@@ -2,12 +2,12 @@ import React from 'react';
 import { Text, View,} from 'react-native';
 import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';
 import {ScrollView} from 'react-native';
-import ProfileImageLarge160 from 'Root/component/molecules/ProfileImageLarge160';
-import ProfileImageLarge194 from 'Root/component/molecules/ProfileImageLarge194';
-import ProfileImageMedium120 from 'Root/component/molecules/ProfileImageMedium120';
-import ProfileImageMedium140 from 'Root/component/molecules/ProfileImageMedium140';
-import ProfileImageSmall from 'Root/component/molecules/ProfileImageSmall';
-import PetImageLabel from 'Root/component/molecules/PetImageLabel';
+import ProfileImageLarge160 from 'Molecules/image/ProfileImageLarge160';
+import ProfileImageLarge194 from 'Molecules/image/ProfileImageLarge194';
+import ProfileImageMedium120 from 'Molecules/image/ProfileImageMedium120';
+import ProfileImageMedium140 from 'Molecules/image/ProfileImageMedium140';
+import ProfileImageSmall from 'Molecules/image/ProfileImageSmall';
+import PetImageLabel from 'Molecules/label/PetImageLabel';
 import { BLUE20, WHITE } from 'Root/config/color';
 export default ProfileImageSelectTest = props => {
 	return (

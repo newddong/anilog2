@@ -3,7 +3,7 @@ import {Text, View, ScrollView, TouchableOpacity} from 'react-native';
 // import {TouchableOpacity} from 'react-native-gesture-handler';
 import {login_style, shelterMenu, temp_txt, temp_style, btn_style} from './style_templete';
 import {useNavigation} from '@react-navigation/core';
-import ProfileImageLarge160 from '../molecules/ProfileImageLarge160';
+import ProfileImageLarge160 from 'Molecules/image/ProfileImageLarge160';
 import {txt} from 'Root/config/textstyle';
 import SocialInfoB from '../organism_ksw/SocialInfoB';
 import {btn_w280} from '../atom/btn/btn_style';

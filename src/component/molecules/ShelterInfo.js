@@ -3,7 +3,7 @@ import {txt} from 'Root/config/textstyle';
 import {Text, View, TouchableOpacity, Linking} from 'react-native';
 import DP from 'Root/config/dp';
 import {APRI10, BLUE20, GRAY10} from 'Root/config/color';
-import ProfileImageSmall from './ProfileImageSmall';
+import ProfileImageSmall from 'Molecules/image/ProfileImageSmall';
 
 /**
  * 보호소 Object 정보 박스

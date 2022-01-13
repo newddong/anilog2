@@ -1,7 +1,7 @@
 import React from 'react';
 import {FlatList, View} from 'react-native';
 import {organism_style} from './style_organism';
-import PetLabel from '../molecules/PetLabel';
+import PetLabel from 'Molecules/label/PetLabel';
 
 export default PetAccountList = props => {
 	const onLabelClick = (pet)=>{

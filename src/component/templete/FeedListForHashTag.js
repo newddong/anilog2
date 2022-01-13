@@ -5,7 +5,7 @@ import {APRI10, GRAY20, GRAY30, WHITE} from 'Root/config/color';
 
 import {feedListForHashTag, login_style, temp_style} from './style_templete';
 import {useNavigation} from '@react-navigation/core';
-import HashLabel from '../molecules/HashLabel';
+import HashLabel from 'Molecules/label/HashLabel';
 import FeedThumbnailList from '../organism_ksw/FeedThumbnailList';
 import {getFeedsByHash} from 'Root/api/hashapi';
 import Modal from '../modal/Modal';

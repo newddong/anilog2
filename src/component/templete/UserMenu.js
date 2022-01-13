@@ -29,7 +29,7 @@ import {
 import {btn_w280} from '../atom/btn/btn_style';
 import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FavoriteTag48_Filled, Paw48_APRI10, Setting46} from '../atom/icon';
 import AniButton from 'Molecules/button/AniButton';
-import ProfileImageLarge194 from '../molecules/ProfileImageLarge194';
+import ProfileImageLarge194 from 'Molecules/image/ProfileImageLarge194';
 import ProfileMenu from '../organism_ksw/ProfileMenu';
 import SocialInfoB from '../organism_ksw/SocialInfoB';
 import {login_style, shelterMenu, temp_style, userMenu_style} from './style_templete';

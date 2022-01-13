@@ -1,19 +1,18 @@
 import React from 'react';
 import {ScrollView, Text, View, TouchableOpacity} from 'react-native';
-import PetLabel from 'Root/component/molecules/PetLabel';
+import PetLabel from 'Molecules/label/PetLabel';
 import UserDescriptionLabel from 'Root/component/molecules/UserDescriptionLabel';
 import UserLocationLabel from 'Root/component/molecules/UserLocationLabel';
 import UserLocationTimeLabel from 'Root/component/molecules/UserLocationTimeLabel';
 import UserPetLabel from 'Root/component/molecules/UserPetLabel';
 import UserTimeLabel from 'Root/component/molecules/UserTimeLabel';
-import HashLabel from 'Root/component/molecules/HashLabel';
+import HashLabel from 'Molecules/label/HashLabel';
 import {APRI10, GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import ShelterLabel from 'Root/component/molecules/ShelterLabel';
+import ShelterLabel from 'Molecules/label/ShelterLabel';
 import { useNavigation } from '@react-navigation/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import PetImageLabel from 'Root/component/molecules/PetImageLabel';
-import ShelterSmallLabel from 'Root/component/molecules/ShelterSmallLabel';
+import ShelterSmallLabel from 'Molecules/label/ShelterSmallLabel';
 import ShelterInfo from 'Root/component/molecules/ShelterInfo';
 const LabelTest = () => {
 	//세션아이디의 일치여부에 따른 스타일 적용 테스트용 토큰

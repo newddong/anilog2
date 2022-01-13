@@ -1,6 +1,6 @@
 import React from 'react';
 import {FlatList, ScrollView, Text, View} from 'react-native';
-import HashLabel from '../molecules/HashLabel';
+import HashLabel from 'Molecules/label/HashLabel';
 import {hashTagList, organism_style} from './style_organism';
 
 /**

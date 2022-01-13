@@ -3,7 +3,7 @@ import {Text, TouchableOpacity, View} from 'react-native';
 import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {BLACK} from 'Root/screens/color';
-import ProfileImageMedium140 from '../molecules/ProfileImageMedium140';
+import ProfileImageMedium140 from 'Molecules/image/ProfileImageMedium140';
 import {shelterLabel} from './style_organism';
 
 export default ShelterVerticalLabel = props => {

@@ -3,7 +3,7 @@ import {FlatList, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {GRAY10} from 'Root/config/color';
 import {dummy_petList} from 'Root/config/dummyDate_json';
 import {txt} from 'Root/config/textstyle';
-import ProfileImageMedium120 from '../molecules/ProfileImageMedium120';
+import ProfileImageMedium120 from 'Molecules/image/ProfileImageMedium120';
 import {petList} from './style_organism';
 
 export default PetList = props => {

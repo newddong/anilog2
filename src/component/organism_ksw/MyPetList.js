@@ -2,7 +2,7 @@ import React from 'react';
 import {FlatList, TouchableOpacity} from 'react-native';
 import {Text, View} from 'react-native';
 import AddPet from '../molecules/AddPet';
-import PetImageLabel from '../molecules/PetImageLabel';
+import PetImageLabel from 'Molecules/label/PetImageLabel';
 import {myPetList} from './style_organism';
 
 /**

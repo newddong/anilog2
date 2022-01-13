@@ -2,7 +2,7 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import {GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import PetImageLabel from '../molecules/PetImageLabel';
+import PetImageLabel from 'Molecules/label/PetImageLabel';
 import {animalInfo} from './style_organism';
 
 export default AnimalInfo = props => {

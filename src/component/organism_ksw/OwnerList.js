@@ -2,7 +2,7 @@ import React from 'react';
 import {FlatList, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import ProfileImageMedium120 from '../molecules/ProfileImageMedium120';
+import ProfileImageMedium120 from 'Molecules/image/ProfileImageMedium120';
 import {ownerList} from './style_organism';
 
 export default OwnerList = props => {

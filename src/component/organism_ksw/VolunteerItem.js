@@ -3,7 +3,7 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import {GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import ShelterLabel from '../molecules/ShelterLabel';
+import ShelterLabel from 'Molecules/label/ShelterLabel';
 import UserDescriptionLabel from '../molecules/UserDescriptionLabel';
 import {volunteerItem} from './style_organism';
 

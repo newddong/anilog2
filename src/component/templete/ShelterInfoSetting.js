@@ -4,7 +4,7 @@ import {Text, View, TouchableOpacity} from 'react-native';
 import {login_style, temp_style, shelterInfoSetting} from './style_templete';
 import {useNavigation} from '@react-navigation/core';
 import {btn_w114, btn_w242} from '../atom/btn/btn_style';
-import ProfileImageLarge160 from '../molecules/ProfileImageLarge160';
+import ProfileImageLarge160 from 'Molecules/image/ProfileImageLarge160';
 import {txt} from 'Root/screens/assign/style_assign';
 import AniButton from 'Molecules/button/AniButton';
 import {GRAY10} from 'Root/config/color';

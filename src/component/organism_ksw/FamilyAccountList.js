@@ -2,7 +2,7 @@ import React from 'react';
 import {FlatList, Text, View, TouchableOpacity, ScrollView} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {Cross52} from '../atom/icon';
-import ProfileImageSmall from '../molecules/ProfileImageSmall';
+import ProfileImageSmall from 'Molecules/image/ProfileImageSmall';
 import {familyAccountList} from './style_organism';
 
 /**

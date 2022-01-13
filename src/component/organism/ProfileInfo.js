@@ -6,7 +6,7 @@ import {btn_w280} from '../atom/btn/btn_style';
 import {Bracket48} from '../atom/icon';
 import ActionButton from 'Molecules/button/ActionButton';
 import AniButton from 'Molecules/button/AniButton';
-import ProfileImageLarge160 from '../molecules/ProfileImageLarge160';
+import ProfileImageLarge160 from 'Molecules/image/ProfileImageLarge160';
 import SocialInfoA from '../organism_ksw/SocialInfoA';
 import {NORMAL, PET, SHELTER} from 'Root/i18n/msg';
 import ProfileDropdown from 'Molecules/dropdown/ProfileDropdown';

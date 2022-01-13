@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 import {Cross46, Rect48_Border} from '../atom/icon';
-import HashLabel from '../molecules/HashLabel';
+import HashLabel from 'Molecules/label/HashLabel';
 import {controllableHashTag} from './style_organism';
 
 export default ControllableHashTag = props => {

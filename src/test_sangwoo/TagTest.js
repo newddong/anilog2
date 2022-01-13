@@ -3,7 +3,7 @@ import { Text, View, Image, TouchableOpacity} from 'react-native';
 import TagView from 'Root/component/molecules/TagView';
 import TagEdit from 'Root/component/molecules/TagEdit';
 import AddPet from 'Root/component/molecules/AddPet';
-import RescueImage from 'Root/component/molecules/RescueImage';
+import RescueImage from 'Molecules/image/RescueImage';
 export default TagTest = props => {
 	const onDelete = () => {
 		console.log("ondelete")

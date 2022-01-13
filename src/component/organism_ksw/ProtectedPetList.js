@@ -3,7 +3,7 @@ import {FlatList, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {getUserInfoById} from 'Root/api/userapi';
 import {GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import ProfileImageMedium120 from '../molecules/ProfileImageMedium120';
+import ProfileImageMedium120 from 'Molecules/image/ProfileImageMedium120';
 import {protectedPetList} from './style_organism';
 import {getUserProtectAnimalList} from 'Root/api/protectapi';
 

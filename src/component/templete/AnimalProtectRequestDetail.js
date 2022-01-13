@@ -4,12 +4,12 @@ import {Image, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {btn_w226, btn_w276} from '../atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import {login_style, temp_style, animalProtectRequestDetail_style, feedCommentList, accountPicker} from './style_templete';
-import RescueImage from '../molecules/RescueImage';
+import RescueImage from 'Molecules/image/RescueImage';
 import {ScrollView} from 'react-native-gesture-handler';
 
 import {txt} from 'Root/config/textstyle';
 import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
-import ShelterSmallLabel from '../molecules/ShelterSmallLabel';
+import ShelterSmallLabel from 'Molecules/label/ShelterSmallLabel';
 import {BackArrow32, FavoriteTag48_Filled, Share48_Filled} from '../atom/icon';
 import DP from 'Root/config/dp';
 import CommentList from '../organism_ksw/CommentList';

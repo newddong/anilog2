@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View, TouchableWithoutFeedback} from 'react-native';
 import {txt} from 'Root/config/textstyle';
-import {btn_w654} from '../atom/btn/btn_style';
+import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';
 import {login_style, btn_style, temp_style, assignShelterProfileImage_style} from './style_templete';

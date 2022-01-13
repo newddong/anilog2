@@ -3,11 +3,11 @@ import React from 'react';
 import {Text, View, Image, TouchableOpacity} from 'react-native';
 import {APRI10, BLACK, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import DP from 'Root/screens/dp';
-import {styles} from '../atom/image/imageStyle';
+import DP from 'Root/config/dp';
+import {styles} from 'Atom/image/imageStyle';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import {ProfileDefaultImg} from '../atom/icon';
+import {ProfileDefaultImg} from 'Atom/icon';
 
 /**
  * 유저의 프로필 사진, 닉네임, 소개글, 팔로우 상태를 출력하는 라벨

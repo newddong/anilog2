@@ -2,13 +2,12 @@ import React from 'react';
 import {Text, View, ScrollView, TouchableWithoutFeedback} from 'react-native';
 import {APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {btn_w654} from '../atom/btn/btn_style';
+import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
-import Stagebar from '../molecules/Stagebar';
-import TabSelectBorder_Type1 from '../molecules/TabSelectBorder_Type1';
-import EmailVerification from '../organism_ksw/EmailVerification';
-import PhoneNumVerification from '../organism_ksw/PhoneNumVerification';
-import {stagebar_style} from '../organism_ksw/style_organism';
+import Stagebar from 'Molecules/Stagebar';
+import EmailVerification from 'Organism/EmailVerification';
+import PhoneNumVerification from 'Organism/PhoneNumVerification';
+import {stagebar_style} from 'Organism/style_organism';
 import {login_style, btn_style, temp_style, progressbar_style, userAssign} from './style_templete';
 
 // DropDown 컴포넌트 해결될 시 props처리와 data처리 추가해야함

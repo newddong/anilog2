@@ -4,8 +4,8 @@ import React from 'react';
 import {ActivityIndicator, Text, View} from 'react-native';
 import {getUserListByNickname} from 'Root/api/userapi';
 import {dummy_AccountHashList, dummy_accountList, dummy_userObject} from 'Root/config/dummyDate_json';
-import AccountHashList from '../organism_ksw/AccountHashList';
-import SelectStat from '../organism_ksw/SelectStat';
+import AccountHashList from 'Organism/list/AccountHashList';
+import SelectStat from 'Organism/SelectStat';
 import {login_style, temp_style, selectstat_view_style, saveFavorite} from './style_templete';
 
 // 각각 뷰에 컴포넌트 삽입시 style의 첫번째 index 삭제할 것. 두번째 index는 상.하 간격 style이라서 이 컴포넌트에만 해당 됨.

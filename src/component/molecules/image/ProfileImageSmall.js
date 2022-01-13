@@ -16,8 +16,8 @@ import {
 	ProfileDefaultImg2_194,
 	ProfileDefaultImg3_194,
 	Public48,
-} from '../atom/icon';
-import {styles} from '../atom/image/imageStyle';
+} from 'Atom/icon';
+import {styles} from 'Atom/image/imageStyle';
 
 /**
  * 프로필이미지 소형(size 가변 - 94 76 70 60 46)

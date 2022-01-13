@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import DP from 'Root/config/dp';
-import SvgWrapper, {SvgWrap} from 'Screens/svgwrapper';
+import SvgWrapper, {SvgWrap} from 'Atom/svgwrapper';
 import {txt} from 'Root/config/textstyle';
 import {tab, layout} from './style_BottomTab';
 import {APRI10, GRAY20} from 'Root/config/color';

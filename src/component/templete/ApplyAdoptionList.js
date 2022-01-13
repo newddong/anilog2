@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {ActivityIndicator, Text, View} from 'react-native';
-import AnimalNeedHelpList from '../organism_ksw/AnimalNeedHelpList';
+import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {login_style, temp_style, baseInfo_style} from './style_templete';
 import {getUserAdoptProtectionList} from 'Root/api/protectapi';
 

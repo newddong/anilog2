@@ -1,7 +1,7 @@
 import React from 'react';
 import {ActivityIndicator, Text, View} from 'react-native';
 import {login_style, animalFromShelter_style} from './style_templete';
-import AnimalNeedHelpList from '../organism_ksw/AnimalNeedHelpList';
+import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {useNavigation} from '@react-navigation/core';
 import {getProtectRequestListByShelterId, getShelterProtectAnimalList} from 'Root/api/shelterapi';
 import {txt} from 'Root/config/textstyle';

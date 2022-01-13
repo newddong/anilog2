@@ -4,8 +4,8 @@ import {Text, View, Image, TouchableOpacity} from 'react-native';
 import {GRAY20, BLACK, APRI10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
-import DP from 'Root/screens/dp';
-import {styles} from '../atom/image/imageStyle';
+import DP from 'Root/config/dp';
+import {styles} from 'Atom/image/imageStyle';
 
 /**
  *  반려동물의 프로필 사진, 유저의 닉네임, 시간 정보를 출력하는 라벨

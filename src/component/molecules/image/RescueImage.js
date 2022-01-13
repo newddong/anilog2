@@ -5,7 +5,7 @@ import {APRI10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {ADOPT, DEFAULT_ANIMAL_PROFILE, DEFAULT_PROFILE, DISCUSS, NEAR_RAINBOWBRIDGE, PROTECT, RESCUE} from 'Root/i18n/msg';
-import {styles} from '../atom/image/imageStyle';
+import {styles} from 'Atom/image/imageStyle';
 
 /**
  * 동물 구조 임시보호 입양 관련 이미지

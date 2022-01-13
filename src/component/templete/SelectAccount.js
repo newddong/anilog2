@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View} from 'react-native';
-import AccountList from '../organism_ksw/AccountList';
+import AccountList from 'Organism/list/AccountList';
 import {login_style, selectAccount} from './style_templete';
 import {getUserListByNickname} from 'Root/api/userapi';
 

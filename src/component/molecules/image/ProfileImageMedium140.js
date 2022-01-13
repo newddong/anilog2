@@ -1,8 +1,8 @@
 import React from 'react';
 import {View, Image} from 'react-native';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
-import {Paw48_Mixed, Paw48_YELL20, Paw48_APRI10, Private48, Public48} from '../atom/icon';
-import {styles} from '../atom/image/imageStyle';
+import {Paw48_Mixed, Paw48_YELL20, Paw48_APRI10, Private48, Public48} from 'Atom/icon';
+import {styles} from 'Atom/image/imageStyle';
 
 /**
  * 프로필이미지 140

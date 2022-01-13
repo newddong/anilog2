@@ -2,9 +2,9 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import DP from 'Root/screens/dp';
-import {Hash50} from '../atom/icon';
-import {styles} from '../atom/image/imageStyle';
+import DP from 'Root/config/dp';
+import {Hash50} from 'Atom/icon';
+import {styles} from 'Atom/image/imageStyle';
 
 /**
  * 해시태그 관련 라벨 (키워드 및 태그된 게시물 수 출력 )

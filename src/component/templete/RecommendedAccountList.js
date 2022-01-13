@@ -1,9 +1,9 @@
 import React from 'react';
 import {FlatList, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {dummy_userObject} from 'Root/config/dummyDate_json';
-import {Write94} from '../atom/icon';
+import {Write94} from 'Atom/icon';
 import InputWithSearchIcon from 'Molecules/input/InputWithSearchIcon';
-import ControllableAccountList from '../organism_ksw/ControllableAccountList';
+import ControllableAccountList from 'Organism/list/ControllableAccountList';
 import {followerList} from './style_templete';
 import {getUserListByNickname} from 'Root/api/userapi';
 

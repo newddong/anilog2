@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import {Text, View} from 'react-native';
-import TabSelectBorder_Type1 from 'Root/component/molecules/TabSelectBorder_Type1';
+import TabSelectBorder_Type1 from 'Molecules/tab/TabSelectBorder_Type1';
 import {login_style, btn_style, requestLogin_style, loginTemplete_style} from './style_templete';
 import {txt} from 'Root/config/textstyle';
 import {NEEDS_LOGIN_ARE_YOU_MEMBER} from 'Root/i18n/msg';
 import AniButton from 'Molecules/button/AniButton';
-import {btn_w522} from '../atom/btn/btn_style';
-import {Facebook_Icon, Instagram_Icon, Kakao_Icon, Naver_Icon} from '../atom/icon';
+import {btn_w522} from 'Atom/btn/btn_style';
+import {Facebook_Icon, Instagram_Icon, Kakao_Icon, Naver_Icon} from 'Atom/icon';
 
 export default RequestLogin = props => {
 	const onPressRegister = () => {

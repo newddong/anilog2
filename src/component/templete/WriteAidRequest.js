@@ -1,16 +1,15 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
 import {Text, View, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {APRI10, GRAY10, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
-import {AddItem64, Camera54} from '../atom/icon';
-import {styles} from '../atom/image/imageStyle';
-import AidRequest from '../organism_ksw/AidRequest';
+import {AddItem64, Camera54} from 'Atom/icon';
+import {styles} from 'Atom/image/imageStyle';
+import AidRequest from 'Organism/listitem/AidRequest';
 import {assignProtectAnimal_style, feedWrite, login_style, temp_style, writeAidRequest} from './style_templete';
 import ImagePicker from 'react-native-image-crop-picker';
-import Modal from '../modal/Modal';
+import Modal from 'Component/modal/Modal';
 
 export default WriteAidRequest = ({route, navigation}) => {
 	// console.log('WriteAidRequest', route.params);

@@ -2,9 +2,9 @@ import React, {useEffect} from 'react';
 
 import {View, Text, TouchableWithoutFeedback} from 'react-native';
 import {lo, txt, btn, item} from './style_address';
-import FormTxtInput from 'Screens/common/formtxtinput';
-import DP from 'Screens/dp';
-import {SvgWrap} from 'Screens/svgwrapper';
+import FormTxtInput from 'Molecules/input/formtxtinput';
+import DP from 'Root/config/dp';
+import {SvgWrap} from 'Atom/svgwrapper';
 import {SearchIcon, Bracket} from 'Asset/image';
 import {ScrollView, FlatList} from 'react-native';
 import axios from 'axios';

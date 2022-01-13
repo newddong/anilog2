@@ -1,15 +1,15 @@
 import React from 'react';
 import {Text, View, Image, TouchableOpacity} from 'react-native';
 import {txt} from 'Root/config/textstyle';
-import DP from 'Root/screens/dp';
+import DP from 'Root/config/dp';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import {APRI10, BLACK} from 'Root/config/color';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import {getUserInfoById} from 'Root/api/userapi';
 import Modal from 'Component/modal/Modal';
-import {ProfileDefaultImg1, ProfileDefaultImg1_70, Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, Private30, Public30} from '../atom/icon';
-import {profiledefault2} from '../atom/icon/profiledefault2.svg';
+import {ProfileDefaultImg1, ProfileDefaultImg1_70, Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, Private30, Public30} from 'Atom/icon';
+import {profiledefault2} from 'Atom/icon/profiledefault2.svg';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 /**

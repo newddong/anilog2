@@ -2,9 +2,8 @@ import React from 'react';
 
 import {View, Image, Text} from 'react-native';
 import {DEFAULT_ANIMAL_PROFILE, DEFAULT_PROFILE} from 'Root/i18n/msg';
-import profile from 'Root/screens/feed/profile/profile';
-import {Paw48_Mixed, Paw48_YELL20, Paw48_APRI10, Private62, Public62, ProfileDefaultImg3_194, ProfileDefaultImg} from '../atom/icon';
-import {styles} from '../atom/image/imageStyle';
+import {Paw48_Mixed, Paw48_YELL20, Paw48_APRI10, Private62, Public62, ProfileDefaultImg3_194, ProfileDefaultImg} from 'Atom/icon';
+import {styles} from 'Atom/image/imageStyle';
 
 /**
  * 프로필 이미지 160

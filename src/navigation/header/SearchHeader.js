@@ -3,8 +3,8 @@ import {Text, TextInput, View, StyleSheet} from 'react-native';
 
 import {SearchIcon} from 'Asset/image';
 import Backbutton from 'Screens/header/icon_back.svg';
-import DP from 'Screens/dp';
-import SvgWrapper from 'Screens/svgwrapper';
+import DP from 'Root/config/dp';
+import SvgWrapper from 'Atom/svgwrapper';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import FormTxtInput from 'Screens/common/formtxtinput';
 // import { CommonActions } from '@react-navigation/native';

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Text, View} from 'react-native';
-import TabSelectBorder_Type1 from 'Root/component/molecules/TabSelectBorder_Type1';
+import TabSelectBorder_Type1 from 'Molecules/tab/TabSelectBorder_Type1';
 import {login_style, btn_style, suggestAssign_style } from './style_templete';
 import {txt}  from 'Root/config/textstyle';
 import { NONE_OF_YOUR_ACCOUNTS} from 'Root/i18n/msg';

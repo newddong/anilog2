@@ -3,7 +3,7 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {AVAILABLE_NICK, NEW_NICK_REQUEST, UNAVAILABLE_NICK, PREVIOUS_NICK_TITLE, NEW_NICK_TITLE} from 'Root/i18n/msg';
-import {btn_w654} from '../atom/btn/btn_style';
+import {btn_w654} from 'Atom/btn/btn_style';
 import Modal from '../modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
 import Input24 from 'Molecules/input/Input24';

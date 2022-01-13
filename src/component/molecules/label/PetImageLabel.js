@@ -3,8 +3,8 @@ import {View, Image, Text, TouchableOpacity} from 'react-native';
 import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
-import {Paw62_APRI10, Paw62_Mixed, Paw62_YELL20, ProfileDefaultImg} from '../atom/icon';
-import {styles} from '../atom/image/imageStyle';
+import {Paw62_APRI10, Paw62_Mixed, Paw62_YELL20, ProfileDefaultImg} from 'Atom/icon';
+import {styles} from 'Atom/image/imageStyle';
 
 /**
  * 버튼 컴포넌트트

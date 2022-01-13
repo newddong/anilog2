@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View, TouchableWithoutFeedback, KeyboardAvoidingView} from 'react-native';
 import {txt} from 'Root/config/textstyle';
-import {btn_w522} from '../atom/btn/btn_style';
+import {btn_w522} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import Input30 from 'Molecules/input/Input30';
 import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';

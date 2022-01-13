@@ -2,8 +2,8 @@ import React from 'react';
 import {ScrollView, Text, View} from 'react-native';
 import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import OnOffSwitch from '../molecules/OnOffSwitch';
-import Vaccination from '../organism_ksw/Vaccination';
+import OnOffSwitch from 'Molecules/OnOffSwitch';
+import Vaccination from 'Organism/Vaccination';
 import {login_style, temp_txt, vaccinationRecord} from './style_templete';
 import {_dummy_PetVaccinationObject} from 'Root/config/dummy_data_hjs';
 

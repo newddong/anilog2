@@ -3,7 +3,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import ProtectRequestList from 'Templete/ProtectRequestList';
 import MissingReportList from 'Templete/MissingReportList';
 import ActivationList from 'Templete/ActivationList';
-import TopTabNavigation_Border from 'Root/component/organism_ksw/TopTabNavigation_Border';
+import TopTabNavigation_Border from 'Root/component/organism/TopTabNavigation_Border';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 
 const ProtectionTab = createMaterialTopTabNavigator();

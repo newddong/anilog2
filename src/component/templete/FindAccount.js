@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 import { TAB_VERIFY_PHONE, TAB_VERIFY_EMAIL,INQUERY_ACCOUNT, PHONEVERI_AND_EMAIL_VERI, BTN_W654} from 'Root/i18n/msg';
-import TabSelectBorder_Type1 from 'Root/component/molecules/TabSelectBorder_Type1';
+import TabSelectBorder_Type1 from 'Molecules/tab/TabSelectBorder_Type1';
 import {login_style, btn_style, findAccount_style} from './style_templete';
 import {txt}  from 'Root/config/textstyle';
 

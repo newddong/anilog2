@@ -3,7 +3,7 @@ import React from 'react';
 import {ScrollView, Text, View} from 'react-native';
 import {dummy_userObject} from 'Root/config/dummyDate_json';
 import Modal from '../modal/Modal';
-import ControllableAccountList from '../organism_ksw/ControllableAccountList';
+import ControllableAccountList from 'Organism/list/ControllableAccountList';
 import {login_style, searchAccountA} from './style_templete';
 import {getUserListByNickname} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';

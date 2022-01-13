@@ -3,9 +3,9 @@ import {Text, View, Image, TouchableOpacity} from 'react-native';
 import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
-import DP from 'Root/screens/dp';
-import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20} from '../atom/icon';
-import {styles} from '../atom/image/imageStyle';
+import DP from 'Root/config/dp';
+import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20} from 'Atom/icon';
+import {styles} from 'Atom/image/imageStyle';
 
 /**
  * 버튼 컴포넌트트

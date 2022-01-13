@@ -1,17 +1,17 @@
 import React from 'react';
 import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
-import {btn_w226} from '../atom/btn/btn_style';
+import {btn_w226} from 'Atom/btn/btn_style';
 import {login_style, btn_style, temp_style, progressbar_style, assignProtectAnimal_style} from './style_templete';
 import {useNavigation} from '@react-navigation/core';
-import Stagebar from '../molecules/Stagebar';
+import Stagebar from 'Molecules/Stagebar';
 import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {PLEASE_UPLOAD_PIC} from 'Root/i18n/msg';
-import SelectedMediaList from '../organism_ksw/SelectedMediaList';
-import {AddItem64, Camera54} from '../atom/icon';
+import SelectedMediaList from 'Organism/list/SelectedMediaList';
+import {AddItem64, Camera54} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
-import {styles} from '../atom/image/imageStyle';
-import {stagebar_style} from '../organism_ksw/style_organism';
+import {styles} from 'Atom/image/imageStyle';
+import {stagebar_style} from 'Organism/style_organism';
 import {launchImageLibrary} from 'react-native-image-picker';
 
 export default AssignProtectAnimalImage = props => {

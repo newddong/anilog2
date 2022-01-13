@@ -1,12 +1,11 @@
 import React from 'react';
 import {View, Text, TextInput, TouchableWithoutFeedback, Platform} from 'react-native';
-import AccountList from '../organism_ksw/AccountList';
-import AccountHashList from '../organism_ksw/AccountHashList';
+import AccountHashList from 'Organism/list/AccountHashList';
 import {GRAY20} from 'Root/config/color';
 import {findTagAt, isTag, getTagName, findStartIndexOfTag, findEndIndexOfTag} from 'Root/util/stringutil';
 import {getUserListByNickname} from 'Root/api/userapi';
 import {getHashKeywords} from 'Root/api/hashapi';
-import Modal from '../modal/Modal';
+import Modal from 'Component/modal/Modal';
 
 export default function HashInput(props) {
 	const [value, setValue] = React.useState('');

@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import DP from 'Screens/dp';
+import DP from 'Root/config/dp';
 
 export const square_style = size => {
 	return {

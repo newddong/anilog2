@@ -3,7 +3,7 @@ import {ActivityIndicator, ScrollView, View} from 'react-native';
 import {getApplyDetailById} from 'Root/api/protectapi';
 import {getProtectAnimalByProtectAnimalId} from 'Root/api/shelterapi';
 import {getUserInfoById} from 'Root/api/userapi';
-import AnimalProtectDetail from '../organism_ksw/AnimalProtectDetail';
+import AnimalProtectDetail from 'Organism/AnimalProtectDetail';
 import {login_style, btn_style, temp_style, baseInfo_style} from './style_templete';
 
 // ShelterMenu - 나의 보호소 출신동물 - 입양처 보기

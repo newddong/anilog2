@@ -2,8 +2,8 @@ import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {Text, View} from 'react-native';
 
-import FeedThumbnailList from '../organism_ksw/FeedThumbnailList';
-import SelectStat from '../organism_ksw/SelectStat';
+import FeedThumbnailList from 'Organism/feed/FeedThumbnailList';
+import SelectStat from 'Organism/SelectStat';
 import {login_style, temp_style, selectstat_view_style} from './style_templete';
 import Modal from '../modal/Modal';
 import {CONFIRM_DELETE_FAVORITE_FEED, CONFIRM_DELETE_MY_FEED, CONFIRM_DELETE_TAG_ME_FEED} from 'Root/i18n/msg';

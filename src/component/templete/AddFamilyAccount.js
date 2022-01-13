@@ -1,9 +1,9 @@
 import React from 'react';
 import {ScrollView, View} from 'react-native';
-import {btn_w654} from '../atom/btn/btn_style';
+import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import InputWithSearchIcon from 'Molecules/input/InputWithSearchIcon';
-import AccountList from '../organism_ksw/AccountList';
+import AccountList from 'Organism/list/AccountList';
 import {login_style, btn_style, temp_style, addFamilyAccount_style} from './style_templete';
 import {CommonActions} from '@react-navigation/native';
 import Modal from '../modal/Modal';

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View} from 'react-native';
-import AnimalNeedHelpList from '../organism_ksw/AnimalNeedHelpList';
-import SelectStat from '../organism_ksw/SelectStat';
+import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
+import SelectStat from 'Organism/SelectStat';
 import {login_style, temp_style} from './style_templete';
 import {useNavigation} from '@react-navigation/core';
 import {getProtectRequestList, getProtectRequestListByShelterId} from 'Root/api/shelterapi';

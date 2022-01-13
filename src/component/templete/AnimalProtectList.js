@@ -4,7 +4,7 @@ import {ScrollView, Text, View} from 'react-native';
 import {getUserProtectAnimalList} from 'Root/api/protectapi';
 import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import AnimalInfoList from '../organism_ksw/AnimalInfoList';
+import AnimalInfoList from 'Organism/list/AnimalInfoList';
 import {login_style, temp_style, baseInfo_style, animalProtectList} from './style_templete';
 
 //접근 테이블 - ProtectAnimalObject, UserObject(pet)

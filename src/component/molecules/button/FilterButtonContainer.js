@@ -4,8 +4,7 @@ import {Text, View} from 'react-native';
 import {GRAY10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import {btn_w226} from '../atom/btn/btn_style';
-import {Arrow_Down_GRAY10, Arrow_Up_GRAY10} from '../atom/icon';
+import {Arrow_Down_GRAY10, Arrow_Up_GRAY10} from 'Atom/icon';
 
 /**
  *

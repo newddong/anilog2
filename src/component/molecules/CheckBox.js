@@ -2,7 +2,7 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {Text, View, TouchableWithoutFeedback} from 'react-native';
 import DP from 'Root/config/dp';
-import {Check50, Rect48_GRAY30, Rect50_Border} from '../atom/icon';
+import {Check50, Rect48_GRAY30, Rect50_Border} from 'Atom/icon';
 import {GRAY10, GRAY20} from 'Root/config/color';
 /**
  *

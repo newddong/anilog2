@@ -10,8 +10,8 @@ import {
 	ProfileDefaultImg1_194,
 	ProfileDefaultImg2_194,
 	ProfileDefaultImg3_194,
-} from '../atom/icon';
-import {styles} from '../atom/image/imageStyle';
+} from 'Atom/icon';
+import {styles} from 'Atom/image/imageStyle';
 
 /**
  * 프로필이미지 194

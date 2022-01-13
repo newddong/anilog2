@@ -4,8 +4,8 @@ import PropsTypes, {any, bool, func, number, object, oneOf, oneOfType, string} f
 import {APRI10, GRAY30} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import {btn_w226} from '../atom/btn/btn_style';
-import {Arrow_Down_APRI10, Arrow_Down_GRAY30, Arrow_Down_White, Arrow_Up_APRI10, Arrow_Up_GRAY30, Arrow_Up_White} from '../atom/icon';
+import {btn_w226} from 'Atom/btn/btn_style';
+import {Arrow_Down_APRI10, Arrow_Down_GRAY30, Arrow_Down_White, Arrow_Up_APRI10, Arrow_Up_GRAY30, Arrow_Up_White} from 'Atom/icon';
 
 /**
  * 인풋 크기 24

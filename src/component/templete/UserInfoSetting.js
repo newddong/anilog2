@@ -4,11 +4,11 @@ import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator} 
 import {GRAY10, GRAY40} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {DEFAULT_PROFILE, MODIFY_PROFILE} from 'Root/i18n/msg';
-import {btn_w114, btn_w242} from '../atom/btn/btn_style';
-import {Arrow_Down_GRAY20, NextMark} from '../atom/icon';
+import {btn_w114, btn_w242} from 'Atom/btn/btn_style';
+import {Arrow_Down_GRAY20, NextMark} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
 import ProfileImageLarge194 from 'Molecules/image/ProfileImageLarge194';
-import MyPetList from '../organism_ksw/MyPetList';
+import MyPetList from 'Organism/list/MyPetList';
 import {login_style, btn_style, temp_style, userInfoSetting_style} from './style_templete';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import {getUserProfile} from 'Root/api/usermenuapi';

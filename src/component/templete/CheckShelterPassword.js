@@ -2,12 +2,12 @@ import React from 'react';
 import {Text, View, TouchableWithoutFeedback, KeyboardAvoidingView} from 'react-native';
 import {APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {btn_w654} from '../atom/btn/btn_style';
+import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
-import Stagebar from '../molecules/Stagebar';
+import Stagebar from 'Molecules/Stagebar';
 import {login_style, btn_style, temp_style, progressbar_style, checkShelterPassword_style} from './style_templete';
-import PasswordChecker from '../organism_ksw/PasswordChecker';
-import {stagebar_style} from '../organism_ksw/style_organism';
+import PasswordChecker from 'Organism/PasswordChecker';
+import {stagebar_style} from 'Organism/style_organism';
 
 // 각각 뷰에 컴포넌트 삽입시 style의 첫번째 index 삭제할 것. 두번째 index는 상.하 간격 style이라서 이 컴포넌트에만 해당 됨.
 //ex) 변경 전: <View style={[btn_style.btn_w654, findAccount_style.btn_w654]}>   변경 후:  <View style={[findAccount_style.btn_w654]}>

@@ -3,7 +3,7 @@ import {Text, View, TouchableOpacity, TouchableWithoutFeedback} from 'react-nati
 import {APRI10, GRAY20, GRAY30, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import {btn_w226} from '../atom/btn/btn_style';
+import {btn_w226} from 'Atom/btn/btn_style';
 /**
  * 버튼 컴포넌트트
  * @param {object} props - Props Object

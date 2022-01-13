@@ -4,14 +4,14 @@ import {Text, View, TouchableWithoutFeedback} from 'react-native';
 import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import Stagebar from '../molecules/Stagebar';
+import Stagebar from 'Molecules/Stagebar';
 import AniButton from 'Molecules/button/AniButton';
 import {login_style, btn_style, temp_style, progressbar_style, assignPetInfo_style} from './style_templete';
-import DatePicker from '../molecules/DatePicker';
+import DatePicker from 'Molecules/DatePicker';
 import Modal from '../modal/Modal';
 import Input30 from 'Molecules/input/Input30';
 import {assignPet} from 'Root/api/userapi';
-import {stagebar_style} from '../organism_ksw/style_organism';
+import {stagebar_style} from 'Organism/style_organism';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {DEFAULT_ANIMAL_PROFILE, DEFAULT_PROFILE} from 'Root/i18n/msg';
 

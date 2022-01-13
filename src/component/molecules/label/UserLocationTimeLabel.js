@@ -4,8 +4,8 @@ import {Text, View, Image, TouchableOpacity} from 'react-native';
 import {APRI10, GRAY20, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
-import DP from 'Root/screens/dp';
-import {styles} from '../atom/image/imageStyle';
+import DP from 'Root/config/dp';
+import {styles} from 'Atom/image/imageStyle';
 import {useNavigation} from '@react-navigation/native';
 import {getTimeLapsed} from 'Root/util/dateutil';
 

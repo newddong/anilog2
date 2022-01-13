@@ -6,8 +6,8 @@ import {GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {PET_PROTECT_LOCATION} from 'Root/i18n/msg';
 import FilterButton from 'Molecules/button/FilterButton';
-import OnOffSwitch from '../molecules/OnOffSwitch';
-import AnimalNeedHelpList from '../organism_ksw/AnimalNeedHelpList';
+import OnOffSwitch from 'Molecules/OnOffSwitch';
+import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {login_style, searchProtectRequest, temp_style} from './style_templete';
 
 export default SearchProtectRequest = ({route, navigation}) => {

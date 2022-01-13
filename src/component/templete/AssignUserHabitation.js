@@ -1,12 +1,12 @@
 import React from 'react';
 import {Text, View, TouchableWithoutFeedback} from 'react-native';
 import {txt} from 'Root/config/textstyle';
-import {btn_w522} from '../atom/btn/btn_style';
+import {btn_w522} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
-import Stagebar from '../molecules/Stagebar';
+import Stagebar from 'Molecules/Stagebar';
 import {login_style, btn_style, temp_style, progressbar_style, assignUserHabitation_style} from './style_templete';
 import Modal from 'Component/modal/Modal';
-import {stagebar_style} from '../organism_ksw/style_organism';
+import {stagebar_style} from 'Organism/style_organism';
 import {getAddressList} from 'Root/api/address';
 import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 

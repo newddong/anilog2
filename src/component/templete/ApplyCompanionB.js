@@ -6,13 +6,13 @@ import {getPettypes} from 'Root/api/userapi';
 import {APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {COMPANION_DURATION, COMPANION_STATUS, PET_AGE, PET_KIND} from 'Root/i18n/msg';
-import {btn_w176} from '../atom/btn/btn_style';
-import {AddItem64} from '../atom/icon';
+import {btn_w176} from 'Atom/btn/btn_style';
+import {AddItem64} from 'Atom/icon';
 import Modal from '../modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
-import Stagebar from '../molecules/Stagebar';
-import CompanionFormList from '../organism_ksw/CompanionFormList';
-import {stagebar_style} from '../organism_ksw/style_organism';
+import Stagebar from 'Molecules/Stagebar';
+import CompanionFormList from 'Organism/list/CompanionFormList';
+import {stagebar_style} from 'Organism/style_organism';
 import {applyCompanionB, login_style, temp_style, applyCompanionC, btn_style} from './style_templete';
 
 export default ApplyCompanionC = props => {

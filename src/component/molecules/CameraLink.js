@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, TouchableOpacity} from 'react-native';
-import DP from 'Root/screens/dp';
-import {CameraLinkIcon} from '../atom/icon';
-import {styles} from '../atom/image/imageStyle';
+import DP from 'Root/config/dp';
+import {CameraLinkIcon} from 'Atom/icon';
+import {styles} from 'Atom/image/imageStyle';
 
 export default CameraLink = props => {
 

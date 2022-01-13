@@ -114,6 +114,17 @@ export default Modal = {
 	 */
 	popPetSelect: (primaryItem, secondaryItem, onOk, okButtonnMsg) => {},
 
+	/**
+	 * 선택 모달창을 띄우는 함수(첫번째 선택에 따라 두번째 선택의 항목이 변하는 부분은 구현되지 않음)
+	 * @param {object} data - 첫번째 항목 초기값
+	 * @param {()=>void} onOk - 선택항목들을 반환하는 매개변수가 2개인 콜백
+	 * @param {()=>void} onClose - 선택항목들을 반환하는 매개변수가 2개인 콜백
+	 *
+	 * @example
+	 * Modal.popProtectPetDetails(data, ()=>alert('등록'),()=>alert('취소'), );
+	 */
+	popProtectPetDetails: (data, onOk, onClose) => {},
+
 	popInfoModal: () => {},
 
 	alert: () => {},

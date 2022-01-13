@@ -2,7 +2,7 @@ import React from 'react';
 import {View} from 'react-native';
 import {btn_w108} from '../atom/btn/btn_style';
 import {Cross46} from '../atom/icon';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import CheckBox from '../molecules/CheckBox';
 import UserDescriptionLabel from '../molecules/UserDescriptionLabel';
 import {controllableAccount, organism_style} from './style_organism';

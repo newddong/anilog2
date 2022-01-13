@@ -5,7 +5,7 @@ import {btn_w276} from '../atom/btn/btn_style';
 import ProtectedThumbnail from '../molecules/ProtectedThumbnail';
 import {animalNeedHelp} from './style_organism';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import {FavoriteTag48_Border, FavoriteTag48_Filled} from '../atom/icon';
 import {BLUE10, BLUE20, RED10} from 'Root/config/color';
 import {DEFAULT_ANIMAL_PROFILE} from 'Root/i18n/msg';

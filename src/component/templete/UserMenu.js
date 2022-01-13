@@ -28,7 +28,7 @@ import {
 } from 'Root/i18n/msg';
 import {btn_w280} from '../atom/btn/btn_style';
 import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FavoriteTag48_Filled, Paw48_APRI10, Setting46} from '../atom/icon';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import ProfileImageLarge194 from '../molecules/ProfileImageLarge194';
 import ProfileMenu from '../organism_ksw/ProfileMenu';
 import SocialInfoB from '../organism_ksw/SocialInfoB';
@@ -38,7 +38,6 @@ import {getUserProfile} from 'Root/api/userapi';
 import Modal from '../modal/Modal';
 import {userLogout} from 'Root/api/userapi';
 import {useIsFocused} from '@react-navigation/native';
-import Input24 from '../molecules/Input24';
 export default UserMenu = props => {
 	// console.log('UserMenu Props', props);
 	const navigation = useNavigation();

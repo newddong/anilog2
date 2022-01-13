@@ -6,7 +6,6 @@ import Feed from '../organism/Feed';
 import {feedList, login_style, missingAnimalDetail, temp_style} from './style_templete';
 import {getSuggestFeedList} from 'Root/api/feedapi';
 import Modal from 'Component/modal/Modal';
-import OneBtnModal from '../molecules/OneBtnModal';
 import DP from 'Root/config/dp';
 import {getFeedListByUserId} from 'Root/api/feedapi';
 import {getFeedsByHash} from 'Root/api/hashapi';

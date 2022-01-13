@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {Image, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {btn_w226, btn_w276} from '../atom/btn/btn_style';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import {login_style, temp_style, animalProtectRequestDetail_style, feedCommentList, accountPicker} from './style_templete';
 import RescueImage from '../molecules/RescueImage';
 import {ScrollView} from 'react-native-gesture-handler';

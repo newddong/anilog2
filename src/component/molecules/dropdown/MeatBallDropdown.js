@@ -1,12 +1,12 @@
 import React from 'react';
 import {View, TouchableOpacity, TouchableWithoutFeedback, Text, StyleSheet} from 'react-native';
-import Dropdown from 'Molecules/Dropdown';
+import Dropdown from 'Molecules/dropdown/Dropdown';
 import {btn_w280, btn_w226} from 'Atom/btn/btn_style';
 import {APRI10, APRI20, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import Modal from 'Component/modal/Modal';
 import {txt} from 'Root/config/textstyle';
-import MeatBallButton from 'Root/component/molecules/MeatBallButton';
+import MeatBallButton from 'Molecules/button/MeatBallButton';
 
 /**
  *

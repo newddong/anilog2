@@ -6,7 +6,7 @@ import {txt} from 'Root/config/textstyle';
 import {DEFAULT_PROFILE, MODIFY_PROFILE} from 'Root/i18n/msg';
 import {btn_w114, btn_w242} from '../atom/btn/btn_style';
 import {Arrow_Down_GRAY20, NextMark} from '../atom/icon';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import ProfileImageLarge194 from '../molecules/ProfileImageLarge194';
 import MyPetList from '../organism_ksw/MyPetList';
 import {login_style, btn_style, temp_style, userInfoSetting_style} from './style_templete';

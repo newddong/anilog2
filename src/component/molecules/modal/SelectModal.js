@@ -1,14 +1,14 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, SafeAreaView, StyleSheet,Dimensions,Platform} from 'react-native';
-import DropdownSelect from 'Molecules/DropdownSelect';
+import DropdownSelect from 'Molecules/dropdown/DropdownSelect';
 
-import AniButton from 'Molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Component/modal/Modal';
-import Input24 from './Input24';
+import Input24 from 'Molecules/input/Input24';
 
 /**
  * 선택창과 직접 입력창을 띄우는 모달 컴포넌트

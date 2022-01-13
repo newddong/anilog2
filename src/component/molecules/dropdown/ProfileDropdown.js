@@ -1,8 +1,8 @@
 import React from 'react';
 import {View, TouchableOpacity, TouchableWithoutFeedback, Text} from 'react-native';
-import AniButton from 'Molecules/AniButton';
-import ActionButton from 'Molecules/ActionButton';
-import Dropdown from 'Molecules/Dropdown';
+import AniButton from 'Molecules/button/AniButton';
+import ActionButton from 'Molecules/button/ActionButton';
+import Dropdown from 'Molecules/dropdown/Dropdown';
 import {btn_w280, btn_w226} from 'Atom/btn/btn_style';
 import {APRI10, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';

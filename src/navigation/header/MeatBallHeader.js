@@ -5,7 +5,7 @@ import {Text, View, Image, ScrollView, Dimensions, SafeAreaView, StyleSheet, Tou
 import {BackArrow32, Meatball50_GRAY20_Horizontal} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import MeatBallDropdown from 'Molecules/MeatBallDropdown';
+import MeatBallDropdown from 'Molecules/dropdown/MeatBallDropdown';
 import {btn_w280} from 'Root/component/atom/btn/btn_style';
 
 /**

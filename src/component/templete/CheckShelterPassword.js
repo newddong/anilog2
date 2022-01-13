@@ -3,7 +3,7 @@ import {Text, View, TouchableWithoutFeedback, KeyboardAvoidingView} from 'react-
 import {APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from '../atom/btn/btn_style';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import Stagebar from '../molecules/Stagebar';
 import {login_style, btn_style, temp_style, progressbar_style, checkShelterPassword_style} from './style_templete';
 import PasswordChecker from '../organism_ksw/PasswordChecker';

@@ -5,17 +5,12 @@ import {txt} from 'Root/config/textstyle';
 import TabSelectFilled_Type1 from '../molecules/TabSelectFilled_Type1';
 import DatePicker from 'Root/component/molecules/DatePicker';
 import {login_style, btn_style, temp_style, userInfoDetailSettting_style} from './style_templete';
-import InputWithSelect from '../molecules/InputWithSelect';
-import AddressInput from '../organism_ksw/AddressInput';
 import InterestTagList from '../organism_ksw/InterestTagList';
 import {GENDER_TAB_SELECT, INPUT_PHONE_NUM, INTEREST_ACT, INTEREST_REGION, mobile_carrier} from 'Root/i18n/msg';
-import {dummy_userObject} from 'Root/config/dummyDate_json';
-import {getUserInfoById} from 'Root/api/userapi';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from '../modal/Modal';
-import Input24 from '../molecules/Input24';
+import Input24 from 'Molecules/input/Input24';
 import {getAddressList} from 'Root/api/address';
-import NormalDropDown from 'Molecules/NormalDropDown';
+import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 
 export default UserInfoDetailSettting = ({route, navigation}) => {
 	const debug = false;

@@ -14,7 +14,7 @@ import {
 	PASSWORD_UNMATCHED,
 	PWD_CHECK_INFO,
 } from 'Root/i18n/msg';
-import PasswordInput from '../molecules/PasswordInput';
+import PasswordInput from 'Molecules/input/PasswordInput';
 import {passwordChecker_style} from './style_organism';
 
 /**

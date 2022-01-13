@@ -1,15 +1,14 @@
 import React from 'react';
 import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
-import InputBalloon from 'Root/component/molecules/InputBalloon';
-import InputLongText from 'Root/component/molecules/InputLongText';
-import Input30 from 'Root/component/molecules/Input30';
-import Input24 from 'Root/component/molecules/Input24';
-import InputWithSearchIcon from 'Root/component/molecules/InputWithSearchIcon';
+import InputBalloon from 'Molecules/input/InputBalloon';
+import InputLongText from 'Molecules/input/InputLongText';
+import Input30 from 'Molecules/input/Input30';
+import Input24 from 'Molecules/input/Input24';
+import InputWithSearchIcon from 'Molecules/input/InputWithSearchIcon';
 import {useNavigation} from '@react-navigation/core';
 import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {GRAY_BRIGHT} from 'Root/screens/color';
-import Formtxtinput from 'Root/screens/common/formtxtinput';
 export default InputTest1 = props => {
 	const navigation = useNavigation();
 	return (

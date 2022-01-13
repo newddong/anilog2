@@ -5,8 +5,7 @@ import {AlarmBadger48, Search48, BackArrow32} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {WHITE, APRI10} from 'Root/config/color';
-import Input24 from 'Molecules/Input24';
-import Input30 from 'Molecules/Input30';
+import Input24 from 'Molecules/input/Input24';
 
 export default ConfirmInputHeader = ({navigation, route, options, back}) => {
 	const confirm = () => {

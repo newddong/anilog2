@@ -2,7 +2,7 @@ import React from 'react';
 import {Dimensions, Text, View, Platform} from 'react-native';
 import {organism_style, feedContent_style} from './style_organism';
 import UserLocationLabel from 'Root/component/molecules/UserLocationLabel';
-import AniButton from 'Root/component/molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import {btn_w130} from 'Root/component/atom/btn/btn_style';
 import {useNavigation, useRoute} from '@react-navigation/core';
 import {FavoriteTag48_Filled, Meatball50_GRAY20_Horizontal, Share48_Filled} from '../atom/icon';

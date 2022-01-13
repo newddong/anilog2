@@ -6,6 +6,7 @@ import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {btn_w226} from '../atom/btn/btn_style';
 import {Arrow_Down_APRI10, Arrow_Down_GRAY30, Arrow_Down_White, Arrow_Up_APRI10, Arrow_Up_GRAY30, Arrow_Up_White} from '../atom/icon';
+import Modal from '../modal/Modal';
 
 /**
  * 인풋 크기 24
@@ -135,7 +136,7 @@ ActionButton.defaultProps = {
 	btnLayout: btn_w226, // 버튼의 레이아웃(width, height, radius 등의 수치 결정)
 	titleFontStyle: 24, // 버튼 title의 폰트 크기
 	btnStyle: 'border', // 버튼스타일 filled border noBorder
-	onOpen: e => console.log('actionButton Open', e),
-	onClose: e => console.log('actionButton close', e),
+	onOpen: e => {},
+	onClose: e => {},
 };
 export default ActionButton;

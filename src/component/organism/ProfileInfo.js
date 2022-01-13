@@ -118,30 +118,29 @@ export default ProfileInfo = props => {
 		followUser(
 			{follow_userobject_id: data._id},
 			result => {
-				setData({...data,is_follow: !result.msg.follow_is_delete,user_follower_count: data.user_follower_count+1})
+				setData({...data, is_follow: !result.msg.follow_is_delete, user_follower_count: data.user_follower_count + 1});
 			},
 			error => Modal.alert(error),
 		);
 	};
 
-	const socialAction = (v,i)=>{
-		console.log('socialAction',v,i);
+	const socialAction = (v, i) => {
+		console.log('socialAction', v, i);
 		switch (i) {
-			case 0:
+			case 3:
 				unFollowUser(
 					{follow_userobject_id: data._id},
 					result => {
-						setData({...data,is_follow: !result.msg.follow_is_delete,user_follower_count: data.user_follower_count-1})
+						setData({...data, is_follow: !result.msg.follow_is_delete, user_follower_count: data.user_follower_count - 1});
 					},
 					error => Modal.alert(error),
 				);
 				break;
-		
+
 			default:
 				break;
 		}
-	}
-
+	};
 
 	return (
 		<View style={organism_style.profileInfo_main}>
@@ -187,15 +186,15 @@ export default ProfileInfo = props => {
 			<View style={[organism_style.btn_w280_view_profileInfo, profileInfo_style.btn_w280_view]}>
 				<View style={[organism_style.btn_w280_profileInfo, profileInfo_style.btn_w280]}>
 					{userGlobalObject.userInfo._id == data._id ? (
-						<AniButton btnTitle={'내 계정'} btnStyle={'filled'} titleFontStyle={24} btnLayout={btn_w280}/>
+						<AniButton btnTitle={'내 계정'} btnStyle={'filled'} titleFontStyle={24} btnLayout={btn_w280} />
 					) : data.is_follow ? (
 						<ProfileDropdown
 							btnTitle={'팔로우 중'}
 							titleFontStyle={24}
 							btnStyle={'filled'}
 							btnLayout={btn_w280}
-							// menu={['즐겨찾기', '소식받기', '차단', '팔로우 취소']}
-							menu={['팔로우 취소']}
+							menu={['즐겨찾기', '소식받기', '차단', '팔로우 취소']}
+							// menu={['팔로우 취소']}
 							onSelect={socialAction}
 							// onOpen={()=>{alert('open')}}
 							// onClose={()=>{alert('close')}}

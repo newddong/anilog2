@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, TouchableOpacity, TouchableWithoutFeedback, Text} from 'react-native';
+import React, {useState} from 'react';
+import {View, TouchableOpacity, TouchableWithoutFeedback, Text, Animated, StyleSheet, Easing} from 'react-native';
 import AniButton from 'Molecules/AniButton';
 import ActionButton from 'Molecules/ActionButton';
 import Dropdown from 'Molecules/Dropdown';
@@ -20,31 +20,77 @@ import {txt} from 'Root/config/textstyle';
  * @param {()=>void} props.onClose - 드롭다운이 닫혔을 때 동작하는 콜백
  */
 const ProfileDropdown = props => {
-	
+	const closeAnimation = () => {
+		Animated.timing(animatedHeight, {
+			toValue: -100,
+			duration: 300,
+			easing: Easing.linear,
+			useNativeDriver: false,
+		}).start();
+		setExpanded(false);
+	};
+
 	const onClose = () => {
+		console.log('Close');
 		props.onClose();
-		Modal.close();
+		closeAnimation();
 	};
 
 	const onOpen = () => {
-		props.onOpen();
+		console.log('Open');
+		Animated.timing(animatedHeight, {
+			duration: 500,
+			toValue: 252 * DP,
+			easing: Easing.linear,
+			useNativeDriver: false,
+		}).start();
+		setExpanded(true);
 	};
 
-	const onSelect = (v,i) => {
-		props.onSelect(v,i);
+	const onSelect = (v, i) => {
+		closeAnimation();
+		props.onSelect(v, i);
 		dropdown.current.button.current.press();
 	};
+
 	const dropdown = React.useRef();
+	const animatedHeight = React.useRef(new Animated.Value(0)).current;
+	const [expanded, setExpanded] = useState(false);
+
+	const interpolatedHeight = animatedHeight.interpolate({
+		inputRange: [0, 100],
+		outputRange: [75, 150],
+	});
+
+	const onLayout = e => {
+		// console.log('e', e.nativeEvent);
+	};
+
 	return (
 		<Dropdown
-			buttonComponent={<ActionButton {...props} initState={false} noStateChange onClose={onClose} onOpen={onOpen}/>}
+			buttonComponent={<ActionButton {...props} initState={expanded} onOpen={onOpen} onClose={onClose} noStateChange />}
 			ref={dropdown}
+			animated={true}
 			dropdownList={
-				<View style={{backgroundColor: APRI10, borderRadius: 40 * DP, alignItems: 'center'}}>
-					<ActionButton {...props} initState={false} noStateChange onClose={onClose} onOpen={onOpen} />
+				<Animated.ScrollView
+					onLayout={onLayout}
+					showsVerticalScrollIndicator={false}
+					contentContainerStyle={[styles.container]}
+					style={{
+						// backgroundColor: 'lightgray',
+						height: interpolatedHeight,
+						borderRadius: 40 * DP,
+						shadowColor: 'blue',
+						shadowOffset: {
+							height: 2,
+							width: 2,
+						},
+						// elevation: 2,
+					}}>
+					<ActionButton {...props} initState={!expanded} onClose={onSelect} />
 					{props.menu.map((v, i) => (
-						<TouchableWithoutFeedback onPress={()=>onSelect(v,i)} key={i}>
-							<View style={{width: props.btnLayout.width, marginVertical: 15 * DP,height:80*DP,justifyContent:'center'}}>
+						<TouchableWithoutFeedback onPress={() => onSelect(v, i)} key={i}>
+							<View style={[styles.menuItem, {width: props.btnLayout.width}]}>
 								<Text
 									style={[
 										txt.noto24b,
@@ -52,6 +98,9 @@ const ProfileDropdown = props => {
 											fontSize: props.titleFontStyle * DP,
 											textAlign: 'center',
 											color: WHITE,
+											shadowOffset: {width: 2, height: 1},
+											shadowOpacity: 0.3,
+											shadowColor: 'black',
 										},
 									]}>
 									{v}
@@ -59,7 +108,7 @@ const ProfileDropdown = props => {
 							</View>
 						</TouchableWithoutFeedback>
 					))}
-				</View>
+				</Animated.ScrollView>
 			}
 		/>
 	);
@@ -75,3 +124,15 @@ ProfileDropdown.defaultProps = {
 };
 
 export default ProfileDropdown;
+
+const styles = StyleSheet.create({
+	container: {
+		backgroundColor: APRI10,
+		borderRadius: 40 * DP,
+		alignItems: 'center',
+	},
+	menuItem: {
+		height: 70 * DP,
+		justifyContent: 'center',
+	},
+});

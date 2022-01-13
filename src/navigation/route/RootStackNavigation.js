@@ -67,6 +67,7 @@ import RadioSelectModal from 'Root/component/molecules/RadioSelectModal';
 import AddVolunteers from 'Root/component/templete/AddVolunteers';
 import Calendar_Multiple from 'Root/component/molecules/Calendar_Multiple';
 import InfoModal from 'Root/component/molecules/InfoModal';
+import ProtectedPetDetailModal from 'Root/component/molecules/ProtectedPetDetailModal';
 // import Camera from 'Root/component/templete/Camera';
 const RootStack = createStackNavigator();
 
@@ -151,6 +152,11 @@ export default RootStackNavigation = () => {
 
 	Modal.popInfoModal = () => {
 		popIn(<InfoModal />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popProtectPetDetails = (data, onOk, onClose) => {
+		popIn(<ProtectedPetDetailModal data={data} onOk={onOk} onClose={onClose} />);
 		!isPop && setPop(true);
 	};
 

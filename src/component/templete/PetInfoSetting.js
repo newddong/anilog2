@@ -5,7 +5,7 @@ import {APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w242} from '../atom/btn/btn_style';
 import {Cross52, NextMark} from '../atom/icon';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import OnOffSwitch from '../molecules/OnOffSwitch';
 import PetImageLabel from '../molecules/PetImageLabel';
 import {btn_style, login_style, petInfoSetting, temp_style} from './style_templete';
@@ -15,7 +15,6 @@ import {getUserInfoById, removeUserFromFamily} from 'Root/api/userapi';
 import {familyAccountList_style} from '../organism_ksw/style_organism';
 import ProfileImageSmall from '../molecules/ProfileImageSmall';
 import UserDescriptionLabel from '../molecules/UserDescriptionLabel';
-import PetSelectModal from '../molecules/PetSelectModal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 //이 화면에 들어오면서 특정 _id를 API 연동으로 데이터를 가져 옴.

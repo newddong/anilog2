@@ -3,7 +3,7 @@ import {Text, View, ScrollView, TouchableWithoutFeedback} from 'react-native';
 import {APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from '../atom/btn/btn_style';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import Stagebar from '../molecules/Stagebar';
 import TabSelectBorder_Type1 from '../molecules/TabSelectBorder_Type1';
 import EmailVerification from '../organism_ksw/EmailVerification';

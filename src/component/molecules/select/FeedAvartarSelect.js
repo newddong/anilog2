@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableWithoutFeedback, StyleSheet, Dimensions, Platform, ScrollView} from 'react-native';
-import AniButton from 'Molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10} from 'Root/config/color';
 import DP from 'Root/config/dp';

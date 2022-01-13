@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/core';
 import {btn_w114, btn_w242} from '../atom/btn/btn_style';
 import ProfileImageLarge160 from '../molecules/ProfileImageLarge160';
 import {txt} from 'Root/screens/assign/style_assign';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import {GRAY10} from 'Root/config/color';
 import {getUserInfoById, updateUserIntroduction} from 'Root/api/userapi';
 import AsyncStorage from '@react-native-async-storage/async-storage';

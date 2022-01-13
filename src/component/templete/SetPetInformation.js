@@ -4,7 +4,7 @@ import {login_style, setPetInformation, temp_style} from './style_templete';
 import {txt} from 'Root/config/textstyle';
 import TabSelectFilled_Type1 from '../molecules/TabSelectFilled_Type1';
 import DatePicker from '../molecules/DatePicker';
-import Input30 from '../molecules/Input30';
+import Input30 from 'Molecules/input/Input30';
 import RadioBox from '../molecules/RadioBox';
 import moment from 'moment';
 

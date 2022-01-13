@@ -4,9 +4,9 @@ import {login_style, btn_style, temp_style, progressbar_style, assignShelterAddr
 import {APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from '../atom/btn/btn_style';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import Stagebar from '../molecules/Stagebar';
-import Input24 from '../molecules/Input24';
+import Input24 from 'Molecules/input/Input24';
 import AddressInput from '../organism_ksw/AddressInput';
 import axios from 'axios';
 import {stagebar_style} from '../organism_ksw/style_organism';

@@ -2,9 +2,9 @@ import React from 'react';
 import {Text, View, ScrollView} from 'react-native';
 import {btn_w226} from 'Root/component/atom/btn/btn_style';
 import {Leaflet, Urgent_Write1, Urgent_Write2} from 'Root/component/atom/icon';
-import ActionButton from 'Root/component/molecules/ActionButton';
-import AniButton from 'Root/component/molecules/AniButton';
-import FilterButton from 'Root/component/molecules/FilterButtonContainer';
+import ActionButton from 'Molecules/button/ActionButton';
+import AniButton from 'Molecules/button/AniButton';
+import FilterButton from 'Molecules/button/FilterButtonContainer';
 import DP from 'Root/config/dp';
 export default ButtonTest = props => {
 	return (

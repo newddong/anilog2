@@ -3,13 +3,13 @@ import {View, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, Keyboard
 import {APRI10, GRAY10, GREEN, RED10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from '../atom/btn/btn_style';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import Stagebar from '../molecules/Stagebar';
-import Input24 from '../molecules/Input24';
+import Input24 from 'Molecules/input/Input24';
 import {login_style, btn_style, temp_style, progressbar_style, assignShelterInformation_style} from './style_templete';
-import InputWithSelect from '../molecules/InputWithSelect';
+import InputWithSelect from 'Molecules/input/InputWithSelect';
 import {initial_number, email_supplier} from 'Root/config/dummyDate_json';
-import InputWithEmail from '../molecules/InputWithEmail';
+import InputWithEmail from 'Molecules/input/InputWithEmail';
 import DatePicker from '../molecules/DatePicker';
 import {stagebar_style} from '../organism_ksw/style_organism';
 

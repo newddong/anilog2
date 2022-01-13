@@ -6,13 +6,13 @@ import {txt} from 'Root/config/textstyle';
 import {ActivityIndicator, Text, TouchableWithoutFeedback, View} from 'react-native';
 import Stagebar from '../molecules/Stagebar';
 import {btn_w226} from '../atom/btn/btn_style';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import {login_style, btn_style, temp_style, progressbar_style, assignPetInfo_style} from './style_templete';
 import RadioBox from '../molecules/RadioBox';
 import TabSelectFilled_Type1 from '../molecules/TabSelectFilled_Type1';
 import {FEMALE, MALE, NO, PET_KIND, UNAWARENESS, YES} from 'Root/i18n/msg';
 import {stagebar_style} from '../organism_ksw/style_organism';
-import NormalDropDown from 'Molecules/NormalDropDown';
+import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 import {getPettypes} from 'Root/api/userapi';
 import Modal from '../modal/Modal';
 

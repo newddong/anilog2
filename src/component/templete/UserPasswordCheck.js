@@ -4,7 +4,7 @@ import {Text, View, TouchableWithoutFeedback, ScrollView, KeyboardAvoidingView} 
 import {APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from '../atom/btn/btn_style';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import Stagebar from '../molecules/Stagebar';
 import PasswordChecker from '../organism_ksw/PasswordChecker';
 import {stagebar_style} from '../organism_ksw/style_organism';

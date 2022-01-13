@@ -5,7 +5,7 @@ import {userAssign_agreementCheckList} from 'Root/config/dummyDate_json';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from '../atom/btn/btn_style';
 import Modal from '../modal/Modal';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import Stagebar from '../molecules/Stagebar';
 import AssignCheckList from '../organism_ksw/AssignCheckList';
 import AssignCheckListItem from '../organism_ksw/AssignCheckListItem';

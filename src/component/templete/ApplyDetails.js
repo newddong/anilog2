@@ -6,7 +6,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import {CONFIRM_ADOPT_REQUEST, CONFIRM_FINALIZED, CONFIRM_PROTECT_REQUEST} from 'Root/i18n/msg';
 import {btn_w226} from '../atom/btn/btn_style';
 import Modal from '../modal/Modal';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import AnimalProtectDetail from '../organism_ksw/AnimalProtectDetail';
 import {applyDetails, btn_style, login_style, temp_style} from './style_templete';
 

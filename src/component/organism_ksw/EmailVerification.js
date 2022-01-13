@@ -1,10 +1,10 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 import {btn_w226} from '../atom/btn/btn_style';
-import AniButton from '../molecules/AniButton';
-import Input30 from '../molecules/Input30';
-import InputTimeLimit from '../molecules/InputTimeLimit';
-import InputWithEmail from '../molecules/InputWithEmail';
+import AniButton from 'Molecules/button/AniButton';
+import Input30 from 'Molecules/input/Input30';
+import InputTimeLimit from 'Molecules/input/InputTimeLimit';
+import InputWithEmail from 'Molecules/input/InputWithEmail';
 import {btn_style, temp_style} from '../templete/style_templete';
 import {emailVerification} from './style_organism';
 

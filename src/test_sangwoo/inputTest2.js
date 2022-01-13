@@ -3,9 +3,9 @@ import {txt} from 'Root/config/textstyle';
 import { Text, View, TouchableOpacity} from 'react-native';
 import DP from 'Root/config/dp';
 import {useNavigation} from '@react-navigation/core';
-import PasswordInput from 'Root/component/molecules/PasswordInput';
-import InputWithSelect from 'Root/component/molecules/InputWithSelect';
-import InputWithEmail from 'Root/component/molecules/InputWithEmail';
+import PasswordInput from 'Molecules/input/PasswordInput';
+import InputWithSelect from 'Molecules/input/InputWithSelect';
+import InputWithEmail from 'Molecules/input/InputWithEmail';
 import { GRAY10 } from 'Root/config/color';
 export default InputTest2 = props => {
 	const navigation = useNavigation();

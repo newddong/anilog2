@@ -9,7 +9,7 @@ import {txt} from 'Root/config/textstyle';
 import {PLEASE_UPLOAD_PIC} from 'Root/i18n/msg';
 import SelectedMediaList from '../organism_ksw/SelectedMediaList';
 import {AddItem64, Camera54} from '../atom/icon';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import {styles} from '../atom/image/imageStyle';
 import {stagebar_style} from '../organism_ksw/style_organism';
 import {launchImageLibrary} from 'react-native-image-picker';

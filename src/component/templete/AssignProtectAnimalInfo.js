@@ -5,16 +5,14 @@ import {login_style, btn_style, temp_style, progressbar_style, assignProtectAnim
 import {APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import Stagebar from '../molecules/Stagebar';
-import DropdownSelect from '../molecules/DropdownSelect';
-import Input24 from '../molecules/Input30';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import {useNavigation} from '@react-navigation/core';
 import Modal from '../modal/Modal';
 import {PET_YEAR, PET_MONTH} from 'Root/i18n/msg';
 import {stagebar_style} from '../organism_ksw/style_organism';
 import {CommonActions} from '@react-navigation/native';
-import NormalDropDown from '../molecules/NormalDropDown';
-import Input30 from '../molecules/Input30';
+import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
+import Input30 from 'Molecules/input/Input30';
 import {assignShelterAnimal} from 'Root/api/shelterapi';
 
 export default AssignProtectAnimalInfo = ({route}) => {

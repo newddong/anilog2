@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View,} from 'react-native';
-import ProfileImageSelect from 'Root/component/molecules/ProfileImageSelect';
+import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';
 import {ScrollView} from 'react-native';
 import ProfileImageLarge160 from 'Root/component/molecules/ProfileImageLarge160';
 import ProfileImageLarge194 from 'Root/component/molecules/ProfileImageLarge194';

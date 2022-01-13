@@ -9,7 +9,7 @@ import SocialInfoB from '../organism_ksw/SocialInfoB';
 import {btn_w280} from '../atom/btn/btn_style';
 import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FloatAddPet_126x92} from '../atom/icon';
 import {FloatAddArticle_126x92} from '../atom/icon';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import ProfileMenu from '../organism_ksw/ProfileMenu';
 import {Setting46, FavoriteTag48_Filled, Heart48_Filled, Paw46} from '../atom/icon';
 import {_dummy_VolunteerActivityApplicant, _dummy_userObject_user} from 'Root/config/dummy_data_hjs';

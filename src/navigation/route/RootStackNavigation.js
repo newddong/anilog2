@@ -50,12 +50,12 @@ import UserVerification from 'Root/component/templete/UserVerification';
 import FeedWriteHeader from 'Navigation/header/FeedWriteHeader';
 import BookmarkHeader from 'Navigation/header/BookmarkHeader';
 
-import TwoBtnModal from 'Molecules/TwoBtnModal';
-import OneBtnModal from 'Molecules/OneBtnModal';
-import NoBtnModal from 'Molecules/NoBtnModal';
-import RollingSelect from 'Molecules/RollingSelect';
-import SelectModal from 'Molecules/SelectModal';
-import FeedAvartarSelect from 'Molecules/FeedAvartarSelect';
+import TwoBtnModal from 'Molecules/modal/TwoBtnModal';
+import OneBtnModal from 'Molecules/modal/OneBtnModal';
+import NoBtnModal from 'Molecules/modal/NoBtnModal';
+import RollingSelect from 'Molecules/select/RollingSelect';
+import SelectModal from 'Molecules/modal/SelectModal';
+import FeedAvartarSelect from 'Molecules/select/FeedAvartarSelect';
 import KeyBoardInputBackGround from 'Molecules/KeyboardInputBackGround';
 
 import Modal from 'Component/modal/Modal';
@@ -63,11 +63,15 @@ import Calendar from 'Root/test_sangwoo/calendar';
 import InputAndSearchHeader from '../header/InputAndSearchHeader';
 import LogoutView from 'Root/test_sangwoo/LogoutView';
 import RequestLogin from 'Root/component/templete/RequestLogin';
-import RadioSelectModal from 'Root/component/molecules/RadioSelectModal';
+import RadioSelectModal from 'Molecules/modal/RadioSelectModal';
 import AddVolunteers from 'Root/component/templete/AddVolunteers';
 import Calendar_Multiple from 'Root/component/molecules/Calendar_Multiple';
+<<<<<<< HEAD
 import InfoModal from 'Root/component/molecules/InfoModal';
 import ProtectedPetDetailModal from 'Root/component/molecules/ProtectedPetDetailModal';
+=======
+import InfoModal from 'Molecules/modal/InfoModal';
+>>>>>>> d635673fc899603860bb55ede7a5818ebcc9d5fc
 // import Camera from 'Root/component/templete/Camera';
 const RootStack = createStackNavigator();
 

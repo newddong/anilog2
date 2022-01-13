@@ -8,8 +8,8 @@ import {day} from 'Root/i18n/msg';
 import {txt} from 'Root/config/textstyle';
 import {APRI10, BLACK, GRAY10, GRAY20, GRAY30, WHITE} from 'Root/config/color';
 import {NextMark} from 'Root/component/atom/icon';
-import YearDropDown from 'Root/component/molecules/YearDropDown';
-import AniButton from 'Root/component/molecules/AniButton';
+import YearDropDown from 'Molecules/dropdown/YearDropDown';
+import AniButton from 'Molecules/button/AniButton';
 
 const Calendar = props => {
 	const HEIGHT = Dimensions.get('screen').height;

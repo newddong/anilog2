@@ -9,7 +9,7 @@ import {COMPANION_DURATION, COMPANION_STATUS, PET_AGE, PET_KIND} from 'Root/i18n
 import {btn_w176} from '../atom/btn/btn_style';
 import {AddItem64} from '../atom/icon';
 import Modal from '../modal/Modal';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import Stagebar from '../molecules/Stagebar';
 import CompanionFormList from '../organism_ksw/CompanionFormList';
 import {stagebar_style} from '../organism_ksw/style_organism';

@@ -6,7 +6,7 @@ import {APRI10, GRAY10} from 'Root/config/color';
 import {applyComanionCheckList} from 'Root/config/dummyDate_json';
 import {txt} from 'Root/config/textstyle';
 import {btn_w176} from '../atom/btn/btn_style';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import Stagebar from '../molecules/Stagebar';
 import AssignCheckList from '../organism_ksw/AssignCheckList';
 import {stagebar_style} from '../organism_ksw/style_organism';

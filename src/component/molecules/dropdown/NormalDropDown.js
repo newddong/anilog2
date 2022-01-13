@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, TouchableWithoutFeedback, Text, StyleSheet, ScrollView} from 'react-native';
-import Dropdown from 'Molecules/Dropdown';
+import Dropdown from 'Molecules/dropdown/Dropdown';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {GRAY40, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';

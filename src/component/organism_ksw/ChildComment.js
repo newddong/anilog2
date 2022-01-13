@@ -6,7 +6,7 @@ import {txt} from 'Root/config/textstyle';
 import {SETTING_COMMENT, SETTING_OWN_COMMENT} from 'Root/i18n/msg';
 import {Heart30_Border, Heart30_Filled, Meatball50_GRAY20_Vertical} from '../atom/icon';
 import {styles} from '../atom/image/imageStyle';
-import MeatBallDropdown from '../molecules/MeatBallDropdown';
+import MeatBallDropdown from 'Molecules/dropdown/MeatBallDropdown';
 import UserTimeLabel from '../molecules/UserTimeLabel';
 import {useNavigation} from '@react-navigation/native';
 import {childComment} from './style_organism';

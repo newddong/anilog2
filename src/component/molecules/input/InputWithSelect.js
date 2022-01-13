@@ -4,7 +4,7 @@ import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {APRI10, RED10} from 'Root/config/color';
 import NormalDropDown from './NormalDropDown';
-import Input24 from 'Molecules/Input24';
+import Input24 from 'Molecules/input/Input24';
 
 /**
  * 드롭다운이 추가된 인풋 컴포넌트

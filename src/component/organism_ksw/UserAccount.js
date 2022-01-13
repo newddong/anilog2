@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, TouchableOpacity} from 'react-native';
 import {btn_w108} from '../atom/btn/btn_style';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import CheckBox from '../molecules/CheckBox';
 import HashLabel from '../molecules/HashLabel';
 import UserDescriptionLabel from '../molecules/UserDescriptionLabel';

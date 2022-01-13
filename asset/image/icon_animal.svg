@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="48" height="48" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#ffb6a5"/>
+      <stop offset="1" stop-color="#ffe7a4"/>
+    </linearGradient>
+  </defs>
+  <g id="그룹_248" data-name="그룹 248" transform="translate(-329 -988)">
+    <path id="사각형_186" data-name="사각형 186" d="M10,0H38A10,10,0,0,1,48,10V48a0,0,0,0,1,0,0H10A10,10,0,0,1,0,38V10A10,10,0,0,1,10,0Z" transform="translate(329 988)" fill="url(#linear-gradient)"/>
+    <g id="pets_black_48dp" transform="translate(332 1070)">
+      <circle id="타원_8" data-name="타원 8" cx="4" cy="4" r="4" transform="translate(5 -64)" fill="#fff"/>
+      <circle id="타원_9" data-name="타원 9" cx="4" cy="4" r="4" transform="translate(12.385 -72)" fill="#fff"/>
+      <circle id="타원_10" data-name="타원 10" cx="4" cy="4" r="4" transform="translate(21.615 -72)" fill="#fff"/>
+      <circle id="타원_11" data-name="타원 11" cx="4" cy="4" r="4" transform="translate(29 -64)" fill="#fff"/>
+      <path id="패스_115" data-name="패스 115" d="M23.019,18.08c-1.305-1.773-1.4-3.286-2.721-5.059a6.554,6.554,0,0,0-2.626-2.295,2.717,2.717,0,0,0-.5-.156,6.53,6.53,0,0,0-1.17-.07,5.448,5.448,0,0,0-1.185.087,2.717,2.717,0,0,0-.5.156A6.654,6.654,0,0,0,11.7,13.038C10.4,14.811,10.3,16.324,8.979,18.1,7.014,20.374,3.6,22.9,4.048,26.424a5.15,5.15,0,0,0,3.5,4.033c2.449.209,4.591-1.765,8.312-1.765h.27c3.721,0,5.267,1.807,8.312,1.765a5.175,5.175,0,0,0,3.5-4.033c.465-3.546-2.951-6.067-4.916-8.345Z" transform="translate(5.006 -74.5)" fill="#fff"/>
+    </g>
+  </g>
+</svg>

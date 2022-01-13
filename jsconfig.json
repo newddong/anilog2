@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"baseUrl": ".",
+		"paths": {
+			"Root/*": ["./src/*"],
+			"Screens/*":["./src/screens/*"],
+			"Asset/*":["./asset/*"],
+			"Navigation/*":["./src/navigation/*"],
+			"Component/*":["./src/component/*"],
+			"Atom/*":["./src/component/atom/*"],
+			"Molecules/*":["./src/component/molecules/*"],
+			"Organism/*":["./src/component/organism/*"],
+			"Templete/*":["./src/component/templete/*"],
+		},
+	},
+	"include": ["**/*"],
+	"exclude": ["node_modules"],
+	
+}

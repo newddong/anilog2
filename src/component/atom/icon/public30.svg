@@ -1,0 +1,7 @@
+<svg id="PUBLIC_30" data-name="PUBLIC 30" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+  <rect id="사각형_152" data-name="사각형 152" width="30" height="30" rx="15" fill="#ff9888"/>
+  <g id="Icon_-_Home" data-name="Icon - Home" transform="translate(3 4)">
+    <path id="Icon_-_Home-2" data-name="Icon - Home-2" d="M417.468,1852.322l-10.225-8.59a.851.851,0,0,0-1.037,0l-10.225,8.59c-.745.626.3,1.745,1.037,1.125l.97-.815c-.03,3.374-.043,6.748-.075,10.122a.8.8,0,0,0,.111.43.6.6,0,0,0,.623.365c2.009-.136,4.023-.084,6.033-.186.081,0,4.01,0,4.092,0,2.01.1,4.024.051,6.033.186a.6.6,0,0,0,.619-.359.8.8,0,0,0,.113-.436c-.033-3.374-.045-6.749-.075-10.122l.97.815C417.169,1854.066,418.214,1852.949,417.468,1852.322Z" transform="translate(-394.725 -1843.555)" fill="#fff"/>
+  </g>
+  <text id="공" transform="translate(8 6)" fill="#ff9888" font-size="12" font-family="NotoSansKR-Bold" font-weight="700" letter-spacing="-0.025em"><tspan x="1.48" y="14">공</tspan></text>
+</svg>

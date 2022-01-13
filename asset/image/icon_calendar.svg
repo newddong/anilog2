@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <g id="그룹_131" data-name="그룹 131" transform="translate(-149 -808)">
+    <rect id="사각형_141" data-name="사각형 141" width="48" height="48" transform="translate(149 808)" fill="none" opacity="0.4"/>
+    <g id="date_range_black_48dp" transform="translate(155 870)">
+      <path id="패스_42" data-name="패스 42" d="M35,5.6H33V3.8a2.011,2.011,0,0,0-4,0V5.6H13V3.8A1.914,1.914,0,0,0,11,2,1.914,1.914,0,0,0,9,3.8V5.6H7A3.8,3.8,0,0,0,3.02,9.2L3,34.4A3.814,3.814,0,0,0,7,38H35a3.827,3.827,0,0,0,4-3.6V9.2A3.827,3.827,0,0,0,35,5.6Zm0,27a1.914,1.914,0,0,1-2,1.8H9a1.914,1.914,0,0,1-2-1.8v-18H35ZM11,18.2h4v3.6H11Zm8,0h4v3.6H19Zm8,0h4v3.6H27Z" transform="translate(-3 -58)" fill="#ff9888"/>
+    </g>
+  </g>
+</svg>

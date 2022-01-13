@@ -1,0 +1,8 @@
+<svg id="그룹_245" data-name="그룹 245" xmlns="http://www.w3.org/2000/svg" width="58" height="58" viewBox="0 0 58 58">
+  <rect id="사각형_247" data-name="사각형 247" width="58" height="58" fill="none" opacity="0.4"/>
+  <path id="play_arrow_black_48dp" d="M8,7.385v16.2A1.67,1.67,0,0,0,10.568,24.9l13.573-8.1a1.514,1.514,0,0,0,0-2.643L10.568,6.071A1.67,1.67,0,0,0,8,7.385Z" transform="translate(13.872 13.515)" fill="#ffb6a5"/>
+  <g id="사각형_248" data-name="사각형 248" transform="translate(5 10)" fill="none" stroke="#ffb6a5" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
+    <rect width="48" height="38" rx="10" stroke="none"/>
+    <rect x="2" y="2" width="44" height="34" rx="8" fill="none"/>
+  </g>
+</svg>

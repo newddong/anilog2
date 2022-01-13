@@ -1,0 +1,23 @@
+stack-MainScreen
+    tab-feed
+        stack-FeedHome
+        stack-Profile
+    tab-movie
+        stack-MovieHome
+        stack-MoviePlay
+        stack-MovieCategory
+    tab-animalsave
+        stack-AnimalSavingHome
+            tab-AidRequest
+            tab-MyActivity
+            tab-Participation
+        stack-임시보호 참여하기
+        stack-AidRequestDetail
+        stack-보호 활동 신청
+    tab-Myprofile
+stack-Login
+stack-Search
+    stack-Search
+        tab-Feed
+        tab-HealthMovie
+        tab-AidRequest

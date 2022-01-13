@@ -4,7 +4,7 @@ import { GRAY10, GRAY20 } from 'Root/config/color';
 import { txt } from 'Root/config/textstyle';
 import { btn_w226 } from '../atom/btn/btn_style';
 import { Cross46, Cross52 } from '../atom/icon';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import LocalMedia from '../molecules/LocalMedia';
 import { interestTagList, myPetList } from './style_organism';
 

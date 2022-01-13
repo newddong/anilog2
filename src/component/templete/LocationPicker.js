@@ -2,7 +2,7 @@ import React from 'react';
 import {FlatList, Text, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import InputWithSearchIcon from '../molecules/InputWithSearchIcon';
+import InputWithSearchIcon from 'Molecules/input/InputWithSearchIcon';
 import {login_style, temp_style, locationPicker} from './style_templete';
 
 export default LocationPicker = props => {

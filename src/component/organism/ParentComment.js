@@ -6,8 +6,6 @@ import ChildCommentList from 'Root/component/organism/ChildCommentList';
 import UserLocationTimeLabel from '../molecules/UserLocationTimeLabel';
 import {Heart30_Border, Heart30_Filled} from '../atom/icon';
 import {txt} from 'Root/config/textstyle';
-import MeatBallDropdown from '../molecules/MeatBallDropdown';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {DEFAULT_PROFILE, SETTING_COMMENT, SETTING_OWN_COMMENT} from 'Root/i18n/msg';
 import {GRAY10} from 'Root/config/color';
 import {getChildCommentList} from 'Root/api/commentapi';

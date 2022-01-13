@@ -2,7 +2,6 @@ import React from 'react';
 import {View, StyleSheet, Text, Dimensions, TouchableWithoutFeedback} from 'react-native';
 import Modal from 'Component/modal/Modal';
 import DP from 'Root/config/dp';
-import AniButton from './AniButton';
 
 /**
  *

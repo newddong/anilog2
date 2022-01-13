@@ -5,7 +5,7 @@ import {assignPet} from 'Root/api/userapi';
 import {PROTECT_ACT_ADOPT_CONFIRM, PROTECT_ACT_PROTECT_CONFIRM} from 'Root/i18n/msg';
 import {btn_w226} from '../atom/btn/btn_style';
 import Modal from '../modal/Modal';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import AnimalProtectDetail from '../organism_ksw/AnimalProtectDetail';
 import {login_style, btn_style, protectApplyForm} from './style_templete';
 

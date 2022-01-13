@@ -6,8 +6,8 @@ import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import address from 'Root/screens/common/address';
 import {btn_w108, btn_w176, btn_w226} from '../atom/btn/btn_style';
-import AniButton from '../molecules/AniButton';
-import Input24 from '../molecules/Input24';
+import AniButton from 'Molecules/button/AniButton';
+import Input24 from 'Molecules/input/Input24';
 import {btn_style, temp_style} from '../templete/style_templete';
 import {addressInput} from './style_organism';
 /**

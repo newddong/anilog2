@@ -6,7 +6,7 @@ import DP from 'Root/config/dp';
 import {APRI10, GRAY20, GRAY30, GREEN, RED10} from 'Root/config/color';
 import {Cross52, Eye52_APRI10, Eye52_GRAY20} from '../atom/icon';
 import {BackgroundColor} from 'chalk';
-import Input24 from 'Molecules/Input24';
+import Input24 from 'Molecules/input/Input24';
 
 /**
  * 비밀번호 입력

@@ -4,7 +4,7 @@ import {BLUE20, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {Calendar48_Filled, Person48, Phone48} from '../atom/icon';
 import Modal from '../modal/Modal';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import ShelterInfo from '../molecules/ShelterInfo';
 import AccountList from '../organism_ksw/AccountList';
 import {login_style, applicationFormVolunteer, btn_style} from './style_templete';

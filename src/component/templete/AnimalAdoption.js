@@ -6,7 +6,7 @@ import {txt} from 'Root/config/textstyle';
 import {btn_w522} from '../atom/btn/btn_style';
 import {Paw48_APRI10, Paw62_APRI10, Paw62_Mixed, Paw62_YELL20} from '../atom/icon';
 import Modal from '../modal/Modal';
-import AniButton from '../molecules/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import {login_style, btn_style, animalAdoption} from './style_templete';
 
 export default AnimalAdoption = props => {

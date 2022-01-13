@@ -6,7 +6,7 @@ import {GRAY10} from 'Root/config/color';
 import OnOffSwitch from '../molecules/OnOffSwitch';
 import {txt} from 'Root/config/textstyle';
 import {ONLY_CONTENT_FOR_ADOPTION, PET_KIND, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
-import FilterButton from '../molecules/FilterButton';
+import FilterButton from 'Molecules/button/FilterButton';
 import {getProtectRequestList, getProtectRequestListByShelterId} from 'Root/api/shelterapi.js';
 import {getPettypes} from 'Root/api/userapi';
 

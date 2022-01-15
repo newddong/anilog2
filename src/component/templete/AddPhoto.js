@@ -6,11 +6,8 @@ import {txt} from 'Root/config/textstyle';
 import CameraRoll from '@react-native-community/cameraroll';
 // import { hasAndroidPermission } from './camerapermission';
 // import { requestPermission, reqeustCameraPermission } from 'permission';
-import Photos from 'Molecules/Photos';
-import LocalMedia from 'Molecules/LocalMedia';
-import {DownBracketBlack} from 'Asset/image';
-import SvgWrapper from 'Screens/svgwrapper';
-import {Bracket48} from '../atom/icon';
+import LocalMedia from 'Molecules/media/LocalMedia';
+import {Bracket48} from 'Atom/icon';
 // import FastImage from 'react-native-fast-image';
 // import Video from 'react-native-video';
 

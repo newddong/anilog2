@@ -3,7 +3,7 @@ import React from 'react';
 import {ScrollView, Text, View} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {AVAILABLE_NICK, DEFAULT_PROFILE, NEW_NICK_REQUEST, NEW_NICK_TITLE, NICKNAME_FORM, PREVIOUS_NICK_TITLE, UNAVAILABLE_NICK} from 'Root/i18n/msg';
-import {btn_w654} from '../atom/btn/btn_style';
+import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import Input24 from 'Molecules/input/Input24';
 import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';

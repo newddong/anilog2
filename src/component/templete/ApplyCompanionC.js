@@ -5,11 +5,11 @@ import {Text, View} from 'react-native';
 import {APRI10, GRAY10} from 'Root/config/color';
 import {applyComanionCheckList} from 'Root/config/dummyDate_json';
 import {txt} from 'Root/config/textstyle';
-import {btn_w176} from '../atom/btn/btn_style';
+import {btn_w176} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
-import Stagebar from '../molecules/Stagebar';
-import AssignCheckList from '../organism_ksw/AssignCheckList';
-import {stagebar_style} from '../organism_ksw/style_organism';
+import Stagebar from 'Molecules/Stagebar';
+import AssignCheckList from 'Organism/list/AssignCheckList';
+import {stagebar_style} from 'Organism/style_organism';
 import {applyCompanionC, btn_style, login_style, temp_style} from './style_templete';
 
 // protect_act_checklist : {

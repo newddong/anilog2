@@ -4,12 +4,12 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import {APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {btn_w176} from '../atom/btn/btn_style';
+import {btn_w176} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import InputLongText from 'Molecules/input/InputLongText';
-import Stagebar from '../molecules/Stagebar';
-import SelectStat from '../organism_ksw/SelectStat';
-import {stagebar_style} from '../organism_ksw/style_organism';
+import Stagebar from 'Molecules/Stagebar';
+import SelectStat from 'Organism/SelectStat';
+import {stagebar_style} from 'Organism/style_organism';
 import {applyCompanionD, btn_style, login_style, temp_style} from './style_templete';
 
 // protect_act_applicant_id : Mongodb_ID(ref:UserObject), //보호활동 신청자

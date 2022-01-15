@@ -5,9 +5,9 @@ import {getAppliesRecord} from 'Root/api/protectapi';
 import {dummy_AppliesRecord_protect} from 'Root/config/dummy_data_hjs';
 import {dummy_AppliesRecord_rescue} from 'Root/config/dummy_data_hjs';
 import {txt} from 'Root/config/textstyle';
-import {NextMark} from '../atom/icon';
-import AnimalNeedHelpList from '../organism_ksw/AnimalNeedHelpList';
-import ShelterList from '../organism_ksw/ShelterList';
+import {NextMark} from 'Atom/icon';
+import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
+import ShelterList from 'Organism/list/ShelterList';
 import {appliesRecord, login_style} from './style_templete';
 
 export default AppliesRecord = ({route}) => {

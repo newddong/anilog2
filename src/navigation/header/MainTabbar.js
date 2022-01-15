@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import DP from 'Screens/dp';
-import SvgWrapper, {SvgWrap} from 'Screens/svgwrapper';
+import DP from 'Root/config/dp';
+import SvgWrapper, {SvgWrap} from 'Atom/svgwrapper';
 import {MainTabFeed, MainTabMy, MainTabVideo, MainTabSaveAnimal} from 'Asset/image_v2';
 import {txt} from 'Root/config/textstyle';
 import {tab, layout} from './maintabbar_style';

@@ -3,7 +3,7 @@ import {txt} from 'Root/config/textstyle';
 import {Text, View, TouchableOpacity, FlatList} from 'react-native';
 import DP from 'Root/config/dp';
 import {GRAY20} from 'Root/config/color';
-import {RadioChecked48, RadioUnchecked48} from '../atom/icon';
+import {RadioChecked48, RadioUnchecked48} from 'Atom/icon';
 
 /**
  * 버튼 컴포넌트트

@@ -3,7 +3,7 @@ import {ActivityIndicator, ScrollView, Text, View} from 'react-native';
 import {login_style, manageVolunteer, protectApplicant} from './style_templete';
 import {txt} from 'Root/config/textstyle';
 import {GRAY20} from 'Root/config/color';
-import AccountList from '../organism_ksw/AccountList';
+import AccountList from 'Organism/list/AccountList';
 import {getUserInfoById, getUserProfile} from 'Root/api/userapi';
 
 //보호 활동 신청자

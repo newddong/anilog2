@@ -1,10 +1,10 @@
 import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
 import {ScrollView, Text, View} from 'react-native';
-import {btn_w654} from '../atom/btn/btn_style';
+import {btn_w654} from 'Atom/btn/btn_style';
 import Modal from '../modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
-import PasswordChecker from '../organism_ksw/PasswordChecker';
+import PasswordChecker from 'Organism/PasswordChecker';
 import {login_style, btn_style, temp_style, changePassword_style} from './style_templete';
 // import {changeUserPassword} from 'Root/api/usermenuapi';
 import {changeUserPassword} from 'Root/api/userapi';

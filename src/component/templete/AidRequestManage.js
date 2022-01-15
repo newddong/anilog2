@@ -1,7 +1,7 @@
 import React from 'react';
 import {ActivityIndicator, ScrollView, Text, View} from 'react-native';
 import {login_style, temp_style, baseInfo_style} from './style_templete';
-import AidRequestList from '../organism_ksw/AidRequestList';
+import AidRequestList from 'Organism/list/AidRequestList';
 import {getAnimalListWithApplicant, getShelterProtectAnimalList} from 'Root/api/shelterapi';
 import {txt} from 'Root/config/textstyle';
 import {GRAY10} from 'Root/config/color';

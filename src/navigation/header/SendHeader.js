@@ -6,7 +6,7 @@ import {WHITE, APRI10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 import {createProtectRequest} from 'Root/api/shelterapi';
-import {RED} from 'Root/screens/color';
+import {RED} from 'Root/config/color';
 
 export default SendHeader = ({route, navigation, options}) => {
 	// console.log('props SendHeader', route.params);

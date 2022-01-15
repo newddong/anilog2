@@ -1,16 +1,16 @@
 import React from 'react';
 import {Text, View, TouchableOpacity} from 'react-native';
-import {btn_w226} from '../atom/btn/btn_style';
+import {btn_w226} from 'Atom/btn/btn_style';
 import {login_style, btn_style, temp_style, progressbar_style, assignProtectAnimal_style, assignProtectAnimalDate} from './style_templete';
 import {useNavigation} from '@react-navigation/core';
-import Stagebar from '../molecules/Stagebar';
+import Stagebar from 'Molecules/Stagebar';
 import {APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {PLEASE_GIVE_ME_DATE_AND_PLACE, BTN_BACK, BTN_NEXT} from 'Root/i18n/msg';
-import DatePicker from '../molecules/DatePicker';
+import DatePicker from 'Molecules/DatePicker';
 import Input24 from 'Molecules/input/Input24';
 import AniButton from 'Molecules/button/AniButton';
-import {stagebar_style} from '../organism_ksw/style_organism';
+import {stagebar_style} from 'Organism/style_organism';
 
 export default AssignProtectAnimalDate = props => {
 	// console.log(props.route.params);

@@ -5,7 +5,7 @@ import {btn_w280, btn_w226} from 'Atom/btn/btn_style';
 import {APRI10, BLACK, BLUE10, GRAY10, GRAY40, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import FilterButtonContainer from './FilterButtonContainer';
+import FilterButtonContainer from 'Molecules/button/FilterButtonContainer';
 
 /**
  * 필터 버튼

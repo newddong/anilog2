@@ -4,7 +4,7 @@ import {APRI10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {ASSIGN_PET} from 'Root/i18n/msg';
-import {Add_Pet} from '../atom/icon';
+import {Add_Pet} from 'Atom/icon';
 
 /**
  * 버튼 컴포넌트트

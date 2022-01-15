@@ -4,10 +4,9 @@ import {View, Text, TouchableOpacity, SafeAreaView, StyleSheet, Dimensions, Plat
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10} from 'Root/config/color';
-import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Component/modal/Modal';
-import NormalDropDown from './NormalDropDown';
+import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 import {getPettypes} from 'Root/api/userapi';
 
 /**

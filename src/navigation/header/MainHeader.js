@@ -2,10 +2,10 @@ import React, {useState, useRef} from 'react';
 import {Text, TextInput, View, Image, ScrollView, Dimensions, SafeAreaView, StyleSheet} from 'react-native';
 
 import {Logo, AlarmIcon, SearchIcon, AnimalIcon} from 'Asset/image';
-import DP from 'Screens/dp';
-import SvgWrapper, {SvgWrap} from 'Screens/svgwrapper';
+import DP from 'Root/config/dp';
+import SvgWrapper, {SvgWrap} from 'Atom/svgwrapper';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
-import {MAINCOLOR} from 'Screens/color';
+import {MAINCOLOR} from 'Root/config/color';
 //deprecated
 export default MainHeader = ({navigation}) => {
 	const clickLogo = () => {

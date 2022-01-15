@@ -3,13 +3,13 @@ import {Text, View, TouchableWithoutFeedback, ScrollView} from 'react-native';
 import {APRI10, GRAY10} from 'Root/config/color';
 import {userAssign_agreementCheckList} from 'Root/config/dummyDate_json';
 import {txt} from 'Root/config/textstyle';
-import {btn_w654} from '../atom/btn/btn_style';
+import {btn_w654} from 'Atom/btn/btn_style';
 import Modal from '../modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
-import Stagebar from '../molecules/Stagebar';
-import AssignCheckList from '../organism_ksw/AssignCheckList';
-import AssignCheckListItem from '../organism_ksw/AssignCheckListItem';
-import {stagebar_style} from '../organism_ksw/style_organism';
+import Stagebar from 'Molecules/Stagebar';
+import AssignCheckList from 'Organism/list/AssignCheckList';
+import AssignCheckListItem from 'Organism/list/AssignCheckListItem';
+import {stagebar_style} from 'Organism/style_organism';
 import {login_style, btn_style, temp_style, progressbar_style, agreementCheck_style} from './style_templete';
 
 export default AgreementCheck = props => {

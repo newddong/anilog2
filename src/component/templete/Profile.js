@@ -2,22 +2,18 @@ import React from 'react';
 import {View, TouchableWithoutFeedback, ScrollView, Text, FlatList} from 'react-native';
 import {getProtectRequestListByShelterId, getShelterProtectAnimalList} from 'Root/api/shelterapi';
 import {getUserProfile} from 'Root/api/userapi';
-import DP from 'Root/config/dp';
 import {NORMAL, PET, SHELTER} from 'Root/i18n/msg';
-import {Write94} from '../atom/icon';
-import TabSelectFilled_Type2 from '../molecules/TabSelectFilled_Type2';
-import ProfileInfo from '../organism/ProfileInfo';
-import AnimalNeedHelpList from '../organism_ksw/AnimalNeedHelpList';
-import FeedThumbnailList from '../organism_ksw/FeedThumbnailList';
-import OwnerList from '../organism_ksw/OwnerList';
-import PetList from '../organism_ksw/PetList';
-import ProtectedPetList from '../organism_ksw/ProtectedPetList';
+import {Write94} from 'Atom/icon';
+import TabSelectFilled_Type2 from 'Molecules/tab/TabSelectFilled_Type2';
+import ProfileInfo from 'Organism/ProfileInfo';
+import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
+import FeedThumbnailList from 'Organism/feed/FeedThumbnailList';
+import OwnerList from 'Organism/list/OwnerList';
+import PetList from 'Organism/list/PetList';
 import {login_style, profile, temp_style} from './style_templete';
 import Modal from 'Component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {emailVerification} from '../organism_ksw/style_organism';
-import InfoScreen from 'Root/component/organism_ksw/InfoScreen';
+import InfoScreen from 'Root/component/organism/InfoScreen';
 
 export default Profile = ({route, navigation}) => {
 	const [data, setData] = React.useState({...route.params?.userobject, feedList: []}); //라벨을 클릭한 유저의 userObject data

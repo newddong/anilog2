@@ -1,12 +1,10 @@
 import React from 'react';
 import {Text, View, Image, ScrollView, FlatList, TouchableOpacity, PermissionsAndroid} from 'react-native';
 import {txt} from 'Root/config/textstyle';
-import {Bracket48} from '../atom/icon';
-import LocalMedia from '../molecules/LocalMedia';
+import {Bracket48} from 'Atom/icon';
+import LocalMedia from 'Molecules/media/LocalMedia';
 import {login_style, temp_style, photoSelect} from './style_templete';
 import CameraRoll from '@react-native-community/cameraroll';
-import {item} from 'Root/screens/common/style_address';
-import dp from 'Root/screens/dp';
 
 /**
  * 사진선택 템플릿

@@ -1,6 +1,6 @@
 import React from 'react';
 import {FlatList, ScrollView, Text, TouchableOpacity, View} from 'react-native';
-import ControllableAccountList from '../organism_ksw/ControllableAccountList';
+import ControllableAccountList from 'Organism/list/ControllableAccountList';
 import {followerList} from './style_templete';
 import {getFollows, getFollowers} from 'Root/api/userapi';
 

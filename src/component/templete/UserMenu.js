@@ -26,12 +26,12 @@ import {
 	TAGED_CONTENTS_FOR_ME,
 	LOGOUT,
 } from 'Root/i18n/msg';
-import {btn_w280} from '../atom/btn/btn_style';
-import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FavoriteTag48_Filled, Paw48_APRI10, Setting46} from '../atom/icon';
+import {btn_w280} from 'Atom/btn/btn_style';
+import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FavoriteTag48_Filled, Paw48_APRI10, Setting46} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
-import ProfileImageLarge194 from '../molecules/ProfileImageLarge194';
-import ProfileMenu from '../organism_ksw/ProfileMenu';
-import SocialInfoB from '../organism_ksw/SocialInfoB';
+import ProfileImageLarge194 from 'Molecules/image/ProfileImageLarge194';
+import ProfileMenu from 'Organism/ProfileMenu';
+import SocialInfoB from 'Organism/info/SocialInfoB';
 import {login_style, shelterMenu, temp_style, userMenu_style} from './style_templete';
 // import {getUserProfile} from 'Root/api/usermenuapi';
 import {getUserProfile} from 'Root/api/userapi';

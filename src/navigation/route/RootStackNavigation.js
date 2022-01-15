@@ -30,7 +30,6 @@ import LocationPicker from 'Templete/LocationPicker';
 
 import PhotoSelect from 'Templete/PhotoSelect';
 import AddPhoto from 'Templete/AddPhoto';
-import AddPhotoHeader from 'Navigation/header/AddPhotoHeader';
 
 import AddressSearch from 'Templete/AddressSearch';
 
@@ -59,13 +58,12 @@ import FeedAvartarSelect from 'Molecules/select/FeedAvartarSelect';
 import KeyBoardInputBackGround from 'Molecules/KeyboardInputBackGround';
 
 import Modal from 'Component/modal/Modal';
-import Calendar from 'Root/test_sangwoo/calendar';
+import Calendar from 'Molecules/calendar/calendar';
 import InputAndSearchHeader from '../header/InputAndSearchHeader';
-import LogoutView from 'Root/test_sangwoo/LogoutView';
 import RequestLogin from 'Root/component/templete/RequestLogin';
 import RadioSelectModal from 'Molecules/modal/RadioSelectModal';
 import AddVolunteers from 'Root/component/templete/AddVolunteers';
-import Calendar_Multiple from 'Root/component/molecules/Calendar_Multiple';
+import Calendar_Multiple from 'Molecules/calendar/Calendar_Multiple';
 import InfoModal from 'Molecules/modal/InfoModal';
 // import Camera from 'Root/component/templete/Camera';
 const RootStack = createStackNavigator();

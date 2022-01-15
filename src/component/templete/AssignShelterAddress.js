@@ -3,13 +3,13 @@ import {Text, View, TouchableWithoutFeedback, KeyboardAvoidingView} from 'react-
 import {login_style, btn_style, temp_style, progressbar_style, assignShelterAddress_style} from './style_templete';
 import {APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {btn_w654} from '../atom/btn/btn_style';
+import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
-import Stagebar from '../molecules/Stagebar';
+import Stagebar from 'Molecules/Stagebar';
 import Input24 from 'Molecules/input/Input24';
-import AddressInput from '../organism_ksw/AddressInput';
+import AddressInput from 'Organism/AddressInput';
 import axios from 'axios';
-import {stagebar_style} from '../organism_ksw/style_organism';
+import {stagebar_style} from 'Organism/style_organism';
 
 export default AssignShelterAddress = props => {
 	const [confirmed, setConfirmed] = React.useState(false); //주소란이 모두 작성되었다며 통과가능

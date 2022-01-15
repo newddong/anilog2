@@ -2,7 +2,7 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {Calendar48_Border} from '../atom/icon';
+import {Calendar48_Border} from 'Atom/icon';
 import {APRI10} from 'Root/config/color';
 import Modal from '../modal/Modal';
 import {object} from 'prop-types';

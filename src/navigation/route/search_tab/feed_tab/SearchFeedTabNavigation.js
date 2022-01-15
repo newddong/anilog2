@@ -3,7 +3,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import SearchAccountA from 'Templete/SearchAccountA';
 import SearchFeed from 'Templete/SearchFeed';
 import SearchHashTag from 'Templete/SearchHashTag';
-import TopTabNavigation_Border_Type2 from 'Root/component/organism_ksw/TopTabNavigation_Border_Type2';
+import TopTabNavigation_Border_Type2 from 'Root/component/organism/TopTabNavigation_Border_Type2';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import Profile from 'Root/component/templete/Profile';
 import MeatBallHeader from 'Root/navigation/header/MeatBallHeader';

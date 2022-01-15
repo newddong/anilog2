@@ -1,8 +1,8 @@
 import React from 'react';
 import {Text, View, TouchableWithoutFeedback, FlatList, ScrollView, RefreshControl} from 'react-native';
 import {WHITE} from 'Root/config/color';
-import {Write94} from '../atom/icon';
-import Feed from '../organism/Feed';
+import {Write94} from 'Atom/icon';
+import Feed from 'Organism/feed/Feed';
 import {feedList, login_style, missingAnimalDetail, temp_style} from './style_templete';
 import {getSuggestFeedList} from 'Root/api/feedapi';
 import Modal from 'Component/modal/Modal';

@@ -1,31 +1,25 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {Image, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {btn_w226, btn_w276} from '../atom/btn/btn_style';
+import {btn_w226, btn_w276} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import {login_style, temp_style, animalProtectRequestDetail_style, feedCommentList, accountPicker} from './style_templete';
-import RescueImage from '../molecules/RescueImage';
+import RescueImage from 'Molecules/image/RescueImage';
 import {ScrollView} from 'react-native-gesture-handler';
 
 import {txt} from 'Root/config/textstyle';
 import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
-import ShelterSmallLabel from '../molecules/ShelterSmallLabel';
-import {BackArrow32, FavoriteTag48_Filled, Share48_Filled} from '../atom/icon';
+import ShelterSmallLabel from 'Molecules/label/ShelterSmallLabel';
+import {BackArrow32, FavoriteTag48_Filled, Share48_Filled} from 'Atom/icon';
 import DP from 'Root/config/dp';
-import CommentList from '../organism_ksw/CommentList';
-import AnimalNeedHelpList from '../organism_ksw/AnimalNeedHelpList';
-import ReplyWriteBox from '../organism_ksw/ReplyWriteBox';
+import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
+import ReplyWriteBox from 'Organism/ReplyWriteBox';
 import {dummy_AnimalNeedHelpList_various_status, dummy_CommentObject, dummy_ShelterProtectAnimalObject} from 'Root/config/dummyDate_json';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {launchImageLibrary} from 'react-native-image-picker';
-import {organism_style, profileInfo_style} from '../organism/style_organism';
-import {Bracket48} from '../atom/icon';
 import {ActivityIndicator} from 'react-native';
 import moment from 'moment';
 import {getCommentListByProtectId} from 'Root/api/commentapi';
 import {createComment} from 'Root/api/commentapi';
-import ImagePicker from 'react-native-image-crop-picker';
 import Modal from '../modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 

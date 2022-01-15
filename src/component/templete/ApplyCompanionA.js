@@ -3,12 +3,12 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import {APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {btn_w226, btn_w654} from '../atom/btn/btn_style';
+import {btn_w226, btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import Input24 from 'Molecules/input/Input24';
-import Stagebar from '../molecules/Stagebar';
-import AddressInput from '../organism_ksw/AddressInput';
-import {addressInput, stagebar_style} from '../organism_ksw/style_organism';
+import Stagebar from 'Molecules/Stagebar';
+import AddressInput from 'Organism/AddressInput';
+import {addressInput, stagebar_style} from 'Organism/style_organism';
 import {applyCompanionA, btn_style, login_style, temp_style} from './style_templete';
 
 // 참조 DB테이블 :

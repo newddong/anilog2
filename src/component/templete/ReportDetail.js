@@ -2,7 +2,7 @@ import React from 'react';
 import {LogBox, ScrollView, Image, ActivityIndicator, TouchableOpacity, FlatList} from 'react-native';
 import {Text, View} from 'react-native';
 import {login_style, reportDetail, temp_style} from './style_templete';
-import FeedContent from '../organism/FeedContent';
+import FeedContent from 'Organism/feed/FeedContent';
 import {useNavigation} from '@react-navigation/core';
 import {_dummy_ReportDetail} from 'Root/config/dummy_data_hjs';
 import {dummy_CommentObject} from 'Root/config/dummyDate_json';

@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import FeedMedia from '../molecules/FeedMedia';
+import FeedMedia from 'Molecules/media/FeedMedia';
 import {login_style, temp_style, feedMediaTagEdit} from './style_templete';
 
 export default FeedMediaTagEdit = props => {

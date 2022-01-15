@@ -1,19 +1,13 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {Text, TextInput, View, StyleSheet} from 'react-native';
 
-import {SearchIcon} from 'Asset/image';
 import Backbutton from 'Screens/header/icon_back.svg';
-import DP from 'Screens/dp';
-import SvgWrapper from 'Screens/svgwrapper';
+import DP from 'Root/config/dp';
+import SvgWrapper from 'Atom/svgwrapper';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {txt} from '../home/post/style_post';
-import {exportUriList} from 'Screens/camera/addphoto';
 // import { CommonActions } from '@react-navigation/native';
 // import { useNavigationState } from '@react-navigation/native';
-import CookieManager from '@react-native-cookies/cookies';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {serveruri, cookieReset} from 'Screens/server';
-import axios from 'axios';
 import {createPost, editPost} from 'Root/api/feedapi';
 //deprecated
 export default WriteHeader = ({navigation, route, options, back}) => {

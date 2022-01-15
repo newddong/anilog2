@@ -1,10 +1,10 @@
 import React from 'react';
 import {ScrollView, Text, View, TouchableWithoutFeedback, ActivityIndicator} from 'react-native';
 import {feedWrite, login_style, missingReportList, searchProtectRequest, temp_style, temp_txt} from './style_templete';
-import AnimalNeedHelpList from '../organism_ksw/AnimalNeedHelpList';
+import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {GRAY10, WHITE} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {Urgent_Write1, Urgent_Write2} from '../atom/icon';
+import {Urgent_Write1, Urgent_Write2} from 'Atom/icon';
 import {useNavigation} from '@react-navigation/core';
 import FilterButton from 'Molecules/button/FilterButton';
 import {PET_KIND, PET_PROTECT_LOCATION} from 'Root/i18n/msg';

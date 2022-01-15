@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Button, ScrollView, Image, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 // import { RNCamera } from 'react-native-camera';
 import CameraRoll from '@react-native-community/cameraroll';
-import DP from 'Screens/dp';
+import DP from 'Root/config/dp';
 // import { RNCamera } from 'react-native-camera';
 
 export default Camera = () => {

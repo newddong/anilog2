@@ -3,7 +3,7 @@ import {ScrollView, Text, View} from 'react-native';
 import {GRAY20} from 'Root/config/color';
 import {dummy_hashTagListObject} from 'Root/config/dummyDate_json';
 import {txt} from 'Root/config/textstyle';
-import HashTagList from '../organism_ksw/HashTagList';
+import HashTagList from 'Organism/list/HashTagList';
 import {login_style, searchHashTag, temp_style} from './style_templete';
 
 export default SearchHashTag = props => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 import {login_style, temp_style, protectRequestList_style, baseInfo_style} from './style_templete';
-import AnimalNeedHelpList from '../organism_ksw/AnimalNeedHelpList';
+import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {dummy_AnimalNeedHelpList_various_status} from 'Root/config/dummyDate_json';
 import {PET_KIND, PROTECT_STATUS} from 'Root/i18n/msg';
 import FilterButton from 'Molecules/button/FilterButton';

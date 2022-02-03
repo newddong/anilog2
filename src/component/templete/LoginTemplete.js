@@ -8,7 +8,7 @@ import AniButton from 'Molecules/button/AniButton';
 import CheckBox from 'Molecules/select/CheckBox';
 import Input24 from 'Molecules/input/Input24';
 import PasswordInput from 'Molecules/input/PasswordInput';
-import {login_style, btn_style, loginTemplete_style} from './style_templete';
+import {login_style, btn_style, loginTemplete_style} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
 import {useLogin, userLogin} from 'Root/api/userapi';
 import AsyncStorage from '@react-native-async-storage/async-storage';

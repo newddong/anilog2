@@ -3,7 +3,7 @@ import {ScrollView, View} from 'react-native';
 import {dummy_userObject} from 'Root/config/dummyDate_json';
 import {Write94} from 'Atom/icon';
 import ControllableAccountList from 'Organism/list/ControllableAccountList';
-import {linkedAccountList} from './style_templete';
+import {linkedAccountList} from 'Templete/style_templete';
 import {getFollows, getFollowers} from 'Root/api/userapi';
 import Modal from 'Component/modal/Modal';
 

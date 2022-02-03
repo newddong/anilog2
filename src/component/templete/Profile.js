@@ -10,7 +10,7 @@ import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import FeedThumbnailList from 'Organism/feed/FeedThumbnailList';
 import OwnerList from 'Organism/list/OwnerList';
 import PetList from 'Organism/list/PetList';
-import {login_style, profile, temp_style} from './style_templete';
+import {login_style, profile, temp_style} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import InfoScreen from 'Organism/info/InfoScreen';

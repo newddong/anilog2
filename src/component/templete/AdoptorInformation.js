@@ -4,7 +4,7 @@ import {getApplyDetailById} from 'Root/api/protectapi';
 import {getProtectAnimalByProtectAnimalId} from 'Root/api/shelterapi';
 import {getUserInfoById} from 'Root/api/userapi';
 import AnimalProtectDetail from 'Organism/info/AnimalProtectDetail';
-import {login_style, btn_style, temp_style, baseInfo_style} from './style_templete';
+import {login_style, btn_style, temp_style, baseInfo_style} from 'Templete/style_templete';
 
 // ShelterMenu - 나의 보호소 출신동물 - 입양처 보기
 // 연관 테이블 - PRotectionActivityApplicantObject , ProtectRequestObject, ShelterProtectAnimalObject

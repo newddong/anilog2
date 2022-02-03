@@ -1,14 +1,14 @@
 import React from 'react';
 import {FlatList, TouchableOpacity, ScrollView} from 'react-native';
 import {Text, View, TouchableWithoutFeedback} from 'react-native';
-import {socialRelation, login_style, temp_style} from './style_templete';
+import {socialRelation, login_style, temp_style} from 'Templete/style_templete';
 import {useNavigation} from '@react-navigation/core';
 import TopTabNavigation_Border from 'Organism/menu/TopTabNavigation_Border';
 import InputWithSearchIcon from 'Molecules/input/InputWithSearchIcon';
 import {Write94} from 'Atom/icon';
 import SocialRelationTopTabNavigation from 'Root/navigation/route/main_tab/protection_stack/socialRelation_tab/SocialRelationTopTabNavigation';
-import {linkedAccountList} from './style_templete';
-import {followerList} from './style_templete';
+import {linkedAccountList} from 'Templete/style_templete';
+import {followerList} from 'Templete/style_templete';
 
 export default SocialRelation = props => {
 	const [showRecommendList, setShowRecommendList] = React.useState(false);

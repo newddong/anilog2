@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Text, View} from 'react-native';
 import TabSelectBorder_Type1 from 'Molecules/tab/TabSelectBorder_Type1';
-import {login_style, btn_style, requestLogin_style, loginTemplete_style} from './style_templete';
+import {login_style, btn_style, requestLogin_style, loginTemplete_style} from 'Templete/style_templete';
 import {txt} from 'Root/config/textstyle';
 import {NEEDS_LOGIN_ARE_YOU_MEMBER} from 'Root/i18n/msg';
 import AniButton from 'Molecules/button/AniButton';

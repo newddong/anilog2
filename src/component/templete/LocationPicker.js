@@ -3,7 +3,7 @@ import {FlatList, Text, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import InputWithSearchIcon from 'Molecules/input/InputWithSearchIcon';
-import {login_style, temp_style, locationPicker} from './style_templete';
+import {login_style, temp_style, locationPicker} from 'Templete/style_templete';
 
 export default LocationPicker = props => {
 	const [searchState, setSearchState] = React.useState(false);

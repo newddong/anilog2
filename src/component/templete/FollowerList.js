@@ -1,7 +1,7 @@
 import React from 'react';
 import {FlatList, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import ControllableAccountList from 'Organism/list/ControllableAccountList';
-import {followerList} from './style_templete';
+import {followerList} from 'Templete/style_templete';
 import {getFollows, getFollowers} from 'Root/api/userapi';
 
 export default FollowerList = ({route, navigation}) => {

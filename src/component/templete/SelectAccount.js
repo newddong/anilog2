@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 import AccountList from 'Organism/list/AccountList';
-import {login_style, selectAccount} from './style_templete';
+import {login_style, selectAccount} from 'Templete/style_templete';
 import {getUserListByNickname} from 'Root/api/userapi';
 
 export default SelectAccount = ({route, navigation}) => {

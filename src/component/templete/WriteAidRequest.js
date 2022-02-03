@@ -7,7 +7,7 @@ import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import {AddItem64, Camera54} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import AidRequest from 'Organism/listitem/AidRequest';
-import {assignProtectAnimal_style, feedWrite, login_style, temp_style, writeAidRequest} from './style_templete';
+import {assignProtectAnimal_style, feedWrite, login_style, temp_style, writeAidRequest} from 'Templete/style_templete';
 import ImagePicker from 'react-native-image-crop-picker';
 import Modal from 'Component/modal/Modal';
 

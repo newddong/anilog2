@@ -1,12 +1,12 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import FeedList from 'Templete/FeedList';
+import FeedList from 'Templete/feed/FeedList';
 import Profile from 'Templete/Profile';
 import SocialRelation from 'Templete/SocialRelation';
-import FeedListForHashTag from 'Templete/FeedListForHashTag';
-import FeedCommentList from 'Templete/FeedCommentList';
-import AnimalProtectRequestDetail from 'Root/component/templete/AnimalProtectRequestDetail';
+import FeedListForHashTag from 'Templete/feed/FeedListForHashTag';
+import FeedCommentList from 'Templete/feed/FeedCommentList';
+import AnimalProtectRequestDetail from 'Templete/protection/AnimalProtectRequestDetail';
 
 import LogoHeader from 'Navigation/header/LogoHeader';
 import MeatBallHeader from 'Navigation/header/MeatBallHeader';

@@ -3,7 +3,7 @@ import {Text, View, Image, ScrollView, FlatList, TouchableOpacity, PermissionsAn
 import {txt} from 'Root/config/textstyle';
 import {Bracket48} from 'Atom/icon';
 import LocalMedia from 'Molecules/media/LocalMedia';
-import {login_style, temp_style, photoSelect} from './style_templete';
+import {login_style, temp_style, photoSelect} from 'Templete/style_templete';
 import CameraRoll from '@react-native-community/cameraroll';
 
 /**

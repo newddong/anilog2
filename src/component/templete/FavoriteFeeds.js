@@ -4,8 +4,8 @@ import {Text, View} from 'react-native';
 
 import FeedThumbnailList from 'Organism/feed/FeedThumbnailList';
 import SelectStat from 'Organism/list/SelectStat';
-import {login_style, temp_style, selectstat_view_style} from './style_templete';
-import Modal from '../modal/Modal';
+import {login_style, temp_style, selectstat_view_style} from 'Templete/style_templete';
+import Modal from 'Component/modal/Modal';
 import {CONFIRM_DELETE_FAVORITE_FEED, CONFIRM_DELETE_MY_FEED, CONFIRM_DELETE_TAG_ME_FEED} from 'Root/i18n/msg';
 import {getFeedListByUserId} from 'Root/api/feedapi';
 import {txt} from 'Root/config/textstyle';

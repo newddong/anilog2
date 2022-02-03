@@ -6,8 +6,8 @@ import {txt} from 'Root/config/textstyle';
 import {btn_w226, btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import Input24 from 'Molecules/input/Input24';
-import Stagebar from 'Molecules/Stagebar';
-import AddressInput from 'Organism/AddressInput';
+import Stagebar from 'Molecules/info/Stagebar';
+import AddressInput from 'Organism/input/AddressInput';
 import {addressInput, stagebar_style} from 'Organism/style_organism';
 import {applyCompanionA, btn_style, login_style, temp_style} from './style_templete';
 

@@ -4,7 +4,7 @@ import {GRAY10} from 'Root/config/color';
 import {Lock60_Border, Lock60_Filled, Photo60, Send60} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import SelectedMedia from 'Molecules/media/SelectedMedia';
-import {feedCommentList} from '../templete/style_templete';
+import {feedCommentList} from 'Templete/style_templete';
 /**
  * @param {{
  * onLockBtnClick : void ,

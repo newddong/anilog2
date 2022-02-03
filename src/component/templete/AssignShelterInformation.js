@@ -4,13 +4,13 @@ import {APRI10, GRAY10, GREEN, RED10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
-import Stagebar from 'Molecules/Stagebar';
+import Stagebar from 'Molecules/info/Stagebar';
 import Input24 from 'Molecules/input/Input24';
 import {login_style, btn_style, temp_style, progressbar_style, assignShelterInformation_style} from './style_templete';
 import InputWithSelect from 'Molecules/input/InputWithSelect';
 import {initial_number, email_supplier} from 'Root/config/dummyDate_json';
 import InputWithEmail from 'Molecules/input/InputWithEmail';
-import DatePicker from 'Molecules/DatePicker';
+import DatePicker from 'Molecules/select/DatePicker';
 import {stagebar_style} from 'Organism/style_organism';
 
 // 각각 뷰에 컴포넌트 삽입시 style의 첫번째 index 삭제할 것. 두번째 index는 상.하 간격 style이라서 이 컴포넌트에만 해당 됨.

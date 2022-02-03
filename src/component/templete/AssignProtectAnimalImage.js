@@ -3,7 +3,7 @@ import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {login_style, btn_style, temp_style, progressbar_style, assignProtectAnimal_style} from './style_templete';
 import {useNavigation} from '@react-navigation/core';
-import Stagebar from 'Molecules/Stagebar';
+import Stagebar from 'Molecules/info/Stagebar';
 import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {PLEASE_UPLOAD_PIC} from 'Root/i18n/msg';

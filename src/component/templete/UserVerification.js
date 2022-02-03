@@ -4,9 +4,9 @@ import {APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
-import Stagebar from 'Molecules/Stagebar';
-import EmailVerification from 'Organism/EmailVerification';
-import PhoneNumVerification from 'Organism/PhoneNumVerification';
+import Stagebar from 'Molecules/info/Stagebar';
+import EmailVerification from 'Organism/form/EmailVerification';
+import PhoneNumVerification from 'Organism/form/PhoneNumVerification';
 import {stagebar_style} from 'Organism/style_organism';
 import {login_style, btn_style, temp_style, progressbar_style, userAssign} from './style_templete';
 

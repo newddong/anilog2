@@ -7,8 +7,8 @@ import {txt} from 'Root/config/textstyle';
 import {btn_w176} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import InputLongText from 'Molecules/input/InputLongText';
-import Stagebar from 'Molecules/Stagebar';
-import SelectStat from 'Organism/SelectStat';
+import Stagebar from 'Molecules/info/Stagebar';
+import SelectStat from 'Organism/list/SelectStat';
 import {stagebar_style} from 'Organism/style_organism';
 import {applyCompanionD, btn_style, login_style, temp_style} from './style_templete';
 

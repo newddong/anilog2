@@ -4,13 +4,13 @@ import {GREEN} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {mobile_carrier} from 'Root/i18n/msg';
 import {btn_w226} from 'Atom/btn/btn_style';
-import Modal from '../modal/Modal';
+import Modal from 'Component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
 import Input30 from 'Molecules/input/Input30';
 import InputTimeLimit from 'Molecules/input/InputTimeLimit';
 import InputWithSelect from 'Molecules/input/InputWithSelect';
-import {btn_style, temp_style} from '../templete/style_templete';
-import {phoneNumVerification} from './style_organism';
+import {btn_style, temp_style} from 'Templete/style_templete';
+import {phoneNumVerification} from 'Organism/style_organism';
 
 /**
  *

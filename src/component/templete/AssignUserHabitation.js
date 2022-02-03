@@ -3,7 +3,7 @@ import {Text, View, TouchableWithoutFeedback} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {btn_w522} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
-import Stagebar from 'Molecules/Stagebar';
+import Stagebar from 'Molecules/info/Stagebar';
 import {login_style, btn_style, temp_style, progressbar_style, assignUserHabitation_style} from './style_templete';
 import Modal from 'Component/modal/Modal';
 import {stagebar_style} from 'Organism/style_organism';

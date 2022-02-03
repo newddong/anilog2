@@ -15,7 +15,7 @@ import {
 	PWD_CHECK_INFO,
 } from 'Root/i18n/msg';
 import PasswordInput from 'Molecules/input/PasswordInput';
-import {passwordChecker_style} from './style_organism';
+import {passwordChecker_style} from 'Organism/style_organism';
 
 /**
  *

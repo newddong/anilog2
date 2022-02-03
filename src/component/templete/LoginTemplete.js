@@ -5,7 +5,7 @@ import {txt} from 'Root/config/textstyle';
 import {btn_w522} from 'Atom/btn/btn_style';
 import {Kakao_Icon, Naver_Icon, NextMark, Instagram_Icon, Facebook_Icon} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
-import CheckBox from 'Molecules/CheckBox';
+import CheckBox from 'Molecules/select/CheckBox';
 import Input24 from 'Molecules/input/Input24';
 import PasswordInput from 'Molecules/input/PasswordInput';
 import {login_style, btn_style, loginTemplete_style} from './style_templete';

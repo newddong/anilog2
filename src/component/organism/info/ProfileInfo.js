@@ -10,7 +10,7 @@ import ProfileImageLarge160 from 'Molecules/image/ProfileImageLarge160';
 import SocialInfoA from 'Organism/info/SocialInfoA';
 import {NORMAL, PET, SHELTER} from 'Root/i18n/msg';
 import ProfileDropdown from 'Molecules/dropdown/ProfileDropdown';
-import {organism_style, profileInfo_style} from './style_organism';
+import {organism_style, profileInfo_style} from 'Organism/style_organism';
 import Modal from 'Root/component/modal/Modal';
 import {followUser, unFollowUser} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';

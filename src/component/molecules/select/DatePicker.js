@@ -4,7 +4,7 @@ import {Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {Calendar48_Border} from 'Atom/icon';
 import {APRI10} from 'Root/config/color';
-import Modal from '../modal/Modal';
+import Modal from 'Component/modal/Modal';
 import {object} from 'prop-types';
 
 /**

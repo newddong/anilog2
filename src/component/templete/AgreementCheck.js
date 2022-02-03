@@ -6,9 +6,9 @@ import {txt} from 'Root/config/textstyle';
 import {btn_w654} from 'Atom/btn/btn_style';
 import Modal from '../modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
-import Stagebar from 'Molecules/Stagebar';
+import Stagebar from 'Molecules/info/Stagebar';
 import AssignCheckList from 'Organism/list/AssignCheckList';
-import AssignCheckListItem from 'Organism/list/AssignCheckListItem';
+import AssignCheckListItem from 'Organism/listitem/AssignCheckListItem';
 import {stagebar_style} from 'Organism/style_organism';
 import {login_style, btn_style, temp_style, progressbar_style, agreementCheck_style} from './style_templete';
 

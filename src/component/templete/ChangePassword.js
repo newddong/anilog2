@@ -4,7 +4,7 @@ import {ScrollView, Text, View} from 'react-native';
 import {btn_w654} from 'Atom/btn/btn_style';
 import Modal from '../modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
-import PasswordChecker from 'Organism/PasswordChecker';
+import PasswordChecker from 'Organism/form/PasswordChecker';
 import {login_style, btn_style, temp_style, changePassword_style} from './style_templete';
 // import {changeUserPassword} from 'Root/api/usermenuapi';
 import {changeUserPassword} from 'Root/api/userapi';

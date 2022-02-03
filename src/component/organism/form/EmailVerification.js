@@ -5,8 +5,8 @@ import AniButton from 'Molecules/button/AniButton';
 import Input30 from 'Molecules/input/Input30';
 import InputTimeLimit from 'Molecules/input/InputTimeLimit';
 import InputWithEmail from 'Molecules/input/InputWithEmail';
-import {btn_style, temp_style} from '../templete/style_templete';
-import {emailVerification} from './style_organism';
+import {btn_style, temp_style} from 'Templete/style_templete';
+import {emailVerification} from 'Organism/style_organism';
 
 export default EmailVerification = props => {
 	const [timeOut, setTimeOut] = React.useState(false);

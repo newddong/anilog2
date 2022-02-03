@@ -4,7 +4,7 @@ import {ScrollView} from 'react-native';
 import {Text, View, FlatList} from 'react-native';
 import FeedContent from 'Organism/feed/FeedContent';
 import CommentList from 'Organism/comment/CommentList';
-import ReplyWriteBox from 'Organism/ReplyWriteBox';
+import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
 import {feedCommentList, login_style} from './style_templete';
 import {createComment, getCommentListByFeedId, getCommentListByProtectId} from 'Root/api/commentapi';
 import {txt} from 'Root/config/textstyle';

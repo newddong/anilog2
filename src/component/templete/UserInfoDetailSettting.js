@@ -3,7 +3,7 @@ import {ScrollView, Text, View} from 'react-native';
 import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import TabSelectFilled_Type1 from 'Molecules/tab/TabSelectFilled_Type1';
-import DatePicker from 'Root/component/molecules/DatePicker';
+import DatePicker from 'Molecules/select/DatePicker';
 import {login_style, btn_style, temp_style, userInfoDetailSettting_style} from './style_templete';
 import InterestTagList from 'Organism/list/InterestTagList';
 import {GENDER_TAB_SELECT, INPUT_PHONE_NUM, INTEREST_ACT, INTEREST_REGION, mobile_carrier} from 'Root/i18n/msg';

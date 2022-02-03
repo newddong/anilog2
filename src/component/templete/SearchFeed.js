@@ -2,11 +2,11 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import {login_style, searchFeed, temp_style, temp_txt} from './style_templete';
 import FeedThumbnailList from 'Organism/feed/FeedThumbnailList';
-import OnOffSwitch from 'Molecules/OnOffSwitch';
+import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import {txt} from 'Root/config/textstyle';
 import {GRAY10} from 'Root/config/color';
 import {dummy_FeedObject} from 'Root/config/dummyDate_json';
-import ListEmptyInfo from 'Molecules/ListEmptyInfo';
+import ListEmptyInfo from 'Molecules/info/ListEmptyInfo';
 import {getSuggestFeedList} from 'Root/api/feedapi';
 
 export default SearchFeed = ({route, navigation}) => {

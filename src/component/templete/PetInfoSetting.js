@@ -6,7 +6,7 @@ import {txt} from 'Root/config/textstyle';
 import {btn_w242} from 'Atom/btn/btn_style';
 import {Cross52, NextMark} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
-import OnOffSwitch from 'Molecules/OnOffSwitch';
+import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import PetImageLabel from 'Molecules/label/PetImageLabel';
 import {btn_style, login_style, petInfoSetting, temp_style} from './style_templete';
 import {_dummy_petInfo_from_user} from 'Root/config/dummy_data_hjs';

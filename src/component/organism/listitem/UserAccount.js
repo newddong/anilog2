@@ -2,10 +2,10 @@ import React from 'react';
 import {View, TouchableOpacity} from 'react-native';
 import {btn_w108} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
-import CheckBox from 'Molecules/CheckBox';
+import CheckBox from 'Molecules/select/CheckBox';
 import HashLabel from 'Molecules/label/HashLabel';
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
-import {userAccount} from './style_organism';
+import {userAccount} from 'Organism/style_organism';
 
 /**
  * 친구 즐겨찾기 Hash와 유저오브젝트 리스트 출력 컴포넌트

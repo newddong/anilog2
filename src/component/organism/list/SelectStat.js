@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Text, View, TouchableOpacity} from 'react-native';
 import {txt} from 'Root/config/textstyle';
-import {temp_style} from '../templete/style_templete';
-import {selectStat} from './style_organism';
+import {temp_style} from 'Templete/style_templete';
+import {selectStat} from 'Organism/style_organism';
 
 /**
  *

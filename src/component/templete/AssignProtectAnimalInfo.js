@@ -4,7 +4,7 @@ import {btn_w226} from 'Atom/btn/btn_style';
 import {login_style, btn_style, temp_style, progressbar_style, assignProtectAnimal_style} from './style_templete';
 import {APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import Stagebar from 'Molecules/Stagebar';
+import Stagebar from 'Molecules/info/Stagebar';
 import AniButton from 'Molecules/button/AniButton';
 import {useNavigation} from '@react-navigation/core';
 import Modal from '../modal/Modal';

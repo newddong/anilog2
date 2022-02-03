@@ -55,7 +55,7 @@ import NoBtnModal from 'Molecules/modal/NoBtnModal';
 import RollingSelect from 'Molecules/select/RollingSelect';
 import SelectModal from 'Molecules/modal/SelectModal';
 import FeedAvartarSelect from 'Molecules/select/FeedAvartarSelect';
-import KeyBoardInputBackGround from 'Molecules/KeyboardInputBackGround';
+import KeyBoardInputBackGround from 'Molecules/input/KeyboardInputBackGround';
 
 import Modal from 'Component/modal/Modal';
 import Calendar from 'Molecules/calendar/calendar';

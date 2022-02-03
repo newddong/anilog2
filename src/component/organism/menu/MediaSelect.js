@@ -6,7 +6,7 @@ import { btn_w226 } from 'Atom/btn/btn_style';
 import { Cross46, Cross52 } from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
 import LocalMedia from 'Molecules/media/LocalMedia';
-import { interestTagList, myPetList } from './style_organism';
+import { interestTagList, myPetList } from 'Organism/style_organism';
 
 export default MediaSelect = props => {
 

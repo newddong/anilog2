@@ -5,9 +5,9 @@ import {APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
-import Stagebar from 'Molecules/Stagebar';
+import Stagebar from 'Molecules/info/Stagebar';
 import Input24 from 'Molecules/input/Input24';
-import AddressInput from 'Organism/AddressInput';
+import AddressInput from 'Organism/input/AddressInput';
 import axios from 'axios';
 import {stagebar_style} from 'Organism/style_organism';
 

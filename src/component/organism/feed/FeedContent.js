@@ -14,7 +14,7 @@ import {SHARE} from 'Root/i18n/msg';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {MAINCOLOR} from 'Root/config/color';
 import {getTimeLapsed, parsingDate} from 'Root/util/dateutil';
-import HashText from 'Molecules/HashText';
+import HashText from 'Molecules/info/HashText';
 
 export default FeedContent = props => {
 	const {

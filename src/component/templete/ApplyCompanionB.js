@@ -10,7 +10,7 @@ import {btn_w176} from 'Atom/btn/btn_style';
 import {AddItem64} from 'Atom/icon';
 import Modal from '../modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
-import Stagebar from 'Molecules/Stagebar';
+import Stagebar from 'Molecules/info/Stagebar';
 import CompanionFormList from 'Organism/list/CompanionFormList';
 import {stagebar_style} from 'Organism/style_organism';
 import {applyCompanionB, login_style, temp_style, applyCompanionC, btn_style} from './style_templete';

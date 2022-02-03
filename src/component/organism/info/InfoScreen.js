@@ -4,7 +4,7 @@ import {GRAY10, APRI10} from 'Root/config/color';
 import {dummy_ActivationList} from 'Root/config/dummyDate_json';
 import {txt} from 'Root/config/textstyle';
 import {styles} from 'Atom/image/imageStyle';
-import {activationList, login_style, temp_style} from '../templete/style_templete';
+import {activationList, login_style, temp_style} from 'Templete/style_templete';
 import {Ready_for_updating} from 'Atom/icon';
 
 export default InfoScreen = props => {

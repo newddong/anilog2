@@ -3,9 +3,9 @@ import {Text, View} from 'react-native';
 import {login_style, setPetInformation, temp_style} from './style_templete';
 import {txt} from 'Root/config/textstyle';
 import TabSelectFilled_Type1 from 'Molecules/tab/TabSelectFilled_Type1';
-import DatePicker from 'Molecules/DatePicker';
+import DatePicker from 'Molecules/select/DatePicker';
 import Input30 from 'Molecules/input/Input30';
-import RadioBox from 'Molecules/RadioBox';
+import RadioBox from 'Molecules/select/RadioBox';
 import moment from 'moment';
 
 export default SetPetInformation = ({route, navigation}) => {

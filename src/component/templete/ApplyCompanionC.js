@@ -7,7 +7,7 @@ import {applyComanionCheckList} from 'Root/config/dummyDate_json';
 import {txt} from 'Root/config/textstyle';
 import {btn_w176} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
-import Stagebar from 'Molecules/Stagebar';
+import Stagebar from 'Molecules/info/Stagebar';
 import AssignCheckList from 'Organism/list/AssignCheckList';
 import {stagebar_style} from 'Organism/style_organism';
 import {applyCompanionC, btn_style, login_style, temp_style} from './style_templete';

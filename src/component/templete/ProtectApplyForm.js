@@ -6,7 +6,7 @@ import {PROTECT_ACT_ADOPT_CONFIRM, PROTECT_ACT_PROTECT_CONFIRM} from 'Root/i18n/
 import {btn_w226} from 'Atom/btn/btn_style';
 import Modal from '../modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
-import AnimalProtectDetail from 'Organism/AnimalProtectDetail';
+import AnimalProtectDetail from 'Organism/info/AnimalProtectDetail';
 import {login_style, btn_style, protectApplyForm} from './style_templete';
 
 export default ProtectApplyForm = ({route, navigation}) => {

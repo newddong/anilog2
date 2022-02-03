@@ -1,6 +1,6 @@
 import React from 'react';
 import {FlatList, Text, View, ScrollView} from 'react-native';
-import CompanionForm from 'Organism/CompanionForm';
+import CompanionForm from 'Organism/form/CompanionForm';
 import {companionFormList} from 'Organism/style_organism';
 
 /**

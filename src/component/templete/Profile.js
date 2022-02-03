@@ -5,7 +5,7 @@ import {getUserProfile} from 'Root/api/userapi';
 import {NORMAL, PET, SHELTER} from 'Root/i18n/msg';
 import {Write94} from 'Atom/icon';
 import TabSelectFilled_Type2 from 'Molecules/tab/TabSelectFilled_Type2';
-import ProfileInfo from 'Organism/ProfileInfo';
+import ProfileInfo from 'Organism/info/ProfileInfo';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import FeedThumbnailList from 'Organism/feed/FeedThumbnailList';
 import OwnerList from 'Organism/list/OwnerList';
@@ -13,7 +13,7 @@ import PetList from 'Organism/list/PetList';
 import {login_style, profile, temp_style} from './style_templete';
 import Modal from 'Component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import InfoScreen from 'Root/component/organism/InfoScreen';
+import InfoScreen from 'Organism/info/InfoScreen';
 
 export default Profile = ({route, navigation}) => {
 	const [data, setData] = React.useState({...route.params?.userobject, feedList: []}); //라벨을 클릭한 유저의 userObject data

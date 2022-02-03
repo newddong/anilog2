@@ -7,7 +7,7 @@ import {CONFIRM_ADOPT_REQUEST, CONFIRM_FINALIZED, CONFIRM_PROTECT_REQUEST} from 
 import {btn_w226} from 'Atom/btn/btn_style';
 import Modal from '../modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
-import AnimalProtectDetail from 'Organism/AnimalProtectDetail';
+import AnimalProtectDetail from 'Organism/info/AnimalProtectDetail';
 import {applyDetails, btn_style, login_style, temp_style} from './style_templete';
 
 export default ApplyDetails = ({route, navigation}) => {

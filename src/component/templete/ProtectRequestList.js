@@ -3,7 +3,7 @@ import {ScrollView, Text, View, ActivityIndicator} from 'react-native';
 import {login_style, protectRequestList, searchProtectRequest, temp_style} from './style_templete';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {GRAY10} from 'Root/config/color';
-import OnOffSwitch from 'Molecules/OnOffSwitch';
+import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import {txt} from 'Root/config/textstyle';
 import {ONLY_CONTENT_FOR_ADOPTION, PET_KIND, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
 import FilterButton from 'Molecules/button/FilterButton';

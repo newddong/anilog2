@@ -11,7 +11,7 @@ import Modal from '../modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
 import Input30 from 'Molecules/input/Input30';
 import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';
-import Stagebar from 'Molecules/Stagebar';
+import Stagebar from 'Molecules/info/Stagebar';
 import {stagebar_style} from 'Organism/style_organism';
 import {login_style, btn_style, temp_style, progressbar_style, assignPetProfileImage_style} from './style_templete';
 import {launchImageLibrary} from 'react-native-image-picker';

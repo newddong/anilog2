@@ -1,6 +1,6 @@
 import React from "react";
 import {View,TouchableWithoutFeedback, Keyboard} from 'react-native';
-import Modal from "../modal/Modal";
+import Modal from "Component/modal/Modal";
 
 
 

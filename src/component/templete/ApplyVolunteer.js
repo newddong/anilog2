@@ -9,7 +9,7 @@ import AniButton from 'Molecules/button/AniButton';
 import AccountList from 'Organism/list/AccountList';
 import ShelterInfo from 'Organism/info/ShelterInfo';
 import {applyVolunteer, btn_style, login_style} from './style_templete';
-import DatePicker from 'Molecules/DatePicker';
+import DatePicker from 'Molecules/select/DatePicker';
 import Input24 from 'Molecules/input/Input24';
 import Modal from '../modal/Modal';
 import {getUserInfoById} from 'Root/api/userapi';

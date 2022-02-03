@@ -4,9 +4,9 @@ import {GRAY10, APRI10, BLUE20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {House48, Phone48, Paw48_APRI10, Check48, TextBalloon48, Person48} from 'Atom/icon';
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
-import {animalProtectList} from '../templete/style_templete';
+import {animalProtectList} from 'Templete/style_templete';
 import AnimalNeedHelp from 'Organism/listitem/AnimalNeedHelp';
-import {animalProtectDetail} from './style_organism';
+import {animalProtectDetail} from 'Organism/style_organism';
 
 export default AnimalProtectDetail = props => {
 	// console.log(' AnimalProtectDetail / props.data', props.data.protect_act_companion_history);

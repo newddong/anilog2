@@ -13,7 +13,7 @@ import ShelterSmallLabel from 'Molecules/label/ShelterSmallLabel';
 import {BackArrow32, FavoriteTag48_Filled, Share48_Filled} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
-import ReplyWriteBox from 'Organism/ReplyWriteBox';
+import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
 import {dummy_AnimalNeedHelpList_various_status, dummy_CommentObject, dummy_ShelterProtectAnimalObject} from 'Root/config/dummyDate_json';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import {ActivityIndicator} from 'react-native';

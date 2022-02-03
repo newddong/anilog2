@@ -7,8 +7,8 @@ import {txt} from 'Root/config/textstyle';
 import {btn_w108, btn_w176, btn_w226} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import Input24 from 'Molecules/input/Input24';
-import {btn_style, temp_style} from '../templete/style_templete';
-import {addressInput} from './style_organism';
+import {btn_style, temp_style} from 'Templete/style_templete';
+import {addressInput} from 'Organism/style_organism';
 /**
  *
  * @param {object} props

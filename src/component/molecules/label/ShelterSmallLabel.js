@@ -2,15 +2,9 @@ import React from 'react';
 import {Text, View, Image, TouchableOpacity} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-<<<<<<< HEAD:src/component/molecules/ShelterSmallLabel.js
-import {Private30, Public30} from '../atom/icon';
-import {styles} from '../atom/image/imageStyle';
 import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
-=======
 import {Private30, Public30} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
-import {APRI10, BLACK, GRAY10, GRAY20} from 'Root/config/color';
->>>>>>> 0110887ebd3b00c5b3c02bdf349c5d217c2ffd2d:src/component/molecules/label/ShelterSmallLabel.js
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import moment from 'moment';

@@ -22,8 +22,8 @@ export default LoginTemplete = props => {
 
 		userLogin(
 			{
-				login_id: id,
-				login_password: password,
+				login_id: '01096450422',
+				login_password: 'tkddn123',
 			},
 			userObject => {
 				// console.log('userObject', userObject.msg);
@@ -98,6 +98,10 @@ export default LoginTemplete = props => {
 		console.log('Id Validator ' + text);
 	};
 
+	const test = () => {
+		Modal.pop;
+	};
+
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
 			{/* confirm without login */}
@@ -164,6 +168,9 @@ export default LoginTemplete = props => {
 					</TouchableOpacity>
 				</View>
 
+				<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_assign]}>
+					<AniButton btnLayout={btn_w522} btnTitle={'회원가입'} btnStyle={'border'} btnTheme={'shadow'} titleFontStyle={32} onPress={test} />
+				</View>
 				{/* social login */}
 				{/* <View style={[login_style.social_info, loginTemplete_style.social_info]}>
 				<View style={[loginTemplete_style.socialLogin_icon]}>

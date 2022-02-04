@@ -1,16 +1,8 @@
-<<<<<<< HEAD:src/component/molecules/ProfileDropdown.js
 import React, {useState} from 'react';
 import {View, TouchableOpacity, TouchableWithoutFeedback, Text, Animated, StyleSheet, Easing} from 'react-native';
-import AniButton from 'Molecules/AniButton';
-import ActionButton from 'Molecules/ActionButton';
-import Dropdown from 'Molecules/Dropdown';
-=======
-import React from 'react';
-import {View, TouchableOpacity, TouchableWithoutFeedback, Text} from 'react-native';
+import Dropdown from 'Molecules/dropdown/Dropdown';
 import AniButton from 'Molecules/button/AniButton';
 import ActionButton from 'Molecules/button/ActionButton';
-import Dropdown from 'Molecules/dropdown/Dropdown';
->>>>>>> d635673fc899603860bb55ede7a5818ebcc9d5fc:src/component/molecules/dropdown/ProfileDropdown.js
 import {btn_w280, btn_w226} from 'Atom/btn/btn_style';
 import {APRI10, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';

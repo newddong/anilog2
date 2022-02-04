@@ -1,13 +1,12 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, SafeAreaView, StyleSheet, Platform, Dimensions, Image, TouchableWithoutFeedback} from 'react-native';
-import AniButton from 'Molecules/AniButton';
-import {btn_w226} from 'Atom/btn/btn_style';
+import AniButton from '../button/AniButton';
 import {WHITE, GRAY10, APRI10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {Female48, Male48} from '../atom/icon';
-import {styles} from '../atom/image/imageStyle';
-import Modal from '../modal/Modal';
+import {Female48, Male48} from '../../atom/icon';
+import {styles} from '../../atom/image/imageStyle';
+import Modal from '../../modal/Modal';
 
 /**
  * 한개 버튼을 띄우는 모달

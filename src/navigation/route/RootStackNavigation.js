@@ -30,9 +30,7 @@ import LocationPicker from 'Templete/search/LocationPicker';
 
 import PhotoSelect from 'Templete/media/PhotoSelect';
 import AddPhoto from 'Templete/media/AddPhoto';
-
 import AddressSearch from 'Templete/search/AddressSearch';
-
 import AssignPetProfileImage from 'Templete/pet/AssignPetProfileImage';
 import AssignPetInfoA from 'Templete/pet/AssignPetInfoA';
 import AssignPetInfoB from 'Templete/pet/AssignPetInfoB';
@@ -62,22 +60,12 @@ import Calendar from 'Molecules/calendar/calendar';
 import InputAndSearchHeader from '../header/InputAndSearchHeader';
 import RequestLogin from 'Templete/login/RequestLogin';
 import RadioSelectModal from 'Molecules/modal/RadioSelectModal';
-<<<<<<< HEAD
-import AddVolunteers from 'Root/component/templete/AddVolunteers';
-import Calendar_Multiple from 'Root/component/molecules/Calendar_Multiple';
-<<<<<<< HEAD
-import InfoModal from 'Root/component/molecules/InfoModal';
-import ProtectedPetDetailModal from 'Root/component/molecules/ProtectedPetDetailModal';
-=======
-import InfoModal from 'Molecules/modal/InfoModal';
->>>>>>> d635673fc899603860bb55ede7a5818ebcc9d5fc
+import AddVolunteers from 'Root/component/templete/volunteer/AddVolunteers';
+import Calendar_Multiple from 'Root/component/molecules/calendar/Calendar_Multiple';
+import ProtectedPetDetailModal from 'Root/component/molecules/modal/ProtectedPetDetailModal';
+import InfoModal from 'Root/component/molecules/modal/InfoModal';
 // import Camera from 'Root/component/templete/Camera';
-=======
-import AddVolunteers from 'Templete/volunteer/AddVolunteers';
-import Calendar_Multiple from 'Molecules/calendar/Calendar_Multiple';
-import InfoModal from 'Molecules/modal/InfoModal';
 // import Camera from 'Templete/media/Camera';
->>>>>>> 0110887ebd3b00c5b3c02bdf349c5d217c2ffd2d
 const RootStack = createStackNavigator();
 
 export default RootStackNavigation = () => {
@@ -169,11 +157,65 @@ export default RootStackNavigation = () => {
 		!isPop && setPop(true);
 	};
 
-	// const openCalendar = () => {
-	// 	console.log('openCale')
-	// 	Modal.popCalendar(showCalendar, closeCalendar, date => onDateChange(date))
-	// 	setShowCalendar(true);
-	// };
+	Modal.popSelectScrollBoxModal = (data, header, onSelect, onClose) => {
+		popIn(<SelectScrollBoxModal data={data} header={header} onSelect={onSelect} onClose={onClose} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popSelectDateModal = (header, onSelect) => {
+		popIn(<SelectDateModal header={header} onSelect={onSelect} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popSelectBoxModal = (data, onSelect, onClose, headerRoof, headerTitle) => {
+		popIn(<SelectBoxModal data={data} onSelect={onSelect} onClose={onClose} headerRoof={headerRoof} headerTitle={headerTitle} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popInformationModal = (data, onClose) => {
+		popIn(<InformationModal data={data} onClose={onClose} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popAddFamilyModal = (data, onYes, onNo) => {
+		popIn(<AddFamilyModal data={data} onYes={onYes} onNo={onNo} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popTwoBtnSelectModal = (data, msg, onYes, onNo, noMsg, yesMsg) => {
+		popIn(<TwoButtonSelectModal data={data} msg={msg} onYes={onYes} onNo={onNo} noMsg={noMsg} yesMsg={yesMsg} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popOneBtnSelectModal = (data, msg, onYes, yesMsg) => {
+		popIn(<OneButtonSelectModal data={data} msg={msg} onYes={onYes} yesMsg={yesMsg} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popTopAlarm = (data, onClose) => {
+		popIn(<TopAlarm data={data} onClose={onClose} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popAnimalInfoModal = (data, onPressAdoptorInfo, onPressReqeustInfo) => {
+		popIn(<AnimalInfoModal data={data} onPressAdoptorInfo={onPressAdoptorInfo} onPressReqeustInfo={onPressReqeustInfo} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popAdoptionInfoModal = (data, onYes, onNo) => {
+		popIn(<AdoptionInfoModal data={data} onYes={onYes} onNo={onNo} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popSocialModal = (onPressKakao, onPressLinkCopy, onPressMsg) => {
+		popIn(<SocialModal onPressKakao={onPressKakao} onPressLinkCopy={onPressLinkCopy} onPressMsg={onPressMsg} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popInterestTagModal = (data, onSave, onClose) => {
+		popIn(<InterestTagModal data={data} onSave={onSave} onClose={onClose} />);
+		!isPop && setPop(true);
+	};
 
 	return (
 		<SafeAreaView style={{flex: 1}}>

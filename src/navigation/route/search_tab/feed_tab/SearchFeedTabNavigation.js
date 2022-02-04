@@ -1,11 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import SearchAccountA from 'Templete/search/SearchAccountA';
-import SearchFeed from 'Templete/search/SearchFeed';
-import SearchHashTag from 'Templete/search/SearchHashTag';
-import TopTabNavigation_Border_Type2 from 'Organism/menu/TopTabNavigation_Border_Type2';
+import SearchAccountA from 'Root/component/templete/search/SearchAccountA';
+import SearchFeed from 'Root/component/templete/search/SearchFeed';
+import SearchHashTag from 'Root/component/templete/search/SearchHashTag';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
-import MeatBallHeader from 'Root/navigation/header/MeatBallHeader';
 import {Animated, Dimensions, Text, TouchableOpacity, View} from 'react-native';
 import {APRI10, GRAY10, GRAY20, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
@@ -57,7 +55,6 @@ export default SearchFeedTabNavigation = props => {
 			// initialRouteName={navName[props.defaultIndex]}
 			initialLayout={{width: Dimensions.get('window').width}}
 			optimizationsEnabled
-			lazy={true}
 			screenOptions={{
 				tabBarItemStyle: {height: 70 * DP},
 				tabBarLabelStyle: [txt.noto24, {color: GRAY10, textAlignVertical: 'center', marginTop: -20 * DP}],
@@ -72,7 +69,12 @@ export default SearchFeedTabNavigation = props => {
 				{props => <SearchAccountA {...props} prevNav={props.prevNav} input={searchInput} onClickUser={onClickUser} />}
 			</SearchFeedTabNav.Screen>
 			{/* 태그 */}
-			<SearchFeedTabNav.Screen name="SearchHashTag" options={{title: '해쉬태그'}}>
+			<SearchFeedTabNav.Screen
+				name="SearchHashTag"
+				options={{
+					title: '해쉬태그',
+					header: props => <InputAndSearchHeader {...props} />,
+				}}>
 				{props => <SearchHashTag {...props} input={searchInput} />}
 			</SearchFeedTabNav.Screen>
 		</SearchFeedTabNav.Navigator>

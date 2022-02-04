@@ -2,7 +2,7 @@ import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import ProtectRequestList from 'Templete/protection/ProtectRequestList';
 import MissingReportList from 'Templete/missing/MissingReportList';
-import ActivationList from 'Templete/ActivationList';
+import ActivationList from 'Templete/list/ActivationList';
 import TopTabNavigation_Border from 'Organism/menu/TopTabNavigation_Border';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 

@@ -1,14 +1,13 @@
 import React, {useEffect} from 'react';
-
-import {View, Text, TouchableWithoutFeedback} from 'react-native';
-import {lo, txt, btn, item} from './style_address';
+import {View, Text, TouchableWithoutFeedback, FlatList} from 'react-native';
+import {lo, txt, btn, item} from 'Templete/style_address';
 import FormTxtInput from 'Molecules/input/formtxtinput';
 import DP from 'Root/config/dp';
 import {SvgWrap} from 'Atom/svgwrapper';
 import {SearchIcon, Bracket} from 'Asset/image';
-import {ScrollView, FlatList} from 'react-native';
 import axios from 'axios';
 import qs from 'qs';
+
 export default AddressSearch = props => {
 	console.log('data', props.route.params);
 	// const [data, setData] = React.useState({keyword:'',...props.route.params?.data,input:{}});

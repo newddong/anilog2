@@ -5,7 +5,6 @@ import SearchFeed from 'Templete/search/SearchFeed';
 import SearchHashTag from 'Templete/search/SearchHashTag';
 import TopTabNavigation_Border_Type2 from 'Organism/menu/TopTabNavigation_Border_Type2';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
-import Profile from 'Root/component/templete/Profile';
 import MeatBallHeader from 'Root/navigation/header/MeatBallHeader';
 import {Dimensions} from 'react-native';
 

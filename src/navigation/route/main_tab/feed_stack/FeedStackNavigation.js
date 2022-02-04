@@ -2,8 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import FeedList from 'Templete/feed/FeedList';
-import Profile from 'Templete/Profile';
-import SocialRelation from 'Templete/SocialRelation';
+import Profile from 'Templete/profile/Profile';
 import FeedListForHashTag from 'Templete/feed/FeedListForHashTag';
 import FeedCommentList from 'Templete/feed/FeedCommentList';
 import AnimalProtectRequestDetail from 'Templete/protection/AnimalProtectRequestDetail';

@@ -3,7 +3,7 @@ import {SafeAreaView, View, Dimensions, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import LoginTemplete from 'Templete/LoginTemplete';
+import LoginTemplete from 'Templete/login/LoginTemplete';
 
 import AgreementCheck from 'Templete/user/AgreementCheck';
 import UserPasswordCheck from 'Templete/user/UserPasswordCheck';
@@ -21,17 +21,17 @@ import ApplyCompanionA from 'Templete/pet/ApplyCompanionA';
 import ApplyCompanionB from 'Templete/pet/ApplyCompanionB';
 import ApplyCompanionC from 'Templete/pet/ApplyCompanionC';
 import ApplyCompanionD from 'Templete/pet/ApplyCompanionD';
-import ApplyDetails from 'Templete/ApplyDetails';
+import ApplyDetails from 'Templete/protection/ApplyDetails';
 
 import ApplyVolunteer from 'Templete/volunteer/ApplyVolunteer';
 import FeedMediaTagEdit from 'Templete/feed/FeedMediaTagEdit';
 import FeedWrite from 'Templete/feed/FeedWrite';
-import LocationPicker from 'Templete/LocationPicker';
+import LocationPicker from 'Templete/search/LocationPicker';
 
-import PhotoSelect from 'Templete/PhotoSelect';
-import AddPhoto from 'Templete/AddPhoto';
+import PhotoSelect from 'Templete/media/PhotoSelect';
+import AddPhoto from 'Templete/media/AddPhoto';
 
-import AddressSearch from 'Templete/AddressSearch';
+import AddressSearch from 'Templete/search/AddressSearch';
 
 import AssignPetProfileImage from 'Templete/pet/AssignPetProfileImage';
 import AssignPetInfoA from 'Templete/pet/AssignPetInfoA';
@@ -60,12 +60,12 @@ import KeyBoardInputBackGround from 'Molecules/input/KeyboardInputBackGround';
 import Modal from 'Component/modal/Modal';
 import Calendar from 'Molecules/calendar/calendar';
 import InputAndSearchHeader from '../header/InputAndSearchHeader';
-import RequestLogin from 'Root/component/templete/RequestLogin';
+import RequestLogin from 'Templete/login/RequestLogin';
 import RadioSelectModal from 'Molecules/modal/RadioSelectModal';
 import AddVolunteers from 'Templete/volunteer/AddVolunteers';
 import Calendar_Multiple from 'Molecules/calendar/Calendar_Multiple';
 import InfoModal from 'Molecules/modal/InfoModal';
-// import Camera from 'Root/component/templete/Camera';
+// import Camera from 'Templete/media/Camera';
 const RootStack = createStackNavigator();
 
 export default RootStackNavigation = () => {

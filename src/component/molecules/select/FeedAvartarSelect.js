@@ -7,8 +7,8 @@ import DP from 'Root/config/dp';
 import Modal from 'Component/modal/Modal';
 import {getUserInfoById} from 'Root/api/userapi';
 import userGlobalObj from 'Root/config/userGlobalObject';
-import PetAccountList from 'Component/organism_ksw/PetAccountList';
-import {txt} from 'Root/screens/assign/style_assign';
+import PetAccountList from 'Organism/list/PetAccountList';
+import {txt} from 'Root/config/textstyle';
 
 /**
  * 아바타 동물을 선택하는 모달창

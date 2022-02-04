@@ -1,8 +1,8 @@
 import React from 'react';
 import {View, Image, TouchableOpacity} from 'react-native';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
-import {AddItem92} from '../atom/icon';
-import {styles} from '../atom/image/imageStyle';
+import {AddItem92} from 'Atom/icon';
+import {styles} from 'Atom/image/imageStyle';
 import {ProfileDefaultImg1, ProfileDefaultImg2, ProfileDefaultImg3} from 'Atom/icon';
 
 /**

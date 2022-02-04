@@ -3,7 +3,7 @@ import {txt} from 'Root/config/textstyle';
 import {View, TouchableOpacity, TextInput} from 'react-native';
 import DP from 'Root/config/dp';
 import {APRI10, GRAY30} from 'Root/config/color';
-import {Cross48, Search48} from '../atom/icon';
+import {Cross48, Search48} from 'Atom/icon';
 
 /**
  * 검색 기능이 추가된 인풋 컴포넌트

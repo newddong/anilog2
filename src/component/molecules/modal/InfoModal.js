@@ -5,8 +5,8 @@ import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import Modal from '../modal/Modal';
-import {UpdateImg} from '../atom/icon';
+import Modal from 'Component/modal/Modal';
+import {UpdateImg} from 'Atom/icon';
 
 /**
  * 한개 버튼을 띄우는 모달

@@ -5,7 +5,7 @@ import {Logo} from 'Asset/image';
 import {AlarmBadger48, Search48} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {WHITE, APRI10} from 'Root/config/color';
-import SvgWrapper, {SvgWrap} from 'Screens/svgwrapper';
+import SvgWrapper, {SvgWrap} from 'Atom/svgwrapper';
 
 export default LogoHeader = ({navigation, route, options, back}) => {
 	const clickLogo = () => {

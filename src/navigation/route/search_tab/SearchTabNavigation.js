@@ -1,7 +1,13 @@
 import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import SearchFeedTabNavigation from './feed_tab/SearchFeedTabNavigation';
+<<<<<<< HEAD
 import Temp from 'Navigation/route/main_tab/community_stack/temp';
+=======
+import SearchProtectRequest from 'Templete/search/SearchProtectRequest';
+import Temp from 'Navigation/route/main_tab/community_stack/temp';
+import TopTabNavigation_Filled from 'Organism/menu/TopTabNavigation_Filled';
+>>>>>>> 0110887ebd3b00c5b3c02bdf349c5d217c2ffd2d
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import {Dimensions, StyleSheet} from 'react-native';
 import {APRI10, GRAY10, WHITE} from 'Root/config/color';

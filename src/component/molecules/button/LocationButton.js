@@ -3,8 +3,8 @@ import {Text, View, TouchableOpacity, TouchableWithoutFeedback} from 'react-nati
 import {APRI10, GRAY20, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import {btn_w176, btn_w226} from '../atom/btn/btn_style';
-import {Location54_APRI10} from '../atom/icon';
+import {btn_w176, btn_w226} from 'Atom/btn/btn_style';
+import {Location54_APRI10} from 'Atom/icon';
 
 /**
  * 로케이션 마크가 추가된 AniButton

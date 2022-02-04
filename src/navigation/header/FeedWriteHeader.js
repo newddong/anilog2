@@ -5,7 +5,7 @@ import DP from 'Root/config/dp';
 import {WHITE, APRI10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
-import {RED} from 'Root/screens/color';
+import {RED} from 'Root/config/color';
 import {createFeed, createMissing, createReport} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 

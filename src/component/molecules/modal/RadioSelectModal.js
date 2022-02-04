@@ -6,11 +6,8 @@ import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10, APRI10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import Modal from 'Component/modal/Modal';
-import ProfileImageSmall from './ProfileImageSmall';
-import CheckBox from './CheckBox';
-import RadioBox from './RadioBox';
-import {RadioChecked48, RadioUnchecked48} from '../atom/icon';
+import ProfileImageSmall from 'Molecules/image/ProfileImageSmall';
+import {RadioChecked48, RadioUnchecked48} from 'Atom/icon';
 
 /**
  * 선택창과 직접 입력창을 띄우는 모달 컴포넌트

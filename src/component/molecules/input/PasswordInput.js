@@ -4,7 +4,7 @@ import {Text, View, TouchableOpacity, TextInput} from 'react-native';
 import PropsTypes, {any, bool, func, number, object, oneOf, oneOfType, string} from 'prop-types';
 import DP from 'Root/config/dp';
 import {APRI10, GRAY20, GRAY30, GREEN, RED10} from 'Root/config/color';
-import {Cross52, Eye52_APRI10, Eye52_GRAY20} from '../atom/icon';
+import {Cross52, Eye52_APRI10, Eye52_GRAY20} from 'Atom/icon';
 import {BackgroundColor} from 'chalk';
 import Input24 from 'Molecules/input/Input24';
 

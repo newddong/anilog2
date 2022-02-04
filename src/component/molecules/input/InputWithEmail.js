@@ -2,12 +2,10 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {Text, View, TouchableOpacity, TextInput} from 'react-native';
 import DP from 'Root/config/dp';
-import {Arrow_Down_GRAY20, Arrow_Up_GRAY20, Cross52} from '../atom/icon';
 import {APRI10, GRAY10, GRAY30, RED10} from 'Root/config/color';
-import NormalDropDown from './NormalDropDown';
 import Input24 from './Input24';
 import {EMAIL_DOMAIN} from 'Root/i18n/msg';
-import EmialDropDown from './EmailDropDown';
+import EmialDropDown from 'Molecules/dropdown/EmailDropDown';
 
 /**
  *

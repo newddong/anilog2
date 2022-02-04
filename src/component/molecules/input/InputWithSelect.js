@@ -3,7 +3,7 @@ import {Text, View} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {APRI10, RED10} from 'Root/config/color';
-import NormalDropDown from './NormalDropDown';
+import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 import Input24 from 'Molecules/input/Input24';
 
 /**

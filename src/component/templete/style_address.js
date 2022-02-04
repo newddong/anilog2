@@ -1,6 +1,6 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import DP from 'Screens/dp';
-import {BLACK, GRAY, GRAY_BRIGHT, GRAY_PLACEHOLDER, MAINCOLOR, SLIGHT_BLACK, LINK, WHITE, RED, GRAY_TXT_INPUT} from 'Screens/color';
+import DP from 'Root/config/dp';
+import {BLACK, GRAY, GRAY_BRIGHT, GRAY_PLACEHOLDER, MAINCOLOR, SLIGHT_BLACK, LINK, WHITE, RED, GRAY_TXT_INPUT} from 'Root/config/color';
 
 export const lo = StyleSheet.create({
 	wrp_main: {

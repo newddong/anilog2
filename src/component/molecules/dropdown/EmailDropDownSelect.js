@@ -3,7 +3,7 @@ import {txt} from 'Root/config/textstyle';
 import PropsTypes, {any, func, number, object, oneOf, oneOfType, shape} from 'prop-types';
 import {Text, View, TouchableOpacity, TextInput} from 'react-native';
 import DP from 'Root/config/dp';
-import {Arrow_Down_GRAY20, Arrow_Up_GRAY20} from '../atom/icon';
+import {Arrow_Down_GRAY20, Arrow_Up_GRAY20} from 'Atom/icon';
 import {APRI10, BLACK, GRAY40} from 'Root/config/color';
 import Dropdown from './Dropdown';
 import Modal from 'Component/modal/Modal';

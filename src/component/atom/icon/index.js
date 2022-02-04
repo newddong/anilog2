@@ -123,7 +123,7 @@ import profiledefault2 from './profiledefault2';
 import profiledefault3 from './profiledefault3';
 import ready_for_updating from './ready_for_updating';
 import updateImg from './updateImg';
-import DP from 'Screens/dp';
+import DP from 'Root/config/dp';
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
 
 const size30 = {width: 30 * DP, height: 30 * DP};

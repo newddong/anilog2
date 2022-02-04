@@ -4,7 +4,7 @@ import PropsTypes, {any, bool, func, number, object, oneOf, oneOfType, string} f
 import {Text, View, TextInput, Platform} from 'react-native';
 import DP from 'Root/config/dp';
 import {APRI10, GRAY10, GRAY20, GRAY30, GRAY40, GREEN, RED10} from 'Root/config/color';
-import {Cross46, Eye52_APRI10, Eye52_GRAY20} from '../atom/icon';
+import {Cross46, Eye52_APRI10, Eye52_GRAY20} from 'Atom/icon';
 import Modal from 'Component/modal/Modal';
 /**
  * 인풋 크기 24

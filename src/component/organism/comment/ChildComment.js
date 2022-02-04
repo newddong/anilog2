@@ -9,7 +9,7 @@ import {styles} from 'Atom/image/imageStyle';
 import MeatBallDropdown from 'Molecules/dropdown/MeatBallDropdown';
 import UserTimeLabel from 'Molecules/label/UserTimeLabel';
 import {useNavigation} from '@react-navigation/native';
-import {childComment} from './style_organism';
+import {childComment} from 'Organism/style_organism';
 /**
  *
  * @param {{

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View, TouchableWithoutFeedback, ViewPropTypes} from 'react-native';
 import {txt} from 'Root/config/textstyle';
-import {socialInfoA} from './style_organism';
+import {socialInfoA} from 'Organism/style_organism';
 import {useNavigation} from '@react-navigation/core';
 
 export default SocialInfoA = props => {

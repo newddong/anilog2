@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import InfoScreen from 'Root/component/organism/InfoScreen';
+import InfoScreen from 'Organism/info/InfoScreen';
 // import DropdownSelect from 'Root/component/molecules/DropdownSelect';
 
 export default Temp = () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
-import {organism_style, feed_style} from './style_organism';
+import {organism_style, feed_style} from '../style_organism';
 import FeedContent from './FeedContent';
 import {Comment48_Border, Like48_Border} from 'Atom/icon';
 import FeedMedia from 'Molecules/media/FeedMedia';
@@ -11,7 +11,7 @@ import Swiper from 'react-native-swiper';
 import CookieManager from '@react-native-cookies/cookies';
 import {serveruri} from 'Root/config/server';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Modal from '../modal/Modal';
+import Modal from 'Component/modal/Modal';
 
 export default Feed = React.memo(props => {
 	// console.log('Feed', props.data);

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 import {txt} from 'Root/config/textstyle';
-import {socialInfoB} from './style_organism';
+import {socialInfoB} from '../style_organism';
 import {useNavigation} from '@react-navigation/native';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 export default SocialInfoB = props => {

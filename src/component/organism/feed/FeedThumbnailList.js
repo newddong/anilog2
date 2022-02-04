@@ -4,7 +4,7 @@ import FeedThumnail from 'Molecules/media/FeedThumnail';
 import {NORMAL, PET, SHELTER} from 'Root/i18n/msg';
 import {txt} from 'Root/config/textstyle';
 import {GRAY10} from 'Root/config/color';
-import ListEmptyInfo from 'Molecules/ListEmptyInfo';
+import ListEmptyInfo from 'Molecules/info/ListEmptyInfo';
 /**
  *
  *@param {{

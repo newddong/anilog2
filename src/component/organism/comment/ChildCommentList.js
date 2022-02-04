@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, FlatList} from 'react-native';
-import {organism_style} from './style_organism';
+import {organism_style} from 'Organism/style_organism';
 import ChildComment from 'Organism/comment/ChildComment';
 import {ChildCommentLinker} from 'Atom/icon';
 

@@ -2,8 +2,8 @@ import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import {APRI10, BLACK, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import CheckBox from 'Molecules/CheckBox';
-import {assignCheckListItem} from './style_organism';
+import CheckBox from 'Molecules/select/CheckBox';
+import {assignCheckListItem} from 'Organism/style_organism';
 
 /**
  *

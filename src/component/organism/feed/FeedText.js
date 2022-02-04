@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dimensions, FlatList, Text, View } from 'react-native';
 import { txt } from 'Root/config/textstyle';
-import { feedText } from './style_organism';
+import { feedText } from 'Organism/style_organism';
 import DP from 'Root/config/dp';
 
 

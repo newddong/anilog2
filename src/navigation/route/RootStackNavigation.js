@@ -3,49 +3,49 @@ import {SafeAreaView, View, Dimensions, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import LoginTemplete from 'Templete/LoginTemplete';
+import LoginTemplete from 'Templete/login/LoginTemplete';
 
-import AgreementCheck from 'Templete/AgreementCheck';
-import UserPasswordCheck from 'Templete/UserPasswordCheck';
-import AssignUserHabitation from 'Templete/AssignUserHabitation';
-import AssignUserProfileImage from 'Templete/AssignUserProfileImage';
+import AgreementCheck from 'Templete/user/AgreementCheck';
+import UserPasswordCheck from 'Templete/user/UserPasswordCheck';
+import AssignUserHabitation from 'Templete/user/AssignUserHabitation';
+import AssignUserProfileImage from 'Templete/user/AssignUserProfileImage';
 
-import ShelterCodeCheck from 'Templete/ShelterCodeCheck';
-import ShelterAssignEntrance from 'Templete/ShelterAssignEntrance';
-import AssignShelterAddress from 'Templete/AssignShelterAddress';
-import AssignShelterInformation from 'Templete/AssignShelterInformation';
-import CheckShelterPassword from 'Templete/CheckShelterPassword';
-import AssignShelterProfileImage from 'Templete/AssignShelterProfileImage';
+import ShelterCodeCheck from 'Templete/shelter/ShelterCodeCheck';
+import ShelterAssignEntrance from 'Templete/shelter/ShelterAssignEntrance';
+import AssignShelterAddress from 'Templete/shelter/AssignShelterAddress';
+import AssignShelterInformation from 'Templete/shelter/AssignShelterInformation';
+import CheckShelterPassword from 'Templete/shelter/CheckShelterPassword';
+import AssignShelterProfileImage from 'Templete/shelter/AssignShelterProfileImage';
 
-import ApplyCompanionA from 'Templete/ApplyCompanionA';
-import ApplyCompanionB from 'Templete/ApplyCompanionB';
-import ApplyCompanionC from 'Templete/ApplyCompanionC';
-import ApplyCompanionD from 'Templete/ApplyCompanionD';
-import ApplyDetails from 'Templete/ApplyDetails';
+import ApplyCompanionA from 'Templete/pet/ApplyCompanionA';
+import ApplyCompanionB from 'Templete/pet/ApplyCompanionB';
+import ApplyCompanionC from 'Templete/pet/ApplyCompanionC';
+import ApplyCompanionD from 'Templete/pet/ApplyCompanionD';
+import ApplyDetails from 'Templete/protection/ApplyDetails';
 
-import ApplyVolunteer from 'Templete/ApplyVolunteer';
-import FeedMediaTagEdit from 'Templete/FeedMediaTagEdit';
-import FeedWrite from 'Templete/FeedWrite';
-import LocationPicker from 'Templete/LocationPicker';
+import ApplyVolunteer from 'Templete/volunteer/ApplyVolunteer';
+import FeedMediaTagEdit from 'Templete/feed/FeedMediaTagEdit';
+import FeedWrite from 'Templete/feed/FeedWrite';
+import LocationPicker from 'Templete/search/LocationPicker';
 
-import PhotoSelect from 'Templete/PhotoSelect';
-import AddPhoto from 'Templete/AddPhoto';
+import PhotoSelect from 'Templete/media/PhotoSelect';
+import AddPhoto from 'Templete/media/AddPhoto';
 
-import AddressSearch from 'Templete/AddressSearch';
+import AddressSearch from 'Templete/search/AddressSearch';
 
-import AssignPetProfileImage from 'Templete/AssignPetProfileImage';
-import AssignPetInfoA from 'Templete/AssignPetInfoA';
-import AssignPetInfoB from 'Templete/AssignPetInfoB';
+import AssignPetProfileImage from 'Templete/pet/AssignPetProfileImage';
+import AssignPetInfoA from 'Templete/pet/AssignPetInfoA';
+import AssignPetInfoB from 'Templete/pet/AssignPetInfoB';
 
 import MainTabNavigation from './main_tab/MainTabNavigation';
 import SearchTabNavigation from './search_tab/SearchTabNavigation';
 
 import {PIC_SELECTION} from 'Root/i18n/msg';
-import FeedListForHashTag from 'Root/component/templete/FeedListForHashTag';
+import FeedList from 'Templete/feed/FeedListForHashTag';
 
 import SimpleHeader from 'Navigation/header/SimpleHeader';
 import SendHeader from '../header/SendHeader';
-import UserVerification from 'Root/component/templete/UserVerification';
+import UserVerification from 'Templete/user/UserVerification';
 import FeedWriteHeader from 'Navigation/header/FeedWriteHeader';
 import BookmarkHeader from 'Navigation/header/BookmarkHeader';
 
@@ -55,17 +55,17 @@ import NoBtnModal from 'Molecules/modal/NoBtnModal';
 import RollingSelect from 'Molecules/select/RollingSelect';
 import SelectModal from 'Molecules/modal/SelectModal';
 import FeedAvartarSelect from 'Molecules/select/FeedAvartarSelect';
-import KeyBoardInputBackGround from 'Molecules/KeyboardInputBackGround';
+import KeyBoardInputBackGround from 'Molecules/input/KeyboardInputBackGround';
 
 import Modal from 'Component/modal/Modal';
 import Calendar from 'Molecules/calendar/calendar';
 import InputAndSearchHeader from '../header/InputAndSearchHeader';
-import RequestLogin from 'Root/component/templete/RequestLogin';
+import RequestLogin from 'Templete/login/RequestLogin';
 import RadioSelectModal from 'Molecules/modal/RadioSelectModal';
-import AddVolunteers from 'Root/component/templete/AddVolunteers';
+import AddVolunteers from 'Templete/volunteer/AddVolunteers';
 import Calendar_Multiple from 'Molecules/calendar/Calendar_Multiple';
 import InfoModal from 'Molecules/modal/InfoModal';
-// import Camera from 'Root/component/templete/Camera';
+// import Camera from 'Templete/media/Camera';
 const RootStack = createStackNavigator();
 
 export default RootStackNavigation = () => {

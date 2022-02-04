@@ -81,26 +81,22 @@ export default Modal = {
 	 * 아바타 동물을 선택하는 모달창
 	 *
 	 * @param {string} okButtonnMsg - 확인 버튼 메시지
-	 * @param {()=>void} onOk - 확인 버튼 콜백
 	 * @param {(petObject:string)=>void} onSelectPet - 반려동물 라벨을 클릭했을때 콜백
 	 *
 	 * @example
 	 * Modal.popSelect(['개','고양이','기타'],['리트리버','말티즈','푸들','치와와'],(val1,val2)=>alert(val1+':'+val2),'동물선택');
 	 */
-	feedAvartarSelect: (onSelectPet, onOk, okButtonnMsg) => {},
+	popAvatarSelectModal: (onSelectPet, okButtonnMsg) => {},
 
 	/**
 	 * 반려 동물을 선택하는 모달창
 	 * @param {Array.<string>} items -  배열
-	 * @param {string} selectMsg - 확인 버튼 메시지
-	 * @param {string} exitMsg - 확인 버튼 메시지
-	 * @param {(petObject:string)=>void} onSelect - 확인 버튼 콜백
-	 * @param {()=>void} onExit - 확인 버튼 콜백
+	 * @param {string} title - 확인 버튼 메시지
+	 * @param {(string)=>void} onSelect - 확인 버튼 콜백
 	 *
 	 * @example
-	 * Modal.popSelect(['개','고양이','기타'],['리트리버','말티즈','푸들','치와와'],(val1,val2)=>alert(val1+':'+val2),'동물선택');
 	 */
-	popRadioSelect: (items, selectMsg, exitMsg, onSelect, onExit) => {},
+	popRadioSelect: (items, title, onSelect) => {},
 
 	/**
 	 * 선택 모달창을 띄우는 함수(첫번째 선택에 따라 두번째 선택의 항목이 변하는 부분은 구현되지 않음)
@@ -115,7 +111,7 @@ export default Modal = {
 	popPetSelect: (primaryItem, secondaryItem, onOk, okButtonnMsg) => {},
 
 	/**
-	 * 선택 모달창을 띄우는 함수(첫번째 선택에 따라 두번째 선택의 항목이 변하는 부분은 구현되지 않음)
+	 * 보호동물 등록 세부사항 요약 모달
 	 * @param {object} data - 첫번째 항목 초기값
 	 * @param {()=>void} onOk - 선택항목들을 반환하는 매개변수가 2개인 콜백
 	 * @param {()=>void} onClose - 선택항목들을 반환하는 매개변수가 2개인 콜백
@@ -124,6 +120,130 @@ export default Modal = {
 	 * Modal.popProtectPetDetails(data, ()=>alert('등록'),()=>alert('취소'), );
 	 */
 	popProtectPetDetails: (data, onOk, onClose) => {},
+
+	/**
+	 * 스크롤뷰 형태의 모달창을 띄우는 함수(하단 스크롤뷰 셀렉트 모달)
+	 * @param {object} data - 선택항목 리스트 , 최대 두 개의 길이의 오브젝트 배열 타입
+	 * @param {string} header - 선택항목 제목 / 빈 값일 시 '취소' 출력
+	 * @param {(data,data)=>void} onSelect - 완료 버튼 클릭 콜백 / 선택항목들을 반환하는 매개변수가 2개인 콜백
+	 * @param {()=>void} onClose - 헤더 타이틀이 빈 값일 경우 '취소'가 타이틀로 출력되며, 해당 '취소' 버튼 클릭 시 수행되는 콜백 함수
+	 *
+	 * @example
+	 */
+	popSelectScrollBoxModal: (data, header, onSelect) => {},
+
+	/**
+	 * 날짜 선택창 모달을 띄우는 함수(하단 스크롤뷰 셀렉트 모달)
+	 * @param {string} header - 선택항목 제목
+	 * @param {(date)=>void} onSelect - 선택항목들을 반환하는 매개변수가 2개인 콜백
+	 *
+	 * @example
+	 */
+	popSelectDateModal: (header, onSelect) => {},
+
+	/**
+	 * 선택 모달창을 띄우는 함수(중앙 일반 셀렉트 모달)
+	 * @param {object} data - 선택항목 리스트
+	 * @param {()=>void} onSelect - 선택항목들을 반환하는 매개변수가 2개인 콜백
+	 * @param {()=>void} onClose - x마크 클릭 콜백 함수
+	 * @param {boolean} headerRoof - 모달 헤더 부분 지붕 존재 유무
+	 * @param {string} headerTitle - 모달 헤더 타이틀 문자열
+	 *
+	 * @example
+	 */
+	popSelectBoxModal: (data, onSelect, onClose, headerRoof, headerTitle) => {},
+
+	/**
+	 * 유저 오브젝트 정보 요약 출력 모달
+	 * @param {object} data - 유저 오브젝트 정보
+	 * @param {()=>void} onClose - x마크 클릭 콜백 함수
+	 *
+	 * @example
+	 */
+	popInformationModal: (data, onClose) => {},
+
+	/**
+	 * 반려동물의 가족계정 추가 컨펌 모달
+	 * @param {object} data - 추가할 가족 계정의 오브젝트 정보
+	 * @param {()=>void} onYes - x마크 클릭 콜백 함수
+	 * @param {()=>void} onNo - x마크 클릭 콜백 함수
+	 *
+	 * @example
+	 */
+	popAddFamilyModal: (data, onYes, onNo) => {},
+
+	/**
+	 * 버튼 두개의 선택 모달
+	 * @param {object} data - 추가할 가족 계정의 오브젝트 정보
+	 * @param {string} msg - 모달 타이틀
+	 * @param {(selectedItem:string)=>void} onYes - Ok버튼 콜백
+	 * @param {()=>void} onNo - No버튼 콜백
+	 * @param {string} yesMsg - 확인 버튼 타이틀
+	 * @param {string} noMsg - 취소 버튼 타이틀
+	 *
+	 * @example
+	 */
+	popTwoBtnSelectModal: (data, msg, onYes, onNo, noMsg, yesMsg) => {},
+
+	/**
+	 * 버튼 한개의 선택 모달
+	 * @param {object} data - 추가할 가족 계정의 오브젝트 정보
+	 * @param {string} msg - 모달 타이틀
+	 * @param {(selectedItem:string)=>void} onYes - Ok버튼 콜백
+	 * @param {()=>void} onNo - No버튼 콜백
+	 * @param {string} yesMsg - 확인 버튼 타이틀
+	 * @param {string} noMsg - 취소 버튼 타이틀
+	 *
+	 * @example
+	 */
+	popOneBtnSelectModal: (data, msg, onYes, yesMsg) => {},
+
+	/**
+	 * 나의 보호소 출신 동물 / 보호동물 및 보호요청게시글 게이트웨이 모달
+	 * @param {object} data - 선택한 보호동물의 정보
+	 * @param {()=>void)} onPressAdoptorInfo - 입양처보기 버튼 타이틀
+	 * @param {()=>void)} onPressReqeustInfo - 게시글보기 버튼 타이틀
+	 *
+	 * @example
+	 */
+	popAnimalInfoModal: (data, onYes, onNo) => {},
+
+	/**
+	 * 입양 및 임시보호 동물 알림 모달
+	 * @param {object} data - 선택한 보호동물의 정보
+	 * @param {()=>void)} onYes - 등록 버튼 클릭
+	 * @param {()=>void)} onNo - 나가기 버튼 클릭
+	 *
+	 * @example
+	 */
+	popAdoptionInfoModal: (data, onYes, onNo) => {},
+
+	/**
+	 * 반려동물의 백신예정일 알람()
+	 * @param {object} data - 추가할 가족 계정의 오브젝트 정보
+	 *
+	 * @example
+	 */
+	popTopAlarm: (data, onClose) => {},
+
+	/**
+	 * 관심사 추가 및 수정 모달
+	 * @param {object} data - 관심사 추가할 계정 object(반려동물 혹은 유저)
+	 * @param {(selectedData)=>void)} onSave - 저장 버튼 클릭 콜백 / 선택된 항목의 오브젝트( ex : 지역, 미용, 놀이, 건강 등)
+	 * @param {()=>void)} onClose - 페이지 좌상단 x버튼 클릭 / 종료 콜백
+	 *
+	 * @example
+	 */
+	popInterestTagModal: (data, onSave, onClose) => {},
+
+	/**
+	 * 공유 - 공유 목록 출력 모달
+	 * @param {()=>void} props.onPressKakao - 카카오톡 클릭
+	 * @param {()=>void} props.onPressLinkCopy - 링크복사 클릭
+	 * @param {()=>void} props.onPressMsg - 메시지 클릭
+	 * @example
+	 */
+	popSocialModal: (onPressKakao, onPressLinkCopy, onPressMsg) => {},
 
 	popInfoModal: () => {},
 

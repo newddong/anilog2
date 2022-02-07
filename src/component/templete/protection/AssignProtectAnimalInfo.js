@@ -9,7 +9,7 @@ import AniButton from 'Molecules/button/AniButton';
 import {useNavigation} from '@react-navigation/core';
 import Modal from 'Component/modal/Modal';
 import {PET_YEAR, PET_MONTH} from 'Root/i18n/msg';
-import {stagebar_style} from 'Organism/style_organism';
+import {stagebar_style} from 'Root/component/organism/style_organism copy';
 import {CommonActions} from '@react-navigation/native';
 import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 import Input30 from 'Molecules/input/Input30';
@@ -70,18 +70,23 @@ export default AssignProtectAnimalInfo = ({route}) => {
 
 	const registerProtectPet = () => {
 		console.log('Before AssiginShelterAnimal Data? ', data);
-
-		assignShelterAnimal(
+		Modal.popProtectPetDetails(
 			data,
-			result => {
-				console.log(`assignShelterAnimal result.ms:${JSON.stringify(result.msg)}`);
-				Modal.popTwoBtn('보호 동물이 등록되었습니다. \n바로 보호요청 글을 작성하시겠습니까?', '아니오', '새 글 작성', goToShelterMenu, () =>
-					goToWriteAidRequest(result.msg),
+			() => {
+				assignShelterAnimal(
+					data,
+					result => {
+						console.log(`assignShelterAnimal result.ms:${JSON.stringify(result.msg)}`);
+						Modal.popTwoBtn('보호 동물이 등록되었습니다. \n바로 보호요청 글을 작성하시겠습니까?', '아니오', '새 글 작성', goToShelterMenu, () =>
+							goToWriteAidRequest(result.msg),
+						);
+					},
+					err => {
+						console.log('assignShelterAnimal / err', err);
+					},
 				);
 			},
-			err => {
-				console.log('assignShelterAnimal / err', err);
-			},
+			() => console.log('취소'),
 		);
 	};
 
@@ -127,19 +132,6 @@ export default AssignProtectAnimalInfo = ({route}) => {
 					width={600 * DP} //bar의 너비
 				/>
 			</View>
-			{/* <TouchableWithoutFeedback onPress={() => console.log(data)}>
-				<View
-					style={{
-						backgroundColor: 'red',
-						height: 30,
-						width: 30,
-						position: 'absolute',
-						borderWidth: 1,
-						borderColor: 'blue',
-						top: 0,
-						left: 0,
-					}}></View>
-			</TouchableWithoutFeedback> */}
 
 			<View style={[temp_style.textMsg_assignProtectAnimal, assignProtectAnimal_style.textMsg]}>
 				<Text style={[txt.noto24, {color: GRAY10}]}>해당 동물의 예상 연령과 체중, 중성화 여부를 적어주세요.</Text>

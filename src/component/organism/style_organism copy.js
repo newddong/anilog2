@@ -223,7 +223,7 @@ export const hashTagList = StyleSheet.create({
 export const phoneNumVerification = StyleSheet.create({
 	container: {
 		width: 654 * DP,
-		height: 402 * DP,
+		// height: 402 * DP, //UX 변경으로 인한 주석처리 (22.02.03 - 상우)
 		backgroundColor: WHITE,
 	},
 	input30: {

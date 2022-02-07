@@ -15,11 +15,6 @@ import {SearchContext} from 'Root/config/searchContext';
 const MainTabNav = createBottomTabNavigator();
 
 export default MainTabNavigation = ({route, navigation}) => {
-	// const [headerOff, setHeaderOff] = React.useState(false);
-	// React.useEffect(() => {
-	// 	console.log('searchContext / MainTab  :   ', searchContext.routeName);
-	// 	// searchContext.routeName == 'SearchFeed' ? setHeaderOff(true) : setHeaderOff(false);
-	// }, [searchContext.routeName]);
 	const routeName = getFocusedRouteNameFromRoute(route) ?? '';
 	console.log('getFocusedRouteNameFromRoute / MainTab  : ', routeName);
 	const getTabBarVisibility = route => {
@@ -78,7 +73,7 @@ export default MainTabNavigation = ({route, navigation}) => {
 				options={{
 					header: props => <InputAndSearchHeader {...props} />,
 					tabBarShowLabel: false,
-					// headerShown: !headerOff,
+					// headerShown: ,
 				}}>
 				{props => <SearchTabNavigation {...props} user_type={route.params} />}
 			</MainTabNav.Screen>

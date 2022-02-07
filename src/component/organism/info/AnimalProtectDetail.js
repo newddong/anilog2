@@ -6,7 +6,7 @@ import {House48, Phone48, Paw48_APRI10, Check48, TextBalloon48, Person48} from '
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
 import {animalProtectList} from 'Templete/style_templete';
 import AnimalNeedHelp from 'Organism/listitem/AnimalNeedHelp';
-import {animalProtectDetail} from 'Organism/style_organism';
+import {animalProtectDetail} from '../style_organism copy';
 
 export default AnimalProtectDetail = props => {
 	// console.log(' AnimalProtectDetail / props.data', props.data.protect_act_companion_history);

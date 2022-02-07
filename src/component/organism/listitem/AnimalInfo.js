@@ -3,8 +3,7 @@ import {Text, View} from 'react-native';
 import {GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import PetImageLabel from 'Molecules/label/PetImageLabel';
-import {animalInfo} from 'Organism/style_organism';
-
+import {animalInfo} from '../style_organism copy';
 export default AnimalInfo = props => {
 	const [data, setData] = React.useState(props.data);
 	// console.log('AnimalInfo', props.data);

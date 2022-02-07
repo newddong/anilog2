@@ -2,9 +2,9 @@ import React from 'react';
 import {Text, View, Image, TouchableOpacity} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
+import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
 import {Private30, Public30} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
-import {APRI10, BLACK, GRAY10, GRAY20} from 'Root/config/color';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import moment from 'moment';
@@ -18,6 +18,7 @@ import moment from 'moment';
 const ShelterSmallLabel = props => {
 	const [validation, setValidation] = React.useState(false);
 	const data = props.data;
+	//ddd
 	//user_nickname Text 색깔 조건부적용을 위한 세션아이디 비교
 	React.useEffect(() => {
 		AsyncStorage.getItem('token', (err, res) => {

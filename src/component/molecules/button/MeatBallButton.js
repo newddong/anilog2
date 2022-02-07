@@ -15,8 +15,9 @@ const MeatBallButton = React.forwardRef((props, ref) => {
 		},
 	}));
 	const [isOpen, setOpen] = React.useState(props.initState);
+
 	const onPress = e => {
-		// setOpen(!isOpen);
+		setOpen(!isOpen);
 		console.log('MeatBallButton onPress');
 		// !props.noStateChange && setOpen(!isOpen);
 		// isOpen ? props.onOpen() : props.onClose();

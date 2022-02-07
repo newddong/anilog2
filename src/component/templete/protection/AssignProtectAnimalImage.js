@@ -11,7 +11,7 @@ import SelectedMediaList from 'Organism/list/SelectedMediaList';
 import {AddItem64, Camera54} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
 import {styles} from 'Atom/image/imageStyle';
-import {stagebar_style} from 'Organism/style_organism';
+import {stagebar_style} from 'Root/component/organism/style_organism copy';
 import {launchImageLibrary} from 'react-native-image-picker';
 
 export default AssignProtectAnimalImage = props => {

@@ -11,7 +11,7 @@ import {login_style, btn_style, temp_style, progressbar_style, assignPetInfo_sty
 import RadioBox from 'Molecules/select/RadioBox';
 import TabSelectFilled_Type1 from 'Molecules/tab/TabSelectFilled_Type1';
 import {FEMALE, MALE, NO, PET_KIND, UNAWARENESS, YES} from 'Root/i18n/msg';
-import {stagebar_style} from 'Organism/style_organism';
+import {stagebar_style} from 'Root/component/organism/style_organism copy';
 import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 import {getPettypes} from 'Root/api/userapi';
 import Modal from 'Component/modal/Modal';

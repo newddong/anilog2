@@ -13,6 +13,7 @@ import Modal from 'Component/modal/Modal';
 import {useLogin, userLogin} from 'Root/api/userapi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import userGlobalObj from 'Root/config/userGlobalObject';
+import {CALENDAR_MONTH, DOG_KIND, mobile_carrier, PET_KIND} from 'Root/i18n/msg';
 
 export default LoginTemplete = props => {
 	const [id, setId] = React.useState('');
@@ -22,8 +23,8 @@ export default LoginTemplete = props => {
 
 		userLogin(
 			{
-				login_id: id,
-				login_password: password,
+				login_id: '0333324513',
+				login_password: 'tkddn123',
 			},
 			userObject => {
 				// console.log('userObject', userObject.msg);
@@ -98,6 +99,17 @@ export default LoginTemplete = props => {
 		console.log('Id Validator ' + text);
 	};
 
+	const test = () => {
+		Modal.popTwoBtnSelectModal(
+			['1', '2', '3'],
+			'모달',
+			() => alert('yes'),
+			() => alert('no'),
+			'취소',
+			'확인',
+		);
+	};
+
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
 			{/* confirm without login */}
@@ -164,6 +176,9 @@ export default LoginTemplete = props => {
 					</TouchableOpacity>
 				</View>
 
+				<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_assign]}>
+					<AniButton btnLayout={btn_w522} btnTitle={'회원가입'} btnStyle={'border'} btnTheme={'shadow'} titleFontStyle={32} onPress={test} />
+				</View>
 				{/* social login */}
 				{/* <View style={[login_style.social_info, loginTemplete_style.social_info]}>
 				<View style={[loginTemplete_style.socialLogin_icon]}>

@@ -122,6 +122,8 @@ import profiledefault1 from './profiledefault1';
 import profiledefault2 from './profiledefault2';
 import profiledefault3 from './profiledefault3';
 import ready_for_updating from './ready_for_updating';
+import cross24 from './cross24';
+
 import updateImg from './updateImg';
 import DP from 'Root/config/dp';
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
@@ -318,3 +320,5 @@ export const Facebook_Icon = makeSvg(facebookIcon, size80);
 export const CrossMark_Filled = makeSvg(crossMark_filled, size50);
 export const ChildCommentLinker = makeSvg(childCommentLinker, {width: 14 * DP, height: 14 * DP});
 export const Ready_for_updating = makeSvg(ready_for_updating, {width: 382 * DP, height: 382 * DP});
+export const Cross24_Filled = makeSvg(cross24, {width: 24 * DP, height: 24 * DP}, GRAY10);
+export const Cross24_White = makeSvg(cross24, {width: 24 * DP, height: 24 * DP}, 'white');

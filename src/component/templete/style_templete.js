@@ -613,7 +613,6 @@ export const temp_style = StyleSheet.create({
 	},
 	inputForm_assignPetProfileImage: {
 		width: 654 * DP,
-		height: 172 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
@@ -1155,6 +1154,7 @@ export const userAssign = StyleSheet.create({
 	textMessageInside: {
 		width: 414 * DP,
 		textAlign: 'left',
+		color: GRAY10,
 	},
 });
 
@@ -1530,11 +1530,12 @@ export const assignUserProfileImage_style = StyleSheet.create({
 });
 
 export const assignShelterAddress_style = StyleSheet.create({
-	inputForm: {
-		marginTop: 80 * DP,
+	textMsg: {
+		width: 654 * DP,
+		marginTop: 12 * DP,
 	},
 	input24A: {
-		marginTop: 80 * DP,
+		marginTop: 32 * DP,
 	},
 	addressInput: {
 		marginTop: 60 * DP,
@@ -1543,18 +1544,27 @@ export const assignShelterAddress_style = StyleSheet.create({
 		marginTop: 110 * DP,
 	},
 });
-
 export const assignShelterInformation_style = StyleSheet.create({
 	inputFormContainer: {
-		marginTop: 20 * DP,
+		width: 654 * DP,
+		height: 700 * DP,
+		marginTop: 84 * DP,
+	},
+	textMsg: {
+		width: 654 * DP,
+		marginTop: 12 * DP,
+	},
+	inputWithSelect: {
+		width: 654 * DP,
+		height: 158 * DP,
+		justifyContent: 'space-between',
 	},
 	input24A: {
-		marginTop: 80 * DP,
-	},
-	inputWithEmail: {
+		width: 654 * DP,
+		height: 118 * DP,
 		marginTop: 60 * DP,
 	},
-	input24A: {
+	inputWithEmail: {
 		marginTop: 60 * DP,
 	},
 	datePicker: {
@@ -1572,8 +1582,17 @@ export const assignShelterInformation_style = StyleSheet.create({
 		paddingLeft: 20 * DP,
 		marginTop: 10 * DP,
 	},
+	datePickerContainer: {
+		width: 654 * DP,
+		height: 82 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		borderBottomColor: APRI10,
+		borderBottomWidth: 2 * DP,
+		paddingVertical: 15 * DP,
+		paddingHorizontal: 20 * DP,
+	},
 });
-
 export const checkShelterPassword_style = StyleSheet.create({
 	passwordChecker: {
 		marginTop: 110 * DP,
@@ -1585,10 +1604,10 @@ export const checkShelterPassword_style = StyleSheet.create({
 
 export const assignShelterProfileImage_style = StyleSheet.create({
 	txt_msg: {
-		marginTop: 80 * DP,
+		marginTop: 12 * DP,
 	},
 	profileImageSelect: {
-		marginTop: 70 * DP,
+		marginTop: 50 * DP,
 	},
 	btn_w654: {
 		marginTop: 110 * DP,
@@ -1600,7 +1619,7 @@ export const changeUserProfileImage_style = StyleSheet.create({
 		marginTop: 42 * DP,
 	},
 	profileImageSelect: {
-		marginTop: 70 * DP,
+		marginTop: 50 * DP,
 	},
 	btn_w654: {
 		marginVertical: 110 * DP,
@@ -1805,10 +1824,10 @@ export const assignPetProfileImage_style = StyleSheet.create({
 		alignItems: 'flex-start',
 	},
 	profileImageSelect: {
-		marginTop: 70 * DP,
+		marginTop: 50 * DP,
 	},
 	inputForm: {
-		marginTop: 70 * DP,
+		marginTop: 50 * DP,
 	},
 	btn_w654: {
 		marginTop: 110 * DP,
@@ -1818,8 +1837,10 @@ export const assignPetProfileImage_style = StyleSheet.create({
 	},
 	checkBox: {
 		flexDirection: 'row',
-
-		marginTop: 40 * DP,
+		marginTop: 20 * DP,
+		width: 526 * DP,
+		alignSelf: 'flex-start',
+		paddingLeft: 20 * DP,
 	},
 });
 
@@ -1867,6 +1888,34 @@ export const assignPetInfo_style = StyleSheet.create({
 	btn_w226_viewB: {
 		marginTop: 130 * DP,
 	},
+	petKind: {
+		width: 204 * DP,
+		height: 82 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderBottomWidth: 2 * DP,
+		borderBottomColor: APRI10,
+	},
+	pet_species_detail: {
+		width: 292 * DP,
+		height: 82 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderBottomWidth: 2 * DP,
+		borderBottomColor: APRI10,
+	},
+	petKind_text: {
+		width: 120 * DP,
+		height: 44 * DP,
+		textAlign: 'center',
+	},
+	pet_species_detail_text: {
+		width: 208 * DP,
+		height: 44 * DP,
+		textAlign: 'center',
+	},
 });
 
 export const assignProtectAnimal_style = StyleSheet.create({
@@ -1877,11 +1926,9 @@ export const assignProtectAnimal_style = StyleSheet.create({
 	textMsg: {
 		width: 654 * DP,
 		marginTop: 12 * DP,
-		alignSelf: 'flex-start',
-		marginLeft: 50 * DP,
 	},
 	selectedMediaList: {
-		marginTop: 70 * DP,
+		marginTop: 50 * DP,
 		marginLeft: 10 * DP,
 		alignSelf: 'flex-start',
 	},
@@ -1890,8 +1937,7 @@ export const assignProtectAnimal_style = StyleSheet.create({
 		height: 72 * DP,
 		flexDirection: 'row',
 		// alignItems: 'center',
-		marginTop: 50 * DP,
-		marginBottom: 64 * DP,
+		marginTop: 30 * DP,
 	},
 	inputform: {
 		marginTop: 60 * DP,

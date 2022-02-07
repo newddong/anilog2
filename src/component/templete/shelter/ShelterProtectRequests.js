@@ -1,13 +1,12 @@
 import React from 'react';
 import {Text, View} from 'react-native';
-import {login_style, temp_style, protectRequestList_style, baseInfo_style} from 'Templete/style_templete';
-import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
-import {dummy_AnimalNeedHelpList_various_status} from 'Root/config/dummyDate_json';
+import {login_style, temp_style, protectRequestList_style, baseInfo_style} from '../style_templete';
+import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
 import {PET_KIND, PROTECT_STATUS} from 'Root/i18n/msg';
-import FilterButton from 'Molecules/button/FilterButton';
-import MeatBallDropdown from 'Molecules/dropdown/MeatBallDropdown';
+import FilterButton from 'Root/component/molecules/button/FilterButton';
+import MeatBallDropdown from 'Root/component/molecules/dropdown/MeatBallDropdown';
 import {getProtectRequestList, getProtectRequestListByShelterId} from 'Root/api/shelterapi';
-import Modal from 'Component/modal/Modal';
+import Modal from 'Root/component/modal/Modal';
 import {txt} from 'Root/config/textstyle';
 import {getPettypes} from 'Root/api/userapi';
 
@@ -20,7 +19,7 @@ export default ShelterProtectRequests = ({route, navigation}) => {
 	const [petTypes, setPetTypes] = React.useState(['동물종류']);
 
 	React.useEffect(() => {
-		Modal.popNoBtn('잠시만 기다려주세요.');
+		// Modal.popNoBtn('잠시만 기다려주세요.');
 		getProtectRequestListByShelterId(
 			{
 				shelter_userobject_id: route.params,
@@ -38,14 +37,14 @@ export default ShelterProtectRequests = ({route, navigation}) => {
 				} else {
 					setProtectAnimalList(result.msg);
 				}
-				Modal.close();
+				// Modal.close();
 			},
 			err => {
 				console.log('err / getProtectReqeustListByShelterId / ShelterProtectRequest', err);
 				if (err == '검색 결과가 없습니다.') {
 					setProtectAnimalList([]);
 				}
-				Modal.close();
+				// Modal.close();
 			},
 		);
 	}, [filterSpecies, filterStatus]);

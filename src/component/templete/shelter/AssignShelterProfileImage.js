@@ -1,14 +1,14 @@
 import React from 'react';
-import {Text, View, TouchableWithoutFeedback} from 'react-native';
+import {Text, View, StyleSheet} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from 'Atom/btn/btn_style';
-import AniButton from 'Molecules/button/AniButton';
-import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';
-import {login_style, btn_style, temp_style, assignShelterProfileImage_style} from 'Templete/style_templete';
+import AniButton from 'Root/component/molecules/button/AniButton';
+import ProfileImageSelect from 'Root/component/molecules/select/ProfileImageSelect';
+import {login_style, btn_style, temp_style, assignShelterProfileImage_style} from '../style_templete';
 import Modal from 'Component/modal/Modal';
-import {launchImageLibrary} from 'react-native-image-picker';
 import {assignShelter} from 'Root/api/userapi';
 import ImagePicker from 'react-native-image-crop-picker';
+import {GRAY10} from 'Root/config/color';
 
 export default AssignShelterProfileImage = props => {
 	const [data, setData] = React.useState({
@@ -59,19 +59,25 @@ export default AssignShelterProfileImage = props => {
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
 			{/* Text Msg */}
-			<View style={[temp_style.textMsg_AssignUserProfileImage, assignShelterProfileImage_style.txt_msg]}>
-				<Text style={[txt.noto24]}>프로필 이미지를 설정해주셔야해요.</Text>
+			<View style={[assignShelterProfileImage_style.txt_msg]}>
+				<Text style={[txt.noto24, {color: GRAY10}]}>프로필 사진은 나중에도 변경 할 수 있어요.</Text>
 			</View>
 
 			{/* (M)ProfileImageSelect */}
-			<View style={[temp_style.profileImageSelect, assignShelterProfileImage_style.profileImageSelect]}>
+			<View style={[assignShelterProfileImage_style.profileImageSelect]}>
 				<ProfileImageSelect onClick={selectPhoto} selectedImageUri={data.user_profile_uri} />
 			</View>
 
 			{/* (A)Btn_w654 */}
-			<View style={[btn_style.btn_w654, assignShelterProfileImage_style.btn_w654]}>
-				<AniButton btnTitle={'확인'} titleFontStyle={'32'} disable={data.user_profile_uri == ''} btnLayout={btn_w654} onPress={assginShelter} />
+			<View style={[assignShelterProfileImage_style.btn_w654]}>
+				{data.user_profile_uri == '' ? (
+					<AniButton btnTitle={'확인'} titleFontStyle={'32'} disable btnLayout={btn_w654} onPress={assginShelter} />
+				) : (
+					<AniButton btnTitle={'확인'} titleFontStyle={'32'} btnStyle={'border'} btnLayout={btn_w654} onPress={assginShelter} />
+				)}
 			</View>
 		</View>
 	);
 };
+
+const styles = StyleSheet.create({});

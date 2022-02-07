@@ -25,7 +25,7 @@ const SelectScrollBoxModal = props => {
 
 	const onSelect = () => {
 		if (data.length == 1) {
-			props.onSelect(data[0][selectedItem]);
+			props.onSelect(data[0][selectedItem - 2]);
 		} else {
 			props.onSelect(data[0][selectedItem], data[1][selectedItem2]);
 		}

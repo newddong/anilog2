@@ -1,26 +1,24 @@
 import React from 'react';
-import {Text, View, ScrollView, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableOpacity} from 'react-native';
 import {GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w522} from 'Atom/btn/btn_style';
-import {Kakao_Icon, Naver_Icon, NextMark, Instagram_Icon, Facebook_Icon} from 'Atom/icon';
-import AniButton from 'Molecules/button/AniButton';
-import CheckBox from 'Molecules/select/CheckBox';
-import Input24 from 'Molecules/input/Input24';
-import PasswordInput from 'Molecules/input/PasswordInput';
-import {login_style, btn_style, loginTemplete_style} from 'Templete/style_templete';
+import AniButton from 'Root/component/molecules/button/AniButton';
+import CheckBox from 'Root/component/molecules/select/CheckBox';
+import Input24 from 'Root/component/molecules/input/Input24';
+import PasswordInput from 'Root/component/molecules/input/PasswordInput';
+import {login_style, btn_style, loginTemplete_style} from '../style_templete';
 import Modal from 'Component/modal/Modal';
-import {useLogin, userLogin} from 'Root/api/userapi';
+import {userLogin} from 'Root/api/userapi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import userGlobalObj from 'Root/config/userGlobalObject';
-import {CALENDAR_MONTH, DOG_KIND, mobile_carrier, PET_KIND} from 'Root/i18n/msg';
+import {ALIGNITEMS, CALENDAR_DAY, CALENDAR_MONTH, CALENDAR_YEAR, FEED_FOLLOWING_USER_CLICK, mobile_carrier, REPORT_CONTENT} from 'Root/i18n/msg';
 
 export default LoginTemplete = props => {
 	const [id, setId] = React.useState('');
 	const [password, setPassword] = React.useState('');
 	const tryToLogin = () => {
 		Modal.popNoBtn('로그인을 요청합니다.');
-
 		userLogin(
 			{
 				login_id: '0333324513',
@@ -65,8 +63,12 @@ export default LoginTemplete = props => {
 		props.navigation.push('ShelterCodeCheck');
 	};
 
-	const findMyId = () => {};
-	const changePassword = () => {};
+	const findMyId = () => {
+		props.navigation.push('FindAccount');
+	};
+	const changePassword = () => {
+		props.navigation.push('PasswordResetIdentification');
+	};
 
 	//자동로그인 박스 클릭
 	const onCheckAutoLogin = state => {
@@ -100,14 +102,7 @@ export default LoginTemplete = props => {
 	};
 
 	const test = () => {
-		Modal.popTwoBtnSelectModal(
-			['1', '2', '3'],
-			'모달',
-			() => alert('yes'),
-			() => alert('no'),
-			'취소',
-			'확인',
-		);
+		Modal.popSelectScrollBoxModal([mobile_carrier], '도, 광역시를 지정해주세요.', e => console.log('e', e));
 	};
 
 	return (
@@ -176,9 +171,8 @@ export default LoginTemplete = props => {
 					</TouchableOpacity>
 				</View>
 
-				<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_assign]}>
-					<AniButton btnLayout={btn_w522} btnTitle={'회원가입'} btnStyle={'border'} btnTheme={'shadow'} titleFontStyle={32} onPress={test} />
-				</View>
+				{/* <AniButton btnLayout={btn_w522} btnTitle={'테스트'} btnStyle={'border'} titleFontStyle={32} onPress={test} /> */}
+				{/* <WebView></WebView> */}
 				{/* social login */}
 				{/* <View style={[login_style.social_info, loginTemplete_style.social_info]}>
 				<View style={[loginTemplete_style.socialLogin_icon]}>

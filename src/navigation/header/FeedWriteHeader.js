@@ -110,11 +110,11 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 	const titleStyle = [{textAlign: 'center'}, txt.noto40b, route.params?.feedType != 'Feed' ? {color: RED} : {}];
 
 	const avartarSelect = () => {
-		Modal.feedAvartarSelect(petObject => {
-			console.log(petObject);
+		Modal.popAvatarSelectModal(petObject => {
+			console.log('petObject / onOk', petObject);
 			navigation.setOptions({title: petObject.user_nickname});
 			navigation.setParams({...route.params, feed_avatar_id: petObject._id});
-		});
+		}, '이 계정 글쓰기');
 	};
 
 	return (

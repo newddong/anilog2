@@ -87,16 +87,14 @@ export default UserMenu = props => {
 				},
 			);
 		} else {
-			Modal.popRadioSelect(
-				data.user_my_pets,
-				'선택',
-				'나가기',
+			Modal.popAvatarSelectModal(
 				selectedPet => {
 					// console.log('selected', selectedPet);
 					navigation.push('PetInfoSetting', {pet_id: selectedPet._id, token: data}); //data에 있는 userObject를 토대로 해당 유저의 반려동물을 검색해서 보내야함
 					Modal.close();
 				},
-				() => Modal.close(),
+				'확인',
+				false,
 			);
 		}
 	};

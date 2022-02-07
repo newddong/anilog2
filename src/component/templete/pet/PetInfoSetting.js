@@ -12,10 +12,9 @@ import {btn_style, login_style, petInfoSetting, temp_style} from 'Templete/style
 import {_dummy_petInfo_from_user} from 'Root/config/dummy_data_hjs';
 import Modal from 'Component/modal/Modal';
 import {getUserInfoById, removeUserFromFamily} from 'Root/api/userapi';
-import {familyAccountList_style} from 'Organism/style_organism';
-import ProfileImageSmall from 'Molecules/image/ProfileImageSmall';
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {familyAccountList_style} from 'Root/component/organism/style_organism copy';
 
 //이 화면에 들어오면서 특정 _id를 API 연동으로 데이터를 가져 옴.
 //이전 화면에서 모든 데이터를 가진 상태에서 들어오는 것이 아님.

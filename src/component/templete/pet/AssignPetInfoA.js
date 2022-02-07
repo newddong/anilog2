@@ -3,7 +3,7 @@ import React from 'react';
 import {APRI10, GRAY10, GRAY30} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import {ActivityIndicator, Text, TouchableWithoutFeedback, View} from 'react-native';
+import {ActivityIndicator, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 import Stagebar from 'Molecules/info/Stagebar';
 import {btn_w226} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
@@ -15,6 +15,7 @@ import {stagebar_style} from 'Root/component/organism/style_organism copy';
 import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 import {getPettypes} from 'Root/api/userapi';
 import Modal from 'Component/modal/Modal';
+import {Arrow_Down_GRAY10} from 'Root/component/atom/icon';
 
 export default AssignPetInfoA = props => {
 	const navigation = useNavigation();
@@ -72,6 +73,25 @@ export default AssignPetInfoA = props => {
 		setData({...data, pet_neutralization: neutralization});
 	};
 
+	const onPressPetSpecies = () => {
+		Modal.popSelectScrollBoxModal([types.map(v => v.pet_species)], '동물 종 선택', selectedItem => {
+			const findItem = types.find(e => e.pet_species == selectedItem);
+			const pet_spcies_detail = findItem.pet_species_detail;
+			console.log('pet_spcies_detail', pet_spcies_detail);
+			setData({...data, pet_species: selectedItem, pet_species_detail: pet_spcies_detail[0]});
+			Modal.close();
+		});
+	};
+
+	const onPressPetSpeciesDetail = () => {
+		const findItem = types.find(e => e.pet_species == data.pet_species);
+		const pet_spcies_detail = findItem.pet_species_detail;
+		Modal.popSelectScrollBoxModal([pet_spcies_detail], '동물 종 선택', selectedItem => {
+			setData({...data, pet_species_detail: selectedItem});
+			Modal.close();
+		});
+	};
+
 	const onSelectSpecies = (v, i) => {
 		console.log('v=>' + v + ' i=>' + i);
 		setData({...data, pet_species: types[i].pet_species, type: types[i], pet_species_detail: types[i].pet_species_detail[0]});
@@ -119,19 +139,30 @@ export default AssignPetInfoA = props => {
 					{/* 분류 */}
 					<View style={[temp_style.inputForm_assignPetInfo_line1]}>
 						<Text style={[temp_style.text_assignPetInfo, txt.noto28, {color: GRAY10}]}>분류</Text>
-						<View style={[temp_style.dropdownSelect_assignPetInfo_depth1, assignPetInfo_style.dropdownSelect_depth1]}>
-							<NormalDropDown menu={types.map(v => v.pet_species)} width={204} onSelect={onSelectSpecies} defaultIndex={0} />
-						</View>
-						<View style={[temp_style.dropdownSelect_assignPetInfo_depth2, assignPetInfo_style.dropdownSelect_depth2]}>
-							<NormalDropDown
+						<TouchableOpacity
+							onPress={onPressPetSpecies}
+							style={[temp_style.dropdownSelect_assignPetInfo_depth1, assignPetInfo_style.dropdownSelect_depth1]}>
+							<View style={[assignPetInfo_style.petKind]}>
+								<Text style={[txt.noto28, assignPetInfo_style.petKind_text]}>{data.pet_species}</Text>
+								<Arrow_Down_GRAY10 />
+							</View>
+						</TouchableOpacity>
+						<TouchableOpacity
+							onPress={onPressPetSpeciesDetail}
+							style={[temp_style.dropdownSelect_assignPetInfo_depth2, assignPetInfo_style.dropdownSelect_depth2]}>
+							<View style={[assignPetInfo_style.pet_species_detail]}>
+								<Text style={[txt.noto28, assignPetInfo_style.pet_species_detail_text]}>{data.pet_species_detail}</Text>
+								<Arrow_Down_GRAY10 />
+							</View>
+							{/* <NormalDropDown
 								menu={data.type.pet_species_detail}
 								isLargeCategoryChanged={isSpeciesChanged}
 								defaultIndex={0}
 								width={292}
 								height={500}
 								onSelect={onSelectSpeciesDetail}
-							/>
-						</View>
+							/> */}
+						</TouchableOpacity>
 					</View>
 
 					{/* 성별 */}

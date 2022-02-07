@@ -1,11 +1,12 @@
 import React from 'react';
-import {ActivityIndicator, ScrollView, Text, View} from 'react-native';
-import {login_style, temp_style, baseInfo_style} from 'Templete/style_templete';
-import AidRequestList from 'Organism/list/AidRequestList';
+import {ActivityIndicator, ScrollView, Text, View, StyleSheet} from 'react-native';
+import {login_style, temp_style, baseInfo_style} from '../style_templete';
+import AidRequestList from 'Root/component/organism/list/AidRequestList';
 import {getAnimalListWithApplicant, getShelterProtectAnimalList} from 'Root/api/shelterapi';
 import {txt} from 'Root/config/textstyle';
 import {GRAY10} from 'Root/config/color';
 import {getApplyDetailById} from 'Root/api/protectapi';
+import DP from 'Root/config/dp';
 
 //ShelterMenu => 신청서 조회 [Nav명 - ProtectApplyList]
 //ShelterMenu => 보호중인 동물 [Nav명 - ShelterProtectAnimalList]
@@ -179,3 +180,29 @@ export default AidRequestManage = ({route, navigation}) => {
 	}
 };
 // 61c1cc107be07611b00945f9
+
+const style = StyleSheet.create({
+	shareDropDown: {
+		width: 384 * DP,
+		height: 184 * DP,
+		position: 'absolute',
+		right: 0,
+		top: 80 * DP,
+		flexDirection: 'row',
+		borderRadius: 40 * DP,
+		borderTopEndRadius: 0,
+		zIndex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: 'white',
+		opacity: 0.9,
+		paddingLeft: 60 * DP,
+		shadowOffset: {
+			height: 5 * DP,
+		},
+		shadowColor: '#000000',
+		shadowOpacity: 0.5,
+		shadowRadius: 4.67,
+		elevation: 3,
+	},
+});

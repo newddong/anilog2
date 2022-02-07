@@ -1,13 +1,12 @@
 import React from 'react';
-import {Text, View, TouchableWithoutFeedback, KeyboardAvoidingView} from 'react-native';
+import {Text, View, KeyboardAvoidingView} from 'react-native';
 import {txt} from 'Root/config/textstyle';
-import {btn_w522} from 'Atom/btn/btn_style';
-import AniButton from 'Molecules/button/AniButton';
-import Input30 from 'Molecules/input/Input30';
-import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';
-import {login_style, btn_style, temp_style, progressbar_style, assignUserProfileImage_style} from 'Templete/style_templete';
+import {btn_w654} from 'Atom/btn/btn_style';
+import AniButton from 'Root/component/molecules/button/AniButton';
+import Input30 from 'Root/component/molecules/input/Input30';
+import ProfileImageSelect from 'Root/component/molecules/select/ProfileImageSelect';
+import {login_style, btn_style, temp_style, assignUserProfileImage_style} from '../style_templete';
 import Modal from 'Component/modal/Modal';
-import {launchImageLibrary} from 'react-native-image-picker';
 import {assignUser, nicknameDuplicationCheck} from 'Root/api/userapi';
 import ImagePicker from 'react-native-image-crop-picker';
 
@@ -152,7 +151,7 @@ export default AssignUserProfileImage = props => {
 			<View style={[temp_style.input30_assignUserProfileImage, assignUserProfileImage_style.input30]}>
 				<Input30
 					value={nickname}
-					showTitle={true}
+					showTitle={false}
 					title={'닉네임'}
 					description={'* 2자 이상 15자 이내의 영문,숫자, _ 의 입력만 가능합니다.'}
 					width={654}
@@ -171,9 +170,9 @@ export default AssignUserProfileImage = props => {
 			{/* (A)Btn_w654 */}
 			<View style={[btn_style.btn_w654, assignUserProfileImage_style.btn_w654]}>
 				{confirmed ? (
-					<AniButton btnTitle={'확인'} titleFontStyle={'32'} btnTheme={'shadow'} btnLayout={btn_w522} onPress={pressConfirm} />
+					<AniButton btnTitle={'확인'} titleFontStyle={'32'} btnStyle={'borderd1'} btnTheme={'shadow'} btnLayout={btn_w654} onPress={pressConfirm} />
 				) : (
-					<AniButton btnTitle={'확인'} titleFontStyle={'32'} disable={true} btnLayout={btn_w522} />
+					<AniButton btnTitle={'확인'} titleFontStyle={'32'} disable={true} btnLayout={btn_w654} />
 				)}
 			</View>
 		</KeyboardAvoidingView>

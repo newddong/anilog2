@@ -1,17 +1,19 @@
 import React from 'react';
-import {View, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, Keyboard, Text} from 'react-native';
-import {APRI10, GRAY10, GREEN, RED10} from 'Root/config/color';
+import {View, Text, TouchableOpacity} from 'react-native';
+import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from 'Atom/btn/btn_style';
-import AniButton from 'Molecules/button/AniButton';
-import Stagebar from 'Molecules/info/Stagebar';
-import Input24 from 'Molecules/input/Input24';
-import {login_style, btn_style, temp_style, progressbar_style, assignShelterInformation_style} from 'Templete/style_templete';
-import InputWithSelect from 'Molecules/input/InputWithSelect';
+import AniButton from 'Root/component/molecules/button/AniButton';
+import Input24 from 'Root/component/molecules/input/Input24';
+import {login_style, btn_style, temp_style, progressbar_style, assignShelterInformation_style} from '../style_templete';
+import InputWithSelect from 'Root/component/molecules/input/InputWithSelect';
 import {initial_number, email_supplier} from 'Root/config/dummyDate_json';
-import InputWithEmail from 'Molecules/input/InputWithEmail';
-import DatePicker from 'Molecules/select/DatePicker';
+import InputWithEmail from 'Root/component/molecules/input/InputWithEmail';
 import {stagebar_style} from 'Root/component/organism/style_organism copy';
+import {Calendar48_Border, Calendar48_Filled} from 'Atom/icon';
+import Modal from 'Root/component/modal/Modal';
+import StageBar from 'Root/component/molecules/info/Stagebar';
+
 // 각각 뷰에 컴포넌트 삽입시 style의 첫번째 index 삭제할 것. 두번째 index는 상.하 간격 style이라서 이 컴포넌트에만 해당 됨.
 //ex) 변경 전: <View style={[btn_style.btn_w654, findAccount_style.btn_w654]}>   변경 후:  <View style={[findAccount_style.btn_w654]}>
 
@@ -88,10 +90,19 @@ export default AssignShelterInformation = props => {
 		return num.length >= 7;
 	};
 
+	const onPressDatePicker = () => {
+		// console.log('dd');
+		Modal.popSelectDateModal('보호소 설립일 선택', date => {
+			console.log('date', date);
+			setData({...data, shelter_foundation_date: date});
+			Modal.close();
+		});
+	};
+
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
 			<View style={[temp_style.stageBar, progressbar_style.stageBar]}>
-				<Stagebar
+				<StageBar
 					backgroundBarStyle={stagebar_style.backgroundBar} //배경이 되는 bar의 style, width props으로 너비결정됨
 					insideBarStyle={stagebar_style.insideBar} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
 					textStyle={[txt.roboto24, stagebar_style.text]} //text의 스타일
@@ -99,18 +110,21 @@ export default AssignShelterInformation = props => {
 					maxstage={4} //전체 단계를 정의
 					width={600 * DP} //bar의 너비
 				/>
-				<Text style={[txt.noto24, {color: GRAY10}]}>전화번호와 E-mail은 반드시 입력해주세요.</Text>
+			</View>
+			<View style={[assignShelterInformation_style.textMsg]}>
+				<Text style={[txt.noto24]}>
+					'<Text style={{color: 'red'}}>*</Text>'는 필수 입력해야하는 사항입니다.
+				</Text>
 			</View>
 			{/* InputForm */}
 			<View style={[assignShelterInformation_style.inputFormContainer]}>
 				{/* (M)전화번호 */}
-				<View style={[temp_style.inputWithSelect_assignShelterInformation, assignShelterInformation_style.input24A]}>
+				<View style={[assignShelterInformation_style.inputWithSelect]}>
 					<InputWithSelect
 						value={data.shelter_delegate_contact_number}
 						placeholder={'전화번호 입력란'}
 						title={'전화번호'}
 						title_star={true}
-						alert_msg={'등록한 전화번호로 로그인이 가능합니다.'}
 						items={initial_number}
 						keyboardType={'number-pad'}
 						validator={phoneValidate}
@@ -119,6 +133,7 @@ export default AssignShelterInformation = props => {
 						confirm={phoneConfirmed}
 						width={420}
 					/>
+					<Text style={{color: GRAY10}}>*기재한 전화번호로 로그인이 가능합니다.</Text>
 				</View>
 
 				{/* (M)이메일 */}
@@ -132,13 +147,6 @@ export default AssignShelterInformation = props => {
 						onChange={onChangeEmail}
 						onValid={onValidEmail}
 					/>
-					<View style={[assignShelterInformation_style.emailConfirmMsg]}>
-						{emailConfirmed ? (
-							<Text style={[txt.noto26, {color: GREEN}]}>이메일 양식과 일치합니다.</Text>
-						) : (
-							<Text style={[txt.noto26, {color: RED10}]}>이메일 양식에 맞춰주세요.</Text>
-						)}
-					</View>
 				</View>
 
 				{/* (M)홈페이지 */}
@@ -158,13 +166,21 @@ export default AssignShelterInformation = props => {
 
 				{/* (M)설립일 */}
 				<View style={[temp_style.datePicker_assignShelterInformation, assignShelterInformation_style.datePicker]}>
-					<DatePicker width={654} title={'설립일'} onDateChange={onChangeDate} future={false} />
+					{/* <DatePicker width={654} title={'설립일'} onDateChange={onChangeDate} future={false} /> */}
+					<TouchableOpacity style={[assignShelterInformation_style.datePickerContainer]} onPress={onPressDatePicker}>
+						<Text style={[txt.noto32]}>{data.shelter_foundation_date ? data.shelter_foundation_date : '설립일을 지정해주세요.'}</Text>
+						<Calendar48_Border />
+					</TouchableOpacity>
 				</View>
 			</View>
 
 			{/* (A)Btn_w654 */}
 			<View style={[btn_style.btn_w654, assignShelterInformation_style.btn_w654]}>
-				<AniButton btnTitle={'확인'} disable={!phoneConfirmed || !emailConfirmed} btnLayout={btn_w654} titleFontStyle={32} onPress={goToNextStep} />
+				{!phoneConfirmed || !emailConfirmed ? (
+					<AniButton btnTitle={'확인'} btnLayout={btn_w654} disable titleFontStyle={32} onPress={goToNextStep} />
+				) : (
+					<AniButton btnTitle={'확인'} btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} onPress={goToNextStep} />
+				)}
 			</View>
 		</View>
 	);

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableWithoutFeedback, StyleSheet, Dimensions, Platform, ScrollView, FlatList} from 'react-native';
+import {View, Text, TouchableWithoutFeedback, StyleSheet, Dimensions, Platform, ScrollView, FlatList, TouchableOpacity} from 'react-native';
 import AniButton from '../button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10, APRI10} from 'Root/config/color';
@@ -16,6 +16,7 @@ import PetLabel from '../label/PetLabel';
  * @param {Object} props - props object
  * @param {(petObject:string)=>void} props.onSelectPet - 반려동물 라벨을 클릭했을때 콜백
  * @param {string} props.okButtonnMsg - 확인 버튼 메시지
+ * @param {boolean} props.isBtnMode - 버튼출력여부
  *
  */
 const AvatarSelectModal = props => {
@@ -44,7 +45,11 @@ const AvatarSelectModal = props => {
 
 	const renderItem = (item, index) => {
 		const onClickLabel = () => {
-			setSelectedItem(index);
+			if (props.isBtnMode) {
+				setSelectedItem(index);
+			} else {
+				props.onSelectPet && props.onSelectPet(items[index]);
+			}
 		};
 		return (
 			<View style={[style.listItem, {backgroundColor: index == selectedItem ? APRI10 : WHITE}]}>
@@ -54,8 +59,8 @@ const AvatarSelectModal = props => {
 	};
 
 	return (
-		<View style={style.background}>
-			<View style={[style.popUpWindow, style.shadow]}>
+		<TouchableOpacity onPress={() => Modal.close()} activeOpacity={1} style={style.background}>
+			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
 				{console.log('items.length:', items.length)}
 				{/* {checkApi.current ? ( */}
 				{items.length > 0 ? (
@@ -65,12 +70,18 @@ const AvatarSelectModal = props => {
 					<Text style={[{textAlign: 'center', marginBottom: 30 * DP}, txt.noto28b]}>{'등록된 반려동물이 없습니다.\n 반려동물을 등록해주세요'}</Text>
 				)}
 				{/* // ) : null} */}
-				<View style={style.buttonContainer}>
-					<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.okButtonnMsg} onPress={pressOk} />
-				</View>
-				{(checkApi.current = false)}
-			</View>
-		</View>
+				{props.isBtnMode ? (
+					<>
+						<View style={style.buttonContainer}>
+							<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.okButtonnMsg} onPress={pressOk} />
+						</View>
+						{(checkApi.current = false)}
+					</>
+				) : (
+					<></>
+				)}
+			</TouchableOpacity>
+		</TouchableOpacity>
 	);
 };
 
@@ -80,6 +91,7 @@ AvatarSelectModal.defaultProps = {
 		console.log('YES');
 	},
 	onSelectPet: e => {},
+	isBtnMode: true,
 };
 
 const style = StyleSheet.create({

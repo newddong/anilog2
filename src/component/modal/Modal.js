@@ -82,11 +82,13 @@ export default Modal = {
 	 *
 	 * @param {string} okButtonnMsg - 확인 버튼 메시지
 	 * @param {(petObject:string)=>void} onSelectPet - 반려동물 라벨을 클릭했을때 콜백
+	 * @param {boolean} props.isBtnMode - 버튼출력여부
+	 *
 	 *
 	 * @example
 	 * Modal.popSelect(['개','고양이','기타'],['리트리버','말티즈','푸들','치와와'],(val1,val2)=>alert(val1+':'+val2),'동물선택');
 	 */
-	popAvatarSelectModal: (onSelectPet, okButtonnMsg) => {},
+	popAvatarSelectModal: (onSelectPet, okButtonnMsg, isBtnMode) => {},
 
 	/**
 	 * 반려 동물을 선택하는 모달창

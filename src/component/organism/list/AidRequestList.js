@@ -3,7 +3,7 @@ import {View, FlatList, Text, TouchableOpacity, ScrollView, TouchableWithoutFeed
 import {txt} from 'Root/config/textstyle';
 import {AddItem64} from 'Atom/icon';
 import AidRequest from 'Organism/listitem/AidRequest';
-import {aidRequestList} from 'Organism/style_organism';
+import {aidRequestList} from '../style_organism copy';
 
 /**
  *

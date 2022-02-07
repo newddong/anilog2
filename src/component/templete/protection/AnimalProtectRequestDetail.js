@@ -1,26 +1,25 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Image, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Image, Text, TextInput, TouchableOpacity, View, Animated, Easing, ActivityIndicator, ScrollView} from 'react-native';
 import {btn_w226, btn_w276} from 'Atom/btn/btn_style';
-import AniButton from 'Molecules/button/AniButton';
-import {login_style, temp_style, animalProtectRequestDetail_style, feedCommentList, accountPicker} from 'Templete/style_templete';
-import RescueImage from 'Molecules/image/RescueImage';
-import {ScrollView} from 'react-native-gesture-handler';
-
+import AniButton from 'Root/component/molecules/button/AniButton';
+import {login_style, temp_style, animalProtectRequestDetail_style, accountPicker} from '../style_templete';
+import RescueImage from 'Root/component/molecules/image/RescueImage';
 import {txt} from 'Root/config/textstyle';
 import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
-import ShelterSmallLabel from 'Molecules/label/ShelterSmallLabel';
-import {BackArrow32, FavoriteTag48_Filled, Share48_Filled} from 'Atom/icon';
+import ShelterSmallLabel from 'Root/component/molecules/label/ShelterSmallLabel';
+import {BackArrow32, Clip72, Email72, FavoriteTag48_Filled, Share48_Filled, SocialKakao72} from 'Atom/icon';
 import DP from 'Root/config/dp';
-import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
-import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
-import {dummy_AnimalNeedHelpList_various_status, dummy_CommentObject, dummy_ShelterProtectAnimalObject} from 'Root/config/dummyDate_json';
+import CommentList from 'Root/component/organism/comment/CommentList';
+import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
+import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
+import {dummy_CommentObject} from 'Root/config/dummyDate_json';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
-import {ActivityIndicator} from 'react-native';
 import moment from 'moment';
 import {getCommentListByProtectId} from 'Root/api/commentapi';
 import {createComment} from 'Root/api/commentapi';
-import Modal from 'Component/modal/Modal';
+import ImagePicker from 'react-native-image-crop-picker';
+import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 //AnimalProtectRequestDetail 호출 경로
@@ -46,6 +45,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const [content, setContent] = React.useState('');
 	const [parentComment, setParentComment] = React.useState();
 	const [isShelter, setIsShelter] = React.useState(false);
+	const [isSharePressed, setIsSharePressed] = React.useState(false);
 	const debug = false;
 
 	debug && console.log('AnimalProtectRequestDetail data:', data);
@@ -260,8 +260,23 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	};
 
 	//보호소 라벨 공유 클릭
-	const onPressShare = () => {
-		console.log('공유클릭');
+	const onPressShare = e => {
+		setIsSharePressed(!isSharePressed);
+		if (!isSharePressed) {
+			Animated.spring(animatedValue, {
+				duration: 300,
+				toValue: 220,
+				easing: Easing.linear,
+				useNativeDriver: false,
+			}).start();
+		} else {
+			Animated.timing(animatedValue, {
+				duration: 300,
+				toValue: -100,
+				// easing: Easing.linear,
+				useNativeDriver: false,
+			}).start();
+		}
 	};
 
 	//댓글 리스트 표출 개수 제어
@@ -289,6 +304,28 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		console.log('data', data);
 		navigation.push('UserProfile', {userobject: data});
 	};
+
+	//보호소 라벨 우측 공유 버튼 - 카카오톡 클릭
+	const onPressKakao = () => {
+		// props.onPressKakao();
+	};
+
+	//보호소 라벨 우측 공유 버튼 - 링크복사 클릭
+	const onPressLinkCopy = () => {
+		// props.onPressLinkCopy();
+	};
+
+	//보호소 라벨 우측 공유 버튼 - 메시지 클릭
+	const onPressMsg = () => {
+		// props.onPressMsg();
+	};
+
+	const animatedValue = React.useRef(new Animated.Value(0)).current;
+
+	const interpolated = animatedValue.interpolate({
+		inputRange: [0, 200],
+		outputRange: [0, 1],
+	});
 
 	if (loading) {
 		return (
@@ -318,16 +355,38 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					</View>
 					{/* Buttons */}
 					<View style={[temp_style.button_animalProtectRequestDetail]}>
-						<View>
-							<FavoriteTag48_Filled onPress={onPressShelterLabelFavorite} />
+						<TouchableOpacity onPress={onPressShelterLabelFavorite} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
+							<FavoriteTag48_Filled />
 							<Text style={[txt.roboto24, {color: APRI10, alignSelf: 'center'}]}>
 								{data ? count_to_K(data.protect_request_writer_id.user_follow_count) : ''}
 							</Text>
-						</View>
-						<View style={{marginLeft: 30 * DP}}>
-							<Share48_Filled onPress={onPressShare} />
+						</TouchableOpacity>
+						<TouchableOpacity onPress={onPressShare} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
+							<Share48_Filled />
 							<Text style={[txt.roboto24, {color: APRI10}]}>공유</Text>
-						</View>
+						</TouchableOpacity>
+						{/* 공유 클릭 시 소셜 공유하기 창 출력 */}
+						<Animated.View
+							style={[
+								animalProtectRequestDetail_style.shareDropDown,
+								{
+									opacity: interpolated,
+								},
+							]}>
+							<TouchableOpacity onPress={onPressKakao} style={[animalProtectRequestDetail_style.socialItem]}>
+								<SocialKakao72 />
+								<Text style={[txt.noto22, {color: GRAY10}]}>카카오톡</Text>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={onPressLinkCopy} style={[animalProtectRequestDetail_style.socialItem]}>
+								<Clip72 />
+								<Text style={[txt.noto22, {color: GRAY10}]}>링크복사</Text>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={onPressMsg} style={[animalProtectRequestDetail_style.socialItem]}>
+								<Email72 />
+								<Text style={[txt.noto22, {color: GRAY10}]}>메시지</Text>
+							</TouchableOpacity>
+						</Animated.View>
+						{/* 공유하기창 종료 */}
 					</View>
 				</View>
 

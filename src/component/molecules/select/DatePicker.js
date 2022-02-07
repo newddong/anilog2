@@ -62,7 +62,7 @@ const DatePicker = props => {
 				}}>
 				<Text
 					style={[
-						txt.roboto28,
+						txt.roboto32,
 						{
 							lineHeight: 44 * DP,
 							paddingLeft: 14 * DP,

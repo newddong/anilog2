@@ -1,15 +1,14 @@
 import React from 'react';
-import {Text, View, TouchableWithoutFeedback, KeyboardAvoidingView} from 'react-native';
-import {login_style, btn_style, temp_style, progressbar_style, assignShelterAddress_style} from 'Templete/style_templete';
+import {Text, View, KeyboardAvoidingView} from 'react-native';
+import {login_style, btn_style, temp_style, progressbar_style, assignShelterAddress_style} from '../style_templete';
 import {APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from 'Atom/btn/btn_style';
-import AniButton from 'Molecules/button/AniButton';
-import Stagebar from 'Molecules/info/Stagebar';
-import Input24 from 'Molecules/input/Input24';
-import AddressInput from 'Organism/input/AddressInput';
-import axios from 'axios';
+import AniButton from 'Root/component/molecules/button/AniButton';
+import Input24 from 'Root/component/molecules/input/Input24';
+import AddressInput from 'Root/component/organism/input/AddressInput';
 import {stagebar_style} from 'Root/component/organism/style_organism copy';
+import StageBar from 'Root/component/molecules/info/Stagebar';
 
 export default AssignShelterAddress = props => {
 	const [confirmed, setConfirmed] = React.useState(false); //주소란이 모두 작성되었다며 통과가능
@@ -37,8 +36,8 @@ export default AssignShelterAddress = props => {
 			setData({
 				...data,
 				shelter_address: {
-					brief: addr.jibunAddr,
-					detail: addr.detailAddr,
+					brief: addr.address,
+					detail: '',
 				},
 			});
 		}
@@ -68,7 +67,7 @@ export default AssignShelterAddress = props => {
 	//주소찾기 클릭
 	const goToAddressSearch = () => {
 		console.log('onPressSearchAddr');
-		props.navigation.push('AddressSearch', {addr: '', from: props.route.name});
+		props.navigation.push('AddressSearchPage', {prevRoute: props.route.name});
 	};
 
 	//보호소 이름
@@ -99,7 +98,7 @@ export default AssignShelterAddress = props => {
 		<KeyboardAvoidingView style={[login_style.wrp_main, {flex: 1}]} behavior={'padding'}>
 			{/* (M)StageBar	 */}
 			<View style={[temp_style.stageBar, progressbar_style.stageBar]}>
-				<Stagebar
+				<StageBar
 					backgroundBarStyle={stagebar_style.backgroundBar} //배경이 되는 bar의 style, width props으로 너비결정됨
 					insideBarStyle={stagebar_style.insideBar} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
 					textStyle={[txt.roboto24, stagebar_style.text]} //text의 스타일
@@ -107,6 +106,11 @@ export default AssignShelterAddress = props => {
 					maxstage={4} //전체 단계를 정의
 					width={600 * DP} //bar의 너비
 				/>
+			</View>
+			<View style={[assignShelterAddress_style.textMsg]}>
+				<Text style={[txt.noto24]}>
+					'<Text style={{color: 'red'}}>*</Text>'는 필수 입력해야하는 사항입니다.
+				</Text>
 			</View>
 
 			{/* InputForm */}
@@ -122,7 +126,7 @@ export default AssignShelterAddress = props => {
 					showMsg
 					width={654}
 					confirm_msg={''}
-					alert_msg={'유효한 보호소 이름을 입력하세요, 띄어쓰기는 허용되지 않습니다.'}
+					alert_msg={'2~20자의 한글로 작성해주세요.'}
 				/>
 			</View>
 
@@ -141,14 +145,11 @@ export default AssignShelterAddress = props => {
 
 			{/* (A)Btn_w654 */}
 			<View style={[btn_style.btn_w654, assignShelterAddress_style.btn_w654]}>
-				<AniButton
-					btnTitle={'다음'}
-					btnTheme={'shadow'}
-					disable={!confirmName || !confirmed}
-					btnLayout={btn_w654}
-					titleFontStyle={32}
-					onPress={goToNextStep}
-				/>
+				{confirmed ? (
+					<AniButton btnTitle={'다음'} btnStyle={'border'} btnLayout={btn_w654} titleFontStyle={32} onPress={goToNextStep} />
+				) : (
+					<AniButton btnTitle={'다음'} disable btnLayout={btn_w654} titleFontStyle={32} onPress={goToNextStep} />
+				)}
 			</View>
 		</KeyboardAvoidingView>
 	);

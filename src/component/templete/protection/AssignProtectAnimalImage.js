@@ -64,7 +64,7 @@ export default AssignProtectAnimalImage = props => {
 
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
-			<ScrollView contentContainerStyle={[assignProtectAnimal_style.container]}>
+			<View style={[assignProtectAnimal_style.container]}>
 				{/* (M)StageBar	 */}
 				<View style={[temp_style.stageBar, progressbar_style.stageBar]}>
 					<Stagebar
@@ -111,7 +111,7 @@ export default AssignProtectAnimalImage = props => {
 						<AniButton btnTitle={'다음'} disable={data.protect_animal_photo_uri_list.length == 0} btnLayout={btn_w226} onPress={gotoNextStep} />
 					</View>
 				</View>
-			</ScrollView>
+			</View>
 		</View>
 	);
 };

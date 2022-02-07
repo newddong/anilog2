@@ -4,7 +4,7 @@ import {APRI10, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {Cross46, Star50_Border, Star50_Filled} from 'Atom/icon';
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
-import {organism_style} from 'Organism/style_organism';
+import {organism_style} from '../style_organism copy';
 
 /**
  *

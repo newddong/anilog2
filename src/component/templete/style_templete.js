@@ -17,7 +17,7 @@ import {
 	GRAY30,
 } from 'Root/config/color';
 import DP from 'Root/config/dp';
-
+import {Platform} from 'react-native';
 export const login_style = StyleSheet.create({
 	wrp_main: {
 		// flex: 1,
@@ -3270,8 +3270,25 @@ export const missingAnimalDetail = StyleSheet.create({
 	poster: {
 		width: 618 * DP,
 		height: 872 * DP,
-
-		marginTop: 33 * DP,
+		// marginTop: 33 * DP,
+		backgroundColor: '#FFFFFF',
+		// backgroundColor: 'lightblue',
+		...Platform.select({
+			ios: {
+				borderColor: 'black',
+				shadowColor: '#4F4F4F',
+				shadowOffset: {
+					width: 8,
+					hegiht: 6,
+				},
+				shadowOpacity: 0.25,
+				// shadowRadius: 2.62,
+			},
+			android: {
+				elevation: 4,
+			},
+		}),
+		alignItems: 'center',
 	},
 	feedContent: {
 		marginTop: 40 * DP,
@@ -3282,6 +3299,116 @@ export const missingAnimalDetail = StyleSheet.create({
 		backgroundColor: GRAY30,
 		height: 2,
 	},
+	title: {
+		width: 578 * DP,
+		height: 112 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: '#FF0000',
+		borderRadius: 10,
+		marginTop: 10 * DP,
+	},
+	titleText: {
+		fontSize: 62 * DP,
+		fontWeight: 'bold',
+		color: 'white',
+	},
+	picture: {
+		marginTop: 10 * DP,
+		width: 578 * DP,
+		height: 284 * DP,
+		// backgroundColor: 'yellow',
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+	},
+	img_squre_284: {
+		width: 284 * DP,
+		height: 284 * DP,
+
+		backgroundColor: '#B0C7D8',
+	},
+	textBox: {
+		marginTop: 10 * DP,
+		height: 300 * DP, //유동적인 텍스트 크기에 대해서 좌우 간격이 좁아짐에 따라 늘어나는 height에 관한 처리 필요
+		width: 578 * DP,
+		alignItems: 'center',
+	},
+	phoneNumberBox: {
+		width: 578 * DP,
+		height: 106 * DP,
+		backgroundColor: '#FF0000',
+		alignItems: 'center',
+	},
+	missingTextWhite18: {
+		marginTop: 8 * DP,
+		fontSize: 18 * DP,
+		color: 'white',
+	},
+	missingText18: {
+		fontSize: 18 * DP,
+		color: '#191919',
+	},
+	missingText38: {
+		fontSize: 38 * DP,
+		fontWeight: 'bold',
+		color: '#FF0000',
+	},
+	missingBlackText32: {
+		fontSize: 32 * DP,
+		fontWeight: 'bold',
+		color: '#191919',
+	},
+	missingRedText32: {
+		fontSize: 32 * DP,
+		fontWeight: 'bold',
+		color: '#FF0000',
+	},
+	missingText26: {
+		fontSize: 26 * DP,
+		fontWeight: 'bold',
+		color: '#191919',
+	},
+	missingText22: {
+		paddingTop: 10 * DP,
+		fontSize: 22 * DP,
+		color: '#191919',
+	},
+	missingTextYellow50: {
+		fontSize: 50 * DP,
+		color: '#FFEE00',
+		fontWeight: 'bold',
+		fontFamily: 'Roboto',
+	},
+	yellowNumberBox: {
+		height: 62 * DP,
+		width: 452 * DP,
+		marginBottom: 8 * DP,
+		alignItems: 'center',
+	},
+	oneLine: {
+		borderBottomColor: 'black',
+		borderBottomWidth: 2 * DP,
+		width: 578 * DP,
+		marginTop: 10 * DP,
+		color: '#191919',
+	},
+	floatingBtnMissingReport: {
+		width: 118 * DP,
+		height: 110 * DP,
+		borderRadius: 45 * DP,
+		borderColor: '#FF0000',
+		borderWidth: 2,
+		// marginBottom: 20 * DP,
+		// marginRight: 12 * DP,
+		alignItems: 'center',
+		bottom: 20 * DP,
+		right: 12 * DP,
+		justifyContent: 'center',
+		backgroundColor: '#FFFFFF',
+		position: 'absolute',
+		opacity: 0.8,
+	},
+
 	commentList: {},
 });
 

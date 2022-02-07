@@ -123,8 +123,8 @@ import profiledefault2 from './profiledefault2';
 import profiledefault3 from './profiledefault3';
 import ready_for_updating from './ready_for_updating';
 import cross24 from './cross24';
-
 import updateImg from './updateImg';
+import posterSave from './posterSave';
 import DP from 'Root/config/dp';
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
 
@@ -136,6 +136,7 @@ const size48 = {width: 48 * DP, height: 48 * DP};
 const size50 = {width: 50 * DP, height: 50 * DP};
 const size52 = {width: 52 * DP, height: 52 * DP};
 const size54 = {width: 54 * DP, height: 54 * DP};
+const size54x46 = {width: 54 * DP, height: 46 * DP};
 const size58 = {width: 58 * DP, height: 58 * DP};
 const size60 = {width: 60 * DP, height: 60 * DP};
 const size62 = {width: 62 * DP, height: 64 * DP};
@@ -322,3 +323,4 @@ export const ChildCommentLinker = makeSvg(childCommentLinker, {width: 14 * DP, h
 export const Ready_for_updating = makeSvg(ready_for_updating, {width: 382 * DP, height: 382 * DP});
 export const Cross24_Filled = makeSvg(cross24, {width: 24 * DP, height: 24 * DP}, GRAY10);
 export const Cross24_White = makeSvg(cross24, {width: 24 * DP, height: 24 * DP}, 'white');
+export const PosterSave = makeSvg(posterSave, size54x46);

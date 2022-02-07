@@ -27,7 +27,7 @@ import {
 	LOGOUT,
 } from 'Root/i18n/msg';
 import {btn_w280} from 'Atom/btn/btn_style';
-import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FavoriteTag48_Filled, Paw48_APRI10, Setting46} from 'Atom/icon';
+import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FavoriteTag48_Filled, Paw46, Paw48_APRI10, Setting46} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
 import ProfileImageLarge194 from 'Molecules/image/ProfileImageLarge194';
 import ProfileMenu from 'Organism/menu/ProfileMenu';
@@ -138,7 +138,7 @@ export default UserMenu = props => {
 				Modal.popInfoModal();
 				// navigation.push('FavoriteFeeds', {token: data}); // FavoriteFeedObject
 				break;
-			case '보호 요청':
+			case '보호 요청(저장)':
 				// navigation.push('UserSaveAnimalRequest'); // BookmarkProtectRequestObject
 				Modal.popInfoModal();
 				break;
@@ -187,35 +187,38 @@ export default UserMenu = props => {
 							{data._id != undefined && <ProfileImageLarge194 data={data} />}
 						</View>
 
-						<View>
+						<View style={{marginLeft: 52 * DP}}>
 							<TouchableOpacity onPress={onPressMyName} style={[userMenu_style.user_id]}>
-								<Text style={[txt.roboto36b]}>{data.user_nickname || ''}</Text>
+								<Text style={[txt.roboto40b]}>{data.user_nickname || ''}</Text>
 							</TouchableOpacity>
 
-							<View style={[userMenu_style.contents]}>
-								{data._id != undefined && (
-									<Text numberOfLines={showMoreIntro ? 10 : 2} style={[txt.noto24, {color: GRAY10}]}>
-										{data.user_introduction || '자기소개가 없습니다.'}
-									</Text>
-								)}
-								{data._id != undefined && showMoreIntro ? (
-									<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {}]}>
-										<Text style={[txt.noto24, {color: GRAY10}]}>접기</Text>
-										<Arrow_Up_GRAY20 />
-									</TouchableOpacity>
-								) : data._id != undefined ? (
-									<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {}]}>
-										<Text style={[txt.noto24, {color: GRAY10}]}>펼치기</Text>
-										<Arrow_Down_GRAY10 />
-									</TouchableOpacity>
-								) : null}
+							<View style={[userMenu_style.contents, {marginTop: 18 * DP}, {alignItems: 'flex-start'}]}>
+								<SocialInfoB data={data} />
 							</View>
 						</View>
 					</View>
 
 					{/* 업로드 팔로워 팔로잉 */}
-					<View style={[userMenu_style.socialInfoB]}>
-						<SocialInfoB data={data} />
+					<View style={{flexDirection: 'row', width: 654 * DP}}>
+						<View style={[userMenu_style.introduceBox]}>
+							{/* <SocialInfoB data={data} /> */}
+							{data._id != undefined && (
+								<Text numberOfLines={showMoreIntro ? 10 : 2} style={[txt.noto26, {color: GRAY10}]}>
+									{data.user_introduction || '자기소개가 없습니다.'}
+								</Text>
+							)}
+							{data._id != undefined && showMoreIntro ? (
+								<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {}]}>
+									<Text style={[txt.noto24, {color: GRAY10}]}>접기</Text>
+									<Arrow_Up_GRAY20 />
+								</TouchableOpacity>
+							) : data._id != undefined ? (
+								<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {}]}>
+									<Text style={[txt.noto24, {color: GRAY10}]}>펼치기</Text>
+									<Arrow_Down_GRAY10 />
+								</TouchableOpacity>
+							) : null}
+						</View>
 					</View>
 
 					{/* 내 정보 수정 버튼*/}
@@ -254,7 +257,7 @@ export default UserMenu = props => {
 							[COMUNITY, NOTE_LIST],
 						]}
 						onClick={menuClick}
-						titleIcon={<Paw48_APRI10 />}
+						titleIcon={<Paw46 />}
 					/>
 					<ProfileMenu
 						menuTitle={SETTING}

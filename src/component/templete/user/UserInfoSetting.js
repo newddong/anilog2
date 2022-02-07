@@ -142,7 +142,7 @@ export default UserInfoSetting = ({route}) => {
 							{/* 이메일, 비밀번호 변경하기*/}
 							<View style={[temp_style.accountInfo_depth2]}>
 								<View style={[temp_style.user_email_userInfoSetting, userInfoSetting_style.user_email]}>
-									<Text style={[txt.roboto24]}>{data.user_nickname || ''}</Text>
+									<Text style={[txt.roboto26]}>{data.user_nickname || ''}</Text>
 								</View>
 								<View style={[temp_style.changePassword_userInfoSetting, userInfoSetting_style.changePassword]}>
 									<TouchableOpacity onPress={onPressChangePwd}>

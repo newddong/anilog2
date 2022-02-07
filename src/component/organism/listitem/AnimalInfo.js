@@ -23,11 +23,11 @@ export default AnimalInfo = props => {
 		<View style={[animalInfo.container]}>
 			<PetImageLabel data={data} onPressLabel={() => props.onPressLabel()} showNickname={false} />
 			<View style={[animalInfo.infoContainer]}>
-				<Text style={[animalInfo.infoContainer_petNickname, txt.noto30b]}>{data.user_nickname || ''}</Text>
-				<Text style={[animalInfo.infoContainer_petDetail, txt.noto24, {color: GRAY20}]}>
+				<Text style={[animalInfo.infoContainer_petNickname, txt.noto32b]}>{data.user_nickname || ''}</Text>
+				<Text style={[animalInfo.infoContainer_petDetail, txt.noto28, {color: GRAY20}]}>
 					{data.pet_species || ''}/{data.pet_species_detail || ''}
 				</Text>
-				<Text style={[animalInfo.infoContainer_petDetail, txt.noto24, {color: GRAY20}]}>임시보호 {data.protect_animal_date || ''}일 째</Text>
+				<Text style={[animalInfo.infoContainer_petDetail, txt.noto28, {color: GRAY20}]}>임시보호 {data.protect_animal_date || ''}일 째</Text>
 			</View>
 		</View>
 	);

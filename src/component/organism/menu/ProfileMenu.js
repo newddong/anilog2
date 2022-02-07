@@ -27,7 +27,7 @@ export default ProfileMenu = props => {
 						<View style={[profileMenu.item]}>
 							<TouchableOpacity onPress={() => menuClick(item[0])}>
 								<View style={[profileMenu.item_text]}>
-									<Text style={[txt.noto24, {color: GRAY10}]}>{item[0]}</Text>
+									<Text style={[txt.noto26, {color: GRAY10}]}>{item[0]}</Text>
 								</View>
 							</TouchableOpacity>
 							<View style={[profileMenu.item_bracket]}>
@@ -38,7 +38,7 @@ export default ProfileMenu = props => {
 						<View style={[profileMenu.item]}>
 							<TouchableOpacity onPress={() => menuClick(item[1])}>
 								<View style={[profileMenu.item_text]}>
-									<Text style={[txt.noto24, {color: GRAY10}]}>{item[1]}</Text>
+									<Text style={[txt.noto26, {color: GRAY10}]}>{item[1]}</Text>
 								</View>
 							</TouchableOpacity>
 							<View style={[profileMenu.item_bracket]}>{item[1] == '' ? null : <NextMark onPress={() => menuClick(item[1])} />}</View>
@@ -59,7 +59,7 @@ export default ProfileMenu = props => {
 				<View style={[profileMenu.titleContainer]}>
 					{props.titleIcon}
 					<View style={[profileMenu.title]}>
-						<Text style={[txt.noto24b, {color: GRAY10}]}>{props.menuTitle}</Text>
+						<Text style={[txt.noto28b, {color: GRAY10}]}>{props.menuTitle}</Text>
 					</View>
 				</View>
 				<ScrollView horizontal={false} scrollEnabled={false}>

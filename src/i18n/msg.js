@@ -355,7 +355,7 @@ export const INFO_QUESTION = '정보/문의';
 //User Menu 버튼
 export const INFO = '알림';
 export const ANIMAL_PROTECTION_STATE = '동물 보호 현황';
-export const PROTECTION_REQUEST = '보호 요청';
+export const PROTECTION_REQUEST = '보호 요청(저장)';
 
 export const PLEASE_UPLOAD_PIC = '해당 동물의 특징이 잘 보이는 이미지를 올려주세요.';
 export const PLEASE_GIVE_ME_DATE_AND_PLACE = '해당 동물이 구조된 날짜와 장소를 알려 주세요.';
@@ -398,7 +398,7 @@ export const PWD_CHECK_INFO = '비밀번호를 다시 한 번 적어주세요.';
 
 //Nickname 설정 관련
 export const NICKNAME_FORM = '2자 이상 15자 이내의 영문, 숫자의 입력만 가능합니다';
-export const NEW_NICK_REQUEST = '새로운 닉네임을 적어주세요.';
+export const NEW_NICK_REQUEST = '닉네임을 입력 해주세요.';
 export const PREVIOUS_NICK_TITLE = '기존 닉네임';
 
 export const NEW_NICK_TITLE = '새 닉네임';

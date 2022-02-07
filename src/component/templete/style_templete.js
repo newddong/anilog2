@@ -1718,13 +1718,14 @@ export const userMenu_style = StyleSheet.create({
 		marginTop: 38 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
+		backgroundColor: 'yellow',
 	},
 	userInfo: {
 		flexDirection: 'row',
 		marginTop: 40 * DP,
 	},
 	profileImageLarge: {
-		marginRight: 40 * DP,
+		// marginRight: 52 * DP,
 	},
 	btn_w280_view: {
 		flexDirection: 'row',
@@ -1741,6 +1742,10 @@ export const userMenu_style = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		// backgroundColor: '#BF9547',
+	},
+	introduceBox: {
+		flexDirection: 'row',
+		width: 492 * DP,
 	},
 	horizontalLine: {},
 });
@@ -2068,7 +2073,6 @@ export const shelterMenu = StyleSheet.create({
 	showMore: {
 		width: 400 * DP,
 		justifyContent: 'flex-end',
-		// backgroundColor: 'red',
 		flexDirection: 'row',
 	},
 	socialInfoB_4Items: {

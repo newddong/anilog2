@@ -9,7 +9,7 @@ import Stagebar from 'Molecules/info/Stagebar';
 import Input24 from 'Molecules/input/Input24';
 import AddressInput from 'Organism/input/AddressInput';
 import axios from 'axios';
-import {stagebar_style} from 'Organism/style_organism';
+import {stagebar_style} from 'Root/component/organism/style_organism copy';
 
 export default AssignShelterAddress = props => {
 	const [confirmed, setConfirmed] = React.useState(false); //주소란이 모두 작성되었다며 통과가능

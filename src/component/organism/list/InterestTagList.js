@@ -2,12 +2,13 @@ import React from 'react';
 import {FlatList, Text, View} from 'react-native';
 import {GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {btn_w226} from 'Atom/btn/btn_style';
-import {Cross46, Cross52} from 'Atom/icon';
-import AniButton from 'Molecules/button/AniButton';
-import {interestTagList} from 'Organism/style_organism';
+import {btn_w226} from 'Root/component/atom/btn/btn_style';
+import {Cross46} from 'Root/component/atom/icon';
+import AniButton from 'Root/component/molecules/button/AniButton';
 import {useNavigation} from '@react-navigation/core';
-import {INTEREST_REGION} from 'Root/i18n/msg';
+import {INTEREST_ACT, INTEREST_REGION} from 'Root/i18n/msg';
+import Modal from 'Root/component/modal/Modal';
+import {interestTagList} from '../style_organism copy';
 /**
  *
  *@param {{
@@ -23,8 +24,17 @@ export default InterestTagList = props => {
 		props.onDelete(index);
 	};
 
-	const onPressButton = () => {
-		if (props.title == INTEREST_REGION) navigation.push('LocationPicker');
+	const onPressAddBtn = () => {
+		if (props.title == INTEREST_REGION) {
+			navigation.push('LocationPicker');
+		} else if (props.title == INTEREST_ACT) {
+			console.log('Interest Act');
+			Modal.popInterestTagModal(
+				'',
+				() => alert('저장'),
+				() => Modal.close(),
+			);
+		}
 	};
 
 	const renderItem = (item, index) => {
@@ -45,7 +55,7 @@ export default InterestTagList = props => {
 					<Text style={[txt.noto28, {color: GRAY10}]}>{props.title}</Text>
 				</View>
 				<View style={[interestTagList.btn_w226]}>
-					<AniButton btnTitle={'추가하기'} btnLayout={btn_w226} btnTheme={'shadow'} />
+					<AniButton onPress={onPressAddBtn} btnTitle={'추가하기'} btnLayout={btn_w226} btnTheme={'shadow'} />
 				</View>
 			</View>
 			<View style={[interestTagList.interestingTagList]}>

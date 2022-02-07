@@ -13,6 +13,7 @@ import Modal from 'Component/modal/Modal';
 import {useLogin, userLogin} from 'Root/api/userapi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import userGlobalObj from 'Root/config/userGlobalObject';
+import {CALENDAR_MONTH, DOG_KIND, mobile_carrier, PET_KIND} from 'Root/i18n/msg';
 
 export default LoginTemplete = props => {
 	const [id, setId] = React.useState('');
@@ -22,7 +23,7 @@ export default LoginTemplete = props => {
 
 		userLogin(
 			{
-				login_id: '01096450422',
+				login_id: '0333324513',
 				login_password: 'tkddn123',
 			},
 			userObject => {
@@ -99,7 +100,14 @@ export default LoginTemplete = props => {
 	};
 
 	const test = () => {
-		Modal.pop;
+		Modal.popTwoBtnSelectModal(
+			['1', '2', '3'],
+			'모달',
+			() => alert('yes'),
+			() => alert('no'),
+			'취소',
+			'확인',
+		);
 	};
 
 	return (

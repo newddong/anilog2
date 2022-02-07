@@ -12,7 +12,7 @@ import AniButton from 'Molecules/button/AniButton';
 import Input30 from 'Molecules/input/Input30';
 import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';
 import Stagebar from 'Molecules/info/Stagebar';
-import {stagebar_style} from 'Organism/style_organism';
+import {stagebar_style} from 'Root/component/organism/style_organism copy';
 import {login_style, btn_style, temp_style, progressbar_style, assignPetProfileImage_style} from 'Templete/style_templete';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {checkProtectPet, nicknameDuplicationCheck} from 'Root/api/userapi';

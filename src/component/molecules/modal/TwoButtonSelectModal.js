@@ -20,18 +20,19 @@ import {txt} from 'Root/config/textstyle';
 import {Arrow_Down_GRAY10, Arrow_Up_GRAY10} from 'Atom/icon';
 
 /**
- * 버튼 한 개의 셀렉트 모달창
+ * 셀렉트 모달창
  *
  * @param {Object} props - props object
  * @param {Object} props.data - 드롭다운 아이템 목록
  * @param {string} props.msg -  상단 모달창에서 타이틀
  * @param {(selectedItem)=>void} props.onYes - 상단 모달창에서 확인 버튼 콜백 / 선택한 아이템 반환
+ * @param {()=>void} props.onNo -  상단 모달창에서 취소 버튼 콜백
  * @param {string} props.yesMsg -  상단 모달창에서 확인 버튼 타이틀
+ * @param {string} props.noMsg -  상단 모달창에서 취소 버튼 타이틀
  *
  */
-const OneButtonSelectModal = props => {
+const TwoButtonSelectModal = props => {
 	const data = props.data;
-	console.log('data', props);
 
 	const [selectedItem, setSelectedItem] = React.useState(2);
 	const [confirmedSelect, setConfirmedSelect] = React.useState(data[2]);
@@ -96,6 +97,11 @@ const OneButtonSelectModal = props => {
 		}
 	};
 
+	//상단 모달창에서 취소 버튼 클릭
+	const pressNo = () => {
+		props.onNo();
+	};
+
 	//상단 모달창에서 드롭다운 열기 클릭
 	const onOpen = () => {
 		setSelectOpen(!selectOpen);
@@ -140,7 +146,8 @@ const OneButtonSelectModal = props => {
 				</TouchableOpacity>
 				{getDirectInput()}
 				<View style={style.buttonContainer}>
-					<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.yesMsg} onPress={pressYes} />
+					<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.noMsg} onPress={pressNo} />
+					<AniButton btnLayout={btn_w226} btnTitle={props.yesMsg} onPress={pressYes} />
 				</View>
 			</View>
 			<Animated.View
@@ -181,8 +188,13 @@ const OneButtonSelectModal = props => {
 	);
 };
 
-OneButtonSelectModal.defaultProps = {
+TwoButtonSelectModal.defaultProps = {
+	popUpMsg: 'popUp',
+	noMsg: 'cancel',
 	yesMsg: 'ok',
+	onNo: () => {
+		alert('NO');
+	},
 	onYes: () => {
 		alert('YES');
 	},
@@ -210,8 +222,10 @@ const style = StyleSheet.create({
 		textAlign: 'center',
 	},
 	buttonContainer: {
+		width: 486 * DP,
 		alignSelf: 'center',
 		flexDirection: 'row',
+		justifyContent: 'space-between',
 	},
 	shadow: {
 		shadowColor: '#000000',
@@ -278,8 +292,8 @@ const style = StyleSheet.create({
 		justifyContent: 'center',
 		width: 666 * DP,
 		height: 70 * DP,
-		borderRadius: 30 * DP,
+		borderRadius: 20 * DP,
 	},
 });
 
-export default OneButtonSelectModal;
+export default TwoButtonSelectModal;

@@ -4,7 +4,7 @@ import AniButton from 'Molecules/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10, APRI10} from 'Root/config/color';
 import DP from 'Root/config/dp';
-import AidRequest from '../organism_ksw/AidRequest';
+import AidRequest from 'Root/component/organism/listitem/AidRequest';
 import {txt} from 'Root/config/textstyle';
 
 /**

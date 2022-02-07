@@ -64,6 +64,14 @@ import AddVolunteers from 'Root/component/templete/volunteer/AddVolunteers';
 import Calendar_Multiple from 'Root/component/molecules/calendar/Calendar_Multiple';
 import ProtectedPetDetailModal from 'Root/component/molecules/modal/ProtectedPetDetailModal';
 import InfoModal from 'Root/component/molecules/modal/InfoModal';
+import AnimalInfoModal from 'Root/component/molecules/modal/AnimalInfoModal';
+import SelectBoxModal from 'Root/component/molecules/modal/SelectBoxModal';
+import SelectDateModal from 'Root/component/molecules/modal/SelectDateModal';
+import SelectScrollBoxModal from 'Root/component/molecules/modal/SelectScrollBoxModal';
+import SocialModal from 'Root/component/molecules/modal/SocialModal';
+import TopAlarm from 'Root/component/molecules/modal/TopAlarm';
+import TwoButtonSelectModal from 'Root/component/molecules/modal/TwoButtonSelectModal';
+import OneButtonSelectModal from 'Root/component/molecules/modal/OneButtonSelectModal';
 // import Camera from 'Root/component/templete/Camera';
 // import Camera from 'Templete/media/Camera';
 const RootStack = createStackNavigator();
@@ -142,8 +150,8 @@ export default RootStackNavigation = () => {
 		!isPop && setPop(true);
 	};
 
-	Modal.popRadioSelect = (items, selectMsg, exitMsg, onSelect, onExit) => {
-		popIn(<RadioSelectModal items={items} selectMsg={selectMsg} exitMsg={exitMsg} onSelect={onSelect} onExit={onExit} />);
+	Modal.popRadioSelect = (items, title, onSelect) => {
+		popIn(<RadioSelectModal items={items} title={title} onSelect={onSelect} />);
 		!isPop && setPop(true);
 	};
 

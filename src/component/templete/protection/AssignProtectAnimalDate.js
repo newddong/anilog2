@@ -10,8 +10,7 @@ import {PLEASE_GIVE_ME_DATE_AND_PLACE, BTN_BACK, BTN_NEXT} from 'Root/i18n/msg';
 import DatePicker from 'Molecules/select/DatePicker';
 import Input24 from 'Molecules/input/Input24';
 import AniButton from 'Molecules/button/AniButton';
-import {stagebar_style} from 'Organism/style_organism';
-
+import {stagebar_style} from 'Root/component/organism/style_organism copy';
 export default AssignProtectAnimalDate = props => {
 	// console.log(props.route.params);
 	const navigation = useNavigation();

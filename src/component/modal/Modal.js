@@ -220,8 +220,9 @@ export default Modal = {
 
 	/**
 	 * 반려동물의 백신예정일 알람()
-	 * @param {object} data - 추가할 가족 계정의 오브젝트 정보
-	 *
+	 * @param {object} data - 추가할 가족 계정의 오브젝트 정보(필요 데이터 - 해당 달, 펫 닉네임, 필요한 백싱 )
+	 * @param {()=>void)} onClose - X마크 클릭
+
 	 * @example
 	 */
 	popTopAlarm: (data, onClose) => {},

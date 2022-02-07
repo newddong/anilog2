@@ -2,20 +2,13 @@ import React from 'react';
 import {FlatList, Text, View} from 'react-native';
 import {GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-<<<<<<< HEAD
-import {btn_w226} from 'Atom/btn/btn_style';
-import {Cross46, Cross52} from 'Atom/icon';
-import AniButton from 'Molecules/button/AniButton';
-import {interestTagList} from 'Organism/style_organism copy';
-=======
 import {btn_w226} from 'Root/component/atom/btn/btn_style';
 import {Cross46} from 'Root/component/atom/icon';
 import AniButton from 'Root/component/molecules/button/AniButton';
->>>>>>> 71d323f65c6be1dcf8b283d205842781df9cd976
 import {useNavigation} from '@react-navigation/core';
 import {INTEREST_ACT, INTEREST_REGION} from 'Root/i18n/msg';
 import Modal from 'Root/component/modal/Modal';
-import {interestTagList} from '../style_organism copy';
+import {interestTagList} from 'Organism/style_organism copy';
 /**
  *
  *@param {{

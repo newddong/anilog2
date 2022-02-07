@@ -1,6 +1,6 @@
 import React from 'react';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
-import {organism_style, feed_style} from '../style_organism';
+import {organism_style, feed_style} from 'Organism/style_organism';
 import FeedContent from './FeedContent';
 import {Comment48_Border, Like48_Border} from 'Atom/icon';
 import FeedMedia from 'Molecules/media/FeedMedia';
@@ -82,7 +82,7 @@ export default Feed = React.memo(props => {
 							</View>
 						</View>
 						<TouchableOpacity onPress={moveToCommentList}>
-							<View style={{ flexDirection: 'row'}}>
+							<View style={{flexDirection: 'row'}}>
 								<View style={organism_style.like48}>
 									<Comment48_Border />
 								</View>

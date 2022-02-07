@@ -4,7 +4,7 @@ import AniButton from '../button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10, APRI10} from 'Root/config/color';
 import DP from 'Root/config/dp';
-import AidRequest from 'Root/component/organism/listitem/AidRequest';
+import AidRequest from 'Organism/listitem/AidRequest';
 
 /**
  * 나의 보호소 출신 동물 / 보호동물 및 보호요청게시글 게이트웨이 모달

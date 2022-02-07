@@ -42,8 +42,15 @@ export default AnimalFromShelter = ({route}) => {
 	}, [route]);
 
 	//라벨 클릭
-	const onClickLabel = (status, user_id, item) => {
-		console.log('status , id => ' + status + '_' + user_id);
+	const onClickLabel = (status, user_id, protectAnimalObject) => {
+		// console.log('status , id => ' + status + '_' + user_id);
+		// console.log('item', item._id);
+		console.log(protectAnimalObject);
+		Modal.popAnimalInfoModal(
+			protectAnimalObject,
+			() => navigation.push('ProtectRequestManage', {item: protectAnimalObject, list: data}),
+			() => navigation.push('AdoptorInformation', protectAnimalObject),
+		);
 	};
 
 	//테두리 모드 On 상태에서 입양처 보기 클릭
@@ -74,7 +81,7 @@ export default AnimalFromShelter = ({route}) => {
 					) : (
 						<AnimalNeedHelpList
 							data={data}
-							borderMode={true}
+							// borderMode={true}
 							onClickLabel={onClickLabel}
 							onPressAdoptorInfo={onPressAdoptorInfo}
 							onPressProtectRequest={onPressProtectRequest}

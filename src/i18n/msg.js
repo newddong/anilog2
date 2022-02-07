@@ -184,6 +184,41 @@ export const EMAIL_DOMAIN = [
 	'직접입력',
 ];
 
+export const CALENDAR_YEAR = () => {
+	let currentTime = new Date();
+	let year = ['-------------', '-------------'];
+	for (let i = 0; i < 70; i++) {
+		year.push(currentTime.getFullYear() - i);
+	}
+	year.push('-------------', '-------------');
+	return year;
+};
+
+export const CALENDAR_MONTH = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+export const CALENDAR_DAY = () => {
+	const paddingObject = '-------------';
+	let day30 = ['-------------', '-------------'];
+	let day31 = ['-------------', '-------------'];
+	let day29 = ['-------------', '-------------'];
+	for (let i = 1; i < 32; i++) {
+		day31.push(i);
+	}
+	for (let i = 1; i < 31; i++) {
+		day30.push(i);
+	}
+	for (let i = 1; i < 30; i++) {
+		day29.push(i);
+	}
+	day31.push(paddingObject);
+	day31.push(paddingObject);
+	day30.push(paddingObject);
+	day30.push(paddingObject);
+	day29.push(paddingObject);
+	day29.push(paddingObject);
+	const days = {day31: day31, day30: day30, day29: day29};
+	return days;
+};
+
 //반려동물 종류
 export const PET_KIND = async () => {
 	let a = [];

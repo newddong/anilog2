@@ -1,11 +1,12 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {Text, View, TouchableOpacity, TextInput} from 'react-native';
+import {Text, View, TouchableOpacity, TextInput, TouchableWithoutFeedback, StyleSheet} from 'react-native';
 import DP from 'Root/config/dp';
+import {Arrow_Down_GRAY20, Arrow_Up_GRAY20, Cross52, NextMark} from 'Root/component/atom/icon';
 import {APRI10, GRAY10, GRAY30, RED10} from 'Root/config/color';
 import Input24 from './Input24';
 import {EMAIL_DOMAIN} from 'Root/i18n/msg';
-import EmialDropDown from 'Molecules/dropdown/EmailDropDown';
+import Modal from 'Root/component/modal/Modal';
 
 /**
  *
@@ -89,6 +90,23 @@ const InputWithEmail = props => {
 		props.onValid(isValid);
 	};
 
+	const selectEmailModal = () => {
+		const onSelectEmail = selectedItem => {
+			console.log('selectedItem', selectedItem);
+			if (selectedItem == '직접입력') {
+				setDirectInputMode(true);
+				setSelectedItem('');
+			} else {
+				console.log('ddd');
+				setDirectInputMode(false);
+				setSelectedItem(selectedItem);
+				setEmail(input + '@' + selectedItem);
+			}
+			Modal.close();
+		};
+		Modal.popSelectScrollBoxModal([EMAIL_DOMAIN], '메일 주소 선택', onSelectEmail);
+	};
+
 	return (
 		<View style={{}}>
 			{props.title ? (
@@ -115,17 +133,43 @@ const InputWithEmail = props => {
 					validator={validator}
 					onValid={onValid}
 				/>
-				<View style={{height: 80 * DP, borderBottomColor: APRI10, borderBottomWidth: 2 * DP, justifyContent: 'center'}}>
+				<View
+					style={{
+						height: 80 * DP,
+						borderBottomColor: selectedItem != '' || domainDirect != '' ? APRI10 : GRAY30,
+						borderBottomWidth: 2 * DP,
+						justifyContent: 'center',
+					}}>
 					<Text style={[txt.roboto24b, {lineHeight: 36 * DP}]}>@</Text>
 				</View>
-				<EmialDropDown
+				{/* <EmialDropDown
 					menu={EMAIL_DOMAIN}
 					width={254}
 					defaultIndex={defaultIndex}
 					defaultDirectInput={props.defaultValue ? props.defaultValue.split('@')[1] || '' : ''}
 					onChangeDomain={onDirectInput}
 					onSelect={onSelectDropDown}
-				/>
+				/> */}
+				<TouchableWithoutFeedback onPress={selectEmailModal}>
+					<View
+						style={[
+							styles_inputWithEmail.emailDomainContainer,
+							{
+								borderBottomWidth: 2 * DP,
+								borderBottomColor: selectedItem != '' || domainDirect != '' ? APRI10 : GRAY30,
+							},
+						]}>
+						<TextInput
+							style={[styles_inputWithEmail.emailDomain]}
+							value={selectedItem != '' ? selectedItem : null}
+							onChangeText={onDirectInput}
+							editable={directInputMode ? true : false}
+						/>
+						<View style={{height: 80 * DP, transform: [{rotate: '90deg'}]}}>
+							<NextMark />
+						</View>
+					</View>
+				</TouchableWithoutFeedback>
 			</View>
 		</View>
 	);
@@ -142,3 +186,14 @@ InputWithEmail.defaultProps = {
 };
 
 export default InputWithEmail;
+const styles_inputWithEmail = StyleSheet.create({
+	emailDomain: {
+		flex: 1,
+		paddingLeft: 10 * DP,
+	},
+	emailDomainContainer: {
+		width: 230 * DP,
+		height: 80 * DP,
+		flexDirection: 'row',
+	},
+});

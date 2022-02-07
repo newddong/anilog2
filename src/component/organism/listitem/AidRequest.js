@@ -5,7 +5,7 @@ import {txt} from 'Root/config/textstyle';
 import {DEFAULT_ANIMAL_PROFILE} from 'Root/i18n/msg';
 import {AddItem64, Female48, Male48} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
-import {aidRequest} from 'Organism/style_organism';
+import {aidRequest} from '../style_organism copy';
 
 /**
  *

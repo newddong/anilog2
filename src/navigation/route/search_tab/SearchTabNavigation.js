@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import SearchFeedTabNavigation from './feed_tab/SearchFeedTabNavigation';
-import SearchProtectRequest from 'Templete/search/SearchProtectRequest';
 import Temp from 'Navigation/route/main_tab/community_stack/temp';
-import TopTabNavigation_Filled from 'Organism/menu/TopTabNavigation_Filled';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
-import {Dimensions} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
+import {APRI10, GRAY10, WHITE} from 'Root/config/color';
+import DP from 'Root/config/dp';
 
 const SearchTabNav = createMaterialTopTabNavigator();
 
@@ -13,16 +13,14 @@ export default SearchTabNavigation = props => {
 	// navigation.push('Search', {mother: 0, child: 1});
 	// ㄴ 위와 같이 호출할 경우 mother는 상위TopTab의 Tab인덱스를, child는 하단TopTab의 인덱스를 설정해줄 수 있음.
 	const prevNav = props.route.params.prevNav;
-	const childTab = props.route.params.child;
+	const childTab = props.route.params.child; //
 	const [searchInput, setSearchInput] = React.useState();
-	const tabList = ['피드', '커뮤니티'];
 	const navName = ['FEED', 'COMMUNITY'];
 	//SearchHeader에서 작성한 검색어와 검색클릭이 행해지면 SearchInput에 값이 들어감
 
 	const [currentScreen, setCurrentScreen] = React.useState(0); //현재 보고 있는 화면 State
 	const [currentChild, setCurrentChild] = React.useState(''); //현재 보고 있는 화면 State
 	const routeName = getFocusedRouteNameFromRoute(props.route); //현재 활성화되어 있는 스크린의 이름을 받아옴
-	console.log('route', routeName);
 	React.useEffect(() => {
 		if (routeName == navName[0]) setCurrentScreen(0);
 		else if (routeName == navName[1]) setCurrentScreen(1);
@@ -52,33 +50,29 @@ export default SearchTabNavigation = props => {
 		// props.onClickUser();
 	};
 
+	const searchTabLabelOption = {
+		tabBarActiveTintColor: 'white',
+		tabBarLabelStyle: [styles.tabbarLabelStyle],
+		tabBarInactiveTintColor: GRAY10,
+		tabBarPressColor: WHITE,
+	};
+
 	return (
 		<SearchTabNav.Navigator
-			screenOptions={{lazy: true}}
+			screenOptions={{
+				tabBarItemStyle: {height: 70 * DP},
+				tabBarIndicatorStyle: styles.tabBarIndicatorStyle,
+				lazy: true,
+			}}
 			initialLayout={{width: Dimensions.get('window').width}}
 			initialRouteName={'FEED'}
-			optimizationsEnabled={true}
-			tabBar={({state, descriptors, navigation, position}) => {
-				// console.log('state', state);
-				const onSelectTab = pressedTab => {
-					// console.log('press', state.routes[pressedTab].name);
-					navigation.navigate({
-						//현재 Tab state가 가지는 routes들 중 pressedTab 인덱스
-						name: state.routes[pressedTab].name,
-						merge: true,
-					});
-				};
-				return (
-					<TopTabNavigation_Filled
-						onSelect={onSelectTab} // 현재 클릭된 상태인 tab (pressedTab에는 클릭된 index가 담겨져있음)
-						select={props.route.params.mother ? props.route.params.mother : state.index} // gesture Handler(손가락으로 swipe)로 tab을 움직였을 시 자식까지 state를 연동시키기 위한 props
-						fontSize={24}
-						menu={tabList}
-						value={currentScreen}
-					/>
-				);
-			}}>
-			<SearchTabNav.Screen name="FEED">
+			optimizationsEnabled={true}>
+			<SearchTabNav.Screen
+				name="FEED"
+				options={{
+					title: '피드',
+					...searchTabLabelOption,
+				}}>
 				{props => (
 					<SearchFeedTabNavigation
 						{...props}
@@ -91,8 +85,29 @@ export default SearchTabNavigation = props => {
 					/>
 				)}
 			</SearchTabNav.Screen>
-			<SearchTabNav.Screen name="COMMUNITY" component={Temp} />
+			<SearchTabNav.Screen
+				name="COMMUNITY"
+				component={Temp}
+				options={{
+					title: '커뮤니티',
+					...searchTabLabelOption,
+				}}
+			/>
 			{/* <SearchTabNav.Screen name="SearchProtectRequest">{props => <SearchProtectRequest {...props} input={searchInput} />}</SearchTabNav.Screen> */}
 		</SearchTabNav.Navigator>
 	);
 };
+
+const styles = StyleSheet.create({
+	tabbarLabelStyle: {
+		fontFamily: 'NotoSansKR-Bold',
+		fontSize: 30 * DP,
+		marginTop: -20 * DP,
+	},
+	tabBarIndicatorStyle: {
+		backgroundColor: APRI10,
+		height: 70 * DP,
+		borderTopRightRadius: 40 * DP,
+		borderTopLeftRadius: 40 * DP,
+	},
+});

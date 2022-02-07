@@ -1,16 +1,13 @@
 import React from 'react';
-
 import {View, Text, TouchableOpacity, TouchableWithoutFeedback, Alert, Dimensions, StyleSheet} from 'react-native';
-
 import moment from 'moment';
 import DP from 'Root/config/dp';
 import {day} from 'Root/i18n/msg';
 import {txt} from 'Root/config/textstyle';
 import {WHITE, APRI10, BLACK, GRAY10, GRAY20, GRAY30, MIDNIGHT_BLUE, BLUE10} from 'Root/config/color';
 import {NextMark} from 'Root/component/atom/icon';
-// import YearDropDown from 'Root/component/molecules/YearDropDown';
-import AniButton from 'Molecules/button/AniButton';
-import {btn_w108, btn_w116, btn_w176, btn_w92} from 'Atom/btn/btn_style';
+import AniButton from '../button/AniButton';
+import {btn_w108, btn_w116, btn_w176, btn_w92} from 'Root/component/atom/btn/btn_style';
 
 const Calendar_Multiple = props => {
 	const HEIGHT = Dimensions.get('screen').height;

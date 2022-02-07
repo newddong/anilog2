@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text, Dimensions, TouchableWithoutFeedback} from 'react-native';
+import {View, StyleSheet, Text, Dimensions, TouchableWithoutFeedback, Animated, Easing} from 'react-native';
 import Modal from 'Component/modal/Modal';
 import DP from 'Root/config/dp';
 
@@ -11,9 +11,9 @@ import DP from 'Root/config/dp';
  * horizontalOffset : '',
  * }} props
  */
-export default Dropdown = React.forwardRef((props,ref) => {
-	React.useImperativeHandle(ref,()=>({
-		button:buttonref
+export default Dropdown = React.forwardRef((props, ref) => {
+	React.useImperativeHandle(ref, () => ({
+		button: buttonref,
 	}));
 
 	const container = React.useRef();
@@ -22,7 +22,6 @@ export default Dropdown = React.forwardRef((props,ref) => {
 	const onPressOverride = () => {
 		console.log('onPressOverride');
 		click();
-
 		props.buttonComponent.props.onPress();
 		isClick.current = !isClick.current;
 	};
@@ -33,17 +32,26 @@ export default Dropdown = React.forwardRef((props,ref) => {
 		props.buttonComponent.props.onOpen();
 	};
 	const onCloseOverride = () => {
-		console.log('onCloseOverride');
-		Modal.close();
-		props.buttonComponent.props.onClose();
+		if (props.animated) {
+			setTimeout(() => {
+				console.log('onCloseOverride / Animated');
+				Modal.close();
+				props.buttonComponent.props.onClose();
+			}, 450);
+		} else {
+			console.log('onCloseOverride / NoneAnimated');
+			Modal.close();
+			props.buttonComponent.props.onClose();
+		}
 	};
 
 	const closeDropdown = () => {
 		console.log('closeDropDown');
-		Modal.close();
+		// Modal.close(); 시간차 애니메이션 효과를 주기 위한 주석처리
 		buttonref.current && buttonref.current.press();
 		props.buttonComponent.props.onClose();
 	};
+
 	const positionY = (py, height) => {
 		if (props.alignBottom) {
 			return py + height;
@@ -67,6 +75,7 @@ export default Dropdown = React.forwardRef((props,ref) => {
 					style: [
 						{position: 'absolute', top: positionY(py, height), left: positionX(px, width), paddingBottom: 15 * DP},
 						props.dropdownList.props.style,
+						// {height: animatedHeight},
 					],
 				});
 				Modal.popDrop(

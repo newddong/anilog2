@@ -1,7 +1,6 @@
 import React from 'react';
-import {View, TouchableOpacity, TouchableWithoutFeedback, Text, StyleSheet} from 'react-native';
+import {View, TouchableWithoutFeedback, Text, StyleSheet, Animated, Easing} from 'react-native';
 import Dropdown from 'Molecules/dropdown/Dropdown';
-import {btn_w280, btn_w226} from 'Atom/btn/btn_style';
 import {APRI10, APRI20, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import Modal from 'Component/modal/Modal';
@@ -19,50 +18,80 @@ import MeatBallButton from 'Molecules/button/MeatBallButton';
  * }} props
  */
 const MeatBallDropdown = props => {
+	const animatedHeight = React.useRef(new Animated.Value(0)).current;
+	const [expanded, setExpanded] = React.useState(false);
+
+	const closeAnimation = () => {
+		console.log('CloseAnimation called');
+		Animated.timing(animatedHeight, {
+			toValue: 0,
+			duration: 450,
+			// easing: Easing.linear,
+			useNativeDriver: false,
+		}).start();
+		setExpanded(false);
+	};
+
 	const onOpen = () => {
-		props.onOpen();
+		Animated.timing(animatedHeight, {
+			duration: 500,
+			toValue: 252 * DP,
+			// easing: Easing.linear,
+			useNativeDriver: false,
+		}).start();
+		setExpanded(true);
+		// props.onOpen();
 	};
 
 	const onClose = () => {
-		props.onClose();
-		Modal.close();
+		// props.onClose();
+		closeAnimation();
+		// Modal.close();
 	};
 	const onSelect = (v, i) => {
+		closeAnimation();
 		props.onSelect(v, i);
 		dropdown.current.button.current.press();
 	};
 	const dropdown = React.useRef();
+
+	const interpolatedHeight = animatedHeight.interpolate({
+		inputRange: [0, 100],
+		outputRange: [0, 150],
+	});
+
 	return (
 		<Dropdown
-			// buttonComponent={<ActionButton {...props} initState={false} noStateChange />}
 			alignBottom
 			ref={dropdown}
+			animated={true}
 			horizontalOffset={320 * DP}
-			buttonComponent={<MeatBallButton {...props} initState={false} />}
+			buttonComponent={<MeatBallButton {...props} initState={expanded} onOpen={onOpen} onClose={onClose} noStateChange />}
 			dropdownList={
-				<View>
-					<TouchableWithoutFeedback>
-						{/*부모의 터치 이벤트를 dropdownList로 오지 않도록 차단 더 세련된 방법을 찾아야함*/}
-						<View style={[style.dropdownList, style.shadow]}>
-							{props.menu.map((v, i) => (
-								<TouchableWithoutFeedback onPress={() => onSelect(v, i)} key={i}>
-									<View style={{width: 320 * DP, marginVertical: 15 * DP}}>
-										<Text
-											style={[
-												txt.noto24b,
-												{
-													fontSize: props.titleFontStyle * DP,
-													textAlign: 'center',
-												},
-											]}>
-											{v}
-										</Text>
-									</View>
-								</TouchableWithoutFeedback>
-							))}
-						</View>
-					</TouchableWithoutFeedback>
-				</View>
+				<Animated.ScrollView
+					style={{
+						height: interpolatedHeight,
+					}}>
+					{/*부모의 터치 이벤트를 dropdownList로 오지 않도록 차단 더 세련된 방법을 찾아야함*/}
+					<View style={[style.dropdownList, style.shadow]}>
+						{props.menu.map((v, i) => (
+							<TouchableWithoutFeedback onPress={() => onSelect(v, i)} key={i}>
+								<View style={{width: 320 * DP, marginVertical: 15 * DP}}>
+									<Text
+										style={[
+											txt.noto24b,
+											{
+												fontSize: props.titleFontStyle * DP,
+												textAlign: 'center',
+											},
+										]}>
+										{v}
+									</Text>
+								</View>
+							</TouchableWithoutFeedback>
+						))}
+					</View>
+				</Animated.ScrollView>
 			}
 		/>
 	);

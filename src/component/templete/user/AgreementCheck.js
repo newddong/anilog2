@@ -9,7 +9,7 @@ import AniButton from 'Molecules/button/AniButton';
 import Stagebar from 'Molecules/info/Stagebar';
 import AssignCheckList from 'Organism/list/AssignCheckList';
 import AssignCheckListItem from 'Organism/listitem/AssignCheckListItem';
-import {stagebar_style} from 'Root/component/organism/style_organism copy';
+import {stagebar_style} from 'Organism/style_organism copy';
 import {login_style, btn_style, temp_style, progressbar_style, agreementCheck_style} from 'Templete/style_templete';
 
 export default AgreementCheck = props => {

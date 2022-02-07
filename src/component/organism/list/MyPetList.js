@@ -3,7 +3,7 @@ import {FlatList, TouchableOpacity} from 'react-native';
 import {Text, View} from 'react-native';
 import AddPet from 'Molecules/button/AddPet';
 import PetImageLabel from 'Molecules/label/PetImageLabel';
-import {myPetList} from '../style_organism copy';
+import {myPetList} from 'Organism/style_organism copy';
 /**
  *
  * @param {{

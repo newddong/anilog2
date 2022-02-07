@@ -5,7 +5,7 @@ import {txt} from 'Root/config/textstyle';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {Cross46, Cross52} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
-import {interestTagList} from '../style_organism copy';
+import {interestTagList} from 'Organism/style_organism copy';
 import {useNavigation} from '@react-navigation/core';
 import {INTEREST_REGION} from 'Root/i18n/msg';
 /**

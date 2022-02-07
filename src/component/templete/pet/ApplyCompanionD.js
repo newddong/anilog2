@@ -9,7 +9,7 @@ import AniButton from 'Molecules/button/AniButton';
 import InputLongText from 'Molecules/input/InputLongText';
 import Stagebar from 'Molecules/info/Stagebar';
 import SelectStat from 'Organism/list/SelectStat';
-import {stagebar_style} from 'Root/component/organism/style_organism copy';
+import {stagebar_style} from 'Organism/style_organism copy';
 import {applyCompanionD, btn_style, login_style, temp_style} from 'Templete/style_templete';
 
 // protect_act_applicant_id : Mongodb_ID(ref:UserObject), //보호활동 신청자

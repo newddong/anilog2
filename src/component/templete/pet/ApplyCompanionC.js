@@ -9,7 +9,7 @@ import {btn_w176} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import Stagebar from 'Molecules/info/Stagebar';
 import AssignCheckList from 'Organism/list/AssignCheckList';
-import {stagebar_style} from 'Root/component/organism/style_organism copy';
+import {stagebar_style} from 'Organism/style_organism copy';
 import {applyCompanionC, btn_style, login_style, temp_style} from 'Templete/style_templete';
 
 // protect_act_checklist : {

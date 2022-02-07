@@ -6,7 +6,7 @@ import AniButton from 'Molecules/button/AniButton';
 import Stagebar from 'Molecules/info/Stagebar';
 import {login_style, btn_style, temp_style, progressbar_style, assignUserHabitation_style} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
-import {stagebar_style} from 'Root/component/organism/style_organism copy';
+import {stagebar_style} from 'Organism/style_organism copy';
 import {getAddressList} from 'Root/api/address';
 import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 

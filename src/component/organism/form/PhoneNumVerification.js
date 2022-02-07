@@ -10,7 +10,7 @@ import Input30 from 'Molecules/input/Input30';
 import InputTimeLimit from 'Molecules/input/InputTimeLimit';
 import InputWithSelect from 'Molecules/input/InputWithSelect';
 import {btn_style, temp_style} from 'Templete/style_templete';
-import {phoneNumVerification} from '../style_organism copy';
+import {phoneNumVerification} from 'Organism/style_organism copy';
 /**
  *
  *@param {{

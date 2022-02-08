@@ -2,15 +2,15 @@ import React from 'react';
 import {ScrollView, Text, View} from 'react-native';
 import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import TabSelectFilled_Type1 from 'Root/component/molecules/tab/TabSelectFilled_Type1';
-import DatePicker from 'Root/component/molecules/select/DatePicker';
+import TabSelectFilled_Type1 from 'Molecules/tab/TabSelectFilled_Type1';
+import DatePicker from 'Molecules/select/DatePicker';
 import {login_style, btn_style, temp_style, userInfoDetailSettting_style} from '../style_templete';
-import InterestTagList from 'Root/component/organism/list/InterestTagList';
+import InterestTagList from 'Organism/list/InterestTagList';
 import {GENDER_TAB_SELECT, INPUT_PHONE_NUM, INTEREST_ACT, INTEREST_REGION, mobile_carrier} from 'Root/i18n/msg';
-import Modal from 'Root/component/modal/Modal';
-import Input24 from 'Root/component/molecules/input/Input24';
+import Modal from 'Component/modal/Modal';
+import Input24 from 'Molecules/input/Input24';
 import {getAddressList} from 'Root/api/address';
-import NormalDropDown from 'Root/component/molecules/dropdown/NormalDropDown';
+import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 
 export default UserInfoDetailSettting = ({route, navigation}) => {
 	const debug = false;

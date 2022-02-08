@@ -6,7 +6,7 @@ import {txt} from 'Root/config/textstyle';
 import {COMPANION_DURATION, COMPANION_STATUS, PET_AGE, PET_KIND} from 'Root/i18n/msg';
 import {Cross52, CrossMark_Filled} from 'Atom/icon';
 import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
-import {companionForm} from '../style_organism copy';
+import {companionForm} from 'Organism/style_organism copy';
 
 /**
  *

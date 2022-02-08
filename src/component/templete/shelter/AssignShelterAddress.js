@@ -1,12 +1,12 @@
 import React from 'react';
 import {Text, View, KeyboardAvoidingView} from 'react-native';
-import {login_style, btn_style, temp_style, progressbar_style, assignShelterAddress_style} from '../style_templete';
+import {login_style, btn_style, temp_style, progressbar_style, assignShelterAddress_style} from 'Templete/style_templete';
 import {APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Root/component/molecules/button/AniButton';
-import Input24 from 'Root/component/molecules/input/Input24';
-import AddressInput from 'Root/component/organism/input/AddressInput';
+import Input24 from 'Molecules/input/Input24';
+import AddressInput from 'Organism/input/AddressInput';
 import {stagebar_style} from 'Root/component/organism/style_organism copy';
 import StageBar from 'Root/component/molecules/info/Stagebar';
 

@@ -21,8 +21,8 @@ export default LoginTemplete = props => {
 		Modal.popNoBtn('로그인을 요청합니다.');
 		userLogin(
 			{
-				login_id: '01096450422',
-				login_password: 'tkddn123',
+				login_id: id,
+				login_password: password,
 			},
 			userObject => {
 				// console.log('userObject', userObject.msg);

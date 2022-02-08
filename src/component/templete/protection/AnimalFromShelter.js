@@ -1,8 +1,8 @@
 import React from 'react';
 import {ActivityIndicator, Text, View} from 'react-native';
-import {login_style, animalFromShelter_style} from '../style_templete';
-import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
 import {useNavigation} from '@react-navigation/core';
+import {login_style, animalFromShelter_style} from 'Templete/style_templete';
+import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {getProtectRequestListByShelterId, getShelterProtectAnimalList} from 'Root/api/shelterapi';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';

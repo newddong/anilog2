@@ -3,10 +3,10 @@ import {StyleSheet, Text, View} from 'react-native';
 import {INQUERY_ACCOUNT} from 'Root/i18n/msg';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import PhoneNumVerification from 'Root/component/organism/form/PhoneNumVerification';
-import AniButton from 'Root/component/molecules/button/AniButton';
+import PhoneNumVerification from 'Organism/form/PhoneNumVerification';
+import AniButton from 'Molecules/button/AniButton';
 import {btn_w654} from 'Atom/btn/btn_style';
-import Modal from 'Root/component/modal/Modal';
+import Modal from 'Component/modal/Modal';
 import {GRAY10} from 'Root/config/color';
 
 // 각각 뷰에 컴포넌트 삽입시 style의 첫번째 index 삭제할 것. 두번째 index는 상.하 간격 style이라서 이 컴포넌트에만 해당 됨.

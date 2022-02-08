@@ -5,12 +5,12 @@ import {userAssign_agreementCheckList} from 'Root/config/dummyDate_json';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from 'Atom/btn/btn_style';
 import Modal from 'Root/component/modal/Modal';
-import AniButton from 'Root/component/molecules/button/AniButton';
-import AssignCheckList from 'Root/component/organism/list/AssignCheckList';
-import AssignCheckListItem from 'Root/component/organism/listitem/AssignCheckListItem';
-import {stagebar_style} from 'Root/component/organism/style_organism copy';
-import {login_style, btn_style, temp_style, progressbar_style, agreementCheck_style} from '../style_templete';
-import StageBar from 'Root/component/molecules/info/Stagebar';
+import AniButton from 'Molecules/button/AniButton';
+import AssignCheckList from 'Organism/list/AssignCheckList';
+import AssignCheckListItem from 'Organism/listitem/AssignCheckListItem';
+import {stagebar_style} from 'Organism/style_organism copy';
+import {login_style, btn_style, temp_style, progressbar_style, agreementCheck_style} from 'Templete/style_templete';
+import StageBar from 'Molecules/info/Stagebar';
 
 export default AgreementCheck = props => {
 	const user_agreement = React.useRef({

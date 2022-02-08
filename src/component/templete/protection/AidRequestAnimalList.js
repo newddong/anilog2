@@ -1,8 +1,7 @@
 import React from 'react';
 import {ActivityIndicator, ScrollView, Text, View} from 'react-native';
-import {login_style} from '../style_templete';
 import AidRequestList from 'Root/component/organism/list/AidRequestList';
-import {temp_style, baseInfo_style} from '../style_templete';
+import {temp_style, baseInfo_style, login_style} from 'Templete/style_templete';
 import {getShelterProtectAnimalList} from 'Root/api/shelterapi';
 import {getApplyDetailById} from 'Root/api/protectapi';
 import {txt} from 'Root/config/textstyle';

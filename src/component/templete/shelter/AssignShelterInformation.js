@@ -3,16 +3,16 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from 'Atom/btn/btn_style';
-import AniButton from 'Root/component/molecules/button/AniButton';
-import Input24 from 'Root/component/molecules/input/Input24';
-import {login_style, btn_style, temp_style, progressbar_style, assignShelterInformation_style} from '../style_templete';
-import InputWithSelect from 'Root/component/molecules/input/InputWithSelect';
+import AniButton from 'Molecules/button/AniButton';
+import Input24 from 'Molecules/input/Input24';
+import {login_style, btn_style, temp_style, progressbar_style, assignShelterInformation_style} from 'Templete/style_templete';
+import InputWithSelect from 'Molecules/input/InputWithSelect';
 import {initial_number, email_supplier} from 'Root/config/dummyDate_json';
-import InputWithEmail from 'Root/component/molecules/input/InputWithEmail';
-import {stagebar_style} from 'Root/component/organism/style_organism copy';
+import InputWithEmail from 'Molecules/input/InputWithEmail';
+import {stagebar_style} from 'Organism/style_organism copy';
 import {Calendar48_Border, Calendar48_Filled} from 'Atom/icon';
 import Modal from 'Root/component/modal/Modal';
-import StageBar from 'Root/component/molecules/info/Stagebar';
+import StageBar from 'Molecules/info/Stagebar';
 
 // 각각 뷰에 컴포넌트 삽입시 style의 첫번째 index 삭제할 것. 두번째 index는 상.하 간격 style이라서 이 컴포넌트에만 해당 됨.
 //ex) 변경 전: <View style={[btn_style.btn_w654, findAccount_style.btn_w654]}>   변경 후:  <View style={[findAccount_style.btn_w654]}>

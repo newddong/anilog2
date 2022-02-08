@@ -1,10 +1,10 @@
 import React from 'react';
 import {Text, View} from 'react-native';
-import {login_style, temp_style, protectRequestList_style, baseInfo_style} from '../style_templete';
-import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
+import {login_style, temp_style, protectRequestList_style, baseInfo_style} from 'Templete/style_templete';
+import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {PET_KIND, PROTECT_STATUS} from 'Root/i18n/msg';
-import FilterButton from 'Root/component/molecules/button/FilterButton';
-import MeatBallDropdown from 'Root/component/molecules/dropdown/MeatBallDropdown';
+import FilterButton from 'Molecules/button/FilterButton';
+import MeatBallDropdown from 'Molecules/dropdown/MeatBallDropdown';
 import {getProtectRequestList, getProtectRequestListByShelterId} from 'Root/api/shelterapi';
 import Modal from 'Root/component/modal/Modal';
 import {txt} from 'Root/config/textstyle';

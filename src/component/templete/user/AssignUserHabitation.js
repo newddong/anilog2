@@ -2,14 +2,14 @@ import React from 'react';
 import {Text, View, TouchableOpacity} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {btn_w522, btn_w654} from 'Atom/btn/btn_style';
-import AniButton from 'Root/component/molecules/button/AniButton';
-import {login_style, btn_style, temp_style, progressbar_style, assignUserHabitation_style} from '../style_templete';
+import AniButton from 'Molecules/button/AniButton';
+import {login_style, btn_style, temp_style, progressbar_style, assignUserHabitation_style} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
 import {stagebar_style} from 'Organism/style_organism copy';
 import {getAddressList} from 'Root/api/address';
 import {APRI10} from 'Root/config/color';
 import {Arrow_Down_GRAY10} from 'Atom/icon';
-import StageBar from 'Root/component/molecules/info/Stagebar';
+import StageBar from 'Molecules/info/Stagebar';
 
 /**
  * 유저의 지역정보를 등록하는 템플릿

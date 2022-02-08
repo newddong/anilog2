@@ -1,16 +1,15 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
+import moment from 'moment';
+import {useNavigation} from '@react-navigation/core';
 import {txt} from 'Root/config/textstyle';
 import {btn_w276} from 'Atom/btn/btn_style';
 import ProtectedThumbnail from 'Molecules/media/ProtectedThumbnail';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import AniButton from 'Molecules/button/AniButton';
 import {FavoriteTag48_Border, FavoriteTag48_Filled} from 'Atom/icon';
 import {BLUE10, BLUE20, RED10} from 'Root/config/color';
 import {DEFAULT_ANIMAL_PROFILE} from 'Root/i18n/msg';
-import moment from 'moment';
-import {useNavigation} from '@react-navigation/core';
-import {animalNeedHelp} from '../style_organism copy';
+import {animalNeedHelp} from 'Organism/style_organism copy';
 
 /**
  *

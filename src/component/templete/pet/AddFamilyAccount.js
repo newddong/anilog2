@@ -2,7 +2,7 @@ import React from 'react';
 import {ScrollView, View} from 'react-native';
 import InputWithSearchIcon from 'Root/component/molecules/input/InputWithSearchIcon';
 import AccountList from 'Root/component/organism/list/AccountList';
-import {login_style, temp_style, addFamilyAccount_style} from '../style_templete';
+import {login_style, temp_style, addFamilyAccount_style} from 'Templete/style_templete';
 import Modal from 'Root/component/modal/Modal';
 import {addUserToFamily, getUserListByNickname} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';

@@ -4,9 +4,9 @@ import {GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from 'Atom/btn/btn_style';
 import {NextMark} from 'Atom/icon';
-import AniButton from 'Root/component/molecules/button/AniButton';
-import Input24 from 'Root/component/molecules/input/Input24';
-import {login_style, btn_style, temp_style, shelterCodeCheck_style} from '../style_templete';
+import AniButton from 'Molecules/button/AniButton';
+import Input24 from 'Molecules/input/Input24';
+import {login_style, btn_style, temp_style, shelterCodeCheck_style} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
 import {checkShelterCode} from 'Root/api/userapi';
 

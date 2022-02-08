@@ -12,15 +12,15 @@ import {applyDetails, btn_style, login_style, temp_style} from 'Templete/style_t
 
 export default ApplyDetails = ({route, navigation}) => {
 	const [data, setData] = React.useState(route.params);
-	console.log('', data.protect_act_companion_history);
 	//모달창에서 최종 확인을 클릭
 	const isProtect = route.name == 'ApplyProtectActivityE';
+
 	React.useEffect(() => {
 		isProtect ? navigation.setOptions({title: '임시보호 신청'}) : navigation.setOptions({title: '입양 신청'});
 	}, []);
+
 	const onFinalize = () => {
 		Modal.close();
-
 		createProtectActivity(
 			{
 				protect_request_object_id: data._id,
@@ -67,7 +67,7 @@ export default ApplyDetails = ({route, navigation}) => {
 						{/* ApplyProtectActivityE 혹은 ApplyAnimalAdoptionE ==> 입양이나 임시보호 신청의 마지막 단계이므로 '신청'버튼이 필요 */}
 						{/* ApplyAdoptionDetails 혹은 ApplyTempProtectDetails ==> 유저가 신청한 입양이나 임시보호의 Detail을 보기만하는 것이므로 '신청'버튼 불필요 */}
 						{route.name == 'ApplyAdoptionDetails' || route.name == 'ApplyTempProtectDetails' ? null : (
-							<AniButton btnLayout={btn_w226} btnTitle={'신청'} onPress={onPressRegister} />
+							<AniButton btnLayout={btn_w226} btnTitle={'신청하기'} onPress={onPressRegister} />
 						)}
 					</View>
 				</View>

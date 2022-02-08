@@ -2,7 +2,7 @@ import React from 'react';
 import {FlatList, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import AnimalInfo from 'Organism/listitem/AnimalInfo';
-import {animalInfoList} from '../style_organism copy';
+import {animalInfoList} from 'Organism/style_organism copy';
 //동물 보호 현황 - From UserMenu / 관련 테이블 @ProtectAnimalObject / UserObject(pet)
 export default AnimalInfoList = props => {
 	const [data, setData] = React.useState(props.items);

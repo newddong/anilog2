@@ -18,7 +18,6 @@ import {aidRequest} from '../style_organism copy';
  */
 export default AidRequest = props => {
 	const data = props.data;
-	// console.log('data', data.protect_animal_species);
 	// console.log('badge', data.protect_act_applicants.length);
 
 	//해당 AidRequest박스 선택 시 부모컴포넌트 OnSelect 실행

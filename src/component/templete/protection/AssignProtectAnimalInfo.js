@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, TouchableWithoutFeedback} from 'react-native';
+import {Text, View, TouchableWithoutFeedback, TouchableOpacity} from 'react-native';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {login_style, btn_style, temp_style, progressbar_style, assignProtectAnimal_style} from 'Templete/style_templete';
 import {APRI10, GRAY10} from 'Root/config/color';
@@ -9,14 +9,15 @@ import AniButton from 'Molecules/button/AniButton';
 import {useNavigation} from '@react-navigation/core';
 import Modal from 'Component/modal/Modal';
 import {PET_YEAR, PET_MONTH} from 'Root/i18n/msg';
-import {stagebar_style} from 'Root/component/organism/style_organism copy';
+import {stagebar_style} from 'Organism/style_organism copy';
 import {CommonActions} from '@react-navigation/native';
 import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 import Input30 from 'Molecules/input/Input30';
 import {assignShelterAnimal} from 'Root/api/shelterapi';
+import {Arrow_Down_GRAY10} from 'Root/component/atom/icon';
 
 export default AssignProtectAnimalInfo = ({route}) => {
-	console.log('Assing', route.params);
+	// console.log('Assing', route.params);
 	const navigation = useNavigation();
 	const [btnOn, setBtnOn] = React.useState(true);
 	const [data, setData] = React.useState({
@@ -69,7 +70,6 @@ export default AssignProtectAnimalInfo = ({route}) => {
 	};
 
 	const registerProtectPet = () => {
-		console.log('Before AssiginShelterAnimal Data? ', data);
 		Modal.popProtectPetDetails(
 			data,
 			() => {
@@ -99,6 +99,20 @@ export default AssignProtectAnimalInfo = ({route}) => {
 
 	const goBack = () => {
 		navigation.goBack();
+	};
+
+	const onPressYear = () => {
+		Modal.popSelectScrollBoxModal([PET_YEAR], '동물 예상 연령(년)', selectedItem => {
+			setYear(selectedItem);
+			Modal.close();
+		});
+	};
+
+	const onPressMonth = () => {
+		Modal.popSelectScrollBoxModal([PET_MONTH], '동물 예상 연령(년)', selectedItem => {
+			setMonth(selectedItem);
+			Modal.close();
+		});
 	};
 
 	const onSelectYear = (v, i) => {
@@ -141,15 +155,17 @@ export default AssignProtectAnimalInfo = ({route}) => {
 				{/* 예상 연령 */}
 				<View style={[temp_style.inputForm_assignProtectAnimal_line1]}>
 					<View style={assignProtectAnimal_style.width118}>
-						<Text style={[txt.noto28, {color: GRAY10}]}>예상 연령</Text>
+						<Text style={[txt.noto28]}>예상 연령</Text>
 					</View>
-					<View style={[assignProtectAnimal_style.dropdownSelect_year]}>
-						<NormalDropDown menu={PET_YEAR} height={500} width={160} onSelect={onSelectYear} defaultIndex={0} />
-					</View>
+					<TouchableOpacity onPress={onPressYear} style={[assignProtectAnimal_style.dropdownSelect_year]}>
+						<Text style={[txt.roboto28, assignProtectAnimal_style.dropdownSelect_year_text]}>{year}</Text>
+						<Arrow_Down_GRAY10 />
+					</TouchableOpacity>
 					<Text style={[txt.noto24, assignProtectAnimal_style.text118]}>년</Text>
-					<View style={[assignProtectAnimal_style.dropdownSelect_month]}>
-						<NormalDropDown menu={PET_MONTH} onSelect={onSelectMonth} width={160} defaultIndex={0} />
-					</View>
+					<TouchableOpacity onPress={onPressMonth} style={[assignProtectAnimal_style.dropdownSelect_month]}>
+						<Text style={[txt.roboto28, assignProtectAnimal_style.dropdownSelect_year_text]}>{month}</Text>
+						<Arrow_Down_GRAY10 />
+					</TouchableOpacity>
 					<Text style={[txt.noto24, assignProtectAnimal_style.text118]}>개월</Text>
 				</View>
 
@@ -158,14 +174,13 @@ export default AssignProtectAnimalInfo = ({route}) => {
 					<View style={assignProtectAnimal_style.width118}>
 						<Text style={[txt.noto28, {color: GRAY10}]}>체중</Text>
 					</View>
-					<View style={[assignProtectAnimal_style.dropdownSelect_year]}>
+					<View style={[assignProtectAnimal_style.weight]}>
 						<Input30
-							alert_msg={'두자리 숫자, 소수점 한자리'}
 							description="info"
-							showmsg={true}
+							showmsg={false}
 							confirm={true}
 							showTitle={false}
-							width={200}
+							width={206}
 							placeholder={'몸무게 입력'}
 							showCrossMark={false}
 							onChange={onChangeKg}
@@ -175,8 +190,8 @@ export default AssignProtectAnimalInfo = ({route}) => {
 							maxLength={4}
 							confirm_msg=""
 						/>
+						<Text style={[txt.noto28, assignProtectAnimal_style.weightText]}>kg</Text>
 					</View>
-					<Text style={[assignProtectAnimal_style.text118]}>kg</Text>
 				</View>
 			</View>
 
@@ -185,7 +200,7 @@ export default AssignProtectAnimalInfo = ({route}) => {
 					<AniButton btnTitle={'뒤로'} btnTheme={'shadow'} btnStyle={'border'} btnLayout={btn_w226} onPress={goBack} />
 				</View>
 				<View style={[btn_style.btn_w226]}>
-					<AniButton btnTitle={'등록'} btnTheme={'shadow'} btnLayout={btn_w226} onPress={gotoNextStep} />
+					<AniButton btnTitle={'완료'} btnTheme={'shadow'} btnLayout={btn_w226} onPress={gotoNextStep} />
 				</View>
 			</View>
 		</View>

@@ -26,10 +26,6 @@ export default AssignShelterAddress = props => {
 	});
 
 	React.useEffect(() => {
-		console.log('data', data.shelter_address);
-	}, [data]);
-
-	React.useEffect(() => {
 		if (props.route.params.addr) {
 			console.log('주소를 받아온다.', props.route.params.addr);
 			let addr = props.route.params.addr;

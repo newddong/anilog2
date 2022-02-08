@@ -7,7 +7,11 @@ export default AddressSearchPage = props => {
 	console.log('props', props.route);
 	const onSelectData = data => {
 		console.log('data', data);
-		props.navigation.push(props.route.params.prevRoute, {addr: data});
+		props.navigation.navigate({
+			name: props.route.params.prevRoute,
+			params: {addr: data},
+			merge: true,
+		});
 	};
 
 	return (

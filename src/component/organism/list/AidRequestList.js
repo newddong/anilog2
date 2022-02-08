@@ -2,8 +2,8 @@ import React from 'react';
 import {View, FlatList, Text, TouchableOpacity, ScrollView, TouchableWithoutFeedback} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {AddItem64} from 'Atom/icon';
-import AidRequest from 'Organism/listitem/AidRequest';
 import {aidRequestList} from '../style_organism copy';
+import AidRequest from '../listitem/AidRequest';
 
 /**
  *

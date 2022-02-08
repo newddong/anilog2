@@ -9,7 +9,7 @@ import {btn_w176} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import Stagebar from 'Molecules/info/Stagebar';
 import AssignCheckList from 'Organism/list/AssignCheckList';
-import {stagebar_style} from 'Root/component/organism/style_organism copy';
+import {stagebar_style} from 'Organism/style_organism copy';
 import {applyCompanionC, btn_style, login_style, temp_style} from 'Templete/style_templete';
 
 // protect_act_checklist : {
@@ -37,9 +37,11 @@ export default ApplyCompanionC = props => {
 
 	const [temp, setTemp] = React.useState(undefined);
 	const [checkList, setCheckList] = React.useState(applyComanionCheckList);
+
 	React.useEffect(() => {
 		isProtect ? navigation.setOptions({title: '임시보호 신청'}) : navigation.setOptions({title: '입양 신청'});
 	}, []);
+
 	//임시저장된 자료에 맞춰 각 CheckListItem에 대한 체크 상태 여부를 결정
 	React.useEffect(() => {
 		if (temp != undefined) {

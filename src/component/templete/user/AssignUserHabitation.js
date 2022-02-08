@@ -5,7 +5,7 @@ import {btn_w522, btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import {login_style, btn_style, temp_style, progressbar_style, assignUserHabitation_style} from '../style_templete';
 import Modal from 'Component/modal/Modal';
-import {stagebar_style} from 'Root/component/organism/style_organism copy';
+import {stagebar_style} from 'Organism/style_organism copy';
 import {getAddressList} from 'Root/api/address';
 import {APRI10} from 'Root/config/color';
 import {Arrow_Down_GRAY10} from 'Atom/icon';

@@ -8,7 +8,7 @@ import AniButton from 'Root/component/molecules/button/AniButton';
 import {useNavigation} from '@react-navigation/core';
 import {INTEREST_ACT, INTEREST_REGION} from 'Root/i18n/msg';
 import Modal from 'Root/component/modal/Modal';
-import {interestTagList} from '../style_organism copy';
+import {interestTagList} from 'Organism/style_organism copy';
 /**
  *
  *@param {{

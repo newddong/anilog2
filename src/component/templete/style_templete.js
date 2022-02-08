@@ -1729,7 +1729,7 @@ export const userMenu_style = StyleSheet.create({
 	},
 	btn_w280_view: {
 		flexDirection: 'row',
-		marginVertical: 30 * DP,
+		marginVertical: 40 * DP,
 		width: 610 * DP,
 		alignItems: 'center',
 	},
@@ -2847,7 +2847,7 @@ export const appliesRecord = StyleSheet.create({
 	},
 	record: {
 		width: 750 * DP,
-		marginTop: 30 * DP,
+		marginTop: 46 * DP,
 		alignItems: 'center',
 		alignSelf: 'center',
 	},
@@ -2860,14 +2860,15 @@ export const appliesRecord = StyleSheet.create({
 		headerContainer: {
 			width: 654 * DP,
 			height: 48 * DP,
-			marginBottom: 14 * DP,
+			marginBottom: 20 * DP,
 			flexDirection: 'row',
 			alignItems: 'center',
 			title: {
 				height: 48 * DP,
 				alignItems: 'center',
 				justifyContent: 'center',
-				color: GRAY20,
+				// color: GRAY20,
+				color: '#191919',
 			},
 			moreTxt: {},
 			moreBtn: {},
@@ -2882,6 +2883,7 @@ export const appliesRecord = StyleSheet.create({
 		right: 0,
 	},
 	shelterList_container: {
+		marginTop: 48 * DP,
 		alignItems: 'center',
 		height: 312 * DP,
 		marginVertical: 30 * DP,

@@ -1,10 +1,10 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator} from 'react-native';
-import {GRAY10, GRAY40} from 'Root/config/color';
+import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet} from 'react-native';
+import {GRAY10, GRAY40, APRI10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {DEFAULT_PROFILE, MODIFY_PROFILE} from 'Root/i18n/msg';
-import {btn_w114, btn_w242} from 'Atom/btn/btn_style';
+import {btn_w114, btn_w194, btn_w242} from 'Atom/btn/btn_style';
 import {Arrow_Down_GRAY20, NextMark} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
 import ProfileImageLarge194 from 'Molecules/image/ProfileImageLarge194';
@@ -13,6 +13,7 @@ import {login_style, btn_style, temp_style, userInfoSetting_style} from 'Templet
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import {getUserProfile} from 'Root/api/usermenuapi';
 import {getUserInfoById, getUserProfile, updateUserIntroduction} from 'Root/api/userapi';
+import DP from 'Root/config/dp';
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 export default UserInfoSetting = ({route}) => {
 	// console.log('userInfoSetting', route);
@@ -129,7 +130,7 @@ export default UserInfoSetting = ({route}) => {
 							{data._id != undefined && <ProfileImageLarge194 data={data} />}
 						</View>
 						<View style={[btn_style.btn_w242, userInfoSetting_style.btn_w242]}>
-							<AniButton btnTitle={MODIFY_PROFILE} btnLayout={btn_w242} onPress={onPressModofyProfile} />
+							<AniButton btnTitle={MODIFY_PROFILE} btnStyle={'border'} btnLayout={btn_w194} onPress={onPressModofyProfile} />
 						</View>
 					</View>
 					{/* step2 - MyInfo */}
@@ -146,7 +147,7 @@ export default UserInfoSetting = ({route}) => {
 								</View>
 								<View style={[temp_style.changePassword_userInfoSetting, userInfoSetting_style.changePassword]}>
 									<TouchableOpacity onPress={onPressChangePwd}>
-										<Text style={[txt.noto24, {color: GRAY10}]}>비밀번호 변경하기</Text>
+										<Text style={[txt.noto26, {color: APRI10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>비밀번호 변경하기</Text>
 									</TouchableOpacity>
 								</View>
 							</View>
@@ -174,9 +175,19 @@ export default UserInfoSetting = ({route}) => {
 								</View>
 								<View style={[btn_style.btn_w114, userInfoSetting_style.btn_w114]}>
 									{modifyMode ? (
-										<AniButton onPress={modify_finalize} btnTitle={'적용'} btnLayout={btn_w114} />
+										<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
+											<TouchableOpacity onPress={modify_finalize}>
+												<Text style={[txt.noto26, {color: GRAY10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>완료</Text>
+											</TouchableOpacity>
+										</View>
 									) : (
-										<AniButton onPress={modify_userIntro} btnTitle={'수정'} btnStyle={'border'} btnLayout={btn_w114} />
+										// <AniButton onPress={modify_finalize} btnTitle={'적용'} btnLayout={btn_w114} />
+										// <AniButton onPress={modify_userIntro} btnTitle={'수정'} btnStyle={'border'} btnLayout={btn_w114} />
+										<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
+											<TouchableOpacity onPress={modify_userIntro}>
+												<Text style={[txt.noto26, {color: APRI10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>수정</Text>
+											</TouchableOpacity>
+										</View>
 									)}
 								</View>
 							</View>
@@ -186,7 +197,7 @@ export default UserInfoSetting = ({route}) => {
 									<View style={[userInfoSetting_style.user_introModifyContainer]}>
 										<TextInput
 											onChangeText={modifyIntroText}
-											style={[txt.noto24, userInfoSetting_style.user_intro_modifyMode]}
+											style={[txt.noto24, userInfoSetting_style.user_intro_modifyMode, {backgroundColor: GRAY40}]}
 											defaultValue={data.user_introduction || ''}
 											multiline={true}
 											maxLength={500}
@@ -240,3 +251,10 @@ export default UserInfoSetting = ({route}) => {
 		);
 	}
 };
+
+const styles = StyleSheet.create({
+	changeInfo: {
+		width: 90 * DP,
+		height: 64 * DP,
+	},
+});

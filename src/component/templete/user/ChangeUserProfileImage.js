@@ -151,7 +151,7 @@ export default ChangeUserProfileImage = ({route}) => {
 						/>
 					</View>
 					{/* 새닉네임 */}
-					<View style={[temp_style.input24_changeUserProfileImage]}>
+					<View style={[temp_style.input24_changeUserProfileImage, {paddingTop: 80 * DP}]}>
 						<Input24
 							onChange={nickName_validator}
 							validator={validateNewNick}
@@ -173,7 +173,14 @@ export default ChangeUserProfileImage = ({route}) => {
 				</View>
 				{/* 확인버튼 */}
 				<View style={[btn_style.btn_w654, changeUserProfileImage_style.btn_w654]}>
-					<AniButton onPress={onConfirmed} btnTitle={'확인'} titleFontStyle={32} btnLayout={btn_w654} disable={confirmed ? false : true} />
+					<AniButton
+						onPress={onConfirmed}
+						btnStyle={'border'}
+						btnTitle={'확인'}
+						titleFontStyle={32}
+						btnLayout={btn_w654}
+						disable={confirmed ? false : true}
+					/>
 				</View>
 			</ScrollView>
 		</View>

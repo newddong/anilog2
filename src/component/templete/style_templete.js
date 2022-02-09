@@ -309,7 +309,8 @@ export const temp_style = StyleSheet.create({
 	},
 	input24_changeUserProfileImage: {
 		width: 654 * DP,
-		height: 168 * DP,
+		// height: 168 * DP,
+		height: 130 * DP,
 	},
 	input30_changePetProfileImage: {
 		width: 654 * DP,
@@ -543,8 +544,8 @@ export const temp_style = StyleSheet.create({
 		// backgroundColor: '#D19F9F',
 	},
 	changePassword_userInfoSetting: {
-		width: 188 * DP,
-		height: 36 * DP,
+		width: 212 * DP,
+		height: 64 * DP,
 		// backgroundColor: '#D19F9F',
 	},
 	vertical_border: {
@@ -1767,7 +1768,6 @@ export const userInfoSetting_style = StyleSheet.create({
 	},
 	changePassword: {
 		marginTop: 30 * DP,
-		marginLeft: 24 * DP,
 	},
 	bracket48: {
 		marginLeft: 404 * DP,
@@ -1782,12 +1782,12 @@ export const userInfoSetting_style = StyleSheet.create({
 	},
 	btn_w114: {
 		marginTop: 40 * DP,
-		marginLeft: 340 * DP,
+		marginLeft: 364 * DP,
 	},
 	user_introModifyContainer: {
 		height: 140 * DP,
-		borderBottomColor: APRI10,
-		borderBottomWidth: 3 * DP,
+		// borderBottomColor: APRI10,
+		// borderBottomWidth: 3 * DP,
 	},
 	user_intro_modifyMode: {
 		// maxHeight: 200 * DP,

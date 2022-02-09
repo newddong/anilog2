@@ -26,7 +26,7 @@ export default OnOffSwitch = props => {
 					{/* {console.log('btnStatus=>' + btnStatus)} */}
 					<View
 						style={{
-							width: 84 * DP,
+							width: 80 * DP,
 							height: 36 * DP,
 							flexDirection: 'row',
 							borderRadius: 18 * DP,

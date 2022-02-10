@@ -1,6 +1,6 @@
 import React from 'react';
 import {FlatList, ScrollView, Text, View} from 'react-native';
-import {accountHashList} from 'Organism/style_organism';
+import {accountHashList} from 'Organism/style_organism copy';
 import UserAccount from 'Organism/listitem/UserAccount';
 
 /**
@@ -33,13 +33,8 @@ export default AccountHashList = props => {
 	};
 
 	return (
-		<View style={[accountHashList.container, {height: props.routeName&&props.routeName != 'SaveFavorite' ? 300 * DP : null}]}>
-			<FlatList
-				data={props.data}
-				keyExtractor={item => item._id}
-				renderItem={renderItem}
-				showsVerticalScrollIndicator={false}
-			/>
+		<View style={[accountHashList.container, {height: props.routeName && props.routeName != 'SaveFavorite' ? 300 * DP : null}]}>
+			<FlatList data={props.data} keyExtractor={item => item._id} renderItem={renderItem} showsVerticalScrollIndicator={false} />
 		</View>
 	);
 };

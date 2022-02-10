@@ -969,8 +969,7 @@ export const temp_style = StyleSheet.create({
 		backgroundColor: '#E1BDE2',
 	},
 	accountInfo_shelterInfoSetting_view: {
-		height: 192 * DP,
-		// backgroundColor: '#FF00FF',
+		height: 206 * DP,
 	},
 	introduce_shelterInfoSetting_view: {
 		minHeight: 200 * DP,
@@ -999,6 +998,7 @@ export const temp_style = StyleSheet.create({
 		width: 654 * DP,
 		height: 46 * DP,
 		justifyContent: 'space-between',
+		marginTop: 44 * DP,
 		// backgroundColor: '#F6F6E4',
 	},
 	introduceMent_shelterInfoSetting: {
@@ -1607,7 +1607,7 @@ export const changeUserProfileImage_style = StyleSheet.create({
 		marginVertical: 110 * DP,
 	},
 	input24: {
-		marginBottom: 44 * DP,
+		marginBottom: 80 * DP,
 	},
 });
 
@@ -1626,7 +1626,7 @@ export const changePetProfileImage_style = StyleSheet.create({
 
 export const changePassword_style = StyleSheet.create({
 	passwordChecker: {
-		marginTop: 90 * DP,
+		marginTop: 164 * DP,
 	},
 	btn_w654: {
 		marginVertical: 110 * DP,
@@ -1745,6 +1745,7 @@ export const userMenu_style = StyleSheet.create({
 		// backgroundColor: '#BF9547',
 	},
 	introduceBox: {
+		marginTop: 30 * DP,
 		flexDirection: 'row',
 		width: 492 * DP,
 	},
@@ -2061,14 +2062,15 @@ export const shelterMenu = StyleSheet.create({
 		width: 420 * DP,
 		height: 58 * DP,
 		// backgroundColor: '#D1E7F1',
-		marginTop: 27 * DP,
+		marginTop: 10 * DP,
 		alignSelf: 'flex-end',
 	},
 	shelterInfo_contents: {
 		width: 420 * DP,
 		// height: 82 * DP,
 		// backgroundColor: '#FBC5C5',
-		alignSelf: 'flex-end',
+		// alignSelf: 'flex-end',
+		alignSelf: 'center',
 	},
 	showMore: {
 		width: 400 * DP,
@@ -2086,6 +2088,7 @@ export const shelterMenu = StyleSheet.create({
 		width: 654 * DP,
 		height: 92 * DP,
 		marginTop: 40 * DP,
+		// paddingTop: 40 * DP,
 		flexDirection: 'row',
 		alignItems: 'center',
 	},
@@ -2104,9 +2107,25 @@ export const shelterMenu = StyleSheet.create({
 		alignItems: 'center',
 		marginLeft: 82 * DP,
 	},
-	btnView_floadArticle_126x92: {
+	btnView_floadAddPet_128x68: {
+		width: 128 * DP,
+		height: 68 * DP,
+		// backgroundColor: '#BF9547',
+		justifyContent: 'center',
+		alignItems: 'center',
+		marginLeft: 32 * DP,
+	},
+	btnView_floadArticle_129x92: {
 		width: 126 * DP,
 		height: 92 * DP,
+		backgroundColor: '#BF9547',
+		justifyContent: 'center',
+		alignItems: 'center',
+		marginLeft: 36 * DP,
+	},
+	btnView_floadArticle_128x68: {
+		width: 128 * DP,
+		height: 68 * DP,
 		// backgroundColor: '#BF9547',
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -2115,6 +2134,7 @@ export const shelterMenu = StyleSheet.create({
 	profileMenu1: {
 		backgroundColor: '#FFF',
 		width: 750 * DP,
+		height: 238 * DP,
 		marginTop: 10 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -2122,6 +2142,7 @@ export const shelterMenu = StyleSheet.create({
 	profileMenu2: {
 		backgroundColor: '#FFF',
 		width: 750 * DP,
+		height: 238 * DP,
 		marginTop: 10 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -2129,6 +2150,7 @@ export const shelterMenu = StyleSheet.create({
 	profileMenu3: {
 		backgroundColor: '#FFF',
 		width: 750 * DP,
+		height: 316 * DP,
 		marginTop: 10 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -2136,7 +2158,7 @@ export const shelterMenu = StyleSheet.create({
 	profileMenu4: {
 		backgroundColor: '#FFF',
 		width: 750 * DP,
-
+		height: 238 * DP,
 		marginTop: 10 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -2179,10 +2201,13 @@ export const shelterInfoSetting = StyleSheet.create({
 		right: 0,
 	},
 	email_view: {
-		marginTop: 30 * DP,
 		alignItems: 'center',
 	},
-	accountInfo: {},
+	accountInfo: {
+		width: 200 * DP,
+		height: 46 * DP,
+		marginTop: 44 * DP,
+	},
 	introduceMent: {},
 	grayLine: {
 		width: 750 * DP,

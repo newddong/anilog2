@@ -130,13 +130,13 @@ export default UserMenu = props => {
 	const menuClick = menuItem => {
 		switch (menuItem) {
 			case '친구':
-				Modal.popInfoModal();
-				// navigation.push('SaveFavorite'); // FollowObject
+				// Modal.popInfoModal();
+				navigation.push('SaveFavorite'); // FollowObject
 				break;
 			case '피드 게시글':
 				// alert('업데이트 예정입니다');
-				Modal.popInfoModal();
-				// navigation.push('FavoriteFeeds', {token: data}); // FavoriteFeedObject
+				// Modal.popInfoModal();
+				navigation.push('FavoriteFeeds', {token: data}); // FavoriteFeedObject
 				break;
 			case '보호 요청(저장)':
 				// navigation.push('UserSaveAnimalRequest'); // BookmarkProtectRequestObject
@@ -191,14 +191,13 @@ export default UserMenu = props => {
 							<TouchableOpacity onPress={onPressMyName} style={[userMenu_style.user_id]}>
 								<Text style={[txt.roboto40b]}>{data.user_nickname || ''}</Text>
 							</TouchableOpacity>
-
+							{/* 업로드 팔로워 팔로잉 */}
 							<View style={[userMenu_style.contents, {marginTop: 18 * DP}, {alignItems: 'flex-start'}]}>
 								<SocialInfoB data={data} />
 							</View>
 						</View>
 					</View>
 
-					{/* 업로드 팔로워 팔로잉 */}
 					<View style={{flexDirection: 'row', width: 654 * DP}}>
 						<View style={[userMenu_style.introduceBox, {alignSelf: 'flex-start'}]}>
 							{/* <SocialInfoB data={data} /> */}

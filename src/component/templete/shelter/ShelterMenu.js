@@ -1,14 +1,13 @@
 import React from 'react';
 import {Text, View, ScrollView, TouchableOpacity} from 'react-native';
 // import {TouchableOpacity} from 'react-native-gesture-handler';
-import {login_style, shelterMenu, temp_txt, temp_style, btn_style} from 'Templete/style_templete';
+import {login_style, shelterMenu, temp_txt, temp_style, btn_style, userMenu_style} from 'Templete/style_templete';
 import {useNavigation} from '@react-navigation/core';
 import ProfileImageLarge160 from 'Molecules/image/ProfileImageLarge160';
 import {txt} from 'Root/config/textstyle';
 import SocialInfoB from 'Organism/info/SocialInfoB';
-import {btn_w280} from 'Atom/btn/btn_style';
-import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FloatAddPet_126x92} from 'Atom/icon';
-import {FloatAddArticle_126x92} from 'Atom/icon';
+import {btn_w280, btn_w280_h68} from 'Atom/btn/btn_style';
+import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FloatAddArticle_128x68, FloatAddPet_128x68, FloatAddArticle_126x92, FloatAddPet_126x92} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
 import ProfileMenu from 'Organism/menu/ProfileMenu';
 import {Setting46, FavoriteTag48_Filled, Heart48_Filled, Paw46} from 'Atom/icon';
@@ -35,11 +34,13 @@ import {
 	ACCOUNT,
 	MODIFY_SHELTER_DATA,
 	LOGOUT,
+	INFO,
 } from 'Root/i18n/msg';
 import {GRAY10} from 'Root/config/color';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getUserProfile} from 'Root/api/userapi';
 import {userLogout} from 'Root/api/userapi';
+import DP from 'Root/config/dp';
 
 export default ShelterMenu = ({route}) => {
 	const navigation = useNavigation();
@@ -206,56 +207,64 @@ export default ShelterMenu = ({route}) => {
 							<View style={[shelterMenu.shelterInfo_container_right]}>
 								{/* 보호소 이름 */}
 								<View style={[shelterMenu.shelterInfo_user_id]}>
-									<Text style={txt.noto36b}>{data.user_nickname || ''}</Text>
+									<Text style={txt.noto40b}>{data.user_nickname || ''}</Text>
 								</View>
-								{/* user_introduction */}
-								<View style={[shelterMenu.shelterInfo_contents]}>
-									{/* 자기소개글의 본래 텍스트 라인수 체크를 위한 더미텍스트컴포넌트 삭제금지 */}
-									<Text
-										style={[txt.noto24, {position: 'absolute', opacity: 0, backgroundColor: 'red'}]}
-										numberOfLines={null}
-										onTextLayout={({nativeEvent: {lines}}) => {
-											setIntroOriginLine(lines.length);
-										}}>
-										{data.user_introduction || ''}
-									</Text>
-									{/* 삭제금지 */}
-									<Text numberOfLines={showMoreIntro ? 10 : 2} style={[txt.noto24, {color: GRAY10}]}>
-										{data.user_introduction || '자기소개가 없습니다.'}
-									</Text>
-									{introOriginLine < 3 ? (
-										<></>
-									) : showMoreIntro ? (
-										<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {}]}>
-											<Text style={[txt.noto24, {color: GRAY10}]}>접기</Text>
-											<Arrow_Up_GRAY20 />
-										</TouchableOpacity>
-									) : (
-										<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {}]}>
-											<Text style={[txt.noto24, {color: GRAY10}]}>펼치기</Text>
-											<Arrow_Down_GRAY10 />
-										</TouchableOpacity>
-									)}
+								{/* SocialInfo */}
+								<View style={[shelterMenu.shelterInfo_contents, {marginTop: 18 * DP}]}>
+									<SocialInfoB data={data} />
 								</View>
 							</View>
 						</View>
 					</View>
-					{/* SocialInfo */}
-					<View style={[temp_style.socialInfoB, shelterMenu.socialInfoB_4Items]}>
-						<SocialInfoB data={data} />
+					{/* user_introduction */}
+					{/* <View style={[temp_style.socialInfoB, shelterMenu.socialInfoB_4Items, {alignItems: 'center'}]}> */}
+					<View style={{flexDirection: 'row', width: 654 * DP}}>
+						{/* <SocialInfoB data={data} /> */}
+						{/* 자기소개글의 본래 텍스트 라인수 체크를 위한 더미텍스트컴포넌트 삭제금지 */}
+						<View style={[userMenu_style.introduceBox]}>
+							<Text
+								style={[txt.noto24, {position: 'absolute', opacity: 0}]}
+								numberOfLines={null}
+								onTextLayout={({nativeEvent: {lines}}) => {
+									setIntroOriginLine(lines.length);
+								}}>
+								{data.user_introduction || ''}
+							</Text>
+							{/* 삭제금지 */}
+							<Text numberOfLines={showMoreIntro ? 10 : 2} style={[txt.noto26]}>
+								{data.user_introduction || '자기소개가 없습니다.'}
+							</Text>
+						</View>
+						{introOriginLine < 3 ? (
+							<></>
+						) : showMoreIntro ? (
+							<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {flex: 1}]}>
+								<View style={[{flexDirection: 'row'}, {alignSelf: 'flex-end'}, {justifyContent: 'flex-end'}]}>
+									<Text style={[txt.noto24, {color: GRAY10}, {alignSelf: 'flex-end'}]}>접기</Text>
+									<Arrow_Up_GRAY20 />
+								</View>
+							</TouchableOpacity>
+						) : (
+							<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {flex: 1}]}>
+								<View style={[{flexDirection: 'row'}, {alignSelf: 'flex-end'}, {justifyContent: 'flex-end'}]}>
+									<Text style={[txt.noto24, {color: GRAY10}]}>펼치기</Text>
+									<Arrow_Down_GRAY10 />
+								</View>
+							</TouchableOpacity>
+						)}
 					</View>
 
 					<View style={[shelterMenu.btnView, {}]}>
 						<View style={[btn_style.btn_w280]}>
-							<AniButton btnTitle={MODIFY_SHELTER_DATA} btnStyle={'border'} btnLayout={btn_w280} onPress={moveToShelterInfoSetting} />
+							<AniButton btnTitle={MODIFY_SHELTER_DATA} btnStyle={'border'} btnLayout={btn_w280_h68} onPress={moveToShelterInfoSetting} />
 						</View>
 
-						<View style={[shelterMenu.btnView_floadAddPet_126x92]}>
-							<FloatAddPet_126x92 onPress={moveToAssignProtectAnimalImage}></FloatAddPet_126x92>
+						<View style={[shelterMenu.btnView_floadAddPet_128x68]}>
+							<FloatAddPet_128x68 onPress={moveToAssignProtectAnimalImage} />
 						</View>
 
-						<View style={[shelterMenu.btnView_floadArticle_126x92]}>
-							<FloatAddArticle_126x92 onPress={moveToAidRequestAnimalList}></FloatAddArticle_126x92>
+						<View style={[shelterMenu.btnView_floadArticle_128x68]}>
+							<FloatAddArticle_128x68 onPress={moveToAidRequestAnimalList} />
 						</View>
 					</View>
 				</View>
@@ -299,7 +308,7 @@ export default ShelterMenu = ({route}) => {
 						menuTitle={SETTING}
 						menuItems={[
 							[INFO_QUESTION, ACCOUNT],
-							[, LOGOUT],
+							[INFO, LOGOUT],
 						]}
 						onClick={click_menu}
 						titleIcon={<Setting46 />}

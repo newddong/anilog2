@@ -151,7 +151,7 @@ export default ChangeUserProfileImage = ({route}) => {
 						/>
 					</View>
 					{/* 새닉네임 */}
-					<View style={[temp_style.input24_changeUserProfileImage, {paddingTop: 80 * DP}]}>
+					<View style={[temp_style.input24_changeUserProfileImage]}>
 						<Input24
 							onChange={nickName_validator}
 							validator={validateNewNick}

@@ -197,7 +197,7 @@ export default UserInfoSetting = ({route}) => {
 									<View style={[userInfoSetting_style.user_introModifyContainer]}>
 										<TextInput
 											onChangeText={modifyIntroText}
-											style={[txt.noto24, userInfoSetting_style.user_intro_modifyMode, {backgroundColor: GRAY40}]}
+											style={[txt.noto26, userInfoSetting_style.user_intro_modifyMode, {backgroundColor: GRAY40}]}
 											defaultValue={data.user_introduction || ''}
 											multiline={true}
 											maxLength={500}

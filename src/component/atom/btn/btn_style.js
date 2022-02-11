@@ -15,7 +15,9 @@ export const btn_w178 = {width: 178 * DP, height: 70 * DP, borderRadius: 40 * DP
 
 export const btn_w176 = {width: 176 * DP, height: 70 * DP, borderRadius: 40 * DP};
 export const btn_w158_urgent = {width: 158 * DP, height: 90 * DP, borderRadius: 40 * DP, backgroundColor: 'red'};
+
 export const btn_w130 = {width: 130 * DP, height: 38 * DP, borderRadius: 20 * DP};
+export const btn_w136 = {width: 136 * DP, height: 70 * DP, borderRadius: 40 * DP};
 export const btn_w114 = {width: 114 * DP, height: 60 * DP, borderRadius: 30 * DP};
 export const btn_w108 = {width: 108 * DP, height: 54 * DP, borderRadius: 30 * DP};
 export const btn_w116 = {width: 116 * DP, height: 60 * DP, borderRadius: 21 * DP};

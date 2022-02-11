@@ -12,10 +12,10 @@ import Modal from 'Component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
 import Stagebar from 'Molecules/info/Stagebar';
 import CompanionFormList from 'Organism/list/CompanionFormList';
-import {stagebar_style} from 'Root/component/organism/style_organism copy';
+import {stagebar_style} from 'Organism/style_organism copy';
 import {applyCompanionB, login_style, temp_style, applyCompanionC, btn_style} from 'Templete/style_templete';
 
-export default ApplyCompanionC = props => {
+export default ApplyCompanionB = props => {
 	const navigation = useNavigation();
 
 	const [data, setData] = React.useState({

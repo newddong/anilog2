@@ -119,7 +119,7 @@ const style = StyleSheet.create({
 	shadow: {
 		shadowColor: '#000000',
 		shadowOpacity: 0.27,
-		shadowRadius: 4.65,
+		shadowRadius: 4.65 * DP,
 		shadowOffset: {
 			width: 1 * DP,
 			height: 2 * DP,

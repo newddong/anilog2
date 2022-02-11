@@ -8,8 +8,8 @@ import AniButton from 'Molecules/button/AniButton';
 import Input24 from 'Molecules/input/Input24';
 import Stagebar from 'Molecules/info/Stagebar';
 import AddressInput from 'Organism/input/AddressInput';
-import {addressInput, stagebar_style} from 'Organism/style_organism';
 import {applyCompanionA, btn_style, login_style, temp_style} from 'Templete/style_templete';
+import {stagebar_style} from 'Root/component/organism/style_organism copy';
 
 // 참조 DB테이블 :
 // ProtectionActivityApplicantObject - [ ApplyCompanion A,B,C,D,E 에 걸쳐 Write 해나갈 Data]
@@ -19,7 +19,6 @@ import {applyCompanionA, btn_style, login_style, temp_style} from 'Templete/styl
 export default ApplyCompanionA = ({route}) => {
 	const navigation = useNavigation();
 	const isProtect = route.name == 'ApplyProtectActivityA'; //임시보호 신청여부 , false일 경우 자동으로 입양모드 전환
-	const [confirmed, setConfirmed] = React.useState(false);
 	const [phoneNumFormCheck, setPhoneNumFormCheck] = React.useState(false);
 	const [data, setData] = React.useState({
 		protect_act_type: isProtect ? 'protect' : 'adopt',
@@ -30,7 +29,6 @@ export default ApplyCompanionA = ({route}) => {
 			brief: '',
 			detail: '',
 		},
-
 		protect_act_phone_number: '',
 		protect_request_pet_data: '',
 	});
@@ -49,24 +47,35 @@ export default ApplyCompanionA = ({route}) => {
 	}, [data]);
 
 	React.useEffect(() => {
+		console.log('route.params', route.params);
 		const addr = route.params.addr;
 		if (route.params != null) {
 			//한번 주소 검색이 된적이 있는가?
 			if (addr) {
 				console.log('route.params.Address Changed?   ', addr);
 				// setData({...data, user_address: {city: addr.siNm, district: addr.sggNm, neighbor: addr.rn + ' ' + addr.buldMnnm}});
-				setData({...data, protect_act_address: {brief: addr.roadAddr, detail: addr.detailAddr}});
+				setData({...data, protect_act_address: {brief: addr.address}});
 			}
 		}
 	}, [route.params.addr]);
 
-	React.useEffect(() => {
-		// console.log('data: ', data);
-	}, [data]);
+	// React.useEffect(() => {
+	// 	if (route.params.addr) {
+	// 		console.log('주소를 받아온다.', route.params.addr);
+	// 		let addr = route.params.addr;
+	// 		setData({
+	// 			...data,
+	// 			protect_act_address: {
+	// 				brief: addr.address,
+	// 				detail: '',
+	// 			},
+	// 		});
+	// 	}
+	// }, [route.params.addr]);
 
 	//주소찾기 버튼 클릭
 	const goToAddressSearch = () => {
-		navigation.push('AddressSearch', {addr: '', from: route.name});
+		navigation.push('AddressSearchPage', {prevRoute: route.name});
 	};
 
 	//연락처 Value 콜백
@@ -184,13 +193,11 @@ export default ApplyCompanionA = ({route}) => {
 			</View>
 			{/* (A)Btn_w654 */}
 			<View style={[btn_style.btn_w654, applyCompanionA.btn_w654]}>
-				<AniButton
-					btnTitle={'확인'}
-					disable={data.protect_act_address.brief != '' && phoneNumFormCheck ? false : true}
-					titleFontStyle={40}
-					btnLayout={btn_w654}
-					onPress={goToNextStep}
-				/>
+				{data.protect_act_address.brief != '' && phoneNumFormCheck ? (
+					<AniButton btnTitle={'다음'} titleFontStyle={40} btnStyle={'border'} btnLayout={btn_w654} onPress={goToNextStep} />
+				) : (
+					<AniButton btnTitle={'다음'} disable titleFontStyle={40} btnLayout={btn_w654} onPress={goToNextStep} />
+				)}
 			</View>
 		</View>
 	);

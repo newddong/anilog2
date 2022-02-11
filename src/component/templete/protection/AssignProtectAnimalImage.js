@@ -11,7 +11,7 @@ import SelectedMediaList from 'Organism/list/SelectedMediaList';
 import {AddItem64, Camera54} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
 import {styles} from 'Atom/image/imageStyle';
-import {stagebar_style} from 'Root/component/organism/style_organism copy';
+import {stagebar_style} from 'Organism/style_organism copy';
 import {launchImageLibrary} from 'react-native-image-picker';
 
 export default AssignProtectAnimalImage = props => {
@@ -64,7 +64,7 @@ export default AssignProtectAnimalImage = props => {
 
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
-			<ScrollView contentContainerStyle={[assignProtectAnimal_style.container]}>
+			<View style={[assignProtectAnimal_style.container]}>
 				{/* (M)StageBar	 */}
 				<View style={[temp_style.stageBar, progressbar_style.stageBar]}>
 					<Stagebar
@@ -111,7 +111,7 @@ export default AssignProtectAnimalImage = props => {
 						<AniButton btnTitle={'다음'} disable={data.protect_animal_photo_uri_list.length == 0} btnLayout={btn_w226} onPress={gotoNextStep} />
 					</View>
 				</View>
-			</ScrollView>
+			</View>
 		</View>
 	);
 };

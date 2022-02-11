@@ -1,20 +1,15 @@
 import React from 'react';
 import {ScrollView, View} from 'react-native';
-import {btn_w654} from 'Atom/btn/btn_style';
-import AniButton from 'Molecules/button/AniButton';
-import InputWithSearchIcon from 'Molecules/input/InputWithSearchIcon';
-import AccountList from 'Organism/list/AccountList';
-import {login_style, btn_style, temp_style, addFamilyAccount_style} from 'Templete/style_templete';
-import {CommonActions} from '@react-navigation/native';
-import Modal from 'Component/modal/Modal';
+import InputWithSearchIcon from 'Root/component/molecules/input/InputWithSearchIcon';
+import AccountList from 'Root/component/organism/list/AccountList';
+import {login_style, temp_style, addFamilyAccount_style} from 'Templete/style_templete';
+import Modal from 'Root/component/modal/Modal';
 import {addUserToFamily, getUserListByNickname} from 'Root/api/userapi';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default AddFamilyAccount = ({route, navigation}) => {
 	console.log('route', route.params);
 	const [searched_accountList, setSearched_accountList] = React.useState([]);
-	const [selectedAccount, setSelectedAccount] = React.useState(null);
 
 	//돋보기 버튼 클릭 콜백
 	const onSearch = input => {
@@ -63,41 +58,44 @@ export default AddFamilyAccount = ({route, navigation}) => {
 
 	const onAccountClick = item => {
 		console.log('onAccoitCLick');
-		setSelectedAccount(item);
+		const onConfirm = () => {
+			// setSelectedAccount(item);
+			onCheckFamilyMembers(item);
+			Modal.close();
+		};
+		Modal.popAddFamilyModal(
+			item,
+			() => onConfirm(),
+			() => Modal.close(),
+		);
 	};
 
 	//초대하기 클릭
-	const onCheckFamilyMembers = async () => {
+	const onCheckFamilyMembers = item => {
+		console.log('item', item);
 		// console.log('리스트 인원 수 체크 후 3인이 넘어갈때 초대하면 3인까지만 가능하다는 메세지 필요 ~  3인이 안되면 API로 추가 후 goback');
-		const finalize = () => {
-			addUserToFamily(
-				{
-					userobject_id: route.params.pet_id,
-					family_userobject_id: selectedAccount,
-				},
-				result => {
-					console.log('result / addUserToFamily / AddFamilyAccount    :  ', result);
+		addUserToFamily(
+			{
+				userobject_id: route.params.pet_id,
+				family_userobject_id: item._id,
+			},
+			result => {
+				console.log('result / addUserToFamily / AddFamilyAccount    :  ', result);
+				Modal.close();
+				navigation.navigate({
+					name: 'PetInfoSetting',
+					params: {addedAccount: result.msg},
+					merge: true,
+				});
+			},
+			err => {
+				console.log('err / addUserToFamily / AddFamilyAccount   :  ', err);
+				if (err == '반려동물 끼리는 가족이 될 수 없습니다.') {
 					Modal.close();
-					navigation.navigate({
-						name: 'PetInfoSetting',
-						params: {addedAccount: result.msg},
-						merge: true,
-					});
-				},
-				err => {
-					console.log('err / addUserToFamily / AddFamilyAccount   :  ', err);
-					if (err == '반려동물 끼리는 가족이 될 수 없습니다.') {
-						Modal.close();
-						Modal.popOneBtn('반려동물 끼리는 가족이 될 수 없습니다.', '확인', () => Modal.close());
-					}
-				},
-			);
-		};
-		if (selectedAccount) {
-			Modal.popTwoBtn('이 계정을 가족으로 추가하시겠습니까?', '취소', '추가', () => Modal.close(), finalize);
-		} else {
-			Modal.popOneBtn('초대하실 계정을 선택해주세요.', '확인', () => Modal.close());
-		}
+					Modal.popOneBtn('반려동물 끼리는 가족이 될 수 없습니다.', '확인', () => Modal.close());
+				}
+			},
+		);
 	};
 
 	return (
@@ -109,9 +107,10 @@ export default AddFamilyAccount = ({route, navigation}) => {
 			<ScrollView style={[addFamilyAccount_style.accountList]}>
 				<AccountList items={searched_accountList} onClickLabel={onAccountClick} />
 			</ScrollView>
-			<View style={[btn_style.btn_w654, addFamilyAccount_style.btn_w654]}>
+			{/* UI 변경으로 인한 주석처리 */}
+			{/* <View style={[btn_style.btn_w654, addFamilyAccount_style.btn_w654]}>
 				<AniButton onPress={onCheckFamilyMembers} btnTitle={'초대하기'} btnLayout={btn_w654} btnTheme={'shadow'} titleFontStyle={32} />
-			</View>
+			</View> */}
 		</View>
 	);
 };

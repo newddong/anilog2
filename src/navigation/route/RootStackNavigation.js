@@ -72,6 +72,13 @@ import SocialModal from 'Root/component/molecules/modal/SocialModal';
 import TopAlarm from 'Root/component/molecules/modal/TopAlarm';
 import TwoButtonSelectModal from 'Root/component/molecules/modal/TwoButtonSelectModal';
 import OneButtonSelectModal from 'Root/component/molecules/modal/OneButtonSelectModal';
+import FindAccount from 'Root/component/templete/user/FindAccount';
+import SuggestAssign from 'Root/component/templete/login/SuggestAssign';
+import PasswordResetIdentification from 'Root/component/templete/login/PasswordResetIdentification';
+import PasswordReset from 'Root/component/templete/user/PasswordReset';
+import AddressSearchPage from 'Root/component/templete/search/AddressSearchPage';
+import InterestTagModal from 'Root/component/molecules/modal/InterestTagModal';
+import AvatarSelectModal from 'Root/component/molecules/modal/AvatarSelectModal';
 // import Camera from 'Root/component/templete/Camera';
 // import Camera from 'Templete/media/Camera';
 const RootStack = createStackNavigator();
@@ -137,6 +144,11 @@ export default RootStackNavigation = () => {
 
 	Modal.feedAvartarSelect = (onSelectPet, onOk, okButtonnMsg) => {
 		popIn(<FeedAvartarSelect onSelectPet={onSelectPet} onOk={onOk} okButtonnMsg={okButtonnMsg} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popAvatarSelectModal = (onSelectPet, okButtonnMsg, isBtnMode) => {
+		popIn(<AvatarSelectModal onSelectPet={onSelectPet} okButtonnMsg={okButtonnMsg} isBtnMode={isBtnMode} />);
 		!isPop && setPop(true);
 	};
 
@@ -294,6 +306,27 @@ export default RootStackNavigation = () => {
 						options={{header: props => <SimpleHeader {...props} />, title: '보호소 등록'}}
 					/>
 
+					<RootStack.Screen
+						name="FindAccount"
+						component={FindAccount}
+						options={{header: props => <SimpleHeader {...props} />, title: '내 계정 찾기'}}
+					/>
+					<RootStack.Screen
+						name="SuggestAssign"
+						component={SuggestAssign}
+						options={{header: props => <SimpleHeader {...props} />, title: '내 계정 찾기'}}
+					/>
+					<RootStack.Screen
+						name="PasswordResetIdentification"
+						component={PasswordResetIdentification}
+						options={{header: props => <SimpleHeader {...props} />, title: '비밀번호 재설정'}}
+					/>
+					<RootStack.Screen
+						name="PasswordReset"
+						component={PasswordReset}
+						options={{header: props => <SimpleHeader {...props} />, title: '비밀번호 재설정'}}
+					/>
+
 					<RootStack.Screen name="ApplyProtectActivityA" component={ApplyCompanionA} options={{header: props => <SimpleHeader {...props} />}} />
 					<RootStack.Screen name="ApplyProtectActivityB" component={ApplyCompanionB} options={{header: props => <SimpleHeader {...props} />}} />
 					<RootStack.Screen name="ApplyProtectActivityC" component={ApplyCompanionC} options={{header: props => <SimpleHeader {...props} />}} />
@@ -362,6 +395,11 @@ export default RootStackNavigation = () => {
 					<RootStack.Screen
 						name="AddressSearch"
 						component={AddressSearch}
+						options={{header: props => <SimpleHeader {...props} />, title: '주소 검색'}}
+					/>
+					<RootStack.Screen
+						name="AddressSearchPage"
+						component={AddressSearchPage}
 						options={{header: props => <SimpleHeader {...props} />, title: '주소 검색'}}
 					/>
 					<RootStack.Screen name="RequestLogin" component={RequestLogin} />

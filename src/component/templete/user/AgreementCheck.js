@@ -1,16 +1,16 @@
 import React from 'react';
-import {Text, View, TouchableWithoutFeedback, ScrollView} from 'react-native';
-import {APRI10, GRAY10} from 'Root/config/color';
+import {View, ScrollView} from 'react-native';
+import {APRI10} from 'Root/config/color';
 import {userAssign_agreementCheckList} from 'Root/config/dummyDate_json';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from 'Atom/btn/btn_style';
-import Modal from 'Component/modal/Modal';
+import Modal from 'Root/component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
-import Stagebar from 'Molecules/info/Stagebar';
 import AssignCheckList from 'Organism/list/AssignCheckList';
 import AssignCheckListItem from 'Organism/listitem/AssignCheckListItem';
-import {stagebar_style} from 'Root/component/organism/style_organism copy';
+import {stagebar_style} from 'Organism/style_organism copy';
 import {login_style, btn_style, temp_style, progressbar_style, agreementCheck_style} from 'Templete/style_templete';
+import StageBar from 'Molecules/info/Stagebar';
 
 export default AgreementCheck = props => {
 	const user_agreement = React.useRef({
@@ -83,12 +83,8 @@ export default AgreementCheck = props => {
 	return (
 		<ScrollView contentContainerStyle={{flex: 1, backgroundColor: 'red'}}>
 			<View style={[login_style.wrp_main, {flex: 1}]}>
-				{/* <TouchableWithoutFeedback onPress={() => console.log(user_agreement)}>
-					<View style={{backgroundColor: 'red', height: 30, width: 30, position: 'absolute', top: 0, left: 0}}></View>
-				</TouchableWithoutFeedback> */}
-				{/* (M)StageBar	 */}
 				<View style={[temp_style.stageBar, progressbar_style.stageBar]}>
-					<Stagebar
+					<StageBar
 						backgroundBarStyle={stagebar_style.backgroundBar} //배경이 되는 bar의 style, width props으로 너비결정됨
 						insideBarStyle={stagebar_style.insideBar} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
 						textStyle={[txt.roboto24, stagebar_style.text]} //text의 스타일
@@ -114,9 +110,9 @@ export default AgreementCheck = props => {
 				{/* (A)Btn_w654 */}
 				<View style={[btn_style.btn_w654, agreementCheck_style.btn_w654]}>
 					{permissionToNext ? (
-						<AniButton btnTitle={'다음'} titleFontStyle={'32'} btnTheme={'shadow'} btnLayout={btn_w654} onPress={goToNextStep} />
+						<AniButton btnTitle={'다음'} titleFontStyle={32} btnStyle={'border'} btnLayout={btn_w654} onPress={goToNextStep} />
 					) : (
-						<AniButton btnTitle={'다음'} titleFontStyle={'32'} disable={true} btnLayout={btn_w654} onPress={goToNextStep} />
+						<AniButton btnTitle={'다음'} titleFontStyle={32} disable={true} btnLayout={btn_w654} onPress={goToNextStep} />
 					)}
 				</View>
 			</View>

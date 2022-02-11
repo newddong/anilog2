@@ -23,7 +23,7 @@ const RadioSelectModal = props => {
 	};
 
 	const renderItem = (item, index) => {
-		// console.log('item', item);
+		console.log('item', item);
 		return (
 			<View style={[style.itemContainer]}>
 				<View style={[style.checkBox]}>

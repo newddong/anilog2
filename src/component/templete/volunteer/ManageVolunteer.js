@@ -1,15 +1,14 @@
 import React from 'react';
 import {ScrollView, Text, View, TouchableOpacity, ActivityIndicator} from 'react-native';
+import {useNavigation} from '@react-navigation/core';
+import moment from 'moment';
 import {GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {Arrow_Down_GRAY20, Arrow_Up_GRAY20} from 'Atom/icon';
 import VolunteerItemList from 'Organism/list/VolunteerItemList';
 import {login_style, manageVolunteer} from 'Templete/style_templete';
-import {useNavigation} from '@react-navigation/core';
 import {_dummy_userObject_user, _dummy_VolunteerActivityApplicant} from 'Root/config/dummy_data_hjs';
 import {getShelterVolunteerActivityList, getUserVolunteerActivityList} from 'Root/api/volunteerapi';
-import {getUserInfoById} from 'Root/api/userapi';
-import moment from 'moment';
 
 export default ManageVolunteer = ({route}) => {
 	// console.log(route.params);
@@ -111,10 +110,8 @@ export default ManageVolunteer = ({route}) => {
 		isShelterUser ? navigation.push('ShelterVolunteerForm', shelterData) : navigation.push('UserVolunteerForm', shelterData);
 	};
 
-	const onClickLabel = data => {
-		isShelterUser
-			? navigation.push('UserProfile', {userobject: data.volunteer_accompany[0]})
-			: navigation.push('UserProfile', {userobject: data.volunteer_target_shelter});
+	const onClickLabel = shelterData => {
+		isShelterUser ? navigation.push('ShelterVolunteerForm', shelterData) : navigation.push('UserVolunteerForm', shelterData);
 	};
 
 	const whenEmpty = () => {

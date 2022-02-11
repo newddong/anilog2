@@ -1,13 +1,12 @@
 import React from 'react';
-import {Text, View, ScrollView, TouchableWithoutFeedback} from 'react-native';
-import {APRI10, GRAY10} from 'Root/config/color';
+import {Text, View, ScrollView} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import Stagebar from 'Molecules/info/Stagebar';
 import EmailVerification from 'Organism/form/EmailVerification';
 import PhoneNumVerification from 'Organism/form/PhoneNumVerification';
-import {stagebar_style} from 'Root/component/organism/style_organism copy';
+import {stagebar_style} from 'Organism/style_organism copy';
 import {login_style, btn_style, temp_style, progressbar_style, userAssign} from 'Templete/style_templete';
 
 // DropDown 컴포넌트 해결될 시 props처리와 data처리 추가해야함
@@ -18,8 +17,8 @@ export default UserVerification = props => {
 	const user_data = React.useRef({
 		...props.route.params,
 		user_name: 'name',
-		user_phone_number: '01096450422',
-		user_mobile_company: 'SKT',
+		user_phone_number: '',
+		user_mobile_company: '',
 	}).current;
 
 	const [tabState, setTabState] = React.useState(0);
@@ -102,7 +101,7 @@ export default UserVerification = props => {
 			<ScrollView>
 				{/* (M)StageBar	 */}
 				<View style={[temp_style.stageBar, progressbar_style.stageBar]}>
-					<Stagebar
+					<StageBar
 						backgroundBarStyle={stagebar_style.backgroundBar} //배경이 되는 bar의 style, width props으로 너비결정됨
 						insideBarStyle={stagebar_style.insideBar} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
 						textStyle={[txt.roboto24, stagebar_style.text]} //text의 스타일
@@ -147,9 +146,16 @@ export default UserVerification = props => {
 				{/* (A)Btn_w654 */}
 				<View style={[btn_style.btn_w654, userAssign.btn_w654]}>
 					{verified ? (
-						<AniButton btnTitle={'인증 완료'} btnLayout={btn_w654} btnTheme={'shadow'} titleFontStyle={32} onPress={goToNextStep} />
+						<AniButton
+							btnTitle={'인증 완료'}
+							btnLayout={btn_w654}
+							btnTheme={'shadow'}
+							btnStyle={'border'}
+							titleFontStyle={32}
+							onPress={goToNextStep}
+						/>
 					) : (
-						<AniButton btnTitle={'인증 완료'} btnLayout={btn_w654} disable={true} titleFontStyle={32} onPress={goToNextStep} />
+						<AniButton btnTitle={'인증 확인'} btnLayout={btn_w654} disable={true} titleFontStyle={32} onPress={goToNextStep} />
 					)}
 				</View>
 			</ScrollView>

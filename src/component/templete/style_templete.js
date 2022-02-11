@@ -17,7 +17,7 @@ import {
 	GRAY30,
 } from 'Root/config/color';
 import DP from 'Root/config/dp';
-
+import {Platform} from 'react-native';
 export const login_style = StyleSheet.create({
 	wrp_main: {
 		// flex: 1,
@@ -613,7 +613,6 @@ export const temp_style = StyleSheet.create({
 	},
 	inputForm_assignPetProfileImage: {
 		width: 654 * DP,
-		height: 172 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
@@ -1155,6 +1154,7 @@ export const userAssign = StyleSheet.create({
 	textMessageInside: {
 		width: 414 * DP,
 		textAlign: 'left',
+		color: GRAY10,
 	},
 });
 
@@ -1530,11 +1530,12 @@ export const assignUserProfileImage_style = StyleSheet.create({
 });
 
 export const assignShelterAddress_style = StyleSheet.create({
-	inputForm: {
-		marginTop: 80 * DP,
+	textMsg: {
+		width: 654 * DP,
+		marginTop: 12 * DP,
 	},
 	input24A: {
-		marginTop: 80 * DP,
+		marginTop: 32 * DP,
 	},
 	addressInput: {
 		marginTop: 60 * DP,
@@ -1543,18 +1544,27 @@ export const assignShelterAddress_style = StyleSheet.create({
 		marginTop: 110 * DP,
 	},
 });
-
 export const assignShelterInformation_style = StyleSheet.create({
 	inputFormContainer: {
-		marginTop: 20 * DP,
+		width: 654 * DP,
+		height: 700 * DP,
+		marginTop: 84 * DP,
+	},
+	textMsg: {
+		width: 654 * DP,
+		marginTop: 12 * DP,
+	},
+	inputWithSelect: {
+		width: 654 * DP,
+		height: 158 * DP,
+		justifyContent: 'space-between',
 	},
 	input24A: {
-		marginTop: 80 * DP,
-	},
-	inputWithEmail: {
+		width: 654 * DP,
+		height: 118 * DP,
 		marginTop: 60 * DP,
 	},
-	input24A: {
+	inputWithEmail: {
 		marginTop: 60 * DP,
 	},
 	datePicker: {
@@ -1572,8 +1582,17 @@ export const assignShelterInformation_style = StyleSheet.create({
 		paddingLeft: 20 * DP,
 		marginTop: 10 * DP,
 	},
+	datePickerContainer: {
+		width: 654 * DP,
+		height: 82 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		borderBottomColor: APRI10,
+		borderBottomWidth: 2 * DP,
+		paddingVertical: 15 * DP,
+		paddingHorizontal: 20 * DP,
+	},
 });
-
 export const checkShelterPassword_style = StyleSheet.create({
 	passwordChecker: {
 		marginTop: 110 * DP,
@@ -1585,10 +1604,10 @@ export const checkShelterPassword_style = StyleSheet.create({
 
 export const assignShelterProfileImage_style = StyleSheet.create({
 	txt_msg: {
-		marginTop: 80 * DP,
+		marginTop: 12 * DP,
 	},
 	profileImageSelect: {
-		marginTop: 70 * DP,
+		marginTop: 50 * DP,
 	},
 	btn_w654: {
 		marginTop: 110 * DP,
@@ -1600,7 +1619,7 @@ export const changeUserProfileImage_style = StyleSheet.create({
 		marginTop: 42 * DP,
 	},
 	profileImageSelect: {
-		marginTop: 70 * DP,
+		marginTop: 50 * DP,
 	},
 	btn_w654: {
 		marginVertical: 110 * DP,
@@ -1718,13 +1737,14 @@ export const userMenu_style = StyleSheet.create({
 		marginTop: 38 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
+		backgroundColor: 'yellow',
 	},
 	userInfo: {
 		flexDirection: 'row',
 		marginTop: 40 * DP,
 	},
 	profileImageLarge: {
-		marginRight: 40 * DP,
+		// marginRight: 52 * DP,
 	},
 	btn_w280_view: {
 		flexDirection: 'row',
@@ -1741,6 +1761,10 @@ export const userMenu_style = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		// backgroundColor: '#BF9547',
+	},
+	introduceBox: {
+		flexDirection: 'row',
+		width: 492 * DP,
 	},
 	horizontalLine: {},
 });
@@ -1805,10 +1829,10 @@ export const assignPetProfileImage_style = StyleSheet.create({
 		alignItems: 'flex-start',
 	},
 	profileImageSelect: {
-		marginTop: 70 * DP,
+		marginTop: 50 * DP,
 	},
 	inputForm: {
-		marginTop: 70 * DP,
+		marginTop: 50 * DP,
 	},
 	btn_w654: {
 		marginTop: 110 * DP,
@@ -1818,8 +1842,10 @@ export const assignPetProfileImage_style = StyleSheet.create({
 	},
 	checkBox: {
 		flexDirection: 'row',
-
-		marginTop: 40 * DP,
+		marginTop: 20 * DP,
+		width: 526 * DP,
+		alignSelf: 'flex-start',
+		paddingLeft: 20 * DP,
 	},
 });
 
@@ -1867,6 +1893,34 @@ export const assignPetInfo_style = StyleSheet.create({
 	btn_w226_viewB: {
 		marginTop: 130 * DP,
 	},
+	petKind: {
+		width: 204 * DP,
+		height: 82 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderBottomWidth: 2 * DP,
+		borderBottomColor: APRI10,
+	},
+	pet_species_detail: {
+		width: 292 * DP,
+		height: 82 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderBottomWidth: 2 * DP,
+		borderBottomColor: APRI10,
+	},
+	petKind_text: {
+		width: 120 * DP,
+		height: 44 * DP,
+		textAlign: 'center',
+	},
+	pet_species_detail_text: {
+		width: 208 * DP,
+		height: 44 * DP,
+		textAlign: 'center',
+	},
 });
 
 export const assignProtectAnimal_style = StyleSheet.create({
@@ -1877,11 +1931,9 @@ export const assignProtectAnimal_style = StyleSheet.create({
 	textMsg: {
 		width: 654 * DP,
 		marginTop: 12 * DP,
-		alignSelf: 'flex-start',
-		marginLeft: 50 * DP,
 	},
 	selectedMediaList: {
-		marginTop: 70 * DP,
+		marginTop: 50 * DP,
 		marginLeft: 10 * DP,
 		alignSelf: 'flex-start',
 	},
@@ -1890,17 +1942,38 @@ export const assignProtectAnimal_style = StyleSheet.create({
 		height: 72 * DP,
 		flexDirection: 'row',
 		// alignItems: 'center',
-		marginTop: 50 * DP,
-		marginBottom: 64 * DP,
+		marginTop: 30 * DP,
 	},
 	inputform: {
 		marginTop: 60 * DP,
 	},
 	dropdownSelect_year: {
 		marginLeft: 30 * DP,
+		width: 160 * DP,
+		height: 82 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderBottomWidth: 2 * DP,
+		borderBottomColor: APRI10,
+		flexDirection: 'row',
 	},
 	dropdownSelect_month: {
 		marginLeft: 50 * DP,
+		width: 160 * DP,
+		height: 82 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderBottomWidth: 2 * DP,
+		borderBottomColor: APRI10,
+		flexDirection: 'row',
+	},
+	weight: {
+		flexDirection: 'row',
+		height: 82 * DP,
+	},
+	weightText: {
+		marginLeft: 10 * DP,
+		alignSelf: 'center',
 	},
 	btn_w226: {
 		width: 226 * DP,
@@ -1944,6 +2017,12 @@ export const assignProtectAnimal_style = StyleSheet.create({
 	},
 	width118: {
 		width: 118 * DP,
+	},
+	dropdownSelect_year_text: {
+		width: 100 * DP,
+		height: 44 * DP,
+		textAlign: 'center',
+		textAlignVertical: 'center',
 	},
 });
 
@@ -2068,7 +2147,6 @@ export const shelterMenu = StyleSheet.create({
 	showMore: {
 		width: 400 * DP,
 		justifyContent: 'flex-end',
-		// backgroundColor: 'red',
 		flexDirection: 'row',
 	},
 	socialInfoB_4Items: {
@@ -3108,7 +3186,7 @@ export const applyCompanionA = StyleSheet.create({
 		marginTop: 12 * DP,
 	},
 	inputForm: {
-		marginTop: 80 * DP,
+		marginTop: 60 * DP,
 	},
 	btn_w654: {
 		marginTop: 70 * DP,
@@ -3270,8 +3348,25 @@ export const missingAnimalDetail = StyleSheet.create({
 	poster: {
 		width: 618 * DP,
 		height: 872 * DP,
-
-		marginTop: 33 * DP,
+		// marginTop: 33 * DP,
+		backgroundColor: '#FFFFFF',
+		// backgroundColor: 'lightblue',
+		...Platform.select({
+			ios: {
+				borderColor: 'black',
+				shadowColor: '#4F4F4F',
+				shadowOffset: {
+					width: 8,
+					hegiht: 6,
+				},
+				shadowOpacity: 0.25,
+				// shadowRadius: 2.62,
+			},
+			android: {
+				elevation: 4,
+			},
+		}),
+		alignItems: 'center',
 	},
 	feedContent: {
 		marginTop: 40 * DP,
@@ -3282,6 +3377,116 @@ export const missingAnimalDetail = StyleSheet.create({
 		backgroundColor: GRAY30,
 		height: 2,
 	},
+	title: {
+		width: 578 * DP,
+		height: 112 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: '#FF0000',
+		borderRadius: 10,
+		marginTop: 10 * DP,
+	},
+	titleText: {
+		fontSize: 62 * DP,
+		fontWeight: 'bold',
+		color: 'white',
+	},
+	picture: {
+		marginTop: 10 * DP,
+		width: 578 * DP,
+		height: 284 * DP,
+		// backgroundColor: 'yellow',
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+	},
+	img_squre_284: {
+		width: 284 * DP,
+		height: 284 * DP,
+
+		backgroundColor: '#B0C7D8',
+	},
+	textBox: {
+		marginTop: 10 * DP,
+		height: 300 * DP, //유동적인 텍스트 크기에 대해서 좌우 간격이 좁아짐에 따라 늘어나는 height에 관한 처리 필요
+		width: 578 * DP,
+		alignItems: 'center',
+	},
+	phoneNumberBox: {
+		width: 578 * DP,
+		height: 106 * DP,
+		backgroundColor: '#FF0000',
+		alignItems: 'center',
+	},
+	missingTextWhite18: {
+		marginTop: 8 * DP,
+		fontSize: 18 * DP,
+		color: 'white',
+	},
+	missingText18: {
+		fontSize: 18 * DP,
+		color: '#191919',
+	},
+	missingText38: {
+		fontSize: 38 * DP,
+		fontWeight: 'bold',
+		color: '#FF0000',
+	},
+	missingBlackText32: {
+		fontSize: 32 * DP,
+		fontWeight: 'bold',
+		color: '#191919',
+	},
+	missingRedText32: {
+		fontSize: 32 * DP,
+		fontWeight: 'bold',
+		color: '#FF0000',
+	},
+	missingText26: {
+		fontSize: 26 * DP,
+		fontWeight: 'bold',
+		color: '#191919',
+	},
+	missingText22: {
+		paddingTop: 10 * DP,
+		fontSize: 22 * DP,
+		color: '#191919',
+	},
+	missingTextYellow50: {
+		fontSize: 50 * DP,
+		color: '#FFEE00',
+		fontWeight: 'bold',
+		fontFamily: 'Roboto',
+	},
+	yellowNumberBox: {
+		height: 62 * DP,
+		width: 452 * DP,
+		marginBottom: 8 * DP,
+		alignItems: 'center',
+	},
+	oneLine: {
+		borderBottomColor: 'black',
+		borderBottomWidth: 2 * DP,
+		width: 578 * DP,
+		marginTop: 10 * DP,
+		color: '#191919',
+	},
+	floatingBtnMissingReport: {
+		width: 118 * DP,
+		height: 110 * DP,
+		borderRadius: 45 * DP,
+		borderColor: '#FF0000',
+		borderWidth: 2,
+		// marginBottom: 20 * DP,
+		// marginRight: 12 * DP,
+		alignItems: 'center',
+		bottom: 20 * DP,
+		right: 12 * DP,
+		justifyContent: 'center',
+		backgroundColor: '#FFFFFF',
+		position: 'absolute',
+		opacity: 0.8,
+	},
+
 	commentList: {},
 });
 

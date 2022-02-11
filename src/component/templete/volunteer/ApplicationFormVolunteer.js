@@ -1,15 +1,14 @@
 import React from 'react';
-import {ActivityIndicator, ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, ScrollView, Text, TouchableOpacity, View, Linking} from 'react-native';
 import {BLUE20, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {Calendar48_Filled, Person48, Phone48} from 'Atom/icon';
-import Modal from 'Component/modal/Modal';
+import Modal from 'Root/component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
 import ShelterInfo from 'Organism/info/ShelterInfo';
 import AccountList from 'Organism/list/AccountList';
 import {login_style, applicationFormVolunteer, btn_style} from 'Templete/style_templete';
 import {_dummy_ApplicationFormVolunteer_shelter} from 'Root/config/dummy_data_hjs';
-import {Linking} from 'react-native';
 import moment from 'moment';
 import {getUserInfoById} from 'Root/api/userapi';
 import {setVolunteerActivityStatus} from 'Root/api/volunteerapi';
@@ -40,7 +39,7 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 						userobject_id: v,
 					},
 					result => {
-						// console.log('result / getUserInfoById / UserVolunteerForm  ', i, result.msg);
+						console.log('result / getUserInfoById / UserVolunteerForm  ', i, result.msg);
 						copy.push(result.msg);
 						setApplicant(copy);
 					},
@@ -193,7 +192,6 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 							</View>
 							<View style={[applicationFormVolunteer.title]}>
 								<Text style={[txt.noto24b, {color: GRAY10}]}>참여 인원</Text>
-
 								<Text style={[txt.roboto28, {marginLeft: 5, marginTop: 2}]}>{data.volunteer_accompany ? applicant.length : '0'}</Text>
 							</View>
 						</View>

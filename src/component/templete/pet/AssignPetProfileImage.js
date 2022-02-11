@@ -12,7 +12,7 @@ import AniButton from 'Molecules/button/AniButton';
 import Input30 from 'Molecules/input/Input30';
 import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';
 import Stagebar from 'Molecules/info/Stagebar';
-import {stagebar_style} from 'Root/component/organism/style_organism copy';
+import {stagebar_style} from 'Organism/style_organism copy';
 import {login_style, btn_style, temp_style, progressbar_style, assignPetProfileImage_style} from 'Templete/style_templete';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {checkProtectPet, nicknameDuplicationCheck} from 'Root/api/userapi';
@@ -53,6 +53,21 @@ export default AssignPetProfileImage = ({navigation, route}) => {
 		// );
 	}, []);
 
+	React.useEffect(() => {
+		//추가로 등록할 반려동물이 있나요? 에서 '추가 등록'을 눌렀을 경우 저장되어 있는 state값을 지워야함
+		if (route.params?.initialization) {
+			console.log('Initialization');
+			setData({
+				user_profile_uri: '',
+				user_nickname: '',
+				pet_status: 'companion', //입양, 임시보호중인 동물일때는 초기값을 다르게 표기하도록(여기서는 임시보호, 반려동물 상태밖에 없음,입양된 동물은 더이상 정보수정 불가)
+				pet_is_temp_protection: false,
+				userobject_id: route.params?.userobject_id,
+				previousRouteName: route.params?.previousRouteName,
+			});
+		}
+	}, []);
+
 	const nicknameInput = React.useRef();
 
 	//닉네임 Validation
@@ -91,19 +106,6 @@ export default AssignPetProfileImage = ({navigation, route}) => {
 
 	//프로필이미지 클릭 시 PhotoSelect로 이동
 	const selectPhoto = () => {
-		// navigation.push('SinglePhotoSelect', route.name);
-		// launchImageLibrary(
-		// 	{
-		// 		mediaType: 'photo',
-		// 		selectionLimit: 1,
-		// 	},
-		// 	responseObject => {
-		// 		console.log('선택됨', responseObject);
-		// 		responseObject.didCancel
-		// 			? console.log('선택취소')
-		// 			: setData({...data, user_profile_uri: responseObject.assets[responseObject.assets.length - 1].uri});
-		// 	},
-		// );
 		ImagePicker.openPicker({
 			compressImageQuality: 0.8,
 			cropping: true,
@@ -134,7 +136,6 @@ export default AssignPetProfileImage = ({navigation, route}) => {
 			{/* contentContainerStyle​ : The style of the content container (View) when behavior is 'position'. */}
 			<View style={[login_style.wrp_main, {flex: 1}]}>
 				{/* (M)StageBar	 */}
-
 				<View style={[temp_style.stageBar, progressbar_style.stageBar]}>
 					<Stagebar
 						backgroundBarStyle={stagebar_style.backgroundBar} //배경이 되는 bar의 style, width props으로 너비결정됨
@@ -163,6 +164,7 @@ export default AssignPetProfileImage = ({navigation, route}) => {
 						<Input30
 							value={data.user_nickname}
 							showTitle={false}
+							showmsg={false}
 							width={654}
 							confirm_msg={'사용 가능한 닉네임입니다.'}
 							alert_msg={alertmsg}
@@ -174,19 +176,20 @@ export default AssignPetProfileImage = ({navigation, route}) => {
 							maxLength={25}
 						/>
 					</View>
-					<View style={[temp_style.checkBox_assignPetProfileImage, assignPetProfileImage_style.checkBox]}>
+
+					<View style={[assignPetProfileImage_style.checkBox]}>
 						<TouchableOpacity onPress={onPressCheckBox}>{protect ? <Check50 /> : <Rect50_Border />}</TouchableOpacity>
 						<Text style={[txt.noto28, {marginLeft: 10 * DP, textAlignVertical: 'center'}]}>해당 동물은 임시보호 중인 동물입니다.</Text>
 					</View>
 				</View>
 
 				{/* (A)Btn_w654 */}
-				<View style={[btn_style.btn_w654, assignPetProfileImage_style.btn_w654]}>
+				<View style={[assignPetProfileImage_style.btn_w654]}>
 					{/* 닉네임 Validator를 통과하여야만 버튼이 활성화된다 */}
 					{confirmed ? (
-						<AniButton btnTitle={'확인'} btnTheme={'shadow'} btnLayout={btn_w654} titleFontStyle={32} onPress={goToNextStep} />
+						<AniButton btnTitle={'확인'} btnStyle={'border'} btnLayout={btn_w654} titleFontStyle={32} onPress={goToNextStep} />
 					) : (
-						<AniButton btnTitle={'확인'} disable={true} btnLayout={btn_w654} titleFontStyle={32} />
+						<AniButton btnTitle={'확인'} disable btnLayout={btn_w654} titleFontStyle={32} />
 					)}
 				</View>
 			</View>

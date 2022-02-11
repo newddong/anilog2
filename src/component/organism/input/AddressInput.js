@@ -8,7 +8,7 @@ import {btn_w108, btn_w176, btn_w226} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import Input24 from 'Molecules/input/Input24';
 import {btn_style, temp_style} from 'Templete/style_templete';
-import {addressInput} from '../style_organism copy';
+import {addressInput} from 'Organism/style_organism copy';
 /**
  *
  * @param {object} props
@@ -84,7 +84,7 @@ const AddressInput = props => {
 					/>
 
 					<View style={[addressInput.btn_w226]}>
-						<AniButton btnTitle={'주소 찾기'} btnLayout={btn_w176} btnTheme={'shadow'} onPress={onPressSearchAddr} />
+						<AniButton btnTitle={'주소 찾기'} btnLayout={btn_w176} btnStyle={'border'} btnTheme={'shadow'} onPress={onPressSearchAddr} />
 					</View>
 				</View>
 			</View>

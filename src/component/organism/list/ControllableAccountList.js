@@ -4,7 +4,7 @@ import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import ControllableAccount from 'Organism/listitem/ControllableAccount';
 import ListEmptyInfo from 'Molecules/info/ListEmptyInfo';
-import {controllableAccountList} from '../style_organism copy';
+import {controllableAccountList} from 'Organism/style_organism copy';
 
 /**
  *

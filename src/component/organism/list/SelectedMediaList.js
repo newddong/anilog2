@@ -3,7 +3,7 @@ import {FlatList, Text, View} from 'react-native';
 import {dummy_selectedMediaList} from 'Root/config/dummyDate_json';
 import {styles} from 'Atom/image/imageStyle';
 import SelectedMedia from 'Molecules/media/SelectedMedia';
-import {selectedMediaList} from 'Organism/style_organism';
+import {selectedMediaList} from 'Organism/style_organism copy';
 
 /**
  * @param {{

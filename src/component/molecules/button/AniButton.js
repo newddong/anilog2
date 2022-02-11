@@ -70,7 +70,7 @@ const AniButton = props => {
 			<View style={[props.btnLayout, btnTheme(), border(), {backgroundColor: btnStyle(), justifyContent: 'center'}]}>
 				<Text
 					style={[
-						txt.noto24b,
+						txt.noto24,
 						{
 							fontSize: props.titleFontStyle * DP,
 							color: btnTxtColor(),

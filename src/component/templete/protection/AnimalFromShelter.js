@@ -1,10 +1,11 @@
 import React from 'react';
 import {ActivityIndicator, Text, View} from 'react-native';
+import {useNavigation} from '@react-navigation/core';
 import {login_style, animalFromShelter_style} from 'Templete/style_templete';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
-import {useNavigation} from '@react-navigation/core';
 import {getProtectRequestListByShelterId, getShelterProtectAnimalList} from 'Root/api/shelterapi';
 import {txt} from 'Root/config/textstyle';
+import Modal from 'Root/component/modal/Modal';
 
 export default AnimalFromShelter = ({route}) => {
 	const token = route.params;
@@ -23,7 +24,7 @@ export default AnimalFromShelter = ({route}) => {
 				request_number: '',
 			},
 			result => {
-				// console.log('result / getProtectRequestListByShelterId / AnimalFromShelter', result.msg[2].protect_animal_id);
+				// console.log('result / getProtectRequestListByShelterId / AnimalFromShelter', result);
 				setData(result.msg);
 				Modal.close();
 				setTimeout(() => {

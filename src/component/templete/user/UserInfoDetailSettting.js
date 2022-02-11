@@ -4,7 +4,7 @@ import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import TabSelectFilled_Type1 from 'Molecules/tab/TabSelectFilled_Type1';
 import DatePicker from 'Molecules/select/DatePicker';
-import {login_style, btn_style, temp_style, userInfoDetailSettting_style} from 'Templete/style_templete';
+import {login_style, btn_style, temp_style, userInfoDetailSettting_style} from '../style_templete';
 import InterestTagList from 'Organism/list/InterestTagList';
 import {GENDER_TAB_SELECT, INPUT_PHONE_NUM, INTEREST_ACT, INTEREST_REGION, mobile_carrier} from 'Root/i18n/msg';
 import Modal from 'Component/modal/Modal';
@@ -28,96 +28,6 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 	React.useEffect(() => {
 		navigation.setParams({data: route.params, route_name: route.name});
 		console.log('route', data);
-		const t = {
-			__v: 2,
-			_id: '61d2de63c0f179ccd5ba5887',
-			is_follow: false,
-			pet_family: [],
-			type: 'UserObject',
-			user_address: {city: '서울특별시', district: '마포구', neighbor: '신수동'},
-			user_agreement: {
-				is_donation_info: true,
-				is_location_service_info: true,
-				is_marketting_info: true,
-				is_over_fourteen: true,
-				is_personal_info: true,
-				is_service: true,
-			},
-			user_denied: false,
-			user_follow_count: 5,
-			user_follower_count: 3,
-			user_interests: [],
-			user_introduction: 'Dkd		Dkdk',
-			user_is_verified_email: false,
-			user_is_verified_phone_number: true,
-			user_mobile_company: 'SK텔레콤',
-			user_my_pets: [
-				{
-					__v: 2,
-					_id: '61d2de8ac0f179ccd5ba58a6',
-					pet_birthday: '2022-01-03T00:00:00.000Z',
-					pet_family: [Array],
-					pet_is_temp_protection: false,
-					pet_neutralization: 'no',
-					pet_sex: 'male',
-					pet_species: '개',
-					pet_species_detail: '코커스패니얼',
-					pet_status: 'companion',
-					pet_weight: '4',
-					type: 'UserObject',
-					user_agreement: [Object],
-					user_denied: false,
-					user_follow_count: 0,
-					user_follower_count: 1,
-					user_interests: [Array],
-					user_introduction: '',
-					user_is_verified_email: false,
-					user_is_verified_phone_number: false,
-					user_my_pets: [Array],
-					user_nickname: '길동이',
-					user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1641209482105_A3B92DE3-4536-43F5-B8A9-94355C099318.jpg',
-					user_register_date: '2022-01-03T11:31:22.210Z',
-					user_type: 'pet',
-					user_upload_count: 0,
-				},
-				{
-					__v: 0,
-					_id: '61d2ff57c0f179ccd5ba6e72',
-					pet_birthday: '2021-03-03T00:00:00.000Z',
-					pet_family: [Array],
-					pet_is_temp_protection: true,
-					pet_neutralization: 'unknown',
-					pet_sex: 'female',
-					pet_species: '고양이',
-					pet_species_detail: '브리티시 숏헤어',
-					pet_status: 'protect',
-					pet_weight: '2',
-					type: 'UserObject',
-					user_agreement: [Object],
-					user_denied: false,
-					user_follow_count: 0,
-					user_follower_count: 0,
-					user_interests: [Array],
-					user_introduction: '',
-					user_is_verified_email: false,
-					user_is_verified_phone_number: false,
-					user_my_pets: [Array],
-					user_nickname: '기스',
-					user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1641217879453_1d4f1cf2-f720-4377-9f14-4b9f513317f7.jpg',
-					user_register_date: '2022-01-03T13:51:19.661Z',
-					user_type: 'pet',
-					user_upload_count: 0,
-				},
-			],
-			user_name: '권상우',
-			user_nickname: '권상우',
-			user_password: 'tkddn123',
-			user_phone_number: '01096450422',
-			user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1641209443215_0CF8CF7C-DA9E-4F9D-9F6D-2C19C7144A45.jpg',
-			user_register_date: '2022-01-03T11:30:43.310Z',
-			user_type: 'user',
-			user_upload_count: 4,
-		};
 		setLoaded(true);
 	}, []);
 
@@ -319,19 +229,6 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 								<NormalDropDown menu={district} width={210} height={500} onSelect={onSelectDistrict} defaultIndex={0} />
 								<NormalDropDown menu={neighbor} width={210} height={500} onSelect={onSelectNeighbor} defaultIndex={0} />
 							</View>
-
-							{/* <AddressInput
-								title={'나의 지역'}
-								// address={data.user_address.brief ? data.user_address.brief : '없음'}
-								// detailAddress={data.user_address.detail ? data.user_address.detail : '없음'}
-								onChangeAddress={onChangeAddress}
-								onChangeDeatilAddress={onChangeDeatilAddress}
-								onPressSearchAddr={onPressSearchAddress}
-								// addressDefault={data ? data.user_address.city + '  ' + data.user_address.district : ''}
-								// addressDefault={data.user_address.brief ? data.user_address.brief : '없음'}
-								// detailAddressDefault={data ? data.user_address.neighbor : ''}
-								// detailAddressDefault={data.user_address.detail ? data.user_address.detail : '없음'}
-							/> */}
 						</View>
 						{/* 관심지역 및 활동 */}
 						<View style={[userInfoDetailSettting_style.tagListContainer]}>
@@ -339,7 +236,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 								<InterestTagList title={INTEREST_REGION} items={data.user_interests.location || []} onDelete={onDeleteInterestRegion} />
 							</View>
 							<View style={[userInfoDetailSettting_style.interestTagList]}>
-								<InterestTagList title={INTEREST_ACT} items={data.user_interests.activity || []} onDelete={onDeleteInterestAct} />
+								<InterestTagList gList title={INTEREST_ACT} items={data.user_interests.activity || []} onDelete={onDeleteInterestAct} />
 							</View>
 						</View>
 					</View>

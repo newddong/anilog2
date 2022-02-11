@@ -2,7 +2,7 @@ import React from 'react';
 import {FlatList} from 'react-native';
 import {View} from 'react-native';
 import AssignCheckListItem from 'Organism/listitem/AssignCheckListItem';
-import {assignCheckList} from '../style_organism copy';
+import {assignCheckList} from 'Organism/style_organism copy';
 /**
  *
  *@param {{

@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
 import {Text, View, Image, TouchableOpacity} from 'react-native';
 import {APRI10, BLACK, GRAY10} from 'Root/config/color';
@@ -38,7 +37,7 @@ const UserDescriptionLabel = props => {
 				<View style={{marginLeft: 30 * DP}}>
 					<View style={{flexDirection: 'row'}}>
 						<Text
-							style={(txt.roboto28b, {color: userGlobalObject.userInfo.user_nickname == data.user_nickname ? APRI10 : BLACK})}
+							style={(txt.roboto28b, {color: userGlobalObject.userInfo._id == data._id ? APRI10 : BLACK})}
 							numberOfLines={1}
 							ellipsizeMode="tail">
 							{data.user_nickname || ''}

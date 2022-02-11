@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
 import {Text, View, Image, TouchableOpacity} from 'react-native';
 import {GRAY20, BLACK, APRI10} from 'Root/config/color';
@@ -6,6 +5,7 @@ import {txt} from 'Root/config/textstyle';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import DP from 'Root/config/dp';
 import {styles} from 'Atom/image/imageStyle';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 /**
  *  반려동물의 프로필 사진, 유저의 닉네임, 시간 정보를 출력하는 라벨
@@ -18,9 +18,7 @@ const UserTimeLabel = props => {
 
 	//현재 접속한 토큰과 출력된 유저라벨의 유저가 같은지 확인
 	React.useEffect(() => {
-		AsyncStorage.getItem('token', (err, res) => {
-			res == props.data.comment_writer_id._id ? setIsLoginUser(true) : setIsLoginUser(false);
-		});
+		userGlobalObject.userInfo._id == props.data.comment_writer_id._id ? setIsLoginUser(true) : setIsLoginUser(false);
 	}, [props.data]);
 
 	const getCommentedTime = () => {

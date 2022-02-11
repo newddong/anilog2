@@ -6,7 +6,6 @@ import {txt} from 'Root/config/textstyle';
 import {WHITE, APRI10} from 'Root/config/color';
 import Modal from 'Root/component/modal/Modal';
 import {updatePetDetailInformation, updateUserDetailInformation} from 'Root/api/userapi';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 export default SaveButtonHeader = ({navigation, route, options, back}) => {
 	const [data, setData] = React.useState();
 	const [save, setSaved] = React.useState(false); // 저장 버튼 클릭 한 번이라도 했는지 여부

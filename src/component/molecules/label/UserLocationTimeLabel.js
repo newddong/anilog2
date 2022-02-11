@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import userGlobalObject from 'Root/config/userGlobalObject';
 import React from 'react';
 import {Text, View, Image, TouchableOpacity} from 'react-native';
 import {APRI10, GRAY20, BLACK} from 'Root/config/color';
@@ -21,9 +21,7 @@ const UserLocationTimeLabel = props => {
 	const [isLoginUser, setIsLoginUser] = React.useState(false); //현재 접속 중인 아이디와 같다면 닉네임 색깔이 메인색깔
 	//현재 접속한 토큰과 출력된 유저라벨의 유저가 같은지 확인
 	React.useEffect(() => {
-		AsyncStorage.getItem('token', (err, res) => {
-			res == props.data._id ? setIsLoginUser(true) : setIsLoginUser(false);
-		});
+		userGlobalObject.userInfo._id == props.data._id ? setIsLoginUser(true) : setIsLoginUser(false);
 	}, [props.data]);
 
 	const onClickLabel = e => {

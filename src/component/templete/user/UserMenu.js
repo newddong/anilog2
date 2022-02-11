@@ -47,6 +47,8 @@ export default UserMenu = props => {
 
 	//토큰에 로그인한 유저의 _id를 저장
 	React.useEffect(() => {
+		//자동로그인 이외의 기능에는 AsyncStorage를 사용해서 토큰을 불러오지 않음
+		//메모리의 userObject를 이용해서 권한을 파악할것임
 		AsyncStorage.getItem('token', (err, res) => {
 			if (res == null) {
 				navigation.navigate('Login');

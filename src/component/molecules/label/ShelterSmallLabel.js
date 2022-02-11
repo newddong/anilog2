@@ -5,7 +5,7 @@ import DP from 'Root/config/dp';
 import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
 import {Private30, Public30} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import userGlobalObj from 'Root/config/userGlobalObject';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import moment from 'moment';
 
@@ -21,9 +21,7 @@ const ShelterSmallLabel = props => {
 	//ddd
 	//user_nickname Text 색깔 조건부적용을 위한 세션아이디 비교
 	React.useEffect(() => {
-		AsyncStorage.getItem('token', (err, res) => {
-			data.user_id == res ? setValidation(true) : false; //일치한다면 Validation True로 nickname text color를 바꿈
-		});
+		data.user_id == userGlobalObj.userInfo._id ? setValidation(true) : false; //일치한다면 Validation True로 nickname text color를 바꿈
 	});
 
 	const getStatusMark = () => {

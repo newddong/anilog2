@@ -21,15 +21,15 @@ export default LoginTemplete = props => {
 		Modal.popNoBtn('로그인을 요청합니다.');
 		userLogin(
 			{
-				login_id: '01096450001',
-				login_password: 'tkddn123',
+				login_id: id,
+				login_password: password,
 			},
 			userObject => {
-				// console.log('userObject', userObject.msg);
+				console.log('userObject', userObject.msg);
 				Modal.close();
 				Modal.popNoBtn(userObject.msg.user_nickname + '님 \n로그인이 성공하였습니다.');
-				AsyncStorage.setItem('token', userObject.msg._id || '');
-				AsyncStorage.setItem('type', userObject.msg.user_type || '');
+				// AsyncStorage.setItem('token', userObject.msg._id || '');
+				// AsyncStorage.setItem('type', userObject.msg.user_type || '');
 
 				if (!userObject.msg._id) {
 					AsyncStorage.getItem('userInfo').then(user => {

@@ -5,18 +5,7 @@ import DP from 'Root/config/dp';
 /**
  * 실종제보 요약정보 올가니즘 컴포넌트
  * 'feed_type' 'missing' 'report' 시 사용됨.
- * @param {object} data - 실종제보 피드 정보 MissingAnimalDetail 또는 ReportDetail의 data
- * @param {string} missing_animal_species 실종 게시물의 실종 동물 종
- * @param {string} missing_animal_species_detail 실종 게시물의 실종 동물 품종
- * @param {string} missing_animal_sex 실종 게시물의 실종 동물 성별
- * @param {string} missing_animal_age 실종 게시물의 실종 동물 나이
- * @param {string} missing_animal_lost_location 실종 게시물의 실종 동물 실종위치
- * @param {string} missing_animal_contact 실종 게시물의 게시자 연락처
- * @param {string} missing_animal_features 실종 게시물의 실종 동물 특징
- * @param {string} missing_animal_date 실종 게시물의 실종일
- * @param {string} feed_type missing, report 로 실종 / 제보 분기 처리
- * @param {string} report_witness_date 제보 게시물의 제보 날짜
- * @param {string} report_witness_location 제보 게시물의 제보 위치
+ * @param {object} props.data - 실종제보 피드 정보 MissingAnimalDetail 또는 ReportDetail의 data 객체
  * @returns 실종제보 요약정보 컴포넌트
  */
 const MissingReportInfo = props => {

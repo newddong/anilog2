@@ -15,6 +15,7 @@ import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {MAINCOLOR} from 'Root/config/color';
 import {getTimeLapsed, parsingDate} from 'Root/util/dateutil';
 import HashText from 'Molecules/info/HashText';
+import MissingReportInfo from 'Organism/info/MissingReportInfo';
 
 export default FeedContent = props => {
 	const {
@@ -160,6 +161,7 @@ export default FeedContent = props => {
 					<View style={{flexDirection: 'row', alignItems: 'center'}}>
 						<Text style={[txt.noto28]}>제보 날짜: </Text>
 						<Text style={[txt.noto30b]}>{parsingDate(report_witness_date)}</Text>
+						{/* <MissingReportInfo data={props.data} /> */}
 					</View>
 					<View style={{flexDirection: 'row', alignItems: 'flex-start', paddingTop: 10 * DP}}>
 						<Text style={[txt.noto28]}>제보 장소: </Text>
@@ -168,7 +170,7 @@ export default FeedContent = props => {
 				</View>
 			)}
 
-			{(route.name.includes('FeedList')||feed_type=='report'||feed_type=='missing'||route.name.includes('FeedCommentList') || show) && (
+			{(route.name.includes('FeedList') || feed_type == 'report' || feed_type == 'missing' || route.name.includes('FeedCommentList') || show) && (
 				<View style={[organism_style.content_feedContent, feedContent_style.content_Top10]}>
 					<HashText style={[txt.noto28]} numberOfLines={shouldBeDetail ? 0 : 2} onLayout={onLayoutContent}>
 						{feed_content}
@@ -181,18 +183,19 @@ export default FeedContent = props => {
 					<Text style={[txt.noto22, {color: GRAY10}]}>{getTimeLapsed(feed_date)}</Text>
 				</View>
 
-				{!show && route.name.includes('FeedList')||route.name.includes('FeedCommentList') && (
-					<TouchableWithoutFeedback onPress={showMore}>
-						<View style={[organism_style.addMore_view_feedContent]}>
-							<View style={[organism_style.addMore_feedContent]}>
-								<Text style={[txt.noto22, {color: GRAY10}]}>더보기</Text>
+				{(!show && route.name.includes('FeedList')) ||
+					(route.name.includes('FeedCommentList') && (
+						<TouchableWithoutFeedback onPress={showMore}>
+							<View style={[organism_style.addMore_view_feedContent]}>
+								<View style={[organism_style.addMore_feedContent]}>
+									<Text style={[txt.noto22, {color: GRAY10}]}>더보기</Text>
+								</View>
+								<View style={[organism_style.braket]}>
+									<Arrow_Down_GRAY20 />
+								</View>
 							</View>
-							<View style={[organism_style.braket]}>
-								<Arrow_Down_GRAY20 />
-							</View>
-						</View>
-					</TouchableWithoutFeedback>
-				)}
+						</TouchableWithoutFeedback>
+					))}
 			</View>
 		</View>
 	);

@@ -10,7 +10,7 @@ import FilterButton from 'Molecules/button/FilterButton';
 import {PET_KIND, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
 import {getMissingReportList} from 'Root/api/feedapi.js';
 import {getPettypes} from 'Root/api/userapi';
-
+import {btn_w306_h68} from 'Component/atom/btn/btn_style';
 export default MissingReportList = props => {
 	const navigation = useNavigation();
 	const [showUrgentBtns, setShowUrgentBtns] = React.useState(true); //긴급버튼목록
@@ -134,10 +134,10 @@ export default MissingReportList = props => {
 					<View style={[searchProtectRequest.filterView.inside]}>
 						<View style={{flexDirection: 'row'}}>
 							<View style={[temp_style.filterBtn]}>
-								<FilterButton menu={PET_PROTECT_LOCATION} onSelect={onSelectLocation} width={306} height={700} />
+								<FilterButton menu={PET_PROTECT_LOCATION} btnLayout={btn_w306_h68} onSelect={onSelectLocation} width={306} height={700} />
 							</View>
 							<View style={[temp_style.filterBtn]}>
-								<FilterButton menu={petTypes} onSelect={onSelectKind} width={306} />
+								<FilterButton menu={petTypes} btnLayout={btn_w306_h68} onSelect={onSelectKind} width={306} />
 							</View>
 						</View>
 					</View>

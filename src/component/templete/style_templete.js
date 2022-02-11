@@ -309,7 +309,8 @@ export const temp_style = StyleSheet.create({
 	},
 	input24_changeUserProfileImage: {
 		width: 654 * DP,
-		height: 168 * DP,
+		// height: 168 * DP,
+		height: 130 * DP,
 	},
 	input30_changePetProfileImage: {
 		width: 654 * DP,
@@ -543,8 +544,8 @@ export const temp_style = StyleSheet.create({
 		// backgroundColor: '#D19F9F',
 	},
 	changePassword_userInfoSetting: {
-		width: 188 * DP,
-		height: 36 * DP,
+		width: 212 * DP,
+		height: 64 * DP,
 		// backgroundColor: '#D19F9F',
 	},
 	vertical_border: {
@@ -967,8 +968,7 @@ export const temp_style = StyleSheet.create({
 		backgroundColor: '#E1BDE2',
 	},
 	accountInfo_shelterInfoSetting_view: {
-		height: 192 * DP,
-		// backgroundColor: '#FF00FF',
+		height: 206 * DP,
 	},
 	introduce_shelterInfoSetting_view: {
 		minHeight: 200 * DP,
@@ -997,6 +997,7 @@ export const temp_style = StyleSheet.create({
 		width: 654 * DP,
 		height: 46 * DP,
 		justifyContent: 'space-between',
+		marginTop: 44 * DP,
 		// backgroundColor: '#F6F6E4',
 	},
 	introduceMent_shelterInfoSetting: {
@@ -1625,7 +1626,7 @@ export const changeUserProfileImage_style = StyleSheet.create({
 		marginVertical: 110 * DP,
 	},
 	input24: {
-		marginBottom: 44 * DP,
+		marginBottom: 80 * DP,
 	},
 });
 
@@ -1644,7 +1645,7 @@ export const changePetProfileImage_style = StyleSheet.create({
 
 export const changePassword_style = StyleSheet.create({
 	passwordChecker: {
-		marginTop: 90 * DP,
+		marginTop: 164 * DP,
 	},
 	btn_w654: {
 		marginVertical: 110 * DP,
@@ -1748,7 +1749,7 @@ export const userMenu_style = StyleSheet.create({
 	},
 	btn_w280_view: {
 		flexDirection: 'row',
-		marginVertical: 30 * DP,
+		marginVertical: 40 * DP,
 		width: 610 * DP,
 		alignItems: 'center',
 	},
@@ -1763,6 +1764,7 @@ export const userMenu_style = StyleSheet.create({
 		// backgroundColor: '#BF9547',
 	},
 	introduceBox: {
+		marginTop: 30 * DP,
 		flexDirection: 'row',
 		width: 492 * DP,
 	},
@@ -1786,7 +1788,6 @@ export const userInfoSetting_style = StyleSheet.create({
 	},
 	changePassword: {
 		marginTop: 30 * DP,
-		marginLeft: 24 * DP,
 	},
 	bracket48: {
 		marginLeft: 404 * DP,
@@ -1801,12 +1802,12 @@ export const userInfoSetting_style = StyleSheet.create({
 	},
 	btn_w114: {
 		marginTop: 40 * DP,
-		marginLeft: 340 * DP,
+		marginLeft: 364 * DP,
 	},
 	user_introModifyContainer: {
 		height: 140 * DP,
-		borderBottomColor: APRI10,
-		borderBottomWidth: 3 * DP,
+		// borderBottomColor: APRI10,
+		// borderBottomWidth: 3 * DP,
 	},
 	user_intro_modifyMode: {
 		// maxHeight: 200 * DP,
@@ -2135,14 +2136,15 @@ export const shelterMenu = StyleSheet.create({
 		width: 420 * DP,
 		height: 58 * DP,
 		// backgroundColor: '#D1E7F1',
-		marginTop: 27 * DP,
+		marginTop: 10 * DP,
 		alignSelf: 'flex-end',
 	},
 	shelterInfo_contents: {
 		width: 420 * DP,
 		// height: 82 * DP,
 		// backgroundColor: '#FBC5C5',
-		alignSelf: 'flex-end',
+		// alignSelf: 'flex-end',
+		alignSelf: 'center',
 	},
 	showMore: {
 		width: 400 * DP,
@@ -2160,6 +2162,7 @@ export const shelterMenu = StyleSheet.create({
 		width: 654 * DP,
 		height: 92 * DP,
 		marginTop: 40 * DP,
+		// paddingTop: 40 * DP,
 		flexDirection: 'row',
 		alignItems: 'center',
 	},
@@ -2178,9 +2181,25 @@ export const shelterMenu = StyleSheet.create({
 		alignItems: 'center',
 		marginLeft: 82 * DP,
 	},
-	btnView_floadArticle_126x92: {
+	btnView_floadAddPet_128x68: {
+		width: 128 * DP,
+		height: 68 * DP,
+		// backgroundColor: '#BF9547',
+		justifyContent: 'center',
+		alignItems: 'center',
+		marginLeft: 32 * DP,
+	},
+	btnView_floadArticle_129x92: {
 		width: 126 * DP,
 		height: 92 * DP,
+		backgroundColor: '#BF9547',
+		justifyContent: 'center',
+		alignItems: 'center',
+		marginLeft: 36 * DP,
+	},
+	btnView_floadArticle_128x68: {
+		width: 128 * DP,
+		height: 68 * DP,
 		// backgroundColor: '#BF9547',
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -2189,6 +2208,7 @@ export const shelterMenu = StyleSheet.create({
 	profileMenu1: {
 		backgroundColor: '#FFF',
 		width: 750 * DP,
+		height: 238 * DP,
 		marginTop: 10 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -2196,6 +2216,7 @@ export const shelterMenu = StyleSheet.create({
 	profileMenu2: {
 		backgroundColor: '#FFF',
 		width: 750 * DP,
+		height: 238 * DP,
 		marginTop: 10 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -2203,6 +2224,7 @@ export const shelterMenu = StyleSheet.create({
 	profileMenu3: {
 		backgroundColor: '#FFF',
 		width: 750 * DP,
+		height: 316 * DP,
 		marginTop: 10 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -2210,7 +2232,7 @@ export const shelterMenu = StyleSheet.create({
 	profileMenu4: {
 		backgroundColor: '#FFF',
 		width: 750 * DP,
-
+		height: 238 * DP,
 		marginTop: 10 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -2253,10 +2275,13 @@ export const shelterInfoSetting = StyleSheet.create({
 		right: 0,
 	},
 	email_view: {
-		marginTop: 30 * DP,
 		alignItems: 'center',
 	},
-	accountInfo: {},
+	accountInfo: {
+		width: 200 * DP,
+		height: 46 * DP,
+		marginTop: 44 * DP,
+	},
 	introduceMent: {},
 	grayLine: {
 		width: 750 * DP,
@@ -2279,26 +2304,25 @@ export const editShelterInfo = StyleSheet.create({
 	inputCont: {
 		flexDirection: 'row',
 		alignSelf: 'center',
-		height: 110 * DP,
+		height: 82 * DP,
 		// backgroundColor: 'yellow',
-		marginBottom: 10 * DP,
+		// marginBottom: 10 * DP,
 	},
 	input30WithMsg: {
 		flexDirection: 'row',
 		alignSelf: 'center',
-		height: 120 * DP,
+		height: 82 * DP,
 	},
 	inputEmail: {
 		flexDirection: 'row',
-		alignSelf: 'center',
-		height: 100 * DP,
-		marginBottom: 40 * DP,
+		// alignSelf: 'center',
+		height: 82 * DP,
 		// backgroundColor: 'yellow',
 	},
 	shelterInfoForm: {
 		width: 654 * DP,
 		// backgroundColor: '#A07A7A',
-		marginTop: 40 * DP,
+		marginTop: 50 * DP,
 	},
 	btn_w654: {
 		marginVertical: 50 * DP,
@@ -2311,9 +2335,9 @@ export const editShelterInfo = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	text: {
-		width: 118 * DP,
+		width: 144 * DP,
 		height: 46 * DP,
-		marginBottom: 35 * DP,
+		marginRight: 16 * DP,
 		// backgroundColor: 'pink',
 	},
 	emailText: {
@@ -2323,16 +2347,15 @@ export const editShelterInfo = StyleSheet.create({
 	},
 	input30: {
 		width: 520 * DP,
-		height: 120 * DP,
-		marginBottom: 40 * DP,
+		height: 82 * DP,
+		// marginBottom: 50 * DP,
 		// justifyContent: 'center',
 		// backgroundColor: '#EDEDED',
 	},
-	inputWithEmail: {},
+	inputWithEmail: {width: 520 * DP, height: 82 * DP},
 	addressInput: {
 		width: 654 * DP,
 		height: 236 * DP,
-		marginBottom: 20 * DP,
 		marginTop: 40 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -2921,7 +2944,7 @@ export const appliesRecord = StyleSheet.create({
 	},
 	record: {
 		width: 750 * DP,
-		marginTop: 30 * DP,
+		marginTop: 46 * DP,
 		alignItems: 'center',
 		alignSelf: 'center',
 	},
@@ -2934,14 +2957,15 @@ export const appliesRecord = StyleSheet.create({
 		headerContainer: {
 			width: 654 * DP,
 			height: 48 * DP,
-			marginBottom: 14 * DP,
+			marginBottom: 20 * DP,
 			flexDirection: 'row',
 			alignItems: 'center',
 			title: {
 				height: 48 * DP,
 				alignItems: 'center',
 				justifyContent: 'center',
-				color: GRAY20,
+				// color: GRAY20,
+				color: '#191919',
 			},
 			moreTxt: {},
 			moreBtn: {},
@@ -2956,6 +2980,7 @@ export const appliesRecord = StyleSheet.create({
 		right: 0,
 	},
 	shelterList_container: {
+		marginTop: 48 * DP,
 		alignItems: 'center',
 		height: 312 * DP,
 		marginVertical: 30 * DP,

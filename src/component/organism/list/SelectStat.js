@@ -49,24 +49,24 @@ export default SelectStat = props => {
 			<View style={[temp_style.selectstat, selectStat.selectstat]}>
 				{selectMode ? (
 					<TouchableOpacity style={[temp_style.textBtn]} onPress={selectCancel}>
-						<Text style={[txt.noto24, {alignSelf: 'flex-start'}]}>취소</Text>
+						<Text style={[txt.noto26, {alignSelf: 'flex-start'}]}>취소</Text>
 						<Text>{props.headerText}</Text>
 					</TouchableOpacity>
 				) : null}
 				{selectMode ? (
 					<View style={[selectStat.rightContainer]}>
 						<TouchableOpacity onPress={selectAll} style={[temp_style.textBtn]}>
-							<Text style={[txt.noto24]}>{selectCNT.current % 2 == 1 ? '전체 취소' : '전체 선택'}</Text>
+							<Text style={[txt.noto26]}>{selectCNT.current % 2 == 1 ? '전체 취소' : '전체 선택'}</Text>
 						</TouchableOpacity>
 						<View style={[selectStat.vertical_stick]} />
 						<TouchableOpacity onPress={deleteSelectedItem} style={[temp_style.textBtn]}>
-							<Text style={[txt.noto24]}>선택 삭제</Text>
+							<Text style={[txt.noto26]}>선택 삭제</Text>
 						</TouchableOpacity>
 					</View>
 				) : (
 					<View style={[selectStat.rightContainer]}>
 						<TouchableOpacity style={[temp_style.textBtn]} onPress={select}>
-							<Text style={[txt.noto24]}>선택하기</Text>
+							<Text style={[txt.noto26]}>선택하기</Text>
 						</TouchableOpacity>
 					</View>
 				)}

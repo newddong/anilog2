@@ -136,29 +136,37 @@ export default AppliesRecord = ({route}) => {
 					<View style={[appliesRecord.record]}>
 						<View style={[appliesRecord.animalNeedHelp.headerContainer]}>
 							<Text style={[appliesRecord.animalNeedHelp.headerContainer.title]}>입양 신청 </Text>
-							<TouchableOpacity onPress={showMoreAdoption} style={[appliesRecord.showMoreBox]}>
-								<Text style={[txt.noto24]}>더보기 </Text>
-								<NextMark />
-							</TouchableOpacity>
+							{adopt_application_list != undefined && adopt_application_list.length > 0 ? (
+								<TouchableOpacity onPress={showMoreAdoption} style={[appliesRecord.showMoreBox]}>
+									<Text style={[txt.noto24, {color: 'gray'}]}>더보기 </Text>
+									<NextMark />
+								</TouchableOpacity>
+							) : (
+								<></>
+							)}
 						</View>
 						{adopt_application_list != undefined && adopt_application_list.length > 0 ? (
 							<AnimalNeedHelpList data={adopt_application_list} onClickLabel={onClickAdoptApplication} onFavoriteTag={onOff_FavoriteTag} />
 						) : (
-							<Text>검색 결과가 없습니다.</Text>
+							<Text style={{padding: 15}}>검색 결과가 없습니다.</Text>
 						)}
 					</View>
 					<View style={[appliesRecord.record]}>
 						<View style={[appliesRecord.animalNeedHelp.headerContainer]}>
 							<Text style={[appliesRecord.animalNeedHelp.headerContainer.title]}>임시보호 신청 </Text>
-							<TouchableOpacity onPress={showMoreProtection} style={[appliesRecord.showMoreBox]}>
-								<Text style={[txt.noto24]}>더보기 </Text>
-								<NextMark />
-							</TouchableOpacity>
+							{protect_application_list != undefined && protect_application_list.length > 0 ? (
+								<TouchableOpacity onPress={showMoreProtection} style={[appliesRecord.showMoreBox]}>
+									<Text style={[txt.noto24, {color: 'gray'}]}>더보기 </Text>
+									<NextMark />
+								</TouchableOpacity>
+							) : (
+								<></>
+							)}
 						</View>
 						{protect_application_list != undefined && protect_application_list.length > 0 ? (
 							<AnimalNeedHelpList data={protect_application_list} onClickLabel={onClickProtectApplication} onFavoriteTag={onOff_FavoriteTag} />
 						) : (
-							<Text>검색 결과가 없습니다.</Text>
+							<Text style={{padding: 15}}>검색 결과가 없습니다.</Text>
 						)}
 					</View>
 					<View style={[appliesRecord.shelterList_container]}>
@@ -174,7 +182,7 @@ export default AppliesRecord = ({route}) => {
 						{volunteer_list != undefined && volunteer_list.length > 0 ? (
 							<ShelterList items={volunteer_list} onShelterLabelClick={onClickShelterLabel} />
 						) : (
-							<Text>검색 결과가 없습니다.</Text>
+							<Text style={{padding: 15}}>검색 결과가 없습니다.</Text>
 						)}
 					</View>
 				</ScrollView>

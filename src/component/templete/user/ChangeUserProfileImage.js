@@ -173,7 +173,14 @@ export default ChangeUserProfileImage = ({route}) => {
 				</View>
 				{/* 확인버튼 */}
 				<View style={[btn_style.btn_w654, changeUserProfileImage_style.btn_w654]}>
-					<AniButton onPress={onConfirmed} btnTitle={'확인'} titleFontStyle={32} btnLayout={btn_w654} disable={confirmed ? false : true} />
+					<AniButton
+						onPress={onConfirmed}
+						btnStyle={'border'}
+						btnTitle={'확인'}
+						titleFontStyle={32}
+						btnLayout={btn_w654}
+						disable={confirmed ? false : true}
+					/>
 				</View>
 			</ScrollView>
 		</View>

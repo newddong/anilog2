@@ -5,7 +5,7 @@ import AniButton from 'Molecules/button/AniButton';
 import CheckBox from 'Molecules/select/CheckBox';
 import HashLabel from 'Molecules/label/HashLabel';
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
-import {userAccount} from 'Organism/style_organism';
+import {userAccount} from 'Organism/style_organism copy';
 
 /**
  * 친구 즐겨찾기 Hash와 유저오브젝트 리스트 출력 컴포넌트

@@ -1,10 +1,8 @@
 import React from 'react';
-import {Text, View, ScrollView, FlatList, TextInput} from 'react-native';
-import DP from 'Root/config/dp';
-import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
+import {Text, View, ScrollView, FlatList, TextInput, TouchableOpacity} from 'react-native';
+import {GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {btn_w226} from 'Atom/btn/btn_style';
-import {Add_Volunteer, Calendar48_Filled, Cross46, Person48, Phone48} from 'Atom/icon';
+import {AddItem64, Add_Volunteer, Calendar48_Filled, Cross46, Cross48, Person48, Phone48} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
 import AccountList from 'Organism/list/AccountList';
 import ShelterInfo from 'Organism/info/ShelterInfo';
@@ -15,6 +13,7 @@ import Modal from 'Component/modal/Modal';
 import {getUserInfoById} from 'Root/api/userapi';
 import {assignVolunteerActivity} from 'Root/api/volunteerapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import UserDescriptionLabel from 'Root/component/molecules/label/UserDescriptionLabel';
 
 //관련 DB테이블 - VolunteerActivityApplicantObject
 export default ApplyVolunteer = ({route, navigation}) => {
@@ -158,6 +157,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 			</View>
 		);
 	};
+
 	if (loading) {
 		return <></>;
 	} else {
@@ -178,13 +178,23 @@ export default ApplyVolunteer = ({route, navigation}) => {
 								<Text style={[txt.noto24b, {color: GRAY10}]}>봉사활동 희망 날짜</Text>
 							</View>
 						</View>
-						<DatePicker width={654} onDateChange={onDateChange} past={false} multiple={true} />
+						<DatePicker width={590} onDateChange={onDateChange} past={false} multiple={true} />
 						{/* 봉사활동 희망날짜 FlatList */}
-						<ScrollView horizontal={false} contentContainerStyle={{flex: 0}}>
+						{/* <ScrollView horizontal={false} contentContainerStyle={{flex: 0}}>
 							<ScrollView horizontal={true} contentContainerStyle={{flex: 1}}>
 								<FlatList data={data.volunteer_wish_date} renderItem={({item, index}) => renderItem(item, index)} />
 							</ScrollView>
-						</ScrollView>
+						</ScrollView> */}
+						{data.volunteer_wish_date.map((v, i) => {
+							return (
+								<View key={i} style={[applyVolunteer.volunteerDateList]}>
+									<Text style={[txt.roboto28, applyVolunteer.volunteerDateList_text]}>{v}</Text>
+									<View style={[applyVolunteer.volunteerDateList_cross]}>
+										<Cross46 onPress={() => onDeleteVolunteerDate(i)} />
+									</View>
+								</View>
+							);
+						})}
 					</View>
 					{/* 참여인원 */}
 					<View style={[applyVolunteer.participants]}>
@@ -194,19 +204,36 @@ export default ApplyVolunteer = ({route, navigation}) => {
 							</View>
 							<View style={[applyVolunteer.title]}>
 								<Text style={[txt.noto24b, {color: GRAY10}]}>참여 인원</Text>
-								<Text style={[txt.noto22, {color: GRAY20}]}>(비회원 포함 기입 / 계정 추가는 생략 가능)</Text>
+								<Text style={[txt.noto22, {color: GRAY20}]}>(총 인원 수 기입)</Text>
 							</View>
 						</View>
-						<TextInput editable={false} style={[applyVolunteer.number_of_volunteerers]} value={data.volunteer_accompany.length + ' 명'} />
+						<View style={[applyVolunteer.number_of_volunteerers]}>
+							<TextInput
+								style={[txt.noto28, applyVolunteer.volunteerListInput]}
+								textAlign={'right'}
+								keyboardType={'number-pad'}
+								placeholder={'애니로그 계정 유무 상관없는 총 인원수'}
+								placeholderTextColor={GRAY10}
+							/>
+							<Text style={[txt.noto32]}> {'  '} 명</Text>
+						</View>
 						{/* 봉활참여인원 FlatList 여기 */}
 						<View style={[applyVolunteer.participants_step2]}>
-							<View style={[applyVolunteer.accountList]}>
-								<AccountList items={data.volunteer_accompany} width={446} onDelete={onDeleteAccount} makeBorderMode={false} />
-							</View>
-							<View style={[applyVolunteer.addParticipantBtn]}>
-								<Add_Volunteer onPress={addVolunteer} />
-								<Text style={[txt.noto28, applyVolunteer.addParticipantTxt]}>계정 추가</Text>
-							</View>
+							{/* <AccountList items={data.volunteer_accompany} width={446} onDelete={onDeleteAccount} makeBorderMode={false} /> */}
+							{data.volunteer_accompany.map((v, i) => {
+								return (
+									<View style={[applyVolunteer.participants_container]}>
+										<View style={[applyVolunteer.participants_list_container]}>
+											<UserDescriptionLabel data={v} />
+										</View>
+										<Cross48 onPress={() => onDeleteAccount(i)} />
+									</View>
+								);
+							})}
+							<TouchableOpacity onPress={addVolunteer} style={[applyVolunteer.addParticipantBtn]}>
+								<AddItem64 />
+								<Text style={[txt.noto28, applyVolunteer.addParticipantTxt]}>애니로그 계정인 봉사자 추가</Text>
+							</TouchableOpacity>
 						</View>
 					</View>
 					{/* 봉사활동자 연락처 */}

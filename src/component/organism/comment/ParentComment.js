@@ -4,12 +4,13 @@ import {organism_style, parentComment} from 'Organism/style_organism';
 import {styles} from 'Atom/image/imageStyle';
 import ChildCommentList from 'Organism/comment/ChildCommentList';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
-import {Heart30_Border, Heart30_Filled} from 'Atom/icon';
+import {Heart30_Border, Heart30_Filled, Meatball50_APRI10_Vertical, Meatball50_GRAY20_Vertical} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
-import {DEFAULT_PROFILE, SETTING_COMMENT, SETTING_OWN_COMMENT} from 'Root/i18n/msg';
+import {DEFAULT_PROFILE, REPLY_MEATBALL_MENU, REPLY_MEATBALL_MENU_MY_REPLY, SETTING_COMMENT, SETTING_OWN_COMMENT} from 'Root/i18n/msg';
 import {GRAY10} from 'Root/config/color';
 import {getChildCommentList} from 'Root/api/commentapi';
 import Modal from 'Component/modal/Modal';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 /**
  *
@@ -27,6 +28,7 @@ export default ParentComment = props => {
 	const [likeState, setLikeState] = React.useState(false); //해당 댓글의 좋아요 상태 - 로그인 유저가 좋아요를 누른 기록이 있다면 filled , or border
 	const [isMyComment, setIsMyComment] = React.useState(false); //해당 댓글 작성자가 본인인지 여부 Boolean
 	const [showChild, setShowChild] = React.useState(false); //해당 댓글의 답글들 출력 여부 Boolean
+	const [meatball, setMeatball] = React.useState(false); // 해당 댓글의 미트볼 헤더 클릭 여부
 
 	React.useEffect(() => {
 		setData(props.parentComment);
@@ -63,12 +65,47 @@ export default ParentComment = props => {
 		);
 	};
 
+	const onSelectReplyMeatballMenu = i => {};
+
+	const onPressMeatball = () => {
+		// console.log('meatballREf', meatballRef);
+		meatballRef.current.measure((fx, fy, width, height, px, py) => {
+			const isWriter = userGlobalObject.userInfo._id == data.comment_writer_id._id;
+			if (isWriter) {
+				Modal.popDropdownModal(
+					{x: px, y: py},
+					REPLY_MEATBALL_MENU_MY_REPLY,
+					selectedItem => {
+						alert(REPLY_MEATBALL_MENU_MY_REPLY[selectedItem]);
+					},
+					() => {
+						console.log('meatball', meatball);
+					},
+				);
+			} else {
+				Modal.popDropdownModal(
+					{x: px, y: py},
+					REPLY_MEATBALL_MENU,
+					selectedItem => {
+						alert(REPLY_MEATBALL_MENU[selectedItem]);
+					},
+					() => {
+						console.log('meatball', meatball);
+					},
+				);
+			}
+		});
+	};
+
+	const meatballRef = React.useRef();
+
 	return (
 		<View style={organism_style.parentComment}>
 			{/* 유저프로필 라벨 및 Meatball  */}
 			<View style={[organism_style.UserLocationTimeLabel_view_parentComment]}>
-				<View style={organism_style.userLocationTimeLabel}>
+				<View style={[organism_style.userLocationTimeLabel, parentComment.userLabelContainer]} ref={meatballRef}>
 					<UserLocationTimeLabel data={data.comment_writer_id} time={data.comment_update_date} />
+					{meatball ? <Meatball50_APRI10_Vertical onPress={onPressMeatball} /> : <Meatball50_GRAY20_Vertical onPress={onPressMeatball} />}
 				</View>
 				{/* 연결되는 기능 개발 후 추후 연결 */}
 				{/* <View style={[organism_style.meatball_50_vertical]}>
@@ -85,7 +122,7 @@ export default ParentComment = props => {
 			)}
 			{/* 댓글 내용 */}
 			<View style={[parentComment.comment_contents]}>
-				<Text style={[txt.noto24]}>{data ? data.comment_contents : ''}</Text>
+				<Text style={[txt.noto26]}>{data ? data.comment_contents : ''}</Text>
 			</View>
 			<View style={[parentComment.likeReplyButton]}>
 				{/* Data - 좋아요 상태 t/f */}

@@ -35,9 +35,9 @@ const ActionButton = React.forwardRef((props, ref) => {
 	const border = () => {
 		//border는 btnStyle='border' or disable=true 인 경우 발생
 		if (props.disable) {
-			return {borderColor: GRAY30, borderWidth: 4 * DP};
+			return {borderColor: GRAY30, borderWidth: 2 * DP};
 		} else if (props.btnStyle == 'border') {
-			return {borderColor: APRI10, borderWidth: 4 * DP};
+			return {borderColor: APRI10, borderWidth: 2 * DP};
 		}
 	};
 

@@ -80,8 +80,8 @@ const FeedThumbnail = React.memo(props => {
 				{props.data.feed_type == 'missing' || props.data.feed_type == 'report' ? (
 					<View
 						style={{
-							width: 124 * DP,
-							height: 48 * DP,
+							width: 96 * DP,
+							height: 56 * DP,
 							position: 'absolute',
 							justifyContent: 'center',
 							backgroundColor: RED10,
@@ -90,8 +90,8 @@ const FeedThumbnail = React.memo(props => {
 							right: 0,
 							bottom: 0,
 						}}>
-						<Text style={[txt.noto24b, {width: 124 * DP, lineHeight: 36 * DP, color: WHITE, textAlign: 'center'}]}>
-							{props.data.feed_type == 'missing' ? '실 종' : '제 보'}
+						<Text style={[txt.noto28b, {width: 96 * DP, lineHeight: 36 * DP, color: WHITE, textAlign: 'center'}]}>
+							{props.data.feed_type == 'missing' ? '실종' : '제보'}
 						</Text>
 					</View>
 				) : (

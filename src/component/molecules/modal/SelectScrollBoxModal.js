@@ -41,7 +41,12 @@ const SelectScrollBoxModal = props => {
 
 	const onScroll = (event, i) => {
 		let y = event.nativeEvent.contentOffset.y;
-		let focused = Math.floor(y / (68 * DP));
+		let focused = '';
+		if (data.length < 5) {
+			focused = Math.floor(y / (62 * DP));
+		} else {
+			focused = Math.floor(y / (68 * DP));
+		}
 		console.log('foucsed', focused, i);
 		if (i == 0) {
 			if (focused < 1) {
@@ -90,7 +95,7 @@ const SelectScrollBoxModal = props => {
 			<View style={style.popUpWindow}>
 				<View style={style.header}>
 					{props.header == '' ? (
-						<Text onPress={() => props.onClose()} style={[txt.noto30, {color: WHITE}]}>
+						<Text onPress={() => Modal.close()} style={[txt.noto30, {color: WHITE}]}>
 							취소
 						</Text>
 					) : (

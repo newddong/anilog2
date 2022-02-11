@@ -6,6 +6,8 @@ import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 
 export default SimpleHeader = ({navigation, route, options, back}) => {
+	console.log('options', options);
+	console.log('route', route.params);
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
 			<TouchableOpacity onPress={navigation.goBack}>

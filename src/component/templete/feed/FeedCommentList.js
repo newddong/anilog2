@@ -13,10 +13,11 @@ import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {GRAY10, GRAY20} from 'Root/config/color';
 
 export default FeedCommentList = props => {
 	// console.log('props.showAllContents', props.route.params.showAllContents);
-	console.log(props.route.name, '코멘트 리스트 네임');
+	// console.log(props.route.name, '코멘트 리스트 네임');
 	const navigation = useNavigation();
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
@@ -115,7 +116,7 @@ export default FeedCommentList = props => {
 		if (index == 0)
 			return (
 				<View style={{justifyContent: 'flex-end', paddingBottom: 10 * DP, height: 60 * DP, backgroundColor: '#FFF', paddingHorizontal: 48 * DP}}>
-					<Text style={[txt.noto28]}>댓글 {comments.length}개 </Text>
+					<Text style={[txt.noto26, {color: GRAY10}]}>댓글 {comments.length}개 </Text>
 				</View>
 			);
 		if (index > 0) return <CommentList items={item} onPressReplyBtn={onReplyBtnClick} />;

@@ -22,7 +22,14 @@ export default MeatBallHeader = props => {
 		if (select == '정보') {
 			Modal.close();
 			setTimeout(() => {
-				Modal.popInformationModal(props.options.data, () => onClose());
+				Modal.popInformationModal(
+					props.options.data,
+					() => onClose(),
+					() => {
+						props.navigation.push('UserInfoSetting');
+						//프로필 수정하는 페이지 이동
+					},
+				);
 			}, 100);
 		} else if (select == '공유하기') {
 			console.log('dddd');
@@ -39,7 +46,8 @@ export default MeatBallHeader = props => {
 
 	const onPressMeatball = () => {
 		setIsClicked(true);
-		if (props.options.data && props.options.data.user_type == 'user ' && props.options.data._id == userInfo._id) {
+
+		if (props.options.data && props.options.data.user_type == 'user' && props.options.data._id == userInfo._id) {
 			//일반 유저 프로필이며 자신의 계정일 경우
 			Modal.popSelectBoxModal(
 				['계정 주소 공유하기'],
@@ -81,8 +89,18 @@ export default MeatBallHeader = props => {
 				false,
 			);
 		} else if (props.options.data && props.options.data.user_type == 'shelter' && props.options.data._id != userInfo._id) {
+			//보호소 프로필이며 자신의 계정이 아닐경우
 			Modal.popSelectBoxModal(
 				['정보', '공유하기', '신고'],
+				select => onSelect(select),
+				() => onClose(),
+				false,
+				false,
+			);
+		} else if (props.options.data && props.options.data.user_type == 'shelter' && props.options.data._id == userInfo._id) {
+			//보호소 프로필이며 자신의 계정이 아닐경우
+			Modal.popSelectBoxModal(
+				['정보', '공유하기'],
 				select => onSelect(select),
 				() => onClose(),
 				false,

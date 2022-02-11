@@ -3,7 +3,7 @@ import {View, TouchableWithoutFeedback, ScrollView, Text, FlatList} from 'react-
 import {getProtectRequestListByShelterId, getShelterProtectAnimalList} from 'Root/api/shelterapi';
 import {getUserProfile} from 'Root/api/userapi';
 import {NORMAL, PET, SHELTER} from 'Root/i18n/msg';
-import {Write94} from 'Atom/icon';
+import {Message94, Write94} from 'Atom/icon';
 import TabSelectFilled_Type2 from 'Molecules/tab/TabSelectFilled_Type2';
 import ProfileInfo from 'Organism/info/ProfileInfo';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
@@ -30,7 +30,7 @@ export default Profile = ({route, navigation}) => {
 					userobject_id: route.params.userobject._id,
 				},
 				result => {
-					navigation.setOptions({title: result.msg.user_nickname});
+					navigation.setOptions({title: result.msg.user_nickname, data: result.msg});
 					setData(result.msg);
 					console.log('getUserProfileResult', result.msg);
 				},
@@ -148,6 +148,18 @@ export default Profile = ({route, navigation}) => {
 		navigation.push('UserProfile', {userobject: item});
 	};
 
+	const onPressSendMsg = () => {
+		alert('sendMsg');
+	};
+
+	const onPressAddPetBtn = () => {
+		alert('AddPet');
+	};
+
+	const onPressAddArticleBtn = () => {
+		alert('addArticle');
+	};
+
 	//userType이 PET이며 Tab의 반려인계정이 Open으로 설정이 되어 있는 경우
 	const showPetOrOwnerList = () => {
 		if (data.user_type == PET && showOwnerState) {
@@ -182,6 +194,8 @@ export default Profile = ({route, navigation}) => {
 						onShowCompanion={() => setShowCompanion(true)}
 						onHideCompanion={() => setShowCompanion(false)}
 						onPressVolunteer={onClick_Volunteer_ShelterProfile}
+						onPressAddPetBtn={onPressAddPetBtn}
+						onPressAddArticleBtn={onPressAddArticleBtn}
 					/>
 				</View>
 				{showPetOrOwnerList()}
@@ -212,12 +226,7 @@ export default Profile = ({route, navigation}) => {
 					return <FeedThumbnailList items={item} onClickThumnail={onClick_Thumbnail_FeedTab} />;
 					// return <InfoScreen />;
 				} else {
-					return (
-						// <InfoScreen />
-						<View style={[profile.animalNeedHelpList]}>
-							<AnimalNeedHelpList data={protectActList} onClickLabel={onClickProtectAnimal} />
-						</View>
-					);
+					return <InfoScreen />;
 				}
 			}
 		};
@@ -242,7 +251,7 @@ export default Profile = ({route, navigation}) => {
 		return data.user_type == PET ? (
 			<TabSelectFilled_Type2 items={['피드', '태그']} onSelect={onSelectTabMenu} />
 		) : (
-			<TabSelectFilled_Type2 items={['피드', '태그', '보호활동']} onSelect={onSelectTabMenu} />
+			<TabSelectFilled_Type2 items={['피드', '태그', '커뮤니티']} onSelect={onSelectTabMenu} />
 		);
 	};
 
@@ -250,11 +259,9 @@ export default Profile = ({route, navigation}) => {
 		<View style={[login_style.wrp_main, profile.container]}>
 			{showTabContent()}
 			{userGlobalObject.userInfo && (
-				<TouchableWithoutFeedback onPress={moveToFeedWrite}>
-					<View style={[temp_style.floatingBtn, profile.floatingBtn]}>
-						<Write94 />
-					</View>
-				</TouchableWithoutFeedback>
+				<View style={[temp_style.floatingBtn, profile.floatingBtn]}>
+					{data.user_type == 'pet' ? <Message94 onPress={onPressSendMsg} /> : <Write94 onPress={moveToFeedWrite} />}
+				</View>
 			)}
 		</View>
 	);

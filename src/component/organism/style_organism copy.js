@@ -197,6 +197,7 @@ export const accountHashList = StyleSheet.create({
 	container: {
 		width: 750 * DP,
 		alignItems: 'center',
+		marginTop: 20 * DP,
 		// marginBottom: 100 * DP,
 		// backgroundColor: BGCOLOR,
 	},
@@ -729,7 +730,7 @@ export const companionFormList = StyleSheet.create({
 export const assignCheckListItem = StyleSheet.create({
 	container: {
 		width: 654 * DP,
-		height: 50 * DP,
+		// height: 50 * DP,
 		alignItems: 'center',
 		flexDirection: 'row',
 	},
@@ -739,7 +740,7 @@ export const assignCheckListItem = StyleSheet.create({
 	},
 	textContainer: {
 		width: 592 * DP,
-		height: 72 * DP,
+		// height: 72 * DP,
 		marginLeft: 12 * DP,
 		justifyContent: 'center',
 	},
@@ -1127,10 +1128,13 @@ export const animalNeedHelp = StyleSheet.create({
 	detail_upper_tag: {},
 	detail_lowerMenu: {
 		width: 410 * DP,
-		height: 160 * DP,
+		height: 214 * DP,
+		paddingVertical: 22 * DP,
 	},
 	lowerMenu_kindAndBreed: {
-		height: 46 * DP,
+		height: 50 * DP,
+		// justifyContent: 'center',
+		alignItems: 'center',
 		flexDirection: 'row',
 	},
 	breedText: {
@@ -1139,6 +1143,7 @@ export const animalNeedHelp = StyleSheet.create({
 	},
 	lowerMenu_helpDetail: {
 		height: 38 * DP,
+		marginTop: 10 * DP,
 	},
 	container_with_Line: {
 		width: 705 * DP,
@@ -1164,9 +1169,6 @@ export const animalNeedHelp = StyleSheet.create({
 	},
 	container_basicInfo_seleted: {
 		flexDirection: 'row',
-	},
-	lowerMenu_kindAndBreed_marginTop: {
-		marginTop: 6 * DP,
 	},
 });
 

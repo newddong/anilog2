@@ -28,8 +28,12 @@ const SocialModal = props => {
 		props.onPressMsg();
 	};
 
+	const onClose = () => {
+		Modal.close();
+	};
+
 	return (
-		<TouchableOpacity onPress={() => Modal.close()} activeOpacity={1} style={style.background}>
+		<TouchableOpacity onPress={onClose} activeOpacity={1} style={[style.background]}>
 			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
 				<View style={[style.inside]}>
 					<TouchableOpacity onPress={onPressKakao} style={[style.socialItem]}>

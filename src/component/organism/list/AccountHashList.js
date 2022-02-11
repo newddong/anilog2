@@ -1,7 +1,7 @@
 import React from 'react';
 import {FlatList, ScrollView, Text, View} from 'react-native';
-import {accountHashList} from 'Organism/style_organism';
 import UserAccount from 'Organism/listitem/UserAccount';
+import {accountHashList} from 'Organism/style_organism copy';
 
 /**
  * 친구 즐겨찾기 Hash와 유저오브젝트 리스트 출력 컴포넌트
@@ -33,13 +33,8 @@ export default AccountHashList = props => {
 	};
 
 	return (
-		<View style={[accountHashList.container, {height: props.routeName&&props.routeName != 'SaveFavorite' ? 300 * DP : null}]}>
-			<FlatList
-				data={props.data}
-				keyExtractor={item => item._id}
-				renderItem={renderItem}
-				showsVerticalScrollIndicator={false}
-			/>
+		<View style={[accountHashList.container, {height: props.routeName && props.routeName != 'SaveFavorite' ? 300 * DP : null}]}>
+			<FlatList data={props.data} keyExtractor={item => item._id} renderItem={renderItem} showsVerticalScrollIndicator={false} />
 		</View>
 	);
 };

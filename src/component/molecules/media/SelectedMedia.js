@@ -34,7 +34,7 @@ const SelectedMedia = props => {
 						right: 0,
 						borderRadius: 50,
 						backgroundColor: 'gray',
-						opacity: 1,
+						opacity: 0.9,
 						shadowOpacity: 0.1,
 					}}>
 					{/* 190 크기의 selectMedia를 호출한 경우 Cancel 마크 크기는 더 작게 */}

@@ -1,39 +1,46 @@
 import React from 'react';
-import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
-import {GRAY10} from 'Root/config/color';
+import {Text, View, TouchableOpacity, ScrollView, Linking} from 'react-native';
+import {BLUE20, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {btn_w280} from 'Atom/btn/btn_style';
-import {Bracket48} from 'Atom/icon';
+import {btn_w280, btn_w280x68} from 'Atom/btn/btn_style';
+import {Bracket48, FloatAddArticle_128x68, FloatAddPet_126x92, FloatAddPet_128x68} from 'Atom/icon';
 import ActionButton from 'Molecules/button/ActionButton';
 import AniButton from 'Molecules/button/AniButton';
 import ProfileImageLarge160 from 'Molecules/image/ProfileImageLarge160';
 import SocialInfoA from 'Organism/info/SocialInfoA';
-import {NORMAL, PET, SHELTER} from 'Root/i18n/msg';
+import {FOLLOWER_MENU, FOLLOWER_PET_MENU, NORMAL, PET, SHELTER} from 'Root/i18n/msg';
 import ProfileDropdown from 'Molecules/dropdown/ProfileDropdown';
 import {organism_style, profileInfo_style} from 'Organism/style_organism';
 import Modal from 'Root/component/modal/Modal';
 import {followUser, unFollowUser} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import SelectInput from 'Root/component/molecules/button/SelectInput';
+import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
+import {FloatAddArticle_126x92} from 'Atom/icon';
 
 /**
- *
- *@param {{
- * data: 'profile userObject',
- * onPressVolunteer: void,
- * onShowOwnerBtnClick : void,
- * onHideOwnerBtnClick : void,
- * onShowCompanion : void,
- * onHideCompanion :void,
- * adoptionBtnClick: void
- * }} props
+ * 프로필 템플릿 상단의 유저 정보
+ * @param {object} props - Props Object
+ * @param {object} props.data - ex) 2021.05.01  처음 설정되어 있는 날짜
+ * @param {()=>void)} props.onPressVolunteer - 봉사활동 신청 버튼 클릭
+ * @param {()=>void} props.onShowOwnerBtnClick - 반려인 버튼 열기 클릭
+ * @param {()=>void} props.onHideOwnerBtnClick - 반려인 버튼 닫기 클릭
+ * @param {()=>void} props.onShowCompanion - 반려동물 열기 클릭
+ * @param {()=>void} props.onHideCompanion - 반려동물 닫기 클릭
+ * @param {()=>void} props.adoptionBtnClick - 입양 버튼(삭제예정)
+ * @param {()=>void} props.onPressAddPetBtn - 보호소 계정(계정 주인)의 보호동물 추가 버튼 클릭
+ * @param {()=>void} props.onPressAddArticleBtn - 보호소 계정(계정 주인)의 보호요청 게시글 추가 버튼 클릭
  */
-export default ProfileInfo = props => {
+const ProfileInfo = props => {
 	const [data, setData] = React.useState(props.data);
 
 	const [showMore, setShowMore] = React.useState(false); // 프로필 Description 우측 더보기 클릭 State
 	const [ownerListState, setOwnerListState] = React.useState(false); // userType이 Pet일 경우 반려인계정 출력 여부 T/F
 	const [companionListState, setCompanionListState] = React.useState(false); // userType이 User일 경우 반렫동물 리스트 출력 여부 T/F
 	const [into_height, setIntro_height] = React.useState(0); //user_introduction 의 길이 => 길이에 따른 '더보기' 버튼 출력 여부 결정
+
+	const isOwner = userGlobalObject.userInfo.user_my_pets.includes(data._id);
+	console.log('data', isOwner);
 
 	//더보기 클릭
 	const onPressShowMore = () => {
@@ -76,19 +83,26 @@ export default ProfileInfo = props => {
 		setIntro_height(e.nativeEvent.layout.height);
 	};
 
+	const onPressAddPetBtn = () => {
+		props.onPressAddPetBtn();
+	};
+	const onPressAddArticleBtn = () => {
+		props.onPressAddArticleBtn();
+	};
+
 	// props.data의 유저타입에 따라 다른 버튼이 출력
 	// NORMAL - [팔로우, 반려동물] / PET - [팔로우, 반려인계정 OR 입양하기] / SHELTER - [팔로우, 봉사활동 ]
 	const getButton = () => {
 		if (data.user_type == PET) {
 			if (data.pet_status == 'protected') {
-				return <AniButton btnTitle={'입양 하기'} btnStyle={'border'} titleFontStyle={30} btnLayout={btn_w280} onPress={onPressAdoption} />;
+				return <AniButton btnTitle={'입양 하기'} btnStyle={'border'} titleFontStyle={30} btnLayout={btn_w280x68} onPress={onPressAdoption} />;
 			} else
 				return (
 					<ActionButton
-						btnTitle={'반려인 계정'}
+						btnTitle={'반려인'}
 						btnStyle={ownerListState ? 'filled' : 'border'}
-						titleFontStyle={24}
-						btnLayout={btn_w280}
+						titleFontStyle={26}
+						btnLayout={btn_w280x68}
 						onOpen={showOwner}
 						onClose={hideOwner}
 					/>
@@ -98,14 +112,24 @@ export default ProfileInfo = props => {
 				<ActionButton
 					btnTitle={'반려동물'}
 					btnStyle={companionListState ? 'filled' : 'border'}
-					titleFontStyle={24}
-					btnLayout={btn_w280}
+					titleFontStyle={26}
+					btnLayout={btn_w280x68}
 					onOpen={showCompanion}
 					onClose={hideCompanion}
 				/>
 			);
+		} else {
+			if (userGlobalObject.userInfo._id == data._id) {
+				return (
+					<View style={[{flexDirection: 'row', justifyContent: 'space-between'}]}>
+						<FloatAddPet_128x68 onPress={onPressAddPetBtn} />
+						<FloatAddArticle_128x68 onPress={onPressAddArticleBtn} />
+					</View>
+				);
+			} else {
+				return <AniButton btnTitle={'봉사활동 신청'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} onPress={onPressVolunteer} />;
+			}
 		}
-		return <AniButton btnTitle={'봉사 활동'} btnStyle={'border'} titleFontStyle={24} btnLayout={btn_w280} onPress={onPressVolunteer} />;
 	};
 
 	React.useEffect(() => {
@@ -141,6 +165,44 @@ export default ProfileInfo = props => {
 		}
 	};
 
+	const onPressFollowingSetting = () => {
+		let isProtectingPet = userGlobalObject.userInfo.user_my_pets.includes(data._id) || data.pet_status == 'protect';
+		Modal.popSelectBoxModal(
+			isProtectingPet ? FOLLOWER_PET_MENU : FOLLOWER_MENU,
+			selectedItem => {
+				alert(selectedItem);
+				Modal.close();
+			},
+			() => Modal.close(),
+			true,
+			'팔로우 중',
+		);
+	};
+
+	const onPressShelterContact = () => {
+		Linking.openURL(`tel:${data.shelter_delegate_contact_number}`);
+	};
+
+	const autoHyphen = target => {
+		let hyphened = target.replace(/[^0-9]/, '').replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
+		return hyphened;
+	};
+
+	const getShelterInfo = () => {
+		if (data.user_type == 'shelter') {
+			return (
+				<View style={[profileInfo_style.shelter_info_container]}>
+					<Text style={[txt.noto28, {color: GRAY10}]}>{data.shelter_address.brief}</Text>
+					<Text onPress={onPressShelterContact} style={[txt.noto28, {color: BLUE20, textDecorationLine: 'underline'}]}>
+						{autoHyphen(data.shelter_delegate_contact_number)}
+					</Text>
+				</View>
+			);
+		} else {
+			return <></>;
+		}
+	};
+
 	return (
 		<View style={organism_style.profileInfo_main}>
 			{/* 프로필 INFO */}
@@ -170,7 +232,7 @@ export default ProfileInfo = props => {
 				{into_height > 50 * DP ? (
 					<TouchableOpacity onPress={onPressShowMore} style={[organism_style.addMore_profileInfo, profileInfo_style.addMore]}>
 						<View style={{flexDirection: 'row'}}>
-							<Text style={[txt.noto24, {color: GRAY10, top: 2}]}>더보기 </Text>
+							<Text style={[txt.noto24, {color: GRAY10, top: 2}]}>{showMore ? '접기' : '더보기'} </Text>
 							<View style={[showMore ? {transform: [{rotate: '180deg'}]} : null]}>
 								<Bracket48 />
 							</View>
@@ -180,29 +242,21 @@ export default ProfileInfo = props => {
 					<></>
 				)}
 			</View>
+			{/* 보호소 계정 프로필의 주소 및 연락처 정보 */}
+			{getShelterInfo()}
 
 			{/* 프로필 관련 버튼 */}
 			<View style={[organism_style.btn_w280_view_profileInfo, profileInfo_style.btn_w280_view]}>
-				<View style={[organism_style.btn_w280_profileInfo, profileInfo_style.btn_w280]}>
+				<View style={[organism_style.btn_w280_profileInfo]}>
 					{userGlobalObject.userInfo._id == data._id ? (
-						<AniButton btnTitle={'내 계정'} btnStyle={'filled'} titleFontStyle={24} btnLayout={btn_w280} />
+						<AniButton btnTitle={'프로필 수정'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} />
 					) : data.is_follow ? (
-						<ProfileDropdown
-							btnTitle={'팔로우 중'}
-							titleFontStyle={24}
-							btnStyle={'filled'}
-							btnLayout={btn_w280}
-							menu={['즐겨찾기', '소식받기', '차단', '팔로우 취소']}
-							// menu={['팔로우 취소']}
-							onSelect={socialAction}
-							// onOpen={()=>{alert('open')}}
-							// onClose={()=>{alert('close')}}
-						/>
+						<ArrowDownButton btnTitle={'팔로우 중'} btnLayout={btn_w280x68} onPress={onPressFollowingSetting} />
 					) : (
-						<AniButton btnTitle={'팔로우'} btnStyle={'border'} titleFontStyle={24} btnLayout={btn_w280} onPress={follow} />
+						<AniButton btnTitle={'팔로우'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} onPress={follow} />
 					)}
 				</View>
-				<View style={[organism_style.ActionButton_profileInfo, profileInfo_style.btn_w280]}>{getButton()}</View>
+				<View style={[organism_style.ActionButton_profileInfo, profileInfo_style.buttonContainer]}>{getButton()}</View>
 			</View>
 		</View>
 	);
@@ -214,4 +268,7 @@ ProfileInfo.defaultProps = {
 	onHideOwnerBtnClick: e => {},
 	onShowCompanion: e => {},
 	onHideCompanion: e => {},
+	onPressAddPetBtn: e => {},
+	onPressAddArticleBtn: e => {},
 };
+export default ProfileInfo;

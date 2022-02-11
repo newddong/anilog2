@@ -2,7 +2,7 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {Text, View, TextInput} from 'react-native';
 import DP from 'Root/config/dp';
-import {APRI10, GRAY30, RED10} from 'Root/config/color';
+import {APRI10, GRAY10, GRAY30, RED10} from 'Root/config/color';
 /**
  * 테두리가 둥근 인풋 컴포넌트
  * @param {object} props - Props Object
@@ -13,6 +13,7 @@ import {APRI10, GRAY30, RED10} from 'Root/config/color';
  */
 const InputBalloon = props => {
 	const inputRef = React.useRef();
+	const [text, setText] = React.useState('');
 
 	const blur = () => {
 		inputRef.current.blur();
@@ -28,6 +29,7 @@ const InputBalloon = props => {
 
 	const onChange = txt => {
 		props.onChange(txt);
+		setText(txt);
 	};
 
 	return (
@@ -40,11 +42,12 @@ const InputBalloon = props => {
 				style={{
 					color: RED10,
 					width: 654 * DP,
-					height: 230 * DP,
+					height: 264 * DP,
 					marginTop: 12 * DP,
 					borderRadius: 30 * DP,
 					borderWidth: 2 * DP,
-					borderColor: GRAY30,
+					borderColor: APRI10,
+					padding: 24 * DP,
 					alignItems: 'center',
 					justifyContent: 'center',
 				}}>
@@ -56,6 +59,7 @@ const InputBalloon = props => {
 					ref={inputRef}
 					maxLength={props.maxLength}
 				/>
+				<Text style={[txt.roboto24, {color: GRAY10, alignSelf: 'flex-end'}]}> {text.length} /200</Text>
 			</View>
 		</View>
 	);

@@ -3,7 +3,7 @@ import {FlatList, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import ProfileImageMedium120 from 'Molecules/image/ProfileImageMedium120';
-import {petList} from 'Organism/style_organism';
+import {petList} from 'Organism/style_organism copy';
 
 export default PetList = props => {
 	const renderItem = (item, index) => {
@@ -17,7 +17,7 @@ export default PetList = props => {
 
 				<View style={[petList.petProfileInfo]}>
 					<Text style={[txt.noto24, {color: GRAY10}]}> {item.user_nickname}</Text>
-					<Text style={[txt.noto24, {color: GRAY10}]}>{item.pet_species_detail?item.pet_species_detail:''}</Text>
+					<Text style={[txt.noto24, {color: GRAY10}]}>{item.pet_species_detail ? item.pet_species_detail : ''}</Text>
 				</View>
 			</View>
 		);

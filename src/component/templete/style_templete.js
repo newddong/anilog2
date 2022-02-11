@@ -675,10 +675,14 @@ export const temp_style = StyleSheet.create({
 	},
 	feedTextEdit: {
 		width: 654 * DP,
-		minHeight: 248 * DP,
+		// minHeight: 376 * DP,
 		marginTop: 40 * DP,
 		backgroundColor: 'white',
 		alignSelf: 'center',
+		borderWidth: 2 * DP,
+		borderColor: APRI10,
+		borderRadius: 24 * DP,
+		padding: 24 * DP,
 	},
 	selectedMediaList: {
 		width: 654 * DP,
@@ -902,7 +906,7 @@ export const temp_style = StyleSheet.create({
 	},
 	rescueContentTitle: {
 		width: 654 * DP,
-		marginBottom: 40 * DP,
+		marginBottom: 30 * DP,
 	},
 	shelterSmallLabel_view_animalProtectRequestDetail: {
 		flexDirection: 'row',
@@ -912,8 +916,9 @@ export const temp_style = StyleSheet.create({
 		justifyContent: 'space-between',
 	},
 	shelterSmallLabel_animalProtectRequestDetail: {
-		width: 504 * DP,
-		height: 72 * DP,
+		width: 516 * DP,
+		height: 88 * DP,
+		// backgroundColor: 'yellow',
 	},
 	button_animalProtectRequestDetail: {
 		width: 126 * DP,
@@ -922,7 +927,7 @@ export const temp_style = StyleSheet.create({
 	},
 	rescueSummary: {
 		width: 654 * DP,
-		height: 188 * DP,
+		height: 202 * DP,
 		borderWidth: 4 * DP,
 		borderColor: APRI10,
 		borderRadius: 40 * DP,
@@ -3091,6 +3096,7 @@ export const applyVolunteer = StyleSheet.create({
 	viewForm: {
 		width: 654 * DP,
 		marginTop: 40 * DP,
+		alignItems: 'flex-end',
 	},
 	viewForm_step1: {
 		width: 654 * DP,
@@ -3110,10 +3116,9 @@ export const applyVolunteer = StyleSheet.create({
 		flexDirection: 'row',
 	},
 	volunteerDateList: {
-		width: 606 * DP,
+		width: 578 * DP,
 		height: 52 * DP,
 		marginTop: 30 * DP,
-		alignSelf: 'center',
 		flexDirection: 'row',
 	},
 	volunteerDateList_text: {
@@ -3121,7 +3126,7 @@ export const applyVolunteer = StyleSheet.create({
 	},
 	volunteerDateList_cross: {
 		position: 'absolute',
-		right: 0,
+		right: 5 * DP,
 		justifyContent: 'center',
 	},
 	viewForm_step2: {
@@ -3134,35 +3139,65 @@ export const applyVolunteer = StyleSheet.create({
 		width: 654 * DP,
 		marginTop: 40 * DP,
 	},
+	volunteerListInput: {
+		width: 480 * DP,
+		height: 44 * DP,
+		// backgroundColor: 'lightblue',
+	},
 	number_of_volunteerers: {
 		borderBottomColor: APRI10,
 		borderBottomWidth: 2 * DP,
-		width: 654 * DP,
-		height: 82 * DP,
+		width: 590 * DP,
+		height: 106 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		alignSelf: 'flex-end',
+		flexDirection: 'row',
+		// backgroundColor: 'yellow',
 	},
 	participants_step1: {
 		width: 654 * DP,
 		height: 52 * DP,
 		flexDirection: 'row',
 	},
-
 	participants_step2: {
-		width: 606 * DP,
+		width: 654 * DP,
 		marginTop: 20 * DP,
+		alignSelf: 'flex-end',
+		// alignItems: 'flex-end',
+	},
+	participants_container: {
+		flexDirection: 'row',
+		width: 590 * DP,
+		alignSelf: 'flex-end',
+		alignItems: 'center',
+		marginBottom: 30 * DP,
+	},
+	participants_list_container: {
+		width: 514 * DP,
+		height: 94 * DP,
 	},
 	accountList: {
 		width: 654 * DP,
 	},
 	addParticipantBtn: {
-		width: 654 * DP,
+		width: 590 * DP,
+		height: 136 * DP,
 		marginLeft: 10 * DP,
+		borderWidth: 2 * DP,
+		borderColor: APRI10,
+		borderRadius: 30 * DP,
+		paddingVertical: 36 * DP,
+		paddingHorizontal: 56 * DP,
+		alignSelf: 'flex-end',
 		flexDirection: 'row',
 	},
 	addParticipantTxt: {
 		color: APRI10,
 		alignSelf: 'center',
+		textAlign: 'center',
 		justifyContent: 'center',
-		marginLeft: 30 * DP,
+		marginLeft: 20 * DP,
 	},
 	participants_contact: {
 		width: 654 * DP,
@@ -3258,6 +3293,7 @@ export const applyCompanionD = StyleSheet.create({
 	},
 	InputLongText: {
 		marginTop: 40 * DP,
+		alignItems: 'center',
 	},
 	stageBar: {
 		marginTop: 20 * DP,
@@ -3581,8 +3617,8 @@ export const feedCommentList = StyleSheet.create({
 	},
 	editComment: {
 		width: 750 * DP,
-		shadowColor: '#000000',
-		shadowOpacity: 0.27,
+		shadowColor: 'black',
+		shadowOpacity: 0.5,
 		shadowRadius: 4.65,
 		shadowOffset: {
 			width: 1 * DP,
@@ -3593,12 +3629,11 @@ export const feedCommentList = StyleSheet.create({
 		backgroundColor: WHITE,
 		bottom: 1,
 		alignItems: 'center',
-		paddingTop: 30 * DP,
 	},
 	editComment_photoAdded: {
 		width: 750 * DP,
 		shadowColor: '#000000',
-		shadowOpacity: 0.27,
+		shadowOpacity: 0.5,
 		shadowRadius: 4.65,
 		shadowOffset: {
 			width: 1 * DP,
@@ -3626,10 +3661,27 @@ export const feedCommentList = StyleSheet.create({
 		fontSize: 28 * DP,
 	},
 	replyTextInput: {
-		width: 530 * DP,
-		height: 108 * DP,
+		width: 646 * DP,
 		marginLeft: 20 * DP,
 		fontSize: 28 * DP,
+		// backgroundColor: 'yellow',
+	},
+	replyTextInput_photo: {
+		width: 442 * DP,
+		marginRight: 12 * DP,
+		// backgroundColor: 'pink',
+	},
+	replyTextInput_protect_request: {
+		textAlignVertical: 'center',
+	},
+	commentBox_protect_request_left: {
+		width: 550 * DP,
+		height: 68 * DP,
+		marginRight: 12 * DP,
+		borderRadius: 24 * DP,
+		backgroundColor: GRAY30,
+		justifyContent: 'center',
+		paddingLeft: 20 * DP,
 	},
 	editComment_expanded: {
 		width: 750 * DP,
@@ -3637,6 +3689,61 @@ export const feedCommentList = StyleSheet.create({
 		backgroundColor: '#D9A0A0',
 		position: 'absolute',
 		bottom: 0,
+	},
+	commentBox: {
+		width: 750 * DP,
+		height: 186 * DP,
+		paddingVertical: 28 * DP,
+		paddingHorizontal: 20 * DP,
+		alignItems: 'center',
+	},
+	commentBox_photo: {
+		width: 750 * DP,
+		height: 318 * DP,
+		// paddingBottom: 12 * DP,
+		paddingTop: 30 * DP,
+		paddingBottom: 20 * DP,
+		paddingHorizontal: 20 * DP,
+		alignItems: 'center',
+	},
+	commentBox_protect_request: {
+		width: 694 * DP,
+		height: 68 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
+	commentBox_input_photo: {
+		width: 492 * DP,
+		height: 190 * DP,
+		borderRadius: 30 * DP,
+		marginRight: 12 * DP,
+		paddingHorizontal: 20 * DP,
+		paddingVertical: 12 * DP,
+		backgroundColor: GRAY30,
+	},
+	commentBox_top_photo: {
+		width: 694 * DP,
+		height: 190 * DP,
+		borderRadius: 24 * DP,
+		marginBottom: 12 * DP,
+		// justifyContent: 'space-between',
+	},
+	commentBox_top: {
+		width: 694 * DP,
+		height: 68 * DP,
+		borderRadius: 24 * DP,
+		marginBottom: 12 * DP,
+		justifyContent: 'center',
+		backgroundColor: GRAY30,
+	},
+	commentBox_bottom: {
+		width: 694 * DP,
+		height: 68 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+	},
+	commentBox_bottom_left: {
+		flexDirection: 'row',
 	},
 });
 
@@ -3803,17 +3910,32 @@ export const writeAidRequest = StyleSheet.create({
 		height: 100 * DP,
 	},
 	contentInput: {
-		flex: 1,
-		borderBottomWidth: 2 * DP,
+		width: 606 * DP,
+		height: 300 * DP,
+		// backgroundColor: 'yellow',
 	},
 	feedTextEdit: {
-		marginTop: 80 * DP,
+		marginTop: 40 * DP,
+		width: 654 * DP,
+		alignSelf: 'center',
+		borderRadius: 24 * DP,
+		// padding: 24 * DP,
+		// backgroundColor: 'red',
 	},
 	requestContent_underline: {
 		width: 654 * DP,
 		height: 2 * DP,
 		marginVertical: 40 * DP,
 		backgroundColor: APRI10,
+	},
+	contentContainer: {
+		width: 654 * DP,
+		height: 376 * DP,
+		borderRadius: 24 * DP,
+		borderWidth: 2 * DP,
+		borderColor: APRI10,
+		padding: 24 * DP,
+		// backgroundColor: 'yellow',
 	},
 	addPhotoContainer: {
 		width: 160 * DP,
@@ -3873,7 +3995,7 @@ export const feedWrite = StyleSheet.create({
 		flexDirection: 'row',
 		width: 654 * DP,
 		height: 54 * DP,
-		marginTop: 38 * DP,
+		marginTop: 30 * DP,
 		alignItems: 'center',
 		justifyContent: 'space-between',
 	},
@@ -3920,6 +4042,16 @@ export const feedWrite = StyleSheet.create({
 		// },
 		elevation: 4,
 	},
+	public_setting_btn: {
+		width: 194 * DP,
+		height: 60 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderRadius: 30 * DP,
+		borderWidth: 4 * DP,
+		borderColor: APRI10,
+		flexDirection: 'row',
+	},
 	urgentBtnItemContainer: {
 		width: 158 * DP,
 		height: 90 * DP,
@@ -3964,6 +4096,11 @@ export const feedWrite = StyleSheet.create({
 		height: 168 * DP,
 		marginBottom: 4 * DP,
 	},
+	missing_location_input: {
+		height: 230 * DP,
+		width: 654 * DP,
+		marginBottom: 30 * DP,
+	},
 	inputBalloon: {
 		marginBottom: 50 * DP,
 	},
@@ -3999,6 +4136,19 @@ export const feedWrite = StyleSheet.create({
 	reportLocation_form_right: {
 		width: 176 * DP,
 		marginLeft: 40 * DP,
+	},
+	missing_location_detail_input: {
+		width: 654 * DP,
+		marginTop: 24 * DP,
+		height: 82 * DP,
+		paddingLeft: 20 * DP,
+		borderBottomWidth: 2 * DP,
+		borderBottomColor: APRI10,
+	},
+	report_location: {
+		height: 230 * DP,
+		width: 654 * DP,
+		marginVertical: 30 * DP,
 	},
 	btn_w176: {
 		marginBottom: 24 * DP,
@@ -4036,6 +4186,7 @@ export const profile = StyleSheet.create({
 	},
 	petList: {
 		width: 750 * DP,
+		height: 212 * DP,
 	},
 	animalNeedHelpList: {
 		width: 750 * DP,
@@ -4057,10 +4208,12 @@ export const animalProtectRequestDetail_style = StyleSheet.create({
 	},
 	rescueSummary: {
 		marginTop: 28 * DP,
+		zIndex: -1,
 	},
 	rescueText: {
 		width: 654 * DP,
-		marginVertical: 40 * DP,
+		marginTop: 40 * DP,
+		marginBottom: 70 * DP,
 	},
 	floatingBtnAapply: {
 		position: 'absolute',
@@ -4111,6 +4264,10 @@ export const animalProtectRequestDetail_style = StyleSheet.create({
 		// elevation: 2,
 		paddingHorizontal: 60 * DP,
 	},
+	buttonItemContainer: {
+		width: 48 * DP,
+		marginLeft: 15 * DP,
+	},
 	btnContainer: {
 		width: 750 * DP,
 		height: 100 * DP,
@@ -4132,9 +4289,34 @@ export const animalProtectRequestDetail_style = StyleSheet.create({
 		paddingHorizontal: 60 * DP,
 		justifyContent: 'space-between',
 	},
-	replyWriteBox: {
-		marginTop: 58 * DP,
+	shareDropDown: {
+		width: 384 * DP,
+		height: 184 * DP,
+		position: 'absolute',
+		right: 0,
+		top: 80 * DP,
+		flexDirection: 'row',
+		borderRadius: 40 * DP,
+		borderTopEndRadius: 0,
+		zIndex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: WHITE,
+		paddingLeft: 60 * DP,
+		shadowOffset: {
+			height: 5 * DP,
+		},
+		shadowColor: '#000000',
+		shadowOpacity: 0.5,
+		shadowRadius: 4.67,
+		elevation: 3,
 	},
+	socialItem: {
+		width: 92 * DP,
+		height: 116 * DP,
+		marginRight: 40 * DP,
+	},
+	replyWriteBox: {},
 });
 
 export const animalProtectList = StyleSheet.create({

@@ -19,7 +19,7 @@ export default SearchFeedTabNavigation = props => {
 	const tabbarTitle = () => {
 		switch (routeName) {
 			case 'SearchFeed':
-				return '피드';
+				return '추천';
 				break;
 			case 'SearchAccountA':
 				return '계정';
@@ -61,7 +61,7 @@ export default SearchFeedTabNavigation = props => {
 				tabBarIndicatorStyle: {backgroundColor: APRI10},
 			}}>
 			{/* 게시글 */}
-			<SearchFeedTabNav.Screen name="SearchFeed" options={{title: '피드'}}>
+			<SearchFeedTabNav.Screen name="SearchFeed" options={{title: '추천'}}>
 				{props => <SearchFeed {...props} />}
 			</SearchFeedTabNav.Screen>
 			{/* 계정 */}

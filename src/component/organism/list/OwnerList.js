@@ -3,7 +3,7 @@ import {FlatList, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import ProfileImageMedium120 from 'Molecules/image/ProfileImageMedium120';
-import {ownerList} from 'Organism/style_organism';
+import {ownerList} from 'Organism/style_organism copy';
 
 export default OwnerList = props => {
 	const onClickLabel = item => {
@@ -25,7 +25,7 @@ export default OwnerList = props => {
 			</View>
 		);
 	};
-	
+
 	return (
 		<View style={[ownerList.container]}>
 			<View style={[ownerList.insideContainer]}>

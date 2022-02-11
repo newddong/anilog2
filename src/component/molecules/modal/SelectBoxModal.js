@@ -25,11 +25,9 @@ const SelectBoxModal = props => {
 
 	const renderItem = (item, index) => {
 		return (
-			<View style={style.listItem}>
-				<TouchableOpacity onPress={() => onSelect(item)}>
-					<Text style={[txt.noto30, {height: 48 * DP}]}>{item}</Text>
-				</TouchableOpacity>
-			</View>
+			<TouchableOpacity onPress={() => onSelect(item)} style={style.listItem}>
+				<Text style={[txt.noto30, {height: 48 * DP}]}>{item}</Text>
+			</TouchableOpacity>
 		);
 	};
 

@@ -1,8 +1,9 @@
 import React from 'react';
 import {View, Image} from 'react-native';
 import {DEFAULT_PROFILE, PET_STATUS_ADOPT, PET_STATUS_COMPANION, PET_STATUS_PROTECT, PRIVATE, PUBLIC} from 'Root/i18n/msg';
-import {Paw48_Mixed, Paw48_YELL20, Paw48_APRI10, Private48, Public48} from 'Atom/icon';
+import {Paw48_Mixed, Paw48_YELL20, Paw48_APRI10, Private48, Public48, ProfileDefaultImg} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
+import dp from 'Root/config/dp';
 
 /**
  * 프로필이미지 120
@@ -49,7 +50,11 @@ const ProfileImageMedium120 = props => {
 
 	return (
 		<View style={styles.img_round_120}>
-			<Image source={{uri: props.data.user_profile_uri || DEFAULT_PROFILE}} style={styles.img_round_120} />
+			{props.data.user_profile_uri != undefined ? (
+				<Image source={{uri: props.data.user_profile_uri}} style={styles.img_round_120} />
+			) : (
+				<ProfileDefaultImg size={styles.img_round_120} />
+			)}
 			{userType()}
 		</View>
 	);

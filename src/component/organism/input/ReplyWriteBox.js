@@ -5,6 +5,9 @@ import {Lock60_Border, Lock60_Filled, Photo60, Send60} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import SelectedMedia from 'Molecules/media/SelectedMedia';
 import {feedCommentList} from 'Templete/style_templete';
+import AniButton from 'Root/component/molecules/button/AniButton';
+import dp from 'Root/config/dp';
+import {btn_w116, btn_w120} from 'Root/component/atom/btn/btn_style';
 /**
  * @param {{
  * onLockBtnClick : void ,
@@ -44,18 +47,18 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 
 	if (props.isProtectRequest) {
 		return (
-			<View style={[feedCommentList.editCommentFromRequest]}>
-				{/* 사진 추가를 통해서 받아온 사진이 한 개 이상인 경우 */}
-				<View style={{flexDirection: 'row', alignItems: 'center'}}>
+			<View style={[feedCommentList.commentBox_protect_request]}>
+				<View style={[feedCommentList.commentBox_protect_request_left]}>
 					<TextInput
-						style={[feedCommentList.InputFromProtectRequest]}
-						placeholder={'댓글 입력'}
-						placeholderTextColor={GRAY10}
+						style={[feedCommentList.replyTextInput_protect_request]}
+						multiline={true}
+						placeholder={'댓글입력..'}
 						onChangeText={props.onChangeReplyInput}
 						ref={inputRef}
 					/>
-					<Send60 onPress={onWrite} />
 				</View>
+
+				<AniButton onPress={onWrite} btnLayout={btn_w120} btnStyle={'border'} btnTitle={'댓글'} titleFontStyle={24} />
 			</View>
 		);
 	} else {
@@ -63,19 +66,62 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 			<View style={[props.photo.length > 0 ? feedCommentList.editComment : feedCommentList.editComment_photoAdded]}>
 				{/* 사진 추가를 통해서 받아온 사진이 한 개 이상인 경우 */}
 				{props.photo.length > 0 ? (
-					<View style={[styles.img_square_round_606]}>
-						{/* <Image source={{ uri: props.photo[0] }} style={styles.img_square_round_606} /> */}
-						<SelectedMedia media_uri={props.photo} layout={styles.img_square_round_606} onDelete={onDeleteImage} />
+					<View style={[feedCommentList.commentBox_photo]}>
+						<View style={[feedCommentList.commentBox_top_photo, {flexDirection: 'row'}]}>
+							<View style={[feedCommentList.commentBox_input_photo]}>
+								<TextInput
+									style={[feedCommentList.replyTextInput_photo]}
+									multiline={true}
+									placeholder={'댓글입력..'}
+									onChangeText={props.onChangeReplyInput}
+									ref={inputRef}
+								/>
+							</View>
+
+							<SelectedMedia media_uri={props.photo} layout={styles.img_square_round_190} onDelete={onDeleteImage} />
+						</View>
+						<View style={[feedCommentList.commentBox_bottom]}>
+							<View style={[feedCommentList.commentBox_bottom_left]}>
+								{props.privateComment ? (
+									<Lock60_Filled onPress={() => props.onLockBtnClick()} />
+								) : (
+									<Lock60_Border onPress={() => props.onLockBtnClick()} />
+								)}
+								<Photo60 onPress={() => props.onAddPhoto()} />
+							</View>
+							<View style={[feedCommentList.commentBox_bottom_right]}>
+								<AniButton onPress={onWrite} btnLayout={btn_w120} btnStyle={'border'} btnTitle={'댓글'} titleFontStyle={24} />
+							</View>
+							{/* <Send60 onPress={onWrite} /> */}
+						</View>
 					</View>
 				) : (
-					false
+					<View style={[feedCommentList.commentBox]}>
+						<View style={[feedCommentList.commentBox_top]}>
+							<TextInput
+								style={[feedCommentList.replyTextInput]}
+								multiline={true}
+								placeholder={'댓글입력..'}
+								onChangeText={props.onChangeReplyInput}
+								ref={inputRef}
+							/>
+						</View>
+						<View style={[feedCommentList.commentBox_bottom]}>
+							<View style={[feedCommentList.commentBox_bottom_left]}>
+								{props.privateComment ? (
+									<Lock60_Filled onPress={() => props.onLockBtnClick()} />
+								) : (
+									<Lock60_Border onPress={() => props.onLockBtnClick()} />
+								)}
+								<Photo60 onPress={() => props.onAddPhoto()} />
+							</View>
+							<View style={[feedCommentList.commentBox_bottom_right]}>
+								<AniButton onPress={onWrite} btnLayout={btn_w120} btnStyle={'border'} btnTitle={'댓글'} titleFontStyle={24} />
+							</View>
+							{/* <Send60 onPress={onWrite} /> */}
+						</View>
+					</View>
 				)}
-				<View style={{flexDirection: 'row', alignItems: 'center'}}>
-					{/* {props.privateComment ? <Lock60_Filled onPress={() => props.onLockBtnClick()} /> : <Lock60_Border onPress={() => props.onLockBtnClick()} />} */}
-					<Photo60 onPress={() => props.onAddPhoto()} />
-					<TextInput style={[feedCommentList.replyTextInput]} onChangeText={props.onChangeReplyInput} ref={inputRef} />
-					<Send60 onPress={onWrite} />
-				</View>
 			</View>
 		);
 	}

@@ -19,7 +19,7 @@ export default ShelterInfoSetting = ({route}) => {
 	const [modifyMode, setModifyMode] = React.useState(false); //소개라 수정모드
 	const [intro_modified, setIntro_modified] = React.useState(''); //수정된 소개란 텍스트
 	const [numberOfLines, setNumOfLines] = React.useState();
-	const [showMore, setShowMore] = React.useState();
+	const [showMore, setShowMore] = React.useState(false);
 	const modifyRef = React.useRef();
 
 	const fetchData = () => {
@@ -96,6 +96,10 @@ export default ShelterInfoSetting = ({route}) => {
 	//수정 TextInput 콜백 함수
 	const modifyIntroText = text => {
 		setIntro_modified(text);
+	};
+	//더보기 state 바꾸기
+	const changeShowMore = () => {
+		setShowMore(!showMore);
 	};
 
 	return (
@@ -174,7 +178,7 @@ export default ShelterInfoSetting = ({route}) => {
 									</Text>
 									{numberOfLines > 3 ? (
 										<TouchableOpacity
-											onPress={() => setShowMore(!showMore)}
+											onPress={changeShowMore}
 											style={{alignSelf: 'flex-end', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
 											<Text style={[txt.noto24, {color: GRAY10}]}>더보기</Text>
 											{!showMore ? <Arrow_Down_GRAY20 /> : <Arrow_Up_GRAY20 />}

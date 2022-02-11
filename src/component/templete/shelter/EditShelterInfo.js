@@ -13,13 +13,14 @@ import {GRAY10} from 'Root/config/color';
 import moment from 'moment';
 import Modal from 'Component/modal/Modal';
 import {updateShelterDetailInformation} from 'Root/api/userapi';
+import DP from 'Root/config/dp';
 
 export default EditShelterInfo = ({route, navigation}) => {
 	const [data, setData] = React.useState(route.params.data);
 	// console.log('dataEmail  : ', data.user_email);
 	const isDirectInput = !EMAIL_DOMAIN.some(e => e == data.user_email.split('@')[1]);
 	// console.log('isDirectInput', isDirectInput);
-
+	console.log('data', route.params.data);
 	React.useEffect(() => {
 		if (route.params.addr) {
 			console.log('route.params.Address Changed?   ', route.params.addr);
@@ -163,7 +164,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 					<View style={[editShelterInfo.input30WithMsg]}>
 						<View style={[editShelterInfo.category]}>
 							<View style={[editShelterInfo.text]}>
-								<Text style={[txt.noto28, {color: GRAY10}]}>보호소 </Text>
+								<Text style={[txt.noto28, {color: GRAY10}]}>보호소 이름</Text>
 							</View>
 						</View>
 						<View style={[editShelterInfo.input30]}>
@@ -194,7 +195,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 						/>
 					</View>
 					{/* 전ㄴ화번호 */}
-					<View style={[editShelterInfo.inputCont]}>
+					<View style={[editShelterInfo.inputCont, {marginTop: 50 * DP}]}>
 						<View style={[editShelterInfo.category]}>
 							<View style={[editShelterInfo.text]}>
 								<Text style={[txt.noto28, {color: GRAY10}]}>전화번호</Text>
@@ -214,7 +215,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 						</View>
 					</View>
 					{/* 이메일 단위 */}
-					<View style={[editShelterInfo.inputEmail]}>
+					<View style={[editShelterInfo.inputEmail, {marginTop: 50 * DP}]}>
 						<View style={[editShelterInfo.category]}>
 							<View style={[editShelterInfo.emailText]}>
 								<Text style={[txt.noto28, {color: GRAY10}]}>이메일</Text>
@@ -232,7 +233,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 						</View>
 					</View>
 					{/* 홈페이지 */}
-					<View style={[editShelterInfo.inputCont]}>
+					<View style={[editShelterInfo.inputCont, {marginTop: 50 * DP}]}>
 						<View style={[editShelterInfo.category]}>
 							<View style={[editShelterInfo.text]}>
 								<Text style={[txt.noto28, {color: GRAY10}]}>홈페이지</Text>
@@ -253,7 +254,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 						</View>
 					</View>
 					{/* 설립일 */}
-					<View style={[editShelterInfo.inputCont]}>
+					<View style={[editShelterInfo.inputCont, {marginTop: 50 * DP}]}>
 						<View style={[editShelterInfo.category]}>
 							<View style={[editShelterInfo.text]}>
 								<Text style={[txt.noto28, {color: GRAY10}]}>설립일</Text>
@@ -265,8 +266,8 @@ export default EditShelterInfo = ({route, navigation}) => {
 					</View>
 				</View>
 
-				<View style={[editShelterInfo.btn_w654]}>
-					<AniButton btnLayout={btn_w654} btnTitle={COMPLETE_MODIFY} titleFontStyle={32} onPress={finalized} />
+				<View style={[editShelterInfo.btn_w654, {marginTop: 110 * DP}]}>
+					<AniButton btnLayout={btn_w654} btnStyle={'border'} btnTitle={COMPLETE_MODIFY} titleFontStyle={32} onPress={finalized} />
 				</View>
 			</ScrollView>
 		</View>

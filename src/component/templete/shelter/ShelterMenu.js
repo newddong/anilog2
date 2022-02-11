@@ -102,6 +102,10 @@ export default ShelterMenu = ({route}) => {
 			},
 		);
 	};
+	//더보기 state 바꾸기
+	const changeShowMore = () => {
+		setShowMoreIntro(!showMoreIntro);
+	};
 
 	//메뉴에 해당되는 네이게이션 이동
 	const click_menu = item_menu => {
@@ -235,10 +239,11 @@ export default ShelterMenu = ({route}) => {
 								{data.user_introduction || '자기소개가 없습니다.'}
 							</Text>
 						</View>
-						{introOriginLine < 3 ? (
+						{/* 원래 introOriginLine < 3 ?이였지만 작동안해서 수정하였습니다. */}
+						{introOriginLine < 1 ? (
 							<></>
 						) : showMoreIntro ? (
-							<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {flex: 1}]}>
+							<TouchableOpacity onPress={changeShowMore} style={[shelterMenu.showMore, {flex: 1}]}>
 								<View style={[{flexDirection: 'row'}, {alignSelf: 'flex-end'}, {justifyContent: 'flex-end'}]}>
 									<Text style={[txt.noto24, {color: GRAY10}, {alignSelf: 'flex-end'}]}>접기</Text>
 									<Arrow_Up_GRAY20 />

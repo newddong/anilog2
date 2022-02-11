@@ -15,7 +15,7 @@ import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {MAINCOLOR} from 'Root/config/color';
 import {getTimeLapsed, parsingDate} from 'Root/util/dateutil';
 import HashText from 'Molecules/info/HashText';
-import MissingReportInfo from '../info/MissingReportInfo';
+import MissingReportInfo from 'Organism/info/MissingReportInfo';
 
 export default FeedContent = props => {
 	const {

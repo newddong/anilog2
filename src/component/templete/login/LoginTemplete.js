@@ -23,10 +23,8 @@ export default LoginTemplete = props => {
 
 		userLogin(
 			{
-				login_id: '0333324513',
-				login_password: 'tkddn123',
-				// login_id: '01084227964',
-				// login_password: '1234567a',
+				login_id: id,
+				login_password: password,
 			},
 			userObject => {
 				// console.log('userObject', userObject.msg);

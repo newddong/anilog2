@@ -1,6 +1,24 @@
 import React from 'react';
 import {Text, View, Platform, StyleSheet} from 'react-native';
 import DP from 'Root/config/dp';
+
+/**
+ * 실종제보 요약정보 올가니즘 컴포넌트
+ * 'feed_type' 'missing' 'report' 시 사용됨.
+ * @param {object} data - 실종제보 피드 정보 MissingAnimalDetail 또는 ReportDetail의 data
+ * @param {string} missing_animal_species 실종 게시물의 실종 동물 종
+ * @param {string} missing_animal_species_detail 실종 게시물의 실종 동물 품종
+ * @param {string} missing_animal_sex 실종 게시물의 실종 동물 성별
+ * @param {string} missing_animal_age 실종 게시물의 실종 동물 나이
+ * @param {string} missing_animal_lost_location 실종 게시물의 실종 동물 실종위치
+ * @param {string} missing_animal_contact 실종 게시물의 게시자 연락처
+ * @param {string} missing_animal_features 실종 게시물의 실종 동물 특징
+ * @param {string} missing_animal_date 실종 게시물의 실종일
+ * @param {string} feed_type missing, report 로 실종 / 제보 분기 처리
+ * @param {string} report_witness_date 제보 게시물의 제보 날짜
+ * @param {string} report_witness_location 제보 게시물의 제보 위치
+ * @returns 실종제보 요약정보 컴포넌트
+ */
 const MissingReportInfo = props => {
 	const {
 		missing_animal_species,
@@ -17,7 +35,7 @@ const MissingReportInfo = props => {
 	} = props.data;
 
 	var newAnimalSex = '';
-
+	//missing_animal_sex 문자열 처리
 	switch (missing_animal_sex) {
 		case 'male':
 			newAnimalSex = '수컷';
@@ -60,6 +78,7 @@ const MissingReportInfo = props => {
 		);
 	} else if (feed_type == 'report') {
 		console.log('ReportMissing Date', report_witness_date);
+		//날짜 문자열 형식처리
 		const newReportDateText = report_witness_date.toString().split('-');
 		const newReportDate = newReportDateText[0] + '.' + newReportDateText[1] + '.' + newReportDateText[2].toString().substring(0, 2);
 		return (

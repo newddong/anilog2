@@ -84,7 +84,7 @@ const AddressInput = props => {
 					/>
 
 					<View style={[addressInput.btn_w226]}>
-						<AniButton btnTitle={'주소 찾기'} btnLayout={btn_w176} btnTheme={'shadow'} onPress={onPressSearchAddr} />
+						<AniButton btnTitle={'주소 검색'} btnLayout={btn_w176} btnTheme={'shadow'} onPress={onPressSearchAddr} />
 					</View>
 				</View>
 			</View>

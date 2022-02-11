@@ -4,9 +4,10 @@ import {GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import PetImageLabel from 'Molecules/label/PetImageLabel';
 import {animalInfo} from 'Organism/style_organism copy';
+import DP from 'Root/config/dp';
 export default AnimalInfo = props => {
 	const [data, setData] = React.useState(props.data);
-	// console.log('AnimalInfo', props.data);
+	console.log('AnimalInfo', props.data);
 	React.useEffect(() => {
 		let register_date = data.user_register_date;
 		const date = new Date(register_date);
@@ -24,7 +25,7 @@ export default AnimalInfo = props => {
 			<PetImageLabel data={data} onPressLabel={() => props.onPressLabel()} showNickname={false} />
 			<View style={[animalInfo.infoContainer]}>
 				<Text style={[animalInfo.infoContainer_petNickname, txt.noto32b]}>{data.user_nickname || ''}</Text>
-				<Text style={[animalInfo.infoContainer_petDetail, txt.noto28, {color: GRAY20}]}>
+				<Text style={[animalInfo.infoContainer_petDetail, txt.noto28, {marginTop: 12 * DP}]}>
 					{data.pet_species || ''}/{data.pet_species_detail || ''}
 				</Text>
 				<Text style={[animalInfo.infoContainer_petDetail, txt.noto28, {color: GRAY20}]}>임시보호 {data.protect_animal_date || ''}일 째</Text>

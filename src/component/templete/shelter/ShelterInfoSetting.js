@@ -2,11 +2,11 @@ import React from 'react';
 import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
 import {login_style, temp_style, shelterInfoSetting} from 'Templete/style_templete';
 import {useNavigation} from '@react-navigation/core';
-import {btn_w114, btn_w242} from 'Atom/btn/btn_style';
+import {btn_w114, btn_w194, btn_w242} from 'Atom/btn/btn_style';
 import ProfileImageLarge160 from 'Molecules/image/ProfileImageLarge160';
 import {txt} from 'Root/config/textstyle';
 import AniButton from 'Molecules/button/AniButton';
-import {GRAY10} from 'Root/config/color';
+import {GRAY10, APRI10, GRAY40} from 'Root/config/color';
 import {getUserInfoById, updateUserIntroduction} from 'Root/api/userapi';
 import {TextInput} from 'react-native';
 import moment from 'moment';
@@ -19,7 +19,7 @@ export default ShelterInfoSetting = ({route}) => {
 	const [modifyMode, setModifyMode] = React.useState(false); //소개라 수정모드
 	const [intro_modified, setIntro_modified] = React.useState(''); //수정된 소개란 텍스트
 	const [numberOfLines, setNumOfLines] = React.useState();
-	const [showMore, setShowMore] = React.useState();
+	const [showMore, setShowMore] = React.useState(false);
 	const modifyRef = React.useRef();
 
 	const fetchData = () => {
@@ -97,6 +97,10 @@ export default ShelterInfoSetting = ({route}) => {
 	const modifyIntroText = text => {
 		setIntro_modified(text);
 	};
+	//더보기 state 바꾸기
+	const changeShowMore = () => {
+		setShowMore(!showMore);
+	};
 
 	return (
 		<ScrollView contentContainerStyle={[shelterInfoSetting.container]}>
@@ -108,7 +112,7 @@ export default ShelterInfoSetting = ({route}) => {
 					</View>
 
 					<View style={[shelterInfoSetting.btn_w242]}>
-						<AniButton btnTitle={'프로필 변경'} btnLayout={btn_w242} onPress={moveToChangeUserProfileImage} />
+						<AniButton btnTitle={'프로필 변경'} btnLayout={btn_w194} btnStyle={'border'} onPress={moveToChangeUserProfileImage} />
 					</View>
 				</View>
 				<View style={[shelterInfoSetting.shelterInfoSetting_step2]}>
@@ -118,9 +122,9 @@ export default ShelterInfoSetting = ({route}) => {
 							<Text style={[txt.noto30b, {color: GRAY10}]}>계정정보</Text>
 						</View>
 						<View style={[temp_style.accountInfo_email_shelterInfoSetting_view, shelterInfoSetting.email_view]}>
-							<Text style={[txt.roboto24]}>{data.user_nickname}</Text>
+							<Text style={[txt.roboto26]}>{data.user_nickname}</Text>
 							<TouchableOpacity onPress={moveToChangePassword}>
-								<Text style={[txt.noto24, {color: GRAY10}]}>비밀번호 변경하기</Text>
+								<Text style={[txt.noto26, {color: APRI10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>비밀번호 변경하기</Text>
 							</TouchableOpacity>
 						</View>
 					</View>
@@ -133,9 +137,15 @@ export default ShelterInfoSetting = ({route}) => {
 							</View>
 							<View style={[shelterInfoSetting.btn_w114]}>
 								{modifyMode ? (
-									<AniButton onPress={modify_finalize} btnTitle={'적용'} btnLayout={btn_w114} />
+									// <AniButton onPress={modify_finalize} btnTitle={'적용'} btnLayout={btn_w114} />
+									<TouchableOpacity onPress={modify_finalize}>
+										<Text style={[txt.noto26, {color: GRAY10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>완료</Text>
+									</TouchableOpacity>
 								) : (
-									<AniButton onPress={modify_userIntro} btnTitle={'수정'} btnStyle={'border'} btnLayout={btn_w114} />
+									<TouchableOpacity onPress={modify_userIntro}>
+										<Text style={[txt.noto26, {color: APRI10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>수정</Text>
+									</TouchableOpacity>
+									// <AniButton onPress={modify_userIntro} btnTitle={'수정'} btnStyle={'border'} btnLayout={btn_w114} />
 								)}
 							</View>
 						</View>
@@ -146,7 +156,7 @@ export default ShelterInfoSetting = ({route}) => {
 								<View style={[shelterInfoSetting.modificationTextCont]}>
 									<TextInput
 										onChangeText={modifyIntroText}
-										style={[txt.noto24, shelterInfoSetting.modificationTextInput]}
+										style={[txt.noto26, shelterInfoSetting.modificationTextInput, {backgroundColor: GRAY40}]}
 										defaultValue={data.user_introduction || '소개란이 비어있습니다.'}
 										multiline={true}
 										maxLength={500}
@@ -156,7 +166,7 @@ export default ShelterInfoSetting = ({route}) => {
 								</View>
 							) : (
 								<View style={{}}>
-									<Text style={[txt.noto24, {color: GRAY10}]} ellipsizeMode={'tail'} numberOfLines={showMore ? null : 3}>
+									<Text style={[txt.noto26, {color: GRAY10}]} ellipsizeMode={'tail'} numberOfLines={showMore ? null : 3}>
 										{data.user_introduction || ''}
 									</Text>
 									<Text
@@ -168,7 +178,7 @@ export default ShelterInfoSetting = ({route}) => {
 									</Text>
 									{numberOfLines > 3 ? (
 										<TouchableOpacity
-											onPress={() => setShowMore(!showMore)}
+											onPress={changeShowMore}
 											style={{alignSelf: 'flex-end', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
 											<Text style={[txt.noto24, {color: GRAY10}]}>더보기</Text>
 											{!showMore ? <Arrow_Down_GRAY20 /> : <Arrow_Up_GRAY20 />}
@@ -188,7 +198,9 @@ export default ShelterInfoSetting = ({route}) => {
 								<Text style={[txt.noto30b, {color: GRAY10}]}>보호소 정보</Text>
 							</View>
 							<View style={shelterInfoSetting.btn_w114}>
-								<AniButton btnLayout={btn_w114} btnStyle={'border'} btnTitle={'수정'} onPress={moveToEditShelterInfo} />
+								<TouchableOpacity onPress={moveToEditShelterInfo}>
+									<Text style={[txt.noto26, {color: APRI10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>수정</Text>
+								</TouchableOpacity>
 							</View>
 						</View>
 						<View style={temp_style.title_type_shelterInfoSetting_view}>

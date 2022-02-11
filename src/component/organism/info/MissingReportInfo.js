@@ -1,6 +1,13 @@
 import React from 'react';
 import {Text, View, Platform, StyleSheet} from 'react-native';
 import DP from 'Root/config/dp';
+
+/**
+ * 실종제보 요약정보 올가니즘 컴포넌트
+ * 'feed_type' 'missing' 'report' 시 사용됨.
+ * @param {object} props.data - 실종제보 피드 정보 MissingAnimalDetail 또는 ReportDetail의 data 객체
+ * @returns 실종제보 요약정보 컴포넌트
+ */
 const MissingReportInfo = props => {
 	const {
 		missing_animal_species,
@@ -17,7 +24,7 @@ const MissingReportInfo = props => {
 	} = props.data;
 
 	var newAnimalSex = '';
-
+	//missing_animal_sex 문자열 처리
 	switch (missing_animal_sex) {
 		case 'male':
 			newAnimalSex = '수컷';
@@ -60,6 +67,7 @@ const MissingReportInfo = props => {
 		);
 	} else if (feed_type == 'report') {
 		console.log('ReportMissing Date', report_witness_date);
+		//날짜 문자열 형식처리
 		const newReportDateText = report_witness_date.toString().split('-');
 		const newReportDate = newReportDateText[0] + '.' + newReportDateText[1] + '.' + newReportDateText[2].toString().substring(0, 2);
 		return (

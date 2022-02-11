@@ -26,7 +26,7 @@ import {
 	TAGED_CONTENTS_FOR_ME,
 	LOGOUT,
 } from 'Root/i18n/msg';
-import {btn_w280} from 'Atom/btn/btn_style';
+import {btn_w280, btn_w280_h68} from 'Atom/btn/btn_style';
 import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FavoriteTag48_Filled, Paw46, Paw48_APRI10, Setting46} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
 import ProfileImageLarge194 from 'Molecules/image/ProfileImageLarge194';
@@ -128,13 +128,13 @@ export default UserMenu = props => {
 	const menuClick = menuItem => {
 		switch (menuItem) {
 			case '친구':
-				Modal.popInfoModal();
-				// navigation.push('SaveFavorite'); // FollowObject
+				// Modal.popInfoModal();
+				navigation.push('SaveFavorite'); // FollowObject
 				break;
 			case '피드 게시글':
 				// alert('업데이트 예정입니다');
-				Modal.popInfoModal();
-				// navigation.push('FavoriteFeeds', {token: data}); // FavoriteFeedObject
+				// Modal.popInfoModal();
+				navigation.push('FavoriteFeeds', {token: data}); // FavoriteFeedObject
 				break;
 			case '보호 요청(저장)':
 				// navigation.push('UserSaveAnimalRequest'); // BookmarkProtectRequestObject
@@ -189,48 +189,51 @@ export default UserMenu = props => {
 							<TouchableOpacity onPress={onPressMyName} style={[userMenu_style.user_id]}>
 								<Text style={[txt.roboto40b]}>{data.user_nickname || ''}</Text>
 							</TouchableOpacity>
-
+							{/* 업로드 팔로워 팔로잉 */}
 							<View style={[userMenu_style.contents, {marginTop: 18 * DP}, {alignItems: 'flex-start'}]}>
 								<SocialInfoB data={data} />
 							</View>
 						</View>
 					</View>
 
-					{/* 업로드 팔로워 팔로잉 */}
 					<View style={{flexDirection: 'row', width: 654 * DP}}>
-						<View style={[userMenu_style.introduceBox]}>
+						<View style={[userMenu_style.introduceBox, {alignSelf: 'flex-start'}]}>
 							{/* <SocialInfoB data={data} /> */}
 							{data._id != undefined && (
-								<Text numberOfLines={showMoreIntro ? 10 : 2} style={[txt.noto26, {color: GRAY10}]}>
+								<Text numberOfLines={showMoreIntro ? 10 : 2} style={[txt.noto26]}>
 									{data.user_introduction || '자기소개가 없습니다.'}
 								</Text>
 							)}
-							{data._id != undefined && showMoreIntro ? (
-								<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {}]}>
-									<Text style={[txt.noto24, {color: GRAY10}]}>접기</Text>
+						</View>
+						{data._id != undefined && showMoreIntro ? (
+							<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {flex: 1}]}>
+								<View style={[{flexDirection: 'row'}, {alignSelf: 'flex-end'}, {justifyContent: 'flex-end'}]}>
+									<Text style={[txt.noto24, {color: GRAY10}, {alignSelf: 'flex-end'}]}>접기</Text>
 									<Arrow_Up_GRAY20 />
-								</TouchableOpacity>
-							) : data._id != undefined ? (
-								<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {}]}>
+								</View>
+							</TouchableOpacity>
+						) : data._id != undefined ? (
+							<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {flex: 1}]}>
+								<View style={[{flexDirection: 'row'}, {alignSelf: 'flex-end'}, {justifyContent: 'flex-end'}]}>
 									<Text style={[txt.noto24, {color: GRAY10}]}>펼치기</Text>
 									<Arrow_Down_GRAY10 />
-								</TouchableOpacity>
-							) : null}
-						</View>
+								</View>
+							</TouchableOpacity>
+						) : null}
 					</View>
 
 					{/* 내 정보 수정 버튼*/}
 					<View style={[userMenu_style.btn_w280_view]}>
 						<View style={[userMenu_style.btn_w280]}>
-							<AniButton btnLayout={btn_w280} btnStyle={'border'} btnTheme={'shadow'} btnTitle={MY_INFO_MODIFY} onPress={onPressModifyMyInfo} />
+							<AniButton btnLayout={btn_w280_h68} btnStyle={'border'} btnTheme={'shadow'} btnTitle={MY_INFO_MODIFY} onPress={onPressModifyMyInfo} />
 						</View>
 
 						{/* 나의 반려동물 버튼 */}
 						<View style={[userMenu_style.btn_w280]}>
 							{data.user_my_pets?.length == 0 ? (
-								<AniButton btnLayout={btn_w280} disable btnTitle={MY_COMPANION} />
+								<AniButton btnLayout={btn_w280_h68} disable btnTitle={MY_COMPANION} />
 							) : (
-								<AniButton btnLayout={btn_w280} btnStyle={'border'} btnTheme={'shadow'} btnTitle={MY_COMPANION} onPress={onPressMyCompanion} />
+								<AniButton btnLayout={btn_w280_h68} btnStyle={'border'} btnTheme={'shadow'} btnTitle={MY_COMPANION} onPress={onPressMyCompanion} />
 							)}
 						</View>
 					</View>

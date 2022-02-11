@@ -24,6 +24,7 @@ import HashText from 'Molecules/info/HashText';
 import Modal from 'Root/component/modal/Modal';
 import {getFollows} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import MissingReportInfo from 'Organism/info/MissingReportInfo';
 
 export default FeedContent = props => {
 	const {
@@ -307,6 +308,7 @@ export default FeedContent = props => {
 					<View style={{flexDirection: 'row', alignItems: 'center'}}>
 						<Text style={[txt.noto28]}>제보 날짜: </Text>
 						<Text style={[txt.noto30b]}>{parsingDate(report_witness_date)}</Text>
+						{/* <MissingReportInfo data={props.data} /> */}
 					</View>
 					<View style={{flexDirection: 'row', alignItems: 'flex-start', paddingTop: 10 * DP}}>
 						<Text style={[txt.noto28]}>제보 장소: </Text>

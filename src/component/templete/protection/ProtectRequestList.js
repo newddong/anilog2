@@ -9,6 +9,7 @@ import {ONLY_CONTENT_FOR_ADOPTION, PET_KIND, PET_PROTECT_LOCATION} from 'Root/i1
 import FilterButton from 'Molecules/button/FilterButton';
 import {getProtectRequestList, getProtectRequestListByShelterId} from 'Root/api/shelterapi.js';
 import {getPettypes} from 'Root/api/userapi';
+import {btn_w306_h68} from 'Component/atom/btn/btn_style';
 
 export default ProtectRequestList = ({navigation, route}) => {
 	const [data, setData] = React.useState([]);
@@ -163,10 +164,10 @@ export default ProtectRequestList = ({navigation, route}) => {
 						<View style={[searchProtectRequest.filterView.inside]}>
 							<View style={{flexDirection: 'row'}}>
 								<View style={[temp_style.filterBtn]}>
-									<FilterButton menu={PET_PROTECT_LOCATION} onSelect={onSelectLocation} width={306} height={700} />
+									<FilterButton menu={PET_PROTECT_LOCATION} btnLayout={btn_w306_h68} onSelect={onSelectLocation} width={306} height={700} />
 								</View>
 								<View style={[temp_style.filterBtn]}>
-									<FilterButton menu={petTypes} onSelect={onSelectKind} width={306} />
+									<FilterButton menu={petTypes} btnLayout={btn_w306_h68} onSelect={onSelectKind} width={306} />
 								</View>
 							</View>
 							{/* 입양 가능한 게시물만 보기 */}

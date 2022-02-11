@@ -402,7 +402,7 @@ export const INTEREST_ACT = '관심 활동';
 export const GENDER_TAB_SELECT = ['남자', '여자'];
 
 //PasswordChecker
-export const PASSWORD_TITLE = '비밀번호';
+export const PASSWORD_TITLE = '새로운 비밀번호';
 export const PASSWORD_CHECK_TITLE = '비밀번호 확인';
 export const NEW_PWD_TITLE = '새로운 비밀번호';
 export const CURRENT_PWD_TITLE = '현재 비밀번호';

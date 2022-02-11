@@ -108,7 +108,7 @@ export default ChangePassword = ({route, navigation}) => {
 				<View style={[temp_style.passwordChecker_changePassword, changePassword_style.passwordChecker]}>
 					<PasswordChecker
 						currentPwd={route.params}
-						isResetPwdMode={true}
+						isResetPwdMode={false}
 						passwordValidator={pwd => passwordValidator(pwd)}
 						passwordChecker={pwd => passwordChecker(pwd)}
 						checkPresentPwd={pwd => checkPresentPwd(pwd)}

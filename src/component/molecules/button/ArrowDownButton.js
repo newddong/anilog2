@@ -4,6 +4,7 @@ import {APRI10, GRAY20, GRAY30, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {btn_w226} from 'Atom/btn/btn_style';
+import {Arrow_Down_White} from 'Atom/icon';
 /**
  * 버튼 컴포넌트트
  * @param {object} props - Props Object
@@ -15,7 +16,7 @@ import {btn_w226} from 'Atom/btn/btn_style';
  * @param {number} props.titleFontStyle - 제목 글꼴 크기, 기본값 24
  * @param {(title:string)=>void} props.onPress - 버튼을 눌렸을때 동작하는 콜백, 제목 반환환
  */
-const AniButton = props => {
+const ArrowDownButton = props => {
 	const btnTheme = () => {
 		//btnTheme이 shadow일 경우 Button의 View에 아래의 style을 추가한다
 		if (props.btnTheme == 'shadow') {
@@ -34,32 +35,20 @@ const AniButton = props => {
 
 	//txt Color의 종류는 3가지 - white, APRI10, GRAY20
 	const btnTxtColor = () => {
-		if (props.disable || props.btnStyle == 'filled') {
-			return WHITE;
-		} else if (props.btnTheme == 'gray' && props.btnStyle == 'border') {
-			return GRAY20;
-		} else return APRI10;
+		return WHITE;
 	};
 
 	//default는 APRI10, Gray의 경우 GRAY20
 	const border = () => {
 		if (props.btnStyle == 'border' && props.btnTheme == 'gray') {
-			return {borderColor: GRAY20, borderWidth: 2 * DP};
+			return {borderColor: GRAY20, borderWidth: 4 * DP};
 		} else if (props.btnStyle == 'border') {
-			return {borderColor: APRI10, borderWidth: 2 * DP};
+			return {borderColor: APRI10, borderWidth: 4 * DP};
 		}
 	};
 
 	const btnStyle = () => {
-		if (props.disable) {
-			return GRAY30;
-		} //disable일 경우 배경색 GRAY30
-		else if (props.btnStyle == 'filled') {
-			return APRI10;
-		} //FILLED일 경우 배경색 APRI10
-		else {
-			return WHITE;
-		} //이외의 경우 WHITE
+		return APRI10;
 	};
 	const onPress = () => {
 		props.disable ? false : props.onPress(props.btnTitle);
@@ -67,7 +56,13 @@ const AniButton = props => {
 
 	const insideView = () => {
 		return (
-			<View style={[props.btnLayout, btnTheme(), border(), {backgroundColor: btnStyle(), justifyContent: 'center'}]}>
+			<View
+				style={[
+					props.btnLayout,
+					btnTheme(),
+					border(),
+					{backgroundColor: btnStyle(), justifyContent: 'center', alignItems: 'center', flexDirection: 'row'},
+				]}>
 				<Text
 					style={[
 						txt.noto24,
@@ -75,11 +70,13 @@ const AniButton = props => {
 							fontSize: props.titleFontStyle * DP,
 							color: btnTxtColor(),
 							textAlign: 'center',
+							width: (props.btnLayout.width - 20) * DP,
 							// lineHeight: lineHeight(),
 						},
 					]}>
 					{props.btnTitle}
 				</Text>
+				<Arrow_Down_White />
 			</View>
 		);
 	};
@@ -90,7 +87,7 @@ const AniButton = props => {
 	);
 };
 
-AniButton.defaultProps = {
+ArrowDownButton.defaultProps = {
 	btnTitle: 'title', //버튼의 제목
 	btnTheme: 'shadow', // btnTheme - ’shadow’, ‘noShadow’, ‘gray’에서 결정
 	btnStyle: 'filled', // btnStyle - ‘filled’, ‘border’, ‘noBorder’ 에서 결정
@@ -100,4 +97,4 @@ AniButton.defaultProps = {
 	onPress: e => console.log(e), // 버튼을 탭했을때 발생하는 콜백
 };
 
-export default AniButton;
+export default ArrowDownButton;

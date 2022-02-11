@@ -113,33 +113,26 @@ export default WriteAidRequest = ({route, navigation}) => {
 				<View style={[writeAidRequest.aidRequestCont]}>
 					<AidRequest data={data} selected={true} />
 				</View>
-				<View style={[temp_style.feedTextEdit, writeAidRequest.feedTextEdit]}>
+				<View style={[writeAidRequest.feedTextEdit]}>
 					<View style={[writeAidRequest.titleContainer]}>
 						<TextInput
 							onChangeText={onChangeTitle}
 							placeholder={'제목 입력'}
 							// numberOfLines={1}
-
-							style={[
-								txt.noto30,
-								writeAidRequest.titleInput,
-								protectRequestData.protect_request_title.length != '' ? {borderBottomColor: APRI10} : {borderBottomColor: GRAY30},
-							]}
+							style={[txt.noto30, writeAidRequest.titleInput, {borderBottomColor: APRI10}]}
 						/>
 					</View>
-					<View style={[temp_style.feedTextEdit]}>
+					<View style={[writeAidRequest.contentContainer]}>
 						{/* 피드 글 작성 */}
 						<TextInput
 							onChangeText={onChangeContent}
+							style={[writeAidRequest.contentInput]}
+							maxLength={500}
 							textAlignVertical={'top'}
 							multiline={true}
-							style={[
-								protectRequestData.protect_request_content.length != '' ? {borderBottomColor: APRI10} : {borderBottomColor: GRAY30},
-								,
-								writeAidRequest.contentInput,
-							]}
 							placeholder="내용 입력"
 						/>
+						<Text style={[txt.noto24, {color: GRAY20, alignSelf: 'flex-end'}]}>{protectRequestData.protect_request_content.length} / 500</Text>
 					</View>
 				</View>
 

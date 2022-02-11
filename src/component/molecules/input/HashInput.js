@@ -202,11 +202,10 @@ export default function HashInput(props) {
 		onChangeText(internal.value);
 	};
 
-	const onFocus = (e) => {
+	const onFocus = e => {
 		Modal.closeKeboard();
-		props.onFocus&&props.onFocus(e);
-
-	}
+		props.onFocus && props.onFocus(e);
+	};
 
 	return (
 		<>

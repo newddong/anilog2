@@ -5,16 +5,25 @@ import UserLocationLabel from 'Molecules/label/UserLocationLabel';
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w130} from 'Root/component/atom/btn/btn_style';
 import {useNavigation, useRoute} from '@react-navigation/core';
-import {FavoriteTag48_Filled, Meatball50_GRAY20_Horizontal, Share48_Filled} from 'Atom/icon';
+import {FavoriteTag48_Filled, Meatball50_APRI10_Horizontal, Meatball50_GRAY20_Horizontal, Share48_Filled} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
 import {Arrow_Down_GRAY20, Arrow_Up_GRAY20} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {GRAY10} from 'Root/config/color';
-import {SHARE} from 'Root/i18n/msg';
+import {
+	FEED_MEATBALL_MENU_FOLLOWING,
+	FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS,
+	FEED_MEATBALL_MENU_UNFOLLOWING,
+	REPORT_MENU,
+	SHARE,
+} from 'Root/i18n/msg';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {MAINCOLOR} from 'Root/config/color';
 import {getTimeLapsed, parsingDate} from 'Root/util/dateutil';
 import HashText from 'Molecules/info/HashText';
+import Modal from 'Root/component/modal/Modal';
+import {getFollows} from 'Root/api/userapi';
+import userGlobalObject from 'Root/config/userGlobalObject';
 import MissingReportInfo from 'Organism/info/MissingReportInfo';
 
 export default FeedContent = props => {
@@ -59,6 +68,7 @@ export default FeedContent = props => {
 	const [reportLayout, setReportLayout] = React.useState({height: 0, width: 0});
 	const [labelLayout, setlabelLayout] = React.useState({height: 0, width: 0});
 	const [show, setShow] = React.useState(false);
+	const [isMeatballClicked, setIsMeatballClicked] = React.useState(false);
 	//FeedText가 담긴 View 의 onLayout
 	const onLayoutContent = event => {
 		const {width, height} = event.nativeEvent.layout;
@@ -84,15 +94,150 @@ export default FeedContent = props => {
 		}
 	}, [layout]);
 
+	//피드 미트볼 메뉴 - 신고 클릭
+	const onPressReport = () => {
+		Modal.close();
+		setTimeout(() => {
+			Modal.popOneBtnSelectModal(
+				REPORT_MENU,
+				'이 게시물을 신고 하시겠습니까?',
+				selectedItem => {
+					alert(selectedItem);
+				},
+				'신고',
+			);
+		}, 500);
+	};
+
+	//피드 미트볼 메뉴 - 공유하기 클릭
+	const onPressShare = () => {
+		Modal.close();
+		setTimeout(() => {
+			Modal.popSocialModal(
+				() => alert('kakao'),
+				() => alert('link'),
+				() => alert('message'),
+			);
+		}, 500);
+	};
+
+	//피드 미트볼 메뉴 - 팔로우 취소
+	const onPressCancelFollow = () => {
+		Modal.close();
+		setTimeout(() => {
+			Modal.popOneBtn('이 계정을 팔로우 취소하시겠습니까?', '팔로우 취소', () => {
+				alert('팔로우 취소');
+				Modal.close();
+			});
+		}, 100);
+	};
+
+	//피드 미트볼 메뉴 - 쪽지 보내기
+	const onPressSendMsg = () => {
+		Modal.close();
+		setTimeout(() => {
+			Modal.popMessageModal(
+				'주둥이',
+				msg => {
+					console.log('msg', msg);
+					Modal.close();
+				},
+				() => alert('나가기'),
+			);
+		}, 100);
+	};
+
 	const onClickMeatball = () => {
-		console.log('meatball');
+		//피드 미트볼 메뉴 팝업 분기에 대한 기획의도가 불분명한 상태이므로
+		//출력되는 메뉴에 대한 분기처리는 차후 처리 (현재는 더미로 적용)
+		// console.log(props.data);
+		let isMyFeed = userGlobalObject.userInfo._id == props.data.feed_writer_id._id;
+		if (isMyFeed) {
+			//나의 피드 게시글의 미트볼 헤더 클릭
+			Modal.popSelectBoxModal(
+				FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS,
+				selectedItem => {
+					alert(selectedItem);
+					Modal.close();
+					setIsMeatballClicked(false);
+				},
+				() => Modal.close(),
+				false,
+				'',
+			);
+		} else if (!isMyFeed) {
+			getFollows(
+				{userobject_id: userGlobalObject.userInfo._id},
+				result => {
+					// console.log('result / getFollows ', result.msg);
+					let follow_id_list = [];
+					result.msg.map((v, i) => {
+						follow_id_list.push(v.follow_id._id);
+					});
+					// console.log('follow', follow_id_list);
+					let isFollowers = follow_id_list.includes(props.data.feed_writer_id._id);
+					// console.log('isFollowers?', follow_id_list.includes(props.data.feed_writer_id._id));
+					//현재 팔로우 상태 중인 유저의 피드글의 미트볼 헤더 클릭
+					if (isFollowers) {
+						Modal.popSelectBoxModal(
+							FEED_MEATBALL_MENU_FOLLOWING,
+							selectedItem => {
+								// alert(selectedItem);
+								Modal.close();
+								if (selectedItem == '신고') {
+									onPressReport();
+								} else if (selectedItem == '공유하기') {
+									onPressShare();
+								} else if (selectedItem == '팔로우 취소') {
+									onPressCancelFollow();
+								} else if (selectedItem == '쪽지 보내기') {
+									onPressSendMsg();
+								}
+								setIsMeatballClicked(false);
+							},
+							() => Modal.close(),
+							false,
+							'',
+						);
+						//현재 팔로우 상태 중이지 않은 유저의 피드글의 미트볼 헤더 클릭
+					} else {
+						Modal.popSelectBoxModal(
+							FEED_MEATBALL_MENU_UNFOLLOWING,
+							selectedItem => {
+								alert(selectedItem);
+								if (selectedItem == '신고') {
+									onPressReport();
+								} else if (selectedItem == '공유하기') {
+									onPressShare();
+								} else if (selectedItem == '팔로우 취소') {
+									onPressCancelFollow();
+								} else if (selectedItem == '쪽지 보내기') {
+									onPressSendMsg();
+								}
+								Modal.close();
+								setIsMeatballClicked(false);
+							},
+							() => Modal.close(),
+							false,
+							'',
+						);
+					}
+				},
+				err => {
+					console.log('err', err);
+				},
+			);
+		}
+		// if()
 	};
 
 	const showMore = () => {
 		setShow(true);
 	};
+
 	const shouldBeDetail = show || route.name == 'MissingAnimalDetail' || route.name == 'ReportDetail';
 	console.log('경로', route.name, route.name.includes('FeedCommentList'));
+
 	return (
 		<View style={[organism_style.feedContent, shouldBeDetail ? {height: 270 * DP + reportLayout.height + labelLayout.height + layout.height} : {}]}>
 			{/* // <View style={[organism_style.feedContent,{height:800*DP}]}> */}
@@ -105,6 +250,8 @@ export default FeedContent = props => {
 						onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})}
 						location={feed_location}
 					/>
+
+					<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
 				</View>
 
 				{/* type값이 status일 경우 status 버튼이 나오고 그렇지 않으면 다른 버튼 표기 */}

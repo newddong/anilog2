@@ -25,7 +25,7 @@ import {animalNeedHelp} from 'Organism/style_organism copy';
  * }} props
  */
 export default AnimalNeedHelp = props => {
-	console.log('AnimalNeedHelp', props.data);
+	// console.log('AnimalNeedHelp', props.data);
 	// console.log('AnimalNeedHelp', props.data.protect_animal_id.protect_animal_sex);
 
 	const navigation = useNavigation();
@@ -132,44 +132,23 @@ export default AnimalNeedHelp = props => {
 	const contents = () => {
 		return (
 			<View style={[animalNeedHelp.detailContainer]}>
-				{data.feed_type != 'missing' && data.feed_type != 'report' && (
-					<View style={[animalNeedHelp.detail_upperMenu]}>
-						<View style={[animalNeedHelp.detail_upper_petStateContainer]}>
-							{data.protect_animal_protect_request ? (
-								<View style={[animalNeedHelp.detail_upper_petState]}>
-									<Text style={[txt.noto24, animalNeedHelp.petStatusContainer_text]}>임보요청</Text>
-								</View>
-							) : null}
-							{/* 입양가능날짜 출력 T/F */}
-							{data.protect_animal_adoption_days_remain != null ? (
-								<View style={[animalNeedHelp.detail_upper_petState]}>
-									<Text style={[txt.noto24, animalNeedHelp.petStatusContainer_text]}>
-										{data.protect_animal_adoption_days_remain || ''}일 후 입양가능
-									</Text>
-								</View>
-							) : null}
-						</View>
-						{/* 좋아요 State Tag */}
-					</View>
-				)}
-
 				<View style={[animalNeedHelp.detail_lowerMenu]}>
 					{data.feed_type != 'missing' && data.feed_type != 'report' && (
 						<>
 							{/* 동물 종류 및 품종 */}
-							<View style={[animalNeedHelp.lowerMenu_kindAndBreed, animalNeedHelp.lowerMenu_kindAndBreed_marginTop]}>
-								<Text style={[txt.noto30b]}>{data.protect_animal_species || ''}</Text>
+							<View style={[animalNeedHelp.lowerMenu_kindAndBreed]}>
+								<Text style={[txt.noto34b]}>{data.protect_animal_species || ''}</Text>
 								<Text style={[txt.noto28, animalNeedHelp.breedText]}>{data.protect_animal_species_detail || ''}</Text>
 							</View>
 							{/* 보호요청 관련 Details */}
 							<View style={[animalNeedHelp.lowerMenu_helpDetail]}>
-								<Text style={[txt.noto24]}>등&nbsp; 록&nbsp; 일 : {getParsedDate()}</Text>
-								<Text style={[txt.noto24]}>
+								<Text style={[txt.noto28]}>등&nbsp; 록&nbsp; 일 : {getParsedDate()}</Text>
+								<Text style={[txt.noto28]}>
 									{/* 보호장소 : {data.protect_request_writer_id != null ? data.protect_request_writer_id.shelter_name : data.shelter_name} */}
 									보호장소 : {data.shelter_name ? data.shelter_name : data.protect_request_writer_id.shelter_name}
 								</Text>
-								<Text style={[txt.noto24]}>
-									구조지역 :
+								<Text style={[txt.noto28]}>
+									구조지역 :{' '}
 									{data.protect_animal_rescue_location
 										? data.protect_animal_rescue_location
 										: data.protect_animal_id

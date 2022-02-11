@@ -41,29 +41,38 @@ const InputLongText = props => {
 		<View style={{flexDirection: 'row'}}>
 			<View
 				style={{
-					width: 710 * DP,
-					height: 424 * DP,
+					width: 654 * DP,
+					height: 380 * DP,
 					borderWidth: 2 * DP,
 					borderRadius: 30 * DP,
 					borderColor: content.length > 0 ? APRI10 : GRAY30,
 					alignItems: 'center',
 					justifyContent: 'center',
+					paddingHorizontal: 24 * DP,
+
+					// backgroundColor: 'yellow',
 				}}>
-				<View style={{width: 654 * DP, height: 344 * DP}}>
-					<TextInput
-						style={[txt.noto24, {width: 654 * DP, height: 314 * DP, textAlignVertical: 'top'}]}
-						onChangeText={onChange}
-						placeholder={props.placeholder}
-						multiline={true}
-						ref={inputRef}
-						defaultValue={props.value}
-						maxLength={props.maxlength}
-					/>
-					<View style={{width: 95 * DP, height: 30 * DP, alignSelf: 'flex-end'}}>
-						<Text style={[txt.roboto24, {color: GRAY10}]}>
-							{content.length}/{props.maxlength}
-						</Text>
-					</View>
+				<TextInput
+					style={[
+						txt.noto24,
+						{
+							width: 606 * DP,
+							height: 298 * DP,
+							textAlignVertical: 'top',
+							// backgroundColor: 'red',
+						},
+					]}
+					onChangeText={onChange}
+					placeholder={props.placeholder}
+					multiline={true}
+					ref={inputRef}
+					defaultValue={props.value}
+					maxLength={props.maxlength}
+				/>
+				<View style={{width: 95 * DP, height: 30 * DP, alignSelf: 'flex-end'}}>
+					<Text style={[txt.roboto24, {color: GRAY10}]}>
+						{content.length}/{props.maxlength}
+					</Text>
 				</View>
 			</View>
 		</View>

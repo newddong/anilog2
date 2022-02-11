@@ -79,6 +79,10 @@ import PasswordReset from 'Root/component/templete/user/PasswordReset';
 import AddressSearchPage from 'Root/component/templete/search/AddressSearchPage';
 import InterestTagModal from 'Root/component/molecules/modal/InterestTagModal';
 import AvatarSelectModal from 'Root/component/molecules/modal/AvatarSelectModal';
+import InformationModal from 'Root/component/molecules/modal/InformationModal';
+import MessageModal from 'Root/component/molecules/modal/MessageModal';
+import DropdownModal from 'Root/component/molecules/modal/DropdownModal';
+import ShareModal from 'Root/component/molecules/modal/ShareModal';
 // import Camera from 'Root/component/templete/Camera';
 // import Camera from 'Templete/media/Camera';
 const RootStack = createStackNavigator();
@@ -192,8 +196,8 @@ export default RootStackNavigation = () => {
 		!isPop && setPop(true);
 	};
 
-	Modal.popInformationModal = (data, onClose) => {
-		popIn(<InformationModal data={data} onClose={onClose} />);
+	Modal.popInformationModal = (data, onClose, onPressEdit) => {
+		popIn(<InformationModal data={data} onClose={onClose} onPressEdit={onPressEdit} />);
 		!isPop && setPop(true);
 	};
 
@@ -234,6 +238,21 @@ export default RootStackNavigation = () => {
 
 	Modal.popInterestTagModal = (data, onSave, onClose) => {
 		popIn(<InterestTagModal data={data} onSave={onSave} onClose={onClose} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popMessageModal = (receiver, onSend, onClose) => {
+		popIn(<MessageModal receiver={receiver} onSend={onSend} onClose={onClose} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popDropdownModal = (offset, menu, onPressMenu, onClose) => {
+		popIn(<DropdownModal offset={offset} menu={menu} onPressMenu={onPressMenu} onClose={onClose} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popShareModal = (offset, onPressKakao, onPressLinkCopy, onPressMsg) => {
+		popIn(<ShareModal offset={offset} onPressKakao={onPressKakao} onPressLinkCopy={onPressLinkCopy} onPressMsg={onPressMsg} />);
 		!isPop && setPop(true);
 	};
 

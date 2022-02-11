@@ -1,7 +1,7 @@
 import React from 'react';
 import {FlatList, ScrollView, Text, View} from 'react-native';
-import {accountHashList} from 'Organism/style_organism copy';
 import UserAccount from 'Organism/listitem/UserAccount';
+import {accountHashList} from 'Organism/style_organism copy';
 
 /**
  * 친구 즐겨찾기 Hash와 유저오브젝트 리스트 출력 컴포넌트

@@ -11,6 +11,8 @@ import ActivationDetail from 'Templete/protection/ActivationDetail';
 import SocialRelationTopTabNavigation from './socialRelation_tab/SocialRelationTopTabNavigation';
 import ProtectionTopTabNavigation from './protection_tab/ProtectionTopTabNavigation';
 import AlarmAndSearchHeader from 'Root/navigation/header/AlarmAndSearchHeader';
+import SimpleHeader from 'Root/navigation/header/SimpleHeader';
+import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballHeader';
 
 const ProtectionStack = createStackNavigator();
 
@@ -27,8 +29,9 @@ export default ProtectionStackNavigation = () => {
 			<ProtectionStack.Screen
 				name="AnimalProtectRequestDetail"
 				component={AnimalProtectRequestDetail}
-				options={{header: props => <SimpleHeader {...props} />}}
+				options={{header: props => <SimpleWithMeatballHeader {...props} />}}
 			/>
+
 			<ProtectionStack.Screen name="FeedListForHashTag" component={FeedListForHashTag} />
 			<ProtectionStack.Screen name="FeedCommentList" component={FeedCommentList} options={{header: props => <AlarmAndSearchHeader {...props} />}} />
 			<ProtectionStack.Screen name="MissingAnimalDetail" component={MissingAnimalDetail} options={{header: props => <MeatBallHeader {...props} />}} />

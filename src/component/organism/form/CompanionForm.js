@@ -1,12 +1,15 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 import {getPettypes} from 'Root/api/userapi';
-import {GRAY10, GRAY40} from 'Root/config/color';
+import {APRI10, GRAY10, GRAY40} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {COMPANION_DURATION, COMPANION_STATUS, PET_AGE, PET_KIND} from 'Root/i18n/msg';
 import {Cross52, CrossMark_Filled} from 'Atom/icon';
 import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 import {companionForm} from 'Organism/style_organism copy';
+import DropdownSelect from 'Root/component/molecules/dropdown/DropdownSelect';
+import Modal from 'Root/component/modal/Modal';
+import SelectInput from 'Root/component/molecules/button/SelectInput';
 
 /**
  *
@@ -20,6 +23,10 @@ import {companionForm} from 'Organism/style_organism copy';
  */
 export default CompanionForm = props => {
 	const [petTypes, setPetTypes] = React.useState(['동물종류']);
+	const [selectedPetTypes, setSelectedPetTypes] = React.useState('동물종류');
+	const [selectedYear, setSelectedYear] = React.useState(PET_AGE[0]);
+	const [selectedDuration, setSelectedDuration] = React.useState(COMPANION_DURATION[0]);
+	const [selectedStatus, setSelectedStatus] = React.useState(COMPANION_STATUS[0]);
 
 	React.useEffect(() => {
 		getPettypes(
@@ -54,54 +61,69 @@ export default CompanionForm = props => {
 		props.onSelectStatus(v, i);
 	};
 
+	const onPressPetTypes = () => {
+		Modal.popSelectScrollBoxModal([petTypes], '동물 종 선택', selectedItem => {
+			setSelectedPetTypes(selectedItem);
+			Modal.close();
+			props.onSelectSpecies(selectedItem);
+		});
+	};
+
+	const onPressYear = () => {
+		Modal.popSelectScrollBoxModal([PET_AGE], '동물 종 선택', selectedItem => {
+			setSelectedYear(selectedItem);
+			Modal.close();
+			props.onSelectAge(selectedItem);
+		});
+	};
+
+	const onPressDuration = () => {
+		Modal.popSelectScrollBoxModal([COMPANION_DURATION], '동물 종 선택', selectedItem => {
+			setSelectedDuration(selectedItem);
+			Modal.close();
+			props.onSelectDuration(selectedItem);
+		});
+	};
+
+	const onPressStatus = () => {
+		Modal.popSelectScrollBoxModal([COMPANION_STATUS], '동물 종 선택', selectedItem => {
+			setSelectedStatus(selectedItem);
+			Modal.close();
+			props.onSelectStatus(selectedItem);
+		});
+	};
+
 	return (
 		<View style={[companionForm.container]}>
 			<View style={[companionForm.insideContainer]}>
 				<View style={[companionForm.upperMenu]}>
 					<View style={[companionForm.inputItem]}>
 						<View style={[companionForm.fieldName]}>
-							<Text style={[txt.noto24, {color: GRAY10}]}>종</Text>
+							<Text style={[txt.noto24, {color: APRI10}]}>종</Text>
 						</View>
 						<View style={[companionForm.dropDownSelect]}>
-							<NormalDropDown
-								menu={petTypes}
-								onSelect={(v, i) => onSelectSpecies(v, i)}
-								// defaultIndex={isTempData ? species_index : 0}
-							/>
+							<SelectInput onPressInput={onPressPetTypes} width={202} value={selectedPetTypes} />
 						</View>
 					</View>
 					<View style={[companionForm.inputItem]}>
 						<View style={[companionForm.fieldName]}>
-							<Text style={[txt.noto24, {color: GRAY10}]}>나이</Text>
+							<Text style={[txt.noto24, {color: APRI10}]}>나이</Text>
 						</View>
 						<View style={[companionForm.dropDownSelect]}>
-							<NormalDropDown
-								menu={PET_AGE}
-								onSelect={(v, i) => onSelectAge(v, i)}
-								// defaultIndex={isTempData ? age_index : 0}
-							/>
+							<SelectInput onPressInput={onPressYear} width={202} value={selectedYear} />
 						</View>
 					</View>
 					<View style={[companionForm.inputItem]}>
 						<View style={[companionForm.fieldName]}>
-							<Text style={[txt.noto24, {color: GRAY10}]}>반려생활 기간</Text>
+							<Text style={[txt.noto24, {color: APRI10}]}>반려생활 기간</Text>
 						</View>
 						<View style={[companionForm.dropDownSelect]}>
-							<NormalDropDown
-								menu={COMPANION_DURATION}
-								onSelect={(v, i) => onSelectDuration(v, i)}
-								// defaultIndex={isTempData ? period_index : 0}
-							/>
+							<SelectInput onPressInput={onPressDuration} width={202} value={selectedDuration} />
 						</View>
 					</View>
 				</View>
 				<View style={[companionForm.lowerMenu]}>
-					<NormalDropDown
-						menu={COMPANION_STATUS}
-						onSelect={(v, i) => onSelectStatus(v, i)}
-						width={654}
-						// defaultIndex={isTempData ? status_index : 0}
-					/>
+					<SelectInput onPressInput={onPressStatus} width={654} value={selectedStatus} />
 				</View>
 			</View>
 			<View style={{position: 'absolute', right: 0, top: -5, borderRadius: 50, backgroundColor: GRAY40, zIndex: 1}}>

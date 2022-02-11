@@ -14,7 +14,7 @@ export const organism_style = StyleSheet.create({
 		// paddingBottom: 50 * DP,
 		backgroundColor: WHITE,
 		paddingHorizontal: 48 * DP,
-		paddingBottom:100*DP,
+		paddingBottom: 100 * DP,
 	},
 	userLocationLabel_view_feedContent: {
 		flexDirection: 'row',
@@ -24,7 +24,10 @@ export const organism_style = StyleSheet.create({
 	},
 	userLocationLabel_feedContent: {
 		flexDirection: 'row',
-		// width: 448 * DP,
+		width: 654 * DP, //유저아이디 최우측 미트볼 아이콘 추가를 위한 수정
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		// backgroundColor: 'yellow',
 	},
 	feed: {
 		// flexDirection: 'column',
@@ -275,7 +278,8 @@ export const organism_style = StyleSheet.create({
 		flexDirection: 'row',
 		width: 654 * DP,
 		height: 100 * DP,
-		justifyContent: 'space-between',
+		// alignItems:'center'
+		// justifyContent: 'space-between',
 	},
 	btn_w280_profileInfo: {
 		width: 280 * DP,
@@ -405,8 +409,13 @@ export const profileInfo_style = StyleSheet.create({
 	btn_w280_view: {
 		marginTop: 40 * DP,
 	},
-	btn_w280: {
-		marginLeft: 0 * DP,
+	buttonContainer: {
+		width: 292 * DP,
+		height: 68 * DP,
+		marginLeft: 38 * DP,
+	},
+	shelter_info_container: {
+		marginTop: 12 * DP,
 	},
 });
 
@@ -459,5 +468,10 @@ export const parentComment = StyleSheet.create({
 	},
 	img_square_round: {
 		marginTop: 5 * DP,
+	},
+	userLabelContainer: {
+		width: 654 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
 	},
 });

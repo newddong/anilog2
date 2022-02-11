@@ -190,9 +190,6 @@ export default ApplyCompanionB = props => {
 						<AddItem64 />
 						<View style={[applyCompanionB.addPetTextView]}>
 							<Text style={[txt.noto30, {color: APRI10}]}>반려 생활 추가</Text>
-							{/* <TouchableOpacity onPress={deleteAs}>
-							<Text style={[txt.noto30, { color: APRI10 }]}>어싱크 체크</Text>
-						</TouchableOpacity> */}
 						</View>
 					</TouchableOpacity>
 					{/* 3개 버튼 */}

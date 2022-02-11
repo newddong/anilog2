@@ -132,7 +132,7 @@ export default Modal = {
 	 *
 	 * @example
 	 */
-	popSelectScrollBoxModal: (data, header, onSelect) => {},
+	popSelectScrollBoxModal: (data, header, onSelect, onClose) => {},
 
 	/**
 	 * 날짜 선택창 모달을 띄우는 함수(하단 스크롤뷰 셀렉트 모달)
@@ -159,10 +159,11 @@ export default Modal = {
 	 * 유저 오브젝트 정보 요약 출력 모달
 	 * @param {object} data - 유저 오브젝트 정보
 	 * @param {()=>void} onClose - x마크 클릭 콜백 함수
+	 * @param {()=>void} onPressEdit - 수정 클릭 콜백 함수
 	 *
 	 * @example
 	 */
-	popInformationModal: (data, onClose) => {},
+	popInformationModal: (data, onClose, onPressEdit) => {},
 
 	/**
 	 * 반려동물의 가족계정 추가 컨펌 모달
@@ -189,7 +190,7 @@ export default Modal = {
 
 	/**
 	 * 버튼 한개의 선택 모달
-	 * @param {object} data - 추가할 가족 계정의 오브젝트 정보
+	 * @param {object} data - 출력 아이템
 	 * @param {string} msg - 모달 타이틀
 	 * @param {(selectedItem:string)=>void} onYes - Ok버튼 콜백
 	 * @param {()=>void} onNo - No버튼 콜백
@@ -247,6 +248,35 @@ export default Modal = {
 	 * @example
 	 */
 	popSocialModal: (onPressKakao, onPressLinkCopy, onPressMsg) => {},
+
+	/**
+	 * 쪽지 모달
+	 * @param {()=>void} props.receiver - 카카오톡 클릭
+	 * @param {(msg:string)=>void} props.onSend - 링크복사 클릭
+	 * @param {()=>void} props.onClose - 메시지 클릭
+	 * @example
+	 */
+	popMessageModal: (receiver, onSend, onClose) => {},
+
+	/**
+	 * 드롭다운 형식의 메뉴 모달
+	 * @param {object} props.offset - 위치 정보
+	 * @param {object} props.menu - 출력될 메뉴 아이템
+	 * @param {(index:number)=>void} props.onPressMenu - 메뉴 아이템 클릭(클릭한 아이템 인덱스 반환)
+	 * @param {()=>void} props.onClose - 종료
+	 * @example
+	 */
+	popDropdownModal: (offset, menu, onPressMenu, onClose) => {},
+
+	/**
+	 * 드롭다운 형식의 메뉴 모달
+	 * @param {object} props.offset - 위치 정보
+	 * @param {()=>void} props.onPressKakao - 카카오톡 클릭
+	 * @param {()=>void} props.onPressLinkCopy - 링크복사 클릭
+	 * @param {()=>void} props.onPressMsg - 메시지 클릭
+	 * @example
+	 */
+	popShareModal: (offset, onPressKakao, onPonPressLinkCopyressMenu, onPressMsg) => {},
 
 	popInfoModal: () => {},
 

@@ -3,14 +3,14 @@ import {ScrollView, Text, TouchableOpacity, View, TouchableWithoutFeedback, Text
 import {APRI10, WHITE, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {Camera54, Location54_APRI10, Paw54_Border} from 'Root/component/atom/icon/index';
+import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Paw54_Border} from 'Root/component/atom/icon/index';
 import {Urgent_Write1, Urgent_Write2} from 'Atom/icon';
 import {btn_style, feedWrite, login_style, temp_style} from 'Templete/style_templete';
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w176, btn_w194} from 'Atom/btn/btn_style';
 import ActionButton from 'Molecules/button/ActionButton';
 import SelectedMediaList from 'Organism/list/SelectedMediaList';
-import {DOG_KIND, PET_KIND, pet_kind} from 'Root/i18n/msg';
+import {DOG_KIND, PET_KIND, pet_kind, PUBLIC_SETTING} from 'Root/i18n/msg';
 import DatePicker from 'Molecules/select/DatePicker';
 import TabSelectFilled_Type1 from 'Molecules/tab/TabSelectFilled_Type1';
 import Input24 from 'Molecules/input/Input24';
@@ -25,6 +25,7 @@ import {getPettypes} from 'Root/api/userapi';
 import ImagePicker from 'react-native-image-crop-picker';
 import HashInput from 'Molecules/input/HashInput';
 import {getAddressList} from 'Root/api/address';
+import SelectInput from 'Root/component/molecules/button/SelectInput';
 
 export default FeedWrite = props => {
 	const [showPetAccountList, setShowPetAccountList] = React.useState(false); //PetAccount 계정
@@ -36,6 +37,7 @@ export default FeedWrite = props => {
 	const [feedText, setFeedText] = React.useState(''); //피드 TextInput Value
 	const [selectedImg, setSelectedImg] = React.useState([]); //사진 uri리스트
 	const [isSearchTag, setSearchTag] = React.useState(false);
+	const [publicSetting, setPublicSetting] = React.useState('전체 공개'); //공개 여부
 
 	React.useEffect(() => {
 		props.navigation.setParams({
@@ -185,6 +187,13 @@ export default FeedWrite = props => {
 		setSearchTag(isFind);
 	};
 
+	const onPressPublicSetting = () => {
+		Modal.popSelectScrollBoxModal([PUBLIC_SETTING], '취소', selectedItem => {
+			setPublicSetting(selectedItem);
+			Modal.close();
+		});
+	};
+
 	const setWriteModeState = () => {
 		return (
 			<>
@@ -220,9 +229,11 @@ export default FeedWrite = props => {
 								onPress={onSetDiary}
 							/>
 						</View>
-						<View style={[btn_style.btn_w194]}>
-							<ActionButton btnTitle={'전체 공개'} btnStyle={'border'} titleFontStyle={24} btnLayout={btn_w194} />
-						</View>
+						<TouchableOpacity onPress={onPressPublicSetting} style={[feedWrite.public_setting_btn]}>
+							{/* <ActionButton btnTitle={'전체 공개'} onOpen={() => alert('dd')} btnStyle={'border'} titleFontStyle={24} btnLayout={btn_w194} /> */}
+							<Text style={[txt.noto24, {color: APRI10}]}>{publicSetting}</Text>
+							<Arrow_Down_APRI10 />
+						</TouchableOpacity>
 					</View>
 				)}
 				{selectedImg.length > 0 && (
@@ -240,7 +251,7 @@ export default FeedWrite = props => {
 		<View style={[login_style.wrp_main, feedWrite.container]}>
 			{/* <ScrollView contentContainerStyle={{width: 750 * DP, alignItems: 'center'}}> */}
 			<HashInput
-				containerStyle={[temp_style.feedTextEdit, {borderBottomWidth: 2 * DP, borderBottomColor: APRI10}]}
+				containerStyle={[temp_style.feedTextEdit, {minHeight: showLostAnimalForm || showReportForm ? 276 * DP : 376 * DP}]}
 				textAlignVertical={'top'}
 				multiline={true}
 				placeholder="게시물을 작성하세요 (150자)"
@@ -291,12 +302,32 @@ const MissingForm = props => {
 	]);
 	const [isSpeciesChanged, setIsSpeciesChanged] = React.useState(false);
 
+	const [city, setCity] = React.useState(['시를 선택해 주세요']);
+	const [district, setDistrict] = React.useState(['구를 선택해 주세요']);
+
+	React.useEffect(() => {
+		getAddressList(
+			{},
+			cities => {
+				setCity(cities.msg),
+					() => {
+						console.log('Get Address Failed');
+					};
+			},
+			err => Modal.alert(err),
+		);
+	}, []);
+
 	const [data, setData] = React.useState({
 		missing_animal_species: types[0].pet_species,
 		missing_animal_species_detail: types[0].pet_species_detail[0],
 		missing_animal_sex: 'male',
 		missing_animal_age: '',
-		missing_animal_lost_location: '',
+		missing_animal_lost_location: {
+			city: city[0],
+			district: '구를 선택',
+			detail: '',
+		},
 		missing_animal_features: '',
 		missing_animal_date: '',
 		missing_animal_contact: '',
@@ -360,6 +391,39 @@ const MissingForm = props => {
 	const inputFeature = feature => {
 		setData({...data, missing_animal_features: feature});
 	};
+
+	const onPressCity = () => {
+		Modal.popSelectScrollBoxModal([city], '도, 광역, 특별시', selectedItem => {
+			let lost_location_container = data.missing_animal_lost_location;
+			lost_location_container.city = selectedItem;
+
+			setData({...data, missing_animal_lost_location: lost_location_container});
+			getAddressList(
+				{city: selectedItem},
+				districts => {
+					console.log('districts.msg', districts.msg);
+					setDistrict(districts.msg);
+				},
+				e => console.log('e', e),
+			);
+			Modal.close();
+		});
+	};
+	const onPressDistrict = () => {
+		Modal.popSelectScrollBoxModal([district], '도, 광역, 특별시', selectedItem => {
+			let lost_location_container = data.missing_animal_lost_location;
+			lost_location_container.district = selectedItem;
+			setData({...data, missing_animal_lost_location: lost_location_container});
+			Modal.close();
+		});
+	};
+
+	const onChangeMissingLocationDetail = text => {
+		let lost_location_container = data.missing_animal_lost_location;
+		lost_location_container.detail = text;
+		setData({...data, missing_animal_lost_location: lost_location_container});
+	};
+
 	return (
 		<ScrollView style={[feedWrite.lostAnimalForm]} showsVerticalScrollIndicator={false}>
 			{/* DropDownSelect */}
@@ -418,15 +482,16 @@ const MissingForm = props => {
 					value={data.missing_animal_age}
 				/>
 			</View>
-			<View style={[temp_style.input24, feedWrite.input24]}>
-				<Input24
-					title={'실종 위치'}
-					placeholder="실종 동물의 위치를 입력하세요 (30자)"
-					width={654}
-					descriptionType={'none'}
-					onChange={inputLocation}
-					maxlength={30}
-					value={data.missing_animal_lost_location}
+			<View style={[temp_style.input24, feedWrite.missing_location_input]}>
+				<Text style={[txt.noto24, {color: APRI10}]}>실종된 위치</Text>
+				<View style={[{flexDirection: 'row', justifyContent: 'space-between'}]}>
+					<SelectInput onPressInput={onPressCity} width={292} value={data.missing_animal_lost_location.city} />
+					<SelectInput onPressInput={onPressDistrict} width={292} value={data.missing_animal_lost_location.district} />
+				</View>
+				<TextInput
+					onChangeText={onChangeMissingLocationDetail}
+					style={[feedWrite.missing_location_detail_input]}
+					placeholder={'반려동물이 실종된 구체적인 장소를 설명해주세요.'}
 				/>
 			</View>
 			<View style={[temp_style.input24, feedWrite.input24]}>
@@ -444,10 +509,10 @@ const MissingForm = props => {
 			<View style={[temp_style.inputBalloon, feedWrite.inputBalloon]}>
 				<InputBalloon
 					title={'실종 동물의 특징'}
-					placeholder="실종 동물의 특징을 상세하게 적어주세요 (150자)"
+					placeholder="실종된 반려동물의 특징을 알려주세요. ex) 털 색, 겁이 많아서 잡으려고 하지 마시고 바로 연락주세요, 한 쪽귀가 접혀있어요, 등에 회색 점이 있어요..."
 					onChange={inputFeature}
 					value={data.missing_animal_features}
-					maxLength={150}
+					maxLength={200}
 				/>
 			</View>
 		</ScrollView>
@@ -478,12 +543,11 @@ const ReportForm = props => {
 		report_witness_location: '',
 		report_location: {
 			// 필드명 조정 필요 (상우)
-			city: '', //시,도
-			district: '', //군,구
+			city: city[0], //시,도
+			district: district[0], //군,구
 			neighbor: '', //동,읍,면
 			detailAddr: '',
 		},
-		report_animal_features: '',
 		report_animal_species: types[0].pet_species,
 		report_animal_species_detail: types[0].pet_species_detail[0],
 		type: types[0],
@@ -632,6 +696,37 @@ const ReportForm = props => {
 		setData({...data, report_animal_species_detail: data.type.pet_species_detail[i]});
 	};
 
+	const onPressCity = () => {
+		Modal.popSelectScrollBoxModal([city], '도, 광역, 특별시', selectedItem => {
+			let report_location = data.report_location;
+			report_location.city = selectedItem;
+			setData({...data, report_location: report_location});
+			getAddressList(
+				{city: selectedItem},
+				districts => {
+					console.log('districts.msg', districts.msg);
+					setDistrict(districts.msg);
+				},
+				e => console.log('e', e),
+			);
+			Modal.close();
+		});
+	};
+	const onPressDistrict = () => {
+		Modal.popSelectScrollBoxModal([district], '도, 광역, 특별시', selectedItem => {
+			let report_location = data.report_location;
+			report_location.district = selectedItem;
+			setData({...data, report_location: report_location});
+			Modal.close();
+		});
+	};
+
+	const onChangeMissingLocationDetail = text => {
+		let report_location = data.report_location;
+		report_location.detail = text;
+		setData({...data, report_location: report_location});
+	};
+
 	return (
 		<ScrollView style={[feedWrite.reportForm_container]} showsVerticalScrollIndicator={false}>
 			<View style={[feedWrite.reportForm]}>
@@ -662,70 +757,16 @@ const ReportForm = props => {
 					<View style={[temp_style.datePicker_assignShelterInformation, feedWrite.datePicker]}>
 						<DatePicker width={654} onDateChange={onDateChange} defaultDate={''} />
 					</View>
-					<View style={[feedWrite.reportLocation_form]}>
-						<View style={[feedWrite.reportLocation_form_left]}>
-							<View style={[feedWrite.reportLocation_form_left_title]}>
-								<Text style={[txt.noto24, {color: APRI10}]}>제보 장소</Text>
-							</View>
-							{/* <View style={[temp_style.inputNoTitle, feedWrite.reportLocation_form_left_inputNoTitle]}>
-								<Input24 onChange={onChangeAddr} value={addr} width={438} placeholder={'동주소 까지 적어주세요'} onClear={onClearAddr} />
-							</View> */}
+					<View style={[temp_style.input24, feedWrite.report_location]}>
+						<Text style={[txt.noto24, {color: APRI10}]}>제보 장소</Text>
+						<View style={[{flexDirection: 'row', justifyContent: 'space-between'}]}>
+							<SelectInput onPressInput={onPressCity} width={292} value={data.report_location.city} />
+							<SelectInput onPressInput={onPressDistrict} width={292} value={data.report_location.district} />
 						</View>
-						<View style={[feedWrite.reportLocation_form_right]}>
-							<View style={[btn_style.btn_w176, feedWrite.btn_w176]}>
-								<LocationButton
-									btnTitle={'현위치'}
-									onPress={() => Modal.popOneBtn('현위치 찾기 기능은 패치예정입니다!', '확인', () => Modal.close())}
-								/>
-							</View>
-							{/* <View style={[btn_style.btn_w176, feedWrite.btn_w176]}>
-								<AniButton btnTitle={'주소 검색'} btnLayout={btn_w176} btnStyle={'border'} titleFontStyle={24} onPress={searchAddress} />
-							</View> */}
-						</View>
-					</View>
-					<View style={[feedWrite.addressSelectContainer]}>
-						<View style={[feedWrite.addressDropDownContainer]}>
-							<NormalDropDown menu={city} onSelect={onSelectCity} titleFontStyle={20} width={220} height={300} />
-						</View>
-						<View style={[feedWrite.addressDropDownContainer]}>
-							<NormalDropDown
-								menu={district}
-								onSelect={onSelectDistrict}
-								titleFontStyle={20}
-								width={200}
-								height={300}
-								isLargeCategoryChanged={isCityChanged}
-							/>
-						</View>
-						<View style={[feedWrite.addressDropDownContainer]}>
-							<NormalDropDown
-								menu={neighbor}
-								onSelect={onSelectNeighbor}
-								titleFontStyle={20}
-								width={200}
-								height={300}
-								isLargeCategoryChanged={isDistrictChanged}
-							/>
-						</View>
-					</View>
-					<View style={[temp_style.inputNoTitle, feedWrite.locationDetail]}>
-						<Input24
-							onChange={onChangeDetailAddr}
-							onClear={onClearDetailAddr}
-							width={654}
-							placeholder={'장소의 세부적인 정보를 적어주세요 (20자)'}
-							maxlength={21}
-							// value={detailAddr}
-							value={data.report_location.detailAddr}
-						/>
-					</View>
-					<View style={[temp_style.inputBalloon, feedWrite.inputBalloon]}>
-						<InputBalloon
-							title={'제보할 동물의 특징'}
-							placeholder="제보할 동물의 특징을 상세하게 적어주세요 (150자)"
-							onChange={inputFeature}
-							maxLength={150}
-							value={data.missing_animal_features}
+						<TextInput
+							onChangeText={onChangeMissingLocationDetail}
+							style={[feedWrite.missing_location_detail_input]}
+							placeholder={'제보하려는 장소의 위치를 설명해주세요.'}
 						/>
 					</View>
 				</View>

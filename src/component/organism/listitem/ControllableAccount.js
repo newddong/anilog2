@@ -5,8 +5,9 @@ import {Cross46} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
 import CheckBox from 'Molecules/select/CheckBox';
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
-import {controllableAccount, organism_style} from 'Organism/style_organism';
+import {organism_style} from 'Organism/style_organism';
 import {useNavigation} from '@react-navigation/native';
+import {controllableAccount} from 'Organism/style_organism copy';
 
 /**
  *

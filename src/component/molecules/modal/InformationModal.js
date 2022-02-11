@@ -1,13 +1,12 @@
 import React from 'react';
+import moment from 'moment';
 import {View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions, TouchableWithoutFeedback, FlatList, Linking} from 'react-native';
 import {WHITE, GRAY10, APRI10, GRAY20, APRI20, GRAY30, BLACK, BLUE20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import Modal from '../modal/Modal';
-import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, Cross24, Cross24_Filled, Cross24_White, Female48, Male48} from '../atom/icon';
-import moment from 'moment';
-import AniButton from './AniButton';
-import {btn_w130, btn_w136} from '../atom/btn/btn_style';
+import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, Cross24, Cross24_Filled, Cross24_White, Female48, Male48} from 'Atom/icon';
+import AniButton from 'Molecules/button/AniButton';
+import {btn_w130, btn_w136} from 'Atom/btn/btn_style';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 /**
@@ -16,6 +15,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
  * @param {Object} props - props object
  * @param {Object} props.data - 유저 오브젝트 데이터
  * @param {()=>void} props.onClose - X 마크 클릭 콜백 함수
+ * @param {()=>void} props.onPressEdit - X 마크 클릭 콜백 함수
  *
  */
 const InformationModal = props => {
@@ -56,6 +56,10 @@ const InformationModal = props => {
 		} else if (data.pet_neutralization == 'yes') {
 			return 'O';
 		}
+	};
+
+	const onPressEdit = () => {
+		props.onPressEdit();
 	};
 
 	const getContents = () => {
@@ -139,7 +143,7 @@ const InformationModal = props => {
 					</View>
 					{isOwner() ? (
 						<View>
-							<AniButton btnLayout={btn_w136} btnStyle={'border'} btnTitle={'수정'} />
+							<AniButton onPress={onPressEdit} btnLayout={btn_w136} btnStyle={'border'} btnTitle={'수정'} />
 						</View>
 					) : (
 						<></>

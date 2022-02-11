@@ -18,6 +18,7 @@ import {WHITE, GRAY10, APRI10, GRAY20, BLACK} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {Arrow_Down_GRAY10, Arrow_Up_GRAY10} from 'Atom/icon';
+import Modal from 'Root/component/modal/Modal';
 
 /**
  * 버튼 한 개의 셀렉트 모달창
@@ -129,7 +130,7 @@ const OneButtonSelectModal = props => {
 	};
 
 	return (
-		<View style={style.background}>
+		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={style.background}>
 			<View style={[style.popUpWindow, style.shadow]}>
 				<Text style={[txt.noto28, style.msg]}>{props.msg}</Text>
 				<TouchableOpacity onPress={onOpen} style={style.dropdownContainer} activeOpacity={1}>
@@ -158,7 +159,7 @@ const OneButtonSelectModal = props => {
 						<Text style={[txt.noto30, {color: WHITE}]}>완료</Text>
 					</TouchableOpacity>
 				</View>
-				<View style={[style.list]}>
+				<TouchableOpacity activeOpacity={1} style={[style.list]}>
 					<FlatList
 						data={props.data}
 						// keyExtractor={item => item.index}
@@ -175,9 +176,9 @@ const OneButtonSelectModal = props => {
 							);
 						}}
 					/>
-				</View>
+				</TouchableOpacity>
 			</Animated.View>
-		</View>
+		</TouchableOpacity>
 	);
 };
 

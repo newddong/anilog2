@@ -3,7 +3,7 @@ import React from 'react';
 import {Image, Text, TextInput, TouchableOpacity, View, Animated, Easing, ActivityIndicator, ScrollView} from 'react-native';
 import {btn_w226, btn_w276} from 'Atom/btn/btn_style';
 import AniButton from 'Root/component/molecules/button/AniButton';
-import {login_style, temp_style, animalProtectRequestDetail_style, accountPicker} from '../style_templete';
+import {login_style, temp_style, accountPicker, animalProtectRequestDetail_style} from '../style_templete';
 import RescueImage from 'Root/component/molecules/image/RescueImage';
 import {txt} from 'Root/config/textstyle';
 import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
@@ -46,6 +46,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const [parentComment, setParentComment] = React.useState();
 	const [isShelter, setIsShelter] = React.useState(false);
 	const [isSharePressed, setIsSharePressed] = React.useState(false);
+	const shareRef = React.useRef();
 	const debug = false;
 
 	debug && console.log('AnimalProtectRequestDetail data:', data);
@@ -262,21 +263,30 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	//보호소 라벨 공유 클릭
 	const onPressShare = e => {
 		setIsSharePressed(!isSharePressed);
-		if (!isSharePressed) {
-			Animated.spring(animatedValue, {
-				duration: 300,
-				toValue: 220,
-				easing: Easing.linear,
-				useNativeDriver: false,
-			}).start();
-		} else {
-			Animated.timing(animatedValue, {
-				duration: 300,
-				toValue: -100,
-				// easing: Easing.linear,
-				useNativeDriver: false,
-			}).start();
-		}
+		// console.log('ref', shareRef.current.offset);
+		shareRef.current.measure((fx, fy, width, height, px, py) => {
+			Modal.popShareModal(
+				{x: px, y: py},
+				() => alert('kakao'),
+				() => alert('link'),
+				() => alert('msg'),
+			);
+		});
+		// if (!isSharePressed) {
+		// 	Animated.spring(animatedValue, {
+		// 		duration: 300,
+		// 		toValue: 220,
+		// 		easing: Easing.linear,
+		// 		useNativeDriver: false,
+		// 	}).start();
+		// } else {
+		// 	Animated.timing(animatedValue, {
+		// 		duration: 300,
+		// 		toValue: -100,
+		// 		// easing: Easing.linear,
+		// 		useNativeDriver: false,
+		// 	}).start();
+		// }
 	};
 
 	//댓글 리스트 표출 개수 제어
@@ -323,7 +333,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const animatedValue = React.useRef(new Animated.Value(0)).current;
 
 	const interpolated = animatedValue.interpolate({
-		inputRange: [0, 200],
+		inputRange: [0, 100],
 		outputRange: [0, 1],
 	});
 
@@ -361,10 +371,12 @@ export default AnimalProtectRequestDetail = ({route}) => {
 								{data ? count_to_K(data.protect_request_writer_id.user_follow_count) : ''}
 							</Text>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={onPressShare} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
-							<Share48_Filled />
-							<Text style={[txt.roboto24, {color: APRI10}]}>공유</Text>
-						</TouchableOpacity>
+						<View ref={shareRef}>
+							<TouchableOpacity onPress={onPressShare} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
+								<Share48_Filled />
+								<Text style={[txt.roboto24, {color: APRI10}]}>공유</Text>
+							</TouchableOpacity>
+						</View>
 						{/* 공유 클릭 시 소셜 공유하기 창 출력 */}
 						<Animated.View
 							style={[

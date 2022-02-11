@@ -88,7 +88,6 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 						data.feed_content &&
 						data.feed_medias &&
 						data.media_uri.length > 0 &&
-						data.report_animal_features &&
 						data.report_animal_species &&
 						data.report_witness_date &&
 						data.report_witness_location

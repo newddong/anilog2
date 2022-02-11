@@ -194,7 +194,25 @@ export const CALENDAR_YEAR = () => {
 	return year;
 };
 
-export const CALENDAR_MONTH = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+export const CALENDAR_MONTH = [
+	'-------------',
+	'-------------',
+	'1',
+	'2',
+	'3',
+	'4',
+	'5',
+	'6',
+	'7',
+	'8',
+	'9',
+	'10',
+	'11',
+	'12',
+	'-------------',
+	'-------------',
+	'-------------',
+];
 export const CALENDAR_DAY = () => {
 	const paddingObject = '-------------';
 	let day30 = ['-------------', '-------------'];
@@ -237,6 +255,8 @@ export const PET_KIND = async () => {
 	// console.log('result', result);
 	return result;
 };
+
+export const PUBLIC_SETTING = ['전체 공개', '팔로워 공개', '비공개'];
 
 export const DOG_KIND = [
 	'믹스견',
@@ -411,9 +431,10 @@ export const AVAILABLE_NICK = '사용 가능한 닉네임입니다!';
 export const PROTECT_STATUS = ['입양가능', '협의중', '완료']; //SHELTER PROTECT REQUEST 템플릿
 export const SETTING_OWN_COMMENT = ['수정', '삭제'];
 export const SETTING_COMMENT = ['신고'];
+export const PROTECT_REQUEST_STATUS = ['임보중', '협의 중', '완료', '사망', '입양 가능'];
 
 //Modal Message
-export const CONFIRM_PROTECT_REQUEST = '이 내용으로 보호 활동 신청을 하시겠습니까?';
+export const CONFIRM_PROTECT_REQUEST = '이 내용으로 \n 보호 활동 신청을 하시겠습니까?';
 export const CONFIRM_ADOPT_REQUEST = '위 내용으로 입양 신청을 하시겠습니까?';
 export const CONFIRM_FINALIZED =
 	'신청이 완료 되었습니다. \n 보호소마다 심사의 기간과 기준이 다르며, 상황에 따라 연락이 가지 않을 수도 있음을 알려드립니다.';
@@ -434,3 +455,31 @@ export const NEAR_RAINBOWBRIDGE = '안락사 임박';
 //동물 나이
 export const PET_YEAR = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15'];
 export const PET_MONTH = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
+
+//팔로우 중 => 출력  메뉴
+export const FOLLOWER_MENU = ['즐겨찾기 추가', '소식 받기', '차단', '팔로우 취소'];
+export const FOLLOWER_PET_MENU = ['즐겨찾기 추가', '소식 받기', '차단', '팔로우 취소', '입양하기'];
+
+//피드 미트볼 메뉴 리스트
+export const FEED_MEATBALL_MENU_FOLLOWING = ['쪽지 보내기', '즐겨찾기', '공유하기', '게시물 알람 설정', '팔로우 취소', '신고'];
+export const FEED_MEATBALL_MENU_UNFOLLOWING = ['쪽지 보내기', '팔로우', '즐겨찾기', '공유하기', '신고'];
+export const FEED_MEATBALL_MENU_MY_FEED = ['공유하기', '수정', '삭제'];
+export const FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS = ['상태 변경', '공유하기', '수정', '삭제'];
+export const FEED_MEATBALL_MENU = ['공유하기', '신고'];
+
+//신고 목록
+export const REPORT_MENU = [
+	'------------------',
+	'------------------',
+	'기타(직접 입력)',
+	'부적절한 홍보 게시글',
+	'음란성 또는 청소년에게 부적절한 게시글',
+	'명예 훼손/사생활 침해  및 저작권 침해',
+	'심한 불쾌감 유발(폭력성, 욕설 등)',
+	'------------------',
+	'------------------',
+];
+
+//댓글 미트볼 헤더 출력 메뉴
+export const REPLY_MEATBALL_MENU_MY_REPLY = ['공유하기', '수정', '삭제'];
+export const REPLY_MEATBALL_MENU = ['공유하기', '신고'];

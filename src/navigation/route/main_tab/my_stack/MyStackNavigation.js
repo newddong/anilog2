@@ -55,6 +55,8 @@ import SimpleHeader from 'Root/navigation/header/SimpleHeader';
 import LogoHeader from 'Root/navigation/header/LogoHeader';
 import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 import {useNavigation} from '@react-navigation/core';
+import userGlobalObject from 'Root/config/userGlobalObject';
+
 const MyStack = createStackNavigator();
 
 export default MyStackNavigation = props => {
@@ -66,7 +68,7 @@ export default MyStackNavigation = props => {
 	}, [props.route.params]);
 
 	return (
-		<MyStack.Navigator initialRouteName={props.user_type == 'shelter' ? 'ShelterMenu' : 'UserMenu'}>
+		<MyStack.Navigator initialRouteName={userGlobalObject.userInfo.user_type == 'shelter' ? 'ShelterMenu' : 'UserMenu'}>
 			{/* // <MyStack.Navigator initialRouteName={'ShelterMenu'}> */}
 			<MyStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <MeatBallHeader {...props} />, title: '피드 게시글'}} />
 			<MyStack.Screen name="UserFeeds" component={FavoriteFeeds} options={{header: props => <SimpleHeader {...props} />, title: '내 게시글'}} />

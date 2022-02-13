@@ -80,20 +80,7 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 
 							<SelectedMedia media_uri={props.photo} layout={styles.img_square_round_190} onDelete={onDeleteImage} />
 						</View>
-						<View style={[feedCommentList.commentBox_bottom]}>
-							<View style={[feedCommentList.commentBox_bottom_left]}>
-								{props.privateComment ? (
-									<Lock60_Filled onPress={() => props.onLockBtnClick()} />
-								) : (
-									<Lock60_Border onPress={() => props.onLockBtnClick()} />
-								)}
-								<Photo60 onPress={() => props.onAddPhoto()} />
-							</View>
-							<View style={[feedCommentList.commentBox_bottom_right]}>
-								<AniButton onPress={onWrite} btnLayout={btn_w120} btnStyle={'border'} btnTitle={'댓글'} titleFontStyle={24} />
-							</View>
-							{/* <Send60 onPress={onWrite} /> */}
-						</View>
+						<CommentBoxBottom {...props} onWrite={onWrite}/>
 					</View>
 				) : (
 					<View style={[feedCommentList.commentBox]}>
@@ -106,26 +93,28 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 								ref={inputRef}
 							/>
 						</View>
-						<View style={[feedCommentList.commentBox_bottom]}>
-							<View style={[feedCommentList.commentBox_bottom_left]}>
-								{props.privateComment ? (
-									<Lock60_Filled onPress={() => props.onLockBtnClick()} />
-								) : (
-									<Lock60_Border onPress={() => props.onLockBtnClick()} />
-								)}
-								<Photo60 onPress={() => props.onAddPhoto()} />
-							</View>
-							<View style={[feedCommentList.commentBox_bottom_right]}>
-								<AniButton onPress={onWrite} btnLayout={btn_w120} btnStyle={'border'} btnTitle={'댓글'} titleFontStyle={24} />
-							</View>
-							{/* <Send60 onPress={onWrite} /> */}
-						</View>
+						<CommentBoxBottom {...props} onWrite={onWrite}/>
 					</View>
 				)}
 			</View>
 		);
 	}
 });
+
+const CommentBoxBottom = props => {
+	return (
+		<View style={[feedCommentList.commentBox_bottom]}>
+			<View style={[feedCommentList.commentBox_bottom_left]}>
+				{props.privateComment ? <Lock60_Filled onPress={props.onLockBtnClick} /> : <Lock60_Border onPress={props.onLockBtnClick} />}
+				<Photo60 onPress={props.onAddPhoto} />
+			</View>
+			<View style={[feedCommentList.commentBox_bottom_right]}>
+				<AniButton onPress={props.onWrite} btnLayout={btn_w120} btnStyle={'border'} btnTitle={'댓글'} titleFontStyle={24} />
+			</View>
+			{/* <Send60 onPress={onWrite} /> */}
+		</View>
+	);
+};
 
 ReplyWriteBox.defaultProps = {
 	onLockBtnClick: e => console.log(e), // 비밀 댓글 클릭

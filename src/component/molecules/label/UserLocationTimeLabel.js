@@ -28,7 +28,6 @@ const UserLocationTimeLabel = props => {
 		// props.onLabelClick(props.data._id);
 		navigation.navigate('UserProfile', {userobject: props.data});
 	};
-	console.log(props.data);
 
 	// const address = Object.assign({}, props.data.user_address);
 	return (

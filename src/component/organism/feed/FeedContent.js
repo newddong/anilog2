@@ -236,7 +236,7 @@ export default FeedContent = props => {
 	};
 
 	const shouldBeDetail = show || route.name == 'MissingAnimalDetail' || route.name == 'ReportDetail';
-	console.log('경로', route.name, route.name.includes('FeedCommentList'));
+	// console.log('경로', route.name, route.name.includes('FeedCommentList'));
 
 	return (
 		<View style={[organism_style.feedContent, shouldBeDetail ? {height: 270 * DP + reportLayout.height + labelLayout.height + layout.height} : {}]}>

@@ -2525,7 +2525,7 @@ export const animalAdoption = StyleSheet.create({
 		textAlign: 'center',
 	},
 	btn_w522: {
-		marginBottom: 40 * DP,
+		marginBottom: 50 * DP,
 		alignSelf: 'center',
 	},
 });
@@ -2563,8 +2563,8 @@ export const setPetInformation = StyleSheet.create({
 		alignSelf: 'flex-end',
 	},
 	inputNoTitle: {
-		width: 156 * DP,
-		flexDirection: 'row',
+		// width: 156 * DP,
+		// backgroundColor: 'yellow',
 	},
 	kg: {
 		width: 68 * DP,
@@ -2591,6 +2591,10 @@ export const setPetInformation = StyleSheet.create({
 	weightInfoText: {
 		marginTop: 5 * DP,
 	},
+	weight_info: {
+		color: APRI10,
+		// backgroundColor: 'yellow',
+	},
 });
 
 export const petInfoSetting = StyleSheet.create({
@@ -2599,15 +2603,70 @@ export const petInfoSetting = StyleSheet.create({
 	},
 	profileContainer: {
 		width: 750 * DP,
-		height: 364 * DP,
-
+		// height: 344 * DP,
 		borderBottomColor: GRAY40,
 		borderBottomWidth: 10 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',
+		paddingVertical: 30 * DP,
+		// backgroundColor: 'yellow',
+	},
+	profileInside: {
+		width: 654 * DP,
+		// height: 254 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		// backgroundColor: 'lightblue',
 	},
 	petImageLabel: {
-		marginTop: 44 * DP,
+		width: 190 * DP,
+		height: 190 * DP,
+		alignItems: 'center',
+		// marginTop: 44 * DP,
+	},
+	profileEditMark: {
+		position: 'absolute',
+		right: 0,
+		bottom: 0,
+	},
+	petInfoContainer: {
+		width: 396 * DP,
+		// backgroundColor: 'pink',
+	},
+	petInfo_topside: {
+		width: 332 * DP,
+		// height: 106 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		flexDirection: 'row',
+	},
+	petInfo_topside_item: {
+		width: 164 * DP,
+		// height: 106 * DP,
+		alignItems: 'center',
+		// backgroundColor: 'blue',
+	},
+	petInfo_topside_upload: {
+		width: 80 * DP,
+		height: 85 * DP,
+		justifyContent: 'space-between',
+		// backgroundColor: 'red',
+	},
+	petInfo_bottom: {
+		width: 394 * DP,
+		// height: 80 * DP,
+		marginTop: 20 * DP,
+		// backgroundColor: 'green',
+	},
+	user_introBox: {
+		height: 80 * DP,
+		// backgroundColor: 'yellow',
+	},
+	petInfo_bottom_showMore: {
+		// height: 80 * DP,
+		flexDirection: 'row',
+		alignSelf: 'flex-end',
+		// marginRight: 20 * DP,
 	},
 	btn_w242: {
 		marginTop: 30 * DP,
@@ -2618,7 +2677,7 @@ export const petInfoSetting = StyleSheet.create({
 			width: 750 * DP,
 			height: 248 * DP,
 			marginTop: 10 * DP,
-			borderBottomColor: GRAY40,
+			borderBottomColor: GRAY30,
 			borderBottomWidth: 2 * DP,
 			justifyContent: 'center',
 			alignItems: 'center',
@@ -2648,9 +2707,10 @@ export const petInfoSetting = StyleSheet.create({
 	petProfileMenu: {
 		container: {
 			width: 654 * DP,
-			height: 130 * DP,
+			// height: 130 * DP,
 			marginTop: 2 * DP,
-			borderBottomColor: GRAY40,
+			paddingVertical: 40 * DP,
+			borderBottomColor: GRAY30,
 			borderBottomWidth: 2 * DP,
 			justifyContent: 'center',
 			// alignItems: 'center',
@@ -2675,6 +2735,9 @@ export const petInfoSetting = StyleSheet.create({
 			alignItems: 'center',
 			alignSelf: 'flex-end',
 		},
+	},
+	petIntroduction: {
+		marginTop: 30 * DP,
 	},
 	familyAccountSetting: {
 		container: {
@@ -2739,8 +2802,8 @@ export const petInfoSetting = StyleSheet.create({
 	changeAdoptionStatus: {
 		container: {
 			width: 750 * DP,
-			height: 200 * DP,
 			alignItems: 'center',
+			paddingVertical: 30 * DP,
 			// backgroundColor: GRAY30,
 		},
 		insideContainer: {
@@ -2748,7 +2811,7 @@ export const petInfoSetting = StyleSheet.create({
 			justifyContent: 'space-between',
 		},
 		menuView: {
-			marginTop: 52 * DP,
+			// marginTop: 52 * DP,
 			flexDirection: 'row',
 		},
 		bracket50: {

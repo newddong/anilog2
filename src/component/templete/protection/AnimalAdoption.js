@@ -14,8 +14,16 @@ export default AnimalAdoption = props => {
 
 	//임시보호에서 반려 동물 변경 응원 팝업창 !
 	const onCheerUp = () => {
-		console.log('- onCheerUp - ');
-		// Modal.popNoBtn('임시보호가 아닌 반려동물로서의 새로운 삶을 살게 된 구름이를 응원합니다!');
+		// console.log('- onCheerUp - ');
+		console.log('props.route.params', props.route.params);
+
+		Modal.close();
+		setTimeout(() => {
+			Modal.popCongratulationModal(props.route.params.user_nickname, props.route.params.user_profile_uri);
+			// setTimeout(() => {
+
+			// }, 300);
+		}, 200);
 		// setTimeout(() => {
 		// 	Modal.close();
 		// 	navigation.navigate('SelectAccount');
@@ -76,6 +84,7 @@ export default AnimalAdoption = props => {
 					<AniButton
 						btnTitle={'입양'}
 						btnLayout={btn_w522}
+						btnStyle={'border'}
 						titleFontStyle={32}
 						onPress={() => {
 							Modal.popOneBtn('패치 예정입니다!', '확인', () => Modal.close());
@@ -104,15 +113,15 @@ export default AnimalAdoption = props => {
 						btnLayout={btn_w522}
 						titleFontStyle={32}
 						onPress={() => {
-							Modal.popOneBtn('패치 예정입니다!', '확인', () => Modal.close());
+							// Modal.popOneBtn('패치 예정입니다!', '확인', () => Modal.close());
 
-							// Modal.popTwoBtn(
-							// 	'이 동물을 가족으로 맞이하시겠어요?',
-							// 	'취소',
-							// 	'예',
-							// 	() => Modal.close(),
-							// 	() => onCheerUp,
-							// );
+							Modal.popTwoBtn(
+								'이 동물을 가족으로 맞이하시겠어요?',
+								'취소',
+								'예',
+								() => Modal.close(),
+								() => onCheerUp(),
+							);
 						}}
 					/>
 				</View>

@@ -15,10 +15,13 @@ import Modal from 'Root/component/modal/Modal';
  * @param {()=>void} props.onClose - 취소 버튼 콜백
  *
  */
-const SelectScrollBoxModal = props => {
+const SelectMultipleScrollBoxModal = props => {
 	const data = props.data;
+
 	const [selectedItem, setSelectedItem] = React.useState(2);
+	const [first, setFirst] = React.useState([]);
 	const [selectedItem2, setSelectedItem2] = React.useState(2);
+	const [second, setSecond] = React.useState([]);
 	const refContainerLeft = React.useRef('');
 	const refContainerRight = React.useRef('');
 	const padding = '-------------';
@@ -32,55 +35,88 @@ const SelectScrollBoxModal = props => {
 	};
 
 	React.useEffect(() => {
+		let first_category = [];
+		data._W.map((v, i) => {
+			first_category.push(v.pet_species);
+		});
+		setFirst(first_category);
+		getSecondCategory();
+	}, []);
+
+	// React.useEffect(() => {
+	// 	console.log('first_2', first);
+	// 	const findIndex = data._W.find(e => e.pet_species == first[selectedItem - 2]);
+	// 	setSecond(findIndex.pet_species_detail);
+	// 	// console.log('findIndex', findIndex.pet_species_detail);
+	// 	// setSecond(findIndex.pet_species_detail);
+	// }, [first, selectedItem]);
+
+	const getSecondCategory = () => {
+		let first_category = [];
+		data._W.map((v, i) => {
+			first_category.push(v.pet_species);
+		});
+		const findIndex = data._W.find(e => e.pet_species == first_category[selectedItem - 2]);
+		setSecond(findIndex.pet_species_detail);
+	};
+
+	React.useEffect(() => {
 		// refContainerLeft.current.scrollToIndex({animated: true, index: selectedItem});
+		getSecondCategory();
 	}, [selectedItem]);
 
 	React.useEffect(() => {
 		// refContainerRight.current.scrollToIndex({animated: true, index: selectedItem});
 	}, [selectedItem]);
 
-	const onScroll = (event, i) => {
+	const onScroll = event => {
 		let y = event.nativeEvent.contentOffset.y;
-		let focused = '';
-		if (data[0].length < 5) {
-			focused = Math.floor(y / (62 * DP));
+		let focused = Math.floor(y / (68 * DP));
+		console.log('foucsed', focused);
+		if (focused < 1) {
+			setSelectedItem(2);
 		} else {
-			focused = Math.floor(y / (68 * DP));
+			setSelectedItem(focused + 2);
 		}
-		console.log('foucsed', focused, i);
-		if (i == 0) {
-			if (focused < 1) {
-				setSelectedItem(2);
-			} else if (focused > data[0].length - 1) {
-				console.log('넘어갔나?');
-				setSelectedItem(data[0].length + 1);
-			} else {
-				setSelectedItem(focused + 2);
-			}
+	};
+
+	const onScroll_second = event => {
+		let y = event.nativeEvent.contentOffset.y;
+
+		let focused = '';
+		if (second.length < 5) {
+			focused = Math.floor(y / (63 * DP));
 		} else {
-			if (focused < 1) {
-				setSelectedItem2(2);
-			} else {
-				setSelectedItem2(focused + 2);
-			}
+			focused = Math.floor(y / (69 * DP));
+		}
+		console.log('foucsed', focused);
+		if (focused < 1) {
+			setSelectedItem2(2);
+		} else {
+			setSelectedItem2(focused + 2);
 		}
 	};
 
 	const getWidth = () => {
-		if (data.length == 1) {
-			return 666 * DP;
-		} else if (data.length == 2) {
-			return 324 * DP;
-		}
+		return 324 * DP;
 	};
 
 	const onScrollToIndexFailed = e => {
 		console.log('e', e);
 	};
 
-	const getPadding = v => {
+	const getFirst = () => {
 		let arr = [padding, padding];
-		let newArr = arr.concat(v);
+		let newArr = arr.concat(first);
+		newArr.push(padding);
+		newArr.push(padding);
+		newArr.push(padding);
+		return newArr;
+	};
+
+	const getSecond = v => {
+		let arr = [padding, padding];
+		let newArr = arr.concat(second);
 		newArr.push(padding);
 		newArr.push(padding);
 		newArr.push(padding);
@@ -106,47 +142,69 @@ const SelectScrollBoxModal = props => {
 					</TouchableOpacity>
 				</View>
 				<View style={style.listContainer}>
-					{data.map((v, i) => {
-						return (
-							<View style={[style.list]} key={i}>
-								<FlatList
-									data={getPadding(v)}
-									ref={i == 0 ? refContainerLeft : refContainerRight}
-									scrollEventThrottle={50}
-									// keyExtractor={item => String(item)}
-									// onScrollToIndexFailed={onScrollToIndexFailed}
-									onScroll={e => onScroll(e, i)}
-									showsVerticalScrollIndicator={false}
-									renderItem={({item, index}) => {
-										return (
-											<TouchableWithoutFeedback key={index} onPress={() => (i == 0 ? setSelectedItem(index) : setSelectedItem2(index))}>
-												<View
-													key={index}
-													style={[
-														style.listItem,
-														index == (i == 0 ? selectedItem : selectedItem2) && item != padding ? {backgroundColor: APRI10} : null,
-														{
-															width: getWidth(),
-															// zIndex: 3,
-														},
-													]}>
-													<Text style={[txt.roboto34, {color: BLACK}]}>{item}</Text>
-												</View>
-											</TouchableWithoutFeedback>
-										);
-									}}
-								/>
-								{/* <View style={[style.box]} /> */}
-							</View>
-						);
-					})}
+					<View style={[style.list]}>
+						<FlatList
+							data={getFirst()}
+							ref={refContainerLeft}
+							scrollEventThrottle={50}
+							onScroll={onScroll}
+							showsVerticalScrollIndicator={false}
+							renderItem={({item, index}) => {
+								return (
+									<TouchableWithoutFeedback key={index} onPress={() => setSelectedItem(index)}>
+										<View
+											key={index}
+											style={[
+												style.listItem,
+												index == selectedItem && item != padding ? {backgroundColor: APRI10} : null,
+												{
+													width: getWidth(),
+													// zIndex: 3,
+												},
+											]}>
+											<Text style={[txt.roboto34, {color: BLACK}]}>{item}</Text>
+										</View>
+									</TouchableWithoutFeedback>
+								);
+							}}
+						/>
+						{/* <View style={[style.box]} /> */}
+					</View>
+					<View style={[style.list]}>
+						<FlatList
+							data={getSecond()}
+							ref={refContainerRight}
+							scrollEventThrottle={50}
+							onScroll={onScroll_second}
+							showsVerticalScrollIndicator={false}
+							renderItem={({item, index}) => {
+								return (
+									<TouchableWithoutFeedback key={index} onPress={() => setSelectedItem2(index)}>
+										<View
+											key={index}
+											style={[
+												style.listItem,
+												index == selectedItem2 && item != padding ? {backgroundColor: APRI10} : null,
+												{
+													width: getWidth(),
+													// zIndex: 3,
+												},
+											]}>
+											<Text style={[txt.roboto34, {color: BLACK}]}>{item}</Text>
+										</View>
+									</TouchableWithoutFeedback>
+								);
+							}}
+						/>
+						{/* <View style={[style.box]} /> */}
+					</View>
 				</View>
 			</View>
 		</View>
 	);
 };
 
-SelectScrollBoxModal.defaultProps = {
+SelectMultipleScrollBoxModal.defaultProps = {
 	// header: 'popUp',
 	onSelect: () => {},
 };
@@ -210,4 +268,4 @@ const style = StyleSheet.create({
 	},
 });
 
-export default SelectScrollBoxModal;
+export default SelectMultipleScrollBoxModal;

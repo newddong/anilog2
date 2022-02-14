@@ -15,7 +15,6 @@ import {
 	MyTabBorder,
 	MyTabFilled,
 } from 'Atom/icon';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function BottomTab({state, descriptors, navigation}) {
 	const focusedOptions = descriptors[state.routes[state.index].key].options;

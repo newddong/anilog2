@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/core';
 import React, {useRef} from 'react';
 import {Text, View, ScrollView, TouchableOpacity} from 'react-native';
@@ -38,6 +37,8 @@ import {getUserProfile} from 'Root/api/userapi';
 import Modal from 'Component/modal/Modal';
 import {userLogout} from 'Root/api/userapi';
 import {useIsFocused} from '@react-navigation/native';
+import userGlobalObject from 'Root/config/userGlobalObject';
+
 export default UserMenu = props => {
 	// console.log('UserMenu Props', props);
 	const navigation = useNavigation();
@@ -47,29 +48,27 @@ export default UserMenu = props => {
 
 	//토큰에 로그인한 유저의 _id를 저장
 	React.useEffect(() => {
-		AsyncStorage.getItem('token', (err, res) => {
-			if (res == null) {
-				navigation.navigate('Login');
-			}
-		});
+		//자동로그인 이외의 기능에는 AsyncStorage를 사용해서 토큰을 불러오지 않음
+		//메모리의 userObject를 이용해서 권한을 파악할것임
+		if(userGlobalObject.userInfo._id==''){
+			navigation.navigate('Login');
+		}
 	}, []);
 
 	React.useEffect(() => {
-		AsyncStorage.getItem('token', (err, res) => {
-			getUserProfile(
-				{
-					userobject_id: res,
-				},
-				userObject => {
-					// console.log('user', userObject.msg.user_my_pets);
-					setData(userObject.msg);
-				},
+		getUserProfile(
+			{
+				userobject_id: userGlobalObject.userInfo._id,
+			},
+			userObject => {
+				// console.log('user', userObject.msg.user_my_pets);
+				setData(userObject.msg);
+			},
 
-				err => {
-					console.log('er', err);
-				},
-			);
-		});
+			err => {
+				console.log('er', err);
+			},
+		);
 	}, [ifFoucsed]); //원래 navigation이였음
 
 	// 나의 반려동물 버튼 클릭
@@ -114,7 +113,7 @@ export default UserMenu = props => {
 			1,
 			e => {
 				console.log('e', e);
-				AsyncStorage.clear();
+				userGlobalObject.userInfo = {};
 				alert('Logout 성공');
 				navigation.reset({routes: [{name: 'Login'}]});
 			},

@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
 import {Text, View, ScrollView, Image} from 'react-native';
 import {createProtectActivity} from 'Root/api/protectapi';

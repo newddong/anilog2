@@ -20,7 +20,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
  * onPressReplyBtn : void,
  * }} props
  */
-export default ParentComment = props => {
+export default ParentComment = React.memo((props, ref) => {
 	// console.log('ParentComment', props.parentComment.comment_contents);
 
 	const [data, setData] = React.useState(props.parentComment);
@@ -44,8 +44,28 @@ export default ParentComment = props => {
 		// });
 	}, [props.parentComment]);
 
+	const addChildComment = newChildComment => {
+		// newChildComment.comment_writer_id = userGlobalObject.userInfo;
+		// setChild([newChildComment].concat(child));
+		// setShowChild(true);
+		// console.log(newChildComment);
+		console.log('대댓글 추가');
+		getChildCommentList(
+			{
+				commentobject_id: props.parentComment._id,
+			},
+			result => {
+				console.log(result.msg);
+				setChild(result.msg);
+				!showChild && setShowChild(true);
+			},
+			err => Modal.alert(err),
+		);
+	};
+
 	const onPressReplyBtn = () => {
-		props.onPressReplyBtn(props.parentComment._id);
+		console.log('대댓글 추가2');
+		props.onPressReplyBtn(props.parentComment._id, addChildComment);
 	};
 
 	const onCLickHeart = () => {
@@ -58,6 +78,7 @@ export default ParentComment = props => {
 				commentobject_id: props.parentComment._id,
 			},
 			result => {
+				console.log(result.msg);
 				setChild(result.msg);
 				setShowChild(!showChild);
 			},
@@ -98,7 +119,7 @@ export default ParentComment = props => {
 	};
 
 	const meatballRef = React.useRef();
-
+	const childrenCount = child.length > 0 ? child.length : props.parentComment.children_count;
 	return (
 		<View style={organism_style.parentComment}>
 			{/* 유저프로필 라벨 및 Meatball  */}
@@ -128,7 +149,8 @@ export default ParentComment = props => {
 				{/* Data - 좋아요 상태 t/f */}
 
 				<TouchableOpacity onPress={showChildComment} style={[parentComment.showChildComment]}>
-					{data.children_count > 0 && <Text style={[txt.noto24, {color: GRAY10}]}> 답글{data.children_count}개 보기 </Text>}
+					{/* {data.children_count > 0 && <Text style={[txt.noto24, {color: GRAY10}]}> 답글{data.children_count}개 보기 </Text>} */}
+					{childrenCount > 0 && <Text style={[txt.noto24, {color: GRAY10}]}> 답글{childrenCount}개 보기 </Text>}
 				</TouchableOpacity>
 				<View style={[parentComment.heart30]}>
 					{likeState ? <Heart30_Filled onPress={onCLickHeart} /> : <Heart30_Border onPress={onCLickHeart} />}
@@ -151,7 +173,8 @@ export default ParentComment = props => {
 			)}
 		</View>
 	);
-};
+});
+
 ParentComment.defaultProps = {
 	onPressReplyBtn: e => console.log(e), //부모 댓글의 답글 쓰기 클릭 이벤트
 	onPress_ChildComment_ReplyBtn: e => console.log(e), //자식 댓글의 답글 쓰기 클릭 이벤ㅌ

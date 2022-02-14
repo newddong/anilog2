@@ -8,7 +8,6 @@ import {login_style, btn_style, temp_style, addFamilyAccount_style} from 'Temple
 import {CommonActions} from '@react-navigation/native';
 import Modal from 'Component/modal/Modal';
 import {addUserToFamily, getUserListByNickname} from 'Root/api/userapi';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default AddVolunteers = ({route, navigation}) => {

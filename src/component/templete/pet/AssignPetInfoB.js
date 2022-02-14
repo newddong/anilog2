@@ -12,7 +12,6 @@ import Modal from 'Component/modal/Modal';
 import Input30 from 'Molecules/input/Input30';
 import {assignPet} from 'Root/api/userapi';
 import {stagebar_style} from 'Organism/style_organism copy';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {DEFAULT_ANIMAL_PROFILE, DEFAULT_PROFILE} from 'Root/i18n/msg';
 
 export default AssignPetInfoB = props => {

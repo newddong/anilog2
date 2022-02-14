@@ -38,6 +38,7 @@ import {
 } from 'Root/i18n/msg';
 import {GRAY10} from 'Root/config/color';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import userGlobalObject from 'Root/config/userGlobalObject';
 import {getUserProfile} from 'Root/api/userapi';
 import {userLogout} from 'Root/api/userapi';
 import DP from 'Root/config/dp';
@@ -49,23 +50,21 @@ export default ShelterMenu = ({route}) => {
 	const [introOriginLine, setIntroOriginLine] = React.useState(0);
 	React.useEffect(() => {
 		const getInfo = () => {
-			AsyncStorage.getItem('token', async (err, res) => {
 				// Modal.popNoBtn('Loading');
-				getUserProfile(
-					{
-						userobject_id: res,
-					},
-					userObject => {
-						// console.log('userObject/ ShelterMenu', userObject.msg);
-						setData(userObject.msg);
-						// Modal.close();
-					},
-					err => {
-						console.log('err', err);
-						// Modal.close();
-					},
-				);
-			});
+			getUserProfile(
+				{
+					userobject_id: userGlobalObject.userInfo._id,
+				},
+				userObject => {
+					// console.log('userObject/ ShelterMenu', userObject.msg);
+					setData(userObject.msg);
+					// Modal.close();
+				},
+				err => {
+					console.log('err', err);
+					// Modal.close();
+				},
+			);
 		};
 		const unsubscribe = navigation.addListener('focus', () => getInfo());
 

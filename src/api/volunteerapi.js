@@ -4,8 +4,8 @@ import {apiController, apiFormController} from './apiController';
  * 봉사활동 신청서를 작성한다.
  * @param {object} params
  * @param {String} params.shelter_userobject_id - 봉사활동을 희망하는 보호소의 오브젝트 아이디
- * @param {Array.<String>} params.volunteer_accompany_number - 봉사활동 인원수
- * @param {number} params.volunteer_wish_date_list - 봉사활동을 희망하는 날자
+ * @param {Array.<String>} params.volunteer_wish_date_list - 봉사활동을 희망하는 날짜
+ * @param {number} params.volunteer_accompany_number - 봉사활동 인원수
  * @param {Array.<String>} params.accompany_userobject_id_list - 봉사활동 참여인원 목록(신청자를 포함)
  * @param {String} params.volunteer_delegate_contact - 봉사활동 대표자의 연락처
  * @param {function} callback - API응답처리 콜백

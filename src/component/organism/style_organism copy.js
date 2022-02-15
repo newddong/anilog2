@@ -608,76 +608,6 @@ export const shelterList = StyleSheet.create({
 	},
 });
 
-export const childComment = StyleSheet.create({
-	container: {
-		width: 574 * DP,
-		alignSelf: 'center',
-		// backgroundColor: 'yellow',
-	},
-	profileContainer: {
-		width: 574 * DP,
-		height: 50 * DP,
-		flexDirection: 'row',
-	},
-	commentMark: {
-		width: 14 * DP,
-		height: 14 * DP,
-		borderLeftWidth: 2 * DP,
-		borderBottomWidth: 2 * DP,
-		borderLeftColor: GRAY10,
-		borderBottomColor: GRAY10,
-	},
-	userTimeLabel: {
-		width: 442 * DP,
-		height: 46 * DP,
-		marginLeft: 10 * DP,
-	},
-	meatBall50_vertical: {
-		width: 50 * DP,
-		height: 50 * DP,
-		marginLeft: 58 * DP,
-	},
-	img_square_round_484: {
-		alignSelf: 'flex-end',
-		marginBottom: 12 * DP,
-	},
-	commentContainer: {
-		width: 484 * DP,
-		marginLeft: 90 * DP,
-		marginVertical: 20 * DP,
-	},
-	commentText: {},
-	likeReplyButton: {
-		width: 222 * DP,
-		height: 34 * DP,
-		flexDirection: 'row',
-		alignSelf: 'flex-end',
-	},
-	heart30: {
-		width: 30 * DP,
-		height: 30 * DP,
-	},
-	likeCount: {
-		width: 50 * DP,
-		height: 30 * DP,
-		marginLeft: 12 * DP,
-	},
-	likeCountText: {
-		color: GRAY10,
-		textAlignVertical: 'center',
-		textAlign: 'center',
-		lineHeight: 30 * DP,
-	},
-	writeComment: {
-		width: 130 * DP,
-		height: 34 * DP,
-	},
-	writeCommentText: {
-		color: GRAY20,
-		includeFontPadding: false,
-	},
-});
-
 export const companionForm = StyleSheet.create({
 	container: {
 		width: 702 * DP,
@@ -951,7 +881,6 @@ export const aidRequestList = StyleSheet.create({
 	},
 	itemContainer: {
 		alignSelf: 'center',
-		flexDirection: 'row',
 		marginBottom: 20 * DP,
 	},
 	addProtectedPetContainer: {
@@ -980,6 +909,12 @@ export const aidRequestList = StyleSheet.create({
 	aidRequestListCont: {
 		width: 750 * DP,
 		marginTop: 20 * DP,
+	},
+	needPostText: {
+		width: 654 * DP,
+		height: 40 * DP,
+		paddingRight: 5 * DP,
+		// backgroundColor: 'yellow',
 	},
 });
 

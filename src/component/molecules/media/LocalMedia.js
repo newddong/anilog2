@@ -31,6 +31,8 @@ import {Paw94x90} from 'Atom/icon';
  */
 const LocalMedia = React.memo(props => {
 	// console.log(props.index)
+	console.log('props.data', props.data);
+
 	const [isSelect, setSelected] = React.useState(false);
 
 	React.useEffect(() => {
@@ -109,7 +111,7 @@ const LocalMedia = React.memo(props => {
 
 	return (
 		<TouchableOpacity onPress={onPressMedia} style={styles.img_square_186}>
-			<Image source={{uri: props.data.image.uri}} style={getStyleOfSelectedItem()} />
+			{/* <Image source={{uri: props.data.image.uri}} style={getStyleOfSelectedItem()} /> */}
 			{isSelect && getImageOfSelectedItem()}
 			{props.data.image.playableDuration != null && (
 				<Text style={[txt.roboto22, {color: WHITE, position: 'absolute', left: 10 * DP, bottom: 6 * DP}]}>{props.data.image.playableDuration}</Text>
@@ -125,8 +127,8 @@ LocalMedia.defaultProps = {
 			uri: 'https://consecutionjiujitsu.com/wp-content/uploads/2017/04/default-image.jpg',
 			playableDuration: 0,
 		},
-		timestamp:0,
-		group_name:'Picture',
+		timestamp: 0,
+		group_name: 'Picture',
 		isVideo: false,
 		duration: null,
 	},
@@ -134,7 +136,7 @@ LocalMedia.defaultProps = {
 	disable: false,
 	isSingleSelection: true,
 	onSelect: e => console.log(e),
-	onCancel: e => console.log(e)
+	onCancel: e => console.log(e),
 };
 
 export default LocalMedia;

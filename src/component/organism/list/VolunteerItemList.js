@@ -1,7 +1,7 @@
 import React from 'react';
 import {FlatList, View, ScrollView, TouchableOpacity} from 'react-native';
-import {volunteerItemList} from 'Organism/style_organism';
 import VolunteerItem from 'Organism/listitem/VolunteerItem';
+import {volunteerItemList} from 'Organism/style_organism copy';
 
 /**
  * 보호소 Object 정보 박스

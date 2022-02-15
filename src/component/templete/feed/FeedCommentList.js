@@ -1,6 +1,5 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {ScrollView} from 'react-native';
 import {Text, View, FlatList} from 'react-native';
 import FeedContent from 'Organism/feed/FeedContent';
 import CommentList from 'Organism/comment/CommentList';
@@ -12,7 +11,6 @@ import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GRAY10, GRAY20} from 'Root/config/color';
 
 export default FeedCommentList = props => {
@@ -26,7 +24,8 @@ export default FeedCommentList = props => {
 	const [parentComment, setParentComment] = React.useState();
 	const [content, setContent] = React.useState('');
 	const input = React.useRef();
-	userGlobalObject;
+	const addChildCommentFn = React.useRef(() => {});
+	const [refresh, setRefresh] = React.useState(true);
 	React.useEffect(() => {
 		if (props.route.name == 'FeedCommentList') {
 			getCommentListByFeedId(
@@ -45,7 +44,7 @@ export default FeedCommentList = props => {
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
 	const onWrite = () => {
-		if (content.trim() == '') return Modal.popOneBtn('메세지를 입력하세요.', '확인', () => Modal.close());
+		if (content.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
 
 		let param = {
 			comment_photo_uri: photo, //사진uri
@@ -67,8 +66,22 @@ export default FeedCommentList = props => {
 				console.log(result);
 				setPhoto();
 				setParentComment();
-				parentComment || setComments([{...result.msg, comment_writer_id: userGlobalObject.userInfo}].concat(comments));
 				setContent('');
+				if (props.route.name == 'FeedCommentList') {
+					getCommentListByFeedId(
+						{
+							feedobject_id: props.route.params.feedobject._id,
+							request_number: 1000,
+						},
+						comments => {
+							!parentComment && setComments([]); //댓글목록 초기화
+							setComments(comments.msg);
+							parentComment && addChildCommentFn.current();
+							console.log('comments', comments);
+						},
+						err => console.log(err),
+					);
+				}
 			},
 			err => Modal.alert(err),
 		);
@@ -105,11 +118,12 @@ export default FeedCommentList = props => {
 	};
 
 	// 답글 쓰기 버튼 클릭 콜백함수
-	const onReplyBtnClick = parentCommentId => {
+	const onReplyBtnClick = (parentCommentId, addChildComment) => {
 		console.log(parentCommentId);
 		setParentComment(parentCommentId);
 		input.current.focus();
 		editComment || setEditComment(true);
+		addChildCommentFn.current = addChildComment;
 	};
 
 	const render = ({item, index}) => {
@@ -125,13 +139,14 @@ export default FeedCommentList = props => {
 		<View style={[login_style.wrp_main, feedCommentList.container]}>
 			<FlatList
 				data={[{}, comments]}
+				extraData={refresh}
 				renderItem={render}
 				stickyHeaderIndices={[1]}
 				ListHeaderComponent={<FeedContent data={props.route.params.feedobject} showAllContents={props.route.params.showAllContents} />}
 			/>
 			{/* Parent Comment 혹은 Child Comment 에서 답글쓰기를 클릭할 시 화면 최하단에 등장 */}
 			{/* 비로그인 유저일 경우 리플란이 안보이도록 처리 - 상우 */}
-			{userGlobalObject.userInfo && (editComment || props.route.name == 'FeedCommentList') ? (
+			{userGlobalObject.userInfo._id != '' && (editComment || props.route.name == 'FeedCommentList') ? (
 				<ReplyWriteBox
 					onAddPhoto={onAddPhoto}
 					onChangeReplyInput={onChangeReplyInput}

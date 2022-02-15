@@ -111,8 +111,8 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 	const avartarSelect = () => {
 		Modal.popAvatarSelectModal(petObject => {
 			console.log('petObject / onOk', petObject);
-			navigation.setOptions({title: petObject.user_nickname});
-			navigation.setParams({...route.params, feed_avatar_id: petObject._id});
+			petObject&&navigation.setOptions({title: petObject.user_nickname});
+			petObject&&navigation.setParams({...route.params, feed_avatar_id: petObject._id});
 		}, '이 계정 글쓰기');
 	};
 

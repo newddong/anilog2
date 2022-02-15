@@ -5,7 +5,7 @@ import DP from 'Root/config/dp';
 import {Private48, Public48} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import {APRI10, BLACK, GRAY10} from 'Root/config/color';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import userGlobalObj from 'Root/config/userGlobalObject';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 
 /**
@@ -18,14 +18,9 @@ const ShelterLabel = props => {
 	const [validation, setValidation] = React.useState(false);
 	//user_nickname Text 색깔 조건부적용을 위한 세션아이디 비교
 	React.useEffect(() => {
-		const getItem = async () => {
-			let token = await AsyncStorage.getItem('token');
-			if (props.data.user_id == token) {
-				setValidation(true); //일치한다면 Validation True로 nickname text color를 바꿈
-			}
-			return token;
-		};
-		getItem();
+		if (props.data.user_id == userGlobalObj.userInfo._id) {
+			setValidation(true); //일치한다면 Validation True로 nickname text color를 바꿈
+		}
 		return () => {};
 	});
 

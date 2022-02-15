@@ -4,7 +4,6 @@ import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import {APRI10, BLACK} from 'Root/config/color';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import {getUserInfoById} from 'Root/api/userapi';
 import Modal from 'Component/modal/Modal';
@@ -20,7 +19,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
  */
 const UserLocationLabel = props => {
 	// const [isLoginUser, setIsLoginUser] = React.useState(false); //현재 접속 중인 아이디와 같다면 닉네임 색깔이 메인색깔
-	const isLoginUser = userGlobalObject.userInfo._id == props.data._id;
+	const isLoginUser = userGlobalObject.userInfo?._id == props.data._id;
 
 	// console.log('UserLocationLabel', props.data.user_profile_uri);
 	//현재 접속한 토큰과 출력된 유저라벨의 유저가 같은지 확인

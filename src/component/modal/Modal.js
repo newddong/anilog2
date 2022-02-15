@@ -135,6 +135,17 @@ export default Modal = {
 	popSelectScrollBoxModal: (data, header, onSelect, onClose) => {},
 
 	/**
+	 * 스크롤뷰 형태의 모달창을 띄우는 함수(하단 스크롤뷰 셀렉트 모달)
+	 * @param {object} data - 선택항목 리스트 , 최대 두 개의 길이의 오브젝트 배열 타입
+	 * @param {string} header - 선택항목 제목 / 빈 값일 시 '취소' 출력
+	 * @param {(data,data)=>void} onSelect - 완료 버튼 클릭 콜백 / 선택항목들을 반환하는 매개변수가 2개인 콜백
+	 * @param {()=>void} onClose - 헤더 타이틀이 빈 값일 경우 '취소'가 타이틀로 출력되며, 해당 '취소' 버튼 클릭 시 수행되는 콜백 함수
+	 *
+	 * @example
+	 */
+	popMultipleScrollBoxModal: (data, header, onSelect, onClose) => {},
+
+	/**
 	 * 날짜 선택창 모달을 띄우는 함수(하단 스크롤뷰 셀렉트 모달)
 	 * @param {string} header - 선택항목 제목
 	 * @param {(date)=>void} onSelect - 선택항목들을 반환하는 매개변수가 2개인 콜백
@@ -269,7 +280,7 @@ export default Modal = {
 	popDropdownModal: (offset, menu, onPressMenu, onClose) => {},
 
 	/**
-	 * 드롭다운 형식의 메뉴 모달
+	 * 공유하기 클릭 시 출력되는 모달
 	 * @param {object} props.offset - 위치 정보
 	 * @param {()=>void} props.onPressKakao - 카카오톡 클릭
 	 * @param {()=>void} props.onPressLinkCopy - 링크복사 클릭
@@ -277,6 +288,14 @@ export default Modal = {
 	 * @example
 	 */
 	popShareModal: (offset, onPressKakao, onPonPressLinkCopyressMenu, onPressMsg) => {},
+
+	/**
+	 * 입양 확정 시 출력되는 축하 메시지 모달
+	 * @param {string} props.pet_nickname - 카카오톡 클릭
+	 * @param {string} props.user_profile_uri - 카카오톡 클릭
+	 * @example
+	 */
+	popCongratulationModal: (pet_nickname, user_profile_uri) => {},
 
 	popInfoModal: () => {},
 

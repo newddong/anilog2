@@ -24,7 +24,7 @@ export default ChangePetProfileImage = props => {
 	};
 
 	const selectPhoto = () => {
-		// navigation.push('SinglePhotoSelect', props.route.name);
+		navigation.push('SinglePhotoSelect', props.route.name);
 		// launchImageLibrary(
 		// 	{
 		// 		mediaType: 'photo',
@@ -37,18 +37,18 @@ export default ChangePetProfileImage = props => {
 		// 			: setPetData({...petData, user_profile_uri: responseObject.assets[responseObject.assets.length - 1].uri || petData.user_profile_uri});
 		// 	},
 		// );
-		ImagePicker.openPicker({
-			compressImageQuality: 0.8,
-			cropping: true,
-			cropperCircleOverlay: true,
-		})
-			.then(images => {
-				setPetData({...petData, user_profile_uri: images.path || petData.user_profile_uri});
-				setConfirmed(true);
-				Modal.close();
-			})
-			.catch(err => console.log(err + ''));
-		Modal.close();
+		// ImagePicker.openPicker({
+		// 	compressImageQuality: 0.8,
+		// 	cropping: true,
+		// 	cropperCircleOverlay: true,
+		// })
+		// 	.then(images => {
+		// 		setPetData({...petData, user_profile_uri: images.path || petData.user_profile_uri});
+		// 		setConfirmed(true);
+		// 		Modal.close();
+		// 	})
+		// 	.catch(err => console.log(err + ''));
+		// Modal.close();
 	};
 	console.log('petDetail', props.route.params);
 	//중복 처리
@@ -118,7 +118,7 @@ export default ChangePetProfileImage = props => {
 				<ProfileImageSelect onClick={selectPhoto} selectedImageUri={petData.user_profile_uri} />
 			</View>
 
-			<View style={[temp_style.input30_changePetProfileImage, changePetProfileImage_style.input30]}>
+			<View style={[changePetProfileImage_style.input30]}>
 				{/* 기존 닉네임 */}
 				<View style={[temp_style.input24_changeUserProfileImage, changeUserProfileImage_style.input24]}>
 					<Input24
@@ -162,15 +162,19 @@ export default ChangePetProfileImage = props => {
 				</View>
 			</View>
 
-			<View style={[btn_style.btn_w654, changePetProfileImage_style.btn_w654, {paddingTop: 25}]}>
-				<AniButton
-					onPress={onPressConfirm}
-					disable={confirmed ? false : true}
-					btnTitle={'확인'}
-					btnTheme={'shadow'}
-					titleFontStyle={32}
-					btnLayout={btn_w654}
-				/>
+			<View style={[changePetProfileImage_style.btn_w654]}>
+				{confirmed ? (
+					<AniButton
+						onPress={onPressConfirm}
+						// disable={confirmed ? false : true}
+						btnStyle={'border'}
+						btnTitle={'확인'}
+						titleFontStyle={32}
+						btnLayout={btn_w654}
+					/>
+				) : (
+					<AniButton onPress={onPressConfirm} disable btnTitle={'확인'} titleFontStyle={32} btnLayout={btn_w654} />
+				)}
 			</View>
 		</View>
 	);

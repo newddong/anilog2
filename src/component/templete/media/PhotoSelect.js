@@ -64,7 +64,7 @@ const PhotoSelect = props => {
 			try {
 				/** 외부 저장소 접근권한 */
 				const isAllowExternalStorage = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
-				
+
 				PermissionsAndroid.check(isAllowExternalStorage).then(isPermit => {
 					if (isPermit) {
 						loadPhotosMilsec();
@@ -220,7 +220,7 @@ const PhotoSelect = props => {
 					numColumns={4}
 					renderItem={({item, index}) => renderItem(item, index)}
 					scrollEnabled
-					keyExtractor={item.key}
+					// keyExtractor={item.key}
 				/>
 			</View>
 		</View>

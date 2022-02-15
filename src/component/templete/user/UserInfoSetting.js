@@ -10,7 +10,7 @@ import AniButton from 'Molecules/button/AniButton';
 import ProfileImageLarge194 from 'Molecules/image/ProfileImageLarge194';
 import MyPetList from 'Organism/list/MyPetList';
 import {login_style, btn_style, temp_style, userInfoSetting_style} from 'Templete/style_templete';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import userGlobalObject from 'Root/config/userGlobalObject';
 // import {getUserProfile} from 'Root/api/usermenuapi';
 import {getUserInfoById, getUserProfile, updateUserIntroduction} from 'Root/api/userapi';
 import DP from 'Root/config/dp';
@@ -25,27 +25,25 @@ export default UserInfoSetting = ({route}) => {
 	const [showMore, setShowMore] = React.useState();
 	const modifyRef = React.useRef();
 	const fetchData = () => {
-		AsyncStorage.getItem('token', (err, res) => {
-			getUserInfoById(
-				{
-					userobject_id: res,
-				},
-				userObject => {
-					setData(userObject.msg);
-					navigation.setOptions({title: userObject.msg.user_nickname});
-					setTimeout(() => {
-						setLoading(false);
-					}, 500);
-					console.log('result / getUserProfile / UserInfoSetting', userObject.msg.user_introduction);
-				},
-				err => {
-					console.log('er', err);
-					setTimeout(() => {
-						setLoading(false);
-					}, 500);
-				},
-			);
-		});
+		getUserInfoById(
+			{
+				userobject_id: userGlobalObject.userInfo._id,
+			},
+			userObject => {
+				setData(userObject.msg);
+				navigation.setOptions({title: userObject.msg.user_nickname});
+				setTimeout(() => {
+					setLoading(false);
+				}, 500);
+				console.log('result / getUserProfile / UserInfoSetting', userObject.msg.user_introduction);
+			},
+			err => {
+				console.log('er', err);
+				setTimeout(() => {
+					setLoading(false);
+				}, 500);
+			},
+		);
 	};
 	React.useEffect(() => {
 		// fetchData();

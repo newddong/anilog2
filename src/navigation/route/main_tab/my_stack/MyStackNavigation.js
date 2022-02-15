@@ -55,6 +55,8 @@ import SimpleHeader from 'Root/navigation/header/SimpleHeader';
 import LogoHeader from 'Root/navigation/header/LogoHeader';
 import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 import {useNavigation} from '@react-navigation/core';
+import userGlobalObject from 'Root/config/userGlobalObject';
+
 const MyStack = createStackNavigator();
 
 export default MyStackNavigation = props => {
@@ -62,11 +64,11 @@ export default MyStackNavigation = props => {
 	const [searchInput, setSearchInput] = React.useState();
 
 	React.useEffect(() => {
-		setSearchInput(props.route.params);
+		setSearchInput(props.route.params); //검색어 입력 전달
 	}, [props.route.params]);
 
 	return (
-		<MyStack.Navigator initialRouteName={props.user_type == 'shelter' ? 'ShelterMenu' : 'UserMenu'}>
+		<MyStack.Navigator initialRouteName={userGlobalObject.userInfo.user_type == 'shelter' ? 'ShelterMenu' : 'UserMenu'}>
 			{/* // <MyStack.Navigator initialRouteName={'ShelterMenu'}> */}
 			<MyStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <MeatBallHeader {...props} />, title: '피드 게시글'}} />
 			<MyStack.Screen name="UserFeeds" component={FavoriteFeeds} options={{header: props => <SimpleHeader {...props} />, title: '내 게시글'}} />
@@ -193,6 +195,8 @@ export default MyStackNavigation = props => {
 				component={AssignProtectAnimalDate}
 				options={{header: props => <SimpleHeader {...props} />, title: '보호 동물 등록'}}
 			/>
+			<MyStack.Screen name="SinglePhotoSelect" component={PhotoSelect} />
+
 			<MyStack.Screen
 				name="AssignProtectAnimalType"
 				component={AssignPetInfoA}
@@ -206,7 +210,7 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen
 				name="AidRequestAnimalList"
 				component={AidRequestAnimalList}
-				options={{header: props => <SendHeader {...props} />, title: '동물 보호 요청'}}
+				options={{header: props => <SimpleHeader {...props} />, title: '동물 보호 요청'}}
 			/>
 			<MyStack.Screen
 				name="WriteAidRequest"

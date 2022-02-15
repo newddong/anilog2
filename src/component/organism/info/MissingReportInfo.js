@@ -105,6 +105,7 @@ const style = StyleSheet.create({
 		paddingTop: 30 * DP,
 		paddingLeft: 24 * DP,
 		paddingBottom: 30 * DP,
+		overflow:'hidden'
 	},
 	missingTextMainColor: {
 		fontSize: 30 * DP,

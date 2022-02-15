@@ -133,7 +133,6 @@ export default Modal = {
 	 * @example
 	 */
 	popSelectScrollBoxModal: (data, header, onSelect, onClose) => {},
-<<<<<<< HEAD
 
 	/**
 	 * 스크롤뷰 형태의 모달창을 띄우는 함수(하단 스크롤뷰 셀렉트 모달)
@@ -145,8 +144,6 @@ export default Modal = {
 	 * @example
 	 */
 	popMultipleScrollBoxModal: (data, header, onSelect, onClose) => {},
-=======
->>>>>>> f6bcc52b5d0daf604cff44eba8b8f345d98902e7
 
 	/**
 	 * 날짜 선택창 모달을 띄우는 함수(하단 스크롤뷰 셀렉트 모달)
@@ -283,11 +280,7 @@ export default Modal = {
 	popDropdownModal: (offset, menu, onPressMenu, onClose) => {},
 
 	/**
-<<<<<<< HEAD
 	 * 공유하기 클릭 시 출력되는 모달
-=======
-	 * 드롭다운 형식의 메뉴 모달
->>>>>>> f6bcc52b5d0daf604cff44eba8b8f345d98902e7
 	 * @param {object} props.offset - 위치 정보
 	 * @param {()=>void} props.onPressKakao - 카카오톡 클릭
 	 * @param {()=>void} props.onPressLinkCopy - 링크복사 클릭
@@ -296,7 +289,6 @@ export default Modal = {
 	 */
 	popShareModal: (offset, onPressKakao, onPonPressLinkCopyressMenu, onPressMsg) => {},
 
-<<<<<<< HEAD
 	/**
 	 * 입양 확정 시 출력되는 축하 메시지 모달
 	 * @param {string} props.pet_nickname - 카카오톡 클릭
@@ -305,8 +297,6 @@ export default Modal = {
 	 */
 	popCongratulationModal: (pet_nickname, user_profile_uri) => {},
 
-=======
->>>>>>> f6bcc52b5d0daf604cff44eba8b8f345d98902e7
 	popInfoModal: () => {},
 
 	alert: () => {},

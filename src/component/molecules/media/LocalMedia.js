@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, Image, TouchableOpacity} from 'react-native';
+import {Text, View, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {styles} from 'Atom/image/imageStyle';
@@ -31,7 +31,7 @@ import {Paw94x90} from 'Atom/icon';
  */
 const LocalMedia = React.memo(props => {
 	// console.log(props.index)
-	console.log('props.data', props.data);
+	// console.log('props.data', props.data);
 
 	const [isSelect, setSelected] = React.useState(false);
 
@@ -68,14 +68,7 @@ const LocalMedia = React.memo(props => {
 	const getImageOfSelectedItem = () => {
 		if (props.isSingleSelection) {
 			return (
-				<View
-					style={{
-						width: 94 * DP,
-						height: 90 * DP,
-						position: 'absolute',
-						paddingVertical: 48 * DP,
-						paddingHorizontal: 46 * DP,
-					}}>
+				<View style={style.paw94}>
 					<Paw94x90 />
 				</View>
 			);
@@ -111,11 +104,11 @@ const LocalMedia = React.memo(props => {
 
 	return (
 		<TouchableOpacity onPress={onPressMedia} style={styles.img_square_186}>
-			{/* <Image source={{uri: props.data.image.uri}} style={getStyleOfSelectedItem()} /> */}
+			<Image source={{uri: props.data.img_uri}} style={getStyleOfSelectedItem()} />
 			{isSelect && getImageOfSelectedItem()}
-			{props.data.image.playableDuration != null && (
+			{/* {props.data.image.playableDuration != null && (
 				<Text style={[txt.roboto22, {color: WHITE, position: 'absolute', left: 10 * DP, bottom: 6 * DP}]}>{props.data.image.playableDuration}</Text>
-			)}
+			)} */}
 		</TouchableOpacity>
 	);
 	// isVideo = true 분기
@@ -138,5 +131,15 @@ LocalMedia.defaultProps = {
 	onSelect: e => console.log(e),
 	onCancel: e => console.log(e),
 };
+
+const style = StyleSheet.create({
+	paw94: {
+		width: 94 * DP,
+		height: 90 * DP,
+		position: 'absolute',
+		paddingVertical: 48 * DP,
+		paddingHorizontal: 46 * DP,
+	},
+});
 
 export default LocalMedia;

@@ -32,7 +32,12 @@ const PhotoSelect = props => {
 	 *@param {number} request - 불러올 미디어의 숫자 (기본값 20)
 	 *@param {string} type - 불러올 미디어의 타잎('Photos'|'All'|'Videos')
 	 */
+
 	const loadPhotosMilsec = (request = 20, timeStamp = 0, type = 'Photos') => {
+		CameraRoll.getAlbums({assetType: 'All'}).then(val => {
+			console.log('GetAlbums', val);
+		});
+
 		CameraRoll.getPhotos({
 			first: request,
 			toTime: timeStamp ? (timeStamp - 1) * 1000 : 0,
@@ -40,6 +45,7 @@ const PhotoSelect = props => {
 			include: ['playableDuration'],
 		})
 			.then(r => {
+				// console.log('r', JSON.stringify(r));
 				let copy = [...r.edges];
 				copy.map((v, i) => {
 					copy[i] = {

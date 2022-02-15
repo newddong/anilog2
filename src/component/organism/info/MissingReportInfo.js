@@ -38,6 +38,7 @@ const MissingReportInfo = props => {
 			newAnimalSex = '모름';
 			break;
 	}
+
 	//MissingReportInfo 하나의 정보 컴포넌트
 	const InfoOneLine = props => {
 		return (
@@ -55,12 +56,14 @@ const MissingReportInfo = props => {
 	if (feed_type == 'missing') {
 		const newMissingDateText = missing_animal_date.toString().split('-');
 		const newMissingDate = newMissingDateText[0] + '.' + newMissingDateText[1] + '.' + newMissingDateText[2].toString().substring(0, 2);
+		var splitAddress = missing_animal_lost_location.split('"');
+		var newMissingLocation = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
 		return (
 			<View style={style.container}>
 				<InfoOneLine title="동물 분류 : " content={missing_animal_species + ' / ' + missing_animal_species_detail} />
 				<InfoOneLine title="실종 날짜 : " content={newMissingDate} />
 				<InfoOneLine title="성별/나이 : " content={newAnimalSex + ' / ' + missing_animal_age + '살'} />
-				<InfoOneLine title="실종 위치 : " content={missing_animal_lost_location} />
+				<InfoOneLine title="실종 위치 : " content={newMissingLocation} />
 				<InfoOneLine title="연  락  처 : " content={missing_animal_contact} />
 				<InfoOneLine title="특       징 : " content={missing_animal_features} />
 			</View>
@@ -102,6 +105,7 @@ const style = StyleSheet.create({
 		paddingTop: 30 * DP,
 		paddingLeft: 24 * DP,
 		paddingBottom: 30 * DP,
+		overflow:'hidden'
 	},
 	missingTextMainColor: {
 		fontSize: 30 * DP,

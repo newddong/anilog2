@@ -464,7 +464,7 @@ export const interestTagList = StyleSheet.create({
 		alignSelf: 'center',
 	},
 	btn_w226: {
-		marginLeft: 202 * DP,
+		marginLeft: 234 * DP,
 	},
 	interestingTagList: {
 		width: 606 * DP,

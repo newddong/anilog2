@@ -64,7 +64,7 @@ export default Feed = React.memo(props => {
 	};
 
 	return (
-		<View style={[organism_style.feed]}>
+		<View style={[organism_style.feed]} removeClippedSubviews>
 			<FeedContent data={props.data} />
 			{/* 270DP */}
 			<View style={[organism_style.feedMedia_feed]}>

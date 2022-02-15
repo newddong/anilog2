@@ -249,12 +249,8 @@ export default FeedContent = props => {
 						onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})}
 						location={feed_location}
 					/>
-
-					<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
-				</View>
-
-				{/* type값이 status일 경우 status 버튼이 나오고 그렇지 않으면 다른 버튼 표기 */}
-				{feed_type == 'feed' ? (
+					<View style={{flexDirection: 'row', alignItems: 'center'}}>
+					{feed_type == 'feed' ? (
 					<View style={{flexDirection: 'row', alignItems: 'center'}}>
 						<View style={[feedContent_style.status /*{width:130*DP,height:38*DP}*/]}>
 							{feed_is_protect_diary && (
@@ -268,6 +264,7 @@ export default FeedContent = props => {
 										borderColor: MAINCOLOR,
 										borderRadius: 10 * DP,
 										borderWidth: 2 * DP,
+										marginRight: 10 * DP
 									}}>
 									<Text style={[txt.roboto24, txt.maincolor]}>임보일기</Text>
 								</View>
@@ -299,6 +296,12 @@ export default FeedContent = props => {
 						</View>
 					</View>
 				)}
+					<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
+					</View>
+				</View>
+
+				{/* type값이 status일 경우 status 버튼이 나오고 그렇지 않으면 다른 버튼 표기 */}
+				
 			</View>
 			{/* line 1-1 (제보관련 내용) */}
 			{feed_type == 'report' && (

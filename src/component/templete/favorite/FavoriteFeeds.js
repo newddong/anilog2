@@ -114,7 +114,8 @@ export default FavoriteFeeds = ({route, navigation}) => {
 					return CONFIRM_DELETE_FAVORITE_FEED;
 				} else return CONFIRM_DELETE_MY_FEED;
 			};
-			Modal.popTwoBtn(deleteMsg(), '취소', '해제', () => Modal.close(), doDelete);
+			// Modal.popTwoBtn(deleteMsg(), '취소', '해제', () => Modal.close(), doDelete);
+			Modal.popOneBtn(deleteMsg(), '해제', doDelete);
 		}
 	};
 

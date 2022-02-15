@@ -9,6 +9,8 @@ import {getProtectRequestList, getProtectRequestListByShelterId} from 'Root/api/
 import Modal from 'Root/component/modal/Modal';
 import {txt} from 'Root/config/textstyle';
 import {getPettypes} from 'Root/api/userapi';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {NewMeatBall60} from 'Root/component/atom/icon';
 
 // ShelterMenu - 보호요청 올린 게시글 클릭
 // params - 로그인한 보호소 유저의 _id
@@ -108,6 +110,9 @@ export default ShelterProtectRequests = ({route, navigation}) => {
 					<FilterButton menu={petTypes} width={306} onSelect={onSelectFilter} />
 				</View>
 				<View style={[temp_style.meatball50]}>
+					{/* <TouchableOpacity onPress={onSelectMeatball}>
+						<NewMeatBall60 />
+					</TouchableOpacity> */}
 					<MeatBallDropdown menu={PROTECT_STATUS} onSelect={onSelectMeatball} />
 				</View>
 			</View>

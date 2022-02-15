@@ -60,7 +60,6 @@ export default FeedContent = props => {
 		feed_writer_id,
 		feed_avatar_id,
 	} = props.data;
-
 	const navigation = useNavigation();
 	const route = useRoute();
 	const [btnStatus, setBtnStatus] = React.useState(false); //더보기 Arrow방향 false면 아래
@@ -301,22 +300,27 @@ export default FeedContent = props => {
 					</View>
 				)}
 			</View>
-
 			{/* line 1-1 (제보관련 내용) */}
 			{feed_type == 'report' && (
 				<View style={[organism_style.tipOff_feedContent, feedContent_style.tipOff]} onLayout={onLayoutReport}>
-					<View style={{flexDirection: 'row', alignItems: 'center'}}>
+					{/* <View style={{flexDirection: 'row', alignItems: 'center'}}>
 						<Text style={[txt.noto28]}>제보 날짜: </Text>
 						<Text style={[txt.noto30b]}>{parsingDate(report_witness_date)}</Text>
-						{/* <MissingReportInfo data={props.data} /> */}
+						<MissingReportInfo data={props.data} />
 					</View>
 					<View style={{flexDirection: 'row', alignItems: 'flex-start', paddingTop: 10 * DP}}>
 						<Text style={[txt.noto28]}>제보 장소: </Text>
 						<Text style={[txt.noto28b, {width: 500 * DP}]}>{report_witness_location}</Text>
-					</View>
+					</View> */}
+					<MissingReportInfo data={props.data} />
 				</View>
 			)}
-
+			{/* 실종 MissingReportInfo 분기 처리 */}
+			{feed_type == 'missing' && (
+				<View style={[organism_style.tipOff_feedContent, feedContent_style.tipOff]} onLayout={onLayoutReport}>
+					<MissingReportInfo data={props.data} />
+				</View>
+			)}
 			{(route.name.includes('FeedList') || feed_type == 'report' || feed_type == 'missing' || route.name.includes('FeedCommentList') || show) && (
 				<View style={[organism_style.content_feedContent, feedContent_style.content_Top10]}>
 					<HashText style={[txt.noto28]} numberOfLines={shouldBeDetail ? 0 : 2} onLayout={onLayoutContent}>
@@ -324,7 +328,6 @@ export default FeedContent = props => {
 					</HashText>
 				</View>
 			)}
-
 			<View style={[organism_style.time_view_feedContent]}>
 				<View style={[organism_style.time_feedContent]}>
 					<Text style={[txt.noto22, {color: GRAY10}]}>{getTimeLapsed(feed_date)}</Text>

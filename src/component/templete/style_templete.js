@@ -525,8 +525,9 @@ export const temp_style = StyleSheet.create({
 	},
 	floatingBtn: {
 		flexDirection: 'column',
-		width: 94 * DP,
-		height: 94 * DP,
+
+		width: 110 * DP,
+		height: 110 * DP,
 	},
 	editComment: {},
 	aidRequest: {
@@ -1676,12 +1677,11 @@ export const userInfoDetailSettting_style = StyleSheet.create({
 	phone_num_input: {
 		width: 520 * DP,
 		bottom: 0 * DP,
-		// height: 82 * DP,
-		// backgroundColor: '#EDEDED',
+		height: 80 * DP,
 	},
 	tagListContainer: {
 		width: 654 * DP,
-		marginTop: 60 * DP,
+		marginTop: 50 * DP,
 	},
 	interestTagList: {
 		width: 654 * DP,
@@ -2909,13 +2909,13 @@ export const searchProtectRequest = StyleSheet.create({
 	},
 	filterView: {
 		width: 750 * DP,
-		height: 110 * DP,
-		marginTop: 40 * DP,
+		height: 68 * DP,
+		marginTop: 30 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 		inside: {
 			width: 654 * DP,
-			height: 126 * DP,
+			height: 68 * DP,
 		},
 		onOffBtnView: {
 			width: 344 * DP,
@@ -2936,7 +2936,7 @@ export const searchProtectRequest = StyleSheet.create({
 		},
 	},
 	animalNeedHelpList: {
-		marginTop: 30 * DP,
+		marginTop: 50 * DP,
 		width: 750 * DP,
 		alignSelf: 'center',
 		// backgroundColor: '#FF00FF',
@@ -4042,7 +4042,9 @@ export const feedWrite = StyleSheet.create({
 	},
 	urgentBtnContainer: {
 		width: 158 * DP,
+		// width: 110 * DP,
 		height: 332 * DP,
+		// height: 110 * DP,
 		position: 'absolute',
 		right: 30 * DP,
 		bottom: 40 * DP,

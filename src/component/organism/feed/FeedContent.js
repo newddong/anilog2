@@ -249,56 +249,58 @@ export default FeedContent = props => {
 						onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})}
 						location={feed_location}
 					/>
+					<View style={{flexDirection: 'row', alignItems: 'center'}}>
+						{feed_type == 'feed' ? (
+							<View style={{flexDirection: 'row', alignItems: 'center'}}>
+								<View style={[feedContent_style.status /*{width:130*DP,height:38*DP}*/]}>
+									{feed_is_protect_diary && (
+										<View
+											style={{
+												width: 130 * DP,
+												height: 38 * DP,
+												justifyContent: 'center',
+												alignSelf: 'flex-end',
+												alignItems: 'center',
+												borderColor: MAINCOLOR,
+												borderRadius: 10 * DP,
+												borderWidth: 2 * DP,
+												marginRight: 10 * DP,
+											}}>
+											<Text style={[txt.roboto24, txt.maincolor]}>임보일기</Text>
+										</View>
+									)}
+								</View>
 
-					<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
+								{/* 연결되는 기능 개발 후 추후 연결 */}
+								{/* <View style={[organism_style.meatball, feedContent_style.meatball]}>
+							<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
+						</View> */}
+							</View>
+						) : (
+							<View style={[organism_style.button_view_feedContent]}>
+								<View style={[organism_style.favoriteTag_view_feedContent]}>
+									<View style={[organism_style.favoriteTag_feedContent]}>
+										<FavoriteTag48_Filled />
+									</View>
+									<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
+										<Text>{feed_favorite_count}</Text>
+									</View>
+								</View>
+								<View style={[organism_style.share48_view_feedContent]}>
+									<View style={[organism_style.share48_feedContent]}>
+										<Share48_Filled />
+									</View>
+									<View style={[organism_style.share_feedContent, feedContent_style.share]}>
+										<Text style={[txt.noto24, {color: GRAY10}]}>{SHARE}</Text>
+									</View>
+								</View>
+							</View>
+						)}
+						<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
+					</View>
 				</View>
 
 				{/* type값이 status일 경우 status 버튼이 나오고 그렇지 않으면 다른 버튼 표기 */}
-				{feed_type == 'feed' ? (
-					<View style={{flexDirection: 'row', alignItems: 'center'}}>
-						<View style={[feedContent_style.status /*{width:130*DP,height:38*DP}*/]}>
-							{feed_is_protect_diary && (
-								<View
-									style={{
-										width: 130 * DP,
-										height: 38 * DP,
-										justifyContent: 'center',
-										alignSelf: 'flex-end',
-										alignItems: 'center',
-										borderColor: MAINCOLOR,
-										borderRadius: 10 * DP,
-										borderWidth: 2 * DP,
-									}}>
-									<Text style={[txt.roboto24, txt.maincolor]}>임보일기</Text>
-								</View>
-							)}
-						</View>
-
-						{/* 연결되는 기능 개발 후 추후 연결 */}
-						{/* <View style={[organism_style.meatball, feedContent_style.meatball]}>
-							<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
-						</View> */}
-					</View>
-				) : (
-					<View style={[organism_style.button_view_feedContent]}>
-						<View style={[organism_style.favoriteTag_view_feedContent]}>
-							<View style={[organism_style.favoriteTag_feedContent]}>
-								<FavoriteTag48_Filled />
-							</View>
-							<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
-								<Text>{feed_favorite_count}</Text>
-							</View>
-						</View>
-						<View style={[organism_style.share48_view_feedContent]}>
-							<View style={[organism_style.share48_feedContent]}>
-								<Share48_Filled />
-							</View>
-							<View style={[organism_style.share_feedContent, feedContent_style.share]}>
-								<Text style={[txt.noto24, {color: GRAY10}]}>{SHARE}</Text>
-							</View>
-						</View>
-					</View>
-				)}
 			</View>
 			{/* line 1-1 (제보관련 내용) */}
 			{feed_type == 'report' && (

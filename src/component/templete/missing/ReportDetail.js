@@ -67,7 +67,7 @@ export default ReportDetail = props => {
 		getCommnetList();
 		setTimeout(() => {
 			setLoading(false);
-		}, 500);
+		}, 0);
 	}, []);
 
 	// React.useEffect(() => {

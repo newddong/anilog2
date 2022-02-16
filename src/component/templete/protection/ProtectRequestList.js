@@ -48,13 +48,13 @@ export default ProtectRequestList = ({navigation, route}) => {
 						setData(filtered);
 						setTimeout(() => {
 							setLoading(false);
-						}, 1500);
+						}, 0);
 						// console.log('length', filtered.length);
 					} else {
 						setData(data.msg);
 						setTimeout(() => {
 							setLoading(false);
-						}, 1500);
+						}, 0);
 					}
 				},
 				err => {
@@ -64,7 +64,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 					}
 					setTimeout(() => {
 						setLoading(false);
-					}, 1500);
+					}, 0);
 				},
 			);
 		};

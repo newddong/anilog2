@@ -239,7 +239,9 @@ export default FeedContent = props => {
 
 	return (
 		// <View style={[organism_style.feedContent,{overflow:'hidden'}, shouldBeDetail ? {height: 270 * DP + reportLayout.height + labelLayout.height + layout.height} : {}]} removeClippedSubviews>
-		<View style={[{height: 270 * DP}, shouldBeDetail ? {height: 270 * DP + reportLayout.height + labelLayout.height + layout.height} : {}]} removeClippedSubviews>
+		<View
+			style={[{height: 270 * DP}, shouldBeDetail ? {height: 270 * DP + reportLayout.height + labelLayout.height + layout.height} : {}]}
+			removeClippedSubviews>
 			<View style={[organism_style.feedContent, {overflow: 'hidden'}]}>
 				{/* // <View style={[organism_style.feedContent,{height:800*DP}]}> */}
 				{/* line 1 */}
@@ -333,7 +335,7 @@ export default FeedContent = props => {
 					</View>
 				)}
 			</View>
-			<View style={[organism_style.time_view_feedContent,{paddingHorizontal:48*DP}]}>
+			<View style={[organism_style.time_view_feedContent, {paddingHorizontal: 48 * DP}]}>
 				<View style={[organism_style.time_feedContent]}>
 					<Text style={[txt.noto22, {color: GRAY10}]}>{getTimeLapsed(feed_date)}</Text>
 				</View>

@@ -260,7 +260,7 @@ export default ShelterMenu = ({route}) => {
 					</View>
 
 					<View style={[shelterMenu.btnView, {}]}>
-						<View style={[btn_style.btn_w280]}>
+						<View style={[btn_style.btn_w280, {alignItems: 'flex-start'}]}>
 							<AniButton btnTitle={MODIFY_SHELTER_DATA} btnStyle={'border'} btnLayout={btn_w280x68} onPress={moveToShelterInfoSetting} />
 						</View>
 
@@ -271,6 +271,10 @@ export default ShelterMenu = ({route}) => {
 						<View style={[shelterMenu.btnView_floadArticle_128x68]}>
 							<FloatAddArticle_128x68 onPress={moveToAidRequestAnimalList} />
 						</View>
+					</View>
+					<View style={[shelterMenu.textView_height36]}>
+						<Text style={[shelterMenu.text36, {marginRight: 37 * DP}]}>보호 동물 추가</Text>
+						<Text style={[shelterMenu.text36, {marginRight: 7 * DP}]}>보호글 쓰기</Text>
 					</View>
 				</View>
 				{/* 하단 메뉴 */}

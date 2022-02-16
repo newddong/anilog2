@@ -21,7 +21,6 @@ import userGlobalObject from 'Root/config/userGlobalObject';
  * }} props
  */
 export default ParentComment = React.memo((props, ref) => {
-	
 	// console.log('ParentComment', props.parentComment.comment_contents);
 
 	const [data, setData] = React.useState(props.parentComment);
@@ -45,12 +44,12 @@ export default ParentComment = React.memo((props, ref) => {
 		// });
 	}, [props.parentComment]);
 
-	const addChildComment = (newChildComment) => {
+	const addChildComment = newChildComment => {
 		// newChildComment.comment_writer_id = userGlobalObject.userInfo;
 		// setChild([newChildComment].concat(child));
 		// setShowChild(true);
 		// console.log(newChildComment);
-		console.log('대댓글 추가')
+		console.log('대댓글 추가');
 		getChildCommentList(
 			{
 				commentobject_id: props.parentComment._id,
@@ -58,19 +57,16 @@ export default ParentComment = React.memo((props, ref) => {
 			result => {
 				console.log(result.msg);
 				setChild(result.msg);
-				!showChild&&setShowChild(true);
-				
+				!showChild && setShowChild(true);
 			},
 			err => Modal.alert(err),
 		);
 	};
 
 	const onPressReplyBtn = () => {
-		console.log('대댓글 추가2')
+		console.log('대댓글 추가2');
 		props.onPressReplyBtn(props.parentComment._id, addChildComment);
 	};
-
-	
 
 	const onCLickHeart = () => {
 		setLikeState(!likeState);
@@ -85,7 +81,6 @@ export default ParentComment = React.memo((props, ref) => {
 				console.log(result.msg);
 				setChild(result.msg);
 				setShowChild(!showChild);
-				
 			},
 			err => Modal.alert(err),
 		);
@@ -124,7 +119,7 @@ export default ParentComment = React.memo((props, ref) => {
 	};
 
 	const meatballRef = React.useRef();
-	const childrenCount = child.length>0 ? child.length: props.parentComment.children_count;
+	const childrenCount = child.length > 0 ? child.length : props.parentComment.children_count;
 	return (
 		<View style={organism_style.parentComment}>
 			{/* 유저프로필 라벨 및 Meatball  */}
@@ -155,7 +150,7 @@ export default ParentComment = React.memo((props, ref) => {
 
 				<TouchableOpacity onPress={showChildComment} style={[parentComment.showChildComment]}>
 					{/* {data.children_count > 0 && <Text style={[txt.noto24, {color: GRAY10}]}> 답글{data.children_count}개 보기 </Text>} */}
-					{childrenCount>0&&<Text style={[txt.noto24, {color: GRAY10}]}> 답글{childrenCount}개 보기 </Text>}
+					{childrenCount > 0 && <Text style={[txt.noto24, {color: GRAY10}]}> 답글{childrenCount}개 보기 </Text>}
 				</TouchableOpacity>
 				<View style={[parentComment.heart30]}>
 					{likeState ? <Heart30_Filled onPress={onCLickHeart} /> : <Heart30_Border onPress={onCLickHeart} />}

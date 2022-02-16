@@ -1,16 +1,22 @@
 import React from 'react';
-import {ActivityIndicator, ScrollView, Text, View} from 'react-native';
+import {ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import AidRequestList from 'Root/component/organism/list/AidRequestList';
 import {temp_style, baseInfo_style, login_style} from 'Templete/style_templete';
 import {getShelterProtectAnimalList} from 'Root/api/shelterapi';
 import {getApplyDetailById} from 'Root/api/protectapi';
+import {aidRequestList} from 'Organism/style_organism copy';
 import {txt} from 'Root/config/textstyle';
-import {GRAY10} from 'Root/config/color';
+import {APRI10, GRAY10} from 'Root/config/color';
+import {AddItem64} from 'Root/component/atom/icon';
+import DP from 'Root/config/dp';
+import Modal from 'Root/component/modal/Modal';
 
 //ShelterMenu => 보호요청 게시글 작성하기 버튼 클릭
 //연관 테이블 : ShelterProtectAnimalObject
 export default AidRequestAnimalList = ({route, navigation}) => {
 	const [data, setData] = React.useState([]);
+	const [hasPostAnimalList, setHasPostAnimalList] = React.useState([]);
+	const [noPostAnimalList, setNoPostAnimalList] = React.useState([]);
 	const [notFilteredData, setNotFilteredData] = React.useState('');
 	const [loading, setLoading] = React.useState(true); // 화면 출력 여부 결정
 
@@ -22,12 +28,13 @@ export default AidRequestAnimalList = ({route, navigation}) => {
 				request_number: '',
 			},
 			result => {
+				// console.log('result.msg', result.msg);
 				setData(result.msg);
 				const protectAnimalList = result.msg;
 				let notFiltered = [];
 
 				protectAnimalList.map((value, index) => {
-					// console.log('v.protectActApplicants', v.protect_act_applicants);
+					// console.log('v.protectActApplicants', value.protect_act_applicants);
 					const protectActivities_id = value.protect_act_applicants;
 					protectActivities_id.map((protect_activity_value, protect_activity_index) => {
 						// console.log('v', index, protect_activity_value);
@@ -43,7 +50,7 @@ export default AidRequestAnimalList = ({route, navigation}) => {
 								protect_act_object_id: protect_activity_value,
 							},
 							res => {
-								// console.log('result / getApplyDetailById / AidRequestManage  ', protect_activity_index, res.msg);
+								console.log('result / getApplyDetailById / AidRequestManage  ', protect_activity_index, res.msg);
 								const protect_activity_object = res.msg;
 								protect_activity_object.protect_animal_id = index;
 								notFiltered.push(res.msg);
@@ -81,21 +88,41 @@ export default AidRequestAnimalList = ({route, navigation}) => {
 			index_dup_deleted.map((v, i) => {
 				protect_animal_list_copy.splice(v, 1);
 			});
+			// console.log('protect_animal_list_copy', protect_animal_list_copy);
 			setData(protect_animal_list_copy);
 			setTimeout(() => {
 				setLoading(false);
 			}, 1500);
 		} else {
 			console.log('waiting');
+			let hasPostList = [];
+			let noPostList = [];
+			data.map((v, i) => {
+				if (v.protect_animal_protect_request_id != null) {
+					hasPostList.push(v);
+				} else {
+					noPostList.push(v);
+				}
+			});
+
 			setTimeout(() => {
+				setHasPostAnimalList(hasPostList);
+				setNoPostAnimalList(noPostList);
 				setLoading(false);
 			}, 1500);
 		}
 	}, [notFilteredData]);
 
-	const onSelectRequestItem = index => {
+	const onSelectHasPostList = index => {
 		//SendHeader에 보내는 파라미터 - 선택된 요청게시글의 protect_animal_protect_request_id , 네비게이션 네임
-		navigation.setParams({data: data[index], nav: route.name});
+		// navigation.setParams({data: data[index], nav: route.name});
+		console.log('onSelectNoPostList / index', index);
+
+		// Modal.popAdoptionInfoModal();
+	};
+
+	const onSelectNoPostList = index => {
+		console.log('onSelectNoPostList / index', index);
 	};
 
 	const onPressAddProtectAnimal = () => {
@@ -121,11 +148,59 @@ export default AidRequestAnimalList = ({route, navigation}) => {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
 				<ScrollView style={{flex: 1}}>
-					<View style={[temp_style.aidRequestList_aidRequestManage, baseInfo_style.list]}>
-						<AidRequestList items={data} onSelect={onSelectRequestItem} onPressAddProtectAnimal={onPressAddProtectAnimal} whenEmpty={whenEmpty} />
+					<View style={[style.container]}>
+						<TouchableOpacity onPress={onPressAddProtectAnimal} style={[style.addItemContainer]}>
+							<AddItem64 />
+							<Text style={[txt.noto30, style.addProtectedPetText]}>보호중인 동물 추가하기</Text>
+						</TouchableOpacity>
+						<Text style={[txt.noto24, style.text]}>보호 요청글 게시 필요</Text>
+						<View style={[style.aidRequestList]}>
+							<AidRequestList items={noPostAnimalList} onSelect={onSelectNoPostList} selectBorderMode={false} whenEmpty={whenEmpty} needPost={true} />
+						</View>
+						<Text style={[txt.noto24, style.text]}>보호 요청글 게시 완료</Text>
+						<View style={[style.aidRequestList]}>
+							<AidRequestList items={hasPostAnimalList} onSelect={onSelectHasPostList} selectBorderMode={false} whenEmpty={whenEmpty} />
+						</View>
 					</View>
 				</ScrollView>
 			</View>
 		);
 	}
 };
+
+const style = StyleSheet.create({
+	container: {
+		// width: 654 * DP,
+		// width: 654 * DP,
+		// width: 654 * DP,
+		// width: 654 * DP,
+		alignItems: 'center',
+	},
+	addItemContainer: {
+		width: 654 * DP,
+		height: 174 * DP,
+		borderRadius: 30 * DP,
+		marginRight: 14 * DP,
+		borderColor: APRI10,
+		borderWidth: 2 * DP,
+		marginTop: 30 * DP,
+		alignItems: 'center',
+		alignSelf: 'center',
+		justifyContent: 'center',
+		flexDirection: 'row',
+	},
+	aidRequestList: {
+		// backgroundColor: 'yellow',
+	},
+	addProtectedPetText: {
+		marginLeft: 10 * DP,
+		textAlign: 'center',
+		textAlignVertical: 'center',
+		color: APRI10,
+	},
+	text: {
+		marginTop: 40 * DP,
+		width: 654 * DP,
+		marginBottom: -10 * DP,
+	},
+});

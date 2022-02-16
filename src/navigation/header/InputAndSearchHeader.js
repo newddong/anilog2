@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 
 import {BackArrow32} from 'Atom/icon';
 import DP from 'Root/config/dp';
@@ -8,7 +8,7 @@ import InputWithSearchIcon from 'Molecules/input/InputWithSearchIcon';
 
 export default ConfirmInputHeader = props => {
 	// console.log('ConfirmInputHeader.', props.route.params.routeName);
-	const routeName = props.route.params.routeName != undefined ? props.route.params.routeName : 'SearchFeed';
+	const routeName = props.route.params.routeName != undefined ? props.route.params.routeName : '';
 	const [searchInput, setSearchInput] = React.useState('');
 	const confirm = () => {
 		// navigation.navigate('Search');
@@ -37,12 +37,12 @@ export default ConfirmInputHeader = props => {
 						<BackArrow32 onPress={onPressGoBack} />
 					</View>
 				</TouchableOpacity>
-				{routeName == 'SearchFeed' ? (
-					<></>
-				) : (
+				{routeName != 'SearchFeed' ? (
 					<View style={{marginBottom: 20 * DP, flex: 1}}>
 						<InputWithSearchIcon placeholder={'검색어를 입력하세요.'} width={590} onChange={onChangeSearchText} onSearch={confirm} />
 					</View>
+				) : (
+					<></>
 				)}
 			</>
 		</View>

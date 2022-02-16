@@ -73,7 +73,7 @@ export default MissingAnimalDetail = props => {
 		getCommnetList();
 		setTimeout(() => {
 			setLoading(false);
-		}, 500);
+		}, 10);
 	}, []);
 
 	// React.useEffect(() => {
@@ -210,7 +210,7 @@ export default MissingAnimalDetail = props => {
 	// 01010041004 -> 010-1004-1004 포맷 정규식 함수
 	const phoneFomatter = num => {
 		var formatNum = '';
-
+		if(!num)return;
 		if (num.length == 11) {
 			formatNum = num.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
 		} else if (num.length == 8) {
@@ -305,6 +305,9 @@ export default MissingAnimalDetail = props => {
 		console.log('newDateDate', newText.split('-'));
 		var newYearText = splitedNewText[0] + '년 ';
 		var newDayText = splitedNewText[1] + '월 ' + '월 ' + splitedNewText[2].toString().substring(0, 2) + '일';
+		var splitAddress = data.missing_animal_lost_location.split('"');
+		var newMissingAddress = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
+
 		if (data.missing_animal_sex == 'male') {
 			animalSex = '/ 남';
 		} else if (data.missing_animal_sex == 'female') {
@@ -312,6 +315,8 @@ export default MissingAnimalDetail = props => {
 		} else {
 			animalSex = '';
 		}
+
+		console.log('missing_animal_lost_location', data.missing_animal_lost_location.split('"'));
 		return (
 			<View style={missingAnimalDetail.textBox}>
 				<Text style={missingAnimalDetail.missingText38}>
@@ -324,7 +329,7 @@ export default MissingAnimalDetail = props => {
 				</View>
 				{/* <Text>{data.missing_animal_date} 실종</Text> */}
 				<View style={{paddingTop: 4}}>
-					<Text style={missingAnimalDetail.missingText26}>{data.missing_animal_lost_location}</Text>
+					<Text style={missingAnimalDetail.missingText26}>{newMissingAddress}</Text>
 				</View>
 				<View style={missingAnimalDetail.oneLine} />
 
@@ -426,7 +431,7 @@ export default MissingAnimalDetail = props => {
 						</View>
 
 						<View style={[temp_style.feedContent]}>
-							<MissingReportInfo data={data} />
+							{/* <MissingReportInfo data={data} /> */}
 							{/* DB에서 가져오는 제보 피드글 데이터를 FeedContent에 넘겨준다. */}
 							<FeedContent data={data} />
 						</View>

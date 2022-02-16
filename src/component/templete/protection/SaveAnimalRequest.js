@@ -10,6 +10,12 @@ export default SaveAnimalRequest = ({route}) => {
 	const navigation = useNavigation();
 
 	//계정 좌측 CheckBox 디스플레이 여부
+	//계정 좌측 CheckBox 디스플레이 여부
+	//계정 좌측 CheckBox 디스플레이 여부
+	//계정 좌측 CheckBox 디스플레이 여부
+	//계정 좌측 CheckBox 디스플레이 여부
+	//계정 좌측 CheckBox 디스플레이 여부
+	//계정 좌측 CheckBox 디스플레이 여부
 
 	const [checkBoxMode, setCheckBoxMode] = React.useState(false);
 	//checkBox On

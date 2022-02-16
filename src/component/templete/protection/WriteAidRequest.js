@@ -118,6 +118,7 @@ export default WriteAidRequest = ({route, navigation}) => {
 						<TextInput
 							onChangeText={onChangeTitle}
 							placeholder={'제목 입력'}
+							placeholderTextColor={GRAY20}
 							// numberOfLines={1}
 							style={[txt.noto30, writeAidRequest.titleInput, {borderBottomColor: APRI10}]}
 						/>

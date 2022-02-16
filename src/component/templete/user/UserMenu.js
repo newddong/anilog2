@@ -25,7 +25,7 @@ import {
 	TAGED_CONTENTS_FOR_ME,
 	LOGOUT,
 } from 'Root/i18n/msg';
-import {btn_w280, btn_w280_h68} from 'Atom/btn/btn_style';
+import {btn_w280, btn_w280x68} from 'Atom/btn/btn_style';
 import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FavoriteTag48_Filled, Paw46, Paw48_APRI10, Setting46} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
 import ProfileImageLarge194 from 'Molecules/image/ProfileImageLarge194';
@@ -50,7 +50,7 @@ export default UserMenu = props => {
 	React.useEffect(() => {
 		//자동로그인 이외의 기능에는 AsyncStorage를 사용해서 토큰을 불러오지 않음
 		//메모리의 userObject를 이용해서 권한을 파악할것임
-		if(userGlobalObject.userInfo._id==''){
+		if (userGlobalObject.userInfo._id == '') {
 			navigation.navigate('Login');
 		}
 	}, []);
@@ -214,7 +214,7 @@ export default UserMenu = props => {
 						) : data._id != undefined ? (
 							<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {flex: 1}]}>
 								<View style={[{flexDirection: 'row'}, {alignSelf: 'flex-end'}, {justifyContent: 'flex-end'}]}>
-									<Text style={[txt.noto24, {color: GRAY10}]}>펼치기</Text>
+									<Text style={[txt.noto24, {color: GRAY10}]}>더보기</Text>
 									<Arrow_Down_GRAY10 />
 								</View>
 							</TouchableOpacity>
@@ -224,15 +224,15 @@ export default UserMenu = props => {
 					{/* 내 정보 수정 버튼*/}
 					<View style={[userMenu_style.btn_w280_view]}>
 						<View style={[userMenu_style.btn_w280]}>
-							<AniButton btnLayout={btn_w280_h68} btnStyle={'border'} btnTheme={'shadow'} btnTitle={MY_INFO_MODIFY} onPress={onPressModifyMyInfo} />
+							<AniButton btnLayout={btn_w280x68} btnStyle={'border'} btnTheme={'shadow'} btnTitle={MY_INFO_MODIFY} onPress={onPressModifyMyInfo} />
 						</View>
 
 						{/* 나의 반려동물 버튼 */}
 						<View style={[userMenu_style.btn_w280]}>
 							{data.user_my_pets?.length == 0 ? (
-								<AniButton btnLayout={btn_w280_h68} disable btnTitle={MY_COMPANION} />
+								<AniButton btnLayout={btn_w280x68} disable btnTitle={MY_COMPANION} />
 							) : (
-								<AniButton btnLayout={btn_w280_h68} btnStyle={'border'} btnTheme={'shadow'} btnTitle={MY_COMPANION} onPress={onPressMyCompanion} />
+								<AniButton btnLayout={btn_w280x68} btnStyle={'border'} btnTheme={'shadow'} btnTitle={MY_COMPANION} onPress={onPressMyCompanion} />
 							)}
 						</View>
 					</View>

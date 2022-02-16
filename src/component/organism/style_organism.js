@@ -7,7 +7,7 @@ export const organism_style = StyleSheet.create({
 	feedContent: {
 		flexDirection: 'column',
 		width: 750 * DP,
-		height: 270 * DP,
+		// height: 270 * DP,
 		// height: 300 * DP,
 		alignItems: 'center',
 		paddingTop: 40 * DP,
@@ -15,6 +15,7 @@ export const organism_style = StyleSheet.create({
 		backgroundColor: WHITE,
 		paddingHorizontal: 48 * DP,
 		paddingBottom: 100 * DP,
+		overflow: 'hidden',
 	},
 	userLocationLabel_view_feedContent: {
 		flexDirection: 'row',

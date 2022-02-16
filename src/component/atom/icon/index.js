@@ -129,7 +129,11 @@ import cross24 from './cross24';
 import message94 from './message94';
 import updateImg from './updateImg';
 import posterSave from './posterSave';
+import congratulation from './congratulation';
+import newmeatball60 from './newMeatBall60';
+import newmeatball60Filled from './newMeatBall60Filled';
 import DP from 'Root/config/dp';
+
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
 
 const size30 = {width: 30 * DP, height: 30 * DP};
@@ -333,3 +337,6 @@ export const Cross24_White = makeSvg(cross24, {width: 24 * DP, height: 24 * DP},
 export const PosterSave = makeSvg(posterSave, size54x46);
 export const Message94 = makeSvg(message94, size94);
 export const MainLogo = makeSvg(mainLogo, {width: 122 * DP, height: 90 * DP});
+export const Congratulation = makeSvg(congratulation, {width: 124 * DP, height: 110 * DP});
+export const NewMeatBall60 = makeSvg(newmeatball60, size60);
+export const NewMeatBall60Filled = makeSvg(newmeatball60Filled, size60);

@@ -1,12 +1,13 @@
 import React from 'react';
-import {ActivityIndicator, ScrollView, Text, View, StyleSheet} from 'react-native';
+import {ActivityIndicator, ScrollView, Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {login_style, temp_style, baseInfo_style} from 'Templete/style_templete';
 import AidRequestList from 'Root/component/organism/list/AidRequestList';
 import {getAnimalListWithApplicant, getShelterProtectAnimalList} from 'Root/api/shelterapi';
 import {txt} from 'Root/config/textstyle';
-import {GRAY10} from 'Root/config/color';
+import {APRI10, GRAY10} from 'Root/config/color';
 import {getApplyDetailById} from 'Root/api/protectapi';
 import DP from 'Root/config/dp';
+import {AddItem64} from 'Root/component/atom/icon';
 
 //ShelterMenu => 신청서 조회 [Nav명 - ProtectApplyList]
 //ShelterMenu => 보호중인 동물 [Nav명 - ShelterProtectAnimalList]
@@ -161,7 +162,21 @@ export default AidRequestManage = ({route, navigation}) => {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
 				<ScrollView style={{flex: 1}}>
-					<View style={[temp_style.aidRequestList_aidRequestManage, baseInfo_style.list]}>
+					<View style={[style.container]}>
+						<TouchableOpacity onPress={addProtectAnimal} style={[style.addItemContainer]}>
+							<AddItem64 />
+							<Text style={[txt.noto30, style.addProtectedPetText]}>보호중인 동물 추가하기</Text>
+						</TouchableOpacity>
+						<Text style={[txt.noto24, style.text]}>보호 요청글 게시 필요</Text>
+						<View style={[style.aidRequestList]}>
+							<AidRequestList items={data} onSelect={onSelect} needPost={true} selectBorderMode={false} />
+						</View>
+						<Text style={[txt.noto24, style.text]}>보호 요청글 게시 완료</Text>
+						<View style={[style.aidRequestList]}>
+							<AidRequestList items={data} onSelect={onSelect} selectBorderMode={false} />
+						</View>
+					</View>
+					{/* <View style={[temp_style.aidRequestList_aidRequestManage, baseInfo_style.list]}>
 						{data.length == 0 ? (
 							<Text style={[txt.noto30, {alignSelf: 'center', marginTop: 130, color: GRAY10}]}>목록이 비어있습니다.</Text>
 						) : (
@@ -173,7 +188,7 @@ export default AidRequestManage = ({route, navigation}) => {
 								selectBorderMode={false}
 							/>
 						)}
-					</View>
+					</View> */}
 				</ScrollView>
 			</View>
 		);
@@ -182,6 +197,37 @@ export default AidRequestManage = ({route, navigation}) => {
 // 61c1cc107be07611b00945f9
 
 const style = StyleSheet.create({
+	container: {
+		// width: 654 * DP,
+		alignItems: 'center',
+	},
+	addItemContainer: {
+		width: 654 * DP,
+		height: 174 * DP,
+		borderRadius: 30 * DP,
+		marginRight: 14 * DP,
+		borderColor: APRI10,
+		borderWidth: 2 * DP,
+		marginTop: 30 * DP,
+		alignItems: 'center',
+		alignSelf: 'center',
+		justifyContent: 'center',
+		flexDirection: 'row',
+	},
+	aidRequestList: {
+		// backgroundColor: 'yellow',
+	},
+	addProtectedPetText: {
+		marginLeft: 10 * DP,
+		textAlign: 'center',
+		textAlignVertical: 'center',
+		color: APRI10,
+	},
+	text: {
+		marginTop: 40 * DP,
+		width: 654 * DP,
+		marginBottom: -10 * DP,
+	},
 	shareDropDown: {
 		width: 384 * DP,
 		height: 184 * DP,

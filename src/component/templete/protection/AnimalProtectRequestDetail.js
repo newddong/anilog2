@@ -58,7 +58,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		setWritersAnotherRequests(filteredList);
 		setTimeout(() => {
 			setLoading(false);
-		}, 1000);
+		}, 0);
 		//보고있는 요청글의 작성자가 로그인한 계정과 일치한다면 입양 / 임보 버튼이 나와서는 안됨
 		const user_type = userGlobalObject.userInfo.user_type;
 		user_type == 'shelter' ? setIsShelter(true) : setIsShelter(false);

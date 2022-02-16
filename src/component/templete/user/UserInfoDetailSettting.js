@@ -11,7 +11,7 @@ import Modal from 'Component/modal/Modal';
 import Input24 from 'Molecules/input/Input24';
 import {getAddressList} from 'Root/api/address';
 import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
-
+import InputWithSelect from 'Root/component/molecules/input/InputWithSelect';
 export default UserInfoDetailSettting = ({route, navigation}) => {
 	const debug = false;
 	// console.log('UserInfoDetailSetting route.params : ', route.params);
@@ -185,14 +185,14 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 							</View>
 						</View>
 						{/* 생일 */}
-						<View style={[userInfoDetailSettting_style.inputForm_detail]}>
-							<View style={[temp_style.text_userInfoDetailSettting, userInfoDetailSettting_style.text]}>
+						{/* <View style={[userInfoDetailSettting_style.inputForm_detail]}> */}
+						{/* <View style={[temp_style.text_userInfoDetailSettting, userInfoDetailSettting_style.text]}>
 								<Text style={[txt.noto28, {color: GRAY10}]}>생일</Text>
 							</View>
 							<View style={[temp_style.tabSelectFilled_Type1]}>
 								<DatePicker onDateChange={date => onDateChange(date)} defaultDate={data.user_birthday} future={false} />
-							</View>
-						</View>
+							</View> */}
+						{/* </View> */}
 						{/* 전화번호 */}
 						<View style={[userInfoDetailSettting_style.inputWithSelect]}>
 							<View style={[temp_style.text_userInfoDetailSettting, userInfoDetailSettting_style.text]}>

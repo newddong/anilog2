@@ -464,7 +464,7 @@ export const interestTagList = StyleSheet.create({
 		alignSelf: 'center',
 	},
 	btn_w226: {
-		marginLeft: 202 * DP,
+		marginLeft: 234 * DP,
 	},
 	interestingTagList: {
 		width: 606 * DP,
@@ -881,7 +881,6 @@ export const aidRequestList = StyleSheet.create({
 	},
 	itemContainer: {
 		alignSelf: 'center',
-		flexDirection: 'row',
 		marginBottom: 20 * DP,
 	},
 	addProtectedPetContainer: {
@@ -910,6 +909,12 @@ export const aidRequestList = StyleSheet.create({
 	aidRequestListCont: {
 		width: 750 * DP,
 		marginTop: 20 * DP,
+	},
+	needPostText: {
+		width: 654 * DP,
+		height: 40 * DP,
+		paddingRight: 5 * DP,
+		// backgroundColor: 'yellow',
 	},
 });
 

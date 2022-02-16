@@ -64,7 +64,7 @@ export default MyStackNavigation = props => {
 	const [searchInput, setSearchInput] = React.useState();
 
 	React.useEffect(() => {
-		setSearchInput(props.route.params);
+		setSearchInput(props.route.params); //검색어 입력 전달
 	}, [props.route.params]);
 
 	return (
@@ -195,6 +195,8 @@ export default MyStackNavigation = props => {
 				component={AssignProtectAnimalDate}
 				options={{header: props => <SimpleHeader {...props} />, title: '보호 동물 등록'}}
 			/>
+			<MyStack.Screen name="SinglePhotoSelect" component={PhotoSelect} />
+
 			<MyStack.Screen
 				name="AssignProtectAnimalType"
 				component={AssignPetInfoA}
@@ -208,7 +210,7 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen
 				name="AidRequestAnimalList"
 				component={AidRequestAnimalList}
-				options={{header: props => <SendHeader {...props} />, title: '동물 보호 요청'}}
+				options={{header: props => <SimpleHeader {...props} />, title: '동물 보호 요청'}}
 			/>
 			<MyStack.Screen
 				name="WriteAidRequest"

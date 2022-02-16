@@ -24,7 +24,7 @@ export default FeedCommentList = props => {
 	const [parentComment, setParentComment] = React.useState();
 	const [content, setContent] = React.useState('');
 	const input = React.useRef();
-	const addChildCommentFn = React.useRef(()=>{});
+	const addChildCommentFn = React.useRef(() => {});
 	const [refresh, setRefresh] = React.useState(true);
 	React.useEffect(() => {
 		if (props.route.name == 'FeedCommentList') {
@@ -41,7 +41,6 @@ export default FeedCommentList = props => {
 			);
 		}
 	}, []);
-	
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
 	const onWrite = () => {
@@ -75,9 +74,9 @@ export default FeedCommentList = props => {
 							request_number: 1000,
 						},
 						comments => {
-							!parentComment&&setComments([]); //댓글목록 초기화
+							!parentComment && setComments([]); //댓글목록 초기화
 							setComments(comments.msg);
-							parentComment&&addChildCommentFn.current();
+							parentComment && addChildCommentFn.current();
 							console.log('comments', comments);
 						},
 						err => console.log(err),
@@ -86,7 +85,6 @@ export default FeedCommentList = props => {
 			},
 			err => Modal.alert(err),
 		);
-		
 	};
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수

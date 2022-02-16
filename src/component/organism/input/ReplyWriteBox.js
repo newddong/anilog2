@@ -80,7 +80,7 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 
 							<SelectedMedia media_uri={props.photo} layout={styles.img_square_round_190} onDelete={onDeleteImage} />
 						</View>
-						<CommentBoxBottom {...props} onWrite={onWrite}/>
+						<CommentBoxBottom {...props} onWrite={onWrite} />
 					</View>
 				) : (
 					<View style={[feedCommentList.commentBox]}>
@@ -93,7 +93,7 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 								ref={inputRef}
 							/>
 						</View>
-						<CommentBoxBottom {...props} onWrite={onWrite}/>
+						<CommentBoxBottom {...props} onWrite={onWrite} />
 					</View>
 				)}
 			</View>

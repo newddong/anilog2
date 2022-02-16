@@ -881,7 +881,6 @@ export const aidRequestList = StyleSheet.create({
 	},
 	itemContainer: {
 		alignSelf: 'center',
-		flexDirection: 'row',
 		marginBottom: 20 * DP,
 	},
 	addProtectedPetContainer: {
@@ -910,6 +909,12 @@ export const aidRequestList = StyleSheet.create({
 	aidRequestListCont: {
 		width: 750 * DP,
 		marginTop: 20 * DP,
+	},
+	needPostText: {
+		width: 654 * DP,
+		height: 40 * DP,
+		paddingRight: 5 * DP,
+		// backgroundColor: 'yellow',
 	},
 });
 

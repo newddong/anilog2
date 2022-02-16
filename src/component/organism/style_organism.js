@@ -15,7 +15,7 @@ export const organism_style = StyleSheet.create({
 		backgroundColor: WHITE,
 		paddingHorizontal: 48 * DP,
 		paddingBottom: 100 * DP,
-		overflow:'hidden',
+		overflow: 'hidden',
 	},
 	userLocationLabel_view_feedContent: {
 		flexDirection: 'row',

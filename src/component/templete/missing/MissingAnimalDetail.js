@@ -71,9 +71,7 @@ export default MissingAnimalDetail = props => {
 	React.useEffect(() => {
 		console.log(' - MissingAnimalDetail Comment -');
 		getCommnetList();
-		setTimeout(() => {
-			setLoading(false);
-		}, 500);
+		setLoading(false);
 	}, []);
 
 	// React.useEffect(() => {

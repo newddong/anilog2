@@ -15,6 +15,8 @@ import moment from 'moment';
  * @param {()=>void} props.onPressAddProtectAnimal - 추가 버튼 클릭 콜백
  * @param {boolean} props.selectBorderMode - 선택 및 테두리 출력 모드
  * @param {boolean} props.needPost - 컴포넌트 하단 요청 게시글 필요 / 완려 텍스트 출력 분기
+ * @param {string} props.callFrom - 호출 네비게이션
+ * @param {component} props.whenEmpty - 빈 값 시 출력 컴포넌트
  *
  */
 export default AidRequestList = props => {
@@ -60,7 +62,7 @@ export default AidRequestList = props => {
 					selected={isSelected}
 					onSelect={() => onSelect(index)}
 					selectBorderMode={props.selectBorderMode}
-					showBadge={!isShelterProtectAnimal}
+					showBadge={isShelterProtectAnimal}
 				/>
 				{props.needPost ? (
 					<View style={[aidRequestList.needPostText]}>

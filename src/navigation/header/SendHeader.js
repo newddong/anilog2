@@ -43,7 +43,10 @@ export default SendHeader = ({route, navigation, options}) => {
 										console.log('successed / createProtectRequest / SendHeader', successed.protect_request_photos_uri);
 										Modal.popNoBtn('보호요청 게시글 \n 작성이 완료되었습니다!');
 										Modal.close();
-										navigation.push('ShelterMenu');
+										navigation.reset({
+											index: 0,
+											routes: [{name: 'ShelterMenu'}],
+										});
 									},
 									err => {
 										console.log('err, createProtectRequest / SendHeader', err);

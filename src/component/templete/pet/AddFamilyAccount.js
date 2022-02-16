@@ -8,7 +8,7 @@ import {addUserToFamily, getUserListByNickname} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default AddFamilyAccount = ({route, navigation}) => {
-	console.log('route', route.params);
+	// console.log('route', route.params);
 	const [searched_accountList, setSearched_accountList] = React.useState([]);
 
 	//돋보기 버튼 클릭 콜백

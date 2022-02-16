@@ -34,7 +34,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 	React.useEffect(() => {
 		if (route.params != null) {
 			if (route.params.addr && !addrSearched) {
-				console.log('route.params.Address Changed?   ', route.params.addr);
+				// console.log('route.params.Address Changed?   ', route.params.addr);
 				const addr = route.params.addr;
 				setData({
 					...data,

@@ -36,6 +36,7 @@ export default MissingAnimalDetail = props => {
 	const [replyPressed, setReplyPressed] = React.useState(false);
 	const debug = true;
 	const [loading, setLoading] = React.useState(true); //로딩상태
+
 	const viewShotRef = useRef();
 	React.useEffect(() => {
 		setPhoto(props.route.params);

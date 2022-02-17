@@ -65,9 +65,7 @@ export default ReportDetail = props => {
 	React.useEffect(() => {
 		console.log(' - ReportDetail Comment -');
 		getCommnetList();
-		setTimeout(() => {
-			setLoading(false);
-		}, 500);
+		setLoading(false);
 	}, []);
 
 	// React.useEffect(() => {
@@ -234,7 +232,7 @@ export default ReportDetail = props => {
 						</View>
 						<View style={[temp_style.feedContent]}>
 							{/* DB에서 가져오는 제보 피드글 데이터를 FeedContent에 넘겨준다. */}
-							<FeedContent data={data}/>
+							<FeedContent data={data} />
 						</View>
 						<View style={[reportDetail.allCommentCount]}>
 							<TouchableOpacity onPress={moveToCommentList}>
@@ -247,11 +245,11 @@ export default ReportDetail = props => {
 					</View>
 				}
 				renderItem={({item, index}) => (
-						<CommentList
-							items={commentDataList}
-							onPressReplyBtn={onReplyBtnClick}
-							onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
-						/>
+					<CommentList
+						items={commentDataList}
+						onPressReplyBtn={onReplyBtnClick}
+						onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
+					/>
 				)}
 			/>
 			<View>

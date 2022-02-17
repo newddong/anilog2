@@ -15,7 +15,6 @@ import {accountHashList} from 'Organism/style_organism copy';
  */
 export default AccountHashList = props => {
 	// console.log('props', props.items.length);
-	console.log(props.data);
 	const renderItem = ({item, index}) => {
 		return (
 			<View style={[accountHashList.userAccount]}>

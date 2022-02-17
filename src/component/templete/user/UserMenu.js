@@ -214,7 +214,7 @@ export default UserMenu = props => {
 						) : data._id != undefined ? (
 							<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {flex: 1}]}>
 								<View style={[{flexDirection: 'row'}, {alignSelf: 'flex-end'}, {justifyContent: 'flex-end'}]}>
-									<Text style={[txt.noto24, {color: GRAY10}]}>펼치기</Text>
+									<Text style={[txt.noto24, {color: GRAY10}]}>더보기</Text>
 									<Arrow_Down_GRAY10 />
 								</View>
 							</TouchableOpacity>

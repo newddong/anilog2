@@ -1,11 +1,11 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, SafeAreaView, StyleSheet, Platform, Dimensions} from 'react-native';
-import AniButton from '../button/AniButton';
+import AniButton from 'Molecules/button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import UserDescriptionLabel from '../label/UserDescriptionLabel';
+import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
 
 /**
  * 가족 계정 추가 컨펌 모달 컴포넌트

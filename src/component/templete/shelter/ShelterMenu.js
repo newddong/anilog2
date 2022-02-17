@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/core';
 import ProfileImageLarge160 from 'Molecules/image/ProfileImageLarge160';
 import {txt} from 'Root/config/textstyle';
 import SocialInfoB from 'Organism/info/SocialInfoB';
-import {btn_w280, btn_w280_h68} from 'Atom/btn/btn_style';
+import {btn_w280, btn_w280x68} from 'Atom/btn/btn_style';
 import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FloatAddArticle_128x68, FloatAddPet_128x68, FloatAddArticle_126x92, FloatAddPet_126x92} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
 import ProfileMenu from 'Organism/menu/ProfileMenu';
@@ -50,7 +50,7 @@ export default ShelterMenu = ({route}) => {
 	const [introOriginLine, setIntroOriginLine] = React.useState(0);
 	React.useEffect(() => {
 		const getInfo = () => {
-				// Modal.popNoBtn('Loading');
+			// Modal.popNoBtn('Loading');
 			getUserProfile(
 				{
 					userobject_id: userGlobalObject.userInfo._id,
@@ -117,6 +117,7 @@ export default ShelterMenu = ({route}) => {
 			// 신청서 조회
 			case INQUERY_APPLICATION:
 				navigation.navigate('ProtectApplyList', {nav: 'ProtectApplyList', token: data._id, shelter_name: data.shelter_name});
+
 				break;
 			//나의 보호소 출신 동물
 			case FROM_MY_SHELTER:
@@ -259,8 +260,8 @@ export default ShelterMenu = ({route}) => {
 					</View>
 
 					<View style={[shelterMenu.btnView, {}]}>
-						<View style={[btn_style.btn_w280]}>
-							<AniButton btnTitle={MODIFY_SHELTER_DATA} btnStyle={'border'} btnLayout={btn_w280_h68} onPress={moveToShelterInfoSetting} />
+						<View style={[btn_style.btn_w280, {alignItems: 'flex-start'}]}>
+							<AniButton btnTitle={MODIFY_SHELTER_DATA} btnStyle={'border'} btnLayout={btn_w280x68} onPress={moveToShelterInfoSetting} />
 						</View>
 
 						<View style={[shelterMenu.btnView_floadAddPet_128x68]}>
@@ -270,6 +271,10 @@ export default ShelterMenu = ({route}) => {
 						<View style={[shelterMenu.btnView_floadArticle_128x68]}>
 							<FloatAddArticle_128x68 onPress={moveToAidRequestAnimalList} />
 						</View>
+					</View>
+					<View style={[shelterMenu.textView_height36]}>
+						<Text style={[shelterMenu.text36, {marginRight: 37 * DP}]}>보호 동물 추가</Text>
+						<Text style={[shelterMenu.text36, {marginRight: 7 * DP}]}>보호글 쓰기</Text>
 					</View>
 				</View>
 				{/* 하단 메뉴 */}

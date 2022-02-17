@@ -50,8 +50,11 @@ export default Modal = {
 	 * @param {boolean} past - 과거 날짜만 선택가능
 	 * @param {boolean} future - 미래 날짜만 선택가능
 	 * @param {boolean} multiple - 다중선택 가능
+	 * @param {object} previous - 다중선택일 경우 기존의 선택 리스트
+   * @param {number} props.maxLength - 다중선택 모드일 경우 선택가능 수
+
 	 */
-	popCalendar: (visible, onOff, date, past, future, multiple) => {},
+	popCalendar: (visible, onOff, date, past, future, multiple, previous, maxLength) => {},
 
 	/**
 	 * 회전 선택창을 모달로 띄우는 함수
@@ -224,13 +227,28 @@ export default Modal = {
 
 	/**
 	 * 입양 및 임시보호 동물 알림 모달
-	 * @param {object} data - 선택한 보호동물의 정보
-	 * @param {()=>void)} onYes - 등록 버튼 클릭
-	 * @param {()=>void)} onNo - 나가기 버튼 클릭
 	 *
-	 * @example
+	 * @param {Object} props - props object
+	 * @param {object} props.data - 보호동물 데이터오브젲ㄱ트
+	 * @param {string} props.msg - 팝업 메시지
+	 * @param {string} props.yesMsg - 팝업 메시지
+	 * @param {string} props.noMsg - No 버튼 타이틀
+	 * @param {(data)=>void} props.onYes - 등록 클릭
+	 * @param {(data)=>void} props.onNo - 아니오  클릭
+	 *
 	 */
-	popAdoptionInfoModal: (data, onYes, onNo) => {},
+	popAdoptionInfoModal: (data, msg, yesMsg, noMsg, onYes, onNo) => {},
+
+	/**
+	 * 입양 및 임시보호 동물 알림 모달
+	 *
+	 * @param {Object} props - props object
+	 * @param {object} props.data - 보호동물 데이터오브젝트
+	 * @param {string} props.yesMsg - Yes버튼 타이틀
+	 * @param {(data)=>void} props.onYes - 등록 클릭
+	 *
+	 */
+	popAdoptionInfoModalWithOneBtn: (data, yesMsg, onYes) => {},
 
 	/**
 	 * 반려동물의 백신예정일 알람()

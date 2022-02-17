@@ -7,6 +7,7 @@ import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
 import {animalProtectList} from 'Templete/style_templete';
 import AnimalNeedHelp from 'Organism/listitem/AnimalNeedHelp';
 import {animalProtectDetail} from 'Organism/style_organism copy';
+import {hyphened} from 'Root/util/dateutil';
 
 export default AnimalProtectDetail = props => {
 	// console.log(' AnimalProtectDetail / props.data', props.data.protect_act_companion_history);
@@ -61,7 +62,7 @@ export default AnimalProtectDetail = props => {
 					<View style={[animalProtectDetail.detail]}>
 						<View style={[animalProtectList.menuHeader]}>
 							<House48 />
-							<Text style={[txt.noto28b, {color: GRAY10}]}>{'   '}보호장소</Text>
+							<Text style={[txt.noto26b, {color: GRAY10}]}>{'   '}보호장소</Text>
 						</View>
 						<View style={[animalProtectDetail.detail_content]}>
 							<Text style={[txt.noto28]}>
@@ -74,17 +75,17 @@ export default AnimalProtectDetail = props => {
 					<View style={[animalProtectDetail.detail]}>
 						<View style={[animalProtectList.menuHeader]}>
 							<Phone48 />
-							<Text style={[txt.noto28b, {color: GRAY10}]}>{'   '}연락처</Text>
+							<Text style={[txt.noto26b, {color: GRAY10}]}>{'   '}연락처</Text>
 						</View>
 						<TouchableOpacity onPress={onPressPhoneNum} style={[animalProtectDetail.detail_content]}>
-							<Text style={[txt.noto28, {color: BLUE20, textDecorationLine: 'underline'}]}>{data.protect_act_phone_number || ''}</Text>
+							<Text style={[txt.noto28, {color: BLUE20, textDecorationLine: 'underline'}]}>{hyphened(data.protect_act_phone_number) || ''}</Text>
 						</TouchableOpacity>
 					</View>
 					{/* 반려 동물 생활 */}
 					<View style={[animalProtectDetail.detail]}>
 						<View style={[animalProtectList.menuHeader]}>
 							<Paw48_APRI10 />
-							<Text style={[txt.noto28b, {color: GRAY10}]}>{'   '}반려 동물 생활</Text>
+							<Text style={[txt.noto26b, {color: GRAY10}]}>{'   '}반려 동물 생활</Text>
 						</View>
 						{data.protect_act_companion_history.map((v, i) => {
 							// console.log('v', i, v.companion_pet_current_status);
@@ -102,7 +103,7 @@ export default AnimalProtectDetail = props => {
 					<View style={[animalProtectDetail.detail]}>
 						<View style={[animalProtectList.menuHeader]}>
 							<Check48 />
-							<Text style={[txt.noto28b, {color: GRAY10}]}>{'   '}체크 포인트</Text>
+							<Text style={[txt.noto26, {color: GRAY10}]}>{'   '}체크 포인트</Text>
 						</View>
 						<View style={[animalProtectDetail.detail_content]}>
 							<Text style={[txt.noto28, {color: data.protect_act_checklist.is_adult ? APRI10 : GRAY10}]}>- 성인 확인</Text>
@@ -118,7 +119,7 @@ export default AnimalProtectDetail = props => {
 					<View style={[animalProtectDetail.detail]}>
 						<View style={[animalProtectList.menuHeader]}>
 							<TextBalloon48 />
-							<Text style={[txt.noto28b, {color: GRAY10}]}>{'   '}신청 동기</Text>
+							<Text style={[txt.noto26b, {color: GRAY10}]}>{'   '}신청 동기</Text>
 						</View>
 						<View style={[animalProtectDetail.detail_content]}>
 							<Text style={[txt.noto28]}>{data.protect_act_motivation || ''}</Text>

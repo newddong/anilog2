@@ -236,17 +236,16 @@ export default FeedWrite = props => {
 						</TouchableOpacity>
 					</View>
 				)}
-				{selectedImg.length > 0 && (
+				{/* {selectedImg.length > 0 && (
 					<View style={[temp_style.selectedMediaList, feedWrite.selectedMediaList]}>
 						<SelectedMediaList items={selectedImg} onDelete={deletePhoto} />
 					</View>
-				)}
+				)} */}
 				{/* 긴급 게시 관련 버튼 클릭 시 출력되는 View */}
 				{setUrgBtnsClickedView()}
 			</>
 		);
 	};
-
 	return (
 		<View style={[login_style.wrp_main, feedWrite.container]}>
 			{/* <ScrollView contentContainerStyle={{width: 750 * DP, alignItems: 'center'}}> */}
@@ -258,7 +257,10 @@ export default FeedWrite = props => {
 				placeholderTextColor={GRAY20}
 				onChangeText={inputFeedTxt}
 				maxLength={150}
-				onFind={onFindTag}></HashInput>
+				onFind={onFindTag}
+				selectedImg={selectedImg}
+				onDelete={deletePhoto}
+			/>
 
 			{!isSearchTag && setWriteModeState()}
 			{/* 긴급 게시물 관련 버튼 컨테이너 */}
@@ -352,13 +354,30 @@ const MissingForm = props => {
 		setData({...data, missing_animal_date: date});
 	};
 
-	const onSelectSpecies = (v, i) => {
-		setData({...data, missing_animal_species: types[i].pet_species, type: types[i]});
-		setIsSpeciesChanged(!isSpeciesChanged);
+	const onSelectSpecies = () => {
+		Modal.popSelectScrollBoxModal(
+			[types.map(v => v.pet_species)],
+			'동물 종 선택',
+			selected => {
+				const find = types.find(e => e.pet_species == selected);
+				setData({...data, missing_animal_species: selected, missing_animal_species_detail: find.pet_species_detail[0]});
+				setIsSpeciesChanged(!isSpeciesChanged);
+			},
+			() => Modal.close(),
+		);
 	};
 
-	const onSelectSpeciesDetail = (v, i) => {
-		setData({...data, missing_animal_species_detail: data.type.pet_species_detail[i]});
+	const onSelectSpeciesDetail = () => {
+		const find = types.find(e => e.pet_species == data.missing_animal_species);
+		Modal.popSelectScrollBoxModal(
+			[find.pet_species_detail],
+			'품종 선택',
+			selected => {
+				setData({...data, missing_animal_species_detail: selected});
+			},
+			() => Modal.close(),
+		);
+		// setData({...data, missing_animal_species_detail: data.type.pet_species_detail[i]});
 	};
 
 	const selectSex = i => {
@@ -433,17 +452,11 @@ const MissingForm = props => {
 				</View>
 				<View style={[feedWrite.formContentContainer]}>
 					<View style={[temp_style.dropdownSelect, feedWrite.dropdownSelect]}>
-						<NormalDropDown items={pet_kind} menu={types.map(v => v.pet_species)} width={292} onSelect={onSelectSpecies} defaultIndex={0} />
+						{/* <NormalDropDown items={pet_kind} menu={types.map(v => v.pet_species)} width={292} onSelect={onSelectSpecies} defaultIndex={0} /> */}
+						<SelectInput onPressInput={onSelectSpecies} width={292} value={data.missing_animal_species} />
 					</View>
 					<View style={[temp_style.dropdownSelect, feedWrite.dropdownSelect]}>
-						<NormalDropDown
-							items={pet_kind}
-							menu={data.type.pet_species_detail}
-							width={292}
-							height={500}
-							isLargeCategoryChanged={isSpeciesChanged}
-							onSelect={onSelectSpeciesDetail}
-						/>
+						<SelectInput onPressInput={onSelectSpeciesDetail} width={292} value={data.missing_animal_species_detail} />
 					</View>
 				</View>
 			</View>
@@ -687,13 +700,30 @@ const ReportForm = props => {
 		setData({...data, report_animal_features: feature});
 	};
 
-	const onSelectSpecies = (v, i) => {
-		setData({...data, report_animal_species: types[i].pet_species, type: types[i]});
-		setIsSpeciesChanged(!isSpeciesChanged);
+	const onSelectSpecies = () => {
+		Modal.popSelectScrollBoxModal(
+			[types.map(v => v.pet_species)],
+			'동물 종 선택',
+			selected => {
+				const find = types.find(e => e.pet_species == selected);
+				setData({...data, report_animal_species: selected, report_animal_species_detail: find.pet_species_detail[0]});
+				setIsSpeciesChanged(!isSpeciesChanged);
+			},
+			() => Modal.close(),
+		);
 	};
 
-	const onSelectSpeciesDetail = (v, i) => {
-		setData({...data, report_animal_species_detail: data.type.pet_species_detail[i]});
+	const onSelectSpeciesDetail = () => {
+		const find = types.find(e => e.pet_species == data.report_animal_species);
+		Modal.popSelectScrollBoxModal(
+			[find.pet_species_detail],
+			'품종 선택',
+			selected => {
+				setData({...data, report_animal_species_detail: selected});
+			},
+			() => Modal.close(),
+		);
+		// setData({...data, missing_animal_species_detail: data.type.pet_species_detail[i]});
 	};
 
 	const onPressCity = () => {
@@ -737,17 +767,10 @@ const ReportForm = props => {
 						</View>
 						<View style={[feedWrite.formContentContainer]}>
 							<View style={[temp_style.dropdownSelect, feedWrite.dropdownSelect]}>
-								<NormalDropDown items={pet_kind} menu={types.map(v => v.pet_species)} width={292} onSelect={onSelectSpecies} defaultIndex={0} />
+								<SelectInput onPressInput={onSelectSpecies} width={292} value={data.report_animal_species} />
 							</View>
 							<View style={[temp_style.dropdownSelect, feedWrite.dropdownSelect]}>
-								<NormalDropDown
-									items={pet_kind}
-									isLargeCategoryChanged={isSpeciesChanged}
-									menu={data.type.pet_species_detail}
-									width={292}
-									height={500}
-									onSelect={onSelectSpeciesDetail}
-								/>
+								<SelectInput onPressInput={onSelectSpeciesDetail} width={292} value={data.report_animal_species_detail} />
 							</View>
 						</View>
 					</View>

@@ -1,11 +1,13 @@
 import React from 'react';
-import {View, Text, TextInput, TouchableWithoutFeedback, Platform} from 'react-native';
+import {View, Text, TextInput, TouchableWithoutFeedback, Platform, StyleSheet} from 'react-native';
 import AccountHashList from 'Organism/list/AccountHashList';
 import {GRAY20} from 'Root/config/color';
 import {findTagAt, isTag, getTagName, findStartIndexOfTag, findEndIndexOfTag} from 'Root/util/stringutil';
 import {getUserListByNickname} from 'Root/api/userapi';
 import {getHashKeywords} from 'Root/api/hashapi';
 import Modal from 'Component/modal/Modal';
+import SelectedMedia from '../media/SelectedMedia';
+import {styles} from 'Root/component/atom/image/imageStyle';
 
 export default function HashInput(props) {
 	const [value, setValue] = React.useState('');
@@ -207,9 +209,21 @@ export default function HashInput(props) {
 		props.onFocus && props.onFocus(e);
 	};
 
+	const deletePhoto = index => {
+		console.log('delete Photo', index);
+		props.onDelete(index);
+	};
+
 	return (
 		<>
-			<View style={[props.containerStyle, {height: 10 * DP}]}>
+			<View
+				style={[
+					props.containerStyle,
+					{
+						justifyContent: 'space-between',
+						height: props.selectedImg.length ? 486 * DP : null, //실종, 제보, 피드 글쓰기에서 사진이 추가된 경우 일괄적으로 486의 height를 가짐.
+					},
+				]}>
 				<TextInput
 					{...props} //props override
 					textAlignVertical={'top'}
@@ -223,6 +237,11 @@ export default function HashInput(props) {
 					ref={inputRef}
 					maxLength={props.maxLength}
 					onSelectionChange={onSelectionChange}></TextInput>
+				{props.selectedImg.length > 0 && (
+					<View style={[style.mediaListContainer]}>
+						<SelectedMediaList items={props.selectedImg} onDelete={deletePhoto} />
+					</View>
+				)}
 			</View>
 
 			{find && (
@@ -241,3 +260,11 @@ HashInput.defaultProp = {
 	onChangeText: (text, hashKewords) => {},
 	onFind: isFinding => {},
 };
+
+const style = StyleSheet.create({
+	mediaListContainer: {
+		width: 600 * DP,
+		// height: 190 * DP,
+		marginTop: 10 * DP,
+	},
+});

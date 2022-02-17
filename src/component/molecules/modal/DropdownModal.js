@@ -71,7 +71,7 @@ const DropdownModal = props => {
 				<TouchableOpacity activeOpacity={1} style={{paddingBottom: 15 * DP}}>
 					{props.menu.map((v, i) => {
 						return (
-							<TouchableOpacity onPress={() => props.onPressMenu(i)}>
+							<TouchableOpacity onPress={() => props.onPressMenu(i)} key={i}>
 								<Text style={[txt.noto24, {height: 48 * DP, marginVertical: 10 * DP, width: 220 * DP, textAlign: 'center'}]}>{v}</Text>
 							</TouchableOpacity>
 						);

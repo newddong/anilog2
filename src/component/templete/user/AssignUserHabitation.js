@@ -26,8 +26,8 @@ const AssignUserHabitation = props => {
 			// district: '구를 선택해 주세요', //군,구
 			// neighbor: '동을 선택해 주세요', //동,읍,면
 			city: '', //시,도
-			district: '', //군,구
-			neighbor: '', //동,읍,면
+			district: '군, 구를 선택해주세요.', //군,구
+			neighbor: '동, 읍을 선택해주세요.', //동,읍,면
 		},
 	});
 
@@ -169,7 +169,7 @@ const AssignUserHabitation = props => {
 				districts => {
 					setDistrict(districts.msg);
 					debug && console.log('districts:', districts.msg);
-					setData({...data, user_address: {...data.user_address, city: value, district: districts.msg[0], neighbor: ''}});
+					setData({...data, user_address: {...data.user_address, city: value, district: districts.msg[0], neighbor: '동, 읍을 선택해주세요.'}});
 					if (value != data.user_address.city) {
 						setIsCityChanged(!isCityChanged);
 					}
@@ -198,6 +198,7 @@ const AssignUserHabitation = props => {
 				},
 				handleError,
 			);
+			Modal.close();
 		});
 	};
 

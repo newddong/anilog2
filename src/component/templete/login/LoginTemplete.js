@@ -43,7 +43,7 @@ export default LoginTemplete = props => {
 					Modal.close();
 					// props.navigation.navigate('MainTab', userObject.msg.user_type);
 					props.navigation.reset({routes: [{name: 'MainTab', params: userObject.msg.user_type}]});
-				}, 1000);
+				}, 0);
 			},
 			error => {
 				Modal.close();

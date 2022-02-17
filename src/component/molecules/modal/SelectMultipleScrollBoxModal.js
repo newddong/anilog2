@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions, TouchableWithoutFeedback, FlatList} from 'react-native';
-import {WHITE, APRI10, BLACK} from 'Root/config/color';
+import {WHITE, APRI10, BLACK, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
@@ -17,14 +17,13 @@ import Modal from 'Root/component/modal/Modal';
  */
 const SelectMultipleScrollBoxModal = props => {
 	const data = props.data;
-
 	const [selectedItem, setSelectedItem] = React.useState(2);
-	const [first, setFirst] = React.useState([]);
 	const [selectedItem2, setSelectedItem2] = React.useState(2);
+	const [first, setFirst] = React.useState(data.large);
 	const [second, setSecond] = React.useState([]);
 	const refContainerLeft = React.useRef('');
 	const refContainerRight = React.useRef('');
-	const padding = '-------------';
+	const padding = '-----------------------';
 
 	const onSelect = () => {
 		if (data.length == 1) {
@@ -34,30 +33,12 @@ const SelectMultipleScrollBoxModal = props => {
 		}
 	};
 
-	React.useEffect(() => {
-		let first_category = [];
-		data._W.map((v, i) => {
-			first_category.push(v.pet_species);
-		});
-		setFirst(first_category);
-		getSecondCategory();
-	}, []);
-
-	// React.useEffect(() => {
-	// 	console.log('first_2', first);
-	// 	const findIndex = data._W.find(e => e.pet_species == first[selectedItem - 2]);
-	// 	setSecond(findIndex.pet_species_detail);
-	// 	// console.log('findIndex', findIndex.pet_species_detail);
-	// 	// setSecond(findIndex.pet_species_detail);
-	// }, [first, selectedItem]);
-
 	const getSecondCategory = () => {
 		let first_category = [];
-		data._W.map((v, i) => {
-			first_category.push(v.pet_species);
+		data.large.map((v, i) => {
+			first_category.push(v.large);
 		});
-		const findIndex = data._W.find(e => e.pet_species == first_category[selectedItem - 2]);
-		setSecond(findIndex.pet_species_detail);
+		setSecond(data.sub[selectedItem - 2]);
 	};
 
 	React.useEffect(() => {
@@ -162,7 +143,9 @@ const SelectMultipleScrollBoxModal = props => {
 													// zIndex: 3,
 												},
 											]}>
-											<Text style={[txt.roboto34, {color: BLACK}]}>{item}</Text>
+
+											<Text style={[txt.roboto34, {color: item == padding ? GRAY20 : BLACK}]}>{item}</Text>
+
 										</View>
 									</TouchableWithoutFeedback>
 								);
@@ -190,7 +173,9 @@ const SelectMultipleScrollBoxModal = props => {
 													// zIndex: 3,
 												},
 											]}>
-											<Text style={[txt.roboto34, {color: BLACK}]}>{item}</Text>
+
+											<Text style={[txt.roboto34, {color: item == padding ? GRAY20 : BLACK}]}>{item}</Text>
+
 										</View>
 									</TouchableWithoutFeedback>
 								);

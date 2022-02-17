@@ -800,10 +800,11 @@ export const aidRequest = StyleSheet.create({
 	insideContainer: {
 		width: 654 * DP,
 		// height: 174 * DP,
-		marginTop: 18 * DP,
-		borderRadius: 30 * DP,
-		// borderColor: APRI10,
 		flexDirection: 'row',
+		borderRadius: 30 * DP,
+		// backgroundColor: 'red',
+		borderColor: APRI10,
+		borderWidth: 10 * DP,
 	},
 	leftContainer: {},
 	img_irregular_174: {
@@ -857,7 +858,7 @@ export const aidRequest = StyleSheet.create({
 		// backgroundColor: 'lightgray',
 	},
 	borderColor_APRI10: {
-		borderWidth: 6 * DP,
+		borderWidth: 2 * DP,
 		borderColor: APRI10,
 	},
 	borderColor_GRAY10: {

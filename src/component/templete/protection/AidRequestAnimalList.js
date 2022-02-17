@@ -63,14 +63,14 @@ export default AidRequestAnimalList = ({route, navigation}) => {
 				});
 				setTimeout(() => {
 					setNotFilteredData(notFiltered);
-				}, 1500);
+				}, 500);
 			},
 			err => {
 				console.log('err / getShelterProtectAnimalList / AidRequestAnimalList   :  ', err);
 				// setData(err);
 				setTimeout(() => {
 					setLoading(false);
-				}, 1500);
+				}, 500);
 			},
 		);
 	}, []);
@@ -92,7 +92,7 @@ export default AidRequestAnimalList = ({route, navigation}) => {
 			setData(protect_animal_list_copy);
 			setTimeout(() => {
 				setLoading(false);
-			}, 1500);
+			}, 500);
 		} else {
 			console.log('waiting');
 			let hasPostList = [];
@@ -109,7 +109,7 @@ export default AidRequestAnimalList = ({route, navigation}) => {
 				setHasPostAnimalList(hasPostList);
 				setNoPostAnimalList(noPostList);
 				setLoading(false);
-			}, 1500);
+			}, 1000);
 		}
 	}, [notFilteredData]);
 
@@ -117,12 +117,24 @@ export default AidRequestAnimalList = ({route, navigation}) => {
 		//SendHeader에 보내는 파라미터 - 선택된 요청게시글의 protect_animal_protect_request_id , 네비게이션 네임
 		// navigation.setParams({data: data[index], nav: route.name});
 		console.log('onSelectNoPostList / index', index);
-
-		// Modal.popAdoptionInfoModal();
+		Modal.popAdoptionInfoModal(
+			hasPostAnimalList[index],
+			'이 동물은 이미 보호 요청글 게시가  완료되었습니다.',
+			'다시 게시하기',
+			'게시글 보기',
+			// ()=> navigation.navigate('AnimalProtectRequestDetail', {item: item, list: protectActList, title: titleValue}),
+			() => alert('게시글보기'),
+			//현재 보호요청게시글에 접근하기 위해서 API 3가지를 별개로 접근하고 파라미터를 보내줘야 하는 상황
+			// AnimalProtectRequestDetail의 API 접근방식이 개선된 이후 처리 필요
+			() => navigation.push('WriteAidRequest', {data: hasPostAnimalList[index]}),
+		);
 	};
 
 	const onSelectNoPostList = index => {
 		console.log('onSelectNoPostList / index', index);
+		Modal.popAdoptionInfoModalWithOneBtn(noPostAnimalList[index], '보호요청 글쓰기', () =>
+			navigation.push('WriteAidRequest', {data: noPostAnimalList[index]}),
+		);
 	};
 
 	const onPressAddProtectAnimal = () => {

@@ -4,6 +4,7 @@ import {Text, View, TouchableOpacity, Linking, StyleSheet} from 'react-native';
 import DP from 'Root/config/dp';
 import {APRI10, BLUE20, GRAY10} from 'Root/config/color';
 import ProfileImageSmall from 'Molecules/image/ProfileImageSmall';
+import {hyphened} from 'Root/util/dateutil';
 
 /**
  * 보호소 Object 정보 박스
@@ -28,7 +29,8 @@ const ShelterInfo = props => {
 				</Text>
 				<TouchableOpacity onPress={onPressPhoneNum}>
 					<Text style={[txt.noto24, {alignSelf: 'flex-end', color: BLUE20, textDecorationLine: 'underline'}]}>
-						{data.shelter_delegate_contact_number || ''}
+						{/* {data.shelter_delegate_contact_number || ''} */}
+						{hyphened(data.shelter_delegate_contact_number) || ''}
 					</Text>
 				</TouchableOpacity>
 			</View>

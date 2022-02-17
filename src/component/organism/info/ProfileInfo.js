@@ -256,7 +256,7 @@ const ProfileInfo = props => {
 						<AniButton btnTitle={'팔로우'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} onPress={follow} />
 					)}
 				</View>
-				<View style={[organism_style.ActionButton_profileInfo, profileInfo_style.buttonContainer]}>{getButton()}</View>
+				<View style={[]}>{getButton()}</View>
 			</View>
 		</View>
 	);

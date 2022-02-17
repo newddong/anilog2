@@ -3012,7 +3012,7 @@ export const searchProtectRequest = StyleSheet.create({
 		},
 	},
 	animalNeedHelpList: {
-		marginTop: 50 * DP,
+		marginTop: 80 * DP,
 		width: 750 * DP,
 		alignSelf: 'center',
 		// backgroundColor: '#FF00FF',
@@ -3793,7 +3793,8 @@ export const feedCommentList = StyleSheet.create({
 	},
 	commentBox: {
 		width: 750 * DP,
-		height: 186 * DP,
+		// height: 186 * DP,
+		// backgroundColor: 'yellow',
 		paddingVertical: 28 * DP,
 		paddingHorizontal: 20 * DP,
 		alignItems: 'center',
@@ -3831,7 +3832,9 @@ export const feedCommentList = StyleSheet.create({
 	},
 	commentBox_top: {
 		width: 694 * DP,
-		height: 68 * DP,
+		// height: 68 * DP,
+		maxHeight: 224 * DP,
+		padding: 10 * DP,
 		borderRadius: 24 * DP,
 		marginBottom: 12 * DP,
 		justifyContent: 'center',

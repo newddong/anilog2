@@ -12,41 +12,27 @@ import Modal from 'Root/component/modal/Modal';
  * 입양 및 임시보호 동물 알림 모달
  *
  * @param {Object} props - props object
- * @param {object} props.data - 보호동물 데이터오브젲ㄱ트
- * @param {string} props.msg - 팝업 메시지
+ * @param {object} props.data - 보호동물 데이터오브젝트
  * @param {string} props.yesMsg - Yes버튼 타이틀
- * @param {string} props.noMsg - No 버튼 타이틀
  * @param {(data)=>void} props.onYes - 등록 클릭
- * @param {(data)=>void} props.onNo - 아니오  클릭
  *
  */
-const AdoptionInfoModal = props => {
+const AdoptionInfoModalWithOneBtn = props => {
 	// console.log('Adoption data', props.data);
 	const data = props.data;
 	const onYes = () => {
 		props.onYes();
 	};
 
-	const onNo = () => {
-		props.onNo();
-	};
-
 	return (
 		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={style.background}>
 			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
 				<View style={[style.inside]}>
-					<View style={[style.infoText]}>
-						<Text style={[txt.noto28, {color: GRAY10, textAlign: 'center'}]}>
-							{/* 새로 입양하시는 동물이 있습니다. {'\n'}해당 동물을 등록하시겠습니까?{' '} */}
-							{props.msg}
-						</Text>
-					</View>
 					<View style={[style.aidRequestContainer]}>
 						<AidRequest data={data} selectBorderMode={true} showBadge={false} />
 					</View>
 					<View style={style.buttonContainer}>
-						<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.noMsg} onPress={onYes} />
-						<AniButton btnLayout={btn_w226} btnStyle={'filled'} btnTitle={props.yesMsg} onPress={onNo} />
+						<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.yesMsg} onPress={onYes} />
 					</View>
 				</View>
 			</TouchableOpacity>
@@ -54,7 +40,7 @@ const AdoptionInfoModal = props => {
 	);
 };
 
-AdoptionInfoModal.defaultProps = {
+AdoptionInfoModalWithOneBtn.defaultProps = {
 	yesMsg: '등 록',
 };
 
@@ -68,16 +54,16 @@ const style = StyleSheet.create({
 	},
 	popUpWindow: {
 		width: 694 * DP,
-		height: 490 * DP,
-		padding: 20 * DP,
+		height: 334 * DP,
 		// paddingBottom: 30 * DP,
 		backgroundColor: WHITE,
 		borderRadius: 50 * DP,
 	},
 	inside: {
 		width: 654 * DP,
-		height: 420 * DP,
-		paddingVertical: 40 * DP,
+		height: 274 * DP,
+		paddingVertical: 30 * DP,
+		paddingHorizontal: 20 * DP,
 	},
 	infoText: {
 		width: 466 * DP,
@@ -86,11 +72,11 @@ const style = StyleSheet.create({
 		alignSelf: 'center',
 	},
 	aidRequestContainer: {
-		marginVertical: 20 * DP,
 		// backgroundColor: 'yellow',
 	},
 	buttonContainer: {
-		width: 486 * DP,
+		marginTop: 20 * DP,
+		width: 226 * DP,
 		alignSelf: 'center',
 		flexDirection: 'row',
 		justifyContent: 'space-between',
@@ -107,4 +93,4 @@ const style = StyleSheet.create({
 	},
 });
 
-export default AdoptionInfoModal;
+export default AdoptionInfoModalWithOneBtn;

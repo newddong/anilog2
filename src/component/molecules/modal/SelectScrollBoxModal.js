@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions, TouchableWithoutFeedback, FlatList} from 'react-native';
-import {WHITE, APRI10, BLACK} from 'Root/config/color';
+import {WHITE, APRI10, BLACK, GRAY20, GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
@@ -21,7 +21,7 @@ const SelectScrollBoxModal = props => {
 	const [selectedItem2, setSelectedItem2] = React.useState(2);
 	const refContainerLeft = React.useRef('');
 	const refContainerRight = React.useRef('');
-	const padding = '-------------';
+	const padding = '---------------------------';
 
 	const onSelect = () => {
 		if (data.length == 1) {
@@ -42,12 +42,8 @@ const SelectScrollBoxModal = props => {
 	const onScroll = (event, i) => {
 		let y = event.nativeEvent.contentOffset.y;
 		let focused = '';
-		if (data.length < 5) {
-			focused = Math.floor(y / (62 * DP));
-		} else {
-			focused = Math.floor(y / (68 * DP));
-		}
-		console.log('foucsed', focused, i);
+		data[0].length < 5 ? (focused = Math.floor(y / (62 * DP))) : (focused = Math.floor(y / (68 * DP)));
+		// console.log('foucsed', focused, i);
 		if (i == 0) {
 			if (focused < 1) {
 				setSelectedItem(2);
@@ -85,6 +81,14 @@ const SelectScrollBoxModal = props => {
 		newArr.push(padding);
 		newArr.push(padding);
 		return newArr;
+	};
+
+	const getColor = item => {
+		if (item == padding) {
+			return GRAY20;
+		} else {
+			return BLACK;
+		}
 	};
 
 	return (
@@ -130,7 +134,7 @@ const SelectScrollBoxModal = props => {
 															// zIndex: 3,
 														},
 													]}>
-													<Text style={[txt.roboto34, {color: BLACK}]}>{item}</Text>
+													<Text style={[txt.roboto34, {color: getColor(item)}]}>{item}</Text>
 												</View>
 											</TouchableWithoutFeedback>
 										);

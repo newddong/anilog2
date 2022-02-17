@@ -8,6 +8,7 @@ import {Animated, Dimensions, Text, TouchableOpacity, View} from 'react-native';
 import {APRI10, GRAY10, GRAY20, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
+import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 
 const SearchFeedTabNav = createMaterialTopTabNavigator();
 
@@ -41,6 +42,7 @@ export default SearchFeedTabNavigation = props => {
 
 	React.useEffect(() => {
 		//SearchHeader에서 작성한 검색어와 검색클릭이 행해지면 SearchInput에 값이 들어감
+		console.log('props.input / FeedTabNavi', props.input);
 		setSearchInput(props.input);
 	}, [props.input]);
 
@@ -61,7 +63,7 @@ export default SearchFeedTabNavigation = props => {
 				tabBarIndicatorStyle: {backgroundColor: APRI10},
 			}}>
 			{/* 게시글 */}
-			<SearchFeedTabNav.Screen name="SearchFeed" options={{title: '추천'}}>
+			<SearchFeedTabNav.Screen name="SearchFeed" options={{title: '게시글'}}>
 				{props => <SearchFeed {...props} />}
 			</SearchFeedTabNav.Screen>
 			{/* 계정 */}
@@ -69,13 +71,8 @@ export default SearchFeedTabNavigation = props => {
 				{props => <SearchAccountA {...props} prevNav={props.prevNav} input={searchInput} onClickUser={onClickUser} />}
 			</SearchFeedTabNav.Screen>
 			{/* 태그 */}
-			<SearchFeedTabNav.Screen
-				name="SearchHashTag"
-				options={{
-					title: '해쉬태그',
-					header: props => <InputAndSearchHeader {...props} />,
-				}}>
-				{props => <SearchHashTag {...props} input={searchInput} />}
+			<SearchFeedTabNav.Screen name="SearchHashTag" options={{title: '해쉬태그'}}>
+				{props => <SearchHashTag {...props} search={searchInput} />}
 			</SearchFeedTabNav.Screen>
 		</SearchFeedTabNav.Navigator>
 	);

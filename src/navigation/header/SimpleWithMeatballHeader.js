@@ -12,6 +12,7 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 	const isWriter = userGlobalObject.userInfo._id == route.params.item.protect_request_writer_id._id;
 
 	const onPressChangeProtectRequestStatus = () => {
+		console.log('dddd');
 		Modal.close();
 		setTimeout(() => {
 			Modal.popSelectScrollBoxModal([PROTECT_REQUEST_STATUS], '', selectedItem => {
@@ -32,7 +33,9 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 		}, 200);
 	};
 
-	const onPressEdit = () => {};
+	const onPressEdit = () => {
+		alert('수정하기');
+	};
 
 	const onPressDelete = () => {
 		Modal.close();
@@ -51,12 +54,19 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 				switch (selectedItem) {
 					case '상태 변경':
 						onPressChangeProtectRequestStatus();
+						break;
 					case '공유하기':
 						onPressShare();
+						break;
+
 					case '수정':
 						onPressEdit();
+						break;
+
 					case '삭제':
 						onPressDelete();
+						break;
+
 					default:
 						break;
 				}

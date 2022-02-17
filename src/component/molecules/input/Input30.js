@@ -4,7 +4,7 @@ import {Text, View, TextInput} from 'react-native';
 import DP from 'Root/config/dp';
 import {BLACK, APRI10, GRAY10, GRAY20, GRAY30, RED10, GREEN} from 'Root/config/color';
 import PropsTypes, {any, bool, func, number, object, oneOf, oneOfType, string} from 'prop-types';
-import {Cross52} from 'Atom/icon';
+import {Cross24_Filled, Cross52} from 'Atom/icon';
 import {TouchableOpacity} from 'react-native';
 
 /**
@@ -122,8 +122,8 @@ const Input30 = React.forwardRef((props, ref) => {
 					/>
 					{/* {input.length > 0 ? ( */}
 					{props.value.length > 0 && props.showCrossMark ? (
-						<TouchableOpacity onPress={onClear} style={{position: 'absolute', right: 0}}>
-							<Cross52 />
+						<TouchableOpacity onPress={onClear} style={{position: 'absolute', right: 20 * DP}}>
+							<Cross24_Filled />
 						</TouchableOpacity>
 					) : (
 						false

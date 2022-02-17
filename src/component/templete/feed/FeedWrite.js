@@ -246,9 +246,6 @@ export default FeedWrite = props => {
 			</>
 		);
 	};
-	// 장기적으로 보면 NC는 가망이 없는 회사임. 지금 리니지 충성고객층 연령대가 40~60대일텐데 이 사람들 더 나이 들고 하면 게임 할 체력이 안될텐데 그 고객층 날라가면 또 다른 새로운 고객층을 확보해야하는데 그게 지금 안되고 있음.
-	// 지금 봐바 10~30대 유저들 NC를 게임회사가 아니라 도박회사로 보고 있는데 암만 마케팅하고 홍보하고 지랄해봤자 이미 깊게 박혀진 이미지는 절대 못바뀜. 그러므로 새로운 고객층 확보가 불가능함.
-	// 해외? 개네들 우리보다 리니지류 게임을 극혐하는데 고객이 확보 될리가 있나 ㅋㅋ
 	return (
 		<View style={[login_style.wrp_main, feedWrite.container]}>
 			{/* <ScrollView contentContainerStyle={{width: 750 * DP, alignItems: 'center'}}> */}

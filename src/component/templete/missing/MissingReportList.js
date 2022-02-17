@@ -131,7 +131,7 @@ export default MissingReportList = props => {
 	const onSelectKind = kind => {
 		Modal.popSelectScrollBoxModal(
 			[petTypes],
-			'보호 지역 선택',
+			'동물 종류 선택',
 			selected => {
 				selected == '동물종류'
 					? setFilterData({...filterData, missing_animal_species: ''})

@@ -13,6 +13,7 @@ import Modal from 'Root/component/modal/Modal';
  * @param {string} props.header - 모달 상단 좌측의 헤더 타이틀 / 빈 값 '' 을 보낼 경우 '취소' 출력
  * @param {(선택1, 선택2)=>void} props.onSelect - 완료 버튼 콜백 / data의 길이에 맞게 값 반환
  * @param {()=>void} props.onClose - 취소 버튼 콜백
+ * @param {height} props.height - 취소 버튼 콜백
  *
  */
 const SelectScrollBoxModal = props => {
@@ -27,7 +28,8 @@ const SelectScrollBoxModal = props => {
 		if (data.length == 1) {
 			props.onSelect(data[0][selectedItem - 2]);
 		} else {
-			props.onSelect(data[0][selectedItem], data[1][selectedItem2]);
+			console.log('selectedItem2', selectedItem2);
+			props.onSelect(data[0][selectedItem - 2], data[1][selectedItem2 - 2]);
 		}
 	};
 
@@ -42,7 +44,7 @@ const SelectScrollBoxModal = props => {
 	const onScroll = (event, i) => {
 		let y = event.nativeEvent.contentOffset.y;
 		let focused = '';
-		data[0].length < 5 ? (focused = Math.floor(y / (62 * DP))) : (focused = Math.floor(y / (68 * DP)));
+		data[0].length < 5 ? (focused = Math.floor(y / (72 * DP))) : (focused = Math.floor(y / (78 * DP)));
 		// console.log('foucsed', focused, i);
 		if (i == 0) {
 			if (focused < 1) {
@@ -56,6 +58,9 @@ const SelectScrollBoxModal = props => {
 		} else {
 			if (focused < 1) {
 				setSelectedItem2(2);
+			} else if (focused > data[1].length - 1) {
+				console.log('넘어갔나?');
+				setSelectedItem2(data[1].length + 1);
 			} else {
 				setSelectedItem2(focused + 2);
 			}
@@ -94,9 +99,15 @@ const SelectScrollBoxModal = props => {
 	return (
 		<View style={style.background}>
 			<TouchableWithoutFeedback onPress={() => Modal.close()}>
-				<View style={{width: 750 * DP, height: 700}} />
+				<View style={{width: 750 * DP, height: 1200 * DP}} />
 			</TouchableWithoutFeedback>
-			<View style={style.popUpWindow}>
+			<View
+				style={[
+					style.popUpWindow,
+					{
+						// height: props.height * DP,
+					},
+				]}>
 				<View style={style.header}>
 					{props.header == '' ? (
 						<Text onPress={() => Modal.close()} style={[txt.noto30, {color: WHITE}]}>
@@ -132,6 +143,7 @@ const SelectScrollBoxModal = props => {
 														{
 															width: getWidth(),
 															// zIndex: 3,
+															height: i == 0 ? 80 * DP : 80 * DP,
 														},
 													]}>
 													<Text style={[txt.roboto34, {color: getColor(item)}]}>{item}</Text>
@@ -153,6 +165,7 @@ const SelectScrollBoxModal = props => {
 SelectScrollBoxModal.defaultProps = {
 	// header: 'popUp',
 	onSelect: () => {},
+	height: 476,
 };
 
 const style = StyleSheet.create({

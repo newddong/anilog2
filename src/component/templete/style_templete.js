@@ -450,9 +450,9 @@ export const temp_style = StyleSheet.create({
 		alignItems: 'center',
 	},
 	controllableHashTagList: {
-		width: 654 * DP,
-		marginTop: 40 * DP,
-		marginBottom: 20 * DP,
+		width: 300 * DP,
+		height: 36 * DP,
+		marginTop: 20 * DP,
 		marginLeft: 48 * DP,
 	},
 	hashTagList: {
@@ -1949,7 +1949,7 @@ export const assignProtectAnimal_style = StyleSheet.create({
 		height: 72 * DP,
 		flexDirection: 'row',
 		// alignItems: 'center',
-		marginTop: 30 * DP,
+		marginTop: 70 * DP,
 	},
 	inputform: {
 		marginTop: 60 * DP,
@@ -2024,6 +2024,9 @@ export const assignProtectAnimal_style = StyleSheet.create({
 	},
 	width118: {
 		width: 118 * DP,
+	},
+	estimatedAgeContainer: {
+		marginLeft: 10 * DP,
 	},
 	dropdownSelect_year_text: {
 		width: 100 * DP,
@@ -2319,28 +2322,27 @@ export const editShelterInfo = StyleSheet.create({
 		// backgroundColor: '#B3EBB5',
 		alignItems: 'center',
 	},
+
+	shelterInfoForm: {
+		width: 654 * DP,
+		// backgroundColor: '#A07A7A',
+		marginTop: 50 * DP,
+	},
 	inputCont: {
 		flexDirection: 'row',
-		alignSelf: 'center',
 		height: 82 * DP,
 		// backgroundColor: 'yellow',
 		// marginBottom: 10 * DP,
 	},
 	input30WithMsg: {
 		flexDirection: 'row',
-		alignSelf: 'center',
+		// alignSelf: 'center',
 		height: 82 * DP,
 	},
 	inputEmail: {
 		flexDirection: 'row',
-		// alignSelf: 'center',
 		height: 82 * DP,
 		// backgroundColor: 'yellow',
-	},
-	shelterInfoForm: {
-		width: 654 * DP,
-		// backgroundColor: '#A07A7A',
-		marginTop: 50 * DP,
 	},
 	btn_w654: {
 		marginVertical: 50 * DP,
@@ -2348,7 +2350,7 @@ export const editShelterInfo = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	category: {
-		width: 134 * DP,
+		width: 160 * DP,
 		// backgroundColor: '#7F8EF3',
 		justifyContent: 'center',
 	},
@@ -2364,13 +2366,17 @@ export const editShelterInfo = StyleSheet.create({
 		// backgroundColor: 'pink',
 	},
 	input30: {
-		width: 520 * DP,
+		// width: 520 * DP,
 		height: 82 * DP,
 		// marginBottom: 50 * DP,
 		// justifyContent: 'center',
 		// backgroundColor: '#EDEDED',
 	},
-	inputWithEmail: {width: 520 * DP, height: 82 * DP},
+	inputWithEmail: {
+		width: 480 * DP,
+		height: 82 * DP,
+		// backgroundColor: 'red',
+	},
 	addressInput: {
 		width: 654 * DP,
 		height: 236 * DP,
@@ -2719,14 +2725,14 @@ export const petInfoSetting = StyleSheet.create({
 	},
 	petProfileMenu: {
 		container: {
-			width: 654 * DP,
+			width: 750 * DP,
 			// height: 130 * DP,
 			marginTop: 2 * DP,
 			paddingVertical: 40 * DP,
-			borderBottomColor: GRAY30,
+			borderBottomColor: GRAY40,
 			borderBottomWidth: 2 * DP,
 			justifyContent: 'center',
-			// alignItems: 'center',
+			alignItems: 'center',
 			// backgroundColor: 'yellow',
 		},
 		insideContainer: {
@@ -2750,7 +2756,10 @@ export const petInfoSetting = StyleSheet.create({
 		},
 	},
 	petIntroduction: {
+		width: 654 * DP,
 		marginTop: 30 * DP,
+		alignItems: 'flex-start',
+		// backgroundColor: 'yellow',
 	},
 	familyAccountSetting: {
 		container: {
@@ -2898,9 +2907,10 @@ export const feedListForHashTag = StyleSheet.create({
 		flex: 1,
 	},
 	hashTagInfo: {
-		width: 750 * DP,
+		width: 702 * DP,
 		height: 232 * DP,
 		alignItems: 'center',
+		// backgroundColor: 'lightblue',
 	},
 	hashLabel: {
 		width: 622 * DP,
@@ -2921,6 +2931,13 @@ export const feedListForHashTag = StyleSheet.create({
 		flexDirection: 'row',
 		marginRight: 24 * DP,
 		backgroundColor: WHITE,
+	},
+	categoryText: {
+		width: 161 * DP,
+		height: 70 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		// backgroundColor: 'pink',
 	},
 });
 
@@ -2976,6 +2993,7 @@ export const searchAccountB = StyleSheet.create({
 export const searchHashTag = StyleSheet.create({
 	container: {
 		flex: 1,
+		alignItems: 'center',
 	},
 });
 
@@ -3244,14 +3262,16 @@ export const applyVolunteer = StyleSheet.create({
 		width: 480 * DP,
 		height: 44 * DP,
 		// backgroundColor: 'lightblue',
+		textAlign: 'right',
 	},
 	number_of_volunteerers: {
 		borderBottomColor: APRI10,
 		borderBottomWidth: 2 * DP,
 		width: 590 * DP,
 		height: 106 * DP,
+		paddingRight: 20 * DP,
 		alignItems: 'center',
-		justifyContent: 'center',
+		justifyContent: 'flex-end',
 		alignSelf: 'flex-end',
 		flexDirection: 'row',
 		// backgroundColor: 'yellow',
@@ -4300,6 +4320,13 @@ export const profile = StyleSheet.create({
 		marginTop: 20 * DP,
 		flex: 1,
 		// height: 400 * DP,
+	},
+	listEmpty: {
+		width: 684 * DP,
+		height: 212 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		// backgroundColor: 'red',
 	},
 });
 

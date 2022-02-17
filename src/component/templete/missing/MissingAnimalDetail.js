@@ -72,7 +72,6 @@ export default MissingAnimalDetail = props => {
 		console.log(' - MissingAnimalDetail Comment -');
 		getCommnetList();
 		setLoading(false);
-
 	}, []);
 
 	// React.useEffect(() => {
@@ -209,7 +208,7 @@ export default MissingAnimalDetail = props => {
 	// 01010041004 -> 010-1004-1004 포맷 정규식 함수
 	const phoneFomatter = num => {
 		var formatNum = '';
-		if(!num)return;
+		if (!num) return;
 		if (num.length == 11) {
 			formatNum = num.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
 		} else if (num.length == 8) {
@@ -266,7 +265,7 @@ export default MissingAnimalDetail = props => {
 	// 포스터 동물 사진2개 View 컴포넌트
 	const MissingAnimalPicture = () => {
 		console.log('data.feed_media length', data.feed_medias);
-		if (data.feed_medias.length < 2) {
+		if (data.feed_medias && data.feed_medias.length < 2) {
 			return (
 				<View style={missingAnimalDetail.picture}>
 					<Image

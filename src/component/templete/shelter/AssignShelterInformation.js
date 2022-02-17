@@ -82,7 +82,6 @@ export default AssignShelterInformation = props => {
 	const onValidPhoneNumber = isValid => {
 		// let regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
 		console.log('onValidPhoneNumber', data.shelter_delegate_contact_number.length >= 7);
-
 		setPhoneConfirmed(9 < data.shelter_delegate_contact_number.length);
 	};
 

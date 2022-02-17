@@ -88,7 +88,6 @@ import AddFamilyModal from 'Root/component/molecules/modal/AddFamilyModal';
 import CongratulationModal from 'Root/component/molecules/modal/CongratulationModal';
 import AdoptionInfoModal from 'Root/component/molecules/modal/AdoptionInfoModal';
 import AdoptionInfoModalWithOneBtn from 'Root/component/molecules/modal/AdoptionInfoModalWithOneBtn';
-
 // import Camera from 'Root/component/templete/Camera';
 // import Camera from 'Templete/media/Camera';
 const RootStack = createStackNavigator();
@@ -134,10 +133,20 @@ export default RootStackNavigation = () => {
 		!isPop && setPop(true);
 	};
 
-	Modal.popCalendar = (visible, onOff, date, past, future, multiple) => {
-		console.log('Multi', multiple);
+	Modal.popCalendar = (visible, onOff, date, past, future, multiple, previous, maxLength) => {
+		// console.log('Multi', multiple);
 		multiple
-			? popIn(<Calendar_Multiple modalOn={visible} modalOff={onOff} selectDate={date} past={past} future={future} />)
+			? popIn(
+					<Calendar_Multiple
+						modalOn={visible}
+						modalOff={onOff}
+						selectDate={date}
+						past={past}
+						future={future}
+						previous={previous}
+						maxLength={maxLength}
+					/>,
+			  )
 			: popIn(<Calendar modalOn={visible} modalOff={onOff} selectDate={date} past={past} future={future} />);
 		!isPop && setPop(true);
 	};

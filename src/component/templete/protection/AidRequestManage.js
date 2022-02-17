@@ -10,7 +10,6 @@ import DP from 'Root/config/dp';
 import {AddItem64} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
 
-
 //ShelterMenu => 신청서 조회 [Nav명 - ProtectApplyList]
 //ShelterMenu => 보호중인 동물 [Nav명 - ShelterProtectAnimalList]
 export default AidRequestManage = ({route, navigation}) => {

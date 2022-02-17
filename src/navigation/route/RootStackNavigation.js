@@ -86,6 +86,9 @@ import ShareModal from 'Root/component/molecules/modal/ShareModal';
 import SelectMultipleScrollBoxModal from 'Root/component/molecules/modal/SelectMultipleScrollBoxModal';
 import AddFamilyModal from 'Root/component/molecules/modal/AddFamilyModal';
 import CongratulationModal from 'Root/component/molecules/modal/CongratulationModal';
+import AdoptionInfoModal from 'Root/component/molecules/modal/AdoptionInfoModal';
+import AdoptionInfoModalWithOneBtn from 'Root/component/molecules/modal/AdoptionInfoModalWithOneBtn';
+
 // import Camera from 'Root/component/templete/Camera';
 // import Camera from 'Templete/media/Camera';
 const RootStack = createStackNavigator();
@@ -234,8 +237,13 @@ export default RootStackNavigation = () => {
 		!isPop && setPop(true);
 	};
 
-	Modal.popAdoptionInfoModal = (data, onYes, onNo) => {
-		popIn(<AdoptionInfoModal data={data} onYes={onYes} onNo={onNo} />);
+	Modal.popAdoptionInfoModal = (data, msg, yesMsg, noMsg, onYes, onNo) => {
+		popIn(<AdoptionInfoModal msg={msg} yesMsg={yesMsg} noMsg={noMsg} data={data} onYes={onYes} onNo={onNo} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popAdoptionInfoModalWithOneBtn = (data, yesMsg, onYes) => {
+		popIn(<AdoptionInfoModalWithOneBtn yesMsg={yesMsg} data={data} onYes={onYes} />);
 		!isPop && setPop(true);
 	};
 

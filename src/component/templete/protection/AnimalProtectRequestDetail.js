@@ -56,9 +56,8 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		//그러나 현재 보고 있는 보호요청게시글은 해당 리스트에 출력이 되어서는 안됨 => Filter처리
 		const filteredList = writersAnotherRequests.filter(e => e._id != data._id);
 		setWritersAnotherRequests(filteredList);
-		setTimeout(() => {
-			setLoading(false);
-		}, 0);
+		setLoading(false);
+
 		//보고있는 요청글의 작성자가 로그인한 계정과 일치한다면 입양 / 임보 버튼이 나와서는 안됨
 		const user_type = userGlobalObject.userInfo.user_type;
 		user_type == 'shelter' ? setIsShelter(true) : setIsShelter(false);

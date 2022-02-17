@@ -1,11 +1,13 @@
 import React from 'react';
-import {View, Text, TextInput, TouchableWithoutFeedback, Platform} from 'react-native';
+import {View, Text, TextInput, TouchableWithoutFeedback, Platform, StyleSheet} from 'react-native';
 import AccountHashList from 'Organism/list/AccountHashList';
 import {GRAY20} from 'Root/config/color';
 import {findTagAt, isTag, getTagName, findStartIndexOfTag, findEndIndexOfTag} from 'Root/util/stringutil';
 import {getUserListByNickname} from 'Root/api/userapi';
 import {getHashKeywords} from 'Root/api/hashapi';
 import Modal from 'Component/modal/Modal';
+import SelectedMedia from '../media/SelectedMedia';
+import {styles} from 'Root/component/atom/image/imageStyle';
 
 export default function HashInput(props) {
 	const [value, setValue] = React.useState('');
@@ -207,22 +209,45 @@ export default function HashInput(props) {
 		props.onFocus && props.onFocus(e);
 	};
 
+	const deletePhoto = index => {
+		console.log('delete Photo', index);
+		props.onDelete(index);
+	};
+
+	// console.log('containerStyle', props.containerStyle[1].minHeight);
+	// console.log('488', 488 * DP);
+
 	return (
 		<>
-			<View style={[props.containerStyle, {height: 10 * DP}]}>
-				<TextInput
-					{...props} //props override
-					textAlignVertical={'top'}
-					multiline={true}
-					value={value}
-					onChangeText={onChangeText}
-					onFocus={onFocus}
-					placeholder={props.placeholder}
-					placeholderTextColor={GRAY20}
-					selection={cursor}
-					ref={inputRef}
-					maxLength={props.maxLength}
-					onSelectionChange={onSelectionChange}></TextInput>
+			<View
+				onLayout={e => console.log('e', e.nativeEvent.layout.height)}
+				style={[
+					props.containerStyle,
+					{
+						justifyContent: 'space-between',
+						minHeight: null,
+					},
+				]}>
+				<View style={[{minHeight: props.selectedImg.length > 0 ? props.containerStyle[1].minHeight + 10 * DP : props.containerStyle[1].minHeight}]}>
+					<TextInput
+						{...props} //props override
+						textAlignVertical={'top'}
+						multiline={true}
+						value={value}
+						onChangeText={onChangeText}
+						onFocus={onFocus}
+						placeholder={props.placeholder}
+						placeholderTextColor={GRAY20}
+						selection={cursor}
+						ref={inputRef}
+						maxLength={props.maxLength}
+						onSelectionChange={onSelectionChange}></TextInput>
+				</View>
+				{props.selectedImg.length > 0 && (
+					<View style={[style.mediaListContainer]}>
+						<SelectedMediaList items={props.selectedImg} onDelete={deletePhoto} />
+					</View>
+				)}
 			</View>
 
 			{find && (
@@ -241,3 +266,11 @@ HashInput.defaultProp = {
 	onChangeText: (text, hashKewords) => {},
 	onFind: isFinding => {},
 };
+
+const style = StyleSheet.create({
+	mediaListContainer: {
+		width: 600 * DP,
+		// height: 190 * DP,
+		marginTop: 10 * DP,
+	},
+});

@@ -32,7 +32,7 @@ export default ProtectApplyForm = ({route, navigation}) => {
 				setData(addedData);
 				setTimeout(() => {
 					setLoading(false);
-				}, 1500);
+				}, 500);
 			},
 			err => {
 				console.log('err / getProtectRequestByProtectRequestId / ProtectApplyForm  ', err);

@@ -7,6 +7,7 @@ import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
 import {animalProtectList} from 'Templete/style_templete';
 import AnimalNeedHelp from 'Organism/listitem/AnimalNeedHelp';
 import {animalProtectDetail} from 'Organism/style_organism copy';
+import {hyphened} from 'Root/util/dateutil';
 
 export default AnimalProtectDetail = props => {
 	// console.log(' AnimalProtectDetail / props.data', props.data.protect_act_companion_history);
@@ -77,7 +78,7 @@ export default AnimalProtectDetail = props => {
 							<Text style={[txt.noto26b, {color: GRAY10}]}>{'   '}연락처</Text>
 						</View>
 						<TouchableOpacity onPress={onPressPhoneNum} style={[animalProtectDetail.detail_content]}>
-							<Text style={[txt.noto28, {color: BLUE20, textDecorationLine: 'underline'}]}>{data.protect_act_phone_number || ''}</Text>
+							<Text style={[txt.noto28, {color: BLUE20, textDecorationLine: 'underline'}]}>{hyphened(data.protect_act_phone_number) || ''}</Text>
 						</TouchableOpacity>
 					</View>
 					{/* 반려 동물 생활 */}

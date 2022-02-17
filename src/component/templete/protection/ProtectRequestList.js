@@ -10,6 +10,10 @@ import FilterButton from 'Molecules/button/FilterButton';
 import {getProtectRequestList, getProtectRequestListByShelterId} from 'Root/api/shelterapi.js';
 import {getPettypes} from 'Root/api/userapi';
 import {btn_w306_h68} from 'Component/atom/btn/btn_style';
+import DropdownModal from 'Root/component/molecules/modal/DropdownModal';
+import DropdownSelect from 'Root/component/molecules/dropdown/DropdownSelect';
+import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
+import Modal from 'Root/component/modal/Modal';
 
 export default ProtectRequestList = ({navigation, route}) => {
 	const [data, setData] = React.useState([]);
@@ -46,15 +50,13 @@ export default ProtectRequestList = ({navigation, route}) => {
 					if (filterData.adoptable_posts) {
 						filtered = data.msg.filter(e => e.protect_request_status != 'complete');
 						setData(filtered);
-						setTimeout(() => {
-							setLoading(false);
-						}, 0);
+
+						setLoading(false);
 						// console.log('length', filtered.length);
 					} else {
 						setData(data.msg);
-						setTimeout(() => {
-							setLoading(false);
-						}, 0);
+						setLoading(false);
+
 					}
 				},
 				err => {
@@ -62,9 +64,8 @@ export default ProtectRequestList = ({navigation, route}) => {
 					if (err == '검색 결과가 없습니다.') {
 						setData([]);
 					}
-					setTimeout(() => {
-						setLoading(false);
-					}, 0);
+					setLoading(false);
+
 				},
 			);
 		};
@@ -134,12 +135,35 @@ export default ProtectRequestList = ({navigation, route}) => {
 		console.log('즐겨찾기=>' + value + ' ' + index);
 	};
 	//지역 필터
-	const onSelectLocation = location => {
-		location == '지역' ? setFilterData({...filterData, city: ''}) : setFilterData({...filterData, city: location});
+	const onSelectLocation = () => {
+		Modal.popSelectScrollBoxModal(
+			[PET_PROTECT_LOCATION],
+			'보호 지역 선택',
+			selected => {
+				selected == '지역' ? setFilterData({...filterData, city: ''}) : setFilterData({...filterData, city: selected});
+				Modal.close();
+			},
+			() => {
+				Modal.close();
+			},
+		);
 	};
 	//동물종류 필터
 	const onSelectKind = kind => {
-		kind == '동물종류' ? setFilterData({...filterData, protect_animal_species: ''}) : setFilterData({...filterData, protect_animal_species: kind});
+		Modal.popSelectScrollBoxModal(
+			[petTypes],
+			'보호 지역 선택',
+			selected => {
+				selected == '동물종류'
+					? setFilterData({...filterData, protect_animal_species: ''})
+					: setFilterData({...filterData, protect_animal_species: selected});
+
+				Modal.close();
+			},
+			() => {
+				Modal.close();
+			},
+		);
 	};
 	//검색결과가 없을 경우
 	const whenEmpty = () => {
@@ -164,10 +188,22 @@ export default ProtectRequestList = ({navigation, route}) => {
 						<View style={[searchProtectRequest.filterView.inside]}>
 							<View style={{flexDirection: 'row'}}>
 								<View style={[temp_style.filterBtn]}>
-									<FilterButton menu={PET_PROTECT_LOCATION} btnLayout={btn_w306_h68} onSelect={onSelectLocation} width={306} height={700} />
+									<ArrowDownButton
+										onPress={onSelectLocation}
+										btnTitle={filterData.city || '지역'}
+										btnLayout={btn_w306_h68}
+										btnStyle={'border'}
+										btnTheme={'gray'}
+									/>
 								</View>
 								<View style={[temp_style.filterBtn]}>
-									<FilterButton menu={petTypes} btnLayout={btn_w306_h68} onSelect={onSelectKind} width={306} />
+									<ArrowDownButton
+										onPress={onSelectKind}
+										btnTitle={filterData.protect_animal_species || '동물 종류'}
+										btnLayout={btn_w306_h68}
+										btnStyle={'border'}
+										btnTheme={'gray'}
+									/>
 								</View>
 							</View>
 							{/* 입양 가능한 게시물만 보기 */}
@@ -182,8 +218,6 @@ export default ProtectRequestList = ({navigation, route}) => {
 						</View>
 					</View>
 					<View style={[searchProtectRequest.animalNeedHelpList]}>
-						{/* <AnimalNeedHelpList data={data} onClickLabel={onClickLabel} onFavoriteTag={onOff_FavoriteTag} /> */}
-						{/* <ActivityIndicator  */}
 						<AnimalNeedHelpList data={data} onClickLabel={onClickLabel} onFavoriteTag={onOff_FavoriteTag} whenEmpty={whenEmpty()} />
 					</View>
 				</ScrollView>

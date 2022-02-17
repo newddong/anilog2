@@ -105,7 +105,7 @@ export default FeedContent = props => {
 				},
 				'신고',
 			);
-		}, 500);
+		}, 100);
 	};
 
 	//피드 미트볼 메뉴 - 공유하기 클릭
@@ -117,7 +117,7 @@ export default FeedContent = props => {
 				() => alert('link'),
 				() => alert('message'),
 			);
-		}, 500);
+		}, 100);
 	};
 
 	//피드 미트볼 메뉴 - 팔로우 취소
@@ -309,15 +309,6 @@ export default FeedContent = props => {
 				{/* line 1-1 (제보관련 내용) */}
 				{feed_type == 'report' && (
 					<View style={[organism_style.tipOff_feedContent, feedContent_style.tipOff]} onLayout={onLayoutReport}>
-						{/* <View style={{flexDirection: 'row', alignItems: 'center'}}>
-						<Text style={[txt.noto28]}>제보 날짜: </Text>
-						<Text style={[txt.noto30b]}>{parsingDate(report_witness_date)}</Text>
-						<MissingReportInfo data={props.data} />
-					</View>
-					<View style={{flexDirection: 'row', alignItems: 'flex-start', paddingTop: 10 * DP}}>
-						<Text style={[txt.noto28]}>제보 장소: </Text>
-						<Text style={[txt.noto28b, {width: 500 * DP}]}>{report_witness_location}</Text>
-					</View> */}
 						<MissingReportInfo data={props.data} />
 					</View>
 				)}
@@ -337,7 +328,7 @@ export default FeedContent = props => {
 			</View>
 			<View style={[organism_style.time_view_feedContent, {paddingHorizontal: 48 * DP}]}>
 				<View style={[organism_style.time_feedContent]}>
-					<Text style={[txt.noto22, {color: GRAY10}]}>{getTimeLapsed(feed_date)}</Text>
+					<Text style={[txt.noto22, {color: GRAY10}]}>{feed_date&&getTimeLapsed(feed_date)}</Text>
 				</View>
 
 				{

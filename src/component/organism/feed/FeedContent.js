@@ -236,13 +236,15 @@ export default FeedContent = props => {
 
 	const shouldBeDetail = show || route.name == 'MissingAnimalDetail' || route.name == 'ReportDetail';
 	// console.log('경로', route.name, route.name.includes('FeedCommentList'));
-
+	console.log('피드 컨텐츠 경로명',route.name);
 	return (
 		// <View style={[organism_style.feedContent,{overflow:'hidden'}, shouldBeDetail ? {height: 270 * DP + reportLayout.height + labelLayout.height + layout.height} : {}]} removeClippedSubviews>
 		<View
-			style={[{height: 270 * DP}, shouldBeDetail ? {height: 270 * DP + reportLayout.height + labelLayout.height + layout.height} : {}]}
+			style={[{height: 270 * DP,backgroundColor:'red'}, /*shouldBeDetail ? {height: 270 * DP + layout.height} : {}*/]}
 			removeClippedSubviews>
-			<View style={[organism_style.feedContent, {overflow: 'hidden'}]}>
+			<View style={[organism_style.feedContent, {overflow: 'hidden',backgroundColor:'green'}]} onLayout={(e)=>{
+				console.log('레이아웃',e.nativeEvent.layout,'비교',270*DP);
+			}}>
 				{/* // <View style={[organism_style.feedContent,{height:800*DP}]}> */}
 				{/* line 1 */}
 				<View style={[organism_style.userLocationLabel_view_feedContent]} onLayout={onLayoutLabel}>
@@ -306,20 +308,14 @@ export default FeedContent = props => {
 
 					{/* type값이 status일 경우 status 버튼이 나오고 그렇지 않으면 다른 버튼 표기 */}
 				</View>
-				{/* line 1-1 (제보관련 내용) */}
-				{feed_type == 'report' && (
-					<View style={[organism_style.tipOff_feedContent, feedContent_style.tipOff]} onLayout={onLayoutReport}>
-						<MissingReportInfo data={props.data} />
-					</View>
-				)}
-				{/* 실종 MissingReportInfo 분기 처리 */}
-				{feed_type == 'missing' && (
+				{/* line 1-1 (실종/제보관련 내용) */}
+				{!route.name.includes('MainHomeFeedList')&&(feed_type == 'report'||feed_type=='missing') && (
 					<View style={[organism_style.tipOff_feedContent, feedContent_style.tipOff]} onLayout={onLayoutReport}>
 						<MissingReportInfo data={props.data} />
 					</View>
 				)}
 				{(route.name.includes('FeedList') || feed_type == 'report' || feed_type == 'missing' || route.name.includes('FeedCommentList') || show) && (
-					<View style={[organism_style.content_feedContent, feedContent_style.content_Top10]}>
+					<View style={[organism_style.content_feedContent, feedContent_style.content_Top10,{backgroundColor:'yellow'}]}>
 						<HashText style={[txt.noto28]} numberOfLines={shouldBeDetail ? 0 : 2} onLayout={onLayoutContent}>
 							{feed_content}
 						</HashText>
@@ -330,19 +326,16 @@ export default FeedContent = props => {
 				<View style={[organism_style.time_feedContent]}>
 					<Text style={[txt.noto22, {color: GRAY10}]}>{feed_date&&getTimeLapsed(feed_date)}</Text>
 				</View>
-
-				{
-					<TouchableWithoutFeedback onPress={showMore}>
-						<View style={[organism_style.addMore_view_feedContent]}>
-							<View style={[organism_style.addMore_feedContent]}>
-								<Text style={[txt.noto22, {color: GRAY10}]}>더보기</Text>
-							</View>
-							<View style={[organism_style.braket]}>
-								<Arrow_Down_GRAY20 />
-							</View>
+				{!show&&<TouchableWithoutFeedback onPress={showMore}>
+					<View style={[organism_style.addMore_view_feedContent]}>
+						<View style={[organism_style.addMore_feedContent]}>
+							<Text style={[txt.noto22, {color: GRAY10}]}>더보기</Text>
 						</View>
-					</TouchableWithoutFeedback>
-				}
+						<View style={[organism_style.braket]}>
+							<Arrow_Down_GRAY20 />
+						</View>
+					</View>
+				</TouchableWithoutFeedback>}
 			</View>
 		</View>
 	);

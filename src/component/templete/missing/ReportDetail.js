@@ -52,7 +52,7 @@ export default ReportDetail = props => {
 				feedobject_id: props.route.params._id,
 			},
 			data => {
-				debug && console.log(`ReportDetail data:${JSON.stringify(data.msg)}`);
+				// debug && console.log(`ReportDetail data:${JSON.stringify(data.msg)}`);
 				setData(data.msg);
 			},
 			errcallback => {

@@ -59,7 +59,7 @@ export default MissingAnimalDetail = props => {
 				feedobject_id: props.route.params._id,
 			},
 			data => {
-				debug && console.log(`MissingAnimalDetail data:${JSON.stringify(data.msg)}`);
+				// debug && console.log(`MissingAnimalDetail data:${JSON.stringify(data.msg)}`);
 				setData(data.msg);
 			},
 			errcallback => {

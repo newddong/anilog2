@@ -83,7 +83,7 @@ export default MissingReportList = props => {
 	};
 
 	const onClickLabel = (status, id, item) => {
-		console.log(`\nMissingReportList:onLabelClick() - status=>${status} id=>${id} item=>${JSON.stringify(item)}`);
+		// console.log(`\nMissingReportList:onLabelClick() - status=>${status} id=>${id} item=>${JSON.stringify(item)}`);
 		let sexValue = '';
 		switch (status) {
 			case 'missing':

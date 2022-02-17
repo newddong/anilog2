@@ -27,8 +27,8 @@ export async function apiController(path, args) {
 				if(cookie['connect.sid']){
 					sid = cookie['connect.sid'].value;
 					console.log('메모리에 sid정보 불러옴',sid);
-					let sidLocal = await AsyncStorage.setItem('sid', cookie['connect.sid'].value);
-					console.log('디스크에 sid정보를 씀', sidLocal);
+					await AsyncStorage.setItem('sid', sid);
+					console.log('디스크에 sid정보를 씀', sid);
 				}
 				console.log('유저로그인', cookie);
 			} catch (err) {
@@ -36,50 +36,10 @@ export async function apiController(path, args) {
 				args[2](err + ''); //에러 처리 콜백
 			}
 		}
-		if (result.data.status == 200) {
-			args[1](result.data);
-		} 
-
-		else if(result.data.status == 401){
-			if (!sid) {
-				try{
-				sid = await AsyncStorage.getItem('sid');
-				}catch(err){
-					console.log('디스크에서 sid정보 불러오기 오류',sid);	
-				}
-				console.log('메모리상에 sid 정보가 없어 로컬에서 불러옴',sid);
-			}
-			console.log('메모리 sid정보',sid);
-
-			if (sid) {
-				try {
-					let cookie = await cookieReset(sid, path);
-					console.log('쿠키 리셋 완료', cookie);
-				} catch (err) {
-					console.log('쿠키 리셋중 에러', err);
-					args[2](err + ''); //에러 처리 콜백
-				}
-			}
-			let result = await axios.post(serveruri + path, args[0]);//한번 더 요청
-			if (result.data.status == 200) {
-				args[1](result.data);
-			}
-			else {
-				args[2](result.data.msg); //이 단계에서는 로그인을 하지 않음이 확실해짐
-			}
-		}
-		else {
-			args[2](result.data.msg);
-		}
+		process(path,result,args);
 	} catch (err) {
 		args[2](err + ''); //에러 처리 콜백
 	}
-
-
-
-
-
-
 }
 
 /**
@@ -130,15 +90,50 @@ export async function apiFormController(path, args) {
 				'Content-Type': 'multipart/form-data',
 			},
 		});
-		if (result.data.status == 200) {
-			args[1](result.data);
-		} else {
-			args[2](result.data.msg);
-		}
+		process(path,result,args);
 	} catch (err) {
 		args[2](err + ''); //에러 처리 콜백
 	}
 }
+
+async function process(path,result,args){
+	if (result.data.status == 200) {
+		args[1](result.data);
+	} 
+	else if(result.data.status == 401){
+		if (!sid) {
+			try{
+			sid = await AsyncStorage.getItem('sid');
+			}catch(err){
+				console.log('디스크에서 sid정보 불러오기 오류',sid);	
+			}
+			console.log('메모리상에 sid 정보가 없어 로컬에서 불러옴',sid);
+		}
+		console.log('메모리 sid정보',sid);
+
+		if (sid) {
+			try {
+				let cookie = await cookieReset(sid, path);
+				console.log('쿠키 리셋 완료', cookie);
+			} catch (err) {
+				console.log('쿠키 리셋중 에러', err);
+				args[2](err + ''); //에러 처리 콜백
+			}
+		}
+		let result = await axios.post(serveruri + path, args[0]);//한번 더 요청
+		if (result.data.status == 200) {
+			args[1](result.data);
+		}
+		else {
+			args[2](result.data.msg); //이 단계에서는 로그인을 하지 않음이 확실해짐
+		}
+	}
+	else {
+		args[2](result.data.msg);
+	}
+}
+
+
 
 //쿠키 리셋 코드
 // let token = await AsyncStorage.getItem('token');

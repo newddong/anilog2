@@ -68,3 +68,26 @@ export function getTagName(string){
     if(checkChar.some(v=>string[0]==v))return string.substring(1);
     return string;
 }
+
+
+/**
+ * 01010041004 -> 010-1004-1004 포맷 정규식 함수
+ * @param {string} num
+ */
+ export function phoneFomatter(num){
+    var formatNum = '';
+    if (!num) return;
+    if (num.length == 11) {
+        formatNum = num.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+    } else if (num.length == 8) {
+        formatNum = num.replace(/(\d{4})(\d{4})/, '$1-$2');
+    } else {
+        if (num.indexOf('02') == 0) {
+            formatNum = num.replace(/(\d{2})(\d{4})(\d{4})/, '$1-$2-$3');
+        } else {
+            formatNum = num.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+        }
+    }
+    console.log(formatNum, 'formatNum');
+    return formatNum;
+};

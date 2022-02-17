@@ -88,7 +88,7 @@ export default ProtectApplicant = ({route, navigation}) => {
 		});
 		setTimeout(() => {
 			setLoading(false);
-		}, 1500);
+		}, 500);
 	}, []);
 
 	//AccountList의 라벨 클릭 콜백 함수

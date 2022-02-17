@@ -32,6 +32,9 @@ export default PetInfoSetting = ({route, navigation}) => {
 	const [isChiefUser, setIsChiefUser] = React.useState(false);
 	const [showMore, setShowmore] = React.useState(false); // 소개 더보기 클릭 여부
 	const [editMode, setEditMode] = React.useState(false); // 소개 수정 클릭 여부
+
+	const [introOriginLine, setIntroOriginLine] = React.useState(0);
+
 	const [userIntro_temp, setUserIntro_temp] = React.useState('');
 	const modifyRef = React.useRef('');
 
@@ -59,12 +62,11 @@ export default PetInfoSetting = ({route, navigation}) => {
 				navigation.setOptions({title: result.msg.user_nickname});
 				userGlobalObject.userInfo.user_nickname == result.msg.pet_family[0].user_nickname ? setIsChiefUser(true) : setIsChiefUser(false);
 				setPetData(result.msg);
-				setTimeout(() => {
-					setLoading(false);
-				}, 1000);
+				setLoading(false);
 			},
 			err => {
 				console.log('err / GetUserInfoById / PetInfosetting', err);
+				setLoading(false);
 			},
 		);
 	};
@@ -73,8 +75,17 @@ export default PetInfoSetting = ({route, navigation}) => {
 	const changePetInfo = () => {
 		const petKind = PET_KIND();
 		setTimeout(() => {
+
+			let category = {
+				large: [],
+				sub: [],
+			};
+			petKind._W.map((v, i) => {
+				category.large.push(v.pet_species);
+				category.sub.push(v.pet_species_detail);
+			});
 			Modal.popMultipleScrollBoxModal(
-				petKind,
+				category,
 				'동물종 선택',
 				(sel1, sel2) => {
 					alert(sel1);
@@ -184,7 +195,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 	if (loading) {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
-				<ActivityIndicator size={'large'}></ActivityIndicator>
+				<ActivityIndicator size={'large'} />
 			</View>
 		);
 	} else {
@@ -217,21 +228,37 @@ export default PetInfoSetting = ({route, navigation}) => {
 								</View>
 								<View style={[petInfoSetting.petInfo_bottom]}>
 									<View style={[petInfoSetting.user_introBox, !showMore ? {height: null} : null]}>
-										<Text style={[txt.noto26, {color: GRAY10}]}>{petData.user_introduction || '반려동물 소개가 없습니다.'}</Text>
+										<Text numberOfLines={showMore ? 2 : 10} style={[txt.noto26, {color: GRAY10}]}>
+											{petData.user_introduction || '반려동물 소개가 없습니다.'}
+										</Text>
 									</View>
-									<TouchableOpacity onPress={showMoreIntro} style={[petInfoSetting.petInfo_bottom_showMore]}>
-										{showMore ? (
-											<>
-												<Text style={[txt.noto26, {color: GRAY10}]}>더보기</Text>
-												<Arrow_Down_GRAY10 />
-											</>
-										) : (
-											<>
-												<Text style={[txt.noto26, {color: GRAY10}]}>접기</Text>
-												<Arrow_Up_GRAY10 />
-											</>
-										)}
-									</TouchableOpacity>
+									<View style={[petInfoSetting.user_introBox, {position: 'absolute', opacity: 0}]}>
+										<Text
+											onTextLayout={({nativeEvent: {lines}}) => {
+												setIntroOriginLine(lines.length);
+												// console.log('lines.length', lines.length);
+											}}
+											style={[txt.noto26, {color: GRAY10}]}>
+											{petData.user_introduction || '반려동물 소개가 없습니다.'}
+										</Text>
+									</View>
+									{introOriginLine < 2 ? (
+										<></>
+									) : (
+										<TouchableOpacity onPress={showMoreIntro} style={[petInfoSetting.petInfo_bottom_showMore]}>
+											{!showMore ? (
+												<>
+													<Text style={[txt.noto26, {color: GRAY10}]}>접기</Text>
+													<Arrow_Up_GRAY10 />
+												</>
+											) : (
+												<>
+													<Text style={[txt.noto26, {color: GRAY10}]}>더보기</Text>
+													<Arrow_Down_GRAY10 />
+												</>
+											)}
+										</TouchableOpacity>
+									)}
 								</View>
 							</View>
 						</View>

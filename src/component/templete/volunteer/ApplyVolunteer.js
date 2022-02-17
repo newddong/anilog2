@@ -22,6 +22,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 	const [loading, setLoading] = React.useState(true);
 	const [shelter_data, setShelter_data] = React.useState(route.params); //선택한 보호소프로필의 userObject가 담겨있음
 	const userInfo = userGlobalObject.userInfo;
+
 	React.useEffect(() => {
 		Modal.popNoBtn('신청 양식을 얻어오고 있습니다.');
 		getUserInfoById(
@@ -62,6 +63,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 		volunteer_accompany: [],
 		volunteer_delegate_contact: '',
 		volunteer_status: 'waiting',
+		volunteer_accompany_number: '1',
 	});
 
 	//추가된 봉사활동자가 있는 경우 Data에 추가
@@ -86,13 +88,14 @@ export default ApplyVolunteer = ({route, navigation}) => {
 				data.volunteer_accompany.map((v, i) => {
 					getAccompaniesId.push(v._id);
 				});
-				console.log('token', param.token);
+				// console.log('token', param.token);
 				assignVolunteerActivity(
 					{
 						shelter_userobject_id: param.token,
 						volunteer_wish_date_list: data.volunteer_wish_date,
 						accompany_userobject_id_list: getAccompaniesId,
 						volunteer_delegate_contact: data.volunteer_delegate_contact,
+						volunteer_accompany_number: data.volunteer_accompany_number,
 					},
 					result => {
 						console.log('result / assignVolunteerAct / ApplyVolunteer   :  ', result);
@@ -158,6 +161,10 @@ export default ApplyVolunteer = ({route, navigation}) => {
 		);
 	};
 
+	const onChangeAccompanyNumber = num => {
+		setData({...data, volunteer_accompany_number: num});
+	};
+
 	if (loading) {
 		return <></>;
 	} else {
@@ -209,11 +216,14 @@ export default ApplyVolunteer = ({route, navigation}) => {
 						</View>
 						<View style={[applyVolunteer.number_of_volunteerers]}>
 							<TextInput
-								style={[txt.noto28, applyVolunteer.volunteerListInput]}
+								style={[txt.noto32, applyVolunteer.volunteerListInput]}
 								textAlign={'right'}
 								keyboardType={'number-pad'}
 								placeholder={'애니로그 계정 유무 상관없는 총 인원수'}
 								placeholderTextColor={GRAY10}
+								// textContentType={''}
+
+								onChangeText={onChangeAccompanyNumber}
 							/>
 							<Text style={[txt.noto32]}> {'  '} 명</Text>
 						</View>
@@ -222,7 +232,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 							{/* <AccountList items={data.volunteer_accompany} width={446} onDelete={onDeleteAccount} makeBorderMode={false} /> */}
 							{data.volunteer_accompany.map((v, i) => {
 								return (
-									<View style={[applyVolunteer.participants_container]}>
+									<View style={[applyVolunteer.participants_container]} key={i}>
 										<View style={[applyVolunteer.participants_list_container]}>
 											<UserDescriptionLabel data={v} />
 										</View>

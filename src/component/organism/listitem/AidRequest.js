@@ -18,7 +18,7 @@ import {aidRequest} from '../style_organism copy';
  */
 export default AidRequest = props => {
 	const data = props.data;
-	// console.log('badge', data.protect_act_applicants.length);
+	// console.log('badge', data);
 
 	//해당 AidRequest박스 선택 시 부모컴포넌트 OnSelect 실행
 	const onSelect = () => {
@@ -30,7 +30,8 @@ export default AidRequest = props => {
 			<View
 				style={[
 					aidRequest.insideContainer,
-					props.selected && props.selectBorderMode ? aidRequest.borderColor_APRI10 : aidRequest.borderColor_GRAY10,
+					// props.selected && props.selectBorderMode ? aidRequest.borderColor_APRI10 : aidRequest.borderColor_GRAY10,
+					aidRequest.borderColor_APRI10,
 				]}>
 				{/* 보호동물 프로필 이미지 및 성별 */}
 				<View style={[aidRequest.img_irregular_174]}>
@@ -88,7 +89,7 @@ export default AidRequest = props => {
 			</View>
 
 			{/* 앞 화면이 신청서 조회일 경우에만 표기 되도록 변경, 추후에 분기 타도록 ~ */}
-			{/* {console.log('props.nvName=>' + props.nvName)} */}
+			{/* {console.log('props.showBadge=>' + props.showBadge)} */}
 			{props.showBadge && data.protect_act_applicants.length > 0 ? (
 				<View style={[aidRequest.numberContainer]}>
 					<Text style={[{color: WHITE, paddingRight: 5 * DP}]}>{data.protect_act_applicants ? data.protect_act_applicants.length : ''}</Text>
@@ -103,5 +104,5 @@ export default AidRequest = props => {
 AidRequest.defaultProps = {
 	onSelect: e => console.log('AidRequest', e),
 	selectBorderMode: true,
-	showBadge: true,
+	showBadge: false,
 };

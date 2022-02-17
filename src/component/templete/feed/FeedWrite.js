@@ -236,29 +236,34 @@ export default FeedWrite = props => {
 						</TouchableOpacity>
 					</View>
 				)}
-				{selectedImg.length > 0 && (
+				{/* {selectedImg.length > 0 && (
 					<View style={[temp_style.selectedMediaList, feedWrite.selectedMediaList]}>
 						<SelectedMediaList items={selectedImg} onDelete={deletePhoto} />
 					</View>
-				)}
+				)} */}
 				{/* 긴급 게시 관련 버튼 클릭 시 출력되는 View */}
 				{setUrgBtnsClickedView()}
 			</>
 		);
 	};
-
+	// 장기적으로 보면 NC는 가망이 없는 회사임. 지금 리니지 충성고객층 연령대가 40~60대일텐데 이 사람들 더 나이 들고 하면 게임 할 체력이 안될텐데 그 고객층 날라가면 또 다른 새로운 고객층을 확보해야하는데 그게 지금 안되고 있음.
+	// 지금 봐바 10~30대 유저들 NC를 게임회사가 아니라 도박회사로 보고 있는데 암만 마케팅하고 홍보하고 지랄해봤자 이미 깊게 박혀진 이미지는 절대 못바뀜. 그러므로 새로운 고객층 확보가 불가능함.
+	// 해외? 개네들 우리보다 리니지류 게임을 극혐하는데 고객이 확보 될리가 있나 ㅋㅋ
 	return (
 		<View style={[login_style.wrp_main, feedWrite.container]}>
 			{/* <ScrollView contentContainerStyle={{width: 750 * DP, alignItems: 'center'}}> */}
 			<HashInput
-				containerStyle={[temp_style.feedTextEdit, {minHeight: showLostAnimalForm || showReportForm ? 276 * DP : 376 * DP}]}
+				containerStyle={[temp_style.feedTextEdit, {minHeight: showLostAnimalForm || showReportForm ? 214 * DP : 316 * DP}]}
 				textAlignVertical={'top'}
 				multiline={true}
 				placeholder="게시물을 작성하세요 (150자)"
 				placeholderTextColor={GRAY20}
 				onChangeText={inputFeedTxt}
 				maxLength={150}
-				onFind={onFindTag}></HashInput>
+				onFind={onFindTag}
+				selectedImg={selectedImg}
+				onDelete={deletePhoto}
+			/>
 
 			{!isSearchTag && setWriteModeState()}
 			{/* 긴급 게시물 관련 버튼 컨테이너 */}
@@ -352,13 +357,30 @@ const MissingForm = props => {
 		setData({...data, missing_animal_date: date});
 	};
 
-	const onSelectSpecies = (v, i) => {
-		setData({...data, missing_animal_species: types[i].pet_species, type: types[i]});
-		setIsSpeciesChanged(!isSpeciesChanged);
+	const onSelectSpecies = () => {
+		Modal.popSelectScrollBoxModal(
+			[types.map(v => v.pet_species)],
+			'동물 종 선택',
+			selected => {
+				const find = types.find(e => e.pet_species == selected);
+				setData({...data, missing_animal_species: selected, missing_animal_species_detail: find.pet_species_detail[0]});
+				setIsSpeciesChanged(!isSpeciesChanged);
+			},
+			() => Modal.close(),
+		);
 	};
 
-	const onSelectSpeciesDetail = (v, i) => {
-		setData({...data, missing_animal_species_detail: data.type.pet_species_detail[i]});
+	const onSelectSpeciesDetail = () => {
+		const find = types.find(e => e.pet_species == data.missing_animal_species);
+		Modal.popSelectScrollBoxModal(
+			[find.pet_species_detail],
+			'품종 선택',
+			selected => {
+				setData({...data, missing_animal_species_detail: selected});
+			},
+			() => Modal.close(),
+		);
+		// setData({...data, missing_animal_species_detail: data.type.pet_species_detail[i]});
 	};
 
 	const selectSex = i => {
@@ -433,17 +455,11 @@ const MissingForm = props => {
 				</View>
 				<View style={[feedWrite.formContentContainer]}>
 					<View style={[temp_style.dropdownSelect, feedWrite.dropdownSelect]}>
-						<NormalDropDown items={pet_kind} menu={types.map(v => v.pet_species)} width={292} onSelect={onSelectSpecies} defaultIndex={0} />
+						{/* <NormalDropDown items={pet_kind} menu={types.map(v => v.pet_species)} width={292} onSelect={onSelectSpecies} defaultIndex={0} /> */}
+						<SelectInput onPressInput={onSelectSpecies} width={292} value={data.missing_animal_species} />
 					</View>
 					<View style={[temp_style.dropdownSelect, feedWrite.dropdownSelect]}>
-						<NormalDropDown
-							items={pet_kind}
-							menu={data.type.pet_species_detail}
-							width={292}
-							height={500}
-							isLargeCategoryChanged={isSpeciesChanged}
-							onSelect={onSelectSpeciesDetail}
-						/>
+						<SelectInput onPressInput={onSelectSpeciesDetail} width={292} value={data.missing_animal_species_detail} />
 					</View>
 				</View>
 			</View>
@@ -687,13 +703,30 @@ const ReportForm = props => {
 		setData({...data, report_animal_features: feature});
 	};
 
-	const onSelectSpecies = (v, i) => {
-		setData({...data, report_animal_species: types[i].pet_species, type: types[i]});
-		setIsSpeciesChanged(!isSpeciesChanged);
+	const onSelectSpecies = () => {
+		Modal.popSelectScrollBoxModal(
+			[types.map(v => v.pet_species)],
+			'동물 종 선택',
+			selected => {
+				const find = types.find(e => e.pet_species == selected);
+				setData({...data, report_animal_species: selected, report_animal_species_detail: find.pet_species_detail[0]});
+				setIsSpeciesChanged(!isSpeciesChanged);
+			},
+			() => Modal.close(),
+		);
 	};
 
-	const onSelectSpeciesDetail = (v, i) => {
-		setData({...data, report_animal_species_detail: data.type.pet_species_detail[i]});
+	const onSelectSpeciesDetail = () => {
+		const find = types.find(e => e.pet_species == data.report_animal_species);
+		Modal.popSelectScrollBoxModal(
+			[find.pet_species_detail],
+			'품종 선택',
+			selected => {
+				setData({...data, report_animal_species_detail: selected});
+			},
+			() => Modal.close(),
+		);
+		// setData({...data, missing_animal_species_detail: data.type.pet_species_detail[i]});
 	};
 
 	const onPressCity = () => {
@@ -737,17 +770,10 @@ const ReportForm = props => {
 						</View>
 						<View style={[feedWrite.formContentContainer]}>
 							<View style={[temp_style.dropdownSelect, feedWrite.dropdownSelect]}>
-								<NormalDropDown items={pet_kind} menu={types.map(v => v.pet_species)} width={292} onSelect={onSelectSpecies} defaultIndex={0} />
+								<SelectInput onPressInput={onSelectSpecies} width={292} value={data.report_animal_species} />
 							</View>
 							<View style={[temp_style.dropdownSelect, feedWrite.dropdownSelect]}>
-								<NormalDropDown
-									items={pet_kind}
-									isLargeCategoryChanged={isSpeciesChanged}
-									menu={data.type.pet_species_detail}
-									width={292}
-									height={500}
-									onSelect={onSelectSpeciesDetail}
-								/>
+								<SelectInput onPressInput={onSelectSpeciesDetail} width={292} value={data.report_animal_species_detail} />
 							</View>
 						</View>
 					</View>

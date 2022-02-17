@@ -88,6 +88,7 @@ import AddFamilyModal from 'Root/component/molecules/modal/AddFamilyModal';
 import CongratulationModal from 'Root/component/molecules/modal/CongratulationModal';
 import AdoptionInfoModal from 'Root/component/molecules/modal/AdoptionInfoModal';
 import AdoptionInfoModalWithOneBtn from 'Root/component/molecules/modal/AdoptionInfoModalWithOneBtn';
+
 // import Camera from 'Root/component/templete/Camera';
 // import Camera from 'Templete/media/Camera';
 const RootStack = createStackNavigator();

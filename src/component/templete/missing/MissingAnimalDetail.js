@@ -72,6 +72,7 @@ export default MissingAnimalDetail = props => {
 		console.log(' - MissingAnimalDetail Comment -');
 		getCommnetList();
 		setLoading(false);
+
 	}, []);
 
 	// React.useEffect(() => {
@@ -208,7 +209,7 @@ export default MissingAnimalDetail = props => {
 	// 01010041004 -> 010-1004-1004 포맷 정규식 함수
 	const phoneFomatter = num => {
 		var formatNum = '';
-
+		if(!num)return;
 		if (num.length == 11) {
 			formatNum = num.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
 		} else if (num.length == 8) {

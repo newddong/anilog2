@@ -50,11 +50,13 @@ export default ProtectRequestList = ({navigation, route}) => {
 					if (filterData.adoptable_posts) {
 						filtered = data.msg.filter(e => e.protect_request_status != 'complete');
 						setData(filtered);
+
 						setLoading(false);
 						// console.log('length', filtered.length);
 					} else {
 						setData(data.msg);
 						setLoading(false);
+
 					}
 				},
 				err => {
@@ -63,6 +65,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 						setData([]);
 					}
 					setLoading(false);
+
 				},
 			);
 		};

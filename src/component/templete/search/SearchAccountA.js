@@ -72,6 +72,10 @@ export default SearchAccountA = props => {
 	return (
 		<View style={[searchAccountA.container]}>
 			<View style={[searchAccountA.listContainer]}>
+				{/* <View style={[{height: 38 * DP, alignSelf: 'flex-start'}]}>
+					<Text style={({fontSize: 24 * DP}, {marginLeft: 48 * DP})}>최근 본 계정</Text>
+				</View> */}
+
 				<ControllableAccountList items={searchedList} onClickAccount={onClickAccount} showButtons={false} />
 			</View>
 		</View>

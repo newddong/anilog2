@@ -15,6 +15,7 @@ import {
 	GRAY10,
 	GRAY40,
 	GRAY30,
+	APRI20,
 } from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {Platform} from 'react-native';
@@ -2164,8 +2165,8 @@ export const shelterMenu = StyleSheet.create({
 	},
 	btnView: {
 		// backgroundColor: '#78BB95',
-		width: 654 * DP,
-		height: 92 * DP,
+		// width: 654 * DP,
+		// height: 132 * DP,
 		marginTop: 40 * DP,
 		// paddingTop: 40 * DP,
 		flexDirection: 'row',
@@ -2193,6 +2194,18 @@ export const shelterMenu = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		marginLeft: 32 * DP,
+	},
+	textView_height36: {
+		width: 610 * DP,
+		height: 36 * DP,
+		flexDirection: 'row',
+		alignItems: 'flex-end',
+		justifyContent: 'flex-end',
+		marginBottom: 40 * DP,
+	},
+	text36: {
+		fontSize: 24 * DP,
+		color: APRI10,
 	},
 	btnView_floadArticle_129x92: {
 		width: 126 * DP,

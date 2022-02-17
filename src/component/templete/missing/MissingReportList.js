@@ -11,6 +11,7 @@ import {PET_KIND, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
 import {getMissingReportList} from 'Root/api/feedapi.js';
 import {getPettypes} from 'Root/api/userapi';
 import {btn_w306_h68} from 'Component/atom/btn/btn_style';
+import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 export default MissingReportList = props => {
 	const navigation = useNavigation();
 	const [showUrgentBtns, setShowUrgentBtns] = React.useState(true); //긴급버튼목록
@@ -82,7 +83,7 @@ export default MissingReportList = props => {
 	};
 
 	const onClickLabel = (status, id, item) => {
-		console.log(`\nMissingReportList:onLabelClick() - status=>${status} id=>${id} item=>${JSON.stringify(item)}`);
+		// console.log(`\nMissingReportList:onLabelClick() - status=>${status} id=>${id} item=>${JSON.stringify(item)}`);
 		let sexValue = '';
 		switch (status) {
 			case 'missing':
@@ -111,12 +112,37 @@ export default MissingReportList = props => {
 		navigation.push('UserProfile', {userobject: item.feed_writer_id});
 	};
 
-	const onSelectLocation = location => {
-		location == '지역' ? setFilterData({...filterData, city: ''}) : setFilterData({...filterData, city: location});
+	//지역 필터
+	const onSelectLocation = () => {
+		Modal.popSelectScrollBoxModal(
+			[PET_PROTECT_LOCATION],
+			'보호 지역 선택',
+			selected => {
+				selected == '지역' ? setFilterData({...filterData, city: ''}) : setFilterData({...filterData, city: selected});
+				Modal.close();
+			},
+			() => {
+				Modal.close();
+			},
+		);
 	};
 
+	//동물종류 필터
 	const onSelectKind = kind => {
-		kind == '동물종류' ? setFilterData({...filterData, missing_animal_species: ''}) : setFilterData({...filterData, missing_animal_species: kind});
+		Modal.popSelectScrollBoxModal(
+			[petTypes],
+			'보호 지역 선택',
+			selected => {
+				selected == '동물종류'
+					? setFilterData({...filterData, missing_animal_species: ''})
+					: setFilterData({...filterData, missing_animal_species: selected});
+
+				Modal.close();
+			},
+			() => {
+				Modal.close();
+			},
+		);
 	};
 
 	const whenEmpty = () => {
@@ -134,10 +160,24 @@ export default MissingReportList = props => {
 					<View style={[searchProtectRequest.filterView.inside]}>
 						<View style={{flexDirection: 'row'}}>
 							<View style={[temp_style.filterBtn]}>
-								<FilterButton menu={PET_PROTECT_LOCATION} btnLayout={btn_w306_h68} onSelect={onSelectLocation} width={306} height={700} />
+								{/* <FilterButton menu={PET_PROTECT_LOCATION} btnLayout={btn_w306_h68} onSelect={onSelectLocation} width={306} height={700} /> */}
+								<ArrowDownButton
+									onPress={onSelectLocation}
+									btnTitle={filterData.city || '지역'}
+									btnLayout={btn_w306_h68}
+									btnStyle={'border'}
+									btnTheme={'gray'}
+								/>
 							</View>
 							<View style={[temp_style.filterBtn]}>
-								<FilterButton menu={petTypes} btnLayout={btn_w306_h68} onSelect={onSelectKind} width={306} />
+								{/* <FilterButton menu={petTypes} btnLayout={btn_w306_h68} onSelect={onSelectKind} width={306} /> */}
+								<ArrowDownButton
+									onPress={onSelectKind}
+									btnTitle={filterData.missing_animal_species || '동물 종류'}
+									btnLayout={btn_w306_h68}
+									btnStyle={'border'}
+									btnTheme={'gray'}
+								/>
 							</View>
 						</View>
 					</View>

@@ -1,10 +1,10 @@
 import React from 'react';
 import {Text, View, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
-import {APRI10, GRAY20, GRAY30, WHITE} from 'Root/config/color';
+import {APRI10, GRAY10, GRAY20, GRAY30, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {btn_w226} from 'Atom/btn/btn_style';
-import {Arrow_Down_White} from 'Atom/icon';
+import {Arrow_Down_GRAY10, Arrow_Down_White} from 'Atom/icon';
 /**
  * 버튼 컴포넌트트
  * @param {object} props - Props Object
@@ -35,21 +35,32 @@ const ArrowDownButton = props => {
 
 	//txt Color의 종류는 3가지 - white, APRI10, GRAY20
 	const btnTxtColor = () => {
-		return WHITE;
+		if (props.btnTheme == 'gray') {
+			return GRAY10;
+		} else return WHITE;
 	};
 
 	//default는 APRI10, Gray의 경우 GRAY20
 	const border = () => {
 		if (props.btnStyle == 'border' && props.btnTheme == 'gray') {
-			return {borderColor: GRAY20, borderWidth: 4 * DP};
+			return {borderColor: GRAY10, borderWidth: 4 * DP};
 		} else if (props.btnStyle == 'border') {
 			return {borderColor: APRI10, borderWidth: 4 * DP};
 		}
 	};
 
 	const btnStyle = () => {
-		return APRI10;
+		if (props.btnTheme == 'gray') {
+			return WHITE;
+		} else return APRI10;
 	};
+
+	const getArrow = () => {
+		if (props.btnTheme == 'gray') {
+			return <Arrow_Down_GRAY10 />;
+		} else return <Arrow_Down_White />;
+	};
+
 	const onPress = () => {
 		props.disable ? false : props.onPress(props.btnTitle);
 	};
@@ -76,7 +87,7 @@ const ArrowDownButton = props => {
 					]}>
 					{props.btnTitle}
 				</Text>
-				<Arrow_Down_White />
+				{getArrow()}
 			</View>
 		);
 	};

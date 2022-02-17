@@ -34,6 +34,8 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 		},
 	}));
 
+	const [content, setContent] = React.useState('');
+
 	const inputRef = useRef();
 
 	const onWrite = () => {
@@ -45,6 +47,11 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 		props.onDeleteImage();
 	};
 
+	const onChangeText = text => {
+		setContent(text);
+		props.onChangeReplyInput(text);
+	};
+
 	if (props.isProtectRequest) {
 		return (
 			<View style={[feedCommentList.commentBox_protect_request]}>
@@ -53,7 +60,7 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 						style={[feedCommentList.replyTextInput_protect_request]}
 						multiline={true}
 						placeholder={'댓글입력..'}
-						onChangeText={props.onChangeReplyInput}
+						onChangeText={onChangeText}
 						ref={inputRef}
 					/>
 				</View>
@@ -70,22 +77,24 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 						<View style={[feedCommentList.commentBox_top_photo, {flexDirection: 'row'}]}>
 							<View style={[feedCommentList.commentBox_input_photo]}>
 								<TextInput
+									defaultValue={content == '' ? null : content}
 									style={[feedCommentList.replyTextInput_photo]}
 									multiline={true}
 									placeholder={'댓글입력..'}
-									onChangeText={props.onChangeReplyInput}
+									onChangeText={onChangeText}
 									ref={inputRef}
 								/>
 							</View>
 
 							<SelectedMedia media_uri={props.photo} layout={styles.img_square_round_190} onDelete={onDeleteImage} />
 						</View>
-						<CommentBoxBottom {...props} onWrite={onWrite}/>
+						<CommentBoxBottom {...props} onWrite={onWrite} />
 					</View>
 				) : (
 					<View style={[feedCommentList.commentBox]}>
 						<View style={[feedCommentList.commentBox_top]}>
 							<TextInput
+								defaultValue={content == '' ? null : content}
 								style={[feedCommentList.replyTextInput]}
 								multiline={true}
 								placeholder={'댓글입력..'}
@@ -93,7 +102,7 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 								ref={inputRef}
 							/>
 						</View>
-						<CommentBoxBottom {...props} onWrite={onWrite}/>
+						<CommentBoxBottom {...props} onWrite={onWrite} />
 					</View>
 				)}
 			</View>

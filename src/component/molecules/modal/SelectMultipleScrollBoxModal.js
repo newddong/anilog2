@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions, TouchableWithoutFeedback, FlatList} from 'react-native';
-import {WHITE, APRI10, BLACK, GRAY20, GRAY30} from 'Root/config/color';
+import {WHITE, APRI10, BLACK, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
@@ -15,13 +15,15 @@ import Modal from 'Root/component/modal/Modal';
  * @param {()=>void} props.onClose - 취소 버튼 콜백
  *
  */
-const SelectScrollBoxModal = props => {
+const SelectMultipleScrollBoxModal = props => {
 	const data = props.data;
 	const [selectedItem, setSelectedItem] = React.useState(2);
 	const [selectedItem2, setSelectedItem2] = React.useState(2);
+	const [first, setFirst] = React.useState(data.large);
+	const [second, setSecond] = React.useState([]);
 	const refContainerLeft = React.useRef('');
 	const refContainerRight = React.useRef('');
-	const padding = '---------------------------';
+	const padding = '-----------------------';
 
 	const onSelect = () => {
 		if (data.length == 1) {
@@ -31,64 +33,75 @@ const SelectScrollBoxModal = props => {
 		}
 	};
 
+	const getSecondCategory = () => {
+		let first_category = [];
+		data.large.map((v, i) => {
+			first_category.push(v.large);
+		});
+		setSecond(data.sub[selectedItem - 2]);
+	};
+
 	React.useEffect(() => {
 		// refContainerLeft.current.scrollToIndex({animated: true, index: selectedItem});
+		getSecondCategory();
 	}, [selectedItem]);
 
 	React.useEffect(() => {
 		// refContainerRight.current.scrollToIndex({animated: true, index: selectedItem});
 	}, [selectedItem]);
 
-	const onScroll = (event, i) => {
+	const onScroll = event => {
 		let y = event.nativeEvent.contentOffset.y;
-		let focused = '';
-		data[0].length < 5 ? (focused = Math.floor(y / (62 * DP))) : (focused = Math.floor(y / (68 * DP)));
-		// console.log('foucsed', focused, i);
-		if (i == 0) {
-			if (focused < 1) {
-				setSelectedItem(2);
-			} else if (focused > data[0].length - 1) {
-				console.log('넘어갔나?');
-				setSelectedItem(data[0].length + 1);
-			} else {
-				setSelectedItem(focused + 2);
-			}
+		let focused = Math.floor(y / (68 * DP));
+		console.log('foucsed', focused);
+		if (focused < 1) {
+			setSelectedItem(2);
 		} else {
-			if (focused < 1) {
-				setSelectedItem2(2);
-			} else {
-				setSelectedItem2(focused + 2);
-			}
+			setSelectedItem(focused + 2);
+		}
+	};
+
+	const onScroll_second = event => {
+		let y = event.nativeEvent.contentOffset.y;
+
+		let focused = '';
+		if (second.length < 5) {
+			focused = Math.floor(y / (63 * DP));
+		} else {
+			focused = Math.floor(y / (69 * DP));
+		}
+		console.log('foucsed', focused);
+		if (focused < 1) {
+			setSelectedItem2(2);
+		} else {
+			setSelectedItem2(focused + 2);
 		}
 	};
 
 	const getWidth = () => {
-		if (data.length == 1) {
-			return 666 * DP;
-		} else if (data.length == 2) {
-			return 324 * DP;
-		}
+		return 324 * DP;
 	};
 
 	const onScrollToIndexFailed = e => {
 		console.log('e', e);
 	};
 
-	const getPadding = v => {
+	const getFirst = () => {
 		let arr = [padding, padding];
-		let newArr = arr.concat(v);
+		let newArr = arr.concat(first);
 		newArr.push(padding);
 		newArr.push(padding);
 		newArr.push(padding);
 		return newArr;
 	};
 
-	const getColor = item => {
-		if (item == padding) {
-			return GRAY20;
-		} else {
-			return BLACK;
-		}
+	const getSecond = v => {
+		let arr = [padding, padding];
+		let newArr = arr.concat(second);
+		newArr.push(padding);
+		newArr.push(padding);
+		newArr.push(padding);
+		return newArr;
 	};
 
 	return (
@@ -110,47 +123,69 @@ const SelectScrollBoxModal = props => {
 					</TouchableOpacity>
 				</View>
 				<View style={style.listContainer}>
-					{data.map((v, i) => {
-						return (
-							<View style={[style.list]} key={i}>
-								<FlatList
-									data={getPadding(v)}
-									ref={i == 0 ? refContainerLeft : refContainerRight}
-									scrollEventThrottle={50}
-									// keyExtractor={item => String(item)}
-									// onScrollToIndexFailed={onScrollToIndexFailed}
-									onScroll={e => onScroll(e, i)}
-									showsVerticalScrollIndicator={false}
-									renderItem={({item, index}) => {
-										return (
-											<TouchableWithoutFeedback key={index} onPress={() => (i == 0 ? setSelectedItem(index) : setSelectedItem2(index))}>
-												<View
-													key={index}
-													style={[
-														style.listItem,
-														index == (i == 0 ? selectedItem : selectedItem2) && item != padding ? {backgroundColor: APRI10} : null,
-														{
-															width: getWidth(),
-															// zIndex: 3,
-														},
-													]}>
-													<Text style={[txt.roboto34, {color: getColor(item)}]}>{item}</Text>
-												</View>
-											</TouchableWithoutFeedback>
-										);
-									}}
-								/>
-								{/* <View style={[style.box]} /> */}
-							</View>
-						);
-					})}
+					<View style={[style.list]}>
+						<FlatList
+							data={getFirst()}
+							ref={refContainerLeft}
+							scrollEventThrottle={50}
+							onScroll={onScroll}
+							showsVerticalScrollIndicator={false}
+							renderItem={({item, index}) => {
+								return (
+									<TouchableWithoutFeedback key={index} onPress={() => setSelectedItem(index)}>
+										<View
+											key={index}
+											style={[
+												style.listItem,
+												index == selectedItem && item != padding ? {backgroundColor: APRI10} : null,
+												{
+													width: getWidth(),
+													// zIndex: 3,
+												},
+											]}>
+											<Text style={[txt.roboto34, {color: item == padding ? GRAY20 : BLACK}]}>{item}</Text>
+										</View>
+									</TouchableWithoutFeedback>
+								);
+							}}
+						/>
+						{/* <View style={[style.box]} /> */}
+					</View>
+					<View style={[style.list]}>
+						<FlatList
+							data={getSecond()}
+							ref={refContainerRight}
+							scrollEventThrottle={50}
+							onScroll={onScroll_second}
+							showsVerticalScrollIndicator={false}
+							renderItem={({item, index}) => {
+								return (
+									<TouchableWithoutFeedback key={index} onPress={() => setSelectedItem2(index)}>
+										<View
+											key={index}
+											style={[
+												style.listItem,
+												index == selectedItem2 && item != padding ? {backgroundColor: APRI10} : null,
+												{
+													width: getWidth(),
+													// zIndex: 3,
+												},
+											]}>
+											<Text style={[txt.roboto34, {color: item == padding ? GRAY20 : BLACK}]}>{item}</Text>
+										</View>
+									</TouchableWithoutFeedback>
+								);
+							}}
+						/>
+						{/* <View style={[style.box]} /> */}
+					</View>
 				</View>
 			</View>
 		</View>
 	);
 };
 
-SelectScrollBoxModal.defaultProps = {
+SelectMultipleScrollBoxModal.defaultProps = {
 	// header: 'popUp',
 	onSelect: () => {},
 };
@@ -214,4 +249,4 @@ const style = StyleSheet.create({
 	},
 });
 
-export default SelectScrollBoxModal;
+export default SelectMultipleScrollBoxModal;

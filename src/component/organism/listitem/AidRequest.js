@@ -18,19 +18,19 @@ import {aidRequest} from '../style_organism copy';
  */
 export default AidRequest = props => {
 	const data = props.data;
-	// console.log('badge', data.protect_act_applicants.length);
-
+	// console.log('badge', data);
+	console.log('AidRequest', props);
 	//해당 AidRequest박스 선택 시 부모컴포넌트 OnSelect 실행
 	const onSelect = () => {
 		props.onSelect();
 	};
-
 	return (
 		<TouchableOpacity onPress={onSelect} style={[aidRequest.container]}>
 			<View
 				style={[
 					aidRequest.insideContainer,
-					props.selected && props.selectBorderMode ? aidRequest.borderColor_APRI10 : aidRequest.borderColor_GRAY10,
+					// props.selected && props.selectBorderMode ? aidRequest.borderColor_APRI10 : aidRequest.borderColor_GRAY10,
+					aidRequest.borderColor_APRI10,
 				]}>
 				{/* 보호동물 프로필 이미지 및 성별 */}
 				<View style={[aidRequest.img_irregular_174]}>
@@ -56,29 +56,37 @@ export default AidRequest = props => {
 								<Text style={[txt.noto24, {color: GRAY20}]}>예상연령</Text>
 							</View>
 							<View style={[aidRequest.right_middleMenu_content]}>
-								<Text style={[txt.noto24]}>{data.protect_animal_estimate_age || ''}</Text>
+								<Text style={[txt.noto26]}>{data.protect_animal_estimate_age || ''}</Text>
 							</View>
 							<View style={[aidRequest.right_middleMenu_title]}>
 								<Text style={[txt.noto24, {color: GRAY20}]}>체중</Text>
 							</View>
 							<View style={[aidRequest.right_middleMenu_content]}>
-								<Text style={[txt.noto24]}>{data.protect_animal_weight ? parseFloat(data.protect_animal_weight).toFixed(1) + 'kg' : '모름'}</Text>
+								<Text style={[txt.noto26]}>{data.protect_animal_weight ? parseFloat(data.protect_animal_weight).toFixed(1) + 'kg' : '모름'}</Text>
+							</View>
+							<View style={[aidRequest.right_middleMenu_title]}>
+								<Text style={[txt.noto24, {color: GRAY20}]}>중성화</Text>
+							</View>
+							<View style={[aidRequest.right_middleMenu_content]}>
+								<Text style={[txt.noto26]}>
+									{data.protect_animal_neutralization ? (data.protect_animal_neutralization == 'yes' ? 'O' : 'X') : '모름'}
+								</Text>
 							</View>
 						</View>
 						<View style={[aidRequest.right_lowerMenu]}>
-							<View style={[aidRequest.right_middleMenu_title]}>
+							{/* <View style={[aidRequest.right_middleMenu_title]}>
 								<Text style={[txt.noto24, {color: GRAY20}]}>중성화</Text>
 							</View>
 							<View style={[aidRequest.right_middleMenu_content]}>
 								<Text style={[txt.noto24]}>
 									{data.protect_animal_neutralization ? (data.protect_animal_neutralization == 'yes' ? 'O' : 'X') : '모름'}
 								</Text>
-							</View>
+							</View> */}
 							<View style={[aidRequest.right_middleMenu_title]}>
 								<Text style={[txt.noto24, {color: GRAY20}]}>구조장소</Text>
 							</View>
 							<View style={[aidRequest.right_middleMenu_content]}>
-								<Text numberOfLines={1} style={[txt.noto24]} ellipsizeMode={'tail'} style={[aidRequest.saved_location_text]}>
+								<Text numberOfLines={1} style={[txt.noto26, aidRequest.saved_location_text]} ellipsizeMode={'tail'}>
 									{data.protect_animal_rescue_location ? data.protect_animal_rescue_location : ''}
 								</Text>
 							</View>
@@ -88,7 +96,7 @@ export default AidRequest = props => {
 			</View>
 
 			{/* 앞 화면이 신청서 조회일 경우에만 표기 되도록 변경, 추후에 분기 타도록 ~ */}
-			{/* {console.log('props.nvName=>' + props.nvName)} */}
+			{/* {console.log('props.showBadge=>' + props.showBadge)} */}
 			{props.showBadge && data.protect_act_applicants.length > 0 ? (
 				<View style={[aidRequest.numberContainer]}>
 					<Text style={[{color: WHITE, paddingRight: 5 * DP}]}>{data.protect_act_applicants ? data.protect_act_applicants.length : ''}</Text>
@@ -103,5 +111,5 @@ export default AidRequest = props => {
 AidRequest.defaultProps = {
 	onSelect: e => console.log('AidRequest', e),
 	selectBorderMode: true,
-	showBadge: true,
+	showBadge: false,
 };

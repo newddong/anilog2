@@ -4,20 +4,26 @@ import {txt} from 'Root/config/textstyle';
 import {AddItem64} from 'Atom/icon';
 import {aidRequestList} from 'Organism/style_organism copy';
 import AidRequest from 'Organism/listitem/AidRequest';
+import {APRI10, GRAY20} from 'Root/config/color';
+import moment from 'moment';
 
 /**
+ * 보호 동물 정보 요약 컴포넌트
+ * @param {object} props - Props Object
+ * @param {object} props.items - 출력 아이템 리스트
+ * @param {(index:number)=>void} props.onSelect - 선택 콜백
+ * @param {()=>void} props.onPressAddProtectAnimal - 추가 버튼 클릭 콜백
+ * @param {boolean} props.selectBorderMode - 선택 및 테두리 출력 모드
+ * @param {boolean} props.needPost - 컴포넌트 하단 요청 게시글 필요 / 완려 텍스트 출력 분기
+ * @param {string} props.callFrom - 호출 네비게이션
+ * @param {component} props.whenEmpty - 빈 값 시 출력 컴포넌트
  *
- * @param {{
- * items : 'ArrayList',
- * onSelect : '(index:number) => void /',
- * onPressAddProtectAnimal : void,
- * selectBorderMode : 'Boolean / 선택시 테두리 및 투명도 적용 모드 default true'
- * }} props
  */
 export default AidRequestList = props => {
 	const [selectedIndex, setSelectedIndex] = React.useState();
 	const [isSelectedOnce, setIsSelectedOnce] = React.useState(false);
 	const isShelterProtectAnimal = props.callFrom == 'ShelterProtectAnimalList';
+
 	const onPressAddProtectAnimal = () => {
 		setIsSelectedOnce(false);
 		setSelectedIndex(-1);
@@ -35,7 +41,14 @@ export default AidRequestList = props => {
 		setIsSelectedOnce(false);
 	};
 
+	const getParsedDate = date => {
+		const parsing = moment(date).format('YYYY.MM.DD');
+		return parsing;
+	};
+
 	const renderItem = (item, index) => {
+		// console.log('item', item);
+
 		const isSelected = index == selectedIndex; //현재 선택된 indexd와 해당 item의 index가 같은 경우에서만 불투명으로 처리되며 나머지는 투명해짐
 		return (
 			<View
@@ -49,8 +62,21 @@ export default AidRequestList = props => {
 					selected={isSelected}
 					onSelect={() => onSelect(index)}
 					selectBorderMode={props.selectBorderMode}
-					showBadge={!isShelterProtectAnimal}
+					showBadge={isShelterProtectAnimal}
 				/>
+				{props.needPost ? (
+					<View style={[aidRequestList.needPostText]}>
+						<Text style={[txt.noto26, {color: APRI10, alignSelf: 'flex-end'}]}>
+							{getParsedDate(item.protect_animal_rescue_date)} 구조 · 보호 요청글 게시 필요{' '}
+						</Text>
+					</View>
+				) : (
+					<View style={[aidRequestList.needPostText]}>
+						<Text style={[txt.noto26, {color: GRAY20, alignSelf: 'flex-end'}]}>
+							{getParsedDate(item.protect_animal_rescue_date)} 구조 · 보호 요청글 게시 완료{' '}
+						</Text>
+					</View>
+				)}
 			</View>
 		);
 	};
@@ -60,14 +86,14 @@ export default AidRequestList = props => {
 			<View style={[aidRequestList.container]}>
 				{/* {console.log('ProtectRequestList=>' + JSON.stringify(dummy_ProtectRequestList))} */}
 				{/* '보호중인 동물' 메뉴에 들어갔을때만 '보호중인 동물 추가하기 기능 보임' */}
-				{props.callFrom != 'ProtectApplyList' ? (
+				{/* {props.callFrom != 'ProtectApplyList' ? (
 					<TouchableOpacity onPress={onPressAddProtectAnimal} style={[aidRequestList.addProtectedPetContainer]}>
 						<View style={[aidRequestList.addProtectedPet_insideContainer]}>
 							<AddItem64 />
 						</View>
 						<Text style={[txt.noto30, aidRequestList.addProtectedPetText]}>보호중인 동물 추가하기</Text>
 					</TouchableOpacity>
-				) : null}
+				) : null} */}
 				<ScrollView horizontal={false} contentContainerStyle={{flex: 0}}>
 					<ScrollView horizontal={true} contentContainerStyle={{flex: 1}} scrollEnabled={false}>
 						<View style={aidRequestList.aidRequestListCont}>
@@ -90,4 +116,5 @@ AidRequestList.defaultProps = {
 	selectBorderMode: true,
 	onSelect: e => console.log('AidRequestList / Onselect', e),
 	onPressAddProtectAnimal: e => console.log('AidRequestList, OnPressAddProtectAnimal', e),
+	needPost: false,
 };

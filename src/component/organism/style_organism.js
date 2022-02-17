@@ -14,8 +14,7 @@ export const organism_style = StyleSheet.create({
 		// paddingBottom: 50 * DP,
 		backgroundColor: WHITE,
 		paddingHorizontal: 48 * DP,
-		paddingBottom: 100 * DP,
-		overflow:'hidden',
+		overflow: 'hidden',
 	},
 	userLocationLabel_view_feedContent: {
 		flexDirection: 'row',
@@ -277,10 +276,10 @@ export const organism_style = StyleSheet.create({
 	},
 	btn_w280_view_profileInfo: {
 		flexDirection: 'row',
-		width: 654 * DP,
-		height: 100 * DP,
-		// alignItems:'center'
-		// justifyContent: 'space-between',
+		width: 610 * DP,
+		alignSelf: 'center',
+		marginBottom: 40 * DP,
+		justifyContent: 'space-between',
 	},
 	btn_w280_profileInfo: {
 		width: 280 * DP,
@@ -413,7 +412,8 @@ export const profileInfo_style = StyleSheet.create({
 	buttonContainer: {
 		width: 292 * DP,
 		height: 68 * DP,
-		marginLeft: 38 * DP,
+		// marginLeft: 38 * DP,
+		// backgroundColor: 'red',
 	},
 	shelter_info_container: {
 		marginTop: 12 * DP,

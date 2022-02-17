@@ -83,6 +83,12 @@ import InformationModal from 'Root/component/molecules/modal/InformationModal';
 import MessageModal from 'Root/component/molecules/modal/MessageModal';
 import DropdownModal from 'Root/component/molecules/modal/DropdownModal';
 import ShareModal from 'Root/component/molecules/modal/ShareModal';
+import SelectMultipleScrollBoxModal from 'Root/component/molecules/modal/SelectMultipleScrollBoxModal';
+import AddFamilyModal from 'Root/component/molecules/modal/AddFamilyModal';
+import CongratulationModal from 'Root/component/molecules/modal/CongratulationModal';
+import AdoptionInfoModal from 'Root/component/molecules/modal/AdoptionInfoModal';
+import AdoptionInfoModalWithOneBtn from 'Root/component/molecules/modal/AdoptionInfoModalWithOneBtn';
+
 // import Camera from 'Root/component/templete/Camera';
 // import Camera from 'Templete/media/Camera';
 const RootStack = createStackNavigator();
@@ -186,6 +192,11 @@ export default RootStackNavigation = () => {
 		!isPop && setPop(true);
 	};
 
+	Modal.popMultipleScrollBoxModal = (data, header, onSelect, onClose) => {
+		popIn(<SelectMultipleScrollBoxModal data={data} header={header} onSelect={onSelect} onClose={onClose} />);
+		!isPop && setPop(true);
+	};
+
 	Modal.popSelectDateModal = (header, onSelect) => {
 		popIn(<SelectDateModal header={header} onSelect={onSelect} />);
 		!isPop && setPop(true);
@@ -226,8 +237,13 @@ export default RootStackNavigation = () => {
 		!isPop && setPop(true);
 	};
 
-	Modal.popAdoptionInfoModal = (data, onYes, onNo) => {
-		popIn(<AdoptionInfoModal data={data} onYes={onYes} onNo={onNo} />);
+	Modal.popAdoptionInfoModal = (data, msg, yesMsg, noMsg, onYes, onNo) => {
+		popIn(<AdoptionInfoModal msg={msg} yesMsg={yesMsg} noMsg={noMsg} data={data} onYes={onYes} onNo={onNo} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popAdoptionInfoModalWithOneBtn = (data, yesMsg, onYes) => {
+		popIn(<AdoptionInfoModalWithOneBtn yesMsg={yesMsg} data={data} onYes={onYes} />);
 		!isPop && setPop(true);
 	};
 
@@ -253,6 +269,11 @@ export default RootStackNavigation = () => {
 
 	Modal.popShareModal = (offset, onPressKakao, onPressLinkCopy, onPressMsg) => {
 		popIn(<ShareModal offset={offset} onPressKakao={onPressKakao} onPressLinkCopy={onPressLinkCopy} onPressMsg={onPressMsg} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popCongratulationModal = (pet_nickname, user_profile_uri) => {
+		popIn(<CongratulationModal pet_nickname={pet_nickname} user_profile_uri={user_profile_uri} />);
 		!isPop && setPop(true);
 	};
 

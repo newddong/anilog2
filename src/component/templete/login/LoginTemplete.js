@@ -39,11 +39,10 @@ export default LoginTemplete = props => {
 					AsyncStorage.setItem('userInfo', JSON.stringify(userObject.msg));
 					userGlobalObj.userInfo = userObject.msg;
 				}
-				setTimeout(() => {
-					Modal.close();
-					// props.navigation.navigate('MainTab', userObject.msg.user_type);
-					props.navigation.reset({routes: [{name: 'MainTab', params: userObject.msg.user_type}]});
-				}, 1000);
+				
+				Modal.close();
+				props.navigation.reset({routes: [{name: 'MainTab', params: userObject.msg.user_type}]});
+				
 			},
 			error => {
 				Modal.close();

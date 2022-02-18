@@ -7,6 +7,7 @@ import DatePicker from 'Molecules/select/DatePicker';
 import Input30 from 'Molecules/input/Input30';
 import RadioBox from 'Molecules/select/RadioBox';
 import moment from 'moment';
+import {WEIGHT_INPUT_FORM_INFO} from 'Root/i18n/msg';
 
 export default SetPetInformation = ({route, navigation}) => {
 	const [data, setData] = React.useState(route.params);
@@ -147,7 +148,8 @@ export default SetPetInformation = ({route, navigation}) => {
 						<View style={[setPetInformation.inputNoTitle]}>
 							<View style={{flexDirection: 'row'}}>
 								<Input30
-									alert_msg={'두자리 숫자, 소수점 한자리'}
+									alert_msg={WEIGHT_INPUT_FORM_INFO}
+
 									description="info"
 									showmsg={false}
 									confirm={true}

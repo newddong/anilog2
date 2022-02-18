@@ -244,7 +244,7 @@ export const phoneNumVerification = StyleSheet.create({
 		color: 'red',
 		// backgroundColor: 'yellow',
 		paddingLeft: 10 * DP,
-		marginTop: -20 * DP,
+		marginTop: -40 * DP,
 		marginBottom: 10 * DP,
 	},
 	inputTimeLimitContainer: {

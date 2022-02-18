@@ -247,6 +247,7 @@ export default MissingAnimalDetail = props => {
 		}
 	};
 
+
 	const moveToCommentList = () => {
 		let feedobject = {};
 		feedobject._id = props.route.params._id;

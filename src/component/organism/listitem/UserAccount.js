@@ -18,7 +18,7 @@ import {userAccount} from 'Organism/style_organism copy';
  * @param {boolean} props.checkBoxState - 선택 여부 (default = false)
  */
 export default UserAccount = props => {
-	// console.log('item', props.data);
+	// console.log('item', props.data.keywordBold);
 
 	const [followState, setFollowState] = React.useState(true);
 

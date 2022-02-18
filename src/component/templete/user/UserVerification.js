@@ -8,6 +8,7 @@ import EmailVerification from 'Organism/form/EmailVerification';
 import PhoneNumVerification from 'Organism/form/PhoneNumVerification';
 import {stagebar_style} from 'Organism/style_organism copy';
 import {login_style, btn_style, temp_style, progressbar_style, userAssign} from 'Templete/style_templete';
+import StageBar from 'Molecules/info/Stagebar';
 
 // DropDown 컴포넌트 해결될 시 props처리와 data처리 추가해야함
 // 이메일부분 삭제 컨펌 나면 삭제 실시 예정

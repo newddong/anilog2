@@ -8,13 +8,14 @@ import Stagebar from 'Molecules/info/Stagebar';
 import AniButton from 'Molecules/button/AniButton';
 import {useNavigation} from '@react-navigation/core';
 import Modal from 'Component/modal/Modal';
-import {PET_YEAR, PET_MONTH} from 'Root/i18n/msg';
+import {PET_YEAR, PET_MONTH, WEIGHT_INPUT_FORM_INFO} from 'Root/i18n/msg';
 import {stagebar_style} from 'Organism/style_organism copy';
 import {CommonActions} from '@react-navigation/native';
 import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 import Input30 from 'Molecules/input/Input30';
 import {assignShelterAnimal} from 'Root/api/shelterapi';
 import {Arrow_Down_GRAY10} from 'Root/component/atom/icon';
+import SelectInput from 'Root/component/molecules/button/SelectInput';
 
 export default AssignProtectAnimalInfo = ({route}) => {
 	// console.log('Assing', route.params);
@@ -134,6 +135,19 @@ export default AssignProtectAnimalInfo = ({route}) => {
 		return regExp.test(e);
 	};
 
+	const onPressEstimatedAge = () => {
+		Modal.popSelectScrollBoxModal(
+			[PET_MONTH, ['개월', '년']],
+			'보호 동물의 예상연령',
+			(s1, s2) => {
+				setData({...data, protect_animal_estimate_age: s1 + ' ' + s2});
+				console.log('selected', s1, s2);
+				Modal.close();
+			},
+			() => Modal.close(),
+		);
+	};
+
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
 			<View style={[temp_style.stageBar, progressbar_style.stageBar]}>
@@ -155,9 +169,9 @@ export default AssignProtectAnimalInfo = ({route}) => {
 				{/* 예상 연령 */}
 				<View style={[temp_style.inputForm_assignProtectAnimal_line1]}>
 					<View style={assignProtectAnimal_style.width118}>
-						<Text style={[txt.noto28]}>예상 연령</Text>
+						<Text style={[txt.noto28, {color: GRAY10}]}>예상 연령</Text>
 					</View>
-					<TouchableOpacity onPress={onPressYear} style={[assignProtectAnimal_style.dropdownSelect_year]}>
+					{/* <TouchableOpacity onPress={onPressYear} style={[assignProtectAnimal_style.dropdownSelect_year]}>
 						<Text style={[txt.roboto28, assignProtectAnimal_style.dropdownSelect_year_text]}>{year}</Text>
 						<Arrow_Down_GRAY10 />
 					</TouchableOpacity>
@@ -166,7 +180,10 @@ export default AssignProtectAnimalInfo = ({route}) => {
 						<Text style={[txt.roboto28, assignProtectAnimal_style.dropdownSelect_year_text]}>{month}</Text>
 						<Arrow_Down_GRAY10 />
 					</TouchableOpacity>
-					<Text style={[txt.noto24, assignProtectAnimal_style.text118]}>개월</Text>
+					<Text style={[txt.noto24, assignProtectAnimal_style.text118]}>개월</Text> */}
+					<View style={[assignProtectAnimal_style.estimatedAgeContainer]}>
+						<SelectInput onPressInput={onPressEstimatedAge} width={500} value={data.protect_animal_estimate_age} />
+					</View>
 				</View>
 
 				{/* 체중 */}
@@ -177,7 +194,8 @@ export default AssignProtectAnimalInfo = ({route}) => {
 					<View style={[assignProtectAnimal_style.weight]}>
 						<Input30
 							description="info"
-							showmsg={false}
+							showmsg={true}
+							alert_msg={WEIGHT_INPUT_FORM_INFO}
 							confirm={true}
 							showTitle={false}
 							width={206}

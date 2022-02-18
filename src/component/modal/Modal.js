@@ -50,8 +50,11 @@ export default Modal = {
 	 * @param {boolean} past - 과거 날짜만 선택가능
 	 * @param {boolean} future - 미래 날짜만 선택가능
 	 * @param {boolean} multiple - 다중선택 가능
+	 * @param {object} previous - 다중선택일 경우 기존의 선택 리스트
+   * @param {number} props.maxLength - 다중선택 모드일 경우 선택가능 수
+
 	 */
-	popCalendar: (visible, onOff, date, past, future, multiple) => {},
+	popCalendar: (visible, onOff, date, past, future, multiple, previous, maxLength) => {},
 
 	/**
 	 * 회전 선택창을 모달로 띄우는 함수

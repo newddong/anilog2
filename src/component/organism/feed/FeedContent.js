@@ -234,17 +234,36 @@ export default FeedContent = props => {
 		setShow(true);
 	};
 
-	const shouldBeDetail = show || route.name == 'MissingAnimalDetail' || route.name == 'ReportDetail';
-	// console.log('경로', route.name, route.name.includes('FeedCommentList'));
-	console.log('피드 컨텐츠 경로명',route.name);
+	const isMissingReport = route.name == 'MissingAnimalDetail' || route.name == 'ReportDetail';
+
+	const layoutStyle = () => {
+		if (isMissingReport) {
+			return {
+				// backgroundColor: 'red',
+			};
+		} else {
+			
+			if(!show){
+			
+				// return {height: 870 * DP, backgroundColor: 'purple'}
+			}else{
+			
+			return {
+				height: 830 * DP,
+				backgroundColor: 'blue',
+			};
+		}
+		}
+	};
+
+	console.log('피드 컨텐츠 경로명', route.name);
 	return (
-		// <View style={[organism_style.feedContent,{overflow:'hidden'}, shouldBeDetail ? {height: 270 * DP + reportLayout.height + labelLayout.height + layout.height} : {}]} removeClippedSubviews>
-		<View
-			style={[{height: 270 * DP,backgroundColor:'red'}, /*shouldBeDetail ? {height: 270 * DP + layout.height} : {}*/]}
-			removeClippedSubviews>
-			<View style={[organism_style.feedContent, {overflow: 'hidden',backgroundColor:'green'}]} onLayout={(e)=>{
-				console.log('레이아웃',e.nativeEvent.layout,'비교',270*DP);
-			}}>
+		<View style={isMissingReport?{}:show?{height:270*DP}:{height:270*DP}} removeClippedSubviews>
+			<View
+				style={[organism_style.feedContent, {overflow: 'hidden', /*backgroundColor: 'green'*/}]}
+				onLayout={e => {
+					console.log('레이아웃', e.nativeEvent.layout, '비교', 270 * DP);
+				}}>
 				{/* // <View style={[organism_style.feedContent,{height:800*DP}]}> */}
 				{/* line 1 */}
 				<View style={[organism_style.userLocationLabel_view_feedContent]} onLayout={onLayoutLabel}>
@@ -309,34 +328,37 @@ export default FeedContent = props => {
 					{/* type값이 status일 경우 status 버튼이 나오고 그렇지 않으면 다른 버튼 표기 */}
 				</View>
 				{/* line 1-1 (실종/제보관련 내용) */}
-				{!route.name.includes('MainHomeFeedList')&&(feed_type == 'report'||feed_type=='missing') && (
+				{!route.name.includes('MainHomeFeedList') && (feed_type == 'report' || feed_type == 'missing') && (
 					<View style={[organism_style.tipOff_feedContent, feedContent_style.tipOff]} onLayout={onLayoutReport}>
 						<MissingReportInfo data={props.data} />
 					</View>
 				)}
 				{(route.name.includes('FeedList') || feed_type == 'report' || feed_type == 'missing' || route.name.includes('FeedCommentList') || show) && (
-					<View style={[organism_style.content_feedContent, feedContent_style.content_Top10,{backgroundColor:'yellow'}]}>
-						<HashText style={[txt.noto28]} numberOfLines={shouldBeDetail ? 0 : 2} onLayout={onLayoutContent}>
+					<View style={[organism_style.content_feedContent, feedContent_style.content_Top10 /*, {backgroundColor: 'yellow'}*/]}>
+						<HashText style={[txt.noto28]} numberOfLines={isMissingReport ? 0 : 2} onLayout={onLayoutContent}>
 							{feed_content}
 						</HashText>
 					</View>
 				)}
 			</View>
-			<View style={[organism_style.time_view_feedContent, {paddingHorizontal: 48 * DP}]}>
-				<View style={[organism_style.time_feedContent]}>
-					<Text style={[txt.noto22, {color: GRAY10}]}>{feed_date&&getTimeLapsed(feed_date)}</Text>
-				</View>
-				{!show&&<TouchableWithoutFeedback onPress={showMore}>
-					<View style={[organism_style.addMore_view_feedContent]}>
-						<View style={[organism_style.addMore_feedContent]}>
-							<Text style={[txt.noto22, {color: GRAY10}]}>더보기</Text>
-						</View>
-						<View style={[organism_style.braket]}>
-							<Arrow_Down_GRAY20 />
-						</View>
+			{!isMissingReport&&<View style={[organism_style.time_view_feedContent, {paddingHorizontal: 48 * DP}]}>
+					<View style={[organism_style.time_feedContent]}>
+						<Text style={[txt.noto22, {color: GRAY10}]}>{feed_date && getTimeLapsed(feed_date)}</Text>
 					</View>
-				</TouchableWithoutFeedback>}
-			</View>
+					{!show&& (
+						<TouchableWithoutFeedback onPress={showMore}>
+							<View style={[organism_style.addMore_view_feedContent]}>
+								<View style={[organism_style.addMore_feedContent]}>
+									<Text style={[txt.noto22, {color: GRAY10}]}>더보기</Text>
+								</View>
+								<View style={[organism_style.braket]}>
+									<Arrow_Down_GRAY20 />
+								</View>
+							</View>
+						</TouchableWithoutFeedback>
+					)}
+				</View>
+			}
 		</View>
 	);
 };

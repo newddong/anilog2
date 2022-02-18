@@ -75,7 +75,6 @@ export default PetInfoSetting = ({route, navigation}) => {
 	const changePetInfo = () => {
 		const petKind = PET_KIND();
 		setTimeout(() => {
-
 			let category = {
 				large: [],
 				sub: [],

@@ -56,7 +56,6 @@ export default ProtectRequestList = ({navigation, route}) => {
 					} else {
 						setData(data.msg);
 						setLoading(false);
-
 					}
 				},
 				err => {
@@ -65,7 +64,6 @@ export default ProtectRequestList = ({navigation, route}) => {
 						setData([]);
 					}
 					setLoading(false);
-
 				},
 			);
 		};

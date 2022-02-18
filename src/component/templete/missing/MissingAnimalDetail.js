@@ -18,7 +18,7 @@ import CameraRoll from '@react-native-community/cameraroll';
 import Modal from 'Root/component/modal/Modal';
 import MissingReportInfo from 'Organism/info/MissingReportInfo';
 import {PosterSave} from 'Component/atom/icon';
-import {phoneFomatter} from 'Root/util/stringutil'
+import {phoneFomatter} from 'Root/util/stringutil';
 
 export default MissingAnimalDetail = props => {
 	const navigation = useNavigation();
@@ -36,7 +36,6 @@ export default MissingAnimalDetail = props => {
 	const [replyPressed, setReplyPressed] = React.useState(false);
 	const debug = true;
 	const [loading, setLoading] = React.useState(true); //로딩상태
-	
 	const viewShotRef = useRef();
 	React.useEffect(() => {
 		setPhoto(props.route.params);
@@ -61,6 +60,7 @@ export default MissingAnimalDetail = props => {
 			data => {
 				// debug && console.log(`MissingAnimalDetail data:${JSON.stringify(data.msg)}`);
 				setData(data.msg);
+				setFeedLoading(false);
 			},
 			errcallback => {
 				console.log(`errcallback:${JSON.stringify(errcallback)}`);
@@ -247,9 +247,6 @@ export default MissingAnimalDetail = props => {
 		}
 	};
 
-
-
-
 	const moveToCommentList = () => {
 		let feedobject = {};
 		feedobject._id = props.route.params._id;
@@ -264,7 +261,7 @@ export default MissingAnimalDetail = props => {
 			</View>
 		);
 	}
-	
+
 	return (
 		<View style={[reportDetail.wrp_main]}>
 			<FlatList
@@ -276,12 +273,12 @@ export default MissingAnimalDetail = props => {
 							<ViewShot ref={viewShotRef} options={{format: 'jpg', quality: 1.0}}>
 								<View style={[missingAnimalDetail.poster]}>
 									<View style={missingAnimalDetail.title}>
-										<MissingAnimalTitle data={data}/>
+										<MissingAnimalTitle data={data} />
 									</View>
-									<MissingAnimalPicture data={data}/>
-									<MissingAnimalText data={data}/>
-									
-									<MissingAnimalPhone data={data}/>
+									<MissingAnimalPicture data={data} />
+									<MissingAnimalText data={data} />
+
+									<MissingAnimalPhone data={data} />
 									<Text style={missingAnimalDetail.missingText18}>반려동물 커뮤니티 애니로그</Text>
 								</View>
 							</ViewShot>
@@ -340,7 +337,7 @@ export default MissingAnimalDetail = props => {
 const MissingAnimalTitle = props => {
 	const [animalSpecies, setAnimalSpecies] = React.useState(''); //포스터 타이틀 동물 종류
 	const data = props.data;
-	if(!data)return false;
+	if (!data) return false;
 	useEffect(() => {
 		switch (data.missing_animal_species) {
 			case '개':
@@ -373,9 +370,9 @@ const MissingAnimalTitle = props => {
 //포스터 동물 정보 View 컴포넌트
 const MissingAnimalText = props => {
 	const data = props.data;
-	if(!data.missing_animal_date)return false;
+	if (!data.missing_animal_date) return false;
 	var newText = data.missing_animal_date;
-	console.log('뉴 텍스트',newText);
+	console.log('뉴 텍스트', newText);
 	var splitedNewText = newText.split('-');
 	var animalSex = '';
 	console.log('newDateDate', newText.split('-'));
@@ -431,14 +428,13 @@ const MissingAnimalPhone = props => {
 	);
 };
 
-
 //-------------------- 강아지를 찾습니다 컴포넌트 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 // 포스터 동물 사진2개 View 컴포넌트
 const MissingAnimalPicture = props => {
 	const data = props.data;
 	const feed_medias = data.feed_medias;
 	console.log('data.feed_media length', data.feed_medias);
-	if(!feed_medias)return false;
+	if (!feed_medias) return false;
 	if (feed_medias.length < 2) {
 		return (
 			<View style={missingAnimalDetail.picture}>
@@ -448,8 +444,8 @@ const MissingAnimalPicture = props => {
 					}}
 					style={[missingAnimalDetail.img_squre_284]}
 				/>
-			</View>);
-		
+			</View>
+		);
 	} else {
 		return (
 			<View style={missingAnimalDetail.picture}>

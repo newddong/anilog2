@@ -2114,6 +2114,8 @@ export const shelterMenu = StyleSheet.create({
 		// height: 550 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',
+		borderBottomColor: GRAY40,
+		borderBottomWidth: 10 * DP,
 	},
 	shelterInfo: {
 		backgroundColor: '#FFF',
@@ -4154,7 +4156,7 @@ export const feedWrite = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		borderRadius: 30 * DP,
-		borderWidth: 4 * DP,
+		borderWidth: 2 * DP,
 		borderColor: APRI10,
 		flexDirection: 'row',
 	},

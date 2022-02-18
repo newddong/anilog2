@@ -229,6 +229,7 @@ export default FeedWrite = props => {
 								onPress={onSetDiary}
 							/>
 						</View>
+
 						<TouchableOpacity onPress={onPressPublicSetting} style={[feedWrite.public_setting_btn]}>
 							{/* <ActionButton btnTitle={'전체 공개'} onOpen={() => alert('dd')} btnStyle={'border'} titleFontStyle={24} btnLayout={btn_w194} /> */}
 							<Text style={[txt.noto24, {color: APRI10}]}>{publicSetting}</Text>

@@ -143,9 +143,7 @@ const SelectMultipleScrollBoxModal = props => {
 													// zIndex: 3,
 												},
 											]}>
-
 											<Text style={[txt.roboto34, {color: item == padding ? GRAY20 : BLACK}]}>{item}</Text>
-
 										</View>
 									</TouchableWithoutFeedback>
 								);
@@ -173,9 +171,7 @@ const SelectMultipleScrollBoxModal = props => {
 													// zIndex: 3,
 												},
 											]}>
-
 											<Text style={[txt.roboto34, {color: item == padding ? GRAY20 : BLACK}]}>{item}</Text>
-
 										</View>
 									</TouchableWithoutFeedback>
 								);

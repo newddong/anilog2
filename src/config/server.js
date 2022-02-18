@@ -1,5 +1,4 @@
 import CookieManager from '@react-native-cookies/cookies';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // export const serveruri = 'http://10.0.2.2:3000';
 // export const serveruri = 'http://localhost:3000'

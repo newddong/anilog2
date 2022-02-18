@@ -184,6 +184,59 @@ export const EMAIL_DOMAIN = [
 	'직접입력',
 ];
 
+export const CALENDAR_YEAR = () => {
+	let currentTime = new Date();
+	let year = ['-------------', '-------------'];
+	for (let i = 0; i < 70; i++) {
+		year.push(currentTime.getFullYear() - i);
+	}
+	year.push('-------------', '-------------');
+	return year;
+};
+
+export const CALENDAR_MONTH = [
+	'-------------',
+	'-------------',
+	'1',
+	'2',
+	'3',
+	'4',
+	'5',
+	'6',
+	'7',
+	'8',
+	'9',
+	'10',
+	'11',
+	'12',
+	'-------------',
+	'-------------',
+	'-------------',
+];
+export const CALENDAR_DAY = () => {
+	const paddingObject = '-------------';
+	let day30 = ['-------------', '-------------'];
+	let day31 = ['-------------', '-------------'];
+	let day29 = ['-------------', '-------------'];
+	for (let i = 1; i < 32; i++) {
+		day31.push(i);
+	}
+	for (let i = 1; i < 31; i++) {
+		day30.push(i);
+	}
+	for (let i = 1; i < 30; i++) {
+		day29.push(i);
+	}
+	day31.push(paddingObject);
+	day31.push(paddingObject);
+	day30.push(paddingObject);
+	day30.push(paddingObject);
+	day29.push(paddingObject);
+	day29.push(paddingObject);
+	const days = {day31: day31, day30: day30, day29: day29};
+	return days;
+};
+
 //반려동물 종류
 export const PET_KIND = async () => {
 	let a = [];
@@ -202,6 +255,8 @@ export const PET_KIND = async () => {
 	// console.log('result', result);
 	return result;
 };
+
+export const PUBLIC_SETTING = ['전체 공개', '팔로워 공개', '비공개'];
 
 export const DOG_KIND = [
 	'믹스견',
@@ -320,7 +375,7 @@ export const INFO_QUESTION = '정보/문의';
 //User Menu 버튼
 export const INFO = '알림';
 export const ANIMAL_PROTECTION_STATE = '동물 보호 현황';
-export const PROTECTION_REQUEST = '보호 요청';
+export const PROTECTION_REQUEST = '보호 요청(저장)';
 
 export const PLEASE_UPLOAD_PIC = '해당 동물의 특징이 잘 보이는 이미지를 올려주세요.';
 export const PLEASE_GIVE_ME_DATE_AND_PLACE = '해당 동물이 구조된 날짜와 장소를 알려 주세요.';
@@ -347,7 +402,7 @@ export const INTEREST_ACT = '관심 활동';
 export const GENDER_TAB_SELECT = ['남자', '여자'];
 
 //PasswordChecker
-export const PASSWORD_TITLE = '비밀번호';
+export const PASSWORD_TITLE = '새로운 비밀번호';
 export const PASSWORD_CHECK_TITLE = '비밀번호 확인';
 export const NEW_PWD_TITLE = '새로운 비밀번호';
 export const CURRENT_PWD_TITLE = '현재 비밀번호';
@@ -363,7 +418,7 @@ export const PWD_CHECK_INFO = '비밀번호를 다시 한 번 적어주세요.';
 
 //Nickname 설정 관련
 export const NICKNAME_FORM = '2자 이상 15자 이내의 영문, 숫자의 입력만 가능합니다';
-export const NEW_NICK_REQUEST = '새로운 닉네임을 적어주세요.';
+export const NEW_NICK_REQUEST = '닉네임을 입력 해주세요.';
 export const PREVIOUS_NICK_TITLE = '기존 닉네임';
 
 export const NEW_NICK_TITLE = '새 닉네임';
@@ -376,14 +431,15 @@ export const AVAILABLE_NICK = '사용 가능한 닉네임입니다!';
 export const PROTECT_STATUS = ['입양가능', '협의중', '완료']; //SHELTER PROTECT REQUEST 템플릿
 export const SETTING_OWN_COMMENT = ['수정', '삭제'];
 export const SETTING_COMMENT = ['신고'];
+export const PROTECT_REQUEST_STATUS = ['임보중', '협의 중', '완료', '사망', '입양 가능'];
 
 //Modal Message
-export const CONFIRM_PROTECT_REQUEST = '이 내용으로 보호 활동 신청을 하시겠습니까?';
+export const CONFIRM_PROTECT_REQUEST = '이 내용으로 \n 보호 활동 신청을 하시겠습니까?';
 export const CONFIRM_ADOPT_REQUEST = '위 내용으로 입양 신청을 하시겠습니까?';
 export const CONFIRM_FINALIZED =
 	'신청이 완료 되었습니다. \n 보호소마다 심사의 기간과 기준이 다르며, 상황에 따라 연락이 가지 않을 수도 있음을 알려드립니다.';
 export const CONFIRM_DELETE_TAG_ME_FEED = '해당 게시글을 나의 "태그된 피드"에서 삭제하시겠습니까? 게시물을 올린 계정에서는 삭제되지 않습니다.';
-export const CONFIRM_DELETE_FAVORITE_FEED = '선택한 피드를 즐겨찾기에서 해제하시겠습니까?';
+export const CONFIRM_DELETE_FAVORITE_FEED = '선택한 피드를 즐겨찾기에서\n 해제하시겠습니까?';
 export const CONFIRM_DELETE_MY_FEED = '선택한 목록을 내 피드글에서 해제하시겠습니까?';
 export const PROTECT_ACT_PROTECT_CONFIRM = '임시보호는 확정을 눌러도 이 게시물의 \n 상태가 "입양가능"으로 유지됩니다.';
 export const PROTECT_ACT_ADOPT_CONFIRM = '입양확정을 하게 되면 이 게시물의 상태가 "완료"로 변경됩니다.';
@@ -399,3 +455,31 @@ export const NEAR_RAINBOWBRIDGE = '안락사 임박';
 //동물 나이
 export const PET_YEAR = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15'];
 export const PET_MONTH = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
+
+//팔로우 중 => 출력  메뉴
+export const FOLLOWER_MENU = ['즐겨찾기 추가', '소식 받기', '차단', '팔로우 취소'];
+export const FOLLOWER_PET_MENU = ['즐겨찾기 추가', '소식 받기', '차단', '팔로우 취소', '입양하기'];
+
+//피드 미트볼 메뉴 리스트
+export const FEED_MEATBALL_MENU_FOLLOWING = ['쪽지 보내기', '즐겨찾기', '공유하기', '게시물 알람 설정', '팔로우 취소', '신고'];
+export const FEED_MEATBALL_MENU_UNFOLLOWING = ['쪽지 보내기', '팔로우', '즐겨찾기', '공유하기', '신고'];
+export const FEED_MEATBALL_MENU_MY_FEED = ['공유하기', '수정', '삭제'];
+export const FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS = ['상태 변경', '공유하기', '수정', '삭제'];
+export const FEED_MEATBALL_MENU = ['공유하기', '신고'];
+
+//신고 목록
+export const REPORT_MENU = [
+	'------------------',
+	'------------------',
+	'기타(직접 입력)',
+	'부적절한 홍보 게시글',
+	'음란성 또는 청소년에게 부적절한 게시글',
+	'명예 훼손/사생활 침해  및 저작권 침해',
+	'심한 불쾌감 유발(폭력성, 욕설 등)',
+	'------------------',
+	'------------------',
+];
+
+//댓글 미트볼 헤더 출력 메뉴
+export const REPLY_MEATBALL_MENU_MY_REPLY = ['공유하기', '수정', '삭제'];
+export const REPLY_MEATBALL_MENU = ['공유하기', '신고'];

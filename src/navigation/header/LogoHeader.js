@@ -2,10 +2,10 @@ import React from 'react';
 import {Text, TextInput, View, Image, ScrollView, Dimensions, SafeAreaView, StyleSheet} from 'react-native';
 
 import {Logo} from 'Asset/image';
-import {AlarmBadger48, Search48} from 'Atom/icon';
+import {AlarmBadger48, MainLogo, Search48} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {WHITE, APRI10} from 'Root/config/color';
-import SvgWrapper, {SvgWrap} from 'Screens/svgwrapper';
+import SvgWrapper, {SvgWrap} from 'Atom/svgwrapper';
 
 export default LogoHeader = ({navigation, route, options, back}) => {
 	const clickLogo = () => {
@@ -20,7 +20,7 @@ export default LogoHeader = ({navigation, route, options, back}) => {
 	};
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
-			<SvgWrap style={style.logoContainer} onPress={clickLogo} svg={<Logo fill={APRI10} />} />
+			<MainLogo />
 			<View style={style.buttonContainer}>
 				<Search48 onPress={clickSearch} />
 

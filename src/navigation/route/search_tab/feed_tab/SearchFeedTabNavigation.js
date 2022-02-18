@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import SearchAccountA from 'Templete/SearchAccountA';
-import SearchFeed from 'Templete/SearchFeed';
-import SearchHashTag from 'Templete/SearchHashTag';
-import TopTabNavigation_Border_Type2 from 'Root/component/organism_ksw/TopTabNavigation_Border_Type2';
+import SearchAccountA from 'Root/component/templete/search/SearchAccountA';
+import SearchFeed from 'Root/component/templete/search/SearchFeed';
+import SearchHashTag from 'Root/component/templete/search/SearchHashTag';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
-import Profile from 'Root/component/templete/Profile';
-import MeatBallHeader from 'Root/navigation/header/MeatBallHeader';
-import {Dimensions} from 'react-native';
+import {Animated, Dimensions, Text, TouchableOpacity, View} from 'react-native';
+import {APRI10, GRAY10, GRAY20, WHITE} from 'Root/config/color';
+import DP from 'Root/config/dp';
+import {txt} from 'Root/config/textstyle';
 
 const SearchFeedTabNav = createMaterialTopTabNavigator();
 
@@ -15,7 +15,22 @@ export default SearchFeedTabNavigation = props => {
 	const [searchInput, setSearchInput] = React.useState(); // 검색어 관련 State
 	const [currentScreen, setCurrentScreen] = React.useState(0); //현재 보고 있는 화면 State
 	const routeName = getFocusedRouteNameFromRoute(props.route);
-	// console.log('getFocusedRouteNameFromRoute / SearchFeedTab', routeName);
+	console.log('getFocusedRouteNameFromRoute / SearchFeedTab', routeName);
+	const tabbarTitle = () => {
+		switch (routeName) {
+			case 'SearchFeed':
+				return '추천';
+				break;
+			case 'SearchAccountA':
+				return '계정';
+				break;
+			case 'SearchHashTag':
+				return '해쉬태그';
+				break;
+			default:
+				break;
+		}
+	};
 	React.useEffect(() => {
 		if (routeName == navName[0]) setCurrentScreen(0);
 		else if (routeName == navName[1]) setCurrentScreen(1);
@@ -29,7 +44,6 @@ export default SearchFeedTabNavigation = props => {
 		setSearchInput(props.input);
 	}, [props.input]);
 
-	const menuItem = ['게시글', '계정', '태그'];
 	const navName = ['SearchFeed', 'SearchAccountA', 'SearchHashTag'];
 
 	const onClickUser = sendUserobject => {
@@ -41,37 +55,28 @@ export default SearchFeedTabNavigation = props => {
 			// initialRouteName={navName[props.defaultIndex]}
 			initialLayout={{width: Dimensions.get('window').width}}
 			optimizationsEnabled
-			// lazy={true}
-			screenOptions={{lazy: true}}
-			// tabBar={({state, descriptors, navigation, position}) => {
-			// 	// console.log('navigation', navigation);
-			// 	const onSelectTab = pressedTab => {
-			// 		// console.log('press', state.routes[pressedTab].name);
-			// 		navigation.navigate({
-			// 			//현재 Tab state가 가지는 routes들 중 pressedTab 인덱스
-			// 			name: state.routes[pressedTab].name,
-			// 			merge: true,
-			// 		});
-			// 	};
-			// 	return (
-			// 		<TopTabNavigation_Border_Type2
-			// 			items={menuItem}
-			// 			onSelect={onSelectTab} // 현재 클릭된 상태인 tab (pressedTab에는 클릭된 index가 담겨져있음)
-			// 			select={props.defaultIndex || 0} // gesture Handler(손가락으로 swipe)로 tab을 움직였을 시 자식까지 state를 연동시키기 위한 props
-			// 			fontSize={24}
-			// 			value={currentScreen}
-			// 		/>
-			// 	);
-			// }}
-		>
+			screenOptions={{
+				tabBarItemStyle: {height: 70 * DP},
+				tabBarLabelStyle: [txt.noto24, {color: GRAY10, textAlignVertical: 'center', marginTop: -20 * DP}],
+				tabBarIndicatorStyle: {backgroundColor: APRI10},
+			}}>
 			{/* 게시글 */}
-			<SearchFeedTabNav.Screen name="SearchFeed">{props => <SearchFeed {...props} />}</SearchFeedTabNav.Screen>
+			<SearchFeedTabNav.Screen name="SearchFeed" options={{title: '추천'}}>
+				{props => <SearchFeed {...props} />}
+			</SearchFeedTabNav.Screen>
 			{/* 계정 */}
-			<SearchFeedTabNav.Screen name="SearchAccountA">
+			<SearchFeedTabNav.Screen name="SearchAccountA" options={{title: '계정'}}>
 				{props => <SearchAccountA {...props} prevNav={props.prevNav} input={searchInput} onClickUser={onClickUser} />}
 			</SearchFeedTabNav.Screen>
 			{/* 태그 */}
-			<SearchFeedTabNav.Screen name="SearchHashTag">{props => <SearchHashTag {...props} input={searchInput} />}</SearchFeedTabNav.Screen>
+			<SearchFeedTabNav.Screen
+				name="SearchHashTag"
+				options={{
+					title: '해쉬태그',
+					header: props => <InputAndSearchHeader {...props} />,
+				}}>
+				{props => <SearchHashTag {...props} input={searchInput} />}
+			</SearchFeedTabNav.Screen>
 		</SearchFeedTabNav.Navigator>
 	);
 };

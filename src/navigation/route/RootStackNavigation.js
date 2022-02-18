@@ -3,71 +3,94 @@ import {SafeAreaView, View, Dimensions, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import LoginTemplete from 'Templete/LoginTemplete';
+import LoginTemplete from 'Templete/login/LoginTemplete';
 
-import AgreementCheck from 'Templete/AgreementCheck';
-import UserPasswordCheck from 'Templete/UserPasswordCheck';
-import AssignUserHabitation from 'Templete/AssignUserHabitation';
-import AssignUserProfileImage from 'Templete/AssignUserProfileImage';
+import AgreementCheck from 'Templete/user/AgreementCheck';
+import UserPasswordCheck from 'Templete/user/UserPasswordCheck';
+import AssignUserHabitation from 'Templete/user/AssignUserHabitation';
+import AssignUserProfileImage from 'Templete/user/AssignUserProfileImage';
 
-import ShelterCodeCheck from 'Templete/ShelterCodeCheck';
-import ShelterAssignEntrance from 'Templete/ShelterAssignEntrance';
-import AssignShelterAddress from 'Templete/AssignShelterAddress';
-import AssignShelterInformation from 'Templete/AssignShelterInformation';
-import CheckShelterPassword from 'Templete/CheckShelterPassword';
-import AssignShelterProfileImage from 'Templete/AssignShelterProfileImage';
+import ShelterCodeCheck from 'Templete/shelter/ShelterCodeCheck';
+import ShelterAssignEntrance from 'Templete/shelter/ShelterAssignEntrance';
+import AssignShelterAddress from 'Templete/shelter/AssignShelterAddress';
+import AssignShelterInformation from 'Templete/shelter/AssignShelterInformation';
+import CheckShelterPassword from 'Templete/shelter/CheckShelterPassword';
+import AssignShelterProfileImage from 'Templete/shelter/AssignShelterProfileImage';
 
-import ApplyCompanionA from 'Templete/ApplyCompanionA';
-import ApplyCompanionB from 'Templete/ApplyCompanionB';
-import ApplyCompanionC from 'Templete/ApplyCompanionC';
-import ApplyCompanionD from 'Templete/ApplyCompanionD';
-import ApplyDetails from 'Templete/ApplyDetails';
+import ApplyCompanionA from 'Templete/pet/ApplyCompanionA';
+import ApplyCompanionB from 'Templete/pet/ApplyCompanionB';
+import ApplyCompanionC from 'Templete/pet/ApplyCompanionC';
+import ApplyCompanionD from 'Templete/pet/ApplyCompanionD';
+import ApplyDetails from 'Templete/protection/ApplyDetails';
 
-import ApplyVolunteer from 'Templete/ApplyVolunteer';
-import FeedMediaTagEdit from 'Templete/FeedMediaTagEdit';
-import FeedWrite from 'Templete/FeedWrite';
-import LocationPicker from 'Templete/LocationPicker';
+import ApplyVolunteer from 'Templete/volunteer/ApplyVolunteer';
+import FeedMediaTagEdit from 'Templete/feed/FeedMediaTagEdit';
+import FeedWrite from 'Templete/feed/FeedWrite';
+import LocationPicker from 'Templete/search/LocationPicker';
 
-import PhotoSelect from 'Templete/PhotoSelect';
-import AddPhoto from 'Templete/AddPhoto';
-import AddPhotoHeader from 'Navigation/header/AddPhotoHeader';
-
-import AddressSearch from 'Templete/AddressSearch';
-
-import AssignPetProfileImage from 'Templete/AssignPetProfileImage';
-import AssignPetInfoA from 'Templete/AssignPetInfoA';
-import AssignPetInfoB from 'Templete/AssignPetInfoB';
+import PhotoSelect from 'Templete/media/PhotoSelect';
+import AddPhoto from 'Templete/media/AddPhoto';
+import AddressSearch from 'Templete/search/AddressSearch';
+import AssignPetProfileImage from 'Templete/pet/AssignPetProfileImage';
+import AssignPetInfoA from 'Templete/pet/AssignPetInfoA';
+import AssignPetInfoB from 'Templete/pet/AssignPetInfoB';
 
 import MainTabNavigation from './main_tab/MainTabNavigation';
 import SearchTabNavigation from './search_tab/SearchTabNavigation';
 
 import {PIC_SELECTION} from 'Root/i18n/msg';
-import FeedListForHashTag from 'Root/component/templete/FeedListForHashTag';
+import FeedList from 'Templete/feed/FeedListForHashTag';
 
 import SimpleHeader from 'Navigation/header/SimpleHeader';
 import SendHeader from '../header/SendHeader';
-import UserVerification from 'Root/component/templete/UserVerification';
+import UserVerification from 'Templete/user/UserVerification';
 import FeedWriteHeader from 'Navigation/header/FeedWriteHeader';
 import BookmarkHeader from 'Navigation/header/BookmarkHeader';
 
-import TwoBtnModal from 'Molecules/TwoBtnModal';
-import OneBtnModal from 'Molecules/OneBtnModal';
-import NoBtnModal from 'Molecules/NoBtnModal';
-import RollingSelect from 'Molecules/RollingSelect';
-import SelectModal from 'Molecules/SelectModal';
-import FeedAvartarSelect from 'Molecules/FeedAvartarSelect';
-import KeyBoardInputBackGround from 'Molecules/KeyboardInputBackGround';
+import TwoBtnModal from 'Molecules/modal/TwoBtnModal';
+import OneBtnModal from 'Molecules/modal/OneBtnModal';
+import NoBtnModal from 'Molecules/modal/NoBtnModal';
+import RollingSelect from 'Molecules/select/RollingSelect';
+import SelectModal from 'Molecules/modal/SelectModal';
+import FeedAvartarSelect from 'Molecules/select/FeedAvartarSelect';
+import KeyBoardInputBackGround from 'Molecules/input/KeyboardInputBackGround';
 
 import Modal from 'Component/modal/Modal';
-import Calendar from 'Root/test_sangwoo/calendar';
+import Calendar from 'Molecules/calendar/calendar';
 import InputAndSearchHeader from '../header/InputAndSearchHeader';
-import LogoutView from 'Root/test_sangwoo/LogoutView';
-import RequestLogin from 'Root/component/templete/RequestLogin';
-import RadioSelectModal from 'Root/component/molecules/RadioSelectModal';
-import AddVolunteers from 'Root/component/templete/AddVolunteers';
-import Calendar_Multiple from 'Root/component/molecules/Calendar_Multiple';
-import InfoModal from 'Root/component/molecules/InfoModal';
+import RequestLogin from 'Templete/login/RequestLogin';
+import RadioSelectModal from 'Molecules/modal/RadioSelectModal';
+import AddVolunteers from 'Root/component/templete/volunteer/AddVolunteers';
+import Calendar_Multiple from 'Root/component/molecules/calendar/Calendar_Multiple';
+import ProtectedPetDetailModal from 'Root/component/molecules/modal/ProtectedPetDetailModal';
+import InfoModal from 'Root/component/molecules/modal/InfoModal';
+import AnimalInfoModal from 'Root/component/molecules/modal/AnimalInfoModal';
+import SelectBoxModal from 'Root/component/molecules/modal/SelectBoxModal';
+import SelectDateModal from 'Root/component/molecules/modal/SelectDateModal';
+import SelectScrollBoxModal from 'Root/component/molecules/modal/SelectScrollBoxModal';
+import SocialModal from 'Root/component/molecules/modal/SocialModal';
+import TopAlarm from 'Root/component/molecules/modal/TopAlarm';
+import TwoButtonSelectModal from 'Root/component/molecules/modal/TwoButtonSelectModal';
+import OneButtonSelectModal from 'Root/component/molecules/modal/OneButtonSelectModal';
+import FindAccount from 'Root/component/templete/user/FindAccount';
+import SuggestAssign from 'Root/component/templete/login/SuggestAssign';
+import PasswordResetIdentification from 'Root/component/templete/login/PasswordResetIdentification';
+import PasswordReset from 'Root/component/templete/user/PasswordReset';
+import AddressSearchPage from 'Root/component/templete/search/AddressSearchPage';
+import InterestTagModal from 'Root/component/molecules/modal/InterestTagModal';
+import AvatarSelectModal from 'Root/component/molecules/modal/AvatarSelectModal';
+import InformationModal from 'Root/component/molecules/modal/InformationModal';
+import MessageModal from 'Root/component/molecules/modal/MessageModal';
+import DropdownModal from 'Root/component/molecules/modal/DropdownModal';
+import ShareModal from 'Root/component/molecules/modal/ShareModal';
+import SelectMultipleScrollBoxModal from 'Root/component/molecules/modal/SelectMultipleScrollBoxModal';
+import AddFamilyModal from 'Root/component/molecules/modal/AddFamilyModal';
+import CongratulationModal from 'Root/component/molecules/modal/CongratulationModal';
+import AdoptionInfoModal from 'Root/component/molecules/modal/AdoptionInfoModal';
+import AdoptionInfoModalWithOneBtn from 'Root/component/molecules/modal/AdoptionInfoModalWithOneBtn';
+
 // import Camera from 'Root/component/templete/Camera';
+// import Camera from 'Templete/media/Camera';
 const RootStack = createStackNavigator();
 
 export default RootStackNavigation = () => {
@@ -134,6 +157,11 @@ export default RootStackNavigation = () => {
 		!isPop && setPop(true);
 	};
 
+	Modal.popAvatarSelectModal = (onSelectPet, okButtonnMsg, isBtnMode) => {
+		popIn(<AvatarSelectModal onSelectPet={onSelectPet} okButtonnMsg={okButtonnMsg} isBtnMode={isBtnMode} />);
+		!isPop && setPop(true);
+	};
+
 	Modal.closeKeboard = () => {
 		popIn(<KeyBoardInputBackGround />);
 		!isPop && setPop(true);
@@ -144,8 +172,8 @@ export default RootStackNavigation = () => {
 		!isPop && setPop(true);
 	};
 
-	Modal.popRadioSelect = (items, selectMsg, exitMsg, onSelect, onExit) => {
-		popIn(<RadioSelectModal items={items} selectMsg={selectMsg} exitMsg={exitMsg} onSelect={onSelect} onExit={onExit} />);
+	Modal.popRadioSelect = (items, title, onSelect) => {
+		popIn(<RadioSelectModal items={items} title={title} onSelect={onSelect} />);
 		!isPop && setPop(true);
 	};
 
@@ -154,11 +182,100 @@ export default RootStackNavigation = () => {
 		!isPop && setPop(true);
 	};
 
-	// const openCalendar = () => {
-	// 	console.log('openCale')
-	// 	Modal.popCalendar(showCalendar, closeCalendar, date => onDateChange(date))
-	// 	setShowCalendar(true);
-	// };
+	Modal.popProtectPetDetails = (data, onOk, onClose) => {
+		popIn(<ProtectedPetDetailModal data={data} onOk={onOk} onClose={onClose} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popSelectScrollBoxModal = (data, header, onSelect, onClose) => {
+		popIn(<SelectScrollBoxModal data={data} header={header} onSelect={onSelect} onClose={onClose} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popMultipleScrollBoxModal = (data, header, onSelect, onClose) => {
+		popIn(<SelectMultipleScrollBoxModal data={data} header={header} onSelect={onSelect} onClose={onClose} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popSelectDateModal = (header, onSelect) => {
+		popIn(<SelectDateModal header={header} onSelect={onSelect} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popSelectBoxModal = (data, onSelect, onClose, headerRoof, headerTitle) => {
+		popIn(<SelectBoxModal data={data} onSelect={onSelect} onClose={onClose} headerRoof={headerRoof} headerTitle={headerTitle} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popInformationModal = (data, onClose, onPressEdit) => {
+		popIn(<InformationModal data={data} onClose={onClose} onPressEdit={onPressEdit} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popAddFamilyModal = (data, onYes, onNo) => {
+		popIn(<AddFamilyModal data={data} onYes={onYes} onNo={onNo} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popTwoBtnSelectModal = (data, msg, onYes, onNo, noMsg, yesMsg) => {
+		popIn(<TwoButtonSelectModal data={data} msg={msg} onYes={onYes} onNo={onNo} noMsg={noMsg} yesMsg={yesMsg} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popOneBtnSelectModal = (data, msg, onYes, yesMsg) => {
+		popIn(<OneButtonSelectModal data={data} msg={msg} onYes={onYes} yesMsg={yesMsg} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popTopAlarm = (data, onClose) => {
+		popIn(<TopAlarm data={data} onClose={onClose} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popAnimalInfoModal = (data, onPressAdoptorInfo, onPressReqeustInfo) => {
+		popIn(<AnimalInfoModal data={data} onPressAdoptorInfo={onPressAdoptorInfo} onPressReqeustInfo={onPressReqeustInfo} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popAdoptionInfoModal = (data, msg, yesMsg, noMsg, onYes, onNo) => {
+		popIn(<AdoptionInfoModal msg={msg} yesMsg={yesMsg} noMsg={noMsg} data={data} onYes={onYes} onNo={onNo} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popAdoptionInfoModalWithOneBtn = (data, yesMsg, onYes) => {
+		popIn(<AdoptionInfoModalWithOneBtn yesMsg={yesMsg} data={data} onYes={onYes} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popSocialModal = (onPressKakao, onPressLinkCopy, onPressMsg) => {
+		popIn(<SocialModal onPressKakao={onPressKakao} onPressLinkCopy={onPressLinkCopy} onPressMsg={onPressMsg} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popInterestTagModal = (data, onSave, onClose) => {
+		popIn(<InterestTagModal data={data} onSave={onSave} onClose={onClose} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popMessageModal = (receiver, onSend, onClose) => {
+		popIn(<MessageModal receiver={receiver} onSend={onSend} onClose={onClose} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popDropdownModal = (offset, menu, onPressMenu, onClose) => {
+		popIn(<DropdownModal offset={offset} menu={menu} onPressMenu={onPressMenu} onClose={onClose} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popShareModal = (offset, onPressKakao, onPressLinkCopy, onPressMsg) => {
+		popIn(<ShareModal offset={offset} onPressKakao={onPressKakao} onPressLinkCopy={onPressLinkCopy} onPressMsg={onPressMsg} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popCongratulationModal = (pet_nickname, user_profile_uri) => {
+		popIn(<CongratulationModal pet_nickname={pet_nickname} user_profile_uri={user_profile_uri} />);
+		!isPop && setPop(true);
+	};
 
 	return (
 		<SafeAreaView style={{flex: 1}}>
@@ -229,6 +346,27 @@ export default RootStackNavigation = () => {
 						options={{header: props => <SimpleHeader {...props} />, title: '보호소 등록'}}
 					/>
 
+					<RootStack.Screen
+						name="FindAccount"
+						component={FindAccount}
+						options={{header: props => <SimpleHeader {...props} />, title: '내 계정 찾기'}}
+					/>
+					<RootStack.Screen
+						name="SuggestAssign"
+						component={SuggestAssign}
+						options={{header: props => <SimpleHeader {...props} />, title: '내 계정 찾기'}}
+					/>
+					<RootStack.Screen
+						name="PasswordResetIdentification"
+						component={PasswordResetIdentification}
+						options={{header: props => <SimpleHeader {...props} />, title: '비밀번호 재설정'}}
+					/>
+					<RootStack.Screen
+						name="PasswordReset"
+						component={PasswordReset}
+						options={{header: props => <SimpleHeader {...props} />, title: '비밀번호 재설정'}}
+					/>
+
 					<RootStack.Screen name="ApplyProtectActivityA" component={ApplyCompanionA} options={{header: props => <SimpleHeader {...props} />}} />
 					<RootStack.Screen name="ApplyProtectActivityB" component={ApplyCompanionB} options={{header: props => <SimpleHeader {...props} />}} />
 					<RootStack.Screen name="ApplyProtectActivityC" component={ApplyCompanionC} options={{header: props => <SimpleHeader {...props} />}} />
@@ -297,6 +435,11 @@ export default RootStackNavigation = () => {
 					<RootStack.Screen
 						name="AddressSearch"
 						component={AddressSearch}
+						options={{header: props => <SimpleHeader {...props} />, title: '주소 검색'}}
+					/>
+					<RootStack.Screen
+						name="AddressSearchPage"
+						component={AddressSearchPage}
 						options={{header: props => <SimpleHeader {...props} />, title: '주소 검색'}}
 					/>
 					<RootStack.Screen name="RequestLogin" component={RequestLogin} />

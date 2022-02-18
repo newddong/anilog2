@@ -6,7 +6,7 @@ import {WHITE, APRI10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 import {createProtectRequest} from 'Root/api/shelterapi';
-import {RED} from 'Root/screens/color';
+import {RED} from 'Root/config/color';
 
 export default SendHeader = ({route, navigation, options}) => {
 	// console.log('props SendHeader', route.params);
@@ -43,7 +43,10 @@ export default SendHeader = ({route, navigation, options}) => {
 										console.log('successed / createProtectRequest / SendHeader', successed.protect_request_photos_uri);
 										Modal.popNoBtn('보호요청 게시글 \n 작성이 완료되었습니다!');
 										Modal.close();
-										navigation.push('ShelterMenu');
+										navigation.reset({
+											index: 0,
+											routes: [{name: 'ShelterMenu'}],
+										});
 									},
 									err => {
 										console.log('err, createProtectRequest / SendHeader', err);

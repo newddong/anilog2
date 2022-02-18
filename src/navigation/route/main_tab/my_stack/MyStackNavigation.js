@@ -1,50 +1,51 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import Profile from 'Templete/Profile';
-import SocialRelation from 'Templete/SocialRelation';
-import FeedList from 'Templete/FeedList';
-import FeedListForHashTag from 'Templete/FeedListForHashTag';
-import FeedCommentList from 'Templete/FeedCommentList';
-import UserInfoDetailSettting from 'Templete/UserInfoDetailSettting';
-import UserMenu from 'Templete/UserMenu';
-import UserInfoSetting from 'Templete/UserInfoSetting';
-import ChangeUserProfileImage from 'Templete/ChangeUserProfileImage';
-import ChangePassword from 'Templete/ChangePassword';
-import VaccinationRecord from 'Templete/VaccinationRecord';
-import AnimalAdoption from 'Templete/AnimalAdoption';
-import PetInfoSetting from 'Templete/PetInfoSetting';
-import ChangePetProfileImage from 'Templete/ChangePetProfileImage';
-import SetPetInformation from 'Templete/SetPetInformation';
-import AddFamilyAccount from 'Templete/AddFamilyAccount';
-import AssignPetProfileImage from 'Templete/AssignPetProfileImage';
-import AssignPetInfoA from 'Templete/AssignPetInfoA';
-import AssignPetInfoB from 'Templete/AssignPetInfoB';
-import SaveFavorite from 'Templete/SaveFavorite';
-import SaveAnimalRequest from 'Templete/SaveAnimalRequest';
-import FavoriteFeeds from 'Templete/FavoriteFeeds';
-import AppliesRecord from 'Templete/AppliesRecord';
-import ApplyAdoptionList from 'Templete/ApplyAdoptionList';
-import ApplyDetails from 'Templete/ApplyDetails';
-import AnimalProtectList from 'Templete/AnimalProtectList';
-import AssignProtectAnimalImage from 'Templete/AssignProtectAnimalImage';
-import AssignProtectAnimalDate from 'Templete/AssignProtectAnimalDate';
-import AssignProtectAnimalInfo from 'Templete/AssignProtectAnimalInfo';
-import ShelterMenu from 'Templete/ShelterMenu';
-import ShelterInfoSetting from 'Templete/ShelterInfoSetting';
-import EditShelterInfo from 'Templete/EditShelterInfo';
-import AidRequestAnimalList from 'Templete/AidRequestAnimalList';
-import WriteAidRequest from 'Templete/WriteAidRequest';
-import AidRequestManage from 'Templete/AidRequestManage';
-import ProtectApplicant from 'Templete/ProtectApplicant';
-import ProtectApplyForm from 'Templete/ProtectApplyForm';
-import ShelterProtectRequests from 'Templete/ShelterProtectRequests';
-import AnimalFromShelter from 'Templete/AnimalFromShelter';
-import AdoptorInformation from 'Templete/AdoptorInformation';
-import ManageVolunteer from 'Templete/ManageVolunteer';
-import ApplicationFormVolunteer from 'Templete/ApplicationFormVolunteer';
-import PhotoSelect from 'Templete/PhotoSelect';
-import AnimalProtectRequestDetail from 'Templete/AnimalProtectRequestDetail';
-import SelectAccount from 'Templete/SelectAccount';
+import Profile from 'Templete/profile/Profile';
+import FeedList from 'Templete/feed/FeedList';
+import FeedListForHashTag from 'Templete/feed/FeedListForHashTag';
+import FeedCommentList from 'Templete/feed/FeedCommentList';
+
+import UserInfoDetailSettting from 'Templete/user/UserInfoDetailSettting';
+import UserMenu from 'Templete/user/UserMenu';
+import UserInfoSetting from 'Templete/user/UserInfoSetting';
+
+import ChangeUserProfileImage from 'Templete/user/ChangeUserProfileImage';
+import ChangePassword from 'Templete/user/ChangePassword';
+import VaccinationRecord from 'Templete/vaccination/VaccinationRecord';
+import AnimalAdoption from 'Templete/protection/AnimalAdoption';
+import PetInfoSetting from 'Templete/pet/PetInfoSetting';
+import ChangePetProfileImage from 'Templete/pet/ChangePetProfileImage';
+import SetPetInformation from 'Templete/pet/SetPetInformation';
+import AddFamilyAccount from 'Templete/pet/AddFamilyAccount';
+import AssignPetProfileImage from 'Templete/pet/AssignPetProfileImage';
+import AssignPetInfoA from 'Templete/pet/AssignPetInfoA';
+import AssignPetInfoB from 'Templete/pet/AssignPetInfoB';
+import SaveFavorite from 'Templete/favorite/SaveFavorite';
+import SaveAnimalRequest from 'Templete/protection/SaveAnimalRequest';
+import FavoriteFeeds from 'Templete/favorite/FavoriteFeeds';
+import AppliesRecord from 'Templete/my/AppliesRecord';
+import ApplyAdoptionList from 'Templete/list/ApplyAdoptionList';
+import ApplyDetails from 'Templete/protection/ApplyDetails';
+import AnimalProtectList from 'Templete/protection/AnimalProtectList';
+import AssignProtectAnimalImage from 'Templete/protection/AssignProtectAnimalImage';
+import AssignProtectAnimalDate from 'Templete/protection/AssignProtectAnimalDate';
+import AssignProtectAnimalInfo from 'Templete/protection/AssignProtectAnimalInfo';
+import ShelterMenu from 'Templete/shelter/ShelterMenu';
+import ShelterInfoSetting from 'Templete/shelter/ShelterInfoSetting';
+import EditShelterInfo from 'Templete/shelter/EditShelterInfo';
+import AidRequestAnimalList from 'Templete/protection/AidRequestAnimalList';
+import WriteAidRequest from 'Templete/protection/WriteAidRequest';
+import AidRequestManage from 'Templete/protection/AidRequestManage';
+import ProtectApplicant from 'Templete/protection/ProtectApplicant';
+import ProtectApplyForm from 'Templete/protection/ProtectApplyForm';
+import ShelterProtectRequests from 'Templete/shelter/ShelterProtectRequests';
+import AnimalFromShelter from 'Templete/protection/AnimalFromShelter';
+import AdoptorInformation from 'Templete/protection/AdoptorInformation';
+import ManageVolunteer from 'Templete/volunteer/ManageVolunteer';
+import ApplicationFormVolunteer from 'Templete/volunteer/ApplicationFormVolunteer';
+import PhotoSelect from 'Templete/media/PhotoSelect';
+import AnimalProtectRequestDetail from 'Templete/protection/AnimalProtectRequestDetail';
+import SelectAccount from 'Templete/search/SelectAccount';
 import ConfirmInputHeader from 'Navigation/header/ConfirmInputHeader';
 import SaveButtonHeader from 'Navigation/header/SaveButtonHeader';
 import MeatBallHeader from 'Root/navigation/header/MeatBallHeader';
@@ -54,6 +55,8 @@ import SimpleHeader from 'Root/navigation/header/SimpleHeader';
 import LogoHeader from 'Root/navigation/header/LogoHeader';
 import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 import {useNavigation} from '@react-navigation/core';
+import userGlobalObject from 'Root/config/userGlobalObject';
+
 const MyStack = createStackNavigator();
 
 export default MyStackNavigation = props => {
@@ -61,11 +64,11 @@ export default MyStackNavigation = props => {
 	const [searchInput, setSearchInput] = React.useState();
 
 	React.useEffect(() => {
-		setSearchInput(props.route.params);
+		setSearchInput(props.route.params); //검색어 입력 전달
 	}, [props.route.params]);
 
 	return (
-		<MyStack.Navigator initialRouteName={props.user_type == 'shelter' ? 'ShelterMenu' : 'UserMenu'}>
+		<MyStack.Navigator initialRouteName={userGlobalObject.userInfo.user_type == 'shelter' ? 'ShelterMenu' : 'UserMenu'}>
 			{/* // <MyStack.Navigator initialRouteName={'ShelterMenu'}> */}
 			<MyStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <MeatBallHeader {...props} />, title: '피드 게시글'}} />
 			<MyStack.Screen name="UserFeeds" component={FavoriteFeeds} options={{header: props => <SimpleHeader {...props} />, title: '내 게시글'}} />
@@ -192,6 +195,8 @@ export default MyStackNavigation = props => {
 				component={AssignProtectAnimalDate}
 				options={{header: props => <SimpleHeader {...props} />, title: '보호 동물 등록'}}
 			/>
+			<MyStack.Screen name="SinglePhotoSelect" component={PhotoSelect} />
+
 			<MyStack.Screen
 				name="AssignProtectAnimalType"
 				component={AssignPetInfoA}
@@ -205,7 +210,7 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen
 				name="AidRequestAnimalList"
 				component={AidRequestAnimalList}
-				options={{header: props => <SendHeader {...props} />, title: '동물 보호 요청'}}
+				options={{header: props => <SimpleHeader {...props} />, title: '동물 보호 요청'}}
 			/>
 			<MyStack.Screen
 				name="WriteAidRequest"

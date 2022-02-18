@@ -5,7 +5,7 @@ import DP from 'Root/config/dp';
 import {WHITE, APRI10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
-import {RED} from 'Root/screens/color';
+import {RED} from 'Root/config/color';
 import {createFeed, createMissing, createReport} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
@@ -88,7 +88,6 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 						data.feed_content &&
 						data.feed_medias &&
 						data.media_uri.length > 0 &&
-						data.report_animal_features &&
 						data.report_animal_species &&
 						data.report_witness_date &&
 						data.report_witness_location
@@ -110,11 +109,11 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 	const titleStyle = [{textAlign: 'center'}, txt.noto40b, route.params?.feedType != 'Feed' ? {color: RED} : {}];
 
 	const avartarSelect = () => {
-		Modal.feedAvartarSelect(petObject => {
-			console.log(petObject);
-			navigation.setOptions({title: petObject.user_nickname});
-			navigation.setParams({...route.params, feed_avatar_id: petObject._id});
-		});
+		Modal.popAvatarSelectModal(petObject => {
+			console.log('petObject / onOk', petObject);
+			petObject&&navigation.setOptions({title: petObject.user_nickname});
+			petObject&&navigation.setParams({...route.params, feed_avatar_id: petObject._id});
+		}, '이 계정 글쓰기');
 	};
 
 	return (

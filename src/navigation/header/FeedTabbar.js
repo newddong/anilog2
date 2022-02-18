@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, TouchableOpacity, StyleSheet, TouchableWithoutFeedback, Dimensions, Animated} from 'react-native';
-import DP from 'Screens/dp';
+import DP from 'Root/config/dp';
 
 export default FeedTabBar = ({state, descriptors, navigation, position}) => {
 	const width = Dimensions.get('screen').width / state.routes.length;

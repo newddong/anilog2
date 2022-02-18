@@ -1,16 +1,18 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import Profile from 'Templete/Profile';
-import FeedList from 'Templete/FeedList';
-import AnimalProtectRequestDetail from 'Templete/AnimalProtectRequestDetail';
-import FeedListForHashTag from 'Templete/FeedListForHashTag';
-import FeedCommentList from 'Templete/FeedCommentList';
-import MissingAnimalDetail from 'Templete/MissingAnimalDetail';
-import ReportDetail from 'Templete/ReportDetail';
-import ActivationDetail from 'Templete/ActivationDetail';
+import Profile from 'Templete/profile/Profile';
+import FeedList from 'Templete/feed/FeedList';
+import AnimalProtectRequestDetail from 'Templete/protection/AnimalProtectRequestDetail';
+import FeedListForHashTag from 'Templete/feed/FeedListForHashTag';
+import FeedCommentList from 'Templete/feed/FeedCommentList';
+import MissingAnimalDetail from 'Templete/missing/MissingAnimalDetail';
+import ReportDetail from 'Templete/missing/ReportDetail';
+import ActivationDetail from 'Templete/protection/ActivationDetail';
 import SocialRelationTopTabNavigation from './socialRelation_tab/SocialRelationTopTabNavigation';
 import ProtectionTopTabNavigation from './protection_tab/ProtectionTopTabNavigation';
 import AlarmAndSearchHeader from 'Root/navigation/header/AlarmAndSearchHeader';
+import SimpleHeader from 'Root/navigation/header/SimpleHeader';
+import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballHeader';
 
 const ProtectionStack = createStackNavigator();
 
@@ -27,8 +29,9 @@ export default ProtectionStackNavigation = () => {
 			<ProtectionStack.Screen
 				name="AnimalProtectRequestDetail"
 				component={AnimalProtectRequestDetail}
-				options={{header: props => <SimpleHeader {...props} />}}
+				options={{header: props => <SimpleWithMeatballHeader {...props} />}}
 			/>
+
 			<ProtectionStack.Screen name="FeedListForHashTag" component={FeedListForHashTag} />
 			<ProtectionStack.Screen name="FeedCommentList" component={FeedCommentList} options={{header: props => <AlarmAndSearchHeader {...props} />}} />
 			<ProtectionStack.Screen name="MissingAnimalDetail" component={MissingAnimalDetail} options={{header: props => <MeatBallHeader {...props} />}} />

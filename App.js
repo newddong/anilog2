@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-import Route from './route';
 import RootStackNavigation from 'Navigation/route/RootStackNavigation';
 
 // import SplashScreen from 'rreact-native-splash-screen';

@@ -1,10 +1,10 @@
 import React from 'react';
 import {View} from 'react-native'
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import TopTabNavigation_Border from 'Root/component/organism_ksw/TopTabNavigation_Border';
-import LinkedAccountList from 'Root/component/templete/LinkedAccountList';
-import FollowerList from 'Root/component/templete/FollowerList';
-import RecommendedAccountList from 'Root/component/templete/RecommendedAccountList';
+import TopTabNavigation_Border from 'Organism/menu/TopTabNavigation_Border';
+import LinkedAccountList from 'Templete/list/LinkedAccountList';
+import FollowerList from 'Templete/list/FollowerList';
+import RecommendedAccountList from 'Templete/list/RecommendedAccountList';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 
 const SocialRelationTab = createMaterialTopTabNavigator();

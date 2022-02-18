@@ -18,7 +18,6 @@ import moment from 'moment';
 const ShelterSmallLabel = props => {
 	const [validation, setValidation] = React.useState(false);
 	const data = props.data;
-	//ddd
 	//user_nickname Text 색깔 조건부적용을 위한 세션아이디 비교
 	React.useEffect(() => {
 		data.user_id == userGlobalObj.userInfo._id ? setValidation(true) : false; //일치한다면 Validation True로 nickname text color를 바꿈
@@ -41,8 +40,6 @@ const ShelterSmallLabel = props => {
 
 	const getFoundationDate = () => {
 		let date = data.shelter_foundation_date;
-		// console.log(date);
-
 		date = moment(date).format('YYYY-MM-DD');
 		return date;
 	};

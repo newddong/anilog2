@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View, ScrollView, FlatList, TextInput, TouchableOpacity} from 'react-native';
-import {BLACK, GRAY10, GRAY20} from 'Root/config/color';
+import {BLACK, GRAY10, GRAY20, RED10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {AddItem64, Add_Volunteer, Calendar48_Filled, Cross46, Cross48, Person48, Phone48} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
@@ -88,7 +88,22 @@ export default ApplyVolunteer = ({route, navigation}) => {
 				data.volunteer_accompany.map((v, i) => {
 					getAccompaniesId.push(v._id);
 				});
-				// console.log('token', param.token);
+				const t = {
+					shelter_userobject_id: param.token,
+					volunteer_wish_date_list: data.volunteer_wish_date,
+					accompany_userobject_id_list: getAccompaniesId,
+					volunteer_delegate_contact: data.volunteer_delegate_contact,
+					volunteer_accompany_number: data.volunteer_accompany_number,
+				};
+				console.log('t', t);
+				const q = {
+					accompany_userobject_id_list: ['61d2de63c0f179ccd5ba5887'],
+					shelter_userobject_id: '6203aff5c0f179ccd5bb8054',
+					volunteer_accompany_number: 3,
+					volunteer_delegate_contact: '1212344551',
+					volunteer_wish_date_list: ['2022.02.22', '2022.02.23', '2022.02.24'],
+				};
+
 				assignVolunteerActivity(
 					{
 						shelter_userobject_id: param.token,
@@ -161,11 +176,14 @@ export default ApplyVolunteer = ({route, navigation}) => {
 	};
 
 	const onPressAccompanyNumber = () => {
+		const numberArray = ['1명', '2명', '3명', '4명', '5명'];
 		Modal.popSelectScrollBoxModal(
-			[['1명', '2명', '3명', '4명', '5명']],
+			[numberArray],
 			'봉사활동 인원수(최대 5인)',
 			selected => {
-				setData({...data, volunteer_accompany_number: selected});
+				const findIndex = numberArray.findIndex(e => e == selected);
+				console.log('findIndex', findIndex);
+				setData({...data, volunteer_accompany_number: findIndex + 1});
 				Modal.close();
 			},
 			() => Modal.close(),
@@ -194,6 +212,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 							</View>
 							<View style={[applyVolunteer.title]}>
 								<Text style={[txt.noto24b, {color: GRAY10}]}>봉사활동 희망 날짜</Text>
+								<Text style={[txt.noto28, {color: RED10}]}> *</Text>
 							</View>
 						</View>
 						<DatePicker
@@ -229,7 +248,6 @@ export default ApplyVolunteer = ({route, navigation}) => {
 							</View>
 						</View>
 						<View style={[applyVolunteer.number_of_volunteerers]}>
-
 							<Text
 								onPress={onPressAccompanyNumber}
 								style={[
@@ -239,10 +257,9 @@ export default ApplyVolunteer = ({route, navigation}) => {
 										color: data.volunteer_accompany_number != '' ? BLACK : GRAY20,
 									},
 								]}>
-								{data.volunteer_accompany_number != '' ? data.volunteer_accompany_number : '애니로그 계정 유무 상관없는 총 인원수'}
+								{data.volunteer_accompany_number != '' ? data.volunteer_accompany_number + '명' : '애니로그 계정 유무 상관없는 총 인원수'}
 							</Text>
 							{data.volunteer_accompany_number != '' ? <></> : <Text style={[txt.noto32]}> {'  '} 명</Text>}
-
 						</View>
 						{/* 봉활참여인원 FlatList 여기 */}
 						<View style={[applyVolunteer.participants_step2]}>
@@ -271,13 +288,14 @@ export default ApplyVolunteer = ({route, navigation}) => {
 							</View>
 							<View style={[applyVolunteer.title]}>
 								<Text style={[txt.noto24b, {color: GRAY10}]}>봉사 활동자 연락처</Text>
+								<Text style={[txt.noto28, {color: RED10}]}> *</Text>
 							</View>
 						</View>
 						<View style={[applyVolunteer.participants_contact_text]}>
 							<Input24
 								width={654}
 								placeholder={'연락처를 적어주세요.'}
-								// keyboardType={'phone-pad'}
+								keyboardType={'phone-pad'}
 								onChange={onChangePhoneNumber}
 								value={data.volunteer_delegate_contact}
 							/>

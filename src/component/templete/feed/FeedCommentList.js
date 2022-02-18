@@ -26,6 +26,7 @@ export default FeedCommentList = props => {
 	const input = React.useRef();
 	const addChildCommentFn = React.useRef(() => {});
 	const [refresh, setRefresh] = React.useState(true);
+
 	React.useEffect(() => {
 		if (props.route.name == 'FeedCommentList') {
 			getCommentListByFeedId(
@@ -35,9 +36,9 @@ export default FeedCommentList = props => {
 				},
 				comments => {
 					setComments(comments.msg);
-					console.log('comments', comments);
+					// console.log('comments', comments);
 				},
-				err => console.log(err),
+				err => console.log('getCommentListByFeedId', err),
 			);
 		}
 	}, []);
@@ -133,7 +134,12 @@ export default FeedCommentList = props => {
 					<Text style={[txt.noto26, {color: GRAY10}]}>댓글 {comments.length}개 </Text>
 				</View>
 			);
-		if (index > 0) return <CommentList items={item} onPressReplyBtn={onReplyBtnClick} />;
+		if (index > 0)
+			return (
+				<View style={{marginLeft: 48 * DP}}>
+					<CommentList items={item} onPressReplyBtn={onReplyBtnClick} />
+				</View>
+			);
 	};
 	return (
 		<View style={[login_style.wrp_main, feedCommentList.container]}>

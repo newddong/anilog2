@@ -242,27 +242,24 @@ export default FeedContent = props => {
 				// backgroundColor: 'red',
 			};
 		} else {
-			
-			if(!show){
-			
+			if (!show) {
 				// return {height: 870 * DP, backgroundColor: 'purple'}
-			}else{
-			
-			return {
-				height: 830 * DP,
-				backgroundColor: 'blue',
-			};
-		}
+			} else {
+				return {
+					height: 830 * DP,
+					backgroundColor: 'blue',
+				};
+			}
 		}
 	};
 
-	console.log('피드 컨텐츠 경로명', route.name);
+	// console.log('피드 컨텐츠 경로명', route.name);
 	return (
-		<View style={isMissingReport?{}:show?{height:270*DP}:{height:270*DP}} removeClippedSubviews>
+		<View style={isMissingReport ? {} : show ? {height: 270 * DP} : {height: 270 * DP}} removeClippedSubviews>
 			<View
-				style={[organism_style.feedContent, {overflow: 'hidden', /*backgroundColor: 'green'*/}]}
+				style={[organism_style.feedContent, {overflow: 'hidden' /*backgroundColor: 'green'*/}]}
 				onLayout={e => {
-					console.log('레이아웃', e.nativeEvent.layout, '비교', 270 * DP);
+					// console.log('레이아웃', e.nativeEvent.layout, '비교', 270 * DP);
 				}}>
 				{/* // <View style={[organism_style.feedContent,{height:800*DP}]}> */}
 				{/* line 1 */}
@@ -323,7 +320,6 @@ export default FeedContent = props => {
 							)}
 							<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
 						</View>
-
 					</View>
 
 					{/* type값이 status일 경우 status 버튼이 나오고 그렇지 않으면 다른 버튼 표기 */}
@@ -342,11 +338,12 @@ export default FeedContent = props => {
 					</View>
 				)}
 			</View>
-			{!isMissingReport&&<View style={[organism_style.time_view_feedContent, {paddingHorizontal: 48 * DP}]}>
+			{!isMissingReport && (
+				<View style={[organism_style.time_view_feedContent, {paddingHorizontal: 48 * DP}]}>
 					<View style={[organism_style.time_feedContent]}>
 						<Text style={[txt.noto22, {color: GRAY10}]}>{feed_date && getTimeLapsed(feed_date)}</Text>
 					</View>
-					{!show&& (
+					{!show && (
 						<TouchableWithoutFeedback onPress={showMore}>
 							<View style={[organism_style.addMore_view_feedContent]}>
 								<View style={[organism_style.addMore_feedContent]}>
@@ -359,7 +356,7 @@ export default FeedContent = props => {
 						</TouchableWithoutFeedback>
 					)}
 				</View>
-			}
+			)}
 		</View>
 	);
 };

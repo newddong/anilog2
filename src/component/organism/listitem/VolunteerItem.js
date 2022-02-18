@@ -5,7 +5,7 @@ import {GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import ShelterLabel from 'Molecules/label/ShelterLabel';
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
-import {volunteerItem} from 'Organism/style_organism';
+import {volunteerItem} from 'Organism/style_organism copy';
 
 /**
  * 보호소 Object 정보 박스

@@ -229,6 +229,7 @@ export default FeedWrite = props => {
 								onPress={onSetDiary}
 							/>
 						</View>
+
 						<TouchableOpacity onPress={onPressPublicSetting} style={[feedWrite.public_setting_btn]}>
 							{/* <ActionButton btnTitle={'전체 공개'} onOpen={() => alert('dd')} btnStyle={'border'} titleFontStyle={24} btnLayout={btn_w194} /> */}
 							<Text style={[txt.noto24, {color: APRI10}]}>{publicSetting}</Text>
@@ -250,7 +251,7 @@ export default FeedWrite = props => {
 		<View style={[login_style.wrp_main, feedWrite.container]}>
 			{/* <ScrollView contentContainerStyle={{width: 750 * DP, alignItems: 'center'}}> */}
 			<HashInput
-				containerStyle={[temp_style.feedTextEdit, {minHeight: showLostAnimalForm || showReportForm ? 276 * DP : 376 * DP}]}
+				containerStyle={[temp_style.feedTextEdit, {minHeight: showLostAnimalForm || showReportForm ? 214 * DP : 316 * DP}]}
 				textAlignVertical={'top'}
 				multiline={true}
 				placeholder="게시물을 작성하세요 (150자)"

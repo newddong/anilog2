@@ -2117,6 +2117,8 @@ export const shelterMenu = StyleSheet.create({
 		// height: 550 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',
+		borderBottomColor: GRAY40,
+		borderBottomWidth: 10 * DP,
 	},
 	shelterInfo: {
 		backgroundColor: '#FFF',
@@ -2725,6 +2727,7 @@ export const petInfoSetting = StyleSheet.create({
 	},
 	petProfileMenu: {
 		container: {
+
 			width: 750 * DP,
 			// height: 130 * DP,
 			marginTop: 2 * DP,
@@ -4174,7 +4177,7 @@ export const feedWrite = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		borderRadius: 30 * DP,
-		borderWidth: 4 * DP,
+		borderWidth: 2 * DP,
 		borderColor: APRI10,
 		flexDirection: 'row',
 	},

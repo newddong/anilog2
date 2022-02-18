@@ -104,7 +104,9 @@ export default AnimalNeedHelp = props => {
 	const getParsedDate = () => {
 		let date = '';
 		if (data.feed_type == 'missing') {
-			date = data.missing_animal_date;
+			var splitAddress = data.missing_animal_lost_location.split('"');
+			// date = data.missing_animal_date;
+			date = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
 		} else if (data.feed_type == 'report') {
 			date = data.report_witness_date;
 		} else {
@@ -173,7 +175,7 @@ export default AnimalNeedHelp = props => {
 									나이:{data.missing_animal_age + '살' || ''} / 성별: {getParsedSex()}
 									{/* {data.missing_animal_sex} */}
 								</Text>
-								<Text style={[txt.noto24, {width: 380 * DP}]}>실종위치: {data.missing_animal_lost_location || ''}</Text>
+								<Text style={[txt.noto24, {width: 380 * DP}]}>실종위치: {getParsedDate(data.missing_animal_lost_location) || ''}</Text>
 								<Text style={[txt.noto24]} numberOfLines={1}>
 									특징: {data.missing_animal_features || ''}
 								</Text>

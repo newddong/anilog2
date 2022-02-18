@@ -214,6 +214,7 @@ export default function HashInput(props) {
 		props.onDelete(index);
 	};
 
+
 	return (
 		<>
 			<View

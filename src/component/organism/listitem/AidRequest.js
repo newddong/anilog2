@@ -24,7 +24,6 @@ export default AidRequest = props => {
 	const onSelect = () => {
 		props.onSelect();
 	};
-
 	return (
 		<TouchableOpacity onPress={onSelect} style={[aidRequest.container]}>
 			<View
@@ -57,29 +56,37 @@ export default AidRequest = props => {
 								<Text style={[txt.noto24, {color: GRAY20}]}>예상연령</Text>
 							</View>
 							<View style={[aidRequest.right_middleMenu_content]}>
-								<Text style={[txt.noto24]}>{data.protect_animal_estimate_age || ''}</Text>
+								<Text style={[txt.noto26]}>{data.protect_animal_estimate_age || ''}</Text>
 							</View>
 							<View style={[aidRequest.right_middleMenu_title]}>
 								<Text style={[txt.noto24, {color: GRAY20}]}>체중</Text>
 							</View>
 							<View style={[aidRequest.right_middleMenu_content]}>
-								<Text style={[txt.noto24]}>{data.protect_animal_weight ? parseFloat(data.protect_animal_weight).toFixed(1) + 'kg' : '모름'}</Text>
+								<Text style={[txt.noto26]}>{data.protect_animal_weight ? parseFloat(data.protect_animal_weight).toFixed(1) + 'kg' : '모름'}</Text>
+							</View>
+							<View style={[aidRequest.right_middleMenu_title]}>
+								<Text style={[txt.noto24, {color: GRAY20}]}>중성화</Text>
+							</View>
+							<View style={[aidRequest.right_middleMenu_content]}>
+								<Text style={[txt.noto26]}>
+									{data.protect_animal_neutralization ? (data.protect_animal_neutralization == 'yes' ? 'O' : 'X') : '모름'}
+								</Text>
 							</View>
 						</View>
 						<View style={[aidRequest.right_lowerMenu]}>
-							<View style={[aidRequest.right_middleMenu_title]}>
+							{/* <View style={[aidRequest.right_middleMenu_title]}>
 								<Text style={[txt.noto24, {color: GRAY20}]}>중성화</Text>
 							</View>
 							<View style={[aidRequest.right_middleMenu_content]}>
 								<Text style={[txt.noto24]}>
 									{data.protect_animal_neutralization ? (data.protect_animal_neutralization == 'yes' ? 'O' : 'X') : '모름'}
 								</Text>
-							</View>
+							</View> */}
 							<View style={[aidRequest.right_middleMenu_title]}>
 								<Text style={[txt.noto24, {color: GRAY20}]}>구조장소</Text>
 							</View>
 							<View style={[aidRequest.right_middleMenu_content]}>
-								<Text numberOfLines={1} style={[txt.noto24]} ellipsizeMode={'tail'} style={[aidRequest.saved_location_text]}>
+								<Text numberOfLines={1} style={[txt.noto26, aidRequest.saved_location_text]} ellipsizeMode={'tail'}>
 									{data.protect_animal_rescue_location ? data.protect_animal_rescue_location : ''}
 								</Text>
 							</View>

@@ -172,6 +172,10 @@ export default ApplyVolunteer = ({route, navigation}) => {
 		);
 	};
 
+	const onChangeAccompanyNumber = num => {
+		setData({...data, volunteer_accompany_number: num});
+	};
+
 	if (loading) {
 		return <></>;
 	} else {
@@ -225,6 +229,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 							</View>
 						</View>
 						<View style={[applyVolunteer.number_of_volunteerers]}>
+
 							<Text
 								onPress={onPressAccompanyNumber}
 								style={[
@@ -237,6 +242,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 								{data.volunteer_accompany_number != '' ? data.volunteer_accompany_number : '애니로그 계정 유무 상관없는 총 인원수'}
 							</Text>
 							{data.volunteer_accompany_number != '' ? <></> : <Text style={[txt.noto32]}> {'  '} 명</Text>}
+
 						</View>
 						{/* 봉활참여인원 FlatList 여기 */}
 						<View style={[applyVolunteer.participants_step2]}>

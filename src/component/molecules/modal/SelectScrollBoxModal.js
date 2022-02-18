@@ -44,6 +44,7 @@ const SelectScrollBoxModal = props => {
 	const onScroll = (event, i) => {
 		let y = event.nativeEvent.contentOffset.y;
 		let focused = '';
+
 		data[0].length < 5 ? (focused = Math.floor(y / (72 * DP))) : (focused = Math.floor(y / (78 * DP)));
 		// console.log('foucsed', focused, i);
 		if (i == 0) {

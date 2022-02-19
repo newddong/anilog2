@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableOpacity,KeyboardAvoidingView} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {btn_w522, btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
@@ -210,7 +210,7 @@ const AssignUserHabitation = props => {
 	};
 
 	return (
-		<View style={[login_style.wrp_main, {flex: 1}]}>
+		<KeyboardAvoidingView style={[login_style.wrp_main, {flex: 1}]} behavior='position'>
 			{/* (M)StageBar	 */}
 			<View style={[temp_style.stageBar, progressbar_style.stageBar]}>
 				<StageBar
@@ -290,7 +290,7 @@ const AssignUserHabitation = props => {
 					<AniButton btnTitle={'확인'} titleFontStyle={32} disable={true} btnLayout={btn_w654} />
 				)}
 			</View>
-		</View>
+		</KeyboardAvoidingView>
 	);
 };
 

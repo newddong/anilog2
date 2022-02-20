@@ -242,25 +242,22 @@ export default FeedContent = props => {
 				// backgroundColor: 'red',
 			};
 		} else {
-			
-			if(!show){
-			
+			if (!show) {
 				// return {height: 870 * DP, backgroundColor: 'purple'}
-			}else{
-			
-			return {
-				height: 830 * DP,
-				backgroundColor: 'blue',
-			};
-		}
+			} else {
+				return {
+					height: 830 * DP,
+					backgroundColor: 'blue',
+				};
+			}
 		}
 	};
 
 	console.log('피드 컨텐츠 경로명', route.name);
 	return (
-		<View style={isMissingReport?{}:show?{height:270*DP}:{height:270*DP}} removeClippedSubviews>
+		<View style={isMissingReport ? {} : show ? {height: 270 * DP} : {height: 270 * DP}} removeClippedSubviews>
 			<View
-				style={[organism_style.feedContent, {overflow: 'hidden', /*backgroundColor: 'green'*/}]}
+				style={[organism_style.feedContent, {overflow: 'hidden' /*backgroundColor: 'green'*/}]}
 				onLayout={e => {
 					console.log('레이아웃', e.nativeEvent.layout, '비교', 270 * DP);
 				}}>
@@ -303,14 +300,14 @@ export default FeedContent = props => {
 								</View>
 							) : (
 								<View style={[organism_style.button_view_feedContent]}>
-									<View style={[organism_style.favoriteTag_view_feedContent]}>
+									{/* <View style={[organism_style.favoriteTag_view_feedContent]}>
 										<View style={[organism_style.favoriteTag_feedContent]}>
 											<FavoriteTag48_Filled />
 										</View>
 										<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
 											<Text>{feed_favorite_count}</Text>
 										</View>
-									</View>
+									</View> */}
 									<View style={[organism_style.share48_view_feedContent]}>
 										<View style={[organism_style.share48_feedContent]}>
 											<Share48_Filled />
@@ -342,11 +339,12 @@ export default FeedContent = props => {
 					</View>
 				)}
 			</View>
-			{!isMissingReport&&<View style={[organism_style.time_view_feedContent, {paddingHorizontal: 48 * DP}]}>
+			{!isMissingReport && (
+				<View style={[organism_style.time_view_feedContent, {paddingHorizontal: 48 * DP}]}>
 					<View style={[organism_style.time_feedContent]}>
 						<Text style={[txt.noto22, {color: GRAY10}]}>{feed_date && getTimeLapsed(feed_date)}</Text>
 					</View>
-					{!show&& (
+					{!show && (
 						<TouchableWithoutFeedback onPress={showMore}>
 							<View style={[organism_style.addMore_view_feedContent]}>
 								<View style={[organism_style.addMore_feedContent]}>
@@ -359,7 +357,8 @@ export default FeedContent = props => {
 						</TouchableWithoutFeedback>
 					)}
 				</View>
-			}
+
+			)}
 		</View>
 	);
 };

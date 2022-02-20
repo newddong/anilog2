@@ -19,6 +19,7 @@ import {
 } from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {Platform} from 'react-native';
+
 export const login_style = StyleSheet.create({
 	wrp_main: {
 		// flex: 1,
@@ -4120,7 +4121,7 @@ export const feedWrite = StyleSheet.create({
 	},
 	buttonContainer: {
 		flexDirection: 'row',
-		width: 654 * DP,
+		paddingHorizontal:48*DP,
 		height: 54 * DP,
 		marginTop: 30 * DP,
 		alignItems: 'center',
@@ -4132,7 +4133,7 @@ export const feedWrite = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	btn_w194_container: {
-		width: 654 * DP,
+		paddingHorizontal:48*DP,
 		marginTop: 40 * DP,
 		flexDirection: 'row',
 	},
@@ -4195,7 +4196,8 @@ export const feedWrite = StyleSheet.create({
 		marginTop: 28 * DP,
 	},
 	lostAnimalForm: {
-		width: 654 * DP,
+		// width: 654 * DP,
+		paddingHorizontal:48*DP,
 		marginTop: 40 * DP,
 	},
 	lostAnimalForm_Form: {
@@ -4237,12 +4239,14 @@ export const feedWrite = StyleSheet.create({
 		// height: 585 * DP,
 	},
 	reportForm: {
-		width: 654 * DP,
+		// width: 654 * DP,
+		paddingHorizontal:48*DP,
 		// height: 456 * DP,
 		marginTop: 40 * DP,
 	},
 	reportForm_form: {
-		width: 654 * DP,
+		// width: 654 * DP,
+		
 		// height: 126 * DP,
 		marginBottom: 40 * DP,
 	},

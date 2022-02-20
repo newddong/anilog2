@@ -105,9 +105,11 @@ export default AnimalNeedHelp = props => {
 	const getParsedDate = () => {
 		let date = '';
 		if (data.feed_type == 'missing') {
+
 			// var splitAddress = data.missing_animal_date.split('-');
 			// console.log('missing getParedDate', splitAddress);
 			date = data.missing_animal_date;
+
 		} else if (data.feed_type == 'report') {
 			date = data.report_witness_date;
 			console.log('report date', date);

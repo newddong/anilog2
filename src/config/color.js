@@ -16,7 +16,10 @@
 // export const APRI10 = '#FF9888';
 export const TEXTBASECOLOR = '#191919';
 
+
 export const APRI10 = '#FF634A';
+export const APRI20 = '#FF6558';
+
 export const BLACK = '#191919';
 export const GRAY10 = '#767676';
 export const GRAY20 = '#999999';

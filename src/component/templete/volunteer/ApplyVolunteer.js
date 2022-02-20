@@ -103,7 +103,6 @@ export default ApplyVolunteer = ({route, navigation}) => {
 					volunteer_delegate_contact: '1212344551',
 					volunteer_wish_date_list: ['2022.02.22', '2022.02.23', '2022.02.24'],
 				};
-
 				assignVolunteerActivity(
 					{
 						shelter_userobject_id: param.token,

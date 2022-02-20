@@ -305,7 +305,7 @@ const MissingForm = props => {
 	]);
 	const [isSpeciesChanged, setIsSpeciesChanged] = React.useState(false);
 
-	const [city, setCity] = React.useState(['시를 선택해 주세요']);
+	const [city, setCity] = React.useState(['광역시, 도']);
 	const [district, setDistrict] = React.useState(['구를 선택해 주세요']);
 
 	React.useEffect(() => {

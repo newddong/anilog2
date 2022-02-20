@@ -198,6 +198,7 @@ export default ProtectCommentList = props => {
 				{
 					alignItems: 'center',
 					flex: 1,
+					backgroundColor: '#fff',
 				},
 			]}>
 			<FlatList

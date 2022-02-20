@@ -247,7 +247,6 @@ export default MissingAnimalDetail = props => {
 		}
 	};
 
-
 	const moveToCommentList = () => {
 		let feedobject = {};
 		feedobject._id = props.route.params._id;
@@ -268,6 +267,7 @@ export default MissingAnimalDetail = props => {
 			<FlatList
 				contentContainerStyle={[reportDetail.container]}
 				data={[{}]}
+				showsVerticalScrollIndicator={false}
 				ListHeaderComponent={
 					<View style={{alignItems: 'center'}}>
 						<View>

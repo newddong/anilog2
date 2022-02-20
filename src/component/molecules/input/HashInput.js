@@ -223,7 +223,6 @@ export default function HashInput(props) {
 					props.containerStyle,
 					{
 						justifyContent: 'space-between',
-						height: props.selectedImg.length ? 486 * DP : null, //실종, 제보, 피드 글쓰기에서 사진이 추가된 경우 일괄적으로 486의 height를 가짐.
 					},
 				]}>
 				<TextInput

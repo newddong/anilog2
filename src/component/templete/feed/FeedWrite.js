@@ -305,7 +305,7 @@ export default FeedWrite = props => {
 			{/* </ScrollView> */}
 
 			{showUrgentBtns && !isSearchTag ? (
-				<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer, {backgroundColor: '#FFF'}]}>
+				<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
 					{showActionButton ? (
 						<View>
 							<TouchableWithoutFeedback onPress={onPressMissingWrite}>
@@ -837,7 +837,7 @@ const ReportForm = props => {
 
 	React.useEffect(() => {
 		props.scrollref.current.scrollToOffset({offset: currentPosition.current});
-		currentPosition.current(0);
+		currentPosition.current=0;
 	}, [keyboardArea]);
 
 	const onPressIn = (inputRef)=>()=>{

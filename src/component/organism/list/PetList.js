@@ -26,7 +26,12 @@ export default PetList = props => {
 	return (
 		<View style={[petList.container]}>
 			<View style={[petList.insideContainer]}>
-				<FlatList data={props.items} renderItem={({item, index}) => renderItem(item, index)} horizontal={true} />
+				<FlatList
+					data={props.items}
+					renderItem={({item, index}) => renderItem(item, index)}
+					horizontal={true}
+					ListEmptyComponent={props.ListEmptyComponent}
+				/>
 			</View>
 		</View>
 	);
@@ -34,6 +39,9 @@ export default PetList = props => {
 PetList.defaultProps = {
 	items: [],
 	onClickLabel: e => console.log(e),
+	ListEmptyComponent: e => {
+		return <></>;
+	},
 };
 // ProfileImageMedium120 - props
 // img_uri: 'https://consecutionjiujitsu.com/wp-content/uploads/2017/04/default-image.jpg', //image uri

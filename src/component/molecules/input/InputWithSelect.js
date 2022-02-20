@@ -1,10 +1,12 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {APRI10, RED10} from 'Root/config/color';
 import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 import Input24 from 'Molecules/input/Input24';
+import SelectInput from '../button/SelectInput';
+import Modal from 'Root/component/modal/Modal';
 
 /**
  * 드롭다운이 추가된 인풋 컴포넌트
@@ -40,8 +42,11 @@ const InputWithSelect = props => {
 
 	const onSelectDropDown = (v, i) => {
 		// console.log('드롭다운 선택확인 ', v, i);
-		props.onChange(v + props.delimiter + input);
-		setDropdownVal(v);
+		Modal.popSelectScrollBoxModal([props.items], '통신사 선택', selected => {
+			props.onChange(selected + props.delimiter + input);
+			setDropdownVal(selected);
+			Modal.close();
+		});
 	};
 
 	const validator = text => {
@@ -54,8 +59,8 @@ const InputWithSelect = props => {
 	};
 
 	return (
-		<View style={{height: 82 * DP, maxWidth: 654 * DP}}>
-			{props.title != null ? (
+		<View style={styles.container}>
+			{props.title != '' ? ( //분기 처리 오류 수정 22.02.17 권상우
 				<View style={{flexDirection: 'row'}}>
 					<Text style={[txt.noto24, {color: APRI10}]}>{props.title}</Text>
 					<Text style={[txt.noto24, {color: RED10, marginLeft: 30 * DP}]}>{props.title_star ? '*' : null}</Text>
@@ -67,7 +72,8 @@ const InputWithSelect = props => {
 					flexDirection: 'row',
 					alignItems: 'center',
 				}}>
-				<NormalDropDown menu={props.items} width={200} defaultIndex={props.defaultIndex ? props.defaultIndex : 0} onSelect={onSelectDropDown} />
+				{/* <NormalDropDown menu={props.items} width={200} defaultIndex={props.defaultIndex ? props.defaultIndex : 0} onSelect={onSelectDropDown} /> */}
+				<SelectInput onPressInput={onSelectDropDown} noBorder={false} value={dropdownVal} width={200} />
 				<View style={{marginLeft: 20 * DP}}>
 					<Input24
 						placeholder={props.placeholder}
@@ -108,5 +114,11 @@ InputWithSelect.defaultProps = {
 	keyboardType: 'default',
 	delimiter: '',
 };
+
+const styles = StyleSheet.create({
+	container: {
+		maxWidth: 654 * DP,
+	},
+});
 
 export default InputWithSelect;

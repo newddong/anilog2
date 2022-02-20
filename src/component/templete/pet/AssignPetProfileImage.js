@@ -38,19 +38,19 @@ export default AssignPetProfileImage = ({navigation, route}) => {
 	// }, [route.params]);
 
 	React.useEffect(() => {
-		// checkProtectPet(
-		// 	{userobject_id: data.userobject_id},
-		// 	cbObj => {
-		// 		Modal.popTwoBtn(
-		// 			'새로 임시보호, 입양을 하는 동물이 있습니다.\n 해당 동물을 등록하시겠습니까?',
-		// 			'아니오',
-		// 			'네',
-		// 			() => Modal.close(),
-		// 			() => Modal.close(),
-		// 		);
-		// 	},
-		// 	e => Modal.popOneBtn(e + 'CheckProtectPet', '확인', () => Modal.close()),
-		// );
+		checkProtectPet(
+			{userobject_id: data.userobject_id},
+			cbObj => {
+				Modal.popTwoBtn(
+					'새로 임시보호, 입양을 하는 동물이 있습니다.\n 해당 동물을 등록하시겠습니까?',
+					'아니오',
+					'네',
+					() => Modal.close(),
+					() => Modal.close(),
+				);
+			},
+			e => Modal.popOneBtn(e + 'CheckProtectPet', '확인', () => Modal.close()),
+		);
 	}, []);
 
 	React.useEffect(() => {

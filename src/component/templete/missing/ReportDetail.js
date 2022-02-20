@@ -66,7 +66,6 @@ export default ReportDetail = props => {
 	React.useEffect(() => {
 		console.log(' - ReportDetail Comment -');
 		getCommnetList();
-
 		setLoading(false);
 	}, []);
 

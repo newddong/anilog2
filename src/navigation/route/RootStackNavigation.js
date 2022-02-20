@@ -134,10 +134,20 @@ export default RootStackNavigation = () => {
 		!isPop && setPop(true);
 	};
 
-	Modal.popCalendar = (visible, onOff, date, past, future, multiple) => {
-		console.log('Multi', multiple);
+	Modal.popCalendar = (visible, onOff, date, past, future, multiple, previous, maxLength) => {
+		// console.log('Multi', multiple);
 		multiple
-			? popIn(<Calendar_Multiple modalOn={visible} modalOff={onOff} selectDate={date} past={past} future={future} />)
+			? popIn(
+					<Calendar_Multiple
+						modalOn={visible}
+						modalOff={onOff}
+						selectDate={date}
+						past={past}
+						future={future}
+						previous={previous}
+						maxLength={maxLength}
+					/>,
+			  )
 			: popIn(<Calendar modalOn={visible} modalOff={onOff} selectDate={date} past={past} future={future} />);
 		!isPop && setPop(true);
 	};

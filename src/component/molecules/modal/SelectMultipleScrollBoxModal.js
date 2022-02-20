@@ -17,6 +17,8 @@ import Modal from 'Root/component/modal/Modal';
  */
 const SelectMultipleScrollBoxModal = props => {
 	const data = props.data;
+	// console.log('data', JSON.stringify(data));
+
 	const [selectedItem, setSelectedItem] = React.useState(2);
 	const [selectedItem2, setSelectedItem2] = React.useState(2);
 	const [first, setFirst] = React.useState(data.large);

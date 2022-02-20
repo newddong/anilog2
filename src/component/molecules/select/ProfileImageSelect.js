@@ -1,9 +1,10 @@
 import React from 'react';
-import {View, Image, TouchableOpacity} from 'react-native';
+import {View, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import {AddItem92} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import {ProfileDefaultImg1, ProfileDefaultImg2, ProfileDefaultImg3} from 'Atom/icon';
+import DP from 'Root/config/dp';
 
 /**
  * 프로필 이미지 컨테이너
@@ -34,7 +35,7 @@ const ProfileImageSelect = props => {
 			{/* ProfileImage uri가 null일 경우와 아닌 경우의 분기 */}
 			{props.selectedImageUri.length ? <Image style={styles.img_round_294} source={{uri: props.selectedImageUri}} /> : randomdefault()}
 			<View style={{position: 'absolute', right: 0, bottom: 0, backgroundColor: '#ffffff', borderRadius: 50, opacity: 0.8, shadowOpacity: 0.2}}>
-				<View style={{backgroundColor: 'black', borderRadius: 50, opacity: 0.4, shadowOpacity: 0.2}}>
+				<View style={style.shadow}>
 					<AddItem92 />
 				</View>
 			</View>
@@ -46,4 +47,13 @@ ProfileImageSelect.defaultProps = {
 	selectedImageUri: '',
 	onClick: e => console.log(e),
 };
+
+const style = StyleSheet.create({
+	shadow: {
+		backgroundColor: 'black',
+		borderRadius: 50 * DP,
+		opacity: 0.6,
+		shadowOpacity: 0.5,
+	},
+});
 export default ProfileImageSelect;

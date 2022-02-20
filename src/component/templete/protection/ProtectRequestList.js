@@ -50,7 +50,6 @@ export default ProtectRequestList = ({navigation, route}) => {
 					if (filterData.adoptable_posts) {
 						filtered = data.msg.filter(e => e.protect_request_status != 'complete');
 						setData(filtered);
-
 						setLoading(false);
 						// console.log('length', filtered.length);
 					} else {
@@ -150,7 +149,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 	const onSelectKind = kind => {
 		Modal.popSelectScrollBoxModal(
 			[petTypes],
-			'보호 지역 선택',
+			'동물 종류 선택',
 			selected => {
 				selected == '동물종류'
 					? setFilterData({...filterData, protect_animal_species: ''})

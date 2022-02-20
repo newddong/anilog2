@@ -17,10 +17,44 @@ import DP from 'Root/config/dp';
 
 export default EditShelterInfo = ({route, navigation}) => {
 	const [data, setData] = React.useState(route.params.data);
-	// console.log('dataEmail  : ', data.user_email);
+	console.log('dataEmail  : ', data);
 	const isDirectInput = !EMAIL_DOMAIN.some(e => e == data.user_email.split('@')[1]);
 	// console.log('isDirectInput', isDirectInput);
-	console.log('data', route.params.data);
+	const e = {
+		shelter_address: {brief: '경북 포항시 남구 연일읍 형산강남로 8', detail: '87-22 빨간 지붕도'},
+		shelter_delegate_contact_number: '01096450001',
+		shelter_foundation_date: '2022-08-04T00:00:00.000Z',
+		shelter_homepage: 'Naver.com',
+		shelter_name: '형산보호소',
+		shelter_type: 'private',
+		type: 'UserObject',
+		user_agreement: {
+			is_donation_info: false,
+			is_location_service_info: false,
+			is_marketting_info: false,
+			is_over_fourteen: false,
+			is_personal_info: false,
+			is_service: false,
+		},
+		user_denied: false,
+		user_email: 'Lanad01@undefined',
+		user_follow_count: 1,
+		user_follower_count: 0,
+		user_interests: [],
+		user_introduction: '',
+		user_is_verified_email: false,
+		user_is_verified_phone_number: false,
+		user_my_pets: [],
+		user_name: '형산보호소',
+		user_nickname: '형산보호소',
+		user_password: 'tkddn123',
+		user_phone_number: '01096450001',
+		user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1644408821715_76E74A61-FDF5-4B75-BD96-B309E2475F05.jpg',
+		user_register_date: '2022-02-09T12:13:41.815Z',
+		user_type: 'shelter',
+		user_upload_count: 8,
+	};
+
 	React.useEffect(() => {
 		if (route.params.addr) {
 			console.log('route.params.Address Changed?   ', route.params.addr);
@@ -28,7 +62,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 			setData({
 				...data,
 				shelter_address: {
-					brief: addr.siNm + ' ' + addr.sggNm + ' ' + addr.rn + ' ' + addr.buldMnnm,
+					brief: addr.address,
 					detail: addr.detailAddr,
 					city: addr.siNm,
 					district: addr.sggNm + ' ' + addr.emdNm + ' ' + addr.lnbrMnnm + '-' + addr.lnbrSlno,
@@ -45,7 +79,8 @@ export default EditShelterInfo = ({route, navigation}) => {
 
 	//주소찾기 클릭
 	const onPressSearchAddr = () => {
-		navigation.push('AddressSearch', {addr: data.shelter_address ? data.shelter_address : '', from: route.name});
+		navigation.push('AddressSearchPage', {prevRoute: route.name});
+		// navigation.push('AddressSearch', {addr: data.shelter_address ? data.shelter_address : '', from: route.name});
 	};
 
 	const onChangeDeatilAddress = detail => {
@@ -162,9 +197,9 @@ export default EditShelterInfo = ({route, navigation}) => {
 				<View style={[editShelterInfo.shelterInfoForm]}>
 					{/* 보호소 이름 */}
 					<View style={[editShelterInfo.input30WithMsg]}>
-						<View style={[editShelterInfo.category]}>
+						<View style={[editShelterInfo.category, {}]}>
 							<View style={[editShelterInfo.text]}>
-								<Text style={[txt.noto28, {color: GRAY10}]}>보호소 이름</Text>
+								<Text style={[txt.noto30, {color: GRAY10}]}>보호소 이름</Text>
 							</View>
 						</View>
 						<View style={[editShelterInfo.input30]}>
@@ -194,11 +229,11 @@ export default EditShelterInfo = ({route, navigation}) => {
 							onPressSearchAddr={onPressSearchAddr}
 						/>
 					</View>
-					{/* 전ㄴ화번호 */}
+					{/* 전화번호 */}
 					<View style={[editShelterInfo.inputCont, {marginTop: 50 * DP}]}>
 						<View style={[editShelterInfo.category]}>
 							<View style={[editShelterInfo.text]}>
-								<Text style={[txt.noto28, {color: GRAY10}]}>전화번호</Text>
+								<Text style={[txt.noto30, {color: GRAY10}]}>전화번호</Text>
 							</View>
 						</View>
 						<View style={[editShelterInfo.input30]}>
@@ -214,11 +249,11 @@ export default EditShelterInfo = ({route, navigation}) => {
 							/>
 						</View>
 					</View>
-					{/* 이메일 단위 */}
+					{/* 이메일 */}
 					<View style={[editShelterInfo.inputEmail, {marginTop: 50 * DP}]}>
 						<View style={[editShelterInfo.category]}>
 							<View style={[editShelterInfo.emailText]}>
-								<Text style={[txt.noto28, {color: GRAY10}]}>이메일</Text>
+								<Text style={[txt.noto30, {color: GRAY10}]}>이메일</Text>
 							</View>
 						</View>
 						<View style={[editShelterInfo.inputWithEmail]}>
@@ -227,7 +262,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 								onSelectDropDown={onSelectDomain}
 								onChange={onChangeEmail}
 								defaultValue={data.user_email}
-								width={240}
+								width={200}
 								placeholder={'이메일을 입력'}
 							/>
 						</View>
@@ -236,7 +271,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 					<View style={[editShelterInfo.inputCont, {marginTop: 50 * DP}]}>
 						<View style={[editShelterInfo.category]}>
 							<View style={[editShelterInfo.text]}>
-								<Text style={[txt.noto28, {color: GRAY10}]}>홈페이지</Text>
+								<Text style={[txt.noto30, {color: GRAY10}]}>홈페이지</Text>
 							</View>
 						</View>
 						<View style={[editShelterInfo.input30]}>
@@ -261,7 +296,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 							</View>
 						</View>
 						<View style={[editShelterInfo.input30]}>
-							<DatePicker width={530} onDateChange={onChangeDate} defaultDate={getFoundationDate()} future={false} />
+							<DatePicker width={475} onDateChange={onChangeDate} defaultDate={getFoundationDate()} future={false} />
 						</View>
 					</View>
 				</View>

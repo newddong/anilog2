@@ -12,6 +12,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
 import {GRAY10, GRAY20} from 'Root/config/color';
+import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 
 export default FeedCommentList = props => {
 	// console.log('props.showAllContents', props.route.params.showAllContents);
@@ -26,6 +27,8 @@ export default FeedCommentList = props => {
 	const input = React.useRef();
 	const addChildCommentFn = React.useRef(() => {});
 	const [refresh, setRefresh] = React.useState(true);
+	const keyboardY = useKeyboardBottom(150*DP);
+
 	React.useEffect(() => {
 		if (props.route.name == 'FeedCommentList') {
 			getCommentListByFeedId(
@@ -147,6 +150,7 @@ export default FeedCommentList = props => {
 			{/* Parent Comment 혹은 Child Comment 에서 답글쓰기를 클릭할 시 화면 최하단에 등장 */}
 			{/* 비로그인 유저일 경우 리플란이 안보이도록 처리 - 상우 */}
 			{userGlobalObject.userInfo._id != '' && (editComment || props.route.name == 'FeedCommentList') ? (
+				<View style={{position:'absolute',bottom:keyboardY}}>
 				<ReplyWriteBox
 					onAddPhoto={onAddPhoto}
 					onChangeReplyInput={onChangeReplyInput}
@@ -156,7 +160,7 @@ export default FeedCommentList = props => {
 					privateComment={privateComment}
 					photo={photo}
 					ref={input}
-				/>
+				/></View>
 			) : (
 				false
 			)}

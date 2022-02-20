@@ -32,7 +32,6 @@ export default PetInfoSetting = ({route, navigation}) => {
 	const [isChiefUser, setIsChiefUser] = React.useState(false);
 	const [showMore, setShowmore] = React.useState(false); // 소개 더보기 클릭 여부
 	const [editMode, setEditMode] = React.useState(false); // 소개 수정 클릭 여부
-
 	const [introOriginLine, setIntroOriginLine] = React.useState(0);
 
 	const [userIntro_temp, setUserIntro_temp] = React.useState('');

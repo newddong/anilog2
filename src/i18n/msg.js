@@ -469,17 +469,16 @@ export const FEED_MEATBALL_MENU = ['공유하기', '신고'];
 
 //신고 목록
 export const REPORT_MENU = [
-	'------------------',
-	'------------------',
 	'기타(직접 입력)',
 	'부적절한 홍보 게시글',
 	'음란성 또는 청소년에게 부적절한 게시글',
 	'명예 훼손/사생활 침해  및 저작권 침해',
 	'심한 불쾌감 유발(폭력성, 욕설 등)',
-	'------------------',
-	'------------------',
 ];
 
 //댓글 미트볼 헤더 출력 메뉴
 export const REPLY_MEATBALL_MENU_MY_REPLY = ['공유하기', '수정', '삭제'];
 export const REPLY_MEATBALL_MENU = ['공유하기', '신고'];
+
+//동물 체중 안내
+export const WEIGHT_INPUT_FORM_INFO = '두자리 숫자, 소수점 한자리';

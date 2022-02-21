@@ -357,7 +357,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					</View>
 				</View>
 				<View style={[animalProtectRequestDetail_style.replyWriteBox]}>
-					{editComment && <ReplyWriteBox onPressReply={onPressReply} isProtectRequest={true} />}
+					{editComment && <ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} isProtectRequest={true} />}
 				</View>
 				{/* 보호요청 더 보기addMoreRequest */}
 				<View style={[temp_style.addMoreRequest_view]}>

@@ -35,9 +35,9 @@ const UserLocationTimeLabel = props => {
 		<TouchableOpacity onPress={onClickLabel} style={{paddingBottom: 8 * DP}}>
 			<View style={{flexDirection: 'row', alignItems: 'center'}}>
 				{props.data.user_profile_uri != undefined ? (
-					<Image source={{uri: props.data.user_profile_uri}} style={styles.img_round_60} />
+					<Image source={{uri: props.data.user_profile_uri}} style={props.isLarge?styles.img_round_70:styles.img_round_60} />
 				) : (
-					<ProfileDefaultImg size={styles.img_round_60} />
+					<ProfileDefaultImg size={props.isLarge?styles.img_round_70:styles.img_round_60} />
 				)}
 
 				<View style={{marginLeft: 20 * DP}}>

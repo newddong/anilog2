@@ -44,7 +44,7 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 	const onWrite = () => {
 		props.onWrite();
 		setContent('');
-		inputRef.current.clear();
+		inputRef.current.clear&&inputRef.current.clear();
 	};
 
 	const onDeleteImage = () => {

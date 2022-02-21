@@ -182,7 +182,7 @@ export default ProtectCommentList = props => {
 					</View>
 				</View>
 				<View style={[style.cotent_container_header]}>
-					<Text style={[txt.noto28, {color: GRAY10}]}>보호요청</Text>
+					<Text style={[txt.noto28, {color: GRAY10}]}>보호요청{props.route.name}</Text>
 					<Text style={[txt.noto32b, {}]}>{data.protect_request_title || ''}</Text>
 				</View>
 				<View style={[style.cotent_container_info]}>

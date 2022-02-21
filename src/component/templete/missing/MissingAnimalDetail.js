@@ -22,9 +22,6 @@ import {phoneFomatter} from 'Root/util/stringutil';
 
 export default MissingAnimalDetail = props => {
 	const navigation = useNavigation();
-	React.useEffect(() => {
-		LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
-	}, []);
 
 	const [photo, setPhoto] = React.useState(props.route.params != null ? props.route.params : []); //PhotoSelect에서 사진 선택이 됐을 경우 photo에 담김
 	const [editComment, setEditComment] = React.useState(false); //답글 작성란 View 보이기 T/F
@@ -208,20 +205,26 @@ export default MissingAnimalDetail = props => {
 	};
 
 	//전단지 저장
-	async function captureScreenShot() {
+	function captureScreenShot() {
 		try {
-			const imageURI = await viewShotRef.current.capture();
-			if (Platform.OS === 'android') {
-				const granted = await getPermissionAndroid();
-				if (!granted) {
-					return;
+			(async function(){
+				try{
+				const imageURI = await viewShotRef.current.capture();
+				if (Platform.OS === 'android') {
+					const granted = getPermissionAndroid();
+					if (!granted) {
+						return;
+					}
 				}
+				const image = CameraRoll.save(imageURI, 'photo');
+				if (image) {
+					// Alert.alert('', 'Image saved successfully.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
+					Modal.popOneBtn('전단지가 저장되었습니다.', '확인', Modal.close);
+				}
+			}catch(error){
+				console.log('error',error);
 			}
-			const image = CameraRoll.save(imageURI, 'photo');
-			if (image) {
-				// Alert.alert('', 'Image saved successfully.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
-				Modal.popOneBtn('전단지가 저장되었습니다.', '확인', Modal.close);
-			}
+			})();
 			// Share.share({title: 'Image', url: imageURI});
 		} catch (error) {
 			console.log('error', error);
@@ -232,15 +235,15 @@ export default MissingAnimalDetail = props => {
 	const getPermissionAndroid = async () => {
 		try {
 			const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE, {
-				title: 'Image Download Permission',
-				message: 'Your permission is required to save images to your device',
-				buttonNegative: 'Cancel',
-				buttonPositive: 'OK',
-			});
-			if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-				return true;
-			}
-			Alert.alert('', '전단지를 저장하기 위해서는 권한이 필요합니다.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
+					title: 'Image Download Permission',
+					message: 'Your permission is required to save images to your device',
+					buttonNegative: 'Cancel',
+					buttonPositive: 'OK',
+				});
+				if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+					return true;
+				}
+				Alert.alert('', '전단지를 저장하기 위해서는 권한이 필요합니다.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
 		} catch (err) {
 			// handle error as you please
 			console.log('err', err);
@@ -311,7 +314,8 @@ export default MissingAnimalDetail = props => {
 					<CommentList
 						items={commentDataList}
 						onPressReplyBtn={onReplyBtnClick}
-						onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
+						// onPress_ChildComment_ReplyBtn={onChildReplyBtnClick}
+						onPress_ChildComment_ReplyBtn={moveToCommentList}
 					/>
 					// </View>
 				)}

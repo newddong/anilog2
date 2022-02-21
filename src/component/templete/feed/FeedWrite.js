@@ -1,6 +1,6 @@
 import React from 'react';
 import {ScrollView, Text, TouchableOpacity, View, TouchableWithoutFeedback, TextInput, Platform, Keyboard} from 'react-native';
-import {APRI10, WHITE, GRAY20} from 'Root/config/color';
+import {APRI10, WHITE, GRAY20, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Paw54_Border} from 'Root/component/atom/icon/index';
@@ -285,7 +285,6 @@ export default FeedWrite = props => {
 								textAlignVertical={'top'}
 								multiline={true}
 								placeholder="게시물을 작성하세요 (150자)"
-								placeholderTextColor={GRAY20}
 								onChangeText={inputFeedTxt}
 								maxLength={150}
 								onFind={onFindTag}
@@ -490,10 +489,10 @@ const MissingForm = props => {
 
 	React.useEffect(() => {
 		props.scrollref.current.scrollToOffset({offset: currentPosition.current});
-		currentPosition.current=0;
+		currentPosition.current = 0;
 	}, [keyboardArea]);
 
-	const onPressIn = (inputRef)=>()=>{
+	const onPressIn = inputRef => () => {
 		if (Platform.OS === 'android') return;
 		inputRef.current.measureLayout(
 			props.container.current,
@@ -572,6 +571,7 @@ const MissingForm = props => {
 					onChangeText={onChangeMissingLocationDetail}
 					style={[feedWrite.missing_location_detail_input]}
 					placeholder={'반려동물이 실종된 구체적인 장소를 설명해주세요.'}
+					placeholderTextColor={GRAY10}
 					onPressIn={onPressIn(inputLocationRef)}
 					ref={inputLocationRef}
 				/>
@@ -837,10 +837,10 @@ const ReportForm = props => {
 
 	React.useEffect(() => {
 		props.scrollref.current.scrollToOffset({offset: currentPosition.current});
-		currentPosition.current=0;
+		currentPosition.current = 0;
 	}, [keyboardArea]);
 
-	const onPressIn = (inputRef)=>()=>{
+	const onPressIn = inputRef => () => {
 		if (Platform.OS === 'android') return;
 		inputRef.current.measureLayout(
 			props.container.current,
@@ -854,7 +854,6 @@ const ReportForm = props => {
 			},
 		);
 	};
-
 
 	return (
 		<View style={[feedWrite.reportForm_container]} showsVerticalScrollIndicator={false}>
@@ -889,13 +888,14 @@ const ReportForm = props => {
 							onChangeText={onChangeMissingLocationDetail}
 							style={[feedWrite.missing_location_detail_input]}
 							placeholder={'제보하려는 장소의 위치를 설명해주세요.'}
+							placeholderTextColor={GRAY10}
 							onPressIn={onPressIn(inputLocationRef)}
 							ref={inputLocationRef}
 						/>
 					</View>
 				</View>
 			</View>
-			<View style={{height: keyboardArea, width: '100%',backgroundColor:'#FFF'}}></View>
+			<View style={{height: keyboardArea, width: '100%', backgroundColor: '#FFF'}}></View>
 		</View>
 	);
 };

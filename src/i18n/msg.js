@@ -428,7 +428,7 @@ export const AVAILABLE_NICK = '사용 가능한 닉네임입니다!';
 //FilterButton 관련
 
 //Meatball
-export const PROTECT_STATUS = ['입양가능', '협의중', '완료']; //SHELTER PROTECT REQUEST 템플릿
+export const PROTECT_STATUS = ['입양가능', '협의 중', '임보 중', '완료']; //SHELTER PROTECT REQUEST 템플릿
 export const SETTING_OWN_COMMENT = ['수정', '삭제'];
 export const SETTING_COMMENT = ['신고'];
 export const PROTECT_REQUEST_STATUS = ['임보중', '협의 중', '완료', '사망', '입양 가능'];
@@ -454,7 +454,7 @@ export const NEAR_RAINBOWBRIDGE = '안락사 임박';
 
 //동물 나이
 export const PET_YEAR = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15'];
-export const PET_MONTH = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
+export const PET_MONTH = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
 
 //팔로우 중 => 출력  메뉴
 export const FOLLOWER_MENU = ['즐겨찾기 추가', '소식 받기', '차단', '팔로우 취소'];

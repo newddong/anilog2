@@ -14,7 +14,7 @@ import {txt} from 'Root/config/textstyle';
  * }} props
  */
 export default CommentList = props => {
-	console.log('length', props.items.length);
+	// console.log('length', props.items.length);
 	const renderItem = ({item, index}) => {
 		// console.log('CommentList', item);
 		return (
@@ -46,10 +46,12 @@ export default CommentList = props => {
 
 	return (
 		<View
-			style={{
-				width: 654 * DP,
-				// backgroundColor: 'red',
-			}}>
+			style={
+				{
+					// width: 654 * DP,
+					// backgroundColor: 'lightblue',
+				}
+			}>
 			<FlatList data={props.items} renderItem={renderItem} ListEmptyComponent={whenEmpty} scrollEnabled={false} stickyHeaderIndices={[0]} />
 		</View>
 	);

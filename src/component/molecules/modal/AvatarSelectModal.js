@@ -64,7 +64,9 @@ const AvatarSelectModal = props => {
 			{userobject_id: userGlobalObj.userInfo._id},
 			user => {
 				let avatarList = user.msg?.user_my_pets;
-				avatarList.push(userGlobalObj.userInfo);
+				if (props.isBtnMode) {
+					avatarList.push(userGlobalObj.userInfo);
+				}
 				setItems(avatarList);
 				setLoading(true);
 			},

@@ -59,7 +59,6 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		//그러나 현재 보고 있는 보호요청게시글은 해당 리스트에 출력이 되어서는 안됨 => Filter처리
 		const filteredList = writersAnotherRequests.filter(e => e._id != data._id);
 		setWritersAnotherRequests(filteredList);
-		setLoading(false);
 
 		//보고있는 요청글의 작성자가 로그인한 계정과 일치한다면 입양 / 임보 버튼이 나와서는 안됨
 		const user_type = userGlobalObject.userInfo.user_type;
@@ -132,10 +131,13 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				// console.log(`commentArray -${JSON.stringify(commentArray)}`);
 				console.log('commentArray', commentArray.length);
 				setCommentDataList(commentArray);
-
+				//댓글이 출력이 안되는 현상 발견으로 비동기 처리
+				setLoading(false);
 				debug && console.log('commentArray refresh', commentArray);
 			},
 			errcallback => {
+				//댓글이 출력이 안되는 현상 발견으로 비동기 처리
+				setLoading(false);
 				console.log(`Comment errcallback:${JSON.stringify(errcallback)}`);
 			},
 		);
@@ -236,6 +238,8 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		setIsSharePressed(!isSharePressed);
 		// console.log('ref', shareRef.current.offset);
 		shareRef.current.measure((fx, fy, width, height, px, py) => {
+			console.log('px', px);
+			console.log('py', py);
 			Modal.popShareModal(
 				{x: px, y: py},
 				() => alert('kakao'),
@@ -341,10 +345,12 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					)}
 					<View style={[temp_style.commentList]}>
 						<ScrollView horizontal={false} scrollEnabled={false}>
-							<ScrollView horizontal={true} scrollEnabled={false} style={{}}>
+							<ScrollView horizontal={true} scrollEnabled={false} style={{flex: 1}}>
 								<View
 									style={{
 										paddingVertical: 40 * DP,
+										// backgroundColor: 'pink',
+										// flex: 1,
 									}}>
 									<CommentList
 										items={commentDataList && commentDataList.length > 2 ? commentDataList.slice(0, 2) : commentDataList}

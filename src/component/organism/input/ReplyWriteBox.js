@@ -69,7 +69,7 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 					</Text>
 				</View>
 
-				<AniButton onPress={onWrite} btnLayout={btn_w120} btnStyle={'border'} btnTitle={'댓글'} titleFontStyle={24} />
+				<AniButton onPress={onPressReply} btnLayout={btn_w120} btnStyle={'border'} btnTitle={'댓글'} titleFontStyle={24} />
 			</View>
 		);
 	} else {

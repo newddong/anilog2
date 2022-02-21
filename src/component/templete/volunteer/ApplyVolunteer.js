@@ -147,7 +147,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 	const canOpenCalendar = () => {
 		let result = true;
 		if (data.volunteer_wish_date.length == 3) {
-			Modal.popOneBtn('희망날짜는 3개 이상 선택이 불가능합니다.', '확인', () => Modal.close());
+			Modal.popOneBtn('희망날짜는 3일 이상 선택이 불가능합니다.', '확인', () => Modal.close());
 			result = false;
 		} else {
 			result = true;

@@ -2083,6 +2083,17 @@ export const protectRequestList_style = StyleSheet.create({
 	filterbutton_view: {
 		marginTop: 40 * DP,
 	},
+	shadow: {
+		width: 60 * DP,
+		height: 60 * DP,
+		backgroundColor: 'white',
+		shadowOpacity: 0.5,
+		elevation: 2,
+		shadowOffset: {
+			height: 4 * DP,
+		},
+		borderRadius: 20 * DP,
+	},
 });
 
 export const requestLogin_style = StyleSheet.create({

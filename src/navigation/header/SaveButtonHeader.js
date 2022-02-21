@@ -137,10 +137,9 @@ const style = StyleSheet.create({
 		marginBottom: 20 * DP,
 	},
 	buttonContainer: {
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		width: 67 * DP,
+		// width: 67 * DP,
 		marginBottom: 22 * DP,
+		// backgroundColor: 'red',
 	},
 	shadow: {
 		// shadowColor: '#000000',

@@ -29,7 +29,7 @@ export default function GeoLocation() {
 				setLogitude(longitude);
 			},
 			error => {
-				console.log(error.code, error.message);
+				console.log('error get GEOLOCation', error.code, error.message);
 			},
 			{enableHighAccuracy: false, timeout: 5000, maximumAge: 10000},
 		);

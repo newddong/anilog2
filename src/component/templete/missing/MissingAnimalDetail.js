@@ -25,7 +25,7 @@ export default MissingAnimalDetail = props => {
 	React.useEffect(() => {
 		LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 	}, []);
-
+	console.log('MissingAnimalDetail', props);
 	const [photo, setPhoto] = React.useState(props.route.params != null ? props.route.params : []); //PhotoSelect에서 사진 선택이 됐을 경우 photo에 담김
 	const [editComment, setEditComment] = React.useState(false); //답글 작성란 View 보이기 T/F
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
@@ -60,7 +60,6 @@ export default MissingAnimalDetail = props => {
 			data => {
 				// debug && console.log(`MissingAnimalDetail data:${JSON.stringify(data.msg)}`);
 				setData(data.msg);
-				setFeedLoading(false);
 			},
 			errcallback => {
 				console.log(`errcallback:${JSON.stringify(errcallback)}`);
@@ -212,7 +211,8 @@ export default MissingAnimalDetail = props => {
 		try {
 			const imageURI = await viewShotRef.current.capture();
 			if (Platform.OS === 'android') {
-				const granted = await getPermissionAndroid();
+				// const granted = await getPermissionAndroid();
+				const granted = getPerMission();
 				if (!granted) {
 					return;
 				}
@@ -246,6 +246,22 @@ export default MissingAnimalDetail = props => {
 			console.log('err', err);
 		}
 	};
+
+	function capture() {
+		try {
+			captureScreenShot();
+		} catch (err) {
+			console.log('Screenshot Error', err);
+		}
+	}
+	function getPerMission() {
+		try {
+			getPermissionAndroid();
+		} catch (err) {
+			console.log('Android Image Permisson Failed', err);
+		}
+	}
+
 
 	const moveToCommentList = () => {
 		let feedobject = {};
@@ -283,7 +299,7 @@ export default MissingAnimalDetail = props => {
 									<Text style={missingAnimalDetail.missingText18}>반려동물 커뮤니티 애니로그</Text>
 								</View>
 							</ViewShot>
-							<TouchableWithoutFeedback onPress={captureScreenShot}>
+							<TouchableWithoutFeedback onPress={capture}>
 								<View style={missingAnimalDetail.floatingBtnMissingReport}>
 									<PosterSave />
 									<Text style={[txt.noto20, {color: 'red'}, {fontWeight: 'bold'}]}>전단지 저장</Text>
@@ -336,34 +352,34 @@ export default MissingAnimalDetail = props => {
 
 // 포스터 제목 컴포넌트
 const MissingAnimalTitle = props => {
-	const [animalSpecies, setAnimalSpecies] = React.useState(''); //포스터 타이틀 동물 종류
+	// const [animalSpecies, setAnimalSpecies] = React.useState('');
+	//포스터 타이틀 동물 종류
 	const data = props.data;
 	if (!data) return false;
-	useEffect(() => {
-		switch (data.missing_animal_species) {
-			case '개':
-				setAnimalSpecies('강아지를');
-				break;
-			case '고양이':
-				setAnimalSpecies('고양이를');
-				break;
-			case '기타 포유류':
-				setAnimalSpecies('반려동물을');
-				break;
-			case '조류':
-				setAnimalSpecies(data.missing_animal_species_detail.toString() + '를');
-				break;
-			case '수중생물':
-				setAnimalSpecies('물고기를');
-				break;
-			case '기타':
-				setAnimalSpecies(data.missing_animal_species_detail.toString() + '를');
-				break;
-			default:
-				setAnimalSpecies('반려동물을');
-				break;
-		}
-	}, []);
+	switch (data.missing_animal_species) {
+		case '개':
+			var animalSpecies = '강아지를';
+			break;
+		case '고양이':
+			var animalSpecies = '고양이를';
+			break;
+		case '기타 포유류':
+			var animalSpecies = '반려동물을';
+			break;
+		case '조류':
+			var animalSpecies = data.missing_animal_species_detail.toString() + '를';
+			break;
+		case '수중생물':
+			var animalSpecies = '물고기를';
+
+			break;
+		case '기타':
+			var animalSpecies = data.missing_animal_species_detail.toString() + '를';
+			break;
+		default:
+			var animalSpecies = '반려동물을';
+			break;
+	}
 
 	return <Text style={missingAnimalDetail.titleText}>{animalSpecies} 찾습니다</Text>;
 };

@@ -139,6 +139,7 @@ export default AnimalNeedHelp = props => {
 		return newMissingLocation;
 	};
 
+	// console.log('AnimalNeedHel', data);
 	const contents = () => {
 		return (
 			<View style={[animalNeedHelp.detailContainer]}>

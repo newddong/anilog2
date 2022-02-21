@@ -344,26 +344,29 @@ export default AnimalProtectRequestDetail = ({route}) => {
 						<></>
 					)}
 					<View style={[temp_style.commentList]}>
-						<ScrollView horizontal={false} scrollEnabled={false}>
-							<ScrollView horizontal={true} scrollEnabled={false} style={{flex: 1}}>
+						<CommentList
+							items={commentDataList && commentDataList.length > 2 ? commentDataList.slice(0, 2) : commentDataList}
+							onPressReplyBtn={onPressReply}
+							onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
+						/>
+						{/* <ScrollView horizontal={false} scrollEnabled={false}>
+							<ScrollView horizontal={true} scrollEnabled={false} style={{}}>
 								<View
 									style={{
 										paddingVertical: 40 * DP,
-										// backgroundColor: 'pink',
-										// flex: 1,
 									}}>
 									<CommentList
 										items={commentDataList && commentDataList.length > 2 ? commentDataList.slice(0, 2) : commentDataList}
-										onPressReplyBtn={onReplyBtnClick}
+										onPressReplyBtn={onPressReply}
 										onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
 									/>
 								</View>
 							</ScrollView>
-						</ScrollView>
+						</ScrollView> */}
 					</View>
 				</View>
 				<View style={[animalProtectRequestDetail_style.replyWriteBox]}>
-					{editComment && <ReplyWriteBox onPressReply={onPressReply} isProtectRequest={true} />}
+					{editComment && <ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} isProtectRequest={true} />}
 				</View>
 				{/* 보호요청 더 보기addMoreRequest */}
 				<View style={[temp_style.addMoreRequest_view]}>

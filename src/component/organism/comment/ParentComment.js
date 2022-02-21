@@ -30,6 +30,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
  */
 export default ParentComment = React.memo((props, ref) => {
 	console.log('ParentComment : ', props.parentComment.comment_writer_id.user_nickname, props.parentComment.comment_is_secure);
+	console.log('ParentComment', props.parentComment.comment_is_secure);
 
 	const [data, setData] = React.useState(props.parentComment);
 	const [child, setChild] = React.useState([]);

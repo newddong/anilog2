@@ -1,6 +1,6 @@
 import React from 'react';
-import { Platform, Keyboard, StatusBar } from 'react-native';
-import DP,{ isNotch } from 'Root/config/dp';
+import {Platform, Keyboard, StatusBar} from 'react-native';
+import DP, {isNotch} from 'Root/config/dp';
 
 export function useKeyboardBottom(tabheight){
     if(Platform.OS==='android')return 0;
@@ -41,5 +41,5 @@ export function useKeyboardBottom(tabheight){
         }
     });
 
-    return KeyboardY;
+	return KeyboardY;
 }

@@ -632,8 +632,7 @@ const ReportForm = props => {
 			// 필드명 조정 필요 (상우)
 			city: city[0], //시,도
 			district: district[0], //군,구
-			neighbor: '', //동,읍,면
-			detailAddr: '',
+			detail: '', //상세 주솧
 		},
 		report_animal_species: types[0].pet_species,
 		report_animal_species_detail: types[0].pet_species_detail[0],
@@ -707,7 +706,7 @@ const ReportForm = props => {
 				} else {
 					setNeighbor(neighbor.msg);
 				}
-				setData({...data, report_location: {city: data.report_location.city, district: data.report_location.district, neighbor: neighbor.msg[0]}});
+				// setData({...data, report_location: {city: data.report_location.city, district: data.report_location.district, neighbor: neighbor.msg[0]}});
 				// data.report_location.district == data.report_location.district ? false : setIsDistrictChanged(!isDistrictChanged);
 				setIsDistrictChanged(!isDistrictChanged);
 			},
@@ -828,7 +827,9 @@ const ReportForm = props => {
 	const onChangeMissingLocationDetail = text => {
 		let report_location = data.report_location;
 		report_location.detail = text;
+
 		setData({...data, report_location: report_location});
+		console.log('text input :', data.report_location);
 	};
 
 	const keyboardArea = useKeyboardBottom(0 * DP);

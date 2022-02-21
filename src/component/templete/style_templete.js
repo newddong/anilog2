@@ -4262,7 +4262,6 @@ export const feedWrite = StyleSheet.create({
 	},
 	reportForm_form: {
 		// width: 654 * DP,
-
 		// height: 126 * DP,
 		marginBottom: 40 * DP,
 	},

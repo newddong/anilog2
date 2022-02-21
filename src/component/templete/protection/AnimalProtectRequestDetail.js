@@ -340,7 +340,12 @@ export default AnimalProtectRequestDetail = ({route}) => {
 						<></>
 					)}
 					<View style={[temp_style.commentList]}>
-						<ScrollView horizontal={false} scrollEnabled={false}>
+						<CommentList
+											items={commentDataList && commentDataList.length > 2 ? commentDataList.slice(0, 2) : commentDataList}
+											onPressReplyBtn={onPressReply}
+											onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
+										/>
+						{/* <ScrollView horizontal={false} scrollEnabled={false}>
 							<ScrollView horizontal={true} scrollEnabled={false} style={{}}>
 								<View
 									style={{
@@ -353,7 +358,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 									/>
 								</View>
 							</ScrollView>
-						</ScrollView>
+						</ScrollView> */}
 					</View>
 				</View>
 				<View style={[animalProtectRequestDetail_style.replyWriteBox]}>

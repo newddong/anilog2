@@ -27,7 +27,8 @@ export default FeedCommentList = props => {
 	const input = React.useRef();
 	const addChildCommentFn = React.useRef(() => {});
 	const [refresh, setRefresh] = React.useState(true);
-	const keyboardY = useKeyboardBottom(150*DP);
+	const keyboardY = useKeyboardBottom(150 * DP);
+	const flatlist = React.useRef();
 
 	React.useEffect(() => {
 		if (props.route.name == 'FeedCommentList') {
@@ -81,6 +82,8 @@ export default FeedCommentList = props => {
 							setComments(comments.msg);
 							parentComment && addChildCommentFn.current();
 							console.log('comments', comments);
+							input.current.blur();
+							flatlist.current.scrollToOffset({offset: 0});
 						},
 						err => console.log(err),
 					);
@@ -129,6 +132,11 @@ export default FeedCommentList = props => {
 		addChildCommentFn.current = addChildComment;
 	};
 
+	const [heightReply, setReplyHeight] = React.useState(0);
+	const onReplyBtnLayout = e => {
+		setReplyHeight(e.nativeEvent.layout.height);
+	};
+
 	const render = ({item, index}) => {
 		if (index == 0)
 			return (
@@ -138,6 +146,12 @@ export default FeedCommentList = props => {
 			);
 		if (index > 0) return <CommentList items={item} onPressReplyBtn={onReplyBtnClick} />;
 	};
+	const currentPosition = React.useRef(0);
+	const onScroll = e => {
+		console.log(e.nativeEvent.contentOffset.y);
+		currentPosition.current = e.nativeEvent.contentOffset.y;
+	};
+
 	return (
 		<View style={[login_style.wrp_main, feedCommentList.container]}>
 			<FlatList
@@ -146,21 +160,25 @@ export default FeedCommentList = props => {
 				renderItem={render}
 				stickyHeaderIndices={[1]}
 				ListHeaderComponent={<FeedContent data={props.route.params.feedobject} showAllContents={props.route.params.showAllContents} />}
+				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
+				onScroll={onScroll}
+				ref={flatlist}
 			/>
 			{/* Parent Comment 혹은 Child Comment 에서 답글쓰기를 클릭할 시 화면 최하단에 등장 */}
 			{/* 비로그인 유저일 경우 리플란이 안보이도록 처리 - 상우 */}
 			{userGlobalObject.userInfo._id != '' && (editComment || props.route.name == 'FeedCommentList') ? (
-				<View style={{position:'absolute',bottom:keyboardY}}>
-				<ReplyWriteBox
-					onAddPhoto={onAddPhoto}
-					onChangeReplyInput={onChangeReplyInput}
-					onLockBtnClick={onLockBtnClick}
-					onWrite={onWrite}
-					onDeleteImage={onDeleteImage}
-					privateComment={privateComment}
-					photo={photo}
-					ref={input}
-				/></View>
+				<View style={{position: 'absolute', bottom: keyboardY}} onLayout={onReplyBtnLayout}>
+					<ReplyWriteBox
+						onAddPhoto={onAddPhoto}
+						onChangeReplyInput={onChangeReplyInput}
+						onLockBtnClick={onLockBtnClick}
+						onWrite={onWrite}
+						onDeleteImage={onDeleteImage}
+						privateComment={privateComment}
+						photo={photo}
+						ref={input}
+					/>
+				</View>
 			) : (
 				false
 			)}

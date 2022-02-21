@@ -62,6 +62,7 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 						placeholder={'댓글입력..'}
 						onChangeText={onChangeText}
 						ref={inputRef}
+						onFocus={props.onFocus}
 					/>
 				</View>
 
@@ -82,6 +83,7 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 									multiline={true}
 									placeholder={'댓글입력..'}
 									onChangeText={onChangeText}
+									onFocus={props.onFocus}
 									ref={inputRef}
 								/>
 							</View>
@@ -99,6 +101,7 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 								multiline={true}
 								placeholder={'댓글입력..'}
 								onChangeText={props.onChangeReplyInput}
+								onFocus={props.onFocus}
 								ref={inputRef}
 							/>
 						</View>

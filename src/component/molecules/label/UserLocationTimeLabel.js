@@ -33,13 +33,13 @@ const UserLocationTimeLabel = props => {
 	return (
 		<TouchableOpacity onPress={onClickLabel} style={{paddingBottom: 8 * DP}}>
 			<View style={{flexDirection: 'row', alignItems: 'center'}}>
-				<Image source={{uri: props.data.user_profile_uri || DEFAULT_PROFILE}} style={styles.img_round_60} />
+				<Image source={{uri: props.data.user_profile_uri || DEFAULT_PROFILE}} style={props.isLarge?styles.img_round_70:styles.img_round_60} />
 
 				<View style={{marginLeft: 20 * DP}}>
-					<Text style={[txt.roboto24, {color: isLoginUser ? APRI10 : BLACK}]} numberOfLines={1}>
+					<Text style={[props.isLarge?txt.roboto32b:txt.roboto24, {color: isLoginUser ? APRI10 : BLACK}]} numberOfLines={1}>
 						{props.data.user_nickname || ''}
 					</Text>
-					<Text style={[txt.noto24, {lineHeight: 36 * DP, color: GRAY20}]} numberOfLines={1}>
+					<Text style={[props.isLarge?txt.noto26:txt.noto24, {lineHeight: 36 * DP, color: GRAY20}]} numberOfLines={1}>
 						{/* {address?.city} {address?.district} · {props.data.feed_type == undefined ? getCommentedTime() : props.data.comment_date} */}
 						{props.time && getTimeLapsed(props.time)}
 					</Text>
@@ -57,5 +57,6 @@ UserLocationTimeLabel.defaultProps = {
 			district: '',
 		},
 	},
+	isLarge:false,
 };
 export default UserLocationTimeLabel;

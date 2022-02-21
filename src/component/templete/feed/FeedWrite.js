@@ -343,7 +343,7 @@ const MissingForm = props => {
 	]);
 	const [isSpeciesChanged, setIsSpeciesChanged] = React.useState(false);
 
-	const [city, setCity] = React.useState(['시를 선택해 주세요']);
+	const [city, setCity] = React.useState(['광역시, 도']);
 	const [district, setDistrict] = React.useState(['구를 선택해 주세요']);
 	React.useEffect(() => {
 		getAddressList(
@@ -490,6 +490,7 @@ const MissingForm = props => {
 
 	React.useEffect(() => {
 		props.scrollref.current.scrollToOffset({offset: currentPosition.current});
+
 		currentPosition.current = 0;
 	}, [keyboardArea]);
 
@@ -856,6 +857,31 @@ const ReportForm = props => {
 		);
 	};
 
+	const keyboardArea = useKeyboardBottom(0 * DP);
+	const inputLocationRef = React.useRef();
+	const currentPosition = React.useRef(0);
+
+	React.useEffect(() => {
+		props.scrollref.current.scrollToOffset({offset: currentPosition.current});
+		currentPosition.current=0;
+	}, [keyboardArea]);
+
+	const onPressIn = (inputRef)=>()=>{
+		if (Platform.OS === 'android') return;
+		inputRef.current.measureLayout(
+			props.container.current,
+			(left, top, width, height) => {
+				console.log('left:%s,top:%s,width:%s,height:%s', left, top, width, height);
+				currentPosition.current = top;
+				// props.scrollref.current.scrollToOffset({offset:top})
+			},
+			() => {
+				console.log('measurelayout failed');
+			},
+		);
+	};
+
+
 	return (
 		<View style={[feedWrite.reportForm_container]} showsVerticalScrollIndicator={false}>
 			<View style={[feedWrite.reportForm]}>
@@ -895,7 +921,7 @@ const ReportForm = props => {
 					</View>
 				</View>
 			</View>
-			<View style={{height: keyboardArea, width: '100%', backgroundColor: '#FFF'}}></View>
+			<View style={{height: keyboardArea, width: '100%',backgroundColor:'#FFF'}}></View>
 		</View>
 	);
 };

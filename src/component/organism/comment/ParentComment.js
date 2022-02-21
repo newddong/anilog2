@@ -4,7 +4,7 @@ import {organism_style, parentComment} from 'Organism/style_organism';
 import {styles} from 'Atom/image/imageStyle';
 import ChildCommentList from 'Organism/comment/ChildCommentList';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
-import {Heart30_Border, Heart30_Filled, Meatball50_APRI10_Vertical, Meatball50_GRAY20_Vertical} from 'Atom/icon';
+import {Heart30_Border, Heart30_Filled, Lock60_Border, Lock60_Filled, Meatball50_APRI10_Vertical, Meatball50_GRAY20_Vertical} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
 import {DEFAULT_PROFILE, REPLY_MEATBALL_MENU, REPLY_MEATBALL_MENU_MY_REPLY, SETTING_COMMENT, SETTING_OWN_COMMENT} from 'Root/i18n/msg';
 import {GRAY10} from 'Root/config/color';
@@ -21,7 +21,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
  * }} props
  */
 export default ParentComment = React.memo((props, ref) => {
-	// console.log('ParentComment', props.parentComment.comment_contents);
+	console.log('ParentComment', props.parentComment.comment_is_secure);
 
 	const [data, setData] = React.useState(props.parentComment);
 	const [child, setChild] = React.useState([]);
@@ -125,7 +125,7 @@ export default ParentComment = React.memo((props, ref) => {
 			{/* 유저프로필 라벨 및 Meatball  */}
 			<View style={[organism_style.UserLocationTimeLabel_view_parentComment]}>
 				<View style={[organism_style.userLocationTimeLabel, parentComment.userLabelContainer]} ref={meatballRef}>
-					<UserLocationTimeLabel data={data.comment_writer_id} time={data.comment_update_date} />
+					{data.comment_is_secure ? <Lock60_Filled /> : <UserLocationTimeLabel data={data.comment_writer_id} time={data.comment_update_date} />}
 					{meatball ? <Meatball50_APRI10_Vertical onPress={onPressMeatball} /> : <Meatball50_GRAY20_Vertical onPress={onPressMeatball} />}
 				</View>
 				{/* 연결되는 기능 개발 후 추후 연결 */}
@@ -143,7 +143,11 @@ export default ParentComment = React.memo((props, ref) => {
 			)}
 			{/* 댓글 내용 */}
 			<View style={[parentComment.comment_contents]}>
-				<Text style={[txt.noto26]}>{data ? data.comment_contents : ''}</Text>
+				{data.comment_is_secure ? (
+					<Text style={[txt.noto26, {color: GRAY10}]}> 해당 댓글은 작성자 및 운영자만 볼 수 있습니다.</Text>
+				) : (
+					<Text style={[txt.noto26]}>{data ? data.comment_contents : '해당 댓글은 작성자 및 운영자만 볼 수 있습니다.'}</Text>
+				)}
 			</View>
 			<View style={[parentComment.likeReplyButton]}>
 				{/* Data - 좋아요 상태 t/f */}

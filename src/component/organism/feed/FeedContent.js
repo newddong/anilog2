@@ -264,7 +264,7 @@ export default FeedContent = props => {
 		}
 	};
 
-	console.log('피드 컨텐츠 경로명', route.name);
+	// console.log('피드 컨텐츠 경로명', route.name);
 	return (
 		// <View style={isMissingReportRoute || show ? {} : {height: 270 * DP}} removeClippedSubviews>
 		<View style={layoutStyle()} removeClippedSubviews>
@@ -332,7 +332,6 @@ export default FeedContent = props => {
 							<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
 							{/* <Text>{feed_type}</Text> */}
 						</View>
-
 					</View>
 
 					{/* type값이 status일 경우 status 버튼이 나오고 그렇지 않으면 다른 버튼 표기 */}
@@ -365,7 +364,6 @@ export default FeedContent = props => {
 						</View>
 					</TouchableWithoutFeedback>
 				</View>
-
 			)}
 		</View>
 	);

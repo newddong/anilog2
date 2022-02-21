@@ -246,6 +246,7 @@ export default MissingAnimalDetail = props => {
 			console.log('err', err);
 		}
 	};
+
 	function capture() {
 		try {
 			captureScreenShot();
@@ -260,6 +261,7 @@ export default MissingAnimalDetail = props => {
 			console.log('Android Image Permisson Failed', err);
 		}
 	}
+
 
 	const moveToCommentList = () => {
 		let feedobject = {};
@@ -281,6 +283,7 @@ export default MissingAnimalDetail = props => {
 			<FlatList
 				contentContainerStyle={[reportDetail.container]}
 				data={[{}]}
+				showsVerticalScrollIndicator={false}
 				ListHeaderComponent={
 					<View style={{alignItems: 'center'}}>
 						<View>

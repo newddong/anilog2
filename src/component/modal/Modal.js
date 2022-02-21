@@ -305,7 +305,7 @@ export default Modal = {
 	 * @param {()=>void} props.onPressMsg - 메시지 클릭
 	 * @example
 	 */
-	popShareModal: (offset, onPressKakao, onPonPressLinkCopyressMenu, onPressMsg) => {},
+	popShareModal: (offset, onPressKakao, onPressLinkCopy, onPressMsg) => {},
 
 	/**
 	 * 입양 확정 시 출력되는 축하 메시지 모달

@@ -28,7 +28,7 @@ const ShareModal = props => {
 			useNativeDriver: false,
 		}).start();
 		Animated.timing(animatedOpacity, {
-			duration: 600,
+			duration: 500,
 			toValue: 1,
 			easing: Easing.linear,
 			useNativeDriver: false,
@@ -64,11 +64,7 @@ const ShareModal = props => {
 		props.onPressMsg();
 	};
 
-	const onClose = () => {
-		Modal.close();
-	};
-
-	console.log('props.off', props.offset);
+	// console.log('props.off', Platform.OS, props.offset.y);
 
 	return (
 		<TouchableOpacity activeOpacity={1} onPress={closeAnimation} style={style.background}>
@@ -87,10 +83,6 @@ const ShareModal = props => {
 				]}>
 				<TouchableOpacity activeOpacity={1} style={{paddingBottom: 15 * DP}}>
 					<View style={[style.inside]}>
-						<TouchableOpacity onPress={onPressKakao} style={[style.socialItem]}>
-							<SocialKakao72 />
-							<Text style={[txt.noto22, {color: GRAY10}]}>카카오톡</Text>
-						</TouchableOpacity>
 						<TouchableOpacity onPress={onPressLinkCopy} style={[style.socialItem]}>
 							<Clip72 />
 							<Text style={[txt.noto22, {color: GRAY10}]}>링크복사</Text>
@@ -98,6 +90,10 @@ const ShareModal = props => {
 						<TouchableOpacity onPress={onPressMsg} style={[style.socialItem]}>
 							<Email72 />
 							<Text style={[txt.noto22, {color: GRAY10}]}>메시지</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={onPressKakao} style={[style.socialItem]}>
+							<SocialKakao72 />
+							<Text style={[txt.noto22, {color: GRAY10}]}>카카오톡</Text>
 						</TouchableOpacity>
 					</View>
 				</TouchableOpacity>
@@ -124,12 +120,12 @@ const style = StyleSheet.create({
 		width: Platform.OS == 'ios' ? Dimensions.get('window').width : '100%',
 		justifyContent: 'center',
 		alignItems: 'center',
+		// backgroundColor: 'yellow',
 	},
 	popUpWindow: {
 		width: 384 * DP,
 		height: 160 * DP,
 		backgroundColor: WHITE,
-		opacity: 0.1,
 		alignItems: 'center',
 		justifyContent: 'center',
 		paddingHorizontal: 40 * DP,

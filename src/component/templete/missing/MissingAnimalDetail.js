@@ -267,6 +267,7 @@ export default MissingAnimalDetail = props => {
 			<FlatList
 				contentContainerStyle={[reportDetail.container]}
 				data={[{}]}
+				showsVerticalScrollIndicator={false}
 				ListHeaderComponent={
 					<View style={{alignItems: 'center'}}>
 						<View>

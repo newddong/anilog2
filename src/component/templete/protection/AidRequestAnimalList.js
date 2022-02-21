@@ -90,7 +90,18 @@ export default AidRequestAnimalList = ({route, navigation}) => {
 			});
 			// console.log('protect_animal_list_copy', protect_animal_list_copy);
 			setData(protect_animal_list_copy);
+			let hasPostList = [];
+			let noPostList = [];
+			protect_animal_list_copy.map((v, i) => {
+				if (v.protect_animal_protect_request_id != null) {
+					hasPostList.push(v);
+				} else {
+					noPostList.push(v);
+				}
+			});
 			setTimeout(() => {
+				setHasPostAnimalList(hasPostList);
+				setNoPostAnimalList(noPostList);
 				setLoading(false);
 			}, 500);
 		} else {

@@ -10,7 +10,7 @@ import {createFeed, createMissing, createReport} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default FeedWriteHeader = ({route, navigation, options}) => {
-	// console.log('route', route);
+	console.log('route', route);
 	const userInfo = userGlobalObject;
 	const complete = result => {
 		Modal.close();
@@ -111,8 +111,8 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 	const avartarSelect = () => {
 		Modal.popAvatarSelectModal(petObject => {
 			console.log('petObject / onOk', petObject);
-			petObject&&navigation.setOptions({title: petObject.user_nickname});
-			petObject&&navigation.setParams({...route.params, feed_avatar_id: petObject._id});
+			petObject && navigation.setOptions({title: petObject.user_nickname});
+			petObject && navigation.setParams({...route.params, feed_avatar_id: petObject._id});
 		}, '이 계정 글쓰기');
 	};
 

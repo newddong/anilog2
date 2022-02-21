@@ -13,6 +13,7 @@ import ProtectionTopTabNavigation from './protection_tab/ProtectionTopTabNavigat
 import AlarmAndSearchHeader from 'Root/navigation/header/AlarmAndSearchHeader';
 import SimpleHeader from 'Root/navigation/header/SimpleHeader';
 import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballHeader';
+import ProtectCommentList from 'Root/component/templete/protection/ProtectCommentList';
 
 const ProtectionStack = createStackNavigator();
 
@@ -34,6 +35,11 @@ export default ProtectionStackNavigation = () => {
 
 			<ProtectionStack.Screen name="FeedListForHashTag" component={FeedListForHashTag} />
 			<ProtectionStack.Screen name="FeedCommentList" component={FeedCommentList} options={{header: props => <AlarmAndSearchHeader {...props} />}} />
+			<ProtectionStack.Screen
+				name="ProtectCommentList"
+				component={ProtectCommentList}
+				options={{header: props => <AlarmAndSearchHeader {...props} />}}
+			/>
 			<ProtectionStack.Screen name="MissingAnimalDetail" component={MissingAnimalDetail} options={{header: props => <MeatBallHeader {...props} />}} />
 			<ProtectionStack.Screen
 				name="ReportDetail"

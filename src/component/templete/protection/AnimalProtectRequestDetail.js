@@ -8,7 +8,7 @@ import RescueImage from 'Root/component/molecules/image/RescueImage';
 import {txt} from 'Root/config/textstyle';
 import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
 import ShelterSmallLabel from 'Root/component/molecules/label/ShelterSmallLabel';
-import {BackArrow32, Clip72, Email72, FavoriteTag48_Filled, Share48_Filled, SocialKakao72} from 'Atom/icon';
+import {BackArrow32, Bracket48, Clip72, Email72, FavoriteTag48_Filled, Share48_Filled, SocialKakao72} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import CommentList from 'Root/component/organism/comment/CommentList';
 import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
@@ -21,12 +21,15 @@ import {createComment} from 'Root/api/commentapi';
 import ImagePicker from 'react-native-image-crop-picker';
 import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {profileInfo_style} from 'Root/component/organism/style_organism';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ProtectAnimalInfoBox from 'Root/component/organism/info/ProtectAnimalInfoBox';
 
 //AnimalProtectRequestDetail 호출 경로
 // - ProtectRequestList(보호활동탭) , AnimalFromShelter(게시글보기) , Profile(보호활동)
 
 export default AnimalProtectRequestDetail = ({route}) => {
-	console.log('AnimalProtectRequestDetail', route.params.item.protect_request_status);
+	// console.log('AnimalProtectRequestDetail', route.params.item.protect_request_status);
 
 	const navigation = useNavigation();
 	// 보호소 data는 ShelterSmallLabel에서 사용,  보호동물 Data는 RescueSummary, 임시보호 신청, 입양 신청 등에서 사용됨
@@ -89,9 +92,9 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const getCommnetList = () => {
 		getCommentListByProtectId(
 			{
-				feedobject_id: data._id,
+				protect_request_object_id: data._id,
 				commentobject_id: '',
-				request_number: 10,
+				request_number: 1000,
 			},
 			commentdata => {
 				debug && console.log('AnimalProtectRequestDetail / getCommentListByProtectId:', commentdata.msg);
@@ -109,6 +112,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				//부모 댓글은 실제 삭제불가하며 필드로 삭제 여부 값 형성 필요. (네이버나 다음 까페에서도 대댓글 존재시 댓글은 삭제해도 댓글 자리는 존재하고 그 밑으로 대댓글 그대로 노출됨)
 				let commentArray = [];
 				let tempComment = commentdata.msg;
+
 				tempComment.map((v, i) => {
 					// comment_parent가 없으면 일반 댓글
 					if (v.comment_parent == undefined) {
@@ -126,7 +130,9 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					}
 				});
 				// console.log(`commentArray -${JSON.stringify(commentArray)}`);
+				console.log('commentArray', commentArray.length);
 				setCommentDataList(commentArray);
+
 				debug && console.log('commentArray refresh', commentArray);
 			},
 			errcallback => {
@@ -145,29 +151,6 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const onWrite = () => {
 		Modal.popOneBtn('아직 댓글 기능을 제공하지 않습니다.', '확인', () => Modal.close());
 		return;
-		// if (content.trim() == '') return Modal.popOneBtn('메세지를 입력하세요.', '확인', () => Modal.close());
-
-		// let param = {
-		// 	comment_photo_uri: photo, //사진uri
-		// 	comment_contents: content, //내용
-		// 	protect_request_object_id: data._id,
-		// 	// comment_is_secure: privateComment, //공개여부 테스트때 반영
-		// };
-
-		// // if (parentComment) {
-		// // 	param = {...param, commentobject_id: parentComment};
-		// // }
-		// console.log('param:', param);
-		// createComment(
-		// 	param,
-		// 	result => {
-		// 		console.log(result);
-		// 		setPhoto();
-		// 		setParentComment();
-		// 		getCommnetList();
-		// 	},
-		// 	err => Modal.alert(err),
-		// );
 	};
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
@@ -180,17 +163,6 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const onAddPhoto = () => {
 		Modal.popOneBtn('아직 기능을 제공하지 않습니다.', '확인', () => Modal.close());
 		return;
-		// navigation.push('SinglePhotoSelect', props.route.name);
-		// ImagePicker.openPicker({
-		// 	compressImageQuality: 0.8,
-		// 	cropping: true,
-		// })
-		// 	.then(images => {
-		// 		setPhoto(images.path);
-		// 		Modal.close();
-		// 	})
-		// 	.catch(err => console.log(err + ''));
-		// Modal.close();
 	};
 
 	// 답글 쓰기 -> Input value 변경 콜백함수
@@ -271,21 +243,6 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				() => alert('msg'),
 			);
 		});
-		// if (!isSharePressed) {
-		// 	Animated.spring(animatedValue, {
-		// 		duration: 300,
-		// 		toValue: 220,
-		// 		easing: Easing.linear,
-		// 		useNativeDriver: false,
-		// 	}).start();
-		// } else {
-		// 	Animated.timing(animatedValue, {
-		// 		duration: 300,
-		// 		toValue: -100,
-		// 		// easing: Easing.linear,
-		// 		useNativeDriver: false,
-		// 	}).start();
-		// }
 	};
 
 	//댓글 리스트 표출 개수 제어
@@ -310,31 +267,22 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	};
 
 	const onClickShelterLabel = data => {
-		console.log('data', data);
 		navigation.push('UserProfile', {userobject: data});
 	};
 
-	//보호소 라벨 우측 공유 버튼 - 카카오톡 클릭
-	const onPressKakao = () => {
-		// props.onPressKakao();
+	const onPressReply = async () => {
+		AsyncStorage.getItem('sid', (err, res) => {
+			console.log('res', res);
+			if (res == null) {
+				Modal.popNoBtn('로그인이 필요합니다.');
+				setTimeout(() => {
+					Modal.close();
+				}, 1500);
+			} else {
+				navigation.push('ProtectCommentList', {protectObject: data});
+			}
+		});
 	};
-
-	//보호소 라벨 우측 공유 버튼 - 링크복사 클릭
-	const onPressLinkCopy = () => {
-		// props.onPressLinkCopy();
-	};
-
-	//보호소 라벨 우측 공유 버튼 - 메시지 클릭
-	const onPressMsg = () => {
-		// props.onPressMsg();
-	};
-
-	const animatedValue = React.useRef(new Animated.Value(0)).current;
-
-	const interpolated = animatedValue.interpolate({
-		inputRange: [0, 100],
-		outputRange: [0, 1],
-	});
 
 	if (loading) {
 		return (
@@ -362,129 +310,62 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					<View style={[temp_style.shelterSmallLabel_animalProtectRequestDetail]}>
 						<ShelterSmallLabel data={data.protect_request_writer_id} onClickLabel={onClickShelterLabel} />
 					</View>
-					{/* Buttons */}
 					<View style={[temp_style.button_animalProtectRequestDetail]}>
 						<TouchableOpacity onPress={onPressShelterLabelFavorite} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
 							<FavoriteTag48_Filled />
-							<Text style={[txt.roboto24, {color: APRI10, alignSelf: 'center'}]}>
+							<Text style={[txt.roboto24, {color: APRI10, alignSelf: 'center', textAlign: 'center'}]}>
 								{data ? count_to_K(data.protect_request_writer_id.user_follow_count) : ''}
 							</Text>
 						</TouchableOpacity>
-						<View ref={shareRef}>
+						<View ref={shareRef} collapsable={false}>
 							<TouchableOpacity onPress={onPressShare} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
 								<Share48_Filled />
 								<Text style={[txt.roboto24, {color: APRI10}]}>공유</Text>
 							</TouchableOpacity>
 						</View>
-						{/* 공유 클릭 시 소셜 공유하기 창 출력 */}
-						<Animated.View
-							style={[
-								animalProtectRequestDetail_style.shareDropDown,
-								{
-									opacity: interpolated,
-								},
-							]}>
-							<TouchableOpacity onPress={onPressKakao} style={[animalProtectRequestDetail_style.socialItem]}>
-								<SocialKakao72 />
-								<Text style={[txt.noto22, {color: GRAY10}]}>카카오톡</Text>
-							</TouchableOpacity>
-							<TouchableOpacity onPress={onPressLinkCopy} style={[animalProtectRequestDetail_style.socialItem]}>
-								<Clip72 />
-								<Text style={[txt.noto22, {color: GRAY10}]}>링크복사</Text>
-							</TouchableOpacity>
-							<TouchableOpacity onPress={onPressMsg} style={[animalProtectRequestDetail_style.socialItem]}>
-								<Email72 />
-								<Text style={[txt.noto22, {color: GRAY10}]}>메시지</Text>
-							</TouchableOpacity>
-						</Animated.View>
-						{/* 공유하기창 종료 */}
 					</View>
 				</View>
-
-				<View style={[temp_style.rescueSummary, animalProtectRequestDetail_style.rescueSummary]}>
-					<View style={[animalProtectRequestDetail_style.rescueSummary_insideContainer]}>
-						<View style={[animalProtectRequestDetail_style.rescueSummary_insideItem]}>
-							<Text style={[txt.noto24, animalProtectRequestDetail_style.rescueSummary_insideItem_category]}>분류</Text>
-							<Text style={[txt.noto24, animalProtectRequestDetail_style.rescueSummary_insideItem_content]}>
-								{data.protect_animal_id ? data.protect_animal_id.protect_animal_species : ''}
-							</Text>
-							<Text style={[txt.noto24, animalProtectRequestDetail_style.rescueSummary_insideItem_category]}>품종</Text>
-							<Text style={[txt.noto24, animalProtectRequestDetail_style.rescueSummary_insideItem_content]}>
-								{data.protect_animal_id ? data.protect_animal_id.protect_animal_species_detail : ''}
-							</Text>
-							<Text style={[txt.noto24, animalProtectRequestDetail_style.rescueSummary_insideItem_category]}>성별</Text>
-							<Text style={[txt.noto24, animalProtectRequestDetail_style.rescueSummary_insideItem_content]}>
-								{data.protect_animal_id ? (data.protect_animal_id.protect_animal_sex == 'male' ? '수컷' : '암컷') : ''}
-							</Text>
-						</View>
-						<View style={[animalProtectRequestDetail_style.rescueSummary_insideItem]}>
-							<Text style={[txt.noto24, animalProtectRequestDetail_style.rescueSummary_insideItem_category]}>예상연령</Text>
-							<Text style={[txt.noto24, animalProtectRequestDetail_style.rescueSummary_insideItem_content]}>
-								{data.protect_animal_id ? data.protect_animal_id.protect_animal_estimate_age : ''}
-							</Text>
-							<Text style={[txt.noto24, animalProtectRequestDetail_style.rescueSummary_insideItem_category]}>체중</Text>
-							<Text style={[txt.noto24, animalProtectRequestDetail_style.rescueSummary_insideItem_content]}>
-								{data.protect_animal_id ? data.protect_animal_id.protect_animal_weight : ''} kg
-							</Text>
-							<Text style={[txt.noto24, animalProtectRequestDetail_style.rescueSummary_insideItem_category]}>중성화</Text>
-							<Text style={[txt.noto24, animalProtectRequestDetail_style.rescueSummary_insideItem_content]}>
-								{data.protect_animal_id ? (data.protect_animal_id.protect_animal_neutralization == 'yes' ? 'O' : 'X') : ''}
-							</Text>
-						</View>
-						<View style={[animalProtectRequestDetail_style.rescueSummary_insideItem]}>
-							<Text style={[txt.noto24, animalProtectRequestDetail_style.rescueSummary_insideItem_category]}>발견장소</Text>
-							<Text style={[txt.noto24, animalProtectRequestDetail_style.rescueSummary_insideItem_content]}>
-								{data.protect_animal_id ? data.protect_animal_id.protect_animal_rescue_location : ''}
-							</Text>
-						</View>
-					</View>
-				</View>
+				<ProtectAnimalInfoBox data={data} />
 
 				<View style={[animalProtectRequestDetail_style.rescueText]}>
 					<Text style={[txt.noto24]}>{data.protect_request_content || ''}</Text>
 				</View>
-
-				<View style={[temp_style.commentList]}>
-					{/* CommentList에 필요한 데이터 - CommentObject, WriterObejct(UserObject), FeedObject(FeedObject), LikeCommentObject */}
-					{/* 위의 모든 데이터가 CommentList items에 담겨져 있어야 함 */}
-					{/* <CommentList
-						items={commentDataList}
-						onPressReplyBtn={onReplyBtnClick}
-						onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
-					/> */}
-				</View>
-
-				{/* 더보기 버튼 - 기본 2개 표출되며, 더보기 누르면 모두 보이도록 함. (hjs - 추후에 5개씩 더 보이게 한다거나 등등의 개수 제어 필요) */}
-				{/* <TouchableOpacity onPress={onPressShowMore} style={[organism_style.addMore_profileInfo, profileInfo_style.addMore]}>
-					<Text style={[txt.noto24, {color: GRAY10}]}>더보기 </Text>
-					<View style={showMore ? {transform: [{rotate: '180deg'}]} : null}>
-						<Bracket48 />
-					</View>
-				</TouchableOpacity> */}
-
-				<View style={[animalProtectRequestDetail_style.replyWriteBox]}>
-					{editComment && (
-						<ReplyWriteBox
-							onAddPhoto={onAddPhoto}
-							onChangeReplyInput={onChangeReplyInput}
-							onLockBtnClick={onLockBtnClick}
-							onWrite={onWrite}
-							onDeleteImage={onDeleteImage}
-							privateComment={privateComment}
-							photo={photo}
-							isProtectRequest={true}
-							// ref={input}
-						/>
+				{/* {console.log('commentDataList.length', commentDataList.length)} */}
+				<View style={[animalProtectRequestDetail_style.replyContainer, {}]}>
+					{commentDataList && commentDataList.length > 0 ? (
+						<TouchableOpacity onPress={onPressReply} style={[animalProtectRequestDetail_style.replyCountContainer]}>
+							<Text style={[txt.noto28, {color: GRAY10}]}> 댓글 {commentDataList.length}개 모두 보기</Text>
+						</TouchableOpacity>
+					) : (
+						<></>
 					)}
+					<View style={[temp_style.commentList]}>
+						<ScrollView horizontal={false} scrollEnabled={false}>
+							<ScrollView horizontal={true} scrollEnabled={false} style={{}}>
+								<View
+									style={{
+										paddingVertical: 40 * DP,
+									}}>
+									<CommentList
+										items={commentDataList && commentDataList.length > 2 ? commentDataList.slice(0, 2) : commentDataList}
+										onPressReplyBtn={onReplyBtnClick}
+										onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
+									/>
+								</View>
+							</ScrollView>
+						</ScrollView>
+					</View>
 				</View>
-
+				<View style={[animalProtectRequestDetail_style.replyWriteBox]}>
+					{editComment && <ReplyWriteBox onPressReply={onPressReply} isProtectRequest={true} />}
+				</View>
 				{/* 보호요청 더 보기addMoreRequest */}
 				<View style={[temp_style.addMoreRequest_view]}>
 					<Text style={[txt.noto24, temp_style.addMoreRequest, {color: GRAY20}]}>보호요청 더보기</Text>
 				</View>
 
 				{/* AnimalNeedHelpList */}
-				<View style={[accountPicker.accountList]}>
+				<View style={[animalProtectRequestDetail_style.accountList]}>
 					<AnimalNeedHelpList data={writersAnotherRequests} onClickLabel={onClick_ProtectedThumbLabel} onFavoriteTag={onPressFavoriteTag} />
 				</View>
 				{/* 보호소 계정이 나의 보호요청 게시글을 통해 들어왔을 경우 버튼 출력 X */}

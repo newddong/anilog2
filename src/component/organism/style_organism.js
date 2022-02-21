@@ -14,7 +14,7 @@ export const organism_style = StyleSheet.create({
 		// paddingBottom: 50 * DP,
 		backgroundColor: WHITE,
 		paddingHorizontal: 48 * DP,
-		paddingBottom: 52 * DP,
+		paddingBottom: 100 * DP,
 		overflow: 'hidden',
 	},
 	userLocationLabel_view_feedContent: {
@@ -70,7 +70,7 @@ export const organism_style = StyleSheet.create({
 		flexDirection: 'row',
 		width: '100%',
 		height: 48 * DP,
-		paddingHorizontal:48*DP,
+		paddingHorizontal: 48 * DP,
 		alignItems: 'center',
 		// justifyContent: 'space-between',
 		justifyContent: 'flex-end',
@@ -439,7 +439,7 @@ export const parentComment = StyleSheet.create({
 	comment_contents: {
 		width: 574 * DP,
 		marginLeft: 80 * DP,
-		// marginTop: 3 * DP, //원래는 15였음
+		marginTop: 10 * DP, //UI 3차 적용 - 22.02.19 ksw
 		alignSelf: 'flex-start',
 	},
 	showChildComment: {
@@ -471,7 +471,7 @@ export const parentComment = StyleSheet.create({
 		includeFontPadding: false,
 	},
 	img_square_round: {
-		marginTop: 5 * DP,
+		marginTop: 15 * DP,
 	},
 	userLabelContainer: {
 		width: 654 * DP,

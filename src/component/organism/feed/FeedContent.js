@@ -233,47 +233,42 @@ export default FeedContent = props => {
 
 	const isMissingReportRoute = route.name == 'MissingAnimalDetail' || route.name == 'ReportDetail';
 	const isCommentList = route.name == 'FeedCommentList';
-	const isMissingReportType = feed_content =='missing' || feed_content == 'report'
+	const isMissingReportType = feed_content == 'missing' || feed_content == 'report';
 
 	const [isShowBtn, setIsShowBtn] = React.useState(true);
-	const [numLine, setNumLine] = React.useState(isMissingReportRoute?0:3);
-	
-	const onTextLayout = e=>{
-		console.log('텍스트 레이아웃',e.nativeEvent);
-		if(e.nativeEvent.lines.length>=3){
+	const [numLine, setNumLine] = React.useState(isMissingReportRoute ? 0 : 3);
+
+	const onTextLayout = e => {
+		console.log('텍스트 레이아웃', e.nativeEvent);
+		if (e.nativeEvent.lines.length >= 3) {
 			setIsShowBtn(true);
-		}else{
+		} else {
 			setIsShowBtn(false);
 		}
-	}
+	};
 
 	const showMore = () => {
 		setNumLine(0);
 		setShow(true);
-		
 	};
-
-	
 
 	const layoutStyle = () => {
 		if (isMissingReportRoute || show) {
 			return {};
-		} else if(isCommentList) {
+		} else if (isCommentList) {
 			return {};
-		}else{
+		} else {
 			return {
-				height:270*DP
-			}
+				height: 270 * DP,
+			};
 		}
-
 	};
 
-	console.log('피드 컨텐츠 경로명', route.name);
+	// console.log('피드 컨텐츠 경로명', route.name);
 	return (
 		// <View style={isMissingReportRoute || show ? {} : {height: 270 * DP}} removeClippedSubviews>
 		<View style={layoutStyle()} removeClippedSubviews>
-			<View
-				style={[organism_style.feedContent, {overflow: 'hidden'}]}>
+			<View style={[organism_style.feedContent, {overflow: 'hidden'}]}>
 				{/* // <View style={[organism_style.feedContent,{height:800*DP}]}> */}
 				{/* line 1 */}
 				<View style={[organism_style.userLocationLabel_view_feedContent]} onLayout={onLayoutLabel}>
@@ -287,7 +282,7 @@ export default FeedContent = props => {
 							isLarge
 						/>
 						<View style={{flexDirection: 'row', alignItems: 'center'}}>
-							{!isMissingReportRoute? (
+							{!isMissingReportRoute ? (
 								<View style={{flexDirection: 'row', alignItems: 'center'}}>
 									<View style={[feedContent_style.status /*{width:130*DP,height:38*DP}*/]}>
 										{feed_is_protect_diary && (
@@ -356,18 +351,18 @@ export default FeedContent = props => {
 					</View>
 				)}
 			</View>
-			{!isMissingReportRoute&& isShowBtn && !show && (
+			{!isMissingReportRoute && isShowBtn && !show && (
 				<View style={[organism_style.time_view_feedContent]}>
-						<TouchableWithoutFeedback onPress={showMore}>
-							<View style={[organism_style.addMore_view_feedContent]}>
-								<View style={[organism_style.addMore_feedContent]}>
-									<Text style={[txt.noto22, {color: GRAY10}]}>더보기</Text>
-								</View>
-								<View style={[organism_style.braket]}>
-									<Arrow_Down_GRAY20 />
-								</View>
+					<TouchableWithoutFeedback onPress={showMore}>
+						<View style={[organism_style.addMore_view_feedContent]}>
+							<View style={[organism_style.addMore_feedContent]}>
+								<Text style={[txt.noto22, {color: GRAY10}]}>더보기</Text>
 							</View>
-						</TouchableWithoutFeedback>
+							<View style={[organism_style.braket]}>
+								<Arrow_Down_GRAY20 />
+							</View>
+						</View>
+					</TouchableWithoutFeedback>
 				</View>
 			)}
 		</View>

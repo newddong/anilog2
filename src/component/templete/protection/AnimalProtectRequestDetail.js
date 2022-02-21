@@ -348,7 +348,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 									}}>
 									<CommentList
 										items={commentDataList && commentDataList.length > 2 ? commentDataList.slice(0, 2) : commentDataList}
-										onPressReplyBtn={onReplyBtnClick}
+										onPressReplyBtn={onPressReply}
 										onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
 									/>
 								</View>

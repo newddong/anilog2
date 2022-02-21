@@ -323,9 +323,8 @@ export default MissingAnimalDetail = props => {
 					// <View style={[reportDetail.commentList]}>
 					<CommentList
 						items={commentDataList}
-						onPressReplyBtn={onReplyBtnClick}
-						// onPress_ChildComment_ReplyBtn={onChildReplyBtnClick}
-						onPress_ChildComment_ReplyBtn={moveToCommentList}
+						onPressReplyBtn={moveToCommentList}
+						onPress_ChildComment_ReplyBtn={onChildReplyBtnClick}
 					/>
 					// </View>
 				)}

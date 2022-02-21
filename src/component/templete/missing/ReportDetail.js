@@ -248,7 +248,7 @@ export default ReportDetail = props => {
 				renderItem={({item, index}) => (
 					<CommentList
 						items={commentDataList}
-						onPressReplyBtn={onReplyBtnClick}
+						onPressReplyBtn={moveToCommentList}
 						onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
 					/>
 				)}

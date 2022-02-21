@@ -230,20 +230,30 @@ export default FeedContent = props => {
 		}
 		// if()
 	};
-	const [isShowBtn, setIsShowBtn] = React.useState(false);
-	const onTextLayout = e=>{
-		if(e.nativeEvent.lines.length>3){
-			setIsShowBtn(true);
-		}
-	}
-
-	const showMore = () => {
-		setShow(true);
-	};
 
 	const isMissingReportRoute = route.name == 'MissingAnimalDetail' || route.name == 'ReportDetail';
 	const isCommentList = route.name == 'FeedCommentList';
 	const isMissingReportType = feed_content =='missing' || feed_content == 'report'
+
+	const [isShowBtn, setIsShowBtn] = React.useState(true);
+	const [numLine, setNumLine] = React.useState(isMissingReportRoute?0:3);
+	
+	const onTextLayout = e=>{
+		console.log('텍스트 레이아웃',e.nativeEvent);
+		if(e.nativeEvent.lines.length>=3){
+			setIsShowBtn(true);
+		}else{
+			setIsShowBtn(false);
+		}
+	}
+
+	const showMore = () => {
+		setNumLine(0);
+		setShow(true);
+		
+	};
+
+	
 
 	const layoutStyle = () => {
 		if (isMissingReportRoute || show) {
@@ -339,7 +349,8 @@ export default FeedContent = props => {
 				)}
 				{(route.name.includes('FeedList') || feed_type == 'report' || feed_type == 'missing' || route.name.includes('FeedCommentList') || show) && (
 					<View style={[organism_style.content_feedContent, feedContent_style.content_Top10]}>
-						<HashText style={[txt.noto28]} numberOfLines={isMissingReportRoute || show ? 0 : 3} onLayout={onLayoutText} onTextLayout={onTextLayout}>
+						{/* <HashText style={[txt.noto28]} numberOfLines={isMissingReportRoute || show ? 0 : 3} onLayout={onLayoutText} onTextLayout={onTextLayout}> */}
+						<HashText style={[txt.noto28]} numberOfLines={numLine} ellipsizeMode={'tail'} onTextLayout={onTextLayout}>
 							{feed_content}
 						</HashText>
 					</View>

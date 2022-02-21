@@ -146,6 +146,12 @@ export default FeedCommentList = props => {
 			);
 		if (index > 0) return <CommentList items={item} onPressReplyBtn={onReplyBtnClick} />;
 	};
+	const currentPosition = React.useRef(0);
+	const onScroll = e => {
+		console.log(e.nativeEvent.contentOffset.y);
+		currentPosition.current = e.nativeEvent.contentOffset.y;
+	}
+
 	return (
 		<View style={[login_style.wrp_main, feedCommentList.container]}>
 			<FlatList
@@ -154,7 +160,8 @@ export default FeedCommentList = props => {
 				renderItem={render}
 				stickyHeaderIndices={[1]}
 				ListHeaderComponent={<FeedContent data={props.route.params.feedobject} showAllContents={props.route.params.showAllContents} />}
-				ListFooterComponent={<View style={{height:heightReply}}></View>}
+				ListFooterComponent={<View style={{height:heightReply+keyboardY}}></View>}
+				onScroll={onScroll}
 				ref={flatlist}
 			/>
 			{/* Parent Comment 혹은 Child Comment 에서 답글쓰기를 클릭할 시 화면 최하단에 등장 */}

@@ -1,11 +1,11 @@
 import React from 'react';
-import {ScrollView, Text, TouchableOpacity, View, TouchableWithoutFeedback, TextInput} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View, TouchableWithoutFeedback, TextInput, Platform, Keyboard} from 'react-native';
 import {APRI10, WHITE, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Paw54_Border} from 'Root/component/atom/icon/index';
 import {Urgent_Write1, Urgent_Write2} from 'Atom/icon';
-import {btn_style, feedWrite, login_style, temp_style} from 'Templete/style_templete';
+import {btn_style, feedWrite, login_style, temp_style, buttonstyle} from 'Templete/style_templete';
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w176, btn_w194} from 'Atom/btn/btn_style';
 import ActionButton from 'Molecules/button/ActionButton';
@@ -25,7 +25,11 @@ import {getPettypes} from 'Root/api/userapi';
 import ImagePicker from 'react-native-image-crop-picker';
 import HashInput from 'Molecules/input/HashInput';
 import {getAddressList} from 'Root/api/address';
-import SelectInput from 'Root/component/molecules/button/SelectInput';
+import SelectInput from 'Molecules/button/SelectInput';
+import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {FlatList} from 'react-native-gesture-handler';
+import ReactNativeModal from 'react-native-modal';
 
 export default FeedWrite = props => {
 	const [showPetAccountList, setShowPetAccountList] = React.useState(false); //PetAccount 계정
@@ -38,6 +42,10 @@ export default FeedWrite = props => {
 	const [selectedImg, setSelectedImg] = React.useState([]); //사진 uri리스트
 	const [isSearchTag, setSearchTag] = React.useState(false);
 	const [publicSetting, setPublicSetting] = React.useState('전체 공개'); //공개 여부
+	const keyboardArea = useKeyboardBottom(0 * DP);
+	const scrollref = React.useRef();
+	const lastTouchY = React.useRef(0);
+	const container = React.useRef();
 
 	React.useEffect(() => {
 		props.navigation.setParams({
@@ -71,6 +79,17 @@ export default FeedWrite = props => {
 		console.log(feedText);
 	}, [feedText]);
 
+	// React.useEffect(() => {
+	// 	let scroll = Keyboard.addListener('keyboardDidShow', e => {
+	// 		console.log('keyboarddidshow scrollto');
+	// 		// scrollref.current.scrollToEnd({duration:100,animated:true});
+	// 		// scrollref.current.scrollToOffset({offset:lastTouchY.current})
+
+	// 	});
+	// 	return () => {
+	// 		scroll.remove();
+	// 	};
+	// }, []);
 	//긴급버튼 중 - 실종 클릭
 	const onPressMissingWrite = () => {
 		setShowLostAnimalForm(true);
@@ -177,9 +196,9 @@ export default FeedWrite = props => {
 	const setUrgBtnsClickedView = () => {
 		//긴급 버튼 중 '제보' 클릭한 경우
 		if (showReportForm) {
-			return <ReportForm onDataChange={onReportForm} />;
+			return <ReportForm onDataChange={onReportForm} container={container} scrollref={scrollref} />;
 		} // 긴급 게시 버튼 중 '실종' 클릭한 경우
-		else return showLostAnimalForm ? <MissingForm onDataChange={onMissingForm} /> : false;
+		else return showLostAnimalForm ? <MissingForm onDataChange={onMissingForm} container={container} scrollref={scrollref} /> : false;
 	};
 
 	//태그 검색중 리스트 외의 다른화면 가리기
@@ -192,6 +211,13 @@ export default FeedWrite = props => {
 			setPublicSetting(selectedItem);
 			Modal.close();
 		});
+	};
+
+	const onPressIn = e => {
+		console.log('pressIn', e.nativeEvent);
+		// lastTouchY.current=e.pageY;
+		scrollref.current.scrollToOffset({offset: e.nativeEvent.pageY});
+		// scrollref.current.scrollToEnd()
 	};
 
 	const setWriteModeState = () => {
@@ -248,41 +274,54 @@ export default FeedWrite = props => {
 		);
 	};
 	return (
-		<View style={[login_style.wrp_main, feedWrite.container]}>
-			{/* <ScrollView contentContainerStyle={{width: 750 * DP, alignItems: 'center'}}> */}
-			<HashInput
-				containerStyle={[temp_style.feedTextEdit, {minHeight: showLostAnimalForm || showReportForm ? 214 * DP : 316 * DP}]}
-				textAlignVertical={'top'}
-				multiline={true}
-				placeholder="게시물을 작성하세요 (150자)"
-				placeholderTextColor={GRAY20}
-				onChangeText={inputFeedTxt}
-				maxLength={150}
-				onFind={onFindTag}
-				selectedImg={selectedImg}
-				onDelete={deletePhoto}
-			/>
+		<View style={{flex: 1, backgroundColor: '#FFF'}}>
+			{/* <ScrollView contentContainerStyle={[login_style.wrp_main,{backgroundColor:'#fff'}]} ref={ref=>{console.log('스크롤 할당',ref);scrollref.current=ref}}> */}
+			<FlatList
+				renderItem={({item, index}) => {
+					return (
+						<View contentContainerStyle={[login_style.wrp_main, {backgroundColor: '#000'}]} ref={container}>
+							<HashInput
+								containerStyle={[temp_style.feedTextEdit, {minHeight: showLostAnimalForm || showReportForm ? 214 * DP : 316 * DP}]}
+								textAlignVertical={'top'}
+								multiline={true}
+								placeholder="게시물을 작성하세요 (150자)"
+								placeholderTextColor={GRAY20}
+								onChangeText={inputFeedTxt}
+								maxLength={150}
+								onFind={onFindTag}
+								selectedImg={selectedImg}
+								onDelete={deletePhoto}
+							/>
 
-			{!isSearchTag && setWriteModeState()}
-			{/* 긴급 게시물 관련 버튼 컨테이너 */}
+							{!isSearchTag && setWriteModeState()}
+							{/* 긴급 게시물 관련 버튼 컨테이너 */}
+							{/* <View style={{height: keyboardArea, width: '100%', backgroundColor: 'red'}}></View> */}
+						</View>
+					);
+				}}
+				data={[{}]}
+				ref={scrollref}></FlatList>
 
 			{/* </ScrollView> */}
+
 			{showUrgentBtns && !isSearchTag ? (
 				<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
 					{showActionButton ? (
 						<View>
 							<TouchableWithoutFeedback onPress={onPressMissingWrite}>
-								<View style={[feedWrite.urgentBtnItemContainer]}>
+								<View style={[feedWrite.urgentBtnItemContainer, buttonstyle.shadow]}>
 									<Text style={[txt.noto32, {color: WHITE}]}>실종</Text>
 								</View>
 							</TouchableWithoutFeedback>
 							<TouchableWithoutFeedback onPress={onPressReportWrite}>
-								<View style={[feedWrite.urgentBtnItemContainer]}>
+								<View style={[feedWrite.urgentBtnItemContainer, buttonstyle.shadow]}>
 									<Text style={[txt.noto32, {color: WHITE}]}>제보</Text>
 								</View>
 							</TouchableWithoutFeedback>
 						</View>
-					) : null}
+					) : (
+						false
+					)}
 					<TouchableWithoutFeedback onPress={() => setShowActionButton(!showActionButton)}>
 						<View style={[feedWrite.urgentActionButton]}>{showActionButton ? <Urgent_Write2 /> : <Urgent_Write1 />}</View>
 					</TouchableWithoutFeedback>
@@ -290,7 +329,6 @@ export default FeedWrite = props => {
 			) : (
 				false
 			)}
-			{/* </ScrollView> */}
 		</View>
 	);
 };
@@ -307,7 +345,6 @@ const MissingForm = props => {
 
 	const [city, setCity] = React.useState(['광역시, 도']);
 	const [district, setDistrict] = React.useState(['구를 선택해 주세요']);
-
 	React.useEffect(() => {
 		getAddressList(
 			{},
@@ -444,8 +481,35 @@ const MissingForm = props => {
 		setData({...data, missing_animal_lost_location: lost_location_container});
 	};
 
+	const keyboardArea = useKeyboardBottom(0 * DP);
+	const inputAgeRef = React.useRef();
+	const inputLocationRef = React.useRef();
+	const inputContactRef = React.useRef();
+	const inputBalloonRef = React.useRef();
+	const currentPosition = React.useRef(0);
+
+	React.useEffect(() => {
+		props.scrollref.current.scrollToOffset({offset: currentPosition.current});
+		currentPosition.current=0;
+	}, [keyboardArea]);
+
+	const onPressIn = (inputRef)=>()=>{
+		if (Platform.OS === 'android') return;
+		inputRef.current.measureLayout(
+			props.container.current,
+			(left, top, width, height) => {
+				console.log('left:%s,top:%s,width:%s,height:%s', left, top, width, height);
+				currentPosition.current = top;
+				// props.scrollref.current.scrollToOffset({offset:top})
+			},
+			() => {
+				console.log('measurelayout failed');
+			},
+		);
+	};
+
 	return (
-		<ScrollView style={[feedWrite.lostAnimalForm]} showsVerticalScrollIndicator={false}>
+		<View style={[feedWrite.lostAnimalForm]} showsVerticalScrollIndicator={false}>
 			{/* DropDownSelect */}
 			<View style={[feedWrite.lostAnimalForm_Form]}>
 				<View style={[feedWrite.formTitle]}>
@@ -494,6 +558,8 @@ const MissingForm = props => {
 					maxlength={2}
 					keyboardType={'number-pad'}
 					value={data.missing_animal_age}
+					onPressIn={onPressIn(inputAgeRef)}
+					ref={inputAgeRef}
 				/>
 			</View>
 			<View style={[temp_style.input24, feedWrite.missing_location_input]}>
@@ -506,6 +572,8 @@ const MissingForm = props => {
 					onChangeText={onChangeMissingLocationDetail}
 					style={[feedWrite.missing_location_detail_input]}
 					placeholder={'반려동물이 실종된 구체적인 장소를 설명해주세요.'}
+					onPressIn={onPressIn(inputLocationRef)}
+					ref={inputLocationRef}
 				/>
 			</View>
 			<View style={[temp_style.input24, feedWrite.input24]}>
@@ -518,6 +586,8 @@ const MissingForm = props => {
 					keyboardType={'number-pad'}
 					maxlength={15}
 					value={data.missing_animal_contact}
+					onPressIn={onPressIn(inputContactRef)}
+					ref={inputContactRef}
 				/>
 			</View>
 			<View style={[temp_style.inputBalloon, feedWrite.inputBalloon]}>
@@ -527,9 +597,12 @@ const MissingForm = props => {
 					onChange={inputFeature}
 					value={data.missing_animal_features}
 					maxLength={200}
+					onPressIn={onPressIn(inputBalloonRef)}
+					ref={inputBalloonRef}
 				/>
 			</View>
-		</ScrollView>
+			<View style={{height: keyboardArea, width: '100%', backgroundColor: '#FFF'}}></View>
+		</View>
 	);
 };
 
@@ -758,8 +831,33 @@ const ReportForm = props => {
 		setData({...data, report_location: report_location});
 	};
 
+	const keyboardArea = useKeyboardBottom(0 * DP);
+	const inputLocationRef = React.useRef();
+	const currentPosition = React.useRef(0);
+
+	React.useEffect(() => {
+		props.scrollref.current.scrollToOffset({offset: currentPosition.current});
+		currentPosition.current=0;
+	}, [keyboardArea]);
+
+	const onPressIn = (inputRef)=>()=>{
+		if (Platform.OS === 'android') return;
+		inputRef.current.measureLayout(
+			props.container.current,
+			(left, top, width, height) => {
+				console.log('left:%s,top:%s,width:%s,height:%s', left, top, width, height);
+				currentPosition.current = top;
+				// props.scrollref.current.scrollToOffset({offset:top})
+			},
+			() => {
+				console.log('measurelayout failed');
+			},
+		);
+	};
+
+
 	return (
-		<ScrollView style={[feedWrite.reportForm_container]} showsVerticalScrollIndicator={false}>
+		<View style={[feedWrite.reportForm_container]} showsVerticalScrollIndicator={false}>
 			<View style={[feedWrite.reportForm]}>
 				<View style={[feedWrite.reportForm_form]}>
 					<View style={[feedWrite.lostAnimalForm_Form]}>
@@ -791,10 +889,13 @@ const ReportForm = props => {
 							onChangeText={onChangeMissingLocationDetail}
 							style={[feedWrite.missing_location_detail_input]}
 							placeholder={'제보하려는 장소의 위치를 설명해주세요.'}
+							onPressIn={onPressIn(inputLocationRef)}
+							ref={inputLocationRef}
 						/>
 					</View>
 				</View>
 			</View>
-		</ScrollView>
+			<View style={{height: keyboardArea, width: '100%',backgroundColor:'#FFF'}}></View>
+		</View>
 	);
 };

@@ -206,6 +206,7 @@ export default function HashInput(props) {
 
 	const onFocus = e => {
 		Modal.closeKeboard();
+		console.log('focus', e.nativeEvent);
 		props.onFocus && props.onFocus(e);
 	};
 
@@ -213,7 +214,6 @@ export default function HashInput(props) {
 		console.log('delete Photo', index);
 		props.onDelete(index);
 	};
-
 
 	return (
 		<>

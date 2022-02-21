@@ -86,6 +86,7 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 									multiline={true}
 									placeholder={'댓글입력..'}
 									onChangeText={onChangeText}
+									onFocus={props.onFocus}
 									ref={inputRef}
 								/>
 							</View>

@@ -23,6 +23,11 @@ const Input24 = React.forwardRef((props, ref) => {
 		clear: () => {
 			inputRef.current.clear();
 		},
+		measureLayout:(containerRef,callback,failcallback)=>{
+			inputRef.current.measureLayout(
+				containerRef,callback,failcallback
+			)
+		},
 	}));
 	// const [input, setInput] = React.useState('');
 	const [confirm, setConfirm] = React.useState(false);
@@ -63,7 +68,7 @@ const Input24 = React.forwardRef((props, ref) => {
 	};
 
 	const onFocus = () => {
-		Modal.closeKeboard();
+		// Modal.closeKeboard();
 		// inputRef.current.clear();
 		props.onFocus();
 	};
@@ -107,7 +112,7 @@ const Input24 = React.forwardRef((props, ref) => {
 	};
 
 	return (
-		<View style={[props.width && {width: props.width * DP}, {flexDirection: 'column'}]}>
+		<View style={[props.width && {width: props.width * DP}, {flexDirection: 'column'}]} onLayout={props.onLayout}>
 			{/* width props를 입력하지 않을 경우 Input컴포넌트의 부모의 width를 따라 넓이가 정해지도록 수정*/}
 			{/* height 를 title과 alert_msg가 없을 때에는 공간을 차지하지 않도록 가변이 되도록 style을 수정*/}
 
@@ -155,6 +160,7 @@ const Input24 = React.forwardRef((props, ref) => {
 							// minWidth: 300 * DP,
 						},
 					]}
+					onPressIn={props.onPressIn}
 				/>
 				{props.value.length > 0 && props.showCrossMark ? (
 					<View style={{position: 'absolute', right: 0}}>

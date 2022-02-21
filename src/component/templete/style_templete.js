@@ -3800,11 +3800,15 @@ export const feedCommentList = StyleSheet.create({
 		width: 646 * DP,
 		marginLeft: 20 * DP,
 		fontSize: 28 * DP,
+		paddingVertical:0,
+		includeFontPadding:false,
 		// backgroundColor: 'yellow',
 	},
 	replyTextInput_photo: {
 		width: 442 * DP,
 		marginRight: 12 * DP,
+		paddingVertical:0,
+		includeFontPadding:false,
 		// backgroundColor: 'pink',
 	},
 	replyTextInput_protect_request: {
@@ -3838,6 +3842,7 @@ export const feedCommentList = StyleSheet.create({
 		paddingVertical: 28 * DP,
 		paddingHorizontal: 20 * DP,
 		alignItems: 'center',
+		
 	},
 	commentBox_photo: {
 		width: 750 * DP,

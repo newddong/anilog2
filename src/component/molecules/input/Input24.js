@@ -68,7 +68,7 @@ const Input24 = React.forwardRef((props, ref) => {
 	};
 
 	const onFocus = () => {
-		// Modal.closeKeboard();
+		Modal.closeKeboard();
 		// inputRef.current.clear();
 		props.onFocus();
 	};

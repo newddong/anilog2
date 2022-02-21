@@ -140,7 +140,7 @@ export default AssignProtectAnimalInfo = ({route}) => {
 			[PET_MONTH, ['개월', '년']],
 			'보호 동물의 예상연령',
 			(s1, s2) => {
-				setData({...data, protect_animal_estimate_age: s1 + ' ' + s2});
+				setData({...data, protect_animal_estimate_age: s1 + s2});
 				console.log('selected', s1, s2);
 				Modal.close();
 			},
@@ -171,16 +171,6 @@ export default AssignProtectAnimalInfo = ({route}) => {
 					<View style={assignProtectAnimal_style.width118}>
 						<Text style={[txt.noto28, {color: GRAY10}]}>예상 연령</Text>
 					</View>
-					{/* <TouchableOpacity onPress={onPressYear} style={[assignProtectAnimal_style.dropdownSelect_year]}>
-						<Text style={[txt.roboto28, assignProtectAnimal_style.dropdownSelect_year_text]}>{year}</Text>
-						<Arrow_Down_GRAY10 />
-					</TouchableOpacity>
-					<Text style={[txt.noto24, assignProtectAnimal_style.text118]}>년</Text>
-					<TouchableOpacity onPress={onPressMonth} style={[assignProtectAnimal_style.dropdownSelect_month]}>
-						<Text style={[txt.roboto28, assignProtectAnimal_style.dropdownSelect_year_text]}>{month}</Text>
-						<Arrow_Down_GRAY10 />
-					</TouchableOpacity>
-					<Text style={[txt.noto24, assignProtectAnimal_style.text118]}>개월</Text> */}
 					<View style={[assignProtectAnimal_style.estimatedAgeContainer]}>
 						<SelectInput onPressInput={onPressEstimatedAge} width={500} value={data.protect_animal_estimate_age} />
 					</View>

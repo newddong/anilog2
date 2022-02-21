@@ -60,8 +60,6 @@ const Calendar_Multiple = props => {
 	//날짜 선택
 	const onSelectDate = date => {
 		const dateFormat = date.format('yyyy.MM.DD');
-		console.log('현재 선택', selectedDates);
-		console.log('maxLength', props.maxLength);
 		if (selectedDates.length + 1 > props.maxLength) {
 			console.log('3개이상은 안되요');
 			setIsMaximum(true);
@@ -211,7 +209,7 @@ const Calendar_Multiple = props => {
 								textAlign: 'center',
 							},
 						]}>
-						{props.maxLength}개 이상의 선택은 불가합니다.
+						{props.maxLength}일 이상의 선택은 불가합니다.
 					</Text>
 					<View
 						style={[

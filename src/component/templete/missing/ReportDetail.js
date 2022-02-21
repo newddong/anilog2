@@ -15,7 +15,7 @@ import {txt} from 'Root/config/textstyle';
 
 export default ReportDetail = props => {
 	const navigation = useNavigation();
-	console.log('ReportDetail', props);
+	// console.log('ReportDetail', props);
 	React.useEffect(() => {
 		LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 	}, []);

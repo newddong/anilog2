@@ -14,7 +14,6 @@ import {txt} from 'Root/config/textstyle';
  * }} props
  */
 export default CommentList = props => {
-	console.log('length', props.items.length);
 	const renderItem = ({item, index}) => {
 		// console.log('CommentList', item);
 		return (

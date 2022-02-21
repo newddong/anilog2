@@ -105,14 +105,12 @@ export default AnimalNeedHelp = props => {
 	const getParsedDate = () => {
 		let date = '';
 		if (data.feed_type == 'missing') {
-
 			// var splitAddress = data.missing_animal_date.split('-');
 			// console.log('missing getParedDate', splitAddress);
 			date = data.missing_animal_date;
-
 		} else if (data.feed_type == 'report') {
 			date = data.report_witness_date;
-			console.log('report date', date);
+			// console.log('report date', date);
 		} else {
 			date = data.protect_request_date;
 		}
@@ -140,6 +138,7 @@ export default AnimalNeedHelp = props => {
 		var newMissingLocation = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
 		return newMissingLocation;
 	};
+
 	// console.log('AnimalNeedHel', data);
 	const contents = () => {
 		return (

@@ -153,11 +153,9 @@ export default FeedCommentList = props => {
 	};
 	const currentPosition = React.useRef(0);
 	const onScroll = e => {
-		console.log(e.nativeEvent.contentOffset.y);
+		// console.log(e.nativeEvent.contentOffset.y);
 		currentPosition.current = e.nativeEvent.contentOffset.y;
 	};
-
-
 
 	return (
 		<View style={[login_style.wrp_main, feedCommentList.container]}>

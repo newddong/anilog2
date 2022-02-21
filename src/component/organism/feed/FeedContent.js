@@ -239,7 +239,7 @@ export default FeedContent = props => {
 	const [numLine, setNumLine] = React.useState(isMissingReportRoute ? 0 : 3);
 
 	const onTextLayout = e => {
-		console.log('텍스트 레이아웃', e.nativeEvent);
+		// console.log('텍스트 레이아웃', e.nativeEvent);
 		if (e.nativeEvent.lines.length >= 3) {
 			setIsShowBtn(true);
 		} else {

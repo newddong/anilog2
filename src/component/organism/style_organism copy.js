@@ -824,7 +824,7 @@ export const aidRequest = StyleSheet.create({
 	right_insideContainer: {
 		width: 440 * DP,
 		height: 138 * DP,
-		marginHorizontal: 20 * DP,
+		marginHorizontal: 15 * DP,
 		// backgroundColor: 'pink',
 	},
 	right_upperMenu: {
@@ -846,9 +846,12 @@ export const aidRequest = StyleSheet.create({
 	right_middleMenu_content: {
 		height: 36 * DP,
 		// backgroundColor: 'palegreen',
-		paddingRight: 15 * DP,
+		paddingRight: 10 * DP,
 		marginLeft: 10 * DP,
 		marginRight: 10 * DP,
+	},
+	right_middleMenu_content_text: {
+		lineHeight: 36 * DP,
 	},
 	right_lowerMenu: {
 		width: 440 * DP,
@@ -873,6 +876,8 @@ export const aidRequest = StyleSheet.create({
 	},
 	saved_location_text: {
 		maxWidth: 200 * DP,
+		lineHeight: 36 * DP,
+		// textAlignVertical: 'center',
 	},
 });
 

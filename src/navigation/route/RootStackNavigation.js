@@ -184,8 +184,8 @@ export default RootStackNavigation = () => {
 		!isPop && setPop(true);
 	};
 
-	Modal.popRadioSelect = (items, title, onSelect) => {
-		popIn(<RadioSelectModal items={items} title={title} onSelect={onSelect} />);
+	Modal.popRadioSelect = (offset, items, title, onSelect, onClose) => {
+		popIn(<RadioSelectModal offset={offset} items={items} title={title} onSelect={onSelect} onClose={onClose} />);
 		!isPop && setPop(true);
 	};
 
@@ -264,8 +264,8 @@ export default RootStackNavigation = () => {
 		!isPop && setPop(true);
 	};
 
-	Modal.popInterestTagModal = (data, onSave, onClose) => {
-		popIn(<InterestTagModal data={data} onSave={onSave} onClose={onClose} />);
+	Modal.popInterestTagModal = (isActivation, data, onSave, onClose) => {
+		popIn(<InterestTagModal isActivation={isActivation} data={data} onSave={onSave} onClose={onClose} />);
 		!isPop && setPop(true);
 	};
 

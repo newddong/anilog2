@@ -19,7 +19,7 @@ import {aidRequest} from '../style_organism copy';
 export default AidRequest = props => {
 	const data = props.data;
 	// console.log('badge', data);
-	console.log('AidRequest', props);
+
 	//해당 AidRequest박스 선택 시 부모컴포넌트 OnSelect 실행
 	const onSelect = () => {
 		props.onSelect();
@@ -51,37 +51,31 @@ export default AidRequest = props => {
 								{data.protect_animal_species_detail != 'undefined' ? data.protect_animal_species_detail : ''}
 							</Text>
 						</View>
-						<View style={[aidRequest.right_middleMenu]}>
+						<View style={[aidRequest.right_middleMenu, {}]}>
 							<View style={[aidRequest.right_middleMenu_title]}>
 								<Text style={[txt.noto24, {color: GRAY20}]}>예상연령</Text>
 							</View>
 							<View style={[aidRequest.right_middleMenu_content]}>
-								<Text style={[txt.noto26]}>{data.protect_animal_estimate_age || ''}</Text>
+								<Text style={[txt.noto26, aidRequest.right_middleMenu_content_text]}>{data.protect_animal_estimate_age || ''}</Text>
 							</View>
 							<View style={[aidRequest.right_middleMenu_title]}>
 								<Text style={[txt.noto24, {color: GRAY20}]}>체중</Text>
 							</View>
 							<View style={[aidRequest.right_middleMenu_content]}>
-								<Text style={[txt.noto26]}>{data.protect_animal_weight ? parseFloat(data.protect_animal_weight).toFixed(1) + 'kg' : '모름'}</Text>
+								<Text style={[txt.noto26, aidRequest.right_middleMenu_content_text]}>
+									{data.protect_animal_weight ? parseFloat(data.protect_animal_weight).toFixed(1) + 'kg' : '모름'}
+								</Text>
 							</View>
 							<View style={[aidRequest.right_middleMenu_title]}>
 								<Text style={[txt.noto24, {color: GRAY20}]}>중성화</Text>
 							</View>
 							<View style={[aidRequest.right_middleMenu_content]}>
-								<Text style={[txt.noto26]}>
+								<Text style={[txt.noto26, aidRequest.right_middleMenu_content_text]}>
 									{data.protect_animal_neutralization ? (data.protect_animal_neutralization == 'yes' ? 'O' : 'X') : '모름'}
 								</Text>
 							</View>
 						</View>
 						<View style={[aidRequest.right_lowerMenu]}>
-							{/* <View style={[aidRequest.right_middleMenu_title]}>
-								<Text style={[txt.noto24, {color: GRAY20}]}>중성화</Text>
-							</View>
-							<View style={[aidRequest.right_middleMenu_content]}>
-								<Text style={[txt.noto24]}>
-									{data.protect_animal_neutralization ? (data.protect_animal_neutralization == 'yes' ? 'O' : 'X') : '모름'}
-								</Text>
-							</View> */}
 							<View style={[aidRequest.right_middleMenu_title]}>
 								<Text style={[txt.noto24, {color: GRAY20}]}>구조장소</Text>
 							</View>

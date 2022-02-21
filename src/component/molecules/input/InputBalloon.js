@@ -11,7 +11,21 @@ import {APRI10, GRAY10, GRAY30, RED10} from 'Root/config/color';
  * @param {(input:string)=>void} props.onChange - 인풋 값 변경 콜백
  * @param {number} props.maxLength - 인풋의 길이 제한값
  */
-const InputBalloon = props => {
+const InputBalloon = React.forwardRef((props, ref) => {
+	React.useImperativeHandle(ref, () => ({
+		focus: () => {
+			inputRef.current.focus();
+		},
+		blur: () => {
+			inputRef.current.blur();
+		},
+		clear: () => {
+			inputRef.current.clear();
+		},
+		measureLayout: (containerRef, callback, failcallback) => {
+			inputRef.current.measureLayout(containerRef, callback, failcallback);
+		},
+	}));
 	const inputRef = React.useRef();
 	const [text, setText] = React.useState('');
 
@@ -58,12 +72,14 @@ const InputBalloon = props => {
 					multiline={true}
 					ref={inputRef}
 					maxLength={props.maxLength}
+					placeholderTextColor={GRAY10}
+					onPressIn={props.onPressIn}
 				/>
 				<Text style={[txt.roboto24, {color: GRAY10, alignSelf: 'flex-end'}]}> {text.length} /200</Text>
 			</View>
 		</View>
 	);
-};
+});
 InputBalloon.defaultProps = {
 	placeholder: 'placeholder',
 	value: 'value',

@@ -244,7 +244,7 @@ export const phoneNumVerification = StyleSheet.create({
 		color: 'red',
 		// backgroundColor: 'yellow',
 		paddingLeft: 10 * DP,
-		marginTop: -20 * DP,
+		marginTop: -40 * DP,
 		marginBottom: 10 * DP,
 	},
 	inputTimeLimitContainer: {
@@ -824,7 +824,7 @@ export const aidRequest = StyleSheet.create({
 	right_insideContainer: {
 		width: 440 * DP,
 		height: 138 * DP,
-		marginHorizontal: 20 * DP,
+		marginHorizontal: 15 * DP,
 		// backgroundColor: 'pink',
 	},
 	right_upperMenu: {
@@ -846,9 +846,12 @@ export const aidRequest = StyleSheet.create({
 	right_middleMenu_content: {
 		height: 36 * DP,
 		// backgroundColor: 'palegreen',
-		paddingRight: 15 * DP,
+		paddingRight: 10 * DP,
 		marginLeft: 10 * DP,
 		marginRight: 10 * DP,
+	},
+	right_middleMenu_content_text: {
+		lineHeight: 36 * DP,
 	},
 	right_lowerMenu: {
 		width: 440 * DP,
@@ -873,6 +876,8 @@ export const aidRequest = StyleSheet.create({
 	},
 	saved_location_text: {
 		maxWidth: 200 * DP,
+		lineHeight: 36 * DP,
+		// textAlignVertical: 'center',
 	},
 });
 
@@ -1065,7 +1070,7 @@ export const animalNeedHelp = StyleSheet.create({
 	detail_lowerMenu: {
 		width: 410 * DP,
 		height: 214 * DP,
-		paddingVertical: 22 * DP,
+		paddingVertical: 4 * DP,
 	},
 	lowerMenu_kindAndBreed: {
 		height: 50 * DP,
@@ -1078,8 +1083,8 @@ export const animalNeedHelp = StyleSheet.create({
 		marginLeft: 20 * DP,
 	},
 	lowerMenu_helpDetail: {
-		height: 38 * DP,
-		marginTop: 10 * DP,
+		// height: 38 * DP,
+		// marginTop: 10 * DP,
 	},
 	container_with_Line: {
 		width: 705 * DP,

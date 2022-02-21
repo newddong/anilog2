@@ -1,15 +1,15 @@
 import React from 'react';
-import {Text, View, TouchableWithoutFeedback, FlatList, ScrollView, RefreshControl} from 'react-native';
+import {StyleSheet, View, FlatList,RefreshControl} from 'react-native';
 import {WHITE} from 'Root/config/color';
 import {Write94} from 'Atom/icon';
 import Feed from 'Organism/feed/Feed';
-import {feedList, login_style, missingAnimalDetail, temp_style} from 'Templete/style_templete';
 import {getSuggestFeedList} from 'Root/api/feedapi';
 import Modal from 'Component/modal/Modal';
 import DP from 'Root/config/dp';
 import {getFeedListByUserId} from 'Root/api/feedapi';
 import {getFeedsByHash} from 'Root/api/hashapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {login_style, buttonstyle } from 'Templete/style_templete';
 
 export default FeedList = ({route, navigation}) => {
 	const ITEM_HEIGHT = 1222*DP;
@@ -105,7 +105,7 @@ export default FeedList = ({route, navigation}) => {
 	};
 	
 	return (
-		<View style={[login_style.wrp_main, {flex: 1, backgroundColor: WHITE}]}>
+		<View style={login_style.wrp_main, {flex: 1, backgroundColor: WHITE}}>
 			<FlatList
 				data={feedList}
 				renderItem={({item}) => renderItem(item)}
@@ -117,10 +117,11 @@ export default FeedList = ({route, navigation}) => {
 				initialScrollIndex={index}
 			/>
 			{userGlobalObject.userInfo && (
-				<View style={{position: 'absolute', bottom: 40 * DP, right: 30 * DP}}>
+				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP},buttonstyle.shadow]}>
 					<Write94 onPress={moveToFeedWrite} />
 				</View>
 			)}
 		</View>
 	);
 };
+

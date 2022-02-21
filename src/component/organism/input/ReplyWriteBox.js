@@ -8,6 +8,7 @@ import {feedCommentList} from 'Templete/style_templete';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import dp from 'Root/config/dp';
 import {btn_w116, btn_w120} from 'Root/component/atom/btn/btn_style';
+import {txt} from 'Root/config/textstyle';
 /**
  * @param {{
  * onLockBtnClick : void ,
@@ -16,11 +17,13 @@ import {btn_w116, btn_w120} from 'Root/component/atom/btn/btn_style';
  * onDeleteImage : 'void / 댓글창에서 추가한 사진 삭제 버튼 클릭',
  * onWrite : void,
  * onFocusReplyBox : void,
+ * onPressReply : void,
  * privateComment : 'boolean / 비밀글 여부',
  * isProtectRequest : 'boolean / 보호요청 게시글에서의 호출',
  * photo : 'Array / 사진 목록',
  * }} props
  */
+
 export default ReplyWriteBox = React.forwardRef((props, ref) => {
 	React.useImperativeHandle(ref, () => ({
 		focus: () => {
@@ -40,7 +43,8 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 
 	const onWrite = () => {
 		props.onWrite();
-		inputRef.current.clear();
+		setContent('');
+		inputRef.current.clear && inputRef.current.clear();
 	};
 
 	const onDeleteImage = () => {
@@ -52,20 +56,20 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 		props.onChangeReplyInput(text);
 	};
 
+	const onPressReply = () => {
+		props.onPressReply();
+	};
+
 	if (props.isProtectRequest) {
 		return (
 			<View style={[feedCommentList.commentBox_protect_request]}>
 				<View style={[feedCommentList.commentBox_protect_request_left]}>
-					<TextInput
-						style={[feedCommentList.replyTextInput_protect_request]}
-						multiline={true}
-						placeholder={'댓글입력..'}
-						onChangeText={onChangeText}
-						ref={inputRef}
-					/>
+					<Text onPress={onPressReply} style={[txt.noto26, feedCommentList.replyTextInput_protect_request, {}]} ref={inputRef}>
+						댓글입력
+					</Text>
 				</View>
 
-				<AniButton onPress={onWrite} btnLayout={btn_w120} btnStyle={'border'} btnTitle={'댓글'} titleFontStyle={24} />
+				<AniButton onPress={onPressReply} btnLayout={btn_w120} btnStyle={'border'} btnTitle={'댓글'} titleFontStyle={24} />
 			</View>
 		);
 	} else {
@@ -82,6 +86,7 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 									multiline={true}
 									placeholder={'댓글입력..'}
 									onChangeText={onChangeText}
+									onFocus={props.onFocus}
 									ref={inputRef}
 								/>
 							</View>
@@ -98,7 +103,7 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 								style={[feedCommentList.replyTextInput]}
 								multiline={true}
 								placeholder={'댓글입력..'}
-								onChangeText={props.onChangeReplyInput}
+								onChangeText={onChangeText}
 								ref={inputRef}
 							/>
 						</View>
@@ -132,6 +137,7 @@ ReplyWriteBox.defaultProps = {
 	onFocusReplyBox: e => console.log(e), // 리플 Input 변경
 	onDeleteImage: e => console.log(e),
 	onWrite: e => console.log(e), // 보내기 클릭
+	onPressReply: e => console.log(e), // 댓글입력(보호요청게시글일 경우) 클릭
 	privateComment: false, // 비밀 댓글 상태 여부
 	photo: [],
 };

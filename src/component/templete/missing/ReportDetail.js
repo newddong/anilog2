@@ -15,7 +15,7 @@ import {txt} from 'Root/config/textstyle';
 
 export default ReportDetail = props => {
 	const navigation = useNavigation();
-	console.log('ReportDetail', props);
+	// console.log('ReportDetail', props);
 	React.useEffect(() => {
 		LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 	}, []);
@@ -29,8 +29,8 @@ export default ReportDetail = props => {
 	const [writeCommentData, setWriteCommentData] = React.useState(); //더보기 클릭 State
 	const [replyPressed, setReplyPressed] = React.useState(false);
 	const debug = true;
-	const [loading, setLoading] = React.useState(true); //로딩상태
-
+	const [loading, setLoading] = React.useState(true); //댓글 로딩상태
+	const [feedLoding, setFeedLoading] = React.useState(true); //피드 로딩상태
 	React.useEffect(() => {
 		setPhoto(props.route.params);
 	}, [props.route.params]);
@@ -52,8 +52,9 @@ export default ReportDetail = props => {
 				feedobject_id: props.route.params._id,
 			},
 			data => {
-				debug && console.log(`ReportDetail data:${JSON.stringify(data.msg)}`);
+				// debug && console.log(`ReportDetail data:${JSON.stringify(data.msg)}`);
 				setData(data.msg);
+				setFeedLoading(false);
 			},
 			errcallback => {
 				console.log(`errcallback:${JSON.stringify(errcallback)}`);
@@ -65,9 +66,7 @@ export default ReportDetail = props => {
 	React.useEffect(() => {
 		console.log(' - ReportDetail Comment -');
 		getCommnetList();
-
 		setLoading(false);
-
 	}, []);
 
 	// React.useEffect(() => {
@@ -202,7 +201,7 @@ export default ReportDetail = props => {
 		setShowMore(!showMore);
 	};
 
-	if (loading) {
+	if (loading || feedLoding) {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
 				<ActivityIndicator size={'large'}></ActivityIndicator>
@@ -249,7 +248,7 @@ export default ReportDetail = props => {
 				renderItem={({item, index}) => (
 					<CommentList
 						items={commentDataList}
-						onPressReplyBtn={onReplyBtnClick}
+						onPressReplyBtn={moveToCommentList}
 						onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
 					/>
 				)}

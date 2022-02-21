@@ -3,7 +3,7 @@ import {txt} from 'Root/config/textstyle';
 import {Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {Calendar48_Border} from 'Atom/icon';
-import {APRI10, BLACK, GRAY20} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, GRAY20} from 'Root/config/color';
 import Modal from 'Component/modal/Modal';
 import {object} from 'prop-types';
 
@@ -17,6 +17,10 @@ import {object} from 'prop-types';
  * @param {boolean} props.past - 이전날짜 선택 불가 모드 (default = true)
  * @param {boolean} props.future - 이전날짜 선택 불가 모드 (default = true)
  * @param {(title:string)=>void} props.onDateChange - 달력에서 날짜가 선택되었을 때 실행되는 콜백. 날짜정보를 반환함
+ * @param {()=>void} props.canOpenCalendar - 달력 출력 여부 판정
+ * @param {boolean} props.multiple - 다중선택 모드 여부
+ * @param {object} props.previous - 다중선택 모드일 경우 이전 선택 리스트 배열
+ * @param {number} props.maxLength - 다중선택 모드일 경우 선택가능 수
  */
 const DatePicker = props => {
 	const [showCalendar, setShowCalendar] = React.useState(false);
@@ -29,16 +33,27 @@ const DatePicker = props => {
 	};
 
 	const closeCalendar = () => {
-		console.log('close');
+		// console.log('close');
 		Modal.close();
 	};
 
 	const openCalendar = () => {
-		console.log('openCale');
-		props.multiple
-			? Modal.popCalendar(showCalendar, closeCalendar, date => onDateChange(date), props.past, props.future, props.multiple)
-			: Modal.popCalendar(showCalendar, closeCalendar, date => onDateChange(date), props.past, props.future);
-		setShowCalendar(true);
+		// console.log('openCale');
+		if (props.canOpenCalendar()) {
+			props.multiple
+				? Modal.popCalendar(
+						showCalendar,
+						closeCalendar,
+						date => onDateChange(date),
+						props.past,
+						props.future,
+						props.multiple,
+						props.previous,
+						props.maxLength,
+				  )
+				: Modal.popCalendar(showCalendar, closeCalendar, date => onDateChange(date), props.past, props.future);
+			setShowCalendar(true);
+		}
 	};
 
 	return (
@@ -67,10 +82,10 @@ const DatePicker = props => {
 							lineHeight: 44 * DP,
 							paddingLeft: 14 * DP,
 							paddingVertical: 18 * DP, // Value와 최상위 View와의 paddingVertical 16px
-							color: selectedDate == '눌러서 지정해주세요!' ? GRAY20 : BLACK,
+							color: selectedDate == '눌러서 지정해주세요!' ? GRAY10 : BLACK,
 						},
 					]}>
-					{typeof selectedDate === 'object' ? '눌러서 추가해주세요' : selectedDate}
+					{typeof selectedDate === 'object' ? '눌러서 지정해주세요!' : selectedDate}
 				</Text>
 				<View style={{position: 'absolute', right: 15 * DP}}>
 					<Calendar48_Border />
@@ -83,7 +98,11 @@ DatePicker.defaultProps = {
 	width: 520, //전체 DatePicker의 너비
 	title: 'title',
 	onDateChange: e => console.log(e),
+	canOpenCalendar: e => {
+		return true;
+	},
 	past: true,
+	maxLength: 3,
 };
 
 export default DatePicker;

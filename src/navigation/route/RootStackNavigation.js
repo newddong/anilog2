@@ -88,6 +88,8 @@ import AddFamilyModal from 'Root/component/molecules/modal/AddFamilyModal';
 import CongratulationModal from 'Root/component/molecules/modal/CongratulationModal';
 import AdoptionInfoModal from 'Root/component/molecules/modal/AdoptionInfoModal';
 import AdoptionInfoModalWithOneBtn from 'Root/component/molecules/modal/AdoptionInfoModalWithOneBtn';
+import GeoLocationAPI from 'Root/component/templete/search/GeoLocationSearch';
+import GeoLocationSearch from 'Root/component/templete/search/GeoLocationSearch';
 
 // import Camera from 'Root/component/templete/Camera';
 // import Camera from 'Templete/media/Camera';
@@ -134,10 +136,20 @@ export default RootStackNavigation = () => {
 		!isPop && setPop(true);
 	};
 
-	Modal.popCalendar = (visible, onOff, date, past, future, multiple) => {
-		console.log('Multi', multiple);
+	Modal.popCalendar = (visible, onOff, date, past, future, multiple, previous, maxLength) => {
+		// console.log('Multi', multiple);
 		multiple
-			? popIn(<Calendar_Multiple modalOn={visible} modalOff={onOff} selectDate={date} past={past} future={future} />)
+			? popIn(
+					<Calendar_Multiple
+						modalOn={visible}
+						modalOff={onOff}
+						selectDate={date}
+						past={past}
+						future={future}
+						previous={previous}
+						maxLength={maxLength}
+					/>,
+			  )
 			: popIn(<Calendar modalOn={visible} modalOff={onOff} selectDate={date} past={past} future={future} />);
 		!isPop && setPop(true);
 	};
@@ -172,8 +184,8 @@ export default RootStackNavigation = () => {
 		!isPop && setPop(true);
 	};
 
-	Modal.popRadioSelect = (items, title, onSelect) => {
-		popIn(<RadioSelectModal items={items} title={title} onSelect={onSelect} />);
+	Modal.popRadioSelect = (offset, items, title, onSelect, onClose) => {
+		popIn(<RadioSelectModal offset={offset} items={items} title={title} onSelect={onSelect} onClose={onClose} />);
 		!isPop && setPop(true);
 	};
 
@@ -252,8 +264,8 @@ export default RootStackNavigation = () => {
 		!isPop && setPop(true);
 	};
 
-	Modal.popInterestTagModal = (data, onSave, onClose) => {
-		popIn(<InterestTagModal data={data} onSave={onSave} onClose={onClose} />);
+	Modal.popInterestTagModal = (isActivation, data, onSave, onClose) => {
+		popIn(<InterestTagModal isActivation={isActivation} data={data} onSave={onSave} onClose={onClose} />);
 		!isPop && setPop(true);
 	};
 
@@ -440,6 +452,11 @@ export default RootStackNavigation = () => {
 					<RootStack.Screen
 						name="AddressSearchPage"
 						component={AddressSearchPage}
+						options={{header: props => <SimpleHeader {...props} />, title: '주소 검색'}}
+					/>
+					<RootStack.Screen
+						name="GeoLocation"
+						component={GeoLocationSearch}
 						options={{header: props => <SimpleHeader {...props} />, title: '주소 검색'}}
 					/>
 					<RootStack.Screen name="RequestLogin" component={RequestLogin} />

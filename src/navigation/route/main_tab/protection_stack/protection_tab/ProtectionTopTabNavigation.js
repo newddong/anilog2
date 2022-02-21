@@ -23,6 +23,7 @@ export default ProtectionTopTabNavigation = ({route, navigation}) => {
 	}, [routeName]);
 	return (
 		<ProtectionTab.Navigator
+			initialRouteName='ProtectRequestList'
 			tabBar={({state, descriptors, navigation, position}) => {
 				const onSelectTab = pressedTab => {
 					navigation.navigate({

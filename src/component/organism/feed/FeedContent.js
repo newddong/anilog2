@@ -2,6 +2,7 @@ import React from 'react';
 import {Dimensions, Text, View, Platform} from 'react-native';
 import {organism_style, feedContent_style} from 'Organism/style_organism';
 import UserLocationLabel from 'Molecules/label/UserLocationLabel';
+import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w130} from 'Root/component/atom/btn/btn_style';
 import {useNavigation, useRoute} from '@react-navigation/core';
@@ -63,15 +64,15 @@ export default FeedContent = props => {
 	const navigation = useNavigation();
 	const route = useRoute();
 	const [btnStatus, setBtnStatus] = React.useState(false); //더보기 Arrow방향 false면 아래
-	const [layout, setLayout] = React.useState({height: 0 * DP, width: 0}); // 초기의 Layout
+	const [textLayout, setTextLayout] = React.useState({height: 0 * DP, width: 0}); // 초기의 Layout
 	const [reportLayout, setReportLayout] = React.useState({height: 0, width: 0});
 	const [labelLayout, setlabelLayout] = React.useState({height: 0, width: 0});
 	const [show, setShow] = React.useState(false);
 	const [isMeatballClicked, setIsMeatballClicked] = React.useState(false);
 	//FeedText가 담긴 View 의 onLayout
-	const onLayoutContent = event => {
+	const onLayoutText = event => {
 		const {width, height} = event.nativeEvent.layout;
-		setLayout({width, height});
+		setTextLayout({width, height});
 	};
 
 	//제보게시물
@@ -86,12 +87,12 @@ export default FeedContent = props => {
 	};
 
 	React.useEffect(() => {
-		if (layout.height + reportLayout.height + labelLayout.height + 116 * DP > 265 * DP) {
+		if (textLayout.height + reportLayout.height + labelLayout.height + 116 * DP > 265 * DP) {
 			setBtnStatus(true);
 		} else {
 			setBtnStatus(false);
 		}
-	}, [layout]);
+	}, [textLayout]);
 
 	//피드 미트볼 메뉴 - 신고 클릭
 	const onPressReport = () => {
@@ -230,31 +231,58 @@ export default FeedContent = props => {
 		// if()
 	};
 
+	const isMissingReportRoute = route.name == 'MissingAnimalDetail' || route.name == 'ReportDetail';
+	const isCommentList = route.name == 'FeedCommentList';
+	const isMissingReportType = feed_content == 'missing' || feed_content == 'report';
+
+	const [isShowBtn, setIsShowBtn] = React.useState(true);
+	const [numLine, setNumLine] = React.useState(isMissingReportRoute ? 0 : 3);
+
+	const onTextLayout = e => {
+		// console.log('텍스트 레이아웃', e.nativeEvent);
+		if (e.nativeEvent.lines.length >= 3) {
+			setIsShowBtn(true);
+		} else {
+			setIsShowBtn(false);
+		}
+	};
+
 	const showMore = () => {
+		setNumLine(0);
 		setShow(true);
 	};
 
-	const shouldBeDetail = show || route.name == 'MissingAnimalDetail' || route.name == 'ReportDetail';
-	// console.log('경로', route.name, route.name.includes('FeedCommentList'));
+	const layoutStyle = () => {
+		if (isMissingReportRoute || show) {
+			return {};
+		} else if (isCommentList) {
+			return {};
+		} else {
+			return {
+				height: 270 * DP,
+			};
+		}
+	};
 
+	// console.log('피드 컨텐츠 경로명', route.name);
 	return (
-		// <View style={[organism_style.feedContent,{overflow:'hidden'}, shouldBeDetail ? {height: 270 * DP + reportLayout.height + labelLayout.height + layout.height} : {}]} removeClippedSubviews>
-		<View
-			style={[{height: 270 * DP}, shouldBeDetail ? {height: 270 * DP + reportLayout.height + labelLayout.height + layout.height} : {}]}
-			removeClippedSubviews>
+		// <View style={isMissingReportRoute || show ? {} : {height: 270 * DP}} removeClippedSubviews>
+		<View style={layoutStyle()} removeClippedSubviews>
 			<View style={[organism_style.feedContent, {overflow: 'hidden'}]}>
 				{/* // <View style={[organism_style.feedContent,{height:800*DP}]}> */}
 				{/* line 1 */}
 				<View style={[organism_style.userLocationLabel_view_feedContent]} onLayout={onLayoutLabel}>
 					{/* UserLocationLabel */}
 					<View style={[organism_style.userLocationLabel_feedContent]}>
-						<UserLocationLabel
+						<UserLocationTimeLabel
 							data={feed_avatar_id || feed_writer_id || undefined}
 							onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})}
 							location={feed_location}
+							time={feed_date}
+							isLarge
 						/>
 						<View style={{flexDirection: 'row', alignItems: 'center'}}>
-							{feed_type == 'feed' ? (
+							{!isMissingReportRoute ? (
 								<View style={{flexDirection: 'row', alignItems: 'center'}}>
 									<View style={[feedContent_style.status /*{width:130*DP,height:38*DP}*/]}>
 										{feed_is_protect_diary && (
@@ -282,14 +310,14 @@ export default FeedContent = props => {
 								</View>
 							) : (
 								<View style={[organism_style.button_view_feedContent]}>
-									<View style={[organism_style.favoriteTag_view_feedContent]}>
+									{/* <View style={[organism_style.favoriteTag_view_feedContent]}>
 										<View style={[organism_style.favoriteTag_feedContent]}>
 											<FavoriteTag48_Filled />
 										</View>
 										<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
 											<Text>{feed_favorite_count}</Text>
 										</View>
-									</View>
+									</View> */}
 									<View style={[organism_style.share48_view_feedContent]}>
 										<View style={[organism_style.share48_feedContent]}>
 											<Share48_Filled />
@@ -300,38 +328,31 @@ export default FeedContent = props => {
 									</View>
 								</View>
 							)}
+							{/* <Text>{route.name}</Text> */}
 							<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
+							{/* <Text>{feed_type}</Text> */}
 						</View>
 					</View>
 
 					{/* type값이 status일 경우 status 버튼이 나오고 그렇지 않으면 다른 버튼 표기 */}
 				</View>
-				{/* line 1-1 (제보관련 내용) */}
-				{feed_type == 'report' && (
-					<View style={[organism_style.tipOff_feedContent, feedContent_style.tipOff]} onLayout={onLayoutReport}>
-						<MissingReportInfo data={props.data} />
-					</View>
-				)}
-				{/* 실종 MissingReportInfo 분기 처리 */}
-				{feed_type == 'missing' && (
+				{/* line 1-1 (실종/제보관련 내용) */}
+				{!route.name.includes('MainHomeFeedList') && (feed_type == 'report' || feed_type == 'missing') && (
 					<View style={[organism_style.tipOff_feedContent, feedContent_style.tipOff]} onLayout={onLayoutReport}>
 						<MissingReportInfo data={props.data} />
 					</View>
 				)}
 				{(route.name.includes('FeedList') || feed_type == 'report' || feed_type == 'missing' || route.name.includes('FeedCommentList') || show) && (
 					<View style={[organism_style.content_feedContent, feedContent_style.content_Top10]}>
-						<HashText style={[txt.noto28]} numberOfLines={shouldBeDetail ? 0 : 2} onLayout={onLayoutContent}>
+						{/* <HashText style={[txt.noto28]} numberOfLines={isMissingReportRoute || show ? 0 : 3} onLayout={onLayoutText} onTextLayout={onTextLayout}> */}
+						<HashText style={[txt.noto28]} numberOfLines={numLine} ellipsizeMode={'tail'} onTextLayout={onTextLayout}>
 							{feed_content}
 						</HashText>
 					</View>
 				)}
 			</View>
-			<View style={[organism_style.time_view_feedContent, {paddingHorizontal: 48 * DP}]}>
-				<View style={[organism_style.time_feedContent]}>
-					<Text style={[txt.noto22, {color: GRAY10}]}>{feed_date&&getTimeLapsed(feed_date)}</Text>
-				</View>
-
-				{
+			{!isMissingReportRoute && isShowBtn && !show && (
+				<View style={[organism_style.time_view_feedContent]}>
 					<TouchableWithoutFeedback onPress={showMore}>
 						<View style={[organism_style.addMore_view_feedContent]}>
 							<View style={[organism_style.addMore_feedContent]}>
@@ -342,8 +363,8 @@ export default FeedContent = props => {
 							</View>
 						</View>
 					</TouchableWithoutFeedback>
-				}
-			</View>
+				</View>
+			)}
 		</View>
 	);
 };

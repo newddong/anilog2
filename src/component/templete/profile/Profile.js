@@ -14,6 +14,8 @@ import {login_style, profile, temp_style} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import InfoScreen from 'Organism/info/InfoScreen';
+import {txt} from 'Root/config/textstyle';
+import {GRAY10} from 'Root/config/color';
 
 export default Profile = ({route, navigation}) => {
 	const [data, setData] = React.useState({...route.params?.userobject, feedList: []}); //라벨을 클릭한 유저의 userObject data
@@ -160,6 +162,14 @@ export default Profile = ({route, navigation}) => {
 		alert('addArticle');
 	};
 
+	const petListEmptyComponent = () => {
+		return (
+			<View style={[profile.listEmpty, {}]}>
+				<Text style={[txt.noto28, {color: GRAY10}]}>아직 등록된 반려동물이 없네요.</Text>
+			</View>
+		);
+	};
+
 	//userType이 PET이며 Tab의 반려인계정이 Open으로 설정이 되어 있는 경우
 	const showPetOrOwnerList = () => {
 		if (data.user_type == PET && showOwnerState) {
@@ -174,7 +184,7 @@ export default Profile = ({route, navigation}) => {
 		} else if (data.user_type == NORMAL && showCompanion) {
 			return (
 				<View style={[profile.petList]}>
-					<PetList items={data.user_my_pets} onClickLabel={onClickMyCompanion} />
+					<PetList items={data.user_my_pets} onClickLabel={onClickMyCompanion} ListEmptyComponent={petListEmptyComponent} />
 				</View>
 			);
 		}

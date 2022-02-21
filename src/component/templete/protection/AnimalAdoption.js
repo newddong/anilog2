@@ -21,7 +21,6 @@ export default AnimalAdoption = props => {
 		Modal.close();
 		setTimeout(() => {
 			Modal.popCongratulationModal(props.route.params.user_nickname, props.route.params.user_profile_uri);
-
 			setTimeout(() => {
 				Modal.close();
 				console.log('pet_id: props.route.params._id', props.route.params._id);

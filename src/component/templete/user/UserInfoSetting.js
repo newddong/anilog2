@@ -32,16 +32,12 @@ export default UserInfoSetting = ({route}) => {
 			userObject => {
 				setData(userObject.msg);
 				navigation.setOptions({title: userObject.msg.user_nickname});
-				setTimeout(() => {
-					setLoading(false);
-				}, 500);
+				setLoading(false);
 				console.log('result / getUserProfile / UserInfoSetting', userObject.msg.user_introduction);
 			},
 			err => {
 				console.log('er', err);
-				setTimeout(() => {
-					setLoading(false);
-				}, 500);
+				setLoading(false);
 			},
 		);
 	};

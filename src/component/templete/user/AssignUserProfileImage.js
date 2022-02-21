@@ -153,6 +153,7 @@ export default AssignUserProfileImage = props => {
 					value={nickname}
 					showTitle={false}
 					title={'닉네임'}
+					info={'띄어쓰기 없이 2자 이상 15자 이내의 한글, 영문, 숫자, "_",의 입력만 가능합니다. '}
 					description={'* 2자 이상 15자 이내의 영문,숫자, _ 의 입력만 가능합니다.'}
 					width={654}
 					confirm_msg={'사용 가능한 닉네임입니다.'}
@@ -170,9 +171,9 @@ export default AssignUserProfileImage = props => {
 			{/* (A)Btn_w654 */}
 			<View style={[btn_style.btn_w654, assignUserProfileImage_style.btn_w654]}>
 				{confirmed ? (
-					<AniButton btnTitle={'확인'} titleFontStyle={'32'} btnStyle={'borderd1'} btnTheme={'shadow'} btnLayout={btn_w654} onPress={pressConfirm} />
+					<AniButton btnTitle={'확인'} titleFontStyle={32} btnStyle={'border'} btnLayout={btn_w654} onPress={pressConfirm} />
 				) : (
-					<AniButton btnTitle={'확인'} titleFontStyle={'32'} disable={true} btnLayout={btn_w654} />
+					<AniButton btnTitle={'확인'} titleFontStyle={32} disable={true} btnLayout={btn_w654} />
 				)}
 			</View>
 		</KeyboardAvoidingView>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView, Text, View, TouchableWithoutFeedback, ActivityIndicator} from 'react-native';
+import {ScrollView, Text, View, TouchableWithoutFeedback, FlatList} from 'react-native';
 import {feedWrite, login_style, missingReportList, searchProtectRequest, temp_style, temp_txt} from 'Templete/style_templete';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {GRAY10, WHITE} from 'Root/config/color';
@@ -83,7 +83,7 @@ export default MissingReportList = props => {
 	};
 
 	const onClickLabel = (status, id, item) => {
-		console.log(`\nMissingReportList:onLabelClick() - status=>${status} id=>${id} item=>${JSON.stringify(item)}`);
+		// console.log(`\nMissingReportList:onLabelClick() - status=>${status} id=>${id} item=>${JSON.stringify(item)}`);
 		let sexValue = '';
 		switch (status) {
 			case 'missing':
@@ -131,7 +131,7 @@ export default MissingReportList = props => {
 	const onSelectKind = kind => {
 		Modal.popSelectScrollBoxModal(
 			[petTypes],
-			'보호 지역 선택',
+			'동물 종류 선택',
 			selected => {
 				selected == '동물종류'
 					? setFilterData({...filterData, missing_animal_species: ''})
@@ -155,44 +155,52 @@ export default MissingReportList = props => {
 
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
-			<ScrollView style={{flex: 1}}>
-				<View style={[searchProtectRequest.filterView]}>
-					<View style={[searchProtectRequest.filterView.inside]}>
-						<View style={{flexDirection: 'row'}}>
-							<View style={[temp_style.filterBtn]}>
-								{/* <FilterButton menu={PET_PROTECT_LOCATION} btnLayout={btn_w306_h68} onSelect={onSelectLocation} width={306} height={700} /> */}
-								<ArrowDownButton
-									onPress={onSelectLocation}
-									btnTitle={filterData.city || '지역'}
-									btnLayout={btn_w306_h68}
-									btnStyle={'border'}
-									btnTheme={'gray'}
-								/>
-							</View>
-							<View style={[temp_style.filterBtn]}>
-								{/* <FilterButton menu={petTypes} btnLayout={btn_w306_h68} onSelect={onSelectKind} width={306} /> */}
-								<ArrowDownButton
-									onPress={onSelectKind}
-									btnTitle={filterData.missing_animal_species || '동물 종류'}
-									btnLayout={btn_w306_h68}
-									btnStyle={'border'}
-									btnTheme={'gray'}
-								/>
+			<FlatList
+				horizontal={false}
+				data={[{}]}
+				listKey={({item, index}) => index}
+				renderItem={({item, index}) => (
+					<View style={{}}>
+						<View style={[searchProtectRequest.filterView]}>
+							<View style={[searchProtectRequest.filterView.inside]}>
+								<View style={{flexDirection: 'row'}}>
+									<View style={[temp_style.filterBtn]}>
+										{/* <FilterButton menu={PET_PROTECT_LOCATION} btnLayout={btn_w306_h68} onSelect={onSelectLocation} width={306} height={700} /> */}
+										<ArrowDownButton
+											onPress={onSelectLocation}
+											btnTitle={filterData.city || '지역'}
+											btnLayout={btn_w306_h68}
+											btnStyle={'border'}
+											btnTheme={'gray'}
+										/>
+									</View>
+									<View style={[temp_style.filterBtn]}>
+										{/* <FilterButton menu={petTypes} btnLayout={btn_w306_h68} onSelect={onSelectKind} width={306} /> */}
+										<ArrowDownButton
+											onPress={onSelectKind}
+											btnTitle={filterData.missing_animal_species || '동물 종류'}
+											btnLayout={btn_w306_h68}
+											btnStyle={'border'}
+											btnTheme={'gray'}
+										/>
+									</View>
+								</View>
 							</View>
 						</View>
+						<View style={[searchProtectRequest.animalNeedHelpList]}>
+							{/* 플랫리스트 부분 */}
+							<AnimalNeedHelpList
+								// data={dummy_MissingReportList}
+								data={data}
+								onFavoriteTag={(e, index) => onOff_FavoriteTag(e, index)}
+								onClickLabel={(status, id, item) => onClickLabel(status, id, item)}
+								whenEmpty={whenEmpty()}
+							/>
+						</View>
 					</View>
-				</View>
-				<View style={[searchProtectRequest.animalNeedHelpList]}>
-					{/* 플랫리스트 부분 */}
-					<AnimalNeedHelpList
-						// data={dummy_MissingReportList}
-						data={data}
-						onFavoriteTag={(e, index) => onOff_FavoriteTag(e, index)}
-						onClickLabel={(status, id, item) => onClickLabel(status, id, item)}
-						whenEmpty={whenEmpty()}
-					/>
-				</View>
-			</ScrollView>
+				)}
+			/>
+
 			{showUrgentBtns ? (
 				<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
 					{showActionButton ? (

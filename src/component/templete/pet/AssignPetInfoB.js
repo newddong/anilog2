@@ -24,7 +24,7 @@ export default AssignPetInfoB = props => {
 		pet_birthday: '2021.03.03',
 		pet_weight: '0',
 	});
-	const [selectedBirthDate, setSelectedBirthDate] = React.useState('2021.03.01');
+	const [selectedBirthDate, setSelectedBirthDate] = React.useState('2022.01.01');
 	const [btnOn, setBtnOn] = React.useState(true);
 	//생녈월일 계산 함수
 	const getBirthDate = () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View, ScrollView, FlatList, TextInput, TouchableOpacity} from 'react-native';
-import {GRAY10, GRAY20} from 'Root/config/color';
+import {BLACK, GRAY10, GRAY20, RED10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {AddItem64, Add_Volunteer, Calendar48_Filled, Cross46, Cross48, Person48, Phone48} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
@@ -63,7 +63,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 		volunteer_accompany: [],
 		volunteer_delegate_contact: '',
 		volunteer_status: 'waiting',
-		volunteer_accompany_number: '1',
+		volunteer_accompany_number: '',
 	});
 
 	//추가된 봉사활동자가 있는 경우 Data에 추가
@@ -88,7 +88,21 @@ export default ApplyVolunteer = ({route, navigation}) => {
 				data.volunteer_accompany.map((v, i) => {
 					getAccompaniesId.push(v._id);
 				});
-				// console.log('token', param.token);
+				const t = {
+					shelter_userobject_id: param.token,
+					volunteer_wish_date_list: data.volunteer_wish_date,
+					accompany_userobject_id_list: getAccompaniesId,
+					volunteer_delegate_contact: data.volunteer_delegate_contact,
+					volunteer_accompany_number: data.volunteer_accompany_number,
+				};
+				console.log('t', t);
+				const q = {
+					accompany_userobject_id_list: ['61d2de63c0f179ccd5ba5887'],
+					shelter_userobject_id: '6203aff5c0f179ccd5bb8054',
+					volunteer_accompany_number: 3,
+					volunteer_delegate_contact: '1212344551',
+					volunteer_wish_date_list: ['2022.02.22', '2022.02.23', '2022.02.24'],
+				};
 				assignVolunteerActivity(
 					{
 						shelter_userobject_id: param.token,
@@ -130,6 +144,17 @@ export default ApplyVolunteer = ({route, navigation}) => {
 		setData({...data, volunteer_wish_date: filteredDates});
 	};
 
+	const canOpenCalendar = () => {
+		let result = true;
+		if (data.volunteer_wish_date.length == 3) {
+			Modal.popOneBtn('희망날짜는 3일 이상 선택이 불가능합니다.', '확인', () => Modal.close());
+			result = false;
+		} else {
+			result = true;
+		}
+		return result;
+	};
+
 	//봉사활동자 연락처 변경 콜백
 	const onChangePhoneNumber = num => {
 		setData({...data, volunteer_delegate_contact: num});
@@ -149,15 +174,18 @@ export default ApplyVolunteer = ({route, navigation}) => {
 		setData({...data, volunteer_accompany: copy});
 	};
 
-	//봉사활동 날짜 item render
-	const renderItem = (item, index) => {
-		return (
-			<View style={[applyVolunteer.volunteerDateList]}>
-				<Text style={[txt.roboto28, applyVolunteer.volunteerDateList_text]}>{item}</Text>
-				<View style={[applyVolunteer.volunteerDateList_cross]}>
-					<Cross46 onPress={() => onDeleteVolunteerDate(index)} />
-				</View>
-			</View>
+	const onPressAccompanyNumber = () => {
+		const numberArray = ['1명', '2명', '3명', '4명', '5명'];
+		Modal.popSelectScrollBoxModal(
+			[numberArray],
+			'봉사활동 인원수(최대 5인)',
+			selected => {
+				const findIndex = numberArray.findIndex(e => e == selected);
+				console.log('findIndex', findIndex);
+				setData({...data, volunteer_accompany_number: findIndex + 1});
+				Modal.close();
+			},
+			() => Modal.close(),
 		);
 	};
 
@@ -183,15 +211,19 @@ export default ApplyVolunteer = ({route, navigation}) => {
 							</View>
 							<View style={[applyVolunteer.title]}>
 								<Text style={[txt.noto24b, {color: GRAY10}]}>봉사활동 희망 날짜</Text>
+								<Text style={[txt.noto28, {color: RED10}]}> *</Text>
 							</View>
 						</View>
-						<DatePicker width={590} onDateChange={onDateChange} past={false} multiple={true} />
-						{/* 봉사활동 희망날짜 FlatList */}
-						{/* <ScrollView horizontal={false} contentContainerStyle={{flex: 0}}>
-							<ScrollView horizontal={true} contentContainerStyle={{flex: 1}}>
-								<FlatList data={data.volunteer_wish_date} renderItem={({item, index}) => renderItem(item, index)} />
-							</ScrollView>
-						</ScrollView> */}
+						<DatePicker
+							width={590}
+							canOpenCalendar={canOpenCalendar}
+							onDateChange={onDateChange}
+							past={false}
+							multiple={true}
+							previous={data.volunteer_wish_date}
+							maxLength={3}
+						/>
+						{/* 봉사활동 희망날짜 리스트 */}
 						{data.volunteer_wish_date.map((v, i) => {
 							return (
 								<View key={i} style={[applyVolunteer.volunteerDateList]}>
@@ -211,21 +243,22 @@ export default ApplyVolunteer = ({route, navigation}) => {
 							</View>
 							<View style={[applyVolunteer.title]}>
 								<Text style={[txt.noto24b, {color: GRAY10}]}>참여 인원</Text>
-								<Text style={[txt.noto22, {color: GRAY20}]}>(총 인원 수 기입)</Text>
+								<Text style={[txt.noto22, {color: GRAY20}]}>(총 인원 수 기입 - 최대 5인)</Text>
 							</View>
 						</View>
 						<View style={[applyVolunteer.number_of_volunteerers]}>
-							<TextInput
-								style={[txt.noto32, applyVolunteer.volunteerListInput]}
-								textAlign={'right'}
-								keyboardType={'number-pad'}
-								placeholder={'애니로그 계정 유무 상관없는 총 인원수'}
-								placeholderTextColor={GRAY10}
-								// textContentType={''}
-
-								onChangeText={onChangeAccompanyNumber}
-							/>
-							<Text style={[txt.noto32]}> {'  '} 명</Text>
+							<Text
+								onPress={onPressAccompanyNumber}
+								style={[
+									txt.noto30,
+									applyVolunteer.volunteerListInput,
+									{
+										color: data.volunteer_accompany_number != '' ? BLACK : GRAY20,
+									},
+								]}>
+								{data.volunteer_accompany_number != '' ? data.volunteer_accompany_number + '명' : '애니로그 계정 유무 상관없는 총 인원수'}
+							</Text>
+							{data.volunteer_accompany_number != '' ? <></> : <Text style={[txt.noto32]}> {'  '} 명</Text>}
 						</View>
 						{/* 봉활참여인원 FlatList 여기 */}
 						<View style={[applyVolunteer.participants_step2]}>
@@ -254,10 +287,17 @@ export default ApplyVolunteer = ({route, navigation}) => {
 							</View>
 							<View style={[applyVolunteer.title]}>
 								<Text style={[txt.noto24b, {color: GRAY10}]}>봉사 활동자 연락처</Text>
+								<Text style={[txt.noto28, {color: RED10}]}> *</Text>
 							</View>
 						</View>
 						<View style={[applyVolunteer.participants_contact_text]}>
-							<Input24 width={654} placeholder={'연락처를 적어주세요.'} onChange={onChangePhoneNumber} value={data.volunteer_delegate_contact} />
+							<Input24
+								width={654}
+								placeholder={'연락처를 적어주세요.'}
+								keyboardType={'phone-pad'}
+								onChange={onChangePhoneNumber}
+								value={data.volunteer_delegate_contact}
+							/>
 						</View>
 					</View>
 					{/* 신청 버튼 */}

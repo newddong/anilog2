@@ -132,6 +132,8 @@ import posterSave from './posterSave';
 import congratulation from './congratulation';
 import newmeatball60 from './newMeatBall60';
 import newmeatball60Filled from './newMeatBall60Filled';
+import filter60Border from './filter60Border';
+import filter60Filled from './filter60Filled';
 import DP from 'Root/config/dp';
 
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
@@ -340,3 +342,5 @@ export const MainLogo = makeSvg(mainLogo, {width: 122 * DP, height: 90 * DP});
 export const Congratulation = makeSvg(congratulation, {width: 124 * DP, height: 110 * DP});
 export const NewMeatBall60 = makeSvg(newmeatball60, size60);
 export const NewMeatBall60Filled = makeSvg(newmeatball60Filled, size60);
+export const Filter60Border = makeSvg(filter60Border, size60);
+export const Filter60Filled = makeSvg(filter60Filled, size60);

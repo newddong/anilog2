@@ -6,7 +6,8 @@ import {ImageList48, VideoPlay48, VideoPlay_Feed} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import {BLACK, RED10, WHITE} from 'Root/config/color';
 import Swiper from 'react-native-swiper';
-
+import {number} from 'prop-types';
+import {phoneFomatter} from 'Root/util/stringutil';
 /**
  *
  * @param {{
@@ -55,8 +56,19 @@ export default FeedMedia = props => {
 	const species_detail = missing_animal_species_detail || report_animal_species_detail;
 	const animal_species_detail = species_detail?.includes('un') || !species_detail ? '' : ' / ' + species_detail;
 	const emergency_location = missing_animal_lost_location || report_witness_location;
+	if (feed_type == 'missing') {
+		const newMissingDateText = missing_animal_date.toString().split('-');
+		var newMissingDate = newMissingDateText[0] + '.' + newMissingDateText[1] + '.' + newMissingDateText[2].toString().substring(0, 2);
+		var splitAddress = missing_animal_lost_location.split('"');
+		var newMissingAddress = splitAddress[11];
+	}
+	if (feed_type == 'report') {
+		const newMissingDateText = report_witness_date.toString().split('-');
+		var newMissingDate = newMissingDateText[0] + '.' + newMissingDateText[1] + '.' + newMissingDateText[2].toString().substring(0, 2);
+		// var splitAddress = report_witness_location.split('"');
+		// var newMissingAddress = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
+	}
 	// console.log(props.data.medias);
-
 	const onSelect = () => {
 		props.onSelect(props.data.feed_id);
 		// setSelected(!selected);
@@ -104,7 +116,64 @@ export default FeedMedia = props => {
 			) : (
 				false
 			)}
-			{isEmergency ? (
+			{feed_type == 'missing' ? (
+				<View style={[style.emergency_background, {paddingVertical: 20 * DP, paddingHorizontal: 24 * DP, height: null}]}>
+					<View style={{flexDirection: 'row'}}>
+						<View style={{flex: 1}}>
+							<Text style={[missing_animal_species_detail.length>5?txt.roboto36b:txt.roboto40b, {color: 'white'}]} numberOfLines={3}>
+								{missing_animal_species + ' / ' + missing_animal_species_detail}
+							</Text>
+						</View>
+						<View style={{flex: 1}}>
+							<Text style={[txt.roboto40b, {color: 'white'}, {textAlign: 'right'}, {paddingRight: 38 * DP}]}>
+								{phoneFomatter(missing_animal_contact)}
+							</Text>
+						</View>
+					</View>
+					<View style={{flex: 1, flexDirection: 'row', paddingTop: 16 * DP}}>
+						<View style={style.missing_date_age_container}>
+							<Text style={[txt.roboto36b, {color: 'white'}]}>{newMissingDate}</Text>
+							<Text style={[txt.roboto36b, {color: 'white'}, {paddingTop: 10 * DP}]}>나이 : {missing_animal_age}살</Text>
+						</View>
+						<View style={style.missing_detail_container}>
+							<Text style={[txt.roboto26, {color: 'white'}]} numberOfLines={2}>
+								{/* {emergency_location} */}- {newMissingAddress}
+							</Text>
+							<Text style={[txt.roboto26, {color: 'white'}]} numberOfLines={2}>
+								- {missing_animal_features}
+							</Text>
+						</View>
+					</View>
+				</View>
+			) : (
+				false
+			)}
+			{feed_type == 'report' ? (
+				<View style={[style.emergency_background, {paddingHorizontal: 30 * DP, height: null}]}>
+					<View style={[{flexDirection: 'row'}]}>
+						<View style={[style.report_date_container, {marginTop: 32 * DP}]}>
+							<Text style={[txt.roboto34b, {color: 'white'}]}>{newMissingDate}</Text>
+						</View>
+
+						<View style={style.report_location_container}>
+							<Text style={[txt.roboto28b, {color: 'white'}, {textAlign: 'center'}]} numberOfLines={2}>
+								{report_witness_location}
+							</Text>
+						</View>
+					</View>
+					<View style={{flex: 1, flexDirection: 'row', paddingTop: 16 * DP}}>
+						<View style={style.report_detail_container}>
+							<Text style={[txt.roboto26, {color: 'white'}]} numberOfLines={2}>
+								{feed_content}
+							</Text>
+						</View>
+					</View>
+				</View>
+			) : (
+				false
+			)}
+
+			{/* {isEmergency ? (
 				<View style={[style.emergency_background, {paddingVertical: 20 * DP, paddingHorizontal: 48 * DP, height: null}]}>
 					<View style={style.emergency_info_container}>
 						<View style={{flexDirection: 'row'}}>
@@ -126,7 +195,7 @@ export default FeedMedia = props => {
 				</View>
 			) : (
 				false
-			)}
+			)} */}
 		</View>
 	);
 };
@@ -176,5 +245,31 @@ const style = StyleSheet.create({
 	},
 	emergency_info_container: {
 		flexDirection: 'row',
+	},
+	missing_date_age_container: {
+		width: 192 * DP,
+		height: 102 * DP,
+	},
+	missing_detail_container: {
+		width: 500 * DP,
+		height: 114 * DP,
+		paddingLeft: 10 * DP,
+	},
+	report_date_container: {
+		height: 48 * DP,
+		width: 198 * DP,
+		flex: 1,
+	},
+	report_location_container: {
+		height: 80 * DP,
+		width: 468 * DP,
+		paddingTop: 16 * DP,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+
+	report_detail_container: {
+		height: 80 * DP,
+		width: 690 * DP,
 	},
 });

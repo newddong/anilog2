@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, TouchableWithoutFeedback, Alert, Dimensions, StyleSheet} from 'react-native';
+import {View, Text, TouchableOpacity, TouchableWithoutFeedback, Alert, Dimensions, StyleSheet, Animated} from 'react-native';
 import moment from 'moment';
 import DP from 'Root/config/dp';
 import {day} from 'Root/i18n/msg';
@@ -8,12 +8,15 @@ import {WHITE, APRI10, BLACK, GRAY10, GRAY20, GRAY30, MIDNIGHT_BLUE, BLUE10} fro
 import {NextMark} from 'Root/component/atom/icon';
 import AniButton from '../button/AniButton';
 import {btn_w108, btn_w116, btn_w176, btn_w92} from 'Root/component/atom/btn/btn_style';
+import Modal from 'Root/component/modal/Modal';
 
 const Calendar_Multiple = props => {
 	const HEIGHT = Dimensions.get('screen').height;
 
 	const [getMoment, setMoment] = React.useState(moment()); //현재 시각 정보
-	const [selectedDates, setSelectedDates] = React.useState([]);
+	const [selectedDates, setSelectedDates] = React.useState([]); //선택된 날짜 목록
+	const [isMaximum, setIsMaximum] = React.useState(false); //선택가능 숫자 초과 선택 여부
+	const animatedOpacity = React.useRef(new Animated.Value(0)).current;
 	const today = getMoment;
 	const firstWeek = today.clone().startOf('month').week(); //현재 날짜 정보가 가지는 month의 첫째 주 정보를 가져온다
 	const lastWeek =
@@ -21,19 +24,46 @@ const Calendar_Multiple = props => {
 			? 53 //12월 마지막째 주가 그 해의 52번째 주를 넘겨서 1로 되었을 때는 이를 53으로 인식시켜야한다.
 			: today.clone().endOf('month').week();
 
+	//선택완료
 	const confirm = () => {
 		props.modalOff();
 		props.selectDate(selectedDates);
 	};
 
+	//취소버튼
 	const modalOff = () => {
 		props.modalOff();
 	};
 
+	React.useEffect(() => {
+		if (props.previous.length > 0) {
+			setSelectedDates(props.previous);
+		}
+	}, []);
+
+	React.useEffect(() => {
+		if (isMaximum) {
+			Animated.timing(animatedOpacity, {
+				duration: 300,
+				toValue: 1,
+				useNativeDriver: false,
+			}).start();
+		} else if (!isMaximum) {
+			Animated.timing(animatedOpacity, {
+				duration: 300,
+				toValue: 0,
+				useNativeDriver: false,
+			}).start();
+		}
+	}, [isMaximum]);
+
+	//날짜 선택
 	const onSelectDate = date => {
-		// console.log('date', date);
 		const dateFormat = date.format('yyyy.MM.DD');
-		if (selectedDates.some(e => e == dateFormat)) {
+		if (selectedDates.length + 1 > props.maxLength) {
+			console.log('3개이상은 안되요');
+			setIsMaximum(true);
+		} else if (selectedDates.some(e => e == dateFormat)) {
 			console.log('두번클릭');
 			let copy = [...selectedDates];
 			const filtered = copy.filter(e => e != dateFormat);
@@ -163,6 +193,38 @@ const Calendar_Multiple = props => {
 					<AniButton btnTitle={'선택완료'} btnLayout={btn_w116} onPress={confirm}></AniButton>
 				</View>
 			</View>
+			{isMaximum ? (
+				<Animated.View
+					style={[
+						styles.infoContainer,
+						styles.shadow,
+						{
+							opacity: animatedOpacity,
+						},
+					]}>
+					<Text
+						style={[
+							{
+								color: GRAY10,
+								textAlign: 'center',
+							},
+						]}>
+						{props.maxLength}일 이상의 선택은 불가합니다.
+					</Text>
+					<View
+						style={[
+							styles.infoBtnContainer,
+							{
+								alignItems: 'center',
+								marginTop: 50 * DP,
+							},
+						]}>
+						<AniButton btnTitle={'확인'} btnStyle={'border'} onPress={() => setIsMaximum(!isMaximum)} />
+					</View>
+				</Animated.View>
+			) : (
+				<></>
+			)}
 		</View>
 	);
 };
@@ -311,13 +373,26 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	shadow: {
-		shadowColor: '#000000',
-		shadowOpacity: 0.27,
+		shadowColor: 'black',
+		shadowOpacity: 0.4,
 		shadowRadius: 4.65,
 		shadowOffset: {
 			width: 1 * DP,
 			height: 2 * DP,
 		},
 		elevation: 2,
+	},
+	infoContainer: {
+		position: 'absolute',
+		alignSelf: 'center',
+		justifyContent: 'center',
+		// top: 460 * DP,
+		width: 614 * DP,
+		height: 280 * DP,
+		backgroundColor: 'white',
+		paddingTop: 60 * DP,
+		paddingBottom: 52 * DP,
+		paddingHorizontal: 64 * DP,
+		borderRadius: 40 * DP,
 	},
 });

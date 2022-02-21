@@ -1,8 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-  <g id="CHECK_48" data-name="CHECK 48" transform="translate(-526.669 -1866.469)">
-    <g id="그룹_4223" data-name="그룹 4223">
-      <rect id="사각형_152" data-name="사각형 152" width="48" height="48" rx="20" transform="translate(526.669 1866.469)" fill="#ff9888"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
+  <g id="그룹_4870" data-name="그룹 4870" transform="translate(-48 -636)">
+    <rect id="사각형_28" data-name="사각형 28" width="50" height="50" transform="translate(48 636)" fill="none"/>
+    <g id="그룹_3453" data-name="그룹 3453" transform="translate(2 2)">
+      <path id="패스_1524" data-name="패스 1524" d="M20,0h6A20,20,0,0,1,46,20v6A20,20,0,0,1,26,46H20A20,20,0,0,1,0,26V20A20,20,0,0,1,20,0Z" transform="translate(48 636)" fill="#ff634a"/>
+      <path id="Icon_-_White_Checked" data-name="Icon - White Checked" d="M4386.688,597c2.808,2.72,5.452,5.3,7.935,7.7a2.715,2.715,0,0,0,3.77,0c5.09-5.344,9.194-9.609,13.846-14.611,3.407-3.892-1.529-6.418-3.77-3.789-4.814,5.313-7.456,7.929-12.136,12.665h0c-2.482-2.4-2.907-2.766-5.873-5.757C4387.746,590.824,4384.1,594.222,4386.688,597Z" transform="translate(-4328.603 63.659)" fill="#fff"/>
     </g>
-    <path id="Icon_-_White_Checked" data-name="Icon - White Checked" d="M535.692,1893.435c3.255,3.225,6.321,6.29,9.2,9.133a3.1,3.1,0,0,0,4.371,0c5.9-6.337,10.66-11.394,16.053-17.325,3.95-4.615-1.772-7.611-4.371-4.493-5.582,6.3-8.645,9.4-14.07,15.018h0c-2.877-2.843-3.371-3.28-6.81-6.827a3.137,3.137,0,1,0-4.515,4.356Q535.62,1893.367,535.692,1893.435Z" transform="translate(0 -1)" fill="#fff"/>
   </g>
 </svg>

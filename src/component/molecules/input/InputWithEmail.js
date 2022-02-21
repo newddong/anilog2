@@ -3,7 +3,7 @@ import {txt} from 'Root/config/textstyle';
 import {Text, View, TouchableOpacity, TextInput, TouchableWithoutFeedback, StyleSheet} from 'react-native';
 import DP from 'Root/config/dp';
 import {Arrow_Down_GRAY20, Arrow_Up_GRAY20, Cross52, NextMark} from 'Root/component/atom/icon';
-import {APRI10, GRAY10, GRAY30, RED10} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, GRAY20, GRAY30, RED10} from 'Root/config/color';
 import Input24 from './Input24';
 import {EMAIL_DOMAIN} from 'Root/i18n/msg';
 import Modal from 'Root/component/modal/Modal';
@@ -27,7 +27,7 @@ import Modal from 'Root/component/modal/Modal';
  */
 const InputWithEmail = props => {
 	// Dropdown에서 현재 선택된 항목 State, 처음 Mount시 itemList[defaultIndex]를 반환
-	const [selectedItem, setSelectedItem] = React.useState();
+	const [selectedItem, setSelectedItem] = React.useState('');
 	const [defaultIndex, setDefaultIndex] = React.useState(0);
 	const [input, setInput] = React.useState(props.value || '');
 	const [domainDirect, setDomainDirect] = React.useState('');
@@ -94,10 +94,10 @@ const InputWithEmail = props => {
 		const onSelectEmail = selectedItem => {
 			console.log('selectedItem', selectedItem);
 			if (selectedItem == '직접입력') {
+				console.log('직접입력');
 				setDirectInputMode(true);
 				setSelectedItem('');
 			} else {
-				console.log('ddd');
 				setDirectInputMode(false);
 				setSelectedItem(selectedItem);
 				setEmail(input + '@' + selectedItem);
@@ -142,34 +142,44 @@ const InputWithEmail = props => {
 					}}>
 					<Text style={[txt.roboto24b, {lineHeight: 36 * DP}]}>@</Text>
 				</View>
-				{/* <EmialDropDown
-					menu={EMAIL_DOMAIN}
-					width={254}
-					defaultIndex={defaultIndex}
-					defaultDirectInput={props.defaultValue ? props.defaultValue.split('@')[1] || '' : ''}
-					onChangeDomain={onDirectInput}
-					onSelect={onSelectDropDown}
-				/> */}
-				<TouchableWithoutFeedback onPress={selectEmailModal}>
-					<View
-						style={[
-							styles_inputWithEmail.emailDomainContainer,
-							{
-								borderBottomWidth: 2 * DP,
-								borderBottomColor: selectedItem != '' || domainDirect != '' ? APRI10 : GRAY30,
-							},
-						]}>
+				<TouchableOpacity
+					onPress={selectEmailModal}
+					style={[
+						styles_inputWithEmail.emailDomainContainer,
+						{
+							borderBottomWidth: 2 * DP,
+							borderBottomColor: selectedItem != '' || domainDirect != '' ? APRI10 : GRAY30,
+							// backgroundColor: 'red',
+							justifyContent: 'space-between',
+							alignItems: 'center',
+						},
+					]}>
+					{directInputMode ? (
 						<TextInput
-							style={[styles_inputWithEmail.emailDomain]}
-							value={selectedItem != '' ? selectedItem : null}
+							style={[txt.roboto32, styles_inputWithEmail.emailDomain_input, {}]}
 							onChangeText={onDirectInput}
-							editable={directInputMode ? true : false}
+							// editable={directInputMode ? true : false}
 						/>
-						<View style={{height: 80 * DP, transform: [{rotate: '90deg'}]}}>
-							<NextMark />
-						</View>
+					) : (
+						<Text
+							style={[
+								txt.roboto32,
+								styles_inputWithEmail.emailDomain,
+								{
+									color: selectedItem != '' ? BLACK : GRAY20,
+								},
+							]}
+							// onChangeText={onDirectInput}
+							// editable={directInputMode ? true : false}
+						>
+							{selectedItem != '' ? selectedItem : '도메인'}
+						</Text>
+					)}
+
+					<View style={[styles_inputWithEmail.arrowMark]}>
+						<NextMark />
 					</View>
-				</TouchableWithoutFeedback>
+				</TouchableOpacity>
 			</View>
 		</View>
 	);
@@ -187,13 +197,29 @@ InputWithEmail.defaultProps = {
 
 export default InputWithEmail;
 const styles_inputWithEmail = StyleSheet.create({
-	emailDomain: {
-		flex: 1,
-		paddingLeft: 10 * DP,
-	},
 	emailDomainContainer: {
-		width: 230 * DP,
+		width: 250 * DP,
 		height: 80 * DP,
 		flexDirection: 'row',
+		// backgroundColor: 'red',
+	},
+	emailDomain: {
+		flex: 1,
+		// width: 170 * DP,
+		// paddingLeft: 10 * DP,
+		textAlign: 'center',
+	},
+	emailDomain_input: {
+		flex: 1,
+		// width: 170 * DP,
+		paddingHorizontal: 15 * DP,
+		// textAlign: 'center',
+	},
+
+	arrowMark: {
+		// width: 44 * DP,
+		height: 80 * DP,
+		transform: [{rotate: '90deg'}],
+		right: 30 * DP,
 	},
 });

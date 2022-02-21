@@ -3,7 +3,7 @@ import {Text, View, ScrollView} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
-import Stagebar from 'Molecules/info/Stagebar';
+import StageBar from 'Molecules/info/Stagebar';
 import EmailVerification from 'Organism/form/EmailVerification';
 import PhoneNumVerification from 'Organism/form/PhoneNumVerification';
 import {stagebar_style} from 'Organism/style_organism copy';

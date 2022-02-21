@@ -50,8 +50,11 @@ export default Modal = {
 	 * @param {boolean} past - 과거 날짜만 선택가능
 	 * @param {boolean} future - 미래 날짜만 선택가능
 	 * @param {boolean} multiple - 다중선택 가능
+	 * @param {object} previous - 다중선택일 경우 기존의 선택 리스트
+   * @param {number} props.maxLength - 다중선택 모드일 경우 선택가능 수
+
 	 */
-	popCalendar: (visible, onOff, date, past, future, multiple) => {},
+	popCalendar: (visible, onOff, date, past, future, multiple, previous, maxLength) => {},
 
 	/**
 	 * 회전 선택창을 모달로 띄우는 함수
@@ -92,13 +95,15 @@ export default Modal = {
 
 	/**
 	 * 반려 동물을 선택하는 모달창
+	 * @param {object} offset -  선택 위치
 	 * @param {Array.<string>} items -  배열
 	 * @param {string} title - 확인 버튼 메시지
-	 * @param {(string)=>void} onSelect - 확인 버튼 콜백
+	 * @param {(string)=>void} onSelect - 선택 콜백
+	 * @param {()=>void} onClose - 확인 버튼 콜백
 	 *
 	 * @example
 	 */
-	popRadioSelect: (items, title, onSelect) => {},
+	popRadioSelect: (offset, items, title, onSelect, onClose) => {},
 
 	/**
 	 * 선택 모달창을 띄우는 함수(첫번째 선택에 따라 두번째 선택의 항목이 변하는 부분은 구현되지 않음)
@@ -258,13 +263,14 @@ export default Modal = {
 
 	/**
 	 * 관심사 추가 및 수정 모달
+	 * @param {object} isActivation - 관심활동 / 관심지역 분기 (true일 경우 관심활동)
 	 * @param {object} data - 관심사 추가할 계정 object(반려동물 혹은 유저)
 	 * @param {(selectedData)=>void)} onSave - 저장 버튼 클릭 콜백 / 선택된 항목의 오브젝트( ex : 지역, 미용, 놀이, 건강 등)
 	 * @param {()=>void)} onClose - 페이지 좌상단 x버튼 클릭 / 종료 콜백
 	 *
 	 * @example
 	 */
-	popInterestTagModal: (data, onSave, onClose) => {},
+	popInterestTagModal: (isActivation, data, onSave, onClose) => {},
 
 	/**
 	 * 공유 - 공유 목록 출력 모달
@@ -302,7 +308,7 @@ export default Modal = {
 	 * @param {()=>void} props.onPressMsg - 메시지 클릭
 	 * @example
 	 */
-	popShareModal: (offset, onPressKakao, onPonPressLinkCopyressMenu, onPressMsg) => {},
+	popShareModal: (offset, onPressKakao, onPressLinkCopy, onPressMsg) => {},
 
 	/**
 	 * 입양 확정 시 출력되는 축하 메시지 모달

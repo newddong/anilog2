@@ -206,6 +206,7 @@ export default function HashInput(props) {
 
 	const onFocus = e => {
 		Modal.closeKeboard();
+		console.log('focus', e.nativeEvent);
 		props.onFocus && props.onFocus(e);
 	};
 
@@ -214,35 +215,29 @@ export default function HashInput(props) {
 		props.onDelete(index);
 	};
 
-	// console.log('containerStyle', props.containerStyle[1].minHeight);
-	// console.log('488', 488 * DP);
-
 	return (
 		<>
 			<View
-				onLayout={e => console.log('e', e.nativeEvent.layout.height)}
 				style={[
 					props.containerStyle,
 					{
 						justifyContent: 'space-between',
-						minHeight: null,
+						height: props.selectedImg.length ? 486 * DP : null, //실종, 제보, 피드 글쓰기에서 사진이 추가된 경우 일괄적으로 486의 height를 가짐.
 					},
 				]}>
-				<View style={[{minHeight: props.selectedImg.length > 0 ? props.containerStyle[1].minHeight + 10 * DP : props.containerStyle[1].minHeight}]}>
-					<TextInput
-						{...props} //props override
-						textAlignVertical={'top'}
-						multiline={true}
-						value={value}
-						onChangeText={onChangeText}
-						onFocus={onFocus}
-						placeholder={props.placeholder}
-						placeholderTextColor={GRAY20}
-						selection={cursor}
-						ref={inputRef}
-						maxLength={props.maxLength}
-						onSelectionChange={onSelectionChange}></TextInput>
-				</View>
+				<TextInput
+					{...props} //props override
+					textAlignVertical={'top'}
+					multiline={true}
+					value={value}
+					onChangeText={onChangeText}
+					onFocus={onFocus}
+					placeholder={props.placeholder}
+					placeholderTextColor={GRAY20}
+					selection={cursor}
+					ref={inputRef}
+					maxLength={props.maxLength}
+					onSelectionChange={onSelectionChange}></TextInput>
 				{props.selectedImg.length > 0 && (
 					<View style={[style.mediaListContainer]}>
 						<SelectedMediaList items={props.selectedImg} onDelete={deletePhoto} />

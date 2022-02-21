@@ -25,7 +25,7 @@ export default LoginTemplete = props => {
 				login_password: password,
 			},
 			userObject => {
-				console.log('userObject', userObject.msg);
+				// console.log('userObject', userObject.msg);
 				Modal.close();
 				Modal.popNoBtn(userObject.msg.user_nickname + '님 \n로그인이 성공하였습니다.');
 				// AsyncStorage.setItem('token', userObject.msg._id || '');
@@ -39,11 +39,9 @@ export default LoginTemplete = props => {
 					AsyncStorage.setItem('userInfo', JSON.stringify(userObject.msg));
 					userGlobalObj.userInfo = userObject.msg;
 				}
-				setTimeout(() => {
-					Modal.close();
-					// props.navigation.navigate('MainTab', userObject.msg.user_type);
-					props.navigation.reset({routes: [{name: 'MainTab', params: userObject.msg.user_type}]});
-				}, 0);
+
+				Modal.close();
+				props.navigation.reset({routes: [{name: 'MainTab', params: userObject.msg.user_type}]});
 			},
 			error => {
 				Modal.close();
@@ -171,23 +169,39 @@ export default LoginTemplete = props => {
 					</TouchableOpacity>
 				</View>
 
-				{/* <AniButton btnLayout={btn_w522} btnTitle={'테스트'} btnStyle={'border'} titleFontStyle={32} onPress={test} /> */}
-				{/* <WebView></WebView> */}
-				{/* social login */}
-				{/* <View style={[login_style.social_info, loginTemplete_style.social_info]}>
-				<View style={[loginTemplete_style.socialLogin_icon]}>
-					<Naver_Icon />
-				</View>
-				<View style={[loginTemplete_style.socialLogin_icon]}>
-					<Kakao_Icon />
-				</View>
-				<View style={[loginTemplete_style.socialLogin_icon]}>
-					<Instagram_Icon />
-				</View>
-				<View style={[loginTemplete_style.socialLogin_icon]}>
-					<Facebook_Icon />
-				</View>
-			</View> */}
+				{/* <View style={[login_style.basic_info, loginTemplete_style.basic_info, {marginTop: 0}]}>
+					<TouchableOpacity
+						onPress={() => {
+							setId('01096450001');
+							setPassword('tkddn123');
+						}}>
+						<Text style={[txt.noto24, {color: GRAY20}]}> 보호소 1</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={() => {
+							setId('0333324513');
+							setPassword('tkddn123');
+						}}>
+						<Text style={[txt.noto24, {color: GRAY20}]}> 보호소 2</Text>
+					</TouchableOpacity>
+					<Text style={{color: GRAY20}}> | </Text>
+					<TouchableOpacity
+						onPress={() => {
+							setId('01096450422');
+							setPassword('tkddn123');
+						}}>
+						<Text style={[txt.noto24, {color: GRAY20}]}> 계정 1 </Text>
+					</TouchableOpacity>
+					<Text style={{color: GRAY20}}> | </Text>
+					<TouchableOpacity
+						onPress={() => {
+							setId('01096450420');
+							setPassword('tkddn123');
+							props.navigation.push('GeoLocation');
+						}}>
+						<Text style={[txt.noto24, {color: GRAY20}]}> 계정 2 </Text>
+					</TouchableOpacity>
+				</View> */}
 			</View>
 		</View>
 	);

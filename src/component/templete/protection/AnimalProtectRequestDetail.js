@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Image, Text, TextInput, TouchableOpacity, View, Animated, Easing, ActivityIndicator, ScrollView} from 'react-native';
+import {Image, Text, TextInput, TouchableOpacity, View, Animated, Easing, ActivityIndicator,FlatList} from 'react-native';
 import {btn_w226, btn_w276} from 'Atom/btn/btn_style';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import {login_style, temp_style, accountPicker, animalProtectRequestDetail_style} from '../style_templete';
@@ -297,90 +297,83 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	}
 	return (
 		<View style={[login_style.wrp_main]}>
-			<ScrollView contentContainerStyle={[animalProtectRequestDetail_style.container]}>
-				{/* 임시보호 후보자 협의 중 사진 */}
-				<View style={[temp_style.rescueImage]}>
-					<RescueImage status={data.protect_request_status || 'adopt'} img_uri={data.protect_request_photos_uri || DEFAULT_PROFILE} />
-				</View>
-				<View style={[temp_style.requestProtect_view]}>
-					<Text style={[txt.noto24, temp_style.requestProtect, {color: GRAY10}]}>보호요청</Text>
-				</View>
-				{/* RescueContentTitle */}
-				<View style={[temp_style.rescueContentTitle]}>
-					<Text style={[txt.noto28b]}>{data.protect_request_title || ''}</Text>
-				</View>
-				{/* 보호소 라벨 */}
-				<View style={[temp_style.shelterSmallLabel_view_animalProtectRequestDetail]}>
-					<View style={[temp_style.shelterSmallLabel_animalProtectRequestDetail]}>
-						<ShelterSmallLabel data={data.protect_request_writer_id} onClickLabel={onClickShelterLabel} />
-					</View>
-					<View style={[temp_style.button_animalProtectRequestDetail]}>
-						<TouchableOpacity onPress={onPressShelterLabelFavorite} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
-							<FavoriteTag48_Filled />
-							<Text style={[txt.roboto24, {color: APRI10, alignSelf: 'center', textAlign: 'center'}]}>
-								{data ? count_to_K(data.protect_request_writer_id.user_follow_count) : ''}
-							</Text>
-						</TouchableOpacity>
-						<View ref={shareRef} collapsable={false}>
-							<TouchableOpacity onPress={onPressShare} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
-								<Share48_Filled />
-								<Text style={[txt.roboto24, {color: APRI10}]}>공유</Text>
-							</TouchableOpacity>
-						</View>
-					</View>
-				</View>
-				<ProtectAnimalInfoBox data={data} />
+			<FlatList
+				data={[{}]}
+				keyExtractor={({item,index})=>index}
+				listKey={({item,index})=>index}
+				renderItem={({item, index}) => {
+					return (
+						<View style={[animalProtectRequestDetail_style.container]}>
+							{/* 임시보호 후보자 협의 중 사진 */}
+							<View style={[temp_style.rescueImage]}>
+								<RescueImage status={data.protect_request_status || 'adopt'} img_uri={data.protect_request_photos_uri || DEFAULT_PROFILE} />
+							</View>
+							<View style={[temp_style.requestProtect_view]}>
+								<Text style={[txt.noto24, temp_style.requestProtect, {color: GRAY10}]}>보호요청</Text>
+							</View>
+							{/* RescueContentTitle */}
+							<View style={[temp_style.rescueContentTitle]}>
+								<Text style={[txt.noto28b]}>{data.protect_request_title || ''}</Text>
+							</View>
+							{/* 보호소 라벨 */}
+							<View style={[temp_style.shelterSmallLabel_view_animalProtectRequestDetail]}>
+								<View style={[temp_style.shelterSmallLabel_animalProtectRequestDetail]}>
+									<ShelterSmallLabel data={data.protect_request_writer_id} onClickLabel={onClickShelterLabel} />
+								</View>
+								<View style={[temp_style.button_animalProtectRequestDetail]}>
+									<TouchableOpacity onPress={onPressShelterLabelFavorite} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
+										<FavoriteTag48_Filled />
+										<Text style={[txt.roboto24, {color: APRI10, alignSelf: 'center', textAlign: 'center'}]}>
+											{data ? count_to_K(data.protect_request_writer_id.user_follow_count) : ''}
+										</Text>
+									</TouchableOpacity>
+									<View ref={shareRef} collapsable={false}>
+										<TouchableOpacity onPress={onPressShare} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
+											<Share48_Filled />
+											<Text style={[txt.roboto24, {color: APRI10}]}>공유</Text>
+										</TouchableOpacity>
+									</View>
+								</View>
+							</View>
+							<ProtectAnimalInfoBox data={data} />
 
-				<View style={[animalProtectRequestDetail_style.rescueText]}>
-					<Text style={[txt.noto24]}>{data.protect_request_content || ''}</Text>
-				</View>
-				{/* {console.log('commentDataList.length', commentDataList.length)} */}
-				<View style={[animalProtectRequestDetail_style.replyContainer, {}]}>
-					{commentDataList && commentDataList.length > 0 ? (
-						<TouchableOpacity onPress={onPressReply} style={[animalProtectRequestDetail_style.replyCountContainer]}>
-							<Text style={[txt.noto28, {color: GRAY10}]}> 댓글 {commentDataList.length}개 모두 보기</Text>
-						</TouchableOpacity>
-					) : (
-						<></>
-					)}
-					<View style={[temp_style.commentList]}>
-						<CommentList
-							items={commentDataList && commentDataList.length > 2 ? commentDataList.slice(0, 2) : commentDataList}
-							onPressReplyBtn={onPressReply}
-							onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
-						/>
-						{/* <ScrollView horizontal={false} scrollEnabled={false}>
-							<ScrollView horizontal={true} scrollEnabled={false} style={{}}>
-								<View
-									style={{
-										paddingVertical: 40 * DP,
-									}}>
+							<View style={[animalProtectRequestDetail_style.rescueText]}>
+								<Text style={[txt.noto24]}>{data.protect_request_content || ''}</Text>
+							</View>
+							{/* {console.log('commentDataList.length', commentDataList.length)} */}
+							<View style={[animalProtectRequestDetail_style.replyContainer, {}]}>
+								{commentDataList && commentDataList.length > 0 ? (
+									<TouchableOpacity onPress={onPressReply} style={[animalProtectRequestDetail_style.replyCountContainer]}>
+										<Text style={[txt.noto28, {color: GRAY10}]}> 댓글 {commentDataList.length}개 모두 보기</Text>
+									</TouchableOpacity>
+								) : (
+									<></>
+								)}
+								<View style={[temp_style.commentList]}>
 									<CommentList
 										items={commentDataList && commentDataList.length > 2 ? commentDataList.slice(0, 2) : commentDataList}
 										onPressReplyBtn={onPressReply}
 										onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
 									/>
 								</View>
-							</ScrollView>
-						</ScrollView> */}
-					</View>
-				</View>
-				<View style={[animalProtectRequestDetail_style.replyWriteBox]}>
-					{editComment && <ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} isProtectRequest={true} />}
-				</View>
-				{/* 보호요청 더 보기addMoreRequest */}
-				<View style={[temp_style.addMoreRequest_view]}>
-					<Text style={[txt.noto24, temp_style.addMoreRequest, {color: GRAY20}]}>보호요청 더보기</Text>
-				</View>
+							</View>
+							<View style={[animalProtectRequestDetail_style.replyWriteBox]}>
+								{editComment && <ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} isProtectRequest={true} />}
+							</View>
+							{/* 보호요청 더 보기addMoreRequest */}
+							<View style={[temp_style.addMoreRequest_view]}>
+								<Text style={[txt.noto24, temp_style.addMoreRequest, {color: GRAY20}]}>보호요청 더보기</Text>
+							</View>
 
-				{/* AnimalNeedHelpList */}
-				<View style={[animalProtectRequestDetail_style.accountList]}>
-					<AnimalNeedHelpList data={writersAnotherRequests} onClickLabel={onClick_ProtectedThumbLabel} onFavoriteTag={onPressFavoriteTag} />
-				</View>
-				{/* 보호소 계정이 나의 보호요청 게시글을 통해 들어왔을 경우 버튼 출력 X */}
-			</ScrollView>
-			{/* ScrollView 바깥에 둬야 Scroll의 현재 위치에 상관없이 아래에 출력 */}
-
+							{/* AnimalNeedHelpList */}
+							<View style={[animalProtectRequestDetail_style.accountList]}>
+								<AnimalNeedHelpList data={writersAnotherRequests} onClickLabel={onClick_ProtectedThumbLabel} onFavoriteTag={onPressFavoriteTag} />
+							</View>
+							{/* 보호소 계정이 나의 보호요청 게시글을 통해 들어왔을 경우 버튼 출력 X */}
+						</View>
+					);
+				}}
+			/>
 			{isShelter || data.protect_request_status == 'complete' ? (
 				//보호소메뉴에서 자신의 보호요청게시글을 보는 경우 or 작성자 본인인 경우에는 임보/입양 버튼이 출력이 안됨
 				<></>

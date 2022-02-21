@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView, Text, View, ActivityIndicator} from 'react-native';
+import {Text, View, ActivityIndicator, FlatList} from 'react-native';
 import {login_style, protectRequestList, searchProtectRequest, temp_style} from 'Templete/style_templete';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {GRAY10} from 'Root/config/color';
@@ -180,44 +180,50 @@ export default ProtectRequestList = ({navigation, route}) => {
 	} else {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
-				<ScrollView style={{flex: 1}}>
-					<View style={[searchProtectRequest.filterView]}>
-						<View style={[searchProtectRequest.filterView.inside]}>
-							<View style={{flexDirection: 'row'}}>
-								<View style={[temp_style.filterBtn]}>
-									<ArrowDownButton
-										onPress={onSelectLocation}
-										btnTitle={filterData.city || '지역'}
-										btnLayout={btn_w306_h68}
-										btnStyle={'border'}
-										btnTheme={'gray'}
-									/>
-								</View>
-								<View style={[temp_style.filterBtn]}>
-									<ArrowDownButton
-										onPress={onSelectKind}
-										btnTitle={filterData.protect_animal_species || '동물 종류'}
-										btnLayout={btn_w306_h68}
-										btnStyle={'border'}
-										btnTheme={'gray'}
-									/>
+				<FlatList
+					horizontal={false}
+					data={[{}]}
+					listKey={({item,index})=>index}
+					renderItem={({item, index}) => (
+						<View style={{}}>
+							<View style={[searchProtectRequest.filterView]}>
+								<View style={[searchProtectRequest.filterView.inside]}>
+									<View style={{flexDirection: 'row'}}>
+										<View style={[temp_style.filterBtn]}>
+											<ArrowDownButton
+												onPress={onSelectLocation}
+												btnTitle={filterData.city || '지역'}
+												btnLayout={btn_w306_h68}
+												btnStyle={'border'}
+												btnTheme={'gray'}
+											/>
+										</View>
+										<View style={[temp_style.filterBtn]}>
+											<ArrowDownButton
+												onPress={onSelectKind}
+												btnTitle={filterData.protect_animal_species || '동물 종류'}
+												btnLayout={btn_w306_h68}
+												btnStyle={'border'}
+												btnTheme={'gray'}
+											/>
+										</View>
+									</View>
+									<View style={[searchProtectRequest.filterView.onOffBtnView]}>
+										<View style={[searchProtectRequest.filterView.onOffBtnMsg]}>
+											<Text style={[txt.noto20, {color: GRAY10}]}>{ONLY_CONTENT_FOR_ADOPTION}</Text>
+										</View>
+										<View style={[temp_style.onOffSwitch, searchProtectRequest.filterView.onOffSwitch]}>
+											<OnOffSwitch onSwtichOn={filterOn} onSwtichOff={filterOff} />
+										</View>
+									</View>
 								</View>
 							</View>
-							{/* 입양 가능한 게시물만 보기 */}
-							<View style={[searchProtectRequest.filterView.onOffBtnView]}>
-								<View style={[searchProtectRequest.filterView.onOffBtnMsg]}>
-									<Text style={[txt.noto20, {color: GRAY10}]}>{ONLY_CONTENT_FOR_ADOPTION}</Text>
-								</View>
-								<View style={[temp_style.onOffSwitch, searchProtectRequest.filterView.onOffSwitch]}>
-									<OnOffSwitch onSwtichOn={filterOn} onSwtichOff={filterOff} />
-								</View>
+							<View style={[searchProtectRequest.animalNeedHelpList]}>
+								<AnimalNeedHelpList data={data} onClickLabel={onClickLabel} onFavoriteTag={onOff_FavoriteTag} whenEmpty={whenEmpty()} />
 							</View>
 						</View>
-					</View>
-					<View style={[searchProtectRequest.animalNeedHelpList]}>
-						<AnimalNeedHelpList data={data} onClickLabel={onClickLabel} onFavoriteTag={onOff_FavoriteTag} whenEmpty={whenEmpty()} />
-					</View>
-				</ScrollView>
+					)}
+				/>
 			</View>
 		);
 	}

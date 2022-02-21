@@ -857,31 +857,6 @@ const ReportForm = props => {
 		);
 	};
 
-	const keyboardArea = useKeyboardBottom(0 * DP);
-	const inputLocationRef = React.useRef();
-	const currentPosition = React.useRef(0);
-
-	React.useEffect(() => {
-		props.scrollref.current.scrollToOffset({offset: currentPosition.current});
-		currentPosition.current=0;
-	}, [keyboardArea]);
-
-	const onPressIn = (inputRef)=>()=>{
-		if (Platform.OS === 'android') return;
-		inputRef.current.measureLayout(
-			props.container.current,
-			(left, top, width, height) => {
-				console.log('left:%s,top:%s,width:%s,height:%s', left, top, width, height);
-				currentPosition.current = top;
-				// props.scrollref.current.scrollToOffset({offset:top})
-			},
-			() => {
-				console.log('measurelayout failed');
-			},
-		);
-	};
-
-
 	return (
 		<View style={[feedWrite.reportForm_container]} showsVerticalScrollIndicator={false}>
 			<View style={[feedWrite.reportForm]}>

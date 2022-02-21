@@ -204,7 +204,7 @@ export default MissingAnimalDetail = props => {
 	};
 
 	//전단지 저장
-	function captureScreenShot() {
+	async function captureScreenShot() {
 		try {
 			const imageURI = await viewShotRef.current.capture();
 			if (Platform.OS === 'android') {

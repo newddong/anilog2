@@ -490,10 +490,11 @@ const MissingForm = props => {
 
 	React.useEffect(() => {
 		props.scrollref.current.scrollToOffset({offset: currentPosition.current});
-		currentPosition.current=0;
+
+		currentPosition.current = 0;
 	}, [keyboardArea]);
 
-	const onPressIn = (inputRef)=>()=>{
+	const onPressIn = inputRef => () => {
 		if (Platform.OS === 'android') return;
 		inputRef.current.measureLayout(
 			props.container.current,
@@ -632,8 +633,7 @@ const ReportForm = props => {
 			// 필드명 조정 필요 (상우)
 			city: city[0], //시,도
 			district: district[0], //군,구
-			neighbor: '', //동,읍,면
-			detailAddr: '',
+			detail: '', //상세 주솧
 		},
 		report_animal_species: types[0].pet_species,
 		report_animal_species_detail: types[0].pet_species_detail[0],
@@ -707,7 +707,7 @@ const ReportForm = props => {
 				} else {
 					setNeighbor(neighbor.msg);
 				}
-				setData({...data, report_location: {city: data.report_location.city, district: data.report_location.district, neighbor: neighbor.msg[0]}});
+				// setData({...data, report_location: {city: data.report_location.city, district: data.report_location.district, neighbor: neighbor.msg[0]}});
 				// data.report_location.district == data.report_location.district ? false : setIsDistrictChanged(!isDistrictChanged);
 				setIsDistrictChanged(!isDistrictChanged);
 			},
@@ -828,7 +828,33 @@ const ReportForm = props => {
 	const onChangeMissingLocationDetail = text => {
 		let report_location = data.report_location;
 		report_location.detail = text;
+
 		setData({...data, report_location: report_location});
+		console.log('text input :', data.report_location);
+	};
+
+	const keyboardArea = useKeyboardBottom(0 * DP);
+	const inputLocationRef = React.useRef();
+	const currentPosition = React.useRef(0);
+
+	React.useEffect(() => {
+		props.scrollref.current.scrollToOffset({offset: currentPosition.current});
+		currentPosition.current = 0;
+	}, [keyboardArea]);
+
+	const onPressIn = inputRef => () => {
+		if (Platform.OS === 'android') return;
+		inputRef.current.measureLayout(
+			props.container.current,
+			(left, top, width, height) => {
+				console.log('left:%s,top:%s,width:%s,height:%s', left, top, width, height);
+				currentPosition.current = top;
+				// props.scrollref.current.scrollToOffset({offset:top})
+			},
+			() => {
+				console.log('measurelayout failed');
+			},
+		);
 	};
 
 	const keyboardArea = useKeyboardBottom(0 * DP);

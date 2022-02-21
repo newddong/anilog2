@@ -75,13 +75,8 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 					const data = param;
 
 					data.report_witness_location =
-						(data.report_location.city || '') +
-						' ' +
-						(data.report_location.district || '') +
-						' ' +
-						(data.report_location.neighbor || '') +
-						' ' +
-						data.report_location.detailAddr;
+						(data.report_location.city || '') + ' ' + (data.report_location.district || '') + ' ' + (data.report_location.detail || '');
+
 					console.log('Before Write Report ', data);
 					if (
 						// data.addr &&

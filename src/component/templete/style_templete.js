@@ -4126,7 +4126,7 @@ export const feedWrite = StyleSheet.create({
 	},
 	buttonContainer: {
 		flexDirection: 'row',
-		paddingHorizontal: 48 * DP,
+		paddingHorizontal:48*DP,
 		height: 54 * DP,
 		marginTop: 30 * DP,
 		alignItems: 'center',
@@ -4138,7 +4138,7 @@ export const feedWrite = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	btn_w194_container: {
-		paddingHorizontal: 48 * DP,
+		paddingHorizontal:48*DP,
 		marginTop: 40 * DP,
 		flexDirection: 'row',
 	},
@@ -4251,7 +4251,6 @@ export const feedWrite = StyleSheet.create({
 	},
 	reportForm_form: {
 		// width: 654 * DP,
-
 		// height: 126 * DP,
 		marginBottom: 40 * DP,
 	},

@@ -39,7 +39,6 @@ const UserLocationTimeLabel = props => {
 				) : (
 					<ProfileDefaultImg size={props.isLarge?styles.img_round_70:styles.img_round_60} />
 				)}
-
 				<View style={{marginLeft: 20 * DP}}>
 					<Text style={[props.isLarge ? txt.roboto32b : txt.roboto24, {color: isLoginUser ? APRI10 : BLACK}]} numberOfLines={1}>
 						{props.data.user_nickname || ''}
@@ -63,5 +62,6 @@ UserLocationTimeLabel.defaultProps = {
 		},
 	},
 	isLarge: false,
+
 };
 export default UserLocationTimeLabel;

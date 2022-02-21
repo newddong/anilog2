@@ -157,6 +157,8 @@ export default FeedCommentList = props => {
 		currentPosition.current = e.nativeEvent.contentOffset.y;
 	};
 
+
+
 	return (
 		<View style={[login_style.wrp_main, feedCommentList.container]}>
 			<FlatList

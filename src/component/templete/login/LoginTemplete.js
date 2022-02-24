@@ -15,6 +15,30 @@ import userGlobalObj from 'Root/config/userGlobalObject';
 import {ALIGNITEMS, CALENDAR_DAY, CALENDAR_MONTH, CALENDAR_YEAR, FEED_FOLLOWING_USER_CLICK, mobile_carrier, REPORT_CONTENT} from 'Root/i18n/msg';
 
 export default LoginTemplete = props => {
+	
+
+	// const userSetting = {
+	// 	autoLogin : false,
+	// 	saveId : false,
+	// 	sevedId : '',
+	// }
+
+	const [userSetting, setUserSetting] = React.useState();
+	React.useEffect(()=>{
+		AsyncStorage.getItem('userSetting').then(setting =>{
+			if(setting){
+				setUserSetting(setting);
+			}else{
+				setUserSetting({
+					autoLogin : false,
+					saveId : false,
+					savedId : '',
+				})
+			}
+			console.log(setting);
+		})
+	},[])
+	
 	const [id, setId] = React.useState('');
 	const [password, setPassword] = React.useState('');
 	const tryToLogin = () => {
@@ -68,13 +92,15 @@ export default LoginTemplete = props => {
 		props.navigation.push('PasswordResetIdentification');
 	};
 
+
+
 	//자동로그인 박스 클릭
 	const onCheckAutoLogin = state => {
-		// console.log('자동로그인', state);
+		console.log('자동로그인', state);
 	};
 	//아이디 저장 박스 클릭
 	const onCheckSaveId = state => {
-		// console.log('아이디저장', state);
+		console.log('아이디저장', state);
 	};
 
 	//아이디 입력
@@ -102,7 +128,13 @@ export default LoginTemplete = props => {
 	const test = () => {
 		Modal.popSelectScrollBoxModal([mobile_carrier], '도, 광역시를 지정해주세요.', e => console.log('e', e));
 	};
-
+	if(!userSetting){
+		return (
+			<View style={{flex:1,justifyContent:'center',alignItems:'center',backgroundColor:'#fff'}}>
+				<Text style={txt.roboto30b}>사용자 설정을 불러오는 중입니다.</Text>
+			</View>
+		);
+	}
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
 			{/* confirm without login */}
@@ -135,10 +167,10 @@ export default LoginTemplete = props => {
 					<View style={[loginTemplete_style.checkBox_loginFormContainer]}>
 						<View style={[loginTemplete_style.checkBox_loginForm]}>
 							<View style={[loginTemplete_style.checkBoxContainer]}>
-								<CheckBox value={'자동 로그인'} onCheck={onCheckAutoLogin} />
+								<CheckBox value={'자동 로그인'} onCheck={onCheckAutoLogin} state/>
 							</View>
 							<View style={[loginTemplete_style.checkBoxContainer]}>
-								<CheckBox value={'아이디저장'} onCheck={onCheckSaveId} />
+								<CheckBox value={'아이디저장'} onCheck={onCheckSaveId} state/>
 							</View>
 						</View>
 					</View>

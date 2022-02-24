@@ -17,43 +17,9 @@ import DP from 'Root/config/dp';
 
 export default EditShelterInfo = ({route, navigation}) => {
 	const [data, setData] = React.useState(route.params.data);
-	console.log('dataEmail  : ', data);
+	// console.log('dataEmail  : ', data);
+	// console.log('data phone', data.shelter_delegate_contact_number);
 	const isDirectInput = !EMAIL_DOMAIN.some(e => e == data.user_email.split('@')[1]);
-	// console.log('isDirectInput', isDirectInput);
-	const e = {
-		shelter_address: {brief: '경북 포항시 남구 연일읍 형산강남로 8', detail: '87-22 빨간 지붕도'},
-		shelter_delegate_contact_number: '01096450001',
-		shelter_foundation_date: '2022-08-04T00:00:00.000Z',
-		shelter_homepage: 'Naver.com',
-		shelter_name: '형산보호소',
-		shelter_type: 'private',
-		type: 'UserObject',
-		user_agreement: {
-			is_donation_info: false,
-			is_location_service_info: false,
-			is_marketting_info: false,
-			is_over_fourteen: false,
-			is_personal_info: false,
-			is_service: false,
-		},
-		user_denied: false,
-		user_email: 'Lanad01@undefined',
-		user_follow_count: 1,
-		user_follower_count: 0,
-		user_interests: [],
-		user_introduction: '',
-		user_is_verified_email: false,
-		user_is_verified_phone_number: false,
-		user_my_pets: [],
-		user_name: '형산보호소',
-		user_nickname: '형산보호소',
-		user_password: 'tkddn123',
-		user_phone_number: '01096450001',
-		user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1644408821715_76E74A61-FDF5-4B75-BD96-B309E2475F05.jpg',
-		user_register_date: '2022-02-09T12:13:41.815Z',
-		user_type: 'shelter',
-		user_upload_count: 8,
-	};
 
 	React.useEffect(() => {
 		if (route.params.addr) {
@@ -64,9 +30,6 @@ export default EditShelterInfo = ({route, navigation}) => {
 				shelter_address: {
 					brief: addr.address,
 					detail: addr.detailAddr,
-					city: addr.siNm,
-					district: addr.sggNm + ' ' + addr.emdNm + ' ' + addr.lnbrMnnm + '-' + addr.lnbrSlno,
-					neighbor: '',
 				},
 			});
 		}
@@ -83,6 +46,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 		// navigation.push('AddressSearch', {addr: data.shelter_address ? data.shelter_address : '', from: route.name});
 	};
 
+	//세부 주소 변경
 	const onChangeDeatilAddress = detail => {
 		let copy = {...data.shelter_address};
 		copy.detail = detail;
@@ -109,7 +73,8 @@ export default EditShelterInfo = ({route, navigation}) => {
 		// ('* 2자 이상 15자 이내의 영문,숫자, _ 의 입력만 가능합니다.');
 		// console.log('text', text);
 		var regExp2 = /^[가-힣a-zA-Z\s]{3,15}$/;
-		return regExp2.test(data.shelter_name);
+		// console.log('regExp2', regExp2.test(text));
+		return regExp2.test(text);
 	};
 
 	//이메일 도메인 드롭다운 설정 콜백
@@ -143,8 +108,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 
 	//수정 완료 클릭
 	const finalized = () => {
-		console.log('email', data.user_email);
-
+		// console.log('email', data.user_email);
 		Modal.popTwoBtn(
 			'정말 보호소 정보를 수정하시겠습니까?',
 			'아니오',
@@ -152,9 +116,11 @@ export default EditShelterInfo = ({route, navigation}) => {
 			() => Modal.close(),
 			() => {
 				let regEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
-				let regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+				// let regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+				let regPhone = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
 				const regexPhone = regPhone.test(data.shelter_delegate_contact_number);
 				const regexEmail = regEmail.test(data.user_email);
+				console.log('data.email  :', data.user_email);
 				console.log('regexEmail', regexEmail);
 				console.log('regexPhone', regexPhone);
 				if (regexEmail && regexPhone) {
@@ -180,7 +146,6 @@ export default EditShelterInfo = ({route, navigation}) => {
 					);
 					navigation.navigate('ShelterInfoSetting');
 				} else if (!regexEmail || !regexPhone) {
-					console.log('eeee');
 					Modal.close();
 					setTimeout(() => {
 						Modal.popOneBtn('이메일 혹은 전화번호를 \n 다시 확인해주세요.', '확인', () => Modal.close());
@@ -197,14 +162,14 @@ export default EditShelterInfo = ({route, navigation}) => {
 				<View style={[editShelterInfo.shelterInfoForm]}>
 					{/* 보호소 이름 */}
 					<View style={[editShelterInfo.input30WithMsg]}>
-						<View style={[editShelterInfo.category, {}]}>
+						<View style={[editShelterInfo.category, {width: null}]}>
 							<View style={[editShelterInfo.text]}>
 								<Text style={[txt.noto30, {color: GRAY10}]}>보호소 이름</Text>
 							</View>
 						</View>
-						<View style={[editShelterInfo.input30]}>
+						<View style={[editShelterInfo.input30, {}]}>
 							<Input30
-								value={data.shelter_name}
+								// value={data.shelter_name}
 								defaultValue={data.shelter_name}
 								showTitle={false}
 								width={520}
@@ -243,6 +208,10 @@ export default EditShelterInfo = ({route, navigation}) => {
 								showTitle={false}
 								showmsg={false}
 								confirm={true}
+								validator={() => {
+									return data.shelter_delegate_contact_number != '';
+								}}
+								keyboardType={'numeric'}
 								width={520}
 								placeholder={'전화번호를 기재해주세요.'}
 								onChange={onChangeContact}
@@ -276,7 +245,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 						</View>
 						<View style={[editShelterInfo.input30]}>
 							<Input30
-								value={data.shelter_homepage || ''}
+								// value={data.shelter_homepage || ''}
 								defaultValue={data.shelter_homepage || ''}
 								placeholder={'홈페이지 입력'}
 								showTitle={false}
@@ -284,6 +253,9 @@ export default EditShelterInfo = ({route, navigation}) => {
 								width={520}
 								onClear={onClearHomepage}
 								confirm={true}
+								validator={txt => {
+									return txt != '';
+								}}
 								onChange={onChangeHomePage}
 							/>
 						</View>

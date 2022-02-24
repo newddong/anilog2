@@ -31,7 +31,7 @@ import Modal from 'Root/component/modal/Modal';
  *
  */
 const OneButtonSelectModal = props => {
-	const padding = '---------------------';
+	const padding = '';
 
 	const data = props.data;
 	const getData = () => {
@@ -124,13 +124,14 @@ const OneButtonSelectModal = props => {
 
 	//직접 입력 선택했을 경우 상단 모달에 TextInput 출력
 	const getDirectInput = () => {
-		console.log('confirmedSelect', confirmedSelect);
+		// console.log('confirmedSelect', confirmedSelect);
 		if (confirmedSelect === '기타(직접 입력)' || confirmedSelect == '직접입력') {
 			return (
 				<TextInput
 					onChangeText={onChangeDirectInput}
 					style={[txt.noto28, style.directInputStyle]}
 					multiline={true}
+					textAlignVertical={'top'}
 					placeholder={'가능한 상세히 적어주세요!'}
 				/>
 			);

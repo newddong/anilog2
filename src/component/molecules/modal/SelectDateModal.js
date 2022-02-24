@@ -18,7 +18,7 @@ const SelectDateModal = props => {
 	const [year, setYear] = React.useState(2);
 	const [month, setMonth] = React.useState(2);
 	const [day, setDay] = React.useState(2);
-	const padding = '-------------';
+	const padding = '';
 
 	const onSelect = () => {
 		let selectedYear = CALENDAR_YEAR()[year];
@@ -144,9 +144,7 @@ const SelectDateModal = props => {
 							renderItem={({item, index}) => {
 								return (
 									<TouchableWithoutFeedback key={index} onPress={() => setMonth(index)}>
-										<View
-											key={index}
-											style={[style.listItem, index == month && item != '-------------' ? {backgroundColor: APRI10} : null, {width: 188 * DP}]}>
+										<View key={index} style={[style.listItem, index == month && item != '' ? {backgroundColor: APRI10} : null, {width: 188 * DP}]}>
 											<Text
 												style={[
 													txt.roboto34,
@@ -154,7 +152,7 @@ const SelectDateModal = props => {
 														color: item == padding ? GRAY20 : BLACK,
 													},
 												]}>
-												{item == '-------------' ? item : item + '월'}
+												{item == '' ? item : item + '월'}
 											</Text>
 										</View>
 									</TouchableWithoutFeedback>
@@ -171,9 +169,7 @@ const SelectDateModal = props => {
 							renderItem={({item, index}) => {
 								return (
 									<TouchableWithoutFeedback key={index} onPress={() => setDay(index)}>
-										<View
-											key={index}
-											style={[style.listItem, index == day && item != '-------------' ? {backgroundColor: APRI10} : null, {width: 188 * DP}]}>
+										<View key={index} style={[style.listItem, index == day && item != '' ? {backgroundColor: APRI10} : null, {width: 188 * DP}]}>
 											<Text
 												style={[
 													txt.roboto34,
@@ -181,7 +177,7 @@ const SelectDateModal = props => {
 														color: item == padding ? GRAY20 : BLACK,
 													},
 												]}>
-												{item == '-------------' ? item : item + '일'}
+												{item == '' ? item : item + '일'}
 											</Text>
 										</View>
 									</TouchableWithoutFeedback>

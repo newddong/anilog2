@@ -9,12 +9,13 @@ import {volunteerItemList} from 'Organism/style_organism copy';
  * @param {object} props.data - 봉사활동 Object
  * @param {(data:object)=>void} props.onClickLabel - 프로필 라벨 클릭
  * @param {(data:object)=>void} props.onClickItem - 아이템 클릭 클릭
+ * @param {boolean} props.isShelterUser - 아이템 클릭 클릭
  */
 export default VolunteerItemList = props => {
 	const renderItem = (item, index) => {
 		return (
 			<TouchableOpacity onPress={() => props.onClickItem(item)} style={[volunteerItemList.itemContainer]}>
-				<VolunteerItem data={item} type={props.type} onClickLabel={() => props.onClickLabel(item)} />
+				<VolunteerItem data={item} type={props.type} onClickLabel={() => props.onClickLabel(item)} isShelterUser={props.isShelterUser} />
 			</TouchableOpacity>
 		);
 	};
@@ -37,4 +38,5 @@ export default VolunteerItemList = props => {
 
 VolunteerItemList.defaultProps = {
 	onClickItem: e => console.log(e),
+	isShelterUser: false,
 };

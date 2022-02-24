@@ -547,7 +547,7 @@ export const temp_style = StyleSheet.create({
 		// backgroundColor: '#D19F9F',
 	},
 	changePassword_userInfoSetting: {
-		width: 212 * DP,
+		// width: 212 * DP,
 		height: 64 * DP,
 		// backgroundColor: '#D19F9F',
 	},
@@ -1777,6 +1777,12 @@ export const userMenu_style = StyleSheet.create({
 		width: 492 * DP,
 	},
 	horizontalLine: {},
+	showMoreContainer: {
+		flexDirection: 'row',
+		alignSelf: 'flex-end',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
 });
 
 export const userInfoSetting_style = StyleSheet.create({
@@ -2094,6 +2100,15 @@ export const protectRequestList_style = StyleSheet.create({
 		},
 		borderRadius: 20 * DP,
 	},
+	listContainer: {
+		width: 750 * DP,
+		// height: 1286 * DP,
+		// marginBottom: 70 * DP,
+		marginTop: 35 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: '#FFF',
+	},
 });
 
 export const requestLogin_style = StyleSheet.create({
@@ -2370,7 +2385,7 @@ export const editShelterInfo = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	text: {
-		width: 144 * DP,
+		// width: 144 * DP,
 		height: 46 * DP,
 		marginRight: 16 * DP,
 		// backgroundColor: 'pink',
@@ -2495,10 +2510,12 @@ export const applicationFormVolunteer = StyleSheet.create({
 		marginTop: 10 * DP,
 		paddingLeft: 66 * DP,
 	},
-	btn_w226: {
-		height: 90 * DP,
+	buttonContainer: {
+		width: 654 * DP,
 		marginTop: 110 * DP,
 		marginBottom: 66 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
 	},
 });
 
@@ -2627,6 +2644,7 @@ export const setPetInformation = StyleSheet.create({
 	},
 	weight_info: {
 		color: APRI10,
+		marginTop: 10 * DP,
 		// backgroundColor: 'yellow',
 	},
 });
@@ -2920,6 +2938,8 @@ export const vaccinationRecord = StyleSheet.create({
 export const feedListForHashTag = StyleSheet.create({
 	container: {
 		flex: 1,
+		alignItems: 'center',
+		backgroundColor: '#FFF',
 	},
 	hashTagInfo: {
 		width: 702 * DP,
@@ -2953,6 +2973,9 @@ export const feedListForHashTag = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		// backgroundColor: 'pink',
+	},
+	feedThumbnailList: {
+		width: 750 * DP,
 	},
 });
 
@@ -3009,6 +3032,7 @@ export const searchHashTag = StyleSheet.create({
 	container: {
 		flex: 1,
 		alignItems: 'center',
+		backgroundColor: 'white',
 	},
 });
 
@@ -3800,11 +3824,15 @@ export const feedCommentList = StyleSheet.create({
 		width: 646 * DP,
 		marginLeft: 20 * DP,
 		fontSize: 28 * DP,
+		paddingVertical: 0,
+		includeFontPadding: false,
 		// backgroundColor: 'yellow',
 	},
 	replyTextInput_photo: {
 		width: 442 * DP,
 		marginRight: 12 * DP,
+		paddingVertical: 0,
+		includeFontPadding: false,
 		// backgroundColor: 'pink',
 	},
 	replyTextInput_protect_request: {
@@ -3985,7 +4013,7 @@ export const manageVolunteer = StyleSheet.create({
 	},
 	volunteerList: {
 		width: 750 * DP,
-		marginBottom: 30 * DP,
+		marginBottom: 20 * DP,
 	},
 	previous_volunteerList: {
 		width: 750 * DP,
@@ -4004,9 +4032,9 @@ export const manageVolunteer = StyleSheet.create({
 	},
 	separator: {
 		width: 654 * DP,
-		marginTop: 40 * DP,
+		// marginTop: 40 * DP,
 		height: 2 * DP,
-		backgroundColor: APRI10,
+		backgroundColor: GRAY10,
 	},
 	showMoreContainer: {
 		width: 214 * DP,
@@ -4480,6 +4508,7 @@ export const animalProtectRequestDetail_style = StyleSheet.create({
 		alignItems: 'flex-end',
 		alignSelf: 'flex-end',
 		marginTop: 30 * DP,
+		marginBottom: 20 * DP,
 		// backgroundColor: 'red',
 	},
 });

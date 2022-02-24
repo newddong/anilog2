@@ -1,9 +1,10 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions, TouchableWithoutFeedback, FlatList} from 'react-native';
-import {WHITE, GRAY10, APRI10, GRAY30} from 'Root/config/color';
+import {WHITE, GRAY10, APRI10, GRAY30, GREEN} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {Cross24, Cross24_Filled, Cross24_White} from 'Atom/icon';
+import Modal from 'Root/component/modal/Modal';
 
 /**
  * 중앙 셀렉트 박스 모달
@@ -25,7 +26,7 @@ const SelectBoxModal = props => {
 
 	const renderItem = (item, index) => {
 		return (
-			<TouchableOpacity onPress={() => onSelect(item)} style={style.listItem}>
+			<TouchableOpacity onPress={() => onSelect(item)} style={[style.listItem, {}]}>
 				<Text style={[txt.noto30, {height: 48 * DP}]}>{item}</Text>
 			</TouchableOpacity>
 		);
@@ -36,21 +37,27 @@ const SelectBoxModal = props => {
 	};
 
 	return (
-		<View style={style.background}>
-			<View style={[style.popUpWindow, {height: (120 + 92 * data.length) * DP}]}>
+		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={style.background}>
+			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow]}>
 				{props.headerRoof ? (
-					<View style={style.roof}>
-						<View style={style.roofInside}>
-							<Text style={[txt.noto30, style.headerTitle]}>{props.headerTitle}</Text>
-							<Cross24_White onPress={() => props.onClose()} />
-						</View>
+					<View
+						style={[
+							style.roof,
+							{
+								flexDirection: 'row',
+							},
+						]}>
+						<Text style={[txt.noto30, style.headerTitle]}>{props.headerTitle}</Text>
+						<TouchableOpacity onPress={() => props.onClose()} style={[style.crossMarkContainer]}>
+							<Cross24_White />
+						</TouchableOpacity>
 					</View>
 				) : (
-					<View style={{alignSelf: 'flex-end', marginRight: 40 * DP, marginTop: 20 * DP}}>
+					<View style={style.crossMarkContainer_withoutTitle}>
 						<Cross24_Filled onPress={() => props.onClose()} />
 					</View>
 				)}
-				<View style={style.insideContainer}>
+				<View style={[style.insideContainer]}>
 					<FlatList
 						data={data}
 						renderItem={({item, index}) => renderItem(item, index)}
@@ -58,8 +65,8 @@ const SelectBoxModal = props => {
 						ItemSeparatorComponent={ItemSeparatorComponent}
 					/>
 				</View>
-			</View>
-		</View>
+			</TouchableOpacity>
+		</TouchableOpacity>
 	);
 };
 
@@ -79,7 +86,6 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 	},
 	popUpWindow: {
-		width: 566 * DP,
 		// paddingHorizontal: 40 * DP,
 		paddingBottom: 40 * DP,
 		justifyContent: 'center',
@@ -90,10 +96,11 @@ const style = StyleSheet.create({
 	},
 	insideContainer: {
 		width: 486 * DP,
-		paddingTop: 24 * DP,
+		// paddingTop: 24 * DP,
 	},
 	roof: {
-		width: 566 * DP,
+		paddingHorizontal: 40 * DP,
+		marginBottom: 20 * DP,
 		height: 88 * DP,
 		backgroundColor: APRI10,
 		borderTopLeftRadius: 50 * DP,
@@ -102,9 +109,11 @@ const style = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	roofInside: {
-		paddingHorizontal: 40 * DP,
+		// paddingHorizontal: 40 * DP,
 		paddingVertical: 18 * DP,
 		width: 486 * DP,
+		height: 75 * DP,
+		// backgroundColor: 'green',
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
@@ -118,6 +127,22 @@ const style = StyleSheet.create({
 		height: 88 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
+	},
+	crossMarkContainer: {
+		width: 60 * DP,
+		height: 60 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	crossMarkContainer_withoutTitle: {
+		alignSelf: 'flex-end',
+		marginRight: 20 * DP,
+		width: 60 * DP,
+		height: 60 * DP,
+		marginTop: 20 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		// backgroundColor: 'red',
 	},
 });
 

@@ -50,7 +50,6 @@ export default ShelterMenu = ({route}) => {
 	const [introOriginLine, setIntroOriginLine] = React.useState(0);
 	React.useEffect(() => {
 		const getInfo = () => {
-			// Modal.popNoBtn('Loading');
 			getUserProfile(
 				{
 					userobject_id: userGlobalObject.userInfo._id,

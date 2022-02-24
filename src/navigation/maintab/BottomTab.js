@@ -41,6 +41,10 @@ export default function BottomTab({state, descriptors, navigation}) {
 		}
 	}
 
+	const nestedState = state.routes[state.index].state;
+	const nestedRouteName = nestedState ? nestedState.routes[nestedState.index].name:'none'
+
+	if(nestedRouteName.includes('CommentList'))return false;
 	return (
 		<>
 			<Shadow />

@@ -24,8 +24,8 @@ const Input30 = React.forwardRef((props, ref) => {
 			onClear();
 		},
 	}));
-	const [input, setInput] = React.useState('');
-	const [confirmed, setConfirmed] = React.useState(false); //Confirm Msg 출력 Boolean
+	const [input, setInput] = React.useState(props.defaultValue ? props.defaultValue : '');
+	const [confirmed, setConfirmed] = React.useState(input == '' ? false : true); //Confirm Msg 출력 Boolean
 	const inputRef = React.useRef();
 
 	// Input 값 변동 콜백
@@ -39,6 +39,8 @@ const Input30 = React.forwardRef((props, ref) => {
 
 	const validator = text => {
 		let isValid = props.validator(text);
+		// console.log('isValid / Text', text);
+		// console.log('isValid', isValid);
 		setConfirmed(isValid);
 		props.onValid && props.onValid(isValid);
 	};
@@ -115,14 +117,14 @@ const Input30 = React.forwardRef((props, ref) => {
 								textAlignVertical: 'bottom',
 								color: confirmed ? BLACK : RED10,
 								// width: props.width * DP,
-								width: props.width ? props.width * DP - 46 * DP : null,
+								width: props.width ? props.width - 46 * DP : null,
 								// textAlign: 'center',
 							},
 						]}
 					/>
 					{/* {input.length > 0 ? ( */}
 					{props.value.length > 0 && props.showCrossMark ? (
-						<TouchableOpacity onPress={onClear} style={{position: 'absolute', right: 20 * DP}}>
+						<TouchableOpacity onPress={onClear} style={{position: 'absolute', right: 20 * DP, alignItems: 'center', width: 66 * DP, height: 40 * DP}}>
 							<Cross24_Filled />
 						</TouchableOpacity>
 					) : (

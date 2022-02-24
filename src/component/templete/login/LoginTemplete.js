@@ -169,7 +169,7 @@ export default LoginTemplete = props => {
 					</TouchableOpacity>
 				</View>
 
-				{/* <View style={[login_style.basic_info, loginTemplete_style.basic_info, {marginTop: 0}]}>
+				<View style={[login_style.basic_info, loginTemplete_style.basic_info, {marginTop: 0}]}>
 					<TouchableOpacity
 						onPress={() => {
 							setId('01096450001');
@@ -201,7 +201,7 @@ export default LoginTemplete = props => {
 						}}>
 						<Text style={[txt.noto24, {color: GRAY20}]}> 계정 2 </Text>
 					</TouchableOpacity>
-				</View> */}
+				</View>
 			</View>
 		</View>
 	);

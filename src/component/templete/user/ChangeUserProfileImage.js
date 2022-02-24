@@ -60,18 +60,6 @@ export default ChangeUserProfileImage = ({route}) => {
 				},
 			);
 		}
-		// navigation.dispatch(
-		// 	CommonActions.reset({
-		// 		index: 1,
-		// 		routes: [
-		// 			{name: 'UserMenu'},
-		// 			{
-		// 				name: 'UserInfoSetting',
-		// 				params: {changedPhoto: data.user_profile_uri},
-		// 			},
-		// 		],
-		// 	}),
-		// );
 	};
 
 	const selectPhoto = () => {
@@ -119,16 +107,9 @@ export default ChangeUserProfileImage = ({route}) => {
 	};
 
 	const validateNewNick = nick => {
-		// ('* 2자 이상 15자 이내의 영문,숫자, _ 의 입력만 가능합니다.');
-		// 영문자, 소문자, 숫자, "-","_" 로만 구성된 길이 2~10자리 사이의 문자열
-		// checkDuplicateNickname(newNick);
-		console.log('Dup', duplicated);
 		let regExp = /^[가-힣a-zA-Z0-9_]{2,20}$/;
 		setValidated(regExp.test(nick));
-		// checkDuplicateNickname(nick);
-		// console.log('is duplicated?', nick, regExp.test(newNick), duplicated);
 		return regExp.test(nick) && !checkDuplicateNickname(nick);
-		// return regExp.test(nick);
 	};
 
 	return (
@@ -173,14 +154,25 @@ export default ChangeUserProfileImage = ({route}) => {
 				</View>
 				{/* 확인버튼 */}
 				<View style={[btn_style.btn_w654, changeUserProfileImage_style.btn_w654]}>
-					<AniButton
-						onPress={onConfirmed}
-						btnStyle={'border'}
-						btnTitle={'확인'}
-						titleFontStyle={32}
-						btnLayout={btn_w654}
-						disable={confirmed ? false : true}
-					/>
+					{confirmed ? (
+						<AniButton
+							onPress={onConfirmed}
+							btnStyle={'border'}
+							btnTitle={'확인'}
+							titleFontStyle={32}
+							btnLayout={btn_w654}
+							// disable={confirmed ? false : true}
+						/>
+					) : (
+						<AniButton
+							onPress={onConfirmed}
+							btnTitle={'확인'}
+							titleFontStyle={32}
+							btnLayout={btn_w654}
+							disable
+							// disable={confirmed ? false : true}
+						/>
+					)}
 				</View>
 			</ScrollView>
 		</View>

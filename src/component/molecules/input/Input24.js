@@ -23,10 +23,8 @@ const Input24 = React.forwardRef((props, ref) => {
 		clear: () => {
 			inputRef.current.clear();
 		},
-		measureLayout:(containerRef,callback,failcallback)=>{
-			inputRef.current.measureLayout(
-				containerRef,callback,failcallback
-			)
+		measureLayout: (containerRef, callback, failcallback) => {
+			inputRef.current.measureLayout(containerRef, callback, failcallback);
 		},
 	}));
 	// const [input, setInput] = React.useState('');
@@ -40,7 +38,7 @@ const Input24 = React.forwardRef((props, ref) => {
 
 	React.useEffect(() => {
 		if (props.defaultValue != null) {
-			console.log('defaultValue', props.defaultValue);
+			// console.log('defaultValue', props.defaultValue);
 			onChange(props.defaultValue);
 		}
 	}, [props.defaultValue]);
@@ -62,7 +60,6 @@ const Input24 = React.forwardRef((props, ref) => {
 
 	const onChange = text => {
 		// setInput(text);
-		console.log('onChange', text);
 		props.validator && validator(text);
 		props.onChange && props.onChange(text);
 	};
@@ -91,7 +88,7 @@ const Input24 = React.forwardRef((props, ref) => {
 		} else if (props.descriptionType == 'star') {
 			return <Text style={[txt.noto28, {color: RED10, marginLeft: 60 * DP}]}>*</Text>;
 		} else if (props.descriptionType == 'none') {
-			return null;
+			return <></>;
 		}
 	};
 

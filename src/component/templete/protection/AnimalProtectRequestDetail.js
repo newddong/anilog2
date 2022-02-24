@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Image, Text, TextInput, TouchableOpacity, View, Animated, Easing, ActivityIndicator,FlatList} from 'react-native';
+import {Image, Text, TextInput, TouchableOpacity, View, Animated, Easing, ActivityIndicator, FlatList} from 'react-native';
 import {btn_w226, btn_w276} from 'Atom/btn/btn_style';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import {login_style, temp_style, accountPicker, animalProtectRequestDetail_style} from '../style_templete';
@@ -299,8 +299,8 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		<View style={[login_style.wrp_main]}>
 			<FlatList
 				data={[{}]}
-				keyExtractor={({item,index})=>index}
-				listKey={({item,index})=>index}
+				// keyExtractor={({item, index}) => index}
+				listKey={({item, index}) => index}
 				renderItem={({item, index}) => {
 					return (
 						<View style={[animalProtectRequestDetail_style.container]}>

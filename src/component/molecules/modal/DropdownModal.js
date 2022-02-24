@@ -20,14 +20,14 @@ const DropdownModal = props => {
 	const animatedOpacity = React.useRef(new Animated.Value(0)).current;
 
 	React.useEffect(() => {
-		Animated.timing(animatedHeight, {
-			duration: 500,
+		Animated.spring(animatedHeight, {
+			duration: 400,
 			toValue: (props.menu.length * 70 + 40) * DP,
 			easing: Easing.linear,
 			useNativeDriver: false,
 		}).start();
 		Animated.timing(animatedOpacity, {
-			duration: 600,
+			duration: 400,
 			toValue: 1,
 			easing: Easing.linear,
 			useNativeDriver: false,
@@ -35,14 +35,14 @@ const DropdownModal = props => {
 	}, []);
 
 	const closeAnimation = () => {
-		Animated.timing(animatedHeight, {
+		Animated.spring(animatedHeight, {
 			toValue: 0,
-			duration: 500,
+			duration: 600,
 			easing: Easing.linear,
 			useNativeDriver: false,
 		}).start();
 		Animated.timing(animatedOpacity, {
-			duration: 500,
+			duration: 200,
 			toValue: 0,
 			easing: Easing.linear,
 			useNativeDriver: false,
@@ -128,7 +128,7 @@ const style = StyleSheet.create({
 		},
 		shadowOpacity: 1,
 		shadowRadius: 4.65 * DP,
-		elevation: 2,
+		elevation: 4,
 	},
 });
 

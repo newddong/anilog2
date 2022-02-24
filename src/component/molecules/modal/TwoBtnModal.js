@@ -5,6 +5,7 @@ import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
+import Modal from 'Root/component/modal/Modal';
 
 /**
  * 두 버튼을 띄우는 모달 컴포넌트
@@ -25,15 +26,15 @@ const TwoBtnModal = props => {
 		props.onNo();
 	};
 	return (
-		<View style={style.background}>
-			<View style={[style.popUpWindow, style.shadow]}>
+		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={style.background}>
+			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
 				<Text style={[txt.noto28, style.msg]}>{props.popUpMsg}</Text>
 				<View style={style.buttonContainer}>
 					<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.noMsg} onPress={pressNo} />
 					<AniButton btnLayout={btn_w226} btnStyle={'filled'} btnTitle={props.yesMsg} onPress={pressYes} />
 				</View>
-			</View>
-		</View>
+			</TouchableOpacity>
+		</TouchableOpacity>
 	);
 };
 

@@ -175,8 +175,6 @@ export default UserInfoSetting = ({route}) => {
 											</TouchableOpacity>
 										</View>
 									) : (
-										// <AniButton onPress={modify_finalize} btnTitle={'적용'} btnLayout={btn_w114} />
-										// <AniButton onPress={modify_userIntro} btnTitle={'수정'} btnStyle={'border'} btnLayout={btn_w114} />
 										<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
 											<TouchableOpacity onPress={modify_userIntro}>
 												<Text style={[txt.noto26, {color: APRI10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>수정</Text>

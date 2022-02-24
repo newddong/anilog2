@@ -297,7 +297,7 @@ export const organism_style = StyleSheet.create({
 		width: 654 * DP,
 		marginBottom: 20 * DP,
 		alignItems: 'flex-end',
-		backgroundColor: '#FFF',
+		// backgroundColor: 'yellow',
 	},
 	userLocationTimeLabel: {
 		width: 472 * DP,
@@ -323,7 +323,7 @@ export const organism_style = StyleSheet.create({
 		marginBottom: 30 * DP,
 
 		//UI 끝이 보이지 않아 임시적으로 marginRight 값 15 넣음.
-		marginRight: 15 * DP,
+		// marginRight: 15 * DP,
 		flexDirection: 'row',
 		// backgroundColor: '#B4EAD3',
 	},
@@ -385,6 +385,10 @@ export const feed_style = StyleSheet.create({
 		marginLeft: 38 * DP,
 		backgroundColor: 'yellow',
 	},
+	recent_comment_user: {
+		height: 38 * DP, //특정 디바이스에서 Feed Recent Comment User Nickname 텍스트가 잘리던 현상 수정
+		// backgroundColor: 'red',
+	},
 });
 
 export const profileInfo_style = StyleSheet.create({
@@ -430,22 +434,25 @@ export const parentComment = StyleSheet.create({
 	likeReplyButton: {
 		width: 574 * DP,
 		height: 34 * DP,
-		marginTop: 20 * DP,
+		marginTop: 5 * DP,
 		flexDirection: 'row',
 		alignItems: 'center',
 		// alignSelf: 'flex-end',
 		justifyContent: 'flex-end',
 	},
 	comment_contents: {
-		width: 574 * DP,
-		marginLeft: 80 * DP,
+		width: 580 * DP,
+		// marginLeft: 80 * DP,
 		marginTop: 10 * DP, //UI 3차 적용 - 22.02.19 ksw
-		alignSelf: 'flex-start',
+		alignSelf: 'flex-end',
+		// backgroundColor: 'red',
 	},
 	showChildComment: {
-		position: 'absolute',
-		left: 0,
-		paddingBottom: 5 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		// position: 'absolute',
+		// left: 0,
+		// paddingBottom: 5 * DP,
 	},
 	heart30: {
 		width: 30 * DP,
@@ -463,7 +470,7 @@ export const parentComment = StyleSheet.create({
 		lineHeight: 30 * DP,
 	},
 	writeComment: {
-		width: 130 * DP,
+		// width: 130 * DP,
 		height: 34 * DP,
 	},
 	writeCommentText: {
@@ -474,8 +481,11 @@ export const parentComment = StyleSheet.create({
 		marginTop: 15 * DP,
 	},
 	userLabelContainer: {
-		width: 654 * DP,
+		// width: 472 * DP,
 		flexDirection: 'row',
-		justifyContent: 'space-between',
+		// justifyContent: 'space-between',
+	},
+	secureIcon: {
+		marginLeft: 10 * DP,
 	},
 });

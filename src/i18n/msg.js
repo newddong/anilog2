@@ -186,38 +186,20 @@ export const EMAIL_DOMAIN = [
 
 export const CALENDAR_YEAR = () => {
 	let currentTime = new Date();
-	let year = ['-------------', '-------------'];
+	let year = ['', ''];
 	for (let i = 0; i < 70; i++) {
 		year.push(currentTime.getFullYear() - i);
 	}
-	year.push('-------------', '-------------');
+	year.push('', '');
 	return year;
 };
 
-export const CALENDAR_MONTH = [
-	'-------------',
-	'-------------',
-	'1',
-	'2',
-	'3',
-	'4',
-	'5',
-	'6',
-	'7',
-	'8',
-	'9',
-	'10',
-	'11',
-	'12',
-	'-------------',
-	'-------------',
-	'-------------',
-];
+export const CALENDAR_MONTH = ['', '', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '', '', ''];
 export const CALENDAR_DAY = () => {
-	const paddingObject = '-------------';
-	let day30 = ['-------------', '-------------'];
-	let day31 = ['-------------', '-------------'];
-	let day29 = ['-------------', '-------------'];
+	const paddingObject = '';
+	let day30 = ['', ''];
+	let day31 = ['', ''];
+	let day29 = ['', ''];
 	for (let i = 1; i < 32; i++) {
 		day31.push(i);
 	}
@@ -417,7 +399,7 @@ export const NEW_PWD_PLACEHOLDER = '새로운 비밀번호 확인';
 export const PWD_CHECK_INFO = '비밀번호를 다시 한 번 적어주세요.';
 
 //Nickname 설정 관련
-export const NICKNAME_FORM = '2자 이상 15자 이내의 영문, 숫자의 입력만 가능합니다';
+export const NICKNAME_FORM = '2~15자 이내의 영문,한글,숫자 입력만 가능합니다';
 export const NEW_NICK_REQUEST = '닉네임을 입력 해주세요.';
 export const PREVIOUS_NICK_TITLE = '기존 닉네임';
 

@@ -95,7 +95,7 @@ export function phoneFomatter(num) {
 			formatNum = num.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
 		}
 	}
-	console.log(formatNum, 'formatNum');
+	// console.log(formatNum, 'formatNum');
 	return formatNum;
 }
 

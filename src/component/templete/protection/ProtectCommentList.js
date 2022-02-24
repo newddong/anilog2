@@ -174,7 +174,7 @@ export default ProtectCommentList = props => {
 			<View style={[style.contentContainer]}>
 				<View style={[style.content_container_label]}>
 					<ShelterSmallLabel data={data.protect_request_writer_id} onClickLabel={onClickShelterLabel} />
-					<View style={[temp_style.button_animalProtectRequestDetail]}>
+					{/* <View style={[temp_style.button_animalProtectRequestDetail]}>
 						<TouchableOpacity onPress={onPressShelterLabelFavorite} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
 							<FavoriteTag48_Filled />
 							<Text style={[txt.roboto24, {color: APRI10, alignSelf: 'center', textAlign: 'center'}]}>
@@ -187,15 +187,15 @@ export default ProtectCommentList = props => {
 								<Text style={[txt.roboto24, {color: APRI10}]}>공유</Text>
 							</TouchableOpacity>
 						</View>
-					</View>
+					</View> */}
 				</View>
 				<View style={[style.cotent_container_header]}>
-					<Text style={[txt.noto28, {color: GRAY10}]}>보호요청{props.route.name}</Text>
+					<Text style={[txt.noto28, {color: GRAY10}]}>보호요청</Text>
 					<Text style={[txt.noto32b, {}]}>{data.protect_request_title || ''}</Text>
 				</View>
-				<View style={[style.cotent_container_info]}>
+				{/* <View style={[style.cotent_container_info]}>
 					<ProtectAnimalInfoBox data={data} />
-				</View>
+				</View> */}
 			</View>
 		);
 	};
@@ -242,6 +242,7 @@ const style = StyleSheet.create({
 		width: 654 * DP,
 		alignSelf: 'center',
 		alignItems: 'center',
+		marginBottom: 20 * DP,
 		// backgroundColor: 'lightblue',
 	},
 	cotent_container_header: {

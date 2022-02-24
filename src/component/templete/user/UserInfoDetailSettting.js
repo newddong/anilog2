@@ -20,14 +20,19 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 	const [data, setData] = React.useState(route.params); //기존 유저의 데이터가 담겨있음
 	const [loaded, setLoaded] = React.useState(false);
 	const [addrSearched, setAddrSearched] = React.useState(false);
+	const [locationInterest, setLocationInterest] = React.useState(route.params.user_interests.interests_location);
+	const [contentInterest, setContentInterest] = React.useState();
 	// 갱신되는 데이터는 Header에도 Json형태로 전해짐
 	// React.useEffect(() => {
 	// 	navigation.setParams({data: data, route_name: route.name});
 	// 	// console.log('user_mobile_company', data.user_mobile_company);
 	// }, [data]);
-
+	React.useEffect(() => {
+		console.log('interset', locationInterest, contentInterest);
+	}, [locationInterest, contentInterest]);
 	React.useEffect(() => {
 		navigation.setParams({data: route.params, route_name: route.name});
+		console.log('ahhh', route.params.user_interests);
 		setLoaded(true);
 	}, []);
 
@@ -188,21 +193,29 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 	};
 
 	const onPressAddInterestActivation = () => {
+		console.log(contentInterest);
 		Modal.popInterestTagModal(
 			true,
-			'',
+			route.params.user_interests,
 			() => alert('저장'),
 			() => Modal.close(),
+			setContentInterest,
 		);
 	};
 
 	const onPressAddInterestLocation = () => {
 		Modal.popInterestTagModal(
 			false,
-			'',
+			route.params.user_interests,
 			() => alert('저장'),
 			() => Modal.close(),
+			setLocationInterest,
 		);
+		// setData(prevState => ({
+		// 	...prevState,
+		// 	user_interests: interest,
+		// }));
+		console.log('next State', data);
 	};
 
 	if (loaded) {
@@ -258,7 +271,8 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 								<InterestTagList
 									onPressAddBtn={onPressAddInterestLocation}
 									title={INTEREST_REGION}
-									items={data.user_interests.location || []}
+									// items={data.user_interests.location || []}
+									items={locationInterest}
 									onDelete={onDeleteInterestRegion}
 								/>
 							</View>
@@ -266,7 +280,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 								<InterestTagList
 									onPressAddBtn={onPressAddInterestActivation}
 									title={INTEREST_ACT}
-									items={data.user_interests.activity || []}
+									// items={data.user_interests.activity || []}
 									onDelete={onDeleteInterestAct}
 								/>
 							</View>

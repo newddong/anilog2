@@ -229,21 +229,20 @@ export default MissingAnimalDetail = props => {
 	const getPermissionAndroid = async () => {
 		try {
 			const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE, {
-					title: 'Image Download Permission',
-					message: 'Your permission is required to save images to your device',
-					buttonNegative: 'Cancel',
-					buttonPositive: 'OK',
-				});
-				if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-					return true;
-				}
-				Alert.alert('', '전단지를 저장하기 위해서는 권한이 필요합니다.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
+				title: 'Image Download Permission',
+				message: 'Your permission is required to save images to your device',
+				buttonNegative: 'Cancel',
+				buttonPositive: 'OK',
+			});
+			if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+				return true;
+			}
+			Alert.alert('', '전단지를 저장하기 위해서는 권한이 필요합니다.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
 		} catch (err) {
 			// handle error as you please
 			console.log('err', err);
 		}
 	};
-
 	function capture() {
 		try {
 			captureScreenShot();
@@ -258,7 +257,6 @@ export default MissingAnimalDetail = props => {
 			console.log('Android Image Permisson Failed', err);
 		}
 	}
-
 
 	const moveToCommentList = () => {
 		let feedobject = {};
@@ -321,11 +319,7 @@ export default MissingAnimalDetail = props => {
 				}
 				renderItem={({item, index}) => (
 					// <View style={[reportDetail.commentList]}>
-					<CommentList
-						items={commentDataList}
-						onPressReplyBtn={moveToCommentList}
-						onPress_ChildComment_ReplyBtn={onChildReplyBtnClick}
-					/>
+					<CommentList items={commentDataList} onPressReplyBtn={moveToCommentList} onPress_ChildComment_ReplyBtn={onChildReplyBtnClick} />
 					// </View>
 				)}
 			/>

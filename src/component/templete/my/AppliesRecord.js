@@ -182,7 +182,7 @@ export default AppliesRecord = ({route}) => {
 						{volunteer_list != undefined && volunteer_list.length > 0 ? (
 							<ShelterList items={volunteer_list} onShelterLabelClick={onClickShelterLabel} />
 						) : (
-							<Text style={{padding: 15}}>검색 결과가 없습니다.</Text>
+							<Text style={{padding: 15}}>신청 내역이 없습니다.</Text>
 						)}
 					</View>
 				</ScrollView>

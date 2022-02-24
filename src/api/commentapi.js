@@ -70,7 +70,7 @@ export async function deleteComment(params, callback, errcallback) {
 }
 
 /**
- * 댓글/대댓글 수정 (현재 내용 및 비밀글 설정값 모두 보낼 것 - 이미지 수정은 추후 재개발 예정)
+ * 댓글/대댓글 수정 (현재 내용 및 비밀글 설정값 모두 보낼 것 - 이미지 수정은 추후 재개발 예정).
  *
  * @param {object} params
  * @param {string} params.commentobject_id - 댓글/대댓글을 불러올 object ID

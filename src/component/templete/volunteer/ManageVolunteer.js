@@ -28,8 +28,22 @@ export default ManageVolunteer = ({route}) => {
 				{},
 				result => {
 					console.log('success / getUserVolunterItemList / ManageVolunteer', result.msg[0]);
+
+					const q = {
+						__v: 0,
+						_id: '62171a8035dd87f36daaba06',
+						volunteer_accompany: [
+							{_id: '62171a8035dd87f36daaba07', confirm: 'waiting', member: '61d2de63c0f179ccd5ba5887'},
+							{_id: '62171a8035dd87f36daaba08', confirm: 'waiting', member: '61d2e5d3c0f179ccd5ba6241'},
+						],
+						volunteer_accompany_number: 2,
+						volunteer_delegate_contact: '01096450422',
+						volunteer_status: 'notaccept',
+						volunteer_wish_date: ['2022-02-25T00:00:00.000Z', '2022-02-26T00:00:00.000Z'],
+					};
 					let doneList = []; //지난 내역을 담을 컨테이너
 					let notDoneList = []; //활동 예정 중인 신청을 담을 컨테이너
+
 					result.msg.map((v, i) => {
 						let wishdate = moment(v.volunteer_wish_date[0]).toDate(); //봉사활동 희망날짜 배열에서 첫번째 값을 받아와 Date타입으로 치환
 						let thisTime = new Date().getTime(); // 현재 시간
@@ -39,11 +53,19 @@ export default ManageVolunteer = ({route}) => {
 						v.user_type = v.volunteer_target_shelter.user_type;
 						v.user_profile_uri = v.volunteer_target_shelter.user_profile_uri;
 						// 비교 후 '지난 내역' / '활동 예정' 각 배열에 푸쉬
-						wishdate.getTime() < thisTime ? doneList.push(v) : notDoneList.push(v);
+						if (wishdate.getTime() < thisTime) {
+							// console.log('v.volunteer_status', i, v.volunteer_status);
+							doneList.push(v);
+						} else if (v.volunteer_status == 'waiting' || v.volunteer_status == 'accept') {
+							// console.log('v.volunteer_status', i, v.volunteer_status);
+							notDoneList.push(v);
+						} else {
+							// console.log('v.volunteer_status', i, v.volunteer_wish_date);
+							doneList.push(v);
+						}
 					});
 					setDoneList(doneList); //API로 받아온 지난 내역 값 setState
 					setNotDoneList(notDoneList); //이하동문
-					// setLoading(false);
 					setTimeout(() => {
 						setLoading(false);
 					}, 500);
@@ -60,16 +82,33 @@ export default ManageVolunteer = ({route}) => {
 			getShelterVolunteerActivityList(
 				{
 					volunteer_activity_object_id: '',
-					volunteer_status: 'waiting',
+					volunteer_status: '',
 					request_number: 30,
 				},
 				data => {
+					data.msg.map((v, i) => {
+						console.log('status', i, v.volunteer_status);
+						if (v.volunteer_status == 'accept') {
+							console.log('v', v);
+						}
+						// console.log('volunteer_accompany', i, v.volunteer_accompany);
+					});
 					// console.log('success / getUserVolunterItemList / ManageShelterVolunteer', data.msg[1]);
 					//volunteer_accompany 속성에 있는 데이터들을 1depth 올려준다.
 					data.msg.map((v, i) => {
 						let wishdate = moment(v.volunteer_wish_date[0]).toDate(); //봉사활동 희망날짜 배열에서 첫번째 값을 받아와 Date타입으로 치환
 						let thisTime = new Date().getTime(); // 현재 시간
-						wishdate.getTime() < thisTime ? doneList.push(v) : notDoneList.push(v); // 비교 후 '지난 내역' / '활동 예정' 각 배열에 푸쉬
+						// wishdate.getTime() < thisTime ? doneList.push(v) : notDoneList.push(v); // 비교 후 '지난 내역' / '활동 예정' 각 배열에 푸쉬
+						if (wishdate.getTime() < thisTime) {
+							// 시간이 지난 신청서는 우선 지난 신청서로 푸쉬
+							doneList.push(v);
+						} else if (v.volunteer_status == 'waiting' || v.volunteer_status == 'accept') {
+							// 시간이 지나지 않았고, 수락 대기 중 혹은 수락이 된 신청서는 제외하고는 모두 지난 신청서로 푸쉬
+							notDoneList.push(v);
+						} else {
+							// 결국 남는 건 done / notaccept / cancel 일 경우에 대해서는 지난 신청서로 푸쉬
+							doneList.push(v);
+						}
 					});
 					setDoneList(doneList);
 					setNotDoneList(notDoneList);
@@ -94,7 +133,6 @@ export default ManageVolunteer = ({route}) => {
 
 	// 봉사활동 아이템 클릭 => 봉사활동 신청서 필요 데이터 : 보호소 정보 / 해당 봉사활동 데이터
 	const goToAssignVolunteer = shelterData => {
-		// console.log('shelter', shelterData);
 		isShelterUser ? navigation.push('ShelterVolunteerForm', shelterData) : navigation.push('UserVolunteerForm', shelterData);
 	};
 
@@ -103,7 +141,7 @@ export default ManageVolunteer = ({route}) => {
 	};
 
 	const whenEmpty = () => {
-		return <Text style={[txt.roboto28b, {marginTop: 50}]}>신청 내역이 없습니다. </Text>;
+		return <Text style={[txt.roboto28b, manageVolunteer.whenEmpty]}>신청 내역이 없습니다. </Text>;
 	};
 
 	if (loading) {

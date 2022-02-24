@@ -27,7 +27,7 @@ export default FeedCommentList = props => {
 	const input = React.useRef();
 	const addChildCommentFn = React.useRef(() => {});
 	const [refresh, setRefresh] = React.useState(true);
-	const keyboardY = useKeyboardBottom(150 * DP);
+	const keyboardY = useKeyboardBottom(0 * DP);
 	const flatlist = React.useRef();
 
 	React.useEffect(() => {

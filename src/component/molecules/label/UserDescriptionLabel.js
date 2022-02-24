@@ -42,7 +42,16 @@ const UserDescriptionLabel = props => {
 					</View>
 					{data.user_introduction ? (
 						<Text
-							style={[txt.noto24, {lineHeight: 44 * DP, color: GRAY10, maxWidth: props.width * DP || 400 * DP}]}
+							style={[
+								txt.noto24,
+								{
+									lineHeight: 44 * DP,
+									color: GRAY10,
+									width: props.width * DP || null, //22.02.24 추가 KSW UserDescriptionLabel이 사용되는 모든 템플릿 안드로이드 ios 확인 완료 출력 오류 없는 상태
+									maxWidth: props.width * DP || 400 * DP,
+									// backgroundColor: 'yellow',
+								},
+							]}
 							numberOfLines={1}
 							ellipsizeMode="tail">
 							{data.user_introduction || ''}

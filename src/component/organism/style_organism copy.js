@@ -929,12 +929,15 @@ export const volunteerItem = StyleSheet.create({
 		width: 654 * DP,
 		height: 94 * DP,
 		flexDirection: 'row',
+		justifyContent: 'space-between',
 	},
 	labelContainer: {
-		width: 542 * DP,
+		width: 510 * DP,
+		// backgroundColor: 'palegreen',
 	},
 	expected_activityDate: {
-		width: 112 * DP,
+		// width: 112 * DP,
+		// backgroundColor: 'yellow',
 		height: 70 * DP,
 		alignItems: 'flex-end',
 		alignSelf: 'center',

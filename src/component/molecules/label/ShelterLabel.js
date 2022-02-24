@@ -15,7 +15,6 @@ import {DEFAULT_PROFILE} from 'Root/i18n/msg';
  * @param {(data:object)=>void} props.onClickLabel - 보호소 UserObject
  */
 const ShelterLabel = props => {
-	console.log('shelterLabel');
 	const [validation, setValidation] = React.useState(false);
 	//user_nickname Text 색깔 조건부적용을 위한 세션아이디 비교
 	React.useEffect(() => {
@@ -46,7 +45,7 @@ const ShelterLabel = props => {
 				<Image source={{uri: props.data.user_profile_uri || DEFAULT_PROFILE}} style={styles.img_round_94} />
 			</TouchableOpacity>
 			<View style={{position: 'absolute', left: 66 * DP, top: 46 * DP}}>{getStatusMark()}</View>
-			<View style={{marginLeft: 50 * DP, paddingVertical: 4 * DP}}>
+			<View style={{marginLeft: 30 * DP, paddingVertical: 4 * DP}}>
 				<Text style={[txt.roboto28b, {color: validation ? APRI10 : BLACK}]} numberOfLines={1} ellipsizeMode="tail">
 					{props.data.shelter_name || ''}
 				</Text>

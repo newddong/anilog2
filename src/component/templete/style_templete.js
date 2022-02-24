@@ -2517,6 +2517,12 @@ export const applicationFormVolunteer = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 	},
+	btnContainer: {
+		width: 654 * DP,
+		marginTop: 60 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+	},
 });
 
 export const animalAdoption = StyleSheet.create({
@@ -3122,6 +3128,9 @@ export const appliesRecord = StyleSheet.create({
 		alignItems: 'center',
 		height: 312 * DP,
 		marginVertical: 30 * DP,
+	},
+	whenEmpty: {
+		paddingVertical: 40 * DP,
 	},
 });
 
@@ -4053,6 +4062,9 @@ export const manageVolunteer = StyleSheet.create({
 		height: 130 * DP,
 		paddingTop: 50 * DP,
 		textAlign: 'center',
+	},
+	whenEmpty: {
+		paddingVertical: 70 * DP,
 	},
 });
 

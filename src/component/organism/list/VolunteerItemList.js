@@ -22,13 +22,14 @@ export default VolunteerItemList = props => {
 
 	return (
 		<View style={[volunteerItemList.container]}>
-			<ScrollView horizontal={false}>
+			<ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
 				<ScrollView horizontal={true} scrollEnabled={false}>
 					<FlatList
 						data={props.items}
 						renderItem={({item, index}) => renderItem(item, index)}
 						scrollEnabled={false}
 						ListEmptyComponent={props.whenEmpty}
+						showsVerticalScrollIndicator={false}
 					/>
 				</ScrollView>
 			</ScrollView>

@@ -11,7 +11,7 @@ import DatePicker from 'Molecules/select/DatePicker';
 import Input24 from 'Molecules/input/Input24';
 import Modal from 'Component/modal/Modal';
 import {getUserInfoById} from 'Root/api/userapi';
-import {assignVolunteerActivity} from 'Root/api/volunteerapi';
+import {assignVolunteerActivity, setVolunteerActivityAcceptByMember, setVolunteerActivityStatus} from 'Root/api/volunteerapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import UserDescriptionLabel from 'Root/component/molecules/label/UserDescriptionLabel';
 
@@ -100,17 +100,36 @@ export default ApplyVolunteer = ({route, navigation}) => {
 					},
 					result => {
 						console.log('result / assignVolunteerAct / ApplyVolunteer   :  ', result);
+
 						Modal.popNoBtn('봉사활동 신청이 완료되었습니다.');
-						setTimeout(() => {
-							Modal.close();
-							navigation.goBack();
-						}, 1000);
+						setVolunteerConfirmStatus(result.msg._id);
 					},
 					err => {
 						console.log('err / assignVolunteerAct  / ApplyVolunteer  :  ', err);
 					},
 				);
 				Modal.close();
+			},
+		);
+	};
+
+	//봉사활동을 신청 후, 신청자 본인은 자동으로 참여 확정으로 바꿔주는 함수
+	const setVolunteerConfirmStatus = async id => {
+		setVolunteerActivityAcceptByMember(
+			{
+				volunteer_activity_object_id: id,
+				confirm: 'accept',
+			},
+			result => {
+				console.log('result / setVolunteerActivityAcceptByMember / ', result.msg);
+				setTimeout(() => {
+					Modal.close();
+					navigation.goBack();
+				}, 1000);
+			},
+			err => {
+				console.log('err / setVolunteerActivityAcceptByMember ', err);
+				Modal.alert('오류 발생!!');
 			},
 		);
 	};

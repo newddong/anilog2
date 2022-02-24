@@ -1,6 +1,10 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
+<<<<<<< HEAD
 import {Image, Text, TextInput, TouchableOpacity, View, Animated, Easing, ActivityIndicator, FlatList} from 'react-native';
+=======
+import {Image, Text, TextInput, TouchableOpacity, View, Animated, Easing, ActivityIndicator,FlatList} from 'react-native';
+>>>>>>> 92f56e69e34dd769632c96d32fab2bd41b8df228
 import {btn_w226, btn_w276} from 'Atom/btn/btn_style';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import {login_style, temp_style, accountPicker, animalProtectRequestDetail_style} from '../style_templete';

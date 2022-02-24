@@ -16,7 +16,6 @@ import {ProfileDefaultImg} from 'Atom/icon';
  * @param {(data:object)=>void} props.onClickLabel - 버튼을 눌렸을때 동작하는 콜백, 제목 반환환
  */
 const UserDescriptionLabel = props => {
-	console.log('props.data / 디스크립', props.data);
 	const data = props.data;
 
 	const onClickLabel = () => {

@@ -19,11 +19,11 @@ import {hyphened} from 'Root/util/dateutil';
 
 export default ApplicationFormVolunteer = ({route, navigation}) => {
 	// console.log('route / ApplicationFormVolunteer', route.params);
-	const [data, setData] = React.useState(route.params); // 봉사활동 Object
+	const data = route.params; // 봉사활동 Object
 	const [loading, setLoading] = React.useState(true); // 화면 출력 여부 결정
 	const [applicant, setApplicant] = React.useState([]); // 봉사활동 지원자 배열 (Object배열)
 	const isShelterOwner = route.name == 'ShelterVolunteerForm'; // 보호소 계정의 봉사활동 신청관리 루트로 들어왔는지 여부
-
+	console.log('data', data);
 	//봉사활동 지원자 프로필 라벨 채우기 위한 API 접속(차후 한 번에 받아오는 방식으로 전환 필요)
 	React.useEffect(() => {
 		if (route.name == 'UserVolunteerForm') {
@@ -55,11 +55,15 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 			}, 500);
 		} else {
 			//ShelterVolunteerForm
-			console.log('ShelterVolunteerForm Recieved params', route.params.volunteer_accompany);
-			setApplicant(data.volunteer_accompany);
+			console.log('ShelterVolunteerForm Recieved params', data.volunteer_accompany);
+			let accompanyList = [];
+			data.volunteer_accompany.map((v, i) => {
+				accompanyList.push(v.member);
+			});
+			setApplicant(accompanyList);
 			setTimeout(() => {
 				setLoading(false);
-			}, 1000);
+			}, 500);
 		}
 	}, []);
 
@@ -206,7 +210,9 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 							</View>
 							<View style={[applicationFormVolunteer.title]}>
 								<Text style={[txt.noto24b, {color: GRAY10}]}>참여 인원</Text>
-								<Text style={[txt.roboto28, {marginLeft: 5, marginTop: 2}]}>{data.volunteer_accompany ? applicant.length : '0'}</Text>
+								<Text style={[txt.roboto28, {marginLeft: 5, marginTop: 2}]}>
+									{data.volunteer_accompany_number ? data.volunteer_accompany_number : '0'}
+								</Text>
 							</View>
 						</View>
 						{/* 참여 리스트 */}

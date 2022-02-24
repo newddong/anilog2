@@ -15,6 +15,7 @@ import {DEFAULT_PROFILE} from 'Root/i18n/msg';
  * @param {(data:object)=>void} props.onClickLabel - 보호소 UserObject
  */
 const ShelterLabel = props => {
+	console.log('shelterLabel');
 	const [validation, setValidation] = React.useState(false);
 	//user_nickname Text 색깔 조건부적용을 위한 세션아이디 비교
 	React.useEffect(() => {

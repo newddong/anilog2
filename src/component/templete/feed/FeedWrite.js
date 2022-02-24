@@ -1,6 +1,6 @@
 import React from 'react';
 import {ScrollView, Text, TouchableOpacity, View, TouchableWithoutFeedback, TextInput, Platform, Keyboard} from 'react-native';
-import {APRI10, WHITE, GRAY20} from 'Root/config/color';
+import {APRI10, WHITE, GRAY20, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Paw54_Border} from 'Root/component/atom/icon/index';
@@ -285,7 +285,6 @@ export default FeedWrite = props => {
 								textAlignVertical={'top'}
 								multiline={true}
 								placeholder="게시물을 작성하세요 (150자)"
-								placeholderTextColor={GRAY20}
 								onChangeText={inputFeedTxt}
 								maxLength={150}
 								onFind={onFindTag}
@@ -343,7 +342,7 @@ const MissingForm = props => {
 	]);
 	const [isSpeciesChanged, setIsSpeciesChanged] = React.useState(false);
 
-	const [city, setCity] = React.useState(['시를 선택해 주세요']);
+	const [city, setCity] = React.useState(['광역시, 도']);
 	const [district, setDistrict] = React.useState(['구를 선택해 주세요']);
 	React.useEffect(() => {
 		getAddressList(
@@ -572,6 +571,7 @@ const MissingForm = props => {
 					onChangeText={onChangeMissingLocationDetail}
 					style={[feedWrite.missing_location_detail_input]}
 					placeholder={'반려동물이 실종된 구체적인 장소를 설명해주세요.'}
+					placeholderTextColor={GRAY10}
 					onPressIn={onPressIn(inputLocationRef)}
 					ref={inputLocationRef}
 				/>
@@ -889,6 +889,7 @@ const ReportForm = props => {
 							onChangeText={onChangeMissingLocationDetail}
 							style={[feedWrite.missing_location_detail_input]}
 							placeholder={'제보하려는 장소의 위치를 설명해주세요.'}
+							placeholderTextColor={GRAY10}
 							onPressIn={onPressIn(inputLocationRef)}
 							ref={inputLocationRef}
 						/>

@@ -39,9 +39,9 @@ export default FeedCommentList = props => {
 				},
 				comments => {
 					setComments(comments.msg);
-					console.log('comments', comments);
+					// console.log('comments', comments);
 				},
-				err => console.log(err),
+				err => console.log('getCommentListByFeedId', err),
 			);
 		}
 	}, []);
@@ -144,11 +144,16 @@ export default FeedCommentList = props => {
 					<Text style={[txt.noto26, {color: GRAY10}]}>댓글 {comments.length}개 </Text>
 				</View>
 			);
-		if (index > 0) return <CommentList items={item} onPressReplyBtn={onReplyBtnClick} />;
+		if (index > 0)
+			return (
+				<View style={{marginLeft: 48 * DP}}>
+					<CommentList items={item} onPressReplyBtn={onReplyBtnClick} />
+				</View>
+			);
 	};
 	const currentPosition = React.useRef(0);
 	const onScroll = e => {
-		console.log(e.nativeEvent.contentOffset.y);
+		// console.log(e.nativeEvent.contentOffset.y);
 		currentPosition.current = e.nativeEvent.contentOffset.y;
 	};
 

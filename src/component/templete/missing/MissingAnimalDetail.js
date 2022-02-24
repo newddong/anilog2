@@ -22,10 +22,6 @@ import {phoneFomatter} from 'Root/util/stringutil';
 
 export default MissingAnimalDetail = props => {
 	const navigation = useNavigation();
-	React.useEffect(() => {
-		LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
-	}, []);
-	console.log('MissingAnimalDetail', props);
 	const [photo, setPhoto] = React.useState(props.route.params != null ? props.route.params : []); //PhotoSelect에서 사진 선택이 됐을 경우 photo에 담김
 	const [editComment, setEditComment] = React.useState(false); //답글 작성란 View 보이기 T/F
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
@@ -35,6 +31,7 @@ export default MissingAnimalDetail = props => {
 	const [writeCommentData, setWriteCommentData] = React.useState(); //더보기 클릭 State
 	const [replyPressed, setReplyPressed] = React.useState(false);
 	const debug = true;
+
 	const [loading, setLoading] = React.useState(true); //로딩상태
 	const viewShotRef = useRef();
 	React.useEffect(() => {
@@ -216,11 +213,11 @@ export default MissingAnimalDetail = props => {
 				if (!granted) {
 					return;
 				}
-			}
-			const image = CameraRoll.save(imageURI, 'photo');
-			if (image) {
-				// Alert.alert('', 'Image saved successfully.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
-				Modal.popOneBtn('전단지가 저장되었습니다.', '확인', Modal.close);
+				const image = CameraRoll.save(imageURI, 'photo');
+				if (image) {
+					// Alert.alert('', 'Image saved successfully.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
+					Modal.popOneBtn('전단지가 저장되었습니다.', '확인', Modal.close);
+				}
 			}
 			// Share.share({title: 'Image', url: imageURI});
 		} catch (error) {
@@ -281,6 +278,7 @@ export default MissingAnimalDetail = props => {
 			<FlatList
 				contentContainerStyle={[reportDetail.container]}
 				data={[{}]}
+				showsVerticalScrollIndicator={false}
 				ListHeaderComponent={
 					<View style={{alignItems: 'center'}}>
 						<View>
@@ -321,11 +319,7 @@ export default MissingAnimalDetail = props => {
 				}
 				renderItem={({item, index}) => (
 					// <View style={[reportDetail.commentList]}>
-					<CommentList
-						items={commentDataList}
-						onPressReplyBtn={onReplyBtnClick}
-						onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
-					/>
+					<CommentList items={commentDataList} onPressReplyBtn={moveToCommentList} onPress_ChildComment_ReplyBtn={onChildReplyBtnClick} />
 					// </View>
 				)}
 			/>

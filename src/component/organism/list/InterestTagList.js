@@ -15,6 +15,7 @@ import {interestTagList} from 'Organism/style_organism copy';
  * title: string,
  * items : 'List item ',
  * onDelete : void,
+ * onPressAddBtn : void,
  * }} props
  */
 export default InterestTagList = props => {
@@ -25,16 +26,7 @@ export default InterestTagList = props => {
 	};
 
 	const onPressAddBtn = () => {
-		if (props.title == INTEREST_REGION) {
-			navigation.push('LocationPicker');
-		} else if (props.title == INTEREST_ACT) {
-			console.log('Interest Act');
-			Modal.popInterestTagModal(
-				'',
-				() => alert('저장'),
-				() => Modal.close(),
-			);
-		}
+		props.onPressAddBtn();
 	};
 
 	const renderItem = (item, index) => {
@@ -69,4 +61,5 @@ InterestTagList.defaultProps = {
 	items: null,
 	title: null,
 	onDelete: e => console.log(e),
+	onPressAddBtn: e => console.log(e),
 };

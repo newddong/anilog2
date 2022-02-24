@@ -22,7 +22,7 @@ const SelectScrollBoxModal = props => {
 	const [selectedItem2, setSelectedItem2] = React.useState(2);
 	const refContainerLeft = React.useRef('');
 	const refContainerRight = React.useRef('');
-	const padding = '---------------------------';
+	const padding = '';
 
 	const onSelect = () => {
 		if (data.length == 1) {

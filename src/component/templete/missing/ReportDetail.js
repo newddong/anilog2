@@ -15,7 +15,7 @@ import {txt} from 'Root/config/textstyle';
 
 export default ReportDetail = props => {
 	const navigation = useNavigation();
-	console.log('ReportDetail', props);
+	// console.log('ReportDetail', props);
 	React.useEffect(() => {
 		LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 	}, []);
@@ -248,7 +248,7 @@ export default ReportDetail = props => {
 				renderItem={({item, index}) => (
 					<CommentList
 						items={commentDataList}
-						onPressReplyBtn={onReplyBtnClick}
+						onPressReplyBtn={moveToCommentList}
 						onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
 					/>
 				)}

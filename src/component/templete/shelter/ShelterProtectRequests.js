@@ -10,7 +10,10 @@ import Modal from 'Root/component/modal/Modal';
 import {txt} from 'Root/config/textstyle';
 import {getPettypes} from 'Root/api/userapi';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {NewMeatBall60} from 'Root/component/atom/icon';
+import {Filter60Border, Filter60Filled, NewMeatBall60} from 'Root/component/atom/icon';
+import DP from 'Root/config/dp';
+import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
+import {btn_w306_h68} from 'Root/component/atom/btn/btn_style';
 
 // ShelterMenu - 보호요청 올린 게시글 클릭
 // params - 로그인한 보호소 유저의 _id
@@ -19,6 +22,8 @@ export default ShelterProtectRequests = ({route, navigation}) => {
 	const [filterStatus, setFilterStatus] = React.useState('all');
 	const [filterSpecies, setFilterSpecies] = React.useState('');
 	const [petTypes, setPetTypes] = React.useState(['동물종류']);
+	const [filterIcon, setFilterIcon] = React.useState(false);
+	const filterRef = React.useRef();
 
 	React.useEffect(() => {
 		// Modal.popNoBtn('잠시만 기다려주세요.');
@@ -99,6 +104,56 @@ export default ShelterProtectRequests = ({route, navigation}) => {
 		}
 	};
 
+	const onFilterOn = () => {
+		setFilterIcon(!filterIcon);
+		filterRef.current.measure((fx, fy, width, height, px, py) => {
+			// console.log('px', px);
+			// console.log('py', py);
+			if (!filterIcon) {
+				Modal.popRadioSelect(
+					{x: px, y: py},
+					PROTECT_STATUS,
+					'정렬',
+					selected => {
+						switch (selected) {
+							case 0:
+								setFilterStatus('rescue');
+								break;
+							case 1:
+								setFilterStatus('discuss');
+								break;
+							case 2:
+								setFilterStatus('complete');
+								break;
+							default:
+								break;
+						}
+						setFilterIcon(false);
+						Modal.close();
+					},
+					() => {
+						setFilterIcon(false);
+						Modal.close();
+					},
+				);
+			}
+		});
+	};
+
+	const onSelectKind = kind => {
+		Modal.popSelectScrollBoxModal(
+			[petTypes],
+			'동물 종류 선택',
+			selected => {
+				selected == '동물종류' ? setFilterSpecies('') : setFilterSpecies(selected);
+				Modal.close();
+			},
+			() => {
+				Modal.close();
+			},
+		);
+	};
+
 	const whenEmpty = () => {
 		return <Text style={[txt.roboto28b, {marginTop: 50, textAlign: 'center'}]}>보호 요청 게시목록이 없습니다. </Text>;
 	};
@@ -107,13 +162,22 @@ export default ShelterProtectRequests = ({route, navigation}) => {
 		<View style={[login_style.wrp_main, {flex: 1}]}>
 			<View style={[temp_style.filterbutton_view, protectRequestList_style.filterbutton_view]}>
 				<View style={[temp_style.filterbutton]}>
-					<FilterButton menu={petTypes} width={306} onSelect={onSelectFilter} />
+					<ArrowDownButton
+						onPress={onSelectKind}
+						btnTitle={filterSpecies || '동물종류'}
+						btnLayout={btn_w306_h68}
+						btnStyle={'border'}
+						btnTheme={'gray'}
+					/>
 				</View>
 				<View style={[temp_style.meatball50]}>
-					{/* <TouchableOpacity onPress={onSelectMeatball}>
-						<NewMeatBall60 />
-					</TouchableOpacity> */}
-					<MeatBallDropdown menu={PROTECT_STATUS} onSelect={onSelectMeatball} />
+					{filterIcon ? (
+						<Filter60Filled onPress={onFilterOn} />
+					) : (
+						<View style={[protectRequestList_style.shadow]} collapsable={false} ref={filterRef}>
+							<Filter60Border onPress={onFilterOn} />
+						</View>
+					)}
 				</View>
 			</View>
 			<View style={[temp_style.baseFlatList_protectRequestList, baseInfo_style.list]}>

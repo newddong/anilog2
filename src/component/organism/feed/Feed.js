@@ -81,7 +81,7 @@ export default Feed = React.memo(props => {
 								<Text style={[txt.roboto24]}>{feed_like_count}</Text>
 							</View>
 						</View>
-						<TouchableOpacity onPress={moveToCommentList}>
+						{/* <TouchableOpacity onPress={moveToCommentList}>
 							<View style={{flexDirection: 'row'}}>
 								<View style={organism_style.like48}>
 									<Comment48_Border />
@@ -92,7 +92,7 @@ export default Feed = React.memo(props => {
 									</View>
 								</View>
 							</View>
-						</TouchableOpacity>
+						</TouchableOpacity> */}
 					</View>
 
 					{/* 댓글 comment_count개 모두 보기 */}

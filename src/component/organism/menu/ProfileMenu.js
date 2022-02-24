@@ -5,6 +5,7 @@ import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {FavoriteTag46_Filled, FavoriteTag48_Filled, NextMark, Paw46} from 'Atom/icon';
 import {profileMenu} from 'Organism/style_organism copy';
+import {GRAY40} from 'Root/config/color';
 /**
  *
  * @param {{

@@ -11,6 +11,7 @@ import {txt} from 'Root/config/textstyle';
  * @param {value} props.value - 현재 선택 값
  * @param {string} props.textColor - 텍스트 색깔
  * @param {number} props.width - 인풋 너비
+ * @param {number} props.fontSize - 인풋 너비
  * @param {()=>void} props.onPressInput - 버튼을 눌렸을때 동작하는 콜백, 제목 반환환
  * @param {boolean} props.noBorder - 하단 테두리
  */
@@ -27,20 +28,25 @@ const SelectInput = props => {
 				{
 					width: props.width * DP,
 					borderBottomColor: props.noBorder ? WHITE : APRI10,
+					// backgroundColor: 'yellow',
 				},
 			]}>
 			<Text
 				style={[
 					txt.noto28,
 					{
+						fontSize: props.fontSize * DP,
 						color: props.textColor,
 						width: (props.width - 70) * DP,
 						textAlign: 'center',
+						// backgroundColor: 'red',
 					},
 				]}>
 				{props.value}
 			</Text>
-			<Arrow_Down_GRAY10 />
+			<View style={[{top: 4 * DP}]}>
+				<Arrow_Down_GRAY10 />
+			</View>
 		</TouchableOpacity>
 	);
 };
@@ -62,6 +68,7 @@ SelectInput.defaultProps = {
 	value: 'Default',
 	onPressInput: () => {},
 	noBorder: false,
+	fontSize: 28,
 };
 
 export default SelectInput;

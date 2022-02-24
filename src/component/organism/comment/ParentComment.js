@@ -31,6 +31,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
  * }} props
  */
 export default ParentComment = React.memo((props, ref) => {
+
 	// console.log('ParentComment : ', props.parentComment.comment_writer_id.user_nickname, props.parentComment.comment_is_secure);
 	// console.log('ParentComment', props.parentComment.comment_is_secure);
 
@@ -154,6 +155,7 @@ export default ParentComment = React.memo((props, ref) => {
 	return (
 		<View style={organism_style.parentComment}>
 			{/* 유저프로필 라벨 및 Meatball  */}
+
 			<View style={[organism_style.UserLocationTimeLabel_view_parentComment, {}]}>
 				<View style={[parentComment.userLabelContainer, {}]} collapsable={false} ref={meatballRef}>
 					<UserLocationTimeLabel data={data.comment_writer_id} time={data.comment_update_date} />

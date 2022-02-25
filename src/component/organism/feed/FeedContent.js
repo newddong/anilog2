@@ -328,16 +328,16 @@ export default FeedContent = props => {
 									</View>
 								</View>
 							)}
-							{/* <Text>{route.name}</Text> */}
+							<Text>{route.name}</Text>
 							<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
-							{/* <Text>{feed_type}</Text> */}
+							<Text>{feed_type}</Text>
 						</View>
 					</View>
 
 					{/* type값이 status일 경우 status 버튼이 나오고 그렇지 않으면 다른 버튼 표기 */}
 				</View>
 				{/* line 1-1 (실종/제보관련 내용) */}
-				{!route.name.includes('MainHomeFeedList') && (feed_type == 'report' || feed_type == 'missing') && (
+				{!route.name.includes('MainHomeFeedList') && !route.name.includes('UserFeedList') && (feed_type == 'report' || feed_type == 'missing') && (
 					<View style={[organism_style.tipOff_feedContent, feedContent_style.tipOff]} onLayout={onLayoutReport}>
 						<MissingReportInfo data={props.data} />
 					</View>

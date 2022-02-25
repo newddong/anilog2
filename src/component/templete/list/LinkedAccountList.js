@@ -15,22 +15,25 @@ export default LinkedAccountList = props => {
 	const [myFollower, setMyFollower] = React.useState(); // 팔로워리스트 현재 빈 값
 	const [recommendedList, setRecommendedList] = React.useState(); // 추천리스트 현재 빈 값
 
-	console.log('초기 파라메터',props.route.params);
+	// console.log('초기 파라메터', props.route.params);
 
-	React.useEffect(()=>{
-		getFollowers({
-			userobject_id : props.route.params.userobject._id
-		},(result)=>{
-			setMyFollower(result.msg.map(v=>v.follower_id));
-		},(err)=>{
-			Modal.alert(error);
-		})
+	React.useEffect(() => {
+		getFollowers(
+			{
+				userobject_id: props.route.params.userobject._id,
+			},
+			result => {
+				setMyFollower(result.msg.map(v => v.follower_id));
+			},
+			err => {
+				// Modal.alert(err);
+			},
+		);
+	}, []);
 
-	},[])
-
-	React.useEffect(()=>{
-		console.log('팔로워 리스트',myFollower);
-	},[myFollower])
+	React.useEffect(() => {
+		console.log('팔로워 리스트', myFollower);
+	}, [myFollower]);
 
 	return (
 		<View style={[linkedAccountList.container]}>

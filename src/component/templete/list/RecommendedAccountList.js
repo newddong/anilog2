@@ -31,7 +31,7 @@ export default RecommendedAccountList = ({route, navigation}) => {
 				setRecommendList(result.msg);
 			},
 			err => {
-				Modal.alert(error);
+				// Modal.alert(err);
 			},
 		);
 	}, []);

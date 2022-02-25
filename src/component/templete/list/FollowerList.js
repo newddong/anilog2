@@ -3,6 +3,7 @@ import {FlatList, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import ControllableAccountList from 'Organism/list/ControllableAccountList';
 import {followerList} from 'Templete/style_templete';
 import {getFollows, getFollowers} from 'Root/api/userapi';
+import InputWithSearchIcon from 'Root/component/molecules/input/InputWithSearchIcon';
 
 export default FollowerList = ({route, navigation}) => {
 	const [searchInput, setSearchInput] = React.useState('');
@@ -11,6 +12,14 @@ export default FollowerList = ({route, navigation}) => {
 	const onClickAccount = item => {
 		// console.log('item', item);
 		navigation.push('UserProfile', {userobject: item});
+	};
+
+	const onChangeSearchInput = text => {
+		setSearchInput(text);
+	};
+
+	const onSearch = () => {
+		console.log('');
 	};
 
 	React.useEffect(() => {
@@ -23,7 +32,7 @@ export default FollowerList = ({route, navigation}) => {
 					setMyFollower(result.msg.map(v => v.follower_id));
 				},
 				err => {
-					Modal.alert(error);
+					// Modal.alert(err);
 				},
 			);
 		}
@@ -36,22 +45,18 @@ export default FollowerList = ({route, navigation}) => {
 					setMyFollower(result.msg.map(v => v.follow_id));
 				},
 				err => {
-					Modal.alert(error);
+					Modal.alert(err);
 				},
 			);
 		}
 	}, []);
 
-	React.useEffect(() => {
-		console.log('팔로워 리스트', myFollower);
-	}, [myFollower]);
-
 	return (
 		<View style={[followerList.container]}>
 			<ScrollView style={[{flex: 0}]}>
-				{/* <View style={[followerList.inputWitchSearch, {alignSelf: 'center'}]}>
+				<View style={[followerList.inputWitchSearch, {alignSelf: 'center'}]}>
 					<InputWithSearchIcon onChange={onChangeSearchInput} onSearch={onSearch} placeholder={'검색어를 입력해주세요.'} />
-				</View> */}
+				</View>
 				<View style={[{alignItems: 'center'}]}>
 					<ScrollView horizontal={false} style={{flex: 0}}>
 						<ScrollView horizontal={true} style={{flex: 1}}>

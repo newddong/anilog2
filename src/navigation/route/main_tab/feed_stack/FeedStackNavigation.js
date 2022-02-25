@@ -23,7 +23,7 @@ export default FeedStackNavigation = () => {
 			<FeedStack.Screen
 				name="SocialRelation"
 				component={SocialRelationTopTabNavigation}
-				options={{header: props => <MeatBallHeader {...props} />, title: '프로필'}}
+				options={{header: props => <SimpleHeader {...props} />, title: '프로필'}}
 			/>
 			<FeedStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <MeatBallHeader {...props} />, title: '프로필'}} />
 			<FeedStack.Screen name="HashFeedList" component={FeedList} />

@@ -10,7 +10,7 @@ import {createFeed, createMissing, createReport} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default FeedWriteHeader = ({route, navigation, options}) => {
-	console.log('route', route);
+	// console.log('route', route);
 	const userInfo = userGlobalObject;
 	const complete = result => {
 		Modal.close();
@@ -33,7 +33,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			});
 			return;
 		}
-		console.log('route.params:', route.params);
+		// console.log('route.params:', route.params);
 		Modal.popNoBtn('게시물을 등록중입니다.');
 		let param = {...route.params, hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1))};
 		switch (route.params?.feedType) {

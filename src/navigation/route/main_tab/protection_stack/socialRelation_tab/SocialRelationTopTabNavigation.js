@@ -1,11 +1,13 @@
 import React from 'react';
-import {View} from 'react-native'
+import {View, StyleSheet} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import TopTabNavigation_Border from 'Organism/menu/TopTabNavigation_Border';
 import LinkedAccountList from 'Templete/list/LinkedAccountList';
 import FollowerList from 'Templete/list/FollowerList';
 import RecommendedAccountList from 'Templete/list/RecommendedAccountList';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
+import DP from 'Root/config/dp';
+import {APRI10} from 'Root/config/color';
 
 const SocialRelationTab = createMaterialTopTabNavigator();
 
@@ -31,33 +33,51 @@ export default SocialRelationTopTabNavigation = ({route, navigation}) => {
 	}, [routeName]);
 
 	return (
-		<View style={{flex:1}}>
 		<SocialRelationTab.Navigator
 			initialRouteName={'FollowerList'}
-			tabBar={({state, descriptors, navigation, position}) => {
-				const onSelectTab = pressedTab => {
-					navigation.navigate({
-						//현재 Tab state가 가지는 routes들 중 pressedTab 인덱스
-						name: state.routes[pressedTab].name,
-						merge: true,
-					});
-				};
+			screenOptions={{
+				tabBarItemStyle: {height: 70 * DP},
+				tabBarIndicatorStyle: styles.tabBarIndicatorStyle,
+				lazy: true,
+			}}
+			// tabBar={({state, descriptors, navigation, position}) => {
+			// 	const onSelectTab = pressedTab => {
+			// 		navigation.navigate({
+			// 			//현재 Tab state가 가지는 routes들 중 pressedTab 인덱스
+			// 			name: state.routes[pressedTab].name,
+			// 			merge: true,
+			// 		});
+			// 	};
 
-				return (
-					<TopTabNavigation_Border
-						items={tabBarItems} //Tab에 출력될 Label 배열
-						onSelect={onSelectTab} // 현재 클릭된 상태인 tab (pressedTab에는 클릭된 index가 담겨져있음)
-						select={state.index} // gesture Handler(손가락으로 swipe)로 tab을 움직였을 시 자식까지 state를 연동시키기 위한 props
-						fontSize={24}
-						value={currentScreen} //TopTab의 현재 선택 Value(가변)
-					/>
-				);
-			}}>
-			{/* <SocialRelationTab.Screen name="LinkedAccountList" component={LinkedAccountList} initialParams={{userobject:data}}/> */}
-			<SocialRelationTab.Screen name="FollowerList" component={FollowerList} initialParams={{userobject:data}}/>
-			<SocialRelationTab.Screen name="FollowingList" component={FollowerList} initialParams={{userobject:data}}/>
-			<SocialRelationTab.Screen name="RecommendedAccountList" component={RecommendedAccountList} initialParams={{userobject:data}}/>
+			// 	return (
+			// 		<TopTabNavigation_Border
+			// 			items={tabBarItems} //Tab에 출력될 Label 배열
+			// 			onSelect={onSelectTab} // 현재 클릭된 상태인 tab (pressedTab에는 클릭된 index가 담겨져있음)
+			// 			select={state.index} // gesture Handler(손가락으로 swipe)로 tab을 움직였을 시 자식까지 state를 연동시키기 위한 props
+			// 			fontSize={24}
+			// 			value={currentScreen} //TopTab의 현재 선택 Value(가변)
+			// 		/>
+			// 	);
+			// }}
+		>
+			<SocialRelationTab.Screen name="LinkedAccountList" component={LinkedAccountList} initialParams={{userobject: data}} />
+			<SocialRelationTab.Screen name="FollowerList" component={FollowerList} initialParams={{userobject: data}} />
+			<SocialRelationTab.Screen name="FollowingList" component={FollowerList} initialParams={{userobject: data}} />
+			<SocialRelationTab.Screen name="RecommendedAccountList" component={RecommendedAccountList} initialParams={{userobject: data}} />
 		</SocialRelationTab.Navigator>
-		</View>
 	);
 };
+
+const styles = StyleSheet.create({
+	tabbarLabelStyle: {
+		fontFamily: 'NotoSansKR-Bold',
+		fontSize: 30 * DP,
+		marginTop: -20 * DP,
+	},
+	tabBarIndicatorStyle: {
+		backgroundColor: APRI10,
+		height: 70 * DP,
+		borderTopRightRadius: 40 * DP,
+		borderTopLeftRadius: 40 * DP,
+	},
+});

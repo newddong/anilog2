@@ -1717,6 +1717,40 @@ export const addFamilyAccount_style = StyleSheet.create({
 		marginLeft: 20 * DP,
 		marginBottom: 20 * DP,
 	},
+	listEmptyContainer: {
+		width: 654 * DP,
+		paddingVertical: 30 * DP,
+		paddingHorizontal: 30 * DP,
+		alignItems: 'center',
+		// backgroundColor: 'yellow',
+	},
+});
+
+export const addVolunteers = StyleSheet.create({
+	container: {
+		alignItems: 'center',
+		flex: 1,
+	},
+	inputWithSearchIcon: {
+		marginTop: 20 * DP,
+	},
+	accountList: {
+		width: 730 * DP,
+		marginLeft: 48 * DP,
+		marginTop: 30 * DP,
+	},
+	btn_w654: {
+		marginTop: 50 * DP,
+		marginLeft: 20 * DP,
+		marginBottom: 20 * DP,
+	},
+	listEmptyContainer: {
+		width: 654 * DP,
+		paddingVertical: 30 * DP,
+		paddingHorizontal: 30 * DP,
+		alignItems: 'center',
+		// backgroundColor: 'yellow',
+	},
 });
 
 export const userMenu_style = StyleSheet.create({
@@ -4378,7 +4412,9 @@ export const feedWrite = StyleSheet.create({
 });
 
 export const profile = StyleSheet.create({
-	container: {flex: 1},
+	container: {
+		flex: 1,
+	},
 	profileInfo: {
 		width: '100%',
 		backgroundColor: WHITE,
@@ -4411,6 +4447,13 @@ export const profile = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		// backgroundColor: 'red',
+	},
+	whenFeedThumbnailEmpty: {
+		width: 750 * DP,
+		height: 400 * DP,
+		backgroundColor: 'white',
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
 });
 

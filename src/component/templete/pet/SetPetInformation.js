@@ -153,7 +153,7 @@ export default SetPetInformation = ({route, navigation}) => {
 									showmsg={false}
 									confirm={true}
 									showTitle={false}
-									width={270}
+									width={120}
 									placeholder={'몸무게 입력'}
 									showCrossMark={false}
 									onChange={onChangeKg}

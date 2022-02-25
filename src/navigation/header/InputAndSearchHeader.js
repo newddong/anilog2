@@ -7,7 +7,7 @@ import {WHITE, APRI10} from 'Root/config/color';
 import InputWithSearchIcon from 'Molecules/input/InputWithSearchIcon';
 
 export default ConfirmInputHeader = props => {
-	// console.log('ConfirmInputHeader.', props.route.params.routeName);
+	// console.log('props.route.params', props.route.params.routeName);
 	const routeName = props.route.params.routeName != undefined ? props.route.params.routeName : '';
 	const [searchInput, setSearchInput] = React.useState('');
 	const confirm = () => {
@@ -15,9 +15,14 @@ export default ConfirmInputHeader = props => {
 		props.navigation.setParams({searchInput: searchInput});
 	};
 
+	React.useEffect(() => {}, []);
+
 	const onChangeSearchText = text => {
 		// console.log('text', text);
 		setSearchInput(text);
+		if (text != '') {
+			props.navigation.setParams({searchInput: text});
+		}
 	};
 
 	//뒤로 가기 클릭 시 탭이 initialRoute인 Feed로 가던 현상 수정

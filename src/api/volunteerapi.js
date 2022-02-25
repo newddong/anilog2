@@ -61,3 +61,15 @@ export async function setVolunteerActivityStatus(params, callback, errcallback) 
 export async function getShelterVolunteerActivityList(params, callback, errcallback) {
 	apiController('/volunteer/getShelterVolunteerActivityList', arguments);
 }
+
+/**
+ * 참여 인원의 수락 여부 상태를 변경한다 (로그인 필요)
+ * @param {object} params
+ * @param {string} params.volunteer_activity_object_id - 봉사활동 신청서의 아이디
+ * @param {number} params.confirm - 참여 인원의 참여 및 거절 값 ('accept' | 'notaccept')
+ * @param {function} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function setVolunteerActivityAcceptByMember(params, callback, errcallback) {
+	apiController('/volunteer/setVolunteerActivityAcceptByMember', arguments);
+}

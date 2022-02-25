@@ -15,7 +15,7 @@ import userGlobalObj from 'Root/config/userGlobalObject';
 import {ALIGNITEMS, CALENDAR_DAY, CALENDAR_MONTH, CALENDAR_YEAR, FEED_FOLLOWING_USER_CLICK, mobile_carrier, REPORT_CONTENT} from 'Root/i18n/msg';
 
 export default LoginTemplete = props => {
-	
+
 	const [userSetting, setUserSetting] = React.useState();
 
 	React.useEffect(()=>{
@@ -36,7 +36,6 @@ export default LoginTemplete = props => {
 			}
 		})
 	},[])
-	
 	
 	const tryToLogin = () => {
 		Modal.popNoBtn('로그인을 요청합니다.');
@@ -91,8 +90,6 @@ export default LoginTemplete = props => {
 		props.navigation.push('PasswordResetIdentification');
 	};
 
-
-
 	//자동로그인 박스 클릭
 	const onCheckAutoLogin = state => {
 		console.log('자동로그인', state);
@@ -133,9 +130,9 @@ export default LoginTemplete = props => {
 		// Modal.popSelectScrollBoxModal([mobile_carrier], '도, 광역시를 지정해주세요.', e => console.log('e', e));
 		console.log(userSetting);
 	};
-	if(!userSetting){
+	if (!userSetting) {
 		return (
-			<View style={{flex:1,justifyContent:'center',alignItems:'center',backgroundColor:'#fff'}}>
+			<View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff'}}>
 				<Text style={txt.roboto30b}>사용자 설정을 불러오는 중입니다.</Text>
 			</View>
 		);
@@ -234,7 +231,7 @@ export default LoginTemplete = props => {
 						onPress={() => {
 							setId('01096450420');
 							setPassword('tkddn123');
-							props.navigation.push('GeoLocation');
+							// props.navigation.push('GeoLocation');
 						}}>
 						<Text style={[txt.noto24, {color: GRAY20}]}> 계정 2 </Text>
 					</TouchableOpacity>

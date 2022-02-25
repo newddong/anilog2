@@ -9,6 +9,7 @@ import {NextMark} from 'Atom/icon';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import ShelterList from 'Organism/list/ShelterList';
 import {appliesRecord, login_style} from 'Templete/style_templete';
+import AnimalNeedHelp from 'Root/component/organism/listitem/AnimalNeedHelp';
 import {getUserVolunteerActivityList} from 'Root/api/volunteerapi';
 
 export default AppliesRecord = ({route}) => {
@@ -28,12 +29,11 @@ export default AppliesRecord = ({route}) => {
 		getUserAdoptProtectionList(
 			{protect_act_object_id: route.params, request_number: 5, protect_act_type: 'adopt'},
 			result => {
-				// console.log('result / getAppliesRecord / ApplitesRecord  : ', JSON.stringify(result.msg.volunteer[0]));
-				console.log('result.msg', result.msg);
+				console.log('result / getAppliesRecord / ApplitesRecord  : ', JSON.stringify(result.msg.volunteer));
+
 				// 가장 최근 입양 신청한 내역 받고 필드 정리
-				if (result.msg.length > 0) {
-					console.log('dd');
-					let adopt = result.msg[0];
+				if (result.msg.adopt.length > 0) {
+					let adopt = result.msg.adopt[0];
 					let adopt_animal_info = adopt.protect_act_request_article_id.protect_animal_id;
 					delete adopt_animal_info._id;
 					adopt = Object.assign(adopt, adopt_animal_info);
@@ -133,8 +133,10 @@ export default AppliesRecord = ({route}) => {
 
 	//봉사활동 신청 하단 라벨 클릭
 	const onClickShelterLabel = shelterInfo => {
-		console.log('shelter', shelterInfo);
-		navigation.push('UserVolunteerForm', shelterInfo); //봉사 활동 신청 관련
+		console.log('shelterInfi', shelterInfo);
+		let volunteerData = shelterInfo;
+		volunteerData.route = route.name;
+		navigation.push('UserVolunteerForm', volunteerData); //봉사 활동 신청 관련
 	};
 
 	//입양 신청 라벨 클릭
@@ -174,7 +176,7 @@ export default AppliesRecord = ({route}) => {
 						{adopt_application_list != undefined && adopt_application_list.length > 0 ? (
 							<AnimalNeedHelpList data={adopt_application_list} onClickLabel={onClickAdoptApplication} onFavoriteTag={onOff_FavoriteTag} />
 						) : (
-							<Text style={{padding: 15}}>검색 결과가 없습니다.</Text>
+							<Text style={[txt.roboto32b, appliesRecord.whenEmpty]}>검색 결과가 없습니다.</Text>
 						)}
 					</View>
 					<View style={[appliesRecord.record]}>
@@ -192,7 +194,7 @@ export default AppliesRecord = ({route}) => {
 						{protect_application_list != undefined && protect_application_list.length > 0 ? (
 							<AnimalNeedHelpList data={protect_application_list} onClickLabel={onClickProtectApplication} onFavoriteTag={onOff_FavoriteTag} />
 						) : (
-							<Text style={{padding: 15}}>검색 결과가 없습니다.</Text>
+							<Text style={[txt.roboto32b, appliesRecord.whenEmpty]}>검색 결과가 없습니다.</Text>
 						)}
 					</View>
 					<View style={[appliesRecord.shelterList_container]}>
@@ -208,7 +210,7 @@ export default AppliesRecord = ({route}) => {
 						{volunteer_list != undefined && volunteer_list.length > 0 ? (
 							<ShelterList items={volunteer_list} onShelterLabelClick={onClickShelterLabel} />
 						) : (
-							<Text style={{padding: 15}}>신청 내역이 없습니다.</Text>
+							<Text style={[txt.roboto32b, appliesRecord.whenEmpty]}>검색 결과가 없습니다.</Text>
 						)}
 					</View>
 				</ScrollView>

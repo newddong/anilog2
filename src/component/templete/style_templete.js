@@ -2101,7 +2101,6 @@ export const protectRequestList_style = StyleSheet.create({
 		},
 		borderRadius: 20 * DP,
 	},
-
 	listContainer: {
 		width: 750 * DP,
 		// height: 1286 * DP,
@@ -2518,6 +2517,33 @@ export const applicationFormVolunteer = StyleSheet.create({
 		marginBottom: 66 * DP,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
+	},
+	btnContainer: {
+		width: 654 * DP,
+		marginTop: 60 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+	},
+	notAcceptText: {
+		borderRadius: 30 * DP,
+		borderWidth: 2 * DP,
+		borderColor: APRI10,
+		// padding: 30 * DP,
+		paddingHorizontal: 20 * DP,
+		width: 654 * DP,
+		paddingVertical: 15 * DP,
+		alignItems: 'center',
+	},
+	accompanyItem: {
+		width: 630 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		marginBottom: 20 * DP,
+	},
+	accompanyItemLabel: {
+		// backgroundColor: 'red',
+		width: 440 * DP,
 	},
 });
 
@@ -3124,6 +3150,9 @@ export const appliesRecord = StyleSheet.create({
 		alignItems: 'center',
 		height: 312 * DP,
 		marginVertical: 30 * DP,
+	},
+	whenEmpty: {
+		paddingVertical: 40 * DP,
 	},
 });
 
@@ -3826,7 +3855,6 @@ export const feedCommentList = StyleSheet.create({
 		width: 646 * DP,
 		marginLeft: 20 * DP,
 		fontSize: 28 * DP,
-
 		paddingVertical: 0,
 		includeFontPadding: false,
 		// backgroundColor: 'yellow',
@@ -4056,6 +4084,9 @@ export const manageVolunteer = StyleSheet.create({
 		height: 130 * DP,
 		paddingTop: 50 * DP,
 		textAlign: 'center',
+	},
+	whenEmpty: {
+		paddingVertical: 70 * DP,
 	},
 });
 

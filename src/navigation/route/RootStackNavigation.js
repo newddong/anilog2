@@ -69,7 +69,6 @@ import userGlobalObj from 'Root/config/userGlobalObject';
 const RootStack = createStackNavigator();
 
 export default RootStackNavigation = () => {
-
 	const [isPop, popupComponent] = useModal();
 	const [isLoading, setLoading] = React.useState(true);
 	const [initialRouteName, setInitialRouteName] = React.useState('Login');
@@ -111,9 +110,8 @@ export default RootStackNavigation = () => {
 				setInitialRouteName('Login');
 				setLoading(false);
 			}
-			
 		});
-	},[]);
+	}, []);
 
 	if (isLoading) {
 		return (
@@ -300,7 +298,6 @@ export default RootStackNavigation = () => {
 			</SafeAreaView>
 		);
 	}
-
 };
 
 const popup = StyleSheet.create({

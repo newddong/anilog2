@@ -134,7 +134,6 @@ import newmeatball60 from './newMeatBall60';
 import newmeatball60Filled from './newMeatBall60Filled';
 import filter60Border from './filter60Border';
 import filter60Filled from './filter60Filled';
-
 import secureIcon40 from './secureIcon40';
 import DP from 'Root/config/dp';
 

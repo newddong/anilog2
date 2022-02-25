@@ -16,7 +16,6 @@ import {ProfileDefaultImg} from 'Atom/icon';
  * @param {(data:object)=>void} props.onClickLabel - 버튼을 눌렸을때 동작하는 콜백, 제목 반환환
  */
 const UserDescriptionLabel = props => {
-	console.log('props.data', props.data.user_profile_uri);
 	const data = props.data;
 
 	const onClickLabel = () => {
@@ -43,7 +42,16 @@ const UserDescriptionLabel = props => {
 					</View>
 					{data.user_introduction ? (
 						<Text
-							style={[txt.noto24, {lineHeight: 44 * DP, color: GRAY10, maxWidth: props.width * DP || 400 * DP}]}
+							style={[
+								txt.noto24,
+								{
+									lineHeight: 44 * DP,
+									color: GRAY10,
+									width: props.width * DP || null, //22.02.24 추가 KSW UserDescriptionLabel이 사용되는 모든 템플릿  확인 완료 출력 오류 없는 상태 (And, ios)
+									maxWidth: props.width * DP || 400 * DP,
+									// backgroundColor: 'yellow',
+								},
+							]}
 							numberOfLines={1}
 							ellipsizeMode="tail">
 							{data.user_introduction || ''}

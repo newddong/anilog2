@@ -209,9 +209,7 @@ export default Modal = {
 	 * @param {object} data - 출력 아이템
 	 * @param {string} msg - 모달 타이틀
 	 * @param {(selectedItem:string)=>void} onYes - Ok버튼 콜백
-	 * @param {()=>void} onNo - No버튼 콜백
 	 * @param {string} yesMsg - 확인 버튼 타이틀
-	 * @param {string} noMsg - 취소 버튼 타이틀
 	 *
 	 * @example
 	 */

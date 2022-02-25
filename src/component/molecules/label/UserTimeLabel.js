@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View, Image, TouchableOpacity} from 'react-native';
-import {GRAY20, BLACK, APRI10} from 'Root/config/color';
+import {GRAY20, BLACK, APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import DP from 'Root/config/dp';
@@ -36,12 +36,19 @@ const UserTimeLabel = props => {
 			<TouchableOpacity onPress={onClickLabel}>
 				<Image source={{uri: props.data.comment_writer_id.user_profile_uri || DEFAULT_PROFILE}} style={styles.img_round_46} />
 			</TouchableOpacity>
-			<View style={{marginLeft: 20 * DP, flexDirection: 'row', paddingBottom: 10 * DP, height: 36 * DP}}>
-				<Text style={[txt.roboto24, {lineHeight: 30 * DP, color: isLoginUser ? APRI10 : BLACK}]} numberOfLines={1} ellipsizeMode="tail">
+			<View
+				style={{
+					marginLeft: 20 * DP,
+					flexDirection: 'row',
+					paddingBottom: 10 * DP,
+					// height: 36 * DP, - 22.02.22 특정 디바이스에서 이름이 잘리는 현상 발견으로 Height 절대값 => null
+					// backgroundColor: 'red',
+				}}>
+				<Text style={[txt.roboto24, {lineHeight: 30 * DP, color: isLoginUser ? APRI10 : GRAY10}]} numberOfLines={1} ellipsizeMode="tail">
 					{props.data.comment_writer_id.user_nickname || ''}
 				</Text>
 				<Text style={[txt.noto24, {lineHeight: 30 * DP, color: GRAY20, paddingLeft: 16 * DP}]} numberOfLines={1} ellipsizeMode="tail">
-					{props.data.feed_type == undefined ? getCommentedTime() : props.data.comment_date} {/* {getCommentedTime()}일 전 */}
+					·{props.data.feed_type == undefined ? getCommentedTime() : props.data.comment_date} {/* {getCommentedTime()}일 전 */}
 				</Text>
 			</View>
 		</View>

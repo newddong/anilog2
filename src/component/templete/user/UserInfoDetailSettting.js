@@ -22,18 +22,23 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 	const [loaded, setLoaded] = React.useState(false);
 	const [addrSearched, setAddrSearched] = React.useState(false);
 	const [locationInterest, setLocationInterest] = React.useState(route.params.user_interests.interests_location);
+
 	const [contentInterest, setContentInterest] = React.useState([]);
 	const [interestList, setInterestList] = React.useState();
 	const [interestLoaded, setInterestLoaded] = React.useState(false);
 	const [contentSendObejct, setContentSendObject] = React.useState({});
+
 	// 갱신되는 데이터는 Header에도 Json형태로 전해짐
 	// React.useEffect(() => {
 	// 	navigation.setParams({data: data, route_name: route.name});
 	// 	// console.log('user_mobile_company', data.user_mobile_company);
 	// }, [data]);
-
+	React.useEffect(() => {
+		console.log('interset', locationInterest, contentInterest);
+	}, [locationInterest, contentInterest]);
 	React.useEffect(() => {
 		navigation.setParams({data: route.params, route_name: route.name});
+    
 		var temp = [];
 		console.log('ahhh', route.params.user_interests);
 
@@ -52,7 +57,6 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 			}
 			setContentInterest(temp);
 		});
-
 		setLoaded(true);
 	}, []);
 

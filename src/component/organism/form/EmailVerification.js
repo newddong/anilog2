@@ -8,6 +8,7 @@ import InputWithEmail from 'Molecules/input/InputWithEmail';
 import {btn_style, temp_style} from 'Templete/style_templete';
 import {emailVerification} from 'Organism/style_organism';
 
+//이메일 인증 취소로 삭제 예정 22.02.22 KSW
 export default EmailVerification = props => {
 	const [timeOut, setTimeOut] = React.useState(false);
 	const onEndTimer = () => {
@@ -57,6 +58,7 @@ export default EmailVerification = props => {
 	);
 };
 
+EmailVerification.defaultProps = {};
 // btnTitle: 'title', //버튼의 제목
 // 	btnTheme: 'shadow', // btnTheme - ’shadow’, ‘noShadow’, ‘gray’에서 결정
 // 	btnStyle: 'filled', // btnStyle - ‘filled’, ‘border’, ‘noBorder’ 에서 결정

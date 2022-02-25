@@ -2,6 +2,7 @@ import React from 'react';
 import {FlatList, Text, View} from 'react-native';
 import ShelterVerticalLabel from 'Organism/listitem/ShelterVerticalLabel';
 import {shelterList} from 'Organism/style_organism copy';
+
 export default ShelterList = props => {
 	// console.log('props.items', props.items[0]);
 

@@ -12,6 +12,7 @@ import {_dummy_ApplicationFormVolunteer_shelter} from 'Root/config/dummy_data_hj
 import moment from 'moment';
 import {getUserInfoById} from 'Root/api/userapi';
 import {setVolunteerActivityStatus} from 'Root/api/volunteerapi';
+import {hyphened} from 'Root/util/dateutil';
 
 //ApplicationFormVolunteer (봉사활동 신청서 폼) 호출 네비게이트
 // ==> ManageVolunteer에서 더보기 클릭, 혹은 AppliesRecord(신청내역)에서 보호소 라벨 클릭 <==
@@ -122,6 +123,19 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 		);
 	};
 
+	// 해당 보호소 계정이 봉사활동 신청서 활동거절 을 눌렀을 때
+	const onPressReject = () => {
+		console.log('before press confirm', data);
+		Modal.popOneBtnSelectModal(
+			['사유선택', '기타(직접 입력)', '해당 날짜는 봉사가 불가합니다.', '해당 날짜의 봉사 인원수가 다 찼습니다.'],
+			'활동 거절을 하시겠습니까?  거절 사유를 선택해주세요.',
+			selected => {
+				alert(selected);
+			},
+			'확인',
+		);
+	};
+
 	const onPressPhoneCall = () => {
 		Linking.openURL(`tel:${data.volunteer_delegate_contact}`);
 	};
@@ -151,7 +165,7 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 						<></>
 					) : (
 						<View style={[applicationFormVolunteer.shelterInfo]}>
-							<ShelterInfo data={data} />
+							<ShelterInfo data={data} route={route.name} />
 						</View>
 					)}
 					{/* 봉사활동 희망날짜 */}
@@ -213,20 +227,25 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 						<View style={[applicationFormVolunteer.participants_contact_text]}>
 							{isShelterOwner ? (
 								<TouchableOpacity onPress={onPressPhoneCall}>
-									<Text style={[txt.roboto28, {color: BLUE20, textDecorationLine: 'underline'}]}>{data.volunteer_delegate_contact || ''}</Text>
+									<Text style={[txt.roboto28, {color: BLUE20, textDecorationLine: 'underline'}]}>
+										{hyphened(data.volunteer_delegate_contact) || ''}
+									</Text>
 								</TouchableOpacity>
 							) : (
-								<Text style={[txt.roboto28]}>{data.volunteer_delegate_contact || ''}</Text>
+								<Text style={[txt.roboto28]}>{hyphened(data.volunteer_delegate_contact) || ''}</Text>
 							)}
 						</View>
 					</View>
-					<View style={[btn_style.btn_w226, applicationFormVolunteer.btn_w226]}>
-						{isShelterOwner ? (
-							<AniButton onPress={onPressConfirm} btnTitle={'활동 승인'} />
-						) : (
+					{isShelterOwner ? (
+						<View style={[applicationFormVolunteer.buttonContainer]}>
+							<AniButton onPress={onPressReject} btnStyle={'border'} btnTitle={'활동 거절'} />
+							<AniButton onPress={onPressConfirm} btnStyle={'border'} btnTitle={'활동 승인'} />
+						</View>
+					) : (
+						<View style={[applicationFormVolunteer.buttonContainer, {justifyContent: 'center'}]}>
 							<AniButton onPress={onPressCancel} btnTitle={'신청 취소'} btnStyle={'border'} />
-						)}
-					</View>
+						</View>
+					)}
 				</ScrollView>
 			</View>
 		);

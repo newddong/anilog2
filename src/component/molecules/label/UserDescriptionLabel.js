@@ -16,7 +16,7 @@ import {ProfileDefaultImg} from 'Atom/icon';
  * @param {(data:object)=>void} props.onClickLabel - 버튼을 눌렸을때 동작하는 콜백, 제목 반환환
  */
 const UserDescriptionLabel = props => {
-	// console.log('props.data', props.data);
+	console.log('props.data', props.data.user_profile_uri);
 	const data = props.data;
 
 	const onClickLabel = () => {
@@ -36,10 +36,7 @@ const UserDescriptionLabel = props => {
 
 				<View style={{marginLeft: 30 * DP}}>
 					<View style={{flexDirection: 'row'}}>
-						<Text
-							style={(txt.roboto28b, {color: userGlobalObject.userInfo._id == data._id ? APRI10 : BLACK})}
-							numberOfLines={1}
-							ellipsizeMode="tail">
+						<Text style={(txt.roboto28b, {color: userGlobalObject.userInfo._id == data._id ? APRI10 : BLACK})} numberOfLines={1} ellipsizeMode="tail">
 							{data.user_nickname || ''}
 						</Text>
 						{data.showStatus ? <Text style={[txt.noto22, {color: APRI10, alignSelf: 'center', paddingLeft: 10 * DP}]}> STATUS</Text> : null}

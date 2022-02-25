@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View, Image} from 'react-native';
 import Swiper from 'react-native-swiper';
-import {APRI10} from 'Root/config/color';
+import {APRI10, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {ADOPT, DEFAULT_ANIMAL_PROFILE, DEFAULT_PROFILE, DISCUSS, NEAR_RAINBOWBRIDGE, PROTECT, RESCUE} from 'Root/i18n/msg';
@@ -36,15 +36,28 @@ const RescueImage = props => {
 			{props.img_uri.length == 0 ? (
 				<Image source={{uri: DEFAULT_ANIMAL_PROFILE}} style={styles.img_rect_654x542} />
 			) : (
-				<Swiper
-					// style={[styles.img_square_750x750]}
-					activeDotColor="#FFB6A5"
-					showsButtons={false}
-					autoplay={false}
-					loop={false}
-					horizontal={true}>
+				<Swiper activeDotColor="#FFB6A5" autoplay={false} loop={false} horizontal={true}>
 					{props.img_uri.map((data, idx) => (
-						<Image source={{uri: data}} style={styles.img_rect_654x542} key={idx} />
+						<View key={idx}>
+							<Image source={{uri: data}} style={styles.img_rect_654x542} />
+							<View
+								style={{
+									position: 'absolute',
+									borderRadius: 24 * DP,
+									width: 76 * DP,
+									height: 50 * DP,
+									backgroundColor: 'black',
+									opacity: 0.6,
+									right: 20 * DP,
+									bottom: 20 * DP,
+									alignItems: 'center',
+									justifyContent: 'center',
+								}}>
+								<Text style={[txt.roboto24, {color: 'white'}]}>
+									{idx + 1}/{props.img_uri.length}
+								</Text>
+							</View>
+						</View>
 					))}
 					{/* {getFeedIcon()} */}
 				</Swiper>

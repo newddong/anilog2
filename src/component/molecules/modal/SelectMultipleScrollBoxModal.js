@@ -25,7 +25,7 @@ const SelectMultipleScrollBoxModal = props => {
 	const [second, setSecond] = React.useState([]);
 	const refContainerLeft = React.useRef('');
 	const refContainerRight = React.useRef('');
-	const padding = '-----------------------';
+	const padding = '';
 
 	const onSelect = () => {
 		if (data.length == 1) {

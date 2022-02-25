@@ -49,7 +49,7 @@ const ShelterLabel = props => {
 				<Text style={[txt.roboto28b, {color: validation ? APRI10 : BLACK}]} numberOfLines={1} ellipsizeMode="tail">
 					{props.data.shelter_name || ''}
 				</Text>
-				<Text style={[txt.noto24, {lineHeight: 44 * DP, color: GRAY10}]} numberOfLines={1} ellipsizeMode="tail">
+				<Text style={[txt.noto24, {width: 400 * DP, lineHeight: 44 * DP, color: GRAY10}]} numberOfLines={1} ellipsizeMode="tail">
 					{props.data.shelter_address.brief || ''} {props.data.shelter_address.detail || ''}
 				</Text>
 			</View>

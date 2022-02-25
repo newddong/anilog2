@@ -1,17 +1,13 @@
 import React from 'react';
-import {Text, View} from 'react-native';
-import {login_style, temp_style, protectRequestList_style, baseInfo_style} from 'Templete/style_templete';
+import {ScrollView, Text, View} from 'react-native';
+import {login_style, temp_style, protectRequestList_style} from 'Templete/style_templete';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
-import {PET_KIND, PROTECT_STATUS} from 'Root/i18n/msg';
-import FilterButton from 'Molecules/button/FilterButton';
-import MeatBallDropdown from 'Molecules/dropdown/MeatBallDropdown';
-import {getProtectRequestList, getProtectRequestListByShelterId} from 'Root/api/shelterapi';
+import {PROTECT_STATUS} from 'Root/i18n/msg';
+import {getProtectRequestListByShelterId} from 'Root/api/shelterapi';
 import Modal from 'Root/component/modal/Modal';
 import {txt} from 'Root/config/textstyle';
 import {getPettypes} from 'Root/api/userapi';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Filter60Border, Filter60Filled, NewMeatBall60} from 'Root/component/atom/icon';
-import DP from 'Root/config/dp';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 import {btn_w306_h68} from 'Root/component/atom/btn/btn_style';
 
@@ -180,9 +176,13 @@ export default ShelterProtectRequests = ({route, navigation}) => {
 					)}
 				</View>
 			</View>
-			<View style={[temp_style.baseFlatList_protectRequestList, baseInfo_style.list]}>
-				<AnimalNeedHelpList data={protectAnimalList} onClickLabel={onClickLabel} onFavoriteTag={onFavoriteTag} whenEmpty={whenEmpty()} />
-			</View>
+			<ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
+				<ScrollView horizontal={true} scrollEnabled={false}>
+					<View style={[protectRequestList_style.listContainer]}>
+						<AnimalNeedHelpList data={protectAnimalList} onClickLabel={onClickLabel} onFavoriteTag={onFavoriteTag} whenEmpty={whenEmpty()} />
+					</View>
+				</ScrollView>
+			</ScrollView>
 		</View>
 	);
 };

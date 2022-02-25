@@ -16,6 +16,7 @@ import ShelterSmallLabel from 'Root/component/molecules/label/ShelterSmallLabel'
 import {FavoriteTag48_Filled, Share48_Filled} from 'Root/component/atom/icon';
 import {count_to_K} from 'Root/util/stringutil';
 import ProtectAnimalInfoBox from 'Root/component/organism/info/ProtectAnimalInfoBox';
+import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 
 export default ProtectCommentList = props => {
 	// console.log('props.showAllContents', props.route.params.showAllContents);
@@ -31,6 +32,8 @@ export default ProtectCommentList = props => {
 	const addChildCommentFn = React.useRef(() => {});
 	const [refresh, setRefresh] = React.useState(true);
 	const data = props.route.params.protectObject;
+	const keyboardY = useKeyboardBottom(0 * DP);
+
 	// console.log('보호 요청 게시글', data);
 	React.useEffect(() => {
 		// console.log('보효요청게시글', props.route.params.protectObject._id);
@@ -147,6 +150,11 @@ export default ProtectCommentList = props => {
 		);
 	};
 
+	const [heightReply, setReplyHeight] = React.useState(0);
+	const onReplyBtnLayout = e => {
+		setReplyHeight(e.nativeEvent.layout.height);
+	};
+
 	const render = ({item, index}) => {
 		if (index == 0)
 			return (
@@ -166,7 +174,7 @@ export default ProtectCommentList = props => {
 			<View style={[style.contentContainer]}>
 				<View style={[style.content_container_label]}>
 					<ShelterSmallLabel data={data.protect_request_writer_id} onClickLabel={onClickShelterLabel} />
-					<View style={[temp_style.button_animalProtectRequestDetail]}>
+					{/* <View style={[temp_style.button_animalProtectRequestDetail]}>
 						<TouchableOpacity onPress={onPressShelterLabelFavorite} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
 							<FavoriteTag48_Filled />
 							<Text style={[txt.roboto24, {color: APRI10, alignSelf: 'center', textAlign: 'center'}]}>
@@ -179,15 +187,15 @@ export default ProtectCommentList = props => {
 								<Text style={[txt.roboto24, {color: APRI10}]}>공유</Text>
 							</TouchableOpacity>
 						</View>
-					</View>
+					</View> */}
 				</View>
 				<View style={[style.cotent_container_header]}>
-					<Text style={[txt.noto28, {color: GRAY10}]}>보호요청{props.route.name}</Text>
+					<Text style={[txt.noto28, {color: GRAY10}]}>보호요청</Text>
 					<Text style={[txt.noto32b, {}]}>{data.protect_request_title || ''}</Text>
 				</View>
-				<View style={[style.cotent_container_info]}>
+				{/* <View style={[style.cotent_container_info]}>
 					<ProtectAnimalInfoBox data={data} />
-				</View>
+				</View> */}
 			</View>
 		);
 	};
@@ -207,18 +215,21 @@ export default ProtectCommentList = props => {
 				renderItem={render}
 				showsVerticalScrollIndicator={false}
 				ListHeaderComponent={protectRequestContent}
+				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
 			/>
 			{userGlobalObject.userInfo._id != '' && (editComment || props.route.name == 'ProtectCommentList') ? (
-				<ReplyWriteBox
-					onAddPhoto={onAddPhoto}
-					onChangeReplyInput={onChangeReplyInput}
-					onLockBtnClick={onLockBtnClick}
-					onWrite={onWrite}
-					onDeleteImage={onDeleteImage}
-					privateComment={privateComment}
-					photo={photo}
-					ref={input}
-				/>
+				<View style={{position:'absolute', bottom: keyboardY}} onLayout={onReplyBtnLayout}>
+					<ReplyWriteBox
+						onAddPhoto={onAddPhoto}
+						onChangeReplyInput={onChangeReplyInput}
+						onLockBtnClick={onLockBtnClick}
+						onWrite={onWrite}
+						onDeleteImage={onDeleteImage}
+						privateComment={privateComment}
+						photo={photo}
+						ref={input}
+					/>
+				</View>
 			) : (
 				false
 			)}
@@ -231,6 +242,7 @@ const style = StyleSheet.create({
 		width: 654 * DP,
 		alignSelf: 'center',
 		alignItems: 'center',
+		marginBottom: 20 * DP,
 		// backgroundColor: 'lightblue',
 	},
 	cotent_container_header: {

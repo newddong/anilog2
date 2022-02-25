@@ -49,7 +49,7 @@ export default SearchHashTag = props => {
 	};
 
 	return (
-		<View style={[searchHashTag.container]}>
+		<View style={[searchHashTag.container, {backgroundColor: 'white'}]}>
 			{/* // 검색 내역이 존재할 경우 API를 통해 받아온 내역 출력 */}
 			{findList.length != 0 ? (
 				<ScrollView horizontal={false} contentContainerStyle={{flex: 1}} showsVerticalScrollIndicator={false}>

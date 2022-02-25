@@ -46,6 +46,7 @@ export default UserMenu = props => {
 	const ifFoucsed = useIsFocused();
 	const [data, setData] = React.useState({}); //우선 userObject 0번 추가
 	const [showMoreIntro, setShowMoreIntro] = React.useState(false);
+	const [numberOfLines, setNumOfLines] = React.useState();
 
 	//토큰에 로그인한 유저의 _id를 저장
 	React.useEffect(() => {
@@ -198,28 +199,42 @@ export default UserMenu = props => {
 
 					<View style={{flexDirection: 'row', width: 654 * DP}}>
 						<View style={[userMenu_style.introduceBox, {alignSelf: 'flex-start'}]}>
-							{/* <SocialInfoB data={data} /> */}
 							{data._id != undefined && (
-								<Text numberOfLines={showMoreIntro ? 10 : 2} style={[txt.noto26]}>
+								<Text numberOfLines={!showMoreIntro ? 10 : 2} style={[txt.noto26]}>
 									{data.user_introduction || '자기소개가 없습니다.'}
 								</Text>
 							)}
 						</View>
-						{data._id != undefined && showMoreIntro ? (
-							<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {flex: 1}]}>
-								<View style={[{flexDirection: 'row'}, {alignSelf: 'flex-end'}, {justifyContent: 'flex-end'}]}>
-									<Text style={[txt.noto24, {color: GRAY10}, {alignSelf: 'flex-end'}]}>접기</Text>
-									<Arrow_Up_GRAY20 />
-								</View>
-							</TouchableOpacity>
-						) : data._id != undefined ? (
-							<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {flex: 1}]}>
-								<View style={[{flexDirection: 'row'}, {alignSelf: 'flex-end'}, {justifyContent: 'flex-end'}]}>
-									<Text style={[txt.noto24, {color: GRAY10}]}>더보기</Text>
-									<Arrow_Down_GRAY10 />
-								</View>
-							</TouchableOpacity>
-						) : null}
+						{/* 더미 텍스트 삭제금지 */}
+						<Text
+							style={[txt.noto24, {position: 'absolute', opacity: 0, backgroundColor: 'red'}]}
+							numberOfLines={null}
+							onTextLayout={({nativeEvent: {lines}}) => {
+								// console.log('lines.length', lines.length);
+								setNumOfLines(lines.length);
+							}}>
+							{data.user_introduction || ''}
+						</Text>
+						{/* 유저 소개란 - 2줄 이상일 경우 더보기/접기 컴포넌트 출력 */}
+						{numberOfLines > 2 ? (
+							!showMoreIntro ? (
+								<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {flex: 1}]}>
+									<View style={[userMenu_style.showMoreContainer, {}]}>
+										<Text style={[txt.noto24, {color: GRAY10}]}>접기</Text>
+										<Arrow_Up_GRAY20 />
+									</View>
+								</TouchableOpacity>
+							) : data._id != undefined ? (
+								<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {flex: 1}]}>
+									<View style={[userMenu_style.showMoreContainer]}>
+										<Text style={[txt.noto24, {color: GRAY10}]}>더보기</Text>
+										<Arrow_Down_GRAY10 />
+									</View>
+								</TouchableOpacity>
+							) : null
+						) : (
+							<></>
+						)}
 					</View>
 
 					{/* 내 정보 수정 버튼*/}

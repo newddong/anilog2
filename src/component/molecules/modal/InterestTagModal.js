@@ -85,6 +85,7 @@ const InterestTagModal = props => {
 		});
 		//현재 유저의 관심사 리스트를 목록들에 적용
 		const saveUserInterest = Object.entries(props.data).map(interest => {
+
 			console.log('object', interest);
 			if (props.isActivation) {
 				tempUserInterestContentList.push(interest[1]);
@@ -106,6 +107,7 @@ const InterestTagModal = props => {
 		// );
 	}, []);
 
+
 	//현재 유저의 관심사 리스트를 목록들에 적용
 	// React.useEffect(() => {
 	// 	let copy = [...userInterestContent];
@@ -114,7 +116,6 @@ const InterestTagModal = props => {
 	// 			copy.push(value);
 	// 		});
 	// 	});
-
 	// 	copy = [...new Set(copy)];
 	// 	console.log('copy', copy);
 	// 	setUserInterestContent(copy);
@@ -176,6 +177,7 @@ const InterestTagModal = props => {
 	};
 
 	//X마크 클릭 후 나가기 클릭
+
 	const onPressExitWithoutSave = () => {
 		console.log('onPressExitWithoutSave');
 		props.onClose();
@@ -330,7 +332,8 @@ const style = StyleSheet.create({
 		width: 52 * DP,
 	},
 	saveText: {
-		width: 66 * DP,
+		// width: 66 * DP,
+
 		height: 56 * DP,
 	},
 	content: {

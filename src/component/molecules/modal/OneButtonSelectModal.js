@@ -28,7 +28,7 @@ const OneButtonSelectModal = props => {
 		const newArr = init.concat(data);
 		newArr.push(padding);
 		newArr.push(padding);
-		// newArr.push(padding);
+		newArr.push(padding);
 		return newArr;
 	};
 
@@ -41,7 +41,7 @@ const OneButtonSelectModal = props => {
 		if (selectOpen) {
 			Animated.timing(animatedHeight, {
 				duration: 500,
-				toValue: 330 * DP,
+				toValue: 465 * DP,
 				// easing: Easing.linear,
 				useNativeDriver: false,
 			}).start();

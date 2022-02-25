@@ -124,7 +124,7 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 		console.log('before press confirm', data);
 		Modal.popOneBtnSelectModal(
 			['보호소 사정으로 해당 날짜는 봉사가 불가합니다.', '해당 날짜에는 이미 봉사활동 인원이 다 찼습니다', '해당 날짜는 보호소 휴일입니다.'],
-			'활동 거절을 하시겠습니까?  거절 사유를 선택해주세요.',
+			'활동 거절을 하시겠습니까? \n  거절 사유를 선택해주세요.',
 			selected => {
 				// alert(selected);
 				setVolunteerActivityStatus(

@@ -270,7 +270,7 @@ export default Modal = {
 	 *
 	 * @example
 	 */
-	popInterestTagModal: (isActivation, data, onSave, onClose) => {},
+	popInterestTagModal: (isActivation, data, onSave, onClose, setState) => {},
 
 	/**
 	 * 공유 - 공유 목록 출력 모달

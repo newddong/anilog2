@@ -14,7 +14,7 @@ export const organism_style = StyleSheet.create({
 		// paddingBottom: 50 * DP,
 		backgroundColor: WHITE,
 		paddingHorizontal: 48 * DP,
-		paddingBottom: 100 * DP,
+		paddingBottom: 52 * DP,
 		overflow: 'hidden',
 	},
 	userLocationLabel_view_feedContent: {

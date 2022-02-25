@@ -120,7 +120,7 @@ export default FeedMedia = props => {
 				<View style={[style.emergency_background, {paddingVertical: 20 * DP, paddingHorizontal: 24 * DP, height: null}]}>
 					<View style={{flexDirection: 'row'}}>
 						<View style={{flex: 1}}>
-							<Text style={[missing_animal_species_detail.length>5?txt.roboto36b:txt.roboto40b, {color: 'white'}]} numberOfLines={3}>
+							<Text style={[missing_animal_species_detail.length > 5 ? txt.roboto36b : txt.roboto40b, {color: 'white'}]} numberOfLines={3}>
 								{missing_animal_species + ' / ' + missing_animal_species_detail}
 							</Text>
 						</View>

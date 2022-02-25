@@ -13,13 +13,19 @@ import {getAddressList} from 'Root/api/address';
 import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 import InputWithSelect from 'Root/component/molecules/input/InputWithSelect';
 import SelectInput from 'Root/component/molecules/button/SelectInput';
+import {getInterestsList} from 'Root/api/interestsapi';
 export default UserInfoDetailSettting = ({route, navigation}) => {
 	const debug = false;
-	// console.log('UserInfoDetailSetting route.params : ', route.params.user_address);
+	// console.log('UserInfoDetailSetting route.params : ', route.params);
 	// console.log('UserInfoDetailSetting route.params : ', route.params.data.user_interests);
 	const [data, setData] = React.useState(route.params); //기존 유저의 데이터가 담겨있음
 	const [loaded, setLoaded] = React.useState(false);
 	const [addrSearched, setAddrSearched] = React.useState(false);
+	const [locationInterest, setLocationInterest] = React.useState(route.params.user_interests.interests_location);
+	const [contentInterest, setContentInterest] = React.useState([]);
+	const [interestList, setInterestList] = React.useState();
+	const [interestLoaded, setInterestLoaded] = React.useState(false);
+	const [contentSendObejct, setContentSendObject] = React.useState({});
 	// 갱신되는 데이터는 Header에도 Json형태로 전해짐
 	// React.useEffect(() => {
 	// 	navigation.setParams({data: data, route_name: route.name});
@@ -28,9 +34,57 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 
 	React.useEffect(() => {
 		navigation.setParams({data: route.params, route_name: route.name});
+		var temp = [];
+		console.log('ahhh', route.params.user_interests);
+
+		getInterestsList({}, interests => {
+			setInterestList(interests.msg);
+			setInterestLoaded(true);
+		});
+		const getContentInteres = Object.entries(route.params.user_interests).map(content => {
+			console.log('ohhh', content);
+
+			if (content[0] != 'interests_location') {
+				Object.entries(content[1]).map(contents => {
+					console.log('contents', contents[1]);
+					temp.push(contents[1]);
+				});
+			}
+			setContentInterest(temp);
+		});
+
 		setLoaded(true);
 	}, []);
 
+	React.useEffect(() => {
+		console.log('interset', locationInterest, contentInterest);
+
+		setData({
+			...data,
+			user_interests: {...data.user_interests, interests_location: locationInterest, interests_contetn: contentInterest},
+		});
+		// setData({...data, user_address: {...data.user_address, city: selected, district: districts.msg[0]}});
+		if (interestLoaded) {
+			for (var props of contentInterest) {
+				const getKey = Object.entries(interestList[0]).map(content => {
+					// console.log('hihihi', content[1], props);
+
+					if (content[1].includes(props)) {
+						console.log('hohohoho', props, content[0]);
+						// setContentSendObject((contentSendObejct[content[0]] = props));
+					}
+					console.log('content', contentSendObejct);
+				});
+			}
+		}
+
+		console.log('setData', data);
+	}, [locationInterest, contentInterest]);
+
+	function getKeyByValue(object, value) {
+		// console.log(Object.keys(object).find(key => object[key] == value));
+		return Object.keys(object).find(key => object[key] == value);
+	}
 	React.useEffect(() => {
 		// if (route.params != null) {
 		// 	if (route.params.addr && !addrSearched) {
@@ -163,46 +217,59 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 
 	//관심지역 태그 X마크 삭제클릭
 	const onDeleteInterestRegion = index => {
-		let copy = data.user_interests.location;
+		// let copy = data.user_interests.location;
+		let copy = locationInterest;
 		copy.splice(index, 1);
 		setData({
 			...data,
 			user_interests: {
 				location: copy,
-				activity: data.user_interests.activity,
 			},
 		});
 	};
 
 	//관심활동 태그 X마크 삭제 클릭
 	const onDeleteInterestAct = index => {
-		let copy = data.user_interests.activity;
+		// let copy = data.user_interests.activity;
+		let copy = contentInterest;
 		copy.splice(index, 1);
-		setData({
-			...data,
-			user_interests: {
-				location: data.user_interests.location,
-				activity: copy,
-			},
-		});
+		console.log('copy', copy);
+		setContentInterest(copy);
+		// setData({
+		// 	...data,
+		// 	user_interests: {
+		// 		location: data.user_interests.location,
+		// 		activity: copy,
+		// 	},
+		// });
 	};
 
 	const onPressAddInterestActivation = () => {
+		console.log(contentInterest);
 		Modal.popInterestTagModal(
 			true,
-			'',
+			// route.params.user_interests,
+			contentInterest || [],
 			() => alert('저장'),
 			() => Modal.close(),
+			setContentInterest,
 		);
 	};
 
 	const onPressAddInterestLocation = () => {
 		Modal.popInterestTagModal(
 			false,
-			'',
+			// route.params.user_interests,
+			locationInterest || [],
 			() => alert('저장'),
 			() => Modal.close(),
+			setLocationInterest,
 		);
+		// setData(prevState => ({
+		// 	...prevState,
+		// 	user_interests: interest,
+		// }));
+		console.log('next State', data);
 	};
 
 	if (loaded) {
@@ -258,7 +325,8 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 								<InterestTagList
 									onPressAddBtn={onPressAddInterestLocation}
 									title={INTEREST_REGION}
-									items={data.user_interests.location || []}
+									// items={data.user_interests.location || []}
+									items={locationInterest || []}
 									onDelete={onDeleteInterestRegion}
 								/>
 							</View>
@@ -266,7 +334,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 								<InterestTagList
 									onPressAddBtn={onPressAddInterestActivation}
 									title={INTEREST_ACT}
-									items={data.user_interests.activity || []}
+									items={contentInterest || []}
 									onDelete={onDeleteInterestAct}
 								/>
 							</View>

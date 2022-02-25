@@ -201,7 +201,7 @@ export default UserInfoSetting = ({route}) => {
 									</View>
 								) : (
 									<View style={{}}>
-										<Text style={[txt.noto24, {color: GRAY10}]} ellipsizeMode={'tail'} numberOfLines={showMore ? null : 3}>
+										<Text style={[txt.noto24]} ellipsizeMode={'tail'} numberOfLines={showMore ? null : 3}>
 											{data.user_introduction || ''}
 										</Text>
 										{/* 더미 텍스트 삭제금지 */}

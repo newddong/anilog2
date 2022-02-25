@@ -264,8 +264,8 @@ export default RootStackNavigation = () => {
 		!isPop && setPop(true);
 	};
 
-	Modal.popInterestTagModal = (isActivation, data, onSave, onClose) => {
-		popIn(<InterestTagModal isActivation={isActivation} data={data} onSave={onSave} onClose={onClose} />);
+	Modal.popInterestTagModal = (isActivation, data, onSave, onClose, setState) => {
+		popIn(<InterestTagModal isActivation={isActivation} data={data} onSave={onSave} onClose={onClose} setState={setState} />);
 		!isPop && setPop(true);
 	};
 

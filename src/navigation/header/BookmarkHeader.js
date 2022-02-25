@@ -34,7 +34,7 @@ const style = StyleSheet.create({
 	headerContainer: {
 		alignItems: 'center',
 		justifyContent: 'space-between',
-		height: 135 * DP,
+		height: 95 * DP,
 		flexDirection: 'row',
 		backgroundColor: WHITE,
 		paddingHorizontal: 48 * DP,

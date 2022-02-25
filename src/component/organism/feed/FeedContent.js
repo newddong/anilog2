@@ -236,14 +236,18 @@ export default FeedContent = props => {
 	const isMissingReportType = feed_content == 'missing' || feed_content == 'report';
 
 	const [isShowBtn, setIsShowBtn] = React.useState(true);
-	const [numLine, setNumLine] = React.useState(isMissingReportRoute ? 0 : 3);
+	const [numLine, setNumLine] = React.useState(isMissingReportRoute ? 0 : 2);
+	const [lineCount, setLineCount] = React.useState(0);
 
 	const onTextLayout = e => {
 		// console.log('텍스트 레이아웃', e.nativeEvent);
-		if (e.nativeEvent.lines.length >= 3) {
+		if (e.nativeEvent.lines.length >= 2) {
 			setIsShowBtn(true);
-		} else {
+			setLineCount(e.nativeEvent.lines.length+1);
+		} 
+		else{
 			setIsShowBtn(false);
+			setLineCount(e.nativeEvent.lines.length);
 		}
 	};
 
@@ -259,7 +263,7 @@ export default FeedContent = props => {
 			return {};
 		} else {
 			return {
-				height: 270 * DP,
+				height: 110 * DP + lineCount * 54*DP,
 			};
 		}
 	};
@@ -267,8 +271,8 @@ export default FeedContent = props => {
 	// console.log('피드 컨텐츠 경로명', route.name);
 	return (
 		// <View style={isMissingReportRoute || show ? {} : {height: 270 * DP}} removeClippedSubviews>
-		<View style={layoutStyle()} removeClippedSubviews>
-			<View style={[organism_style.feedContent, {overflow: 'hidden'}]}>
+		<View style={[layoutStyle()]} removeClippedSubviews>
+			<View style={[organism_style.feedContent]}>
 				{/* // <View style={[organism_style.feedContent,{height:800*DP}]}> */}
 				{/* line 1 */}
 				<View style={[organism_style.userLocationLabel_view_feedContent]} onLayout={onLayoutLabel}>
@@ -328,9 +332,9 @@ export default FeedContent = props => {
 									</View>
 								</View>
 							)}
-							<Text>{route.name}</Text>
+							{/* <Text>{route.name}</Text> */}
 							<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
-							<Text>{feed_type}</Text>
+							{/* <Text>{feed_type}</Text> */}
 						</View>
 					</View>
 

@@ -135,7 +135,7 @@ MeatBallHeader.defaultProps = {
 const style = StyleSheet.create({
 	headerContainer: {
 		alignItems: 'center',
-		height: 135 * DP,
+		height: 95 * DP,
 		flexDirection: 'row',
 		backgroundColor: '#FFFFFF',
 		justifyContent: 'space-between',

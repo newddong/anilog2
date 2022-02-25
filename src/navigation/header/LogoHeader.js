@@ -20,7 +20,9 @@ export default LogoHeader = ({navigation, route, options, back}) => {
 	};
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
+			<View style={style.logoContainer}>
 			<MainLogo />
+			</View>
 			<View style={style.buttonContainer}>
 				<Search48 onPress={clickSearch} />
 
@@ -34,7 +36,7 @@ const style = StyleSheet.create({
 	headerContainer: {
 		alignItems: 'flex-end',
 		justifyContent: 'space-between',
-		height: 135 * DP,
+		height: 105 * DP,
 		flexDirection: 'row',
 		backgroundColor: WHITE,
 		paddingHorizontal: 48 * DP,

@@ -38,6 +38,7 @@ import Modal from 'Component/modal/Modal';
 import {userLogout} from 'Root/api/userapi';
 import {useIsFocused} from '@react-navigation/native';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {GRAY40} from 'Root/config/color';
 
 export default UserMenu = props => {
 	// console.log('UserMenu Props', props);
@@ -255,6 +256,7 @@ export default UserMenu = props => {
 
 				{/* 하단 메뉴 */}
 				<View style={[temp_style.userMenu_step2, userMenu_style.horizontalLine]}>
+					{/* <View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}> */}
 					<ProfileMenu
 						menuTitle={FAVORITES}
 						menuItems={[
@@ -264,25 +266,30 @@ export default UserMenu = props => {
 						onClick={menuClick}
 						titleIcon={<FavoriteTag48_Filled />}
 					/>
-					<ProfileMenu
-						menuTitle={MY_ACTIVITY_IN_SHELTER}
-						menuItems={[
-							[MY_CONTENTS, TAGED_CONTENTS_FOR_ME],
-							[APPLICATION_HISTORY, ANIMAL_PROTECTION_STATE],
-							[COMUNITY, NOTE_LIST],
-						]}
-						onClick={menuClick}
-						titleIcon={<Paw46 />}
-					/>
-					<ProfileMenu
-						menuTitle={SETTING}
-						menuItems={[
-							[INFO_QUESTION, ACCOUNT],
-							[INFO, LOGOUT],
-						]}
-						onClick={menuClick}
-						titleIcon={<Setting46 />}
-					/>
+					{/* </View> */}
+					<View>
+						<ProfileMenu
+							menuTitle={MY_ACTIVITY_IN_SHELTER}
+							menuItems={[
+								[MY_CONTENTS, TAGED_CONTENTS_FOR_ME],
+								[APPLICATION_HISTORY, ANIMAL_PROTECTION_STATE],
+								[COMUNITY, NOTE_LIST],
+							]}
+							onClick={menuClick}
+							titleIcon={<Paw46 />}
+						/>
+					</View>
+					<View>
+						<ProfileMenu
+							menuTitle={SETTING}
+							menuItems={[
+								[INFO_QUESTION, ACCOUNT],
+								[INFO, LOGOUT],
+							]}
+							onClick={menuClick}
+							titleIcon={<Setting46 />}
+						/>
+					</View>
 				</View>
 			</View>
 		</ScrollView>

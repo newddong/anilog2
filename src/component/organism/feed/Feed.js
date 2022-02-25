@@ -82,7 +82,6 @@ export default Feed = React.memo(props => {
 								<Text style={[txt.roboto24]}>{feed_like_count}</Text>
 							</View>
 						</View>
-						{/* UI 3차 적용으로 인한 주석처리 */}
 						{/* <TouchableOpacity onPress={moveToCommentList}>
 							<View style={{flexDirection: 'row'}}>
 								<View style={organism_style.like48}>

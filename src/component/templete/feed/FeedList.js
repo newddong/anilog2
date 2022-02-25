@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, FlatList,RefreshControl} from 'react-native';
+import {StyleSheet, View, FlatList, RefreshControl} from 'react-native';
 import {WHITE} from 'Root/config/color';
 import {Write94} from 'Atom/icon';
 import Feed from 'Organism/feed/Feed';
@@ -9,10 +9,10 @@ import DP from 'Root/config/dp';
 import {getFeedListByUserId} from 'Root/api/feedapi';
 import {getFeedsByHash} from 'Root/api/hashapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import {login_style, buttonstyle } from 'Templete/style_templete';
+import {login_style, buttonstyle} from 'Templete/style_templete';
 
 export default FeedList = ({route, navigation}) => {
-	const ITEM_HEIGHT = 1222*DP;
+	const ITEM_HEIGHT = 1222 * DP;
 	const [feedList, setFeedList] = React.useState([]);
 	const [refreshing, setRefreshing] = React.useState(false);
 	const [index, setIndex] = React.useState(0);
@@ -24,12 +24,11 @@ export default FeedList = ({route, navigation}) => {
 				navigation.setOptions({title: route.params?.userobject.user_nickname + '님의 게시글'});
 				break;
 			case 'HashFeedList':
-				navigation.setOptions({title: '#'+route.params?.hashtag_keyword});
+				navigation.setOptions({title: '#' + route.params?.hashtag_keyword});
 				break;
 			default:
 				break;
 		}
-		
 	}, [route.params?.userobject]);
 
 	React.useEffect(() => {
@@ -38,31 +37,35 @@ export default FeedList = ({route, navigation}) => {
 				case 'UserFeedList':
 					getFeedListByUserId(
 						{
-							userobject_id : route.params?.userobject._id,
-							request_number: 9999
+							userobject_id: route.params?.userobject._id,
+							request_number: 9999,
 						},
-						({msg})=>{
-							setIndex(msg.findIndex(v=>v._id==route.params?.selected._id));
+						({msg}) => {
+							setIndex(msg.findIndex(v => v._id == route.params?.selected._id));
 							setFeedList(msg);
 						},
 						errormsg => {
 							Modal.popOneBtn(errormsg, '확인', () => Modal.close());
 						},
-					)
+					);
 					break;
 				case 'HashFeedList':
 					getFeedsByHash(
 						{hashtag_keyword: route.params?.hashtag_keyword},
-						({msg})=>{
-							setIndex(msg.feeds.findIndex(v=>v.hashtag_feed_id._id==route.params?.selected._id));
-							
-							setFeedList(msg.feeds.map(v=>v.hashtag_feed_id));
+						({msg}) => {
+							setIndex(msg.feeds.findIndex(v => v.hashtag_feed_id._id == route.params?.selected._id));
+
+							setFeedList(msg.feeds.map(v => v.hashtag_feed_id));
 						},
 						error => {
-							Modal.popOneBtn(error,'확인',()=>{setTimeout(()=>{navigation.goBack(),300})})
+							Modal.popOneBtn(error, '확인', () => {
+								setTimeout(() => {
+									navigation.goBack(), 300;
+								});
+							});
 						},
 					);
-				break;
+					break;
 				default:
 					getSuggestFeedList(
 						{},
@@ -103,25 +106,22 @@ export default FeedList = ({route, navigation}) => {
 
 		wait(2000).then(() => setRefreshing(false));
 	};
-	
+
 	return (
-		<View style={login_style.wrp_main, {flex: 1, backgroundColor: WHITE}}>
+		<View style={(login_style.wrp_main, {flex: 1, backgroundColor: WHITE})}>
 			<FlatList
 				data={feedList}
 				renderItem={({item}) => renderItem(item)}
 				keyExtractor={(item, index) => index}
 				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-				getItemLayout={(data, index) => (
-					{length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index}
-				)}
+				getItemLayout={(data, index) => ({length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index})}
 				initialScrollIndex={index}
 			/>
 			{userGlobalObject.userInfo && (
-				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP},buttonstyle.shadow]}>
+				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}, buttonstyle.shadow]}>
 					<Write94 onPress={moveToFeedWrite} />
 				</View>
 			)}
 		</View>
 	);
 };
-

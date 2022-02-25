@@ -441,7 +441,7 @@ export const myPetList = StyleSheet.create({
 	petImageLabel: {
 		width: 180 * DP,
 		height: 270 * DP,
-		marginLeft: 20 * DP,
+		marginLeft: 30 * DP,
 	},
 	addPet: {
 		marginLeft: 20 * DP,

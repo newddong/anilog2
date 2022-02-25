@@ -210,7 +210,7 @@ export default Modal = {
 	 * @param {string} msg - 모달 타이틀
 	 * @param {(selectedItem:string)=>void} onYes - Ok버튼 콜백
 	 * @param {string} yesMsg - 확인 버튼 타이틀
-	 * @param {number} yesMsg - 하단 리스트 아이템 텍스트 크기
+	 * @param {number} fontSize - 하단 리스트 아이템 텍스트 크기
 	 *
 	 * @example
 	 */
@@ -269,7 +269,7 @@ export default Modal = {
 	 *
 	 * @example
 	 */
-	popInterestTagModal: (isActivation, data, onSave, onClose) => {},
+	popInterestTagModal: (isActivation, data, onSave, onClose, setState) => {},
 
 	/**
 	 * 공유 - 공유 목록 출력 모달

@@ -28,22 +28,8 @@ export default ManageVolunteer = ({route}) => {
 				{},
 				result => {
 					console.log('success / getUserVolunterItemList / ManageVolunteer', result.msg[0]);
-
-					const q = {
-						__v: 0,
-						_id: '62171a8035dd87f36daaba06',
-						volunteer_accompany: [
-							{_id: '62171a8035dd87f36daaba07', confirm: 'waiting', member: '61d2de63c0f179ccd5ba5887'},
-							{_id: '62171a8035dd87f36daaba08', confirm: 'waiting', member: '61d2e5d3c0f179ccd5ba6241'},
-						],
-						volunteer_accompany_number: 2,
-						volunteer_delegate_contact: '01096450422',
-						volunteer_status: 'notaccept',
-						volunteer_wish_date: ['2022-02-25T00:00:00.000Z', '2022-02-26T00:00:00.000Z'],
-					};
 					let doneList = []; //지난 내역을 담을 컨테이너
 					let notDoneList = []; //활동 예정 중인 신청을 담을 컨테이너
-
 					result.msg.map((v, i) => {
 						let wishdate = moment(v.volunteer_wish_date[0]).toDate(); //봉사활동 희망날짜 배열에서 첫번째 값을 받아와 Date타입으로 치환
 						let thisTime = new Date().getTime(); // 현재 시간

@@ -2523,6 +2523,27 @@ export const applicationFormVolunteer = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 	},
+	notAcceptText: {
+		borderRadius: 30 * DP,
+		borderWidth: 2 * DP,
+		borderColor: APRI10,
+		// padding: 30 * DP,
+		paddingHorizontal: 20 * DP,
+		width: 654 * DP,
+		paddingVertical: 15 * DP,
+		alignItems: 'center',
+	},
+	accompanyItem: {
+		width: 630 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		marginBottom: 20 * DP,
+	},
+	accompanyItemLabel: {
+		// backgroundColor: 'red',
+		width: 440 * DP,
+	},
 });
 
 export const animalAdoption = StyleSheet.create({

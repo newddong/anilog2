@@ -1,17 +1,5 @@
 import React from 'react';
-import {
-	View,
-	Text,
-	TouchableWithoutFeedback,
-	StyleSheet,
-	Dimensions,
-	Platform,
-	ScrollView,
-	FlatList,
-	TouchableOpacity,
-	Animated,
-	TextInput,
-} from 'react-native';
+import {View, Text, StyleSheet, Dimensions, Platform, FlatList, TouchableOpacity, Animated, TextInput} from 'react-native';
 import AniButton from '../button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10, APRI10, GRAY20, BLACK} from 'Root/config/color';
@@ -28,6 +16,7 @@ import Modal from 'Root/component/modal/Modal';
  * @param {string} props.msg -  상단 모달창에서 타이틀
  * @param {(selectedItem)=>void} props.onYes - 상단 모달창에서 확인 버튼 콜백 / 선택한 아이템 반환
  * @param {string} props.yesMsg -  상단 모달창에서 확인 버튼 타이틀
+ * @param {number} props.fontSize -  하단 리스트 아이템 텍스트 크기
  *
  */
 const OneButtonSelectModal = props => {
@@ -39,7 +28,7 @@ const OneButtonSelectModal = props => {
 		const newArr = init.concat(data);
 		newArr.push(padding);
 		newArr.push(padding);
-		newArr.push(padding);
+		// newArr.push(padding);
 		return newArr;
 	};
 
@@ -52,7 +41,7 @@ const OneButtonSelectModal = props => {
 		if (selectOpen) {
 			Animated.timing(animatedHeight, {
 				duration: 500,
-				toValue: 465 * DP,
+				toValue: 330 * DP,
 				// easing: Easing.linear,
 				useNativeDriver: false,
 			}).start();
@@ -155,7 +144,7 @@ const OneButtonSelectModal = props => {
 				<Text style={[txt.noto28, style.msg]}>{props.msg}</Text>
 				<TouchableOpacity onPress={onOpen} style={style.dropdownContainer} activeOpacity={1}>
 					<View style={style.selectedItem}>
-						<Text style={[txt.noto28]}>{data[selectedItem - 2]}</Text>
+						<Text style={[txt.noto28, {fontSize: props.fontSize * DP - 3}]}>{data[selectedItem - 2]}</Text>
 					</View>
 					<View style={style.dropdownIcon}>{!selectOpen ? <Arrow_Down_GRAY10 onPress={onOpen} /> : <Arrow_Up_GRAY10 onPress={onOpen} />}</View>
 				</TouchableOpacity>
@@ -170,6 +159,7 @@ const OneButtonSelectModal = props => {
 					style.downScrollSelectContainer,
 					{
 						height: interpolatedHeight,
+						// bottom: 100,
 					},
 				]}>
 				<View style={[style.header]}>
@@ -180,7 +170,7 @@ const OneButtonSelectModal = props => {
 						<Text style={[txt.noto30, {color: WHITE}]}>완료</Text>
 					</TouchableOpacity>
 				</View>
-				<View style={[style.list]}>
+				<View style={[style.list, {}]}>
 					<FlatList
 						data={getData()}
 						// keyExtractor={item => item.index}
@@ -194,7 +184,7 @@ const OneButtonSelectModal = props => {
 									key={index}
 									style={[style.listItem, index == selectedItem && item != padding ? {backgroundColor: APRI10} : null]}>
 									<>
-										<Text style={[txt.roboto34, {color: getTextColor(index)}]}>{item}</Text>
+										<Text style={[txt.roboto34, {color: getTextColor(index), fontSize: props.fontSize * DP}]}>{item}</Text>
 									</>
 								</TouchableOpacity>
 							);
@@ -211,6 +201,7 @@ OneButtonSelectModal.defaultProps = {
 	onYes: () => {
 		alert('YES');
 	},
+	fontSize: 34,
 };
 
 const style = StyleSheet.create({
@@ -218,12 +209,16 @@ const style = StyleSheet.create({
 		backgroundColor: '#0009',
 		height: Platform.OS == 'ios' ? Dimensions.get('window').height : '100%',
 		width: Platform.OS == 'ios' ? Dimensions.get('window').width : '100%',
-		justifyContent: 'center',
+		// justifyContent: 'center',
+		// top: 200 * DP,
+		paddingTop: 300 * DP,
 		alignItems: 'center',
 	},
 	popUpWindow: {
 		width: 654 * DP,
 		backgroundColor: '#e4e4e4',
+		// backfaceVisibility: 'yellow',
+		// backgroundColor: 'yellow',
 		paddingTop: 60 * DP,
 		paddingBottom: 52 * DP,
 		paddingHorizontal: 46 * DP,

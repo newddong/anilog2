@@ -210,10 +210,11 @@ export default Modal = {
 	 * @param {string} msg - 모달 타이틀
 	 * @param {(selectedItem:string)=>void} onYes - Ok버튼 콜백
 	 * @param {string} yesMsg - 확인 버튼 타이틀
+	 * @param {number} yesMsg - 하단 리스트 아이템 텍스트 크기
 	 *
 	 * @example
 	 */
-	popOneBtnSelectModal: (data, msg, onYes, yesMsg) => {},
+	popOneBtnSelectModal: (data, msg, onYes, yesMsg, fontSize) => {},
 
 	/**
 	 * 나의 보호소 출신 동물 / 보호동물 및 보호요청게시글 게이트웨이 모달

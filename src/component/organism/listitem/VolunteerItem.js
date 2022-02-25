@@ -27,43 +27,7 @@ export default VolunteerItem = props => {
 
 	const getStatusText_notDone = () => {
 		let text = '활동 예정';
-		if (props.isShelterUser) {
-			switch (data.volunteer_status) {
-				case 'accept':
-					text = '활동 예정';
-					break;
-				case 'waiting':
-					text = '수락 대기중';
-					break;
-
-				default:
-					break;
-			}
-		} else {
-			const accompanies = data.volunteer_accompany; //봉사활동 참여자 리스트
-			const findMyDataFromAccompanies = accompanies.find(e => e.member == userGlobalObject.userInfo._id); //나의 현재 수락여부 상태 조회
-			//활동승인(accept) : 참여인원이 승인 [App에서 표기 : '참여 확정']
-			//활동거절(notaccept) : 참여인원이 거절 [App에서 표기 : '참여 불가']
-			//활동승인대기(waiting) : 참여인원 수락 대기중 [App에서 표기 : '수락 대기중']
-			console.log('findMyDataFromAccompanies.confirm', findMyDataFromAccompanies.confirm);
-			switch (findMyDataFromAccompanies.confirm) {
-				case 'accept':
-					//해당 봉사활동에 대해서 본인 계정이 참여 확정을 지었을 경우
-					text = '참여 확정';
-					break;
-				case 'waiting':
-					//해당 봉사활동에 대해서 본인 계정이 수락 대기 중인 경우
-
-					text = '수락 대기중';
-					break;
-				case 'notaccept':
-					//해당 봉사활동에 대해서 본인 계정이 참여 불가 버튼을 눌렀을 경우
-					text = '참여 거절';
-					break;
-				default:
-					break;
-			}
-		}
+		data.volunteer_status == 'waiting' ? (text = '수락 대기중') : (text = '활동 예정');
 		return text;
 	};
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import {ActivityIndicator, ScrollView, Text, TouchableOpacity, View, Linking} from 'react-native';
-import {BLUE20, GRAY10} from 'Root/config/color';
+import {APRI10, BLUE20, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {Calendar48_Filled, Person48, Phone48} from 'Atom/icon';
 import Modal from 'Root/component/modal/Modal';
@@ -15,6 +15,8 @@ import {setVolunteerActivityAcceptByMember, setVolunteerActivityStatus} from 'Ro
 import {hyphened} from 'Root/util/dateutil';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {btn_w654} from 'Root/component/atom/btn/btn_style';
+import dp from 'Root/config/dp';
+import UserDescriptionLabel from 'Root/component/molecules/label/UserDescriptionLabel';
 
 //ApplicationFormVolunteer (봉사활동 신청서 폼) 호출 네비게이트
 // ==> ManageVolunteer에서 더보기 클릭, 혹은 AppliesRecord(신청내역)에서 보호소 라벨 클릭 <==
@@ -29,7 +31,7 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 	//봉사활동 지원자 프로필 라벨 채우기 위한 API 접속(차후 한 번에 받아오는 방식으로 전환 필요)
 	React.useEffect(() => {
 		if (route.name == 'UserVolunteerForm') {
-			console.log('BeforeSplice', data.volunteer_accompany);
+			// console.log('BeforeSplice', data);
 			let accompanyList = [];
 			data.volunteer_accompany.map((v, i) => {
 				accompanyList.push(v.member);
@@ -40,7 +42,7 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 			}, 500);
 		} else {
 			//ShelterVolunteerForm
-			console.log('ShelterVolunteerForm Recieved params', data);
+			// console.log('ShelterVolunteerForm Recieved params', data);
 			let accompanyList = [];
 			data.volunteer_accompany.map((v, i) => {
 				accompanyList.push(v.member);
@@ -117,16 +119,20 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 		);
 	};
 
-	// 해당 보호소 계정이 봉사활동 신청서 활동거절을 눌렀을 때
+	//보호소 계정이 봉사활동 신청서 활동거절을 눌렀을 때
 	const onPressReject = () => {
 		console.log('before press confirm', data);
 		Modal.popOneBtnSelectModal(
-			['사유 선택', '기타(직접 입력)', '해당 날짜는 봉사가 불가합니다.', '해당 날짜의 봉사 인원수가 다 찼습니다.', '해당 날짜는 보호소 휴일입니다.'],
+			['보호소 사정으로 해당 날짜는 봉사가 불가합니다.', '해당 날짜에는 이미 봉사활동 인원이 다 찼습니다', '해당 날짜는 보호소 휴일입니다.'],
 			'활동 거절을 하시겠습니까?  거절 사유를 선택해주세요.',
 			selected => {
 				// alert(selected);
 				setVolunteerActivityStatus(
-					{volunteer_activity_object_id: data._id, volunteer_status: 'notaccept'},
+					{
+						volunteer_activity_object_id: data._id,
+						volunteer_status: 'notaccept',
+						volunteer_reason_of_notaccept: selected,
+					},
 					result => {
 						console.log('result / setVolunteerActivityStatus / 활동 거절', result);
 						Modal.popNoBtn('봉사활동이 거절 되었습니다.');
@@ -141,6 +147,7 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 				);
 			},
 			'확인',
+			30,
 		);
 	};
 
@@ -183,6 +190,7 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 			{
 				volunteer_activity_object_id: data._id,
 				confirm: 'notaccept',
+				// volunteer_reason_of_notaccept:
 			},
 			result => {
 				console.log('result / setVolunteerActivityAcceptByMember / :', result.msg);
@@ -198,11 +206,33 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 		);
 	};
 
+	const getAccompanyItem = (v, i) => {
+		let status = '';
+		if (v.confirm == 'accept') {
+			status = '참여 확정';
+		} else if (v.confirm == 'notaccept') {
+			status = '참여 불가';
+		} else {
+			status = '수락 대기중';
+		}
+		return (
+			<View style={[applicationFormVolunteer.accompanyItem]} key={i}>
+				<View style={[applicationFormVolunteer.accompanyItemLabel]}>
+					<UserDescriptionLabel data={v.member} onClickLabel={onClickLabel} width={300} />
+				</View>
+				<Text style={[txt.noto24, {color: GRAY10}]}>{status}</Text>
+			</View>
+		);
+	};
+
 	const onPressAlreadyConfirm = () => {
 		Modal.alert('이미 참여 확정된 봉사활동입니다. \n 혹시 참여가 어려우실 경우 \n 대표자 혹은 대상 보호소에 연락 요청드립니다.');
 	};
 	const onPressAlreadyRejected = () => {
 		Modal.alert('이미 참여 불가된 봉사활동은 대표자 \n 혹은 대상 보호소에 문의 부탁드립니다.');
+	};
+	const onPressNotAcceptTitle = () => {
+		Modal.alert('이미 거절된 봉사활동은 \n 혹은 대상 보호소에 문의 부탁드립니다.');
 	};
 
 	const getButtonWhenShelter = () => {
@@ -231,13 +261,13 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 				default:
 					break;
 			}
-			return <AniButton onPress={onPressAlreadyConfirm} btnLayout={btn_w654} titleFontStyle={32} btnTitle={title} btnStyle={'border'} />;
+			return <AniButton btnLayout={btn_w654} titleFontStyle={32} btnTitle={title} btnStyle={'border'} />;
 		} else {
 			return (
-				<>
+				<View style={[applicationFormVolunteer.btnContainer]}>
 					<AniButton onPress={onPressReject} btnStyle={'border'} btnTitle={'활동 거절'} />
 					<AniButton onPress={onPressConfirm} btnStyle={'border'} btnTitle={'활동 승인'} />
-				</>
+				</View>
 			);
 		}
 	};
@@ -247,55 +277,72 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 		//활동승인(accept) : 참여인원이 승인 [App에서 표기 : '참여 확정']
 		//활동거절(notaccept) : 참여인원이 거절 [App에서 표기 : '참여 불가']
 		//활동승인대기(waiting) : 참여인원 수락 대기중 [App에서 표기 : '수락 대기중']
-		//현재 접속 계정이 해당 봉사활동신청건에 대하여 '참여확정'하였는지 '참여거절'하였는지 여부
-		// console.log('route.name == UserVolunteerForm', data.route);
-		let find = {};
-		if (data.route == 'AppliesRecord') {
-			find = data.volunteer_accompany.find(e => e.member._id == userGlobalObject.userInfo._id);
-		} else {
-			find = data.volunteer_accompany.find(e => e.member == userGlobalObject.userInfo._id);
-		}
+		let find = data.volunteer_accompany.find(e => e.member._id == userGlobalObject.userInfo._id);
 		// console.log('find', find);
 		let wishdate = moment(data.volunteer_wish_date[0]).toDate(); //봉사활동 희망날짜 배열에서 첫번째 값을 받아와 Date타입으로 치환
 		let thisTime = new Date().getTime(); // 현재 시간
 		if (wishdate < thisTime) {
+			//현재 시간보다 이전인 모든 봉사활동 신청서는 넓은 버튼에 내역을 담는다
 			const volunteerDate = moment(data.volunteer_wish_date[0]).format('YY.MM.DD');
-			// console.log('data.volunteer_status', data.volunteer_status);
 			let title = '활동 완료';
 			switch (data.volunteer_status) {
 				case 'accept':
-				case 'done':
+				case 'done': //활동완료
 					title = volunteerDate + ' / 활동 완료';
 					break;
-				case 'notaccept':
+				case 'notaccept': //보호소거절
 					title = volunteerDate + ' / 활동 거절';
 					break;
-				case 'cancel':
+				case 'cancel': //유저취소
 					title = volunteerDate + ' / 활동 취소';
 					break;
-				case 'waiting':
+				case 'waiting': //미처리상태로 시간이 지남
 					title = volunteerDate + ' / 만  료';
 					break;
-
 				default:
 					break;
 			}
-			return <AniButton onPress={onPressAlreadyConfirm} btnLayout={btn_w654} titleFontStyle={32} btnTitle={title} btnStyle={'border'} />;
+			return <AniButton btnLayout={btn_w654} titleFontStyle={32} btnTitle={title} btnStyle={'border'} />;
 		} else {
-			if (data.volunteer_accompany[0].member == userGlobalObject.userInfo._id) {
-				return <AniButton onPress={onPressCancel} btnTitle={'신청 취소'} btnStyle={'border'} />;
-			} else if (find.confirm == 'accept') {
-				//accept(참여 확정 상태일 경우 )
-				return <AniButton onPress={onPressAlreadyConfirm} btnTitle={'참여 확정 상태'} btnStyle={'border'} />;
-			} else if (find.confirm == 'notaccept') {
-				return <AniButton onPress={onPressAlreadyRejected} btnTitle={'참여 거절 상태'} btnStyle={'border'} />;
-			} else {
+			//봉사활동까지 시간이 남아있는 경우
+			if (data.volunteer_status == 'notaccept') {
+				//보호소로부터 거절 당한 경우
+				const notAcceptTitle = '(사유 - ' + data.volunteer_reason_of_notaccept + ')';
 				return (
-					<View style={[applicationFormVolunteer.btnContainer]}>
-						<AniButton onPress={onPressNotAccept} btnStyle={'border'} btnTitle={'참여 불가'} />
-						<AniButton onPress={onPressAccept} btnStyle={'border'} btnTitle={'참여 확정'} />
+					<View style={[applicationFormVolunteer.notAcceptText]}>
+						<Text style={[txt.roboto32, {color: APRI10}]}>활동 거절</Text>
+						<Text style={[txt.roboto24, {color: APRI10}]}>{notAcceptTitle}</Text>
 					</View>
 				);
+			} else if (data.volunteer_status == 'cancel') {
+				//봉사활동신청자가 취소한 경우
+				let canceledText = '';
+				data.volunteer_accompany[0].member._id == userGlobalObject.userInfo._id
+					? (canceledText = '해당 건을 이미 취소하셨습니다.') //신청자 본인
+					: (canceledText = '봉사활동 신청자가 해당 건을 취소하였습니다.'); //참여자
+				return (
+					<View style={[applicationFormVolunteer.notAcceptText]}>
+						<Text style={[txt.roboto28, {color: APRI10}]}>{canceledText}</Text>
+					</View>
+				);
+			} else if (data.volunteer_status == 'waiting' || data.volunteer_status == 'accept') {
+				//봉사활동 신청이 수락되었거나 보호소 승락 대기 상태 중인 경우
+				if (data.volunteer_accompany[0].member._id == userGlobalObject.userInfo._id) {
+					//봉사활동 신청 당사자인 경우
+					return <AniButton onPress={onPressCancel} btnTitle={'신청 취소'} btnStyle={'border'} />;
+				} else if (find.confirm == 'accept') {
+					//accept(참여 확정 상태일 경우 )
+					return <AniButton onPress={onPressAlreadyConfirm} btnTitle={'참여 확정 상태'} btnStyle={'border'} />;
+				} else if (find.confirm == 'notaccept') {
+					return <AniButton onPress={onPressAlreadyRejected} btnTitle={'참여 거절 상태'} btnStyle={'border'} />;
+				} else {
+					return (
+						<View style={[applicationFormVolunteer.btnContainer]}>
+							<AniButton onPress={onPressNotAccept} btnStyle={'border'} btnTitle={'참여 불가'} />
+							<AniButton onPress={onPressAccept} btnStyle={'border'} btnTitle={'참여 확정'} />
+						</View>
+					);
+				}
 			}
 		}
 	};
@@ -363,7 +410,10 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 						</View>
 						{/* 참여 리스트 */}
 						<View style={[applicationFormVolunteer.participants_step2]}>
-							<AccountList items={applicant} onClickLabel={onClickLabel} makeBorderMode={false} showCrossMark={false} />
+							{/* <AccountList items={applicant} onClickLabel={onClickLabel} makeBorderMode={false} showCrossMark={false} /> */}
+							{data.volunteer_accompany.map((v, i) => {
+								return getAccompanyItem(v, i);
+							})}
 						</View>
 					</View>
 					{/* 봉사활동자 연락처 */}

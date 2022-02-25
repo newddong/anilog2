@@ -234,8 +234,8 @@ export default RootStackNavigation = () => {
 		!isPop && setPop(true);
 	};
 
-	Modal.popOneBtnSelectModal = (data, msg, onYes, yesMsg) => {
-		popIn(<OneButtonSelectModal data={data} msg={msg} onYes={onYes} yesMsg={yesMsg} />);
+	Modal.popOneBtnSelectModal = (data, msg, onYes, yesMsg, fontSize) => {
+		popIn(<OneButtonSelectModal data={data} msg={msg} onYes={onYes} yesMsg={yesMsg} fontSize={fontSize} />);
 		!isPop && setPop(true);
 	};
 

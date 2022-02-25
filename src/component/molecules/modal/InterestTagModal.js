@@ -85,16 +85,14 @@ const InterestTagModal = props => {
 		});
 		//현재 유저의 관심사 리스트를 목록들에 적용
 		const saveUserInterest = Object.entries(props.data).map(interest => {
-			console.log('object', interest[1]);
-			if (interest[0] == 'interests_location') {
-				interest[1].map(interestsLocation => {
-					tempUserInterestLocationList.push(interestsLocation);
-				});
+
+			console.log('object', interest);
+			if (props.isActivation) {
+				tempUserInterestContentList.push(interest[1]);
 			} else {
-				interest[1].map(interestsContent => {
-					tempUserInterestContentList.push(interestsContent);
-				});
+				tempUserInterestLocationList.push(interest[1]);
 			}
+
 			console.log('아오..', tempUserInterestLocationList, tempUserInterestContentList);
 			setUserInterestContent(tempUserInterestContentList);
 			setUserInterestLocation(tempUserInterestLocationList);
@@ -109,6 +107,7 @@ const InterestTagModal = props => {
 		// );
 	}, []);
 
+
 	//현재 유저의 관심사 리스트를 목록들에 적용
 	// React.useEffect(() => {
 	// 	let copy = [...userInterestContent];
@@ -117,14 +116,12 @@ const InterestTagModal = props => {
 	// 			copy.push(value);
 	// 		});
 	// 	});
-
 	// 	copy = [...new Set(copy)];
 	// 	console.log('copy', copy);
 	// 	setUserInterestContent(copy);
 	// }, [userData]);
 	//관심활동 태그를 클릭
 	const onPressInterestActivationTag = tag => {
-		console.log('tag', tag);
 		let copy = [...userInterestContent];
 		if (copy.includes(tag)) {
 			let findIndex = copy.findIndex(e => e == tag);
@@ -132,13 +129,12 @@ const InterestTagModal = props => {
 		} else {
 			copy.push(tag);
 		}
+
 		setUserInterestContent(copy);
-		// userInterestContent.push(tag);
 	};
 
 	//관심지역 태그를 클릭
 	const onPressInterestLocationTag = tag => {
-		console.log('tag', tag);
 		let copy = [...userInterestLocation];
 		if (copy.includes(tag)) {
 			let findIndex = copy.findIndex(e => e == tag);
@@ -152,17 +148,13 @@ const InterestTagModal = props => {
 
 	//저장
 	const onPressSave = () => {
-		console.log('저장 실시 및 저장될 태그 목록', userInterestContent);
-		console.log('props', props);
 		if (props.isActivation) {
-			var interest = {activity: userInterestContent};
+			props.setState(userInterestContent);
 		} else {
-			var interest = {location: userInterestLocation};
+			props.setState(userInterestLocation);
 		}
-		console.log('오브젝트', interest);
 		setIsSaved(true);
-		// props.onSave([interest]);
-		props.setState([interest]);
+
 		Modal.close();
 	};
 

@@ -67,6 +67,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const RootStack = createStackNavigator();
 
 export default RootStackNavigation = () => {
+
 	const [isPop, popupComponent] = useModal();
 	const [isAutoLogin, setAutoLogin] = React.useState(false);
 
@@ -266,6 +267,7 @@ export default RootStackNavigation = () => {
 			</SafeAreaView>
 		);
 	}
+
 };
 
 const popup = StyleSheet.create({

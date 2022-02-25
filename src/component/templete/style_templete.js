@@ -3834,7 +3834,6 @@ export const feedCommentList = StyleSheet.create({
 	replyTextInput_photo: {
 		width: 442 * DP,
 		marginRight: 12 * DP,
-
 		paddingVertical: 0,
 		includeFontPadding: false,
 		// backgroundColor: 'pink',

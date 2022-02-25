@@ -24,6 +24,7 @@ import {
 	SETTING,
 	TAGED_CONTENTS_FOR_ME,
 	LOGOUT,
+	OPENSETTING,
 } from 'Root/i18n/msg';
 import {btn_w280, btn_w280x68} from 'Atom/btn/btn_style';
 import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FavoriteTag48_Filled, Paw46, Paw48_APRI10, Setting46} from 'Atom/icon';
@@ -158,19 +159,20 @@ export default UserMenu = props => {
 				Modal.popInfoModal();
 				break;
 			case '정보/문의':
-				Modal.popInfoModal();
+				// Modal.popInfoModal();
+				navigation.push('SettingInformAsk');
 				break;
 			case '커뮤니티':
 				Modal.popInfoModal();
 				break;
 			case '계정':
-				Modal.popInfoModal();
+				navigation.push('SettingAccount');
 				break;
 			case '알림':
-				Modal.popInfoModal();
+				navigation.push('SettingAlarm');
 				break;
-			case '로그아웃':
-				logout();
+			case '공개 설정':
+				navigation.push('SettingOpen');
 				break;
 		}
 		// navigation.push('me')
@@ -283,8 +285,8 @@ export default UserMenu = props => {
 						<ProfileMenu
 							menuTitle={SETTING}
 							menuItems={[
-								[INFO_QUESTION, ACCOUNT],
-								[INFO, LOGOUT],
+								[OPENSETTING, ACCOUNT],
+								[INFO, INFO_QUESTION],
 							]}
 							onClick={menuClick}
 							titleIcon={<Setting46 />}

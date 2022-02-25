@@ -16,21 +16,17 @@ import { findAccount_style } from 'Root/component/templete/style_templete';
  */
 export default CheckBox = props => {
 	// console.log('props.checkBoxState ', props.index, props.checkBoxState);
-	const [checked, setChecked] = React.useState(findAccount_style); //체크상태 여부 boolean isCheck값에 따라 초기상태 결정됨
+	const [checked, setChecked] = React.useState(props.state); //체크상태 여부 boolean isCheck값에 따라 초기상태 결정됨
 
 	const toggleCheck = () => {
 		setChecked(!checked);
 	};
 
-	React.useEffect(() => {
-		console.log('props.state===>', props.state);
-		setChecked(props.state);
+	// React.useEffect(() => {
+	// 	console.log('props.state===>', props.state);
+	// 	setChecked(props.state);
 		// props.onCheck(props.state);
-	}, [props.state]);
-
-	React.useEffect(() => {
-		setChecked(false);
-	}, [props.isDeleted]);
+	// }, [props.state]);
 
 	React.useEffect(() => {
 		// console.log('CheckBox state?', checked);

@@ -128,7 +128,7 @@ export const KENNEL_COUGH = '캔넬코프';
 export const RABIES = '광견병';
 export const DISCLOSE = '공개';
 export const ASSIGN_PET = '반려동물 추가';
-
+export const OPENSETTING = '공개 설정';
 //SearchTopTabRoute
 export const FEED = '피드';
 export const HEALTH_VIDEO = '건강영상';
@@ -464,3 +464,13 @@ export const REPLY_MEATBALL_MENU = ['공유하기', '신고'];
 
 //동물 체중 안내
 export const WEIGHT_INPUT_FORM_INFO = '두자리 숫자, 소수점 한자리';
+
+//알림  설정
+
+export const FOLLWER_NEW_POST_ALRAM = '팔로워 새 게시글 알림';
+export const FAVORITE_PROTECT_STATUS_CHANGE_ALRAM = '즐겨찾은 보호요청 상태 변경 알림';
+export const PET_VACCIN_DATE_ALRAM = '반려동물의 접종 예정일 알림';
+export const MY_POST_ALRAM = '내 게시글 알림';
+export const MY_POST_COMMENT_ALRAM = '내 게시글에 달린 댓글 알림';
+export const TAG_OR_FOLLOW_ALRAM = '나를 태그하거나 팔로우시 알림';
+export const MY_APPLY_STATUS_CHANGE_ALRAM = '내 신청서 상태 변경시 알림';

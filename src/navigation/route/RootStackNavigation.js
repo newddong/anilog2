@@ -37,6 +37,7 @@ import AssignPetInfoB from 'Templete/pet/AssignPetInfoB';
 
 import MainTabNavigation from './main_tab/MainTabNavigation';
 import SearchTabNavigation from './search_tab/SearchTabNavigation';
+import AccountPicker from 'Templete/search/AccountPicker';
 
 import {PIC_SELECTION} from 'Root/i18n/msg';
 import FeedList from 'Templete/feed/FeedListForHashTag';
@@ -46,9 +47,10 @@ import SendHeader from '../header/SendHeader';
 import UserVerification from 'Templete/user/UserVerification';
 import FeedWriteHeader from 'Navigation/header/FeedWriteHeader';
 import BookmarkHeader from 'Navigation/header/BookmarkHeader';
+import ConfirmHeader from 'Navigation/header/ConfirmHeader';
 
 import Modal from 'Component/modal/Modal';
-import InputAndSearchHeader from '../header/InputAndSearchHeader';
+import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 import RequestLogin from 'Templete/login/RequestLogin';
 import AddVolunteers from 'Root/component/templete/volunteer/AddVolunteers';
 import FindAccount from 'Root/component/templete/user/FindAccount';
@@ -76,12 +78,12 @@ export default RootStackNavigation = () => {
 
 	React.useEffect(() => {
 		AsyncStorage.getItem('userSetting', (err, userSetting) => {
-			if(!userSetting){
+			if (!userSetting) {
 				setLoading(false);
-				return
+				return;
 			}
 			let setting = JSON.parse(userSetting);
-			if(setting.isAutoLogin == true) {
+			if (setting.isAutoLogin == true) {
 				userLogin(
 					{
 						login_id: setting.id,
@@ -104,9 +106,8 @@ export default RootStackNavigation = () => {
 					},
 				);
 
-
 				// setLoading(false);
-			}else{
+			} else {
 				setInitialRouteName('Login');
 				setLoading(false);
 			}
@@ -114,10 +115,7 @@ export default RootStackNavigation = () => {
 	}, []);
 
 	if (isLoading) {
-		return (
-			<SafeAreaView>
-			</SafeAreaView>
-		);
+		return <SafeAreaView></SafeAreaView>;
 	} else {
 		return (
 			<SafeAreaView style={{flex: 1}}>
@@ -231,7 +229,11 @@ export default RootStackNavigation = () => {
 							component={AddVolunteers}
 							options={{header: props => <SimpleHeader {...props} />, title: '봉사활동 계정 추가'}}
 						/>
-						<RootStack.Screen name="FeedMediaTagEdit" component={FeedMediaTagEdit} />
+						<RootStack.Screen
+							name="FeedMediaTagEdit"
+							component={FeedMediaTagEdit}
+							options={{header: props => <ConfirmHeader {...props} />, title: ''}}
+						/>
 						<RootStack.Screen
 							name="FeedWrite"
 							component={FeedWrite}
@@ -290,6 +292,11 @@ export default RootStackNavigation = () => {
 							options={{header: props => <SimpleHeader {...props} />, title: '주소 검색'}}
 						/>
 						<RootStack.Screen name="RequestLogin" component={RequestLogin} />
+						<RootStack.Screen name="UserList" options={{title: '계정'}}
+							options={{header: props => <InputAndSearchHeader {...props} />}}
+						>
+							{props => <AccountPicker {...props} /*prevNav={props.prevNav} input={searchInput} onClickUser={onClickUser}*/ />}
+						</RootStack.Screen>
 					</RootStack.Navigator>
 				</NavigationContainer>
 

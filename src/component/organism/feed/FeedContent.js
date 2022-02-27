@@ -228,7 +228,6 @@ export default FeedContent = props => {
 				},
 			);
 		}
-		// if()
 	};
 
 	const isMissingReportRoute = route.name == 'MissingAnimalDetail' || route.name == 'ReportDetail';
@@ -241,13 +240,25 @@ export default FeedContent = props => {
 
 	const onTextLayout = e => {
 		// console.log('텍스트 레이아웃', e.nativeEvent);
-		if (e.nativeEvent.lines.length >= 2) {
-			setIsShowBtn(true);
-			setLineCount(e.nativeEvent.lines.length+1);
-		} 
-		else{
-			setIsShowBtn(false);
-			setLineCount(e.nativeEvent.lines.length);
+		if(Platform.OS=='ios'){	
+			if (e.nativeEvent.lines.length >= 2) {
+				setIsShowBtn(true);
+				setLineCount(e.nativeEvent.lines.length+1);
+			} 
+			else{
+				setIsShowBtn(false);
+				setLineCount(e.nativeEvent.lines.length);
+			}
+		}
+		if(Platform.OS=='android'){
+			if (e.nativeEvent.lines.length >= 2) {
+				setIsShowBtn(true);
+				setLineCount(e.nativeEvent.lines.length);
+			} 
+			else{
+				setIsShowBtn(false);
+				setLineCount(e.nativeEvent.lines.length);
+			}
 		}
 	};
 
@@ -263,7 +274,7 @@ export default FeedContent = props => {
 			return {};
 		} else {
 			return {
-				height: 110 * DP + lineCount * 54*DP,
+				height: 110 * DP + (lineCount > 3 ? 3 : lineCount) * 54*DP,
 			};
 		}
 	};
@@ -333,6 +344,7 @@ export default FeedContent = props => {
 								</View>
 							)}
 							{/* <Text>{route.name}</Text> */}
+							{/* <Text>{lineCount}</Text> */}
 							<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
 							{/* <Text>{feed_type}</Text> */}
 						</View>

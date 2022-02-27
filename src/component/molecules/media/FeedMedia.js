@@ -15,8 +15,7 @@ import {phoneFomatter} from 'Root/util/stringutil';
  * }} props
  */
 export default FeedMedia = props => {
-	const [contentLayout, setContentLayout] = React.useState({height: 214 * DP, width: 0});
-
+	console.log(props.data);
 	const {
 		feed_content,
 		feed_thumbnail,
@@ -145,9 +144,10 @@ export default FeedMedia = props => {
 						);
 					}}
 					horizontal={true}>
-					{feed_medias.map((data, idx) => (
-						<Image source={{uri: data.media_uri}} style={styles.img_square_750x750} key={idx} />
-					))}
+					{feed_medias.map((data, idx) => {
+						console.log(data);
+						return <Image source={{uri: data.media_uri}} style={styles.img_square_750x750} key={idx} />;
+					})}
 					{/* {getFeedIcon()} */}
 				</Swiper>
 			</View>

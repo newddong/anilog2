@@ -1,9 +1,7 @@
 import {useNavigation} from '@react-navigation/core';
-import {duration} from 'moment';
 import React from 'react';
 import {ActivityIndicator, Text, View} from 'react-native';
 import {getUserListByNickname} from 'Root/api/userapi';
-import {dummy_AccountHashList, dummy_accountList, dummy_userObject} from 'Root/config/dummyDate_json';
 import AccountHashList from 'Organism/list/AccountHashList';
 import SelectStat from 'Organism/list/SelectStat';
 import {login_style, temp_style, selectstat_view_style, saveFavorite} from 'Templete/style_templete';

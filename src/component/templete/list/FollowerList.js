@@ -7,7 +7,7 @@ import InputWithSearchIcon from 'Root/component/molecules/input/InputWithSearchI
 
 export default FollowerList = ({route, navigation}) => {
 	const [searchInput, setSearchInput] = React.useState('');
-	const [myFollower, setMyFollower] = React.useState(); // 팔로워리스트 현재 빈 값
+	const [myFollower, setMyFollower] = React.useState([]); // 팔로워리스트 현재 빈 값
 
 	const onClickAccount = item => {
 		// console.log('item', item);
@@ -32,7 +32,7 @@ export default FollowerList = ({route, navigation}) => {
 					setMyFollower(result.msg.map(v => v.follower_id));
 				},
 				err => {
-					// Modal.alert(err);
+					console.log('getFollowers / error / FollwerList : ', err);
 				},
 			);
 		}
@@ -45,7 +45,7 @@ export default FollowerList = ({route, navigation}) => {
 					setMyFollower(result.msg.map(v => v.follow_id));
 				},
 				err => {
-					Modal.alert(err);
+					console.log('getFollows / error / FollwerList : ', err);
 				},
 			);
 		}
@@ -58,15 +58,7 @@ export default FollowerList = ({route, navigation}) => {
 					<InputWithSearchIcon onChange={onChangeSearchInput} onSearch={onSearch} placeholder={'검색어를 입력해주세요.'} />
 				</View>
 				<View style={[{alignItems: 'center'}]}>
-					<ScrollView horizontal={false} style={{flex: 0}}>
-						<ScrollView horizontal={true} style={{flex: 1}}>
-							<ControllableAccountList
-								items={myFollower}
-								onClickAccount={onClickAccount}
-								title={route.name == 'FollowerList' ? '팔로워' : '팔로잉'}
-							/>
-						</ScrollView>
-					</ScrollView>
+					<ControllableAccountList items={myFollower} onClickAccount={onClickAccount} title={route.name == 'FollowerList' ? '팔로워' : '팔로잉'} />
 				</View>
 			</ScrollView>
 			{/* <View style={[followerList.floatingBtn]}>

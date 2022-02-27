@@ -61,6 +61,8 @@ import GeoLocationSearch from 'Root/component/templete/search/GeoLocationSearch'
 
 import {useModal} from './useModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {userLogin} from 'Root/api/userapi';
+import userGlobalObj from 'Root/config/userGlobalObject';
 
 // import Camera from 'Root/component/templete/Camera';
 // import Camera from 'Templete/media/Camera';
@@ -68,24 +70,50 @@ const RootStack = createStackNavigator();
 
 export default RootStackNavigation = () => {
 	const [isPop, popupComponent] = useModal();
-	const [isAutoLogin, setAutoLogin] = React.useState(false);
+	const [isLoading, setLoading] = React.useState(true);
+	const [initialRouteName, setInitialRouteName] = React.useState('Login');
+	// let initialRouteName = 'Login'
 
 	React.useEffect(() => {
-		AsyncStorage.getItem('userSetting', (err, result) => {
-			if (result) {
-				console.log('오토로그인', result);
-				setAutoLogin(false);
+		AsyncStorage.getItem('userSetting', (err, userSetting) => {
+			if (!userSetting) {
+				setLoading(false);
+				return;
 			}
-			console.log('오토', result);
+			let setting = JSON.parse(userSetting);
+			if (setting.isAutoLogin == true) {
+				userLogin(
+					{
+						login_id: setting.id,
+						login_password: setting.password,
+					},
+					userObject => {
+						if (!userObject.msg._id) {
+							AsyncStorage.getItem('userInfo').then(user => {
+								userGlobalObj.userInfo = JSON.parse(user);
+							});
+						} else {
+							AsyncStorage.setItem('userInfo', JSON.stringify(userObject.msg));
+							userGlobalObj.userInfo = userObject.msg;
+						}
+						setInitialRouteName('MainTab');
+						setLoading(false);
+					},
+					error => {
+						alert(error);
+					},
+				);
+
+				// setLoading(false);
+			} else {
+				setInitialRouteName('Login');
+				setLoading(false);
+			}
 		});
 	}, []);
 
-	if (isAutoLogin) {
-		return (
-			<SafeAreaView>
-				<Text>자동로그인중</Text>
-			</SafeAreaView>
-		);
+	if (isLoading) {
+		return <SafeAreaView></SafeAreaView>;
 	} else {
 		return (
 			<SafeAreaView style={{flex: 1}}>
@@ -93,7 +121,7 @@ export default RootStackNavigation = () => {
 					onStateChange={() => {
 						Modal.close();
 					}}>
-					<RootStack.Navigator initialRouteName="Login">
+					<RootStack.Navigator initialRouteName={initialRouteName}>
 						{/* <RootStack.Screen name="MainTab" component={MainTabNavigation} options={{header: props => <LogoutView {...props} />}} /> */}
 						<RootStack.Screen name="MainTab" component={MainTabNavigation} options={{headerShown: false}} />
 						<RootStack.Screen name="Login" component={LoginTemplete} options={{headerShown: false}} />

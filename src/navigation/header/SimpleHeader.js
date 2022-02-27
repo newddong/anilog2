@@ -25,7 +25,7 @@ export default SimpleHeader = ({navigation, route, options, back}) => {
 const style = StyleSheet.create({
 	headerContainer: {
 		alignItems: 'center',
-		height: 135 * DP,
+		height: 95 * DP,
 		flexDirection: 'row',
 		backgroundColor: '#FFFFFF',
 		justifyContent: 'flex-start',

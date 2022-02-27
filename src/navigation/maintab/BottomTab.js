@@ -127,7 +127,7 @@ const Shadow = () => (
 			style={{
 				position: 'absolute',
 				width: '100%',
-				height: 146 * DP,
+				height: 106 * DP,
 				backgroundColor: '#767676',
 				bottom: 0,
 				opacity: 0.03,
@@ -136,7 +136,7 @@ const Shadow = () => (
 			style={{
 				position: 'absolute',
 				width: '100%',
-				height: 143 * DP,
+				height: 103 * DP,
 				backgroundColor: '#767676',
 				bottom: 0,
 				opacity: 0.1,

@@ -8,7 +8,6 @@ import FeedCommentList from 'Templete/feed/FeedCommentList';
 import UserInfoDetailSettting from 'Templete/user/UserInfoDetailSettting';
 import UserMenu from 'Templete/user/UserMenu';
 import UserInfoSetting from 'Templete/user/UserInfoSetting';
-
 import ChangeUserProfileImage from 'Templete/user/ChangeUserProfileImage';
 import ChangePassword from 'Templete/user/ChangePassword';
 import VaccinationRecord from 'Templete/vaccination/VaccinationRecord';
@@ -56,7 +55,10 @@ import LogoHeader from 'Root/navigation/header/LogoHeader';
 import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 import {useNavigation} from '@react-navigation/core';
 import userGlobalObject from 'Root/config/userGlobalObject';
-
+import SettingInformAsk from 'Templete/user/SettingInformAsk';
+import SettingAccount from 'Templete/user/SettingAccount';
+import SettingAlarm from 'Templete/user/SettingAlarm';
+import SettingOpen from 'Templete/user/SettingOpen';
 const MyStack = createStackNavigator();
 
 export default MyStackNavigation = props => {
@@ -298,6 +300,14 @@ export default MyStackNavigation = props => {
 				component={ApplicationFormVolunteer}
 				options={{header: props => <SimpleHeader {...props} />, title: '봉사활동 신청서'}}
 			/>
+			<MyStack.Screen
+				name="SettingInformAsk"
+				component={SettingInformAsk}
+				options={{header: props => <SimpleHeader {...props} />, title: '정보/문의'}}
+			/>
+			<MyStack.Screen name="SettingAccount" component={SettingAccount} options={{header: props => <SimpleHeader {...props} />, title: '계정'}} />
+			<MyStack.Screen name="SettingAlarm" component={SettingAlarm} options={{header: props => <SimpleHeader {...props} />, title: '알림'}} />
+			<MyStack.Screen name="SettingOpen" component={SettingOpen} options={{header: props => <SimpleHeader {...props} />, title: '공개 설정'}} />
 		</MyStack.Navigator>
 	);
 };

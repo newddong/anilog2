@@ -7,14 +7,11 @@ export const organism_style = StyleSheet.create({
 	feedContent: {
 		flexDirection: 'column',
 		width: 750 * DP,
-		// height: 270 * DP,
-		// height: 300 * DP,
 		alignItems: 'center',
-		paddingTop: 40 * DP,
-		// paddingBottom: 50 * DP,
+		paddingTop: 20 * DP,
 		backgroundColor: WHITE,
+		paddingBottom:15*DP,
 		paddingHorizontal: 48 * DP,
-		paddingBottom: 52 * DP,
 		overflow: 'hidden',
 	},
 	userLocationLabel_view_feedContent: {
@@ -28,16 +25,10 @@ export const organism_style = StyleSheet.create({
 		width: 654 * DP, //유저아이디 최우측 미트볼 아이콘 추가를 위한 수정
 		justifyContent: 'space-between',
 		alignItems: 'center',
-		// backgroundColor: 'yellow',
 	},
 	feed: {
-		// flexDirection: 'column',
 		alignItems: 'center',
 		width: 750 * DP,
-		// marginTop: 30 * DP,
-		// alignItems: 'center',
-		// justifyContent: 'center',
-		// backgroundColor: 'lightblue',
 	},
 	feedMedia: {
 		width: 750 * DP,
@@ -75,7 +66,7 @@ export const organism_style = StyleSheet.create({
 		// justifyContent: 'space-between',
 		justifyContent: 'flex-end',
 		backgroundColor: '#fff1',
-		position: 'absolute',
+		// position: 'absolute',
 		bottom: 0,
 	},
 	time_feedContent: {
@@ -158,8 +149,9 @@ export const organism_style = StyleSheet.create({
 	},
 	comment_feed_view: {
 		width: 750 * DP,
-		height: 202 * DP,
+		height: 200 * DP,
 		alignItems: 'center',
+		// backgroundColor:'green'
 	},
 	likeCommentButtons_view: {
 		flexDirection: 'row',

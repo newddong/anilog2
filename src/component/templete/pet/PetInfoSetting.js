@@ -9,7 +9,6 @@ import AniButton from 'Molecules/button/AniButton';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import PetImageLabel from 'Molecules/label/PetImageLabel';
 import {btn_style, login_style, petInfoSetting, temp_style} from 'Templete/style_templete';
-import {_dummy_petInfo_from_user} from 'Root/config/dummy_data_hjs';
 import Modal from 'Component/modal/Modal';
 import {getUserInfoById, removeUserFromFamily} from 'Root/api/userapi';
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';

@@ -31,10 +31,6 @@ export default LinkedAccountList = props => {
 		);
 	}, []);
 
-	React.useEffect(() => {
-		console.log('팔로워 리스트', myFollower);
-	}, [myFollower]);
-
 	return (
 		<View style={[linkedAccountList.container]}>
 			<ScrollView style={[{flex: 0}]}>
@@ -43,9 +39,9 @@ export default LinkedAccountList = props => {
 						<ControllableAccountList items={myFollower} title={'팔로워'} />
 					</View>
 
-					{/* <View style={[linkedAccountList.accountList_step1]}>
-						<ControllableAccountList items={dummy_userObject} title={'추천'} showCrossMark={true} />
-					</View> */}
+					<View style={[linkedAccountList.accountList_step1]}>
+						<ControllableAccountList items={recommendedList} title={'추천'} showCrossMark={true} />
+					</View>
 				</View>
 			</ScrollView>
 			<View style={[linkedAccountList.floatingBtn]}>

@@ -16,7 +16,7 @@ import {number} from 'prop-types';
  *
  *@param {{
  *data: 'data object',
- *onLabelClick: 'void / Label클릭 콜백함수 '
+ *onClickLabel: 'void / Label클릭 콜백함수 '
  *onFavoriteTag : 'void / 즐겨찾기 태그 깃발 클릭 ',
  *borderMode : 'boolean / 테두리 및 입양처보기, 게시글보기 모드 ',
  *onCheckBox : 'boolean / CheckBox 보이기',

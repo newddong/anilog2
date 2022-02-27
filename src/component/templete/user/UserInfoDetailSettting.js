@@ -21,25 +21,24 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 	const [data, setData] = React.useState(route.params); //기존 유저의 데이터가 담겨있음
 	const [loaded, setLoaded] = React.useState(false);
 	const [addrSearched, setAddrSearched] = React.useState(false);
-	const [locationInterest, setLocationInterest] = React.useState(route.params.user_interests.interests_location);
-
+	const [locationInterest, setLocationInterest] = React.useState(route.params.user_interests.interests_location || []);
 	const [contentInterest, setContentInterest] = React.useState([]);
 	const [interestList, setInterestList] = React.useState();
 	const [interestLoaded, setInterestLoaded] = React.useState(false);
-	const [contentSendObejct, setContentSendObject] = React.useState({});
-
+	const [contentSendObejct, setContentSendObject] = React.useState();
+	var temp = [];
 	// 갱신되는 데이터는 Header에도 Json형태로 전해짐
 	// React.useEffect(() => {
 	// 	navigation.setParams({data: data, route_name: route.name});
 	// 	// console.log('user_mobile_company', data.user_mobile_company);
 	// }, [data]);
+	console.log('dataaaaa', data);
 	React.useEffect(() => {
 		console.log('interset', locationInterest, contentInterest);
 	}, [locationInterest, contentInterest]);
 	React.useEffect(() => {
 		navigation.setParams({data: route.params, route_name: route.name});
-    
-		var temp = [];
+
 		console.log('ahhh', route.params.user_interests);
 
 		getInterestsList({}, interests => {
@@ -49,9 +48,9 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 		const getContentInteres = Object.entries(route.params.user_interests).map(content => {
 			console.log('ohhh', content);
 
-			if (content[0] != 'interests_location') {
+			if (content[0] != 'interests_location' && content[0] != '_id') {
 				Object.entries(content[1]).map(contents => {
-					console.log('contents', contents[1]);
+					// console.log('contents', contents[1]);
 					temp.push(contents[1]);
 				});
 			}
@@ -62,11 +61,11 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 
 	React.useEffect(() => {
 		console.log('interset', locationInterest, contentInterest);
-
-		setData({
-			...data,
-			user_interests: {...data.user_interests, interests_location: locationInterest, interests_contetn: contentInterest},
-		});
+		console.log('interest list', interestList);
+		// setData({
+		// 	...data,
+		// 	user_interests: {...data.user_interests, interests_location: locationInterest},
+		// });
 		// setData({...data, user_address: {...data.user_address, city: selected, district: districts.msg[0]}});
 		if (interestLoaded) {
 			for (var props of contentInterest) {
@@ -74,14 +73,26 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 					// console.log('hihihi', content[1], props);
 
 					if (content[1].includes(props)) {
-						console.log('hohohoho', props, content[0]);
+						// console.log('hohohoho', props, content[0]);
 						// setContentSendObject((contentSendObejct[content[0]] = props));
+						if (temp[content[0]]) {
+							temp[content[0]].push(props);
+						} else {
+							temp[content[0]] = [props];
+						}
+
+						console.log('temp', temp);
 					}
-					console.log('content', contentSendObejct);
 				});
 			}
+			var locationObject = {interests_location: locationInterest};
+			Object.assign(locationObject, temp);
+			console.log('mergedObjecct', locationObject);
+			setData(prevState => ({
+				...prevState,
+				user_interests: locationObject,
+			}));
 		}
-
 		console.log('setData', data);
 	}, [locationInterest, contentInterest]);
 

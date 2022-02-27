@@ -8,7 +8,6 @@ import DP from 'Root/config/dp';
 import userGlobalObject from 'Root/config/userGlobalObject';
 export default SettingAccount = ({route}) => {
 	const navigation = useNavigation();
-
 	const logout = () => {
 		userLogout(
 			1,
@@ -37,7 +36,7 @@ export default SettingAccount = ({route}) => {
 				<View style={styles.accountInfoContainer}>
 					<View style={{width: 550 * DP}}>
 						<Text style={[txt.noto32b, {color: GRAY10}]}>가입 계정 정보</Text>
-						<Text style={[{marginTop: 30 * DP}, txt.noto30, {color: TEXTBASECOLOR}]}>315150918509</Text>
+						<Text style={[{marginTop: 30 * DP}, txt.noto30, {color: TEXTBASECOLOR}]}>{userGlobalObject.userInfo.user_phone_number}</Text>
 					</View>
 				</View>
 				<View style={styles.logOutContainer}>

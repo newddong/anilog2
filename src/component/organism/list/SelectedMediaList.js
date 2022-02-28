@@ -1,6 +1,5 @@
 import React from 'react';
 import {FlatList, Text, View} from 'react-native';
-import {dummy_selectedMediaList} from 'Root/config/dummyDate_json';
 import {styles} from 'Atom/image/imageStyle';
 import SelectedMedia from 'Molecules/media/SelectedMedia';
 import {selectedMediaList} from 'Organism/style_organism copy';
@@ -33,7 +32,7 @@ export default SelectedMediaList = props => {
 };
 
 SelectedMediaList.defaultProps = {
-	items: dummy_selectedMediaList,
+	items: [],
 	layout: styles.img_square_round_190,
 	onDelete: e => console.log(e),
 };

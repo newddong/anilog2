@@ -88,7 +88,7 @@ const ActionButton = React.forwardRef((props, ref) => {
 				]}>
 				<Text
 					style={[
-						txt.noto24b,
+						txt.noto24,
 						{
 							fontSize: props.titleFontStyle * DP,
 							color: btnTxtColor(), //TXT_COLOR가 다양하므로 함수로 분기처리

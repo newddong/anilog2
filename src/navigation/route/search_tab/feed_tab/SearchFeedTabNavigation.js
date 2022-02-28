@@ -1,22 +1,20 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import SearchAccountA from 'Root/component/templete/search/SearchAccountA';
 import SearchFeed from 'Root/component/templete/search/SearchFeed';
 import SearchHashTag from 'Root/component/templete/search/SearchHashTag';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
-import {Animated, Dimensions, Text, TouchableOpacity, View} from 'react-native';
-import {APRI10, GRAY10, GRAY20, WHITE} from 'Root/config/color';
+import {Dimensions} from 'react-native';
+import {APRI10, GRAY10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 
 const SearchFeedTabNav = createMaterialTopTabNavigator();
 
 export default SearchFeedTabNavigation = props => {
-	const [searchInput, setSearchInput] = React.useState(); // 검색어 관련 State
-	const [currentScreen, setCurrentScreen] = React.useState(0); //현재 보고 있는 화면 State
+	const [searchInput, setSearchInput] = React.useState(''); // 검색어 관련 State
 	const routeName = getFocusedRouteNameFromRoute(props.route);
-	console.log('getFocusedRouteNameFromRoute / SearchFeedTab', routeName);
+	// console.log('getFocusedRouteNameFromRoute / SearchFeedTab', routeName);
 	const tabbarTitle = () => {
 		switch (routeName) {
 			case 'SearchFeed':
@@ -32,21 +30,21 @@ export default SearchFeedTabNavigation = props => {
 				break;
 		}
 	};
+	// const navName = ['SearchFeed', 'SearchAccountA', 'SearchHashTag'];
+
 	React.useEffect(() => {
-		if (routeName == navName[0]) setCurrentScreen(0);
-		else if (routeName == navName[1]) setCurrentScreen(1);
-		else if (routeName == navName[2]) setCurrentScreen(2);
+		// if (routeName == navName[0]) setCurrentScreen(0);
+		// else if (routeName == navName[1]) setCurrentScreen(1);
+		// else if (routeName == navName[2]) setCurrentScreen(2);
 		props.routeNameChild(routeName);
-		// props.navigation.setOptions({childName: routeName});
+		props.navigation.setParams({routeName: routeName});
 	}, [routeName]);
 
 	React.useEffect(() => {
 		//SearchHeader에서 작성한 검색어와 검색클릭이 행해지면 SearchInput에 값이 들어감
-		console.log('props.input / FeedTabNavi', props.input);
+		// console.log('props.input / FeedTabNavi', props.input);
 		setSearchInput(props.input);
 	}, [props.input]);
-
-	const navName = ['SearchFeed', 'SearchAccountA', 'SearchHashTag'];
 
 	const onClickUser = sendUserobject => {
 		props.onClickUser(sendUserobject);
@@ -54,7 +52,7 @@ export default SearchFeedTabNavigation = props => {
 
 	return (
 		<SearchFeedTabNav.Navigator
-			// initialRouteName={navName[props.defaultIndex]}
+			initialRouteName="SearchAccountA"
 			initialLayout={{width: Dimensions.get('window').width}}
 			optimizationsEnabled
 			screenOptions={{

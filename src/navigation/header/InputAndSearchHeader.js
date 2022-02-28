@@ -9,6 +9,7 @@ import InputWithSearchIcon from 'Molecules/input/InputWithSearchIcon';
 export default InputAndSearchHeader = props => {
 	// console.log('ConfirmInputHeader.', props.route.params.routeName);
 	const routeName = props.route.name != undefined ? props.route.name : '';
+
 	const [searchInput, setSearchInput] = React.useState('');
 
 
@@ -17,10 +18,15 @@ export default InputAndSearchHeader = props => {
 		routeName!='UserList'&&props.navigation.setParams({searchInput: searchInput});
 	};
 
+	React.useEffect(() => {}, []);
+
 	const onChangeSearchText = text => {
 		// console.log('text', text);
 		props.navigation.setParams({...props.route.params, searchInput:text});
 		setSearchInput(text);
+		if (text != '') {
+			props.navigation.setParams({searchInput: text});
+		}
 	};
 
 	//뒤로 가기 클릭 시 탭이 initialRoute인 Feed로 가던 현상 수정

@@ -47,11 +47,10 @@ const ShareModal = props => {
 			toValue: 0,
 			easing: Easing.linear,
 			useNativeDriver: false,
-		}).start();
-		setTimeout(() => {
+		}).start(() => {
 			Modal.close();
-		}, 400);
-		props.onClose();
+			props.onClose();
+		});
 	};
 
 	const onPressKakao = () => {
@@ -63,8 +62,6 @@ const ShareModal = props => {
 	const onPressMsg = () => {
 		props.onPressMsg();
 	};
-
-	// console.log('props.off', Platform.OS, props.offset.y);
 
 	return (
 		<TouchableOpacity activeOpacity={1} onPress={closeAnimation} style={style.background}>

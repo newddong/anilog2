@@ -35,6 +35,7 @@ const InputWithSearchIcon = props => {
 	//돋보기 버튼 클릭 콜백
 	const onSearch = () => {
 		props.onSearch(input);
+		blur();
 	};
 
 	//인풋 포커스가 해제되었을 때 콜백

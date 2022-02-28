@@ -1,7 +1,6 @@
 import React from 'react';
 import {FlatList, Image, ScrollView, Text, View, TouchableOpacity} from 'react-native';
 import {GRAY10, APRI10} from 'Root/config/color';
-import {dummy_ActivationList} from 'Root/config/dummyDate_json';
 import {txt} from 'Root/config/textstyle';
 import {styles} from 'Atom/image/imageStyle';
 import {activationList, login_style, temp_style} from 'Templete/style_templete';

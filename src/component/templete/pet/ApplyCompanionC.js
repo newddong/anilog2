@@ -3,7 +3,6 @@ import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {Text, View} from 'react-native';
 import {APRI10, GRAY10} from 'Root/config/color';
-import {applyComanionCheckList} from 'Root/config/dummyDate_json';
 import {txt} from 'Root/config/textstyle';
 import {btn_w176} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
@@ -11,6 +10,7 @@ import Stagebar from 'Molecules/info/Stagebar';
 import AssignCheckList from 'Organism/list/AssignCheckList';
 import {stagebar_style} from 'Organism/style_organism copy';
 import {applyCompanionC, btn_style, login_style, temp_style} from 'Templete/style_templete';
+import {applyComanionCheckList} from 'Root/i18n/msg';
 
 // protect_act_checklist : {
 // 	is_adult : Boolean, //성인여부

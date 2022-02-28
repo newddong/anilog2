@@ -10,7 +10,7 @@ import {controllableAccountList} from 'Root/component/organism/style_organism co
 
 export default SearchHashTag = props => {
 	const searchInput = props.search.searchInput;
-	console.log('searchInput / SearchHashTag : ', props.search.searchInput);
+	// console.log('searchInput / SearchHashTag : ', props.search.searchInput);
 	const [findList, setFindList] = React.useState([]);
 	const dummy = [
 		{
@@ -29,8 +29,7 @@ export default SearchHashTag = props => {
 				hashtag_keyword: searchInput,
 			},
 			result => {
-				console.log('hash editing', result.msg);
-
+				// console.log('hash editing', result.msg);
 				setFindList(result.msg);
 			},
 			error => {

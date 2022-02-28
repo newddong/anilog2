@@ -417,6 +417,11 @@ export const profileInfo_style = StyleSheet.create({
 	shelter_info_container: {
 		marginTop: 12 * DP,
 	},
+	shelterButtonContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		width: 292 * DP,
+	},
 });
 
 export const parentComment = StyleSheet.create({

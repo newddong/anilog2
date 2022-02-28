@@ -75,7 +75,7 @@ export default MainTabNavigation = ({route, navigation}) => {
 					tabBarShowLabel: false,
 					// headerShown: ,
 				}}>
-				{props => <SearchTabNavigation {...props} user_type={route.params} />}
+				{props => <SearchTabNavigation {...props} />}
 			</MainTabNav.Screen>
 		</MainTabNav.Navigator>
 	);

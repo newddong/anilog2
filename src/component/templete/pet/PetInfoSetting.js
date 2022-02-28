@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Platform, ScrollView, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {APRI10, GRAY10, GRAY40} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w242} from 'Atom/btn/btn_style';
@@ -9,7 +9,6 @@ import AniButton from 'Molecules/button/AniButton';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import PetImageLabel from 'Molecules/label/PetImageLabel';
 import {btn_style, login_style, petInfoSetting, temp_style} from 'Templete/style_templete';
-import {_dummy_petInfo_from_user} from 'Root/config/dummy_data_hjs';
 import Modal from 'Component/modal/Modal';
 import {getUserInfoById, removeUserFromFamily} from 'Root/api/userapi';
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
@@ -205,7 +204,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 						<View style={[petInfoSetting.profileInside]}>
 							<TouchableOpacity onPress={changeProfile} style={[petInfoSetting.petImageLabel]}>
 								<PetImageLabel data={petData} showNickname={false} />
-								<View style={[petInfoSetting.profileEditMark]}>
+								<View style={[Platform.OS == 'ios' ? petInfoSetting.profileEditMark : petInfoSetting.profileEditMark_and]}>
 									<AddItem92 />
 								</View>
 							</TouchableOpacity>
@@ -364,7 +363,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 										<View style={[familyAccountList_style.userIDContainer]}>
 											<Text style={[txt.roboto28b]}>{v.user_nickname}</Text>
 										</View> */}
-											<UserDescriptionLabel data={v} onClickLabel={onClickFamilyLabel} />
+											<UserDescriptionLabel data={v} onClickLabel={onClickFamilyLabel} width={400} />
 											{v.user_nickname == loginUser.user_nickname || !isChiefUser ? (
 												<></>
 											) : (

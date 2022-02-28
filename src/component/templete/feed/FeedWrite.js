@@ -185,7 +185,7 @@ export default FeedWrite = props => {
 
 	//태그 추가
 	const moveToFeedMediaTagEdit = () => {
-		// props.navigation.push('FeedMediaTagEdit');
+		props.navigation.push('FeedMediaTagEdit');
 	};
 	const inputFeedTxt = (feedInput, hashtag_keyword) => {
 		props.navigation.setParams({...props.route.params, feed_content: feedText, hashtag_keyword: hashtag_keyword});

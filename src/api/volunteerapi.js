@@ -42,6 +42,7 @@ export async function getUserVolunteerActivityList(params, callback, errcallback
  * @param {object} params
  * @param {string} params.volunteer_activity_object_id - 상태를 변경하려는 봉사활동 신청서의 아이디
  * @param {'done'|'notaccept'|'accept'|'waiting'|'cancel'} params.volunteer_status - 변경하려고 하는 상태('done'|'notaccept'|'accept'|'waiting'|'cancel')
+ * @param {string} params.volunteer_reason_of_notaccept - 보호소가 신청 거절을 할 경우 거절사유
  * @param {function} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */

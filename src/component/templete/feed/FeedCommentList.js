@@ -27,7 +27,7 @@ export default FeedCommentList = props => {
 	const input = React.useRef();
 	const addChildCommentFn = React.useRef(() => {});
 	const [refresh, setRefresh] = React.useState(true);
-	const keyboardY = useKeyboardBottom(150 * DP);
+	const keyboardY = useKeyboardBottom(0 * DP);
 	const flatlist = React.useRef();
 
 	React.useEffect(() => {
@@ -53,7 +53,7 @@ export default FeedCommentList = props => {
 		let param = {
 			comment_photo_uri: photo, //사진uri
 			comment_contents: content, //내용
-			// comment_is_secure: privateComment, //공개여부 테스트때 반영
+			comment_is_secure: privateComment, //공개여부 테스트때 반영
 		};
 		if (props.route.name == 'FeedCommentList') {
 			param = {...param, feedobject_id: props.route.params.feedobject._id};

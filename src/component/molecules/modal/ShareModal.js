@@ -7,7 +7,7 @@ import Modal from 'Component/modal/Modal';
 import {Clip72, Email72, SocialKakao72} from 'Root/component/atom/icon';
 
 /**
- * 드롭다운 형식의 메뉴 모달
+ * 공유하기 메뉴 모달
  *
  * @param {Object} props - props object
  * @param {object} props.offset - 위치 정보
@@ -83,6 +83,10 @@ const ShareModal = props => {
 				]}>
 				<TouchableOpacity activeOpacity={1} style={{paddingBottom: 15 * DP}}>
 					<View style={[style.inside]}>
+						<TouchableOpacity onPress={onPressKakao} style={[style.socialItem]}>
+							<SocialKakao72 />
+							<Text style={[txt.noto22, {color: GRAY10}]}>카카오톡</Text>
+						</TouchableOpacity>
 						<TouchableOpacity onPress={onPressLinkCopy} style={[style.socialItem]}>
 							<Clip72 />
 							<Text style={[txt.noto22, {color: GRAY10}]}>링크복사</Text>
@@ -90,10 +94,6 @@ const ShareModal = props => {
 						<TouchableOpacity onPress={onPressMsg} style={[style.socialItem]}>
 							<Email72 />
 							<Text style={[txt.noto22, {color: GRAY10}]}>메시지</Text>
-						</TouchableOpacity>
-						<TouchableOpacity onPress={onPressKakao} style={[style.socialItem]}>
-							<SocialKakao72 />
-							<Text style={[txt.noto22, {color: GRAY10}]}>카카오톡</Text>
 						</TouchableOpacity>
 					</View>
 				</TouchableOpacity>
@@ -160,6 +160,7 @@ const style = StyleSheet.create({
 		width: 92 * DP,
 		height: 116 * DP,
 		marginRight: 30 * DP,
+		// backgroundColor: 'green',
 	},
 });
 

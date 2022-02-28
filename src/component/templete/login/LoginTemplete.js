@@ -15,21 +15,44 @@ import userGlobalObj from 'Root/config/userGlobalObject';
 import {ALIGNITEMS, CALENDAR_DAY, CALENDAR_MONTH, CALENDAR_YEAR, FEED_FOLLOWING_USER_CLICK, mobile_carrier, REPORT_CONTENT} from 'Root/i18n/msg';
 
 export default LoginTemplete = props => {
-	const [id, setId] = React.useState('');
-	const [password, setPassword] = React.useState('');
+
+	const [userSetting, setUserSetting] = React.useState();
+
+	React.useEffect(()=>{
+		AsyncStorage.getItem('userSetting').then(setting =>{
+			if(setting){
+				console.log('셋팅 로드중',JSON.parse(setting))
+				let userSetting = JSON.parse(setting);
+				userSetting.password = '';
+				setUserSetting(userSetting);
+			}else{
+				console.log('셋팅 로드 실패 초기값 사용',JSON.parse(setting))
+				setUserSetting({
+					isAutoLogin : false,
+					isSaveId : false,
+					id : '',
+					password : '',
+				})
+			}
+		})
+	},[])
+	
 	const tryToLogin = () => {
 		Modal.popNoBtn('로그인을 요청합니다.');
+		if(!userSetting.isSaveId){
+			userSetting.id = '';
+			userSetting.password = '';
+		}
+		AsyncStorage.setItem('userSetting',JSON.stringify(userSetting));
+
 		userLogin(
 			{
-				login_id: id,
-				login_password: password,
+				login_id: userSetting.id,
+				login_password: userSetting.password,
 			},
 			userObject => {
-				// console.log('userObject', userObject.msg);
 				Modal.close();
 				Modal.popNoBtn(userObject.msg.user_nickname + '님 \n로그인이 성공하였습니다.');
-				// AsyncStorage.setItem('token', userObject.msg._id || '');
-				// AsyncStorage.setItem('type', userObject.msg.user_type || '');
 
 				if (!userObject.msg._id) {
 					AsyncStorage.getItem('userInfo').then(user => {
@@ -39,7 +62,6 @@ export default LoginTemplete = props => {
 					AsyncStorage.setItem('userInfo', JSON.stringify(userObject.msg));
 					userGlobalObj.userInfo = userObject.msg;
 				}
-
 				Modal.close();
 				props.navigation.reset({routes: [{name: 'MainTab', params: userObject.msg.user_type}]});
 			},
@@ -70,23 +92,27 @@ export default LoginTemplete = props => {
 
 	//자동로그인 박스 클릭
 	const onCheckAutoLogin = state => {
-		// console.log('자동로그인', state);
+		console.log('자동로그인', state);
+		setUserSetting({...userSetting,isAutoLogin:state});
 	};
 	//아이디 저장 박스 클릭
 	const onCheckSaveId = state => {
-		// console.log('아이디저장', state);
+		console.log('아이디저장', state);
+		setUserSetting({...userSetting,isSaveId:state});
 	};
 
 	//아이디 입력
 	const onChangeId = id => {
 		// console.log('유저 아이디 입력', id);
-		setId(id);
+		// setId(id);
+		setUserSetting({...userSetting,id:id});
 	};
 
 	//암호입력
 	const onChangePassword = pwd => {
 		// console.log('암호입력', pwd);
-		setPassword(pwd);
+		// setPassword(pwd);
+		setUserSetting({...userSetting,password:pwd});
 	};
 
 	//Password Text Input Validator
@@ -99,10 +125,18 @@ export default LoginTemplete = props => {
 		console.log('Id Validator ' + text);
 	};
 
+	const [t, setT] = React.useState(false);
 	const test = () => {
-		Modal.popSelectScrollBoxModal([mobile_carrier], '도, 광역시를 지정해주세요.', e => console.log('e', e));
+		// Modal.popSelectScrollBoxModal([mobile_carrier], '도, 광역시를 지정해주세요.', e => console.log('e', e));
+		console.log(userSetting);
 	};
-
+	if (!userSetting) {
+		return (
+			<View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff'}}>
+				<Text style={txt.roboto30b}>사용자 설정을 불러오는 중입니다.</Text>
+			</View>
+		);
+	}
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
 			{/* confirm without login */}
@@ -119,7 +153,7 @@ export default LoginTemplete = props => {
 				{/* LoginForm */}
 				<View style={[loginTemplete_style.loginForm]}>
 					<View style={[loginTemplete_style.idInput]}>
-						<Input24 placeholder={'전화번호를 입력해주세요.'} keyboardType={'number-pad'} width={520} onChange={onChangeId} value={id} />
+						<Input24 placeholder={'전화번호를 입력해주세요.'} keyboardType={'number-pad'} width={520} onChange={onChangeId} value={userSetting.id} />
 					</View>
 					<View style={[loginTemplete_style.pwdInput]}>
 						<PasswordInput
@@ -135,10 +169,10 @@ export default LoginTemplete = props => {
 					<View style={[loginTemplete_style.checkBox_loginFormContainer]}>
 						<View style={[loginTemplete_style.checkBox_loginForm]}>
 							<View style={[loginTemplete_style.checkBoxContainer]}>
-								<CheckBox value={'자동 로그인'} onCheck={onCheckAutoLogin} />
+								<CheckBox value={'자동 로그인'} onCheck={onCheckAutoLogin} state={userSetting.isAutoLogin}/>
 							</View>
 							<View style={[loginTemplete_style.checkBoxContainer]}>
-								<CheckBox value={'아이디저장'} onCheck={onCheckSaveId} />
+								<CheckBox value={'아이디저장'} onCheck={onCheckSaveId} state={userSetting.isSaveId}/>
 							</View>
 						</View>
 					</View>
@@ -197,7 +231,7 @@ export default LoginTemplete = props => {
 						onPress={() => {
 							setId('01096450420');
 							setPassword('tkddn123');
-							props.navigation.push('GeoLocation');
+							// props.navigation.push('GeoLocation');
 						}}>
 						<Text style={[txt.noto24, {color: GRAY20}]}> 계정 2 </Text>
 					</TouchableOpacity>

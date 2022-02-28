@@ -22,7 +22,7 @@ export default ChildComment = props => {
 	const [data, setData] = React.useState(props.data);
 	const [isMyComment, setIsMyComment] = React.useState(false);
 	const [likeState, setLikeState] = React.useState(false);
-	console.log('ChildCommnet Data', props);
+	// console.log('ChildCommnet Data', props);
 	const navigation = useNavigation();
 	React.useEffect(() => {
 		setData(props.data);
@@ -61,7 +61,7 @@ export default ChildComment = props => {
 			)}
 			{/* 댓글 텍스트 */}
 			<View style={[childComment.commentContainer]}>
-				<Text style={[txt.noto24, {color: GRAY10}]}>{data ? data.comment_contents : ''}</Text>
+				<Text style={[txt.noto24]}>{data ? data.comment_contents : ''}</Text>
 			</View>
 			{/* 좋아요 버튼, 좋아요 숫자 , 답글쓰기 컨테이너 */}
 			<View style={[childComment.likeReplyButton]}>
@@ -99,6 +99,7 @@ export const childComment = StyleSheet.create({
 	profileContainer: {
 		width: 574 * DP,
 		height: 50 * DP,
+		// marginBottom: 10 * DP,
 		flexDirection: 'row',
 	},
 	commentMark: {
@@ -126,11 +127,11 @@ export const childComment = StyleSheet.create({
 	commentContainer: {
 		width: 484 * DP,
 		marginLeft: 90 * DP,
-		marginVertical: 20 * DP,
+		marginBottom: 4 * DP,
 	},
 	commentText: {},
 	likeReplyButton: {
-		width: 222 * DP,
+		// width: 222 * DP,
 		height: 34 * DP,
 		flexDirection: 'row',
 		alignSelf: 'flex-end',

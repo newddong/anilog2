@@ -24,6 +24,7 @@ import {
 	SETTING,
 	TAGED_CONTENTS_FOR_ME,
 	LOGOUT,
+	OPENSETTING,
 } from 'Root/i18n/msg';
 import {btn_w280, btn_w280x68} from 'Atom/btn/btn_style';
 import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FavoriteTag48_Filled, Paw46, Paw48_APRI10, Setting46} from 'Atom/icon';
@@ -38,6 +39,7 @@ import Modal from 'Component/modal/Modal';
 import {userLogout} from 'Root/api/userapi';
 import {useIsFocused} from '@react-navigation/native';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {GRAY40} from 'Root/config/color';
 
 export default UserMenu = props => {
 	// console.log('UserMenu Props', props);
@@ -45,6 +47,7 @@ export default UserMenu = props => {
 	const ifFoucsed = useIsFocused();
 	const [data, setData] = React.useState({}); //우선 userObject 0번 추가
 	const [showMoreIntro, setShowMoreIntro] = React.useState(false);
+	const [numberOfLines, setNumOfLines] = React.useState();
 
 	//토큰에 로그인한 유저의 _id를 저장
 	React.useEffect(() => {
@@ -156,19 +159,20 @@ export default UserMenu = props => {
 				Modal.popInfoModal();
 				break;
 			case '정보/문의':
-				Modal.popInfoModal();
+				// Modal.popInfoModal();
+				navigation.push('SettingInformAsk');
 				break;
 			case '커뮤니티':
 				Modal.popInfoModal();
 				break;
 			case '계정':
-				Modal.popInfoModal();
+				navigation.push('SettingAccount');
 				break;
 			case '알림':
-				Modal.popInfoModal();
+				navigation.push('SettingAlarm');
 				break;
-			case '로그아웃':
-				logout();
+			case '공개 설정':
+				navigation.push('SettingOpen');
 				break;
 		}
 		// navigation.push('me')
@@ -197,28 +201,42 @@ export default UserMenu = props => {
 
 					<View style={{flexDirection: 'row', width: 654 * DP}}>
 						<View style={[userMenu_style.introduceBox, {alignSelf: 'flex-start'}]}>
-							{/* <SocialInfoB data={data} /> */}
 							{data._id != undefined && (
-								<Text numberOfLines={showMoreIntro ? 10 : 2} style={[txt.noto26]}>
+								<Text numberOfLines={!showMoreIntro ? 10 : 2} style={[txt.noto26]}>
 									{data.user_introduction || '자기소개가 없습니다.'}
 								</Text>
 							)}
 						</View>
-						{data._id != undefined && showMoreIntro ? (
-							<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {flex: 1}]}>
-								<View style={[{flexDirection: 'row'}, {alignSelf: 'flex-end'}, {justifyContent: 'flex-end'}]}>
-									<Text style={[txt.noto24, {color: GRAY10}, {alignSelf: 'flex-end'}]}>접기</Text>
-									<Arrow_Up_GRAY20 />
-								</View>
-							</TouchableOpacity>
-						) : data._id != undefined ? (
-							<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {flex: 1}]}>
-								<View style={[{flexDirection: 'row'}, {alignSelf: 'flex-end'}, {justifyContent: 'flex-end'}]}>
-									<Text style={[txt.noto24, {color: GRAY10}]}>더보기</Text>
-									<Arrow_Down_GRAY10 />
-								</View>
-							</TouchableOpacity>
-						) : null}
+						{/* 더미 텍스트 삭제금지 */}
+						<Text
+							style={[txt.noto24, {position: 'absolute', opacity: 0, backgroundColor: 'red'}]}
+							numberOfLines={null}
+							onTextLayout={({nativeEvent: {lines}}) => {
+								// console.log('lines.length', lines.length);
+								setNumOfLines(lines.length);
+							}}>
+							{data.user_introduction || ''}
+						</Text>
+						{/* 유저 소개란 - 2줄 이상일 경우 더보기/접기 컴포넌트 출력 */}
+						{numberOfLines > 2 ? (
+							!showMoreIntro ? (
+								<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {flex: 1}]}>
+									<View style={[userMenu_style.showMoreContainer, {}]}>
+										<Text style={[txt.noto24, {color: GRAY10}]}>접기</Text>
+										<Arrow_Up_GRAY20 />
+									</View>
+								</TouchableOpacity>
+							) : data._id != undefined ? (
+								<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {flex: 1}]}>
+									<View style={[userMenu_style.showMoreContainer]}>
+										<Text style={[txt.noto24, {color: GRAY10}]}>더보기</Text>
+										<Arrow_Down_GRAY10 />
+									</View>
+								</TouchableOpacity>
+							) : null
+						) : (
+							<></>
+						)}
 					</View>
 
 					{/* 내 정보 수정 버튼*/}
@@ -240,6 +258,7 @@ export default UserMenu = props => {
 
 				{/* 하단 메뉴 */}
 				<View style={[temp_style.userMenu_step2, userMenu_style.horizontalLine]}>
+					{/* <View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}> */}
 					<ProfileMenu
 						menuTitle={FAVORITES}
 						menuItems={[
@@ -249,25 +268,30 @@ export default UserMenu = props => {
 						onClick={menuClick}
 						titleIcon={<FavoriteTag48_Filled />}
 					/>
-					<ProfileMenu
-						menuTitle={MY_ACTIVITY_IN_SHELTER}
-						menuItems={[
-							[MY_CONTENTS, TAGED_CONTENTS_FOR_ME],
-							[APPLICATION_HISTORY, ANIMAL_PROTECTION_STATE],
-							[COMUNITY, NOTE_LIST],
-						]}
-						onClick={menuClick}
-						titleIcon={<Paw46 />}
-					/>
-					<ProfileMenu
-						menuTitle={SETTING}
-						menuItems={[
-							[INFO_QUESTION, ACCOUNT],
-							[INFO, LOGOUT],
-						]}
-						onClick={menuClick}
-						titleIcon={<Setting46 />}
-					/>
+					{/* </View> */}
+					<View>
+						<ProfileMenu
+							menuTitle={MY_ACTIVITY_IN_SHELTER}
+							menuItems={[
+								[MY_CONTENTS, TAGED_CONTENTS_FOR_ME],
+								[APPLICATION_HISTORY, ANIMAL_PROTECTION_STATE],
+								[COMUNITY, NOTE_LIST],
+							]}
+							onClick={menuClick}
+							titleIcon={<Paw46 />}
+						/>
+					</View>
+					<View>
+						<ProfileMenu
+							menuTitle={SETTING}
+							menuItems={[
+								[OPENSETTING, ACCOUNT],
+								[INFO, INFO_QUESTION],
+							]}
+							onClick={menuClick}
+							titleIcon={<Setting46 />}
+						/>
+					</View>
 				</View>
 			</View>
 		</ScrollView>

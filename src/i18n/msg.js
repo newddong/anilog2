@@ -128,7 +128,7 @@ export const KENNEL_COUGH = '캔넬코프';
 export const RABIES = '광견병';
 export const DISCLOSE = '공개';
 export const ASSIGN_PET = '반려동물 추가';
-
+export const OPENSETTING = '공개 설정';
 //SearchTopTabRoute
 export const FEED = '피드';
 export const HEALTH_VIDEO = '건강영상';
@@ -186,38 +186,20 @@ export const EMAIL_DOMAIN = [
 
 export const CALENDAR_YEAR = () => {
 	let currentTime = new Date();
-	let year = ['-------------', '-------------'];
+	let year = ['', ''];
 	for (let i = 0; i < 70; i++) {
 		year.push(currentTime.getFullYear() - i);
 	}
-	year.push('-------------', '-------------');
+	year.push('', '');
 	return year;
 };
 
-export const CALENDAR_MONTH = [
-	'-------------',
-	'-------------',
-	'1',
-	'2',
-	'3',
-	'4',
-	'5',
-	'6',
-	'7',
-	'8',
-	'9',
-	'10',
-	'11',
-	'12',
-	'-------------',
-	'-------------',
-	'-------------',
-];
+export const CALENDAR_MONTH = ['', '', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '', '', ''];
 export const CALENDAR_DAY = () => {
-	const paddingObject = '-------------';
-	let day30 = ['-------------', '-------------'];
-	let day31 = ['-------------', '-------------'];
-	let day29 = ['-------------', '-------------'];
+	const paddingObject = '';
+	let day30 = ['', ''];
+	let day31 = ['', ''];
+	let day29 = ['', ''];
 	for (let i = 1; i < 32; i++) {
 		day31.push(i);
 	}
@@ -417,7 +399,7 @@ export const NEW_PWD_PLACEHOLDER = '새로운 비밀번호 확인';
 export const PWD_CHECK_INFO = '비밀번호를 다시 한 번 적어주세요.';
 
 //Nickname 설정 관련
-export const NICKNAME_FORM = '2자 이상 15자 이내의 영문, 숫자의 입력만 가능합니다';
+export const NICKNAME_FORM = '2~15자 이내의 영문,한글,숫자 입력만 가능합니다';
 export const NEW_NICK_REQUEST = '닉네임을 입력 해주세요.';
 export const PREVIOUS_NICK_TITLE = '기존 닉네임';
 
@@ -482,3 +464,13 @@ export const REPLY_MEATBALL_MENU = ['공유하기', '신고'];
 
 //동물 체중 안내
 export const WEIGHT_INPUT_FORM_INFO = '두자리 숫자, 소수점 한자리';
+
+//알림  설정
+
+export const FOLLWER_NEW_POST_ALRAM = '팔로워 새 게시글 알림';
+export const FAVORITE_PROTECT_STATUS_CHANGE_ALRAM = '즐겨찾은 보호요청 상태 변경 알림';
+export const PET_VACCIN_DATE_ALRAM = '반려동물의 접종 예정일 알림';
+export const MY_POST_ALRAM = '내 게시글 알림';
+export const MY_POST_COMMENT_ALRAM = '내 게시글에 달린 댓글 알림';
+export const TAG_OR_FOLLOW_ALRAM = '나를 태그하거나 팔로우시 알림';
+export const MY_APPLY_STATUS_CHANGE_ALRAM = '내 신청서 상태 변경시 알림';

@@ -38,19 +38,19 @@ export default AssignPetProfileImage = ({navigation, route}) => {
 	// }, [route.params]);
 
 	React.useEffect(() => {
-		checkProtectPet(
-			{userobject_id: data.userobject_id},
-			cbObj => {
-				Modal.popTwoBtn(
-					'새로 임시보호, 입양을 하는 동물이 있습니다.\n 해당 동물을 등록하시겠습니까?',
-					'아니오',
-					'네',
-					() => Modal.close(),
-					() => Modal.close(),
-				);
-			},
-			e => Modal.popOneBtn(e + 'CheckProtectPet', '확인', () => Modal.close()),
-		);
+		// checkProtectPet(
+		// 	{userobject_id: data.userobject_id},
+		// 	cbObj => {
+		// 		Modal.popTwoBtn(
+		// 			'새로 임시보호, 입양을 하는 동물이 있습니다.\n 해당 동물을 등록하시겠습니까?',
+		// 			'아니오',
+		// 			'네',
+		// 			() => Modal.close(),
+		// 			() => Modal.close(),
+		// 		);
+		// 	},
+		// 	e => Modal.popOneBtn(e + 'CheckProtectPet', '확인', () => Modal.close()),
+		// );
 	}, []);
 
 	React.useEffect(() => {
@@ -160,12 +160,12 @@ export default AssignPetProfileImage = ({navigation, route}) => {
 
 				{/* InputForm */}
 				<View style={[temp_style.inputForm_assignPetProfileImage, assignPetProfileImage_style.inputForm]}>
-					<View style={[temp_style.input30_assignPetProfileImage]}>
+					<View style={[temp_style.input30_assignPetProfileImage, {backgroundColor: 'white'}]}>
 						<Input30
 							value={data.user_nickname}
 							showTitle={false}
 							showmsg={false}
-							width={654}
+							width={350}
 							confirm_msg={'사용 가능한 닉네임입니다.'}
 							alert_msg={alertmsg}
 							placeholder={'반려동물의 닉네임을 입력해주세요.'}

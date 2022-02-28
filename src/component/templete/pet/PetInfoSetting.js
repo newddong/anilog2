@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Platform, ScrollView, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {APRI10, GRAY10, GRAY40} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w242} from 'Atom/btn/btn_style';
@@ -204,7 +204,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 						<View style={[petInfoSetting.profileInside]}>
 							<TouchableOpacity onPress={changeProfile} style={[petInfoSetting.petImageLabel]}>
 								<PetImageLabel data={petData} showNickname={false} />
-								<View style={[petInfoSetting.profileEditMark]}>
+								<View style={[Platform.OS == 'ios' ? petInfoSetting.profileEditMark : petInfoSetting.profileEditMark_and]}>
 									<AddItem92 />
 								</View>
 							</TouchableOpacity>
@@ -363,7 +363,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 										<View style={[familyAccountList_style.userIDContainer]}>
 											<Text style={[txt.roboto28b]}>{v.user_nickname}</Text>
 										</View> */}
-											<UserDescriptionLabel data={v} onClickLabel={onClickFamilyLabel} />
+											<UserDescriptionLabel data={v} onClickLabel={onClickFamilyLabel} width={400} />
 											{v.user_nickname == loginUser.user_nickname || !isChiefUser ? (
 												<></>
 											) : (

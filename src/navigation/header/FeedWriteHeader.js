@@ -10,7 +10,7 @@ import {createFeed, createMissing, createReport} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default FeedWriteHeader = ({route, navigation, options}) => {
-	console.log('route', route);
+	// console.log('route', route);
 	const userInfo = userGlobalObject;
 	const complete = result => {
 		Modal.close();

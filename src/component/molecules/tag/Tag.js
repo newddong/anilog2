@@ -6,12 +6,13 @@ import {txt} from 'Root/config/textstyle';
 import {useNavigation, useRoute} from '@react-navigation/native';
 
 export default Tag = ({pos, user, content, onDelete, onEnd, viewmode, backgroundLayout}) => {
+	console.log('tags',pos,user)
 	const [position, setPosition] = React.useState({x: pos.x, y: pos.y, opacity: 1});
 	const tagnav = useNavigation();
 	React.useEffect(() => {
-		// setPosition({...position, x: pos.x, y: pos.y});
-		tagX.value = pos.x;
-		tagY.value = pos.y;
+		setPosition({...position, x: pos.x, y: pos.y});
+		// tagX.value = pos.x;
+		// tagY.value = pos.y;
 	}, [pos.x, pos.y]);
 
 	const WIDTH = 750 * DP;
@@ -97,21 +98,22 @@ export default Tag = ({pos, user, content, onDelete, onEnd, viewmode, background
 		if (viewmode) {
 			return (
 				<TouchableWithoutFeedback onPress={moveToTaggedProfile}>
-					<View style={[tag.background, {position: 'absolute', top: HEIGTHRATIO*position.y, left: WIDTHRATIO*position.x, opacity: position.opacity}]} onLayout={onLayout}>
+					<View style={[tag.background, {top: HEIGTHRATIO*position.y, left: WIDTHRATIO*position.x, opacity: position.opacity}]} onLayout={onLayout}>
 						<Text style={[txt.roboto28, txt.white]}>{user.nickname}</Text>
 					</View>
 				</TouchableWithoutFeedback>
 			);
-		} else {
-			return (
-				// <PanGestureHandler onGestureEvent={gestureHandler}>
-					<Animated.View style={[tag.background, {opacity: position.opacity}/*, moveTag*/]} onLayout={onLayout}>
-						<Text style={[txt.roboto28, txt.white]}>{user.nickname}</Text>
-						{/* {!viewmode && <SvgWrap style={tag.delete} svg={<DeleteImage />} onPress={deleteTag} />} */}
-					</Animated.View>
-				// </PanGestureHandler>
-			);
-		}
+		} 
+		// else {
+		// 	return (
+		// 		<PanGestureHandler onGestureEvent={gestureHandler}>
+		// 			<Animated.View style={[tag.background, {opacity: position.opacity}/*, moveTag*/]} onLayout={onLayout}>
+		// 				<Text style={[txt.roboto28, txt.white]}>{user.nickname}</Text>
+		// 				{!viewmode && <SvgWrap style={tag.delete} svg={<DeleteImage />} onPress={deleteTag} />}
+		// 			</Animated.View>
+		// 		</PanGestureHandler>
+		// 	);
+		// }
 	});
 
 	return render();
@@ -131,6 +133,7 @@ const tag = StyleSheet.create({
 		alignItems: 'center',
 		flexDirection: 'row',
 		position: 'absolute',
+	
 	},
 	upleft: {
 		borderTopLeftRadius: 0,

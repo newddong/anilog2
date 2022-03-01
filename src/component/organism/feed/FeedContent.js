@@ -239,7 +239,7 @@ export default FeedContent = props => {
 	const [lineCount, setLineCount] = React.useState(0);
 
 	const onTextLayout = e => {
-		// console.log('텍스트 레이아웃', e.nativeEvent);
+		// console.log('텍스트 레이아웃', e.nativeEvent, 1*DP);
 		if(Platform.OS=='ios'){	
 			if (e.nativeEvent.lines.length >= 2) {
 				setIsShowBtn(true);
@@ -280,7 +280,7 @@ export default FeedContent = props => {
 	};
 
 	// console.log('피드 컨텐츠 경로명', route.name);
-	console.log('피드 텍스트 내용 : ', feed_content.split('\n'));
+	// console.log('피드 텍스트 내용 : ', feed_content.split('\n'));
 	return (
 		// <View style={isMissingReportRoute || show ? {} : {height: 270 * DP}} removeClippedSubviews>
 		<View style={[layoutStyle()]} removeClippedSubviews>

@@ -10,9 +10,10 @@ import {getFeedListByUserId} from 'Root/api/feedapi';
 import {getFeedsByHash} from 'Root/api/hashapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {login_style, buttonstyle} from 'Templete/style_templete';
+import { getStringLength, getLinesOfString } from 'Root/util/stringutil';
 
 export default FeedList = ({route, navigation}) => {
-	const ITEM_HEIGHT = 1122 * DP;
+	// const ITEM_HEIGHT = 1122 * DP;
 	const [feedList, setFeedList] = React.useState([]);
 	const [refreshing, setRefreshing] = React.useState(false);
 	const [index, setIndex] = React.useState(0);
@@ -45,8 +46,8 @@ export default FeedList = ({route, navigation}) => {
 							setFeedList(
 								msg
 									.map((v, i, a) => {
-										let lines = v.feed_content.split('\n').length;
-										return {...v, height: (1050 +(lines > 3 ? 3 : lines) * 54) * DP};
+										let lines = getLinesOfString(v.feed_content,48);
+										return {...v, height: (1060 +(lines > 3 ? 2*54+48 : lines*54)) * DP};
 									})
 									.map((v, i, a) => {
 
@@ -93,7 +94,7 @@ export default FeedList = ({route, navigation}) => {
 								msg
 									.map((v, i, a) => {
 										let lines = v.feed_content.split('\n').length;
-										return {...v, height: (1050 +(lines > 3 ? 3 : lines) * 54) * DP};
+										return {...v, height: (1060 +(lines > 3 ? 2*54+48 : lines*54)) * DP};
 									})
 									.map((v, i, a) => {
 
@@ -139,9 +140,9 @@ export default FeedList = ({route, navigation}) => {
 	const onRefresh = () => {
 		setRefreshing(true);
 
-		wait(2000).then(() => setRefreshing(false));
+		wait(1000).then(() => setRefreshing(false));
 	};
-
+	
 	return (
 		<View style={(login_style.wrp_main, {flex: 1, backgroundColor: WHITE})}>
 			<FlatList
@@ -150,19 +151,7 @@ export default FeedList = ({route, navigation}) => {
 				keyExtractor={(item, index) => index}
 				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 				getItemLayout={(data, index) => {
-					// console.log('데이터', data);
-					// let offset = data.slice(0, index).reduce((a, v) => {
-					// 	let lines = v.feed_content.split('\n').length;
-					// 	return a + (1060 + (lines > 3 ? 3 : lines) * 54) * DP;
-					// },0);
-					// console.log('데이터 리스트',data, ' 현재인덱스', index)
-					// if(!data[index])return 0;
-					// let curLines = data[index].feed_content.split('\n').length;
-					// let height = (1060 + (curLines > 3 ? 3: curLines) * 54)*DP;
-					// console.log('높이:',height,',오프셋:',offset,',인덱스:',index);
-
-					// return {length: 0, offset: 0, index: index};
-					if(!data[index])return {length:0, offset:0, index:index};
+					if(!data[index])return {length:0, offset:0, index: index};
 					return {length: data[index].height, offset: data[index].offset, index: index};
 				}}
 				initialScrollIndex={index}

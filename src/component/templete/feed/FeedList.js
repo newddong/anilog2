@@ -12,7 +12,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import {login_style, buttonstyle} from 'Templete/style_templete';
 
 export default FeedList = ({route, navigation}) => {
-	const ITEM_HEIGHT = 1222 * DP;
+	const ITEM_HEIGHT = 1122 * DP;
 	const [feedList, setFeedList] = React.useState([]);
 	const [refreshing, setRefreshing] = React.useState(false);
 	const [index, setIndex] = React.useState(0);
@@ -42,7 +42,17 @@ export default FeedList = ({route, navigation}) => {
 						},
 						({msg}) => {
 							setIndex(msg.findIndex(v => v._id == route.params?.selected._id));
-							setFeedList(msg);
+							// msg.map((v,i)=>{
+							// 	let lines = v.feed_content.split('\n').length;
+							// 	return {...v,height:(1060+(lines>3?3:lines)*54)*DP};
+							// })
+
+							setFeedList(
+								msg.map((v, i) => {
+									let lines = v.feed_content.split('\n').length;
+									return {...v, height: (1060 + (lines > 3 ? 3 : lines) * 54) * DP};
+								}),
+							);
 						},
 						errormsg => {
 							Modal.popOneBtn(errormsg, '확인', () => Modal.close());
@@ -71,7 +81,22 @@ export default FeedList = ({route, navigation}) => {
 						{},
 						({msg}) => {
 							// console.log('msg', msg);
-							setFeedList(msg);
+							// setFeedList(msg);
+							setFeedList(
+								msg
+									.map((v, i, a) => {
+										let lines = v.feed_content.split('\n').length;
+										return {...v, height: (1060 + (lines > 3 ? 3 : lines) * 54) * DP};
+									})
+									.map((v, i, a) => {
+										return {
+											...v,
+											offset: a.slice(0, i).reduce((p, v) => {
+												return v.height + p;
+											}, 0),
+										};
+									}),
+							);
 						},
 						errormsg => {
 							Modal.popOneBtn(errormsg, '확인', () => Modal.close());
@@ -114,7 +139,20 @@ export default FeedList = ({route, navigation}) => {
 				renderItem={({item}) => renderItem(item)}
 				keyExtractor={(item, index) => index}
 				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-				getItemLayout={(data, index) => ({length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index})}
+				getItemLayout={(data, index) => {
+					console.log('데이터', data);
+					// let offset = data.slice(0, index).reduce((a, v) => {
+					// 	let lines = v.feed_content.split('\n').length;
+					// 	return a + (1060 + (lines > 3 ? 3 : lines) * 54) * DP;
+					// },0);
+					// console.log('데이터 리스트',data, ' 현재인덱스', index)
+					// if(!data[index])return 0;
+					// let curLines = data[index].feed_content.split('\n').length;
+					// let height = (1060 + (curLines > 3 ? 3: curLines) * 54)*DP;
+					// console.log('높이:',height,',오프셋:',offset,',인덱스:',index);
+
+					return {length: data.length, offset: data?.offset, index: index};
+				}}
 				initialScrollIndex={index}
 			/>
 			{userGlobalObject.userInfo && (

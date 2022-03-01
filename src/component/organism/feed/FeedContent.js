@@ -280,6 +280,7 @@ export default FeedContent = props => {
 	};
 
 	// console.log('피드 컨텐츠 경로명', route.name);
+	console.log('피드 텍스트 내용 : ', feed_content.split('\n'));
 	return (
 		// <View style={isMissingReportRoute || show ? {} : {height: 270 * DP}} removeClippedSubviews>
 		<View style={[layoutStyle()]} removeClippedSubviews>

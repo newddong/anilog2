@@ -42,16 +42,23 @@ export default FeedList = ({route, navigation}) => {
 						},
 						({msg}) => {
 							setIndex(msg.findIndex(v => v._id == route.params?.selected._id));
-							// msg.map((v,i)=>{
-							// 	let lines = v.feed_content.split('\n').length;
-							// 	return {...v,height:(1060+(lines>3?3:lines)*54)*DP};
-							// })
-
 							setFeedList(
-								msg.map((v, i) => {
-									let lines = v.feed_content.split('\n').length;
-									return {...v, height: (1060 + (lines > 3 ? 3 : lines) * 54) * DP};
-								}),
+								msg
+									.map((v, i, a) => {
+										let lines = v.feed_content.split('\n').length;
+										return {...v, height: (1050 +(lines > 3 ? 3 : lines) * 54) * DP};
+									})
+									.map((v, i, a) => {
+
+										let offset = a.slice(0,i).reduce((prev,current)=>{
+											return current.height + prev;
+										},0)
+										return {
+											...v,
+											offset: offset
+											}
+										}
+									)
 							);
 						},
 						errormsg => {
@@ -86,16 +93,19 @@ export default FeedList = ({route, navigation}) => {
 								msg
 									.map((v, i, a) => {
 										let lines = v.feed_content.split('\n').length;
-										return {...v, height: (1060 + (lines > 3 ? 3 : lines) * 54) * DP};
+										return {...v, height: (1050 +(lines > 3 ? 3 : lines) * 54) * DP};
 									})
 									.map((v, i, a) => {
+
+										let offset = a.slice(0,i).reduce((prev,current)=>{
+											return current.height + prev;
+										},0)
 										return {
 											...v,
-											offset: a.slice(0, i).reduce((p, v) => {
-												return v.height + p;
-											}, 0),
-										};
-									}),
+											offset: offset
+											}
+										}
+									)
 							);
 						},
 						errormsg => {
@@ -140,7 +150,7 @@ export default FeedList = ({route, navigation}) => {
 				keyExtractor={(item, index) => index}
 				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 				getItemLayout={(data, index) => {
-					console.log('데이터', data);
+					// console.log('데이터', data);
 					// let offset = data.slice(0, index).reduce((a, v) => {
 					// 	let lines = v.feed_content.split('\n').length;
 					// 	return a + (1060 + (lines > 3 ? 3 : lines) * 54) * DP;
@@ -151,7 +161,9 @@ export default FeedList = ({route, navigation}) => {
 					// let height = (1060 + (curLines > 3 ? 3: curLines) * 54)*DP;
 					// console.log('높이:',height,',오프셋:',offset,',인덱스:',index);
 
-					return {length: data.length, offset: data?.offset, index: index};
+					// return {length: 0, offset: 0, index: index};
+					if(!data[index])return {length:0, offset:0, index:index};
+					return {length: data[index].height, offset: data[index].offset, index: index};
 				}}
 				initialScrollIndex={index}
 			/>
@@ -163,3 +175,4 @@ export default FeedList = ({route, navigation}) => {
 		</View>
 	);
 };
+``

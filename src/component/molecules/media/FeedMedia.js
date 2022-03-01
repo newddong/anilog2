@@ -15,7 +15,7 @@ import {phoneFomatter} from 'Root/util/stringutil';
  * }} props
  */
 export default FeedMedia = props => {
-	console.log(props.data);
+	// console.log(props.data);
 	const {
 		feed_content,
 		feed_thumbnail,
@@ -145,7 +145,7 @@ export default FeedMedia = props => {
 					}}
 					horizontal={true}>
 					{feed_medias.map((data, idx) => {
-						console.log(data);
+						// console.log(data);
 						return <Image source={{uri: data.media_uri}} style={styles.img_square_750x750} key={idx} />;
 					})}
 					{/* {getFeedIcon()} */}

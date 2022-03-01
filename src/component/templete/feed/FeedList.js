@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, FlatList, RefreshControl} from 'react-native';
+import {StyleSheet, View, FlatList, RefreshControl, Platform} from 'react-native';
 import {WHITE} from 'Root/config/color';
 import {Write94} from 'Atom/icon';
 import Feed from 'Organism/feed/Feed';
@@ -46,7 +46,7 @@ export default FeedList = ({route, navigation}) => {
 							setFeedList(
 								msg
 									.map((v, i, a) => {
-										let lines = getLinesOfString(v.feed_content,48);
+										let lines = getLinesOfString(v.feed_content,Platform.OS=='android'?48:50);
 										return {...v, height: (1060 +(lines > 3 ? 2*54+48 : lines*54)) * DP};
 									})
 									.map((v, i, a) => {
@@ -93,7 +93,7 @@ export default FeedList = ({route, navigation}) => {
 							setFeedList(
 								msg
 									.map((v, i, a) => {
-										let lines = v.feed_content.split('\n').length;
+										let lines = getLinesOfString(v.feed_content,Platform.OS=='android'?48:50);
 										return {...v, height: (1060 +(lines > 3 ? 2*54+48 : lines*54)) * DP};
 									})
 									.map((v, i, a) => {

@@ -32,36 +32,39 @@ export default FeedMediaTagEdit = props => {
 
 	const [data, setData] = React.useState(feedData);
 
-
-
 	const onMakeTag = (tag, uri) => {
-		// console.log(uri + '   make   ' + JSON.stringify(tag));
-		// feedData.media_uri?.forEach((v, i, a) => {
-		// 	let newtag = {x: tag.x, y: tag.y, user: tag.user};
-		// 	if (v.uri === uri) {
-		// 		a[i].tags ? a[i].tags.push(newtag) : (a[i].tags = [newtag]);
-		// 	}
-		// });
+		console.log(uri,'   make   ',tag);
+		data.feed_medias?.forEach((v, i, a) => {
+			let newtag = {position_x: tag.pos.x, position_y: tag.pos.y, tag_user_id: tag.user._id, user:tag.user, pos: tag.pos};
+			if (v.uri === uri) {
+				a[i].tags ? a[i].tags.push(newtag) : (a[i].tags = [newtag]);
+			}
+		});
 	};
 	const onDeleteTag = (user, uri) => {
-		console.log(uri + '   del   ' + JSON.stringify(user));
-		// feedData.media_uri?.forEach((v, i, a) => {
-		// 	if (v.uri === uri) {
-		// 		v.tags.forEach((v, i, a) => {
-		// 			if (v.user._id === user._id) {
-		// 				a.splice(i, 1);
-		// 			}
-		// 		});
-		// 	}
-		// });
+		console.log(uri,'   del   ',user);
+		data.feed_medias?.forEach((v, i, a) => {
+			if (v.uri === uri) {
+				v.tags.forEach((v, i, a) => {
+					if (v.user._id === user._id) {
+						a.splice(i, 1);
+					}
+				});
+			}
+		});
 	};
 
 	const renderItems = () => {
 		if (!data) return false;
-		return data.media_uri?.map((v, i) => (
-			<PhotoTagItem style={lo.box_img} uri={v} data={v} key={i} onMakeTag={onMakeTag} onDeleteTag={onDeleteTag} viewmode={false} />
+		return data.feed_medias?.map((v, i) => (
+			<PhotoTagItem style={lo.box_img} uri={v.uri} data={v.uri} taglist={v.tags} key={i} onMakeTag={onMakeTag} onDeleteTag={onDeleteTag} viewmode={false} />
 		));
 	};
+
+	const showTags = () => {
+		console.log('show Tags ',data)
+		console.log('Feed',feedData)
+	}
 	return (
 		<View style={lo.wrp_main}>
 			<View style={lo.box_img_tag}>
@@ -115,8 +118,11 @@ export default FeedMediaTagEdit = props => {
 				</Swiper>
 			</View>
 			<View style={lo.box_explain}>
+				<TouchableWithoutFeedback onPress={showTags}>
+				<View style={{backgroundColor:'green',width:50,height:50}}></View>
+				</TouchableWithoutFeedback>
 				<Text style={txt.noto28r}>사진 속 인물이나 동물을 눌러 태그하세요</Text>
-				<Text style={txt.noto28r}>다시 눌러 삭제가 가능합니다.</Text>
+				{/* <Text style={txt.noto28r}>다시 눌러 삭제가 가능합니다.</Text> */}
 				{/* <Text style={txt.noto28r}>누른 상태에서 움직이면 위치가 이동합니다.</Text> */}
 				{/* <TouchableWithoutFeedback onPress={test}>
 				<View style={{height:80*DP,width:80*DP,backgroundColor:'green'}}></View>
@@ -126,8 +132,8 @@ export default FeedMediaTagEdit = props => {
 	);
 };
 
-const PhotoTagItem = ({style, uri, data, taglist, onMakeTag, onDeleteTag, viewmode}) => {
-	console.log(taglist);
+const PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, viewmode}) => {
+	console.log('태그 리스트',taglist);
 	const [tags, setTags] = React.useState(taglist ? taglist : []);
 	const [showTags, setShowTags] = React.useState(!viewmode);
 	const nav = useNavigation();
@@ -147,9 +153,10 @@ const PhotoTagItem = ({style, uri, data, taglist, onMakeTag, onDeleteTag, viewmo
 
 	React.useEffect(() => {
 		if (clickedPost.current.x < 0 || clickedPost.current.y < 0) return;
+		if (!route.params.taggedAccount)return;
 		console.log('계정 선택함', route);
 		if (route.params.taggedAccount) {
-			let newTag = {x: clickedPost.current.x, y: clickedPost.current.y, user: route.params.taggedAccount};
+			let newTag = {pos:{x: clickedPost.current.x, y: clickedPost.current.y}, user: route.params.taggedAccount};
 			setTags(tags.filter(v => v.user._id !== route.params.taggedAccount._id).concat(newTag));
 			clickedPost.current = {x: -1, y: -1};
 			onMakeTag && onMakeTag(newTag, uri);
@@ -162,7 +169,7 @@ const PhotoTagItem = ({style, uri, data, taglist, onMakeTag, onDeleteTag, viewmo
 
 	const test = async () => {
 		console.log(tags);
-		setShowTags(!showTags);
+		// setShowTags(!showTags);
 		// let a =  await axios.post(serveruri + '/user/test', {array: tags});
 		// console.log(a);
 	};
@@ -174,20 +181,17 @@ const PhotoTagItem = ({style, uri, data, taglist, onMakeTag, onDeleteTag, viewmo
 		});
 	};
 	const [backgroundLayout, setBackgroundLayout] = React.useState({width: 750 * DP, height: 750 * DP});
-	const onLayout = e => {
-		// setBackgroundLayout(e.nativeEvent.layout);
-	};
 
 	return (
 		<TouchableWithoutFeedback onPress={makeTag}>
-			<View style={styles.img_square_750x750} onLayout={onLayout}>
-				{Platform.OS === 'ios' ? <Image style={styles.img_square_750x750} source={{uri: uri}} /> : <FastImage style={styles.img_square_750x750} source={{uri: uri}} />}
-				{/* {tags?.map((v, i) => (
+			<View style={styles.img_square_750x750}>
+				<Image style={styles.img_square_750x750} source={{uri: uri}} />
+				{tags?.map((v, i) => (
 					<Tag pos={v.pos} key={i} user={v.user} onDelete={deleteTag} onEnd={endTagmove} viewmode={true} backgroundLayout={backgroundLayout} />
-				))} */}
-				{/* <TouchableWithoutFeedback onPress={test}>
-					<View style={{width: 100 * DP, height: 100 * DP, backgroundColor: 'red', position: 'absolute'}} />
-				</TouchableWithoutFeedback> */}
+				))}
+				<TouchableWithoutFeedback onPress={test}>
+					<View style={{width: 50 * DP, height: 50 * DP, backgroundColor: 'red', position: 'absolute'}} />
+				</TouchableWithoutFeedback>
 			</View>
 		</TouchableWithoutFeedback>
 	);

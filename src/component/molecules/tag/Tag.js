@@ -8,13 +8,13 @@ import {Cancel48} from 'Atom/icon';
 
 export default Tag = ({pos, user, content, onDelete, onEnd, viewmode, backgroundLayout}) => {
 	console.log('tags', pos, user);
-	const [position, setPosition] = React.useState({x: pos.x, y: pos.y, opacity: 1});
+	const [position, setPosition] = React.useState({x: pos?.x, y: pos?.y, opacity: 1});
 	const tagnav = useNavigation();
-	React.useEffect(() => {
-		setPosition({...position, x: pos.x, y: pos.y});
-		// tagX.value = pos.x;
-		// tagY.value = pos.y;
-	}, [pos.x, pos.y]);
+	// React.useEffect(() => {
+	// 	setPosition({...position, x: pos.x, y: pos.y});
+	// 	// tagX.value = pos.x;
+	// 	// tagY.value = pos.y;
+	// }, [pos.x, pos.y]);
 
 	const WIDTH = 750 * DP;
 	const HEIGHT = 750 * DP;
@@ -91,18 +91,18 @@ export default Tag = ({pos, user, content, onDelete, onEnd, viewmode, background
 	// });
 
 	const moveToTaggedProfile = () => {
-		tagnav.push('Profile', {user_nickname: user.nickname, user_id: user._id});
+		tagnav.push('UserProfile', {userobject:user});
 	};
 
 	// const style = [tag.background, {top: position.y, left: position.x, opacity: position.opacity}, border()];
 	const render = React.useCallback(() => {
-		if (viewmode && false) {
+		if (viewmode) {
 			return (
 				<TouchableWithoutFeedback onPress={moveToTaggedProfile}>
 					<View
-						style={[tag.background, {top: HEIGTHRATIO * position.y, left: WIDTHRATIO * position.x, opacity: position.opacity}]}
+						style={[tag.background, {paddingRight:30*DP,top: HEIGTHRATIO * position.y, left: WIDTHRATIO * position.x, opacity: position.opacity}]}
 						onLayout={onLayout}>
-						<Text style={[txt.roboto28, txt.white]}>12{user.user_nickname}</Text>
+						<Text style={[txt.roboto28, txt.white]}>{user.user_nickname}</Text>
 					</View>
 				</TouchableWithoutFeedback>
 			);

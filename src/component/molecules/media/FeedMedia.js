@@ -2,12 +2,14 @@ import React from 'react';
 import {Text, View, Image, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {ImageList48, VideoPlay48, VideoPlay_Feed} from 'Atom/icon';
+import {ImageList48, VideoPlay48, VideoPlay_Feed, Tag70} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import {APRI10, BLACK, GRAY10, RED10, WHITE} from 'Root/config/color';
 import Swiper from 'react-native-swiper';
 import {number} from 'prop-types';
 import {phoneFomatter} from 'Root/util/stringutil';
+import PhotoTagItem from 'Organism/feed/PhotoTagItem';
+
 /**
  *
  * @param {{
@@ -145,8 +147,9 @@ export default FeedMedia = props => {
 					}}
 					horizontal={true}>
 					{feed_medias.map((data, idx) => {
-						// console.log(data);
-						return <Image source={{uri: data.media_uri}} style={styles.img_square_750x750} key={idx} />;
+						console.log(data);
+						return <PhotoTagItem style={styles.img_square_750x750} uri={data.media_uri} data={data.media_uri} taglist={data.tags} key={idx} viewmode={true} />
+						// return <Image source={{uri: data.media_uri}} style={styles.img_square_750x750} key={idx} />;
 					})}
 					{/* {getFeedIcon()} */}
 				</Swiper>

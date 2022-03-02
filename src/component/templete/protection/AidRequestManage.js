@@ -52,103 +52,7 @@ export default AidRequestManage = ({route, navigation}) => {
 		navigation.push('AssignProtectAnimalImage');
 	};
 
-	const showProtect = data => {
-		console.log('showProtect', data);
-		const e = {
-			__v: 2,
-			_id: '620bb39fe9c46a5c3f40bdd8',
-			protect_act_applicants: ['621c54d71e2fe3271dfc0aa7', '621c54f61e2fe3271dfc0ada'],
-			protect_animal_belonged_shelter_id: '6203aff5c0f179ccd5bb8054',
-			protect_animal_estimate_age: '2년 0개월',
-			protect_animal_neutralization: 'unknown',
-			protect_animal_photo_uri_list: [
-				'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1644934047116_9764658D-64E9-46CE-9D22-A461A76AB5D7.jpg',
-			],
-			protect_animal_protect_request_id: '620bb4bde9c46a5c3f40bddb',
-			protect_animal_protector_discussion_id: [],
-			protect_animal_rescue_date: '2022-01-30T00:00:00.000Z',
-			protect_animal_rescue_location: '해처리',
-			protect_animal_sex: 'female',
-			protect_animal_species: '고양이',
-			protect_animal_species_detail: '러시안블루',
-			protect_animal_status: 'protect',
-			protect_animal_weight: 3,
-		};
-		const ce = {
-			__v: 0,
-			_id: '620bb622e9c46a5c3f40bde7',
-			protect_animal_id: {
-				__v: 0,
-				_id: '620a4543c0f179ccd5bbb9e1',
-				protect_act_applicants: [],
-				protect_animal_belonged_shelter_id: '6203aff5c0f179ccd5bb8054',
-				protect_animal_estimate_age: '6개월',
-				protect_animal_neutralization: 'unknown',
-				protect_animal_photo_uri_list: [
-					'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1644840259078_2C957963-634D-4AB9-AF54-0B3BD469A2CD.jpg',
-				],
-				protect_animal_protect_request_id: '620bb622e9c46a5c3f40bde7',
-				protect_animal_protector_discussion_id: [],
-				protect_animal_rescue_date: '2022-02-02T00:00:00.000Z',
-				protect_animal_rescue_location: '바른치킨',
-				protect_animal_sex: 'female',
-				protect_animal_species: '고양이',
-				protect_animal_species_detail: '아메리칸 숏헤어',
-				protect_animal_status: 'rescue',
-				protect_animal_weight: 2,
-			},
-			// protect_animal_species: '고양이',
-			// protect_animal_species_detail: '아메리칸 숏헤어',
-			// protect_recent_comment: {comment_contents: '댓글', comment_id: '62134348d3fb3be156244e64', comment_user_nickname: '안네씨'},
-			// protect_request_comment_count: 5,
-			// protect_request_content: '테스트3',
-			// protect_request_date: '2022-02-15T14:18:10.639Z',
-			// protect_request_favorite_count: 0,
-			// protect_request_hit: 0,
-			protect_request_photos_uri: [
-				'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1644840259078_2C957963-634D-4AB9-AF54-0B3BD469A2CD.jpg',
-			],
-			protect_request_status: 'complete',
-			protect_request_title: '네비게이션 오류 테스트',
-			// protect_request_update_date: '2022-02-15T14:18:10.640Z',
-			protect_request_writer_id: {
-				__v: 0,
-				_id: '6203aff5c0f179ccd5bb8054',
-				pet_family: [],
-				shelter_address: {brief: '서울 서대문구 경기대로9길 92', detail: 'ㅇ1'},
-				shelter_delegate_contact_number: '0109645011',
-				shelter_foundation_date: '2022-08-04T00:00:00.000Z',
-				shelter_homepage: 'Naver.com',
-				shelter_name: '형산보호소',
-				shelter_type: 'private',
-				type: 'UserObject',
-				user_agreement: {
-					is_donation_info: false,
-					is_location_service_info: false,
-					is_marketting_info: false,
-					is_over_fourteen: false,
-					is_personal_info: false,
-					is_service: false,
-				},
-				user_denied: false,
-				user_email: 'Lanad01@naver.com',
-				user_follow_count: 2,
-				user_follower_count: 1,
-				user_interests: [],
-				user_introduction: '',
-				user_is_verified_email: false,
-				user_is_verified_phone_number: false,
-				user_my_pets: [],
-				user_name: '형산보호소',
-				user_nickname: '형산보호소',
-				user_password: 'tkddn123',
-				user_phone_number: '01096450001',
-				user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1644408821715_76E74A61-FDF5-4B75-BD96-B309E2475F05.jpg',
-				user_register_date: '2022-02-09T12:13:41.815Z',
-				user_type: 'shelter',
-				user_upload_count: 14,
-			},
-		};
+	const moveToProtectRequest = data => {
 		let sexValue = '';
 		switch (data.protect_animal_sex) {
 			case 'male':
@@ -161,9 +65,8 @@ export default AidRequestManage = ({route, navigation}) => {
 				sexValue = '성별모름';
 				break;
 		}
-		console.log('data.writetr', data.protect_request_writer_id);
 		const titleValue = data.protect_animal_species + '/' + data.protect_animal_species_detail + '/' + sexValue;
-		navigation.navigate('AnimalProtectRequestDetail', {item: ce, title: titleValue});
+		// navigation.navigate('AnimalProtectRequestDetail', {item: data, title: titleValue});
 	};
 
 	const onSelectHasPostList = index => {
@@ -176,7 +79,7 @@ export default AidRequestManage = ({route, navigation}) => {
 			'다시 게시하기',
 			'게시글 보기',
 			// ()=> navigation.navigate('AnimalProtectRequestDetail', {item: item, list: protectActList, title: titleValue}),
-			() => showProtect(hasPostAnimalList[index]),
+			() => moveToProtectRequest(hasPostAnimalList[index]),
 			//현재 보호요청게시글에 접근하기 위해서 API 3가지를 별개로 접근하고 파라미터를 보내줘야 하는 상황
 			// AnimalProtectRequestDetail의 API 접근방식이 개선된 이후 처리 필요
 			() => navigation.push('WriteAidRequest', {data: hasPostAnimalList[index]}),

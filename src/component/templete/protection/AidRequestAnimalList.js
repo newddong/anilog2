@@ -1,10 +1,8 @@
 import React from 'react';
 import {ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import AidRequestList from 'Root/component/organism/list/AidRequestList';
-import {temp_style, baseInfo_style, login_style} from 'Templete/style_templete';
+import {login_style} from 'Templete/style_templete';
 import {getShelterProtectAnimalList} from 'Root/api/shelterapi';
-import {getApplyDetailById} from 'Root/api/protectapi';
-import {aidRequestList} from 'Organism/style_organism copy';
 import {txt} from 'Root/config/textstyle';
 import {APRI10, GRAY10} from 'Root/config/color';
 import {AddItem64} from 'Root/component/atom/icon';

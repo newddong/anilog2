@@ -294,6 +294,7 @@ export async function getUserInfoById(params, callback, errcallback) {
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
 */
 export async function getUserListByNickname(params, callback, errcallback) {
+	console.log('api param',params);
 	apiController( '/user/getUserListByNickname', arguments);
 }
 

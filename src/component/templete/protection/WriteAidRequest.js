@@ -70,8 +70,7 @@ export default WriteAidRequest = ({route, navigation}) => {
 						quality: 0.8,
 					},
 					responseObject => {
-						console.log('선택됨', responseObject);
-
+						// console.log('선택됨', responseObject);
 						if (!responseObject.didCancel) {
 							let tempContainer = [...imageList];
 							responseObject.assets.map(v => tempContainer.push(v.uri));
@@ -118,6 +117,7 @@ export default WriteAidRequest = ({route, navigation}) => {
 						<TextInput
 							onChangeText={onChangeTitle}
 							placeholder={'제목 입력'}
+							placeholderTextColor={GRAY20}
 							// numberOfLines={1}
 							style={[txt.noto30, writeAidRequest.titleInput, {borderBottomColor: APRI10}]}
 						/>
@@ -130,6 +130,7 @@ export default WriteAidRequest = ({route, navigation}) => {
 							maxLength={500}
 							textAlignVertical={'top'}
 							multiline={true}
+							placeholderTextColor={GRAY20}
 							placeholder="내용 입력"
 						/>
 						<Text style={[txt.noto24, {color: GRAY20, alignSelf: 'flex-end'}]}>{protectRequestData.protect_request_content.length} / 500</Text>

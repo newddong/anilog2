@@ -244,7 +244,7 @@ export const phoneNumVerification = StyleSheet.create({
 		color: 'red',
 		// backgroundColor: 'yellow',
 		paddingLeft: 10 * DP,
-		marginTop: -20 * DP,
+		marginTop: -40 * DP,
 		marginBottom: 10 * DP,
 	},
 	inputTimeLimitContainer: {
@@ -441,7 +441,7 @@ export const myPetList = StyleSheet.create({
 	petImageLabel: {
 		width: 180 * DP,
 		height: 270 * DP,
-		marginLeft: 20 * DP,
+		marginLeft: 30 * DP,
 	},
 	addPet: {
 		marginLeft: 20 * DP,
@@ -464,7 +464,7 @@ export const interestTagList = StyleSheet.create({
 		alignSelf: 'center',
 	},
 	btn_w226: {
-		marginLeft: 202 * DP,
+		marginLeft: 234 * DP,
 	},
 	interestingTagList: {
 		width: 606 * DP,
@@ -800,10 +800,11 @@ export const aidRequest = StyleSheet.create({
 	insideContainer: {
 		width: 654 * DP,
 		// height: 174 * DP,
-		marginTop: 18 * DP,
-		borderRadius: 30 * DP,
-		// borderColor: APRI10,
 		flexDirection: 'row',
+		borderRadius: 30 * DP,
+		// backgroundColor: 'red',
+		borderColor: APRI10,
+		borderWidth: 10 * DP,
 	},
 	leftContainer: {},
 	img_irregular_174: {
@@ -823,7 +824,7 @@ export const aidRequest = StyleSheet.create({
 	right_insideContainer: {
 		width: 440 * DP,
 		height: 138 * DP,
-		marginHorizontal: 20 * DP,
+		marginHorizontal: 15 * DP,
 		// backgroundColor: 'pink',
 	},
 	right_upperMenu: {
@@ -845,9 +846,12 @@ export const aidRequest = StyleSheet.create({
 	right_middleMenu_content: {
 		height: 36 * DP,
 		// backgroundColor: 'palegreen',
-		paddingRight: 15 * DP,
+		paddingRight: 10 * DP,
 		marginLeft: 10 * DP,
 		marginRight: 10 * DP,
+	},
+	right_middleMenu_content_text: {
+		lineHeight: 36 * DP,
 	},
 	right_lowerMenu: {
 		width: 440 * DP,
@@ -857,7 +861,7 @@ export const aidRequest = StyleSheet.create({
 		// backgroundColor: 'lightgray',
 	},
 	borderColor_APRI10: {
-		borderWidth: 6 * DP,
+		borderWidth: 2 * DP,
 		borderColor: APRI10,
 	},
 	borderColor_GRAY10: {
@@ -872,6 +876,8 @@ export const aidRequest = StyleSheet.create({
 	},
 	saved_location_text: {
 		maxWidth: 200 * DP,
+		lineHeight: 36 * DP,
+		// textAlignVertical: 'center',
 	},
 });
 
@@ -881,7 +887,6 @@ export const aidRequestList = StyleSheet.create({
 	},
 	itemContainer: {
 		alignSelf: 'center',
-		flexDirection: 'row',
 		marginBottom: 20 * DP,
 	},
 	addProtectedPetContainer: {
@@ -911,6 +916,12 @@ export const aidRequestList = StyleSheet.create({
 		width: 750 * DP,
 		marginTop: 20 * DP,
 	},
+	needPostText: {
+		width: 654 * DP,
+		height: 40 * DP,
+		paddingRight: 5 * DP,
+		// backgroundColor: 'yellow',
+	},
 });
 
 export const volunteerItem = StyleSheet.create({
@@ -918,12 +929,15 @@ export const volunteerItem = StyleSheet.create({
 		width: 654 * DP,
 		height: 94 * DP,
 		flexDirection: 'row',
+		justifyContent: 'space-between',
 	},
 	labelContainer: {
-		width: 542 * DP,
+		width: 510 * DP,
+		// backgroundColor: 'palegreen',
 	},
 	expected_activityDate: {
-		width: 112 * DP,
+		// width: 112 * DP,
+		// backgroundColor: 'yellow',
 		height: 70 * DP,
 		alignItems: 'flex-end',
 		alignSelf: 'center',
@@ -1059,7 +1073,7 @@ export const animalNeedHelp = StyleSheet.create({
 	detail_lowerMenu: {
 		width: 410 * DP,
 		height: 214 * DP,
-		paddingVertical: 22 * DP,
+		paddingVertical: 4 * DP,
 	},
 	lowerMenu_kindAndBreed: {
 		height: 50 * DP,
@@ -1072,8 +1086,8 @@ export const animalNeedHelp = StyleSheet.create({
 		marginLeft: 20 * DP,
 	},
 	lowerMenu_helpDetail: {
-		height: 38 * DP,
-		marginTop: 10 * DP,
+		// height: 38 * DP,
+		// marginTop: 10 * DP,
 	},
 	container_with_Line: {
 		width: 705 * DP,

@@ -3,7 +3,7 @@ import {txt} from 'Root/config/textstyle';
 import {View, TouchableOpacity, TextInput} from 'react-native';
 import DP from 'Root/config/dp';
 import {APRI10, GRAY30} from 'Root/config/color';
-import {Cross48, Search48} from 'Atom/icon';
+import {Cross24_Filled, Cross48, Search48} from 'Atom/icon';
 
 /**
  * 검색 기능이 추가된 인풋 컴포넌트
@@ -35,6 +35,7 @@ const InputWithSearchIcon = props => {
 	//돋보기 버튼 클릭 콜백
 	const onSearch = () => {
 		props.onSearch(input);
+		blur();
 	};
 
 	//인풋 포커스가 해제되었을 때 콜백
@@ -76,8 +77,8 @@ const InputWithSearchIcon = props => {
 						},
 					]}
 				/>
-				<View style={{flexDirection: 'row', position: 'absolute', right: 0}}>
-					<Cross48 onPress={onClear} />
+				<View style={{flexDirection: 'row', position: 'absolute', alignItems: 'center', right: 0}}>
+					<Cross24_Filled onPress={onClear} />
 					{/* SearchIcon은 X 마크와 14px 차이 */}
 					<TouchableOpacity onPress={onSearch} style={{marginHorizontal: 20 * DP}}>
 						<Search48 />

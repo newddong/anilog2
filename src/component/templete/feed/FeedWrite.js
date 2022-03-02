@@ -1,11 +1,11 @@
 import React from 'react';
-import {ScrollView, Text, TouchableOpacity, View, TouchableWithoutFeedback, TextInput} from 'react-native';
-import {APRI10, WHITE, GRAY20} from 'Root/config/color';
+import {ScrollView, Text, TouchableOpacity, View, TouchableWithoutFeedback, TextInput, Platform, Keyboard} from 'react-native';
+import {APRI10, WHITE, GRAY20, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Paw54_Border} from 'Root/component/atom/icon/index';
 import {Urgent_Write1, Urgent_Write2} from 'Atom/icon';
-import {btn_style, feedWrite, login_style, temp_style} from 'Templete/style_templete';
+import {btn_style, feedWrite, login_style, temp_style, buttonstyle} from 'Templete/style_templete';
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w176, btn_w194} from 'Atom/btn/btn_style';
 import ActionButton from 'Molecules/button/ActionButton';
@@ -25,7 +25,11 @@ import {getPettypes} from 'Root/api/userapi';
 import ImagePicker from 'react-native-image-crop-picker';
 import HashInput from 'Molecules/input/HashInput';
 import {getAddressList} from 'Root/api/address';
-import SelectInput from 'Root/component/molecules/button/SelectInput';
+import SelectInput from 'Molecules/button/SelectInput';
+import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {FlatList} from 'react-native-gesture-handler';
+import ReactNativeModal from 'react-native-modal';
 
 export default FeedWrite = props => {
 	const [showPetAccountList, setShowPetAccountList] = React.useState(false); //PetAccount 계정
@@ -38,12 +42,16 @@ export default FeedWrite = props => {
 	const [selectedImg, setSelectedImg] = React.useState([]); //사진 uri리스트
 	const [isSearchTag, setSearchTag] = React.useState(false);
 	const [publicSetting, setPublicSetting] = React.useState('전체 공개'); //공개 여부
-
+	const keyboardArea = useKeyboardBottom(0 * DP);
+	const scrollref = React.useRef();
+	const lastTouchY = React.useRef(0);
+	const container = React.useRef();
+	const test = ()=>{console.log('네비게이션 스테이트', props.route, props.navigation.getState())}
 	React.useEffect(() => {
 		props.navigation.setParams({
 			...props.route.params,
 			media_uri: selectedImg,
-			feed_medias: selectedImg.map(v => ({is_video: false, duration: 0, tags: [{position_x: 0, position_y: 0}]})),
+			feed_medias: selectedImg.map(v => ({uri:v,is_video: false, duration: 0, tags: []})),
 		});
 	}, [selectedImg]); //네비게이션 파라메터에 이미지 리스트를 넣음(헤더에서 처리하도록)
 
@@ -71,6 +79,17 @@ export default FeedWrite = props => {
 		console.log(feedText);
 	}, [feedText]);
 
+	// React.useEffect(() => {
+	// 	let scroll = Keyboard.addListener('keyboardDidShow', e => {
+	// 		console.log('keyboarddidshow scrollto');
+	// 		// scrollref.current.scrollToEnd({duration:100,animated:true});
+	// 		// scrollref.current.scrollToOffset({offset:lastTouchY.current})
+
+	// 	});
+	// 	return () => {
+	// 		scroll.remove();
+	// 	};
+	// }, []);
 	//긴급버튼 중 - 실종 클릭
 	const onPressMissingWrite = () => {
 		setShowLostAnimalForm(true);
@@ -166,7 +185,7 @@ export default FeedWrite = props => {
 
 	//태그 추가
 	const moveToFeedMediaTagEdit = () => {
-		// props.navigation.push('FeedMediaTagEdit');
+		props.navigation.push('FeedMediaTagEdit');
 	};
 	const inputFeedTxt = (feedInput, hashtag_keyword) => {
 		props.navigation.setParams({...props.route.params, feed_content: feedText, hashtag_keyword: hashtag_keyword});
@@ -177,9 +196,9 @@ export default FeedWrite = props => {
 	const setUrgBtnsClickedView = () => {
 		//긴급 버튼 중 '제보' 클릭한 경우
 		if (showReportForm) {
-			return <ReportForm onDataChange={onReportForm} />;
+			return <ReportForm onDataChange={onReportForm} container={container} scrollref={scrollref} />;
 		} // 긴급 게시 버튼 중 '실종' 클릭한 경우
-		else return showLostAnimalForm ? <MissingForm onDataChange={onMissingForm} /> : false;
+		else return showLostAnimalForm ? <MissingForm onDataChange={onMissingForm} container={container} scrollref={scrollref} /> : false;
 	};
 
 	//태그 검색중 리스트 외의 다른화면 가리기
@@ -192,6 +211,13 @@ export default FeedWrite = props => {
 			setPublicSetting(selectedItem);
 			Modal.close();
 		});
+	};
+
+	const onPressIn = e => {
+		console.log('pressIn', e.nativeEvent);
+		// lastTouchY.current=e.pageY;
+		scrollref.current.scrollToOffset({offset: e.nativeEvent.pageY});
+		// scrollref.current.scrollToEnd()
 	};
 
 	const setWriteModeState = () => {
@@ -229,6 +255,7 @@ export default FeedWrite = props => {
 								onPress={onSetDiary}
 							/>
 						</View>
+
 						<TouchableOpacity onPress={onPressPublicSetting} style={[feedWrite.public_setting_btn]}>
 							{/* <ActionButton btnTitle={'전체 공개'} onOpen={() => alert('dd')} btnStyle={'border'} titleFontStyle={24} btnLayout={btn_w194} /> */}
 							<Text style={[txt.noto24, {color: APRI10}]}>{publicSetting}</Text>
@@ -236,50 +263,65 @@ export default FeedWrite = props => {
 						</TouchableOpacity>
 					</View>
 				)}
-				{selectedImg.length > 0 && (
+				{/* {selectedImg.length > 0 && (
 					<View style={[temp_style.selectedMediaList, feedWrite.selectedMediaList]}>
 						<SelectedMediaList items={selectedImg} onDelete={deletePhoto} />
 					</View>
-				)}
+				)} */}
 				{/* 긴급 게시 관련 버튼 클릭 시 출력되는 View */}
 				{setUrgBtnsClickedView()}
 			</>
 		);
 	};
-
 	return (
-		<View style={[login_style.wrp_main, feedWrite.container]}>
-			{/* <ScrollView contentContainerStyle={{width: 750 * DP, alignItems: 'center'}}> */}
-			<HashInput
-				containerStyle={[temp_style.feedTextEdit, {minHeight: showLostAnimalForm || showReportForm ? 276 * DP : 376 * DP}]}
-				textAlignVertical={'top'}
-				multiline={true}
-				placeholder="게시물을 작성하세요 (150자)"
-				placeholderTextColor={GRAY20}
-				onChangeText={inputFeedTxt}
-				maxLength={150}
-				onFind={onFindTag}></HashInput>
+		<View style={{flex: 1, backgroundColor: '#FFF'}}>
+			{/* <ScrollView contentContainerStyle={[login_style.wrp_main,{backgroundColor:'#fff'}]} ref={ref=>{console.log('스크롤 할당',ref);scrollref.current=ref}}> */}
+			<FlatList
+				renderItem={({item, index}) => {
+					return (
+						<View contentContainerStyle={[login_style.wrp_main, {backgroundColor: '#000'}]} ref={container}>
+							<HashInput
+								containerStyle={[temp_style.feedTextEdit, {minHeight: showLostAnimalForm || showReportForm ? 214 * DP : 316 * DP}]}
+								textAlignVertical={'top'}
+								multiline={true}
+								placeholder="게시물을 작성하세요 (150자)"
+								onChangeText={inputFeedTxt}
+								maxLength={150}
+								onFind={onFindTag}
+								selectedImg={selectedImg}
+								onDelete={deletePhoto}
+							/>
 
-			{!isSearchTag && setWriteModeState()}
-			{/* 긴급 게시물 관련 버튼 컨테이너 */}
+							{!isSearchTag && setWriteModeState()}
+							{/* 긴급 게시물 관련 버튼 컨테이너 */}
+							{/* <View style={{height: keyboardArea, width: '100%', backgroundColor: 'red'}}></View> */}
+						</View>
+					);
+				}}
+				data={[{}]}
+				ref={scrollref}></FlatList>
 
 			{/* </ScrollView> */}
+			<TouchableWithoutFeedback onPress={test}>
+			<View style={{backgroundColor:'red',width:50,height:50}}></View></TouchableWithoutFeedback>
 			{showUrgentBtns && !isSearchTag ? (
 				<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
 					{showActionButton ? (
 						<View>
 							<TouchableWithoutFeedback onPress={onPressMissingWrite}>
-								<View style={[feedWrite.urgentBtnItemContainer]}>
+								<View style={[feedWrite.urgentBtnItemContainer, buttonstyle.shadow]}>
 									<Text style={[txt.noto32, {color: WHITE}]}>실종</Text>
 								</View>
 							</TouchableWithoutFeedback>
 							<TouchableWithoutFeedback onPress={onPressReportWrite}>
-								<View style={[feedWrite.urgentBtnItemContainer]}>
+								<View style={[feedWrite.urgentBtnItemContainer, buttonstyle.shadow]}>
 									<Text style={[txt.noto32, {color: WHITE}]}>제보</Text>
 								</View>
 							</TouchableWithoutFeedback>
 						</View>
-					) : null}
+					) : (
+						false
+					)}
 					<TouchableWithoutFeedback onPress={() => setShowActionButton(!showActionButton)}>
 						<View style={[feedWrite.urgentActionButton]}>{showActionButton ? <Urgent_Write2 /> : <Urgent_Write1 />}</View>
 					</TouchableWithoutFeedback>
@@ -287,7 +329,6 @@ export default FeedWrite = props => {
 			) : (
 				false
 			)}
-			{/* </ScrollView> */}
 		</View>
 	);
 };
@@ -302,9 +343,8 @@ const MissingForm = props => {
 	]);
 	const [isSpeciesChanged, setIsSpeciesChanged] = React.useState(false);
 
-	const [city, setCity] = React.useState(['시를 선택해 주세요']);
+	const [city, setCity] = React.useState(['광역시, 도']);
 	const [district, setDistrict] = React.useState(['구를 선택해 주세요']);
-
 	React.useEffect(() => {
 		getAddressList(
 			{},
@@ -352,13 +392,30 @@ const MissingForm = props => {
 		setData({...data, missing_animal_date: date});
 	};
 
-	const onSelectSpecies = (v, i) => {
-		setData({...data, missing_animal_species: types[i].pet_species, type: types[i]});
-		setIsSpeciesChanged(!isSpeciesChanged);
+	const onSelectSpecies = () => {
+		Modal.popSelectScrollBoxModal(
+			[types.map(v => v.pet_species)],
+			'동물 종 선택',
+			selected => {
+				const find = types.find(e => e.pet_species == selected);
+				setData({...data, missing_animal_species: selected, missing_animal_species_detail: find.pet_species_detail[0]});
+				setIsSpeciesChanged(!isSpeciesChanged);
+			},
+			() => Modal.close(),
+		);
 	};
 
-	const onSelectSpeciesDetail = (v, i) => {
-		setData({...data, missing_animal_species_detail: data.type.pet_species_detail[i]});
+	const onSelectSpeciesDetail = () => {
+		const find = types.find(e => e.pet_species == data.missing_animal_species);
+		Modal.popSelectScrollBoxModal(
+			[find.pet_species_detail],
+			'품종 선택',
+			selected => {
+				setData({...data, missing_animal_species_detail: selected});
+			},
+			() => Modal.close(),
+		);
+		// setData({...data, missing_animal_species_detail: data.type.pet_species_detail[i]});
 	};
 
 	const selectSex = i => {
@@ -424,8 +481,35 @@ const MissingForm = props => {
 		setData({...data, missing_animal_lost_location: lost_location_container});
 	};
 
+	const keyboardArea = useKeyboardBottom(0 * DP);
+	const inputAgeRef = React.useRef();
+	const inputLocationRef = React.useRef();
+	const inputContactRef = React.useRef();
+	const inputBalloonRef = React.useRef();
+	const currentPosition = React.useRef(0);
+
+	React.useEffect(() => {
+		props.scrollref.current.scrollToOffset({offset: currentPosition.current});
+		currentPosition.current = 0;
+	}, [keyboardArea]);
+
+	const onPressIn = inputRef => () => {
+		if (Platform.OS === 'android') return;
+		inputRef.current.measureLayout(
+			props.container.current,
+			(left, top, width, height) => {
+				console.log('left:%s,top:%s,width:%s,height:%s', left, top, width, height);
+				currentPosition.current = top;
+				// props.scrollref.current.scrollToOffset({offset:top})
+			},
+			() => {
+				console.log('measurelayout failed');
+			},
+		);
+	};
+
 	return (
-		<ScrollView style={[feedWrite.lostAnimalForm]} showsVerticalScrollIndicator={false}>
+		<View style={[feedWrite.lostAnimalForm]} showsVerticalScrollIndicator={false}>
 			{/* DropDownSelect */}
 			<View style={[feedWrite.lostAnimalForm_Form]}>
 				<View style={[feedWrite.formTitle]}>
@@ -433,17 +517,11 @@ const MissingForm = props => {
 				</View>
 				<View style={[feedWrite.formContentContainer]}>
 					<View style={[temp_style.dropdownSelect, feedWrite.dropdownSelect]}>
-						<NormalDropDown items={pet_kind} menu={types.map(v => v.pet_species)} width={292} onSelect={onSelectSpecies} defaultIndex={0} />
+						{/* <NormalDropDown items={pet_kind} menu={types.map(v => v.pet_species)} width={292} onSelect={onSelectSpecies} defaultIndex={0} /> */}
+						<SelectInput onPressInput={onSelectSpecies} width={292} value={data.missing_animal_species} />
 					</View>
 					<View style={[temp_style.dropdownSelect, feedWrite.dropdownSelect]}>
-						<NormalDropDown
-							items={pet_kind}
-							menu={data.type.pet_species_detail}
-							width={292}
-							height={500}
-							isLargeCategoryChanged={isSpeciesChanged}
-							onSelect={onSelectSpeciesDetail}
-						/>
+						<SelectInput onPressInput={onSelectSpeciesDetail} width={292} value={data.missing_animal_species_detail} />
 					</View>
 				</View>
 			</View>
@@ -480,6 +558,8 @@ const MissingForm = props => {
 					maxlength={2}
 					keyboardType={'number-pad'}
 					value={data.missing_animal_age}
+					onPressIn={onPressIn(inputAgeRef)}
+					ref={inputAgeRef}
 				/>
 			</View>
 			<View style={[temp_style.input24, feedWrite.missing_location_input]}>
@@ -492,6 +572,9 @@ const MissingForm = props => {
 					onChangeText={onChangeMissingLocationDetail}
 					style={[feedWrite.missing_location_detail_input]}
 					placeholder={'반려동물이 실종된 구체적인 장소를 설명해주세요.'}
+					placeholderTextColor={GRAY10}
+					onPressIn={onPressIn(inputLocationRef)}
+					ref={inputLocationRef}
 				/>
 			</View>
 			<View style={[temp_style.input24, feedWrite.input24]}>
@@ -504,6 +587,8 @@ const MissingForm = props => {
 					keyboardType={'number-pad'}
 					maxlength={15}
 					value={data.missing_animal_contact}
+					onPressIn={onPressIn(inputContactRef)}
+					ref={inputContactRef}
 				/>
 			</View>
 			<View style={[temp_style.inputBalloon, feedWrite.inputBalloon]}>
@@ -513,9 +598,12 @@ const MissingForm = props => {
 					onChange={inputFeature}
 					value={data.missing_animal_features}
 					maxLength={200}
+					onPressIn={onPressIn(inputBalloonRef)}
+					ref={inputBalloonRef}
 				/>
 			</View>
-		</ScrollView>
+			<View style={{height: keyboardArea, width: '100%', backgroundColor: '#FFF'}}></View>
+		</View>
 	);
 };
 
@@ -545,8 +633,7 @@ const ReportForm = props => {
 			// 필드명 조정 필요 (상우)
 			city: city[0], //시,도
 			district: district[0], //군,구
-			neighbor: '', //동,읍,면
-			detailAddr: '',
+			detail: '', //상세 주솧
 		},
 		report_animal_species: types[0].pet_species,
 		report_animal_species_detail: types[0].pet_species_detail[0],
@@ -620,7 +707,7 @@ const ReportForm = props => {
 				} else {
 					setNeighbor(neighbor.msg);
 				}
-				setData({...data, report_location: {city: data.report_location.city, district: data.report_location.district, neighbor: neighbor.msg[0]}});
+				// setData({...data, report_location: {city: data.report_location.city, district: data.report_location.district, neighbor: neighbor.msg[0]}});
 				// data.report_location.district == data.report_location.district ? false : setIsDistrictChanged(!isDistrictChanged);
 				setIsDistrictChanged(!isDistrictChanged);
 			},
@@ -687,13 +774,30 @@ const ReportForm = props => {
 		setData({...data, report_animal_features: feature});
 	};
 
-	const onSelectSpecies = (v, i) => {
-		setData({...data, report_animal_species: types[i].pet_species, type: types[i]});
-		setIsSpeciesChanged(!isSpeciesChanged);
+	const onSelectSpecies = () => {
+		Modal.popSelectScrollBoxModal(
+			[types.map(v => v.pet_species)],
+			'동물 종 선택',
+			selected => {
+				const find = types.find(e => e.pet_species == selected);
+				setData({...data, report_animal_species: selected, report_animal_species_detail: find.pet_species_detail[0]});
+				setIsSpeciesChanged(!isSpeciesChanged);
+			},
+			() => Modal.close(),
+		);
 	};
 
-	const onSelectSpeciesDetail = (v, i) => {
-		setData({...data, report_animal_species_detail: data.type.pet_species_detail[i]});
+	const onSelectSpeciesDetail = () => {
+		const find = types.find(e => e.pet_species == data.report_animal_species);
+		Modal.popSelectScrollBoxModal(
+			[find.pet_species_detail],
+			'품종 선택',
+			selected => {
+				setData({...data, report_animal_species_detail: selected});
+			},
+			() => Modal.close(),
+		);
+		// setData({...data, missing_animal_species_detail: data.type.pet_species_detail[i]});
 	};
 
 	const onPressCity = () => {
@@ -724,11 +828,37 @@ const ReportForm = props => {
 	const onChangeMissingLocationDetail = text => {
 		let report_location = data.report_location;
 		report_location.detail = text;
+
 		setData({...data, report_location: report_location});
+		console.log('text input :', data.report_location);
+	};
+
+	const keyboardArea = useKeyboardBottom(0 * DP);
+	const inputLocationRef = React.useRef();
+	const currentPosition = React.useRef(0);
+
+	React.useEffect(() => {
+		props.scrollref.current.scrollToOffset({offset: currentPosition.current});
+		currentPosition.current = 0;
+	}, [keyboardArea]);
+
+	const onPressIn = inputRef => () => {
+		if (Platform.OS === 'android') return;
+		inputRef.current.measureLayout(
+			props.container.current,
+			(left, top, width, height) => {
+				console.log('left:%s,top:%s,width:%s,height:%s', left, top, width, height);
+				currentPosition.current = top;
+				// props.scrollref.current.scrollToOffset({offset:top})
+			},
+			() => {
+				console.log('measurelayout failed');
+			},
+		);
 	};
 
 	return (
-		<ScrollView style={[feedWrite.reportForm_container]} showsVerticalScrollIndicator={false}>
+		<View style={[feedWrite.reportForm_container]} showsVerticalScrollIndicator={false}>
 			<View style={[feedWrite.reportForm]}>
 				<View style={[feedWrite.reportForm_form]}>
 					<View style={[feedWrite.lostAnimalForm_Form]}>
@@ -737,17 +867,10 @@ const ReportForm = props => {
 						</View>
 						<View style={[feedWrite.formContentContainer]}>
 							<View style={[temp_style.dropdownSelect, feedWrite.dropdownSelect]}>
-								<NormalDropDown items={pet_kind} menu={types.map(v => v.pet_species)} width={292} onSelect={onSelectSpecies} defaultIndex={0} />
+								<SelectInput onPressInput={onSelectSpecies} width={292} value={data.report_animal_species} />
 							</View>
 							<View style={[temp_style.dropdownSelect, feedWrite.dropdownSelect]}>
-								<NormalDropDown
-									items={pet_kind}
-									isLargeCategoryChanged={isSpeciesChanged}
-									menu={data.type.pet_species_detail}
-									width={292}
-									height={500}
-									onSelect={onSelectSpeciesDetail}
-								/>
+								<SelectInput onPressInput={onSelectSpeciesDetail} width={292} value={data.report_animal_species_detail} />
 							</View>
 						</View>
 					</View>
@@ -767,10 +890,14 @@ const ReportForm = props => {
 							onChangeText={onChangeMissingLocationDetail}
 							style={[feedWrite.missing_location_detail_input]}
 							placeholder={'제보하려는 장소의 위치를 설명해주세요.'}
+							placeholderTextColor={GRAY10}
+							onPressIn={onPressIn(inputLocationRef)}
+							ref={inputLocationRef}
 						/>
 					</View>
 				</View>
 			</View>
-		</ScrollView>
+			<View style={{height: keyboardArea, width: '100%', backgroundColor: '#FFF'}}></View>
+		</View>
 	);
 };

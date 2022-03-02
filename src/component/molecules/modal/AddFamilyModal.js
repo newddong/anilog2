@@ -1,11 +1,12 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, SafeAreaView, StyleSheet, Platform, Dimensions} from 'react-native';
-import AniButton from 'Molecules/AniButton';
+import {View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions} from 'react-native';
+import AniButton from 'Molecules/button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import UserDescriptionLabel from 'Root/component/molecules/UserDescriptionLabel';
+import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
+import Modal from 'Root/component/modal/Modal';
 
 /**
  * 가족 계정 추가 컨펌 모달 컴포넌트
@@ -17,7 +18,6 @@ import UserDescriptionLabel from 'Root/component/molecules/UserDescriptionLabel'
  */
 const AddFamilyModal = props => {
 	const data = props.data;
-	console.log('props.data', props.data);
 	const pressYes = () => {
 		props.onYes();
 	};
@@ -25,8 +25,8 @@ const AddFamilyModal = props => {
 		props.onNo();
 	};
 	return (
-		<View style={style.background}>
-			<View style={[style.popUpWindow, style.shadow]}>
+		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={style.background}>
+			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
 				<Text style={[txt.noto28, style.msg]}>이 계정을 가족으로 추가하시겠습니까?</Text>
 				<View style={style.label}>
 					<UserDescriptionLabel data={data} />
@@ -35,8 +35,8 @@ const AddFamilyModal = props => {
 					<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={'취소'} onPress={pressNo} />
 					<AniButton btnLayout={btn_w226} btnTitle={'추가하기'} onPress={pressYes} />
 				</View>
-			</View>
-		</View>
+			</TouchableOpacity>
+		</TouchableOpacity>
 	);
 };
 
@@ -59,7 +59,7 @@ const style = StyleSheet.create({
 	},
 	popUpWindow: {
 		width: 614 * DP,
-		height: 320 * DP,
+		// height: 320 * DP,
 		backgroundColor: WHITE,
 		paddingVertical: 30 * DP,
 		paddingHorizontal: 64 * DP,

@@ -8,7 +8,6 @@ import FeedCommentList from 'Templete/feed/FeedCommentList';
 import UserInfoDetailSettting from 'Templete/user/UserInfoDetailSettting';
 import UserMenu from 'Templete/user/UserMenu';
 import UserInfoSetting from 'Templete/user/UserInfoSetting';
-
 import ChangeUserProfileImage from 'Templete/user/ChangeUserProfileImage';
 import ChangePassword from 'Templete/user/ChangePassword';
 import VaccinationRecord from 'Templete/vaccination/VaccinationRecord';
@@ -56,7 +55,10 @@ import LogoHeader from 'Root/navigation/header/LogoHeader';
 import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 import {useNavigation} from '@react-navigation/core';
 import userGlobalObject from 'Root/config/userGlobalObject';
-
+import SettingInformAsk from 'Templete/user/SettingInformAsk';
+import SettingAccount from 'Templete/user/SettingAccount';
+import SettingAlarm from 'Templete/user/SettingAlarm';
+import SettingOpen from 'Templete/user/SettingOpen';
 const MyStack = createStackNavigator();
 
 export default MyStackNavigation = props => {
@@ -64,7 +66,7 @@ export default MyStackNavigation = props => {
 	const [searchInput, setSearchInput] = React.useState();
 
 	React.useEffect(() => {
-		setSearchInput(props.route.params);
+		setSearchInput(props.route.params); //검색어 입력 전달
 	}, [props.route.params]);
 
 	return (
@@ -132,7 +134,7 @@ export default MyStackNavigation = props => {
 			/>
 			<MyStack.Screen name="AnimalAdoption" component={AnimalAdoption} options={{header: props => <SimpleHeader {...props} />, title: '상태 변경'}} />
 			<MyStack.Screen name="SelectAccount" options={{header: props => <InputAndSearchHeader {...props} />, title: ''}}>
-				{props => <SelectAccount {...props} input={searchInput} prevNav={props.route.params.prevNav} />}
+				{props => <SelectAccount {...props} input={props.route.params} prevNav={props.route.params.prevNav} />}
 			</MyStack.Screen>
 			{/* <MyStack.Screen name="SelectAccount" component={SelectAccount} options={{header: props => <InputAndSearchHeader {...props} />}} /> */}
 			<MyStack.Screen
@@ -195,6 +197,8 @@ export default MyStackNavigation = props => {
 				component={AssignProtectAnimalDate}
 				options={{header: props => <SimpleHeader {...props} />, title: '보호 동물 등록'}}
 			/>
+			<MyStack.Screen name="SinglePhotoSelect" component={PhotoSelect} />
+
 			<MyStack.Screen
 				name="AssignProtectAnimalType"
 				component={AssignPetInfoA}
@@ -208,7 +212,7 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen
 				name="AidRequestAnimalList"
 				component={AidRequestAnimalList}
-				options={{header: props => <SendHeader {...props} />, title: '동물 보호 요청'}}
+				options={{header: props => <SimpleHeader {...props} />, title: '동물 보호 요청'}}
 			/>
 			<MyStack.Screen
 				name="WriteAidRequest"
@@ -296,6 +300,14 @@ export default MyStackNavigation = props => {
 				component={ApplicationFormVolunteer}
 				options={{header: props => <SimpleHeader {...props} />, title: '봉사활동 신청서'}}
 			/>
+			<MyStack.Screen
+				name="SettingInformAsk"
+				component={SettingInformAsk}
+				options={{header: props => <SimpleHeader {...props} />, title: '정보/문의'}}
+			/>
+			<MyStack.Screen name="SettingAccount" component={SettingAccount} options={{header: props => <SimpleHeader {...props} />, title: '계정'}} />
+			<MyStack.Screen name="SettingAlarm" component={SettingAlarm} options={{header: props => <SimpleHeader {...props} />, title: '알림'}} />
+			<MyStack.Screen name="SettingOpen" component={SettingOpen} options={{header: props => <SimpleHeader {...props} />, title: '공개 설정'}} />
 		</MyStack.Navigator>
 	);
 };

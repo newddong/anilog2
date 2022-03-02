@@ -49,6 +49,7 @@ export default Feed = React.memo(props => {
 		feed_avatar_id,
 	} = props.data;
 	// console.log(props.data);
+	// console.log('feed', feed_recent_comment);
 	const moveToCommentList = async () => {
 		AsyncStorage.getItem('sid', (err, res) => {
 			console.log('res', res);
@@ -64,7 +65,7 @@ export default Feed = React.memo(props => {
 	};
 
 	return (
-		<View style={[organism_style.feed]}>
+		<View style={[organism_style.feed]} removeClippedSubviews>
 			<FeedContent data={props.data} />
 			{/* 270DP */}
 			<View style={[organism_style.feedMedia_feed]}>
@@ -73,7 +74,7 @@ export default Feed = React.memo(props => {
 			<View style={organism_style.comment_feed_view}>
 				<View style={[organism_style.likeCommentButtons_view, feed_style.likeCommentButtons_view]}>
 					<View style={[organism_style.likeCommentInfo_view_feed]}>
-						<View style={organism_style.like48}>
+						<View style={[organism_style.like48]}>
 							<Like48_Border />
 						</View>
 						<View style={organism_style.like_count_view_feed}>
@@ -81,7 +82,7 @@ export default Feed = React.memo(props => {
 								<Text style={[txt.roboto24]}>{feed_like_count}</Text>
 							</View>
 						</View>
-						<TouchableOpacity onPress={moveToCommentList}>
+						{/* <TouchableOpacity onPress={moveToCommentList}>
 							<View style={{flexDirection: 'row'}}>
 								<View style={organism_style.like48}>
 									<Comment48_Border />
@@ -92,7 +93,7 @@ export default Feed = React.memo(props => {
 									</View>
 								</View>
 							</View>
-						</TouchableOpacity>
+						</TouchableOpacity> */}
 					</View>
 
 					{/* 댓글 comment_count개 모두 보기 */}
@@ -109,7 +110,7 @@ export default Feed = React.memo(props => {
 				<View style={[organism_style.recentComment_view, feed_style.recentComment_view]}>
 					<View style={[organism_style.writerID_feed_view]}>
 						<View style={[organism_style.writerID_feed, {flex: 1}, {alignItems: 'flex-start'}]}>
-							<Text style={[txt.roboto24, {color: GRAY10}]}>{feed_recent_comment?.comment_user_nickname}</Text>
+							<Text style={[txt.roboto24, feed_style.recent_comment_user, {color: GRAY10}]}>{feed_recent_comment?.comment_user_nickname}</Text>
 						</View>
 						<View style={(organism_style.commentText_view, {flex: 3})}>
 							<Text style={[txt.noto24]} numberOfLines={2} ellipsizeMode="tail">

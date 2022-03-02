@@ -1,17 +1,5 @@
 import React from 'react';
-import {
-	View,
-	Text,
-	TouchableWithoutFeedback,
-	StyleSheet,
-	Dimensions,
-	Platform,
-	ScrollView,
-	FlatList,
-	TouchableOpacity,
-	Animated,
-	TextInput,
-} from 'react-native';
+import {View, Text, StyleSheet, Dimensions, Platform, FlatList, TouchableOpacity, Animated, TextInput} from 'react-native';
 import AniButton from '../button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10, APRI10, GRAY20, BLACK} from 'Root/config/color';
@@ -28,11 +16,21 @@ import Modal from 'Root/component/modal/Modal';
  * @param {string} props.msg -  상단 모달창에서 타이틀
  * @param {(selectedItem)=>void} props.onYes - 상단 모달창에서 확인 버튼 콜백 / 선택한 아이템 반환
  * @param {string} props.yesMsg -  상단 모달창에서 확인 버튼 타이틀
+ * @param {number} props.fontSize -  하단 리스트 아이템 텍스트 크기
  *
  */
 const OneButtonSelectModal = props => {
+	const padding = '';
+
 	const data = props.data;
-	console.log('data', props);
+	const getData = () => {
+		let init = [padding, padding];
+		const newArr = init.concat(data);
+		newArr.push(padding);
+		newArr.push(padding);
+		newArr.push(padding);
+		return newArr;
+	};
 
 	const [selectedItem, setSelectedItem] = React.useState(2);
 	const [confirmedSelect, setConfirmedSelect] = React.useState(data[2]);
@@ -60,8 +58,8 @@ const OneButtonSelectModal = props => {
 	const onScroll = event => {
 		// console.log('event', event.nativeEvent.contentOffset);
 		let y = event.nativeEvent.contentOffset.y;
-		let focused = Math.floor(y / (60 * DP));
-		console.log('foucsed', focused);
+		let focused = Math.floor(y / (68 * DP));
+		// console.log('foucsed', focused);
 		if (focused < 1) {
 			setSelectedItem(2);
 		} else {
@@ -110,17 +108,19 @@ const OneButtonSelectModal = props => {
 	//하단 드롭다운에서 완료 버튼 클릭
 	const onSelect = () => {
 		setSelectOpen(false);
-		setConfirmedSelect(data[selectedItem]);
+		setConfirmedSelect(data[selectedItem - 2]);
 	};
 
 	//직접 입력 선택했을 경우 상단 모달에 TextInput 출력
 	const getDirectInput = () => {
-		if (confirmedSelect === '기타(직접 입력)') {
+		// console.log('confirmedSelect', confirmedSelect);
+		if (confirmedSelect === '기타(직접 입력)' || confirmedSelect == '직접입력') {
 			return (
 				<TextInput
 					onChangeText={onChangeDirectInput}
 					style={[txt.noto28, style.directInputStyle]}
 					multiline={true}
+					textAlignVertical={'top'}
 					placeholder={'가능한 상세히 적어주세요!'}
 				/>
 			);
@@ -129,13 +129,22 @@ const OneButtonSelectModal = props => {
 		}
 	};
 
+	const onPressOutSide = () => {
+		if (selectOpen) {
+			setSelectOpen(!selectOpen);
+		} else {
+			Modal.close();
+		}
+	};
+
 	return (
-		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={style.background}>
-			<View style={[style.popUpWindow, style.shadow]}>
+		<TouchableOpacity activeOpacity={1} onPress={onPressOutSide} style={style.background}>
+			{/* 상단 선택영역  */}
+			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
 				<Text style={[txt.noto28, style.msg]}>{props.msg}</Text>
 				<TouchableOpacity onPress={onOpen} style={style.dropdownContainer} activeOpacity={1}>
 					<View style={style.selectedItem}>
-						<Text style={[txt.noto28]}>{data[selectedItem]}</Text>
+						<Text style={[txt.noto28, {fontSize: props.fontSize * DP - 3}]}>{data[selectedItem - 2]}</Text>
 					</View>
 					<View style={style.dropdownIcon}>{!selectOpen ? <Arrow_Down_GRAY10 onPress={onOpen} /> : <Arrow_Up_GRAY10 onPress={onOpen} />}</View>
 				</TouchableOpacity>
@@ -143,12 +152,14 @@ const OneButtonSelectModal = props => {
 				<View style={style.buttonContainer}>
 					<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.yesMsg} onPress={pressYes} />
 				</View>
-			</View>
+			</TouchableOpacity>
+			{/* 하단 스크롤뷰 영역 */}
 			<Animated.View
 				style={[
 					style.downScrollSelectContainer,
 					{
 						height: interpolatedHeight,
+						// bottom: 100,
 					},
 				]}>
 				<View style={[style.header]}>
@@ -159,24 +170,27 @@ const OneButtonSelectModal = props => {
 						<Text style={[txt.noto30, {color: WHITE}]}>완료</Text>
 					</TouchableOpacity>
 				</View>
-				<TouchableOpacity activeOpacity={1} style={[style.list]}>
+				<View style={[style.list, {}]}>
 					<FlatList
-						data={props.data}
+						data={getData()}
 						// keyExtractor={item => item.index}
 						onScroll={onScroll}
 						showsVerticalScrollIndicator={false}
-						overScrollMode={'always'}
 						renderItem={({item, index}) => {
 							return (
-								<View key={index} style={[style.listItem, index == selectedItem && index != 1 && index != 0 ? {backgroundColor: APRI10} : null]}>
-									<TouchableWithoutFeedback onPress={() => setSelectedItem(index)}>
-										<Text style={[txt.roboto34, {color: getTextColor(index)}]}>{item}</Text>
-									</TouchableWithoutFeedback>
-								</View>
+								<TouchableOpacity
+									activeOpacity={1}
+									onPress={() => setSelectedItem(index)}
+									key={index}
+									style={[style.listItem, index == selectedItem && item != padding ? {backgroundColor: APRI10} : null]}>
+									<>
+										<Text style={[txt.roboto34, {color: getTextColor(index), fontSize: props.fontSize * DP}]}>{item}</Text>
+									</>
+								</TouchableOpacity>
 							);
 						}}
 					/>
-				</TouchableOpacity>
+				</View>
 			</Animated.View>
 		</TouchableOpacity>
 	);
@@ -187,6 +201,7 @@ OneButtonSelectModal.defaultProps = {
 	onYes: () => {
 		alert('YES');
 	},
+	fontSize: 34,
 };
 
 const style = StyleSheet.create({
@@ -194,12 +209,16 @@ const style = StyleSheet.create({
 		backgroundColor: '#0009',
 		height: Platform.OS == 'ios' ? Dimensions.get('window').height : '100%',
 		width: Platform.OS == 'ios' ? Dimensions.get('window').width : '100%',
-		justifyContent: 'center',
+		// justifyContent: 'center',
+		// top: 200 * DP,
+		paddingTop: 300 * DP,
 		alignItems: 'center',
 	},
 	popUpWindow: {
 		width: 654 * DP,
 		backgroundColor: '#e4e4e4',
+		// backfaceVisibility: 'yellow',
+		// backgroundColor: 'yellow',
 		paddingTop: 60 * DP,
 		paddingBottom: 52 * DP,
 		paddingHorizontal: 46 * DP,

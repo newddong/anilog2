@@ -2,6 +2,7 @@ import React from 'react';
 import {Dimensions, Text, View, Platform} from 'react-native';
 import {organism_style, feedContent_style} from 'Organism/style_organism';
 import UserLocationLabel from 'Molecules/label/UserLocationLabel';
+import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w130} from 'Root/component/atom/btn/btn_style';
 import {useNavigation, useRoute} from '@react-navigation/core';
@@ -60,19 +61,18 @@ export default FeedContent = props => {
 		feed_writer_id,
 		feed_avatar_id,
 	} = props.data;
-
 	const navigation = useNavigation();
 	const route = useRoute();
 	const [btnStatus, setBtnStatus] = React.useState(false); //더보기 Arrow방향 false면 아래
-	const [layout, setLayout] = React.useState({height: 0 * DP, width: 0}); // 초기의 Layout
+	const [textLayout, setTextLayout] = React.useState({height: 0 * DP, width: 0}); // 초기의 Layout
 	const [reportLayout, setReportLayout] = React.useState({height: 0, width: 0});
 	const [labelLayout, setlabelLayout] = React.useState({height: 0, width: 0});
 	const [show, setShow] = React.useState(false);
 	const [isMeatballClicked, setIsMeatballClicked] = React.useState(false);
 	//FeedText가 담긴 View 의 onLayout
-	const onLayoutContent = event => {
+	const onLayoutText = event => {
 		const {width, height} = event.nativeEvent.layout;
-		setLayout({width, height});
+		setTextLayout({width, height});
 	};
 
 	//제보게시물
@@ -87,12 +87,12 @@ export default FeedContent = props => {
 	};
 
 	React.useEffect(() => {
-		if (layout.height + reportLayout.height + labelLayout.height + 116 * DP > 265 * DP) {
+		if (textLayout.height + reportLayout.height + labelLayout.height + 116 * DP > 265 * DP) {
 			setBtnStatus(true);
 		} else {
 			setBtnStatus(false);
 		}
-	}, [layout]);
+	}, [textLayout]);
 
 	//피드 미트볼 메뉴 - 신고 클릭
 	const onPressReport = () => {
@@ -106,7 +106,7 @@ export default FeedContent = props => {
 				},
 				'신고',
 			);
-		}, 500);
+		}, 100);
 	};
 
 	//피드 미트볼 메뉴 - 공유하기 클릭
@@ -118,7 +118,7 @@ export default FeedContent = props => {
 				() => alert('link'),
 				() => alert('message'),
 			);
-		}, 500);
+		}, 100);
 	};
 
 	//피드 미트볼 메뉴 - 팔로우 취소
@@ -228,122 +228,160 @@ export default FeedContent = props => {
 				},
 			);
 		}
-		// if()
+	};
+
+	const isMissingReportRoute = route.name == 'MissingAnimalDetail' || route.name == 'ReportDetail';
+	const isCommentList = route.name == 'FeedCommentList';
+	const isMissingReportType = feed_content == 'missing' || feed_content == 'report';
+
+	const [isShowBtn, setIsShowBtn] = React.useState(true);
+	const [numLine, setNumLine] = React.useState(isMissingReportRoute ? 0 : 2);
+	const [lineCount, setLineCount] = React.useState(0);
+
+	const onTextLayout = e => {
+		// console.log('텍스트 레이아웃', e.nativeEvent, 1*DP);
+		if(Platform.OS=='ios'){	
+			if (e.nativeEvent.lines.length >= 2) {
+				setIsShowBtn(true);
+				setLineCount(e.nativeEvent.lines.length+1);
+			} 
+			else{
+				setIsShowBtn(false);
+				setLineCount(e.nativeEvent.lines.length);
+			}
+		}
+		if(Platform.OS=='android'){
+			if (e.nativeEvent.lines.length >= 2) {
+				setIsShowBtn(true);
+				setLineCount(e.nativeEvent.lines.length);
+			} 
+			else{
+				setIsShowBtn(false);
+				setLineCount(e.nativeEvent.lines.length);
+			}
+		}
 	};
 
 	const showMore = () => {
+		setNumLine(0);
 		setShow(true);
 	};
 
-	const shouldBeDetail = show || route.name == 'MissingAnimalDetail' || route.name == 'ReportDetail';
-	// console.log('경로', route.name, route.name.includes('FeedCommentList'));
+	const layoutStyle = () => {
+		if (isMissingReportRoute || show) {
+			return {};
+		} else if (isCommentList) {
+			return {};
+		} else {
+			return {
+				height: 110 * DP + (lineCount > 3 ? 3 : lineCount) * 54*DP,
+			};
+		}
+	};
 
+	// console.log('피드 컨텐츠 경로명', route.name);
+	// console.log('피드 텍스트 내용 : ', feed_content.split('\n'));
 	return (
-		<View style={[organism_style.feedContent, shouldBeDetail ? {height: 270 * DP + reportLayout.height + labelLayout.height + layout.height} : {}]}>
-			{/* // <View style={[organism_style.feedContent,{height:800*DP}]}> */}
-			{/* line 1 */}
-			<View style={[organism_style.userLocationLabel_view_feedContent]} onLayout={onLayoutLabel}>
-				{/* UserLocationLabel */}
-				<View style={[organism_style.userLocationLabel_feedContent]}>
-					<UserLocationLabel
-						data={feed_avatar_id || feed_writer_id || undefined}
-						onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})}
-						location={feed_location}
-					/>
+		// <View style={isMissingReportRoute || show ? {} : {height: 270 * DP}} removeClippedSubviews>
+		<View style={[layoutStyle()]} removeClippedSubviews>
+			<View style={[organism_style.feedContent]}>
+				{/* // <View style={[organism_style.feedContent,{height:800*DP}]}> */}
+				{/* line 1 */}
+				<View style={[organism_style.userLocationLabel_view_feedContent]} onLayout={onLayoutLabel}>
+					{/* UserLocationLabel */}
+					<View style={[organism_style.userLocationLabel_feedContent]}>
+						<UserLocationTimeLabel
+							data={feed_avatar_id || feed_writer_id || undefined}
+							onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})}
+							location={feed_location}
+							time={feed_date}
+							isLarge
+						/>
+						<View style={{flexDirection: 'row', alignItems: 'center'}}>
+							{!isMissingReportRoute ? (
+								<View style={{flexDirection: 'row', alignItems: 'center'}}>
+									<View style={[feedContent_style.status /*{width:130*DP,height:38*DP}*/]}>
+										{feed_is_protect_diary && (
+											<View
+												style={{
+													width: 130 * DP,
+													height: 38 * DP,
+													justifyContent: 'center',
+													alignSelf: 'flex-end',
+													alignItems: 'center',
+													borderColor: MAINCOLOR,
+													borderRadius: 10 * DP,
+													borderWidth: 2 * DP,
+													marginRight: 10 * DP,
+												}}>
+												<Text style={[txt.roboto24, txt.maincolor]}>임보일기</Text>
+											</View>
+										)}
+									</View>
 
-					<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
-				</View>
-
-				{/* type값이 status일 경우 status 버튼이 나오고 그렇지 않으면 다른 버튼 표기 */}
-				{feed_type == 'feed' ? (
-					<View style={{flexDirection: 'row', alignItems: 'center'}}>
-						<View style={[feedContent_style.status /*{width:130*DP,height:38*DP}*/]}>
-							{feed_is_protect_diary && (
-								<View
-									style={{
-										width: 130 * DP,
-										height: 38 * DP,
-										justifyContent: 'center',
-										alignSelf: 'flex-end',
-										alignItems: 'center',
-										borderColor: MAINCOLOR,
-										borderRadius: 10 * DP,
-										borderWidth: 2 * DP,
-									}}>
-									<Text style={[txt.roboto24, txt.maincolor]}>임보일기</Text>
-								</View>
-							)}
-						</View>
-
-						{/* 연결되는 기능 개발 후 추후 연결 */}
-						{/* <View style={[organism_style.meatball, feedContent_style.meatball]}>
+									{/* 연결되는 기능 개발 후 추후 연결 */}
+									{/* <View style={[organism_style.meatball, feedContent_style.meatball]}>
 							<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
 						</View> */}
+								</View>
+							) : (
+								<View style={[organism_style.button_view_feedContent]}>
+									{/* <View style={[organism_style.favoriteTag_view_feedContent]}>
+										<View style={[organism_style.favoriteTag_feedContent]}>
+											<FavoriteTag48_Filled />
+										</View>
+										<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
+											<Text>{feed_favorite_count}</Text>
+										</View>
+									</View> */}
+									<View style={[organism_style.share48_view_feedContent]}>
+										<View style={[organism_style.share48_feedContent]}>
+											<Share48_Filled />
+										</View>
+										<View style={[organism_style.share_feedContent, feedContent_style.share]}>
+											<Text style={[txt.noto24, {color: GRAY10}]}>{SHARE}</Text>
+										</View>
+									</View>
+								</View>
+							)}
+							{/* <Text>{route.name}</Text> */}
+							{/* <Text>{lineCount}</Text> */}
+							<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
+							{/* <Text>{feed_type}</Text> */}
+						</View>
 					</View>
-				) : (
-					<View style={[organism_style.button_view_feedContent]}>
-						<View style={[organism_style.favoriteTag_view_feedContent]}>
-							<View style={[organism_style.favoriteTag_feedContent]}>
-								<FavoriteTag48_Filled />
-							</View>
-							<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
-								<Text>{feed_favorite_count}</Text>
-							</View>
-						</View>
-						<View style={[organism_style.share48_view_feedContent]}>
-							<View style={[organism_style.share48_feedContent]}>
-								<Share48_Filled />
-							</View>
-							<View style={[organism_style.share_feedContent, feedContent_style.share]}>
-								<Text style={[txt.noto24, {color: GRAY10}]}>{SHARE}</Text>
-							</View>
-						</View>
+
+					{/* type값이 status일 경우 status 버튼이 나오고 그렇지 않으면 다른 버튼 표기 */}
+				</View>
+				{/* line 1-1 (실종/제보관련 내용) */}
+				{!route.name.includes('MainHomeFeedList') && !route.name.includes('UserFeedList') && (feed_type == 'report' || feed_type == 'missing') && (
+					<View style={[organism_style.tipOff_feedContent, feedContent_style.tipOff]} onLayout={onLayoutReport}>
+						<MissingReportInfo data={props.data} />
+					</View>
+				)}
+				{(route.name.includes('FeedList') || feed_type == 'report' || feed_type == 'missing' || route.name.includes('FeedCommentList') || show) && (
+					<View style={[organism_style.content_feedContent, feedContent_style.content_Top10]}>
+						{/* <HashText style={[txt.noto28]} numberOfLines={isMissingReportRoute || show ? 0 : 3} onLayout={onLayoutText} onTextLayout={onTextLayout}> */}
+						<HashText style={[txt.noto28]} numberOfLines={numLine} ellipsizeMode={'tail'} onTextLayout={onTextLayout}>
+							{feed_content}
+						</HashText>
 					</View>
 				)}
 			</View>
-
-			{/* line 1-1 (제보관련 내용) */}
-			{feed_type == 'report' && (
-				<View style={[organism_style.tipOff_feedContent, feedContent_style.tipOff]} onLayout={onLayoutReport}>
-					<View style={{flexDirection: 'row', alignItems: 'center'}}>
-						<Text style={[txt.noto28]}>제보 날짜: </Text>
-						<Text style={[txt.noto30b]}>{parsingDate(report_witness_date)}</Text>
-						{/* <MissingReportInfo data={props.data} /> */}
-					</View>
-					<View style={{flexDirection: 'row', alignItems: 'flex-start', paddingTop: 10 * DP}}>
-						<Text style={[txt.noto28]}>제보 장소: </Text>
-						<Text style={[txt.noto28b, {width: 500 * DP}]}>{report_witness_location}</Text>
-					</View>
-				</View>
-			)}
-
-			{(route.name.includes('FeedList') || feed_type == 'report' || feed_type == 'missing' || route.name.includes('FeedCommentList') || show) && (
-				<View style={[organism_style.content_feedContent, feedContent_style.content_Top10]}>
-					<HashText style={[txt.noto28]} numberOfLines={shouldBeDetail ? 0 : 2} onLayout={onLayoutContent}>
-						{feed_content}
-					</HashText>
-				</View>
-			)}
-
-			<View style={[organism_style.time_view_feedContent]}>
-				<View style={[organism_style.time_feedContent]}>
-					<Text style={[txt.noto22, {color: GRAY10}]}>{getTimeLapsed(feed_date)}</Text>
-				</View>
-
-				{(!show && route.name.includes('FeedList')) ||
-					(route.name.includes('FeedCommentList') && (
-						<TouchableWithoutFeedback onPress={showMore}>
-							<View style={[organism_style.addMore_view_feedContent]}>
-								<View style={[organism_style.addMore_feedContent]}>
-									<Text style={[txt.noto22, {color: GRAY10}]}>더보기</Text>
-								</View>
-								<View style={[organism_style.braket]}>
-									<Arrow_Down_GRAY20 />
-								</View>
+			{!isMissingReportRoute && isShowBtn && !show && (
+				<View style={[organism_style.time_view_feedContent]}>
+					<TouchableWithoutFeedback onPress={showMore}>
+						<View style={[organism_style.addMore_view_feedContent]}>
+							<View style={[organism_style.addMore_feedContent]}>
+								<Text style={[txt.noto22, {color: GRAY10}]}>더보기</Text>
 							</View>
-						</TouchableWithoutFeedback>
-					))}
-			</View>
+							<View style={[organism_style.braket]}>
+								<Arrow_Down_GRAY20 />
+							</View>
+						</View>
+					</TouchableWithoutFeedback>
+				</View>
+			)}
 		</View>
 	);
 };

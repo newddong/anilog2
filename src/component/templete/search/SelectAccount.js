@@ -3,25 +3,33 @@ import {Text, View} from 'react-native';
 import AccountList from 'Organism/list/AccountList';
 import {login_style, selectAccount} from 'Templete/style_templete';
 import {getUserListByNickname} from 'Root/api/userapi';
+import {txt} from 'Root/config/textstyle';
+import userGlobalObject from 'Root/config/userGlobalObject';
+import Modal from 'Root/component/modal/Modal';
+import dp from 'Root/config/dp';
 
 export default SelectAccount = ({route, navigation}) => {
 	const [data, setData] = React.useState([]);
 
 	React.useEffect(() => {
 		console.log('searchInput / SelectAccount', route.params.searchInput);
-		getUserListByNickname(
-			{
-				user_nickname: route.params.searchInput,
-				user_type: 'user',
-			},
-			result => {
-				console.log('result / getUserListByUserNickname / SelectAccount  ', result.msg);
-				setData(result.msg);
-			},
-			err => {
-				console.log('err / getUserListByUserNickname / SelectAccount  ', err);
-			},
-		);
+		if (route.params?.searchInput != '') {
+			getUserListByNickname(
+				{
+					user_nickname: route.params.searchInput,
+					request_number: '',
+					userobject_id: '',
+					user_type: 'user',
+				},
+				result => {
+					// console.log('result / getUserListByUserNickname / SelectAccount  ', result.msg);
+					setData(result.msg);
+				},
+				err => {
+					console.log('err / getUserListByUserNickname / SelectAccount  ', err);
+				},
+			);
+		}
 	}, [route.params?.searchInput]);
 
 	const onSelect = (item, index) => {
@@ -39,9 +47,15 @@ export default SelectAccount = ({route, navigation}) => {
 
 	return (
 		<View style={[login_style.wrp_main, selectAccount.container]}>
-			<View style={[selectAccount.accountList]}>
-				<AccountList items={data} onSelect={onSelect} />
-			</View>
+			{data.length > 0 ? (
+				<View style={[selectAccount.accountList]}>
+					<AccountList items={data} onSelect={onSelect} />
+				</View>
+			) : (
+				<View>
+					<Text style={[txt.roboto32b, {paddingVertical: 30 * dp}]}>검색 결과가 없습니다.</Text>
+				</View>
+			)}
 		</View>
 	);
 };

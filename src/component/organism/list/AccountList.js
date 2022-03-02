@@ -16,6 +16,7 @@ import {organism_style} from 'Organism/style_organism copy';
  * onClickLabel : 'void / 계정 라벨 클릭 - ',
  * showCrossMark : 'boolean / X마크 출력 여부 , default = true',
  * showStarMark : 'boolean / 별 마크(즐겨찾기 여부) 출력 여부 / default = false'
+ * listEmptyComponent : 'component / 리스트 없을 시 '
  * }} props
  */
 export default AccountList = props => {
@@ -87,6 +88,7 @@ export default AccountList = props => {
 						renderItem={({item, index}) => renderItem(item, index)}
 						scrollEnabled={false}
 						showsVerticalScrollIndicator={false}
+						ListEmptyComponent={props.listEmptyComponent}
 					/>
 				</View>
 			</ScrollView>
@@ -102,4 +104,7 @@ AccountList.defaultProps = {
 	makeBorderMode: true,
 	showCrossMark: true,
 	showStarMark: false,
+	listEmptyComponent: () => {
+		return <></>;
+	},
 };

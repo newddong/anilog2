@@ -40,7 +40,6 @@ const ProfileInfo = props => {
 	const [into_height, setIntro_height] = React.useState(0); //user_introduction 의 길이 => 길이에 따른 '더보기' 버튼 출력 여부 결정
 
 	const isOwner = userGlobalObject.userInfo.user_my_pets.includes(data._id);
-	console.log('data', isOwner);
 
 	//더보기 클릭
 	const onPressShowMore = () => {
@@ -120,8 +119,9 @@ const ProfileInfo = props => {
 			);
 		} else {
 			if (userGlobalObject.userInfo._id == data._id) {
+				//보호소 프로필이며 자기 계정인 경우
 				return (
-					<View style={[{flexDirection: 'row', justifyContent: 'space-between'}]}>
+					<View style={[profileInfo_style.shelterButtonContainer]}>
 						<FloatAddPet_128x68 onPress={onPressAddPetBtn} />
 						<FloatAddArticle_128x68 onPress={onPressAddArticleBtn} />
 					</View>
@@ -256,7 +256,7 @@ const ProfileInfo = props => {
 						<AniButton btnTitle={'팔로우'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} onPress={follow} />
 					)}
 				</View>
-				<View style={[organism_style.ActionButton_profileInfo, profileInfo_style.buttonContainer]}>{getButton()}</View>
+				<View style={[]}>{getButton()}</View>
 			</View>
 		</View>
 	);

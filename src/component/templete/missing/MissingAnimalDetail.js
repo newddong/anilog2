@@ -18,13 +18,10 @@ import CameraRoll from '@react-native-community/cameraroll';
 import Modal from 'Root/component/modal/Modal';
 import MissingReportInfo from 'Organism/info/MissingReportInfo';
 import {PosterSave} from 'Component/atom/icon';
+import {phoneFomatter} from 'Root/util/stringutil';
 
 export default MissingAnimalDetail = props => {
 	const navigation = useNavigation();
-	React.useEffect(() => {
-		LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
-	}, []);
-
 	const [photo, setPhoto] = React.useState(props.route.params != null ? props.route.params : []); //PhotoSelect에서 사진 선택이 됐을 경우 photo에 담김
 	const [editComment, setEditComment] = React.useState(false); //답글 작성란 View 보이기 T/F
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
@@ -34,8 +31,8 @@ export default MissingAnimalDetail = props => {
 	const [writeCommentData, setWriteCommentData] = React.useState(); //더보기 클릭 State
 	const [replyPressed, setReplyPressed] = React.useState(false);
 	const debug = true;
+
 	const [loading, setLoading] = React.useState(true); //로딩상태
-	const [animalSpecies, setAnimalSpecies] = React.useState(''); //포스터 타이틀 동물 종류
 	const viewShotRef = useRef();
 	React.useEffect(() => {
 		setPhoto(props.route.params);
@@ -58,7 +55,7 @@ export default MissingAnimalDetail = props => {
 				feedobject_id: props.route.params._id,
 			},
 			data => {
-				debug && console.log(`MissingAnimalDetail data:${JSON.stringify(data.msg)}`);
+				// debug && console.log(`MissingAnimalDetail data:${JSON.stringify(data.msg)}`);
 				setData(data.msg);
 			},
 			errcallback => {
@@ -71,9 +68,7 @@ export default MissingAnimalDetail = props => {
 	React.useEffect(() => {
 		console.log(' - MissingAnimalDetail Comment -');
 		getCommnetList();
-		setTimeout(() => {
-			setLoading(false);
-		}, 500);
+		setLoading(false);
 	}, []);
 
 	// React.useEffect(() => {
@@ -207,37 +202,22 @@ export default MissingAnimalDetail = props => {
 	const onPressShowMore = () => {
 		setShowMore(!showMore);
 	};
-	// 01010041004 -> 010-1004-1004 포맷 정규식 함수
-	const phoneFomatter = num => {
-		var formatNum = '';
 
-		if (num.length == 11) {
-			formatNum = num.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-		} else if (num.length == 8) {
-			formatNum = num.replace(/(\d{4})(\d{4})/, '$1-$2');
-		} else {
-			if (num.indexOf('02') == 0) {
-				formatNum = num.replace(/(\d{2})(\d{4})(\d{4})/, '$1-$2-$3');
-			} else {
-				formatNum = num.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
-			}
-		}
-		console.log(formatNum, 'formatNum');
-		return formatNum;
-	};
+	//전단지 저장
 	async function captureScreenShot() {
 		try {
 			const imageURI = await viewShotRef.current.capture();
 			if (Platform.OS === 'android') {
-				const granted = await getPermissionAndroid();
+				// const granted = await getPermissionAndroid();
+				const granted = getPerMission();
 				if (!granted) {
 					return;
 				}
-			}
-			const image = CameraRoll.save(imageURI, 'photo');
-			if (image) {
-				// Alert.alert('', 'Image saved successfully.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
-				Modal.popOneBtn('전단지가 저장되었습니다.', '확인', Modal.close);
+				const image = CameraRoll.save(imageURI, 'photo');
+				if (image) {
+					// Alert.alert('', 'Image saved successfully.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
+					Modal.popOneBtn('전단지가 저장되었습니다.', '확인', Modal.close);
+				}
 			}
 			// Share.share({title: 'Image', url: imageURI});
 		} catch (error) {
@@ -263,126 +243,19 @@ export default MissingAnimalDetail = props => {
 			console.log('err', err);
 		}
 	};
-	//-------------------- 강아지를 찾습니다 컴포넌트 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-	// 포스터 동물 사진2개 View 컴포넌트
-	const MissingAnimalPicture = () => {
-		console.log('data.feed_media length', data.feed_medias);
-		if (data.feed_medias.length < 2) {
-			return (
-				<View style={missingAnimalDetail.picture}>
-					<Image
-						source={{
-							uri: data.feed_medias[0].media_uri,
-						}}
-						style={[missingAnimalDetail.img_squre_284]}
-					/>
-				</View>
-			);
-		} else {
-			return (
-				<View style={missingAnimalDetail.picture}>
-					<Image
-						source={{
-							uri: data.feed_medias[0].media_uri,
-						}}
-						style={[missingAnimalDetail.img_squre_284]}
-					/>
-					<Image
-						source={{
-							uri: data.feed_medias[1].media_uri,
-						}}
-						style={[missingAnimalDetail.img_squre_284]}
-					/>
-				</View>
-			);
+	function capture() {
+		try {
+			captureScreenShot();
+		} catch (err) {
+			console.log('Screenshot Error', err);
 		}
-	};
-	//포스터 동물 정보 View 컴포넌트
-	const MissingAnimalText = () => {
-		var newText = data.missing_animal_date;
-		var splitedNewText = newText.split('-');
-		var animalSex = '';
-		console.log('newDateDate', newText.split('-'));
-		var newYearText = splitedNewText[0] + '년 ';
-		var newDayText = splitedNewText[1] + '월 ' + '월 ' + splitedNewText[2].toString().substring(0, 2) + '일';
-		if (data.missing_animal_sex == 'male') {
-			animalSex = '/ 남';
-		} else if (data.missing_animal_sex == 'female') {
-			animalSex = '/ 여';
-		} else {
-			animalSex = '';
+	}
+	function getPerMission() {
+		try {
+			getPermissionAndroid();
+		} catch (err) {
+			console.log('Android Image Permisson Failed', err);
 		}
-		return (
-			<View style={missingAnimalDetail.textBox}>
-				<Text style={missingAnimalDetail.missingText38}>
-					{data.missing_animal_species} / {data.missing_animal_species_detail} / {data.missing_animal_age}살 {animalSex}
-				</Text>
-				<View style={{flexDirection: 'row', alignItems: 'center'}}>
-					<Text style={missingAnimalDetail.missingBlackText32}>{newYearText}</Text>
-					<Text style={missingAnimalDetail.missingRedText32}>{newDayText} </Text>
-					<Text style={missingAnimalDetail.missingBlackText32}>실종</Text>
-				</View>
-				{/* <Text>{data.missing_animal_date} 실종</Text> */}
-				<View style={{paddingTop: 4}}>
-					<Text style={missingAnimalDetail.missingText26}>{data.missing_animal_lost_location}</Text>
-				</View>
-				<View style={missingAnimalDetail.oneLine} />
-
-				{/* <Text numberOfLines={1}>___________________________________</Text> */}
-
-				<Text style={missingAnimalDetail.missingText22}>ㆍ{data.missing_animal_features}</Text>
-			</View>
-		);
-	};
-	// 포스터 전화번호 View 컴포넌트
-	const MissingAnimalPhone = () => {
-		var phoneNumber = phoneFomatter(data.missing_animal_contact);
-		return (
-			<View style={missingAnimalDetail.phoneNumberBox}>
-				<Text style={missingAnimalDetail.missingTextWhite18}>동물을 찾으면 직접 전단지를 수거하겠습니다. 전단지를 떼지 말아주세요!!</Text>
-				<View style={missingAnimalDetail.yellowNumberBox}>
-					{/* <Text style={missingAnimalDetail.missingTextYellow50}>{data.missing_animal_contact}</Text> */}
-					<Text style={missingAnimalDetail.missingTextYellow50}>{phoneNumber}</Text>
-				</View>
-			</View>
-		);
-	};
-	// 포스터 제목 컴포넌트
-	const MissingAnimalTitle = () => {
-		useEffect(() => {
-			switch (data.missing_animal_species) {
-				case '개':
-					setAnimalSpecies('강아지를');
-					break;
-				case '고양이':
-					setAnimalSpecies('고양이를');
-					break;
-				case '기타 포유류':
-					setAnimalSpecies('반려동물을');
-					break;
-				case '조류':
-					setAnimalSpecies(data.missing_animal_species_detail.toString() + '를');
-					break;
-				case '수중생물':
-					setAnimalSpecies('물고기를');
-					break;
-				case '기타':
-					setAnimalSpecies(data.missing_animal_species_detail.toString() + '를');
-					break;
-				default:
-					setAnimalSpecies('반려동물을');
-					break;
-			}
-		}, []);
-
-		return <Text style={missingAnimalDetail.titleText}>{animalSpecies} 찾습니다</Text>;
-	};
-	if (loading) {
-		return (
-			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
-				<ActivityIndicator size={'large'}></ActivityIndicator>
-			</View>
-		);
 	}
 
 	const moveToCommentList = () => {
@@ -391,33 +264,37 @@ export default MissingAnimalDetail = props => {
 		navigation.push('FeedCommentList', {feedobject: data, showAllContents: true});
 	};
 
+	//로딩중일때 출력
+	if (loading) {
+		return (
+			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
+				<ActivityIndicator size={'large'}></ActivityIndicator>
+			</View>
+		);
+	}
+
 	return (
 		<View style={[reportDetail.wrp_main]}>
 			<FlatList
 				contentContainerStyle={[reportDetail.container]}
 				data={[{}]}
+				showsVerticalScrollIndicator={false}
 				ListHeaderComponent={
 					<View style={{alignItems: 'center'}}>
 						<View>
 							<ViewShot ref={viewShotRef} options={{format: 'jpg', quality: 1.0}}>
 								<View style={[missingAnimalDetail.poster]}>
 									<View style={missingAnimalDetail.title}>
-										<MissingAnimalTitle />
+										<MissingAnimalTitle data={data} />
 									</View>
-									{/* <Image
-								source={{
-									uri: data.feed_thumbnail,
-								}}
-								style={[temp_style.img_square_750]}
-							/> */}
-									<MissingAnimalPicture />
-									<MissingAnimalText />
-									<MissingAnimalPhone />
+									<MissingAnimalPicture data={data} />
+									<MissingAnimalText data={data} />
+
+									<MissingAnimalPhone data={data} />
 									<Text style={missingAnimalDetail.missingText18}>반려동물 커뮤니티 애니로그</Text>
 								</View>
 							</ViewShot>
-							{/* <TouchableWithoutFeedback onPress={captureScreenShot}> */}
-							<TouchableWithoutFeedback onPress={captureScreenShot}>
+							<TouchableWithoutFeedback onPress={capture}>
 								<View style={missingAnimalDetail.floatingBtnMissingReport}>
 									<PosterSave />
 									<Text style={[txt.noto20, {color: 'red'}, {fontWeight: 'bold'}]}>전단지 저장</Text>
@@ -426,7 +303,7 @@ export default MissingAnimalDetail = props => {
 						</View>
 
 						<View style={[temp_style.feedContent]}>
-							<MissingReportInfo data={data} />
+							{/* <MissingReportInfo data={data} /> */}
 							{/* DB에서 가져오는 제보 피드글 데이터를 FeedContent에 넘겨준다. */}
 							<FeedContent data={data} />
 						</View>
@@ -442,11 +319,7 @@ export default MissingAnimalDetail = props => {
 				}
 				renderItem={({item, index}) => (
 					// <View style={[reportDetail.commentList]}>
-					<CommentList
-						items={commentDataList}
-						onPressReplyBtn={onReplyBtnClick}
-						onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
-					/>
+					<CommentList items={commentDataList} onPressReplyBtn={moveToCommentList} onPress_ChildComment_ReplyBtn={onChildReplyBtnClick} />
 					// </View>
 				)}
 			/>
@@ -466,4 +339,137 @@ export default MissingAnimalDetail = props => {
 			</View>
 		</View>
 	);
+};
+
+// 포스터 제목 컴포넌트
+const MissingAnimalTitle = props => {
+	// const [animalSpecies, setAnimalSpecies] = React.useState('');
+	//포스터 타이틀 동물 종류
+	const data = props.data;
+	if (!data) return false;
+	switch (data.missing_animal_species) {
+		case '개':
+			var animalSpecies = '강아지를';
+			break;
+		case '고양이':
+			var animalSpecies = '고양이를';
+			break;
+		case '기타 포유류':
+			var animalSpecies = '반려동물을';
+			break;
+		case '조류':
+			var animalSpecies = data.missing_animal_species_detail.toString() + '를';
+			break;
+		case '수중생물':
+			var animalSpecies = '물고기를';
+
+			break;
+		case '기타':
+			var animalSpecies = data.missing_animal_species_detail.toString() + '를';
+			break;
+		default:
+			var animalSpecies = '반려동물을';
+			break;
+	}
+
+	return <Text style={missingAnimalDetail.titleText}>{animalSpecies} 찾습니다</Text>;
+};
+
+//포스터 동물 정보 View 컴포넌트
+const MissingAnimalText = props => {
+	const data = props.data;
+	if (!data.missing_animal_date) return false;
+	var newText = data.missing_animal_date;
+	console.log('뉴 텍스트', newText);
+	var splitedNewText = newText.split('-');
+	var animalSex = '';
+	console.log('newDateDate', newText.split('-'));
+	var newYearText = splitedNewText[0] + '년 ';
+	var newDayText = splitedNewText[1] + '월 ' + '월 ' + splitedNewText[2].toString().substring(0, 2) + '일';
+	var splitAddress = data.missing_animal_lost_location.split('"');
+	var newMissingAddress = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
+
+	if (data.missing_animal_sex == 'male') {
+		animalSex = '/ 남';
+	} else if (data.missing_animal_sex == 'female') {
+		animalSex = '/ 여';
+	} else {
+		animalSex = '';
+	}
+
+	console.log('missing_animal_lost_location', data.missing_animal_lost_location.split('"'));
+	return (
+		<View style={missingAnimalDetail.textBox}>
+			<Text style={missingAnimalDetail.missingText38}>
+				{data.missing_animal_species} / {data.missing_animal_species_detail} / {data.missing_animal_age}살 {animalSex}
+			</Text>
+			<View style={{flexDirection: 'row', alignItems: 'center'}}>
+				<Text style={missingAnimalDetail.missingBlackText32}>{newYearText}</Text>
+				<Text style={missingAnimalDetail.missingRedText32}>{newDayText} </Text>
+				<Text style={missingAnimalDetail.missingBlackText32}>실종</Text>
+			</View>
+			{/* <Text>{data.missing_animal_date} 실종</Text> */}
+			<View style={{paddingTop: 4}}>
+				<Text style={missingAnimalDetail.missingText26}>{newMissingAddress}</Text>
+			</View>
+			<View style={missingAnimalDetail.oneLine} />
+
+			{/* <Text numberOfLines={1}>___________________________________</Text> */}
+
+			<Text style={missingAnimalDetail.missingText22}>ㆍ{data.missing_animal_features}</Text>
+		</View>
+	);
+};
+
+// 포스터 전화번호 View 컴포넌트
+const MissingAnimalPhone = props => {
+	const data = props.data;
+	var phoneNumber = phoneFomatter(data.missing_animal_contact);
+	return (
+		<View style={missingAnimalDetail.phoneNumberBox}>
+			<Text style={missingAnimalDetail.missingTextWhite18}>동물을 찾으면 직접 전단지를 수거하겠습니다. 전단지를 떼지 말아주세요!!</Text>
+			<View style={missingAnimalDetail.yellowNumberBox}>
+				{/* <Text style={missingAnimalDetail.missingTextYellow50}>{data.missing_animal_contact}</Text> */}
+				<Text style={missingAnimalDetail.missingTextYellow50}>{phoneNumber}</Text>
+			</View>
+		</View>
+	);
+};
+
+//-------------------- 강아지를 찾습니다 컴포넌트 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+// 포스터 동물 사진2개 View 컴포넌트
+const MissingAnimalPicture = props => {
+	const data = props.data;
+	const feed_medias = data.feed_medias;
+	console.log('data.feed_media length', data.feed_medias);
+	if (!feed_medias) return false;
+	if (feed_medias.length < 2) {
+		return (
+			<View style={missingAnimalDetail.picture}>
+				<Image
+					source={{
+						uri: data.feed_medias[0].media_uri,
+					}}
+					style={[missingAnimalDetail.img_squre_284]}
+				/>
+			</View>
+		);
+	} else {
+		return (
+			<View style={missingAnimalDetail.picture}>
+				<Image
+					source={{
+						uri: data.feed_medias[0].media_uri,
+					}}
+					style={[missingAnimalDetail.img_squre_284]}
+				/>
+				<Image
+					source={{
+						uri: data.feed_medias[1].media_uri,
+					}}
+					style={[missingAnimalDetail.img_squre_284]}
+				/>
+			</View>
+		);
+	}
 };

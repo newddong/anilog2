@@ -1,19 +1,22 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, TouchableWithoutFeedback, Alert, Dimensions, StyleSheet} from 'react-native';
+import {View, Text, TouchableOpacity, TouchableWithoutFeedback, Alert, Dimensions, StyleSheet, Animated} from 'react-native';
 import moment from 'moment';
 import DP from 'Root/config/dp';
 import {day} from 'Root/i18n/msg';
 import {txt} from 'Root/config/textstyle';
-import {WHITE, APRI10, BLACK, GRAY10, GRAY20, GRAY30, MIDNIGHT_BLUE, BLUE10} from 'Root/config/color';
+import {WHITE, APRI10, BLACK, GRAY10, GRAY20, GRAY30, MIDNIGHT_BLUE, BLUE10, RED10} from 'Root/config/color';
 import {NextMark} from 'Root/component/atom/icon';
 import AniButton from '../button/AniButton';
 import {btn_w108, btn_w116, btn_w176, btn_w92} from 'Root/component/atom/btn/btn_style';
+import Modal from 'Root/component/modal/Modal';
 
 const Calendar_Multiple = props => {
 	const HEIGHT = Dimensions.get('screen').height;
 
 	const [getMoment, setMoment] = React.useState(moment()); //현재 시각 정보
-	const [selectedDates, setSelectedDates] = React.useState([]);
+	const [selectedDates, setSelectedDates] = React.useState([]); //선택된 날짜 목록
+	const [isMaximum, setIsMaximum] = React.useState(false); //선택가능 숫자 초과 선택 여부
+	const animatedOpacity = React.useRef(new Animated.Value(0)).current;
 	const today = getMoment;
 	const firstWeek = today.clone().startOf('month').week(); //현재 날짜 정보가 가지는 month의 첫째 주 정보를 가져온다
 	const lastWeek =
@@ -21,24 +24,49 @@ const Calendar_Multiple = props => {
 			? 53 //12월 마지막째 주가 그 해의 52번째 주를 넘겨서 1로 되었을 때는 이를 53으로 인식시켜야한다.
 			: today.clone().endOf('month').week();
 
+	//선택완료
 	const confirm = () => {
 		props.modalOff();
 		props.selectDate(selectedDates);
 	};
 
+	//취소버튼
 	const modalOff = () => {
 		props.modalOff();
 	};
 
+	React.useEffect(() => {
+		if (props.previous.length > 0) {
+			setSelectedDates(props.previous);
+		}
+	}, []);
+
+	React.useEffect(() => {
+		if (isMaximum) {
+			Animated.timing(animatedOpacity, {
+				duration: 300,
+				toValue: 1,
+				useNativeDriver: false,
+			}).start();
+		} else if (!isMaximum) {
+			Animated.timing(animatedOpacity, {
+				duration: 300,
+				toValue: 0,
+				useNativeDriver: false,
+			}).start();
+		}
+	}, [isMaximum]);
+
+	//날짜 선택
 	const onSelectDate = date => {
-		// console.log('date', date);
 		const dateFormat = date.format('yyyy.MM.DD');
 		if (selectedDates.some(e => e == dateFormat)) {
-			console.log('두번클릭');
 			let copy = [...selectedDates];
 			const filtered = copy.filter(e => e != dateFormat);
 			// console.log('filtered', filtered);
 			setSelectedDates(filtered);
+		} else if (selectedDates.length + 1 > props.maxLength) {
+			setIsMaximum(true);
 		} else {
 			let copy = [...selectedDates];
 			copy.push(dateFormat);
@@ -67,7 +95,7 @@ const Calendar_Multiple = props => {
 											alignItems: 'center',
 											justifyContent: 'center',
 											backgroundColor: isOneofSelectedDates ? APRI10 : 'white',
-											borderRadius: 20,
+											borderRadius: 40 * DP,
 										}}>
 										<Text style={[txt.roboto28b, {color: isOneofSelectedDates ? WHITE : 'black', lineHeight: 66 * DP}]}>{days.format('D')}</Text>
 									</View>
@@ -103,27 +131,32 @@ const Calendar_Multiple = props => {
 	};
 
 	return (
-		<View style={[styles.outside, {height: HEIGHT}]}>
-			<View style={[styles.inside]}>
+		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={[styles.outside, {height: HEIGHT}]}>
+			<TouchableOpacity activeOpacity={1} style={[styles.inside]}>
+				{/* 년도 */}
 				<Text style={[txt.roboto28b, {color: GRAY10, marginRight: 7 * DP}]}> {today.format('YYYY')}</Text>
+				{/* 월 변경 */}
 				<View style={[styles.headerCont, {}]}>
+					{/* 지난달 */}
 					<TouchableOpacity
 						style={styles.changeMonthBtn}
 						onPress={() => {
 							setMoment(getMoment.clone().subtract(1, 'month'));
 						}}>
 						<View style={[styles.monthConatiner]}>
-							<Text style={[txt.roboto32b, {color: GRAY20, marginRight: 12 * DP}]}>{getMoment.clone().subtract(1, 'month').month() + 1}</Text>
+							<Text style={[txt.roboto32b, {color: GRAY20, marginRight: 50 * DP}]}>{getMoment.clone().subtract(1, 'month').month() + 1}</Text>
 							<View style={{transform: [{rotate: '180deg'}]}}>
 								<NextMark />
 							</View>
 						</View>
 					</TouchableOpacity>
+					{/* 현재월 */}
 					<TouchableWithoutFeedback style={styles.changeMonthBtn}>
 						<Text style={[txt.roboto32b, {justifyContent: 'center', textAlign: 'center', width: 130, paddingTop: 20 * DP}]}>
 							{today.format('MM')}
 						</Text>
 					</TouchableWithoutFeedback>
+					{/* 다음달 */}
 					<TouchableOpacity
 						style={styles.changeMonthBtn}
 						onPress={() => {
@@ -131,11 +164,12 @@ const Calendar_Multiple = props => {
 						}}>
 						<View style={[styles.monthConatiner]}>
 							<NextMark />
-							<Text style={[txt.roboto32b, {color: GRAY20, marginLeft: 15 * DP}]}>{getMoment.clone().add(1, 'month').month() + 1}</Text>
+							<Text style={[txt.roboto32b, {color: GRAY20, marginLeft: 50 * DP}]}>{getMoment.clone().add(1, 'month').month() + 1}</Text>
 						</View>
 					</TouchableOpacity>
 				</View>
 				<View style={{backgroundColor: APRI10, width: '100%', height: 2 * DP}} />
+				{/* 일  */}
 				<View style={styles.daysCont}>
 					{Array(7)
 						.fill(day) //월화수목금토일 정보
@@ -154,16 +188,50 @@ const Calendar_Multiple = props => {
 							);
 						})}
 				</View>
-				<View style={styles.daysContainer}>{calendarArr()}</View>
+				<View style={[styles.daysContainer]}>{calendarArr()}</View>
 				{/* 모달바깥쪽 클릭이 modalOFF로 처리되게끔 한 View 목록 */}
 
-				<View style={{backgroundColor: APRI10, width: '100%', height: 2 * DP, marginBottom: 20}} />
-				<View style={{flexDirection: 'row', justifyContent: 'space-around', width: 654 * DP}}>
+				<View style={styles.lineStyle} />
+				{/* 하단 버튼  */}
+				<View style={[styles.bottom_btnContainer]}>
 					<AniButton btnTitle={'취소'} btnLayout={btn_w92} btnStyle={'border'} onPress={modalOff}></AniButton>
 					<AniButton btnTitle={'선택완료'} btnLayout={btn_w116} onPress={confirm}></AniButton>
 				</View>
-			</View>
-		</View>
+			</TouchableOpacity>
+			{/* 3개 이상 선택 시 출력되는 컴포넌트 */}
+			{isMaximum ? (
+				<Animated.View
+					style={[
+						styles.infoContainer,
+						styles.shadow,
+						{
+							opacity: animatedOpacity,
+						},
+					]}>
+					<Text
+						style={[
+							{
+								color: GRAY10,
+								textAlign: 'center',
+							},
+						]}>
+						{props.maxLength}일 이상의 선택은 불가합니다.
+					</Text>
+					<View
+						style={[
+							styles.infoBtnContainer,
+							{
+								alignItems: 'center',
+								marginTop: 50 * DP,
+							},
+						]}>
+						<AniButton btnTitle={'확인'} btnStyle={'border'} onPress={() => setIsMaximum(!isMaximum)} />
+					</View>
+				</Animated.View>
+			) : (
+				<></>
+			)}
+		</TouchableOpacity>
 	);
 };
 export default Calendar_Multiple;
@@ -173,28 +241,29 @@ const styles = StyleSheet.create({
 		// marginTop: 200 * DP,
 		// borderRadius: 40 * DP,
 		// height: '100%',
+		//
 		justifyContent: 'center',
-		backgroundColor: 'white',
+		backgroundColor: '#0009',
 	},
 	inside: {
 		// marginVertical: 100 * DP,
 		width: 654 * DP,
 		paddingVertical: 30 * DP,
 		marginBottom: 100 * DP,
-		backgroundColor: WHITE,
-		shadowColor: 'black',
+		// backgroundColor: RED10,
+		shadowColor: '#fff',
 		shadowRadius: 4.65,
 		shadowOffset: {
 			width: 2 * DP,
 			height: 2 * DP,
 		},
 		elevation: 2,
-		shadowOpacity: 0.1,
+		shadowOpacity: 0.3,
 		borderRadius: 40 * DP,
 		justifyContent: 'center',
 		alignSelf: 'center',
 		alignItems: 'center',
-		// backgroundColor: BLUE10,
+		backgroundColor: WHITE,
 	},
 	calendarContainer: {
 		justifyContent: 'center',
@@ -230,7 +299,7 @@ const styles = StyleSheet.create({
 		alignSelf: 'center',
 		width: 80 * DP,
 		height: 80 * DP,
-		marginHorizontal: 40 * DP,
+		// marginHorizontal: 40 * DP,
 	},
 	changeMonthText: {
 		alignSelf: 'center',
@@ -259,6 +328,7 @@ const styles = StyleSheet.create({
 		// backgroundColor: 'pink',
 	},
 	daysCont: {
+		marginTop: 20 * DP,
 		marginBottom: 30 * DP,
 		flexDirection: 'row',
 		alignSelf: 'center',
@@ -311,13 +381,37 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	shadow: {
-		shadowColor: '#000000',
-		shadowOpacity: 0.27,
+		shadowColor: 'black',
+		shadowOpacity: 0.4,
 		shadowRadius: 4.65,
 		shadowOffset: {
 			width: 1 * DP,
 			height: 2 * DP,
 		},
 		elevation: 2,
+	},
+	infoContainer: {
+		position: 'absolute',
+		alignSelf: 'center',
+		justifyContent: 'center',
+		// top: 460 * DP,
+		width: 614 * DP,
+		height: 280 * DP,
+		backgroundColor: 'white',
+		paddingTop: 60 * DP,
+		paddingBottom: 52 * DP,
+		paddingHorizontal: 64 * DP,
+		borderRadius: 40 * DP,
+	},
+	lineStyle: {
+		backgroundColor: APRI10,
+		width: '100%',
+		height: 2 * DP,
+		marginBottom: 40 * DP,
+	},
+	bottom_btnContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+		width: 654 * DP,
 	},
 });

@@ -8,18 +8,25 @@ import {Paw48_APRI10, Paw62_APRI10, Paw62_Mixed, Paw62_YELL20} from 'Atom/icon';
 import Modal from 'Component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
 import {login_style, btn_style, animalAdoption} from 'Templete/style_templete';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default AnimalAdoption = props => {
 	const navigation = useNavigation();
+	console.log('props.route.params', props.route.params);
 
 	//임시보호에서 반려 동물 변경 응원 팝업창 !
 	const onCheerUp = () => {
-		console.log('- onCheerUp - ');
-		// Modal.popNoBtn('임시보호가 아닌 반려동물로서의 새로운 삶을 살게 된 구름이를 응원합니다!');
-		// setTimeout(() => {
-		// 	Modal.close();
-		// 	navigation.navigate('SelectAccount');
-		// }, 1000);
+		// console.log('- onCheerUp - ');
+
+		Modal.close();
+		setTimeout(() => {
+			Modal.popCongratulationModal(props.route.params.user_nickname, props.route.params.user_profile_uri);
+			setTimeout(() => {
+				Modal.close();
+				console.log('pet_id: props.route.params._id', props.route.params._id);
+				navigation.navigate('PetInfoSetting', {pet_id: props.route.params._id, token: userGlobalObject.userInfo});
+			}, 1000);
+		}, 200);
 	};
 
 	return (
@@ -76,23 +83,23 @@ export default AnimalAdoption = props => {
 					<AniButton
 						btnTitle={'입양'}
 						btnLayout={btn_w522}
+						btnStyle={'border'}
 						titleFontStyle={32}
 						onPress={() => {
-							Modal.popOneBtn('패치 예정입니다!', '확인', () => Modal.close());
-							// Modal.popTwoBtn(
-							// 	'입양 예정자가 애니로그 계정이 있나요?',
-							// 	'없음',
-							// 	'계정 찾기',
-							// 	() => {
-							// 		Modal.close();
-							// 		navigation.push('PetInfoSetting', {userobject_id: props.route.params.userobject_id});
-							// 	},
-							// 	() => {
-							// 		Modal.close();
-							// 		console.log('모달창 닫힘');
-							// 		navigation.push('SelectAccount', {userobject_id: props.route.params.userobject_id});
-							// 	},
-							// );
+							// Modal.popOneBtn('패치 예정입니다!', '확인', () => Modal.close());
+							Modal.popTwoBtn(
+								'입양 예정자가 애니로그 계정이 있나요?',
+								'없어요',
+								'계정 찾기',
+								() => {
+									Modal.close();
+								},
+								() => {
+									Modal.close();
+									// console.log('모달창 닫힘');
+									navigation.push('SelectAccount', {userobject_id: props.route.params.userobject_id});
+								},
+							);
 						}}
 					/>
 				</View>
@@ -104,15 +111,15 @@ export default AnimalAdoption = props => {
 						btnLayout={btn_w522}
 						titleFontStyle={32}
 						onPress={() => {
-							Modal.popOneBtn('패치 예정입니다!', '확인', () => Modal.close());
+							// Modal.popOneBtn('패치 예정입니다!', '확인', () => Modal.close());
 
-							// Modal.popTwoBtn(
-							// 	'이 동물을 가족으로 맞이하시겠어요?',
-							// 	'취소',
-							// 	'예',
-							// 	() => Modal.close(),
-							// 	() => onCheerUp,
-							// );
+							Modal.popTwoBtn(
+								'이 동물을 가족으로 맞이하시겠어요?',
+								'취소',
+								'예',
+								() => Modal.close(),
+								() => onCheerUp(),
+							);
 						}}
 					/>
 				</View>

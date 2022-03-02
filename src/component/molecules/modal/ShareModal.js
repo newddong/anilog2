@@ -7,7 +7,7 @@ import Modal from 'Component/modal/Modal';
 import {Clip72, Email72, SocialKakao72} from 'Root/component/atom/icon';
 
 /**
- * 드롭다운 형식의 메뉴 모달
+ * 공유하기 메뉴 모달
  *
  * @param {Object} props - props object
  * @param {object} props.offset - 위치 정보
@@ -28,7 +28,7 @@ const ShareModal = props => {
 			useNativeDriver: false,
 		}).start();
 		Animated.timing(animatedOpacity, {
-			duration: 600,
+			duration: 500,
 			toValue: 1,
 			easing: Easing.linear,
 			useNativeDriver: false,
@@ -47,11 +47,10 @@ const ShareModal = props => {
 			toValue: 0,
 			easing: Easing.linear,
 			useNativeDriver: false,
-		}).start();
-		setTimeout(() => {
+		}).start(() => {
 			Modal.close();
-		}, 400);
-		props.onClose();
+			props.onClose();
+		});
 	};
 
 	const onPressKakao = () => {
@@ -63,12 +62,6 @@ const ShareModal = props => {
 	const onPressMsg = () => {
 		props.onPressMsg();
 	};
-
-	const onClose = () => {
-		Modal.close();
-	};
-
-	console.log('props.off', props.offset);
 
 	return (
 		<TouchableOpacity activeOpacity={1} onPress={closeAnimation} style={style.background}>
@@ -124,12 +117,12 @@ const style = StyleSheet.create({
 		width: Platform.OS == 'ios' ? Dimensions.get('window').width : '100%',
 		justifyContent: 'center',
 		alignItems: 'center',
+		// backgroundColor: 'yellow',
 	},
 	popUpWindow: {
 		width: 384 * DP,
 		height: 160 * DP,
 		backgroundColor: WHITE,
-		opacity: 0.1,
 		alignItems: 'center',
 		justifyContent: 'center',
 		paddingHorizontal: 40 * DP,
@@ -164,6 +157,7 @@ const style = StyleSheet.create({
 		width: 92 * DP,
 		height: 116 * DP,
 		marginRight: 30 * DP,
+		// backgroundColor: 'green',
 	},
 });
 

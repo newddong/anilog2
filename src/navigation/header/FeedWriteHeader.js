@@ -17,7 +17,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 		Modal.popNoBtn('게시물 등록이 완료되었습니다.');
 		setTimeout(() => {
 			Modal.close();
-			navigation.goBack();
+			// navigation.goBack();
 		}, 200);
 	};
 	const handleError = err => {
@@ -33,7 +33,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			});
 			return;
 		}
-		console.log('route.params:', route.params);
+		// console.log('route.params:', route.params);
 		Modal.popNoBtn('게시물을 등록중입니다.');
 		let param = {...route.params, hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1))};
 		switch (route.params?.feedType) {
@@ -75,13 +75,8 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 					const data = param;
 
 					data.report_witness_location =
-						(data.report_location.city || '') +
-						' ' +
-						(data.report_location.district || '') +
-						' ' +
-						(data.report_location.neighbor || '') +
-						' ' +
-						data.report_location.detailAddr;
+						(data.report_location.city || '') + ' ' + (data.report_location.district || '') + ' ' + (data.report_location.detail || '');
+
 					console.log('Before Write Report ', data);
 					if (
 						// data.addr &&
@@ -111,11 +106,13 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 	const avartarSelect = () => {
 		Modal.popAvatarSelectModal(petObject => {
 			console.log('petObject / onOk', petObject);
-			petObject&&navigation.setOptions({title: petObject.user_nickname});
-			petObject&&navigation.setParams({...route.params, feed_avatar_id: petObject._id});
+			petObject && navigation.setOptions({title: petObject.user_nickname});
+			petObject && navigation.setParams({...route.params, feed_avatar_id: petObject._id});
 		}, '이 계정 글쓰기');
 	};
-
+	const test =()=>{
+		console.log(route.params)
+	}
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
 			<TouchableOpacity onPress={navigation.goBack}>
@@ -135,6 +132,9 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 					<Text style={titleStyle}>{options.title}</Text>
 				</View>
 			)}
+			<TouchableWithoutFeedback onPress={test}>
+			<View style={{backgroundColor:'red',width:50,height:50}}></View>
+			</TouchableWithoutFeedback>
 			<Send60_Big onPress={onSend} />
 		</View>
 	);

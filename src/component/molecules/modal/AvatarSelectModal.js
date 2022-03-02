@@ -1,5 +1,16 @@
 import React from 'react';
-import {View, Text, TouchableWithoutFeedback, StyleSheet, Dimensions, Platform, ScrollView, FlatList, TouchableOpacity} from 'react-native';
+import {
+	View,
+	Text,
+	TouchableWithoutFeedback,
+	StyleSheet,
+	Dimensions,
+	Platform,
+	ScrollView,
+	FlatList,
+	TouchableOpacity,
+	ActivityIndicator,
+} from 'react-native';
 import AniButton from '../button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10, APRI10} from 'Root/config/color';
@@ -9,6 +20,7 @@ import {getUserInfoById} from 'Root/api/userapi';
 import userGlobalObj from 'Root/config/userGlobalObject';
 import {txt} from 'Root/config/textstyle';
 import PetLabel from '../label/PetLabel';
+import {item} from 'Root/component/templete/style_address';
 
 /**
  * 아바타 동물을 선택하는 모달창
@@ -23,25 +35,13 @@ const AvatarSelectModal = props => {
 	const [items, setItems] = React.useState([]);
 	const [selectedItem, setSelectedItem] = React.useState(1000);
 	const checkApi = React.useRef(false);
+	const [loading, setLoading] = React.useState(false);
 
 	const pressOk = () => {
 		props.onOk();
 		props.onSelectPet && props.onSelectPet(items[selectedItem]);
 		Modal.close();
 	};
-
-	React.useEffect(() => {
-		getUserInfoById(
-			{userobject_id: userGlobalObj.userInfo._id},
-			user => {
-				setItems(user.msg?.user_my_pets);
-			},
-			err => {
-				Modal.popOneBtn(err, '확인', () => Modal.close());
-			},
-		);
-		checkApi.current = true;
-	}, []);
 
 	const renderItem = (item, index) => {
 		const onClickLabel = () => {
@@ -52,37 +52,98 @@ const AvatarSelectModal = props => {
 			}
 		};
 		return (
-			<View style={[style.listItem, {backgroundColor: index == selectedItem ? APRI10 : WHITE}]}>
+			<View key={index} style={[style.listItem, {backgroundColor: index == selectedItem ? APRI10 : WHITE}]}>
 				<PetLabel data={item} onLabelClick={onClickLabel} />
 			</View>
 		);
 	};
+	const platform = Platform.OS;
 
-	return (
-		<TouchableOpacity onPress={() => Modal.close()} activeOpacity={1} style={style.background}>
-			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
-				{console.log('items.length:', items.length)}
-				{/* {checkApi.current ? ( */}
-				{items.length > 0 ? (
-					// <PetAccountList items={items} onLabelClick={selectPet} />
-					<FlatList data={items} renderItem={({item, index}) => renderItem(item, index)} />
-				) : (
-					<Text style={[{textAlign: 'center', marginBottom: 30 * DP}, txt.noto28b]}>{'등록된 반려동물이 없습니다.\n 반려동물을 등록해주세요'}</Text>
-				)}
-				{/* // ) : null} */}
-				{props.isBtnMode ? (
-					<>
-						<View style={style.buttonContainer}>
-							<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.okButtonnMsg} onPress={pressOk} />
+	React.useEffect(() => {
+		getUserInfoById(
+			{userobject_id: userGlobalObj.userInfo._id},
+			user => {
+				let avatarList = user.msg?.user_my_pets;
+				if (props.isBtnMode) {
+					avatarList.push(userGlobalObj.userInfo);
+				}
+				setItems(avatarList);
+				setLoading(true);
+			},
+			err => {
+				Modal.popOneBtn(err, '확인', () => Modal.close());
+				setLoading(true);
+			},
+		);
+		checkApi.current = true;
+	}, []);
+
+	const scrollViewRef = React.useRef();
+
+	React.useEffect(() => {
+		setTimeout(() => {
+			scrollViewRef.current?.flashScrollIndicators();
+		}, 500);
+		// scrollViewRef.current;
+	}, [scrollViewRef]);
+
+	if (!loading) {
+		return <ActivityIndicator />;
+	} else
+		return (
+			<TouchableOpacity onPress={() => Modal.close()} activeOpacity={1} style={style.background}>
+				<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
+					{/* {console.log('items.length:', items.length)} */}
+					{/* {checkApi.current ? ( */}
+					{items.length > 0 ? (
+						<View style={[style.avatarList, {}]}>
+							{/* <Text> {nativeEvent}</Text> */}
+							{platform === 'android' ? (
+								<FlatList data={items} renderItem={({item, index}) => renderItem(item, index)} persistentScrollbar={true}></FlatList>
+							) : (
+								<View style={{flexDirection: 'row'}}>
+									<FlatList
+										ref={scrollViewRef}
+										data={items}
+										renderItem={({item, index}) => renderItem(item, index)}
+										persistentScrollbar={true}
+										showsHorizontalScrollIndicator={false}
+										scrollToOverflowEnabled={false}></FlatList>
+									{items.length > 5 && !showIndicator ? (
+										<View
+											style={{
+												top: top,
+												right: 11.5 * DP,
+												height: 200 * DP,
+												// height: 500 * DP,
+												width: 6 * DP,
+												borderRadius: 40 * DP,
+												backgroundColor: 'gray',
+											}}
+										/>
+									) : (
+										<></>
+									)}
+								</View>
+							)}
 						</View>
-						{(checkApi.current = false)}
-					</>
-				) : (
-					<></>
-				)}
+					) : (
+						<Text style={[{textAlign: 'center', marginBottom: 30 * DP}, txt.noto28b]}>{'등록된 반려동물이 없습니다.\n 반려동물을 등록해주세요'}</Text>
+					)}
+					{/* // ) : null} */}
+					{props.isBtnMode ? (
+						<>
+							<View style={style.buttonContainer}>
+								<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.okButtonnMsg} onPress={pressOk} />
+							</View>
+							{(checkApi.current = false)}
+						</>
+					) : (
+						<></>
+					)}
+				</TouchableOpacity>
 			</TouchableOpacity>
-		</TouchableOpacity>
-	);
+		);
 };
 
 AvatarSelectModal.defaultProps = {
@@ -104,7 +165,7 @@ const style = StyleSheet.create({
 		position: 'absolute',
 	},
 	popUpWindow: {
-		width: 334 * DP,
+		width: 330 * DP,
 		backgroundColor: WHITE,
 		paddingTop: 60 * DP,
 		paddingBottom: 52 * DP,
@@ -118,6 +179,7 @@ const style = StyleSheet.create({
 	},
 	buttonContainer: {
 		flexDirection: 'row',
+		paddingTop: 10 * DP,
 		justifyContent: 'center',
 	},
 	shadow: {
@@ -130,11 +192,15 @@ const style = StyleSheet.create({
 		},
 		elevation: 2,
 	},
+	avatarList: {
+		maxHeight: 124 * 5 * DP,
+		// backgroundColor: 'red',
+	},
 	listItem: {
 		width: 294 * DP,
-		height: 114 * DP,
+		height: 124 * DP,
+		paddingVertical: 10 * DP,
 		borderRadius: 30 * DP,
-		marginBottom: 30 * DP,
 		paddingHorizontal: 20 * DP,
 		// alignItems: 'center',
 		justifyContent: 'center',

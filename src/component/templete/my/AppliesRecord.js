@@ -1,14 +1,13 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {ActivityIndicator, ScrollView, Text, TouchableOpacity, View} from 'react-native';
-import {getAppliesRecord} from 'Root/api/protectapi';
-import {dummy_AppliesRecord_protect} from 'Root/config/dummy_data_hjs';
-import {dummy_AppliesRecord_rescue} from 'Root/config/dummy_data_hjs';
+import {getUserAdoptProtectionList} from 'Root/api/protectapi';
 import {txt} from 'Root/config/textstyle';
 import {NextMark} from 'Atom/icon';
-import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import ShelterList from 'Organism/list/ShelterList';
 import {appliesRecord, login_style} from 'Templete/style_templete';
+import AnimalNeedHelp from 'Root/component/organism/listitem/AnimalNeedHelp';
+import {getUserVolunteerActivityList} from 'Root/api/volunteerapi';
 
 export default AppliesRecord = ({route}) => {
 	//첫번째 값만 신청내역에 보여주기 위함. AnimalNeedHelpList가 배열 데이터를 다루기 때문에 반드시 객체가 배열이어야 함.
@@ -17,36 +16,52 @@ export default AppliesRecord = ({route}) => {
 	const [protect_application_list, setProtect_application_list] = React.useState();
 	const [volunteer_list, setVolunteer_list] = React.useState();
 	const [loading, setLoading] = React.useState(true); // 화면 출력 여부 결정
-
 	//보호 요청 데이터 불러오기 (아직 API 미작업 )
 	React.useEffect(() => {
 		console.log('- getAppliesRecord data -');
 		//입양신청, 임시보호 신청, 봉사활동 신청 배열 형식으로 모두 가져오게 됨. 현재 리스트에서는 입양신청 1개, 임시보호 신청 1개, 봉사활동 신청 10개만 가져 올 예정
 		//API 구조 변경 후 재작업 진행 예정.
-		getAppliesRecord(
-			{},
+		// getAppliesRecord(
+		getUserAdoptProtectionList(
+			{
+				protect_act_object_id: route.params,
+				request_number: 5,
+				protect_act_type: 'adopt',
+			},
 			result => {
-				console.log('result / getAppliesRecord / ApplitesRecord  : ', JSON.stringify(result.msg.volunteer[0]));
-
+				// console.log('result / getAppliesRecord / ApplitesRecord  : ', JSON.stringify(result.msg[0]));
 				// 가장 최근 입양 신청한 내역 받고 필드 정리
-				if (result.msg.adopt.length > 0) {
-					console.log('dd');
-					let adopt = result.msg.adopt[0];
-					let adopt_animal_info = adopt.protect_act_request_article_id.protect_animal_id;
-					delete adopt_animal_info._id;
-					adopt = Object.assign(adopt, adopt_animal_info);
-					adopt.protect_request_photos_uri = adopt.protect_act_request_article_id.protect_request_photos_uri;
-					adopt.protect_request_date = adopt.protect_act_request_article_id.protect_request_date;
-					adopt.protect_request_status = adopt.protect_act_request_article_id.protect_request_status;
-					adopt.shelter_name = adopt.protect_act_request_article_id.protect_request_writer_id.shelter_name;
-					delete adopt.protect_act_request_article_id;
-					const adoptArr = [adopt];
-					setAdopt_application_list(adoptArr);
-				}
+				let adopt = result.msg[0];
+				let adopt_animal_info = adopt.protect_act_request_article_id.protect_animal_id;
+				delete adopt_animal_info._id;
+				adopt = Object.assign(adopt, adopt_animal_info);
+				adopt.protect_request_photos_uri = adopt.protect_act_request_article_id.protect_request_photos_uri;
+				adopt.protect_request_date = adopt.protect_act_request_article_id.protect_request_date;
+				adopt.protect_request_status = adopt.protect_act_request_article_id.protect_request_status;
+				adopt.shelter_name = adopt.protect_act_request_article_id.protect_request_writer_id.shelter_name;
+				delete adopt.protect_act_request_article_id;
+				const adoptArr = [adopt];
+				setAdopt_application_list(adoptArr);
 
+				setTimeout(() => {
+					setLoading(false);
+				}, 500);
+			},
+			err => {
+				console.log('err / getAppliesRecord / AppliesRecord', err);
+				setTimeout(() => {
+					setLoading(false);
+				}, 500);
+			},
+		);
+		getUserAdoptProtectionList(
+			{protect_act_object_id: route.params, request_number: 5, protect_act_type: 'protect'},
+			result => {
+				// console.log('result / getAppliesRecord / ApplitesRecord  : ', JSON.stringify(result.msg.volunteer[0]));
+				// console.log('result.msg', result.msg);
 				//가장 최근 임보활동 신청한 내역 받고 필드 정리
-				if (result.msg.protect.length > 0) {
-					let protect = result.msg.protect[0];
+				if (result.msg.length > 0) {
+					let protect = result.msg[0];
 					let protect_animal_info = protect.protect_act_request_article_id.protect_animal_id;
 					delete protect_animal_info._id;
 					protect = Object.assign(protect, protect_animal_info);
@@ -57,20 +72,6 @@ export default AppliesRecord = ({route}) => {
 					delete protect.protect_act_request_article_id;
 					const protectArr = [protect];
 					setProtect_application_list(protectArr);
-				}
-
-				if (result.msg.volunteer.length > 0) {
-					//봉사활동 신청 내역 받고 필드 정리
-					let volunteer = result.msg.volunteer;
-					volunteer.map((v, i) => {
-						v.shelter_address = v.volunteer_target_shelter.shelter_address;
-						v.shelter_name = v.volunteer_target_shelter.shelter_name;
-						v.user_type = v.volunteer_target_shelter.user_type;
-						v.user_profile_uri = v.volunteer_target_shelter.user_profile_uri;
-						v.shelter_type = v.volunteer_target_shelter.shelter_type;
-						delete v.volunteer_target_shelter;
-					});
-					setVolunteer_list(volunteer);
 				}
 
 				setTimeout(() => {
@@ -84,16 +85,38 @@ export default AppliesRecord = ({route}) => {
 				}, 500);
 			},
 		);
+		getUserVolunteerActivityList(
+			{},
+			result => {
+				// console.log('volunteer', result.msg);
+				// 	//봉사활동 신청 내역 받고 필드 정리
+				if (result.msg.length > 0) {
+					let volunteer = result.msg;
+					volunteer.map((v, i) => {
+						v.shelter_address = v.volunteer_target_shelter.shelter_address;
+						v.shelter_name = v.volunteer_target_shelter.shelter_name;
+						v.user_type = v.volunteer_target_shelter.user_type;
+						v.user_profile_uri = v.volunteer_target_shelter.user_profile_uri;
+						v.shelter_type = v.volunteer_target_shelter.shelter_type;
+						delete v.volunteer_target_shelter;
+					});
+					setVolunteer_list(volunteer);
+				}
+			},
+			err => {
+				console.log('봉사활동', err);
+			},
+		);
 	}, []);
 
 	//입양 신청 - 더보기 클릭
 	const showMoreAdoption = () => {
-		navigation.push('ApplyAdoptionList', dummy_AppliesRecord_rescue);
+		navigation.push('ApplyAdoptionList');
 	};
 
 	//임시보호 신청 - 더보기 클릭
 	const showMoreProtection = () => {
-		navigation.push('ApplyTempProtectList', dummy_AppliesRecord_protect);
+		navigation.push('ApplyTempProtectList');
 	};
 
 	//봉사활동 신청 - 더보기 클릭
@@ -107,20 +130,22 @@ export default AppliesRecord = ({route}) => {
 
 	//봉사활동 신청 하단 라벨 클릭
 	const onClickShelterLabel = shelterInfo => {
-		console.log('shelter', shelterInfo);
-		navigation.push('UserVolunteerForm', shelterInfo); //봉사 활동 신청 관련
+		console.log('shelterInfi', shelterInfo);
+		let volunteerData = shelterInfo;
+		volunteerData.route = route.name;
+		navigation.push('UserVolunteerForm', volunteerData); //봉사 활동 신청 관련
 	};
 
 	//입양 신청 라벨 클릭
 	const onClickAdoptApplication = (status, id, data) => {
 		console.log('data ', data);
-		navigation.push('ApplyAdoptionDetails', data);
+		navigation.push('ApplyAdoptionDetails', adopt_application_list[0]);
 	};
 
 	//임시보호 신청 라벨 클릭
 	const onClickProtectApplication = (status, id, data) => {
 		console.log('data', data);
-		navigation.push('ApplyTempProtectDetails', data);
+		navigation.push('ApplyTempProtectDetails', protect_application_list[0]);
 	};
 
 	if (loading) {
@@ -146,9 +171,10 @@ export default AppliesRecord = ({route}) => {
 							)}
 						</View>
 						{adopt_application_list != undefined && adopt_application_list.length > 0 ? (
-							<AnimalNeedHelpList data={adopt_application_list} onClickLabel={onClickAdoptApplication} onFavoriteTag={onOff_FavoriteTag} />
+							// <AnimalNeedHelpList data={adopt_application_list} onClickLabel={onClickAdoptApplication} onFavoriteTag={onOff_FavoriteTag} />
+							<AnimalNeedHelp data={adopt_application_list[0]} onClickLabel={onClickAdoptApplication} />
 						) : (
-							<Text style={{padding: 15}}>검색 결과가 없습니다.</Text>
+							<Text style={[txt.roboto32b, appliesRecord.whenEmpty]}>검색 결과가 없습니다.</Text>
 						)}
 					</View>
 					<View style={[appliesRecord.record]}>
@@ -164,9 +190,10 @@ export default AppliesRecord = ({route}) => {
 							)}
 						</View>
 						{protect_application_list != undefined && protect_application_list.length > 0 ? (
-							<AnimalNeedHelpList data={protect_application_list} onClickLabel={onClickProtectApplication} onFavoriteTag={onOff_FavoriteTag} />
+							// <AnimalNeedHelpList data={protect_application_list} onClickLabel={onClickProtectApplication} onFavoriteTag={onOff_FavoriteTag} />
+							<AnimalNeedHelp data={protect_application_list[0]} onClickLabel={onClickProtectApplication} />
 						) : (
-							<Text style={{padding: 15}}>검색 결과가 없습니다.</Text>
+							<Text style={[txt.roboto32b, appliesRecord.whenEmpty]}>검색 결과가 없습니다.</Text>
 						)}
 					</View>
 					<View style={[appliesRecord.shelterList_container]}>
@@ -182,7 +209,7 @@ export default AppliesRecord = ({route}) => {
 						{volunteer_list != undefined && volunteer_list.length > 0 ? (
 							<ShelterList items={volunteer_list} onShelterLabelClick={onClickShelterLabel} />
 						) : (
-							<Text style={{padding: 15}}>검색 결과가 없습니다.</Text>
+							<Text style={[txt.roboto32b, appliesRecord.whenEmpty]}>검색 결과가 없습니다.</Text>
 						)}
 					</View>
 				</ScrollView>

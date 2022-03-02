@@ -6,12 +6,11 @@ import {useNavigation} from '@react-navigation/core';
 import ProfileImageLarge160 from 'Molecules/image/ProfileImageLarge160';
 import {txt} from 'Root/config/textstyle';
 import SocialInfoB from 'Organism/info/SocialInfoB';
-import {btn_w280, btn_w280_h68} from 'Atom/btn/btn_style';
-import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FloatAddArticle_128x68, FloatAddPet_128x68, FloatAddArticle_126x92, FloatAddPet_126x92} from 'Atom/icon';
+import {btn_w280, btn_w280x68} from 'Atom/btn/btn_style';
+import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FloatAddArticle_128x68, FloatAddPet_128x68} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
 import ProfileMenu from 'Organism/menu/ProfileMenu';
 import {Setting46, FavoriteTag48_Filled, Heart48_Filled, Paw46} from 'Atom/icon';
-import {_dummy_VolunteerActivityApplicant, _dummy_userObject_user} from 'Root/config/dummy_data_hjs';
 import {
 	MANAGEMENT_OF_PROTECTED_ANIMAL,
 	PROTECTED_ANIMAL,
@@ -50,7 +49,6 @@ export default ShelterMenu = ({route}) => {
 	const [introOriginLine, setIntroOriginLine] = React.useState(0);
 	React.useEffect(() => {
 		const getInfo = () => {
-				// Modal.popNoBtn('Loading');
 			getUserProfile(
 				{
 					userobject_id: userGlobalObject.userInfo._id,
@@ -117,6 +115,7 @@ export default ShelterMenu = ({route}) => {
 			// 신청서 조회
 			case INQUERY_APPLICATION:
 				navigation.navigate('ProtectApplyList', {nav: 'ProtectApplyList', token: data._id, shelter_name: data.shelter_name});
+
 				break;
 			//나의 보호소 출신 동물
 			case FROM_MY_SHELTER:
@@ -259,8 +258,8 @@ export default ShelterMenu = ({route}) => {
 					</View>
 
 					<View style={[shelterMenu.btnView, {}]}>
-						<View style={[btn_style.btn_w280]}>
-							<AniButton btnTitle={MODIFY_SHELTER_DATA} btnStyle={'border'} btnLayout={btn_w280_h68} onPress={moveToShelterInfoSetting} />
+						<View style={[btn_style.btn_w280, {alignItems: 'flex-start'}]}>
+							<AniButton btnTitle={MODIFY_SHELTER_DATA} btnStyle={'border'} btnLayout={btn_w280x68} onPress={moveToShelterInfoSetting} />
 						</View>
 
 						<View style={[shelterMenu.btnView_floadAddPet_128x68]}>
@@ -270,6 +269,10 @@ export default ShelterMenu = ({route}) => {
 						<View style={[shelterMenu.btnView_floadArticle_128x68]}>
 							<FloatAddArticle_128x68 onPress={moveToAidRequestAnimalList} />
 						</View>
+					</View>
+					<View style={[shelterMenu.textView_height36]}>
+						<Text style={[shelterMenu.text36, {marginRight: 37 * DP}]}>보호 동물 추가</Text>
+						<Text style={[shelterMenu.text36, {marginRight: 7 * DP}]}>보호글 쓰기</Text>
 					</View>
 				</View>
 				{/* 하단 메뉴 */}
@@ -321,18 +324,4 @@ export default ShelterMenu = ({route}) => {
 			</ScrollView>
 		</View>
 	);
-};
-
-const t = {
-	_id: '61b9eba4185a4f69d5981ad6',
-	feedList: [[Object], [Object], [Object], [Object], [Object], [Object], [Object]],
-	user_denied: false,
-	user_follow_count: 0,
-	user_follower_count: 0,
-	user_introduction: '',
-	user_my_pets: [],
-	user_nickname: '상우 보호소',
-	user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1639574436056_DWG_KIA_logo.png',
-	user_type: 'shelter',
-	user_upload_count: 0,
 };

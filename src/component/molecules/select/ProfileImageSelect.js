@@ -1,9 +1,11 @@
 import React from 'react';
-import {View, Image, TouchableOpacity} from 'react-native';
+import {View, Image, TouchableOpacity, StyleSheet, Platform} from 'react-native';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import {AddItem92} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import {ProfileDefaultImg1, ProfileDefaultImg2, ProfileDefaultImg3} from 'Atom/icon';
+import DP from 'Root/config/dp';
+import {BLACK, GRAY10, GRAY20, GRAY30, GRAY40, WHITE} from 'Root/config/color';
 
 /**
  * 프로필 이미지 컨테이너
@@ -12,7 +14,7 @@ import {ProfileDefaultImg1, ProfileDefaultImg2, ProfileDefaultImg3} from 'Atom/i
  * @param {()=>void} props.onClick - 이미지 눌렸을때 동작하는 콜백,
  */
 const ProfileImageSelect = props => {
-	console.log('props', props);
+	// console.log('props', props);
 	const onClick = e => {
 		props.onClick();
 	};
@@ -33,8 +35,8 @@ const ProfileImageSelect = props => {
 		<TouchableOpacity onPress={onClick} style={styles.img_round_294}>
 			{/* ProfileImage uri가 null일 경우와 아닌 경우의 분기 */}
 			{props.selectedImageUri.length ? <Image style={styles.img_round_294} source={{uri: props.selectedImageUri}} /> : randomdefault()}
-			<View style={{position: 'absolute', right: 0, bottom: 0, backgroundColor: '#ffffff', borderRadius: 50, opacity: 0.8, shadowOpacity: 0.2}}>
-				<View style={{backgroundColor: 'black', borderRadius: 50, opacity: 0.4, shadowOpacity: 0.2}}>
+			<View style={[style.shadowBtn]}>
+				<View style={[Platform.OS == 'ios' ? style.shadow : style.shadow_and]}>
 					<AddItem92 />
 				</View>
 			</View>
@@ -46,4 +48,28 @@ ProfileImageSelect.defaultProps = {
 	selectedImageUri: '',
 	onClick: e => console.log(e),
 };
+
+const style = StyleSheet.create({
+	shadow: {
+		backgroundColor: GRAY10,
+		borderRadius: 50 * DP,
+		opacity: 0.8,
+		shadowOpacity: 0.4,
+		elevation: 5,
+	},
+	shadow_and: {
+		backgroundColor: WHITE,
+		borderRadius: 50 * DP,
+		opacity: 0.8,
+		elevation: 5,
+	},
+	shadowBtn: {
+		position: 'absolute',
+		right: 0,
+		bottom: 0,
+		backgroundColor: Platform.OS == 'android' ? BLACK : WHITE,
+		opacity: 1,
+		borderRadius: 50 * DP,
+	},
+});
 export default ProfileImageSelect;

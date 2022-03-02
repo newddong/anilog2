@@ -5,24 +5,24 @@ export const tab = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-evenly',
 		backgroundColor: '#FFF',
-		height: 140 * DP,
+		height: 100 * DP,
 	},
 	hitboxLayout: {
 		width: 150 * DP,
-		height: 140 * DP,
+		height: 100 * DP,
 		alignItems: 'center',
 	},
 	tab_feed: {
-		paddingTop: 24 * DP,
+		paddingTop: 14 * DP,
 		marginLeft: 30 * DP,
 	},
 	tab_animal_saving: {
-		paddingTop: 26 * DP,
+		paddingTop: 16 * DP,
 	},
 	tab_community: {
-		paddingTop: 24 * DP,
+		paddingTop: 14 * DP,
 	},
 	tab_my: {
-		paddingTop: 24 * DP,
+		paddingTop: 14 * DP,
 	},
 });

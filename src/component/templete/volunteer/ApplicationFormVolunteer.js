@@ -8,7 +8,6 @@ import AniButton from 'Molecules/button/AniButton';
 import ShelterInfo from 'Organism/info/ShelterInfo';
 import AccountList from 'Organism/list/AccountList';
 import {login_style, applicationFormVolunteer, btn_style} from 'Templete/style_templete';
-import {_dummy_ApplicationFormVolunteer_shelter} from 'Root/config/dummy_data_hjs';
 import moment from 'moment';
 import {getUserInfoById} from 'Root/api/userapi';
 import {setVolunteerActivityAcceptByMember, setVolunteerActivityStatus} from 'Root/api/volunteerapi';

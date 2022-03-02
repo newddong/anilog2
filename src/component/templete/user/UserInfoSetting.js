@@ -33,7 +33,7 @@ export default UserInfoSetting = ({route}) => {
 				setData(userObject.msg);
 				navigation.setOptions({title: userObject.msg.user_nickname});
 				setLoading(false);
-				console.log('result / getUserProfile / UserInfoSetting', userObject.msg.user_introduction);
+				// console.log('result / getUserProfile / UserInfoSetting', userObject.msg.user_introduction);
 			},
 			err => {
 				console.log('er', err);

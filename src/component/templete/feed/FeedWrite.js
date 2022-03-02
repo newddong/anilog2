@@ -46,12 +46,12 @@ export default FeedWrite = props => {
 	const scrollref = React.useRef();
 	const lastTouchY = React.useRef(0);
 	const container = React.useRef();
-
+	const test = ()=>{console.log('네비게이션 스테이트', props.route, props.navigation.getState())}
 	React.useEffect(() => {
 		props.navigation.setParams({
 			...props.route.params,
 			media_uri: selectedImg,
-			feed_medias: selectedImg.map(v => ({is_video: false, duration: 0, tags: [{position_x: 0, position_y: 0}]})),
+			feed_medias: selectedImg.map(v => ({uri:v,is_video: false, duration: 0, tags: []})),
 		});
 	}, [selectedImg]); //네비게이션 파라메터에 이미지 리스트를 넣음(헤더에서 처리하도록)
 
@@ -302,7 +302,8 @@ export default FeedWrite = props => {
 				ref={scrollref}></FlatList>
 
 			{/* </ScrollView> */}
-
+			<TouchableWithoutFeedback onPress={test}>
+			<View style={{backgroundColor:'red',width:50,height:50}}></View></TouchableWithoutFeedback>
 			{showUrgentBtns && !isSearchTag ? (
 				<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
 					{showActionButton ? (

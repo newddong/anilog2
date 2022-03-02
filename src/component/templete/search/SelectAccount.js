@@ -6,33 +6,30 @@ import {getUserListByNickname} from 'Root/api/userapi';
 import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
+import dp from 'Root/config/dp';
 
 export default SelectAccount = ({route, navigation}) => {
 	const [data, setData] = React.useState([]);
 
 	React.useEffect(() => {
 		console.log('searchInput / SelectAccount', route.params.searchInput);
-		getUserListByNickname(
-			{
-				user_nickname: route.params.searchInput,
-				request_number: '',
-				userobject_id: '',
-				user_type: 'user',
-			},
-			result => {
-				console.log('result / getUserListByUserNickname / SelectAccount  ', result.msg);
-				let userList = []; //입양이 가능한 일반 유저 계정 컨테이너
-				result.msg.map((v, i) => {
-					if (v.user_type == 'user' && v._id != userGlobalObject.userInfo._id) {
-						userList.push(v);
-					}
-				});
-				setData(userList);
-			},
-			err => {
-				console.log('err / getUserListByUserNickname / SelectAccount  ', err);
-			},
-		);
+		if (route.params?.searchInput != '') {
+			getUserListByNickname(
+				{
+					user_nickname: route.params.searchInput,
+					request_number: '',
+					userobject_id: '',
+					user_type: 'user',
+				},
+				result => {
+					// console.log('result / getUserListByUserNickname / SelectAccount  ', result.msg);
+					setData(result.msg);
+				},
+				err => {
+					console.log('err / getUserListByUserNickname / SelectAccount  ', err);
+				},
+			);
+		}
 	}, [route.params?.searchInput]);
 
 	const onSelect = (item, index) => {
@@ -56,7 +53,7 @@ export default SelectAccount = ({route, navigation}) => {
 				</View>
 			) : (
 				<View>
-					<Text style={[txt.noto28]}>검색 결과가 없습니다.</Text>
+					<Text style={[txt.roboto32b, {paddingVertical: 30 * dp}]}>검색 결과가 없습니다.</Text>
 				</View>
 			)}
 		</View>

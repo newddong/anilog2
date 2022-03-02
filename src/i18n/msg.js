@@ -474,3 +474,33 @@ export const MY_POST_ALRAM = '내 게시글 알림';
 export const MY_POST_COMMENT_ALRAM = '내 게시글에 달린 댓글 알림';
 export const TAG_OR_FOLLOW_ALRAM = '나를 태그하거나 팔로우시 알림';
 export const MY_APPLY_STATUS_CHANGE_ALRAM = '내 신청서 상태 변경시 알림';
+
+export const INITIAL_NUMBER = ['010', '02', '031', '033', '043', '041', '054', '055', '063', '061', '064'];
+
+export const applyComanionCheckList = [
+	{
+		text: '입양 혹은 임시보호를 하려는 당사자는 성인입니다',
+		detail: false,
+		state: false,
+	},
+	{
+		text: '주거지 근처에 접종을 위해 주기적으로 갈 수 있는 동물병원이 있습니다',
+		detail: false,
+		state: false,
+	},
+	{
+		text: '현재 함께 사는 동거인들에게 입양 혹은 임시보호의 동의를 받았거나 동거인이 없습니다.',
+		detail: false,
+		state: false,
+	},
+	{
+		text: '입양 혹은 임시보호를 하려는 동물에 대한 배변 훈련 지식이 있습니다.',
+		detail: false,
+		state: false,
+	},
+	{
+		text: '입양 혹은 임시보호를 하려는 동물 청결(손톱 손질, 목욕, 항문낭, 귀청결 등)에 대한 지식이 있습니다.',
+		detail: false,
+		state: false,
+	},
+];

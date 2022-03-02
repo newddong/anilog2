@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, FlatList, RefreshControl} from 'react-native';
+import {StyleSheet, View, FlatList, RefreshControl, Platform} from 'react-native';
 import {WHITE} from 'Root/config/color';
 import {Write94} from 'Atom/icon';
 import Feed from 'Organism/feed/Feed';
@@ -10,9 +10,10 @@ import {getFeedListByUserId} from 'Root/api/feedapi';
 import {getFeedsByHash} from 'Root/api/hashapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {login_style, buttonstyle} from 'Templete/style_templete';
+import { getStringLength, getLinesOfString } from 'Root/util/stringutil';
 
 export default FeedList = ({route, navigation}) => {
-	const ITEM_HEIGHT = 1222 * DP;
+	// const ITEM_HEIGHT = 1122 * DP;
 	const [feedList, setFeedList] = React.useState([]);
 	const [refreshing, setRefreshing] = React.useState(false);
 	const [index, setIndex] = React.useState(0);
@@ -42,7 +43,24 @@ export default FeedList = ({route, navigation}) => {
 						},
 						({msg}) => {
 							setIndex(msg.findIndex(v => v._id == route.params?.selected._id));
-							setFeedList(msg);
+							setFeedList(
+								msg
+									.map((v, i, a) => {
+										let lines = getLinesOfString(v.feed_content,Platform.OS=='android'?48:50);
+										return {...v, height: (1060 +(lines > 3 ? 2*54+48 : lines*54)) * DP};
+									})
+									.map((v, i, a) => {
+
+										let offset = a.slice(0,i).reduce((prev,current)=>{
+											return current.height + prev;
+										},0)
+										return {
+											...v,
+											offset: offset
+											}
+										}
+									)
+							);
 						},
 						errormsg => {
 							Modal.popOneBtn(errormsg, '확인', () => Modal.close());
@@ -71,7 +89,25 @@ export default FeedList = ({route, navigation}) => {
 						{},
 						({msg}) => {
 							// console.log('msg', msg);
-							setFeedList(msg);
+							// setFeedList(msg);
+							setFeedList(
+								msg
+									.map((v, i, a) => {
+										let lines = getLinesOfString(v.feed_content,Platform.OS=='android'?48:50);
+										return {...v, height: (1060 +(lines > 3 ? 2*54+48 : lines*54)) * DP};
+									})
+									.map((v, i, a) => {
+
+										let offset = a.slice(0,i).reduce((prev,current)=>{
+											return current.height + prev;
+										},0)
+										return {
+											...v,
+											offset: offset
+											}
+										}
+									)
+							);
 						},
 						errormsg => {
 							Modal.popOneBtn(errormsg, '확인', () => Modal.close());
@@ -104,9 +140,9 @@ export default FeedList = ({route, navigation}) => {
 	const onRefresh = () => {
 		setRefreshing(true);
 
-		wait(2000).then(() => setRefreshing(false));
+		wait(1000).then(() => setRefreshing(false));
 	};
-
+	
 	return (
 		<View style={(login_style.wrp_main, {flex: 1, backgroundColor: WHITE})}>
 			<FlatList
@@ -114,7 +150,10 @@ export default FeedList = ({route, navigation}) => {
 				renderItem={({item}) => renderItem(item)}
 				keyExtractor={(item, index) => index}
 				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-				getItemLayout={(data, index) => ({length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index})}
+				getItemLayout={(data, index) => {
+					if(!data[index])return {length:0, offset:0, index: index};
+					return {length: data[index].height, offset: data[index].offset, index: index};
+				}}
 				initialScrollIndex={index}
 			/>
 			{userGlobalObject.userInfo && (
@@ -125,3 +164,4 @@ export default FeedList = ({route, navigation}) => {
 		</View>
 	);
 };
+``

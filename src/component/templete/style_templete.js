@@ -3568,6 +3568,7 @@ export const applyDetails = StyleSheet.create({
 		marginBottom: 30 * DP,
 		alignSelf: 'center',
 		flexDirection: 'row',
+		justifyContent: 'space-between',
 	},
 });
 

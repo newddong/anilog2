@@ -211,7 +211,7 @@ export default LoginTemplete = props => {
 					</TouchableOpacity>
 					<TouchableOpacity
 						onPress={() => {
-							setUserSetting({...userSetting, id: '0333324513', password: 'tkddn123'});
+							setUserSetting({...userSetting, id: '01096450002', password: 'tkddn123'});
 						}}>
 						<Text style={[txt.noto24, {color: GRAY20}]}> 보호소 2</Text>
 					</TouchableOpacity>
@@ -226,8 +226,6 @@ export default LoginTemplete = props => {
 					<TouchableOpacity
 						onPress={() => {
 							setUserSetting({...userSetting, id: '01096450420', password: 'tkddn123'});
-
-							// props.navigation.push('GeoLocation');
 						}}>
 						<Text style={[txt.noto24, {color: GRAY20}]}> 계정 2 </Text>
 					</TouchableOpacity>
@@ -236,7 +234,6 @@ export default LoginTemplete = props => {
 					<TouchableOpacity
 						onPress={() => {
 							setUserSetting({...userSetting, id: '01096450421', password: 'tkddn123'});
-
 							// props.navigation.push('GeoLocation');
 						}}>
 						<Text style={[txt.noto24, {color: GRAY20}]}> 계정 3 </Text>

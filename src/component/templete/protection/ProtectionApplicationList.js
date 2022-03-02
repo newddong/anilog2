@@ -45,10 +45,12 @@ export default ProtectionApplicationList = ({route, navigation}) => {
 		);
 	};
 
+	//입양 신청 건 클릭
 	const onClickAdoptionItem = i => {
 		navigation.push('ProtectApplyForm', {data: adoptionList[i], route: route.name});
 	};
 
+	//임시 보호 신청 건 클릭
 	const onClickProtectItem = i => {
 		navigation.push('ProtectApplyForm', {data: protectList[i], route: route.name});
 	};
@@ -75,6 +77,7 @@ export default ProtectionApplicationList = ({route, navigation}) => {
 	} else {
 		return (
 			<View style={[style.container]}>
+				{/* 입양신청 */}
 				<View style={[style.listContainer]}>
 					<View style={[{flexDirection: 'row', justifyContent: 'flex-start'}]}>
 						<Text style={[txt.noto26, style.listTitle]}>입양 신청 </Text>
@@ -88,6 +91,7 @@ export default ProtectionApplicationList = ({route, navigation}) => {
 							  })}
 					</View>
 				</View>
+				{/* 임시보호신청 */}
 				<View style={[style.listContainer]}>
 					<View style={[{flexDirection: 'row', justifyContent: 'flex-start'}]}>
 						<Text style={[txt.noto26, style.listTitle]}>임시 보호 신청 </Text>
@@ -105,7 +109,6 @@ export default ProtectionApplicationList = ({route, navigation}) => {
 		);
 	}
 };
-// 61c1cc107be07611b00945f9
 
 const style = StyleSheet.create({
 	container: {
@@ -133,215 +136,3 @@ const style = StyleSheet.create({
 		// backgroundColor: 'pink',
 	},
 });
-
-const q = {
-	adopt: [
-		{
-			protect_act_address: {
-				brief: '경기 남양주시 덕소로 33-45',
-				detail: '331',
-			},
-			protect_act_checklist: {
-				is_adult: false,
-				is_near_veterinary: false,
-				is_agreed_housemate: false,
-				is_experience_defecate: false,
-				is_knowledge_sanitation: false,
-			},
-			_id: '621c54d71e2fe3271dfc0aa7',
-			protect_act_type: 'adopt',
-			protect_act_phone_number: '0100334412',
-			protect_act_companion_history: [],
-			protect_act_motivation: null,
-			protect_act_applicant_id: {
-				user_agreement: {
-					is_over_fourteen: true,
-				},
-			},
-			protect_act_request_article_id: '620bb4bde9c46a5c3f40bddb',
-			protect_act_status: 'wait',
-			protect_act_request_shelter_id: '6203aff5c0f179ccd5bb8054',
-			protect_act_protect_animal_id: '620bb39fe9c46a5c3f40bdd8',
-			__v: 0,
-		},
-		{
-			protect_act_address: {
-				brief: '경기 성남시 수정구 분당내곡로 301',
-				detail: '오스',
-			},
-			protect_act_checklist: {
-				is_adult: false,
-				is_near_veterinary: false,
-				is_agreed_housemate: false,
-				is_experience_defecate: true,
-				is_knowledge_sanitation: false,
-			},
-			_id: '621c41091e2fe3271dfc0841',
-			protect_act_type: 'adopt',
-			protect_act_phone_number: '01096450422',
-			protect_act_companion_history: [],
-			protect_act_motivation: null,
-			protect_act_applicant_id: {
-				user_agreement: {
-					is_over_fourteen: true,
-					is_service: true,
-					is_personal_info: true,
-					is_location_service_info: true,
-					is_donation_info: true,
-					is_marketting_info: true,
-				},
-				user_address: {
-					city: '서울특별시',
-					district: '마포구',
-					neighbor: '신수동',
-				},
-				_id: '61d2de63c0f179ccd5ba5887',
-				type: 'UserObject',
-				user_type: 'user',
-				user_name: '권상우',
-				user_nickname: '권상우입',
-				user_phone_number: '01096450422',
-				user_mobile_company: 'SK텔레콤',
-				user_is_verified_phone_number: true,
-				user_is_verified_email: false,
-				user_password: 'tkddn123',
-				user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1641209443215_0CF8CF7C-DA9E-4F9D-9F6D-2C19C7144A45.jpg',
-				user_introduction: '아이에\n그라긋\nDd1',
-				user_upload_count: 22,
-				user_follow_count: 17,
-				user_follower_count: 4,
-				user_denied: false,
-				user_my_pets: ['61d2de8ac0f179ccd5ba58a6', '61d2ff57c0f179ccd5ba6e72', '61e0f9c0c0f179ccd5bb06c3', '6200fa6fc0f179ccd5bb69be'],
-				pet_family: [],
-				user_interests: [],
-				user_register_date: '2022-01-03T11:30:43.310Z',
-				__v: 4,
-			},
-			protect_act_request_article_id: '620bb622e9c46a5c3f40bde7',
-			protect_act_status: 'wait',
-			protect_act_request_shelter_id: '6203aff5c0f179ccd5bb8054',
-			protect_act_protect_animal_id: '620a4543c0f179ccd5bbb9e1',
-			__v: 0,
-		},
-	],
-	protect: [
-		{
-			protect_act_address: {
-				brief: '서울 중랑구 구리포천고속도로 3',
-				detail: '331',
-			},
-			protect_act_checklist: {
-				is_adult: false,
-				is_near_veterinary: false,
-				is_agreed_housemate: false,
-				is_experience_defecate: false,
-				is_knowledge_sanitation: false,
-			},
-			_id: '621c54f61e2fe3271dfc0ada',
-			protect_act_type: 'protect',
-			protect_act_phone_number: '01099664312',
-			protect_act_companion_history: [],
-			protect_act_motivation: null,
-			protect_act_applicant_id: {
-				user_agreement: {
-					is_over_fourteen: true,
-					is_service: true,
-					is_personal_info: true,
-					is_location_service_info: true,
-					is_donation_info: true,
-					is_marketting_info: true,
-				},
-				user_address: {
-					city: '서울특별시',
-					district: '마포구',
-					neighbor: '신수동',
-				},
-				_id: '61d2de63c0f179ccd5ba5887',
-				type: 'UserObject',
-				user_type: 'user',
-				user_name: '권상우',
-				user_nickname: '권상우입',
-				user_phone_number: '01096450422',
-				user_mobile_company: 'SK텔레콤',
-				user_is_verified_phone_number: true,
-				user_is_verified_email: false,
-				user_password: 'tkddn123',
-				user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1641209443215_0CF8CF7C-DA9E-4F9D-9F6D-2C19C7144A45.jpg',
-				user_introduction: '아이에\n그라긋\nDd1',
-				user_upload_count: 22,
-				user_follow_count: 17,
-				user_follower_count: 4,
-				user_denied: false,
-				user_my_pets: ['61d2de8ac0f179ccd5ba58a6', '61d2ff57c0f179ccd5ba6e72', '61e0f9c0c0f179ccd5bb06c3', '6200fa6fc0f179ccd5bb69be'],
-				pet_family: [],
-				user_interests: [],
-				user_register_date: '2022-01-03T11:30:43.310Z',
-				__v: 4,
-			},
-			protect_act_request_article_id: '620bb4bde9c46a5c3f40bddb',
-			protect_act_status: 'wait',
-			protect_act_request_shelter_id: '6203aff5c0f179ccd5bb8054',
-			protect_act_protect_animal_id: '620bb39fe9c46a5c3f40bdd8',
-			__v: 0,
-		},
-		{
-			protect_act_address: {
-				brief: '서울 서대문구 경기대로9길 92',
-				detail: '221\n221',
-			},
-			protect_act_checklist: {
-				is_adult: false,
-				is_near_veterinary: false,
-				is_agreed_housemate: false,
-				is_experience_defecate: false,
-				is_knowledge_sanitation: false,
-			},
-			_id: '621c4b2c1e2fe3271dfc09a2',
-			protect_act_type: 'protect',
-			protect_act_phone_number: '01099942122',
-			protect_act_companion_history: [],
-			protect_act_motivation: null,
-			protect_act_applicant_id: {
-				user_agreement: {
-					is_over_fourteen: true,
-					is_service: true,
-					is_personal_info: true,
-					is_location_service_info: true,
-					is_donation_info: true,
-					is_marketting_info: true,
-				},
-				user_address: {
-					city: '서울특별시',
-					district: '마포구',
-					neighbor: '신수동',
-				},
-				_id: '61d2de63c0f179ccd5ba5887',
-				type: 'UserObject',
-				user_type: 'user',
-				user_name: '권상우',
-				user_nickname: '권상우입',
-				user_phone_number: '01096450422',
-				user_mobile_company: 'SK텔레콤',
-				user_is_verified_phone_number: true,
-				user_is_verified_email: false,
-				user_password: 'tkddn123',
-				user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1641209443215_0CF8CF7C-DA9E-4F9D-9F6D-2C19C7144A45.jpg',
-				user_introduction: '아이에\n그라긋\nDd1',
-				user_upload_count: 22,
-				user_follow_count: 17,
-				user_follower_count: 4,
-				user_denied: false,
-				user_my_pets: ['61d2de8ac0f179ccd5ba58a6', '61d2ff57c0f179ccd5ba6e72', '61e0f9c0c0f179ccd5bb06c3', '6200fa6fc0f179ccd5bb69be'],
-				pet_family: [],
-				user_interests: [],
-				user_register_date: '2022-01-03T11:30:43.310Z',
-				__v: 4,
-			},
-			protect_act_request_article_id: '620bb622e9c46a5c3f40bde7',
-			protect_act_status: 'wait',
-			protect_act_request_shelter_id: '6203aff5c0f179ccd5bb8054',
-			protect_act_protect_animal_id: '620a4543c0f179ccd5bbb9e1',
-			__v: 0,
-		},
-	],
-};

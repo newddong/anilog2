@@ -46,7 +46,7 @@ const InputWithEmail = props => {
 	}, [email]);
 
 	const onChange = text => {
-		// console.log('text', text);
+		console.log('text', text);
 		setInput(text);
 		directInputMode ? setEmail(text + '@' + domainDirect) : setEmail(text + '@' + selectedItem);
 	};
@@ -126,7 +126,7 @@ const InputWithEmail = props => {
 					}}
 					placeholder={props.placeholder}
 					defaultValue={props.defaultValue ? props.defaultValue.split('@')[0] : ''}
-					onChange={onChange}
+					onChangeText={onChange}
 					maxlength={30}
 				/>
 				<View

@@ -108,10 +108,23 @@ export async function getProtectAnimalByProtectAnimalId(params, callback, errcal
  * 보호소에 등록된 동물의 상태를 변경
  * @param {object} params - token아이디
  * @param {string} params.shelter_protect_animal_object_id - 보호소의 등록된 동물의 오브젝트 아이디.
- * @param {string} params.protect_animal_status - 변경할 보호소의 동물 상태 ('rescue'|'protect'|'adopt'|'discuss'|'rainbowbridge')
+ * @param {string} params.protect_animal_status - 동물 상태.
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function setShelterProtectAnimalStatus(params, callback, errcallback) {
 	apiController('/shelter/setShelterProtectAnimalStatus', arguments);
+}
+
+setShelterProtectAnimalStatus;
+
+/**
+ * 보호소가 보호중인 동물에 관한 요청 게시글 리스트 조회
+ * @param {object} params - token아이디
+ * @param {string} params.shelter_protect_animal_object_id - 보호소의 등록된 동물의 오브젝트 아이디.
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getProtectRequestListByProtectAnimalId(params, callback, errcallback) {
+	apiController('/shelter/getProtectRequestListByProtectAnimalId', arguments);
 }

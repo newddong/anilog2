@@ -1,91 +1,66 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {Image, Text, TextInput, TouchableOpacity, View, Animated, Easing, ActivityIndicator, FlatList} from 'react-native';
-import {btn_w226, btn_w276} from 'Atom/btn/btn_style';
+import {btn_w276} from 'Atom/btn/btn_style';
 import AniButton from 'Root/component/molecules/button/AniButton';
-import {login_style, temp_style, accountPicker, animalProtectRequestDetail_style} from '../style_templete';
+import {login_style, temp_style, animalProtectRequestDetail_style} from '../style_templete';
 import RescueImage from 'Root/component/molecules/image/RescueImage';
 import {txt} from 'Root/config/textstyle';
 import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
 import ShelterSmallLabel from 'Root/component/molecules/label/ShelterSmallLabel';
-import {BackArrow32, Bracket48, Clip72, Email72, FavoriteTag48_Filled, Share48_Filled, SocialKakao72} from 'Atom/icon';
+import {FavoriteTag48_Filled, Share48_Filled} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import CommentList from 'Root/component/organism/comment/CommentList';
 import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
-import {dummy_CommentObject} from 'Root/config/dummyDate_json';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import moment from 'moment';
 import {getCommentListByProtectId} from 'Root/api/commentapi';
-import {createComment} from 'Root/api/commentapi';
-import ImagePicker from 'react-native-image-crop-picker';
 import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import {profileInfo_style} from 'Root/component/organism/style_organism';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ProtectAnimalInfoBox from 'Root/component/organism/info/ProtectAnimalInfoBox';
+import {count_to_K} from 'Root/util/stringutil';
+import {getProtectRequestListByShelterId} from 'Root/api/shelterapi';
 
 //AnimalProtectRequestDetail 호출 경로
 // - ProtectRequestList(보호활동탭) , AnimalFromShelter(게시글보기) , Profile(보호활동)
 
 export default AnimalProtectRequestDetail = ({route}) => {
 	// console.log('AnimalProtectRequestDetail', route.params.item.protect_request_status);
-
 	const navigation = useNavigation();
 	// 보호소 data는 ShelterSmallLabel에서 사용,  보호동물 Data는 RescueSummary, 임시보호 신청, 입양 신청 등에서 사용됨
 	const data = route.params ? route.params.item : ''; // ProtectRequestObject, ShelterProtectAnimalObject 정보가 담겨 있는 상태
-	const [writersAnotherRequests, setWritersAnotherRequests] = React.useState(route.params.list ? route.params.list : []); //해당 게시글 작성자의 따른 보호요청게시글 목록
+	const [writersAnotherRequests, setWritersAnotherRequests] = React.useState([]); //해당 게시글 작성자의 따른 보호요청게시글 목록
 	const [loading, setLoading] = React.useState(true); //로딩상태
-	const [editComment, setEditComment] = React.useState(true); // 댓글 쓰기 클릭
-	const [privateComment, setPrivateComment] = React.useState(false); // 팝업된 댓글창에서 비밀글 상태
-	const [photo, setPhoto] = React.useState(); // PhotoSelect에서 가져온 Photo uri
-	const [replyData, setReplyData] = React.useState();
-	const [showMore, setShowMore] = React.useState(false); //더보기 클릭 State
 	const [commentDataList, setCommentDataList] = React.useState(); //comment list 정보
-	const [writeCommentData, setWriteCommentData] = React.useState(); //입력한 댓글 정보
-	const [replyPressed, setReplyPressed] = React.useState(false);
-	const [token, setToken] = React.useState();
-	const [content, setContent] = React.useState('');
-	const [parentComment, setParentComment] = React.useState();
-	const [isShelter, setIsShelter] = React.useState(false);
 	const [isSharePressed, setIsSharePressed] = React.useState(false);
 	const shareRef = React.useRef();
 	const debug = false;
-
+	const isShelter = userGlobalObject.userInfo.user_type == 'shelter';
 	debug && console.log('AnimalProtectRequestDetail data:', data);
 
 	React.useEffect(() => {
-		//현재 보고 있는 보호요청게시글의 작성자(보호소)의 모든 보호요청게시글이 담겨 있는 writersAnotherRequests
-		//그러나 현재 보고 있는 보호요청게시글은 해당 리스트에 출력이 되어서는 안됨 => Filter처리
-		const filteredList = writersAnotherRequests.filter(e => e._id != data._id);
-		setWritersAnotherRequests(filteredList);
-
-		//보고있는 요청글의 작성자가 로그인한 계정과 일치한다면 입양 / 임보 버튼이 나와서는 안됨
-		const user_type = userGlobalObject.userInfo.user_type;
-		user_type == 'shelter' ? setIsShelter(true) : setIsShelter(false);
-	}, []);
-
-	//대댓글 달기 버튼 누르면 대댓글 작성
-	React.useEffect(() => {
-		if (replyPressed == true) {
-			createComment(
-				{...writeCommentData},
-
-				callback => {
-					debug && console.log('write commnet success', callback);
-					getCommnetList();
-				},
-				err => {
-					console.log('write comment error', err);
-				},
-			);
-			// setWriteCommentData();
-			delete writeCommentData.comment_photo_uri;
-			onDeleteImage();
-			setEditComment(!editComment);
-			setReplyPressed(false);
-		}
-	}, [replyPressed]);
+		getCommnetList(); //댓글리스트 가져오기
+		getProtectRequestListByShelterId(
+			{
+				shelter_userobject_id: data.protect_request_writer_id._id,
+				protect_request_object_id: '',
+				request_number: 5,
+				protect_request_status: 'rescue',
+			},
+			result => {
+				// console.log('result / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', result.msg);
+				//현재 보고 있는 보호요청게시글의 작성자(보호소)의 모든 보호요청게시글이 담겨 있는 writersAnotherRequests
+				//그러나 현재 보고 있는 보호요청게시글은 해당 리스트에 출력이 되어서는 안됨 => Filter처리
+				const filteredList = result.msg.filter(e => e._id != data._id);
+				setWritersAnotherRequests(filteredList);
+			},
+			err => {
+				console.log('err / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', err);
+			},
+		);
+	}, [data]);
 
 	//댓글 목록 불러오기
 	const getCommnetList = () => {
@@ -93,7 +68,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 			{
 				protect_request_object_id: data._id,
 				commentobject_id: '',
-				request_number: 1000,
+				request_number: 2,
 			},
 			commentdata => {
 				debug && console.log('AnimalProtectRequestDetail / getCommentListByProtectId:', commentdata.msg);
@@ -143,83 +118,18 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		);
 	};
 
-	//댓글 불러오기 (상단의 useEffect와 합칠지는 추후 결정)
-	React.useEffect(() => {
-		// console.log(' - AnimalProtectRequestDetail getCommnetList -');
-		getCommnetList();
-	}, []);
-
-	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
-	const onWrite = () => {
-		Modal.popOneBtn('아직 댓글 기능을 제공하지 않습니다.', '확인', () => Modal.close());
-		return;
-	};
-
-	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
-	const onLockBtnClick = () => {
-		setPrivateComment(!privateComment);
-		!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
-	};
-
-	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
-	const onAddPhoto = () => {
-		Modal.popOneBtn('아직 기능을 제공하지 않습니다.', '확인', () => Modal.close());
-		return;
-	};
-
-	// 답글 쓰기 -> Input value 변경 콜백함수
-	const onChangeReplyInput = text => {
-		setContent(text);
-	};
-
-	// 답글 쓰기 버튼 클릭 콜백함수
-	const onReplyBtnClick = parentCommentId => {
-		console.log(parentCommentId);
-		setParentComment(parentCommentId);
-		input.current.focus();
-		editComment || setEditComment(true);
-	};
-
-	// 자식 답글에서 답글쓰기 버튼 클릭 콜백함수
-	const onChildReplyBtnClick = comment => {
-		setEditComment(!editComment);
-	};
-
-	// 답글 이미지 등록 후 지우기 버튼 클릭 콜백함수
-	const onDeleteImage = () => {
-		setPhoto([]);
-	};
-
-	//더보기 클릭
-	const onPressShowMore = () => {
-		setShowMore(!showMore);
-	};
-
 	//보호요청 더보기의 Thumnail클릭
 	const onClick_ProtectedThumbLabel = (status, user_id, item) => {
 		if (route.name == 'ProtectRequestManage') {
 			// console.log('ProtectRequestManage');
 			const animal_sex_toString = item.protect_animal_id.protect_animal_sex == 'female' ? '여' : '남';
 			const title = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + animal_sex_toString;
-			navigation.push('ProtectRequestManage', {item: item, list: route.params.list, title: title});
+			navigation.push('ProtectRequestManage', {item: item, title: title});
 		} else {
 			console.log('AnimalProtectRequestDetail', item);
 			const animal_sex_toString = item.protect_animal_id.protect_animal_sex == 'female' ? '여' : '남';
 			const title = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + animal_sex_toString;
-			navigation.push('AnimalProtectRequestDetail', {item: item, list: route.params.list, title: title});
-		}
-	};
-
-	//좋아요 숫자 출력 함수
-	const count_to_K = cnt => {
-		if (cnt > 1000000) {
-			let count = (cnt / 1000000).toFixed(0) + 'm';
-			return count;
-		} else if (cnt > 1000) {
-			let count = (cnt / 1000).toFixed(0) + 'k';
-			return count;
-		} else {
-			return cnt;
+			navigation.push('AnimalProtectRequestDetail', {item: item, title: title});
 		}
 	};
 
@@ -236,10 +146,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	//보호소 라벨 공유 클릭
 	const onPressShare = e => {
 		setIsSharePressed(!isSharePressed);
-		// console.log('ref', shareRef.current.offset);
-		shareRef.current.measure((fx, fy, width, height, px, py) => {
-			console.log('px', px);
-			console.log('py', py);
+		shareRef.current.measure((px, py) => {
 			Modal.popShareModal(
 				{x: px, y: py},
 				() => alert('kakao'),
@@ -247,17 +154,6 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				() => alert('msg'),
 			);
 		});
-	};
-
-	//댓글 리스트 표출 개수 제어
-	const checkDataLength = () => {
-		let tempList = [];
-		if (!showMore) {
-			if (dummy_CommentObject.length > 2) {
-				tempList = [...dummy_CommentObject.slice(0, 2)];
-				return tempList;
-			} else return dummy_CommentObject;
-		} else return dummy_CommentObject;
 	};
 
 	//임시보호 버튼 클릭
@@ -353,12 +249,11 @@ export default AnimalProtectRequestDetail = ({route}) => {
 									<CommentList
 										items={commentDataList && commentDataList.length > 2 ? commentDataList.slice(0, 2) : commentDataList}
 										onPressReplyBtn={onPressReply}
-										onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
 									/>
 								</View>
 							</View>
 							<View style={[animalProtectRequestDetail_style.replyWriteBox]}>
-								{editComment && <ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} isProtectRequest={true} />}
+								<ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} isProtectRequest={true} />
 							</View>
 							{/* 보호요청 더 보기addMoreRequest */}
 							<View style={[temp_style.addMoreRequest_view]}>

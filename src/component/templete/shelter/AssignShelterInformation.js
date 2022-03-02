@@ -53,7 +53,6 @@ export default AssignShelterInformation = props => {
 
 	//이메일
 	const onChangeEmail = email => {
-		console.log('emial ------------', email);
 		// var regEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
 		// setEmailConfirmed(regEmail.test(email));
 		setData({...data, user_email: email});

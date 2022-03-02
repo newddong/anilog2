@@ -11,7 +11,7 @@ import {login_style, btn_style, protectApplyForm} from 'Templete/style_templete'
 import {setShelterProtectAnimalStatus} from 'Root/api/shelterapi';
 
 export default ProtectApplyForm = ({route, navigation}) => {
-	// console.log('ProtectApplyForm props', route.params);
+	console.log('ProtectApplyForm props', route.params);
 	const [data, setData] = React.useState(route.params);
 	const [loading, setLoading] = React.useState(true); // 화면 출력 여부 결정
 
@@ -104,14 +104,15 @@ export default ProtectApplyForm = ({route, navigation}) => {
 						console.log('err / SetProtectRequestStatus / ProtectApplyForm  :', err);
 					},
 				);
+				console.log('data.protect_act_status', data.protect_act_type);
 				setShelterProtectAnimalStatus(
 					{
 						shelter_protect_animal_object_id: data.protect_animal_id._id,
-						protect_animal_status: data.protect_act_status == 'adopt' ? 'adopt' : 'protect',
+						protect_animal_status: data.protect_act_type == 'adopt' ? 'adopt' : 'protect',
 					},
 					result => {
 						console.log('result / setShelterProtectAnimalStatus / ProtectApplyForm : ', result.msg);
-						navigation.goBack();
+						navigation.navigate('ShelterMenu');
 					},
 					err => {
 						console.log('err / setShelterProtectAnimalStatus / PRotectApplyForm : ', err);

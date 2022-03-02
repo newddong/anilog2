@@ -14,137 +14,141 @@ import Modal from 'Root/component/modal/Modal';
 export default AidRequestManage = ({route, navigation}) => {
 	// console.log('AidRequestManage');
 	const [loading, setLoading] = React.useState(true); // 화면 출력 여부 결정
-	const [data, setData] = React.useState([]);
 	const [hasPostAnimalList, setHasPostAnimalList] = React.useState([]);
 	const [noPostAnimalList, setNoPostAnimalList] = React.useState([]);
-	const [notFilteredData, setNotFilteredData] = React.useState([]);
-	const isShelterProtect = route.name == 'ShelterProtectAnimalList';
 
 	React.useEffect(() => {
-		if (isShelterProtect) {
-			// 보호중인 동물이므로 입양 및 임시보호가 완료된 보호동물들은 출력이 되어서는 안됨
-			//protect_animal_status !='adopt' or 'protect'일 경우 제외되어야 함
-			//차후 API 다듬는 과정에서 추가 필요
-			getShelterProtectAnimalList(
-				{
-					shelter_protect_animal_object_id: '',
-					request_number: '',
-				},
-				result => {
-					// console.log('result / getShelterProtectAnimalList / ShelterProtectAnimalList', result.msg[0]);
-					//현재 protect_animal_status 를 바꾸는 API가 없는 상태이므로 신청 및 확정이 완료된 동물이더라도
-					//모든 보호소의 보호동물들은 protect_animal_status == 'rescue' 상태로 온다
-					//우선 해당 보호동물에 대한 입양 및 보호 신청 _id를 토대로 getApplyDetailById 접속
-					// 만약 status가 단 하나라도 'accept' 인 것이 있다면 출력을 시키지 말아야함
-					// 모든 것은 API가 도착하면 개선이 가능
-					setData(result.msg);
-					const protectAnimalList = result.msg;
-					let notFiltered = [];
-					protectAnimalList.map((value, index) => {
-						// console.log('v.protectActApplicants', v.protect_act_applicants);
-						const protectActivities_id = value.protect_act_applicants;
-						protectActivities_id.map((protect_activity_value, protect_activity_index) => {
-							// console.log('v', index, protect_activity_value);
-							getApplyDetailById(
-								{
-									protect_act_object_id: protect_activity_value,
-								},
-								res => {
-									// console.log('result / getApplyDetailById / AidRequestManage  ', protect_activity_index, res.msg);
-									const protect_activity_object = res.msg;
-									protect_activity_object.protect_animal_id = index;
-
-									notFiltered.push(res.msg);
-									// const isAccepted = protect_activity_object.protect_act_status == 'accept';
-									// console.log('isAccepted', index, protect_activity_index, isAccepted);
-									// isAccepted ? shelterProtectAnimalList_notAccepted.push(protectAnimalList[index]) : null;
-									// setNotFilteredData(shelterProtectAnimalList_notAccepted);
-									// // setData(result.msg);
-								},
-								err => {
-									console.log('err / getApplyDetailById / AidRequestManage   ', err);
-								},
-							);
-						});
-					});
-					setTimeout(() => {
-						setNotFilteredData(notFiltered);
-					}, 500);
-				},
-				err => {
-					console.log('err / getShelterProtectAnimalList', err);
-					setTimeout(() => {
-						setLoading(false);
-					}, 500);
-					// setData(err);
-				},
-			);
-		}
+		getShelterProtectAnimalList(
+			{
+				shelter_protect_animal_object_id: '',
+				request_number: '',
+			},
+			result => {
+				// console.log('result / getShelterProtectAnimalList / ShelterProtectAnimalList', result.msg);
+				const protectAnimalList = result.msg.filter(e => e.protect_animal_status != 'adopt'); //입양 완료 건에 대해서만 제외()
+				let hasPostList = [];
+				let noPostList = [];
+				protectAnimalList.map((v, i) => {
+					// console.log('v', v.protect_animal_protect_request_id);
+					v.protect_animal_protect_request_id != null ? hasPostList.push(v) : noPostList.push(v);
+				});
+				setTimeout(() => {
+					setHasPostAnimalList(hasPostList);
+					setNoPostAnimalList(noPostList);
+					setLoading(false);
+				}, 500);
+			},
+			err => {
+				console.log('err / getShelterProtectAnimalList', err);
+				setTimeout(() => {
+					setLoading(false);
+				}, 500);
+				// setData(err);
+			},
+		);
 	}, []);
-
-	React.useEffect(() => {
-		// 보호소의 모든 보호동물이 담겨 있는 notFilteredData
-		// 해당 보호동물에 대한 [입양/지원] 신청서가 있을 경우 해당 신청서들을 탐색
-		// 탐색의 목적 => 신청서들 중 상태가 'accept'된 항목이 있을 경우 이미 보호소를 떠난 동물로 판단
-		if (notFilteredData != null) {
-			// const isNotProtect = notFilteredData.filter(e => e.protect_act_type == 'protect');
-			// console.log('isNotProtect', isNotProtect);
-			// console.log('waiting');
-
-			const filtered_by_status = notFilteredData.filter(e => e.protect_act_status == 'accept');
-			let index_of_acceptItem = [];
-			filtered_by_status.map((v, i) => {
-				index_of_acceptItem.push(v.protect_animal_id);
-			});
-			const index_dup_deleted = Array.from(new Set(index_of_acceptItem));
-			let protect_animal_list_copy = [...data];
-			index_dup_deleted.map((v, i) => {
-				protect_animal_list_copy.splice(v, 1);
-			});
-			// setData(protect_animal_list_copy);
-			let hasPostList = [];
-			let noPostList = [];
-			protect_animal_list_copy.map((v, i) => {
-				// console.log('v', v.protect_animal_protect_request_id);
-				if (v.protect_animal_protect_request_id != null) {
-					hasPostList.push(v);
-				} else {
-					noPostList.push(v);
-				}
-			});
-			setTimeout(() => {
-				setHasPostAnimalList(hasPostList);
-				setNoPostAnimalList(noPostList);
-				setLoading(false);
-			}, 500);
-		} else {
-			console.log('waiting');
-			let hasPostList = [];
-			let noPostList = [];
-			data.map((v, i) => {
-				console.log('v', v.protect_animal_protect_request_id);
-				if (v.protect_animal_protect_request_id != null) {
-					hasPostList.push(v);
-				} else {
-					noPostList.push(v);
-				}
-			});
-
-			setTimeout(() => {
-				setHasPostAnimalList(hasPostList);
-				setNoPostAnimalList(noPostList);
-				setLoading(false);
-			}, 1000);
-		}
-	}, [notFilteredData]);
 
 	const addProtectAnimal = () => {
 		navigation.push('AssignProtectAnimalImage');
-		// navigation.push('WriteAidRequest');
 	};
 
 	const showProtect = data => {
 		console.log('showProtect', data);
+		const e = {
+			__v: 2,
+			_id: '620bb39fe9c46a5c3f40bdd8',
+			protect_act_applicants: ['621c54d71e2fe3271dfc0aa7', '621c54f61e2fe3271dfc0ada'],
+			protect_animal_belonged_shelter_id: '6203aff5c0f179ccd5bb8054',
+			protect_animal_estimate_age: '2년 0개월',
+			protect_animal_neutralization: 'unknown',
+			protect_animal_photo_uri_list: [
+				'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1644934047116_9764658D-64E9-46CE-9D22-A461A76AB5D7.jpg',
+			],
+			protect_animal_protect_request_id: '620bb4bde9c46a5c3f40bddb',
+			protect_animal_protector_discussion_id: [],
+			protect_animal_rescue_date: '2022-01-30T00:00:00.000Z',
+			protect_animal_rescue_location: '해처리',
+			protect_animal_sex: 'female',
+			protect_animal_species: '고양이',
+			protect_animal_species_detail: '러시안블루',
+			protect_animal_status: 'protect',
+			protect_animal_weight: 3,
+		};
+		const ce = {
+			__v: 0,
+			_id: '620bb622e9c46a5c3f40bde7',
+			protect_animal_id: {
+				__v: 0,
+				_id: '620a4543c0f179ccd5bbb9e1',
+				protect_act_applicants: [],
+				protect_animal_belonged_shelter_id: '6203aff5c0f179ccd5bb8054',
+				protect_animal_estimate_age: '6개월',
+				protect_animal_neutralization: 'unknown',
+				protect_animal_photo_uri_list: [
+					'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1644840259078_2C957963-634D-4AB9-AF54-0B3BD469A2CD.jpg',
+				],
+				protect_animal_protect_request_id: '620bb622e9c46a5c3f40bde7',
+				protect_animal_protector_discussion_id: [],
+				protect_animal_rescue_date: '2022-02-02T00:00:00.000Z',
+				protect_animal_rescue_location: '바른치킨',
+				protect_animal_sex: 'female',
+				protect_animal_species: '고양이',
+				protect_animal_species_detail: '아메리칸 숏헤어',
+				protect_animal_status: 'rescue',
+				protect_animal_weight: 2,
+			},
+			// protect_animal_species: '고양이',
+			// protect_animal_species_detail: '아메리칸 숏헤어',
+			// protect_recent_comment: {comment_contents: '댓글', comment_id: '62134348d3fb3be156244e64', comment_user_nickname: '안네씨'},
+			// protect_request_comment_count: 5,
+			// protect_request_content: '테스트3',
+			// protect_request_date: '2022-02-15T14:18:10.639Z',
+			// protect_request_favorite_count: 0,
+			// protect_request_hit: 0,
+			protect_request_photos_uri: [
+				'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1644840259078_2C957963-634D-4AB9-AF54-0B3BD469A2CD.jpg',
+			],
+			protect_request_status: 'complete',
+			protect_request_title: '네비게이션 오류 테스트',
+			// protect_request_update_date: '2022-02-15T14:18:10.640Z',
+			protect_request_writer_id: {
+				__v: 0,
+				_id: '6203aff5c0f179ccd5bb8054',
+				pet_family: [],
+				shelter_address: {brief: '서울 서대문구 경기대로9길 92', detail: 'ㅇ1'},
+				shelter_delegate_contact_number: '0109645011',
+				shelter_foundation_date: '2022-08-04T00:00:00.000Z',
+				shelter_homepage: 'Naver.com',
+				shelter_name: '형산보호소',
+				shelter_type: 'private',
+				type: 'UserObject',
+				user_agreement: {
+					is_donation_info: false,
+					is_location_service_info: false,
+					is_marketting_info: false,
+					is_over_fourteen: false,
+					is_personal_info: false,
+					is_service: false,
+				},
+				user_denied: false,
+				user_email: 'Lanad01@naver.com',
+				user_follow_count: 2,
+				user_follower_count: 1,
+				user_interests: [],
+				user_introduction: '',
+				user_is_verified_email: false,
+				user_is_verified_phone_number: false,
+				user_my_pets: [],
+				user_name: '형산보호소',
+				user_nickname: '형산보호소',
+				user_password: 'tkddn123',
+				user_phone_number: '01096450001',
+				user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1644408821715_76E74A61-FDF5-4B75-BD96-B309E2475F05.jpg',
+				user_register_date: '2022-02-09T12:13:41.815Z',
+				user_type: 'shelter',
+				user_upload_count: 14,
+			},
+		};
 		let sexValue = '';
 		switch (data.protect_animal_sex) {
 			case 'male':
@@ -157,8 +161,9 @@ export default AidRequestManage = ({route, navigation}) => {
 				sexValue = '성별모름';
 				break;
 		}
+		console.log('data.writetr', data.protect_request_writer_id);
 		const titleValue = data.protect_animal_species + '/' + data.protect_animal_species_detail + '/' + sexValue;
-		navigation.navigate('AnimalProtectRequestDetail', {item: data, list: [], title: titleValue});
+		navigation.navigate('AnimalProtectRequestDetail', {item: ce, title: titleValue});
 	};
 
 	const onSelectHasPostList = index => {

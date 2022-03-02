@@ -91,32 +91,19 @@ export default SaveAnimalRequest = ({route}) => {
 	//썸네일 클릭
 	const navigationGo = (status, user_id, item) => {
 		let sexValue = '';
-		getProtectRequestListByShelterId(
-			{
-				shelter_userobject_id: item.protect_request_writer_id._id,
-				protect_request_status: 'all',
-				protect_request_object_id: null,
-				request_number: 10,
-			},
-			result => {
-				switch (item.protect_animal_sex) {
-					case 'male':
-						sexValue = '남';
-						break;
-					case 'female':
-						sexValue = '여';
-						break;
-					case 'male':
-						sexValue = '성별모름';
-						break;
-				}
-				const titleValue = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + sexValue;
-				navigation.push('AnimalProtectRequestDetail', {item: item, list: result.msg, title: titleValue});
-			},
-			err => {
-				console.log('err / getProtectRequestListByShelterId / ProtectRequestList   : ', err);
-			},
-		);
+		switch (item.protect_animal_sex) {
+			case 'male':
+				sexValue = '남';
+				break;
+			case 'female':
+				sexValue = '여';
+				break;
+			case 'male':
+				sexValue = '성별모름';
+				break;
+		}
+		const titleValue = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + sexValue;
+		navigation.push('AnimalProtectRequestDetail', {item: item, title: titleValue});
 	};
 
 	return (

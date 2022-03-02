@@ -1,16 +1,13 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import moment from 'moment';
-import {useNavigation} from '@react-navigation/core';
 import {txt} from 'Root/config/textstyle';
 import {btn_w276} from 'Atom/btn/btn_style';
 import ProtectedThumbnail from 'Molecules/media/ProtectedThumbnail';
 import AniButton from 'Molecules/button/AniButton';
 import {FavoriteTag48_Border, FavoriteTag48_Filled} from 'Atom/icon';
-import {BLUE10, BLUE20, RED10} from 'Root/config/color';
 import {DEFAULT_ANIMAL_PROFILE} from 'Root/i18n/msg';
 import {animalNeedHelp} from 'Organism/style_organism copy';
-import {number} from 'prop-types';
 
 /**
  *
@@ -27,7 +24,7 @@ import {number} from 'prop-types';
  * }} props
  */
 export default AnimalNeedHelp = props => {
-	// console.log('AnimalNeedHelp', props.data);
+	// console.log('AnimalNeedHelp', props.data.protect_request_status);
 
 	const data = props.data;
 	const [selected, setSelected] = React.useState(false);
@@ -156,7 +153,7 @@ export default AnimalNeedHelp = props => {
 									{/* 보호장소 : {data.protect_request_writer_id != null ? data.protect_request_writer_id.shelter_name : data.shelter_name} */}
 									보호장소 : {data.shelter_name ? data.shelter_name : data.protect_request_writer_id.shelter_name}
 								</Text>
-								<Text style={[txt.noto28]}>
+								<Text style={[txt.noto28]} numberOfLines={1}>
 									구조지역 :{' '}
 									{data.protect_animal_rescue_location
 										? data.protect_animal_rescue_location
@@ -205,7 +202,6 @@ export default AnimalNeedHelp = props => {
 							{/* 실종/제보 관련 Details */}
 							<View style={[animalNeedHelp.lowerMenu_helpDetail]}>
 								<Text style={[txt.noto28b]}>제보일: {getParsedDate()}</Text>
-
 								<Text style={[txt.noto28, {width: 408 * DP}]} numberOfLines={1}>
 									실종위치: {data.report_witness_location || ''}
 								</Text>

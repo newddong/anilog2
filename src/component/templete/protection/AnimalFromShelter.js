@@ -1,9 +1,9 @@
 import React from 'react';
-import {ActivityIndicator, Text, View} from 'react-native';
+import {ActivityIndicator, ScrollView, Text, View} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {login_style, animalFromShelter_style} from 'Templete/style_templete';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
-import {getProtectRequestListByShelterId, getShelterProtectAnimalList} from 'Root/api/shelterapi';
+import {getProtectRequestListByShelterId} from 'Root/api/shelterapi';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 
@@ -25,7 +25,7 @@ export default AnimalFromShelter = ({route}) => {
 				request_number: '',
 			},
 			result => {
-				// console.log('result / getProtectRequestListByShelterId / AnimalFromShelter', result);
+				console.log('result / getProtectRequestListByShelterId / AnimalFromShelter', result.msg[0]);
 				setData(result.msg);
 				Modal.close();
 				setTimeout(() => {
@@ -45,20 +45,15 @@ export default AnimalFromShelter = ({route}) => {
 
 	//라벨 클릭
 	const onClickLabel = (status, user_id, protectAnimalObject) => {
-		// console.log('status , id => ' + status + '_' + user_id);
-		// console.log('item', item._id);
-		console.log(protectAnimalObject);
 		Modal.popAnimalInfoModal(
 			protectAnimalObject,
-			() => navigation.push('ProtectRequestManage', {item: protectAnimalObject, list: data}),
+			() => navigation.push('ProtectRequestManage', {item: protectAnimalObject}),
 			() => navigation.push('AdoptorInformation', protectAnimalObject),
 		);
 	};
 
 	//테두리 모드 On 상태에서 입양처 보기 클릭
 	const onPressAdoptorInfo = data => {
-		console.log('item / onPressAdoptorInfo', data);
-		// 61c7104c10b3b3bf4acbd20b
 		navigation.push('AdoptorInformation', data);
 	};
 
@@ -77,19 +72,23 @@ export default AnimalFromShelter = ({route}) => {
 	} else {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
-				<View style={[animalFromShelter_style.container]}>
-					{data.length == 0 ? (
-						<Text style={[txt.roboto28b, {marginTop: 200}]}>아직 입양 완료된 보호소 출신의 보호 동물이 없네요.</Text>
-					) : (
-						<AnimalNeedHelpList
-							data={data}
-							// borderMode={true}
-							onClickLabel={onClickLabel}
-							onPressAdoptorInfo={onPressAdoptorInfo}
-							onPressProtectRequest={onPressProtectRequest}
-						/>
-					)}
-				</View>
+				<ScrollView horizontal={false}>
+					<ScrollView horizontal={true} scrollEnabled={false}>
+						<View style={[animalFromShelter_style.container]}>
+							{data.length == 0 ? (
+								<Text style={[txt.roboto28b, {marginTop: 200}]}>아직 입양 완료된 보호소 출신의 보호 동물이 없네요.</Text>
+							) : (
+								<AnimalNeedHelpList
+									data={data}
+									// borderMode={true}
+									onClickLabel={onClickLabel}
+									onPressAdoptorInfo={onPressAdoptorInfo}
+									onPressProtectRequest={onPressProtectRequest}
+								/>
+							)}
+						</View>
+					</ScrollView>
+				</ScrollView>
 			</View>
 		);
 	}

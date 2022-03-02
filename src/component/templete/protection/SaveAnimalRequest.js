@@ -9,14 +9,6 @@ import {getProtectRequestList, getProtectRequestListByShelterId} from 'Root/api/
 export default SaveAnimalRequest = ({route}) => {
 	const navigation = useNavigation();
 
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-
 	const [checkBoxMode, setCheckBoxMode] = React.useState(false);
 	//checkBox On
 	const [data, setData] = React.useState([]);
@@ -140,7 +132,6 @@ export default SaveAnimalRequest = ({route}) => {
 				/>
 			</View>
 
-			{/* <FlatList> */}
 			<View style={[temp_style.AnimalNeedHelpList]}>
 				<AnimalNeedHelpList
 					data={data}
@@ -153,7 +144,6 @@ export default SaveAnimalRequest = ({route}) => {
 					isDeleted={isDeleted}
 				/>
 			</View>
-			{/* </FlatList> */}
 		</View>
 	);
 };

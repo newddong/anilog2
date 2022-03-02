@@ -26,9 +26,9 @@ export default AssignCheckListItem = props => {
 		props.onPressDetail();
 	};
 
-	// React.useEffect(() => {
-	// 	setChecked(props.state);
-	// }, [props.state]);
+	React.useEffect(() => {
+		setChecked(props.state);
+	}, [props.state]);
 
 	React.useEffect(() => {
 		setChecked(props.isCheck);

@@ -20,6 +20,8 @@ export default ApplyDetails = ({route, navigation}) => {
 
 	const onFinalize = () => {
 		Modal.close();
+		console.log('data.protect_act_type', data.protect_act_type);
+
 		createProtectActivity(
 			{
 				protect_request_object_id: data._id,

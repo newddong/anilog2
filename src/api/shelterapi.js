@@ -17,7 +17,7 @@ import {apiController} from './apiController';
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function assignShelterAnimal(params, callback, errcallback) {
-	apiController( '/shelter/assignShelterAnimal', arguments);
+	apiController('/shelter/assignShelterAnimal', arguments);
 }
 
 /**
@@ -32,7 +32,7 @@ export async function assignShelterAnimal(params, callback, errcallback) {
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function createProtectRequest(params, callback, errcallback) {
-	apiController( '/shelter/createProtectRequest', arguments);
+	apiController('/shelter/createProtectRequest', arguments);
 }
 
 /**
@@ -47,7 +47,7 @@ export async function createProtectRequest(params, callback, errcallback) {
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백 *
  */
 export async function getProtectRequestList(params, callback, errcallback) {
-	apiController( '/shelter/getProtectRequestList', arguments);
+	apiController('/shelter/getProtectRequestList', arguments);
 }
 
 /**
@@ -67,23 +67,21 @@ export async function getProtectRequestList(params, callback, errcallback) {
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function getShelterProtectAnimalList(params, callback, errcallback) {
-	apiController( '/shelter/getShelterProtectAnimalList', arguments);
+	apiController('/shelter/getShelterProtectAnimalList', arguments);
 }
-
 
 /**
  * 대상 유저 오브젝트 아이디의 보호소가 올린 동물보호 요청 게시물 리스트를 불러온다.
  * @param {object} params - token아이디
- * @param {string} params.shelter_userobject_id - 동물보호 요청 리스트를 불러올 대상 
+ * @param {string} params.shelter_userobject_id - 동물보호 요청 리스트를 불러올 대상
  * @param {string} params.protect_request_object_id - 커서 역할을 할 보호요청 오브잭트(페이징 처리)
  * @param {number} params.request_number - 요청할 게시물의 숫자
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
- export async function getProtectRequestListByShelterId(params, callback, errcallback) {
-	apiController( '/shelter/getProtectRequestListByShelterId', arguments);
+export async function getProtectRequestListByShelterId(params, callback, errcallback) {
+	apiController('/shelter/getProtectRequestListByShelterId', arguments);
 }
-
 
 /**
  * 보호소에 보호활동(입양,임시보호)신청이 접수된 동물 목록을 조회
@@ -91,19 +89,29 @@ export async function getShelterProtectAnimalList(params, callback, errcallback)
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
- export async function getAnimalListWithApplicant(params, callback, errcallback) {
-	apiController( '/shelter/getAnimalListWithApplicant', arguments);
+export async function getAnimalListWithApplicant(params, callback, errcallback) {
+	apiController('/shelter/getAnimalListWithApplicant', arguments);
 }
-
-
 
 /**
  * 보호소에 등록된 동물의 상세 정보를 조회
  * @param {object} params - token아이디
- * @param {string} params.shelter_protect_animal_object_id - 보호소의 등록된 동물의 오브젝트 아이디. 
+ * @param {string} params.shelter_protect_animal_object_id - 보호소의 등록된 동물의 오브젝트 아이디.
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
- export async function getProtectAnimalByProtectAnimalId(params, callback, errcallback) {
-	apiController( '/shelter/getProtectAnimalByProtectAnimalId', arguments);
+export async function getProtectAnimalByProtectAnimalId(params, callback, errcallback) {
+	apiController('/shelter/getProtectAnimalByProtectAnimalId', arguments);
+}
+
+/**
+ * 보호소에 등록된 동물의 상태를 변경
+ * @param {object} params - token아이디
+ * @param {string} params.shelter_protect_animal_object_id - 보호소의 등록된 동물의 오브젝트 아이디.
+ * @param {string} params.protect_animal_status - 변경할 보호소의 동물 상태 ('rescue'|'protect'|'adopt'|'discuss'|'rainbowbridge')
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function setShelterProtectAnimalStatus(params, callback, errcallback) {
+	apiController('/shelter/setShelterProtectAnimalStatus', arguments);
 }

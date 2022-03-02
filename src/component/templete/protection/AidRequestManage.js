@@ -10,10 +10,9 @@ import DP from 'Root/config/dp';
 import {AddItem64} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
 
-//ShelterMenu => 신청서 조회 [Nav명 - ProtectApplyList]
 //ShelterMenu => 보호중인 동물 [Nav명 - ShelterProtectAnimalList]
 export default AidRequestManage = ({route, navigation}) => {
-	const token = route.params.token;
+	// console.log('AidRequestManage');
 	const [loading, setLoading] = React.useState(true); // 화면 출력 여부 결정
 	const [data, setData] = React.useState([]);
 	const [hasPostAnimalList, setHasPostAnimalList] = React.useState([]);
@@ -41,7 +40,6 @@ export default AidRequestManage = ({route, navigation}) => {
 					setData(result.msg);
 					const protectAnimalList = result.msg;
 					let notFiltered = [];
-
 					protectAnimalList.map((value, index) => {
 						// console.log('v.protectActApplicants', v.protect_act_applicants);
 						const protectActivities_id = value.protect_act_applicants;
@@ -81,37 +79,6 @@ export default AidRequestManage = ({route, navigation}) => {
 					// setData(err);
 				},
 			);
-		} else {
-			//token(id)를 토대로 보호소 계정이 등록한 보호요청 게시글 중 신청서가 들어와 있는 목록을 조회
-			console.log('ProtectApplyList');
-			getAnimalListWithApplicant(
-				{},
-				result => {
-					// console.log('result / getAnimalListWithApplicant / ProtectApplyList', result.msg);
-					let merged = []; //페이지 이동 후 입양 신청한
-					result.msg.map((data, i) => {
-						data.shelter_name = route.params.shelter_name;
-						// console.log('data', i, data);
-						//출력된 보호요청게시글들이 가지는 지원신청서가 혹시 accept 상태인 것이 있는 경우 ( == 입양/임보가 확정-취소-신청취소 된 상태 )
-						// ==> 출력되어서는 안됨
-						const hasApplicantsWaitng = data.protect_act_applicants.some(
-							e => e.protect_act_status == 'accept' || e.protect_act_status == 'denied' || e.protect_act_status == 'cancel',
-						);
-						!hasApplicantsWaitng ? merged.push(data) : false;
-					});
-					setData(merged);
-					setTimeout(() => {
-						setLoading(false);
-					}, 500);
-				},
-				err => {
-					console.log('err / getAnimalListWithApplicant', err);
-					setTimeout(() => {
-						setLoading(false);
-					}, 500);
-					// setData(err);
-				},
-			);
 		}
 	}, []);
 
@@ -122,7 +89,7 @@ export default AidRequestManage = ({route, navigation}) => {
 		if (notFilteredData != null) {
 			// const isNotProtect = notFilteredData.filter(e => e.protect_act_type == 'protect');
 			// console.log('isNotProtect', isNotProtect);
-			console.log('waiting');
+			// console.log('waiting');
 
 			const filtered_by_status = notFilteredData.filter(e => e.protect_act_status == 'accept');
 			let index_of_acceptItem = [];
@@ -138,7 +105,7 @@ export default AidRequestManage = ({route, navigation}) => {
 			let hasPostList = [];
 			let noPostList = [];
 			protect_animal_list_copy.map((v, i) => {
-				console.log('v', v.protect_animal_protect_request_id);
+				// console.log('v', v.protect_animal_protect_request_id);
 				if (v.protect_animal_protect_request_id != null) {
 					hasPostList.push(v);
 				} else {
@@ -149,7 +116,7 @@ export default AidRequestManage = ({route, navigation}) => {
 				setHasPostAnimalList(hasPostList);
 				setNoPostAnimalList(noPostList);
 				setLoading(false);
-			}, 1500);
+			}, 500);
 		} else {
 			console.log('waiting');
 			let hasPostList = [];
@@ -171,17 +138,27 @@ export default AidRequestManage = ({route, navigation}) => {
 		}
 	}, [notFilteredData]);
 
-	//선택 시 이동
-	const onSelect = index => {
-		console.log('index', data[index]);
-		!isShelterProtect
-			? navigation.push('ProtectApplicant', data[index])
-			: console.log('ShelterProtectAnimalList에서는 네비게이션 정의가 안됨', data[index]);
-	};
-
 	const addProtectAnimal = () => {
 		navigation.push('AssignProtectAnimalImage');
 		// navigation.push('WriteAidRequest');
+	};
+
+	const showProtect = data => {
+		console.log('showProtect', data);
+		let sexValue = '';
+		switch (data.protect_animal_sex) {
+			case 'male':
+				sexValue = '남';
+				break;
+			case 'female':
+				sexValue = '여';
+				break;
+			case 'male':
+				sexValue = '성별모름';
+				break;
+		}
+		const titleValue = data.protect_animal_species + '/' + data.protect_animal_species_detail + '/' + sexValue;
+		navigation.navigate('AnimalProtectRequestDetail', {item: data, list: [], title: titleValue});
 	};
 
 	const onSelectHasPostList = index => {
@@ -194,7 +171,7 @@ export default AidRequestManage = ({route, navigation}) => {
 			'다시 게시하기',
 			'게시글 보기',
 			// ()=> navigation.navigate('AnimalProtectRequestDetail', {item: item, list: protectActList, title: titleValue}),
-			() => alert('게시글보기'),
+			() => showProtect(hasPostAnimalList[index]),
 			//현재 보호요청게시글에 접근하기 위해서 API 3가지를 별개로 접근하고 파라미터를 보내줘야 하는 상황
 			// AnimalProtectRequestDetail의 API 접근방식이 개선된 이후 처리 필요
 			() => navigation.push('WriteAidRequest', {data: hasPostAnimalList[index]}),
@@ -253,19 +230,6 @@ export default AidRequestManage = ({route, navigation}) => {
 							/>
 						</View>
 					</View>
-					{/* <View style={[temp_style.aidRequestList_aidRequestManage, baseInfo_style.list]}>
-						{data.length == 0 ? (
-							<Text style={[txt.noto30, {alignSelf: 'center', marginTop: 130, color: GRAY10}]}>목록이 비어있습니다.</Text>
-						) : (
-							<AidRequestList
-								items={data}
-								onPressAddProtectAnimal={addProtectAnimal}
-								onSelect={onSelect}
-								callFrom={route.name}
-								selectBorderMode={false}
-							/>
-						)}
-					</View> */}
 				</ScrollView>
 			</View>
 		);

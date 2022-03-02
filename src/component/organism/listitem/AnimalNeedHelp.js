@@ -23,15 +23,13 @@ import {number} from 'prop-types';
  *onPressAdoptorInfo : 'boolean / HashClick Callback',
  *onPressProtectRequest : 'void / 테두리 모드 게시글보기 클릭',
  *onPressReporter : 'void / 제보 게시글의 제보자 닉네임 클릭',
+ *inActiveOpacity : 'boolean / 클릭 애니메이션 여부 default false',
  * }} props
  */
 export default AnimalNeedHelp = props => {
 	// console.log('AnimalNeedHelp', props.data);
-	// console.log('AnimalNeedHelp', props.data.protect_animal_id.protect_animal_sex);
 
-	const navigation = useNavigation();
 	const data = props.data;
-	// console.log('AnimalNeedHelp: -------------- ', JSON.stringify(data));
 	const [selected, setSelected] = React.useState(false);
 	const [favorite, setFavorite] = React.useState(false);
 	const [thumbnailData, setThumbnailData] = React.useState({});
@@ -249,7 +247,7 @@ export default AnimalNeedHelp = props => {
 							<View>{contents()}</View>
 						</TouchableOpacity>
 					) : (
-						<TouchableOpacity onPress={() => props.onClickLabel(data.feed_type, data._id)}>
+						<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.2} onPress={() => props.onClickLabel(data.feed_type, data._id)}>
 							<View>{contents()}</View>
 						</TouchableOpacity>
 					)}
@@ -272,8 +270,9 @@ export default AnimalNeedHelp = props => {
 
 AnimalNeedHelp.defaultProps = {
 	selected: false,
-	onClickLabel: e => console.log(e),
+	onClickLabel: e => {},
 	onFavoriteTag: e => console.log(e),
 	onPressAdoptorInfo: e => console.log('e'),
 	isChecked: false,
+	inActiveOpacity: false,
 };

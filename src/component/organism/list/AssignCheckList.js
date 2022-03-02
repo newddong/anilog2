@@ -13,11 +13,10 @@ import {assignCheckList} from 'Organism/style_organism copy';
  */
 export default AssignCheckList = props => {
 	// console.log('AssignCheckLis', props.items);
-	// const [isCheckAll,setCheckAll] = React.useState(false);
-	// React.useEffect(()=>{
-
-	// 	setCheckAll(props.isCheckAll);
-	// },[props.isCheckAll])
+	const [isCheckAll, setCheckAll] = React.useState(false);
+	React.useEffect(() => {
+		setCheckAll(props.isCheckAll);
+	}, [props.isCheckAll]);
 
 	const renderItem = (item, index) => {
 		// console.log('item', item);

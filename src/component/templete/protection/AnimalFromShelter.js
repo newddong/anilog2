@@ -7,6 +7,7 @@ import {getProtectRequestListByShelterId, getShelterProtectAnimalList} from 'Roo
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 
+//ShelterMenu => 나의 보호소 출신 동물
 export default AnimalFromShelter = ({route}) => {
 	const token = route.params;
 	const navigation = useNavigation();

@@ -35,7 +35,6 @@ import EditShelterInfo from 'Templete/shelter/EditShelterInfo';
 import AidRequestAnimalList from 'Templete/protection/AidRequestAnimalList';
 import WriteAidRequest from 'Templete/protection/WriteAidRequest';
 import AidRequestManage from 'Templete/protection/AidRequestManage';
-import ProtectApplicant from 'Templete/protection/ProtectApplicant';
 import ProtectApplyForm from 'Templete/protection/ProtectApplyForm';
 import ShelterProtectRequests from 'Templete/shelter/ShelterProtectRequests';
 import AnimalFromShelter from 'Templete/protection/AnimalFromShelter';
@@ -59,6 +58,7 @@ import SettingInformAsk from 'Templete/user/SettingInformAsk';
 import SettingAccount from 'Templete/user/SettingAccount';
 import SettingAlarm from 'Templete/user/SettingAlarm';
 import SettingOpen from 'Templete/user/SettingOpen';
+import ProtectionApplicationList from 'Root/component/templete/protection/ProtectionApplicationList';
 const MyStack = createStackNavigator();
 
 export default MyStackNavigation = props => {
@@ -225,15 +225,15 @@ export default MyStackNavigation = props => {
 				options={{header: props => <SimpleHeader {...props} />, title: '보호 동물 목록'}}
 			/>
 			<MyStack.Screen
-				name="ProtectApplyList"
-				component={AidRequestManage}
+				name="ProtectionApplicationList"
+				component={ProtectionApplicationList}
 				options={{header: props => <SimpleHeader {...props} />, title: '신청서 조회'}}
 			/>
-			<MyStack.Screen
+			{/* <MyStack.Screen
 				name="ProtectApplicant"
 				component={ProtectApplicant}
 				options={{header: props => <SimpleHeader {...props} />, title: '보호 활동 신청자'}}
-			/>
+			/> */}
 			<MyStack.Screen
 				name="ProtectApplyForm"
 				component={ProtectApplyForm}

@@ -4,7 +4,7 @@ import {Text, View, TouchableWithoutFeedback} from 'react-native';
 import DP from 'Root/config/dp';
 import {Check50, Rect48_GRAY30, Rect50_Border} from 'Atom/icon';
 import {GRAY10, GRAY20} from 'Root/config/color';
-import { findAccount_style } from 'Root/component/templete/style_templete';
+import {findAccount_style} from 'Root/component/templete/style_templete';
 /**
  *
  * @param {{
@@ -22,11 +22,11 @@ export default CheckBox = props => {
 		setChecked(!checked);
 	};
 
-	// React.useEffect(() => {
-	// 	console.log('props.state===>', props.state);
-	// 	setChecked(props.state);
-		// props.onCheck(props.state);
-	// }, [props.state]);
+	React.useEffect(() => {
+		console.log('props.state===>', props.state);
+		setChecked(props.state);
+		props.onCheck(props.state);
+	}, [props.state]);
 
 	React.useEffect(() => {
 		// console.log('CheckBox state?', checked);

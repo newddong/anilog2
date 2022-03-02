@@ -56,7 +56,7 @@ export default AdoptorInformation = ({route, navigation}) => {
 								setData(merged);
 								setTimeout(() => {
 									setLoading(false);
-								}, 1500);
+								}, 500);
 							},
 							err => {
 								console.log('err / getUserInfoById / AdoptorInformation  ', err);
@@ -88,12 +88,12 @@ export default AdoptorInformation = ({route, navigation}) => {
 		);
 	} else {
 		return (
-			<View style={[login_style.wrp_main, {flex: 1}]}>
-				<ScrollView style={{flex: 1}}>
-					<View style={[temp_style.animalProtectDetails_adoptorInformation, baseInfo_style.list]}>
-						<AnimalProtectDetail data={data} onClickLabel={onClickAdoptor} nav={route.name} />
-					</View>
-				</ScrollView>
+			<View style={[login_style.wrp_main, {}]}>
+				{/* <ScrollView style={{flex: 1}}> */}
+				<View style={[temp_style.animalProtectDetails_adoptorInformation, baseInfo_style.list]}>
+					<AnimalProtectDetail data={data} onClickLabel={onClickAdoptor} nav={route.name} />
+				</View>
+				{/* </ScrollView> */}
 			</View>
 		);
 	}

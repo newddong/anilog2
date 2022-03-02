@@ -46,7 +46,7 @@ export default FeedWrite = props => {
 	const scrollref = React.useRef();
 	const lastTouchY = React.useRef(0);
 	const container = React.useRef();
-	const test = ()=>{console.log('네비게이션 스테이트', props.route, props.navigation.getState())}
+	
 	React.useEffect(() => {
 		props.navigation.setParams({
 			...props.route.params,
@@ -302,8 +302,6 @@ export default FeedWrite = props => {
 				ref={scrollref}></FlatList>
 
 			{/* </ScrollView> */}
-			<TouchableWithoutFeedback onPress={test}>
-			<View style={{backgroundColor:'red',width:50,height:50}}></View></TouchableWithoutFeedback>
 			{showUrgentBtns && !isSearchTag ? (
 				<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
 					{showActionButton ? (

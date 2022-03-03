@@ -22,15 +22,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ProtectAnimalInfoBox from 'Root/component/organism/info/ProtectAnimalInfoBox';
 import {count_to_K} from 'Root/util/stringutil';
 import {getProtectRequestListByShelterId} from 'Root/api/shelterapi';
+import {getProtectRequestByProtectRequestId} from 'Root/api/protectapi';
 
 //AnimalProtectRequestDetail 호출 경로
-// - ProtectRequestList(보호활동탭) , AnimalFromShelter(게시글보기) , Profile(보호활동)
+// - ProtectRequestList(보호활동탭) , AnimalFromShelter(게시글보기) , AidRequestManage(게시글보기), AidRequestAnimalList(게시글 보기)
 
 export default AnimalProtectRequestDetail = ({route}) => {
 	// console.log('AnimalProtectRequestDetail', route.params.item.protect_request_status);
 	const navigation = useNavigation();
 	// 보호소 data는 ShelterSmallLabel에서 사용,  보호동물 Data는 RescueSummary, 임시보호 신청, 입양 신청 등에서 사용됨
-	const data = route.params ? route.params.item : ''; // ProtectRequestObject, ShelterProtectAnimalObject 정보가 담겨 있는 상태
+	// const data = route.params ? route.params.item : ''; // ProtectRequestObject, ShelterProtectAnimalObject 정보가 담겨 있는 상태
+	const [data, setData] = React.useState('');
 	const [writersAnotherRequests, setWritersAnotherRequests] = React.useState([]); //해당 게시글 작성자의 따른 보호요청게시글 목록
 	const [loading, setLoading] = React.useState(true); //로딩상태
 	const [commentDataList, setCommentDataList] = React.useState(); //comment list 정보
@@ -41,10 +43,35 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	debug && console.log('AnimalProtectRequestDetail data:', data);
 
 	React.useEffect(() => {
+		getProtectRequestObject();
 		getCommnetList(); //댓글리스트 가져오기
+		setTimeout(() => {
+			setLoading(false);
+		}, 500);
+	}, []);
+
+	//보호요청게시글의 정보 가져오기
+	const getProtectRequestObject = () => {
+		getProtectRequestByProtectRequestId(
+			{
+				protect_request_object_id: route.params.id,
+			},
+			result => {
+				console.log('result /getProtectRequestByProtectRequestId / AnimalProtectRequestDetail : ', result.msg.protect_request_is_delete);
+				setData(result.msg);
+				getProtectRequestList(result.msg.protect_request_writer_id._id); //API에서 받아온 보호요청게시글의 작성자 _id를 토대로, 작성자의 다른 보호요청게시글을 받아옴
+			},
+			err => {
+				console.log('err / getProtectRequestByProtectRequestId / AnimalProtectRequestDetail : ', err);
+			},
+		);
+	};
+
+	//보호소의 다른 보호 요청게시글 불러오기
+	const getProtectRequestList = id => {
 		getProtectRequestListByShelterId(
 			{
-				shelter_userobject_id: data.protect_request_writer_id._id,
+				shelter_userobject_id: id,
 				protect_request_object_id: '',
 				request_number: 5,
 				protect_request_status: 'rescue',
@@ -53,25 +80,25 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				// console.log('result / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', result.msg);
 				//현재 보고 있는 보호요청게시글의 작성자(보호소)의 모든 보호요청게시글이 담겨 있는 writersAnotherRequests
 				//그러나 현재 보고 있는 보호요청게시글은 해당 리스트에 출력이 되어서는 안됨 => Filter처리
-				const filteredList = result.msg.filter(e => e._id != data._id);
+				const filteredList = result.msg.filter(e => e._id != route.params.id);
 				setWritersAnotherRequests(filteredList);
 			},
 			err => {
 				console.log('err / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', err);
 			},
 		);
-	}, [data]);
+	};
 
 	//댓글 목록 불러오기
 	const getCommnetList = () => {
 		getCommentListByProtectId(
 			{
-				protect_request_object_id: data._id,
+				protect_request_object_id: route.params.id,
 				commentobject_id: '',
 				request_number: 2,
 			},
 			commentdata => {
-				debug && console.log('AnimalProtectRequestDetail / getCommentListByProtectId:', commentdata.msg);
+				// debug && console.log('AnimalProtectRequestDetail / getCommentListByProtectId:', commentdata.msg);
 				commentdata.msg.map((v, i) => {
 					//1depth를 올려준다.
 					commentdata.msg[i].user_address = commentdata.msg[i].comment_writer_id.user_address;
@@ -103,16 +130,16 @@ export default AnimalProtectRequestDetail = ({route}) => {
 						}
 					}
 				});
-				// console.log(`commentArray -${JSON.stringify(commentArray)}`);
-				console.log('commentArray', commentArray.length);
+				// console.log('commentArray', commentArray.length);
 				setCommentDataList(commentArray);
 				//댓글이 출력이 안되는 현상 발견으로 비동기 처리
-				setLoading(false);
 				debug && console.log('commentArray refresh', commentArray);
 			},
 			errcallback => {
 				//댓글이 출력이 안되는 현상 발견으로 비동기 처리
-				setLoading(false);
+				setTimeout(() => {
+					setLoading(false);
+				}, 500);
 				console.log(`Comment errcallback:${JSON.stringify(errcallback)}`);
 			},
 		);
@@ -124,12 +151,12 @@ export default AnimalProtectRequestDetail = ({route}) => {
 			// console.log('ProtectRequestManage');
 			const animal_sex_toString = item.protect_animal_id.protect_animal_sex == 'female' ? '여' : '남';
 			const title = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + animal_sex_toString;
-			navigation.push('ProtectRequestManage', {item: item, title: title});
+			navigation.push('ProtectRequestManage', {id: item._id, title: title});
 		} else {
-			console.log('AnimalProtectRequestDetail', item);
+			// console.log('AnimalProtectRequestDetail', item);
 			const animal_sex_toString = item.protect_animal_id.protect_animal_sex == 'female' ? '여' : '남';
 			const title = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + animal_sex_toString;
-			navigation.push('AnimalProtectRequestDetail', {item: item, title: title});
+			navigation.push('AnimalProtectRequestDetail', {id: item._id, title: title, writer: item.protect_request_writer_id._id});
 		}
 	};
 
@@ -202,7 +229,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 						<View style={[animalProtectRequestDetail_style.container]}>
 							{/* 임시보호 후보자 협의 중 사진 */}
 							<View style={[temp_style.rescueImage]}>
-								<RescueImage status={data.protect_request_status || 'adopt'} img_uri={data.protect_request_photos_uri || DEFAULT_PROFILE} />
+								<RescueImage status={data.protect_request_status || 'adopt'} img_uri={data.protect_request_photos_uri} />
 							</View>
 							<View style={[temp_style.requestProtect_view]}>
 								<Text style={[txt.noto24, temp_style.requestProtect, {color: GRAY10}]}>보호요청</Text>

@@ -6,7 +6,7 @@ import {GRAY10} from 'Root/config/color';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import {txt} from 'Root/config/textstyle';
 import {ONLY_CONTENT_FOR_ADOPTION, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
-import {getProtectRequestList, getProtectRequestListByShelterId} from 'Root/api/shelterapi.js';
+import {getProtectRequestList} from 'Root/api/shelterapi.js';
 import {getPettypes} from 'Root/api/userapi';
 import {btn_w306_h68} from 'Component/atom/btn/btn_style';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
@@ -80,7 +80,6 @@ export default ProtectRequestList = ({navigation, route}) => {
 	const onClickLabel = (status, id, item) => {
 		//data에는 getProtectRequestList(어떠한 필터도 없이 모든 보호요청게시글을 출력)의 결과값이 담겨있음
 		//따라서 출력할 것을 해당 게시글의 작성자(보호소)가 작성한 보호요청게시글로 좁혀야함
-		// console.log('item:', item);
 		let sexValue = '';
 		switch (item.protect_animal_sex) {
 			case 'male':
@@ -94,7 +93,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 				break;
 		}
 		const titleValue = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + sexValue;
-		navigation.navigate('AnimalProtectRequestDetail', {item: item, title: titleValue});
+		navigation.navigate('AnimalProtectRequestDetail', {id: item._id, title: titleValue, writer: item.protect_request_writer_id._id});
 	};
 
 	const filterOn = () => {

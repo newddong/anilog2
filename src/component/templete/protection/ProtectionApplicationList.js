@@ -4,10 +4,8 @@ import {getAnimalListWithApplicant} from 'Root/api/shelterapi';
 import {txt} from 'Root/config/textstyle';
 import {APRI10, GRAY10} from 'Root/config/color';
 import DP from 'Root/config/dp';
-import {dummy_userObject} from 'Root/config/dummyDate_json';
 import UserDescriptionLabel from 'Root/component/molecules/label/UserDescriptionLabel';
 import {Star50_Border} from 'Root/component/atom/icon';
-import {getUserInfoById} from 'Root/api/userapi';
 
 //ShelterMenu => 신청서 조회 [Nav명 - ProtectionAplicationList]
 export default ProtectionApplicationList = ({route, navigation}) => {

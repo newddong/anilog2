@@ -10,6 +10,7 @@ import {getPettypes} from 'Root/api/userapi';
 import {Filter60Border, Filter60Filled, NewMeatBall60} from 'Root/component/atom/icon';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 import {btn_w306_h68} from 'Root/component/atom/btn/btn_style';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 // ShelterMenu - 보호요청 올린 게시글 클릭
 // params - 로그인한 보호소 유저의 _id
@@ -25,7 +26,7 @@ export default ShelterProtectRequests = ({route, navigation}) => {
 		// Modal.popNoBtn('잠시만 기다려주세요.');
 		getProtectRequestListByShelterId(
 			{
-				shelter_userobject_id: route.params,
+				shelter_userobject_id: userGlobalObject.userInfo._id,
 				protect_request_status: filterStatus,
 				protect_request_object_id: null,
 				request_number: 10,
@@ -68,7 +69,8 @@ export default ShelterProtectRequests = ({route, navigation}) => {
 
 	//보호 게시글 목록의 라벨 클릭 콜백
 	const onClickLabel = (status, user_id, item) => {
-		navigation.push('ProtectRequestManage', {item: item});
+		console.log('item', item._id);
+		navigation.push('ProtectRequestManage', {id: item._id});
 	};
 
 	//보호게시글 목록의 즐겨찾기 태그

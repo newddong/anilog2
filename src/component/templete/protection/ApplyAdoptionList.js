@@ -35,7 +35,6 @@ export default ApplyAdoptionList = props => {
 			},
 			result => {
 				// console.log(`ApplyAdoptionList getUserAdoptProtectionList: ${JSON.stringify(result.msg)}`);
-
 				//1depth 올려줌.
 				for (let index = 0; index < result.msg.length; index++) {
 					result.msg[index].protect_request_photo_thumbnail = result.msg[index].protect_act_request_article_id.protect_request_photos_uri[0];

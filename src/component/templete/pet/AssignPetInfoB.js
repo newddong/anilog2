@@ -68,7 +68,7 @@ export default AssignPetInfoB = props => {
 				if (isCopied.user_profile_uri == '') {
 					isCopied.user_profile_uri = 'http://';
 				}
-				console.log('isCopied.user_profile_uri ', isCopied.user_profile_uri);
+				// console.log('isCopied.user_profile_uri ', isCopied.user_profile_uri);
 				try {
 					assignPet(
 						{...isCopied, userobject_id: data.userobject_id},

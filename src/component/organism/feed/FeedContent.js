@@ -12,7 +12,9 @@ import {Arrow_Down_GRAY20, Arrow_Up_GRAY20} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {GRAY10} from 'Root/config/color';
 import {
+	FEED_MEATBALL_MENU,
 	FEED_MEATBALL_MENU_FOLLOWING,
+	FEED_MEATBALL_MENU_MY_FEED,
 	FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS,
 	FEED_MEATBALL_MENU_UNFOLLOWING,
 	REPORT_MENU,
@@ -147,86 +149,148 @@ export default FeedContent = props => {
 		}, 100);
 	};
 
+	//피드 미트볼 메뉴 - 수정 클릭
+	const onPressEdit = () => {
+		Modal.close();
+		console.log('수정');
+	};
+
+	//피드 미트볼 메뉴 - 삭제 클릭
+	const onPressDelete = () => {
+		Modal.close();
+		console.log('삭제');
+	};
+
 	const onClickMeatball = () => {
 		//피드 미트볼 메뉴 팝업 분기에 대한 기획의도가 불분명한 상태이므로
 		//출력되는 메뉴에 대한 분기처리는 차후 처리 (현재는 더미로 적용)
-		// console.log(props.data);
 		let isMyFeed = userGlobalObject.userInfo._id == props.data.feed_writer_id._id;
-		if (isMyFeed) {
-			//나의 피드 게시글의 미트볼 헤더 클릭
-			Modal.popSelectBoxModal(
-				FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS,
-				selectedItem => {
-					alert(selectedItem);
-					Modal.close();
-					setIsMeatballClicked(false);
-				},
-				() => Modal.close(),
-				false,
-				'',
-			);
-		} else if (!isMyFeed) {
-			getFollows(
-				{userobject_id: userGlobalObject.userInfo._id},
-				result => {
-					// console.log('result / getFollows ', result.msg);
-					let follow_id_list = [];
-					result.msg.map((v, i) => {
-						follow_id_list.push(v.follow_id._id);
-					});
-					// console.log('follow', follow_id_list);
-					let isFollowers = follow_id_list.includes(props.data.feed_writer_id._id);
-					// console.log('isFollowers?', follow_id_list.includes(props.data.feed_writer_id._id));
-					//현재 팔로우 상태 중인 유저의 피드글의 미트볼 헤더 클릭
-					if (isFollowers) {
-						Modal.popSelectBoxModal(
-							FEED_MEATBALL_MENU_FOLLOWING,
-							selectedItem => {
-								// alert(selectedItem);
-								Modal.close();
-								if (selectedItem == '신고') {
-									onPressReport();
-								} else if (selectedItem == '공유하기') {
-									onPressShare();
-								} else if (selectedItem == '팔로우 취소') {
-									onPressCancelFollow();
-								} else if (selectedItem == '쪽지 보내기') {
-									onPressSendMsg();
-								}
-								setIsMeatballClicked(false);
-							},
-							() => Modal.close(),
-							false,
-							'',
-						);
-						//현재 팔로우 상태 중이지 않은 유저의 피드글의 미트볼 헤더 클릭
-					} else {
-						Modal.popSelectBoxModal(
-							FEED_MEATBALL_MENU_UNFOLLOWING,
-							selectedItem => {
-								alert(selectedItem);
-								if (selectedItem == '신고') {
-									onPressReport();
-								} else if (selectedItem == '공유하기') {
-									onPressShare();
-								} else if (selectedItem == '팔로우 취소') {
-									onPressCancelFollow();
-								} else if (selectedItem == '쪽지 보내기') {
-									onPressSendMsg();
-								}
-								Modal.close();
-								setIsMeatballClicked(false);
-							},
-							() => Modal.close(),
-							false,
-							'',
-						);
-					}
-				},
-				err => {
-					console.log('err', err);
-				},
-			);
+		let feedType = props.data.feed_type;
+		if (feedType == 'feed') {
+			if (isMyFeed) {
+				//나의 피드 게시글의 미트볼 헤더 클릭
+				Modal.popSelectBoxModal(
+					FEED_MEATBALL_MENU_MY_FEED,
+					selectedItem => {
+						if (selectedItem == '공유하기') {
+							onPressShare();
+						} else if (selectedItem == '수정') {
+							onPressEdit();
+						} else if (selectedItem == '삭제') {
+							onPressDelete();
+						}
+						Modal.close();
+						setIsMeatballClicked(false);
+					},
+					() => Modal.close(),
+					false,
+					'',
+				);
+			} else if (!isMyFeed) {
+				//내 피드가 아닐 경우의 미트볼 클릭 출력 아이템
+				getFollows(
+					{userobject_id: userGlobalObject.userInfo._id},
+					result => {
+						// console.log('result / getFollows ', result.msg);
+						let follow_id_list = [];
+						result.msg.map((v, i) => {
+							follow_id_list.push(v.follow_id._id);
+						});
+						let isFollowers = follow_id_list.includes(props.data.feed_writer_id._id); //해당 피드 게시글 작성자가 내 팔로워 목록에 있는지 여부
+						//현재 팔로우 상태 중인 유저의 피드글의 미트볼 헤더 클릭
+						if (isFollowers) {
+							//내가 팔로우하고 있는 유저의 피드게시글
+							Modal.popSelectBoxModal(
+								FEED_MEATBALL_MENU_FOLLOWING,
+								selectedItem => {
+									Modal.close();
+									if (selectedItem == '신고') {
+										onPressReport();
+									} else if (selectedItem == '공유하기') {
+										onPressShare();
+									} else if (selectedItem == '팔로우 취소') {
+										onPressCancelFollow();
+									} else if (selectedItem == '쪽지 보내기') {
+										onPressSendMsg();
+									}
+									setIsMeatballClicked(false);
+								},
+								() => Modal.close(),
+								false,
+								'',
+							);
+						} else {
+							//현재 팔로우 상태 중이지 않은 유저의 피드글의 미트볼 헤더 클릭
+							Modal.popSelectBoxModal(
+								FEED_MEATBALL_MENU_UNFOLLOWING,
+								selectedItem => {
+									// alert(selectedItem);
+									if (selectedItem == '신고') {
+										onPressReport();
+									} else if (selectedItem == '공유하기') {
+										onPressShare();
+									} else if (selectedItem == '팔로우 취소') {
+										onPressCancelFollow();
+									} else if (selectedItem == '쪽지 보내기') {
+										onPressSendMsg();
+									}
+									Modal.close();
+									setIsMeatballClicked(false);
+								},
+								() => Modal.close(),
+								false,
+								'',
+							);
+						}
+					},
+					err => {
+						console.log('err', err);
+					},
+				);
+			}
+		} else {
+			//긴급 피드(실종 제보)
+			if (isMyFeed) {
+				// 긴급피드 올린 작성자일 경우
+				Modal.popSelectBoxModal(
+					FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS,
+					selectedItem => {
+						console.log(selectedItem);
+						if (selectedItem == '상태변경') {
+							// onPressReport();
+						} else if (selectedItem == '공유하기') {
+							onPressShare();
+						} else if (selectedItem == '수정') {
+							onPressEdit();
+						} else if (selectedItem == '삭제') {
+							onPressDelete();
+						}
+						Modal.close();
+						setIsMeatballClicked(false);
+					},
+					() => Modal.close(),
+					false,
+					'',
+				);
+			} else if (!isMyFeed) {
+				// 긴급피드 올린 작성자가 아닐 경우
+				Modal.popSelectBoxModal(
+					FEED_MEATBALL_MENU,
+					selectedItem => {
+						console.log(selectedItem);
+						if (selectedItem == '공유하기') {
+							onPressShare();
+						} else if (selectedItem == '신고') {
+							onPressReport();
+						}
+						Modal.close();
+						setIsMeatballClicked(false);
+					},
+					() => Modal.close(),
+					false,
+					'',
+				);
+			}
 		}
 	};
 
@@ -240,22 +304,20 @@ export default FeedContent = props => {
 
 	const onTextLayout = e => {
 		// console.log('텍스트 레이아웃', e.nativeEvent, 1*DP);
-		if(Platform.OS=='ios'){	
+		if (Platform.OS == 'ios') {
 			if (e.nativeEvent.lines.length >= 2) {
 				setIsShowBtn(true);
-				setLineCount(e.nativeEvent.lines.length+1);
-			} 
-			else{
+				setLineCount(e.nativeEvent.lines.length + 1);
+			} else {
 				setIsShowBtn(false);
 				setLineCount(e.nativeEvent.lines.length);
 			}
 		}
-		if(Platform.OS=='android'){
+		if (Platform.OS == 'android') {
 			if (e.nativeEvent.lines.length >= 2) {
 				setIsShowBtn(true);
 				setLineCount(e.nativeEvent.lines.length);
-			} 
-			else{
+			} else {
 				setIsShowBtn(false);
 				setLineCount(e.nativeEvent.lines.length);
 			}
@@ -274,13 +336,11 @@ export default FeedContent = props => {
 			return {};
 		} else {
 			return {
-				height: 110 * DP + (lineCount > 3 ? 3 : lineCount) * 54*DP,
+				height: 110 * DP + (lineCount > 3 ? 3 : lineCount) * 54 * DP,
 			};
 		}
 	};
 
-	// console.log('피드 컨텐츠 경로명', route.name);
-	// console.log('피드 텍스트 내용 : ', feed_content.split('\n'));
 	return (
 		// <View style={isMissingReportRoute || show ? {} : {height: 270 * DP}} removeClippedSubviews>
 		<View style={[layoutStyle()]} removeClippedSubviews>

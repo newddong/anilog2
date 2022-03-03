@@ -61,6 +61,8 @@ import SettingOpen from 'Templete/user/SettingOpen';
 import ProtectionApplicationList from 'Root/component/templete/protection/ProtectionApplicationList';
 import ProtectCommentList from 'Root/component/templete/protection/ProtectCommentList';
 import AlarmAndSearchHeader from 'Root/navigation/header/AlarmAndSearchHeader';
+import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballHeader';
+import EditAidRequest from 'Root/component/templete/protection/EditAidRequest';
 const MyStack = createStackNavigator();
 
 export default MyStackNavigation = props => {
@@ -87,7 +89,7 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen
 				name="AnimalProtectRequestDetail"
 				component={AnimalProtectRequestDetail}
-				options={{header: props => <SimpleHeader {...props} />}}
+				options={{header: props => <SimpleWithMeatballHeader {...props} />}}
 			/>
 			<MyStack.Screen
 				name="FeedListForHashTag"
@@ -220,6 +222,11 @@ export default MyStackNavigation = props => {
 				name="WriteAidRequest"
 				component={WriteAidRequest}
 				options={{header: props => <SendHeader {...props} />, title: '동물 보호 요청'}}
+			/>
+			<MyStack.Screen
+				name="EditAidRequest"
+				component={EditAidRequest}
+				options={{header: props => <SendHeader {...props} />, title: '보호 요청 게시글 수정'}}
 			/>
 			<MyStack.Screen
 				name="ShelterProtectAnimalList"

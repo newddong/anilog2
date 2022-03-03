@@ -1,16 +1,5 @@
 import React from 'react';
-import {
-	View,
-	Text,
-	TouchableWithoutFeedback,
-	StyleSheet,
-	Dimensions,
-	Platform,
-	ScrollView,
-	FlatList,
-	TouchableOpacity,
-	ActivityIndicator,
-} from 'react-native';
+import {View, Text, StyleSheet, Dimensions, Platform, FlatList, TouchableOpacity, ActivityIndicator} from 'react-native';
 import AniButton from '../button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10, APRI10} from 'Root/config/color';
@@ -20,7 +9,6 @@ import {getUserInfoById} from 'Root/api/userapi';
 import userGlobalObj from 'Root/config/userGlobalObject';
 import {txt} from 'Root/config/textstyle';
 import PetLabel from '../label/PetLabel';
-import {item} from 'Root/component/templete/style_address';
 
 /**
  * 아바타 동물을 선택하는 모달창
@@ -76,16 +64,13 @@ const AvatarSelectModal = props => {
 			},
 		);
 		checkApi.current = true;
-	}, []);
-
-	const scrollViewRef = React.useRef();
-
-	React.useEffect(() => {
+		//스크롤 Indicator 출력
 		setTimeout(() => {
 			scrollViewRef.current?.flashScrollIndicators();
 		}, 500);
-		// scrollViewRef.current;
-	}, [scrollViewRef]);
+	}, []);
+
+	const scrollViewRef = React.useRef();
 
 	if (!loading) {
 		return <ActivityIndicator />;
@@ -109,21 +94,6 @@ const AvatarSelectModal = props => {
 										persistentScrollbar={true}
 										showsHorizontalScrollIndicator={false}
 										scrollToOverflowEnabled={false}></FlatList>
-									{items.length > 5 && !showIndicator ? (
-										<View
-											style={{
-												top: top,
-												right: 11.5 * DP,
-												height: 200 * DP,
-												// height: 500 * DP,
-												width: 6 * DP,
-												borderRadius: 40 * DP,
-												backgroundColor: 'gray',
-											}}
-										/>
-									) : (
-										<></>
-									)}
 								</View>
 							)}
 						</View>

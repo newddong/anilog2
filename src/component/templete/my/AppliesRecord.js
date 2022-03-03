@@ -24,8 +24,9 @@ export default AppliesRecord = ({route}) => {
 				userobject_id: userGlobalObject.userInfo._id,
 			},
 			result => {
+				//입양
 				if (result.msg.adopt.length > 0) {
-					// console.log('result / getAppliesRecord / AppliesRecord : ', JSON.stringify(result.msg.protect[0]));
+					// console.log('result / getAppliesRecord / AppliesRecord : ', JSON.stringify(result.msg.protect));
 					let adopt = result.msg.adopt[0];
 					let adopt_animal_info = adopt.protect_act_request_article_id._id;
 					delete adopt_animal_info._id;
@@ -41,7 +42,7 @@ export default AppliesRecord = ({route}) => {
 					const adoptArr = [adopt];
 					setAdopt_application_list(adoptArr);
 				}
-
+				//임보
 				if (result.msg.protect.length > 0) {
 					let protect = result.msg.protect[0];
 					let protect_animal_info = protect.protect_act_request_article_id.protect_animal_id;
@@ -55,7 +56,7 @@ export default AppliesRecord = ({route}) => {
 					const protectArr = [protect];
 					setProtect_application_list(protectArr);
 				}
-
+				//봉사활동
 				if (result.msg.volunteer.length > 0) {
 					let volunteerList = result.msg.volunteer.length > 5 ? result.msg.volunteer.slice(0, 4) : result.msg.volunteer;
 					volunteerList.map((v, i) => {

@@ -29,7 +29,7 @@ export default AdoptorInformation = ({route, navigation}) => {
 			},
 			result => {
 				// console.log('result / getProtectAnimalByProtectAnimalId  / AdoptorInformation  : ', result.msg.protect_act_applicants);
-				// 				1. 이전 템플릿(AnimalFromShelter)에서 보내주는 파라미터의 ProtectRequestObject 의
+				// 1. 이전 템플릿(AnimalFromShelter)에서 보내주는 파라미터의 ProtectRequestObject 의
 				// 보호동물 _id를 토대로 getProtectAnimalByProtectAnimalId(보호동물 상세정보 조회) API 접속
 				// 2. 보호동물 오브젝트에서 해당 동물에 대한 입양 및 임보 신청 건이 배열 형태로 옴
 				// protect_act_applicants : ["61c34aed17f59a595cc4219a", "61c34be517f59a595cc421a0"]
@@ -100,4 +100,3 @@ export default AdoptorInformation = ({route, navigation}) => {
 		);
 	}
 };
-// 61c7104c10b3b3bf4acbd20b

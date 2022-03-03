@@ -77,7 +77,6 @@ export default AssignPetInfoA = props => {
 		Modal.popSelectScrollBoxModal([types.map(v => v.pet_species)], '동물 종 선택', selectedItem => {
 			const findItem = types.find(e => e.pet_species == selectedItem);
 			const pet_spcies_detail = findItem.pet_species_detail;
-			console.log('pet_spcies_detail', pet_spcies_detail);
 			setData({...data, pet_species: selectedItem, pet_species_detail: pet_spcies_detail[0]});
 			Modal.close();
 		});

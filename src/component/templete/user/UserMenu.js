@@ -40,6 +40,7 @@ import {userLogout} from 'Root/api/userapi';
 import {useIsFocused} from '@react-navigation/native';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {GRAY40} from 'Root/config/color';
+import DP from 'Root/config/dp';
 
 export default UserMenu = props => {
 	// console.log('UserMenu Props', props);
@@ -184,16 +185,14 @@ export default UserMenu = props => {
 				{/* 유저 프로필 정보 */}
 				<View style={[userMenu_style.userMenu_step1]}>
 					<View style={[temp_style.userInfo, userMenu_style.userInfo]}>
-						<View style={[temp_style.profileImageLarge, userMenu_style.profileImageLarge]}>
-							{data._id != undefined && <ProfileImageLarge194 data={data} />}
-						</View>
+						<View style={[temp_style.profileImageLarge]}>{data._id != undefined && <ProfileImageLarge194 data={data} />}</View>
 
-						<View style={{marginLeft: 52 * DP}}>
+						<View style={[{marginLeft: 46 * DP}, {height: 194 * DP}, {justifyContent: 'flex-end'}]}>
 							<TouchableOpacity onPress={onPressMyName} style={[userMenu_style.user_id]}>
 								<Text style={[txt.roboto40b]}>{data.user_nickname || ''}</Text>
 							</TouchableOpacity>
 							{/* 업로드 팔로워 팔로잉 */}
-							<View style={[userMenu_style.contents, {marginTop: 18 * DP}, {alignItems: 'flex-start'}]}>
+							<View style={[{width: 408 * DP}, {marginTop: 18 * DP}]}>
 								<SocialInfoB data={data} />
 							</View>
 						</View>
@@ -258,28 +257,32 @@ export default UserMenu = props => {
 
 				{/* 하단 메뉴 */}
 				<View style={[temp_style.userMenu_step2, userMenu_style.horizontalLine]}>
-					{/* <View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}> */}
-					<ProfileMenu
-						menuTitle={FAVORITES}
-						menuItems={[
-							[FRIENDS, PEED_CONTENTS],
-							[PROTECTION_REQUEST, COMUNITY],
-						]}
-						onClick={menuClick}
-						titleIcon={<FavoriteTag48_Filled />}
-					/>
-					{/* </View> */}
-					<View>
-						<ProfileMenu
-							menuTitle={MY_ACTIVITY_IN_SHELTER}
-							menuItems={[
-								[MY_CONTENTS, TAGED_CONTENTS_FOR_ME],
-								[APPLICATION_HISTORY, ANIMAL_PROTECTION_STATE],
-								[COMUNITY, NOTE_LIST],
-							]}
-							onClick={menuClick}
-							titleIcon={<Paw46 />}
-						/>
+					<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
+						<View>
+							<ProfileMenu
+								menuTitle={FAVORITES}
+								menuItems={[
+									[FRIENDS, PEED_CONTENTS],
+									[PROTECTION_REQUEST, COMUNITY],
+								]}
+								onClick={menuClick}
+								titleIcon={<FavoriteTag48_Filled />}
+							/>
+						</View>
+					</View>
+					<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
+						<View>
+							<ProfileMenu
+								menuTitle={MY_ACTIVITY_IN_SHELTER}
+								menuItems={[
+									[MY_CONTENTS, TAGED_CONTENTS_FOR_ME],
+									[APPLICATION_HISTORY, ANIMAL_PROTECTION_STATE],
+									[COMUNITY, NOTE_LIST],
+								]}
+								onClick={menuClick}
+								titleIcon={<Paw46 />}
+							/>
+						</View>
 					</View>
 					<View>
 						<ProfileMenu

@@ -10,7 +10,7 @@ import FilterButton from 'Molecules/button/FilterButton';
 import {PET_KIND, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
 import {getMissingReportList} from 'Root/api/feedapi.js';
 import {getPettypes} from 'Root/api/userapi';
-import {btn_w306_h68} from 'Component/atom/btn/btn_style';
+import {btn_w306_h68, btn_w306_h68_r2} from 'Component/atom/btn/btn_style';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 export default MissingReportList = props => {
 	const navigation = useNavigation();
@@ -187,7 +187,7 @@ export default MissingReportList = props => {
 								</View>
 							</View>
 						</View>
-						<View style={[searchProtectRequest.animalNeedHelpList]}>
+						<View style={[searchProtectRequest.animalMissingReportList]}>
 							{/* 플랫리스트 부분 */}
 							<AnimalNeedHelpList
 								// data={dummy_MissingReportList}

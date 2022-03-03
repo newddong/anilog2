@@ -55,6 +55,7 @@ export default SaveButtonHeader = ({navigation, route, options, back}) => {
 					result => {
 						console.log('result / updateUserDetailInformation / SaveButtonHeader   : ', result);
 						Modal.popOneBtn('저장되었습니다.', '확인', Modal.close);
+						navigation.goBack();
 					},
 					err => {
 						console.log('err / updateUserDetailInformation / SaveButtonHeader    :  ', err);

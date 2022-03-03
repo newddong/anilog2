@@ -10,62 +10,36 @@ import AnimalProtectDetail from 'Organism/info/AnimalProtectDetail';
 import {login_style, btn_style, protectApplyForm} from 'Templete/style_templete';
 import {setShelterProtectAnimalStatus} from 'Root/api/shelterapi';
 
+//ShelterMenu -> 신청서조회 -> 신청서 클릭 -> 입양 확정 및 임시보호 확정
 export default ProtectApplyForm = ({route, navigation}) => {
-	console.log('ProtectApplyForm props', route.params);
+	// console.log('ProtectApplyForm props', route.params);
 	const [data, setData] = React.useState(route.params);
 	const [loading, setLoading] = React.useState(true); // 화면 출력 여부 결정
 
 	React.useEffect(() => {
-		// console.log('data.protect_act_request_article_id', route.params.data.protect_act_request_article_id);
-		if (route.params?.route == 'ProtectionApplicationList') {
-			// console.log('route.params.data.protect_act_request_article_id', route.params.data.protect_act_request_article_id);
-			getProtectRequestByProtectRequestId(
-				{
-					protect_request_object_id: route.params.data.protect_act_request_article_id,
-				},
-				result => {
-					// console.log('result / getProtectRequestByProtectRequestId / ProtectApplyForm ', result.msg);
-					const addedData = {...route.params.data};
-					addedData.protect_animal_species = result.msg.protect_animal_species;
-					addedData.protect_animal_species_detail = result.msg.protect_animal_species_detail;
-					addedData.protect_animal_rescue_location = result.msg.protect_animal_id.protect_animal_rescue_location;
-					addedData.protect_request_date = result.msg.protect_request_date;
-					addedData.protect_request_photos_uri = result.msg.protect_request_photos_uri;
-					addedData.protect_animal_id = result.msg.protect_animal_id;
-					addedData.shelter_name = result.msg.protect_request_writer_id.user_nickname;
-					setData(addedData);
-					setTimeout(() => {
-						setLoading(false);
-					}, 500);
-				},
-				err => {
-					console.log('err / getProtectRequestByProtectRequestId / ProtectApplyForm /ProtectionApplicationList ', err);
-				},
-			);
-		} else {
-			getProtectRequestByProtectRequestId(
-				{
-					protect_request_object_id: data.protect_act_request_article_id,
-				},
-				result => {
-					// console.log('result / getProtectRequestByProtectRequestId / ProtectApplyForm ', result.msg);
-					const addedData = {...data};
-					addedData.protect_animal_species = result.msg.protect_animal_species;
-					addedData.protect_animal_species_detail = result.msg.protect_animal_species_detail;
-					addedData.protect_animal_rescue_location = result.msg.protect_animal_id.protect_animal_rescue_location;
-					addedData.protect_request_date = result.msg.protect_request_date;
-					addedData.protect_request_photos_uri = result.msg.protect_request_photos_uri;
-					// console.log('addred', addedData);
-					setData(addedData);
-					setTimeout(() => {
-						setLoading(false);
-					}, 500);
-				},
-				err => {
-					console.log('err / getProtectRequestByProtectRequestId / ProtectApplyForm  ', err);
-				},
-			);
-		}
+		getProtectRequestByProtectRequestId(
+			{
+				protect_request_object_id: route.params.data.protect_act_request_article_id,
+			},
+			result => {
+				// console.log('result / getProtectRequestByProtectRequestId / ProtectApplyForm ', result.msg);
+				const addedData = {...route.params.data};
+				addedData.protect_animal_species = result.msg.protect_animal_species;
+				addedData.protect_animal_species_detail = result.msg.protect_animal_species_detail;
+				addedData.protect_animal_rescue_location = result.msg.protect_animal_id.protect_animal_rescue_location;
+				addedData.protect_request_date = result.msg.protect_request_date;
+				addedData.protect_request_photos_uri = result.msg.protect_request_photos_uri;
+				addedData.protect_animal_id = result.msg.protect_animal_id;
+				addedData.shelter_name = result.msg.protect_request_writer_id.user_nickname;
+				setData(addedData);
+				setTimeout(() => {
+					setLoading(false);
+				}, 500);
+			},
+			err => {
+				console.log('err / getProtectRequestByProtectRequestId / ProtectApplyForm /ProtectionApplicationList ', err);
+			},
+		);
 	}, []);
 
 	const onPressConfirm = () => {
@@ -91,6 +65,7 @@ export default ProtectApplyForm = ({route, navigation}) => {
 						console.log('err / setProtectActivityStatus / ProtectApplyForm  : ', err);
 					},
 				);
+				//보호 요청 게시글의 상태를 변경
 				setProtectRequestStatus(
 					{
 						protect_request_object_id: data.protect_act_request_article_id,
@@ -104,7 +79,7 @@ export default ProtectApplyForm = ({route, navigation}) => {
 						console.log('err / SetProtectRequestStatus / ProtectApplyForm  :', err);
 					},
 				);
-				console.log('data.protect_act_status', data.protect_act_type);
+				//보호 동물의 상태를 변경
 				setShelterProtectAnimalStatus(
 					{
 						shelter_protect_animal_object_id: data.protect_animal_id._id,
@@ -122,8 +97,6 @@ export default ProtectApplyForm = ({route, navigation}) => {
 			},
 		);
 	};
-	console.log('protect_act_type', data.protect_act_type);
-
 	if (loading) {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>

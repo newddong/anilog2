@@ -146,7 +146,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	//보호소 라벨 공유 클릭
 	const onPressShare = e => {
 		setIsSharePressed(!isSharePressed);
-		shareRef.current.measure((px, py) => {
+		shareRef.current.measure((fx, fy, width, height, px, py) => {
 			Modal.popShareModal(
 				{x: px, y: py},
 				() => alert('kakao'),

@@ -114,8 +114,7 @@ export default ShelterMenu = ({route}) => {
 				break;
 			// 신청서 조회
 			case INQUERY_APPLICATION:
-				navigation.navigate('ProtectionApplicationList', {shelter_name: data.shelter_name});
-
+				navigation.navigate('ProtectionApplicationList');
 				break;
 			//나의 보호소 출신 동물
 			case FROM_MY_SHELTER:

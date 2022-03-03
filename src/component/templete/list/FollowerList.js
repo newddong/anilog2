@@ -27,7 +27,6 @@ export default FollowerList = ({route, navigation}) => {
 			getFollowers(
 				{
 					userobject_id: route.params.userobject._id,
-					user_nickname: input,
 				},
 				result => {
 					setMyFollower(result.msg.map(v => v.follower_id));

@@ -131,7 +131,7 @@ export async function getProtectRequestListByProtectAnimalId(params, callback, e
  * 동물보호 요청 게시물을 수정
  * @param {object} params - token아이디
  * @param {string} params.protect_request_object_id  - 동물보호 요청 게시물 ID
- * @param {string} params.protect_request_photos_uri - 동물보호 요청 게시물 추가 사진 uri
+ * @param {Array<string>} params.protect_request_photos_uri - 동물보호 요청 게시물 추가 사진 uri
  * @param {Array<integer>} params.protect_photos_to_delete - 삭제할 동물보호 요청 게시물 사진 인덱스 (인덱스 0은 삭제 불가)
  * @param {string} params.protect_request_title - 동물보호 요청 게시물 제목
  * @param {string} params.protect_request_content - 동물보호 요청 게시물 내용

@@ -142,6 +142,7 @@ export async function updateProtectRequest(params, callback, errcallback) {
 	apiController('/shelter/updateProtectRequest', arguments);
 }
 
+
 /**
  * 동물보호 요청 게시물을 삭제
  * @param {object} params - token아이디

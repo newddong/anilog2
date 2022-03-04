@@ -21,20 +21,20 @@ const InterestTagModal = props => {
 	//유저 오브젝트의 user_interests 의 더미데이터
 	// user_interests는 크게 location 및 activity로 구성
 
-	const userDataDummy = [
-		{
-			category: '건강',
-			content: ['재활', '노환'],
-		},
-		{
-			category: '놀이',
-			content: ['애견카페', '애견패션'],
-		},
-		{
-			category: '사료&간식',
-			content: ['노환', '애견패션', '어질리티'],
-		},
-	];
+	// const userDataDummy = [
+	// 	{
+	// 		category: '건강',
+	// 		content: ['재활', '노환'],
+	// 	},
+	// 	{
+	// 		category: '놀이',
+	// 		content: ['애견카페', '애견패션'],
+	// 	},
+	// 	{
+	// 		category: '사료&간식',
+	// 		content: ['노환', '애견패션', '어질리티'],
+	// 	},
+	// ];
 	// const dummyActivityList = [
 	// 	{
 	// 		category: '생활',
@@ -57,7 +57,7 @@ const InterestTagModal = props => {
 	// 		content: ['재활', '노환', '예방접종', '구강관리', '다이어트'],
 	// 	},
 	// ];
-	const [userData, setUserData] = React.useState(userDataDummy);
+	const [userData, setUserData] = React.useState();
 	const [userInterestContent, setUserInterestContent] = React.useState([]);
 	const [isSaved, setIsSaved] = React.useState(false); // '저장하지 않고 나가시겠습니까?' 메시지 출력 여부 판별
 	const [showBtnModal, setShowBtnModal] = React.useState(false); //모달창 대체 View 출력 여부
@@ -85,7 +85,6 @@ const InterestTagModal = props => {
 		});
 		//현재 유저의 관심사 리스트를 목록들에 적용
 		const saveUserInterest = Object.entries(props.data).map(interest => {
-
 			console.log('object', interest);
 			if (props.isActivation) {
 				tempUserInterestContentList.push(interest[1]);
@@ -106,7 +105,6 @@ const InterestTagModal = props => {
 		// 	err => console.log('err', err),
 		// );
 	}, []);
-
 
 	//현재 유저의 관심사 리스트를 목록들에 적용
 	// React.useEffect(() => {
@@ -380,7 +378,7 @@ const style = StyleSheet.create({
 		paddingVertical: 30 * DP,
 		paddingHorizontal: 64 * DP,
 		backgroundColor: 'white',
-		opacity: 0.8,
+		opacity: 0.9,
 	},
 	btnModalTitle: {
 		alignItems: 'center',

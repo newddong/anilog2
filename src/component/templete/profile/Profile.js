@@ -16,7 +16,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import InfoScreen from 'Organism/info/InfoScreen';
 import {txt} from 'Root/config/textstyle';
 import {GRAY10} from 'Root/config/color';
-import dp from 'Root/config/dp';
+import DP from 'Root/config/dp';
 
 export default Profile = ({route, navigation}) => {
 	const [data, setData] = React.useState({...route.params?.userobject, feedList: []}); //라벨을 클릭한 유저의 userObject data
@@ -327,9 +327,12 @@ export default Profile = ({route, navigation}) => {
 		<View style={[login_style.wrp_main, profile.container]}>
 			{showTabContent()}
 			{userGlobalObject.userInfo && (
-				<View style={[temp_style.floatingBtn, profile.floatingBtn]}>
+				<View style={[{width: 94 * DP}, {height: 94 * DP}, profile.floatingBtn, {alignItems: 'center'}, {justifyContent: 'center'}]}>
 					{data.user_type == 'pet' ? <Message94 onPress={onPressSendMsg} /> : <Write94 onPress={moveToFeedWrite} />}
 				</View>
+				// <View style={[temp_style.floatingBtn, profile.floatingBtn, {alignItems: 'center'}, {justifyContent: 'center'}, {backgroundColor: 'yellow'}]}>
+				// 	{data.user_type == 'pet' ? <Message94 onPress={onPressSendMsg} /> : <Write94 onPress={moveToFeedWrite} />}
+				// </View>
 			)}
 		</View>
 	);

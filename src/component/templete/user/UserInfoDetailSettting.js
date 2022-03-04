@@ -56,11 +56,10 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 						temp.push(contents[1]);
 					});
 				}
-				setContentInterest(temp);
-				setLocationInterest(data.user_interests[0].interests_location);
 			});
 		}
-
+		setContentInterest(temp);
+		setLocationInterest(data.user_interests[0].interests_location);
 		setLoaded(true);
 	}, []);
 

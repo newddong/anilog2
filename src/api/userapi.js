@@ -24,12 +24,9 @@ import {apiController, apiFormController} from './apiController';
  * @param {function} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
-export async function assignUser (params, callback, errcallback){
-	apiController('/user/assignUser',arguments);
-};
-
-
-
+export async function assignUser(params, callback, errcallback) {
+	apiController('/user/assignUser', arguments);
+}
 
 /**
  * 유저가 등록중인 임시보호/입양할 동물이 있는지 체크
@@ -40,7 +37,7 @@ export async function assignUser (params, callback, errcallback){
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function checkProtectPet(params, callback, errcallback) {
-	apiController( '/user/checkProtectPet', arguments);
+	apiController('/user/checkProtectPet', arguments);
 }
 
 /**
@@ -63,7 +60,7 @@ export async function checkProtectPet(params, callback, errcallback) {
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function assignPet(params, callback, errcallback) {
-	apiController( '/user/assignPet', arguments);
+	apiController('/user/assignPet', arguments);
 }
 
 /**
@@ -85,7 +82,7 @@ export async function assignPet(params, callback, errcallback) {
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function assignShelter(params, callback, errcallback) {
-	apiController( '/user/assignShelter', arguments);
+	apiController('/user/assignShelter', arguments);
 }
 
 /**
@@ -97,7 +94,7 @@ export async function assignShelter(params, callback, errcallback) {
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function checkShelterCode(params, callback, errcallback) {
-	apiController( '/user/checkShelterCode', arguments);
+	apiController('/user/checkShelterCode', arguments);
 }
 
 /**
@@ -111,7 +108,7 @@ export async function checkShelterCode(params, callback, errcallback) {
  */
 export async function userLogin(params, callback, errcallback) {
 	// console.log('param userLogin', params);
-	apiController( '/user/userLogin', arguments);
+	apiController('/user/userLogin', arguments);
 }
 
 /**
@@ -120,7 +117,7 @@ export async function userLogin(params, callback, errcallback) {
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function userLogout(params, callback, errcallback) {
-	apiController( '/user/userLogout', arguments);
+	apiController('/user/userLogout', arguments);
 }
 
 /**
@@ -133,7 +130,7 @@ export async function userLogout(params, callback, errcallback) {
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function getUserProfile(params, callback, errcallback) {
-	apiController( '/user/getUserProfile', arguments);
+	apiController('/user/getUserProfile', arguments);
 }
 
 /**
@@ -145,7 +142,7 @@ export async function getUserProfile(params, callback, errcallback) {
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function nicknameDuplicationCheck(params, callback, errcallback) {
-	apiController( '/user/nicknameDuplicationCheck', arguments);
+	apiController('/user/nicknameDuplicationCheck', arguments);
 }
 
 /**
@@ -159,7 +156,7 @@ export async function nicknameDuplicationCheck(params, callback, errcallback) {
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function updateUserInformation(params, callback, errcallback) {
-	apiController( '/user/updateUserInformation', arguments);
+	apiController('/user/updateUserInformation', arguments);
 }
 
 /**
@@ -190,7 +187,7 @@ export async function updateUserInformation(params, callback, errcallback) {
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function updateUserDetailInformation(params, callback, errcallback) {
-	apiController( '/user/updateUserDetailInformation', arguments);
+	apiController('/user/updateUserDetailInformation', arguments);
 }
 
 /**
@@ -206,7 +203,7 @@ export async function updateUserDetailInformation(params, callback, errcallback)
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function updatePetDetailInformation(params, callback, errcallback) {
-	apiController( '/user/updatePetDetailInformation', arguments);
+	apiController('/user/updatePetDetailInformation', arguments);
 }
 
 /**
@@ -219,7 +216,7 @@ export async function updatePetDetailInformation(params, callback, errcallback) 
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function addUserToFamily(params, callback, errcallback) {
-	apiController( '/user/addUserToFamily', arguments);
+	apiController('/user/addUserToFamily', arguments);
 }
 
 /**
@@ -233,7 +230,7 @@ export async function addUserToFamily(params, callback, errcallback) {
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function changeUserPassword(params, callback, errcallback) {
-	apiController( '/user/changeUserPassword', arguments);
+	apiController('/user/changeUserPassword', arguments);
 }
 
 /**
@@ -245,9 +242,8 @@ export async function changeUserPassword(params, callback, errcallback) {
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function getUserInfoById(params, callback, errcallback) {
-	apiController( '/user/getUserInfoById', arguments);
+	apiController('/user/getUserInfoById', arguments);
 }
-
 
 /**
  * 유저의 소개글 변경(로그인 필요)
@@ -257,48 +253,45 @@ export async function getUserInfoById(params, callback, errcallback) {
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
- export async function updateUserIntroduction(params, callback, errcallback) {
-	apiController( '/user/updateUserIntroduction', arguments);
+export async function updateUserIntroduction(params, callback, errcallback) {
+	apiController('/user/updateUserIntroduction', arguments);
 }
-
 
 /**
  * 보호소 상세 정보를 수정
  *
  * @param {object} params
  * @param {string} userobject_id - 수정할 보호소 오브젝트 아이디
- * @param {string} shelter_name - 보호소 이름 
+ * @param {string} shelter_name - 보호소 이름
  * @param {object} params.shelter_address
  * @param {string} params.shelter_address.brief - 보호소 주소
  * @param {string} params.shelter_address.detail - 보호소 상세 주소
- * @param {string} shelter_delegate_contact_number - 보호소 대표 전화번호, 휴대폰 번호 
- * @param {string} user_email - 이메일 
- * @param {string} shelter_homepage - 보호소 홈페이지 uri 
- * @param {string} shelter_foundation_date - 보호소 설립일 
+ * @param {string} shelter_delegate_contact_number - 보호소 대표 전화번호, 휴대폰 번호
+ * @param {string} user_email - 이메일
+ * @param {string} shelter_homepage - 보호소 홈페이지 uri
+ * @param {string} shelter_foundation_date - 보호소 설립일
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
- export async function updateShelterDetailInformation(params, callback, errcallback) {
-	apiController( '/user/updateShelterDetailInformation', arguments);
+export async function updateShelterDetailInformation(params, callback, errcallback) {
+	apiController('/user/updateShelterDetailInformation', arguments);
 }
 
-/** 유저닉네임으로 유저 계정을 검색, 리스트를 반환 
+/** 유저닉네임으로 유저 계정을 검색, 리스트를 반환
  * @param {object} params
  * @param {string} params.user_nickname - 검색할 유저의 닉네임
  * @param {number} params.request_number - 요청할 유저 계정 숫자
  * @param {string} params.userobject_id - 커서 객체(페이징 처리)
- * 
+ *
  * @param {string} params.user_type - 조회할 유저의 타잎 {'user'|'shelter'|'pet'}
- * 
+ *
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
-*/
+ */
 export async function getUserListByNickname(params, callback, errcallback) {
-	console.log('api param',params);
-	apiController( '/user/getUserListByNickname', arguments);
+	console.log('api param', params);
+	apiController('/user/getUserListByNickname', arguments);
 }
-
-
 
 /** 가족 계정에서 대상 유저를 삭제
  * @param {object} params
@@ -306,31 +299,27 @@ export async function getUserListByNickname(params, callback, errcallback) {
  * @param {number} params.pet_userobject_id - 가족계정을 조정할 반려동물아이디
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
-*/
+ */
 export async function removeUserFromFamily(params, callback, errcallback) {
-	apiController( '/user/removeUserFromFamily', arguments);
+	apiController('/user/removeUserFromFamily', arguments);
 }
-
-
 
 /** 펫 타입들을 불러온다.
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
-*/
+ */
 export async function getPettypes(params, callback, errcallback) {
-	apiController( '/user/getPettypes', arguments);
+	apiController('/user/getPettypes', arguments);
 }
-
-
 
 /** 유저를 팔로우한다.
  * @param {object} params
  * @param {string} params.follow_userobject_id - 팔로우 할 유저아이디
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
-*/
+ */
 export async function followUser(params, callback, errcallback) {
-	apiController( '/user/followUser', arguments);
+	apiController('/user/followUser', arguments);
 }
 
 /** 유저를 팔로우 취소한다.
@@ -338,9 +327,9 @@ export async function followUser(params, callback, errcallback) {
  * @param {string} params.follow_userobject_id - 팔로우 취소 할 유저아이디
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
-*/
+ */
 export async function unFollowUser(params, callback, errcallback) {
-	apiController( '/user/unFollowUser', arguments);
+	apiController('/user/unFollowUser', arguments);
 }
 
 /** 대상 유저가 팔로우 한 유저를 검색한다.
@@ -348,18 +337,28 @@ export async function unFollowUser(params, callback, errcallback) {
  * @param {string} params.userobject_id  - 팔로우 목록을 열람할 유저의 아이디.
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
-*/
+ */
 export async function getFollows(params, callback, errcallback) {
-	apiController( '/user/getFollows', arguments);
+	apiController('/user/getFollows', arguments);
 }
-
 
 /** 대상 유저를 팔로우 한 유저를 검색한다.
  * @param {object} params
  * @param {string} params.userobject_id  - 팔로우 목록을 열람할 유저의 아이디.
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
-*/
+ */
 export async function getFollowers(params, callback, errcallback) {
-	apiController( '/user/getFollowers', arguments);
+	apiController('/user/getFollowers', arguments);
+}
+
+/** 반려동물의 상태를 변경한다.
+ * @param {object} params
+ * @param {string} params.userobject_id  - 반려동물의 ID.
+ * @param {string} params.pet_status  - 반려동물의 상태값 (protect|adopt|companion)
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function setPetStatus(params, callback, errcallback) {
+	apiController('/user/setPetStatus', arguments);
 }

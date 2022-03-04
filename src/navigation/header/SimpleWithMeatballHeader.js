@@ -56,7 +56,8 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 							protect_request_object_id: route.params.id,
 						},
 						result => {
-							console.log('result / deleteProtectRequest / SimpleWithMeatBallHeader  : ', result.msg);
+							console.log('result / deleteProtectRequest / SimpleWithMeatBallHeader  : ', result.msg.protect_request_is_delete);
+							navigation.goBack(); //뒤로 가기
 						},
 						err => {
 							console.log('err /deleteProtectRequest / SimpleWithMeatBallHeader  :  ', err);

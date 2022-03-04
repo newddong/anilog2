@@ -141,6 +141,7 @@ export async function getProtectRequestListByProtectAnimalId(params, callback, e
 export async function updateProtectRequest(params, callback, errcallback) {
 	apiController('/shelter/updateProtectRequest', arguments);
 }
+
 /**
  * 동물보호 요청 게시물을 삭제
  * @param {object} params - token아이디
@@ -150,4 +151,15 @@ export async function updateProtectRequest(params, callback, errcallback) {
  */
 export async function deleteProtectRequest(params, callback, errcallback) {
 	apiController('/shelter/deleteProtectRequest', arguments);
+}
+
+/**
+ * 우리 보호소 출신 동물 - 입양처 보기 조회
+ * @param {object} params - token아이디
+ * @param {string} params.protect_animal_object_id - 보호 동물 ID
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getAdoptInfo(params, callback, errcallback) {
+	apiController('/shelter/getAdoptInfo', arguments);
 }

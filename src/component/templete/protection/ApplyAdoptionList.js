@@ -1,17 +1,15 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {ActivityIndicator, FlatList, ScrollView, Text, View} from 'react-native';
+import {ActivityIndicator, ScrollView, Text, View} from 'react-native';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
-import {login_style, temp_style, baseInfo_style} from 'Templete/style_templete';
+import {login_style, baseInfo_style} from 'Templete/style_templete';
 import {getUserAdoptProtectionList} from 'Root/api/protectapi';
-import AnimalNeedHelp from 'Root/component/organism/listitem/AnimalNeedHelp';
 
 // UserMenu => 신청 내역 => 입양 신청 더보기 클릭
 export default ApplyAdoptionList = props => {
 	// console.log('ApplyAdoptionList', props);
 	const navigation = useNavigation();
-	const [data, setData] = React.useState();
-	const [loading, setLoading] = React.useState(true); // 화면 출력 여부 결정
+	const [data, setData] = React.useState(false);
 
 	const onOff_FavoriteTag = (value, index) => {
 		// console.log('즐겨찾기=>' + value + ' ' + index);
@@ -48,17 +46,15 @@ export default ApplyAdoptionList = props => {
 					result.msg[index].protect_animal_status = result.msg[index].protect_act_request_article_id.protect_animal_id.protect_animal_status;
 				}
 				setData(result.msg);
-				setTimeout(() => {
-					setLoading(false);
-				}, 1000);
 			},
 			err => {
 				console.log('err / getAppliesRecord / AppliesRecord', err);
+				setData([]);
 			},
 		);
 	}, []);
 
-	if (loading) {
+	if (data == '') {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
 				<ActivityIndicator size={'large'}></ActivityIndicator>

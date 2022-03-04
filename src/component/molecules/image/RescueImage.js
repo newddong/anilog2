@@ -4,7 +4,7 @@ import Swiper from 'react-native-swiper';
 import {APRI10, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import {ADOPT, DEFAULT_ANIMAL_PROFILE, DISCUSS, NEAR_RAINBOWBRIDGE, PROTECT, RESCUE} from 'Root/i18n/msg';
+import {ADOPT, DISCUSS, NEAR_RAINBOWBRIDGE, PROTECT, RESCUE} from 'Root/i18n/msg';
 import {styles} from 'Atom/image/imageStyle';
 
 /**
@@ -14,7 +14,7 @@ import {styles} from 'Atom/image/imageStyle';
  * @param {'rescue'|'discuss'|'nearrainbow'|'adopt'|'protect'} props.status - 동물의 보호활동 상태
  */
 const RescueImage = props => {
-	// console.log('props / RescueImage', props);
+	console.log('props / RescueImage', props);
 	const getStatusText = () => {
 		switch (props.status) {
 			case 'rescue':
@@ -33,11 +33,9 @@ const RescueImage = props => {
 	};
 	return (
 		<View style={styles.img_rect_654x542}>
-			{props.img_uri.length == 0 ? (
-				<Image source={{uri: DEFAULT_ANIMAL_PROFILE}} style={styles.img_rect_654x542} />
-			) : (
-				<Swiper showsPagination={false} autoplay={false} loop={false} horizontal={true}>
-					{props.img_uri.map((data, idx) => (
+			<Swiper showsPagination={false} autoplay={false} loop={false} horizontal={true}>
+				{props.img_uri != undefined &&
+					props.img_uri.map((data, idx) => (
 						<View key={idx}>
 							<Image source={{uri: data}} style={styles.img_rect_654x542} />
 							<View style={[style.swiper_index]}>
@@ -47,9 +45,7 @@ const RescueImage = props => {
 							</View>
 						</View>
 					))}
-					{/* {getFeedIcon()} */}
-				</Swiper>
-			)}
+			</Swiper>
 
 			<View style={[style.status_text]}>
 				<Text style={[txt.noto36, {textAlign: 'center', color: 'white'}]}>{getStatusText()}</Text>

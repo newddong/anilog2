@@ -9,25 +9,19 @@ import ShelterInfo from 'Organism/info/ShelterInfo';
 import AccountList from 'Organism/list/AccountList';
 import {login_style, applicationFormVolunteer, btn_style} from 'Templete/style_templete';
 import moment from 'moment';
-import {getUserInfoById} from 'Root/api/userapi';
 import {setVolunteerActivityAcceptByMember, setVolunteerActivityStatus} from 'Root/api/volunteerapi';
 import {hyphened} from 'Root/util/dateutil';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {btn_w654} from 'Root/component/atom/btn/btn_style';
-import dp from 'Root/config/dp';
 import UserDescriptionLabel from 'Root/component/molecules/label/UserDescriptionLabel';
 
 //ApplicationFormVolunteer (봉사활동 신청서 폼) 호출 네비게이트
 // ==> ManageVolunteer에서 더보기 클릭, 혹은 AppliesRecord(신청내역)에서 보호소 라벨 클릭 <==
-
 export default ApplicationFormVolunteer = ({route, navigation}) => {
 	// console.log('route / ApplicationFormVolunteer', route.params);
-
 	const data = route.params; // 봉사활동 Object
-	const [loading, setLoading] = React.useState(true); // 화면 출력 여부 결정
 	const isShelterOwner = route.name == 'ShelterVolunteerForm'; // 보호소 계정의 봉사활동 신청관리 루트로 들어왔는지 여부
-	// console.log('data', data);
-	//봉사활동 지원자 프로필 라벨 채우기 위한 API 접속(차후 한 번에 받아오는 방식으로 전환 필요)
+
 	React.useEffect(() => {
 		if (route.name == 'UserVolunteerForm') {
 			// console.log('BeforeSplice', data);
@@ -35,9 +29,6 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 			data.volunteer_accompany.map((v, i) => {
 				accompanyList.push(v.member);
 			});
-			setTimeout(() => {
-				setLoading(false);
-			}, 500);
 		} else {
 			//ShelterVolunteerForm
 			// console.log('ShelterVolunteerForm Recieved params', data);
@@ -45,9 +36,6 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 			data.volunteer_accompany.map((v, i) => {
 				accompanyList.push(v.member);
 			});
-			setTimeout(() => {
-				setLoading(false);
-			}, 500);
 		}
 	}, []);
 
@@ -372,104 +360,96 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 		}
 	};
 
-	if (loading) {
-		return (
-			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
-				<ActivityIndicator size={'large'}></ActivityIndicator>
-			</View>
-		);
-	} else {
-		return (
-			<View style={[login_style.wrp_main, {flex: 1}]}>
-				<ScrollView contentContainerStyle={[applicationFormVolunteer.container]} showsVerticalScrollIndicator={false}>
-					{/* 보호소 정보 박스 (보호소 계정 본인이면 안보여야한다) */}
-					{isShelterOwner ? (
-						<></>
-					) : (
-						<View style={[applicationFormVolunteer.shelterInfo]}>
-							<ShelterInfo data={data} route={route.name} />
+	return (
+		<View style={[login_style.wrp_main, {flex: 1}]}>
+			<ScrollView contentContainerStyle={[applicationFormVolunteer.container]} showsVerticalScrollIndicator={false}>
+				{/* 보호소 정보 박스 (보호소 계정 본인이면 안보여야한다) */}
+				{isShelterOwner ? (
+					<></>
+				) : (
+					<View style={[applicationFormVolunteer.shelterInfo]}>
+						<ShelterInfo data={data} route={route.name} />
+					</View>
+				)}
+				{/* 봉사활동 희망날짜 */}
+				<View style={[applicationFormVolunteer.viewForm]}>
+					<View style={[applicationFormVolunteer.viewForm_step1]}>
+						<View style={[applicationFormVolunteer.icon48]}>
+							<Calendar48_Filled />
 						</View>
-					)}
-					{/* 봉사활동 희망날짜 */}
-					<View style={[applicationFormVolunteer.viewForm]}>
-						<View style={[applicationFormVolunteer.viewForm_step1]}>
-							<View style={[applicationFormVolunteer.icon48]}>
-								<Calendar48_Filled />
-							</View>
-							<View style={[applicationFormVolunteer.title]}>
-								<Text style={[txt.noto24b, {color: GRAY10}]}>봉사활동 희망 날짜</Text>
-							</View>
-						</View>
-						<View style={{}}>
-							{Array(data.volunteer_wish_date.length / data.volunteer_wish_date.length >= 3 ? 3 : 1) //페이징 3개 단위로 나눔
-								.fill(1) // undefined면 값이 호출되지 않으니 1로 일괄 추가
-								.map((v, pagingNumber) => {
-									return (
-										<View key={pagingNumber} style={[applicationFormVolunteer.wish_date_separator]}>
-											{data.volunteer_wish_date.map((v, i) => {
-												if (Math.floor(i / 3) == pagingNumber)
-													// 페이징 기준인 3으로 나눈 몫이 각 pagingNumber값과 일치하는 경우만 출력
-													return (
-														<Text key={i} style={[txt.roboto28, {paddingLeft: 5}]}>
-															{parsing_wish_date(v)} {' / '}
-														</Text>
-													);
-											})}
-										</View>
-									);
-								})}
+						<View style={[applicationFormVolunteer.title]}>
+							<Text style={[txt.noto24b, {color: GRAY10}]}>봉사활동 희망 날짜</Text>
 						</View>
 					</View>
-					{/* 참여인원 */}
-					<View style={[applicationFormVolunteer.participants]}>
-						<View style={[applicationFormVolunteer.participants_step1]}>
-							<View style={[applicationFormVolunteer.icon48]}>
-								<Person48 />
-							</View>
-							<View style={[applicationFormVolunteer.title]}>
-								<Text style={[txt.noto24b, {color: GRAY10}]}>참여 인원</Text>
-								<Text style={[txt.roboto28, {marginLeft: 5, marginTop: 2}]}>
-									{data.volunteer_accompany_number ? data.volunteer_accompany_number : '0'}
-								</Text>
-							</View>
-						</View>
-						{/* 참여 리스트 */}
-						<View style={[applicationFormVolunteer.participants_step2]}>
-							{/* <AccountList items={applicant} onClickLabel={onClickLabel} makeBorderMode={false} showCrossMark={false} /> */}
-							{data.volunteer_accompany.map((v, i) => {
-								return getAccompanyItem(v, i);
+					<View style={{}}>
+						{Array(data.volunteer_wish_date.length / data.volunteer_wish_date.length >= 3 ? 3 : 1) //페이징 3개 단위로 나눔
+							.fill(1) // undefined면 값이 호출되지 않으니 1로 일괄 추가
+							.map((v, pagingNumber) => {
+								return (
+									<View key={pagingNumber} style={[applicationFormVolunteer.wish_date_separator]}>
+										{data.volunteer_wish_date.map((v, i) => {
+											if (Math.floor(i / 3) == pagingNumber)
+												// 페이징 기준인 3으로 나눈 몫이 각 pagingNumber값과 일치하는 경우만 출력
+												return (
+													<Text key={i} style={[txt.roboto28, {paddingLeft: 5}]}>
+														{parsing_wish_date(v)} {' / '}
+													</Text>
+												);
+										})}
+									</View>
+								);
 							})}
+					</View>
+				</View>
+				{/* 참여인원 */}
+				<View style={[applicationFormVolunteer.participants]}>
+					<View style={[applicationFormVolunteer.participants_step1]}>
+						<View style={[applicationFormVolunteer.icon48]}>
+							<Person48 />
+						</View>
+						<View style={[applicationFormVolunteer.title]}>
+							<Text style={[txt.noto24b, {color: GRAY10}]}>참여 인원</Text>
+							<Text style={[txt.roboto28, {marginLeft: 5, marginTop: 2}]}>
+								{data.volunteer_accompany_number ? data.volunteer_accompany_number : '0'}
+							</Text>
 						</View>
 					</View>
-					{/* 봉사활동자 연락처 */}
-					<View style={[applicationFormVolunteer.participants_contact]}>
-						<View style={[applicationFormVolunteer.viewForm_step1]}>
-							<View style={[applicationFormVolunteer.icon48]}>
-								<Phone48 />
-							</View>
-							<View style={[applicationFormVolunteer.title]}>
-								<Text style={[txt.noto24b, {color: GRAY10}]}>봉사 활동자 연락처</Text>
-							</View>
+					{/* 참여 리스트 */}
+					<View style={[applicationFormVolunteer.participants_step2]}>
+						{/* <AccountList items={applicant} onClickLabel={onClickLabel} makeBorderMode={false} showCrossMark={false} /> */}
+						{data.volunteer_accompany.map((v, i) => {
+							return getAccompanyItem(v, i);
+						})}
+					</View>
+				</View>
+				{/* 봉사활동자 연락처 */}
+				<View style={[applicationFormVolunteer.participants_contact]}>
+					<View style={[applicationFormVolunteer.viewForm_step1]}>
+						<View style={[applicationFormVolunteer.icon48]}>
+							<Phone48 />
 						</View>
-						<View style={[applicationFormVolunteer.participants_contact_text]}>
-							{isShelterOwner ? (
-								<TouchableOpacity onPress={onPressPhoneCall}>
-									<Text style={[txt.roboto28, {color: BLUE20, textDecorationLine: 'underline'}]}>
-										{hyphened(data.volunteer_delegate_contact) || ''}
-									</Text>
-								</TouchableOpacity>
-							) : (
-								<Text style={[txt.roboto28]}>{hyphened(data.volunteer_delegate_contact) || ''}</Text>
-							)}
+						<View style={[applicationFormVolunteer.title]}>
+							<Text style={[txt.noto24b, {color: GRAY10}]}>봉사 활동자 연락처</Text>
 						</View>
 					</View>
-					{isShelterOwner ? (
-						<View style={[applicationFormVolunteer.buttonContainer, {justifyContent: 'center'}]}>{getButtonWhenShelter()}</View>
-					) : (
-						<View style={[applicationFormVolunteer.buttonContainer, {justifyContent: 'center'}]}>{getButtonWhenUser()}</View>
-					)}
-				</ScrollView>
-			</View>
-		);
-	}
+					<View style={[applicationFormVolunteer.participants_contact_text]}>
+						{isShelterOwner ? (
+							<TouchableOpacity onPress={onPressPhoneCall}>
+								<Text style={[txt.roboto28, {color: BLUE20, textDecorationLine: 'underline'}]}>
+									{hyphened(data.volunteer_delegate_contact) || ''}
+								</Text>
+							</TouchableOpacity>
+						) : (
+							<Text style={[txt.roboto28]}>{hyphened(data.volunteer_delegate_contact) || ''}</Text>
+						)}
+					</View>
+				</View>
+				{isShelterOwner ? (
+					<View style={[applicationFormVolunteer.buttonContainer, {justifyContent: 'center'}]}>{getButtonWhenShelter()}</View>
+				) : (
+					<View style={[applicationFormVolunteer.buttonContainer, {justifyContent: 'center'}]}>{getButtonWhenUser()}</View>
+				)}
+			</ScrollView>
+		</View>
+	);
 };

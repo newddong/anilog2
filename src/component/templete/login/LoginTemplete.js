@@ -215,6 +215,12 @@ export default LoginTemplete = props => {
 						}}>
 						<Text style={[txt.noto24, {color: GRAY20}]}> 보호소 2</Text>
 					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={() => {
+							setUserSetting({...userSetting, id: '01001096450003', password: 'tkddn123'});
+						}}>
+						<Text style={[txt.noto24, {color: GRAY20}]}> 보호소 2</Text>
+					</TouchableOpacity>
 					<Text style={{color: GRAY20}}> | </Text>
 					<TouchableOpacity
 						onPress={() => {

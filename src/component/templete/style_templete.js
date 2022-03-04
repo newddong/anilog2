@@ -3200,7 +3200,7 @@ export const appliesRecord = StyleSheet.create({
 		marginVertical: 30 * DP,
 	},
 	whenEmpty: {
-		paddingVertical: 40 * DP,
+		paddingVertical: 60 * DP,
 	},
 });
 
@@ -4626,6 +4626,12 @@ export const animalProtectList = StyleSheet.create({
 		height: 48 * DP,
 		alignItems: 'center',
 		flexDirection: 'row',
+	},
+	whenEmpty: {
+		width: 654 * DP,
+		padding: 50,
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
 });
 

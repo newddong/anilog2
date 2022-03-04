@@ -16,12 +16,11 @@ import {getProtectRequestByProtectRequestId} from 'Root/api/protectapi';
 export default EditAidRequest = ({route, navigation}) => {
 	// console.log('route.params :   ', route.params);
 
-	const [data, setData] = React.useState(); //ShelterProtectAnimalObject(보호소의 보호동물) 정보가 담겨있음
+	const [data, setData] = React.useState('false'); //ShelterProtectAnimalObject(보호소의 보호동물) 정보가 담겨있음
 	const [imageList, setImageList] = React.useState([]); //PhotoSelect에서 선택된 사진List
 	const [protectRequestData, setProtectRequestData] = React.useState();
 	const [previousPhotoList, setPreviousPhotoList] = React.useState([]);
 	const [deletedList, setDeletedList] = React.useState([]);
-	const [loading, setLoading] = React.useState(true); //로딩상태
 	const titleRef = React.useRef();
 	const contentRef = React.useRef();
 	React.useEffect(() => {
@@ -30,37 +29,19 @@ export default EditAidRequest = ({route, navigation}) => {
 				protect_request_object_id: route.params.data,
 			},
 			result => {
-				console.log('result / getProtectRequestByProtectRequestId / EditAidREquest : ', result.msg.protect_animal_id.protect_animal_photo_uri_list);
-				const protectAnimal = [
-					'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1646318740284_2D516662-2D11-4E5B-93DB-EA51C49F17CD.jpg',
-					'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1646318740340_539CD65A-CFFE-4831-B7C5-BE1427A63513.jpg',
-					'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1646318740543_D370F33C-A9BC-496A-A42E-20D82A7E684C.jpg',
-					'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1646318740858_E9541DE0-D58F-48AE-9BC7-A8EC34D7908D.jpg',
-				];
-				const d = [
-					'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1646318740284_2D516662-2D11-4E5B-93DB-EA51C49F17CD.jpg',
-					'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1646322651091_1646318740284_2D516662-2D11-4E5B-93DB-EA51C49F17CD.jpg',
-					'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1646322651118_75D15A04-185A-4F6F-900B-F59588162F0F.jpg',
-					'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1646322651127_589DFA36-5E80-4C8A-AEDE-D380D93BFB1F.jpg',
-					'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1646322651134_D5686CD1-901F-487F-8F91-12BCBBBD0ADB.jpg',
-				];
-
+				// console.log('result / getProtectRequestByProtectRequestId / EditAidREquest : ', result.msg);
 				const res = result.msg.protect_animal_id;
-				setData(res);
 				setProtectRequestData({
 					protect_request_object_id: result.msg._id,
-					protect_request_photos_uri: result.msg.protect_request_photos_uri,
+					protect_request_photos_uri: [],
 					protect_request_title: result.msg.protect_request_title,
 					protect_request_content: result.msg.protect_request_content,
 					protect_request_status: 'rescue',
 					protect_photos_to_delete: '',
 				});
-				setImageList(result.msg.protect_request_photos_uri);
+				setImageList(result.msg.protect_request_photos_uri.slice(1, result.msg.protect_request_photos_uri.length));
 				setPreviousPhotoList(result.msg.protect_request_photos_uri);
-
-				setTimeout(() => {
-					setLoading(false);
-				}, 500);
+				setData(res);
 			},
 			err => {
 				console.log('err / getProtectRequestByProtectRequestId / EditAidRequest : ', err);
@@ -91,7 +72,7 @@ export default EditAidRequest = ({route, navigation}) => {
 					cropping: true,
 				})
 					.then(images => {
-						console.log('images', images);
+						// console.log('images', images);
 						let photoList = [...imageList];
 						photoList.push(images.path);
 						setImageList(imageList.concat(images.path));
@@ -134,7 +115,7 @@ export default EditAidRequest = ({route, navigation}) => {
 		let copy = [...imageList];
 		copy.splice(index, 1);
 		setImageList(copy);
-		console.log('deleted uri', previousPhotoList[index]);
+		// console.log('deleted uri', previousPhotoList[index]);
 		let deleted = [...deletedList];
 		deleted.push(previousPhotoList[index]);
 		setDeletedList(deleted);
@@ -152,7 +133,7 @@ export default EditAidRequest = ({route, navigation}) => {
 		setProtectRequestData({...protectRequestData, protect_request_title: text});
 	};
 
-	if (loading) {
+	if (data == 'false') {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
 				<ActivityIndicator size={'large'} />

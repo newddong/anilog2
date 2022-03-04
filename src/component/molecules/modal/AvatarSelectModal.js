@@ -20,10 +20,9 @@ import PetLabel from '../label/PetLabel';
  *
  */
 const AvatarSelectModal = props => {
-	const [items, setItems] = React.useState([]);
+	const [items, setItems] = React.useState('');
 	const [selectedItem, setSelectedItem] = React.useState(1000);
 	const checkApi = React.useRef(false);
-	const [loading, setLoading] = React.useState(false);
 
 	const pressOk = () => {
 		props.onOk();
@@ -56,11 +55,9 @@ const AvatarSelectModal = props => {
 					avatarList.push(userGlobalObj.userInfo);
 				}
 				setItems(avatarList);
-				setLoading(true);
 			},
 			err => {
 				Modal.popOneBtn(err, '확인', () => Modal.close());
-				setLoading(true);
 			},
 		);
 		checkApi.current = true;
@@ -72,7 +69,7 @@ const AvatarSelectModal = props => {
 
 	const scrollViewRef = React.useRef();
 
-	if (!loading) {
+	if (items == '') {
 		return <ActivityIndicator />;
 	} else
 		return (

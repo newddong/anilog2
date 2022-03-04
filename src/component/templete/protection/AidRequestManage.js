@@ -13,9 +13,8 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 //ShelterMenu => 보호중인 동물 [Nav명 - ShelterProtectAnimalList]
 export default AidRequestManage = ({route, navigation}) => {
 	// console.log('AidRequestManage');
-	const [loading, setLoading] = React.useState(true); // 화면 출력 여부 결정
-	const [hasPostAnimalList, setHasPostAnimalList] = React.useState([]);
-	const [noPostAnimalList, setNoPostAnimalList] = React.useState([]);
+	const [hasPostAnimalList, setHasPostAnimalList] = React.useState('false');
+	const [noPostAnimalList, setNoPostAnimalList] = React.useState('false');
 
 	React.useEffect(() => {
 		getShelterProtectAnimalList(
@@ -24,25 +23,16 @@ export default AidRequestManage = ({route, navigation}) => {
 				request_number: '',
 			},
 			result => {
-				// console.log('result / getShelterProtectAnimalList / ShelterProtectAnimalList', result.msg[0]);
-				const protectAnimalList = result.msg.filter(e => e.protect_animal_status != 'adopt'); //입양 완료 건에 대해서만 제외()
-				let hasPostList = [];
-				let noPostList = [];
-				protectAnimalList.map((v, i) => {
-					v.protect_animal_protect_request_id != null ? hasPostList.push(v) : noPostList.push(v);
-				});
-				setTimeout(() => {
-					setHasPostAnimalList(hasPostList);
-					setNoPostAnimalList(noPostList);
-					setLoading(false);
-				}, 500);
+				// console.log('result / getShelterProtectAnimalList / ShelterProtectAnimalList', result.msg);
+				let hasPostList = result.msg.hasRequest.filter(e => e.protect_animal_status != 'adopt');
+				let noPostList = result.msg.noRequest.filter(e => e.protect_animal_status != 'adopt');
+				setHasPostAnimalList(hasPostList);
+				setNoPostAnimalList(noPostList);
 			},
 			err => {
 				console.log('err / getShelterProtectAnimalList', err);
-				setTimeout(() => {
-					setLoading(false);
-				}, 500);
-				// setData(err);
+				setHasPostAnimalList([]);
+				setNoPostAnimalList([]);
 			},
 		);
 	}, []);
@@ -97,7 +87,10 @@ export default AidRequestManage = ({route, navigation}) => {
 		);
 	};
 
-	if (loading) {
+	//API 접속 이전 상태인 false가 단 하나라도 없으면 이미 로딩완료
+	const isLoaded = hasPostAnimalList == 'false' || noPostAnimalList == 'false';
+
+	if (isLoaded) {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
 				<ActivityIndicator size={'large'} />

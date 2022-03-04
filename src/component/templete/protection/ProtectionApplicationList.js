@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, ScrollView, Text, View, StyleSheet, TouchableOpacity} from 'react-native';
+import {ActivityIndicator, ScrollView, Text, View, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import {getAnimalListWithApplicant} from 'Root/api/shelterapi';
 import {txt} from 'Root/config/textstyle';
 import {APRI10, GRAY10} from 'Root/config/color';
@@ -9,9 +9,8 @@ import {Star50_Border} from 'Root/component/atom/icon';
 
 //ShelterMenu => 신청서 조회 [Nav명 - ProtectionAplicationList]
 export default ProtectionApplicationList = ({route, navigation}) => {
-	const [loading, setLoading] = React.useState(true); // 화면 출력 여부 결정
-	const [adoptionList, setAdoptionList] = React.useState([]);
-	const [protectList, setProtectList] = React.useState([]);
+	const [adoptionList, setAdoptionList] = React.useState('false');
+	const [protectList, setProtectList] = React.useState('false');
 
 	React.useEffect(() => {
 		getAnimalListWithApplicant(
@@ -22,15 +21,11 @@ export default ProtectionApplicationList = ({route, navigation}) => {
 				const filtered_protect = result.msg.protect.filter(e => e.protect_act_status != 'accept');
 				setAdoptionList(filtered_adopt);
 				setProtectList(filtered_protect);
-				setTimeout(() => {
-					setLoading(false);
-				}, 500);
 			},
 			err => {
 				console.log('err / getAnimalListWithApplicant', err);
-				setTimeout(() => {
-					setLoading(false);
-				}, 500);
+				setAdoptionList([]);
+				setProtectList([]);
 			},
 		);
 	}, []);
@@ -66,7 +61,9 @@ export default ProtectionApplicationList = ({route, navigation}) => {
 		);
 	};
 
-	if (loading) {
+	const isLoaded = protectList == 'false' || adoptionList == 'false';
+
+	if (isLoaded) {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
 				<ActivityIndicator size={'large'} />
@@ -82,11 +79,7 @@ export default ProtectionApplicationList = ({route, navigation}) => {
 						<Text style={[txt.noto26, {color: GRAY10}]}>{adoptionList.length}</Text>
 					</View>
 					<View style={[style.list]}>
-						{adoptionList.length == 0
-							? whenEmpty()
-							: adoptionList.map((v, i) => {
-									return listItem(v, i, true);
-							  })}
+						<FlatList data={adoptionList} renderItem={({item, index}) => listItem(item, index, true)} ListEmptyComponent={whenEmpty()} />
 					</View>
 				</View>
 				{/* 임시보호신청 */}
@@ -96,11 +89,7 @@ export default ProtectionApplicationList = ({route, navigation}) => {
 						<Text style={[txt.noto26, {color: GRAY10}]}>{protectList.length}</Text>
 					</View>
 					<View style={[style.list]}>
-						{protectList.length == 0
-							? whenEmpty()
-							: protectList.map((v, i) => {
-									return listItem(v, i, false);
-							  })}
+						<FlatList data={protectList} renderItem={({item, index}) => listItem(item, index, true)} ListEmptyComponent={whenEmpty()} />
 					</View>
 				</View>
 			</View>

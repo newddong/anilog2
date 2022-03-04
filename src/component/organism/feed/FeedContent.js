@@ -1,12 +1,9 @@
 import React from 'react';
 import {Dimensions, Text, View, Platform} from 'react-native';
 import {organism_style, feedContent_style} from 'Organism/style_organism';
-import UserLocationLabel from 'Molecules/label/UserLocationLabel';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
-import AniButton from 'Molecules/button/AniButton';
-import {btn_w130} from 'Root/component/atom/btn/btn_style';
 import {useNavigation, useRoute} from '@react-navigation/core';
-import {FavoriteTag48_Filled, Meatball50_APRI10_Horizontal, Meatball50_GRAY20_Horizontal, Share48_Filled} from 'Atom/icon';
+import {Meatball50_GRAY20_Horizontal, Share48_Filled} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
 import {Arrow_Down_GRAY20, Arrow_Up_GRAY20} from 'Atom/icon';
 import DP from 'Root/config/dp';
@@ -152,7 +149,6 @@ export default FeedContent = props => {
 	//피드 미트볼 메뉴 - 수정 클릭
 	const onPressEdit = () => {
 		Modal.close();
-		console.log('수정');
 	};
 
 	//피드 미트볼 메뉴 - 삭제 클릭

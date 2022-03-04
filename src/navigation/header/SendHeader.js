@@ -65,15 +65,6 @@ export default SendHeader = ({route, navigation, options}) => {
 						'확인',
 						() => Modal.close(),
 						() => {
-							console.log('SendHeader / Before Edit AidRequest ', data.protect_photos_to_delete.length);
-							console.log('protect_request_photos_uri', data.protect_request_photos_uri.length);
-							const gg = [
-								'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1646321833784_E0B59812-034A-456A-B007-869D8CFF013E.jpg',
-								'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1646321833784_E0B59812-034A-456A-B007-869D8CFF013E.jpg',
-								'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1646321833725_1646318740284_2D516662-2D11-4E5B-93DB-EA51C49F17CD.jpg',
-								'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1646318740284_2D516662-2D11-4E5B-93DB-EA51C49F17CD.jpg',
-							];
-
 							updateProtectRequest(
 								{
 									protect_request_object_id: data.protect_request_object_id,
@@ -84,6 +75,7 @@ export default SendHeader = ({route, navigation, options}) => {
 								},
 								result => {
 									// console.log('result / updateProtectRequest / SendHeader : ', result.msg);
+									navigation.goBack();
 								},
 								err => {
 									console.log('err / updateProtectRequest / SendHeader : ', err);

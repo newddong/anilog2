@@ -9,14 +9,6 @@ import {getProtectRequestList, getProtectRequestListByShelterId} from 'Root/api/
 export default SaveAnimalRequest = ({route}) => {
 	const navigation = useNavigation();
 
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-
 	const [checkBoxMode, setCheckBoxMode] = React.useState(false);
 	//checkBox On
 	const [data, setData] = React.useState([]);
@@ -99,32 +91,19 @@ export default SaveAnimalRequest = ({route}) => {
 	//썸네일 클릭
 	const navigationGo = (status, user_id, item) => {
 		let sexValue = '';
-		getProtectRequestListByShelterId(
-			{
-				shelter_userobject_id: item.protect_request_writer_id._id,
-				protect_request_status: 'all',
-				protect_request_object_id: null,
-				request_number: 10,
-			},
-			result => {
-				switch (item.protect_animal_sex) {
-					case 'male':
-						sexValue = '남';
-						break;
-					case 'female':
-						sexValue = '여';
-						break;
-					case 'male':
-						sexValue = '성별모름';
-						break;
-				}
-				const titleValue = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + sexValue;
-				navigation.push('AnimalProtectRequestDetail', {item: item, list: result.msg, title: titleValue});
-			},
-			err => {
-				console.log('err / getProtectRequestListByShelterId / ProtectRequestList   : ', err);
-			},
-		);
+		switch (item.protect_animal_sex) {
+			case 'male':
+				sexValue = '남';
+				break;
+			case 'female':
+				sexValue = '여';
+				break;
+			case 'male':
+				sexValue = '성별모름';
+				break;
+		}
+		const titleValue = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + sexValue;
+		navigation.push('AnimalProtectRequestDetail', {item: item, title: titleValue});
 	};
 
 	return (
@@ -140,7 +119,6 @@ export default SaveAnimalRequest = ({route}) => {
 				/>
 			</View>
 
-			{/* <FlatList> */}
 			<View style={[temp_style.AnimalNeedHelpList]}>
 				<AnimalNeedHelpList
 					data={data}
@@ -153,7 +131,6 @@ export default SaveAnimalRequest = ({route}) => {
 					isDeleted={isDeleted}
 				/>
 			</View>
-			{/* </FlatList> */}
 		</View>
 	);
 };

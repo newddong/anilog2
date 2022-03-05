@@ -151,10 +151,10 @@ export default UserMenu = props => {
 				// navigation.push('TagMeFeeds', {token: data});
 				break;
 			case '신청 내역':
-				navigation.push('AppliesRecord', data._id); // ShelterProtectAnimalObject
+				navigation.push('AppliesRecord'); // ShelterProtectAnimalObject
 				break;
 			case '동물 보호 현황':
-				navigation.push('AnimalProtectList', data._id); //ProtectAnimalObject
+				navigation.push('AnimalProtectList'); //ProtectAnimalObject
 				break;
 			case '쪽지함':
 				Modal.popInfoModal();

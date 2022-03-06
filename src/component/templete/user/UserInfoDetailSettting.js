@@ -21,41 +21,45 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 	const [data, setData] = React.useState(route.params); //기존 유저의 데이터가 담겨있음
 	const [loaded, setLoaded] = React.useState(false);
 	const [addrSearched, setAddrSearched] = React.useState(false);
-	const [locationInterest, setLocationInterest] = React.useState(route.params.user_interests.interests_location || []);
+	const [locationInterest, setLocationInterest] = React.useState([]);
 	const [contentInterest, setContentInterest] = React.useState([]);
 	const [interestList, setInterestList] = React.useState();
 	const [interestLoaded, setInterestLoaded] = React.useState(false);
 	const [contentSendObejct, setContentSendObject] = React.useState();
 	var temp = [];
 	// 갱신되는 데이터는 Header에도 Json형태로 전해짐
-	// React.useEffect(() => {
-	// 	navigation.setParams({data: data, route_name: route.name});
-	// 	// console.log('user_mobile_company', data.user_mobile_company);
-	// }, [data]);
-	console.log('dataaaaa', data);
 	React.useEffect(() => {
-		console.log('interset', locationInterest, contentInterest);
-	}, [locationInterest, contentInterest]);
+		navigation.setParams({data: data, route_name: route.name});
+		// console.log('user_mobile_company', data.user_mobile_company);
+	}, [data]);
+
+	React.useEffect(() => {
+		console.log('interest changed', locationInterest, contentInterest);
+		console.log('data', data);
+	}, [locationInterest, contentInterest, data]);
 	React.useEffect(() => {
 		navigation.setParams({data: route.params, route_name: route.name});
-
-		console.log('ahhh', route.params.user_interests);
+		console.log(data);
+		// console.log('ahhh', route.params?.user_interests[0]);
 
 		getInterestsList({}, interests => {
 			setInterestList(interests.msg);
 			setInterestLoaded(true);
 		});
-		const getContentInteres = Object.entries(route.params.user_interests).map(content => {
-			console.log('ohhh', content);
+		if (data.user_interests) {
+			const getContentInteres = Object.entries(data.user_interests[0]).map(content => {
+				console.log('ohhh', content);
 
-			if (content[0] != 'interests_location' && content[0] != '_id') {
-				Object.entries(content[1]).map(contents => {
-					// console.log('contents', contents[1]);
-					temp.push(contents[1]);
-				});
-			}
-			setContentInterest(temp);
-		});
+				if (content[0] != 'interests_location' && content[0] != '_id') {
+					Object.entries(content[1]).map(contents => {
+						// console.log('contents', contents[1]);
+						temp.push(contents[1]);
+					});
+				}
+			});
+		}
+		setContentInterest(temp);
+		setLocationInterest(data.user_interests[0].interests_location);
 		setLoaded(true);
 	}, []);
 
@@ -235,12 +239,13 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 		// let copy = data.user_interests.location;
 		let copy = locationInterest;
 		copy.splice(index, 1);
-		setData({
-			...data,
-			user_interests: {
-				location: copy,
-			},
-		});
+		setInterestList(copy);
+		// setData({
+		// 	...data,
+		// 	user_interests: {
+		// 		interests_location: copy,
+		// 	},
+		// });
 	};
 
 	//관심활동 태그 X마크 삭제 클릭
@@ -250,13 +255,6 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 		copy.splice(index, 1);
 		console.log('copy', copy);
 		setContentInterest(copy);
-		// setData({
-		// 	...data,
-		// 	user_interests: {
-		// 		location: data.user_interests.location,
-		// 		activity: copy,
-		// 	},
-		// });
 	};
 
 	const onPressAddInterestActivation = () => {

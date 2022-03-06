@@ -4,6 +4,7 @@ import {ActivityIndicator, ScrollView, Text, View} from 'react-native';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {login_style, baseInfo_style} from 'Templete/style_templete';
 import {getUserAdoptProtectionList} from 'Root/api/protectapi';
+import AnimalNeedHelp from 'Root/component/organism/listitem/AnimalNeedHelp';
 
 // UserMenu => 신청 내역 => 입양 신청 더보기 클릭
 export default ApplyAdoptionList = props => {

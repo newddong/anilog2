@@ -19,6 +19,7 @@ import UserDescriptionLabel from 'Root/component/molecules/label/UserDescription
 // ==> ManageVolunteer에서 더보기 클릭, 혹은 AppliesRecord(신청내역)에서 보호소 라벨 클릭 <==
 export default ApplicationFormVolunteer = ({route, navigation}) => {
 	// console.log('route / ApplicationFormVolunteer', route.params);
+
 	const data = route.params; // 봉사활동 Object
 	const isShelterOwner = route.name == 'ShelterVolunteerForm'; // 보호소 계정의 봉사활동 신청관리 루트로 들어왔는지 여부
 

@@ -1781,7 +1781,7 @@ export const userMenu_style = StyleSheet.create({
 		marginTop: 38 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
-		backgroundColor: 'yellow',
+		// backgroundColor: 'yellow',
 	},
 	userInfo: {
 		flexDirection: 'row',
@@ -3146,6 +3146,12 @@ export const searchProtectRequest = StyleSheet.create({
 	},
 	animalNeedHelpList: {
 		marginTop: 80 * DP,
+		width: 750 * DP,
+		alignSelf: 'center',
+		// backgroundColor: '#FF00FF',
+	},
+	animalMissingReportList: {
+		marginTop: 50 * DP,
 		width: 750 * DP,
 		alignSelf: 'center',
 		// backgroundColor: '#FF00FF',

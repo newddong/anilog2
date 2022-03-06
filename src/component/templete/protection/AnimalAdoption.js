@@ -70,16 +70,6 @@ export default AnimalAdoption = props => {
 		);
 	};
 
-	// const onPressMyAdoption = () => {
-	// 	Modal.popTwoBtn(
-	// 		'이 동물을 가족으로 맞이하시겠어요?',
-	// 		'취소',
-	// 		'예',
-	// 		() => Modal.close(),
-	// 		() => onCheerUp(),
-	// 	);
-	// };
-
 	return (
 		<ScrollView>
 			<View style={[login_style.wrp_main, animalAdoption.container]}>

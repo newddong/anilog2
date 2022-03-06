@@ -333,7 +333,7 @@ export const MODIFY_PROFILE = '프로필 변경';
 export const MANAGEMENT_OF_PROTECTED_ANIMAL = '보호동물 관리';
 export const PROTECTED_ANIMAL = '보호중인 동물';
 export const INQUERY_APPLICATION = '신청서 조회';
-export const FROM_MY_SHELTER = '나의 보호소 출신동물';
+export const FROM_MY_SHELTER = '나의 보호소 출신 동물';
 export const MANAGEMENT_OF_VOLUNTEER = '봉사활동 신청관리';
 
 export const FAVORITES = '즐겨찾기';
@@ -346,7 +346,7 @@ export const MY_ACTIVITY_IN_SHELTER = '나의 활동';
 export const MY_CONTENTS = '내 게시글';
 export const TAGED_CONTENTS_FOR_ME = '나를 태그한 글';
 export const APPLICATION_HISTORY = '신청 내역';
-export const UPLOADED_POST_FOR_REQ_PROTECTION = '보호요청 올린 게시글';
+export const UPLOADED_POST_FOR_REQ_PROTECTION = '보호 요청 글';
 export const NOTE_LIST = '쪽지함';
 export const MODIFY_SHELTER_DATA = '보호소 정보수정';
 

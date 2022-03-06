@@ -47,7 +47,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 			setInterestLoaded(true);
 		});
 		if (data.user_interests) {
-			const getContentInteres = Object.entries(data.user_interests[0]).map(content => {
+			const getContentInteres = Object.entries(data.user_interests).map(content => {
 				console.log('ohhh', content);
 
 				if (content[0] != 'interests_location' && content[0] != '_id') {
@@ -59,7 +59,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 			});
 		}
 		setContentInterest(temp);
-		setLocationInterest(data.user_interests[0].interests_location);
+		setLocationInterest(data.user_interests.interests_location);
 		setLoaded(true);
 	}, []);
 

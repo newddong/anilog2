@@ -9,6 +9,7 @@ import {getApplyDetailById} from 'Root/api/protectapi';
 import DP from 'Root/config/dp';
 import {AddItem64} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
+import {lo} from '../style_address';
 
 //ShelterMenu => 신청서 조회 [Nav명 - ProtectApplyList]
 //ShelterMenu => 보호중인 동물 [Nav명 - ShelterProtectAnimalList]
@@ -28,8 +29,8 @@ export default AidRequestManage = ({route, navigation}) => {
 			//차후 API 다듬는 과정에서 추가 필요
 			getShelterProtectAnimalList(
 				{
-					shelter_protect_animal_object_id: '',
-					request_number: '',
+					// shelter_protect_animal_object_id: '',
+					request_number: 10,
 				},
 				result => {
 					// console.log('result / getShelterProtectAnimalList / ShelterProtectAnimalList', result.msg[0]);
@@ -38,40 +39,57 @@ export default AidRequestManage = ({route, navigation}) => {
 					//우선 해당 보호동물에 대한 입양 및 보호 신청 _id를 토대로 getApplyDetailById 접속
 					// 만약 status가 단 하나라도 'accept' 인 것이 있다면 출력을 시키지 말아야함
 					// 모든 것은 API가 도착하면 개선이 가능
+					//api 에서 hasRequest와 noRequest로 오지만 hasRequest에는 noRequest obejct도 추가되어있어 그걸 리스트에서 빼주는 과정
 					setData(result.msg);
-					const protectAnimalList = result.msg;
-					let notFiltered = [];
+					const hasList = result.msg.hasRequest;
+					const noList = result.msg.noRequest;
+					const stringhasList = [];
+					const stringNoList = [];
+					const newHasList = [];
 
-					protectAnimalList.map((value, index) => {
-						// console.log('v.protectActApplicants', v.protect_act_applicants);
-						const protectActivities_id = value.protect_act_applicants;
-						protectActivities_id.map((protect_activity_value, protect_activity_index) => {
-							// console.log('v', index, protect_activity_value);
-							getApplyDetailById(
-								{
-									protect_act_object_id: protect_activity_value,
-								},
-								res => {
-									// console.log('result / getApplyDetailById / AidRequestManage  ', protect_activity_index, res.msg);
-									const protect_activity_object = res.msg;
-									protect_activity_object.protect_animal_id = index;
-
-									notFiltered.push(res.msg);
-									// const isAccepted = protect_activity_object.protect_act_status == 'accept';
-									// console.log('isAccepted', index, protect_activity_index, isAccepted);
-									// isAccepted ? shelterProtectAnimalList_notAccepted.push(protectAnimalList[index]) : null;
-									// setNotFilteredData(shelterProtectAnimalList_notAccepted);
-									// // setData(result.msg);
-								},
-								err => {
-									console.log('err / getApplyDetailById / AidRequestManage   ', err);
-								},
-							);
-						});
+					const loop = hasList.map((value, idx) => {
+						stringhasList.push(JSON.stringify(value));
 					});
-					setTimeout(() => {
-						setNotFilteredData(notFiltered);
-					}, 500);
+					const loop2 = noList.map((value, idx) => {
+						stringNoList.push(JSON.stringify(value));
+					});
+					let difference = stringhasList.filter(x => !stringNoList.includes(x));
+					const loop3 = difference.map((value, index) => {
+						newHasList.push(JSON.parse(value));
+					});
+
+					setHasPostAnimalList(newHasList);
+					setNoPostAnimalList(noList);
+					setLoading(false);
+					console.log('noList', newHasList);
+					// notFiltered = [];
+					// protectAnimalList.map((value, index) => {
+					// console.log('map', value);
+					// const protectActivities_id = value.protect_act_applicants;
+					// protectActivities_id.map((protect_activity_value, protect_activity_index) => {
+					// console.log('v', index, protect_activity_value);
+					// getApplyDetailById(
+					// 	{
+					// 		protect_act_object_id: protect_activity_value,
+					// 	},
+					// 	res => {
+					// 		// console.log('result / getApplyDetailById / AidRequestManage  ', protect_activity_index, res.msg);
+					// 		const protect_activity_object = res.msg;
+					// 		protect_activity_object.protect_animal_id = index;
+
+					// 		notFiltered.push(res.msg);
+					// 		// const isAccepted = protect_activity_object.protect_act_status == 'accept';
+					// 		// console.log('isAccepted', index, protect_activity_index, isAccepted);
+					// 		// isAccepted ? shelterProtectAnimalList_notAccepted.push(protectAnimalList[index]) : null;
+					// 		// setNotFilteredData(shelterProtectAnimalList_notAccepted);
+					// 		// // setData(result.msg);
+					// 	},
+					// 	err => {
+					// 		console.log('err / getApplyDetailById / AidRequestManage   ', err);
+					// 	},
+					// );
+					// });
+					// });
 				},
 				err => {
 					console.log('err / getShelterProtectAnimalList', err);
@@ -87,7 +105,7 @@ export default AidRequestManage = ({route, navigation}) => {
 			getAnimalListWithApplicant(
 				{},
 				result => {
-					// console.log('result / getAnimalListWithApplicant / ProtectApplyList', result.msg);
+					console.log('result / getAnimalListWithApplicant / ProtectApplyList', result.msg);
 					let merged = []; //페이지 이동 후 입양 신청한
 					result.msg.map((data, i) => {
 						data.shelter_name = route.params.shelter_name;
@@ -112,64 +130,65 @@ export default AidRequestManage = ({route, navigation}) => {
 					// setData(err);
 				},
 			);
+			onSelect;
 		}
 	}, []);
 
-	React.useEffect(() => {
-		// 보호소의 모든 보호동물이 담겨 있는 notFilteredData
-		// 해당 보호동물에 대한 [입양/지원] 신청서가 있을 경우 해당 신청서들을 탐색
-		// 탐색의 목적 => 신청서들 중 상태가 'accept'된 항목이 있을 경우 이미 보호소를 떠난 동물로 판단
-		if (notFilteredData != null) {
-			// const isNotProtect = notFilteredData.filter(e => e.protect_act_type == 'protect');
-			// console.log('isNotProtect', isNotProtect);
-			console.log('waiting');
+	// React.useEffect(() => {
+	// 	// 보호소의 모든 보호동물이 담겨 있는 notFilteredData
+	// 	// 해당 보호동물에 대한 [입양/지원] 신청서가 있을 경우 해당 신청서들을 탐색
+	// 	// 탐색의 목적 => 신청서들 중 상태가 'accept'된 항목이 있을 경우 이미 보호소를 떠난 동물로 판단
+	// 	if (notFilteredData != null) {
+	// 		// const isNotProtect = notFilteredData.filter(e => e.protect_act_type == 'protect');
+	// 		// console.log('isNotProtect', isNotProtect);
+	// 		console.log('waiting');
 
-			const filtered_by_status = notFilteredData.filter(e => e.protect_act_status == 'accept');
-			let index_of_acceptItem = [];
-			filtered_by_status.map((v, i) => {
-				index_of_acceptItem.push(v.protect_animal_id);
-			});
-			const index_dup_deleted = Array.from(new Set(index_of_acceptItem));
-			let protect_animal_list_copy = [...data];
-			index_dup_deleted.map((v, i) => {
-				protect_animal_list_copy.splice(v, 1);
-			});
-			// setData(protect_animal_list_copy);
-			let hasPostList = [];
-			let noPostList = [];
-			protect_animal_list_copy.map((v, i) => {
-				console.log('v', v.protect_animal_protect_request_id);
-				if (v.protect_animal_protect_request_id != null) {
-					hasPostList.push(v);
-				} else {
-					noPostList.push(v);
-				}
-			});
-			setTimeout(() => {
-				setHasPostAnimalList(hasPostList);
-				setNoPostAnimalList(noPostList);
-				setLoading(false);
-			}, 1500);
-		} else {
-			console.log('waiting');
-			let hasPostList = [];
-			let noPostList = [];
-			data.map((v, i) => {
-				console.log('v', v.protect_animal_protect_request_id);
-				if (v.protect_animal_protect_request_id != null) {
-					hasPostList.push(v);
-				} else {
-					noPostList.push(v);
-				}
-			});
+	// 		const filtered_by_status = notFilteredData.filter(e => e.protect_act_status == 'accept');
+	// 		let index_of_acceptItem = [];
+	// 		filtered_by_status.map((v, i) => {
+	// 			index_of_acceptItem.push(v.protect_animal_id);
+	// 		});
+	// 		const index_dup_deleted = Array.from(new Set(index_of_acceptItem));
+	// 		let protect_animal_list_copy = [...data];
+	// 		index_dup_deleted.map((v, i) => {
+	// 			protect_animal_list_copy.splice(v, 1);
+	// 		});
+	// 		// setData(protect_animal_list_copy);
+	// 		let hasPostList = [];
+	// 		let noPostList = [];
+	// 		protect_animal_list_copy.map((v, i) => {
+	// 			console.log('v', v.protect_animal_protect_request_id);
+	// 			if (v.protect_animal_protect_request_id != null) {
+	// 				hasPostList.push(v);
+	// 			} else {
+	// 				noPostList.push(v);
+	// 			}
+	// 		});
+	// 		setTimeout(() => {
+	// 			setHasPostAnimalList(hasPostList);
+	// 			setNoPostAnimalList(noPostList);
+	// 			setLoading(false);
+	// 		}, 1500);
+	// 	} else {
+	// 		console.log('waiting');
+	// 		let hasPostList = [];
+	// 		let noPostList = [];
+	// 		data.map((v, i) => {
+	// 			console.log('v', v.protect_animal_protect_request_id);
+	// 			if (v.protect_animal_protect_request_id != null) {
+	// 				hasPostList.push(v);
+	// 			} else {
+	// 				noPostList.push(v);
+	// 			}
+	// 		});
 
-			setTimeout(() => {
-				setHasPostAnimalList(hasPostList);
-				setNoPostAnimalList(noPostList);
-				setLoading(false);
-			}, 1000);
-		}
-	}, [notFilteredData]);
+	// 		setTimeout(() => {
+	// 			setHasPostAnimalList(hasPostList);
+	// 			setNoPostAnimalList(noPostList);
+	// 			setLoading(false);
+	// 		}, 1000);
+	// 	}
+	// }, [notFilteredData]);
 
 	//선택 시 이동
 	const onSelect = index => {

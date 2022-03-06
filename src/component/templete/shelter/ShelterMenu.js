@@ -159,6 +159,7 @@ export default ShelterMenu = ({route}) => {
 				break;
 			//신청내역
 			case APPLICATION_HISTORY:
+				navigation.push('AppliesRecord', data._id);
 				Modal.popInfoModal();
 				break;
 			// 보호 요청 올린 게시글
@@ -177,15 +178,15 @@ export default ShelterMenu = ({route}) => {
 			//-------------- 설정
 			//정보/문의
 			case INFO_QUESTION:
-				Modal.popInfoModal();
+				navigation.push('SettingInformAsk');
 				break;
 			// 계정
 			case ACCOUNT:
-				Modal.popInfoModal();
+				navigation.push('SettingAccount');
 				break;
-			//로그아웃
-			case LOGOUT:
-				logout();
+			//알림
+			case INFO:
+				navigation.push('SettingAlarm');
 				break;
 		}
 	};
@@ -311,15 +312,7 @@ export default ShelterMenu = ({route}) => {
 					/>
 				</View>
 				<View style={[shelterMenu.profileMenu4]}>
-					<ProfileMenu
-						menuTitle={SETTING}
-						menuItems={[
-							[INFO_QUESTION, ACCOUNT],
-							[INFO, LOGOUT],
-						]}
-						onClick={click_menu}
-						titleIcon={<Setting46 />}
-					/>
+					<ProfileMenu menuTitle={SETTING} menuItems={[[INFO_QUESTION, ACCOUNT], [INFO]]} onClick={click_menu} titleIcon={<Setting46 />} />
 				</View>
 			</ScrollView>
 		</View>

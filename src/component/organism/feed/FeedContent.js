@@ -157,7 +157,23 @@ export default FeedContent = props => {
 			Modal.popSelectBoxModal(
 				FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS,
 				selectedItem => {
-					alert(selectedItem);
+					switch (selectedItem) {
+						case '상태 변경':
+							alert('상태 변경!');
+							break;
+						case '공유하기':
+							alert('공유하기!');
+							break;
+						case '수정':
+							// alert('수정!');
+							navigation.navigate('FeedEdit',props.data);
+							break;
+						case '삭제':
+							alert('삭제');
+							break;
+						default:
+							break;
+					}
 					Modal.close();
 					setIsMeatballClicked(false);
 				},

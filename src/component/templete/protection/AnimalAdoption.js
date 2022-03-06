@@ -27,7 +27,7 @@ export default AnimalAdoption = props => {
 			() => {
 				Modal.close();
 				// console.log('모달창 닫힘');
-				navigation.push('SelectAccount', {userobject_id: props.route.params.userobject_id});
+				navigation.push('SelectAccount', {userobject_id: props.route.params});
 			},
 		);
 	};
@@ -36,7 +36,7 @@ export default AnimalAdoption = props => {
 		const changePetStatus = async () => {
 			setPetStatus(
 				{
-					userobject_id: props.route.params,
+					userobject_id: props.route.params._id,
 					pet_status: 'companion',
 				},
 				result => {
@@ -69,16 +69,6 @@ export default AnimalAdoption = props => {
 			() => onCheerUp(),
 		);
 	};
-
-	// const onPressMyAdoption = () => {
-	// 	Modal.popTwoBtn(
-	// 		'이 동물을 가족으로 맞이하시겠어요?',
-	// 		'취소',
-	// 		'예',
-	// 		() => Modal.close(),
-	// 		() => onCheerUp(),
-	// 	);
-	// };
 
 	return (
 		<ScrollView>

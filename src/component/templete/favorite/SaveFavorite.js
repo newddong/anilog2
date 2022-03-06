@@ -1,10 +1,10 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {ActivityIndicator, Text, View} from 'react-native';
-import {getFollowers, getFollows, getUserListByNickname} from 'Root/api/userapi';
+import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
+import {getFollows, getUserListByNickname} from 'Root/api/userapi';
 import AccountHashList from 'Organism/list/AccountHashList';
 import SelectStat from 'Organism/list/SelectStat';
-import {login_style, temp_style, selectstat_view_style, saveFavorite} from 'Templete/style_templete';
+import {login_style, temp_style, selectstat_view_style} from 'Templete/style_templete';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 //즐겨찾기 친구
@@ -24,7 +24,7 @@ export default SaveFavorite = props => {
 				let follow_id_list = [];
 				follow.msg.map((v, i) => {
 					follow_id_list.push(v.follow_id._id);
-					console.log('foll', i, v.follow_id.user_nickname);
+					// console.log('foll', i, v.follow_id.user_nickname);
 				});
 				getUserListByNickname(
 					{
@@ -38,24 +38,10 @@ export default SaveFavorite = props => {
 						let res = result.msg;
 						res.map((v, i) => {
 							if (follow_id_list.includes(v._id)) {
+								//출력될 아이템들의 Id를 팔로워 Id목록과 비교하여 값을 포함하고 있다면 팔로우 or 팔오잉
 								v.isFollowing = true;
 							} else v.isFollowing = false;
 						});
-						// console.log('res', res[0]);
-						res.map((v, i) => {
-							console.log('v', i, v.isFollowing);
-							// const e  = 61d2de8ac0f179ccd5ba58a6
-							// LOG  v 1 61d2ef69c0f179ccd5ba66cc
-							// LOG  v 2 61d38081c0f179ccd5ba7ec7
-							// LOG  v 3 61d3812ac0f179ccd5ba7ecb
-							// LOG  v 4 61d38ebcc0f179ccd5ba81e1
-							// LOG  v 5 61d391e0c0f179ccd5ba8404
-							// LOG  v 6 61d397a8c0f179ccd5ba84fb
-							// LOG  v 7 61d398a5c0f179ccd5ba85a1
-							// LOG  v 8 61d3be2bc0f179ccd5ba9889
-							// LOG  v 9 61d3f45ec0f179ccd5baa07b
-						});
-
 						setData(res);
 					},
 					err => {
@@ -146,7 +132,7 @@ export default SaveFavorite = props => {
 						/>
 					</View>
 				</View>
-				<View style={[saveFavorite.accountHashList, {height: null}]}>
+				<View style={[style.accountHashList, {height: null}]}>
 					<AccountHashList
 						data={data}
 						checkBoxMode={checkBoxMode}
@@ -163,75 +149,12 @@ export default SaveFavorite = props => {
 	}
 };
 
-const gd = [
-	{
-		__v: 3,
-		_id: '61d2de8ac0f179ccd5ba58a6',
-		pet_birthday: '2022-01-03T00:00:00.000Z',
-		pet_family: ['61d2de63c0f179ccd5ba5887', '61d2dcb0c0f179ccd5ba5649'],
-		pet_is_temp_protection: false,
-		pet_neutralization: 'no',
-		pet_sex: 'male',
-		pet_species: '개',
-		pet_species_detail: '코커스패니얼',
-		pet_status: 'companion',
-		pet_weight: '4',
-		type: 'UserObject',
-		user_agreement: {
-			is_donation_info: false,
-			is_location_service_info: false,
-			is_marketting_info: false,
-			is_over_fourteen: false,
-			is_personal_info: false,
-			is_service: false,
-		},
-		user_denied: false,
-		user_follow_count: 0,
-		user_follower_count: 2,
-		user_interests: [],
-		user_introduction: '',
-		user_is_verified_email: false,
-		user_is_verified_phone_number: false,
-		user_my_pets: [],
-		user_nickname: '길동이',
-		user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1641209482105_A3B92DE3-4536-43F5-B8A9-94355C099318.jpg',
-		user_register_date: '2022-01-03T11:31:22.210Z',
-		user_type: 'pet',
-		user_upload_count: 0,
+const style = StyleSheet.create({
+	accountHashList: {
+		// width: 654 * DP,
+		marginTop: 30 * DP,
+		paddingBottom: 100 * DP, // ScrollView로 주지 않아 아래가 잘리는 현상 처리
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
-	{
-		__v: 0,
-		_id: '61d2ef69c0f179ccd5ba66cc',
-		pet_birthday: '2021-11-01T00:00:00.000Z',
-		pet_family: ['61d2ed24c0f179ccd5ba65a4'],
-		pet_is_temp_protection: false,
-		pet_neutralization: 'no',
-		pet_sex: 'male',
-		pet_species: '개',
-		pet_species_detail: '진돗개',
-		pet_status: 'companion',
-		pet_weight: '1',
-		type: 'UserObject',
-		user_agreement: {
-			is_donation_info: false,
-			is_location_service_info: false,
-			is_marketting_info: false,
-			is_over_fourteen: false,
-			is_personal_info: false,
-			is_service: false,
-		},
-		user_denied: false,
-		user_follow_count: 0,
-		user_follower_count: 0,
-		user_interests: [],
-		user_introduction: '',
-		user_is_verified_email: false,
-		user_is_verified_phone_number: false,
-		user_my_pets: [],
-		user_nickname: '진돌이',
-		user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1641213801224_F8B5ABD7-3D41-444D-AD4F-4FB3221AEB25.jpg',
-		user_register_date: '2022-01-03T12:43:21.328Z',
-		user_type: 'pet',
-		user_upload_count: 0,
-	},
-];
+});

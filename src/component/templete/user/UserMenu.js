@@ -93,7 +93,7 @@ export default UserMenu = props => {
 			Modal.popAvatarSelectModal(
 				selectedPet => {
 					// console.log('selected', selectedPet);
-					navigation.push('PetInfoSetting', {pet_id: selectedPet._id, token: data}); //data에 있는 userObject를 토대로 해당 유저의 반려동물을 검색해서 보내야함
+					navigation.push('PetInfoSetting', {pet_id: selectedPet._id}); //data에 있는 userObject를 토대로 해당 유저의 반려동물을 검색해서 보내야함
 					Modal.close();
 				},
 				'확인',
@@ -109,22 +109,6 @@ export default UserMenu = props => {
 	// 내 정보 수정 클릭
 	const onPressModifyMyInfo = () => {
 		navigation.push('UserInfoSetting', {token: data._id}); //userObject
-	};
-
-	//로그아웃 기능
-	const logout = () => {
-		userLogout(
-			1,
-			e => {
-				console.log('e', e);
-				userGlobalObject.userInfo = {};
-				alert('Logout 성공');
-				navigation.reset({routes: [{name: 'Login'}]});
-			},
-			err => {
-				console.log('err', err);
-			},
-		);
 	};
 
 	//하단 메뉴 클릭

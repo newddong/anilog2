@@ -114,7 +114,7 @@ const SelectScrollBoxModal = props => {
 					) : (
 						<Text style={[txt.noto30, {color: WHITE}]}>{props.header}</Text>
 					)}
-					<TouchableOpacity onPress={onSelect}>
+					<TouchableOpacity onPress={onSelect} style={style.completeText}>
 						<Text style={[txt.noto30, {color: WHITE}]}>완료</Text>
 					</TouchableOpacity>
 				</View>
@@ -222,6 +222,12 @@ const style = StyleSheet.create({
 		borderRadius: 20 * DP,
 		height: 70 * DP,
 		backgroundColor: APRI10,
+	},
+	completeText: {
+		width: 110 * DP,
+		height: 80 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
 });
 

@@ -238,11 +238,6 @@ export default MyStackNavigation = props => {
 				component={ProtectionApplicationList}
 				options={{header: props => <SimpleHeader {...props} />, title: '신청서 조회'}}
 			/>
-			{/* <MyStack.Screen
-				name="ProtectApplicant"
-				component={ProtectApplicant}
-				options={{header: props => <SimpleHeader {...props} />, title: '보호 활동 신청자'}}
-			/> */}
 			<MyStack.Screen
 				name="ProtectApplyForm"
 				component={ProtectApplyForm}

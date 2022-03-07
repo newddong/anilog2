@@ -109,6 +109,8 @@ export async function getProtectAnimalByProtectAnimalId(params, callback, errcal
  * @param {object} params - token아이디
  * @param {string} params.shelter_protect_animal_object_id - 보호소의 등록된 동물의 오브젝트 아이디.
  * @param {string} params.protect_animal_status - 동물 상태.
+ * @param {string} params.protect_animal_adoptor_id - 입양자 (UserObjectID)
+ * @param {string} params.protect_animal_protector_id - 임시보호자 (UserObjectID)
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */

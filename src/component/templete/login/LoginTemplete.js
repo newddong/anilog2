@@ -201,50 +201,6 @@ export default LoginTemplete = props => {
 						<Text style={[txt.noto24, {color: GRAY20}]}> 비밀번호 재설정</Text>
 					</TouchableOpacity>
 				</View>
-
-				<View style={[login_style.basic_info, loginTemplete_style.basic_info, {marginTop: 0}]}>
-					<TouchableOpacity
-						onPress={() => {
-							setUserSetting({...userSetting, id: '01096450001', password: 'tkddn123'});
-						}}>
-						<Text style={[txt.noto24, {color: GRAY20}]}> 보호소 1</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						onPress={() => {
-							setUserSetting({...userSetting, id: '01096450002', password: 'tkddn123'});
-						}}>
-						<Text style={[txt.noto24, {color: GRAY20}]}> 보호소 2</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						onPress={() => {
-							setUserSetting({...userSetting, id: '01001096450003', password: 'tkddn123'});
-						}}>
-						<Text style={[txt.noto24, {color: GRAY20}]}> 보호소 2</Text>
-					</TouchableOpacity>
-					<Text style={{color: GRAY20}}> | </Text>
-					<TouchableOpacity
-						onPress={() => {
-							setUserSetting({...userSetting, id: '01096450422', password: 'tkddn123'});
-						}}>
-						<Text style={[txt.noto24, {color: GRAY20}]}> 계정 1 </Text>
-					</TouchableOpacity>
-					<Text style={{color: GRAY20}}> | </Text>
-					<TouchableOpacity
-						onPress={() => {
-							setUserSetting({...userSetting, id: '01096450420', password: 'tkddn123'});
-						}}>
-						<Text style={[txt.noto24, {color: GRAY20}]}> 계정 2 </Text>
-					</TouchableOpacity>
-					<Text style={{color: GRAY20}}> | </Text>
-
-					<TouchableOpacity
-						onPress={() => {
-							setUserSetting({...userSetting, id: '01096450421', password: 'tkddn123'});
-							// props.navigation.push('GeoLocation');
-						}}>
-						<Text style={[txt.noto24, {color: GRAY20}]}> 계정 3 </Text>
-					</TouchableOpacity>
-				</View>
 			</View>
 		</View>
 	);

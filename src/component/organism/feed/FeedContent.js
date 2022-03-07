@@ -22,7 +22,7 @@ import {MAINCOLOR} from 'Root/config/color';
 import {getTimeLapsed, parsingDate} from 'Root/util/dateutil';
 import HashText from 'Molecules/info/HashText';
 import Modal from 'Root/component/modal/Modal';
-import {getFollows} from 'Root/api/userapi';
+import {followUser, getFollows, unFollowUser} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import MissingReportInfo from 'Organism/info/MissingReportInfo';
 
@@ -124,10 +124,63 @@ export default FeedContent = props => {
 	const onPressCancelFollow = () => {
 		Modal.close();
 		setTimeout(() => {
-			Modal.popOneBtn('이 계정을 팔로우 취소하시겠습니까?', '팔로우 취소', () => {
-				alert('팔로우 취소');
-				Modal.close();
-			});
+			Modal.popTwoBtn(
+				'이 계정을 팔로우 취소하시겠습니까?',
+				'아니오',
+				'팔로우 취소',
+				() => {
+					Modal.close();
+				},
+				() => {
+					unFollowUser(
+						{
+							follow_userobject_id: props.data.feed_writer_id._id,
+						},
+						result => {
+							// console.log('result / unFollowUser / FeedContent', result.msg);
+							Modal.close();
+							Modal.popNoBtn(props.data.feed_writer_id.user_nickname + '님을 \n 팔로우 취소하였습니다.');
+							setTimeout(() => {
+								Modal.close();
+							}, 2000);
+						},
+						err => {
+							console.log('err / unFollowUser / FeedContent', err);
+						},
+					);
+				},
+			);
+		}, 100);
+	};
+
+	const onPressFollow = () => {
+		// console.log('data', props.data);
+		Modal.close();
+		setTimeout(() => {
+			Modal.popTwoBtn(
+				props.data.feed_writer_id.user_nickname + '님을 \n 팔로우하시겠습니까?',
+				'아니오',
+				'팔로우',
+				() => Modal.close(),
+				() => {
+					followUser(
+						{
+							follow_userobject_id: props.data.feed_writer_id._id,
+						},
+						result => {
+							// console.log('result / followUser / FeedContent', result.msg);
+							Modal.close();
+							Modal.popNoBtn(props.data.feed_writer_id.user_nickname + '님을 \n 팔로우하였습니다.');
+							setTimeout(() => {
+								Modal.close();
+							}, 2000);
+						},
+						err => {
+							console.log('err / followUser / FeedContent', err);
+						},
+					);
+				},
+			);
 		}, 100);
 	};
 
@@ -223,6 +276,8 @@ export default FeedContent = props => {
 									// alert(selectedItem);
 									if (selectedItem == '신고') {
 										onPressReport();
+									} else if (selectedItem == '팔로우') {
+										onPressFollow();
 									} else if (selectedItem == '공유하기') {
 										onPressShare();
 									} else if (selectedItem == '팔로우 취소') {

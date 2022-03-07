@@ -31,16 +31,18 @@ export default UserInfoSetting = ({route}) => {
 			},
 			userObject => {
 				setData(userObject.msg);
-				navigation.setOptions({title: userObject.msg.user_nickname});
+				navigation.setOptions({title: userGlobalObject.userInfo.user_nickname});
 			},
 			err => {
 				console.log('er', err);
 			},
 		);
 	};
+
 	React.useEffect(() => {
 		// fetchData();
 		navigation.addListener('focus', () => fetchData());
+
 		//스크린 포커스, 프로필 변경이 있을 시 getUSerInfoById에 접속
 	}, [route.params?.changedPhoto]);
 
@@ -73,8 +75,7 @@ export default UserInfoSetting = ({route}) => {
 
 	//나의 반려동물 => 반려클릭
 	const onClickCompanionLabel = myPetData => {
-		console.log('myPetdata', myPetData);
-		navigation.push('PetInfoSetting', {pet_id: myPetData._id, token: data});
+		navigation.push('PetInfoSetting', {pet_id: myPetData._id});
 	};
 
 	//비밀번호 변경하기 클릭

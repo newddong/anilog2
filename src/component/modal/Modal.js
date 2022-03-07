@@ -245,6 +245,20 @@ export default Modal = {
 	 * 입양 및 임시보호 동물 알림 모달
 	 *
 	 * @param {Object} props - props object
+	 * @param {object} props.data - 보호동물 데이터오브젲ㄱ트
+	 * @param {string} props.msg - 팝업 메시지
+	 * @param {string} props.yesMsg - 팝업 메시지
+	 * @param {string} props.noMsg - No 버튼 타이틀
+	 * @param {(data)=>void} props.onYes - 등록 클릭
+	 * @param {(data)=>void} props.onNo - 아니오  클릭
+	 *
+	 */
+	popAnimalToRegisterModal: (data, msg, yesMsg, noMsg, onYes, onNo) => {},
+
+	/**
+	 * 입양 및 임시보호 동물 알림 모달
+	 *
+	 * @param {Object} props - props object
 	 * @param {object} props.data - 보호동물 데이터오브젝트
 	 * @param {string} props.yesMsg - Yes버튼 타이틀
 	 * @param {(data)=>void} props.onYes - 등록 클릭

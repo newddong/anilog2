@@ -148,14 +148,14 @@ export default AssignUserProfileImage = props => {
 			</View>
 
 			{/* (M)Input30 */}
-			<View style={[temp_style.input30_assignUserProfileImage, assignUserProfileImage_style.input30]}>
+			<View style={[temp_style.input30_assignUserProfileImage, assignUserProfileImage_style.input30, {backgroundColor: 'white'}]}>
 				<Input30
 					value={nickname}
 					showTitle={false}
 					title={'닉네임'}
 					info={'띄어쓰기 없이 2자 이상 15자 이내의 한글, 영문, 숫자, "_",의 입력만 가능합니다. '}
 					description={'* 2자 이상 15자 이내의 영문,숫자, _ 의 입력만 가능합니다.'}
-					width={654}
+					width={344} //
 					confirm_msg={'사용 가능한 닉네임입니다.'}
 					alert_msg={'사용 불가능한 닉네임입니다.'}
 					placeholder={'닉네임을 입력해주세요.'}

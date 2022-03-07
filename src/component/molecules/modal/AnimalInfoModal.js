@@ -1,10 +1,11 @@
 import React from 'react';
-import {View, StyleSheet, Platform, Dimensions} from 'react-native';
+import {View, StyleSheet, Platform, Dimensions, TouchableOpacity} from 'react-native';
 import AniButton from '../button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10, APRI10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import AidRequest from 'Organism/listitem/AidRequest';
+import Modal from 'Root/component/modal/Modal';
 
 /**
  * 나의 보호소 출신 동물 / 보호동물 및 보호요청게시글 게이트웨이 모달
@@ -26,19 +27,19 @@ const AnimalInfoModal = props => {
 	};
 
 	return (
-		<View style={style.background}>
-			<View style={[style.popUpWindow, style.shadow]}>
+		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={style.background}>
+			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
 				<View style={[style.inside]}>
 					<View style={[style.aidRequestContainer]}>
-						<AidRequest data={data.protect_animal_id} selectBorderMode={true} showBadge={false} />
+						<AidRequest data={data.protect_animal_id} selectBorderMode={true} showBadge={false} inActiveOpacity={true} />
 					</View>
 					<View style={style.buttonContainer}>
 						<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={'게시글 보기'} onPress={onPressAdoptorInfo} />
 						<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={'입양처 보기'} onPress={onPressReqeustInfo} />
 					</View>
 				</View>
-			</View>
-		</View>
+			</TouchableOpacity>
+		</TouchableOpacity>
 	);
 };
 
@@ -54,9 +55,9 @@ const style = StyleSheet.create({
 	},
 	popUpWindow: {
 		width: 694 * DP,
-		height: 358 * DP,
+		height: 368 * DP,
 		padding: 20 * DP,
-		paddingBottom: 30 * DP,
+		paddingVertical: 30 * DP,
 		backgroundColor: WHITE,
 		borderRadius: 50 * DP,
 	},

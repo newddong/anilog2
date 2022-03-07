@@ -77,36 +77,21 @@ export default SearchProtectRequest = ({route, navigation}) => {
 	const onClickLabel = (status, id, item) => {
 		//data에는 getProtectRequestList(어떠한 필터도 없이 모든 보호요청게시글을 출력)의 결과값이 담겨있음
 		//따라서 출력할 것을 해당 게시글의 작성자(보호소)가 작성한 보호요청게시글로 좁혀야함
-		console.log('item', item.protect_request_writer_id._id);
-		getProtectRequestListByShelterId(
-			{
-				shelter_userobject_id: item.protect_request_writer_id._id,
-				protect_request_status: 'all',
-				protect_request_object_id: null,
-				request_number: 10,
-			},
-			result => {
-				console.log('result / getPRotectRequestListByShelterId / ProtectRequestList  : ', result.msg);
-				let sexValue = '';
+		let sexValue = '';
 
-				switch (item.protect_animal_sex) {
-					case 'male':
-						sexValue = '남';
-						break;
-					case 'female':
-						sexValue = '여';
-						break;
-					case 'male':
-						sexValue = '성별모름';
-						break;
-				}
-				const titleValue = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + sexValue;
-				navigation.navigate('AnimalProtectRequestDetail', {item: item, list: result.msg, title: titleValue});
-			},
-			err => {
-				console.log('err / getProtectRequestListByShelterId / ProtectRequestList   : ', err);
-			},
-		);
+		switch (item.protect_animal_sex) {
+			case 'male':
+				sexValue = '남';
+				break;
+			case 'female':
+				sexValue = '여';
+				break;
+			case 'male':
+				sexValue = '성별모름';
+				break;
+		}
+		const titleValue = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + sexValue;
+		navigation.navigate('AnimalProtectRequestDetail', {item: item, title: titleValue});
 	};
 
 	const onSwtichOn = () => {

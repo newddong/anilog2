@@ -10,7 +10,7 @@ import SelectedMedia from '../media/SelectedMedia';
 import {styles} from 'Root/component/atom/image/imageStyle';
 
 export default function HashInput(props) {
-	const [value, setValue] = React.useState('');
+	const [value, setValue] = React.useState(props.value?props.value:'');
 	const [find, setFind] = React.useState(false);
 	const [cursor, setCursor] = React.useState();
 	const inputRef = React.useRef();

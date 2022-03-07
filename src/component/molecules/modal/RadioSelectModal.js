@@ -12,6 +12,7 @@ import Modal from 'Root/component/modal/Modal';
  * @param {Object} props - props object
  * @param {Object} props.offset - 선택된 좌표
  * @param {Object} props.items - 출력 아이템
+ * @param {String} props.current - 출력 아이템
  * @param {(string)=>void} props.onSelect - 확인 버튼 콜백
  * @param {void} props.onClose - 모달 종료 콜백
  *
@@ -19,10 +20,16 @@ import Modal from 'Root/component/modal/Modal';
 
 const RadioSelectModal = props => {
 	const [selectedIndex, setSelectedIndex] = React.useState(0);
+	React.useEffect(() => {
+		if (props.current != undefined) {
+			setSelectedIndex(props.current);
+		}
+	}, [props.current]);
 
 	const onSelect = index => {
 		setSelectedIndex(index);
-		props.onSelect(props.items[index]);
+		props.onSelect(index);
+		onClose();
 	};
 
 	const onClose = () => {

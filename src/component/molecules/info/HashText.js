@@ -13,7 +13,6 @@ import {getUserListByNickname} from 'Root/api/userapi';
  * @param {(input:string)=>void} props.onChange - 인풋 값 변경 콜백
  */
 export default function HashText(props) {
-	// return <Text {...props}>{'adkjlfkjaljsiwoejoj미ㅏ어랴ㅐㅈ;버ㅣ거버디ㅏㅓ리머;ㄴ어adkjlfkjaljsiwoejoj미ㅏ어랴ㅐㅈ;버ㅣ거버디ㅏㅓ리머;ㄴ어라adkjlfkjaljsiwoejoj미ㅏ어랴ㅐㅈ;버ㅣ거버디ㅏㅓ리머;ㄴ어라adkjlfkjaljsiwoejoj미ㅏ어랴ㅐㅈ;버ㅣ거버디ㅏㅓ리머;ㄴ어라adkjlfkjaljsiwoejoj미ㅏ어랴ㅐㅈ;버ㅣ거버디ㅏㅓ리머;ㄴ어라adkjlfkjaljsiwoejoj미ㅏ어랴ㅐㅈ;버ㅣ거버디ㅏㅓ리머;ㄴ어라라'}</Text>;
 	return <Text {...props}>{makeFeedInputView(props.children, props.allowTab)}</Text>;
 }
 

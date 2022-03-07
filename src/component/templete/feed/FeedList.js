@@ -10,13 +10,14 @@ import {getFeedListByUserId} from 'Root/api/feedapi';
 import {getFeedsByHash} from 'Root/api/hashapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {login_style, buttonstyle} from 'Templete/style_templete';
-import { getStringLength, getLinesOfString } from 'Root/util/stringutil';
+import {getStringLength, getLinesOfString} from 'Root/util/stringutil';
+import propTypes from 'prop-types';
 
 export default FeedList = ({route, navigation}) => {
-	// const ITEM_HEIGHT = 1122 * DP;
 	const [feedList, setFeedList] = React.useState([]);
 	const [refreshing, setRefreshing] = React.useState(false);
 	const [index, setIndex] = React.useState(0);
+	const flatlist = React.useRef();
 	//피드썸네일 클릭 리스트일 경우
 	React.useEffect(() => {
 		// console.log('userobject', route.params?.userobject);
@@ -42,24 +43,22 @@ export default FeedList = ({route, navigation}) => {
 							request_number: 9999,
 						},
 						({msg}) => {
-							setIndex(msg.findIndex(v => v._id == route.params?.selected._id));
+							// setIndex(msg.findIndex(v => v._id == route.params?.selected._id));
 							setFeedList(
 								msg
 									.map((v, i, a) => {
-										let lines = getLinesOfString(v.feed_content,Platform.OS=='android'?48:50);
-										return {...v, height: (1060 +(lines > 3 ? 2*54+48 : lines*54)) * DP};
+										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
+										return {...v, height: (1060 + (lines > 3 ? 2 * 54 + 48 : lines * 54)) * DP};
 									})
 									.map((v, i, a) => {
-
-										let offset = a.slice(0,i).reduce((prev,current)=>{
+										let offset = a.slice(0, i).reduce((prev, current) => {
 											return current.height + prev;
-										},0)
+										}, 0);
 										return {
 											...v,
-											offset: offset
-											}
-										}
-									)
+											offset: offset,
+										};
+									}),
 							);
 						},
 						errormsg => {
@@ -93,20 +92,18 @@ export default FeedList = ({route, navigation}) => {
 							setFeedList(
 								msg
 									.map((v, i, a) => {
-										let lines = getLinesOfString(v.feed_content,Platform.OS=='android'?48:50);
-										return {...v, height: (1060 +(lines > 3 ? 2*54+48 : lines*54)) * DP};
+										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
+										return {...v, height: (1060 + (lines > 3 ? 2 * 54 + 48 : lines * 54)) * DP};
 									})
 									.map((v, i, a) => {
-
-										let offset = a.slice(0,i).reduce((prev,current)=>{
+										let offset = a.slice(0, i).reduce((prev, current) => {
 											return current.height + prev;
-										},0)
+										}, 0);
 										return {
 											...v,
-											offset: offset
-											}
-										}
-									)
+											offset: offset,
+										};
+									}),
 							);
 						},
 						errormsg => {
@@ -125,8 +122,26 @@ export default FeedList = ({route, navigation}) => {
 		return unsubscribe;
 	}, [refreshing]);
 
+	React.useEffect(() => {
+		if (feedList.length > 0) {
+			let indx = feedList.findIndex(v => v._id == route.params?.selected._id);
+			console.log('인덱스', indx);
+			setTimeout(()=>{
+				flatlist.current.scrollToIndex({
+					animated: false,
+					index: indx>0?indx:0,
+				});
+			},0)
+			
+		}
+	}, [feedList]);
+
 	const moveToFeedWrite = () => {
-		userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed'});
+		flatlist.current.scrollToIndex({
+			animated: false,
+			index: 5,
+		});
+		// userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed'});
 	};
 
 	const renderItem = item => {
@@ -142,7 +157,9 @@ export default FeedList = ({route, navigation}) => {
 
 		wait(1000).then(() => setRefreshing(false));
 	};
-	
+	const onR = () => {
+		console.log('onrefresh')
+	}
 	return (
 		<View style={(login_style.wrp_main, {flex: 1, backgroundColor: WHITE})}>
 			<FlatList
@@ -151,10 +168,13 @@ export default FeedList = ({route, navigation}) => {
 				keyExtractor={(item, index) => index}
 				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 				getItemLayout={(data, index) => {
-					if(!data[index])return {length:0, offset:0, index: index};
+					if (!data[index]) return {length: 0, offset: 0, index: index};
 					return {length: data[index].height, offset: data[index].offset, index: index};
 				}}
-				initialScrollIndex={index}
+				// initialScrollIndex={index}
+				ref={flatlist}
+				onRefresh={onR}
+				refreshing
 			/>
 			{userGlobalObject.userInfo && (
 				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}, buttonstyle.shadow]}>
@@ -164,4 +184,3 @@ export default FeedList = ({route, navigation}) => {
 		</View>
 	);
 };
-``

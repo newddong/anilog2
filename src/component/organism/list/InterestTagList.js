@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, Text, View} from 'react-native';
+import {FlatList, Text, View, ScrollView} from 'react-native';
 import {GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w190} from 'Root/component/atom/btn/btn_style';
@@ -39,7 +39,7 @@ export default InterestTagList = props => {
 			</View>
 		);
 	};
-
+	const numColums = Math.ceil(props.items / 2);
 	return (
 		<View style={[interestTagList.container]}>
 			<View style={[interestTagList.titleContainer]}>
@@ -51,7 +51,13 @@ export default InterestTagList = props => {
 				</View>
 			</View>
 			<View style={[interestTagList.interestingTagList]}>
-				<FlatList data={props.items} renderItem={({item, index}) => renderItem(item, index)} horizontal={true} />
+				<FlatList
+					style={[{display: 'flex', flexWrap: 'wrap'}]}
+					data={props.items}
+					renderItem={({item, index}) => renderItem(item, index)}
+					horizontal={true}
+					// numColumns={3}
+				/>
 			</View>
 		</View>
 	);

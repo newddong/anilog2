@@ -101,8 +101,8 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 		}
 	};
 
-	const titleStyle = [{textAlign: 'center'}, txt.noto40b, route.params?.feedType != 'Feed' ? {color: RED} : {}];
-
+	const titleStyle = [{textAlign: 'center'}, txt.noto40b, route.params?.feedType != 'Feed' ? {color: RED} : {color: '#000'}];
+	console.log(route.params)
 	const avartarSelect = () => {
 		Modal.popAvatarSelectModal(petObject => {
 			console.log('petObject / onOk', petObject);

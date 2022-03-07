@@ -35,7 +35,7 @@ import {
 	LOGOUT,
 	INFO,
 } from 'Root/i18n/msg';
-import {GRAY10} from 'Root/config/color';
+import {GRAY10, GRAY40} from 'Root/config/color';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {getUserProfile} from 'Root/api/userapi';
@@ -47,6 +47,7 @@ export default ShelterMenu = ({route}) => {
 	const [data, setData] = React.useState({}); //우선 userObject_Shelter 0번 추가
 	const [showMoreIntro, setShowMoreIntro] = React.useState(false);
 	const [introOriginLine, setIntroOriginLine] = React.useState(0);
+	console.log('introOriginLine', introOriginLine);
 	React.useEffect(() => {
 		const getInfo = () => {
 			getUserProfile(
@@ -124,7 +125,7 @@ export default ShelterMenu = ({route}) => {
 				break;
 			//봉사활동 신청 관리
 			case MANAGEMENT_OF_VOLUNTEER:
-				navigation.push('ManageShelterVolunteer');
+				navigation.push('ManageShelterVolunteer', data._id);
 				break;
 			//---------------즐겨찾기
 			//친구
@@ -196,8 +197,8 @@ export default ShelterMenu = ({route}) => {
 	}, [introOriginLine]);
 
 	return (
-		<View style={(login_style.wrp_main, shelterMenu.container)}>
-			<ScrollView style={{backgroundColor: '#FFF'}}>
+		<ScrollView>
+			<View style={(login_style.wrp_main, shelterMenu.container)}>
 				<View style={[shelterMenu.shelterMenuStep1]}>
 					{/* Shelter Info*/}
 					<View style={[shelterMenu.shelterInfo]}>
@@ -278,43 +279,45 @@ export default ShelterMenu = ({route}) => {
 				</View>
 				{/* 하단 메뉴 */}
 				<View style={[shelterMenu.profileMenu1]}>
-					<ProfileMenu
-						menuTitle={MANAGEMENT_OF_PROTECTED_ANIMAL}
-						menuItems={[
-							[PROTECTED_ANIMAL, INQUERY_APPLICATION],
-							[FROM_MY_SHELTER, MANAGEMENT_OF_VOLUNTEER],
-						]}
-						onClick={click_menu}
-						titleIcon={<Heart48_Filled />}
-					/>
+					<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
+						<ProfileMenu
+							menuTitle={MANAGEMENT_OF_PROTECTED_ANIMAL}
+							menuItems={[
+								[PROTECTED_ANIMAL, INQUERY_APPLICATION],
+								[FROM_MY_SHELTER, MANAGEMENT_OF_VOLUNTEER],
+							]}
+							onClick={click_menu}
+							titleIcon={<Heart48_Filled />}
+						/>
+					</View>
 				</View>
 				<View style={[shelterMenu.profileMenu2]}>
-					<ProfileMenu
-						menuTitle={FAVORITES}
-						menuItems={[
-							[FRIENDS, PEED_CONTENTS],
-							[REQ_PROTECTION_SAVE, COMUNITY],
-						]}
-						onClick={click_menu}
-						titleIcon={<FavoriteTag48_Filled />}
-					/>
+					<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
+						<ProfileMenu
+							menuTitle={FAVORITES}
+							menuItems={[
+								[FRIENDS, PEED_CONTENTS],
+								[REQ_PROTECTION_SAVE, COMUNITY],
+							]}
+							onClick={click_menu}
+							titleIcon={<FavoriteTag48_Filled />}
+						/>
+					</View>
 				</View>
 				<View style={[shelterMenu.profileMenu3]}>
-					<ProfileMenu
-						menuTitle={MY_ACTIVITY_IN_SHELTER}
-						menuItems={[
-							[MY_CONTENTS, TAGED_CONTENTS_FOR_ME],
-							[APPLICATION_HISTORY, UPLOADED_POST_FOR_REQ_PROTECTION],
-							[COMUNITY, NOTE_LIST],
-						]}
-						onClick={click_menu}
-						titleIcon={<Paw46 />}
-					/>
+					<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
+						<ProfileMenu
+							menuTitle={MY_ACTIVITY_IN_SHELTER}
+							menuItems={[[MY_CONTENTS, TAGED_CONTENTS_FOR_ME], [COMUNITY, UPLOADED_POST_FOR_REQ_PROTECTION], [NOTE_LIST]]}
+							onClick={click_menu}
+							titleIcon={<Paw46 />}
+						/>
+					</View>
 				</View>
 				<View style={[shelterMenu.profileMenu4]}>
 					<ProfileMenu menuTitle={SETTING} menuItems={[[INFO_QUESTION, ACCOUNT], [INFO]]} onClick={click_menu} titleIcon={<Setting46 />} />
 				</View>
-			</ScrollView>
-		</View>
+			</View>
+		</ScrollView>
 	);
 };

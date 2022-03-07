@@ -2,8 +2,8 @@ import React from 'react';
 import {Image, Text, View, TouchableOpacity, StyleSheet} from 'react-native';
 import {GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {SETTING_COMMENT, SETTING_OWN_COMMENT} from 'Root/i18n/msg';
 import {Heart30_Border, Heart30_Filled, Meatball50_GRAY20_Vertical} from 'Atom/icon';
+import {DEFAULT_PROFILE, REPLY_MEATBALL_MENU, REPLY_MEATBALL_MENU_MY_REPLY, SETTING_COMMENT, SETTING_OWN_COMMENT} from 'Root/i18n/msg';
 import {styles} from 'Atom/image/imageStyle';
 import MeatBallDropdown from 'Molecules/dropdown/MeatBallDropdown';
 import UserTimeLabel from 'Molecules/label/UserTimeLabel';
@@ -22,6 +22,7 @@ export default ChildComment = props => {
 	const [data, setData] = React.useState(props.data);
 	const [isMyComment, setIsMyComment] = React.useState(false);
 	const [likeState, setLikeState] = React.useState(false);
+	const [meatball, setMeatball] = React.useState(false); // 해당 댓글의 미트볼 헤더 클릭 여부
 	// console.log('ChildCommnet Data', props);
 	const navigation = useNavigation();
 	React.useEffect(() => {
@@ -41,6 +42,70 @@ export default ChildComment = props => {
 		props.onPressReplyBtn(props.data.comment_parent);
 	};
 
+	const onPressMeatball = () => {
+		// console.log('meatballREf', meatballRef);
+
+		const isWriter = userGlobalObject.userInfo._id == data.comment_writer_id._id;
+		if (isWriter) {
+			Modal.popSelectBoxModal(
+				REPLY_MEATBALL_MENU_MY_REPLY,
+				selectedItem => {
+					switch (selectedItem) {
+						case '상태 변경':
+							alert('상태 변경!');
+							break;
+						case '공유하기':
+							alert('공유하기!');
+							break;
+						case '수정':
+							props.onEdit&&props.onEdit(data);
+							// alert('수정!');
+							// navigation.navigate('FeedEdit',props.data);
+							break;
+						case '삭제':
+							alert('삭제');
+							break;
+						default:
+							break;
+					}
+					Modal.close();
+					// setIsMeatballClicked(false);
+				},
+				() => Modal.close(),
+				false,
+				'',
+			);
+		} else {
+			Modal.popSelectBoxModal(
+				REPLY_MEATBALL_MENU,
+				selectedItem => {
+					switch (selectedItem) {
+						case '상태 변경':
+							alert('상태 변경!');
+							break;
+						case '공유하기':
+							alert('공유하기!');
+							break;
+						case '수정':
+							// alert('수정!');
+							// navigation.navigate('FeedEdit',props.data);
+							break;
+						case '삭제':
+							alert('삭제');
+							break;
+						default:
+							break;
+					}
+					Modal.close();
+					// setIsMeatballClicked(false);
+				},
+				() => Modal.close(),
+				false,
+				'',
+			);
+		}
+	};
+
 	return (
 		<View style={[childComment.container]}>
 			<View style={[childComment.profileContainer]}>
@@ -48,7 +113,8 @@ export default ChildComment = props => {
 					<UserTimeLabel data={data || null} onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})} />
 				</View>
 				<View style={[childComment.meatBall50_vertical]}>
-					<MeatBallDropdown menu={isMyComment ? SETTING_OWN_COMMENT : SETTING_COMMENT} horizontal={false} />
+					{meatball ? <Meatball50_APRI10_Vertical onPress={onPressMeatball} /> : <Meatball50_GRAY20_Vertical onPress={onPressMeatball} />}
+					{/* <MeatBallDropdown menu={isMyComment ? SETTING_OWN_COMMENT : SETTING_COMMENT} horizontal={false} /> */}
 				</View>
 			</View>
 			{/* 해당 대댓글이 photo_uri를 가지고 있는 경우만 IMage 출력 */}

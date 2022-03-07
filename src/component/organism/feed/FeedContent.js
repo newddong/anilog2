@@ -149,6 +149,7 @@ export default FeedContent = props => {
 	//피드 미트볼 메뉴 - 수정 클릭
 	const onPressEdit = () => {
 		Modal.close();
+		navigation.navigate('FeedEdit',props.data);
 	};
 
 	//피드 미트볼 메뉴 - 삭제 클릭
@@ -172,7 +173,6 @@ export default FeedContent = props => {
 							onPressShare();
 						} else if (selectedItem == '수정') {
 							onPressEdit();
-              navigation.navigate('FeedEdit',props.data);
 						} else if (selectedItem == '삭제') {
 							onPressDelete();
 						}

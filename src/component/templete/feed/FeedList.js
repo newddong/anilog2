@@ -164,10 +164,7 @@ export default FeedList = ({route, navigation}) => {
 	const rememberScroll = e=>{
 		if(e.nativeEvent.contentOffset.y>0){
 		userGlobalObject.t = e.nativeEvent.contentOffset;
-		console.log('스크롤',userGlobalObject.t)
 		}
-		
-		// console.log(e.nativeEvent.contentOffset);
 	}
 
 	return (

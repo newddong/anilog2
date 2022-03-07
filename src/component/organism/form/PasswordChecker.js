@@ -13,6 +13,7 @@ import {
 	PASSWORD_CHECK_TITLE,
 	PASSWORD_UNMATCHED,
 	PWD_CHECK_INFO,
+	REQ_PASSWORD,
 } from 'Root/i18n/msg';
 import PasswordInput from 'Molecules/input/PasswordInput';
 import {passwordChecker_style} from 'Organism/style_organism copy';
@@ -95,7 +96,7 @@ export default PasswordChecker = props => {
 				<PasswordInput
 					title={PASSWORD_TITLE}
 					description={PASSWORD_FORM_DESCRIPTION}
-					placeholder={CURRENT_PWD_TITLE}
+					placeholder={REQ_PASSWORD}
 					information={PASSWORD_FORM_DESCRIPTION}
 					alert_msg={FORM_UNMATCHED_DESC}
 					confirm_msg={FORM_MATCHED_DESC}

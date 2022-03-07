@@ -361,3 +361,12 @@ export async function getFollowers(params, callback, errcallback) {
 export async function setPetStatus(params, callback, errcallback) {
 	apiController('/user/setPetStatus', arguments);
 }
+
+/** 입양 및 임보로 승인된 동물 중 반려 동물로 등록되지 않은 동물 목록 (로그인한 계정에 준함)
+ * @param {object} params
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getAnimalListNotRegisterWithCompanion(params, callback, errcallback) {
+	apiController('/user/getAnimalListNotRegisterWithCompanion', arguments);
+}

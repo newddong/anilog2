@@ -290,7 +290,7 @@ export default FeedContent = props => {
 			return {};
 		} else {
 			return {
-				height: 110 * DP + (lineCount > 3 ? 3 : lineCount) * 54*DP,
+				height: lineCount?110 * DP + (lineCount > 3 ? 3 : lineCount) * 54*DP:0,
 			};
 		}
 	};

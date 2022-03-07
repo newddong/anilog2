@@ -15,8 +15,8 @@ export default function HashInput(props) {
 	const [cursor, setCursor] = React.useState();
 	const inputRef = React.useRef();
 	const internal = React.useRef({
-		value: '',
-		text: '',
+		value: props.value?props.value:'',
+		text: props.value?props.value:'',
 		textInputCursor: 0, //입력칸의 커서 위치
 		cursor: 0, //text에서 커서 위치
 		tagStartIdx: 0,
@@ -28,7 +28,6 @@ export default function HashInput(props) {
 		linkStore: new Map(),
 		hashKewords: [],
 	}).current;
-	console.log(internal);
 	const [findList, setFindList] = React.useState([]);
 	const changeTextRegex = /([#@])([^#@\s]+)/gm;
 	const findHashRegex = /[#]([^#\s]+)/g;
@@ -63,9 +62,12 @@ export default function HashInput(props) {
 
 		if (isTag(internal.editTag)) {
 			if (internal.editTag.startsWith('@')) {
+				console.log('유저 닉네임 검색', internal.editTag);
 				getUserListByNickname(
 					{
 						user_nickname: getTagName(internal.editTag),
+						request_number: 9999,
+						user_type:''
 					},
 					result => {
 						console.log('user editing', result);
@@ -108,7 +110,7 @@ export default function HashInput(props) {
 
 		internal.prevEditTag = internal.editTag;
 		internal.editTag = findTagAt(start, internal.value); //현재 커서의 위치에서 태그를 찾음
-		console.log('move tag ', internal.editTag);
+		console.log('move tag ', internal.editTag, internal.value);
 
 		if (internal.editTag != internal.prevEditTag) {
 			console.log('nickname search by move cursor ');
@@ -116,6 +118,8 @@ export default function HashInput(props) {
 				getUserListByNickname(
 					{
 						user_nickname: getTagName(findTagAt(internal.textInputCursor, internal.value)),
+						request_number: 9999,
+						user_type:''
 					},
 					result => {
 						console.log('user selection', result);
@@ -214,7 +218,6 @@ export default function HashInput(props) {
 		console.log('delete Photo', index);
 		props.onDelete(index);
 	};
-
 	return (
 		<>
 			<View

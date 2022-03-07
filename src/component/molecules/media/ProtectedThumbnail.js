@@ -63,7 +63,7 @@ const ProtectedThumbnail = props => {
 			case 'rescue':
 			case 'wait':
 			case 'protect':
-				return '입양가능';
+				return '입양 가능';
 			case 'emergency':
 				return '안락사 임박';
 			case 'missing':
@@ -76,7 +76,8 @@ const ProtectedThumbnail = props => {
 				return '무지개다리';
 			case 'complete':
 			case 'accept':
-				return '입양완료';
+			case 'done':
+				return '입양 완료';
 		}
 	};
 

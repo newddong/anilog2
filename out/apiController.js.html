@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: apiController.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: apiController.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import axios from 'axios';
+import {serveruri, cookieReset} from 'Root/config/server';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import CookieManager from '@react-native-cookies/cookies';
+
+let sid = undefined;
+
+/**
+ * axios와 api파일의 각 함수들의 공통 작업을 연결하기 위한 컨트롤러
+ * @param {string} path - API 호출 경로
+ * @param {IArguments}} args - 함수의 arguments, MDN참조
+ */
+export async function apiController(path, args) {
+	let existFileField = Object.keys(args[0]).some(v => v.includes('uri'));
+	if (existFileField) {
+		console.log('첨부파일 uri처리 루틴 진입');
+		apiFormController(path, args);
+		return;
+	}
+
+	try {
+		let result = await axios.post(serveruri + path, args[0]);
+		if (path.includes('userLogin')) {
+			try {
+				let cookie = await CookieManager.get(serveruri);
+				console.log('경로 %s에 대한 쿠키정보 ',serveruri,cookie);
+				if(cookie['connect.sid']){
+					sid = cookie['connect.sid'].value;
+					console.log('메모리에 sid정보 불러옴',sid);
+					await AsyncStorage.setItem('sid', sid);
+					console.log('디스크에 sid정보를 씀', sid);
+				}
+				console.log('유저로그인', cookie);
+			} catch (err) {
+				console.log('로그인 에러', err);
+				args[2](err + ''); //에러 처리 콜백
+			}
+		}
+		process(path,result,args);
+	} catch (err) {
+		args[2](err + ''); //에러 처리 콜백
+	}
+}
+
+/**
+ * axios와 api파일의 각 함수들의 공통 작업을 연결하기 위한 컨트롤러
+ * FormData를 이용
+ * @param {string} path - API 호출 경로
+ * @param {IArguments}} args - 함수의 arguments, MDN참조
+ */
+export async function apiFormController(path, args) {
+	try {
+		let form = new FormData();
+		Object.entries(args[0]).forEach(v => {
+			if (v[0].includes('uri')) {
+				if (typeof v[1] == 'object') {
+					//필드에 여러 값을 받을 경우, typeof는 object임(array도 object가 됨)
+					v[1].forEach(file => {
+						form.append(v[0], {
+							name: file,
+							type: 'multipart/form-data',
+							uri: file,
+						});
+					});
+				}
+				if (typeof v[1] == 'string') {
+					//필드에 단일 값을 문자열로 받았을 경우
+					if (v[1].includes('http')) {
+						form.append(v[0], v[1]);
+						//파라메터 값 형식이 인터넷 주소일경우
+					} else {
+						form.append(v[0], {
+							name: v[1],
+							type: 'multipart/form-data',
+							uri: v[1],
+						});
+						//파라메터 값이 파일일 경우
+					}
+				}
+			} else {
+				if (typeof v[1] == 'object') {
+					form.append(v[0], JSON.stringify(v[1]));
+				} else {
+					form.append(v[0], v[1]);
+				}
+			}
+		});
+		let result = await axios.post(serveruri + path, form, {
+			headers: {
+				'Content-Type': 'multipart/form-data',
+			},
+		});
+		process(path,result,args);
+	} catch (err) {
+		args[2](err + ''); //에러 처리 콜백
+	}
+}
+
+async function process(path,result,args){
+	if (result.data.status == 200) {
+		args[1](result.data);
+	} 
+	else if(result.data.status == 401){
+		if (!sid) {
+			try{
+			sid = await AsyncStorage.getItem('sid');
+			}catch(err){
+				console.log('디스크에서 sid정보 불러오기 오류',sid);	
+			}
+			console.log('메모리상에 sid 정보가 없어 로컬에서 불러옴',sid);
+		}
+		console.log('메모리 sid정보',sid);
+
+		if (sid) {
+			try {
+				let cookie = await cookieReset(sid, path);
+				console.log('쿠키 리셋 완료', cookie);
+			} catch (err) {
+				console.log('쿠키 리셋중 에러', err);
+				args[2](err + ''); //에러 처리 콜백
+			}
+		}
+		let result = await axios.post(serveruri + path, args[0]);//한번 더 요청
+		if (result.data.status == 200) {
+			args[1](result.data);
+		}
+		else {
+			args[2](result.data.msg); //이 단계에서는 로그인을 하지 않음이 확실해짐
+		}
+	}
+	else {
+		args[2](result.data.msg);
+	}
+}
+
+
+
+//쿠키 리셋 코드
+// let token = await AsyncStorage.getItem('token');
+// await cookieReset(token);
+
+//export async function (.*?) \(.*?\)\{\n(.*?\n)*?\};
+//export async function $1(params, callback, errcallback){\n\tapiController(serveruri,'/user/$1',arguments);\n};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addUserToFamily">addUserToFamily</a></li><li><a href="global.html#apiController">apiController</a></li><li><a href="global.html#apiFormController">apiFormController</a></li><li><a href="global.html#assignPet">assignPet</a></li><li><a href="global.html#assignShelter">assignShelter</a></li><li><a href="global.html#assignShelterAnimal">assignShelterAnimal</a></li><li><a href="global.html#assignUser">assignUser</a></li><li><a href="global.html#assignVolunteerActivity">assignVolunteerActivity</a></li><li><a href="global.html#changeUserPassword">changeUserPassword</a></li><li><a href="global.html#checkProtectPet">checkProtectPet</a></li><li><a href="global.html#checkShelterCode">checkShelterCode</a></li><li><a href="global.html#createComment">createComment</a></li><li><a href="global.html#createFeed">createFeed</a></li><li><a href="global.html#createMissing">createMissing</a></li><li><a href="global.html#createProtectActivity">createProtectActivity</a></li><li><a href="global.html#createProtectRequest">createProtectRequest</a></li><li><a href="global.html#createReport">createReport</a></li><li><a href="global.html#deleteComment">deleteComment</a></li><li><a href="global.html#followUser">followUser</a></li><li><a href="global.html#getAddressList">getAddressList</a></li><li><a href="global.html#getAnimalListWithApplicant">getAnimalListWithApplicant</a></li><li><a href="global.html#getAppliesRecord">getAppliesRecord</a></li><li><a href="global.html#getApplyDetailById">getApplyDetailById</a></li><li><a href="global.html#getChildCommentList">getChildCommentList</a></li><li><a href="global.html#getCommentListByFeedId">getCommentListByFeedId</a></li><li><a href="global.html#getCommentListByProtectId">getCommentListByProtectId</a></li><li><a href="global.html#getFeedDetailById">getFeedDetailById</a></li><li><a href="global.html#getFeedListByUserId">getFeedListByUserId</a></li><li><a href="global.html#getFeedsByHash">getFeedsByHash</a></li><li><a href="global.html#getFollowers">getFollowers</a></li><li><a href="global.html#getFollows">getFollows</a></li><li><a href="global.html#getHashKeywords">getHashKeywords</a></li><li><a href="global.html#getInterestsList">getInterestsList</a></li><li><a href="global.html#getMissingReportList">getMissingReportList</a></li><li><a href="global.html#getPettypes">getPettypes</a></li><li><a href="global.html#getProtectAnimalByProtectAnimalId">getProtectAnimalByProtectAnimalId</a></li><li><a href="global.html#getProtectApplicantList">getProtectApplicantList</a></li><li><a href="global.html#getProtectRequestByProtectRequestId">getProtectRequestByProtectRequestId</a></li><li><a href="global.html#getProtectRequestList">getProtectRequestList</a></li><li><a href="global.html#getProtectRequestListByProtectAnimalId">getProtectRequestListByProtectAnimalId</a></li><li><a href="global.html#getProtectRequestListByShelterId">getProtectRequestListByShelterId</a></li><li><a href="global.html#getShelterProtectAnimalList">getShelterProtectAnimalList</a></li><li><a href="global.html#getShelterVolunteerActivityList">getShelterVolunteerActivityList</a></li><li><a href="global.html#getSuggestFeedList">getSuggestFeedList</a></li><li><a href="global.html#getUserAdoptProtectionList">getUserAdoptProtectionList</a></li><li><a href="global.html#getUserInfoById">getUserInfoById</a></li><li><a href="global.html#getUserListByNickname">getUserListByNickname</a></li><li><a href="global.html#getUserProfile">getUserProfile</a></li><li><a href="global.html#getUserProtectAnimalList">getUserProtectAnimalList</a></li><li><a href="global.html#getUserVolunteerActivityList">getUserVolunteerActivityList</a></li><li><a href="global.html#getVolunteerActivityById">getVolunteerActivityById</a></li><li><a href="global.html#nicknameDuplicationCheck">nicknameDuplicationCheck</a></li><li><a href="global.html#removeUserFromFamily">removeUserFromFamily</a></li><li><a href="global.html#setProtectActivityStatus">setProtectActivityStatus</a></li><li><a href="global.html#setProtectRequestStatus">setProtectRequestStatus</a></li><li><a href="global.html#setShelterProtectAnimalStatus">setShelterProtectAnimalStatus</a></li><li><a href="global.html#setVolunteerActivityAcceptByMember">setVolunteerActivityAcceptByMember</a></li><li><a href="global.html#setVolunteerActivityStatus">setVolunteerActivityStatus</a></li><li><a href="global.html#unFollowUser">unFollowUser</a></li><li><a href="global.html#updateComment">updateComment</a></li><li><a href="global.html#updatePetDetailInformation">updatePetDetailInformation</a></li><li><a href="global.html#updateShelterDetailInformation">updateShelterDetailInformation</a></li><li><a href="global.html#updateUserDetailInformation">updateUserDetailInformation</a></li><li><a href="global.html#updateUserInformation">updateUserInformation</a></li><li><a href="global.html#updateUserIntroduction">updateUserIntroduction</a></li><li><a href="global.html#userLogin">userLogin</a></li><li><a href="global.html#userLogout">userLogout</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Wed Mar 02 2022 10:13:12 GMT+0900 (대한민국 표준시)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

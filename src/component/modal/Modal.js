@@ -97,13 +97,14 @@ export default Modal = {
 	 * 반려 동물을 선택하는 모달창
 	 * @param {object} offset -  선택 위치
 	 * @param {Array.<string>} items -  배열
+	 * @param {string} current -  현재 선택 상태
 	 * @param {string} title - 확인 버튼 메시지
 	 * @param {(string)=>void} onSelect - 선택 콜백
 	 * @param {()=>void} onClose - 확인 버튼 콜백
 	 *
 	 * @example
 	 */
-	popRadioSelect: (offset, items, title, onSelect, onClose) => {},
+	popRadioSelect: (offset, items, current, title, onSelect, onClose) => {},
 
 	/**
 	 * 선택 모달창을 띄우는 함수(첫번째 선택에 따라 두번째 선택의 항목이 변하는 부분은 구현되지 않음)

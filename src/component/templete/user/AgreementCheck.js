@@ -119,7 +119,7 @@ export default AgreementCheck = props => {
 	);
 };
 
-export const userAssign_agreementCheckList = [
+const userAssign_agreementCheckList = [
 	{text: '본인은 만 14세 이상입니다. (필수)', detail: false},
 	{text: '서비스 이용약관 동의 (필수)', detail: true},
 	{text: '개인정보 수집 이용약관 동의 (필수)', detail: true},

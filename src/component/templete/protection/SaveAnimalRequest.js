@@ -9,14 +9,6 @@ import {getProtectRequestList, getProtectRequestListByShelterId} from 'Root/api/
 export default SaveAnimalRequest = ({route}) => {
 	const navigation = useNavigation();
 
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-
 	const [checkBoxMode, setCheckBoxMode] = React.useState(false);
 	//checkBox On
 	const [data, setData] = React.useState([]);
@@ -26,22 +18,16 @@ export default SaveAnimalRequest = ({route}) => {
 
 	React.useEffect(() => {
 		getProtectRequestList(
-			//현재 로그인한 보호소의 고유 _id를 파라미터로 보내고
-			//_id를 통해 얻어온 보호소의 보호 요청 게시글 리스트를 출력
 			{
 				protect_request_object_id: null,
 				request_number: 2,
 			},
 			result => {
-				console.log('result / getProtectRequestLIst / ShelterSaveAnimalRequest', result);
+				// console.log('result / getProtectRequestLIst / ShelterSaveAnimalRequest', result);
 				setData(result.msg);
-				// 받아온 protect_animal_protect_Request_id로 해당 게시글 좋아요 여부도 판별해야함
 			},
 			err => {
 				console.log('err / getProtectRequestList', err);
-				// err.filter(e => {
-				// 	// console.log('e._protect_animal', e.protect_animal_id);
-				// });
 			},
 		);
 	}, []);
@@ -99,32 +85,19 @@ export default SaveAnimalRequest = ({route}) => {
 	//썸네일 클릭
 	const navigationGo = (status, user_id, item) => {
 		let sexValue = '';
-		getProtectRequestListByShelterId(
-			{
-				shelter_userobject_id: item.protect_request_writer_id._id,
-				protect_request_status: 'all',
-				protect_request_object_id: null,
-				request_number: 10,
-			},
-			result => {
-				switch (item.protect_animal_sex) {
-					case 'male':
-						sexValue = '남';
-						break;
-					case 'female':
-						sexValue = '여';
-						break;
-					case 'male':
-						sexValue = '성별모름';
-						break;
-				}
-				const titleValue = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + sexValue;
-				navigation.push('AnimalProtectRequestDetail', {item: item, list: result.msg, title: titleValue});
-			},
-			err => {
-				console.log('err / getProtectRequestListByShelterId / ProtectRequestList   : ', err);
-			},
-		);
+		switch (item.protect_animal_sex) {
+			case 'male':
+				sexValue = '남';
+				break;
+			case 'female':
+				sexValue = '여';
+				break;
+			case 'male':
+				sexValue = '성별모름';
+				break;
+		}
+		const titleValue = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + sexValue;
+		navigation.push('AnimalProtectRequestDetail', {id: item._id, title: titleValue});
 	};
 
 	return (
@@ -140,7 +113,6 @@ export default SaveAnimalRequest = ({route}) => {
 				/>
 			</View>
 
-			{/* <FlatList> */}
 			<View style={[temp_style.AnimalNeedHelpList]}>
 				<AnimalNeedHelpList
 					data={data}
@@ -153,7 +125,6 @@ export default SaveAnimalRequest = ({route}) => {
 					isDeleted={isDeleted}
 				/>
 			</View>
-			{/* </FlatList> */}
 		</View>
 	);
 };

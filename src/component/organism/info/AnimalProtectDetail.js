@@ -10,7 +10,7 @@ import {animalProtectDetail} from 'Organism/style_organism copy';
 import {hyphened} from 'Root/util/dateutil';
 
 export default AnimalProtectDetail = props => {
-	// console.log(' AnimalProtectDetail / props.data', props.data.protect_act_companion_history);
+	// console.log(' AnimalProtectDetail / props.data', props.data);
 
 	const data = props.data;
 	const getStatusText = arg => {
@@ -36,7 +36,7 @@ export default AnimalProtectDetail = props => {
 		<ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
 			<View style={[animalProtectDetail.container]}>
 				<View style={[animalProtectDetail.animalNeedHelp_container]}>
-					<AnimalNeedHelp data={data} />
+					<AnimalNeedHelp data={data} inActiveOpacity={true} />
 				</View>
 				<View style={[animalProtectDetail.details_container]}>
 					{/* 보호장소 */}

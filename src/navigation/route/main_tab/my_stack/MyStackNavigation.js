@@ -23,7 +23,7 @@ import SaveFavorite from 'Templete/favorite/SaveFavorite';
 import SaveAnimalRequest from 'Templete/protection/SaveAnimalRequest';
 import FavoriteFeeds from 'Templete/favorite/FavoriteFeeds';
 import AppliesRecord from 'Templete/my/AppliesRecord';
-import ApplyAdoptionList from 'Templete/list/ApplyAdoptionList';
+import ApplyAdoptionList from 'Root/component/templete/protection/ApplyAdoptionList';
 import ApplyDetails from 'Templete/protection/ApplyDetails';
 import AnimalProtectList from 'Templete/protection/AnimalProtectList';
 import AssignProtectAnimalImage from 'Templete/protection/AssignProtectAnimalImage';
@@ -35,7 +35,6 @@ import EditShelterInfo from 'Templete/shelter/EditShelterInfo';
 import AidRequestAnimalList from 'Templete/protection/AidRequestAnimalList';
 import WriteAidRequest from 'Templete/protection/WriteAidRequest';
 import AidRequestManage from 'Templete/protection/AidRequestManage';
-import ProtectApplicant from 'Templete/protection/ProtectApplicant';
 import ProtectApplyForm from 'Templete/protection/ProtectApplyForm';
 import ShelterProtectRequests from 'Templete/shelter/ShelterProtectRequests';
 import AnimalFromShelter from 'Templete/protection/AnimalFromShelter';
@@ -59,6 +58,11 @@ import SettingInformAsk from 'Templete/user/SettingInformAsk';
 import SettingAccount from 'Templete/user/SettingAccount';
 import SettingAlarm from 'Templete/user/SettingAlarm';
 import SettingOpen from 'Templete/user/SettingOpen';
+import ProtectionApplicationList from 'Root/component/templete/protection/ProtectionApplicationList';
+import ProtectCommentList from 'Root/component/templete/protection/ProtectCommentList';
+import AlarmAndSearchHeader from 'Root/navigation/header/AlarmAndSearchHeader';
+import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballHeader';
+import EditAidRequest from 'Root/component/templete/protection/EditAidRequest';
 const MyStack = createStackNavigator();
 
 export default MyStackNavigation = props => {
@@ -85,7 +89,7 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen
 				name="AnimalProtectRequestDetail"
 				component={AnimalProtectRequestDetail}
-				options={{header: props => <SimpleHeader {...props} />}}
+				options={{header: props => <SimpleWithMeatballHeader {...props} />}}
 			/>
 			<MyStack.Screen
 				name="FeedListForHashTag"
@@ -220,20 +224,25 @@ export default MyStackNavigation = props => {
 				options={{header: props => <SendHeader {...props} />, title: '동물 보호 요청'}}
 			/>
 			<MyStack.Screen
+				name="EditAidRequest"
+				component={EditAidRequest}
+				options={{header: props => <SendHeader {...props} />, title: '보호 요청 게시글 수정'}}
+			/>
+			<MyStack.Screen
 				name="ShelterProtectAnimalList"
 				component={AidRequestManage}
 				options={{header: props => <SimpleHeader {...props} />, title: '보호 동물 목록'}}
 			/>
 			<MyStack.Screen
-				name="ProtectApplyList"
-				component={AidRequestManage}
+				name="ProtectionApplicationList"
+				component={ProtectionApplicationList}
 				options={{header: props => <SimpleHeader {...props} />, title: '신청서 조회'}}
 			/>
-			<MyStack.Screen
+			{/* <MyStack.Screen
 				name="ProtectApplicant"
 				component={ProtectApplicant}
 				options={{header: props => <SimpleHeader {...props} />, title: '보호 활동 신청자'}}
-			/>
+			/> */}
 			<MyStack.Screen
 				name="ProtectApplyForm"
 				component={ProtectApplyForm}
@@ -305,6 +314,7 @@ export default MyStackNavigation = props => {
 				component={SettingInformAsk}
 				options={{header: props => <SimpleHeader {...props} />, title: '정보/문의'}}
 			/>
+			<MyStack.Screen name="ProtectCommentList" component={ProtectCommentList} options={{header: props => <AlarmAndSearchHeader {...props} />}} />
 			<MyStack.Screen name="SettingAccount" component={SettingAccount} options={{header: props => <SimpleHeader {...props} />, title: '계정'}} />
 			<MyStack.Screen name="SettingAlarm" component={SettingAlarm} options={{header: props => <SimpleHeader {...props} />, title: '알림'}} />
 			<MyStack.Screen name="SettingOpen" component={SettingOpen} options={{header: props => <SimpleHeader {...props} />, title: '공개 설정'}} />

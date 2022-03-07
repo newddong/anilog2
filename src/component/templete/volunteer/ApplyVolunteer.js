@@ -22,7 +22,6 @@ export default ApplyVolunteer = ({route, navigation}) => {
 	const [loading, setLoading] = React.useState(true);
 	const [shelter_data, setShelter_data] = React.useState(route.params); //선택한 보호소프로필의 userObject가 담겨있음
 	const userInfo = userGlobalObject.userInfo;
-	console.log('praram', param);
 
 	React.useEffect(() => {
 		Modal.popNoBtn('신청 양식을 얻어오고 있습니다.');
@@ -100,7 +99,6 @@ export default ApplyVolunteer = ({route, navigation}) => {
 					},
 					result => {
 						console.log('result / assignVolunteerAct / ApplyVolunteer   :  ', result);
-
 						Modal.popNoBtn('봉사활동 신청이 완료되었습니다.');
 						setVolunteerConfirmStatus(result.msg._id);
 					},

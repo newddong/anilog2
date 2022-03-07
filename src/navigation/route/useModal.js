@@ -34,18 +34,17 @@ import CongratulationModal from 'Root/component/molecules/modal/CongratulationMo
 import AdoptionInfoModal from 'Root/component/molecules/modal/AdoptionInfoModal';
 import AdoptionInfoModalWithOneBtn from 'Root/component/molecules/modal/AdoptionInfoModalWithOneBtn';
 
-
 export function useModal() {
 	const [isPop, setPop] = React.useState(false);
 	const [popupComponent, setPopupComponent] = React.useState([]);
 
-    /**
+	/**
 	 * 컴포넌트를 모달 스택에 넣음
 	 *
 	 * @param {React.FC} Component - 팝업할 컴포넌트
 	 * @return void
 	 */
-    const popIn = Component => {
+	const popIn = Component => {
 		const component = React.cloneElement(Component, {key: popupComponent.length});
 		setPopupComponent([...popupComponent, component]);
 	};
@@ -123,8 +122,8 @@ export function useModal() {
 		!isPop && setPop(true);
 	};
 
-	Modal.popRadioSelect = (offset, items, title, onSelect, onClose) => {
-		popIn(<RadioSelectModal offset={offset} items={items} title={title} onSelect={onSelect} onClose={onClose} />);
+	Modal.popRadioSelect = (offset, items, current, title, onSelect, onClose) => {
+		popIn(<RadioSelectModal offset={offset} items={items} current={current} title={title} onSelect={onSelect} onClose={onClose} />);
 		!isPop && setPop(true);
 	};
 
@@ -228,5 +227,5 @@ export function useModal() {
 		!isPop && setPop(true);
 	};
 
-    return [isPop, popupComponent];
+	return [isPop, popupComponent];
 }

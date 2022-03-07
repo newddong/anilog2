@@ -28,7 +28,6 @@ const SelectScrollBoxModal = props => {
 		if (data.length == 1) {
 			props.onSelect(data[0][selectedItem - 2]);
 		} else {
-			console.log('selectedItem2', selectedItem2);
 			props.onSelect(data[0][selectedItem - 2], data[1][selectedItem2 - 2]);
 		}
 	};
@@ -51,7 +50,6 @@ const SelectScrollBoxModal = props => {
 			if (focused < 1) {
 				setSelectedItem(2);
 			} else if (focused > data[0].length - 1) {
-				console.log('넘어갔나?');
 				setSelectedItem(data[0].length + 1);
 			} else {
 				setSelectedItem(focused + 2);
@@ -60,7 +58,6 @@ const SelectScrollBoxModal = props => {
 			if (focused < 1) {
 				setSelectedItem2(2);
 			} else if (focused > data[1].length - 1) {
-				console.log('넘어갔나?');
 				setSelectedItem2(data[1].length + 1);
 			} else {
 				setSelectedItem2(focused + 2);

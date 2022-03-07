@@ -13,7 +13,7 @@ import Modal from 'Component/modal/Modal';
 
 export default WriteAidRequest = ({route, navigation}) => {
 	// console.log('WriteAidRequest', route.params);
-	const [data, setData] = React.useState({...route.params.data}); //ShelterProtectAnimalObject(보호소의 보호동물) 정보가 담겨있음
+	const [data, setData] = React.useState(route.params.data); //ShelterProtectAnimalObject(보호소의 보호동물) 정보가 담겨있음
 	//ProtectRequestObject(보호소의 동물 보호 요청 게시글) 테이블에 맞춘 보호요청 작성글을 작성
 	const [protectRequestData, setProtectRequestData] = React.useState({
 		shelter_protect_animal_object_id: data._id,

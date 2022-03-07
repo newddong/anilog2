@@ -1,227 +1,81 @@
 import React from 'react';
 import {ActivityIndicator, ScrollView, Text, View, StyleSheet, TouchableOpacity} from 'react-native';
-import {login_style, temp_style, baseInfo_style} from 'Templete/style_templete';
+import {login_style} from 'Templete/style_templete';
 import AidRequestList from 'Root/component/organism/list/AidRequestList';
-import {getAnimalListWithApplicant, getShelterProtectAnimalList} from 'Root/api/shelterapi';
+import {getShelterProtectAnimalList} from 'Root/api/shelterapi';
 import {txt} from 'Root/config/textstyle';
 import {APRI10, GRAY10} from 'Root/config/color';
-import {getApplyDetailById} from 'Root/api/protectapi';
 import DP from 'Root/config/dp';
 import {AddItem64} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
-import {lo} from '../style_address';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
-//ShelterMenu => 신청서 조회 [Nav명 - ProtectApplyList]
 //ShelterMenu => 보호중인 동물 [Nav명 - ShelterProtectAnimalList]
 export default AidRequestManage = ({route, navigation}) => {
-	const token = route.params.token;
-	const [loading, setLoading] = React.useState(true); // 화면 출력 여부 결정
-	const [data, setData] = React.useState([]);
-	const [hasPostAnimalList, setHasPostAnimalList] = React.useState([]);
-	const [noPostAnimalList, setNoPostAnimalList] = React.useState([]);
-	const [notFilteredData, setNotFilteredData] = React.useState([]);
-	const isShelterProtect = route.name == 'ShelterProtectAnimalList';
+	// console.log('AidRequestManage');
+	const [hasPostAnimalList, setHasPostAnimalList] = React.useState('false');
+	const [noPostAnimalList, setNoPostAnimalList] = React.useState('false');
 
 	React.useEffect(() => {
-		if (isShelterProtect) {
-			// 보호중인 동물이므로 입양 및 임시보호가 완료된 보호동물들은 출력이 되어서는 안됨
-			//protect_animal_status !='adopt' or 'protect'일 경우 제외되어야 함
-			//차후 API 다듬는 과정에서 추가 필요
-			getShelterProtectAnimalList(
-				{
-					// shelter_protect_animal_object_id: '',
-					request_number: 10,
-				},
-				result => {
-					// console.log('result / getShelterProtectAnimalList / ShelterProtectAnimalList', result.msg[0]);
-					//현재 protect_animal_status 를 바꾸는 API가 없는 상태이므로 신청 및 확정이 완료된 동물이더라도
-					//모든 보호소의 보호동물들은 protect_animal_status == 'rescue' 상태로 온다
-					//우선 해당 보호동물에 대한 입양 및 보호 신청 _id를 토대로 getApplyDetailById 접속
-					// 만약 status가 단 하나라도 'accept' 인 것이 있다면 출력을 시키지 말아야함
-					// 모든 것은 API가 도착하면 개선이 가능
-					//api 에서 hasRequest와 noRequest로 오지만 hasRequest에는 noRequest obejct도 추가되어있어 그걸 리스트에서 빼주는 과정
-					setData(result.msg);
-					const hasList = result.msg.hasRequest;
-					const noList = result.msg.noRequest;
-					const stringhasList = [];
-					const stringNoList = [];
-					const newHasList = [];
 
-					const loop = hasList.map((value, idx) => {
-						stringhasList.push(JSON.stringify(value));
-					});
-					const loop2 = noList.map((value, idx) => {
-						stringNoList.push(JSON.stringify(value));
-					});
-					let difference = stringhasList.filter(x => !stringNoList.includes(x));
-					const loop3 = difference.map((value, index) => {
-						newHasList.push(JSON.parse(value));
-					});
-
-					setHasPostAnimalList(newHasList);
-					setNoPostAnimalList(noList);
-					setLoading(false);
-					console.log('noList', newHasList);
-					// notFiltered = [];
-					// protectAnimalList.map((value, index) => {
-					// console.log('map', value);
-					// const protectActivities_id = value.protect_act_applicants;
-					// protectActivities_id.map((protect_activity_value, protect_activity_index) => {
-					// console.log('v', index, protect_activity_value);
-					// getApplyDetailById(
-					// 	{
-					// 		protect_act_object_id: protect_activity_value,
-					// 	},
-					// 	res => {
-					// 		// console.log('result / getApplyDetailById / AidRequestManage  ', protect_activity_index, res.msg);
-					// 		const protect_activity_object = res.msg;
-					// 		protect_activity_object.protect_animal_id = index;
-
-					// 		notFiltered.push(res.msg);
-					// 		// const isAccepted = protect_activity_object.protect_act_status == 'accept';
-					// 		// console.log('isAccepted', index, protect_activity_index, isAccepted);
-					// 		// isAccepted ? shelterProtectAnimalList_notAccepted.push(protectAnimalList[index]) : null;
-					// 		// setNotFilteredData(shelterProtectAnimalList_notAccepted);
-					// 		// // setData(result.msg);
-					// 	},
-					// 	err => {
-					// 		console.log('err / getApplyDetailById / AidRequestManage   ', err);
-					// 	},
-					// );
-					// });
-					// });
-				},
-				err => {
-					console.log('err / getShelterProtectAnimalList', err);
-					setTimeout(() => {
-						setLoading(false);
-					}, 500);
-					// setData(err);
-				},
-			);
-		} else {
-			//token(id)를 토대로 보호소 계정이 등록한 보호요청 게시글 중 신청서가 들어와 있는 목록을 조회
-			console.log('ProtectApplyList');
-			getAnimalListWithApplicant(
-				{},
-				result => {
-					console.log('result / getAnimalListWithApplicant / ProtectApplyList', result.msg);
-					let merged = []; //페이지 이동 후 입양 신청한
-					result.msg.map((data, i) => {
-						data.shelter_name = route.params.shelter_name;
-						// console.log('data', i, data);
-						//출력된 보호요청게시글들이 가지는 지원신청서가 혹시 accept 상태인 것이 있는 경우 ( == 입양/임보가 확정-취소-신청취소 된 상태 )
-						// ==> 출력되어서는 안됨
-						const hasApplicantsWaitng = data.protect_act_applicants.some(
-							e => e.protect_act_status == 'accept' || e.protect_act_status == 'denied' || e.protect_act_status == 'cancel',
-						);
-						!hasApplicantsWaitng ? merged.push(data) : false;
-					});
-					setData(merged);
-					setTimeout(() => {
-						setLoading(false);
-					}, 500);
-				},
-				err => {
-					console.log('err / getAnimalListWithApplicant', err);
-					setTimeout(() => {
-						setLoading(false);
-					}, 500);
-					// setData(err);
-				},
-			);
-			onSelect;
-		}
+		getShelterProtectAnimalList(
+			{
+				shelter_protect_animal_object_id: '',
+				request_number: '',
+			},
+			result => {
+				// console.log('result / getShelterProtectAnimalList / ShelterProtectAnimalList', result.msg);
+				let hasPostList = result.msg.hasRequest.filter(e => e.protect_animal_status != 'adopt');
+				let noPostList = result.msg.noRequest.filter(e => e.protect_animal_status != 'adopt');
+				setHasPostAnimalList(hasPostList);
+				setNoPostAnimalList(noPostList);
+			},
+			err => {
+				console.log('err / getShelterProtectAnimalList', err);
+				setHasPostAnimalList([]);
+				setNoPostAnimalList([]);
+			},
+		);
 	}, []);
 
-	// React.useEffect(() => {
-	// 	// 보호소의 모든 보호동물이 담겨 있는 notFilteredData
-	// 	// 해당 보호동물에 대한 [입양/지원] 신청서가 있을 경우 해당 신청서들을 탐색
-	// 	// 탐색의 목적 => 신청서들 중 상태가 'accept'된 항목이 있을 경우 이미 보호소를 떠난 동물로 판단
-	// 	if (notFilteredData != null) {
-	// 		// const isNotProtect = notFilteredData.filter(e => e.protect_act_type == 'protect');
-	// 		// console.log('isNotProtect', isNotProtect);
-	// 		console.log('waiting');
-
-	// 		const filtered_by_status = notFilteredData.filter(e => e.protect_act_status == 'accept');
-	// 		let index_of_acceptItem = [];
-	// 		filtered_by_status.map((v, i) => {
-	// 			index_of_acceptItem.push(v.protect_animal_id);
-	// 		});
-	// 		const index_dup_deleted = Array.from(new Set(index_of_acceptItem));
-	// 		let protect_animal_list_copy = [...data];
-	// 		index_dup_deleted.map((v, i) => {
-	// 			protect_animal_list_copy.splice(v, 1);
-	// 		});
-	// 		// setData(protect_animal_list_copy);
-	// 		let hasPostList = [];
-	// 		let noPostList = [];
-	// 		protect_animal_list_copy.map((v, i) => {
-	// 			console.log('v', v.protect_animal_protect_request_id);
-	// 			if (v.protect_animal_protect_request_id != null) {
-	// 				hasPostList.push(v);
-	// 			} else {
-	// 				noPostList.push(v);
-	// 			}
-	// 		});
-	// 		setTimeout(() => {
-	// 			setHasPostAnimalList(hasPostList);
-	// 			setNoPostAnimalList(noPostList);
-	// 			setLoading(false);
-	// 		}, 1500);
-	// 	} else {
-	// 		console.log('waiting');
-	// 		let hasPostList = [];
-	// 		let noPostList = [];
-	// 		data.map((v, i) => {
-	// 			console.log('v', v.protect_animal_protect_request_id);
-	// 			if (v.protect_animal_protect_request_id != null) {
-	// 				hasPostList.push(v);
-	// 			} else {
-	// 				noPostList.push(v);
-	// 			}
-	// 		});
-
-	// 		setTimeout(() => {
-	// 			setHasPostAnimalList(hasPostList);
-	// 			setNoPostAnimalList(noPostList);
-	// 			setLoading(false);
-	// 		}, 1000);
-	// 	}
-	// }, [notFilteredData]);
-
-	//선택 시 이동
-	const onSelect = index => {
-		console.log('index', data[index]);
-		!isShelterProtect
-			? navigation.push('ProtectApplicant', data[index])
-			: console.log('ShelterProtectAnimalList에서는 네비게이션 정의가 안됨', data[index]);
-	};
 
 	const addProtectAnimal = () => {
 		navigation.push('AssignProtectAnimalImage');
-		// navigation.push('WriteAidRequest');
+	};
+
+	const moveToProtectRequest = data => {
+		let sexValue = '';
+		switch (data.protect_animal_sex) {
+			case 'male':
+				sexValue = '남';
+				break;
+			case 'female':
+				sexValue = '여';
+				break;
+			case 'male':
+				sexValue = '성별모름';
+				break;
+		}
+		const titleValue = data.protect_animal_species + '/' + data.protect_animal_species_detail + '/' + sexValue;
+		navigation.navigate('AnimalProtectRequestDetail', {
+			id: data.protect_animal_protect_request_id,
+			title: titleValue,
+			writer: userGlobalObject.userInfo._id,
+		});
 	};
 
 	const onSelectHasPostList = index => {
-		//SendHeader에 보내는 파라미터 - 선택된 요청게시글의 protect_animal_protect_request_id , 네비게이션 네임
-		// navigation.setParams({data: data[index], nav: route.name});
-		console.log('onSelectNoPostList / index', index);
 		Modal.popAdoptionInfoModal(
 			hasPostAnimalList[index],
 			'이 동물은 이미 보호 요청글 게시가  완료되었습니다.',
 			'다시 게시하기',
 			'게시글 보기',
-			// ()=> navigation.navigate('AnimalProtectRequestDetail', {item: item, list: protectActList, title: titleValue}),
-			() => alert('게시글보기'),
-			//현재 보호요청게시글에 접근하기 위해서 API 3가지를 별개로 접근하고 파라미터를 보내줘야 하는 상황
-			// AnimalProtectRequestDetail의 API 접근방식이 개선된 이후 처리 필요
+			() => moveToProtectRequest(hasPostAnimalList[index]),
 			() => navigation.push('WriteAidRequest', {data: hasPostAnimalList[index]}),
 		);
 	};
 
 	const onSelectNoPostList = index => {
-		console.log('onSelectNoPostList / index', index);
 		Modal.popAdoptionInfoModalWithOneBtn(noPostAnimalList[index], '보호요청 글쓰기', () =>
 			navigation.push('WriteAidRequest', {data: noPostAnimalList[index]}),
 		);
@@ -235,7 +89,10 @@ export default AidRequestManage = ({route, navigation}) => {
 		);
 	};
 
-	if (loading) {
+	//API 접속 이전 상태인 false가 단 하나라도 없으면 이미 로딩완료
+	const isLoaded = hasPostAnimalList == 'false' || noPostAnimalList == 'false';
+
+	if (isLoaded) {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
 				<ActivityIndicator size={'large'} />
@@ -272,25 +129,11 @@ export default AidRequestManage = ({route, navigation}) => {
 							/>
 						</View>
 					</View>
-					{/* <View style={[temp_style.aidRequestList_aidRequestManage, baseInfo_style.list]}>
-						{data.length == 0 ? (
-							<Text style={[txt.noto30, {alignSelf: 'center', marginTop: 130, color: GRAY10}]}>목록이 비어있습니다.</Text>
-						) : (
-							<AidRequestList
-								items={data}
-								onPressAddProtectAnimal={addProtectAnimal}
-								onSelect={onSelect}
-								callFrom={route.name}
-								selectBorderMode={false}
-							/>
-						)}
-					</View> */}
 				</ScrollView>
 			</View>
 		);
 	}
 };
-// 61c1cc107be07611b00945f9
 
 const style = StyleSheet.create({
 	container: {

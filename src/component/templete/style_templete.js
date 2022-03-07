@@ -852,8 +852,8 @@ export const temp_style = StyleSheet.create({
 		backgroundColor: '#C4C483',
 	},
 	animalProtectDetails_adoptorInformation: {
-		width: 750 * DP,
-		alignItems: 'center',
+		// width: 750 * DP,
+		// alignItems: 'center',
 		justifyContent: 'center',
 	},
 	aidRequestList_aidRequestManage: {
@@ -3206,7 +3206,7 @@ export const appliesRecord = StyleSheet.create({
 		marginVertical: 30 * DP,
 	},
 	whenEmpty: {
-		paddingVertical: 40 * DP,
+		paddingVertical: 60 * DP,
 	},
 });
 
@@ -3574,6 +3574,7 @@ export const applyDetails = StyleSheet.create({
 		marginBottom: 30 * DP,
 		alignSelf: 'center',
 		flexDirection: 'row',
+		justifyContent: 'space-between',
 	},
 });
 
@@ -4631,6 +4632,12 @@ export const animalProtectList = StyleSheet.create({
 		height: 48 * DP,
 		alignItems: 'center',
 		flexDirection: 'row',
+	},
+	whenEmpty: {
+		width: 654 * DP,
+		padding: 50,
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
 });
 

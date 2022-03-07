@@ -12,11 +12,11 @@ import {useEffect} from 'react';
 export default ChangePassword = ({route, navigation}) => {
 	const [confirmed, setConfirmed] = React.useState(false);
 	const [pwd, setPwd] = React.useState(); // 바꿀 비밀번호
-	const [prevpwd, setprepwd] = React.useState(); //현재 비밀번호
+	const [prevpwd, setprepwd] = React.useState(route.params); //현재 비밀번호
 	const [pwdValid, setPwdValid] = React.useState(false); // 비밀번호 양식 체크 (8자이상~~)
 	const [pwdCheck, setPwdCheck] = React.useState(false); // 비밀번호 더블 체크 통과 여부
 	const [presentPwdValid, setPresentPwdValid] = React.useState(true); // 현재 비밀번호 입력값이 실제 DB와 일치하는지 여부
-
+	console.log('route', route.params);
 	useEffect(() => {
 		console.log('pwd', pwd);
 		console.log('prevpwd', prevpwd);
@@ -96,7 +96,7 @@ export default ChangePassword = ({route, navigation}) => {
 				navigation.goBack();
 			},
 			err => {
-				alert('비밀번호를 다시 입력해주세요.');
+				alert(err);
 				console.log('er', err);
 			},
 		);

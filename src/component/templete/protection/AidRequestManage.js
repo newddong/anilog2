@@ -17,6 +17,7 @@ export default AidRequestManage = ({route, navigation}) => {
 	const [noPostAnimalList, setNoPostAnimalList] = React.useState('false');
 
 	React.useEffect(() => {
+
 		getShelterProtectAnimalList(
 			{
 				shelter_protect_animal_object_id: '',
@@ -36,6 +37,7 @@ export default AidRequestManage = ({route, navigation}) => {
 			},
 		);
 	}, []);
+
 
 	const addProtectAnimal = () => {
 		navigation.push('AssignProtectAnimalImage');

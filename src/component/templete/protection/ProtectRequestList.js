@@ -1,24 +1,19 @@
 import React from 'react';
 import {Text, View, ActivityIndicator, FlatList} from 'react-native';
-import {login_style, protectRequestList, searchProtectRequest, temp_style} from 'Templete/style_templete';
+import {login_style, searchProtectRequest, temp_style} from 'Templete/style_templete';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {GRAY10} from 'Root/config/color';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import {txt} from 'Root/config/textstyle';
-import {ONLY_CONTENT_FOR_ADOPTION, PET_KIND, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
-import FilterButton from 'Molecules/button/FilterButton';
+import {ONLY_CONTENT_FOR_ADOPTION, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
 import {getProtectRequestList, getProtectRequestListByShelterId} from 'Root/api/shelterapi.js';
 import {getPettypes} from 'Root/api/userapi';
 import {btn_w306_h68} from 'Component/atom/btn/btn_style';
-import DropdownModal from 'Root/component/molecules/modal/DropdownModal';
-import DropdownSelect from 'Root/component/molecules/dropdown/DropdownSelect';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 import Modal from 'Root/component/modal/Modal';
 
 export default ProtectRequestList = ({navigation, route}) => {
 	const [data, setData] = React.useState([]);
-	const [showAdoptable, setShowAdoptable] = React.useState(false);
-	const [refreshing, setRefreshing] = React.useState(false);
 	const [loading, setLoading] = React.useState(true); //로딩상태
 	const [filterData, setFilterData] = React.useState({
 		city: '',
@@ -37,8 +32,6 @@ export default ProtectRequestList = ({navigation, route}) => {
 			getProtectRequestList(
 				filterData,
 				data => {
-					// console.log('data' + JSON.stringify(`data${data}`));
-					// console.log('보호요청 ', data.msg[0]);
 					// data.msg.forEach(e => console.log('forEach', e.protect_animal_id.protect_animal_sex, e.protect_animal_id.protect_animal_status));
 					let filtered = [...data.msg];
 					data.msg.forEach(each => {
@@ -89,32 +82,19 @@ export default ProtectRequestList = ({navigation, route}) => {
 		//따라서 출력할 것을 해당 게시글의 작성자(보호소)가 작성한 보호요청게시글로 좁혀야함
 		// console.log('item:', item);
 		let sexValue = '';
-		getProtectRequestListByShelterId(
-			{
-				shelter_userobject_id: item.protect_request_writer_id._id,
-				protect_request_status: 'all',
-				protect_request_object_id: null,
-				request_number: 10,
-			},
-			result => {
-				switch (item.protect_animal_sex) {
-					case 'male':
-						sexValue = '남';
-						break;
-					case 'female':
-						sexValue = '여';
-						break;
-					case 'male':
-						sexValue = '성별모름';
-						break;
-				}
-				const titleValue = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + sexValue;
-				navigation.navigate('AnimalProtectRequestDetail', {item: item, list: result.msg, title: titleValue});
-			},
-			err => {
-				console.log('err / getProtectRequestListByShelterId / ProtectRequestList   : ', err);
-			},
-		);
+		switch (item.protect_animal_sex) {
+			case 'male':
+				sexValue = '남';
+				break;
+			case 'female':
+				sexValue = '여';
+				break;
+			case 'male':
+				sexValue = '성별모름';
+				break;
+		}
+		const titleValue = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + sexValue;
+		navigation.navigate('AnimalProtectRequestDetail', {item: item, title: titleValue});
 	};
 
 	const filterOn = () => {
@@ -183,7 +163,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 				<FlatList
 					horizontal={false}
 					data={[{}]}
-					listKey={({item,index})=>index}
+					listKey={({item, index}) => index}
 					renderItem={({item, index}) => (
 						<View style={{}}>
 							<View style={[searchProtectRequest.filterView]}>

@@ -37,7 +37,7 @@ export default FeedMediaTagEdit = props => {
 		console.log(uri,'   make   ',tag);
 		data.feed_medias?.forEach((v, i, a) => {
 			let newtag = {position_x: tag.pos.x, position_y: tag.pos.y, tag_user_id: tag.user._id, user:tag.user, pos: tag.pos};
-			if (v.uri === uri) {
+			if (v.media_uri === uri) {
 				a[i].tags ? a[i].tags.push(newtag) : (a[i].tags = [newtag]);
 			}
 		});
@@ -45,7 +45,7 @@ export default FeedMediaTagEdit = props => {
 	const onDeleteTag = (user, uri) => {
 		console.log(uri,'   del   ',user);
 		data.feed_medias?.forEach((v, i, a) => {
-			if (v.uri === uri) {
+			if (v.media_uri === uri) {
 				v.tags.forEach((v, i, a) => {
 					if (v.user._id === user._id) {
 						a.splice(i, 1);
@@ -58,7 +58,7 @@ export default FeedMediaTagEdit = props => {
 	const renderItems = () => {
 		if (!data) return false;
 		return data.feed_medias?.map((v, i) => (
-			<PhotoTagItem style={lo.box_img} uri={v.uri} data={v.uri} taglist={v.tags} key={i} onMakeTag={onMakeTag} onDeleteTag={onDeleteTag} viewmode={false} />
+			<PhotoTagItem style={lo.box_img} uri={v.media_uri} data={v.media_uri} taglist={v.tags} key={i} onMakeTag={onMakeTag} onDeleteTag={onDeleteTag} viewmode={false} />
 		));
 	};
 
@@ -66,6 +66,10 @@ export default FeedMediaTagEdit = props => {
 		console.log('show Tags ',data)
 		console.log('Feed',feedData)
 	}
+	const test = () => {
+		console.log(navState);
+	}
+
 	return (
 		<View style={lo.wrp_main}>
 			<View style={lo.box_img_tag}>
@@ -122,9 +126,9 @@ export default FeedMediaTagEdit = props => {
 				<Text style={txt.noto28r}>사진 속 인물이나 동물을 눌러 태그하세요</Text>
 				{/* <Text style={txt.noto28r}>다시 눌러 삭제가 가능합니다.</Text> */}
 				{/* <Text style={txt.noto28r}>누른 상태에서 움직이면 위치가 이동합니다.</Text> */}
-				{/* <TouchableWithoutFeedback onPress={test}>
+				<TouchableWithoutFeedback onPress={test}>
 				<View style={{height:80*DP,width:80*DP,backgroundColor:'green'}}></View>
-				</TouchableWithoutFeedback> */}
+				</TouchableWithoutFeedback>
 			</View>
 		</View>
 	);

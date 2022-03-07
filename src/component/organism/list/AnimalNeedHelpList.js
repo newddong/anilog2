@@ -59,7 +59,7 @@ export default AnimalNeedHelpList = props => {
 				showsVerticalScrollIndicator={false}
 				keyExtractor={item => item._id}
 				ListEmptyComponent={props.whenEmpty}
-				listKey={({item,index})=>index}
+				listKey={({item, index}) => index}
 			/>
 		</View>
 	);

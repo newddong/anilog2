@@ -410,7 +410,8 @@ export const AVAILABLE_NICK = '사용 가능한 닉네임입니다!';
 //FilterButton 관련
 
 //Meatball
-export const PROTECT_STATUS = ['입양가능', '협의 중', '임보 중', '완료']; //SHELTER PROTECT REQUEST 템플릿
+export const PROTECT_STATUS = ['모든 게시글', '입양가능', '협의 중', '완료']; //SHELTER PROTECT REQUEST 템플릿
+export const PROTECT_STATUS_VAR = ['all', 'rescue', 'discuss', 'complete']; //SHELTER PROTECT REQUEST 템플릿
 export const SETTING_OWN_COMMENT = ['수정', '삭제'];
 export const SETTING_COMMENT = ['신고'];
 export const PROTECT_REQUEST_STATUS = ['임보중', '협의 중', '완료', '사망', '입양 가능'];

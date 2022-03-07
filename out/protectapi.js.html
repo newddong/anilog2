@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: protectapi.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: protectapi.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {apiController, apiFormController} from './apiController';
+
+/**
+ * 유저의 보호동물(프로필에서 보여지는) 목록 조회
+ *
+ * @param {object} params - token아이디
+ * @param {string} params.userobject_id - 보호동물을 조회하고 싶은 유저의 오브젝트 아이디.
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getUserProtectAnimalList(params, callback, errcallback) {
+	apiController('/protect/getUserProtectAnimalList', arguments);
+}
+
+/**
+ * @typedef ProtectCheckList
+ * @property {Boolean} is_adult - 성인여부
+ * @property {Boolean} is_near_veterinary - 보호지 근처의 동물병원 여부
+ * @property {Boolean} is_agreed_housemate - 가족, 동거인의 동의 여부
+ * @property {Boolean} is_experience_defecate - 배변훈련 지식여부
+ * @property {Boolean} is_knowledge_sanitation - 반려동물 미용,위생 지식여부
+ */
+
+/**
+ * @typedef ProtectActAddress
+ * @property {string} city - 시,도
+ * @property {string} district - 군,구
+ * @property {string} neighbor - 동,읍,면
+ * @property {string} brief - 검색주소
+ * @property {string} detail - 검색주소(자세히)
+ */
+
+/**
+ * @typedef CompanionHistory
+ * @property {String} companion_pet_species - 이전 반려동물의 종류
+ * @property {String} companion_pet_age - 이전 반려동물의 나이
+ * @property {String} companion_pet_period - 기른 기간
+ * @property {'living'|'died'|'adopted'} companion_pet_current_status - 상태정보 카테고리 정해야함
+ */
+
+/**
+ * 동물보호(입양, 임시보호) 신청
+ *
+ * @param {object} params
+ * @param {'protect'|'adopt'} params.protect_act_type - 신청한 보호 활동의 종류, 임시보호(protect), 입양(adopt)
+ * @param {String} params.protect_request_object_id - 대상 보호신청 게시글
+ * @param {Array.&lt;CompanionHistory>} params.protect_act_companion_history - 보호 신청자의 반려생활 이력
+ * @param {ProtectActAddress} params.protect_act_address - 보호 신청자의 주소
+ * @param {String} params.protect_act_phone_number - 보호 신청자의 전화번호
+ * @param {ProtectCheckList} params.protect_act_checklist - 보호신청 체크리스트
+ * @param {String} params.protect_act_motivation - 보호활동 신청동기
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ *
+ */
+export async function createProtectActivity(params, callback, errcallback) {
+	apiController('/protect/createProtectActivity', arguments);
+}
+
+/**
+ * 유저의 동물보호 신청내역 가져오기
+ * (입양신청, 임시보호 신청, 봉사활동 신청 - 한 화면에서 입양신청 1개, 임시보호 신청 1개, 봉사활동 신청 3 ~ 4개 표출)
+ * @param {object} params
+ * @param {string} params.userobject_id - 사용자 계정 id
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ *
+ */
+export async function getAppliesRecord(params, callback, errcallback) {
+	apiController('/protect/getAppliesRecord', arguments);
+}
+
+/**
+ * 유저의 보호활동(입양,임시보호) 신청 내역을 가져오기
+ * @param {object} params
+ * @param {'protect'|'adopt'} params.protect_act_type - 가져올 보호 활동의 종류, 임시보호(protect), 입양(adopt) {'protect'|'adopt'}
+ * @param {number} params.request_number - 요청할 게시물의 숫자
+ * @param {string} params.protect_act_object_id - 페이징을 위한 오브젝트 객체 아이디
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getUserAdoptProtectionList(params, callback, errcallback) {
+	apiController('/protect/getUserAdoptProtectionList', arguments);
+}
+
+/**
+ * 유저의 보호활동(입양,임시보호) 신청서 자세히 보기
+ * @param {object} params
+ * @param {string} params.protect_act_object_id - 불러올 신청서의 오브젝트 아이디
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getApplyDetailById(params, callback, errcallback) {
+	apiController('/protect/getApplyDetailById', arguments);
+}
+
+/**
+ * 보호활동 신청서의 상태를 변경
+ * @param {object} params
+ * @param {string} params.protect_act_object_id - 변경할 신청서의 오브젝트 아이디
+ * @param {string} params.protect_act_status - 변경할 신청서의 상태('accept'|'denied'|'cancel'|'wait')
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function setProtectActivityStatus(params, callback, errcallback) {
+	apiController('/protect/setProtectActivityStatus', arguments);
+}
+
+/**
+ * 동물보호요청 게시물의 상태를 변경
+ * @param {object} params
+ * @param {string} params.protect_request_object_id - 변경할 보호요청 게시물의 오브젝트 아이디
+ * @param {string} params.protect_request_status - 변경할 보호요청 게시물의 상태('rescue'|'discuss'|'nearrainbow'|'complete')
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function setProtectRequestStatus(params, callback, errcallback) {
+	apiController('/protect/setProtectRequestStatus', arguments);
+}
+
+/**
+ * 대상 동물보호 게시물에 동물보호를 신청한 신청자의 리스트
+ * @param {object} params
+ * @param {string} params.protect_request_object_id - 신청자 리스트를 불러올 보호요청 게시물의 오브젝트 아이디
+ * @param {string} params.protect_request_status - 리스트의 보호요청 게시물의 상태('rescue'|'discuss'|'nearrainbow'|'complete')필터
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+ export async function getProtectApplicantList(params, callback, errcallback){
+	apiController( '/protect/getProtectApplicantList', arguments);
+};
+
+
+/**
+ * 동물보호 요청 게시글 상세조회
+ * @param {object} params
+ * @param {string} params.protect_request_object_id - 동물보호 요청 게시물 오브젝트 아이디
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+ export async function getProtectRequestByProtectRequestId(params, callback, errcallback){
+	apiController( '/protect/getProtectRequestByProtectRequestId', arguments);
+	};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addUserToFamily">addUserToFamily</a></li><li><a href="global.html#apiController">apiController</a></li><li><a href="global.html#apiFormController">apiFormController</a></li><li><a href="global.html#assignPet">assignPet</a></li><li><a href="global.html#assignShelter">assignShelter</a></li><li><a href="global.html#assignShelterAnimal">assignShelterAnimal</a></li><li><a href="global.html#assignUser">assignUser</a></li><li><a href="global.html#assignVolunteerActivity">assignVolunteerActivity</a></li><li><a href="global.html#changeUserPassword">changeUserPassword</a></li><li><a href="global.html#checkProtectPet">checkProtectPet</a></li><li><a href="global.html#checkShelterCode">checkShelterCode</a></li><li><a href="global.html#createComment">createComment</a></li><li><a href="global.html#createFeed">createFeed</a></li><li><a href="global.html#createMissing">createMissing</a></li><li><a href="global.html#createProtectActivity">createProtectActivity</a></li><li><a href="global.html#createProtectRequest">createProtectRequest</a></li><li><a href="global.html#createReport">createReport</a></li><li><a href="global.html#deleteComment">deleteComment</a></li><li><a href="global.html#followUser">followUser</a></li><li><a href="global.html#getAddressList">getAddressList</a></li><li><a href="global.html#getAnimalListWithApplicant">getAnimalListWithApplicant</a></li><li><a href="global.html#getAppliesRecord">getAppliesRecord</a></li><li><a href="global.html#getApplyDetailById">getApplyDetailById</a></li><li><a href="global.html#getChildCommentList">getChildCommentList</a></li><li><a href="global.html#getCommentListByFeedId">getCommentListByFeedId</a></li><li><a href="global.html#getCommentListByProtectId">getCommentListByProtectId</a></li><li><a href="global.html#getFeedDetailById">getFeedDetailById</a></li><li><a href="global.html#getFeedListByUserId">getFeedListByUserId</a></li><li><a href="global.html#getFeedsByHash">getFeedsByHash</a></li><li><a href="global.html#getFollowers">getFollowers</a></li><li><a href="global.html#getFollows">getFollows</a></li><li><a href="global.html#getHashKeywords">getHashKeywords</a></li><li><a href="global.html#getInterestsList">getInterestsList</a></li><li><a href="global.html#getMissingReportList">getMissingReportList</a></li><li><a href="global.html#getPettypes">getPettypes</a></li><li><a href="global.html#getProtectAnimalByProtectAnimalId">getProtectAnimalByProtectAnimalId</a></li><li><a href="global.html#getProtectApplicantList">getProtectApplicantList</a></li><li><a href="global.html#getProtectRequestByProtectRequestId">getProtectRequestByProtectRequestId</a></li><li><a href="global.html#getProtectRequestList">getProtectRequestList</a></li><li><a href="global.html#getProtectRequestListByProtectAnimalId">getProtectRequestListByProtectAnimalId</a></li><li><a href="global.html#getProtectRequestListByShelterId">getProtectRequestListByShelterId</a></li><li><a href="global.html#getShelterProtectAnimalList">getShelterProtectAnimalList</a></li><li><a href="global.html#getShelterVolunteerActivityList">getShelterVolunteerActivityList</a></li><li><a href="global.html#getSuggestFeedList">getSuggestFeedList</a></li><li><a href="global.html#getUserAdoptProtectionList">getUserAdoptProtectionList</a></li><li><a href="global.html#getUserInfoById">getUserInfoById</a></li><li><a href="global.html#getUserListByNickname">getUserListByNickname</a></li><li><a href="global.html#getUserProfile">getUserProfile</a></li><li><a href="global.html#getUserProtectAnimalList">getUserProtectAnimalList</a></li><li><a href="global.html#getUserVolunteerActivityList">getUserVolunteerActivityList</a></li><li><a href="global.html#getVolunteerActivityById">getVolunteerActivityById</a></li><li><a href="global.html#nicknameDuplicationCheck">nicknameDuplicationCheck</a></li><li><a href="global.html#removeUserFromFamily">removeUserFromFamily</a></li><li><a href="global.html#setProtectActivityStatus">setProtectActivityStatus</a></li><li><a href="global.html#setProtectRequestStatus">setProtectRequestStatus</a></li><li><a href="global.html#setShelterProtectAnimalStatus">setShelterProtectAnimalStatus</a></li><li><a href="global.html#setVolunteerActivityAcceptByMember">setVolunteerActivityAcceptByMember</a></li><li><a href="global.html#setVolunteerActivityStatus">setVolunteerActivityStatus</a></li><li><a href="global.html#unFollowUser">unFollowUser</a></li><li><a href="global.html#updateComment">updateComment</a></li><li><a href="global.html#updatePetDetailInformation">updatePetDetailInformation</a></li><li><a href="global.html#updateShelterDetailInformation">updateShelterDetailInformation</a></li><li><a href="global.html#updateUserDetailInformation">updateUserDetailInformation</a></li><li><a href="global.html#updateUserInformation">updateUserInformation</a></li><li><a href="global.html#updateUserIntroduction">updateUserIntroduction</a></li><li><a href="global.html#userLogin">userLogin</a></li><li><a href="global.html#userLogout">userLogout</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Wed Mar 02 2022 10:13:12 GMT+0900 (대한민국 표준시)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

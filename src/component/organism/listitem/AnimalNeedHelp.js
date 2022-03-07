@@ -1,16 +1,13 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import moment from 'moment';
-import {useNavigation} from '@react-navigation/core';
 import {txt} from 'Root/config/textstyle';
 import {btn_w276} from 'Atom/btn/btn_style';
 import ProtectedThumbnail from 'Molecules/media/ProtectedThumbnail';
 import AniButton from 'Molecules/button/AniButton';
 import {FavoriteTag48_Border, FavoriteTag48_Filled} from 'Atom/icon';
-import {BLUE10, BLUE20, RED10} from 'Root/config/color';
 import {DEFAULT_ANIMAL_PROFILE} from 'Root/i18n/msg';
 import {animalNeedHelp} from 'Organism/style_organism copy';
-import {number} from 'prop-types';
 
 /**
  *
@@ -23,15 +20,13 @@ import {number} from 'prop-types';
  *onPressAdoptorInfo : 'boolean / HashClick Callback',
  *onPressProtectRequest : 'void / 테두리 모드 게시글보기 클릭',
  *onPressReporter : 'void / 제보 게시글의 제보자 닉네임 클릭',
+ *inActiveOpacity : 'boolean / 클릭 애니메이션 여부 default false',
  * }} props
  */
 export default AnimalNeedHelp = props => {
-	// console.log('AnimalNeedHelp', props.data);
-	// console.log('AnimalNeedHelp', props.data.protect_animal_id.protect_animal_sex);
+	// console.log('AnimalNeedHelp', props.data.protect_request_status);
 
-	const navigation = useNavigation();
 	const data = props.data;
-	// console.log('AnimalNeedHelp: -------------- ', JSON.stringify(data));
 	const [selected, setSelected] = React.useState(false);
 	const [favorite, setFavorite] = React.useState(false);
 	const [thumbnailData, setThumbnailData] = React.useState({});
@@ -158,7 +153,7 @@ export default AnimalNeedHelp = props => {
 									{/* 보호장소 : {data.protect_request_writer_id != null ? data.protect_request_writer_id.shelter_name : data.shelter_name} */}
 									보호장소 : {data.shelter_name ? data.shelter_name : data.protect_request_writer_id.shelter_name}
 								</Text>
-								<Text style={[txt.noto28]}>
+								<Text style={[txt.noto28]} numberOfLines={1}>
 									구조지역 :{' '}
 									{data.protect_animal_rescue_location
 										? data.protect_animal_rescue_location
@@ -207,7 +202,6 @@ export default AnimalNeedHelp = props => {
 							{/* 실종/제보 관련 Details */}
 							<View style={[animalNeedHelp.lowerMenu_helpDetail]}>
 								<Text style={[txt.noto28b]}>제보일: {getParsedDate()}</Text>
-
 								<Text style={[txt.noto28, {width: 408 * DP}]} numberOfLines={1}>
 									실종위치: {data.report_witness_location || ''}
 								</Text>
@@ -249,7 +243,7 @@ export default AnimalNeedHelp = props => {
 							<View>{contents()}</View>
 						</TouchableOpacity>
 					) : (
-						<TouchableOpacity onPress={() => props.onClickLabel(data.feed_type, data._id)}>
+						<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.2} onPress={() => props.onClickLabel(data.feed_type, data._id)}>
 							<View>{contents()}</View>
 						</TouchableOpacity>
 					)}
@@ -272,8 +266,9 @@ export default AnimalNeedHelp = props => {
 
 AnimalNeedHelp.defaultProps = {
 	selected: false,
-	onClickLabel: e => console.log(e),
+	onClickLabel: e => {},
 	onFavoriteTag: e => console.log(e),
 	onPressAdoptorInfo: e => console.log('e'),
 	isChecked: false,
+	inActiveOpacity: false,
 };

@@ -66,15 +66,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {userLogin} from 'Root/api/userapi';
 import userGlobalObj from 'Root/config/userGlobalObject';
 
-// import Camera from 'Root/component/templete/Camera';
-// import Camera from 'Templete/media/Camera';
 const RootStack = createStackNavigator();
 
 export default RootStackNavigation = () => {
 	const [isPop, popupComponent] = useModal();
 	const [isLoading, setLoading] = React.useState(true);
 	const [initialRouteName, setInitialRouteName] = React.useState('Login');
-	// let initialRouteName = 'Login'
 
 	React.useEffect(() => {
 		AsyncStorage.getItem('userSetting', (err, userSetting) => {
@@ -239,7 +236,11 @@ export default RootStackNavigation = () => {
 							component={FeedWrite}
 							options={{header: props => <FeedWriteHeader {...props} />, title: '게시물 작성'}}
 						/>
-
+						<RootStack.Screen
+							name="FeedEdit"
+							component={FeedWrite}
+							options={{header: props => <FeedWriteHeader {...props} />, title: '게시물 수정'}}
+						/>
 						<RootStack.Screen
 							name="FeedMissingWrite"
 							component={FeedWrite}

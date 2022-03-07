@@ -144,7 +144,7 @@ export default UserMenu = props => {
 				Modal.popInfoModal();
 				break;
 			case '내 게시글':
-				navigation.push('UserFeeds', {token: data});
+				navigation.push('UserFeeds');
 				break;
 			case '나를 태그한 글':
 				Modal.popInfoModal();

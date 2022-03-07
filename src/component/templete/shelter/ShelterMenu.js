@@ -110,7 +110,7 @@ export default ShelterMenu = ({route}) => {
 			//--------------- 보호 동물 관리
 			// 보호중인 동물
 			case PROTECTED_ANIMAL:
-				navigation.navigate('ShelterProtectAnimalList', {nav: 'ShelterProtectAnimalList', token: data._id});
+				navigation.navigate('ShelterProtectAnimalList');
 				break;
 			// 신청서 조회
 			case INQUERY_APPLICATION:
@@ -118,8 +118,7 @@ export default ShelterMenu = ({route}) => {
 				break;
 			//나의 보호소 출신 동물
 			case FROM_MY_SHELTER:
-				//listType: 'original'- 클릭시 해당 UserProfile로 go, 'twoBtn' - 클릭시 외곽 선 표출, , 'checkBox' - 해당 페이지에서 바로 체크박스 표출
-				navigation.push('AnimalFromShelter', data._id);
+				navigation.push('AnimalFromShelter');
 				break;
 			//봉사활동 신청 관리
 			case MANAGEMENT_OF_VOLUNTEER:
@@ -138,7 +137,6 @@ export default ShelterMenu = ({route}) => {
 				break;
 			//보호요청(저장)
 			case REQ_PROTECTION_SAVE:
-				//listType: 'original'- 클릭시 해당 UserProfile로 go, 'twoBtn' - 클릭시 외곽 선 표출, , 'checkBox' - 해당 페이지에서 선택하기 시 체크박스 표출
 				// navigation.push('ShelterSaveAnimalRequest');
 				Modal.popInfoModal();
 				break;
@@ -162,8 +160,7 @@ export default ShelterMenu = ({route}) => {
 				break;
 			// 보호 요청 올린 게시글
 			case UPLOADED_POST_FOR_REQ_PROTECTION:
-				//보호요청 게시글 스크린 필요 데이터 : ShelterProtectAnimalObject.protect_animal_writer_id == userData._id가 일치하는 것을 검색해야한다
-				navigation.push('ShelterProtectRequests', data._id);
+				navigation.push('ShelterProtectRequests');
 				break;
 			//커뮤니티
 			case COMUNITY:

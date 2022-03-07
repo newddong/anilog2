@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, TouchableWithoutFeedback} from 'react-native';
+import {Text, View} from 'react-native';
 import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
@@ -12,10 +12,9 @@ import Modal from 'Component/modal/Modal';
 import Input30 from 'Molecules/input/Input30';
 import {assignPet} from 'Root/api/userapi';
 import {stagebar_style} from 'Organism/style_organism copy';
-import {DEFAULT_ANIMAL_PROFILE, DEFAULT_PROFILE} from 'Root/i18n/msg';
 
 export default AssignPetInfoB = props => {
-	console.log('AssignPetInfoB', props.route.params);
+	// console.log('AssignPetInfoB', props.route.params);
 	const navigation = useNavigation();
 
 	const [data, setData] = React.useState({
@@ -56,45 +55,32 @@ export default AssignPetInfoB = props => {
 	};
 
 	//등록 완료
-	const onRegister = async () => {
-		Modal.popTwoBtn(
-			'추가로 등록할 반려동물이 있나요?',
-			'아니오',
-			'추가 등록',
-			() => {
-				Modal.popNoBtn('반려동물 등록 중입니다.');
-				console.log('data before assiginPet', data.user_profile_uri);
-				let isCopied = {...data};
-				if (isCopied.user_profile_uri == '') {
-					isCopied.user_profile_uri = 'http://';
-				}
-				console.log('isCopied.user_profile_uri ', isCopied.user_profile_uri);
-				try {
-					assignPet(
-						{...isCopied, userobject_id: data.userobject_id},
-						success => {
-							console.log('success', success);
-							Modal.close();
-							Modal.popOneBtn('반려동물 등록이 완료되었습니다.', '확인', () => {
-								Modal.close();
-								props.navigation.navigate(data.previousRouteName);
-							});
+	const onRegister = () => {
+		let isCopied = {...data};
+		assignPet(
+			{...isCopied, userobject_id: data.userobject_id},
+			success => {
+				console.log('success', success.msg);
+				Modal.popNoBtn('반려동물 등록이 완료되었습니다.');
+				setTimeout(() => {
+					Modal.close();
+					Modal.popTwoBtn(
+						'추가로 등록할 반려동물이 있나요?',
+						'아니오',
+						'추가 등록',
+						() => {
+							props.navigation.navigate(data.previousRouteName);
 						},
-						error => {
-							console.log('error', error);
-							Modal.close();
-
-							Modal.popOneBtn(error, '확인', () => Modal.close());
+						() => {
+							// props.navigation.reset({index: 1, routes: [{name: 'AssignPetProfileImage', params: {initialization: true}}]});
+							props.navigation.navigate('AssignPetProfileImage', {initialization: true});
 						},
 					);
-				} catch (err) {
-					console.log('err', err);
-				} finally {
-					Modal.close();
-				}
+				}, 500);
 			},
-			() => {
-				props.navigation.reset({routes: [{name: 'AssignPetProfileImage', params: {initialization: true}}]});
+			error => {
+				console.log('error', error);
+				Modal.close();
 			},
 		);
 	};

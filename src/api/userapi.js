@@ -289,7 +289,6 @@ export async function updateShelterDetailInformation(params, callback, errcallba
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function getUserListByNickname(params, callback, errcallback) {
-	console.log('api param', params);
 	apiController('/user/getUserListByNickname', arguments);
 }
 
@@ -352,10 +351,10 @@ export async function getFollowers(params, callback, errcallback) {
 	apiController('/user/getFollowers', arguments);
 }
 
-/** 반려동물의 상태를 변경한다.
+/** 반려동물의 상태를 변경
  * @param {object} params
- * @param {string} params.userobject_id  - 반려동물의 ID.
- * @param {string} params.pet_status  - 반려동물의 상태값 (protect|adopt|companion)
+ * @param {string} params.userobject_id  - 반려동물 _id
+ * @param {string} params.pet_status  - 반려동물 _id
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */

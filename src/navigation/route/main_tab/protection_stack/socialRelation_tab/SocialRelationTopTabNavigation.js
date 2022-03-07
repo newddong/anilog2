@@ -1,54 +1,39 @@
 import React from 'react';
 import {View, StyleSheet, Dimensions, Text, TouchableOpacity, Animated} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import TopTabNavigation_Border from 'Organism/menu/TopTabNavigation_Border';
 import LinkedAccountList from 'Templete/list/LinkedAccountList';
 import FollowerList from 'Templete/list/FollowerList';
 import RecommendedAccountList from 'Templete/list/RecommendedAccountList';
-import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 import DP from 'Root/config/dp';
-import {APRI10, GRAY10, GRAY40, WHITE} from 'Root/config/color';
+import {APRI10, GRAY10, WHITE} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {count_to_K} from 'Root/util/stringutil';
 
 const SocialRelationTab = createMaterialTopTabNavigator();
 
 export default SocialRelationTopTabNavigation = ({route, navigation}) => {
-	const [data, setData] = React.useState(route.params.userobject);
+	const data = route.params.userobject;
 
 	//헤더 타이틀 설정 작업 및 유저 오브젝트 할당
 	React.useEffect(() => {
 		navigation.setOptions({title: route.params.userobject.user_nickname});
 	}, [route.params]);
 
-	const tabBarItems = ['함께 아는 친구', count_to_K(data.user_follower_count) + ' 팔로워', count_to_K(data.user_follower_count) + ' 팔로잉', '추천']; //커스텀 TabBar의 각 라벨들
-	// const tabBarItems = ['1123 함께 아는 친구', 1028 + ' 팔로워', 1112 + ' 팔로잉', '추천']; //커스텀 TabBar의 각 라벨들
+	const tabBarItems = ['함께 아는 친구', count_to_K(data.user_follower_count) + ' 팔로워', count_to_K(data.user_follow_count) + ' 팔로잉', '추천'];
 
 	function MyTabBar({state, descriptors, navigation, position}) {
 		return (
-			<View
-				style={{
-					flexDirection: 'row',
-					backgroundColor: WHITE,
-					alignItems: 'center',
-					paddingHorizontal: 48 * DP,
-					// bac
-				}}>
+			<View style={[styles.tabContainer]}>
 				{state.routes.map((route, index) => {
 					const {options} = descriptors[route.key];
-					const label = options.tabBarLabel !== undefined ? options.tabBarLabel : options.title !== undefined ? options.title : route.name;
-
 					const isFocused = state.index === index;
-
 					const onPress = () => {
 						const event = navigation.emit({
 							type: 'tabPress',
 							target: route.key,
 							canPreventDefault: true,
 						});
-
 						if (!isFocused && !event.defaultPrevented) {
-							// The `merge: true` option makes sure that the params inside the tab screen are preserved
 							navigation.navigate({name: route.name, merge: true});
 						}
 					};
@@ -124,10 +109,14 @@ export default SocialRelationTopTabNavigation = ({route, navigation}) => {
 };
 
 const styles = StyleSheet.create({
+	tabContainer: {
+		flexDirection: 'row',
+		backgroundColor: WHITE,
+		alignItems: 'center',
+		paddingHorizontal: 48 * DP,
+	},
 	tabbarItemStyle: {
 		height: 70 * DP,
-
-		// backgroundColor: 'red',
 	},
 	tabBarIndicatorStyle: {
 		backgroundColor: WHITE,
@@ -135,7 +124,5 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 2 * DP,
 		borderBottomColor: APRI10,
 		color: APRI10,
-		// borderTopRightRadius: 40 * DP,
-		// borderTopLeftRadius: 40 * DP,
 	},
 });

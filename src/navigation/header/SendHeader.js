@@ -5,7 +5,7 @@ import DP from 'Root/config/dp';
 import {WHITE, APRI10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
-import {createProtectRequest} from 'Root/api/shelterapi';
+import {createProtectRequest, updateProtectRequest} from 'Root/api/shelterapi';
 import {RED} from 'Root/config/color';
 
 export default SendHeader = ({route, navigation, options}) => {
@@ -31,7 +31,7 @@ export default SendHeader = ({route, navigation, options}) => {
 							'확인',
 							() => Modal.close(),
 							() => {
-								console.log('SendHeader / Before Create AidRequest ', data);
+								// console.log('SendHeader / Before Create AidRequest ', data);
 								createProtectRequest(
 									{
 										protect_request_photos_uri: data.protect_request_photos_uri,
@@ -40,7 +40,7 @@ export default SendHeader = ({route, navigation, options}) => {
 										protect_request_content: data.protect_request_content,
 									},
 									successed => {
-										console.log('successed / createProtectRequest / SendHeader', successed.protect_request_photos_uri);
+										console.log('successed / createProtectRequest / SendHeader', successed);
 										Modal.popNoBtn('보호요청 게시글 \n 작성이 완료되었습니다!');
 										Modal.close();
 										navigation.reset({
@@ -56,6 +56,36 @@ export default SendHeader = ({route, navigation, options}) => {
 							},
 						);
 					}
+					break;
+				}
+				case 'EditAidRequest': {
+					Modal.popTwoBtn(
+						'해당 내용으로 보호요청 \n 게시글을 수정하시겠습니까?',
+						'취소',
+						'확인',
+						() => Modal.close(),
+						() => {
+							updateProtectRequest(
+								{
+									protect_request_object_id: data.protect_request_object_id,
+									protect_request_photos_uri: data.protect_request_photos_uri,
+									protect_photos_to_delete: data.protect_photos_to_delete,
+									protect_request_content: data.protect_request_content,
+									protect_request_title: data.protect_request_title,
+								},
+								result => {
+									// console.log('result / updateProtectRequest / SendHeader : ', result.msg);
+									navigation.goBack();
+								},
+								err => {
+									console.log('err / updateProtectRequest / SendHeader : ', err);
+								},
+							);
+
+							Modal.close();
+						},
+					);
+					break;
 				}
 				default:
 					break;

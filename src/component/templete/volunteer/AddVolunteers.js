@@ -49,7 +49,6 @@ export default AddVolunteers = ({route, navigation}) => {
 	};
 
 	const onAccountClick = item => {
-		console.log('onAccoitCLick');
 		setSelectedAccount(item);
 	};
 

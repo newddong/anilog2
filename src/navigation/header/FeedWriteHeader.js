@@ -6,11 +6,10 @@ import {WHITE, APRI10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 import {RED} from 'Root/config/color';
-import {createFeed, createMissing, createReport} from 'Root/api/feedapi';
+import {createFeed, createMissing, createReport, editFeed} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default FeedWriteHeader = ({route, navigation, options}) => {
-	// console.log('route', route);
 	const userInfo = userGlobalObject;
 	const complete = result => {
 		Modal.close();
@@ -26,7 +25,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 		Modal.popOneBtn(err, '확인', () => Modal.close());
 	};
 
-	const onSend = () => {
+	const onCreate = () => {
 		if (route.params.feed_medias[0] == undefined) {
 			Modal.popOneBtn('이미지 등록은 필수 사항입니다.', '확인', () => {
 				Modal.close();
@@ -35,7 +34,8 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 		}
 		// console.log('route.params:', route.params);
 		Modal.popNoBtn('게시물을 등록중입니다.');
-		let param = {...route.params, hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1))};
+		let param = {...route.params,
+			hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1))};
 		switch (route.params?.feedType) {
 			case 'Feed':
 				console.log(param);
@@ -99,10 +99,39 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			default:
 				break;
 		}
+		userGlobalObject.t.y = 0;
 	};
 
-	const titleStyle = [{textAlign: 'center'}, txt.noto40b, route.params?.feedType != 'Feed' ? {color: RED} : {}];
+	const onEdit = () => {
+		// if (route.params.feed_medias[0] == undefined) {
+		// 	Modal.popOneBtn('이미지 등록은 필수 사항입니다.', '확인', () => {
+		// 		Modal.close();
+		// 	});
+		// 	return;
+		// }
+		// console.log('route.params:', route.params);
+		// Modal.popNoBtn('게시물을 수정중입니다.');
+		let changeTextRegex = /([#@])([^#@\s]+)/gm;
+		let param = {...route.params,
+			feedobject_id: route.params._id,
+			feed_content: route.params.isEdit?route.params.feed_content:route.params.feed_content.replace(changeTextRegex,'&$1&$1$1$2%&%&$1&$1'),
+			hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1))};
+		editFeed(param,complete, handleError)
+		
+		console.log('수정 파라메터', param, route.params);
+		switch (route.params?.feedType) {
+			case 'Feed':
+				break;
+			case 'Missing':
+				break;
+			case 'Report':
+				break;
+			default:
+				break;
+		}
+	};
 
+	const titleStyle = [{textAlign: 'center'}, txt.noto40b, route.params?.feedType != 'Feed' ? {color: RED} : {color: '#000'}];
 	const avartarSelect = () => {
 		Modal.popAvatarSelectModal(petObject => {
 			console.log('petObject / onOk', petObject);
@@ -129,7 +158,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 					<Text style={titleStyle}>{options.title}</Text>
 				</View>
 			)}
-			<Send60_Big onPress={onSend} />
+			<Send60_Big onPress={route.name=='FeedEdit'?onEdit:onCreate} />
 		</View>
 	);
 };

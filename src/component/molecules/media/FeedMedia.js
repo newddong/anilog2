@@ -147,7 +147,6 @@ export default FeedMedia = props => {
 					}}
 					horizontal={true}>
 					{feed_medias.map((data, idx) => {
-						console.log(data);
 						return <PhotoTagItem style={styles.img_square_750x750} uri={data.media_uri} data={data.media_uri} taglist={data.tags} key={idx} viewmode={true} />
 						// return <Image source={{uri: data.media_uri}} style={styles.img_square_750x750} key={idx} />;
 					})}

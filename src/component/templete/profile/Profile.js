@@ -129,7 +129,7 @@ export default Profile = ({route, navigation}) => {
 		setShowCompanion(true);
 		Animated.timing(animatedHeight, {
 			duration: 300,
-			toValue: 212 * dp,
+			toValue: 212 * DP,
 			easing: Easing.linear,
 			useNativeDriver: false,
 		}).start();

@@ -11,11 +11,10 @@ import {getFeedListByUserId} from 'Root/api/feedapi';
 import {txt} from 'Root/config/textstyle';
 import {GRAY10} from 'Root/config/color';
 import {getUserProfile} from 'Root/api/userapi';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 //즐겨찾기한 피드목록을 조회
 export default FavoriteFeeds = ({route, navigation}) => {
-	const token = route.params.token;
-	// console.log('token', token);
 	const [selectMode, setSelectMode] = React.useState(false);
 	const [data, setData] = React.useState([]);
 	const [selectCNT, setSelectCNT] = React.useState(0);
@@ -26,7 +25,7 @@ export default FavoriteFeeds = ({route, navigation}) => {
 			case 'UserFeeds': //내 게시글
 				getFeedListByUserId(
 					{
-						userobject_id: token,
+						userobject_id: userGlobalObject.userInfo._id,
 					},
 					result => {
 						console.log('result / getFeedListByUserId / FavoriteFeeds  : ', result.msg[0]);
@@ -40,7 +39,7 @@ export default FavoriteFeeds = ({route, navigation}) => {
 			case 'FavoriteFeeds': //즐겨찾기한 피드 게시글
 				getFeedListByUserId(
 					{
-						userobject_id: token,
+						userobject_id: userGlobalObject.userInfo._id,
 					},
 					result => {
 						// console.log('result / getFeedListByUserId / FavoriteFeeds  : ', result.msg);
@@ -54,7 +53,7 @@ export default FavoriteFeeds = ({route, navigation}) => {
 			case 'TagMeFeeds': //나의 활동 => 나를 태그한 글
 				getFeedListByUserId(
 					{
-						userobject_id: token,
+						userobject_id: userGlobalObject.userInfo._id,
 					},
 					result => {
 						// console.log('result / getFeedListByUserId / FavoriteFeeds  : ', result.msg);

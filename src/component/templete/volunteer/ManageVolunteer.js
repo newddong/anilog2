@@ -2,7 +2,6 @@ import React from 'react';
 import {ScrollView, Text, View, TouchableOpacity, ActivityIndicator} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import moment from 'moment';
-import {GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {Arrow_Down_GRAY20, Arrow_Up_GRAY20} from 'Atom/icon';
 import VolunteerItemList from 'Organism/list/VolunteerItemList';
@@ -10,14 +9,12 @@ import {login_style, manageVolunteer} from 'Templete/style_templete';
 import {getShelterVolunteerActivityList, getUserVolunteerActivityList} from 'Root/api/volunteerapi';
 
 export default ManageVolunteer = ({route}) => {
-	// console.log(route.params);
 	// console.log('route.name', route.name);
 	const navigation = useNavigation();
 	const isShelterUser = route.name == 'ManageShelterVolunteer';
-	const [loading, setLoading] = React.useState(true);
 
-	const [notDoneList, setNotDoneList] = React.useState(); //활동 예정중인 신청
-	const [doneList, setDoneList] = React.useState([]); // 지난 신청
+	const [notDoneList, setNotDoneList] = React.useState('false'); //활동 예정중인 신청
+	const [doneList, setDoneList] = React.useState('false'); // 지난 신청
 	const [showMoreHistory, setShowMoreHistory] = React.useState(false); //지난 내역 더보기
 
 	React.useEffect(() => {
@@ -26,7 +23,7 @@ export default ManageVolunteer = ({route}) => {
 			getUserVolunteerActivityList(
 				{},
 				result => {
-					console.log('success / getUserVolunterItemList / ManageVolunteer', result.msg[0]);
+					// console.log('success / getUserVolunterItemList / ManageVolunteer', result.msg[0]);
 					let doneList = []; //지난 내역을 담을 컨테이너
 					let notDoneList = []; //활동 예정 중인 신청을 담을 컨테이너
 					result.msg.map((v, i) => {
@@ -51,12 +48,11 @@ export default ManageVolunteer = ({route}) => {
 					});
 					setDoneList(doneList); //API로 받아온 지난 내역 값 setState
 					setNotDoneList(notDoneList); //이하동문
-					setTimeout(() => {
-						setLoading(false);
-					}, 500);
 				},
 				err => {
 					console.log('err', err);
+					setDoneList([]);
+					setNotDoneList([]);
 				},
 			);
 		} else {
@@ -71,19 +67,10 @@ export default ManageVolunteer = ({route}) => {
 					request_number: 30,
 				},
 				data => {
-					data.msg.map((v, i) => {
-						console.log('status', i, v.volunteer_status);
-						if (v.volunteer_status == 'accept') {
-							console.log('v', v);
-						}
-						// console.log('volunteer_accompany', i, v.volunteer_accompany);
-					});
 					// console.log('success / getUserVolunterItemList / ManageShelterVolunteer', data.msg[1]);
-					//volunteer_accompany 속성에 있는 데이터들을 1depth 올려준다.
 					data.msg.map((v, i) => {
 						let wishdate = moment(v.volunteer_wish_date[0]).toDate(); //봉사활동 희망날짜 배열에서 첫번째 값을 받아와 Date타입으로 치환
 						let thisTime = new Date().getTime(); // 현재 시간
-						// wishdate.getTime() < thisTime ? doneList.push(v) : notDoneList.push(v); // 비교 후 '지난 내역' / '활동 예정' 각 배열에 푸쉬
 						if (wishdate.getTime() < thisTime) {
 							// 시간이 지난 신청서는 우선 지난 신청서로 푸쉬
 							doneList.push(v);
@@ -97,15 +84,11 @@ export default ManageVolunteer = ({route}) => {
 					});
 					setDoneList(doneList);
 					setNotDoneList(notDoneList);
-					setTimeout(() => {
-						setLoading(false);
-					}, 500);
 				},
 				errcallback => {
 					console.log(`getShelterVolunteerActivityList errcallback:${JSON.stringify(errcallback)}`);
-					setTimeout(() => {
-						setLoading(false);
-					}, 500);
+					setDoneList([]);
+					setNotDoneList([]);
 				},
 			);
 		}
@@ -128,8 +111,9 @@ export default ManageVolunteer = ({route}) => {
 	const whenEmpty = () => {
 		return <Text style={[txt.roboto28b, manageVolunteer.whenEmpty]}>신청 내역이 없습니다. </Text>;
 	};
+	const isLoaded = doneList == 'false' || notDoneList == 'false'; //활동 예정 및 지난 신청 중 단 하나라도 false(API 적용 이전값)가 있다면 아직 로딩중
 
-	if (loading) {
+	if (isLoaded) {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
 				<ActivityIndicator size={'large'}></ActivityIndicator>

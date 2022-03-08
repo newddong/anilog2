@@ -116,8 +116,6 @@ export async function setShelterProtectAnimalStatus(params, callback, errcallbac
 	apiController('/shelter/setShelterProtectAnimalStatus', arguments);
 }
 
-setShelterProtectAnimalStatus;
-
 /**
  * 보호소가 보호중인 동물에 관한 요청 게시글 리스트 조회
  * @param {object} params - token아이디
@@ -127,4 +125,41 @@ setShelterProtectAnimalStatus;
  */
 export async function getProtectRequestListByProtectAnimalId(params, callback, errcallback) {
 	apiController('/shelter/getProtectRequestListByProtectAnimalId', arguments);
+}
+
+/**
+ * 동물보호 요청 게시물을 수정
+ * @param {object} params - token아이디
+ * @param {string} params.protect_request_object_id - 동물보호 요청 게시물 ID
+ * @param {Array.<string>} params.protect_request_photos_uri - 동물보호 요청 게시물 추가 사진 uri
+ * @param {Array.<string>} params.protect_photos_to_delete - 삭제할 동물보호 요청 게시물 사진 인덱스 (인덱스 0은 삭제 불가- 인덱스 숫자만 기입)
+ * @param {string} params.protect_request_title - 동물보호 요청 게시물 제목
+ * @param {string} params.protect_request_content - 동물보호 요청 게시물 내용
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function updateProtectRequest(params, callback, errcallback) {
+	apiController('/shelter/updateProtectRequest', arguments);
+}
+
+/**
+ * 동물보호 요청 게시물을 삭제
+ * @param {object} params - token아이디
+ * @param {string} params.protect_request_object_id - 동물보호 요청 게시물 ID
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function deleteProtectRequest(params, callback, errcallback) {
+	apiController('/shelter/deleteProtectRequest', arguments);
+}
+
+/**
+ * 우리 보호소 출신 동물 - 입양처 보기 조회
+ * @param {object} params - token아이디
+ * @param {string} params.protect_animal_object_id - 보호 동물 ID
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getAdoptInfo(params, callback, errcallback) {
+	apiController('/shelter/getAdoptInfo', arguments);
 }

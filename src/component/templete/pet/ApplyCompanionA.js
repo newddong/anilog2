@@ -38,7 +38,7 @@ export default ApplyCompanionA = ({route}) => {
 
 	//동물보호 및 입양 요청 스크린에서 보내준 [임시보호 및 입양 신청을 한 동물에 대한 정보] 가 담겨 있는 'protect_request_pet_data'
 	React.useEffect(() => {
-		console.log('params', route.params.protect_request_pet_data);
+		// console.log('params', route.params.protect_request_pet_data);
 	}, [route.params.protect_request_pet_data]);
 
 	//보호장소 및 연락처가 공란이면 다음 단계로 넘어갈 수 없는 로직
@@ -47,7 +47,7 @@ export default ApplyCompanionA = ({route}) => {
 	}, [data]);
 
 	React.useEffect(() => {
-		console.log('route.params', route.params);
+		// console.log('route.params', route.params);
 		const addr = route.params.addr;
 		if (route.params != null) {
 			//한번 주소 검색이 된적이 있는가?

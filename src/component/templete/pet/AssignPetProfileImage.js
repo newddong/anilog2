@@ -32,10 +32,6 @@ export default AssignPetProfileImage = ({navigation, route}) => {
 
 	const [confirmed, setConfirmed] = React.useState(false); // 닉네임 폼 Validator 통과 ?
 	const [protect, setProtect] = React.useState(false); // 임시보호 동물 T/F
-	const [alertmsg, setAlertMsg] = React.useState('사용 불가능한 닉네임입니다.');
-	// React.useEffect(() => {
-	// 	route.params && setData({...data, user_profile_uri: route.params});
-	// }, [route.params]);
 
 	React.useEffect(() => {
 		// checkProtectPet(
@@ -167,7 +163,7 @@ export default AssignPetProfileImage = ({navigation, route}) => {
 							showmsg={false}
 							width={350}
 							confirm_msg={'사용 가능한 닉네임입니다.'}
-							alert_msg={alertmsg}
+							alert_msg={'사용 불가능한 닉네임입니다.'}
 							placeholder={'반려동물의 닉네임을 입력해주세요.'}
 							validator={nickName_validator}
 							onChange={onNicknameChange}
@@ -196,16 +192,3 @@ export default AssignPetProfileImage = ({navigation, route}) => {
 		</KeyboardAvoidingView>
 	);
 };
-
-//	showTitle: true, // true - title과 description 출력 , false - 미출력
-//	title: 'title',
-//	description: 'description',
-//	placeholder: 'placeholder',
-//	value: 'value',
-//	alert_msg: 'alert_msg',
-//	confirm_msg: 'confirm_msg',
-//	clearMark: false,
-//	onClear: e => console.log(e),
-//	onChange: e => console.log(e),
-//	width: 300, // TextInput 너비
-//};

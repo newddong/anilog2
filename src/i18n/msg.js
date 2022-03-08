@@ -333,7 +333,7 @@ export const MODIFY_PROFILE = '프로필 변경';
 export const MANAGEMENT_OF_PROTECTED_ANIMAL = '보호동물 관리';
 export const PROTECTED_ANIMAL = '보호중인 동물';
 export const INQUERY_APPLICATION = '신청서 조회';
-export const FROM_MY_SHELTER = '나의 보호소 출신동물';
+export const FROM_MY_SHELTER = '나의 보호소 출신 동물';
 export const MANAGEMENT_OF_VOLUNTEER = '봉사활동 신청관리';
 
 export const FAVORITES = '즐겨찾기';
@@ -346,7 +346,7 @@ export const MY_ACTIVITY_IN_SHELTER = '나의 활동';
 export const MY_CONTENTS = '내 게시글';
 export const TAGED_CONTENTS_FOR_ME = '나를 태그한 글';
 export const APPLICATION_HISTORY = '신청 내역';
-export const UPLOADED_POST_FOR_REQ_PROTECTION = '보호요청 올린 게시글';
+export const UPLOADED_POST_FOR_REQ_PROTECTION = '보호 요청 글';
 export const NOTE_LIST = '쪽지함';
 export const MODIFY_SHELTER_DATA = '보호소 정보수정';
 
@@ -410,7 +410,8 @@ export const AVAILABLE_NICK = '사용 가능한 닉네임입니다!';
 //FilterButton 관련
 
 //Meatball
-export const PROTECT_STATUS = ['입양가능', '협의 중', '임보 중', '완료']; //SHELTER PROTECT REQUEST 템플릿
+export const PROTECT_STATUS = ['모든 게시글', '입양가능', '협의 중', '완료']; //SHELTER PROTECT REQUEST 템플릿
+export const PROTECT_STATUS_VAR = ['all', 'rescue', 'discuss', 'complete']; //SHELTER PROTECT REQUEST 템플릿
 export const SETTING_OWN_COMMENT = ['수정', '삭제'];
 export const SETTING_COMMENT = ['신고'];
 export const PROTECT_REQUEST_STATUS = ['임보중', '협의 중', '완료', '사망', '입양 가능'];
@@ -446,7 +447,7 @@ export const FOLLOWER_PET_MENU = ['즐겨찾기 추가', '소식 받기', '차�
 export const FEED_MEATBALL_MENU_FOLLOWING = ['쪽지 보내기', '즐겨찾기', '공유하기', '게시물 알람 설정', '팔로우 취소', '신고'];
 export const FEED_MEATBALL_MENU_UNFOLLOWING = ['쪽지 보내기', '팔로우', '즐겨찾기', '공유하기', '신고'];
 export const FEED_MEATBALL_MENU_MY_FEED = ['공유하기', '수정', '삭제'];
-export const FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS = ['상태 변경', '공유하기', '수정', '삭제'];
+export const FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS = ['상태변경', '공유하기', '수정', '삭제'];
 export const FEED_MEATBALL_MENU = ['공유하기', '신고'];
 
 //신고 목록

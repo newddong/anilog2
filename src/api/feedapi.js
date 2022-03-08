@@ -134,3 +134,20 @@ export async function getFeedListByUserId(params, callback, errcallback){
  export async function getSuggestFeedList(params, callback, errcallback){
 	apiController('/feed/getSuggestFeedList',arguments);
 };
+
+/**
+ * 선택한 피드를 수정한다.
+ * @param {object} params
+ * @param {string} params.feedobject_id - 수정할 피드 오브젝트의 몽고디비 아이디
+ * @param {string} params.feed_content - 피드 텍스트 내용
+ * @param {string} params.feed_location - 피드 작성 지역
+ * @param {string} params.feed_avatar_id - 피드의 작성자로 지정하고 싶은 반려동물 ID
+ * @param {boolean} params.feed_is_protect_diary - 피드가 임보일기인지 정함 T/F
+ * @param {Array.<string>} params.media_uri - 피드 첨부파일 uri리스트
+ * @param {Array.<FeedMedias>} params.feed_medias - 첨부 객체정보 리스트
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function editFeed(params, callback, errcallback){
+	apiController('/feed/editFeed',arguments);
+}

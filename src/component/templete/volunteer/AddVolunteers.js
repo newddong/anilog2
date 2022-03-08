@@ -49,7 +49,6 @@ export default AddVolunteers = ({route, navigation}) => {
 	};
 
 	const onAccountClick = item => {
-		console.log('onAccoitCLick');
 		setSelectedAccount(item);
 	};
 
@@ -81,7 +80,7 @@ export default AddVolunteers = ({route, navigation}) => {
 	return (
 		<View style={[login_style.wrp_main, addVolunteers.container]}>
 			<View style={[addVolunteers.inputWithSearchIcon]}>
-				<InputWithSearchIcon onSearch={onSearch} onChange={onChangeKeyword} width={654} placeholder={'추가할 계정을 검색해주세요.'} />
+				<InputWithSearchIcon onSearch={onSearch} onChange={onChangeKeyword} width={654} placeholder={'봉사 활동을 함께 할 계정을 검색해주세요.'} />
 			</View>
 			<ScrollView style={[addVolunteers.accountList]}>
 				<AccountList items={searched_accountList} listEmptyComponent={listEmptyComponent} onClickLabel={onAccountClick} />

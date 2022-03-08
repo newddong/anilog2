@@ -12,17 +12,16 @@ export default InputAndSearchHeader = props => {
 
 	const [searchInput, setSearchInput] = React.useState('');
 
-
 	const confirm = () => {
 		// navigation.navigate('Search');
-		routeName!='UserList'&&props.navigation.setParams({searchInput: searchInput});
+		routeName != 'UserList' && props.navigation.setParams({searchInput: searchInput});
 	};
 
 	React.useEffect(() => {}, []);
 
 	const onChangeSearchText = text => {
 		// console.log('text', text);
-		props.navigation.setParams({...props.route.params, searchInput:text});
+		props.navigation.setParams({...props.route.params, searchInput: text});
 		setSearchInput(text);
 		if (text != '') {
 			props.navigation.setParams({searchInput: text});
@@ -31,10 +30,9 @@ export default InputAndSearchHeader = props => {
 
 	//뒤로 가기 클릭 시 탭이 initialRoute인 Feed로 가던 현상 수정
 	const onPressGoBack = () => {
-		if(!props.route.params||!props.route.params.prevNav){
+		if (!props.route.params || !props.route.params.prevNav) {
 			props.navigation.goBack();
-		}
-		else if (props.route.params.prevNav == 'MainHomeFeedList' || props.route.params.prevNav == 'ProtectionTab') {
+		} else if (props.route.params.prevNav == 'MainHomeFeedList' || props.route.params.prevNav == 'ProtectionTab') {
 			props.navigation.navigate(props.route.params.prevNav);
 		} else {
 			props.navigation.goBack();

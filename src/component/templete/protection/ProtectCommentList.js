@@ -20,8 +20,6 @@ import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 
 export default ProtectCommentList = props => {
 	// console.log('props.showAllContents', props.route.params.showAllContents);
-	// console.log(props.route.name, '코멘트 리스트 네임');
-	const navigation = useNavigation();
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
 	const [photo, setPhoto] = React.useState();
@@ -34,9 +32,7 @@ export default ProtectCommentList = props => {
 	const data = props.route.params.protectObject;
 	const keyboardY = useKeyboardBottom(0 * DP);
 
-	// console.log('보호 요청 게시글', data);
 	React.useEffect(() => {
-		// console.log('보효요청게시글', props.route.params.protectObject._id);
 		getCommentListByProtectId(
 			{
 				protect_request_object_id: data,
@@ -218,7 +214,7 @@ export default ProtectCommentList = props => {
 				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
 			/>
 			{userGlobalObject.userInfo._id != '' && (editComment || props.route.name == 'ProtectCommentList') ? (
-				<View style={{position:'absolute', bottom: keyboardY}} onLayout={onReplyBtnLayout}>
+				<View style={{position: 'absolute', bottom: keyboardY}} onLayout={onReplyBtnLayout}>
 					<ReplyWriteBox
 						onAddPhoto={onAddPhoto}
 						onChangeReplyInput={onChangeReplyInput}

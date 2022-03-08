@@ -14,7 +14,7 @@ import {styles} from 'Atom/image/imageStyle';
  * @param {'rescue'|'discuss'|'nearrainbow'|'adopt'|'protect'} props.status - 동물의 보호활동 상태
  */
 const RescueImage = props => {
-	// console.log('props / RescueImage', props);
+	console.log('props / RescueImage', props);
 	const getStatusText = () => {
 		switch (props.status) {
 			case 'rescue':

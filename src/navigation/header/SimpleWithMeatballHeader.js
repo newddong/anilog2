@@ -15,7 +15,6 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 	// console.log('route.params', route.params);
 
 	const onPressChangeProtectRequestStatus = () => {
-		// alert('dd');
 		Modal.close();
 		setTimeout(() => {
 			Modal.popSelectScrollBoxModal([PROTECT_REQUEST_STATUS], '', selectedItem => {

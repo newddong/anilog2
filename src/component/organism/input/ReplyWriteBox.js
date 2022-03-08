@@ -38,7 +38,9 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 	}));
 
 	const [content, setContent] = React.useState('');
-
+	React.useEffect(()=>{
+		setContent(props.value);
+	},[props.value])
 	const inputRef = useRef();
 
 	const onWrite = () => {

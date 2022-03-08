@@ -11,5 +11,8 @@ export default userGlobalObj = {
         user_nickname:'',
         user_type:'',
         _id:'',
+    },
+    t:{
+        y:0
     }
 };

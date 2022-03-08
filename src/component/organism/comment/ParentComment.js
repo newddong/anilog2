@@ -98,35 +98,95 @@ export default ParentComment = React.memo((props, ref) => {
 	};
 
 	const onSelectReplyMeatballMenu = i => {};
-
+	
+	const onEdit = (data) => {
+		
+		props.onEdit&&props.onEdit(data);
+	}
 	const onPressMeatball = () => {
 		// console.log('meatballREf', meatballRef);
+		
 		meatballRef.current.measure((fx, fy, width, height, px, py) => {
 			const isWriter = userGlobalObject.userInfo._id == data.comment_writer_id._id;
 			console.log('px', px);
 			console.log('py', py);
 			if (isWriter) {
-				Modal.popDropdownModal(
-					{x: px, y: py},
+				Modal.popSelectBoxModal(
 					REPLY_MEATBALL_MENU_MY_REPLY,
 					selectedItem => {
-						alert(REPLY_MEATBALL_MENU_MY_REPLY[selectedItem]);
+						switch (selectedItem) {
+							case '상태 변경':
+								alert('상태 변경!');
+								break;
+							case '공유하기':
+								alert('공유하기!');
+								break;
+							case '수정':
+								onEdit(props.parentComment);
+								// alert('수정!');
+								// navigation.navigate('FeedEdit',props.data);
+								break;
+							case '삭제':
+								alert('삭제');
+								break;
+							default:
+								break;
+						}
+						Modal.close();
+						// setIsMeatballClicked(false);
 					},
-					() => {
-						console.log('meatball', meatball);
-					},
+					() => Modal.close(),
+					false,
+					'',
 				);
+				// Modal.popDropdownModal(
+				// 	{x: px, y: py},
+				// 	REPLY_MEATBALL_MENU_MY_REPLY,
+				// 	selectedItem => {
+				// 		alert(REPLY_MEATBALL_MENU_MY_REPLY[selectedItem]);
+				// 	},
+				// 	() => {
+				// 		console.log('meatball', meatball);
+				// 	},
+				// );
 			} else {
-				Modal.popDropdownModal(
-					{x: px, y: py},
+				Modal.popSelectBoxModal(
 					REPLY_MEATBALL_MENU,
 					selectedItem => {
-						alert(REPLY_MEATBALL_MENU[selectedItem]);
+						switch (selectedItem) {
+							case '상태 변경':
+								alert('상태 변경!');
+								break;
+							case '공유하기':
+								alert('공유하기!');
+								break;
+							case '수정':
+								// alert('수정!');
+								// navigation.navigate('FeedEdit',props.data);
+								break;
+							case '삭제':
+								alert('삭제');
+								break;
+							default:
+								break;
+						}
+						Modal.close();
+						// setIsMeatballClicked(false);
 					},
-					() => {
-						console.log('meatball', meatball);
-					},
+					() => Modal.close(),
+					false,
+					'',
 				);
+				// Modal.popDropdownModal(
+				// 	{x: px, y: py},
+				// 	REPLY_MEATBALL_MENU,
+				// 	selectedItem => {
+				// 		alert(REPLY_MEATBALL_MENU[selectedItem]);
+				// 	},
+				// 	() => {
+				// 		console.log('meatball', meatball);
+				// 	},
+				// );
 			}
 		});
 	};
@@ -213,7 +273,7 @@ export default ParentComment = React.memo((props, ref) => {
 			{/* Data - 대댓글List */}
 			{showChild ? (
 				<View style={[organism_style.childCommentList, parentComment.img_square_round_574]}>
-					<ChildCommentList items={child} showChildComment={showChildComment} />
+					<ChildCommentList items={child} showChildComment={showChildComment} onEdit={onEdit}/>
 				</View>
 			) : (
 				false

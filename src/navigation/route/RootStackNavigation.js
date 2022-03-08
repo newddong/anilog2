@@ -66,15 +66,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {userLogin} from 'Root/api/userapi';
 import userGlobalObj from 'Root/config/userGlobalObject';
 
-// import Camera from 'Root/component/templete/Camera';
-// import Camera from 'Templete/media/Camera';
 const RootStack = createStackNavigator();
 
 export default RootStackNavigation = () => {
 	const [isPop, popupComponent] = useModal();
 	const [isLoading, setLoading] = React.useState(true);
 	const [initialRouteName, setInitialRouteName] = React.useState('Login');
-	// let initialRouteName = 'Login'
 
 	React.useEffect(() => {
 		AsyncStorage.getItem('userSetting', (err, userSetting) => {
@@ -239,7 +236,11 @@ export default RootStackNavigation = () => {
 							component={FeedWrite}
 							options={{header: props => <FeedWriteHeader {...props} />, title: '게시물 작성'}}
 						/>
-
+						<RootStack.Screen
+							name="FeedEdit"
+							component={FeedWrite}
+							options={{header: props => <FeedWriteHeader {...props} />, title: '게시물 수정'}}
+						/>
 						<RootStack.Screen
 							name="FeedMissingWrite"
 							component={FeedWrite}
@@ -292,7 +293,7 @@ export default RootStackNavigation = () => {
 							options={{header: props => <SimpleHeader {...props} />, title: '주소 검색'}}
 						/>
 						<RootStack.Screen name="RequestLogin" component={RequestLogin} />
-						<RootStack.Screen name="UserList" options={{title: '계정'}} options={{header: props => <InputAndSearchHeader {...props} />}}>
+						<RootStack.Screen name="UserList" options={{header: props => <InputAndSearchHeader {...props} />, title: '계정'}}>
 							{props => <AccountPicker {...props} /*prevNav={props.prevNav} input={searchInput} onClickUser={onClickUser}*/ />}
 						</RootStack.Screen>
 					</RootStack.Navigator>

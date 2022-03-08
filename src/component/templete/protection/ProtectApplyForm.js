@@ -84,8 +84,6 @@ export default ProtectApplyForm = ({route, navigation}) => {
 							shelter_protect_animal_object_id: data.protect_animal_id._id,
 							protect_animal_status: 'adopt',
 							protect_animal_adoptor_id: route.params.data.protect_act_applicant_id._id,
-							// protect_animal_status: data.protect_act_type == 'adopt' ? 'adopt' : 'protect',
-							// protect_animal_ddd
 							// ---1. 여기서 입양자 임시보호자 아이디 넣어주고
 							// 2. getAnimalListNotRegisteredWithCompanion으로 아직 등록안될 동물이 있는 경우
 							// 3. 받아온 데이터로 모달 구성하고 AssignPet 실시함

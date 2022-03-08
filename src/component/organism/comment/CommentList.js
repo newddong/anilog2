@@ -20,6 +20,7 @@ export default CommentList = props => {
 			<ParentComment
 				parentComment={item}
 				onPressReplyBtn={props.onPressReplyBtn} // 부모 댓글의 답글쓰기 클릭 이벤트
+				onEdit={props.onEdit}
 			/>
 		);
 	};

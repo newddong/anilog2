@@ -134,9 +134,9 @@ export default FeedMediaTagEdit = props => {
 				<Text style={txt.noto28r}>사진 속 인물이나 동물을 눌러 태그하세요</Text>
 				{/* <Text style={txt.noto28r}>다시 눌러 삭제가 가능합니다.</Text> */}
 				{/* <Text style={txt.noto28r}>누른 상태에서 움직이면 위치가 이동합니다.</Text> */}
-				<TouchableWithoutFeedback onPress={test}>
+				{/* <TouchableWithoutFeedback onPress={test}>
 				<View style={{height:80*DP,width:80*DP,backgroundColor:'green'}}></View>
-				</TouchableWithoutFeedback>
+				</TouchableWithoutFeedback> */}
 			</View>
 		</View>
 	);

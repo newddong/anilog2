@@ -4,10 +4,9 @@ import {BLACK, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 /**
- *
- * @param {{
- * isCheck : boolean ,
- * }} props
+ * 게시글 사진 썸네일 목록
+ * @param {object} props - Props Object
+ * @param {object} props.photo_list -
  */
 export default ArticleThumnails = props => {
 	const getThirdPhoto = () => {

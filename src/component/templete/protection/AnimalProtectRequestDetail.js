@@ -56,6 +56,8 @@ export default AnimalProtectRequestDetail = ({route}) => {
 			result => {
 				console.log('result /getProtectRequestByProtectRequestId / AnimalProtectRequestDetail : ', result.msg.protect_request_is_delete);
 				setData(result.msg);
+				navigation.setParams({...route.params, request_object: result.msg});
+				// props.navigation.setParams({...props.route.params, feed_content: feedText});
 				getProtectRequestList(result.msg.protect_request_writer_id._id); //API에서 받아온 보호요청게시글의 작성자 _id를 토대로, 작성자의 다른 보호요청게시글을 받아옴
 			},
 			err => {

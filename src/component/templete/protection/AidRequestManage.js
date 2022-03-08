@@ -17,7 +17,6 @@ export default AidRequestManage = ({route, navigation}) => {
 	const [noPostAnimalList, setNoPostAnimalList] = React.useState('false');
 
 	React.useEffect(() => {
-
 		getShelterProtectAnimalList(
 			{
 				shelter_protect_animal_object_id: '',
@@ -37,7 +36,6 @@ export default AidRequestManage = ({route, navigation}) => {
 			},
 		);
 	}, []);
-
 
 	const addProtectAnimal = () => {
 		navigation.push('AssignProtectAnimalImage');
@@ -71,7 +69,9 @@ export default AidRequestManage = ({route, navigation}) => {
 			'다시 게시하기',
 			'게시글 보기',
 			() => moveToProtectRequest(hasPostAnimalList[index]),
-			() => navigation.push('WriteAidRequest', {data: hasPostAnimalList[index]}),
+			() => {
+				navigation.push('WriteAidRequest', {data: hasPostAnimalList[index], isRePost: true});
+			},
 		);
 	};
 

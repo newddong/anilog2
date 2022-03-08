@@ -135,6 +135,10 @@ import newmeatball60Filled from './newMeatBall60Filled';
 import filter60Border from './filter60Border';
 import filter60Filled from './filter60Filled';
 import secureIcon40 from './secureIcon40';
+import locationGray from './locationGray';
+import animal_another from './animal_another';
+import animal_cat from './animal_cat';
+import animal_dog from './animal_dog';
 import DP from 'Root/config/dp';
 
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
@@ -347,3 +351,7 @@ export const NewMeatBall60Filled = makeSvg(newmeatball60Filled, size60);
 export const Filter60Border = makeSvg(filter60Border, size60);
 export const Filter60Filled = makeSvg(filter60Filled, size60);
 export const SecureIcon40 = makeSvg(secureIcon40, size40);
+export const LocationGray = makeSvg(locationGray, {width: 31 * DP, height: 37 * DP});
+export const Animal_another = makeSvg(animal_another, {width: 120 * DP, height: 60 * DP});
+export const Animal_cat = makeSvg(animal_cat, {width: 136 * DP, height: 60 * DP});
+export const Animal_dog = makeSvg(animal_dog, {width: 100 * DP, height: 60 * DP});

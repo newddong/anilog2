@@ -4,10 +4,9 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {BLACK, GRAY10, GRAY20, GRAY30, WHITE} from 'Root/config/color';
 /**
- *
- * @param {{
- * isCheck : boolean ,
- * }} props
+ * 추천 게시글
+ * @param {object} props - Props Object
+ * @param {object} props.data - 데이터 오브젝트
  */
 export default RecommendArticle = props => {
 	const article = () => {

@@ -7,10 +7,9 @@ import ArticleThumnails from './ArticleThumnails';
 import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {GRAY10} from 'Root/config/color';
 /**
- *
- * @param {{
- * isCheck : boolean ,
- * }} props
+ * 게시글
+ * @param {object} props - Props Object
+ * @param {object} props.data - 게시글 아이템 data
  */
 export default Article = props => {
 	return (
@@ -43,6 +42,7 @@ Article.defaultProps = {
 const style = StyleSheet.create({
 	container: {
 		width: 654 * DP,
+		paddingVertical: 30 * DP,
 		alignSelf: 'center',
 	},
 	content: {

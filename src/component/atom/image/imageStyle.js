@@ -49,6 +49,11 @@ export const styles = StyleSheet.create({
 		height: 178 * DP,
 		borderRadius: 30 * DP,
 	},
+	img_square_round_186: {
+		width: 186 * DP,
+		height: 186 * DP,
+		borderRadius: 30 * DP,
+	},
 
 	//Square no round
 

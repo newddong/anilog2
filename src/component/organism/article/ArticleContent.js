@@ -6,10 +6,9 @@ import {GRAY10, GRAY20} from 'Root/config/color';
 import {Arrow_Down_GRAY10, FavoriteTag46_Filled, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
 /**
- *
- * @param {{
- * isCheck : boolean ,
- * }} props
+ * 게시글 컨텐츠
+ * @param {object} props - Props Object
+ * @param {object} props.data - 데이터
  */
 export default ArticleContent = props => {
 	return (

@@ -43,7 +43,7 @@ export default AppliesRecord = ({route}) => {
 				} else {
 					setAdopt_application_list([]);
 				}
-				//임보
+				//임보ㅇ
 				if (result.msg.protect != undefined) {
 					let protect = result.msg.protect;
 					let protect_animal_info = protect.protect_act_request_article_id.protect_animal_id;

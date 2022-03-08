@@ -377,8 +377,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 						</View>
 					</View>
 					{/* 반려동물 입양 상태 변경 */}
-					{/* 반려 동물 상태가 companion가 아닐 경우에만 보이도록 추후 변경 예정 */}
-					{petData.pet_status != 'companion' && (
+					{petData.pet_status == 'protect' && ( //오로지 임보일때만 출력
 						<View style={[petInfoSetting.changeAdoptionStatus.container]}>
 							<View style={[petInfoSetting.familyAccountSetting.insideContainer]}>
 								<View style={[petInfoSetting.familyAccountSetting.menuView]}>

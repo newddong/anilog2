@@ -108,8 +108,8 @@ export function useModal() {
 		!isPop && setPop(true);
 	};
 
-	Modal.popAvatarSelectModal = (onSelectPet, okButtonnMsg, isBtnMode) => {
-		popIn(<AvatarSelectModal onSelectPet={onSelectPet} okButtonnMsg={okButtonnMsg} isBtnMode={isBtnMode} />);
+	Modal.popAvatarSelectModal = (onSelectPet, okButtonnMsg, isWriteMode) => {
+		popIn(<AvatarSelectModal onSelectPet={onSelectPet} okButtonnMsg={okButtonnMsg} isWriteMode={isWriteMode} />);
 		!isPop && setPop(true);
 	};
 

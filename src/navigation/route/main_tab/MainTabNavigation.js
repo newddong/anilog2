@@ -11,6 +11,8 @@ import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import SearchTabNavigation from '../search_tab/SearchTabNavigation';
 import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 import {SearchContext} from 'Root/config/searchContext';
+import CommunityTabNavigation from './community_stack/CommunityTabNavigation';
+import LogoHeader from 'Root/navigation/header/LogoHeader';
 
 const MainTabNav = createBottomTabNavigator();
 
@@ -55,7 +57,16 @@ export default MainTabNavigation = ({route, navigation}) => {
 					header: props => false,
 				})}
 			/>
-			<MainTabNav.Screen name="COMMUNITY" component={Temp} options={{header: props => <SimpleHeader {...props} />, title: '커뮤니티'}} />
+			<MainTabNav.Screen
+				name="COMMUNITY"
+				component={CommunityTabNavigation}
+				options={({route}) => ({
+					tabBarVisible: getTabBarVisibility(route),
+					tabBarLabel: '커뮤니티',
+					tabBarHideOnKeyboard: true,
+					header: props => <LogoHeader {...props} />,
+				})}
+			/>
 
 			<MainTabNav.Screen
 				name="MY"

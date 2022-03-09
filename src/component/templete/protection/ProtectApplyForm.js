@@ -13,8 +13,7 @@ import {setShelterProtectAnimalStatus} from 'Root/api/shelterapi';
 //ShelterMenu -> 신청서조회 -> 신청서 클릭 -> 입양 확정 및 임시보호 확정
 export default ProtectApplyForm = ({route, navigation}) => {
 	// console.log('ProtectApplyForm props', route.params);
-	const [data, setData] = React.useState(route.params);
-	const [loading, setLoading] = React.useState(true); // 화면 출력 여부 결정
+	const [data, setData] = React.useState('false');
 
 	React.useEffect(() => {
 		getProtectRequestByProtectRequestId(
@@ -32,12 +31,10 @@ export default ProtectApplyForm = ({route, navigation}) => {
 				addedData.protect_animal_id = result.msg.protect_animal_id;
 				addedData.shelter_name = result.msg.protect_request_writer_id.user_nickname;
 				setData(addedData);
-				setTimeout(() => {
-					setLoading(false);
-				}, 500);
 			},
 			err => {
 				console.log('err / getProtectRequestByProtectRequestId / ProtectApplyForm /ProtectionApplicationList ', err);
+				Modal.popOneBtn(err, '뒤로가기', () => navigation.goBack());
 			},
 		);
 	}, []);
@@ -59,7 +56,7 @@ export default ProtectApplyForm = ({route, navigation}) => {
 						protect_act_status: 'accept',
 					},
 					result => {
-						// console.log('result / setProtectActivityStatus / ProtectApplyForm  : ', result.msg);
+						console.log('result / setProtectActivityStatus / ProtectApplyForm  : ', result.msg);
 					},
 					err => {
 						console.log('err / setProtectActivityStatus / ProtectApplyForm  : ', err);
@@ -86,7 +83,7 @@ export default ProtectApplyForm = ({route, navigation}) => {
 						protect_animal_status: data.protect_act_type == 'adopt' ? 'adopt' : 'protect',
 					},
 					result => {
-						console.log('result / setShelterProtectAnimalStatus / ProtectApplyForm : ', result.msg);
+						// console.log('result / setShelterProtectAnimalStatus / ProtectApplyForm : ', result.msg);
 						navigation.navigate('ShelterMenu');
 					},
 					err => {
@@ -97,7 +94,7 @@ export default ProtectApplyForm = ({route, navigation}) => {
 			},
 		);
 	};
-	if (loading) {
+	if (data == 'false') {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
 				<ActivityIndicator size={'large'}></ActivityIndicator>

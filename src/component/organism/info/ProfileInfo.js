@@ -179,6 +179,10 @@ const ProfileInfo = props => {
 		);
 	};
 
+	const onPressEditProfile = () => {
+		console.log('dd');
+	};
+
 	const onPressShelterContact = () => {
 		Linking.openURL(`tel:${data.shelter_delegate_contact_number}`);
 	};
@@ -249,7 +253,7 @@ const ProfileInfo = props => {
 			<View style={[organism_style.btn_w280_view_profileInfo, profileInfo_style.btn_w280_view]}>
 				<View style={[organism_style.btn_w280_profileInfo]}>
 					{userGlobalObject.userInfo._id == data._id ? (
-						<AniButton btnTitle={'프로필 수정'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} />
+						<AniButton onPress={onPressEditProfile} btnTitle={'프로필 수정'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} />
 					) : data.is_follow ? (
 						<ArrowDownButton btnTitle={'팔로우 중'} btnLayout={btn_w280x68} onPress={onPressFollowingSetting} />
 					) : (

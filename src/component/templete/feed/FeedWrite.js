@@ -38,7 +38,9 @@ export default FeedWrite = props => {
 	const [showReportForm, setShowRepotForm] = React.useState(false); //제보버튼
 	const [showActionButton, setShowActionButton] = React.useState(false); // 긴급게시(하얀버전) 클릭 시 - 실종/제보 버튼 출력 Boolean
 	const [isDiary, setDiary] = React.useState(false); //임보일기여부
-	const [feedText, setFeedText] = React.useState(''); //피드 TextInput Value
+	const [feedText, setFeedText] = React.useState(
+		props.route.params.feed_content ? props.route.params.feed_content.replace(/(&@|&#){2}(.*?)%&%.*?(&@|&#){2}/gm, '$2') : '',
+	); //피드 TextInput Value
 	const [selectedImg, setSelectedImg] = React.useState([]); //사진 uri리스트
 	const [isSearchTag, setSearchTag] = React.useState(false);
 	const [publicSetting, setPublicSetting] = React.useState('전체 공개'); //공개 여부
@@ -46,7 +48,9 @@ export default FeedWrite = props => {
 	const scrollref = React.useRef();
 	const lastTouchY = React.useRef(0);
 	const container = React.useRef();
-	const [editText, setEditText] = React.useState(props.route.params.feed_content);
+	const [editText, setEditText] = React.useState(
+		props.route.params.feed_content ? props.route.params.feed_content.replace(/(&@|&#){2}(.*?)%&%.*?(&@|&#){2}/gm, '$2') : '',
+	);
 
 	React.useEffect(() => {
 		if (props.route.name != 'FeedEdit') {
@@ -58,8 +62,13 @@ export default FeedWrite = props => {
 		} else {
 			props.navigation.setParams({
 				...props.route.params,
-				media_uri: selectedImg,
+				media_uri: selectedImg.filter(v => !v.includes('http')),
+				feed_medias: selectedImg.map(img => {
+					let media = props.route.params.feed_medias.find(v=>v.media_uri == img);
+					return {media_uri: img, is_video: false, duration: 0, tags: media ? media.tags : []}
+				})
 			});
+			console.log('첨부 이미지 변화', selectedImg);
 		}
 	}, [selectedImg]); //네비게이션 파라메터에 이미지 리스트를 넣음(헤더에서 처리하도록)
 
@@ -74,8 +83,14 @@ export default FeedWrite = props => {
 				console.log('제보 편집');
 				onPressReportWrite();
 			}
-			setEditText(props.route.params.feed_content);
 			setSelectedImg(props.route.params.feed_medias.map(v => v.media_uri));
+			let regEx = new RegExp(`&#&#(.*?)%&%&`,`gm`);
+			let hashes = [];
+			let match = [];
+			while((match = regEx.exec(props.route.params.feed_content))!==null){
+				hashes.push(match[1]);
+			}
+			props.navigation.setParams({...props.route.params, hashtag_keyword: hashes})
 		}
 		if (props.route.params?.feedType == 'Feed') {
 			props.navigation.setOptions({title: userGlobalObj.userInfo?.user_nickname});
@@ -196,7 +211,7 @@ export default FeedWrite = props => {
 		props.navigation.push('FeedMediaTagEdit');
 	};
 	const inputFeedTxt = (feedInput, hashtag_keyword) => {
-		props.navigation.setParams({...props.route.params, feed_content: feedText, hashtag_keyword: hashtag_keyword});
+		props.navigation.setParams({...props.route.params, feed_content: feedText, hashtag_keyword: hashtag_keyword, isEdit: true});
 		setFeedText(feedInput);
 	};
 
@@ -286,9 +301,9 @@ export default FeedWrite = props => {
 	};
 	return (
 		<View style={{flex: 1, backgroundColor: '#FFF'}}>
-			<TouchableWithoutFeedback onPress={test}>
+			{/* <TouchableWithoutFeedback onPress={test}>
 				<View style={{backgroundColor: 'red', width: 50, height: 50}}></View>
-			</TouchableWithoutFeedback>
+			</TouchableWithoutFeedback> */}
 			<FlatList
 				renderItem={({item, index}) => {
 					return (
@@ -370,7 +385,7 @@ const MissingForm = props => {
 	const initData = () => {
 		if (route.name == 'FeedEdit') {
 			return route.params;
-		}else{
+		} else {
 			return {
 				missing_animal_species: types[0].pet_species,
 				missing_animal_species_detail: types[0].pet_species_detail[0],

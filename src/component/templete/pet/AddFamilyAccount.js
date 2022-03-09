@@ -60,7 +60,6 @@ export default AddFamilyAccount = ({route, navigation}) => {
 
 	//초대하기 클릭
 	const onCheckFamilyMembers = item => {
-		console.log('item', item);
 		// console.log('리스트 인원 수 체크 후 3인이 넘어갈때 초대하면 3인까지만 가능하다는 메세지 필요 ~  3인이 안되면 API로 추가 후 goback');
 		addUserToFamily(
 			{

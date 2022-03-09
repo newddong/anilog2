@@ -7,12 +7,15 @@ import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS, PROTECT_REQUEST_STATUS} from 'Root/i18n/msg';
+import {getProtectRequestByProtectRequestId} from 'Root/api/protectapi';
+import {deleteProtectRequest} from 'Root/api/shelterapi';
 
+//보호 요청게시글 작성자일 경우 미트볼 아이콘 출력이 되는 헤더
 export default SimpleWithMeatballHeader = ({navigation, route, options, back}) => {
-	const isWriter = userGlobalObject.userInfo._id == route.params.item.protect_request_writer_id._id;
+	const isWriter = userGlobalObject.userInfo._id == route.params.writer;
+	// console.log('route.params', route.params);
 
 	const onPressChangeProtectRequestStatus = () => {
-		console.log('dddd');
 		Modal.close();
 		setTimeout(() => {
 			Modal.popSelectScrollBoxModal([PROTECT_REQUEST_STATUS], '', selectedItem => {
@@ -33,17 +36,36 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 		}, 200);
 	};
 
+	//수정 버튼 클릭
 	const onPressEdit = () => {
-		alert('수정하기');
+		navigation.push('EditAidRequest', {data: route.params.id});
 	};
 
+	//게시글 삭제
 	const onPressDelete = () => {
 		Modal.close();
 		setTimeout(() => {
-			Modal.popOneBtn('이 게시글을 삭제하시겠습니까?', '삭제', () => {
-				alert('삭제');
-				Modal.close();
-			});
+			Modal.popTwoBtn(
+				'이 게시글을 삭제하시겠습니까?',
+				'아니오',
+				'삭제',
+				() => Modal.close(),
+				() => {
+					deleteProtectRequest(
+						{
+							protect_request_object_id: route.params.id,
+						},
+						result => {
+							console.log('result / deleteProtectRequest / SimpleWithMeatBallHeader  : ', result.msg.protect_request_is_delete);
+							navigation.goBack(); //뒤로 가기
+						},
+						err => {
+							console.log('err /deleteProtectRequest / SimpleWithMeatBallHeader  :  ', err);
+						},
+					);
+					Modal.close();
+				},
+			);
 		}, 400);
 	};
 
@@ -58,15 +80,12 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 					case '공유하기':
 						onPressShare();
 						break;
-
 					case '수정':
 						onPressEdit();
 						break;
-
 					case '삭제':
 						onPressDelete();
 						break;
-
 					default:
 						break;
 				}
@@ -85,7 +104,7 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 					<BackArrow32 onPress={navigation.goBack} />
 				</View>
 			</TouchableOpacity>
-			<Text style={[{flex: 1, textAlign: 'center', marginLeft: 30 * DP, marginRight: 80 * DP}, txt.roboto40b]}>
+			<Text style={[{flex: 1, textAlign: 'center', marginLeft: 30 * DP, marginRight: 80 * DP}, txt.roboto40b]} numberOfLines={1}>
 				{options.title ? options.title : route.params.title}
 			</Text>
 			{isWriter ? <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} /> : <></>}

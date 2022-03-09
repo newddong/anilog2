@@ -120,7 +120,7 @@ export default FeedList = ({route, navigation}) => {
 		//Refreshing 요청시 피드리스트 다시 조회
 		refreshing ? getList() : false;
 		return unsubscribe;
-	}, [refreshing]);
+	}, [refreshing, route]);
 
 	React.useEffect(() => {
 		if (feedList.length > 0) {
@@ -131,20 +131,20 @@ export default FeedList = ({route, navigation}) => {
 					animated: false,
 					index: indx>0?indx:0,
 				});
+				flatlist.current.scrollToOffset({
+					offset: userGlobalObject.t.y,
+					animated:false
+				})
 			},0)
 			
 		}
 	}, [feedList]);
 
 	const moveToFeedWrite = () => {
-		flatlist.current.scrollToIndex({
-			animated: false,
-			index: 5,
-		});
-		// userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed'});
+		userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed'});
 	};
 
-	const renderItem = item => {
+	const renderItem = ({item}) => {
 		return <Feed data={item} />;
 	};
 
@@ -160,11 +160,18 @@ export default FeedList = ({route, navigation}) => {
 	const onR = () => {
 		console.log('onrefresh')
 	}
+
+	const rememberScroll = e=>{
+		if(e.nativeEvent.contentOffset.y>0){
+		userGlobalObject.t = e.nativeEvent.contentOffset;
+		}
+	}
+
 	return (
 		<View style={(login_style.wrp_main, {flex: 1, backgroundColor: WHITE})}>
 			<FlatList
 				data={feedList}
-				renderItem={({item}) => renderItem(item)}
+				renderItem={renderItem}
 				keyExtractor={(item, index) => index}
 				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 				getItemLayout={(data, index) => {
@@ -175,6 +182,7 @@ export default FeedList = ({route, navigation}) => {
 				ref={flatlist}
 				onRefresh={onR}
 				refreshing
+				onScroll={rememberScroll}
 			/>
 			{userGlobalObject.userInfo && (
 				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}, buttonstyle.shadow]}>

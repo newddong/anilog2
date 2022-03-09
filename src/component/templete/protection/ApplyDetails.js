@@ -2,12 +2,12 @@ import React from 'react';
 import {Text, View, ScrollView, Image} from 'react-native';
 import {createProtectActivity} from 'Root/api/protectapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import {CONFIRM_ADOPT_REQUEST, CONFIRM_FINALIZED, CONFIRM_PROTECT_REQUEST} from 'Root/i18n/msg';
+import {CONFIRM_ADOPT_REQUEST, CONFIRM_PROTECT_REQUEST} from 'Root/i18n/msg';
 import {btn_w226} from 'Atom/btn/btn_style';
 import Modal from 'Component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
 import AnimalProtectDetail from 'Organism/info/AnimalProtectDetail';
-import {applyDetails, btn_style, login_style, temp_style} from 'Templete/style_templete';
+import {applyDetails, login_style, temp_style} from 'Templete/style_templete';
 
 export default ApplyDetails = ({route, navigation}) => {
 	const data = route.params;

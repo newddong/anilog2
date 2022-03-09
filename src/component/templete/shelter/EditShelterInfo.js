@@ -14,13 +14,14 @@ import moment from 'moment';
 import Modal from 'Component/modal/Modal';
 import {updateShelterDetailInformation} from 'Root/api/userapi';
 import DP from 'Root/config/dp';
+import {useNavigation} from '@react-navigation/native';
 
 export default EditShelterInfo = ({route, navigation}) => {
 	const [data, setData] = React.useState(route.params.data);
 	// console.log('dataEmail  : ', data);
 	// console.log('data phone', data.shelter_delegate_contact_number);
 	const isDirectInput = !EMAIL_DOMAIN.some(e => e == data.user_email.split('@')[1]);
-
+	console.log(route.params.data);
 	React.useEffect(() => {
 		if (route.params.addr) {
 			console.log('route.params.Address Changed?   ', route.params.addr);
@@ -144,7 +145,8 @@ export default EditShelterInfo = ({route, navigation}) => {
 							Modal.close();
 						},
 					);
-					navigation.navigate('ShelterInfoSetting');
+					// navigation.navigate('ShelterInfoSetting');
+					// navigation.goBack();
 				} else if (!regexEmail || !regexPhone) {
 					Modal.close();
 					setTimeout(() => {

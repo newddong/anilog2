@@ -9,24 +9,12 @@ import Modal from 'Component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
 import {login_style, btn_style, animalAdoption} from 'Templete/style_templete';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {setPetStatus} from 'Root/api/userapi';
 
 //UserMenu -> PetInfoSetting -> 보호동물 상태 변경
 export default AnimalAdoption = props => {
 	const navigation = useNavigation();
 	// console.log('props.route.params', props.route.params);
-
-	//임시보호에서 반려 동물 변경 응원 팝업창 !
-	const onCheerUp = () => {
-		Modal.close();
-		setTimeout(() => {
-			Modal.popCongratulationModal(props.route.params.user_nickname, props.route.params.user_profile_uri);
-			setTimeout(() => {
-				Modal.close();
-				// console.log('pet_id: props.route.params._id', props.route.params._id);
-				navigation.navigate('PetInfoSetting', {pet_id: props.route.params._id, token: userGlobalObject.userInfo});
-			}, 1000);
-		}, 200);
-	};
 
 	const onPressAdoption = () => {
 		Modal.popTwoBtn(
@@ -45,6 +33,34 @@ export default AnimalAdoption = props => {
 	};
 
 	const onPressMyAdoption = () => {
+		const changePetStatus = async () => {
+			setPetStatus(
+				{
+					userobject_id: props.route.params,
+					pet_status: 'companion',
+				},
+				result => {
+					// console.log('result / setPetStatus / AnimalAdoption : ', result.msg);
+				},
+				err => {
+					console.log('err / setPetStatus / AnimalAdoption : ', err);
+				},
+			);
+		};
+
+		//임시보호에서 반려 동물 변경 응원 팝업창 !
+		const onCheerUp = () => {
+			Modal.close();
+			setTimeout(() => {
+				Modal.popCongratulationModal(props.route.params.user_nickname, props.route.params.user_profile_uri);
+				setTimeout(() => {
+					Modal.close();
+					changePetStatus().then(() => {
+						navigation.navigate('PetInfoSetting', {pet_id: props.route.params._id, token: userGlobalObject.userInfo});
+					});
+				}, 1000);
+			}, 200);
+		};
 		Modal.popTwoBtn(
 			'이 동물을 가족으로 맞이하시겠어요?',
 			'취소',

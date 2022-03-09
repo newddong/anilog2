@@ -25,6 +25,7 @@ import {
 	TAGED_CONTENTS_FOR_ME,
 	LOGOUT,
 	OPENSETTING,
+	REQ_PROTECTION_SAVE,
 } from 'Root/i18n/msg';
 import {btn_w280, btn_w280x68} from 'Atom/btn/btn_style';
 import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FavoriteTag48_Filled, Paw46, Paw48_APRI10, Setting46} from 'Atom/icon';
@@ -130,49 +131,49 @@ export default UserMenu = props => {
 	//하단 메뉴 클릭
 	const menuClick = menuItem => {
 		switch (menuItem) {
-			case '친구':
+			case FRIENDS:
 				// Modal.popInfoModal();
 				navigation.push('SaveFavorite'); // FollowObject
 				break;
-			case '피드 게시글':
+			case PEED_CONTENTS:
 				// alert('업데이트 예정입니다');
 				// Modal.popInfoModal();
 				navigation.push('FavoriteFeeds', {token: data}); // FavoriteFeedObject
 				break;
-			case '보호 요청(저장)':
+			case REQ_PROTECTION_SAVE:
 				// navigation.push('UserSaveAnimalRequest'); // BookmarkProtectRequestObject
 				Modal.popInfoModal();
 				break;
-			case '내 게시글':
+			case MY_CONTENTS:
 				navigation.push('UserFeeds', {token: data});
 				break;
-			case '나를 태그한 글':
+			case TAGED_CONTENTS_FOR_ME:
 				Modal.popInfoModal();
 				// navigation.push('TagMeFeeds', {token: data});
+				break;    
+			case APPLICATION_HISTORY:
+				navigation.push('AppliesRecord', data._id); // ShelterProtectAnimalObject
 				break;
-			case '신청 내역':
-				navigation.push('AppliesRecord'); // ShelterProtectAnimalObject
+			case ANIMAL_PROTECTION_STATE:
+				navigation.push('AnimalProtectList', data._id); //ProtectAnimalObject
 				break;
-			case '동물 보호 현황':
-				navigation.push('AnimalProtectList'); //ProtectAnimalObject
-				break;
-			case '쪽지함':
+			case NOTE_LIST:
 				Modal.popInfoModal();
 				break;
-			case '정보/문의':
+			case INFO_QUESTION:
 				// Modal.popInfoModal();
 				navigation.push('SettingInformAsk');
 				break;
-			case '커뮤니티':
+			case COMUNITY:
 				Modal.popInfoModal();
 				break;
-			case '계정':
+			case ACCOUNT:
 				navigation.push('SettingAccount');
 				break;
-			case '알림':
+			case INFO:
 				navigation.push('SettingAlarm');
 				break;
-			case '공개 설정':
+			case OPENSETTING:
 				navigation.push('SettingOpen');
 				break;
 		}

@@ -18,22 +18,16 @@ export default SaveAnimalRequest = ({route}) => {
 
 	React.useEffect(() => {
 		getProtectRequestList(
-			//현재 로그인한 보호소의 고유 _id를 파라미터로 보내고
-			//_id를 통해 얻어온 보호소의 보호 요청 게시글 리스트를 출력
 			{
 				protect_request_object_id: null,
 				request_number: 2,
 			},
 			result => {
-				console.log('result / getProtectRequestLIst / ShelterSaveAnimalRequest', result);
+				// console.log('result / getProtectRequestLIst / ShelterSaveAnimalRequest', result);
 				setData(result.msg);
-				// 받아온 protect_animal_protect_Request_id로 해당 게시글 좋아요 여부도 판별해야함
 			},
 			err => {
 				console.log('err / getProtectRequestList', err);
-				// err.filter(e => {
-				// 	// console.log('e._protect_animal', e.protect_animal_id);
-				// });
 			},
 		);
 	}, []);
@@ -103,7 +97,7 @@ export default SaveAnimalRequest = ({route}) => {
 				break;
 		}
 		const titleValue = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + sexValue;
-		navigation.push('AnimalProtectRequestDetail', {item: item, title: titleValue});
+		navigation.push('AnimalProtectRequestDetail', {id: item._id, title: titleValue});
 	};
 
 	return (

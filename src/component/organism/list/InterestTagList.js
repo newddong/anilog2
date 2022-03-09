@@ -16,6 +16,7 @@ import {interestTagList} from 'Organism/style_organism copy';
  * items : 'List item ',
  * onDelete : void,
  * onPressAddBtn : void,
+ * extra : boolean,
  * }} props
  */
 export default InterestTagList = props => {
@@ -56,6 +57,7 @@ export default InterestTagList = props => {
 					data={props.items}
 					renderItem={({item, index}) => renderItem(item, index)}
 					horizontal={true}
+					extraData={props.extra}
 					// numColumns={3}
 				/>
 			</View>

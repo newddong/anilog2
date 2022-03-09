@@ -17,9 +17,8 @@ import {ProfileDefaultImg} from 'Atom/icon';
  */
 const UserDescriptionLabel = props => {
 	const data = props.data;
-	// console.log('data / USerDescription Label : ', props.data.user_profile_uri);
+	// console.log('data / USerDescription Label : ', props.data.user_introduction);
 	const onClickLabel = () => {
-		// console.log(`UserDescriptionLabel:onClickLabel()-props.data:${JSON.stringify(props.data)}`);
 		props.onClickLabel(props.data);
 	};
 

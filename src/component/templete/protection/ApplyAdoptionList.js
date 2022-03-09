@@ -1,8 +1,8 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {ActivityIndicator, FlatList, ScrollView, Text, View} from 'react-native';
+import {ActivityIndicator, ScrollView, Text, View} from 'react-native';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
-import {login_style, temp_style, baseInfo_style} from 'Templete/style_templete';
+import {login_style, baseInfo_style} from 'Templete/style_templete';
 import {getUserAdoptProtectionList} from 'Root/api/protectapi';
 import AnimalNeedHelp from 'Root/component/organism/listitem/AnimalNeedHelp';
 
@@ -10,8 +10,7 @@ import AnimalNeedHelp from 'Root/component/organism/listitem/AnimalNeedHelp';
 export default ApplyAdoptionList = props => {
 	// console.log('ApplyAdoptionList', props);
 	const navigation = useNavigation();
-	const [data, setData] = React.useState();
-	const [loading, setLoading] = React.useState(true); // 화면 출력 여부 결정
+	const [data, setData] = React.useState(false);
 
 	const onOff_FavoriteTag = (value, index) => {
 		// console.log('즐겨찾기=>' + value + ' ' + index);
@@ -35,7 +34,6 @@ export default ApplyAdoptionList = props => {
 			},
 			result => {
 				// console.log(`ApplyAdoptionList getUserAdoptProtectionList: ${JSON.stringify(result.msg)}`);
-
 				//1depth 올려줌.
 				for (let index = 0; index < result.msg.length; index++) {
 					result.msg[index].protect_request_photo_thumbnail = result.msg[index].protect_act_request_article_id.protect_request_photos_uri[0];
@@ -49,17 +47,15 @@ export default ApplyAdoptionList = props => {
 					result.msg[index].protect_animal_status = result.msg[index].protect_act_request_article_id.protect_animal_id.protect_animal_status;
 				}
 				setData(result.msg);
-				setTimeout(() => {
-					setLoading(false);
-				}, 1000);
 			},
 			err => {
 				console.log('err / getAppliesRecord / AppliesRecord', err);
+				setData([]);
 			},
 		);
 	}, []);
 
-	if (loading) {
+	if (data == '') {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
 				<ActivityIndicator size={'large'}></ActivityIndicator>

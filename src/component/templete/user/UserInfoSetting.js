@@ -18,12 +18,12 @@ import DP from 'Root/config/dp';
 export default UserInfoSetting = ({route}) => {
 	// console.log('userInfoSetting', route);
 	const navigation = useNavigation();
-	const [data, setData] = React.useState({}); // 로그인 유저의 UserObject
-	const [loading, setLoading] = React.useState(true); // 화면 출력 여부 결정
+	const [data, setData] = React.useState('false'); // 로그인 유저의 UserObject
 	const [modifyMode, setModifyMode] = React.useState(false);
 	const [numberOfLines, setNumOfLines] = React.useState();
 	const [showMore, setShowMore] = React.useState();
 	const modifyRef = React.useRef();
+
 	const fetchData = () => {
 		getUserInfoById(
 			{
@@ -32,12 +32,9 @@ export default UserInfoSetting = ({route}) => {
 			userObject => {
 				setData(userObject.msg);
 				navigation.setOptions({title: userObject.msg.user_nickname});
-				setLoading(false);
-				// console.log('result / getUserProfile / UserInfoSetting', userObject.msg.user_introduction);
 			},
 			err => {
 				console.log('er', err);
-				setLoading(false);
 			},
 		);
 	};
@@ -108,7 +105,7 @@ export default UserInfoSetting = ({route}) => {
 	const modifyIntroText = text => {
 		setData({...data, user_introduction: text});
 	};
-	if (loading) {
+	if (data == 'false') {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
 				<ActivityIndicator size={'large'}></ActivityIndicator>

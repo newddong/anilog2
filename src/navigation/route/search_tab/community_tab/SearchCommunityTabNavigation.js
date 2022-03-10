@@ -7,7 +7,7 @@ import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import {Dimensions} from 'react-native';
 import {APRI10, GRAY10} from 'Root/config/color';
 import DP from 'Root/config/dp';
-import SearchFreeBoard from 'Root/component/templete/community/SearchFreeBoard';
+import SearchFreeBoard from 'Root/component/templete/search/SearchFreeBoard';
 
 const SearchCommunityTabNav = createMaterialTopTabNavigator();
 

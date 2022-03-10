@@ -1,6 +1,6 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import {GRAY10} from 'Root/config/color';
 import {Like48_Border} from 'Root/component/atom/icon';
@@ -9,10 +9,20 @@ import {Like48_Border} from 'Root/component/atom/icon';
  * 후기 요약 컴포넌트 아이템
  * @param {object} props - Props Object
  * @param {object} props.data - 데이터
+ * @param {()=>void)} props.onPressReview - 리뷰 클릭 이벤트
+ * @param {()=>void)} props.onPressLike - 좋아요 클릭 이벤트
  */
-export default ReviewBriefItem = props => {
+const ReviewBriefItem = props => {
+	const onPressReview = () => {
+		// props.onPressReview();
+	};
+
+	const onPressLike = () => {
+		// props.onPressLike();
+	};
+
 	return (
-		<View style={[style.container]}>
+		<TouchableOpacity onPress={onPressReview} style={[style.container]}>
 			<View style={[style.img]}>
 				<Image
 					style={[styles.img_square_round_186]}
@@ -34,16 +44,21 @@ export default ReviewBriefItem = props => {
 						<Text style={[txt.noto26, {color: GRAY10}]}>user_nickname</Text>
 					</View>
 					<View style={[style.like]}>
-						<Like48_Border />
+						<Like48_Border onPress={onPressLike} />
 						<Text style={[txt.noto26, {color: GRAY10, marginLeft: 12 * DP}]}>303</Text>
 					</View>
 				</View>
 			</View>
-		</View>
+		</TouchableOpacity>
 	);
 };
 
-ReviewBriefItem.defaultProps = {};
+ReviewBriefItem.defaultProps = {
+	onPressReview: () => {},
+	onPressLike: () => {},
+};
+
+export default ReviewBriefItem;
 
 const style = StyleSheet.create({
 	container: {

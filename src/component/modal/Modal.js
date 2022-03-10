@@ -332,6 +332,13 @@ export default Modal = {
 	 */
 	popCongratulationModal: (pet_nickname, user_profile_uri) => {},
 
+	/**
+	 * 사진을 확장된 View에서 보는 모달
+	 * @param {string} props.photoList - 사진 목록
+	 * @example
+	 */
+	popPhotoListViewModal: photoList => {},
+
 	popInfoModal: () => {},
 
 	alert: () => {},

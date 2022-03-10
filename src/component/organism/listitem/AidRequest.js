@@ -93,7 +93,7 @@ export default AidRequest = props => {
 			{/* {console.log('props.showBadge=>' + props.showBadge)} */}
 			{props.showBadge && data.protect_act_applicants.length > 0 ? (
 				<View style={[aidRequest.numberContainer]}>
-					<Text style={[{color: WHITE, paddingRight: 5 * DP}]}>{data.protect_act_applicants ? data.protect_act_applicants.length : ''}</Text>
+					<Text style={[{color: WHITE}]}>{data.protect_act_applicants ? data.protect_act_applicants.length : ''}</Text>
 				</View>
 			) : (
 				<></>

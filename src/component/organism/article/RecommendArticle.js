@@ -1,25 +1,27 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {BLACK, GRAY10, GRAY20, GRAY30, WHITE} from 'Root/config/color';
+import ProfileImageSmall from 'Root/component/molecules/image/ProfileImageSmall';
+import {dummy_userObject} from 'Root/config/dummyDate_json';
 /**
  * 추천 게시글
  * @param {object} props - Props Object
  * @param {object} props.data - 데이터 오브젝트
+ * @param {()=>void)} props.onPressRecommendArticle - 추천 게시글 클릭
  */
-export default RecommendArticle = props => {
+const RecommendArticle = props => {
+	const onPressRecommendArticle = () => {
+		props.onPressRecommendArticle();
+	};
+
 	const article = () => {
 		return (
-			<View style={[style.item]}>
+			<TouchableOpacity onPress={onPressRecommendArticle} activeOpacity={0.7} style={[style.item]}>
 				<View style={[style.userLabel]}>
-					<Image
-						style={[style.imgBox]}
-						source={{
-							uri: 'https://img.huffingtonpost.com/asset/618cc2d026000093123cdf98.jpg?cache=xQWtHHJF1a&ops=scalefit_720_noupscale&format=webp',
-						}}
-					/>
-					<Text style={[txt.noto24, {marginLeft: 24 * DP}]}>sssjm012</Text>
+					<ProfileImageSmall data={dummy_userObject[0]} size={46} />
+					<Text style={[txt.noto24, {marginLeft: 24 * DP}]}>{dummy_userObject[0].user_nickname}</Text>
 				</View>
 				<View style={[style.article_content]}>
 					<Text style={[txt.noto24, {color: GRAY10}]} numberOfLines={2}>
@@ -27,7 +29,7 @@ export default RecommendArticle = props => {
 					</Text>
 					<Text style={[txt.noto24, {color: GRAY20, marginTop: 16 * DP}]}>1분 전</Text>
 				</View>
-			</View>
+			</TouchableOpacity>
 		);
 	};
 
@@ -45,8 +47,11 @@ export default RecommendArticle = props => {
 	);
 };
 
-RecommendArticle.defaultProps = {};
+RecommendArticle.defaultProps = {
+	onPressRecommendArticle: () => {},
+};
 
+export default RecommendArticle;
 const style = StyleSheet.create({
 	container: {
 		width: 750 * DP,
@@ -97,6 +102,6 @@ const style = StyleSheet.create({
 		width: 590 * DP,
 		height: 2 * DP,
 		marginVertical: 35 * DP,
-		backgroundColor: BLACK,
+		backgroundColor: GRAY20,
 	},
 });

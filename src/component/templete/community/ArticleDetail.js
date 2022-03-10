@@ -1,25 +1,25 @@
-import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
-import FeedContent from 'Organism/feed/FeedContent';
-import CommentList from 'Organism/comment/CommentList';
-import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
-import {animalProtectRequestDetail_style, feedCommentList, login_style, temp_style} from 'Templete/style_templete';
-import {createComment, getCommentListByFeedId, getCommentListByProtectId} from 'Root/api/commentapi';
 import {txt} from 'Root/config/textstyle';
-import Modal from 'Component/modal/Modal';
-import ImagePicker from 'react-native-image-crop-picker';
-import userGlobalObject from 'Root/config/userGlobalObject';
+import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
-import ShelterSmallLabel from 'Root/component/molecules/label/ShelterSmallLabel';
-import {FavoriteTag48_Filled, Share48_Filled} from 'Root/component/atom/icon';
-import {count_to_K} from 'Root/util/stringutil';
-import ProtectAnimalInfoBox from 'Root/component/organism/info/ProtectAnimalInfoBox';
-import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
+import {FavoriteTag46_Filled, Like48_Border, LocationGray, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
+import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
+import {dummy_userObject} from 'Root/config/dummyDate_json';
+import {GRAY10, GRAY20, GRAY30} from 'Root/config/color';
+import CommentList from 'Root/component/organism/comment/CommentList';
+import ArticleThumnails from 'Root/component/organism/article/ArticleThumnails';
+import userGlobalObject from 'Root/config/userGlobalObject';
+import {useKeyboardBottom} from 'Root/component/molecules/input/usekeyboardbottom';
+import ImagePicker from 'react-native-image-crop-picker';
+import Modal from 'Root/component/modal/Modal';
+import Article from 'Root/component/organism/article/Article';
 
-export default ProtectCommentList = props => {
-	// console.log('props.showAllContents', props.route.params.showAllContents);
+/**
+ * 후기 상세 내용
+ * @param {object} props - Props Object
+ * @param {object} props.data-
+ */
+export default ArticleDetail = props => {
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
 	const [photo, setPhoto] = React.useState();
@@ -29,22 +29,21 @@ export default ProtectCommentList = props => {
 	const input = React.useRef();
 	const addChildCommentFn = React.useRef(() => {});
 	const [refresh, setRefresh] = React.useState(true);
-	const data = props.route.params.protectObject;
+	// const data = props.route.params.protectObject;
 	const keyboardY = useKeyboardBottom(0 * DP);
 
-	React.useEffect(() => {
-		getCommentListByProtectId(
-			{
-				protect_request_object_id: data,
-				request_number: 1000,
-			},
-			comments => {
-				setComments(comments.msg);
-				// console.log('comments', comments);
-			},
-			err => console.log('err', err),
-		);
-	}, []);
+	const onPressMeatball = () => {
+		alert('onPressMeatball');
+	};
+
+	const onPressLike = () => {
+		alert('onPressLike');
+	};
+
+	//사진클릭
+	const onPressPhotos = () => {
+		Modal.popPhotoListViewModal(dummy);
+	};
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
 	const onWrite = () => {
@@ -124,29 +123,8 @@ export default ProtectCommentList = props => {
 		addChildCommentFn.current = addChildComment;
 	};
 
-	const onClickShelterLabel = () => {
-		console.log('ddd');
-	};
-
-	//보호요청 더보기의 리스트 중 한 아이템의 좋아요 태그 클릭
-	const onPressFavoriteTag = (item, index) => {
-		console.log('FavoriteTag', index, item);
-	};
-
-	//보호요청 게시글 작성 보호소 라벨의 좋아요 태그 클릭
-	const onPressShelterLabelFavorite = () => {
-		console.log('d');
-	};
-	//보호소 라벨 공유 클릭
-	const onPressShare = e => {
-		Modal.popSocialModal(
-			() => alert('kakao'),
-			() => alert('Link'),
-			() => alert('link'),
-		);
-	};
-
 	const [heightReply, setReplyHeight] = React.useState(0);
+
 	const onReplyBtnLayout = e => {
 		setReplyHeight(e.nativeEvent.layout.height);
 	};
@@ -157,7 +135,7 @@ export default ProtectCommentList = props => {
 				<View
 					style={{
 						justifyContent: 'flex-end',
-						marginBottom: 20 * DP,
+						paddingVertical: 30 * DP,
 					}}>
 					<Text style={[txt.noto26, {color: GRAY10}]}>댓글 {comments.length}개 </Text>
 				</View>
@@ -165,35 +143,24 @@ export default ProtectCommentList = props => {
 		if (index > 0) return <CommentList items={item} onPressReplyBtn={onReplyBtnClick} />;
 	};
 
-	const protectRequestContent = () => {
+	const freeBoardContent = () => {
 		return (
-			<View style={[style.contentContainer]}>
-				<View style={[style.content_container_label]}>
-					<ShelterSmallLabel data={data.protect_request_writer_id} onClickLabel={onClickShelterLabel} />
-				</View>
-				<View style={[style.cotent_container_header]}>
-					<Text style={[txt.noto28, {color: GRAY10}]}>보호요청</Text>
-					<Text style={[txt.noto32b, {}]}>{data.protect_request_title || ''}</Text>
-				</View>
+			<View style={{alignItems: 'center'}}>
+				<Article onPressThumnails={onPressPhotos} route={props.route.name} />
+				<View style={[style.separator]} />
+				<View style={[style.articleCommentList]}>{/* <CommentList /> */}</View>
 			</View>
 		);
 	};
 
 	return (
-		<View
-			style={[
-				{
-					alignItems: 'center',
-					flex: 1,
-					backgroundColor: '#fff',
-				},
-			]}>
+		<View style={[style.container]}>
 			<FlatList
 				data={[{}, comments]}
 				extraData={refresh}
 				renderItem={render}
 				showsVerticalScrollIndicator={false}
-				ListHeaderComponent={protectRequestContent}
+				ListHeaderComponent={freeBoardContent}
 				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
 			/>
 			{userGlobalObject.userInfo._id != '' ? (
@@ -216,25 +183,55 @@ export default ProtectCommentList = props => {
 	);
 };
 
+ArticleDetail.defaultProps = {};
+
 const style = StyleSheet.create({
-	contentContainer: {
-		width: 654 * DP,
+	container: {
 		alignSelf: 'center',
 		alignItems: 'center',
-		marginBottom: 20 * DP,
-		// backgroundColor: 'lightblue',
 	},
-	cotent_container_header: {
+	header: {
+		flexDirection: 'row',
 		width: 654 * DP,
-		marginTop: 20 * DP,
+		height: 50 * DP,
+		justifyContent: 'space-between',
 	},
-	content_container_label: {
-		width: 654 * DP,
-		marginTop: 15 * DP,
+	header_title: {
+		width: 544 * DP,
+	},
+	header_icon: {
+		justifyContent: 'space-between',
 		flexDirection: 'row',
 	},
-	cotent_container_info: {
+	profile: {
+		alignSelf: 'flex-start',
+		marginTop: 12 * DP,
+	},
+	hashText: {
+		width: 634 * DP,
+		marginTop: 10 * DP,
+	},
+	footer: {
+		// flex: 1,
+		width: 150 * DP,
+		alignSelf: 'flex-end',
+		flexDirection: 'row',
+		justifyContent: 'flex-end',
+		alignItems: 'center',
+	},
+	separator: {
 		width: 654 * DP,
-		marginBottom: 20 * DP,
+		height: 2 * DP,
+		backgroundColor: GRAY20,
+	},
+	articleCommentList: {
+		// backgroundColor: 'red',
 	},
 });
+
+const dummy = [
+	'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
+	'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
+	'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
+	'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
+];

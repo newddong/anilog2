@@ -46,28 +46,25 @@ export default SelectAccount = ({route, navigation}) => {
 					{
 						userobject_id: route.params.userobject_id._id,
 						pet_status: 'adopt',
+						pet_adopter: item._id,
 					},
 					result => {
-						console.log('result / setPetStatus / SelectAccount  : ', result.msg);
+						console.log('result / setPetStatus / SelectAccount  : ', result.msg.pet_adopter);
+						setTimeout(() => {
+							Modal.popCongratulationModal(route.params.userobject_id.user_nickname, route.params.userobject_id.user_profile_uri);
+							setTimeout(() => {
+								navigation.navigate({
+									name: 'PetInfoSetting',
+									params: {},
+									merge: true,
+								});
+							}, 1500);
+						}, 300);
 					},
 					err => {
 						console.log('err / setPetStatus / SelectAccount  : ', err);
 					},
 				);
-				// assignPet({ 입양 확정 시 입양예정자 계정에 pet추가하는 로직 추가 필요
-				// 	userobject_id:item._id,
-				// 	user_nickname
-				// })
-				setTimeout(() => {
-					Modal.popCongratulationModal(route.params.userobject_id.user_nickname, route.params.userobject_id.user_profile_uri);
-					setTimeout(() => {
-						navigation.navigate({
-							name: 'PetInfoSetting',
-							params: {},
-							merge: true,
-						});
-					}, 500);
-				}, 300);
 			},
 		);
 	};

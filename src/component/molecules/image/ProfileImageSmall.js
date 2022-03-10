@@ -104,5 +104,6 @@ const ProfileImageSmall = props => {
 
 ProfileImageSmall.defaultProps = {
 	size: 94,
+	data: {},
 };
 export default ProfileImageSmall;

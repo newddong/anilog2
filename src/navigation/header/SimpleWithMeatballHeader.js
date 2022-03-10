@@ -162,6 +162,10 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 						},
 						result => {
 							console.log('result / setShelterProtectAnimalStatus / SimpleWithMeatballHeader', result.msg.protect_animal_status);
+							Modal.popNoBtn('보호 요청 게시글의 상태변경이 \n 완료되었습니다.');
+							setTimeout(() => {
+								Modal.close();
+							}, 1000);
 						},
 						err => {
 							console.log('err / setShelterProtectAnimalStatus / SimpleWithMeatballHeader', err);

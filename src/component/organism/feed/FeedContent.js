@@ -153,8 +153,8 @@ export default FeedContent = props => {
 		}, 100);
 	};
 
+	//팔로우 버튼
 	const onPressFollow = () => {
-		// console.log('data', props.data);
 		Modal.close();
 		setTimeout(() => {
 			Modal.popTwoBtn(

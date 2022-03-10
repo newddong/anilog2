@@ -6,22 +6,25 @@ import {txt} from 'Root/config/textstyle';
 /**
  * 게시글 사진 썸네일 목록
  * @param {object} props - Props Object
- * @param {object} props.photo_list -
+ * @param {Object} props.photo_list - 사진 리스트
  */
 export default ArticleThumnails = props => {
+	// console.log('props.photo_list', props.photo_list);
+	const photos = props.photo_list;
+
 	const getThirdPhoto = () => {
-		if (dummy.length == 3) {
+		if (photos.length == 3) {
 			return (
 				<View style={[style.photo3_right_photo]}>
-					<Image source={{uri: dummy[2]}} style={[{flex: 1}]} />
+					<Image source={{uri: photos[2]}} style={[{flex: 1}]} />
 				</View>
 			);
 		} else {
 			return (
 				<View style={[style.photo3_right_photo]}>
-					<Image source={{uri: dummy[2]}} style={[style.photo3_right_photo]} />
+					<Image source={{uri: photos[2]}} style={[style.photo3_right_photo]} />
 					<View style={[style.photo3_right_opacity]}>
-						<Text style={[txt.roboto32b, style.text]}>+ {dummy.length - 3}</Text>
+						<Text style={[txt.roboto32b, style.text]}>+ {photos.length - 3}</Text>
 					</View>
 				</View>
 			);
@@ -29,22 +32,21 @@ export default ArticleThumnails = props => {
 	};
 
 	const content = () => {
-		console.log('dummy.length', dummy.length);
-		if (dummy.length == 1) {
-			return <Image source={{uri: dummy[0]}} style={[style.photo_1]} />;
-		} else if (dummy.length == 2) {
+		if (photos.length == 1) {
+			return <Image source={{uri: photos[0]}} style={[style.photo_1]} />;
+		} else if (photos.length == 2) {
 			return (
 				<View style={[style.photo_2_container]}>
-					<Image source={{uri: dummy[0]}} style={[style.photo_2]} />
-					<Image source={{uri: dummy[1]}} style={[style.photo_2]} />
+					<Image source={{uri: photos[0]}} style={[style.photo_2]} />
+					<Image source={{uri: photos[1]}} style={[style.photo_2]} />
 				</View>
 			);
-		} else if (dummy.length >= 3) {
+		} else if (photos.length >= 3) {
 			return (
 				<View style={[style.photo_3_container]}>
-					<Image source={{uri: dummy[0]}} style={[style.photo3_first]} />
+					<Image source={{uri: photos[0]}} style={[style.photo3_first]} />
 					<View style={[style.photo3_right]}>
-						<Image source={{uri: dummy[1]}} style={[style.photo3_right_photo]} />
+						<Image source={{uri: photos[1]}} style={[style.photo3_right_photo]} />
 						{getThirdPhoto()}
 					</View>
 				</View>
@@ -52,25 +54,17 @@ export default ArticleThumnails = props => {
 		}
 	};
 
-	return (
-		<View style={[style.container]}>
-			<View style={[style.content]}>{content()}</View>
-		</View>
-	);
+	return <View style={[style.container]}>{content()}</View>;
 };
 
-ArticleThumnails.defaultProps = {};
-
-const dummy = [
-	'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
-	'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
-	'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
-	'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
-];
+ArticleThumnails.defaultProps = {
+	photo_list: [],
+};
 
 const style = StyleSheet.create({
 	container: {
 		alignSelf: 'center',
+		paddingVertical: 30 * DP,
 	},
 	photo_1: {
 		width: 654 * DP,

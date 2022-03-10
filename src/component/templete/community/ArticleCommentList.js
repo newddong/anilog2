@@ -4,7 +4,6 @@ import {Text, View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import FeedContent from 'Organism/feed/FeedContent';
 import CommentList from 'Organism/comment/CommentList';
 import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
-import {animalProtectRequestDetail_style, feedCommentList, login_style, temp_style} from 'Templete/style_templete';
 import {createComment, getCommentListByFeedId, getCommentListByProtectId} from 'Root/api/commentapi';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Component/modal/Modal';
@@ -13,12 +12,9 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
 import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
 import ShelterSmallLabel from 'Root/component/molecules/label/ShelterSmallLabel';
-import {FavoriteTag48_Filled, Share48_Filled} from 'Root/component/atom/icon';
-import {count_to_K} from 'Root/util/stringutil';
-import ProtectAnimalInfoBox from 'Root/component/organism/info/ProtectAnimalInfoBox';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 
-export default ProtectCommentList = props => {
+export default ArticleCommentList = props => {
 	// console.log('props.showAllContents', props.route.params.showAllContents);
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
@@ -170,11 +166,28 @@ export default ProtectCommentList = props => {
 			<View style={[style.contentContainer]}>
 				<View style={[style.content_container_label]}>
 					<ShelterSmallLabel data={data.protect_request_writer_id} onClickLabel={onClickShelterLabel} />
+					{/* <View style={[temp_style.button_animalProtectRequestDetail]}>
+						<TouchableOpacity onPress={onPressShelterLabelFavorite} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
+							<FavoriteTag48_Filled />
+							<Text style={[txt.roboto24, {color: APRI10, alignSelf: 'center', textAlign: 'center'}]}>
+								{data ? count_to_K(data.protect_request_writer_id.user_follow_count) : ''}
+							</Text>
+						</TouchableOpacity>
+						<View collapsable={false}>
+							<TouchableOpacity onPress={onPressShare} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
+								<Share48_Filled />
+								<Text style={[txt.roboto24, {color: APRI10}]}>공유</Text>
+							</TouchableOpacity>
+						</View>
+					</View> */}
 				</View>
 				<View style={[style.cotent_container_header]}>
 					<Text style={[txt.noto28, {color: GRAY10}]}>보호요청</Text>
 					<Text style={[txt.noto32b, {}]}>{data.protect_request_title || ''}</Text>
 				</View>
+				{/* <View style={[style.cotent_container_info]}>
+					<ProtectAnimalInfoBox data={data} />
+				</View> */}
 			</View>
 		);
 	};
@@ -196,7 +209,7 @@ export default ProtectCommentList = props => {
 				ListHeaderComponent={protectRequestContent}
 				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
 			/>
-			{userGlobalObject.userInfo._id != '' ? (
+			{userGlobalObject.userInfo._id != '' && (editComment || props.route.name == 'ProtectCommentList') ? (
 				<View style={{position: 'absolute', bottom: keyboardY}} onLayout={onReplyBtnLayout}>
 					<ReplyWriteBox
 						onAddPhoto={onAddPhoto}

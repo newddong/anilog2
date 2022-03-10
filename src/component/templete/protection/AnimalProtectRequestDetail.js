@@ -28,7 +28,7 @@ import {getProtectRequestByProtectRequestId} from 'Root/api/protectapi';
 // - ProtectRequestList(보호활동탭) , AnimalFromShelter(게시글보기) , AidRequestManage(게시글보기), AidRequestAnimalList(게시글 보기)
 
 export default AnimalProtectRequestDetail = ({route}) => {
-	// console.log('AnimalProtectRequestDetail', route.params.item.protect_request_status);
+	console.log('AnimalProtectRequestDetail', route.params.id);
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
 	const [writersAnotherRequests, setWritersAnotherRequests] = React.useState('false'); //해당 게시글 작성자의 따른 보호요청게시글 목록
@@ -61,7 +61,13 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				getProtectRequestList(result.msg.protect_request_writer_id._id); //API에서 받아온 보호요청게시글의 작성자 _id를 토대로, 작성자의 다른 보호요청게시글을 받아옴
 			},
 			err => {
+				// getProtectRequestListByShelterId
 				console.log('err / getProtectRequestByProtectRequestId / AnimalProtectRequestDetail : ', err);
+				if (err == '검색 결과가 없습니다.') {
+					Modal.popOneBtn('이미 삭제된 요청건입니다.', '확 인', () => {
+						navigation.goBack();
+					});
+				}
 			},
 		);
 	};
@@ -73,7 +79,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				shelter_userobject_id: id,
 				protect_request_object_id: '',
 				request_number: 5,
-				protect_request_status: 'rescue',
+				protect_request_status: 'all', //하단 리스트
 			},
 			result => {
 				// console.log('result / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', result.msg);
@@ -84,6 +90,9 @@ export default AnimalProtectRequestDetail = ({route}) => {
 			},
 			err => {
 				console.log('err / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', err);
+				if (err == '검색 결과가 없습니다.') {
+					setWritersAnotherRequests([]);
+				}
 			},
 		);
 	};

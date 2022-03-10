@@ -1,41 +1,52 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import ReviewBriefItem from '../listitem/ReviewBriefItem';
 import {GRAY10} from 'Root/config/color';
-import {Arrow_Down_GRAY10} from 'Root/component/atom/icon';
+import {Arrow_Down_GRAY10, Arrow_Up_GRAY10} from 'Root/component/atom/icon';
 
 /**
  * 후기 요약 컴포넌트 리스트
  * @param {object} props - Props Object
- * @param {object} props.data - 데이터
+ * @param {object} props.items - 데이터
  */
-export default ReviewBriefList = props => {
-	const dummy = [1, 2, 3];
-	return (
-		<ScrollView contentContainerStyle={[style.container]}>
-			{dummy.map((v, i) => {
-				return (
-					<View style={[style.listItem]}>
-						<ReviewBriefItem key={i} />
-					</View>
-				);
-			})}
-			<View style={[style.showMore]}>
-				<Text style={[txt.noto24, {color: GRAY10}]}>더보기</Text>
-				<Arrow_Down_GRAY10 />
+const ReviewBriefList = props => {
+	const [showMore, setShowMore] = React.useState(false);
+
+	const renderItem = (item, index) => {
+		return (
+			<View style={[style.listItem]}>
+				<ReviewBriefItem />
 			</View>
-		</ScrollView>
+		);
+	};
+	return (
+		<View style={[style.container]}>
+			<FlatList
+				data={showMore ? props.items : props.items.slice(0, 2)}
+				renderItem={({item, index}) => renderItem(item, index)}
+				keyExtractor={item => item.id}
+			/>
+			{props.items && props.items.length > 2 ? (
+				<TouchableOpacity onPress={() => setShowMore(!showMore)} style={[style.showMore]}>
+					<Text style={[txt.noto24, {color: GRAY10}]}>더보기</Text>
+					{!showMore ? <Arrow_Down_GRAY10 /> : <Arrow_Up_GRAY10 />}
+				</TouchableOpacity>
+			) : (
+				<></>
+			)}
+		</View>
 	);
 };
 
 ReviewBriefList.defaultProps = {};
 
+export default ReviewBriefList;
+
 const style = StyleSheet.create({
 	container: {
-		width: 750 * DP,
+		paddingVertical: 30 * DP,
 		alignItems: 'center',
-		// backgroundColor: 'red',
 	},
 	listItem: {
 		marginBottom: 40 * DP,

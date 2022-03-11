@@ -47,6 +47,7 @@ const RecommendArticle = props => {
 	);
 };
 
+
 RecommendArticle.defaultProps = {
 	onPressRecommendArticle: () => {},
 };

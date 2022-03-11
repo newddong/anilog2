@@ -10,6 +10,7 @@ import {FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS, PROTECT_REQUEST_STATUS} from 'Ro
 import {deleteProtectRequest, setShelterProtectAnimalStatus} from 'Root/api/shelterapi';
 import {setProtectRequestStatus} from 'Root/api/protectapi';
 
+
 //보호 요청게시글 작성자일 경우 미트볼 아이콘 출력이 되는 헤더
 export default SimpleWithMeatballHeader = ({navigation, route, options, back}) => {
 	const isWriter = userGlobalObject.userInfo._id == route.params.writer;

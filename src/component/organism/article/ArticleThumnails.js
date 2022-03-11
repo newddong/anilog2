@@ -54,12 +54,14 @@ export default ArticleThumnails = props => {
 		}
 	};
 
+
 	return <View style={[style.container]}>{content()}</View>;
 };
 
 ArticleThumnails.defaultProps = {
 	photo_list: [],
 };
+
 
 const style = StyleSheet.create({
 	container: {

@@ -36,6 +36,7 @@ import AdoptionInfoModalWithOneBtn from 'Root/component/molecules/modal/Adoption
 import AnimalToRegisterModal from 'Root/component/molecules/modal/AnimalToRegisterModal';
 import PhotoListViewModal from 'Root/component/molecules/modal/PhotoListViewModal';
 
+
 export function useModal() {
 	const [isPop, setPop] = React.useState(false);
 	const [popupComponent, setPopupComponent] = React.useState([]);

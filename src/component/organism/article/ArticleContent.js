@@ -31,6 +31,7 @@ const ArticleContent = props => {
 
 	const [showMore, setShowMore] = React.useState(false);
 
+
 	return (
 		<View style={[style.container]}>
 			<View style={[style.header]}>
@@ -71,12 +72,14 @@ const ArticleContent = props => {
 	);
 };
 
+
 ArticleContent.defaultProps = {
 	onPressFavorite: () => {},
 	onPressMeatball: () => {},
 	onPressArticle: () => {},
 };
 export default ArticleContent;
+
 
 const style = StyleSheet.create({
 	container: {

@@ -124,6 +124,7 @@ const style = StyleSheet.create({
 		flexDirection: 'row',
 		alignSelf: 'flex-end',
 	},
+
 	content: {
 		width: 654 * DP,
 		height: 130 * DP,

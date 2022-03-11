@@ -153,6 +153,7 @@ export default FeedContent = props => {
 		}, 100);
 	};
 
+
 	//팔로우 버튼
 	const onPressFollow = () => {
 		Modal.close();

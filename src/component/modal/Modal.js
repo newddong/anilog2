@@ -85,13 +85,13 @@ export default Modal = {
 	 *
 	 * @param {string} okButtonnMsg - 확인 버튼 메시지
 	 * @param {(petObject:string)=>void} onSelectPet - 반려동물 라벨을 클릭했을때 콜백
-	 * @param {boolean} props.isBtnMode - 버튼출력여부
+	 * @param {boolean} props.isWriteMode - 피드 글쓰기에서의 호출
 	 *
 	 *
 	 * @example
 	 * Modal.popSelect(['개','고양이','기타'],['리트리버','말티즈','푸들','치와와'],(val1,val2)=>alert(val1+':'+val2),'동물선택');
 	 */
-	popAvatarSelectModal: (onSelectPet, okButtonnMsg, isBtnMode) => {},
+	popAvatarSelectModal: (onSelectPet, okButtonnMsg, isWriteMode) => {},
 
 	/**
 	 * 반려 동물을 선택하는 모달창
@@ -245,6 +245,20 @@ export default Modal = {
 	 * 입양 및 임시보호 동물 알림 모달
 	 *
 	 * @param {Object} props - props object
+	 * @param {object} props.data - 보호동물 데이터오브젲ㄱ트
+	 * @param {string} props.msg - 팝업 메시지
+	 * @param {string} props.yesMsg - 팝업 메시지
+	 * @param {string} props.noMsg - No 버튼 타이틀
+	 * @param {(data)=>void} props.onYes - 등록 클릭
+	 * @param {(data)=>void} props.onNo - 아니오  클릭
+	 *
+	 */
+	popAnimalToRegisterModal: (data, msg, yesMsg, noMsg, onYes, onNo) => {},
+
+	/**
+	 * 입양 및 임시보호 동물 알림 모달
+	 *
+	 * @param {Object} props - props object
 	 * @param {object} props.data - 보호동물 데이터오브젝트
 	 * @param {string} props.yesMsg - Yes버튼 타이틀
 	 * @param {(data)=>void} props.onYes - 등록 클릭
@@ -312,11 +326,18 @@ export default Modal = {
 
 	/**
 	 * 입양 확정 시 출력되는 축하 메시지 모달
-	 * @param {string} props.pet_nickname - 카카오톡 클릭
-	 * @param {string} props.user_profile_uri - 카카오톡 클릭
+	 * @param {string} props.pet_nickname - 펫 닉네임
+	 * @param {string} props.user_profile_uri - 펫 프로필 사진
 	 * @example
 	 */
 	popCongratulationModal: (pet_nickname, user_profile_uri) => {},
+
+	/**
+	 * 사진을 확장된 View에서 보는 모달
+	 * @param {string} props.photoList - 사진 목록
+	 * @example
+	 */
+	popPhotoListViewModal: photoList => {},
 
 	popInfoModal: () => {},
 

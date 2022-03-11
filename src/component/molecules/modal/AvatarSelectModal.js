@@ -16,7 +16,7 @@ import PetLabel from '../label/PetLabel';
  * @param {Object} props - props object
  * @param {(petObject:string)=>void} props.onSelectPet - 반려동물 라벨을 클릭했을때 콜백
  * @param {string} props.okButtonnMsg - 확인 버튼 메시지
- * @param {boolean} props.isBtnMode - 버튼출력여부
+ * @param {boolean} props.isWriteMode - 버튼출력여부
  *
  */
 const AvatarSelectModal = props => {
@@ -32,7 +32,7 @@ const AvatarSelectModal = props => {
 
 	const renderItem = (item, index) => {
 		const onClickLabel = () => {
-			if (props.isBtnMode) {
+			if (props.isWriteMode) {
 				setSelectedItem(index);
 			} else {
 				props.onSelectPet && props.onSelectPet(items[index]);
@@ -51,10 +51,13 @@ const AvatarSelectModal = props => {
 			{userobject_id: userGlobalObj.userInfo._id},
 			user => {
 				let avatarList = user.msg?.user_my_pets;
-				if (props.isBtnMode) {
-					avatarList.push(userGlobalObj.userInfo);
+				if (props.isWriteMode) {
+					const filter = avatarList.filter(e => e.pet_status != 'adopt'); //입양 동물은 글을 못씀
+					filter.push(userGlobalObj.userInfo);
+					setItems(filter);
+				} else {
+					setItems(avatarList);
 				}
-				setItems(avatarList);
 			},
 			err => {
 				Modal.popOneBtn(err, '확인', () => Modal.close());
@@ -98,7 +101,7 @@ const AvatarSelectModal = props => {
 						<Text style={[{textAlign: 'center', marginBottom: 30 * DP}, txt.noto28b]}>{'등록된 반려동물이 없습니다.\n 반려동물을 등록해주세요'}</Text>
 					)}
 					{/* // ) : null} */}
-					{props.isBtnMode ? (
+					{props.isWriteMode ? (
 						<>
 							<View style={style.buttonContainer}>
 								<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.okButtonnMsg} onPress={pressOk} />
@@ -119,7 +122,7 @@ AvatarSelectModal.defaultProps = {
 		console.log('YES');
 	},
 	onSelectPet: e => {},
-	isBtnMode: true,
+	isWriteMode: true,
 };
 
 const style = StyleSheet.create({

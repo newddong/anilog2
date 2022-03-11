@@ -293,9 +293,7 @@ export default RootStackNavigation = () => {
 							options={{header: props => <SimpleHeader {...props} />, title: '주소 검색'}}
 						/>
 						<RootStack.Screen name="RequestLogin" component={RequestLogin} />
-						<RootStack.Screen name="UserList"
-							options={{header: props => <InputAndSearchHeader {...props} />, title: '계정'}}
-						>
+						<RootStack.Screen name="UserList" options={{header: props => <InputAndSearchHeader {...props} />, title: '계정'}}>
 							{props => <AccountPicker {...props} /*prevNav={props.prevNav} input={searchInput} onClickUser={onClickUser}*/ />}
 						</RootStack.Screen>
 					</RootStack.Navigator>

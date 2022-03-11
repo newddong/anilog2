@@ -414,7 +414,7 @@ export const PROTECT_STATUS = ['모든 게시글', '입양가능', '협의 중',
 export const PROTECT_STATUS_VAR = ['all', 'rescue', 'discuss', 'complete']; //SHELTER PROTECT REQUEST 템플릿
 export const SETTING_OWN_COMMENT = ['수정', '삭제'];
 export const SETTING_COMMENT = ['신고'];
-export const PROTECT_REQUEST_STATUS = ['임보중', '협의 중', '완료', '사망', '입양 가능'];
+export const PROTECT_REQUEST_STATUS = ['협의 중', '사망', '입양 가능'];
 
 //Modal Message
 export const CONFIRM_PROTECT_REQUEST = '이 내용으로 \n 보호 활동 신청을 하시겠습니까?';

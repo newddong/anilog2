@@ -17,7 +17,6 @@ export default AidRequestManage = ({route, navigation}) => {
 	const [noPostAnimalList, setNoPostAnimalList] = React.useState('false');
 
 	React.useEffect(() => {
-
 		getShelterProtectAnimalList(
 			{
 				shelter_protect_animal_object_id: '',
@@ -37,7 +36,6 @@ export default AidRequestManage = ({route, navigation}) => {
 			},
 		);
 	}, []);
-
 
 	const addProtectAnimal = () => {
 		navigation.push('AssignProtectAnimalImage');
@@ -67,11 +65,13 @@ export default AidRequestManage = ({route, navigation}) => {
 	const onSelectHasPostList = index => {
 		Modal.popAdoptionInfoModal(
 			hasPostAnimalList[index],
-			'이 동물은 이미 보호 요청글 게시가  완료되었습니다.',
+			'이 동물은 이미 보호 요청글 \n 게시가 완료되었습니다.',
 			'다시 게시하기',
 			'게시글 보기',
 			() => moveToProtectRequest(hasPostAnimalList[index]),
-			() => navigation.push('WriteAidRequest', {data: hasPostAnimalList[index]}),
+			() => {
+				navigation.push('WriteAidRequest', {data: hasPostAnimalList[index], isRePost: true});
+			},
 		);
 	};
 

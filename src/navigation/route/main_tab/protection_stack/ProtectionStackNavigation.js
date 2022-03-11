@@ -14,6 +14,7 @@ import AlarmAndSearchHeader from 'Root/navigation/header/AlarmAndSearchHeader';
 import SimpleHeader from 'Root/navigation/header/SimpleHeader';
 import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballHeader';
 import ProtectCommentList from 'Root/component/templete/protection/ProtectCommentList';
+import EditAidRequest from 'Root/component/templete/protection/EditAidRequest';
 
 const ProtectionStack = createStackNavigator();
 
@@ -31,6 +32,11 @@ export default ProtectionStackNavigation = () => {
 				name="AnimalProtectRequestDetail"
 				component={AnimalProtectRequestDetail}
 				options={{header: props => <SimpleWithMeatballHeader {...props} />}}
+			/>
+			<ProtectionStack.Screen
+				name="EditAidRequest"
+				component={EditAidRequest}
+				options={{header: props => <SendHeader {...props} />, title: '보호 요청 게시글 수정'}}
 			/>
 
 			<ProtectionStack.Screen name="FeedListForHashTag" component={FeedListForHashTag} />

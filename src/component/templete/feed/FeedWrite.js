@@ -301,9 +301,9 @@ export default FeedWrite = props => {
 	};
 	return (
 		<View style={{flex: 1, backgroundColor: '#FFF'}}>
-			<TouchableWithoutFeedback onPress={test}>
+			{/* <TouchableWithoutFeedback onPress={test}>
 				<View style={{backgroundColor: 'red', width: 50, height: 50}}></View>
-			</TouchableWithoutFeedback>
+			</TouchableWithoutFeedback> */}
 			<FlatList
 				renderItem={({item, index}) => {
 					return (

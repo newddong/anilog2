@@ -19,7 +19,7 @@ import {aidRequest} from '../style_organism copy';
  */
 export default AidRequest = props => {
 	const data = props.data;
-	// console.log('badge', data);
+	// console.log('AidRequest', data.protect_animal_photo_uri_list);
 	//해당 AidRequest박스 선택 시 부모컴포넌트 OnSelect 실행
 	const onSelect = () => {
 		props.onSelect();
@@ -93,7 +93,7 @@ export default AidRequest = props => {
 			{/* {console.log('props.showBadge=>' + props.showBadge)} */}
 			{props.showBadge && data.protect_act_applicants.length > 0 ? (
 				<View style={[aidRequest.numberContainer]}>
-					<Text style={[{color: WHITE, paddingRight: 5 * DP}]}>{data.protect_act_applicants ? data.protect_act_applicants.length : ''}</Text>
+					<Text style={[{color: WHITE}]}>{data.protect_act_applicants ? data.protect_act_applicants.length : ''}</Text>
 				</View>
 			) : (
 				<></>

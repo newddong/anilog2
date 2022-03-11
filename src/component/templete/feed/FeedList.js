@@ -157,9 +157,6 @@ export default FeedList = ({route, navigation}) => {
 
 		wait(1000).then(() => setRefreshing(false));
 	};
-	const onR = () => {
-		console.log('onrefresh')
-	}
 
 	const rememberScroll = e=>{
 		if(e.nativeEvent.contentOffset.y>0){
@@ -172,15 +169,17 @@ export default FeedList = ({route, navigation}) => {
 			<FlatList
 				data={feedList}
 				renderItem={renderItem}
-				keyExtractor={(item, index) => index}
+				keyExtractor={(item, index) => {
+					let key = item._id + item.feed_update_date;
+					console.log('키 추출 : ',key);
+					return key;
+				}}
 				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 				getItemLayout={(data, index) => {
 					if (!data[index]) return {length: 0, offset: 0, index: index};
 					return {length: data[index].height, offset: data[index].offset, index: index};
 				}}
-				// initialScrollIndex={index}
 				ref={flatlist}
-				onRefresh={onR}
 				refreshing
 				onScroll={rememberScroll}
 			/>

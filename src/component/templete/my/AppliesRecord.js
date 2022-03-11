@@ -75,7 +75,7 @@ export default AppliesRecord = ({route}) => {
 					setVolunteer_list([]);
 				}
 				setTimeout(() => {
-					setLoading(false);
+					// setLoading(false);
 				}, 500);
 			},
 			err => {

@@ -63,8 +63,8 @@ import ProtectCommentList from 'Root/component/templete/protection/ProtectCommen
 import AlarmAndSearchHeader from 'Root/navigation/header/AlarmAndSearchHeader';
 import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballHeader';
 import EditAidRequest from 'Root/component/templete/protection/EditAidRequest';
+import ReceivedMessage from 'Templete/user/ReceivedMessage';
 const MyStack = createStackNavigator();
-
 export default MyStackNavigation = props => {
 	// console.log('MyStack', props.navigation);
 	const [searchInput, setSearchInput] = React.useState();
@@ -318,6 +318,11 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen name="SettingAccount" component={SettingAccount} options={{header: props => <SimpleHeader {...props} />, title: '계정'}} />
 			<MyStack.Screen name="SettingAlarm" component={SettingAlarm} options={{header: props => <SimpleHeader {...props} />, title: '알림'}} />
 			<MyStack.Screen name="SettingOpen" component={SettingOpen} options={{header: props => <SimpleHeader {...props} />, title: '공개 설정'}} />
+			<MyStack.Screen
+				name="ReceivedMessage"
+				component={ReceivedMessage}
+				options={{header: props => <SimpleHeader {...props} />, title: '받은 쪽지함'}}
+			/>
 		</MyStack.Navigator>
 	);
 };

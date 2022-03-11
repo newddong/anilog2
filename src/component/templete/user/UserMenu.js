@@ -150,7 +150,7 @@ export default UserMenu = props => {
 			case TAGED_CONTENTS_FOR_ME:
 				Modal.popInfoModal();
 				// navigation.push('TagMeFeeds', {token: data});
-				break;    
+				break;
 			case APPLICATION_HISTORY:
 				navigation.push('AppliesRecord', data._id); // ShelterProtectAnimalObject
 				break;
@@ -158,7 +158,9 @@ export default UserMenu = props => {
 				navigation.push('AnimalProtectList', data._id); //ProtectAnimalObject
 				break;
 			case NOTE_LIST:
-				Modal.popInfoModal();
+				console.log('눌림');
+				navigation.push('ReceivedMessage', {token: data});
+				// Modal.popInfoModal();
 				break;
 			case INFO_QUESTION:
 				// Modal.popInfoModal();

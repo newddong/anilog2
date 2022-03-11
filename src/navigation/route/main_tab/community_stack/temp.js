@@ -6,6 +6,9 @@ import ArticleThumnails from 'Root/component/organism/article/ArticleThumnails';
 import Article from 'Root/component/organism/article/Article';
 import RecommendArticle from 'Root/component/organism/article/RecommendArticle';
 import Review from 'Root/component/organism/article/Review';
+import ReviewContent from 'Root/component/organism/article/ReviewContent';
+import ReviewBriefItem from 'Root/component/organism/listitem/ReviewBriefItem';
+import ReviewBriefList from 'Root/component/organism/list/ReviewBriefList';
 // import DropdownSelect from 'Root/component/molecules/DropdownSelect';
 
 export default Temp = () => {
@@ -15,7 +18,9 @@ export default Temp = () => {
 			{/* <InfoScreen /> */}
 			{/* <Article /> */}
 			{/* <RecommendArticle /> */}
-			<Review />
+			{/* <ReviewContent /> */}
+			{/* <ReviewBriefItem /> */}
+			<ReviewBriefList />
 			{/* <DropdownSelect/> */}
 		</View>
 	);

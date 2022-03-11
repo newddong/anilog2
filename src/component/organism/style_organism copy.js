@@ -799,7 +799,7 @@ export const aidRequest = StyleSheet.create({
 		position: 'absolute',
 		right: 0,
 		top: 0,
-		paddingLeft: 10 * DP,
+		// paddingLeft: 10 * DP,
 		borderRadius: 50 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',

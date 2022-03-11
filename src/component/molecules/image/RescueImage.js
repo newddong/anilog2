@@ -1,11 +1,12 @@
 import React from 'react';
 import {Text, View, Image, StyleSheet} from 'react-native';
 import Swiper from 'react-native-swiper';
-import {APRI10, WHITE} from 'Root/config/color';
+import {APRI10, BLACK, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {ADOPT, DISCUSS, NEAR_RAINBOWBRIDGE, PROTECT, RESCUE} from 'Root/i18n/msg';
 import {styles} from 'Atom/image/imageStyle';
+import {RainbowBridge} from 'Root/component/atom/icon';
 
 /**
  * 동물 구조 임시보호 입양 관련 이미지
@@ -14,25 +15,27 @@ import {styles} from 'Atom/image/imageStyle';
  * @param {'rescue'|'discuss'|'nearrainbow'|'adopt'|'protect'} props.status - 동물의 보호활동 상태
  */
 const RescueImage = props => {
-	console.log('props / RescueImage', props);
+	// console.log('props / RescueImage', props.status);
 	const getStatusText = () => {
 		switch (props.status) {
 			case 'rescue':
 				return RESCUE;
+			case 'complete':
+				return ADOPT;
 			case 'discuss':
 				return DISCUSS;
+			case 'rainbowbridge':
+				return '';
 			case 'nearrainbow':
 				return NEAR_RAINBOWBRIDGE;
 			case 'adopt':
 				return ADOPT;
 			case 'protect':
 				return PROTECT;
-			case 'complete':
-				return ADOPT;
 		}
 	};
 	return (
-		<View style={styles.img_rect_654x542}>
+		<View style={[styles.img_rect_654x542, {zIndex: -2}]}>
 			<Swiper showsPagination={false} autoplay={false} loop={false} horizontal={true}>
 				{props.img_uri != undefined &&
 					props.img_uri.map((data, idx) => (
@@ -46,10 +49,20 @@ const RescueImage = props => {
 						</View>
 					))}
 			</Swiper>
-
-			<View style={[style.status_text]}>
-				<Text style={[txt.noto36, {textAlign: 'center', color: 'white'}]}>{getStatusText()}</Text>
-			</View>
+			{props.status != 'rainbowbridge' ? (
+				<></>
+			) : (
+				<View style={[style.rainbow, styles.img_rect_654x542]}>
+					<RainbowBridge />
+				</View>
+			)}
+			{props.status != 'rainbowbridge' ? (
+				<View style={[style.status_text]}>
+					<Text style={[txt.noto36, {textAlign: 'center', color: 'white'}]}>{getStatusText()}</Text>
+				</View>
+			) : (
+				<></>
+			)}
 		</View>
 	);
 };
@@ -79,6 +92,14 @@ const style = StyleSheet.create({
 		backgroundColor: APRI10,
 		position: 'absolute',
 		right: 0,
+	},
+	rainbow: {
+		position: 'absolute',
+		backgroundColor: BLACK,
+		opacity: 0.8,
+		zIndex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
 });
 

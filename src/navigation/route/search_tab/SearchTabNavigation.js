@@ -6,6 +6,7 @@ import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import {Dimensions, StyleSheet} from 'react-native';
 import {APRI10, GRAY10, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
+import SearchCommunityTabNavigation from './community_tab/SearchCommunityTabNavigation';
 
 const SearchTabNav = createMaterialTopTabNavigator();
 
@@ -88,12 +89,23 @@ export default SearchTabNavigation = props => {
 			</SearchTabNav.Screen>
 			<SearchTabNav.Screen
 				name="COMMUNITY"
-				component={Temp}
+				// component={Temp}
 				options={{
 					title: '커뮤니티',
 					...searchTabLabelOption,
-				}}
-			/>
+				}}>
+				{props => (
+					<SearchCommunityTabNavigation
+						{...props}
+						input={searchInput}
+						// routeNameChild={routeNameChanged}
+						// prevNav={prevNav}
+						// routeName={currentChild}
+						// onClickUser={onClickUser}
+						// defaultIndex={childTab ? childTab : 0}
+					/>
+				)}
+			</SearchTabNav.Screen>
 		</SearchTabNav.Navigator>
 	);
 };

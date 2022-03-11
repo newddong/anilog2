@@ -46,7 +46,6 @@ export default ProtectRequestList = ({navigation, route}) => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			getList();
 		});
-		getList();
 		return unsubscribe;
 	}, [filterData]);
 

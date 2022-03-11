@@ -1,45 +1,46 @@
 export const dummy_userObject = [
 	{
-		_id: 1, //temp
-		user_type: 'user', //유저의 유형, 일반유저(user),보호소(shelter),반려동물(pet)으로 나뉨
+		_id: '61d2de63c0f179ccd5ba5887',
+		type: 'UserObject',
+		user_type: 'user',
 		user_agreement: {
-			is_over_fourteen: true, //14살 이상
-			is_service: true, //서비스 동의
-			is_personal_Info: true, //개인정보 제공 동의
-			is_location_service_info: true, //위치정보 제공 동의
-			is_donation_info: true, //기부정보 제공 동의
-			is_marketting_Info: false, //마케팅정보 제공 동의
-		}, //회원가입 동의항목 동의여부
-		user_name: '권상우', //실명
-		user_nickname: 'Dende', //닉네임
-		user_gender: 'female',
-		user_phone_number: '010-9645-0422', //휴대폰번호
-		user_mobile_company: 'LG U+', //가입된 통신사
-		user_is_verified_phone_number: true, //폰번호 인증여부
-		user_email: 'lanad01@naver.com', //이메일
-		user_is_verified_email: false, //이메일 인증여부
-		user_password: '121212', //패스워드
-		user_address: {
-			city: '서울시', //시,도
-			district: '마포구', //군,구
-			neighbor: '신수동 89-77', //동,읍,면
-		}, //회원주소
-		user_profile_uri: 'https://photo.jtbc.joins.com/news/2017/06/05/20170605100602700.jpg', //프로필 사진
-		user_introduction:
-			'권상우는 연예계에서 없어선 안 될 배우다. 드라마와 영화, 두 분야를 오가며 시청자와 관객의 부름을 받는 배우는 생각보다 많지 않다. 호감도와 연기력, 두 가지 모두를 갖춰야 전방위 활동이 가능하다.',
-		user_birthday: '1991.12.21', //필요한지 검토 필요
-		user_interests: {
-			location: ['마포', '용산', '남산'],
-			activity: ['산책', '펫카페'],
+			is_over_fourteen: true,
+			is_service: true,
+			is_personal_info: true,
+			is_location_service_info: true,
+			is_donation_info: true,
+			is_marketting_info: true,
 		},
-		user_upload_count: 142142, //업로드 게시물 숫자
-		user_follow_count: 12324, //팔로우 숫자
-		user_follower_count: 1245667, //팔로워 숫자
-		user_denied: false, //유저의 차단여부
-		user_register_date: '2021-11-24', //가입일
-
-		//@FollowObject
-		follow_id: [2, 3],
+		user_name: '권상우',
+		user_nickname: '권상우입',
+		user_phone_number: '01096450422',
+		user_mobile_company: 'SK텔레콤',
+		user_is_verified_phone_number: true,
+		user_is_verified_email: false,
+		user_password: 'tkddn123',
+		user_address: {
+			city: '서울특별시',
+			district: '마포구',
+			neighbor: '신수동',
+		},
+		user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1641209443215_0CF8CF7C-DA9E-4F9D-9F6D-2C19C7144A45.jpg',
+		user_introduction: '아이에',
+		user_upload_count: 23,
+		user_follow_count: 18,
+		user_follower_count: 4,
+		user_denied: false,
+		user_my_pets: ['61d2de8ac0f179ccd5ba58a6', '61d2ff57c0f179ccd5ba6e72'],
+		pet_family: [],
+		user_register_date: '2022-01-03T11:30:43.310Z',
+		__v: 9,
+		user_update_date: '2022-03-04T16:21:15.980Z',
+		user_interests: {
+			interests_activity: [],
+			interests_beauty: [],
+			interests_food: [],
+			interests_health: [],
+			interests_location: [],
+		},
 	},
 	{
 		_id: 2, //temp

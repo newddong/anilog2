@@ -170,28 +170,11 @@ export default ProtectCommentList = props => {
 			<View style={[style.contentContainer]}>
 				<View style={[style.content_container_label]}>
 					<ShelterSmallLabel data={data.protect_request_writer_id} onClickLabel={onClickShelterLabel} />
-					{/* <View style={[temp_style.button_animalProtectRequestDetail]}>
-						<TouchableOpacity onPress={onPressShelterLabelFavorite} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
-							<FavoriteTag48_Filled />
-							<Text style={[txt.roboto24, {color: APRI10, alignSelf: 'center', textAlign: 'center'}]}>
-								{data ? count_to_K(data.protect_request_writer_id.user_follow_count) : ''}
-							</Text>
-						</TouchableOpacity>
-						<View collapsable={false}>
-							<TouchableOpacity onPress={onPressShare} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
-								<Share48_Filled />
-								<Text style={[txt.roboto24, {color: APRI10}]}>공유</Text>
-							</TouchableOpacity>
-						</View>
-					</View> */}
 				</View>
 				<View style={[style.cotent_container_header]}>
 					<Text style={[txt.noto28, {color: GRAY10}]}>보호요청</Text>
 					<Text style={[txt.noto32b, {}]}>{data.protect_request_title || ''}</Text>
 				</View>
-				{/* <View style={[style.cotent_container_info]}>
-					<ProtectAnimalInfoBox data={data} />
-				</View> */}
 			</View>
 		);
 	};
@@ -213,7 +196,7 @@ export default ProtectCommentList = props => {
 				ListHeaderComponent={protectRequestContent}
 				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
 			/>
-			{userGlobalObject.userInfo._id != '' && (editComment || props.route.name == 'ProtectCommentList') ? (
+			{userGlobalObject.userInfo._id != '' ? (
 				<View style={{position: 'absolute', bottom: keyboardY}} onLayout={onReplyBtnLayout}>
 					<ReplyWriteBox
 						onAddPhoto={onAddPhoto}

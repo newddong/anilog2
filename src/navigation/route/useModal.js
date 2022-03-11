@@ -34,6 +34,8 @@ import CongratulationModal from 'Root/component/molecules/modal/CongratulationMo
 import AdoptionInfoModal from 'Root/component/molecules/modal/AdoptionInfoModal';
 import AdoptionInfoModalWithOneBtn from 'Root/component/molecules/modal/AdoptionInfoModalWithOneBtn';
 import AnimalToRegisterModal from 'Root/component/molecules/modal/AnimalToRegisterModal';
+import PhotoListViewModal from 'Root/component/molecules/modal/PhotoListViewModal';
+
 
 export function useModal() {
 	const [isPop, setPop] = React.useState(false);
@@ -108,8 +110,8 @@ export function useModal() {
 		!isPop && setPop(true);
 	};
 
-	Modal.popAvatarSelectModal = (onSelectPet, okButtonnMsg, isBtnMode) => {
-		popIn(<AvatarSelectModal onSelectPet={onSelectPet} okButtonnMsg={okButtonnMsg} isBtnMode={isBtnMode} />);
+	Modal.popAvatarSelectModal = (onSelectPet, okButtonnMsg, isWriteMode) => {
+		popIn(<AvatarSelectModal onSelectPet={onSelectPet} okButtonnMsg={okButtonnMsg} isWriteMode={isWriteMode} />);
 		!isPop && setPop(true);
 	};
 
@@ -230,6 +232,11 @@ export function useModal() {
 
 	Modal.popCongratulationModal = (pet_nickname, user_profile_uri) => {
 		popIn(<CongratulationModal pet_nickname={pet_nickname} user_profile_uri={user_profile_uri} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popPhotoListViewModal = photoList => {
+		popIn(<PhotoListViewModal photoList={photoList} />);
 		!isPop && setPop(true);
 	};
 

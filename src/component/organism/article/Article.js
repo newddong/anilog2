@@ -1,48 +1,91 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import DP from 'Root/config/dp';
 import ArticleContent from './ArticleContent';
 import ArticleThumnails from './ArticleThumnails';
 import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {GRAY10} from 'Root/config/color';
 /**
- *
- * @param {{
- * isCheck : boolean ,
- * }} props
+ * 게시글
+ * @param {object} props - Props Object
+ * @param {object} props.data - 게시글 아이템 data
+ * @param {()=>void)} props.onPressArticle - 게시글 아이템 클릭
+ * @param {()=>void)} props.onPressThumnails - 게시글 사진 클릭
  */
-export default Article = props => {
+const Article = props => {
+	//댓글 더 보기 클릭
+	const onPressReply = () => {
+		alert('onPressReply ');
+	};
+
+	//좋아요 클릭
+	const onPressLike = () => {
+		console.log('onPressLike');
+	};
+
+	const onPressFavorite = () => {
+		console.log('onPressFavorite');
+	};
+
+	const onPressMeatball = () => {
+		console.log('onPressMeatball');
+	};
+
+	const onPressArticle = () => {
+		props.onPressArticle();
+	};
+
+	const onPressThumnails = () => {
+		props.onPressThumnails();
+	};
+
+	const dummy = [
+		'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
+		'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
+		'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
+		'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
+	];
+
 	return (
 		<View style={[style.container]}>
 			<View style={[style.content]}>
-				<ArticleContent />
+				<ArticleContent onPressArticle={onPressArticle} onPressFavorite={onPressFavorite} onPressMeatball={onPressMeatball} route={props.route} />
 			</View>
-			<View style={[style.thumbnail]}>
-				<ArticleThumnails />
-			</View>
-			<View style={[style.likeComment]}>
-				<View style={[style.like]}>
-					<Like48_Border />
-					<Text style={[txt.noto24, {color: GRAY10, marginLeft: 15 * DP}]}>109</Text>
+			<TouchableOpacity onPress={onPressThumnails} activeOpacity={0.7} style={[style.thumbnail]}>
+				<ArticleThumnails photo_list={dummy} />
+			</TouchableOpacity>
+			{props.route == 'ArticleDetail' ? (
+				<></>
+			) : (
+				<View style={[style.likeComment]}>
+					<View style={[style.like]}>
+						<Like48_Border onPress={onPressLike} />
+						<Text style={[txt.noto24, {color: GRAY10, marginLeft: 15 * DP}]}>109</Text>
+					</View>
+					<View style={[style.comment]}>
+						<Text onPress={onPressReply} style={[txt.noto24, {color: GRAY10}]}>
+							댓글 6개 모두 보기
+						</Text>
+					</View>
 				</View>
-				<View style={[style.comment]}>
-					<Text style={[txt.noto24, {color: GRAY10}]}>댓글 6개 모두 보기</Text>
-				</View>
-			</View>
+			)}
 		</View>
 	);
 };
 
 Article.defaultProps = {
-	value: '',
-	disable: false,
-	onCheck: e => console.log(e),
+	onPressArticle: () => {},
+	onPressThumnails: () => {},
+	route: undefined,
 };
+
+export default Article;
 
 const style = StyleSheet.create({
 	container: {
 		width: 654 * DP,
+		paddingVertical: 30 * DP,
 		alignSelf: 'center',
 	},
 	content: {

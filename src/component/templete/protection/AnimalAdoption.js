@@ -15,8 +15,7 @@ import {setPetStatus} from 'Root/api/userapi';
 export default AnimalAdoption = props => {
 	const navigation = useNavigation();
 	// console.log('props.route.params', props.route.params);
-
-	//입양 - []
+	//입양 - 애니로그 계정 유무에 따른 버튼 분기
 	const onPressAdoption = () => {
 		Modal.popTwoBtn(
 			'입양 예정자가 애니로그 계정이 있나요?',
@@ -46,7 +45,8 @@ export default AnimalAdoption = props => {
 				});
 			},
 			() => {
-				//계정 찾기 클릭 시 일단 보냄
+				//계정 찾기 클릭 시 계정 선택하는 템플릿으로 이동
+
 				Modal.close();
 				navigation.push('SelectAccount', {userobject_id: props.route.params});
 			},

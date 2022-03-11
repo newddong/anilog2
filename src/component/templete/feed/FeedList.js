@@ -126,17 +126,21 @@ export default FeedList = ({route, navigation}) => {
 		if (feedList.length > 0) {
 			let indx = feedList.findIndex(v => v._id == route.params?.selected._id);
 			console.log('인덱스', indx);
-			setTimeout(()=>{
-				flatlist.current.scrollToIndex({
-					animated: false,
-					index: indx>0?indx:0,
-				});
-				flatlist.current.scrollToOffset({
-					offset: userGlobalObject.t.y,
-					animated:false
-				})
-			},0)
-			
+			if(route.name=='UserFeedList'){
+				setTimeout(()=>{
+					flatlist.current.scrollToIndex({
+						animated: false,
+						index: indx>0?indx:0,
+					});
+				},0)
+			}else{
+				setTimeout(()=>{
+					flatlist.current.scrollToOffset({
+						offset: userGlobalObject.t.y,
+						animated:false
+					})
+				},0)
+			}
 		}
 	}, [feedList]);
 
@@ -171,7 +175,6 @@ export default FeedList = ({route, navigation}) => {
 				renderItem={renderItem}
 				keyExtractor={(item, index) => {
 					let key = item._id + item.feed_update_date;
-					console.log('키 추출 : ',key);
 					return key;
 				}}
 				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}

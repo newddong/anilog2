@@ -18,7 +18,16 @@ import {Arrow_Down_GRAY10} from 'Root/component/atom/icon';
 export default AssignPetInfoA = props => {
 	const navigation = useNavigation();
 	const isProtectAnimalRoute = props.route.name == 'AssignProtectAnimalType';
-	// console.log(isProtectAnimalRoute)
+	const isAdoptRegist = props.route.params.isAdoptRegist;
+	const params = props.route.params.data;
+	// console.log('AssignPetInfoA : ', props.route.params);
+
+	React.useEffect(() => {
+		if (isAdoptRegist) {
+			setData(props.route.params);
+		}
+	}, []);
+
 	const [types, setTypes] = React.useState([
 		{
 			pet_species: [],
@@ -28,11 +37,13 @@ export default AssignPetInfoA = props => {
 
 	const [data, setData] = React.useState({
 		...props.route.params.data,
-		pet_species: types[0].pet_species,
-		pet_species_detail: types[0].pet_species_detail[0],
+		pet_species: isAdoptRegist ? params.pet_species : types[0].pet_species,
+		pet_species_detail: isAdoptRegist ? params.pet_species_detail : types[0].pet_species_detail[0],
 		type: types[0],
-		pet_sex: 'male',
-		pet_neutralization: 'unknown',
+		pet_sex: isAdoptRegist ? params.pet_sex : 'male',
+		pet_neutralization: isAdoptRegist ? params.pet_neutralization : 'unknown',
+		pet_birthday: '',
+		pet_weight: isAdoptRegist ? params.pet_weight : '',
 	});
 
 	React.useEffect(() => {
@@ -40,7 +51,11 @@ export default AssignPetInfoA = props => {
 			{},
 			types => {
 				setTypes(types.msg);
-				setData({...data, pet_species: types.msg[0].pet_species, type: types.msg[0], pet_species_detail: types.msg[0].pet_species_detail[0]});
+				if (isAdoptRegist) {
+					setData({...data, pet_species: params.pet_species, type: types.msg[0], pet_species_detail: params.pet_species_detail});
+				} else {
+					setData({...data, pet_species: types.msg[0].pet_species, type: types.msg[0], pet_species_detail: types.msg[0].pet_species_detail[0]});
+				}
 			},
 			err => Modal.alert(err),
 		);
@@ -79,11 +94,32 @@ export default AssignPetInfoA = props => {
 		});
 	};
 
+	const getDefaultGender = () => {
+		let result = 0;
+		if (isAdoptRegist) {
+			params.pet_sex == 'male' ? (result = 0) : (result = 1);
+			return result;
+		} else return result;
+	};
+
+	const getDefaultNeutralization = () => {
+		if (isAdoptRegist) {
+			if (params.pet_neutralization == 'unknown') {
+				return 2;
+			} else if (params.pet_neutralization == 'yes') {
+				return 0;
+			} else return 1;
+		} else {
+			return 0;
+		}
+	};
+
+	//다음버튼
 	const gotoNextStep = () => {
-		console.log('data, ', data.pet_species_detail);
+		// console.log('data, ', data.pet_species_detail);
 		props.route.name == 'AssignProtectAnimalType'
 			? props.navigation.push('AssignProtectAnimalAge', data)
-			: props.navigation.push('AssignPetInfoB', data);
+			: props.navigation.push('AssignPetInfoB', {data: data, isAdoptRegist: isAdoptRegist});
 	};
 
 	return (
@@ -130,7 +166,7 @@ export default AssignPetInfoA = props => {
 				<View style={[temp_style.inputForm_assignPetInfo_line2, assignPetInfo_style.line2]}>
 					<Text style={[temp_style.text_assignPetInfo, txt.noto28, {color: GRAY10}]}>성별</Text>
 					<View style={[temp_style.tabSelectFilled_Type1, assignPetInfo_style.tabSelectFilled_Type1]}>
-						<TabSelectFilled_Type1 items={[MALE, FEMALE]} width={450} onSelect={onSelectGender} />
+						<TabSelectFilled_Type1 items={[MALE, FEMALE]} width={450} onSelect={onSelectGender} defaultIndex={getDefaultGender()} />
 					</View>
 				</View>
 
@@ -138,7 +174,7 @@ export default AssignPetInfoA = props => {
 				<View style={[temp_style.inputForm_assignPetInfo_line3, assignPetInfo_style.line3]}>
 					<Text style={[temp_style.text_assignPetInfo, txt.noto28, {color: GRAY10}]}>중성화</Text>
 					<View style={[assignPetInfo_style.tabSelectFilled_Type1]}>
-						<RadioBox items={[YES, NO, UNAWARENESS]} onSelect={onSelectNeutralization} />
+						<RadioBox items={[YES, NO, UNAWARENESS]} onSelect={onSelectNeutralization} defaultSelect={getDefaultNeutralization()} />
 					</View>
 				</View>
 			</View>

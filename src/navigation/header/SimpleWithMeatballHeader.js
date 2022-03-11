@@ -7,7 +7,6 @@ import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS, PROTECT_REQUEST_STATUS} from 'Root/i18n/msg';
-import {getProtectRequestByProtectRequestId} from 'Root/api/protectapi';
 import {deleteProtectRequest} from 'Root/api/shelterapi';
 
 //보호 요청게시글 작성자일 경우 미트볼 아이콘 출력이 되는 헤더
@@ -74,7 +73,7 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 			FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS,
 			selectedItem => {
 				switch (selectedItem) {
-					case '상태 변경':
+					case '상태변경':
 						onPressChangeProtectRequestStatus();
 						break;
 					case '공유하기':

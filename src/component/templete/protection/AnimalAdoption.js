@@ -16,27 +16,49 @@ export default AnimalAdoption = props => {
 	const navigation = useNavigation();
 	// console.log('props.route.params', props.route.params);
 
+	//입양 - []
 	const onPressAdoption = () => {
 		Modal.popTwoBtn(
 			'입양 예정자가 애니로그 계정이 있나요?',
 			'없어요',
 			'계정 찾기',
 			() => {
-				Modal.close();
+				//없어요 클릭 시 그냥 입양완료로 바꾸고 끝
+				setPetStatus(
+					{
+						userobject_id: props.route.params._id,
+						pet_status: 'adopt',
+					},
+					result => {
+						// console.log('result / setPetStatus / AnimalAdoption : ', result.msg);
+					},
+					err => {
+						console.log('err / setPetStatus / AnimalAdoption : ', err);
+					},
+				).then(() => {
+					setTimeout(() => {
+						Modal.popCongratulationModal(props.route.params.user_nickname, props.route.params.user_profile_uri);
+						setTimeout(() => {
+							Modal.close();
+							navigation.navigate('PetInfoSetting', {pet_id: props.route.params._id});
+						}, 1000);
+					}, 200);
+				});
 			},
 			() => {
+				//계정 찾기 클릭 시 일단 보냄
 				Modal.close();
-				// console.log('모달창 닫힘');
-				navigation.push('SelectAccount', {userobject_id: props.route.params.userobject_id});
+				navigation.push('SelectAccount', {userobject_id: props.route.params});
 			},
 		);
 	};
 
+	//임시보호자 입양 버튼 클릭(내가 직접 입양하므로 petStatus만 변경하면 종료)
 	const onPressMyAdoption = () => {
 		const changePetStatus = async () => {
 			setPetStatus(
 				{
-					userobject_id: props.route.params,
+					userobject_id: props.route.params._id,
 					pet_status: 'companion',
 				},
 				result => {
@@ -47,7 +69,6 @@ export default AnimalAdoption = props => {
 				},
 			);
 		};
-
 		//임시보호에서 반려 동물 변경 응원 팝업창 !
 		const onCheerUp = () => {
 			Modal.close();
@@ -56,7 +77,7 @@ export default AnimalAdoption = props => {
 				setTimeout(() => {
 					Modal.close();
 					changePetStatus().then(() => {
-						navigation.navigate('PetInfoSetting', {pet_id: props.route.params._id, token: userGlobalObject.userInfo});
+						navigation.navigate('PetInfoSetting', {pet_id: props.route.params._id});
 					});
 				}, 1000);
 			}, 200);

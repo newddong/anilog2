@@ -191,7 +191,7 @@ const Calendar = props => {
 	return (
 		<TouchableWithoutFeedback>
 			<View style={[styles.outside, {height: HEIGHT}]}>
-				<View style={{justifyContent: 'center', alignItems: 'center', marginTop: 100, backgroundColor: WHITE}}>
+				<View style={{justifyContent: 'center', alignItems: 'center', marginTop: 200 * DP, backgroundColor: WHITE}}>
 					<YearDropDown menu={years()} defaultIndex={4} index={getMoment.year()} onSelect={onSelectYear} />
 					<View style={[styles.headerCont, {}]}>
 						<TouchableOpacity

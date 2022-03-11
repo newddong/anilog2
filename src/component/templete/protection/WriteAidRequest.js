@@ -28,7 +28,7 @@ export default WriteAidRequest = ({route, navigation}) => {
 
 	//헤더로 데이터 보내기
 	React.useEffect(() => {
-		// console.log('ProtectRequestData / WriteAidRequest ', protectRequestData.shelter_protect_animal_object_id);
+		// console.log('ProtectRequestData / WriteAidRequest ', protectRequestData);
 		navigation.setParams({data: protectRequestData, nav: route.name});
 	}, [protectRequestData]);
 

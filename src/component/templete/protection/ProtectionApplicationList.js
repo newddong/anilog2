@@ -45,6 +45,7 @@ export default ProtectionApplicationList = ({route, navigation}) => {
 
 	//임시 보호 신청 건 클릭
 	const onClickProtectItem = i => {
+		console.log('protectList', protectList[i]);
 		navigation.push('ProtectApplyForm', {data: protectList[i], route: route.name});
 	};
 
@@ -89,7 +90,7 @@ export default ProtectionApplicationList = ({route, navigation}) => {
 						<Text style={[txt.noto26, {color: GRAY10}]}>{protectList.length}</Text>
 					</View>
 					<View style={[style.list]}>
-						<FlatList data={protectList} renderItem={({item, index}) => listItem(item, index, true)} ListEmptyComponent={whenEmpty()} />
+						<FlatList data={protectList} renderItem={({item, index}) => listItem(item, index, false)} ListEmptyComponent={whenEmpty()} />
 					</View>
 				</View>
 			</View>

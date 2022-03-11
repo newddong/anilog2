@@ -12,7 +12,8 @@ import {setShelterProtectAnimalStatus} from 'Root/api/shelterapi';
 
 //ShelterMenu -> 신청서조회 -> 신청서 클릭 -> 입양 확정 및 임시보호 확정
 export default ProtectApplyForm = ({route, navigation}) => {
-	// console.log('ProtectApplyForm props', route.params);
+	console.log('ProtectApplyForm props', route.params.data.protect_act_applicant_id._id);
+
 	const [data, setData] = React.useState('false');
 
 	React.useEffect(() => {
@@ -77,19 +78,43 @@ export default ProtectApplyForm = ({route, navigation}) => {
 					},
 				);
 				//보호 동물의 상태를 변경
-				setShelterProtectAnimalStatus(
-					{
-						shelter_protect_animal_object_id: data.protect_animal_id._id,
-						protect_animal_status: data.protect_act_type == 'adopt' ? 'adopt' : 'protect',
-					},
-					result => {
-						// console.log('result / setShelterProtectAnimalStatus / ProtectApplyForm : ', result.msg);
-						navigation.navigate('ShelterMenu');
-					},
-					err => {
-						console.log('err / setShelterProtectAnimalStatus / PRotectApplyForm : ', err);
-					},
-				);
+				if (data.protect_act_type == 'adopt') {
+					setShelterProtectAnimalStatus(
+						{
+							shelter_protect_animal_object_id: data.protect_animal_id._id,
+							protect_animal_status: 'adopt',
+							protect_animal_adoptor_id: route.params.data.protect_act_applicant_id._id,
+							// ---1. 여기서 입양자 임시보호자 아이디 넣어주고
+							// 2. getAnimalListNotRegisteredWithCompanion으로 아직 등록안될 동물이 있는 경우
+							// 3. 받아온 데이터로 모달 구성하고 AssignPet 실시함
+							// 4. AssignPet 등록 시 protect_act_protect_animal_id / protect_animal_status
+							//    두가지를 반드시 넣어줘야함
+						},
+						result => {
+							// console.log('result / setShelterProtectAnimalStatus / ProtectApplyForm : ', result.msg);
+							navigation.navigate('ShelterMenu');
+						},
+						err => {
+							console.log('err / setShelterProtectAnimalStatus / PRotectApplyForm : ', err);
+						},
+					);
+				} else {
+					setShelterProtectAnimalStatus(
+						{
+							shelter_protect_animal_object_id: data.protect_animal_id._id,
+							protect_animal_status: 'protect',
+							protect_animal_protector_id: route.params.data.protect_act_applicant_id._id,
+						},
+						result => {
+							console.log('result / setShelterProtectAnimalStatus / ProtectApplyForm : ', result.msg);
+							navigation.navigate('ShelterMenu');
+						},
+						err => {
+							console.log('err / setShelterProtectAnimalStatus / PRotectApplyForm : ', err);
+						},
+					);
+				}
+
 				Modal.close();
 			},
 		);

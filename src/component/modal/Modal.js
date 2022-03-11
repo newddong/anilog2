@@ -245,6 +245,20 @@ export default Modal = {
 	 * 입양 및 임시보호 동물 알림 모달
 	 *
 	 * @param {Object} props - props object
+	 * @param {object} props.data - 보호동물 데이터오브젲ㄱ트
+	 * @param {string} props.msg - 팝업 메시지
+	 * @param {string} props.yesMsg - 팝업 메시지
+	 * @param {string} props.noMsg - No 버튼 타이틀
+	 * @param {(data)=>void} props.onYes - 등록 클릭
+	 * @param {(data)=>void} props.onNo - 아니오  클릭
+	 *
+	 */
+	popAnimalToRegisterModal: (data, msg, yesMsg, noMsg, onYes, onNo) => {},
+
+	/**
+	 * 입양 및 임시보호 동물 알림 모달
+	 *
+	 * @param {Object} props - props object
 	 * @param {object} props.data - 보호동물 데이터오브젝트
 	 * @param {string} props.yesMsg - Yes버튼 타이틀
 	 * @param {(data)=>void} props.onYes - 등록 클릭
@@ -312,8 +326,8 @@ export default Modal = {
 
 	/**
 	 * 입양 확정 시 출력되는 축하 메시지 모달
-	 * @param {string} props.pet_nickname - 카카오톡 클릭
-	 * @param {string} props.user_profile_uri - 카카오톡 클릭
+	 * @param {string} props.pet_nickname - 펫 닉네임
+	 * @param {string} props.user_profile_uri - 펫 프로필 사진
 	 * @example
 	 */
 	popCongratulationModal: (pet_nickname, user_profile_uri) => {},

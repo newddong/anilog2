@@ -23,8 +23,6 @@ import {DOG_KIND, PET_KIND, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
 
 export default PetInfoSetting = ({route, navigation}) => {
 	// console.log('PetInfoSetting / route.params', route.params.pet_id);
-	const loginUser = route.params.token;
-
 	const [petData, setPetData] = React.useState('false'); // 현재 반려동물 프로필 데이터
 	const [familyAccountList, setFamilyAccountList] = React.useState([]); //가족 계정 목록 데이터
 	const [isChiefUser, setIsChiefUser] = React.useState(false);
@@ -346,7 +344,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 											<Text style={[txt.roboto28b]}>{v.user_nickname}</Text>
 										</View> */}
 											<UserDescriptionLabel data={v} onClickLabel={onClickFamilyLabel} width={400} />
-											{v.user_nickname == loginUser.user_nickname || !isChiefUser ? (
+											{v.user_nickname == userGlobalObject.userInfo.user_nickname || !isChiefUser ? (
 												<></>
 											) : (
 												<View style={{position: 'absolute', right: 5 * DP}}>

@@ -33,6 +33,7 @@ import AddFamilyModal from 'Root/component/molecules/modal/AddFamilyModal';
 import CongratulationModal from 'Root/component/molecules/modal/CongratulationModal';
 import AdoptionInfoModal from 'Root/component/molecules/modal/AdoptionInfoModal';
 import AdoptionInfoModalWithOneBtn from 'Root/component/molecules/modal/AdoptionInfoModalWithOneBtn';
+import AnimalToRegisterModal from 'Root/component/molecules/modal/AnimalToRegisterModal';
 
 export function useModal() {
 	const [isPop, setPop] = React.useState(false);
@@ -189,6 +190,11 @@ export function useModal() {
 
 	Modal.popAdoptionInfoModal = (data, msg, yesMsg, noMsg, onYes, onNo) => {
 		popIn(<AdoptionInfoModal msg={msg} yesMsg={yesMsg} noMsg={noMsg} data={data} onYes={onYes} onNo={onNo} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popAnimalToRegisterModal = (data, msg, yesMsg, noMsg, onYes, onNo) => {
+		popIn(<AnimalToRegisterModal msg={msg} yesMsg={yesMsg} noMsg={noMsg} data={data} onYes={onYes} onNo={onNo} />);
 		!isPop && setPop(true);
 	};
 

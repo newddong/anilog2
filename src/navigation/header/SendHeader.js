@@ -10,18 +10,17 @@ import {RED} from 'Root/config/color';
 
 export default SendHeader = ({route, navigation, options}) => {
 	// console.log('props SendHeader', route.params);
-
 	const onSend = () => {
 		if (route.params.data) {
-			// console.log('OnSend', route.params.data);
 			const data = route.params.data;
 			switch (route.params.nav) {
 				case 'AidRequestAnimalList': {
-					// console.log('route, SendHeader / AidRequestAnimalList', data);
+					//보호요청 글쓰기 템플릿
 					navigation.push('WriteAidRequest', {data: data});
 					break;
 				}
 				case 'WriteAidRequest': {
+					//보호요청 게시글 쓰기 분기
 					if (!data.protect_request_content || !data.protect_request_title) {
 						Modal.popOneBtn('보호 요청 내용과 제목은 \n 반드시 입력해주셔야합니다.', '확인', () => Modal.close());
 					} else {
@@ -31,7 +30,6 @@ export default SendHeader = ({route, navigation, options}) => {
 							'확인',
 							() => Modal.close(),
 							() => {
-								// console.log('SendHeader / Before Create AidRequest ', data);
 								createProtectRequest(
 									{
 										protect_request_photos_uri: data.protect_request_photos_uri,
@@ -59,6 +57,7 @@ export default SendHeader = ({route, navigation, options}) => {
 					break;
 				}
 				case 'EditAidRequest': {
+					//보호 요청 게시글 수정 분기
 					Modal.popTwoBtn(
 						'해당 내용으로 보호요청 \n 게시글을 수정하시겠습니까?',
 						'취소',

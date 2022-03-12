@@ -29,7 +29,7 @@ export default FeedCommentList = props => {
 	const [refresh, setRefresh] = React.useState(true);
 	const keyboardY = useKeyboardBottom(0 * DP);
 	const flatlist = React.useRef();
-	const [editMode, setEditMode] = React.useState(false);//댓글 편집 모드
+	const [editMode, setEditMode] = React.useState(false); //댓글 편집 모드
 
 	React.useEffect(() => {
 		if (props.route.name == 'FeedCommentList') {
@@ -41,6 +41,18 @@ export default FeedCommentList = props => {
 				comments => {
 					setComments(comments.msg);
 					// console.log('comments', comments);
+				},
+				err => console.log('getCommentListByFeedId', err),
+			);
+		} else {
+			getCommentListByFeedId(
+				{
+					feedobject_id: props.route.params.feedobject._id,
+					request_number: 1000,
+				},
+				comments => {
+					setComments(comments.msg);
+					navigation.setOptions({title: '댓글 ' + comments.msg.length});
 				},
 				err => console.log('getCommentListByFeedId', err),
 			);
@@ -65,13 +77,13 @@ export default FeedCommentList = props => {
 		if (parentComment) {
 			param = {...param, commentobject_id: parentComment};
 		}
-		if(editMode){
-			console.log('댓ㄷ글편집',editData)
+		if (editMode) {
+			console.log('댓글편집', editData);
 			updateComment(
 				{
 					...editData,
 					comment_contents: content,
-					commentobject_id: editData._id
+					commentobject_id: editData._id,
 				},
 				result => {
 					console.log(result);
@@ -97,35 +109,35 @@ export default FeedCommentList = props => {
 					}
 				},
 				err => Modal.alert(err),
-			)
-		}else{
-		createComment(
-			param,
-			result => {
-				console.log(result);
-				setPhoto();
-				setParentComment();
-				setContent('');
-				if (props.route.name == 'FeedCommentList') {
-					getCommentListByFeedId(
-						{
-							feedobject_id: props.route.params.feedobject._id,
-							request_number: 1000,
-						},
-						comments => {
-							!parentComment && setComments([]); //댓글목록 초기화
-							setComments(comments.msg);
-							parentComment && addChildCommentFn.current();
-							console.log('comments', comments);
-							input.current.blur();
-							flatlist.current.scrollToOffset({offset: 0});
-						},
-						err => console.log(err),
-					);
-				}
-			},
-			err => Modal.alert(err),
-		);
+			);
+		} else {
+			createComment(
+				param,
+				result => {
+					console.log(result);
+					setPhoto();
+					setParentComment();
+					setContent('');
+					if (props.route.name == 'FeedCommentList') {
+						getCommentListByFeedId(
+							{
+								feedobject_id: props.route.params.feedobject._id,
+								request_number: 1000,
+							},
+							comments => {
+								!parentComment && setComments([]); //댓글목록 초기화
+								setComments(comments.msg);
+								parentComment && addChildCommentFn.current();
+								console.log('comments', comments);
+								input.current.blur();
+								flatlist.current.scrollToOffset({offset: 0});
+							},
+							err => console.log(err),
+						);
+					}
+				},
+				err => Modal.alert(err),
+			);
 		}
 	};
 
@@ -175,10 +187,10 @@ export default FeedCommentList = props => {
 
 	//미트볼, 수정을 누르면 동작
 	const [editData, setEditData] = React.useState();
-	const onEdit = (comment) => {
+	const onEdit = comment => {
 		setEditMode(true);
 		setEditData(comment);
-	}
+	};
 
 	const render = ({item, index}) => {
 		if (index == 0)
@@ -190,7 +202,7 @@ export default FeedCommentList = props => {
 		if (index > 0)
 			return (
 				<View style={{marginLeft: 48 * DP}}>
-					<CommentList items={item} onPressReplyBtn={onReplyBtnClick} onEdit={onEdit}/>
+					<CommentList items={item} onPressReplyBtn={onReplyBtnClick} onEdit={onEdit} />
 				</View>
 			);
 	};

@@ -4641,17 +4641,6 @@ export const animalProtectList = StyleSheet.create({
 	},
 });
 
-export const saveFavorite = StyleSheet.create({
-	accountHashList: {
-		width: 654 * DP,
-		// height: 1324 * DP,
-		marginTop: 30 * DP,
-		alignItems: 'center',
-		justifyContent: 'center',
-		// backgroundColor: '#F2C2C2',
-	},
-});
-
 export const linkedAccountList = StyleSheet.create({
 	container: {
 		flex: 1,

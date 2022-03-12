@@ -66,13 +66,6 @@ import EditAidRequest from 'Root/component/templete/protection/EditAidRequest';
 const MyStack = createStackNavigator();
 
 export default MyStackNavigation = props => {
-	// console.log('MyStack', props.navigation);
-	const [searchInput, setSearchInput] = React.useState();
-
-	React.useEffect(() => {
-		setSearchInput(props.route.params); //검색어 입력 전달
-	}, [props.route.params]);
-
 	return (
 		<MyStack.Navigator initialRouteName={userGlobalObject.userInfo.user_type == 'shelter' ? 'ShelterMenu' : 'UserMenu'}>
 			{/* // <MyStack.Navigator initialRouteName={'ShelterMenu'}> */}
@@ -238,11 +231,6 @@ export default MyStackNavigation = props => {
 				component={ProtectionApplicationList}
 				options={{header: props => <SimpleHeader {...props} />, title: '신청서 조회'}}
 			/>
-			{/* <MyStack.Screen
-				name="ProtectApplicant"
-				component={ProtectApplicant}
-				options={{header: props => <SimpleHeader {...props} />, title: '보호 활동 신청자'}}
-			/> */}
 			<MyStack.Screen
 				name="ProtectApplyForm"
 				component={ProtectApplyForm}

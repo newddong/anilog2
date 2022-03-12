@@ -354,7 +354,8 @@ export async function getFollowers(params, callback, errcallback) {
 /** 반려동물의 상태를 변경
  * @param {object} params
  * @param {string} params.userobject_id  - 반려동물 _id
- * @param {string} params.pet_status  - 반려동물 _id
+ * @param {string} params.pet_status  - 반려동물의 상태  |임시보호중(protect), 입양됨(adopt), 반려동물(companion)|
+ * @param {string} params.pet_adopter  - 반려동물 입양자
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */

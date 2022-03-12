@@ -14,7 +14,6 @@ export default AdoptorInformation = ({route, navigation}) => {
 	React.useEffect(() => {
 		getAdoptInfo(
 			{
-				// protect_animal_object_id: route.params,
 				protect_animal_object_id: route.params,
 			},
 			result => {

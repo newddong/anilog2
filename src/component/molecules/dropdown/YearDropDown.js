@@ -36,35 +36,13 @@ const YearDropDown = props => {
 			ref={dropdown}
 			buttonComponent={<YearDropDownSelect width={props.width} value={value} />}
 			dropdownList={
-				<View
-					style={{
-						backgroundColor: WHITE,
-						marginLeft: 28 * DP,
-						marginBottom: 100,
-						top: 220 * DP,
-						width: 240 * DP,
-						borderRadius: 10 * DP,
-						alignItems: 'center',
-					}}>
-					<ScrollView style={{height: 800 * DP}} contentContainerStyle={{}}>
+				<View style={[styles.container]}>
+					<ScrollView style={styles.listCont} contentContainerStyle={{}} showsHorizontalScrollIndicator={false}>
 						{props.menu.map((v, i) => (
 							<View key={i}>
 								<TouchableWithoutFeedback onPress={() => onSelect(v, i)}>
 									<View style={[styles.itemContainer, {width: 240 * DP}]}>
-										<Text
-											style={[
-												txt.roboto32b,
-												{
-													alignSelf: 'center',
-													textAlign: 'center',
-													color: GRAY10,
-													width: 100 * DP,
-													borderBottomColor: GRAY30,
-													borderBottomWidth: 2 * DP,
-												},
-											]}>
-											{v}
-										</Text>
+										<Text style={[txt.roboto36b, styles.text]}>{v}</Text>
 									</View>
 								</TouchableWithoutFeedback>
 							</View>
@@ -77,10 +55,36 @@ const YearDropDown = props => {
 };
 
 export const styles = StyleSheet.create({
+	container: {
+		backgroundColor: WHITE,
+		// backgroundColor: 'red',
+		// width: 220 * DP,
+		shadowColor: 'black',
+		shadowOffset: {
+			// height: 3,
+			// width: 2,
+		},
+		shadowOpacity: 0.5,
+		borderRadius: 20 * DP,
+		alignItems: 'center',
+	},
+	listCont: {
+		height: 900 * DP,
+		right: 10 * DP,
+	},
 	itemContainer: {
 		justifyContent: 'center',
 		height: 60 * DP,
 		borderRadius: 10 * DP,
+	},
+	text: {
+		alignSelf: 'center',
+		textAlign: 'center',
+		color: GRAY10,
+		paddingLeft: 10 * DP,
+		// width: 100 * DP,
+		borderBottomColor: GRAY30,
+		borderBottomWidth: 2 * DP,
 	},
 	separator: {
 		backgroundColor: GRAY40,

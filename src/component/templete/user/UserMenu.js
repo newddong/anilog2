@@ -142,7 +142,9 @@ export default UserMenu = props => {
 				navigation.push('AnimalProtectList', data._id); //ProtectAnimalObject
 				break;
 			case NOTE_LIST:
-				Modal.popInfoModal();
+				console.log('눌림');
+				navigation.push('ReceivedMessage', {token: data});
+				// Modal.popInfoModal();
 				break;
 			case INFO_QUESTION:
 				// Modal.popInfoModal();

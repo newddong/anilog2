@@ -334,6 +334,7 @@ export async function unFollowUser(params, callback, errcallback) {
 /** 대상 유저가 팔로우 한 유저를 검색한다.
  * @param {object} params
  * @param {string} params.userobject_id  - 팔로우 목록을 열람할 유저의 아이디.
+ * @param {string} params.user_nickname  - 팔로우 목록 중 찾고자 하는 닉네임/
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
@@ -344,6 +345,7 @@ export async function getFollows(params, callback, errcallback) {
 /** 대상 유저를 팔로우 한 유저를 검색한다.
  * @param {object} params
  * @param {string} params.userobject_id  - 팔로우 목록을 열람할 유저의 아이디.
+ * @param {string} params.user_nickname  - 팔로우 목록 중 찾고자 하는 닉네임/
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */

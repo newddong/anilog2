@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, FlatList} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import {BLACK} from 'Root/config/color';
 import {WriteBoard} from 'Root/component/atom/icon';
@@ -23,6 +23,11 @@ export default ArticleMain = ({route, navigation}) => {
 		navigation.push('ArticleCommentList', {feedobject: {_id: '62262a16d38ae5f3c51390d6'}});
 	};
 
+	//글쓰기
+	const onPressWrite = () => {
+		navigation.push('CommunityWrite', {isReview: false});
+	};
+
 	return (
 		<View style={[style.container]}>
 			<ArticleList
@@ -33,7 +38,7 @@ export default ArticleMain = ({route, navigation}) => {
 				onPressRecommendArticle={onPressRecommendArticle} //추천 게시글 아이템 클릭
 			/>
 			<View style={[style.write, style.shadow]}>
-				<WriteBoard />
+				<WriteBoard onPress={onPressWrite} />
 			</View>
 		</View>
 	);

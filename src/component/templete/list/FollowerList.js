@@ -27,8 +27,10 @@ export default FollowerList = ({route, navigation}) => {
 			getFollowers(
 				{
 					userobject_id: route.params.userobject._id,
+					user_nickname: searchInput,
 				},
 				result => {
+					// console.log('result / getFollowers / ', result.msg);
 					setMyFollower(result.msg.map(v => v.follower_id));
 				},
 				err => {
@@ -40,6 +42,7 @@ export default FollowerList = ({route, navigation}) => {
 			getFollows(
 				{
 					userobject_id: route.params.userobject._id,
+					user_nickname: searchInput,
 				},
 				result => {
 					setMyFollower(result.msg.map(v => v.follow_id));
@@ -49,7 +52,7 @@ export default FollowerList = ({route, navigation}) => {
 				},
 			);
 		}
-	}, []);
+	}, [searchInput]);
 
 	return (
 		<View style={[followerList.container]}>

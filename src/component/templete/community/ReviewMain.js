@@ -52,6 +52,10 @@ export default ReviewMain = ({route, navigation}) => {
 		navigation.push('ReviewDetail');
 	};
 
+	const onPressWrite = () => {
+		navigation.push('CommunityWrite', {isReview: true});
+	};
+
 	return (
 		<View style={[style.container]}>
 			<View style={[style.filter]}>
@@ -85,7 +89,7 @@ export default ReviewMain = ({route, navigation}) => {
 
 			<ReviewList items={dummy} onPressReviewContent={onPressReviewContent} onPressReply={onPressReply} />
 			<View style={[style.write, style.shadow]}>
-				<WriteBoard />
+				<WriteBoard onPress={onPressWrite} />
 			</View>
 		</View>
 	);

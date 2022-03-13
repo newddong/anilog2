@@ -37,10 +37,11 @@ export default FeedCommentList = props => {
 				{
 					feedobject_id: props.route.params.feedobject._id,
 					request_number: 1000,
+					login_userobject_id: userGlobalObject.userInfo._id
 				},
 				comments => {
 					setComments(comments.msg);
-					// console.log('comments', comments);
+					console.log('comments', comments);
 				},
 				err => console.log('getCommentListByFeedId', err),
 			);
@@ -49,6 +50,7 @@ export default FeedCommentList = props => {
 				{
 					feedobject_id: props.route.params.feedobject._id,
 					request_number: 1000,
+					login_userobject_id: userGlobalObject.userInfo._id
 				},
 				comments => {
 					setComments(comments.msg);

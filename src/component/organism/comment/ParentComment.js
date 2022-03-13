@@ -21,7 +21,7 @@ import {GRAY10} from 'Root/config/color';
 import {getChildCommentList} from 'Root/api/commentapi';
 import Modal from 'Component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
-
+import {likeComment} from 'Root/api/commentapi';
 /**
  *
  * @param {{
@@ -36,6 +36,7 @@ export default ParentComment = React.memo((props, ref) => {
 
 	const [data, setData] = React.useState(props.parentComment);
 	const [child, setChild] = React.useState([]);
+	const [likeCount, setLikeCount] = React.useState(0);
 	const [likeState, setLikeState] = React.useState(false); //해당 댓글의 좋아요 상태 - 로그인 유저가 좋아요를 누른 기록이 있다면 filled , or border
 	const [isMyComment, setIsMyComment] = React.useState(false); //해당 댓글 작성자가 본인인지 여부 Boolean
 	const [showChild, setShowChild] = React.useState(false); //해당 댓글의 답글들 출력 여부 Boolean
@@ -43,7 +44,8 @@ export default ParentComment = React.memo((props, ref) => {
 
 	React.useEffect(() => {
 		setData(props.parentComment);
-
+		setLikeState(props.parentComment.comment_is_like);
+		setLikeCount(props.parentComment.comment_like_count);
 		// console.log('parantCommnet data', data);
 		//API 에서 해당 데이터가 들어온 후 재작업 예정.
 		//댓글의 Writer와 로그인유저가 일치하는 경우 내 댓글 처리
@@ -64,6 +66,7 @@ export default ParentComment = React.memo((props, ref) => {
 		getChildCommentList(
 			{
 				commentobject_id: props.parentComment._id,
+				login_userobject_id: userGlobalObject.userInfo._id
 			},
 			result => {
 				console.log(result.msg);
@@ -81,12 +84,23 @@ export default ParentComment = React.memo((props, ref) => {
 
 	const onCLickHeart = () => {
 		setLikeState(!likeState);
+		likeComment({
+			commentobject_id : props.parentComment._id,
+			userobject_id: userGlobalObject.userInfo._id,
+			is_like: !likeState
+		},({msg}) =>{
+			setLikeCount(msg.targetComment.comment_like_count);
+		},error=>{
+			console.log(error);
+		})
+		props.like&&props.like(props.parentComment);
 	};
 
 	const showChildComment = () => {
 		getChildCommentList(
 			{
 				commentobject_id: props.parentComment._id,
+				login_userobject_id: userGlobalObject.userInfo._id
 			},
 			result => {
 				console.log(result.msg);
@@ -103,6 +117,12 @@ export default ParentComment = React.memo((props, ref) => {
 		
 		props.onEdit&&props.onEdit(data);
 	}
+
+	const like = data => {
+
+		props.like&&props.like(data);
+	}
+
 	const onPressMeatball = () => {
 		// console.log('meatballREf', meatballRef);
 		
@@ -139,16 +159,6 @@ export default ParentComment = React.memo((props, ref) => {
 					false,
 					'',
 				);
-				// Modal.popDropdownModal(
-				// 	{x: px, y: py},
-				// 	REPLY_MEATBALL_MENU_MY_REPLY,
-				// 	selectedItem => {
-				// 		alert(REPLY_MEATBALL_MENU_MY_REPLY[selectedItem]);
-				// 	},
-				// 	() => {
-				// 		console.log('meatball', meatball);
-				// 	},
-				// );
 			} else {
 				Modal.popSelectBoxModal(
 					REPLY_MEATBALL_MENU,
@@ -177,16 +187,6 @@ export default ParentComment = React.memo((props, ref) => {
 					false,
 					'',
 				);
-				// Modal.popDropdownModal(
-				// 	{x: px, y: py},
-				// 	REPLY_MEATBALL_MENU,
-				// 	selectedItem => {
-				// 		alert(REPLY_MEATBALL_MENU[selectedItem]);
-				// 	},
-				// 	() => {
-				// 		console.log('meatball', meatball);
-				// 	},
-				// );
 			}
 		});
 	};
@@ -255,7 +255,7 @@ export default ParentComment = React.memo((props, ref) => {
 					</View>
 					<View style={[parentComment.likeCount]}>
 						{/* Data - 좋아요 숫자 */}
-						<Text style={(txt.roboto24, parentComment.likeCountText)}>{data ? data.comment_like_count : ''}</Text>
+						<Text style={(txt.roboto24, parentComment.likeCountText)}>{likeCount}</Text>
 					</View>
 					<TouchableOpacity style={[parentComment.writeComment]} onPress={onPressReplyBtn}>
 						<Text style={[txt.noto22, parentComment.writeCommentText]}>· 답글 쓰기</Text>
@@ -273,7 +273,7 @@ export default ParentComment = React.memo((props, ref) => {
 			{/* Data - 대댓글List */}
 			{showChild ? (
 				<View style={[organism_style.childCommentList, parentComment.img_square_round_574]}>
-					<ChildCommentList items={child} showChildComment={showChildComment} onEdit={onEdit}/>
+					<ChildCommentList items={child} showChildComment={showChildComment} onEdit={onEdit} like={like}/>
 				</View>
 			) : (
 				false

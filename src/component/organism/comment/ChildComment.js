@@ -9,6 +9,7 @@ import MeatBallDropdown from 'Molecules/dropdown/MeatBallDropdown';
 import UserTimeLabel from 'Molecules/label/UserTimeLabel';
 import {useNavigation} from '@react-navigation/native';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {likeComment} from 'Root/api/commentapi';
 
 /**
  *
@@ -21,12 +22,15 @@ export default ChildComment = props => {
 	// console.log('ChildComment', props.data);
 	const [data, setData] = React.useState(props.data);
 	const [isMyComment, setIsMyComment] = React.useState(false);
+	const [likeCount, setLikeCount] = React.useState(0);
 	const [likeState, setLikeState] = React.useState(false);
 	const [meatball, setMeatball] = React.useState(false); // 해당 댓글의 미트볼 헤더 클릭 여부
 	// console.log('ChildCommnet Data', props);
 	const navigation = useNavigation();
 	React.useEffect(() => {
 		setData(props.data);
+		setLikeState(props.data.comment_is_like);
+		setLikeCount(props.data.comment_like_count);
 	}, [props.data]);
 
 	React.useEffect(() => {
@@ -35,6 +39,16 @@ export default ChildComment = props => {
 
 	const onCLickHeart = () => {
 		setLikeState(!likeState);
+		likeComment({
+			commentobject_id : props.data._id,
+			userobject_id: userGlobalObject.userInfo._id,
+			is_like: !likeState
+		},({msg}) =>{
+			setLikeCount(msg.targetComment.comment_like_count);
+		},error=>{
+			console.log(error);
+		})
+		props.like&&props.like(props.data);
 	};
 
 	//대댓글 클릭
@@ -135,7 +149,7 @@ export default ChildComment = props => {
 					{likeState ? <Heart30_Filled onPress={onCLickHeart} /> : <Heart30_Border onPress={onCLickHeart} />}
 				</View>
 				<View style={[childComment.likeCount]}>
-					<Text style={(txt.roboto24, childComment.likeCountText)}>{data ? data.comment_like_count : ''}</Text>
+					<Text style={(txt.roboto24, childComment.likeCountText)}>{likeCount}</Text>
 				</View>
 				{/* <TouchableOpacity style={[childComment.writeComment]} onPress={onPressReplyBtn}>
 					<Text style={(txt.noto22, childComment.writeCommentText)} numberOfLines={1}>

@@ -151,3 +151,17 @@ export async function getFeedListByUserId(params, callback, errcallback){
 export async function editFeed(params, callback, errcallback){
 	apiController('/feed/editFeed',arguments);
 }
+
+
+/**
+ * 선택한 피드에 좋아요를 설정/해제한다.
+ * @param {object} params
+ * @param {string} params.feedobject_id - 좋아요를 설정할 피드 오브젝트의 몽고디비 아이디
+ * @param {string} params.userobject_id - 좋아요를 설정한 유저의 몽고디비 아이디
+ * @param {string} params.is_like - 피드 좋아요 T/F
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+ export async function likeFeed(params, callback, errcallback){
+	apiController('/feed/likeFeed',arguments);
+}

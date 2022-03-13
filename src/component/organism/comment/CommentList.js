@@ -14,6 +14,9 @@ import {txt} from 'Root/config/textstyle';
  * }} props
  */
 export default CommentList = props => {
+	const like = data => {
+	}
+	
 	const renderItem = ({item, index}) => {
 		// console.log('CommentList', item);
 		return (
@@ -21,6 +24,7 @@ export default CommentList = props => {
 				parentComment={item}
 				onPressReplyBtn={props.onPressReplyBtn} // 부모 댓글의 답글쓰기 클릭 이벤트
 				onEdit={props.onEdit}
+				like={like}
 			/>
 		);
 	};

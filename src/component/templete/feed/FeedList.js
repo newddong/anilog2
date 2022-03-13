@@ -6,7 +6,7 @@ import Feed from 'Organism/feed/Feed';
 import {getSuggestFeedList} from 'Root/api/feedapi';
 import Modal from 'Component/modal/Modal';
 import DP from 'Root/config/dp';
-import {getFeedListByUserId} from 'Root/api/feedapi';
+import {getFeedListByUserId, getFavoriteFeedListByUserId} from 'Root/api/feedapi';
 import {getFeedsByHash} from 'Root/api/hashapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {login_style, buttonstyle} from 'Templete/style_templete';
@@ -73,6 +73,24 @@ export default FeedList = ({route, navigation}) => {
 							setIndex(msg.feeds.findIndex(v => v.hashtag_feed_id._id == route.params?.selected._id));
 
 							setFeedList(msg.feeds.map(v => v.hashtag_feed_id));
+						},
+						error => {
+							Modal.popOneBtn(error, '확인', () => {
+								setTimeout(() => {
+									navigation.goBack(), 300;
+								});
+							});
+						},
+					);
+					break;
+				case 'FavoriteFeedList':
+					getFavoriteFeedListByUserId(
+						{userobject_id : userGlobalObject.userInfo._id},
+						({msg}) => {
+							// setIndex(msg.feeds.findIndex(v => v.hashtag_feed_id._id == route.params?.selected._id));
+
+							setFeedList(msg);
+							console.log('즐겨찾기 리스트', msg)
 						},
 						error => {
 							Modal.popOneBtn(error, '확인', () => {

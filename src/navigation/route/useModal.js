@@ -209,8 +209,8 @@ export function useModal() {
 		!isPop && setPop(true);
 	};
 
-	Modal.popInterestTagModal = (isActivation, data, onSave, onClose, setState) => {
-		popIn(<InterestTagModal isActivation={isActivation} data={data} onSave={onSave} onClose={onClose} setState={setState} />);
+	Modal.popInterestTagModal = (category, data, onSave, onClose, setState) => {
+		popIn(<InterestTagModal category={category} data={data} onSave={onSave} onClose={onClose} setState={setState} />);
 		!isPop && setPop(true);
 	};
 

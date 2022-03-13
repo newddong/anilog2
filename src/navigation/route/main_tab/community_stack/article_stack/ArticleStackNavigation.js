@@ -7,6 +7,8 @@ import SimpleHeader from 'Root/navigation/header/SimpleHeader';
 import ArticleDetail from 'Root/component/templete/community/ArticleDetail';
 import ArticleMain from 'Root/component/templete/community/ArticleMain';
 import Profile from 'Root/component/templete/profile/Profile';
+import ArticleCommentList from 'Root/component/templete/community/ArticleCommentList';
+import FeedCommentList from 'Root/component/templete/feed/FeedCommentList';
 
 const ArticleStackNav = createStackNavigator();
 
@@ -22,6 +24,15 @@ export default ArticleStackNavigation = props => {
 			<ArticleStackNav.Screen
 				name={'ArticleDetail'}
 				component={ArticleDetail}
+				options={({route}) => ({
+					headerShown: true,
+					header: props => <SimpleHeader {...props} />,
+					title: ' ',
+				})}
+			/>
+			<ArticleStackNav.Screen
+				name={'ArticleCommentList'}
+				component={FeedCommentList}
 				options={({route}) => ({
 					headerShown: true,
 					header: props => <SimpleHeader {...props} />,

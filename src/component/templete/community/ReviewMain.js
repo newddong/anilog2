@@ -4,6 +4,7 @@ import {BLACK} from 'Root/config/color';
 import {Animal_another_off, Animal_cat_off, Animal_dog_off, Filter60Border, Filter60Filled, WriteBoard} from 'Root/component/atom/icon';
 import ReviewList from 'Root/component/organism/list/ReviewList';
 import {Animal_another, Animal_cat, Animal_dog} from 'Root/component/atom/icon';
+import Modal from 'Root/component/modal/Modal';
 
 export default ReviewMain = ({route, navigation}) => {
 	const onPressAnimalFilter = filter => {
@@ -17,9 +18,6 @@ export default ReviewMain = ({route, navigation}) => {
 			case 'another':
 				setFilterData({...filterData, another: !filterData.another});
 				break;
-			case 'filter':
-				setFilterData({...filterData, filter: !filterData.filter});
-				break;
 			default:
 				break;
 		}
@@ -30,36 +28,53 @@ export default ReviewMain = ({route, navigation}) => {
 		dog: false,
 		cat: false,
 		another: false,
-		filter: false,
+		filter: {
+			location: '',
+			category: [],
+		},
 	});
+
+	const onPressFilter = () => {
+		Modal.popInterestTagModal(
+			'Review',
+			[],
+			() => Modal.close(),
+			() => Modal.close(),
+			() => alert('setstate'),
+		);
+	};
+
+	const onPressReply = index => {
+		navigation.push('ReviewCommentList', {feedobject: {_id: '62262a16d38ae5f3c51390d6'}});
+	};
+
+	const onPressReviewContent = index => {
+		navigation.push('ReviewDetail');
+	};
 
 	return (
 		<View style={[style.container]}>
 			<View style={[style.filter]}>
 				<View style={[style.shadow_filter]}>
-					{filterData.filter ? (
-						<Filter60Filled onPress={() => onPressAnimalFilter('filter')} />
-					) : (
-						<Filter60Border onPress={() => onPressAnimalFilter('filter')} />
-					)}
+					<Filter60Border onPress={() => onPressFilter('filter')} />
 				</View>
 				<View style={[style.animalFilter]}>
 					<View style={[style.shadow]}>
-						{filterData.dog ? (
+						{!filterData.dog ? (
 							<Animal_dog onPress={() => onPressAnimalFilter('dog')} />
 						) : (
 							<Animal_dog_off onPress={() => onPressAnimalFilter('dog')} />
 						)}
 					</View>
 					<View style={[style.shadow]}>
-						{filterData.cat ? (
+						{!filterData.cat ? (
 							<Animal_cat onPress={() => onPressAnimalFilter('cat')} />
 						) : (
 							<Animal_cat_off onPress={() => onPressAnimalFilter('cat')} />
 						)}
 					</View>
 					<View style={[style.shadow]}>
-						{filterData.another ? (
+						{!filterData.another ? (
 							<Animal_another onPress={() => onPressAnimalFilter('another')} />
 						) : (
 							<Animal_another_off onPress={() => onPressAnimalFilter('another')} />
@@ -67,17 +82,8 @@ export default ReviewMain = ({route, navigation}) => {
 					</View>
 				</View>
 			</View>
-			<FlatList
-				data={[{}]}
-				listKey={({item, index}) => index}
-				renderItem={({item, index}) => {
-					return (
-						<View>
-							<ReviewList items={dummy} />
-						</View>
-					);
-				}}
-			/>
+
+			<ReviewList items={dummy} onPressReviewContent={onPressReviewContent} onPressReply={onPressReply} />
 			<View style={[style.write, style.shadow]}>
 				<WriteBoard />
 			</View>
@@ -91,11 +97,13 @@ const style = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		backgroundColor: '#fff',
+		paddingBottom: 100 * DP,
 	},
 	filter: {
 		width: 676 * DP,
 		height: 60 * DP,
 		marginTop: 30 * DP,
+		// paddingTop: 30 * DP,
 		marginBottom: 10 * DP,
 		flexDirection: 'row',
 	},

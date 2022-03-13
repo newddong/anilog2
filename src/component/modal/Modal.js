@@ -277,14 +277,14 @@ export default Modal = {
 
 	/**
 	 * 관심사 추가 및 수정 모달
-	 * @param {object} isActivation - 관심활동 / 관심지역 분기 (true일 경우 관심활동)
+	 * @param {'Activity'|'Location'|'Review'} category - 관심활동 / 관심지역 / 관심 후기 분기
 	 * @param {object} data - 관심사 추가할 계정 object(반려동물 혹은 유저)
 	 * @param {(selectedData)=>void)} onSave - 저장 버튼 클릭 콜백 / 선택된 항목의 오브젝트( ex : 지역, 미용, 놀이, 건강 등)
 	 * @param {()=>void)} onClose - 페이지 좌상단 x버튼 클릭 / 종료 콜백
 	 *
 	 * @example
 	 */
-	popInterestTagModal: (isActivation, data, onSave, onClose, setState) => {},
+	popInterestTagModal: (category, data, onSave, onClose, setState) => {},
 
 	/**
 	 * 공유 - 공유 목록 출력 모달

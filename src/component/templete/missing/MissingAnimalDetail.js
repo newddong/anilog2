@@ -19,6 +19,7 @@ import Modal from 'Root/component/modal/Modal';
 import MissingReportInfo from 'Organism/info/MissingReportInfo';
 import {PosterSave} from 'Component/atom/icon';
 import {phoneFomatter} from 'Root/util/stringutil';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default MissingAnimalDetail = props => {
 	const navigation = useNavigation();
@@ -102,6 +103,7 @@ export default MissingAnimalDetail = props => {
 				feedobject_id: props.route.params._id,
 				// commentobject_id: '61c2c0de7be07611b0094ffd',
 				request_number: 10,
+				login_userobject_id: userGlobalObject.userInfo._id
 			},
 			commentdata => {
 				// console.log('commentdata', commentdata.msg);

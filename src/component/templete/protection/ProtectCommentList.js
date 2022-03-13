@@ -37,6 +37,7 @@ export default ProtectCommentList = props => {
 			{
 				protect_request_object_id: data,
 				request_number: 1000,
+				login_userobject_id: userGlobalObject.userInfo._id
 			},
 			comments => {
 				setComments(comments.msg);
@@ -71,6 +72,7 @@ export default ProtectCommentList = props => {
 					{
 						protect_request_object_id: props.route.params.protectObject._id,
 						request_number: 1000,
+						login_userobject_id: userGlobalObject.userInfo._id
 					},
 					comments => {
 						!parentComment && setComments([]); //댓글목록 초기화

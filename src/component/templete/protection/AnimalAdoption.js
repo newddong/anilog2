@@ -15,7 +15,6 @@ import {setPetStatus} from 'Root/api/userapi';
 export default AnimalAdoption = props => {
 	const navigation = useNavigation();
 	// console.log('props.route.params', props.route.params);
-
 	//입양 - 애니로그 계정 유무에 따른 버튼 분기
 	const onPressAdoption = () => {
 		Modal.popTwoBtn(

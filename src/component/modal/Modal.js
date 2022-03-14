@@ -339,6 +339,22 @@ export default Modal = {
 	 */
 	popPhotoListViewModal: photoList => {},
 
+	/**
+	 * 로딩 중 출력 모달
+	 * @param {object} props - 추후 업데이트
+	 * @example
+	 */
+	popLoading: () => {},
+
+	/**
+	 * 주소 현위치 컨펌 모달
+	 * @param {Object} props - props object
+	 * @param {()=>void} props.onPressAddrSearch - 주소 찾기 클릭
+	 * @param {()=>void} props.onConfirm - 확인 버튼 콜백
+	 * @param {()=>void} props.searchedLocation - 현재 주소
+	 */
+	popLocationCheckModal: (onPressAddrSearch, onConfirm, searchedLocation) => {},
+
 	popInfoModal: () => {},
 
 	alert: () => {},

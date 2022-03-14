@@ -144,6 +144,8 @@ import animal_dog from './animal_dog';
 import animal_dog_off from './animal_dog_off';
 import rainbowBridge from './rainbowBridge';
 import writeBoard from './writeBoard';
+import loading from './loading';
+import save54 from './save54';
 import DP from 'Root/config/dp';
 
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
@@ -366,3 +368,5 @@ export const Animal_dog = makeSvg(animal_dog_off, {width: 100 * DP, height: 60 *
 export const Animal_dog_off = makeSvg(animal_dog, {width: 100 * DP, height: 60 * DP});
 export const RainbowBridge = makeSvg(rainbowBridge, {width: 132 * DP, height: 170 * DP});
 export const WriteBoard = makeSvg(writeBoard, size94);
+export const LoadingImg = makeSvg(loading, {width: 150 * DP, height: 150 * DP});
+export const Save54 = makeSvg(save54, {width: 54 * DP, height: 54 * DP});

@@ -34,6 +34,11 @@ export const styles = StyleSheet.create({
 		height: 410 * DP,
 		borderRadius: 30 * DP,
 	},
+	img_square_round_286: {
+		width: 286 * DP,
+		height: 286 * DP,
+		borderRadius: 32 * DP,
+	},
 	img_square_round_240: {
 		width: 240 * DP,
 		height: 240 * DP,

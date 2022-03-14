@@ -12,6 +12,7 @@ import FeedCommentList from 'Root/component/templete/feed/FeedCommentList';
 import CommunityWrite from 'Root/component/templete/community/CommunityWrite';
 import SendHeader from 'Root/navigation/header/SendHeader';
 import AddressSearchPage from 'Root/component/templete/search/AddressSearchPage';
+import GeoLocationSearch from 'Root/component/templete/search/GeoLocationSearch';
 
 const ArticleStackNav = createStackNavigator();
 
@@ -69,6 +70,11 @@ export default ArticleStackNavigation = props => {
 			<ArticleStackNav.Screen
 				name="AddressSearchPage"
 				component={AddressSearchPage}
+				options={{header: props => <SimpleHeader {...props} />, title: '주소 검색'}}
+			/>
+			<ArticleStackNav.Screen
+				name="GeoLocationSearch"
+				component={GeoLocationSearch}
 				options={{header: props => <SimpleHeader {...props} />, title: '주소 검색'}}
 			/>
 		</ArticleStackNav.Navigator>

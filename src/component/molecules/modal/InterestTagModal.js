@@ -192,13 +192,14 @@ const InterestTagModal = props => {
 
 	//저장
 	const onPressSave = () => {
-		if (props.isActivation) {
+		if (props.category == 'Activity') {
 			props.setState(userInterestContent);
-		} else {
+		} else if (props.category == 'Location') {
 			props.setState(userInterestLocation);
+		} else {
+			props.setState(selectedCity + ' / ' + selectedDistrict + ' / ' + userInterestReview.toString());
 		}
 		setIsSaved(true);
-
 		Modal.close();
 	};
 
@@ -306,8 +307,8 @@ const InterestTagModal = props => {
 			return <ActivityIndicator />;
 		} else
 			return (
-				<ScrollView>
-					<View style={[style.review_container, {}]}>
+				<ScrollView style={{flex: 1}}>
+					<View style={[style.review_container]}>
 						<View style={[style.review_location]}>
 							<ArrowDownButton onPress={onOpenCity} btnStyle={'border'} btnLayout={btn_w242} btnTitle={selectedCity} />
 							<ArrowDownButton onPress={onOpenDistrict} btnStyle={'border'} btnLayout={btn_w242} btnTitle={selectedDistrict} />
@@ -431,23 +432,23 @@ const InterestTagModal = props => {
 
 	return (
 		<View style={style.background}>
-			<TouchableOpacity
-				activeOpacity={1}
-				onPress={() => {
-					setSelectCityOpen(false);
-					setSelectDistrictOpen(false);
-				}}
+			<View
+				// activeOpacity={0.9}
+				// onPress={() => {
+				// 	setSelectCityOpen(false);
+				// 	setSelectDistrictOpen(false);
+				// }}
 				style={[style.popUpWindow]}>
 				<View style={[style.header]}>
-					<View style={[style.crossMark]}>
-						<Cross24_Filled onPress={onClose} />
-					</View>
+					<TouchableOpacity onPress={onClose} style={[style.crossMark]}>
+						<Cross24_Filled />
+					</TouchableOpacity>
 					<TouchableOpacity onPress={onPressSave} style={[style.saveText]}>
 						<Text style={[txt.noto36b, {color: APRI10}]}>저장</Text>
 					</TouchableOpacity>
 				</View>
 				{getList()}
-			</TouchableOpacity>
+			</View>
 			{showBtnModal ? (
 				<View style={[style.btnModalContainer, style.shadow]}>
 					<View style={[style.btnModalTitle]}>
@@ -604,7 +605,9 @@ const style = StyleSheet.create({
 		// backgroundColor: 'yellow',
 	},
 	crossMark: {
-		width: 52 * DP,
+		width: 90 * DP,
+		height: 90 * DP,
+		justifyContent: 'center',
 	},
 	saveText: {
 		// width: 66 * DP,

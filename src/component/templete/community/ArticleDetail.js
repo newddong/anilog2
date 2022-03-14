@@ -155,14 +155,16 @@ export default ArticleDetail = props => {
 
 	return (
 		<View style={[style.container]}>
-			<FlatList
-				data={[{}, comments]}
-				extraData={refresh}
-				renderItem={render}
-				showsVerticalScrollIndicator={false}
-				ListHeaderComponent={freeBoardContent}
-				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
-			/>
+			<View style={[{width: 750 * DP, alignItems: 'center'}]}>
+				<FlatList
+					data={[{}, comments]}
+					extraData={refresh}
+					renderItem={render}
+					showsVerticalScrollIndicator={false}
+					ListHeaderComponent={freeBoardContent}
+					ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
+				/>
+			</View>
 			{userGlobalObject.userInfo._id != '' ? (
 				<View style={{position: 'absolute', bottom: keyboardY}} onLayout={onReplyBtnLayout}>
 					<ReplyWriteBox
@@ -187,6 +189,8 @@ ArticleDetail.defaultProps = {};
 
 const style = StyleSheet.create({
 	container: {
+		flex: 1,
+		backgroundColor: '#fff',
 		alignSelf: 'center',
 		alignItems: 'center',
 	},

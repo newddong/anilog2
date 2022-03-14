@@ -12,10 +12,6 @@ export default function GeoLocation() {
 	const y = '37.3097165';
 	const [latitude, setLatitude] = useState(null);
 	const [longitude, setLogitude] = useState(null);
-	React.useEffect(() => {
-		console.log('latitude   ', latitude);
-		console.log('longitude   ', longitude);
-	}, [latitude]);
 
 	//위도 경도 받아오기
 	const geoLocation = () => {

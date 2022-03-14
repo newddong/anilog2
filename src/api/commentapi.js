@@ -82,3 +82,17 @@ export async function deleteComment(params, callback, errcallback) {
 export async function updateComment(params, callback, errcallback) {
 	apiController('/comment/updateComment', arguments);
 }
+
+/**
+ * 댓글/대댓글에 좋아요 설정
+ *
+ * @param {object} params
+ * @param {string} params.commentobject_id - 좋아요를 누른 댓글/대댓글의 object ID
+ * @param {string} params.userobject_id - 댓글/대댓글에 좋아요를 누른 유저의 object ID
+ * @param {string} params.is_like - 좋아요 T/F
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function likeComment(params, callback, errcallback) {
+	apiController('/comment/likeComment', arguments);
+}

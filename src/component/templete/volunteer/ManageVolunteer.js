@@ -2,23 +2,19 @@ import React from 'react';
 import {ScrollView, Text, View, TouchableOpacity, ActivityIndicator} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import moment from 'moment';
-import {GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {Arrow_Down_GRAY20, Arrow_Up_GRAY20} from 'Atom/icon';
 import VolunteerItemList from 'Organism/list/VolunteerItemList';
 import {login_style, manageVolunteer} from 'Templete/style_templete';
-import {_dummy_userObject_user, _dummy_VolunteerActivityApplicant} from 'Root/config/dummy_data_hjs';
 import {getShelterVolunteerActivityList, getUserVolunteerActivityList} from 'Root/api/volunteerapi';
 
 export default ManageVolunteer = ({route}) => {
-	// console.log(route.params);
 	// console.log('route.name', route.name);
 	const navigation = useNavigation();
 	const isShelterUser = route.name == 'ManageShelterVolunteer';
-	const [loading, setLoading] = React.useState(true);
 
-	const [notDoneList, setNotDoneList] = React.useState(); //활동 예정중인 신청
-	const [doneList, setDoneList] = React.useState([]); // 지난 신청
+	const [notDoneList, setNotDoneList] = React.useState('false'); //활동 예정중인 신청
+	const [doneList, setDoneList] = React.useState('false'); // 지난 신청
 	const [showMoreHistory, setShowMoreHistory] = React.useState(false); //지난 내역 더보기
 
 	React.useEffect(() => {
@@ -27,7 +23,7 @@ export default ManageVolunteer = ({route}) => {
 			getUserVolunteerActivityList(
 				{},
 				result => {
-					console.log('success / getUserVolunterItemList / ManageVolunteer', result.msg);
+					// console.log('success / getUserVolunterItemList / ManageVolunteer', result.msg[0]);
 					let doneList = []; //지난 내역을 담을 컨테이너
 					let notDoneList = []; //활동 예정 중인 신청을 담을 컨테이너
 					result.msg.map((v, i) => {
@@ -39,17 +35,24 @@ export default ManageVolunteer = ({route}) => {
 						v.user_type = v.volunteer_target_shelter.user_type;
 						v.user_profile_uri = v.volunteer_target_shelter.user_profile_uri;
 						// 비교 후 '지난 내역' / '활동 예정' 각 배열에 푸쉬
-						wishdate.getTime() < thisTime ? doneList.push(v) : notDoneList.push(v);
+						if (wishdate.getTime() < thisTime) {
+							// console.log('v.volunteer_status', i, v.volunteer_status);
+							doneList.push(v);
+						} else if (v.volunteer_status == 'waiting' || v.volunteer_status == 'accept') {
+							// console.log('v.volunteer_status', i, v.volunteer_status);
+							notDoneList.push(v);
+						} else {
+							// console.log('v.volunteer_status', i, v.volunteer_wish_date);
+							doneList.push(v);
+						}
 					});
 					setDoneList(doneList); //API로 받아온 지난 내역 값 setState
 					setNotDoneList(notDoneList); //이하동문
-					// setLoading(false);
-					setTimeout(() => {
-						setLoading(false);
-					}, 500);
 				},
 				err => {
 					console.log('err', err);
+					setDoneList([]);
+					setNotDoneList([]);
 				},
 			);
 		} else {
@@ -60,40 +63,32 @@ export default ManageVolunteer = ({route}) => {
 			getShelterVolunteerActivityList(
 				{
 					volunteer_activity_object_id: '',
-					volunteer_status: 'waiting',
+					volunteer_status: '',
 					request_number: 30,
 				},
 				data => {
-					//volunteer_accompany 속성에 있는 데이터들을 1depth 올려준다.
+					// console.log('success / getUserVolunterItemList / ManageShelterVolunteer', data.msg[1]);
 					data.msg.map((v, i) => {
-						data.msg[i].user_profile_uri = data.msg[i].volunteer_accompany[0].user_profile_uri;
-						data.msg[i].user_introduction = data.msg[i].volunteer_accompany[0].user_introduction;
-						data.msg[i].user_nickname = data.msg[i].volunteer_accompany[0].user_nickname;
 						let wishdate = moment(v.volunteer_wish_date[0]).toDate(); //봉사활동 희망날짜 배열에서 첫번째 값을 받아와 Date타입으로 치환
 						let thisTime = new Date().getTime(); // 현재 시간
-						wishdate.getTime() < thisTime ? doneList.push(v) : notDoneList.push(v); // 비교 후 '지난 내역' / '활동 예정' 각 배열에 푸쉬
-						//날짜포멧변경
-						// data.msg[i].volunteer_wish_date[0] = data.msg[i].volunteer_wish_date[0].substring(0, 10).replace(/-/g, '.');
-						//오늘 날짜와 지난 날짜를 구분해서 최근 신청서와 지난 신청서를 구분.
-						// const strArry = data.msg[i].volunteer_wish_date[0].split('.');
-						// const dataData = new Date(strArry[0], strArry[1], strArry[1]);
-						// if (nowDate <= dataData) {
-						// 	notDoneList.push(data.msg[i]);
-						// } else {
-						// 	doneList.push(data.msg[i]);
-						// }
+						if (wishdate.getTime() < thisTime) {
+							// 시간이 지난 신청서는 우선 지난 신청서로 푸쉬
+							doneList.push(v);
+						} else if (v.volunteer_status == 'waiting' || v.volunteer_status == 'accept') {
+							// 시간이 지나지 않았고, 수락 대기 중 혹은 수락이 된 신청서는 제외하고는 모두 지난 신청서로 푸쉬
+							notDoneList.push(v);
+						} else {
+							// 결국 남는 건 done / notaccept / cancel 일 경우에 대해서는 지난 신청서로 푸쉬
+							doneList.push(v);
+						}
 					});
 					setDoneList(doneList);
 					setNotDoneList(notDoneList);
-					setTimeout(() => {
-						setLoading(false);
-					}, 500);
 				},
 				errcallback => {
 					console.log(`getShelterVolunteerActivityList errcallback:${JSON.stringify(errcallback)}`);
-					setTimeout(() => {
-						setLoading(false);
-					}, 500);
+					setDoneList([]);
+					setNotDoneList([]);
 				},
 			);
 		}
@@ -106,7 +101,6 @@ export default ManageVolunteer = ({route}) => {
 
 	// 봉사활동 아이템 클릭 => 봉사활동 신청서 필요 데이터 : 보호소 정보 / 해당 봉사활동 데이터
 	const goToAssignVolunteer = shelterData => {
-		// console.log('shelter', shelterData);
 		isShelterUser ? navigation.push('ShelterVolunteerForm', shelterData) : navigation.push('UserVolunteerForm', shelterData);
 	};
 
@@ -115,10 +109,11 @@ export default ManageVolunteer = ({route}) => {
 	};
 
 	const whenEmpty = () => {
-		return <Text style={[txt.roboto28b, {marginTop: 50}]}>신청 내역이 없습니다. </Text>;
+		return <Text style={[txt.roboto28b, manageVolunteer.whenEmpty]}>신청 내역이 없습니다. </Text>;
 	};
+	const isLoaded = doneList == 'false' || notDoneList == 'false'; //활동 예정 및 지난 신청 중 단 하나라도 false(API 적용 이전값)가 있다면 아직 로딩중
 
-	if (loading) {
+	if (isLoaded) {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
 				<ActivityIndicator size={'large'}></ActivityIndicator>
@@ -130,7 +125,7 @@ export default ManageVolunteer = ({route}) => {
 				<ScrollView contentContainerStyle={manageVolunteer.container}>
 					{/* 활동 예정 중인 신청 */}
 					<View style={[manageVolunteer.title]}>
-						<Text style={[txt.noto24, {color: GRAY20}]}>{isShelterUser ? '최근 신청서' : '활동 예정중인 신청'} </Text>
+						<Text style={[txt.noto24]}>{isShelterUser ? '최근 신청서' : '활동 예정중인 신청'} </Text>
 					</View>
 					<View style={[manageVolunteer.volunteerList]}>
 						<VolunteerItemList
@@ -139,6 +134,7 @@ export default ManageVolunteer = ({route}) => {
 							onClickItem={goToAssignVolunteer}
 							onClickLabel={onClickLabel}
 							whenEmpty={whenEmpty()}
+							isShelterUser={isShelterUser}
 						/>
 					</View>
 
@@ -146,10 +142,17 @@ export default ManageVolunteer = ({route}) => {
 
 					{/* 지난 신청 */}
 					<View style={[manageVolunteer.title]}>
-						<Text style={[txt.noto24, {color: GRAY20}]}>{isShelterUser ? '지난 신청서' : '지난 신청'}</Text>
+						<Text style={[txt.noto24]}>{isShelterUser ? '지난 신청서' : '지난 신청'}</Text>
 					</View>
 					<View style={[showMoreHistory ? manageVolunteer.previous_volunteerList_expanded : manageVolunteer.previous_volunteerList]}>
-						<VolunteerItemList items={doneList} type={'done'} onClickLabel={onClickLabel} onClickItem={goToAssignVolunteer} whenEmpty={whenEmpty()} />
+						<VolunteerItemList
+							items={doneList}
+							type={'done'}
+							isShelterUser={isShelterUser}
+							onClickLabel={onClickLabel}
+							onClickItem={goToAssignVolunteer}
+							whenEmpty={whenEmpty()}
+						/>
 					</View>
 
 					{/* 지난 내역 더보기 --> [클릭] => 지난 내역 더보기 Container는 사라짐 */}

@@ -1,21 +1,23 @@
 import React from 'react';
-import {StyleSheet, View, FlatList, RefreshControl} from 'react-native';
+import {StyleSheet, View, FlatList, RefreshControl, Platform} from 'react-native';
 import {WHITE} from 'Root/config/color';
 import {Write94} from 'Atom/icon';
 import Feed from 'Organism/feed/Feed';
 import {getSuggestFeedList} from 'Root/api/feedapi';
 import Modal from 'Component/modal/Modal';
 import DP from 'Root/config/dp';
-import {getFeedListByUserId} from 'Root/api/feedapi';
+import {getFeedListByUserId, getFavoriteFeedListByUserId} from 'Root/api/feedapi';
 import {getFeedsByHash} from 'Root/api/hashapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {login_style, buttonstyle} from 'Templete/style_templete';
+import {getStringLength, getLinesOfString} from 'Root/util/stringutil';
+import {GRAY30} from 'Root/config/color';
 
 export default FeedList = ({route, navigation}) => {
-	const ITEM_HEIGHT = 1222 * DP;
 	const [feedList, setFeedList] = React.useState([]);
 	const [refreshing, setRefreshing] = React.useState(false);
 	const [index, setIndex] = React.useState(0);
+	const flatlist = React.useRef();
 	//피드썸네일 클릭 리스트일 경우
 	React.useEffect(() => {
 		// console.log('userobject', route.params?.userobject);
@@ -39,10 +41,25 @@ export default FeedList = ({route, navigation}) => {
 						{
 							userobject_id: route.params?.userobject._id,
 							request_number: 9999,
+							login_userobject_id: userGlobalObject.userInfo._id,
 						},
 						({msg}) => {
-							setIndex(msg.findIndex(v => v._id == route.params?.selected._id));
-							setFeedList(msg);
+							setFeedList(
+								msg
+									.map((v, i, a) => {
+										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
+										return {...v, height: (1060 + (lines > 3 ? 2 * 54 + 48 : lines * 54)) * DP};
+									})
+									.map((v, i, a) => {
+										let offset = a.slice(0, i).reduce((prev, current) => {
+											return current.height + prev;
+										}, 0);
+										return {
+											...v,
+											offset: offset,
+										};
+									}),
+							);
 						},
 						errormsg => {
 							Modal.popOneBtn(errormsg, '확인', () => Modal.close());
@@ -66,12 +83,46 @@ export default FeedList = ({route, navigation}) => {
 						},
 					);
 					break;
+				case 'FavoriteFeedList':
+					getFavoriteFeedListByUserId(
+						{userobject_id: userGlobalObject.userInfo._id},
+						({msg}) => {
+							// setIndex(msg.feeds.findIndex(v => v.hashtag_feed_id._id == route.params?.selected._id));
+
+							setFeedList(msg);
+							console.log('즐겨찾기 리스트', msg);
+						},
+						error => {
+							Modal.popOneBtn(error, '확인', () => {
+								setTimeout(() => {
+									navigation.goBack(), 300;
+								});
+							});
+						},
+					);
+					break;
 				default:
 					getSuggestFeedList(
-						{},
+						{
+							login_userobject_id: userGlobalObject.userInfo._id,
+						},
 						({msg}) => {
-							// console.log('msg', msg);
-							setFeedList(msg);
+							setFeedList(
+								msg
+									.map((v, i, a) => {
+										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
+										return {...v, height: (1060 + (lines > 3 ? 2 * 54 + 48 : lines * 54)) * DP};
+									})
+									.map((v, i, a) => {
+										let offset = a.slice(0, i).reduce((prev, current) => {
+											return current.height + prev;
+										}, 0);
+										return {
+											...v,
+											offset: offset,
+										};
+									}),
+							);
 						},
 						errormsg => {
 							Modal.popOneBtn(errormsg, '확인', () => Modal.close());
@@ -87,13 +138,35 @@ export default FeedList = ({route, navigation}) => {
 		//Refreshing 요청시 피드리스트 다시 조회
 		refreshing ? getList() : false;
 		return unsubscribe;
-	}, [refreshing]);
+	}, [refreshing, route]);
+	const [refresh, setRefresh] = React.useState(false);
+	React.useEffect(() => {
+		if (feedList.length > 0) {
+			let indx = feedList.findIndex(v => v._id == route.params?.selected._id);
+			if (route.name == 'UserFeedList') {
+				setTimeout(() => {
+					flatlist.current.scrollToIndex({
+						animated: false,
+						index: indx > 0 ? indx : 0,
+					});
+				}, 0);
+			} else {
+				setTimeout(() => {
+					flatlist.current.scrollToOffset({
+						offset: userGlobalObject.t.y,
+						animated: false,
+					});
+				}, 0);
+			}
+		}
+		setRefresh(!refresh);
+	}, [feedList]);
 
 	const moveToFeedWrite = () => {
 		userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed'});
 	};
 
-	const renderItem = item => {
+	const renderItem = ({item}) => {
 		return <Feed data={item} />;
 	};
 
@@ -104,18 +177,38 @@ export default FeedList = ({route, navigation}) => {
 	const onRefresh = () => {
 		setRefreshing(true);
 
-		wait(2000).then(() => setRefreshing(false));
+		wait(1000).then(() => setRefreshing(false));
+	};
+
+	const rememberScroll = e => {
+		if (e.nativeEvent.contentOffset.y > 0) {
+			userGlobalObject.t = e.nativeEvent.contentOffset;
+		}
 	};
 
 	return (
 		<View style={(login_style.wrp_main, {flex: 1, backgroundColor: WHITE})}>
 			<FlatList
 				data={feedList}
-				renderItem={({item}) => renderItem(item)}
-				keyExtractor={(item, index) => index}
+				renderItem={renderItem}
+				keyExtractor={(item, index) => {
+					let key = item._id + item.feed_update_date + item.feed_is_like;
+					return key;
+				}}
 				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-				getItemLayout={(data, index) => ({length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index})}
-				initialScrollIndex={index}
+				getItemLayout={(data, index) => {
+					if (!data[index]) return {length: 0, offset: 0, index: index};
+					return {length: data[index].height, offset: data[index].offset, index: index};
+				}}
+				ref={flatlist}
+				refreshing
+				extraData={refresh}
+				onScroll={rememberScroll}
+				ItemSeparatorComponent={({highlited}) => (
+					<View style={{alignItems: 'center'}}>
+						<View style={{height: 2 * DP, backgroundColor: GRAY30, width: 654 * DP}}></View>
+					</View>
+				)}
 			/>
 			{userGlobalObject.userInfo && (
 				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}, buttonstyle.shadow]}>

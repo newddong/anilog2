@@ -128,7 +128,7 @@ export const KENNEL_COUGH = '캔넬코프';
 export const RABIES = '광견병';
 export const DISCLOSE = '공개';
 export const ASSIGN_PET = '반려동물 추가';
-
+export const OPENSETTING = '공개 설정';
 //SearchTopTabRoute
 export const FEED = '피드';
 export const HEALTH_VIDEO = '건강영상';
@@ -186,38 +186,20 @@ export const EMAIL_DOMAIN = [
 
 export const CALENDAR_YEAR = () => {
 	let currentTime = new Date();
-	let year = ['-------------', '-------------'];
+	let year = ['', ''];
 	for (let i = 0; i < 70; i++) {
 		year.push(currentTime.getFullYear() - i);
 	}
-	year.push('-------------', '-------------');
+	year.push('', '');
 	return year;
 };
 
-export const CALENDAR_MONTH = [
-	'-------------',
-	'-------------',
-	'1',
-	'2',
-	'3',
-	'4',
-	'5',
-	'6',
-	'7',
-	'8',
-	'9',
-	'10',
-	'11',
-	'12',
-	'-------------',
-	'-------------',
-	'-------------',
-];
+export const CALENDAR_MONTH = ['', '', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '', '', ''];
 export const CALENDAR_DAY = () => {
-	const paddingObject = '-------------';
-	let day30 = ['-------------', '-------------'];
-	let day31 = ['-------------', '-------------'];
-	let day29 = ['-------------', '-------------'];
+	const paddingObject = '';
+	let day30 = ['', ''];
+	let day31 = ['', ''];
+	let day29 = ['', ''];
 	for (let i = 1; i < 32; i++) {
 		day31.push(i);
 	}
@@ -351,7 +333,7 @@ export const MODIFY_PROFILE = '프로필 변경';
 export const MANAGEMENT_OF_PROTECTED_ANIMAL = '보호동물 관리';
 export const PROTECTED_ANIMAL = '보호중인 동물';
 export const INQUERY_APPLICATION = '신청서 조회';
-export const FROM_MY_SHELTER = '나의 보호소 출신동물';
+export const FROM_MY_SHELTER = '나의 보호소 출신 동물';
 export const MANAGEMENT_OF_VOLUNTEER = '봉사활동 신청관리';
 
 export const FAVORITES = '즐겨찾기';
@@ -364,7 +346,7 @@ export const MY_ACTIVITY_IN_SHELTER = '나의 활동';
 export const MY_CONTENTS = '내 게시글';
 export const TAGED_CONTENTS_FOR_ME = '나를 태그한 글';
 export const APPLICATION_HISTORY = '신청 내역';
-export const UPLOADED_POST_FOR_REQ_PROTECTION = '보호요청 올린 게시글';
+export const UPLOADED_POST_FOR_REQ_PROTECTION = '보호 요청 글';
 export const NOTE_LIST = '쪽지함';
 export const MODIFY_SHELTER_DATA = '보호소 정보수정';
 
@@ -417,7 +399,7 @@ export const NEW_PWD_PLACEHOLDER = '새로운 비밀번호 확인';
 export const PWD_CHECK_INFO = '비밀번호를 다시 한 번 적어주세요.';
 
 //Nickname 설정 관련
-export const NICKNAME_FORM = '2자 이상 15자 이내의 영문, 숫자의 입력만 가능합니다';
+export const NICKNAME_FORM = '2~15자 이내의 영문,한글,숫자 입력만 가능합니다';
 export const NEW_NICK_REQUEST = '닉네임을 입력 해주세요.';
 export const PREVIOUS_NICK_TITLE = '기존 닉네임';
 
@@ -428,10 +410,11 @@ export const AVAILABLE_NICK = '사용 가능한 닉네임입니다!';
 //FilterButton 관련
 
 //Meatball
-export const PROTECT_STATUS = ['입양가능', '협의 중', '임보 중', '완료']; //SHELTER PROTECT REQUEST 템플릿
+export const PROTECT_STATUS = ['모든 게시글', '입양가능', '협의 중', '완료']; //SHELTER PROTECT REQUEST 템플릿
+export const PROTECT_STATUS_VAR = ['all', 'rescue', 'discuss', 'complete']; //SHELTER PROTECT REQUEST 템플릿
 export const SETTING_OWN_COMMENT = ['수정', '삭제'];
 export const SETTING_COMMENT = ['신고'];
-export const PROTECT_REQUEST_STATUS = ['임보중', '협의 중', '완료', '사망', '입양 가능'];
+export const PROTECT_REQUEST_STATUS = ['협의 중', '사망', '입양 가능'];
 
 //Modal Message
 export const CONFIRM_PROTECT_REQUEST = '이 내용으로 \n 보호 활동 신청을 하시겠습니까?';
@@ -463,8 +446,10 @@ export const FOLLOWER_PET_MENU = ['즐겨찾기 추가', '소식 받기', '차�
 //피드 미트볼 메뉴 리스트
 export const FEED_MEATBALL_MENU_FOLLOWING = ['쪽지 보내기', '즐겨찾기', '공유하기', '게시물 알람 설정', '팔로우 취소', '신고'];
 export const FEED_MEATBALL_MENU_UNFOLLOWING = ['쪽지 보내기', '팔로우', '즐겨찾기', '공유하기', '신고'];
+export const FEED_MEATBALL_MENU_FOLLOWING_UNFAVORITE = ['쪽지 보내기', '즐겨찾기 취소', '공유하기', '게시물 알람 설정', '팔로우 취소', '신고'];
+export const FEED_MEATBALL_MENU_UNFOLLOWING_UNFAVORITE = ['쪽지 보내기', '팔로우', '즐겨찾기 취소', '공유하기', '신고'];
 export const FEED_MEATBALL_MENU_MY_FEED = ['공유하기', '수정', '삭제'];
-export const FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS = ['상태 변경', '공유하기', '수정', '삭제'];
+export const FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS = ['상태변경', '공유하기', '수정', '삭제'];
 export const FEED_MEATBALL_MENU = ['공유하기', '신고'];
 
 //신고 목록
@@ -482,3 +467,43 @@ export const REPLY_MEATBALL_MENU = ['공유하기', '신고'];
 
 //동물 체중 안내
 export const WEIGHT_INPUT_FORM_INFO = '두자리 숫자, 소수점 한자리';
+
+//알림  설정
+
+export const FOLLWER_NEW_POST_ALRAM = '팔로워 새 게시글 알림';
+export const FAVORITE_PROTECT_STATUS_CHANGE_ALRAM = '즐겨찾은 보호요청 상태 변경 알림';
+export const PET_VACCIN_DATE_ALRAM = '반려동물의 접종 예정일 알림';
+export const MY_POST_ALRAM = '내 게시글 알림';
+export const MY_POST_COMMENT_ALRAM = '내 게시글에 달린 댓글 알림';
+export const TAG_OR_FOLLOW_ALRAM = '나를 태그하거나 팔로우시 알림';
+export const MY_APPLY_STATUS_CHANGE_ALRAM = '내 신청서 상태 변경시 알림';
+
+export const INITIAL_NUMBER = ['010', '02', '031', '033', '043', '041', '054', '055', '063', '061', '064'];
+
+export const applyComanionCheckList = [
+	{
+		text: '입양 혹은 임시보호를 하려는 당사자는 성인입니다',
+		detail: false,
+		state: false,
+	},
+	{
+		text: '주거지 근처에 접종을 위해 주기적으로 갈 수 있는 동물병원이 있습니다',
+		detail: false,
+		state: false,
+	},
+	{
+		text: '현재 함께 사는 동거인들에게 입양 혹은 임시보호의 동의를 받았거나 동거인이 없습니다.',
+		detail: false,
+		state: false,
+	},
+	{
+		text: '입양 혹은 임시보호를 하려는 동물에 대한 배변 훈련 지식이 있습니다.',
+		detail: false,
+		state: false,
+	},
+	{
+		text: '입양 혹은 임시보호를 하려는 동물 청결(손톱 손질, 목욕, 항문낭, 귀청결 등)에 대한 지식이 있습니다.',
+		detail: false,
+		state: false,
+	},
+];

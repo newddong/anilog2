@@ -30,30 +30,38 @@ export default SaveButtonHeader = ({navigation, route, options, back}) => {
 			if (route.params.route_name == 'UserInfoDetailSetting') {
 				console.log('data!!!', data.data);
 				console.log('저장 버튼 param', data.data._id, data.data.user_birthday, data.data.user_interests, data.data.user_address, data.data.user_sex),
-					updateUserDetailInformation(
-						{
-							// userobject_id: received._id,
-							// user_birthday: received.user_birthday,
-							// user_interests: received.user_interests,
-							// user_address: received.user_address,
-							// user_sex: received.user_sex,
-							userobject_id: data.data._id,
-							user_birthday: data.data.user_birthday,
-							// user_interests: data.data.user_interests,
-							user_interests: [],
-							user_address: data.data.user_address,
-							user_sex: data.data.user_sex,
-						},
+					console.log('data.data', typeof data.data.user_interests);
+				updateUserDetailInformation(
+					{
+						// userobject_id: received._id,
+						// user_birthday: received.user_birthday,
+						// user_interests: received.user_interests,
+						// user_address: received.user_address,
+						// user_sex: received.user_sex,
+						userobject_id: data.data._id,
+						user_birthday: '',
+						user_interests: data.data.user_interests,
+						// user_interests: {
+						// 	interests_activity: ['의류'],
+						// 	interests_beauty: ['미용'],
+						// 	interests_food: ['독스포츠'],
+						// 	interests_health: ['노환'],
+						// 	interests_location: ['서울 특별시'],
+						// },
+						user_address: data.data.user_address,
+						user_sex: data.data.user_sex,
+					},
 
-						result => {
-							console.log('result / updateUserDetailInformation / SaveButtonHeader   : ', result);
-							Modal.popOneBtn('저장되었습니다.', '확인', Modal.close);
-						},
-						err => {
-							console.log('err / updateUserDetailInformation / SaveButtonHeader    :  ', err);
-							Modal.popOneBtn('저장실패 하였습니다.' + err, '확인', Modal.close);
-						},
-					);
+					result => {
+						console.log('result / updateUserDetailInformation / SaveButtonHeader   : ', result);
+						Modal.popOneBtn('저장되었습니다.', '확인', Modal.close);
+						navigation.goBack();
+					},
+					err => {
+						console.log('err / updateUserDetailInformation / SaveButtonHeader    :  ', err);
+						Modal.popOneBtn('저장실패 하였습니다.' + err, '확인', Modal.close);
+					},
+				);
 			} else if (route.params.route_name == 'SetPetInformation') {
 				//펫 유저의 상세정보 수정
 				updatePetDetailInformation(

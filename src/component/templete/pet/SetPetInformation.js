@@ -149,12 +149,11 @@ export default SetPetInformation = ({route, navigation}) => {
 							<View style={{flexDirection: 'row'}}>
 								<Input30
 									alert_msg={WEIGHT_INPUT_FORM_INFO}
-
 									description="info"
 									showmsg={false}
 									confirm={true}
 									showTitle={false}
-									width={206}
+									width={120}
 									placeholder={'몸무게 입력'}
 									showCrossMark={false}
 									onChange={onChangeKg}

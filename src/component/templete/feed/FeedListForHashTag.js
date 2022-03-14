@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, TouchableWithoutFeedback, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableWithoutFeedback, TouchableOpacity, ScrollView} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {APRI10, GRAY20, GRAY30, WHITE} from 'Root/config/color';
 import {feedListForHashTag, login_style, temp_style} from 'Templete/style_templete';
@@ -54,7 +54,7 @@ export default FeedListForHashTag = props => {
 	}, []);
 
 	return (
-		<View style={[login_style.wrp_main, feedListForHashTag.container, {}]}>
+		<View style={[feedListForHashTag.container, {}]}>
 			{/* HashTagInfo */}
 			<View style={[feedListForHashTag.hashTagInfo]}>
 				<View style={[feedListForHashTag.hashLabel]}>
@@ -76,9 +76,13 @@ export default FeedListForHashTag = props => {
 				</View>
 			</View>
 			{/* FeedThumbnailList */}
-			<View style={[temp_style.feedThumbnailList]}>
-				<FeedThumbnailList items={feeds} onClickThumnail={moveToHashFeedList} />
-			</View>
+			<ScrollView horizontal={false} contentContainerStyle={{flex: 1}} showsVerticalScrollIndicator={false}>
+				<ScrollView horizontal={true} scrollEnabled={false}>
+					<View style={[feedListForHashTag.feedThumbnailList]}>
+						<FeedThumbnailList items={feeds} onClickThumnail={moveToHashFeedList} />
+					</View>
+				</ScrollView>
+			</ScrollView>
 		</View>
 	);
 };

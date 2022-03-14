@@ -43,7 +43,7 @@ const ArrowDownButton = props => {
 	//default는 APRI10, Gray의 경우 GRAY20
 	const border = () => {
 		if (props.btnStyle == 'border' && props.btnTheme == 'gray') {
-			return {borderColor: GRAY10, borderWidth: 4 * DP};
+			return {borderColor: GRAY10, borderWidth: 2 * DP};
 		} else if (props.btnStyle == 'border') {
 			return {borderColor: APRI10, borderWidth: 4 * DP};
 		}

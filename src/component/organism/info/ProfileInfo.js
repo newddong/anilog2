@@ -40,7 +40,6 @@ const ProfileInfo = props => {
 	const [into_height, setIntro_height] = React.useState(0); //user_introduction 의 길이 => 길이에 따른 '더보기' 버튼 출력 여부 결정
 
 	const isOwner = userGlobalObject.userInfo.user_my_pets.includes(data._id);
-	console.log('data', isOwner);
 
 	//더보기 클릭
 	const onPressShowMore = () => {
@@ -120,8 +119,9 @@ const ProfileInfo = props => {
 			);
 		} else {
 			if (userGlobalObject.userInfo._id == data._id) {
+				//보호소 프로필이며 자기 계정인 경우
 				return (
-					<View style={[{flexDirection: 'row', justifyContent: 'space-between'}]}>
+					<View style={[profileInfo_style.shelterButtonContainer]}>
 						<FloatAddPet_128x68 onPress={onPressAddPetBtn} />
 						<FloatAddArticle_128x68 onPress={onPressAddArticleBtn} />
 					</View>
@@ -177,6 +177,10 @@ const ProfileInfo = props => {
 			true,
 			'팔로우 중',
 		);
+	};
+
+	const onPressEditProfile = () => {
+		console.log('dd');
 	};
 
 	const onPressShelterContact = () => {
@@ -249,7 +253,7 @@ const ProfileInfo = props => {
 			<View style={[organism_style.btn_w280_view_profileInfo, profileInfo_style.btn_w280_view]}>
 				<View style={[organism_style.btn_w280_profileInfo]}>
 					{userGlobalObject.userInfo._id == data._id ? (
-						<AniButton btnTitle={'프로필 수정'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} />
+						<AniButton onPress={onPressEditProfile} btnTitle={'프로필 수정'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} />
 					) : data.is_follow ? (
 						<ArrowDownButton btnTitle={'팔로우 중'} btnLayout={btn_w280x68} onPress={onPressFollowingSetting} />
 					) : (

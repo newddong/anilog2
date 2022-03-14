@@ -10,7 +10,7 @@ import {controllableAccountList} from 'Root/component/organism/style_organism co
 
 export default SearchHashTag = props => {
 	const searchInput = props.search.searchInput;
-	console.log('searchInput / SearchHashTag : ', props.search.searchInput);
+	// console.log('searchInput / SearchHashTag : ', props.search.searchInput);
 	const [findList, setFindList] = React.useState([]);
 	const dummy = [
 		{
@@ -29,8 +29,7 @@ export default SearchHashTag = props => {
 				hashtag_keyword: searchInput,
 			},
 			result => {
-				console.log('hash editing', result.msg);
-
+				// console.log('hash editing', result.msg);
 				setFindList(result.msg);
 			},
 			error => {
@@ -49,7 +48,7 @@ export default SearchHashTag = props => {
 	};
 
 	return (
-		<View style={[searchHashTag.container]}>
+		<View style={[searchHashTag.container, {backgroundColor: 'white'}]}>
 			{/* // 검색 내역이 존재할 경우 API를 통해 받아온 내역 출력 */}
 			{findList.length != 0 ? (
 				<ScrollView horizontal={false} contentContainerStyle={{flex: 1}} showsVerticalScrollIndicator={false}>

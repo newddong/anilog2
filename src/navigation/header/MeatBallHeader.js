@@ -14,7 +14,6 @@ import userGlobalObject from 'Root/config/userGlobalObject';
  */
 export default MeatBallHeader = props => {
 	// console.log('props.options', props.options.data);
-	const [isClicked, setIsClicked] = React.useState(false);
 	const userInfo = userGlobalObject.userInfo;
 
 	const onSelect = select => {
@@ -45,8 +44,6 @@ export default MeatBallHeader = props => {
 	};
 
 	const onPressMeatball = () => {
-		setIsClicked(true);
-
 		if (props.options.data && props.options.data.user_type == 'user' && props.options.data._id == userInfo._id) {
 			//일반 유저 프로필이며 자신의 계정일 경우
 			Modal.popSelectBoxModal(
@@ -90,28 +87,15 @@ export default MeatBallHeader = props => {
 			);
 		} else if (props.options.data && props.options.data.user_type == 'shelter' && props.options.data._id != userInfo._id) {
 			//보호소 프로필이며 자신의 계정이 아닐경우
-			Modal.popSelectBoxModal(
-				['정보', '공유하기', '신고'],
-				select => onSelect(select),
-				() => onClose(),
-				false,
-				false,
-			);
+			Modal.popSelectBoxModal(['정보', '공유하기', '신고'], select => onSelect(select), onClose, false, false);
 		} else if (props.options.data && props.options.data.user_type == 'shelter' && props.options.data._id == userInfo._id) {
-			//보호소 프로필이며 자신의 계정이 아닐경우
-			Modal.popSelectBoxModal(
-				['정보', '공유하기'],
-				select => onSelect(select),
-				() => onClose(),
-				false,
-				false,
-			);
+			//보호소 프로필이며 자신의 계정일 경우
+			Modal.popSelectBoxModal(['정보', '공유하기'], select => onSelect(select), onClose, false, false);
 		}
 	};
 
 	const onClose = () => {
 		Modal.close();
-		setIsClicked(false);
 	};
 
 	return (
@@ -123,7 +107,7 @@ export default MeatBallHeader = props => {
 			</TouchableOpacity>
 			<Text style={txt.roboto40b}>{props.options.title ? props.options.title : props.route.params.title}</Text>
 			{/* <MeatBallDropdown menu={PROTECT_STATUS} onSelect={onPressMeatball} /> */}
-			{isClicked ? <Meatball50_APRI10_Horizontal onPress={onPressMeatball} /> : <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />}
+			<Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />
 		</View>
 	);
 };
@@ -135,7 +119,7 @@ MeatBallHeader.defaultProps = {
 const style = StyleSheet.create({
 	headerContainer: {
 		alignItems: 'center',
-		height: 135 * DP,
+		height: 95 * DP,
 		flexDirection: 'row',
 		backgroundColor: '#FFFFFF',
 		justifyContent: 'space-between',

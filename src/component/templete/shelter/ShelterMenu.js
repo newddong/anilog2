@@ -7,11 +7,10 @@ import ProfileImageLarge160 from 'Molecules/image/ProfileImageLarge160';
 import {txt} from 'Root/config/textstyle';
 import SocialInfoB from 'Organism/info/SocialInfoB';
 import {btn_w280, btn_w280x68} from 'Atom/btn/btn_style';
-import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FloatAddArticle_128x68, FloatAddPet_128x68, FloatAddArticle_126x92, FloatAddPet_126x92} from 'Atom/icon';
+import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FloatAddArticle_128x68, FloatAddPet_128x68} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
 import ProfileMenu from 'Organism/menu/ProfileMenu';
 import {Setting46, FavoriteTag48_Filled, Heart48_Filled, Paw46} from 'Atom/icon';
-import {_dummy_VolunteerActivityApplicant, _dummy_userObject_user} from 'Root/config/dummy_data_hjs';
 import {
 	MANAGEMENT_OF_PROTECTED_ANIMAL,
 	PROTECTED_ANIMAL,
@@ -36,7 +35,7 @@ import {
 	LOGOUT,
 	INFO,
 } from 'Root/i18n/msg';
-import {GRAY10} from 'Root/config/color';
+import {GRAY10, GRAY40} from 'Root/config/color';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {getUserProfile} from 'Root/api/userapi';
@@ -48,9 +47,9 @@ export default ShelterMenu = ({route}) => {
 	const [data, setData] = React.useState({}); //우선 userObject_Shelter 0번 추가
 	const [showMoreIntro, setShowMoreIntro] = React.useState(false);
 	const [introOriginLine, setIntroOriginLine] = React.useState(0);
+	console.log('introOriginLine', introOriginLine);
 	React.useEffect(() => {
 		const getInfo = () => {
-			// Modal.popNoBtn('Loading');
 			getUserProfile(
 				{
 					userobject_id: userGlobalObject.userInfo._id,
@@ -112,21 +111,19 @@ export default ShelterMenu = ({route}) => {
 			//--------------- 보호 동물 관리
 			// 보호중인 동물
 			case PROTECTED_ANIMAL:
-				navigation.navigate('ShelterProtectAnimalList', {nav: 'ShelterProtectAnimalList', token: data._id});
+				navigation.navigate('ShelterProtectAnimalList');
 				break;
 			// 신청서 조회
 			case INQUERY_APPLICATION:
-				navigation.navigate('ProtectApplyList', {nav: 'ProtectApplyList', token: data._id, shelter_name: data.shelter_name});
-
+				navigation.navigate('ProtectionApplicationList');
 				break;
 			//나의 보호소 출신 동물
 			case FROM_MY_SHELTER:
-				//listType: 'original'- 클릭시 해당 UserProfile로 go, 'twoBtn' - 클릭시 외곽 선 표출, , 'checkBox' - 해당 페이지에서 바로 체크박스 표출
-				navigation.push('AnimalFromShelter', data._id);
+				navigation.push('AnimalFromShelter');
 				break;
 			//봉사활동 신청 관리
 			case MANAGEMENT_OF_VOLUNTEER:
-				navigation.push('ManageShelterVolunteer');
+				navigation.push('ManageShelterVolunteer', data._id);
 				break;
 			//---------------즐겨찾기
 			//친구
@@ -141,7 +138,6 @@ export default ShelterMenu = ({route}) => {
 				break;
 			//보호요청(저장)
 			case REQ_PROTECTION_SAVE:
-				//listType: 'original'- 클릭시 해당 UserProfile로 go, 'twoBtn' - 클릭시 외곽 선 표출, , 'checkBox' - 해당 페이지에서 선택하기 시 체크박스 표출
 				// navigation.push('ShelterSaveAnimalRequest');
 				Modal.popInfoModal();
 				break;
@@ -161,12 +157,12 @@ export default ShelterMenu = ({route}) => {
 				break;
 			//신청내역
 			case APPLICATION_HISTORY:
+				navigation.push('AppliesRecord', data._id);
 				Modal.popInfoModal();
 				break;
 			// 보호 요청 올린 게시글
 			case UPLOADED_POST_FOR_REQ_PROTECTION:
-				//보호요청 게시글 스크린 필요 데이터 : ShelterProtectAnimalObject.protect_animal_writer_id == userData._id가 일치하는 것을 검색해야한다
-				navigation.push('ShelterProtectRequests', data._id);
+				navigation.push('ShelterProtectRequests');
 				break;
 			//커뮤니티
 			case COMUNITY:
@@ -179,15 +175,15 @@ export default ShelterMenu = ({route}) => {
 			//-------------- 설정
 			//정보/문의
 			case INFO_QUESTION:
-				Modal.popInfoModal();
+				navigation.push('SettingInformAsk');
 				break;
 			// 계정
 			case ACCOUNT:
-				Modal.popInfoModal();
+				navigation.push('SettingAccount');
 				break;
-			//로그아웃
-			case LOGOUT:
-				logout();
+			//알림
+			case INFO:
+				navigation.push('SettingAlarm');
 				break;
 		}
 	};
@@ -197,8 +193,8 @@ export default ShelterMenu = ({route}) => {
 	}, [introOriginLine]);
 
 	return (
-		<View style={(login_style.wrp_main, shelterMenu.container)}>
-			<ScrollView style={{backgroundColor: '#FFF'}}>
+		<ScrollView>
+			<View style={(login_style.wrp_main, shelterMenu.container)}>
 				<View style={[shelterMenu.shelterMenuStep1]}>
 					{/* Shelter Info*/}
 					<View style={[shelterMenu.shelterInfo]}>
@@ -279,65 +275,45 @@ export default ShelterMenu = ({route}) => {
 				</View>
 				{/* 하단 메뉴 */}
 				<View style={[shelterMenu.profileMenu1]}>
-					<ProfileMenu
-						menuTitle={MANAGEMENT_OF_PROTECTED_ANIMAL}
-						menuItems={[
-							[PROTECTED_ANIMAL, INQUERY_APPLICATION],
-							[FROM_MY_SHELTER, MANAGEMENT_OF_VOLUNTEER],
-						]}
-						onClick={click_menu}
-						titleIcon={<Heart48_Filled />}
-					/>
+					<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
+						<ProfileMenu
+							menuTitle={MANAGEMENT_OF_PROTECTED_ANIMAL}
+							menuItems={[
+								[PROTECTED_ANIMAL, INQUERY_APPLICATION],
+								[FROM_MY_SHELTER, MANAGEMENT_OF_VOLUNTEER],
+							]}
+							onClick={click_menu}
+							titleIcon={<Heart48_Filled />}
+						/>
+					</View>
 				</View>
 				<View style={[shelterMenu.profileMenu2]}>
-					<ProfileMenu
-						menuTitle={FAVORITES}
-						menuItems={[
-							[FRIENDS, PEED_CONTENTS],
-							[REQ_PROTECTION_SAVE, COMUNITY],
-						]}
-						onClick={click_menu}
-						titleIcon={<FavoriteTag48_Filled />}
-					/>
+					<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
+						<ProfileMenu
+							menuTitle={FAVORITES}
+							menuItems={[
+								[FRIENDS, PEED_CONTENTS],
+								[REQ_PROTECTION_SAVE, COMUNITY],
+							]}
+							onClick={click_menu}
+							titleIcon={<FavoriteTag48_Filled />}
+						/>
+					</View>
 				</View>
 				<View style={[shelterMenu.profileMenu3]}>
-					<ProfileMenu
-						menuTitle={MY_ACTIVITY_IN_SHELTER}
-						menuItems={[
-							[MY_CONTENTS, TAGED_CONTENTS_FOR_ME],
-							[APPLICATION_HISTORY, UPLOADED_POST_FOR_REQ_PROTECTION],
-							[COMUNITY, NOTE_LIST],
-						]}
-						onClick={click_menu}
-						titleIcon={<Paw46 />}
-					/>
+					<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
+						<ProfileMenu
+							menuTitle={MY_ACTIVITY_IN_SHELTER}
+							menuItems={[[MY_CONTENTS, TAGED_CONTENTS_FOR_ME], [COMUNITY, UPLOADED_POST_FOR_REQ_PROTECTION], [NOTE_LIST]]}
+							onClick={click_menu}
+							titleIcon={<Paw46 />}
+						/>
+					</View>
 				</View>
 				<View style={[shelterMenu.profileMenu4]}>
-					<ProfileMenu
-						menuTitle={SETTING}
-						menuItems={[
-							[INFO_QUESTION, ACCOUNT],
-							[INFO, LOGOUT],
-						]}
-						onClick={click_menu}
-						titleIcon={<Setting46 />}
-					/>
+					<ProfileMenu menuTitle={SETTING} menuItems={[[INFO_QUESTION, ACCOUNT], [INFO]]} onClick={click_menu} titleIcon={<Setting46 />} />
 				</View>
-			</ScrollView>
-		</View>
+			</View>
+		</ScrollView>
 	);
-};
-
-const t = {
-	_id: '61b9eba4185a4f69d5981ad6',
-	feedList: [[Object], [Object], [Object], [Object], [Object], [Object], [Object]],
-	user_denied: false,
-	user_follow_count: 0,
-	user_follower_count: 0,
-	user_introduction: '',
-	user_my_pets: [],
-	user_nickname: '상우 보호소',
-	user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1639574436056_DWG_KIA_logo.png',
-	user_type: 'shelter',
-	user_upload_count: 0,
 };

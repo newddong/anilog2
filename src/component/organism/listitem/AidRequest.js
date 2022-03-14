@@ -14,18 +14,18 @@ import {aidRequest} from '../style_organism copy';
  * selected : 'Boolean / true일 경우 메인색의 테두리 형성 or 회색의 얇은 테두리 형성',
  * selectBorderMode : 'Boolean / 테두리 형성 모드 적용 여부 default true',
  * showBadge : 'Boolean / 지원자 신청을 나타내는 뱃지 번호 출력 여부',
+ * inActiveOpacity : 'Boolean / 클릭 시 터쳐블 애니메이션 출력 여부 Default = false',
  * }} props
  */
 export default AidRequest = props => {
 	const data = props.data;
-	// console.log('badge', data);
-	console.log('AidRequest', props);
+	// console.log('AidRequest', data.protect_animal_photo_uri_list);
 	//해당 AidRequest박스 선택 시 부모컴포넌트 OnSelect 실행
 	const onSelect = () => {
 		props.onSelect();
 	};
 	return (
-		<TouchableOpacity onPress={onSelect} style={[aidRequest.container]}>
+		<TouchableOpacity onPress={onSelect} activeOpacity={props.inActiveOpacity ? 1 : 0.2} style={[aidRequest.container]}>
 			<View
 				style={[
 					aidRequest.insideContainer,
@@ -93,7 +93,7 @@ export default AidRequest = props => {
 			{/* {console.log('props.showBadge=>' + props.showBadge)} */}
 			{props.showBadge && data.protect_act_applicants.length > 0 ? (
 				<View style={[aidRequest.numberContainer]}>
-					<Text style={[{color: WHITE, paddingRight: 5 * DP}]}>{data.protect_act_applicants ? data.protect_act_applicants.length : ''}</Text>
+					<Text style={[{color: WHITE}]}>{data.protect_act_applicants ? data.protect_act_applicants.length : ''}</Text>
 				</View>
 			) : (
 				<></>
@@ -103,7 +103,8 @@ export default AidRequest = props => {
 };
 
 AidRequest.defaultProps = {
-	onSelect: e => console.log('AidRequest', e),
+	onSelect: e => {},
 	selectBorderMode: true,
 	showBadge: false,
+	inActiveOpacity: false,
 };

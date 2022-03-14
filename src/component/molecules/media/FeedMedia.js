@@ -2,12 +2,14 @@ import React from 'react';
 import {Text, View, Image, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {ImageList48, VideoPlay48, VideoPlay_Feed} from 'Atom/icon';
+import {ImageList48, VideoPlay48, VideoPlay_Feed, Tag70} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
-import {BLACK, RED10, WHITE} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, RED10, WHITE} from 'Root/config/color';
 import Swiper from 'react-native-swiper';
 import {number} from 'prop-types';
 import {phoneFomatter} from 'Root/util/stringutil';
+import PhotoTagItem from 'Organism/feed/PhotoTagItem';
+
 /**
  *
  * @param {{
@@ -15,8 +17,7 @@ import {phoneFomatter} from 'Root/util/stringutil';
  * }} props
  */
 export default FeedMedia = props => {
-	const [contentLayout, setContentLayout] = React.useState({height: 214 * DP, width: 0});
-
+	// console.log(props.data);
 	const {
 		feed_content,
 		feed_thumbnail,
@@ -92,20 +93,63 @@ export default FeedMedia = props => {
 		} else return false;
 	};
 
+	const swiperRef = React.useRef();
+
+	// console.log('swiperRef', swiperRef.current);
+
 	return (
 		<View>
 			{/* Select된 상태일 때 불투명도 40% 적용 및 배경색  Black */}
 			<View style={{backgroundColor: BLACK}}>
 				<Swiper
 					// style={[styles.img_square_750x750]}
-					activeDotColor="#FFB6A5"
+					activeDotColor={APRI10}
 					showsButtons={false}
 					autoplay={false}
 					loop={false}
+					removeClippedSubviews={false}
+					scrollEventThrottle={16}
+					ref={swiperRef}
+					renderPagination={(index, total, context) => {
+						// console.log('context', context);
+						return feed_medias.length == 1 ? (
+							<></>
+						) : (
+							<View
+								style={{
+									bottom: -50 * DP,
+									alignSelf: 'center',
+									alignItems: 'center',
+									justifyContent: 'space-between',
+									width: 28 * feed_medias.length * DP,
+									height: 24 * DP,
+									// backgroundColor: 'green',
+									flexDirection: 'row',
+									position: 'absolute',
+								}}>
+								{feed_medias.map((data, idx) => {
+									return (
+										<View
+											key={idx}
+											style={[
+												{
+													alignSelf: 'center',
+													width: 14 * DP,
+													height: 14 * DP,
+													backgroundColor: index == idx ? APRI10 : GRAY10,
+													borderRadius: 50 * DP,
+												},
+											]}></View>
+									);
+								})}
+							</View>
+						);
+					}}
 					horizontal={true}>
-					{feed_medias.map((data, idx) => (
-						<Image source={{uri: data.media_uri}} style={styles.img_square_750x750} key={idx} />
-					))}
+					{feed_medias.map((data, idx) => {
+						return <PhotoTagItem style={styles.img_square_750x750} uri={data.media_uri} data={data.media_uri} taglist={data.tags} key={idx} viewmode={true} />
+						// return <Image source={{uri: data.media_uri}} style={styles.img_square_750x750} key={idx} />;
+					})}
 					{/* {getFeedIcon()} */}
 				</Swiper>
 			</View>

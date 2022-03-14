@@ -11,7 +11,7 @@ import DatePicker from 'Molecules/select/DatePicker';
 import Input24 from 'Molecules/input/Input24';
 import Modal from 'Component/modal/Modal';
 import {getUserInfoById} from 'Root/api/userapi';
-import {assignVolunteerActivity} from 'Root/api/volunteerapi';
+import {assignVolunteerActivity, setVolunteerActivityAcceptByMember, setVolunteerActivityStatus} from 'Root/api/volunteerapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import UserDescriptionLabel from 'Root/component/molecules/label/UserDescriptionLabel';
 
@@ -88,21 +88,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 				data.volunteer_accompany.map((v, i) => {
 					getAccompaniesId.push(v._id);
 				});
-				const t = {
-					shelter_userobject_id: param.token,
-					volunteer_wish_date_list: data.volunteer_wish_date,
-					accompany_userobject_id_list: getAccompaniesId,
-					volunteer_delegate_contact: data.volunteer_delegate_contact,
-					volunteer_accompany_number: data.volunteer_accompany_number,
-				};
-				console.log('t', t);
-				const q = {
-					accompany_userobject_id_list: ['61d2de63c0f179ccd5ba5887'],
-					shelter_userobject_id: '6203aff5c0f179ccd5bb8054',
-					volunteer_accompany_number: 3,
-					volunteer_delegate_contact: '1212344551',
-					volunteer_wish_date_list: ['2022.02.22', '2022.02.23', '2022.02.24'],
-				};
+
 				assignVolunteerActivity(
 					{
 						shelter_userobject_id: param.token,
@@ -114,10 +100,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 					result => {
 						console.log('result / assignVolunteerAct / ApplyVolunteer   :  ', result);
 						Modal.popNoBtn('봉사활동 신청이 완료되었습니다.');
-						setTimeout(() => {
-							Modal.close();
-							navigation.goBack();
-						}, 1000);
+						setVolunteerConfirmStatus(result.msg._id);
 					},
 					err => {
 						console.log('err / assignVolunteerAct  / ApplyVolunteer  :  ', err);
@@ -128,9 +111,29 @@ export default ApplyVolunteer = ({route, navigation}) => {
 		);
 	};
 
+	//봉사활동을 신청 후, 신청자 본인은 자동으로 참여 확정으로 바꿔주는 함수
+	const setVolunteerConfirmStatus = async id => {
+		setVolunteerActivityAcceptByMember(
+			{
+				volunteer_activity_object_id: id,
+				confirm: 'accept',
+			},
+			result => {
+				console.log('result / setVolunteerActivityAcceptByMember / ', result.msg);
+				setTimeout(() => {
+					Modal.close();
+					navigation.goBack();
+				}, 1000);
+			},
+			err => {
+				console.log('err / setVolunteerActivityAcceptByMember ', err);
+				Modal.alert('오류 발생!!');
+			},
+		);
+	};
+
 	//계정추가 버튼 클릭
 	const addVolunteer = () => {
-		// navigation.push('Search', {mother: 0, child: 1, prevNav: route.name});
 		navigation.push('AddVolunteers');
 	};
 
@@ -144,6 +147,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 		setData({...data, volunteer_wish_date: filteredDates});
 	};
 
+	//희망날짜가 3일 이상 선택된 경우 달력 모달이 열리지 않음
 	const canOpenCalendar = () => {
 		let result = true;
 		if (data.volunteer_wish_date.length == 3) {
@@ -167,13 +171,18 @@ export default ApplyVolunteer = ({route, navigation}) => {
 		setData({...data, volunteer_wish_date: copy});
 	};
 
-	//봉사활동 참여인원 List에서 지우기 클릭
+	//애니로그 계정 봉사활동 참여인원 List에서 지우기 클릭
 	const onDeleteAccount = index => {
 		let copy = [...data.volunteer_accompany];
-		copy.splice(index, 1);
-		setData({...data, volunteer_accompany: copy});
+		if (copy[index]._id == userGlobalObject.userInfo._id) {
+			Modal.alert('신청자 본인은 삭제할 수 없습니다.');
+		} else {
+			copy.splice(index, 1);
+			setData({...data, volunteer_accompany: copy});
+		}
 	};
 
+	//봉사활동 참여인원 선택 모달
 	const onPressAccompanyNumber = () => {
 		const numberArray = ['1명', '2명', '3명', '4명', '5명'];
 		Modal.popSelectScrollBoxModal(
@@ -187,10 +196,6 @@ export default ApplyVolunteer = ({route, navigation}) => {
 			},
 			() => Modal.close(),
 		);
-	};
-
-	const onChangeAccompanyNumber = num => {
-		setData({...data, volunteer_accompany_number: num});
 	};
 
 	if (loading) {
@@ -306,7 +311,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 							onPress={onRegister}
 							btnTitle={'신청'}
 							disable={
-								data.volunteer_accompany.length > 0 && data.volunteer_delegate_contact.length > 0 && data.volunteer_wish_date.length > 0
+								data.volunteer_accompany_number != '' && data.volunteer_delegate_contact.length > 0 && data.volunteer_wish_date.length > 0
 									? false
 									: true
 							}

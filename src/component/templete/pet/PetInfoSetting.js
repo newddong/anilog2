@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Platform, ScrollView, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {APRI10, GRAY10, GRAY40} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w242} from 'Atom/btn/btn_style';
@@ -9,7 +9,6 @@ import AniButton from 'Molecules/button/AniButton';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import PetImageLabel from 'Molecules/label/PetImageLabel';
 import {btn_style, login_style, petInfoSetting, temp_style} from 'Templete/style_templete';
-import {_dummy_petInfo_from_user} from 'Root/config/dummy_data_hjs';
 import Modal from 'Component/modal/Modal';
 import {getUserInfoById, removeUserFromFamily} from 'Root/api/userapi';
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
@@ -24,11 +23,8 @@ import {DOG_KIND, PET_KIND, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
 
 export default PetInfoSetting = ({route, navigation}) => {
 	// console.log('PetInfoSetting / route.params', route.params.pet_id);
-	const loginUser = route.params.token;
-
-	const [petData, setPetData] = React.useState({}); // 현재 반려동물 프로필 데이터
+	const [petData, setPetData] = React.useState('false'); // 현재 반려동물 프로필 데이터
 	const [familyAccountList, setFamilyAccountList] = React.useState([]); //가족 계정 목록 데이터
-	const [loading, setLoading] = React.useState(true); // 화면 출력 여부 결정
 	const [isChiefUser, setIsChiefUser] = React.useState(false);
 	const [showMore, setShowmore] = React.useState(false); // 소개 더보기 클릭 여부
 	const [editMode, setEditMode] = React.useState(false); // 소개 수정 클릭 여부
@@ -51,21 +47,15 @@ export default PetInfoSetting = ({route, navigation}) => {
 		getUserInfoById(
 			{userobject_id: route.params.pet_id},
 			result => {
-				console.log('result / GetUserInfoById / PetInfoSetting', result.msg);
-				const t = {
-					user_follow_count: 0,
-					user_follower_count: 1,
-					user_upload_count: 0,
-				};
+				// console.log('result / GetUserInfoById / PetInfoSetting', result.msg);
 				setFamilyAccountList(result.msg.pet_family);
 				navigation.setOptions({title: result.msg.user_nickname});
 				userGlobalObject.userInfo.user_nickname == result.msg.pet_family[0].user_nickname ? setIsChiefUser(true) : setIsChiefUser(false);
 				setPetData(result.msg);
-				setLoading(false);
 			},
 			err => {
 				console.log('err / GetUserInfoById / PetInfosetting', err);
-				setLoading(false);
+				Modal.popOneBtn(err, '뒤로 가기', () => navigation.goBack());
 			},
 		);
 	};
@@ -93,17 +83,6 @@ export default PetInfoSetting = ({route, navigation}) => {
 				() => Modal.close(),
 			);
 		}, 200);
-
-		// Modal.popSelectScrollBoxModal(
-		// 	[DOG_KIND, PET_PROTECT_LOCATION],
-		// 	'동물 종 선택',
-		// 	selected => {
-		// 		alert(selected);
-		// 		Modal.close();
-		// 	},
-		// 	() => Modal.close(),
-		// );
-		// Modal.popPetSelect(petData.pet_species, petData.pet_species_detail, (val1, val2) => console.log(val1 + ':' + val2), '완료');
 	};
 
 	//프로필 변경 버튼
@@ -190,7 +169,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 		console.log('deleteAccount');
 	};
 
-	if (loading) {
+	if (petData == 'false') {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
 				<ActivityIndicator size={'large'} />
@@ -205,7 +184,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 						<View style={[petInfoSetting.profileInside]}>
 							<TouchableOpacity onPress={changeProfile} style={[petInfoSetting.petImageLabel]}>
 								<PetImageLabel data={petData} showNickname={false} />
-								<View style={[petInfoSetting.profileEditMark]}>
+								<View style={[Platform.OS == 'ios' ? petInfoSetting.profileEditMark : petInfoSetting.profileEditMark_and]}>
 									<AddItem92 />
 								</View>
 							</TouchableOpacity>
@@ -364,8 +343,8 @@ export default PetInfoSetting = ({route, navigation}) => {
 										<View style={[familyAccountList_style.userIDContainer]}>
 											<Text style={[txt.roboto28b]}>{v.user_nickname}</Text>
 										</View> */}
-											<UserDescriptionLabel data={v} onClickLabel={onClickFamilyLabel} />
-											{v.user_nickname == loginUser.user_nickname || !isChiefUser ? (
+											<UserDescriptionLabel data={v} onClickLabel={onClickFamilyLabel} width={400} />
+											{v.user_nickname == userGlobalObject.userInfo.user_nickname || !isChiefUser ? (
 												<></>
 											) : (
 												<View style={{position: 'absolute', right: 5 * DP}}>
@@ -398,8 +377,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 						</View>
 					</View>
 					{/* 반려동물 입양 상태 변경 */}
-					{/* 반려 동물 상태가 companion가 아닐 경우에만 보이도록 추후 변경 예정 */}
-					{petData.pet_status != 'companion' && (
+					{petData.pet_status == 'protect' && ( //오로지 임보일때만 출력
 						<View style={[petInfoSetting.changeAdoptionStatus.container]}>
 							<View style={[petInfoSetting.familyAccountSetting.insideContainer]}>
 								<View style={[petInfoSetting.familyAccountSetting.menuView]}>

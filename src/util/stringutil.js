@@ -95,14 +95,15 @@ export function phoneFomatter(num) {
 			formatNum = num.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
 		}
 	}
-	console.log(formatNum, 'formatNum');
+	// console.log(formatNum, 'formatNum');
 	return formatNum;
 }
 
 /**
  * 좋아요 숫자 k 단위로 환산
  * @param {string} num
- */ export const count_to_K = cnt => {
+ */ 
+export const count_to_K = cnt => {
 	if (cnt > 1000000) {
 		let count = (cnt / 1000000).toFixed(0) + 'm';
 		return count;
@@ -113,3 +114,33 @@ export function phoneFomatter(num) {
 		return cnt;
 	}
 };
+
+/**
+ * 문자열의 길이 구하기(한글 1문자를 2로 판단)
+ * @param {string} str
+ */
+export function getStringLength(str){
+	let result = 0;
+	for(let i=0;i<str.length;i++){
+		if(str.charCodeAt(i)>256){
+			result += 2;
+		}else{
+			result += 1;
+		}
+	}
+	return result;
+}
+
+/**
+ * 문자열의 라인 수 구하기
+ * @param {string} str
+ * @param {number} num - 한줄에 들어가는 최대 문자열의 수
+ */
+export function getLinesOfString(str,num){
+	let arr = str.split('\n')
+	let lines = 0;
+	for(string of arr){
+		lines += string.length==0?1:Math.ceil(getStringLength(string)/num);
+	}
+	return lines;
+}

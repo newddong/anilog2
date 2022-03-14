@@ -14,6 +14,7 @@ import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 import InputWithSelect from 'Root/component/molecules/input/InputWithSelect';
 import SelectInput from 'Root/component/molecules/button/SelectInput';
 import {getInterestsList} from 'Root/api/interestsapi';
+import ReactPropTypesSecret from 'prop-types/lib/ReactPropTypesSecret';
 export default UserInfoDetailSettting = ({route, navigation}) => {
 	const debug = false;
 	// console.log('UserInfoDetailSetting route.params : ', route.params);
@@ -21,41 +22,82 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 	const [data, setData] = React.useState(route.params); //기존 유저의 데이터가 담겨있음
 	const [loaded, setLoaded] = React.useState(false);
 	const [addrSearched, setAddrSearched] = React.useState(false);
-	const [locationInterest, setLocationInterest] = React.useState(route.params.user_interests.interests_location);
+	const [locationInterest, setLocationInterest] = React.useState([]);
 	const [contentInterest, setContentInterest] = React.useState([]);
 	const [interestList, setInterestList] = React.useState();
 	const [interestLoaded, setInterestLoaded] = React.useState(false);
-	const [contentSendObejct, setContentSendObject] = React.useState({});
+	const [contentSendObejct, setContentSendObject] = React.useState();
+	const [refresh, setRefresh] = React.useState(false);
+	var temp = [];
 	// 갱신되는 데이터는 Header에도 Json형태로 전해짐
-	// React.useEffect(() => {
-	// 	navigation.setParams({data: data, route_name: route.name});
-	// 	// console.log('user_mobile_company', data.user_mobile_company);
-	// }, [data]);
+	React.useEffect(() => {
+		navigation.setParams({data: data, route_name: route.name});
+		// console.log('user_mobile_company', data.user_mobile_company);
+	}, [data]);
 
 	React.useEffect(() => {
 		navigation.setParams({data: route.params, route_name: route.name});
-		var temp = [];
-		console.log('ahhh', route.params.user_interests);
+		console.log(data);
+		// console.log('ahhh', route.params?.user_interests[0]);
 
 		getInterestsList({}, interests => {
 			setInterestList(interests.msg);
 			setInterestLoaded(true);
 		});
-		const getContentInteres = Object.entries(route.params.user_interests).map(content => {
-			console.log('ohhh', content);
+		if (data.user_interests) {
+			const getContentInteres = Object.entries(data.user_interests).map(content => {
+				console.log('ohhh', content);
 
-			if (content[0] != 'interests_location') {
-				Object.entries(content[1]).map(contents => {
-					console.log('contents', contents[1]);
-					temp.push(contents[1]);
-				});
-			}
-			setContentInterest(temp);
-		});
-
+				if (content[0] != 'interests_location' && content[0] != '_id') {
+					Object.entries(content[1]).map(contents => {
+						// console.log('contents', contents[1]);
+						temp.push(contents[1]);
+					});
+				}
+			});
+		}
+		setContentInterest(temp);
+		setLocationInterest(data.user_interests.interests_location);
 		setLoaded(true);
 	}, []);
+	//변경된 locationObject와 contentInterest를 저장형식에 맞게 파싱
+	React.useEffect(() => {
+		console.log('interset', locationInterest, contentInterest);
+		// console.log('interest list', interestList);
 
+		if (interestLoaded) {
+			for (var props of contentInterest) {
+				const getKey = Object.entries(interestList[0]).map(content => {
+					// console.log('hihihi', content[1], props);
+
+					if (content[1].includes(props)) {
+						// console.log('hohohoho', props, content[0]);
+						// setContentSendObject((contentSendObejct[content[0]] = props));
+						if (temp[content[0]]) {
+							temp[content[0]].push(props);
+						} else {
+							temp[content[0]] = [props];
+						}
+
+						console.log('temp', temp);
+					}
+				});
+			}
+			var locationObject = {interests_location: locationInterest};
+			Object.assign(locationObject, temp);
+			console.log('mergedObjecct', locationObject);
+			setData(prevState => ({
+				...prevState,
+				user_interests: locationObject,
+			}));
+		}
+		console.log('setData', data);
+	}, [refresh, locationInterest, contentInterest]);
+
+	function getKeyByValue(object, value) {
+		// console.log(Object.keys(object).find(key => object[key] == value));
+		return Object.keys(object).find(key => object[key] == value);
+	}
 	React.useEffect(() => {
 		console.log('interset', locationInterest, contentInterest);
 
@@ -220,12 +262,15 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 		// let copy = data.user_interests.location;
 		let copy = locationInterest;
 		copy.splice(index, 1);
-		setData({
-			...data,
-			user_interests: {
-				location: copy,
-			},
-		});
+
+		setLocationInterest(copy);
+		setRefresh(!refresh);
+		// setData({
+		// 	...data,
+		// 	user_interests: {
+		// 		interests_location: copy,
+		// 	},
+		// });
 	};
 
 	//관심활동 태그 X마크 삭제 클릭
@@ -235,13 +280,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 		copy.splice(index, 1);
 		console.log('copy', copy);
 		setContentInterest(copy);
-		// setData({
-		// 	...data,
-		// 	user_interests: {
-		// 		location: data.user_interests.location,
-		// 		activity: copy,
-		// 	},
-		// });
+		setRefresh(!refresh);
 	};
 
 	const onPressAddInterestActivation = () => {
@@ -328,6 +367,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 									// items={data.user_interests.location || []}
 									items={locationInterest || []}
 									onDelete={onDeleteInterestRegion}
+									extra={refresh}
 								/>
 							</View>
 							<View style={[userInfoDetailSettting_style.interestTagList]}>
@@ -336,6 +376,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 									title={INTEREST_ACT}
 									items={contentInterest || []}
 									onDelete={onDeleteInterestAct}
+									extra={refresh}
 								/>
 							</View>
 						</View>

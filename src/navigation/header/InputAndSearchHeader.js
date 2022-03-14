@@ -6,23 +6,33 @@ import DP from 'Root/config/dp';
 import {WHITE, APRI10} from 'Root/config/color';
 import InputWithSearchIcon from 'Molecules/input/InputWithSearchIcon';
 
-export default ConfirmInputHeader = props => {
+export default InputAndSearchHeader = props => {
 	// console.log('ConfirmInputHeader.', props.route.params.routeName);
-	const routeName = props.route.params.routeName != undefined ? props.route.params.routeName : '';
+	const routeName = props.route.name != undefined ? props.route.name : '';
+
 	const [searchInput, setSearchInput] = React.useState('');
+
 	const confirm = () => {
 		// navigation.navigate('Search');
-		props.navigation.setParams({searchInput: searchInput});
+		routeName != 'UserList' && props.navigation.setParams({searchInput: searchInput});
 	};
+
+	React.useEffect(() => {}, []);
 
 	const onChangeSearchText = text => {
 		// console.log('text', text);
+		props.navigation.setParams({...props.route.params, searchInput: text});
 		setSearchInput(text);
+		if (text != '') {
+			props.navigation.setParams({searchInput: text});
+		}
 	};
 
 	//뒤로 가기 클릭 시 탭이 initialRoute인 Feed로 가던 현상 수정
 	const onPressGoBack = () => {
-		if (props.route.params.prevNav == 'MainHomeFeedList' || props.route.params.prevNav == 'ProtectionTab') {
+		if (!props.route.params || !props.route.params.prevNav) {
+			props.navigation.goBack();
+		} else if (props.route.params.prevNav == 'MainHomeFeedList' || props.route.params.prevNav == 'ProtectionTab') {
 			props.navigation.navigate(props.route.params.prevNav);
 		} else {
 			props.navigation.goBack();

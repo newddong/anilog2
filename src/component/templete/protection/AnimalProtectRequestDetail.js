@@ -104,6 +104,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				protect_request_object_id: route.params.id,
 				commentobject_id: '',
 				request_number: 2,
+				login_userobject_id: userGlobalObject.userInfo._id
 			},
 			commentdata => {
 				// debug && console.log('AnimalProtectRequestDetail / getCommentListByProtectId:', commentdata.msg);

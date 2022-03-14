@@ -12,6 +12,7 @@ import moment from 'moment';
 import {create} from 'react-test-renderer';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {txt} from 'Root/config/textstyle';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default ReportDetail = props => {
 	const navigation = useNavigation();
@@ -100,6 +101,7 @@ export default ReportDetail = props => {
 				feedobject_id: props.route.params._id,
 				// commentobject_id: '61c2c0de7be07611b0094ffd',
 				request_number: 10,
+				login_userobject_id: userGlobalObject.userInfo._id
 			},
 			commentdata => {
 				// console.log('commentdata', commentdata.msg);

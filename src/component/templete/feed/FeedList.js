@@ -6,12 +6,12 @@ import Feed from 'Organism/feed/Feed';
 import {getSuggestFeedList} from 'Root/api/feedapi';
 import Modal from 'Component/modal/Modal';
 import DP from 'Root/config/dp';
-import {getFeedListByUserId} from 'Root/api/feedapi';
+import {getFeedListByUserId, getFavoriteFeedListByUserId} from 'Root/api/feedapi';
 import {getFeedsByHash} from 'Root/api/hashapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {login_style, buttonstyle} from 'Templete/style_templete';
 import {getStringLength, getLinesOfString} from 'Root/util/stringutil';
-import propTypes from 'prop-types';
+import { GRAY30 } from 'Root/config/color';
 
 export default FeedList = ({route, navigation}) => {
 	const [feedList, setFeedList] = React.useState([]);
@@ -41,9 +41,9 @@ export default FeedList = ({route, navigation}) => {
 						{
 							userobject_id: route.params?.userobject._id,
 							request_number: 9999,
+							login_userobject_id : userGlobalObject.userInfo._id,
 						},
 						({msg}) => {
-							// setIndex(msg.findIndex(v => v._id == route.params?.selected._id));
 							setFeedList(
 								msg
 									.map((v, i, a) => {
@@ -83,12 +83,30 @@ export default FeedList = ({route, navigation}) => {
 						},
 					);
 					break;
+				case 'FavoriteFeedList':
+					getFavoriteFeedListByUserId(
+						{userobject_id : userGlobalObject.userInfo._id},
+						({msg}) => {
+							// setIndex(msg.feeds.findIndex(v => v.hashtag_feed_id._id == route.params?.selected._id));
+
+							setFeedList(msg);
+							console.log('즐겨찾기 리스트', msg)
+						},
+						error => {
+							Modal.popOneBtn(error, '확인', () => {
+								setTimeout(() => {
+									navigation.goBack(), 300;
+								});
+							});
+						},
+					);
+					break;
 				default:
 					getSuggestFeedList(
-						{},
+						{
+							login_userobject_id : userGlobalObject.userInfo._id
+						},
 						({msg}) => {
-							// console.log('msg', msg);
-							// setFeedList(msg);
 							setFeedList(
 								msg
 									.map((v, i, a) => {
@@ -121,11 +139,10 @@ export default FeedList = ({route, navigation}) => {
 		refreshing ? getList() : false;
 		return unsubscribe;
 	}, [refreshing, route]);
-
+	const [refresh,setRefresh] = React.useState(false);
 	React.useEffect(() => {
 		if (feedList.length > 0) {
 			let indx = feedList.findIndex(v => v._id == route.params?.selected._id);
-			console.log('인덱스', indx);
 			if(route.name=='UserFeedList'){
 				setTimeout(()=>{
 					flatlist.current.scrollToIndex({
@@ -142,6 +159,7 @@ export default FeedList = ({route, navigation}) => {
 				},0)
 			}
 		}
+		setRefresh(!refresh);
 	}, [feedList]);
 
 	const moveToFeedWrite = () => {
@@ -174,7 +192,7 @@ export default FeedList = ({route, navigation}) => {
 				data={feedList}
 				renderItem={renderItem}
 				keyExtractor={(item, index) => {
-					let key = item._id + item.feed_update_date;
+					let key = item._id + item.feed_update_date+item.feed_is_like;
 					return key;
 				}}
 				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -184,7 +202,11 @@ export default FeedList = ({route, navigation}) => {
 				}}
 				ref={flatlist}
 				refreshing
+				extraData={refresh}
 				onScroll={rememberScroll}
+				ItemSeparatorComponent={({highlited})=><View style={{alignItems:'center'}}>
+					<View style={{height:2*DP,backgroundColor:GRAY30,width:654*DP}}></View>
+				</View>}
 			/>
 			{userGlobalObject.userInfo && (
 				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}, buttonstyle.shadow]}>

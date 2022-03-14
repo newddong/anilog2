@@ -11,9 +11,11 @@ import {GRAY10} from 'Root/config/color';
 import {
 	FEED_MEATBALL_MENU,
 	FEED_MEATBALL_MENU_FOLLOWING,
+	FEED_MEATBALL_MENU_FOLLOWING_UNFAVORITE,
 	FEED_MEATBALL_MENU_MY_FEED,
 	FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS,
 	FEED_MEATBALL_MENU_UNFOLLOWING,
+	FEED_MEATBALL_MENU_UNFOLLOWING_UNFAVORITE,
 	REPORT_MENU,
 	SHARE,
 } from 'Root/i18n/msg';
@@ -23,6 +25,7 @@ import {getTimeLapsed, parsingDate} from 'Root/util/dateutil';
 import HashText from 'Molecules/info/HashText';
 import Modal from 'Root/component/modal/Modal';
 import {followUser, getFollows, unFollowUser} from 'Root/api/userapi';
+import {favoriteFeed, getFavoriteFeedListByUserId} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import MissingReportInfo from 'Organism/info/MissingReportInfo';
 
@@ -212,9 +215,49 @@ export default FeedContent = props => {
 		console.log('삭제');
 	};
 
-	const onClickMeatball = () => {
+	//피드 미트볼 - 즐겨찾기 설정
+	const onFavorite = isFavorite => {
+		Modal.close();
+		setTimeout(() => {
+			Modal.popTwoBtn(
+				isFavorite?'게시물을 즐겨찾기로 추가하시겠습니까?':'게시물을 즐겨찾기에서 삭제 하시겠습니까?',
+				'아니오',
+				isFavorite?'즐겨찾기 추가':'즐겨찾기 삭제',
+				() => Modal.close(),
+				() => {
+					favoriteFeed(
+						{
+							feedobject_id: _id,
+							userobject_id: userGlobalObject.userInfo._id,
+							is_favorite: isFavorite,
+						},
+						result => {
+							// console.log('result / followUser / FeedContent', result.msg);
+							Modal.close();
+							Modal.popNoBtn('즐겨찾기 '+(isFavorite?'추가':'삭제')+'가 완료되었습니다.');
+							setTimeout(() => {
+								Modal.close();
+							}, 200);
+						},
+						err => {
+							console.log('err / favorite', err);
+						},
+					);
+				},
+			);
+		}, 100);
+	}
+
+
+
+	const meatballActions = context => {
 		//피드 미트볼 메뉴 팝업 분기에 대한 기획의도가 불분명한 상태이므로
 		//출력되는 메뉴에 대한 분기처리는 차후 처리 (현재는 더미로 적용)
+		console.log(context);
+
+
+		let isFavorite = context.favorite_feeds.some(feed=>feed._id == _id);
+		console.log('즐겨찾기됨?', isFavorite);
 		let isMyFeed = userGlobalObject.userInfo._id == props.data.feed_writer_id._id;
 		let feedType = props.data.feed_type;
 		if (feedType == 'feed') {
@@ -252,7 +295,7 @@ export default FeedContent = props => {
 						if (isFollowers) {
 							//내가 팔로우하고 있는 유저의 피드게시글
 							Modal.popSelectBoxModal(
-								FEED_MEATBALL_MENU_FOLLOWING,
+								!isFavorite?FEED_MEATBALL_MENU_FOLLOWING:FEED_MEATBALL_MENU_FOLLOWING_UNFAVORITE,
 								selectedItem => {
 									Modal.close();
 									if (selectedItem == '신고') {
@@ -263,6 +306,10 @@ export default FeedContent = props => {
 										onPressCancelFollow();
 									} else if (selectedItem == '쪽지 보내기') {
 										onPressSendMsg();
+									} else if (selectedItem == '즐겨찾기') {
+										onFavorite(true);
+									} else if (selectedItem == '즐겨찾기 취소') {
+										onFavorite(false);
 									}
 									setIsMeatballClicked(false);
 								},
@@ -273,7 +320,7 @@ export default FeedContent = props => {
 						} else {
 							//현재 팔로우 상태 중이지 않은 유저의 피드글의 미트볼 헤더 클릭
 							Modal.popSelectBoxModal(
-								FEED_MEATBALL_MENU_UNFOLLOWING,
+								!isFavorite?FEED_MEATBALL_MENU_UNFOLLOWING:FEED_MEATBALL_MENU_UNFOLLOWING_UNFAVORITE,
 								selectedItem => {
 									// alert(selectedItem);
 									if (selectedItem == '신고') {
@@ -286,6 +333,10 @@ export default FeedContent = props => {
 										onPressCancelFollow();
 									} else if (selectedItem == '쪽지 보내기') {
 										onPressSendMsg();
+									} else if (selectedItem == '즐겨찾기') {
+										onFavorite(true);
+									} else if (selectedItem == '즐겨찾기 취소') {
+										onFavorite(false);
 									}
 									Modal.close();
 									setIsMeatballClicked(false);
@@ -347,6 +398,20 @@ export default FeedContent = props => {
 			}
 		}
 	};
+
+	const onClickMeatball = () => {
+		getFavoriteFeedListByUserId({
+			userobject_id: userGlobalObject.userInfo._id
+		},(r)=>{
+			let context = {
+				favorite_feeds:r.msg
+			};
+			meatballActions(context);
+		},err=>{
+			console.log(err);
+		})
+	}
+
 
 	const isMissingReportRoute = route.name == 'MissingAnimalDetail' || route.name == 'ReportDetail';
 	const isCommentList = route.name == 'FeedCommentList';

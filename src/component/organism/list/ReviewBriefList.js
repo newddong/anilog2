@@ -9,6 +9,8 @@ import {Arrow_Down_GRAY10, Arrow_Up_GRAY10} from 'Root/component/atom/icon';
  * 후기 요약 컴포넌트 리스트
  * @param {object} props - Props Object
  * @param {object} props.items - 데이터
+ * @param {index:number} props.onPressReview - 리뷰 아이템 클릭
+ * @param {index:number} props.onPressLike - 리뷰 아이템 좋아요 클릭
  */
 const ReviewBriefList = props => {
 	const [showMore, setShowMore] = React.useState(false);
@@ -16,7 +18,7 @@ const ReviewBriefList = props => {
 	const renderItem = (item, index) => {
 		return (
 			<View style={[style.listItem]}>
-				<ReviewBriefItem />
+				<ReviewBriefItem onPressReview={() => props.onPressReview(index)} onPressLike={() => props.onPressLike(index)} />
 			</View>
 		);
 	};
@@ -27,7 +29,7 @@ const ReviewBriefList = props => {
 				renderItem={({item, index}) => renderItem(item, index)}
 				keyExtractor={item => item.id}
 			/>
-			{props.items && props.items.length > 2 ? (
+			{props.items && props.items.length > 2 ? ( //아이템이 두 개 이상일 경우 더보기 출력
 				<TouchableOpacity onPress={() => setShowMore(!showMore)} style={[style.showMore]}>
 					<Text style={[txt.noto24, {color: GRAY10}]}>더보기</Text>
 					{!showMore ? <Arrow_Down_GRAY10 /> : <Arrow_Up_GRAY10 />}
@@ -39,7 +41,10 @@ const ReviewBriefList = props => {
 	);
 };
 
-ReviewBriefList.defaultProps = {};
+ReviewBriefList.defaultProps = {
+	onPressReview: () => {},
+	onPressLike: () => {},
+};
 
 export default ReviewBriefList;
 

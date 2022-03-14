@@ -4,7 +4,7 @@ import {APRI10, GRAY10, GRAY20, GRAY30, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {btn_w226} from 'Atom/btn/btn_style';
-import {Arrow_Down_GRAY10, Arrow_Down_White} from 'Atom/icon';
+import {Arrow_Down_APRI10, Arrow_Down_GRAY10, Arrow_Down_White} from 'Atom/icon';
 /**
  * 버튼 컴포넌트트
  * @param {object} props - Props Object
@@ -34,10 +34,19 @@ const ArrowDownButton = props => {
 	};
 
 	//txt Color의 종류는 3가지 - white, APRI10, GRAY20
+	// const btnTxtColor = () => {
+	// 	if (props.btnTheme == 'gray') {
+	// 		return GRAY10;
+	// 	} else return WHITE;
+	// };
+
+	//txt Color의 종류는 3가지 - white, APRI10, GRAY20
 	const btnTxtColor = () => {
-		if (props.btnTheme == 'gray') {
-			return GRAY10;
-		} else return WHITE;
+		if (props.disable || props.btnStyle == 'filled') {
+			return WHITE;
+		} else if (props.btnTheme == 'gray' && props.btnStyle == 'border') {
+			return GRAY20;
+		} else return APRI10;
 	};
 
 	//default는 APRI10, Gray의 경우 GRAY20
@@ -49,16 +58,31 @@ const ArrowDownButton = props => {
 		}
 	};
 
+	// const btnStyle = () => {
+	// 	if (props.btnTheme == 'gray') {
+	// 		return WHITE;
+	// 	} else return APRI10;
+	// };
+
 	const btnStyle = () => {
-		if (props.btnTheme == 'gray') {
+		if (props.disable) {
+			return GRAY30;
+		} //disable일 경우 배경색 GRAY30
+		else if (props.btnStyle == 'filled') {
+			return APRI10;
+		} //FILLED일 경우 배경색 APRI10
+		else {
 			return WHITE;
-		} else return APRI10;
+		} //이외의 경우 WHITE
 	};
 
 	const getArrow = () => {
 		if (props.btnTheme == 'gray') {
 			return <Arrow_Down_GRAY10 />;
-		} else return <Arrow_Down_White />;
+		} else if (props.btnStyle == 'border') {
+			return <Arrow_Down_APRI10 />;
+		}
+		return <Arrow_Down_White />;
 	};
 
 	const onPress = () => {

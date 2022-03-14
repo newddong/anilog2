@@ -5,6 +5,8 @@ import ReviewMain from 'Root/component/templete/community/ReviewMain';
 import FeedCommentList from 'Root/component/templete/feed/FeedCommentList';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 import Profile from 'Root/component/templete/profile/Profile';
+import CommunityWrite from 'Root/component/templete/community/CommunityWrite';
+import SendHeader from 'Root/navigation/header/SendHeader';
 
 const ReviewStackNav = createStackNavigator();
 
@@ -48,6 +50,15 @@ export default ReviewStackNavigation = props => {
 				options={({route}) => ({
 					headerShown: true,
 					header: props => <SimpleHeader {...props} />,
+					title: ' ',
+				})}
+			/>
+			<ReviewStackNav.Screen
+				name={'CommunityWrite'}
+				component={CommunityWrite}
+				options={({route}) => ({
+					headerShown: true,
+					header: props => <SendHeader {...props} />,
 					title: ' ',
 				})}
 			/>

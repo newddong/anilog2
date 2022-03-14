@@ -8,18 +8,14 @@ import {Urgent_Write1, Urgent_Write2} from 'Atom/icon';
 import {btn_style, feedWrite, login_style, temp_style, buttonstyle} from 'Templete/style_templete';
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w176, btn_w194} from 'Atom/btn/btn_style';
-import ActionButton from 'Molecules/button/ActionButton';
-import SelectedMediaList from 'Organism/list/SelectedMediaList';
 import {DOG_KIND, PET_KIND, pet_kind, PUBLIC_SETTING} from 'Root/i18n/msg';
 import DatePicker from 'Molecules/select/DatePicker';
 import TabSelectFilled_Type1 from 'Molecules/tab/TabSelectFilled_Type1';
 import Input24 from 'Molecules/input/Input24';
 import InputBalloon from 'Molecules/input/InputBalloon';
-import LocationButton from 'Molecules/button/LocationButton';
 import {launchImageLibrary} from 'react-native-image-picker';
 import Modal from 'Component/modal/Modal';
 import userGlobalObj from 'Root/config/userGlobalObject';
-import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {getPettypes} from 'Root/api/userapi';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -27,9 +23,7 @@ import HashInput from 'Molecules/input/HashInput';
 import {getAddressList} from 'Root/api/address';
 import SelectInput from 'Molecules/button/SelectInput';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {FlatList} from 'react-native-gesture-handler';
-import ReactNativeModal from 'react-native-modal';
 
 export default FeedWrite = props => {
 	const [showPetAccountList, setShowPetAccountList] = React.useState(false); //PetAccount 계정
@@ -64,9 +58,9 @@ export default FeedWrite = props => {
 				...props.route.params,
 				media_uri: selectedImg.filter(v => !v.includes('http')),
 				feed_medias: selectedImg.map(img => {
-					let media = props.route.params.feed_medias.find(v=>v.media_uri == img);
-					return {media_uri: img, is_video: false, duration: 0, tags: media ? media.tags : []}
-				})
+					let media = props.route.params.feed_medias.find(v => v.media_uri == img);
+					return {media_uri: img, is_video: false, duration: 0, tags: media ? media.tags : []};
+				}),
 			});
 			console.log('첨부 이미지 변화', selectedImg);
 		}
@@ -84,13 +78,13 @@ export default FeedWrite = props => {
 				onPressReportWrite();
 			}
 			setSelectedImg(props.route.params.feed_medias.map(v => v.media_uri));
-			let regEx = new RegExp(`&#&#(.*?)%&%&`,`gm`);
+			let regEx = new RegExp(`&#&#(.*?)%&%&`, `gm`);
 			let hashes = [];
 			let match = [];
-			while((match = regEx.exec(props.route.params.feed_content))!==null){
+			while ((match = regEx.exec(props.route.params.feed_content)) !== null) {
 				hashes.push(match[1]);
 			}
-			props.navigation.setParams({...props.route.params, hashtag_keyword: hashes})
+			props.navigation.setParams({...props.route.params, hashtag_keyword: hashes});
 		}
 		if (props.route.params?.feedType == 'Feed') {
 			props.navigation.setOptions({title: userGlobalObj.userInfo?.user_nickname});

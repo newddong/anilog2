@@ -257,7 +257,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 	const onPressAddInterestActivation = () => {
 		console.log(contentInterest);
 		Modal.popInterestTagModal(
-			true,
+			'Activity',
 			// route.params.user_interests,
 			contentInterest || [],
 			() => alert('저장'),
@@ -268,7 +268,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 
 	const onPressAddInterestLocation = () => {
 		Modal.popInterestTagModal(
-			false,
+			'Location',
 			// route.params.user_interests,
 			locationInterest || [],
 			() => alert('저장'),

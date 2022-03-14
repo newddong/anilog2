@@ -15,42 +15,24 @@ export default SaveFavorite = props => {
 	let selectCNT = React.useRef(0);
 
 	React.useEffect(() => {
-		getFollows(
+		getUserListByNickname(
 			{
-				userobject_id: userGlobalObject.userInfo._id,
+				user_nickname: '이',
+				user_type: '',
+				userobject_id: '',
+				request_number: 10,
 			},
-			follow => {
-				// console.log('follow / getFollows / SaveFavorite', follow.msg);
-				let follow_id_list = [];
-				follow.msg.map((v, i) => {
-					follow_id_list.push(v.follow_id._id);
-					// console.log('foll', i, v.follow_id.user_nickname);
+			result => {
+				// console.log('result / getUserListByNick / SaveFavorite  : ', result.msg.slice(0, 2));
+				result.msg.map((v, i) => {
+					console.log('i', i, v.follow);
 				});
-				getUserListByNickname(
-					{
-						user_nickname: '이',
-						user_type: '',
-						userobject_id: '',
-						request_number: 10,
-					},
-					result => {
-						// console.log('result / getUserListByNick / SaveFavorite  : ', result.msg.slice(0, 2));
-						let res = result.msg;
-						res.map((v, i) => {
-							if (follow_id_list.includes(v._id)) {
-								//출력될 아이템들의 Id를 팔로워 Id목록과 비교하여 값을 포함하고 있다면 팔로우 or 팔오잉
-								v.isFollowing = true;
-							} else v.isFollowing = false;
-						});
-						setData(res);
-					},
-					err => {
-						console.log('err', err);
-					},
-				);
+				let res = result.msg;
+
+				setData(res);
 			},
 			err => {
-				console.log(' err / getFollows / SaveFavorite');
+				console.log('err', err);
 			},
 		);
 	}, []);

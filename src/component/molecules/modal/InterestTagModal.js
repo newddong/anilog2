@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions, ScrollView, FlatList} from 'react-native';
-import {WHITE, GRAY10, APRI10, GRAY20} from 'Root/config/color';
+import {View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions, ScrollView, FlatList, ActivityIndicator, Animated} from 'react-native';
+import {WHITE, GRAY10, APRI10, GRAY20, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Component/modal/Modal';
@@ -8,69 +8,45 @@ import AniButton from '../button/AniButton';
 import {Cross24_Filled} from 'Root/component/atom/icon';
 import {getAddressList} from 'Root/api/address';
 import {getInterestsList} from 'Root/api/interestsapi';
+import ArrowDownButton from '../button/ArrowDownButton';
+import {btn_w242, btn_w280x68} from 'Root/component/atom/btn/btn_style';
 /**
  * 관심사 추가 및 수정 모달
- * @param {object} isActivation -  관심활동 / 관심지역 분기 (true일 경우 관심활동)
+ * @param {'Activity'|'Location'|'Review'} category -  관심활동 / 관심지역 / 커뮤니티후기 분기
  * @param {object} data - 관심사 추가할 계정 object(반려동물 혹은 유저)
  * @param {(selectedData)=>void)} onSave - 저장 버튼 클릭 콜백 / 선택된 항목의 오브젝트( ex : 지역, 미용, 놀이, 건강 등)
  * @param {()=>void)} onClose - 페이지 좌상단 x버튼 클릭 / 종료 콜백
  *
  */
 const InterestTagModal = props => {
-	console.log('InterestTagModa', props.data);
+	// console.log('InterestTagModa', props.data);
 	//유저 오브젝트의 user_interests 의 더미데이터
 	// user_interests는 크게 location 및 activity로 구성
 
-	// const userDataDummy = [
-	// 	{
-	// 		category: '건강',
-	// 		content: ['재활', '노환'],
-	// 	},
-	// 	{
-	// 		category: '놀이',
-	// 		content: ['애견카페', '애견패션'],
-	// 	},
-	// 	{
-	// 		category: '사료&간식',
-	// 		content: ['노환', '애견패션', '어질리티'],
-	// 	},
-	// ];
-	// const dummyActivityList = [
-	// 	{
-	// 		category: '생활',
-	// 		content: ['미용', '펫의류', '펫인테리어', '산책', '훈련'],
-	// 	},
-	// 	{
-	// 		category: '놀이',
-	// 		content: ['프리스비', '어질리티', '노즈워쿠', '장난감', '캣휠', '사냥놀이'],
-	// 	},
-	// 	{
-	// 		category: '장소',
-	// 		content: ['애견놀이터', '애견카페', '애견패션', '목장', '펫페어'],
-	// 	},
-	// 	{
-	// 		category: '사료&간식',
-	// 		content: ['수제간식', '건강보조제', '습식사료', '건식사료', '캣닢'],
-	// 	},
-	// 	{
-	// 		category: '건강',
-	// 		content: ['재활', '노환', '예방접종', '구강관리', '다이어트'],
-	// 	},
-	// ];
-	const [userData, setUserData] = React.useState();
 	const [userInterestContent, setUserInterestContent] = React.useState([]);
+	const [userInterestLocation, setUserInterestLocation] = React.useState([]);
+	const [userInterestReview, setUserInterestReview] = React.useState([]);
 	const [isSaved, setIsSaved] = React.useState(false); // '저장하지 않고 나가시겠습니까?' 메시지 출력 여부 판별
 	const [showBtnModal, setShowBtnModal] = React.useState(false); //모달창 대체 View 출력 여부
 	const [addressList, setAddressList] = React.useState([]);
-	const [userInterestLocation, setUserInterestLocation] = React.useState([]);
+	const [city, setCity] = React.useState(''); // 리뷰의 지역 필터 중 광역시, 도 파라미터
+	const [district, setDistrict] = React.useState(['', '', '광역시, 도를 먼저 선택해주세요.']); // 리뷰의 지역 필터 중 시군구 파라미터
+	const [selectedItem, setSelectedItem] = React.useState(2); // 광역시 도 선택 인덱스
+	const [selectedCity, setSelectedCity] = React.useState('강원도');
+	const [selectedItem_dis, setSelectedItem_dis] = React.useState(2); // 시군구 선택 인덱스
+	const [selectedDistrict, setSelectedDistrict] = React.useState('원주시'); // 시군구 선택 아이템
+	const [selectCityOpen, setSelectCityOpen] = React.useState(false);
+	const [selectDistrictOpen, setSelectDistrictOpen] = React.useState(false);
 	const [activityLists, setActivityLists] = React.useState([]);
+
 	React.useEffect(() => {
 		var tempUserInterestContentList = [];
 		var tempUserInterestLocationList = [];
+
+		//유저 관심사 목록 DB에서 받아오기
 		getInterestsList({}, interests => {
 			var acitivityList = [];
 			const nameList = {interests_beauty: '미용', interests_activity: '놀이', interests_food: '사료&간식', interests_health: '건강'};
-
 			const interestObj = interests.msg[0];
 			const getinterest = Object.entries(interestObj).map((category, idx) => {
 				if (idx == 2) {
@@ -80,7 +56,6 @@ const InterestTagModal = props => {
 					acitivityList.push({category: nameList[category[0]], content: category[1]});
 				}
 			});
-			// console.log('activityList', acitivityList);
 			setActivityLists(acitivityList);
 		});
 		//현재 유저의 관심사 리스트를 목록들에 적용
@@ -96,28 +71,100 @@ const InterestTagModal = props => {
 			setUserInterestContent(tempUserInterestContentList);
 			setUserInterestLocation(tempUserInterestLocationList);
 		});
-		// getAddressList(
-		// 	{},
-		// 	cities => {
-		// 		// setAddressList(cities.msg);
-		// 		console.log(cities.msg);
-		// 	},
-		// 	err => console.log('err', err),
-		// );
+		if (props.category == 'Review') {
+			getAddressList(
+				{},
+				result => {
+					// console.log('result', result.msg);
+					const padding = '';
+					let arr = [padding, padding];
+					let cities = arr.concat(result.msg);
+					cities.push(padding);
+					cities.push(padding);
+					setCity(cities);
+					getAddressList(
+						{
+							city: '강원도',
+						},
+						result => {
+							const padding = '';
+							let arr = [padding, padding];
+							let districts = arr.concat(result.msg);
+							districts.push(padding);
+							districts.push(padding);
+							setDistrict(districts);
+						},
+						err => {
+							console.log('err', err);
+						},
+					);
+				},
+				err => console.log('err', err),
+			);
+		}
 	}, []);
 
-	//현재 유저의 관심사 리스트를 목록들에 적용
-	// React.useEffect(() => {
-	// 	let copy = [...userInterestContent];
-	// 	userData.map((v, i) => {
-	// 		v.content.map(value => {
-	// 			copy.push(value);
-	// 		});
-	// 	});
-	// 	copy = [...new Set(copy)];
-	// 	console.log('copy', copy);
-	// 	setUserInterestContent(copy);
-	// }, [userData]);
+	const citySelectHeight = React.useRef(new Animated.Value(0)).current;
+	const districtSelectHeight = React.useRef(new Animated.Value(0)).current;
+
+	const cityInterpolatedHeight = citySelectHeight.interpolate({
+		inputRange: [0, 100],
+		outputRange: [0, 100],
+	});
+
+	const districtInterpolatedHeight = districtSelectHeight.interpolate({
+		inputRange: [0, 100],
+		outputRange: [0, 100],
+	});
+
+	React.useEffect(() => {
+		if (selectCityOpen) {
+			Animated.timing(citySelectHeight, {
+				duration: 500,
+				toValue: 465 * DP,
+				// easing: Easing.linear,
+				useNativeDriver: false,
+			}).start();
+		} else if (!selectCityOpen) {
+			Animated.timing(citySelectHeight, {
+				duration: 500,
+				toValue: 0,
+				// easing: Easing.linear,
+				useNativeDriver: false,
+			}).start();
+		}
+	}, [selectCityOpen]);
+
+	React.useEffect(() => {
+		if (selectDistrictOpen) {
+			Animated.timing(districtSelectHeight, {
+				duration: 500,
+				toValue: 465 * DP,
+				// easing: Easing.linear,
+				useNativeDriver: false,
+			}).start();
+		} else if (!selectDistrictOpen) {
+			Animated.timing(districtSelectHeight, {
+				duration: 500,
+				toValue: 0,
+				// easing: Easing.linear,
+				useNativeDriver: false,
+			}).start();
+		}
+	}, [selectDistrictOpen]);
+
+	//관심 리뷰 태그를 클릭
+	const onPressInterestReviewTag = tag => {
+		let copy = [...userInterestReview];
+		if (copy.includes(tag)) {
+			let findIndex = copy.findIndex(e => e == tag);
+			copy.splice(findIndex, 1);
+		} else {
+			copy.push(tag);
+		}
+		setUserInterestReview(copy);
+	};
+
 	//관심활동 태그를 클릭
 	const onPressInterestActivationTag = tag => {
 		let copy = [...userInterestContent];
@@ -127,7 +174,6 @@ const InterestTagModal = props => {
 		} else {
 			copy.push(tag);
 		}
-
 		setUserInterestContent(copy);
 	};
 
@@ -146,22 +192,23 @@ const InterestTagModal = props => {
 
 	//저장
 	const onPressSave = () => {
-		if (props.isActivation) {
+		if (props.category == 'Activity') {
 			props.setState(userInterestContent);
-		} else {
+		} else if (props.category == 'Location') {
 			props.setState(userInterestLocation);
+		} else {
+			props.setState(selectedCity + ' / ' + selectedDistrict + ' / ' + userInterestReview.toString());
 		}
 		setIsSaved(true);
-
 		Modal.close();
 	};
 
+	//모달 종료
 	const onClose = () => {
 		if (isSaved) {
 			props.onClose();
 			Modal.close();
 		} else {
-			// alert('저장하지 않고 나가시겠습니까?');
 			setShowBtnModal(true);
 		}
 	};
@@ -175,11 +222,141 @@ const InterestTagModal = props => {
 	};
 
 	//X마크 클릭 후 나가기 클릭
-
 	const onPressExitWithoutSave = () => {
 		console.log('onPressExitWithoutSave');
 		props.onClose();
 		Modal.close();
+	};
+
+	const getList = () => {
+		if (props.category == 'Review') {
+			return getReviewCategory();
+		} else if (props.category == 'Activity') {
+			return getActivityList();
+		} else if (props.category == 'Location') {
+			return getLocationList();
+		}
+	};
+
+	//상단 모달창에서 광역시, 도 드롭다운 열기 클릭
+	const onOpenCity = () => {
+		setSelectDistrictOpen(false); // 광역시가 열리면 시군구는 닫힘
+		setSelectCityOpen(!selectCityOpen);
+	};
+
+	//상단 모달창에서 시군구 드롭다운 열기 클릭
+	const onOpenDistrict = () => {
+		setSelectCityOpen(false); // 시군구가 열리면 광역시는 닫힘
+		setSelectDistrictOpen(!selectDistrictOpen);
+	};
+
+	//광역시 도  모달 스크롤
+	const onScroll = event => {
+		let y = event.nativeEvent.contentOffset.y; //스크롤 영역 데이터
+		let focused = Math.floor(y / (68 * DP));
+		if (focused < 1) {
+			setSelectedItem(2);
+		} else {
+			setSelectedItem(focused + 2);
+		}
+	};
+
+	//시군구 모달 스크롤
+	const onScroll_dis = event => {
+		let y = event.nativeEvent.contentOffset.y;
+		let focused = Math.floor(y / (68 * DP));
+		if (focused < 1) {
+			setSelectedItem_dis(2);
+		} else {
+			setSelectedItem_dis(focused + 2);
+		}
+	};
+
+	//하단 드롭다운에서 완료 버튼 클릭
+	const onSelect = () => {
+		setSelectCityOpen(false);
+		setSelectedCity(city[selectedItem]);
+		getAddressList(
+			{
+				city: city[selectedItem],
+			},
+			result => {
+				const padding = '';
+				let arr = [padding, padding];
+				let districts = arr.concat(result.msg);
+				districts.push(padding);
+				districts.push(padding);
+				setDistrict(districts);
+				setSelectedDistrict(result.msg[0]);
+				setSelectedItem_dis(2);
+			},
+			err => {
+				console.log('err', err);
+			},
+		);
+	};
+
+	//하단 드롭다운에서 완료 버튼 클릭
+	const onSelect_dis = arg => {
+		setSelectDistrictOpen(false);
+		setSelectedDistrict(district[selectedItem_dis]);
+	};
+
+	const getReviewCategory = () => {
+		if (city == '') {
+			return <ActivityIndicator />;
+		} else
+			return (
+				<ScrollView style={{flex: 1}}>
+					<View style={[style.review_container]}>
+						<View style={[style.review_location]}>
+							<ArrowDownButton onPress={onOpenCity} btnStyle={'border'} btnLayout={btn_w242} btnTitle={selectedCity} />
+							<ArrowDownButton onPress={onOpenDistrict} btnStyle={'border'} btnLayout={btn_w242} btnTitle={selectedDistrict} />
+						</View>
+						{dummyReviewCategoryList.map((v, i) => {
+							return (
+								<View key={i} style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
+									<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>{v.category_title}</Text>
+									<View style={style.review_category_item}>
+										{v.content.length
+											? v.content.map((d, i) => {
+													if (i % 2 == 0) {
+														return null;
+													}
+													return (
+														<TouchableOpacity
+															onPress={() => onPressInterestReviewTag(d)}
+															key={i}
+															style={[userInterestReview.includes(d) ? style.contentText_userInterest : style.contentText]}>
+															<Text style={[txt.noto28, {color: userInterestReview.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
+														</TouchableOpacity>
+													);
+											  })
+											: null}
+									</View>
+									<View style={style.review_category_item}>
+										{v.content.length
+											? v.content.map((d, i) => {
+													if (i % 2 != 0) {
+														return null;
+													}
+													return (
+														<TouchableOpacity
+															key={i}
+															onPress={() => onPressInterestReviewTag(d)}
+															style={[userInterestReview.includes(d) ? style.contentText_userInterest : style.contentText]}>
+															<Text style={[txt.noto28, {color: userInterestReview.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
+														</TouchableOpacity>
+													);
+											  })
+											: null}
+									</View>
+								</View>
+							);
+						})}
+					</View>
+				</ScrollView>
+			);
 	};
 
 	const getActivityList = () => {
@@ -189,7 +366,6 @@ const InterestTagModal = props => {
 					return (
 						<View key={i} style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
 							<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>{v.category}</Text>
-
 							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
 								{v.content.length
 									? v.content.map((d, i) => {
@@ -256,16 +432,22 @@ const InterestTagModal = props => {
 
 	return (
 		<View style={style.background}>
-			<View style={[style.popUpWindow]}>
+			<View
+				// activeOpacity={0.9}
+				// onPress={() => {
+				// 	setSelectCityOpen(false);
+				// 	setSelectDistrictOpen(false);
+				// }}
+				style={[style.popUpWindow]}>
 				<View style={[style.header]}>
-					<View style={[style.crossMark]}>
-						<Cross24_Filled onPress={onClose} />
-					</View>
+					<TouchableOpacity onPress={onClose} style={[style.crossMark]}>
+						<Cross24_Filled />
+					</TouchableOpacity>
 					<TouchableOpacity onPress={onPressSave} style={[style.saveText]}>
 						<Text style={[txt.noto36b, {color: APRI10}]}>저장</Text>
 					</TouchableOpacity>
 				</View>
-				{props.isActivation ? getActivityList() : getLocationList()}
+				{getList()}
 			</View>
 			{showBtnModal ? (
 				<View style={[style.btnModalContainer, style.shadow]}>
@@ -280,6 +462,80 @@ const InterestTagModal = props => {
 			) : (
 				<></>
 			)}
+			{/* 하단 스크롤뷰 영역 - 광역시 도 */}
+			<Animated.View
+				style={[
+					style.downScrollSelectContainer,
+					{
+						height: cityInterpolatedHeight,
+					},
+				]}>
+				<View style={[style.modal_header]}>
+					<Text onPress={() => setSelectCityOpen(false)} style={[txt.noto30, {color: WHITE, paddingVertical: 22 * DP}]}>
+						취소
+					</Text>
+					<TouchableOpacity onPress={onSelect}>
+						<Text style={[txt.noto30, {color: WHITE}]}>완료</Text>
+					</TouchableOpacity>
+				</View>
+				<View style={[style.list, {}]}>
+					<FlatList
+						data={city}
+						onScroll={onScroll}
+						showsVerticalScrollIndicator={false}
+						renderItem={({item, index}) => {
+							return (
+								<TouchableOpacity
+									activeOpacity={1}
+									onPress={() => setSelectedItem(index)}
+									key={index}
+									style={[style.listItem, index == selectedItem && item != '' ? {backgroundColor: APRI10} : null]}>
+									<>
+										<Text style={[txt.roboto34, {color: index == selectedItem && item != '' ? WHITE : GRAY10}]}>{item}</Text>
+									</>
+								</TouchableOpacity>
+							);
+						}}
+					/>
+				</View>
+			</Animated.View>
+			{/* 하단 스크롤뷰 영역 - 시군구 */}
+			<Animated.View
+				style={[
+					style.downScrollSelectContainer,
+					{
+						height: districtInterpolatedHeight,
+					},
+				]}>
+				<View style={[style.modal_header]}>
+					<Text onPress={() => setSelectDistrictOpen(false)} style={[txt.noto30, {color: WHITE, paddingVertical: 22 * DP}]}>
+						취소
+					</Text>
+					<TouchableOpacity onPress={onSelect_dis}>
+						<Text style={[txt.noto30, {color: WHITE}]}>완료</Text>
+					</TouchableOpacity>
+				</View>
+				<View style={[style.list, {}]}>
+					<FlatList
+						data={district}
+						onScroll={onScroll_dis}
+						showsVerticalScrollIndicator={false}
+						renderItem={({item, index}) => {
+							return (
+								<TouchableOpacity
+									activeOpacity={1}
+									onPress={() => setSelectedItem_dis(index)}
+									key={index}
+									style={[style.listItem, index == selectedItem_dis && item != '' ? {backgroundColor: APRI10} : null]}>
+									<>
+										<Text style={[txt.roboto34, {color: index == selectedItem_dis && item != '' ? WHITE : GRAY10}]}>{item}</Text>
+									</>
+								</TouchableOpacity>
+							);
+						}}
+					/>
+				</View>
+			</Animated.View>
 		</View>
 	);
 };
@@ -289,6 +545,28 @@ InterestTagModal.defaultProps = {
 	onClose: () => {},
 	isActivation: true,
 };
+const dummyReviewCategoryList = [
+	{
+		category_title: '여행ㆍ숙박ㆍ카페',
+		content: ['펫 숙소', '관광지', '놀이터', '펫카페'],
+	},
+	{
+		category_title: '병원ㆍ건강',
+		content: ['병원', '사료', '간식'],
+	},
+	{
+		category_title: '펫 인테리어 ㆍ 놀이',
+		content: ['집 ㆍ 방석', '가구', '노즈워크/장난감'],
+	},
+	{
+		category_title: '기타',
+		content: ['청결용품', '의류', '기타'],
+	},
+	{
+		category_title: '후기',
+		content: ['치료 경혐', '훈련 경혐', '다이어트 경험'],
+	},
+];
 
 const style = StyleSheet.create({
 	background: {
@@ -327,7 +605,9 @@ const style = StyleSheet.create({
 		// backgroundColor: 'yellow',
 	},
 	crossMark: {
-		width: 52 * DP,
+		width: 90 * DP,
+		height: 90 * DP,
+		justifyContent: 'center',
 	},
 	saveText: {
 		// width: 66 * DP,
@@ -389,6 +669,50 @@ const style = StyleSheet.create({
 		marginTop: 30 * DP,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
+	},
+	review_container: {
+		paddingHorizontal: 5 * DP,
+	},
+	review_location: {
+		flexDirection: 'row',
+		width: 530 * DP,
+		paddingVertical: 30 * DP,
+		alignSelf: 'center',
+		justifyContent: 'space-between',
+	},
+	review_category_item: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+	},
+	downScrollSelectContainer: {
+		position: 'absolute',
+		bottom: 0,
+		width: 750 * DP,
+		// height: 476 * DP,
+		justifyContent: 'flex-end',
+	},
+	modal_header: {
+		width: 750 * DP,
+		flexDirection: 'row',
+		backgroundColor: APRI10,
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		paddingHorizontal: 40 * DP,
+		borderTopRightRadius: 40 * DP,
+		borderTopLeftRadius: 40 * DP,
+	},
+	list: {
+		width: 750 * DP,
+		flex: 1,
+		alignItems: 'center',
+		backgroundColor: 'white',
+	},
+	listItem: {
+		alignItems: 'center',
+		justifyContent: 'center',
+		width: 666 * DP,
+		height: 70 * DP,
+		borderRadius: 30 * DP,
 	},
 });
 

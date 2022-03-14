@@ -255,7 +255,7 @@ export default RootStackNavigation = () => {
 
 						{/* 카메라 관련 기능은 네이티브 모듈이 안정화 혹은 자체 개발이 될때까지 추가 보류 */}
 						{/* <RootStack.Screen name="SinglePhotoSelect" component={PhotoSelect} /> */}
-						{/* <RootStack.Screen name="SinglePhotoSelect" component={AddPhoto} /> */}
+						<RootStack.Screen name="SinglePhotoSelect" component={AddPhoto} />
 						{/* <RootStack.Screen name="MultiPhotoSelect" component={PhotoSelect} /> */}
 						<RootStack.Screen name="MultiPhotoSelect" component={AddPhoto} />
 						{/* 카메라 컴포넌트 임시 추가 */}

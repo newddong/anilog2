@@ -31,7 +31,6 @@ const ArticleContent = props => {
 
 	const [showMore, setShowMore] = React.useState(false);
 
-
 	return (
 		<View style={[style.container]}>
 			<View style={[style.header]}>
@@ -47,14 +46,8 @@ const ArticleContent = props => {
 				<UserLocationTimeLabel data={dummy_userObject[0]} />
 			</View>
 			<TouchableOpacity activeOpacity={1} onPress={onPressArticle}>
-				<View
-					style={[
-						style.hashText,
-						{
-							height: isDetail || showMore ? null : 86 * DP,
-						},
-					]}>
-					<Text>
+				<View style={[style.hashText, {}]}>
+					<Text numberOfLines={isDetail || showMore ? null : 2}>
 						우리 #둥이 는 언제나 #창가 에 앉아있기를 좋아하는거같다. 다른 강아지들은 높은곳을 무서워한다는데ㅋㅋㅋ 정말 신... #둥이 는 언제나 #창가 에
 						앉아있기를 좋아하는거같다. 다른 강아지들은 높은곳을 무서워한다는데ㅋㅋㅋ 정말 신...
 					</Text>
@@ -72,14 +65,12 @@ const ArticleContent = props => {
 	);
 };
 
-
 ArticleContent.defaultProps = {
 	onPressFavorite: () => {},
 	onPressMeatball: () => {},
 	onPressArticle: () => {},
 };
 export default ArticleContent;
-
 
 const style = StyleSheet.create({
 	container: {

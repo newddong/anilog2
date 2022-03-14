@@ -11,7 +11,6 @@ import {getSettingPublic, updateSettingPublic} from 'Root/api/settingpublic';
 import {INFO_QUESTION} from 'Root/i18n/msg';
 import FastImage from 'react-native-fast-image';
 import {useState} from 'react/cjs/react.production.min';
-import SettingOpenPage from './SettingOpenPage';
 
 export default SettingOpen = ({route}) => {
 	const [openObject, setOpenObject] = React.useState();

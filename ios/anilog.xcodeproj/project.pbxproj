@@ -12,22 +12,22 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		24DD834A9C1C42FE9FE332C9 /* NotoSansKR-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0A068D045B4047B2B4373AC9 /* NotoSansKR-Bold.otf */; };
+		2C7A42484CA9CA675C35D61E /* libPods-anilog-anilogTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4615C9F5C3CE11D85E5CD042 /* libPods-anilog-anilogTests.a */; };
 		38C809C2E250425DBE6E3698 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 03A25EDACADC457B8C7B463B /* Roboto-Italic.ttf */; };
 		39266251E14A4E1C9F361D92 /* Roboto-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B7CC3F2370A94A2B8E77E173 /* Roboto-MediumItalic.ttf */; };
 		4167E5783D00443CB84C5A09 /* Roboto-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EC9C1B8ED74746BFAAF40EDB /* Roboto-BlackItalic.ttf */; };
-		4828A78D489A0894BC6407E1 /* libPods-anilog.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B87C71DE3BE292E7035DD777 /* libPods-anilog.a */; };
 		5173D2FCD89A41C7B59447B2 /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD10A8244A6A41CDAC458879 /* Roboto-Black.ttf */; };
 		5904887F8D634AAE8F93F269 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 74D65069EA9C4C30A86404F7 /* Roboto-Bold.ttf */; };
 		5A12A690994F4E089B3007C2 /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FBBBEBDBF6284C908A9FA4CB /* Roboto-ThinItalic.ttf */; };
 		61382C99BF2A4E959B782CC5 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 491A95C9D8B44C93826661F1 /* Roboto-Medium.ttf */; };
 		7E1C798840BD4BBB9496F685 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AAC775FFF43F4592ABC47E11 /* Roboto-Light.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		8B7F88D88EC92B234DB0C7AC /* libPods-anilog-anilogTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 46289F34A97A71F74ED3D938 /* libPods-anilog-anilogTests.a */; };
 		A6656D5242D64B84A760D9E9 /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 76509BC8278D4CF685E56AD9 /* Roboto-BoldItalic.ttf */; };
 		A72774053C0A480B90682CC4 /* Roboto-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9C12F8D39E3F46AA9ADA1233 /* Roboto-LightItalic.ttf */; };
 		B3C88654360E43C29548F8C8 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F3F8D1B05DA044339A2953BF /* Roboto-Regular.ttf */; };
 		BADD4E1093BD4F9096A80D38 /* NotoSansKR-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5F41EF1252CC4F08B3BAF374 /* NotoSansKR-Regular.otf */; };
 		E6C58BF1C3784743B899A910 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FC408770C16F4B2F8C6E5B3C /* Roboto-Thin.ttf */; };
+		FA810DDFD3E9B502570DEDE0 /* libPods-anilog.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B079AF24774A2B10B60DFF49 /* libPods-anilog.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,26 +52,26 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = anilog/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = anilog/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = anilog/main.m; sourceTree = "<group>"; };
-		46289F34A97A71F74ED3D938 /* libPods-anilog-anilogTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-anilog-anilogTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		260C0AB6EC0CEFE917F43DCA /* Pods-anilog-anilogTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-anilog-anilogTests.debug.xcconfig"; path = "Target Support Files/Pods-anilog-anilogTests/Pods-anilog-anilogTests.debug.xcconfig"; sourceTree = "<group>"; };
+		4615C9F5C3CE11D85E5CD042 /* libPods-anilog-anilogTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-anilog-anilogTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		491A95C9D8B44C93826661F1 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Medium.ttf"; path = "../asset/fonts/Roboto-Medium.ttf"; sourceTree = "<group>"; };
-		52C590BD8B35513573D0A430 /* Pods-anilog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-anilog.release.xcconfig"; path = "Target Support Files/Pods-anilog/Pods-anilog.release.xcconfig"; sourceTree = "<group>"; };
+		589B0AC5A823102178DB5694 /* Pods-anilog-anilogTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-anilog-anilogTests.release.xcconfig"; path = "Target Support Files/Pods-anilog-anilogTests/Pods-anilog-anilogTests.release.xcconfig"; sourceTree = "<group>"; };
 		5F41EF1252CC4F08B3BAF374 /* NotoSansKR-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "NotoSansKR-Regular.otf"; path = "../asset/fonts/NotoSansKR-Regular.otf"; sourceTree = "<group>"; };
 		74D65069EA9C4C30A86404F7 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Bold.ttf"; path = "../asset/fonts/Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		76509BC8278D4CF685E56AD9 /* Roboto-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-BoldItalic.ttf"; path = "../asset/fonts/Roboto-BoldItalic.ttf"; sourceTree = "<group>"; };
-		7658A3B8CBBB19334EF297F9 /* Pods-anilog-anilogTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-anilog-anilogTests.release.xcconfig"; path = "Target Support Files/Pods-anilog-anilogTests/Pods-anilog-anilogTests.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = anilog/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9C12F8D39E3F46AA9ADA1233 /* Roboto-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-LightItalic.ttf"; path = "../asset/fonts/Roboto-LightItalic.ttf"; sourceTree = "<group>"; };
 		AAC775FFF43F4592ABC47E11 /* Roboto-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Light.ttf"; path = "../asset/fonts/Roboto-Light.ttf"; sourceTree = "<group>"; };
+		B079AF24774A2B10B60DFF49 /* libPods-anilog.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-anilog.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7CC3F2370A94A2B8E77E173 /* Roboto-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-MediumItalic.ttf"; path = "../asset/fonts/Roboto-MediumItalic.ttf"; sourceTree = "<group>"; };
-		B87C71DE3BE292E7035DD777 /* libPods-anilog.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-anilog.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD10A8244A6A41CDAC458879 /* Roboto-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Black.ttf"; path = "../asset/fonts/Roboto-Black.ttf"; sourceTree = "<group>"; };
+		E31176A5D1C6961F817358D8 /* Pods-anilog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-anilog.release.xcconfig"; path = "Target Support Files/Pods-anilog/Pods-anilog.release.xcconfig"; sourceTree = "<group>"; };
+		E3FFBA379F6EF570C62482AB /* Pods-anilog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-anilog.debug.xcconfig"; path = "Target Support Files/Pods-anilog/Pods-anilog.debug.xcconfig"; sourceTree = "<group>"; };
 		EC9C1B8ED74746BFAAF40EDB /* Roboto-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-BlackItalic.ttf"; path = "../asset/fonts/Roboto-BlackItalic.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F293CACCE00B0A0642E3641D /* Pods-anilog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-anilog.debug.xcconfig"; path = "Target Support Files/Pods-anilog/Pods-anilog.debug.xcconfig"; sourceTree = "<group>"; };
 		F3F8D1B05DA044339A2953BF /* Roboto-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Regular.ttf"; path = "../asset/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		FBBBEBDBF6284C908A9FA4CB /* Roboto-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-ThinItalic.ttf"; path = "../asset/fonts/Roboto-ThinItalic.ttf"; sourceTree = "<group>"; };
 		FC408770C16F4B2F8C6E5B3C /* Roboto-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Thin.ttf"; path = "../asset/fonts/Roboto-Thin.ttf"; sourceTree = "<group>"; };
-		FCA46C6C31F4EE672DFF4E35 /* Pods-anilog-anilogTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-anilog-anilogTests.debug.xcconfig"; path = "Target Support Files/Pods-anilog-anilogTests/Pods-anilog-anilogTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,7 +79,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8B7F88D88EC92B234DB0C7AC /* libPods-anilog-anilogTests.a in Frameworks */,
+				2C7A42484CA9CA675C35D61E /* libPods-anilog-anilogTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,7 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4828A78D489A0894BC6407E1 /* libPods-anilog.a in Frameworks */,
+				FA810DDFD3E9B502570DEDE0 /* libPods-anilog.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,10 +127,10 @@
 		1D9FF524E237CC6152C4E970 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				F293CACCE00B0A0642E3641D /* Pods-anilog.debug.xcconfig */,
-				52C590BD8B35513573D0A430 /* Pods-anilog.release.xcconfig */,
-				FCA46C6C31F4EE672DFF4E35 /* Pods-anilog-anilogTests.debug.xcconfig */,
-				7658A3B8CBBB19334EF297F9 /* Pods-anilog-anilogTests.release.xcconfig */,
+				E3FFBA379F6EF570C62482AB /* Pods-anilog.debug.xcconfig */,
+				E31176A5D1C6961F817358D8 /* Pods-anilog.release.xcconfig */,
+				260C0AB6EC0CEFE917F43DCA /* Pods-anilog-anilogTests.debug.xcconfig */,
+				589B0AC5A823102178DB5694 /* Pods-anilog-anilogTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -139,8 +139,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				B87C71DE3BE292E7035DD777 /* libPods-anilog.a */,
-				46289F34A97A71F74ED3D938 /* libPods-anilog-anilogTests.a */,
+				B079AF24774A2B10B60DFF49 /* libPods-anilog.a */,
+				4615C9F5C3CE11D85E5CD042 /* libPods-anilog-anilogTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -205,12 +205,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "anilogTests" */;
 			buildPhases = (
-				6378EF2BEDB0FF3A03D6546E /* [CP] Check Pods Manifest.lock */,
+				18EC2F455B2788050CBE568F /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				7AF027A533A126F4C48E9104 /* [CP] Embed Pods Frameworks */,
-				7486EF9A41C068C50A0AEC71 /* [CP] Copy Pods Resources */,
+				BE7409C4700CEA158964590A /* [CP] Embed Pods Frameworks */,
+				D47FE84123CB157B434BCF58 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -226,14 +226,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "anilog" */;
 			buildPhases = (
-				186B5F62BEA4A24C713D2EC3 /* [CP] Check Pods Manifest.lock */,
+				1363ED4656547214606772C7 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				BC734ADFC4782E6A5E29AAB7 /* [CP] Embed Pods Frameworks */,
-				6AA3C1F4FD06448940F6A14A /* [CP] Copy Pods Resources */,
+				2C38B001C6D44A73AA8E1A4E /* [CP] Embed Pods Frameworks */,
+				A1CA2026A99256D7DEEDED69 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -328,7 +328,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=/opt/homebrew/bin/node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		186B5F62BEA4A24C713D2EC3 /* [CP] Check Pods Manifest.lock */ = {
+		1363ED4656547214606772C7 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -350,7 +350,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		6378EF2BEDB0FF3A03D6546E /* [CP] Check Pods Manifest.lock */ = {
+		18EC2F455B2788050CBE568F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -372,7 +372,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		6AA3C1F4FD06448940F6A14A /* [CP] Copy Pods Resources */ = {
+		2C38B001C6D44A73AA8E1A4E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-anilog/Pods-anilog-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-anilog/Pods-anilog-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-anilog/Pods-anilog-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A1CA2026A99256D7DEEDED69 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -389,24 +406,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-anilog/Pods-anilog-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		7486EF9A41C068C50A0AEC71 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-anilog-anilogTests/Pods-anilog-anilogTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-anilog-anilogTests/Pods-anilog-anilogTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-anilog-anilogTests/Pods-anilog-anilogTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7AF027A533A126F4C48E9104 /* [CP] Embed Pods Frameworks */ = {
+		BE7409C4700CEA158964590A /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -423,21 +423,21 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-anilog-anilogTests/Pods-anilog-anilogTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		BC734ADFC4782E6A5E29AAB7 /* [CP] Embed Pods Frameworks */ = {
+		D47FE84123CB157B434BCF58 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-anilog/Pods-anilog-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-anilog-anilogTests/Pods-anilog-anilogTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-anilog/Pods-anilog-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-anilog-anilogTests/Pods-anilog-anilogTests-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-anilog/Pods-anilog-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-anilog-anilogTests/Pods-anilog-anilogTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -492,7 +492,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FCA46C6C31F4EE672DFF4E35 /* Pods-anilog-anilogTests.debug.xcconfig */;
+			baseConfigurationReference = 260C0AB6EC0CEFE917F43DCA /* Pods-anilog-anilogTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -519,7 +519,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7658A3B8CBBB19334EF297F9 /* Pods-anilog-anilogTests.release.xcconfig */;
+			baseConfigurationReference = 589B0AC5A823102178DB5694 /* Pods-anilog-anilogTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -543,7 +543,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F293CACCE00B0A0642E3641D /* Pods-anilog.debug.xcconfig */;
+			baseConfigurationReference = E3FFBA379F6EF570C62482AB /* Pods-anilog.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -574,7 +574,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 52C590BD8B35513573D0A430 /* Pods-anilog.release.xcconfig */;
+			baseConfigurationReference = E31176A5D1C6961F817358D8 /* Pods-anilog.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

@@ -1,9 +1,11 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+rn_maps_path = '../node_modules/react-native-maps'
 
 platform :ios, '11.0'
 
 target 'anilog' do
+
   config = use_native_modules!
 
   use_react_native!(
@@ -13,6 +15,8 @@ target 'anilog' do
   )
 
   pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
+  pod 'react-native-google-maps', :path => rn_maps_path
+  # pod 'react-native-maps', :path => rn_maps_path
 
   target 'anilogTests' do
     inherit! :complete

@@ -58,9 +58,9 @@ const NoteSelectStat = props => {
 				) : (
 					<TouchableOpacity style={[temp_style.textBtn]} onPress={props.changeStatus}>
 						{props.received ? (
-							<Text style={[txt.noto26, {color: APRI10}, {alignSelf: 'flex-start'}]}>받은 쪽지함</Text>
-						) : (
 							<Text style={[txt.noto26, {color: APRI10}, {alignSelf: 'flex-start'}]}>보낸 쪽지함</Text>
+						) : (
+							<Text style={[txt.noto26, {color: APRI10}, {alignSelf: 'flex-start'}]}>받은 쪽지함</Text>
 						)}
 					</TouchableOpacity>
 				)}

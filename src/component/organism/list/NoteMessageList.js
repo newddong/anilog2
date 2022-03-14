@@ -13,35 +13,33 @@ import UserNote from '../listitem/UserNote';
  * @param {boolean} props.checkBoxMode - 선택 삭제 모드 여부 (default= false)
  * @param {boolean} props.showFollowBtn - 선택 삭제 모드 여부 (default= false)
  */
-const NoteList = props => {
-	console.log('NoteList props', props.data);
+const NoteMessageList = props => {
+	console.log('NoteMessageList props', props.data);
 	const renderItem = ({item, index}) => {
 		console.log('item', item);
+		//쪽지부분 정책 결정 필요
 		return (
 			<View style={[accountHashList.userAccount]}>
-				<UserNote
+				{/* <UserNote
 					data={item}
 					checkBoxMode={props.checkBoxMode}
 					onLabelClick={item => props.onClickLabel(item)}
 					onCheckBox={e => props.onCheckBox(e, index)}
-				/>
+				/> */}
 			</View>
 		);
 	};
 
 	return (
 		<View style={[accountHashList.container, {height: props.routeName && props.routeName != 'SaveFavorite' ? 300 * DP : null}]}>
+			<Text>쪽지 내용 리스트 나오는 화면</Text>
 			<FlatList data={props.data} keyExtractor={item => item._id} renderItem={renderItem} showsVerticalScrollIndicator={false} />
 		</View>
 	);
 };
 
-NoteList.defaultProps = {
+NoteMessageList.defaultProps = {
 	items: [],
-	onClickLabel: e => console.log(e),
-	onCheckBox: e => console.log(e),
-	checkBoxMode: false, // CheckBox 콘테이너 Show T/F
-	showFollowBtn: false,
 };
 
-export default NoteList;
+export default NoteMessageList;

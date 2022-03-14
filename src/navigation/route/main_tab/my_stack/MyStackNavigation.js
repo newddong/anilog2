@@ -64,6 +64,8 @@ import AlarmAndSearchHeader from 'Root/navigation/header/AlarmAndSearchHeader';
 import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballHeader';
 import EditAidRequest from 'Root/component/templete/protection/EditAidRequest';
 import ReceivedMessage from 'Templete/user/ReceivedMessage';
+import UserNotePage from 'Templete/user/UserNotePage';
+
 const MyStack = createStackNavigator();
 export default MyStackNavigation = props => {
 	return (
@@ -311,6 +313,7 @@ export default MyStackNavigation = props => {
 				component={ReceivedMessage}
 				options={{header: props => <SimpleHeader {...props} />, title: '받은 쪽지함'}}
 			/>
+			<MyStack.Screen name="UserNote" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />, title: props.title}} />
 		</MyStack.Navigator>
 	);
 };

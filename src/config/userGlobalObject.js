@@ -11,6 +11,7 @@ export default userGlobalObj = {
         user_nickname:'',
         user_type:'',
         _id:'',
+        favorite_feedlist:[],
     },
     t:{
         y:0

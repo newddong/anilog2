@@ -7,7 +7,7 @@ import SelectStat from 'Organism/list/SelectStat';
 import {login_style, temp_style, selectstat_view_style} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
 import {CONFIRM_DELETE_FAVORITE_FEED, CONFIRM_DELETE_MY_FEED, CONFIRM_DELETE_TAG_ME_FEED} from 'Root/i18n/msg';
-import {getFeedListByUserId} from 'Root/api/feedapi';
+import {getFeedListByUserId, getFavoriteFeedListByUserId} from 'Root/api/feedapi';
 import {txt} from 'Root/config/textstyle';
 import {GRAY10} from 'Root/config/color';
 import {getUserProfile} from 'Root/api/userapi';
@@ -37,12 +37,12 @@ export default FavoriteFeeds = ({route, navigation}) => {
 				);
 				break;
 			case 'FavoriteFeeds': //즐겨찾기한 피드 게시글
-				getFeedListByUserId(
+				getFavoriteFeedListByUserId(
 					{
 						userobject_id: userGlobalObject.userInfo._id,
 					},
 					result => {
-						// console.log('result / getFeedListByUserId / FavoriteFeeds  : ', result.msg);
+						console.log('result / getFeedListByUserId / FavoriteFeeds  : ', result.msg);
 						setData(result.msg);
 					},
 					err => {

@@ -17,9 +17,11 @@ import InfoScreen from 'Organism/info/InfoScreen';
 import {txt} from 'Root/config/textstyle';
 import {GRAY10} from 'Root/config/color';
 import DP from 'Root/config/dp';
+import {getFeedListByUserId, getUserTaggedFeedList} from 'Root/api/feedapi';
 
 export default Profile = ({route, navigation}) => {
 	const [data, setData] = React.useState({...route.params?.userobject, feedList: []}); //라벨을 클릭한 유저의 userObject data
+	const [feedList, setFeedList] = React.useState([]);
 	const [tabMenuSelected, setTabMenuSelected] = React.useState(0); //프로필 Tab의 선택상태
 	const [showOwnerState, setShowOwnerState] = React.useState(false); // 현재 로드되어 있는 profile의 userType이 Pet인 경우 반려인 계정 리스트의 출력 여부
 	const [showCompanion, setShowCompanion] = React.useState(false); // User계정이 반려동물버튼을 클릭
@@ -50,6 +52,44 @@ export default Profile = ({route, navigation}) => {
 			});
 		}
 	}, []);
+
+	React.useEffect(()=>{
+		switch (tabMenuSelected) {
+			case 0:
+				getFeedListByUserId(
+					{ userobject_id: route.params.userobject._id},
+					result=> {
+						console.log('유저의 피드 리스트', result);
+						setFeedList(result.msg);
+					},
+					err => {
+						Modal.popOneBtn(err, '확인', () => {
+							Modal.close();
+						});
+					}
+				)
+				break;
+			case 1:
+				getUserTaggedFeedList(
+					{ userobject_id: route.params.userobject._id},
+					result=> {
+						console.log('유저의 태그된 피드 리스트', result);
+						setFeedList(result.msg);
+					},
+					err => {
+						Modal.popOneBtn(err, '확인', () => {
+							setFeedList([]);
+							Modal.close();
+						});
+					}
+				)
+				break;
+			default:
+				break;
+		}
+
+
+	},[tabMenuSelected])
 
 	//프로필의 피드탭의 피드 썸네일 클릭
 	const onClick_Thumbnail_FeedTab = (index, item) => {
@@ -148,7 +188,7 @@ export default Profile = ({route, navigation}) => {
 		setShowOwnerState(true);
 		Animated.timing(animatedHeight, {
 			duration: 300,
-			toValue: 212 * dp,
+			toValue: 212 * DP,
 			easing: Easing.linear,
 			useNativeDriver: false,
 		}).start();
@@ -236,7 +276,7 @@ export default Profile = ({route, navigation}) => {
 				);
 			}
 			if (data.user_type != SHELTER) {
-				if (tabMenuSelected == 0) {
+				if (tabMenuSelected == 0 || tabMenuSelected == 1) {
 					return <FeedThumbnailList items={item} whenEmpty={whenFeedThumbnailEmpty} onClickThumnail={onClick_Thumbnail_FeedTab} />;
 				} else {
 					return <InfoScreen />;
@@ -254,7 +294,7 @@ export default Profile = ({route, navigation}) => {
 		return (
 			<View style={[profile.feedListContainer]}>
 				<FlatList
-					data={[{}, data.feedList]} //테스트 나중에 data.feedList로 변경해야함
+					data={[{},feedList]}
 					renderItem={renderItem}
 					keyExtractor={(item, index) => index + ''}
 					ListHeaderComponent={userProfileInfo()}

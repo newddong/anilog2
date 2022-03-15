@@ -16,6 +16,9 @@ export default SettingOpen = ({route}) => {
 	const [openObject, setOpenObject] = React.useState();
 	const [loading, setLoading] = React.useState(true);
 	const [refreshing, setRefreshing] = React.useState(false);
+	const [onCount, setOnCount] = React.useState(0);
+	const [send, setSend] = React.useState(false);
+	console.log('onCount', onCount);
 	React.useEffect(() => {
 		getSettingPublic(
 			{},
@@ -27,7 +30,10 @@ export default SettingOpen = ({route}) => {
 				delete temp.setting_public_user_id;
 				delete temp.__v;
 				console.log('temp', temp);
-				setOpenObject(noticeObject.msg[0]);
+				if (temp.setting_public_all) {
+					setOnCount(3);
+				}
+				setOpenObject(temp);
 				setLoading(false);
 			},
 
@@ -39,8 +45,15 @@ export default SettingOpen = ({route}) => {
 
 	React.useEffect(() => {
 		console.log('openObject', openObject);
+		// console.log('type of Open', typeof openObject, typeof openObject.setting_public_all);
 		updateSettingPublic(
-			openObject,
+			{
+				setting_public_all: false,
+				setting_public_my_feed: true,
+				setting_public_my_tag_post: false,
+				setting_public_community_post: false,
+			},
+
 			callback => {
 				console.log('success callback', callback);
 			},
@@ -49,9 +62,24 @@ export default SettingOpen = ({route}) => {
 			},
 		);
 	}, [openObject]);
-	React.useEffect(() => {
-		console.log('Refreshing', refreshing);
-	}, [refreshing]);
+	// const postApi = () => {
+	// 	console.log('postApi', openObject);
+	// 	updateSettingPublic(
+	// 		{
+	// 			setting_public_all: openObject.setting_public_all,
+	// 			setting_public_my_feed: openObject.setting_public_my_feed,
+	// 			setting_public_my_tag_post: openObject.setting_public_my_tag_post,
+	// 			setting_public_community_post: openObject.setting_public_community_post,
+	// 		},
+	// 		callback => {
+	// 			console.log('success callback', callback);
+	// 		},
+	// 		err => {
+	// 			console.log('err', err);
+	// 		},
+	// 	);
+	// };
+
 	const onSwtichAll = () => {
 		if (openObject.setting_public_all) {
 			setOpenObject(prevState => ({
@@ -61,6 +89,7 @@ export default SettingOpen = ({route}) => {
 				setting_public_my_tag_post: false,
 				setting_public_community_post: false,
 			}));
+			setOnCount(0);
 		} else {
 			setOpenObject(prevState => ({
 				...prevState,
@@ -69,25 +98,56 @@ export default SettingOpen = ({route}) => {
 				setting_public_my_tag_post: true,
 				setting_public_community_post: true,
 			}));
+			setOnCount(3);
+		}
+		// setSend(!send);
+		// postApi();
+	};
+	const switchButton = keys => {
+		if (keys) {
+			setOnCount(onCount - 1);
+			setOpenObject(prevState => ({
+				...prevState,
+				setting_public_all: false,
+			}));
+		} else {
+			onCount == 2
+				? setOpenObject(prevState => ({
+						...prevState,
+						setting_public_all: true,
+				  }))
+				: null;
+			setOnCount(onCount + 1);
 		}
 	};
 	const onSwtichMyFeed = () => {
+		switchButton(openObject.setting_public_my_feed);
+
 		setOpenObject(prevState => ({
 			...prevState,
 			setting_public_my_feed: !prevState.setting_public_my_feed,
 		}));
+		// setSend(!send);
+		// postApi();
 	};
+
 	const onSwtichMyTagPost = () => {
+		switchButton(openObject.setting_public_my_tag_post);
 		setOpenObject(prevState => ({
 			...prevState,
 			setting_public_my_tag_post: !prevState.setting_public_my_tag_post,
 		}));
+		// setSend(!send);
+		// postApi();
 	};
 	const onSwtichMyCommunityPost = () => {
+		switchButton(openObject.setting_public_community_post);
 		setOpenObject(prevState => ({
 			...prevState,
 			setting_public_community_post: !prevState.setting_public_community_post,
 		}));
+		// setSend(!send);
+		// postApi();
 	};
 
 	if (loading) {
@@ -136,6 +196,8 @@ export default SettingOpen = ({route}) => {
 							</View>
 						</View>
 					</View>
+					<Text>{`${onCount}`}</Text>
+					<Text>{JSON.stringify(openObject)} </Text>
 				</View>
 			</ScrollView>
 		);

@@ -74,9 +74,6 @@ export default AppliesRecord = ({route}) => {
 				} else {
 					setVolunteer_list([]);
 				}
-				setTimeout(() => {
-					// setLoading(false);
-				}, 500);
 			},
 			err => {
 				console.log('err / getAppliesRecord / : ', err);

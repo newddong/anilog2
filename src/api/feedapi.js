@@ -190,3 +190,14 @@ export async function editFeed(params, callback, errcallback){
 	apiController('/feed/getFavoriteFeedListByUserId',arguments);
 }
 
+
+/**
+ * 특정 유저가 태그된 피드의 리스트를 불러온다.
+ * @param {object} params
+ * @param {string} params.userobject_id - 즐겨찾기를 조회할 유저의 몽고디비 아이디
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+ export async function getUserTaggedFeedList(params, callback, errcallback){
+	apiController('/feed/getUserTaggedFeedList',arguments);
+}

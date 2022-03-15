@@ -1,15 +1,14 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {Text, View, TextInput} from 'react-native';
+import PropsTypes, {any, bool, func, number, object, oneOf, oneOfType, string} from 'prop-types';
 import DP from 'Root/config/dp';
 import {APRI10, GRAY10, GRAY30, RED10} from 'Root/config/color';
+
 /**
- * 테두리가 둥근 인풋 컴포넌트
- * @param {object} props - Props Object
- * @param {string} props.title - 인풋 상단의 제목
- * @param {string} props.placeholder - 인풋의 PlaceHolder
- * @param {(input:string)=>void} props.onChange - 인풋 값 변경 콜백
- * @param {number} props.maxLength - 인풋의 길이 제한값
+ * 인풋 벌룬
+ * @type {React.ForwardRefRenderFunction<?,InputBalloonProps>}
+ *
  */
 const InputBalloon = React.forwardRef((props, ref) => {
 	React.useImperativeHandle(ref, () => ({
@@ -48,10 +47,15 @@ const InputBalloon = React.forwardRef((props, ref) => {
 
 	return (
 		<View style={{width: 654 * DP}}>
-			<Text style={[txt.noto24, {color: APRI10, lineHeight: 34 * DP}]}>
-				{/* Title을 props로 받을 것인지 Input으로 컴포넌트 내에서 처리할 것인지 확인 필요 */}
-				{props.title}
-			</Text>
+			{props.title == '' ? (
+				<></>
+			) : (
+				<Text style={[txt.noto24, {color: APRI10, lineHeight: 34 * DP}]}>
+					{/* Title을 props로 받을 것인지 Input으로 컴포넌트 내에서 처리할 것인지 확인 필요 */}
+					{props.title}
+				</Text>
+			)}
+
 			<View
 				style={{
 					color: RED10,
@@ -83,8 +87,20 @@ const InputBalloon = React.forwardRef((props, ref) => {
 InputBalloon.defaultProps = {
 	placeholder: 'placeholder',
 	value: 'value',
-	title: 'title',
+	title: '',
 	maxLength: 300,
 	onChange: e => console.log(e),
 };
+const InputBalloonProps = {
+	/** @type {string} 인풋 타이틀 */
+	title: string,
+	/** @type {string} 텍스트 초기 상태 */
+	placeholder: string,
+	/** @type {()=>void)} 텍스트 변경 콜백 */
+	onChange: func,
+	/** @type {number} 최대 길이 */
+	maxLength: number,
+};
+
+InputBalloon.propTypes = InputBalloonProps;
 export default InputBalloon;

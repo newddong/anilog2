@@ -24,9 +24,6 @@ const UserNote = props => {
 
 	return (
 		<View style={[styles.userNoteContainer]}>
-			{/* {console.log(`props.checkBoxMode=>${props.checkBoxMode}`)}
-			{console.log(`props.data.checkBoxState=>${props.data.checkBoxState}`)} */}
-			{/* CheckBox */}
 			{props.checkBoxMode ? (
 				<View style={[userAccount.checkBox]}>
 					<CheckBox
@@ -39,7 +36,7 @@ const UserNote = props => {
 			)}
 			{/* 메모 썸네일 객체 */}
 			<View style={[styles.userNoteContainer]}>
-				<TouchableOpacity>
+				<TouchableOpacity onPress={() => props.onLabelClick(data)}>
 					<View style={[styles.userNoteThumbnail]}>
 						{data.user_profile_uri != undefined ? (
 							<Image source={{uri: data.user_profile_uri}} style={[styles.img_round_94]} />

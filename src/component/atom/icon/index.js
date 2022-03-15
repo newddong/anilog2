@@ -144,6 +144,8 @@ import animal_dog from './animal_dog';
 import animal_dog_off from './animal_dog_off';
 import rainbowBridge from './rainbowBridge';
 import writeBoard from './writeBoard';
+import loading from './loading';
+import save54 from './save54';
 import DP from 'Root/config/dp';
 
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
@@ -335,6 +337,7 @@ export const Arrow_Up_GRAY20 = makeSvg(arrow_up, size48, GRAY20);
 export const Arrow_Up_White = makeSvg(arrow_up, size48, 'white');
 export const Mercy_Killing = makeSvg(expiredDate, {width: 134 * DP, height: 27 * DP});
 export const NextMark = makeSvg(nextMonthBtn, {width: 12 * DP, height: 20 * DP}, GRAY10);
+export const NextMark_APRI = makeSvg(nextMonthBtn, {width: 12 * DP, height: 20 * DP}, APRI10);
 export const PreviousMonthBtn = makeSvg(previousMonthBtn, {width: 12 * DP, height: 20 * DP});
 export const VideoPlay_Feed = makeSvg(videoPlay48, size94);
 
@@ -361,7 +364,9 @@ export const Animal_another = makeSvg(animal_another, {width: 120 * DP, height: 
 export const Animal_another_off = makeSvg(animal_another_off, {width: 120 * DP, height: 60 * DP});
 export const Animal_cat = makeSvg(animal_cat, {width: 136 * DP, height: 60 * DP});
 export const Animal_cat_off = makeSvg(animal_cat_off, {width: 136 * DP, height: 60 * DP});
-export const Animal_dog = makeSvg(animal_dog, {width: 100 * DP, height: 60 * DP});
-export const Animal_dog_off = makeSvg(animal_dog_off, {width: 100 * DP, height: 60 * DP});
+export const Animal_dog = makeSvg(animal_dog_off, {width: 100 * DP, height: 60 * DP});
+export const Animal_dog_off = makeSvg(animal_dog, {width: 100 * DP, height: 60 * DP});
 export const RainbowBridge = makeSvg(rainbowBridge, {width: 132 * DP, height: 170 * DP});
 export const WriteBoard = makeSvg(writeBoard, size94);
+export const LoadingImg = makeSvg(loading, {width: 150 * DP, height: 150 * DP});
+export const Save54 = makeSvg(save54, {width: 54 * DP, height: 54 * DP});

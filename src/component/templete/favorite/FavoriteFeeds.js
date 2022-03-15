@@ -7,7 +7,7 @@ import SelectStat from 'Organism/list/SelectStat';
 import {login_style, temp_style, selectstat_view_style} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
 import {CONFIRM_DELETE_FAVORITE_FEED, CONFIRM_DELETE_MY_FEED, CONFIRM_DELETE_TAG_ME_FEED} from 'Root/i18n/msg';
-import {getFeedListByUserId, getFavoriteFeedListByUserId} from 'Root/api/feedapi';
+import {getFeedListByUserId, getFavoriteFeedListByUserId, getUserTaggedFeedList} from 'Root/api/feedapi';
 import {txt} from 'Root/config/textstyle';
 import {GRAY10} from 'Root/config/color';
 import {getUserProfile} from 'Root/api/userapi';
@@ -51,18 +51,29 @@ export default FavoriteFeeds = ({route, navigation}) => {
 				);
 				break;
 			case 'TagMeFeeds': //나의 활동 => 나를 태그한 글
-				getFeedListByUserId(
-					{
-						userobject_id: userGlobalObject.userInfo._id,
-					},
-					result => {
-						// console.log('result / getFeedListByUserId / FavoriteFeeds  : ', result.msg);
+				getUserTaggedFeedList(
+					{ userobject_id:  userGlobalObject.userInfo._id},
+					result=> {
+						console.log('유저의 태그된 피드 리스트', result);
 						setData(result.msg);
 					},
 					err => {
-						console.log('err / getFeedListByUserId / FavoriteFeeds : ', err);
-					},
-				);
+						console.log(err);
+						setData([]);
+					}
+				)
+				// getFavoriteFeedListByUserId(
+				// 	{
+				// 		userobject_id: userGlobalObject.userInfo._id,
+				// 	},
+				// 	result => {
+				// 		// console.log('result / getFeedListByUserId / FavoriteFeeds  : ', result.msg);
+				// 		setData(result.msg);
+				// 	},
+				// 	err => {
+				// 		console.log('err / getFeedListByUserId / FavoriteFeeds : ', err);
+				// 	},
+				// );
 				break;
 
 			default:

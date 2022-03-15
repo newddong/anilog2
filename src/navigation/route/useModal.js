@@ -35,7 +35,8 @@ import AdoptionInfoModal from 'Root/component/molecules/modal/AdoptionInfoModal'
 import AdoptionInfoModalWithOneBtn from 'Root/component/molecules/modal/AdoptionInfoModalWithOneBtn';
 import AnimalToRegisterModal from 'Root/component/molecules/modal/AnimalToRegisterModal';
 import PhotoListViewModal from 'Root/component/molecules/modal/PhotoListViewModal';
-
+import Loading from 'Root/component/molecules/modal/Loading';
+import LocationCheckModal from 'Root/component/molecules/modal/LocationCheckModal';
 
 export function useModal() {
 	const [isPop, setPop] = React.useState(false);
@@ -210,8 +211,8 @@ export function useModal() {
 		!isPop && setPop(true);
 	};
 
-	Modal.popInterestTagModal = (isActivation, data, onSave, onClose, setState) => {
-		popIn(<InterestTagModal isActivation={isActivation} data={data} onSave={onSave} onClose={onClose} setState={setState} />);
+	Modal.popInterestTagModal = (category, data, onSave, onClose, setState) => {
+		popIn(<InterestTagModal category={category} data={data} onSave={onSave} onClose={onClose} setState={setState} />);
 		!isPop && setPop(true);
 	};
 
@@ -237,6 +238,16 @@ export function useModal() {
 
 	Modal.popPhotoListViewModal = photoList => {
 		popIn(<PhotoListViewModal photoList={photoList} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popLoading = () => {
+		popIn(<Loading />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popLocationCheckModal = (onPressAddrSearch, onConfirm, searchedLocation) => {
+		popIn(<LocationCheckModal onPressAddrSearch={onPressAddrSearch} onConfirm={onConfirm} searchedLocation={searchedLocation} />);
 		!isPop && setPop(true);
 	};
 

@@ -7,6 +7,12 @@ import SimpleHeader from 'Root/navigation/header/SimpleHeader';
 import ArticleDetail from 'Root/component/templete/community/ArticleDetail';
 import ArticleMain from 'Root/component/templete/community/ArticleMain';
 import Profile from 'Root/component/templete/profile/Profile';
+import ArticleCommentList from 'Root/component/templete/community/ArticleCommentList';
+import FeedCommentList from 'Root/component/templete/feed/FeedCommentList';
+import CommunityWrite from 'Root/component/templete/community/CommunityWrite';
+import SendHeader from 'Root/navigation/header/SendHeader';
+import AddressSearchPage from 'Root/component/templete/search/AddressSearchPage';
+import GeoLocationSearch from 'Root/component/templete/search/GeoLocationSearch';
 
 const ArticleStackNav = createStackNavigator();
 
@@ -17,8 +23,14 @@ export default ArticleStackNavigation = props => {
 	}, [routeName]);
 
 	return (
-		<ArticleStackNav.Navigator initialRouteName="ArticleMain" screenOptions={{headerShown: false}}>
-			<ArticleStackNav.Screen name={'ArticleMain'} component={ArticleMain} />
+		<ArticleStackNav.Navigator initialRouteName="ArticleMain" screenOptions={{}}>
+			<ArticleStackNav.Screen
+				name={'ArticleMain'}
+				component={ArticleMain}
+				options={({route}) => ({
+					headerShown: false,
+				})}
+			/>
 			<ArticleStackNav.Screen
 				name={'ArticleDetail'}
 				component={ArticleDetail}
@@ -29,13 +41,41 @@ export default ArticleStackNavigation = props => {
 				})}
 			/>
 			<ArticleStackNav.Screen
-				name={'UserProfile'}
-				component={Profile}
+				name={'ArticleCommentList'}
+				component={FeedCommentList}
 				options={({route}) => ({
-					headerShown: true,
+					headerShown: false,
 					header: props => <SimpleHeader {...props} />,
 					title: ' ',
 				})}
+			/>
+			<ArticleStackNav.Screen
+				name={'UserProfile'}
+				component={Profile}
+				options={({route}) => ({
+					headerShown: false,
+					header: props => <SimpleHeader {...props} />,
+					title: ' ',
+				})}
+			/>
+			<ArticleStackNav.Screen
+				name={'CommunityWrite'}
+				component={CommunityWrite}
+				options={({route}) => ({
+					// headerShown: false,
+					header: props => <SendHeader {...props} />,
+					title: '',
+				})}
+			/>
+			<ArticleStackNav.Screen
+				name="AddressSearchPage"
+				component={AddressSearchPage}
+				options={{header: props => <SimpleHeader {...props} />, title: '주소 검색'}}
+			/>
+			<ArticleStackNav.Screen
+				name="GeoLocationSearch"
+				component={GeoLocationSearch}
+				options={{header: props => <SimpleHeader {...props} />, title: '주소 검색'}}
 			/>
 		</ArticleStackNav.Navigator>
 	);

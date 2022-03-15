@@ -8,19 +8,26 @@ import {txt} from 'Root/config/textstyle';
 import ReviewStackNavigation from './review_tab/ReviewStackNavigation';
 import LogoHeader from 'Root/navigation/header/LogoHeader';
 import ArticleStackNavigation from './article_stack/ArticleStackNavigation';
+import {LogBox} from 'react-native';
 
 const CommunityTabNav = createMaterialTopTabNavigator();
 
 export default CommunityMain = props => {
 	const routeName = getFocusedRouteNameFromRoute(props.route); //현재 활성화되어 있는 스크린의 이름을 받아옴
-	const [stackRouteName, setStackRouteName] = React.useState('');
+	const [stackRouteName, setStackRouteName] = React.useState('ArticleMain');
+
+	LogBox.ignoreAllLogs(); //로그 무시
+
 	const sendRoute = route => {
 		setStackRouteName(route);
 	};
 
+	React.useEffect(() => {
+		props.sendRoute(stackRouteName); //자식 네비게이터의 현재 루트 상태
+	}, [stackRouteName]);
+
 	const getTabBarVisibility = () => {
 		// console.log('route', route);
-		props.sendRoute(stackRouteName);
 		switch (stackRouteName) {
 			case 'ArticleMain':
 			case 'ReviewMain':
@@ -56,18 +63,16 @@ export default CommunityMain = props => {
 							{color: routeName == 'ArticleStackNavigation' || routeName == undefined ? WHITE : GRAY10},
 						],
 						swipeEnabled: !getTabBarVisibility() ? false : true,
-						header: props => <LogoHeader />,
 					})}>
 					{props => <ArticleStackNavigation {...props} sendRouteName={sendRoute} />}
 				</CommunityTabNav.Screen>
 				<CommunityTabNav.Screen
 					name={'ReviewStackNavigation'}
 					options={({route}) => ({
-						tabBarStyle: {display: getTabBarVisibility() ? 'flex' : 'none'},
+						tabBarStyle: {display: getTabBarVisibility() ? 'flex' : 'none'}, //상단 헤더 출력 여부 결정
 						tabBarLabel: '후기',
 						tabBarLabelStyle: [txt.noto30b, styles.tabbarLabelStyle, {color: routeName == 'ReviewStackNavigation' ? WHITE : GRAY10}],
 						swipeEnabled: !getTabBarVisibility() ? false : true,
-						header: props => <LogoHeader />,
 					})}>
 					{props => <ReviewStackNavigation {...props} sendRouteName={sendRoute} />}
 				</CommunityTabNav.Screen>

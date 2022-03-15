@@ -9,10 +9,12 @@ import Review from '../article/Review';
  * 후기 리스트
  * @param {object} props - Props Object
  * @param {object} props.items - 데이터
+ * @param {(index:number)} props.onPressReply - 댓글 모두 보기 클릭
+ * @param {(index:number)} props.onPressReviewContent - 리뷰 컨텐츠 클릭
  */
 export default ReviewList = props => {
 	const renderItem = (item, index) => {
-		return <Review />;
+		return <Review onPressReviewContent={() => props.onPressReviewContent(index)} onPressReply={() => props.onPressReply(index)} />;
 	};
 
 	return (
@@ -37,6 +39,8 @@ ReviewList.defaultProps = {
 	whenEmpty: () => {
 		return <></>;
 	},
+	onPressReply: () => {},
+	onPressReviewContent: () => {},
 };
 
 const style = StyleSheet.create({

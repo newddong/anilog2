@@ -46,7 +46,6 @@ export default AnimalAdoption = props => {
 			},
 			() => {
 				//계정 찾기 클릭 시 계정 선택하는 템플릿으로 이동
-
 				Modal.close();
 				navigation.push('SelectAccount', {userobject_id: props.route.params});
 			},

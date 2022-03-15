@@ -12,11 +12,12 @@ import {GRAY10} from 'Root/config/color';
  * @param {object} props.data - 게시글 아이템 data
  * @param {()=>void)} props.onPressArticle - 게시글 아이템 클릭
  * @param {()=>void)} props.onPressThumnails - 게시글 사진 클릭
+ * @param {()=>void)} props.onPressReply - 댓글 모두 보기 클릭
  */
 const Article = props => {
 	//댓글 더 보기 클릭
 	const onPressReply = () => {
-		alert('onPressReply ');
+		props.onPressReply();
 	};
 
 	//좋아요 클릭
@@ -24,18 +25,22 @@ const Article = props => {
 		console.log('onPressLike');
 	};
 
+	//즐겨찾기 클릭
 	const onPressFavorite = () => {
 		console.log('onPressFavorite');
 	};
 
+	//미트볼 클릭
 	const onPressMeatball = () => {
 		console.log('onPressMeatball');
 	};
 
+	//게시글 클릭
 	const onPressArticle = () => {
 		props.onPressArticle();
 	};
 
+	//사진 클릭
 	const onPressThumnails = () => {
 		props.onPressThumnails();
 	};
@@ -77,6 +82,7 @@ const Article = props => {
 Article.defaultProps = {
 	onPressArticle: () => {},
 	onPressThumnails: () => {},
+	onPressReply: () => {},
 	route: undefined,
 };
 
@@ -91,7 +97,6 @@ const style = StyleSheet.create({
 	content: {
 		marginBottom: 5 * DP,
 	},
-	thumbnail: {},
 	likeComment: {
 		marginTop: 20 * DP,
 		flexDirection: 'row',

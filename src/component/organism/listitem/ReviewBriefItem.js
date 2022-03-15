@@ -14,11 +14,11 @@ import {Like48_Border} from 'Root/component/atom/icon';
  */
 const ReviewBriefItem = props => {
 	const onPressReview = () => {
-		// props.onPressReview();
+		props.onPressReview();
 	};
 
 	const onPressLike = () => {
-		// props.onPressLike();
+		props.onPressLike();
 	};
 
 	return (

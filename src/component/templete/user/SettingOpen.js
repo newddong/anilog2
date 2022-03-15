@@ -49,6 +49,9 @@ export default SettingOpen = ({route}) => {
 			},
 		);
 	}, [openObject]);
+	React.useEffect(() => {
+		console.log('Refreshing', refreshing);
+	}, [refreshing]);
 	const onSwtichAll = () => {
 		if (openObject.setting_public_all) {
 			setOpenObject(prevState => ({

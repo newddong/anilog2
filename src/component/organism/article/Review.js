@@ -9,7 +9,9 @@ import {useNavigation} from '@react-navigation/core';
 /**
  * 후기 아이템
  * @param {object} props - Props Object
- * @param {object} props.data-
+ * @param {object} props.data - 리뷰 데이터 오브젝트
+ * @param {()=>void} props.onPressReply - 댓글 모두 보기 클릭
+ * @param {()=>void} props.onPressReviewContent - 리뷰 컨텐츠 클릭
  */
 export default Review = props => {
 	const navigation = useNavigation();
@@ -33,10 +35,18 @@ export default Review = props => {
 		alert('onPressLike');
 	};
 
+	const onPressFavorite = () => {
+		alert('onPressFavorite');
+	};
+
+	const onPressReply = () => {
+		props.onPressReply();
+	};
+
 	const category_dummy = ['애견카페', '애견호텔', '애견놀이터'];
 
 	const moveToReviewDetail = () => {
-		navigation.push('ReviewDetail');
+		props.onPressReviewContent();
 	};
 
 	const dummy = [
@@ -56,7 +66,7 @@ export default Review = props => {
 					})}
 				</View>
 				<View style={[style.icon]}>
-					<FavoriteTag46_Filled />
+					<FavoriteTag46_Filled onPress={onPressFavorite} />
 					<Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />
 				</View>
 			</View>
@@ -77,22 +87,27 @@ export default Review = props => {
 				<View style={[style.thumbnail]}>
 					<ArticleThumnails photo_list={dummy} />
 				</View>
-				{/* 좋아요 및 댓글 모두 보기  */}
-				<View style={[style.likeComment]}>
-					<View style={[style.like]}>
-						<Like48_Border onPress={onPressLike} />
-						<Text style={[txt.noto24, {color: GRAY10, marginLeft: 15 * DP}]}>109</Text>
-					</View>
-					<View style={[style.comment]}>
-						<Text style={[txt.noto24, {color: GRAY10}]}>댓글 6개 모두 보기</Text>
-					</View>
-				</View>
 			</TouchableOpacity>
+			{/* 좋아요 및 댓글 모두 보기  */}
+			<View style={[style.likeComment]}>
+				<View style={[style.like]}>
+					<Like48_Border onPress={onPressLike} />
+					<Text style={[txt.noto24, {color: GRAY10, marginLeft: 15 * DP}]}>109</Text>
+				</View>
+				<View style={[style.comment]}>
+					<Text onPress={onPressReply} style={[txt.noto24, {color: GRAY10}]}>
+						댓글 6개 모두 보기
+					</Text>
+				</View>
+			</View>
 		</View>
 	);
 };
 
-Review.defaultProps = {};
+Review.defaultProps = {
+	onPressReply: () => {},
+	onPressReviewContent: () => {},
+};
 
 const style = StyleSheet.create({
 	container: {
@@ -124,7 +139,6 @@ const style = StyleSheet.create({
 		flexDirection: 'row',
 		alignSelf: 'flex-end',
 	},
-
 	content: {
 		width: 654 * DP,
 		height: 130 * DP,

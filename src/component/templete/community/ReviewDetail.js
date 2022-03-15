@@ -2,10 +2,6 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {FavoriteTag46_Filled, Like48_Border, LocationGray, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
-import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
-import {dummy_userObject} from 'Root/config/dummyDate_json';
-import {styles} from 'Root/component/atom/image/imageStyle';
 import {GRAY10, GRAY20, GRAY30} from 'Root/config/color';
 import CommentList from 'Root/component/organism/comment/CommentList';
 import ReviewBriefList from 'Root/component/organism/list/ReviewBriefList';
@@ -32,15 +28,17 @@ export default ReviewDetail = props => {
 		alert('onPressFavorite');
 	};
 
-	const category_dummy = ['애견카페', '애견호텔', '애견놀이터'];
-
-	const moveToReviewDetail = () => {
-		alert('moveToReviewDetail');
-	};
-
 	const onPressReply = () => {
 		// alert('moveToReplyListPage');
 		navigation.push('ReviewCommentList', {feedobject: {_id: '62262a16d38ae5f3c51390d6'}});
+	};
+
+	const onPressLikeBriefItem = index => {
+		alert('onPressLikeBriefItem');
+	};
+
+	const onPressReviewBrief = index => {
+		navigation.push('ReviewDetail');
 	};
 
 	return (
@@ -66,7 +64,7 @@ export default ReviewDetail = props => {
 							</View>
 							<View style={[style.reviewList]}>
 								<Text style={[txt.noto24, {}]}>관련후기 게시글</Text>
-								<ReviewBriefList items={dummyReviews} />
+								<ReviewBriefList items={dummyReviews} onPressReview={onPressReviewBrief} onPressLike={onPressLikeBriefItem} />
 							</View>
 						</View>
 					);

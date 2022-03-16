@@ -11,6 +11,7 @@ import {getSettingPublic, updateSettingPublic} from 'Root/api/settingpublic';
 import {INFO_QUESTION} from 'Root/i18n/msg';
 import FastImage from 'react-native-fast-image';
 import {useState} from 'react/cjs/react.production.min';
+import OneOnOffLine from 'Root/component/organism/form/OneLineOnOff';
 
 export default SettingOpen = ({route}) => {
 	const [openObject, setOpenObject] = React.useState();
@@ -18,7 +19,7 @@ export default SettingOpen = ({route}) => {
 	const [refreshing, setRefreshing] = React.useState(false);
 	const [onCount, setOnCount] = React.useState(0);
 	const [send, setSend] = React.useState(false);
-	console.log('onCount', onCount);
+
 	React.useEffect(() => {
 		getSettingPublic(
 			{},
@@ -46,39 +47,22 @@ export default SettingOpen = ({route}) => {
 	React.useEffect(() => {
 		console.log('openObject', openObject);
 		// console.log('type of Open', typeof openObject, typeof openObject.setting_public_all);
-		updateSettingPublic(
-			{
-				setting_public_all: false,
-				setting_public_my_feed: true,
-				setting_public_my_tag_post: false,
-				setting_public_community_post: false,
-			},
+		// updateSettingPublic(
+		// 	{
+		// 		setting_public_all: false,
+		// 		setting_public_my_feed: true,
+		// 		setting_public_my_tag_post: false,
+		// 		setting_public_community_post: false,
+		// 	},
 
-			callback => {
-				console.log('success callback', callback);
-			},
-			err => {
-				console.log('err', err);
-			},
-		);
+		// 	callback => {
+		// 		console.log('success callback', callback);
+		// 	},
+		// 	err => {
+		// 		console.log('err', err);
+		// 	},
+		// );
 	}, [openObject]);
-	// const postApi = () => {
-	// 	console.log('postApi', openObject);
-	// 	updateSettingPublic(
-	// 		{
-	// 			setting_public_all: openObject.setting_public_all,
-	// 			setting_public_my_feed: openObject.setting_public_my_feed,
-	// 			setting_public_my_tag_post: openObject.setting_public_my_tag_post,
-	// 			setting_public_community_post: openObject.setting_public_community_post,
-	// 		},
-	// 		callback => {
-	// 			console.log('success callback', callback);
-	// 		},
-	// 		err => {
-	// 			console.log('err', err);
-	// 		},
-	// 	);
-	// };
 
 	const onSwtichAll = () => {
 		if (openObject.setting_public_all) {
@@ -104,7 +88,10 @@ export default SettingOpen = ({route}) => {
 		// postApi();
 	};
 	const switchButton = keys => {
-		if (keys) {
+		const tempObject = {...openObject};
+		tempObject[keys] = !tempObject[keys];
+		setOpenObject(tempObject);
+		if (openObject[keys]) {
 			setOnCount(onCount - 1);
 			setOpenObject(prevState => ({
 				...prevState,
@@ -119,35 +106,6 @@ export default SettingOpen = ({route}) => {
 				: null;
 			setOnCount(onCount + 1);
 		}
-	};
-	const onSwtichMyFeed = () => {
-		switchButton(openObject.setting_public_my_feed);
-
-		setOpenObject(prevState => ({
-			...prevState,
-			setting_public_my_feed: !prevState.setting_public_my_feed,
-		}));
-		// setSend(!send);
-		// postApi();
-	};
-
-	const onSwtichMyTagPost = () => {
-		switchButton(openObject.setting_public_my_tag_post);
-		setOpenObject(prevState => ({
-			...prevState,
-			setting_public_my_tag_post: !prevState.setting_public_my_tag_post,
-		}));
-		// setSend(!send);
-		// postApi();
-	};
-	const onSwtichMyCommunityPost = () => {
-		switchButton(openObject.setting_public_community_post);
-		setOpenObject(prevState => ({
-			...prevState,
-			setting_public_community_post: !prevState.setting_public_community_post,
-		}));
-		// setSend(!send);
-		// postApi();
 	};
 
 	if (loading) {
@@ -167,37 +125,17 @@ export default SettingOpen = ({route}) => {
 						<OnOffSwitch default={openObject.setting_public_all} onSwtichOff={onSwtichAll} onSwtichOn={onSwtichAll} />
 					</View>
 					<View style={[styles.openDetailContainer]}>
+						<OneOnOffLine data={openObject} name="내 피드 비공개" keys="setting_public_my_feed" switchButton={switchButton} />
+
 						<View style={{flexDirection: 'row'}}>
-							<View style={styles.openDetailEachContainer}>
-								<View style={[{width: 550 * DP}, {flexDirection: 'row'}, {alignItems: 'center'}]}>
-									<Text style={[txt.noto28, {color: GRAY10}]}>내 피드 비공개</Text>
-								</View>
-								<OnOffSwitch default={openObject.setting_public_my_feed} onSwtichOff={onSwtichMyFeed} onSwtichOn={onSwtichMyFeed} />
-							</View>
+							<OneOnOffLine data={openObject} name="내 태그 게시글 비공개" keys="setting_public_my_tag_post" switchButton={switchButton} />
 						</View>
 						<View style={{flexDirection: 'row'}}>
-							<View style={[styles.openDetailEachContainer, {marginTop: 24 * DP}]}>
-								<View style={[{width: 550 * DP}, {flexDirection: 'row'}, {alignItems: 'center'}]}>
-									<Text style={[txt.noto28, {color: GRAY10}]}>내 태그 게시글 비공개</Text>
-								</View>
-								<OnOffSwitch default={openObject.setting_public_my_tag_post} onSwtichOff={onSwtichMyTagPost} onSwtichOn={onSwtichMyTagPost} />
-							</View>
-						</View>
-						<View style={{flexDirection: 'row'}}>
-							<View style={[styles.openDetailEachContainer, {marginTop: 24 * DP}]}>
-								<View style={[{width: 550 * DP}, {flexDirection: 'row'}, {alignItems: 'center'}]}>
-									<Text style={[txt.noto28, {color: GRAY10}]}>내 커뮤니티 게시글 비공개</Text>
-								</View>
-								<OnOffSwitch
-									default={openObject.setting_public_community_post}
-									onSwtichOff={onSwtichMyCommunityPost}
-									onSwtichOn={onSwtichMyCommunityPost}
-								/>
-							</View>
+							<OneOnOffLine data={openObject} name="내 커뮤니티 게시글 비공개" keys="setting_public_community_post" switchButton={switchButton} />
 						</View>
 					</View>
-					<Text>{`${onCount}`}</Text>
-					<Text>{JSON.stringify(openObject)} </Text>
+					{/* <Text>{`${onCount}`}</Text> */}
+					{/* <Text>{JSON.stringify(openObject)} </Text> */}
 				</View>
 			</ScrollView>
 		);

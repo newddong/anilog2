@@ -17,10 +17,13 @@ import {
 	PET_VACCIN_DATE_ALRAM,
 	TAG_OR_FOLLOW_ALRAM,
 } from 'Root/i18n/msg';
+import OneLineOnOff from 'Organism/form/OneLineOnOff';
 export default SettingAlarm = ({route}) => {
 	const [alarm, setAlarm] = React.useState();
 	const [loading, setLoading] = React.useState(true);
 	const [apiPost, setApiPost] = React.useState(false);
+	const [onCount, setOnCount] = React.useState(0);
+
 	React.useEffect(() => {
 		getNotice(
 			{},
@@ -32,7 +35,10 @@ export default SettingAlarm = ({route}) => {
 				delete temp.notice_user_id;
 				delete temp.__v;
 				// console.log('temp', temp);
-				setAlarm(noticeObject.msg[0]);
+				if (temp.notice_all) {
+					setOnCount(8);
+				}
+				setAlarm(temp);
 				setLoading(false);
 			},
 
@@ -43,16 +49,17 @@ export default SettingAlarm = ({route}) => {
 	}, []);
 	React.useEffect(() => {
 		console.log('alarm', alarm, apiPost);
-		updateNotice(
-			{...alarm},
-			callback => {
-				console.log('updateNotice', callback);
-			},
+		// console.log('spread alarm', {...alarm});
+		// updateNotice(
+		// 	{alarm},
+		// 	callback => {
+		// 		console.log('updateNotice', callback);
+		// 	},
 
-			err => {
-				console.log('er', err);
-			},
-		);
+		// 	err => {
+		// 		console.log('er', err);
+		// 	},
+		// );
 	}, [alarm]);
 
 	const onSwtichAll = () => {
@@ -70,6 +77,7 @@ export default SettingAlarm = ({route}) => {
 				notice_my_applicant: false,
 				notice_alarm: false,
 			}));
+			setOnCount(0);
 			// setApiPost(!apiPost);
 		} else {
 			setAlarm(prevState => ({
@@ -84,65 +92,32 @@ export default SettingAlarm = ({route}) => {
 				notice_my_applicant: true,
 				notice_alarm: true,
 			}));
+			setOnCount(8);
 			// setApiPost(!apiPost);
 		}
 	};
-	const onSwtichFollower = () => {
-		setAlarm(prevState => ({
-			...prevState,
-			notice_newfollower: !prevState.notice_newfollower,
-		}));
-		// setApiPost(!apiPost);
+
+	const switchButton = keys => {
+		const tempObject = {...alarm};
+		tempObject[keys] = !tempObject[keys];
+		setAlarm(tempObject);
+		if (alarm[keys]) {
+			setOnCount(onCount - 1);
+			setAlarm(prevState => ({
+				...prevState,
+				notice_all: false,
+			}));
+		} else {
+			onCount == 7
+				? setAlarm(prevState => ({
+						...prevState,
+						notice_all: true,
+				  }))
+				: null;
+			setOnCount(onCount + 1);
+		}
 	};
-	const onSwtichProtectStatus = () => {
-		setAlarm(prevState => ({
-			...prevState,
-			notice_favorite_protect_request: !prevState.notice_favorite_protect_request,
-		}));
-		// setApiPost(!apiPost);
-	};
-	const onSwtichPetVaccine = () => {
-		setAlarm(prevState => ({
-			...prevState,
-			notice_pet_vaccination: !prevState.notice_pet_vaccination,
-		}));
-		setApiPost(!apiPost);
-	};
-	const onSwtichMyPost = () => {
-		setAlarm(prevState => ({
-			...prevState,
-			notice_my_post: !prevState.notice_my_post,
-		}));
-		setApiPost(!apiPost);
-	};
-	const onSwtichMyPostComment = () => {
-		setAlarm(prevState => ({
-			...prevState,
-			notice_comment_on_my_post: !prevState.notice_comment_on_my_post,
-		}));
-		// setApiPost(!apiPost);
-	};
-	const onSwtichMyTagFollow = () => {
-		setAlarm(prevState => ({
-			...prevState,
-			notice_tag_follower: !prevState.notice_tag_follower,
-		}));
-		// setApiPost(!apiPost);
-	};
-	const onSwtichApplyStatus = () => {
-		setAlarm(prevState => ({
-			...prevState,
-			notice_my_applicant: !prevState.notice_my_applicant,
-		}));
-		setApiPost(!apiPost);
-	};
-	const onSwtichNotice = () => {
-		setAlarm(prevState => ({
-			...prevState,
-			notice_alarm: !prevState.notice_alarm,
-		}));
-		setApiPost(!apiPost);
-	};
+
 	if (loading) {
 		return <View></View>;
 	} else {
@@ -154,73 +129,39 @@ export default SettingAlarm = ({route}) => {
 							<View style={{width: 550 * DP}}>
 								<Text style={[txt.noto32b, {color: APRI10}]}>전체 알림</Text>
 							</View>
-							<OnOffSwitch onSwtichOff={onSwtichAll} onSwtichOn={onSwtichAll} />
+							<OnOffSwitch default={alarm.notice_all} onSwtichOff={onSwtichAll} onSwtichOn={onSwtichAll} />
 						</View>
 					</View>
 					<View style={styles.serviceAlarmContainer}>
 						<Text style={[txt.noto32b, {color: GRAY10}]}>서비스별 알림</Text>
 						<View style={[styles.alarmDetailEachContainer, {marginTop: 30 * DP}]}>
-							<View style={{flexDirection: 'row'}}>
-								<View style={[{width: 550 * DP}, {flexDirection: 'row'}, {alignItems: 'center'}]}>
-									<Text style={[txt.noto28, {color: GRAY10}]}>{FOLLWER_NEW_POST_ALRAM}</Text>
-								</View>
-								<OnOffSwitch default={alarm.notice_newfollower || ''} onSwtichOff={onSwtichFollower} onSwtichOn={onSwtichFollower} />
-							</View>
+							<OneLineOnOff data={alarm} name={FOLLWER_NEW_POST_ALRAM} keys="notice_newfollower" switchButton={switchButton} />
 						</View>
 						<View style={[styles.alarmDetailEachContainer, {marginTop: 24 * DP}]}>
-							<View style={{flexDirection: 'row'}}>
-								<View style={[{width: 550 * DP}, {flexDirection: 'row'}, {alignItems: 'center'}]}>
-									<Text style={[txt.noto28, {color: GRAY10}]}>{FAVORITE_PROTECT_STATUS_CHANGE_ALRAM}</Text>
-								</View>
-								<OnOffSwitch
-									default={alarm.notice_favorite_protect_request || ''}
-									onSwtichOff={onSwtichProtectStatus}
-									onSwtichOn={onSwtichProtectStatus}
-								/>
-							</View>
+							<OneLineOnOff
+								data={alarm}
+								name={FAVORITE_PROTECT_STATUS_CHANGE_ALRAM}
+								keys="notice_favorite_protect_request"
+								switchButton={switchButton}
+							/>
 						</View>
 						<View style={[styles.alarmDetailEachContainer, {marginTop: 24 * DP}]}>
-							<View style={{flexDirection: 'row'}}>
-								<View style={[{width: 550 * DP}, {flexDirection: 'row'}, {alignItems: 'center'}]}>
-									<Text style={[txt.noto28, {color: GRAY10}]}>{PET_VACCIN_DATE_ALRAM}</Text>
-								</View>
-								<OnOffSwitch default={alarm.notice_pet_vaccination || ''} onSwtichOff={onSwtichPetVaccine} onSwtichOn={onSwtichPetVaccine} />
-							</View>
+							<OneLineOnOff data={alarm} name={PET_VACCIN_DATE_ALRAM} keys="notice_pet_vaccination" switchButton={switchButton} />
 						</View>
 					</View>
 					<View style={styles.activityAlarmContainer}>
 						<Text style={[txt.noto32b, {color: GRAY10}]}>내 활동 알림</Text>
 						<View style={[styles.alarmDetailEachContainer, {marginTop: 30 * DP}]}>
-							<View style={{flexDirection: 'row'}}>
-								<View style={[{width: 550 * DP}, {flexDirection: 'row'}, {alignItems: 'center'}]}>
-									<Text style={[txt.noto28, {color: GRAY10}]}>{MY_POST_ALRAM}</Text>
-								</View>
-								<OnOffSwitch default={alarm.notice_my_post || ''} onSwtichOff={onSwtichMyPost} onSwtichOn={onSwtichMyPost} />
-							</View>
+							<OneLineOnOff data={alarm} name={MY_POST_ALRAM} keys="notice_my_post" switchButton={switchButton} />
 						</View>
 						<View style={[styles.alarmDetailEachContainer, {marginTop: 24 * DP}]}>
-							<View style={{flexDirection: 'row'}}>
-								<View style={[{width: 550 * DP}, {flexDirection: 'row'}, {alignItems: 'center'}]}>
-									<Text style={[txt.noto28, {color: GRAY10}]}>{MY_POST_COMMENT_ALRAM}</Text>
-								</View>
-								<OnOffSwitch default={alarm.notice_comment_on_my_post || ''} onSwtichOff={onSwtichMyPostComment} onSwtichOn={onSwtichMyPostComment} />
-							</View>
+							<OneLineOnOff data={alarm} name={MY_POST_COMMENT_ALRAM} keys="notice_comment_on_my_post" switchButton={switchButton} />
 						</View>
 						<View style={[styles.alarmDetailEachContainer, {marginTop: 24 * DP}]}>
-							<View style={{flexDirection: 'row'}}>
-								<View style={[{width: 550 * DP}, {flexDirection: 'row'}, {alignItems: 'center'}]}>
-									<Text style={[txt.noto28, {color: GRAY10}]}>{TAG_OR_FOLLOW_ALRAM}</Text>
-								</View>
-								<OnOffSwitch default={alarm.notice_tag_follower || ''} onSwtichOff={onSwtichMyTagFollow} onSwtichOn={onSwtichMyTagFollow} />
-							</View>
+							<OneLineOnOff data={alarm} name={TAG_OR_FOLLOW_ALRAM} keys="notice_tag_follower" switchButton={switchButton} />
 						</View>
 						<View style={[styles.alarmDetailEachContainer, {marginTop: 24 * DP}]}>
-							<View style={{flexDirection: 'row'}}>
-								<View style={[{width: 550 * DP}, {flexDirection: 'row'}, {alignItems: 'center'}]}>
-									<Text style={[txt.noto28, {color: GRAY10}]}>{MY_APPLY_STATUS_CHANGE_ALRAM}</Text>
-								</View>
-								<OnOffSwitch default={alarm.notice_my_applicant || ''} onSwtichOff={onSwtichApplyStatus} onSwtichOn={onSwtichApplyStatus} />
-							</View>
+							<OneLineOnOff data={alarm} name={MY_APPLY_STATUS_CHANGE_ALRAM} keys="notice_my_applicant" switchButton={switchButton} />
 						</View>
 					</View>
 					<View style={styles.noticeAlarmContainer}>
@@ -228,10 +169,15 @@ export default SettingAlarm = ({route}) => {
 							<View style={[{width: 550 * DP}, {flexDirection: 'row'}, {alignItems: 'center'}]}>
 								<Text style={[txt.noto32b, {color: GRAY10}]}>공지 알림</Text>
 							</View>
-							<OnOffSwitch default={alarm.notice_alarm || ''} onSwtichOff={onSwtichNotice} onSwtichOn={onSwtichNotice} />
+							<OnOffSwitch
+								default={alarm.notice_alarm || ''}
+								onSwtichOff={() => switchButton('notice_alarm')}
+								onSwtichOn={() => switchButton('notice_alarm')}
+							/>
 						</View>
 					</View>
 				</View>
+				{/* <Text>{onCount}</Text> */}
 			</ScrollView>
 		);
 	}

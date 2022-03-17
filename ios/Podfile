@@ -1,6 +1,6 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
-rn_maps_path = '../node_modules/react-native-maps'
+rn_maps_path = '../node_modules/react-native-maps' # 22.03.15 구글 맵스 활용을 위한 추가 (KSW)
 
 platform :ios, '11.0'
 
@@ -15,8 +15,8 @@ target 'anilog' do
   )
 
   pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
-  pod 'react-native-google-maps', :path => rn_maps_path
-  # pod 'react-native-maps', :path => rn_maps_path
+  pod 'react-native-google-maps', :path => rn_maps_path # 22.03.15 구글 맵스 활용을 위한 추가 (KSW)
+  # pod 'react-native-maps', :path => rn_maps_path # 22.03.15 구글 맵스 활용을 위한 추가 (KSW)
 
   target 'anilogTests' do
     inherit! :complete

@@ -71,9 +71,9 @@ export default ArticleStackNavigation = props => {
 			<ArticleStackNav.Screen
 				name="AddressSearchPage"
 				component={AddressSearchPage}
-				options={{header: props => <SimpleHeader {...props} />, title: '주소 검색'}}
+				options={{header: props => <SimpleHeader {...props} />, title: '주소 설정'}}
 			/>
-			<ArticleStackNav.Screen name="KakaoMap" component={KakaoMap} options={{header: props => <SimpleHeader {...props} />, title: '주소 검색'}} />
+			<ArticleStackNav.Screen name="KakaoMap" component={KakaoMap} options={{header: props => <SimpleHeader {...props} />, title: '주소 설정'}} />
 		</ArticleStackNav.Navigator>
 	);
 };

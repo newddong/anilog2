@@ -27,10 +27,10 @@ export default CommunityWrite = props => {
 	const [selectedImg, setSelectedImg] = React.useState([]); //사진 uri리스트
 
 	React.useEffect(() => {
-		if (props.route.params?.addr) {
+		const param = props.route.params;
+		if (param?.addr) {
 			//다른 주소 검색 결과값 적용
-			console.log('props.route.params?.addr', props.route.params?.addr.address);
-			setLocation(props.route.params?.addr.address); //다른 주소 검색 결과값 적용
+			setLocation(param.addr.road_address.address_name + ' / ' + param.addr.detailAddr); //다른 주소 검색 결과값 적용
 		}
 	}, [props.route.params]);
 

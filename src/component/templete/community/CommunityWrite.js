@@ -21,8 +21,6 @@ export default CommunityWrite = props => {
 	const navigation = useNavigation();
 	const isReview = props.route.params.isReview; //후기 게시글 여부 boolean
 	const [catergory, setCategory] = React.useState('카테고리 선택');
-	const [loading, setLoading] = React.useState(false);
-	const [temp, setTemp] = React.useState('');
 	const [location, setLocation] = React.useState('');
 	const [selectedImg, setSelectedImg] = React.useState([]); //사진 uri리스트
 
@@ -33,27 +31,6 @@ export default CommunityWrite = props => {
 			setLocation(param.addr.road_address.address_name + ' / ' + param.addr.detailAddr); //다른 주소 검색 결과값 적용
 		}
 	}, [props.route.params]);
-
-	React.useEffect(() => {
-		if (loading) {
-			Modal.popLoading();
-		} else if (!loading && temp != '') {
-			Modal.close();
-			setTimeout(() => {
-				Modal.popLocationCheckModal(
-					() => {
-						Modal.close();
-						navigation.push('AddressSearchPage', {prevRoute: props.route.name});
-					},
-					() => {
-						Modal.close();
-						setLocation(temp);
-					},
-					temp,
-				);
-			}, 100);
-		}
-	}, [loading]);
 
 	const onPressPhotoSelect = () => {
 		if (selectedImg.length > 4) {
@@ -104,14 +81,7 @@ export default CommunityWrite = props => {
 	};
 
 	const moveToLocationPicker = async () => {
-		// console.log('moveToLocationPicker');
-		// navigation.push('AddressSearchPage', {prevRoute: props.route.name});
 		navigation.push('KakaoMap');
-
-		// setLoading(true);
-		// const address = await getAddress();
-		// setTemp(address.address.address_name);
-		// setLoading(false);
 	};
 
 	const onPressFilter = () => {
@@ -263,7 +233,8 @@ const style = StyleSheet.create({
 	},
 	contentInput: {
 		// flex: 1,
-		minHeight: 120 * DP,
+		// backgroundColor: 'yellow',
+		minHeight: 150 * DP,
 	},
 	location: {
 		flexDirection: 'row',

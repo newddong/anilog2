@@ -52,7 +52,7 @@ export default KakaoMap = props => {
 		console.log('confirm');
 		let finalized = locationObj;
 		finalized.detailAddr = detailAddr;
-		navigation.push('CommunityWrite', {addr: finalized});
+		navigation.navigate('CommunityWrite', {addr: finalized});
 	};
 
 	//위도 경도 받아오기

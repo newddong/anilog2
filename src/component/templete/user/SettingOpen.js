@@ -47,21 +47,16 @@ export default SettingOpen = ({route}) => {
 	React.useEffect(() => {
 		console.log('openObject', openObject);
 		// console.log('type of Open', typeof openObject, typeof openObject.setting_public_all);
-		// updateSettingPublic(
-		// 	{
-		// 		setting_public_all: false,
-		// 		setting_public_my_feed: true,
-		// 		setting_public_my_tag_post: false,
-		// 		setting_public_community_post: false,
-		// 	},
+		updateSettingPublic(
+			openObject,
 
-		// 	callback => {
-		// 		console.log('success callback', callback);
-		// 	},
-		// 	err => {
-		// 		console.log('err', err);
-		// 	},
-		// );
+			callback => {
+				console.log('success callback', callback);
+			},
+			err => {
+				console.log('err', err);
+			},
+		);
 	}, [openObject]);
 
 	const onSwtichAll = () => {
@@ -127,10 +122,10 @@ export default SettingOpen = ({route}) => {
 					<View style={[styles.openDetailContainer]}>
 						<OneOnOffLine data={openObject} name="내 피드 비공개" keys="setting_public_my_feed" switchButton={switchButton} />
 
-						<View style={{flexDirection: 'row'}}>
+						<View style={[{flexDirection: 'row'}, {marginTop: 24 * DP}]}>
 							<OneOnOffLine data={openObject} name="내 태그 게시글 비공개" keys="setting_public_my_tag_post" switchButton={switchButton} />
 						</View>
-						<View style={{flexDirection: 'row'}}>
+						<View style={[{flexDirection: 'row'}, {marginTop: 24 * DP}]}>
 							<OneOnOffLine data={openObject} name="내 커뮤니티 게시글 비공개" keys="setting_public_community_post" switchButton={switchButton} />
 						</View>
 					</View>

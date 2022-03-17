@@ -49,17 +49,17 @@ export default SettingAlarm = ({route}) => {
 	}, []);
 	React.useEffect(() => {
 		console.log('alarm', alarm, apiPost);
-		// console.log('spread alarm', {...alarm});
-		// updateNotice(
-		// 	{alarm},
-		// 	callback => {
-		// 		console.log('updateNotice', callback);
-		// 	},
+		console.log('spread alarm', {...alarm});
+		updateNotice(
+			alarm,
+			callback => {
+				console.log('updateNotice', callback);
+			},
 
-		// 	err => {
-		// 		console.log('er', err);
-		// 	},
-		// );
+			err => {
+				console.log('er', err);
+			},
+		);
 	}, [alarm]);
 
 	const onSwtichAll = () => {

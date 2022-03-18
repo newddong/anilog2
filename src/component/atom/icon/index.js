@@ -146,6 +146,8 @@ import rainbowBridge from './rainbowBridge';
 import writeBoard from './writeBoard';
 import loading from './loading';
 import save54 from './save54';
+import locationMarker from './locationMarker';
+import currentLocation from './currentLocation';
 import DP from 'Root/config/dp';
 
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
@@ -370,3 +372,5 @@ export const RainbowBridge = makeSvg(rainbowBridge, {width: 132 * DP, height: 17
 export const WriteBoard = makeSvg(writeBoard, size94);
 export const LoadingImg = makeSvg(loading, {width: 150 * DP, height: 150 * DP});
 export const Save54 = makeSvg(save54, {width: 54 * DP, height: 54 * DP});
+export const LocationMarker = makeSvg(locationMarker, {width: 80 * DP, height: 80 * DP});
+export const CurrentLocation = makeSvg(currentLocation, {width: 70 * DP, height: 70 * DP});

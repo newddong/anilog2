@@ -13,6 +13,7 @@ import FastImage from 'react-native-fast-image';
 import {useState} from 'react/cjs/react.production.min';
 import OneOnOffLine from 'Root/component/organism/form/OneLineOnOff';
 
+
 export default SettingOpen = ({route}) => {
 	const [openObject, setOpenObject] = React.useState();
 	const [loading, setLoading] = React.useState(true);

@@ -28,6 +28,7 @@ import {followUser, getFollows, unFollowUser} from 'Root/api/userapi';
 import {favoriteFeed, getFavoriteFeedListByUserId} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import MissingReportInfo from 'Organism/info/MissingReportInfo';
+import {getStringLength, getLinesOfString} from 'Root/util/stringutil';
 
 export default FeedContent = props => {
 	const {
@@ -418,29 +419,7 @@ export default FeedContent = props => {
 
 	const [isShowBtn, setIsShowBtn] = React.useState(true);
 	const [numLine, setNumLine] = React.useState(isMissingReportRoute ? 0 : 2);
-	const [lineCount, setLineCount] = React.useState(0);
 
-	const onTextLayout = e => {
-		// console.log('텍스트 레이아웃', e.nativeEvent, 1*DP);
-		if (Platform.OS == 'ios') {
-			if (e.nativeEvent.lines.length >= 2) {
-				setIsShowBtn(true);
-				setLineCount(e.nativeEvent.lines.length + 1);
-			} else {
-				setIsShowBtn(false);
-				setLineCount(e.nativeEvent.lines.length);
-			}
-		}
-		if (Platform.OS == 'android') {
-			if (e.nativeEvent.lines.length >= 2) {
-				setIsShowBtn(true);
-				setLineCount(e.nativeEvent.lines.length);
-			} else {
-				setIsShowBtn(false);
-				setLineCount(e.nativeEvent.lines.length);
-			}
-		}
-	};
 
 	const showMore = () => {
 		setNumLine(0);
@@ -453,17 +432,16 @@ export default FeedContent = props => {
 		} else if (isCommentList) {
 			return {};
 		} else {
+			let lines = getLinesOfString(feed_content, Platform.OS == 'android' ? 48 : 50);
 			return {
-				height: lineCount ? 110 * DP + (lineCount > 3 ? 3 : lineCount) * 54 * DP : 0,
+				height: 120 * DP + (lines > 3 ? 3 : lines) * 54 * DP ,
 			};
 		}
 	};
 
 	return (
-		// <View style={isMissingReportRoute || show ? {} : {height: 270 * DP}} removeClippedSubviews>
-		<View style={[layoutStyle()]} removeClippedSubviews>
+		<View style={[layoutStyle()]} removeClippedSubviews onLayout={props.onLayout}>
 			<View style={[organism_style.feedContent]}>
-				{/* // <View style={[organism_style.feedContent,{height:800*DP}]}> */}
 				{/* line 1 */}
 				<View style={[organism_style.userLocationLabel_view_feedContent]} onLayout={onLayoutLabel}>
 					{/* UserLocationLabel */}
@@ -539,8 +517,7 @@ export default FeedContent = props => {
 				)}
 				{(route.name.includes('FeedList') || feed_type == 'report' || feed_type == 'missing' || route.name.includes('FeedCommentList') || show) && (
 					<View style={[organism_style.content_feedContent, feedContent_style.content_Top10]}>
-						{/* <HashText style={[txt.noto28]} numberOfLines={isMissingReportRoute || show ? 0 : 3} onLayout={onLayoutText} onTextLayout={onTextLayout}> */}
-						<HashText style={[txt.noto28]} numberOfLines={numLine} ellipsizeMode={'tail'} onTextLayout={onTextLayout}>
+						<HashText style={[txt.noto28]} numberOfLines={numLine} ellipsizeMode={'tail'}>
 							{feed_content}
 						</HashText>
 					</View>

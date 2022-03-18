@@ -11,11 +11,15 @@ import {getSettingPublic, updateSettingPublic} from 'Root/api/settingpublic';
 import {INFO_QUESTION} from 'Root/i18n/msg';
 import FastImage from 'react-native-fast-image';
 import {useState} from 'react/cjs/react.production.min';
+import OneOnOffLine from 'Root/component/organism/form/OneLineOnOff';
 
 export default SettingOpen = ({route}) => {
 	const [openObject, setOpenObject] = React.useState();
 	const [loading, setLoading] = React.useState(true);
 	const [refreshing, setRefreshing] = React.useState(false);
+	const [onCount, setOnCount] = React.useState(0);
+	const [send, setSend] = React.useState(false);
+
 	React.useEffect(() => {
 		getSettingPublic(
 			{},
@@ -27,7 +31,10 @@ export default SettingOpen = ({route}) => {
 				delete temp.setting_public_user_id;
 				delete temp.__v;
 				console.log('temp', temp);
-				setOpenObject(noticeObject.msg[0]);
+				if (temp.setting_public_all) {
+					setOnCount(3);
+				}
+				setOpenObject(temp);
 				setLoading(false);
 			},
 
@@ -39,8 +46,10 @@ export default SettingOpen = ({route}) => {
 
 	React.useEffect(() => {
 		console.log('openObject', openObject);
+		// console.log('type of Open', typeof openObject, typeof openObject.setting_public_all);
 		updateSettingPublic(
 			openObject,
+
 			callback => {
 				console.log('success callback', callback);
 			},
@@ -49,9 +58,7 @@ export default SettingOpen = ({route}) => {
 			},
 		);
 	}, [openObject]);
-	React.useEffect(() => {
-		console.log('Refreshing', refreshing);
-	}, [refreshing]);
+
 	const onSwtichAll = () => {
 		if (openObject.setting_public_all) {
 			setOpenObject(prevState => ({
@@ -61,6 +68,7 @@ export default SettingOpen = ({route}) => {
 				setting_public_my_tag_post: false,
 				setting_public_community_post: false,
 			}));
+			setOnCount(0);
 		} else {
 			setOpenObject(prevState => ({
 				...prevState,
@@ -69,25 +77,30 @@ export default SettingOpen = ({route}) => {
 				setting_public_my_tag_post: true,
 				setting_public_community_post: true,
 			}));
+			setOnCount(3);
 		}
+		// setSend(!send);
+		// postApi();
 	};
-	const onSwtichMyFeed = () => {
-		setOpenObject(prevState => ({
-			...prevState,
-			setting_public_my_feed: !prevState.setting_public_my_feed,
-		}));
-	};
-	const onSwtichMyTagPost = () => {
-		setOpenObject(prevState => ({
-			...prevState,
-			setting_public_my_tag_post: !prevState.setting_public_my_tag_post,
-		}));
-	};
-	const onSwtichMyCommunityPost = () => {
-		setOpenObject(prevState => ({
-			...prevState,
-			setting_public_community_post: !prevState.setting_public_community_post,
-		}));
+	const switchButton = keys => {
+		const tempObject = {...openObject};
+		tempObject[keys] = !tempObject[keys];
+		setOpenObject(tempObject);
+		if (openObject[keys]) {
+			setOnCount(onCount - 1);
+			setOpenObject(prevState => ({
+				...prevState,
+				setting_public_all: false,
+			}));
+		} else {
+			onCount == 2
+				? setOpenObject(prevState => ({
+						...prevState,
+						setting_public_all: true,
+				  }))
+				: null;
+			setOnCount(onCount + 1);
+		}
 	};
 
 	if (loading) {
@@ -107,35 +120,17 @@ export default SettingOpen = ({route}) => {
 						<OnOffSwitch default={openObject.setting_public_all} onSwtichOff={onSwtichAll} onSwtichOn={onSwtichAll} />
 					</View>
 					<View style={[styles.openDetailContainer]}>
-						<View style={{flexDirection: 'row'}}>
-							<View style={styles.openDetailEachContainer}>
-								<View style={[{width: 550 * DP}, {flexDirection: 'row'}, {alignItems: 'center'}]}>
-									<Text style={[txt.noto28, {color: GRAY10}]}>내 피드 비공개</Text>
-								</View>
-								<OnOffSwitch default={openObject.setting_public_my_feed} onSwtichOff={onSwtichMyFeed} onSwtichOn={onSwtichMyFeed} />
-							</View>
+						<OneOnOffLine data={openObject} name="내 피드 비공개" keys="setting_public_my_feed" switchButton={switchButton} />
+
+						<View style={[{flexDirection: 'row'}, {marginTop: 24 * DP}]}>
+							<OneOnOffLine data={openObject} name="내 태그 게시글 비공개" keys="setting_public_my_tag_post" switchButton={switchButton} />
 						</View>
-						<View style={{flexDirection: 'row'}}>
-							<View style={[styles.openDetailEachContainer, {marginTop: 24 * DP}]}>
-								<View style={[{width: 550 * DP}, {flexDirection: 'row'}, {alignItems: 'center'}]}>
-									<Text style={[txt.noto28, {color: GRAY10}]}>내 태그 게시글 비공개</Text>
-								</View>
-								<OnOffSwitch default={openObject.setting_public_my_tag_post} onSwtichOff={onSwtichMyTagPost} onSwtichOn={onSwtichMyTagPost} />
-							</View>
-						</View>
-						<View style={{flexDirection: 'row'}}>
-							<View style={[styles.openDetailEachContainer, {marginTop: 24 * DP}]}>
-								<View style={[{width: 550 * DP}, {flexDirection: 'row'}, {alignItems: 'center'}]}>
-									<Text style={[txt.noto28, {color: GRAY10}]}>내 커뮤니티 게시글 비공개</Text>
-								</View>
-								<OnOffSwitch
-									default={openObject.setting_public_community_post}
-									onSwtichOff={onSwtichMyCommunityPost}
-									onSwtichOn={onSwtichMyCommunityPost}
-								/>
-							</View>
+						<View style={[{flexDirection: 'row'}, {marginTop: 24 * DP}]}>
+							<OneOnOffLine data={openObject} name="내 커뮤니티 게시글 비공개" keys="setting_public_community_post" switchButton={switchButton} />
 						</View>
 					</View>
+					{/* <Text>{`${onCount}`}</Text> */}
+					{/* <Text>{JSON.stringify(openObject)} </Text> */}
 				</View>
 			</ScrollView>
 		);

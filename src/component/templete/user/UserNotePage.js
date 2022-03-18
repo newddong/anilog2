@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TouchableOpacity, Text, StyleSheet, Image} from 'react-native';
+import {View, TouchableOpacity, Text, StyleSheet, Image, ActivityIndicator} from 'react-native';
 import AniButton from 'Molecules/button/AniButton';
 import CheckBox from 'Molecules/select/CheckBox';
 import {userAccount} from 'Organism/style_organism copy';
@@ -10,28 +10,49 @@ import {getTimeLapsed} from 'Root/util/dateutil';
 import {textstyles} from '../style_templete';
 import {ScrollView} from 'react-native-gesture-handler';
 import NoteMessageList from 'Root/component/organism/list/NoteMessageList';
+import {getMemoBoxWithReceiveID} from 'Root/api/userapi';
+import {useNavigation} from '@react-navigation/native';
 /**
  * 쪽지 썸네일 객체
  * @param {object} props - Props Object
- * @param {object} props.data - 쪽지 아이템 데이터
+ * @param {object} props._id - 대화 상대 id
  * @param {void} props.onLabelClick - 쪽지 라벨 클릭
  * @param {boolean} props.checkBoxMode - 선택 삭제 모드 여부 (default = false)
  * @param {boolean} props.checkBoxState - 선택 여부 (default = false)
  */
-const UserNotePage = props => {
-	// console.log('UserAccount item', props.data);
-	const data = props.route.params.messageObject;
-	console.log('====================================');
-	console.log(data);
-	console.log('====================================');
-	return (
-		<View style={styles.container}>
-			<Text style={txt.noto24}>쪽지는 한 달 후에 자동 삭제됩니다.</Text>
-			<View style={styles.messageContainer}>
-				<NoteMessageList />
+const UserNotePage = ({route}) => {
+	console.log('userNotePage', route.params);
+	const navigation = useNavigation();
+	const [data, setData] = React.useState();
+	const [loading, setLoading] = React.useState(true);
+	React.useEffect(() => {
+		getMemoBoxWithReceiveID(
+			{user_object_id: route.params._id},
+			result => {
+				// console.log('result', result.msg);
+				setData(result.msg);
+				setLoading(false);
+			},
+			err => {
+				console.log('err', err);
+			},
+		);
+	}, []);
+	if (loading) {
+		return (
+			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
+				<ActivityIndicator size={'large'}></ActivityIndicator>
 			</View>
-		</View>
-	);
+		);
+	} else {
+		return (
+			<View style={styles.container}>
+				<View style={styles.messageContainer}>
+					<NoteMessageList data={data} />
+				</View>
+			</View>
+		);
+	}
 };
 const styles = StyleSheet.create({
 	container: {

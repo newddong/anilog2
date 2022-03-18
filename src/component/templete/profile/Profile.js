@@ -63,9 +63,8 @@ export default Profile = ({route, navigation}) => {
 						setFeedList(result.msg);
 					},
 					err => {
-						Modal.popOneBtn(err, '확인', () => {
-							Modal.close();
-						});
+						console.log(err);
+						setFeedList([]);
 					}
 				)
 				break;
@@ -77,10 +76,8 @@ export default Profile = ({route, navigation}) => {
 						setFeedList(result.msg);
 					},
 					err => {
-						Modal.popOneBtn(err, '확인', () => {
-							setFeedList([]);
-							Modal.close();
-						});
+						console.log(err);
+						setFeedList([]);
 					}
 				)
 				break;
@@ -261,7 +258,7 @@ export default Profile = ({route, navigation}) => {
 		const whenFeedThumbnailEmpty = () => {
 			return (
 				<View style={[profile.whenFeedThumbnailEmpty]}>
-					<Text style={[txt.roboto32b]}>등록한 피드 게시물이 없습니다.</Text>
+					<Text style={[txt.roboto32b]}>피드 게시물이 없습니다.</Text>
 				</View>
 			);
 		};

@@ -97,6 +97,7 @@ const ArrowDownButton = props => {
 					btnTheme(),
 					border(),
 					{backgroundColor: btnStyle(), justifyContent: 'center', alignItems: 'center', flexDirection: 'row'},
+					{paddingHorizontal: 20 * DP},
 				]}>
 				<Text
 					style={[
@@ -105,13 +106,14 @@ const ArrowDownButton = props => {
 							fontSize: props.titleFontStyle * DP,
 							color: btnTxtColor(),
 							textAlign: 'center',
-							width: (props.btnLayout.width - 20) * DP,
-							// lineHeight: lineHeight(),
+							width: (props.btnLayout.width + 30) * DP,
+							// backgroundColor: 'purple',
 						},
-					]}>
+					]}
+					numberOfLines={1}>
 					{props.btnTitle}
 				</Text>
-				{getArrow()}
+				<View style={[]}>{getArrow()}</View>
 			</View>
 		);
 	};

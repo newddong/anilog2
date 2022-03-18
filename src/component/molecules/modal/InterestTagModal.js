@@ -9,7 +9,7 @@ import {Cross24_Filled} from 'Root/component/atom/icon';
 import {getAddressList} from 'Root/api/address';
 import {getInterestsList} from 'Root/api/interestsapi';
 import ArrowDownButton from '../button/ArrowDownButton';
-import {btn_w242, btn_w280x68} from 'Root/component/atom/btn/btn_style';
+import {btn_w242, btn_w280, btn_w280x68} from 'Root/component/atom/btn/btn_style';
 /**
  * 관심사 추가 및 수정 모달
  * @param {'Activity'|'Location'|'Review'} category -  관심활동 / 관심지역 / 커뮤니티후기 분기
@@ -311,7 +311,7 @@ const InterestTagModal = props => {
 					<View style={[style.review_container]}>
 						<View style={[style.review_location]}>
 							<ArrowDownButton onPress={onOpenCity} btnStyle={'border'} btnLayout={btn_w242} btnTitle={selectedCity} />
-							<ArrowDownButton onPress={onOpenDistrict} btnStyle={'border'} btnLayout={btn_w242} btnTitle={selectedDistrict} />
+							<ArrowDownButton onPress={onOpenDistrict} btnStyle={'border'} btnLayout={btn_w280} titleFontStyle={22} btnTitle={selectedDistrict} />
 						</View>
 						{dummyReviewCategoryList.map((v, i) => {
 							return (

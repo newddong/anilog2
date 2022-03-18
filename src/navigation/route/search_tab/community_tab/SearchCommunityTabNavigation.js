@@ -8,6 +8,8 @@ import {Dimensions} from 'react-native';
 import {APRI10, GRAY10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import SearchFreeBoard from 'Root/component/templete/search/SearchFreeBoard';
+import SearchReview from 'Root/component/templete/search/SearchReview';
+import SearchMarket from 'Root/component/templete/search/SearchMarket';
 
 const SearchCommunityTabNav = createMaterialTopTabNavigator();
 
@@ -47,7 +49,7 @@ export default SearchCommunityTabNavigation = props => {
 					title: '자유 게시글',
 					tabBarLabelStyle: [tabbarLabel('SearchFreeBoard')],
 				}}>
-				{props => <SearchFreeBoard {...props} />}
+				{props => <SearchFreeBoard input={searchInput} {...props} />}
 			</SearchCommunityTabNav.Screen>
 			{/* 계정 */}
 			<SearchCommunityTabNav.Screen
@@ -56,16 +58,16 @@ export default SearchCommunityTabNavigation = props => {
 					title: '후기',
 					tabBarLabelStyle: [tabbarLabel('SearchReview')],
 				}}>
-				{props => <SearchAccountA {...props} input={searchInput} />}
+				{props => <SearchReview {...props} input={searchInput} />}
 			</SearchCommunityTabNav.Screen>
 			{/* 태그 */}
 			<SearchCommunityTabNav.Screen
-				name="SearchTag"
+				name="SearchMarket"
 				options={{
-					title: '태그',
+					title: '마켓',
 					tabBarLabelStyle: [tabbarLabel('SearchTag')],
 				}}>
-				{props => <SearchHashTag {...props} search={searchInput} />}
+				{props => <SearchMarket {...props} search={searchInput} />}
 			</SearchCommunityTabNav.Screen>
 		</SearchCommunityTabNav.Navigator>
 	);

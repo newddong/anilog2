@@ -91,7 +91,7 @@ export default Feed = React.memo(props => {
 		<View style={[feed_templete_style.feed]} removeClippedSubviews>
 			<FeedContent data={props.data} />
 			{/* 270DP */}
-			<View style={[feed_templete_style.feedMedia_feed]}>
+			<View style={[feed_templete_style.feedMedia_feed]}  >
 				<FeedMedia data={props.data} />
 			</View>
 			<View style={[feed_templete_style.comment_feed_view]}>
@@ -126,7 +126,7 @@ export default Feed = React.memo(props => {
 					{/* 댓글 comment_count개 모두 보기 */}
 					<View style={[feed_templete_style.allCommentCount]}>
 						<TouchableOpacity onPress={moveToCommentList}>
-							<View style={{height: 80 * DP}}>
+							<View style={{}}>
 								<Text style={[txt.noto24]}>{feed_comment_count > 0 ? `댓글 ${feed_comment_count}개 모두 보기` : '댓글 쓰기'}</Text>
 							</View>
 						</TouchableOpacity>

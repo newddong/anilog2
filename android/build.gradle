@@ -7,6 +7,8 @@ buildscript {
         compileSdkVersion = 30
         targetSdkVersion = 30
         ndkVersion = "21.4.7075529"
+        playServicesVersion = "17.0.0" // # 22.03.15 구글 맵스 활용을 위한 추가 (KSW)
+
     }
     repositories {
         google()

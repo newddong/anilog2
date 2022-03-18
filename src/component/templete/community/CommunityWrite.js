@@ -1,68 +1,36 @@
 import React from 'react';
-import {ScrollView, Text, TouchableOpacity, View, TouchableWithoutFeedback, TextInput, Platform, Keyboard, StyleSheet} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View, TextInput, Platform, Keyboard, StyleSheet} from 'react-native';
 import {APRI10, WHITE, GRAY20, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {
-	Arrow_Down_APRI10,
-	Camera54,
-	Location54_APRI10,
-	Location54_Filled,
-	NextMark,
-	NextMark_APRI,
-	Paw54_Border,
-	Save54,
-} from 'Root/component/atom/icon/index';
+import {Camera54, Location54_APRI10, Location54_Filled, NextMark_APRI, Save54} from 'Root/component/atom/icon/index';
 import {launchImageLibrary} from 'react-native-image-picker';
 import Modal from 'Component/modal/Modal';
 import userGlobalObj from 'Root/config/userGlobalObject';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {getPettypes} from 'Root/api/userapi';
 import ImagePicker from 'react-native-image-crop-picker';
 import HashInput from 'Molecules/input/HashInput';
-import InputBalloon from 'Root/component/molecules/input/InputBalloon';
 import {getAddress} from 'Root/util/addressutill';
 import SelectedMediaList from 'Root/component/organism/list/SelectedMediaList';
 import {styles} from 'Root/component/atom/image/imageStyle';
+import Geolocation from '@react-native-community/geolocation';
+import axios from 'axios';
 
 export default CommunityWrite = props => {
 	const inputRef = React.useRef();
 	const navigation = useNavigation();
 	const isReview = props.route.params.isReview; //후기 게시글 여부 boolean
 	const [catergory, setCategory] = React.useState('카테고리 선택');
-	const [loading, setLoading] = React.useState(false);
-	const [temp, setTemp] = React.useState('');
 	const [location, setLocation] = React.useState('');
 	const [selectedImg, setSelectedImg] = React.useState([]); //사진 uri리스트
 
 	React.useEffect(() => {
-		if (props.route.params?.addr) {
+		const param = props.route.params;
+		if (param?.addr) {
 			//다른 주소 검색 결과값 적용
-			console.log('props.route.params?.addr', props.route.params?.addr.address);
-			setLocation(props.route.params?.addr.address); //다른 주소 검색 결과값 적용
+			setLocation(param.addr.road_address.address_name + ' / ' + param.addr.detailAddr); //다른 주소 검색 결과값 적용
 		}
 	}, [props.route.params]);
-
-	React.useEffect(() => {
-		if (loading) {
-			Modal.popLoading();
-		} else if (!loading && temp != '') {
-			Modal.close();
-			setTimeout(() => {
-				Modal.popLocationCheckModal(
-					() => {
-						Modal.close();
-						navigation.push('AddressSearchPage', {prevRoute: props.route.name});
-					},
-					() => {
-						Modal.close();
-						setLocation(temp);
-					},
-					temp,
-				);
-			}, 100);
-		}
-	}, [loading]);
 
 	const onPressPhotoSelect = () => {
 		if (selectedImg.length > 4) {
@@ -113,13 +81,7 @@ export default CommunityWrite = props => {
 	};
 
 	const moveToLocationPicker = async () => {
-		// console.log('moveToLocationPicker');
-		// navigation.push('AddressSearchPage', {prevRoute: props.route.name});
-		// navigation.push('GeoLocationSearch');
-		setLoading(true);
-		const address = await getAddress();
-		setTemp(address.address.address_name);
-		setLoading(false);
+		navigation.push('KakaoMap');
 	};
 
 	const onPressFilter = () => {
@@ -137,6 +99,10 @@ export default CommunityWrite = props => {
 
 	const onDeleteImage = () => {
 		console.log('onDeleteImage');
+	};
+
+	const onPressTempSave = () => {
+		alert('onPressTempSave');
 	};
 
 	return (
@@ -183,7 +149,7 @@ export default CommunityWrite = props => {
 				</View>
 			</View>
 			<View style={[style.buttonContainer]}>
-				<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
+				<TouchableOpacity activeOpacity={0.6} onPress={onPressTempSave}>
 					<View style={[style.buttonItem]}>
 						<Save54 />
 						<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>임시저장</Text>
@@ -241,8 +207,8 @@ const style = StyleSheet.create({
 	content: {
 		// marginTop: 30 * DP,
 		width: 654 * DP,
-		// height: 376 * DP,
-		marginTop: 12 * DP,
+		// minHeight: 376 * DP,
+		// marginTop: 12 * DP,
 		borderRadius: 24 * DP,
 		borderWidth: 2 * DP,
 		borderColor: APRI10,
@@ -267,6 +233,8 @@ const style = StyleSheet.create({
 	},
 	contentInput: {
 		// flex: 1,
+		// backgroundColor: 'yellow',
+		minHeight: 150 * DP,
 	},
 	location: {
 		flexDirection: 'row',

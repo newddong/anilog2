@@ -373,3 +373,63 @@ export async function setPetStatus(params, callback, errcallback) {
 export async function getAnimalListNotRegisterWithCompanion(params, callback, errcallback) {
 	apiController('/user/getAnimalListNotRegisterWithCompanion', arguments);
 }
+
+/** 쪽지 보내기
+ * @param {object} params
+ * @param {string} params.memobox_receive_id  - 쪽지 수신 사용자 ID
+ * @param {string} params.memobox_contents  - 쪽지 내용
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function createMemoBox(params, callback, errcallback) {
+	apiController('/user/createMemoBox', arguments);
+}
+
+/** 쪽지 삭제 (userObjectID로 삭제 - 상대방 사용자 대화 내용 모두 삭제)
+ * @param {object} params
+ * @param {string} params.user_object_id  - 삭제할 user_object _id
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function deleteMemoBoxWithUserObjectID(params, callback, errcallback) {
+	apiController('/user/deleteMemoBoxWithUserObjectID', arguments);
+}
+
+/** 쪽지 삭제 (memoboxObjectID로 삭제)
+ * @param {object} params
+ * @param {string} params.memobox_object_id  - 삭제할 memobox_object_id
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function deleteMemoBoxWithMemoBoxObjectID(params, callback, errcallback) {
+	apiController('/user/deleteMemoBoxWithMemoBoxObjectID', arguments);
+}
+
+/** 쪽지를 보내고 받은 모든 대상으로 1개씩만 가져오기 order by:DESC
+ * @param {object} params
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getMemoBoxAllList(params, callback, errcallback) {
+	apiController('/user/getMemoBoxAllList', arguments);
+}
+
+/** 특정 사용자와의 쪽지 내용 불러오기 order by:ASC
+ * @param {object} params
+ * @param {string} params.user_object_id  - 쪽지를 주고받은 특정 대상 user_object_id
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getMemoBoxWithReceiveID(params, callback, errcallback) {
+	apiController('/user/getMemoBoxWithReceiveID', arguments);
+}
+
+/** 쪽지 신고하기 (memoboxObjectID로 신고)
+ * @param {object} params
+ * @param {string} params.memobox_object_id  - 신고할 memobox_object_id
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function setMemoBoxWithReport(params, callback, errcallback) {
+	apiController('/user/setMemoBoxWithReport', arguments);
+}

@@ -7,6 +7,7 @@ import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {GRAY10, APRI10, BLACK} from 'Root/config/color';
 import {getTimeLapsed} from 'Root/util/dateutil';
+import {ProfileDefaultImg} from 'Root/component/atom/icon';
 /**
  * 쪽지 썸네일 객체
  * @param {object} props - Props Object
@@ -38,8 +39,8 @@ const UserNote = props => {
 			<View style={[styles.userNoteContainer]}>
 				<TouchableOpacity onPress={() => props.onLabelClick(data)}>
 					<View style={[styles.userNoteThumbnail]}>
-						{data.user_profile_uri != undefined ? (
-							<Image source={{uri: data.user_profile_uri}} style={[styles.img_round_94]} />
+						{data.opponent_user_profile_uri != undefined ? (
+							<Image source={{uri: data.opponent_user_profile_uri}} style={[styles.img_round_94]} />
 						) : (
 							<ProfileDefaultImg size={styles.img_round_94} />
 						)}
@@ -47,7 +48,7 @@ const UserNote = props => {
 						<View style={{marginLeft: 30 * DP}}>
 							<View style={{flexDirection: 'row'}}>
 								<Text style={[txt.roboto28b, {color: BLACK}, {lineHeight: 44 * DP}]} numberOfLines={1} ellipsizeMode="tail">
-									{data.memobox_send_id || ''}
+									{data.opponent_user_nickname || ''}
 								</Text>
 								{/* {data.showStatus ? <Text style={[txt.noto22, {color: APRI10, alignSelf: 'center', paddingLeft: 10 * DP}]}> STATUS</Text> : null} */}
 							</View>

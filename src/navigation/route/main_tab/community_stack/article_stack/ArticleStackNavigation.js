@@ -13,6 +13,7 @@ import CommunityWrite from 'Root/component/templete/community/CommunityWrite';
 import SendHeader from 'Root/navigation/header/SendHeader';
 import AddressSearchPage from 'Root/component/templete/search/AddressSearchPage';
 import GeoLocationSearch from 'Root/component/templete/search/GeoLocationSearch';
+import KakaoMap from 'Root/component/templete/search/KakaoMap';
 
 const ArticleStackNav = createStackNavigator();
 
@@ -70,13 +71,9 @@ export default ArticleStackNavigation = props => {
 			<ArticleStackNav.Screen
 				name="AddressSearchPage"
 				component={AddressSearchPage}
-				options={{header: props => <SimpleHeader {...props} />, title: '주소 검색'}}
+				options={{header: props => <SimpleHeader {...props} />, title: '주소 설정'}}
 			/>
-			<ArticleStackNav.Screen
-				name="GeoLocationSearch"
-				component={GeoLocationSearch}
-				options={{header: props => <SimpleHeader {...props} />, title: '주소 검색'}}
-			/>
+			<ArticleStackNav.Screen name="KakaoMap" component={KakaoMap} options={{header: props => <SimpleHeader {...props} />, title: '주소 설정'}} />
 		</ArticleStackNav.Navigator>
 	);
 };

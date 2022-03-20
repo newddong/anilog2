@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, FlatList, RefreshControl, Platform} from 'react-native';
 import {WHITE} from 'Root/config/color';
-import {Write94} from 'Atom/icon';
+import {Write94, Camera54} from 'Atom/icon';
 import Feed from 'Organism/feed/Feed';
 import {getSuggestFeedList} from 'Root/api/feedapi';
 import Modal from 'Component/modal/Modal';
@@ -161,24 +161,12 @@ export default FeedList = ({route, navigation}) => {
 			let indx = feedList.findIndex(v => v._id == route.params?.selected._id);
 			if(route.name=='UserFeedList'){
 				setTimeout(()=>{
-					// flatlist.current.scrollToIndex({
-					// 	animated: false,
-					// 	index: indx>0?indx:0,
-					// });
 					flatlist.current.scrollToItem({
 						animated: false,
 						item: feedList[indx]
 					})
 				},0)
 			}
-			// else{
-			// 	setTimeout(()=>{
-			// 		flatlist.current.scrollToOffset({
-			// 			offset: userGlobalObject.t.y,
-			// 			animated:false
-			// 		})
-			// 	},0)
-			// }
 		}
 		setRefresh(!refresh);
 	}, [feedList]);
@@ -207,6 +195,17 @@ export default FeedList = ({route, navigation}) => {
 		}
 	}
 
+	const movetoCamera = () => {
+		Modal.popTwoBtn('카메라롤 모드(임시)','단일선택','다중선택',
+		()=>{
+			Modal.close();
+			navigation.push('SinglePhotoSelect');
+		},
+		()=>{
+			Modal.close();
+			navigation.push('MultiPhotoSelect');
+		})
+	}
 	return (
 		<View style={(login_style.wrp_main, {flex: 1, backgroundColor: WHITE})}>
 			<FlatList
@@ -231,6 +230,8 @@ export default FeedList = ({route, navigation}) => {
 			/>
 			{userGlobalObject.userInfo && (
 				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}, buttonstyle.shadow]}>
+					<View style={{height: 84*DP, width:84*DP,justifyContent:'center',alignItems:'center',backgroundColor:'#FFF',borderRadius:30*DP,marginBottom:20*DP}}>
+						<Camera54 onPress={movetoCamera} /></View>
 					<Write94 onPress={moveToFeedWrite} />
 				</View>
 			)}

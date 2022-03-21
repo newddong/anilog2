@@ -73,7 +73,7 @@ export default FeedCommentList = props => {
 			comment_is_secure: privateComment, //공개여부 테스트때 반영
 		};
 
-		if(editData.comment_photo_uri.length>0){
+		if(editData.comment_photo_uri&&editData.comment_photo_uri.length>0){
 			param.comment_photo_uri = editData.comment_photo_uri;
 		}
 

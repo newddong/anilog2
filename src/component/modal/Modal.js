@@ -341,10 +341,11 @@ export default Modal = {
 
 	/**
 	 * 로딩 중 출력 모달
-	 * @param {object} props - 추후 업데이트
+	 * @param {object} props -
+	 * @param {boolean} props.isModal - 모달인지 여부
 	 * @example
 	 */
-	popLoading: () => {},
+	popLoading: isModal => {},
 
 	/**
 	 * 주소 현위치 컨펌 모달

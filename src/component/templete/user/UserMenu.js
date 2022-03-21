@@ -132,8 +132,8 @@ export default UserMenu = props => {
 				navigation.push('UserFeeds');
 				break;
 			case TAGED_CONTENTS_FOR_ME:
-				Modal.popInfoModal();
-				// navigation.push('TagMeFeeds', {token: data});
+				// Modal.popInfoModal();
+				navigation.push('TagMeFeeds', {token: data});
 				break;
 			case APPLICATION_HISTORY:
 				navigation.push('AppliesRecord', data._id); // ShelterProtectAnimalObject

@@ -308,12 +308,8 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen name="SettingAccount" component={SettingAccount} options={{header: props => <SimpleHeader {...props} />, title: '계정'}} />
 			<MyStack.Screen name="SettingAlarm" component={SettingAlarm} options={{header: props => <SimpleHeader {...props} />, title: '알림'}} />
 			<MyStack.Screen name="SettingOpen" component={SettingOpen} options={{header: props => <SimpleHeader {...props} />, title: '공개 설정'}} />
-			<MyStack.Screen
-				name="ReceivedMessage"
-				component={ReceivedMessage}
-				options={{header: props => <SimpleHeader {...props} />, title: '받은 쪽지함'}}
-			/>
-			<MyStack.Screen name="UserNote" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />, title: props.title}} />
+			<MyStack.Screen name="ReceivedMessage" component={ReceivedMessage} options={{header: props => <SimpleHeader {...props} />, title: '쪽지함'}} />
+			<MyStack.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />, title: props.title}} />
 		</MyStack.Navigator>
 	);
 };

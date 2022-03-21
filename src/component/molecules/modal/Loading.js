@@ -1,9 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, StyleSheet, Platform, Dimensions, Image, Animated, Easing} from 'react-native';
 import {WHITE, GRAY10, APRI10} from 'Root/config/color';
-import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {LoadingImg} from 'Root/component/atom/icon';
 
 /**
  * 버튼이 없는 모달
@@ -11,7 +9,7 @@ import {LoadingImg} from 'Root/component/atom/icon';
  * @todo 모달창이 없어지기 위한 조건을 넣어야함.
  *
  * @param {Object} props - props object
- * @param {string} props.popUpMsg - 팝업 메시지
+ * @param {boolean} props.isModal - 모달인지 여부
  *
  */
 const Loading = props => {
@@ -93,23 +91,14 @@ const Loading = props => {
 		).start();
 	}, []);
 
-	// Next, interpolate beginning and end values (in this case 0 and 1)
-	const spin = spinValue.interpolate({
-		inputRange: [0, 1],
-		outputRange: ['0deg', '360deg'],
-	});
-
 	return (
-		<View style={style.background}>
-			{/* <Animated.View
-				style={[
-					style.popUpWindow,
-					{
-						transform: [{rotate: spin}],
-					},
-				]}>
-				<LoadingImg />
-			</Animated.View> */}
+		<View
+			style={[
+				style.background,
+				{
+					backgroundColor: props.isModal ? '#0009' : 'white',
+				},
+			]}>
 			<Animated.View style={[styles.loading, {opacity}]}>
 				{animations.map((animation, index) => (
 					<Animated.View
@@ -128,6 +117,7 @@ const Loading = props => {
 
 Loading.defaultProps = {
 	popUpMsg: 'popUp',
+	isModal: true,
 };
 
 const styles = StyleSheet.create({

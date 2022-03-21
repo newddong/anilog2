@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, FlatList, RefreshControl, Platform} from 'react-native';
 import {WHITE} from 'Root/config/color';
-import {Write94} from 'Atom/icon';
+import {Write94, Camera54} from 'Atom/icon';
 import Feed from 'Organism/feed/Feed';
 import {getSuggestFeedList} from 'Root/api/feedapi';
 import Modal from 'Component/modal/Modal';
@@ -48,7 +48,15 @@ export default FeedList = ({route, navigation}) => {
 								msg
 									.map((v, i, a) => {
 										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
-										return {...v, height: (1060 + (lines > 3 ? 2 * 54 + 48 : lines * 54)) * DP};
+										lines = lines > 3 ? 3 : lines;
+										if(v.feed_recent_comment){
+											return {...v, height: (750+ 200+ 120+2+ lines*54) * DP};
+										}
+										else{
+											return {...v, height: (750+  72+ 120+2+ lines*54) * DP};
+										}
+											
+
 									})
 									.map((v, i, a) => {
 										let offset = a.slice(0, i).reduce((prev, current) => {
@@ -107,11 +115,19 @@ export default FeedList = ({route, navigation}) => {
 							login_userobject_id : userGlobalObject.userInfo._id
 						},
 						({msg}) => {
+							console.log('피드 리스트', msg);
 							setFeedList(
 								msg
 									.map((v, i, a) => {
 										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
-										return {...v, height: (1060 + (lines > 3 ? 2 * 54 + 48 : lines * 54)) * DP};
+										if(v.feed_recent_comment){
+											return {...v, height: (750+ 200+ 44 +128+2+ (lines > 3 ? 2 * 54 + 48 : lines * 54)) * DP};
+										}
+										else{
+											return {...v, height: (750+ 72+ 44 + 2 + (lines > 3 ? 2 * 54 + 48 : lines * 54)) * DP};
+										}
+											
+
 									})
 									.map((v, i, a) => {
 										let offset = a.slice(0, i).reduce((prev, current) => {
@@ -145,16 +161,9 @@ export default FeedList = ({route, navigation}) => {
 			let indx = feedList.findIndex(v => v._id == route.params?.selected._id);
 			if(route.name=='UserFeedList'){
 				setTimeout(()=>{
-					flatlist.current.scrollToIndex({
+					flatlist.current.scrollToItem({
 						animated: false,
-						index: indx>0?indx:0,
-					});
-				},0)
-			}else{
-				setTimeout(()=>{
-					flatlist.current.scrollToOffset({
-						offset: userGlobalObject.t.y,
-						animated:false
+						item: feedList[indx]
 					})
 				},0)
 			}
@@ -177,7 +186,7 @@ export default FeedList = ({route, navigation}) => {
 	const onRefresh = () => {
 		setRefreshing(true);
 
-		wait(1000).then(() => setRefreshing(false));
+		wait(500).then(() => setRefreshing(false));
 	};
 
 	const rememberScroll = e=>{
@@ -186,6 +195,17 @@ export default FeedList = ({route, navigation}) => {
 		}
 	}
 
+	const movetoCamera = () => {
+		Modal.popTwoBtn('카메라롤 모드(임시)','단일선택','다중선택',
+		()=>{
+			Modal.close();
+			navigation.push('SinglePhotoSelect');
+		},
+		()=>{
+			Modal.close();
+			navigation.push('MultiPhotoSelect');
+		})
+	}
 	return (
 		<View style={(login_style.wrp_main, {flex: 1, backgroundColor: WHITE})}>
 			<FlatList
@@ -210,6 +230,8 @@ export default FeedList = ({route, navigation}) => {
 			/>
 			{userGlobalObject.userInfo && (
 				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}, buttonstyle.shadow]}>
+					<View style={{height: 84*DP, width:84*DP,justifyContent:'center',alignItems:'center',backgroundColor:'#FFF',borderRadius:30*DP,marginBottom:20*DP}}>
+						<Camera54 onPress={movetoCamera} /></View>
 					<Write94 onPress={moveToFeedWrite} />
 				</View>
 			)}

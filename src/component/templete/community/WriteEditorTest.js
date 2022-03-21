@@ -23,31 +23,11 @@ const WriteEditorTest = () => {
 	const richText = React.useRef();
 	const scrollRef = React.useRef();
 	const [data, setData] = React.useState('false');
-	const [style, setStyle] = React.useState();
-
-	const source = {
-		html: `
-      <p style='text-align:center;'>
-        Hello World!
-      </p>`,
-	};
-	const {width} = useWindowDimensions();
 
 	const onChange = editorData => {
 		console.log('editorData', editorData);
-		if (changed == '#') {
-			const htmlizied = "<a href='Naver.com'></a>";
-			// <div><span style="font-size: 1em;">#</span>
-		}
-		// setData(editorData);
-	};
 
-	const command = color => {
-		richText.current?.commandDOM(`$('#title').style.color='${color}'`);
-	};
-
-	const handleCustomAction = e => {
-		setStyle(BLUE20);
+		setData(editorData);
 	};
 
 	const moveToMultiPhotoSelect = () => {

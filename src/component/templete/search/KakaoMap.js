@@ -12,6 +12,7 @@ import {btn_w654} from 'Root/component/atom/btn/btn_style';
 import X2JS from 'x2js';
 import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/core';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 export default KakaoMap = props => {
 	const navigation = useNavigation();
@@ -208,7 +209,9 @@ export default KakaoMap = props => {
 					)}
 				</View>
 			) : (
-				<></>
+				<>
+					<Loading isModal={false} />
+				</>
 			)}
 			{locationObj != '' ? (
 				<View>
@@ -224,11 +227,9 @@ export default KakaoMap = props => {
 							placeholderTextColor={GRAY20}
 						/>
 					</View>
-					<AniButton onPress={confirm} btnTitle={'선택한 위치로 설정'} btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} />
-					{/* <Text> init_latitude: {init_latitude} </Text>
-					<Text> init_longitude: {init_longitude} </Text>
-					<Text> changedLatitude: {changedLatitude} </Text>
-					<Text> changedLongitude: {changedLongitude} </Text> */}
+					<View style={[style.btnContainer]}>
+						<AniButton onPress={confirm} btnTitle={'선택한 위치로 설정'} btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} />
+					</View>
 				</View>
 			) : (
 				<></>
@@ -357,5 +358,8 @@ const style = StyleSheet.create({
 		paddingLeft: 24 * DP,
 		// includeFontPadding: true,
 		// lineHeight: 56 * DP,
+	},
+	btnContainer: {
+		marginTop: 30 * DP,
 	},
 });

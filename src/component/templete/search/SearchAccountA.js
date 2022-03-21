@@ -7,12 +7,13 @@ import ControllableAccountList from 'Organism/list/ControllableAccountList';
 import {login_style, searchAccountA} from 'Templete/style_templete';
 import {getUserListByNickname} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 export default SearchAccountA = props => {
 	// console.log('SearchAccountA', props.route.name);
 	//검색이벤트 발생 시 props.input의 값이 바뀌고 검색을 실시
 	const navigation = useNavigation();
-	const [searchedList, setSearchedList] = React.useState([]);
+	const [searchedList, setSearchedList] = React.useState('false');
 
 	React.useEffect(() => {
 		console.log('props.input', props.input);
@@ -37,6 +38,7 @@ export default SearchAccountA = props => {
 					},
 					err => {
 						console.log('err / getUserListByNick / SearchAccountA', err);
+						setSearchedList(err);
 					},
 				);
 			}
@@ -53,9 +55,13 @@ export default SearchAccountA = props => {
 
 	return (
 		<View style={[searchAccountA.container]}>
-			<ScrollView>
-				<ControllableAccountList items={searchedList} onClickAccount={onClickAccount} showButtons={false} />
-			</ScrollView>
+			{searchedList != 'false' ? (
+				<ScrollView>
+					<ControllableAccountList items={searchedList} onClickAccount={onClickAccount} showButtons={false} />
+				</ScrollView>
+			) : (
+				<Loading isModal={false} />
+			)}
 		</View>
 	);
 };

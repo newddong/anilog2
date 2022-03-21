@@ -135,7 +135,6 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen name="SelectAccount" options={{header: props => <InputAndSearchHeader {...props} />, title: ''}}>
 				{props => <SelectAccount {...props} input={props.route.params} prevNav={props.route.params.prevNav} />}
 			</MyStack.Screen>
-			{/* <MyStack.Screen name="SelectAccount" component={SelectAccount} options={{header: props => <InputAndSearchHeader {...props} />}} /> */}
 			<MyStack.Screen
 				name="AssignPetProfileImage"
 				component={AssignPetProfileImage}

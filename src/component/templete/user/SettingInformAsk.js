@@ -10,12 +10,12 @@ export default SettingInformAsk = ({route}) => {
 	const navigation = useNavigation();
 
 	const onPressNotice = () => {
-		Modal.popInfoModal();
-		// navigation.push('SaveFavorite'); // FollowObjec
+		navigation.push('NoticeList'); // FollowObjec
 	};
-	const onPressQuestions = () => {
-		Modal.popInfoModal();
+	const onPressServiceCenter = () => {
+		navigation.push('ServiceCenter');
 	};
+
 	const onPressServiceTerms = () => {
 		Modal.popInfoModal();
 	};
@@ -25,6 +25,9 @@ export default SettingInformAsk = ({route}) => {
 	const onPressPrivacyTerms = () => {
 		Modal.popInfoModal();
 	};
+	const onPressOpenSource = () => {
+		Modal.popInfoModal();
+	};
 
 	return (
 		<ScrollView>
@@ -32,43 +35,48 @@ export default SettingInformAsk = ({route}) => {
 				<View style={styles.noticeContainer}>
 					<View style={{width: 550 * DP}}>
 						<TouchableOpacity onPress={onPressNotice}>
-							<Text style={[txt.noto32b, {color: GRAY10}]}>공지사항</Text>
+							<Text style={[txt.noto32b]}>공지사항</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
-				<View style={styles.serviceContainer}>
+				<View style={styles.noticeContainer}>
 					<View style={{width: 550 * DP}}>
-						<Text style={[txt.noto32b, {color: GRAY10}, {marginTop: 40 * DP}]}>고객 센터</Text>
-					</View>
-					<View style={{width: 550 * DP}}>
-						<TouchableOpacity onPress={onPressQuestions}>
-							<Text style={[txt.noto28, {color: GRAY10}, {marginTop: 30 * DP}]}>자주 묻는 질문</Text>
+						<TouchableOpacity onPress={onPressServiceCenter}>
+							<Text style={[txt.noto32b]}>고객 센터</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
 				<View style={styles.termsContainer}>
 					<View style={{width: 550 * DP}}>
 						<TouchableOpacity onPress={onPressServiceTerms}>
-							<Text style={[txt.noto28, {color: GRAY10}, {marginTop: 40 * DP}]}>서비스 이용약관</Text>
+							<Text style={[txt.noto28, {marginTop: 40 * DP}]}>서비스 이용약관</Text>
 						</TouchableOpacity>
 					</View>
 					<View style={{width: 550 * DP}}>
 						<TouchableOpacity onPress={onPressLocationTerms}>
-							<Text style={[txt.noto28, {color: GRAY10}, {marginTop: 24 * DP}]}>위치 정보 이용 약관</Text>
+							<Text style={[txt.noto28, {marginTop: 24 * DP}]}>위치 정보 이용 약관</Text>
 						</TouchableOpacity>
 					</View>
 					<View style={{width: 550 * DP}}>
 						<TouchableOpacity onPress={onPressPrivacyTerms}>
-							<Text style={[txt.noto28, {color: GRAY10}, {marginTop: 24 * DP}]}>개인정보처리 방침</Text>
+							<Text style={[txt.noto28, {marginTop: 24 * DP}]}>개인정보처리 방침</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
 				<View style={styles.versionContainer}>
-					<View style={{width: 550 * DP}}>
-						<Text style={[txt.noto32b, {color: GRAY10}]}>앱 버전</Text>
+					<View style={[{width: 358 * DP}]}>
+						<Text style={[txt.noto32b]}>버전 정보</Text>
 					</View>
-
-					<Text style={[txt.noto28, {color: GRAY10}]}>1.0 v</Text>
+					<View style={[{width: 256 * DP}]}>
+						<Text style={[txt.noto32b, {textAlign: 'right'}]}>2.0.1 ver</Text>
+					</View>
+				</View>
+				<View style={styles.serviceContainer}>
+					<View style={{width: 550 * DP}}>
+						<TouchableOpacity onPress={onPressOpenSource}>
+							<Text style={[txt.noto32b]}>오픈 소스 라이선스 정보</Text>
+						</TouchableOpacity>
+					</View>
 				</View>
 			</View>
 		</ScrollView>
@@ -78,7 +86,7 @@ export default SettingInformAsk = ({route}) => {
 const styles = StyleSheet.create({
 	container: {
 		width: 750 * DP,
-		height: 724 * DP,
+		height: 780 * DP,
 		marginTop: 10 * DP,
 		backgroundColor: '#FFFFFF',
 	},
@@ -90,10 +98,9 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 2 * DP,
 	},
 	serviceContainer: {
-		height: 202 * DP,
+		height: 128 * DP,
 		paddingLeft: 48 * DP,
-		borderBottomColor: GRAY40,
-		borderBottomWidth: 2 * DP,
+		justifyContent: 'center',
 	},
 	termsContainer: {
 		height: 260 * DP,
@@ -103,9 +110,12 @@ const styles = StyleSheet.create({
 	},
 	versionContainer: {
 		height: 128 * DP,
+		width: 750 * DP,
 		paddingLeft: 48 * DP,
 		flexDirection: 'row',
 		alignContent: 'center',
 		alignItems: 'center',
+		borderBottomColor: GRAY40,
+		borderBottomWidth: 2 * DP,
 	},
 });

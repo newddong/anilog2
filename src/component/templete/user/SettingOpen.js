@@ -13,7 +13,6 @@ import FastImage from 'react-native-fast-image';
 import {useState} from 'react/cjs/react.production.min';
 import OneOnOffLine from 'Root/component/organism/form/OneLineOnOff';
 
-
 export default SettingOpen = ({route}) => {
 	const [openObject, setOpenObject] = React.useState();
 	const [loading, setLoading] = React.useState(true);
@@ -26,6 +25,7 @@ export default SettingOpen = ({route}) => {
 			{},
 			noticeObject => {
 				var temp = noticeObject.msg[0];
+				var tempInt = 0;
 				console.log('noticeObject', noticeObject.msg[0]);
 				delete temp._id;
 				delete temp.setting_public_update_date;
@@ -34,8 +34,16 @@ export default SettingOpen = ({route}) => {
 				console.log('temp', temp);
 				if (temp.setting_public_all) {
 					setOnCount(3);
+				} else {
+					for (var i of Object.values(temp)) {
+						console.log('iii', i);
+						if (i == true) {
+							tempInt++;
+						}
+					}
 				}
 				setOpenObject(temp);
+				setOnCount(tempInt);
 				setLoading(false);
 			},
 

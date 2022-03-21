@@ -6,7 +6,7 @@ import {styles} from 'Atom/image/imageStyle';
 import SelectedMedia from 'Molecules/media/SelectedMedia';
 import {feedCommentList} from 'Templete/style_templete';
 import AniButton from 'Root/component/molecules/button/AniButton';
-import dp from 'Root/config/dp';
+import DP from 'Root/config/dp';
 import {btn_w116, btn_w120} from 'Root/component/atom/btn/btn_style';
 import {txt} from 'Root/config/textstyle';
 /**
@@ -21,6 +21,7 @@ import {txt} from 'Root/config/textstyle';
  * privateComment : 'boolean / 비밀글 여부',
  * isProtectRequest : 'boolean / 보호요청 게시글에서의 호출',
  * photo : 'Array / 사진 목록',
+ * isMessage : 'boolean' /쪽지함에서의 호출,
  * }} props
  */
 
@@ -38,9 +39,9 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 	}));
 
 	const [content, setContent] = React.useState('');
-	React.useEffect(()=>{
+	React.useEffect(() => {
 		setContent(props.value);
-	},[props.value])
+	}, [props.value]);
 	const inputRef = useRef();
 
 	const onWrite = () => {
@@ -72,6 +73,23 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 				</View>
 
 				<AniButton onPress={onPressReply} btnLayout={btn_w120} btnStyle={'border'} btnTitle={'댓글'} titleFontStyle={24} />
+			</View>
+		);
+	} else if (props.isMessage) {
+		return (
+			<View style={[feedCommentList.commentBox, {flexDirection: 'row'}]}>
+				<View style={[feedCommentList.commentBox_top, {width: 550 * DP}, , {marginRight: 24 * DP}]}>
+					<TextInput
+						defaultValue={content == '' ? null : content}
+						style={[feedCommentList.replyTextInput]}
+						multiline={true}
+						placeholder={'메세지 입력..'}
+						onChangeText={onChangeText}
+						onFocus={props.onFocus}
+						ref={inputRef}
+					/>
+				</View>
+				<AniButton onPress={onWrite} btnLayout={btn_w120} btnStyle={'border'} btnTitle={'보내기'} titleFontStyle={24} />
 			</View>
 		);
 	} else {
@@ -141,5 +159,6 @@ ReplyWriteBox.defaultProps = {
 	onWrite: e => console.log(e), // 보내기 클릭
 	onPressReply: e => console.log(e), // 댓글입력(보호요청게시글일 경우) 클릭
 	privateComment: false, // 비밀 댓글 상태 여부
+	isMessage: false,
 	photo: [],
 };

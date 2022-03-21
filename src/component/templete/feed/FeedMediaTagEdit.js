@@ -32,12 +32,19 @@ export default FeedMediaTagEdit = props => {
 	const feedData = navState.routes[navState.index - 1].params;
 
 	const [data, setData] = React.useState(feedData);
+	
+	// React.useEffect(()=>{
+
+
+
+	// 	setData(feedData);
+	// },[])
 
 	const onMakeTag = (tag, uri) => {
 		console.log(uri,'   make   ',tag);
 		data.feed_medias?.forEach((v, i, a) => {
 			let newtag = {position_x: tag.pos.x, position_y: tag.pos.y, tag_user_id: tag.user._id, user:tag.user, pos: tag.pos};
-			if (v.uri === uri) {
+			if (v.media_uri === uri) {
 				a[i].tags ? a[i].tags.push(newtag) : (a[i].tags = [newtag]);
 			}
 		});
@@ -45,7 +52,7 @@ export default FeedMediaTagEdit = props => {
 	const onDeleteTag = (user, uri) => {
 		console.log(uri,'   del   ',user);
 		data.feed_medias?.forEach((v, i, a) => {
-			if (v.uri === uri) {
+			if (v.media_uri === uri) {
 				v.tags.forEach((v, i, a) => {
 					if (v.user._id === user._id) {
 						a.splice(i, 1);
@@ -56,9 +63,9 @@ export default FeedMediaTagEdit = props => {
 	};
 
 	const renderItems = () => {
-		if (!data) return false;
+		if (!data||data.length<1) return false;
 		return data.feed_medias?.map((v, i) => (
-			<PhotoTagItem style={lo.box_img} uri={v.uri} data={v.uri} taglist={v.tags} key={i} onMakeTag={onMakeTag} onDeleteTag={onDeleteTag} viewmode={false} />
+			<PhotoTagItem style={lo.box_img} uri={v.media_uri} data={v.media_uri} taglist={v.tags} key={i} onMakeTag={onMakeTag} onDeleteTag={onDeleteTag} viewmode={false} />
 		));
 	};
 
@@ -66,6 +73,11 @@ export default FeedMediaTagEdit = props => {
 		console.log('show Tags ',data)
 		console.log('Feed',feedData)
 	}
+	const test = () => {
+		// console.log(navState);
+		console.log(data);
+	}
+
 	return (
 		<View style={lo.wrp_main}>
 			<View style={lo.box_img_tag}>
@@ -80,8 +92,8 @@ export default FeedMediaTagEdit = props => {
 					dot={false}
 					renderPagination={(index, total, context) => {
 						// console.log('context', context);
-						if (!feedData) return <></>;
-						return feedData.media_uri?.length == 1 ? (
+						if (!data) return <></>;
+						return data.feed_medias?.length == 0 ? (
 							<></>
 						) : (
 							<View
@@ -90,13 +102,13 @@ export default FeedMediaTagEdit = props => {
 									alignSelf: 'center',
 									alignItems: 'center',
 									justifyContent: 'space-between',
-									width: 28 * (feedData.media_uri?feedData.media_uri.length:0) * DP,
+									width: 28 * (data.feed_medias?data.feed_medias.length:0) * DP,
 									height: 24 * DP,
 									// backgroundColor: 'green',
 									flexDirection: 'row',
 									position: 'absolute',
 								}}>
-								{feedData.media_uri?feedData.media_uri.map((data, idx) => {
+								{data.feed_medias?data.feed_medias.map((data, idx) => {
 									return (
 										<View
 											key={idx}

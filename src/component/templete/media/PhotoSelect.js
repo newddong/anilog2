@@ -203,7 +203,7 @@ const PhotoSelect = props => {
 
 	return (
 		<View style={(login_style.wrp_main, photoSelect.container)}>
-			<View style={[temp_style.img_square_750]}>
+			<View style={[temp_style.img_square_750,{height:100*DP}]}>
 				<Image
 					source={{
 						uri: selectedPhoto,

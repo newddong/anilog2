@@ -9,24 +9,85 @@ import Modal from 'Component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
 import {login_style, btn_style, animalAdoption} from 'Templete/style_templete';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {setPetStatus} from 'Root/api/userapi';
 
+//UserMenu -> PetInfoSetting -> 보호동물 상태 변경
 export default AnimalAdoption = props => {
 	const navigation = useNavigation();
-	console.log('props.route.params', props.route.params);
-
-	//임시보호에서 반려 동물 변경 응원 팝업창 !
-	const onCheerUp = () => {
-		// console.log('- onCheerUp - ');
-
-		Modal.close();
-		setTimeout(() => {
-			Modal.popCongratulationModal(props.route.params.user_nickname, props.route.params.user_profile_uri);
-			setTimeout(() => {
+	// console.log('props.route.params', props.route.params);
+	//입양 - 애니로그 계정 유무에 따른 버튼 분기
+	const onPressAdoption = () => {
+		Modal.popTwoBtn(
+			'입양 예정자가 애니로그 계정이 있나요?',
+			'없어요',
+			'계정 찾기',
+			() => {
+				//없어요 클릭 시 그냥 입양완료로 바꾸고 끝
+				setPetStatus(
+					{
+						userobject_id: props.route.params._id,
+						pet_status: 'adopt',
+					},
+					result => {
+						// console.log('result / setPetStatus / AnimalAdoption : ', result.msg);
+					},
+					err => {
+						console.log('err / setPetStatus / AnimalAdoption : ', err);
+					},
+				).then(() => {
+					setTimeout(() => {
+						Modal.popCongratulationModal(props.route.params.user_nickname, props.route.params.user_profile_uri);
+						setTimeout(() => {
+							Modal.close();
+							navigation.navigate('PetInfoSetting', {pet_id: props.route.params._id});
+						}, 1000);
+					}, 200);
+				});
+			},
+			() => {
+				//계정 찾기 클릭 시 계정 선택하는 템플릿으로 이동
 				Modal.close();
-				console.log('pet_id: props.route.params._id', props.route.params._id);
-				navigation.navigate('PetInfoSetting', {pet_id: props.route.params._id, token: userGlobalObject.userInfo});
-			}, 1000);
-		}, 200);
+				navigation.push('SelectAccount', {userobject_id: props.route.params});
+			},
+		);
+	};
+
+	//임시보호자 입양 버튼 클릭(내가 직접 입양하므로 petStatus만 변경하면 종료)
+	const onPressMyAdoption = () => {
+		const changePetStatus = async () => {
+			setPetStatus(
+				{
+					userobject_id: props.route.params._id,
+					pet_status: 'companion',
+				},
+				result => {
+					// console.log('result / setPetStatus / AnimalAdoption : ', result.msg);
+				},
+				err => {
+					console.log('err / setPetStatus / AnimalAdoption : ', err);
+				},
+			);
+		};
+		//임시보호에서 반려 동물 변경 응원 팝업창 !
+		const onCheerUp = () => {
+			Modal.close();
+			setTimeout(() => {
+				Modal.popCongratulationModal(props.route.params.user_nickname, props.route.params.user_profile_uri);
+				setTimeout(() => {
+					Modal.close();
+					changePetStatus().then(() => {
+						navigation.navigate('PetInfoSetting', {pet_id: props.route.params._id});
+					});
+				}, 1000);
+			}, 200);
+		};
+		Modal.popTwoBtn(
+			'이 동물을 가족으로 맞이하시겠어요?',
+			'취소',
+			'예',
+			() => Modal.close(),
+			() => onCheerUp(),
+		);
 	};
 
 	return (
@@ -80,48 +141,11 @@ export default AnimalAdoption = props => {
 				</View>
 				{/* 입양 */}
 				<View style={[btn_style.btn_w522, animalAdoption.btn_w522]}>
-					<AniButton
-						btnTitle={'입양'}
-						btnLayout={btn_w522}
-						btnStyle={'border'}
-						titleFontStyle={32}
-						onPress={() => {
-							// Modal.popOneBtn('패치 예정입니다!', '확인', () => Modal.close());
-							Modal.popTwoBtn(
-								'입양 예정자가 애니로그 계정이 있나요?',
-								'없어요',
-								'계정 찾기',
-								() => {
-									Modal.close();
-								},
-								() => {
-									Modal.close();
-									// console.log('모달창 닫힘');
-									navigation.push('SelectAccount', {userobject_id: props.route.params.userobject_id});
-								},
-							);
-						}}
-					/>
+					<AniButton btnTitle={'입양'} btnLayout={btn_w522} btnStyle={'border'} titleFontStyle={32} onPress={onPressAdoption} />
 				</View>
 				{/* 임시보호자 입양*/}
 				<View style={[btn_style.btn_w522, animalAdoption.btn_w522]}>
-					<AniButton
-						btnTitle={'임시보호자 입양'}
-						btnStyle={'border'}
-						btnLayout={btn_w522}
-						titleFontStyle={32}
-						onPress={() => {
-							// Modal.popOneBtn('패치 예정입니다!', '확인', () => Modal.close());
-
-							Modal.popTwoBtn(
-								'이 동물을 가족으로 맞이하시겠어요?',
-								'취소',
-								'예',
-								() => Modal.close(),
-								() => onCheerUp(),
-							);
-						}}
-					/>
+					<AniButton btnTitle={'임시보호자 입양'} btnStyle={'border'} btnLayout={btn_w522} titleFontStyle={32} onPress={onPressMyAdoption} />
 				</View>
 			</View>
 		</ScrollView>

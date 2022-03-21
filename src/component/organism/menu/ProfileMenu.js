@@ -19,8 +19,8 @@ export default ProfileMenu = props => {
 	const menuClick = menuName => {
 		props.onClick(menuName);
 	};
-
 	const renderItem = (item, index) => {
+		// console.log('item', item);
 		return (
 			<View>
 				<View style={[profileMenu.itemContainer]}>
@@ -42,7 +42,8 @@ export default ProfileMenu = props => {
 									<Text style={[txt.noto26, {color: GRAY10}]}>{item[1]}</Text>
 								</View>
 							</TouchableOpacity>
-							<View style={[profileMenu.item_bracket]}>{item[1] == '' ? null : <NextMark onPress={() => menuClick(item[1])} />}</View>
+							{/* <View style={[profileMenu.item_bracket]}>{item[1] == '' ? null : <NextMark onPress={() => menuClick(item[1])} />}</View> */}
+							<View style={[profileMenu.item_bracket]}>{item.length == 1 ? null : <NextMark onPress={() => menuClick(item[1])} />}</View>
 						</View>
 					</View>
 				</View>

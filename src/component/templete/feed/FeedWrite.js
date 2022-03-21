@@ -8,18 +8,14 @@ import {Urgent_Write1, Urgent_Write2} from 'Atom/icon';
 import {btn_style, feedWrite, login_style, temp_style, buttonstyle} from 'Templete/style_templete';
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w176, btn_w194} from 'Atom/btn/btn_style';
-import ActionButton from 'Molecules/button/ActionButton';
-import SelectedMediaList from 'Organism/list/SelectedMediaList';
 import {DOG_KIND, PET_KIND, pet_kind, PUBLIC_SETTING} from 'Root/i18n/msg';
 import DatePicker from 'Molecules/select/DatePicker';
 import TabSelectFilled_Type1 from 'Molecules/tab/TabSelectFilled_Type1';
 import Input24 from 'Molecules/input/Input24';
 import InputBalloon from 'Molecules/input/InputBalloon';
-import LocationButton from 'Molecules/button/LocationButton';
 import {launchImageLibrary} from 'react-native-image-picker';
 import Modal from 'Component/modal/Modal';
 import userGlobalObj from 'Root/config/userGlobalObject';
-import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {getPettypes} from 'Root/api/userapi';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -27,9 +23,7 @@ import HashInput from 'Molecules/input/HashInput';
 import {getAddressList} from 'Root/api/address';
 import SelectInput from 'Molecules/button/SelectInput';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {FlatList} from 'react-native-gesture-handler';
-import ReactNativeModal from 'react-native-modal';
 
 export default FeedWrite = props => {
 	const [showPetAccountList, setShowPetAccountList] = React.useState(false); //PetAccount 계정
@@ -38,7 +32,9 @@ export default FeedWrite = props => {
 	const [showReportForm, setShowRepotForm] = React.useState(false); //제보버튼
 	const [showActionButton, setShowActionButton] = React.useState(false); // 긴급게시(하얀버전) 클릭 시 - 실종/제보 버튼 출력 Boolean
 	const [isDiary, setDiary] = React.useState(false); //임보일기여부
-	const [feedText, setFeedText] = React.useState(''); //피드 TextInput Value
+	const [feedText, setFeedText] = React.useState(
+		props.route.params.feed_content ? props.route.params.feed_content.replace(/(&@|&#){2}(.*?)%&%.*?(&@|&#){2}/gm, '$2') : '',
+	); //피드 TextInput Value
 	const [selectedImg, setSelectedImg] = React.useState([]); //사진 uri리스트
 	const [isSearchTag, setSearchTag] = React.useState(false);
 	const [publicSetting, setPublicSetting] = React.useState('전체 공개'); //공개 여부
@@ -46,16 +42,50 @@ export default FeedWrite = props => {
 	const scrollref = React.useRef();
 	const lastTouchY = React.useRef(0);
 	const container = React.useRef();
-	
+	const [editText, setEditText] = React.useState(
+		props.route.params.feed_content ? props.route.params.feed_content.replace(/(&@|&#){2}(.*?)%&%.*?(&@|&#){2}/gm, '$2') : '',
+	);
+
 	React.useEffect(() => {
-		props.navigation.setParams({
-			...props.route.params,
-			media_uri: selectedImg,
-			feed_medias: selectedImg.map(v => ({uri:v,is_video: false, duration: 0, tags: []})),
-		});
+		if (props.route.name != 'FeedEdit') {
+			props.navigation.setParams({
+				...props.route.params,
+				media_uri: selectedImg,
+				feed_medias: selectedImg.map(v => ({media_uri: v, is_video: false, duration: 0, tags: []})),
+			});
+		} else {
+			props.navigation.setParams({
+				...props.route.params,
+				media_uri: selectedImg.filter(v => !v.includes('http')),
+				feed_medias: selectedImg.map(img => {
+					let media = props.route.params.feed_medias.find(v => v.media_uri == img);
+					return {media_uri: img, is_video: false, duration: 0, tags: media ? media.tags : []};
+				}),
+			});
+			console.log('첨부 이미지 변화', selectedImg);
+		}
 	}, [selectedImg]); //네비게이션 파라메터에 이미지 리스트를 넣음(헤더에서 처리하도록)
 
 	React.useEffect(() => {
+		if (props.route.name == 'FeedEdit') {
+			console.log('feedEdit 진입', props.route.params);
+			if (props.route.params?.feed_type == 'missing') {
+				console.log('실종 편집');
+				onPressMissingWrite();
+			}
+			if (props.route.params?.feed_type == 'report') {
+				console.log('제보 편집');
+				onPressReportWrite();
+			}
+			setSelectedImg(props.route.params.feed_medias.map(v => v.media_uri));
+			let regEx = new RegExp(`&#&#(.*?)%&%&`, `gm`);
+			let hashes = [];
+			let match = [];
+			while ((match = regEx.exec(props.route.params.feed_content)) !== null) {
+				hashes.push(match[1]);
+			}
+			props.navigation.setParams({...props.route.params, hashtag_keyword: hashes});
+		}
 		if (props.route.params?.feedType == 'Feed') {
 			props.navigation.setOptions({title: userGlobalObj.userInfo?.user_nickname});
 			props.navigation.setParams({...props.route.params, feedType: 'Feed'});
@@ -76,21 +106,8 @@ export default FeedWrite = props => {
 
 	React.useEffect(() => {
 		props.navigation.setParams({...props.route.params, feed_content: feedText});
-		console.log(feedText);
 	}, [feedText]);
 
-	// React.useEffect(() => {
-	// 	let scroll = Keyboard.addListener('keyboardDidShow', e => {
-	// 		console.log('keyboarddidshow scrollto');
-	// 		// scrollref.current.scrollToEnd({duration:100,animated:true});
-	// 		// scrollref.current.scrollToOffset({offset:lastTouchY.current})
-
-	// 	});
-	// 	return () => {
-	// 		scroll.remove();
-	// 	};
-	// }, []);
-	//긴급버튼 중 - 실종 클릭
 	const onPressMissingWrite = () => {
 		setShowLostAnimalForm(true);
 		props.navigation.setParams({...props.route.params, feedType: 'Missing'});
@@ -188,7 +205,7 @@ export default FeedWrite = props => {
 		props.navigation.push('FeedMediaTagEdit');
 	};
 	const inputFeedTxt = (feedInput, hashtag_keyword) => {
-		props.navigation.setParams({...props.route.params, feed_content: feedText, hashtag_keyword: hashtag_keyword});
+		props.navigation.setParams({...props.route.params, feed_content: feedText, hashtag_keyword: hashtag_keyword, isEdit: true});
 		setFeedText(feedInput);
 	};
 
@@ -273,9 +290,14 @@ export default FeedWrite = props => {
 			</>
 		);
 	};
+	const test = () => {
+		console.log(props.route);
+	};
 	return (
 		<View style={{flex: 1, backgroundColor: '#FFF'}}>
-			{/* <ScrollView contentContainerStyle={[login_style.wrp_main,{backgroundColor:'#fff'}]} ref={ref=>{console.log('스크롤 할당',ref);scrollref.current=ref}}> */}
+			{/* <TouchableWithoutFeedback onPress={test}>
+				<View style={{backgroundColor: 'red', width: 50, height: 50}}></View>
+			</TouchableWithoutFeedback> */}
 			<FlatList
 				renderItem={({item, index}) => {
 					return (
@@ -290,18 +312,14 @@ export default FeedWrite = props => {
 								onFind={onFindTag}
 								selectedImg={selectedImg}
 								onDelete={deletePhoto}
+								value={editText}
 							/>
-
 							{!isSearchTag && setWriteModeState()}
-							{/* 긴급 게시물 관련 버튼 컨테이너 */}
-							{/* <View style={{height: keyboardArea, width: '100%', backgroundColor: 'red'}}></View> */}
 						</View>
 					);
 				}}
 				data={[{}]}
 				ref={scrollref}></FlatList>
-
-			{/* </ScrollView> */}
 			{showUrgentBtns && !isSearchTag ? (
 				<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
 					{showActionButton ? (
@@ -333,6 +351,8 @@ export default FeedWrite = props => {
 
 //실종 컴포넌트
 const MissingForm = props => {
+	const route = useRoute();
+	console.log('실종 컴포넌트 데이터', route);
 	const [types, setTypes] = React.useState([
 		{
 			pet_species: '개',
@@ -356,21 +376,29 @@ const MissingForm = props => {
 		);
 	}, []);
 
-	const [data, setData] = React.useState({
-		missing_animal_species: types[0].pet_species,
-		missing_animal_species_detail: types[0].pet_species_detail[0],
-		missing_animal_sex: 'male',
-		missing_animal_age: '',
-		missing_animal_lost_location: {
-			city: city[0],
-			district: '구를 선택',
-			detail: '',
-		},
-		missing_animal_features: '',
-		missing_animal_date: '',
-		missing_animal_contact: '',
-		type: types[0],
-	});
+	const initData = () => {
+		if (route.name == 'FeedEdit') {
+			return route.params;
+		} else {
+			return {
+				missing_animal_species: types[0].pet_species,
+				missing_animal_species_detail: types[0].pet_species_detail[0],
+				missing_animal_sex: 'male',
+				missing_animal_age: '',
+				missing_animal_lost_location: {
+					city: city[0],
+					district: '구를 선택',
+					detail: '',
+				},
+				missing_animal_features: '',
+				missing_animal_date: '',
+				missing_animal_contact: '',
+				type: types[0],
+			};
+		}
+	};
+
+	const [data, setData] = React.useState(initData());
 
 	React.useEffect(() => {
 		props.onDataChange && props.onDataChange(data);

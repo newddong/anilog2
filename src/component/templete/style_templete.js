@@ -852,8 +852,8 @@ export const temp_style = StyleSheet.create({
 		backgroundColor: '#C4C483',
 	},
 	animalProtectDetails_adoptorInformation: {
-		width: 750 * DP,
-		alignItems: 'center',
+		// width: 750 * DP,
+		// alignItems: 'center',
 		justifyContent: 'center',
 	},
 	aidRequestList_aidRequestManage: {
@@ -1781,7 +1781,7 @@ export const userMenu_style = StyleSheet.create({
 		marginTop: 38 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
-		backgroundColor: 'yellow',
+		// backgroundColor: 'yellow',
 	},
 	userInfo: {
 		flexDirection: 'row',
@@ -3150,6 +3150,12 @@ export const searchProtectRequest = StyleSheet.create({
 		alignSelf: 'center',
 		// backgroundColor: '#FF00FF',
 	},
+	animalMissingReportList: {
+		marginTop: 50 * DP,
+		width: 750 * DP,
+		alignSelf: 'center',
+		// backgroundColor: '#FF00FF',
+	},
 });
 
 export const appliesRecord = StyleSheet.create({
@@ -3200,7 +3206,7 @@ export const appliesRecord = StyleSheet.create({
 		marginVertical: 30 * DP,
 	},
 	whenEmpty: {
-		paddingVertical: 40 * DP,
+		paddingVertical: 60 * DP,
 	},
 });
 
@@ -3568,6 +3574,7 @@ export const applyDetails = StyleSheet.create({
 		marginBottom: 30 * DP,
 		alignSelf: 'center',
 		flexDirection: 'row',
+		justifyContent: 'space-between',
 	},
 });
 
@@ -4626,16 +4633,11 @@ export const animalProtectList = StyleSheet.create({
 		alignItems: 'center',
 		flexDirection: 'row',
 	},
-});
-
-export const saveFavorite = StyleSheet.create({
-	accountHashList: {
+	whenEmpty: {
 		width: 654 * DP,
-		// height: 1324 * DP,
-		marginTop: 30 * DP,
+		padding: 50,
 		alignItems: 'center',
 		justifyContent: 'center',
-		// backgroundColor: '#F2C2C2',
 	},
 });
 

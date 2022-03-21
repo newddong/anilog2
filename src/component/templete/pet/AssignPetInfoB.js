@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, TouchableWithoutFeedback} from 'react-native';
+import {Text, View} from 'react-native';
 import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
@@ -12,18 +12,26 @@ import Modal from 'Component/modal/Modal';
 import Input30 from 'Molecules/input/Input30';
 import {assignPet} from 'Root/api/userapi';
 import {stagebar_style} from 'Organism/style_organism copy';
-import {DEFAULT_ANIMAL_PROFILE, DEFAULT_PROFILE} from 'Root/i18n/msg';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default AssignPetInfoB = props => {
-	console.log('AssignPetInfoB', props.route.params);
+	// console.log('AssignPetInfoB', props.route.params.data);
 	const navigation = useNavigation();
-
+	const isAdoptRegist = props.route.params.isAdoptRegist;
+	const weightRef = React.useRef();
+	const params = props.route.params.data;
 	const [data, setData] = React.useState({
-		...props.route.params,
-		// user_profile_uri: 'http://',
-		pet_birthday: '2021.03.03',
+		...props.route.params.data,
+		pet_birthday: '',
 		pet_weight: '0',
 	});
+
+	React.useEffect(() => {
+		if (isAdoptRegist) {
+			setData({...params, pet_weight: '0', pet_birthday: '2021.03.03'});
+		}
+	}, []);
+
 	const [selectedBirthDate, setSelectedBirthDate] = React.useState('2022.01.01');
 	const [btnOn, setBtnOn] = React.useState(true);
 	//생녈월일 계산 함수
@@ -48,6 +56,7 @@ export default AssignPetInfoB = props => {
 	const onSelectBirthDate = date => {
 		setSelectedBirthDate(date);
 		setData({...data, pet_birthday: date});
+		weightRef.current.focus();
 	};
 
 	//체중 Input Value 바뀌었을 때
@@ -56,45 +65,43 @@ export default AssignPetInfoB = props => {
 	};
 
 	//등록 완료
-	const onRegister = async () => {
-		Modal.popTwoBtn(
-			'추가로 등록할 반려동물이 있나요?',
-			'아니오',
-			'추가 등록',
-			() => {
-				Modal.popNoBtn('반려동물 등록 중입니다.');
-				console.log('data before assiginPet', data.user_profile_uri);
-				let isCopied = {...data};
-				if (isCopied.user_profile_uri == '') {
-					isCopied.user_profile_uri = 'http://';
-				}
-				console.log('isCopied.user_profile_uri ', isCopied.user_profile_uri);
-				try {
-					assignPet(
-						{...isCopied, userobject_id: data.userobject_id},
-						success => {
-							console.log('success', success);
-							Modal.close();
-							Modal.popOneBtn('반려동물 등록이 완료되었습니다.', '확인', () => {
-								Modal.close();
-								props.navigation.navigate(data.previousRouteName);
+	const onRegister = () => {
+		let isCopied = {...data};
+		console.log('isCop', isCopied);
+		assignPet(
+			{
+				...isCopied,
+				userobject_id: data.userobject_id,
+			},
+			success => {
+				console.log('success', success.msg);
+				Modal.popNoBtn('반려동물 등록이 완료되었습니다.');
+				setTimeout(() => {
+					Modal.close();
+					Modal.popTwoBtn(
+						'추가로 등록할 반려동물이 있나요?',
+						'아니오',
+						'추가 등록',
+						() => {
+							props.navigation.navigate(data.previousRouteName);
+						},
+						() => {
+							//reset 설정 시 기존의 state값들은 초기화됨
+							props.navigation.reset({
+								index: 2,
+								routes: [
+									{name: 'UserMenu'},
+									{name: 'UserInfoSetting', params: {token: userGlobalObject.userInfo._id}},
+									{name: 'AssignPetProfileImage', params: {previousRouteName: 'UserInfoSetting'}},
+								],
 							});
 						},
-						error => {
-							console.log('error', error);
-							Modal.close();
-
-							Modal.popOneBtn(error, '확인', () => Modal.close());
-						},
 					);
-				} catch (err) {
-					console.log('err', err);
-				} finally {
-					Modal.close();
-				}
+				}, 500);
 			},
-			() => {
-				props.navigation.reset({routes: [{name: 'AssignPetProfileImage', params: {initialization: true}}]});
+			error => {
+				console.log('error', error);
+				Modal.close();
 			},
 		);
 	};
@@ -151,10 +158,12 @@ export default AssignPetInfoB = props => {
 							showCrossMark={false}
 							onChange={onChangeKg}
 							value={data.pet_weight}
+							// defaultValue={data.pet_weight.toString()}
 							validator={weigthValid}
 							keyboardType={'number-pad'}
 							maxLength={4}
 							confirm_msg=""
+							ref={weightRef}
 						/>
 					</View>
 					<Text style={[temp_style.text68_assignPetInfo, assignPetInfo_style.text68, txt.noto28]}>kg</Text>

@@ -338,33 +338,41 @@ export const socialInfoA = StyleSheet.create({
 
 export const socialInfoB = StyleSheet.create({
 	container: {
-		width: 500 * DP,
+		// width: 500 * DP,
+		width: 366 * DP,
 		height: 106 * DP,
 		flexDirection: 'row',
+		alignItems: 'stretch',
 	},
 	socialInfo: {
 		width: 82 * DP,
 		width: 96 * DP,
-		// width: 164 * DP,
-		// height: 106 * DP,
+
 		marginRight: 60 * DP,
 		justifyContent: 'center',
-		alignItems: 'center',
+		// alignItems: 'center',
 	},
 	number: {
+		marginLeft: -13.5 * DP,
+		alignSelf: 'center',
 		width: 130 * DP,
 		height: 50 * DP,
 		textAlign: 'center',
+		// backgroundColor: 'yellow',
 	},
 	title: {
+		alignSelf: 'stretch',
 		height: 46 * DP,
+		width: 82 * DP,
+		textAlign: 'center',
+		// backgroundColor: 'purple',
 	},
 });
 
 export const profileMenu = StyleSheet.create({
 	container: {
 		width: 750 * DP,
-		marginBottom: 20 * DP,
+		// marginBottom: 20 * DP,
 	},
 	upperMenu: {},
 	lowerMenu: {
@@ -791,7 +799,7 @@ export const aidRequest = StyleSheet.create({
 		position: 'absolute',
 		right: 0,
 		top: 0,
-		paddingLeft: 10 * DP,
+		// paddingLeft: 10 * DP,
 		borderRadius: 50 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -1045,6 +1053,7 @@ export const animalNeedHelp = StyleSheet.create({
 		width: 380 * DP,
 		height: 214 * DP,
 		marginLeft: 30 * DP,
+		// marginTop: 10 * DP,
 	},
 	detail_upperMenu: {
 		width: 410 * DP,
@@ -1128,7 +1137,7 @@ export const animalNeedHelpList = StyleSheet.create({
 	},
 	itemContainer: {
 		alignItems: 'center',
-		marginBottom: 20 * DP,
+		marginBottom: 40 * DP,
 	},
 });
 

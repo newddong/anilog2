@@ -10,13 +10,12 @@ export const serveruri = 'https://api.zoodoongi.net';
 export const cookieReset = async (token, path) => {
 	// console.log('토큰',token,)
 	// console.log('경로',path)
-	
+
 	await CookieManager.clearAll();
 	await CookieManager.set(serveruri, {
 		name: 'connect.sid',
 		value: token,
 		path: '/',
-		
 	});
 	return await CookieManager.get(serveruri);
 };

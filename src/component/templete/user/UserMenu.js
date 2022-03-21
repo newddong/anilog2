@@ -25,6 +25,7 @@ import {
 	TAGED_CONTENTS_FOR_ME,
 	LOGOUT,
 	OPENSETTING,
+	REQ_PROTECTION_SAVE,
 } from 'Root/i18n/msg';
 import {btn_w280, btn_w280x68} from 'Atom/btn/btn_style';
 import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FavoriteTag48_Filled, Paw46, Paw48_APRI10, Setting46} from 'Atom/icon';
@@ -40,6 +41,7 @@ import {userLogout} from 'Root/api/userapi';
 import {useIsFocused} from '@react-navigation/native';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {GRAY40} from 'Root/config/color';
+import DP from 'Root/config/dp';
 
 export default UserMenu = props => {
 	// console.log('UserMenu Props', props);
@@ -92,7 +94,7 @@ export default UserMenu = props => {
 			Modal.popAvatarSelectModal(
 				selectedPet => {
 					// console.log('selected', selectedPet);
-					navigation.push('PetInfoSetting', {pet_id: selectedPet._id, token: data}); //data에 있는 userObject를 토대로 해당 유저의 반려동물을 검색해서 보내야함
+					navigation.push('PetInfoSetting', {pet_id: selectedPet._id}); //data에 있는 userObject를 토대로 해당 유저의 반려동물을 검색해서 보내야함
 					Modal.close();
 				},
 				'확인',
@@ -110,68 +112,54 @@ export default UserMenu = props => {
 		navigation.push('UserInfoSetting', {token: data._id}); //userObject
 	};
 
-	//로그아웃 기능
-	const logout = () => {
-		userLogout(
-			1,
-			e => {
-				console.log('e', e);
-				userGlobalObject.userInfo = {};
-				alert('Logout 성공');
-				navigation.reset({routes: [{name: 'Login'}]});
-			},
-			err => {
-				console.log('err', err);
-			},
-		);
-	};
-
 	//하단 메뉴 클릭
 	const menuClick = menuItem => {
 		switch (menuItem) {
-			case '친구':
+			case FRIENDS:
 				// Modal.popInfoModal();
 				navigation.push('SaveFavorite'); // FollowObject
 				break;
-			case '피드 게시글':
+			case PEED_CONTENTS:
 				// alert('업데이트 예정입니다');
 				// Modal.popInfoModal();
 				navigation.push('FavoriteFeeds', {token: data}); // FavoriteFeedObject
 				break;
-			case '보호 요청(저장)':
+			case REQ_PROTECTION_SAVE:
 				// navigation.push('UserSaveAnimalRequest'); // BookmarkProtectRequestObject
 				Modal.popInfoModal();
 				break;
 			case '내 게시글':
-				navigation.push('UserFeeds', {token: data});
+				navigation.push('UserFeeds');
 				break;
-			case '나를 태그한 글':
-				Modal.popInfoModal();
-				// navigation.push('TagMeFeeds', {token: data});
+			case TAGED_CONTENTS_FOR_ME:
+				// Modal.popInfoModal();
+				navigation.push('TagMeFeeds', {token: data});
 				break;
-			case '신청 내역':
+			case APPLICATION_HISTORY:
 				navigation.push('AppliesRecord', data._id); // ShelterProtectAnimalObject
 				break;
-			case '동물 보호 현황':
+			case ANIMAL_PROTECTION_STATE:
 				navigation.push('AnimalProtectList', data._id); //ProtectAnimalObject
 				break;
-			case '쪽지함':
-				Modal.popInfoModal();
+			case NOTE_LIST:
+				console.log('눌림');
+				navigation.push('ReceivedMessage', {token: data});
+				// Modal.popInfoModal();
 				break;
-			case '정보/문의':
+			case INFO_QUESTION:
 				// Modal.popInfoModal();
 				navigation.push('SettingInformAsk');
 				break;
-			case '커뮤니티':
+			case COMUNITY:
 				Modal.popInfoModal();
 				break;
-			case '계정':
+			case ACCOUNT:
 				navigation.push('SettingAccount');
 				break;
-			case '알림':
+			case INFO:
 				navigation.push('SettingAlarm');
 				break;
-			case '공개 설정':
+			case OPENSETTING:
 				navigation.push('SettingOpen');
 				break;
 		}
@@ -184,16 +172,14 @@ export default UserMenu = props => {
 				{/* 유저 프로필 정보 */}
 				<View style={[userMenu_style.userMenu_step1]}>
 					<View style={[temp_style.userInfo, userMenu_style.userInfo]}>
-						<View style={[temp_style.profileImageLarge, userMenu_style.profileImageLarge]}>
-							{data._id != undefined && <ProfileImageLarge194 data={data} />}
-						</View>
+						<View style={[temp_style.profileImageLarge]}>{data._id != undefined && <ProfileImageLarge194 data={data} />}</View>
 
-						<View style={{marginLeft: 52 * DP}}>
+						<View style={[{marginLeft: 46 * DP}, {height: 194 * DP}, {justifyContent: 'flex-end'}]}>
 							<TouchableOpacity onPress={onPressMyName} style={[userMenu_style.user_id]}>
 								<Text style={[txt.roboto40b]}>{data.user_nickname || ''}</Text>
 							</TouchableOpacity>
 							{/* 업로드 팔로워 팔로잉 */}
-							<View style={[userMenu_style.contents, {marginTop: 18 * DP}, {alignItems: 'flex-start'}]}>
+							<View style={[{width: 408 * DP}, {marginTop: 18 * DP}]}>
 								<SocialInfoB data={data} />
 							</View>
 						</View>
@@ -258,28 +244,32 @@ export default UserMenu = props => {
 
 				{/* 하단 메뉴 */}
 				<View style={[temp_style.userMenu_step2, userMenu_style.horizontalLine]}>
-					{/* <View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}> */}
-					<ProfileMenu
-						menuTitle={FAVORITES}
-						menuItems={[
-							[FRIENDS, PEED_CONTENTS],
-							[PROTECTION_REQUEST, COMUNITY],
-						]}
-						onClick={menuClick}
-						titleIcon={<FavoriteTag48_Filled />}
-					/>
-					{/* </View> */}
-					<View>
-						<ProfileMenu
-							menuTitle={MY_ACTIVITY_IN_SHELTER}
-							menuItems={[
-								[MY_CONTENTS, TAGED_CONTENTS_FOR_ME],
-								[APPLICATION_HISTORY, ANIMAL_PROTECTION_STATE],
-								[COMUNITY, NOTE_LIST],
-							]}
-							onClick={menuClick}
-							titleIcon={<Paw46 />}
-						/>
+					<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
+						<View>
+							<ProfileMenu
+								menuTitle={FAVORITES}
+								menuItems={[
+									[FRIENDS, PEED_CONTENTS],
+									[PROTECTION_REQUEST, COMUNITY],
+								]}
+								onClick={menuClick}
+								titleIcon={<FavoriteTag48_Filled />}
+							/>
+						</View>
+					</View>
+					<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
+						<View>
+							<ProfileMenu
+								menuTitle={MY_ACTIVITY_IN_SHELTER}
+								menuItems={[
+									[MY_CONTENTS, TAGED_CONTENTS_FOR_ME],
+									[APPLICATION_HISTORY, ANIMAL_PROTECTION_STATE],
+									[COMUNITY, NOTE_LIST],
+								]}
+								onClick={menuClick}
+								titleIcon={<Paw46 />}
+							/>
+						</View>
 					</View>
 					<View>
 						<ProfileMenu

@@ -1,43 +1,35 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {ActivityIndicator, Text, View} from 'react-native';
-import {getUserListByNickname} from 'Root/api/userapi';
+import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
+import {getFollows, getUserListByNickname} from 'Root/api/userapi';
 import AccountHashList from 'Organism/list/AccountHashList';
 import SelectStat from 'Organism/list/SelectStat';
-import {login_style, temp_style, selectstat_view_style, saveFavorite} from 'Templete/style_templete';
+import {login_style, temp_style, selectstat_view_style} from 'Templete/style_templete';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
-// 각각 뷰에 컴포넌트 삽입시 style의 첫번째 index 삭제할 것. 두번째 index는 상.하 간격 style이라서 이 컴포넌트에만 해당 됨.
-//ex) 변경 전: <View style={[btn_style.btn_w654, findAccount_style.btn_w654]}>   변경 후:  <View style={[findAccount_style.btn_w654]}>
-
+//즐겨찾기 친구
 export default SaveFavorite = props => {
 	const navigation = useNavigation();
-	//계정 좌측 CheckBox 디스플레이 여부
 	const [checkBoxMode, setCheckBoxMode] = React.useState(false);
-	//checkBox On
-	const [data, setData] = React.useState([]);
-	const [loading, setLoading] = React.useState(true); // 화면 출력 여부 결정
+	const [data, setData] = React.useState('false');
 	let selectCNT = React.useRef(0);
 
 	React.useEffect(() => {
 		getUserListByNickname(
 			{
 				user_nickname: '이',
-				user_type: 'pet',
+				user_type: '',
 				userobject_id: '',
 				request_number: 10,
 			},
-			res => {
-				res.msg.map((v, i) => {
-					res.msg[i].type = v.user_type;
-					res.msg[i].user_nickname = v.user_nickname;
-					res.msg[i].user_profile_uri = v.user_profile_uri;
-					res.msg[i].text_intro = v.user_introduction;
-					res.msg[i]._id = v._id;
+			result => {
+				// console.log('result / getUserListByNick / SaveFavorite  : ', result.msg.slice(0, 2));
+				result.msg.map((v, i) => {
+					console.log('i', i, v.follow);
 				});
-				setData(res.msg);
-				setTimeout(() => {
-					setLoading(false);
-				}, 1500);
+				let res = result.msg;
+
+				setData(res);
 			},
 			err => {
 				console.log('err', err);
@@ -49,7 +41,6 @@ export default SaveFavorite = props => {
 	const showCheckBox = e => {
 		// console.log(`showCheckBox=>${showCheckBox}`);
 		setCheckBoxMode(e);
-
 		//전체 선택을 처음 누를 경우 무조건 체크 박스가 모두 선택되도록 하기 위해 setSelectCNT값을 0으로 초기화.
 		selectCNT.current = 0;
 
@@ -76,7 +67,6 @@ export default SaveFavorite = props => {
 
 	// 선택하기 => 선택 삭제 클릭 (API 데이터 불러온 뒤 다시 수정할 것. - 실제로 ID를 API로 넘긴 후 데이터를 다시 가져와서 표출 해야함.)
 	const deleteSelectedItem = () => {
-		console.log('삭제시작');
 		let copy = [...data];
 		copy = copy.filter(e => e.checkBoxState != true);
 		copy.map((v, i) => {
@@ -84,31 +74,28 @@ export default SaveFavorite = props => {
 			v._index = i;
 			v.checkBoxState = false;
 		});
-
 		setData(copy);
 	};
 
 	//CheckBox 클릭 시
 	const onCheckBox = (item, index) => {
-		// console.log(index);
 		let copy = [...data];
 		copy[index].checkBoxState = !copy[index].checkBoxState;
-		// set_dummyData(copy);
 	};
 
 	const onClickFollow = data => {
 		console.log('data', data);
 	};
+
 	const onClickLabel = data => {
-		console.log('data', data);
 		navigation.push('UserProfile', {userobject: data});
 	};
+
 	const onClickHash = data => {
-		console.log('data', data);
 		navigation.push('FeedListForHashTag', data);
 	};
 
-	if (loading) {
+	if (data == 'false') {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
 				<ActivityIndicator size={'large'}></ActivityIndicator>
@@ -127,7 +114,7 @@ export default SaveFavorite = props => {
 						/>
 					</View>
 				</View>
-				<View style={[saveFavorite.accountHashList, {height: null}]}>
+				<View style={[style.accountHashList, {height: null}]}>
 					<AccountHashList
 						data={data}
 						checkBoxMode={checkBoxMode}
@@ -136,9 +123,20 @@ export default SaveFavorite = props => {
 						onClickFollow={onClickFollow}
 						onCheckBox={onCheckBox}
 						routeName={props.route.name}
+						showFollowBtn={true}
 					/>
 				</View>
 			</View>
 		);
 	}
 };
+
+const style = StyleSheet.create({
+	accountHashList: {
+		// width: 654 * DP,
+		marginTop: 30 * DP,
+		paddingBottom: 100 * DP, // ScrollView로 주지 않아 아래가 잘리는 현상 처리
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+});

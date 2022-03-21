@@ -17,27 +17,6 @@ import userGlobalObject from 'Root/config/userGlobalObject';
  */
 export default VolunteerItem = props => {
 	const data = props.data;
-	const [loading, setLoading] = React.useState(true);
-	const [volunteer, setVolunteer] = React.useState();
-	React.useEffect(() => {
-		if (props.isShelterUser) {
-			getUserInfoById(
-				{
-					userobject_id: data.volunteer_accompany[0].member,
-				},
-				result => {
-					// console.log('result /getUserInfoById / VolunteerItem ', result.msg);
-					setVolunteer(result.msg);
-					setTimeout(() => {
-						setLoading(false);
-					}, 200);
-				},
-				err => {
-					console.log('err / getUserInfoById / err', JSON.stringify(err));
-				},
-			);
-		}
-	}, [data]);
 
 	const parsing_wish_date = () => {
 		let date = data.volunteer_wish_date[0];

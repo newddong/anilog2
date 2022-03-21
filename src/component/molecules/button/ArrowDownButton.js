@@ -4,7 +4,7 @@ import {APRI10, GRAY10, GRAY20, GRAY30, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {btn_w226} from 'Atom/btn/btn_style';
-import {Arrow_Down_GRAY10, Arrow_Down_White} from 'Atom/icon';
+import {Arrow_Down_APRI10, Arrow_Down_GRAY10, Arrow_Down_White} from 'Atom/icon';
 /**
  * 버튼 컴포넌트트
  * @param {object} props - Props Object
@@ -34,31 +34,55 @@ const ArrowDownButton = props => {
 	};
 
 	//txt Color의 종류는 3가지 - white, APRI10, GRAY20
+	// const btnTxtColor = () => {
+	// 	if (props.btnTheme == 'gray') {
+	// 		return GRAY10;
+	// 	} else return WHITE;
+	// };
+
+	//txt Color의 종류는 3가지 - white, APRI10, GRAY20
 	const btnTxtColor = () => {
-		if (props.btnTheme == 'gray') {
-			return GRAY10;
-		} else return WHITE;
+		if (props.disable || props.btnStyle == 'filled') {
+			return WHITE;
+		} else if (props.btnTheme == 'gray' && props.btnStyle == 'border') {
+			return GRAY20;
+		} else return APRI10;
 	};
 
 	//default는 APRI10, Gray의 경우 GRAY20
 	const border = () => {
 		if (props.btnStyle == 'border' && props.btnTheme == 'gray') {
-			return {borderColor: GRAY10, borderWidth: 4 * DP};
+			return {borderColor: GRAY10, borderWidth: 2 * DP};
 		} else if (props.btnStyle == 'border') {
 			return {borderColor: APRI10, borderWidth: 4 * DP};
 		}
 	};
 
+	// const btnStyle = () => {
+	// 	if (props.btnTheme == 'gray') {
+	// 		return WHITE;
+	// 	} else return APRI10;
+	// };
+
 	const btnStyle = () => {
-		if (props.btnTheme == 'gray') {
+		if (props.disable) {
+			return GRAY30;
+		} //disable일 경우 배경색 GRAY30
+		else if (props.btnStyle == 'filled') {
+			return APRI10;
+		} //FILLED일 경우 배경색 APRI10
+		else {
 			return WHITE;
-		} else return APRI10;
+		} //이외의 경우 WHITE
 	};
 
 	const getArrow = () => {
 		if (props.btnTheme == 'gray') {
 			return <Arrow_Down_GRAY10 />;
-		} else return <Arrow_Down_White />;
+		} else if (props.btnStyle == 'border') {
+			return <Arrow_Down_APRI10 />;
+		}
+		return <Arrow_Down_White />;
 	};
 
 	const onPress = () => {
@@ -73,6 +97,7 @@ const ArrowDownButton = props => {
 					btnTheme(),
 					border(),
 					{backgroundColor: btnStyle(), justifyContent: 'center', alignItems: 'center', flexDirection: 'row'},
+					{paddingHorizontal: 20 * DP},
 				]}>
 				<Text
 					style={[
@@ -81,13 +106,14 @@ const ArrowDownButton = props => {
 							fontSize: props.titleFontStyle * DP,
 							color: btnTxtColor(),
 							textAlign: 'center',
-							width: (props.btnLayout.width - 20) * DP,
-							// lineHeight: lineHeight(),
+							width: (props.btnLayout.width + 30) * DP,
+							// backgroundColor: 'purple',
 						},
-					]}>
+					]}
+					numberOfLines={1}>
 					{props.btnTitle}
 				</Text>
-				{getArrow()}
+				<View style={[]}>{getArrow()}</View>
 			</View>
 		);
 	};

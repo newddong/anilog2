@@ -20,8 +20,6 @@ import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 
 export default ProtectCommentList = props => {
 	// console.log('props.showAllContents', props.route.params.showAllContents);
-	// console.log(props.route.name, '코멘트 리스트 네임');
-	const navigation = useNavigation();
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
 	const [photo, setPhoto] = React.useState();
@@ -34,13 +32,12 @@ export default ProtectCommentList = props => {
 	const data = props.route.params.protectObject;
 	const keyboardY = useKeyboardBottom(0 * DP);
 
-	// console.log('보호 요청 게시글', data);
 	React.useEffect(() => {
-		// console.log('보효요청게시글', props.route.params.protectObject._id);
 		getCommentListByProtectId(
 			{
 				protect_request_object_id: data,
 				request_number: 1000,
+				login_userobject_id: userGlobalObject.userInfo._id
 			},
 			comments => {
 				setComments(comments.msg);
@@ -75,6 +72,7 @@ export default ProtectCommentList = props => {
 					{
 						protect_request_object_id: props.route.params.protectObject._id,
 						request_number: 1000,
+						login_userobject_id: userGlobalObject.userInfo._id
 					},
 					comments => {
 						!parentComment && setComments([]); //댓글목록 초기화
@@ -174,28 +172,11 @@ export default ProtectCommentList = props => {
 			<View style={[style.contentContainer]}>
 				<View style={[style.content_container_label]}>
 					<ShelterSmallLabel data={data.protect_request_writer_id} onClickLabel={onClickShelterLabel} />
-					{/* <View style={[temp_style.button_animalProtectRequestDetail]}>
-						<TouchableOpacity onPress={onPressShelterLabelFavorite} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
-							<FavoriteTag48_Filled />
-							<Text style={[txt.roboto24, {color: APRI10, alignSelf: 'center', textAlign: 'center'}]}>
-								{data ? count_to_K(data.protect_request_writer_id.user_follow_count) : ''}
-							</Text>
-						</TouchableOpacity>
-						<View collapsable={false}>
-							<TouchableOpacity onPress={onPressShare} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
-								<Share48_Filled />
-								<Text style={[txt.roboto24, {color: APRI10}]}>공유</Text>
-							</TouchableOpacity>
-						</View>
-					</View> */}
 				</View>
 				<View style={[style.cotent_container_header]}>
 					<Text style={[txt.noto28, {color: GRAY10}]}>보호요청</Text>
 					<Text style={[txt.noto32b, {}]}>{data.protect_request_title || ''}</Text>
 				</View>
-				{/* <View style={[style.cotent_container_info]}>
-					<ProtectAnimalInfoBox data={data} />
-				</View> */}
 			</View>
 		);
 	};
@@ -217,8 +198,8 @@ export default ProtectCommentList = props => {
 				ListHeaderComponent={protectRequestContent}
 				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
 			/>
-			{userGlobalObject.userInfo._id != '' && (editComment || props.route.name == 'ProtectCommentList') ? (
-				<View style={{position:'absolute', bottom: keyboardY}} onLayout={onReplyBtnLayout}>
+			{userGlobalObject.userInfo._id != '' ? (
+				<View style={{position: 'absolute', bottom: keyboardY}} onLayout={onReplyBtnLayout}>
 					<ReplyWriteBox
 						onAddPhoto={onAddPhoto}
 						onChangeReplyInput={onChangeReplyInput}

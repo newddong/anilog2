@@ -1,19 +1,20 @@
 import React from 'react';
-import {Text, View, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView} from 'react-native';
+import {Text, View, TextInput, TouchableOpacity, ScrollView} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {APRI10, GRAY10, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
-import {AddItem64, Camera54} from 'Atom/icon';
+import {Camera54} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import AidRequest from 'Organism/listitem/AidRequest';
-import {assignProtectAnimal_style, feedWrite, login_style, temp_style, writeAidRequest} from 'Templete/style_templete';
+import {assignProtectAnimal_style, login_style, writeAidRequest} from 'Templete/style_templete';
 import ImagePicker from 'react-native-image-crop-picker';
 import Modal from 'Component/modal/Modal';
 
 export default WriteAidRequest = ({route, navigation}) => {
 	// console.log('WriteAidRequest', route.params);
-	const [data, setData] = React.useState({...route.params.data}); //ShelterProtectAnimalObject(보호소의 보호동물) 정보가 담겨있음
+	const params = route.params.data;
+	const [data, setData] = React.useState(params); //ShelterProtectAnimalObject(보호소의 보호동물) 정보가 담겨있음
 	//ProtectRequestObject(보호소의 동물 보호 요청 게시글) 테이블에 맞춘 보호요청 작성글을 작성
 	const [protectRequestData, setProtectRequestData] = React.useState({
 		shelter_protect_animal_object_id: data._id,
@@ -26,9 +27,16 @@ export default WriteAidRequest = ({route, navigation}) => {
 	});
 	const [imageList, setImageList] = React.useState([]); //PhotoSelect에서 선택된 사진List
 
+	React.useEffect(() => {
+		//다시 게시하기일 경우 imageList 반영시켜야함
+		if (route.params.isRePost) {
+			setImageList(params.protect_animal_photo_uri_list.slice(1, params.protect_animal_photo_uri_list.length));
+		}
+	}, [route.params.isRePost]);
+
 	//헤더로 데이터 보내기
 	React.useEffect(() => {
-		// console.log('ProtectRequestData / WriteAidRequest ', protectRequestData.shelter_protect_animal_object_id);
+		// console.log('ProtectRequestData / WriteAidRequest ', protectRequestData);
 		navigation.setParams({data: protectRequestData, nav: route.name});
 	}, [protectRequestData]);
 

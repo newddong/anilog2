@@ -11,6 +11,8 @@
 #import <FlipperKitNetworkPlugin/FlipperKitNetworkPlugin.h>
 #import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
 #import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
+#import <GoogleMaps/GoogleMaps.h> //22.03.15 구글 맵스 활용을 위한 추가
+
 
 static void InitializeFlipper(UIApplication *application) {
   FlipperClient *client = [FlipperClient sharedClient];
@@ -27,6 +29,7 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [GMSServices provideAPIKey:@"AIzaSyDphEhHtor2nbUGiwm6hL2tNsdVLbExLoI"]; //22.03.15 구글 맵스 활용을 위한 추가 ios API KEY 문의 : 권상우
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
 #endif

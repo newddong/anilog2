@@ -1,16 +1,5 @@
 import React from 'react';
-import {
-	View,
-	Text,
-	TouchableWithoutFeedback,
-	StyleSheet,
-	Dimensions,
-	Platform,
-	ScrollView,
-	FlatList,
-	TouchableOpacity,
-	ActivityIndicator,
-} from 'react-native';
+import {View, Text, StyleSheet, Dimensions, Platform, FlatList, TouchableOpacity, ActivityIndicator} from 'react-native';
 import AniButton from '../button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10, APRI10} from 'Root/config/color';
@@ -20,7 +9,6 @@ import {getUserInfoById} from 'Root/api/userapi';
 import userGlobalObj from 'Root/config/userGlobalObject';
 import {txt} from 'Root/config/textstyle';
 import PetLabel from '../label/PetLabel';
-import {item} from 'Root/component/templete/style_address';
 
 /**
  * 아바타 동물을 선택하는 모달창
@@ -28,14 +16,13 @@ import {item} from 'Root/component/templete/style_address';
  * @param {Object} props - props object
  * @param {(petObject:string)=>void} props.onSelectPet - 반려동물 라벨을 클릭했을때 콜백
  * @param {string} props.okButtonnMsg - 확인 버튼 메시지
- * @param {boolean} props.isBtnMode - 버튼출력여부
+ * @param {boolean} props.isWriteMode - 버튼출력여부
  *
  */
 const AvatarSelectModal = props => {
-	const [items, setItems] = React.useState([]);
+	const [items, setItems] = React.useState('');
 	const [selectedItem, setSelectedItem] = React.useState(1000);
 	const checkApi = React.useRef(false);
-	const [loading, setLoading] = React.useState(false);
 
 	const pressOk = () => {
 		props.onOk();
@@ -45,7 +32,7 @@ const AvatarSelectModal = props => {
 
 	const renderItem = (item, index) => {
 		const onClickLabel = () => {
-			if (props.isBtnMode) {
+			if (props.isWriteMode) {
 				setSelectedItem(index);
 			} else {
 				props.onSelectPet && props.onSelectPet(items[index]);
@@ -64,30 +51,28 @@ const AvatarSelectModal = props => {
 			{userobject_id: userGlobalObj.userInfo._id},
 			user => {
 				let avatarList = user.msg?.user_my_pets;
-				if (props.isBtnMode) {
-					avatarList.push(userGlobalObj.userInfo);
+				if (props.isWriteMode) {
+					const filter = avatarList.filter(e => e.pet_status != 'adopt'); //입양 동물은 글을 못씀
+					filter.push(userGlobalObj.userInfo);
+					setItems(filter);
+				} else {
+					setItems(avatarList);
 				}
-				setItems(avatarList);
-				setLoading(true);
 			},
 			err => {
 				Modal.popOneBtn(err, '확인', () => Modal.close());
-				setLoading(true);
 			},
 		);
 		checkApi.current = true;
+		//스크롤 Indicator 출력
+		setTimeout(() => {
+			scrollViewRef.current?.flashScrollIndicators();
+		}, 500);
 	}, []);
 
 	const scrollViewRef = React.useRef();
 
-	React.useEffect(() => {
-		setTimeout(() => {
-			scrollViewRef.current?.flashScrollIndicators();
-		}, 500);
-		// scrollViewRef.current;
-	}, [scrollViewRef]);
-
-	if (!loading) {
+	if (items == '') {
 		return <ActivityIndicator />;
 	} else
 		return (
@@ -109,21 +94,6 @@ const AvatarSelectModal = props => {
 										persistentScrollbar={true}
 										showsHorizontalScrollIndicator={false}
 										scrollToOverflowEnabled={false}></FlatList>
-									{items.length > 5 && !showIndicator ? (
-										<View
-											style={{
-												top: top,
-												right: 11.5 * DP,
-												height: 200 * DP,
-												// height: 500 * DP,
-												width: 6 * DP,
-												borderRadius: 40 * DP,
-												backgroundColor: 'gray',
-											}}
-										/>
-									) : (
-										<></>
-									)}
 								</View>
 							)}
 						</View>
@@ -131,7 +101,7 @@ const AvatarSelectModal = props => {
 						<Text style={[{textAlign: 'center', marginBottom: 30 * DP}, txt.noto28b]}>{'등록된 반려동물이 없습니다.\n 반려동물을 등록해주세요'}</Text>
 					)}
 					{/* // ) : null} */}
-					{props.isBtnMode ? (
+					{props.isWriteMode ? (
 						<>
 							<View style={style.buttonContainer}>
 								<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.okButtonnMsg} onPress={pressOk} />
@@ -152,7 +122,7 @@ AvatarSelectModal.defaultProps = {
 		console.log('YES');
 	},
 	onSelectPet: e => {},
-	isBtnMode: true,
+	isWriteMode: true,
 };
 
 const style = StyleSheet.create({

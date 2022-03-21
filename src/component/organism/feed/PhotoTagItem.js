@@ -55,19 +55,12 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 		}
 	}, [route.params]);
 
-	React.useEffect(() => {
-		// console.log('태그', tags);
-	}, [tags]);
-
-	const test = async () => {
+	const showTag = () => {
 		console.log(tags);
 		setShowTags(!showTags);
-		// let a =  await axios.post(serveruri + '/user/test', {array: tags});
-		// console.log(a);
 	};
 
 	const endTagmove = e => {
-		// console.log(e);
 		tags.forEach((v, i, a) => {
 			if (v.user._id === e.user._id) a.splice(i, 1, e);
 		});
@@ -77,7 +70,7 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 	const getTags = () => {
 		if (tags.length < 1) return <></>;
 		return tags.map((v, i) => (
-			<Tag pos={v.pos} key={i} user={v.user} onDelete={deleteTag} onEnd={endTagmove} viewmode={viewmode} backgroundLayout={backgroundLayout} />
+			<Tag pos={v.pos} key={v.user._id} user={v.user} onDelete={deleteTag} onEnd={endTagmove} viewmode={viewmode} backgroundLayout={backgroundLayout} />
 		));
 	};
 
@@ -86,8 +79,8 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 			<View style={styles.img_square_750x750}>
 				<Image style={styles.img_square_750x750} source={{uri: uri}} />
 				{showTags && getTags()}
-				{tags.length > 0 && (
-					<TouchableWithoutFeedback onPress={test}>
+				{tags.length > 0 && viewmode && (
+					<TouchableWithoutFeedback onPress={showTag}>
 						<View style={{bottom: 20 * DP, right: 20 * DP, position: 'absolute'}}>
 							<Tag70 />
 						</View>

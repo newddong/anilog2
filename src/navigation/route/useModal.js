@@ -33,19 +33,22 @@ import AddFamilyModal from 'Root/component/molecules/modal/AddFamilyModal';
 import CongratulationModal from 'Root/component/molecules/modal/CongratulationModal';
 import AdoptionInfoModal from 'Root/component/molecules/modal/AdoptionInfoModal';
 import AdoptionInfoModalWithOneBtn from 'Root/component/molecules/modal/AdoptionInfoModalWithOneBtn';
-
+import AnimalToRegisterModal from 'Root/component/molecules/modal/AnimalToRegisterModal';
+import PhotoListViewModal from 'Root/component/molecules/modal/PhotoListViewModal';
+import Loading from 'Root/component/molecules/modal/Loading';
+import LocationCheckModal from 'Root/component/molecules/modal/LocationCheckModal';
 
 export function useModal() {
 	const [isPop, setPop] = React.useState(false);
 	const [popupComponent, setPopupComponent] = React.useState([]);
 
-    /**
+	/**
 	 * 컴포넌트를 모달 스택에 넣음
 	 *
 	 * @param {React.FC} Component - 팝업할 컴포넌트
 	 * @return void
 	 */
-    const popIn = Component => {
+	const popIn = Component => {
 		const component = React.cloneElement(Component, {key: popupComponent.length});
 		setPopupComponent([...popupComponent, component]);
 	};
@@ -108,8 +111,8 @@ export function useModal() {
 		!isPop && setPop(true);
 	};
 
-	Modal.popAvatarSelectModal = (onSelectPet, okButtonnMsg, isBtnMode) => {
-		popIn(<AvatarSelectModal onSelectPet={onSelectPet} okButtonnMsg={okButtonnMsg} isBtnMode={isBtnMode} />);
+	Modal.popAvatarSelectModal = (onSelectPet, okButtonnMsg, isWriteMode) => {
+		popIn(<AvatarSelectModal onSelectPet={onSelectPet} okButtonnMsg={okButtonnMsg} isWriteMode={isWriteMode} />);
 		!isPop && setPop(true);
 	};
 
@@ -123,8 +126,8 @@ export function useModal() {
 		!isPop && setPop(true);
 	};
 
-	Modal.popRadioSelect = (offset, items, title, onSelect, onClose) => {
-		popIn(<RadioSelectModal offset={offset} items={items} title={title} onSelect={onSelect} onClose={onClose} />);
+	Modal.popRadioSelect = (offset, items, current, title, onSelect, onClose) => {
+		popIn(<RadioSelectModal offset={offset} items={items} current={current} title={title} onSelect={onSelect} onClose={onClose} />);
 		!isPop && setPop(true);
 	};
 
@@ -193,6 +196,11 @@ export function useModal() {
 		!isPop && setPop(true);
 	};
 
+	Modal.popAnimalToRegisterModal = (data, msg, yesMsg, noMsg, onYes, onNo) => {
+		popIn(<AnimalToRegisterModal msg={msg} yesMsg={yesMsg} noMsg={noMsg} data={data} onYes={onYes} onNo={onNo} />);
+		!isPop && setPop(true);
+	};
+
 	Modal.popAdoptionInfoModalWithOneBtn = (data, yesMsg, onYes) => {
 		popIn(<AdoptionInfoModalWithOneBtn yesMsg={yesMsg} data={data} onYes={onYes} />);
 		!isPop && setPop(true);
@@ -203,8 +211,8 @@ export function useModal() {
 		!isPop && setPop(true);
 	};
 
-	Modal.popInterestTagModal = (isActivation, data, onSave, onClose, setState) => {
-		popIn(<InterestTagModal isActivation={isActivation} data={data} onSave={onSave} onClose={onClose} setState={setState} />);
+	Modal.popInterestTagModal = (category, data, onSave, onClose, setState) => {
+		popIn(<InterestTagModal category={category} data={data} onSave={onSave} onClose={onClose} setState={setState} />);
 		!isPop && setPop(true);
 	};
 
@@ -228,5 +236,20 @@ export function useModal() {
 		!isPop && setPop(true);
 	};
 
-    return [isPop, popupComponent];
+	Modal.popPhotoListViewModal = photoList => {
+		popIn(<PhotoListViewModal photoList={photoList} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popLoading = () => {
+		popIn(<Loading />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popLocationCheckModal = (onPressAddrSearch, onConfirm, searchedLocation) => {
+		popIn(<LocationCheckModal onPressAddrSearch={onPressAddrSearch} onConfirm={onConfirm} searchedLocation={searchedLocation} />);
+		!isPop && setPop(true);
+	};
+
+	return [isPop, popupComponent];
 }

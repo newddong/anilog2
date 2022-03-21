@@ -28,7 +28,6 @@ const SelectScrollBoxModal = props => {
 		if (data.length == 1) {
 			props.onSelect(data[0][selectedItem - 2]);
 		} else {
-			console.log('selectedItem2', selectedItem2);
 			props.onSelect(data[0][selectedItem - 2], data[1][selectedItem2 - 2]);
 		}
 	};
@@ -51,7 +50,6 @@ const SelectScrollBoxModal = props => {
 			if (focused < 1) {
 				setSelectedItem(2);
 			} else if (focused > data[0].length - 1) {
-				console.log('넘어갔나?');
 				setSelectedItem(data[0].length + 1);
 			} else {
 				setSelectedItem(focused + 2);
@@ -60,7 +58,6 @@ const SelectScrollBoxModal = props => {
 			if (focused < 1) {
 				setSelectedItem2(2);
 			} else if (focused > data[1].length - 1) {
-				console.log('넘어갔나?');
 				setSelectedItem2(data[1].length + 1);
 			} else {
 				setSelectedItem2(focused + 2);
@@ -117,7 +114,7 @@ const SelectScrollBoxModal = props => {
 					) : (
 						<Text style={[txt.noto30, {color: WHITE}]}>{props.header}</Text>
 					)}
-					<TouchableOpacity onPress={onSelect}>
+					<TouchableOpacity onPress={onSelect} style={style.completeText}>
 						<Text style={[txt.noto30, {color: WHITE}]}>완료</Text>
 					</TouchableOpacity>
 				</View>
@@ -134,8 +131,8 @@ const SelectScrollBoxModal = props => {
 									onScroll={e => onScroll(e, i)}
 									showsVerticalScrollIndicator={false}
 									renderItem={({item, index}) => {
-										return (
-											<TouchableWithoutFeedback key={index} onPress={() => (i == 0 ? setSelectedItem(index) : setSelectedItem2(index))}>
+										if (item == '') {
+											return (
 												<View
 													key={index}
 													style={[
@@ -149,8 +146,25 @@ const SelectScrollBoxModal = props => {
 													]}>
 													<Text style={[txt.roboto34, {color: getColor(item)}]}>{item}</Text>
 												</View>
-											</TouchableWithoutFeedback>
-										);
+											);
+										} else
+											return (
+												<TouchableWithoutFeedback key={index} onPress={() => (i == 0 ? setSelectedItem(index) : setSelectedItem2(index))}>
+													<View
+														key={index}
+														style={[
+															style.listItem,
+															index == (i == 0 ? selectedItem : selectedItem2) && item != padding ? {backgroundColor: APRI10} : null,
+															{
+																width: getWidth(),
+																// zIndex: 3,
+																height: i == 0 ? 80 * DP : 80 * DP,
+															},
+														]}>
+														<Text style={[txt.roboto34, {color: getColor(item)}]}>{item}</Text>
+													</View>
+												</TouchableWithoutFeedback>
+											);
 									}}
 								/>
 								{/* <View style={[style.box]} /> */}
@@ -225,6 +239,12 @@ const style = StyleSheet.create({
 		borderRadius: 20 * DP,
 		height: 70 * DP,
 		backgroundColor: APRI10,
+	},
+	completeText: {
+		width: 110 * DP,
+		height: 80 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
 });
 

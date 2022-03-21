@@ -17,7 +17,7 @@ export default OnOffSwitch = props => {
 
 	return (
 		<View>
-			{btnStatus ? (
+			{props.default ? (
 				<TouchableOpacity
 					onPress={() => {
 						setBtnStatus(false);

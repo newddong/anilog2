@@ -14,29 +14,14 @@ const SearchFeedTabNav = createMaterialTopTabNavigator();
 export default SearchFeedTabNavigation = props => {
 	const [searchInput, setSearchInput] = React.useState(''); // 검색어 관련 State
 	const routeName = getFocusedRouteNameFromRoute(props.route);
-	// console.log('getFocusedRouteNameFromRoute / SearchFeedTab', routeName);
-	const tabbarTitle = () => {
-		switch (routeName) {
-			case 'SearchFeed':
-				return '추천';
-				break;
-			case 'SearchAccountA':
-				return '계정';
-				break;
-			case 'SearchHashTag':
-				return '해쉬태그';
-				break;
-			default:
-				break;
-		}
-	};
-	// const navName = ['SearchFeed', 'SearchAccountA', 'SearchHashTag'];
+
+	const navName = ['SearchFeed', 'SearchAccountA', 'SearchHashTag'];
 
 	React.useEffect(() => {
 		// if (routeName == navName[0]) setCurrentScreen(0);
 		// else if (routeName == navName[1]) setCurrentScreen(1);
 		// else if (routeName == navName[2]) setCurrentScreen(2);
-		props.routeNameChild(routeName);
+		// props.routeNameChild(routeName);
 		props.navigation.setParams({routeName: routeName});
 	}, [routeName]);
 

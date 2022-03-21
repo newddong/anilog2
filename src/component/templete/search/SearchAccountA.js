@@ -9,18 +9,18 @@ import {getUserListByNickname} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default SearchAccountA = props => {
-	// console.log('SearchAccountA', props.input);
+	// console.log('SearchAccountA', props.route.name);
 	//검색이벤트 발생 시 props.input의 값이 바뀌고 검색을 실시
+	const navigation = useNavigation();
 	const [searchedList, setSearchedList] = React.useState([]);
 
 	React.useEffect(() => {
+		console.log('props.input', props.input);
 		if (props.input != null) {
 			// const inputData = props.input.searchIn
 			//검색 로직에 대해선 아직 미구현이므로 닉네임과 검색Input이 정확히 일치하는 Account Array를 userList로 반환
 			if (props.input.searchInput != undefined) {
-				// console.log('props.input', props.input);
 				setSearchedList([]);
-				// Modal.popNoBtn('검색 중... 잠시만 기다려주세요');
 				getUserListByNickname(
 					{
 						user_nickname: props.input.searchInput,
@@ -53,9 +53,9 @@ export default SearchAccountA = props => {
 
 	return (
 		<View style={[searchAccountA.container]}>
-			<View style={[searchAccountA.listContainer]}>
+			<ScrollView>
 				<ControllableAccountList items={searchedList} onClickAccount={onClickAccount} showButtons={false} />
-			</View>
+			</ScrollView>
 		</View>
 	);
 };

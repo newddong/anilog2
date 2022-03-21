@@ -9,6 +9,7 @@ import SearchTabNavigation from '../search_tab/SearchTabNavigation';
 import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 import LogoHeader from 'Root/navigation/header/LogoHeader';
 import CommunityMain from './community_stack/CommunityMain';
+import CommunityMainStack from './community_stack/CommunityMainStack';
 
 const MainTabNav = createBottomTabNavigator();
 
@@ -78,9 +79,10 @@ export default MainTabNavigation = ({route, navigation}) => {
 					tabBarVisible: getTabBarVisibility(route),
 					tabBarLabel: '커뮤니티',
 					tabBarHideOnKeyboard: true,
-					header: props => (!getHeaderState() ? <LogoHeader {...props} /> : <></>),
+					// header: props => (!getHeaderState() ? <LogoHeader {...props} /> : <></>),
+					header: props => false,
 				})}>
-				{props => <CommunityMain {...props} sendRoute={sendRoute} />}
+				{props => <CommunityMainStack {...props} sendRoute={sendRoute} />}
 			</MainTabNav.Screen>
 
 			<MainTabNav.Screen

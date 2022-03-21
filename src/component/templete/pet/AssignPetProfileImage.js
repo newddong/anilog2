@@ -35,6 +35,13 @@ export default AssignPetProfileImage = ({route}) => {
 
 	const nicknameInput = React.useRef();
 
+	const ex1 = {
+		user_profile_uri:
+			'/Users/sangwoo/Library/Developer/CoreSimulator/Devices/CF9EEFF7-5DB8-4052-B8E3-F7C49AD98B82/data/Containers/Data/Application/D879842E-A155-4CBF-8F59-B1D69F7B8C71/tmp/react-native-image-crop-picker/C0842DD4-09BF-43AD-B7D7-F134C8D0BB89.jpg',
+	};
+	const ex1_result = 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1647576013930_C0842DD4-09BF-43AD-B7D7-F134C8D0BB89.jpg';
+	const ex2 = {user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1646387471193_677FE438-2B70-4632-B676-7FD277475708.jpg'};
+
 	React.useEffect(() => {
 		getAnimalListNotRegisterWithCompanion(
 			{},
@@ -88,6 +95,8 @@ export default AssignPetProfileImage = ({route}) => {
 								// console.log('Selected Object', result.msg[i]);
 								const selectedAnimal = result.msg[i];
 								const isProtect = selectedAnimal.protect_animal_status == 'protect'; //입양 임보 확정 동물이 임시보호인가?
+								console.log('selectedAnimal.protect_animal_photo_uri_list[0]', selectedAnimal.protect_animal_photo_uri_list);
+
 								setIsAdoptRegist(true);
 								setData({
 									user_profile_uri: selectedAnimal.protect_animal_photo_uri_list[0],

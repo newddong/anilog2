@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Text, View, Button, TouchableOpacity, Platform, StyleSheet, TextInput, Keyboard, StatusBar} from 'react-native';
+import {Text, View, Button, TouchableOpacity, Platform, StyleSheet, TextInput, Keyboard, StatusBar, Dimensions} from 'react-native';
 import axios from 'axios';
 import Geolocation from '@react-native-community/geolocation';
 import {txt} from 'Root/config/textstyle';
@@ -14,21 +14,26 @@ import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/core';
 
 export default KakaoMap = props => {
-	const [locationObj, setLocationObj] = useState('');
 	const navigation = useNavigation();
-	const x = 126.937125;
-	const y = 37.548721;
-	const [init_latitude, setLatitude] = useState('');
-	const [init_longitude, setLogitude] = useState('');
-	const [changedLatitude, setChangedLatitude] = useState('');
-	const [changedLongitude, setChangedLongitude] = useState('');
-	const [detailAddr, setDetailAddr] = React.useState('');
+
+	const [locationObj, setLocationObj] = useState(''); //현재 위치 주소
+	const x = 126.937125; //초기값 더미
+	const y = 37.548721; //초기값 더미
+	const [init_latitude, setLatitude] = useState(''); //초기 위도
+	const [init_longitude, setLogitude] = useState(''); //초기 경도
+	const [changedLatitude, setChangedLatitude] = useState(''); //변경된 위도
+	const [changedLongitude, setChangedLongitude] = useState(''); //변경된 경도
+	const [changedLatitudeDelta, setChangedLatitudeDelta] = useState(0.00002);
+	const [changedLongitudeDelta, setChangedLongitudeDelta] = useState(0.0023);
+	const [detailAddr, setDetailAddr] = React.useState(''); //세부주소 텍스트
 	const keyboardY = useKeyboardBottom(0 * DP);
 
+	// 템플릿 호출 시 바로 현재 모바일 위치를 기반으로 위치 정보 수령
 	React.useEffect(() => {
 		geoLocation();
 	}, []);
 
+	//주소 불러오기 api 호출
 	React.useEffect(() => {
 		if (changedLatitude == '' || changedLongitude == '') {
 			callInitialAddress(init_longitude, init_latitude);
@@ -36,24 +41,6 @@ export default KakaoMap = props => {
 			callInitialAddress(changedLongitude, changedLatitude);
 		}
 	}, [init_latitude, changedLatitude]);
-
-	//현재 위치로 돌아감
-	const initializeRegion = () => {
-		setChangedLatitude(init_latitude);
-		setChangedLongitude(init_longitude);
-	};
-
-	//세부주소
-	const onChangeDetailAddr = text => {
-		setDetailAddr(text);
-	};
-
-	const confirm = () => {
-		console.log('confirm');
-		let finalized = locationObj;
-		finalized.detailAddr = detailAddr;
-		navigation.navigate('CommunityWrite', {addr: finalized});
-	};
 
 	//위도 경도 받아오기
 	const geoLocation = () => {
@@ -70,14 +57,8 @@ export default KakaoMap = props => {
 		);
 	};
 
-	const goToLocation = arg => {
-		//현재 위도 경도
-		setChangedLatitude(arg.latitude);
-		setChangedLongitude(arg.longitude);
-	};
-
+	//위도 경도를 토대로 주소 받아오기
 	const callInitialAddress = async (long, lati) => {
-		// console.log('callInitialAddress', long, lati);
 		try {
 			let res = await axios
 				.get(`https://dapi.kakao.com/v2/local/geo/coord2address.json?input_coord=WGS84&x=${long}&y=${lati}`, {
@@ -106,13 +87,41 @@ export default KakaoMap = props => {
 		}
 	};
 
-	async function getRoadAddr() {
-		//카카오 api로 도로명주소가 조회되지 않을 경우에 호출되는 api
+	//현재 위치로 돌아감
+	const initializeRegion = () => {
+		setChangedLatitude(init_latitude);
+		setChangedLongitude(init_longitude);
+		setChangedLongitudeDelta(0.00002);
+		setChangedLatitudeDelta(0.0023);
+	};
+
+	//세부주소
+	const onChangeDetailAddr = text => {
+		setDetailAddr(text);
+	};
+
+	//선택한 위치로 설정 버튼 클릭
+	const confirm = () => {
+		let finalized = locationObj;
+		finalized.detailAddr = detailAddr;
+		navigation.navigate('CommunityWrite', {addr: finalized});
+	};
+
+	//터치로 인한 위도 경도 변경 콜백
+	const goToLocation = region => {
+		setChangedLatitude(region.latitude);
+		setChangedLongitude(region.longitude);
+		setChangedLongitudeDelta(region.longitudeDelta);
+		setChangedLatitudeDelta(region.latitudeDelta);
+	};
+
+	//카카오 api로 도로명주소가 조회되지 않을 경우에 호출되는 api
+	async function getRoadAddr(addr) {
 		return new Promise(async function (resolve, reject) {
 			try {
 				let res = await axios
 					.get(
-						`https://www.juso.go.kr/addrlink/addrLinkApi.do?currentPage=1&countPerPage=10 &keyword=신수동 89-66&confmKey=devU01TX0FVVEgyMDIyMDMxNjE1NDIyNTExMjM1NDc=&firstSort=road`,
+						`https://www.juso.go.kr/addrlink/addrLinkApi.do?currentPage=1&countPerPage=10 &keyword=${addr}&confmKey=devU01TX0FVVEgyMDIyMDMxNjE1NDIyNTExMjM1NDc=&firstSort=road`,
 					)
 					.then(responseText => {
 						var x2js = new X2JS(); //XML 형식의 데이터를 JSON으로 파싱
@@ -146,6 +155,8 @@ export default KakaoMap = props => {
 							// provider={PROVIDER_GOOGLE} // remove if not using Google Maps
 							style={[style.mapContainer]}
 							customMapStyle={mapStyle}
+							zoomEnabled
+							zoomControlEnabled
 							onRegionChangeComplete={(region, gesture) => {
 								if (gesture.isGesture) {
 									//클릭을 안했음에도 지속적으로 위도 경도가 바뀌는 현상 발생 -> 오로지 터치 시에만 반응하도록 적용
@@ -155,8 +166,8 @@ export default KakaoMap = props => {
 							region={{
 								latitude: changedLatitude != '' ? changedLatitude : init_latitude,
 								longitude: changedLongitude != '' ? changedLongitude : init_longitude,
-								latitudeDelta: 0.00002, //지도의 초기줌 수치
-								longitudeDelta: 0.0023, //지도의 초기줌 수치
+								latitudeDelta: changedLatitudeDelta, //지도의 초기줌 수치
+								longitudeDelta: changedLongitudeDelta, //지도의 초기줌 수치
 							}}>
 							{/* 현재 선택된 위도 경도의 마커 */}
 							<MapView.Marker
@@ -181,8 +192,8 @@ export default KakaoMap = props => {
 								region={{
 									latitude: changedLatitude != '' ? changedLatitude : y,
 									longitude: changedLongitude != '' ? changedLongitude : x,
-									latitudeDelta: 0.00002,
-									longitudeDelta: 0.0023,
+									latitudeDelta: changedLatitudeDelta,
+									longitudeDelta: changedLongitudeDelta,
 								}}>
 								<MapView.Marker
 									coordinate={{

@@ -11,6 +11,7 @@ import {getSuggestFeedList} from 'Root/api/feedapi';
 
 export default SearchFeed = ({route, navigation}) => {
 	const [feedList, setFeedList] = React.useState([]);
+	console.log('SearchFeed', route.name);
 
 	const onClickThumnail = (index, feed) => {
 		navigation.navigate('UserFeedList', {userobject: feed.feed_writer_id, selected: feed});

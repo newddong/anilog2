@@ -72,6 +72,8 @@ export default AssignPetInfoB = props => {
 			{
 				...isCopied,
 				userobject_id: data.userobject_id,
+				user_profile_uri:
+					'/Users/sangwoo/Library/Developer/CoreSimulator/Devices/CF9EEFF7-5DB8-4052-B8E3-F7C49AD98B82/data/Containers/Data/Application/D879842E-A155-4CBF-8F59-B1D69F7B8C71/tmp/react-native-image-crop-picker/C0842DD4-09BF-43AD-B7D7-F134C8D0BB89.jpg',
 			},
 			success => {
 				console.log('success', success.msg);

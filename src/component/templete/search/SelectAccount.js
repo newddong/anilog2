@@ -73,7 +73,7 @@ export default SelectAccount = ({route, navigation}) => {
 		<View style={[login_style.wrp_main, selectAccount.container]}>
 			{data.length > 0 ? (
 				<View style={[selectAccount.accountList]}>
-					<AccountList items={data} onSelect={onSelect} />
+					<AccountList items={data} onSelect={onSelect} showCrossMark={false} />
 				</View>
 			) : (
 				<View>

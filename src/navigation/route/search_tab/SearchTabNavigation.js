@@ -94,17 +94,7 @@ export default SearchTabNavigation = props => {
 					title: '커뮤니티',
 					...searchTabLabelOption,
 				}}>
-				{props => (
-					<SearchCommunityTabNavigation
-						{...props}
-						input={searchInput}
-						// routeNameChild={routeNameChanged}
-						// prevNav={prevNav}
-						// routeName={currentChild}
-						// onClickUser={onClickUser}
-						// defaultIndex={childTab ? childTab : 0}
-					/>
-				)}
+				{props => <SearchCommunityTabNavigation {...props} input={searchInput} />}
 			</SearchTabNav.Screen>
 		</SearchTabNav.Navigator>
 	);

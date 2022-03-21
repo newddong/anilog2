@@ -79,9 +79,10 @@ ReviewDetail.defaultProps = {};
 const style = StyleSheet.create({
 	container: {
 		paddingVertical: 30 * DP,
-		alignSelf: 'center',
+		flex: 1,
+		// alignSelf: 'center',
 		alignItems: 'center',
-		// backgroundColor: 'yellow',
+		backgroundColor: '#fff',
 	},
 
 	separator: {

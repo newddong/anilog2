@@ -46,6 +46,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			getList();
 		});
+		getList(); //필터가 바뀔 때마다 호출되도록 설정
 		return unsubscribe;
 	}, [filterData]);
 

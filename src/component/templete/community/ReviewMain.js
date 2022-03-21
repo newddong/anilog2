@@ -88,7 +88,7 @@ export default ReviewMain = ({route, navigation}) => {
 			</View>
 
 			<ReviewList items={dummy} onPressReviewContent={onPressReviewContent} onPressReply={onPressReply} />
-			<View style={[style.write, style.shadow]}>
+			<View style={[style.write, style.shadowButton]}>
 				<WriteBoard onPress={onPressWrite} />
 			</View>
 		</View>
@@ -129,12 +129,14 @@ const style = StyleSheet.create({
 	shadow: {
 		shadowColor: BLACK,
 		shadowOpacity: 0.5,
-		shadowRadius: 5 * DP,
+		shadowRadius: 1 * DP,
 		shadowOffset: {
 			height: 2 * DP,
 			width: 2 * DP,
 		},
 		elevation: 3,
+		backgroundColor: 'white',
+		borderRadius: 22 * DP,
 	},
 	shadow_filter: {
 		width: 60 * DP,
@@ -146,5 +148,14 @@ const style = StyleSheet.create({
 			height: 4 * DP,
 		},
 		borderRadius: 20 * DP,
+	},
+	shadowButton: {
+		shadowColor: BLACK,
+		shadowOpacity: 0.5,
+		shadowRadius: 1 * DP,
+		shadowOffset: {},
+		elevation: 3,
+		backgroundColor: 'white',
+		borderRadius: 39 * DP,
 	},
 });

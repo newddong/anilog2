@@ -6,7 +6,7 @@ import Feed from 'Organism/feed/Feed';
 import {getSuggestFeedList} from 'Root/api/feedapi';
 import Modal from 'Component/modal/Modal';
 import DP from 'Root/config/dp';
-import {getFeedListByUserId, getFavoriteFeedListByUserId} from 'Root/api/feedapi';
+import {getFeedListByUserId, getFavoriteFeedListByUserId, getUserTaggedFeedList} from 'Root/api/feedapi';
 import {getFeedsByHash} from 'Root/api/hashapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {login_style, buttonstyle} from 'Templete/style_templete';
@@ -24,6 +24,9 @@ export default FeedList = ({route, navigation}) => {
 		switch (route.name) {
 			case 'UserFeedList':
 				navigation.setOptions({title: route.params?.userobject.user_nickname + '님의 게시글'});
+				break;
+			case 'UserTagFeedList':
+				navigation.setOptions({title: route.params?.userobject.user_nickname + '님이 태그된 게시글'});
 				break;
 			case 'HashFeedList':
 				navigation.setOptions({title: '#' + route.params?.hashtag_keyword});
@@ -74,6 +77,45 @@ export default FeedList = ({route, navigation}) => {
 						},
 					);
 					break;
+					case 'TagMeFeedList':
+					case 'UserTagFeedList':
+						getUserTaggedFeedList(
+							{
+								userobject_id: route.params?.userobject._id,
+								request_number: 9999,
+							},
+							({msg}) => {
+								console.log('태그',msg.findIndex(v => v._id == route.params?.selected._id));
+								setFeedList(
+									msg
+										.map((v, i, a) => {
+											let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
+											lines = lines > 3 ? 3 : lines;
+											if(v.feed_recent_comment){
+												return {...v, height: (750+ 200+ 120+2+ lines*54) * DP};
+											}
+											else{
+												return {...v, height: (750+  72+ 120+2+ lines*54) * DP};
+											}
+												
+	
+										})
+										.map((v, i, a) => {
+											let offset = a.slice(0, i).reduce((prev, current) => {
+												return current.height + prev;
+											}, 0);
+											return {
+												...v,
+												offset: offset,
+											};
+										}),
+								);
+							},
+							errormsg => {
+								Modal.popOneBtn(errormsg, '확인', () => Modal.close());
+							},
+						);
+						break;
 				case 'HashFeedList':
 					getFeedsByHash(
 						{hashtag_keyword: route.params?.hashtag_keyword},
@@ -115,7 +157,6 @@ export default FeedList = ({route, navigation}) => {
 							login_userobject_id : userGlobalObject.userInfo._id
 						},
 						({msg}) => {
-							console.log('피드 리스트', msg);
 							setFeedList(
 								msg
 									.map((v, i, a) => {
@@ -159,7 +200,7 @@ export default FeedList = ({route, navigation}) => {
 	React.useEffect(() => {
 		if (feedList.length > 0) {
 			let indx = feedList.findIndex(v => v._id == route.params?.selected._id);
-			if(route.name=='UserFeedList'){
+			if(route.params?.selected){
 				setTimeout(()=>{
 					flatlist.current.scrollToItem({
 						animated: false,
@@ -186,7 +227,7 @@ export default FeedList = ({route, navigation}) => {
 	const onRefresh = () => {
 		setRefreshing(true);
 
-		wait(500).then(() => setRefreshing(false));
+		wait(0).then(() => setRefreshing(false));
 	};
 
 	const rememberScroll = e=>{

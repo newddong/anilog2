@@ -25,6 +25,10 @@ export default CommunityWrite = props => {
 	const [selectedImg, setSelectedImg] = React.useState([]); //사진 uri리스트
 
 	React.useEffect(() => {
+		isReview ? navigation.setOptions({title: '후기 게시글'}) : navigation.setOptions({title: '자유 게시글'});
+	}, []);
+
+	React.useEffect(() => {
 		const param = props.route.params;
 		if (param?.addr) {
 			//다른 주소 검색 결과값 적용

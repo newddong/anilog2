@@ -16,9 +16,9 @@ export default ProtectionApplicationList = ({route, navigation}) => {
 		getAnimalListWithApplicant(
 			{},
 			result => {
-				// console.log('result / getAnimalListWithApplicant / ProtectApplyList', JSON.stringify(result.msg.adopt));
-				const filtered_adopt = result.msg.adopt.filter(e => e.protect_act_status != 'accept');
-				const filtered_protect = result.msg.protect.filter(e => e.protect_act_status != 'accept');
+				console.log('result / getAnimalListWithApplicant / ProtectApplyList', JSON.stringify(result.msg.adopt));
+				const filtered_adopt = result.msg.adopt.filter(e => e.protect_act_status == 'wait'); //완료 목록도 출력되던 오류 수정 22.03.18
+				const filtered_protect = result.msg.protect.filter(e => e.protect_act_status == 'wait');
 				setAdoptionList(filtered_adopt);
 				setProtectList(filtered_protect);
 			},

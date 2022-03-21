@@ -1,17 +1,44 @@
 import React from 'react';
 import {ScrollView, Text, View} from 'react-native';
 import {GRAY20} from 'Root/config/color';
-import {dummy_hashTagListObject} from 'Root/config/dummyDate_json';
 import {txt} from 'Root/config/textstyle';
-import HashTagList from 'Organism/list/HashTagList';
-import {login_style, searchHashTag, temp_style} from 'Templete/style_templete';
+import {searchHashTag, temp_style} from 'Templete/style_templete';
 import {getHashKeywords} from 'Root/api/hashapi';
-import {controllableAccountList} from 'Root/component/organism/style_organism copy';
+import searchContext from 'Root/config/searchContext';
 
 export default SearchHashTag = props => {
-	const searchInput = props.search.searchInput;
 	// console.log('searchInput / SearchHashTag : ', props.search.searchInput);
+
 	const [findList, setFindList] = React.useState([]);
+
+	React.useEffect(() => {
+		console.log('SearchInput / SearchHashTag ', searchContext.searchInfo.searchInput);
+		if (searchContext.searchInfo.searchInput != 'false') {
+			setFindList([]);
+			getHashKeywords(
+				{
+					hashtag_keyword: searchContext.searchInfo.searchInput,
+				},
+				result => {
+					console.log('hash editing', result.msg.length);
+					setFindList(result.msg);
+				},
+				error => {
+					console.log(error);
+				},
+			);
+		}
+	}, [searchContext.searchInfo.searchInput]);
+
+	const onClickHashTag = e => {
+		console.log('onClickHashTag', e);
+	};
+
+	const hashSelect = e => {
+		console.log('hashSelect', e);
+		props.navigation.push('FeedListForHashTag', e);
+	};
+
 	const dummy = [
 		{
 			__v: 0,
@@ -23,34 +50,12 @@ export default SearchHashTag = props => {
 			type: 'HashTagObject',
 		},
 	];
-	React.useEffect(() => {
-		getHashKeywords(
-			{
-				hashtag_keyword: searchInput,
-			},
-			result => {
-				// console.log('hash editing', result.msg);
-				setFindList(result.msg);
-			},
-			error => {
-				console.log(error);
-			},
-		);
-	}, [searchInput]);
-
-	const onClickHashTag = e => {
-		console.log('onClickHashTag', e);
-	};
-
-	const hashSelect = e => {
-		console.log('hashSelect', e);
-		props.navigation.push('FeedListForHashTag', e);
-	};
 
 	return (
 		<View style={[searchHashTag.container, {backgroundColor: 'white'}]}>
 			{/* // 검색 내역이 존재할 경우 API를 통해 받아온 내역 출력 */}
-			{findList.length != 0 ? (
+
+			{findList.length != [] ? (
 				<ScrollView horizontal={false} contentContainerStyle={{flex: 1}} showsVerticalScrollIndicator={false}>
 					<ScrollView horizontal={true} scrollEnabled={false}>
 						<View style={[temp_style.hashTagList]}>

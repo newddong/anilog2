@@ -149,7 +149,7 @@ import save54 from './save54';
 import locationMarker from './locationMarker';
 import currentLocation from './currentLocation';
 import DP from 'Root/config/dp';
-
+import twoPaw from './twoPaw';
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
 
 const size30 = {width: 30 * DP, height: 30 * DP};
@@ -374,3 +374,4 @@ export const LoadingImg = makeSvg(loading, {width: 150 * DP, height: 150 * DP});
 export const Save54 = makeSvg(save54, {width: 54 * DP, height: 54 * DP});
 export const LocationMarker = makeSvg(locationMarker, {width: 80 * DP, height: 80 * DP});
 export const CurrentLocation = makeSvg(currentLocation, {width: 70 * DP, height: 70 * DP});
+export const TwoPaw = makeSvg(twoPaw, {width: 128 * DP, height: 103 * DP});

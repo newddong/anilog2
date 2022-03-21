@@ -115,7 +115,6 @@ export default FeedList = ({route, navigation}) => {
 							login_userobject_id : userGlobalObject.userInfo._id
 						},
 						({msg}) => {
-							console.log('피드 리스트', msg);
 							setFeedList(
 								msg
 									.map((v, i, a) => {

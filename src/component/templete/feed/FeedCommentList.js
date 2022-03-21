@@ -20,16 +20,19 @@ export default FeedCommentList = props => {
 	const navigation = useNavigation();
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
-	const [photo, setPhoto] = React.useState();
 	const [comments, setComments] = React.useState([]);
 	const [parentComment, setParentComment] = React.useState();
-	const [content, setContent] = React.useState('');
 	const input = React.useRef();
 	const addChildCommentFn = React.useRef(() => {});
 	const [refresh, setRefresh] = React.useState(true);
 	const keyboardY = useKeyboardBottom(0 * DP);
 	const flatlist = React.useRef();
 	const [editMode, setEditMode] = React.useState(false); //댓글 편집 모드
+	const [editData, setEditData] = React.useState({
+		comment_contents:'',
+		comment_photo_uri:'',
+	});
+
 
 	React.useEffect(() => {
 		if (props.route.name == 'FeedCommentList') {
@@ -63,13 +66,17 @@ export default FeedCommentList = props => {
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
 	const onWrite = () => {
-		if (content.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
+		if (editData.comment_contents.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
 
 		let param = {
-			comment_photo_uri: photo, //사진uri
-			comment_contents: content, //내용
+			comment_contents: editData.comment_contents, //내용
 			comment_is_secure: privateComment, //공개여부 테스트때 반영
 		};
+
+		if(editData.comment_photo_uri.length>0){
+			param.comment_photo_uri = editData.comment_photo_uri;
+		}
+
 		if (props.route.name == 'FeedCommentList') {
 			param = {...param, feedobject_id: props.route.params.feedobject._id};
 		} else if (props.route.name == '동물보호요청') {
@@ -83,15 +90,17 @@ export default FeedCommentList = props => {
 			console.log('댓글편집', editData);
 			updateComment(
 				{
-					...editData,
-					comment_contents: content,
+					...param,
 					commentobject_id: editData._id,
+					comment_photo_remove: !editData.comment_photo_uri ||  editData.comment_photo_uri == 0,
 				},
 				result => {
 					console.log(result);
-					setPhoto();
 					setParentComment();
-					setContent('');
+					setEditData({
+						comment_contents:'',
+						comment_photo_uri:''
+					});
 					if (props.route.name == 'FeedCommentList') {
 						getCommentListByFeedId(
 							{
@@ -117,9 +126,11 @@ export default FeedCommentList = props => {
 				param,
 				result => {
 					console.log(result);
-					setPhoto();
 					setParentComment();
-					setContent('');
+					setEditData({
+						comment_contents:'',
+						comment_photo_uri:''
+					});
 					if (props.route.name == 'FeedCommentList') {
 						getCommentListByFeedId(
 							{
@@ -152,12 +163,14 @@ export default FeedCommentList = props => {
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
 	const onAddPhoto = () => {
 		// navigation.push('SinglePhotoSelect', props.route.name);
+		console.log('onAddphoto')
 		ImagePicker.openPicker({
 			compressImageQuality: 0.8,
 			cropping: true,
 		})
 			.then(images => {
-				setPhoto(images.path);
+				console.log('onAddphoto Imagepicker', images);
+				setEditData({...editData,comment_photo_uri:images.path});
 				Modal.close();
 			})
 			.catch(err => console.log(err + ''));
@@ -165,17 +178,19 @@ export default FeedCommentList = props => {
 	};
 
 	const onDeleteImage = () => {
-		setPhoto();
+		console.log('onDelete Img')
+		setEditData({...editData,comment_photo_uri:''});
 	};
 
 	// 답글 쓰기 -> Input value 변경 콜백함수
 	const onChangeReplyInput = text => {
-		setContent(text);
+		console.log('onChangeReplyInput : ', text);
+		setEditData({...editData, comment_contents: text});
 	};
 
 	// 답글 쓰기 버튼 클릭 콜백함수
 	const onReplyBtnClick = (parentCommentId, addChildComment) => {
-		console.log(parentCommentId);
+		console.log('onReplyBtnClick : ', parentCommentId);
 		setParentComment(parentCommentId);
 		input.current.focus();
 		editComment || setEditComment(true);
@@ -184,14 +199,15 @@ export default FeedCommentList = props => {
 
 	const [heightReply, setReplyHeight] = React.useState(0);
 	const onReplyBtnLayout = e => {
+		console.log('onReplyBtnLayout');
 		setReplyHeight(e.nativeEvent.layout.height);
 	};
 
 	//미트볼, 수정을 누르면 동작
-	const [editData, setEditData] = React.useState();
 	const onEdit = comment => {
+		console.log('수정 데이터', comment);
 		setEditMode(true);
-		setEditData(comment);
+		setEditData({...comment});
 	};
 
 	const render = ({item, index}) => {
@@ -210,7 +226,6 @@ export default FeedCommentList = props => {
 	};
 	const currentPosition = React.useRef(0);
 	const onScroll = e => {
-		// console.log(e.nativeEvent.contentOffset.y);
 		currentPosition.current = e.nativeEvent.contentOffset.y;
 	};
 
@@ -237,9 +252,8 @@ export default FeedCommentList = props => {
 						onWrite={onWrite}
 						onDeleteImage={onDeleteImage}
 						privateComment={privateComment}
-						photo={photo}
 						ref={input}
-						value={editData?.comment_contents}
+						editData={editData}
 					/>
 				</View>
 			) : (

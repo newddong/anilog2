@@ -128,8 +128,6 @@ export default ParentComment = React.memo((props, ref) => {
 		
 		meatballRef.current.measure((fx, fy, width, height, px, py) => {
 			const isWriter = userGlobalObject.userInfo._id == data.comment_writer_id._id;
-			console.log('px', px);
-			console.log('py', py);
 			if (isWriter) {
 				Modal.popSelectBoxModal(
 					REPLY_MEATBALL_MENU_MY_REPLY,

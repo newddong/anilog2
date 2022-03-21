@@ -26,6 +26,7 @@ export default ArticleMain = ({route, navigation}) => {
 	//글쓰기
 	const onPressWrite = () => {
 		navigation.push('CommunityWrite', {isReview: false});
+		// navigation.push('WriteEditorTest');
 	};
 
 	return (

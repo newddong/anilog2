@@ -10,13 +10,13 @@ import SelectedMedia from '../media/SelectedMedia';
 import {styles} from 'Root/component/atom/image/imageStyle';
 
 export default function HashInput(props) {
-	const [value, setValue] = React.useState(props.value?props.value:'');
+	const [value, setValue] = React.useState(props.value ? props.value : '');
 	const [find, setFind] = React.useState(false);
 	const [cursor, setCursor] = React.useState();
 	const inputRef = React.useRef();
 	const internal = React.useRef({
-		value: props.value?props.value:'',
-		text: props.value?props.value:'',
+		value: props.value ? props.value : '',
+		text: props.value ? props.value : '',
 		textInputCursor: 0, //입력칸의 커서 위치
 		cursor: 0, //text에서 커서 위치
 		tagStartIdx: 0,
@@ -67,7 +67,7 @@ export default function HashInput(props) {
 					{
 						user_nickname: getTagName(internal.editTag),
 						request_number: 9999,
-						user_type:''
+						user_type: '',
 					},
 					result => {
 						console.log('user editing', result);
@@ -119,7 +119,7 @@ export default function HashInput(props) {
 					{
 						user_nickname: getTagName(findTagAt(internal.textInputCursor, internal.value)),
 						request_number: 9999,
-						user_type:''
+						user_type: '',
 					},
 					result => {
 						console.log('user selection', result);

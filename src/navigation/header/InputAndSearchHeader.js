@@ -5,27 +5,42 @@ import {BackArrow32} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {WHITE, APRI10} from 'Root/config/color';
 import InputWithSearchIcon from 'Molecules/input/InputWithSearchIcon';
+import userGlobalObject from 'Root/config/userGlobalObject';
+import searchContext from 'Root/config/searchContext';
 
 export default InputAndSearchHeader = props => {
-	// console.log('ConfirmInputHeader.', props.route.params.routeName);
-	const routeName = props.route.name != undefined ? props.route.name : '';
+	// console.log('ConfirmInputHeader.', props.route);
 
+	const routeName = props.route.name != undefined ? props.route.name : '';
 	const [searchInput, setSearchInput] = React.useState('');
+	const [searchRoute, setSearchRoute] = React.useState('');
 
 	const confirm = () => {
 		// navigation.navigate('Search');
 		routeName != 'UserList' && props.navigation.setParams({searchInput: searchInput});
 	};
 
-	React.useEffect(() => {}, []);
+	React.useEffect(() => {
+		setTimeout(() => {
+			setSearchRoute(searchContext.searchInfo.routeName);
+		}, 0);
+	}, [props]);
+
+	React.useEffect(() => {
+		const timeOutId = setTimeout(() => {
+			props.navigation.setParams({searchInput: searchInput});
+			if (searchInput != '') {
+				props.navigation.setParams({searchInput: searchInput});
+			}
+		}, 500);
+		return () => clearTimeout(timeOutId);
+	}, [searchInput]);
 
 	const onChangeSearchText = text => {
 		// console.log('text', text);
-		props.navigation.setParams({...props.route.params, searchInput: text});
+		// props.navigation.setParams({...props.route.params, searchInput: text});
 		setSearchInput(text);
-		if (text != '') {
-			props.navigation.setParams({searchInput: text});
-		}
+		searchContext.searchInfo.searchInput = text;
 	};
 
 	//뒤로 가기 클릭 시 탭이 initialRoute인 Feed로 가던 현상 수정
@@ -47,7 +62,7 @@ export default InputAndSearchHeader = props => {
 						<BackArrow32 onPress={onPressGoBack} />
 					</View>
 				</TouchableOpacity>
-				{routeName != 'SearchFeed' ? (
+				{searchRoute != 'SearchFeed' ? (
 					<View style={{marginBottom: 20 * DP, flex: 1}}>
 						<InputWithSearchIcon placeholder={'검색어를 입력하세요.'} width={590} onChange={onChangeSearchText} onSearch={confirm} />
 					</View>

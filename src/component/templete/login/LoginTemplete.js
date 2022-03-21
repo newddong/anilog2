@@ -182,52 +182,6 @@ export default LoginTemplete = props => {
 					<AniButton btnLayout={btn_w522} btnTitle={'로그인'} btnTheme={'shadow'} titleFontStyle={32} onPress={tryToLogin} />
 				</View>
 
-				<View style={[login_style.basic_info, loginTemplete_style.basic_info, {marginTop: 10}]}>
-					<TouchableOpacity
-						onPress={() => {
-							setUserSetting({...userSetting, id: '0001', password: '12'});
-						}}>
-						<Text style={[txt.noto24, {color: GRAY20}]}> 보호소 1</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						onPress={() => {
-							setUserSetting({...userSetting, id: '0002', password: '12'});
-						}}>
-						<Text style={[txt.noto24, {color: GRAY20}]}> 희망보호소 </Text>
-					</TouchableOpacity>
-					<Text style={{color: GRAY20}}> | </Text>
-
-					<TouchableOpacity
-						onPress={() => {
-							setUserSetting({...userSetting, id: '01001096450003', password: 'tkddn123'});
-						}}>
-						<Text style={[txt.noto24, {color: GRAY20}]}> 보호소 2</Text>
-					</TouchableOpacity>
-					<Text style={{color: GRAY20}}> | </Text>
-					<TouchableOpacity
-						onPress={() => {
-							setUserSetting({...userSetting, id: '0422', password: '12'});
-						}}>
-						<Text style={[txt.noto24, {color: GRAY20}]}> 계정 1 </Text>
-					</TouchableOpacity>
-					<Text style={{color: GRAY20}}> | </Text>
-					<TouchableOpacity
-						onPress={() => {
-							setUserSetting({...userSetting, id: '01096450420', password: 'tkddn123'});
-						}}>
-						<Text style={[txt.noto24, {color: GRAY20}]}> 계정 2 </Text>
-					</TouchableOpacity>
-					<Text style={{color: GRAY20}}> | </Text>
-
-					<TouchableOpacity
-						onPress={() => {
-							setUserSetting({...userSetting, id: '0423', password: '12'});
-							// props.navigation.push('GeoLocation');
-						}}>
-						<Text style={[txt.noto24, {color: GRAY20}]}> 계정 3 </Text>
-					</TouchableOpacity>
-				</View>
-
 				{/* Btn_w522 */}
 				<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_assign]}>
 					<AniButton btnLayout={btn_w522} btnTitle={'회원가입'} btnStyle={'border'} btnTheme={'shadow'} titleFontStyle={32} onPress={moveToAssign} />

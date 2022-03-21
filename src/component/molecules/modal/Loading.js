@@ -96,7 +96,8 @@ const Loading = props => {
 			style={[
 				style.background,
 				{
-					backgroundColor: props.isModal ? '#0009' : 'white',
+					backgroundColor: props.isModal ? '#0009' : WHITE,
+					opacity: props.isModal ? 1 : 0.5,
 				},
 			]}>
 			<Animated.View style={[styles.loading, {opacity}]}>

@@ -24,7 +24,7 @@ import {MAINCOLOR} from 'Root/config/color';
 import {getTimeLapsed, parsingDate} from 'Root/util/dateutil';
 import HashText from 'Molecules/info/HashText';
 import Modal from 'Root/component/modal/Modal';
-import {followUser, getFollows, unFollowUser} from 'Root/api/userapi';
+import {createMemoBox, followUser, getAnimalListNotRegisterWithCompanion, getFollows, unFollowUser} from 'Root/api/userapi';
 import {favoriteFeed, getFavoriteFeedListByUserId} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import MissingReportInfo from 'Organism/info/MissingReportInfo';
@@ -189,12 +189,22 @@ export default FeedContent = props => {
 	};
 
 	//피드 미트볼 메뉴 - 쪽지 보내기
-	const onPressSendMsg = () => {
+	const onPressSendMsg = _id => {
 		Modal.close();
 		setTimeout(() => {
 			Modal.popMessageModal(
-				'주둥이',
+				_id.user_name,
 				msg => {
+					createMemoBox(
+						{memobox_receive_id: _id._id, memobox_contents: msg},
+						result => {
+							console.log('message sent success', result);
+							Modal.popOneBtn('쪽지 전송하였습니다.', '확인', () => Modal.close());
+						},
+						err => {
+							console.log('message sent err', err);
+						},
+					);
 					console.log('msg', msg);
 					Modal.close();
 				},
@@ -220,9 +230,9 @@ export default FeedContent = props => {
 		Modal.close();
 		setTimeout(() => {
 			Modal.popTwoBtn(
-				isFavorite?'게시물을 즐겨찾기로 추가하시겠습니까?':'게시물을 즐겨찾기에서 삭제 하시겠습니까?',
+				isFavorite ? '게시물을 즐겨찾기로 추가하시겠습니까?' : '게시물을 즐겨찾기에서 삭제 하시겠습니까?',
 				'아니오',
-				isFavorite?'즐겨찾기 추가':'즐겨찾기 삭제',
+				isFavorite ? '즐겨찾기 추가' : '즐겨찾기 삭제',
 				() => Modal.close(),
 				() => {
 					favoriteFeed(
@@ -234,7 +244,7 @@ export default FeedContent = props => {
 						result => {
 							// console.log('result / followUser / FeedContent', result.msg);
 							Modal.close();
-							Modal.popNoBtn('즐겨찾기 '+(isFavorite?'추가':'삭제')+'가 완료되었습니다.');
+							Modal.popNoBtn('즐겨찾기 ' + (isFavorite ? '추가' : '삭제') + '가 완료되었습니다.');
 							setTimeout(() => {
 								Modal.close();
 							}, 200);
@@ -246,17 +256,14 @@ export default FeedContent = props => {
 				},
 			);
 		}, 100);
-	}
-
-
+	};
 
 	const meatballActions = context => {
 		//피드 미트볼 메뉴 팝업 분기에 대한 기획의도가 불분명한 상태이므로
 		//출력되는 메뉴에 대한 분기처리는 차후 처리 (현재는 더미로 적용)
-		console.log(context);
+		console.log('context', context);
 
-
-		let isFavorite = context.favorite_feeds.some(feed=>feed._id == _id);
+		let isFavorite = context.favorite_feeds.some(feed => feed._id == _id);
 		console.log('즐겨찾기됨?', isFavorite);
 		let isMyFeed = userGlobalObject.userInfo._id == props.data.feed_writer_id._id;
 		let feedType = props.data.feed_type;
@@ -295,7 +302,7 @@ export default FeedContent = props => {
 						if (isFollowers) {
 							//내가 팔로우하고 있는 유저의 피드게시글
 							Modal.popSelectBoxModal(
-								!isFavorite?FEED_MEATBALL_MENU_FOLLOWING:FEED_MEATBALL_MENU_FOLLOWING_UNFAVORITE,
+								!isFavorite ? FEED_MEATBALL_MENU_FOLLOWING : FEED_MEATBALL_MENU_FOLLOWING_UNFAVORITE,
 								selectedItem => {
 									Modal.close();
 									if (selectedItem == '신고') {
@@ -320,7 +327,7 @@ export default FeedContent = props => {
 						} else {
 							//현재 팔로우 상태 중이지 않은 유저의 피드글의 미트볼 헤더 클릭
 							Modal.popSelectBoxModal(
-								!isFavorite?FEED_MEATBALL_MENU_UNFOLLOWING:FEED_MEATBALL_MENU_UNFOLLOWING_UNFAVORITE,
+								!isFavorite ? FEED_MEATBALL_MENU_UNFOLLOWING : FEED_MEATBALL_MENU_UNFOLLOWING_UNFAVORITE,
 								selectedItem => {
 									// alert(selectedItem);
 									if (selectedItem == '신고') {
@@ -332,7 +339,7 @@ export default FeedContent = props => {
 									} else if (selectedItem == '팔로우 취소') {
 										onPressCancelFollow();
 									} else if (selectedItem == '쪽지 보내기') {
-										onPressSendMsg();
+										onPressSendMsg(context._id);
 									} else if (selectedItem == '즐겨찾기') {
 										onFavorite(true);
 									} else if (selectedItem == '즐겨찾기 취소') {
@@ -400,18 +407,22 @@ export default FeedContent = props => {
 	};
 
 	const onClickMeatball = () => {
-		getFavoriteFeedListByUserId({
-			userobject_id: userGlobalObject.userInfo._id
-		},(r)=>{
-			let context = {
-				favorite_feeds:r.msg
-			};
-			meatballActions(context);
-		},err=>{
-			console.log(err);
-		})
-	}
-
+		getFavoriteFeedListByUserId(
+			{
+				userobject_id: userGlobalObject.userInfo._id,
+			},
+			r => {
+				let context = {
+					favorite_feeds: r.msg,
+					_id: feed_writer_id,
+				};
+				meatballActions(context);
+			},
+			err => {
+				console.log(err);
+			},
+		);
+	};
 
 	const isMissingReportRoute = route.name == 'MissingAnimalDetail' || route.name == 'ReportDetail';
 	const isCommentList = route.name == 'FeedCommentList';
@@ -419,7 +430,6 @@ export default FeedContent = props => {
 
 	const [isShowBtn, setIsShowBtn] = React.useState(true);
 	const [numLine, setNumLine] = React.useState(isMissingReportRoute ? 0 : 2);
-
 
 	const showMore = () => {
 		setNumLine(0);
@@ -434,7 +444,7 @@ export default FeedContent = props => {
 		} else {
 			let lines = getLinesOfString(feed_content, Platform.OS == 'android' ? 48 : 50);
 			return {
-				height: 120 * DP + (lines > 3 ? 3 : lines) * 54 * DP ,
+				height: 120 * DP + (lines > 3 ? 3 : lines) * 54 * DP,
 			};
 		}
 	};

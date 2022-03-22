@@ -71,6 +71,7 @@ import QnA from 'Root/component/templete/user/AskQuestion';
 import CategoryHelp from 'Templete/user/CategoryHelp';
 import ServiceCenterTopTabNavigation from './ServiceCenterTopTabNavigation';
 import CategoryHelpTopTabNavigation from './CategoryHelpTopTabNavigation';
+import TermsAndPolicy from 'Root/component/templete/user/TermsAndPolicy';
 const MyStack = createStackNavigator();
 export default MyStackNavigation = props => {
 	return (
@@ -318,6 +319,7 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen name="ServiceCenter" component={ServiceCenter} options={{header: props => <SimpleHeader {...props} />, title: '고객 센터'}} />
 			<MyStack.Screen name="CategoryHelp" component={CategoryHelp} options={{header: props => <AlarmAndSearchHeader {...props} />}} />
 			<MyStack.Screen name="ServiceTab" component={ServiceCenterTopTabNavigation} options={{header: props => <InputAndSearchHeader {...props} />}} />
+			<MyStack.Screen name="TermsAndPolicy" component={TermsAndPolicy} options={{header: props => <SimpleHeader {...props} />, title: '약관'}} />
 			<MyStack.Screen
 				name="CategoryHelpTab"
 				component={CategoryHelpTopTabNavigation}

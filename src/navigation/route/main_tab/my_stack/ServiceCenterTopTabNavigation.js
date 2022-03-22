@@ -46,7 +46,11 @@ const ServiceCenterTopTabNavigation = ({route, navigation}) => {
 					</View>
 				); // gesture Handler(손가락으로 swipe)로 tab을 움직였을 시 자식까지 state를 연동시키기 위한 props
 			}}>
-			<ServiceCenterTab.Screen name="AskQuestion" component={AskQuestion} />
+			<ServiceCenterTab.Screen
+				name="AskQuestion"
+				component={AskQuestion}
+				options={{header: props => <SimpleHeader {...props} />, title: '문의사항'}}
+			/>
 			<ServiceCenterTab.Screen name="AskedList" component={AskedQuestion} />
 		</ServiceCenterTab.Navigator>
 	);

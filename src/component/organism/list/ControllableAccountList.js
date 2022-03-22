@@ -11,6 +11,7 @@ import {controllableAccountList} from 'Organism/style_organism copy';
  * @param {{
  * items : Object,
  * onFollowBtnClick: void,
+ * onClickUnFollowBtn : void,
  * onClickAccount : void,
  * showCheckBox : boolean,
  * showCheckBox :boolean,
@@ -36,6 +37,10 @@ export default ControllableAccountList = props => {
 		props.onClickFollowBtn(index);
 	};
 
+	const onClickUnFollowBtn = item => {
+		props.onClickUnFollowBtn(item);
+	};
+
 	const renderItem = (item, index) => {
 		return (
 			<View style={[selectedItem == index ? controllableAccountList.selectedItem : controllableAccountList.no_selectedItem]}>
@@ -47,6 +52,7 @@ export default ControllableAccountList = props => {
 					onClickLabel={() => onSelectItem(item, index)}
 					onPressCrossMark={() => onPressCrossMark(index)}
 					onClickFollowBtn={() => onClickFollowBtn(index)}
+					onClickUnFollowBtn={() => onClickUnFollowBtn(item)}
 				/>
 			</View>
 		);
@@ -79,6 +85,7 @@ ControllableAccountList.defaultProps = {
 	items: [],
 	onClickAccount: e => console.log(e),
 	onClickFollowBtn: e => {},
+	onClickUnFollowBtn: e => {},
 	onPressCrossMark: e => console.log('onPressCrossMark ,', e),
 	title: null,
 	showCrossMark: false,

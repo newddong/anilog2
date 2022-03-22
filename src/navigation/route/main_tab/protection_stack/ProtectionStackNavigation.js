@@ -13,11 +13,8 @@ import ProtectionTopTabNavigation from './protection_tab/ProtectionTopTabNavigat
 import AlarmAndSearchHeader from 'Root/navigation/header/AlarmAndSearchHeader';
 import SimpleHeader from 'Root/navigation/header/SimpleHeader';
 import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballHeader';
-<<<<<<< HEAD
-=======
 import ProtectCommentList from 'Root/component/templete/protection/ProtectCommentList';
 import EditAidRequest from 'Root/component/templete/protection/EditAidRequest';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 
 const ProtectionStack = createStackNavigator();
 
@@ -36,14 +33,11 @@ export default ProtectionStackNavigation = () => {
 				component={AnimalProtectRequestDetail}
 				options={{header: props => <SimpleWithMeatballHeader {...props} />}}
 			/>
-<<<<<<< HEAD
-=======
 			<ProtectionStack.Screen
 				name="EditAidRequest"
 				component={EditAidRequest}
 				options={{header: props => <SendHeader {...props} />, title: '보호 요청 게시글 수정'}}
 			/>
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 
 			<ProtectionStack.Screen name="FeedListForHashTag" component={FeedListForHashTag} />
 			<ProtectionStack.Screen name="FeedCommentList" component={FeedCommentList} options={{header: props => <AlarmAndSearchHeader {...props} />}} />

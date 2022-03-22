@@ -4,11 +4,7 @@ import DP from 'Root/config/dp';
 
 export const btn_w654 = {width: 654 * DP, height: 104 * DP, borderRadius: 40 * DP};
 export const btn_w522 = {width: 522 * DP, height: 92 * DP, borderRadius: 40 * DP};
-<<<<<<< HEAD
-export const btn_w306_h68 = {width: 306 * DP, height: 68 * DP, borderRadius: 30 * DP};
-=======
 export const btn_w306_h68 = {width: 306 * DP, height: 68 * DP, borderRadius: 40 * DP};
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 export const btn_w306 = {width: 306 * DP, height: 60 * DP, borderRadius: 30 * DP};
 export const btn_w280 = {width: 280 * DP, height: 60 * DP, borderRadius: 30 * DP};
 export const btn_w280x68 = {width: 280 * DP, height: 68 * DP, borderRadius: 30 * DP};

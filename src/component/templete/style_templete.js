@@ -19,10 +19,7 @@ import {
 } from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {Platform} from 'react-native';
-<<<<<<< HEAD
-=======
 
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 export const login_style = StyleSheet.create({
 	wrp_main: {
 		// flex: 1,
@@ -550,11 +547,7 @@ export const temp_style = StyleSheet.create({
 		// backgroundColor: '#D19F9F',
 	},
 	changePassword_userInfoSetting: {
-<<<<<<< HEAD
-		width: 212 * DP,
-=======
 		// width: 212 * DP,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		height: 64 * DP,
 		// backgroundColor: '#D19F9F',
 	},
@@ -1788,11 +1781,7 @@ export const userMenu_style = StyleSheet.create({
 		marginTop: 38 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
-<<<<<<< HEAD
-		backgroundColor: 'yellow',
-=======
 		// backgroundColor: 'yellow',
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	},
 	userInfo: {
 		flexDirection: 'row',
@@ -2003,11 +1992,7 @@ export const assignProtectAnimal_style = StyleSheet.create({
 		height: 72 * DP,
 		flexDirection: 'row',
 		// alignItems: 'center',
-<<<<<<< HEAD
-		marginTop: 30 * DP,
-=======
 		marginTop: 70 * DP,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	},
 	inputform: {
 		marginTop: 60 * DP,
@@ -2083,12 +2068,9 @@ export const assignProtectAnimal_style = StyleSheet.create({
 	width118: {
 		width: 118 * DP,
 	},
-<<<<<<< HEAD
-=======
 	estimatedAgeContainer: {
 		marginLeft: 10 * DP,
 	},
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	dropdownSelect_year_text: {
 		width: 100 * DP,
 		height: 44 * DP,
@@ -2413,40 +2395,20 @@ export const editShelterInfo = StyleSheet.create({
 	},
 	inputCont: {
 		flexDirection: 'row',
-<<<<<<< HEAD
-		alignSelf: 'center',
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		height: 82 * DP,
 		// backgroundColor: 'yellow',
 		// marginBottom: 10 * DP,
 	},
 	input30WithMsg: {
 		flexDirection: 'row',
-<<<<<<< HEAD
-		alignSelf: 'center',
-=======
 		// alignSelf: 'center',
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		height: 82 * DP,
 	},
 	inputEmail: {
 		flexDirection: 'row',
-<<<<<<< HEAD
-		// alignSelf: 'center',
 		height: 82 * DP,
 		// backgroundColor: 'yellow',
 	},
-	shelterInfoForm: {
-		width: 654 * DP,
-		// backgroundColor: '#A07A7A',
-		marginTop: 50 * DP,
-	},
-=======
-		height: 82 * DP,
-		// backgroundColor: 'yellow',
-	},
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	btn_w654: {
 		marginVertical: 50 * DP,
 		alignItems: 'center',
@@ -2458,11 +2420,7 @@ export const editShelterInfo = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	text: {
-<<<<<<< HEAD
-		width: 144 * DP,
-=======
 		// width: 144 * DP,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		height: 46 * DP,
 		marginRight: 16 * DP,
 		// backgroundColor: 'pink',
@@ -2473,25 +2431,17 @@ export const editShelterInfo = StyleSheet.create({
 		// backgroundColor: 'pink',
 	},
 	input30: {
-<<<<<<< HEAD
-		width: 520 * DP,
-=======
 		// width: 520 * DP,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		height: 82 * DP,
 		// marginBottom: 50 * DP,
 		// justifyContent: 'center',
 		// backgroundColor: '#EDEDED',
 	},
-<<<<<<< HEAD
-	inputWithEmail: {width: 520 * DP, height: 82 * DP},
-=======
 	inputWithEmail: {
 		width: 480 * DP,
 		height: 82 * DP,
 		// backgroundColor: 'red',
 	},
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	addressInput: {
 		width: 654 * DP,
 		height: 236 * DP,
@@ -2756,10 +2706,7 @@ export const setPetInformation = StyleSheet.create({
 	},
 	weight_info: {
 		color: APRI10,
-<<<<<<< HEAD
-=======
 		marginTop: 10 * DP,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		// backgroundColor: 'yellow',
 	},
 });
@@ -2795,8 +2742,6 @@ export const petInfoSetting = StyleSheet.create({
 		position: 'absolute',
 		right: 0,
 		bottom: 0,
-<<<<<<< HEAD
-=======
 		backgroundColor: 'gray',
 		borderRadius: 50 * DP,
 		opacity: 0.8,
@@ -2811,7 +2756,6 @@ export const petInfoSetting = StyleSheet.create({
 		borderRadius: 50 * DP,
 		opacity: 0.9,
 		elevation: 3,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	},
 	petInfoContainer: {
 		width: 396 * DP,
@@ -2890,19 +2834,11 @@ export const petInfoSetting = StyleSheet.create({
 	},
 	petProfileMenu: {
 		container: {
-<<<<<<< HEAD
-			width: 654 * DP,
-			// height: 130 * DP,
-			marginTop: 2 * DP,
-			paddingVertical: 40 * DP,
-			borderBottomColor: GRAY30,
-=======
 			width: 750 * DP,
 			// height: 130 * DP,
 			marginTop: 2 * DP,
 			paddingVertical: 40 * DP,
 			borderBottomColor: GRAY40,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 			borderBottomWidth: 2 * DP,
 			justifyContent: 'center',
 			alignItems: 'center',
@@ -2929,14 +2865,10 @@ export const petInfoSetting = StyleSheet.create({
 		},
 	},
 	petIntroduction: {
-<<<<<<< HEAD
-		marginTop: 30 * DP,
-=======
 		width: 654 * DP,
 		marginTop: 30 * DP,
 		alignItems: 'flex-start',
 		// backgroundColor: 'yellow',
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	},
 	familyAccountSetting: {
 		container: {
@@ -3214,15 +3146,12 @@ export const searchProtectRequest = StyleSheet.create({
 	},
 	animalNeedHelpList: {
 		marginTop: 80 * DP,
-<<<<<<< HEAD
-=======
 		width: 750 * DP,
 		alignSelf: 'center',
 		// backgroundColor: '#FF00FF',
 	},
 	animalMissingReportList: {
 		marginTop: 50 * DP,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		width: 750 * DP,
 		alignSelf: 'center',
 		// backgroundColor: '#FF00FF',
@@ -3457,24 +3386,16 @@ export const applyVolunteer = StyleSheet.create({
 		width: 480 * DP,
 		height: 44 * DP,
 		// backgroundColor: 'lightblue',
-<<<<<<< HEAD
-=======
 		textAlign: 'right',
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	},
 	number_of_volunteerers: {
 		borderBottomColor: APRI10,
 		borderBottomWidth: 2 * DP,
 		width: 590 * DP,
 		height: 106 * DP,
-<<<<<<< HEAD
-		alignItems: 'center',
-		justifyContent: 'center',
-=======
 		paddingRight: 20 * DP,
 		alignItems: 'center',
 		justifyContent: 'flex-end',
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		alignSelf: 'flex-end',
 		flexDirection: 'row',
 		// backgroundColor: 'yellow',
@@ -3989,26 +3910,13 @@ export const feedCommentList = StyleSheet.create({
 		width: 646 * DP,
 		marginLeft: 20 * DP,
 		fontSize: 28 * DP,
-<<<<<<< HEAD
-=======
 		paddingVertical: 0,
 		includeFontPadding: false,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		// backgroundColor: 'yellow',
 	},
 	replyTextInput_photo: {
 		width: 442 * DP,
 		marginRight: 12 * DP,
-<<<<<<< HEAD
-		// backgroundColor: 'pink',
-	},
-	replyTextInput_protect_request: {
-		textAlignVertical: 'center',
-	},
-	commentBox_protect_request_left: {
-		width: 550 * DP,
-		height: 68 * DP,
-=======
 		paddingVertical: 0,
 		includeFontPadding: false,
 		// backgroundColor: 'pink',
@@ -4023,17 +3931,12 @@ export const feedCommentList = StyleSheet.create({
 	commentBox_protect_request_left: {
 		width: 550 * DP,
 		height: 72 * DP,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		marginRight: 12 * DP,
 		borderRadius: 24 * DP,
 		backgroundColor: GRAY30,
 		justifyContent: 'center',
-<<<<<<< HEAD
-		paddingLeft: 20 * DP,
-=======
 		paddingLeft: 25 * DP,
 		paddingTop: 5 * DP,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	},
 	editComment_expanded: {
 		width: 750 * DP,
@@ -4408,11 +4311,7 @@ export const feedWrite = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		borderRadius: 30 * DP,
-<<<<<<< HEAD
-		borderWidth: 4 * DP,
-=======
 		borderWidth: 2 * DP,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		borderColor: APRI10,
 		flexDirection: 'row',
 	},
@@ -4595,14 +4494,10 @@ export const animalProtectRequestDetail_style = StyleSheet.create({
 	rescueText: {
 		width: 654 * DP,
 		marginTop: 40 * DP,
-<<<<<<< HEAD
-		marginBottom: 70 * DP,
-=======
 		// marginBottom: 70 * DP,
 		paddingBottom: 70 * DP,
 		borderBottomWidth: 2 * DP,
 		borderBottomColor: GRAY20,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	},
 	floatingBtnAapply: {
 		position: 'absolute',
@@ -4646,15 +4541,10 @@ export const animalProtectRequestDetail_style = StyleSheet.create({
 		paddingHorizontal: 60 * DP,
 	},
 	buttonItemContainer: {
-<<<<<<< HEAD
-		width: 48 * DP,
-		marginLeft: 15 * DP,
-=======
 		width: 64 * DP,
 		alignItems: 'center',
 		// backgroundColor: 'yellow',
 		marginLeft: 6 * DP,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	},
 	btnContainer: {
 		width: 750 * DP,
@@ -4695,8 +4585,6 @@ export const animalProtectRequestDetail_style = StyleSheet.create({
 		width: 92 * DP,
 		height: 116 * DP,
 		marginRight: 40 * DP,
-<<<<<<< HEAD
-=======
 	},
 	replyWriteBox: {
 		width: 694 * DP,
@@ -4720,9 +4608,7 @@ export const animalProtectRequestDetail_style = StyleSheet.create({
 		marginTop: 30 * DP,
 		marginBottom: 20 * DP,
 		// backgroundColor: 'red',
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	},
-	replyWriteBox: {},
 });
 
 export const animalProtectList = StyleSheet.create({

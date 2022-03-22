@@ -210,22 +210,9 @@ export default function HashInput(props) {
 
 	const onFocus = e => {
 		Modal.closeKeboard();
-<<<<<<< HEAD:src/component/molecules/input/HashInput.js
-		props.onFocus && props.onFocus(e);
-	};
-
-	const deletePhoto = index => {
-		console.log('delete Photo', index);
-		props.onDelete(index);
-	};
-
-	// console.log('containerStyle', props.containerStyle[1].minHeight);
-	// console.log('488', 488 * DP);
-=======
 		console.log('focus', e.nativeEvent);
 		props.onFocus && props.onFocus(e);
 	};
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/molecules/HashInput.js
 
 	const deletePhoto = index => {
 		console.log('delete Photo', index);
@@ -234,34 +221,10 @@ export default function HashInput(props) {
 	return (
 		<>
 			<View
-<<<<<<< HEAD:src/component/molecules/input/HashInput.js
-				onLayout={e => console.log('e', e.nativeEvent.layout.height)}
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/molecules/HashInput.js
 				style={[
 					props.containerStyle,
 					{
 						justifyContent: 'space-between',
-<<<<<<< HEAD:src/component/molecules/input/HashInput.js
-						minHeight: null,
-					},
-				]}>
-				<View style={[{minHeight: props.selectedImg.length > 0 ? props.containerStyle[1].minHeight + 10 * DP : props.containerStyle[1].minHeight}]}>
-					<TextInput
-						{...props} //props override
-						textAlignVertical={'top'}
-						multiline={true}
-						value={value}
-						onChangeText={onChangeText}
-						onFocus={onFocus}
-						placeholder={props.placeholder}
-						placeholderTextColor={GRAY20}
-						selection={cursor}
-						ref={inputRef}
-						maxLength={props.maxLength}
-						onSelectionChange={onSelectionChange}></TextInput>
-				</View>
-=======
 					},
 				]}>
 				<TextInput
@@ -277,7 +240,6 @@ export default function HashInput(props) {
 					ref={inputRef}
 					maxLength={props.maxLength}
 					onSelectionChange={onSelectionChange}></TextInput>
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/molecules/HashInput.js
 				{props.selectedImg.length > 0 && (
 					<View style={[style.mediaListContainer]}>
 						<SelectedMediaList items={props.selectedImg} onDelete={deletePhoto} />

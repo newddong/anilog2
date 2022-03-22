@@ -5,11 +5,8 @@ import DP from 'Root/config/dp';
 import {APRI10, RED10} from 'Root/config/color';
 import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 import Input24 from 'Molecules/input/Input24';
-<<<<<<< HEAD:src/component/molecules/input/InputWithSelect.js
-=======
 import SelectInput from '../button/SelectInput';
 import Modal from 'Root/component/modal/Modal';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/molecules/InputWithSelect.js
 
 /**
  * 드롭다운이 추가된 인풋 컴포넌트

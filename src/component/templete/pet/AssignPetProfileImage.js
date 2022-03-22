@@ -124,26 +124,6 @@ export default AssignPetProfileImage = ({route}) => {
 		);
 	}, []);
 
-<<<<<<< HEAD:src/component/templete/pet/AssignPetProfileImage.js
-	React.useEffect(() => {
-		//추가로 등록할 반려동물이 있나요? 에서 '추가 등록'을 눌렀을 경우 저장되어 있는 state값을 지워야함
-		if (route.params?.initialization) {
-			console.log('Initialization');
-			setData({
-				user_profile_uri: '',
-				user_nickname: '',
-				pet_status: 'companion', //입양, 임시보호중인 동물일때는 초기값을 다르게 표기하도록(여기서는 임시보호, 반려동물 상태밖에 없음,입양된 동물은 더이상 정보수정 불가)
-				pet_is_temp_protection: false,
-				userobject_id: route.params?.userobject_id,
-				previousRouteName: route.params?.previousRouteName,
-			});
-		}
-	}, []);
-
-	const nicknameInput = React.useRef();
-
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AssignPetProfileImage.js
 	//닉네임 Validation
 	const nickName_validator = text => {
 		// ('* 2자 이상 15자 이내의 영문,숫자, _ 의 입력만 가능합니다.');
@@ -236,11 +216,7 @@ export default AssignPetProfileImage = ({route}) => {
 							value={data.user_nickname}
 							showTitle={false}
 							showmsg={false}
-<<<<<<< HEAD:src/component/templete/pet/AssignPetProfileImage.js
-							width={654}
-=======
 							width={350}
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AssignPetProfileImage.js
 							confirm_msg={'사용 가능한 닉네임입니다.'}
 							alert_msg={'사용 불가능한 닉네임입니다.'}
 							placeholder={'반려동물의 닉네임을 입력해주세요.'}

@@ -4,17 +4,10 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {APRI10, GRAY10, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
-<<<<<<< HEAD:src/component/templete/protection/WriteAidRequest.js
-import {AddItem64, Camera54} from 'Atom/icon';
-import {styles} from 'Atom/image/imageStyle';
-import AidRequest from 'Organism/listitem/AidRequest';
-import {assignProtectAnimal_style, feedWrite, login_style, temp_style, writeAidRequest} from 'Templete/style_templete';
-=======
 import {Camera54} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import AidRequest from 'Organism/listitem/AidRequest';
 import {assignProtectAnimal_style, login_style, writeAidRequest} from 'Templete/style_templete';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/WriteAidRequest.js
 import ImagePicker from 'react-native-image-crop-picker';
 import Modal from 'Component/modal/Modal';
 
@@ -145,10 +138,7 @@ export default WriteAidRequest = ({route, navigation}) => {
 							maxLength={500}
 							textAlignVertical={'top'}
 							multiline={true}
-<<<<<<< HEAD:src/component/templete/protection/WriteAidRequest.js
-=======
 							placeholderTextColor={GRAY20}
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/WriteAidRequest.js
 							placeholder="내용 입력"
 						/>
 						<Text style={[txt.noto24, {color: GRAY20, alignSelf: 'flex-end'}]}>{protectRequestData.protect_request_content.length} / 500</Text>

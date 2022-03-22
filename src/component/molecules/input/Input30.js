@@ -4,11 +4,7 @@ import {Text, View, TextInput} from 'react-native';
 import DP from 'Root/config/dp';
 import {BLACK, APRI10, GRAY10, GRAY20, GRAY30, RED10, GREEN} from 'Root/config/color';
 import PropsTypes, {any, bool, func, number, object, oneOf, oneOfType, string} from 'prop-types';
-<<<<<<< HEAD:src/component/molecules/input/Input30.js
-import {Cross52} from 'Atom/icon';
-=======
 import {Cross24_Filled, Cross52} from 'Atom/icon';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/molecules/Input30.js
 import {TouchableOpacity} from 'react-native';
 
 /**

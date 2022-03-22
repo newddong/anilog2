@@ -4,11 +4,7 @@ import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {BLACK} from 'Root/config/color';
 import ProfileImageMedium140 from 'Molecules/image/ProfileImageMedium140';
-<<<<<<< HEAD:src/component/organism/listitem/ShelterVerticalLabel.js
-import {shelterLabel} from 'Organism/style_organism';
-=======
 import {shelterLabel} from 'Organism/style_organism copy';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/ShelterVerticalLabel.js
 
 export default ShelterVerticalLabel = props => {
 	// console.log('props', props.data);

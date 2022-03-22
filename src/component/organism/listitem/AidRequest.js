@@ -19,12 +19,7 @@ import {aidRequest} from '../style_organism copy';
  */
 export default AidRequest = props => {
 	const data = props.data;
-<<<<<<< HEAD:src/component/organism/listitem/AidRequest.js
-	// console.log('badge', data);
-
-=======
 	// console.log('AidRequest', data.protect_animal_photo_uri_list);
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/AidRequest.js
 	//해당 AidRequest박스 선택 시 부모컴포넌트 OnSelect 실행
 	const onSelect = () => {
 		props.onSelect();
@@ -111,8 +106,5 @@ AidRequest.defaultProps = {
 	onSelect: e => {},
 	selectBorderMode: true,
 	showBadge: false,
-<<<<<<< HEAD:src/component/organism/listitem/AidRequest.js
-=======
 	inActiveOpacity: false,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/AidRequest.js
 };

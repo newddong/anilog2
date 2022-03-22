@@ -4,10 +4,7 @@ import {Text, View, TouchableWithoutFeedback} from 'react-native';
 import DP from 'Root/config/dp';
 import {Check50, Rect48_GRAY30, Rect50_Border} from 'Atom/icon';
 import {GRAY10, GRAY20} from 'Root/config/color';
-<<<<<<< HEAD:src/component/molecules/select/CheckBox.js
-=======
 import {findAccount_style} from 'Root/component/templete/style_templete';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/molecules/CheckBox.js
 /**
  *
  * @param {{

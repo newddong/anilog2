@@ -7,11 +7,6 @@ import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS, PROTECT_REQUEST_STATUS} from 'Root/i18n/msg';
-<<<<<<< HEAD
-
-export default SimpleWithMeatballHeader = ({navigation, route, options, back}) => {
-	const isWriter = userGlobalObject.userInfo._id == route.params.item.protect_request_writer_id._id;
-=======
 import {deleteProtectRequest, setShelterProtectAnimalStatus} from 'Root/api/shelterapi';
 import {setProtectRequestStatus} from 'Root/api/protectapi';
 
@@ -19,15 +14,10 @@ import {setProtectRequestStatus} from 'Root/api/protectapi';
 export default SimpleWithMeatballHeader = ({navigation, route, options, back}) => {
 	const isWriter = userGlobalObject.userInfo._id == route.params.writer;
 	// console.log('route.params / SimpleWithMeatballHeader : ', route.params.request_object);
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 
 	const onPressChangeProtectRequestStatus = () => {
 		Modal.close();
 		setTimeout(() => {
-<<<<<<< HEAD
-			Modal.popSelectScrollBoxModal([PROTECT_REQUEST_STATUS], '', selectedItem => {
-				alert(selectedItem);
-=======
 			//요청게시글 ‘rescue’,'complete',’rainbowbridge’,’discuss’), //항목 추가 필요
 			//보호동물 (‘rescue’,’adopt’,’protect’,’rainbowbridge’,’discuss’),
 			Modal.popSelectScrollBoxModal([PROTECT_REQUEST_STATUS], '', selectedItem => {
@@ -92,7 +82,6 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 						},
 					);
 				}
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 				Modal.close();
 			});
 		}, 200);
@@ -109,17 +98,6 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 		}, 200);
 	};
 
-<<<<<<< HEAD
-	const onPressEdit = () => {};
-
-	const onPressDelete = () => {
-		Modal.close();
-		setTimeout(() => {
-			Modal.popOneBtn('이 게시글을 삭제하시겠습니까?', '삭제', () => {
-				alert('삭제');
-				Modal.close();
-			});
-=======
 	//수정 버튼 클릭
 	const onPressEdit = () => {
 		navigation.push('EditAidRequest', {data: route.params.id});
@@ -150,7 +128,6 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 					Modal.close();
 				},
 			);
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		}, 400);
 	};
 
@@ -159,16 +136,6 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 			FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS,
 			selectedItem => {
 				switch (selectedItem) {
-<<<<<<< HEAD
-					case '상태 변경':
-						onPressChangeProtectRequestStatus();
-					case '공유하기':
-						onPressShare();
-					case '수정':
-						onPressEdit();
-					case '삭제':
-						onPressDelete();
-=======
 					case '상태변경':
 						onPressChangeProtectRequestStatus();
 						break;
@@ -181,7 +148,6 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 					case '삭제':
 						onPressDelete();
 						break;
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 					default:
 						break;
 				}
@@ -200,11 +166,7 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 					<BackArrow32 onPress={navigation.goBack} />
 				</View>
 			</TouchableOpacity>
-<<<<<<< HEAD
-			<Text style={[{flex: 1, textAlign: 'center', marginLeft: 30 * DP, marginRight: 80 * DP}, txt.roboto40b]}>
-=======
 			<Text style={[{flex: 1, textAlign: 'center', marginLeft: 30 * DP, marginRight: 80 * DP}, txt.roboto40b]} numberOfLines={1}>
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 				{options.title ? options.title : route.params.title}
 			</Text>
 			{isWriter ? <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} /> : <></>}

@@ -9,17 +9,6 @@ import {getProtectRequestList, getProtectRequestListByShelterId} from 'Root/api/
 export default SaveAnimalRequest = ({route}) => {
 	const navigation = useNavigation();
 
-<<<<<<< HEAD:src/component/templete/protection/SaveAnimalRequest.js
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-	//계정 좌측 CheckBox 디스플레이 여부
-
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/SaveAnimalRequest.js
 	const [checkBoxMode, setCheckBoxMode] = React.useState(false);
 	//checkBox On
 	const [data, setData] = React.useState([]);

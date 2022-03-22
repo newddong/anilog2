@@ -4,10 +4,6 @@ import {txt} from 'Root/config/textstyle';
 import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import StageBar from 'Molecules/info/Stagebar';
-<<<<<<< HEAD:src/component/templete/user/UserVerification.js
-import EmailVerification from 'Organism/form/EmailVerification';
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/UserVerification.js
 import PhoneNumVerification from 'Organism/form/PhoneNumVerification';
 import {stagebar_style} from 'Organism/style_organism copy';
 import {login_style, btn_style, temp_style, progressbar_style, userAssign} from 'Templete/style_templete';
@@ -133,18 +129,7 @@ export default UserVerification = props => {
 				{/* (A)Btn_w654 */}
 				<View style={[btn_style.btn_w654, userAssign.btn_w654]}>
 					{verified ? (
-<<<<<<< HEAD:src/component/templete/user/UserVerification.js
-						<AniButton
-							btnTitle={'인증 완료'}
-							btnLayout={btn_w654}
-							btnTheme={'shadow'}
-							btnStyle={'border'}
-							titleFontStyle={32}
-							onPress={goToNextStep}
-						/>
-=======
 						<AniButton btnTitle={'인증 완료'} btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} onPress={goToNextStep} />
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/UserVerification.js
 					) : (
 						<AniButton btnTitle={'인증 확인'} btnLayout={btn_w654} disable={true} titleFontStyle={32} onPress={goToNextStep} />
 					)}

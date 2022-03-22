@@ -13,25 +13,17 @@ import {GRAY10} from 'Root/config/color';
 //ex) 변경 전: <View style={[btn_style.btn_w654, findAccount_style.btn_w654]}>   변경 후:  <View style={[findAccount_style.btn_w654]}>
 
 export default FindAccount = props => {
-<<<<<<< HEAD
-	const onPressConfirm = () => {
-		const confirm = false;
-=======
 	//인증 확인 버튼 클릭
 	const onPressConfirm = () => {
 		const confirm = false;
 		//인증 완료
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		if (confirm) {
 			Modal.popNoBtn('이 계정은 이미 가입이 되어있습니다. \n 잠시 뒤에 로그인 페이지로 넘어갑니다.');
 			setTimeout(() => {
 				Modal.close();
 				props.navigation.navigate('Login');
 			}, 1000);
-<<<<<<< HEAD
-=======
 			//인증 실패
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		} else {
 			props.navigation.navigate('SuggestAssign');
 		}

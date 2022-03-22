@@ -5,12 +5,6 @@ import {BackArrow32} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {WHITE, APRI10} from 'Root/config/color';
 import InputWithSearchIcon from 'Molecules/input/InputWithSearchIcon';
-<<<<<<< HEAD
-
-export default ConfirmInputHeader = props => {
-	// console.log('ConfirmInputHeader.', props.route.params.routeName);
-	const routeName = props.route.params.routeName != undefined ? props.route.params.routeName : '';
-=======
 import userGlobalObject from 'Root/config/userGlobalObject';
 import searchContext from 'Root/config/searchContext';
 
@@ -18,7 +12,6 @@ export default InputAndSearchHeader = props => {
 	// console.log('ConfirmInputHeader.', props.route);
 
 	const routeName = props.route.name != undefined ? props.route.name : '';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	const [searchInput, setSearchInput] = React.useState('');
 	const [searchRoute, setSearchRoute] = React.useState('');
 
@@ -69,11 +62,7 @@ export default InputAndSearchHeader = props => {
 						<BackArrow32 onPress={onPressGoBack} />
 					</View>
 				</TouchableOpacity>
-<<<<<<< HEAD
-				{routeName != 'SearchFeed' ? (
-=======
 				{searchRoute != 'SearchFeed' ? (
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 					<View style={{marginBottom: 20 * DP, flex: 1}}>
 						<InputWithSearchIcon placeholder={'검색어를 입력하세요.'} width={590} onChange={onChangeSearchText} onSearch={confirm} />
 					</View>

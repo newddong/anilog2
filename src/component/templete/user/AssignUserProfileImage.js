@@ -171,15 +171,9 @@ export default AssignUserProfileImage = props => {
 			{/* (A)Btn_w654 */}
 			<View style={[btn_style.btn_w654, assignUserProfileImage_style.btn_w654]}>
 				{confirmed ? (
-<<<<<<< HEAD:src/component/templete/user/AssignUserProfileImage.js
-					<AniButton btnTitle={'확인'} titleFontStyle={'32'} btnStyle={'borderd1'} btnTheme={'shadow'} btnLayout={btn_w654} onPress={pressConfirm} />
-				) : (
-					<AniButton btnTitle={'확인'} titleFontStyle={'32'} disable={true} btnLayout={btn_w654} />
-=======
 					<AniButton btnTitle={'확인'} titleFontStyle={32} btnStyle={'border'} btnLayout={btn_w654} onPress={pressConfirm} />
 				) : (
 					<AniButton btnTitle={'확인'} titleFontStyle={32} disable={true} btnLayout={btn_w654} />
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AssignUserProfileImage.js
 				)}
 			</View>
 		</KeyboardAvoidingView>

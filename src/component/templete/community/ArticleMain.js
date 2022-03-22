@@ -20,7 +20,7 @@ export default ArticleMain = ({route, navigation}) => {
 
 	// 댓글 모두보기 클릭
 	const onPressReply = index => {
-		navigation.push('ArticleCommentList', {feedobject: {_id: '62262a16d38ae5f3c51390d6'}});
+		navigation.push('ArticleCommentList', {feedobject: {_id: '61d2df2fc0f179ccd5ba5a1e'}});
 	};
 
 	//글쓰기

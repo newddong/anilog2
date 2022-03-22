@@ -1,57 +1,25 @@
 import React from 'react';
-<<<<<<< HEAD
-import {View, Text, StyleSheet, Dimensions, Platform, FlatList} from 'react-native';
-import {WHITE} from 'Root/config/color';
-import {txt} from 'Root/config/textstyle';
-import DP from 'Root/config/dp';
-import {RadioChecked48, RadioUnchecked48} from 'Atom/icon';
-=======
 import {View, Text, TouchableOpacity, SafeAreaView, FlatList, StyleSheet, Platform, Dimensions, Animated, Easing} from 'react-native';
 import {WHITE} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {Check50, RadioChecked48, RadioUnchecked48} from 'Atom/icon';
 import Modal from 'Root/component/modal/Modal';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 
 /**
  * 선택창과 직접 입력창을 띄우는 모달 컴포넌트
  *
  * @param {Object} props - props object
-<<<<<<< HEAD
- * @param {string} props.title - 확인 버튼 메시지
- * @param {(string)=>void} props.onSelect - 확인 버튼 콜백
-=======
  * @param {Object} props.offset - 선택된 좌표
  * @param {Object} props.items - 출력 아이템
  * @param {String} props.current - 출력 아이템
  * @param {(string)=>void} props.onSelect - 확인 버튼 콜백
  * @param {void} props.onClose - 모달 종료 콜백
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
  *
  */
 
 const RadioSelectModal = props => {
 	const [selectedIndex, setSelectedIndex] = React.useState(0);
-<<<<<<< HEAD
-
-	const onSelect = index => {
-		setSelectedIndex(index);
-		props.onSelect(props.items[index]);
-	};
-
-	const renderItem = (item, index) => {
-		console.log('item', item);
-		return (
-			<View style={[style.itemContainer]}>
-				<View style={[style.checkBox]}>
-					{index == selectedIndex ? <RadioChecked48 onPress={() => onSelect(index)} /> : <RadioUnchecked48 onPress={() => onSelect(index)} />}
-				</View>
-				<Text style={[txt.roboto28b, style.itemTitle]} numberOfLines={1} ellipsizeMode={'tail'}>
-					{item}
-				</Text>
-			</View>
-=======
 	React.useEffect(() => {
 		if (props.current != undefined) {
 			setSelectedIndex(props.current);
@@ -112,21 +80,10 @@ const RadioSelectModal = props => {
 					{item}
 				</Text>
 			</TouchableOpacity>
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		);
 	};
 
 	return (
-<<<<<<< HEAD
-		<View style={style.background}>
-			<View style={[style.popUpWindow, style.shadow]}>
-				<View style={[style.header]}>
-					<Text style={[txt.noto30b]}>{props.title}</Text>
-				</View>
-				<FlatList data={props.items} renderItem={({item, index}) => renderItem(item, index)} showsVerticalScrollIndicator={false} />
-			</View>
-		</View>
-=======
 		<TouchableOpacity activeOpacity={1} onPress={onClose} style={style.background}>
 			<Animated.View
 				style={[
@@ -155,26 +112,18 @@ const RadioSelectModal = props => {
 				</TouchableOpacity>
 			</Animated.View>
 		</TouchableOpacity>
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	);
 };
 
 RadioSelectModal.defaultProps = {
 	selectMsg: '확인',
 	exitMsg: '나가기',
-<<<<<<< HEAD
-=======
 	onClose: e => console.log(e),
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 };
 
 const style = StyleSheet.create({
 	background: {
-<<<<<<< HEAD
-		backgroundColor: '#0009',
-=======
 		// backgroundColor: '#0009',
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		height: Platform.OS == 'ios' ? Dimensions.get('window').height : '100%',
 		width: Platform.OS == 'ios' ? Dimensions.get('window').width : '100%',
 		justifyContent: 'center',
@@ -197,26 +146,11 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 	},
 	itemContainer: {
-<<<<<<< HEAD
-		width: 224 * DP,
-=======
 		width: 200 * DP,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		height: 48 * DP,
 		marginBottom: 40 * DP,
 		flexDirection: 'row',
 		alignItems: 'center',
-<<<<<<< HEAD
-		justifyContent: 'center',
-	},
-	itemTitle: {
-		marginLeft: 20 * DP,
-	},
-	checkBox: {marginRight: 12 * DP},
-	shadow: {
-		shadowColor: '#000000',
-		shadowOpacity: 0.27,
-=======
 		justifyContent: 'space-between',
 		// backgroundColor: 'red',
 	},
@@ -229,17 +163,12 @@ const style = StyleSheet.create({
 	shadow: {
 		shadowColor: 'black',
 		shadowOpacity: 0.5,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		shadowRadius: 4.65,
 		shadowOffset: {
 			width: 1 * DP,
 			height: 2 * DP,
 		},
-<<<<<<< HEAD
-		elevation: 2,
-=======
 		elevation: 9,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	},
 });
 

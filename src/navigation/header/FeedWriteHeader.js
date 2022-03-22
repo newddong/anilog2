@@ -6,11 +6,7 @@ import {WHITE, APRI10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 import {RED} from 'Root/config/color';
-<<<<<<< HEAD
-import {createFeed, createMissing, createReport} from 'Root/api/feedapi';
-=======
 import {createFeed, createMissing, createReport, editFeed} from 'Root/api/feedapi';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default FeedWriteHeader = ({route, navigation, options}) => {
@@ -139,13 +135,8 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 	const avartarSelect = () => {
 		Modal.popAvatarSelectModal(petObject => {
 			console.log('petObject / onOk', petObject);
-<<<<<<< HEAD
-			petObject&&navigation.setOptions({title: petObject.user_nickname});
-			petObject&&navigation.setParams({...route.params, feed_avatar_id: petObject._id});
-=======
 			petObject && navigation.setOptions({title: petObject.user_nickname});
 			petObject && navigation.setParams({...route.params, feed_avatar_id: petObject._id});
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		}, '이 계정 글쓰기');
 	};
 	return (

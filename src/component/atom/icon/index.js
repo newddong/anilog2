@@ -132,10 +132,6 @@ import posterSave from './posterSave';
 import congratulation from './congratulation';
 import newmeatball60 from './newMeatBall60';
 import newmeatball60Filled from './newMeatBall60Filled';
-<<<<<<< HEAD
-import DP from 'Root/config/dp';
-
-=======
 import filter60Border from './filter60Border';
 import filter60Filled from './filter60Filled';
 import secureIcon40 from './secureIcon40';
@@ -153,8 +149,7 @@ import save54 from './save54';
 import locationMarker from './locationMarker';
 import currentLocation from './currentLocation';
 import DP from 'Root/config/dp';
-import twoPaw from './twoPaw';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
+
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
 
 const size30 = {width: 30 * DP, height: 30 * DP};
@@ -363,8 +358,6 @@ export const MainLogo = makeSvg(mainLogo, {width: 122 * DP, height: 90 * DP});
 export const Congratulation = makeSvg(congratulation, {width: 124 * DP, height: 110 * DP});
 export const NewMeatBall60 = makeSvg(newmeatball60, size60);
 export const NewMeatBall60Filled = makeSvg(newmeatball60Filled, size60);
-<<<<<<< HEAD
-=======
 export const Filter60Border = makeSvg(filter60Border, size60);
 export const Filter60Filled = makeSvg(filter60Filled, size60);
 export const SecureIcon40 = makeSvg(secureIcon40, size40);
@@ -381,5 +374,3 @@ export const LoadingImg = makeSvg(loading, {width: 150 * DP, height: 150 * DP});
 export const Save54 = makeSvg(save54, {width: 54 * DP, height: 54 * DP});
 export const LocationMarker = makeSvg(locationMarker, {width: 80 * DP, height: 80 * DP});
 export const CurrentLocation = makeSvg(currentLocation, {width: 70 * DP, height: 70 * DP});
-export const TwoPaw = makeSvg(twoPaw, {width: 128 * DP, height: 103 * DP});
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca

@@ -1,75 +1,52 @@
 import React from 'react';
-import {ScrollView, Text, View, ActivityIndicator} from 'react-native';
-import {login_style, protectRequestList, searchProtectRequest, temp_style} from 'Templete/style_templete';
+import {Text, View, ActivityIndicator, FlatList} from 'react-native';
+import {login_style, searchProtectRequest, temp_style} from 'Templete/style_templete';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {GRAY10} from 'Root/config/color';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import {txt} from 'Root/config/textstyle';
-import {ONLY_CONTENT_FOR_ADOPTION, PET_KIND, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
-import FilterButton from 'Molecules/button/FilterButton';
-import {getProtectRequestList, getProtectRequestListByShelterId} from 'Root/api/shelterapi.js';
+import {ONLY_CONTENT_FOR_ADOPTION, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
+import {getProtectRequestList} from 'Root/api/shelterapi.js';
 import {getPettypes} from 'Root/api/userapi';
 import {btn_w306_h68} from 'Component/atom/btn/btn_style';
-import DropdownModal from 'Root/component/molecules/modal/DropdownModal';
-import DropdownSelect from 'Root/component/molecules/dropdown/DropdownSelect';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 import Modal from 'Root/component/modal/Modal';
 
 export default ProtectRequestList = ({navigation, route}) => {
-	const [data, setData] = React.useState([]);
-	const [showAdoptable, setShowAdoptable] = React.useState(false);
-	const [refreshing, setRefreshing] = React.useState(false);
-	const [loading, setLoading] = React.useState(true); //로딩상태
+	const [data, setData] = React.useState('false');
 	const [filterData, setFilterData] = React.useState({
 		city: '',
 		protect_animal_species: '',
-		adoptable_posts: false,
+		adoptable_posts: 'false',
 		protect_request_object_id: '',
-		request_number: 10,
+		request_number: 10000,
 	});
 	const [petTypes, setPetTypes] = React.useState(['동물종류']);
+
+	const getList = () => {
+		getProtectRequestList(
+			filterData,
+			result => {
+				// console.log('result / getProtectRequestList / ProtectRequestList : ', result.msg);
+				result.msg.forEach(each => {
+					each.protect_animal_sex = each.protect_animal_id.protect_animal_sex;
+					each.protect_animal_status = each.protect_animal_id.protect_animal_status;
+				});
+				setData(result.msg);
+			},
+			err => {
+				console.log(`errcallback:${JSON.stringify(err)}`);
+				if (err == '검색 결과가 없습니다.') {
+					setData([]);
+				}
+			},
+		);
+	};
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			getList();
 		});
-
-		const getList = () => {
-			getProtectRequestList(
-				filterData,
-				data => {
-					// console.log('data' + JSON.stringify(`data${data}`));
-					// console.log('보호요청 ', data.msg[0]);
-					// data.msg.forEach(e => console.log('forEach', e.protect_animal_id.protect_animal_sex, e.protect_animal_id.protect_animal_status));
-					let filtered = [...data.msg];
-					data.msg.forEach(each => {
-						each.protect_animal_sex = each.protect_animal_id.protect_animal_sex;
-						each.protect_animal_status = each.protect_animal_id.protect_animal_status;
-					});
-					// setData(data.msg);
-					//아직 입양 완료된 목록을 제외하고 조회하는 API가 없음. 수동 처리
-					if (filterData.adoptable_posts) {
-						filtered = data.msg.filter(e => e.protect_request_status != 'complete');
-						setData(filtered);
-
-						setLoading(false);
-						// console.log('length', filtered.length);
-					} else {
-						setData(data.msg);
-						setLoading(false);
-
-					}
-				},
-				err => {
-					console.log(`errcallback:${JSON.stringify(err)}`);
-					if (err == '검색 결과가 없습니다.') {
-						setData([]);
-					}
-					setLoading(false);
-
-				},
-			);
-		};
-		getList();
+		getList(); //필터가 바뀔 때마다 호출되도록 설정
 		return unsubscribe;
 	}, [filterData]);
 
@@ -88,47 +65,29 @@ export default ProtectRequestList = ({navigation, route}) => {
 	}, []);
 
 	const onClickLabel = (status, id, item) => {
-		//data에는 getProtectRequestList(어떠한 필터도 없이 모든 보호요청게시글을 출력)의 결과값이 담겨있음
-		//따라서 출력할 것을 해당 게시글의 작성자(보호소)가 작성한 보호요청게시글로 좁혀야함
-		// console.log('item:', item);
 		let sexValue = '';
-		getProtectRequestListByShelterId(
-			{
-				shelter_userobject_id: item.protect_request_writer_id._id,
-				protect_request_status: 'all',
-				protect_request_object_id: null,
-				request_number: 10,
-			},
-			result => {
-				switch (item.protect_animal_sex) {
-					case 'male':
-						sexValue = '남';
-						break;
-					case 'female':
-						sexValue = '여';
-						break;
-					case 'male':
-						sexValue = '성별모름';
-						break;
-				}
-				const titleValue = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + sexValue;
-				navigation.navigate('AnimalProtectRequestDetail', {item: item, list: result.msg, title: titleValue});
-			},
-			err => {
-				console.log('err / getProtectRequestListByShelterId / ProtectRequestList   : ', err);
-			},
-		);
+		switch (item.protect_animal_sex) {
+			case 'male':
+				sexValue = '남';
+				break;
+			case 'female':
+				sexValue = '여';
+				break;
+			case 'male':
+				sexValue = '성별모름';
+				break;
+		}
+		const titleValue = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + sexValue;
+		navigation.navigate('AnimalProtectRequestDetail', {id: item._id, title: titleValue, writer: item.protect_request_writer_id._id});
 	};
 
 	const filterOn = () => {
-		// alert('입양 가능한 게시글만 보기');
 		console.log('입양 가능한 게시글만 보기');
-		setFilterData({...filterData, adoptable_posts: true});
+		setFilterData({...filterData, adoptable_posts: 'true'});
 	};
 	const filterOff = () => {
-		// alert('입양 가능한 게시글만 보기 끄기');
 		console.log('입양 가능한 게시글만 OFF');
-		setFilterData({...filterData, adoptable_posts: false});
+		setFilterData({...filterData, adoptable_posts: 'false'});
 	};
 	//별도의 API 사용 예정.
 	const onOff_FavoriteTag = (value, index) => {
@@ -152,7 +111,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 	const onSelectKind = kind => {
 		Modal.popSelectScrollBoxModal(
 			[petTypes],
-			'보호 지역 선택',
+			'동물 종류 선택',
 			selected => {
 				selected == '동물종류'
 					? setFilterData({...filterData, protect_animal_species: ''})
@@ -174,7 +133,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 		);
 	};
 
-	if (loading) {
+	if (data == 'false') {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
 				<ActivityIndicator size={'large'}></ActivityIndicator>
@@ -183,44 +142,50 @@ export default ProtectRequestList = ({navigation, route}) => {
 	} else {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
-				<ScrollView style={{flex: 1}}>
-					<View style={[searchProtectRequest.filterView]}>
-						<View style={[searchProtectRequest.filterView.inside]}>
-							<View style={{flexDirection: 'row'}}>
-								<View style={[temp_style.filterBtn]}>
-									<ArrowDownButton
-										onPress={onSelectLocation}
-										btnTitle={filterData.city || '지역'}
-										btnLayout={btn_w306_h68}
-										btnStyle={'border'}
-										btnTheme={'gray'}
-									/>
-								</View>
-								<View style={[temp_style.filterBtn]}>
-									<ArrowDownButton
-										onPress={onSelectKind}
-										btnTitle={filterData.protect_animal_species || '동물 종류'}
-										btnLayout={btn_w306_h68}
-										btnStyle={'border'}
-										btnTheme={'gray'}
-									/>
+				<FlatList
+					horizontal={false}
+					data={[{}]}
+					listKey={({item, index}) => index}
+					renderItem={({item, index}) => (
+						<View style={{}}>
+							<View style={[searchProtectRequest.filterView]}>
+								<View style={[searchProtectRequest.filterView.inside]}>
+									<View style={{flexDirection: 'row'}}>
+										<View style={[temp_style.filterBtn]}>
+											<ArrowDownButton
+												onPress={onSelectLocation}
+												btnTitle={filterData.city || '지역'}
+												btnLayout={btn_w306_h68}
+												btnStyle={'border'}
+												btnTheme={'gray'}
+											/>
+										</View>
+										<View style={[temp_style.filterBtn]}>
+											<ArrowDownButton
+												onPress={onSelectKind}
+												btnTitle={filterData.protect_animal_species || '동물 종류'}
+												btnLayout={btn_w306_h68}
+												btnStyle={'border'}
+												btnTheme={'gray'}
+											/>
+										</View>
+									</View>
+									<View style={[searchProtectRequest.filterView.onOffBtnView]}>
+										<View style={[searchProtectRequest.filterView.onOffBtnMsg]}>
+											<Text style={[txt.noto20, {color: GRAY10}]}>{ONLY_CONTENT_FOR_ADOPTION}</Text>
+										</View>
+										<View style={[temp_style.onOffSwitch, searchProtectRequest.filterView.onOffSwitch]}>
+											<OnOffSwitch onSwtichOn={filterOn} onSwtichOff={filterOff} />
+										</View>
+									</View>
 								</View>
 							</View>
-							{/* 입양 가능한 게시물만 보기 */}
-							<View style={[searchProtectRequest.filterView.onOffBtnView]}>
-								<View style={[searchProtectRequest.filterView.onOffBtnMsg]}>
-									<Text style={[txt.noto20, {color: GRAY10}]}>{ONLY_CONTENT_FOR_ADOPTION}</Text>
-								</View>
-								<View style={[temp_style.onOffSwitch, searchProtectRequest.filterView.onOffSwitch]}>
-									<OnOffSwitch onSwtichOn={filterOn} onSwtichOff={filterOff} />
-								</View>
+							<View style={[searchProtectRequest.animalNeedHelpList]}>
+								<AnimalNeedHelpList data={data} onClickLabel={onClickLabel} onFavoriteTag={onOff_FavoriteTag} whenEmpty={whenEmpty()} />
 							</View>
 						</View>
-					</View>
-					<View style={[searchProtectRequest.animalNeedHelpList]}>
-						<AnimalNeedHelpList data={data} onClickLabel={onClickLabel} onFavoriteTag={onOff_FavoriteTag} whenEmpty={whenEmpty()} />
-					</View>
-				</ScrollView>
+					)}
+				/>
 			</View>
 		);
 	}

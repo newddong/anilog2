@@ -1,23 +1,11 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-<<<<<<< HEAD:src/component/templete/favorite/SaveFavorite.js
-import {ActivityIndicator, Text, View} from 'react-native';
-import {getUserListByNickname} from 'Root/api/userapi';
-import {dummy_AccountHashList, dummy_accountList, dummy_userObject} from 'Root/config/dummyDate_json';
-import AccountHashList from 'Organism/list/AccountHashList';
-import SelectStat from 'Organism/list/SelectStat';
-import {login_style, temp_style, selectstat_view_style, saveFavorite} from 'Templete/style_templete';
-
-// 각각 뷰에 컴포넌트 삽입시 style의 첫번째 index 삭제할 것. 두번째 index는 상.하 간격 style이라서 이 컴포넌트에만 해당 됨.
-//ex) 변경 전: <View style={[btn_style.btn_w654, findAccount_style.btn_w654]}>   변경 후:  <View style={[findAccount_style.btn_w654]}>
-=======
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 import {getFollows, getUserListByNickname} from 'Root/api/userapi';
 import AccountHashList from 'Organism/list/AccountHashList';
 import SelectStat from 'Organism/list/SelectStat';
 import {login_style, temp_style, selectstat_view_style} from 'Templete/style_templete';
 import userGlobalObject from 'Root/config/userGlobalObject';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/SaveFavorite.js
 
 //즐겨찾기 친구
 export default SaveFavorite = props => {

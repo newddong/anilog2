@@ -14,22 +14,14 @@ import moment from 'moment';
 import Modal from 'Component/modal/Modal';
 import {updateShelterDetailInformation} from 'Root/api/userapi';
 import DP from 'Root/config/dp';
-<<<<<<< HEAD:src/component/templete/shelter/EditShelterInfo.js
-=======
 import {useNavigation} from '@react-navigation/native';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/EditShelterInfo.js
 
 export default EditShelterInfo = ({route, navigation}) => {
 	const [data, setData] = React.useState(route.params.data);
 	// console.log('dataEmail  : ', data);
 	// console.log('data phone', data.shelter_delegate_contact_number);
 	const isDirectInput = !EMAIL_DOMAIN.some(e => e == data.user_email.split('@')[1]);
-<<<<<<< HEAD:src/component/templete/shelter/EditShelterInfo.js
-	// console.log('isDirectInput', isDirectInput);
-	console.log('data', route.params.data);
-=======
 	console.log(route.params.data);
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/EditShelterInfo.js
 	React.useEffect(() => {
 		if (route.params.addr) {
 			console.log('route.params.Address Changed?   ', route.params.addr);
@@ -174,11 +166,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 					<View style={[editShelterInfo.input30WithMsg]}>
 						<View style={[editShelterInfo.category, {width: null}]}>
 							<View style={[editShelterInfo.text]}>
-<<<<<<< HEAD:src/component/templete/shelter/EditShelterInfo.js
-								<Text style={[txt.noto28, {color: GRAY10}]}>보호소 이름</Text>
-=======
 								<Text style={[txt.noto30, {color: GRAY10}]}>보호소 이름</Text>
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/EditShelterInfo.js
 							</View>
 						</View>
 						<View style={[editShelterInfo.input30, {}]}>
@@ -208,11 +196,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 							onPressSearchAddr={onPressSearchAddr}
 						/>
 					</View>
-<<<<<<< HEAD:src/component/templete/shelter/EditShelterInfo.js
-					{/* 전ㄴ화번호 */}
-=======
 					{/* 전화번호 */}
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/EditShelterInfo.js
 					<View style={[editShelterInfo.inputCont, {marginTop: 50 * DP}]}>
 						<View style={[editShelterInfo.category]}>
 							<View style={[editShelterInfo.text]}>
@@ -236,11 +220,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 							/>
 						</View>
 					</View>
-<<<<<<< HEAD:src/component/templete/shelter/EditShelterInfo.js
-					{/* 이메일 단위 */}
-=======
 					{/* 이메일 */}
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/EditShelterInfo.js
 					<View style={[editShelterInfo.inputEmail, {marginTop: 50 * DP}]}>
 						<View style={[editShelterInfo.category]}>
 							<View style={[editShelterInfo.emailText]}>

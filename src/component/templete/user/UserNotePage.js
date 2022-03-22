@@ -9,12 +9,9 @@ import {GRAY10, APRI10, BLACK, WHITE} from 'Root/config/color';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import {textstyles} from '../style_templete';
 import {ScrollView} from 'react-native-gesture-handler';
-import NoteMessageList from 'Component/organism/list/NoteMessageList';
+import NoteMessageList from 'Root/component/organism/list/NoteMessageList';
 import {getMemoBoxWithReceiveID} from 'Root/api/userapi';
 import {useNavigation} from '@react-navigation/native';
-import ReplyWriteBox from 'Component/organism/input/ReplyWriteBox';
-import {useKeyboardBottom} from 'Component/molecules/input/usekeyboardbottom';
-import {createMemoBox} from 'Root/api/userapi';
 /**
  * 쪽지 썸네일 객체
  * @param {object} props - Props Object
@@ -25,13 +22,9 @@ import {createMemoBox} from 'Root/api/userapi';
  */
 const UserNotePage = ({route}) => {
 	console.log('userNotePage', route.params);
-	const keyboardY = useKeyboardBottom(0 * DP);
 	const navigation = useNavigation();
 	const [data, setData] = React.useState();
 	const [loading, setLoading] = React.useState(true);
-	const input = React.useRef();
-	const [content, setContent] = React.useState('');
-
 	React.useEffect(() => {
 		getMemoBoxWithReceiveID(
 			{user_object_id: route.params._id},
@@ -45,26 +38,6 @@ const UserNotePage = ({route}) => {
 			},
 		);
 	}, []);
-	const [heightReply, setReplyHeight] = React.useState(0);
-	const onReplyBtnLayout = e => {
-		setReplyHeight(e.nativeEvent.layout.height);
-	};
-	const onWrite = () => {
-		if (content.trim() == '') return Modal.popOneBtn('채팅을 입력하세요.', '확인', () => Modal.close());
-		createMemoBox(
-			{memobox_receive_id: route.params._id, memobox_contents: content},
-			result => {
-				console.log('message Sent', result);
-			},
-			err => {
-				'message Sent err', err;
-			},
-		);
-	};
-	const onChangeReplyInput = text => {
-		setContent(text);
-	};
-
 	if (loading) {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
@@ -73,12 +46,9 @@ const UserNotePage = ({route}) => {
 		);
 	} else {
 		return (
-			<View style={[styles.container]}>
-				<View style={[styles.messageContainer]}>
+			<View style={styles.container}>
+				<View style={styles.messageContainer}>
 					<NoteMessageList data={data} />
-				</View>
-				<View style={{position: 'absolute', bottom: keyboardY}} onLayout={onReplyBtnLayout}>
-					<ReplyWriteBox onWrite={onWrite} onChangeReplyInput={onChangeReplyInput} ref={input} value={input} isMessage={true} />
 				</View>
 			</View>
 		);
@@ -92,7 +62,6 @@ const styles = StyleSheet.create({
 	},
 	messageContainer: {
 		marginTop: 30 * DP,
-		height: 1150 * DP,
 	},
 });
 

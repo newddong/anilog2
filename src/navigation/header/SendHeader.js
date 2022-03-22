@@ -5,11 +5,7 @@ import DP from 'Root/config/dp';
 import {WHITE, APRI10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
-<<<<<<< HEAD
-import {createProtectRequest} from 'Root/api/shelterapi';
-=======
 import {createProtectRequest, updateProtectRequest} from 'Root/api/shelterapi';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 import {RED} from 'Root/config/color';
 
 export default SendHeader = ({route, navigation, options}) => {

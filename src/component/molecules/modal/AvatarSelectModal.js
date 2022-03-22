@@ -1,9 +1,5 @@
 import React from 'react';
-<<<<<<< HEAD
-import {View, Text, TouchableWithoutFeedback, StyleSheet, Dimensions, Platform, ScrollView, FlatList, TouchableOpacity} from 'react-native';
-=======
 import {View, Text, StyleSheet, Dimensions, Platform, FlatList, TouchableOpacity, ActivityIndicator} from 'react-native';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 import AniButton from '../button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10, APRI10} from 'Root/config/color';
@@ -20,19 +16,11 @@ import PetLabel from '../label/PetLabel';
  * @param {Object} props - props object
  * @param {(petObject:string)=>void} props.onSelectPet - 반려동물 라벨을 클릭했을때 콜백
  * @param {string} props.okButtonnMsg - 확인 버튼 메시지
-<<<<<<< HEAD
- * @param {boolean} props.isBtnMode - 버튼출력여부
- *
- */
-const AvatarSelectModal = props => {
-	const [items, setItems] = React.useState([]);
-=======
  * @param {boolean} props.isWriteMode - 버튼출력여부
  *
  */
 const AvatarSelectModal = props => {
 	const [items, setItems] = React.useState('');
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	const [selectedItem, setSelectedItem] = React.useState(1000);
 	const checkApi = React.useRef(false);
 
@@ -42,71 +30,20 @@ const AvatarSelectModal = props => {
 		Modal.close();
 	};
 
-<<<<<<< HEAD
-	React.useEffect(() => {
-		getUserInfoById(
-			{userobject_id: userGlobalObj.userInfo._id},
-			user => {
-				setItems(user.msg?.user_my_pets);
-			},
-			err => {
-				Modal.popOneBtn(err, '확인', () => Modal.close());
-			},
-		);
-		checkApi.current = true;
-	}, []);
-
-	const renderItem = (item, index) => {
-		const onClickLabel = () => {
-			if (props.isBtnMode) {
-=======
 	const renderItem = (item, index) => {
 		const onClickLabel = () => {
 			if (props.isWriteMode) {
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 				setSelectedItem(index);
 			} else {
 				props.onSelectPet && props.onSelectPet(items[index]);
 			}
 		};
 		return (
-<<<<<<< HEAD
-			<View style={[style.listItem, {backgroundColor: index == selectedItem ? APRI10 : WHITE}]}>
-=======
 			<View key={index} style={[style.listItem, {backgroundColor: index == selectedItem ? APRI10 : WHITE}]}>
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 				<PetLabel data={item} onLabelClick={onClickLabel} />
 			</View>
 		);
 	};
-<<<<<<< HEAD
-
-	return (
-		<TouchableOpacity onPress={() => Modal.close()} activeOpacity={1} style={style.background}>
-			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
-				{console.log('items.length:', items.length)}
-				{/* {checkApi.current ? ( */}
-				{items.length > 0 ? (
-					// <PetAccountList items={items} onLabelClick={selectPet} />
-					<FlatList data={items} renderItem={({item, index}) => renderItem(item, index)} />
-				) : (
-					<Text style={[{textAlign: 'center', marginBottom: 30 * DP}, txt.noto28b]}>{'등록된 반려동물이 없습니다.\n 반려동물을 등록해주세요'}</Text>
-				)}
-				{/* // ) : null} */}
-				{props.isBtnMode ? (
-					<>
-						<View style={style.buttonContainer}>
-							<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.okButtonnMsg} onPress={pressOk} />
-						</View>
-						{(checkApi.current = false)}
-					</>
-				) : (
-					<></>
-				)}
-			</TouchableOpacity>
-		</TouchableOpacity>
-	);
-=======
 	const platform = Platform.OS;
 
 	React.useEffect(() => {
@@ -177,7 +114,6 @@ const AvatarSelectModal = props => {
 				</TouchableOpacity>
 			</TouchableOpacity>
 		);
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 };
 
 AvatarSelectModal.defaultProps = {
@@ -186,11 +122,7 @@ AvatarSelectModal.defaultProps = {
 		console.log('YES');
 	},
 	onSelectPet: e => {},
-<<<<<<< HEAD
-	isBtnMode: true,
-=======
 	isWriteMode: true,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 };
 
 const style = StyleSheet.create({
@@ -203,11 +135,7 @@ const style = StyleSheet.create({
 		position: 'absolute',
 	},
 	popUpWindow: {
-<<<<<<< HEAD
-		width: 334 * DP,
-=======
 		width: 330 * DP,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		backgroundColor: WHITE,
 		paddingTop: 60 * DP,
 		paddingBottom: 52 * DP,
@@ -221,10 +149,7 @@ const style = StyleSheet.create({
 	},
 	buttonContainer: {
 		flexDirection: 'row',
-<<<<<<< HEAD
-=======
 		paddingTop: 10 * DP,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		justifyContent: 'center',
 	},
 	shadow: {
@@ -237,13 +162,6 @@ const style = StyleSheet.create({
 		},
 		elevation: 2,
 	},
-<<<<<<< HEAD
-	listItem: {
-		width: 294 * DP,
-		height: 114 * DP,
-		borderRadius: 30 * DP,
-		marginBottom: 30 * DP,
-=======
 	avatarList: {
 		maxHeight: 124 * 5 * DP,
 		// backgroundColor: 'red',
@@ -253,7 +171,6 @@ const style = StyleSheet.create({
 		height: 124 * DP,
 		paddingVertical: 10 * DP,
 		borderRadius: 30 * DP,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		paddingHorizontal: 20 * DP,
 		// alignItems: 'center',
 		justifyContent: 'center',

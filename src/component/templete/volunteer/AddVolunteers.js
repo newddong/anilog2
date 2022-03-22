@@ -1,18 +1,10 @@
 import React from 'react';
-<<<<<<< HEAD:src/component/templete/volunteer/AddVolunteers.js
-import {ScrollView, View} from 'react-native';
-=======
 import {ScrollView, Text, View} from 'react-native';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AddVolunteers.js
 import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import InputWithSearchIcon from 'Molecules/input/InputWithSearchIcon';
 import AccountList from 'Organism/list/AccountList';
-<<<<<<< HEAD:src/component/templete/volunteer/AddVolunteers.js
-import {login_style, btn_style, temp_style, addFamilyAccount_style} from 'Templete/style_templete';
-=======
 import {login_style, btn_style, temp_style, addVolunteers} from 'Templete/style_templete';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AddVolunteers.js
 import {CommonActions} from '@react-navigation/native';
 import Modal from 'Component/modal/Modal';
 import {addUserToFamily, getUserListByNickname} from 'Root/api/userapi';

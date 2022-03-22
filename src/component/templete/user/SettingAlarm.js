@@ -29,7 +29,7 @@ export default SettingAlarm = ({route}) => {
 			{},
 			noticeObject => {
 				var temp = noticeObject.msg[0];
-				var tempInt = 0;
+
 				delete temp._id;
 				delete temp.notice_update_date;
 				delete temp.notice_user_id;
@@ -37,15 +37,7 @@ export default SettingAlarm = ({route}) => {
 				// console.log('temp', temp);
 				if (temp.notice_all) {
 					setOnCount(8);
-				} else {
-					for (var i of Object.values(temp)) {
-						console.log('iii', i);
-						if (i == true) {
-							tempInt++;
-						}
-					}
 				}
-				setOnCount(tempInt);
 				setAlarm(temp);
 				setLoading(false);
 			},

@@ -1,13 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Dimensions, Text, TouchableOpacity, Animated} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-<<<<<<< HEAD
-import TopTabNavigation_Border from 'Organism/menu/TopTabNavigation_Border';
-import LinkedAccountList from 'Templete/list/LinkedAccountList';
-import FollowerList from 'Templete/list/FollowerList';
-import RecommendedAccountList from 'Templete/list/RecommendedAccountList';
-import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
-=======
 import LinkedAccountList from 'Templete/list/LinkedAccountList';
 import FollowerList from 'Templete/list/FollowerList';
 import RecommendedAccountList from 'Templete/list/RecommendedAccountList';
@@ -15,19 +8,17 @@ import DP from 'Root/config/dp';
 import {APRI10, GRAY10, WHITE} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {count_to_K} from 'Root/util/stringutil';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 
 const SocialRelationTab = createMaterialTopTabNavigator();
 
 export default SocialRelationTopTabNavigation = ({route, navigation}) => {
 	const data = route.params.userobject;
-
 	//헤더 타이틀 설정 작업 및 유저 오브젝트 할당
 	React.useEffect(() => {
 		navigation.setOptions({title: route.params.userobject.user_nickname});
 	}, [route.params]);
 
-	const tabBarItems = ['함께 아는 친구', count_to_K(data.user_follower_count) + ' 팔로워', count_to_K(data.user_follow_count) + ' 팔로잉', '추천'];
+	const tabBarItems = [count_to_K(data.user_follower_count) + ' 팔로워', count_to_K(data.user_follow_count) + ' 팔로잉', '추천'];
 
 	function MyTabBar({state, descriptors, navigation, position}) {
 		return (
@@ -49,15 +40,15 @@ export default SocialRelationTopTabNavigation = ({route, navigation}) => {
 					const getWidth = () => {
 						switch (index) {
 							case 0:
-								return '35%';
-								break;
 							case 1:
+								return '33%';
+								break;
 							case 2:
-								return '23%';
+								return '33%';
 								break;
-							case 3:
-								return '13%';
-								break;
+							// case 3:
+							// 	return '13%';
+							// 	break;
 
 							default:
 								break;
@@ -106,6 +97,11 @@ export default SocialRelationTopTabNavigation = ({route, navigation}) => {
 			initialLayout={{width: Dimensions.get('window').width}}
 			tabBar={props => <MyTabBar {...props} />}
 			screenOptions={{
+				// tabBarItemStyle: {height: 70 * DP},
+				// tabBarIndicatorStyle: styles.tabBarIndicatorStyle,
+				// tabBarActiveTintColor: WHITE,
+				// tabBarLabelStyle: [styles.tabbarLabelStyle],
+				// tabBarInactiveTintColor: GRAY10,
 				lazy: true,
 			}}>
 			<SocialRelationTab.Screen name="LinkedAccountList" component={LinkedAccountList} initialParams={{userobject: data}} />
@@ -132,5 +128,17 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 2 * DP,
 		borderBottomColor: APRI10,
 		color: APRI10,
+	},
+
+	tabbarLabelStyle: {
+		fontFamily: 'NotoSansKR-Bold',
+		fontSize: 30 * DP,
+		marginTop: -20 * DP,
+	},
+	tabBarIndicatorStyle: {
+		backgroundColor: APRI10,
+		height: 70 * DP,
+		borderTopRightRadius: 40 * DP,
+		borderTopLeftRadius: 40 * DP,
 	},
 });

@@ -38,31 +38,20 @@ export default LoginTemplete = props => {
 
 	const tryToLogin = () => {
 		Modal.popNoBtn('로그인을 요청합니다.');
-<<<<<<< HEAD:src/component/templete/login/LoginTemplete.js
-=======
 		// if (!userSetting.isSaveId) {
 		// 	userSetting.id = '';
 		// 	userSetting.password = '';
 		// }
 		AsyncStorage.setItem('userSetting', JSON.stringify(userSetting));
 		console.log('userSetting', userSetting);
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/LoginTemplete.js
 		userLogin(
 			{
 				login_id: userSetting.id,
 				login_password: userSetting.password,
 			},
 			userObject => {
-<<<<<<< HEAD:src/component/templete/login/LoginTemplete.js
-				console.log('userObject', userObject.msg);
 				Modal.close();
 				Modal.popNoBtn(userObject.msg.user_nickname + '님 \n로그인이 성공하였습니다.');
-				// AsyncStorage.setItem('token', userObject.msg._id || '');
-				// AsyncStorage.setItem('type', userObject.msg.user_type || '');
-=======
-				Modal.close();
-				Modal.popNoBtn(userObject.msg.user_nickname + '님 \n로그인이 성공하였습니다.');
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/LoginTemplete.js
 
 				if (!userObject.msg._id) {
 					AsyncStorage.getItem('userInfo').then(user => {
@@ -72,15 +61,8 @@ export default LoginTemplete = props => {
 					AsyncStorage.setItem('userInfo', JSON.stringify(userObject.msg));
 					userGlobalObj.userInfo = userObject.msg;
 				}
-<<<<<<< HEAD:src/component/templete/login/LoginTemplete.js
-				
 				Modal.close();
 				props.navigation.reset({routes: [{name: 'MainTab', params: userObject.msg.user_type}]});
-				
-=======
-				Modal.close();
-				props.navigation.reset({routes: [{name: 'MainTab', params: userObject.msg.user_type}]});
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/LoginTemplete.js
 			},
 			error => {
 				Modal.close();
@@ -142,12 +124,6 @@ export default LoginTemplete = props => {
 		console.log('Id Validator ' + text);
 	};
 
-<<<<<<< HEAD:src/component/templete/login/LoginTemplete.js
-	const test = () => {
-		Modal.popSelectScrollBoxModal([mobile_carrier], '도, 광역시를 지정해주세요.', e => console.log('e', e));
-	};
-
-=======
 	const [t, setT] = React.useState(false);
 	const test = () => {
 		// Modal.popSelectScrollBoxModal([mobile_carrier], '도, 광역시를 지정해주세요.', e => console.log('e', e));
@@ -160,7 +136,6 @@ export default LoginTemplete = props => {
 			</View>
 		);
 	}
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/LoginTemplete.js
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
 			{/* confirm without login */}
@@ -207,6 +182,52 @@ export default LoginTemplete = props => {
 					<AniButton btnLayout={btn_w522} btnTitle={'로그인'} btnTheme={'shadow'} titleFontStyle={32} onPress={tryToLogin} />
 				</View>
 
+				<View style={[login_style.basic_info, loginTemplete_style.basic_info, {marginTop: 10}]}>
+					<TouchableOpacity
+						onPress={() => {
+							setUserSetting({...userSetting, id: '0001', password: '12'});
+						}}>
+						<Text style={[txt.noto24, {color: GRAY20}]}> 보호소 1</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={() => {
+							setUserSetting({...userSetting, id: '0002', password: '12'});
+						}}>
+						<Text style={[txt.noto24, {color: GRAY20}]}> 희망보호소 </Text>
+					</TouchableOpacity>
+					<Text style={{color: GRAY20}}> | </Text>
+
+					<TouchableOpacity
+						onPress={() => {
+							setUserSetting({...userSetting, id: '01001096450003', password: 'tkddn123'});
+						}}>
+						<Text style={[txt.noto24, {color: GRAY20}]}> 보호소 2</Text>
+					</TouchableOpacity>
+					<Text style={{color: GRAY20}}> | </Text>
+					<TouchableOpacity
+						onPress={() => {
+							setUserSetting({...userSetting, id: '0422', password: '12'});
+						}}>
+						<Text style={[txt.noto24, {color: GRAY20}]}> 계정 1 </Text>
+					</TouchableOpacity>
+					<Text style={{color: GRAY20}}> | </Text>
+					<TouchableOpacity
+						onPress={() => {
+							setUserSetting({...userSetting, id: '01096450420', password: 'tkddn123'});
+						}}>
+						<Text style={[txt.noto24, {color: GRAY20}]}> 계정 2 </Text>
+					</TouchableOpacity>
+					<Text style={{color: GRAY20}}> | </Text>
+
+					<TouchableOpacity
+						onPress={() => {
+							setUserSetting({...userSetting, id: '0423', password: '12'});
+							// props.navigation.push('GeoLocation');
+						}}>
+						<Text style={[txt.noto24, {color: GRAY20}]}> 계정 3 </Text>
+					</TouchableOpacity>
+				</View>
+
 				{/* Btn_w522 */}
 				<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_assign]}>
 					<AniButton btnLayout={btn_w522} btnTitle={'회원가입'} btnStyle={'border'} btnTheme={'shadow'} titleFontStyle={32} onPress={moveToAssign} />
@@ -226,27 +247,6 @@ export default LoginTemplete = props => {
 						<Text style={[txt.noto24, {color: GRAY20}]}> 비밀번호 재설정</Text>
 					</TouchableOpacity>
 				</View>
-<<<<<<< HEAD:src/component/templete/login/LoginTemplete.js
-
-				{/* <AniButton btnLayout={btn_w522} btnTitle={'테스트'} btnStyle={'border'} titleFontStyle={32} onPress={test} /> */}
-				{/* <WebView></WebView> */}
-				{/* social login */}
-				{/* <View style={[login_style.social_info, loginTemplete_style.social_info]}>
-				<View style={[loginTemplete_style.socialLogin_icon]}>
-					<Naver_Icon />
-				</View>
-				<View style={[loginTemplete_style.socialLogin_icon]}>
-					<Kakao_Icon />
-				</View>
-				<View style={[loginTemplete_style.socialLogin_icon]}>
-					<Instagram_Icon />
-				</View>
-				<View style={[loginTemplete_style.socialLogin_icon]}>
-					<Facebook_Icon />
-				</View>
-			</View> */}
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/LoginTemplete.js
 			</View>
 		</View>
 	);

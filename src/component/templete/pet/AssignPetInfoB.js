@@ -12,11 +12,7 @@ import Modal from 'Component/modal/Modal';
 import Input30 from 'Molecules/input/Input30';
 import {assignPet} from 'Root/api/userapi';
 import {stagebar_style} from 'Organism/style_organism copy';
-<<<<<<< HEAD:src/component/templete/pet/AssignPetInfoB.js
-import {DEFAULT_ANIMAL_PROFILE, DEFAULT_PROFILE} from 'Root/i18n/msg';
-=======
 import userGlobalObject from 'Root/config/userGlobalObject';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AssignPetInfoB.js
 
 export default AssignPetInfoB = props => {
 	// console.log('AssignPetInfoB', props.route.params.data);
@@ -69,47 +65,6 @@ export default AssignPetInfoB = props => {
 	};
 
 	//등록 완료
-<<<<<<< HEAD:src/component/templete/pet/AssignPetInfoB.js
-	const onRegister = async () => {
-		Modal.popTwoBtn(
-			'추가로 등록할 반려동물이 있나요?',
-			'아니오',
-			'추가 등록',
-			() => {
-				Modal.popNoBtn('반려동물 등록 중입니다.');
-				console.log('data before assiginPet', data.user_profile_uri);
-				let isCopied = {...data};
-				if (isCopied.user_profile_uri == '') {
-					isCopied.user_profile_uri = 'http://';
-				}
-				console.log('isCopied.user_profile_uri ', isCopied.user_profile_uri);
-				try {
-					assignPet(
-						{...isCopied, userobject_id: data.userobject_id},
-						success => {
-							console.log('success', success);
-							Modal.close();
-							Modal.popOneBtn('반려동물 등록이 완료되었습니다.', '확인', () => {
-								Modal.close();
-								props.navigation.navigate(data.previousRouteName);
-							});
-						},
-						error => {
-							console.log('error', error);
-							Modal.close();
-
-							Modal.popOneBtn(error, '확인', () => Modal.close());
-						},
-					);
-				} catch (err) {
-					console.log('err', err);
-				} finally {
-					Modal.close();
-				}
-			},
-			() => {
-				props.navigation.reset({routes: [{name: 'AssignPetProfileImage', params: {initialization: true}}]});
-=======
 	const onRegister = () => {
 		let isCopied = {...data};
 		console.log('isCop', isCopied);
@@ -147,7 +102,6 @@ export default AssignPetInfoB = props => {
 			error => {
 				console.log('error', error);
 				Modal.close();
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AssignPetInfoB.js
 			},
 		);
 	};

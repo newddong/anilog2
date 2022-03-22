@@ -3,19 +3,12 @@ import {ActivityIndicator, ScrollView, View} from 'react-native';
 import {getProtectRequestByProtectRequestId, setProtectActivityStatus, setProtectRequestStatus} from 'Root/api/protectapi';
 import {assignPet} from 'Root/api/userapi';
 import {PROTECT_ACT_ADOPT_CONFIRM, PROTECT_ACT_PROTECT_CONFIRM} from 'Root/i18n/msg';
-<<<<<<< HEAD:src/component/templete/protection/ProtectApplyForm.js
-import {btn_w226} from 'Atom/btn/btn_style';
-=======
 import {btn_w226, btn_w654} from 'Atom/btn/btn_style';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ProtectApplyForm.js
 import Modal from 'Component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
 import AnimalProtectDetail from 'Organism/info/AnimalProtectDetail';
 import {login_style, btn_style, protectApplyForm} from 'Templete/style_templete';
-<<<<<<< HEAD:src/component/templete/protection/ProtectApplyForm.js
-=======
 import {setShelterProtectAnimalStatus} from 'Root/api/shelterapi';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ProtectApplyForm.js
 
 //ShelterMenu -> 신청서조회 -> 신청서 클릭 -> 입양 확정 및 임시보호 확정
 export default ProtectApplyForm = ({route, navigation}) => {
@@ -39,12 +32,6 @@ export default ProtectApplyForm = ({route, navigation}) => {
 				addedData.protect_animal_id = result.msg.protect_animal_id;
 				addedData.shelter_name = result.msg.protect_request_writer_id.user_nickname;
 				setData(addedData);
-<<<<<<< HEAD:src/component/templete/protection/ProtectApplyForm.js
-				setTimeout(() => {
-					setLoading(false);
-				}, 500);
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ProtectApplyForm.js
 			},
 			err => {
 				console.log('err / getProtectRequestByProtectRequestId / ProtectApplyForm /ProtectionApplicationList ', err);

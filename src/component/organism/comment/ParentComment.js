@@ -4,14 +4,24 @@ import {organism_style, parentComment} from 'Organism/style_organism';
 import {styles} from 'Atom/image/imageStyle';
 import ChildCommentList from 'Organism/comment/ChildCommentList';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
-import {Heart30_Border, Heart30_Filled, Meatball50_APRI10_Vertical, Meatball50_GRAY20_Vertical} from 'Atom/icon';
+import {
+	Arrow_Down_GRAY10,
+	Heart30_Border,
+	Heart30_Filled,
+	Lock60_Border,
+	Lock60_Filled,
+	Meatball50_APRI10_Vertical,
+	Meatball50_GRAY20_Vertical,
+	ProfileDefaultImg,
+	SecureIcon40,
+} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
 import {DEFAULT_PROFILE, REPLY_MEATBALL_MENU, REPLY_MEATBALL_MENU_MY_REPLY, SETTING_COMMENT, SETTING_OWN_COMMENT} from 'Root/i18n/msg';
 import {GRAY10} from 'Root/config/color';
 import {getChildCommentList} from 'Root/api/commentapi';
 import Modal from 'Component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
-
+import {likeComment} from 'Root/api/commentapi';
 /**
  *
  * @param {{
@@ -21,10 +31,12 @@ import userGlobalObject from 'Root/config/userGlobalObject';
  * }} props
  */
 export default ParentComment = React.memo((props, ref) => {
-	// console.log('ParentComment', props.parentComment.comment_contents);
+	// console.log('ParentComment : ', props.parentComment.comment_writer_id.user_nickname, props.parentComment.comment_is_secure);
+	// console.log('ParentComment', props.parentComment.comment_is_secure);
 
 	const [data, setData] = React.useState(props.parentComment);
 	const [child, setChild] = React.useState([]);
+	const [likeCount, setLikeCount] = React.useState(0);
 	const [likeState, setLikeState] = React.useState(false); //해당 댓글의 좋아요 상태 - 로그인 유저가 좋아요를 누른 기록이 있다면 filled , or border
 	const [isMyComment, setIsMyComment] = React.useState(false); //해당 댓글 작성자가 본인인지 여부 Boolean
 	const [showChild, setShowChild] = React.useState(false); //해당 댓글의 답글들 출력 여부 Boolean
@@ -32,7 +44,8 @@ export default ParentComment = React.memo((props, ref) => {
 
 	React.useEffect(() => {
 		setData(props.parentComment);
-
+		setLikeState(props.parentComment.comment_is_like);
+		setLikeCount(props.parentComment.comment_like_count);
 		// console.log('parantCommnet data', data);
 		//API 에서 해당 데이터가 들어온 후 재작업 예정.
 		//댓글의 Writer와 로그인유저가 일치하는 경우 내 댓글 처리
@@ -53,6 +66,7 @@ export default ParentComment = React.memo((props, ref) => {
 		getChildCommentList(
 			{
 				commentobject_id: props.parentComment._id,
+				login_userobject_id: userGlobalObject.userInfo._id
 			},
 			result => {
 				console.log(result.msg);
@@ -70,12 +84,23 @@ export default ParentComment = React.memo((props, ref) => {
 
 	const onCLickHeart = () => {
 		setLikeState(!likeState);
+		likeComment({
+			commentobject_id : props.parentComment._id,
+			userobject_id: userGlobalObject.userInfo._id,
+			is_like: !likeState
+		},({msg}) =>{
+			setLikeCount(msg.targetComment.comment_like_count);
+		},error=>{
+			console.log(error);
+		})
+		props.like&&props.like(props.parentComment);
 	};
 
 	const showChildComment = () => {
 		getChildCommentList(
 			{
 				commentobject_id: props.parentComment._id,
+				login_userobject_id: userGlobalObject.userInfo._id
 			},
 			result => {
 				console.log(result.msg);
@@ -87,86 +112,168 @@ export default ParentComment = React.memo((props, ref) => {
 	};
 
 	const onSelectReplyMeatballMenu = i => {};
+	
+	const onEdit = (data) => {
+		
+		props.onEdit&&props.onEdit(data);
+	}
+
+	const like = data => {
+
+		props.like&&props.like(data);
+	}
 
 	const onPressMeatball = () => {
 		// console.log('meatballREf', meatballRef);
+		
 		meatballRef.current.measure((fx, fy, width, height, px, py) => {
 			const isWriter = userGlobalObject.userInfo._id == data.comment_writer_id._id;
+			console.log('px', px);
+			console.log('py', py);
 			if (isWriter) {
-				Modal.popDropdownModal(
-					{x: px, y: py},
+				Modal.popSelectBoxModal(
 					REPLY_MEATBALL_MENU_MY_REPLY,
 					selectedItem => {
-						alert(REPLY_MEATBALL_MENU_MY_REPLY[selectedItem]);
+						switch (selectedItem) {
+							case '상태 변경':
+								alert('상태 변경!');
+								break;
+							case '공유하기':
+								alert('공유하기!');
+								break;
+							case '수정':
+								onEdit(props.parentComment);
+								// alert('수정!');
+								// navigation.navigate('FeedEdit',props.data);
+								break;
+							case '삭제':
+								alert('삭제');
+								break;
+							default:
+								break;
+						}
+						Modal.close();
+						// setIsMeatballClicked(false);
 					},
-					() => {
-						console.log('meatball', meatball);
-					},
+					() => Modal.close(),
+					false,
+					'',
 				);
 			} else {
-				Modal.popDropdownModal(
-					{x: px, y: py},
+				Modal.popSelectBoxModal(
 					REPLY_MEATBALL_MENU,
 					selectedItem => {
-						alert(REPLY_MEATBALL_MENU[selectedItem]);
+						switch (selectedItem) {
+							case '상태 변경':
+								alert('상태 변경!');
+								break;
+							case '공유하기':
+								alert('공유하기!');
+								break;
+							case '수정':
+								// alert('수정!');
+								// navigation.navigate('FeedEdit',props.data);
+								break;
+							case '삭제':
+								alert('삭제');
+								break;
+							default:
+								break;
+						}
+						Modal.close();
+						// setIsMeatballClicked(false);
 					},
-					() => {
-						console.log('meatball', meatball);
-					},
+					() => Modal.close(),
+					false,
+					'',
 				);
 			}
 		});
 	};
+
+	const isNotAuthorized = () => {
+		let result = true;
+		if (!data.comment_is_secure) {
+			//비밀댓글이 아니라면 public
+			result = false;
+		} else if (userGlobalObject.userInfo._id == data.comment_writer_id._id) {
+			//비밀댓글이지만 댓글의 작성자라면 public
+			result = false;
+		} else if (userGlobalObject.userInfo._id != data.comment_writer_id._id && userGlobalObject.userInfo._id == data.comment_feed_writer_id) {
+			//비밀댓글이면 댓글의 작성자는 아니지만 해당 피드의 작성자라면 public (차후 기획이 바뀐다면 피드 작성자도 볼 수 없다)
+			result = false;
+		} else {
+			// console.log('result', result);
+			return result;
+		}
+	};
+	// userGlobalObject.userInfo._id == data.comment_writer_id &&
 
 	const meatballRef = React.useRef();
 	const childrenCount = child.length > 0 ? child.length : props.parentComment.children_count;
 	return (
 		<View style={organism_style.parentComment}>
 			{/* 유저프로필 라벨 및 Meatball  */}
-			<View style={[organism_style.UserLocationTimeLabel_view_parentComment]}>
-				<View style={[organism_style.userLocationTimeLabel, parentComment.userLabelContainer]} ref={meatballRef}>
+			<View style={[organism_style.UserLocationTimeLabel_view_parentComment, {}]}>
+				<View style={[parentComment.userLabelContainer, {}]} collapsable={false} ref={meatballRef}>
 					<UserLocationTimeLabel data={data.comment_writer_id} time={data.comment_update_date} />
+					{isNotAuthorized() ? (
+						<View style={[parentComment.secureIcon]}>
+							<SecureIcon40 />
+						</View>
+					) : (
+						<></>
+					)}
+				</View>
+				<View style={[]}>
 					{meatball ? <Meatball50_APRI10_Vertical onPress={onPressMeatball} /> : <Meatball50_GRAY20_Vertical onPress={onPressMeatball} />}
 				</View>
-				{/* 연결되는 기능 개발 후 추후 연결 */}
-				{/* <View style={[organism_style.meatball_50_vertical]}>
-					<MeatBallDropdown menu={isMyComment ? SETTING_OWN_COMMENT : SETTING_COMMENT} horizontal={false} />
-				</View> */}
 			</View>
 			{/* 댓글 Dummy 이미지 및 대댓글 목록 */}
-			{data.comment_photo_uri != null ? ( //img_square_round_574
-				<View style={[organism_style.img_square_round_574, parentComment.img_square_round]}>
-					<Image style={[styles.img_square_round_574]} source={{uri: data ? data.comment_photo_uri : DEFAULT_PROFILE}} />
-				</View>
-			) : (
+			{data.comment_photo_uri == undefined || isNotAuthorized() ? ( //img_square_round_574
 				<></>
+			) : (
+				<View style={[organism_style.img_square_round_574, parentComment.img_square_round]}>
+					<Image style={[styles.img_square_round_574]} source={{uri: data.comment_photo_uri}} />
+				</View>
 			)}
 			{/* 댓글 내용 */}
 			<View style={[parentComment.comment_contents]}>
-				<Text style={[txt.noto26]}>{data ? data.comment_contents : ''}</Text>
+				{isNotAuthorized() ? (
+					<Text style={[txt.noto26, {}]}> 비밀 댓글 입니다.</Text>
+				) : (
+					<Text style={[txt.noto26]}>{data ? data.comment_contents : ''}</Text>
+				)}
 			</View>
-			<View style={[parentComment.likeReplyButton]}>
-				{/* Data - 좋아요 상태 t/f */}
+			{isNotAuthorized() ? (
+				<></>
+			) : (
+				<View style={[parentComment.likeReplyButton]}>
+					{/* Data - 좋아요 상태 t/f */}
+					<View style={[parentComment.heart30]}>
+						{likeState ? <Heart30_Filled onPress={onCLickHeart} /> : <Heart30_Border onPress={onCLickHeart} />}
+					</View>
+					<View style={[parentComment.likeCount]}>
+						{/* Data - 좋아요 숫자 */}
+						<Text style={(txt.roboto24, parentComment.likeCountText)}>{likeCount}</Text>
+					</View>
+					<TouchableOpacity style={[parentComment.writeComment]} onPress={onPressReplyBtn}>
+						<Text style={[txt.noto22, parentComment.writeCommentText]}>· 답글 쓰기</Text>
+					</TouchableOpacity>
+				</View>
+			)}
 
+			{/* {data.children_count > 0 && <Text style={[txt.noto24, {color: GRAY10}]}> 답글{data.children_count}개 보기 </Text>} */}
+			{childrenCount > 0 && (
 				<TouchableOpacity onPress={showChildComment} style={[parentComment.showChildComment]}>
-					{/* {data.children_count > 0 && <Text style={[txt.noto24, {color: GRAY10}]}> 답글{data.children_count}개 보기 </Text>} */}
-					{childrenCount > 0 && <Text style={[txt.noto24, {color: GRAY10}]}> 답글{childrenCount}개 보기 </Text>}
+					<Text style={[txt.noto22, {color: GRAY10}]}> 답글 {childrenCount}개 보기 </Text>
+					<Arrow_Down_GRAY10 />
 				</TouchableOpacity>
-				<View style={[parentComment.heart30]}>
-					{likeState ? <Heart30_Filled onPress={onCLickHeart} /> : <Heart30_Border onPress={onCLickHeart} />}
-				</View>
-				<View style={[parentComment.likeCount]}>
-					{/* Data - 좋아요 숫자 */}
-					<Text style={(txt.roboto24, parentComment.likeCountText)}>{data ? data.comment_like_count : ''}</Text>
-				</View>
-				<TouchableOpacity style={[parentComment.writeComment]} onPress={onPressReplyBtn}>
-					<Text style={(txt.noto22, parentComment.writeCommentText)}>· 답글 쓰기</Text>
-				</TouchableOpacity>
-			</View>
+			)}
 			{/* Data - 대댓글List */}
 			{showChild ? (
 				<View style={[organism_style.childCommentList, parentComment.img_square_round_574]}>
-					<ChildCommentList items={child} showChildComment={showChildComment} />
+					<ChildCommentList items={child} showChildComment={showChildComment} onEdit={onEdit} like={like}/>
 				</View>
 			) : (
 				false

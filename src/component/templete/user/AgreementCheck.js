@@ -1,10 +1,6 @@
 import React from 'react';
 import {View, ScrollView} from 'react-native';
 import {APRI10} from 'Root/config/color';
-<<<<<<< HEAD:src/component/templete/user/AgreementCheck.js
-import {userAssign_agreementCheckList} from 'Root/config/dummyDate_json';
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AgreementCheck.js
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from 'Atom/btn/btn_style';
 import Modal from 'Root/component/modal/Modal';

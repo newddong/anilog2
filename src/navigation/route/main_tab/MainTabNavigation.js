@@ -16,11 +16,8 @@ const MainTabNav = createBottomTabNavigator();
 export default MainTabNavigation = ({route, navigation}) => {
 	const routeName = getFocusedRouteNameFromRoute(route) ?? '';
 	// console.log('getFocusedRouteNameFromRoute / MainTab  : ', routeName);
-<<<<<<< HEAD
-=======
 	const [current, setCurrent] = React.useState('ArticleMain');
 
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	const getTabBarVisibility = route => {
 		switch (routeName) {
 			case 'AnimalProtectRequestDetail':
@@ -103,10 +100,6 @@ export default MainTabNavigation = ({route, navigation}) => {
 				options={{
 					header: props => <InputAndSearchHeader {...props} />,
 					tabBarShowLabel: false,
-<<<<<<< HEAD
-					// headerShown: ,
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 				}}>
 				{props => <SearchTabNavigation {...props} />}
 			</MainTabNav.Screen>

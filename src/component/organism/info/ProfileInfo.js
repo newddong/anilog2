@@ -17,6 +17,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import SelectInput from 'Root/component/molecules/button/SelectInput';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 import {FloatAddArticle_126x92} from 'Atom/icon';
+import {useNavigation} from '@react-navigation/core';
 
 /**
  * 프로필 템플릿 상단의 유저 정보
@@ -30,9 +31,11 @@ import {FloatAddArticle_126x92} from 'Atom/icon';
  * @param {()=>void} props.adoptionBtnClick - 입양 버튼(삭제예정)
  * @param {()=>void} props.onPressAddPetBtn - 보호소 계정(계정 주인)의 보호동물 추가 버튼 클릭
  * @param {()=>void} props.onPressAddArticleBtn - 보호소 계정(계정 주인)의 보호요청 게시글 추가 버튼 클릭
+ * @param {()=>void} props.onPressEditProfile - 일반 혹은 보호소 계정(계정 주인)의 프로필 수정 버튼 클릭
  */
 const ProfileInfo = props => {
 	const [data, setData] = React.useState(props.data);
+	const navigation = useNavigation();
 
 	const [showMore, setShowMore] = React.useState(false); // 프로필 Description 우측 더보기 클릭 State
 	const [ownerListState, setOwnerListState] = React.useState(false); // userType이 Pet일 경우 반려인계정 출력 여부 T/F
@@ -40,10 +43,6 @@ const ProfileInfo = props => {
 	const [into_height, setIntro_height] = React.useState(0); //user_introduction 의 길이 => 길이에 따른 '더보기' 버튼 출력 여부 결정
 
 	const isOwner = userGlobalObject.userInfo.user_my_pets.includes(data._id);
-<<<<<<< HEAD:src/component/organism/info/ProfileInfo.js
-	console.log('data', isOwner);
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism/ProfileInfo.js
 
 	//더보기 클릭
 	const onPressShowMore = () => {
@@ -123,14 +122,9 @@ const ProfileInfo = props => {
 			);
 		} else {
 			if (userGlobalObject.userInfo._id == data._id) {
-<<<<<<< HEAD:src/component/organism/info/ProfileInfo.js
-				return (
-					<View style={[{flexDirection: 'row', justifyContent: 'space-between'}]}>
-=======
 				//보호소 프로필이며 자기 계정인 경우
 				return (
 					<View style={[profileInfo_style.shelterButtonContainer]}>
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism/ProfileInfo.js
 						<FloatAddPet_128x68 onPress={onPressAddPetBtn} />
 						<FloatAddArticle_128x68 onPress={onPressAddArticleBtn} />
 					</View>
@@ -141,9 +135,9 @@ const ProfileInfo = props => {
 		}
 	};
 
-	React.useEffect(() => {
-		setData(props.data); //부모에서 props가 비동기로 바뀌었을때 반영하기위함
-	}, [props.data]);
+	// React.useEffect(() => {
+	// 	setData(props.data); //부모에서 props가 비동기로 바뀌었을때 반영하기위함
+	// }, [props.data]);
 
 	//현재 프로필의 유저를 팔로우한다.
 	const follow = () => {
@@ -173,21 +167,6 @@ const ProfileInfo = props => {
 				break;
 		}
 	};
-<<<<<<< HEAD:src/component/organism/info/ProfileInfo.js
-
-	const onPressFollowingSetting = () => {
-		let isProtectingPet = userGlobalObject.userInfo.user_my_pets.includes(data._id) || data.pet_status == 'protect';
-		Modal.popSelectBoxModal(
-			isProtectingPet ? FOLLOWER_PET_MENU : FOLLOWER_MENU,
-			selectedItem => {
-				alert(selectedItem);
-				Modal.close();
-			},
-			() => Modal.close(),
-			true,
-			'팔로우 중',
-		);
-=======
 
 	const onPressFollowingSetting = () => {
 		let isProtectingPet = userGlobalObject.userInfo.user_my_pets.includes(data._id) || data.pet_status == 'protect';
@@ -204,8 +183,7 @@ const ProfileInfo = props => {
 	};
 
 	const onPressEditProfile = () => {
-		console.log('dd');
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism/ProfileInfo.js
+		props.onPressEditProfile();
 	};
 
 	const onPressShelterContact = () => {
@@ -278,11 +256,7 @@ const ProfileInfo = props => {
 			<View style={[organism_style.btn_w280_view_profileInfo, profileInfo_style.btn_w280_view]}>
 				<View style={[organism_style.btn_w280_profileInfo]}>
 					{userGlobalObject.userInfo._id == data._id ? (
-<<<<<<< HEAD:src/component/organism/info/ProfileInfo.js
-						<AniButton btnTitle={'프로필 수정'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} />
-=======
 						<AniButton onPress={onPressEditProfile} btnTitle={'프로필 수정'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} />
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism/ProfileInfo.js
 					) : data.is_follow ? (
 						<ArrowDownButton btnTitle={'팔로우 중'} btnLayout={btn_w280x68} onPress={onPressFollowingSetting} />
 					) : (
@@ -303,5 +277,6 @@ ProfileInfo.defaultProps = {
 	onHideCompanion: e => {},
 	onPressAddPetBtn: e => {},
 	onPressAddArticleBtn: e => {},
+	onPressEditProfile: () => {},
 };
 export default ProfileInfo;

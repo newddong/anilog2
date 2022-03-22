@@ -1,9 +1,5 @@
 import React from 'react';
 import {FlatList, Text, View} from 'react-native';
-<<<<<<< HEAD:src/component/organism/list/SelectedMediaList.js
-import {dummy_selectedMediaList} from 'Root/config/dummyDate_json';
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/SelectedMediaList.js
 import {styles} from 'Atom/image/imageStyle';
 import SelectedMedia from 'Molecules/media/SelectedMedia';
 import {selectedMediaList} from 'Organism/style_organism copy';

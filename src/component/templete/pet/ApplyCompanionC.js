@@ -10,10 +10,7 @@ import Stagebar from 'Molecules/info/Stagebar';
 import AssignCheckList from 'Organism/list/AssignCheckList';
 import {stagebar_style} from 'Organism/style_organism copy';
 import {applyCompanionC, btn_style, login_style, temp_style} from 'Templete/style_templete';
-<<<<<<< HEAD:src/component/templete/pet/ApplyCompanionC.js
-=======
 import {applyComanionCheckList} from 'Root/i18n/msg';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ApplyCompanionC.js
 
 // protect_act_checklist : {
 // 	is_adult : Boolean, //성인여부

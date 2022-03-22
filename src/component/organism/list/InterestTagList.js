@@ -27,20 +27,7 @@ export default InterestTagList = props => {
 	};
 
 	const onPressAddBtn = () => {
-<<<<<<< HEAD:src/component/organism/list/InterestTagList.js
-		if (props.title == INTEREST_REGION) {
-			navigation.push('LocationPicker');
-		} else if (props.title == INTEREST_ACT) {
-			console.log('Interest Act');
-			Modal.popInterestTagModal(
-				'',
-				() => alert('저장'),
-				() => Modal.close(),
-			);
-		}
-=======
 		props.onPressAddBtn();
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/InterestTagList.js
 	};
 
 	const renderItem = (item, index) => {

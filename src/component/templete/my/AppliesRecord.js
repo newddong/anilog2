@@ -4,16 +4,10 @@ import {ActivityIndicator, ScrollView, Text, TouchableOpacity, View} from 'react
 import {getAppliesRecord} from 'Root/api/protectapi';
 import {txt} from 'Root/config/textstyle';
 import {NextMark} from 'Atom/icon';
-<<<<<<< HEAD:src/component/templete/my/AppliesRecord.js
-import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
-import ShelterList from 'Organism/list/ShelterList';
-import {appliesRecord, login_style} from 'Templete/style_templete';
-=======
 import ShelterList from 'Organism/list/ShelterList';
 import {appliesRecord, login_style} from 'Templete/style_templete';
 import AnimalNeedHelp from 'Root/component/organism/listitem/AnimalNeedHelp';
 import userGlobalObject from 'Root/config/userGlobalObject';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AppliesRecord.js
 
 export default AppliesRecord = ({route}) => {
 	//첫번째 값만 신청내역에 보여주기 위함. AnimalNeedHelpList가 배열 데이터를 다루기 때문에 반드시 객체가 배열이어야 함.
@@ -156,11 +150,7 @@ export default AppliesRecord = ({route}) => {
 						{adopt_application_list != undefined && adopt_application_list.length > 0 ? (
 							<AnimalNeedHelp data={adopt_application_list[0]} onClickLabel={onClickAdoptApplication} />
 						) : (
-<<<<<<< HEAD:src/component/templete/my/AppliesRecord.js
-							<Text style={{padding: 15}}>검색 결과가 없습니다.</Text>
-=======
 							<Text style={[txt.roboto32b, appliesRecord.whenEmpty]}>신청하신 입양건이 없습니다.</Text>
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AppliesRecord.js
 						)}
 					</View>
 					<View style={[appliesRecord.record]}>
@@ -178,11 +168,7 @@ export default AppliesRecord = ({route}) => {
 						{protect_application_list != undefined && protect_application_list.length > 0 ? (
 							<AnimalNeedHelp data={protect_application_list[0]} onClickLabel={onClickProtectApplication} />
 						) : (
-<<<<<<< HEAD:src/component/templete/my/AppliesRecord.js
-							<Text style={{padding: 15}}>검색 결과가 없습니다.</Text>
-=======
 							<Text style={[txt.roboto32b, appliesRecord.whenEmpty]}>신청하신 임시보호건이 없습니다.</Text>
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AppliesRecord.js
 						)}
 					</View>
 					<View style={[appliesRecord.shelterList_container]}>
@@ -198,11 +184,7 @@ export default AppliesRecord = ({route}) => {
 						{volunteer_list != undefined && volunteer_list.length > 0 ? (
 							<ShelterList items={volunteer_list} onShelterLabelClick={onClickShelterLabel} />
 						) : (
-<<<<<<< HEAD:src/component/templete/my/AppliesRecord.js
-							<Text style={{padding: 15}}>검색 결과가 없습니다.</Text>
-=======
 							<Text style={[txt.roboto32b, appliesRecord.whenEmpty]}>신청하신 봉사활동건이 없습니다.</Text>
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AppliesRecord.js
 						)}
 					</View>
 				</ScrollView>

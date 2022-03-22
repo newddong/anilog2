@@ -1,19 +1,11 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import moment from 'moment';
-<<<<<<< HEAD:src/component/organism/listitem/AnimalNeedHelp.js
-import {useNavigation} from '@react-navigation/core';
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/AnimalNeedHelp.js
 import {txt} from 'Root/config/textstyle';
 import {btn_w276} from 'Atom/btn/btn_style';
 import ProtectedThumbnail from 'Molecules/media/ProtectedThumbnail';
 import AniButton from 'Molecules/button/AniButton';
 import {FavoriteTag48_Border, FavoriteTag48_Filled} from 'Atom/icon';
-<<<<<<< HEAD:src/component/organism/listitem/AnimalNeedHelp.js
-import {BLUE10, BLUE20, RED10} from 'Root/config/color';
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/AnimalNeedHelp.js
 import {DEFAULT_ANIMAL_PROFILE} from 'Root/i18n/msg';
 import {animalNeedHelp} from 'Organism/style_organism copy';
 
@@ -161,11 +153,7 @@ export default AnimalNeedHelp = props => {
 									{/* 보호장소 : {data.protect_request_writer_id != null ? data.protect_request_writer_id.shelter_name : data.shelter_name} */}
 									보호장소 : {data.shelter_name ? data.shelter_name : data.protect_request_writer_id.shelter_name}
 								</Text>
-<<<<<<< HEAD:src/component/organism/listitem/AnimalNeedHelp.js
-								<Text style={[txt.noto28]}>
-=======
 								<Text style={[txt.noto28]} numberOfLines={1}>
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/AnimalNeedHelp.js
 									구조지역 :{' '}
 									{data.protect_animal_rescue_location
 										? data.protect_animal_rescue_location

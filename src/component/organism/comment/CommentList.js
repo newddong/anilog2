@@ -14,13 +14,9 @@ import {txt} from 'Root/config/textstyle';
  * }} props
  */
 export default CommentList = props => {
-<<<<<<< HEAD:src/component/organism/comment/CommentList.js
-
-=======
 	const like = data => {
 	}
 	
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/CommentList.js
 	const renderItem = ({item, index}) => {
 		// console.log('CommentList', item);
 		return (

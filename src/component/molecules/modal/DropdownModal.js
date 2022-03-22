@@ -20,23 +20,14 @@ const DropdownModal = props => {
 	const animatedOpacity = React.useRef(new Animated.Value(0)).current;
 
 	React.useEffect(() => {
-<<<<<<< HEAD
-		Animated.timing(animatedHeight, {
-			duration: 500,
-=======
 		Animated.spring(animatedHeight, {
 			duration: 400,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 			toValue: (props.menu.length * 70 + 40) * DP,
 			easing: Easing.linear,
 			useNativeDriver: false,
 		}).start();
 		Animated.timing(animatedOpacity, {
-<<<<<<< HEAD
-			duration: 600,
-=======
 			duration: 400,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 			toValue: 1,
 			easing: Easing.linear,
 			useNativeDriver: false,
@@ -44,24 +35,14 @@ const DropdownModal = props => {
 	}, []);
 
 	const closeAnimation = () => {
-<<<<<<< HEAD
-		Animated.timing(animatedHeight, {
-			toValue: 0,
-			duration: 500,
-=======
 		Animated.spring(animatedHeight, {
 			toValue: 0,
 			duration: 600,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 			easing: Easing.linear,
 			useNativeDriver: false,
 		}).start();
 		Animated.timing(animatedOpacity, {
-<<<<<<< HEAD
-			duration: 500,
-=======
 			duration: 200,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 			toValue: 0,
 			easing: Easing.linear,
 			useNativeDriver: false,
@@ -90,11 +71,7 @@ const DropdownModal = props => {
 				<TouchableOpacity activeOpacity={1} style={{paddingBottom: 15 * DP}}>
 					{props.menu.map((v, i) => {
 						return (
-<<<<<<< HEAD
-							<TouchableOpacity onPress={() => props.onPressMenu(i)}>
-=======
 							<TouchableOpacity onPress={() => props.onPressMenu(i)} key={i}>
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 								<Text style={[txt.noto24, {height: 48 * DP, marginVertical: 10 * DP, width: 220 * DP, textAlign: 'center'}]}>{v}</Text>
 							</TouchableOpacity>
 						);
@@ -151,11 +128,7 @@ const style = StyleSheet.create({
 		},
 		shadowOpacity: 1,
 		shadowRadius: 4.65 * DP,
-<<<<<<< HEAD
-		elevation: 2,
-=======
 		elevation: 4,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	},
 });
 

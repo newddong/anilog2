@@ -7,11 +7,6 @@ export const organism_style = StyleSheet.create({
 	feedContent: {
 		flexDirection: 'column',
 		width: 750 * DP,
-<<<<<<< HEAD
-		// height: 270 * DP,
-		// height: 300 * DP,
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		alignItems: 'center',
 		paddingTop: 20 * DP,
 		backgroundColor: WHITE,
@@ -30,10 +25,6 @@ export const organism_style = StyleSheet.create({
 		width: 654 * DP, //유저아이디 최우측 미트볼 아이콘 추가를 위한 수정
 		justifyContent: 'space-between',
 		alignItems: 'center',
-<<<<<<< HEAD
-		// backgroundColor: 'yellow',
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	},
 	feed: {
 		alignItems: 'center',
@@ -425,14 +416,11 @@ export const profileInfo_style = StyleSheet.create({
 	},
 	shelter_info_container: {
 		marginTop: 12 * DP,
-<<<<<<< HEAD
-=======
 	},
 	shelterButtonContainer: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		width: 292 * DP,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	},
 });
 
@@ -496,10 +484,5 @@ export const parentComment = StyleSheet.create({
 	},
 	secureIcon: {
 		marginLeft: 10 * DP,
-	},
-	userLabelContainer: {
-		width: 654 * DP,
-		flexDirection: 'row',
-		justifyContent: 'space-between',
 	},
 });

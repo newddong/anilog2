@@ -13,10 +13,7 @@ import Modal from 'Root/component/modal/Modal';
  * @param {string} props.header - 모달 상단 좌측의 헤더 타이틀 / 빈 값 '' 을 보낼 경우 '취소' 출력
  * @param {(선택1, 선택2)=>void} props.onSelect - 완료 버튼 콜백 / data의 길이에 맞게 값 반환
  * @param {()=>void} props.onClose - 취소 버튼 콜백
-<<<<<<< HEAD
-=======
  * @param {height} props.height - 취소 버튼 콜백
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
  *
  */
 const SelectScrollBoxModal = props => {
@@ -25,21 +22,13 @@ const SelectScrollBoxModal = props => {
 	const [selectedItem2, setSelectedItem2] = React.useState(2);
 	const refContainerLeft = React.useRef('');
 	const refContainerRight = React.useRef('');
-<<<<<<< HEAD
-	const padding = '---------------------------';
-=======
 	const padding = '';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 
 	const onSelect = () => {
 		if (data.length == 1) {
 			props.onSelect(data[0][selectedItem - 2]);
 		} else {
-<<<<<<< HEAD
-			props.onSelect(data[0][selectedItem], data[1][selectedItem2]);
-=======
 			props.onSelect(data[0][selectedItem - 2], data[1][selectedItem2 - 2]);
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		}
 	};
 
@@ -54,21 +43,13 @@ const SelectScrollBoxModal = props => {
 	const onScroll = (event, i) => {
 		let y = event.nativeEvent.contentOffset.y;
 		let focused = '';
-<<<<<<< HEAD
-		data[0].length < 5 ? (focused = Math.floor(y / (62 * DP))) : (focused = Math.floor(y / (68 * DP)));
-=======
 
 		data[0].length < 5 ? (focused = Math.floor(y / (72 * DP))) : (focused = Math.floor(y / (78 * DP)));
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		// console.log('foucsed', focused, i);
 		if (i == 0) {
 			if (focused < 1) {
 				setSelectedItem(2);
 			} else if (focused > data[0].length - 1) {
-<<<<<<< HEAD
-				console.log('넘어갔나?');
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 				setSelectedItem(data[0].length + 1);
 			} else {
 				setSelectedItem(focused + 2);
@@ -76,11 +57,8 @@ const SelectScrollBoxModal = props => {
 		} else {
 			if (focused < 1) {
 				setSelectedItem2(2);
-<<<<<<< HEAD
-=======
 			} else if (focused > data[1].length - 1) {
 				setSelectedItem2(data[1].length + 1);
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 			} else {
 				setSelectedItem2(focused + 2);
 			}
@@ -119,11 +97,6 @@ const SelectScrollBoxModal = props => {
 	return (
 		<View style={style.background}>
 			<TouchableWithoutFeedback onPress={() => Modal.close()}>
-<<<<<<< HEAD
-				<View style={{width: 750 * DP, height: 700}} />
-			</TouchableWithoutFeedback>
-			<View style={style.popUpWindow}>
-=======
 				<View style={{width: 750 * DP, height: 1200 * DP}} />
 			</TouchableWithoutFeedback>
 			<View
@@ -133,7 +106,6 @@ const SelectScrollBoxModal = props => {
 						// height: props.height * DP,
 					},
 				]}>
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 				<View style={style.header}>
 					{props.header == '' ? (
 						<Text onPress={() => Modal.close()} style={[txt.noto30, {color: WHITE}]}>
@@ -142,11 +114,7 @@ const SelectScrollBoxModal = props => {
 					) : (
 						<Text style={[txt.noto30, {color: WHITE}]}>{props.header}</Text>
 					)}
-<<<<<<< HEAD
-					<TouchableOpacity onPress={onSelect}>
-=======
 					<TouchableOpacity onPress={onSelect} style={style.completeText}>
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 						<Text style={[txt.noto30, {color: WHITE}]}>완료</Text>
 					</TouchableOpacity>
 				</View>
@@ -163,13 +131,8 @@ const SelectScrollBoxModal = props => {
 									onScroll={e => onScroll(e, i)}
 									showsVerticalScrollIndicator={false}
 									renderItem={({item, index}) => {
-<<<<<<< HEAD
-										return (
-											<TouchableWithoutFeedback key={index} onPress={() => (i == 0 ? setSelectedItem(index) : setSelectedItem2(index))}>
-=======
 										if (item == '') {
 											return (
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 												<View
 													key={index}
 													style={[
@@ -178,18 +141,11 @@ const SelectScrollBoxModal = props => {
 														{
 															width: getWidth(),
 															// zIndex: 3,
-<<<<<<< HEAD
-=======
 															height: i == 0 ? 80 * DP : 80 * DP,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 														},
 													]}>
 													<Text style={[txt.roboto34, {color: getColor(item)}]}>{item}</Text>
 												</View>
-<<<<<<< HEAD
-											</TouchableWithoutFeedback>
-										);
-=======
 											);
 										} else
 											return (
@@ -209,7 +165,6 @@ const SelectScrollBoxModal = props => {
 													</View>
 												</TouchableWithoutFeedback>
 											);
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 									}}
 								/>
 								{/* <View style={[style.box]} /> */}
@@ -225,10 +180,7 @@ const SelectScrollBoxModal = props => {
 SelectScrollBoxModal.defaultProps = {
 	// header: 'popUp',
 	onSelect: () => {},
-<<<<<<< HEAD
-=======
 	height: 476,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 };
 
 const style = StyleSheet.create({
@@ -288,15 +240,12 @@ const style = StyleSheet.create({
 		height: 70 * DP,
 		backgroundColor: APRI10,
 	},
-<<<<<<< HEAD
-=======
 	completeText: {
 		width: 110 * DP,
 		height: 80 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 });
 
 export default SelectScrollBoxModal;

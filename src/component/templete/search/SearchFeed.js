@@ -5,10 +5,6 @@ import FeedThumbnailList from 'Organism/feed/FeedThumbnailList';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import {txt} from 'Root/config/textstyle';
 import {GRAY10} from 'Root/config/color';
-<<<<<<< HEAD:src/component/templete/search/SearchFeed.js
-import {dummy_FeedObject} from 'Root/config/dummyDate_json';
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/SearchFeed.js
 import ListEmptyInfo from 'Molecules/info/ListEmptyInfo';
 import {getSuggestFeedList} from 'Root/api/feedapi';
 import {useNavigation} from '@react-navigation/core';

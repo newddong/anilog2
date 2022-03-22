@@ -1,14 +1,8 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-<<<<<<< HEAD:src/component/templete/list/ApplyAdoptionList.js
-import {ActivityIndicator, Text, View} from 'react-native';
-import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
-import {login_style, temp_style, baseInfo_style} from 'Templete/style_templete';
-=======
 import {ActivityIndicator, ScrollView, Text, View} from 'react-native';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {login_style, baseInfo_style} from 'Templete/style_templete';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/protection/ApplyAdoptionList.js
 import {getUserAdoptProtectionList} from 'Root/api/protectapi';
 import AnimalNeedHelp from 'Root/component/organism/listitem/AnimalNeedHelp';
 

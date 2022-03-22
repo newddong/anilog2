@@ -7,11 +7,7 @@ import Modal from 'Component/modal/Modal';
 import {Clip72, Email72, SocialKakao72} from 'Root/component/atom/icon';
 
 /**
-<<<<<<< HEAD
- * 드롭다운 형식의 메뉴 모달
-=======
  * 공유하기 메뉴 모달
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
  *
  * @param {Object} props - props object
  * @param {object} props.offset - 위치 정보
@@ -32,11 +28,7 @@ const ShareModal = props => {
 			useNativeDriver: false,
 		}).start();
 		Animated.timing(animatedOpacity, {
-<<<<<<< HEAD
-			duration: 600,
-=======
 			duration: 500,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 			toValue: 1,
 			easing: Easing.linear,
 			useNativeDriver: false,
@@ -55,18 +47,10 @@ const ShareModal = props => {
 			toValue: 0,
 			easing: Easing.linear,
 			useNativeDriver: false,
-<<<<<<< HEAD
-		}).start();
-		setTimeout(() => {
-			Modal.close();
-		}, 400);
-		props.onClose();
-=======
 		}).start(() => {
 			Modal.close();
 			props.onClose();
 		});
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	};
 
 	const onPressKakao = () => {
@@ -79,15 +63,6 @@ const ShareModal = props => {
 		props.onPressMsg();
 	};
 
-<<<<<<< HEAD
-	const onClose = () => {
-		Modal.close();
-	};
-
-	console.log('props.off', props.offset);
-
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	return (
 		<TouchableOpacity activeOpacity={1} onPress={closeAnimation} style={style.background}>
 			<Animated.View
@@ -142,19 +117,12 @@ const style = StyleSheet.create({
 		width: Platform.OS == 'ios' ? Dimensions.get('window').width : '100%',
 		justifyContent: 'center',
 		alignItems: 'center',
-<<<<<<< HEAD
-=======
 		// backgroundColor: 'yellow',
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	},
 	popUpWindow: {
 		width: 384 * DP,
 		height: 160 * DP,
 		backgroundColor: WHITE,
-<<<<<<< HEAD
-		opacity: 0.1,
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		alignItems: 'center',
 		justifyContent: 'center',
 		paddingHorizontal: 40 * DP,
@@ -189,10 +157,7 @@ const style = StyleSheet.create({
 		width: 92 * DP,
 		height: 116 * DP,
 		marginRight: 30 * DP,
-<<<<<<< HEAD
-=======
 		// backgroundColor: 'green',
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	},
 });
 

@@ -37,11 +37,7 @@ export default ApplyCompanionA = ({route}) => {
 	}, []);
 
 	React.useEffect(() => {
-<<<<<<< HEAD:src/component/templete/pet/ApplyCompanionA.js
-		console.log('route.params', route.params);
-=======
 		// console.log('route.params', route.params);
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ApplyCompanionA.js
 		const addr = route.params.addr;
 		if (route.params != null) {
 			//한번 주소 검색이 된적이 있는가?
@@ -53,23 +49,6 @@ export default ApplyCompanionA = ({route}) => {
 		}
 	}, [route.params.addr]);
 
-<<<<<<< HEAD:src/component/templete/pet/ApplyCompanionA.js
-	// React.useEffect(() => {
-	// 	if (route.params.addr) {
-	// 		console.log('주소를 받아온다.', route.params.addr);
-	// 		let addr = route.params.addr;
-	// 		setData({
-	// 			...data,
-	// 			protect_act_address: {
-	// 				brief: addr.address,
-	// 				detail: '',
-	// 			},
-	// 		});
-	// 	}
-	// }, [route.params.addr]);
-
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ApplyCompanionA.js
 	//주소찾기 버튼 클릭
 	const goToAddressSearch = () => {
 		navigation.push('AddressSearchPage', {prevRoute: route.name});

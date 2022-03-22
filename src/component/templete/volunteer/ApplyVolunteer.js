@@ -1,10 +1,6 @@
 import React from 'react';
 import {Text, View, ScrollView, FlatList, TextInput, TouchableOpacity} from 'react-native';
-<<<<<<< HEAD:src/component/templete/volunteer/ApplyVolunteer.js
-import {GRAY10, GRAY20} from 'Root/config/color';
-=======
 import {BLACK, GRAY10, GRAY20, RED10} from 'Root/config/color';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ApplyVolunteer.js
 import {txt} from 'Root/config/textstyle';
 import {AddItem64, Add_Volunteer, Calendar48_Filled, Cross46, Cross48, Person48, Phone48} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
@@ -67,11 +63,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 		volunteer_accompany: [],
 		volunteer_delegate_contact: '',
 		volunteer_status: 'waiting',
-<<<<<<< HEAD:src/component/templete/volunteer/ApplyVolunteer.js
-		volunteer_accompany_number: '1',
-=======
 		volunteer_accompany_number: '',
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ApplyVolunteer.js
 	});
 
 	//추가된 봉사활동자가 있는 경우 Data에 추가
@@ -96,11 +88,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 				data.volunteer_accompany.map((v, i) => {
 					getAccompaniesId.push(v._id);
 				});
-<<<<<<< HEAD:src/component/templete/volunteer/ApplyVolunteer.js
-				// console.log('token', param.token);
-=======
 
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ApplyVolunteer.js
 				assignVolunteerActivity(
 					{
 						shelter_userobject_id: param.token,
@@ -210,13 +198,6 @@ export default ApplyVolunteer = ({route, navigation}) => {
 		);
 	};
 
-<<<<<<< HEAD:src/component/templete/volunteer/ApplyVolunteer.js
-	const onChangeAccompanyNumber = num => {
-		setData({...data, volunteer_accompany_number: num});
-	};
-
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ApplyVolunteer.js
 	if (loading) {
 		return <></>;
 	} else {
@@ -238,15 +219,6 @@ export default ApplyVolunteer = ({route, navigation}) => {
 								<Text style={[txt.noto28, {color: RED10}]}> *</Text>
 							</View>
 						</View>
-<<<<<<< HEAD:src/component/templete/volunteer/ApplyVolunteer.js
-						<DatePicker width={590} onDateChange={onDateChange} past={false} multiple={true} />
-						{/* 봉사활동 희망날짜 FlatList */}
-						{/* <ScrollView horizontal={false} contentContainerStyle={{flex: 0}}>
-							<ScrollView horizontal={true} contentContainerStyle={{flex: 1}}>
-								<FlatList data={data.volunteer_wish_date} renderItem={({item, index}) => renderItem(item, index)} />
-							</ScrollView>
-						</ScrollView> */}
-=======
 						<DatePicker
 							width={590}
 							canOpenCalendar={canOpenCalendar}
@@ -257,7 +229,6 @@ export default ApplyVolunteer = ({route, navigation}) => {
 							maxLength={3}
 						/>
 						{/* 봉사활동 희망날짜 리스트 */}
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ApplyVolunteer.js
 						{data.volunteer_wish_date.map((v, i) => {
 							return (
 								<View key={i} style={[applyVolunteer.volunteerDateList]}>
@@ -277,23 +248,6 @@ export default ApplyVolunteer = ({route, navigation}) => {
 							</View>
 							<View style={[applyVolunteer.title]}>
 								<Text style={[txt.noto24b, {color: GRAY10}]}>참여 인원</Text>
-<<<<<<< HEAD:src/component/templete/volunteer/ApplyVolunteer.js
-								<Text style={[txt.noto22, {color: GRAY20}]}>(총 인원 수 기입)</Text>
-							</View>
-						</View>
-						<View style={[applyVolunteer.number_of_volunteerers]}>
-							<TextInput
-								style={[txt.noto32, applyVolunteer.volunteerListInput]}
-								textAlign={'right'}
-								keyboardType={'number-pad'}
-								placeholder={'애니로그 계정 유무 상관없는 총 인원수'}
-								placeholderTextColor={GRAY10}
-								// textContentType={''}
-
-								onChangeText={onChangeAccompanyNumber}
-							/>
-							<Text style={[txt.noto32]}> {'  '} 명</Text>
-=======
 								<Text style={[txt.noto22, {color: GRAY20}]}>(총 인원 수 기입 - 최대 5인)</Text>
 							</View>
 						</View>
@@ -310,7 +264,6 @@ export default ApplyVolunteer = ({route, navigation}) => {
 								{data.volunteer_accompany_number != '' ? data.volunteer_accompany_number + '명' : '애니로그 계정 유무 상관없는 총 인원수'}
 							</Text>
 							{data.volunteer_accompany_number != '' ? <></> : <Text style={[txt.noto32]}> {'  '} 명</Text>}
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ApplyVolunteer.js
 						</View>
 						{/* 봉활참여인원 FlatList 여기 */}
 						<View style={[applyVolunteer.participants_step2]}>

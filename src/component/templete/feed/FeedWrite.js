@@ -5,45 +5,25 @@ import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Paw54_Border} from 'Root/component/atom/icon/index';
 import {Urgent_Write1, Urgent_Write2} from 'Atom/icon';
-<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
-import {btn_style, feedWrite, login_style, temp_style} from 'Templete/style_templete';
-import AniButton from 'Molecules/button/AniButton';
-import {btn_w176, btn_w194} from 'Atom/btn/btn_style';
-import ActionButton from 'Molecules/button/ActionButton';
-import SelectedMediaList from 'Organism/list/SelectedMediaList';
-=======
 import {btn_style, feedWrite, login_style, temp_style, buttonstyle} from 'Templete/style_templete';
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w176, btn_w194} from 'Atom/btn/btn_style';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 import {DOG_KIND, PET_KIND, pet_kind, PUBLIC_SETTING} from 'Root/i18n/msg';
 import DatePicker from 'Molecules/select/DatePicker';
 import TabSelectFilled_Type1 from 'Molecules/tab/TabSelectFilled_Type1';
 import Input24 from 'Molecules/input/Input24';
 import InputBalloon from 'Molecules/input/InputBalloon';
-<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
-import LocationButton from 'Molecules/button/LocationButton';
 import {launchImageLibrary} from 'react-native-image-picker';
 import Modal from 'Component/modal/Modal';
 import userGlobalObj from 'Root/config/userGlobalObject';
-import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
-=======
-import {launchImageLibrary} from 'react-native-image-picker';
-import Modal from 'Component/modal/Modal';
-import userGlobalObj from 'Root/config/userGlobalObject';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {getPettypes} from 'Root/api/userapi';
 import ImagePicker from 'react-native-image-crop-picker';
 import HashInput from 'Molecules/input/HashInput';
 import {getAddressList} from 'Root/api/address';
-<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
-import SelectInput from 'Root/component/molecules/button/SelectInput';
-=======
 import SelectInput from 'Molecules/button/SelectInput';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import {FlatList} from 'react-native-gesture-handler';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 
 export default FeedWrite = props => {
 	const [showPetAccountList, setShowPetAccountList] = React.useState(false); //PetAccount 계정
@@ -58,8 +38,6 @@ export default FeedWrite = props => {
 	const [selectedImg, setSelectedImg] = React.useState([]); //사진 uri리스트
 	const [isSearchTag, setSearchTag] = React.useState(false);
 	const [publicSetting, setPublicSetting] = React.useState('전체 공개'); //공개 여부
-<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
-=======
 	const keyboardArea = useKeyboardBottom(0 * DP);
 	const scrollref = React.useRef();
 	const lastTouchY = React.useRef(0);
@@ -67,7 +45,6 @@ export default FeedWrite = props => {
 	const [editText, setEditText] = React.useState(
 		props.route.params.feed_content ? props.route.params.feed_content.replace(/(&@|&#){2}(.*?)%&%.*?(&@|&#){2}/gm, '$2') : '',
 	);
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 
 	React.useEffect(() => {
 		if (props.route.name != 'FeedEdit') {
@@ -253,8 +230,6 @@ export default FeedWrite = props => {
 		});
 	};
 
-<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
-=======
 	const onPressIn = e => {
 		console.log('pressIn', e.nativeEvent);
 		// lastTouchY.current=e.pageY;
@@ -262,7 +237,6 @@ export default FeedWrite = props => {
 		// scrollref.current.scrollToEnd()
 	};
 
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 	const setWriteModeState = () => {
 		return (
 			<>
@@ -298,10 +272,7 @@ export default FeedWrite = props => {
 								onPress={onSetDiary}
 							/>
 						</View>
-<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
-=======
 
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 						<TouchableOpacity onPress={onPressPublicSetting} style={[feedWrite.public_setting_btn]}>
 							{/* <ActionButton btnTitle={'전체 공개'} onOpen={() => alert('dd')} btnStyle={'border'} titleFontStyle={24} btnLayout={btn_w194} /> */}
 							<Text style={[txt.noto24, {color: APRI10}]}>{publicSetting}</Text>
@@ -319,31 +290,6 @@ export default FeedWrite = props => {
 			</>
 		);
 	};
-<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
-	// 장기적으로 보면 NC는 가망이 없는 회사임. 지금 리니지 충성고객층 연령대가 40~60대일텐데 이 사람들 더 나이 들고 하면 게임 할 체력이 안될텐데 그 고객층 날라가면 또 다른 새로운 고객층을 확보해야하는데 그게 지금 안되고 있음.
-	// 지금 봐바 10~30대 유저들 NC를 게임회사가 아니라 도박회사로 보고 있는데 암만 마케팅하고 홍보하고 지랄해봤자 이미 깊게 박혀진 이미지는 절대 못바뀜. 그러므로 새로운 고객층 확보가 불가능함.
-	// 해외? 개네들 우리보다 리니지류 게임을 극혐하는데 고객이 확보 될리가 있나 ㅋㅋ
-	return (
-		<View style={[login_style.wrp_main, feedWrite.container]}>
-			{/* <ScrollView contentContainerStyle={{width: 750 * DP, alignItems: 'center'}}> */}
-			<HashInput
-				containerStyle={[temp_style.feedTextEdit, {minHeight: showLostAnimalForm || showReportForm ? 214 * DP : 316 * DP}]}
-				textAlignVertical={'top'}
-				multiline={true}
-				placeholder="게시물을 작성하세요 (150자)"
-				placeholderTextColor={GRAY20}
-				onChangeText={inputFeedTxt}
-				maxLength={150}
-				onFind={onFindTag}
-				selectedImg={selectedImg}
-				onDelete={deletePhoto}
-			/>
-
-			{!isSearchTag && setWriteModeState()}
-			{/* 긴급 게시물 관련 버튼 컨테이너 */}
-
-			{/* </ScrollView> */}
-=======
 	const test = () => {
 		console.log(props.route);
 	};
@@ -374,7 +320,6 @@ export default FeedWrite = props => {
 				}}
 				data={[{}]}
 				ref={scrollref}></FlatList>
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 			{showUrgentBtns && !isSearchTag ? (
 				<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
 					{showActionButton ? (
@@ -416,14 +361,8 @@ const MissingForm = props => {
 	]);
 	const [isSpeciesChanged, setIsSpeciesChanged] = React.useState(false);
 
-<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
-	const [city, setCity] = React.useState(['시를 선택해 주세요']);
-	const [district, setDistrict] = React.useState(['구를 선택해 주세요']);
-
-=======
 	const [city, setCity] = React.useState(['광역시, 도']);
 	const [district, setDistrict] = React.useState(['구를 선택해 주세요']);
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 	React.useEffect(() => {
 		getAddressList(
 			{},
@@ -437,23 +376,6 @@ const MissingForm = props => {
 		);
 	}, []);
 
-<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
-	const [data, setData] = React.useState({
-		missing_animal_species: types[0].pet_species,
-		missing_animal_species_detail: types[0].pet_species_detail[0],
-		missing_animal_sex: 'male',
-		missing_animal_age: '',
-		missing_animal_lost_location: {
-			city: city[0],
-			district: '구를 선택',
-			detail: '',
-		},
-		missing_animal_features: '',
-		missing_animal_date: '',
-		missing_animal_contact: '',
-		type: types[0],
-	});
-=======
 	const initData = () => {
 		if (route.name == 'FeedEdit') {
 			return route.params;
@@ -477,7 +399,6 @@ const MissingForm = props => {
 	};
 
 	const [data, setData] = React.useState(initData());
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 
 	React.useEffect(() => {
 		props.onDataChange && props.onDataChange(data);
@@ -586,8 +507,6 @@ const MissingForm = props => {
 		setData({...data, missing_animal_lost_location: lost_location_container});
 	};
 
-<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
-=======
 	const keyboardArea = useKeyboardBottom(0 * DP);
 	const inputAgeRef = React.useRef();
 	const inputLocationRef = React.useRef();
@@ -615,7 +534,6 @@ const MissingForm = props => {
 		);
 	};
 
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 	return (
 		<View style={[feedWrite.lostAnimalForm]} showsVerticalScrollIndicator={false}>
 			{/* DropDownSelect */}
@@ -680,12 +598,9 @@ const MissingForm = props => {
 					onChangeText={onChangeMissingLocationDetail}
 					style={[feedWrite.missing_location_detail_input]}
 					placeholder={'반려동물이 실종된 구체적인 장소를 설명해주세요.'}
-<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
-=======
 					placeholderTextColor={GRAY10}
 					onPressIn={onPressIn(inputLocationRef)}
 					ref={inputLocationRef}
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 				/>
 			</View>
 			<View style={[temp_style.input24, feedWrite.input24]}>
@@ -709,11 +624,8 @@ const MissingForm = props => {
 					onChange={inputFeature}
 					value={data.missing_animal_features}
 					maxLength={200}
-<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
-=======
 					onPressIn={onPressIn(inputBalloonRef)}
 					ref={inputBalloonRef}
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 				/>
 			</View>
 			<View style={{height: keyboardArea, width: '100%', backgroundColor: '#FFF'}}></View>
@@ -747,12 +659,7 @@ const ReportForm = props => {
 			// 필드명 조정 필요 (상우)
 			city: city[0], //시,도
 			district: district[0], //군,구
-<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
-			neighbor: '', //동,읍,면
-			detailAddr: '',
-=======
 			detail: '', //상세 주솧
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 		},
 		report_animal_species: types[0].pet_species,
 		report_animal_species_detail: types[0].pet_species_detail[0],
@@ -904,7 +811,6 @@ const ReportForm = props => {
 			},
 			() => Modal.close(),
 		);
-<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
 	};
 
 	const onSelectSpeciesDetail = () => {
@@ -920,23 +826,6 @@ const ReportForm = props => {
 		// setData({...data, missing_animal_species_detail: data.type.pet_species_detail[i]});
 	};
 
-=======
-	};
-
-	const onSelectSpeciesDetail = () => {
-		const find = types.find(e => e.pet_species == data.report_animal_species);
-		Modal.popSelectScrollBoxModal(
-			[find.pet_species_detail],
-			'품종 선택',
-			selected => {
-				setData({...data, report_animal_species_detail: selected});
-			},
-			() => Modal.close(),
-		);
-		// setData({...data, missing_animal_species_detail: data.type.pet_species_detail[i]});
-	};
-
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 	const onPressCity = () => {
 		Modal.popSelectScrollBoxModal([city], '도, 광역, 특별시', selectedItem => {
 			let report_location = data.report_location;
@@ -965,9 +854,6 @@ const ReportForm = props => {
 	const onChangeMissingLocationDetail = text => {
 		let report_location = data.report_location;
 		report_location.detail = text;
-<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
-		setData({...data, report_location: report_location});
-=======
 
 		setData({...data, report_location: report_location});
 		console.log('text input :', data.report_location);
@@ -995,7 +881,6 @@ const ReportForm = props => {
 				console.log('measurelayout failed');
 			},
 		);
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 	};
 
 	return (
@@ -1031,12 +916,9 @@ const ReportForm = props => {
 							onChangeText={onChangeMissingLocationDetail}
 							style={[feedWrite.missing_location_detail_input]}
 							placeholder={'제보하려는 장소의 위치를 설명해주세요.'}
-<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
-=======
 							placeholderTextColor={GRAY10}
 							onPressIn={onPressIn(inputLocationRef)}
 							ref={inputLocationRef}
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 						/>
 					</View>
 				</View>

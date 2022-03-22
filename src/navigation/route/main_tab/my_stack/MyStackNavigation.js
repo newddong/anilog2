@@ -8,10 +8,6 @@ import FeedCommentList from 'Templete/feed/FeedCommentList';
 import UserInfoDetailSettting from 'Templete/user/UserInfoDetailSettting';
 import UserMenu from 'Templete/user/UserMenu';
 import UserInfoSetting from 'Templete/user/UserInfoSetting';
-<<<<<<< HEAD
-
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 import ChangeUserProfileImage from 'Templete/user/ChangeUserProfileImage';
 import ChangePassword from 'Templete/user/ChangePassword';
 import VaccinationRecord from 'Templete/vaccination/VaccinationRecord';
@@ -27,11 +23,7 @@ import SaveFavorite from 'Templete/favorite/SaveFavorite';
 import SaveAnimalRequest from 'Templete/protection/SaveAnimalRequest';
 import FavoriteFeeds from 'Templete/favorite/FavoriteFeeds';
 import AppliesRecord from 'Templete/my/AppliesRecord';
-<<<<<<< HEAD
-import ApplyAdoptionList from 'Templete/list/ApplyAdoptionList';
-=======
 import ApplyAdoptionList from 'Root/component/templete/protection/ApplyAdoptionList';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 import ApplyDetails from 'Templete/protection/ApplyDetails';
 import AnimalProtectList from 'Templete/protection/AnimalProtectList';
 import AssignProtectAnimalImage from 'Templete/protection/AssignProtectAnimalImage';
@@ -43,10 +35,6 @@ import EditShelterInfo from 'Templete/shelter/EditShelterInfo';
 import AidRequestAnimalList from 'Templete/protection/AidRequestAnimalList';
 import WriteAidRequest from 'Templete/protection/WriteAidRequest';
 import AidRequestManage from 'Templete/protection/AidRequestManage';
-<<<<<<< HEAD
-import ProtectApplicant from 'Templete/protection/ProtectApplicant';
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 import ProtectApplyForm from 'Templete/protection/ProtectApplyForm';
 import ShelterProtectRequests from 'Templete/shelter/ShelterProtectRequests';
 import AnimalFromShelter from 'Templete/protection/AnimalFromShelter';
@@ -66,9 +54,6 @@ import LogoHeader from 'Root/navigation/header/LogoHeader';
 import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 import {useNavigation} from '@react-navigation/core';
 import userGlobalObject from 'Root/config/userGlobalObject';
-<<<<<<< HEAD
-
-=======
 import SettingInformAsk from 'Templete/user/SettingInformAsk';
 import SettingAccount from 'Templete/user/SettingAccount';
 import SettingAlarm from 'Templete/user/SettingAlarm';
@@ -80,25 +65,9 @@ import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballH
 import EditAidRequest from 'Root/component/templete/protection/EditAidRequest';
 import ReceivedMessage from 'Templete/user/ReceivedMessage';
 import UserNotePage from 'Templete/user/UserNotePage';
-import NoticeList from 'Templete/list/NoticeList';
-import ServiceCenter from 'Templete/user/ServiceCenter';
-import QnA from 'Root/component/templete/user/AskQuestion';
-import CategoryHelp from 'Templete/user/CategoryHelp';
-import ServiceCenterTopTabNavigation from './ServiceCenterTopTabNavigation';
-import CategoryHelpTopTabNavigation from './CategoryHelpTopTabNavigation';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
+
 const MyStack = createStackNavigator();
 export default MyStackNavigation = props => {
-<<<<<<< HEAD
-	// console.log('MyStack', props.navigation);
-	const [searchInput, setSearchInput] = React.useState();
-
-	React.useEffect(() => {
-		setSearchInput(props.route.params); //검색어 입력 전달
-	}, [props.route.params]);
-
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	return (
 		<MyStack.Navigator initialRouteName={userGlobalObject.userInfo.user_type == 'shelter' ? 'ShelterMenu' : 'UserMenu'}>
 			{/* // <MyStack.Navigator initialRouteName={'ShelterMenu'}> */}
@@ -340,15 +309,6 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen name="SettingOpen" component={SettingOpen} options={{header: props => <SimpleHeader {...props} />, title: '공개 설정'}} />
 			<MyStack.Screen name="ReceivedMessage" component={ReceivedMessage} options={{header: props => <SimpleHeader {...props} />, title: '쪽지함'}} />
 			<MyStack.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />, title: props.title}} />
-			<MyStack.Screen name="NoticeList" component={NoticeList} options={{header: props => <SimpleHeader {...props} />, title: '공지사항'}} />
-			<MyStack.Screen name="ServiceCenter" component={ServiceCenter} options={{header: props => <SimpleHeader {...props} />, title: '고객 센터'}} />
-			<MyStack.Screen name="CategoryHelp" component={CategoryHelp} options={{header: props => <AlarmAndSearchHeader {...props} />}} />
-			<MyStack.Screen name="ServiceTab" component={ServiceCenterTopTabNavigation} options={{header: props => <InputAndSearchHeader {...props} />}} />
-			<MyStack.Screen
-				name="CategoryHelpTab"
-				component={CategoryHelpTopTabNavigation}
-				options={{header: props => <InputAndSearchHeader {...props} />}}
-			/>
 		</MyStack.Navigator>
 	);
 };

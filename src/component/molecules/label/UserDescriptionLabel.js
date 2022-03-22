@@ -34,14 +34,7 @@ const UserDescriptionLabel = props => {
 
 				<View style={{marginLeft: 30 * DP}}>
 					<View style={{flexDirection: 'row'}}>
-<<<<<<< HEAD:src/component/molecules/label/UserDescriptionLabel.js
-						<Text
-							style={(txt.roboto28b, {color: userGlobalObject.userInfo._id == data._id ? APRI10 : BLACK})}
-							numberOfLines={1}
-							ellipsizeMode="tail">
-=======
 						<Text style={(txt.roboto28b, {color: userGlobalObject.userInfo._id == data._id ? APRI10 : BLACK})} numberOfLines={1} ellipsizeMode="tail">
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/molecules/UserDescriptionLabel.js
 							{data.user_nickname || ''}
 						</Text>
 						{data.showStatus ? <Text style={[txt.noto22, {color: APRI10, alignSelf: 'center', paddingLeft: 10 * DP}]}> STATUS</Text> : null}

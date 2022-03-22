@@ -31,24 +31,10 @@ export default UserInfoSetting = ({route}) => {
 			},
 			userObject => {
 				setData(userObject.msg);
-<<<<<<< HEAD:src/component/templete/user/UserInfoSetting.js
-				navigation.setOptions({title: userObject.msg.user_nickname});
-				setTimeout(() => {
-					setLoading(false);
-				}, 500);
-				console.log('result / getUserProfile / UserInfoSetting', userObject.msg.user_introduction);
-			},
-			err => {
-				console.log('er', err);
-				setTimeout(() => {
-					setLoading(false);
-				}, 500);
-=======
 				navigation.setOptions({title: userGlobalObject.userInfo.user_nickname});
 			},
 			err => {
 				console.log('er', err);
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/UserInfoSetting.js
 			},
 		);
 	};
@@ -187,11 +173,6 @@ export default UserInfoSetting = ({route}) => {
 											</TouchableOpacity>
 										</View>
 									) : (
-<<<<<<< HEAD:src/component/templete/user/UserInfoSetting.js
-										// <AniButton onPress={modify_finalize} btnTitle={'적용'} btnLayout={btn_w114} />
-										// <AniButton onPress={modify_userIntro} btnTitle={'수정'} btnStyle={'border'} btnLayout={btn_w114} />
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/UserInfoSetting.js
 										<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
 											<TouchableOpacity onPress={modify_userIntro}>
 												<Text style={[txt.noto26, {color: APRI10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>수정</Text>

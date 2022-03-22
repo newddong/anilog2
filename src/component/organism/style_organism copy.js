@@ -347,12 +347,7 @@ export const socialInfoB = StyleSheet.create({
 	socialInfo: {
 		width: 82 * DP,
 		width: 96 * DP,
-<<<<<<< HEAD:src/component/organism/style_organism copy.js
-		// width: 164 * DP,
-		// height: 106 * DP,
-=======
 
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/style_organism.js
 		marginRight: 60 * DP,
 		justifyContent: 'center',
 		// alignItems: 'center',
@@ -1087,11 +1082,7 @@ export const animalNeedHelp = StyleSheet.create({
 	detail_lowerMenu: {
 		width: 410 * DP,
 		height: 214 * DP,
-<<<<<<< HEAD:src/component/organism/style_organism copy.js
-		paddingVertical: 22 * DP,
-=======
 		paddingVertical: 4 * DP,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/style_organism.js
 	},
 	lowerMenu_kindAndBreed: {
 		height: 50 * DP,
@@ -1104,13 +1095,8 @@ export const animalNeedHelp = StyleSheet.create({
 		marginLeft: 20 * DP,
 	},
 	lowerMenu_helpDetail: {
-<<<<<<< HEAD:src/component/organism/style_organism copy.js
-		height: 38 * DP,
-		marginTop: 10 * DP,
-=======
 		// height: 38 * DP,
 		// marginTop: 10 * DP,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/style_organism.js
 	},
 	container_with_Line: {
 		width: 705 * DP,

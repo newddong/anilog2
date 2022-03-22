@@ -2,26 +2,15 @@ import React from 'react';
 import {Text, View, ScrollView, Image} from 'react-native';
 import {createProtectActivity} from 'Root/api/protectapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
-<<<<<<< HEAD:src/component/templete/protection/ApplyDetails.js
-import {CONFIRM_ADOPT_REQUEST, CONFIRM_FINALIZED, CONFIRM_PROTECT_REQUEST} from 'Root/i18n/msg';
-=======
 import {CONFIRM_ADOPT_REQUEST, CONFIRM_PROTECT_REQUEST} from 'Root/i18n/msg';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ApplyDetails.js
 import {btn_w226} from 'Atom/btn/btn_style';
 import Modal from 'Component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
 import AnimalProtectDetail from 'Organism/info/AnimalProtectDetail';
-<<<<<<< HEAD:src/component/templete/protection/ApplyDetails.js
-import {applyDetails, btn_style, login_style, temp_style} from 'Templete/style_templete';
-
-export default ApplyDetails = ({route, navigation}) => {
-	const [data, setData] = React.useState(route.params);
-=======
 import {applyDetails, login_style, temp_style} from 'Templete/style_templete';
 
 export default ApplyDetails = ({route, navigation}) => {
 	const data = route.params;
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ApplyDetails.js
 	//모달창에서 최종 확인을 클릭
 	const isProtect = route.name == 'ApplyProtectActivityE';
 
@@ -68,18 +57,6 @@ export default ApplyDetails = ({route, navigation}) => {
 					<AnimalProtectDetail data={data} />
 				</View>
 				<View style={[applyDetails.btnContainer]}>
-<<<<<<< HEAD:src/component/templete/protection/ApplyDetails.js
-					<View style={[btn_style.btn_w226, applyDetails.btn_w226]}>
-						<AniButton btnStyle={'border'} btnLayout={btn_w226} btnTitle={'뒤로'} onPress={() => navigation.goBack()} />
-					</View>
-					<View style={[btn_style.btn_w226, applyDetails.btn_w226]}>
-						{/* ApplyProtectActivityE 혹은 ApplyAnimalAdoptionE ==> 입양이나 임시보호 신청의 마지막 단계이므로 '신청'버튼이 필요 */}
-						{/* ApplyAdoptionDetails 혹은 ApplyTempProtectDetails ==> 유저가 신청한 입양이나 임시보호의 Detail을 보기만하는 것이므로 '신청'버튼 불필요 */}
-						{route.name == 'ApplyAdoptionDetails' || route.name == 'ApplyTempProtectDetails' ? null : (
-							<AniButton btnLayout={btn_w226} btnTitle={'신청하기'} onPress={onPressRegister} />
-						)}
-					</View>
-=======
 					{/* 입양 임보 신청건에 한해서만 버튼출력 */}
 					{route.name == 'ApplyAdoptionDetails' || route.name == 'ApplyTempProtectDetails' ? (
 						<></>
@@ -89,7 +66,6 @@ export default ApplyDetails = ({route, navigation}) => {
 							<AniButton btnLayout={btn_w226} btnTitle={'신청하기'} onPress={onPressRegister} />
 						</>
 					)}
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ApplyDetails.js
 				</View>
 			</ScrollView>
 		</View>

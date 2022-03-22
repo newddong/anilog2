@@ -3,11 +3,7 @@ import {txt} from 'Root/config/textstyle';
 import {Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {Calendar48_Border} from 'Atom/icon';
-<<<<<<< HEAD:src/component/molecules/select/DatePicker.js
-import {APRI10, BLACK, GRAY20} from 'Root/config/color';
-=======
 import {APRI10, BLACK, GRAY10, GRAY20} from 'Root/config/color';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/molecules/DatePicker.js
 import Modal from 'Component/modal/Modal';
 import {object} from 'prop-types';
 
@@ -86,11 +82,7 @@ const DatePicker = props => {
 							lineHeight: 44 * DP,
 							paddingLeft: 14 * DP,
 							paddingVertical: 18 * DP, // Value와 최상위 View와의 paddingVertical 16px
-<<<<<<< HEAD:src/component/molecules/select/DatePicker.js
-							color: selectedDate == '눌러서 지정해주세요!' ? GRAY20 : BLACK,
-=======
 							color: selectedDate == '눌러서 지정해주세요!' ? GRAY10 : BLACK,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/molecules/DatePicker.js
 						},
 					]}>
 					{typeof selectedDate === 'object' ? '눌러서 지정해주세요!' : selectedDate}

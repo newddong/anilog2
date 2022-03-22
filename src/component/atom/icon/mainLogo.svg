@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="121.399" height="90" viewBox="0 0 121.399 90">
-=======
 <!-- <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="121.399" height="90" viewBox="0 0 121.399 90">
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
   <defs>
     <clipPath id="clip-path">
       <rect id="사각형_1069" data-name="사각형 1069" width="112.028" height="75.533" fill="#ff9888"/>
@@ -33,8 +29,6 @@
       </g>
     </g>
   </g>
-<<<<<<< HEAD
-=======
 </svg> -->
 
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="121.399" height="90" viewBox="0 0 121.399 90">
@@ -68,5 +62,4 @@
       </g>
     </g>
   </g>
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 </svg>

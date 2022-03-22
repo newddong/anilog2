@@ -186,40 +186,6 @@ export const EMAIL_DOMAIN = [
 
 export const CALENDAR_YEAR = () => {
 	let currentTime = new Date();
-<<<<<<< HEAD
-	let year = ['-------------', '-------------'];
-	for (let i = 0; i < 70; i++) {
-		year.push(currentTime.getFullYear() - i);
-	}
-	year.push('-------------', '-------------');
-	return year;
-};
-
-export const CALENDAR_MONTH = [
-	'-------------',
-	'-------------',
-	'1',
-	'2',
-	'3',
-	'4',
-	'5',
-	'6',
-	'7',
-	'8',
-	'9',
-	'10',
-	'11',
-	'12',
-	'-------------',
-	'-------------',
-	'-------------',
-];
-export const CALENDAR_DAY = () => {
-	const paddingObject = '-------------';
-	let day30 = ['-------------', '-------------'];
-	let day31 = ['-------------', '-------------'];
-	let day29 = ['-------------', '-------------'];
-=======
 	let year = ['', ''];
 	for (let i = 0; i < 70; i++) {
 		year.push(currentTime.getFullYear() - i);
@@ -234,7 +200,6 @@ export const CALENDAR_DAY = () => {
 	let day30 = ['', ''];
 	let day31 = ['', ''];
 	let day29 = ['', ''];
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	for (let i = 1; i < 32; i++) {
 		day31.push(i);
 	}
@@ -434,11 +399,7 @@ export const NEW_PWD_PLACEHOLDER = '새로운 비밀번호 확인';
 export const PWD_CHECK_INFO = '비밀번호를 다시 한 번 적어주세요.';
 
 //Nickname 설정 관련
-<<<<<<< HEAD
-export const NICKNAME_FORM = '2자 이상 15자 이내의 영문, 숫자의 입력만 가능합니다';
-=======
 export const NICKNAME_FORM = '2~15자 이내의 영문,한글,숫자 입력만 가능합니다';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 export const NEW_NICK_REQUEST = '닉네임을 입력 해주세요.';
 export const PREVIOUS_NICK_TITLE = '기존 닉네임';
 
@@ -453,11 +414,7 @@ export const PROTECT_STATUS = ['모든 게시글', '입양가능', '협의 중',
 export const PROTECT_STATUS_VAR = ['all', 'rescue', 'discuss', 'complete']; //SHELTER PROTECT REQUEST 템플릿
 export const SETTING_OWN_COMMENT = ['수정', '삭제'];
 export const SETTING_COMMENT = ['신고'];
-<<<<<<< HEAD
-export const PROTECT_REQUEST_STATUS = ['임보중', '협의 중', '완료', '사망', '입양 가능'];
-=======
 export const PROTECT_REQUEST_STATUS = ['협의 중', '사망', '입양 가능'];
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 
 //Modal Message
 export const CONFIRM_PROTECT_REQUEST = '이 내용으로 \n 보호 활동 신청을 하시겠습니까?';
@@ -480,11 +437,7 @@ export const NEAR_RAINBOWBRIDGE = '안락사 임박';
 
 //동물 나이
 export const PET_YEAR = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15'];
-<<<<<<< HEAD
-export const PET_MONTH = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
-=======
 export const PET_MONTH = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 
 //팔로우 중 => 출력  메뉴
 export const FOLLOWER_MENU = ['즐겨찾기 추가', '소식 받기', '차단', '팔로우 취소'];
@@ -493,41 +446,24 @@ export const FOLLOWER_PET_MENU = ['즐겨찾기 추가', '소식 받기', '차�
 //피드 미트볼 메뉴 리스트
 export const FEED_MEATBALL_MENU_FOLLOWING = ['쪽지 보내기', '즐겨찾기', '공유하기', '게시물 알람 설정', '팔로우 취소', '신고'];
 export const FEED_MEATBALL_MENU_UNFOLLOWING = ['쪽지 보내기', '팔로우', '즐겨찾기', '공유하기', '신고'];
-<<<<<<< HEAD
-export const FEED_MEATBALL_MENU_MY_FEED = ['공유하기', '수정', '삭제'];
-export const FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS = ['상태 변경', '공유하기', '수정', '삭제'];
-=======
 export const FEED_MEATBALL_MENU_FOLLOWING_UNFAVORITE = ['쪽지 보내기', '즐겨찾기 취소', '공유하기', '게시물 알람 설정', '팔로우 취소', '신고'];
 export const FEED_MEATBALL_MENU_UNFOLLOWING_UNFAVORITE = ['쪽지 보내기', '팔로우', '즐겨찾기 취소', '공유하기', '신고'];
 export const FEED_MEATBALL_MENU_MY_FEED = ['공유하기', '수정', '삭제'];
 export const FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS = ['상태변경', '공유하기', '수정', '삭제'];
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 export const FEED_MEATBALL_MENU = ['공유하기', '신고'];
 
 //신고 목록
 export const REPORT_MENU = [
-<<<<<<< HEAD
-	'------------------',
-	'------------------',
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	'기타(직접 입력)',
 	'부적절한 홍보 게시글',
 	'음란성 또는 청소년에게 부적절한 게시글',
 	'명예 훼손/사생활 침해  및 저작권 침해',
 	'심한 불쾌감 유발(폭력성, 욕설 등)',
-<<<<<<< HEAD
-	'------------------',
-	'------------------',
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 ];
 
 //댓글 미트볼 헤더 출력 메뉴
 export const REPLY_MEATBALL_MENU_MY_REPLY = ['공유하기', '수정', '삭제'];
 export const REPLY_MEATBALL_MENU = ['공유하기', '신고'];
-<<<<<<< HEAD
-=======
 
 //동물 체중 안내
 export const WEIGHT_INPUT_FORM_INFO = '두자리 숫자, 소수점 한자리';
@@ -571,4 +507,3 @@ export const applyComanionCheckList = [
 		state: false,
 	},
 ];
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca

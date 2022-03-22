@@ -1,9 +1,5 @@
 import React from 'react';
-<<<<<<< HEAD:src/component/molecules/calendar/Calendar_Multiple.js
-import {View, Text, TouchableOpacity, TouchableWithoutFeedback, Alert, Dimensions, StyleSheet} from 'react-native';
-=======
 import {View, Text, TouchableOpacity, TouchableWithoutFeedback, Alert, Dimensions, StyleSheet, Animated} from 'react-native';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/molecules/Calendar_Multiple.js
 import moment from 'moment';
 import DP from 'Root/config/dp';
 import {day} from 'Root/i18n/msg';
@@ -12,10 +8,7 @@ import {WHITE, APRI10, BLACK, GRAY10, GRAY20, GRAY30, MIDNIGHT_BLUE, BLUE10, RED
 import {NextMark} from 'Root/component/atom/icon';
 import AniButton from '../button/AniButton';
 import {btn_w108, btn_w116, btn_w176, btn_w92} from 'Root/component/atom/btn/btn_style';
-<<<<<<< HEAD:src/component/molecules/calendar/Calendar_Multiple.js
-=======
 import Modal from 'Root/component/modal/Modal';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/molecules/Calendar_Multiple.js
 
 const Calendar_Multiple = props => {
 	const HEIGHT = Dimensions.get('screen').height;

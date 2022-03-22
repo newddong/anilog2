@@ -67,13 +67,7 @@ export default ReportDetail = props => {
 	React.useEffect(() => {
 		console.log(' - ReportDetail Comment -');
 		getCommnetList();
-<<<<<<< HEAD:src/component/templete/missing/ReportDetail.js
-
 		setLoading(false);
-
-=======
-		setLoading(false);
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ReportDetail.js
 	}, []);
 
 	// React.useEffect(() => {
@@ -256,11 +250,7 @@ export default ReportDetail = props => {
 				renderItem={({item, index}) => (
 					<CommentList
 						items={commentDataList}
-<<<<<<< HEAD:src/component/templete/missing/ReportDetail.js
-						onPressReplyBtn={onReplyBtnClick}
-=======
 						onPressReplyBtn={moveToCommentList}
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ReportDetail.js
 						onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
 					/>
 				)}

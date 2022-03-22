@@ -1,9 +1,5 @@
 import React from 'react';
-<<<<<<< HEAD:src/component/templete/missing/MissingReportList.js
-import {ScrollView, Text, View, TouchableWithoutFeedback, ActivityIndicator} from 'react-native';
-=======
 import {ScrollView, Text, View, TouchableWithoutFeedback, FlatList} from 'react-native';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/MissingReportList.js
 import {feedWrite, login_style, missingReportList, searchProtectRequest, temp_style, temp_txt} from 'Templete/style_templete';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {GRAY10, WHITE} from 'Root/config/color';
@@ -14,11 +10,7 @@ import FilterButton from 'Molecules/button/FilterButton';
 import {PET_KIND, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
 import {getMissingReportList} from 'Root/api/feedapi.js';
 import {getPettypes} from 'Root/api/userapi';
-<<<<<<< HEAD:src/component/templete/missing/MissingReportList.js
-import {btn_w306_h68} from 'Component/atom/btn/btn_style';
-=======
 import {btn_w306_h68, btn_w306_h68_r2} from 'Component/atom/btn/btn_style';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/MissingReportList.js
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 export default MissingReportList = props => {
 	const navigation = useNavigation();
@@ -139,11 +131,7 @@ export default MissingReportList = props => {
 	const onSelectKind = kind => {
 		Modal.popSelectScrollBoxModal(
 			[petTypes],
-<<<<<<< HEAD:src/component/templete/missing/MissingReportList.js
-			'보호 지역 선택',
-=======
 			'동물 종류 선택',
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/MissingReportList.js
 			selected => {
 				selected == '동물종류'
 					? setFilterData({...filterData, missing_animal_species: ''})
@@ -167,31 +155,6 @@ export default MissingReportList = props => {
 
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
-<<<<<<< HEAD:src/component/templete/missing/MissingReportList.js
-			<ScrollView style={{flex: 1}}>
-				<View style={[searchProtectRequest.filterView]}>
-					<View style={[searchProtectRequest.filterView.inside]}>
-						<View style={{flexDirection: 'row'}}>
-							<View style={[temp_style.filterBtn]}>
-								{/* <FilterButton menu={PET_PROTECT_LOCATION} btnLayout={btn_w306_h68} onSelect={onSelectLocation} width={306} height={700} /> */}
-								<ArrowDownButton
-									onPress={onSelectLocation}
-									btnTitle={filterData.city || '지역'}
-									btnLayout={btn_w306_h68}
-									btnStyle={'border'}
-									btnTheme={'gray'}
-								/>
-							</View>
-							<View style={[temp_style.filterBtn]}>
-								{/* <FilterButton menu={petTypes} btnLayout={btn_w306_h68} onSelect={onSelectKind} width={306} /> */}
-								<ArrowDownButton
-									onPress={onSelectKind}
-									btnTitle={filterData.missing_animal_species || '동물 종류'}
-									btnLayout={btn_w306_h68}
-									btnStyle={'border'}
-									btnTheme={'gray'}
-								/>
-=======
 			<FlatList
 				horizontal={false}
 				data={[{}]}
@@ -222,7 +185,6 @@ export default MissingReportList = props => {
 										/>
 									</View>
 								</View>
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/MissingReportList.js
 							</View>
 						</View>
 						<View style={[searchProtectRequest.animalMissingReportList]}>

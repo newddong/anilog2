@@ -2,18 +2,10 @@ import React from 'react';
 import {ScrollView, Text, View, TouchableOpacity, ActivityIndicator} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import moment from 'moment';
-<<<<<<< HEAD:src/component/templete/volunteer/ManageVolunteer.js
-import {GRAY20} from 'Root/config/color';
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ManageVolunteer.js
 import {txt} from 'Root/config/textstyle';
 import {Arrow_Down_GRAY20, Arrow_Up_GRAY20} from 'Atom/icon';
 import VolunteerItemList from 'Organism/list/VolunteerItemList';
 import {login_style, manageVolunteer} from 'Templete/style_templete';
-<<<<<<< HEAD:src/component/templete/volunteer/ManageVolunteer.js
-import {_dummy_userObject_user, _dummy_VolunteerActivityApplicant} from 'Root/config/dummy_data_hjs';
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ManageVolunteer.js
 import {getShelterVolunteerActivityList, getUserVolunteerActivityList} from 'Root/api/volunteerapi';
 
 export default ManageVolunteer = ({route}) => {

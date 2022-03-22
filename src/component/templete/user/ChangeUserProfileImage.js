@@ -15,7 +15,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 
 export default ChangeUserProfileImage = ({route}) => {
 	// console.log('route / Profile', route.params);
-	// console.log('changeUser', route.params.data);
+	console.log('changeUser', route.params.data._id);
 	const [data, setData] = React.useState(route.params.data);
 	const [newNick, setNewNick] = React.useState(route.params.data.user_nickname);
 	const navigation = useNavigation();
@@ -41,16 +41,22 @@ export default ChangeUserProfileImage = ({route}) => {
 					user_profile_uri: data.user_profile_uri,
 				},
 				success => {
-					// setChanged(true);
-					// console.log('profileChange success', success);
 					Modal.close();
-					// navigation.goBack();
-					navigation.navigate({
-						name: route.params.routeInfo.name,
-						key: route.params.routeInfo.key,
-						params: {changedPhoto: data.user_profile_uri},
-						merge: true,
-					});
+					if (route.params.routeInfo.name.name == 'UserProfile') {
+						navigation.navigate('FEED', {
+							screen: 'UserProfile',
+							params: {
+								userobject: data._id,
+							},
+						});
+					} else {
+						navigation.navigate({
+							name: route.params.routeInfo.name,
+							key: route.params.routeInfo.key,
+							params: {changedPhoto: data.user_profile_uri},
+							merge: true,
+						});
+					}
 				},
 				// console.log('userObject', userObject);
 				err => {
@@ -154,16 +160,6 @@ export default ChangeUserProfileImage = ({route}) => {
 				</View>
 				{/* 확인버튼 */}
 				<View style={[btn_style.btn_w654, changeUserProfileImage_style.btn_w654]}>
-<<<<<<< HEAD:src/component/templete/user/ChangeUserProfileImage.js
-					<AniButton
-						onPress={onConfirmed}
-						btnStyle={'border'}
-						btnTitle={'확인'}
-						titleFontStyle={32}
-						btnLayout={btn_w654}
-						disable={confirmed ? false : true}
-					/>
-=======
 					{confirmed ? (
 						<AniButton
 							onPress={onConfirmed}
@@ -183,7 +179,6 @@ export default ChangeUserProfileImage = ({route}) => {
 							// disable={confirmed ? false : true}
 						/>
 					)}
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ChangeUserProfileImage.js
 				</View>
 			</ScrollView>
 		</View>

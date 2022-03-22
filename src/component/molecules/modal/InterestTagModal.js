@@ -1,21 +1,11 @@
 import React from 'react';
-<<<<<<< HEAD
-import {View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions, ScrollView, FlatList} from 'react-native';
-import {WHITE, GRAY10, APRI10, GRAY20} from 'Root/config/color';
-=======
 import {View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions, ScrollView, FlatList, ActivityIndicator, Animated} from 'react-native';
 import {WHITE, GRAY10, APRI10, GRAY20, BLACK} from 'Root/config/color';
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Component/modal/Modal';
 import AniButton from '../button/AniButton';
 import {Cross24_Filled} from 'Root/component/atom/icon';
-<<<<<<< HEAD
-
-/**
- * 관심사 추가 및 수정 모달
-=======
 import {getAddressList} from 'Root/api/address';
 import {getInterestsList} from 'Root/api/interestsapi';
 import ArrowDownButton from '../button/ArrowDownButton';
@@ -23,73 +13,12 @@ import {btn_w242, btn_w280, btn_w280x68} from 'Root/component/atom/btn/btn_style
 /**
  * 관심사 추가 및 수정 모달
  * @param {'Activity'|'Location'|'Review'} category -  관심활동 / 관심지역 / 커뮤니티후기 분기
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
  * @param {object} data - 관심사 추가할 계정 object(반려동물 혹은 유저)
  * @param {(selectedData)=>void)} onSave - 저장 버튼 클릭 콜백 / 선택된 항목의 오브젝트( ex : 지역, 미용, 놀이, 건강 등)
  * @param {()=>void)} onClose - 페이지 좌상단 x버튼 클릭 / 종료 콜백
  *
  */
 const InterestTagModal = props => {
-<<<<<<< HEAD
-	//유저 오브젝트의 user_interests 의 더미데이터
-	// user_interests는 크게 location 및 activity로 구성
-	const userDataDummy = [
-		{
-			category: '건강',
-			content: ['재활', '노환'],
-		},
-		{
-			category: '놀이',
-			content: ['애견카페', '애견패션'],
-		},
-		{
-			category: '사료&간식',
-			content: ['노환', '애견패션', '어질리티'],
-		},
-	];
-	const dummyActivityList = [
-		{
-			category: '생활',
-			content: ['미용', '펫의류', '펫인테리어', '산책', '훈련'],
-		},
-		{
-			category: '놀이',
-			content: ['프리스비', '어질리티', '노즈워쿠', '장난감', '캣휠', '사냥놀이'],
-		},
-		{
-			category: '장소',
-			content: ['애견놀이터', '애견카페', '애견패션', '목장', '펫페어'],
-		},
-		{
-			category: '사료&간식',
-			content: ['수제간식', '건강보조제', '습식사료', '건식사료', '캣닢'],
-		},
-		{
-			category: '건강',
-			content: ['재활', '노환', '예방접종', '구강관리', '다이어트'],
-		},
-	];
-	const [userData, setUserData] = React.useState(userDataDummy);
-	const [userInterestContent, setUserInterestContent] = React.useState([]);
-	const [isSaved, setIsSaved] = React.useState(false); // '저장하지 않고 나가시겠습니까?' 메시지 출력 여부 판별
-	const [showBtnModal, setShowBtnModal] = React.useState(false); //모달창 대체 View 출력 여부
-
-	//현재 유저의 관심사 리스트를 목록들에 적용
-	React.useEffect(() => {
-		let copy = [...userInterestContent];
-		userData.map((v, i) => {
-			v.content.map(value => {
-				copy.push(value);
-			});
-		});
-		copy = [...new Set(copy)];
-		setUserInterestContent(copy);
-	}, [userData]);
-
-	//태그를 클릭
-	const onPressInterestTag = tag => {
-		console.log('tag', tag);
-=======
 	// console.log('InterestTagModa', props.data);
 	//유저 오브젝트의 user_interests 의 더미데이터
 	// user_interests는 크게 location 및 activity로 구성
@@ -238,7 +167,6 @@ const InterestTagModal = props => {
 
 	//관심활동 태그를 클릭
 	const onPressInterestActivationTag = tag => {
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		let copy = [...userInterestContent];
 		if (copy.includes(tag)) {
 			let findIndex = copy.findIndex(e => e == tag);
@@ -247,8 +175,6 @@ const InterestTagModal = props => {
 			copy.push(tag);
 		}
 		setUserInterestContent(copy);
-<<<<<<< HEAD
-=======
 	};
 
 	//관심지역 태그를 클릭
@@ -261,19 +187,11 @@ const InterestTagModal = props => {
 			copy.push(tag);
 		}
 		setUserInterestLocation(copy);
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		// userInterestContent.push(tag);
 	};
 
 	//저장
 	const onPressSave = () => {
-<<<<<<< HEAD
-		console.log('저장 실시 및 저장될 태그 목록', userInterestContent);
-		setIsSaved(true);
-		props.onSave(userInterestContent);
-	};
-
-=======
 		if (props.category == 'Activity') {
 			props.setState(userInterestContent);
 		} else if (props.category == 'Location') {
@@ -286,16 +204,11 @@ const InterestTagModal = props => {
 	};
 
 	//모달 종료
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	const onClose = () => {
 		if (isSaved) {
 			props.onClose();
 			Modal.close();
 		} else {
-<<<<<<< HEAD
-			// alert('저장하지 않고 나가시겠습니까?');
-=======
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 			setShowBtnModal(true);
 		}
 	};
@@ -315,15 +228,6 @@ const InterestTagModal = props => {
 		Modal.close();
 	};
 
-<<<<<<< HEAD
-	return (
-		<View style={style.background}>
-			<View style={[style.popUpWindow]}>
-				<View style={[style.header]}>
-					<View style={[style.crossMark]}>
-						<Cross24_Filled onPress={onClose} />
-					</View>
-=======
 	const getList = () => {
 		if (props.category == 'Review') {
 			return getReviewCategory();
@@ -539,58 +443,11 @@ const InterestTagModal = props => {
 					<TouchableOpacity onPress={onClose} style={[style.crossMark]}>
 						<Cross24_Filled />
 					</TouchableOpacity>
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 					<TouchableOpacity onPress={onPressSave} style={[style.saveText]}>
 						<Text style={[txt.noto36b, {color: APRI10}]}>저장</Text>
 					</TouchableOpacity>
 				</View>
-<<<<<<< HEAD
-				<ScrollView>
-					{dummyActivityList.map((v, i) => {
-						return (
-							<View key={i} style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
-								<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>{v.category}</Text>
-
-								<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-									{v.content.length
-										? v.content.map((d, i) => {
-												if (i % 2 == 0) {
-													return null;
-												}
-												return (
-													<TouchableOpacity
-														onPress={() => onPressInterestTag(d)}
-														key={i}
-														style={[userInterestContent.includes(d) ? style.contentText_userInterest : style.contentText]}>
-														<Text style={[txt.noto28, {color: userInterestContent.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
-													</TouchableOpacity>
-												);
-										  })
-										: null}
-								</View>
-								<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-									{v.content.length
-										? v.content.map((d, i) => {
-												if (i % 2 != 0) {
-													return null;
-												}
-												return (
-													<TouchableOpacity
-														onPress={() => onPressInterestTag(d)}
-														style={[userInterestContent.includes(d) ? style.contentText_userInterest : style.contentText]}>
-														<Text style={[txt.noto28, {color: userInterestContent.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
-													</TouchableOpacity>
-												);
-										  })
-										: null}
-								</View>
-							</View>
-						);
-					})}
-				</ScrollView>
-=======
 				{getList()}
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 			</View>
 			{showBtnModal ? (
 				<View style={[style.btnModalContainer, style.shadow]}>
@@ -605,8 +462,6 @@ const InterestTagModal = props => {
 			) : (
 				<></>
 			)}
-<<<<<<< HEAD
-=======
 			{/* 하단 스크롤뷰 영역 - 광역시 도 */}
 			<Animated.View
 				style={[
@@ -681,7 +536,6 @@ const InterestTagModal = props => {
 					/>
 				</View>
 			</Animated.View>
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		</View>
 	);
 };
@@ -689,9 +543,6 @@ const InterestTagModal = props => {
 InterestTagModal.defaultProps = {
 	onSave: () => {},
 	onClose: () => {},
-<<<<<<< HEAD
-};
-=======
 	isActivation: true,
 };
 const dummyReviewCategoryList = [
@@ -716,7 +567,6 @@ const dummyReviewCategoryList = [
 		content: ['치료 경혐', '훈련 경혐', '다이어트 경험'],
 	},
 ];
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 
 const style = StyleSheet.create({
 	background: {
@@ -755,12 +605,6 @@ const style = StyleSheet.create({
 		// backgroundColor: 'yellow',
 	},
 	crossMark: {
-<<<<<<< HEAD
-		width: 52 * DP,
-	},
-	saveText: {
-		width: 66 * DP,
-=======
 		width: 90 * DP,
 		height: 90 * DP,
 		justifyContent: 'center',
@@ -768,7 +612,6 @@ const style = StyleSheet.create({
 	saveText: {
 		// width: 66 * DP,
 
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		height: 56 * DP,
 	},
 	content: {
@@ -815,11 +658,7 @@ const style = StyleSheet.create({
 		paddingVertical: 30 * DP,
 		paddingHorizontal: 64 * DP,
 		backgroundColor: 'white',
-<<<<<<< HEAD
-		opacity: 0.8,
-=======
 		opacity: 0.9,
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	},
 	btnModalTitle: {
 		alignItems: 'center',
@@ -831,8 +670,6 @@ const style = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 	},
-<<<<<<< HEAD
-=======
 	review_container: {
 		paddingHorizontal: 5 * DP,
 	},
@@ -877,7 +714,6 @@ const style = StyleSheet.create({
 		height: 70 * DP,
 		borderRadius: 30 * DP,
 	},
->>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 });
 
 export default InterestTagModal;

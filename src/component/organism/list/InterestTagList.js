@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, Text, View} from 'react-native';
+import {FlatList, Text, View, ScrollView} from 'react-native';
 import {GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w190} from 'Root/component/atom/btn/btn_style';
@@ -15,6 +15,8 @@ import {interestTagList} from 'Organism/style_organism copy';
  * title: string,
  * items : 'List item ',
  * onDelete : void,
+ * onPressAddBtn : void,
+ * extra : boolean,
  * }} props
  */
 export default InterestTagList = props => {
@@ -25,6 +27,7 @@ export default InterestTagList = props => {
 	};
 
 	const onPressAddBtn = () => {
+<<<<<<< HEAD:src/component/organism/list/InterestTagList.js
 		if (props.title == INTEREST_REGION) {
 			navigation.push('LocationPicker');
 		} else if (props.title == INTEREST_ACT) {
@@ -35,6 +38,9 @@ export default InterestTagList = props => {
 				() => Modal.close(),
 			);
 		}
+=======
+		props.onPressAddBtn();
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/InterestTagList.js
 	};
 
 	const renderItem = (item, index) => {
@@ -47,7 +53,7 @@ export default InterestTagList = props => {
 			</View>
 		);
 	};
-
+	const numColums = Math.ceil(props.items / 2);
 	return (
 		<View style={[interestTagList.container]}>
 			<View style={[interestTagList.titleContainer]}>
@@ -59,7 +65,14 @@ export default InterestTagList = props => {
 				</View>
 			</View>
 			<View style={[interestTagList.interestingTagList]}>
-				<FlatList data={props.items} renderItem={({item, index}) => renderItem(item, index)} horizontal={true} />
+				<FlatList
+					style={[{display: 'flex', flexWrap: 'wrap'}]}
+					data={props.items}
+					renderItem={({item, index}) => renderItem(item, index)}
+					horizontal={true}
+					extraData={props.extra}
+					// numColumns={3}
+				/>
 			</View>
 		</View>
 	);
@@ -69,4 +82,5 @@ InterestTagList.defaultProps = {
 	items: null,
 	title: null,
 	onDelete: e => console.log(e),
+	onPressAddBtn: e => console.log(e),
 };

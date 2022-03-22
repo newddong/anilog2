@@ -8,7 +8,10 @@ import FeedCommentList from 'Templete/feed/FeedCommentList';
 import UserInfoDetailSettting from 'Templete/user/UserInfoDetailSettting';
 import UserMenu from 'Templete/user/UserMenu';
 import UserInfoSetting from 'Templete/user/UserInfoSetting';
+<<<<<<< HEAD
 
+=======
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 import ChangeUserProfileImage from 'Templete/user/ChangeUserProfileImage';
 import ChangePassword from 'Templete/user/ChangePassword';
 import VaccinationRecord from 'Templete/vaccination/VaccinationRecord';
@@ -24,7 +27,11 @@ import SaveFavorite from 'Templete/favorite/SaveFavorite';
 import SaveAnimalRequest from 'Templete/protection/SaveAnimalRequest';
 import FavoriteFeeds from 'Templete/favorite/FavoriteFeeds';
 import AppliesRecord from 'Templete/my/AppliesRecord';
+<<<<<<< HEAD
 import ApplyAdoptionList from 'Templete/list/ApplyAdoptionList';
+=======
+import ApplyAdoptionList from 'Root/component/templete/protection/ApplyAdoptionList';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 import ApplyDetails from 'Templete/protection/ApplyDetails';
 import AnimalProtectList from 'Templete/protection/AnimalProtectList';
 import AssignProtectAnimalImage from 'Templete/protection/AssignProtectAnimalImage';
@@ -36,7 +43,10 @@ import EditShelterInfo from 'Templete/shelter/EditShelterInfo';
 import AidRequestAnimalList from 'Templete/protection/AidRequestAnimalList';
 import WriteAidRequest from 'Templete/protection/WriteAidRequest';
 import AidRequestManage from 'Templete/protection/AidRequestManage';
+<<<<<<< HEAD
 import ProtectApplicant from 'Templete/protection/ProtectApplicant';
+=======
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 import ProtectApplyForm from 'Templete/protection/ProtectApplyForm';
 import ShelterProtectRequests from 'Templete/shelter/ShelterProtectRequests';
 import AnimalFromShelter from 'Templete/protection/AnimalFromShelter';
@@ -56,10 +66,30 @@ import LogoHeader from 'Root/navigation/header/LogoHeader';
 import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 import {useNavigation} from '@react-navigation/core';
 import userGlobalObject from 'Root/config/userGlobalObject';
+<<<<<<< HEAD
 
+=======
+import SettingInformAsk from 'Templete/user/SettingInformAsk';
+import SettingAccount from 'Templete/user/SettingAccount';
+import SettingAlarm from 'Templete/user/SettingAlarm';
+import SettingOpen from 'Templete/user/SettingOpen';
+import ProtectionApplicationList from 'Root/component/templete/protection/ProtectionApplicationList';
+import ProtectCommentList from 'Root/component/templete/protection/ProtectCommentList';
+import AlarmAndSearchHeader from 'Root/navigation/header/AlarmAndSearchHeader';
+import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballHeader';
+import EditAidRequest from 'Root/component/templete/protection/EditAidRequest';
+import ReceivedMessage from 'Templete/user/ReceivedMessage';
+import UserNotePage from 'Templete/user/UserNotePage';
+import NoticeList from 'Templete/list/NoticeList';
+import ServiceCenter from 'Templete/user/ServiceCenter';
+import QnA from 'Root/component/templete/user/AskQuestion';
+import CategoryHelp from 'Templete/user/CategoryHelp';
+import ServiceCenterTopTabNavigation from './ServiceCenterTopTabNavigation';
+import CategoryHelpTopTabNavigation from './CategoryHelpTopTabNavigation';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 const MyStack = createStackNavigator();
-
 export default MyStackNavigation = props => {
+<<<<<<< HEAD
 	// console.log('MyStack', props.navigation);
 	const [searchInput, setSearchInput] = React.useState();
 
@@ -67,6 +97,8 @@ export default MyStackNavigation = props => {
 		setSearchInput(props.route.params); //검색어 입력 전달
 	}, [props.route.params]);
 
+=======
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	return (
 		<MyStack.Navigator initialRouteName={userGlobalObject.userInfo.user_type == 'shelter' ? 'ShelterMenu' : 'UserMenu'}>
 			{/* // <MyStack.Navigator initialRouteName={'ShelterMenu'}> */}
@@ -83,7 +115,7 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen
 				name="AnimalProtectRequestDetail"
 				component={AnimalProtectRequestDetail}
-				options={{header: props => <SimpleHeader {...props} />}}
+				options={{header: props => <SimpleWithMeatballHeader {...props} />}}
 			/>
 			<MyStack.Screen
 				name="FeedListForHashTag"
@@ -132,9 +164,8 @@ export default MyStackNavigation = props => {
 			/>
 			<MyStack.Screen name="AnimalAdoption" component={AnimalAdoption} options={{header: props => <SimpleHeader {...props} />, title: '상태 변경'}} />
 			<MyStack.Screen name="SelectAccount" options={{header: props => <InputAndSearchHeader {...props} />, title: ''}}>
-				{props => <SelectAccount {...props} input={searchInput} prevNav={props.route.params.prevNav} />}
+				{props => <SelectAccount {...props} input={props.route.params} prevNav={props.route.params.prevNav} />}
 			</MyStack.Screen>
-			{/* <MyStack.Screen name="SelectAccount" component={SelectAccount} options={{header: props => <InputAndSearchHeader {...props} />}} /> */}
 			<MyStack.Screen
 				name="AssignPetProfileImage"
 				component={AssignPetProfileImage}
@@ -218,19 +249,19 @@ export default MyStackNavigation = props => {
 				options={{header: props => <SendHeader {...props} />, title: '동물 보호 요청'}}
 			/>
 			<MyStack.Screen
+				name="EditAidRequest"
+				component={EditAidRequest}
+				options={{header: props => <SendHeader {...props} />, title: '보호 요청 게시글 수정'}}
+			/>
+			<MyStack.Screen
 				name="ShelterProtectAnimalList"
 				component={AidRequestManage}
 				options={{header: props => <SimpleHeader {...props} />, title: '보호 동물 목록'}}
 			/>
 			<MyStack.Screen
-				name="ProtectApplyList"
-				component={AidRequestManage}
+				name="ProtectionApplicationList"
+				component={ProtectionApplicationList}
 				options={{header: props => <SimpleHeader {...props} />, title: '신청서 조회'}}
-			/>
-			<MyStack.Screen
-				name="ProtectApplicant"
-				component={ProtectApplicant}
-				options={{header: props => <SimpleHeader {...props} />, title: '보호 활동 신청자'}}
 			/>
 			<MyStack.Screen
 				name="ProtectApplyForm"
@@ -297,6 +328,26 @@ export default MyStackNavigation = props => {
 				name="UserVolunteerForm"
 				component={ApplicationFormVolunteer}
 				options={{header: props => <SimpleHeader {...props} />, title: '봉사활동 신청서'}}
+			/>
+			<MyStack.Screen
+				name="SettingInformAsk"
+				component={SettingInformAsk}
+				options={{header: props => <SimpleHeader {...props} />, title: '정보/문의'}}
+			/>
+			<MyStack.Screen name="ProtectCommentList" component={ProtectCommentList} options={{header: props => <AlarmAndSearchHeader {...props} />}} />
+			<MyStack.Screen name="SettingAccount" component={SettingAccount} options={{header: props => <SimpleHeader {...props} />, title: '계정'}} />
+			<MyStack.Screen name="SettingAlarm" component={SettingAlarm} options={{header: props => <SimpleHeader {...props} />, title: '알림'}} />
+			<MyStack.Screen name="SettingOpen" component={SettingOpen} options={{header: props => <SimpleHeader {...props} />, title: '공개 설정'}} />
+			<MyStack.Screen name="ReceivedMessage" component={ReceivedMessage} options={{header: props => <SimpleHeader {...props} />, title: '쪽지함'}} />
+			<MyStack.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />, title: props.title}} />
+			<MyStack.Screen name="NoticeList" component={NoticeList} options={{header: props => <SimpleHeader {...props} />, title: '공지사항'}} />
+			<MyStack.Screen name="ServiceCenter" component={ServiceCenter} options={{header: props => <SimpleHeader {...props} />, title: '고객 센터'}} />
+			<MyStack.Screen name="CategoryHelp" component={CategoryHelp} options={{header: props => <AlarmAndSearchHeader {...props} />}} />
+			<MyStack.Screen name="ServiceTab" component={ServiceCenterTopTabNavigation} options={{header: props => <InputAndSearchHeader {...props} />}} />
+			<MyStack.Screen
+				name="CategoryHelpTab"
+				component={CategoryHelpTopTabNavigation}
+				options={{header: props => <InputAndSearchHeader {...props} />}}
 			/>
 		</MyStack.Navigator>
 	);

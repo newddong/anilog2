@@ -1,5 +1,9 @@
-import React from 'react';
-
-export const SearchContext = React.createContext({
-	routeName: '',
-});
+export default searchInfo = {
+	/**
+	 검색 정보
+	*/
+	searchInfo: {
+		routeName: '',
+		searchInput: '',
+	},
+};

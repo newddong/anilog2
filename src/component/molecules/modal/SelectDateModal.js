@@ -18,6 +18,10 @@ const SelectDateModal = props => {
 	const [year, setYear] = React.useState(2);
 	const [month, setMonth] = React.useState(2);
 	const [day, setDay] = React.useState(2);
+<<<<<<< HEAD
+=======
+	const padding = '';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 
 	const onSelect = () => {
 		let selectedYear = CALENDAR_YEAR()[year];
@@ -112,8 +116,27 @@ const SelectDateModal = props => {
 									<TouchableWithoutFeedback key={index} onPress={() => setYear(index)}>
 										<View
 											key={index}
+<<<<<<< HEAD
 											style={[index == year && item != '-------------' ? {backgroundColor: APRI10} : null, style.listItem, {width: 250 * DP}]}>
 											<Text style={[txt.roboto34]}>{item == '-------------' ? item : item + '년'}</Text>
+=======
+											style={[
+												index == year && item != padding ? {backgroundColor: APRI10} : null,
+												style.listItem,
+												{
+													width: 250 * DP,
+												},
+											]}>
+											<Text
+												style={[
+													txt.roboto34,
+													{
+														color: item == padding ? GRAY20 : BLACK,
+													},
+												]}>
+												{item == padding ? item : item + '년'}
+											</Text>
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 										</View>
 									</TouchableWithoutFeedback>
 								);
@@ -129,10 +152,23 @@ const SelectDateModal = props => {
 							renderItem={({item, index}) => {
 								return (
 									<TouchableWithoutFeedback key={index} onPress={() => setMonth(index)}>
+<<<<<<< HEAD
 										<View
 											key={index}
 											style={[style.listItem, index == month && item != '-------------' ? {backgroundColor: APRI10} : null, {width: 188 * DP}]}>
 											<Text style={[txt.roboto34]}>{item == '-------------' ? item : item + '월'}</Text>
+=======
+										<View key={index} style={[style.listItem, index == month && item != '' ? {backgroundColor: APRI10} : null, {width: 188 * DP}]}>
+											<Text
+												style={[
+													txt.roboto34,
+													{
+														color: item == padding ? GRAY20 : BLACK,
+													},
+												]}>
+												{item == '' ? item : item + '월'}
+											</Text>
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 										</View>
 									</TouchableWithoutFeedback>
 								);
@@ -148,10 +184,23 @@ const SelectDateModal = props => {
 							renderItem={({item, index}) => {
 								return (
 									<TouchableWithoutFeedback key={index} onPress={() => setDay(index)}>
+<<<<<<< HEAD
 										<View
 											key={index}
 											style={[style.listItem, index == day && item != '-------------' ? {backgroundColor: APRI10} : null, {width: 188 * DP}]}>
 											<Text style={[txt.roboto34]}>{item == '-------------' ? item : item + '일'}</Text>
+=======
+										<View key={index} style={[style.listItem, index == day && item != '' ? {backgroundColor: APRI10} : null, {width: 188 * DP}]}>
+											<Text
+												style={[
+													txt.roboto34,
+													{
+														color: item == padding ? GRAY20 : BLACK,
+													},
+												]}>
+												{item == '' ? item : item + '일'}
+											</Text>
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 										</View>
 									</TouchableWithoutFeedback>
 								);

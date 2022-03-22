@@ -132,13 +132,35 @@ import posterSave from './posterSave';
 import congratulation from './congratulation';
 import newmeatball60 from './newMeatBall60';
 import newmeatball60Filled from './newMeatBall60Filled';
+<<<<<<< HEAD
 import DP from 'Root/config/dp';
 
+=======
+import filter60Border from './filter60Border';
+import filter60Filled from './filter60Filled';
+import secureIcon40 from './secureIcon40';
+import locationGray from './locationGray';
+import animal_another from './animal_another';
+import animal_another_off from './animal_another_off';
+import animal_cat from './animal_cat';
+import animal_cat_off from './animal_cat_off';
+import animal_dog from './animal_dog';
+import animal_dog_off from './animal_dog_off';
+import rainbowBridge from './rainbowBridge';
+import writeBoard from './writeBoard';
+import loading from './loading';
+import save54 from './save54';
+import locationMarker from './locationMarker';
+import currentLocation from './currentLocation';
+import DP from 'Root/config/dp';
+import twoPaw from './twoPaw';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
 
 const size30 = {width: 30 * DP, height: 30 * DP};
 const size32 = {width: 32 * DP, height: 32 * DP};
 const size38 = {width: 38 * DP, height: 38 * DP};
+const size40 = {width: 40 * DP, height: 40 * DP};
 const size46 = {width: 46 * DP, height: 46 * DP};
 const size48 = {width: 48 * DP, height: 48 * DP};
 const size50 = {width: 50 * DP, height: 50 * DP};
@@ -322,6 +344,7 @@ export const Arrow_Up_GRAY20 = makeSvg(arrow_up, size48, GRAY20);
 export const Arrow_Up_White = makeSvg(arrow_up, size48, 'white');
 export const Mercy_Killing = makeSvg(expiredDate, {width: 134 * DP, height: 27 * DP});
 export const NextMark = makeSvg(nextMonthBtn, {width: 12 * DP, height: 20 * DP}, GRAY10);
+export const NextMark_APRI = makeSvg(nextMonthBtn, {width: 12 * DP, height: 20 * DP}, APRI10);
 export const PreviousMonthBtn = makeSvg(previousMonthBtn, {width: 12 * DP, height: 20 * DP});
 export const VideoPlay_Feed = makeSvg(videoPlay48, size94);
 
@@ -340,3 +363,23 @@ export const MainLogo = makeSvg(mainLogo, {width: 122 * DP, height: 90 * DP});
 export const Congratulation = makeSvg(congratulation, {width: 124 * DP, height: 110 * DP});
 export const NewMeatBall60 = makeSvg(newmeatball60, size60);
 export const NewMeatBall60Filled = makeSvg(newmeatball60Filled, size60);
+<<<<<<< HEAD
+=======
+export const Filter60Border = makeSvg(filter60Border, size60);
+export const Filter60Filled = makeSvg(filter60Filled, size60);
+export const SecureIcon40 = makeSvg(secureIcon40, size40);
+export const LocationGray = makeSvg(locationGray, {width: 31 * DP, height: 37 * DP});
+export const Animal_another = makeSvg(animal_another, {width: 120 * DP, height: 60 * DP});
+export const Animal_another_off = makeSvg(animal_another_off, {width: 120 * DP, height: 60 * DP});
+export const Animal_cat = makeSvg(animal_cat, {width: 136 * DP, height: 60 * DP});
+export const Animal_cat_off = makeSvg(animal_cat_off, {width: 136 * DP, height: 60 * DP});
+export const Animal_dog = makeSvg(animal_dog_off, {width: 100 * DP, height: 60 * DP});
+export const Animal_dog_off = makeSvg(animal_dog, {width: 100 * DP, height: 60 * DP});
+export const RainbowBridge = makeSvg(rainbowBridge, {width: 132 * DP, height: 170 * DP});
+export const WriteBoard = makeSvg(writeBoard, size94);
+export const LoadingImg = makeSvg(loading, {width: 150 * DP, height: 150 * DP});
+export const Save54 = makeSvg(save54, {width: 54 * DP, height: 54 * DP});
+export const LocationMarker = makeSvg(locationMarker, {width: 80 * DP, height: 80 * DP});
+export const CurrentLocation = makeSvg(currentLocation, {width: 70 * DP, height: 70 * DP});
+export const TwoPaw = makeSvg(twoPaw, {width: 128 * DP, height: 103 * DP});
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca

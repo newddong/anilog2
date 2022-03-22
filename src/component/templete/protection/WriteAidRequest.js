@@ -1,19 +1,27 @@
 import React from 'react';
-import {Text, View, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView} from 'react-native';
+import {Text, View, TextInput, TouchableOpacity, ScrollView} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {APRI10, GRAY10, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
+<<<<<<< HEAD:src/component/templete/protection/WriteAidRequest.js
 import {AddItem64, Camera54} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import AidRequest from 'Organism/listitem/AidRequest';
 import {assignProtectAnimal_style, feedWrite, login_style, temp_style, writeAidRequest} from 'Templete/style_templete';
+=======
+import {Camera54} from 'Atom/icon';
+import {styles} from 'Atom/image/imageStyle';
+import AidRequest from 'Organism/listitem/AidRequest';
+import {assignProtectAnimal_style, login_style, writeAidRequest} from 'Templete/style_templete';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/WriteAidRequest.js
 import ImagePicker from 'react-native-image-crop-picker';
 import Modal from 'Component/modal/Modal';
 
 export default WriteAidRequest = ({route, navigation}) => {
 	// console.log('WriteAidRequest', route.params);
-	const [data, setData] = React.useState({...route.params.data}); //ShelterProtectAnimalObject(보호소의 보호동물) 정보가 담겨있음
+	const params = route.params.data;
+	const [data, setData] = React.useState(params); //ShelterProtectAnimalObject(보호소의 보호동물) 정보가 담겨있음
 	//ProtectRequestObject(보호소의 동물 보호 요청 게시글) 테이블에 맞춘 보호요청 작성글을 작성
 	const [protectRequestData, setProtectRequestData] = React.useState({
 		shelter_protect_animal_object_id: data._id,
@@ -26,9 +34,16 @@ export default WriteAidRequest = ({route, navigation}) => {
 	});
 	const [imageList, setImageList] = React.useState([]); //PhotoSelect에서 선택된 사진List
 
+	React.useEffect(() => {
+		//다시 게시하기일 경우 imageList 반영시켜야함
+		if (route.params.isRePost) {
+			setImageList(params.protect_animal_photo_uri_list.slice(1, params.protect_animal_photo_uri_list.length));
+		}
+	}, [route.params.isRePost]);
+
 	//헤더로 데이터 보내기
 	React.useEffect(() => {
-		// console.log('ProtectRequestData / WriteAidRequest ', protectRequestData.shelter_protect_animal_object_id);
+		// console.log('ProtectRequestData / WriteAidRequest ', protectRequestData);
 		navigation.setParams({data: protectRequestData, nav: route.name});
 	}, [protectRequestData]);
 
@@ -70,8 +85,7 @@ export default WriteAidRequest = ({route, navigation}) => {
 						quality: 0.8,
 					},
 					responseObject => {
-						console.log('선택됨', responseObject);
-
+						// console.log('선택됨', responseObject);
 						if (!responseObject.didCancel) {
 							let tempContainer = [...imageList];
 							responseObject.assets.map(v => tempContainer.push(v.uri));
@@ -131,6 +145,10 @@ export default WriteAidRequest = ({route, navigation}) => {
 							maxLength={500}
 							textAlignVertical={'top'}
 							multiline={true}
+<<<<<<< HEAD:src/component/templete/protection/WriteAidRequest.js
+=======
+							placeholderTextColor={GRAY20}
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/WriteAidRequest.js
 							placeholder="내용 입력"
 						/>
 						<Text style={[txt.noto24, {color: GRAY20, alignSelf: 'flex-end'}]}>{protectRequestData.protect_request_content.length} / 500</Text>

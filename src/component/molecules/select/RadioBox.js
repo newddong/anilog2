@@ -11,6 +11,7 @@ import {RadioChecked48, RadioUnchecked48} from 'Atom/icon';
  * @param {object} props.items - 라디오박스 목록 Array
  * @param {boolean} props.horizontal - RadioBox 수평정렬 지정 Default=true
  * @param {number} props.selectableNumber - 선택가능한 Radio Box 숫자 Default = 1
+ * @param {number} props.defaultSelect - 디폴트 선택 인덱스
  * @param {(index:number)=>void} props.onSelect - 라디오버튼 선택할 때 동작하는 콜뱍, 선택한 박스의 인덱스 반환
  */
 const RadioBox = props => {

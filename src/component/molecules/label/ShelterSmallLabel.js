@@ -41,8 +41,6 @@ const ShelterSmallLabel = props => {
 
 	const getFoundationDate = () => {
 		let date = data.shelter_foundation_date;
-		// console.log(date);
-
 		date = moment(date).format('YYYY-MM-DD');
 		return date;
 	};

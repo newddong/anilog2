@@ -5,11 +5,17 @@ import FeedThumbnailList from 'Organism/feed/FeedThumbnailList';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import {txt} from 'Root/config/textstyle';
 import {GRAY10} from 'Root/config/color';
+<<<<<<< HEAD:src/component/templete/search/SearchFeed.js
 import {dummy_FeedObject} from 'Root/config/dummyDate_json';
+=======
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/SearchFeed.js
 import ListEmptyInfo from 'Molecules/info/ListEmptyInfo';
 import {getSuggestFeedList} from 'Root/api/feedapi';
+import {useNavigation} from '@react-navigation/core';
+import searchContext from 'Root/config/searchContext';
 
-export default SearchFeed = ({route, navigation}) => {
+export default SearchFeed = React.memo((props, ref) => {
+	const navigation = useNavigation();
 	const [feedList, setFeedList] = React.useState([]);
 
 	const onClickThumnail = (index, feed) => {
@@ -19,24 +25,28 @@ export default SearchFeed = ({route, navigation}) => {
 	const [showOnlyProtect, setShowOnlyProtect] = React.useState(false);
 
 	React.useEffect(() => {
-		getSuggestFeedList(
-			{},
-			res => {
-				// console.log('res', res.msg[0]);
-				//임시보호 일기 게시글만 보기
-				if (showOnlyProtect) {
-					let filtered = [];
-					res.msg.map((v, i) => {
-						v.feed_is_protect_diary ? filtered.push(v) : false;
-					});
-					setFeedList(filtered);
-				} else {
-					setFeedList(res.msg);
-				}
-			},
-			err => console.log('err', err),
-		);
-	}, [showOnlyProtect]);
+		const unsubscribe = navigation.addListener('focus', () => {
+			searchContext.searchInfo.routeName = props.route.name;
+			getSuggestFeedList(
+				{},
+				res => {
+					console.log('getSuggestFeedList');
+					//임시보호 일기 게시글만 보기
+					if (showOnlyProtect) {
+						let filtered = [];
+						res.msg.map((v, i) => {
+							v.feed_is_protect_diary ? filtered.push(v) : false;
+						});
+						setFeedList(filtered);
+					} else {
+						setFeedList(res.msg);
+					}
+				},
+				err => console.log('err', err),
+			);
+		});
+		return unsubscribe;
+	}, [navigation]);
 
 	const onSwtichOn = () => {
 		console.log('임시보호 게시글만 보기');
@@ -69,4 +79,4 @@ export default SearchFeed = ({route, navigation}) => {
 			</View>
 		</View>
 	);
-};
+});

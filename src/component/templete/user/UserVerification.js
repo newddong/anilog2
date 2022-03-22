@@ -4,7 +4,10 @@ import {txt} from 'Root/config/textstyle';
 import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import StageBar from 'Molecules/info/Stagebar';
+<<<<<<< HEAD:src/component/templete/user/UserVerification.js
 import EmailVerification from 'Organism/form/EmailVerification';
+=======
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/UserVerification.js
 import PhoneNumVerification from 'Organism/form/PhoneNumVerification';
 import {stagebar_style} from 'Organism/style_organism copy';
 import {login_style, btn_style, temp_style, progressbar_style, userAssign} from 'Templete/style_templete';
@@ -93,11 +96,9 @@ export default UserVerification = props => {
 	const onVaild = isValid => {
 		setVerified(isValid);
 	};
+
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
-			{/* <TouchableWithoutFeedback onPress={() => console.log(user_data)}>
-				<View style={{backgroundColor: 'red', height: 30, width: 30, position: 'absolute', top: 0, left: 0}}></View>
-			</TouchableWithoutFeedback> */}
 			<ScrollView>
 				{/* (M)StageBar	 */}
 				<View style={[temp_style.stageBar, progressbar_style.stageBar]}>
@@ -110,42 +111,29 @@ export default UserVerification = props => {
 						width={600 * DP} //bar의 너비
 					/>
 				</View>
-
-				{/* (M)TabSelectBorder_Type1 */}
-				{/* <View style={[temp_style.tabSelectBorder_Type1, userAssign.tabSelectBorder_Type1]}>
-					<TabSelectBorder_Type1 items={['휴대폰 인증', '이메일 인증']} width={650} onSelect={state => changeTabState(state)} />
-				</View> */}
-
 				<View style={[temp_style.textMassageLeftTop]}>
 					<Text style={userAssign.textMessageInside}>휴대폰 번호로 가입이 가능합니다.</Text>
 				</View>
-
-				{tabState == 0 ? (
-					<View style={[temp_style.phoneNumVerification]}>
-						<PhoneNumVerification
-							requestVerification={verificationRequest}
-							requestReVerification={reVerificationRequest}
-							onVerificationNumberChange={onVerificationNumberChange}
-							onNameInputChange={onNameInputChange}
-							onPhoneNumberInputChange={onPhoneNumberInputChange}
-							onMobileCompanyInputChange={onMobileCompanyInputChange}
-							mobileNumValidator={mobileNumValidator}
-							verifyNumValidator={verifyNumValidator}
-							nameValidator={nameValidator}
-							onValid={onVaild}
-							verifyTimeLimit={time}
-							asyncConfirm={async}
-						/>
-					</View>
-				) : (
-					<View style={[temp_style.phoneNumVerification]}>
-						<EmailVerification />
-					</View>
-				)}
-
+				<View style={[temp_style.phoneNumVerification]}>
+					<PhoneNumVerification
+						requestVerification={verificationRequest}
+						requestReVerification={reVerificationRequest}
+						onVerificationNumberChange={onVerificationNumberChange}
+						onNameInputChange={onNameInputChange}
+						onPhoneNumberInputChange={onPhoneNumberInputChange}
+						onMobileCompanyInputChange={onMobileCompanyInputChange}
+						mobileNumValidator={mobileNumValidator}
+						verifyNumValidator={verifyNumValidator}
+						nameValidator={nameValidator}
+						onValid={onVaild}
+						verifyTimeLimit={time}
+						asyncConfirm={async}
+					/>
+				</View>
 				{/* (A)Btn_w654 */}
 				<View style={[btn_style.btn_w654, userAssign.btn_w654]}>
 					{verified ? (
+<<<<<<< HEAD:src/component/templete/user/UserVerification.js
 						<AniButton
 							btnTitle={'인증 완료'}
 							btnLayout={btn_w654}
@@ -154,6 +142,9 @@ export default UserVerification = props => {
 							titleFontStyle={32}
 							onPress={goToNextStep}
 						/>
+=======
+						<AniButton btnTitle={'인증 완료'} btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} onPress={goToNextStep} />
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/UserVerification.js
 					) : (
 						<AniButton btnTitle={'인증 확인'} btnLayout={btn_w654} disable={true} titleFontStyle={32} onPress={goToNextStep} />
 					)}

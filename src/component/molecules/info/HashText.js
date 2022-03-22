@@ -42,6 +42,8 @@ const makeFeedInputView = (input,allowTab) => {
 			getUserListByNickname(
 				{
 					user_nickname: nickname.substring(1),
+					request_number: 1,
+					user_type:''
 				},
 				result => {
 					allowTab&&navigation.push('UserProfile',{userobject:{_id:result.msg[0]._id}});

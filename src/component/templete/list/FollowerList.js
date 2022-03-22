@@ -3,14 +3,23 @@ import {FlatList, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import ControllableAccountList from 'Organism/list/ControllableAccountList';
 import {followerList} from 'Templete/style_templete';
 import {getFollows, getFollowers} from 'Root/api/userapi';
+import InputWithSearchIcon from 'Root/component/molecules/input/InputWithSearchIcon';
 
 export default FollowerList = ({route, navigation}) => {
 	const [searchInput, setSearchInput] = React.useState('');
-	const [myFollower, setMyFollower] = React.useState(); // 팔로워리스트 현재 빈 값
+	const [myFollower, setMyFollower] = React.useState([]); // 팔로워리스트 현재 빈 값
 
 	const onClickAccount = item => {
 		// console.log('item', item);
 		navigation.push('UserProfile', {userobject: item});
+	};
+
+	const onChangeSearchInput = text => {
+		setSearchInput(text);
+	};
+
+	const onSearch = () => {
+		console.log('');
 	};
 
 	React.useEffect(() => {
@@ -18,12 +27,14 @@ export default FollowerList = ({route, navigation}) => {
 			getFollowers(
 				{
 					userobject_id: route.params.userobject._id,
+					user_nickname: searchInput,
 				},
 				result => {
+					// console.log('result / getFollowers / ', result.msg);
 					setMyFollower(result.msg.map(v => v.follower_id));
 				},
 				err => {
-					Modal.alert(error);
+					console.log('getFollowers / error / FollwerList : ', err);
 				},
 			);
 		}
@@ -31,37 +42,26 @@ export default FollowerList = ({route, navigation}) => {
 			getFollows(
 				{
 					userobject_id: route.params.userobject._id,
+					user_nickname: searchInput,
 				},
 				result => {
 					setMyFollower(result.msg.map(v => v.follow_id));
 				},
 				err => {
-					Modal.alert(error);
+					console.log('getFollows / error / FollwerList : ', err);
 				},
 			);
 		}
-	}, []);
-
-	React.useEffect(() => {
-		console.log('팔로워 리스트', myFollower);
-	}, [myFollower]);
+	}, [searchInput]);
 
 	return (
 		<View style={[followerList.container]}>
 			<ScrollView style={[{flex: 0}]}>
-				{/* <View style={[followerList.inputWitchSearch, {alignSelf: 'center'}]}>
+				<View style={[followerList.inputWitchSearch, {alignSelf: 'center'}]}>
 					<InputWithSearchIcon onChange={onChangeSearchInput} onSearch={onSearch} placeholder={'검색어를 입력해주세요.'} />
-				</View> */}
+				</View>
 				<View style={[{alignItems: 'center'}]}>
-					<ScrollView horizontal={false} style={{flex: 0}}>
-						<ScrollView horizontal={true} style={{flex: 1}}>
-							<ControllableAccountList
-								items={myFollower}
-								onClickAccount={onClickAccount}
-								title={route.name == 'FollowerList' ? '팔로워' : '팔로잉'}
-							/>
-						</ScrollView>
-					</ScrollView>
+					<ControllableAccountList items={myFollower} onClickAccount={onClickAccount} title={route.name == 'FollowerList' ? '팔로워' : '팔로잉'} />
 				</View>
 			</ScrollView>
 			{/* <View style={[followerList.floatingBtn]}>

@@ -7,12 +7,15 @@ export const organism_style = StyleSheet.create({
 	feedContent: {
 		flexDirection: 'column',
 		width: 750 * DP,
+<<<<<<< HEAD
 		// height: 270 * DP,
 		// height: 300 * DP,
+=======
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		alignItems: 'center',
-		paddingTop: 40 * DP,
-		// paddingBottom: 50 * DP,
+		paddingTop: 20 * DP,
 		backgroundColor: WHITE,
+		paddingBottom:15*DP,
 		paddingHorizontal: 48 * DP,
 		overflow: 'hidden',
 	},
@@ -27,16 +30,14 @@ export const organism_style = StyleSheet.create({
 		width: 654 * DP, //유저아이디 최우측 미트볼 아이콘 추가를 위한 수정
 		justifyContent: 'space-between',
 		alignItems: 'center',
+<<<<<<< HEAD
 		// backgroundColor: 'yellow',
+=======
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	},
 	feed: {
-		// flexDirection: 'column',
 		alignItems: 'center',
 		width: 750 * DP,
-		// marginTop: 30 * DP,
-		// alignItems: 'center',
-		// justifyContent: 'center',
-		// backgroundColor: 'lightblue',
 	},
 	feedMedia: {
 		width: 750 * DP,
@@ -69,10 +70,12 @@ export const organism_style = StyleSheet.create({
 		flexDirection: 'row',
 		width: '100%',
 		height: 48 * DP,
+		paddingHorizontal: 48 * DP,
 		alignItems: 'center',
-		justifyContent: 'space-between',
-		backgroundColor: '#fffd',
-		position: 'absolute',
+		// justifyContent: 'space-between',
+		justifyContent: 'flex-end',
+		backgroundColor: '#fff1',
+		// position: 'absolute',
 		bottom: 0,
 	},
 	time_feedContent: {
@@ -155,8 +158,9 @@ export const organism_style = StyleSheet.create({
 	},
 	comment_feed_view: {
 		width: 750 * DP,
-		height: 202 * DP,
+		height: 200 * DP,
 		alignItems: 'center',
+		// backgroundColor:'green'
 	},
 	likeCommentButtons_view: {
 		flexDirection: 'row',
@@ -294,7 +298,7 @@ export const organism_style = StyleSheet.create({
 		width: 654 * DP,
 		marginBottom: 20 * DP,
 		alignItems: 'flex-end',
-		// backgroundColor: '#ECFCDD',
+		// backgroundColor: 'yellow',
 	},
 	userLocationTimeLabel: {
 		width: 472 * DP,
@@ -320,7 +324,7 @@ export const organism_style = StyleSheet.create({
 		marginBottom: 30 * DP,
 
 		//UI 끝이 보이지 않아 임시적으로 marginRight 값 15 넣음.
-		marginRight: 15 * DP,
+		// marginRight: 15 * DP,
 		flexDirection: 'row',
 		// backgroundColor: '#B4EAD3',
 	},
@@ -382,6 +386,10 @@ export const feed_style = StyleSheet.create({
 		marginLeft: 38 * DP,
 		backgroundColor: 'yellow',
 	},
+	recent_comment_user: {
+		height: 38 * DP, //특정 디바이스에서 Feed Recent Comment User Nickname 텍스트가 잘리던 현상 수정
+		// backgroundColor: 'red',
+	},
 });
 
 export const profileInfo_style = StyleSheet.create({
@@ -417,6 +425,14 @@ export const profileInfo_style = StyleSheet.create({
 	},
 	shelter_info_container: {
 		marginTop: 12 * DP,
+<<<<<<< HEAD
+=======
+	},
+	shelterButtonContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		width: 292 * DP,
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	},
 });
 
@@ -427,22 +443,25 @@ export const parentComment = StyleSheet.create({
 	likeReplyButton: {
 		width: 574 * DP,
 		height: 34 * DP,
-		marginTop: 20 * DP,
+		marginTop: 5 * DP,
 		flexDirection: 'row',
 		alignItems: 'center',
 		// alignSelf: 'flex-end',
 		justifyContent: 'flex-end',
 	},
 	comment_contents: {
-		width: 574 * DP,
-		marginLeft: 80 * DP,
-		// marginTop: 3 * DP, //원래는 15였음
-		alignSelf: 'flex-start',
+		width: 580 * DP,
+		// marginLeft: 80 * DP,
+		marginTop: 10 * DP, //UI 3차 적용 - 22.02.19 ksw
+		alignSelf: 'flex-end',
+		// backgroundColor: 'red',
 	},
 	showChildComment: {
-		position: 'absolute',
-		left: 0,
-		paddingBottom: 5 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		// position: 'absolute',
+		// left: 0,
+		// paddingBottom: 5 * DP,
 	},
 	heart30: {
 		width: 30 * DP,
@@ -460,7 +479,7 @@ export const parentComment = StyleSheet.create({
 		lineHeight: 30 * DP,
 	},
 	writeComment: {
-		width: 130 * DP,
+		// width: 130 * DP,
 		height: 34 * DP,
 	},
 	writeCommentText: {
@@ -468,7 +487,15 @@ export const parentComment = StyleSheet.create({
 		includeFontPadding: false,
 	},
 	img_square_round: {
-		marginTop: 5 * DP,
+		marginTop: 15 * DP,
+	},
+	userLabelContainer: {
+		// width: 472 * DP,
+		flexDirection: 'row',
+		// justifyContent: 'space-between',
+	},
+	secureIcon: {
+		marginLeft: 10 * DP,
 	},
 	userLabelContainer: {
 		width: 654 * DP,

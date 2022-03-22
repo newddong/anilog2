@@ -1,7 +1,10 @@
 import React from 'react';
 import {View, ScrollView} from 'react-native';
 import {APRI10} from 'Root/config/color';
+<<<<<<< HEAD:src/component/templete/user/AgreementCheck.js
 import {userAssign_agreementCheckList} from 'Root/config/dummyDate_json';
+=======
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AgreementCheck.js
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from 'Atom/btn/btn_style';
 import Modal from 'Root/component/modal/Modal';
@@ -119,3 +122,12 @@ export default AgreementCheck = props => {
 		</ScrollView>
 	);
 };
+
+const userAssign_agreementCheckList = [
+	{text: '본인은 만 14세 이상입니다. (필수)', detail: false},
+	{text: '서비스 이용약관 동의 (필수)', detail: true},
+	{text: '개인정보 수집 이용약관 동의 (필수)', detail: true},
+	{text: '위치기반 서비스 이용약관 동의 (필수)', detail: true},
+	{text: '기부내역 이용약관 동의(필수)', detail: true},
+	{text: '이벤트 및 마케팅 정보 수신 동의 동의(선택)', detail: false},
+];

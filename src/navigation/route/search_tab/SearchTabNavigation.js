@@ -1,11 +1,18 @@
 import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import SearchFeedTabNavigation from './feed_tab/SearchFeedTabNavigation';
+<<<<<<< HEAD
 import Temp from 'Navigation/route/main_tab/community_stack/temp';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import {Dimensions, StyleSheet} from 'react-native';
 import {APRI10, GRAY10, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
+=======
+import {Dimensions, StyleSheet} from 'react-native';
+import {APRI10, GRAY10, WHITE} from 'Root/config/color';
+import DP from 'Root/config/dp';
+import SearchCommunityTabNavigation from './community_tab/SearchCommunityTabNavigation';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 
 const SearchTabNav = createMaterialTopTabNavigator();
 
@@ -13,6 +20,7 @@ export default SearchTabNavigation = props => {
 	// navigation.push('Search', {mother: 0, child: 1});
 	// ㄴ 위와 같이 호출할 경우 mother는 상위TopTab의 Tab인덱스를, child는 하단TopTab의 인덱스를 설정해줄 수 있음.
 	const prevNav = props.route.params.prevNav;
+<<<<<<< HEAD
 	const childTab = props.route.params.child; //
 	const [searchInput, setSearchInput] = React.useState();
 	const navName = ['FEED', 'COMMUNITY'];
@@ -40,6 +48,9 @@ export default SearchTabNavigation = props => {
 		props.navigation.setParams({routeName: v});
 		setCurrentChild(v);
 	};
+=======
+	const [searchInput, setSearchInput] = React.useState('');
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 
 	const onClickUser = sendUserobject => {
 		// console.log('prevNav', prevNav);
@@ -73,6 +84,7 @@ export default SearchTabNavigation = props => {
 					title: '피드',
 					...searchTabLabelOption,
 				}}>
+<<<<<<< HEAD
 				{props => (
 					<SearchFeedTabNavigation
 						{...props}
@@ -94,6 +106,19 @@ export default SearchTabNavigation = props => {
 				}}
 			/>
 			{/* <SearchTabNav.Screen name="SearchProtectRequest">{props => <SearchProtectRequest {...props} input={searchInput} />}</SearchTabNav.Screen> */}
+=======
+				{props => <SearchFeedTabNavigation {...props} onClickUser={onClickUser} />}
+			</SearchTabNav.Screen>
+			<SearchTabNav.Screen
+				name="COMMUNITY"
+				// component={Temp}
+				options={{
+					title: '커뮤니티',
+					...searchTabLabelOption,
+				}}>
+				{props => <SearchCommunityTabNavigation {...props} input={searchInput} />}
+			</SearchTabNav.Screen>
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		</SearchTabNav.Navigator>
 	);
 };

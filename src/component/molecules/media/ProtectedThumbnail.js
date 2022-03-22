@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View, Image, TouchableOpacity} from 'react-native';
-import {GRAY10, RED10, WHITE, APRI10} from 'Root/config/color';
+import {GRAY10, RED10, RED20, WHITE, APRI10, YELL20} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {Mercy_Killing, Female48, Male48} from 'Atom/icon';
@@ -50,11 +50,11 @@ const ProtectedThumbnail = props => {
 
 	const getStatusContainerStyle = () => {
 		if (props.data.status == 'missing') {
-			return {backgroundColor: RED10};
+			return {backgroundColor: RED20};
 		} else if (props.data.status == 'report') {
-			return {backgroundColor: APRI10, borderWidth: 2 * DP, borderColor: APRI10};
+			return {backgroundColor: YELL20, borderWidth: 2 * DP, borderColor: YELL20};
 		} else if (props.data.status == 'emergency') {
-			return {backgroundColor: RED10, borderWidth: 2 * DP, borderColor: RED10};
+			return {backgroundColor: RED20, borderWidth: 2 * DP, borderColor: RED20};
 		} else return {backgroundColor: GRAY10};
 	};
 
@@ -63,7 +63,7 @@ const ProtectedThumbnail = props => {
 			case 'rescue':
 			case 'wait':
 			case 'protect':
-				return '입양가능';
+				return '입양 가능';
 			case 'emergency':
 				return '안락사 임박';
 			case 'missing':
@@ -76,7 +76,8 @@ const ProtectedThumbnail = props => {
 				return '무지개다리';
 			case 'complete':
 			case 'accept':
-				return '입양완료';
+			case 'done':
+				return '입양 완료';
 		}
 	};
 

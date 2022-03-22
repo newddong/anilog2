@@ -34,13 +34,17 @@ export default function BottomTab({state, descriptors, navigation}) {
 	if (state.index == 4 && state.routes) {
 		// console.log('state', state?.routes[state.index].params.prevNav);
 		if (state.routes[state.index].params != undefined) {
-			console.log('state', state.routes ? state.routes[state.index].params.prevNav : 'dd');
+			// console.log('state', state.routes ? state.routes[state.index].params.prevNav : 'dd');
 			let prevNav = state.routes[state.index].params.prevNav;
 			//현재는 서치탭이동이 두가지 경우 (보호활동탭, 피드탭)밖에 없으므로 이하와 같이 처리
 			prevNav == 'ProtectionTab' ? (currentIndex = '1') : (currentIndex = '0');
 		}
 	}
 
+	const nestedState = state.routes[state.index].state;
+	const nestedRouteName = nestedState ? nestedState.routes[nestedState.index].name : 'none';
+
+	if (nestedRouteName.includes('CommentList')) return false;
 	return (
 		<>
 			<Shadow />
@@ -123,7 +127,7 @@ const Shadow = () => (
 			style={{
 				position: 'absolute',
 				width: '100%',
-				height: 146 * DP,
+				height: 106 * DP,
 				backgroundColor: '#767676',
 				bottom: 0,
 				opacity: 0.03,
@@ -132,7 +136,7 @@ const Shadow = () => (
 			style={{
 				position: 'absolute',
 				width: '100%',
-				height: 143 * DP,
+				height: 103 * DP,
 				backgroundColor: '#767676',
 				bottom: 0,
 				opacity: 0.1,

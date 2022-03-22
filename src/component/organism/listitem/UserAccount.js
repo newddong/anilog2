@@ -18,8 +18,7 @@ import {userAccount} from 'Organism/style_organism copy';
  * @param {boolean} props.checkBoxState - 선택 여부 (default = false)
  */
 export default UserAccount = props => {
-	// console.log('item', props.data);
-
+	// console.log('UserAccount item', props.data);
 	const [followState, setFollowState] = React.useState(true);
 
 	const getLabel = () => {
@@ -61,7 +60,7 @@ export default UserAccount = props => {
 				<View
 					onPress={onClickFollow}
 					style={[props.checkBoxMode ? userAccount.followingBtnContainer : userAccount.followingBtnContainer_noneCheckBox]}>
-					{followState ? (
+					{props.data.follow ? (
 						<AniButton onPress={onClickFollow} btnTitle={'팔로잉'} btnTheme={'shadow'} btnStyle={'border'} btnLayout={btn_w108} />
 					) : (
 						<AniButton onPress={onClickFollow} btnTitle={'팔로우'} btnTheme={'shadow'} btnLayout={btn_w108} />

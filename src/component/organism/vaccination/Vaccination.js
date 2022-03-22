@@ -4,7 +4,11 @@ import {TouchableOpacity} from 'react-native';
 import {Text, View, FlatList} from 'react-native';
 import {APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
+<<<<<<< HEAD:src/component/organism/vaccination/Vaccination.js
 import {vaccination} from 'Organism/style_organism';
+=======
+import {vaccination} from 'Organism/style_organism copy';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/Vaccination.js
 
 export default Vaccination = props => {
 	// const testData = [

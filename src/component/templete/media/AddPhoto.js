@@ -45,7 +45,7 @@ export default AddPhoto = props => {
 	 *@param {number} request - 불러올 미디어의 숫자 (기본값 20)
 	 *@param {string} type - 불러올 미디어의 타잎('Photos'|'All'|'Videos')
 	 */
-	const loadPhotosMilsec = (request = 99, timeStamp = 0, type = 'All') => {
+	const loadPhotosMilsec = (request = 30, timeStamp = 0, type = 'All') => {
 		CameraRoll.getPhotos({
 			first: request,
 			toTime: timeStamp ? timeStamp * 1000 - 1 : 0,
@@ -53,8 +53,7 @@ export default AddPhoto = props => {
 			include: ['playableDuration'],
 		})
 			.then(r => {
-				console.log('디바이스 사진 리스트', JSON.stringify(r));
-				// console.log('photolist  '+ JSON.stringify(r));
+				console.log('디바이스 사진 리스트', r);
 				// setPhotoList(photolist.concat(r.edges));
 				setPhotoList(photolist.concat(r.edges));
 				setSelectedPhoto(selectedPhoto);
@@ -67,20 +66,21 @@ export default AddPhoto = props => {
 					};
 				});
 				photoList.splice(0, 0, true); //목록 첫 인덱스는 Default Camera Icon (사진직접찍기 기능)
-				console.log('포토리스트', JSON.stringify(photoList));
+				// console.log('포토리스트', JSON.stringify(photoList));
 				setPhotos(photoList);
 			})
 			.catch(err => {
-				console.log('cameraroll error===>' + err);
+				// console.log('cameraroll error===>' + err);
 			});
 	};
 
 	/** 스크롤이 바닥에 닿을때 페이징 처리를 위한 함수 */
 	const scrollReachBottom = () => {
 		// loadPhotos(page.current);
-		console.log('scrolllist bottom   ' + JSON.stringify(photolist));
-		let timeStamp = photolist.length > 0 ? photolist[photolist.length - 1].node.timestamp : 0;
-		loadPhotosMilsec(timeStamp);
+		// console.log('scrolllist bottom   ' + JSON.stringify(photolist));
+		let timeStamp = photolist.length > 1 ? photolist[photolist.length - 1].node.timestamp : 0;
+		console.log('스크롤이 바닥에 닿았습니다. '+timeStamp+ '이후의 사진을 로드합니다.');
+		loadPhotosMilsec(30,timeStamp);
 	};
 
 	const test = () => {
@@ -103,20 +103,24 @@ export default AddPhoto = props => {
 
 	/** 퍼미션 처리, 사진을 불러오기 전 갤러리 접근 권한을 유저에게 요청 */
 	React.useEffect(() => {
+		console.log('최초 로드')
 		if (Platform.OS === 'ios') {
 			loadPhotosMilsec();
 		} else {
 			try {
+				console.log('안드로이드 OS확인');
 				/** 외부 저장소 접근권한 */
 				const isAllowExternalStorage = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
 
 				PermissionsAndroid.check(isAllowExternalStorage).then(isPermit => {
 					if (isPermit) {
+						console.log('사진접근권한 허용확인');
 						loadPhotosMilsec();
 					} else {
 						PermissionsAndroid.request(isAllowExternalStorage).then(permission => {
 							console.log(permission);
 							if (permission === 'granted') {
+								console.log('저장공간 접근권한 확인');
 								loadPhotosMilsec();
 							} else {
 								alert('기기의 사진 접근권한을 허용해 주세요');
@@ -183,7 +187,7 @@ export default AddPhoto = props => {
 		// props.navigation.navigate(props.route.params?.navfrom,{})
 		// props.navigation.navigate({ name: props.route.params.navfrom, params: { localSelectedImages: exportUriList[0] }, merge: true });
 		// props.navigation.navigate({name: props.route.params?.navfrom, params: {image: exportUriList[0]}, merge: true});
-		console.log(JSON.stringify(photolist));
+		console.log(photolist);
 	};
 
 	return (
@@ -192,7 +196,7 @@ export default AddPhoto = props => {
 				<View />
 			) : (
 				// <Video style={lo.box_img} source={{uri: selectedPhoto[selectedPhoto.length-1]?.uri}} muted />
-				<Image style={lo.box_img} source={{uri: selectedPhoto[selectedPhoto.length - 1]?.uri}} />
+				<Image style={[lo.box_img,{height:375*DP}]} source={{uri: selectedPhoto[selectedPhoto.length - 1]?.uri}} />
 			)}
 			<View style={lo.box_title}>
 				<TouchableWithoutFeedback onPress={test}>
@@ -215,7 +219,7 @@ export default AddPhoto = props => {
 				renderItem={renderList}
 				extraData={selectedPhoto}
 				// columnWrapperStyle={{backgroundColor:'green',borderColor:'red',borderWidth:3*DP}}
-				keyExtractor={item => item.node?.image.uri}
+				keyExtractor={(item,index) => index+item.node.timestamp+item.node?.image.uri}
 				// keyExtractor={item => item.node.timestamp}
 				horizontal={false}
 				numColumns={4}

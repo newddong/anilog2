@@ -1,31 +1,49 @@
 import React from 'react';
-import {ScrollView, Text, TouchableOpacity, View, TouchableWithoutFeedback, TextInput} from 'react-native';
-import {APRI10, WHITE, GRAY20} from 'Root/config/color';
+import {ScrollView, Text, TouchableOpacity, View, TouchableWithoutFeedback, TextInput, Platform, Keyboard} from 'react-native';
+import {APRI10, WHITE, GRAY20, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Paw54_Border} from 'Root/component/atom/icon/index';
 import {Urgent_Write1, Urgent_Write2} from 'Atom/icon';
+<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
 import {btn_style, feedWrite, login_style, temp_style} from 'Templete/style_templete';
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w176, btn_w194} from 'Atom/btn/btn_style';
 import ActionButton from 'Molecules/button/ActionButton';
 import SelectedMediaList from 'Organism/list/SelectedMediaList';
+=======
+import {btn_style, feedWrite, login_style, temp_style, buttonstyle} from 'Templete/style_templete';
+import AniButton from 'Molecules/button/AniButton';
+import {btn_w176, btn_w194} from 'Atom/btn/btn_style';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 import {DOG_KIND, PET_KIND, pet_kind, PUBLIC_SETTING} from 'Root/i18n/msg';
 import DatePicker from 'Molecules/select/DatePicker';
 import TabSelectFilled_Type1 from 'Molecules/tab/TabSelectFilled_Type1';
 import Input24 from 'Molecules/input/Input24';
 import InputBalloon from 'Molecules/input/InputBalloon';
+<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
 import LocationButton from 'Molecules/button/LocationButton';
 import {launchImageLibrary} from 'react-native-image-picker';
 import Modal from 'Component/modal/Modal';
 import userGlobalObj from 'Root/config/userGlobalObject';
 import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
+=======
+import {launchImageLibrary} from 'react-native-image-picker';
+import Modal from 'Component/modal/Modal';
+import userGlobalObj from 'Root/config/userGlobalObject';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {getPettypes} from 'Root/api/userapi';
 import ImagePicker from 'react-native-image-crop-picker';
 import HashInput from 'Molecules/input/HashInput';
 import {getAddressList} from 'Root/api/address';
+<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
 import SelectInput from 'Root/component/molecules/button/SelectInput';
+=======
+import SelectInput from 'Molecules/button/SelectInput';
+import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
+import {FlatList} from 'react-native-gesture-handler';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 
 export default FeedWrite = props => {
 	const [showPetAccountList, setShowPetAccountList] = React.useState(false); //PetAccount 계정
@@ -34,20 +52,63 @@ export default FeedWrite = props => {
 	const [showReportForm, setShowRepotForm] = React.useState(false); //제보버튼
 	const [showActionButton, setShowActionButton] = React.useState(false); // 긴급게시(하얀버전) 클릭 시 - 실종/제보 버튼 출력 Boolean
 	const [isDiary, setDiary] = React.useState(false); //임보일기여부
-	const [feedText, setFeedText] = React.useState(''); //피드 TextInput Value
+	const [feedText, setFeedText] = React.useState(
+		props.route.params.feed_content ? props.route.params.feed_content.replace(/(&@|&#){2}(.*?)%&%.*?(&@|&#){2}/gm, '$2') : '',
+	); //피드 TextInput Value
 	const [selectedImg, setSelectedImg] = React.useState([]); //사진 uri리스트
 	const [isSearchTag, setSearchTag] = React.useState(false);
 	const [publicSetting, setPublicSetting] = React.useState('전체 공개'); //공개 여부
+<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
+=======
+	const keyboardArea = useKeyboardBottom(0 * DP);
+	const scrollref = React.useRef();
+	const lastTouchY = React.useRef(0);
+	const container = React.useRef();
+	const [editText, setEditText] = React.useState(
+		props.route.params.feed_content ? props.route.params.feed_content.replace(/(&@|&#){2}(.*?)%&%.*?(&@|&#){2}/gm, '$2') : '',
+	);
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 
 	React.useEffect(() => {
-		props.navigation.setParams({
-			...props.route.params,
-			media_uri: selectedImg,
-			feed_medias: selectedImg.map(v => ({is_video: false, duration: 0, tags: [{position_x: 0, position_y: 0}]})),
-		});
+		if (props.route.name != 'FeedEdit') {
+			props.navigation.setParams({
+				...props.route.params,
+				media_uri: selectedImg,
+				feed_medias: selectedImg.map(v => ({media_uri: v, is_video: false, duration: 0, tags: []})),
+			});
+		} else {
+			props.navigation.setParams({
+				...props.route.params,
+				media_uri: selectedImg.filter(v => !v.includes('http')),
+				feed_medias: selectedImg.map(img => {
+					let media = props.route.params.feed_medias.find(v => v.media_uri == img);
+					return {media_uri: img, is_video: false, duration: 0, tags: media ? media.tags : []};
+				}),
+			});
+			console.log('첨부 이미지 변화', selectedImg);
+		}
 	}, [selectedImg]); //네비게이션 파라메터에 이미지 리스트를 넣음(헤더에서 처리하도록)
 
 	React.useEffect(() => {
+		if (props.route.name == 'FeedEdit') {
+			console.log('feedEdit 진입', props.route.params);
+			if (props.route.params?.feed_type == 'missing') {
+				console.log('실종 편집');
+				onPressMissingWrite();
+			}
+			if (props.route.params?.feed_type == 'report') {
+				console.log('제보 편집');
+				onPressReportWrite();
+			}
+			setSelectedImg(props.route.params.feed_medias.map(v => v.media_uri));
+			let regEx = new RegExp(`&#&#(.*?)%&%&`, `gm`);
+			let hashes = [];
+			let match = [];
+			while ((match = regEx.exec(props.route.params.feed_content)) !== null) {
+				hashes.push(match[1]);
+			}
+			props.navigation.setParams({...props.route.params, hashtag_keyword: hashes});
+		}
 		if (props.route.params?.feedType == 'Feed') {
 			props.navigation.setOptions({title: userGlobalObj.userInfo?.user_nickname});
 			props.navigation.setParams({...props.route.params, feedType: 'Feed'});
@@ -68,10 +129,8 @@ export default FeedWrite = props => {
 
 	React.useEffect(() => {
 		props.navigation.setParams({...props.route.params, feed_content: feedText});
-		console.log(feedText);
 	}, [feedText]);
 
-	//긴급버튼 중 - 실종 클릭
 	const onPressMissingWrite = () => {
 		setShowLostAnimalForm(true);
 		props.navigation.setParams({...props.route.params, feedType: 'Missing'});
@@ -166,10 +225,10 @@ export default FeedWrite = props => {
 
 	//태그 추가
 	const moveToFeedMediaTagEdit = () => {
-		// props.navigation.push('FeedMediaTagEdit');
+		props.navigation.push('FeedMediaTagEdit');
 	};
 	const inputFeedTxt = (feedInput, hashtag_keyword) => {
-		props.navigation.setParams({...props.route.params, feed_content: feedText, hashtag_keyword: hashtag_keyword});
+		props.navigation.setParams({...props.route.params, feed_content: feedText, hashtag_keyword: hashtag_keyword, isEdit: true});
 		setFeedText(feedInput);
 	};
 
@@ -177,9 +236,9 @@ export default FeedWrite = props => {
 	const setUrgBtnsClickedView = () => {
 		//긴급 버튼 중 '제보' 클릭한 경우
 		if (showReportForm) {
-			return <ReportForm onDataChange={onReportForm} />;
+			return <ReportForm onDataChange={onReportForm} container={container} scrollref={scrollref} />;
 		} // 긴급 게시 버튼 중 '실종' 클릭한 경우
-		else return showLostAnimalForm ? <MissingForm onDataChange={onMissingForm} /> : false;
+		else return showLostAnimalForm ? <MissingForm onDataChange={onMissingForm} container={container} scrollref={scrollref} /> : false;
 	};
 
 	//태그 검색중 리스트 외의 다른화면 가리기
@@ -194,6 +253,16 @@ export default FeedWrite = props => {
 		});
 	};
 
+<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
+=======
+	const onPressIn = e => {
+		console.log('pressIn', e.nativeEvent);
+		// lastTouchY.current=e.pageY;
+		scrollref.current.scrollToOffset({offset: e.nativeEvent.pageY});
+		// scrollref.current.scrollToEnd()
+	};
+
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 	const setWriteModeState = () => {
 		return (
 			<>
@@ -229,6 +298,10 @@ export default FeedWrite = props => {
 								onPress={onSetDiary}
 							/>
 						</View>
+<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
+=======
+
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 						<TouchableOpacity onPress={onPressPublicSetting} style={[feedWrite.public_setting_btn]}>
 							{/* <ActionButton btnTitle={'전체 공개'} onOpen={() => alert('dd')} btnStyle={'border'} titleFontStyle={24} btnLayout={btn_w194} /> */}
 							<Text style={[txt.noto24, {color: APRI10}]}>{publicSetting}</Text>
@@ -246,6 +319,7 @@ export default FeedWrite = props => {
 			</>
 		);
 	};
+<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
 	// 장기적으로 보면 NC는 가망이 없는 회사임. 지금 리니지 충성고객층 연령대가 40~60대일텐데 이 사람들 더 나이 들고 하면 게임 할 체력이 안될텐데 그 고객층 날라가면 또 다른 새로운 고객층을 확보해야하는데 그게 지금 안되고 있음.
 	// 지금 봐바 10~30대 유저들 NC를 게임회사가 아니라 도박회사로 보고 있는데 암만 마케팅하고 홍보하고 지랄해봤자 이미 깊게 박혀진 이미지는 절대 못바뀜. 그러므로 새로운 고객층 확보가 불가능함.
 	// 해외? 개네들 우리보다 리니지류 게임을 극혐하는데 고객이 확보 될리가 있나 ㅋㅋ
@@ -269,22 +343,56 @@ export default FeedWrite = props => {
 			{/* 긴급 게시물 관련 버튼 컨테이너 */}
 
 			{/* </ScrollView> */}
+=======
+	const test = () => {
+		console.log(props.route);
+	};
+	return (
+		<View style={{flex: 1, backgroundColor: '#FFF'}}>
+			{/* <TouchableWithoutFeedback onPress={test}>
+				<View style={{backgroundColor: 'red', width: 50, height: 50}}></View>
+			</TouchableWithoutFeedback> */}
+			<FlatList
+				renderItem={({item, index}) => {
+					return (
+						<View contentContainerStyle={[login_style.wrp_main, {backgroundColor: '#000'}]} ref={container}>
+							<HashInput
+								containerStyle={[temp_style.feedTextEdit, {minHeight: showLostAnimalForm || showReportForm ? 214 * DP : 316 * DP}]}
+								textAlignVertical={'top'}
+								multiline={true}
+								placeholder="게시물을 작성하세요 (150자)"
+								onChangeText={inputFeedTxt}
+								maxLength={150}
+								onFind={onFindTag}
+								selectedImg={selectedImg}
+								onDelete={deletePhoto}
+								value={editText}
+							/>
+							{!isSearchTag && setWriteModeState()}
+						</View>
+					);
+				}}
+				data={[{}]}
+				ref={scrollref}></FlatList>
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 			{showUrgentBtns && !isSearchTag ? (
 				<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
 					{showActionButton ? (
 						<View>
 							<TouchableWithoutFeedback onPress={onPressMissingWrite}>
-								<View style={[feedWrite.urgentBtnItemContainer]}>
+								<View style={[feedWrite.urgentBtnItemContainer, buttonstyle.shadow]}>
 									<Text style={[txt.noto32, {color: WHITE}]}>실종</Text>
 								</View>
 							</TouchableWithoutFeedback>
 							<TouchableWithoutFeedback onPress={onPressReportWrite}>
-								<View style={[feedWrite.urgentBtnItemContainer]}>
+								<View style={[feedWrite.urgentBtnItemContainer, buttonstyle.shadow]}>
 									<Text style={[txt.noto32, {color: WHITE}]}>제보</Text>
 								</View>
 							</TouchableWithoutFeedback>
 						</View>
-					) : null}
+					) : (
+						false
+					)}
 					<TouchableWithoutFeedback onPress={() => setShowActionButton(!showActionButton)}>
 						<View style={[feedWrite.urgentActionButton]}>{showActionButton ? <Urgent_Write2 /> : <Urgent_Write1 />}</View>
 					</TouchableWithoutFeedback>
@@ -292,13 +400,14 @@ export default FeedWrite = props => {
 			) : (
 				false
 			)}
-			{/* </ScrollView> */}
 		</View>
 	);
 };
 
 //실종 컴포넌트
 const MissingForm = props => {
+	const route = useRoute();
+	console.log('실종 컴포넌트 데이터', route);
 	const [types, setTypes] = React.useState([
 		{
 			pet_species: '개',
@@ -307,9 +416,14 @@ const MissingForm = props => {
 	]);
 	const [isSpeciesChanged, setIsSpeciesChanged] = React.useState(false);
 
+<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
 	const [city, setCity] = React.useState(['시를 선택해 주세요']);
 	const [district, setDistrict] = React.useState(['구를 선택해 주세요']);
 
+=======
+	const [city, setCity] = React.useState(['광역시, 도']);
+	const [district, setDistrict] = React.useState(['구를 선택해 주세요']);
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 	React.useEffect(() => {
 		getAddressList(
 			{},
@@ -323,6 +437,7 @@ const MissingForm = props => {
 		);
 	}, []);
 
+<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
 	const [data, setData] = React.useState({
 		missing_animal_species: types[0].pet_species,
 		missing_animal_species_detail: types[0].pet_species_detail[0],
@@ -338,6 +453,31 @@ const MissingForm = props => {
 		missing_animal_contact: '',
 		type: types[0],
 	});
+=======
+	const initData = () => {
+		if (route.name == 'FeedEdit') {
+			return route.params;
+		} else {
+			return {
+				missing_animal_species: types[0].pet_species,
+				missing_animal_species_detail: types[0].pet_species_detail[0],
+				missing_animal_sex: 'male',
+				missing_animal_age: '',
+				missing_animal_lost_location: {
+					city: city[0],
+					district: '구를 선택',
+					detail: '',
+				},
+				missing_animal_features: '',
+				missing_animal_date: '',
+				missing_animal_contact: '',
+				type: types[0],
+			};
+		}
+	};
+
+	const [data, setData] = React.useState(initData());
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 
 	React.useEffect(() => {
 		props.onDataChange && props.onDataChange(data);
@@ -446,8 +586,38 @@ const MissingForm = props => {
 		setData({...data, missing_animal_lost_location: lost_location_container});
 	};
 
+<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
+=======
+	const keyboardArea = useKeyboardBottom(0 * DP);
+	const inputAgeRef = React.useRef();
+	const inputLocationRef = React.useRef();
+	const inputContactRef = React.useRef();
+	const inputBalloonRef = React.useRef();
+	const currentPosition = React.useRef(0);
+
+	React.useEffect(() => {
+		props.scrollref.current.scrollToOffset({offset: currentPosition.current});
+		currentPosition.current = 0;
+	}, [keyboardArea]);
+
+	const onPressIn = inputRef => () => {
+		if (Platform.OS === 'android') return;
+		inputRef.current.measureLayout(
+			props.container.current,
+			(left, top, width, height) => {
+				console.log('left:%s,top:%s,width:%s,height:%s', left, top, width, height);
+				currentPosition.current = top;
+				// props.scrollref.current.scrollToOffset({offset:top})
+			},
+			() => {
+				console.log('measurelayout failed');
+			},
+		);
+	};
+
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 	return (
-		<ScrollView style={[feedWrite.lostAnimalForm]} showsVerticalScrollIndicator={false}>
+		<View style={[feedWrite.lostAnimalForm]} showsVerticalScrollIndicator={false}>
 			{/* DropDownSelect */}
 			<View style={[feedWrite.lostAnimalForm_Form]}>
 				<View style={[feedWrite.formTitle]}>
@@ -496,6 +666,8 @@ const MissingForm = props => {
 					maxlength={2}
 					keyboardType={'number-pad'}
 					value={data.missing_animal_age}
+					onPressIn={onPressIn(inputAgeRef)}
+					ref={inputAgeRef}
 				/>
 			</View>
 			<View style={[temp_style.input24, feedWrite.missing_location_input]}>
@@ -508,6 +680,12 @@ const MissingForm = props => {
 					onChangeText={onChangeMissingLocationDetail}
 					style={[feedWrite.missing_location_detail_input]}
 					placeholder={'반려동물이 실종된 구체적인 장소를 설명해주세요.'}
+<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
+=======
+					placeholderTextColor={GRAY10}
+					onPressIn={onPressIn(inputLocationRef)}
+					ref={inputLocationRef}
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 				/>
 			</View>
 			<View style={[temp_style.input24, feedWrite.input24]}>
@@ -520,6 +698,8 @@ const MissingForm = props => {
 					keyboardType={'number-pad'}
 					maxlength={15}
 					value={data.missing_animal_contact}
+					onPressIn={onPressIn(inputContactRef)}
+					ref={inputContactRef}
 				/>
 			</View>
 			<View style={[temp_style.inputBalloon, feedWrite.inputBalloon]}>
@@ -529,9 +709,15 @@ const MissingForm = props => {
 					onChange={inputFeature}
 					value={data.missing_animal_features}
 					maxLength={200}
+<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
+=======
+					onPressIn={onPressIn(inputBalloonRef)}
+					ref={inputBalloonRef}
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 				/>
 			</View>
-		</ScrollView>
+			<View style={{height: keyboardArea, width: '100%', backgroundColor: '#FFF'}}></View>
+		</View>
 	);
 };
 
@@ -561,8 +747,12 @@ const ReportForm = props => {
 			// 필드명 조정 필요 (상우)
 			city: city[0], //시,도
 			district: district[0], //군,구
+<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
 			neighbor: '', //동,읍,면
 			detailAddr: '',
+=======
+			detail: '', //상세 주솧
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 		},
 		report_animal_species: types[0].pet_species,
 		report_animal_species_detail: types[0].pet_species_detail[0],
@@ -636,7 +826,7 @@ const ReportForm = props => {
 				} else {
 					setNeighbor(neighbor.msg);
 				}
-				setData({...data, report_location: {city: data.report_location.city, district: data.report_location.district, neighbor: neighbor.msg[0]}});
+				// setData({...data, report_location: {city: data.report_location.city, district: data.report_location.district, neighbor: neighbor.msg[0]}});
 				// data.report_location.district == data.report_location.district ? false : setIsDistrictChanged(!isDistrictChanged);
 				setIsDistrictChanged(!isDistrictChanged);
 			},
@@ -714,6 +904,7 @@ const ReportForm = props => {
 			},
 			() => Modal.close(),
 		);
+<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
 	};
 
 	const onSelectSpeciesDetail = () => {
@@ -729,6 +920,23 @@ const ReportForm = props => {
 		// setData({...data, missing_animal_species_detail: data.type.pet_species_detail[i]});
 	};
 
+=======
+	};
+
+	const onSelectSpeciesDetail = () => {
+		const find = types.find(e => e.pet_species == data.report_animal_species);
+		Modal.popSelectScrollBoxModal(
+			[find.pet_species_detail],
+			'품종 선택',
+			selected => {
+				setData({...data, report_animal_species_detail: selected});
+			},
+			() => Modal.close(),
+		);
+		// setData({...data, missing_animal_species_detail: data.type.pet_species_detail[i]});
+	};
+
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 	const onPressCity = () => {
 		Modal.popSelectScrollBoxModal([city], '도, 광역, 특별시', selectedItem => {
 			let report_location = data.report_location;
@@ -757,11 +965,41 @@ const ReportForm = props => {
 	const onChangeMissingLocationDetail = text => {
 		let report_location = data.report_location;
 		report_location.detail = text;
+<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
 		setData({...data, report_location: report_location});
+=======
+
+		setData({...data, report_location: report_location});
+		console.log('text input :', data.report_location);
+	};
+
+	const keyboardArea = useKeyboardBottom(0 * DP);
+	const inputLocationRef = React.useRef();
+	const currentPosition = React.useRef(0);
+
+	React.useEffect(() => {
+		props.scrollref.current.scrollToOffset({offset: currentPosition.current});
+		currentPosition.current = 0;
+	}, [keyboardArea]);
+
+	const onPressIn = inputRef => () => {
+		if (Platform.OS === 'android') return;
+		inputRef.current.measureLayout(
+			props.container.current,
+			(left, top, width, height) => {
+				console.log('left:%s,top:%s,width:%s,height:%s', left, top, width, height);
+				currentPosition.current = top;
+				// props.scrollref.current.scrollToOffset({offset:top})
+			},
+			() => {
+				console.log('measurelayout failed');
+			},
+		);
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 	};
 
 	return (
-		<ScrollView style={[feedWrite.reportForm_container]} showsVerticalScrollIndicator={false}>
+		<View style={[feedWrite.reportForm_container]} showsVerticalScrollIndicator={false}>
 			<View style={[feedWrite.reportForm]}>
 				<View style={[feedWrite.reportForm_form]}>
 					<View style={[feedWrite.lostAnimalForm_Form]}>
@@ -793,10 +1031,17 @@ const ReportForm = props => {
 							onChangeText={onChangeMissingLocationDetail}
 							style={[feedWrite.missing_location_detail_input]}
 							placeholder={'제보하려는 장소의 위치를 설명해주세요.'}
+<<<<<<< HEAD:src/component/templete/feed/FeedWrite.js
+=======
+							placeholderTextColor={GRAY10}
+							onPressIn={onPressIn(inputLocationRef)}
+							ref={inputLocationRef}
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/FeedWrite.js
 						/>
 					</View>
 				</View>
 			</View>
-		</ScrollView>
+			<View style={{height: keyboardArea, width: '100%', backgroundColor: '#FFF'}}></View>
+		</View>
 	);
 };

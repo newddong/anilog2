@@ -54,7 +54,7 @@ export default ControllableAccount = props => {
 				false
 			)}
 			<View style={[showCheckBox || showCrossMark ? controllableAccount.userDescriptionLabel_checked : controllableAccount.userDescriptionLabel]}>
-				<UserDescriptionLabel data={props.data} onClickLabel={onClickLabel} width={300} />
+				<UserDescriptionLabel data={props.data} onClickLabel={onClickLabel} width={480} />
 			</View>
 			{props.showButtons && false ? (
 				<View style={[controllableAccount.rightContainer]}>

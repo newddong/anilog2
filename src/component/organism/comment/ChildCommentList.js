@@ -13,11 +13,19 @@ import {ChildCommentLinker} from 'Atom/icon';
  */
 export default ChildCommentList = props => {
 	// console.log(props.items);
+	const onEdit = (data)=>{
+		props.onEdit&&props.onEdit(data);
+	}
+
+	const like = data => {
+		props.like&&props.like(data);
+	}
+
 	const renderItem = (item, index) => {
 		return (
 			<View style={[organism_style.childCommentList]}>
 				<ChildCommentLinker />
-				<ChildComment data={item} onPressReplyBtn={comment => props.onPressReplyBtn(comment)} />
+				<ChildComment data={item} onPressReplyBtn={comment => props.onPressReplyBtn(comment)} onEdit={onEdit} like={like}/>
 			</View>
 		);
 	};

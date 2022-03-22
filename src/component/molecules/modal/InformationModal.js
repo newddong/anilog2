@@ -8,6 +8,10 @@ import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, Cross24, Cross24_Filled, Cross24_Whi
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w130, btn_w136} from 'Atom/btn/btn_style';
 import userGlobalObject from 'Root/config/userGlobalObject';
+<<<<<<< HEAD
+=======
+import Modal from 'Root/component/modal/Modal';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 
 /**
  * 유저 오브젝트 상세정보 출력 모달
@@ -214,14 +218,24 @@ const InformationModal = props => {
 	};
 
 	return (
+<<<<<<< HEAD
 		<View style={style.background}>
 			<View style={[style.popUpWindow]}>
+=======
+		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={style.background}>
+			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow]}>
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 				<View style={[style.header]}>
 					<Cross24_Filled onPress={() => props.onClose()} />
 				</View>
 				{getContents()}
+<<<<<<< HEAD
 			</View>
 		</View>
+=======
+			</TouchableOpacity>
+		</TouchableOpacity>
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	);
 };
 

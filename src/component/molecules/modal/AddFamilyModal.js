@@ -1,11 +1,19 @@
 import React from 'react';
+<<<<<<< HEAD
 import {View, Text, TouchableOpacity, SafeAreaView, StyleSheet, Platform, Dimensions} from 'react-native';
+=======
+import {View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions} from 'react-native';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
+<<<<<<< HEAD
+=======
+import Modal from 'Root/component/modal/Modal';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 
 /**
  * 가족 계정 추가 컨펌 모달 컴포넌트
@@ -17,7 +25,10 @@ import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
  */
 const AddFamilyModal = props => {
 	const data = props.data;
+<<<<<<< HEAD
 	console.log('props.data', props.data);
+=======
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	const pressYes = () => {
 		props.onYes();
 	};
@@ -25,8 +36,13 @@ const AddFamilyModal = props => {
 		props.onNo();
 	};
 	return (
+<<<<<<< HEAD
 		<View style={style.background}>
 			<View style={[style.popUpWindow, style.shadow]}>
+=======
+		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={style.background}>
+			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 				<Text style={[txt.noto28, style.msg]}>이 계정을 가족으로 추가하시겠습니까?</Text>
 				<View style={style.label}>
 					<UserDescriptionLabel data={data} />
@@ -35,8 +51,13 @@ const AddFamilyModal = props => {
 					<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={'취소'} onPress={pressNo} />
 					<AniButton btnLayout={btn_w226} btnTitle={'추가하기'} onPress={pressYes} />
 				</View>
+<<<<<<< HEAD
 			</View>
 		</View>
+=======
+			</TouchableOpacity>
+		</TouchableOpacity>
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	);
 };
 
@@ -59,7 +80,11 @@ const style = StyleSheet.create({
 	},
 	popUpWindow: {
 		width: 614 * DP,
+<<<<<<< HEAD
 		height: 320 * DP,
+=======
+		// height: 320 * DP,
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		backgroundColor: WHITE,
 		paddingVertical: 30 * DP,
 		paddingHorizontal: 64 * DP,

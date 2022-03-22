@@ -1,13 +1,19 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import moment from 'moment';
+<<<<<<< HEAD:src/component/organism/listitem/AnimalNeedHelp.js
 import {useNavigation} from '@react-navigation/core';
+=======
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/AnimalNeedHelp.js
 import {txt} from 'Root/config/textstyle';
 import {btn_w276} from 'Atom/btn/btn_style';
 import ProtectedThumbnail from 'Molecules/media/ProtectedThumbnail';
 import AniButton from 'Molecules/button/AniButton';
 import {FavoriteTag48_Border, FavoriteTag48_Filled} from 'Atom/icon';
+<<<<<<< HEAD:src/component/organism/listitem/AnimalNeedHelp.js
 import {BLUE10, BLUE20, RED10} from 'Root/config/color';
+=======
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/AnimalNeedHelp.js
 import {DEFAULT_ANIMAL_PROFILE} from 'Root/i18n/msg';
 import {animalNeedHelp} from 'Organism/style_organism copy';
 
@@ -15,22 +21,20 @@ import {animalNeedHelp} from 'Organism/style_organism copy';
  *
  *@param {{
  *data: 'data object',
- *onLabelClick: 'void / Label클릭 콜백함수 '
+ *onClickLabel: 'void / Label클릭 콜백함수 '
  *onFavoriteTag : 'void / 즐겨찾기 태그 깃발 클릭 ',
  *borderMode : 'boolean / 테두리 및 입양처보기, 게시글보기 모드 ',
  *onCheckBox : 'boolean / CheckBox 보이기',
  *onPressAdoptorInfo : 'boolean / HashClick Callback',
  *onPressProtectRequest : 'void / 테두리 모드 게시글보기 클릭',
  *onPressReporter : 'void / 제보 게시글의 제보자 닉네임 클릭',
+ *inActiveOpacity : 'boolean / 클릭 애니메이션 여부 default false',
  * }} props
  */
 export default AnimalNeedHelp = props => {
-	// console.log('AnimalNeedHelp', props.data);
-	// console.log('AnimalNeedHelp', props.data.protect_animal_id.protect_animal_sex);
+	// console.log('AnimalNeedHelp', props.data.protect_request_status);
 
-	const navigation = useNavigation();
 	const data = props.data;
-	// console.log('AnimalNeedHelp: -------------- ', JSON.stringify(data));
 	const [selected, setSelected] = React.useState(false);
 	const [favorite, setFavorite] = React.useState(false);
 	const [thumbnailData, setThumbnailData] = React.useState({});
@@ -104,9 +108,12 @@ export default AnimalNeedHelp = props => {
 	const getParsedDate = () => {
 		let date = '';
 		if (data.feed_type == 'missing') {
+			// var splitAddress = data.missing_animal_date.split('-');
+			// console.log('missing getParedDate', splitAddress);
 			date = data.missing_animal_date;
 		} else if (data.feed_type == 'report') {
 			date = data.report_witness_date;
+			// console.log('report date', date);
 		} else {
 			date = data.protect_request_date;
 		}
@@ -128,7 +135,14 @@ export default AnimalNeedHelp = props => {
 				return '모름';
 		}
 	};
+	const getParsedAddress = () => {
+		let address = data.missing_animal_lost_location;
+		var splitAddress = address.split('"');
+		var newMissingLocation = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
+		return newMissingLocation;
+	};
 
+	// console.log('AnimalNeedHel', data);
 	const contents = () => {
 		return (
 			<View style={[animalNeedHelp.detailContainer]}>
@@ -147,7 +161,11 @@ export default AnimalNeedHelp = props => {
 									{/* 보호장소 : {data.protect_request_writer_id != null ? data.protect_request_writer_id.shelter_name : data.shelter_name} */}
 									보호장소 : {data.shelter_name ? data.shelter_name : data.protect_request_writer_id.shelter_name}
 								</Text>
+<<<<<<< HEAD:src/component/organism/listitem/AnimalNeedHelp.js
 								<Text style={[txt.noto28]}>
+=======
+								<Text style={[txt.noto28]} numberOfLines={1}>
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/AnimalNeedHelp.js
 									구조지역 :{' '}
 									{data.protect_animal_rescue_location
 										? data.protect_animal_rescue_location
@@ -162,19 +180,25 @@ export default AnimalNeedHelp = props => {
 						<>
 							{/* 동물 종류 및 품종 */}
 							<View style={[animalNeedHelp.lowerMenu_kindAndBreed]}>
-								<Text style={[txt.noto30b, {}]}>{data.missing_animal_species || ''}</Text>
-								<Text style={[txt.noto28b, {}, animalNeedHelp.breedText]}>{data.missing_animal_species_detail || ''}</Text>
+								<Text style={[txt.noto34b, {}]}>{data.missing_animal_species || ''}</Text>
+								<Text style={[txt.noto28b, {}, animalNeedHelp.breedText]} numberOfLines={1}>
+									{data.missing_animal_species_detail || ''}
+								</Text>
 							</View>
 							{/* 실종/제보 관련 Details */}
 							<View style={[animalNeedHelp.lowerMenu_helpDetail]}>
 								{/* <Text style={[txt.noto24, {color: RED10}]}>실종일: {data.missing_animal_date || ''}</Text> */}
-								<Text style={[txt.noto24b]}>실종일: {getParsedDate()}</Text>
-								<Text style={[txt.noto24b, {}]}>
+								<Text style={[txt.noto28b]} numberOfLines={1}>
+									실종일: {getParsedDate()}
+								</Text>
+								<Text style={[txt.noto28b, {}]}>
 									나이:{data.missing_animal_age + '살' || ''} / 성별: {getParsedSex()}
 									{/* {data.missing_animal_sex} */}
 								</Text>
-								<Text style={[txt.noto24, {width: 380 * DP}]}>실종위치: {data.missing_animal_lost_location || ''}</Text>
-								<Text style={[txt.noto24]} numberOfLines={1}>
+								<Text style={[txt.noto28, {width: 408 * DP}]} numberOfLines={1}>
+									실종위치: {getParsedAddress() || ''}
+								</Text>
+								<Text style={[txt.noto28]} numberOfLines={1}>
 									특징: {data.missing_animal_features || ''}
 								</Text>
 							</View>
@@ -185,22 +209,17 @@ export default AnimalNeedHelp = props => {
 							{/* 제보 / 제보위치 / 특징 */}
 							{/* 동물 종류 및 품종 */}
 							<View style={[animalNeedHelp.lowerMenu_kindAndBreed]}>
-								<Text style={[txt.noto30b]}>{data.report_animal_species || ''}</Text>
+								<Text style={[txt.noto34b]}>{data.report_animal_species || ''}</Text>
 							</View>
 							{/* 실종/제보 관련 Details */}
 							<View style={[animalNeedHelp.lowerMenu_helpDetail]}>
-								<Text style={[txt.noto24b]}>제보일: {getParsedDate()}</Text>
-
-								<Text style={[txt.noto24, {width: 380 * DP}]}>제보위치: {data.report_witness_location || ''}</Text>
-								<Text style={[txt.noto24]} numberOfLines={1}>
-									특징: {data.report_animal_features || ''}
+								<Text style={[txt.noto28b]}>제보일: {getParsedDate()}</Text>
+								<Text style={[txt.noto28, {width: 408 * DP}]} numberOfLines={1}>
+									실종위치: {data.report_witness_location || ''}
 								</Text>
-								<View style={{flexDirection: 'row', alignItems: 'center'}}>
-									<Text style={[txt.noto24, {}]} numberOfLines={1}>
-										제보자: {''}
-									</Text>
-									<Text style={[txt.noto24]}>{data.feed_writer_id.user_nickname || ''} </Text>
-								</View>
+								<Text style={[txt.noto28, {width: 408 * DP}]} numberOfLines={2}>
+									제보 내용: {data.feed_content}
+								</Text>
 							</View>
 						</>
 					)}
@@ -236,7 +255,7 @@ export default AnimalNeedHelp = props => {
 							<View>{contents()}</View>
 						</TouchableOpacity>
 					) : (
-						<TouchableOpacity onPress={() => props.onClickLabel(data.feed_type, data._id)}>
+						<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.2} onPress={() => props.onClickLabel(data.feed_type, data._id)}>
 							<View>{contents()}</View>
 						</TouchableOpacity>
 					)}
@@ -259,8 +278,9 @@ export default AnimalNeedHelp = props => {
 
 AnimalNeedHelp.defaultProps = {
 	selected: false,
-	onClickLabel: e => console.log(e),
+	onClickLabel: e => {},
 	onFavoriteTag: e => console.log(e),
 	onPressAdoptorInfo: e => console.log('e'),
 	isChecked: false,
+	inActiveOpacity: false,
 };

@@ -1,22 +1,26 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MyStackNavigation from './my_stack/MyStackNavigation';
 import FeedStackNavigation from './feed_stack/FeedStackNavigation';
 import ProtectionStackNavigation from './protection_stack/ProtectionStackNavigation';
-import Temp from './community_stack/temp';
 import BottomTab from 'Navigation/maintab/BottomTab';
-import {FEED, REQ_ANIMAL, VIDEO, MY} from 'Root/i18n/msg';
-import SimpleHeader from 'Root/navigation/header/SimpleHeader';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import SearchTabNavigation from '../search_tab/SearchTabNavigation';
 import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
-import {SearchContext} from 'Root/config/searchContext';
+import LogoHeader from 'Root/navigation/header/LogoHeader';
+import CommunityMain from './community_stack/CommunityMain';
+import CommunityMainStack from './community_stack/CommunityMainStack';
 
 const MainTabNav = createBottomTabNavigator();
 
 export default MainTabNavigation = ({route, navigation}) => {
 	const routeName = getFocusedRouteNameFromRoute(route) ?? '';
 	// console.log('getFocusedRouteNameFromRoute / MainTab  : ', routeName);
+<<<<<<< HEAD
+=======
+	const [current, setCurrent] = React.useState('ArticleMain');
+
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	const getTabBarVisibility = route => {
 		switch (routeName) {
 			case 'AnimalProtectRequestDetail':
@@ -24,6 +28,24 @@ export default MainTabNavigation = ({route, navigation}) => {
 			case 'UserInfoSetting':
 			case 'FeedCommentList':
 				// case 'Search':
+				return false;
+				break;
+			default:
+				break;
+		}
+		return true;
+	};
+
+	//커뮤니티 텝에서 보내주는 route.name
+	const sendRoute = route_name => {
+		setCurrent(route_name);
+	};
+
+	//커뮤니티 탭 헤더 출력 여부 결정
+	const getHeaderState = () => {
+		switch (current) {
+			case 'ArticleMain':
+			case 'ReviewMain':
 				return false;
 				break;
 			default:
@@ -47,7 +69,6 @@ export default MainTabNavigation = ({route, navigation}) => {
 			<MainTabNav.Screen
 				name="PROTECTION"
 				component={ProtectionStackNavigation}
-				// options={{tabBarLabel: '동물보호', tabBarHideOnKeyboard: true, header: props => false}}
 				options={({route}) => ({
 					tabBarVisible: getTabBarVisibility(route),
 					tabBarLabel: '동물보호',
@@ -55,7 +76,17 @@ export default MainTabNavigation = ({route, navigation}) => {
 					header: props => false,
 				})}
 			/>
-			<MainTabNav.Screen name="COMMUNITY" component={Temp} options={{header: props => <SimpleHeader {...props} />, title: '커뮤니티'}} />
+			<MainTabNav.Screen
+				name="COMMUNITY"
+				options={({route}) => ({
+					tabBarVisible: getTabBarVisibility(route),
+					tabBarLabel: '커뮤니티',
+					tabBarHideOnKeyboard: true,
+					// header: props => (!getHeaderState() ? <LogoHeader {...props} /> : <></>),
+					header: props => false,
+				})}>
+				{props => <CommunityMainStack {...props} sendRoute={sendRoute} />}
+			</MainTabNav.Screen>
 
 			<MainTabNav.Screen
 				name="MY"
@@ -65,7 +96,6 @@ export default MainTabNavigation = ({route, navigation}) => {
 					tabBarHideOnKeyboard: true,
 					header: props => false,
 				})}>
-				{/* // options={{tabBarLabel: 'MY', header: props => false}}> */}
 				{props => <MyStackNavigation {...props} user_type={route.params} />}
 			</MainTabNav.Screen>
 			<MainTabNav.Screen
@@ -73,9 +103,12 @@ export default MainTabNavigation = ({route, navigation}) => {
 				options={{
 					header: props => <InputAndSearchHeader {...props} />,
 					tabBarShowLabel: false,
+<<<<<<< HEAD
 					// headerShown: ,
+=======
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 				}}>
-				{props => <SearchTabNavigation {...props} user_type={route.params} />}
+				{props => <SearchTabNavigation {...props} />}
 			</MainTabNav.Screen>
 		</MainTabNav.Navigator>
 	);

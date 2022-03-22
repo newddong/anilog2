@@ -50,8 +50,11 @@ export default Modal = {
 	 * @param {boolean} past - 과거 날짜만 선택가능
 	 * @param {boolean} future - 미래 날짜만 선택가능
 	 * @param {boolean} multiple - 다중선택 가능
+	 * @param {object} previous - 다중선택일 경우 기존의 선택 리스트
+   * @param {number} props.maxLength - 다중선택 모드일 경우 선택가능 수
+
 	 */
-	popCalendar: (visible, onOff, date, past, future, multiple) => {},
+	popCalendar: (visible, onOff, date, past, future, multiple, previous, maxLength) => {},
 
 	/**
 	 * 회전 선택창을 모달로 띄우는 함수
@@ -82,23 +85,43 @@ export default Modal = {
 	 *
 	 * @param {string} okButtonnMsg - 확인 버튼 메시지
 	 * @param {(petObject:string)=>void} onSelectPet - 반려동물 라벨을 클릭했을때 콜백
+<<<<<<< HEAD
 	 * @param {boolean} props.isBtnMode - 버튼출력여부
+=======
+	 * @param {boolean} props.isWriteMode - 피드 글쓰기에서의 호출
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	 *
 	 *
 	 * @example
 	 * Modal.popSelect(['개','고양이','기타'],['리트리버','말티즈','푸들','치와와'],(val1,val2)=>alert(val1+':'+val2),'동물선택');
 	 */
+<<<<<<< HEAD
 	popAvatarSelectModal: (onSelectPet, okButtonnMsg, isBtnMode) => {},
+=======
+	popAvatarSelectModal: (onSelectPet, okButtonnMsg, isWriteMode) => {},
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 
 	/**
 	 * 반려 동물을 선택하는 모달창
+	 * @param {object} offset -  선택 위치
 	 * @param {Array.<string>} items -  배열
+<<<<<<< HEAD
 	 * @param {string} title - 확인 버튼 메시지
 	 * @param {(string)=>void} onSelect - 확인 버튼 콜백
 	 *
 	 * @example
 	 */
 	popRadioSelect: (items, title, onSelect) => {},
+=======
+	 * @param {string} current -  현재 선택 상태
+	 * @param {string} title - 확인 버튼 메시지
+	 * @param {(string)=>void} onSelect - 선택 콜백
+	 * @param {()=>void} onClose - 확인 버튼 콜백
+	 *
+	 * @example
+	 */
+	popRadioSelect: (offset, items, current, title, onSelect, onClose) => {},
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 
 	/**
 	 * 선택 모달창을 띄우는 함수(첫번째 선택에 따라 두번째 선택의 항목이 변하는 부분은 구현되지 않음)
@@ -204,6 +227,7 @@ export default Modal = {
 	 * @param {object} data - 출력 아이템
 	 * @param {string} msg - 모달 타이틀
 	 * @param {(selectedItem:string)=>void} onYes - Ok버튼 콜백
+<<<<<<< HEAD
 	 * @param {()=>void} onNo - No버튼 콜백
 	 * @param {string} yesMsg - 확인 버튼 타이틀
 	 * @param {string} noMsg - 취소 버튼 타이틀
@@ -211,6 +235,14 @@ export default Modal = {
 	 * @example
 	 */
 	popOneBtnSelectModal: (data, msg, onYes, yesMsg) => {},
+=======
+	 * @param {string} yesMsg - 확인 버튼 타이틀
+	 * @param {number} fontSize - 하단 리스트 아이템 텍스트 크기
+	 *
+	 * @example
+	 */
+	popOneBtnSelectModal: (data, msg, onYes, yesMsg, fontSize) => {},
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 
 	/**
 	 * 나의 보호소 출신 동물 / 보호동물 및 보호요청게시글 게이트웨이 모달
@@ -240,6 +272,23 @@ export default Modal = {
 	 * 입양 및 임시보호 동물 알림 모달
 	 *
 	 * @param {Object} props - props object
+<<<<<<< HEAD
+=======
+	 * @param {object} props.data - 보호동물 데이터오브젲ㄱ트
+	 * @param {string} props.msg - 팝업 메시지
+	 * @param {string} props.yesMsg - 팝업 메시지
+	 * @param {string} props.noMsg - No 버튼 타이틀
+	 * @param {(data)=>void} props.onYes - 등록 클릭
+	 * @param {(data)=>void} props.onNo - 아니오  클릭
+	 *
+	 */
+	popAnimalToRegisterModal: (data, msg, yesMsg, noMsg, onYes, onNo) => {},
+
+	/**
+	 * 입양 및 임시보호 동물 알림 모달
+	 *
+	 * @param {Object} props - props object
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	 * @param {object} props.data - 보호동물 데이터오브젝트
 	 * @param {string} props.yesMsg - Yes버튼 타이틀
 	 * @param {(data)=>void} props.onYes - 등록 클릭
@@ -258,13 +307,21 @@ export default Modal = {
 
 	/**
 	 * 관심사 추가 및 수정 모달
+<<<<<<< HEAD
+=======
+	 * @param {'Activity'|'Location'|'Review'} category - 관심활동 / 관심지역 / 관심 후기 분기
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	 * @param {object} data - 관심사 추가할 계정 object(반려동물 혹은 유저)
 	 * @param {(selectedData)=>void)} onSave - 저장 버튼 클릭 콜백 / 선택된 항목의 오브젝트( ex : 지역, 미용, 놀이, 건강 등)
 	 * @param {()=>void)} onClose - 페이지 좌상단 x버튼 클릭 / 종료 콜백
 	 *
 	 * @example
 	 */
+<<<<<<< HEAD
 	popInterestTagModal: (data, onSave, onClose) => {},
+=======
+	popInterestTagModal: (category, data, onSave, onClose, setState) => {},
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 
 	/**
 	 * 공유 - 공유 목록 출력 모달
@@ -302,16 +359,52 @@ export default Modal = {
 	 * @param {()=>void} props.onPressMsg - 메시지 클릭
 	 * @example
 	 */
+<<<<<<< HEAD
 	popShareModal: (offset, onPressKakao, onPonPressLinkCopyressMenu, onPressMsg) => {},
 
 	/**
 	 * 입양 확정 시 출력되는 축하 메시지 모달
 	 * @param {string} props.pet_nickname - 카카오톡 클릭
 	 * @param {string} props.user_profile_uri - 카카오톡 클릭
+=======
+	popShareModal: (offset, onPressKakao, onPressLinkCopy, onPressMsg) => {},
+
+	/**
+	 * 입양 확정 시 출력되는 축하 메시지 모달
+	 * @param {string} props.pet_nickname - 펫 닉네임
+	 * @param {string} props.user_profile_uri - 펫 프로필 사진
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	 * @example
 	 */
 	popCongratulationModal: (pet_nickname, user_profile_uri) => {},
 
+<<<<<<< HEAD
+=======
+	/**
+	 * 사진을 확장된 View에서 보는 모달
+	 * @param {string} props.photoList - 사진 목록
+	 * @example
+	 */
+	popPhotoListViewModal: photoList => {},
+
+	/**
+	 * 로딩 중 출력 모달
+	 * @param {object} props -
+	 * @param {boolean} props.isModal - 모달인지 여부
+	 * @example
+	 */
+	popLoading: isModal => {},
+
+	/**
+	 * 주소 현위치 컨펌 모달
+	 * @param {Object} props - props object
+	 * @param {()=>void} props.onPressAddrSearch - 주소 찾기 클릭
+	 * @param {()=>void} props.onConfirm - 확인 버튼 콜백
+	 * @param {()=>void} props.searchedLocation - 현재 주소
+	 */
+	popLocationCheckModal: (onPressAddrSearch, onConfirm, searchedLocation) => {},
+
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	popInfoModal: () => {},
 
 	alert: () => {},

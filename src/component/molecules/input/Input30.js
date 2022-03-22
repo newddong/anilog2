@@ -4,7 +4,11 @@ import {Text, View, TextInput} from 'react-native';
 import DP from 'Root/config/dp';
 import {BLACK, APRI10, GRAY10, GRAY20, GRAY30, RED10, GREEN} from 'Root/config/color';
 import PropsTypes, {any, bool, func, number, object, oneOf, oneOfType, string} from 'prop-types';
+<<<<<<< HEAD:src/component/molecules/input/Input30.js
 import {Cross52} from 'Atom/icon';
+=======
+import {Cross24_Filled, Cross52} from 'Atom/icon';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/molecules/Input30.js
 import {TouchableOpacity} from 'react-native';
 
 /**
@@ -24,8 +28,8 @@ const Input30 = React.forwardRef((props, ref) => {
 			onClear();
 		},
 	}));
-	const [input, setInput] = React.useState('');
-	const [confirmed, setConfirmed] = React.useState(false); //Confirm Msg 출력 Boolean
+	const [input, setInput] = React.useState(props.defaultValue ? props.defaultValue : '');
+	const [confirmed, setConfirmed] = React.useState(input == '' ? false : true); //Confirm Msg 출력 Boolean
 	const inputRef = React.useRef();
 
 	// Input 값 변동 콜백
@@ -39,6 +43,8 @@ const Input30 = React.forwardRef((props, ref) => {
 
 	const validator = text => {
 		let isValid = props.validator(text);
+		// console.log('isValid / Text', text);
+		// console.log('isValid', isValid);
 		setConfirmed(isValid);
 		props.onValid && props.onValid(isValid);
 	};
@@ -115,15 +121,15 @@ const Input30 = React.forwardRef((props, ref) => {
 								textAlignVertical: 'bottom',
 								color: confirmed ? BLACK : RED10,
 								// width: props.width * DP,
-								width: props.width ? props.width * DP - 46 * DP : null,
+								width: props.width ? props.width - 46 * DP : null,
 								// textAlign: 'center',
 							},
 						]}
 					/>
 					{/* {input.length > 0 ? ( */}
 					{props.value.length > 0 && props.showCrossMark ? (
-						<TouchableOpacity onPress={onClear} style={{position: 'absolute', right: 0}}>
-							<Cross52 />
+						<TouchableOpacity onPress={onClear} style={{position: 'absolute', right: 20 * DP, alignItems: 'center', width: 66 * DP, height: 40 * DP}}>
+							<Cross24_Filled />
 						</TouchableOpacity>
 					) : (
 						false

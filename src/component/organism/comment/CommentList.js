@@ -14,29 +14,51 @@ import {txt} from 'Root/config/textstyle';
  * }} props
  */
 export default CommentList = props => {
+<<<<<<< HEAD:src/component/organism/comment/CommentList.js
 
+=======
+	const like = data => {
+	}
+	
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/CommentList.js
 	const renderItem = ({item, index}) => {
 		// console.log('CommentList', item);
-
 		return (
 			<ParentComment
 				parentComment={item}
 				onPressReplyBtn={props.onPressReplyBtn} // 부모 댓글의 답글쓰기 클릭 이벤트
+				onEdit={props.onEdit}
+				like={like}
 			/>
 		);
 	};
 
 	const whenEmpty = () => {
 		return (
-			<View style={[{height: 100 * DP, width: '100%', paddingVertical: 30 * DP, alignItems: 'center', justifyContent: 'center'}]}>
+			<View
+				style={[
+					{
+						height: 100 * DP,
+						width: 654 * DP,
+						// backgroundColor: 'red',
+						paddingVertical: 30 * DP,
+						alignItems: 'center',
+						justifyContent: 'center',
+						marginBottom: 30 * DP,
+					},
+				]}>
 				<Text style={[txt.roboto30b, {color: GRAY10}]}> 댓글이 없습니다.</Text>
 			</View>
 		);
 	};
 
 	return (
-		<View style={{flex: 1, paddingHorizontal: 48 * DP}}>
-			<FlatList data={props.items} renderItem={renderItem} ListEmptyComponent={whenEmpty} stickyHeaderIndices={[0]} />
+		<View
+			style={{
+				width: 654 * DP,
+				// backgroundColor: 'red',
+			}}>
+			<FlatList listKey={({item,index})=>index} data={props.items} renderItem={renderItem} ListEmptyComponent={whenEmpty} scrollEnabled={false} stickyHeaderIndices={[0]} />
 		</View>
 	);
 };

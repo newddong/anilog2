@@ -7,15 +7,92 @@ import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS, PROTECT_REQUEST_STATUS} from 'Root/i18n/msg';
+<<<<<<< HEAD
 
 export default SimpleWithMeatballHeader = ({navigation, route, options, back}) => {
 	const isWriter = userGlobalObject.userInfo._id == route.params.item.protect_request_writer_id._id;
+=======
+import {deleteProtectRequest, setShelterProtectAnimalStatus} from 'Root/api/shelterapi';
+import {setProtectRequestStatus} from 'Root/api/protectapi';
+
+//보호 요청게시글 작성자일 경우 미트볼 아이콘 출력이 되는 헤더
+export default SimpleWithMeatballHeader = ({navigation, route, options, back}) => {
+	const isWriter = userGlobalObject.userInfo._id == route.params.writer;
+	// console.log('route.params / SimpleWithMeatballHeader : ', route.params.request_object);
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 
 	const onPressChangeProtectRequestStatus = () => {
 		Modal.close();
 		setTimeout(() => {
+<<<<<<< HEAD
 			Modal.popSelectScrollBoxModal([PROTECT_REQUEST_STATUS], '', selectedItem => {
 				alert(selectedItem);
+=======
+			//요청게시글 ‘rescue’,'complete',’rainbowbridge’,’discuss’), //항목 추가 필요
+			//보호동물 (‘rescue’,’adopt’,’protect’,’rainbowbridge’,’discuss’),
+			Modal.popSelectScrollBoxModal([PROTECT_REQUEST_STATUS], '', selectedItem => {
+				const request_obj = route.params.request_object;
+				let selectedStatus = '';
+				switch (selectedItem) {
+					case PROTECT_REQUEST_STATUS[0]:
+						//협의 중
+						selectedStatus = 'discuss';
+						break;
+					case PROTECT_REQUEST_STATUS[1]:
+						//완료
+						selectedStatus = 'complete';
+						break;
+					case PROTECT_REQUEST_STATUS[2]:
+						//사망
+						selectedStatus = 'rainbowbridge';
+						break;
+					case PROTECT_REQUEST_STATUS[3]:
+						//입양가능
+						selectedStatus = 'rescue';
+						break;
+					default:
+						break;
+				}
+				if (selectedStatus == request_obj.protect_request_status) {
+					Modal.close();
+					setTimeout(() => {
+						Modal.popOneBtn('현재 상태와 다른 항목을 \n 골라주세요.', '확 인', () => Modal.close());
+					}, 300);
+				} else {
+					//보호요청 게시글의 상태 변경 실시
+					setProtectRequestStatus(
+						{
+							protect_request_object_id: request_obj._id,
+							protect_request_status: selectedStatus, //선택된 상태
+						},
+						result => {
+							console.log('result / setProtectRequestStatus / SimpleWithMeatballHeader', result.msg.protect_request_status);
+						},
+						err => {
+							console.log('err / setProtectRequestStatus / SimpleWithMeatballHeader', err);
+						},
+					);
+					let shelterProtectAnimalStatus = selectedStatus == 'complete' ? 'adopt' : selectedStatus; // 'complete'와 일치하는 보호동물 상태는 'adopt
+					setShelterProtectAnimalStatus(
+						{
+							shelter_protect_animal_object_id: request_obj.protect_animal_id._id,
+							protect_animal_status: shelterProtectAnimalStatus,
+							// protect_animal_adoptor_id,
+							// protect_animal_protector_id
+						},
+						result => {
+							console.log('result / setShelterProtectAnimalStatus / SimpleWithMeatballHeader', result.msg.protect_animal_status);
+							Modal.popNoBtn('보호 요청 게시글의 상태변경이 \n 완료되었습니다.');
+							setTimeout(() => {
+								Modal.close();
+							}, 1000);
+						},
+						err => {
+							console.log('err / setShelterProtectAnimalStatus / SimpleWithMeatballHeader', err);
+						},
+					);
+				}
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 				Modal.close();
 			});
 		}, 200);
@@ -32,6 +109,7 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 		}, 200);
 	};
 
+<<<<<<< HEAD
 	const onPressEdit = () => {};
 
 	const onPressDelete = () => {
@@ -41,6 +119,38 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 				alert('삭제');
 				Modal.close();
 			});
+=======
+	//수정 버튼 클릭
+	const onPressEdit = () => {
+		navigation.push('EditAidRequest', {data: route.params.id});
+	};
+
+	//게시글 삭제
+	const onPressDelete = () => {
+		Modal.close();
+		setTimeout(() => {
+			Modal.popTwoBtn(
+				'이 게시글을 삭제하시겠습니까?',
+				'아니오',
+				'삭제',
+				() => Modal.close(),
+				() => {
+					deleteProtectRequest(
+						{
+							protect_request_object_id: route.params.id,
+						},
+						result => {
+							console.log('result / deleteProtectRequest / SimpleWithMeatBallHeader  : ', result.msg.protect_request_is_delete);
+							navigation.goBack(); //뒤로 가기
+						},
+						err => {
+							console.log('err /deleteProtectRequest / SimpleWithMeatBallHeader  :  ', err);
+						},
+					);
+					Modal.close();
+				},
+			);
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 		}, 400);
 	};
 
@@ -49,6 +159,7 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 			FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS,
 			selectedItem => {
 				switch (selectedItem) {
+<<<<<<< HEAD
 					case '상태 변경':
 						onPressChangeProtectRequestStatus();
 					case '공유하기':
@@ -57,6 +168,20 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 						onPressEdit();
 					case '삭제':
 						onPressDelete();
+=======
+					case '상태변경':
+						onPressChangeProtectRequestStatus();
+						break;
+					case '공유하기':
+						onPressShare();
+						break;
+					case '수정':
+						onPressEdit();
+						break;
+					case '삭제':
+						onPressDelete();
+						break;
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 					default:
 						break;
 				}
@@ -75,7 +200,11 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 					<BackArrow32 onPress={navigation.goBack} />
 				</View>
 			</TouchableOpacity>
+<<<<<<< HEAD
 			<Text style={[{flex: 1, textAlign: 'center', marginLeft: 30 * DP, marginRight: 80 * DP}, txt.roboto40b]}>
+=======
+			<Text style={[{flex: 1, textAlign: 'center', marginLeft: 30 * DP, marginRight: 80 * DP}, txt.roboto40b]} numberOfLines={1}>
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 				{options.title ? options.title : route.params.title}
 			</Text>
 			{isWriter ? <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} /> : <></>}

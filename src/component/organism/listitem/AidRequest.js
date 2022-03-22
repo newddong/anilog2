@@ -14,19 +14,23 @@ import {aidRequest} from '../style_organism copy';
  * selected : 'Boolean / true일 경우 메인색의 테두리 형성 or 회색의 얇은 테두리 형성',
  * selectBorderMode : 'Boolean / 테두리 형성 모드 적용 여부 default true',
  * showBadge : 'Boolean / 지원자 신청을 나타내는 뱃지 번호 출력 여부',
+ * inActiveOpacity : 'Boolean / 클릭 시 터쳐블 애니메이션 출력 여부 Default = false',
  * }} props
  */
 export default AidRequest = props => {
 	const data = props.data;
+<<<<<<< HEAD:src/component/organism/listitem/AidRequest.js
 	// console.log('badge', data);
 
+=======
+	// console.log('AidRequest', data.protect_animal_photo_uri_list);
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/AidRequest.js
 	//해당 AidRequest박스 선택 시 부모컴포넌트 OnSelect 실행
 	const onSelect = () => {
 		props.onSelect();
 	};
-
 	return (
-		<TouchableOpacity onPress={onSelect} style={[aidRequest.container]}>
+		<TouchableOpacity onPress={onSelect} activeOpacity={props.inActiveOpacity ? 1 : 0.2} style={[aidRequest.container]}>
 			<View
 				style={[
 					aidRequest.insideContainer,
@@ -52,34 +56,36 @@ export default AidRequest = props => {
 								{data.protect_animal_species_detail != 'undefined' ? data.protect_animal_species_detail : ''}
 							</Text>
 						</View>
-						<View style={[aidRequest.right_middleMenu]}>
+						<View style={[aidRequest.right_middleMenu, {}]}>
 							<View style={[aidRequest.right_middleMenu_title]}>
 								<Text style={[txt.noto24, {color: GRAY20}]}>예상연령</Text>
 							</View>
 							<View style={[aidRequest.right_middleMenu_content]}>
-								<Text style={[txt.noto24]}>{data.protect_animal_estimate_age || ''}</Text>
+								<Text style={[txt.noto26, aidRequest.right_middleMenu_content_text]}>{data.protect_animal_estimate_age || ''}</Text>
 							</View>
 							<View style={[aidRequest.right_middleMenu_title]}>
 								<Text style={[txt.noto24, {color: GRAY20}]}>체중</Text>
 							</View>
 							<View style={[aidRequest.right_middleMenu_content]}>
-								<Text style={[txt.noto24]}>{data.protect_animal_weight ? parseFloat(data.protect_animal_weight).toFixed(1) + 'kg' : '모름'}</Text>
+								<Text style={[txt.noto26, aidRequest.right_middleMenu_content_text]}>
+									{data.protect_animal_weight ? parseFloat(data.protect_animal_weight).toFixed(1) + 'kg' : '모름'}
+								</Text>
 							</View>
-						</View>
-						<View style={[aidRequest.right_lowerMenu]}>
 							<View style={[aidRequest.right_middleMenu_title]}>
 								<Text style={[txt.noto24, {color: GRAY20}]}>중성화</Text>
 							</View>
 							<View style={[aidRequest.right_middleMenu_content]}>
-								<Text style={[txt.noto24]}>
+								<Text style={[txt.noto26, aidRequest.right_middleMenu_content_text]}>
 									{data.protect_animal_neutralization ? (data.protect_animal_neutralization == 'yes' ? 'O' : 'X') : '모름'}
 								</Text>
 							</View>
+						</View>
+						<View style={[aidRequest.right_lowerMenu]}>
 							<View style={[aidRequest.right_middleMenu_title]}>
 								<Text style={[txt.noto24, {color: GRAY20}]}>구조장소</Text>
 							</View>
 							<View style={[aidRequest.right_middleMenu_content]}>
-								<Text numberOfLines={1} style={[txt.noto24]} ellipsizeMode={'tail'} style={[aidRequest.saved_location_text]}>
+								<Text numberOfLines={1} style={[txt.noto26, aidRequest.saved_location_text]} ellipsizeMode={'tail'}>
 									{data.protect_animal_rescue_location ? data.protect_animal_rescue_location : ''}
 								</Text>
 							</View>
@@ -92,7 +98,7 @@ export default AidRequest = props => {
 			{/* {console.log('props.showBadge=>' + props.showBadge)} */}
 			{props.showBadge && data.protect_act_applicants.length > 0 ? (
 				<View style={[aidRequest.numberContainer]}>
-					<Text style={[{color: WHITE, paddingRight: 5 * DP}]}>{data.protect_act_applicants ? data.protect_act_applicants.length : ''}</Text>
+					<Text style={[{color: WHITE}]}>{data.protect_act_applicants ? data.protect_act_applicants.length : ''}</Text>
 				</View>
 			) : (
 				<></>
@@ -102,7 +108,11 @@ export default AidRequest = props => {
 };
 
 AidRequest.defaultProps = {
-	onSelect: e => console.log('AidRequest', e),
+	onSelect: e => {},
 	selectBorderMode: true,
 	showBadge: false,
+<<<<<<< HEAD:src/component/organism/listitem/AidRequest.js
+=======
+	inActiveOpacity: false,
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/AidRequest.js
 };

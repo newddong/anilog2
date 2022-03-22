@@ -1,5 +1,9 @@
 import React from 'react';
+<<<<<<< HEAD:src/component/templete/user/AssignUserHabitation.js
 import {Text, View, TouchableOpacity} from 'react-native';
+=======
+import {Text, View, TouchableOpacity,KeyboardAvoidingView} from 'react-native';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AssignUserHabitation.js
 import {txt} from 'Root/config/textstyle';
 import {btn_w522, btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
@@ -26,8 +30,8 @@ const AssignUserHabitation = props => {
 			// district: '구를 선택해 주세요', //군,구
 			// neighbor: '동을 선택해 주세요', //동,읍,면
 			city: '', //시,도
-			district: '', //군,구
-			neighbor: '', //동,읍,면
+			district: '군, 구를 선택해주세요.', //군,구
+			neighbor: '동, 읍을 선택해주세요.', //동,읍,면
 		},
 	});
 
@@ -169,7 +173,11 @@ const AssignUserHabitation = props => {
 				districts => {
 					setDistrict(districts.msg);
 					debug && console.log('districts:', districts.msg);
+<<<<<<< HEAD:src/component/templete/user/AssignUserHabitation.js
 					setData({...data, user_address: {...data.user_address, city: value, district: districts.msg[0], neighbor: ''}});
+=======
+					setData({...data, user_address: {...data.user_address, city: value, district: districts.msg[0], neighbor: '동, 읍을 선택해주세요.'}});
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AssignUserHabitation.js
 					if (value != data.user_address.city) {
 						setIsCityChanged(!isCityChanged);
 					}
@@ -198,6 +206,10 @@ const AssignUserHabitation = props => {
 				},
 				handleError,
 			);
+<<<<<<< HEAD:src/component/templete/user/AssignUserHabitation.js
+=======
+			Modal.close();
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AssignUserHabitation.js
 		});
 	};
 
@@ -209,7 +221,7 @@ const AssignUserHabitation = props => {
 	};
 
 	return (
-		<View style={[login_style.wrp_main, {flex: 1}]}>
+		<KeyboardAvoidingView style={[login_style.wrp_main, {flex: 1}]} behavior='position'>
 			{/* (M)StageBar	 */}
 			<View style={[temp_style.stageBar, progressbar_style.stageBar]}>
 				<StageBar
@@ -289,7 +301,7 @@ const AssignUserHabitation = props => {
 					<AniButton btnTitle={'확인'} titleFontStyle={32} disable={true} btnLayout={btn_w654} />
 				)}
 			</View>
-		</View>
+		</KeyboardAvoidingView>
 	);
 };
 

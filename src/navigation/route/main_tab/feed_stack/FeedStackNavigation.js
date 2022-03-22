@@ -12,6 +12,7 @@ import MeatBallHeader from 'Navigation/header/MeatBallHeader';
 import AlarmAndSearchHeader from 'Navigation/header/AlarmAndSearchHeader';
 import BookmarkHeader from 'Navigation/header/BookmarkHeader';
 import SocialRelationTopTabNavigation from '../protection_stack/socialRelation_tab/SocialRelationTopTabNavigation';
+import SimpleHeader from 'Navigation/header/SimpleHeader';
 
 const FeedStack = createStackNavigator();
 
@@ -23,12 +24,12 @@ export default FeedStackNavigation = () => {
 			<FeedStack.Screen
 				name="SocialRelation"
 				component={SocialRelationTopTabNavigation}
-				options={{header: props => <MeatBallHeader {...props} />, title: '프로필'}}
+				options={{header: props => <SimpleHeader {...props} />, title: '프로필'}}
 			/>
-			<FeedStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <MeatBallHeader {...props} />, title: '프로필'}} />
-			<FeedStack.Screen name="HashFeedList" component={FeedList} />
-			<FeedStack.Screen name="ProtectAnimalFeedList" component={FeedList} />
-			<FeedStack.Screen name="UserTagFeedList" component={FeedList} />
+			<FeedStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: '프로필'}} />
+			<FeedStack.Screen name="HashFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: '프로필'}} />
+			<FeedStack.Screen name="ProtectAnimalFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: '프로필'}} />
+			<FeedStack.Screen name="UserTagFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: '프로필'}} />
 			<FeedStack.Screen
 				name="AnimalProtectRequestDetail"
 				component={AnimalProtectRequestDetail}

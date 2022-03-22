@@ -18,12 +18,12 @@ import DP from 'Root/config/dp';
 export default UserInfoSetting = ({route}) => {
 	// console.log('userInfoSetting', route);
 	const navigation = useNavigation();
-	const [data, setData] = React.useState({}); // 로그인 유저의 UserObject
-	const [loading, setLoading] = React.useState(true); // 화면 출력 여부 결정
+	const [data, setData] = React.useState('false'); // 로그인 유저의 UserObject
 	const [modifyMode, setModifyMode] = React.useState(false);
 	const [numberOfLines, setNumOfLines] = React.useState();
 	const [showMore, setShowMore] = React.useState();
 	const modifyRef = React.useRef();
+
 	const fetchData = () => {
 		getUserInfoById(
 			{
@@ -31,6 +31,7 @@ export default UserInfoSetting = ({route}) => {
 			},
 			userObject => {
 				setData(userObject.msg);
+<<<<<<< HEAD:src/component/templete/user/UserInfoSetting.js
 				navigation.setOptions({title: userObject.msg.user_nickname});
 				setTimeout(() => {
 					setLoading(false);
@@ -42,12 +43,20 @@ export default UserInfoSetting = ({route}) => {
 				setTimeout(() => {
 					setLoading(false);
 				}, 500);
+=======
+				navigation.setOptions({title: userGlobalObject.userInfo.user_nickname});
+			},
+			err => {
+				console.log('er', err);
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/UserInfoSetting.js
 			},
 		);
 	};
+
 	React.useEffect(() => {
 		// fetchData();
 		navigation.addListener('focus', () => fetchData());
+
 		//스크린 포커스, 프로필 변경이 있을 시 getUSerInfoById에 접속
 	}, [route.params?.changedPhoto]);
 
@@ -80,8 +89,7 @@ export default UserInfoSetting = ({route}) => {
 
 	//나의 반려동물 => 반려클릭
 	const onClickCompanionLabel = myPetData => {
-		console.log('myPetdata', myPetData);
-		navigation.push('PetInfoSetting', {pet_id: myPetData._id, token: data});
+		navigation.push('PetInfoSetting', {pet_id: myPetData._id});
 	};
 
 	//비밀번호 변경하기 클릭
@@ -112,7 +120,7 @@ export default UserInfoSetting = ({route}) => {
 	const modifyIntroText = text => {
 		setData({...data, user_introduction: text});
 	};
-	if (loading) {
+	if (data == 'false') {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
 				<ActivityIndicator size={'large'}></ActivityIndicator>
@@ -179,8 +187,11 @@ export default UserInfoSetting = ({route}) => {
 											</TouchableOpacity>
 										</View>
 									) : (
+<<<<<<< HEAD:src/component/templete/user/UserInfoSetting.js
 										// <AniButton onPress={modify_finalize} btnTitle={'적용'} btnLayout={btn_w114} />
 										// <AniButton onPress={modify_userIntro} btnTitle={'수정'} btnStyle={'border'} btnLayout={btn_w114} />
+=======
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/UserInfoSetting.js
 										<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
 											<TouchableOpacity onPress={modify_userIntro}>
 												<Text style={[txt.noto26, {color: APRI10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>수정</Text>
@@ -205,7 +216,7 @@ export default UserInfoSetting = ({route}) => {
 									</View>
 								) : (
 									<View style={{}}>
-										<Text style={[txt.noto24, {color: GRAY10}]} ellipsizeMode={'tail'} numberOfLines={showMore ? null : 3}>
+										<Text style={[txt.noto24]} ellipsizeMode={'tail'} numberOfLines={showMore ? null : 3}>
 											{data.user_introduction || ''}
 										</Text>
 										{/* 더미 텍스트 삭제금지 */}

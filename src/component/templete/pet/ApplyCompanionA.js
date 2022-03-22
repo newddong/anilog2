@@ -36,18 +36,12 @@ export default ApplyCompanionA = ({route}) => {
 		isProtect ? navigation.setOptions({title: '임시보호 신청'}) : navigation.setOptions({title: '입양 신청'});
 	}, []);
 
-	//동물보호 및 입양 요청 스크린에서 보내준 [임시보호 및 입양 신청을 한 동물에 대한 정보] 가 담겨 있는 'protect_request_pet_data'
 	React.useEffect(() => {
-		console.log('params', route.params.protect_request_pet_data);
-	}, [route.params.protect_request_pet_data]);
-
-	//보호장소 및 연락처가 공란이면 다음 단계로 넘어갈 수 없는 로직
-	React.useEffect(() => {
-		// console.log('data', data);
-	}, [data]);
-
-	React.useEffect(() => {
+<<<<<<< HEAD:src/component/templete/pet/ApplyCompanionA.js
 		console.log('route.params', route.params);
+=======
+		// console.log('route.params', route.params);
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ApplyCompanionA.js
 		const addr = route.params.addr;
 		if (route.params != null) {
 			//한번 주소 검색이 된적이 있는가?
@@ -59,6 +53,7 @@ export default ApplyCompanionA = ({route}) => {
 		}
 	}, [route.params.addr]);
 
+<<<<<<< HEAD:src/component/templete/pet/ApplyCompanionA.js
 	// React.useEffect(() => {
 	// 	if (route.params.addr) {
 	// 		console.log('주소를 받아온다.', route.params.addr);
@@ -73,6 +68,8 @@ export default ApplyCompanionA = ({route}) => {
 	// 	}
 	// }, [route.params.addr]);
 
+=======
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ApplyCompanionA.js
 	//주소찾기 버튼 클릭
 	const goToAddressSearch = () => {
 		navigation.push('AddressSearchPage', {prevRoute: route.name});

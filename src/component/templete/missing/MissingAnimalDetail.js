@@ -18,14 +18,15 @@ import CameraRoll from '@react-native-community/cameraroll';
 import Modal from 'Root/component/modal/Modal';
 import MissingReportInfo from 'Organism/info/MissingReportInfo';
 import {PosterSave} from 'Component/atom/icon';
+<<<<<<< HEAD:src/component/templete/missing/MissingAnimalDetail.js
 import {phoneFomatter} from 'Root/util/stringutil'
+=======
+import {phoneFomatter} from 'Root/util/stringutil';
+import userGlobalObject from 'Root/config/userGlobalObject';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/MissingAnimalDetail.js
 
 export default MissingAnimalDetail = props => {
 	const navigation = useNavigation();
-	React.useEffect(() => {
-		LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
-	}, []);
-
 	const [photo, setPhoto] = React.useState(props.route.params != null ? props.route.params : []); //PhotoSelect에서 사진 선택이 됐을 경우 photo에 담김
 	const [editComment, setEditComment] = React.useState(false); //답글 작성란 View 보이기 T/F
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
@@ -35,8 +36,13 @@ export default MissingAnimalDetail = props => {
 	const [writeCommentData, setWriteCommentData] = React.useState(); //더보기 클릭 State
 	const [replyPressed, setReplyPressed] = React.useState(false);
 	const debug = true;
+<<<<<<< HEAD:src/component/templete/missing/MissingAnimalDetail.js
 	const [loading, setLoading] = React.useState(true); //로딩상태
 	
+=======
+
+	const [loading, setLoading] = React.useState(true); //로딩상태
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/MissingAnimalDetail.js
 	const viewShotRef = useRef();
 	React.useEffect(() => {
 		setPhoto(props.route.params);
@@ -106,6 +112,7 @@ export default MissingAnimalDetail = props => {
 				feedobject_id: props.route.params._id,
 				// commentobject_id: '61c2c0de7be07611b0094ffd',
 				request_number: 10,
+				login_userobject_id: userGlobalObject.userInfo._id
 			},
 			commentdata => {
 				// console.log('commentdata', commentdata.msg);
@@ -212,6 +219,7 @@ export default MissingAnimalDetail = props => {
 		try {
 			const imageURI = await viewShotRef.current.capture();
 			if (Platform.OS === 'android') {
+<<<<<<< HEAD:src/component/templete/missing/MissingAnimalDetail.js
 				const granted = await getPermissionAndroid();
 				if (!granted) {
 					return;
@@ -221,11 +229,59 @@ export default MissingAnimalDetail = props => {
 			if (image) {
 				// Alert.alert('', 'Image saved successfully.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
 				Modal.popOneBtn('전단지가 저장되었습니다.', '확인', Modal.close);
+=======
+				// const granted = await getPermissionAndroid();
+				const granted = getPerMission();
+				if (!granted) {
+					return;
+				}
+				const image = CameraRoll.save(imageURI, 'photo');
+				if (image) {
+					// Alert.alert('', 'Image saved successfully.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
+					Modal.popOneBtn('전단지가 저장되었습니다.', '확인', Modal.close);
+				}
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/MissingAnimalDetail.js
 			}
 			// Share.share({title: 'Image', url: imageURI});
 		} catch (error) {
 			console.log('error', error);
 		}
+<<<<<<< HEAD:src/component/templete/missing/MissingAnimalDetail.js
+=======
+	}
+
+	// get permission on android
+	const getPermissionAndroid = async () => {
+		try {
+			const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE, {
+				title: 'Image Download Permission',
+				message: 'Your permission is required to save images to your device',
+				buttonNegative: 'Cancel',
+				buttonPositive: 'OK',
+			});
+			if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+				return true;
+			}
+			Alert.alert('', '전단지를 저장하기 위해서는 권한이 필요합니다.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
+		} catch (err) {
+			// handle error as you please
+			console.log('err', err);
+		}
+	};
+	function capture() {
+		try {
+			captureScreenShot();
+		} catch (err) {
+			console.log('Screenshot Error', err);
+		}
+	}
+	function getPerMission() {
+		try {
+			getPermissionAndroid();
+		} catch (err) {
+			console.log('Android Image Permisson Failed', err);
+		}
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/MissingAnimalDetail.js
 	}
 
 	// get permission on android
@@ -264,18 +320,24 @@ export default MissingAnimalDetail = props => {
 			</View>
 		);
 	}
+<<<<<<< HEAD:src/component/templete/missing/MissingAnimalDetail.js
 	
+=======
+
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/MissingAnimalDetail.js
 	return (
 		<View style={[reportDetail.wrp_main]}>
 			<FlatList
 				contentContainerStyle={[reportDetail.container]}
 				data={[{}]}
+				showsVerticalScrollIndicator={false}
 				ListHeaderComponent={
 					<View style={{alignItems: 'center'}}>
 						<View>
 							<ViewShot ref={viewShotRef} options={{format: 'jpg', quality: 1.0}}>
 								<View style={[missingAnimalDetail.poster]}>
 									<View style={missingAnimalDetail.title}>
+<<<<<<< HEAD:src/component/templete/missing/MissingAnimalDetail.js
 										<MissingAnimalTitle data={data}/>
 									</View>
 									<MissingAnimalPicture data={data}/>
@@ -286,6 +348,18 @@ export default MissingAnimalDetail = props => {
 								</View>
 							</ViewShot>
 							<TouchableWithoutFeedback onPress={captureScreenShot}>
+=======
+										<MissingAnimalTitle data={data} />
+									</View>
+									<MissingAnimalPicture data={data} />
+									<MissingAnimalText data={data} />
+
+									<MissingAnimalPhone data={data} />
+									<Text style={missingAnimalDetail.missingText18}>반려동물 커뮤니티 애니로그</Text>
+								</View>
+							</ViewShot>
+							<TouchableWithoutFeedback onPress={capture}>
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/MissingAnimalDetail.js
 								<View style={missingAnimalDetail.floatingBtnMissingReport}>
 									<PosterSave />
 									<Text style={[txt.noto20, {color: 'red'}, {fontWeight: 'bold'}]}>전단지 저장</Text>
@@ -310,11 +384,15 @@ export default MissingAnimalDetail = props => {
 				}
 				renderItem={({item, index}) => (
 					// <View style={[reportDetail.commentList]}>
+<<<<<<< HEAD:src/component/templete/missing/MissingAnimalDetail.js
 					<CommentList
 						items={commentDataList}
 						onPressReplyBtn={onReplyBtnClick}
 						onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
 					/>
+=======
+					<CommentList items={commentDataList} onPressReplyBtn={moveToCommentList} onPress_ChildComment_ReplyBtn={onChildReplyBtnClick} />
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/MissingAnimalDetail.js
 					// </View>
 				)}
 			/>
@@ -338,6 +416,7 @@ export default MissingAnimalDetail = props => {
 
 // 포스터 제목 컴포넌트
 const MissingAnimalTitle = props => {
+<<<<<<< HEAD:src/component/templete/missing/MissingAnimalDetail.js
 	const [animalSpecies, setAnimalSpecies] = React.useState(''); //포스터 타이틀 동물 종류
 	const data = props.data;
 	if(!data)return false;
@@ -366,6 +445,36 @@ const MissingAnimalTitle = props => {
 				break;
 		}
 	}, []);
+=======
+	// const [animalSpecies, setAnimalSpecies] = React.useState('');
+	//포스터 타이틀 동물 종류
+	const data = props.data;
+	if (!data) return false;
+	switch (data.missing_animal_species) {
+		case '개':
+			var animalSpecies = '강아지를';
+			break;
+		case '고양이':
+			var animalSpecies = '고양이를';
+			break;
+		case '기타 포유류':
+			var animalSpecies = '반려동물을';
+			break;
+		case '조류':
+			var animalSpecies = data.missing_animal_species_detail.toString() + '를';
+			break;
+		case '수중생물':
+			var animalSpecies = '물고기를';
+
+			break;
+		case '기타':
+			var animalSpecies = data.missing_animal_species_detail.toString() + '를';
+			break;
+		default:
+			var animalSpecies = '반려동물을';
+			break;
+	}
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/MissingAnimalDetail.js
 
 	return <Text style={missingAnimalDetail.titleText}>{animalSpecies} 찾습니다</Text>;
 };
@@ -373,9 +482,15 @@ const MissingAnimalTitle = props => {
 //포스터 동물 정보 View 컴포넌트
 const MissingAnimalText = props => {
 	const data = props.data;
+<<<<<<< HEAD:src/component/templete/missing/MissingAnimalDetail.js
 	if(!data.missing_animal_date)return false;
 	var newText = data.missing_animal_date;
 	console.log('뉴 텍스트',newText);
+=======
+	if (!data.missing_animal_date) return false;
+	var newText = data.missing_animal_date;
+	console.log('뉴 텍스트', newText);
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/MissingAnimalDetail.js
 	var splitedNewText = newText.split('-');
 	var animalSex = '';
 	console.log('newDateDate', newText.split('-'));
@@ -431,14 +546,21 @@ const MissingAnimalPhone = props => {
 	);
 };
 
+<<<<<<< HEAD:src/component/templete/missing/MissingAnimalDetail.js
 
+=======
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/MissingAnimalDetail.js
 //-------------------- 강아지를 찾습니다 컴포넌트 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 // 포스터 동물 사진2개 View 컴포넌트
 const MissingAnimalPicture = props => {
 	const data = props.data;
 	const feed_medias = data.feed_medias;
 	console.log('data.feed_media length', data.feed_medias);
+<<<<<<< HEAD:src/component/templete/missing/MissingAnimalDetail.js
 	if(!feed_medias)return false;
+=======
+	if (!feed_medias) return false;
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/MissingAnimalDetail.js
 	if (feed_medias.length < 2) {
 		return (
 			<View style={missingAnimalDetail.picture}>
@@ -448,8 +570,13 @@ const MissingAnimalPicture = props => {
 					}}
 					style={[missingAnimalDetail.img_squre_284]}
 				/>
+<<<<<<< HEAD:src/component/templete/missing/MissingAnimalDetail.js
 			</View>);
 		
+=======
+			</View>
+		);
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/MissingAnimalDetail.js
 	} else {
 		return (
 			<View style={missingAnimalDetail.picture}>
@@ -468,4 +595,8 @@ const MissingAnimalPicture = props => {
 			</View>
 		);
 	}
+<<<<<<< HEAD:src/component/templete/missing/MissingAnimalDetail.js
 };
+=======
+};
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/MissingAnimalDetail.js

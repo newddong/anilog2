@@ -17,13 +17,22 @@ import Modal from 'Root/component/modal/Modal';
  */
 const SelectMultipleScrollBoxModal = props => {
 	const data = props.data;
+<<<<<<< HEAD
+=======
+	// console.log('data', JSON.stringify(data));
+
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 	const [selectedItem, setSelectedItem] = React.useState(2);
 	const [selectedItem2, setSelectedItem2] = React.useState(2);
 	const [first, setFirst] = React.useState(data.large);
 	const [second, setSecond] = React.useState([]);
 	const refContainerLeft = React.useRef('');
 	const refContainerRight = React.useRef('');
+<<<<<<< HEAD
 	const padding = '-----------------------';
+=======
+	const padding = '';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 
 	const onSelect = () => {
 		if (data.length == 1) {
@@ -143,9 +152,13 @@ const SelectMultipleScrollBoxModal = props => {
 													// zIndex: 3,
 												},
 											]}>
+<<<<<<< HEAD
 
 											<Text style={[txt.roboto34, {color: item == padding ? GRAY20 : BLACK}]}>{item}</Text>
 
+=======
+											<Text style={[txt.roboto34, {color: item == padding ? GRAY20 : BLACK}]}>{item}</Text>
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 										</View>
 									</TouchableWithoutFeedback>
 								);
@@ -173,9 +186,13 @@ const SelectMultipleScrollBoxModal = props => {
 													// zIndex: 3,
 												},
 											]}>
+<<<<<<< HEAD
 
 											<Text style={[txt.roboto34, {color: item == padding ? GRAY20 : BLACK}]}>{item}</Text>
 
+=======
+											<Text style={[txt.roboto34, {color: item == padding ? GRAY20 : BLACK}]}>{item}</Text>
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 										</View>
 									</TouchableWithoutFeedback>
 								);

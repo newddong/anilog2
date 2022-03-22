@@ -12,10 +12,10 @@ import {accountHashList} from 'Organism/style_organism copy';
  * @param {void} props.onClickFollow - 팔로우, 팔로잉 버튼 클릭
  * @param {void} props.onCheckBox - 선택 체크박스 클릭
  * @param {boolean} props.checkBoxMode - 선택 삭제 모드 여부 (default= false)
+ * @param {boolean} props.showFollowBtn - 선택 삭제 모드 여부 (default= false)
  */
 export default AccountHashList = props => {
-	// console.log('props', props.items.length);
-	console.log(props.data);
+	// console.log('props', props.data);
 	const renderItem = ({item, index}) => {
 		return (
 			<View style={[accountHashList.userAccount]}>

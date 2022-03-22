@@ -1,14 +1,23 @@
 import React from 'react';
+<<<<<<< HEAD:src/component/templete/volunteer/AddVolunteers.js
 import {ScrollView, View} from 'react-native';
+=======
+import {ScrollView, Text, View} from 'react-native';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AddVolunteers.js
 import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import InputWithSearchIcon from 'Molecules/input/InputWithSearchIcon';
 import AccountList from 'Organism/list/AccountList';
+<<<<<<< HEAD:src/component/templete/volunteer/AddVolunteers.js
 import {login_style, btn_style, temp_style, addFamilyAccount_style} from 'Templete/style_templete';
+=======
+import {login_style, btn_style, temp_style, addVolunteers} from 'Templete/style_templete';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AddVolunteers.js
 import {CommonActions} from '@react-navigation/native';
 import Modal from 'Component/modal/Modal';
 import {addUserToFamily, getUserListByNickname} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {txt} from 'Root/config/textstyle';
 
 export default AddVolunteers = ({route, navigation}) => {
 	console.log('route', route.params);
@@ -17,10 +26,7 @@ export default AddVolunteers = ({route, navigation}) => {
 
 	//돋보기 버튼 클릭 콜백
 	const onSearch = input => {
-		//검색어로 api 연결 후 결과 리스트로 ~
-		console.log(`keyword=>${input}`);
 		setSearched_accountList([]);
-		Modal.popNoBtn('검색 중... 잠시만 기다려주세요');
 		getUserListByNickname(
 			{
 				user_nickname: input,
@@ -31,37 +37,26 @@ export default AddVolunteers = ({route, navigation}) => {
 			result => {
 				// console.log('result / getUserListByNick / AddFamilyccount', result.msg);
 				//현재 usertype 조건이 안먹힘 - 클라이언트에서 필터 실시
-				let filtered = [];
-				result.msg.map((v, i) => {
-					v.user_type == 'user' ? filtered.push(v) : false;
-				});
 				//자기 아이디는 필터 실시
-				let removeMine = filtered.findIndex(e => e.user_nickname == userGlobalObject.userInfo.user_nickname);
+				let filtered = result.msg;
+				let removeMine = result.msg.findIndex(e => e.user_nickname == userGlobalObject.userInfo.user_nickname);
 				removeMine == -1 ? false : filtered.splice(removeMine, 1);
 				setSearched_accountList(filtered);
-				Modal.close();
 			},
 			err => {
 				console.log('err / getUserListByNick / AddFamilyAccount', err);
-				Modal.close();
-				if (err == '검색 결과가 없습니다.') {
-					Modal.popNoBtn('검색 결과가 없습니다.');
-
-					setTimeout(() => {
-						Modal.close();
-					}, 1500);
-				}
 			},
 		);
 	};
 
 	//검색어 Input값 변경 콜백
 	const onChangeKeyword = input => {
-		console.log('input', input);
+		if (input != '') {
+			onSearch(input);
+		}
 	};
 
 	const onAccountClick = item => {
-		console.log('onAccoitCLick');
 		setSelectedAccount(item);
 	};
 
@@ -82,16 +77,23 @@ export default AddVolunteers = ({route, navigation}) => {
 		}
 	};
 
-	return (
-		<View style={[login_style.wrp_main, addFamilyAccount_style.container]}>
-			<View style={[temp_style.inputWithSearchIcon, addFamilyAccount_style.inputWithSearchIcon]}>
-				<InputWithSearchIcon onSearch={onSearch} onChange={onChangeKeyword} width={654} placeholder={'가족 계정을 검색해주세요.'} />
+	const listEmptyComponent = () => {
+		return (
+			<View style={[addVolunteers.listEmptyContainer]}>
+				<Text style={[txt.noto32]}>검색 결과가 없습니다.</Text>
 			</View>
+		);
+	};
 
-			<ScrollView style={[addFamilyAccount_style.accountList]}>
-				<AccountList items={searched_accountList} onClickLabel={onAccountClick} />
+	return (
+		<View style={[login_style.wrp_main, addVolunteers.container]}>
+			<View style={[addVolunteers.inputWithSearchIcon]}>
+				<InputWithSearchIcon onSearch={onSearch} onChange={onChangeKeyword} width={654} placeholder={'봉사 활동을 함께 할 계정을 검색해주세요.'} />
+			</View>
+			<ScrollView style={[addVolunteers.accountList]}>
+				<AccountList items={searched_accountList} listEmptyComponent={listEmptyComponent} onClickLabel={onAccountClick} />
 			</ScrollView>
-			<View style={[btn_style.btn_w654, addFamilyAccount_style.btn_w654]}>
+			<View style={[btn_style.btn_w654, addVolunteers.btn_w654]}>
 				<AniButton onPress={onCheckFamilyMembers} btnTitle={'봉사활동자 추가'} btnLayout={btn_w654} btnTheme={'shadow'} titleFontStyle={32} />
 			</View>
 		</View>

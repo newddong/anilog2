@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, TouchableWithoutFeedback, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableWithoutFeedback, TouchableOpacity, ScrollView} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {APRI10, GRAY20, GRAY30, WHITE} from 'Root/config/color';
 import {feedListForHashTag, login_style, temp_style} from 'Templete/style_templete';
@@ -10,7 +10,7 @@ import {getFeedsByHash} from 'Root/api/hashapi';
 import Modal from 'Component/modal/Modal';
 
 export default FeedListForHashTag = props => {
-	console.log('FeedListForHashTag Props.route.params : ', props.route.params);
+	// console.log('FeedListForHashTag Props.route.params : ', props.route.params);
 	const [hashInfo, setHashInfo] = React.useState(props.route.params);
 	const [feeds, setFeeds] = React.useState([]);
 	const navigation = useNavigation();
@@ -39,7 +39,7 @@ export default FeedListForHashTag = props => {
 				result => {
 					console.log('해쉬 피드리스트', result);
 					setFeeds(result.msg.feeds.map(v => v.hashtag_feed_id));
-					setHashInfo(result.msg.hash)
+					setHashInfo(result.msg.hash);
 					// setFeeds(result.msg.feeds.map(v=>v.hashtag_feed_id));
 				},
 				error => {
@@ -54,7 +54,7 @@ export default FeedListForHashTag = props => {
 	}, []);
 
 	return (
-		<View style={[login_style.wrp_main, feedListForHashTag.container]}>
+		<View style={[feedListForHashTag.container, {}]}>
 			{/* HashTagInfo */}
 			<View style={[feedListForHashTag.hashTagInfo]}>
 				<View style={[feedListForHashTag.hashLabel]}>
@@ -62,19 +62,27 @@ export default FeedListForHashTag = props => {
 				</View>
 				{/* 최근 게시글 / 추천 게시글 */}
 				<View style={[feedListForHashTag.postCategory]}>
-					<TouchableOpacity onPress={showRecentFeed}>
-						<Text style={[txt.noto24, {color: showRecent ? APRI10 : 'black'}]}>최근게시글 </Text>
-					</TouchableOpacity>
+					<View style={[feedListForHashTag.categoryText]}>
+						<Text onPress={showRecentFeed} style={[txt.noto24, {color: showRecent ? APRI10 : 'black'}]}>
+							피드
+						</Text>
+					</View>
 					<Text style={{}}> | </Text>
-					<TouchableOpacity onPress={showRecommendedFeed}>
-						<Text style={[txt.noto24, {color: !showRecent ? APRI10 : 'black'}]}> 추천게시글</Text>
-					</TouchableOpacity>
+					<View style={[feedListForHashTag.categoryText]}>
+						<Text onPress={showRecommendedFeed} style={[txt.noto24, {color: !showRecent ? APRI10 : 'black'}]}>
+							커뮤니티
+						</Text>
+					</View>
 				</View>
 			</View>
 			{/* FeedThumbnailList */}
-			<View style={[temp_style.feedThumbnailList]}>
-				<FeedThumbnailList items={feeds} onClickThumnail={moveToHashFeedList} />
-			</View>
+			<ScrollView horizontal={false} contentContainerStyle={{flex: 1}} showsVerticalScrollIndicator={false}>
+				<ScrollView horizontal={true} scrollEnabled={false}>
+					<View style={[feedListForHashTag.feedThumbnailList]}>
+						<FeedThumbnailList items={feeds} onClickThumnail={moveToHashFeedList} />
+					</View>
+				</ScrollView>
+			</ScrollView>
 		</View>
 	);
 };

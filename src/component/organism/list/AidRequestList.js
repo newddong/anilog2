@@ -84,6 +84,7 @@ export default AidRequestList = props => {
 	return (
 		<TouchableWithoutFeedback onPress={cancelSelect}>
 			<View style={[aidRequestList.container]}>
+<<<<<<< HEAD:src/component/organism/list/AidRequestList.js
 				{/* {console.log('ProtectRequestList=>' + JSON.stringify(dummy_ProtectRequestList))} */}
 				{/* '보호중인 동물' 메뉴에 들어갔을때만 '보호중인 동물 추가하기 기능 보임' */}
 				{/* {props.callFrom != 'ProtectApplyList' ? (
@@ -94,6 +95,8 @@ export default AidRequestList = props => {
 						<Text style={[txt.noto30, aidRequestList.addProtectedPetText]}>보호중인 동물 추가하기</Text>
 					</TouchableOpacity>
 				) : null} */}
+=======
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/AidRequestList.js
 				<ScrollView horizontal={false} contentContainerStyle={{flex: 0}}>
 					<ScrollView horizontal={true} contentContainerStyle={{flex: 1}} scrollEnabled={false}>
 						<View style={aidRequestList.aidRequestListCont}>

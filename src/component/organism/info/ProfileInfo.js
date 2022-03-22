@@ -40,7 +40,10 @@ const ProfileInfo = props => {
 	const [into_height, setIntro_height] = React.useState(0); //user_introduction 의 길이 => 길이에 따른 '더보기' 버튼 출력 여부 결정
 
 	const isOwner = userGlobalObject.userInfo.user_my_pets.includes(data._id);
+<<<<<<< HEAD:src/component/organism/info/ProfileInfo.js
 	console.log('data', isOwner);
+=======
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism/ProfileInfo.js
 
 	//더보기 클릭
 	const onPressShowMore = () => {
@@ -120,8 +123,14 @@ const ProfileInfo = props => {
 			);
 		} else {
 			if (userGlobalObject.userInfo._id == data._id) {
+<<<<<<< HEAD:src/component/organism/info/ProfileInfo.js
 				return (
 					<View style={[{flexDirection: 'row', justifyContent: 'space-between'}]}>
+=======
+				//보호소 프로필이며 자기 계정인 경우
+				return (
+					<View style={[profileInfo_style.shelterButtonContainer]}>
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism/ProfileInfo.js
 						<FloatAddPet_128x68 onPress={onPressAddPetBtn} />
 						<FloatAddArticle_128x68 onPress={onPressAddArticleBtn} />
 					</View>
@@ -164,6 +173,7 @@ const ProfileInfo = props => {
 				break;
 		}
 	};
+<<<<<<< HEAD:src/component/organism/info/ProfileInfo.js
 
 	const onPressFollowingSetting = () => {
 		let isProtectingPet = userGlobalObject.userInfo.user_my_pets.includes(data._id) || data.pet_status == 'protect';
@@ -177,6 +187,25 @@ const ProfileInfo = props => {
 			true,
 			'팔로우 중',
 		);
+=======
+
+	const onPressFollowingSetting = () => {
+		let isProtectingPet = userGlobalObject.userInfo.user_my_pets.includes(data._id) || data.pet_status == 'protect';
+		Modal.popSelectBoxModal(
+			isProtectingPet ? FOLLOWER_PET_MENU : FOLLOWER_MENU,
+			selectedItem => {
+				alert(selectedItem);
+				Modal.close();
+			},
+			() => Modal.close(),
+			true,
+			'팔로우 중',
+		);
+	};
+
+	const onPressEditProfile = () => {
+		console.log('dd');
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism/ProfileInfo.js
 	};
 
 	const onPressShelterContact = () => {
@@ -249,7 +278,11 @@ const ProfileInfo = props => {
 			<View style={[organism_style.btn_w280_view_profileInfo, profileInfo_style.btn_w280_view]}>
 				<View style={[organism_style.btn_w280_profileInfo]}>
 					{userGlobalObject.userInfo._id == data._id ? (
+<<<<<<< HEAD:src/component/organism/info/ProfileInfo.js
 						<AniButton btnTitle={'프로필 수정'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} />
+=======
+						<AniButton onPress={onPressEditProfile} btnTitle={'프로필 수정'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} />
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism/ProfileInfo.js
 					) : data.is_follow ? (
 						<ArrowDownButton btnTitle={'팔로우 중'} btnLayout={btn_w280x68} onPress={onPressFollowingSetting} />
 					) : (

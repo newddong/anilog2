@@ -13,7 +13,10 @@
 // export const SLIGHT_BLACK='#191919';
 // export const RED = '#FF3120';
 // export const GREEN = '#13BE00';
+// export const APRI10 = '#FF9888';
+export const TEXTBASECOLOR = '#191919';
 
+<<<<<<< HEAD
 export const APRI10 = '#FF9888';
 export const APRI20 = '#FF6558';
 export const BLACK = '#191919';
@@ -28,6 +31,25 @@ export const YELL20 = '#FFD153';
 export const GREEN = '#13BE00';
 export const WHITE = '#FFF';
 
+=======
+export const APRI10 = '#FF634A';
+
+export const APRI20 = '#FF6558';
+
+export const BLACK = '#191919';
+export const GRAY10 = '#767676';
+export const GRAY20 = '#999999';
+export const GRAY30 = '#DBDBDB';
+export const GRAY40 = '#EDEDED';
+export const BLUE10 = '#88B8FF';
+export const BLUE20 = '#007EEC';
+export const RED10 = '#FF3120';
+export const RED20 = '#FF0000';
+export const YELL20 = '#FFD153';
+export const GREEN = '#13BE00';
+export const WHITE = '#FFF';
+
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca
 export const MIDNIGHT_BLUE = '#191970';
 export const PALETUR = '#AFEEEE';
 export const LIGHT_SALMON = '#FFA07A';

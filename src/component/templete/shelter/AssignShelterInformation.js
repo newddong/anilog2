@@ -7,12 +7,21 @@ import AniButton from 'Molecules/button/AniButton';
 import Input24 from 'Molecules/input/Input24';
 import {login_style, btn_style, temp_style, progressbar_style, assignShelterInformation_style} from 'Templete/style_templete';
 import InputWithSelect from 'Molecules/input/InputWithSelect';
+<<<<<<< HEAD:src/component/templete/shelter/AssignShelterInformation.js
 import {initial_number, email_supplier} from 'Root/config/dummyDate_json';
 import InputWithEmail from 'Molecules/input/InputWithEmail';
 import {stagebar_style} from 'Organism/style_organism copy';
 import {Calendar48_Border, Calendar48_Filled} from 'Atom/icon';
 import Modal from 'Root/component/modal/Modal';
 import StageBar from 'Molecules/info/Stagebar';
+=======
+import InputWithEmail from 'Molecules/input/InputWithEmail';
+import {stagebar_style} from 'Organism/style_organism copy';
+import {Calendar48_Border} from 'Atom/icon';
+import Modal from 'Root/component/modal/Modal';
+import StageBar from 'Molecules/info/Stagebar';
+import {INITIAL_NUMBER} from 'Root/i18n/msg';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AssignShelterInformation.js
 
 // 각각 뷰에 컴포넌트 삽입시 style의 첫번째 index 삭제할 것. 두번째 index는 상.하 간격 style이라서 이 컴포넌트에만 해당 됨.
 //ex) 변경 전: <View style={[btn_style.btn_w654, findAccount_style.btn_w654]}>   변경 후:  <View style={[findAccount_style.btn_w654]}>
@@ -53,7 +62,6 @@ export default AssignShelterInformation = props => {
 
 	//이메일
 	const onChangeEmail = email => {
-		console.log('emial ------------', email);
 		// var regEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
 		// setEmailConfirmed(regEmail.test(email));
 		setData({...data, user_email: email});
@@ -82,7 +90,6 @@ export default AssignShelterInformation = props => {
 	const onValidPhoneNumber = isValid => {
 		// let regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
 		console.log('onValidPhoneNumber', data.shelter_delegate_contact_number.length >= 7);
-
 		setPhoneConfirmed(9 < data.shelter_delegate_contact_number.length);
 	};
 
@@ -125,7 +132,11 @@ export default AssignShelterInformation = props => {
 						placeholder={'전화번호 입력란'}
 						title={'전화번호'}
 						title_star={true}
+<<<<<<< HEAD:src/component/templete/shelter/AssignShelterInformation.js
 						items={initial_number}
+=======
+						items={INITIAL_NUMBER}
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AssignShelterInformation.js
 						keyboardType={'number-pad'}
 						validator={phoneValidate}
 						onChange={onChangePhoneNumber}

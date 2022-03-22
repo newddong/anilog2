@@ -15,44 +15,116 @@ import Stagebar from 'Molecules/info/Stagebar';
 import {stagebar_style} from 'Organism/style_organism copy';
 import {login_style, btn_style, temp_style, progressbar_style, assignPetProfileImage_style} from 'Templete/style_templete';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {checkProtectPet, nicknameDuplicationCheck} from 'Root/api/userapi';
+import {checkProtectPet, getAnimalListNotRegisterWithCompanion, nicknameDuplicationCheck} from 'Root/api/userapi';
 import ImagePicker from 'react-native-image-crop-picker';
-// 각각 뷰에 컴포넌트 삽입시 style의 첫번째 index 삭제할 것. 두번째 index는 상.하 간격 style이라서 이 컴포넌트에만 해당 됨.
-//ex) 변경 전: <View style={[btn_style.btn_w654, findAccount_style.btn_w654]}>   변경 후:  <View style={[findAccount_style.btn_w654]}>
+import userGlobalObject from 'Root/config/userGlobalObject';
 
-export default AssignPetProfileImage = ({navigation, route}) => {
+export default AssignPetProfileImage = ({route}) => {
+	const navigation = useNavigation();
 	const [data, setData] = React.useState({
 		user_profile_uri: '',
 		user_nickname: '',
 		pet_status: 'companion', //입양, 임시보호중인 동물일때는 초기값을 다르게 표기하도록(여기서는 임시보호, 반려동물 상태밖에 없음,입양된 동물은 더이상 정보수정 불가)
 		pet_is_temp_protection: false,
-		userobject_id: route.params?.userobject_id,
+		userobject_id: userGlobalObject.userInfo._id,
 		previousRouteName: route.params?.previousRouteName,
 	});
-
 	const [confirmed, setConfirmed] = React.useState(false); // 닉네임 폼 Validator 통과 ?
 	const [protect, setProtect] = React.useState(false); // 임시보호 동물 T/F
-	const [alertmsg, setAlertMsg] = React.useState('사용 불가능한 닉네임입니다.');
-	// React.useEffect(() => {
-	// 	route.params && setData({...data, user_profile_uri: route.params});
-	// }, [route.params]);
+	const [isAdoptRegist, setIsAdoptRegist] = React.useState(false);
+
+	const nicknameInput = React.useRef();
 
 	React.useEffect(() => {
-		// checkProtectPet(
-		// 	{userobject_id: data.userobject_id},
-		// 	cbObj => {
-		// 		Modal.popTwoBtn(
-		// 			'새로 임시보호, 입양을 하는 동물이 있습니다.\n 해당 동물을 등록하시겠습니까?',
-		// 			'아니오',
-		// 			'네',
-		// 			() => Modal.close(),
-		// 			() => Modal.close(),
-		// 		);
-		// 	},
-		// 	e => Modal.popOneBtn(e + 'CheckProtectPet', '확인', () => Modal.close()),
-		// );
+		getAnimalListNotRegisterWithCompanion(
+			{},
+			result => {
+				// console.log('result / getAnimalListNotRegisterWithCompanion / AssignPetProfileImage : ', result.msg.length);
+				if (result.msg != undefined) {
+					if (result.msg.length == 1) {
+						//한마리의 입양 임보 대기 동물이 있을 경우
+						Modal.popAnimalToRegisterModal(
+							result.msg,
+							'새로 입양하시는 동물이 있습니다. \n 해당 동물을 등록하시겠습니까?',
+							'등록',
+							'아니오',
+							() => {
+								// console.log('Selected Object', result.msg[i]);
+								const selectedAnimal = result.msg[0];
+								const isProtect = selectedAnimal.protect_animal_status == 'protect'; //입양 임보 확정 동물이 임시보호인가?
+								setIsAdoptRegist(true);
+								setData({
+									user_profile_uri: selectedAnimal.protect_animal_photo_uri_list[0],
+									user_nickname: '',
+									pet_status: isProtect ? 'protect' : 'companion',
+									pet_is_temp_protection: isProtect ? true : false,
+									pet_neutralization: selectedAnimal.protect_animal_neutralization,
+									pet_sex: selectedAnimal.protect_animal_sex,
+									pet_species: selectedAnimal.protect_animal_species,
+									pet_species_detail: selectedAnimal.protect_animal_species_detail,
+									pet_weight: selectedAnimal.protect_animal_weight,
+									protect_act_protect_animal_id: selectedAnimal._id,
+									protect_animal_status: isProtect ? 'registered_protect' : 'registered_adopt',
+									userobject_id: userGlobalObject.userInfo._id,
+									previousRouteName: route.params?.previousRouteName,
+								});
+								console.log('isProtect', isProtect);
+								isProtect ? setProtect(true) : setProtect(false);
+								nicknameInput.current.focus();
+								Modal.close();
+							},
+							() => {
+								Modal.close();
+							},
+						);
+					} else if (result.msg.length > 1) {
+						//두 개 이상의 입양 임보 대기 동물이 있을 경우
+						Modal.popAnimalToRegisterModal(
+							result.msg,
+							'새로 입양하시는 동물들이 있습니다. \n 한 마리씩 등록 해주세요. \n 지금 등록하시겠습니까?',
+							'등록',
+							'아니오',
+							i => {
+								// console.log('Selected Object', result.msg[i]);
+								const selectedAnimal = result.msg[i];
+								const isProtect = selectedAnimal.protect_animal_status == 'protect'; //입양 임보 확정 동물이 임시보호인가?
+								console.log('selectedAnimal.protect_animal_photo_uri_list[0]', selectedAnimal.protect_animal_photo_uri_list);
+
+								setIsAdoptRegist(true);
+								setData({
+									user_profile_uri: selectedAnimal.protect_animal_photo_uri_list[0],
+									user_nickname: '',
+									pet_status: isProtect ? 'protect' : 'companion',
+									pet_is_temp_protection: isProtect ? true : false,
+									pet_neutralization: selectedAnimal.protect_animal_neutralization,
+									pet_sex: selectedAnimal.protect_animal_sex,
+									pet_species: selectedAnimal.protect_animal_species,
+									pet_species_detail: selectedAnimal.protect_animal_species_detail,
+									pet_weight: selectedAnimal.protect_animal_weight,
+									protect_act_protect_animal_id: selectedAnimal._id,
+									protect_animal_status: isProtect ? 'registered_protect' : 'registered_adopt',
+									userobject_id: userGlobalObject.userInfo._id,
+									previousRouteName: route.params?.previousRouteName,
+								});
+								console.log('isProtect', isProtect);
+								isProtect ? setProtect(true) : setProtect(false);
+								nicknameInput.current.focus();
+								Modal.close();
+							},
+							() => {
+								Modal.close();
+							},
+						);
+					}
+				}
+			},
+			err => {
+				console.log('err / getAnimalListNotRegisterWithCompanion / AssignPetProfileImage  : ', err);
+			},
+		);
 	}, []);
 
+<<<<<<< HEAD:src/component/templete/pet/AssignPetProfileImage.js
 	React.useEffect(() => {
 		//추가로 등록할 반려동물이 있나요? 에서 '추가 등록'을 눌렀을 경우 저장되어 있는 state값을 지워야함
 		if (route.params?.initialization) {
@@ -70,6 +142,8 @@ export default AssignPetProfileImage = ({navigation, route}) => {
 
 	const nicknameInput = React.useRef();
 
+=======
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AssignPetProfileImage.js
 	//닉네임 Validation
 	const nickName_validator = text => {
 		// ('* 2자 이상 15자 이내의 영문,숫자, _ 의 입력만 가능합니다.');
@@ -86,24 +160,6 @@ export default AssignPetProfileImage = ({navigation, route}) => {
 		setData({...data, pet_status: petStatus, pet_is_temp_protection: !protect});
 	};
 
-	//확인클릭
-	const goToNextStep = () => {
-		console.log('data', data);
-		nicknameDuplicationCheck(
-			{user_nickname: data.user_nickname},
-			result => {
-				if (result.msg) {
-					Modal.popOneBtn('이미 사용자가 있는 닉네임입니다.', '확인', () => Modal.close());
-				} else {
-					navigation.push('AssignPetInfoA', {data: data});
-				}
-			},
-			error => {
-				Modal.popOneBtn(error, '확인', () => Modal.close());
-			},
-		);
-	};
-
 	//프로필이미지 클릭 시 PhotoSelect로 이동
 	const selectPhoto = () => {
 		ImagePicker.openPicker({
@@ -112,9 +168,8 @@ export default AssignPetProfileImage = ({navigation, route}) => {
 			cropperCircleOverlay: true,
 		})
 			.then(images => {
-				console.log('images', images.path);
 				setData({...data, user_profile_uri: images.path || data.user_profile_uri});
-				console.log('AssignPetProfileImage', data);
+				// console.log('AssignPetProfileImage', data);
 				Modal.close();
 			})
 			.catch(err => console.log(err + ''));
@@ -122,13 +177,29 @@ export default AssignPetProfileImage = ({navigation, route}) => {
 	};
 
 	const onNicknameChange = text => {
-		console.log('닉네임', text);
 		setData({...data, user_nickname: text});
 	};
 
 	const onNicknameValid = isValid => {
-		console.log('바', isValid);
 		setConfirmed(isValid);
+	};
+
+	//확인클릭
+	const goToNextStep = () => {
+		// console.log('data', data);
+		nicknameDuplicationCheck(
+			{user_nickname: data.user_nickname},
+			result => {
+				if (result.msg) {
+					Modal.popOneBtn('이미 사용자가 있는 닉네임입니다.', '확인', () => Modal.close());
+				} else {
+					navigation.push('AssignPetInfoA', {data: data, isAdoptRegist: isAdoptRegist});
+				}
+			},
+			error => {
+				Modal.popOneBtn(error, '확인', () => Modal.close());
+			},
+		);
 	};
 
 	return (
@@ -160,14 +231,18 @@ export default AssignPetProfileImage = ({navigation, route}) => {
 
 				{/* InputForm */}
 				<View style={[temp_style.inputForm_assignPetProfileImage, assignPetProfileImage_style.inputForm]}>
-					<View style={[temp_style.input30_assignPetProfileImage]}>
+					<View style={[temp_style.input30_assignPetProfileImage, {backgroundColor: 'white'}]}>
 						<Input30
 							value={data.user_nickname}
 							showTitle={false}
 							showmsg={false}
+<<<<<<< HEAD:src/component/templete/pet/AssignPetProfileImage.js
 							width={654}
+=======
+							width={350}
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/AssignPetProfileImage.js
 							confirm_msg={'사용 가능한 닉네임입니다.'}
-							alert_msg={alertmsg}
+							alert_msg={'사용 불가능한 닉네임입니다.'}
 							placeholder={'반려동물의 닉네임을 입력해주세요.'}
 							validator={nickName_validator}
 							onChange={onNicknameChange}
@@ -196,16 +271,3 @@ export default AssignPetProfileImage = ({navigation, route}) => {
 		</KeyboardAvoidingView>
 	);
 };
-
-//	showTitle: true, // true - title과 description 출력 , false - 미출력
-//	title: 'title',
-//	description: 'description',
-//	placeholder: 'placeholder',
-//	value: 'value',
-//	alert_msg: 'alert_msg',
-//	confirm_msg: 'confirm_msg',
-//	clearMark: false,
-//	onClear: e => console.log(e),
-//	onChange: e => console.log(e),
-//	width: 300, // TextInput 너비
-//};

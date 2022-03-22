@@ -12,10 +12,11 @@ import moment from 'moment';
 import {create} from 'react-test-renderer';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {txt} from 'Root/config/textstyle';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default ReportDetail = props => {
 	const navigation = useNavigation();
-	console.log('ReportDetail', props);
+	// console.log('ReportDetail', props);
 	React.useEffect(() => {
 		LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 	}, []);
@@ -29,8 +30,8 @@ export default ReportDetail = props => {
 	const [writeCommentData, setWriteCommentData] = React.useState(); //더보기 클릭 State
 	const [replyPressed, setReplyPressed] = React.useState(false);
 	const debug = true;
-	const [loading, setLoading] = React.useState(true); //로딩상태
-
+	const [loading, setLoading] = React.useState(true); //댓글 로딩상태
+	const [feedLoding, setFeedLoading] = React.useState(true); //피드 로딩상태
 	React.useEffect(() => {
 		setPhoto(props.route.params);
 	}, [props.route.params]);
@@ -54,6 +55,7 @@ export default ReportDetail = props => {
 			data => {
 				// debug && console.log(`ReportDetail data:${JSON.stringify(data.msg)}`);
 				setData(data.msg);
+				setFeedLoading(false);
 			},
 			errcallback => {
 				console.log(`errcallback:${JSON.stringify(errcallback)}`);
@@ -65,9 +67,13 @@ export default ReportDetail = props => {
 	React.useEffect(() => {
 		console.log(' - ReportDetail Comment -');
 		getCommnetList();
+<<<<<<< HEAD:src/component/templete/missing/ReportDetail.js
 
 		setLoading(false);
 
+=======
+		setLoading(false);
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ReportDetail.js
 	}, []);
 
 	// React.useEffect(() => {
@@ -101,6 +107,7 @@ export default ReportDetail = props => {
 				feedobject_id: props.route.params._id,
 				// commentobject_id: '61c2c0de7be07611b0094ffd',
 				request_number: 10,
+				login_userobject_id: userGlobalObject.userInfo._id
 			},
 			commentdata => {
 				// console.log('commentdata', commentdata.msg);
@@ -202,7 +209,7 @@ export default ReportDetail = props => {
 		setShowMore(!showMore);
 	};
 
-	if (loading) {
+	if (loading || feedLoding) {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
 				<ActivityIndicator size={'large'}></ActivityIndicator>
@@ -249,7 +256,11 @@ export default ReportDetail = props => {
 				renderItem={({item, index}) => (
 					<CommentList
 						items={commentDataList}
+<<<<<<< HEAD:src/component/templete/missing/ReportDetail.js
 						onPressReplyBtn={onReplyBtnClick}
+=======
+						onPressReplyBtn={moveToCommentList}
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ReportDetail.js
 						onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
 					/>
 				)}

@@ -1,6 +1,10 @@
 import React from 'react';
 import {Text, View, ScrollView, FlatList, TextInput, TouchableOpacity} from 'react-native';
+<<<<<<< HEAD:src/component/templete/volunteer/ApplyVolunteer.js
 import {GRAY10, GRAY20} from 'Root/config/color';
+=======
+import {BLACK, GRAY10, GRAY20, RED10} from 'Root/config/color';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ApplyVolunteer.js
 import {txt} from 'Root/config/textstyle';
 import {AddItem64, Add_Volunteer, Calendar48_Filled, Cross46, Cross48, Person48, Phone48} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
@@ -11,7 +15,7 @@ import DatePicker from 'Molecules/select/DatePicker';
 import Input24 from 'Molecules/input/Input24';
 import Modal from 'Component/modal/Modal';
 import {getUserInfoById} from 'Root/api/userapi';
-import {assignVolunteerActivity} from 'Root/api/volunteerapi';
+import {assignVolunteerActivity, setVolunteerActivityAcceptByMember, setVolunteerActivityStatus} from 'Root/api/volunteerapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import UserDescriptionLabel from 'Root/component/molecules/label/UserDescriptionLabel';
 
@@ -63,7 +67,11 @@ export default ApplyVolunteer = ({route, navigation}) => {
 		volunteer_accompany: [],
 		volunteer_delegate_contact: '',
 		volunteer_status: 'waiting',
+<<<<<<< HEAD:src/component/templete/volunteer/ApplyVolunteer.js
 		volunteer_accompany_number: '1',
+=======
+		volunteer_accompany_number: '',
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ApplyVolunteer.js
 	});
 
 	//추가된 봉사활동자가 있는 경우 Data에 추가
@@ -88,7 +96,11 @@ export default ApplyVolunteer = ({route, navigation}) => {
 				data.volunteer_accompany.map((v, i) => {
 					getAccompaniesId.push(v._id);
 				});
+<<<<<<< HEAD:src/component/templete/volunteer/ApplyVolunteer.js
 				// console.log('token', param.token);
+=======
+
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ApplyVolunteer.js
 				assignVolunteerActivity(
 					{
 						shelter_userobject_id: param.token,
@@ -100,10 +112,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 					result => {
 						console.log('result / assignVolunteerAct / ApplyVolunteer   :  ', result);
 						Modal.popNoBtn('봉사활동 신청이 완료되었습니다.');
-						setTimeout(() => {
-							Modal.close();
-							navigation.goBack();
-						}, 1000);
+						setVolunteerConfirmStatus(result.msg._id);
 					},
 					err => {
 						console.log('err / assignVolunteerAct  / ApplyVolunteer  :  ', err);
@@ -114,9 +123,29 @@ export default ApplyVolunteer = ({route, navigation}) => {
 		);
 	};
 
+	//봉사활동을 신청 후, 신청자 본인은 자동으로 참여 확정으로 바꿔주는 함수
+	const setVolunteerConfirmStatus = async id => {
+		setVolunteerActivityAcceptByMember(
+			{
+				volunteer_activity_object_id: id,
+				confirm: 'accept',
+			},
+			result => {
+				console.log('result / setVolunteerActivityAcceptByMember / ', result.msg);
+				setTimeout(() => {
+					Modal.close();
+					navigation.goBack();
+				}, 1000);
+			},
+			err => {
+				console.log('err / setVolunteerActivityAcceptByMember ', err);
+				Modal.alert('오류 발생!!');
+			},
+		);
+	};
+
 	//계정추가 버튼 클릭
 	const addVolunteer = () => {
-		// navigation.push('Search', {mother: 0, child: 1, prevNav: route.name});
 		navigation.push('AddVolunteers');
 	};
 
@@ -128,6 +157,18 @@ export default ApplyVolunteer = ({route, navigation}) => {
 			isDup ? false : filteredDates.push(v);
 		});
 		setData({...data, volunteer_wish_date: filteredDates});
+	};
+
+	//희망날짜가 3일 이상 선택된 경우 달력 모달이 열리지 않음
+	const canOpenCalendar = () => {
+		let result = true;
+		if (data.volunteer_wish_date.length == 3) {
+			Modal.popOneBtn('희망날짜는 3일 이상 선택이 불가능합니다.', '확인', () => Modal.close());
+			result = false;
+		} else {
+			result = true;
+		}
+		return result;
 	};
 
 	//봉사활동자 연락처 변경 콜백
@@ -142,29 +183,40 @@ export default ApplyVolunteer = ({route, navigation}) => {
 		setData({...data, volunteer_wish_date: copy});
 	};
 
-	//봉사활동 참여인원 List에서 지우기 클릭
+	//애니로그 계정 봉사활동 참여인원 List에서 지우기 클릭
 	const onDeleteAccount = index => {
 		let copy = [...data.volunteer_accompany];
-		copy.splice(index, 1);
-		setData({...data, volunteer_accompany: copy});
+		if (copy[index]._id == userGlobalObject.userInfo._id) {
+			Modal.alert('신청자 본인은 삭제할 수 없습니다.');
+		} else {
+			copy.splice(index, 1);
+			setData({...data, volunteer_accompany: copy});
+		}
 	};
 
-	//봉사활동 날짜 item render
-	const renderItem = (item, index) => {
-		return (
-			<View style={[applyVolunteer.volunteerDateList]}>
-				<Text style={[txt.roboto28, applyVolunteer.volunteerDateList_text]}>{item}</Text>
-				<View style={[applyVolunteer.volunteerDateList_cross]}>
-					<Cross46 onPress={() => onDeleteVolunteerDate(index)} />
-				</View>
-			</View>
+	//봉사활동 참여인원 선택 모달
+	const onPressAccompanyNumber = () => {
+		const numberArray = ['1명', '2명', '3명', '4명', '5명'];
+		Modal.popSelectScrollBoxModal(
+			[numberArray],
+			'봉사활동 인원수(최대 5인)',
+			selected => {
+				const findIndex = numberArray.findIndex(e => e == selected);
+				console.log('findIndex', findIndex);
+				setData({...data, volunteer_accompany_number: findIndex + 1});
+				Modal.close();
+			},
+			() => Modal.close(),
 		);
 	};
 
+<<<<<<< HEAD:src/component/templete/volunteer/ApplyVolunteer.js
 	const onChangeAccompanyNumber = num => {
 		setData({...data, volunteer_accompany_number: num});
 	};
 
+=======
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ApplyVolunteer.js
 	if (loading) {
 		return <></>;
 	} else {
@@ -183,8 +235,10 @@ export default ApplyVolunteer = ({route, navigation}) => {
 							</View>
 							<View style={[applyVolunteer.title]}>
 								<Text style={[txt.noto24b, {color: GRAY10}]}>봉사활동 희망 날짜</Text>
+								<Text style={[txt.noto28, {color: RED10}]}> *</Text>
 							</View>
 						</View>
+<<<<<<< HEAD:src/component/templete/volunteer/ApplyVolunteer.js
 						<DatePicker width={590} onDateChange={onDateChange} past={false} multiple={true} />
 						{/* 봉사활동 희망날짜 FlatList */}
 						{/* <ScrollView horizontal={false} contentContainerStyle={{flex: 0}}>
@@ -192,6 +246,18 @@ export default ApplyVolunteer = ({route, navigation}) => {
 								<FlatList data={data.volunteer_wish_date} renderItem={({item, index}) => renderItem(item, index)} />
 							</ScrollView>
 						</ScrollView> */}
+=======
+						<DatePicker
+							width={590}
+							canOpenCalendar={canOpenCalendar}
+							onDateChange={onDateChange}
+							past={false}
+							multiple={true}
+							previous={data.volunteer_wish_date}
+							maxLength={3}
+						/>
+						{/* 봉사활동 희망날짜 리스트 */}
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ApplyVolunteer.js
 						{data.volunteer_wish_date.map((v, i) => {
 							return (
 								<View key={i} style={[applyVolunteer.volunteerDateList]}>
@@ -211,6 +277,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 							</View>
 							<View style={[applyVolunteer.title]}>
 								<Text style={[txt.noto24b, {color: GRAY10}]}>참여 인원</Text>
+<<<<<<< HEAD:src/component/templete/volunteer/ApplyVolunteer.js
 								<Text style={[txt.noto22, {color: GRAY20}]}>(총 인원 수 기입)</Text>
 							</View>
 						</View>
@@ -226,6 +293,24 @@ export default ApplyVolunteer = ({route, navigation}) => {
 								onChangeText={onChangeAccompanyNumber}
 							/>
 							<Text style={[txt.noto32]}> {'  '} 명</Text>
+=======
+								<Text style={[txt.noto22, {color: GRAY20}]}>(총 인원 수 기입 - 최대 5인)</Text>
+							</View>
+						</View>
+						<View style={[applyVolunteer.number_of_volunteerers]}>
+							<Text
+								onPress={onPressAccompanyNumber}
+								style={[
+									txt.noto30,
+									applyVolunteer.volunteerListInput,
+									{
+										color: data.volunteer_accompany_number != '' ? BLACK : GRAY20,
+									},
+								]}>
+								{data.volunteer_accompany_number != '' ? data.volunteer_accompany_number + '명' : '애니로그 계정 유무 상관없는 총 인원수'}
+							</Text>
+							{data.volunteer_accompany_number != '' ? <></> : <Text style={[txt.noto32]}> {'  '} 명</Text>}
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/templete/ApplyVolunteer.js
 						</View>
 						{/* 봉활참여인원 FlatList 여기 */}
 						<View style={[applyVolunteer.participants_step2]}>
@@ -254,10 +339,17 @@ export default ApplyVolunteer = ({route, navigation}) => {
 							</View>
 							<View style={[applyVolunteer.title]}>
 								<Text style={[txt.noto24b, {color: GRAY10}]}>봉사 활동자 연락처</Text>
+								<Text style={[txt.noto28, {color: RED10}]}> *</Text>
 							</View>
 						</View>
 						<View style={[applyVolunteer.participants_contact_text]}>
-							<Input24 width={654} placeholder={'연락처를 적어주세요.'} onChange={onChangePhoneNumber} value={data.volunteer_delegate_contact} />
+							<Input24
+								width={654}
+								placeholder={'연락처를 적어주세요.'}
+								keyboardType={'phone-pad'}
+								onChange={onChangePhoneNumber}
+								value={data.volunteer_delegate_contact}
+							/>
 						</View>
 					</View>
 					{/* 신청 버튼 */}
@@ -266,7 +358,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 							onPress={onRegister}
 							btnTitle={'신청'}
 							disable={
-								data.volunteer_accompany.length > 0 && data.volunteer_delegate_contact.length > 0 && data.volunteer_wish_date.length > 0
+								data.volunteer_accompany_number != '' && data.volunteer_delegate_contact.length > 0 && data.volunteer_wish_date.length > 0
 									? false
 									: true
 							}

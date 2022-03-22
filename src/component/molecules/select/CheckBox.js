@@ -4,6 +4,10 @@ import {Text, View, TouchableWithoutFeedback} from 'react-native';
 import DP from 'Root/config/dp';
 import {Check50, Rect48_GRAY30, Rect50_Border} from 'Atom/icon';
 import {GRAY10, GRAY20} from 'Root/config/color';
+<<<<<<< HEAD:src/component/molecules/select/CheckBox.js
+=======
+import {findAccount_style} from 'Root/component/templete/style_templete';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/molecules/CheckBox.js
 /**
  *
  * @param {{
@@ -15,21 +19,17 @@ import {GRAY10, GRAY20} from 'Root/config/color';
  */
 export default CheckBox = props => {
 	// console.log('props.checkBoxState ', props.index, props.checkBoxState);
-	const [checked, setChecked] = React.useState(props.checkBoxState || false); //체크상태 여부 boolean isCheck값에 따라 초기상태 결정됨
+	const [checked, setChecked] = React.useState(props.state); //체크상태 여부 boolean isCheck값에 따라 초기상태 결정됨
 
-	const onCheck = () => {
+	const toggleCheck = () => {
 		setChecked(!checked);
 	};
 
 	React.useEffect(() => {
-		// console.log('props.state===>', props.state);
+		console.log('props.state===>', props.state);
 		setChecked(props.state);
 		props.onCheck(props.state);
 	}, [props.state]);
-
-	React.useEffect(() => {
-		setChecked(false);
-	}, [props.isDeleted]);
 
 	React.useEffect(() => {
 		// console.log('CheckBox state?', checked);
@@ -39,7 +39,7 @@ export default CheckBox = props => {
 	return (
 		<View style={{flexDirection: 'row'}}>
 			{/* {console.log('checked=>' + checked)} */}
-			{props.disable ? <Rect48_GRAY30 /> : checked ? <Check50 onPress={onCheck} /> : <Rect50_Border onPress={onCheck} />}
+			{props.disable ? <Rect48_GRAY30 /> : checked ? <Check50 onPress={toggleCheck} /> : <Rect50_Border onPress={toggleCheck} />}
 			<Text
 				style={[
 					txt.noto24,

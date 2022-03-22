@@ -1,11 +1,13 @@
 import React from 'react';
 import {FlatList, Text, View} from 'react-native';
 import ShelterVerticalLabel from 'Organism/listitem/ShelterVerticalLabel';
+<<<<<<< HEAD:src/component/organism/list/ShelterList.js
 import {shelterList} from 'Organism/style_organism';
+=======
+import {shelterList} from 'Organism/style_organism copy';
+>>>>>>> ae42471661ac0f83f330ce6624523fa3e1b07aca:src/component/organism_ksw/ShelterList.js
 
 export default ShelterList = props => {
-	// console.log('props.items', props.items[0]);
-
 	const renderItem = (item, index) => {
 		// console.log('item', item);
 		return (
@@ -30,7 +32,3 @@ ShelterList.defaultProps = {
 	items: [],
 	onShelterLabelClick: e => console.log(e),
 };
-// img_uri: 'https://consecutionjiujitsu.com/wp-content/uploads/2017/04/default-image.jpg', //image uri
-// 	userType: 'user', //required - 유저타입 pet user shelter
-// 	shelterType: 'none', // public private
-// 	petStatus: 'none', // normal protected adopted none

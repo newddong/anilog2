@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet} from 'react-native';
-import {GRAY10, GRAY40, APRI10, GRAY20} from 'Root/config/color';
+import {GRAY10, GRAY40, APRI10, GRAY20, WHITE} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import moment from 'moment';
 import DP from 'Root/config/dp';
@@ -47,6 +47,14 @@ const OneNotice = props => {
 			{pressed ? (
 				<View style={styles.noticeDetailContainer}>
 					<Text style={[styles.detailText]}>{props.contents}</Text>
+					{props.answered ? (
+						<View style={[styles.answeredContainer]}>
+							<Text style={[styles.answeredTextTitle, txt.noto28b, {color: GRAY10}]}>답변</Text>
+							<Text style={[styles.answeredText]}>{props.answerText}</Text>
+						</View>
+					) : (
+						<></>
+					)}
 				</View>
 			) : (
 				<></>
@@ -76,10 +84,27 @@ const styles = StyleSheet.create({
 		marginHorizontal: 48 * DP,
 		marginTop: 40 * DP,
 	},
+	answeredContainer: {
+		borderTopColor: WHITE,
+		borderTopWidth: 2 * DP,
+		backgroundColor: GRAY40,
+	},
+	answeredText: {
+		backgroundColor: GRAY40,
+		marginBottom: 40 * DP,
+		marginHorizontal: 48 * DP,
+	},
+	answeredTextTitle: {
+		backgroundColor: GRAY40,
+		marginHorizontal: 48 * DP,
+		marginTop: 30 * DP,
+	},
 });
 
 OneNotice.defaultProps = {
 	status: false,
+	answered: false,
+	answerText: null,
 };
 
 export default OneNotice;

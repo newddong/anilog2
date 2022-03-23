@@ -68,9 +68,9 @@ export default Profile = ({route}) => {
 		}
 	};
 
-	React.useEffect(() => {
-		fetchData();
-	}, [navigation]);
+	// React.useEffect(() => {
+	// 	fetchData();
+	// }, [navigation]);
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', async () => {

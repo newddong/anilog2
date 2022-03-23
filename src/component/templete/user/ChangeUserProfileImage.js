@@ -38,19 +38,12 @@ export default ChangeUserProfileImage = ({route}) => {
 				},
 				success => {
 					Modal.close();
-					if (route.params.routeInfo.name.name == 'UserProfile') {
-						navigation.reset({
-							index: 0,
-							routes: [{name: 'UserMenu'}],
-						});
-					} else {
-						navigation.navigate({
-							name: route.params.routeInfo.name,
-							key: route.params.routeInfo.key,
-							params: {changedPhoto: data.user_profile_uri},
-							merge: true,
-						});
-					}
+					navigation.navigate({
+						name: route.params.routeInfo.name,
+						key: route.params.routeInfo.key,
+						params: {changedPhoto: data.user_profile_uri},
+						merge: true,
+					});
 				},
 				// console.log('userObject', userObject);
 				err => {

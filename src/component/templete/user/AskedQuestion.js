@@ -15,10 +15,12 @@ const AskedQuestion = ({route}) => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState();
 	const [loading, setLoading] = React.useState(true);
+	const [answerText, setAnswerText] = React.useState();
 	React.useEffect(() => {
 		getQandInfo(
 			{qanda_user_id: userGlobalObj.userInfo._id},
 			result => {
+				console.log('result', result);
 				setData(result.msg);
 				setLoading(false);
 			},
@@ -32,6 +34,8 @@ const AskedQuestion = ({route}) => {
 		console.log('item', item);
 		if (item.qanda_status == 'waiting') {
 			var answered = false;
+		} else {
+			var answered = true;
 		}
 		const date = moment(item.announcement_date).format('YYYY.MM.DD');
 		return (
@@ -41,6 +45,7 @@ const AskedQuestion = ({route}) => {
 				contents={item.qanda_question_contents}
 				status={true}
 				answered={answered}
+				answerText={item.qanda_answer_contents || null}
 			/>
 		);
 	};

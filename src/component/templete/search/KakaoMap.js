@@ -279,10 +279,6 @@ function useKeyboardBottom(tabheight) {
 			setKeyboardY(0);
 		});
 		return () => {
-			// Keyboard.removeAllListeners('keyboardDidShow');
-			// Keyboard.removeAllListeners('keyboardDidHide');
-			// Keyboard.removeAllListeners('keyboardWillShow');
-			// Keyboard.removeAllListeners('keyboardWillHide');
 			didshow.remove();
 			didhide.remove();
 			willshow.remove();

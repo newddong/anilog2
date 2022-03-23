@@ -5,11 +5,13 @@ import {followerList} from 'Templete/style_templete';
 import {getFollows, getFollowers, unFollowUser} from 'Root/api/userapi';
 import InputWithSearchIcon from 'Root/component/molecules/input/InputWithSearchIcon';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import Modal from 'Root/component/modal/Modal';
 
 export default FollowerList = ({route, navigation}) => {
 	const [searchInput, setSearchInput] = React.useState('');
 	const [myFollower, setMyFollower] = React.useState([]); // 팔로워리스트 현재 빈 값
 	const isMyAccount = route.params.userobject._id == userGlobalObject.userInfo._id;
+	console.log();
 
 	const onClickAccount = item => {
 		// console.log('item', item);
@@ -31,8 +33,13 @@ export default FollowerList = ({route, navigation}) => {
 				user_nickname: searchInput,
 			},
 			result => {
-				console.log('result / getFollowers / ', result.msg.length);
-				setMyFollower(result.msg.map(v => v.follower_id));
+				// console.log('result / getFollowers / ', result.msg);
+				result.msg.map((v, i) => {
+					console.log('i', i, v.follow_id.user_nickname);
+				});
+				// setMyFollower(result.msg.map(v => v.follower_id));
+				resolve(result.msg.map(v => v.follower_id));
+				Modal.close();
 			},
 			err => {
 				console.log('getFollowers / error / FollwerList : ', err);
@@ -40,26 +47,35 @@ export default FollowerList = ({route, navigation}) => {
 		);
 	};
 
+	const getFollow = () => {
+		getFollows(
+			{
+				userobject_id: route.params.userobject._id,
+				user_nickname: searchInput,
+			},
+			result => {
+				// console.log('result / getFollows / ', result.msg);
+				result.msg.map((v, i) => {
+					console.log('i', i, v.follow_id.user_nickname);
+				});
+				setMyFollower(result.msg.map(v => v.follow_id));
+				Modal.close();
+			},
+			err => {
+				console.log('getFollows / error / FollwerList : ', err);
+			},
+		);
+	};
+
 	React.useEffect(() => {
+		Modal.popLoading();
 		if (route.name == 'FollowingList') {
 			getFollower();
-		}
-		if (route.name == 'FollowerList') {
-			getFollows(
-				{
-					userobject_id: route.params.userobject._id,
-					user_nickname: searchInput,
-				},
-				result => {
-					console.log('result / getFollows / ', result.msg.length);
-					setMyFollower(result.msg.map(v => v.follow_id));
-				},
-				err => {
-					console.log('getFollows / error / FollwerList : ', err);
-				},
-			);
+		} else if (route.name == 'FollowerList') {
+			getFollow();
 		}
 	}, [searchInput]);
+
 	// 61d2de63c0f179ccd5ba5887
 	const onClickUnFollowBtn = item => {
 		console.log('item', item._id);

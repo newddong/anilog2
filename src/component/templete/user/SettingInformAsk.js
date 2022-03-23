@@ -17,13 +17,17 @@ export default SettingInformAsk = ({route}) => {
 		Modal.popInfoModal();
 	};
 	const onPressServiceTerms = () => {
-		Modal.popInfoModal();
+		// Modal.popInfoModal();
+		navigation.push('TermsAndPolicy', {name: 'service'});
 	};
 	const onPressLocationTerms = () => {
-		Modal.popInfoModal();
+		navigation.push('TermsAndPolicy', {name: 'location'});
 	};
 	const onPressPrivacyTerms = () => {
-		Modal.popInfoModal();
+		navigation.push('TermsAndPolicy', {name: 'privacy'});
+	};
+	const onPressOpenSource = () => {
+		navigation.push('TermsAndPolicy', {name: 'opensource'});
 	};
 
 	return (

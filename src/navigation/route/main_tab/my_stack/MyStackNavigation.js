@@ -65,7 +65,13 @@ import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballH
 import EditAidRequest from 'Root/component/templete/protection/EditAidRequest';
 import ReceivedMessage from 'Templete/user/ReceivedMessage';
 import UserNotePage from 'Templete/user/UserNotePage';
-
+import NoticeList from 'Templete/list/NoticeList';
+import ServiceCenter from 'Templete/user/ServiceCenter';
+import QnA from 'Root/component/templete/user/AskQuestion';
+import CategoryHelp from 'Templete/user/CategoryHelp';
+import ServiceCenterTopTabNavigation from './ServiceCenterTopTabNavigation';
+import CategoryHelpTopTabNavigation from './CategoryHelpTopTabNavigation';
+import TermsAndPolicy from 'Root/component/templete/user/TermsAndPolicy';
 const MyStack = createStackNavigator();
 export default MyStackNavigation = props => {
 	return (
@@ -309,6 +315,16 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen name="SettingOpen" component={SettingOpen} options={{header: props => <SimpleHeader {...props} />, title: '공개 설정'}} />
 			<MyStack.Screen name="ReceivedMessage" component={ReceivedMessage} options={{header: props => <SimpleHeader {...props} />, title: '쪽지함'}} />
 			<MyStack.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />, title: props.title}} />
+			<MyStack.Screen name="NoticeList" component={NoticeList} options={{header: props => <SimpleHeader {...props} />, title: '공지사항'}} />
+			<MyStack.Screen name="ServiceCenter" component={ServiceCenter} options={{header: props => <SimpleHeader {...props} />, title: '고객 센터'}} />
+			<MyStack.Screen name="CategoryHelp" component={CategoryHelp} options={{header: props => <AlarmAndSearchHeader {...props} />}} />
+			<MyStack.Screen name="ServiceTab" component={ServiceCenterTopTabNavigation} options={{header: props => <InputAndSearchHeader {...props} />}} />
+			<MyStack.Screen name="TermsAndPolicy" component={TermsAndPolicy} options={{header: props => <SimpleHeader {...props} />, title: '약관'}} />
+			<MyStack.Screen
+				name="CategoryHelpTab"
+				component={CategoryHelpTopTabNavigation}
+				options={{header: props => <InputAndSearchHeader {...props} />}}
+			/>
 		</MyStack.Navigator>
 	);
 };

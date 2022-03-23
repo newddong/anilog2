@@ -25,6 +25,10 @@ const UserNotePage = ({route}) => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState();
 	const [loading, setLoading] = React.useState(true);
+	const input = React.useRef();
+	const [content, setContent] = React.useState('');
+	const [sent, setSent] = React.useState(false);
+	console.log('data', data);
 	React.useEffect(() => {
 		getMemoBoxWithReceiveID(
 			{user_object_id: route.params._id},
@@ -37,7 +41,28 @@ const UserNotePage = ({route}) => {
 				console.log('err', err);
 			},
 		);
-	}, []);
+	}, [sent]);
+	const [heightReply, setReplyHeight] = React.useState(0);
+	const onReplyBtnLayout = e => {
+		setReplyHeight(e.nativeEvent.layout.height);
+	};
+	const onWrite = () => {
+		if (content.trim() == '') return Modal.popOneBtn('채팅을 입력하세요.', '확인', () => Modal.close());
+		createMemoBox(
+			{memobox_receive_id: route.params._id, memobox_contents: content},
+			result => {
+				console.log('message Sent', result);
+				setSent(!sent);
+			},
+			err => {
+				'message Sent err', err;
+			},
+		);
+	};
+	const onChangeReplyInput = text => {
+		setContent(text);
+	};
+
 	if (loading) {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
@@ -49,6 +74,9 @@ const UserNotePage = ({route}) => {
 			<View style={styles.container}>
 				<View style={styles.messageContainer}>
 					<NoteMessageList data={data} />
+				</View>
+				<View style={[{position: 'absolute', bottom: keyboardY}, {backgroundColor: WHITE}]} onLayout={onReplyBtnLayout}>
+					<ReplyWriteBox onWrite={onWrite} onChangeReplyInput={onChangeReplyInput} ref={input} value={input} isMessage={true} />
 				</View>
 			</View>
 		);

@@ -25,3 +25,14 @@ export async function createHelpByCategory(params, callback, errcallback) {
 export async function getHelpByCategoryDynamicQuery(params, callback, errcallback) {
 	apiController('/helpbycategory/getHelpByCategoryDynamicQuery', arguments);
 }
+
+/**
+ * 카테고리 제목 검색
+ * @param {object} params
+ * @param {string} params.searchKeyword - 검색 키워드
+ * @param {function} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getSearchHelpByCategoryList(params, callback, errcallback) {
+	apiController('/helpbycategory/getSearchHelpByCategoryList', arguments);
+}

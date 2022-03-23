@@ -113,11 +113,11 @@ export default ReceivedMessage = ({route}) => {
 			<View style={[styles.noteList, {height: null}]}>
 				<NoteList data={data} checkBoxMode={checkBoxMode} onClickLabel={onClickLabel} onCheckBox={onCheckBox} routeName={route.name} />
 			</View>
-			<View style={[styles.messageBtnContainer]}>
+			{/* <View style={[styles.messageBtnContainer]}>
 				<TouchableWithoutFeedback onPress={onPressSendMsg}>
 					<View style={[styles.messageActionButton]}>{checkBoxMode ? <Message94 /> : <Message94 />}</View>
 				</TouchableWithoutFeedback>
-			</View>
+			</View> */}
 		</View>
 	);
 };

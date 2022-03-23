@@ -24,7 +24,7 @@ import {MAINCOLOR} from 'Root/config/color';
 import {getTimeLapsed, parsingDate} from 'Root/util/dateutil';
 import HashText from 'Molecules/info/HashText';
 import Modal from 'Root/component/modal/Modal';
-import {followUser, getFollows, unFollowUser} from 'Root/api/userapi';
+import {createMemoBox, followUser, getAnimalListNotRegisterWithCompanion, getFollows, unFollowUser} from 'Root/api/userapi';
 import {favoriteFeed, getFavoriteFeedListByUserId} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import MissingReportInfo from 'Organism/info/MissingReportInfo';
@@ -189,12 +189,22 @@ export default FeedContent = props => {
 	};
 
 	//피드 미트볼 메뉴 - 쪽지 보내기
-	const onPressSendMsg = () => {
+	const onPressSendMsg = _id => {
 		Modal.close();
 		setTimeout(() => {
 			Modal.popMessageModal(
-				'주둥이',
+				_id.user_name,
 				msg => {
+					createMemoBox(
+						{memobox_receive_id: _id._id, memobox_contents: msg},
+						result => {
+							console.log('message sent success', result);
+							Modal.popOneBtn('쪽지 전송하였습니다.', '확인', () => Modal.close());
+						},
+						err => {
+							console.log('message sent err', err);
+						},
+					);
 					console.log('msg', msg);
 					Modal.close();
 				},
@@ -329,7 +339,7 @@ export default FeedContent = props => {
 									} else if (selectedItem == '팔로우 취소') {
 										onPressCancelFollow();
 									} else if (selectedItem == '쪽지 보내기') {
-										onPressSendMsg();
+										onPressSendMsg(context._id);
 									} else if (selectedItem == '즐겨찾기') {
 										onFavorite(true);
 									} else if (selectedItem == '즐겨찾기 취소') {
@@ -404,6 +414,7 @@ export default FeedContent = props => {
 			r => {
 				let context = {
 					favorite_feeds: r.msg,
+					_id: feed_writer_id,
 				};
 				meatballActions(context);
 			},

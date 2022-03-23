@@ -7,6 +7,7 @@ import {WHITE, APRI10} from 'Root/config/color';
 import InputWithSearchIcon from 'Molecules/input/InputWithSearchIcon';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import searchContext from 'Root/config/searchContext';
+import Modal from 'Root/component/modal/Modal';
 
 export default InputAndSearchHeader = props => {
 	// console.log('ConfirmInputHeader.', props.route);
@@ -16,18 +17,23 @@ export default InputAndSearchHeader = props => {
 	const [searchRoute, setSearchRoute] = React.useState('');
 
 	const confirm = () => {
-		// navigation.navigate('Search');
+		//헤더에서 작성한 인풋입력값을 템플릿에 전달
 		routeName != 'UserList' && props.navigation.setParams({searchInput: searchInput});
 	};
 
+	//전역변수값을 사용할 때 비동기처리를 거쳐야만 인풋값이 바뀐 값으로 제대로 인식됨
 	React.useEffect(() => {
+		// searchContext <== 검색 탭에서 사용되는 검색입력값정보
 		setTimeout(() => {
 			setSearchRoute(searchContext.searchInfo.routeName);
 		}, 0);
 	}, [props]);
 
 	React.useEffect(() => {
+		Modal.popLoading();
+		//500의 타임아웃은 타이핑의 시간에 텀을 주기 위함. 타임아웃이 없을 경우 각 초성 입력마다 검색을 실시함.
 		const timeOutId = setTimeout(() => {
+			//헤더에서 작성한 인풋입력값을 템플릿에 전달
 			props.navigation.setParams({searchInput: searchInput});
 			if (searchInput != '') {
 				props.navigation.setParams({searchInput: searchInput});
@@ -37,7 +43,6 @@ export default InputAndSearchHeader = props => {
 	}, [searchInput]);
 
 	const onChangeSearchText = text => {
-		// console.log('text', text);
 		// props.navigation.setParams({...props.route.params, searchInput: text});
 		setSearchInput(text);
 		searchContext.searchInfo.searchInput = text;

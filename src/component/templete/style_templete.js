@@ -1703,6 +1703,7 @@ export const addFamilyAccount_style = StyleSheet.create({
 	container: {
 		alignItems: 'center',
 		flex: 1,
+		backgroundColor: '#fff',
 	},
 	inputWithSearchIcon: {
 		marginTop: 20 * DP,
@@ -1719,7 +1720,7 @@ export const addFamilyAccount_style = StyleSheet.create({
 	},
 	listEmptyContainer: {
 		width: 654 * DP,
-		paddingVertical: 30 * DP,
+		paddingVertical: 70 * DP,
 		paddingHorizontal: 30 * DP,
 		alignItems: 'center',
 		// backgroundColor: 'yellow',

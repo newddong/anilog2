@@ -141,9 +141,11 @@ const ProfileInfo = props => {
 
 	//현재 프로필의 유저를 팔로우한다.
 	const follow = () => {
+		// console.log('data follw', data);
 		followUser(
 			{follow_userobject_id: data._id},
 			result => {
+				console.log('result', result);
 				setData({...data, is_follow: !result.msg.follow_is_delete, user_follower_count: data.user_follower_count + 1});
 			},
 			error => Modal.alert(error),
@@ -196,7 +198,7 @@ const ProfileInfo = props => {
 	};
 
 	const getShelterInfo = () => {
-		if (data.user_type == 'shelter') {
+		if (data.user_type == 'shelter' && data.shelter_address != undefined) {
 			return (
 				<View style={[profileInfo_style.shelter_info_container]}>
 					<Text style={[txt.noto28, {color: GRAY10}]}>{data.shelter_address.brief}</Text>

@@ -7,6 +7,7 @@ import CheckBox from 'Molecules/select/CheckBox';
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
 import {organism_style} from 'Organism/style_organism';
 import {controllableAccount} from 'Organism/style_organism copy';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 /**
  *
@@ -18,12 +19,14 @@ import {controllableAccount} from 'Organism/style_organism copy';
  * showCheckBox : boolean,
  * showCheckBox :boolean,
  * showButtons : boolean
+ * showFollowStatusText : boolean
  * }} props
  */
 export default ControllableAccount = props => {
 	// console.log('props.data', props.showButtons);
 	const [showCheckBox, setShowCheckBox] = React.useState(props.showCheckBox); // Label 좌측 CheckBox 출력 Boolean
 	const [showCrossMark, setShowCrossMark] = React.useState(props.showCrossMark); // 팔로잉 버튼 우측 Cross 출력 Boolean
+	const isMyAccount = props.data._id == userGlobalObject.userInfo._id;
 
 	//팔로우 버튼 클릭
 	const onClickFollowBtn = () => {
@@ -45,6 +48,7 @@ export default ControllableAccount = props => {
 		props.onClickLabel(data);
 	};
 
+	// console.log('props.data.follow', props.data.follow);
 	return (
 		<View style={[controllableAccount.container]}>
 			{showCheckBox ? (
@@ -55,24 +59,28 @@ export default ControllableAccount = props => {
 				false
 			)}
 			<View style={[showCheckBox || showCrossMark ? controllableAccount.userDescriptionLabel_checked : controllableAccount.userDescriptionLabel]}>
-				<UserDescriptionLabel data={props.data} onClickLabel={onClickLabel} width={480} />
+				<UserDescriptionLabel data={props.data} onClickLabel={onClickLabel} width={480} showFollowStatusText={props.showFollowStatusText} />
 			</View>
-			{props.showButtons ? (
+			{props.showButtons && !isMyAccount ? (
 				<View style={[controllableAccount.rightContainer]}>
 					<View style={[controllableAccount.btn_w108_controllableAccount]}>
 						{props.data.follow ? (
-							<AniButton btnTitle={'팔로우'} btnLayout={btn_w108} onPress={onClickFollowBtn} />
-						) : (
 							<AniButton btnTitle={'팔로잉'} btnLayout={btn_w108} btnStyle={'border'} onPress={onClickUnFollowBtn} />
+						) : (
+							<AniButton btnTitle={'팔로우'} btnLayout={btn_w108} onPress={onClickFollowBtn} />
 						)}
 					</View>
 					{showCrossMark ? (
 						<View style={[organism_style.cross46, controllableAccount.cross46]}>
 							<Cross46 onPress={onPressCrossMark} />
 						</View>
-					) : null}
+					) : (
+						<></>
+					)}
 				</View>
-			) : null}
+			) : (
+				<></>
+			)}
 		</View>
 	);
 };
@@ -84,4 +92,5 @@ ControllableAccount.defaultProps = {
 	showCrossMark: false,
 	showCheckBox: false,
 	showButtons: false,
+	showFollowStatusText: false,
 };

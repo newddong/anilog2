@@ -5,28 +5,33 @@ import {txt} from 'Root/config/textstyle';
 import {searchHashTag, temp_style} from 'Templete/style_templete';
 import {getHashKeywords} from 'Root/api/hashapi';
 import searchContext from 'Root/config/searchContext';
+import Modal from 'Root/component/modal/Modal';
 
-export default SearchHashTag = props => {
+export default SearchHashTag = React.memo((props, ref) => {
 	// console.log('searchInput / SearchHashTag : ', props.search.searchInput);
 
 	const [findList, setFindList] = React.useState([]);
 
 	React.useEffect(() => {
-		console.log('SearchInput / SearchHashTag ', searchContext.searchInfo.searchInput);
 		if (searchContext.searchInfo.searchInput != 'false') {
-			setFindList([]);
-			getHashKeywords(
-				{
-					hashtag_keyword: searchContext.searchInfo.searchInput,
-				},
-				result => {
-					console.log('hash editing', result.msg.length);
-					setFindList(result.msg);
-				},
-				error => {
-					console.log(error);
-				},
-			);
+			// setFindList([]);
+			// getHashKeywords(
+			// 	{
+			// 		hashtag_keyword: searchContext.searchInfo.searchInput,
+			// 	},
+			// 	result => {
+			// 		console.log('hash editing', result.msg.length);
+			// 		setFindList(result.msg);
+			// 		Modal.close();
+			// 	},
+			// 	error => {
+			// 		console.log(error);
+			// 		if (err == '검색 결과가 없습니다.') {
+			// 			setSearchedList([]);
+			// 			Modal.close();
+			// 		}
+			// 	},
+			// );
 		}
 	}, [searchContext.searchInfo.searchInput]);
 
@@ -55,11 +60,11 @@ export default SearchHashTag = props => {
 		<View style={[searchHashTag.container, {backgroundColor: 'white'}]}>
 			{/* // 검색 내역이 존재할 경우 API를 통해 받아온 내역 출력 */}
 
-			{findList.length != [] ? (
+			{props.data.length != 0 ? (
 				<ScrollView horizontal={false} contentContainerStyle={{flex: 1}} showsVerticalScrollIndicator={false}>
 					<ScrollView horizontal={true} scrollEnabled={false}>
 						<View style={[temp_style.hashTagList]}>
-							<AccountHashList data={findList} showFollowBtn={false} onClickLabel={onClickHashTag} onClickHash={hashSelect} />
+							<AccountHashList data={props.data} showFollowBtn={false} onClickLabel={onClickHashTag} onClickHash={hashSelect} />
 						</View>
 					</ScrollView>
 				</ScrollView>
@@ -80,4 +85,4 @@ export default SearchHashTag = props => {
 			)}
 		</View>
 	);
-};
+});

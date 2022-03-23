@@ -6,30 +6,36 @@ import {assignPet, getUserListByNickname, setPetStatus} from 'Root/api/userapi';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 import dp from 'Root/config/dp';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default SelectAccount = ({route, navigation}) => {
 	const [data, setData] = React.useState([]);
 
 	React.useEffect(() => {
 		console.log('searchInput / SelectAccount', route.params.searchInput);
-		if (route.params?.searchInput != '') {
-			getUserListByNickname(
-				{
-					user_nickname: route.params.searchInput,
-					request_number: '',
-					userobject_id: '',
-					user_type: 'user',
-				},
-				result => {
-					// console.log('result / getUserListByUserNickname / SelectAccount  ', result.msg);
-
-					setData(result.msg);
-				},
-				err => {
-					console.log('err / getUserListByUserNickname / SelectAccount  ', err);
-				},
-			);
-		}
+		// if (route.params?.searchInput != '') {
+		Modal.popLoading();
+		getUserListByNickname(
+			{
+				user_nickname: route.params.searchInput,
+				request_number: '',
+				userobject_id: '',
+				user_type: 'user',
+			},
+			result => {
+				// console.log('result / getUserListByUserNickname / SelectAccount  ', result.msg);
+				Modal.close();
+				let filtered = result.msg;
+				let removeMine = result.msg.findIndex(e => e.user_nickname == userGlobalObject.userInfo.user_nickname);
+				removeMine == -1 ? false : filtered.splice(removeMine, 1);
+				setData(filtered);
+			},
+			err => {
+				console.log('err / getUserListByUserNickname / SelectAccount  ', err);
+				Modal.close();
+			},
+		);
+		// }
 	}, [route.params?.searchInput]);
 
 	const onSelect = (item, index) => {

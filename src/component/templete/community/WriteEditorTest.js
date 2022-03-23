@@ -26,7 +26,6 @@ const WriteEditorTest = () => {
 
 	const onChange = editorData => {
 		console.log('editorData', editorData);
-
 		setData(editorData);
 	};
 
@@ -86,13 +85,12 @@ const WriteEditorTest = () => {
 	async function changePath(src) {
 		return new Promise(async function (resolve, reject) {
 			try {
-				console.log('src', src);
 				changeLocalPathToS3Path(
 					{
-						s3path: src,
+						s3path_uri: src,
 					},
 					result => {
-						console.log('result / s3path / Write ', result.msg);
+						// console.log('result / s3path / Write ', result.msg);
 						resolve(result.msg);
 					},
 					err => {
@@ -107,26 +105,14 @@ const WriteEditorTest = () => {
 	}
 
 	const insertImage = async imageList => {
-		const sec = 'https://ichef.bbci.co.uk/news/660/cpsprodpb/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg';
 		data != 'false' ? richText.current?.insertHTML('<p><br/></p></div>') : false; //이미지를 넣을 시 바로 다음줄로 이동하도록 처리
-
 		//이미지 입력
-		console.log('imageList', imageList);
-		// imageList.map((v, i) => {
-		// 	richText.current?.insertImage(v, 'margin: 0.2em auto 0.2em; ');
-		// });
-		// richText.current?.insertImage(sec, 'margin: 0.2em auto 0.2em; width:200px; height:200px;  ');
-		const er = [
-			'FAFA055F-AA9D-4F2B-B34E-C9F9DC1B1C25.jpg',
-			// 'file:///Users/sangwoo/Library/Developer/CoreSimulator/Devices/CF9EEFF7-5DB8-4052-B8E3-F7C49AD98B82/data/Containers/Data/Application/D879842E-A155-4CBF-8F59-B1D69F7B8C71/tmp/FAFA055F-AA9D-4F2B-B34E-C9F9DC1B1C25.jpg',
-			// 'file:///Users/sangwoo/Library/Developer/CoreSimulator/Devices/CF9EEFF7-5DB8-4052-B8E3-F7C49AD98B82/data/Containers/Data/Application/D879842E-A155-4CBF-8F59-B1D69F7B8C71/tmp/FAFA055F-AA9D-4F2B-B34E-C9F9DC1B1C25.jpg',
-		];
-		const result = await changePath(er);
-		console.log('result', result);
-		// richText.current?.insertImage(er[1], 'margin: 0.2em auto 0.2em; width:200px; height:200px; ');
-		// richText.current?.insertImage(sec, 'margin: 0.2em auto 0.2em; width:200px; height:200px; ');
-
-		// data != 'false' ? richText.current?.insertHTML('<p><br/></p></div>') : false; //이미지를 넣을 시 바로 다음줄로 이동하도록 처리
+		const result = await changePath(imageList);
+		result.map((v, i) => {
+			richText.current?.insertImage(v.location, 'margin: 0.2em auto 0.2em; width:200px; height:200px; ');
+		});
+		richText.current?.insertImage(sec, 'margin: 0.2em auto 0.2em; width:200px; height:200px; ');
+		data != 'false' ? richText.current?.insertHTML('<p><br/></p></div>') : false; //이미지를 넣을 시 바로 다음줄로 이동하도록 처리
 		richText.current?.focusContentEditor();
 	};
 

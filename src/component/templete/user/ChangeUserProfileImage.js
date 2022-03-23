@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import {BackHandler, ScrollView, Text, View} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {AVAILABLE_NICK, DEFAULT_PROFILE, NEW_NICK_REQUEST, NEW_NICK_TITLE, NICKNAME_FORM, PREVIOUS_NICK_TITLE, UNAVAILABLE_NICK} from 'Root/i18n/msg';
 import {btn_w654} from 'Atom/btn/btn_style';
@@ -15,16 +15,12 @@ import ImagePicker from 'react-native-image-crop-picker';
 
 export default ChangeUserProfileImage = ({route}) => {
 	// console.log('route / Profile', route.params);
-	console.log('changeUser', route.params.data._id);
 	const [data, setData] = React.useState(route.params.data);
 	const [newNick, setNewNick] = React.useState(route.params.data.user_nickname);
 	const navigation = useNavigation();
 	const [confirmed, setConfirmed] = React.useState(false);
 	const [duplicated, setDuplicated] = React.useState(false);
 	const [validateted, setValidated] = React.useState(false);
-	// const [changed, setChanged] = React.useState(false);
-
-	// React.useEffect(() => {}, [changed]);
 
 	const onConfirmed = () => {
 		console.log('duplic', duplicated);
@@ -43,11 +39,9 @@ export default ChangeUserProfileImage = ({route}) => {
 				success => {
 					Modal.close();
 					if (route.params.routeInfo.name.name == 'UserProfile') {
-						navigation.navigate('FEED', {
-							screen: 'UserProfile',
-							params: {
-								userobject: data._id,
-							},
+						navigation.reset({
+							index: 0,
+							routes: [{name: 'UserMenu'}],
 						});
 					} else {
 						navigation.navigate({

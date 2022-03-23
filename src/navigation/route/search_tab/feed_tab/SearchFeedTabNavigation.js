@@ -9,19 +9,102 @@ import {APRI10, GRAY10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import searchContext from 'Root/config/searchContext';
+import {getUserListByNickname} from 'Root/api/userapi';
+import userGlobalObject from 'Root/config/userGlobalObject';
+import Modal from 'Root/component/modal/Modal';
+import {getHashKeywords} from 'Root/api/hashapi';
 
 const SearchFeedTabNav = createMaterialTopTabNavigator();
 
 export default SearchFeedTabNavigation = props => {
+	const [userList, setUserList] = React.useState('false');
+	const [hashList, setHashList] = React.useState('false');
 	const onClickUser = sendUserobject => {
 		props.onClickUser(sendUserobject);
 	};
 
-	const routeName = getFocusedRouteNameFromRoute(props.route);
+	const routeName = getFocusedRouteNameFromRoute(props.route); //현재 보고 있는 템플릿
 
+	//현재 보고 있느 화면이 SearchFeed일 경우 헤더를 가리기 위한 처리
 	React.useEffect(() => {
 		searchContext.searchInfo.routeName = routeName;
 	}, [routeName]);
+
+	//검색탭 헤더의 인풋값이 바뀔 때마다 계정과 해쉬를 받아오는 api에 접속
+	React.useEffect(() => {
+		async function fetchData() {
+			Modal.popLoading(); // 값이 입력되면 우선 로딩
+			if (searchContext.searchInfo.searchInput != '') {
+				const user = await getUserList();
+				const hash = await getHashList();
+				setUserList(user);
+				setHashList(hash);
+				Modal.close(); // 값을 넣어주고 모달 종료
+			} else {
+				setUserList([]);
+				setHashList([]);
+				Modal.close(); //빈 값인 경우에도 초기화시키고 모달 종료
+			}
+		}
+		fetchData(); // effect Hook에서 async await 구문을 쓰기 위한 처리
+	}, [searchContext.searchInfo.searchInput]);
+
+	//검색된 입력값과 일치하는 계정 리스트 받아오기
+	const getUserList = async () => {
+		return new Promise(async function (resolve, reject) {
+			try {
+				getUserListByNickname(
+					{
+						user_nickname: searchContext.searchInfo.searchInput,
+						request_number: '',
+						userobject_id: '',
+						user_type: '',
+					},
+					result => {
+						// console.log('result', result.msg.length);
+						let filtered = result.msg;
+						let removeMine = result.msg.findIndex(e => e.user_nickname == userGlobalObject.userInfo.user_nickname);
+						removeMine == -1 ? false : filtered.splice(removeMine, 1); // 자기 계정은 출력 안되도록
+						resolve(filtered);
+					},
+					err => {
+						console.log('err /getUserListByNickname /  ', err);
+						if (err == '검색 결과가 없습니다.') {
+							resolve([]);
+						}
+					},
+				);
+			} catch (error) {
+				console.log('error getRoadAddr  :  ', error.message);
+				Modal.close(); //오류발생 시 로딩 모달 종료
+			}
+		});
+	};
+
+	const getHashList = async () => {
+		return new Promise(async function (resolve, reject) {
+			try {
+				getHashKeywords(
+					{
+						hashtag_keyword: searchContext.searchInfo.searchInput,
+					},
+					result => {
+						// console.log('hash editing', result.msg.length);
+						resolve(result.msg);
+					},
+					error => {
+						console.log(error);
+						if (error == '검색 결과가 없습니다.') {
+							resolve([]);
+						}
+					},
+				);
+			} catch (error) {
+				console.log('error getHashList  :  ', error.message);
+				Modal.close(); //오류발생 시 로딩 모달 종료
+			}
+		});
+	};
 
 	return (
 		<SearchFeedTabNav.Navigator
@@ -37,10 +120,10 @@ export default SearchFeedTabNavigation = props => {
 				{props => <SearchFeed {...props} prevNav={props.prevNav} />}
 			</SearchFeedTabNav.Screen>
 			<SearchFeedTabNav.Screen name="SearchAccountA" options={{title: '계정'}}>
-				{props => <SearchAccountA {...props} prevNav={props.prevNav} onClickUser={onClickUser} />}
+				{props => <SearchAccountA {...props} prevNav={props.prevNav} data={userList} onClickUser={onClickUser} />}
 			</SearchFeedTabNav.Screen>
 			<SearchFeedTabNav.Screen name="SearchHashTag" options={{title: '해쉬태그'}}>
-				{props => <SearchHashTag {...props} />}
+				{props => <SearchHashTag data={hashList} {...props} />}
 			</SearchFeedTabNav.Screen>
 		</SearchFeedTabNav.Navigator>
 	);

@@ -3,6 +3,7 @@ import {Text, View, TouchableWithoutFeedback, ViewPropTypes} from 'react-native'
 import {txt} from 'Root/config/textstyle';
 import {socialInfoA} from 'Organism/style_organism copy';
 import {useNavigation} from '@react-navigation/core';
+import {count_to_K} from 'Root/util/stringutil';
 
 export default SocialInfoA = props => {
 	// console.log('SocialInfo', props);
@@ -10,18 +11,6 @@ export default SocialInfoA = props => {
 
 	const moveToSocialRelation = () => {
 		navigation.push('SocialRelation', {userobject: props.data});
-	};
-
-	const count_to_K = cnt => {
-		if (cnt > 1000000) {
-			let count = (cnt / 1000000).toFixed(0) + 'm';
-			return count;
-		} else if (cnt > 1000) {
-			let count = (cnt / 1000).toFixed(1) + 'k';
-			return count;
-		} else {
-			return cnt;
-		}
 	};
 
 	return (

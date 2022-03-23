@@ -19,55 +19,62 @@ import {GRAY10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {getFeedListByUserId, getUserTaggedFeedList} from 'Root/api/feedapi';
 import {useNavigation} from '@react-navigation/core';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 export default Profile = ({route}) => {
 	const navigation = useNavigation();
-	const [data, setData] = React.useState({...route.params?.userobject, feedList: []}); //라벨을 클릭한 유저의 userObject data
+	const [data, setData] = React.useState(''); //라벨을 클릭한 유저의 userObject data
 	const [feedList, setFeedList] = React.useState([]);
 	const [tabMenuSelected, setTabMenuSelected] = React.useState(0); //프로필 Tab의 선택상태
 	const [showOwnerState, setShowOwnerState] = React.useState(false); // 현재 로드되어 있는 profile의 userType이 Pet인 경우 반려인 계정 리스트의 출력 여부
 	const [showCompanion, setShowCompanion] = React.useState(false); // User계정이 반려동물버튼을 클릭
 	// console.log('tabMenuselc', tabMenuSelected);
 
-	const getProfileInfo = () => {
-		getUserProfile(
-			{
-				userobject_id: route.params.userobject._id,
-			},
-			result => {
-				navigation.setOptions({title: result.msg.user_nickname, data: result.msg});
-				setData(result.msg);
-				// console.log('getUserProfileResult', result.msg);
-			},
-			err => {
-				Modal.popOneBtn(err, '확인', () => {
-					Modal.close();
-					navigation.goBack();
-				});
-			},
-		);
+	const getProfileInfo = async () => {
+		return new Promise(async function (resolve, reject) {
+			try {
+				getUserProfile(
+					{
+						userobject_id: route.params.userobject._id,
+					},
+					result => {
+						navigation.setOptions({title: result.msg.user_nickname, data: result.msg});
+						resolve(result.msg);
+						console.log('is_follow', result.msg.is_follow);
+					},
+					err => {
+						Modal.popOneBtn(err, '확인', () => {
+							Modal.close();
+							navigation.goBack();
+						});
+					},
+				);
+			} catch (error) {
+				console.log('error getRoadAddr  :  ', error.message);
+				Modal.close(); //오류발생 시 로딩 모달 종료
+			}
+		});
 	};
-	React.useEffect(() => {
+
+	const fetchData = async () => {
 		if (route.params && route.params.userobject) {
-			getProfileInfo();
+			const res = await getProfileInfo();
+			setData(res);
 		} else {
 			Modal.popOneBtn('존재하지 않는 유저입니다.', '확인', () => {
 				Modal.close();
 				navigation.goBack();
 			});
 		}
-	}, []);
+	};
 
 	React.useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', () => {
-			if (route.params && route.params.userobject) {
-				getProfileInfo();
-			} else {
-				Modal.popOneBtn('존재하지 않는 유저입니다.', '확인', () => {
-					Modal.close();
-					navigation.goBack();
-				});
-			}
+		fetchData();
+	}, [navigation]);
+
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', async () => {
+			fetchData();
 		});
 		return unsubscribe;
 	}, []);
@@ -221,13 +228,7 @@ export default Profile = ({route}) => {
 		if (data.user_type == PET && showOwnerState) {
 			// 반려인 계정
 			return (
-				<Animated.View
-					style={[
-						profile.petList,
-						{
-							height: animatedHeight,
-						},
-					]}>
+				<Animated.View style={[profile.petList, {height: animatedHeight}]}>
 					<OwnerList items={data.pet_family} onClickLabel={onClickOwnerLabel} />
 				</Animated.View>
 			);
@@ -248,13 +249,7 @@ export default Profile = ({route}) => {
 	};
 
 	const onPressEditProfile = () => {
-		navigation.navigate('MY', {
-			screen: 'ChangeUserProfileImage',
-			params: {
-				data: data,
-				routeInfo: {name: route},
-			},
-		});
+		navigation.push('ChangeUserProfileImage', {data: data, routeInfo: route});
 	};
 
 	const userProfileInfo = () => {
@@ -342,14 +337,22 @@ export default Profile = ({route}) => {
 
 	return (
 		<View style={[login_style.wrp_main, profile.container]}>
-			{showTabContent()}
-			{userGlobalObject.userInfo && (
-				<View style={[{width: 94 * DP}, {height: 94 * DP}, profile.floatingBtn, {alignItems: 'center'}, {justifyContent: 'center'}]}>
-					{data.user_type == 'pet' ? <Message94 onPress={onPressSendMsg} /> : <Write94 onPress={moveToFeedWrite} />}
-				</View>
-				// <View style={[temp_style.floatingBtn, profile.floatingBtn, {alignItems: 'center'}, {justifyContent: 'center'}, {backgroundColor: 'yellow'}]}>
-				// 	{data.user_type == 'pet' ? <Message94 onPress={onPressSendMsg} /> : <Write94 onPress={moveToFeedWrite} />}
-				// </View>
+			{data != '' ? (
+				<>
+					{showTabContent()}
+					{userGlobalObject.userInfo && (
+						<View style={[{width: 94 * DP}, {height: 94 * DP}, profile.floatingBtn, {alignItems: 'center'}, {justifyContent: 'center'}]}>
+							{data.user_type == 'pet' ? <Message94 onPress={onPressSendMsg} /> : <Write94 onPress={moveToFeedWrite} />}
+						</View>
+						// <View style={[temp_style.floatingBtn, profile.floatingBtn, {alignItems: 'center'}, {justifyContent: 'center'}, {backgroundColor: 'yellow'}]}>
+						// 	{data.user_type == 'pet' ? <Message94 onPress={onPressSendMsg} /> : <Write94 onPress={moveToFeedWrite} />}
+						// </View>
+					)}
+				</>
+			) : (
+				<>
+					<Loading isModal={false} />
+				</>
 			)}
 		</View>
 	);

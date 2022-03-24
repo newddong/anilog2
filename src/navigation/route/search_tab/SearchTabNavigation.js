@@ -5,21 +5,23 @@ import {Dimensions, StyleSheet} from 'react-native';
 import {APRI10, GRAY10, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import SearchCommunityTabNavigation from './community_tab/SearchCommunityTabNavigation';
+import {CommonActions} from '@react-navigation/native';
 
 const SearchTabNav = createMaterialTopTabNavigator();
 
 export default SearchTabNavigation = props => {
 	// navigation.push('Search', {mother: 0, child: 1});
 	// ㄴ 위와 같이 호출할 경우 mother는 상위TopTab의 Tab인덱스를, child는 하단TopTab의 인덱스를 설정해줄 수 있음.
-	const prevNav = props.route.params.prevNav;
+	// const prevNav = props.route.params.prevNav;
 	const [searchInput, setSearchInput] = React.useState('');
 
 	const onClickUser = sendUserobject => {
+		props.navigation.navigate('SearchTabUserProfile', {userobject: sendUserobject});
 		// console.log('prevNav', prevNav);
 		// console.log('sendUserobject', sendUserobject);
-		prevNav == 'ProtectionTab'
-			? props.navigation.navigate('ProtectionTabUserProfile', {userobject: sendUserobject})
-			: props.navigation.navigate('FeedUserProfile', {userobject: sendUserobject});
+		// prevNav == 'ProtectionTab'
+		// ? props.navigation.navigate('ProtectionTabUserProfile', {userobject: sendUserobject})
+		// : props.navigation.navigate('FeedUserProfile', {userobject: sendUserobject});
 		// props.onClickUser();
 	};
 

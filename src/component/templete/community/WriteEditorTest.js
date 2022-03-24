@@ -1,12 +1,12 @@
 import React from 'react';
-import {Text, Platform, KeyboardAvoidingView, SafeAreaView, ScrollView, View, Image, TouchableOpacity, StyleSheet} from 'react-native';
-import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
+import {ScrollView, View, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import Modal from 'Root/component/modal/Modal';
-import {APRI10, BLACK, BLUE10, BLUE20, GRAY10, GRAY30, GRAY40, WHITE} from 'Root/config/color';
+import {APRI10, GRAY40} from 'Root/config/color';
 import {launchImageLibrary} from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import WebView from 'react-native-webview';
 import {changeLocalPathToS3Path} from 'Root/api/community';
+import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
 
 // Manual - https://github.com/wxik/react-native-rich-editor
 // 1. 가능한 기능 - 이미지 넣기, 글자 Bold, 글자 기울기, 링크추가, 글자 가운데줄 추가, 언더라인 추가, 비디오 추가, 라디오박스 추가, 작업되돌리기, 작업 앞으로 돌리기
@@ -111,7 +111,6 @@ const WriteEditorTest = () => {
 		result.map((v, i) => {
 			richText.current?.insertImage(v.location, 'margin: 0.2em auto 0.2em; width:200px; height:200px; ');
 		});
-		richText.current?.insertImage(sec, 'margin: 0.2em auto 0.2em; width:200px; height:200px; ');
 		data != 'false' ? richText.current?.insertHTML('<p><br/></p></div>') : false; //이미지를 넣을 시 바로 다음줄로 이동하도록 처리
 		richText.current?.focusContentEditor();
 	};

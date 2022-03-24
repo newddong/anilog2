@@ -32,10 +32,13 @@ import {useNavigation} from '@react-navigation/core';
  * @param {()=>void} props.onPressAddPetBtn - 보호소 계정(계정 주인)의 보호동물 추가 버튼 클릭
  * @param {()=>void} props.onPressAddArticleBtn - 보호소 계정(계정 주인)의 보호요청 게시글 추가 버튼 클릭
  * @param {()=>void} props.onPressEditProfile - 일반 혹은 보호소 계정(계정 주인)의 프로필 수정 버튼 클릭
+ * @param {()=>void} props.onPressUnFollow - 팔로우 중 버튼 클릭 =>  팔로우취소 버튼 클릭
+ * @param {()=>void} props.onPressFollow - 팔로우 버튼 클릭
  */
 const ProfileInfo = props => {
 	const [data, setData] = React.useState(props.data);
 	const navigation = useNavigation();
+	console.log('is Follow', data.is_follow);
 
 	const [showMore, setShowMore] = React.useState(false); // 프로필 Description 우측 더보기 클릭 State
 	const [ownerListState, setOwnerListState] = React.useState(false); // userType이 Pet일 경우 반려인계정 출력 여부 T/F
@@ -135,21 +138,9 @@ const ProfileInfo = props => {
 		}
 	};
 
-	// React.useEffect(() => {
-	// 	setData(props.data); //부모에서 props가 비동기로 바뀌었을때 반영하기위함
-	// }, [props.data]);
-
 	//현재 프로필의 유저를 팔로우한다.
-	const follow = () => {
-		// console.log('data follw', data);
-		followUser(
-			{follow_userobject_id: data._id},
-			result => {
-				console.log('result', result);
-				setData({...data, is_follow: !result.msg.follow_is_delete, user_follower_count: data.user_follower_count + 1});
-			},
-			error => Modal.alert(error),
-		);
+	const onPressFollow = () => {
+		props.onPressFollow();
 	};
 
 	const socialAction = (v, i) => {
@@ -171,12 +162,27 @@ const ProfileInfo = props => {
 	};
 
 	const onPressFollowingSetting = () => {
-		let isProtectingPet = userGlobalObject.userInfo.user_my_pets.includes(data._id) || data.pet_status == 'protect';
+		let isProtectingPet = data.pet_status == 'protect' || userGlobalObject.userInfo.user_my_pets.includes(data._id);
 		Modal.popSelectBoxModal(
 			isProtectingPet ? FOLLOWER_PET_MENU : FOLLOWER_MENU,
 			selectedItem => {
-				alert(selectedItem);
-				Modal.close();
+				switch (selectedItem) {
+					case '즐겨찾기 추가':
+						console.log('즐겨찾기 추가');
+						break;
+					case '소식 받기':
+						console.log('소식받기');
+						break;
+					case '차단':
+						console.log('차단');
+						break;
+					case '팔로우 취소':
+						Modal.close();
+						props.onPressUnFollow();
+						break;
+					default:
+						break;
+				}
 			},
 			() => Modal.close(),
 			true,
@@ -257,12 +263,12 @@ const ProfileInfo = props => {
 			{/* 프로필 관련 버튼 */}
 			<View style={[organism_style.btn_w280_view_profileInfo, profileInfo_style.btn_w280_view]}>
 				<View style={[organism_style.btn_w280_profileInfo]}>
-					{userGlobalObject.userInfo._id == data._id ? (
+					{userGlobalObject.userInfo._id == data._id ? ( //본인 계정이라면 프로필 수정 버튼
 						<AniButton onPress={onPressEditProfile} btnTitle={'프로필 수정'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} />
-					) : data.is_follow ? (
+					) : data.is_follow ? ( // 타인 계정이며 팔로우 중이라면 '팔로우 중' OR '팔로우'
 						<ArrowDownButton btnTitle={'팔로우 중'} btnLayout={btn_w280x68} onPress={onPressFollowingSetting} />
 					) : (
-						<AniButton btnTitle={'팔로우'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} onPress={follow} />
+						<AniButton onPress={onPressFollow} btnTitle={'팔로우'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} />
 					)}
 				</View>
 				<View style={[]}>{getButton()}</View>
@@ -280,5 +286,7 @@ ProfileInfo.defaultProps = {
 	onPressAddPetBtn: e => {},
 	onPressAddArticleBtn: e => {},
 	onPressEditProfile: () => {},
+	onPressFollow: () => {},
+	onPressUnFollow: () => {},
 };
 export default ProfileInfo;

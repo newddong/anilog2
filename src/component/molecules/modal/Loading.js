@@ -11,38 +11,43 @@ import DP from 'Root/config/dp';
  *
  * @param {Object} props - props object
  * @param {boolean} props.isModal - 모달인지 여부
+ * @param {number} props.height - 컴포넌트 형식일 경우 height
  *
  */
 const Loading = props => {
-	return (
+	return props.isModal ? (
 		<View
 			style={[
 				style.background,
 				{
-					backgroundColor: props.isModal ? '#0009' : 'white',
+					backgroundColor: '#0009',
 				},
 			]}>
-			{Platform.OS == 'android' ? (
-				<FastImage
-					style={{width: 200, height: 200}}
-					source={{
-						uri: 'https://i.imgur.com/u94DlJb.gif',
-						headers: {Authorization: 'someAuthToken'},
-						priority: FastImage.priority.normal,
-					}}
-					resizeMode={FastImage.resizeMode.contain}
-				/>
-			) : (
-				<FastImage
-					style={{width: 200, height: 200}}
-					source={{
-						uri: 'https://i.imgur.com/u94DlJb.gif',
-						headers: {Authorization: 'someAuthToken'},
-						priority: FastImage.priority.normal,
-					}}
-					resizeMode={FastImage.resizeMode.contain}
-				/>
-			)}
+			<FastImage
+				style={{width: 200, height: 200}}
+				source={{
+					uri: 'https://i.imgur.com/u94DlJb.gif',
+					headers: {Authorization: 'someAuthToken'},
+					priority: FastImage.priority.normal,
+				}}
+				resizeMode={FastImage.resizeMode.contain}
+			/>
+		</View>
+	) : (
+		<View
+			style={[
+				style.background,
+				{
+					backgroundColor: '#fff',
+					justifyContent: 'flex-start',
+					flex: 1,
+				},
+			]}>
+			<FastImage
+				style={{width: 200, height: 200}}
+				source={Image.resolveAssetSource(require('Atom/icon/loading_dense.gif'))}
+				resizeMode={FastImage.resizeMode.contain}
+			/>
 		</View>
 	);
 };
@@ -50,6 +55,7 @@ const Loading = props => {
 Loading.defaultProps = {
 	popUpMsg: 'popUp',
 	isModal: true,
+	height: 700 * DP,
 };
 
 const style = StyleSheet.create({

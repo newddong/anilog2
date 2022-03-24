@@ -30,7 +30,6 @@ export default InputAndSearchHeader = props => {
 	}, [props]);
 
 	React.useEffect(() => {
-		Modal.popLoading();
 		//500의 타임아웃은 타이핑의 시간에 텀을 주기 위함. 타임아웃이 없을 경우 각 초성 입력마다 검색을 실시함.
 		const timeOutId = setTimeout(() => {
 			//헤더에서 작성한 인풋입력값을 템플릿에 전달

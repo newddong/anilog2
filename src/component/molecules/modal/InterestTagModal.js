@@ -16,6 +16,7 @@ import {btn_w242, btn_w280, btn_w280x68} from 'Root/component/atom/btn/btn_style
  * @param {object} data - 관심사 추가할 계정 object(반려동물 혹은 유저)
  * @param {(selectedData)=>void)} onSave - 저장 버튼 클릭 콜백 / 선택된 항목의 오브젝트( ex : 지역, 미용, 놀이, 건강 등)
  * @param {()=>void)} onClose - 페이지 좌상단 x버튼 클릭 / 종료 콜백
+ * @param {(selectedItems:object)=>void)} setState - 선택 목록
  *
  */
 const InterestTagModal = props => {
@@ -25,7 +26,7 @@ const InterestTagModal = props => {
 
 	const [userInterestContent, setUserInterestContent] = React.useState([]);
 	const [userInterestLocation, setUserInterestLocation] = React.useState([]);
-	const [userInterestReview, setUserInterestReview] = React.useState([]);
+	const [userInterestReview, setUserInterestReview] = React.useState(props.data);
 	const [isSaved, setIsSaved] = React.useState(false); // '저장하지 않고 나가시겠습니까?' 메시지 출력 여부 판별
 	const [showBtnModal, setShowBtnModal] = React.useState(false); //모달창 대체 View 출력 여부
 	const [addressList, setAddressList] = React.useState([]);
@@ -40,37 +41,6 @@ const InterestTagModal = props => {
 	const [activityLists, setActivityLists] = React.useState([]);
 
 	React.useEffect(() => {
-		var tempUserInterestContentList = [];
-		var tempUserInterestLocationList = [];
-
-		//유저 관심사 목록 DB에서 받아오기
-		getInterestsList({}, interests => {
-			var acitivityList = [];
-			const nameList = {interests_beauty: '미용', interests_activity: '놀이', interests_food: '사료&간식', interests_health: '건강'};
-			const interestObj = interests.msg[0];
-			const getinterest = Object.entries(interestObj).map((category, idx) => {
-				if (idx == 2) {
-					setAddressList(category[1]);
-				}
-				if (idx >= 3) {
-					acitivityList.push({category: nameList[category[0]], content: category[1]});
-				}
-			});
-			setActivityLists(acitivityList);
-		});
-		//현재 유저의 관심사 리스트를 목록들에 적용
-		const saveUserInterest = Object.entries(props.data).map(interest => {
-			console.log('object', interest);
-			if (props.isActivation) {
-				tempUserInterestContentList.push(interest[1]);
-			} else {
-				tempUserInterestLocationList.push(interest[1]);
-			}
-
-			console.log('아오..', tempUserInterestLocationList, tempUserInterestContentList);
-			setUserInterestContent(tempUserInterestContentList);
-			setUserInterestLocation(tempUserInterestLocationList);
-		});
 		if (props.category == 'Review') {
 			getAddressList(
 				{},
@@ -101,6 +71,38 @@ const InterestTagModal = props => {
 				},
 				err => console.log('err', err),
 			);
+		} else {
+			var tempUserInterestContentList = [];
+			var tempUserInterestLocationList = [];
+
+			//유저 관심사 목록 DB에서 받아오기
+			getInterestsList({}, interests => {
+				var acitivityList = [];
+				const nameList = {interests_beauty: '미용', interests_activity: '놀이', interests_food: '사료&간식', interests_health: '건강'};
+				const interestObj = interests.msg[0];
+				const getinterest = Object.entries(interestObj).map((category, idx) => {
+					if (idx == 2) {
+						setAddressList(category[1]);
+					}
+					if (idx >= 3) {
+						acitivityList.push({category: nameList[category[0]], content: category[1]});
+					}
+				});
+				setActivityLists(acitivityList);
+			});
+			//현재 유저의 관심사 리스트를 목록들에 적용
+			const saveUserInterest = Object.entries(props.data).map(interest => {
+				console.log('object', interest);
+				if (props.isActivation) {
+					tempUserInterestContentList.push(interest[1]);
+				} else {
+					tempUserInterestLocationList.push(interest[1]);
+				}
+
+				console.log('아오..', tempUserInterestLocationList, tempUserInterestContentList);
+				setUserInterestContent(tempUserInterestContentList);
+				setUserInterestLocation(tempUserInterestLocationList);
+			});
 		}
 	}, []);
 
@@ -118,40 +120,22 @@ const InterestTagModal = props => {
 	});
 
 	React.useEffect(() => {
-		if (selectCityOpen) {
-			Animated.timing(citySelectHeight, {
-				duration: 500,
-				toValue: 465 * DP,
-				// easing: Easing.linear,
-				useNativeDriver: false,
-			}).start();
-		} else if (!selectCityOpen) {
-			Animated.timing(citySelectHeight, {
-				duration: 500,
-				toValue: 0,
-				// easing: Easing.linear,
-				useNativeDriver: false,
-			}).start();
-		}
+		animateSelectModal(citySelectHeight, selectCityOpen);
 	}, [selectCityOpen]);
 
 	React.useEffect(() => {
-		if (selectDistrictOpen) {
-			Animated.timing(districtSelectHeight, {
-				duration: 500,
-				toValue: 465 * DP,
-				// easing: Easing.linear,
-				useNativeDriver: false,
-			}).start();
-		} else if (!selectDistrictOpen) {
-			Animated.timing(districtSelectHeight, {
-				duration: 500,
-				toValue: 0,
-				// easing: Easing.linear,
-				useNativeDriver: false,
-			}).start();
-		}
+		animateSelectModal(districtSelectHeight, selectDistrictOpen);
 	}, [selectDistrictOpen]);
+
+	const animateSelectModal = (kind, bool) => {
+		const toValue = bool ? 465 : 0;
+		Animated.timing(kind, {
+			duration: 500,
+			toValue: toValue * DP,
+			// easing: Easing.linear,
+			useNativeDriver: false,
+		}).start();
+	};
 
 	//관심 리뷰 태그를 클릭
 	const onPressInterestReviewTag = tag => {
@@ -197,7 +181,11 @@ const InterestTagModal = props => {
 		} else if (props.category == 'Location') {
 			props.setState(userInterestLocation);
 		} else {
-			props.setState(selectedCity + ' / ' + selectedDistrict + ' / ' + userInterestReview.toString());
+			props.setState({
+				selectedCity: selectedCity,
+				selectedDistrict: selectedDistrict,
+				userInterestReview: userInterestReview,
+			});
 		}
 		setIsSaved(true);
 		Modal.close();
@@ -257,7 +245,12 @@ const InterestTagModal = props => {
 		if (focused < 1) {
 			setSelectedItem(2);
 		} else {
-			setSelectedItem(focused + 2);
+			if (focused + 2 >= city.length - 2) {
+				// 마지막 배열을 넘어서서 스크롤을 할 경우 마지막으로 자동 회귀
+				setSelectedItem(city.length - 3);
+			} else {
+				setSelectedItem(focused + 2);
+			}
 		}
 	};
 
@@ -268,7 +261,12 @@ const InterestTagModal = props => {
 		if (focused < 1) {
 			setSelectedItem_dis(2);
 		} else {
-			setSelectedItem_dis(focused + 2);
+			if (focused + 2 >= district.length - 2) {
+				// 마지막 배열을 넘어서서 스크롤을 할 경우 마지막으로 자동 회귀
+				setSelectedItem_dis(district.length - 3);
+			} else {
+				setSelectedItem_dis(focused + 2);
+			}
 		}
 	};
 

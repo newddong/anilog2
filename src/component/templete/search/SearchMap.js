@@ -14,7 +14,7 @@ import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/core';
 import Loading from 'Root/component/molecules/modal/Loading';
 
-export default KakaoMap = props => {
+export default SearchMap = props => {
 	const navigation = useNavigation();
 
 	const [locationObj, setLocationObj] = useState(''); //현재 위치 주소

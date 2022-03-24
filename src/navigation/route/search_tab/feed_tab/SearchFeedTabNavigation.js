@@ -19,31 +19,28 @@ const SearchFeedTabNav = createMaterialTopTabNavigator();
 export default SearchFeedTabNavigation = props => {
 	const [userList, setUserList] = React.useState('false');
 	const [hashList, setHashList] = React.useState('false');
+	const [loading, setLoading] = React.useState(false);
+
 	const onClickUser = sendUserobject => {
 		props.onClickUser(sendUserobject);
 	};
 
-	const routeName = getFocusedRouteNameFromRoute(props.route); //현재 보고 있는 템플릿
-
-	//현재 보고 있느 화면이 SearchFeed일 경우 헤더를 가리기 위한 처리
-	React.useEffect(() => {
-		searchContext.searchInfo.routeName = routeName;
-	}, [routeName]);
+	searchContext.searchInfo.routeName = getFocusedRouteNameFromRoute(props.route); //현재 보고 있는 템플릿
 
 	//검색탭 헤더의 인풋값이 바뀔 때마다 계정과 해쉬를 받아오는 api에 접속
 	React.useEffect(() => {
 		async function fetchData() {
-			Modal.popLoading(); // 값이 입력되면 우선 로딩
+			setLoading(true);
 			if (searchContext.searchInfo.searchInput != '') {
 				const user = await getUserList();
 				const hash = await getHashList();
 				setUserList(user);
 				setHashList(hash);
-				Modal.close(); // 값을 넣어주고 모달 종료
+				setLoading(false);
 			} else {
 				setUserList([]);
 				setHashList([]);
-				Modal.close(); //빈 값인 경우에도 초기화시키고 모달 종료
+				setLoading(false);
 			}
 		}
 		fetchData(); // effect Hook에서 async await 구문을 쓰기 위한 처리
@@ -76,7 +73,6 @@ export default SearchFeedTabNavigation = props => {
 				);
 			} catch (error) {
 				console.log('error getRoadAddr  :  ', error.message);
-				Modal.close(); //오류발생 시 로딩 모달 종료
 			}
 		});
 	};
@@ -101,14 +97,13 @@ export default SearchFeedTabNavigation = props => {
 				);
 			} catch (error) {
 				console.log('error getHashList  :  ', error.message);
-				Modal.close(); //오류발생 시 로딩 모달 종료
 			}
 		});
 	};
 
 	return (
 		<SearchFeedTabNav.Navigator
-			initialRouteName="SearchFeed"
+			initialRouteName="SearchAccountA"
 			initialLayout={{width: Dimensions.get('window').width}}
 			optimizationsEnabled
 			screenOptions={{
@@ -120,10 +115,10 @@ export default SearchFeedTabNavigation = props => {
 				{props => <SearchFeed {...props} prevNav={props.prevNav} />}
 			</SearchFeedTabNav.Screen>
 			<SearchFeedTabNav.Screen name="SearchAccountA" options={{title: '계정'}}>
-				{props => <SearchAccountA {...props} prevNav={props.prevNav} data={userList} onClickUser={onClickUser} />}
+				{props => <SearchAccountA {...props} prevNav={props.prevNav} data={userList} loading={loading} onClickUser={onClickUser} />}
 			</SearchFeedTabNav.Screen>
 			<SearchFeedTabNav.Screen name="SearchHashTag" options={{title: '해쉬태그'}}>
-				{props => <SearchHashTag data={hashList} {...props} />}
+				{props => <SearchHashTag {...props} data={hashList} loading={loading} />}
 			</SearchFeedTabNav.Screen>
 		</SearchFeedTabNav.Navigator>
 	);

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, TouchableWithoutFeedback, ScrollView, Text, FlatList, Animated, Easing} from 'react-native';
 import {getProtectRequestListByShelterId, getShelterProtectAnimalList} from 'Root/api/shelterapi';
-import {getUserProfile} from 'Root/api/userapi';
+import {followUser, getUserProfile, unFollowUser} from 'Root/api/userapi';
 import {NORMAL, PET, SHELTER} from 'Root/i18n/msg';
 import {Message94, Write94} from 'Atom/icon';
 import TabSelectFilled_Type2 from 'Molecules/tab/TabSelectFilled_Type2';
@@ -40,7 +40,7 @@ export default Profile = ({route}) => {
 					result => {
 						navigation.setOptions({title: result.msg.user_nickname, data: result.msg});
 						resolve(result.msg);
-						console.log('is_follow', result.msg.is_follow);
+						// console.log('getUserProfile is Profile 갱신됨?', result.msg.is_follow);
 					},
 					err => {
 						Modal.popOneBtn(err, '확인', () => {
@@ -59,6 +59,7 @@ export default Profile = ({route}) => {
 	const fetchData = async () => {
 		if (route.params && route.params.userobject) {
 			const res = await getProfileInfo();
+			console.log('followUser after', res.is_follow);
 			setData(res);
 		} else {
 			Modal.popOneBtn('존재하지 않는 유저입니다.', '확인', () => {
@@ -67,10 +68,6 @@ export default Profile = ({route}) => {
 			});
 		}
 	};
-
-	// React.useEffect(() => {
-	// 	fetchData();
-	// }, [navigation]);
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', async () => {
@@ -89,7 +86,7 @@ export default Profile = ({route}) => {
 						setFeedList(result.msg);
 					},
 					err => {
-						console.log(err);
+						console.log('getFeedListByUserId err ', err);
 						setFeedList([]);
 					},
 				);
@@ -102,7 +99,7 @@ export default Profile = ({route}) => {
 						setFeedList(result.msg);
 					},
 					err => {
-						console.log(err);
+						console.log('getUserTaggedFeedList err', err);
 						setFeedList([]);
 					},
 				);
@@ -157,6 +154,7 @@ export default Profile = ({route}) => {
 
 	//유저타입 - 유저 => 반려동물 리스트에서 항목 클릭
 	const onClickMyCompanion = item => {
+		console.log('route.name', route.name);
 		navigation.push('UserProfile', {userobject: item});
 	};
 
@@ -248,8 +246,53 @@ export default Profile = ({route}) => {
 		}
 	};
 
+	//프로필 수정 버튼 클릭(본인 계정일 경우만 가능)
 	const onPressEditProfile = () => {
 		navigation.push('ChangeUserProfileImage', {data: data, routeInfo: route});
+	};
+
+	const onPressFollow = () => {
+		followUser(
+			{
+				follow_userobject_id: data._id,
+			},
+			result => {
+				console.log('result / followUser / Profile :', result.msg);
+				setData('');
+				fetchData();
+			},
+			err => {
+				console.log('err / followUser / err', err);
+			},
+		);
+	};
+
+	const onPressUnFollow = () => {
+		Modal.close();
+		setTimeout(() => {
+			Modal.popTwoBtn(
+				'정말로 팔로우를 \n 취소하시겠습니까?',
+				'아니오',
+				'예',
+				() => Modal.close(),
+				() => {
+					unFollowUser(
+						{
+							follow_userobject_id: data._id,
+						},
+						result => {
+							console.log('result / unFollowUser / Profile :', result.msg);
+							setData('');
+							fetchData();
+							Modal.close();
+						},
+						err => {
+							console.log('err / unFollowUser / err', err);
+						},
+					);
+				},
+			);
+		}, 200);
 	};
 
 	const userProfileInfo = () => {
@@ -269,6 +312,8 @@ export default Profile = ({route}) => {
 						onPressAddPetBtn={onPressAddPetBtn}
 						onPressAddArticleBtn={onPressAddArticleBtn}
 						onPressEditProfile={onPressEditProfile}
+						onPressUnFollow={onPressUnFollow}
+						onPressFollow={onPressFollow}
 					/>
 				</View>
 				{showPetOrOwnerList()}

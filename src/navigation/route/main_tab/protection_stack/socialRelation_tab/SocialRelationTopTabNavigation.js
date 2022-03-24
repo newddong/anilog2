@@ -17,23 +17,21 @@ const SocialRelationTab = createMaterialTopTabNavigator();
 export default SocialRelationTopTabNavigation = props => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.route.params?.userobject); //유저 프로필 데이터
-	const [followers, setFollwers] = React.useState('false'); // 팔로워리스트
-	const [follows, setFollows] = React.useState('false'); // 팔로우 리스트
-	const [followerInput, setFollowerInput] = React.useState('');
-	const [followInput, setFollowInput] = React.useState('');
+	const [followers, setFollwers] = React.useState(''); // 팔로워리스트
+	const [follows, setFollows] = React.useState(''); // 팔로우 리스트
+	const [followerInput, setFollowerInput] = React.useState(''); // 팔로워 검색
+	const [followInput, setFollowInput] = React.useState(''); // 팔로우 검색
 	const tabBarItems = [count_to_K(data.user_follower_count) + ' 팔로워', count_to_K(data.user_follow_count) + ' 팔로잉', '추천'];
-
-	// console.log('data', data.user_nickname);
 
 	//헤더 타이틀 설정 작업 및 유저 오브젝트 할당
 	React.useEffect(() => {
+		navigation.setOptions({title: props.route.params.userobject.user_nickname});
 		fetchData();
 	}, [props.route.params]);
 
 	React.useEffect(() => {
 		//입력마다 api 접속하는 것이 아닌 타이핑 이후 500ms 주어 타이핑이 종료되었을 때 검색을 실시하도록 timeOut 설정
 		setTimeout(() => {
-			Modal.popLoading();
 			fetchFollowerData();
 		}, 500);
 	}, [followerInput]);
@@ -41,14 +39,12 @@ export default SocialRelationTopTabNavigation = props => {
 	React.useEffect(() => {
 		//입력마다 api 접속하는 것이 아닌 타이핑 이후 500ms 주어 타이핑이 종료되었을 때 검색을 실시하도록 timeOut 설정
 		setTimeout(() => {
-			Modal.popLoading();
 			fetchFollowData();
 		}, 500);
 	}, [followInput]);
 
 	const fetchData = async () => {
 		const profileInfo = await getProfileInfo();
-		// console.log('SocialRelation Info', profileInfo);
 		fetchFollowData();
 		fetchFollowerData();
 		setData(profileInfo);
@@ -56,16 +52,15 @@ export default SocialRelationTopTabNavigation = props => {
 
 	const fetchFollowData = async () => {
 		const followList = await getFollow();
-		// console.log('followList', followList);
 		setFollows(followList);
 	};
 
 	const fetchFollowerData = async () => {
 		const followerList = await getFollower();
-		// console.log('followerList', followerList);
 		setFollwers(followerList);
 	};
 
+	//해당 유저의 프로필 정보 갱신을 위한 api 접속
 	const getProfileInfo = async () => {
 		return new Promise(async function (resolve, reject) {
 			try {
@@ -74,7 +69,6 @@ export default SocialRelationTopTabNavigation = props => {
 						userobject_id: props.route.params.userobject._id,
 					},
 					result => {
-						navigation.setOptions({title: props.route.params.userobject.user_nickname});
 						resolve(result.msg);
 						// console.log('is_follow', result.msg.is_follow);
 					},
@@ -89,6 +83,7 @@ export default SocialRelationTopTabNavigation = props => {
 		});
 	};
 
+	//팔로잉 목록 받아오기
 	const getFollow = async () => {
 		return new Promise(async function (resolve, reject) {
 			getFollows(
@@ -97,23 +92,23 @@ export default SocialRelationTopTabNavigation = props => {
 					user_nickname: followInput,
 				},
 				result => {
-					console.log('result / getFollows / ', result.msg.length);
+					// console.log('result / getFollows / ', result.msg.length);
 					let filtered = result.msg;
 					filtered.map((v, i) => {
 						v.follower_id = {...v.follower_id, follow: v.follow};
 					});
 					// setFollows(filtered.map(v => v.follower_id));
 					resolve(filtered.map(v => v.follower_id));
-					Modal.close();
 				},
 				err => {
 					console.log('getFollows / error / FollwerList : ', err);
-					Modal.close();
+					resolve([]);
 				},
 			);
 		});
 	};
 
+	//팔로워 목록 받아오기
 	const getFollower = async text => {
 		return new Promise(async function (resolve, reject) {
 			getFollowers(
@@ -122,17 +117,16 @@ export default SocialRelationTopTabNavigation = props => {
 					user_nickname: followerInput,
 				},
 				result => {
-					console.log('result / getFollowers / ', result.msg[0]);
+					// console.log('result / getFollowers / ', result.msg[0]);
 					let filtered = result.msg;
 					filtered.map((v, i) => {
 						v.follow_id = {...v.follow_id, follow: v.follow};
 					});
 					resolve(filtered.map(v => v.follow_id));
-					Modal.close();
 				},
 				err => {
 					console.log('getFollowers / error / FollwerList : ', err);
-					Modal.close();
+					resolve([]);
 				},
 			);
 		});
@@ -148,6 +142,7 @@ export default SocialRelationTopTabNavigation = props => {
 		setFollowInput(text);
 	};
 
+	//상단 탭바 컴포넌트
 	function MyTabBar({state, descriptors, navigation, position}) {
 		return (
 			<View style={[styles.tabContainer]}>
@@ -173,20 +168,17 @@ export default SocialRelationTopTabNavigation = props => {
 							accessibilityLabel={options.tabBarAccessibilityLabel}
 							testID={options.tabBarTestID}
 							onPress={onPress}
-							style={{
-								height: 70 * DP,
-								width: '33%',
-								marginRight: 10 * DP,
-								justifyContent: 'center',
-								borderBottomColor: isFocused ? APRI10 : WHITE,
-								borderBottomWidth: 4 * DP,
-							}}>
+							style={[
+								styles.tabbarItem,
+								{
+									borderBottomColor: isFocused ? APRI10 : WHITE,
+								},
+							]}>
 							<Text
 								numberOfLines={1}
 								style={[
 									txt.noto24,
 									{
-										fontSize: 24 * DP,
 										fontWeight: isFocused ? 'bold' : 'normal',
 										color: isFocused ? APRI10 : GRAY10,
 										textAlign: 'center',
@@ -200,9 +192,7 @@ export default SocialRelationTopTabNavigation = props => {
 			</View>
 		);
 	}
-	if (followers == 'false' || follows == 'false') {
-		<></>;
-	}
+
 	return (
 		<SocialRelationTab.Navigator
 			initialRouteName={'FollowerList'}
@@ -232,6 +222,13 @@ const styles = StyleSheet.create({
 	},
 	tabbarItemStyle: {
 		height: 70 * DP,
+	},
+	tabbarItem: {
+		height: 70 * DP,
+		width: '33%',
+		marginRight: 10 * DP,
+		justifyContent: 'center',
+		borderBottomWidth: 4 * DP,
 	},
 	tabBarIndicatorStyle: {
 		backgroundColor: WHITE,

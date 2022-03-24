@@ -17,10 +17,11 @@ import FeedCommentList from 'Root/component/templete/feed/FeedCommentList';
 import CommunityWrite from 'Root/component/templete/community/CommunityWrite';
 import SendHeader from 'Root/navigation/header/SendHeader';
 import AddressSearchPage from 'Root/component/templete/search/AddressSearchPage';
-import KakaoMap from 'Root/component/templete/search/KakaoMap';
+import KakaoMap from 'Root/component/templete/search/SearchMap';
 import WriteEditorTest from 'Root/component/templete/community/WriteEditorTest';
 import LogoHeader from 'Root/navigation/header/LogoHeader';
 import ReviewDetail from 'Root/component/templete/community/ReviewDetail';
+import SearchMap from 'Root/component/templete/search/SearchMap';
 
 const CommunityMainStackNavi = createStackNavigator();
 
@@ -62,15 +63,6 @@ export default CommunityMainStack = props => {
 				})}
 			/>
 			<CommunityMainStackNavi.Screen
-				name={'CommunityWrite'}
-				component={CommunityWrite}
-				options={({route}) => ({
-					// headerShown: false,
-					header: props => <SendHeader {...props} />,
-					// title: '',
-				})}
-			/>
-			<CommunityMainStackNavi.Screen
 				name="AddressSearchPage"
 				component={AddressSearchPage}
 				options={{header: props => <SimpleHeader {...props} />, title: '주소 설정'}}
@@ -81,11 +73,6 @@ export default CommunityMainStack = props => {
 				options={{header: props => <SimpleHeader {...props} />, title: 'WriteEditorTest'}}
 			/>
 
-			<CommunityMainStackNavi.Screen
-				name="KakaoMap"
-				component={KakaoMap}
-				options={{header: props => <SimpleHeader {...props} />, title: '주소 설정'}}
-			/>
 			<CommunityMainStackNavi.Screen
 				name={'ReviewDetail'}
 				component={ReviewDetail}

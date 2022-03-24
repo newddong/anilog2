@@ -1,12 +1,9 @@
 import React from 'react';
-import {FlatList, ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, ScrollView, View} from 'react-native';
 import ControllableAccountList from 'Organism/list/ControllableAccountList';
 import {followerList} from 'Templete/style_templete';
-import {getFollows, getFollowers, unFollowUser, followUser} from 'Root/api/userapi';
+import {unFollowUser, followUser} from 'Root/api/userapi';
 import InputWithSearchIcon from 'Root/component/molecules/input/InputWithSearchIcon';
-import userGlobalObject from 'Root/config/userGlobalObject';
-import Modal from 'Root/component/modal/Modal';
-import {txt} from 'Root/config/textstyle';
 import {useNavigation} from '@react-navigation/core';
 import Loading from 'Root/component/molecules/modal/Loading';
 
@@ -21,8 +18,19 @@ import Loading from 'Root/component/molecules/modal/Loading';
 export default FollowerList = props => {
 	const navigation = useNavigation();
 	const isFollowing = props.route.name != 'FollowingList';
-	const isMyAccount = props.route.params.userobject._id == userGlobalObject.userInfo._id;
-	// console.log(props.route.params.userobject._id);
+	const [loading, setLoading] = React.useState(false);
+	const [follower, setFollower] = React.useState('false');
+	const [follow, setFollow] = React.useState('false');
+
+	React.useEffect(() => {
+		setFollower(props.followers);
+		setLoading(false);
+	}, [props.followers]);
+
+	React.useEffect(() => {
+		setFollow(props.follows);
+		setLoading(false);
+	}, [props.follows]);
 
 	const onClickFollowBtn = item => {
 		followUser(
@@ -60,6 +68,7 @@ export default FollowerList = props => {
 
 	const onChangeSearchInput = text => {
 		// setSearchInput(text);
+		setLoading(true);
 		props.onChangeSearchInput(text);
 	};
 
@@ -73,33 +82,38 @@ export default FollowerList = props => {
 				<View style={[followerList.inputWitchSearch, {alignSelf: 'center'}]}>
 					<InputWithSearchIcon onChange={onChangeSearchInput} onSearch={onSearch} placeholder={'검색어를 입력해주세요.'} />
 				</View>
-				<View style={[{alignItems: 'center'}]}>
-					{props.route.name != 'FollowingList' ? (
-						<ControllableAccountList
-							items={props.followers}
-							showButtons={true}
-							onClickAccount={onClickAccount}
-							title={!isFollowing ? '' : '팔로잉'}
-							onClickFollowBtn={onClickFollowBtn}
-							onClickUnFollowBtn={onClickUnFollowBtn}
-							showFollowStatusText={false}
-						/>
-					) : (
-						<ControllableAccountList
-							items={props.follows}
-							showButtons={true}
-							onClickAccount={onClickAccount}
-							title={!isFollowing ? '' : '팔로잉'}
-							onClickUnFollowBtn={onClickUnFollowBtn}
-							onClickFollowBtn={onClickFollowBtn}
-							showFollowStatusText={false}
-						/>
-					)}
-				</View>
+				{loading ? (
+					<Loading isModal={false} />
+				) : (
+					<View style={[{alignItems: 'center'}]}>
+						{props.route.name != 'FollowingList' ? (
+							<ControllableAccountList
+								items={follower}
+								showButtons={true}
+								onClickAccount={onClickAccount}
+								title={!isFollowing ? '' : '팔로잉'}
+								onClickFollowBtn={onClickFollowBtn}
+								onClickUnFollowBtn={onClickUnFollowBtn}
+								showFollowStatusText={false}
+							/>
+						) : (
+							<ControllableAccountList
+								items={follow}
+								showButtons={true}
+								onClickAccount={onClickAccount}
+								title={!isFollowing ? '' : '팔로잉'}
+								onClickUnFollowBtn={onClickUnFollowBtn}
+								onClickFollowBtn={onClickFollowBtn}
+								showFollowStatusText={false}
+							/>
+						)}
+					</View>
+				)}
 			</ScrollView>
 			{/* <View style={[followerList.floatingBtn]}>
 				<Write94 onPress={onWrite} />
 			</View> */}
+			{/* <Loading isModal={false} /> */}
 		</View>
 	);
 };

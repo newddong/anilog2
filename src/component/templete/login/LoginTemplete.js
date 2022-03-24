@@ -13,6 +13,8 @@ import {userLogin} from 'Root/api/userapi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import userGlobalObj from 'Root/config/userGlobalObject';
 import {ALIGNITEMS, CALENDAR_DAY, CALENDAR_MONTH, CALENDAR_YEAR, FEED_FOLLOWING_USER_CLICK, mobile_carrier, REPORT_CONTENT} from 'Root/i18n/msg';
+import {createSettingPublic, getSettingPublic} from 'Root/api/settingpublic';
+import {createNotice, getNotice} from 'Root/api/notice';
 
 export default LoginTemplete = props => {
 	const [userSetting, setUserSetting] = React.useState();
@@ -62,6 +64,44 @@ export default LoginTemplete = props => {
 					userGlobalObj.userInfo = userObject.msg;
 				}
 				Modal.close();
+				getSettingPublic(
+					{},
+					result => {
+						if (result.msg.length == []) {
+							createSettingPublic(
+								{},
+								result => {
+									console.log('SettingPublic 생성', result);
+								},
+								err => {
+									'settingPublic 생성 err', err;
+								},
+							);
+						}
+					},
+					err => {
+						console.log('getSettingPublic err', err);
+					},
+				);
+				getNotice(
+					{},
+					result => {
+						if (result.msg.length == 0) {
+							createNotice(
+								{},
+								result => {
+									console.log('createNotice 생성', result);
+								},
+								err => {
+									console.log('createNotice err', err);
+								},
+							);
+						}
+					},
+					err => {
+						console.log('getNotice err', err);
+					},
+				);
 				props.navigation.reset({routes: [{name: 'MainTab', params: userObject.msg.user_type}]});
 			},
 			error => {

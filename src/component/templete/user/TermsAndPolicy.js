@@ -4,42 +4,44 @@ import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, 
 import {GRAY10, GRAY40, APRI10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-
-const dummyData = [
-	'서비스 이용약관 서비스 이용약관 서비스 이용약관서비스 이용약관서비스 이용약관서비스 이용약관서비스 이용약관서비스 이용약관서비스 이용약관',
-	'위치 정보 이용 약관 위치 정보 이용 약관위치 정보 이용 약관위치 정보 이용 약관위치 정보 이용 약관위치 정보 이용 약관위치 정보 이용 약관',
-	'개인 정보 처리 방침 개인 정보 처리 방침개인 정보 처리 방침개인 정보 처리 방침개인 정보 처리 방침개인 정보 처리 방침개인 정보 처리 방침개인 정보 처리 방침',
-	'오픈 소스 라이선스 정보 오픈 소스 라이선스 정보오픈 소스 라이선스 정보오픈 소스 라이선스 정보오픈 소스 라이선스 정보오픈 소스 라이선스 정보',
-];
+import {getTermsOfService} from 'Root/api/termsofservice';
 
 const TermsAndPolicy = ({route}) => {
 	const navigation = useNavigation();
 	console.log('route', route);
-	const [data, setData] = React.useState('');
+	const [contents, setContents] = React.useState('');
+	const [loading, setLoading] = React.useState(true);
+	const data = route.params.term;
 	React.useEffect(() => {
-		// console.log('route name', route.params.name);
+		console.log('route name', route.params);
+
 		switch (route.params.name) {
 			case 'service':
 				navigation.setOptions({title: '서비스 이용약관'});
-				setData(dummyData[0]);
+				// setContents(data[2]);
+				console.log('contents', contents);
 				break;
 			case 'location':
 				navigation.setOptions({title: '위치 정보 이용 약관'});
-				setData(dummyData[1]);
+				// setData(dummyData[0]);
+				// setContents(data[0]);
 				break;
 			case 'privacy':
 				navigation.setOptions({title: '개인정보처리 방침'});
-				setData(dummyData[2]);
+				// setData(dummyData[1]);
+				// setContents(data[1]);
 				break;
 			case 'opensource':
 				navigation.setOptions({title: '오픈소스 라이선스 정보'});
-				setData(dummyData[3]);
+			// setData(dummyData[3]);
+			// setContents(data[1]);
 		}
 	}, []);
+
 	return (
 		<View style={styles.container}>
 			<ScrollView style={styles.termsContainer}>
-				<Text>{data}</Text>
+				<Text>{data.terms_of_service_contents.replace(/\\n/g, `\n`)}</Text>
 			</ScrollView>
 		</View>
 	);

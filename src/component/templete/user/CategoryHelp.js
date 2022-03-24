@@ -9,23 +9,41 @@ import {getAllAnnouncement} from 'Root/api/announcement';
 import {FlatList} from 'react-native-gesture-handler';
 import {MainLogo} from 'Root/component/atom/icon';
 import AniButton from 'Root/component/molecules/button/AniButton';
-import {getHelpByCategoryDynamicQuery} from 'Root/api/helpbycategory';
+import {getHelpByCategoryDynamicQuery, getSearchHelpByCategoryList} from 'Root/api/helpbycategory';
 import OneNotice from 'Organism/listitem/OneNotice';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
-// 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
-const CategoryHelp = ({route}) => {
+import searchContext, {SearchContext} from 'Root/config/searchContext';
+//카테고리별 도움말 화면
+const CategoryHelp = ({route, props}) => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState();
 	const [loading, setLoading] = React.useState(false);
 	const [categoryList, setCategoryList] = React.useState([]);
+	var categoryName = route.params?.category;
 	const [categoryLoad, setCategoryLoaded] = React.useState(false);
-	console.log('categoryHelp', route.params?.category);
-	const categoryName = route.params?.category || '전체';
+	const [searchInput, setSearchInput] = React.useState('');
+	const [searchedData, setSearchedData] = React.useState();
+	const [isSearchedData, setIsSearchedData] = React.useState(false);
 	React.useEffect(() => {
+		getHelpByCategoryDynamicQuery(
+			{},
+			result => {
+				console.log('all the list', result.msg);
+				setData(result.msg);
+				setLoading(false);
+			},
+			err => {
+				console.log('all help list err', err);
+			},
+		);
+	}, []);
+
+	React.useEffect(() => {
+		// console.log('categoryHelp', route);
 		getCommonCodeDynamicQuery(
 			{common_code_c_name: 'helpbycategoryobjects'},
 			result => {
-				console.log('111', result.msg);
+				// console.log('111', result.msg);
 				setCategoryList(result.msg.slice(1));
 				setCategoryLoaded(true);
 			},
@@ -35,10 +53,24 @@ const CategoryHelp = ({route}) => {
 		);
 	}, [route]);
 	React.useEffect(() => {
+		if (categoryName == '전체') {
+			getHelpByCategoryDynamicQuery(
+				{},
+				result => {
+					// console.log('all the list', result.msg);
+					setData(result.msg);
+					setLoading(false);
+				},
+				err => {
+					console.log('all help list err', err);
+				},
+			);
+		}
+
 		if (categoryLoad) {
 			for (var i in categoryList) {
-				console.log('list', categoryList[i]);
-				if (categoryList[i].common_code_msg_kor == categoryName) {
+				// console.log('list', categoryList[i]);
+				if (categoryList[i].common_code_msg_kor == categoryName && categoryName != '전체') {
 					getHelpByCategoryDynamicQuery(
 						{help_by_category_common_code_id: categoryList[i]._id},
 						result => {
@@ -54,9 +86,47 @@ const CategoryHelp = ({route}) => {
 		}
 	}, [categoryList]);
 
+	React.useEffect(() => {
+		console.log('serach', searchContext.searchInfo.searchInput);
+		setSearchInput(searchContext.searchInfo.searchInput);
+		// if (categoryLoad) {
+		// 	getSearchHelpByCategoryList(
+		// 		{searchKeyword: searchContext.searchInfo.searchInput},
+		// 		result => {
+		// 			console.log('result', result.msg);
+		// 		},
+		// 		err => {
+		// 			console.log('category search err', err);
+		// 			setData();
+		// 		},
+		// 	);
+		// }
+	}, [searchContext.serachInfo?.searchInput]);
+
+	React.useEffect(() => {
+		getSearchHelpByCategoryList(
+			{searchKeyword: searchContext.searchInfo.searchInput},
+			result => {
+				console.log('result', result.msg);
+				setSearchedData(result.msg);
+				setIsSearchedData(true);
+			},
+			err => {
+				console.log('category search err', err);
+				setSearchedData();
+				setIsSearchedData(false);
+			},
+		);
+	}, [searchInput]);
 	const renderItem = ({item, index}) => {
-		console.log('item', item);
-		return <OneNotice uptitle={item.common_code_msg_kor} downtitle={item.help_by_category_title} contents={item.help_by_category_contents} />;
+		// console.log('item', item);
+		return (
+			<OneNotice
+				uptitle={item.common_code_msg_kor}
+				downtitle={item.help_by_category_title}
+				contents={item.help_by_category_contents.replace(/\\n/g, `\n`)}
+			/>
+		);
 	};
 
 	if (loading) {
@@ -66,11 +136,27 @@ const CategoryHelp = ({route}) => {
 			</View>
 		);
 	} else {
-		return (
-			<View style={styles.container}>
-				<FlatList data={data} keyExtractor={item => item._id} renderItem={renderItem} showsVerticalScrollIndicator={false} />
-			</View>
-		);
+		if (searchedData) {
+			return (
+				<View>
+					{isSearchedData ? (
+						<View>
+							<Text>데이터 있음</Text>
+						</View>
+					) : (
+						<View>
+							<Text>데이터 없음</Text>
+						</View>
+					)}
+				</View>
+			);
+		} else {
+			return (
+				<View style={styles.container}>
+					<FlatList data={data} keyExtractor={item => item._id} renderItem={renderItem} showsVerticalScrollIndicator={false} />
+				</View>
+			);
+		}
 	}
 };
 

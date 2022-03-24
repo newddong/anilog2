@@ -12,7 +12,7 @@ import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
 import CategoryHelp from 'Component/templete/user/CategoryHelp';
 import {txt} from 'Root/config/textstyle';
 const CategoryHelpTab = createMaterialTopTabNavigator();
-
+import searchContext from 'Root/config/searchContext';
 const CategoryHelpTopTabNavigation = ({route, navigation}) => {
 	const tabList = ['문의하기', '문의 내역'];
 	const navName = ['AskQestion', 'AskedQestion'];
@@ -21,7 +21,8 @@ const CategoryHelpTopTabNavigation = ({route, navigation}) => {
 	const [currentScreen, setCurrentScreen] = React.useState(0); //현재 보고 있는 화면 State
 	const routeName = getFocusedRouteNameFromRoute(route);
 	const [loading, setLoading] = React.useState(true);
-
+	const [searchText, setSearchText] = React.useState('');
+	// console.log('route', route.params);
 	React.useEffect(() => {
 		var temp = [];
 		getCommonCodeDynamicQuery(
@@ -72,13 +73,18 @@ const CategoryHelpTopTabNavigation = ({route, navigation}) => {
 								// select={state.index} //클릭으로 인한 변환
 								// fontSize={28}  props적용안됨
 								value={currentScreen}
+								searchText={'aaa'}
 							/>
 						</View>
 					); // gesture Handler(손가락으로 swipe)로 tab을 움직였을 시 자식까지 state를 연동시키기 위한 props
 				}}>
 				{/* <CategoryTab /> */}
-
-				<CategoryHelpTab.Screen name="CategoryHelp" component={CategoryHelp} options={{title: '카테고리별 도움말'}} />
+				{/* 
+				<CategoryHelpTab.Screen
+					name="CategoryHelp"
+					component={CategoryHelp}
+					options={{header: props => <InputAndSearchHeader {...props} searchText={'aa'} />}}>{props=><CategoryHelp {...props}} search={"aaa"}/></CategoryHelpTab.Screen> */}
+				<CategoryHelpTab.Screen name="CategoryHelp">{props => <CategoryHelp {...props} search="aaa" />}</CategoryHelpTab.Screen>
 			</CategoryHelpTab.Navigator>
 		);
 	}

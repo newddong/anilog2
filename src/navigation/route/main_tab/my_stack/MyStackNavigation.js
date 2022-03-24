@@ -72,6 +72,7 @@ import CategoryHelp from 'Templete/user/CategoryHelp';
 import ServiceCenterTopTabNavigation from './ServiceCenterTopTabNavigation';
 import CategoryHelpTopTabNavigation from './CategoryHelpTopTabNavigation';
 import TermsAndPolicy from 'Root/component/templete/user/TermsAndPolicy';
+import FrequentAsked from 'Root/component/templete/user/FrequentAsked';
 const MyStack = createStackNavigator();
 export default MyStackNavigation = props => {
 	return (
@@ -316,14 +317,24 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen name="ReceivedMessage" component={ReceivedMessage} options={{header: props => <SimpleHeader {...props} />, title: '쪽지함'}} />
 			<MyStack.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />, title: props.title}} />
 			<MyStack.Screen name="NoticeList" component={NoticeList} options={{header: props => <SimpleHeader {...props} />, title: '공지사항'}} />
+
 			<MyStack.Screen name="ServiceCenter" component={ServiceCenter} options={{header: props => <SimpleHeader {...props} />, title: '고객 센터'}} />
 			<MyStack.Screen name="CategoryHelp" component={CategoryHelp} options={{header: props => <AlarmAndSearchHeader {...props} />}} />
-			<MyStack.Screen name="ServiceTab" component={ServiceCenterTopTabNavigation} options={{header: props => <InputAndSearchHeader {...props} />}} />
+			<MyStack.Screen
+				name="ServiceTab"
+				component={ServiceCenterTopTabNavigation}
+				options={{header: props => <SimpleHeader {...props} />, title: '문의 하기'}}
+			/>
 			<MyStack.Screen name="TermsAndPolicy" component={TermsAndPolicy} options={{header: props => <SimpleHeader {...props} />, title: '약관'}} />
 			<MyStack.Screen
 				name="CategoryHelpTab"
 				component={CategoryHelpTopTabNavigation}
 				options={{header: props => <InputAndSearchHeader {...props} />}}
+			/>
+			<MyStack.Screen
+				name="FrequentAsked"
+				component={FrequentAsked}
+				options={{header: props => <SimpleHeader {...props} />, title: '자주 묻는 질문'}}
 			/>
 		</MyStack.Navigator>
 	);

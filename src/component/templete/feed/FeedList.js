@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, FlatList, RefreshControl, Platform} from 'react-native';
-import {WHITE} from 'Root/config/color';
+import {BLACK, WHITE} from 'Root/config/color';
 import {Write94, Camera54} from 'Atom/icon';
 import Feed from 'Organism/feed/Feed';
 import {getSuggestFeedList} from 'Root/api/feedapi';
@@ -166,7 +166,13 @@ export default FeedList = ({route, navigation}) => {
 	}, [feedList]);
 
 	const moveToFeedWrite = () => {
-		userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed'});
+		if (userGlobalObject.userInfo.user_type == 'user') {
+			Modal.popAvatarSelectFromWriteModal(obj => {
+				userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed', feed_avatar_id: obj});
+			});
+		} else {
+			userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed'});
+		}
 	};
 
 	const renderItem = ({item}) => {
@@ -204,6 +210,7 @@ export default FeedList = ({route, navigation}) => {
 			},
 		);
 	};
+
 	return (
 		<View style={(login_style.wrp_main, {flex: 1, backgroundColor: WHITE})}>
 			<FlatList
@@ -229,7 +236,7 @@ export default FeedList = ({route, navigation}) => {
 				)}
 			/>
 			{userGlobalObject.userInfo && (
-				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}, buttonstyle.shadow]}>
+				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP, zIndex: 10}, buttonstyle.shadow]}>
 					<View
 						style={{
 							height: 84 * DP,

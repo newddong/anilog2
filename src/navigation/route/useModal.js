@@ -37,6 +37,7 @@ import AnimalToRegisterModal from 'Root/component/molecules/modal/AnimalToRegist
 import PhotoListViewModal from 'Root/component/molecules/modal/PhotoListViewModal';
 import Loading from 'Root/component/molecules/modal/Loading';
 import LocationCheckModal from 'Root/component/molecules/modal/LocationCheckModal';
+import AvatarSelectFromWriteModal from 'Root/component/molecules/modal/AvatarSelectFromWriteModal';
 
 export function useModal() {
 	const [isPop, setPop] = React.useState(false);
@@ -248,6 +249,11 @@ export function useModal() {
 
 	Modal.popLocationCheckModal = (onPressAddrSearch, onConfirm, searchedLocation) => {
 		popIn(<LocationCheckModal onPressAddrSearch={onPressAddrSearch} onConfirm={onConfirm} searchedLocation={searchedLocation} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popAvatarSelectFromWriteModal = onSelectPet => {
+		popIn(<AvatarSelectFromWriteModal onSelectPet={onSelectPet} />);
 		!isPop && setPop(true);
 	};
 

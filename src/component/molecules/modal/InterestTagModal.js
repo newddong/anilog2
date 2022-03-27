@@ -182,8 +182,6 @@ const InterestTagModal = props => {
 			props.setState(userInterestLocation);
 		} else {
 			props.setState({
-				selectedCity: selectedCity,
-				selectedDistrict: selectedDistrict,
 				userInterestReview: userInterestReview,
 			});
 		}
@@ -217,7 +215,7 @@ const InterestTagModal = props => {
 	};
 
 	const getList = () => {
-		if (props.category == 'Review') {
+		if (props.category == 'Review' || props.category == 'ReviewWrite') {
 			return getReviewCategory();
 		} else if (props.category == 'Activity') {
 			return getActivityList();
@@ -301,16 +299,21 @@ const InterestTagModal = props => {
 	};
 
 	const getReviewCategory = () => {
-		if (city == '') {
+		if (city == '' && props.category != 'ReviewWrite') {
 			return <ActivityIndicator />;
 		} else
 			return (
 				<ScrollView style={{flex: 1}}>
 					<View style={[style.review_container]}>
-						<View style={[style.review_location]}>
-							<ArrowDownButton onPress={onOpenCity} btnStyle={'border'} btnLayout={btn_w242} btnTitle={selectedCity} />
-							<ArrowDownButton onPress={onOpenDistrict} btnStyle={'border'} btnLayout={btn_w280} titleFontStyle={22} btnTitle={selectedDistrict} />
-						</View>
+						{props.category == 'ReviewWrite' ? (
+							<></>
+						) : (
+							<View style={[style.review_location]}>
+								<ArrowDownButton onPress={onOpenCity} btnStyle={'border'} btnLayout={btn_w242} btnTitle={selectedCity} />
+								<ArrowDownButton onPress={onOpenDistrict} btnStyle={'border'} btnLayout={btn_w280} titleFontStyle={22} btnTitle={selectedDistrict} />
+							</View>
+						)}
+
 						{dummyReviewCategoryList.map((v, i) => {
 							return (
 								<View key={i} style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>

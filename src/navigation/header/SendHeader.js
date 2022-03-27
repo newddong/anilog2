@@ -7,12 +7,14 @@ import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 import {createProtectRequest, updateProtectRequest} from 'Root/api/shelterapi';
 import {RED} from 'Root/config/color';
+import {createCommunity} from 'Root/api/community';
 
 export default SendHeader = ({route, navigation, options}) => {
 	// console.log('props SendHeader', route.params);
 	const onSend = () => {
 		if (route.params.data) {
 			const data = route.params.data;
+			// console.log('data at SendHeader', JSON.stringify(data));
 			switch (route.params.nav) {
 				case 'AidRequestAnimalList': {
 					//보호요청 글쓰기 템플릿
@@ -86,6 +88,38 @@ export default SendHeader = ({route, navigation, options}) => {
 					);
 					break;
 				}
+				case 'CommunityWrite': {
+					if (!data.community_content || !data.community_title) {
+						Modal.popOneBtn('보호 요청 내용과 제목은 \n 반드시 입력해주셔야합니다.', '확인', () => Modal.close());
+					} else {
+						Modal.popTwoBtn(
+							'해당 내용으로 커뮤니티 \n 게시글을 작성하시겠습니까?',
+							'취소',
+							'확인',
+							() => Modal.close(),
+							() => {
+								createCommunity(
+									{
+										community_title: data.community_titlem,
+										community_content: data.community_content,
+										community_avatar_id: '',
+										community_location: data.community_location,
+										community_is_temporary: data.community_is_temporary,
+										community_type: '',
+										community_interests: data.community_interests,
+									},
+									result => {
+										console.log('result / createCommunity / SendHeader ', result.msg);
+									},
+									err => {
+										console.log('err / createCommunity / SendHeader ', err);
+									},
+								);
+								Modal.close();
+							},
+						);
+					}
+				}
 				default:
 					break;
 			}
@@ -107,7 +141,6 @@ export default SendHeader = ({route, navigation, options}) => {
 			<View style={style.titleContainer}>
 				<Text style={titleStyle}>{options.title}</Text>
 			</View>
-
 			<Send60_Big onPress={onSend} />
 		</View>
 	);

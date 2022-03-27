@@ -24,6 +24,7 @@ import {getAddressList} from 'Root/api/address';
 import SelectInput from 'Molecules/button/SelectInput';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import {FlatList} from 'react-native-gesture-handler';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default FeedWrite = props => {
 	const [showPetAccountList, setShowPetAccountList] = React.useState(false); //PetAccount 계정
@@ -48,11 +49,22 @@ export default FeedWrite = props => {
 
 	React.useEffect(() => {
 		if (props.route.name != 'FeedEdit') {
-			props.navigation.setParams({
-				...props.route.params,
-				media_uri: selectedImg,
-				feed_medias: selectedImg.map(v => ({media_uri: v, is_video: false, duration: 0, tags: []})),
-			});
+			const param = props.route.params;
+			param.feed_avatar_id //피드 글쓰기 클릭시 즉시 작성자 아바타 계정을 선택하는 절차가 추가됨에 따라 분기처리가 필요해짐
+				? // - 유저 계정에서 피드글쓰기를 누른 경우
+				  props.navigation.setParams({
+						...props.route.params,
+						media_uri: selectedImg,
+						feed_medias: selectedImg.map(v => ({media_uri: v, is_video: false, duration: 0, tags: []})),
+						feed_avatar_id: props.route.params.feed_avatar_id ? props.route.params.feed_avatar_id?._id : userGlobalObject.userInfo._id,
+				  })
+				: // - 보호소 계정에서 피드 글쓰기를 누른 경우
+				  props.navigation.setParams({
+						...props.route.params,
+						media_uri: selectedImg,
+						feed_medias: selectedImg.map(v => ({media_uri: v, is_video: false, duration: 0, tags: []})),
+						// feed_avatar_id: props.route.params.feed_avatar_id ? props.route.params.feed_avatar_id?._id : userGlobalObject.userInfo._id,
+				  });
 		} else {
 			props.navigation.setParams({
 				...props.route.params,
@@ -87,8 +99,32 @@ export default FeedWrite = props => {
 			props.navigation.setParams({...props.route.params, hashtag_keyword: hashes});
 		}
 		if (props.route.params?.feedType == 'Feed') {
-			props.navigation.setOptions({title: userGlobalObj.userInfo?.user_nickname});
+			// 피드 글쓰기 진입시 바로 사진부터 적용하는 방식으로 변경 22.03.28
+			launchImageLibrary(
+				{
+					mediaType: 'photo',
+					selectionLimit: 5 - selectedImg.length, //다중선택 모드일 경우 상시 5개면 4개 상태에서 최대 5개를 더해 9개가 가능해짐
+					maxHeight: 750,
+					maxWidth: 750,
+					quality: 0.8,
+				},
+				responseObject => {
+					console.log('선택됨', responseObject);
+					if (!responseObject.didCancel) {
+						let tempContainer = [...selectedImg];
+						responseObject.assets.map(v => tempContainer.push(v.uri));
+						setSelectedImg(tempContainer.slice(-5));
+						Modal.close();
+					}
+				},
+			);
+			//피드 글쓰기 클릭하면 즉시 작성자 아바타 계정을 선택하는 절차가 추가됨에 따라 분기처리가 필요해짐
+			props.route.params.feed_avatar_id
+				? props.navigation.setOptions({title: props.route.params.feed_avatar_id.user_nickname})
+				: props.navigation.setOptions({title: userGlobalObj.userInfo?.user_nickname});
 			props.navigation.setParams({...props.route.params, feedType: 'Feed'});
+			// props.navigation.setOptions({title: userGlobalObj.userInfo?.user_nickname});
+			// props.navigation.setOptions({title: props.route.params.feed_avatar_id.user_nickname});
 		}
 		if (props.route.params?.feedType == 'Missing') {
 			onPressMissingWrite();
@@ -195,6 +231,7 @@ export default FeedWrite = props => {
 		}
 		props.navigation.setParams({...props.route.params, feed_is_protect_diary: diary});
 	};
+
 	//위치추가
 	const moveToLocationPicker = () => {
 		// props.navigation.push('LocationPicker');

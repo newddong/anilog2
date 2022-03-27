@@ -84,6 +84,7 @@ const ProfileInfo = props => {
 		setCompanionListState(false);
 		props.onHideCompanion();
 	};
+
 	const onLayout = e => {
 		setIntro_height(e.nativeEvent.layout.height);
 	};

@@ -29,6 +29,14 @@ export default ArticleMain = ({route, navigation}) => {
 		// navigation.push('WriteEditorTest');
 	};
 
+	const dummy2 = [
+		// 'ㄱ<div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511800_rn_image_picker_lib_temp_314698c0-0991-4b82-89cf-64abdf448359.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511801_rn_image_picker_lib_temp_43498705-34cb-4f9e-a26d-4e6449b9861e.jpg" onclick="_.sendEvent('ImgClick')" conte
+		// nteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><br></p></div>'
+		`<div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511800_rn_image_picker_lib_temp_314698c0-0991-4b82-89cf-64abdf448359.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511801_rn_image_picker_lib_temp_43498705-34cb-4f9e-a26d-4e6449b9861e.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><br></p></div>`,
+		`<div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511800_rn_image_picker_lib_temp_314698c0-0991-4b82-89cf-64abdf448359.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511801_rn_image_picker_lib_temp_43498705-34cb-4f9e-a26d-4e6449b9861e.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><br></p></div>`,
+		`<div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511800_rn_image_picker_lib_temp_314698c0-0991-4b82-89cf-64abdf448359.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511801_rn_image_picker_lib_temp_43498705-34cb-4f9e-a26d-4e6449b9861e.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><br></p></div>`,
+	];
+
 	return (
 		<View style={[style.container]}>
 			<ArticleList

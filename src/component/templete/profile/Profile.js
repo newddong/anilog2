@@ -139,7 +139,14 @@ export default Profile = ({route}) => {
 
 	//피드글작성 버튼 클릭(액션버튼)
 	const moveToFeedWrite = () => {
-		navigation.push('FeedWrite', {feedType: 'Feed'});
+		if (userGlobalObject.userInfo.user_type == 'user') {
+			Modal.popAvatarSelectFromWriteModal(obj => {
+				userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed', feed_avatar_id: obj});
+			});
+		} else {
+			userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed'});
+		}
+		// navigation.push('FeedWrite', {feedType: 'Feed'});
 	};
 
 	//액션버튼 하단 탭 메뉴 클릭 콜백함수
@@ -167,11 +174,13 @@ export default Profile = ({route}) => {
 	};
 
 	const onPressAddPetBtn = () => {
-		alert('AddPet');
+		// alert('AddPet');
+		navigation.navigate('MY', {screen: 'AssignProtectAnimalImage'});
 	};
 
 	const onPressAddArticleBtn = () => {
-		alert('addArticle');
+		//게시물 추가
+		navigation.navigate('MY', {screen: 'AidRequestAnimalList', params: data._id});
 	};
 
 	const petListEmptyComponent = () => {

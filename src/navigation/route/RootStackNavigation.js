@@ -297,8 +297,12 @@ export default RootStackNavigation = () => {
 						<RootStack.Screen name="UserList" options={{header: props => <InputAndSearchHeader {...props} />, title: '계정'}}>
 							{props => <AccountPicker {...props} /*prevNav={props.prevNav} input={searchInput} onClickUser={onClickUser}*/ />}
 						</RootStack.Screen>
-						<RootStack.Screen name="CommunityWrite" component={CommunityWrite} options={{header: props => <SendHeader {...props} />}} />
-						<RootStack.Screen name="SearchMap" component={SearchMap} options={{header: props => <SimpleHeader {...props} />, title: '주소 설정'}} />
+						{/* <RootStack.Screen
+							name="CommunityWrite"
+							component={CommunityWrite}
+							options={{header: props => <SendHeader {...props} title={'커뮤니티 글 작성'} />}}
+						/> */}
+						{/* <RootStack.Screen name="SearchMap" component={SearchMap} options={{header: props => <SimpleHeader {...props} />, title: '주소 설정'}} /> */}
 					</RootStack.Navigator>
 				</NavigationContainer>
 

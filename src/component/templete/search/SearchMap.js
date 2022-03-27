@@ -14,7 +14,7 @@ import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/core';
 import Loading from 'Root/component/molecules/modal/Loading';
 
-export default SearchMap = props => {
+export default SearchMap = ({route}) => {
 	const navigation = useNavigation();
 
 	const [locationObj, setLocationObj] = useState(''); //현재 위치 주소
@@ -130,13 +130,6 @@ export default SearchMap = props => {
 		setDetailAddr(text);
 	};
 
-	//선택한 위치로 설정 버튼 클릭
-	const confirm = () => {
-		let finalized = locationObj;
-		finalized.detailAddr = detailAddr;
-		navigation.navigate('CommunityWrite', {addr: finalized});
-	};
-
 	//터치로 인한 위도 경도 변경 콜백
 	const goToLocation = region => {
 		setChangedLatitude(region.latitude);
@@ -145,9 +138,33 @@ export default SearchMap = props => {
 		setChangedLatitudeDelta(region.latitudeDelta);
 	};
 
-	const getLoading = () => {
-		Modal.popLoading();
-		return <></>;
+	//선택한 위치로 설정 버튼 클릭
+	const confirm = () => {
+		let finalized = locationObj;
+		finalized.detailAddr = detailAddr;
+		const data = {
+			...route.params,
+			community_location: {
+				addr: finalized,
+				region: {
+					latitude: changedLatitude != '' ? changedLatitude : init_latitude,
+					longitude: changedLongitude != '' ? changedLongitude : init_longitude,
+				},
+			},
+		};
+		navigation.navigate({
+			name: 'CommunityWrite',
+			params: {data: data},
+			merge: false,
+		});
+		// navigation.navigate('CommunityWrite', {
+		// 	addr: finalized,
+		// 	region: {
+		// 		latitude: changedLatitude != '' ? changedLatitude : init_latitude,
+		// 		longitude: changedLongitude != '' ? changedLongitude : init_longitude,
+		// 	},
+
+		// });
 	};
 
 	return (
@@ -169,7 +186,7 @@ export default SearchMap = props => {
 						<MapView
 							// provider={PROVIDER_GOOGLE} // remove if not using Google Maps
 							style={[style.mapContainer]}
-							customMapStyle={mapStyle}
+							customMapStyle={mapStyle2}
 							zoomEnabled
 							zoomControlEnabled
 							onRegionChangeComplete={(region, gesture) => {
@@ -300,6 +317,34 @@ const mapStyle = [
 	},
 	{
 		featureType: 'poi',
+		stylers: [
+			{
+				visibility: 'on',
+			},
+		],
+	},
+	{
+		featureType: 'road',
+		elementType: 'labels.icon',
+		stylers: [
+			{
+				visibility: 'on',
+			},
+		],
+	},
+	{
+		featureType: 'transit',
+		stylers: [
+			{
+				visibility: 'on',
+			},
+		],
+	},
+];
+
+const mapStyle2 = [
+	{
+		featureType: 'poi.business',
 		stylers: [
 			{
 				visibility: 'on',

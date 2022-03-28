@@ -20,6 +20,7 @@ const UserLocationTimeLabel = props => {
 	// console.log('props Time :  ', props);
 	const navigation = useNavigation();
 	const isLoginUser = userGlobalObject.userInfo._id == props.data._id;
+	const isMyPet = props.data.user_type == 'pet' && userGlobalObject.userInfo.user_my_pets.includes(props.data._id);
 
 	const getStatusMark = () => {
 		switch (props.data.pet_status) {
@@ -55,9 +56,33 @@ const UserLocationTimeLabel = props => {
 				</>
 
 				<View style={{marginLeft: 20 * DP}}>
-					<Text style={[props.isLarge ? txt.roboto32b : txt.roboto24, {color: isLoginUser ? APRI10 : BLACK}]} numberOfLines={1}>
-						{props.data.user_nickname || ''}
-					</Text>
+					<View style={{flexDirection: 'row'}}>
+						<Text style={[props.isLarge ? txt.roboto32b : txt.roboto24, {color: isLoginUser ? APRI10 : BLACK}]} numberOfLines={1}>
+							{props.data.user_nickname || ''}
+						</Text>
+						{isMyPet ? (
+							<Text
+								style={[
+									txt.noto22b,
+									{
+										color: APRI10,
+										marginLeft: 10 * DP,
+										borderWidth: 2 * DP,
+										borderColor: APRI10,
+										borderRadius: 10 * DP,
+										padding: 2 * DP,
+										paddingHorizontal: 10 * DP,
+										alignSelf: 'center',
+										justifyContent: 'center',
+										alignItems: 'center',
+									},
+								]}>
+								반려동물
+							</Text>
+						) : (
+							<></>
+						)}
+					</View>
 					<Text style={[props.isLarge ? txt.noto26 : txt.noto24, {lineHeight: 36 * DP, color: GRAY20}]} numberOfLines={1}>
 						{/* {address?.city} {address?.district} · {props.data.feed_type == undefined ? getCommentedTime() : props.data.comment_date} */}
 						{props.time && getTimeLapsed(props.time)}

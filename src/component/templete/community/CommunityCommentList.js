@@ -1,7 +1,5 @@
-import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {Text, View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
-import FeedContent from 'Organism/feed/FeedContent';
 import CommentList from 'Organism/comment/CommentList';
 import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
 import {createComment, getCommentListByFeedId, getCommentListByProtectId} from 'Root/api/commentapi';
@@ -10,8 +8,7 @@ import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
-import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
-import ShelterSmallLabel from 'Root/component/molecules/label/ShelterSmallLabel';
+import {GRAY10} from 'Root/config/color';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 
 export default CommunityCommentList = props => {

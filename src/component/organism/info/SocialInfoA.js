@@ -27,12 +27,16 @@ export default SocialInfoA = props => {
 					<Text style={[txt.noto24, socialInfoA.title]}>팔로워</Text>
 				</View>
 			</TouchableWithoutFeedback>
-			<TouchableWithoutFeedback onPress={moveToSocialRelation}>
-				<View style={[socialInfoA.socialInfo]}>
-					<Text style={[txt.roboto30b, socialInfoA.number]}>{count_to_K(props.data.user_follow_count)}</Text>
-					<Text style={[txt.noto24, socialInfoA.title]}>팔로잉</Text>
-				</View>
-			</TouchableWithoutFeedback>
+			{props.data.user_type == 'pet' ? (
+				<></>
+			) : (
+				<TouchableWithoutFeedback onPress={moveToSocialRelation}>
+					<View style={[socialInfoA.socialInfo]}>
+						<Text style={[txt.roboto30b, socialInfoA.number]}>{count_to_K(props.data.user_follow_count)}</Text>
+						<Text style={[txt.noto24, socialInfoA.title]}>팔로잉</Text>
+					</View>
+				</TouchableWithoutFeedback>
+			)}
 		</View>
 	);
 };

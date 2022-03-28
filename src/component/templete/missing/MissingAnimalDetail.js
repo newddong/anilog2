@@ -35,6 +35,7 @@ export default MissingAnimalDetail = props => {
 
 	const [loading, setLoading] = React.useState(true); //로딩상태
 	const viewShotRef = useRef();
+
 	React.useEffect(() => {
 		setPhoto(props.route.params);
 	}, [props.route.params]);
@@ -48,7 +49,6 @@ export default MissingAnimalDetail = props => {
 	//api 실제 작업 후 하단에 있는 data로 변경 예정 (현재는 에러 방지 코드)
 	const [data, setData] = React.useState({});
 
-	// 제보 데이터 불러오기 (아직 API 미작업 )
 	React.useEffect(() => {
 		console.log(' - MissingAnimalDetail -');
 		getFeedDetailById(
@@ -58,6 +58,7 @@ export default MissingAnimalDetail = props => {
 			data => {
 				// debug && console.log(`MissingAnimalDetail data:${JSON.stringify(data.msg)}`);
 				setData(data.msg);
+				navigation.setParams({writer: data.msg.feed_writer_id._id, isMissingOrReport: true, feed_object: data.msg});
 			},
 			errcallback => {
 				console.log(`errcallback:${JSON.stringify(errcallback)}`);
@@ -103,7 +104,7 @@ export default MissingAnimalDetail = props => {
 				feedobject_id: props.route.params._id,
 				// commentobject_id: '61c2c0de7be07611b0094ffd',
 				request_number: 10,
-				login_userobject_id: userGlobalObject.userInfo._id
+				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			commentdata => {
 				// console.log('commentdata', commentdata.msg);

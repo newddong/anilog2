@@ -30,7 +30,14 @@ const CommunityMainStackNavi = createStackNavigator();
 
 export default CommunityMainStack = props => {
 	return (
-		<CommunityMainStackNavi.Navigator initialRouteName="ReviewStackNavigation">
+		<CommunityMainStackNavi.Navigator initialRouteName="CommunityMain">
+			<CommunityMainStackNavi.Screen
+				name="CommunityMain"
+				component={CommunityMain}
+				options={({route, navigation}) => ({
+					header: props => <LogoHeader {...props} />,
+				})}
+			/>
 			<CommunityMainStackNavi.Screen
 				name="ReviewStackNavigation"
 				component={ReviewStackNavigation}
@@ -38,13 +45,7 @@ export default CommunityMainStack = props => {
 					header: props => <LogoHeader {...props} />,
 				})}
 			/>
-			{/* <CommunityMainStackNavi.Screen
-				name="CommunityMain"
-				component={CommunityMain}
-				options={({route, navigation}) => ({
-					header: props => <LogoHeader {...props} />,
-				})}
-			/> */}
+
 			<CommunityMainStackNavi.Screen
 				name={'ArticleDetail'}
 				component={ArticleDetail}

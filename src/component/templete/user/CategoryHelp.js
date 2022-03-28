@@ -2,28 +2,19 @@ import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet} from 'react-native';
 import {GRAY10, GRAY40, APRI10, GRAY20} from 'Root/config/color';
-import {txt} from 'Root/config/textstyle';
-import moment from 'moment';
 import DP from 'Root/config/dp';
-import {getAllAnnouncement} from 'Root/api/announcement';
 import {FlatList} from 'react-native-gesture-handler';
-import {MainLogo} from 'Root/component/atom/icon';
-import AniButton from 'Root/component/molecules/button/AniButton';
 import {getHelpByCategoryDynamicQuery, getSearchHelpByCategoryList} from 'Root/api/helpbycategory';
 import OneNotice from 'Organism/listitem/OneNotice';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
-import searchContext, {SearchContext} from 'Root/config/searchContext';
 //카테고리별 도움말 화면
 const CategoryHelp = ({route, props}) => {
-	const navigation = useNavigation();
 	const [data, setData] = React.useState();
 	const [loading, setLoading] = React.useState(false);
 	const [categoryList, setCategoryList] = React.useState([]);
 	var categoryName = route.params?.category;
 	const [categoryLoad, setCategoryLoaded] = React.useState(false);
-	const [searchInput, setSearchInput] = React.useState('');
-	const [searchedData, setSearchedData] = React.useState();
-	const [isSearchedData, setIsSearchedData] = React.useState(false);
+
 	React.useEffect(() => {
 		getHelpByCategoryDynamicQuery(
 			{},
@@ -86,38 +77,6 @@ const CategoryHelp = ({route, props}) => {
 		}
 	}, [categoryList]);
 
-	React.useEffect(() => {
-		console.log('serach', searchContext.searchInfo.searchInput);
-		setSearchInput(searchContext.searchInfo.searchInput);
-		// if (categoryLoad) {
-		// 	getSearchHelpByCategoryList(
-		// 		{searchKeyword: searchContext.searchInfo.searchInput},
-		// 		result => {
-		// 			console.log('result', result.msg);
-		// 		},
-		// 		err => {
-		// 			console.log('category search err', err);
-		// 			setData();
-		// 		},
-		// 	);
-		// }
-	}, [searchContext.serachInfo?.searchInput]);
-
-	React.useEffect(() => {
-		getSearchHelpByCategoryList(
-			{searchKeyword: searchContext.searchInfo.searchInput},
-			result => {
-				console.log('result', result.msg);
-				setSearchedData(result.msg);
-				setIsSearchedData(true);
-			},
-			err => {
-				console.log('category search err', err);
-				setSearchedData();
-				setIsSearchedData(false);
-			},
-		);
-	}, [searchInput]);
 	const renderItem = ({item, index}) => {
 		// console.log('item', item);
 		return (
@@ -136,27 +95,11 @@ const CategoryHelp = ({route, props}) => {
 			</View>
 		);
 	} else {
-		if (searchedData) {
-			return (
-				<View>
-					{isSearchedData ? (
-						<View>
-							<Text>데이터 있음</Text>
-						</View>
-					) : (
-						<View>
-							<Text>데이터 없음</Text>
-						</View>
-					)}
-				</View>
-			);
-		} else {
-			return (
-				<View style={styles.container}>
-					<FlatList data={data} keyExtractor={item => item._id} renderItem={renderItem} showsVerticalScrollIndicator={false} />
-				</View>
-			);
-		}
+		return (
+			<View style={styles.container}>
+				<FlatList data={data} keyExtractor={item => item._id} renderItem={renderItem} showsVerticalScrollIndicator={false} />
+			</View>
+		);
 	}
 };
 

@@ -1,41 +1,45 @@
 import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet} from 'react-native';
+import {Text, View, ScrollView, TouchableOpacity, FlatList, ActivityIndicator, StyleSheet} from 'react-native';
 import ActivationList from 'Templete/list/ActivationList';
 import TopTabNavigation_Border from 'Organism/menu/TopTabNavigation_Border';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
-import AskQuestion from 'Templete/user/AskQuestion';
-import AskedQuestion from 'Templete/user/AskedQuestion';
-import {GRAY10, GRAY40, WHITE} from 'Root/config/color';
+
+import {APRI10, GRAY10, GRAY40, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
+import {getHelpByCategoryDynamicQuery, getSearchHelpByCategoryList} from 'Root/api/helpbycategory';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
 import CategoryHelp from 'Component/templete/user/CategoryHelp';
 import {txt} from 'Root/config/textstyle';
-const CategoryHelpTab = createMaterialTopTabNavigator();
 import searchContext from 'Root/config/searchContext';
+import OneNotice from 'Organism/listitem/OneNotice';
+
+const CategoryHelpTab = createMaterialTopTabNavigator();
 const CategoryHelpTopTabNavigation = ({route, navigation}) => {
-	const tabList = ['문의하기', '문의 내역'];
-	const navName = ['AskQestion', 'AskedQestion'];
-	//SearchHeader에서 작성한 검색어와 검색클릭이 행해지면 SearchInput에 값이 들어감
 	const [categoryList, setCategoryList] = React.useState([]);
 	const [currentScreen, setCurrentScreen] = React.useState(0); //현재 보고 있는 화면 State
 	const routeName = getFocusedRouteNameFromRoute(route);
 	const [loading, setLoading] = React.useState(true);
 	const [searchText, setSearchText] = React.useState('');
-	// console.log('route', route.params);
+	const [data, setData] = React.useState();
+	const [commonData, setCommomData] = React.useState();
 	React.useEffect(() => {
 		var temp = [];
+		var temp2 = {};
 		getCommonCodeDynamicQuery(
 			{common_code_c_name: 'helpbycategoryobjects'},
 			result => {
+				console.log('result', result);
 				for (var i in result.msg) {
 					if (i >= 1) {
 						temp.push(result.msg[i].common_code_msg_kor);
+						temp2[result.msg[i]._id] = result.msg[i].common_code_msg_kor;
 					}
 				}
-
+				setCommomData(temp2);
 				setCategoryList(temp);
 				console.log('categoryList', categoryList);
+				console.log('CommonData', commonData);
 				setLoading(false);
 			},
 			err => {
@@ -43,6 +47,39 @@ const CategoryHelpTopTabNavigation = ({route, navigation}) => {
 			},
 		);
 	}, []);
+	React.useEffect(() => {
+		console.log('serach', searchContext.searchInfo.searchInput);
+
+		setSearchText(searchContext.searchInfo.searchInput);
+		if (!loading) {
+			getSearchHelpByCategoryList(
+				{searchKeyword: searchContext.searchInfo.searchInput},
+				result => {
+					console.log('result', result.msg);
+					setData(result.msg);
+				},
+				err => {
+					console.log('category search err', err);
+					setData();
+				},
+			);
+		}
+		console.log('category', categoryList);
+	}, [searchContext.searchInfo.searchInput]);
+
+	const renderItem = ({item, index}) => {
+		console.log('item', item, item._id);
+		return (
+			<OneNotice
+				uptitle={commonData[item.help_by_category_common_code_id]}
+				downtitle={item.help_by_category_title}
+				contents={item.help_by_category_contents.replace(/\\n/g, `\n`)}
+			/>
+		);
+	};
+	const onPressAsk = () => {
+		navigation.push('ServiceTab');
+	};
 
 	if (loading) {
 		return (
@@ -51,42 +88,80 @@ const CategoryHelpTopTabNavigation = ({route, navigation}) => {
 			</View>
 		);
 	} else {
-		return (
-			<CategoryHelpTab.Navigator
-				initialRouteName="CategoryHelp"
-				tabBar={({state, descriptors, navigation, position}) => {
-					const onSelectTab = pressedTab => {
-						navigation.navigate(
-							'CategoryHelp',
-
-							{category: categoryList[pressedTab]},
-						);
-					};
-					return (
-						<View style={[{backgroundColor: WHITE}]}>
-							<View style={[{borderBottomColor: GRAY40}, {borderBottomWidth: 1}, {backgroundColor: WHITE}]}>
-								<Text style={[txt.noto28b, {marginLeft: 48 * DP}, {marginVertical: 20 * DP}]}>카테고리별 도움말</Text>
-							</View>
-							<TopTabNavigation_Border
-								items={categoryList} //Tab에 출력될 Label 배열
-								onSelect={onSelectTab} // 현재 클릭된 상태인 tab (pressedTab에는 클릭된 index가 담겨져있음)
-								// select={state.index} //클릭으로 인한 변환
-								// fontSize={28}  props적용안됨
-								value={currentScreen}
-								searchText={'aaa'}
-							/>
+		if (searchText) {
+			return (
+				<View style={styles.container}>
+					{/* <Text>검색중</Text> */}
+					{data ? (
+						<View style={styles.topContainer}>
+							<FlatList data={data} keyExtractor={item => item._id} renderItem={renderItem} showsVerticalScrollIndicator={false} />
 						</View>
-					); // gesture Handler(손가락으로 swipe)로 tab을 움직였을 시 자식까지 state를 연동시키기 위한 props
-				}}>
-				{/* <CategoryTab /> */}
-				{/* 
-				<CategoryHelpTab.Screen
-					name="CategoryHelp"
-					component={CategoryHelp}
-					options={{header: props => <InputAndSearchHeader {...props} searchText={'aa'} />}}>{props=><CategoryHelp {...props}} search={"aaa"}/></CategoryHelpTab.Screen> */}
-				<CategoryHelpTab.Screen name="CategoryHelp">{props => <CategoryHelp {...props} search="aaa" />}</CategoryHelpTab.Screen>
-			</CategoryHelpTab.Navigator>
-		);
+					) : (
+						<View style={styles.noResultContainer}>
+							<Text style={txt.noto28}>검색결과가 없습니다.</Text>
+						</View>
+					)}
+					<Text style={[txt.noto28, {textAlign: 'center'}, {marginTop: 50 * DP}]}>궁금한 부분을 찾지 못하셨나요?</Text>
+					<TouchableOpacity onPress={onPressAsk}>
+						<Text style={[txt.noto28, {textAlign: 'center'}, {color: APRI10}]}>1:1 문의하기</Text>
+					</TouchableOpacity>
+				</View>
+			);
+		} else {
+			return (
+				<CategoryHelpTab.Navigator
+					initialRouteName="CategoryHelp"
+					tabBar={({state, descriptors, navigation, position}) => {
+						const onSelectTab = pressedTab => {
+							navigation.navigate(
+								'CategoryHelp',
+
+								{category: categoryList[pressedTab]},
+							);
+						};
+						return (
+							<View style={[{backgroundColor: WHITE}]}>
+								<View style={[{borderBottomColor: GRAY40}, {borderBottomWidth: 1}, {backgroundColor: WHITE}]}>
+									<Text style={[txt.noto28b, {marginLeft: 48 * DP}, {marginVertical: 20 * DP}]}>카테고리별 도움말</Text>
+								</View>
+								<TopTabNavigation_Border
+									items={categoryList} //Tab에 출력될 Label 배열
+									onSelect={onSelectTab} // 현재 클릭된 상태인 tab (pressedTab에는 클릭된 index가 담겨져있음)
+									value={currentScreen}
+									searchText={'aaa'}
+								/>
+							</View>
+						);
+					}}>
+					{/* <CategoryTab /> */}
+					{/* 
+					<CategoryHelpTab.Screen
+						name="CategoryHelp"
+						component={CategoryHelp}
+						options={{header: props => <InputAndSearchHeader {...props} searchText={'aa'} />}}>{props=><CategoryHelp {...props}} search={"aaa"}/></CategoryHelpTab.Screen> */}
+					<CategoryHelpTab.Screen name="CategoryHelp">{props => <CategoryHelp {...props} search="aaa" />}</CategoryHelpTab.Screen>
+				</CategoryHelpTab.Navigator>
+			);
+		}
 	}
 };
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: '#FFFFFF',
+		marginTop: 10 * DP,
+	},
+
+	topContainer: {
+		flexDirection: 'row',
+		// width: 428 * DP,
+		alignItems: 'flex-end',
+		marginLeft: 48 * DP,
+	},
+	noResultContainer: {
+		marginTop: 30 * DP,
+		alignContent: 'center',
+		alignItems: 'center',
+	},
+});
 export default CategoryHelpTopTabNavigation;

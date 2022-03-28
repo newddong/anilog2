@@ -28,8 +28,8 @@ export default SettingAlarm = ({route}) => {
 		getNotice(
 			{},
 			noticeObject => {
-				var temp = noticeObject.msg[0];
-
+				let temp = noticeObject.msg[0];
+				let tempInt = 0;
 				delete temp._id;
 				delete temp.notice_update_date;
 				delete temp.notice_user_id;
@@ -37,6 +37,13 @@ export default SettingAlarm = ({route}) => {
 				// console.log('temp', temp);
 				if (temp.notice_all) {
 					setOnCount(8);
+				} else {
+					for (let i of Object.values(temp)) {
+						console.log('iii', i);
+						if (i == true) {
+							tempInt++;
+						}
+					}
 				}
 				setAlarm(temp);
 				setLoading(false);

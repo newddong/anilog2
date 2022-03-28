@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet} from 'react-native';
+import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet, LogBox} from 'react-native';
 import {GRAY10, GRAY40, APRI10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import moment from 'moment';
@@ -9,12 +9,16 @@ import {getAllAnnouncement} from 'Root/api/announcement';
 import {FlatList} from 'react-native-gesture-handler';
 import {MainLogo} from 'Root/component/atom/icon';
 import AniButton from 'Root/component/molecules/button/AniButton';
-// 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
+import {getAppliesRecord} from 'Root/api/protectapi';
+import {getFaq} from 'Root/api/faq';
+import {getTermsOfService} from 'Root/api/termsofservice';
 const ServiceCenter = ({route}) => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState();
 	const [loading, setLoading] = React.useState(true);
+	const [faq, setFaq] = React.useState();
 	React.useEffect(() => {
+		LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 		getAllAnnouncement(
 			{},
 			result => {
@@ -25,15 +29,38 @@ const ServiceCenter = ({route}) => {
 				console.log('getAllAccouncement err', err);
 			},
 		);
+		getFaq(
+			{},
+			result => {
+				console.log('getFaq', result.msg);
+				setFaq(result.msg);
+			},
+			err => {
+				console.log('getFaq err', err);
+			},
+		);
 	}, []);
-	const OftenAskedQestion = props => {
+	const onPressQnA = () => {
+		navigation.push('ServiceTab');
+	};
+	const onPressCategory = () => {
+		navigation.push('CategoryHelpTab');
+	};
+	const onPressFaQ = item => {
+		navigation.push('FrequentAsked', {item});
+	};
+
+	const renderItem = ({item, index}) => {
 		return (
-			<View style={[{flexDirection: 'row'}, {alignItems: 'center'}, {marginTop: 30 * DP}]}>
-				<Text style={[txt.noto34, {color: APRI10}, {marginLeft: 48 * DP}, {width: 42 * DP}]}>{props.index}</Text>
-				<Text style={[txt.noto28, {marginLeft: 12 * DP}]}>{props.title}</Text>
-			</View>
+			<TouchableOpacity onPress={() => onPressFaQ(item)}>
+				<View style={[{flexDirection: 'row'}, {alignItems: 'center'}, {marginTop: 30 * DP}]}>
+					<Text style={[txt.noto34, {color: APRI10}, {marginLeft: 48 * DP}, {width: 42 * DP}]}>{index + 1}</Text>
+					<Text style={[txt.noto28, {marginLeft: 12 * DP}]}>{item.faq_title.slice(2)}</Text>
+				</View>
+			</TouchableOpacity>
 		);
 	};
+
 	const CompanyInfo = props => {
 		return (
 			<View style={[{flexDirection: 'row'}, {alignItems: 'center'}, {marginTop: 30 * DP}]}>
@@ -41,12 +68,6 @@ const ServiceCenter = ({route}) => {
 				<Text style={[txt.noto28, {marginLeft: 12 * DP}]}>{props.contents}</Text>
 			</View>
 		);
-	};
-	const onPressQnA = () => {
-		navigation.push('ServiceTab');
-	};
-	const onPressCategory = () => {
-		navigation.push('CategoryHelpTab');
 	};
 
 	if (loading) {
@@ -79,11 +100,7 @@ const ServiceCenter = ({route}) => {
 						<Text style={[txt.noto28b, {marginLeft: 48 * DP}]}>자주 묻는 질문</Text>
 					</View>
 					<View style={[styles.oftenAskedQuestion]}>
-						<OftenAskedQestion index="1" title="알람이 울리지 않아요." />
-						<OftenAskedQestion index="2" title="비밀번호를 분실했는데 어떻게 하나요? 울리지 않아요." />
-						<OftenAskedQestion index="3" title="핸드폰 번호를 바꿨는데 어떻게 하나요?" />
-						<OftenAskedQestion index="4" title="보호소 등록을 하고 싶어요." />
-						<OftenAskedQestion index="5" title="공개 설정을 하나하나 바꾸고 싶어요." />
+						<FlatList data={faq} keyExtractor={item => item.faq_title} renderItem={renderItem} showsVerticalScrollIndicator={false} />
 					</View>
 					<View style={[styles.miniTitleTextContainer]}>
 						<Text style={[txt.noto28b, {marginLeft: 48 * DP}]}>회사 소개</Text>

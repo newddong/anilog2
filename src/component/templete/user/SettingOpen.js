@@ -43,7 +43,6 @@ export default SettingOpen = ({route}) => {
 					}
 				}
 				setOpenObject(temp);
-				setOnCount(tempInt);
 				setLoading(false);
 			},
 
@@ -172,4 +171,3 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 	},
 });
-//PR충돌로 인한 해결

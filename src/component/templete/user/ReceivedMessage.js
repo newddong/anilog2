@@ -3,14 +3,13 @@ import React from 'react';
 import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {GRAY10, GRAY40, APRI10, GRAY20, TEXTBASECOLOR} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {deleteMemoBoxWithUserObjectID, getMemoBoxAllList, userLogout} from 'Root/api/userapi';
+import {getMemoBoxAllList, userLogout} from 'Root/api/userapi';
 import DP from 'Root/config/dp';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {login_style, temp_style, feedWrite} from '../style_templete';
 import NoteSelectStat from 'Root/component/organism/list/NoteSelectStat';
 import NoteList from 'Root/component/organism/list/NoteList';
 import {Message94, Urgent_Write1, Urgent_Write2} from 'Root/component/atom/icon';
-import {lo} from '../style_address';
 export default ReceivedMessage = ({route}) => {
 	const navigation = useNavigation();
 	const [checkBoxMode, setCheckBoxMode] = React.useState(false);
@@ -19,12 +18,7 @@ export default ReceivedMessage = ({route}) => {
 	let selectCNT = React.useRef(0);
 	//data 구조가 아직 정해지지않아서 data처리는 추후에
 	//받은 쪽지함, 보낸쪽지함 처리
-
 	React.useEffect(() => {
-		getMemoBoxListFunction();
-	}, []);
-
-	const getMemoBoxListFunction = () => {
 		// setData(dummyData);
 		getMemoBoxAllList(
 			{},
@@ -36,8 +30,11 @@ export default ReceivedMessage = ({route}) => {
 				console.log('err', err);
 			},
 		);
+	}, []);
+	const changeStatus = () => {
+		received ? navigation.setOptions({title: '보낸 쪽지함'}) : navigation.setOptions({title: '받은 쪽지함'});
+		setReceived(!received);
 	};
-
 	//쪽지 보내기 모달
 	const onPressSendMsg = () => {
 		Modal.close();
@@ -69,6 +66,7 @@ export default ReceivedMessage = ({route}) => {
 	};
 	const onClickLabel = data => {
 		console.log('onCLick data', data);
+		// navigation.push('UserProfile', {userobject: data});
 		navigation.push('UserNotePage', {title: data.opponent_user_nickname, _id: data.opponent});
 	};
 
@@ -85,25 +83,13 @@ export default ReceivedMessage = ({route}) => {
 	};
 	const deleteSelectedItem = () => {
 		let copy = [...data];
-		copy = copy.filter(e => e.checkBoxState == true);
-		console.log('filtered copy', copy);
+		copy = copy.filter(e => e.checkBoxState != true);
 		copy.map((v, i) => {
-			console.log('vvv', v);
-			deleteMemoBoxWithUserObjectID(
-				{user_object_id: v.opponent},
-				result => {
-					console.log('delelteMemoBoxWithUser success', result);
-				},
-				err => {
-					console.log('deleteMomoBoxWithUser err', err);
-				},
-			);
 			// console.log('index=>' + i);
 			v._index = i;
 			v.checkBoxState = false;
 		});
 		setData(copy);
-		getMemoBoxListFunction();
 	};
 
 	//CheckBox 클릭 시
@@ -121,6 +107,7 @@ export default ReceivedMessage = ({route}) => {
 					onSelectAllClick={selectAll}
 					onDeleteSelectedItem={deleteSelectedItem}
 					received={received}
+					changeStatus={changeStatus}
 				/>
 			</View>
 			<View style={[styles.noteList, {height: null}]}>

@@ -94,6 +94,17 @@ export default Modal = {
 	popAvatarSelectModal: (onSelectPet, okButtonnMsg, isWriteMode) => {},
 
 	/**
+	 * 글쓰기 버튼 시 아바타 동물을 선택하는 모달창
+	 *
+	 * @param {(petObject:string)=>void} onSelectPet - 반려동물 라벨을 클릭했을때 콜백
+	 *
+	 *
+	 * @example
+	 * Modal.popSelect(['개','고양이','기타'],['리트리버','말티즈','푸들','치와와'],(val1,val2)=>alert(val1+':'+val2),'동물선택');
+	 */
+	popAvatarSelectFromWriteModal: onSelectPet => {},
+
+	/**
 	 * 반려 동물을 선택하는 모달창
 	 * @param {object} offset -  선택 위치
 	 * @param {Array.<string>} items -  배열

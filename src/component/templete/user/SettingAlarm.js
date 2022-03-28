@@ -45,7 +45,6 @@ export default SettingAlarm = ({route}) => {
 						}
 					}
 				}
-				setOnCount(tempInt);
 				setAlarm(temp);
 				setLoading(false);
 			},
@@ -230,4 +229,3 @@ const styles = StyleSheet.create({
 		height: 44 * DP,
 	},
 });
-//PR충돌로 인한 해결

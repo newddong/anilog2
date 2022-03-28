@@ -49,11 +49,11 @@ export default AssignPetProfileImage = ({route}) => {
 							'등록',
 							'아니오',
 							() => {
-								// console.log('Selected Object', result.msg[i]);
 								const selectedAnimal = result.msg[0];
 								const isProtect = selectedAnimal.protect_animal_status == 'protect'; //입양 임보 확정 동물이 임시보호인가?
 								setIsAdoptRegist(true);
 								setData({
+									user_profile: selectedAnimal.protect_animal_photo_uri_list[0],
 									user_profile_uri: selectedAnimal.protect_animal_photo_uri_list[0],
 									user_nickname: '',
 									pet_status: isProtect ? 'protect' : 'companion',
@@ -88,10 +88,9 @@ export default AssignPetProfileImage = ({route}) => {
 								// console.log('Selected Object', result.msg[i]);
 								const selectedAnimal = result.msg[i];
 								const isProtect = selectedAnimal.protect_animal_status == 'protect'; //입양 임보 확정 동물이 임시보호인가?
-								console.log('selectedAnimal.protect_animal_photo_uri_list[0]', selectedAnimal.protect_animal_photo_uri_list);
-
 								setIsAdoptRegist(true);
 								setData({
+									user_profile: selectedAnimal.protect_animal_photo_uri_list[0],
 									user_profile_uri: selectedAnimal.protect_animal_photo_uri_list[0],
 									user_nickname: '',
 									pet_status: isProtect ? 'protect' : 'companion',

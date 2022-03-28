@@ -13,6 +13,7 @@ import AlarmAndSearchHeader from 'Navigation/header/AlarmAndSearchHeader';
 import BookmarkHeader from 'Navigation/header/BookmarkHeader';
 import SocialRelationTopTabNavigation from '../protection_stack/socialRelation_tab/SocialRelationTopTabNavigation';
 import SimpleHeader from 'Navigation/header/SimpleHeader';
+import ChangeUserProfileImage from 'Root/component/templete/user/ChangeUserProfileImage';
 
 const FeedStack = createStackNavigator();
 
@@ -26,10 +27,10 @@ export default FeedStackNavigation = () => {
 				component={SocialRelationTopTabNavigation}
 				options={{header: props => <SimpleHeader {...props} />, title: '프로필'}}
 			/>
-			<FeedStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: '프로필'}} />
-			<FeedStack.Screen name="HashFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: '프로필'}} />
-			<FeedStack.Screen name="ProtectAnimalFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: '프로필'}} />
-			<FeedStack.Screen name="UserTagFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: '프로필'}} />
+			<FeedStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <MeatBallHeader {...props} />, title: '프로필'}} />
+			<FeedStack.Screen name="HashFeedList" component={FeedList} />
+			<FeedStack.Screen name="ProtectAnimalFeedList" component={FeedList} />
+			<FeedStack.Screen name="UserTagFeedList" component={FeedList} />
 			<FeedStack.Screen
 				name="AnimalProtectRequestDetail"
 				component={AnimalProtectRequestDetail}
@@ -46,6 +47,11 @@ export default FeedStackNavigation = () => {
 				options={{header: props => <BookmarkHeader {...props} />, title: '#해시태그'}}
 			/>
 			<FeedStack.Screen name="FeedUserProfile" component={Profile} options={{header: props => <MeatBallHeader {...props} />, title: '프로필'}} />
+			<FeedStack.Screen
+				name="ChangeUserProfileImage"
+				component={ChangeUserProfileImage}
+				options={{header: props => <SimpleHeader {...props} />, title: '프로필 변경'}}
+			/>
 		</FeedStack.Navigator>
 	);
 };

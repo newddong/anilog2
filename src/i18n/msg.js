@@ -221,7 +221,6 @@ export const CALENDAR_DAY = () => {
 
 //반려동물 종류
 export const PET_KIND = async () => {
-	let a = [];
 	function getPetKind() {
 		return new Promise((res, rej) => {
 			getPettypes(

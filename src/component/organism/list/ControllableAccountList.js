@@ -10,11 +10,13 @@ import {controllableAccountList} from 'Organism/style_organism copy';
  *
  * @param {{
  * items : Object,
- * onFollowBtnClick: void,
+ * onClickFollowBtn: void,
+ * onClickUnFollowBtn : void,
  * onClickAccount : void,
  * showCheckBox : boolean,
  * showCheckBox :boolean,
  * showButtons : boolean
+ * showFollowStatusText : boolean
  * }} props
  */
 export default ControllableAccountList = props => {
@@ -32,8 +34,12 @@ export default ControllableAccountList = props => {
 	};
 
 	//팔로우 OR 팔로잉버튼 클릭
-	const onClickFollowBtn = index => {
-		props.onClickFollowBtn(index);
+	const onClickFollowBtn = item => {
+		props.onClickFollowBtn(item);
+	};
+
+	const onClickUnFollowBtn = item => {
+		props.onClickUnFollowBtn(item);
 	};
 
 	const renderItem = (item, index) => {
@@ -46,7 +52,9 @@ export default ControllableAccountList = props => {
 					showButtons={props.showButtons}
 					onClickLabel={() => onSelectItem(item, index)}
 					onPressCrossMark={() => onPressCrossMark(index)}
-					onClickFollowBtn={() => onClickFollowBtn(index)}
+					onClickFollowBtn={() => onClickFollowBtn(item)}
+					onClickUnFollowBtn={() => onClickUnFollowBtn(item)}
+					showFollowStatusText={props.showFollowStatusText}
 				/>
 			</View>
 		);
@@ -79,8 +87,10 @@ ControllableAccountList.defaultProps = {
 	items: [],
 	onClickAccount: e => console.log(e),
 	onClickFollowBtn: e => {},
+	onClickUnFollowBtn: e => {},
 	onPressCrossMark: e => console.log('onPressCrossMark ,', e),
 	title: null,
 	showCrossMark: false,
 	showCheckBox: false,
+	showFollowStatusText: true,
 };

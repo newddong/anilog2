@@ -12,6 +12,7 @@ import {findAccount_style} from 'Root/component/templete/style_templete';
  * value : 'string / CheckBox 우측 텍스트',
  * disable : 'boolean / 버튼 사용 가능 여부,
  * onCheck : '박스가 체크될 시 수행되는 callBack함수'
+ * state : '체크상태'
  * }} props
  */
 export default CheckBox = props => {

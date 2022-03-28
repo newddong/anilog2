@@ -52,6 +52,7 @@ export default Feed = React.memo(props => {
 	const [likeCount, setLikeCount] = React.useState(0);
 	const moveToCommentList = async () => {
 		AsyncStorage.getItem('sid', (err, res) => {
+			console.log('res', res);
 			if (res == null && feed_comment_count == 0) {
 				Modal.popNoBtn('로그인이 필요합니다.');
 				setTimeout(() => {

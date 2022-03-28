@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Text, View, Button, TouchableOpacity, Platform, StyleSheet, TextInput, Keyboard, StatusBar, Dimensions} from 'react-native';
+import {Text, View, Button, TouchableOpacity, Platform, StyleSheet, TextInput, Keyboard, StatusBar, Dimensions, SafeAreaView} from 'react-native';
 import axios from 'axios';
 import Geolocation from '@react-native-community/geolocation';
 import {txt} from 'Root/config/textstyle';
@@ -14,7 +14,7 @@ import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/core';
 import Loading from 'Root/component/molecules/modal/Loading';
 
-export default KakaoMap = props => {
+export default SearchMap = ({route}) => {
 	const navigation = useNavigation();
 
 	const [locationObj, setLocationObj] = useState(''); //현재 위치 주소
@@ -31,6 +31,7 @@ export default KakaoMap = props => {
 
 	// 템플릿 호출 시 바로 현재 모바일 위치를 기반으로 위치 정보 수령
 	React.useEffect(() => {
+		Modal.popLoading();
 		geoLocation();
 	}, []);
 
@@ -38,8 +39,10 @@ export default KakaoMap = props => {
 	React.useEffect(() => {
 		if (changedLatitude == '' || changedLongitude == '') {
 			callInitialAddress(init_longitude, init_latitude);
+			Modal.close();
 		} else if (changedLatitude != '') {
 			callInitialAddress(changedLongitude, changedLatitude);
+			Modal.close();
 		}
 	}, [init_latitude, changedLatitude]);
 
@@ -73,20 +76,46 @@ export default KakaoMap = props => {
 						//카카오 API에서 도로명주소가 간혹 Null값으로 오는 현상 발견
 						Modal.popLoading();
 						const road_addr = await getRoadAddr(location.address.address_name); //카카오 API에서 받은 지번을 바탕으로 주변의 도로명주소를 받아오는 API
+						console.log('road_addr is null?', location.road_address);
+						console.log('road_addr : ', road_addr);
 						location.road_address = {
 							address_name: road_addr,
 						};
-						Modal.close();
 						setLocationObj(location);
+						Modal.close();
 					} else {
 						// 도로명주소가 null값이 아니라면 그대로 setState
 						setLocationObj(location);
+						Modal.close();
 					}
 				});
 		} catch (error) {
 			console.log('error callAddress  :  ', error.message);
+			Modal.close();
 		}
 	};
+
+	//카카오 api로 도로명주소가 조회되지 않을 경우에 호출되는 api
+	async function getRoadAddr(addr) {
+		return new Promise(async function (resolve, reject) {
+			try {
+				// 관련 api 사이트 주소 : https://www.juso.go.kr/addrlink/devAddrLinkRequestSubmit.do
+				let res = await axios
+					.get(
+						`https://www.juso.go.kr/addrlink/addrLinkApi.do?currentPage=1&countPerPage=10 &keyword=${addr}&confmKey=devU01TX0FVVEgyMDIyMDMyMjIxNTUyMzExMjM3NDQ=&firstSort=road`,
+					)
+					.then(responseText => {
+						var x2js = new X2JS(); //XML 형식의 데이터를 JSON으로 파싱
+						var json = x2js.xml2js(responseText.data);
+						console.log('도로명주소 받아오기: ', json.results.juso.roadAddr);
+						resolve(json.results.juso.roadAddr);
+					});
+			} catch (error) {
+				console.log('error getRoadAddr  :  ', error.message);
+				Modal.close(); //오류발생 시 Modal 종료
+			}
+		});
+	}
 
 	//현재 위치로 돌아감
 	const initializeRegion = () => {
@@ -101,13 +130,6 @@ export default KakaoMap = props => {
 		setDetailAddr(text);
 	};
 
-	//선택한 위치로 설정 버튼 클릭
-	const confirm = () => {
-		let finalized = locationObj;
-		finalized.detailAddr = detailAddr;
-		navigation.navigate('CommunityWrite', {addr: finalized});
-	};
-
 	//터치로 인한 위도 경도 변경 콜백
 	const goToLocation = region => {
 		setChangedLatitude(region.latitude);
@@ -116,25 +138,26 @@ export default KakaoMap = props => {
 		setChangedLatitudeDelta(region.latitudeDelta);
 	};
 
-	//카카오 api로 도로명주소가 조회되지 않을 경우에 호출되는 api
-	async function getRoadAddr(addr) {
-		return new Promise(async function (resolve, reject) {
-			try {
-				let res = await axios
-					.get(
-						`https://www.juso.go.kr/addrlink/addrLinkApi.do?currentPage=1&countPerPage=10 &keyword=${addr}&confmKey=devU01TX0FVVEgyMDIyMDMxNjE1NDIyNTExMjM1NDc=&firstSort=road`,
-					)
-					.then(responseText => {
-						var x2js = new X2JS(); //XML 형식의 데이터를 JSON으로 파싱
-						var json = x2js.xml2js(responseText.data);
-						resolve(json.results.juso.roadAddr);
-					});
-			} catch (error) {
-				console.log('error callAddress  :  ', error.message);
-				Modal.close(); //오류발생 시 Modal 종료
-			}
+	//선택한 위치로 설정 버튼 클릭
+	const confirm = () => {
+		let finalized = locationObj;
+		finalized.detailAddr = detailAddr;
+		const data = {
+			...route.params,
+			community_location: {
+				addr: finalized,
+				region: {
+					latitude: changedLatitude != '' ? changedLatitude : init_latitude,
+					longitude: changedLongitude != '' ? changedLongitude : init_longitude,
+				},
+			},
+		};
+		navigation.navigate({
+			name: 'CommunityWrite',
+			params: {data: data},
+			merge: false,
 		});
-	}
+	};
 
 	return (
 		<View
@@ -155,7 +178,8 @@ export default KakaoMap = props => {
 						<MapView
 							// provider={PROVIDER_GOOGLE} // remove if not using Google Maps
 							style={[style.mapContainer]}
-							customMapStyle={mapStyle}
+							mapType={'standard'}
+							// customMapStyle={mapStyle2}
 							zoomEnabled
 							zoomControlEnabled
 							onRegionChangeComplete={(region, gesture) => {
@@ -265,10 +289,6 @@ function useKeyboardBottom(tabheight) {
 			setKeyboardY(0);
 		});
 		return () => {
-			// Keyboard.removeAllListeners('keyboardDidShow');
-			// Keyboard.removeAllListeners('keyboardDidHide');
-			// Keyboard.removeAllListeners('keyboardWillShow');
-			// Keyboard.removeAllListeners('keyboardWillHide');
 			didshow.remove();
 			didhide.remove();
 			willshow.remove();
@@ -315,6 +335,34 @@ const mapStyle = [
 	},
 ];
 
+const mapStyle2 = [
+	{
+		featureType: 'poi.business',
+		stylers: [
+			{
+				visibility: 'on',
+			},
+		],
+	},
+	{
+		featureType: 'road',
+		elementType: 'labels.icon',
+		stylers: [
+			{
+				visibility: 'on',
+			},
+		],
+	},
+	{
+		featureType: 'transit',
+		stylers: [
+			{
+				visibility: 'on',
+			},
+		],
+	},
+];
+
 const style = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -335,8 +383,8 @@ const style = StyleSheet.create({
 	},
 	currentLocationIcon: {
 		position: 'absolute',
-		right: 25 * DP,
-		bottom: 25 * DP,
+		right: 50 * DP,
+		bottom: 220 * DP,
 		width: 60 * DP,
 		height: 60 * DP,
 		// backgroundColor: 'red',

@@ -24,12 +24,12 @@ export default SettingInformAsk = ({route}) => {
 	}, []);
 
 	const onPressNotice = () => {
-		navigation.push('NoticeList'); // FollowObjec
+		Modal.popInfoModal();
+		// navigation.push('SaveFavorite'); // FollowObjec
 	};
-	const onPressServiceCenter = () => {
-		navigation.push('ServiceCenter');
+	const onPressQuestions = () => {
+		Modal.popInfoModal();
 	};
-
 	const onPressServiceTerms = () => {
 		// Modal.popInfoModal();
 		navigation.push('TermsAndPolicy', {name: 'service', term: term[2]});
@@ -50,48 +50,43 @@ export default SettingInformAsk = ({route}) => {
 				<View style={styles.noticeContainer}>
 					<View style={{width: 550 * DP}}>
 						<TouchableOpacity onPress={onPressNotice}>
-							<Text style={[txt.noto32b]}>공지사항</Text>
+							<Text style={[txt.noto32b, {color: GRAY10}]}>공지사항</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
-				<View style={styles.noticeContainer}>
+				<View style={styles.serviceContainer}>
 					<View style={{width: 550 * DP}}>
-						<TouchableOpacity onPress={onPressServiceCenter}>
-							<Text style={[txt.noto32b]}>고객 센터</Text>
+						<Text style={[txt.noto32b, {color: GRAY10}, {marginTop: 40 * DP}]}>고객 센터</Text>
+					</View>
+					<View style={{width: 550 * DP}}>
+						<TouchableOpacity onPress={onPressQuestions}>
+							<Text style={[txt.noto28, {color: GRAY10}, {marginTop: 30 * DP}]}>자주 묻는 질문</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
 				<View style={styles.termsContainer}>
 					<View style={{width: 550 * DP}}>
 						<TouchableOpacity onPress={onPressServiceTerms}>
-							<Text style={[txt.noto28, {marginTop: 40 * DP}]}>서비스 이용약관</Text>
+							<Text style={[txt.noto28, {color: GRAY10}, {marginTop: 40 * DP}]}>서비스 이용약관</Text>
 						</TouchableOpacity>
 					</View>
 					<View style={{width: 550 * DP}}>
 						<TouchableOpacity onPress={onPressLocationTerms}>
-							<Text style={[txt.noto28, {marginTop: 24 * DP}]}>위치 정보 이용 약관</Text>
+							<Text style={[txt.noto28, {color: GRAY10}, {marginTop: 24 * DP}]}>위치 정보 이용 약관</Text>
 						</TouchableOpacity>
 					</View>
 					<View style={{width: 550 * DP}}>
 						<TouchableOpacity onPress={onPressPrivacyTerms}>
-							<Text style={[txt.noto28, {marginTop: 24 * DP}]}>개인정보처리 방침</Text>
+							<Text style={[txt.noto28, {color: GRAY10}, {marginTop: 24 * DP}]}>개인정보처리 방침</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
 				<View style={styles.versionContainer}>
-					<View style={[{width: 358 * DP}]}>
-						<Text style={[txt.noto32b]}>버전 정보</Text>
-					</View>
-					<View style={[{width: 256 * DP}]}>
-						<Text style={[txt.noto32b, {textAlign: 'right'}]}>2.0.1 ver</Text>
-					</View>
-				</View>
-				<View style={styles.serviceContainer}>
 					<View style={{width: 550 * DP}}>
-						<TouchableOpacity onPress={onPressOpenSource}>
-							<Text style={[txt.noto32b]}>오픈 소스 라이선스 정보</Text>
-						</TouchableOpacity>
+						<Text style={[txt.noto32b, {color: GRAY10}]}>앱 버전</Text>
 					</View>
+
+					<Text style={[txt.noto28, {color: GRAY10}]}>1.0 v</Text>
 				</View>
 			</View>
 		</ScrollView>
@@ -101,7 +96,7 @@ export default SettingInformAsk = ({route}) => {
 const styles = StyleSheet.create({
 	container: {
 		width: 750 * DP,
-		height: 780 * DP,
+		height: 724 * DP,
 		marginTop: 10 * DP,
 		backgroundColor: '#FFFFFF',
 	},
@@ -113,9 +108,10 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 2 * DP,
 	},
 	serviceContainer: {
-		height: 128 * DP,
+		height: 202 * DP,
 		paddingLeft: 48 * DP,
-		justifyContent: 'center',
+		borderBottomColor: GRAY40,
+		borderBottomWidth: 2 * DP,
 	},
 	termsContainer: {
 		height: 260 * DP,
@@ -125,13 +121,10 @@ const styles = StyleSheet.create({
 	},
 	versionContainer: {
 		height: 128 * DP,
-		width: 750 * DP,
 		paddingLeft: 48 * DP,
 		flexDirection: 'row',
 		alignContent: 'center',
 		alignItems: 'center',
-		borderBottomColor: GRAY40,
-		borderBottomWidth: 2 * DP,
 	},
 });
 //PR충돌로 인한 해결

@@ -12,11 +12,11 @@ import {getMissingReportList} from 'Root/api/feedapi.js';
 import {getPettypes} from 'Root/api/userapi';
 import {btn_w306_h68, btn_w306_h68_r2} from 'Component/atom/btn/btn_style';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
+import CheckBox from 'Root/component/molecules/select/CheckBox';
 export default MissingReportList = props => {
 	const navigation = useNavigation();
 	const [showUrgentBtns, setShowUrgentBtns] = React.useState(true); //긴급버튼목록
 	const [showActionButton, setShowActionButton] = React.useState(false); // 긴급게시(하얀버전) 클릭 시 - 실종/제보 버튼 출력 Boolean
-	const [refreshing, setRefreshing] = React.useState(false);
 
 	const [data, setData] = React.useState([]);
 	const [filterData, setFilterData] = React.useState({
@@ -26,20 +26,8 @@ export default MissingReportList = props => {
 		request_number: 10,
 	});
 	const [petTypes, setPetTypes] = React.useState(['동물종류']);
-
-	React.useEffect(() => {
-		getPettypes(
-			{},
-			types => {
-				const species = [...petTypes];
-				types.msg.map((v, i) => {
-					species[i + 1] = v.pet_species;
-				});
-				setPetTypes(species);
-			},
-			err => Modal.alert(err),
-		);
-	}, []);
+	const [onlyMissing, setOnlyMissing] = React.useState(false);
+	const [onlyReport, setOnlyReport] = React.useState(false);
 
 	// 실종 데이터 불러오기 (아직 API 미작업 )
 	React.useEffect(() => {
@@ -65,7 +53,7 @@ export default MissingReportList = props => {
 		};
 		getList();
 		return unsubscribe;
-	}, [refreshing, filterData]);
+	}, [filterData]);
 
 	//제보 게시글 쓰기 클릭
 	const moveToReportForm = () => {
@@ -128,9 +116,11 @@ export default MissingReportList = props => {
 	};
 
 	//동물종류 필터
-	const onSelectKind = kind => {
+	const onSelectKind = async kind => {
+		const fetchPetKindData = await PET_KIND();
+		let petKind = fetchPetKindData.map((v, i) => v.pet_species);
 		Modal.popSelectScrollBoxModal(
-			[petTypes],
+			[petKind],
 			'동물 종류 선택',
 			selected => {
 				selected == '동물종류'
@@ -185,6 +175,16 @@ export default MissingReportList = props => {
 										/>
 									</View>
 								</View>
+							</View>
+						</View>
+						<View style={[searchProtectRequest.kindFilter]}>
+							<View style={[searchProtectRequest.kindFilterItem, {flexDirection: 'row'}]}>
+								<Text style={[txt.noto28, {color: GRAY10}]}>실종</Text>
+								<CheckBox onCheck={() => setOnlyMissing(!onlyMissing)} />
+							</View>
+							<View style={[searchProtectRequest.kindFilterItem, {flexDirection: 'row'}]}>
+								<Text style={[txt.noto28, {color: GRAY10}]}>제보</Text>
+								<CheckBox onCheck={() => setOnlyReport(!onlyReport)} />
 							</View>
 						</View>
 						<View style={[searchProtectRequest.animalMissingReportList]}>

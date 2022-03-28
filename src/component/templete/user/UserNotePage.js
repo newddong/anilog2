@@ -9,12 +9,9 @@ import {GRAY10, APRI10, BLACK, WHITE} from 'Root/config/color';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import {textstyles} from '../style_templete';
 import {ScrollView} from 'react-native-gesture-handler';
-import NoteMessageList from 'Component/organism/list/NoteMessageList';
+import NoteMessageList from 'Root/component/organism/list/NoteMessageList';
 import {getMemoBoxWithReceiveID} from 'Root/api/userapi';
 import {useNavigation} from '@react-navigation/native';
-import ReplyWriteBox from 'Component/organism/input/ReplyWriteBox';
-import {useKeyboardBottom} from 'Component/molecules/input/usekeyboardbottom';
-import {createMemoBox} from 'Root/api/userapi';
 /**
  * 쪽지 썸네일 객체
  * @param {object} props - Props Object
@@ -25,7 +22,6 @@ import {createMemoBox} from 'Root/api/userapi';
  */
 const UserNotePage = ({route}) => {
 	console.log('userNotePage', route.params);
-	const keyboardY = useKeyboardBottom(0 * DP);
 	const navigation = useNavigation();
 	const [data, setData] = React.useState();
 	const [loading, setLoading] = React.useState(true);
@@ -75,8 +71,8 @@ const UserNotePage = ({route}) => {
 		);
 	} else {
 		return (
-			<View style={[styles.container]}>
-				<View style={[styles.messageContainer]}>
+			<View style={styles.container}>
+				<View style={styles.messageContainer}>
 					<NoteMessageList data={data} />
 				</View>
 				<View style={[{position: 'absolute', bottom: keyboardY}, {backgroundColor: WHITE}]} onLayout={onReplyBtnLayout}>
@@ -94,7 +90,6 @@ const styles = StyleSheet.create({
 	},
 	messageContainer: {
 		marginTop: 30 * DP,
-		height: 1150 * DP,
 	},
 });
 

@@ -14,7 +14,7 @@ import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
 import ShelterSmallLabel from 'Root/component/molecules/label/ShelterSmallLabel';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 
-export default ArticleCommentList = props => {
+export default CommunityCommentList = props => {
 	// console.log('props.showAllContents', props.route.params.showAllContents);
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
@@ -25,13 +25,13 @@ export default ArticleCommentList = props => {
 	const input = React.useRef();
 	const addChildCommentFn = React.useRef(() => {});
 	const [refresh, setRefresh] = React.useState(true);
-	const data = props.route.params.protectObject;
+	const data = props.route.params.feedobject;
 	const keyboardY = useKeyboardBottom(0 * DP);
 
 	React.useEffect(() => {
-		getCommentListByProtectId(
+		getCommentListByFeedId(
 			{
-				protect_request_object_id: data,
+				feedobject_id: data,
 				request_number: 1000,
 			},
 			comments => {
@@ -45,7 +45,6 @@ export default ArticleCommentList = props => {
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
 	const onWrite = () => {
 		if (content.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
-
 		let param = {
 			comment_photo_uri: photo, //사진uri
 			comment_contents: content, //내용
@@ -120,28 +119,6 @@ export default ArticleCommentList = props => {
 		addChildCommentFn.current = addChildComment;
 	};
 
-	const onClickShelterLabel = () => {
-		console.log('ddd');
-	};
-
-	//보호요청 더보기의 리스트 중 한 아이템의 좋아요 태그 클릭
-	const onPressFavoriteTag = (item, index) => {
-		console.log('FavoriteTag', index, item);
-	};
-
-	//보호요청 게시글 작성 보호소 라벨의 좋아요 태그 클릭
-	const onPressShelterLabelFavorite = () => {
-		console.log('d');
-	};
-	//보호소 라벨 공유 클릭
-	const onPressShare = e => {
-		Modal.popSocialModal(
-			() => alert('kakao'),
-			() => alert('Link'),
-			() => alert('link'),
-		);
-	};
-
 	const [heightReply, setReplyHeight] = React.useState(0);
 	const onReplyBtnLayout = e => {
 		setReplyHeight(e.nativeEvent.layout.height);
@@ -161,33 +138,11 @@ export default ArticleCommentList = props => {
 		if (index > 0) return <CommentList items={item} onPressReplyBtn={onReplyBtnClick} />;
 	};
 
-	const protectRequestContent = () => {
+	const communityContent = () => {
 		return (
 			<View style={[style.contentContainer]}>
-				<View style={[style.content_container_label]}>
-					<ShelterSmallLabel data={data.protect_request_writer_id} onClickLabel={onClickShelterLabel} />
-					{/* <View style={[temp_style.button_animalProtectRequestDetail]}>
-						<TouchableOpacity onPress={onPressShelterLabelFavorite} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
-							<FavoriteTag48_Filled />
-							<Text style={[txt.roboto24, {color: APRI10, alignSelf: 'center', textAlign: 'center'}]}>
-								{data ? count_to_K(data.protect_request_writer_id.user_follow_count) : ''}
-							</Text>
-						</TouchableOpacity>
-						<View collapsable={false}>
-							<TouchableOpacity onPress={onPressShare} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
-								<Share48_Filled />
-								<Text style={[txt.roboto24, {color: APRI10}]}>공유</Text>
-							</TouchableOpacity>
-						</View>
-					</View> */}
-				</View>
-				<View style={[style.cotent_container_header]}>
-					<Text style={[txt.noto28, {color: GRAY10}]}>보호요청</Text>
-					<Text style={[txt.noto32b, {}]}>{data.protect_request_title || ''}</Text>
-				</View>
-				{/* <View style={[style.cotent_container_info]}>
-					<ProtectAnimalInfoBox data={data} />
-				</View> */}
+				<View style={[style.content_container_label]}></View>
+				<View style={[style.cotent_container_header]}></View>
 			</View>
 		);
 	};
@@ -206,7 +161,7 @@ export default ArticleCommentList = props => {
 				extraData={refresh}
 				renderItem={render}
 				showsVerticalScrollIndicator={false}
-				ListHeaderComponent={protectRequestContent}
+				ListHeaderComponent={communityContent}
 				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
 			/>
 			{userGlobalObject.userInfo._id != '' && (editComment || props.route.name == 'ProtectCommentList') ? (

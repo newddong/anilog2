@@ -10,6 +10,7 @@ import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 import LogoHeader from 'Root/navigation/header/LogoHeader';
 import CommunityMain from './community_stack/CommunityMain';
 import CommunityMainStack from './community_stack/CommunityMainStack';
+import SearchMainStack from '../search_tab/SearchMainStack';
 
 const MainTabNav = createBottomTabNavigator();
 
@@ -98,10 +99,10 @@ export default MainTabNavigation = ({route, navigation}) => {
 			<MainTabNav.Screen
 				name="Search"
 				options={{
-					header: props => <InputAndSearchHeader {...props} />,
 					tabBarShowLabel: false,
+					header: props => false,
 				}}>
-				{props => <SearchTabNavigation {...props} />}
+				{props => <SearchMainStack {...props} />}
 			</MainTabNav.Screen>
 		</MainTabNav.Navigator>
 	);

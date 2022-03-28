@@ -118,4 +118,13 @@ const styles = StyleSheet.create({
 	},
 });
 
+UserAccount.defaultProps = {
+	onLabelClick: e => console.log(e),
+	onClickFollow: e => console.log(e),
+	onCheckBox: e => console.log(e),
+	checkBoxMode: false,
+	checkBoxState: false,
+	showFollowBtn: false,
+};
+
 export default UserNote;

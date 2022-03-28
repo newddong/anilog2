@@ -2,7 +2,7 @@ import React from 'react';
 import {FlatList, ScrollView, Text, View, StyleSheet, Image} from 'react-native';
 import UserAccount from 'Organism/listitem/UserAccount';
 import {accountHashList} from 'Organism/style_organism copy';
-import UserNote from '../listitem/UserNote';
+import UserNote from './UserNote';
 import DP from 'Root/config/dp';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {txt} from 'Root/config/textstyle';

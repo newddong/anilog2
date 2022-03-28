@@ -28,7 +28,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 	const [interestLoaded, setInterestLoaded] = React.useState(false);
 	const [contentSendObejct, setContentSendObject] = React.useState();
 	const [refresh, setRefresh] = React.useState(false);
-	var temp = [];
+	let temp = [];
 	// 갱신되는 데이터는 Header에도 Json형태로 전해짐
 	React.useEffect(() => {
 		navigation.setParams({data: data, route_name: route.name});
@@ -66,7 +66,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 		// console.log('interest list', interestList);
 
 		if (interestLoaded) {
-			for (var props of contentInterest) {
+			for (let props of contentInterest) {
 				const getKey = Object.entries(interestList[0]).map(content => {
 					// console.log('hihihi', content[1], props);
 
@@ -83,7 +83,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 					}
 				});
 			}
-			var locationObject = {interests_location: locationInterest};
+			let locationObject = {interests_location: locationInterest};
 			Object.assign(locationObject, temp);
 			console.log('mergedObjecct', locationObject);
 			setData(prevState => ({

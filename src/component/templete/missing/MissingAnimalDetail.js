@@ -350,28 +350,29 @@ const MissingAnimalTitle = props => {
 	//포스터 타이틀 동물 종류
 	const data = props.data;
 	if (!data) return false;
+	let animalSpecies = '';
 	switch (data.missing_animal_species) {
 		case '개':
-			var animalSpecies = '강아지를';
+			animalSpecies = '강아지를';
 			break;
 		case '고양이':
-			var animalSpecies = '고양이를';
+			animalSpecies = '고양이를';
 			break;
 		case '기타 포유류':
-			var animalSpecies = '반려동물을';
+			animalSpecies = '반려동물을';
 			break;
 		case '조류':
-			var animalSpecies = data.missing_animal_species_detail.toString() + '를';
+			animalSpecies = data.missing_animal_species_detail.toString() + '를';
 			break;
 		case '수중생물':
-			var animalSpecies = '물고기를';
+			animalSpecies = '물고기를';
 
 			break;
 		case '기타':
-			var animalSpecies = data.missing_animal_species_detail.toString() + '를';
+			animalSpecies = data.missing_animal_species_detail.toString() + '를';
 			break;
 		default:
-			var animalSpecies = '반려동물을';
+			animalSpecies = '반려동물을';
 			break;
 	}
 
@@ -382,15 +383,15 @@ const MissingAnimalTitle = props => {
 const MissingAnimalText = props => {
 	const data = props.data;
 	if (!data.missing_animal_date) return false;
-	var newText = data.missing_animal_date;
+	let newText = data.missing_animal_date;
 	console.log('뉴 텍스트', newText);
-	var splitedNewText = newText.split('-');
-	var animalSex = '';
+	let splitedNewText = newText.split('-');
+	let animalSex = '';
 	console.log('newDateDate', newText.split('-'));
-	var newYearText = splitedNewText[0] + '년 ';
-	var newDayText = splitedNewText[1] + '월 ' + '월 ' + splitedNewText[2].toString().substring(0, 2) + '일';
-	var splitAddress = data.missing_animal_lost_location.split('"');
-	var newMissingAddress = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
+	let newYearText = splitedNewText[0] + '년 ';
+	let newDayText = splitedNewText[1] + '월 ' + '월 ' + splitedNewText[2].toString().substring(0, 2) + '일';
+	let splitAddress = data.missing_animal_lost_location.split('"');
+	let newMissingAddress = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
 
 	if (data.missing_animal_sex == 'male') {
 		animalSex = '/ 남';
@@ -427,7 +428,7 @@ const MissingAnimalText = props => {
 // 포스터 전화번호 View 컴포넌트
 const MissingAnimalPhone = props => {
 	const data = props.data;
-	var phoneNumber = phoneFomatter(data.missing_animal_contact);
+	let phoneNumber = phoneFomatter(data.missing_animal_contact);
 	return (
 		<View style={missingAnimalDetail.phoneNumberBox}>
 			<Text style={missingAnimalDetail.missingTextWhite18}>동물을 찾으면 직접 전단지를 수거하겠습니다. 전단지를 떼지 말아주세요!!</Text>

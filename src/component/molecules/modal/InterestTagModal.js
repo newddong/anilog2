@@ -41,6 +41,37 @@ const InterestTagModal = props => {
 	const [activityLists, setActivityLists] = React.useState([]);
 
 	React.useEffect(() => {
+		let tempUserInterestContentList = [];
+		let tempUserInterestLocationList = [];
+
+		//유저 관심사 목록 DB에서 받아오기
+		getInterestsList({}, interests => {
+			let acitivityList = [];
+			const nameList = {interests_beauty: '미용', interests_activity: '놀이', interests_food: '사료&간식', interests_health: '건강'};
+			const interestObj = interests.msg[0];
+			const getinterest = Object.entries(interestObj).map((category, idx) => {
+				if (idx == 2) {
+					setAddressList(category[1]);
+				}
+				if (idx >= 3) {
+					acitivityList.push({category: nameList[category[0]], content: category[1]});
+				}
+			});
+			setActivityLists(acitivityList);
+		});
+		//현재 유저의 관심사 리스트를 목록들에 적용
+		const saveUserInterest = Object.entries(props.data).map(interest => {
+			console.log('object', interest);
+			if (props.isActivation) {
+				tempUserInterestContentList.push(interest[1]);
+			} else {
+				tempUserInterestLocationList.push(interest[1]);
+			}
+
+			console.log('아오..', tempUserInterestLocationList, tempUserInterestContentList);
+			setUserInterestContent(tempUserInterestContentList);
+			setUserInterestLocation(tempUserInterestLocationList);
+		});
 		if (props.category == 'Review') {
 			getAddressList(
 				{},
@@ -72,8 +103,8 @@ const InterestTagModal = props => {
 				err => console.log('err', err),
 			);
 		} else {
-			var tempUserInterestContentList = [];
-			var tempUserInterestLocationList = [];
+			tempUserInterestContentList = [];
+			tempUserInterestLocationList = [];
 
 			//유저 관심사 목록 DB에서 받아오기
 			getInterestsList({}, interests => {

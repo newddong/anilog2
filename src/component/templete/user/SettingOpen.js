@@ -11,6 +11,7 @@ import {getSettingPublic, updateSettingPublic} from 'Root/api/settingpublic';
 import {INFO_QUESTION} from 'Root/i18n/msg';
 import FastImage from 'react-native-fast-image';
 import {useState} from 'react/cjs/react.production.min';
+import OneOnOffLine from 'Root/component/organism/form/OneLineOnOff';
 
 export default SettingOpen = ({route}) => {
 	const [openObject, setOpenObject] = React.useState();
@@ -23,7 +24,8 @@ export default SettingOpen = ({route}) => {
 		getSettingPublic(
 			{},
 			noticeObject => {
-				var temp = noticeObject.msg[0];
+				let temp = noticeObject.msg[0];
+				let tempInt = 0;
 				console.log('noticeObject', noticeObject.msg[0]);
 				delete temp._id;
 				delete temp.setting_public_update_date;
@@ -32,8 +34,16 @@ export default SettingOpen = ({route}) => {
 				console.log('temp', temp);
 				if (temp.setting_public_all) {
 					setOnCount(3);
+				} else {
+					for (let i of Object.values(temp)) {
+						console.log('iii', i);
+						if (i == true) {
+							tempInt++;
+						}
+					}
 				}
 				setOpenObject(temp);
+				setOnCount(tempInt);
 				setLoading(false);
 			},
 

@@ -2,30 +2,39 @@ import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet} from 'react-native';
 import {GRAY10, GRAY40, APRI10, GRAY20} from 'Root/config/color';
-import {txt} from 'Root/config/textstyle';
-import moment from 'moment';
 import DP from 'Root/config/dp';
-import {getAllAnnouncement} from 'Root/api/announcement';
 import {FlatList} from 'react-native-gesture-handler';
-import {MainLogo} from 'Root/component/atom/icon';
-import AniButton from 'Root/component/molecules/button/AniButton';
-import {getHelpByCategoryDynamicQuery} from 'Root/api/helpbycategory';
+import {getHelpByCategoryDynamicQuery, getSearchHelpByCategoryList} from 'Root/api/helpbycategory';
 import OneNotice from 'Organism/listitem/OneNotice';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
-// 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
-const CategoryHelp = ({route}) => {
-	const navigation = useNavigation();
+//카테고리별 도움말 화면
+const CategoryHelp = ({route, props}) => {
 	const [data, setData] = React.useState();
 	const [loading, setLoading] = React.useState(false);
 	const [categoryList, setCategoryList] = React.useState([]);
+	let categoryName = route.params?.category;
 	const [categoryLoad, setCategoryLoaded] = React.useState(false);
-	console.log('categoryHelp', route.params?.category);
-	const categoryName = route.params?.category || '전체';
+
 	React.useEffect(() => {
+		getHelpByCategoryDynamicQuery(
+			{},
+			result => {
+				console.log('all the list', result.msg);
+				setData(result.msg);
+				setLoading(false);
+			},
+			err => {
+				console.log('all help list err', err);
+			},
+		);
+	}, []);
+
+	React.useEffect(() => {
+		// console.log('categoryHelp', route);
 		getCommonCodeDynamicQuery(
 			{common_code_c_name: 'helpbycategoryobjects'},
 			result => {
-				console.log('111', result.msg);
+				// console.log('111', result.msg);
 				setCategoryList(result.msg.slice(1));
 				setCategoryLoaded(true);
 			},
@@ -35,10 +44,24 @@ const CategoryHelp = ({route}) => {
 		);
 	}, [route]);
 	React.useEffect(() => {
+		if (categoryName == '전체') {
+			getHelpByCategoryDynamicQuery(
+				{},
+				result => {
+					// console.log('all the list', result.msg);
+					setData(result.msg);
+					setLoading(false);
+				},
+				err => {
+					console.log('all help list err', err);
+				},
+			);
+		}
+
 		if (categoryLoad) {
-			for (var i in categoryList) {
-				console.log('list', categoryList[i]);
-				if (categoryList[i].common_code_msg_kor == categoryName) {
+			for (let i in categoryList) {
+				// console.log('list', categoryList[i]);
+				if (categoryList[i].common_code_msg_kor == categoryName && categoryName != '전체') {
 					getHelpByCategoryDynamicQuery(
 						{help_by_category_common_code_id: categoryList[i]._id},
 						result => {
@@ -55,8 +78,14 @@ const CategoryHelp = ({route}) => {
 	}, [categoryList]);
 
 	const renderItem = ({item, index}) => {
-		console.log('item', item);
-		return <OneNotice uptitle={item.common_code_msg_kor} downtitle={item.help_by_category_title} contents={item.help_by_category_contents} />;
+		// console.log('item', item);
+		return (
+			<OneNotice
+				uptitle={item.common_code_msg_kor}
+				downtitle={item.help_by_category_title}
+				contents={item.help_by_category_contents.replace(/\\n/g, `\n`)}
+			/>
+		);
 	};
 
 	if (loading) {

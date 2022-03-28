@@ -45,6 +45,7 @@ export default SettingAlarm = ({route}) => {
 						}
 					}
 				}
+				setOnCount(tempInt);
 				setAlarm(temp);
 				setLoading(false);
 			},

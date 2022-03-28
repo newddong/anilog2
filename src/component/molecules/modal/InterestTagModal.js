@@ -103,8 +103,8 @@ const InterestTagModal = props => {
 				err => console.log('err', err),
 			);
 		} else {
-			var tempUserInterestContentList = [];
-			var tempUserInterestLocationList = [];
+			tempUserInterestContentList = [];
+			tempUserInterestLocationList = [];
 
 			//유저 관심사 목록 DB에서 받아오기
 			getInterestsList({}, interests => {

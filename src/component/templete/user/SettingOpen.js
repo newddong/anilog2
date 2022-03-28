@@ -43,6 +43,7 @@ export default SettingOpen = ({route}) => {
 					}
 				}
 				setOpenObject(temp);
+				setOnCount(tempInt);
 				setLoading(false);
 			},
 

@@ -23,7 +23,7 @@ import Loading from 'Root/component/molecules/modal/Loading';
 
 export default Profile = ({route}) => {
 	const navigation = useNavigation();
-	const [data, setData] = React.useState(''); //라벨을 클릭한 유저의 userObject data
+	const [data, setData] = React.useState({...route.params?.userobject, feedList: []}); //라벨을 클릭한 유저의 userObject data
 	const [feedList, setFeedList] = React.useState([]);
 	const [tabMenuSelected, setTabMenuSelected] = React.useState(0); //프로필 Tab의 선택상태
 	const [showOwnerState, setShowOwnerState] = React.useState(false); // 현재 로드되어 있는 profile의 userType이 Pet인 경우 반려인 계정 리스트의 출력 여부
@@ -115,8 +115,8 @@ export default Profile = ({route}) => {
 	};
 
 	//프로필의 태그탭의 피드 썸네일 클릭
-	const onClick_Thumbnail_TagTab = () => {
-		navigation.push('UserTagFeedList');
+	const onClick_Thumbnail_TagTab = (index, item) => {
+		navigation.push('UserTagFeedList', {userobject: data, selected: item});
 	};
 
 	//프로필의 보호활동 탭의 피드 썸네일 클릭
@@ -350,9 +350,13 @@ export default Profile = ({route}) => {
 				);
 			}
 			if (data.user_type != SHELTER) {
-				if (tabMenuSelected == 0 || tabMenuSelected == 1) {
+				if (tabMenuSelected == 0) {
 					return <FeedThumbnailList items={item} whenEmpty={whenFeedThumbnailEmpty} onClickThumnail={onClick_Thumbnail_FeedTab} />;
-				} else {
+				} 
+				else if(tabMenuSelected == 1){
+					return <FeedThumbnailList items={item} whenEmpty={whenFeedThumbnailEmpty} onClickThumnail={onClick_Thumbnail_TagTab} />;
+				}
+				else {
 					return <InfoScreen />;
 				}
 			} else {

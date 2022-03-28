@@ -32,8 +32,8 @@ const AskQuestion = ({route}) => {
 	const userAssign_agreementCheckList = [{text: '개인정보 수집 이용약관 동의 (필수)', detail: true}];
 	const [id, setId] = React.useState();
 	React.useEffect(() => {
-		var i;
-		var temp = [];
+		let i;
+		let temp = [];
 		getCommonCodeDynamicQuery(
 			{common_code_c_name: 'helpbycategoryobjects'},
 
@@ -90,7 +90,7 @@ const AskQuestion = ({route}) => {
 		if (userAgreement && category != '카테고리 선택' && contents && title) {
 			console.log('전송준비 완료');
 			console.log('qetoiqoeti', commomCode, category);
-			for (var i in commomCode) {
+			for (let i in commomCode) {
 				if (commomCode[i].common_code_msg_kor == category) {
 					// console.log('같은거 ', commomCode[i]._id);
 					setId(commomCode[i]._id);

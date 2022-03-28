@@ -40,12 +40,12 @@ const InterestTagModal = props => {
 	const [activityLists, setActivityLists] = React.useState([]);
 
 	React.useEffect(() => {
-		var tempUserInterestContentList = [];
-		var tempUserInterestLocationList = [];
+		let tempUserInterestContentList = [];
+		let tempUserInterestLocationList = [];
 
 		//유저 관심사 목록 DB에서 받아오기
 		getInterestsList({}, interests => {
-			var acitivityList = [];
+			let acitivityList = [];
 			const nameList = {interests_beauty: '미용', interests_activity: '놀이', interests_food: '사료&간식', interests_health: '건강'};
 			const interestObj = interests.msg[0];
 			const getinterest = Object.entries(interestObj).map((category, idx) => {

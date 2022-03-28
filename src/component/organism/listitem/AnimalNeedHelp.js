@@ -129,8 +129,8 @@ export default AnimalNeedHelp = props => {
 	};
 	const getParsedAddress = () => {
 		let address = data.missing_animal_lost_location;
-		var splitAddress = address.split('"');
-		var newMissingLocation = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
+		let splitAddress = address.split('"');
+		let newMissingLocation = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
 		return newMissingLocation;
 	};
 

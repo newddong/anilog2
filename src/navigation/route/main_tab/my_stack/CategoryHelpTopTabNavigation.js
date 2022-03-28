@@ -24,13 +24,13 @@ const CategoryHelpTopTabNavigation = ({route, navigation}) => {
 	const [data, setData] = React.useState();
 	const [commonData, setCommomData] = React.useState();
 	React.useEffect(() => {
-		var temp = [];
-		var temp2 = {};
+		let temp = [];
+		let temp2 = {};
 		getCommonCodeDynamicQuery(
 			{common_code_c_name: 'helpbycategoryobjects'},
 			result => {
 				console.log('result', result);
-				for (var i in result.msg) {
+				for (let i in result.msg) {
 					if (i >= 1) {
 						temp.push(result.msg[i].common_code_msg_kor);
 						temp2[result.msg[i]._id] = result.msg[i].common_code_msg_kor;

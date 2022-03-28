@@ -59,13 +59,13 @@ export default FeedMedia = props => {
 	const emergency_location = missing_animal_lost_location || report_witness_location;
 	if (feed_type == 'missing') {
 		const newMissingDateText = missing_animal_date.toString().split('-');
-		var newMissingDate = newMissingDateText[0] + '.' + newMissingDateText[1] + '.' + newMissingDateText[2].toString().substring(0, 2);
-		var splitAddress = missing_animal_lost_location.split('"');
-		var newMissingAddress = splitAddress[11];
+		let newMissingDate = newMissingDateText[0] + '.' + newMissingDateText[1] + '.' + newMissingDateText[2].toString().substring(0, 2);
+		let splitAddress = missing_animal_lost_location.split('"');
+		let newMissingAddress = splitAddress[11];
 	}
 	if (feed_type == 'report') {
 		const newMissingDateText = report_witness_date.toString().split('-');
-		var newMissingDate = newMissingDateText[0] + '.' + newMissingDateText[1] + '.' + newMissingDateText[2].toString().substring(0, 2);
+		let newMissingDate = newMissingDateText[0] + '.' + newMissingDateText[1] + '.' + newMissingDateText[2].toString().substring(0, 2);
 		// var splitAddress = report_witness_location.split('"');
 		// var newMissingAddress = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
 	}
@@ -147,7 +147,16 @@ export default FeedMedia = props => {
 					}}
 					horizontal={true}>
 					{feed_medias.map((data, idx) => {
-						return <PhotoTagItem style={styles.img_square_750x750} uri={data.media_uri} data={data.media_uri} taglist={data.tags} key={idx} viewmode={true} />
+						return (
+							<PhotoTagItem
+								style={styles.img_square_750x750}
+								uri={data.media_uri}
+								data={data.media_uri}
+								taglist={data.tags}
+								key={idx}
+								viewmode={true}
+							/>
+						);
 						// return <Image source={{uri: data.media_uri}} style={styles.img_square_750x750} key={idx} />;
 					})}
 					{/* {getFeedIcon()} */}

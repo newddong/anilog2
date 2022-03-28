@@ -12,7 +12,7 @@ const CategoryHelp = ({route, props}) => {
 	const [data, setData] = React.useState();
 	const [loading, setLoading] = React.useState(false);
 	const [categoryList, setCategoryList] = React.useState([]);
-	var categoryName = route.params?.category;
+	let categoryName = route.params?.category;
 	const [categoryLoad, setCategoryLoaded] = React.useState(false);
 
 	React.useEffect(() => {
@@ -59,7 +59,7 @@ const CategoryHelp = ({route, props}) => {
 		}
 
 		if (categoryLoad) {
-			for (var i in categoryList) {
+			for (let i in categoryList) {
 				// console.log('list', categoryList[i]);
 				if (categoryList[i].common_code_msg_kor == categoryName && categoryName != '전체') {
 					getHelpByCategoryDynamicQuery(

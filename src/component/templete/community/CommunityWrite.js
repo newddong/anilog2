@@ -22,6 +22,11 @@ export default CommunityWrite = props => {
 		community_location: '',
 		community_is_temporary: false,
 		community_type: '',
+		community_animalType: {
+			dog: false,
+			cat: false,
+			other: false,
+		},
 	});
 	const [animalType, setAnimalType] = React.useState({
 		dog: false,
@@ -40,41 +45,41 @@ export default CommunityWrite = props => {
 		const param = props.route.params;
 		if (param?.data) {
 			//다른 주소 검색 결과값 적용
-			// console.log('ddddd', JSON.stringify(param.data));
+			console.log('ddddd', JSON.stringify(param.data));
 			const er = {
-				community_title: 'Asd',
-				community_interests: ['관광지', '펫카페', '놀이터'],
-				community_content: '<div>asdsadsda</div>',
-				community_location: false,
-				community_type: '',
-				location: {
+				community_title: 'wpahr\t',
+				community_interests: ['사료', '병원', '간식'],
+				community_content: '<div>asdasd</div>',
+				community_location: {
 					addr: {
 						road_address: {
-							address_name: '서울특별시 마포구 광성로4길 22-12',
+							address_name: '서울특별시 마포구 광성로4길 10-7',
 							region_1depth_name: '서울',
 							region_2depth_name: '마포구',
 							region_3depth_name: '',
 							road_name: '광성로4길',
 							underground_yn: 'N',
-							main_building_no: '22',
-							sub_building_no: '12',
+							main_building_no: '10',
+							sub_building_no: '7',
 							building_name: '',
 							zone_no: '04096',
 						},
 						address: {
-							address_name: '서울 마포구 신수동 89-77',
+							address_name: '서울 마포구 신수동 89-60',
 							region_1depth_name: '서울',
 							region_2depth_name: '마포구',
 							region_3depth_name: '신수동',
 							mountain_yn: 'N',
 							main_address_no: '89',
-							sub_address_no: '77',
+							sub_address_no: '60',
 							zip_code: '',
 						},
 						detailAddr: '',
 					},
-					region: {latitude: 37.54872100000001, longitude: 126.93712499999995},
+					region: {latitude: 37.54911687456195, longitude: 126.9371623504001},
 				},
+				community_is_temporary: false,
+				community_type: '',
 			};
 			setData(param.data);
 			// richText.current?.focusContentEditor();

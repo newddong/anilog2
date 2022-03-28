@@ -157,14 +157,6 @@ export default SearchMap = ({route}) => {
 			params: {data: data},
 			merge: false,
 		});
-		// navigation.navigate('CommunityWrite', {
-		// 	addr: finalized,
-		// 	region: {
-		// 		latitude: changedLatitude != '' ? changedLatitude : init_latitude,
-		// 		longitude: changedLongitude != '' ? changedLongitude : init_longitude,
-		// 	},
-
-		// });
 	};
 
 	return (
@@ -186,7 +178,8 @@ export default SearchMap = ({route}) => {
 						<MapView
 							// provider={PROVIDER_GOOGLE} // remove if not using Google Maps
 							style={[style.mapContainer]}
-							customMapStyle={mapStyle2}
+							mapType={'standard'}
+							// customMapStyle={mapStyle2}
 							zoomEnabled
 							zoomControlEnabled
 							onRegionChangeComplete={(region, gesture) => {
@@ -390,8 +383,8 @@ const style = StyleSheet.create({
 	},
 	currentLocationIcon: {
 		position: 'absolute',
-		right: 25 * DP,
-		bottom: 25 * DP,
+		right: 50 * DP,
+		bottom: 220 * DP,
 		width: 60 * DP,
 		height: 60 * DP,
 		// backgroundColor: 'red',

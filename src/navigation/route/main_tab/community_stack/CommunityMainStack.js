@@ -12,7 +12,7 @@ import SimpleHeader from 'Root/navigation/header/SimpleHeader';
 import ArticleDetail from 'Root/component/templete/community/ArticleDetail';
 import ArticleMain from 'Root/component/templete/community/ArticleMain';
 import Profile from 'Root/component/templete/profile/Profile';
-import ArticleCommentList from 'Root/component/templete/community/ArticleCommentList';
+import ArticleCommentList from 'Root/component/templete/community/CommunityCommentList';
 import FeedCommentList from 'Root/component/templete/feed/FeedCommentList';
 import CommunityWrite from 'Root/component/templete/community/CommunityWrite';
 import SendHeader from 'Root/navigation/header/SendHeader';
@@ -24,6 +24,7 @@ import ReviewDetail from 'Root/component/templete/community/ReviewDetail';
 import SearchMap from 'Root/component/templete/search/SearchMap';
 import {Example} from 'Root/component/templete/community/RichEditorExample';
 import ReviewStackNavigation from './review_tab/ReviewStackNavigation';
+import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
 
 const CommunityMainStackNavi = createStackNavigator();
 
@@ -54,8 +55,8 @@ export default CommunityMainStack = props => {
 				})}
 			/>
 			<CommunityMainStackNavi.Screen
-				name={'ArticleCommentList'}
-				component={FeedCommentList}
+				name={'CommunityCommentList'}
+				component={CommunityCommentList}
 				options={({route}) => ({
 					// headerShown: false,
 					header: props => <SimpleHeader {...props} />,

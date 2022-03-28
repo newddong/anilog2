@@ -3145,6 +3145,18 @@ export const searchProtectRequest = StyleSheet.create({
 			right: 0,
 		},
 	},
+	kindFilter: {
+		width: 270 * DP,
+		marginTop: 30 * DP,
+		flexDirection: 'row',
+		alignSelf: 'flex-end',
+		marginRight: 48 * DP,
+		justifyContent: 'space-between',
+	},
+	kindFilterItem: {
+		width: 130 * DP,
+		justifyContent: 'space-between',
+	},
 	animalNeedHelpList: {
 		marginTop: 80 * DP,
 		width: 750 * DP,
@@ -3152,7 +3164,7 @@ export const searchProtectRequest = StyleSheet.create({
 		// backgroundColor: '#FF00FF',
 	},
 	animalMissingReportList: {
-		marginTop: 50 * DP,
+		marginTop: 30 * DP,
 		width: 750 * DP,
 		alignSelf: 'center',
 		// backgroundColor: '#FF00FF',

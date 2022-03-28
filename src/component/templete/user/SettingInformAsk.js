@@ -134,3 +134,4 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 2 * DP,
 	},
 });
+//PR충돌로 인한 해결

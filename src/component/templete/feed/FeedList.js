@@ -279,3 +279,4 @@ export default FeedList = ({route, navigation}) => {
 		</View>
 	);
 };
+//PR충돌로 인한 해결

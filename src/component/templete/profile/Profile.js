@@ -330,3 +330,4 @@ export default Profile = ({route, navigation}) => {
 		</View>
 	);
 };
+//PR충돌로 인한 해결

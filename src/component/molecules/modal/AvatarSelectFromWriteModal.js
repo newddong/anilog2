@@ -99,6 +99,17 @@ const AvatarSelectFromWriteModal = props => {
 	} else
 		return (
 			<TouchableOpacity onPress={() => Modal.close()} activeOpacity={1} style={style.background}>
+				{/* <View
+					style={[
+						{
+							width: 654 * DP,
+							alignSelf: 'center',
+							alignItems: 'center',
+							// backgroundColor: 'yellow',
+						},
+					]}>
+					<Text style={[txt.roboto40b, {color: WHITE}]}>계정을 선택해주세요.  </Text>
+				</View> */}
 				<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
 					{scrollIndex >= Math.floor(items.length / 4) || items.length < 4 ? (
 						<></>
@@ -128,7 +139,7 @@ const AvatarSelectFromWriteModal = props => {
 							ref={scrollViewRef}
 							keyExtractor={item => item._id}
 							inverted={true}
-							scrollEnabled={false}
+							// scrollEnabled={false}
 							showsVerticalScrollIndicator={false}
 						/>
 					</View>
@@ -185,7 +196,7 @@ const style = StyleSheet.create({
 		// backgroundColor: 'red',
 	},
 	avatarName: {
-		maxWidth: 340 * DP,
+		// maxWidth: 340 * DP,
 		height: 54 * DP,
 		borderRadius: 20 * DP,
 		marginRight: 10 * DP,

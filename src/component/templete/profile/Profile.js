@@ -173,14 +173,15 @@ export default Profile = ({route}) => {
 		alert('sendMsg');
 	};
 
+	//보호 동물 추가
 	const onPressAddPetBtn = () => {
-		// alert('AddPet');
-		navigation.navigate('MY', {screen: 'AssignProtectAnimalImage'});
+		navigation.navigate('MY', {screen: 'ShelterMenu', params: {pageToMove: 'AssignProtectAnimalImage'}});
 	};
 
+	//보호 요청게시물 추가
 	const onPressAddArticleBtn = () => {
-		//게시물 추가
-		navigation.navigate('MY', {screen: 'AidRequestAnimalList', params: data._id});
+		navigation.navigate('MY', {screen: 'ShelterMenu', params: {pageToMove: 'AidRequestAnimalList'}});
+		// navigation.navigate('MY', {screen: 'AidRequestAnimalList', params: data._id});
 	};
 
 	const petListEmptyComponent = () => {

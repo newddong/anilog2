@@ -71,7 +71,6 @@ export default FeedContent = props => {
 	const [reportLayout, setReportLayout] = React.useState({height: 0, width: 0});
 	const [labelLayout, setlabelLayout] = React.useState({height: 0, width: 0});
 	const [show, setShow] = React.useState(false);
-	const [isMeatballClicked, setIsMeatballClicked] = React.useState(false);
 	//FeedText가 담긴 View 의 onLayout
 	const onLayoutText = event => {
 		const {width, height} = event.nativeEvent.layout;
@@ -161,6 +160,128 @@ export default FeedContent = props => {
 	const onPressFollow = () => {
 		Modal.close();
 		setTimeout(() => {
+			console.log('feed? ', props.data);
+			const rt = {
+				__v: 0,
+				_id: '6241567168490bf2826b52eb',
+				feed_avatar_id: {
+					__v: 0,
+					_id: '6238512752f43bf2b67b0ef4',
+					pet_birthday: null,
+					pet_family: ['61d2de63c0f179ccd5ba5887'],
+					pet_is_temp_protection: true,
+					pet_neutralization: 'unknown',
+					pet_sex: 'male',
+					pet_species: '개',
+					pet_species_detail: '믹스견',
+					pet_status: 'protect',
+					pet_weight: '1',
+					type: 'UserObject',
+					user_agreement: {
+						is_donation_info: false,
+						is_location_service_info: false,
+						is_marketting_info: false,
+						is_over_fourteen: false,
+						is_personal_info: false,
+						is_service: false,
+					},
+					user_denied: false,
+					user_follow_count: 0,
+					user_follower_count: 0,
+					user_interests: {
+						interests_activity: [Array],
+						interests_beauty: [Array],
+						interests_food: [Array],
+						interests_health: [Array],
+						interests_location: [Array],
+					},
+					user_introduction: '',
+					user_is_verified_email: false,
+					user_is_verified_phone_number: false,
+					user_my_pets: [],
+					user_nickname: 'Dd1',
+					user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1647857959548_0018CB09-8FB7-4FD7-982D-5304B69A9478.jpg',
+					user_register_date: '2022-03-21T10:19:19.730Z',
+					user_type: 'pet',
+					user_update_date: '2022-03-21T10:19:19.730Z',
+					user_upload_count: 0,
+				},
+				feed_comment_count: 0,
+				feed_content: '임시보호요!',
+				feed_date: '2022-03-28T06:32:17.261Z',
+				feed_favorite_count: 0,
+				feed_is_like: false,
+				feed_is_protect_diary: false,
+				feed_like_count: 0,
+				feed_medias: [
+					{
+						_id: '6241567168490bf2826b52ec',
+						duration: 0,
+						is_video: false,
+						media_uri:
+							'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648449137140_rn_image_picker_lib_temp_2aa2d01f-10cf-4161-943c-a0660fa96323.jpg',
+						tags: [Array],
+					},
+				],
+				feed_thumbnail:
+					'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648449137140_rn_image_picker_lib_temp_2aa2d01f-10cf-4161-943c-a0660fa96323.jpg',
+				feed_type: 'feed',
+				feed_update_date: '2022-03-28T06:32:17.261Z',
+				feed_writer_id: {
+					__v: 10,
+					_id: '61d2de63c0f179ccd5ba5887',
+					pet_family: [],
+					type: 'UserObject',
+					user_address: {city: '서울특별시', district: '마포구', neighbor: '신수동'},
+					user_agreement: {
+						is_donation_info: true,
+						is_location_service_info: true,
+						is_marketting_info: true,
+						is_over_fourteen: true,
+						is_personal_info: true,
+						is_service: true,
+					},
+					user_denied: false,
+					user_follow_count: 4,
+					user_follower_count: 5,
+					user_interests: {
+						interests_activity: [Array],
+						interests_beauty: [Array],
+						interests_food: [Array],
+						interests_health: [Array],
+						interests_location: [Array],
+					},
+					user_introduction: '아이에',
+					user_is_verified_email: false,
+					user_is_verified_phone_number: true,
+					user_mobile_company: 'SK텔레콤',
+					user_my_pets: [
+						'61d2de8ac0f179ccd5ba58a6',
+						'61d2ff57c0f179ccd5ba6e72',
+						'61e0f9c0c0f179ccd5bb06c3',
+						'6200fa6fc0f179ccd5bb69be',
+						'622053001e5b8dc9cbbb2119',
+						'6224a90702a009f461a26f23',
+						'6225868902a009f461a27dfe',
+						'6226d2db269db4bdc762861d',
+						'6238512752f43bf2b67b0ef4',
+					],
+					user_name: '권상우',
+					user_nickname: '권상우',
+					user_password: '12',
+					user_phone_number: '0422',
+					user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1647932305390_C0975042-AE19-4AF5-955F-F7EC597A67CB.jpg',
+					user_register_date: '2022-01-03T11:30:43.310Z',
+					user_type: 'user',
+					user_update_date: '2022-03-04T16:21:15.980Z',
+					user_upload_count: 37,
+				},
+				height: 479.44,
+				missing_animal_date: '2022-03-28T06:32:17.261Z',
+				offset: 0,
+				report_witness_date: '2022-03-28T06:32:17.261Z',
+				type: 'FeedObject',
+			};
 			Modal.popTwoBtn(
 				props.data.feed_writer_id.user_nickname + '님을 \n 팔로우하시겠습니까?',
 				'아니오',
@@ -261,8 +382,87 @@ export default FeedContent = props => {
 	const meatballActions = context => {
 		//피드 미트볼 메뉴 팝업 분기에 대한 기획의도가 불분명한 상태이므로
 		//출력되는 메뉴에 대한 분기처리는 차후 처리 (현재는 더미로 적용)
-		console.log(context);
-
+		// console.log('context / FeedContent', context);
+		console.log('props.data', props.data);
+		const tt = {
+			__v: 0,
+			_id: '62414d2a68490bf2826b5074',
+			feed_comment_count: 0,
+			feed_content: '보호동물 추가 보호요청게시글 추가 네비게이트 테스트',
+			feed_date: '2022-03-28T05:52:42.594Z',
+			feed_favorite_count: 0,
+			feed_is_like: false,
+			feed_is_protect_diary: true,
+			feed_like_count: 0,
+			feed_medias: [
+				{
+					_id: '62414d2a68490bf2826b5075',
+					duration: 0,
+					is_video: false,
+					media_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648446761894_CA14CC35-DB72-4CCB-BD55-5371F5B166BD.jpg',
+					tags: [Array],
+				},
+				{
+					_id: '62414d2a68490bf2826b5076',
+					duration: 0,
+					is_video: false,
+					media_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648446762432_3E937404-1D8A-4E64-B61D-77D3C61C320B.png',
+					tags: [Array],
+				},
+			],
+			feed_thumbnail: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648446761894_CA14CC35-DB72-4CCB-BD55-5371F5B166BD.jpg',
+			feed_type: 'feed',
+			feed_update_date: '2022-03-28T05:52:42.594Z',
+			feed_writer_id: {
+				__v: 0,
+				_id: '62220ed4477a1c991fd47cf7',
+				pet_family: [],
+				shelter_address: {brief: '서울 중랑구 용마산로 194', detail: '22013'},
+				shelter_delegate_contact_number: '01001096450003',
+				shelter_foundation_date: '2014-08-01T00:00:00.000Z',
+				shelter_homepage: 'Htttp:dd12',
+				shelter_name: '탄지보호소',
+				shelter_type: 'public',
+				type: 'UserObject',
+				user_agreement: {
+					is_donation_info: false,
+					is_location_service_info: false,
+					is_marketting_info: false,
+					is_over_fourteen: false,
+					is_personal_info: false,
+					is_service: false,
+				},
+				user_denied: false,
+				user_email: 'Lanad01@kakao.com',
+				user_follow_count: 2,
+				user_follower_count: 0,
+				user_interests: {
+					interests_activity: [Array],
+					interests_beauty: [Array],
+					interests_food: [Array],
+					interests_health: [Array],
+					interests_location: [Array],
+				},
+				user_introduction: '',
+				user_is_verified_email: false,
+				user_is_verified_phone_number: false,
+				user_my_pets: [],
+				user_name: '탄지보호소',
+				user_nickname: '탄지보호소',
+				user_password: 'tkddn123',
+				user_phone_number: '01001096450003',
+				user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1646399188505_07B57E46-3AFE-4DEF-AC34-974489A43703.jpg',
+				user_register_date: '2022-03-04T13:06:28.612Z',
+				user_type: 'shelter',
+				user_update_date: '2022-03-04T13:06:28.612Z',
+				user_upload_count: 12,
+			},
+			height: 499.712,
+			missing_animal_date: '2022-03-28T05:52:42.594Z',
+			offset: 944.128,
+			report_witness_date: '2022-03-28T05:52:42.594Z',
+			type: 'FeedObject',
+		};
 		let isFavorite = context.favorite_feeds.some(feed => feed._id == _id);
 		console.log('즐겨찾기됨?', isFavorite);
 		let isMyFeed = userGlobalObject.userInfo._id == props.data.feed_writer_id._id;
@@ -281,7 +481,6 @@ export default FeedContent = props => {
 							onPressDelete();
 						}
 						Modal.close();
-						setIsMeatballClicked(false);
 					},
 					() => Modal.close(),
 					false,
@@ -295,7 +494,7 @@ export default FeedContent = props => {
 						// console.log('result / getFollows ', result.msg);
 						let follow_id_list = [];
 						result.msg.map((v, i) => {
-							follow_id_list.push(v.follow_id._id);
+							follow_id_list.push(v.follower_id._id);
 						});
 						let isFollowers = follow_id_list.includes(props.data.feed_writer_id._id); //해당 피드 게시글 작성자가 내 팔로워 목록에 있는지 여부
 						//현재 팔로우 상태 중인 유저의 피드글의 미트볼 헤더 클릭
@@ -318,7 +517,6 @@ export default FeedContent = props => {
 									} else if (selectedItem == '즐겨찾기 취소') {
 										onFavorite(false);
 									}
-									setIsMeatballClicked(false);
 								},
 								() => Modal.close(),
 								false,
@@ -346,7 +544,6 @@ export default FeedContent = props => {
 										onFavorite(false);
 									}
 									Modal.close();
-									setIsMeatballClicked(false);
 								},
 								() => Modal.close(),
 								false,
@@ -378,7 +575,6 @@ export default FeedContent = props => {
 							onPressDelete();
 						}
 						Modal.close();
-						setIsMeatballClicked(false);
 					},
 					() => Modal.close(),
 					false,
@@ -396,7 +592,6 @@ export default FeedContent = props => {
 							onPressReport();
 						}
 						Modal.close();
-						setIsMeatballClicked(false);
 					},
 					() => Modal.close(),
 					false,

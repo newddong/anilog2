@@ -34,11 +34,11 @@ export default LinkedAccountList = props => {
 			<ScrollView style={[{flex: 0}]}>
 				<View style={[linkedAccountList.insideContainer]}>
 					<View style={[linkedAccountList.accountList_step1]}>
-						<ControllableAccountList items={myFollower} title={'팔로워'} />
+						<ControllableAccountList items={myFollower} title={'팔로워'} showFollowStatusText={false} />
 					</View>
 
 					<View style={[linkedAccountList.accountList_step1]}>
-						<ControllableAccountList items={recommendedList} title={'추천'} showCrossMark={true} />
+						<ControllableAccountList items={recommendedList} title={'추천'} showCrossMark={true} showFollowStatusText={false} />
 					</View>
 				</View>
 			</ScrollView>

@@ -1,12 +1,12 @@
 import React from 'react';
-import {Text, Platform, KeyboardAvoidingView, SafeAreaView, ScrollView, View, Image, TouchableOpacity, StyleSheet} from 'react-native';
-import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
+import {ScrollView, View, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import Modal from 'Root/component/modal/Modal';
-import {APRI10, BLACK, BLUE10, BLUE20, GRAY10, GRAY30, GRAY40, WHITE} from 'Root/config/color';
+import {APRI10, GRAY40} from 'Root/config/color';
 import {launchImageLibrary} from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
-import {useWindowDimensions} from 'react-native';
 import WebView from 'react-native-webview';
+import {changeLocalPathToS3Path} from 'Root/api/community';
+import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
 
 // Manual - https://github.com/wxik/react-native-rich-editor
 // 1. 가능한 기능 - 이미지 넣기, 글자 Bold, 글자 기울기, 링크추가, 글자 가운데줄 추가, 언더라인 추가, 비디오 추가, 라디오박스 추가, 작업되돌리기, 작업 앞으로 돌리기
@@ -26,7 +26,6 @@ const WriteEditorTest = () => {
 
 	const onChange = editorData => {
 		console.log('editorData', editorData);
-
 		setData(editorData);
 	};
 
@@ -83,22 +82,35 @@ const WriteEditorTest = () => {
 		);
 	};
 
-	const insertImage = imageList => {
-		const sec = 'https://ichef.bbci.co.uk/news/660/cpsprodpb/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg';
+	async function changePath(src) {
+		return new Promise(async function (resolve, reject) {
+			try {
+				changeLocalPathToS3Path(
+					{
+						s3path_uri: src,
+					},
+					result => {
+						// console.log('result / s3path / Write ', result.msg);
+						resolve(result.msg);
+					},
+					err => {
+						console.log('err', err);
+					},
+				);
+			} catch (error) {
+				console.log('error changePath  :  ', error.message);
+				Modal.close(); //오류발생 시 Modal 종료
+			}
+		});
+	}
+
+	const insertImage = async imageList => {
 		data != 'false' ? richText.current?.insertHTML('<p><br/></p></div>') : false; //이미지를 넣을 시 바로 다음줄로 이동하도록 처리
-
 		//이미지 입력
-		// console.log('imageList', imageList);
-		// imageList.map((v, i) => {
-		// 	richText.current?.insertImage(v, 'margin: 0.2em auto 0.2em; ');
-		// });
-		// richText.current?.insertImage(sec, 'margin: 0.2em auto 0.2em; width:200px; height:200px;  ');
-		const er = [
-			'file:///Users/sangwoo/Library/Developer/CoreSimulator/Devices/CF9EEFF7-5DB8-4052-B8E3-F7C49AD98B82/data/Containers/Data/Application/D879842E-A155-4CBF-8F59-B1D69F7B8C71/tmp/FAFA055F-AA9D-4F2B-B34E-C9F9DC1B1C25.jpg',
-		];
-		richText.current?.insertImage(er[1], 'margin: 0.2em auto 0.2em; width:200px; height:200px; ');
-		richText.current?.insertImage(sec, 'margin: 0.2em auto 0.2em; width:200px; height:200px; ');
-
+		const result = await changePath(imageList);
+		result.map((v, i) => {
+			richText.current?.insertImage(v.location, 'margin: 0.2em auto 0.2em; width:200px; height:200px; ');
+		});
 		data != 'false' ? richText.current?.insertHTML('<p><br/></p></div>') : false; //이미지를 넣을 시 바로 다음줄로 이동하도록 처리
 		richText.current?.focusContentEditor();
 	};
@@ -153,7 +165,7 @@ const WriteEditorTest = () => {
 						</TouchableOpacity>
 					),
 				}}
-				customAction={handleCustomAction}
+				// customAction={handleCustomAction}
 				//커스텀 툴바
 				// renderAction={(action, selected) => {
 				//     // console.log('action', action);
@@ -164,7 +176,7 @@ const WriteEditorTest = () => {
 				//         </View>
 				//     );
 				// }}
-				onPressAddImage={insertImage}
+				onPressAddImage={moveToMultiPhotoSelect}
 				selectedIconTint={APRI10}
 			/>
 			<ScrollView contentContainerStyle={{backgroundColor: '#fff', alignItems: 'center'}} ref={scrollRef} showsVerticalScrollIndicator={false}>

@@ -5,7 +5,7 @@ import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {GRAY10} from 'Root/config/color';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import {txt} from 'Root/config/textstyle';
-import {ONLY_CONTENT_FOR_ADOPTION, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
+import {ONLY_CONTENT_FOR_ADOPTION, PET_KIND, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
 import {getProtectRequestList} from 'Root/api/shelterapi.js';
 import {getPettypes} from 'Root/api/userapi';
 import {btn_w306_h68} from 'Component/atom/btn/btn_style';
@@ -21,7 +21,6 @@ export default ProtectRequestList = ({navigation, route}) => {
 		protect_request_object_id: '',
 		request_number: 10000,
 	});
-	const [petTypes, setPetTypes] = React.useState(['동물종류']);
 
 	const getList = () => {
 		getProtectRequestList(
@@ -33,36 +32,25 @@ export default ProtectRequestList = ({navigation, route}) => {
 					each.protect_animal_status = each.protect_animal_id.protect_animal_status;
 				});
 				setData(result.msg);
+				Modal.close();
 			},
 			err => {
 				console.log(`errcallback:${JSON.stringify(err)}`);
 				if (err == '검색 결과가 없습니다.') {
 					setData([]);
 				}
+				Modal.close();
 			},
 		);
 	};
 	React.useEffect(() => {
+		Modal.popLoading();
 		const unsubscribe = navigation.addListener('focus', () => {
 			getList();
 		});
 		getList(); //필터가 바뀔 때마다 호출되도록 설정
 		return unsubscribe;
 	}, [filterData]);
-
-	React.useEffect(() => {
-		getPettypes(
-			{},
-			types => {
-				const species = [...petTypes];
-				types.msg.map((v, i) => {
-					species[i + 1] = v.pet_species;
-				});
-				setPetTypes(species);
-			},
-			err => Modal.alert(err),
-		);
-	}, []);
 
 	const onClickLabel = (status, id, item) => {
 		let sexValue = '';
@@ -108,9 +96,11 @@ export default ProtectRequestList = ({navigation, route}) => {
 		);
 	};
 	//동물종류 필터
-	const onSelectKind = kind => {
+	const onSelectKind = async () => {
+		const fetchPetKindData = await PET_KIND();
+		let petKind = fetchPetKindData.map((v, i) => v.pet_species);
 		Modal.popSelectScrollBoxModal(
-			[petTypes],
+			[petKind],
 			'동물 종류 선택',
 			selected => {
 				selected == '동물종류'

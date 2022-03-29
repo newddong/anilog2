@@ -3,11 +3,25 @@ import React from 'react';
 import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet} from 'react-native';
 import {GRAY10, GRAY40, APRI10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
+import {getTermsOfService} from 'Root/api/termsofservice';
 
 import DP from 'Root/config/dp';
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 export default SettingInformAsk = ({route}) => {
 	const navigation = useNavigation();
+	const [term, setTerm] = React.useState();
+	React.useEffect(() => {
+		getTermsOfService(
+			{},
+			result => {
+				console.log('getTermsOfService', result.msg);
+				setTerm(result.msg);
+			},
+			err => {
+				console.log('getTermsOfService err', err);
+			},
+		);
+	}, []);
 
 	const onPressNotice = () => {
 		navigation.push('NoticeList'); // FollowObjec
@@ -18,13 +32,13 @@ export default SettingInformAsk = ({route}) => {
 
 	const onPressServiceTerms = () => {
 		// Modal.popInfoModal();
-		navigation.push('TermsAndPolicy', {name: 'service'});
+		navigation.push('TermsAndPolicy', {name: 'service', term: term[2]});
 	};
 	const onPressLocationTerms = () => {
-		navigation.push('TermsAndPolicy', {name: 'location'});
+		navigation.push('TermsAndPolicy', {name: 'location', term: term[0]});
 	};
 	const onPressPrivacyTerms = () => {
-		navigation.push('TermsAndPolicy', {name: 'privacy'});
+		navigation.push('TermsAndPolicy', {name: 'privacy', term: term[1]});
 	};
 	const onPressOpenSource = () => {
 		navigation.push('TermsAndPolicy', {name: 'opensource'});

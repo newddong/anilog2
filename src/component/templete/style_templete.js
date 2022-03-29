@@ -1703,6 +1703,7 @@ export const addFamilyAccount_style = StyleSheet.create({
 	container: {
 		alignItems: 'center',
 		flex: 1,
+		backgroundColor: '#fff',
 	},
 	inputWithSearchIcon: {
 		marginTop: 20 * DP,
@@ -1719,7 +1720,7 @@ export const addFamilyAccount_style = StyleSheet.create({
 	},
 	listEmptyContainer: {
 		width: 654 * DP,
-		paddingVertical: 30 * DP,
+		paddingVertical: 70 * DP,
 		paddingHorizontal: 30 * DP,
 		alignItems: 'center',
 		// backgroundColor: 'yellow',
@@ -3144,6 +3145,18 @@ export const searchProtectRequest = StyleSheet.create({
 			right: 0,
 		},
 	},
+	kindFilter: {
+		width: 270 * DP,
+		marginTop: 30 * DP,
+		flexDirection: 'row',
+		alignSelf: 'flex-end',
+		marginRight: 48 * DP,
+		justifyContent: 'space-between',
+	},
+	kindFilterItem: {
+		width: 130 * DP,
+		justifyContent: 'space-between',
+	},
 	animalNeedHelpList: {
 		marginTop: 80 * DP,
 		width: 750 * DP,
@@ -3151,7 +3164,7 @@ export const searchProtectRequest = StyleSheet.create({
 		// backgroundColor: '#FF00FF',
 	},
 	animalMissingReportList: {
-		marginTop: 50 * DP,
+		marginTop: 30 * DP,
 		width: 750 * DP,
 		alignSelf: 'center',
 		// backgroundColor: '#FF00FF',

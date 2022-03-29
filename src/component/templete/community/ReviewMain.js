@@ -45,7 +45,7 @@ export default ReviewMain = ({route, navigation}) => {
 	};
 
 	const onPressReply = index => {
-		navigation.push('ReviewCommentList', {feedobject: {_id: '62262a16d38ae5f3c51390d6'}});
+		navigation.push('CommunityCommentList', {feedobject: {_id: '62262a16d38ae5f3c51390d6'}});
 	};
 
 	const onPressReviewContent = index => {
@@ -53,11 +53,12 @@ export default ReviewMain = ({route, navigation}) => {
 	};
 
 	const onPressWrite = () => {
-		navigation.push('CommunityWrite', {isReview: true});
+		// navigation.push('CommunityWrite', {isReview: true});
+		navigation.push('CommunityWrite');
 	};
 
-	return (
-		<View style={[style.container]}>
+	const filterComponent = () => {
+		return (
 			<View style={[style.filter]}>
 				<View style={[style.shadow_filter]}>
 					<Filter60Border onPress={() => onPressFilter('filter')} />
@@ -86,8 +87,20 @@ export default ReviewMain = ({route, navigation}) => {
 					</View>
 				</View>
 			</View>
+		);
+	};
 
-			<ReviewList items={dummy} onPressReviewContent={onPressReviewContent} onPressReply={onPressReply} />
+	return (
+		<View style={[style.container]}>
+			<FlatList
+				data={[{}]}
+				listKey={({item, index}) => index}
+				renderItem={({item, index}) => {
+					return <ReviewList items={dummy} onPressReviewContent={onPressReviewContent} onPressReply={onPressReply} />;
+				}}
+				ListHeaderComponent={filterComponent()}
+				stickyHeaderIndices={[0]}
+			/>
 			<View style={[style.write, style.shadowButton]}>
 				<WriteBoard onPress={onPressWrite} />
 			</View>
@@ -101,12 +114,12 @@ const style = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		backgroundColor: '#fff',
-		paddingBottom: 100 * DP,
 	},
 	filter: {
 		width: 676 * DP,
 		height: 60 * DP,
 		marginTop: 30 * DP,
+		alignSelf: 'center',
 		// paddingTop: 30 * DP,
 		marginBottom: 10 * DP,
 		flexDirection: 'row',

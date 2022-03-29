@@ -15,19 +15,42 @@ import {Animal_another, Animal_cat, Animal_dog} from 'Root/component/atom/icon';
 
 export default CommunityWrite = props => {
 	const navigation = useNavigation();
+	const isReview = props.route.params.isReview; //후기 게시글 여부 boolean
 	const [data, setData] = React.useState({
 		community_title: '',
-		community_interests: '카테고리 선택',
 		community_content: '',
-		community_location: '',
+		community_is_attached_file: true,
+		community_type: isReview ? 'review' : 'free',
+		community_free_type: 'talk',
+		community_animal_type: '',
+		community_avatar_id: '',
 		community_is_temporary: false,
-		community_type: '',
-		community_animalType: {
-			dog: false,
-			cat: false,
-			other: false,
+		community_interests: {
+			interests_trip: [],
+			interests_hospital: [],
+			interests_interior: [],
+			interests_etc: [],
+			interests_review: [],
+		},
+		community_address: {
+			road_address: {
+				address_name: '',
+				city: '',
+				district: '',
+			},
+			normal_address: {
+				address_name: '',
+				city: '',
+				district: '',
+			},
+			region: {
+				latitude: '',
+				longitude: '',
+			},
 		},
 	});
+	isReview ? navigation.setOptions({title: '후기 게시글'}) : navigation.setOptions({title: '자유 게시글'});
+
 	const [animalType, setAnimalType] = React.useState({
 		dog: false,
 		cat: false,
@@ -36,6 +59,7 @@ export default CommunityWrite = props => {
 	const [cursor, setCursor] = React.useState(0);
 	const richText = React.useRef('');
 	const scrollRef = React.useRef('');
+	const article_type = ['talk', 'question', 'meeting'];
 
 	React.useEffect(() => {
 		props.navigation.setParams({data: data, nav: props.route.name});
@@ -45,42 +69,6 @@ export default CommunityWrite = props => {
 		const param = props.route.params;
 		if (param?.data) {
 			//다른 주소 검색 결과값 적용
-			console.log('ddddd', JSON.stringify(param.data));
-			const er = {
-				community_title: 'wpahr\t',
-				community_interests: ['사료', '병원', '간식'],
-				community_content: '<div>asdasd</div>',
-				community_location: {
-					addr: {
-						road_address: {
-							address_name: '서울특별시 마포구 광성로4길 10-7',
-							region_1depth_name: '서울',
-							region_2depth_name: '마포구',
-							region_3depth_name: '',
-							road_name: '광성로4길',
-							underground_yn: 'N',
-							main_building_no: '10',
-							sub_building_no: '7',
-							building_name: '',
-							zone_no: '04096',
-						},
-						address: {
-							address_name: '서울 마포구 신수동 89-60',
-							region_1depth_name: '서울',
-							region_2depth_name: '마포구',
-							region_3depth_name: '신수동',
-							mountain_yn: 'N',
-							main_address_no: '89',
-							sub_address_no: '60',
-							zip_code: '',
-						},
-						detailAddr: '',
-					},
-					region: {latitude: 37.54911687456195, longitude: 126.9371623504001},
-				},
-				community_is_temporary: false,
-				community_type: '',
-			};
 			setData(param.data);
 			// richText.current?.focusContentEditor();
 		}
@@ -146,18 +134,22 @@ export default CommunityWrite = props => {
 			richText.current?.insertHTML('<p><br/></p></div>');
 			richText.current?.insertHTML(
 				`<img src="${v.location}" onclick="_.sendEvent('ImgClick')" \n
-				contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "/>`,
+				contenteditable="false" height="450px" width="300px" style="border-radius:15px; margin: 0 auto 4px; "/>`,
 			);
 			richText.current?.insertHTML('<p><br/></p></div>');
 		});
-		// lineId = `line${lineNumber}`;
-		// richText.current?.insertHTML(
-		// 	`<div style="padding:10px 0;" contentEditable="false">
-		//         <iframe  width="100%" height="220"  src="https://www.youtube.com/embed/6FrNXgXlCGA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-		//     </div>`,
-		// );
 
 		richText.current?.focusContentEditor();
+	};
+
+	const onPressAddVideo = () => {
+		const example = 'https://media.fmkorea.com/files/attach/new2/20220330/486616/2949542227/4478562221/a0729cce75f3e4a1cd32cf074066543d.mp4?d';
+		// lineId = `line${lineNumber}`;
+		richText.current?.insertHTML(
+			`<div style="padding:10px 0;" contentEditable="false">
+		        <iframe  width="100%" height="220"  src="${example}" frameborder="0" allow="accelerometer; controls; sandbox; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ></iframe>
+		    </div>`,
+		);
 	};
 
 	let handleMessage = React.useCallback(({type, id, data}) => {
@@ -219,7 +211,8 @@ export default CommunityWrite = props => {
 	const onPressFilter = () => {
 		Modal.popInterestTagModal(
 			'ReviewWrite',
-			data.community_interests == '카테고리 선택' ? [] : data.community_interests,
+			// data.community_interests == '카테고리 선택' ? [] : data.community_interests,
+			data.community_interests,
 			() => Modal.close(),
 			() => Modal.close(),
 			arg => {
@@ -241,6 +234,11 @@ export default CommunityWrite = props => {
 	const onCursorPosition = scrollY => {
 		setCursor(scrollY); //현재 커서가 최신화 되지 않던 현상 수정
 		scrollRef.current.scrollTo({y: scrollY - 50, duration: 100, animated: true});
+	};
+
+	const onContentSizeChange = () => {
+		console.log('sadk;lsadkl;as');
+		// scrollRef.current.scrollTo({y: cursor - 30, duration: 100, animated: true});
 	};
 
 	const onFocus = () => {
@@ -274,9 +272,53 @@ export default CommunityWrite = props => {
 	const getReviewCategory = list => {
 		let category_text = '';
 		list.map((v, i) => {
-			category_text = category_text + v + ' / ';
+			// category_text = category_text + v + ' / ';
 		});
 		return category_text;
+	};
+
+	const onPressType = select => {
+		setData({...data, community_free_type: select});
+	};
+
+	const article_type_box = type => {
+		let text = '';
+		switch (type) {
+			case 'talk':
+				text = '잡담';
+				break;
+			case 'question':
+				text = '질문';
+				break;
+			case 'meeting':
+				text = '모임';
+				break;
+			default:
+				break;
+		}
+		return (
+			<TouchableOpacity
+				key={type}
+				onPress={() => onPressType(type)}
+				activeOpacity={0.6}
+				style={[
+					style.category_item_free,
+					{
+						backgroundColor: data.community_free_type == type ? APRI10 : GRAY40,
+					},
+				]}>
+				<Text
+					style={[
+						txt.noto28,
+						style.category_item_text,
+						{
+							color: data.community_free_type == type ? WHITE : GRAY10,
+						},
+					]}>
+					{text}
+				</Text>
+			</TouchableOpacity>
+		);
 	};
 
 	const moveToLocationPicker = () => {
@@ -287,26 +329,35 @@ export default CommunityWrite = props => {
 		<View style={[style.container]}>
 			<ScrollView contentContainerStyle={[style.insideScrollView, {}]} ref={scrollRef} showsVerticalScrollIndicator={false}>
 				{/* //제목 및 카테고리 선택 */}
-				<>
-					<TextInput onChangeText={onChangeTitle} style={[txt.noto30, style.title_text]} placeholder={'제목 입력...'} placeholderTextColor={GRAY20} />
-					<TouchableOpacity activeOpacity={0.6} onPress={onPressFilter} style={[style.category]}>
-						<Text style={[txt.noto28, style.categoryText]} ellipsizeMode={'tail'} numberOfLines={1}>
-							{data.community_interests == '카테고리 선택' ? data.community_interests : getReviewCategory(data.community_interests)}
-						</Text>
-						<View style={[style.nextMark]}>
-							<NextMark_APRI />
-						</View>
-					</TouchableOpacity>
-				</>
+				<TextInput onChangeText={onChangeTitle} style={[txt.noto30, style.title_text]} placeholder={'제목 입력...'} placeholderTextColor={GRAY20} />
+				{isReview ? (
+					<>
+						<TouchableOpacity activeOpacity={0.6} onPress={onPressFilter} style={[style.category]}>
+							<Text style={[txt.noto28, style.categoryText]} ellipsizeMode={'tail'} numberOfLines={1}>
+								{/* {data.community_interests == '카테고리 선택' ? data.community_interests : getReviewCategory(data.community_interests)} */}
+							</Text>
+							<View style={[style.nextMark]}>
+								<NextMark_APRI />
+							</View>
+						</TouchableOpacity>
+					</>
+				) : (
+					<View style={[style.category_free]}>
+						{article_type.map((v, i) => {
+							return article_type_box(v);
+						})}
+					</View>
+				)}
 				{/* 텍스트 입력 박스 */}
 				<View style={[style.content]}>
-					{data.community_location != '' ? (
+					{data.community_address.normal_address.address_name != '' ? (
 						<View style={[style.location]}>
 							<Location54_Filled />
-							<Text style={[txt.noto26b, {color: APRI10, marginLeft: 10 * DP}]}>
-								{data.community_location.addr.road_address.address_name + ' / ' + data.community_location.addr.detailAddr}
+							<Text style={[txt.noto26b, {color: APRI10, marginLeft: 10 * DP, width: 550 * DP}]}>
+								{data.community_address.road_address.address_name == '도로명 주소가 없는 위치입니다. '
+									? data.community_address.normal_address.address_name
+									: data.community_address.road_address.address_name}
 							</Text>
-							{/* location.addr.road_address.address_name + ' / ' + location.addr.detailAddr */}
 						</View>
 					) : (
 						<></>
@@ -316,7 +367,9 @@ export default CommunityWrite = props => {
 						editorStyle={{backgroundColor: WHITE, color: 'black'}}
 						// initialContentHTML={'<p></p>'}
 						onChange={onChange}
-						initialHeight={500 * DP}
+						// useContainer={false}
+						// onContentSizeChange={onContentSizeChange}
+						// initialHeight={500 * DP}
 						style={{
 							width: '100%',
 						}}
@@ -328,31 +381,36 @@ export default CommunityWrite = props => {
 					/>
 				</View>
 				{/* 하단 버튼 컴포넌트  */}
-				<View style={[style.animalFilter_container]}>
-					<View style={[style.animalFilter]}>
-						<View style={[style.shadow]}>
-							{!animalType.dog ? (
-								<Animal_dog onPress={() => onPressAnimalFilter('dog')} />
-							) : (
-								<Animal_dog_off onPress={() => onPressAnimalFilter('dog')} />
-							)}
-						</View>
-						<View style={[style.shadow]}>
-							{!animalType.cat ? (
-								<Animal_cat onPress={() => onPressAnimalFilter('cat')} />
-							) : (
-								<Animal_cat_off onPress={() => onPressAnimalFilter('cat')} />
-							)}
-						</View>
-						<View style={[style.shadow]}>
-							{!animalType.other ? (
-								<Animal_another onPress={() => onPressAnimalFilter('another')} />
-							) : (
-								<Animal_another_off onPress={() => onPressAnimalFilter('another')} />
-							)}
+				{isReview ? (
+					<View style={[style.animalFilter_container]}>
+						<View style={[style.animalFilter]}>
+							<View style={[style.shadow]}>
+								{!animalType.dog ? (
+									<Animal_dog onPress={() => onPressAnimalFilter('dog')} />
+								) : (
+									<Animal_dog_off onPress={() => onPressAnimalFilter('dog')} />
+								)}
+							</View>
+							<View style={[style.shadow]}>
+								{!animalType.cat ? (
+									<Animal_cat onPress={() => onPressAnimalFilter('cat')} />
+								) : (
+									<Animal_cat_off onPress={() => onPressAnimalFilter('cat')} />
+								)}
+							</View>
+							<View style={[style.shadow]}>
+								{!animalType.other ? (
+									<Animal_another onPress={() => onPressAnimalFilter('another')} />
+								) : (
+									<Animal_another_off onPress={() => onPressAnimalFilter('another')} />
+								)}
+							</View>
 						</View>
 					</View>
-				</View>
+				) : (
+					<></>
+				)}
+
 				<View style={[style.buttonContainer]}>
 					<TouchableOpacity activeOpacity={0.6} onPress={onPressTempSave}>
 						<View style={[style.buttonItem]}>
@@ -364,6 +422,12 @@ export default CommunityWrite = props => {
 						<View style={[style.buttonItem]}>
 							<Camera54 />
 							<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>사진추가</Text>
+						</View>
+					</TouchableOpacity>
+					<TouchableOpacity activeOpacity={0.6} onPress={onPressAddVideo}>
+						<View style={[style.buttonItem]}>
+							<Camera54 />
+							<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>영상 추가</Text>
 						</View>
 					</TouchableOpacity>
 					<TouchableOpacity activeOpacity={0.6} onPress={moveToLocationPicker}>
@@ -409,6 +473,23 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 		flexDirection: 'row',
 	},
+	category_free: {
+		marginVertical: 30 * DP,
+		width: 654 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		// backgroundColor: 'yellow',
+	},
+	category_item_free: {
+		width: 210 * DP,
+		height: 82 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: APRI10,
+	},
+	category_item_text: {
+		color: GRAY10,
+	},
 	categoryText: {
 		color: APRI10,
 		width: 500 * DP,
@@ -418,6 +499,7 @@ const style = StyleSheet.create({
 	},
 	content: {
 		width: 654 * DP,
+		minHeight: 500 * DP,
 		borderRadius: 24 * DP,
 		borderWidth: 2 * DP,
 		borderColor: APRI10,
@@ -426,7 +508,7 @@ const style = StyleSheet.create({
 	},
 	buttonContainer: {
 		// backgroundColor: 'yellow',
-		paddingVertical: 20 * DP,
+		paddingVertical: 30 * DP,
 		flexDirection: 'row',
 		alignSelf: 'center',
 		width: 654 * DP,

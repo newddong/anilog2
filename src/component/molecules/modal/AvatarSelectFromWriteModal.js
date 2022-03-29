@@ -119,7 +119,7 @@ const AvatarSelectFromWriteModal = props => {
 					<Text style={[txt.roboto40b, {color: WHITE}]}>계정을 선택해주세요.  </Text>
 				</View> */}
 				<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
-					{scrollIndex >= Math.floor(items.length / 4) || items.length < 4 ? (
+					{scrollIndex >= Math.floor(items.length / 4) || items.length <= 4 ? (
 						<></>
 					) : (
 						<TouchableOpacity

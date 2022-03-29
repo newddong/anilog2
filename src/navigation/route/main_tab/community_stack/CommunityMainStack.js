@@ -55,15 +55,7 @@ export default CommunityMainStack = props => {
 					title: ' ',
 				})}
 			/>
-			<CommunityMainStackNavi.Screen
-				name={'CommunityCommentList'}
-				component={CommunityCommentList}
-				options={({route}) => ({
-					// headerShown: false,
-					header: props => <SimpleHeader {...props} />,
-					title: ' ',
-				})}
-			/>
+
 			<CommunityMainStackNavi.Screen
 				name={'UserProfile'}
 				component={Profile}
@@ -98,14 +90,23 @@ export default CommunityMainStack = props => {
 				options={({route}) => ({
 					headerShown: true,
 					header: props => <SendHeader {...props} />,
-					title: '커뮤니티 게시글 작성',
+					title: '',
 				})}
 			/>
 			<CommunityMainStackNavi.Screen
 				name={'ReviewCommentList'}
-				component={FeedCommentList}
+				component={CommunityCommentList}
 				options={({route}) => ({
 					headerShown: true,
+					header: props => <SimpleHeader {...props} />,
+					title: ' ',
+				})}
+			/>
+			<CommunityMainStackNavi.Screen
+				name={'ArticleCommentList'}
+				component={CommunityCommentList}
+				options={({route}) => ({
+					// headerShown: false,
 					header: props => <SimpleHeader {...props} />,
 					title: ' ',
 				})}

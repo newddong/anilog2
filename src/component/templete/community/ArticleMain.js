@@ -1,26 +1,43 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import ArticleList from 'Root/component/organism/list/ArticleList';
-import {BLACK} from 'Root/config/color';
-import {WriteBoard} from 'Root/component/atom/icon';
+import {BLACK, GRAY10} from 'Root/config/color';
+import {Check50, Rect50_Border, WriteBoard} from 'Atom/icon';
+import {txt} from 'Root/config/textstyle';
+import {dum} from 'Root/config/dummyDate_json';
+import {useNavigation} from '@react-navigation/core';
+import {getCommunityList} from 'Root/api/community';
+import Modal from 'Root/component/modal/Modal';
 
-export default ArticleMain = ({route, navigation}) => {
-	const dummy = [{id: 1}, {id: 2}, {id: 3}, {id: 4}, {id: 5}, {id: 6}, {id: 7}, {id: 8}, {id: 9}, {id: 10}, {id: 11}, {id: 12}];
+export default ArticleMain = ({route}) => {
+	const navigation = useNavigation();
+	const [data, setData] = React.useState(dum);
+
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => fetchData());
+		fetchData();
+		return unsubscribe;
+	}, []);
+
+	const fetchData = () => {
+		getCommunityList(
+			{
+				community_type: 'free',
+			},
+			result => {
+				// console.log('result / getCommunityList / ArticleMain :', result.msg.free);
+				setData(result.msg.free);
+			},
+			err => {
+				console.log('err / getCommunityList / ArticleMain : ', err);
+				Modal.alert(err);
+			},
+		);
+	};
 
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
-		// console.log('dummy', dummy[index]);
-		navigation.push('ArticleDetail');
-	};
-
-	//추천 게시글 아이템 클릭
-	const onPressRecommendArticle = () => {
-		navigation.push('ArticleDetail');
-	};
-
-	// 댓글 모두보기 클릭
-	const onPressReply = index => {
-		navigation.push('ArticleCommentList', {feedobject: {_id: '61d2df2fc0f179ccd5ba5a1e'}});
+		navigation.push('ArticleDetail', {community_object: data[index]});
 	};
 
 	//글쓰기
@@ -29,22 +46,52 @@ export default ArticleMain = ({route, navigation}) => {
 		// navigation.push('WriteEditorTest');
 	};
 
-	const dummy2 = [
-		// 'ㄱ<div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511800_rn_image_picker_lib_temp_314698c0-0991-4b82-89cf-64abdf448359.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511801_rn_image_picker_lib_temp_43498705-34cb-4f9e-a26d-4e6449b9861e.jpg" onclick="_.sendEvent('ImgClick')" conte
-		// nteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><br></p></div>'
-		`<div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511800_rn_image_picker_lib_temp_314698c0-0991-4b82-89cf-64abdf448359.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511801_rn_image_picker_lib_temp_43498705-34cb-4f9e-a26d-4e6449b9861e.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><br></p></div>`,
-		`<div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511800_rn_image_picker_lib_temp_314698c0-0991-4b82-89cf-64abdf448359.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511801_rn_image_picker_lib_temp_43498705-34cb-4f9e-a26d-4e6449b9861e.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><br></p></div>`,
-		`<div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511800_rn_image_picker_lib_temp_314698c0-0991-4b82-89cf-64abdf448359.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511801_rn_image_picker_lib_temp_43498705-34cb-4f9e-a26d-4e6449b9861e.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><br></p></div>`,
-	];
+	const [onlyTalk, setOnlyTalk] = React.useState(false);
+	const [onlyQuestion, setOnlyQuestion] = React.useState(false);
+	const [onlyMeeting, setOnlyMeeting] = React.useState(false);
+
+	const onPressFilter = type => {
+		switch (type) {
+			case '잡담':
+				setOnlyTalk(!onlyTalk);
+				setOnlyQuestion(false);
+				setOnlyMeeting(false);
+				break;
+			case '질문':
+				setOnlyTalk(false);
+				setOnlyQuestion(!onlyQuestion);
+				setOnlyMeeting(false);
+				break;
+			case '모임':
+				setOnlyTalk(false);
+				setOnlyQuestion(false);
+				setOnlyMeeting(!onlyMeeting);
+				break;
+			default:
+				break;
+		}
+	};
 
 	return (
 		<View style={[style.container]}>
+			<View style={[style.kindFilter]}>
+				<View style={[style.kindFilterItem]}>
+					<Text style={[txt.noto28, {color: GRAY10}]}> 잡담</Text>
+					{onlyTalk ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
+				</View>
+				<View style={[style.kindFilterItem]}>
+					<Text style={[txt.noto28, {color: GRAY10}]}> 질문</Text>
+					{onlyQuestion ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
+				</View>
+				<View style={[style.kindFilterItem]}>
+					<Text style={[txt.noto28, {color: GRAY10}]}> 모임</Text>
+					{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
+				</View>
+			</View>
+
 			<ArticleList
-				items={dummy}
+				items={data}
 				onPressArticle={onPressArticle} //게시글 내용 클릭
-				onPressThumnails={onPressArticle} //게시글 사진 썸네일 클릭 - 메인페이지에선 게시글 상세로 이동
-				onPressReply={onPressReply} //댓글 모두보기 클릭
-				onPressRecommendArticle={onPressRecommendArticle} //추천 게시글 아이템 클릭
 			/>
 			<View style={[style.write, style.shadow]}>
 				<WriteBoard onPress={onPressWrite} />
@@ -52,6 +99,7 @@ export default ArticleMain = ({route, navigation}) => {
 		</View>
 	);
 };
+
 ArticleMain.defaultProps = {};
 
 const style = StyleSheet.create({
@@ -78,5 +126,22 @@ const style = StyleSheet.create({
 			width: 2 * DP,
 		},
 		elevation: 3,
+	},
+	kindFilter: {
+		width: 420 * DP,
+		// backgroundColor: 'yellow',
+		marginVertical: 30 * DP,
+		flexDirection: 'row',
+		alignSelf: 'flex-end',
+		marginRight: 48 * DP,
+		justifyContent: 'space-between',
+	},
+	kindFilterItem: {
+		width: 120 * DP,
+		// backgroundColor: 'red',
+		marginLeft: 10 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between',
 	},
 });

@@ -13,6 +13,8 @@ import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 
 export default CommunityCommentList = props => {
 	// console.log('props.showAllContents', props.route.params.showAllContents);
+	console.log('props.route', props.route.name);
+	const data = props.route.params.feedobject;
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
 	const [photo, setPhoto] = React.useState();
@@ -21,8 +23,6 @@ export default CommunityCommentList = props => {
 	const [content, setContent] = React.useState('');
 	const input = React.useRef();
 	const addChildCommentFn = React.useRef(() => {});
-	const [refresh, setRefresh] = React.useState(true);
-	const data = props.route.params.feedobject;
 	const keyboardY = useKeyboardBottom(0 * DP);
 
 	React.useEffect(() => {
@@ -155,13 +155,12 @@ export default CommunityCommentList = props => {
 			]}>
 			<FlatList
 				data={[{}, comments]}
-				extraData={refresh}
 				renderItem={render}
 				showsVerticalScrollIndicator={false}
 				ListHeaderComponent={communityContent}
 				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
 			/>
-			{userGlobalObject.userInfo._id != '' && (editComment || props.route.name == 'ProtectCommentList') ? (
+			{userGlobalObject.userInfo._id != '' ? (
 				<View style={{position: 'absolute', bottom: keyboardY}} onLayout={onReplyBtnLayout}>
 					<ReplyWriteBox
 						onAddPhoto={onAddPhoto}
@@ -175,7 +174,7 @@ export default CommunityCommentList = props => {
 					/>
 				</View>
 			) : (
-				false
+				<></>
 			)}
 		</View>
 	);
@@ -191,11 +190,11 @@ const style = StyleSheet.create({
 	},
 	cotent_container_header: {
 		width: 654 * DP,
-		marginTop: 20 * DP,
+		// marginTop: 20 * DP,
 	},
 	content_container_label: {
 		width: 654 * DP,
-		marginTop: 15 * DP,
+		// marginTop: 15 * DP,
 		flexDirection: 'row',
 	},
 	cotent_container_info: {

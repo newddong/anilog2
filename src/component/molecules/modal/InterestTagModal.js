@@ -10,6 +10,7 @@ import {getAddressList} from 'Root/api/address';
 import {getInterestsList} from 'Root/api/interestsapi';
 import ArrowDownButton from '../button/ArrowDownButton';
 import {btn_w242, btn_w280, btn_w280x68} from 'Root/component/atom/btn/btn_style';
+import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
 /**
  * 관심사 추가 및 수정 모달
  * @param {'Activity'|'Location'|'Review'} category -  관심활동 / 관심지역 / 커뮤니티후기 분기
@@ -20,7 +21,7 @@ import {btn_w242, btn_w280, btn_w280x68} from 'Root/component/atom/btn/btn_style
  *
  */
 const InterestTagModal = props => {
-	// console.log('InterestTagModa', props.data);
+	console.log('InterestTagModa', props.data);
 	//유저 오브젝트의 user_interests 의 더미데이터
 	// user_interests는 크게 location 및 activity로 구성
 
@@ -169,15 +170,15 @@ const InterestTagModal = props => {
 	};
 
 	//관심 리뷰 태그를 클릭
-	const onPressInterestReviewTag = tag => {
-		let copy = [...userInterestReview];
+	const onPressInterestReviewTag = (category, tag) => {
+		let copy = [...userInterestReview.category];
 		if (copy.includes(tag)) {
 			let findIndex = copy.findIndex(e => e == tag);
 			copy.splice(findIndex, 1);
 		} else {
 			copy.push(tag);
 		}
-		setUserInterestReview(copy);
+		// setUserInterestReview(copy);
 	};
 
 	//관심활동 태그를 클릭
@@ -329,6 +330,283 @@ const InterestTagModal = props => {
 		setSelectedDistrict(district[selectedItem_dis]);
 	};
 
+	const getCategoryTitle = v => {
+		console.log('v', v);
+	};
+
+	React.useEffect(() => {
+		getCommonCodeDynamicQuery(
+			{common_code_c_name: 'communityobjects', common_code_value: 'interests_trip'},
+			result => {
+				console.log('common code result', result.msg);
+				let temp = {
+					interests_trip: [],
+					interests_hospital: [],
+					interests_interior: [],
+					interests_review: [],
+					interests_etc: [],
+				};
+				result.msg.map((v, i) => {
+					switch (v.common_code_value) {
+						case 'interests_trip':
+							if (v.common_code_category == 'definition') {
+								temp.interests_trip.push(v.common_code_msg_kor);
+							}
+							break;
+
+						default:
+							break;
+					}
+				});
+
+				const t = [
+					{
+						__v: 0,
+						_id: '623c2bfea3f2e22cac0fb783',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'topic',
+						common_code_create_date: '2022-03-24T08:29:50.091Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '여행 · 숙박 · 까페',
+						common_code_spare: '',
+						common_code_value: 'interests_trip',
+					},
+					{
+						__v: 0,
+						_id: '623c2c30a3f2e22cac0fb785',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'definition',
+						common_code_create_date: '2022-03-24T08:30:40.062Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '펫 숙소',
+						common_code_spare: '',
+						common_code_value: 'interests_trip',
+					},
+					{
+						__v: 0,
+						_id: '623c2c3aa3f2e22cac0fb787',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'definition',
+						common_code_create_date: '2022-03-24T08:30:50.446Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '관광지',
+						common_code_spare: '',
+						common_code_value: 'interests_trip',
+					},
+					{
+						__v: 0,
+						_id: '623c2c3fa3f2e22cac0fb789',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'definition',
+						common_code_create_date: '2022-03-24T08:30:55.364Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '놀이터',
+						common_code_spare: '',
+						common_code_value: 'interests_trip',
+					},
+					{
+						__v: 0,
+						_id: '623c2c46a3f2e22cac0fb78b',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'definition',
+						common_code_create_date: '2022-03-24T08:31:02.037Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '펫 까페',
+						common_code_spare: '',
+						common_code_value: 'interests_trip',
+					},
+					{
+						__v: 0,
+						_id: '623c2d66a3f2e22cac0fb78d',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'topic',
+						common_code_create_date: '2022-03-24T08:35:50.735Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '병원 · 건강',
+						common_code_spare: '',
+						common_code_value: 'interests_hospital',
+					},
+					{
+						__v: 0,
+						_id: '623c2db1a3f2e22cac0fb78f',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'definition',
+						common_code_create_date: '2022-03-24T08:37:05.552Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '병원',
+						common_code_spare: '',
+						common_code_value: 'interests_hospital',
+					},
+					{
+						__v: 0,
+						_id: '623c2db5a3f2e22cac0fb791',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'definition',
+						common_code_create_date: '2022-03-24T08:37:09.835Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '사료',
+						common_code_spare: '',
+						common_code_value: 'interests_hospital',
+					},
+					{
+						__v: 0,
+						_id: '623c2dbaa3f2e22cac0fb793',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'definition',
+						common_code_create_date: '2022-03-24T08:37:14.307Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '간식',
+						common_code_spare: '',
+						common_code_value: 'interests_hospital',
+					},
+					{
+						__v: 0,
+						_id: '623c2dd8a3f2e22cac0fb795',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'topic',
+						common_code_create_date: '2022-03-24T08:37:44.112Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '펫 인테리어 · 놀이',
+						common_code_spare: '',
+						common_code_value: 'interests_interior',
+					},
+					{
+						__v: 0,
+						_id: '623c2df0a3f2e22cac0fb797',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'definition',
+						common_code_create_date: '2022-03-24T08:38:08.992Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '집 · 방석',
+						common_code_spare: '',
+						common_code_value: 'interests_interior',
+					},
+					{
+						__v: 0,
+						_id: '623c2df6a3f2e22cac0fb799',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'definition',
+						common_code_create_date: '2022-03-24T08:38:14.560Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '가구',
+						common_code_spare: '',
+						common_code_value: 'interests_interior',
+					},
+					{
+						__v: 0,
+						_id: '623c2dffa3f2e22cac0fb79b',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'definition',
+						common_code_create_date: '2022-03-24T08:38:23.600Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '노즈워크/장난감',
+						common_code_spare: '',
+						common_code_value: 'interests_interior',
+					},
+					{
+						__v: 0,
+						_id: '623c2e0ea3f2e22cac0fb79d',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'topic',
+						common_code_create_date: '2022-03-24T08:38:38.768Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '기타',
+						common_code_spare: '',
+						common_code_value: 'interests_etc',
+					},
+					{
+						__v: 0,
+						_id: '623c2e3aa3f2e22cac0fb79f',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'definition',
+						common_code_create_date: '2022-03-24T08:39:22.398Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '청결 용품',
+						common_code_spare: '',
+						common_code_value: 'interests_etc',
+					},
+					{
+						__v: 0,
+						_id: '623c2fe8a3f2e22cac0fb7a1',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'definition',
+						common_code_create_date: '2022-03-24T08:46:32.752Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '의류',
+						common_code_spare: '',
+						common_code_value: 'interests_etc',
+					},
+					{
+						__v: 0,
+						_id: '623c3051a3f2e22cac0fb7a5',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'definition',
+						common_code_create_date: '2022-03-24T08:48:17.566Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '기타',
+						common_code_spare: '',
+						common_code_value: 'interests_etc',
+					},
+					{
+						__v: 0,
+						_id: '623c305ba3f2e22cac0fb7a7',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'topic',
+						common_code_create_date: '2022-03-24T08:48:27.096Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '후기',
+						common_code_spare: '',
+						common_code_value: 'interests_review',
+					},
+					{
+						__v: 0,
+						_id: '623c3068a3f2e22cac0fb7a9',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'definition',
+						common_code_create_date: '2022-03-24T08:48:40.146Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '치료 경험',
+						common_code_spare: '',
+						common_code_value: 'interests_review',
+					},
+					{
+						__v: 0,
+						_id: '623c306ca3f2e22cac0fb7ab',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'definition',
+						common_code_create_date: '2022-03-24T08:48:44.692Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '훈련 경험',
+						common_code_spare: '',
+						common_code_value: 'interests_review',
+					},
+					{
+						__v: 0,
+						_id: '623c3077a3f2e22cac0fb7ad',
+						common_code_c_name: 'communityobjects',
+						common_code_category: 'definition',
+						common_code_create_date: '2022-03-24T08:48:55.442Z',
+						common_code_f_name: 'community_interests',
+						common_code_msg_kor: '다이어트 경험',
+						common_code_spare: '',
+						common_code_value: 'interests_review',
+					},
+				];
+			},
+			err => {
+				console.log('common code err', err);
+			},
+		);
+	}, []);
+
+	const dum = {
+		interests_trip: ['펫 숙소', '관광지', '놀이터', '펫카페'],
+		interests_hospital: ['병원', '사료', '간식', '훈련', '건강 보조제', '치료', '다이어트', '노즈워크/장난감'],
+		interests_interior: ['집 ㆍ 방석', '가구'],
+		interests_review: ['청결용품', '의류', '기타'],
+		interests_etc: ['치료 경혐', '훈련 경혐', '다이어트 경험'],
+	};
+
 	const getReviewCategory = () => {
 		if (city == '' && props.category != 'ReviewWrite') {
 			return <ActivityIndicator />;
@@ -344,48 +622,196 @@ const InterestTagModal = props => {
 								<ArrowDownButton onPress={onOpenDistrict} btnStyle={'border'} btnLayout={btn_w280} titleFontStyle={22} btnTitle={selectedDistrict} />
 							</View>
 						)}
-
-						{dummyReviewCategoryList.map((v, i) => {
-							return (
-								<View key={i} style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
-									<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>{v.category_title}</Text>
-									<View style={style.review_category_item}>
-										{v.content.length
-											? v.content.map((d, i) => {
-													if (i % 2 == 0) {
-														return null;
-													}
-													return (
-														<TouchableOpacity
-															onPress={() => onPressInterestReviewTag(d)}
-															key={i}
-															style={[userInterestReview.includes(d) ? style.contentText_userInterest : style.contentText]}>
-															<Text style={[txt.noto28, {color: userInterestReview.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
-														</TouchableOpacity>
-													);
-											  })
-											: null}
-									</View>
-									<View style={style.review_category_item}>
-										{v.content.length
-											? v.content.map((d, i) => {
-													if (i % 2 != 0) {
-														return null;
-													}
-													return (
-														<TouchableOpacity
-															key={i}
-															onPress={() => onPressInterestReviewTag(d)}
-															style={[userInterestReview.includes(d) ? style.contentText_userInterest : style.contentText]}>
-															<Text style={[txt.noto28, {color: userInterestReview.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
-														</TouchableOpacity>
-													);
-											  })
-											: null}
-									</View>
-								</View>
-							);
-						})}
+						{/* 여행 ㆍ 숙박 ㆍ 카페 */}
+						<View style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
+							<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>여행 ㆍ 숙박 ㆍ 카페 </Text>
+							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+								{dum.interests_trip.map((v, i) => {
+									if (i % 2 == 0) {
+										return null;
+									}
+									return (
+										<TouchableOpacity
+											onPress={() => onPressInterestReviewTag('interests_trip', v)}
+											key={i}
+											style={[userInterestReview.interests_trip.includes(v) ? style.contentText_userInterest : style.contentText]}>
+											<Text style={[txt.noto28, {color: userInterestReview.interests_trip.includes(v) ? WHITE : GRAY10, textAlign: 'center'}]}>
+												{v}
+											</Text>
+										</TouchableOpacity>
+									);
+								})}
+							</View>
+							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+								{dum.interests_trip.map((v, i) => {
+									if (i % 2 != 0) {
+										return null;
+									}
+									return (
+										<TouchableOpacity
+											onPress={() => onPressInterestReviewTag('interests_trip', v)}
+											key={i}
+											style={[userInterestReview.interests_trip.includes(v) ? style.contentText_userInterest : style.contentText]}>
+											<Text style={[txt.noto28, {color: userInterestReview.interests_trip.includes(v) ? WHITE : GRAY10, textAlign: 'center'}]}>
+												{v}
+											</Text>
+										</TouchableOpacity>
+									);
+								})}
+							</View>
+						</View>
+						{/* 건강 ㆍ 놀이 ㆍ 음식 */}
+						<View style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
+							<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>건강 ㆍ 놀이 ㆍ 음식 </Text>
+							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+								{dum.interests_hospital.map((v, i) => {
+									if (i % 2 == 0) {
+										return null;
+									}
+									return (
+										<TouchableOpacity
+											onPress={() => onPressInterestReviewTag('interests_hospital', v)}
+											key={i}
+											style={[userInterestReview.interests_hospital.includes(v) ? style.contentText_userInterest : style.contentText]}>
+											<Text style={[txt.noto28, {color: userInterestReview.interests_hospital.includes(v) ? WHITE : GRAY10, textAlign: 'center'}]}>
+												{v}
+											</Text>
+										</TouchableOpacity>
+									);
+								})}
+							</View>
+							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+								{dum.interests_hospital.map((v, i) => {
+									if (i % 2 != 0) {
+										return null;
+									}
+									return (
+										<TouchableOpacity
+											onPress={() => onPressInterestReviewTag('interests_hospital', v)}
+											key={i}
+											style={[userInterestReview.interests_hospital.includes(v) ? style.contentText_userInterest : style.contentText]}>
+											<Text style={[txt.noto28, {color: userInterestReview.interests_hospital.includes(v) ? WHITE : GRAY10, textAlign: 'center'}]}>
+												{v}
+											</Text>
+										</TouchableOpacity>
+									);
+								})}
+							</View>
+						</View>
+						{/* 펫 인테리어  */}
+						<View style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
+							<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>펫 인테리어 </Text>
+							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+								{dum.interests_interior.map((v, i) => {
+									if (i % 2 == 0) {
+										return null;
+									}
+									return (
+										<TouchableOpacity
+											onPress={() => onPressInterestReviewTag('interests_interior', v)}
+											key={i}
+											style={[userInterestReview.interests_interior.includes(v) ? style.contentText_userInterest : style.contentText]}>
+											<Text style={[txt.noto28, {color: userInterestReview.interests_interior.includes(v) ? WHITE : GRAY10, textAlign: 'center'}]}>
+												{v}
+											</Text>
+										</TouchableOpacity>
+									);
+								})}
+							</View>
+							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+								{dum.interests_interior.map((v, i) => {
+									if (i % 2 != 0) {
+										return null;
+									}
+									return (
+										<TouchableOpacity
+											onPress={() => onPressInterestReviewTag('interests_interior', v)}
+											key={i}
+											style={[userInterestReview.interests_interior.includes(v) ? style.contentText_userInterest : style.contentText]}>
+											<Text style={[txt.noto28, {color: userInterestReview.interests_interior.includes(v) ? WHITE : GRAY10, textAlign: 'center'}]}>
+												{v}
+											</Text>
+										</TouchableOpacity>
+									);
+								})}
+							</View>
+						</View>
+						{/* 후기 */}
+						<View style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
+							<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>펫 인테리어 </Text>
+							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+								{dum.interests_review.map((v, i) => {
+									if (i % 2 == 0) {
+										return null;
+									}
+									return (
+										<TouchableOpacity
+											onPress={() => onPressInterestReviewTag('interests_review', v)}
+											key={i}
+											style={[userInterestReview.interests_review.includes(v) ? style.contentText_userInterest : style.contentText]}>
+											<Text style={[txt.noto28, {color: userInterestReview.interests_review.includes(v) ? WHITE : GRAY10, textAlign: 'center'}]}>
+												{v}
+											</Text>
+										</TouchableOpacity>
+									);
+								})}
+							</View>
+							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+								{dum.interests_review.map((v, i) => {
+									if (i % 2 != 0) {
+										return null;
+									}
+									return (
+										<TouchableOpacity
+											onPress={() => onPressInterestReviewTag('interests_review', v)}
+											key={i}
+											style={[userInterestReview.interests_review.includes(v) ? style.contentText_userInterest : style.contentText]}>
+											<Text style={[txt.noto28, {color: userInterestReview.interests_review.includes(v) ? WHITE : GRAY10, textAlign: 'center'}]}>
+												{v}
+											</Text>
+										</TouchableOpacity>
+									);
+								})}
+							</View>
+						</View>
+						{/* 기타 */}
+						<View style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
+							<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>기타 </Text>
+							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+								{dum.interests_etc.map((v, i) => {
+									if (i % 2 == 0) {
+										return null;
+									}
+									return (
+										<TouchableOpacity
+											onPress={() => onPressInterestReviewTag('interests_etc', v)}
+											key={i}
+											style={[userInterestReview.interests_etc.includes(v) ? style.contentText_userInterest : style.contentText]}>
+											<Text style={[txt.noto28, {color: userInterestReview.interests_etc.includes(v) ? WHITE : GRAY10, textAlign: 'center'}]}>
+												{v}
+											</Text>
+										</TouchableOpacity>
+									);
+								})}
+							</View>
+							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+								{dum.interests_etc.map((v, i) => {
+									if (i % 2 != 0) {
+										return null;
+									}
+									return (
+										<TouchableOpacity
+											onPress={() => onPressInterestReviewTag('interests_etc', v)}
+											key={i}
+											style={[userInterestReview.interests_etc.includes(v) ? style.contentText_userInterest : style.contentText]}>
+											<Text style={[txt.noto28, {color: userInterestReview.interests_etc.includes(v) ? WHITE : GRAY10, textAlign: 'center'}]}>
+												{v}
+											</Text>
+										</TouchableOpacity>
+									);
+								})}
+							</View>
+						</View>
 					</View>
 				</ScrollView>
 			);

@@ -21,6 +21,12 @@ const NoteMessageList = props => {
 		return (
 			<View style={[styles.messageItemContainer]}>
 				<OneMessage data={item} />
+				{/* <UserNote
+					data={item}
+					checkBoxMode={props.checkBoxMode}
+					onLabelClick={item => props.onClickLabel(item)}
+					onCheckBox={e => props.onCheckBox(e, index)}
+				/> */}
 			</View>
 		);
 	};
@@ -28,13 +34,7 @@ const NoteMessageList = props => {
 	return (
 		<View style={styles.container}>
 			{/* <Text>쪽지 내용 리스트 나오는 화면</Text> */}
-			<FlatList
-				inverted
-				data={[...props.data].reverse()}
-				keyExtractor={item => item._id}
-				renderItem={renderItem}
-				showsVerticalScrollIndicator={false}
-			/>
+			<FlatList data={props.data} keyExtractor={item => item._id} renderItem={renderItem} showsVerticalScrollIndicator={false} />
 		</View>
 	);
 };

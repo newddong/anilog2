@@ -30,7 +30,7 @@ export default ReviewDetail = props => {
 
 	const onPressReply = () => {
 		// alert('moveToReplyListPage');
-		navigation.push('ReviewCommentList', {feedobject: {_id: '62262a16d38ae5f3c51390d6'}});
+		navigation.push('CommunityCommentList', {feedobject: {_id: '62262a16d38ae5f3c51390d6'}});
 	};
 
 	const onPressLikeBriefItem = index => {
@@ -50,7 +50,7 @@ export default ReviewDetail = props => {
 				showsVerticalScrollIndicator={false}
 				renderItem={({item, index}) => {
 					return (
-						<View style={{alignItems: 'center'}}>
+						<View style={{alignItems: 'center', marginTop: 30 * DP}}>
 							<ReviewContent onPressFavorite={onPressFavorite} onPressMeatball={onPressMeatball} />
 							<View style={[style.separator]} />
 							<View style={[style.commentList]}>
@@ -78,13 +78,12 @@ ReviewDetail.defaultProps = {};
 
 const style = StyleSheet.create({
 	container: {
-		paddingVertical: 30 * DP,
+		// paddingVertical: 30 * DP,
 		flex: 1,
 		// alignSelf: 'center',
 		alignItems: 'center',
 		backgroundColor: '#fff',
 	},
-
 	separator: {
 		width: 654 * DP,
 		height: 2 * DP,

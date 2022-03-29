@@ -17,6 +17,7 @@ import {organism_style} from 'Organism/style_organism copy';
  * showCrossMark : 'boolean / X마크 출력 여부 , default = true',
  * showStarMark : 'boolean / 별 마크(즐겨찾기 여부) 출력 여부 / default = false'
  * listEmptyComponent : 'component / 리스트 없을 시 '
+ * showFollowStatusText : 'boolean / 닉네임 우측 팔로우 중 텍스트 출력 여부'
  * }} props
  */
 export default AccountList = props => {
@@ -60,7 +61,12 @@ export default AccountList = props => {
 				style={[organism_style.accountListItem, {borderColor: selectedIndex == index && props.makeBorderMode ? APRI10 : WHITE}]}
 				onPress={() => makeBorder(item, index)}>
 				<View style={[organism_style.userDescriptionLabelContainer]}>
-					<UserDescriptionLabel data={item} width={310} onClickLabel={item => onclickLabel(item, index)} />
+					<UserDescriptionLabel
+						data={item}
+						width={310}
+						onClickLabel={item => onclickLabel(item, index)}
+						showFollowStatusText={props.showFollowStatusText}
+					/>
 				</View>
 				{props.showCrossMark ? (
 					<View style={{position: 'absolute', right: 15 * DP}}>
@@ -104,6 +110,7 @@ AccountList.defaultProps = {
 	makeBorderMode: true,
 	showCrossMark: true,
 	showStarMark: false,
+	showFollowStatusText: true,
 	listEmptyComponent: () => {
 		return <></>;
 	},

@@ -20,7 +20,7 @@ export default ArticleMain = ({route, navigation}) => {
 
 	// 댓글 모두보기 클릭
 	const onPressReply = index => {
-		navigation.push('ArticleCommentList', {feedobject: {_id: '62262a16d38ae5f3c51390d6'}});
+		navigation.push('ArticleCommentList', {feedobject: {_id: '61d2df2fc0f179ccd5ba5a1e'}});
 	};
 
 	//글쓰기
@@ -28,6 +28,14 @@ export default ArticleMain = ({route, navigation}) => {
 		navigation.push('CommunityWrite', {isReview: false});
 		// navigation.push('WriteEditorTest');
 	};
+
+	const dummy2 = [
+		// 'ㄱ<div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511800_rn_image_picker_lib_temp_314698c0-0991-4b82-89cf-64abdf448359.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511801_rn_image_picker_lib_temp_43498705-34cb-4f9e-a26d-4e6449b9861e.jpg" onclick="_.sendEvent('ImgClick')" conte
+		// nteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><br></p></div>'
+		`<div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511800_rn_image_picker_lib_temp_314698c0-0991-4b82-89cf-64abdf448359.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511801_rn_image_picker_lib_temp_43498705-34cb-4f9e-a26d-4e6449b9861e.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><br></p></div>`,
+		`<div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511800_rn_image_picker_lib_temp_314698c0-0991-4b82-89cf-64abdf448359.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511801_rn_image_picker_lib_temp_43498705-34cb-4f9e-a26d-4e6449b9861e.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><br></p></div>`,
+		`<div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div>ㅋ</div><div><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511800_rn_image_picker_lib_temp_314698c0-0991-4b82-89cf-64abdf448359.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648191511801_rn_image_picker_lib_temp_43498705-34cb-4f9e-a26d-4e6449b9861e.jpg" onclick="_.sendEvent('ImgClick')" contenteditable="false" height="170px" width="150px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><br></p></div>`,
+	];
 
 	return (
 		<View style={[style.container]}>

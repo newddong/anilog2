@@ -11,14 +11,18 @@ import {txt} from 'Root/config/textstyle';
 export default AddFamilyAccount = ({route, navigation}) => {
 	// console.log('route', route.params);
 	const [searched_accountList, setSearched_accountList] = React.useState([]);
+	const [searchInput, setSearchInput] = React.useState('');
 
-	//돋보기 버튼 클릭 콜백
-	const onSearch = input => {
-		//검색어로 api 연결 후 결과 리스트로 ~
+	React.useEffect(() => {
+		Modal.popLoading();
+		search();
+	}, [searchInput]);
+
+	const search = () => {
 		setSearched_accountList([]);
 		getUserListByNickname(
 			{
-				user_nickname: input,
+				user_nickname: searchInput,
 				request_number: '',
 				userobject_id: '',
 				user_type: 'user',
@@ -30,18 +34,26 @@ export default AddFamilyAccount = ({route, navigation}) => {
 				let removeMine = result.msg.findIndex(e => e.user_nickname == userGlobalObject.userInfo.user_nickname);
 				removeMine == -1 ? false : filtered.splice(removeMine, 1);
 				setSearched_accountList(filtered);
+				Modal.close();
 			},
 			err => {
 				console.log('err / getUserListByNick / AddFamilyAccount', err);
+				if (err == '검색 결과가 없습니다.') {
+					Modal.close();
+					setSearched_accountList([]);
+				}
 			},
 		);
 	};
 
+	const onSearch = input => {
+		//검색어로 api 연결 후 결과 리스트로 ~
+		setSearched_accountList([]);
+	};
+
 	//검색어 Input값 변경 콜백
 	const onChangeKeyword = input => {
-		if (input != '') {
-			onSearch(input);
-		}
+		setSearchInput(input);
 	};
 
 	const onAccountClick = item => {
@@ -88,19 +100,19 @@ export default AddFamilyAccount = ({route, navigation}) => {
 	const listEmptyComponent = () => {
 		return (
 			<View style={[addFamilyAccount_style.listEmptyContainer]}>
-				<Text style={[txt.noto32]}>검색 결과가 없습니다.</Text>
+				<Text style={[txt.noto32b]}>검색 결과가 없습니다.</Text>
 			</View>
 		);
 	};
 
 	return (
-		<View style={[login_style.wrp_main, addFamilyAccount_style.container]}>
+		<View style={[addFamilyAccount_style.container]}>
 			<View style={[temp_style.inputWithSearchIcon, addFamilyAccount_style.inputWithSearchIcon]}>
-				<InputWithSearchIcon onSearch={onSearch} onChange={onChangeKeyword} width={654} placeholder={'가족 계정을 검색해주세요.'} />
+				<InputWithSearchIcon onSearch={search} onChange={onChangeKeyword} width={654} placeholder={'가족 계정을 검색해주세요.'} />
 			</View>
 
 			<ScrollView style={[addFamilyAccount_style.accountList]}>
-				<AccountList items={searched_accountList} listEmptyComponent={listEmptyComponent} onClickLabel={onAccountClick} />
+				<AccountList items={searched_accountList} showCrossMark={false} listEmptyComponent={listEmptyComponent} onClickLabel={onAccountClick} />
 			</ScrollView>
 		</View>
 	);

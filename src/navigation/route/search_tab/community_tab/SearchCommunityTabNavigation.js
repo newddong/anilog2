@@ -14,12 +14,6 @@ import SearchMarket from 'Root/component/templete/search/SearchMarket';
 const SearchCommunityTabNav = createMaterialTopTabNavigator();
 
 export default SearchCommunityTabNavigation = props => {
-	const [searchInput, setSearchInput] = React.useState(''); // 검색어 관련 State
-
-	React.useEffect(() => {
-		setSearchInput(props.input);
-	}, [props.input]);
-
 	const routeName = getFocusedRouteNameFromRoute(props.route); //현재 활성화되어 있는 스크린의 이름을 받아옴
 
 	const tabbarLabel = arg => {
@@ -49,7 +43,7 @@ export default SearchCommunityTabNavigation = props => {
 					title: '자유 게시글',
 					tabBarLabelStyle: [tabbarLabel('SearchFreeBoard')],
 				}}>
-				{props => <SearchFreeBoard input={searchInput} {...props} />}
+				{props => <SearchFreeBoard {...props} />}
 			</SearchCommunityTabNav.Screen>
 			{/* 계정 */}
 			<SearchCommunityTabNav.Screen
@@ -58,7 +52,7 @@ export default SearchCommunityTabNavigation = props => {
 					title: '후기',
 					tabBarLabelStyle: [tabbarLabel('SearchReview')],
 				}}>
-				{props => <SearchReview {...props} input={searchInput} />}
+				{props => <SearchReview {...props} />}
 			</SearchCommunityTabNav.Screen>
 			{/* 태그 */}
 			<SearchCommunityTabNav.Screen
@@ -67,7 +61,7 @@ export default SearchCommunityTabNavigation = props => {
 					title: '마켓',
 					tabBarLabelStyle: [tabbarLabel('SearchTag')],
 				}}>
-				{props => <SearchMarket {...props} search={searchInput} />}
+				{props => <SearchMarket {...props} />}
 			</SearchCommunityTabNav.Screen>
 		</SearchCommunityTabNav.Navigator>
 	);

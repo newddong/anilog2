@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, StyleSheet, Platform, Dimensions, Image, Animated, Easing} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {WHITE, GRAY10, APRI10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 
@@ -10,108 +11,43 @@ import DP from 'Root/config/dp';
  *
  * @param {Object} props - props object
  * @param {boolean} props.isModal - 모달인지 여부
+ * @param {number} props.height - 컴포넌트 형식일 경우 height
  *
  */
 const Loading = props => {
-	const spinValue = new Animated.Value(0);
-
-	const defaultColors = ['#FF9888', '#FF9888', '#FF9888', '#FF9888'];
-
-	const [animations, setAnimations] = useState([]);
-	const [reverse, setReverse] = useState(false);
-
-	const opacity = useRef(new Animated.Value(0)).current;
-
-	useEffect(() => {
-		const dotAnimations = [];
-		// eslint-disable-next-line no-plusplus
-		for (let i = 0; i < 4; i++) {
-			dotAnimations.push(new Animated.Value(0));
-		}
-		setAnimations(dotAnimations);
-	}, []);
-
-	useEffect(() => {
-		if (animations.length === 0) return;
-		loadingAnimation(animations, reverse);
-		appearAnimation();
-	}, [animations]);
-
-	function appearAnimation() {
-		Animated.timing(opacity, {
-			toValue: 1,
-			easing: Easing.ease,
-			useNativeDriver: true,
-		}).start();
-	}
-
-	function floatAnimation(node, reverseY, delay) {
-		const floatSequence = Animated.sequence([
-			Animated.timing(node, {
-				toValue: reverseY ? 20 : -20,
-				easing: Easing.bezier(0.41, -0.15, 0.56, 1.21),
-				delay,
-				useNativeDriver: true,
-			}),
-			Animated.timing(node, {
-				toValue: reverseY ? -20 : 20,
-				easing: Easing.bezier(0.41, -0.15, 0.56, 1.21),
-				delay,
-				useNativeDriver: true,
-			}),
-			Animated.timing(node, {
-				toValue: 0,
-				delay,
-				useNativeDriver: true,
-			}),
-		]);
-		return floatSequence;
-	}
-
-	function loadingAnimation(nodes, reverseY) {
-		Animated.parallel(nodes.map((node, index) => floatAnimation(node, reverseY, index * 100))).start(() => {
-			setReverse(!reverse);
-		});
-	}
-
-	useEffect(() => {
-		if (animations.length === 0) return;
-		loadingAnimation(animations, reverse);
-	}, [reverse, animations]);
-
-	// First set up animation
-	React.useEffect(() => {
-		Animated.loop(
-			Animated.timing(spinValue, {
-				toValue: 1,
-				duration: 1500,
-				easing: Easing.linear,
-				useNativeDriver: true,
-			}),
-		).start();
-	}, []);
-
-	return (
+	return props.isModal ? (
 		<View
 			style={[
 				style.background,
 				{
-					backgroundColor: props.isModal ? '#0009' : WHITE,
-					opacity: props.isModal ? 1 : 0.5,
+					backgroundColor: '#0009',
 				},
 			]}>
-			<Animated.View style={[styles.loading, {opacity}]}>
-				{animations.map((animation, index) => (
-					<Animated.View
-						key={`loading-anim-${index}`}
-						style={[
-							{width: 20 * DP, height: 20 * DP, borderRadius: (20 * DP) / 2, marginLeft: 10 * DP},
-							{backgroundColor: defaultColors[index]},
-							{transform: [{translateY: animation}]},
-						]}
-					/>
-				))}
-			</Animated.View>
+			<FastImage
+				style={{width: 200, height: 200}}
+				source={{
+					uri: 'https://i.imgur.com/u94DlJb.gif',
+					headers: {Authorization: 'someAuthToken'},
+					priority: FastImage.priority.normal,
+				}}
+				resizeMode={FastImage.resizeMode.contain}
+			/>
+		</View>
+	) : (
+		<View
+			style={[
+				style.background,
+				{
+					backgroundColor: '#fff',
+					justifyContent: 'flex-start',
+					flex: 1,
+				},
+			]}>
+			<FastImage
+				style={{width: 200, height: 200}}
+				source={Image.resolveAssetSource(require('Atom/icon/loading_dense.gif'))}
+				resizeMode={FastImage.resizeMode.contain}
+			/>
 		</View>
 	);
 };
@@ -119,22 +55,14 @@ const Loading = props => {
 Loading.defaultProps = {
 	popUpMsg: 'popUp',
 	isModal: true,
+	height: 700 * DP,
 };
 
-const styles = StyleSheet.create({
-	loading: {
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		marginBottom: 200 * DP,
-	},
-});
 const style = StyleSheet.create({
 	background: {
 		backgroundColor: '#0009',
-		height: Platform.OS == 'ios' ? Dimensions.get('window').height : '100%',
 		width: Platform.OS == 'ios' ? Dimensions.get('window').width : '100%',
+		height: Platform.OS == 'ios' ? Dimensions.get('window').height : '100%',
 		justifyContent: 'center',
 		alignItems: 'center',
 	},

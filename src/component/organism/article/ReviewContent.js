@@ -2,11 +2,12 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {FavoriteTag46_Filled, LocationGray, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
+import {FavoriteTag46_Filled, LocationBallon, LocationGray, LocationMarker, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
 import {GRAY10} from 'Root/config/color';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
 import {dummy_userObject} from 'Root/config/dummyDate_json';
 import {styles} from 'Root/component/atom/image/imageStyle';
+import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 /**
  * 후기 세부 페이지
  * @param {object} props - Props Object
@@ -22,9 +23,13 @@ const ReviewContent = props => {
 			</TouchableOpacity>
 		);
 	};
+
 	const onPressCategory = category => {
 		alert(category);
 	};
+
+	const x = 126.937125; //초기값 더미
+	const y = 37.548721; //초기값 더미
 
 	const category_dummy = ['애견카페', '애견호텔', '애견놀이터'];
 
@@ -54,6 +59,36 @@ const ReviewContent = props => {
 				/>
 			</View>
 			<View style={[style.footer]}>
+				<MapView
+					provider={null} // remove if not using Google Maps
+					style={[style.mapContainer]}
+					customMapStyle={mapStyle2}
+					zoomEnabled
+					zoomControlEnabled
+					showsUserLocation={true}
+					// showsMyLocationButton={true}
+					followsUserLocation={true}
+					region={{
+						longitude: x,
+						latitude: y,
+						latitudeDelta: 0.00002, //지도의 초기줌 수치
+						longitudeDelta: 0.0023, //지도의 초기줌 수치
+					}}>
+					{/* 현재 선택된 위도 경도의 마커 */}
+					<MapView.Marker
+						coordinate={{
+							longitude: x,
+							latitude: y,
+						}}
+						key={`${x}${Date.now()}`} // 현재 마커의 위치가 바뀌어도 타이틀 및 description이 최신화 되지 않던 현상 발견 -> 키 값 부여
+					>
+						<View style={[{alignItems: 'center', marginBottom: 20 * DP}]}>
+							<Text style={[txt.noto22b, style.locationText]}>서울시 성동구 115-64 멍멍동 왈왈길 멍멍존</Text>
+							<View style={[style.triangle]}></View>
+							<LocationMarker />
+						</View>
+					</MapView.Marker>
+				</MapView>
 				<View style={[style.location]}>
 					<LocationGray />
 					<Text style={[txt.noto26b, {color: GRAY10, marginLeft: 10 * DP}]}>서울시 성동구 115-64 멍멍동 왈왈길 멍멍존</Text>
@@ -73,18 +108,46 @@ ReviewContent.defaultProps = {
 	onPressMeatball: () => {},
 };
 
+const mapStyle2 = [
+	{
+		featureType: 'poi.business',
+		stylers: [
+			{
+				visibility: 'on',
+			},
+		],
+	},
+	{
+		featureType: 'road',
+		elementType: 'labels.icon',
+		stylers: [
+			{
+				visibility: 'on',
+			},
+		],
+	},
+	{
+		featureType: 'transit',
+		stylers: [
+			{
+				visibility: 'on',
+			},
+		],
+	},
+];
+
 export default ReviewContent;
 
 const style = StyleSheet.create({
 	container: {
 		width: 654 * DP,
-		paddingVertical: 24 * DP,
+		// paddingVertical: 24 * DP,
 		alignSelf: 'center',
 		// backgroundColor: 'yellow',
 	},
 	header: {
 		// width: 654 * DP,
-		header: 50 * DP,
+		// header: 50 * DP,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		// backgroundColor: 'pink',
@@ -120,7 +183,7 @@ const style = StyleSheet.create({
 	footer: {
 		marginTop: 20 * DP,
 		width: 654 * DP,
-		height: 88 * DP,
+		// height: 88 * DP,
 		// backgroundColor: 'palegreen',
 	},
 	location: {
@@ -140,5 +203,36 @@ const style = StyleSheet.create({
 		width: 510 * DP,
 		marginTop: 12 * DP,
 		flexDirection: 'row',
+	},
+
+	mapContainer: {
+		width: 654 * DP,
+		height: 654 * DP,
+		borderRadius: 30 * DP,
+		borderColor: GRAY10,
+		borderWidth: 2 * DP,
+		marginVertical: 15 * DP,
+	},
+	locationText: {
+		maxWidth: 520 * DP,
+		height: 60 * DP,
+		borderRadius: 20 * DP,
+		padding: 10 * DP,
+		borderWidth: 2 * DP,
+		textAlign: 'center',
+		backgroundColor: 'white',
+	},
+	triangle: {
+		width: 0,
+		height: 0,
+		backgroundColor: 'transparent',
+		borderStyle: 'solid',
+		borderLeftWidth: 15 * DP,
+		borderRightWidth: 15 * DP,
+		borderBottomWidth: 15 * DP,
+		borderLeftColor: 'transparent',
+		borderRightColor: 'transparent',
+		borderBottomColor: 'black',
+		transform: [{rotate: '180deg'}],
 	},
 });

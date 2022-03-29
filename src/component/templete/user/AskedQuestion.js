@@ -33,9 +33,9 @@ const AskedQuestion = ({route}) => {
 	const renderItem = ({item, index}) => {
 		console.log('item', item);
 		if (item.qanda_status == 'waiting') {
-			var answered = false;
+			let answered = false;
 		} else {
-			var answered = true;
+			let answered = true;
 		}
 		const date = moment(item.announcement_date).format('YYYY.MM.DD');
 		return (

@@ -34,8 +34,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 		}
 		// console.log('route.params:', route.params);
 		Modal.popNoBtn('게시물을 등록중입니다.');
-		let param = {...route.params,
-			hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1))};
+		let param = {...route.params, hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1))};
 		switch (route.params?.feedType) {
 			case 'Feed':
 				console.log(param);
@@ -112,12 +111,14 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 		// console.log('route.params:', route.params);
 		// Modal.popNoBtn('게시물을 수정중입니다.');
 		let changeTextRegex = /([#@])([^#@\s]+)/gm;
-		let param = {...route.params,
+		let param = {
+			...route.params,
 			feedobject_id: route.params._id,
-			feed_content: route.params.isEdit?route.params.feed_content:route.params.feed_content.replace(changeTextRegex,'&$1&$1$1$2%&%&$1&$1'),
-			hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1))};
-		editFeed(param,complete, handleError)
-		
+			feed_content: route.params.isEdit ? route.params.feed_content : route.params.feed_content.replace(changeTextRegex, '&$1&$1$1$2%&%&$1&$1'),
+			hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
+		};
+		editFeed(param, complete, handleError);
+
 		console.log('수정 파라메터', param, route.params);
 		switch (route.params?.feedType) {
 			case 'Feed':
@@ -132,6 +133,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 	};
 
 	const titleStyle = [{textAlign: 'center'}, txt.noto40b, route.params?.feedType != 'Feed' ? {color: RED} : {color: '#000'}];
+
 	const avartarSelect = () => {
 		Modal.popAvatarSelectModal(petObject => {
 			console.log('petObject / onOk', petObject);
@@ -158,7 +160,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 					<Text style={titleStyle}>{options.title}</Text>
 				</View>
 			)}
-			<Send60_Big onPress={route.name=='FeedEdit'?onEdit:onCreate} />
+			<Send60_Big onPress={route.name == 'FeedEdit' ? onEdit : onCreate} />
 		</View>
 	);
 };

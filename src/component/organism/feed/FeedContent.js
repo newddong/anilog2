@@ -261,7 +261,7 @@ export default FeedContent = props => {
 	const meatballActions = context => {
 		//피드 미트볼 메뉴 팝업 분기에 대한 기획의도가 불분명한 상태이므로
 		//출력되는 메뉴에 대한 분기처리는 차후 처리 (현재는 더미로 적용)
-		console.log('context', context);
+		console.log(context);
 
 		let isFavorite = context.favorite_feeds.some(feed => feed._id == _id);
 		console.log('즐겨찾기됨?', isFavorite);

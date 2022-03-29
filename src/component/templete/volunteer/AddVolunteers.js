@@ -4,24 +4,28 @@ import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import InputWithSearchIcon from 'Molecules/input/InputWithSearchIcon';
 import AccountList from 'Organism/list/AccountList';
-import {login_style, btn_style, temp_style, addVolunteers} from 'Templete/style_templete';
-import {CommonActions} from '@react-navigation/native';
+import {login_style, btn_style, addVolunteers} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
-import {addUserToFamily, getUserListByNickname} from 'Root/api/userapi';
+import {getUserListByNickname} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {txt} from 'Root/config/textstyle';
 
 export default AddVolunteers = ({route, navigation}) => {
-	console.log('route', route.params);
+	// console.log('route', route.params);
 	const [searched_accountList, setSearched_accountList] = React.useState([]);
 	const [selectedAccount, setSelectedAccount] = React.useState('');
+	const [searchInput, setSearchInput] = React.useState('');
 
-	//돋보기 버튼 클릭 콜백
-	const onSearch = input => {
+	React.useEffect(() => {
+		Modal.popLoading();
+		search();
+	}, [searchInput]);
+
+	const search = () => {
 		setSearched_accountList([]);
 		getUserListByNickname(
 			{
-				user_nickname: input,
+				user_nickname: searchInput,
 				request_number: '',
 				userobject_id: '',
 				user_type: 'user',
@@ -34,18 +38,21 @@ export default AddVolunteers = ({route, navigation}) => {
 				let removeMine = result.msg.findIndex(e => e.user_nickname == userGlobalObject.userInfo.user_nickname);
 				removeMine == -1 ? false : filtered.splice(removeMine, 1);
 				setSearched_accountList(filtered);
+				Modal.close();
 			},
 			err => {
 				console.log('err / getUserListByNick / AddFamilyAccount', err);
+				if (err == '검색 결과가 없습니다.') {
+					Modal.close();
+					setSearched_accountList([]);
+				}
 			},
 		);
 	};
 
 	//검색어 Input값 변경 콜백
 	const onChangeKeyword = input => {
-		if (input != '') {
-			onSearch(input);
-		}
+		setSearchInput(input);
 	};
 
 	const onAccountClick = item => {
@@ -72,7 +79,7 @@ export default AddVolunteers = ({route, navigation}) => {
 	const listEmptyComponent = () => {
 		return (
 			<View style={[addVolunteers.listEmptyContainer]}>
-				<Text style={[txt.noto32]}>검색 결과가 없습니다.</Text>
+				<Text style={[txt.noto32b]}>검색 결과가 없습니다.</Text>
 			</View>
 		);
 	};
@@ -80,7 +87,7 @@ export default AddVolunteers = ({route, navigation}) => {
 	return (
 		<View style={[login_style.wrp_main, addVolunteers.container]}>
 			<View style={[addVolunteers.inputWithSearchIcon]}>
-				<InputWithSearchIcon onSearch={onSearch} onChange={onChangeKeyword} width={654} placeholder={'봉사 활동을 함께 할 계정을 검색해주세요.'} />
+				<InputWithSearchIcon onSearch={search} onChange={onChangeKeyword} width={654} placeholder={'봉사 활동을 함께 할 계정을 검색해주세요.'} />
 			</View>
 			<ScrollView style={[addVolunteers.accountList]}>
 				<AccountList items={searched_accountList} listEmptyComponent={listEmptyComponent} onClickLabel={onAccountClick} />

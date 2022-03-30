@@ -21,14 +21,20 @@ import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
  *
  */
 const InterestTagModal = props => {
-	console.log('InterestTagModa', props.data);
+	// console.log('InterestTagModa', props.data);
 	//유저 오브젝트의 user_interests 의 더미데이터
 	// user_interests는 크게 location 및 activity로 구성
 
 	const [userInterestContent, setUserInterestContent] = React.useState([]);
 	const [userInterestLocation, setUserInterestLocation] = React.useState([]);
 	const [userInterestReview, setUserInterestReview] = React.useState(props.data);
+
 	const [isSaved, setIsSaved] = React.useState(false); // '저장하지 않고 나가시겠습니까?' 메시지 출력 여부 판별
+
+	const [activityLists, setActivityLists] = React.useState([]);
+
+	//커뮤니티 카테고리 선택 관련 state
+	const [communityInterests, setCommunityInterests] = React.useState('');
 	const [showBtnModal, setShowBtnModal] = React.useState(false); //모달창 대체 View 출력 여부
 	const [addressList, setAddressList] = React.useState([]);
 	const [city, setCity] = React.useState(''); // 리뷰의 지역 필터 중 광역시, 도 파라미터
@@ -39,45 +45,31 @@ const InterestTagModal = props => {
 	const [selectedDistrict, setSelectedDistrict] = React.useState('원주시'); // 시군구 선택 아이템
 	const [selectCityOpen, setSelectCityOpen] = React.useState(false);
 	const [selectDistrictOpen, setSelectDistrictOpen] = React.useState(false);
-	const [activityLists, setActivityLists] = React.useState([]);
 
 	React.useEffect(() => {
-		let tempUserInterestContentList = [];
-		let tempUserInterestLocationList = [];
-
-		//유저 관심사 목록 DB에서 받아오기
-		getInterestsList({}, interests => {
-			let acitivityList = [];
-			const nameList = {interests_beauty: '미용', interests_activity: '놀이', interests_food: '사료&간식', interests_health: '건강'};
-			const interestObj = interests.msg[0];
-			const getinterest = Object.entries(interestObj).map((category, idx) => {
-				if (idx == 2) {
-					setAddressList(category[1]);
-				}
-				if (idx >= 3) {
-					acitivityList.push({category: nameList[category[0]], content: category[1]});
-				}
-			});
-			setActivityLists(acitivityList);
-		});
-		//현재 유저의 관심사 리스트를 목록들에 적용
-		const saveUserInterest = Object.entries(props.data).map(interest => {
-			console.log('object', interest);
-			if (props.isActivation) {
-				tempUserInterestContentList.push(interest[1]);
-			} else {
-				tempUserInterestLocationList.push(interest[1]);
-			}
-
-			console.log('아오..', tempUserInterestLocationList, tempUserInterestContentList);
-			setUserInterestContent(tempUserInterestContentList);
-			setUserInterestLocation(tempUserInterestLocationList);
-		});
+		//커뮤니티 후기 글쓰기에서 호출한 관심태그 모달
+		if (props.category == 'ReviewWrite' || props.category == 'Review') {
+			getCommonCodeDynamicQuery(
+				{
+					common_code_c_name: 'communityobjects',
+					common_code_language: 'kor',
+					common_code_out_type: 'interests',
+				},
+				result => {
+					// console.log('common code result', result.msg);
+					setCommunityInterests(result.msg);
+				},
+				err => {
+					console.log('common code err', err);
+				},
+			);
+		}
 		if (props.category == 'Review') {
+			//커뮤니티 후기글 상세에서 호출한 관심태그 모달
 			getAddressList(
 				{},
 				result => {
-					// console.log('result', result.msg);
+					console.log('result', result.msg);
 					const padding = '';
 					let arr = [padding, padding];
 					let cities = arr.concat(result.msg);
@@ -104,9 +96,8 @@ const InterestTagModal = props => {
 				err => console.log('err', err),
 			);
 		} else {
-			tempUserInterestContentList = [];
-			tempUserInterestLocationList = [];
-
+			let tempUserInterestContentList = [];
+			let tempUserInterestLocationList = [];
 			//유저 관심사 목록 DB에서 받아오기
 			getInterestsList({}, interests => {
 				var acitivityList = [];
@@ -124,14 +115,14 @@ const InterestTagModal = props => {
 			});
 			//현재 유저의 관심사 리스트를 목록들에 적용
 			const saveUserInterest = Object.entries(props.data).map(interest => {
-				console.log('object', interest);
+				// console.log('object', interest);
 				if (props.isActivation) {
 					tempUserInterestContentList.push(interest[1]);
 				} else {
 					tempUserInterestLocationList.push(interest[1]);
 				}
 
-				console.log('아오..', tempUserInterestLocationList, tempUserInterestContentList);
+				// console.log('아오..', tempUserInterestLocationList, tempUserInterestContentList);
 				setUserInterestContent(tempUserInterestContentList);
 				setUserInterestLocation(tempUserInterestLocationList);
 			});
@@ -167,18 +158,6 @@ const InterestTagModal = props => {
 			// easing: Easing.linear,
 			useNativeDriver: false,
 		}).start();
-	};
-
-	//관심 리뷰 태그를 클릭
-	const onPressInterestReviewTag = (category, tag) => {
-		let copy = [...userInterestReview.category];
-		if (copy.includes(tag)) {
-			let findIndex = copy.findIndex(e => e == tag);
-			copy.splice(findIndex, 1);
-		} else {
-			copy.push(tag);
-		}
-		// setUserInterestReview(copy);
 	};
 
 	//관심활동 태그를 클릭
@@ -233,7 +212,6 @@ const InterestTagModal = props => {
 
 	//X마크 클릭 후 저장 후 나감 클릭
 	const onPressExitAfterSave = () => {
-		console.log('onPressExitAfterSave');
 		onPressSave();
 		props.onClose();
 		Modal.close();
@@ -241,7 +219,6 @@ const InterestTagModal = props => {
 
 	//X마크 클릭 후 나가기 클릭
 	const onPressExitWithoutSave = () => {
-		console.log('onPressExitWithoutSave');
 		props.onClose();
 		Modal.close();
 	};
@@ -330,285 +307,130 @@ const InterestTagModal = props => {
 		setSelectedDistrict(district[selectedItem_dis]);
 	};
 
-	const getCategoryTitle = v => {
-		console.log('v', v);
+	//관심 리뷰 태그를 클릭
+	const onPressInterestReviewTag = (category, tag) => {
+		let copy = [];
+		switch (category) {
+			case 0:
+				copy = [...userInterestReview.interests_trip];
+				copy.includes(tag)
+					? copy.splice(
+							copy.findIndex(e => e == tag),
+							1,
+					  )
+					: copy.push(tag);
+				setUserInterestReview({...userInterestReview, interests_trip: copy});
+				break;
+			case 1:
+				copy = [...userInterestReview.interests_interior];
+				copy.includes(tag)
+					? copy.splice(
+							copy.findIndex(e => e == tag),
+							1,
+					  )
+					: copy.push(tag);
+				setUserInterestReview({...userInterestReview, interests_interior: copy});
+				break;
+			case 2:
+				copy = [...userInterestReview.interests_hospital];
+				copy.includes(tag)
+					? copy.splice(
+							copy.findIndex(e => e == tag),
+							1,
+					  )
+					: copy.push(tag);
+				setUserInterestReview({...userInterestReview, interests_hospital: copy});
+				break;
+			case 3:
+				copy = [...userInterestReview.interests_review];
+				copy.includes(tag)
+					? copy.splice(
+							copy.findIndex(e => e == tag),
+							1,
+					  )
+					: copy.push(tag);
+				setUserInterestReview({...userInterestReview, interests_review: copy});
+				break;
+			case 4:
+				copy = [...userInterestReview.interests_etc];
+				copy.includes(tag)
+					? copy.splice(
+							copy.findIndex(e => e == tag),
+							1,
+					  )
+					: copy.push(tag);
+				setUserInterestReview({...userInterestReview, interests_etc: copy});
+				break;
+			default:
+				break;
+		}
 	};
 
-	React.useEffect(() => {
-		getCommonCodeDynamicQuery(
-			{common_code_c_name: 'communityobjects', common_code_value: 'interests_trip'},
-			result => {
-				console.log('common code result', result.msg);
-				let temp = {
-					interests_trip: [],
-					interests_hospital: [],
-					interests_interior: [],
-					interests_review: [],
-					interests_etc: [],
-				};
-				result.msg.map((v, i) => {
-					switch (v.common_code_value) {
-						case 'interests_trip':
-							if (v.common_code_category == 'definition') {
-								temp.interests_trip.push(v.common_code_msg_kor);
-							}
-							break;
+	const getCommuntyInterestList = (type, typeText) => {
+		const hasDefinition = v => {
+			let result = true;
+			switch (typeText) {
+				case 0:
+					result = userInterestReview.interests_trip.includes(v);
+					break;
+				case 1:
+					result = userInterestReview.interests_interior.includes(v);
+					break;
+				case 2:
+					result = userInterestReview.interests_hospital.includes(v);
+					break;
+				case 3:
+					result = userInterestReview.interests_review.includes(v);
+					break;
+				case 4:
+					result = userInterestReview.interests_etc.includes(v);
+					break;
+				default:
+					break;
+			}
+			return result;
+		};
 
-						default:
-							break;
-					}
-				});
-
-				const t = [
-					{
-						__v: 0,
-						_id: '623c2bfea3f2e22cac0fb783',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'topic',
-						common_code_create_date: '2022-03-24T08:29:50.091Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '여행 · 숙박 · 까페',
-						common_code_spare: '',
-						common_code_value: 'interests_trip',
-					},
-					{
-						__v: 0,
-						_id: '623c2c30a3f2e22cac0fb785',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'definition',
-						common_code_create_date: '2022-03-24T08:30:40.062Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '펫 숙소',
-						common_code_spare: '',
-						common_code_value: 'interests_trip',
-					},
-					{
-						__v: 0,
-						_id: '623c2c3aa3f2e22cac0fb787',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'definition',
-						common_code_create_date: '2022-03-24T08:30:50.446Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '관광지',
-						common_code_spare: '',
-						common_code_value: 'interests_trip',
-					},
-					{
-						__v: 0,
-						_id: '623c2c3fa3f2e22cac0fb789',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'definition',
-						common_code_create_date: '2022-03-24T08:30:55.364Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '놀이터',
-						common_code_spare: '',
-						common_code_value: 'interests_trip',
-					},
-					{
-						__v: 0,
-						_id: '623c2c46a3f2e22cac0fb78b',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'definition',
-						common_code_create_date: '2022-03-24T08:31:02.037Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '펫 까페',
-						common_code_spare: '',
-						common_code_value: 'interests_trip',
-					},
-					{
-						__v: 0,
-						_id: '623c2d66a3f2e22cac0fb78d',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'topic',
-						common_code_create_date: '2022-03-24T08:35:50.735Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '병원 · 건강',
-						common_code_spare: '',
-						common_code_value: 'interests_hospital',
-					},
-					{
-						__v: 0,
-						_id: '623c2db1a3f2e22cac0fb78f',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'definition',
-						common_code_create_date: '2022-03-24T08:37:05.552Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '병원',
-						common_code_spare: '',
-						common_code_value: 'interests_hospital',
-					},
-					{
-						__v: 0,
-						_id: '623c2db5a3f2e22cac0fb791',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'definition',
-						common_code_create_date: '2022-03-24T08:37:09.835Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '사료',
-						common_code_spare: '',
-						common_code_value: 'interests_hospital',
-					},
-					{
-						__v: 0,
-						_id: '623c2dbaa3f2e22cac0fb793',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'definition',
-						common_code_create_date: '2022-03-24T08:37:14.307Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '간식',
-						common_code_spare: '',
-						common_code_value: 'interests_hospital',
-					},
-					{
-						__v: 0,
-						_id: '623c2dd8a3f2e22cac0fb795',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'topic',
-						common_code_create_date: '2022-03-24T08:37:44.112Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '펫 인테리어 · 놀이',
-						common_code_spare: '',
-						common_code_value: 'interests_interior',
-					},
-					{
-						__v: 0,
-						_id: '623c2df0a3f2e22cac0fb797',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'definition',
-						common_code_create_date: '2022-03-24T08:38:08.992Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '집 · 방석',
-						common_code_spare: '',
-						common_code_value: 'interests_interior',
-					},
-					{
-						__v: 0,
-						_id: '623c2df6a3f2e22cac0fb799',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'definition',
-						common_code_create_date: '2022-03-24T08:38:14.560Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '가구',
-						common_code_spare: '',
-						common_code_value: 'interests_interior',
-					},
-					{
-						__v: 0,
-						_id: '623c2dffa3f2e22cac0fb79b',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'definition',
-						common_code_create_date: '2022-03-24T08:38:23.600Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '노즈워크/장난감',
-						common_code_spare: '',
-						common_code_value: 'interests_interior',
-					},
-					{
-						__v: 0,
-						_id: '623c2e0ea3f2e22cac0fb79d',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'topic',
-						common_code_create_date: '2022-03-24T08:38:38.768Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '기타',
-						common_code_spare: '',
-						common_code_value: 'interests_etc',
-					},
-					{
-						__v: 0,
-						_id: '623c2e3aa3f2e22cac0fb79f',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'definition',
-						common_code_create_date: '2022-03-24T08:39:22.398Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '청결 용품',
-						common_code_spare: '',
-						common_code_value: 'interests_etc',
-					},
-					{
-						__v: 0,
-						_id: '623c2fe8a3f2e22cac0fb7a1',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'definition',
-						common_code_create_date: '2022-03-24T08:46:32.752Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '의류',
-						common_code_spare: '',
-						common_code_value: 'interests_etc',
-					},
-					{
-						__v: 0,
-						_id: '623c3051a3f2e22cac0fb7a5',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'definition',
-						common_code_create_date: '2022-03-24T08:48:17.566Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '기타',
-						common_code_spare: '',
-						common_code_value: 'interests_etc',
-					},
-					{
-						__v: 0,
-						_id: '623c305ba3f2e22cac0fb7a7',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'topic',
-						common_code_create_date: '2022-03-24T08:48:27.096Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '후기',
-						common_code_spare: '',
-						common_code_value: 'interests_review',
-					},
-					{
-						__v: 0,
-						_id: '623c3068a3f2e22cac0fb7a9',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'definition',
-						common_code_create_date: '2022-03-24T08:48:40.146Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '치료 경험',
-						common_code_spare: '',
-						common_code_value: 'interests_review',
-					},
-					{
-						__v: 0,
-						_id: '623c306ca3f2e22cac0fb7ab',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'definition',
-						common_code_create_date: '2022-03-24T08:48:44.692Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '훈련 경험',
-						common_code_spare: '',
-						common_code_value: 'interests_review',
-					},
-					{
-						__v: 0,
-						_id: '623c3077a3f2e22cac0fb7ad',
-						common_code_c_name: 'communityobjects',
-						common_code_category: 'definition',
-						common_code_create_date: '2022-03-24T08:48:55.442Z',
-						common_code_f_name: 'community_interests',
-						common_code_msg_kor: '다이어트 경험',
-						common_code_spare: '',
-						common_code_value: 'interests_review',
-					},
-				];
-			},
-			err => {
-				console.log('common code err', err);
-			},
+		return (
+			<View style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
+				<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>{type.topic} </Text>
+				<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+					{type.definition.map((v, i) => {
+						if (i % 2 == 0) {
+							return null;
+						}
+						return (
+							<TouchableOpacity
+								onPress={() => onPressInterestReviewTag(typeText, v)}
+								key={i}
+								style={[hasDefinition(v) ? style.contentText_userInterest : style.contentText]}>
+								<Text style={[txt.noto28, {color: hasDefinition(v) ? WHITE : GRAY10, textAlign: 'center'}]}>{v}</Text>
+							</TouchableOpacity>
+						);
+					})}
+				</View>
+				<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+					{type.definition.map((v, i) => {
+						if (i % 2 != 0) {
+							return null;
+						}
+						return (
+							<TouchableOpacity
+								onPress={() => onPressInterestReviewTag(typeText, v)}
+								key={i}
+								style={[hasDefinition(v) ? style.contentText_userInterest : style.contentText]}>
+								<Text style={[txt.noto28, {color: hasDefinition(v) ? WHITE : GRAY10, textAlign: 'center'}]}>{v}</Text>
+							</TouchableOpacity>
+						);
+					})}
+				</View>
+			</View>
 		);
-	}, []);
-
-	const dum = {
-		interests_trip: ['펫 숙소', '관광지', '놀이터', '펫카페'],
-		interests_hospital: ['병원', '사료', '간식', '훈련', '건강 보조제', '치료', '다이어트', '노즈워크/장난감'],
-		interests_interior: ['집 ㆍ 방석', '가구'],
-		interests_review: ['청결용품', '의류', '기타'],
-		interests_etc: ['치료 경혐', '훈련 경혐', '다이어트 경험'],
 	};
 
+	//커뮤니티 카테고리 분기
 	const getReviewCategory = () => {
-		if (city == '' && props.category != 'ReviewWrite') {
+		if (communityInterests == '') {
 			return <ActivityIndicator />;
 		} else
 			return (
@@ -622,196 +444,11 @@ const InterestTagModal = props => {
 								<ArrowDownButton onPress={onOpenDistrict} btnStyle={'border'} btnLayout={btn_w280} titleFontStyle={22} btnTitle={selectedDistrict} />
 							</View>
 						)}
-						{/* 여행 ㆍ 숙박 ㆍ 카페 */}
-						<View style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
-							<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>여행 ㆍ 숙박 ㆍ 카페 </Text>
-							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-								{dum.interests_trip.map((v, i) => {
-									if (i % 2 == 0) {
-										return null;
-									}
-									return (
-										<TouchableOpacity
-											onPress={() => onPressInterestReviewTag('interests_trip', v)}
-											key={i}
-											style={[userInterestReview.interests_trip.includes(v) ? style.contentText_userInterest : style.contentText]}>
-											<Text style={[txt.noto28, {color: userInterestReview.interests_trip.includes(v) ? WHITE : GRAY10, textAlign: 'center'}]}>
-												{v}
-											</Text>
-										</TouchableOpacity>
-									);
-								})}
-							</View>
-							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-								{dum.interests_trip.map((v, i) => {
-									if (i % 2 != 0) {
-										return null;
-									}
-									return (
-										<TouchableOpacity
-											onPress={() => onPressInterestReviewTag('interests_trip', v)}
-											key={i}
-											style={[userInterestReview.interests_trip.includes(v) ? style.contentText_userInterest : style.contentText]}>
-											<Text style={[txt.noto28, {color: userInterestReview.interests_trip.includes(v) ? WHITE : GRAY10, textAlign: 'center'}]}>
-												{v}
-											</Text>
-										</TouchableOpacity>
-									);
-								})}
-							</View>
-						</View>
-						{/* 건강 ㆍ 놀이 ㆍ 음식 */}
-						<View style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
-							<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>건강 ㆍ 놀이 ㆍ 음식 </Text>
-							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-								{dum.interests_hospital.map((v, i) => {
-									if (i % 2 == 0) {
-										return null;
-									}
-									return (
-										<TouchableOpacity
-											onPress={() => onPressInterestReviewTag('interests_hospital', v)}
-											key={i}
-											style={[userInterestReview.interests_hospital.includes(v) ? style.contentText_userInterest : style.contentText]}>
-											<Text style={[txt.noto28, {color: userInterestReview.interests_hospital.includes(v) ? WHITE : GRAY10, textAlign: 'center'}]}>
-												{v}
-											</Text>
-										</TouchableOpacity>
-									);
-								})}
-							</View>
-							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-								{dum.interests_hospital.map((v, i) => {
-									if (i % 2 != 0) {
-										return null;
-									}
-									return (
-										<TouchableOpacity
-											onPress={() => onPressInterestReviewTag('interests_hospital', v)}
-											key={i}
-											style={[userInterestReview.interests_hospital.includes(v) ? style.contentText_userInterest : style.contentText]}>
-											<Text style={[txt.noto28, {color: userInterestReview.interests_hospital.includes(v) ? WHITE : GRAY10, textAlign: 'center'}]}>
-												{v}
-											</Text>
-										</TouchableOpacity>
-									);
-								})}
-							</View>
-						</View>
-						{/* 펫 인테리어  */}
-						<View style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
-							<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>펫 인테리어 </Text>
-							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-								{dum.interests_interior.map((v, i) => {
-									if (i % 2 == 0) {
-										return null;
-									}
-									return (
-										<TouchableOpacity
-											onPress={() => onPressInterestReviewTag('interests_interior', v)}
-											key={i}
-											style={[userInterestReview.interests_interior.includes(v) ? style.contentText_userInterest : style.contentText]}>
-											<Text style={[txt.noto28, {color: userInterestReview.interests_interior.includes(v) ? WHITE : GRAY10, textAlign: 'center'}]}>
-												{v}
-											</Text>
-										</TouchableOpacity>
-									);
-								})}
-							</View>
-							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-								{dum.interests_interior.map((v, i) => {
-									if (i % 2 != 0) {
-										return null;
-									}
-									return (
-										<TouchableOpacity
-											onPress={() => onPressInterestReviewTag('interests_interior', v)}
-											key={i}
-											style={[userInterestReview.interests_interior.includes(v) ? style.contentText_userInterest : style.contentText]}>
-											<Text style={[txt.noto28, {color: userInterestReview.interests_interior.includes(v) ? WHITE : GRAY10, textAlign: 'center'}]}>
-												{v}
-											</Text>
-										</TouchableOpacity>
-									);
-								})}
-							</View>
-						</View>
-						{/* 후기 */}
-						<View style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
-							<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>펫 인테리어 </Text>
-							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-								{dum.interests_review.map((v, i) => {
-									if (i % 2 == 0) {
-										return null;
-									}
-									return (
-										<TouchableOpacity
-											onPress={() => onPressInterestReviewTag('interests_review', v)}
-											key={i}
-											style={[userInterestReview.interests_review.includes(v) ? style.contentText_userInterest : style.contentText]}>
-											<Text style={[txt.noto28, {color: userInterestReview.interests_review.includes(v) ? WHITE : GRAY10, textAlign: 'center'}]}>
-												{v}
-											</Text>
-										</TouchableOpacity>
-									);
-								})}
-							</View>
-							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-								{dum.interests_review.map((v, i) => {
-									if (i % 2 != 0) {
-										return null;
-									}
-									return (
-										<TouchableOpacity
-											onPress={() => onPressInterestReviewTag('interests_review', v)}
-											key={i}
-											style={[userInterestReview.interests_review.includes(v) ? style.contentText_userInterest : style.contentText]}>
-											<Text style={[txt.noto28, {color: userInterestReview.interests_review.includes(v) ? WHITE : GRAY10, textAlign: 'center'}]}>
-												{v}
-											</Text>
-										</TouchableOpacity>
-									);
-								})}
-							</View>
-						</View>
-						{/* 기타 */}
-						<View style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
-							<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>기타 </Text>
-							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-								{dum.interests_etc.map((v, i) => {
-									if (i % 2 == 0) {
-										return null;
-									}
-									return (
-										<TouchableOpacity
-											onPress={() => onPressInterestReviewTag('interests_etc', v)}
-											key={i}
-											style={[userInterestReview.interests_etc.includes(v) ? style.contentText_userInterest : style.contentText]}>
-											<Text style={[txt.noto28, {color: userInterestReview.interests_etc.includes(v) ? WHITE : GRAY10, textAlign: 'center'}]}>
-												{v}
-											</Text>
-										</TouchableOpacity>
-									);
-								})}
-							</View>
-							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-								{dum.interests_etc.map((v, i) => {
-									if (i % 2 != 0) {
-										return null;
-									}
-									return (
-										<TouchableOpacity
-											onPress={() => onPressInterestReviewTag('interests_etc', v)}
-											key={i}
-											style={[userInterestReview.interests_etc.includes(v) ? style.contentText_userInterest : style.contentText]}>
-											<Text style={[txt.noto28, {color: userInterestReview.interests_etc.includes(v) ? WHITE : GRAY10, textAlign: 'center'}]}>
-												{v}
-											</Text>
-										</TouchableOpacity>
-									);
-								})}
-							</View>
-						</View>
+						{getCommuntyInterestList(communityInterests.interests_trip, 0)}
+						{getCommuntyInterestList(communityInterests.interests_interior, 1)}
+						{getCommuntyInterestList(communityInterests.interests_hospital, 2)}
+						{getCommuntyInterestList(communityInterests.interests_review, 3)}
+						{getCommuntyInterestList(communityInterests.interests_etc, 4)}
 					</View>
 				</ScrollView>
 			);
@@ -890,13 +527,7 @@ const InterestTagModal = props => {
 
 	return (
 		<View style={style.background}>
-			<View
-				// activeOpacity={0.9}
-				// onPress={() => {
-				// 	setSelectCityOpen(false);
-				// 	setSelectDistrictOpen(false);
-				// }}
-				style={[style.popUpWindow]}>
+			<View style={[style.popUpWindow]}>
 				<View style={[style.header]}>
 					<TouchableOpacity onPress={onClose} style={[style.crossMark]}>
 						<Cross24_Filled />
@@ -1003,28 +634,6 @@ InterestTagModal.defaultProps = {
 	onClose: () => {},
 	isActivation: true,
 };
-const dummyReviewCategoryList = [
-	{
-		category_title: '여행ㆍ숙박ㆍ카페',
-		content: ['펫 숙소', '관광지', '놀이터', '펫카페'],
-	},
-	{
-		category_title: '병원ㆍ건강',
-		content: ['병원', '사료', '간식'],
-	},
-	{
-		category_title: '펫 인테리어 ㆍ 놀이',
-		content: ['집 ㆍ 방석', '가구', '노즈워크/장난감'],
-	},
-	{
-		category_title: '기타',
-		content: ['청결용품', '의류', '기타'],
-	},
-	{
-		category_title: '후기',
-		content: ['치료 경혐', '훈련 경혐', '다이어트 경험'],
-	},
-];
 
 const style = StyleSheet.create({
 	background: {
@@ -1091,7 +700,7 @@ const style = StyleSheet.create({
 		height: 68 * DP,
 		paddingHorizontal: 12 * DP,
 		minWidth: 126 * DP,
-		borderRadius: 30 * DP,
+		borderRadius: 25 * DP,
 		borderWidth: 2 * DP,
 		borderColor: GRAY20,
 		marginLeft: 20 * DP,
@@ -1103,7 +712,7 @@ const style = StyleSheet.create({
 		paddingHorizontal: 12 * DP,
 		backgroundColor: APRI10,
 		height: 68 * DP,
-		borderRadius: 30 * DP,
+		borderRadius: 25 * DP,
 		minWidth: 126 * DP,
 		marginLeft: 20 * DP,
 		marginTop: 20 * DP,

@@ -153,34 +153,8 @@ export default SearchMap = ({route}) => {
 	const confirm = () => {
 		let finalized = locationObj;
 		finalized.detailAddr = detailAddr;
-		// console.log(finalized);
-		const gg = {
-			address: {
-				address_name: '서울 마포구 신수동 89-77',
-				main_address_no: '89',
-				mountain_yn: 'N',
-				region_1depth_name: '서울',
-				region_2depth_name: '마포구',
-				region_3depth_name: '신수동',
-				sub_address_no: '77',
-				zip_code: '',
-			},
-			detailAddr: '',
-			road_address: {
-				address_name: '서울특별시 마포구 광성로4길 22-12',
-				building_name: '',
-				main_building_no: '22',
-				region_1depth_name: '서울',
-				region_2depth_name: '마포구',
-				region_3depth_name: '',
-				road_name: '광성로4길',
-				sub_building_no: '12',
-				underground_yn: 'N',
-				zone_no: '04096',
-			},
-		};
 		const data = {
-			...route.params,
+			...route.params.data,
 			community_address: {
 				road_address: {
 					address_name: finalized.road_address.address_name + ' ' + finalized.detailAddr,
@@ -198,16 +172,9 @@ export default SearchMap = ({route}) => {
 				},
 			},
 		};
-		// community_address: {
-		// 	addr: finalized,
-		// 	region: {
-		// 		latitude: changedLatitude != '' ? changedLatitude : init_latitude,
-		// 		longitude: changedLongitude != '' ? changedLongitude : init_longitude,
-		// 	},
-		// },
 		navigation.navigate({
 			name: 'CommunityWrite',
-			params: {data: data},
+			params: {data: data, isReview: route.params.isReview},
 			merge: false,
 		});
 	};

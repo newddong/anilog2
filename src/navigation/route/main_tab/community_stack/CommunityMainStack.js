@@ -45,7 +45,6 @@ export default CommunityMainStack = props => {
 					header: props => <LogoHeader {...props} />,
 				})}
 			/>
-
 			<CommunityMainStackNavi.Screen
 				name={'ArticleDetail'}
 				component={ArticleDetail}
@@ -55,7 +54,6 @@ export default CommunityMainStack = props => {
 					title: ' ',
 				})}
 			/>
-
 			<CommunityMainStackNavi.Screen
 				name={'UserProfile'}
 				component={Profile}
@@ -93,7 +91,7 @@ export default CommunityMainStack = props => {
 					title: '',
 				})}
 			/>
-			<CommunityMainStackNavi.Screen
+			{/* <CommunityMainStackNavi.Screen
 				name={'ReviewCommentList'}
 				component={CommunityCommentList}
 				options={({route}) => ({
@@ -104,6 +102,15 @@ export default CommunityMainStack = props => {
 			/>
 			<CommunityMainStackNavi.Screen
 				name={'ArticleCommentList'}
+				component={CommunityCommentList}
+				options={({route}) => ({
+					// headerShown: false,
+					header: props => <SimpleHeader {...props} />,
+					title: ' ',
+				})}
+			/> */}
+			<CommunityMainStackNavi.Screen
+				name={'CommunityCommentList'}
 				component={CommunityCommentList}
 				options={({route}) => ({
 					// headerShown: false,

@@ -14,6 +14,7 @@ import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, ProfileDefaultImg} from 'Atom/i
  * 유저의 프로필 사진, 닉네임, 댓글 작성 날짜 출력하는 라벨
  * @param {object} props - Props Object
  * @param {object} props.data - UserObejct
+ * @param {date} props.time - Date 타입 정보
  * @param {(data:object)=>void} props.onClickLabel - 버튼을 눌렸을때 동작하는 콜백, 제목 반환환
  */
 const UserLocationTimeLabel = props => {

@@ -5,7 +5,7 @@ import FeedContent from 'Organism/feed/FeedContent';
 import CommentList from 'Organism/comment/CommentList';
 import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
 import {feedCommentList, login_style} from 'Templete/style_templete';
-import {createComment, getCommentListByFeedId, getCommentListByProtectId, updateComment} from 'Root/api/commentapi';
+import {createComment, getCommentListByCommunityId, getCommentListByFeedId, getCommentListByProtectId, updateComment} from 'Root/api/commentapi';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -29,10 +29,9 @@ export default FeedCommentList = props => {
 	const flatlist = React.useRef();
 	const [editMode, setEditMode] = React.useState(false); //댓글 편집 모드
 	const [editData, setEditData] = React.useState({
-		comment_contents:'',
-		comment_photo_uri:'',
+		comment_contents: '',
+		comment_photo_uri: '',
 	});
-
 
 	React.useEffect(() => {
 		if (props.route.name == 'FeedCommentList') {
@@ -40,7 +39,7 @@ export default FeedCommentList = props => {
 				{
 					feedobject_id: props.route.params.feedobject._id,
 					request_number: 1000,
-					login_userobject_id: userGlobalObject.userInfo._id
+					login_userobject_id: userGlobalObject.userInfo._id,
 				},
 				comments => {
 					setComments(comments.msg);
@@ -53,7 +52,7 @@ export default FeedCommentList = props => {
 				{
 					feedobject_id: props.route.params.feedobject._id,
 					request_number: 1000,
-					login_userobject_id: userGlobalObject.userInfo._id
+					login_userobject_id: userGlobalObject.userInfo._id,
 				},
 				comments => {
 					setComments(comments.msg);
@@ -73,7 +72,7 @@ export default FeedCommentList = props => {
 			comment_is_secure: privateComment, //공개여부 테스트때 반영
 		};
 
-		if(editData.comment_photo_uri&&editData.comment_photo_uri.length>0){
+		if (editData.comment_photo_uri && editData.comment_photo_uri.length > 0) {
 			param.comment_photo_uri = editData.comment_photo_uri;
 		}
 
@@ -92,14 +91,14 @@ export default FeedCommentList = props => {
 				{
 					...param,
 					commentobject_id: editData._id,
-					comment_photo_remove: !editData.comment_photo_uri ||  editData.comment_photo_uri == 0,
+					comment_photo_remove: !editData.comment_photo_uri || editData.comment_photo_uri == 0,
 				},
 				result => {
 					console.log(result);
 					setParentComment();
 					setEditData({
-						comment_contents:'',
-						comment_photo_uri:''
+						comment_contents: '',
+						comment_photo_uri: '',
 					});
 					if (props.route.name == 'FeedCommentList') {
 						getCommentListByFeedId(
@@ -128,8 +127,8 @@ export default FeedCommentList = props => {
 					console.log(result);
 					setParentComment();
 					setEditData({
-						comment_contents:'',
-						comment_photo_uri:''
+						comment_contents: '',
+						comment_photo_uri: '',
 					});
 					if (props.route.name == 'FeedCommentList') {
 						getCommentListByFeedId(
@@ -163,14 +162,14 @@ export default FeedCommentList = props => {
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
 	const onAddPhoto = () => {
 		// navigation.push('SinglePhotoSelect', props.route.name);
-		console.log('onAddphoto')
+		console.log('onAddphoto');
 		ImagePicker.openPicker({
 			compressImageQuality: 0.8,
 			cropping: true,
 		})
 			.then(images => {
 				console.log('onAddphoto Imagepicker', images);
-				setEditData({...editData,comment_photo_uri:images.path});
+				setEditData({...editData, comment_photo_uri: images.path});
 				Modal.close();
 			})
 			.catch(err => console.log(err + ''));
@@ -178,8 +177,8 @@ export default FeedCommentList = props => {
 	};
 
 	const onDeleteImage = () => {
-		console.log('onDelete Img')
-		setEditData({...editData,comment_photo_uri:''});
+		console.log('onDelete Img');
+		setEditData({...editData, comment_photo_uri: ''});
 	};
 
 	// 답글 쓰기 -> Input value 변경 콜백함수

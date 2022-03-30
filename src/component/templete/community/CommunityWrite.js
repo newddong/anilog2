@@ -9,7 +9,7 @@ import Modal from 'Component/modal/Modal';
 import {useNavigation} from '@react-navigation/native';
 import ImagePicker from 'react-native-image-crop-picker';
 import {changeLocalPathToS3Path} from 'Root/api/community';
-import {actions, RichEditor} from 'react-native-pell-rich-editor';
+import {RichEditor} from 'react-native-pell-rich-editor';
 import {Animal_another_off, Animal_cat_off, Animal_dog_off, Filter60Border, Filter60Filled, WriteBoard} from 'Root/component/atom/icon';
 import {Animal_another, Animal_cat, Animal_dog} from 'Root/component/atom/icon';
 
@@ -21,7 +21,7 @@ export default CommunityWrite = props => {
 		community_content: '',
 		community_is_attached_file: true,
 		community_type: isReview ? 'review' : 'free',
-		community_free_type: 'talk',
+		community_free_type: isReview ? '' : 'talk',
 		community_animal_type: '',
 		community_avatar_id: '',
 		community_is_temporary: false,
@@ -54,7 +54,7 @@ export default CommunityWrite = props => {
 	const [animalType, setAnimalType] = React.useState({
 		dog: false,
 		cat: false,
-		other: false,
+		etc: false,
 	});
 	const [cursor, setCursor] = React.useState(0);
 	const richText = React.useRef('');
@@ -74,28 +74,33 @@ export default CommunityWrite = props => {
 		}
 	}, [props.route.params]);
 
+	//내용 입력
 	const onChange = editorData => {
 		console.log('editorData', editorData);
 		setData({...data, community_content: editorData});
 		scrollRef.current.scrollTo({y: cursor - 50, duration: 100, animated: true});
 	};
 
+	//제목 입력
 	const onChangeTitle = title => {
 		setData({...data, community_title: title});
 	};
 
+	//개 고양이 그외 필터 클릭
 	const onPressAnimalFilter = kind => {
 		switch (kind) {
 			case 'dog':
-				setAnimalType({...animalType, dog: !animalType.dog});
-				let temp = data.filter;
+				setAnimalType({...animalType, dog: !animalType.dog, cat: false, etc: false});
+				setData({...data, community_animal_type: 'dog'});
 				// data.filter.includes('dog') ? false : temp.push('dog')
 				break;
 			case 'cat':
-				setAnimalType({...animalType, cat: !animalType.cat});
+				setAnimalType({...animalType, dog: false, cat: !animalType.cat, etc: false});
+				setData({...data, community_animal_type: 'cat'});
 				break;
-			case 'another':
-				setAnimalType({...animalType, other: !animalType.other});
+			case 'etc':
+				setAnimalType({...animalType, dog: false, cat: false, etc: !animalType.etc});
+				setData({...data, community_animal_type: 'etc'});
 				break;
 			default:
 				break;
@@ -133,7 +138,7 @@ export default CommunityWrite = props => {
 			// richText.current?.insertImage(v.location, 'margin: 0.2em auto 0.2em; border-radius: 15px; width:150px; height:150px;');
 			richText.current?.insertHTML('<p><br/></p></div>');
 			richText.current?.insertHTML(
-				`<img src="${v.location}" onclick="_.sendEvent('ImgClick')" \n
+				`<img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
 				contenteditable="false" height="450px" width="300px" style="border-radius:15px; margin: 0 auto 4px; "/>`,
 			);
 			richText.current?.insertHTML('<p><br/></p></div>');
@@ -144,7 +149,6 @@ export default CommunityWrite = props => {
 
 	const onPressAddVideo = () => {
 		const example = 'https://media.fmkorea.com/files/attach/new2/20220330/486616/2949542227/4478562221/a0729cce75f3e4a1cd32cf074066543d.mp4?d';
-		// lineId = `line${lineNumber}`;
 		richText.current?.insertHTML(
 			`<div style="padding:10px 0;" contentEditable="false">
 		        <iframe  width="100%" height="220"  src="${example}" frameborder="0" allow="accelerometer; controls; sandbox; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ></iframe>
@@ -208,7 +212,15 @@ export default CommunityWrite = props => {
 		);
 	};
 
+	const isInterestsEmpty =
+		data.community_interests.interests_etc.length == 0 &&
+		data.community_interests.interests_hospital.length == 0 &&
+		data.community_interests.interests_interior == 0 &&
+		data.community_interests.interests_review == 0 &&
+		data.community_interests.interests_trip == 0;
+
 	const onPressFilter = () => {
+		console.log('data.community_interests', data.community_interests);
 		Modal.popInterestTagModal(
 			'ReviewWrite',
 			// data.community_interests == '카테고리 선택' ? [] : data.community_interests,
@@ -216,7 +228,7 @@ export default CommunityWrite = props => {
 			() => Modal.close(),
 			() => Modal.close(),
 			arg => {
-				console.log('arg', arg);
+				// console.log('arg', arg);
 				setData({...data, community_interests: arg.userInterestReview});
 				Modal.close();
 			},
@@ -234,16 +246,6 @@ export default CommunityWrite = props => {
 	const onCursorPosition = scrollY => {
 		setCursor(scrollY); //현재 커서가 최신화 되지 않던 현상 수정
 		scrollRef.current.scrollTo({y: scrollY - 50, duration: 100, animated: true});
-	};
-
-	const onContentSizeChange = () => {
-		console.log('sadk;lsadkl;as');
-		// scrollRef.current.scrollTo({y: cursor - 30, duration: 100, animated: true});
-	};
-
-	const onFocus = () => {
-		console.log('cursor', cursor);
-		// scrollRef.current.scrollTo({y: cursor - 30, duration: 100, animated: true});
 	};
 
 	React.useEffect(() => {
@@ -271,8 +273,20 @@ export default CommunityWrite = props => {
 	//선택한 카테고리 목록 Stringify 함수
 	const getReviewCategory = list => {
 		let category_text = '';
-		list.map((v, i) => {
-			// category_text = category_text + v + ' / ';
+		list.interests_trip.map((v, i) => {
+			category_text = category_text + v + ' / ';
+		});
+		list.interests_review.map((v, i) => {
+			category_text = category_text + v + ' / ';
+		});
+		list.interests_interior.map((v, i) => {
+			category_text = category_text + v + ' / ';
+		});
+		list.interests_hospital.map((v, i) => {
+			category_text = category_text + v + ' / ';
+		});
+		list.interests_etc.map((v, i) => {
+			category_text = category_text + v + ' / ';
 		});
 		return category_text;
 	};
@@ -322,7 +336,7 @@ export default CommunityWrite = props => {
 	};
 
 	const moveToLocationPicker = () => {
-		props.navigation.push('SearchMap', data);
+		props.navigation.push('SearchMap', {data: data, isReview: isReview});
 	};
 
 	return (
@@ -334,7 +348,7 @@ export default CommunityWrite = props => {
 					<>
 						<TouchableOpacity activeOpacity={0.6} onPress={onPressFilter} style={[style.category]}>
 							<Text style={[txt.noto28, style.categoryText]} ellipsizeMode={'tail'} numberOfLines={1}>
-								{/* {data.community_interests == '카테고리 선택' ? data.community_interests : getReviewCategory(data.community_interests)} */}
+								{isInterestsEmpty ? '카테고리 선택' : getReviewCategory(data.community_interests)}
 							</Text>
 							<View style={[style.nextMark]}>
 								<NextMark_APRI />
@@ -364,12 +378,12 @@ export default CommunityWrite = props => {
 					)}
 					<RichEditor
 						ref={richText}
-						editorStyle={{backgroundColor: WHITE, color: 'black'}}
-						// initialContentHTML={'<p></p>'}
+						editorStyle={{
+							backgroundColor: WHITE,
+							color: 'black',
+							contentCSSText: 'font-size:14px;',
+						}}
 						onChange={onChange}
-						// useContainer={false}
-						// onContentSizeChange={onContentSizeChange}
-						// initialHeight={500 * DP}
 						style={{
 							width: '100%',
 						}}
@@ -377,7 +391,6 @@ export default CommunityWrite = props => {
 						geolocationEnabled={true}
 						onCursorPosition={onCursorPosition}
 						onMessage={handleMessage}
-						onFocus={onFocus}
 					/>
 				</View>
 				{/* 하단 버튼 컴포넌트  */}
@@ -399,10 +412,10 @@ export default CommunityWrite = props => {
 								)}
 							</View>
 							<View style={[style.shadow]}>
-								{!animalType.other ? (
-									<Animal_another onPress={() => onPressAnimalFilter('another')} />
+								{!animalType.etc ? (
+									<Animal_another onPress={() => onPressAnimalFilter('etc')} />
 								) : (
-									<Animal_another_off onPress={() => onPressAnimalFilter('another')} />
+									<Animal_another_off onPress={() => onPressAnimalFilter('etc')} />
 								)}
 							</View>
 						</View>

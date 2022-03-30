@@ -4,15 +4,12 @@ import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {GRAY10, GRAY20, GRAY30} from 'Root/config/color';
 import CommentList from 'Root/component/organism/comment/CommentList';
-import userGlobalObject from 'Root/config/userGlobalObject';
-import {useKeyboardBottom} from 'Root/component/molecules/input/usekeyboardbottom';
-import ImagePicker from 'react-native-image-crop-picker';
 import Modal from 'Root/component/modal/Modal';
 import Article from 'Root/component/organism/article/Article';
 import {dum} from 'Root/config/dummyDate_json';
 import ArticleList from 'Root/component/organism/list/ArticleList';
-import {getCommentListByFeedId} from 'Root/api/commentapi';
 import {useNavigation} from '@react-navigation/core';
+import {getCommentListByCommunityId} from 'Root/api/commentapi';
 
 /**
  * 자유게시글 상세 내용
@@ -26,7 +23,10 @@ export default ArticleDetail = props => {
 	const [comments, setComments] = React.useState([]);
 
 	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => getComment());
+		navigation.setOptions({title: '자유 게시글'});
 		getComment();
+		return unsubscribe;
 	}, []);
 
 	const onPressMeatball = () => {
@@ -53,15 +53,14 @@ export default ArticleDetail = props => {
 	};
 
 	const getComment = () => {
-		getCommentListByFeedId(
+		getCommentListByCommunityId(
 			{
-				feedobject_id: '6230138e889aa22e10624a36',
+				community_object_id: data._id,
 				request_number: 1000,
-				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			comments => {
 				setComments(comments.msg);
-				// console.log('comments', comments);
+				console.log('comments', comments);
 			},
 			err => console.log('getCommentListByFeedId', err),
 		);
@@ -74,7 +73,8 @@ export default ArticleDetail = props => {
 	};
 
 	const onPressReply = arg => {
-		navigation.push('ArticleCommentList', {feedobject: {_id: '6230138e889aa22e10624a36'}});
+		console.log('data._id', data._id);
+		navigation.push('CommunityCommentList', {community_object: data});
 	};
 
 	const freeBoardContent = () => {
@@ -101,8 +101,8 @@ export default ArticleDetail = props => {
 								) : (
 									<></>
 								)}
-								<View style={[{}]}>
-									<CommentList items={comments && comments.length > 4 ? comments.slice(0, 4) : comments} onPressReplyBtn={onPressReply} />
+								<View style={[style.commentContainer]}>
+									<CommentList items={comments && comments.length > 3 ? comments.slice(0, 3) : comments} onPressReplyBtn={onPressReply} />
 								</View>
 								<View style={[{marginTop: 40 * DP, marginBottom: 80 * DP}]}>
 									<ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} isProtectRequest={true} />
@@ -160,6 +160,11 @@ const style = StyleSheet.create({
 		marginRight: 48 * DP,
 		marginTop: 30 * DP,
 		marginBottom: 20 * DP,
+	},
+	commentContainer: {
+		paddingBottom: 10 * DP,
+		paddingTop: 20 * DP,
+		// backgroundColor: 'yellow',
 	},
 	footer: {
 		// flex: 1,

@@ -1,17 +1,17 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import {BLACK, GRAY10} from 'Root/config/color';
 import {Check50, Rect50_Border, WriteBoard} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
-import {dum} from 'Root/config/dummyDate_json';
 import {useNavigation} from '@react-navigation/core';
 import {getCommunityList} from 'Root/api/community';
 import Modal from 'Root/component/modal/Modal';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 export default ArticleMain = ({route}) => {
 	const navigation = useNavigation();
-	const [data, setData] = React.useState(dum);
+	const [data, setData] = React.useState('');
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => fetchData());
@@ -72,27 +72,57 @@ export default ArticleMain = ({route}) => {
 		}
 	};
 
+	const getData = () => {
+		let filtered = data;
+		if (onlyTalk) {
+			filtered = filtered.filter(e => e.community_free_type == 'talk');
+		} else if (onlyQuestion) {
+			filtered = filtered.filter(e => e.community_free_type == 'question');
+		} else if (onlyMeeting) {
+			filtered = filtered.filter(e => e.community_free_type == 'meeting');
+		}
+		return filtered;
+	};
+
+	// if (data == '') {
+	// 	return <Loading isModal={false} />;
+	// } else
 	return (
 		<View style={[style.container]}>
-			<View style={[style.kindFilter]}>
-				<View style={[style.kindFilterItem]}>
-					<Text style={[txt.noto28, {color: GRAY10}]}> 잡담</Text>
-					{onlyTalk ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
-				</View>
-				<View style={[style.kindFilterItem]}>
-					<Text style={[txt.noto28, {color: GRAY10}]}> 질문</Text>
-					{onlyQuestion ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
-				</View>
-				<View style={[style.kindFilterItem]}>
-					<Text style={[txt.noto28, {color: GRAY10}]}> 모임</Text>
-					{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
-				</View>
-			</View>
-
-			<ArticleList
-				items={data}
-				onPressArticle={onPressArticle} //게시글 내용 클릭
+			<FlatList
+				data={[{}]}
+				renderItem={({item, index}) => {
+					return (
+						<>
+							<View style={[style.kindFilter]}>
+								<View style={[style.kindFilterItem]}>
+									<Text style={[txt.noto28, {color: GRAY10}]}> 잡담</Text>
+									{onlyTalk ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
+								</View>
+								<View style={[style.kindFilterItem]}>
+									<Text style={[txt.noto28, {color: GRAY10}]}> 질문</Text>
+									{onlyQuestion ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
+								</View>
+								<View style={[style.kindFilterItem]}>
+									<Text style={[txt.noto28, {color: GRAY10}]}> 모임</Text>
+									{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
+								</View>
+							</View>
+							{data == '' ? (
+								<Loading isModal={false} />
+							) : (
+								<ArticleList
+									items={getData()}
+									onPressArticle={onPressArticle} //게시글 내용 클릭
+								/>
+							)}
+						</>
+					);
+				}}
+				showsVerticalScrollIndicator={false}
+				listKey={({item, index}) => index}
 			/>
+
 			<View style={[style.write, style.shadow]}>
 				<WriteBoard onPress={onPressWrite} />
 			</View>
@@ -129,11 +159,10 @@ const style = StyleSheet.create({
 	},
 	kindFilter: {
 		width: 420 * DP,
-		// backgroundColor: 'yellow',
+		backgroundColor: 'white',
 		marginVertical: 30 * DP,
 		flexDirection: 'row',
 		alignSelf: 'flex-end',
-		marginRight: 48 * DP,
 		justifyContent: 'space-between',
 	},
 	kindFilterItem: {

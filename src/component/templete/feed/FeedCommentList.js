@@ -74,6 +74,8 @@ export default FeedCommentList = props => {
 
 		if (editData.comment_photo_uri && editData.comment_photo_uri.length > 0) {
 			param.comment_photo_uri = editData.comment_photo_uri;
+		} else {
+			param.comment_photo_remove = true;
 		}
 
 		if (props.route.name == 'FeedCommentList') {
@@ -91,7 +93,6 @@ export default FeedCommentList = props => {
 				{
 					...param,
 					commentobject_id: editData._id,
-					comment_photo_remove: !editData.comment_photo_uri || editData.comment_photo_uri == 0,
 				},
 				result => {
 					console.log(result);

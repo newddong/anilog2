@@ -83,7 +83,6 @@ export async function updateComment(params, callback, errcallback) {
 	apiController('/comment/updateComment', arguments);
 }
 
-
 /**
  * 댓글/대댓글에 좋아요 설정
  *
@@ -94,6 +93,20 @@ export async function updateComment(params, callback, errcallback) {
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
- export async function likeComment(params, callback, errcallback) {
+export async function likeComment(params, callback, errcallback) {
 	apiController('/comment/likeComment', arguments);
+}
+
+/**
+ * 커뮤니티 게시글 댓글 리스트 불러오기
+ *
+ * @param {object} params
+ * @param {string} params.community_object_id - 댓글을 불러올 커뮤니티의 게시물의 ID
+ * @param {number} params.request_number - 댓글의 요청 숫자
+ * @param {string} params.commentobject_id - 커서 역할을 할 코맨트(해당 ID의 코맨트 이전부터 불러옴)
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getCommentListByCommunityId(params, callback, errcallback) {
+	apiController('/comment/getCommentListByCommunityId', arguments);
 }

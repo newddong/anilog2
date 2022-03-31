@@ -42,7 +42,8 @@ export default ArticleMain = ({route}) => {
 
 	//글쓰기
 	const onPressWrite = () => {
-		navigation.push('CommunityWrite', {isReview: false});
+		navigation.navigate('CommunityWrite', {isReview: false});
+		// navigation.push('CommunityWrite', {isReview: false});
 		// navigation.push('WriteEditorTest');
 	};
 

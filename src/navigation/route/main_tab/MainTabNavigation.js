@@ -85,7 +85,6 @@ export default MainTabNavigation = ({route, navigation}) => {
 				})}>
 				{props => <CommunityMainStack {...props} sendRoute={sendRoute} />}
 			</MainTabNav.Screen>
-
 			<MainTabNav.Screen
 				name="MY"
 				options={({route}) => ({

@@ -131,7 +131,7 @@ export default Review = props => {
 		props.onPressReply();
 	};
 
-	const moveToReviewDetail = () => {
+	const onPressReviewContent = () => {
 		props.onPressReviewContent();
 	};
 
@@ -153,7 +153,7 @@ export default Review = props => {
 			<View style={{flexDirection: 'row'}}>
 				<View style={[style.header]}>
 					{getCategory()}
-					<TouchableOpacity onPress={moveToReviewDetail}>
+					<TouchableOpacity activeOpacity={0.6} onPress={onPressReviewContent}>
 						<View style={[style.content]}>
 							<Text style={[txt.noto32b]} numberOfLines={1}>
 								{data.community_title}
@@ -174,7 +174,7 @@ export default Review = props => {
 				<View style={[{height: 100 * DP, backgroundColor: 'white'}]}></View>
 			) : (
 				<View style={[style.thumbnail]}>
-					<ArticleThumnails photo_list={imageList()} />
+					<ArticleThumnails onPressReviewContent={onPressReviewContent} photo_list={imageList()} />
 				</View>
 			)}
 			{/* 좋아요 및 댓글 모두 보기  */}

@@ -3,18 +3,17 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {Dimensions, StyleSheet} from 'react-native';
 import {APRI10, BLACK, GRAY10, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
-import ReviewStackNavigation from './review_tab/ReviewStackNavigation';
-import ArticleStackNavigation from './article_stack/ArticleStackNavigation';
-import {LogBox} from 'react-native';
+import ArticleMain from 'Root/component/templete/community/ArticleMain';
+import ReviewMain from 'Root/component/templete/community/ReviewMain';
 
 const CommunityTabNav = createMaterialTopTabNavigator();
 
 export default CommunityMain = props => {
-	LogBox.ignoreAllLogs(); //로그 무시
+	// LogBox.ignoreAllLogs(); //로그 무시
 
 	return (
 		<CommunityTabNav.Navigator
-			initialRouteName="ArticleStackNavigation"
+			initialRouteName="ArticleMain"
 			screenOptions={{
 				tabBarItemStyle: {height: 70 * DP},
 				tabBarIndicatorStyle: {backgroundColor: 'black', height: 2 * DP},
@@ -25,18 +24,18 @@ export default CommunityMain = props => {
 			initialLayout={{width: Dimensions.get('window').width}}
 			optimizationsEnabled={true}>
 			<CommunityTabNav.Screen
-				name={'ArticleStackNavigation'}
+				name={'ArticleMain'}
 				options={{
 					tabBarLabel: '자유 게시판',
 				}}>
-				{props => <ArticleStackNavigation {...props} />}
+				{props => <ArticleMain {...props} />}
 			</CommunityTabNav.Screen>
 			<CommunityTabNav.Screen
-				name={'ReviewStackNavigation'}
+				name={'ReviewMain'}
 				options={{
 					tabBarLabel: '후기',
 				}}>
-				{props => <ReviewStackNavigation {...props} />}
+				{props => <ReviewMain {...props} />}
 			</CommunityTabNav.Screen>
 		</CommunityTabNav.Navigator>
 	);

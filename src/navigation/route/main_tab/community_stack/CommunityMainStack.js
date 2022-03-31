@@ -91,24 +91,6 @@ export default CommunityMainStack = props => {
 					title: '',
 				})}
 			/>
-			{/* <CommunityMainStackNavi.Screen
-				name={'ReviewCommentList'}
-				component={CommunityCommentList}
-				options={({route}) => ({
-					headerShown: true,
-					header: props => <SimpleHeader {...props} />,
-					title: ' ',
-				})}
-			/>
-			<CommunityMainStackNavi.Screen
-				name={'ArticleCommentList'}
-				component={CommunityCommentList}
-				options={({route}) => ({
-					// headerShown: false,
-					header: props => <SimpleHeader {...props} />,
-					title: ' ',
-				})}
-			/> */}
 			<CommunityMainStackNavi.Screen
 				name={'CommunityCommentList'}
 				component={CommunityCommentList}

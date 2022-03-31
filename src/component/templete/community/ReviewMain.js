@@ -6,9 +6,10 @@ import ReviewList from 'Root/component/organism/list/ReviewList';
 import {Animal_another, Animal_cat, Animal_dog} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
 import {getCommunityList} from 'Root/api/community';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 export default ReviewMain = ({route, navigation}) => {
-	const [data, setData] = React.useState();
+	const [data, setData] = React.useState('');
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => fetchData());
@@ -40,8 +41,8 @@ export default ReviewMain = ({route, navigation}) => {
 			case 'cat':
 				setFilterData({...filterData, cat: !filterData.cat});
 				break;
-			case 'another':
-				setFilterData({...filterData, another: !filterData.another});
+			case 'etc':
+				setFilterData({...filterData, etc: !filterData.etc});
 				break;
 			default:
 				break;
@@ -51,7 +52,7 @@ export default ReviewMain = ({route, navigation}) => {
 	const [filterData, setFilterData] = React.useState({
 		dog: false,
 		cat: false,
-		another: false,
+		etc: false,
 		filter: {
 			location: '',
 			category: [],
@@ -71,20 +72,78 @@ export default ReviewMain = ({route, navigation}) => {
 	};
 
 	const onPressReply = index => {
-		navigation.push('ReviewCommentList', {feedobject: {_id: '62262a16d38ae5f3c51390d6'}});
+		navigation.push('CommunityCommentList', {community_object: data[index]});
 	};
 
 	const onPressReviewContent = index => {
-		navigation.push('ReviewDetail');
+		navigation.push('ReviewDetail', {community_object: data[index]});
 	};
 
 	const onPressWrite = () => {
 		navigation.push('CommunityWrite', {isReview: true});
-		// navigation.push('CommunityWrite');
+	};
+
+	const g = {
+		__v: 0,
+		_id: '62449e8c06cdc2f33c14c572',
+		community_address: {
+			_id: '62449e8c06cdc2f33c14c573',
+			normal_address: {_id: '62449e8c06cdc2f33c14c575', address_name: '', city: '', district: ''},
+			region: {_id: '62449e8c06cdc2f33c14c576', latitude: '', longitude: ''},
+			road_address: {_id: '62449e8c06cdc2f33c14c574', address_name: '', city: '', district: ''},
+		},
+		community_animal_type: '',
+		community_comment_count: 1,
+		community_content: '<div>꼭 드셔보세요</div>',
+		community_date: '2022-03-30T05:57:16.687Z',
+		community_favorite_count: 0,
+		community_free_type: '',
+		community_interests: {interests_etc: [], interests_hospital: [], interests_interior: [], interests_review: [], interests_trip: ['놀이터']},
+		community_is_attached_file: true,
+		community_is_delete: false,
+		community_is_recomment: false,
+		community_is_temporary: false,
+		community_like_count: 0,
+		community_recent_comment: {
+			comment_contents: '손에 손 잡고~',
+			comment_id: '62452c0d06cdc2f33c14c72e',
+			comment_user_nickname: '자네는고양이어딘가',
+		},
+		community_title: '신호등 치킨',
+		community_type: 'review',
+		community_update_date: '2022-03-30T05:57:16.687Z',
+		community_writer_id: {
+			_id: '623b17b4400ac30b877dd7d0',
+			user_nickname: 'Vids1',
+			user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648039860242_5CEB6D55-F508-4B7C-8B4F-8E4706F6F8BE.jpg',
+		},
+		type: 'CommunityObject',
 	};
 
 	const getData = () => {
-		let filtered = data;
+		let filtered = [];
+		// console.log('data', data[0]);
+		if (filterData.dog) {
+			const getDogType = data.filter(e => e.community_animal_type == 'dog');
+			getDogType.map((v, i) => {
+				filtered.push(v);
+			});
+		}
+		if (filterData.cat) {
+			const getCatType = data.filter(e => e.community_animal_type == 'cat');
+			getCatType.map((v, i) => {
+				filtered.push(v);
+			});
+		}
+		if (filterData.etc) {
+			const getEtcType = data.filter(e => e.community_animal_type == 'etc');
+			getEtcType.map((v, i) => {
+				filtered.push(v);
+			});
+		}
+		if (!filterData.dog && !filterData.cat && !filterData.etc) {
+			filtered = data;
+		}
 		return filtered;
 	};
 
@@ -110,10 +169,10 @@ export default ReviewMain = ({route, navigation}) => {
 						)}
 					</View>
 					<View style={[style.shadow]}>
-						{!filterData.another ? (
-							<Animal_another onPress={() => onPressAnimalFilter('another')} />
+						{!filterData.etc ? (
+							<Animal_another onPress={() => onPressAnimalFilter('etc')} />
 						) : (
-							<Animal_another_off onPress={() => onPressAnimalFilter('another')} />
+							<Animal_another_off onPress={() => onPressAnimalFilter('etc')} />
 						)}
 					</View>
 				</View>
@@ -121,26 +180,29 @@ export default ReviewMain = ({route, navigation}) => {
 		);
 	};
 
-	return (
-		<View style={[style.container]}>
-			<FlatList
-				data={[{}]}
-				listKey={({item, index}) => index}
-				renderItem={({item, index}) => {
-					return (
-						<>
-							<View style={[style.write, style.shadowButton]}>
-								<WriteBoard onPress={onPressWrite} />
-							</View>
-							<ReviewList items={getData()} onPressReviewContent={onPressReviewContent} onPressReply={onPressReply} />
-						</>
-					);
-				}}
-				ListHeaderComponent={filterComponent()}
-				stickyHeaderIndices={[0]}
-			/>
-		</View>
-	);
+	if (data == '') {
+		return <Loading isModal={false} />;
+	} else
+		return (
+			<View style={[style.container]}>
+				<FlatList
+					data={[{}]}
+					listKey={({item, index}) => index}
+					renderItem={({item, index}) => {
+						return (
+							<>
+								<ReviewList items={getData()} onPressReviewContent={onPressReviewContent} onPressReply={onPressReply} />
+							</>
+						);
+					}}
+					ListHeaderComponent={filterComponent()}
+					stickyHeaderIndices={[0]}
+				/>
+				<View style={[style.write, style.shadowButton]}>
+					<WriteBoard onPress={onPressWrite} />
+				</View>
+			</View>
+		);
 };
 ReviewMain.defaultProps = {};
 
@@ -152,11 +214,11 @@ const style = StyleSheet.create({
 	},
 	filter: {
 		width: 676 * DP,
-		height: 60 * DP,
-		marginTop: 30 * DP,
+		paddingTop: 15 * DP,
+		paddingBottom: 10 * DP,
 		alignSelf: 'center',
-		// paddingTop: 30 * DP,
-		marginBottom: 10 * DP,
+		alignItems: 'center',
+		backgroundColor: '#fff',
 		flexDirection: 'row',
 	},
 	animalFilter: {

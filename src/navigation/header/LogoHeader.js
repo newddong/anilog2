@@ -16,12 +16,13 @@ export default LogoHeader = ({navigation, route, options, back}) => {
 		// alert('이후 버전에서 제공할 예정입니다!');
 	};
 	const clickAlarm = () => {
-		alert('이후 버전에서 제공할 예정입니다!');
+		// alert('이후 버전에서 제공할 예정입앙!');
+		navigation.navigate('AlarmList');
 	};
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
 			<View style={style.logoContainer}>
-			<MainLogo />
+				<MainLogo />
 			</View>
 			<View style={style.buttonContainer}>
 				<Search48 onPress={clickSearch} />

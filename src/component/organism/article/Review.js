@@ -34,7 +34,14 @@ export default Review = props => {
 		data.community_interests.interests_hospital.map(v => category_sum_list.push(v));
 		data.community_interests.interests_review.map(v => category_sum_list.push(v));
 		data.community_interests.interests_interior.map(v => category_sum_list.push(v));
-		category_sum_list.push('접기');
+		data.community_interests.interests_trip.map(v => category_sum_list.push(v));
+		data.community_interests.interests_etc.map(v => category_sum_list.push(v));
+		data.community_interests.interests_hospital.map(v => category_sum_list.push(v));
+		data.community_interests.interests_review.map(v => category_sum_list.push(v));
+		data.community_interests.interests_interior.map(v => category_sum_list.push(v));
+		if (category_sum_list.length > 3) {
+			category_sum_list.push('접기');
+		}
 		// category_sum_list.push('테스트');
 		const page = Math.floor(category_sum_list.length / 4) + 1;
 		let arr = [];
@@ -45,11 +52,11 @@ export default Review = props => {
 			arr = ['a'];
 			return arr.map((v, i) => {
 				let sliced = category_sum_list.slice(0, 3);
-				sliced.push('+' + (category_sum_list.length - 3));
+				sliced.push('+' + (category_sum_list.length - 4));
 				return (
 					<View style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
 						{sliced.map((v, i) => {
-							const isLast = v == '+' + (category_sum_list.length - 3);
+							const isLast = v == '+' + (category_sum_list.length - 4);
 							return (
 								<TouchableOpacity
 									key={i}
@@ -133,61 +140,18 @@ export default Review = props => {
 		props.onPressReviewContent();
 	};
 
-	// console.log(props.data);
-	const h = {
-		__v: 0,
-		_id: '624459d006cdc2f33c14c2e9',
-		community_address: {
-			_id: '624459d006cdc2f33c14c2ea',
-			normal_address: {_id: '624459d006cdc2f33c14c2ec', address_name: '서울 마포구 신수동 85-26 ', city: '서울', district: '마포구'},
-			region: {_id: '624459d006cdc2f33c14c2ed', latitude: '37.5494302442039', longitude: '126.93828089693083'},
-			road_address: {_id: '624459d006cdc2f33c14c2eb', address_name: '서울특별시 마포구 백범로10길 32(신수동) '},
-		},
-		community_animal_type: 'cat',
-		community_comment_count: 0,
-		community_content:
-			'<p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648646513485_15C242F1-6556-4585-84D4-5963D89A5FD8.jpg" height="450px" width="300px" style="border-radius:15px; margin: 0 auto 4px; "></p><p>개인소통은 컨텐츠 끝나고 더 많이 하겠습니다~</p>',
-		community_date: '2022-03-30T05:57:16.687Z',
-		community_favorite_count: 0,
-		community_free_type: '',
-		community_interests: {
-			interests_etc: [],
-			interests_hospital: [],
-			interests_interior: ['노즈워크/장난감'],
-			interests_review: [],
-			interests_trip: ['펫 까페', '놀이터'],
-		},
-		community_is_attached_file: true,
-		community_is_delete: false,
-		community_is_recomment: false,
-		community_is_temporary: false,
-		community_like_count: 0,
-		community_title: 'Title ',
-		community_type: 'review',
-		community_update_date: '2022-03-30T05:57:16.687Z',
-		community_writer_id: {
-			_id: '623b17ed400ac30b877dd7d9',
-			user_nickname: '자네는고양이어딘가',
-			user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648045670715_812A892F-3DE8-4C38-96D8-2F6A6BC78091.jpg',
-		},
-		type: 'CommunityObject',
-	};
-
-	// console.log('match2', match3);
-	const mat3 = [
-		'<img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648657043751_7F3C2D6B-02DC-446F-A961-59427DD2D401.png" id="image" height="450px" width="300px" style="border-radius:15px; margin: 0 auto 4px; ">',
-		'<img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648657044016_25FA7831-D55E-4F63-A686-4155D766BA30.jpg" id="image" height="450px" width="300px" style="border-radius:15px; margin: 0 auto 4px; ">',
-	];
-
 	const imageList = () => {
 		let imageList = [];
 		let getImgTag = data.community_content.match(/<img[\w\W]+?\/?>/g);
-		getImgTag.map((v, i) => {
-			let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i);
-			// console.log(i, src[1]);
-			imageList.push(src[1]);
-		});
-		console.log('imageList', imageList);
+		// console.log('getImgtag', getImgTag);
+		if (getImgTag) {
+			getImgTag.map((v, i) => {
+				let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i);
+				// console.log(i, src[1]);
+				imageList.push(src[1]);
+			});
+		}
+		// console.log('imageList', imageList);
 		return imageList;
 	};
 

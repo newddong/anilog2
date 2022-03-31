@@ -127,14 +127,18 @@ export default ReviewMain = ({route, navigation}) => {
 				data={[{}]}
 				listKey={({item, index}) => index}
 				renderItem={({item, index}) => {
-					return <ReviewList items={getData()} onPressReviewContent={onPressReviewContent} onPressReply={onPressReply} />;
+					return (
+						<>
+							<View style={[style.write, style.shadowButton]}>
+								<WriteBoard onPress={onPressWrite} />
+							</View>
+							<ReviewList items={getData()} onPressReviewContent={onPressReviewContent} onPressReply={onPressReply} />
+						</>
+					);
 				}}
 				ListHeaderComponent={filterComponent()}
 				stickyHeaderIndices={[0]}
 			/>
-			<View style={[style.write, style.shadowButton]}>
-				<WriteBoard onPress={onPressWrite} />
-			</View>
 		</View>
 	);
 };

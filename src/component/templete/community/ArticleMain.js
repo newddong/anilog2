@@ -30,6 +30,7 @@ export default ArticleMain = ({route}) => {
 			},
 			err => {
 				console.log('err / getCommunityList / ArticleMain : ', err);
+				setData([]);
 				Modal.alert(err);
 			},
 		);
@@ -43,7 +44,6 @@ export default ArticleMain = ({route}) => {
 	//글쓰기
 	const onPressWrite = () => {
 		navigation.navigate('CommunityWrite', {isReview: false});
-		// navigation.push('CommunityWrite', {isReview: false});
 		// navigation.push('WriteEditorTest');
 	};
 
@@ -85,9 +85,6 @@ export default ArticleMain = ({route}) => {
 		return filtered;
 	};
 
-	// if (data == '') {
-	// 	return <Loading isModal={false} />;
-	// } else
 	return (
 		<View style={[style.container]}>
 			<FlatList

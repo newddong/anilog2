@@ -19,6 +19,7 @@ export default ReviewMain = ({route, navigation}) => {
 		fetchData();
 		return unsubscribe;
 	}, []);
+
 	React.useEffect(() => {
 		!isFilter ? fetchData() : false;
 	}, [isFilter]);

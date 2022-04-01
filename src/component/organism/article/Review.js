@@ -53,9 +53,8 @@ export default Review = props => {
 						{sliced.map((v, i) => {
 							const isLast = v == '+' + (category_sum_list.length - 4);
 							return (
-								<TouchableOpacity
+								<View
 									key={i}
-									onPress={() => (isLast ? setMoreCategory(true) : onPressCategory(v))}
 									activeOpacity={0.7}
 									style={[
 										style.category,
@@ -73,7 +72,7 @@ export default Review = props => {
 										]}>
 										{v}
 									</Text>
-								</TouchableOpacity>
+								</View>
 							);
 						})}
 					</View>
@@ -87,9 +86,8 @@ export default Review = props => {
 						{sliced.map((v, i) => {
 							const isLast = v == '접기';
 							return (
-								<TouchableOpacity
+								<View
 									key={i}
-									onPress={() => onPressCategory(v)}
 									activeOpacity={0.7}
 									style={[
 										style.category,
@@ -107,7 +105,7 @@ export default Review = props => {
 										]}>
 										{v}
 									</Text>
-								</TouchableOpacity>
+								</View>
 							);
 						})}
 					</View>

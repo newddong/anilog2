@@ -2,7 +2,7 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {FavoriteTag46_Filled, LocationGray, LocationMarker, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
+import {CurrentLocation, FavoriteTag46_Filled, LocationGray, LocationMarker, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
 import {GRAY10} from 'Root/config/color';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
@@ -30,50 +30,10 @@ const ReviewContent = props => {
 
 	const category = v => {
 		return (
-			<TouchableOpacity onPress={() => onPressCategory(v)} activeOpacity={0.7} style={[style.category]}>
+			<View style={[style.category]}>
 				<Text style={[txt.noto24]}>{v}</Text>
-			</TouchableOpacity>
+			</View>
 		);
-	};
-
-	const gg = {
-		__v: 0,
-		_id: '624592de06cdc2f33c14cfdd',
-		community_address: {
-			_id: '624592de06cdc2f33c14cfde',
-			normal_address: {_id: '624592de06cdc2f33c14cfe0', address_name: '', city: '', district: ''},
-			region: {_id: '624592de06cdc2f33c14cfe1', latitude: '', longitude: ''},
-			road_address: {_id: '624592de06cdc2f33c14cfdf', address_name: '', city: '', district: ''},
-		},
-		community_animal_type: 'cat',
-		community_comment_count: 0,
-		community_content:
-			'<div>4년을 함께</div><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648726746166_1473A70E-78E5-4B2D-893E-18B35E2BD4C8.jpg" id="image" height="450px" width="300px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><br></p>',
-		community_date: '2022-03-30T05:57:16.687Z',
-		community_favorite_count: 0,
-		community_free_type: '',
-		community_interests: {
-			interests_etc: [],
-			interests_hospital: [],
-			interests_interior: ['노즈워크/장난감'],
-			interests_location: {city: '', district: ''},
-			interests_review: [],
-			interests_trip: ['펫 숙소', '놀이터'],
-		},
-		community_is_attached_file: true,
-		community_is_delete: false,
-		community_is_recomment: false,
-		community_is_temporary: false,
-		community_like_count: 0,
-		community_title: '사진1개요',
-		community_type: 'review',
-		community_update_date: '2022-03-30T05:57:16.687Z',
-		community_writer_id: {
-			_id: '623b17ed400ac30b877dd7d9',
-			user_nickname: '자네는고양이어딘가',
-			user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648045670715_812A892F-3DE8-4C38-96D8-2F6A6BC78091.jpg',
-		},
-		type: 'CommunityObject',
 	};
 
 	const onPressCategory = category => {
@@ -130,7 +90,7 @@ const ReviewContent = props => {
 							]}
 						/>
 					) : (
-						<ScrollView>
+						<ScrollView scrollEnabled={false}>
 							<WebView
 								originWhitelist={['*']}
 								scalesPageToFit={true}
@@ -158,19 +118,19 @@ const ReviewContent = props => {
 				) : (
 					<>
 						<MapView
-							provider={null} // remove if not using Google Maps
+							// provider={PROVIDER_GOOGLE} // remove if not using Google Maps
 							style={[style.mapContainer]}
+							provider={PROVIDER_GOOGLE}
 							customMapStyle={mapStyle2}
 							zoomEnabled
 							zoomControlEnabled
 							showsUserLocation={true}
-							// showsMyLocationButton={true}
-							followsUserLocation={true}
+							mapType="standard"
 							region={{
 								longitude: parseFloat(data.community_address.region.longitude),
 								latitude: parseFloat(data.community_address.region.latitude),
-								latitudeDelta: 0.00002, //지도의 초기줌 수치
-								longitudeDelta: 0.0023, //지도의 초기줌 수치
+								latitudeDelta: 0.00012, //지도의 초기줌 수치
+								longitudeDelta: 0.00856, //지도의 초기줌 수치
 							}}>
 							{/* 현재 선택된 위도 경도의 마커 */}
 							<MapView.Marker
@@ -347,5 +307,14 @@ const style = StyleSheet.create({
 	webview: {
 		width: 670 * DP,
 		// minHeight: 500 * DP,
+	},
+	currentLocationIcon: {
+		position: 'absolute',
+		right: 50 * DP,
+		bottom: 100 * DP,
+		width: 60 * DP,
+		height: 60 * DP,
+		// backgroundColor: 'red',
+		zIndex: 1,
 	},
 });

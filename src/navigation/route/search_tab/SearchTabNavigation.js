@@ -15,6 +15,7 @@ import {getHashKeywords} from 'Root/api/hashapi';
 import SearchHashTag from 'Root/component/templete/search/SearchHashTag';
 import SearchAccountA from 'Root/component/templete/search/SearchAccountA';
 import SearchReview from 'Root/component/templete/search/SearchReview';
+import SearchCommunity from 'Root/component/templete/search/SearchCommunity';
 
 const SearchTabNav = createMaterialTopTabNavigator();
 
@@ -143,12 +144,11 @@ export default SearchTabNavigation = props => {
 			</SearchTabNav.Screen>
 			<SearchTabNav.Screen
 				name="COMMUNITY"
-				// component={Temp}
 				options={{
 					title: '커뮤니티',
 					...searchTabLabelOption,
 				}}>
-				{props => <SearchReview {...props} />}
+				{props => <SearchCommunity {...props} />}
 			</SearchTabNav.Screen>
 		</SearchTabNav.Navigator>
 	);

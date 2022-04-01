@@ -10,11 +10,11 @@ import Profile from 'Root/component/templete/profile/Profile';
 import CommunityWrite from 'Root/component/templete/community/CommunityWrite';
 import SendHeader from 'Root/navigation/header/SendHeader';
 import AddressSearchPage from 'Root/component/templete/search/AddressSearchPage';
-import WriteEditorTest from 'Root/component/templete/community/WriteEditorTest';
 import LogoHeader from 'Root/navigation/header/LogoHeader';
 import ReviewDetail from 'Root/component/templete/community/ReviewDetail';
 import SearchMap from 'Root/component/templete/search/SearchMap';
 import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
+import WriteEditorTest from 'Root/component/templete/community/WriteEditorTest';
 
 const CommunityMainStackNavi = createStackNavigator();
 

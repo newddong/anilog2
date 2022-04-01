@@ -10,6 +10,7 @@ import {getAddressList} from 'Root/api/address';
 import {getInterestsList} from 'Root/api/interestsapi';
 import ArrowDownButton from '../button/ArrowDownButton';
 import {btn_w242, btn_w280, btn_w280x68} from 'Root/component/atom/btn/btn_style';
+import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
 /**
  * 관심사 추가 및 수정 모달
  * @param {'Activity'|'Location'|'Review'} category -  관심활동 / 관심지역 / 커뮤니티후기 분기
@@ -27,7 +28,13 @@ const InterestTagModal = props => {
 	const [userInterestContent, setUserInterestContent] = React.useState([]);
 	const [userInterestLocation, setUserInterestLocation] = React.useState([]);
 	const [userInterestReview, setUserInterestReview] = React.useState(props.data);
+
 	const [isSaved, setIsSaved] = React.useState(false); // '저장하지 않고 나가시겠습니까?' 메시지 출력 여부 판별
+
+	const [activityLists, setActivityLists] = React.useState([]);
+
+	//커뮤니티 카테고리 선택 관련 state
+	const [communityInterests, setCommunityInterests] = React.useState('');
 	const [showBtnModal, setShowBtnModal] = React.useState(false); //모달창 대체 View 출력 여부
 	const [addressList, setAddressList] = React.useState([]);
 	const [city, setCity] = React.useState(''); // 리뷰의 지역 필터 중 광역시, 도 파라미터
@@ -38,45 +45,31 @@ const InterestTagModal = props => {
 	const [selectedDistrict, setSelectedDistrict] = React.useState('원주시'); // 시군구 선택 아이템
 	const [selectCityOpen, setSelectCityOpen] = React.useState(false);
 	const [selectDistrictOpen, setSelectDistrictOpen] = React.useState(false);
-	const [activityLists, setActivityLists] = React.useState([]);
 
 	React.useEffect(() => {
-		let tempUserInterestContentList = [];
-		let tempUserInterestLocationList = [];
-
-		//유저 관심사 목록 DB에서 받아오기
-		getInterestsList({}, interests => {
-			let acitivityList = [];
-			const nameList = {interests_beauty: '미용', interests_activity: '놀이', interests_food: '사료&간식', interests_health: '건강'};
-			const interestObj = interests.msg[0];
-			const getinterest = Object.entries(interestObj).map((category, idx) => {
-				if (idx == 2) {
-					setAddressList(category[1]);
-				}
-				if (idx >= 3) {
-					acitivityList.push({category: nameList[category[0]], content: category[1]});
-				}
-			});
-			setActivityLists(acitivityList);
-		});
-		//현재 유저의 관심사 리스트를 목록들에 적용
-		const saveUserInterest = Object.entries(props.data).map(interest => {
-			console.log('object', interest);
-			if (props.isActivation) {
-				tempUserInterestContentList.push(interest[1]);
-			} else {
-				tempUserInterestLocationList.push(interest[1]);
-			}
-
-			console.log('아오..', tempUserInterestLocationList, tempUserInterestContentList);
-			setUserInterestContent(tempUserInterestContentList);
-			setUserInterestLocation(tempUserInterestLocationList);
-		});
+		//커뮤니티 후기 글쓰기에서 호출한 관심태그 모달
+		if (props.category == 'ReviewWrite' || props.category == 'Review') {
+			getCommonCodeDynamicQuery(
+				{
+					common_code_c_name: 'communityobjects',
+					common_code_language: 'kor',
+					common_code_out_type: 'interests',
+				},
+				result => {
+					// console.log('common code result', result.msg);
+					setCommunityInterests(result.msg);
+				},
+				err => {
+					console.log('common code err', err);
+				},
+			);
+		}
 		if (props.category == 'Review') {
+			//커뮤니티 후기글 상세에서 호출한 관심태그 모달
 			getAddressList(
 				{},
 				result => {
-					// console.log('result', result.msg);
+					console.log('result', result.msg);
 					const padding = '';
 					let arr = [padding, padding];
 					let cities = arr.concat(result.msg);
@@ -103,9 +96,8 @@ const InterestTagModal = props => {
 				err => console.log('err', err),
 			);
 		} else {
-			tempUserInterestContentList = [];
-			tempUserInterestLocationList = [];
-
+			let tempUserInterestContentList = [];
+			let tempUserInterestLocationList = [];
 			//유저 관심사 목록 DB에서 받아오기
 			getInterestsList({}, interests => {
 				var acitivityList = [];
@@ -123,14 +115,14 @@ const InterestTagModal = props => {
 			});
 			//현재 유저의 관심사 리스트를 목록들에 적용
 			const saveUserInterest = Object.entries(props.data).map(interest => {
-				console.log('object', interest);
+				// console.log('object', interest);
 				if (props.isActivation) {
 					tempUserInterestContentList.push(interest[1]);
 				} else {
 					tempUserInterestLocationList.push(interest[1]);
 				}
 
-				console.log('아오..', tempUserInterestLocationList, tempUserInterestContentList);
+				// console.log('아오..', tempUserInterestLocationList, tempUserInterestContentList);
 				setUserInterestContent(tempUserInterestContentList);
 				setUserInterestLocation(tempUserInterestLocationList);
 			});
@@ -166,18 +158,6 @@ const InterestTagModal = props => {
 			// easing: Easing.linear,
 			useNativeDriver: false,
 		}).start();
-	};
-
-	//관심 리뷰 태그를 클릭
-	const onPressInterestReviewTag = tag => {
-		let copy = [...userInterestReview];
-		if (copy.includes(tag)) {
-			let findIndex = copy.findIndex(e => e == tag);
-			copy.splice(findIndex, 1);
-		} else {
-			copy.push(tag);
-		}
-		setUserInterestReview(copy);
 	};
 
 	//관심활동 태그를 클릭
@@ -232,7 +212,6 @@ const InterestTagModal = props => {
 
 	//X마크 클릭 후 저장 후 나감 클릭
 	const onPressExitAfterSave = () => {
-		console.log('onPressExitAfterSave');
 		onPressSave();
 		props.onClose();
 		Modal.close();
@@ -240,7 +219,6 @@ const InterestTagModal = props => {
 
 	//X마크 클릭 후 나가기 클릭
 	const onPressExitWithoutSave = () => {
-		console.log('onPressExitWithoutSave');
 		props.onClose();
 		Modal.close();
 	};
@@ -329,8 +307,130 @@ const InterestTagModal = props => {
 		setSelectedDistrict(district[selectedItem_dis]);
 	};
 
+	//관심 리뷰 태그를 클릭
+	const onPressInterestReviewTag = (category, tag) => {
+		let copy = [];
+		switch (category) {
+			case 0:
+				copy = [...userInterestReview.interests_trip];
+				copy.includes(tag)
+					? copy.splice(
+							copy.findIndex(e => e == tag),
+							1,
+					  )
+					: copy.push(tag);
+				setUserInterestReview({...userInterestReview, interests_trip: copy});
+				break;
+			case 1:
+				copy = [...userInterestReview.interests_interior];
+				copy.includes(tag)
+					? copy.splice(
+							copy.findIndex(e => e == tag),
+							1,
+					  )
+					: copy.push(tag);
+				setUserInterestReview({...userInterestReview, interests_interior: copy});
+				break;
+			case 2:
+				copy = [...userInterestReview.interests_hospital];
+				copy.includes(tag)
+					? copy.splice(
+							copy.findIndex(e => e == tag),
+							1,
+					  )
+					: copy.push(tag);
+				setUserInterestReview({...userInterestReview, interests_hospital: copy});
+				break;
+			case 3:
+				copy = [...userInterestReview.interests_review];
+				copy.includes(tag)
+					? copy.splice(
+							copy.findIndex(e => e == tag),
+							1,
+					  )
+					: copy.push(tag);
+				setUserInterestReview({...userInterestReview, interests_review: copy});
+				break;
+			case 4:
+				copy = [...userInterestReview.interests_etc];
+				copy.includes(tag)
+					? copy.splice(
+							copy.findIndex(e => e == tag),
+							1,
+					  )
+					: copy.push(tag);
+				setUserInterestReview({...userInterestReview, interests_etc: copy});
+				break;
+			default:
+				break;
+		}
+	};
+
+	const getCommuntyInterestList = (type, typeText) => {
+		const hasDefinition = v => {
+			let result = true;
+			switch (typeText) {
+				case 0:
+					result = userInterestReview.interests_trip.includes(v);
+					break;
+				case 1:
+					result = userInterestReview.interests_interior.includes(v);
+					break;
+				case 2:
+					result = userInterestReview.interests_hospital.includes(v);
+					break;
+				case 3:
+					result = userInterestReview.interests_review.includes(v);
+					break;
+				case 4:
+					result = userInterestReview.interests_etc.includes(v);
+					break;
+				default:
+					break;
+			}
+			return result;
+		};
+
+		return (
+			<View style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
+				<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>{type.topic} </Text>
+				<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+					{type.definition.map((v, i) => {
+						if (i % 2 == 0) {
+							return null;
+						}
+						return (
+							<TouchableOpacity
+								onPress={() => onPressInterestReviewTag(typeText, v)}
+								key={i}
+								style={[hasDefinition(v) ? style.contentText_userInterest : style.contentText]}>
+								<Text style={[txt.noto28, {color: hasDefinition(v) ? WHITE : GRAY10, textAlign: 'center'}]}>{v}</Text>
+							</TouchableOpacity>
+						);
+					})}
+				</View>
+				<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+					{type.definition.map((v, i) => {
+						if (i % 2 != 0) {
+							return null;
+						}
+						return (
+							<TouchableOpacity
+								onPress={() => onPressInterestReviewTag(typeText, v)}
+								key={i}
+								style={[hasDefinition(v) ? style.contentText_userInterest : style.contentText]}>
+								<Text style={[txt.noto28, {color: hasDefinition(v) ? WHITE : GRAY10, textAlign: 'center'}]}>{v}</Text>
+							</TouchableOpacity>
+						);
+					})}
+				</View>
+			</View>
+		);
+	};
+
+	//커뮤니티 카테고리 분기
 	const getReviewCategory = () => {
-		if (city == '' && props.category != 'ReviewWrite') {
+		if (communityInterests == '') {
 			return <ActivityIndicator />;
 		} else
 			return (
@@ -344,48 +444,11 @@ const InterestTagModal = props => {
 								<ArrowDownButton onPress={onOpenDistrict} btnStyle={'border'} btnLayout={btn_w280} titleFontStyle={22} btnTitle={selectedDistrict} />
 							</View>
 						)}
-
-						{dummyReviewCategoryList.map((v, i) => {
-							return (
-								<View key={i} style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
-									<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>{v.category_title}</Text>
-									<View style={style.review_category_item}>
-										{v.content.length
-											? v.content.map((d, i) => {
-													if (i % 2 == 0) {
-														return null;
-													}
-													return (
-														<TouchableOpacity
-															onPress={() => onPressInterestReviewTag(d)}
-															key={i}
-															style={[userInterestReview.includes(d) ? style.contentText_userInterest : style.contentText]}>
-															<Text style={[txt.noto28, {color: userInterestReview.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
-														</TouchableOpacity>
-													);
-											  })
-											: null}
-									</View>
-									<View style={style.review_category_item}>
-										{v.content.length
-											? v.content.map((d, i) => {
-													if (i % 2 != 0) {
-														return null;
-													}
-													return (
-														<TouchableOpacity
-															key={i}
-															onPress={() => onPressInterestReviewTag(d)}
-															style={[userInterestReview.includes(d) ? style.contentText_userInterest : style.contentText]}>
-															<Text style={[txt.noto28, {color: userInterestReview.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
-														</TouchableOpacity>
-													);
-											  })
-											: null}
-									</View>
-								</View>
-							);
-						})}
+						{getCommuntyInterestList(communityInterests.interests_trip, 0)}
+						{getCommuntyInterestList(communityInterests.interests_interior, 1)}
+						{getCommuntyInterestList(communityInterests.interests_hospital, 2)}
+						{getCommuntyInterestList(communityInterests.interests_review, 3)}
+						{getCommuntyInterestList(communityInterests.interests_etc, 4)}
 					</View>
 				</ScrollView>
 			);
@@ -464,13 +527,7 @@ const InterestTagModal = props => {
 
 	return (
 		<View style={style.background}>
-			<View
-				// activeOpacity={0.9}
-				// onPress={() => {
-				// 	setSelectCityOpen(false);
-				// 	setSelectDistrictOpen(false);
-				// }}
-				style={[style.popUpWindow]}>
+			<View style={[style.popUpWindow]}>
 				<View style={[style.header]}>
 					<TouchableOpacity onPress={onClose} style={[style.crossMark]}>
 						<Cross24_Filled />
@@ -577,28 +634,6 @@ InterestTagModal.defaultProps = {
 	onClose: () => {},
 	isActivation: true,
 };
-const dummyReviewCategoryList = [
-	{
-		category_title: '여행ㆍ숙박ㆍ카페',
-		content: ['펫 숙소', '관광지', '놀이터', '펫카페'],
-	},
-	{
-		category_title: '병원ㆍ건강',
-		content: ['병원', '사료', '간식'],
-	},
-	{
-		category_title: '펫 인테리어 ㆍ 놀이',
-		content: ['집 ㆍ 방석', '가구', '노즈워크/장난감'],
-	},
-	{
-		category_title: '기타',
-		content: ['청결용품', '의류', '기타'],
-	},
-	{
-		category_title: '후기',
-		content: ['치료 경혐', '훈련 경혐', '다이어트 경험'],
-	},
-];
 
 const style = StyleSheet.create({
 	background: {
@@ -665,7 +700,7 @@ const style = StyleSheet.create({
 		height: 68 * DP,
 		paddingHorizontal: 12 * DP,
 		minWidth: 126 * DP,
-		borderRadius: 30 * DP,
+		borderRadius: 25 * DP,
 		borderWidth: 2 * DP,
 		borderColor: GRAY20,
 		marginLeft: 20 * DP,
@@ -677,7 +712,7 @@ const style = StyleSheet.create({
 		paddingHorizontal: 12 * DP,
 		backgroundColor: APRI10,
 		height: 68 * DP,
-		borderRadius: 30 * DP,
+		borderRadius: 25 * DP,
 		minWidth: 126 * DP,
 		marginLeft: 20 * DP,
 		marginTop: 20 * DP,

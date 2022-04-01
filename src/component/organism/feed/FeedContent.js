@@ -71,7 +71,10 @@ export default FeedContent = props => {
 	const [reportLayout, setReportLayout] = React.useState({height: 0, width: 0});
 	const [labelLayout, setlabelLayout] = React.useState({height: 0, width: 0});
 	const [show, setShow] = React.useState(false);
-	const [isMeatballClicked, setIsMeatballClicked] = React.useState(false);
+
+	//코드 중복 해소를 위한 처리.
+	const feed_writer = props.data.feed_avatar_id ? props.data.feed_avatar_id : props.data.feed_writer_id;
+
 	//FeedText가 담긴 View 의 onLayout
 	const onLayoutText = event => {
 		const {width, height} = event.nativeEvent.layout;
@@ -129,7 +132,7 @@ export default FeedContent = props => {
 		Modal.close();
 		setTimeout(() => {
 			Modal.popTwoBtn(
-				'이 계정을 팔로우 취소하시겠습니까?',
+				feed_writer.user_nickname + '님을 팔로우 취소하시겠습니까?',
 				'아니오',
 				'팔로우 취소',
 				() => {
@@ -138,12 +141,14 @@ export default FeedContent = props => {
 				() => {
 					unFollowUser(
 						{
-							follow_userobject_id: props.data.feed_writer_id._id,
+							// follow_userobject_id: props.data.feed_avatar_id ? props.data.feed_avatar_id._id : props.data.feed_writer_id._id,
+							follow_userobject_id: feed_writer._id,
 						},
 						result => {
 							// console.log('result / unFollowUser / FeedContent', result.msg);
 							Modal.close();
-							Modal.popNoBtn(props.data.feed_writer_id.user_nickname + '님을 \n 팔로우 취소하였습니다.');
+							// Modal.popNoBtn(props.data.feed_writer_id.user_nickname + '님을 \n 팔로우 취소하였습니다.');
+							Modal.popNoBtn(feed_writer.user_nickname + '님을 \n 팔로우 취소하였습니다.');
 							setTimeout(() => {
 								Modal.close();
 							}, 2000);
@@ -162,19 +167,21 @@ export default FeedContent = props => {
 		Modal.close();
 		setTimeout(() => {
 			Modal.popTwoBtn(
-				props.data.feed_writer_id.user_nickname + '님을 \n 팔로우하시겠습니까?',
+				feed_writer.user_nickname + '님을 \n 팔로우하시겠습니까?',
 				'아니오',
 				'팔로우',
 				() => Modal.close(),
 				() => {
 					followUser(
 						{
-							follow_userobject_id: props.data.feed_writer_id._id,
+							// follow_userobject_id: props.data.feed_avatar_id ? props.data.feed_avatar_id._id : props.data.feed_writer_id._id,
+							follow_userobject_id: feed_writer._id,
 						},
 						result => {
 							// console.log('result / followUser / FeedContent', result.msg);
 							Modal.close();
-							Modal.popNoBtn(props.data.feed_writer_id.user_nickname + '님을 \n 팔로우하였습니다.');
+							// Modal.popNoBtn(props.data.feed_writer_id.user_nickname + '님을 \n 팔로우하였습니다.');
+							Modal.popNoBtn(feed_writer.user_nickname + '님을 \n 팔로우하였습니다.');
 							setTimeout(() => {
 								Modal.close();
 							}, 2000);
@@ -261,8 +268,8 @@ export default FeedContent = props => {
 	const meatballActions = context => {
 		//피드 미트볼 메뉴 팝업 분기에 대한 기획의도가 불분명한 상태이므로
 		//출력되는 메뉴에 대한 분기처리는 차후 처리 (현재는 더미로 적용)
-		console.log(context);
-
+		// console.log('context / FeedContent', context);
+		// console.log('props.data', props.data);
 		let isFavorite = context.favorite_feeds.some(feed => feed._id == _id);
 		console.log('즐겨찾기됨?', isFavorite);
 		let isMyFeed = userGlobalObject.userInfo._id == props.data.feed_writer_id._id;
@@ -281,7 +288,6 @@ export default FeedContent = props => {
 							onPressDelete();
 						}
 						Modal.close();
-						setIsMeatballClicked(false);
 					},
 					() => Modal.close(),
 					false,
@@ -295,9 +301,10 @@ export default FeedContent = props => {
 						// console.log('result / getFollows ', result.msg);
 						let follow_id_list = [];
 						result.msg.map((v, i) => {
-							follow_id_list.push(v.follow_id._id);
+							follow_id_list.push(v.follower_id._id);
 						});
-						let isFollowers = follow_id_list.includes(props.data.feed_writer_id._id); //해당 피드 게시글 작성자가 내 팔로워 목록에 있는지 여부
+						// let isFollowers = follow_id_list.includes(props.data.feed_avatar_id ? props.data.feed_avatar_id._id : props.data.feed_writer_id._id); //해당 피드 게시글 작성자가 내 팔로워 목록에 있는지 여부
+						let isFollowers = follow_id_list.includes(feed_writer._id); //해당 피드 게시글 작성자가 내 팔로워 목록에 있는지 여부
 						//현재 팔로우 상태 중인 유저의 피드글의 미트볼 헤더 클릭
 						if (isFollowers) {
 							//내가 팔로우하고 있는 유저의 피드게시글
@@ -318,7 +325,6 @@ export default FeedContent = props => {
 									} else if (selectedItem == '즐겨찾기 취소') {
 										onFavorite(false);
 									}
-									setIsMeatballClicked(false);
 								},
 								() => Modal.close(),
 								false,
@@ -346,7 +352,6 @@ export default FeedContent = props => {
 										onFavorite(false);
 									}
 									Modal.close();
-									setIsMeatballClicked(false);
 								},
 								() => Modal.close(),
 								false,
@@ -378,7 +383,6 @@ export default FeedContent = props => {
 							onPressDelete();
 						}
 						Modal.close();
-						setIsMeatballClicked(false);
 					},
 					() => Modal.close(),
 					false,
@@ -396,7 +400,6 @@ export default FeedContent = props => {
 							onPressReport();
 						}
 						Modal.close();
-						setIsMeatballClicked(false);
 					},
 					() => Modal.close(),
 					false,

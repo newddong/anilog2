@@ -38,7 +38,6 @@ export default ProtectionStackNavigation = () => {
 				component={EditAidRequest}
 				options={{header: props => <SendHeader {...props} />, title: '보호 요청 게시글 수정'}}
 			/>
-
 			<ProtectionStack.Screen name="FeedListForHashTag" component={FeedListForHashTag} />
 			<ProtectionStack.Screen name="FeedCommentList" component={FeedCommentList} options={{header: props => <AlarmAndSearchHeader {...props} />}} />
 			<ProtectionStack.Screen
@@ -46,11 +45,15 @@ export default ProtectionStackNavigation = () => {
 				component={ProtectCommentList}
 				options={{header: props => <AlarmAndSearchHeader {...props} />}}
 			/>
-			<ProtectionStack.Screen name="MissingAnimalDetail" component={MissingAnimalDetail} options={{header: props => <MeatBallHeader {...props} />}} />
+			<ProtectionStack.Screen
+				name="MissingAnimalDetail"
+				component={MissingAnimalDetail}
+				options={{header: props => <SimpleWithMeatballHeader {...props} />}}
+			/>
 			<ProtectionStack.Screen
 				name="ReportDetail"
 				component={ReportDetail}
-				options={{header: props => <MeatBallHeader {...props} />, title: '제보글'}}
+				options={{header: props => <SimpleWithMeatballHeader {...props} />, title: '제보글'}}
 			/>
 			<ProtectionStack.Screen name="ActivationDetail" component={ActivationDetail} />
 			<ProtectionStack.Screen

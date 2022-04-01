@@ -17,10 +17,11 @@ export default ProtectRequestList = ({navigation, route}) => {
 	const [filterData, setFilterData] = React.useState({
 		city: '',
 		protect_animal_species: '',
-		adoptable_posts: 'false',
+		// adoptable_posts: 'false', // 입양 가능한 게시글만 보기 필터는 굳이 api에 한 번 더 접속할 필요가 없으므로 제외처리
 		protect_request_object_id: '',
 		request_number: 10000,
 	});
+	const [onlyAdoptable, setOnlyAdoptable] = React.useState(false);
 
 	const getList = () => {
 		getProtectRequestList(
@@ -43,6 +44,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 			},
 		);
 	};
+
 	React.useEffect(() => {
 		Modal.popLoading();
 		const unsubscribe = navigation.addListener('focus', () => {
@@ -71,16 +73,20 @@ export default ProtectRequestList = ({navigation, route}) => {
 
 	const filterOn = () => {
 		console.log('입양 가능한 게시글만 보기');
-		setFilterData({...filterData, adoptable_posts: 'true'});
+		// setFilterData({...filterData, adoptable_posts: 'true'});
+		setOnlyAdoptable(true);
 	};
 	const filterOff = () => {
 		console.log('입양 가능한 게시글만 OFF');
-		setFilterData({...filterData, adoptable_posts: 'false'});
+		// setFilterData({...filterData, adoptable_posts: 'false'});
+		setOnlyAdoptable(false);
 	};
+
 	//별도의 API 사용 예정.
 	const onOff_FavoriteTag = (value, index) => {
 		console.log('즐겨찾기=>' + value + ' ' + index);
 	};
+
 	//지역 필터
 	const onSelectLocation = () => {
 		Modal.popSelectScrollBoxModal(
@@ -95,6 +101,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 			},
 		);
 	};
+
 	//동물종류 필터
 	const onSelectKind = async () => {
 		const fetchPetKindData = await PET_KIND();
@@ -114,6 +121,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 			},
 		);
 	};
+
 	//검색결과가 없을 경우
 	const whenEmpty = () => {
 		return (
@@ -121,6 +129,10 @@ export default ProtectRequestList = ({navigation, route}) => {
 				<Text style={[txt.roboto30b, {color: GRAY10}]}> 검색결과가 없습니다.</Text>
 			</View>
 		);
+	};
+
+	const getData = () => {
+		return onlyAdoptable ? data.filter(v => v.protect_request_status == 'rescue') : data;
 	};
 
 	if (data == 'false') {
@@ -171,7 +183,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 								</View>
 							</View>
 							<View style={[searchProtectRequest.animalNeedHelpList]}>
-								<AnimalNeedHelpList data={data} onClickLabel={onClickLabel} onFavoriteTag={onOff_FavoriteTag} whenEmpty={whenEmpty()} />
+								<AnimalNeedHelpList data={getData()} onClickLabel={onClickLabel} onFavoriteTag={onOff_FavoriteTag} whenEmpty={whenEmpty()} />
 							</View>
 						</View>
 					)}

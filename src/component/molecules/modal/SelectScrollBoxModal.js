@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions, TouchableWithoutFeedback, FlatList} from 'react-native';
-import {WHITE, APRI10, BLACK, GRAY20, GRAY30} from 'Root/config/color';
+import {View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions, TouchableWithoutFeedback, FlatList, Animated, Easing} from 'react-native';
+import {WHITE, APRI10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
@@ -9,7 +9,7 @@ import Modal from 'Root/component/modal/Modal';
  * 하단 셀렉트 박스 모달
  *
  * @param {Object} props - props object
- * @param {Array} props.data - 출력될 데이터 목록 / 최대 두 개의 길이의 배열 타입 : 예 ) [ object, object  ]
+ * @param {Array} props.data - 출력될 데이터 목록 / 최대 두 개의 길이의 배열 타입 : 예 ) [ object, object ]
  * @param {string} props.header - 모달 상단 좌측의 헤더 타이틀 / 빈 값 '' 을 보낼 경우 '취소' 출력
  * @param {(선택1, 선택2)=>void} props.onSelect - 완료 버튼 콜백 / data의 길이에 맞게 값 반환
  * @param {()=>void} props.onClose - 취소 버튼 콜백
@@ -23,6 +23,31 @@ const SelectScrollBoxModal = props => {
 	const refContainerLeft = React.useRef('');
 	const refContainerRight = React.useRef('');
 	const padding = '';
+	const animatedHeight = React.useRef(new Animated.Value(0)).current;
+
+	React.useEffect(() => {
+		animateSelectModal();
+	}, []);
+
+	const animateSelectModal = () => {
+		Animated.timing(animatedHeight, {
+			duration: 400,
+			toValue: 465 * DP,
+			// easing: Easing.linear,
+			useNativeDriver: false,
+		}).start();
+	};
+
+	const closeSelectModal = () => {
+		Animated.timing(animatedHeight, {
+			duration: 200,
+			toValue: 0,
+			easing: Easing.linear,
+			useNativeDriver: false,
+		}).start(() => {
+			Modal.close();
+		});
+	};
 
 	const onSelect = () => {
 		if (data.length == 1) {
@@ -32,49 +57,49 @@ const SelectScrollBoxModal = props => {
 		}
 	};
 
-	React.useEffect(() => {
-		// refContainerLeft.current.scrollToIndex({animated: true, index: selectedItem});
-	}, [selectedItem]);
-
-	React.useEffect(() => {
-		// refContainerRight.current.scrollToIndex({animated: true, index: selectedItem});
-	}, [selectedItem]);
-
 	const onScroll = (event, i) => {
 		let y = event.nativeEvent.contentOffset.y;
 		let focused = '';
 
 		data[0].length < 5 ? (focused = Math.floor(y / (72 * DP))) : (focused = Math.floor(y / (78 * DP)));
-		// console.log('foucsed', focused, i);
 		if (i == 0) {
+			// if (focused < 1) {
+			// 	setSelectedItem(2);
+			// } else if (focused > data[0].length - 1) {
+			// 	setSelectedItem(data[0].length + 1);
+			// } else {
+			// 	setSelectedItem(focused + 2);
+			// }
 			if (focused < 1) {
 				setSelectedItem(2);
-			} else if (focused > data[0].length - 1) {
-				setSelectedItem(data[0].length + 1);
 			} else {
-				setSelectedItem(focused + 2);
+				if (focused >= data[0].length) {
+					// 마지막 배열을 넘어서서 스크롤을 할 경우 마지막으로 자동 회귀
+					setSelectedItem(data[0].length + 1);
+				} else {
+					setSelectedItem(focused + 2);
+				}
 			}
 		} else {
+			// if (focused < 1) {
+			// 	setSelectedItem2(2);
+			// } else if (focused > data[1].length - 1) {
+			// 	setSelectedItem2(data[1].length + 1);
+			// } else {
+			// 	setSelectedItem2(focused + 2);
+			// }
 			if (focused < 1) {
 				setSelectedItem2(2);
-			} else if (focused > data[1].length - 1) {
-				setSelectedItem2(data[1].length + 1);
 			} else {
-				setSelectedItem2(focused + 2);
+				if (focused >= data[1].length) {
+					console.log('focused', focused);
+					// 마지막 배열을 넘어서서 스크롤을 할 경우 마지막으로 자동 회귀
+					setSelectedItem2(data[1].length + 1);
+				} else {
+					setSelectedItem2(focused + 2);
+				}
 			}
 		}
-	};
-
-	const getWidth = () => {
-		if (data.length == 1) {
-			return 666 * DP;
-		} else if (data.length == 2) {
-			return 324 * DP;
-		}
-	};
-
-	const onScrollToIndexFailed = e => {
-		console.log('e', e);
 	};
 
 	const getPadding = v => {
@@ -86,36 +111,28 @@ const SelectScrollBoxModal = props => {
 		return newArr;
 	};
 
-	const getColor = item => {
-		if (item == padding) {
-			return GRAY20;
-		} else {
-			return BLACK;
-		}
-	};
-
 	return (
 		<View style={style.background}>
-			<TouchableWithoutFeedback onPress={() => Modal.close()}>
+			<TouchableWithoutFeedback onPress={closeSelectModal}>
 				<View style={{width: 750 * DP, height: 1200 * DP}} />
 			</TouchableWithoutFeedback>
-			<View
+			<Animated.View
 				style={[
 					style.popUpWindow,
 					{
-						// height: props.height * DP,
+						height: animatedHeight,
 					},
 				]}>
 				<View style={style.header}>
 					{props.header == '' ? (
-						<Text onPress={() => Modal.close()} style={[txt.noto30, {color: WHITE}]}>
+						<Text onPress={closeSelectModal} style={[txt.noto30, {color: WHITE}]}>
 							취소
 						</Text>
 					) : (
-						<Text style={[txt.noto30, {color: WHITE}]}>{props.header}</Text>
+						<Text style={[txt.noto30b, {color: WHITE}]}>{props.header}</Text>
 					)}
 					<TouchableOpacity onPress={onSelect} style={style.completeText}>
-						<Text style={[txt.noto30, {color: WHITE}]}>완료</Text>
+						<Text style={[txt.noto30b, {color: WHITE}]}>완료</Text>
 					</TouchableOpacity>
 				</View>
 				<View style={style.listContainer}>
@@ -126,8 +143,6 @@ const SelectScrollBoxModal = props => {
 									data={getPadding(v)}
 									ref={i == 0 ? refContainerLeft : refContainerRight}
 									scrollEventThrottle={50}
-									// keyExtractor={item => String(item)}
-									// onScrollToIndexFailed={onScrollToIndexFailed}
 									onScroll={e => onScroll(e, i)}
 									showsVerticalScrollIndicator={false}
 									renderItem={({item, index}) => {
@@ -139,12 +154,11 @@ const SelectScrollBoxModal = props => {
 														style.listItem,
 														index == (i == 0 ? selectedItem : selectedItem2) && item != padding ? {backgroundColor: APRI10} : null,
 														{
-															width: getWidth(),
-															// zIndex: 3,
+															width: data.length == 1 ? 666 * DP : 324 * DP,
 															height: i == 0 ? 80 * DP : 80 * DP,
 														},
 													]}>
-													<Text style={[txt.roboto34, {color: getColor(item)}]}>{item}</Text>
+													<Text style={[txt.roboto34, {}]}>{item}</Text>
 												</View>
 											);
 										} else
@@ -156,12 +170,11 @@ const SelectScrollBoxModal = props => {
 															style.listItem,
 															index == (i == 0 ? selectedItem : selectedItem2) && item != padding ? {backgroundColor: APRI10} : null,
 															{
-																width: getWidth(),
-																// zIndex: 3,
+																width: data.length == 1 ? 666 * DP : 324 * DP,
 																height: i == 0 ? 80 * DP : 80 * DP,
 															},
 														]}>
-														<Text style={[txt.roboto34, {color: getColor(item)}]}>{item}</Text>
+														<Text style={[txt.roboto34, {}]}>{item}</Text>
 													</View>
 												</TouchableWithoutFeedback>
 											);
@@ -172,7 +185,7 @@ const SelectScrollBoxModal = props => {
 						);
 					})}
 				</View>
-			</View>
+			</Animated.View>
 		</View>
 	);
 };

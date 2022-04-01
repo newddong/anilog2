@@ -28,7 +28,7 @@ import {getProtectRequestByProtectRequestId} from 'Root/api/protectapi';
 // - ProtectRequestList(보호활동탭) , AnimalFromShelter(게시글보기) , AidRequestManage(게시글보기), AidRequestAnimalList(게시글 보기)
 
 export default AnimalProtectRequestDetail = ({route}) => {
-	console.log('AnimalProtectRequestDetail', route.params.id);
+	// console.log('AnimalProtectRequestDetail', route.params.id);
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
 	const [writersAnotherRequests, setWritersAnotherRequests] = React.useState('false'); //해당 게시글 작성자의 따른 보호요청게시글 목록
@@ -56,7 +56,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 			result => {
 				console.log('result /getProtectRequestByProtectRequestId / AnimalProtectRequestDetail : ', result.msg.protect_request_is_delete);
 				setData(result.msg);
-				navigation.setParams({...route.params, request_object: result.msg});
+				navigation.setParams({...route.params, request_object: result.msg, isMissingOrReport: false});
 				// props.navigation.setParams({...props.route.params, feed_content: feedText});
 				getProtectRequestList(result.msg.protect_request_writer_id._id); //API에서 받아온 보호요청게시글의 작성자 _id를 토대로, 작성자의 다른 보호요청게시글을 받아옴
 			},
@@ -104,7 +104,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				protect_request_object_id: route.params.id,
 				commentobject_id: '',
 				request_number: 2,
-				login_userobject_id: userGlobalObject.userInfo._id
+				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			commentdata => {
 				// debug && console.log('AnimalProtectRequestDetail / getCommentListByProtectId:', commentdata.msg);

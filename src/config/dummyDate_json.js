@@ -6281,3 +6281,126 @@ export const dummy_hashTagListObject = [
 		hashtag_feed_id: [1, 2, 3, 4, 5],
 	},
 ];
+
+export const dum = [
+	{
+		_id: 1,
+		community_title: '제목1', // 커뮤니티 제목
+		community_content: '강아지가 사람을 무서워해요', // 커뮤니티 본문
+		community_type: 'free', // 게시글의 타입 (자유게시판|'free', 리뷰|'review')
+		community_free_type: 'talk', // 자유게시글 타입 (잡담|'talk', 질문|'qustion', 모임|'meeting')
+		community_animal_type: 'dog', // 리뷰 글 내용 동물 타입 (개|'doc', 고양이|'cat', 그외|'etc')
+		community_avatar_id: 'd', // 커뮤니티의 작성자로 지정하고 싶은 반려동물 ID
+		community_is_temporary: false, // 임시저장 여부
+		community_interests: {
+			// 관심사 항목 키워드
+			interests_trip: ['string'],
+			interests_hospital: ['string'],
+			interests_interior: ['string'],
+			interests_etc: ['string'],
+			interests_review: ['string'],
+		},
+		community_address: {
+			// 커뮤니티 리뷰 관련 주소
+			addr: {
+				road_address: {address_name: '도로명 주소가 없는 위치입니다.'},
+				address: {
+					address_name: '서울 마포구 신수동 1-12',
+					region_1depth_name: '서울',
+					region_2depth_name: '마포구',
+					region_3depth_name: '신수동',
+					mountain_yn: 'N',
+					main_address_no: '1',
+					sub_address_no: '12',
+					zip_code: '',
+				},
+				detailAddr: '',
+			},
+			region: {latitude: 37.549587723489424, longitude: 126.9385725098303},
+		},
+		community_like_count: 0,
+		community_favorite_count: 0,
+		community_comment_count: 0,
+		__v: 0,
+	},
+	{
+		_id: 2,
+		community_title: '제목1', // 커뮤니티 제목
+		community_content: '5월1일부터 3일까지 인천 보호소 봉사하실분!!', // 커뮤니티 본문
+		community_type: 'free', // 게시글의 타입 (자유게시판|'free', 리뷰|'review')
+		community_free_type: 'question', // 자유게시글 타입 (잡담|'talk', 질문|'qustion', 모임|'meeting')
+		community_animal_type: 'dog', // 리뷰 글 내용 동물 타입 (개|'doc', 고양이|'cat', 그외|'etc')
+		community_avatar_id: 'd', // 커뮤니티의 작성자로 지정하고 싶은 반려동물 ID
+		community_is_temporary: false, // 임시저장 여부
+		community_interests: {
+			// 관심사 항목 키워드
+			interests_trip: ['string'],
+			interests_hospital: ['string'],
+			interests_interior: ['string'],
+			interests_etc: ['string'],
+			interests_review: ['string'],
+		},
+		community_address: {
+			// 커뮤니티 리뷰 관련 주소
+			addr: {
+				road_address: {address_name: '도로명 주소가 없는 위치입니다.'},
+				address: {
+					address_name: '서울 마포구 신수동 1-12',
+					region_1depth_name: '서울',
+					region_2depth_name: '마포구',
+					region_3depth_name: '신수동',
+					mountain_yn: 'N',
+					main_address_no: '1',
+					sub_address_no: '12',
+					zip_code: '',
+				},
+				detailAddr: '',
+			},
+			region: {latitude: 37.549587723489424, longitude: 126.9385725098303},
+		},
+		community_like_count: 0,
+		community_favorite_count: 0,
+		community_comment_count: 34,
+		__v: 0,
+	},
+	{
+		_id: 3,
+		community_title: '제목1', // 커뮤니티 제목
+		community_content: '본문1', // 커뮤니티 본문
+		community_type: 'free', // 게시글의 타입 (자유게시판|'free', 리뷰|'review')
+		community_free_type: 'meeting', // 자유게시글 타입 (잡담|'talk', 질문|'qustion', 모임|'meeting')
+		community_animal_type: 'dog', // 리뷰 글 내용 동물 타입 (개|'doc', 고양이|'cat', 그외|'etc')
+		community_avatar_id: 'd', // 커뮤니티의 작성자로 지정하고 싶은 반려동물 ID
+		community_is_temporary: false, // 임시저장 여부
+		community_interests: {
+			// 관심사 항목 키워드
+			interests_trip: ['string'],
+			interests_hospital: ['string'],
+			interests_interior: ['string'],
+			interests_etc: ['string'],
+			interests_review: ['string'],
+		},
+		community_address: {
+			// 커뮤니티 리뷰 관련 주소
+			addr: {
+				road_address: {address_name: '도로명 주소가 없는 위치입니다.'},
+				address: {
+					address_name: '서울 마포구 신수동 1-12',
+					region_1depth_name: '서울',
+					region_2depth_name: '마포구',
+					region_3depth_name: '신수동',
+					mountain_yn: 'N',
+					main_address_no: '1',
+					sub_address_no: '12',
+					zip_code: '',
+				},
+				detailAddr: '',
+			},
+			region: {latitude: 37.549587723489424, longitude: 126.9385725098303},
+		},
+		community_like_count: 0,
+		community_favorite_count: 0,
+		community_comment_count: 12,
+		__v: 0,
+	},
+];

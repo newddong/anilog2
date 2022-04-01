@@ -320,6 +320,7 @@ export const socialInfoA = StyleSheet.create({
 		width: 366 * DP,
 		height: 84 * DP,
 		flexDirection: 'row',
+		justifyContent: 'space-between',
 	},
 	socialInfo: {
 		width: 82 * DP,

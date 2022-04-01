@@ -83,6 +83,7 @@ export default AssignPetInfoB = props => {
 						'아니오',
 						'추가 등록',
 						() => {
+							console.log('data.previousRouteName', data.previousRouteName);
 							props.navigation.navigate(data.previousRouteName);
 						},
 						() => {

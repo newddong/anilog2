@@ -3,23 +3,24 @@ import {FlatList, ScrollView, Text, View, StyleSheet, SafeAreaView} from 'react-
 import UserAccount from 'Organism/listitem/UserAccount';
 import {accountHashList} from 'Organism/style_organism copy';
 import UserNote from '../listitem/UserNote';
+import OneAlarm from '../listitem/OneAlarm';
+import {txt} from 'Root/config/textstyle';
+import {GRAY40} from 'Root/config/color';
 
 /**
- * 쪽지 리스트 출력 컴포넌트
+ * 알람 리스트 출력 컴포넌트
  * @param {object} props - Props Object
- * @param {object} props.data - 쪽지 데이터
- * @param {void} props.onClickLabel - 쪽지 라벨 클릭
- * @param {void} props.onCheckBox - 선택 체크박스 클릭
- * @param {boolean} props.checkBoxMode - 선택 삭제 모드 여부 (default= false)
- * @param {boolean} props.showFollowBtn - 선택 삭제 모드 여부 (default= false)
+ * @param {object} props.data - 알림 데이터
+ * @param {void} props.onClickLabel - 알림 라벨 클릭
  */
-const NoteList = props => {
-	console.log('NoteList props', props.data);
+const stringList = ['오늘', '어제', '이번 주'];
+const DailyAlarm = props => {
+	console.log('Daily Alarm props', props.data, props.index);
 	const renderItem = ({item, index}) => {
 		console.log('item', item);
 		return (
 			<View style={[accountHashList.userAccount]}>
-				<UserNote
+				<OneAlarm
 					data={item}
 					checkBoxMode={props.checkBoxMode}
 					onLabelClick={item => props.onClickLabel(item)}
@@ -31,25 +32,37 @@ const NoteList = props => {
 
 	return (
 		<View style={[styles.container]}>
-			<FlatList data={props.data} keyExtractor={item => item._id} renderItem={renderItem} showsVerticalScrollIndicator={false} />
+			<Text style={[txt.noto30, {marginLeft: 48 * DP}, {marginBottom: 20 * DP}]}>{stringList[props.index]}</Text>
+			<FlatList
+				style={[styles.listContainer]}
+				data={props.data}
+				keyExtractor={item => item._id}
+				renderItem={renderItem}
+				showsVerticalScrollIndicator={false}
+			/>
 		</View>
 	);
 };
 
 const styles = StyleSheet.create({
 	container: {
+		marginTop: 40 * DP,
 		width: 750 * DP,
-		minHeight: 1322 * DP,
-		alignItems: 'center',
+		borderBottomColor: GRAY40,
+		borderBottomWidth: 2 * DP,
+		// alignItems: 'center',
 	},
 	userContainer: {
 		width: 750 * DP,
 		// height: 94 * DP,
 		marginBottom: 40 * DP,
 	},
+	listContainer: {
+		flex: 1,
+	},
 });
 
-NoteList.defaultProps = {
+DailyAlarm.defaultProps = {
 	items: [],
 	onClickLabel: e => console.log(e),
 	onCheckBox: e => console.log(e),
@@ -57,4 +70,4 @@ NoteList.defaultProps = {
 	showFollowBtn: false,
 };
 
-export default NoteList;
+export default DailyAlarm;

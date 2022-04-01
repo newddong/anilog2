@@ -18,7 +18,6 @@ import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, ProfileDefaultImg} from 'Atom/i
  * @param {(data:object)=>void} props.onClickLabel - 버튼을 눌렸을때 동작하는 콜백, 제목 반환환
  */
 const UserLocationTimeLabel = props => {
-	// console.log('props Time :  ', props);
 	const navigation = useNavigation();
 	const isLoginUser = userGlobalObject.userInfo._id == props.data._id;
 	const isMyPet = props.data.user_type == 'pet' && userGlobalObject.userInfo.user_my_pets.includes(props.data._id);

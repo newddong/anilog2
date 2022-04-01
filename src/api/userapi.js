@@ -433,3 +433,13 @@ export async function getMemoBoxWithReceiveID(params, callback, errcallback) {
 export async function setMemoBoxWithReport(params, callback, errcallback) {
 	apiController('/user/setMemoBoxWithReport', arguments);
 }
+
+/** 로그인 대상으로 상대방을 팔로우 했는지 확인
+ * @param {object} params
+ * @param {string} params.follow_userobject_id  - 체크할 상대방 userObject ID
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getChekingFollow(params, callback, errcallback) {
+	apiController('/user/getChekingFollow', arguments);
+}

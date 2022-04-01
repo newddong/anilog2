@@ -30,37 +30,24 @@ export default Profile = ({route}) => {
 	const [showCompanion, setShowCompanion] = React.useState(false); // User계정이 반려동물버튼을 클릭
 	// console.log('tabMenuselc', tabMenuSelected);
 
-	const getProfileInfo = async () => {
-		return new Promise(async function (resolve, reject) {
-			try {
-				getUserProfile(
-					{
-						userobject_id: route.params.userobject._id,
-					},
-					result => {
-						navigation.setOptions({title: result.msg.user_nickname, data: result.msg});
-						resolve(result.msg);
-						// console.log('getUserProfile is Profile 갱신됨?', result.msg.is_follow);
-					},
-					err => {
-						Modal.popOneBtn(err, '확인', () => {
-							Modal.close();
-							navigation.goBack();
-						});
-					},
-				);
-			} catch (error) {
-				console.log('error getRoadAddr  :  ', error.message);
-				Modal.close(); //오류발생 시 로딩 모달 종료
-			}
-		});
-	};
-
 	const fetchData = async () => {
 		if (route.params && route.params.userobject) {
-			const res = await getProfileInfo();
-			console.log('followUser after', res.is_follow);
-			setData(res);
+			getUserProfile(
+				{
+					userobject_id: route.params.userobject._id,
+				},
+				result => {
+					navigation.setOptions({title: result.msg.user_nickname, data: result.msg});
+					setData(result.msg);
+					// console.log('getUserProfile is Profile 갱신됨?', result.msg.is_follow);
+				},
+				err => {
+					Modal.popOneBtn(err, '확인', () => {
+						Modal.close();
+						navigation.goBack();
+					});
+				},
+			);
 		} else {
 			Modal.popOneBtn('존재하지 않는 유저입니다.', '확인', () => {
 				Modal.close();
@@ -173,14 +160,15 @@ export default Profile = ({route}) => {
 		alert('sendMsg');
 	};
 
+	//보호 동물 추가
 	const onPressAddPetBtn = () => {
-		// alert('AddPet');
-		navigation.navigate('MY', {screen: 'AssignProtectAnimalImage'});
+		navigation.navigate('MY', {screen: 'ShelterMenu', params: {pageToMove: 'AssignProtectAnimalImage'}});
 	};
 
+	//보호 요청게시물 추가
 	const onPressAddArticleBtn = () => {
-		//게시물 추가
-		navigation.navigate('MY', {screen: 'AidRequestAnimalList', params: data._id});
+		navigation.navigate('MY', {screen: 'ShelterMenu', params: {pageToMove: 'AidRequestAnimalList'}});
+		// navigation.navigate('MY', {screen: 'AidRequestAnimalList', params: data._id});
 	};
 
 	const petListEmptyComponent = () => {
@@ -195,12 +183,7 @@ export default Profile = ({route}) => {
 
 	const onShowCompanion = () => {
 		setShowCompanion(true);
-		Animated.timing(animatedHeight, {
-			duration: 300,
-			toValue: 212 * DP,
-			easing: Easing.linear,
-			useNativeDriver: false,
-		}).start();
+		animationOpen();
 	};
 
 	const onHideCompanion = () => {
@@ -214,12 +197,7 @@ export default Profile = ({route}) => {
 
 	const onShowOwnerBtnClick = () => {
 		setShowOwnerState(true);
-		Animated.timing(animatedHeight, {
-			duration: 300,
-			toValue: 212 * DP,
-			easing: Easing.linear,
-			useNativeDriver: false,
-		}).start();
+		animationOpen();
 	};
 	const onHideOwnerBtnClick = () => {
 		Animated.timing(animatedHeight, {
@@ -228,6 +206,15 @@ export default Profile = ({route}) => {
 			easing: Easing.linear,
 			useNativeDriver: false,
 		}).start(() => setShowOwnerState(false));
+	};
+
+	const animationOpen = () => {
+		Animated.timing(animatedHeight, {
+			duration: 300,
+			toValue: 212 * DP,
+			easing: Easing.linear,
+			useNativeDriver: false,
+		}).start();
 	};
 
 	//userType이 PET이며 Tab의 반려인계정이 Open으로 설정이 되어 있는 경우

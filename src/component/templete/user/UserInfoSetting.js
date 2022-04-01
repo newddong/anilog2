@@ -42,7 +42,7 @@ export default UserInfoSetting = ({route}) => {
 	React.useEffect(() => {
 		// fetchData();
 		navigation.addListener('focus', () => fetchData());
-
+		fetchData();
 		//스크린 포커스, 프로필 변경이 있을 시 getUSerInfoById에 접속
 	}, [route.params?.changedPhoto]);
 

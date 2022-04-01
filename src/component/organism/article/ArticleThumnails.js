@@ -16,13 +16,13 @@ export default ArticleThumnails = props => {
 		if (photos.length == 3) {
 			return (
 				<View style={[style.photo3_right_photo]}>
-					<Image source={{uri: photos[2]}} style={[{flex: 1}]} />
+					<Image source={{uri: photos[2]}} style={[{flex: 1}]} resizeMode={'contain'} />
 				</View>
 			);
 		} else {
 			return (
 				<View style={[style.photo3_right_photo]}>
-					<Image source={{uri: photos[2]}} style={[style.photo3_right_photo]} />
+					<Image source={{uri: photos[2]}} style={[style.photo3_right_photo]} resizeMode={'contain'} />
 					<View style={[style.photo3_right_opacity]}>
 						<Text style={[txt.roboto32b, style.text]}>+ {photos.length - 3}</Text>
 					</View>

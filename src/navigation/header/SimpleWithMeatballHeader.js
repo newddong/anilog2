@@ -1,19 +1,17 @@
 import React from 'react';
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
-
 import {BackArrow32, Meatball50_GRAY20_Horizontal} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
-import {FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS, PROTECT_REQUEST_STATUS} from 'Root/i18n/msg';
+import {FEED_MEATBALL_MENU_MY_FEED, FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS, PROTECT_REQUEST_STATUS} from 'Root/i18n/msg';
 import {deleteProtectRequest, setShelterProtectAnimalStatus} from 'Root/api/shelterapi';
 import {setProtectRequestStatus} from 'Root/api/protectapi';
 
-//보호 요청게시글 작성자일 경우 미트볼 아이콘 출력이 되는 헤더
+//보호 요청게시글 및 제보, 실종글 작성자일 경우 미트볼 아이콘 출력이 되는 헤더
 export default SimpleWithMeatballHeader = ({navigation, route, options, back}) => {
-	const isWriter = userGlobalObject.userInfo._id == route.params.writer;
-	// console.log('route.params / SimpleWithMeatballHeader : ', route.params.request_object);
+	const isWriter = userGlobalObject.userInfo._id == route.params.writer; //작성자인지 여부 판단
 
 	const onPressChangeProtectRequestStatus = () => {
 		Modal.close();
@@ -87,6 +85,7 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 		}, 200);
 	};
 
+	// 미트볼 공유하기 클릭
 	const onPressShare = () => {
 		Modal.close();
 		setTimeout(() => {
@@ -98,9 +97,19 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 		}, 200);
 	};
 
-	//수정 버튼 클릭
+	//보호요청 게시글 미트볼 메뉴 - 수정 클릭
 	const onPressEdit = () => {
 		navigation.push('EditAidRequest', {data: route.params.id});
+	};
+
+	//제보 실종 미트볼 메뉴 - 수정 클릭
+	const onPressEditFeed = () => {
+		navigation.navigate('FeedEdit', route.params.feed_object);
+	};
+
+	//제보 실종 미트볼 메뉴 - 삭제 클릭
+	const onPressDeleteFeed = () => {
+		console.log('삭제 제보 실종');
 	};
 
 	//게시글 삭제
@@ -132,31 +141,58 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 	};
 
 	const onPressMeatball = () => {
-		Modal.popSelectBoxModal(
-			FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS,
-			selectedItem => {
-				switch (selectedItem) {
-					case '상태변경':
-						onPressChangeProtectRequestStatus();
-						break;
-					case '공유하기':
-						onPressShare();
-						break;
-					case '수정':
-						onPressEdit();
-						break;
-					case '삭제':
-						onPressDelete();
-						break;
-					default:
-						break;
-				}
-				Modal.close();
-			},
-			() => Modal.close(),
-			false,
-			'',
-		);
+		if (route.params.isMissingOrReport) {
+			// 실종 제보글일 경우
+			Modal.popSelectBoxModal(
+				FEED_MEATBALL_MENU_MY_FEED,
+				selectedItem => {
+					switch (selectedItem) {
+						case '공유하기':
+							onPressShare();
+							break;
+						case '수정':
+							onPressEditFeed();
+							break;
+						case '삭제':
+							onPressDeleteFeed();
+							break;
+						default:
+							break;
+					}
+					Modal.close();
+				},
+				() => Modal.close(),
+				false,
+				'',
+			);
+		} else {
+			Modal.popSelectBoxModal(
+				// 보호요청 게시글일 경우
+				FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS,
+				selectedItem => {
+					switch (selectedItem) {
+						case '상태변경':
+							onPressChangeProtectRequestStatus();
+							break;
+						case '공유하기':
+							onPressShare();
+							break;
+						case '수정':
+							onPressEdit();
+							break;
+						case '삭제':
+							onPressDelete();
+							break;
+						default:
+							break;
+					}
+					Modal.close();
+				},
+				() => Modal.close(),
+				false,
+				'',
+			);
+		}
 	};
 
 	return (

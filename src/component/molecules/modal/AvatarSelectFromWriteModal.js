@@ -22,6 +22,10 @@ const AvatarSelectFromWriteModal = props => {
 	const [scrollIndex, setScrollIndex] = React.useState(0);
 
 	React.useEffect(() => {
+		console.log('scrollIndex', scrollIndex);
+	}, [scrollIndex]);
+
+	React.useEffect(() => {
 		getUserInfoById(
 			{userobject_id: userGlobalObj.userInfo._id},
 			user => {
@@ -55,13 +59,13 @@ const AvatarSelectFromWriteModal = props => {
 		};
 		if (item.user_type == 'pet') {
 			return (
-				<TouchableOpacity onPress={onClickLabel} key={index} style={[style.listItem]}>
-					<View style={[style.avatarName]}>
+				<View key={index} style={[style.listItem]}>
+					<TouchableOpacity onPress={onClickLabel} style={[style.avatarName]}>
 						<Text numberOfLines={1} ellipsizeMode={'tail'} style={[txt.noto26, {paddingHorizontal: 10 * DP}]}>
 							{item.user_nickname}
 						</Text>
-					</View>
-					<View style={[style.avatarImage]}>
+					</TouchableOpacity>
+					<TouchableOpacity onPress={onClickLabel} style={[style.avatarImage]}>
 						{item.user_profile_uri == undefined ? (
 							<ProfileDefaultImg size={styles.img_round_94} />
 						) : (
@@ -71,27 +75,31 @@ const AvatarSelectFromWriteModal = props => {
 							{/* 팻의 상태 여부에 따른 분기 - protected, adopted, normal  */}
 							{getStatusMark(item.pet_status)}
 						</View>
-					</View>
-				</TouchableOpacity>
+					</TouchableOpacity>
+				</View>
 			);
 		} else {
 			return (
-				<TouchableOpacity onPress={onClickLabel} key={index} style={[style.listItem]}>
-					<View style={[style.avatarName]}>
+				<View key={index} style={[style.listItem]}>
+					<TouchableOpacity onPress={onClickLabel} style={[style.avatarName]}>
 						<Text numberOfLines={1} ellipsizeMode={'tail'} style={[txt.noto26, {paddingHorizontal: 10 * DP}]}>
 							{item.user_nickname}
 						</Text>
-					</View>
-					<View style={[style.avatarImage]}>
+					</TouchableOpacity>
+					<TouchableOpacity onPress={onClickLabel} style={[style.avatarImage]}>
 						{item.user_profile_uri == undefined ? (
 							<ProfileDefaultImg size={styles.img_round_94} />
 						) : (
 							<Image source={{uri: item.user_profile_uri}} style={[styles.img_round_94]} />
 						)}
-					</View>
-				</TouchableOpacity>
+					</TouchableOpacity>
+				</View>
 			);
 		}
+	};
+
+	const onScroll = e => {
+		console.log('y : ', e.nativeEvent.contentOffset.y);
 	};
 
 	if (items == '') {
@@ -99,8 +107,19 @@ const AvatarSelectFromWriteModal = props => {
 	} else
 		return (
 			<TouchableOpacity onPress={() => Modal.close()} activeOpacity={1} style={style.background}>
+				{/* <View
+					style={[
+						{
+							width: 654 * DP,
+							alignSelf: 'center',
+							alignItems: 'center',
+							// backgroundColor: 'yellow',
+						},
+					]}>
+					<Text style={[txt.roboto40b, {color: WHITE}]}>계정을 선택해주세요.  </Text>
+				</View> */}
 				<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
-					{scrollIndex >= Math.floor(items.length / 4) || items.length < 4 ? (
+					{scrollIndex >= Math.floor(items.length / 4) || items.length <= 4 ? (
 						<></>
 					) : (
 						<TouchableOpacity
@@ -129,6 +148,9 @@ const AvatarSelectFromWriteModal = props => {
 							keyExtractor={item => item._id}
 							inverted={true}
 							scrollEnabled={false}
+							// onScroll={onScroll}
+							// onScrollAnimationEnd={e => console.log('e', e.nativeEvent.locationY)}
+							// onEndReached={() => setScrollIndex(Math.floor(1 + items.length / 4))}
 							showsVerticalScrollIndicator={false}
 						/>
 					</View>
@@ -185,7 +207,7 @@ const style = StyleSheet.create({
 		// backgroundColor: 'red',
 	},
 	avatarName: {
-		maxWidth: 340 * DP,
+		// maxWidth: 340 * DP,
 		height: 54 * DP,
 		borderRadius: 20 * DP,
 		marginRight: 10 * DP,

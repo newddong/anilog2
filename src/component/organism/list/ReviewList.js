@@ -14,7 +14,7 @@ import Review from '../article/Review';
  */
 export default ReviewList = props => {
 	const renderItem = (item, index) => {
-		return <Review onPressReviewContent={() => props.onPressReviewContent(index)} onPressReply={() => props.onPressReply(index)} />;
+		return <Review data={item} onPressReviewContent={() => props.onPressReviewContent(index)} onPressReply={() => props.onPressReply(index)} />;
 	};
 
 	return (

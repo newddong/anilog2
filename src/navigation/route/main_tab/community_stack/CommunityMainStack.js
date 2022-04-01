@@ -15,6 +15,7 @@ import ReviewDetail from 'Root/component/templete/community/ReviewDetail';
 import SearchMap from 'Root/component/templete/search/SearchMap';
 import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
 import WriteEditorTest from 'Root/component/templete/community/WriteEditorTest';
+import ReviewStackNavigation from './review_tab/ReviewStackNavigation';
 
 const CommunityMainStackNavi = createStackNavigator();
 
@@ -24,6 +25,13 @@ export default CommunityMainStack = props => {
 			<CommunityMainStackNavi.Screen
 				name="CommunityMain"
 				component={CommunityMain}
+				options={({route, navigation}) => ({
+					header: props => <LogoHeader {...props} />,
+				})}
+			/>
+			<CommunityMainStackNavi.Screen
+				name="ReviewStackNavigation"
+				component={ReviewStackNavigation}
 				options={({route, navigation}) => ({
 					header: props => <LogoHeader {...props} />,
 				})}
@@ -76,6 +84,7 @@ export default CommunityMainStack = props => {
 				name={'CommunityCommentList'}
 				component={CommunityCommentList}
 				options={({route}) => ({
+					// headerShown: false,
 					header: props => <SimpleHeader {...props} />,
 					title: ' ',
 				})}

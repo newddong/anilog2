@@ -65,7 +65,9 @@ import {useModal} from './useModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {userLogin} from 'Root/api/userapi';
 import userGlobalObj from 'Root/config/userGlobalObject';
-
+import CommunityWrite from 'Root/component/templete/community/CommunityWrite';
+import SearchMap from 'Root/component/templete/search/SearchMap';
+import AlarmList from 'Root/component/templete/list/AlarmList';
 const RootStack = createStackNavigator();
 
 export default RootStackNavigation = () => {
@@ -295,6 +297,13 @@ export default RootStackNavigation = () => {
 						<RootStack.Screen name="UserList" options={{header: props => <InputAndSearchHeader {...props} />, title: '계정'}}>
 							{props => <AccountPicker {...props} /*prevNav={props.prevNav} input={searchInput} onClickUser={onClickUser}*/ />}
 						</RootStack.Screen>
+						{/* <RootStack.Screen
+							name="CommunityWrite"
+							component={CommunityWrite}
+							options={{header: props => <SendHeader {...props} title={'커뮤니티 글 작성'} />}}
+						/> */}
+						{/* <RootStack.Screen name="SearchMap" component={SearchMap} options={{header: props => <SimpleHeader {...props} />, title: '주소 설정'}} /> */}
+						<RootStack.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
 					</RootStack.Navigator>
 				</NavigationContainer>
 

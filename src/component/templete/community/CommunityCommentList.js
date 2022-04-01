@@ -34,7 +34,6 @@ export default CommunityCommentList = props => {
 	});
 
 	React.useEffect(() => {
-		// console.log('data._id', data._id);
 		getCommentListByCommunityId(
 			{
 				community_object_id: data._id,
@@ -245,9 +244,9 @@ const style = StyleSheet.create({
 	},
 	commentLength: {
 		justifyContent: 'flex-end',
-		paddingBottom: 20 * DP,
+		paddingBottom: 10 * DP,
 		height: 60 * DP,
-		paddingHorizontal: 22 * DP,
+		paddingHorizontal: 48 * DP,
 		// backgroundColor: 'yellow',
 	},
 });

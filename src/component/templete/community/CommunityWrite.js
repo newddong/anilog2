@@ -10,7 +10,7 @@ import {useNavigation} from '@react-navigation/native';
 import ImagePicker from 'react-native-image-crop-picker';
 import {changeLocalPathToS3Path} from 'Root/api/community';
 import {RichEditor} from 'react-native-pell-rich-editor';
-import {Animal_another_off, Animal_cat_off, Animal_dog_off} from 'Root/component/atom/icon';
+import {Animal_another_off, Animal_cat_off, Animal_dog_off, Filter60Border, Filter60Filled, WriteBoard} from 'Root/component/atom/icon';
 import {Animal_another, Animal_cat, Animal_dog} from 'Root/component/atom/icon';
 import Geolocation from '@react-native-community/geolocation';
 
@@ -32,7 +32,6 @@ export default CommunityWrite = props => {
 			interests_interior: [],
 			interests_etc: [],
 			interests_review: [],
-			interests_location: {city: '', district: ''},
 		},
 		community_address: {
 			road_address: {
@@ -51,6 +50,7 @@ export default CommunityWrite = props => {
 			},
 		},
 	});
+	isReview ? navigation.setOptions({title: '후기 게시글'}) : navigation.setOptions({title: '자유 게시글'});
 
 	const [animalType, setAnimalType] = React.useState({
 		dog: false,
@@ -146,15 +146,22 @@ export default CommunityWrite = props => {
 			// richText.current?.insertImage(v.location, 'margin: 0.2em auto 0.2em; border-radius: 15px; width:150px; height:150px;');
 			richText.current?.insertHTML('<p><br/></p></div>');
 			richText.current?.insertHTML(
-				`<div id="testImg" ><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
-				contenteditable="false" height="340px" width="300px" style="border-radius:15px; margin: 0 auto 4px; "/>
-				<img src="https://cdn-icons-png.flaticon.com/512/458/458595.png" style="position:absolute; top: 35px; right:35px;" width="20px;" height="20px;"  onclick="_.sendEvent('ImgClick')" />
-				</div>`,
+				`<img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
+				contenteditable="false" height="450px" width="300px" style="border-radius:15px; margin: 0 auto 4px; "/>`,
 			);
 			richText.current?.insertHTML('<p><br/></p></div>');
 		});
 
 		richText.current?.focusContentEditor();
+	};
+
+	const onPressAddVideo = () => {
+		const example = 'https://media.fmkorea.com/files/attach/new2/20220330/486616/2949542227/4478562221/a0729cce75f3e4a1cd32cf074066543d.mp4?d';
+		richText.current?.insertHTML(
+			`<div style="padding:10px 0;" contentEditable="false">
+		        <iframe  width="100%" height="220"  src="${example}" frameborder="0" allow="accelerometer; controls; sandbox; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ></iframe>
+		    </div>`,
+		);
 	};
 
 	let handleMessage = React.useCallback(({type, id, data}) => {
@@ -191,14 +198,6 @@ export default CommunityWrite = props => {
 			case 'SwitchImage':
 				break;
 		}
-	};
-	const onPressAddVideo = () => {
-		const example = 'https://media.fmkorea.com/files/attach/new2/20220330/486616/2949542227/4478562221/a0729cce75f3e4a1cd32cf074066543d.mp4?d';
-		richText.current?.insertHTML(
-			`<div style="padding:10px 0;" contentEditable="false">
-		        <iframe  width="100%" height="220"  src="${example}" frameborder="0" allow="accelerometer; controls; sandbox; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ></iframe>
-		    </div>`,
-		);
 	};
 
 	// let handleMessage = React.useCallback(({type, id, data}) => {
@@ -274,7 +273,6 @@ export default CommunityWrite = props => {
 			() => Modal.close(),
 			arg => {
 				// console.log('arg', arg);
-
 				setData({...data, community_interests: arg.userInterestReview});
 				Modal.close();
 			},
@@ -422,39 +420,22 @@ export default CommunityWrite = props => {
 					) : (
 						<></>
 					)}
-					{Platform.OS == 'android' ? (
-						<ScrollView>
-							<RichEditor
-								ref={richText}
-								editorStyle={{
-									contentCSSText: 'font-size:14px;',
-								}}
-								onChange={onChange}
-								style={{
-									width: '100%',
-									opacity: 0.99,
-								}}
-								placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
-								onCursorPosition={onCursorPosition}
-								onMessage={handleMessage}
-							/>
-						</ScrollView>
-					) : (
-						<RichEditor
-							ref={richText}
-							editorStyle={{
-								contentCSSText: 'font-size:14px;',
-							}}
-							onChange={onChange}
-							style={{
-								width: '100%',
-								opacity: 0.99,
-							}}
-							placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
-							onCursorPosition={onCursorPosition}
-							onMessage={handleMessage2}
-						/>
-					)}
+					<RichEditor
+						ref={richText}
+						editorStyle={{
+							backgroundColor: WHITE,
+							color: 'black',
+							contentCSSText: 'font-size:14px;',
+						}}
+						onChange={onChange}
+						style={{
+							width: '100%',
+						}}
+						placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
+						geolocationEnabled={true}
+						onCursorPosition={onCursorPosition}
+						onMessage={handleMessage}
+					/>
 				</View>
 				{/* 하단 버튼 컴포넌트  */}
 				{isReview ? (
@@ -486,43 +467,33 @@ export default CommunityWrite = props => {
 				) : (
 					<></>
 				)}
-				{isReview ? (
-					<View style={[style.buttonContainer]}>
-						<TouchableOpacity activeOpacity={0.6} onPress={onPressTempSave}>
-							<View style={[style.buttonItem]}>
-								<Save54 />
-								<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>임시저장</Text>
-							</View>
-						</TouchableOpacity>
-						<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
-							<View style={[style.buttonItem]}>
-								<Camera54 />
-								<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>사진추가</Text>
-							</View>
-						</TouchableOpacity>
-						<TouchableOpacity activeOpacity={0.6} onPress={onPressAddVideo}>
-							<View style={[style.buttonItem]}>
-								<Camera54 />
-								<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>영상 추가</Text>
-							</View>
-						</TouchableOpacity>
-						<TouchableOpacity activeOpacity={0.6} onPress={moveToLocationPicker}>
-							<View style={[style.buttonItem, {}]}>
-								<Location54_APRI10 />
-								<Text style={[txt.noto24, {color: APRI10, alignSelf: 'center', marginLeft: 10 * DP}]}>위치추가</Text>
-							</View>
-						</TouchableOpacity>
-					</View>
-				) : (
-					<View style={[style.buttonContainer, {justifyContent: 'flex-end'}]}>
-						<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
-							<View style={[style.buttonItem]}>
-								<Camera54 />
-								<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>사진추가</Text>
-							</View>
-						</TouchableOpacity>
-					</View>
-				)}
+
+				<View style={[style.buttonContainer]}>
+					<TouchableOpacity activeOpacity={0.6} onPress={onPressTempSave}>
+						<View style={[style.buttonItem]}>
+							<Save54 />
+							<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>임시저장</Text>
+						</View>
+					</TouchableOpacity>
+					<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
+						<View style={[style.buttonItem]}>
+							<Camera54 />
+							<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>사진추가</Text>
+						</View>
+					</TouchableOpacity>
+					<TouchableOpacity activeOpacity={0.6} onPress={onPressAddVideo}>
+						<View style={[style.buttonItem]}>
+							<Camera54 />
+							<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>영상 추가</Text>
+						</View>
+					</TouchableOpacity>
+					<TouchableOpacity activeOpacity={0.6} onPress={moveToLocationPicker}>
+						<View style={[style.buttonItem, {}]}>
+							<Location54_APRI10 />
+							<Text style={[txt.noto24, {color: APRI10, alignSelf: 'center', marginLeft: 10 * DP}]}>위치추가</Text>
+						</View>
+					</TouchableOpacity>
+				</View>
 			</ScrollView>
 		</View>
 	);

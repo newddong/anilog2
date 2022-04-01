@@ -30,7 +30,6 @@ export default ArticleMain = ({route}) => {
 			},
 			err => {
 				console.log('err / getCommunityList / ArticleMain : ', err);
-				setData([]);
 				Modal.alert(err);
 			},
 		);
@@ -85,6 +84,9 @@ export default ArticleMain = ({route}) => {
 		return filtered;
 	};
 
+	// if (data == '') {
+	// 	return <Loading isModal={false} />;
+	// } else
 	return (
 		<View style={[style.container]}>
 			<FlatList

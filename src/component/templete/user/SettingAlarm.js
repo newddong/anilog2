@@ -18,6 +18,7 @@ import {
 	TAG_OR_FOLLOW_ALRAM,
 } from 'Root/i18n/msg';
 import OneLineOnOff from 'Organism/form/OneLineOnOff';
+import OnOffSwitchForSetting from 'Root/component/molecules/select/OnOffSwitchForSetting';
 export default SettingAlarm = ({route}) => {
 	const [alarm, setAlarm] = React.useState();
 	const [loading, setLoading] = React.useState(true);
@@ -137,7 +138,7 @@ export default SettingAlarm = ({route}) => {
 							<View style={{width: 550 * DP}}>
 								<Text style={[txt.noto32b, {color: APRI10}]}>전체 알림</Text>
 							</View>
-							<OnOffSwitch default={alarm.notice_all} onSwtichOff={onSwtichAll} onSwtichOn={onSwtichAll} />
+							<OnOffSwitchForSetting default={alarm.notice_all} onSwtichOff={onSwtichAll} onSwtichOn={onSwtichAll} />
 						</View>
 					</View>
 					<View style={styles.serviceAlarmContainer}>
@@ -177,7 +178,7 @@ export default SettingAlarm = ({route}) => {
 							<View style={[{width: 550 * DP}, {flexDirection: 'row'}, {alignItems: 'center'}]}>
 								<Text style={[txt.noto32b, {color: GRAY10}]}>공지 알림</Text>
 							</View>
-							<OnOffSwitch
+							<OnOffSwitchForSetting
 								default={alarm.notice_alarm || ''}
 								onSwtichOff={() => switchButton('notice_alarm')}
 								onSwtichOn={() => switchButton('notice_alarm')}

@@ -158,13 +158,6 @@ export default SearchMap = ({route}) => {
 		finalized.detailAddr = detailAddr;
 		const data = {
 			...route.params.data,
-			community_interests: {
-				...route.params.data.community_interests,
-				interests_location: {
-					city: finalized.address.region_1depth_name,
-					district: finalized.address.region_2depth_name,
-				},
-			},
 			community_address: {
 				road_address: {
 					address_name: finalized.road_address.address_name + ' ' + finalized.detailAddr,

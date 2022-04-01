@@ -48,6 +48,7 @@ const ArticleContent = props => {
 	};
 
 	const onWebViewMessage = event => {
+		console.log('event.nativeEvent.data', event.nativeEvent.data);
 		if (parseInt(event.nativeEvent.data) < 300) {
 			setHeight(300 * DP);
 		} else {
@@ -90,7 +91,6 @@ const ArticleContent = props => {
 								style.webview,
 								{
 									height: height,
-									opacity: 0.99,
 								},
 							]}
 						/>

@@ -114,7 +114,7 @@ export default ReviewDetail = props => {
 	//댓글 클릭
 	const onPressReply = () => {
 		// alert('moveToReplyListPage');
-		navigation.push('CommunityCommentList', {community_object: data});
+		navigation.push('ReviewCommentList', {feedobject: {_id: '62262a16d38ae5f3c51390d6'}});
 	};
 
 	//카테고리 클릭

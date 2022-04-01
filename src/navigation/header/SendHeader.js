@@ -99,10 +99,8 @@ export default SendHeader = ({route, navigation, options}) => {
 							() => Modal.close(),
 							() => {
 								// console.log('data before Create', data);
-								let getImgTag = data.community_content.match(/<img[\w\W]+?\/?>/g); //img 태그 추출
-								const attachedCheck = !(getImgTag == null); //추가된 img 태그가 있다면 is_attatched_file은 true or false
 								createCommunity(
-									{...data, community_is_attached_file: attachedCheck},
+									data,
 									result => {
 										console.log('result / createCommunity / SendHeader ', result.msg);
 										navigation.reset({

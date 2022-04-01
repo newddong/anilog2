@@ -13,7 +13,7 @@ import {apiController, apiFormController} from './apiController';
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function createNoticeUser(params, callback, errcallback) {
-	apiController('/notice/createNoticeUser', arguments);
+	apiController('/noticeuser/createNoticeUser', arguments);
 }
 
 /**
@@ -23,5 +23,5 @@ export async function createNoticeUser(params, callback, errcallback) {
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function getNoticeUserList(params, callback, errcallback) {
-	apiController('/notice/getNoticeUserList', arguments);
+	apiController('/noticeuser/getNoticeUserList', arguments);
 }

@@ -64,8 +64,8 @@ const ServiceCenter = ({route}) => {
 	const CompanyInfo = props => {
 		return (
 			<View style={[{flexDirection: 'row'}, {alignItems: 'center'}, {marginTop: 30 * DP}]}>
-				<Text style={[txt.noto28b, {color: GRAY10}, {marginLeft: 48 * DP}, {width: 88 * DP}]}>{props.title}</Text>
-				<Text style={[txt.noto28, {marginLeft: 12 * DP}]}>{props.contents}</Text>
+				<Text style={[txt.noto24b, {color: GRAY10}, {marginLeft: 48 * DP}, {width: 188 * DP}]}>{props.title}</Text>
+				<Text style={[txt.noto24, {marginLeft: 12 * DP}]}>{props.contents}</Text>
 			</View>
 		);
 	};
@@ -106,9 +106,12 @@ const ServiceCenter = ({route}) => {
 						<Text style={[txt.noto28b, {marginLeft: 48 * DP}]}>회사 소개</Text>
 					</View>
 					<View style={[styles.oftenAskedQuestion]}>
-						<CompanyInfo title="회사 명" contents="파인프렌즈" />
-						<CompanyInfo title="주소" contents="서울시 마포구 마포대로 86 창강빌딩 1612호" />
-						<CompanyInfo title="이메일" contents="pinefriends@pine-partners.com" />
+						<CompanyInfo title="회사명" contents="파인프렌즈(주)" />
+						<CompanyInfo title="대 표" contents="최희복" />
+						<CompanyInfo title="사업자등록번호" contents="493-88-01873" />
+						<CompanyInfo title="주소" contents="서울시 강서구 공항대로8길 18-13, 102호(공항동)" />
+						<CompanyInfo title="Tel" contents=" 02-3775-1195" />
+						<CompanyInfo title="이메일" contents="admin@pinefriend.com" />
 					</View>
 				</ScrollView>
 			</View>

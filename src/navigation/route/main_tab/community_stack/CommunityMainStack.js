@@ -1,30 +1,20 @@
 import React from 'react';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 import {Dimensions, StyleSheet, View} from 'react-native';
-import {APRI10, GRAY10, WHITE} from 'Root/config/color';
+import {APRI10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {createStackNavigator} from '@react-navigation/stack';
 import CommunityMain from './CommunityMain';
-
-import MeatBallHeader from 'Root/navigation/header/MeatBallHeader';
 import SimpleHeader from 'Root/navigation/header/SimpleHeader';
 import ArticleDetail from 'Root/component/templete/community/ArticleDetail';
-import ArticleMain from 'Root/component/templete/community/ArticleMain';
 import Profile from 'Root/component/templete/profile/Profile';
-import ArticleCommentList from 'Root/component/templete/community/CommunityCommentList';
-import FeedCommentList from 'Root/component/templete/feed/FeedCommentList';
 import CommunityWrite from 'Root/component/templete/community/CommunityWrite';
 import SendHeader from 'Root/navigation/header/SendHeader';
 import AddressSearchPage from 'Root/component/templete/search/AddressSearchPage';
-import KakaoMap from 'Root/component/templete/search/SearchMap';
-import WriteEditorTest from 'Root/component/templete/community/WriteEditorTest';
 import LogoHeader from 'Root/navigation/header/LogoHeader';
 import ReviewDetail from 'Root/component/templete/community/ReviewDetail';
 import SearchMap from 'Root/component/templete/search/SearchMap';
-import {Example} from 'Root/component/templete/community/RichEditorExample';
-import ReviewStackNavigation from './review_tab/ReviewStackNavigation';
 import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
+import WriteEditorTest from 'Root/component/templete/community/WriteEditorTest';
 
 const CommunityMainStackNavi = createStackNavigator();
 
@@ -34,13 +24,6 @@ export default CommunityMainStack = props => {
 			<CommunityMainStackNavi.Screen
 				name="CommunityMain"
 				component={CommunityMain}
-				options={({route, navigation}) => ({
-					header: props => <LogoHeader {...props} />,
-				})}
-			/>
-			<CommunityMainStackNavi.Screen
-				name="ReviewStackNavigation"
-				component={ReviewStackNavigation}
 				options={({route, navigation}) => ({
 					header: props => <LogoHeader {...props} />,
 				})}
@@ -58,7 +41,7 @@ export default CommunityMainStack = props => {
 				name={'UserProfile'}
 				component={Profile}
 				options={({route}) => ({
-					headerShown: false,
+					headerShown: true,
 					header: props => <SimpleHeader {...props} />,
 					title: ' ',
 				})}
@@ -77,7 +60,6 @@ export default CommunityMainStack = props => {
 				name={'ReviewDetail'}
 				component={ReviewDetail}
 				options={({route}) => ({
-					headerShown: true,
 					header: props => <SimpleHeader {...props} />,
 					title: ' ',
 				})}
@@ -86,16 +68,14 @@ export default CommunityMainStack = props => {
 				name={'CommunityWrite'}
 				component={CommunityWrite}
 				options={({route}) => ({
-					headerShown: true,
 					header: props => <SendHeader {...props} />,
 					title: '',
 				})}
 			/>
-			{/* <CommunityMainStackNavi.Screen
-				name={'ReviewCommentList'}
+			<CommunityMainStackNavi.Screen
+				name={'CommunityCommentList'}
 				component={CommunityCommentList}
 				options={({route}) => ({
-					headerShown: true,
 					header: props => <SimpleHeader {...props} />,
 					title: ' ',
 				})}
@@ -108,7 +88,8 @@ export default CommunityMainStack = props => {
 					header: props => <SimpleHeader {...props} />,
 					title: ' ',
 				})}
-			/> */}
+			/>{' '}
+			*/}
 			<CommunityMainStackNavi.Screen
 				name={'CommunityCommentList'}
 				component={CommunityCommentList}
@@ -122,7 +103,6 @@ export default CommunityMainStack = props => {
 				name={'SearchMap'}
 				component={SearchMap}
 				options={({route}) => ({
-					headerShown: true,
 					header: props => <SimpleHeader {...props} />,
 					title: '주소 검색',
 				})}

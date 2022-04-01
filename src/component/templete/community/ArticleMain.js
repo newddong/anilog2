@@ -30,6 +30,7 @@ export default ArticleMain = ({route}) => {
 			},
 			err => {
 				console.log('err / getCommunityList / ArticleMain : ', err);
+				setData([]);
 				Modal.alert(err);
 			},
 		);
@@ -42,7 +43,7 @@ export default ArticleMain = ({route}) => {
 
 	//글쓰기
 	const onPressWrite = () => {
-		navigation.push('CommunityWrite', {isReview: false});
+		navigation.navigate('CommunityWrite', {isReview: false});
 		// navigation.push('WriteEditorTest');
 	};
 

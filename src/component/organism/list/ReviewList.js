@@ -23,7 +23,7 @@ export default ReviewList = props => {
 				data={props.items}
 				renderItem={({item, index}) => renderItem(item, index)}
 				showsVerticalScrollIndicator={false}
-				keyExtractor={item => item.id}
+				keyExtractor={item => item._id}
 				ListEmptyComponent={props.whenEmpty}
 				ItemSeparatorComponent={() => {
 					return <View style={{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY30}} />;

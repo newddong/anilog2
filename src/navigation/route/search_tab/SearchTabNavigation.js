@@ -15,6 +15,7 @@ import {getHashKeywords} from 'Root/api/hashapi';
 import SearchHashTag from 'Root/component/templete/search/SearchHashTag';
 import SearchAccountA from 'Root/component/templete/search/SearchAccountA';
 import SearchReview from 'Root/component/templete/search/SearchReview';
+import SearchCommunity from 'Root/component/templete/search/SearchCommunity';
 
 const SearchTabNav = createMaterialTopTabNavigator();
 
@@ -143,27 +144,12 @@ export default SearchTabNavigation = props => {
 			</SearchTabNav.Screen>
 			<SearchTabNav.Screen
 				name="COMMUNITY"
-				// component={Temp}
 				options={{
 					title: '커뮤니티',
 					...searchTabLabelOption,
 				}}>
-				{props => <SearchReview {...props} />}
+				{props => <SearchCommunity {...props} />}
 			</SearchTabNav.Screen>
-			{/* <SearchFeedTabNav.Screen name="SearchAccountA" options={{title: '계정'}}>
-				{props => <SearchAccountA {...props} prevNav={props.prevNav} data={userList} loading={loading} onClickUser={onClickUser} />}
-			</SearchFeedTabNav.Screen>
-			<SearchFeedTabNav.Screen name="SearchHashTag" options={{title: '해쉬태그'}}>
-				{props => <SearchHashTag {...props} data={hashList} loading={loading} />}
-			</SearchFeedTabNav.Screen> */}
-			{/* <SearchCommunityTabNav.Screen
-				name="SearchReview"
-				options={{
-					title: '후기',
-					tabBarLabelStyle: [tabbarLabel('SearchReview')],
-				}}>
-				{props => <SearchReview {...props} />}
-			</SearchCommunityTabNav.Screen> */}
 		</SearchTabNav.Navigator>
 	);
 };

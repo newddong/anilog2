@@ -145,11 +145,15 @@ export default CommunityWrite = props => {
 		result.map((v, i) => {
 			// richText.current?.insertImage(v.location, 'margin: 0.2em auto 0.2em; border-radius: 15px; width:150px; height:150px;');
 			richText.current?.insertHTML('<p><br/></p></div>');
+			// richText.current?.insertHTML(
+			// 	`<div id="testImg" ><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
+			// 	contenteditable="false" height="340px" width="300px" style="border-radius:15px; margin: 0 auto 4px; "/>
+			// 	<img src="https://cdn-icons-png.flaticon.com/512/458/458595.png" style="position:absolute; top: 35px; right:35px;" width="20px;" height="20px;"  onclick="_.sendEvent('ImgClick')" />
+			// 	</div>`,
+			// );
 			richText.current?.insertHTML(
-				`<div id="testImg" ><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
-				contenteditable="false" height="340px" width="300px" style="border-radius:15px; margin: 0 auto 4px; "/>
-				<img src="https://cdn-icons-png.flaticon.com/512/458/458595.png" style="position:absolute; top: 35px; right:35px;" width="20px;" height="20px;"  onclick="_.sendEvent('ImgClick')" />
-				</div>`,
+				`<img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
+				contenteditable="false" height="340px" width="300px" style="border-radius:15px; margin: 0 auto 4px; "/>`,
 			);
 			richText.current?.insertHTML('<p><br/></p></div>');
 		});
@@ -201,22 +205,6 @@ export default CommunityWrite = props => {
 				break;
 		}
 	};
-
-	// let handleMessage = React.useCallback(({type, id, data}) => {
-	// 	let index = 0;
-	// 	switch (type) {
-	// 		case 'ImgClick':
-	// 			console.log('ddddd');
-	// 			break;
-	// 		case 'TitleClick':
-	// 			const color = ['red', 'blue', 'gray', 'yellow', 'coral'];
-	// 			richText.current?.commandDOM(`$('#${id}').style.color='${color[XMath.random(color.length - 1)]}'`);
-	// 			break;
-	// 		case 'SwitchImage':
-	// 			break;
-	// 	}
-	// 	// console.log('onMessage', type, id, data);
-	// }, []);
 
 	//사진 불러오기
 	const onPressPhotoSelect = () => {

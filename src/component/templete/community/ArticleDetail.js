@@ -48,10 +48,6 @@ export default ArticleDetail = props => {
 		);
 	};
 
-	const onPressLike = () => {
-		alert('onPressLike');
-	};
-
 	//사진클릭
 	const onPressPhotos = () => {
 		Modal.popPhotoListViewModal(dummy);

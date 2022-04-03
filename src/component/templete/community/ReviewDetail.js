@@ -24,45 +24,6 @@ export default ReviewDetail = props => {
 	const [showMore, setShowMore] = React.useState(false);
 	const scrollRef = React.useRef();
 	// console.log('data', data);
-	const gg = {
-		__v: 0,
-		_id: '624592de06cdc2f33c14cfdd',
-		community_address: {
-			_id: '624592de06cdc2f33c14cfde',
-			normal_address: {_id: '624592de06cdc2f33c14cfe0', address_name: '', city: '', district: ''},
-			region: {_id: '624592de06cdc2f33c14cfe1', latitude: '', longitude: ''},
-			road_address: {_id: '624592de06cdc2f33c14cfdf', address_name: '', city: '', district: ''},
-		},
-		community_animal_type: 'cat',
-		community_comment_count: 0,
-		community_content:
-			'<div>4년을 함께</div><p><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648726746166_1473A70E-78E5-4B2D-893E-18B35E2BD4C8.jpg" id="image" height="450px" width="300px" style="border-radius:15px; margin: 0 auto 4px; "></p><p><br></p>',
-		community_date: '2022-03-30T05:57:16.687Z',
-		community_favorite_count: 0,
-		community_free_type: '',
-		community_interests: {
-			interests_etc: [],
-			interests_hospital: [],
-			interests_interior: ['노즈워크/장난감'],
-			interests_location: {city: '', district: ''},
-			interests_review: [],
-			interests_trip: ['펫 숙소', '놀이터'],
-		},
-		community_is_attached_file: true,
-		community_is_delete: false,
-		community_is_recomment: false,
-		community_is_temporary: false,
-		community_like_count: 0,
-		community_title: '사진1개요',
-		community_type: 'review',
-		community_update_date: '2022-03-30T05:57:16.687Z',
-		community_writer_id: {
-			_id: '623b17ed400ac30b877dd7d9',
-			user_nickname: '자네는고양이어딘가',
-			user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1648045670715_812A892F-3DE8-4C38-96D8-2F6A6BC78091.jpg',
-		},
-		type: 'CommunityObject',
-	};
 
 	React.useEffect(() => {
 		if (data.community_address.normal_address.address_name != '') {
@@ -218,5 +179,3 @@ const style = StyleSheet.create({
 		// backgroundColor: 'yellow',
 	},
 });
-
-const dummyReviews = [{id: 1}, {id: 2}, {id: 3}];

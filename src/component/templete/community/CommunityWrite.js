@@ -50,7 +50,6 @@ export default CommunityWrite = props => {
 			},
 		},
 	});
-	isReview ? navigation.setOptions({title: '후기 게시글'}) : navigation.setOptions({title: '자유 게시글'});
 
 	const [animalType, setAnimalType] = React.useState({
 		dog: false,

@@ -10,32 +10,37 @@ import Loading from 'Root/component/molecules/modal/Loading';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import {txt} from 'Root/config/textstyle';
 import ArticleList from 'Root/component/organism/list/ArticleList';
+import searchContext from 'Root/config/searchContext';
 
 export default SearchCommunity = ({route, navigation}) => {
 	const [data, setData] = React.useState({
 		free: 'false',
 		review: 'false',
 	});
+	const [searchInput, setSearchInput] = React.useState('');
 	const [reviewList, setReviewList] = React.useState('false');
 	const [articleList, setArticleList] = React.useState('false');
 	const [isFilter, setIsFilter] = React.useState(false);
 	const [type, setType] = React.useState('free');
 
 	React.useEffect(() => {
-		fetchData('free');
-		fetchData('review');
+		fetchData();
 	}, []);
 
+	//검색탭 헤더의 인풋값이 바뀔 때마다 계정과 해쉬를 받아오는 api에 접속
+	React.useEffect(() => {
+		setSearchInput(searchContext.searchInfo.searchInput);
+	}, [searchContext.searchInfo.searchInput]);
+
 	const fetchData = arg => {
-		console.log('arg', arg);
 		getCommunityList(
 			{
-				community_type: arg, //required
+				community_type: 'all', //required
 			},
 			result => {
 				// console.log('result / getCommunityList / ArticleMain :', arg, result.msg);
-				// arg == 'free' ? setData({...data, free: result.msg.free}) : setData({...data, review: result.msg.review});
-				arg == 'free' ? setArticleList(result.msg.free) : setReviewList(result.msg.review);
+				setArticleList(result.msg.free);
+				setReviewList(result.msg.review);
 			},
 			err => {
 				console.log('err / getCommunityList / ArticleMain : ', err);
@@ -88,17 +93,18 @@ export default SearchCommunity = ({route, navigation}) => {
 
 	//자유 게시글 아이템 클릭
 	const onPressArticle = index => {
-		navigation.push('ArticleDetail', {community_object: data[index]});
+		navigation.navigate('COMMUNITY', {screen: 'ArticleDetail', params: {community_object: articleList[index]}});
 	};
 
 	//후기 게시글의 댓글쓰기 혹은 댓글 모두 보기 클릭 클릭
 	const onPressReply = index => {
-		navigation.push('CommunityCommentList', {community_object: data[index]});
+		// navigation.push('CommunityCommentList', {community_object: data[index]});
+		navigation.navigate('COMMUNITY', {screen: 'CommunityCommentList', params: {community_object: reviewList[index]}});
 	};
 
 	//후게 게시글 컨텐츠 클릭
 	const onPressReviewContent = index => {
-		navigation.push('ReviewDetail', {community_object: data[index]});
+		navigation.navigate('COMMUNITY', {screen: 'ReviewDetail', params: {community_object: reviewList[index]}});
 	};
 
 	const whenEmpty = () => {
@@ -150,6 +156,7 @@ export default SearchCommunity = ({route, navigation}) => {
 									<>
 										<ArticleList
 											items={articleList}
+											isSearch={searchInput}
 											onPressArticle={onPressArticle} //게시글 내용 클릭
 										/>
 									</>

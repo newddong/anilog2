@@ -2,7 +2,7 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {APRI10, GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
 import {Photo44} from 'Root/component/atom/icon';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import moment from 'moment';
@@ -12,6 +12,7 @@ import Loading from 'Root/component/molecules/modal/Loading';
  * @param {object} props - Props Object
  * @param {object} props.data - 데이터
  * @param {()=>void)} props.onPressArticle - 내용 클릭
+ * @param {string} props.isSearch - 검색어
  */
 const ArticleSummary = props => {
 	const data = props.data;
@@ -64,7 +65,19 @@ const ArticleSummary = props => {
 		if (text.length == 1) {
 			return (
 				<Text style={[txt.noto28, {textAlignVertical: 'center'}]}>
-					{text[0].text}
+					{props.isSearch == '' || props.isSearch.length < 2
+						? text[0].text
+						: text[0].text.split(' ').map((x, ind) => {
+								return x.includes(props.isSearch) ? (
+									<Text key={ind} style={{color: APRI10, backgroundColor: 'yellow', fontWeight: 'bold'}}>
+										{x + ' '}
+									</Text>
+								) : (
+									<Text key={ind} style={{color: BLACK}}>
+										{x + ' '}
+									</Text>
+								);
+						  })}
 					{data.community_is_attached_file ? <Photo44 /> : <></>}
 				</Text>
 			);
@@ -108,6 +121,7 @@ const ArticleSummary = props => {
 
 ArticleSummary.defaultProps = {
 	onPressArticle: () => {},
+	isSearch: '',
 };
 
 export default ArticleSummary;

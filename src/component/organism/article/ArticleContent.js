@@ -46,8 +46,6 @@ const ArticleContent = props => {
 	};
 
 	const handleShoudStartLoadingWithRequest = request => {
-		console.log('shouldStartLoadWithRequest', request);
-
 		return false;
 	};
 
@@ -55,9 +53,18 @@ const ArticleContent = props => {
 		if (parseInt(event.nativeEvent.data) < 300) {
 			setHeight(300 * DP);
 		} else {
+			Platform.OS == 'android'
+				? console.log('height and : ', parseInt(event.nativeEvent.data))
+				: console.log('parseInt(event.nativeEvent.data)', parseInt(event.nativeEvent.data));
 			setHeight(parseInt(event.nativeEvent.data));
 		}
 	};
+
+	React.useEffect(() => {
+		// console.log('height', height);
+	}, [height]);
+
+	console.log('data', data.community_writer_id);
 
 	return (
 		<View style={[style.container]}>
@@ -82,12 +89,14 @@ const ArticleContent = props => {
 				<UserLocationTimeLabel data={data.community_writer_id} time={data.community_update_date} />
 			</View>
 			<View>
-				<View style={[{width: 700 * DP, marginTop: 20 * DP}]}>
+				<View style={[{width: 700 * DP, marginTop: 20 * DP, opacity: height >= 300 ? 1 : 0}]}>
 					{Platform.OS == 'ios' ? (
 						<WebView
 							originWhitelist={['*']}
 							onMessage={onWebViewMessage}
-							onShouldStartLoadWithRequest={handleShoudStartLoadingWithRequest}
+							onLoadStart={() => console.log('load')}
+							// onShouldStartLoadWithRequest={handleShoudStartLoadingWithRequest}
+							onShouldStartLoadWithRequest={() => true}
 							injectedJavaScript="window.ReactNativeWebView.postMessage(document.body.scrollHeight)" //Dynamic Height 수치 설정
 							source={{
 								html: `
@@ -108,6 +117,7 @@ const ArticleContent = props => {
 							originWhitelist={['*']}
 							scalesPageToFit={true}
 							onMessage={onWebViewMessage}
+							automaticallyAdjustContentInsets={false}
 							injectedJavaScript="window.ReactNativeWebView.postMessage(document.body.scrollHeight)" //Dynamic Height 수치 설정
 							source={{
 								html: `
@@ -116,8 +126,7 @@ const ArticleContent = props => {
         `,
 							}}
 							style={{
-								width: 690 * DP,
-								// minHeight: 500 * DP,
+								width: 670 * DP,
 								height: height == 0 ? 500 * DP : height,
 							}}
 						/>

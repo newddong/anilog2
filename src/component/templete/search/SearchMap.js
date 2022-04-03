@@ -159,6 +159,7 @@ export default SearchMap = ({route}) => {
 
 	//터치로 인한 위도 경도 변경 콜백
 	const goToLocation = region => {
+		console.log('region');
 		setChangedLatitude(region.latitude);
 		setChangedLongitude(region.longitude);
 		setChangedLongitudeDelta(region.longitudeDelta);
@@ -252,14 +253,12 @@ export default SearchMap = ({route}) => {
 						<>
 							<MapView
 								ref={map}
-								provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+								// provider={PROVIDER_GOOGLE} // remove if not using Google Maps
 								style={[style.mapContainer]}
 								// customMapStyle={mapStyle}
 								onRegionChangeComplete={(region, gesture) => {
-									if (gesture.isGesture) {
-										//클릭을 안했음에도 지속적으로 위도 경도가 바뀌는 현상 발생 -> 오로지 터치 시에만 반응하도록 적용
-										goToLocation(region); //탐색된 위도 경도를 바꿈
-									}
+									//클릭을 안했음에도 지속적으로 위도 경도가 바뀌는 현상 발생 -> 오로지 터치 시에만 반응하도록 적용
+									goToLocation(region); //탐색된 위도 경도를 바꿈
 								}}
 								region={{
 									latitude: changedLatitude != '' ? changedLatitude : init_latitude,

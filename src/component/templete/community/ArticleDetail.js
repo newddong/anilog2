@@ -48,11 +48,6 @@ export default ArticleDetail = props => {
 		);
 	};
 
-	//사진클릭
-	const onPressPhotos = () => {
-		Modal.popPhotoListViewModal(dummy);
-	};
-
 	const getArticleList = () => {
 		getCommunityList(
 			{
@@ -89,15 +84,14 @@ export default ArticleDetail = props => {
 		navigation.push('ArticleDetail', {community_object: dum[index]});
 	};
 
-	const onPressReply = arg => {
-		console.log('data._id', data._id);
+	const onPressReply = () => {
 		navigation.push('CommunityCommentList', {community_object: data});
 	};
 
 	const freeBoardContent = () => {
 		return (
 			<View style={{alignItems: 'center'}}>
-				<Article data={data} onPressThumnails={onPressPhotos} onPressMeatball={onPressMeatball} route={props.route.name} />
+				<Article data={data} onPressMeatball={onPressMeatball} route={props.route.name} />
 				<View style={[style.separator]} />
 			</View>
 		);
@@ -197,10 +191,3 @@ const style = StyleSheet.create({
 		backgroundColor: GRAY30,
 	},
 });
-
-const dummy = [
-	'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
-	'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
-	'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
-	'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
-];

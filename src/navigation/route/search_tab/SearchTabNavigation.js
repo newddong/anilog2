@@ -143,7 +143,7 @@ export default SearchTabNavigation = props => {
 				{props => <SearchHashTag {...props} data={hashList} loading={loading} />}
 			</SearchTabNav.Screen>
 			<SearchTabNav.Screen
-				name="COMMUNITY"
+				name="COMMUNITYSEARCH"
 				options={{
 					title: '커뮤니티',
 					...searchTabLabelOption,

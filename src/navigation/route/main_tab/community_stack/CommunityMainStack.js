@@ -16,10 +16,17 @@ import SearchMap from 'Root/component/templete/search/SearchMap';
 import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
 import WriteEditorTest from 'Root/component/templete/community/WriteEditorTest';
 import ReviewStackNavigation from './review_tab/ReviewStackNavigation';
+import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 
 const CommunityMainStackNavi = createStackNavigator();
 
 export default CommunityMainStack = props => {
+	const routeName = getFocusedRouteNameFromRoute(props.route) ?? 'CommunityMain';
+
+	React.useEffect(() => {
+		props.sendRoute(routeName);
+	}, [routeName]);
+
 	return (
 		<CommunityMainStackNavi.Navigator initialRouteName="CommunityMain">
 			<CommunityMainStackNavi.Screen

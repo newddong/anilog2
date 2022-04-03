@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView, Text, TouchableOpacity, View, TextInput, Platform, StatusBar, Keyboard, StyleSheet} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View, TextInput, Platform, StatusBar, Keyboard, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {APRI10, WHITE, GRAY20, GRAY10, GRAY40, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP, {isNotch} from 'Root/config/dp';
@@ -152,8 +152,8 @@ export default CommunityWrite = props => {
 			// 	</div>`,
 			// );
 			richText.current?.insertHTML(
-				`<img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
-				contenteditable="false" height="340px" width="300px" style="border-radius:15px; margin: 0 auto 4px; "/>`,
+				`<div style="padding : 8px 10px 8px 0px;" ><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
+				 height="340px" width="100%;" style="border-radius:15px; margin: 0 auto 4px;  "/></div>`,
 			);
 			richText.current?.insertHTML('<p><br/></p></div>');
 		});
@@ -254,7 +254,8 @@ export default CommunityWrite = props => {
 		data.community_interests.interests_trip == 0;
 
 	const onPressFilter = () => {
-		console.log('data.community_interests', data.community_interests);
+		// console.log('data.community_interests', data.community_interests);
+		richText.current?.dismissKeyboard(); //일반적인 input과 달리 RichText에서는 이와같이 키보드를 hide
 		Modal.popInterestTagModal(
 			'ReviewWrite',
 			// data.community_interests == '카테고리 선택' ? [] : data.community_interests,
@@ -282,25 +283,30 @@ export default CommunityWrite = props => {
 		scrollRef.current.scrollTo({y: scrollY - 50, duration: 100, animated: true});
 	};
 
+	const [KeyboardY, setKeyboardY] = React.useState(0);
+	const [showBtn, setShowBtn] = React.useState(false);
+
+	const KeyboardBorderLine = (() => {
+		if (Platform.OS === 'ios') {
+			return isNotch ? -34 : 0;
+		} else if (Platform.OS === 'android') {
+			return isNotch ? StatusBar.currentHeight : 0;
+		}
+	})();
+
 	React.useEffect(() => {
 		let didshow = Keyboard.addListener('keyboardDidShow', e => {
-			// console.log('keyboarddidshow');
 			scrollRef.current.scrollTo({y: cursor - 30, duration: 100, animated: true});
+			setKeyboardY(e.endCoordinates.height + KeyboardBorderLine);
+			Platform.OS == 'android' ? setShowBtn(true) : false;
 		});
 		let didhide = Keyboard.addListener('keyboardDidHide', e => {
-			// console.log('keyboarddidhide');
-		});
-		let willshow = Keyboard.addListener('keyboardWillShow', e => {
-			// console.log('keyboardwillshow');
-		});
-		let willhide = Keyboard.addListener('keyboardWillHide', e => {
-			// console.log('keyboardwillhide');
+			setKeyboardY(0);
+			Platform.OS == 'android' ? setShowBtn(false) : false;
 		});
 		return () => {
 			didshow.remove();
 			didhide.remove();
-			willshow.remove();
-			willhide.remove();
 		};
 	});
 
@@ -369,6 +375,48 @@ export default CommunityWrite = props => {
 		);
 	};
 
+	const getReviewButtonContainer = () => {
+		return (
+			<>
+				<TouchableOpacity activeOpacity={0.6} onPress={onPressTempSave}>
+					<View style={[style.buttonItem]}>
+						<Save54 />
+						<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>임시저장</Text>
+					</View>
+				</TouchableOpacity>
+				<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
+					<View style={[style.buttonItem]}>
+						<Camera54 />
+						<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>사진추가</Text>
+					</View>
+				</TouchableOpacity>
+				{/* <TouchableOpacity activeOpacity={0.6} onPress={onPressAddVideo}>
+							<View style={[style.buttonItem]}>
+								<Camera54 />
+								<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>영상 추가</Text>
+							</View>
+						</TouchableOpacity> */}
+				<TouchableOpacity activeOpacity={0.6} onPress={moveToLocationPicker}>
+					<View style={[style.buttonItem, {}]}>
+						<Location54_APRI10 />
+						<Text style={[txt.noto24, {color: APRI10, alignSelf: 'center', marginLeft: 10 * DP}]}>위치추가</Text>
+					</View>
+				</TouchableOpacity>
+			</>
+		);
+	};
+
+	const getArticleButtonContainer = () => {
+		return (
+			<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
+				<View style={[style.buttonItem]}>
+					<Camera54 />
+					<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>사진추가</Text>
+				</View>
+			</TouchableOpacity>
+		);
+	};
+
 	const moveToLocationPicker = () => {
 		props.navigation.push('SearchMap', {data: data, isReview: isReview});
 	};
@@ -428,20 +476,26 @@ export default CommunityWrite = props => {
 							/>
 						</ScrollView>
 					) : (
-						<RichEditor
-							ref={richText}
-							editorStyle={{
-								contentCSSText: 'font-size:14px;',
-							}}
-							onChange={onChange}
-							style={{
-								width: '100%',
-								opacity: 0.99,
-							}}
-							placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
-							onCursorPosition={onCursorPosition}
-							onMessage={handleMessage2}
-						/>
+						<>
+							<RichEditor
+								ref={richText}
+								showSoftInputOnFocus={false}
+								onFocus={() => setShowBtn(true)}
+								onBlur={() => setShowBtn(false)}
+								keyboardDisplayRequiresUserAction={true}
+								editorStyle={{
+									contentCSSText: 'font-size:14px;',
+								}}
+								onChange={onChange}
+								style={{
+									width: '100%',
+									opacity: 0.99,
+								}}
+								placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
+								onCursorPosition={onCursorPosition}
+								onMessage={handleMessage2}
+							/>
+						</>
 					)}
 				</View>
 				{/* 하단 버튼 컴포넌트  */}
@@ -475,43 +529,25 @@ export default CommunityWrite = props => {
 					<></>
 				)}
 				{isReview ? (
-					<View style={[style.buttonContainer]}>
-						<TouchableOpacity activeOpacity={0.6} onPress={onPressTempSave}>
-							<View style={[style.buttonItem]}>
-								<Save54 />
-								<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>임시저장</Text>
-							</View>
-						</TouchableOpacity>
-						<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
-							<View style={[style.buttonItem]}>
-								<Camera54 />
-								<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>사진추가</Text>
-							</View>
-						</TouchableOpacity>
-						<TouchableOpacity activeOpacity={0.6} onPress={onPressAddVideo}>
-							<View style={[style.buttonItem]}>
-								<Camera54 />
-								<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>영상 추가</Text>
-							</View>
-						</TouchableOpacity>
-						<TouchableOpacity activeOpacity={0.6} onPress={moveToLocationPicker}>
-							<View style={[style.buttonItem, {}]}>
-								<Location54_APRI10 />
-								<Text style={[txt.noto24, {color: APRI10, alignSelf: 'center', marginLeft: 10 * DP}]}>위치추가</Text>
-							</View>
-						</TouchableOpacity>
-					</View>
+					<View style={[style.buttonContainer, {opacity: showBtn == true ? 0 : 1}]}>{getReviewButtonContainer()}</View>
 				) : (
-					<View style={[style.buttonContainer, {justifyContent: 'flex-end'}]}>
-						<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
-							<View style={[style.buttonItem]}>
-								<Camera54 />
-								<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>사진추가</Text>
-							</View>
-						</TouchableOpacity>
-					</View>
+					<View style={[style.buttonContainer, {justifyContent: 'flex-end', opacity: showBtn == true ? 0 : 1}]}>{getArticleButtonContainer()}</View>
 				)}
 			</ScrollView>
+			{isReview ? (
+				//키보드 영역 올라올 시 출력되야 하는 버튼 컨테이너 - 스타일 별도의 처리가 필요하여 분리 처리하였음
+				<View
+					style={[
+						style.buttonContainer_keyboard,
+						{justifyContent: 'space-between', bottom: Platform.OS == 'android' ? 0 : KeyboardY - 50, opacity: showBtn == false ? 0 : 1},
+					]}>
+					{getReviewButtonContainer()}
+				</View>
+			) : (
+				<View style={[style.buttonContainer_keyboard, {bottom: Platform.OS == 'android' ? 0 : KeyboardY - 50, opacity: showBtn == false ? 0 : 1}]}>
+					{getArticleButtonContainer()}
+				</View>
+			)}
 		</View>
 	);
 };
@@ -587,6 +623,16 @@ const style = StyleSheet.create({
 		alignSelf: 'center',
 		width: 654 * DP,
 		justifyContent: 'space-between',
+	},
+	buttonContainer_keyboard: {
+		// backgroundColor: 'yellow',
+		paddingVertical: 15 * DP,
+		flexDirection: 'row',
+		alignSelf: 'center',
+		width: 654 * DP,
+		backgroundColor: 'white',
+		justifyContent: 'flex-end',
+		position: 'absolute',
 	},
 	buttonItem: {
 		width: 160 * DP,

@@ -119,7 +119,7 @@ const ReviewContent = props => {
 					<>
 						<MapView
 							style={[style.mapContainer]}
-							provider={PROVIDER_GOOGLE}
+							// provider={PROVIDER_GOOGLE}
 							customMapStyle={mapStyle2}
 							zoomEnabled
 							zoomControlEnabled
@@ -214,11 +214,8 @@ const style = StyleSheet.create({
 		// backgroundColor: 'yellow',
 	},
 	header: {
-		// width: 654 * DP,
-		// header: 50 * DP,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
-		// backgroundColor: 'pink',
 	},
 	category: {
 		header: 38 * DP,
@@ -251,8 +248,6 @@ const style = StyleSheet.create({
 	footer: {
 		marginTop: 20 * DP,
 		width: 654 * DP,
-		// height: 88 * DP,
-		// backgroundColor: 'palegreen',
 	},
 	location: {
 		width: 654 * DP,

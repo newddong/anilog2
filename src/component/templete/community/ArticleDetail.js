@@ -10,6 +10,7 @@ import {dum} from 'Root/config/dummyDate_json';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import {useNavigation} from '@react-navigation/core';
 import {getCommentListByCommunityId} from 'Root/api/commentapi';
+import {getCommunityList} from 'Root/api/community';
 
 /**
  * 자유게시글 상세 내용
@@ -21,11 +22,15 @@ export default ArticleDetail = props => {
 	// const [data, setData] = React.useState(props.route.params.community_object);
 	const data = props.route.params.community_object;
 	const [comments, setComments] = React.useState([]);
+	const [articleList, setArticleList] = React.useState([]);
 
 	React.useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', () => getComment());
+		const unsubscribe = navigation.addListener('focus', () => {
+			getComment();
+			getArticleList();
+		});
 		navigation.setOptions({title: '자유 게시글'});
-		getComment();
+		// getComment();
 		return unsubscribe;
 	}, []);
 
@@ -43,13 +48,25 @@ export default ArticleDetail = props => {
 		);
 	};
 
-	const onPressLike = () => {
-		alert('onPressLike');
-	};
-
 	//사진클릭
 	const onPressPhotos = () => {
 		Modal.popPhotoListViewModal(dummy);
+	};
+
+	const getArticleList = () => {
+		getCommunityList(
+			{
+				community_type: 'free',
+			},
+			result => {
+				// console.log('result / getCommunityList / ArticleMain :', result.msg.free);
+				setArticleList(result.msg.free);
+			},
+			err => {
+				console.log('err / getCommunityList / ArticleMain : ', err);
+				Modal.alert(err);
+			},
+		);
 	};
 
 	const getComment = () => {
@@ -60,7 +77,7 @@ export default ArticleDetail = props => {
 			},
 			comments => {
 				setComments(comments.msg);
-				console.log('comments', comments);
+				// console.log('comments', comments);
 			},
 			err => console.log('getCommentListByFeedId', err),
 		);
@@ -108,7 +125,7 @@ export default ArticleDetail = props => {
 									<ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} isProtectRequest={true} />
 								</View>
 								<ArticleList
-									items={dum}
+									items={articleList}
 									onPressArticle={onPressArticle} //게시글 내용 클릭
 								/>
 							</View>

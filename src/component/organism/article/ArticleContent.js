@@ -1,13 +1,11 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {ActivityIndicator, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Platform, StyleSheet, Text, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
-import {Arrow_Down_GRAY10, Arrow_Up_GRAY10, FavoriteTag46_Filled, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
+import {APRI10} from 'Root/config/color';
+import {FavoriteTag46_Filled, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
-import {dummy_userObject} from 'Root/config/dummyDate_json';
 import WebView from 'react-native-webview';
-import Modal from 'Root/component/modal/Modal';
 /**
  * 게시글 컨텐츠
  * @param {object} props - Props Object
@@ -47,8 +45,13 @@ const ArticleContent = props => {
 		}
 	};
 
+	const handleShoudStartLoadingWithRequest = request => {
+		console.log('shouldStartLoadWithRequest', request);
+
+		return false;
+	};
+
 	const onWebViewMessage = event => {
-		console.log('event.nativeEvent.data', event.nativeEvent.data);
 		if (parseInt(event.nativeEvent.data) < 300) {
 			setHeight(300 * DP);
 		} else {
@@ -64,7 +67,11 @@ const ArticleContent = props => {
 						{getArticleType()}
 						{'  '}
 					</Text>
-					<Text style={[txt.noto32b]}>우리 강아지 매기</Text>
+					<View>
+						<Text numberOfLines={2} style={[txt.noto32b, {width: 450 * DP, height: 100 * DP}]}>
+							{data.community_title}
+						</Text>
+					</View>
 				</View>
 				<View style={[style.header_icon]}>
 					<FavoriteTag46_Filled onPress={onPressFavorite} />
@@ -80,6 +87,7 @@ const ArticleContent = props => {
 						<WebView
 							originWhitelist={['*']}
 							onMessage={onWebViewMessage}
+							onShouldStartLoadWithRequest={handleShoudStartLoadingWithRequest}
 							injectedJavaScript="window.ReactNativeWebView.postMessage(document.body.scrollHeight)" //Dynamic Height 수치 설정
 							source={{
 								html: `
@@ -91,6 +99,7 @@ const ArticleContent = props => {
 								style.webview,
 								{
 									height: height,
+									opacity: 0.99,
 								},
 							]}
 						/>
@@ -134,7 +143,6 @@ const style = StyleSheet.create({
 	header: {
 		flexDirection: 'row',
 		width: 654 * DP,
-		height: 50 * DP,
 		justifyContent: 'space-between',
 	},
 	header_title: {

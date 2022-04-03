@@ -118,7 +118,6 @@ const ReviewContent = props => {
 				) : (
 					<>
 						<MapView
-							// provider={PROVIDER_GOOGLE} // remove if not using Google Maps
 							style={[style.mapContainer]}
 							provider={PROVIDER_GOOGLE}
 							customMapStyle={mapStyle2}

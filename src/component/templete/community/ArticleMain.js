@@ -30,6 +30,7 @@ export default ArticleMain = ({route}) => {
 			},
 			err => {
 				console.log('err / getCommunityList / ArticleMain : ', err);
+				setData([]);
 				Modal.alert(err);
 			},
 		);

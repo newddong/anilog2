@@ -30,13 +30,6 @@ export default CommunityMainStack = props => {
 				})}
 			/>
 			<CommunityMainStackNavi.Screen
-				name="ReviewStackNavigation"
-				component={ReviewStackNavigation}
-				options={({route, navigation}) => ({
-					header: props => <LogoHeader {...props} />,
-				})}
-			/>
-			<CommunityMainStackNavi.Screen
 				name={'ArticleDetail'}
 				component={ArticleDetail}
 				options={({route}) => ({

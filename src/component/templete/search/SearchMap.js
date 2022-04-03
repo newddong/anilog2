@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Text, View, Button, TouchableOpacity, Platform, StyleSheet, TextInput, Keyboard, StatusBar, Dimensions, SafeAreaView} from 'react-native';
 import axios from 'axios';
 import Geolocation from '@react-native-community/geolocation';
@@ -133,10 +133,23 @@ export default SearchMap = ({route}) => {
 
 	//현재 위치로 돌아감
 	const initializeRegion = () => {
-		setChangedLatitude(init_latitude);
-		setChangedLongitude(init_longitude);
-		setChangedLongitudeDelta(0.00002);
-		setChangedLatitudeDelta(0.0023);
+		if (map.current) {
+			map.current.animateToRegion(
+				{
+					latitude: init_latitude,
+					longitude: init_longitude,
+					latitudeDelta: 0.0002,
+					longitudeDelta: 0.0023,
+				},
+				400,
+			);
+			setTimeout(() => {
+				setChangedLatitude(init_latitude);
+				setChangedLongitude(init_longitude);
+			}, 500);
+			// setChangedLongitudeDelta(0.00002);
+			// setChangedLatitudeDelta(0.0023);
+		}
 	};
 
 	//세부주소
@@ -158,6 +171,13 @@ export default SearchMap = ({route}) => {
 		finalized.detailAddr = detailAddr;
 		const data = {
 			...route.params.data,
+			community_interests: {
+				...route.params.data.community_interests,
+				interests_location: {
+					city: finalized.address.region_1depth_name,
+					district: finalized.address.region_2depth_name,
+				},
+			},
 			community_address: {
 				road_address: {
 					address_name: finalized.road_address.address_name + ' ' + finalized.detailAddr,
@@ -182,6 +202,8 @@ export default SearchMap = ({route}) => {
 		});
 	};
 
+	const map = React.useRef();
+
 	return (
 		<View
 			style={[
@@ -199,10 +221,8 @@ export default SearchMap = ({route}) => {
 					</TouchableOpacity>
 					{Platform.OS == 'android' ? (
 						<MapView
-							// provider={PROVIDER_GOOGLE} // remove if not using Google Maps
 							style={[style.mapContainer]}
 							mapType={'standard'}
-							// customMapStyle={mapStyle2}
 							zoomEnabled
 							zoomControlEnabled
 							onRegionChangeComplete={(region, gesture) => {
@@ -231,6 +251,7 @@ export default SearchMap = ({route}) => {
 					) : (
 						<>
 							<MapView
+								ref={map}
 								provider={PROVIDER_GOOGLE} // remove if not using Google Maps
 								style={[style.mapContainer]}
 								// customMapStyle={mapStyle}

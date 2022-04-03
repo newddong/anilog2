@@ -69,7 +69,6 @@ const InterestTagModal = props => {
 			getAddressList(
 				{},
 				result => {
-					console.log('result', result.msg);
 					const padding = '';
 					let arr = [padding, padding];
 					let cities = arr.concat(result.msg);

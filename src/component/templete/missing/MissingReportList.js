@@ -1,18 +1,16 @@
 import React from 'react';
-import {ScrollView, Text, View, TouchableWithoutFeedback, FlatList} from 'react-native';
-import {feedWrite, login_style, missingReportList, searchProtectRequest, temp_style, temp_txt} from 'Templete/style_templete';
+import {Text, View, TouchableWithoutFeedback, FlatList} from 'react-native';
+import {feedWrite, login_style, searchProtectRequest, temp_style} from 'Templete/style_templete';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {GRAY10, WHITE} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {Urgent_Write1, Urgent_Write2} from 'Atom/icon';
+import {Check50, Rect50_Border, Urgent_Write1, Urgent_Write2} from 'Atom/icon';
 import {useNavigation} from '@react-navigation/core';
-import FilterButton from 'Molecules/button/FilterButton';
 import {PET_KIND, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
 import {getMissingReportList} from 'Root/api/feedapi.js';
-import {getPettypes} from 'Root/api/userapi';
-import {btn_w306_h68, btn_w306_h68_r2} from 'Component/atom/btn/btn_style';
+import {btn_w306_h68} from 'Component/atom/btn/btn_style';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
-import CheckBox from 'Root/component/molecules/select/CheckBox';
+
 export default MissingReportList = props => {
 	const navigation = useNavigation();
 	const [showUrgentBtns, setShowUrgentBtns] = React.useState(true); //긴급버튼목록
@@ -25,7 +23,6 @@ export default MissingReportList = props => {
 		feedobject_id: '',
 		request_number: 10,
 	});
-	const [petTypes, setPetTypes] = React.useState(['동물종류']);
 	const [onlyMissing, setOnlyMissing] = React.useState(false);
 	const [onlyReport, setOnlyReport] = React.useState(false);
 
@@ -94,11 +91,6 @@ export default MissingReportList = props => {
 				break;
 		}
 	};
-	//제보게시글의 제보자 닉네임 클릭
-	const onPressReporter = item => {
-		console.log('item', item.feed_writer_id);
-		navigation.push('UserProfile', {userobject: item.feed_writer_id});
-	};
 
 	//지역 필터
 	const onSelectLocation = () => {
@@ -135,10 +127,35 @@ export default MissingReportList = props => {
 		);
 	};
 
+	const onPressShowMissing = () => {
+		setOnlyMissing(!onlyMissing);
+		setOnlyReport(false);
+	};
+
+	const onPressShowReport = () => {
+		setOnlyReport(!onlyReport);
+		setOnlyMissing(false);
+	};
+
+	React.useEffect(() => {
+		console.log('showMissing : ', onlyMissing, 'showReport : ', onlyReport);
+	}, [onlyMissing, onlyReport]);
+
+	const getData = () => {
+		let filtered = data;
+		if (onlyMissing) {
+			console.log('data', data.slice(0, 2));
+			filtered = filtered.filter(v => v.feed_type != 'missing');
+		} else if (onlyReport) {
+			filtered = filtered.filter(v => v.feed_type != 'report');
+		}
+		return filtered;
+	};
+
 	const whenEmpty = () => {
 		return (
 			<View style={[{height: 100 * DP, marginVertical: 30 * DP, alignItems: 'center', justifyContent: 'center'}]}>
-				<Text style={[txt.roboto30b, {color: GRAY10}]}> 목록이 없습니다.</Text>
+				<Text style={[txt.roboto36b, {}]}> 목록이 없습니다.</Text>
 			</View>
 		);
 	};
@@ -178,20 +195,18 @@ export default MissingReportList = props => {
 							</View>
 						</View>
 						<View style={[searchProtectRequest.kindFilter]}>
-							<View style={[searchProtectRequest.kindFilterItem, {flexDirection: 'row'}]}>
-								<Text style={[txt.noto28, {color: GRAY10}]}>실종</Text>
-								<CheckBox onCheck={() => setOnlyMissing(!onlyMissing)} />
+							<View style={[searchProtectRequest.kindFilterItem]}>
+								<Text style={[txt.noto26, {color: GRAY10}]}> 실종글만 보기</Text>
+								{onlyMissing ? <Check50 onPress={onPressShowMissing} /> : <Rect50_Border onPress={onPressShowMissing} />}
 							</View>
-							<View style={[searchProtectRequest.kindFilterItem, {flexDirection: 'row'}]}>
-								<Text style={[txt.noto28, {color: GRAY10}]}>제보</Text>
-								<CheckBox onCheck={() => setOnlyReport(!onlyReport)} />
+							<View style={[searchProtectRequest.kindFilterItem]}>
+								<Text style={[txt.noto26, {color: GRAY10}]}> 제보글만 보기</Text>
+								{onlyReport ? <Check50 onPress={onPressShowReport} /> : <Rect50_Border onPress={onPressShowReport} />}
 							</View>
 						</View>
 						<View style={[searchProtectRequest.animalMissingReportList]}>
-							{/* 플랫리스트 부분 */}
 							<AnimalNeedHelpList
-								// data={dummy_MissingReportList}
-								data={data}
+								data={getData()}
 								onFavoriteTag={(e, index) => onOff_FavoriteTag(e, index)}
 								onClickLabel={(status, id, item) => onClickLabel(status, id, item)}
 								whenEmpty={whenEmpty()}

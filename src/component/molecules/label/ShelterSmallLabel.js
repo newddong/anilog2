@@ -16,12 +16,9 @@ import moment from 'moment';
  * @param {(user_id:number)=>void} props.onClickLabel - 보호소 UserObject
  */
 const ShelterSmallLabel = props => {
-	const [validation, setValidation] = React.useState(false);
 	const data = props.data;
 	//user_nickname Text 색깔 조건부적용을 위한 세션아이디 비교
-	React.useEffect(() => {
-		data.user_id == userGlobalObj.userInfo._id ? setValidation(true) : false; //일치한다면 Validation True로 nickname text color를 바꿈
-	});
+	const isLoginUser = data._id == userGlobalObj.userInfo._id;
 
 	const getStatusMark = () => {
 		switch (data.shelter_type) {
@@ -51,7 +48,7 @@ const ShelterSmallLabel = props => {
 				<View style={{position: 'absolute', right: 0, bottom: 0}}>{getStatusMark()}</View>
 			</TouchableOpacity>
 			<View style={{marginLeft: 10 * DP, maxWidth: 440 * DP}}>
-				<Text style={[txt.noto24b, {color: validation ? APRI10 : GRAY10}]} numberOfLines={1} ellipsizeMode="tail">
+				<Text style={[txt.noto24b, {color: isLoginUser ? APRI10 : GRAY10}]} numberOfLines={1} ellipsizeMode="tail">
 					{data.shelter_name} / {data.shelter_address.brief}
 				</Text>
 				{data.shelter_foundation_date != null || data.shelter_foundation_date != undefined ? (

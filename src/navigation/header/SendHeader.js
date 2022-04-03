@@ -90,7 +90,7 @@ export default SendHeader = ({route, navigation, options}) => {
 				}
 				case 'CommunityWrite': {
 					if (!data.community_content || !data.community_title) {
-						Modal.popOneBtn('보호 요청 내용과 제목은 \n 반드시 입력해주셔야합니다.', '확인', () => Modal.close());
+						Modal.popOneBtn('게시글 내용과 제목은 \n 반드시 입력해주셔야합니다.', '확인', () => Modal.close());
 					} else {
 						Modal.popTwoBtn(
 							'해당 내용으로 커뮤니티 \n 게시글을 작성하시겠습니까?',
@@ -98,18 +98,15 @@ export default SendHeader = ({route, navigation, options}) => {
 							'확인',
 							() => Modal.close(),
 							() => {
+								// console.log('data before Create', data);
 								createCommunity(
-									{
-										community_title: data.community_titlem,
-										community_content: data.community_content,
-										community_avatar_id: '',
-										community_location: data.community_location,
-										community_is_temporary: data.community_is_temporary,
-										community_type: '',
-										community_interests: data.community_interests,
-									},
+									data,
 									result => {
 										console.log('result / createCommunity / SendHeader ', result.msg);
+										navigation.reset({
+											index: 0,
+											routes: [{name: 'CommunityMain'}],
+										});
 									},
 									err => {
 										console.log('err / createCommunity / SendHeader ', err);

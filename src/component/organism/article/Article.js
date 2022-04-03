@@ -13,8 +13,10 @@ import {GRAY10} from 'Root/config/color';
  * @param {()=>void)} props.onPressArticle - 게시글 아이템 클릭
  * @param {()=>void)} props.onPressThumnails - 게시글 사진 클릭
  * @param {()=>void)} props.onPressReply - 댓글 모두 보기 클릭
+ * @param {()=>void)} props.onPressMeatball - 미트볼 클릭
  */
 const Article = props => {
+	const data = props.data;
 	//댓글 더 보기 클릭
 	const onPressReply = () => {
 		props.onPressReply();
@@ -32,7 +34,7 @@ const Article = props => {
 
 	//미트볼 클릭
 	const onPressMeatball = () => {
-		console.log('onPressMeatball');
+		props.onPressMeatball();
 	};
 
 	//게시글 클릭
@@ -55,11 +57,15 @@ const Article = props => {
 	return (
 		<View style={[style.container]}>
 			<View style={[style.content]}>
-				<ArticleContent onPressArticle={onPressArticle} onPressFavorite={onPressFavorite} onPressMeatball={onPressMeatball} route={props.route} />
+				<ArticleContent
+					data={data}
+					onPressArticle={onPressArticle}
+					onPressFavorite={onPressFavorite}
+					onPressMeatball={onPressMeatball}
+					route={props.route}
+				/>
 			</View>
-			<TouchableOpacity onPress={onPressThumnails} activeOpacity={0.7} style={[style.thumbnail]}>
-				<ArticleThumnails photo_list={dummy} />
-			</TouchableOpacity>
+
 			{props.route == 'ArticleDetail' ? (
 				<></>
 			) : (
@@ -83,6 +89,7 @@ Article.defaultProps = {
 	onPressArticle: () => {},
 	onPressThumnails: () => {},
 	onPressReply: () => {},
+	onPressMeatball: () => {},
 	route: undefined,
 };
 

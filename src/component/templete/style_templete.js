@@ -3146,7 +3146,7 @@ export const searchProtectRequest = StyleSheet.create({
 		},
 	},
 	kindFilter: {
-		width: 270 * DP,
+		// width: 270 * DP,
 		marginTop: 30 * DP,
 		flexDirection: 'row',
 		alignSelf: 'flex-end',
@@ -3154,7 +3154,11 @@ export const searchProtectRequest = StyleSheet.create({
 		justifyContent: 'space-between',
 	},
 	kindFilterItem: {
-		width: 130 * DP,
+		width: 220 * DP,
+		// backgroundColor: 'red',
+		marginLeft: 20 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
 		justifyContent: 'space-between',
 	},
 	animalNeedHelpList: {

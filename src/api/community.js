@@ -13,7 +13,7 @@ export async function changeLocalPathToS3Path(params, callback, errcallback) {
 /**
  * 커뮤니티를 불러옴
  * @param {object} params
- * @param {string} params.community_type - 커뮤니티 타입 ('free'|'review')
+ * @param {string} params.community_type - 커뮤니티 타입 (전체글|'all'|'free'|'review')
  * @param {function} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */

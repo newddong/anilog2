@@ -66,6 +66,7 @@ export default ReviewDetail = props => {
 								<Text style={[txt.noto24, {}]}>관련후기 게시글</Text>
 								<ReviewBriefList items={dummyReviews} onPressReview={onPressReviewBrief} onPressLike={onPressLikeBriefItem} />
 							</View>
+							<></>
 						</View>
 					);
 				}}

@@ -149,6 +149,7 @@ import save54 from './save54';
 import locationMarker from './locationMarker';
 import currentLocation from './currentLocation';
 import triangle from './triangle';
+import photo44 from './photo44';
 import DP from 'Root/config/dp';
 
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
@@ -376,3 +377,4 @@ export const Save54 = makeSvg(save54, {width: 54 * DP, height: 54 * DP});
 export const LocationMarker = makeSvg(locationMarker, {width: 80 * DP, height: 80 * DP});
 export const CurrentLocation = makeSvg(currentLocation, {width: 100 * DP, height: 100 * DP});
 export const Triangle = makeSvg(triangle, {width: 26 * DP, height: 18 * DP});
+export const Photo44 = makeSvg(photo44, {width: 44 * DP, height: 35 * DP});

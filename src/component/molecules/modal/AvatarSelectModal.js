@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Dimensions, Platform, FlatList, TouchableOpacity, ActivityIndicator} from 'react-native';
+import {View, Text, StyleSheet, Dimensions, Platform, FlatList, TouchableOpacity, ActivityIndicator, Image} from 'react-native';
 import AniButton from '../button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10, APRI10} from 'Root/config/color';
@@ -9,6 +9,7 @@ import {getUserInfoById} from 'Root/api/userapi';
 import userGlobalObj from 'Root/config/userGlobalObject';
 import {txt} from 'Root/config/textstyle';
 import PetLabel from '../label/PetLabel';
+import {styles} from 'Root/component/atom/image/imageStyle';
 
 /**
  * 아바타 동물을 선택하는 모달창
@@ -38,11 +39,42 @@ const AvatarSelectModal = props => {
 				props.onSelectPet && props.onSelectPet(items[index]);
 			}
 		};
-		return (
-			<View key={index} style={[style.listItem, {backgroundColor: index == selectedItem ? APRI10 : WHITE}]}>
-				<PetLabel data={item} onLabelClick={onClickLabel} />
-			</View>
-		);
+		if (item.user_type == 'pet') {
+			return (
+				<View key={index} style={[style.listItem, {backgroundColor: index == selectedItem ? APRI10 : WHITE}]}>
+					<PetLabel data={item} onLabelClick={onClickLabel} />
+				</View>
+			);
+		} else {
+			return (
+				<View
+					key={index}
+					style={[
+						style.listItem,
+						{
+							backgroundColor: index == selectedItem ? APRI10 : WHITE,
+							flexDirection: 'row',
+							alignItems: 'center',
+							justifyContent: 'center',
+						},
+					]}>
+					<Image style={styles.img_round_94} source={{uri: item.user_profile_uri}} />
+					<Text
+						style={[
+							txt.roboto28b,
+							{
+								textAlign: 'left',
+								paddingLeft: 30 * DP,
+								width: 170 * DP,
+							},
+						]}
+						numberOfLines={1}
+						ellipsizeMode="tail">
+						{item.user_nickname || ''}
+					</Text>
+				</View>
+			);
+		}
 	};
 	const platform = Platform.OS;
 
@@ -173,7 +205,7 @@ const style = StyleSheet.create({
 		borderRadius: 30 * DP,
 		paddingHorizontal: 20 * DP,
 		// alignItems: 'center',
-		justifyContent: 'center',
+		justifyContent: 'space-between',
 	},
 });
 

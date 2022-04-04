@@ -5,8 +5,33 @@ import {Animal_another_off, Animal_cat_off, Animal_dog_off, Filter60Border, Filt
 import ReviewList from 'Root/component/organism/list/ReviewList';
 import {Animal_another, Animal_cat, Animal_dog} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
+import {getCommunityList} from 'Root/api/community';
 
 export default ReviewMain = ({route, navigation}) => {
+	const [data, setData] = React.useState();
+
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => fetchData());
+		fetchData();
+		return unsubscribe;
+	}, []);
+
+	const fetchData = () => {
+		getCommunityList(
+			{
+				community_type: 'review',
+			},
+			result => {
+				// console.log('result / getCommunityList / ArticleMain :', result.msg);
+				setData(result.msg.review);
+			},
+			err => {
+				console.log('err / getCommunityList / ArticleMain : ', err);
+				Modal.alert(err);
+			},
+		);
+	};
+
 	const onPressAnimalFilter = filter => {
 		switch (filter) {
 			case 'dog':
@@ -22,7 +47,6 @@ export default ReviewMain = ({route, navigation}) => {
 				break;
 		}
 	};
-	const dummy = [{id: 1}, {id: 2}, {id: 3}];
 
 	const [filterData, setFilterData] = React.useState({
 		dog: false,
@@ -37,15 +61,17 @@ export default ReviewMain = ({route, navigation}) => {
 	const onPressFilter = () => {
 		Modal.popInterestTagModal(
 			'Review',
-			[],
+			{interests_etc: [], interests_hospital: [], interests_interior: [], interests_review: [], interests_trip: []},
 			() => Modal.close(),
 			() => Modal.close(),
-			() => alert('setstate'),
+			arg => {
+				console.log('arg', arg);
+			},
 		);
 	};
 
 	const onPressReply = index => {
-		navigation.push('CommunityCommentList', {feedobject: {_id: '62262a16d38ae5f3c51390d6'}});
+		navigation.push('ReviewCommentList', {feedobject: {_id: '62262a16d38ae5f3c51390d6'}});
 	};
 
 	const onPressReviewContent = index => {
@@ -53,8 +79,13 @@ export default ReviewMain = ({route, navigation}) => {
 	};
 
 	const onPressWrite = () => {
-		// navigation.push('CommunityWrite', {isReview: true});
-		navigation.push('CommunityWrite');
+		navigation.push('CommunityWrite', {isReview: true});
+		// navigation.push('CommunityWrite');
+	};
+
+	const getData = () => {
+		let filtered = data;
+		return filtered;
 	};
 
 	const filterComponent = () => {
@@ -96,14 +127,18 @@ export default ReviewMain = ({route, navigation}) => {
 				data={[{}]}
 				listKey={({item, index}) => index}
 				renderItem={({item, index}) => {
-					return <ReviewList items={dummy} onPressReviewContent={onPressReviewContent} onPressReply={onPressReply} />;
+					return (
+						<>
+							<View style={[style.write, style.shadowButton]}>
+								<WriteBoard onPress={onPressWrite} />
+							</View>
+							<ReviewList items={getData()} onPressReviewContent={onPressReviewContent} onPressReply={onPressReply} />
+						</>
+					);
 				}}
 				ListHeaderComponent={filterComponent()}
 				stickyHeaderIndices={[0]}
 			/>
-			<View style={[style.write, style.shadowButton]}>
-				<WriteBoard onPress={onPressWrite} />
-			</View>
 		</View>
 	);
 };

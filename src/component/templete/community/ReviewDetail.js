@@ -30,7 +30,7 @@ export default ReviewDetail = props => {
 
 	const onPressReply = () => {
 		// alert('moveToReplyListPage');
-		navigation.push('CommunityCommentList', {feedobject: {_id: '62262a16d38ae5f3c51390d6'}});
+		navigation.push('ReviewCommentList', {feedobject: {_id: '62262a16d38ae5f3c51390d6'}});
 	};
 
 	const onPressLikeBriefItem = index => {

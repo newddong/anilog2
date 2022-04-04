@@ -32,6 +32,7 @@ export default ReportDetail = props => {
 	const debug = true;
 	const [loading, setLoading] = React.useState(true); //댓글 로딩상태
 	const [feedLoding, setFeedLoading] = React.useState(true); //피드 로딩상태
+
 	React.useEffect(() => {
 		setPhoto(props.route.params);
 	}, [props.route.params]);
@@ -55,6 +56,8 @@ export default ReportDetail = props => {
 			data => {
 				// debug && console.log(`ReportDetail data:${JSON.stringify(data.msg)}`);
 				setData(data.msg);
+				// console.log('data', data.msg.feed_writer_id._id);
+				navigation.setParams({writer: data.msg.feed_writer_id._id, isMissingOrReport: true, feed_object: data.msg});
 				setFeedLoading(false);
 			},
 			errcallback => {
@@ -101,7 +104,7 @@ export default ReportDetail = props => {
 				feedobject_id: props.route.params._id,
 				// commentobject_id: '61c2c0de7be07611b0094ffd',
 				request_number: 10,
-				login_userobject_id: userGlobalObject.userInfo._id
+				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			commentdata => {
 				// console.log('commentdata', commentdata.msg);

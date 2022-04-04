@@ -30,7 +30,14 @@ const CommunityMainStackNavi = createStackNavigator();
 
 export default CommunityMainStack = props => {
 	return (
-		<CommunityMainStackNavi.Navigator initialRouteName="ReviewStackNavigation">
+		<CommunityMainStackNavi.Navigator initialRouteName="CommunityMain">
+			<CommunityMainStackNavi.Screen
+				name="CommunityMain"
+				component={CommunityMain}
+				options={({route, navigation}) => ({
+					header: props => <LogoHeader {...props} />,
+				})}
+			/>
 			<CommunityMainStackNavi.Screen
 				name="ReviewStackNavigation"
 				component={ReviewStackNavigation}
@@ -38,27 +45,11 @@ export default CommunityMainStack = props => {
 					header: props => <LogoHeader {...props} />,
 				})}
 			/>
-			{/* <CommunityMainStackNavi.Screen
-				name="CommunityMain"
-				component={CommunityMain}
-				options={({route, navigation}) => ({
-					header: props => <LogoHeader {...props} />,
-				})}
-			/> */}
 			<CommunityMainStackNavi.Screen
 				name={'ArticleDetail'}
 				component={ArticleDetail}
 				options={({route}) => ({
 					headerShown: true,
-					header: props => <SimpleHeader {...props} />,
-					title: ' ',
-				})}
-			/>
-			<CommunityMainStackNavi.Screen
-				name={'CommunityCommentList'}
-				component={CommunityCommentList}
-				options={({route}) => ({
-					// headerShown: false,
 					header: props => <SimpleHeader {...props} />,
 					title: ' ',
 				})}
@@ -97,14 +88,32 @@ export default CommunityMainStack = props => {
 				options={({route}) => ({
 					headerShown: true,
 					header: props => <SendHeader {...props} />,
-					title: '커뮤니티 게시글 작성',
+					title: '',
+				})}
+			/>
+			{/* <CommunityMainStackNavi.Screen
+				name={'ReviewCommentList'}
+				component={CommunityCommentList}
+				options={({route}) => ({
+					headerShown: true,
+					header: props => <SimpleHeader {...props} />,
+					title: ' ',
 				})}
 			/>
 			<CommunityMainStackNavi.Screen
-				name={'ReviewCommentList'}
-				component={FeedCommentList}
+				name={'ArticleCommentList'}
+				component={CommunityCommentList}
 				options={({route}) => ({
-					headerShown: true,
+					// headerShown: false,
+					header: props => <SimpleHeader {...props} />,
+					title: ' ',
+				})}
+			/> */}
+			<CommunityMainStackNavi.Screen
+				name={'CommunityCommentList'}
+				component={CommunityCommentList}
+				options={({route}) => ({
+					// headerShown: false,
 					header: props => <SimpleHeader {...props} />,
 					title: ' ',
 				})}

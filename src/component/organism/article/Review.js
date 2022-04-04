@@ -3,9 +3,10 @@ import {txt} from 'Root/config/textstyle';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {FavoriteTag46_Filled, Like48_Border, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
-import {GRAY10} from 'Root/config/color';
+import {BLACK, GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
 import ArticleThumnails from './ArticleThumnails';
 import {useNavigation} from '@react-navigation/core';
+import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
 /**
  * 후기 아이템
  * @param {object} props - Props Object
@@ -15,16 +16,108 @@ import {useNavigation} from '@react-navigation/core';
  */
 export default Review = props => {
 	const navigation = useNavigation();
+	const data = props.data;
+	const [moreCategory, setMoreCategory] = React.useState(false);
+
 	const onPressCategory = category => {
-		alert(category);
+		if (category == '접기') {
+			setMoreCategory(false);
+		} else {
+			alert(category);
+		}
 	};
 
-	const category = v => {
-		return (
-			<TouchableOpacity onPress={() => onPressCategory(v)} activeOpacity={0.7} style={[style.category]}>
-				<Text style={[txt.noto24]}>{v}</Text>
-			</TouchableOpacity>
-		);
+	const getCategory = (v, i) => {
+		let category_sum_list = [];
+		data.community_interests.interests_trip.map(v => category_sum_list.push(v));
+		data.community_interests.interests_etc.map(v => category_sum_list.push(v));
+		data.community_interests.interests_hospital.map(v => category_sum_list.push(v));
+		data.community_interests.interests_review.map(v => category_sum_list.push(v));
+		data.community_interests.interests_interior.map(v => category_sum_list.push(v));
+		data.community_interests.interests_trip.map(v => category_sum_list.push(v));
+		data.community_interests.interests_etc.map(v => category_sum_list.push(v));
+		data.community_interests.interests_hospital.map(v => category_sum_list.push(v));
+		data.community_interests.interests_review.map(v => category_sum_list.push(v));
+		data.community_interests.interests_interior.map(v => category_sum_list.push(v));
+		if (category_sum_list.length > 3) {
+			category_sum_list.push('접기');
+		}
+		// category_sum_list.push('테스트');
+		const page = Math.floor(category_sum_list.length / 4) + 1;
+		let arr = [];
+		arr.length = page;
+		arr.fill('a', 0, page);
+
+		if (category_sum_list.length > 3 && !moreCategory) {
+			arr = ['a'];
+			return arr.map((v, i) => {
+				let sliced = category_sum_list.slice(0, 3);
+				sliced.push('+' + (category_sum_list.length - 4));
+				return (
+					<View style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
+						{sliced.map((v, i) => {
+							const isLast = v == '+' + (category_sum_list.length - 4);
+							return (
+								<TouchableOpacity
+									key={i}
+									onPress={() => (isLast ? setMoreCategory(true) : onPressCategory(v))}
+									activeOpacity={0.7}
+									style={[
+										style.category,
+										{
+											backgroundColor: WHITE,
+											borderColor: isLast ? GRAY10 : BLACK,
+										},
+									]}>
+									<Text
+										style={[
+											txt.noto24,
+											{
+												color: isLast ? GRAY10 : BLACK,
+											},
+										]}>
+										{v}
+									</Text>
+								</TouchableOpacity>
+							);
+						})}
+					</View>
+				);
+			});
+		} else
+			return arr.map((v, i) => {
+				let sliced = category_sum_list.slice(i * 4, (i + 1) * 4);
+				return (
+					<View style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
+						{sliced.map((v, i) => {
+							const isLast = v == '접기';
+							return (
+								<TouchableOpacity
+									key={i}
+									onPress={() => onPressCategory(v)}
+									activeOpacity={0.7}
+									style={[
+										style.category,
+										{
+											backgroundColor: isLast ? GRAY20 : WHITE,
+											borderColor: isLast ? GRAY40 : BLACK,
+										},
+									]}>
+									<Text
+										style={[
+											txt.noto24,
+											{
+												color: isLast ? WHITE : BLACK,
+											},
+										]}>
+										{v}
+									</Text>
+								</TouchableOpacity>
+							);
+						})}
+					</View>
+				);
+			});
 	};
 
 	const onPressMeatball = () => {
@@ -43,28 +136,30 @@ export default Review = props => {
 		props.onPressReply();
 	};
 
-	const category_dummy = ['애견카페', '애견호텔', '애견놀이터'];
-
 	const moveToReviewDetail = () => {
 		props.onPressReviewContent();
 	};
 
-	const dummy = [
-		'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
-		'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
-		'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
-		'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
-	];
+	const imageList = () => {
+		let imageList = [];
+		let getImgTag = data.community_content.match(/<img[\w\W]+?\/?>/g);
+		// console.log('getImgtag', getImgTag);
+		if (getImgTag) {
+			getImgTag.map((v, i) => {
+				let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i);
+				// console.log(i, src[1]);
+				imageList.push(src[1]);
+			});
+		}
+		// console.log('imageList', imageList);
+		return imageList;
+	};
 
 	return (
 		<View style={[style.container]}>
 			{/* 리뷰 헤더  */}
 			<View style={[style.header]}>
-				<View style={[style.categoryList]}>
-					{category_dummy.map((v, i) => {
-						return <View key={i}>{category(v)}</View>;
-					})}
-				</View>
+				<View style={[style.categoryList]}>{getCategory()}</View>
 				<View style={[style.icon]}>
 					<FavoriteTag46_Filled onPress={onPressFavorite} />
 					<Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />
@@ -74,29 +169,26 @@ export default Review = props => {
 			<TouchableOpacity onPress={moveToReviewDetail}>
 				<View style={[style.content]}>
 					<Text style={[txt.noto32b]} numberOfLines={1}>
-						성동구 애견카페 '멍멍존' 후기
+						{data.community_title}
 					</Text>
-					<Text style={[txt.roboto28]} numberOfLines={1}>
-						user_nickname
-					</Text>
-					<Text style={[txt.noto26, {color: GRAY10}]} numberOfLines={1}>
-						2022.01.02
-					</Text>
+					<View style={[style.profile]}>
+						<UserLocationTimeLabel data={data.community_writer_id} time={data.community_update_date} />
+					</View>
 				</View>
 				{/* 리뷰 사진 썸네일 */}
 				<View style={[style.thumbnail]}>
-					<ArticleThumnails photo_list={dummy} />
+					<ArticleThumnails photo_list={imageList()} />
 				</View>
 			</TouchableOpacity>
 			{/* 좋아요 및 댓글 모두 보기  */}
 			<View style={[style.likeComment]}>
 				<View style={[style.like]}>
 					<Like48_Border onPress={onPressLike} />
-					<Text style={[txt.noto24, {color: GRAY10, marginLeft: 15 * DP}]}>109</Text>
+					<Text style={[txt.noto24, {color: GRAY10, marginLeft: 15 * DP}]}>{data.community_like_count}</Text>
 				</View>
 				<View style={[style.comment]}>
 					<Text onPress={onPressReply} style={[txt.noto24, {color: GRAY10}]}>
-						댓글 6개 모두 보기
+						{data.community_comment_count == 0 ? '댓글 쓰기' : `댓글 ${data.community_comment_count}개 모두 보기 `}
 					</Text>
 				</View>
 			</View>
@@ -128,21 +220,27 @@ const style = StyleSheet.create({
 		borderRadius: 10 * DP,
 		borderWidth: 2 * DP,
 		marginRight: 12 * DP,
-		paddingHorizontal: 8 * DP,
+		paddingHorizontal: 15 * DP,
 		paddingVertical: 2 * DP,
+		// backgroundColor: 'yellow',
 	},
 	categoryList: {
 		width: 510 * DP,
-		flexDirection: 'row',
+		minHeight: 65 * DP,
+		// backgroundColor: 'yellow',
+		// flexDirection: 'row',
+	},
+	profile: {
+		marginTop: 10 * DP,
 	},
 	icon: {
 		flexDirection: 'row',
-		alignSelf: 'flex-end',
+		alignSelf: 'flex-start',
 	},
 	content: {
 		width: 654 * DP,
 		height: 130 * DP,
-		marginTop: 6 * DP,
+		// marginTop: 6 * DP,
 		// backgroundColor: 'palegreen',
 	},
 	thumbnail: {
@@ -163,3 +261,10 @@ const style = StyleSheet.create({
 		// backgroundColor: 'yellow',
 	},
 });
+
+const dummy = [
+	'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
+	'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
+	'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
+	'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
+];

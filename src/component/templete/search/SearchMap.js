@@ -73,16 +73,27 @@ export default SearchMap = ({route}) => {
 				.then(async res => {
 					let location = res.data.documents[0];
 					if (location.road_address == null) {
+						// console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+						// console.log('road_addr is null?', location.road_address);
+						// console.log('changedLatitude  :  ', changedLatitude, 'changedLongitude :  ', changedLongitude);
+						console.log('address_name  : ', location.address.address_name);
 						//카카오 API에서 도로명주소가 간혹 Null값으로 오는 현상 발견
 						Modal.popLoading();
 						const road_addr = await getRoadAddr(location.address.address_name); //카카오 API에서 받은 지번을 바탕으로 주변의 도로명주소를 받아오는 API
-						console.log('road_addr is null?', location.road_address);
-						console.log('road_addr : ', road_addr);
-						location.road_address = {
-							address_name: road_addr,
-						};
-						setLocationObj(location);
-						Modal.close();
+						console.log('road_addr count : ', road_addr.common.totalCount);
+						if (road_addr.common.totalCount == '0') {
+							location.road_address = {
+								address_name: '도로명 주소가 없는 위치입니다.',
+							};
+							setLocationObj(location);
+							Modal.close();
+						} else {
+							location.road_address = {
+								address_name: road_addr.juso.roadAddr,
+							};
+							setLocationObj(location);
+							Modal.close();
+						}
 					} else {
 						// 도로명주소가 null값이 아니라면 그대로 setState
 						setLocationObj(location);
@@ -107,8 +118,8 @@ export default SearchMap = ({route}) => {
 					.then(responseText => {
 						var x2js = new X2JS(); //XML 형식의 데이터를 JSON으로 파싱
 						var json = x2js.xml2js(responseText.data);
-						console.log('도로명주소 받아오기: ', json.results.juso.roadAddr);
-						resolve(json.results.juso.roadAddr);
+						// console.log('도로명주소 받아오기: ', json.results.juso.roadAddr);
+						resolve(json.results);
 					});
 			} catch (error) {
 				console.log('error getRoadAddr  :  ', error.message);
@@ -143,9 +154,18 @@ export default SearchMap = ({route}) => {
 		let finalized = locationObj;
 		finalized.detailAddr = detailAddr;
 		const data = {
-			...route.params,
-			community_location: {
-				addr: finalized,
+			...route.params.data,
+			community_address: {
+				road_address: {
+					address_name: finalized.road_address.address_name + ' ' + finalized.detailAddr,
+					city: finalized.road_address.region_1depth_name,
+					district: finalized.road_address.region_2depth_name,
+				},
+				normal_address: {
+					address_name: finalized.address.address_name + ' ' + finalized.detailAddr,
+					city: finalized.address.region_1depth_name,
+					district: finalized.address.region_2depth_name,
+				},
 				region: {
 					latitude: changedLatitude != '' ? changedLatitude : init_latitude,
 					longitude: changedLongitude != '' ? changedLongitude : init_longitude,
@@ -154,7 +174,7 @@ export default SearchMap = ({route}) => {
 		};
 		navigation.navigate({
 			name: 'CommunityWrite',
-			params: {data: data},
+			params: {data: data, isReview: route.params.isReview},
 			merge: false,
 		});
 	};
@@ -240,7 +260,9 @@ export default SearchMap = ({route}) => {
 			{locationObj != '' ? (
 				<View>
 					<View style={[style.currentLocation, {}]}>
-						<Text style={[txt.noto28b]}>{locationObj.road_address != null ? locationObj.road_address.address_name : ''}</Text>
+						<Text style={[txt.noto28b]}>
+							{locationObj.road_address != null ? locationObj.road_address.address_name : '도로명 주소가 없는 좌표입니다. '}
+						</Text>
 						<Text style={[txt.noto24, {color: GRAY10}]}>[지번] {locationObj.address.address_name}</Text>
 					</View>
 					<View style={[style.locationDetail]}>
@@ -249,7 +271,9 @@ export default SearchMap = ({route}) => {
 							style={[txt.noto26, style.detailInput]}
 							placeholder={'상세주소를 입력해주세요.'}
 							placeholderTextColor={GRAY20}
+							maxLength={25}
 						/>
+						<Text style={[txt.noto22, {color: GRAY20}]}>{detailAddr.length + '/' + 25} </Text>
 					</View>
 					<View style={[style.btnContainer]}>
 						<AniButton onPress={confirm} btnTitle={'선택한 위치로 설정'} btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} />
@@ -394,12 +418,15 @@ const style = StyleSheet.create({
 		width: 654 * DP,
 		height: 100 * DP,
 		alignSelf: 'center',
-		justifyContent: 'center',
+		alignItems: 'center',
+		justifyContent: 'space-between',
 		marginTop: 10 * DP,
 		marginBottom: 20 * DP,
 		paddingVertical: 10 * DP,
+		paddingRight: 20 * DP,
 		borderWidth: 2 * DP,
 		borderColor: GRAY30,
+		flexDirection: 'row',
 		// backgroundColor: 'yellow',
 	},
 	detailInput: {

@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {Image, Text, TextInput, View} from 'react-native';
+import {Image, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {GRAY10} from 'Root/config/color';
 import {Lock60_Border, Lock60_Filled, Photo60, Send60} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
@@ -40,13 +40,12 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 	const [content, setContent] = React.useState('');
 	const [photo, setPhoto] = React.useState('');
 
-	React.useEffect(()=>{
-		if(props.editData){
+	React.useEffect(() => {
+		if (props.editData) {
 			setContent(props.editData.comment_contents);
 			setPhoto(props.editData.comment_photo_uri);
 		}
-	},[props.editData]);
-
+	}, [props.editData]);
 
 	const inputRef = useRef();
 
@@ -72,11 +71,11 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 	if (props.isProtectRequest) {
 		return (
 			<View style={[feedCommentList.commentBox_protect_request]}>
-				<View style={[feedCommentList.commentBox_protect_request_left]}>
-					<Text onPress={onPressReply} style={[txt.noto26, feedCommentList.replyTextInput_protect_request, {}]} ref={inputRef}>
+				<TouchableOpacity activeOpacity={0.6} onPress={onPressReply} style={[feedCommentList.commentBox_protect_request_left]}>
+					<Text style={[txt.noto26, feedCommentList.replyTextInput_protect_request, {}]} ref={inputRef}>
 						댓글입력
 					</Text>
-				</View>
+				</TouchableOpacity>
 
 				<AniButton onPress={onPressReply} btnLayout={btn_w120} btnStyle={'border'} btnTitle={'댓글'} titleFontStyle={24} />
 			</View>
@@ -100,9 +99,9 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 		);
 	} else {
 		return (
-			<View style={[photo&&photo.length > 0 ? feedCommentList.editComment : feedCommentList.editComment_photoAdded]}>
+			<View style={[photo && photo.length > 0 ? feedCommentList.editComment : feedCommentList.editComment_photoAdded]}>
 				{/* 사진 추가를 통해서 받아온 사진이 한 개 이상인 경우 */}
-				{photo&&photo.length>0 ? (
+				{photo && photo.length > 0 ? (
 					<View style={[feedCommentList.commentBox_photo]}>
 						<View style={[feedCommentList.commentBox_top_photo, {flexDirection: 'row'}]}>
 							<View style={[feedCommentList.commentBox_input_photo]}>

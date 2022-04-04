@@ -6,7 +6,7 @@ import UserNote from '../../organism/listitem/UserNote';
 import DailyAlarm from '../../organism/list/DailyAlarm';
 import {WHITE} from 'Root/config/color';
 import {getNoticeUserList} from 'Root/api/noticeuser';
-
+import _ from 'lodash';
 const dummyData = [
 	[
 		{
@@ -50,6 +50,7 @@ const AlarmList = props => {
 	const [checkBoxMode, setCheckBoxMode] = React.useState(true);
 	const [newNote, setNewNote] = React.useState(true);
 	const [data, setData] = React.useState();
+	const [isEmpty, setIsEmpty] = React.useState();
 	console.log('NoteList props', props.data);
 	let count = 0;
 	React.useEffect(() => {
@@ -61,8 +62,9 @@ const AlarmList = props => {
 				temp[0] = [...result.msg.today];
 				temp[1] = [...result.msg.yesterday];
 				temp[2] = [...result.msg.thisweek];
-				console.log('temp', temp);
+				console.log('temp', temp.length);
 				setData(temp);
+				setIsEmpty(_.isEmpty(temp[0]) && _.isEmpty(temp[1]) && _.isEmpty(temp[2]));
 			},
 			err => {
 				console.log('getNoticeUserList err', err);
@@ -81,10 +83,15 @@ const AlarmList = props => {
 		}
 		return <DailyAlarm index={index} data={item} onLabelClick={item => props.onClickLabel(item)} newNote={newNote} isData={isData} />;
 	};
-
 	return (
 		<View style={[styles.container]}>
-			<FlatList data={data} renderItem={renderItem} showsVerticalScrollIndicator={false} />
+			{isEmpty ? (
+				<View>
+					<Text style={[{textAlign: 'center'}]}>소식이 없습니다.</Text>
+				</View>
+			) : (
+				<FlatList data={data} renderItem={renderItem} showsVerticalScrollIndicator={false} />
+			)}
 		</View>
 	);
 };

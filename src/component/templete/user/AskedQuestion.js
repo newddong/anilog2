@@ -33,14 +33,14 @@ const AskedQuestion = ({route}) => {
 	const renderItem = ({item, index}) => {
 		console.log('item', item);
 		if (item.qanda_status == 'waiting') {
-			let answered = false;
+			var answered = false;
 		} else {
-			let answered = true;
+			var answered = true;
 		}
 		const date = moment(item.announcement_date).format('YYYY.MM.DD');
 		return (
 			<OneNotice
-				uptitle={`${date} / ${item.qanda_common_code_id.common_code_msg_kor}`}
+				uptitle={`${date} / ${item.qanda_common_code_id?.common_code_msg_kor}`}
 				downtitle={item.qanda_question_title}
 				contents={item.qanda_question_contents}
 				status={true}

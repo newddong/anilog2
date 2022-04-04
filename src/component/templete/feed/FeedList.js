@@ -11,7 +11,7 @@ import {getFeedsByHash} from 'Root/api/hashapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {login_style, buttonstyle} from 'Templete/style_templete';
 import {getStringLength, getLinesOfString} from 'Root/util/stringutil';
-import { GRAY30 } from 'Root/config/color';
+import {GRAY30} from 'Root/config/color';
 
 export default FeedList = ({route, navigation}) => {
 	const [feedList, setFeedList] = React.useState([]);
@@ -44,7 +44,7 @@ export default FeedList = ({route, navigation}) => {
 						{
 							userobject_id: route.params?.userobject._id,
 							request_number: 9999,
-							login_userobject_id : userGlobalObject.userInfo._id,
+							login_userobject_id: userGlobalObject.userInfo._id,
 						},
 						({msg}) => {
 							setFeedList(
@@ -52,14 +52,11 @@ export default FeedList = ({route, navigation}) => {
 									.map((v, i, a) => {
 										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
 										lines = lines > 3 ? 3 : lines;
-										if(v.feed_recent_comment){
-											return {...v, height: (750+ 200+ 120+2+ lines*54) * DP};
+										if (v.feed_recent_comment) {
+											return {...v, height: (750 + 200 + 120 + 2 + lines * 54) * DP};
+										} else {
+											return {...v, height: (750 + 72 + 120 + 2 + lines * 54) * DP};
 										}
-										else{
-											return {...v, height: (750+  72+ 120+2+ lines*54) * DP};
-										}
-											
-
 									})
 									.map((v, i, a) => {
 										let offset = a.slice(0, i).reduce((prev, current) => {
@@ -77,45 +74,45 @@ export default FeedList = ({route, navigation}) => {
 						},
 					);
 					break;
-					case 'TagMeFeedList':
-					case 'UserTagFeedList':
-						getUserTaggedFeedList(
-							{
-								userobject_id: route.params?.userobject._id,
-								request_number: 9999,
-							},
-							({msg}) => {
-								console.log('태그',msg.findIndex(v => v._id == route.params?.selected._id));
-								setFeedList(
-									msg
-										.map((v, i, a) => {
-											let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
-											lines = lines > 3 ? 3 : lines;
-											if(v.feed_recent_comment){
-												return {...v, height: (750+ 200+ 120+2+ lines*54) * DP};
-											}
-											else{
-												return {...v, height: (750+  72+ 120+2+ lines*54) * DP};
-											}
-												
-	
-										})
-										.map((v, i, a) => {
-											let offset = a.slice(0, i).reduce((prev, current) => {
-												return current.height + prev;
-											}, 0);
-											return {
-												...v,
-												offset: offset,
-											};
-										}),
-								);
-							},
-							errormsg => {
-								Modal.popOneBtn(errormsg, '확인', () => Modal.close());
-							},
-						);
-						break;
+				case 'TagMeFeedList':
+				case 'UserTagFeedList':
+					getUserTaggedFeedList(
+						{
+							userobject_id: route.params?.userobject._id,
+							request_number: 9999,
+						},
+						({msg}) => {
+							console.log(
+								'태그',
+								msg.findIndex(v => v._id == route.params?.selected._id),
+							);
+							setFeedList(
+								msg
+									.map((v, i, a) => {
+										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
+										lines = lines > 3 ? 3 : lines;
+										if (v.feed_recent_comment) {
+											return {...v, height: (750 + 200 + 120 + 2 + lines * 54) * DP};
+										} else {
+											return {...v, height: (750 + 72 + 120 + 2 + lines * 54) * DP};
+										}
+									})
+									.map((v, i, a) => {
+										let offset = a.slice(0, i).reduce((prev, current) => {
+											return current.height + prev;
+										}, 0);
+										return {
+											...v,
+											offset: offset,
+										};
+									}),
+							);
+						},
+						errormsg => {
+							Modal.popOneBtn(errormsg, '확인', () => Modal.close());
+						},
+					);
+					break;
 				case 'HashFeedList':
 					getFeedsByHash(
 						{hashtag_keyword: route.params?.hashtag_keyword},
@@ -135,12 +132,12 @@ export default FeedList = ({route, navigation}) => {
 					break;
 				case 'FavoriteFeedList':
 					getFavoriteFeedListByUserId(
-						{userobject_id : userGlobalObject.userInfo._id},
+						{userobject_id: userGlobalObject.userInfo._id},
 						({msg}) => {
 							// setIndex(msg.feeds.findIndex(v => v.hashtag_feed_id._id == route.params?.selected._id));
 
 							setFeedList(msg);
-							console.log('즐겨찾기 리스트', msg)
+							console.log('즐겨찾기 리스트', msg);
 						},
 						error => {
 							Modal.popOneBtn(error, '확인', () => {
@@ -154,21 +151,18 @@ export default FeedList = ({route, navigation}) => {
 				default:
 					getSuggestFeedList(
 						{
-							login_userobject_id : userGlobalObject.userInfo._id
+							login_userobject_id: userGlobalObject.userInfo._id,
 						},
 						({msg}) => {
 							setFeedList(
 								msg
 									.map((v, i, a) => {
 										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
-										if(v.feed_recent_comment){
-											return {...v, height: (750+ 200+ 44 +128+2+ (lines > 3 ? 2 * 54 + 48 : lines * 54)) * DP};
+										if (v.feed_recent_comment) {
+											return {...v, height: (750 + 200 + 44 + 128 + 2 + (lines > 3 ? 2 * 54 + 48 : lines * 54)) * DP};
+										} else {
+											return {...v, height: (750 + 72 + 44 + 2 + (lines > 3 ? 2 * 54 + 48 : lines * 54)) * DP};
 										}
-										else{
-											return {...v, height: (750+ 72+ 44 + 2 + (lines > 3 ? 2 * 54 + 48 : lines * 54)) * DP};
-										}
-											
-
 									})
 									.map((v, i, a) => {
 										let offset = a.slice(0, i).reduce((prev, current) => {
@@ -196,24 +190,30 @@ export default FeedList = ({route, navigation}) => {
 		refreshing ? getList() : false;
 		return unsubscribe;
 	}, [refreshing, route]);
-	const [refresh,setRefresh] = React.useState(false);
+	const [refresh, setRefresh] = React.useState(false);
 	React.useEffect(() => {
 		if (feedList.length > 0) {
 			let indx = feedList.findIndex(v => v._id == route.params?.selected._id);
-			if(route.params?.selected){
-				setTimeout(()=>{
+			if (route.params?.selected) {
+				setTimeout(() => {
 					flatlist.current.scrollToItem({
 						animated: false,
-						item: feedList[indx]
-					})
-				},0)
+						item: feedList[indx],
+					});
+				}, 0);
 			}
 		}
 		setRefresh(!refresh);
 	}, [feedList]);
 
 	const moveToFeedWrite = () => {
-		userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed'});
+		if (userGlobalObject.userInfo.user_type == 'user') {
+			Modal.popAvatarSelectFromWriteModal(obj => {
+				userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed', feed_avatar_id: obj});
+			});
+		} else {
+			userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed'});
+		}
 	};
 
 	const renderItem = ({item}) => {
@@ -230,30 +230,34 @@ export default FeedList = ({route, navigation}) => {
 		wait(0).then(() => setRefreshing(false));
 	};
 
-	const rememberScroll = e=>{
-		if(e.nativeEvent.contentOffset.y>0){
-		userGlobalObject.t = e.nativeEvent.contentOffset;
+	const rememberScroll = e => {
+		if (e.nativeEvent.contentOffset.y > 0) {
+			userGlobalObject.t = e.nativeEvent.contentOffset;
 		}
-	}
+	};
 
 	const movetoCamera = () => {
-		Modal.popTwoBtn('카메라롤 모드(임시)','단일선택','다중선택',
-		()=>{
-			Modal.close();
-			navigation.push('SinglePhotoSelect');
-		},
-		()=>{
-			Modal.close();
-			navigation.push('MultiPhotoSelect');
-		})
-	}
+		Modal.popTwoBtn(
+			'카메라롤 모드(임시)',
+			'단일선택',
+			'다중선택',
+			() => {
+				Modal.close();
+				navigation.push('SinglePhotoSelect');
+			},
+			() => {
+				Modal.close();
+				navigation.push('MultiPhotoSelect');
+			},
+		);
+	};
 	return (
 		<View style={(login_style.wrp_main, {flex: 1, backgroundColor: WHITE})}>
 			<FlatList
 				data={feedList}
 				renderItem={renderItem}
 				keyExtractor={(item, index) => {
-					let key = item._id + item.feed_update_date+item.feed_is_like;
+					let key = item._id + item.feed_update_date + item.feed_is_like;
 					return key;
 				}}
 				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -265,14 +269,26 @@ export default FeedList = ({route, navigation}) => {
 				refreshing
 				extraData={refresh}
 				onScroll={rememberScroll}
-				ItemSeparatorComponent={({highlited})=><View style={{alignItems:'center'}}>
-					<View style={{height:2*DP,backgroundColor:GRAY30,width:654*DP}}></View>
-				</View>}
+				ItemSeparatorComponent={({highlited}) => (
+					<View style={{alignItems: 'center'}}>
+						<View style={{height: 2 * DP, backgroundColor: GRAY30, width: 654 * DP}}></View>
+					</View>
+				)}
 			/>
 			{userGlobalObject.userInfo && (
 				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}, buttonstyle.shadow]}>
-					<View style={{height: 84*DP, width:84*DP,justifyContent:'center',alignItems:'center',backgroundColor:'#FFF',borderRadius:30*DP,marginBottom:20*DP}}>
-						<Camera54 onPress={movetoCamera} /></View>
+					<View
+						style={{
+							height: 84 * DP,
+							width: 84 * DP,
+							justifyContent: 'center',
+							alignItems: 'center',
+							backgroundColor: '#FFF',
+							borderRadius: 30 * DP,
+							marginBottom: 20 * DP,
+						}}>
+						<Camera54 onPress={movetoCamera} />
+					</View>
 					<Write94 onPress={moveToFeedWrite} />
 				</View>
 			)}

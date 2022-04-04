@@ -33,12 +33,13 @@ export default FollowerList = props => {
 	}, [props.follows]);
 
 	const onClickFollowBtn = item => {
+		// console.log('followUser', item);
 		followUser(
 			{
 				follow_userobject_id: item._id,
 			},
 			result => {
-				// console.log('result / followUser / FollwerList :', result.msg);
+				console.log('result / followUser / FollwerList :', result.msg);
 				props.resetProfileInfo();
 			},
 			err => {
@@ -48,6 +49,7 @@ export default FollowerList = props => {
 	};
 
 	const onClickUnFollowBtn = item => {
+		// console.log('onClickUnFollowBtn', item);
 		unFollowUser(
 			{
 				follow_userobject_id: item._id,

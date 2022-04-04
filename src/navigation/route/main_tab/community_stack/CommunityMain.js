@@ -1,7 +1,7 @@
 import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {Dimensions, StyleSheet} from 'react-native';
-import {APRI10, GRAY10, WHITE} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import ReviewStackNavigation from './review_tab/ReviewStackNavigation';
 import ArticleStackNavigation from './article_stack/ArticleStackNavigation';
@@ -17,8 +17,7 @@ export default CommunityMain = props => {
 			initialRouteName="ArticleStackNavigation"
 			screenOptions={{
 				tabBarItemStyle: {height: 70 * DP},
-				tabBarIndicatorStyle: styles.tabBarIndicatorStyle,
-				tabBarActiveTintColor: WHITE,
+				tabBarIndicatorStyle: {backgroundColor: 'black', height: 2 * DP},
 				tabBarLabelStyle: [styles.tabbarLabelStyle],
 				tabBarInactiveTintColor: GRAY10,
 				lazy: true,
@@ -46,7 +45,7 @@ export default CommunityMain = props => {
 const styles = StyleSheet.create({
 	tabbarLabelStyle: {
 		fontFamily: 'NotoSansKR-Bold',
-		fontSize: 30 * DP,
+		fontSize: 28 * DP,
 		marginTop: -20 * DP,
 	},
 	tabBarIndicatorStyle: {

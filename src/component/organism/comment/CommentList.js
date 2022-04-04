@@ -14,9 +14,8 @@ import {txt} from 'Root/config/textstyle';
  * }} props
  */
 export default CommentList = props => {
-	const like = data => {
-	}
-	
+	const like = data => {};
+
 	const renderItem = ({item, index}) => {
 		// console.log('CommentList', item);
 		return (
@@ -37,10 +36,9 @@ export default CommentList = props => {
 						height: 100 * DP,
 						width: 654 * DP,
 						// backgroundColor: 'red',
-						paddingVertical: 30 * DP,
+						marginVertical: 30 * DP,
 						alignItems: 'center',
 						justifyContent: 'center',
-						marginBottom: 30 * DP,
 					},
 				]}>
 				<Text style={[txt.roboto30b, {color: GRAY10}]}> 댓글이 없습니다.</Text>
@@ -54,7 +52,14 @@ export default CommentList = props => {
 				width: 654 * DP,
 				// backgroundColor: 'red',
 			}}>
-			<FlatList listKey={({item,index})=>index} data={props.items} renderItem={renderItem} ListEmptyComponent={whenEmpty} scrollEnabled={false} stickyHeaderIndices={[0]} />
+			<FlatList
+				listKey={({item, index}) => index}
+				data={props.items}
+				renderItem={renderItem}
+				ListEmptyComponent={whenEmpty}
+				scrollEnabled={false}
+				stickyHeaderIndices={[0]}
+			/>
 		</View>
 	);
 };

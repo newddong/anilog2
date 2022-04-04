@@ -47,7 +47,7 @@ export default ShelterMenu = ({route}) => {
 	const [data, setData] = React.useState({}); //우선 userObject_Shelter 0번 추가
 	const [showMoreIntro, setShowMoreIntro] = React.useState(false);
 	const [introOriginLine, setIntroOriginLine] = React.useState(0);
-	console.log('introOriginLine', introOriginLine);
+	// console.log('introOriginLine', introOriginLine);
 	React.useEffect(() => {
 		const getInfo = () => {
 			getUserProfile(
@@ -66,9 +66,18 @@ export default ShelterMenu = ({route}) => {
 			);
 		};
 		const unsubscribe = navigation.addListener('focus', () => getInfo());
-
 		return unsubscribe;
 	}, []);
+
+	React.useEffect(() => {
+		if (route.params?.pageToMove != undefined) {
+			if (route.params.pageToMove == 'AssignProtectAnimalImage') {
+				moveToAssignProtectAnimalImage();
+			} else if (route.params.pageToMove == 'AidRequestAnimalList') {
+				moveToAidRequestAnimalList();
+			}
+		}
+	}, [route.params]);
 
 	//보호소 정보 수정
 	const moveToShelterInfoSetting = () => {

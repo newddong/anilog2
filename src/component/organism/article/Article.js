@@ -42,18 +42,6 @@ const Article = props => {
 		props.onPressArticle();
 	};
 
-	//사진 클릭
-	const onPressThumnails = () => {
-		props.onPressThumnails();
-	};
-
-	const dummy = [
-		'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
-		'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
-		'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
-		'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
-	];
-
 	return (
 		<View style={[style.container]}>
 			<View style={[style.content]}>
@@ -65,22 +53,6 @@ const Article = props => {
 					route={props.route}
 				/>
 			</View>
-
-			{props.route == 'ArticleDetail' ? (
-				<></>
-			) : (
-				<View style={[style.likeComment]}>
-					<View style={[style.like]}>
-						<Like48_Border onPress={onPressLike} />
-						<Text style={[txt.noto24, {color: GRAY10, marginLeft: 15 * DP}]}>109</Text>
-					</View>
-					<View style={[style.comment]}>
-						<Text onPress={onPressReply} style={[txt.noto24, {color: GRAY10}]}>
-							댓글 6개 모두 보기
-						</Text>
-					</View>
-				</View>
-			)}
 		</View>
 	);
 };

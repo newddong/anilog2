@@ -11,10 +11,11 @@ import ArticleSummary from '../article/ArticleSummary';
  * @param {object} props - Props Object
  * @param {object} props.items - 데이터
  * @param {(data:object)=>void)} props.onPressArticle - 게시글 컨텐츠 클릭(사진 이외 영역)
+ * @param {string} props.isSearch - 검색어
  */
 const ArticleList = props => {
 	const renderItem = (item, index) => {
-		return <ArticleSummary data={item} onPressArticle={() => props.onPressArticle(index)} />;
+		return <ArticleSummary data={item} isSearch={props.isSearch} onPressArticle={() => props.onPressArticle(index)} />;
 	};
 
 	return (
@@ -43,6 +44,7 @@ ArticleList.defaultProps = {
 	onPressRecommendArticle: () => {},
 	onPressThumnails: () => {},
 	onPressReply: () => {},
+	isSearch: '',
 };
 
 export default ArticleList;

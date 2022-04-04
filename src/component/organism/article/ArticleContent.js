@@ -1,13 +1,12 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {ActivityIndicator, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Linking, LogBox, Platform, StyleSheet, Text, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
-import {Arrow_Down_GRAY10, Arrow_Up_GRAY10, FavoriteTag46_Filled, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
+import {APRI10} from 'Root/config/color';
+import {FavoriteTag46_Filled, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
-import {dummy_userObject} from 'Root/config/dummyDate_json';
 import WebView from 'react-native-webview';
-import Modal from 'Root/component/modal/Modal';
+import Loading from 'Root/component/molecules/modal/Loading';
 /**
  * 게시글 컨텐츠
  * @param {object} props - Props Object
@@ -18,13 +17,11 @@ import Modal from 'Root/component/modal/Modal';
  * @param {string} props.route - 부모 컴포넌트 이름
  */
 const ArticleContent = props => {
+	LogBox.ignoreAllLogs();
+
 	const data = props.data;
 	const [height, setHeight] = React.useState(0); // 게시글 내용의 Dynamic Height 수치
 	// console.log('ArticleContent', props.data);
-
-	const onPressArticle = () => {
-		props.onPressArticle();
-	};
 
 	const onPressMeatball = () => {
 		props.onPressMeatball();
@@ -47,14 +44,27 @@ const ArticleContent = props => {
 		}
 	};
 
-	const onWebViewMessage = event => {
-		console.log('event.nativeEvent.data', event.nativeEvent.data);
-		if (parseInt(event.nativeEvent.data) < 300) {
-			setHeight(300 * DP);
+	const onWebViewMessage = async event => {
+		if (Platform.OS == 'android') {
+			setTimeout(() => {
+				if (parseInt(event.nativeEvent.data) < 300) {
+					setHeight(300 * DP);
+				} else {
+					height >= 300 ? false : setHeight(parseInt(event.nativeEvent.data));
+					console.log('height and : ', parseInt(event.nativeEvent.data));
+				}
+			}, 300);
 		} else {
-			setHeight(parseInt(event.nativeEvent.data));
+			if (parseInt(event.nativeEvent.data) < 300) {
+				setHeight(300 * DP);
+			} else {
+				height >= 300 ? false : setHeight(parseInt(event.nativeEvent.data));
+				console.log('parseInt(event.nativeEvent.data)', parseInt(event.nativeEvent.data));
+			}
 		}
 	};
+
+	const [load, setLoad] = React.useState(false);
 
 	return (
 		<View style={[style.container]}>
@@ -64,7 +74,11 @@ const ArticleContent = props => {
 						{getArticleType()}
 						{'  '}
 					</Text>
-					<Text style={[txt.noto32b]}>우리 강아지 매기</Text>
+					<View>
+						<Text numberOfLines={2} style={[txt.noto32b, {width: 450 * DP, height: 100 * DP}]}>
+							{data.community_title}
+						</Text>
+					</View>
 				</View>
 				<View style={[style.header_icon]}>
 					<FavoriteTag46_Filled onPress={onPressFavorite} />
@@ -72,48 +86,49 @@ const ArticleContent = props => {
 				</View>
 			</View>
 			<View style={[style.profile]}>
-				<UserLocationTimeLabel data={data.community_writer_id} time={data.community_update_date} />
+				<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} />
 			</View>
-			<View>
-				<View style={[{width: 700 * DP, marginTop: 20 * DP}]}>
-					{Platform.OS == 'ios' ? (
-						<WebView
-							originWhitelist={['*']}
-							onMessage={onWebViewMessage}
-							injectedJavaScript="window.ReactNativeWebView.postMessage(document.body.scrollHeight)" //Dynamic Height 수치 설정
-							source={{
-								html: `
+			<View style={[{width: 700 * DP, marginTop: 20 * DP, opacity: height >= 300 * DP ? 1 : 0}]}>
+				{Platform.OS == 'ios' ? (
+					<WebView
+						originWhitelist={['*']}
+						onMessage={onWebViewMessage}
+						injectedJavaScript="window.ReactNativeWebView.postMessage(document.body.scrollHeight)" //Dynamic Height 수치 설정
+						onLoadEnd={() => setLoad(true)}
+						contentMode={'mobile'}
+						source={{
+							html: `
         	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
 			${data.community_content} 
         `,
-							}}
-							style={[
-								style.webview,
-								{
-									height: height,
-								},
-							]}
-						/>
-					) : (
-						<WebView
-							originWhitelist={['*']}
-							scalesPageToFit={true}
-							onMessage={onWebViewMessage}
-							injectedJavaScript="window.ReactNativeWebView.postMessage(document.body.scrollHeight)" //Dynamic Height 수치 설정
-							source={{
-								html: `
+						}}
+						style={[
+							style.webview,
+							{
+								height: height,
+								opacity: load ? 1 : 0,
+							},
+						]}
+					/>
+				) : (
+					<WebView
+						originWhitelist={['*']}
+						scalesPageToFit={true}
+						onLoadEnd={() => setLoad(true)}
+						onMessage={onWebViewMessage}
+						injectedJavaScript="window.ReactNativeWebView.postMessage(document.body.scrollHeight)" //Dynamic Height 수치 설정
+						source={{
+							html: `
         	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
 			${data.community_content} 
         `,
-							}}
-							style={{
-								width: 690 * DP,
-								// minHeight: 500 * DP,
-								height: height == 0 ? 500 * DP : height,
-							}}
-						/>
-					)}
-				</View>
+						}}
+						style={{
+							width: 670 * DP,
+							height: height == 0 ? 300 * DP : height,
+						}}
+					/>
+				)}
 			</View>
 		</View>
 	);
@@ -134,7 +149,6 @@ const style = StyleSheet.create({
 	header: {
 		flexDirection: 'row',
 		width: 654 * DP,
-		height: 50 * DP,
 		justifyContent: 'space-between',
 	},
 	header_title: {

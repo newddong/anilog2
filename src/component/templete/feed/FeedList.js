@@ -213,7 +213,13 @@ export default FeedList = ({route, navigation}) => {
 	}, [feedList]);
 
 	const moveToFeedWrite = () => {
-		userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed'});
+		if (userGlobalObject.userInfo.user_type == 'user') {
+			Modal.popAvatarSelectFromWriteModal(obj => {
+				userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed', feed_avatar_id: obj});
+			});
+		} else {
+			userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed'});
+		}
 	};
 
 	const renderItem = ({item}) => {

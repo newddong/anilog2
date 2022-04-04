@@ -33,6 +33,10 @@ const UserNotePage = ({route}) => {
 	const [content, setContent] = React.useState('');
 	const [sent, setSent] = React.useState(false);
 	console.log('data', data);
+
+	React.useLayoutEffect(() => {
+		navigation.setOptions({tabBarVisible: false});
+	}, []);
 	React.useEffect(() => {
 		getMemoBoxWithReceiveID(
 			{user_object_id: route.params._id},

@@ -5,6 +5,7 @@ import {accountHashList} from 'Organism/style_organism copy';
 import UserNote from '../../organism/listitem/UserNote';
 import DailyAlarm from '../../organism/list/DailyAlarm';
 import {WHITE} from 'Root/config/color';
+import {getNoticeUserList} from 'Root/api/noticeuser';
 
 const dummyData = [
 	[
@@ -46,23 +47,44 @@ const dummyData = [
 	],
 ];
 const AlarmList = props => {
+	const [checkBoxMode, setCheckBoxMode] = React.useState(true);
+	const [newNote, setNewNote] = React.useState(true);
+	const [data, setData] = React.useState();
 	console.log('NoteList props', props.data);
+	let count = 0;
+	React.useEffect(() => {
+		let temp = [[], [], []];
+		getNoticeUserList(
+			{},
+			result => {
+				console.log('result', result.msg);
+				temp[0] = [...result.msg.today];
+				temp[1] = [...result.msg.yesterday];
+				temp[2] = [...result.msg.thisweek];
+				console.log('temp', temp);
+				setData(temp);
+			},
+			err => {
+				console.log('getNoticeUserList err', err);
+			},
+		);
+	}, []);
+
 	const renderItem = ({item, index}) => {
 		console.log('item', item);
-		return (
-			<DailyAlarm
-				index={index}
-				data={item}
-				checkBoxMode={props.checkBoxMode}
-				onLabelClick={item => props.onClickLabel(item)}
-				onCheckBox={e => props.onCheckBox(e, index)}
-			/>
-		);
+		let isData;
+		if (item.length != 0 && count == 0) {
+			isData = true;
+			count++;
+		} else {
+			isData = false;
+		}
+		return <DailyAlarm index={index} data={item} onLabelClick={item => props.onClickLabel(item)} newNote={newNote} isData={isData} />;
 	};
 
 	return (
 		<View style={[styles.container]}>
-			<FlatList data={dummyData} renderItem={renderItem} showsVerticalScrollIndicator={false} />
+			<FlatList data={data} renderItem={renderItem} showsVerticalScrollIndicator={false} />
 		</View>
 	);
 };

@@ -111,28 +111,35 @@ export default ReceivedMessage = ({route}) => {
 		let copy = [...data];
 		copy[index].checkBoxState = !copy[index].checkBoxState;
 	};
-
-	return (
-		<View style={[login_style.wrp_main, {flex: 1}]}>
-			<View style={[temp_style.selectstat_view]}>
-				<SelectStat
-					onSelectMode={e => showCheckBox(e)}
-					onCancelSelectMode={e => hideCheckBox(e)}
-					onSelectAllClick={selectAll}
-					onDeleteSelectedItem={deleteSelectedItem}
-					received={received}
-				/>
+	if (data.length == 0) {
+		return (
+			<View style={[login_style.wrp_main, {flex: 1}]}>
+				<Text>쪽지 내역이 없습니다.</Text>
 			</View>
-			<View style={[styles.noteList, {height: null}]}>
-				<NoteList data={data} checkBoxMode={checkBoxMode} onClickLabel={onClickLabel} onCheckBox={onCheckBox} routeName={route.name} />
+		);
+	} else {
+		return (
+			<View style={[login_style.wrp_main, {flex: 1}]}>
+				<View style={[temp_style.selectstat_view]}>
+					<SelectStat
+						onSelectMode={e => showCheckBox(e)}
+						onCancelSelectMode={e => hideCheckBox(e)}
+						onSelectAllClick={selectAll}
+						onDeleteSelectedItem={deleteSelectedItem}
+						received={received}
+					/>
+				</View>
+				<View style={[styles.noteList, {height: null}]}>
+					<NoteList data={data} checkBoxMode={checkBoxMode} onClickLabel={onClickLabel} onCheckBox={onCheckBox} routeName={route.name} />
+				</View>
+				{/* <View style={[styles.messageBtnContainer]}>
+						<TouchableWithoutFeedback onPress={onPressSendMsg}>
+							<View style={[styles.messageActionButton]}>{checkBoxMode ? <Message94 /> : <Message94 />}</View>
+						</TouchableWithoutFeedback>
+					</View> */}
 			</View>
-			{/* <View style={[styles.messageBtnContainer]}>
-				<TouchableWithoutFeedback onPress={onPressSendMsg}>
-					<View style={[styles.messageActionButton]}>{checkBoxMode ? <Message94 /> : <Message94 />}</View>
-				</TouchableWithoutFeedback>
-			</View> */}
-		</View>
-	);
+		);
+	}
 };
 
 const styles = StyleSheet.create({

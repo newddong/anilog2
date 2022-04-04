@@ -35,22 +35,16 @@ const ArticleSummary = props => {
 	};
 
 	const getUpdateTime = () => {
-		// const timelapse = getTimeLapsed(data.community_update_date);
-		// console.log('timeLapse', timelapse);
-		let dateType = moment(data.community_update_date);
-		// time = data.community_update_date.format('yyyy.MM.DD');
+		getTimeLapsed;
+		const dbDate = new Date(data.community_date);
+		// dbDate.setHours(dbDate.getHours());
 		const current = new Date();
-		current.setHours(current.getHours() + 9);
-		const article_date = new Date(data.community_update_date);
-		article_date.setHours(article_date.getHours() + 6);
-		article_date.setMinutes(article_date.getMinutes() + 45);
-		const diff = (current.getTime() - article_date.getTime()) / 1000;
-		// console.log('diff', diff);
-		if (diff < 43200) {
-			const time = moment(article_date).format('HH:mm');
+		const diff = (current.getTime() - dbDate.getTime()) / 1000;
+		if (diff < 50400) {
+			const time = moment(dbDate).format('HH:mm');
 			return time;
 		} else {
-			const time = dateType.format('YY.MM.DD');
+			const time = moment(dbDate).format('YY.MM.DD');
 			// console.log('g', g);
 			return time;
 		}
@@ -69,7 +63,7 @@ const ArticleSummary = props => {
 						? text[0].text
 						: text[0].text.split(' ').map((x, ind) => {
 								return x.includes(props.isSearch) ? (
-									<Text key={ind} style={{color: APRI10, backgroundColor: 'yellow', fontWeight: 'bold'}}>
+									<Text key={ind} style={{color: APRI10, fontWeight: 'bold'}}>
 										{x + ' '}
 									</Text>
 								) : (
@@ -78,7 +72,8 @@ const ArticleSummary = props => {
 									</Text>
 								);
 						  })}
-					{data.community_is_attached_file ? <Photo44 /> : <></>}
+					{data.community_is_attached_file ? <Photo44 /> : <></>}{' '}
+					<Text style={[txt.roboto28, {color: APRI10}]}>{data.community_comment_count != 0 ? data.community_comment_count : ''}</Text>
 				</Text>
 			);
 		} else {
@@ -88,9 +83,13 @@ const ArticleSummary = props => {
 					<Text style={[txt.noto28, {textAlignVertical: 'center'}]}>{text[0].text}</Text>
 					<View style={{flexDirection: 'row'}}>
 						<Text style={[txt.noto28, {textAlignVertical: 'center', marginRight: 10 * DP, maxWidth: 400 * DP}]} numberOfLines={1}>
-							{text[1].text}
+							{text[1].text}{' '}
 						</Text>
 						{data.community_is_attached_file ? <Photo44 /> : <></>}
+						<Text style={[txt.roboto28, {color: APRI10, textAlignVertical: 'center'}]}>
+							{' '}
+							{data.community_comment_count != 0 ? data.community_comment_count : ''}
+						</Text>
 					</View>
 				</>
 			);
@@ -108,7 +107,7 @@ const ArticleSummary = props => {
 					<Text style={[txt.noto28, {textAlignVertical: 'center', color: WHITE}]} onTextLayout={onTextLayout}>
 						{data.community_title}
 						{'  '}
-						<Text style={[txt.roboto28, {color: APRI10}]}>{data.community_comment_count != 0 ? data.community_comment_count : ''}</Text>
+						{/* <Text style={[txt.roboto28, {opacity: 0}]}>{data.community_comment_count != 0 ? data.community_comment_count : ''}</Text> */}
 					</Text>
 				</TouchableOpacity>
 				<View style={[{alignItems: 'flex-end', justifyContent: 'flex-start'}]}>

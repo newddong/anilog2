@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import {BLACK, GRAY10} from 'Root/config/color';
 import {Check50, Rect50_Border, WriteBoard} from 'Atom/icon';
@@ -8,10 +8,11 @@ import {useNavigation} from '@react-navigation/core';
 import {getCommunityList} from 'Root/api/community';
 import Modal from 'Root/component/modal/Modal';
 import Loading from 'Root/component/molecules/modal/Loading';
+import {styles} from 'Root/component/atom/image/imageStyle';
 
 export default ArticleMain = ({route}) => {
 	const navigation = useNavigation();
-	const [data, setData] = React.useState('');
+	const [data, setData] = React.useState('false');
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => fetchData());
@@ -85,9 +86,21 @@ export default ArticleMain = ({route}) => {
 		return filtered;
 	};
 
-	// if (data == '') {
-	// 	return <Loading isModal={false} />;
-	// } else
+	const whenEmpty = () => {
+		return (
+			<>
+				<Image
+					style={[styles.img_square_246, {paddingVertical: 150 * DP}]}
+					resizeMode={'stretch'}
+					source={{
+						uri: 'https://st.depositphotos.com/21121724/53932/v/600/depositphotos_539322694-stock-illustration-cartoon-home-pets-empty-feeder.jpg',
+					}}
+				/>
+				<Text style={[txt.roboto36b]}>목록이 없네요.</Text>
+			</>
+		);
+	};
+
 	return (
 		<View style={[style.container]}>
 			<FlatList
@@ -109,12 +122,13 @@ export default ArticleMain = ({route}) => {
 									{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
 								</View>
 							</View>
-							{data == '' ? (
+							{data == 'false' ? (
 								<Loading isModal={false} />
 							) : (
 								<ArticleList
 									items={getData()}
 									onPressArticle={onPressArticle} //게시글 내용 클릭
+									whenEmpty={whenEmpty}
 								/>
 							)}
 						</>

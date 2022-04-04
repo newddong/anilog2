@@ -1,11 +1,12 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {ActivityIndicator, Platform, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, Linking, LogBox, Platform, StyleSheet, Text, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {APRI10} from 'Root/config/color';
 import {FavoriteTag46_Filled, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
 import WebView from 'react-native-webview';
+import Loading from 'Root/component/molecules/modal/Loading';
 /**
  * 게시글 컨텐츠
  * @param {object} props - Props Object
@@ -16,13 +17,11 @@ import WebView from 'react-native-webview';
  * @param {string} props.route - 부모 컴포넌트 이름
  */
 const ArticleContent = props => {
+	LogBox.ignoreAllLogs();
+
 	const data = props.data;
 	const [height, setHeight] = React.useState(0); // 게시글 내용의 Dynamic Height 수치
 	// console.log('ArticleContent', props.data);
-
-	const onPressArticle = () => {
-		props.onPressArticle();
-	};
 
 	const onPressMeatball = () => {
 		props.onPressMeatball();
@@ -45,26 +44,27 @@ const ArticleContent = props => {
 		}
 	};
 
-	const handleShoudStartLoadingWithRequest = request => {
-		return false;
-	};
-
-	const onWebViewMessage = event => {
-		if (parseInt(event.nativeEvent.data) < 300) {
-			setHeight(300 * DP);
+	const onWebViewMessage = async event => {
+		if (Platform.OS == 'android') {
+			setTimeout(() => {
+				if (parseInt(event.nativeEvent.data) < 300) {
+					setHeight(300 * DP);
+				} else {
+					height >= 300 ? false : setHeight(parseInt(event.nativeEvent.data));
+					console.log('height and : ', parseInt(event.nativeEvent.data));
+				}
+			}, 300);
 		} else {
-			Platform.OS == 'android'
-				? console.log('height and : ', parseInt(event.nativeEvent.data))
-				: console.log('parseInt(event.nativeEvent.data)', parseInt(event.nativeEvent.data));
-			setHeight(parseInt(event.nativeEvent.data));
+			if (parseInt(event.nativeEvent.data) < 300) {
+				setHeight(300 * DP);
+			} else {
+				height >= 300 ? false : setHeight(parseInt(event.nativeEvent.data));
+				console.log('parseInt(event.nativeEvent.data)', parseInt(event.nativeEvent.data));
+			}
 		}
 	};
 
-	React.useEffect(() => {
-		// console.log('height', height);
-	}, [height]);
-
-	console.log('data', data.community_writer_id);
+	const [load, setLoad] = React.useState(false);
 
 	return (
 		<View style={[style.container]}>
@@ -86,52 +86,49 @@ const ArticleContent = props => {
 				</View>
 			</View>
 			<View style={[style.profile]}>
-				<UserLocationTimeLabel data={data.community_writer_id} time={data.community_update_date} />
+				<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} />
 			</View>
-			<View>
-				<View style={[{width: 700 * DP, marginTop: 20 * DP, opacity: height >= 300 ? 1 : 0}]}>
-					{Platform.OS == 'ios' ? (
-						<WebView
-							originWhitelist={['*']}
-							onMessage={onWebViewMessage}
-							onLoadStart={() => console.log('load')}
-							// onShouldStartLoadWithRequest={handleShoudStartLoadingWithRequest}
-							onShouldStartLoadWithRequest={() => true}
-							injectedJavaScript="window.ReactNativeWebView.postMessage(document.body.scrollHeight)" //Dynamic Height 수치 설정
-							source={{
-								html: `
+			<View style={[{width: 700 * DP, marginTop: 20 * DP, opacity: height >= 300 * DP ? 1 : 0}]}>
+				{Platform.OS == 'ios' ? (
+					<WebView
+						originWhitelist={['*']}
+						onMessage={onWebViewMessage}
+						injectedJavaScript="window.ReactNativeWebView.postMessage(document.body.scrollHeight)" //Dynamic Height 수치 설정
+						onLoadEnd={() => setLoad(true)}
+						contentMode={'mobile'}
+						source={{
+							html: `
         	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
 			${data.community_content} 
         `,
-							}}
-							style={[
-								style.webview,
-								{
-									height: height,
-									opacity: 0.99,
-								},
-							]}
-						/>
-					) : (
-						<WebView
-							originWhitelist={['*']}
-							scalesPageToFit={true}
-							onMessage={onWebViewMessage}
-							automaticallyAdjustContentInsets={false}
-							injectedJavaScript="window.ReactNativeWebView.postMessage(document.body.scrollHeight)" //Dynamic Height 수치 설정
-							source={{
-								html: `
+						}}
+						style={[
+							style.webview,
+							{
+								height: height,
+								opacity: load ? 1 : 0,
+							},
+						]}
+					/>
+				) : (
+					<WebView
+						originWhitelist={['*']}
+						scalesPageToFit={true}
+						onLoadEnd={() => setLoad(true)}
+						onMessage={onWebViewMessage}
+						injectedJavaScript="window.ReactNativeWebView.postMessage(document.body.scrollHeight)" //Dynamic Height 수치 설정
+						source={{
+							html: `
         	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
 			${data.community_content} 
         `,
-							}}
-							style={{
-								width: 670 * DP,
-								height: height == 0 ? 500 * DP : height,
-							}}
-						/>
-					)}
-				</View>
+						}}
+						style={{
+							width: 670 * DP,
+							height: height == 0 ? 300 * DP : height,
+						}}
+					/>
+				)}
 			</View>
 		</View>
 	);

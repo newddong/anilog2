@@ -3,7 +3,7 @@ import {txt} from 'Root/config/textstyle';
 import {Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {CurrentLocation, FavoriteTag46_Filled, LocationGray, LocationMarker, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
-import {GRAY10} from 'Root/config/color';
+import {BLACK, GRAY10, WHITE} from 'Root/config/color';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {useNavigation} from '@react-navigation/core';
@@ -28,30 +28,92 @@ const ReviewContent = props => {
 		data.community_interests.interests_trip,
 	);
 
-	const category = v => {
-		return (
-			<View style={[style.category]}>
-				<Text style={[txt.noto24]}>{v}</Text>
-			</View>
-		);
-	};
-
-	const onPressCategory = category => {
-		alert(category);
+	const getCategory = (v, i) => {
+		// category_sum_list.push('테스트');
+		const page = Math.floor(interests.length / 4) + 1;
+		let arr = [];
+		arr.length = page;
+		arr.fill('a', 0, page);
+		if (interests.length < 4) {
+			arr = ['a'];
+			return arr.map((value, index) => {
+				let sliced = interests.slice(0, 4);
+				return (
+					<View key={index} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
+						{sliced.map((v, i) => {
+							return (
+								<View
+									key={i}
+									activeOpacity={0.7}
+									style={[
+										style.category,
+										{
+											backgroundColor: WHITE,
+											borderColor: BLACK,
+										},
+									]}>
+									<Text
+										style={[
+											txt.noto24,
+											{
+												color: BLACK,
+											},
+										]}>
+										{v}
+									</Text>
+								</View>
+							);
+						})}
+					</View>
+				);
+			});
+		} else
+			return arr.map((value, index) => {
+				let sliced = interests.slice(index * 4, (index + 1) * 4);
+				return (
+					<View key={index} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
+						{sliced.map((v, i) => {
+							return (
+								<View
+									key={i}
+									activeOpacity={0.7}
+									style={[
+										style.category,
+										{
+											backgroundColor: WHITE,
+											borderColor: BLACK,
+										},
+									]}>
+									<Text
+										style={[
+											txt.noto24,
+											{
+												color: BLACK,
+											},
+										]}>
+										{v}
+									</Text>
+								</View>
+							);
+						})}
+					</View>
+				);
+			});
 	};
 
 	const onWebViewMessage = event => {
 		if (parseInt(event.nativeEvent.data) < 300) {
 			setHeight(300 * DP);
 		} else {
-			setHeight(parseInt(event.nativeEvent.data));
+			height >= 300 ? false : setHeight(parseInt(event.nativeEvent.data));
+			Platform.OS == 'android'
+				? console.log('height and : ', parseInt(event.nativeEvent.data))
+				: console.log('parseInt(event.nativeEvent.data)', parseInt(event.nativeEvent.data));
 		}
 	};
 
 	const x = 126.937125; //초기값 더미
 	const y = 37.548721; //초기값 더미
-
-	const category_dummy = ['애견카페', '애견호텔', '애견놀이터'];
 
 	return (
 		<View style={[style.container]}>
@@ -66,7 +128,7 @@ const ReviewContent = props => {
 				</View>
 			</View>
 			<View style={[style.profile]}>
-				<UserLocationTimeLabel data={data.community_writer_id} time={data.community_update_date} />
+				<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} />
 			</View>
 			<View>
 				<View style={[{width: 700 * DP, marginTop: 20 * DP}]}>
@@ -75,6 +137,7 @@ const ReviewContent = props => {
 							originWhitelist={['*']}
 							onMessage={onWebViewMessage}
 							injectedJavaScript="window.ReactNativeWebView.postMessage(document.body.scrollHeight)" //Dynamic Height 수치 설정
+							scrollEnabled={false}
 							source={{
 								html: `
         	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
@@ -142,9 +205,9 @@ const ReviewContent = props => {
 								<View style={[{alignItems: 'center', marginBottom: 20 * DP}]}>
 									<Text style={[txt.noto22b, style.locationText]}>
 										{' '}
-										{data.community_address.road_address.address_name != ''
-											? data.community_address.road_address.address_name
-											: data.community_address.normal_address.address_name}
+										{data.community_address.road_address.address_name == '도로명 주소가 없는 위치입니다. '
+											? data.community_address.normal_address.address_name
+											: data.community_address.road_address.address_name}
 									</Text>
 									<View style={[style.triangle]}></View>
 									<LocationMarker />
@@ -154,18 +217,14 @@ const ReviewContent = props => {
 						<View style={[style.location]}>
 							<LocationGray />
 							<Text style={[txt.noto26b, {color: GRAY10, marginLeft: 10 * DP}]}>
-								{data.community_address.road_address.address_name != ''
-									? data.community_address.road_address.address_name
-									: data.community_address.normal_address.address_name}
+								{data.community_address.road_address.address_name == '도로명 주소가 없는 위치입니다. '
+									? data.community_address.normal_address.address_name
+									: data.community_address.road_address.address_name}
 							</Text>
 						</View>
 					</>
 				)}
-				<View style={[style.categoryList]}>
-					{interests.map((v, i) => {
-						return <View key={i}>{category(v)}</View>;
-					})}
-				</View>
+				<View style={[style.categoryList, {}]}>{getCategory()}</View>
 			</View>
 		</View>
 	);
@@ -222,13 +281,14 @@ const style = StyleSheet.create({
 		borderRadius: 10 * DP,
 		borderWidth: 2 * DP,
 		marginRight: 12 * DP,
-		paddingHorizontal: 8 * DP,
+		paddingHorizontal: 15 * DP,
 		paddingVertical: 2 * DP,
+		backgroundColor: 'yellow',
 	},
 	categoryList: {
 		width: 510 * DP,
 		marginTop: 12 * DP,
-		flexDirection: 'row',
+		// flexDirection: 'row',
 	},
 	header_title: {
 		width: 544 * DP,
@@ -254,20 +314,6 @@ const style = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 	},
-	category: {
-		header: 38 * DP,
-		borderRadius: 10 * DP,
-		borderWidth: 2 * DP,
-		marginRight: 12 * DP,
-		paddingHorizontal: 8 * DP,
-		paddingVertical: 2 * DP,
-	},
-	categoryList: {
-		width: 510 * DP,
-		marginTop: 12 * DP,
-		flexDirection: 'row',
-	},
-
 	mapContainer: {
 		width: 654 * DP,
 		height: 654 * DP,

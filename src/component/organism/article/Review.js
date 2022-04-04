@@ -18,6 +18,13 @@ export default Review = props => {
 	const navigation = useNavigation();
 	const data = props.data;
 	const [moreCategory, setMoreCategory] = React.useState(false);
+	const onPressCategory = category => {
+		if (category == '접기') {
+			setMoreCategory(false);
+		} else {
+			// alert(category);
+		}
+	};
 
 	const getCategory = (v, i) => {
 		let category_sum_list = [];
@@ -45,7 +52,8 @@ export default Review = props => {
 						{sliced.map((v, i) => {
 							const isLast = v == '+' + (category_sum_list.length - 4);
 							return (
-								<View
+								<TouchableOpacity
+									onPress={() => (isLast ? setMoreCategory(true) : onPressCategory(v))}
 									key={i}
 									activeOpacity={0.7}
 									style={[
@@ -64,7 +72,7 @@ export default Review = props => {
 										]}>
 										{v}
 									</Text>
-								</View>
+								</TouchableOpacity>
 							);
 						})}
 					</View>
@@ -78,7 +86,8 @@ export default Review = props => {
 						{sliced.map((v, i) => {
 							const isLast = v == '접기';
 							return (
-								<View
+								<TouchableOpacity
+									onPress={() => onPressCategory(v)}
 									key={i}
 									activeOpacity={0.7}
 									style={[
@@ -97,7 +106,7 @@ export default Review = props => {
 										]}>
 										{v}
 									</Text>
-								</View>
+								</TouchableOpacity>
 							);
 						})}
 					</View>
@@ -141,7 +150,7 @@ export default Review = props => {
 		<View style={[style.container]}>
 			{/* 리뷰 헤더  */}
 			<View style={{flexDirection: 'row'}}>
-				<View style={[style.header]}>
+				<View style={[style.header, {}]}>
 					{getCategory()}
 					<TouchableOpacity activeOpacity={0.6} onPress={onPressReviewContent}>
 						<View style={[style.content]}>
@@ -149,7 +158,7 @@ export default Review = props => {
 								{data.community_title}
 							</Text>
 							<View style={[style.profile]}>
-								<UserLocationTimeLabel data={data.community_writer_id} time={data.community_update_date} />
+								<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} />
 							</View>
 						</View>
 					</TouchableOpacity>
@@ -159,13 +168,14 @@ export default Review = props => {
 					<Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />
 				</View>
 			</View>
-			{/* 리뷰 컨텐츠 */}
-			<TouchableOpacity>
-				{/* 리뷰 사진 썸네일 */}
-				<View style={[style.thumbnail]}>
+			{/* 리뷰 사진 썸네일 */}
+			{imageList().length == 0 ? (
+				<></>
+			) : (
+				<View style={[style.thumbnail, {}]}>
 					<ArticleThumnails onPressReviewContent={onPressReviewContent} photo_list={imageList()} />
 				</View>
-			</TouchableOpacity>
+			)}
 			{/* 좋아요 및 댓글 모두 보기  */}
 			<View style={[style.likeComment]}>
 				<View style={[style.like]}>
@@ -195,7 +205,7 @@ const style = StyleSheet.create({
 	},
 	header: {
 		width: 550 * DP,
-		header: 50 * DP,
+		// header: 50 * DP,
 	},
 	category: {
 		header: 38 * DP,
@@ -225,7 +235,7 @@ const style = StyleSheet.create({
 		marginTop: 8 * DP,
 	},
 	likeComment: {
-		marginTop: 20 * DP,
+		// marginTop: 20 * DP,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		width: 654 * DP,

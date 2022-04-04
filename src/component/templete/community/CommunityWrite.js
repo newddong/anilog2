@@ -63,7 +63,7 @@ export default CommunityWrite = props => {
 	const article_type = ['talk', 'question', 'meeting'];
 
 	React.useEffect(() => {
-		props.navigation.setParams({data: data, nav: props.route.name});
+		props.navigation.setParams({data: data, nav: 'CommunityWrite'});
 	}, [data]);
 
 	React.useEffect(() => {
@@ -155,7 +155,7 @@ export default CommunityWrite = props => {
 				`<div style="padding : 8px 10px 8px 0px;" ><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
 				 height="340px" width="100%;" style="border-radius:15px; margin: 0 auto 4px;  "/></div>`,
 			);
-			richText.current?.insertHTML('<p><br/></p></div>');
+			// richText.current?.insertHTML('<p><br/></p></div>');
 		});
 
 		richText.current?.focusContentEditor();
@@ -275,6 +275,7 @@ export default CommunityWrite = props => {
 	};
 
 	const onPressTempSave = () => {
+		richText.current?.dismissKeyboard(); //일반적인 input과 달리 RichText에서는 이와같이 키보드를 hide
 		alert('onPressTempSave');
 	};
 
@@ -332,6 +333,7 @@ export default CommunityWrite = props => {
 	};
 
 	const onPressType = select => {
+		richText.current?.dismissKeyboard(); //일반적인 input과 달리 RichText에서는 이와같이 키보드를 hide
 		setData({...data, community_free_type: select});
 	};
 
@@ -422,7 +424,7 @@ export default CommunityWrite = props => {
 	};
 
 	return (
-		<View style={[style.container]}>
+		<View style={[style.container, {}]}>
 			<ScrollView contentContainerStyle={[style.insideScrollView, {}]} ref={scrollRef} showsVerticalScrollIndicator={false}>
 				{/* //제목 및 카테고리 선택 */}
 				<TextInput onChangeText={onChangeTitle} style={[txt.noto30, style.title_text]} placeholder={'제목 입력...'} placeholderTextColor={GRAY20} />
@@ -445,7 +447,7 @@ export default CommunityWrite = props => {
 					</View>
 				)}
 				{/* 텍스트 입력 박스 */}
-				<View style={[style.content]}>
+				<View style={[style.content, {}]}>
 					{data.community_address.normal_address.address_name != '' ? (
 						<View style={[style.location]}>
 							<Location54_Filled />
@@ -548,6 +550,8 @@ export default CommunityWrite = props => {
 					{getArticleButtonContainer()}
 				</View>
 			)}
+			{/* ios에서 키보드가 가려지는 현상 방지를 위한 keyBoard패딩 컴포넌트 */}
+			<View style={{height: Platform.OS == 'ios' ? KeyboardY - 40 : null}} />
 		</View>
 	);
 };

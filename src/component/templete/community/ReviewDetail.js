@@ -9,7 +9,11 @@ import {useNavigation} from '@react-navigation/core';
 import ReviewContent from 'Root/component/organism/article/ReviewContent';
 import {getCommunityList} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {getCommentListByCommunityId} from 'Root/api/commentapi';
+import {createComment, getCommentListByCommunityId, getCommentListByFeedId, getCommentListByProtectId, updateComment} from 'Root/api/commentapi';
+import Modal from 'Component/modal/Modal';
+import ImagePicker from 'react-native-image-crop-picker';
+import userGlobalObject from 'Root/config/userGlobalObject';
+import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 
 /**
  * 후기 상세 내용
@@ -23,6 +27,16 @@ export default ReviewDetail = props => {
 	const [comments, setComments] = React.useState([]);
 	const [showMore, setShowMore] = React.useState(false);
 	const scrollRef = React.useRef();
+	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
+	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
+	const [parentComment, setParentComment] = React.useState();
+	const input = React.useRef();
+	const addChildCommentFn = React.useRef(() => {});
+	const [editMode, setEditMode] = React.useState(false); //댓글 편집 모드
+	const [editData, setEditData] = React.useState({
+		comment_contents: '',
+		comment_photo_uri: '',
+	});
 	// console.log('data', data);
 
 	React.useEffect(() => {
@@ -48,6 +62,90 @@ export default ReviewDetail = props => {
 		);
 	}, []);
 
+	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
+	const onWrite = () => {
+		if (editData.comment_contents.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
+
+		let param = {
+			comment_contents: editData.comment_contents, //내용
+			comment_is_secure: privateComment, //공개여부 테스트때 반영
+		};
+
+		if (editData.comment_photo_uri && editData.comment_photo_uri.length > 0) {
+			param.comment_photo_uri = editData.comment_photo_uri;
+		}
+
+		if (parentComment) {
+			//대댓글일 경우 해당 부모 댓글에 대한 댓글을 추가
+			param = {...param, commentobject_id: parentComment};
+		} else {
+			//부모댓글에 쓰는 경우가 아니라면 community 게시글에 대한 댓글을 추가
+			param = {...param, community_object_id: data._id};
+		}
+
+		if (editMode) {
+			console.log('댓글편집', editData);
+			updateComment(
+				{
+					...param,
+					commentobject_id: editData._id,
+					comment_photo_remove: !editData.comment_photo_uri || editData.comment_photo_uri == 0,
+				},
+				result => {
+					console.log(result);
+					setParentComment();
+					setEditData({
+						comment_contents: '',
+						comment_photo_uri: '',
+					});
+					getCommentListByCommunityId(
+						{
+							community_object_id: data._id,
+							request_number: 1000,
+						},
+						comments => {
+							!parentComment && setComments([]); //댓글목록 초기화
+							setComments(comments.msg);
+							parentComment && addChildCommentFn.current();
+							// console.log('comments', comments);
+						},
+						err => console.log('getCommentListByFeedId', err),
+					);
+				},
+				err => Modal.alert(err),
+			);
+		} else {
+			console.log('param', param);
+			createComment(
+				param,
+				result => {
+					console.log(result);
+					setParentComment();
+					setEditData({
+						comment_contents: '',
+						comment_photo_uri: '',
+					});
+					getCommentListByCommunityId(
+						{
+							community_object_id: data._id,
+							request_number: 1000,
+						},
+						comments => {
+							!parentComment && setComments([]); //댓글목록 초기화
+							setComments(comments.msg);
+							parentComment && addChildCommentFn.current();
+							console.log('comments', comments);
+							input.current.blur();
+							// scrollRef.current.scrollToOffset({offset: 0});
+						},
+						err => console.log('getCommentListByFeedId', err),
+					);
+				},
+				err => Modal.alert(err),
+			);
+		}
+	};
+
 	const getComment = () => {
 		getCommentListByCommunityId(
 			{
@@ -62,6 +160,57 @@ export default ReviewDetail = props => {
 		);
 	};
 
+	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
+	const onLockBtnClick = () => {
+		setPrivateComment(!privateComment);
+		!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+	};
+
+	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
+	const onAddPhoto = () => {
+		// navigation.push('SinglePhotoSelect', props.route.name);
+		console.log('onAddphoto');
+		ImagePicker.openPicker({
+			compressImageQuality: 0.8,
+			cropping: true,
+		})
+			.then(images => {
+				console.log('onAddphoto Imagepicker', images);
+				setEditData({...editData, comment_photo_uri: images.path});
+				Modal.close();
+			})
+			.catch(err => console.log(err + ''));
+		Modal.close();
+	};
+
+	const onDeleteImage = () => {
+		console.log('onDelete Img');
+		setEditData({...editData, comment_photo_uri: ''});
+	};
+
+	// 답글 쓰기 -> Input value 변경 콜백함수
+	const onChangeReplyInput = text => {
+		console.log('onChangeReplyInput : ', text);
+		setEditData({...editData, comment_contents: text});
+	};
+
+	// 답글 쓰기 버튼 클릭 콜백함수
+	const onReplyBtnClick = (parentCommentId, addChildComment) => {
+		console.log('onReplyBtnClick : ', parentCommentId);
+		setParentComment(parentCommentId);
+		input.current.focus();
+		editComment || setEditComment(true);
+		addChildCommentFn.current = addChildComment;
+	};
+
+	//미트볼, 수정을 누르면 동작
+	const onEdit = comment => {
+		console.log('수정 데이터', comment);
+		setEditMode(true);
+		setEditData({...comment});
+		input.current?.focus();
+	};
+
 	//미트볼 클릭
 	const onPressMeatball = () => {
 		alert('onPressMeatball');
@@ -74,7 +223,8 @@ export default ReviewDetail = props => {
 
 	//댓글 클릭
 	const onPressReply = () => {
-		// alert('moveToReplyListPage');
+		// console.log('replyY', replyY);
+		// scrollRef.current?.scrollToOffset({offset: (replyY.y - replyY.height) * DP, animated: true});
 		navigation.push('CommunityCommentList', {community_object: data});
 	};
 
@@ -101,7 +251,7 @@ export default ReviewDetail = props => {
 					showsVerticalScrollIndicator={false}
 					onContentSizeChange={(width, height) => {
 						if (showMore) {
-							scrollRef.current.scrollToEnd();
+							// scrollRef.current.scrollToEnd();
 						}
 					}}
 					renderItem={({item, index}) => {
@@ -115,13 +265,25 @@ export default ReviewDetail = props => {
 											<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개 모두 보기</Text>
 										</TouchableOpacity>
 									) : (
-										<></>
+										<View style={[style.replyCountContainer, {alignSelf: 'center', alignItems: 'flex-start'}]}>
+											<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
+										</View>
 									)}
 									<View style={[style.commentContainer]}>
-										<CommentList items={comments && comments.length > 3 ? comments.slice(0, 3) : comments} onPressReplyBtn={onPressReply} />
+										<CommentList items={comments} onPressReplyBtn={onReplyBtnClick} onEdit={onEdit} />
 									</View>
 									<View style={[{marginTop: 20 * DP, marginBottom: 30 * DP}]}>
-										<ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} isProtectRequest={true} />
+										{/* <ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} /> */}
+										<ReplyWriteBox
+											onAddPhoto={onAddPhoto}
+											onChangeReplyInput={onChangeReplyInput}
+											onLockBtnClick={onLockBtnClick}
+											onWrite={onWrite}
+											onDeleteImage={onDeleteImage}
+											privateComment={privateComment}
+											ref={input}
+											editData={editData}
+										/>
 									</View>
 								</View>
 
@@ -166,14 +328,14 @@ const style = StyleSheet.create({
 		width: 654 * DP,
 	},
 	replyCountContainer: {
-		width: 474 * DP,
+		width: 654 * DP,
 		alignItems: 'flex-end',
-		alignSelf: 'flex-end',
-		marginRight: 48 * DP,
+		alignSelf: 'center',
 		marginTop: 30 * DP,
 		marginBottom: 20 * DP,
 	},
 	commentContainer: {
+		alignItems: 'center',
 		paddingBottom: 10 * DP,
 		paddingTop: 20 * DP,
 		// backgroundColor: 'yellow',

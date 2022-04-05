@@ -179,7 +179,8 @@ export default ShelterMenu = ({route}) => {
 				break;
 			// 신청내역
 			case NOTE_LIST:
-				Modal.popInfoModal();
+				// Modal.popInfoModal();
+				navigation.push('ReceivedMessage', {token: data});
 				break;
 			//-------------- 설정
 			//정보/문의

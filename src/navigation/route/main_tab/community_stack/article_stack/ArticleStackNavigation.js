@@ -6,13 +6,13 @@ const ArticleStackNav = createStackNavigator();
 
 export default ArticleStackNavigation = props => {
 	return (
-		<ArticleStackNav.Navigator initialRouteName="ArticleMain" screenOptions={{}}>
+		<ArticleStackNav.Navigator initialRouteName="ArticleMain">
 			<ArticleStackNav.Screen
 				name={'ArticleMain'}
 				component={ArticleMain}
-				options={({route}) => ({
+				options={{
 					headerShown: false,
-				})}
+				}}
 			/>
 		</ArticleStackNav.Navigator>
 	);

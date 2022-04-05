@@ -339,11 +339,9 @@ export default Profile = ({route}) => {
 			if (data.user_type != SHELTER) {
 				if (tabMenuSelected == 0) {
 					return <FeedThumbnailList items={item} whenEmpty={whenFeedThumbnailEmpty} onClickThumnail={onClick_Thumbnail_FeedTab} />;
-				} 
-				else if(tabMenuSelected == 1){
+				} else if (tabMenuSelected == 1) {
 					return <FeedThumbnailList items={item} whenEmpty={whenFeedThumbnailEmpty} onClickThumnail={onClick_Thumbnail_TagTab} />;
-				}
-				else {
+				} else {
 					return <InfoScreen />;
 				}
 			} else {

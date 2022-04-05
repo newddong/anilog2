@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView, Text, TouchableOpacity, View, TextInput, Platform, StatusBar, Keyboard, StyleSheet} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View, TextInput, Platform, StatusBar, Keyboard, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {APRI10, WHITE, GRAY20, GRAY10, GRAY40, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP, {isNotch} from 'Root/config/dp';
@@ -10,8 +10,9 @@ import {useNavigation} from '@react-navigation/native';
 import ImagePicker from 'react-native-image-crop-picker';
 import {changeLocalPathToS3Path} from 'Root/api/community';
 import {RichEditor} from 'react-native-pell-rich-editor';
-import {Animal_another_off, Animal_cat_off, Animal_dog_off, Filter60Border, Filter60Filled, WriteBoard} from 'Root/component/atom/icon';
+import {Animal_another_off, Animal_cat_off, Animal_dog_off} from 'Root/component/atom/icon';
 import {Animal_another, Animal_cat, Animal_dog} from 'Root/component/atom/icon';
+import Geolocation from '@react-native-community/geolocation';
 
 export default CommunityWrite = props => {
 	const navigation = useNavigation();
@@ -31,6 +32,7 @@ export default CommunityWrite = props => {
 			interests_interior: [],
 			interests_etc: [],
 			interests_review: [],
+			interests_location: {city: '', district: ''},
 		},
 		community_address: {
 			road_address: {
@@ -49,7 +51,6 @@ export default CommunityWrite = props => {
 			},
 		},
 	});
-	isReview ? navigation.setOptions({title: '후기 게시글'}) : navigation.setOptions({title: '자유 게시글'});
 
 	const [animalType, setAnimalType] = React.useState({
 		dog: false,
@@ -62,8 +63,15 @@ export default CommunityWrite = props => {
 	const article_type = ['talk', 'question', 'meeting'];
 
 	React.useEffect(() => {
-		props.navigation.setParams({data: data, nav: props.route.name});
+		props.navigation.setParams({data: data, nav: 'CommunityWrite'});
 	}, [data]);
+
+	React.useEffect(() => {
+		isReview ? navigation.setOptions({title: '후기 게시글'}) : navigation.setOptions({title: '자유 게시글'});
+		if (Platform.OS === 'ios') {
+			Geolocation.requestAuthorization('always');
+		}
+	}, []);
 
 	React.useEffect(() => {
 		const param = props.route.params;
@@ -137,11 +145,17 @@ export default CommunityWrite = props => {
 		result.map((v, i) => {
 			// richText.current?.insertImage(v.location, 'margin: 0.2em auto 0.2em; border-radius: 15px; width:150px; height:150px;');
 			richText.current?.insertHTML('<p><br/></p></div>');
+			// richText.current?.insertHTML(
+			// 	`<div id="testImg" ><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
+			// 	contenteditable="false" height="340px" width="300px" style="border-radius:15px; margin: 0 auto 4px; "/>
+			// 	<img src="https://cdn-icons-png.flaticon.com/512/458/458595.png" style="position:absolute; top: 35px; right:35px;" width="20px;" height="20px;"  onclick="_.sendEvent('ImgClick')" />
+			// 	</div>`,
+			// );
 			richText.current?.insertHTML(
-				`<img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
-				contenteditable="false" height="450px" width="300px" style="border-radius:15px; margin: 0 auto 4px; "/>`,
+				`<div style="padding : 8px 10px 8px 0px;" ><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
+				 height="340px" width="100%;" style="border-radius:15px; margin: 0 auto 4px;  "/></div>`,
 			);
-			richText.current?.insertHTML('<p><br/></p></div>');
+			// richText.current?.insertHTML('<p><br/></p></div>');
 		});
 
 		richText.current?.focusContentEditor();
@@ -157,10 +171,12 @@ export default CommunityWrite = props => {
 	};
 
 	let handleMessage = React.useCallback(({type, id, data}) => {
+		console.log('type', type);
 		let index = 0;
 		switch (type) {
 			case 'ImgClick':
 				console.log('ddddd');
+				alert('ddd');
 				break;
 			case 'TitleClick':
 				const color = ['red', 'blue', 'gray', 'yellow', 'coral'];
@@ -171,6 +187,24 @@ export default CommunityWrite = props => {
 		}
 		// console.log('onMessage', type, id, data);
 	}, []);
+
+	const handleMessage2 = e => {
+		console.log('e', e);
+		console.log('type', type);
+		let index = 0;
+		switch (type) {
+			case 'ImgClick':
+				console.log('ddddd');
+				alert('ddd');
+				break;
+			case 'TitleClick':
+				const color = ['red', 'blue', 'gray', 'yellow', 'coral'];
+				richText.current?.commandDOM(`$('#${id}').style.color='${color[XMath.random(color.length - 1)]}'`);
+				break;
+			case 'SwitchImage':
+				break;
+		}
+	};
 
 	//사진 불러오기
 	const onPressPhotoSelect = () => {
@@ -220,7 +254,8 @@ export default CommunityWrite = props => {
 		data.community_interests.interests_trip == 0;
 
 	const onPressFilter = () => {
-		console.log('data.community_interests', data.community_interests);
+		// console.log('data.community_interests', data.community_interests);
+		richText.current?.dismissKeyboard(); //일반적인 input과 달리 RichText에서는 이와같이 키보드를 hide
 		Modal.popInterestTagModal(
 			'ReviewWrite',
 			// data.community_interests == '카테고리 선택' ? [] : data.community_interests,
@@ -240,6 +275,7 @@ export default CommunityWrite = props => {
 	};
 
 	const onPressTempSave = () => {
+		richText.current?.dismissKeyboard(); //일반적인 input과 달리 RichText에서는 이와같이 키보드를 hide
 		alert('onPressTempSave');
 	};
 
@@ -248,25 +284,30 @@ export default CommunityWrite = props => {
 		scrollRef.current.scrollTo({y: scrollY - 50, duration: 100, animated: true});
 	};
 
+	const [KeyboardY, setKeyboardY] = React.useState(0);
+	const [showBtn, setShowBtn] = React.useState(false);
+
+	const KeyboardBorderLine = (() => {
+		if (Platform.OS === 'ios') {
+			return isNotch ? -34 : 0;
+		} else if (Platform.OS === 'android') {
+			return isNotch ? StatusBar.currentHeight : 0;
+		}
+	})();
+
 	React.useEffect(() => {
 		let didshow = Keyboard.addListener('keyboardDidShow', e => {
-			// console.log('keyboarddidshow');
 			scrollRef.current.scrollTo({y: cursor - 30, duration: 100, animated: true});
+			setKeyboardY(e.endCoordinates.height + KeyboardBorderLine);
+			Platform.OS == 'android' ? setShowBtn(true) : false;
 		});
 		let didhide = Keyboard.addListener('keyboardDidHide', e => {
-			// console.log('keyboarddidhide');
-		});
-		let willshow = Keyboard.addListener('keyboardWillShow', e => {
-			// console.log('keyboardwillshow');
-		});
-		let willhide = Keyboard.addListener('keyboardWillHide', e => {
-			// console.log('keyboardwillhide');
+			setKeyboardY(0);
+			Platform.OS == 'android' ? setShowBtn(false) : false;
 		});
 		return () => {
 			didshow.remove();
 			didhide.remove();
-			willshow.remove();
-			willhide.remove();
 		};
 	});
 
@@ -292,6 +333,7 @@ export default CommunityWrite = props => {
 	};
 
 	const onPressType = select => {
+		richText.current?.dismissKeyboard(); //일반적인 input과 달리 RichText에서는 이와같이 키보드를 hide
 		setData({...data, community_free_type: select});
 	};
 
@@ -335,12 +377,54 @@ export default CommunityWrite = props => {
 		);
 	};
 
+	const getReviewButtonContainer = () => {
+		return (
+			<>
+				<TouchableOpacity activeOpacity={0.6} onPress={onPressTempSave}>
+					<View style={[style.buttonItem]}>
+						<Save54 />
+						<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>임시저장</Text>
+					</View>
+				</TouchableOpacity>
+				<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
+					<View style={[style.buttonItem]}>
+						<Camera54 />
+						<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>사진추가</Text>
+					</View>
+				</TouchableOpacity>
+				{/* <TouchableOpacity activeOpacity={0.6} onPress={onPressAddVideo}>
+							<View style={[style.buttonItem]}>
+								<Camera54 />
+								<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>영상 추가</Text>
+							</View>
+						</TouchableOpacity> */}
+				<TouchableOpacity activeOpacity={0.6} onPress={moveToLocationPicker}>
+					<View style={[style.buttonItem, {}]}>
+						<Location54_APRI10 />
+						<Text style={[txt.noto24, {color: APRI10, alignSelf: 'center', marginLeft: 10 * DP}]}>위치추가</Text>
+					</View>
+				</TouchableOpacity>
+			</>
+		);
+	};
+
+	const getArticleButtonContainer = () => {
+		return (
+			<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
+				<View style={[style.buttonItem]}>
+					<Camera54 />
+					<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>사진추가</Text>
+				</View>
+			</TouchableOpacity>
+		);
+	};
+
 	const moveToLocationPicker = () => {
 		props.navigation.push('SearchMap', {data: data, isReview: isReview});
 	};
 
 	return (
-		<View style={[style.container]}>
+		<View style={[style.container, {}]}>
 			<ScrollView contentContainerStyle={[style.insideScrollView, {}]} ref={scrollRef} showsVerticalScrollIndicator={false}>
 				{/* //제목 및 카테고리 선택 */}
 				<TextInput onChangeText={onChangeTitle} style={[txt.noto30, style.title_text]} placeholder={'제목 입력...'} placeholderTextColor={GRAY20} />
@@ -363,7 +447,7 @@ export default CommunityWrite = props => {
 					</View>
 				)}
 				{/* 텍스트 입력 박스 */}
-				<View style={[style.content]}>
+				<View style={[style.content, {}]}>
 					{data.community_address.normal_address.address_name != '' ? (
 						<View style={[style.location]}>
 							<Location54_Filled />
@@ -376,22 +460,45 @@ export default CommunityWrite = props => {
 					) : (
 						<></>
 					)}
-					<RichEditor
-						ref={richText}
-						editorStyle={{
-							backgroundColor: WHITE,
-							color: 'black',
-							contentCSSText: 'font-size:14px;',
-						}}
-						onChange={onChange}
-						style={{
-							width: '100%',
-						}}
-						placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
-						geolocationEnabled={true}
-						onCursorPosition={onCursorPosition}
-						onMessage={handleMessage}
-					/>
+					{Platform.OS == 'android' ? (
+						<ScrollView>
+							<RichEditor
+								ref={richText}
+								editorStyle={{
+									contentCSSText: 'font-size:14px;',
+								}}
+								onChange={onChange}
+								style={{
+									width: '100%',
+									opacity: 0.99,
+								}}
+								placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
+								onCursorPosition={onCursorPosition}
+								onMessage={handleMessage}
+							/>
+						</ScrollView>
+					) : (
+						<>
+							<RichEditor
+								ref={richText}
+								showSoftInputOnFocus={false}
+								onFocus={() => setShowBtn(true)}
+								onBlur={() => setShowBtn(false)}
+								keyboardDisplayRequiresUserAction={true}
+								editorStyle={{
+									contentCSSText: 'font-size:14px;',
+								}}
+								onChange={onChange}
+								style={{
+									width: '100%',
+									opacity: 0.99,
+								}}
+								placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
+								onCursorPosition={onCursorPosition}
+								onMessage={handleMessage2}
+							/>
+						</>
+					)}
 				</View>
 				{/* 하단 버튼 컴포넌트  */}
 				{isReview ? (
@@ -423,34 +530,28 @@ export default CommunityWrite = props => {
 				) : (
 					<></>
 				)}
-
-				<View style={[style.buttonContainer]}>
-					<TouchableOpacity activeOpacity={0.6} onPress={onPressTempSave}>
-						<View style={[style.buttonItem]}>
-							<Save54 />
-							<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>임시저장</Text>
-						</View>
-					</TouchableOpacity>
-					<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
-						<View style={[style.buttonItem]}>
-							<Camera54 />
-							<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>사진추가</Text>
-						</View>
-					</TouchableOpacity>
-					<TouchableOpacity activeOpacity={0.6} onPress={onPressAddVideo}>
-						<View style={[style.buttonItem]}>
-							<Camera54 />
-							<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>영상 추가</Text>
-						</View>
-					</TouchableOpacity>
-					<TouchableOpacity activeOpacity={0.6} onPress={moveToLocationPicker}>
-						<View style={[style.buttonItem, {}]}>
-							<Location54_APRI10 />
-							<Text style={[txt.noto24, {color: APRI10, alignSelf: 'center', marginLeft: 10 * DP}]}>위치추가</Text>
-						</View>
-					</TouchableOpacity>
-				</View>
+				{isReview ? (
+					<View style={[style.buttonContainer, {opacity: showBtn == true ? 0 : 1}]}>{getReviewButtonContainer()}</View>
+				) : (
+					<View style={[style.buttonContainer, {justifyContent: 'flex-end', opacity: showBtn == true ? 0 : 1}]}>{getArticleButtonContainer()}</View>
+				)}
 			</ScrollView>
+			{isReview ? (
+				//키보드 영역 올라올 시 출력되야 하는 버튼 컨테이너 - 스타일 별도의 처리가 필요하여 분리 처리하였음
+				<View
+					style={[
+						style.buttonContainer_keyboard,
+						{justifyContent: 'space-between', bottom: Platform.OS == 'android' ? 0 : KeyboardY - 50, opacity: showBtn == false ? 0 : 1},
+					]}>
+					{getReviewButtonContainer()}
+				</View>
+			) : (
+				<View style={[style.buttonContainer_keyboard, {bottom: Platform.OS == 'android' ? 0 : KeyboardY - 50, opacity: showBtn == false ? 0 : 1}]}>
+					{getArticleButtonContainer()}
+				</View>
+			)}
+			{/* ios에서 키보드가 가려지는 현상 방지를 위한 keyBoard패딩 컴포넌트 */}
+			<View style={{height: Platform.OS == 'ios' ? KeyboardY - 40 : null}} />
 		</View>
 	);
 };
@@ -526,6 +627,16 @@ const style = StyleSheet.create({
 		alignSelf: 'center',
 		width: 654 * DP,
 		justifyContent: 'space-between',
+	},
+	buttonContainer_keyboard: {
+		// backgroundColor: 'yellow',
+		paddingVertical: 15 * DP,
+		flexDirection: 'row',
+		alignSelf: 'center',
+		width: 654 * DP,
+		backgroundColor: 'white',
+		justifyContent: 'flex-end',
+		position: 'absolute',
 	},
 	buttonItem: {
 		width: 160 * DP,

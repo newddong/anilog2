@@ -18,22 +18,16 @@ export default Review = props => {
 	const navigation = useNavigation();
 	const data = props.data;
 	const [moreCategory, setMoreCategory] = React.useState(false);
-
 	const onPressCategory = category => {
 		if (category == '접기') {
 			setMoreCategory(false);
 		} else {
-			alert(category);
+			// alert(category);
 		}
 	};
 
 	const getCategory = (v, i) => {
 		let category_sum_list = [];
-		data.community_interests.interests_trip.map(v => category_sum_list.push(v));
-		data.community_interests.interests_etc.map(v => category_sum_list.push(v));
-		data.community_interests.interests_hospital.map(v => category_sum_list.push(v));
-		data.community_interests.interests_review.map(v => category_sum_list.push(v));
-		data.community_interests.interests_interior.map(v => category_sum_list.push(v));
 		data.community_interests.interests_trip.map(v => category_sum_list.push(v));
 		data.community_interests.interests_etc.map(v => category_sum_list.push(v));
 		data.community_interests.interests_hospital.map(v => category_sum_list.push(v));
@@ -50,17 +44,17 @@ export default Review = props => {
 
 		if (category_sum_list.length > 3 && !moreCategory) {
 			arr = ['a'];
-			return arr.map((v, i) => {
+			return arr.map((value, index) => {
 				let sliced = category_sum_list.slice(0, 3);
 				sliced.push('+' + (category_sum_list.length - 4));
 				return (
-					<View style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
+					<View key={index} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
 						{sliced.map((v, i) => {
 							const isLast = v == '+' + (category_sum_list.length - 4);
 							return (
 								<TouchableOpacity
-									key={i}
 									onPress={() => (isLast ? setMoreCategory(true) : onPressCategory(v))}
+									key={i}
 									activeOpacity={0.7}
 									style={[
 										style.category,
@@ -85,16 +79,16 @@ export default Review = props => {
 				);
 			});
 		} else
-			return arr.map((v, i) => {
-				let sliced = category_sum_list.slice(i * 4, (i + 1) * 4);
+			return arr.map((value, index) => {
+				let sliced = category_sum_list.slice(index * 4, (index + 1) * 4);
 				return (
-					<View style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
+					<View key={index} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
 						{sliced.map((v, i) => {
 							const isLast = v == '접기';
 							return (
 								<TouchableOpacity
-									key={i}
 									onPress={() => onPressCategory(v)}
+									key={i}
 									activeOpacity={0.7}
 									style={[
 										style.category,
@@ -136,50 +130,52 @@ export default Review = props => {
 		props.onPressReply();
 	};
 
-	const moveToReviewDetail = () => {
+	const onPressReviewContent = () => {
 		props.onPressReviewContent();
 	};
 
 	const imageList = () => {
 		let imageList = [];
-		let getImgTag = data.community_content.match(/<img[\w\W]+?\/?>/g);
-		// console.log('getImgtag', getImgTag);
+		let getImgTag = data.community_content.match(/<img[\w\W]+?\/?>/g); //img 태그 추출
 		if (getImgTag) {
 			getImgTag.map((v, i) => {
-				let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i);
-				// console.log(i, src[1]);
+				let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i); //img 태그가 있는 경우 src 추출
 				imageList.push(src[1]);
 			});
 		}
-		// console.log('imageList', imageList);
 		return imageList;
 	};
 
 	return (
 		<View style={[style.container]}>
 			{/* 리뷰 헤더  */}
-			<View style={[style.header]}>
-				<View style={[style.categoryList]}>{getCategory()}</View>
+			<View style={{flexDirection: 'row'}}>
+				<View style={[style.header, {}]}>
+					{getCategory()}
+					<TouchableOpacity activeOpacity={0.6} onPress={onPressReviewContent}>
+						<View style={[style.content]}>
+							<Text style={[txt.noto32b]} numberOfLines={1}>
+								{data.community_title}
+							</Text>
+							<View style={[style.profile]}>
+								<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} />
+							</View>
+						</View>
+					</TouchableOpacity>
+				</View>
 				<View style={[style.icon]}>
 					<FavoriteTag46_Filled onPress={onPressFavorite} />
 					<Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />
 				</View>
 			</View>
-			{/* 리뷰 컨텐츠 */}
-			<TouchableOpacity onPress={moveToReviewDetail}>
-				<View style={[style.content]}>
-					<Text style={[txt.noto32b]} numberOfLines={1}>
-						{data.community_title}
-					</Text>
-					<View style={[style.profile]}>
-						<UserLocationTimeLabel data={data.community_writer_id} time={data.community_update_date} />
-					</View>
+			{/* 리뷰 사진 썸네일 */}
+			{imageList().length == 0 ? (
+				<></>
+			) : (
+				<View style={[style.thumbnail, {}]}>
+					<ArticleThumnails onPressReviewContent={onPressReviewContent} photo_list={imageList()} />
 				</View>
-				{/* 리뷰 사진 썸네일 */}
-				<View style={[style.thumbnail]}>
-					<ArticleThumnails photo_list={imageList()} />
-				</View>
-			</TouchableOpacity>
+			)}
 			{/* 좋아요 및 댓글 모두 보기  */}
 			<View style={[style.likeComment]}>
 				<View style={[style.like]}>
@@ -206,14 +202,10 @@ const style = StyleSheet.create({
 		width: 654 * DP,
 		paddingVertical: 24 * DP,
 		alignSelf: 'center',
-		// backgroundColor: 'yellow',
 	},
 	header: {
-		width: 654 * DP,
-		header: 50 * DP,
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		// backgroundColor: 'pink',
+		width: 550 * DP,
+		// header: 50 * DP,
 	},
 	category: {
 		header: 38 * DP,
@@ -227,8 +219,6 @@ const style = StyleSheet.create({
 	categoryList: {
 		width: 510 * DP,
 		minHeight: 65 * DP,
-		// backgroundColor: 'yellow',
-		// flexDirection: 'row',
 	},
 	profile: {
 		marginTop: 10 * DP,
@@ -238,16 +228,14 @@ const style = StyleSheet.create({
 		alignSelf: 'flex-start',
 	},
 	content: {
-		width: 654 * DP,
-		height: 130 * DP,
-		// marginTop: 6 * DP,
+		// top: -8 * DP,
 		// backgroundColor: 'palegreen',
 	},
 	thumbnail: {
 		marginTop: 8 * DP,
 	},
 	likeComment: {
-		marginTop: 20 * DP,
+		// marginTop: 20 * DP,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		width: 654 * DP,
@@ -261,10 +249,3 @@ const style = StyleSheet.create({
 		// backgroundColor: 'yellow',
 	},
 });
-
-const dummy = [
-	'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
-	'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
-	'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
-	'https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg',
-];

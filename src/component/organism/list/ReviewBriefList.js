@@ -14,23 +14,31 @@ import {Arrow_Down_GRAY10, Arrow_Up_GRAY10} from 'Root/component/atom/icon';
  */
 const ReviewBriefList = props => {
 	const [showMore, setShowMore] = React.useState(false);
+	const scrollRef = React.useRef('');
+
+	const items = showMore ? props.items : props.items.slice(0, 2);
+
+	const onPressShowMore = () => {
+		setShowMore(!showMore);
+		!showMore ? props.showMore() : false;
+	};
 
 	const renderItem = (item, index) => {
 		return (
-			<View style={[style.listItem]}>
-				<ReviewBriefItem onPressReview={() => props.onPressReview(index)} onPressLike={() => props.onPressLike(index)} />
+			<View key={index} style={[style.listItem]}>
+				<ReviewBriefItem data={item} onPressReview={() => props.onPressReview(index)} onPressLike={() => props.onPressLike(index)} />
 			</View>
 		);
 	};
 	return (
 		<View style={[style.container]}>
-			<FlatList
-				data={showMore ? props.items : props.items.slice(0, 2)}
-				renderItem={({item, index}) => renderItem(item, index)}
-				keyExtractor={item => item.id}
-			/>
+			<ScrollView ref={scrollRef}>
+				{items.map((v, i) => {
+					return renderItem(v, i);
+				})}
+			</ScrollView>
 			{props.items && props.items.length > 2 ? ( //아이템이 두 개 이상일 경우 더보기 출력
-				<TouchableOpacity onPress={() => setShowMore(!showMore)} style={[style.showMore]}>
+				<TouchableOpacity onPress={onPressShowMore} style={[style.showMore]}>
 					<Text style={[txt.noto24, {color: GRAY10}]}>더보기</Text>
 					{!showMore ? <Arrow_Down_GRAY10 /> : <Arrow_Up_GRAY10 />}
 				</TouchableOpacity>

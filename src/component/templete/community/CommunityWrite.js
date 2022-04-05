@@ -64,6 +64,7 @@ export default CommunityWrite = props => {
 
 	React.useEffect(() => {
 		props.navigation.setParams({data: data, nav: 'CommunityWrite'});
+		// console.log('data', data.community_title);
 	}, [data]);
 
 	React.useEffect(() => {
@@ -75,6 +76,7 @@ export default CommunityWrite = props => {
 
 	React.useEffect(() => {
 		const param = props.route.params;
+		console.log('param');
 		if (param?.data) {
 			//다른 주소 검색 결과값 적용
 			setData(param.data);
@@ -91,6 +93,7 @@ export default CommunityWrite = props => {
 
 	//제목 입력
 	const onChangeTitle = title => {
+		// console.log('title', title);
 		setData({...data, community_title: title});
 	};
 
@@ -474,7 +477,7 @@ export default CommunityWrite = props => {
 								}}
 								placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
 								onCursorPosition={onCursorPosition}
-								onMessage={handleMessage}
+								// onMessage={handleMessage}
 							/>
 						</ScrollView>
 					) : (
@@ -495,7 +498,7 @@ export default CommunityWrite = props => {
 								}}
 								placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
 								onCursorPosition={onCursorPosition}
-								onMessage={handleMessage2}
+								// onMessage={handleMessage2}
 							/>
 						</>
 					)}

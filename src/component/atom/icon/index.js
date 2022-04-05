@@ -150,6 +150,7 @@ import locationMarker from './locationMarker';
 import currentLocation from './currentLocation';
 import triangle from './triangle';
 import photo44 from './photo44';
+import alarmBadgerNotice48 from './alarmBadgerNotice48';
 import DP from 'Root/config/dp';
 
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
@@ -378,3 +379,4 @@ export const LocationMarker = makeSvg(locationMarker, {width: 80 * DP, height: 8
 export const CurrentLocation = makeSvg(currentLocation, {width: 100 * DP, height: 100 * DP});
 export const Triangle = makeSvg(triangle, {width: 26 * DP, height: 18 * DP});
 export const Photo44 = makeSvg(photo44, {width: 44 * DP, height: 35 * DP});
+export const alarmBadgerNotice = makeSvg(alarmBadgerNotice48, size48);

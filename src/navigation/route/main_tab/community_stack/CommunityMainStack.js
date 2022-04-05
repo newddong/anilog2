@@ -17,6 +17,7 @@ import CommunityCommentList from 'Root/component/templete/community/CommunityCom
 import WriteEditorTest from 'Root/component/templete/community/WriteEditorTest';
 import ReviewStackNavigation from './review_tab/ReviewStackNavigation';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
+import CommunityEdit from 'Root/component/templete/community/CommunityEdit';
 
 const CommunityMainStackNavi = createStackNavigator();
 
@@ -78,6 +79,14 @@ export default CommunityMainStack = props => {
 				options={({route}) => ({
 					header: props => <SendHeader {...props} />,
 					title: '',
+				})}
+			/>
+			<CommunityMainStackNavi.Screen
+				name={'CommunityEdit'}
+				component={CommunityEdit}
+				options={({route}) => ({
+					header: props => <SendHeader {...props} />,
+					title: '후기 게시글 수정',
 				})}
 			/>
 			<CommunityMainStackNavi.Screen

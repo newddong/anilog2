@@ -5,10 +5,11 @@ import {Animal_another_off, Animal_cat_off, Animal_dog_off, Filter60Border, Filt
 import ReviewList from 'Root/component/organism/list/ReviewList';
 import {Animal_another, Animal_cat, Animal_dog} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
-import {getCommunityList} from 'Root/api/community';
+import {getCommunityList, updateAndDeleteCommunity} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import {txt} from 'Root/config/textstyle';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default ReviewMain = ({route, navigation}) => {
 	const [data, setData] = React.useState('false');
@@ -52,6 +53,62 @@ export default ReviewMain = ({route, navigation}) => {
 			category: [],
 		},
 	});
+
+	const onPressMeatball = index => {
+		console.log('index', index);
+		const isMyArticle = userGlobalObject.userInfo._id == data[index].community_writer_id._id;
+		Modal.popSelectBoxModal(
+			isMyArticle ? ['수정', '삭제'] : ['신고'],
+			select => {
+				switch (select) {
+					case '수정':
+						navigation.push('CommunityEdit', {previous: data[index], isReview: true});
+						break;
+					case '삭제':
+						Modal.close();
+						setTimeout(() => {
+							Modal.popTwoBtn(
+								'정말로 이 게시글을 \n 삭제하시겠습니까?',
+								'아니오',
+								'네',
+								() => Modal.close(),
+								() => {
+									updateAndDeleteCommunity(
+										{
+											community_object_id: data[index]._id,
+											community_is_delete: true,
+										},
+										result => {
+											// console.log('result / updateAndDeleteCommunity / ArticleDetail : ', result.msg);
+											Modal.close();
+											setTimeout(() => {
+												Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
+												setTimeout(() => {
+													Modal.close();
+													fetchData();
+												}, 600);
+											}, 200);
+										},
+										err => {
+											console.log('err / updateAndDeleteCommunity / ArticleDetail : ', err);
+											Modal.alert(err);
+										},
+									);
+								},
+							);
+						}, 200);
+						break;
+					case '신고':
+						break;
+					default:
+						break;
+				}
+			},
+			() => Modal.close(),
+			false,
+			false,
+		);
+	};
 
 	const onPressAnimalFilter = filter => {
 		switch (filter) {
@@ -270,7 +327,13 @@ export default ReviewMain = ({route, navigation}) => {
 					renderItem={({item, index}) => {
 						return (
 							<>
-								<ReviewList items={getData()} whenEmpty={whenEmpty} onPressReviewContent={onPressReviewContent} onPressReply={onPressReply} />
+								<ReviewList
+									items={getData()}
+									whenEmpty={whenEmpty}
+									onPressReviewContent={onPressReviewContent}
+									onPressReply={onPressReply}
+									onPressMeatball={onPressMeatball}
+								/>
 							</>
 						);
 					}}

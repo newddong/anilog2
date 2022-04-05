@@ -53,7 +53,7 @@ const ArticleContent = props => {
 					height >= 300 ? false : setHeight(parseInt(event.nativeEvent.data));
 					console.log('height and : ', parseInt(event.nativeEvent.data));
 				}
-			}, 300);
+			}, 150);
 		} else {
 			if (parseInt(event.nativeEvent.data) < 300) {
 				setHeight(300 * DP);
@@ -96,6 +96,7 @@ const ArticleContent = props => {
 						injectedJavaScript="window.ReactNativeWebView.postMessage(document.body.scrollHeight)" //Dynamic Height 수치 설정
 						onLoadEnd={() => setLoad(true)}
 						contentMode={'mobile'}
+						scrollEnabled={false}
 						source={{
 							html: `
         	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
@@ -111,6 +112,7 @@ const ArticleContent = props => {
 						]}
 					/>
 				) : (
+					//안드로이드
 					<WebView
 						originWhitelist={['*']}
 						scalesPageToFit={true}
@@ -126,6 +128,7 @@ const ArticleContent = props => {
 						style={{
 							width: 670 * DP,
 							height: height == 0 ? 300 * DP : height,
+							opacity: 0.99,
 						}}
 					/>
 				)}

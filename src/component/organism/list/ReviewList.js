@@ -11,10 +11,20 @@ import Review from '../article/Review';
  * @param {object} props.items - 데이터
  * @param {(index:number)} props.onPressReply - 댓글 모두 보기 클릭
  * @param {(index:number)} props.onPressReviewContent - 리뷰 컨텐츠 클릭
+ * @param {()=>void} props.onPressMeatball - 미트볼 클릭
+ * @param {string} props.isSearch - 리뷰 컨텐츠 클릭
  */
 export default ReviewList = props => {
 	const renderItem = (item, index) => {
-		return <Review data={item} onPressReviewContent={() => props.onPressReviewContent(index)} onPressReply={() => props.onPressReply(index)} />;
+		return (
+			<Review
+				data={item}
+				isSearch={props.isSearch}
+				onPressReviewContent={() => props.onPressReviewContent(index)}
+				onPressReply={() => props.onPressReply(index)}
+				onPressMeatball={() => props.onPressMeatball(index)}
+			/>
+		);
 	};
 
 	return (

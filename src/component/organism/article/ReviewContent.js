@@ -42,25 +42,8 @@ const ReviewContent = props => {
 					<View key={index} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
 						{sliced.map((v, i) => {
 							return (
-								<View
-									key={i}
-									activeOpacity={0.7}
-									style={[
-										style.category,
-										{
-											backgroundColor: WHITE,
-											borderColor: BLACK,
-										},
-									]}>
-									<Text
-										style={[
-											txt.noto24,
-											{
-												color: BLACK,
-											},
-										]}>
-										{v}
-									</Text>
+								<View key={i} activeOpacity={0.7} style={[style.category, {backgroundColor: WHITE, borderColor: BLACK}]}>
+									<Text style={[txt.noto24, {color: BLACK}]}>{v}</Text>
 								</View>
 							);
 						})}
@@ -74,25 +57,8 @@ const ReviewContent = props => {
 					<View key={index} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
 						{sliced.map((v, i) => {
 							return (
-								<View
-									key={i}
-									activeOpacity={0.7}
-									style={[
-										style.category,
-										{
-											backgroundColor: WHITE,
-											borderColor: BLACK,
-										},
-									]}>
-									<Text
-										style={[
-											txt.noto24,
-											{
-												color: BLACK,
-											},
-										]}>
-										{v}
-									</Text>
+								<View key={i} activeOpacity={0.7} style={[style.category, {backgroundColor: WHITE, borderColor: BLACK}]}>
+									<Text style={[txt.noto24, {color: BLACK}]}>{v}</Text>
 								</View>
 							);
 						})}
@@ -283,7 +249,6 @@ const style = StyleSheet.create({
 		marginRight: 12 * DP,
 		paddingHorizontal: 15 * DP,
 		paddingVertical: 2 * DP,
-		backgroundColor: 'yellow',
 	},
 	categoryList: {
 		width: 510 * DP,

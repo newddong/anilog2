@@ -213,7 +213,58 @@ export default ReviewDetail = props => {
 
 	//미트볼 클릭
 	const onPressMeatball = () => {
-		alert('onPressMeatball');
+		const isMyArticle = userGlobalObject.userInfo._id == data.community_writer_id._id;
+		Modal.popSelectBoxModal(
+			isMyArticle ? ['수정', '삭제'] : ['신고'],
+			select => {
+				switch (select) {
+					case '수정':
+						navigation.push('CommunityEdit', {previous: data, isReview: true});
+						break;
+					case '삭제':
+						Modal.close();
+						setTimeout(() => {
+							Modal.popTwoBtn(
+								'정말로 이 게시글을 \n 삭제하시겠습니까?',
+								'아니오',
+								'네',
+								() => Modal.close(),
+								() => {
+									updateAndDeleteCommunity(
+										{
+											community_object_id: data._id,
+											community_is_delete: true,
+										},
+										result => {
+											// console.log('result / updateAndDeleteCommunity / ArticleDetail : ', result.msg);
+											Modal.close();
+											setTimeout(() => {
+												Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
+												setTimeout(() => {
+													Modal.close();
+													navigation.goBack();
+												}, 600);
+											}, 200);
+										},
+										err => {
+											console.log('err / updateAndDeleteCommunity / ArticleDetail : ', err);
+											Modal.alert(err);
+										},
+									);
+								},
+							);
+						}, 200);
+						break;
+					case '신고':
+						break;
+					default:
+						break;
+				}
+			},
+			() => Modal.close(),
+			false,
+			false,
+		);
 	};
 
 	//즐겨찾기 클릭
@@ -251,7 +302,7 @@ export default ReviewDetail = props => {
 					showsVerticalScrollIndicator={false}
 					onContentSizeChange={(width, height) => {
 						if (showMore) {
-							// scrollRef.current.scrollToEnd();
+							scrollRef.current.scrollToEnd();
 						}
 					}}
 					renderItem={({item, index}) => {

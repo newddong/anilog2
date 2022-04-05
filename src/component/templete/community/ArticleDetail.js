@@ -9,10 +9,11 @@ import Article from 'Root/component/organism/article/Article';
 import {dum} from 'Root/config/dummyDate_json';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import {useNavigation} from '@react-navigation/core';
-import {getCommunityList} from 'Root/api/community';
+import {getCommunityList, updateAndDeleteCommunity} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {createComment, getCommentListByCommunityId, updateComment} from 'Root/api/commentapi';
 import ImagePicker from 'react-native-image-crop-picker';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 /**
  * 자유게시글 상세 내용
@@ -27,7 +28,7 @@ export default ArticleDetail = props => {
 	const [articleList, setArticleList] = React.useState([]);
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
-	const [parentComment, setParentComment] = React.useState();
+	const [parentComment, setParentComment] = React.useState(); //대댓글을 쓰는 경우 해당 댓글의 id container
 	const input = React.useRef();
 	const addChildCommentFn = React.useRef(() => {});
 	const [editMode, setEditMode] = React.useState(false); //댓글 편집 모드
@@ -42,20 +43,7 @@ export default ArticleDetail = props => {
 		navigation.setOptions({title: '자유 게시글'});
 	}, []);
 
-	const onPressMeatball = () => {
-		Modal.popSelectBoxModal(
-			['수정', '삭제'],
-			select => {
-				alert(select);
-				if (select == '수정') {
-				}
-			},
-			() => Modal.close(),
-			false,
-			false,
-		);
-	};
-
+	//페이지 하단에 출력될 자유게시글 목록 api(페이징 필요)
 	const getArticleList = () => {
 		getCommunityList(
 			{
@@ -63,7 +51,33 @@ export default ArticleDetail = props => {
 			},
 			result => {
 				// console.log('result / getCommunityList / ArticleMain :', result.msg.free);
-				setArticleList(result.msg.free);
+				const free = result.msg.free;
+				if (free < 6) {
+					//전체글이 6개 이하라면 그냥 바로 출력
+					setArticleList(free);
+				} else {
+					let temp = [];
+					free.map((e, i) => {
+						const arg_date = new Date(e.community_date).getTime();
+						const this_date = new Date(data.community_date).getTime();
+						this_date > arg_date ? temp.push(e) : false;
+					});
+					if (temp.length > 5) {
+						//전체글이 6개 이상이며 이전의 작성글도 6개 미만이라면 그 이전의 글을 모두 긁어온다
+						setArticleList(temp);
+					} else {
+						//전체글이 6개 이상이지만 해당 작성글 작성일자보다 이전의 작성글이 6개 이하라면 그 이후의 글도 긁어온다.
+						let near = [];
+						let index = free.findIndex(function (item, i) {
+							return item._id === data._id;
+						});
+						const remain = free.length - index;
+						for (let ind = index - (6 - remain); ind < index + remain; ind++) {
+							free[ind]._id != data._id ? near.push(free[ind]) : false;
+						}
+						setArticleList(near);
+					}
+				}
 			},
 			err => {
 				console.log('err / getCommunityList / ArticleMain : ', err);
@@ -72,6 +86,7 @@ export default ArticleDetail = props => {
 		);
 	};
 
+	//해당 자유게시글의 댓글을 받아온다
 	const getComment = () => {
 		getCommentListByCommunityId(
 			{
@@ -212,6 +227,62 @@ export default ArticleDetail = props => {
 		addChildCommentFn.current = addChildComment;
 	};
 
+	//제목 우측 미트볼 클릭
+	const onPressMeatball = () => {
+		const isMyArticle = userGlobalObject.userInfo._id == data.community_writer_id._id;
+		Modal.popSelectBoxModal(
+			isMyArticle ? ['수정', '삭제'] : ['신고'],
+			select => {
+				switch (select) {
+					case '수정':
+						navigation.push('CommunityEdit', {previous: data, isReview: false});
+						break;
+					case '삭제':
+						Modal.close();
+						setTimeout(() => {
+							Modal.popTwoBtn(
+								'정말로 이 게시글을 \n 삭제하시겠습니까?',
+								'아니오',
+								'네',
+								() => Modal.close(),
+								() => {
+									updateAndDeleteCommunity(
+										{
+											community_object_id: data._id,
+											community_is_delete: true,
+										},
+										result => {
+											// console.log('result / updateAndDeleteCommunity / ArticleDetail : ', result.msg);
+											Modal.close();
+											setTimeout(() => {
+												Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
+												setTimeout(() => {
+													Modal.close();
+													navigation.goBack();
+												}, 600);
+											}, 200);
+										},
+										err => {
+											console.log('err / updateAndDeleteCommunity / ArticleDetail : ', err);
+											Modal.alert(err);
+										},
+									);
+								},
+							);
+						}, 200);
+						break;
+					case '신고':
+						break;
+					default:
+						break;
+				}
+			},
+			() => Modal.close(),
+			false,
+			false,
+		);
+	};
+
 	//미트볼, 수정을 누르면 동작
 	const onEdit = comment => {
 		console.log('수정 데이터', comment);
@@ -222,8 +293,8 @@ export default ArticleDetail = props => {
 
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
-		// console.log('dummy', dummy[index]);
-		navigation.push('ArticleDetail', {community_object: dum[index]});
+		// console.log('articleList[index]', articleList[index]);
+		navigation.push('ArticleDetail', {community_object: articleList[index]});
 	};
 
 	const onPressReply = () => {

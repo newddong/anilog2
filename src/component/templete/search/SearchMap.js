@@ -197,9 +197,9 @@ export default SearchMap = ({route}) => {
 			},
 		};
 		navigation.navigate({
-			name: 'CommunityWrite',
+			name: route.params.isEdit ? 'CommunityEdit' : 'CommunityWrite',
 			params: {data: data, isReview: route.params.isReview},
-			merge: false,
+			merge: true,
 		});
 	};
 

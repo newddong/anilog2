@@ -10,10 +10,12 @@ const CommunityTabNav = createMaterialTopTabNavigator();
 
 export default CommunityMain = props => {
 	// LogBox.ignoreAllLogs(); //로그 무시
+	console.log('props', props.route.params);
+	const initailRoute = props.route.params ? props.route.params.isReview : 'ArticleMain';
 
 	return (
 		<CommunityTabNav.Navigator
-			initialRouteName="ArticleMain"
+			initialRouteName={initailRoute}
 			screenOptions={{
 				tabBarItemStyle: {height: 70 * DP},
 				tabBarIndicatorStyle: {backgroundColor: 'black', height: 2 * DP},

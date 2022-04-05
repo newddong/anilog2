@@ -11,12 +11,10 @@ import {styles} from 'Root/component/atom/image/imageStyle';
 import {txt} from 'Root/config/textstyle';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import searchContext from 'Root/config/searchContext';
+import {useNavigation} from '@react-navigation/core';
 
-export default SearchCommunity = ({route, navigation}) => {
-	const [data, setData] = React.useState({
-		free: 'false',
-		review: 'false',
-	});
+export default SearchCommunity = ({route}) => {
+	const navigation = useNavigation();
 	const [searchInput, setSearchInput] = React.useState('');
 	const [reviewList, setReviewList] = React.useState('false');
 	const [articleList, setArticleList] = React.useState('false');
@@ -25,7 +23,15 @@ export default SearchCommunity = ({route, navigation}) => {
 
 	React.useEffect(() => {
 		fetchData();
+		const unsubscribe = navigation.addListener('focus', () => {
+			fetchData();
+		});
+		return unsubscribe;
 	}, []);
+
+	React.useEffect(() => {
+		fetchData();
+	}, [type]);
 
 	//검색탭 헤더의 인풋값이 바뀔 때마다 계정과 해쉬를 받아오는 api에 접속
 	React.useEffect(() => {
@@ -38,12 +44,14 @@ export default SearchCommunity = ({route, navigation}) => {
 				community_type: 'all', //required
 			},
 			result => {
-				// console.log('result / getCommunityList / ArticleMain :', arg, result.msg);
+				console.log('result / getCommunityList / ArticleMain :', arg, result.msg.free.length);
 				setArticleList(result.msg.free);
 				setReviewList(result.msg.review);
 			},
 			err => {
 				console.log('err / getCommunityList / ArticleMain : ', err);
+				setArticleList([]);
+				setReviewList([]);
 			},
 		);
 	};
@@ -162,7 +170,13 @@ export default SearchCommunity = ({route, navigation}) => {
 									</>
 								) : (
 									<>
-										<ReviewList items={reviewList} whenEmpty={whenEmpty} onPressReviewContent={onPressReviewContent} onPressReply={onPressReply} />
+										<ReviewList
+											items={reviewList}
+											isSearch={searchInput}
+											whenEmpty={whenEmpty}
+											onPressReviewContent={onPressReviewContent}
+											onPressReply={onPressReply}
+										/>
 									</>
 								)}
 							</View>

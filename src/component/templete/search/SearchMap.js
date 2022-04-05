@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Text, View, Button, TouchableOpacity, Platform, StyleSheet, TextInput, Keyboard, StatusBar, Dimensions, SafeAreaView} from 'react-native';
 import axios from 'axios';
 import Geolocation from '@react-native-community/geolocation';
@@ -33,6 +33,7 @@ export default SearchMap = ({route}) => {
 	React.useEffect(() => {
 		Modal.popLoading();
 		geoLocation();
+		initializeRegion();
 	}, []);
 
 	//주소 불러오기 api 호출
@@ -50,6 +51,8 @@ export default SearchMap = ({route}) => {
 	const geoLocation = () => {
 		Geolocation.getCurrentPosition(
 			position => {
+				console.log('position.coords.latitude', position.coords.latitude);
+				console.log('position.coords.longitude', position.coords.longitude);
 				setLatitude(position.coords.latitude);
 				setLogitude(position.coords.longitude);
 				callInitialAddress(position.coords.longitude, position.coords.latitude);
@@ -57,7 +60,7 @@ export default SearchMap = ({route}) => {
 			error => {
 				console.log('error get GEOLOCation', error.code, error.message);
 			},
-			{enableHighAccuracy: false, timeout: 5000, maximumAge: 10000},
+			{enableHighAccuracy: false, timeout: 20000, maximumAge: 10000},
 		);
 	};
 
@@ -130,10 +133,23 @@ export default SearchMap = ({route}) => {
 
 	//현재 위치로 돌아감
 	const initializeRegion = () => {
-		setChangedLatitude(init_latitude);
-		setChangedLongitude(init_longitude);
-		setChangedLongitudeDelta(0.00002);
-		setChangedLatitudeDelta(0.0023);
+		if (map.current) {
+			map.current.animateToRegion(
+				{
+					latitude: init_latitude,
+					longitude: init_longitude,
+					latitudeDelta: 0.0002,
+					longitudeDelta: 0.0023,
+				},
+				400,
+			);
+			setTimeout(() => {
+				setChangedLatitude(init_latitude);
+				setChangedLongitude(init_longitude);
+			}, 500);
+			// setChangedLongitudeDelta(0.00002);
+			// setChangedLatitudeDelta(0.0023);
+		}
 	};
 
 	//세부주소
@@ -143,6 +159,7 @@ export default SearchMap = ({route}) => {
 
 	//터치로 인한 위도 경도 변경 콜백
 	const goToLocation = region => {
+		console.log('region');
 		setChangedLatitude(region.latitude);
 		setChangedLongitude(region.longitude);
 		setChangedLongitudeDelta(region.longitudeDelta);
@@ -155,6 +172,13 @@ export default SearchMap = ({route}) => {
 		finalized.detailAddr = detailAddr;
 		const data = {
 			...route.params.data,
+			community_interests: {
+				...route.params.data.community_interests,
+				interests_location: {
+					city: finalized.address.region_1depth_name,
+					district: finalized.address.region_2depth_name,
+				},
+			},
 			community_address: {
 				road_address: {
 					address_name: finalized.road_address.address_name + ' ' + finalized.detailAddr,
@@ -179,6 +203,8 @@ export default SearchMap = ({route}) => {
 		});
 	};
 
+	const map = React.useRef();
+
 	return (
 		<View
 			style={[
@@ -196,10 +222,8 @@ export default SearchMap = ({route}) => {
 					</TouchableOpacity>
 					{Platform.OS == 'android' ? (
 						<MapView
-							// provider={PROVIDER_GOOGLE} // remove if not using Google Maps
 							style={[style.mapContainer]}
 							mapType={'standard'}
-							// customMapStyle={mapStyle2}
 							zoomEnabled
 							zoomControlEnabled
 							onRegionChangeComplete={(region, gesture) => {
@@ -228,22 +252,24 @@ export default SearchMap = ({route}) => {
 					) : (
 						<>
 							<MapView
+								ref={map}
 								// provider={PROVIDER_GOOGLE} // remove if not using Google Maps
 								style={[style.mapContainer]}
 								// customMapStyle={mapStyle}
-								onRegionChangeComplete={region => {
-									goToLocation(region);
+								onRegionChangeComplete={(region, gesture) => {
+									//클릭을 안했음에도 지속적으로 위도 경도가 바뀌는 현상 발생 -> 오로지 터치 시에만 반응하도록 적용
+									goToLocation(region); //탐색된 위도 경도를 바꿈
 								}}
 								region={{
-									latitude: changedLatitude != '' ? changedLatitude : y,
-									longitude: changedLongitude != '' ? changedLongitude : x,
-									latitudeDelta: changedLatitudeDelta,
-									longitudeDelta: changedLongitudeDelta,
+									latitude: changedLatitude != '' ? changedLatitude : init_latitude,
+									longitude: changedLongitude != '' ? changedLongitude : init_longitude,
+									latitudeDelta: changedLatitudeDelta, //지도의 초기줌 수치
+									longitudeDelta: changedLongitudeDelta, //지도의 초기줌 수치
 								}}>
 								<MapView.Marker
 									coordinate={{
-										latitude: changedLatitude != '' ? changedLatitude : init_latitude,
-										longitude: changedLongitude != '' ? changedLongitude : init_longitude,
+										latitude: changedLatitude != '' ? changedLatitude : y,
+										longitude: changedLongitude != '' ? changedLongitude : x,
 									}}
 									key={`${changedLongitude}${Date.now()}`}>
 									<LocationMarker />

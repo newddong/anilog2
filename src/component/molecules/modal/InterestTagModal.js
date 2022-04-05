@@ -40,9 +40,9 @@ const InterestTagModal = props => {
 	const [city, setCity] = React.useState(''); // 리뷰의 지역 필터 중 광역시, 도 파라미터
 	const [district, setDistrict] = React.useState(['', '', '광역시, 도를 먼저 선택해주세요.']); // 리뷰의 지역 필터 중 시군구 파라미터
 	const [selectedItem, setSelectedItem] = React.useState(2); // 광역시 도 선택 인덱스
-	const [selectedCity, setSelectedCity] = React.useState('강원도');
+	const [selectedCity, setSelectedCity] = React.useState('');
 	const [selectedItem_dis, setSelectedItem_dis] = React.useState(2); // 시군구 선택 인덱스
-	const [selectedDistrict, setSelectedDistrict] = React.useState('원주시'); // 시군구 선택 아이템
+	const [selectedDistrict, setSelectedDistrict] = React.useState(''); // 시군구 선택 아이템
 	const [selectCityOpen, setSelectCityOpen] = React.useState(false);
 	const [selectDistrictOpen, setSelectDistrictOpen] = React.useState(false);
 
@@ -69,7 +69,6 @@ const InterestTagModal = props => {
 			getAddressList(
 				{},
 				result => {
-					console.log('result', result.msg);
 					const padding = '';
 					let arr = [padding, padding];
 					let cities = arr.concat(result.msg);
@@ -191,7 +190,16 @@ const InterestTagModal = props => {
 			props.setState(userInterestContent);
 		} else if (props.category == 'Location') {
 			props.setState(userInterestLocation);
-		} else {
+		} else if (props.category == 'ReviewWrite') {
+			props.setState({
+				userInterestReview: userInterestReview,
+			});
+		} else if (props.category == 'Review') {
+			let temp = userInterestReview;
+			temp.interests_location = {
+				city: selectedCity,
+				district: selectedDistrict,
+			};
 			props.setState({
 				userInterestReview: userInterestReview,
 			});
@@ -440,8 +448,14 @@ const InterestTagModal = props => {
 							<></>
 						) : (
 							<View style={[style.review_location]}>
-								<ArrowDownButton onPress={onOpenCity} btnStyle={'border'} btnLayout={btn_w242} btnTitle={selectedCity} />
-								<ArrowDownButton onPress={onOpenDistrict} btnStyle={'border'} btnLayout={btn_w280} titleFontStyle={22} btnTitle={selectedDistrict} />
+								<ArrowDownButton onPress={onOpenCity} btnStyle={'border'} btnLayout={btn_w242} btnTitle={selectedCity || '도, 광역시'} />
+								<ArrowDownButton
+									onPress={onOpenDistrict}
+									btnStyle={'border'}
+									btnLayout={btn_w280}
+									titleFontStyle={22}
+									btnTitle={selectedDistrict || '시군구'}
+								/>
 							</View>
 						)}
 						{getCommuntyInterestList(communityInterests.interests_trip, 0)}

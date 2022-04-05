@@ -11,6 +11,7 @@ import LogoHeader from 'Root/navigation/header/LogoHeader';
 import CommunityMain from './community_stack/CommunityMain';
 import CommunityMainStack from './community_stack/CommunityMainStack';
 import SearchMainStack from '../search_tab/SearchMainStack';
+import {Platform} from 'react-native';
 
 const MainTabNav = createBottomTabNavigator();
 
@@ -20,8 +21,9 @@ export default MainTabNavigation = ({route, navigation}) => {
 	const [current, setCurrent] = React.useState('ArticleMain');
 
 	const getTabBarVisibility = route => {
-		switch (routeName) {
-			case 'AnimalProtectRequestDetail':
+		switch (current) {
+			case 'CommunityWrite':
+				return Platform.OS == 'android' ? false : true;
 			case 'ShelterInfoSetting':
 			case 'UserInfoSetting':
 			case 'FeedCommentList':
@@ -37,19 +39,6 @@ export default MainTabNavigation = ({route, navigation}) => {
 	//커뮤니티 텝에서 보내주는 route.name
 	const sendRoute = route_name => {
 		setCurrent(route_name);
-	};
-
-	//커뮤니티 탭 헤더 출력 여부 결정
-	const getHeaderState = () => {
-		switch (current) {
-			case 'ArticleMain':
-			case 'ReviewMain':
-				return false;
-				break;
-			default:
-				break;
-		}
-		return true;
 	};
 
 	return (
@@ -85,7 +74,6 @@ export default MainTabNavigation = ({route, navigation}) => {
 				})}>
 				{props => <CommunityMainStack {...props} sendRoute={sendRoute} />}
 			</MainTabNav.Screen>
-
 			<MainTabNav.Screen
 				name="MY"
 				options={({route}) => ({

@@ -316,6 +316,17 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen name="SettingOpen" component={SettingOpen} options={{header: props => <SimpleHeader {...props} />, title: '공개 설정'}} />
 			<MyStack.Screen name="ReceivedMessage" component={ReceivedMessage} options={{header: props => <SimpleHeader {...props} />, title: '쪽지함'}} />
 			<MyStack.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />, title: props.title}} />
+			{/* <MyStack.Screen
+				name="UserNotePage"
+				component={UserNotePage}
+				options={({route}) => ({
+					tabBarVisible: false,
+					tabBarHideOnKeyboard: true,
+					header: props => <SimpleHeader {...props} />,
+					title: props.title,
+				})}
+			/> */}
+
 			<MyStack.Screen name="NoticeList" component={NoticeList} options={{header: props => <SimpleHeader {...props} />, title: '공지사항'}} />
 
 			<MyStack.Screen name="ServiceCenter" component={ServiceCenter} options={{header: props => <SimpleHeader {...props} />, title: '고객 센터'}} />

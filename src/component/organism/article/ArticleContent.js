@@ -3,7 +3,7 @@ import {txt} from 'Root/config/textstyle';
 import {ActivityIndicator, Linking, LogBox, Platform, StyleSheet, Text, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {APRI10} from 'Root/config/color';
-import {FavoriteTag46_Filled, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
+import {FavoriteTag46_Filled, FavoriteTag48_Border, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
 import WebView from 'react-native-webview';
 import Loading from 'Root/component/molecules/modal/Loading';
@@ -11,7 +11,7 @@ import Loading from 'Root/component/molecules/modal/Loading';
  * 게시글 컨텐츠
  * @param {object} props - Props Object
  * @param {object} props.data - 데이터
- * @param {()=>void)} props.onPressFavorite - 좋아요 클릭
+ * @param {(bool:boolean)=>void)} props.onPressFavorite - 좋아요 클릭
  * @param {()=>void} props.onPressMeatball - 미트볼 클릭
  * @param {()=>void} props.onPressArticle - 내용 클릭
  * @param {string} props.route - 부모 컴포넌트 이름
@@ -19,16 +19,21 @@ import Loading from 'Root/component/molecules/modal/Loading';
 const ArticleContent = props => {
 	LogBox.ignoreAllLogs();
 
-	const data = props.data;
+	const [data, setData] = React.useState(props.data);
+	const [load, setLoad] = React.useState(false);
 	const [height, setHeight] = React.useState(0); // 게시글 내용의 Dynamic Height 수치
-	// console.log('ArticleContent', props.data);
+
+	React.useEffect(() => {
+		setData(props.data);
+	}, [props.data]);
 
 	const onPressMeatball = () => {
 		props.onPressMeatball();
 	};
 
-	const onPressFavorite = () => {
-		props.onPressFavorite();
+	const onPressFavorite = bool => {
+		setData({...data, community_is_favorite: bool});
+		props.onPressFavorite(bool);
 	};
 
 	const getArticleType = () => {
@@ -64,8 +69,6 @@ const ArticleContent = props => {
 		}
 	};
 
-	const [load, setLoad] = React.useState(false);
-
 	return (
 		<View style={[style.container]}>
 			<View style={[style.header]}>
@@ -81,7 +84,11 @@ const ArticleContent = props => {
 					</View>
 				</View>
 				<View style={[style.header_icon]}>
-					<FavoriteTag46_Filled onPress={onPressFavorite} />
+					{data.community_is_favorite ? (
+						<FavoriteTag46_Filled onPress={() => onPressFavorite(false)} />
+					) : (
+						<FavoriteTag48_Border onPress={() => onPressFavorite(true)} />
+					)}
 					<Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />
 				</View>
 			</View>

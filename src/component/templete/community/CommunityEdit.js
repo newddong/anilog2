@@ -45,13 +45,13 @@ export default CommunityEdit = props => {
 	React.useEffect(() => {
 		const param = props.route.params;
 		// richText.current?.focusContentEditor();
-		if (param?.data) {
+		if (param?.data && data.community_address.region.latitude != param?.data.community_address.region.latitude) {
 			console.log('Address ss ', param.data);
 			//다른 주소 검색 결과값 적용
 			setData(param.data);
 			// richText.current?.focusContentEditor();
 		}
-	}, [props.route.params]);
+	}, [props.route.params?.data]);
 
 	const onHeightChange = e => {
 		console.log('onHeightChange', e);

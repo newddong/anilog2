@@ -22,6 +22,17 @@ export async function getCommunityList(params, callback, errcallback) {
 }
 
 /**
+ * 커뮤니티 제목 내용 검색
+ * @param {object} params
+ * @param {string} params.searchKeyword - 검색 키워드
+ * @param {function} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getSearchCommunityList(params, callback, errcallback) {
+	apiController('/community/getSearchCommunityList', arguments);
+}
+
+/**
  * 커뮤니티 게시물 신규 작성
  * @param {object} params
  * @param {string} params.community_title - 커뮤니티 제목

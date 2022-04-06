@@ -74,7 +74,7 @@ export default CommunityWrite = props => {
 	}, [data]);
 
 	React.useEffect(() => {
-		isReview ? navigation.setOptions({title: '후기 게시글'}) : navigation.setOptions({title: '자유 게시글'});
+		isReview ? navigation.setOptions({title: '리뷰'}) : navigation.setOptions({title: '자유 게시글'});
 		if (Platform.OS === 'ios') {
 			Geolocation.requestAuthorization('always');
 		}
@@ -88,7 +88,7 @@ export default CommunityWrite = props => {
 			setData(param.data);
 			// richText.current?.focusContentEditor();
 		}
-	}, [props.route.params]);
+	}, [props.route.params?.data]);
 
 	//내용 입력
 	const onChange = editorData => {

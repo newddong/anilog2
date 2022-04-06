@@ -10,7 +10,7 @@ const CommunityTabNav = createMaterialTopTabNavigator();
 
 export default CommunityMain = props => {
 	// LogBox.ignoreAllLogs(); //로그 무시
-	console.log('props', props.route.params);
+	// console.log('props', props.route.params);
 	const initailRoute = props.route.params ? props.route.params.isReview : 'ArticleMain';
 
 	return (
@@ -35,7 +35,7 @@ export default CommunityMain = props => {
 			<CommunityTabNav.Screen
 				name={'ReviewMain'}
 				options={{
-					tabBarLabel: '후기',
+					tabBarLabel: '리뷰',
 				}}>
 				{props => <ReviewMain {...props} />}
 			</CommunityTabNav.Screen>

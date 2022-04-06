@@ -9,16 +9,34 @@ import {getCommunityList} from 'Root/api/community';
 import Modal from 'Root/component/modal/Modal';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {styles} from 'Root/component/atom/image/imageStyle';
+import community_obj from 'Root/config/community_obj';
 
 export default ArticleMain = ({route}) => {
+	// console.log('ArticleMain');
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
-
 	React.useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', () => fetchData());
+		const unsubscribe = navigation.addListener('focus', () => {
+			fetchData();
+			console.log('community_obj', community_obj.object._id);
+			console.log('community_obj', community_obj.pageToMove);
+			console.log('community_obj.initial', community_obj.initial);
+			community_obj.current = '';
+			if (community_obj.initial != true) {
+				console.log('community_obj.pageToMove', community_obj.pageToMove);
+				navigation.navigate(community_obj.pageToMove, {community_object: community_obj.object});
+			}
+		});
+		navigation.addListener('blur', () => {
+			community_obj.object = {};
+			community_obj.pageToMove = '';
+			community_obj.initial = true;
+		});
 		fetchData();
 		return unsubscribe;
 	}, []);
+
+	// console.log('route.params.ArticleMain', route.params);
 
 	const fetchData = () => {
 		getCommunityList(
@@ -26,7 +44,7 @@ export default ArticleMain = ({route}) => {
 				community_type: 'free',
 			},
 			result => {
-				// console.log('result / getCommunityList / ArticleMain :', result.msg.free);
+				// console.log('result / getCommunityList / ArticleMain :', result.msg.free[0]);
 				setData(result.msg.free);
 			},
 			err => {
@@ -88,16 +106,16 @@ export default ArticleMain = ({route}) => {
 
 	const whenEmpty = () => {
 		return (
-			<>
+			<View style={{paddingVertical: 170 * DP}}>
 				<Image
-					style={[styles.img_square_246, {paddingVertical: 150 * DP}]}
+					style={[styles.img_square_246, {}]}
 					resizeMode={'stretch'}
 					source={{
 						uri: 'https://st.depositphotos.com/21121724/53932/v/600/depositphotos_539322694-stock-illustration-cartoon-home-pets-empty-feeder.jpg',
 					}}
 				/>
 				<Text style={[txt.roboto36b]}>목록이 없네요.</Text>
-			</>
+			</View>
 		);
 	};
 

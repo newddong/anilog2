@@ -2,7 +2,14 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {CurrentLocation, FavoriteTag46_Filled, LocationGray, LocationMarker, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
+import {
+	CurrentLocation,
+	FavoriteTag46_Filled,
+	FavoriteTag48_Border,
+	LocationGray,
+	LocationMarker,
+	Meatball50_GRAY20_Horizontal,
+} from 'Root/component/atom/icon';
 import {BLACK, GRAY10, WHITE} from 'Root/config/color';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
@@ -12,12 +19,12 @@ import WebView from 'react-native-webview';
  * 후기 세부 페이지
  * @param {object} props - Props Object
  * @param {object} props.data - 데이터
- * @param {()=>void)} props.onPressFavorite - 즐겨찾기 클릭
+ * @param {(bool:boolean)=>void)} props.onPressFavorite - 즐겨찾기 클릭
  * @param {()=>void)} props.onPressMeatball - 미트볼 클릭
  */
 const ReviewContent = props => {
 	const navigation = useNavigation();
-	const data = props.data;
+	const [data, setData] = React.useState(props.data);
 	const [height, setHeight] = React.useState(0); // 게시글 내용의 Dynamic Height 수치
 	let arr = [];
 	const interests = arr.concat(
@@ -27,6 +34,10 @@ const ReviewContent = props => {
 		data.community_interests.interests_review,
 		data.community_interests.interests_trip,
 	);
+
+	React.useEffect(() => {
+		setData(props.data);
+	}, [props.data]);
 
 	const getCategory = (v, i) => {
 		// category_sum_list.push('테스트');
@@ -67,6 +78,11 @@ const ReviewContent = props => {
 			});
 	};
 
+	const onPressFavorite = bool => {
+		setData({...data, community_is_favorite: bool});
+		props.onPressFavorite(bool);
+	};
+
 	const onWebViewMessage = event => {
 		if (parseInt(event.nativeEvent.data) < 300) {
 			setHeight(300 * DP);
@@ -89,7 +105,11 @@ const ReviewContent = props => {
 					<Text style={[txt.noto32b]}>{data.community_title} </Text>
 				</View>
 				<View style={[style.header_icon]}>
-					<FavoriteTag46_Filled onPress={() => props.onPressFavorite()} />
+					{data.community_is_favorite ? (
+						<FavoriteTag46_Filled onPress={() => onPressFavorite(false)} />
+					) : (
+						<FavoriteTag48_Border onPress={() => onPressFavorite(true)} />
+					)}
 					<Meatball50_GRAY20_Horizontal onPress={() => props.onPressMeatball()} />
 				</View>
 			</View>
@@ -228,6 +248,10 @@ const mapStyle2 = [
 		],
 	},
 ];
+
+ReviewContent.defaultProps = {
+	onPressFavorite: () => {},
+};
 
 export default ReviewContent;
 

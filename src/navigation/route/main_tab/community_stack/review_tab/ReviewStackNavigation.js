@@ -11,7 +11,7 @@ export default ReviewStackNavigation = props => {
 				name={'ReviewMain'}
 				component={ReviewMain}
 				options={({route}) => ({
-					tabBarLabel: '후기',
+					tabBarLabel: '리뷰',
 				})}
 			/>
 		</ReviewStackNav.Navigator>

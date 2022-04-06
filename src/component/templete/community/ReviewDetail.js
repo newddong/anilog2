@@ -14,6 +14,7 @@ import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
+import {favoriteEtc} from 'Root/api/favoriteect';
 
 /**
  * 후기 상세 내용
@@ -43,7 +44,7 @@ export default ReviewDetail = props => {
 		if (data.community_address.normal_address.address_name != '') {
 			navigation.setOptions({title: `${data.community_address.normal_address.city} / ${data.community_address.normal_address.district}`});
 		} else {
-			navigation.setOptions({title: '후기 게시글'});
+			navigation.setOptions({title: '리뷰'});
 		}
 		getComment();
 		getCommunityList(
@@ -69,6 +70,7 @@ export default ReviewDetail = props => {
 		let param = {
 			comment_contents: editData.comment_contents, //내용
 			comment_is_secure: privateComment, //공개여부 테스트때 반영
+			community_object_id: data._id,
 		};
 
 		if (editData.comment_photo_uri && editData.comment_photo_uri.length > 0) {
@@ -132,6 +134,8 @@ export default ReviewDetail = props => {
 						},
 						comments => {
 							!parentComment && setComments([]); //댓글목록 초기화
+							// if (props.parentComment.hasOwnProperty('comment_parent_writer_id')) {
+							// 	console.log('title', props.parentComment.comment_contents);
 							setComments(comments.msg);
 							parentComment && addChildCommentFn.current();
 							console.log('comments', comments);
@@ -268,8 +272,18 @@ export default ReviewDetail = props => {
 	};
 
 	//즐겨찾기 클릭
-	const onPressFavorite = () => {
-		alert('onPressFavorite');
+	const onPressFavorite = bool => {
+		favoriteEtc(
+			{
+				collectionName: 'communityobjects',
+				post_object_id: data._id,
+				is_favorite: bool,
+			},
+			result => {
+				// console.log('result / favoriteEtc / ArticleDetail : ', result.msg);
+			},
+			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
+		);
 	};
 
 	//댓글 클릭
@@ -339,7 +353,7 @@ export default ReviewDetail = props => {
 								</View>
 
 								<View style={[style.reviewList]}>
-									<Text style={[txt.noto24, {}]}>관련후기 게시글</Text>
+									<Text style={[txt.noto24, {}]}>관련 리뷰</Text>
 									<ReviewBriefList
 										items={reviewList}
 										showMore={() => setShowMore(true)}

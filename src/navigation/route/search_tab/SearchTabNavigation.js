@@ -16,6 +16,7 @@ import SearchHashTag from 'Root/component/templete/search/SearchHashTag';
 import SearchAccountA from 'Root/component/templete/search/SearchAccountA';
 import SearchReview from 'Root/component/templete/search/SearchReview';
 import SearchCommunity from 'Root/component/templete/search/SearchCommunity';
+import {getSearchCommunityList} from 'Root/api/community';
 
 const SearchTabNav = createMaterialTopTabNavigator();
 
@@ -26,6 +27,7 @@ export default SearchTabNavigation = props => {
 	// const [searchInput, setSearchInput] = React.useState('');
 	const [userList, setUserList] = React.useState('false');
 	const [hashList, setHashList] = React.useState('false');
+	const [commList, setCommList] = React.useState('false');
 	const [loading, setLoading] = React.useState(false);
 
 	const onClickUser = sendUserobject => {
@@ -48,8 +50,10 @@ export default SearchTabNavigation = props => {
 			if (searchContext.searchInfo.searchInput != '') {
 				const user = await getUserList(); //계정 검색
 				const hash = await getHashList(); //태그 검색
+				const comm = await getCommunityList(); //커뮤니티 검색
 				setUserList(user);
 				setHashList(hash);
+				setCommList(comm);
 				setLoading(false);
 			} else {
 				setUserList([]);
@@ -115,6 +119,25 @@ export default SearchTabNavigation = props => {
 		});
 	};
 
+	const getCommunityList = async () => {
+		return new Promise(async function (resolve, reject) {
+			try {
+				getSearchCommunityList(
+					{
+						searchKeyword: searchContext.searchInfo.searchInput,
+					},
+					result => {
+						// console.log('result / getSearchCommunityList / SearchTabNav : ', result.msg);
+						resolve(result.msg);
+					},
+					err => console.log('err / getSearchCommunityList / SearchTabNav : ', err),
+				);
+			} catch (error) {
+				console.log('error getHashList  :  ', error.message);
+			}
+		});
+	};
+
 	return (
 		<SearchTabNav.Navigator
 			screenOptions={{
@@ -148,7 +171,7 @@ export default SearchTabNavigation = props => {
 					title: '커뮤니티',
 					...searchTabLabelOption,
 				}}>
-				{props => <SearchCommunity {...props} />}
+				{props => <SearchCommunity {...props} data={commList} loading={loading} />}
 			</SearchTabNav.Screen>
 		</SearchTabNav.Navigator>
 	);

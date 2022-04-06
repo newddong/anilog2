@@ -16,12 +16,13 @@ import SearchMap from 'Root/component/templete/search/SearchMap';
 import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
 import WriteEditorTest from 'Root/component/templete/community/WriteEditorTest';
 import ReviewStackNavigation from './review_tab/ReviewStackNavigation';
-import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
+import {getFocusedRouteNameFromRoute, useNavigation} from '@react-navigation/core';
 import CommunityEdit from 'Root/component/templete/community/CommunityEdit';
 
 const CommunityMainStackNavi = createStackNavigator();
 
 export default CommunityMainStack = props => {
+	// console.log('CommunityMainStack', props.route);
 	const routeName = getFocusedRouteNameFromRoute(props.route) ?? 'CommunityMain';
 
 	React.useEffect(() => {
@@ -86,7 +87,7 @@ export default CommunityMainStack = props => {
 				component={CommunityEdit}
 				options={({route}) => ({
 					header: props => <SendHeader {...props} />,
-					title: '후기 게시글 수정',
+					title: '리뷰 수정',
 				})}
 			/>
 			<CommunityMainStackNavi.Screen

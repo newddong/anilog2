@@ -14,6 +14,8 @@ import Loading from 'Root/component/molecules/modal/Loading';
 import {createComment, getCommentListByCommunityId, updateComment} from 'Root/api/commentapi';
 import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import community_obj from 'Root/config/community_obj';
+import {favoriteEtc} from 'Root/api/favoriteect';
 
 /**
  * 자유게시글 상세 내용
@@ -23,7 +25,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 export default ArticleDetail = props => {
 	const navigation = useNavigation();
 	// const [data, setData] = React.useState(props.route.params.community_object);
-	const data = props.route.params.community_object;
+	const [data, setData] = React.useState(props.route.params.community_object);
 	const [comments, setComments] = React.useState('false');
 	const [articleList, setArticleList] = React.useState([]);
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
@@ -36,11 +38,27 @@ export default ArticleDetail = props => {
 		comment_contents: '',
 		comment_photo_uri: '',
 	});
+	community_obj.current = data._id;
 
 	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			//다른 탭(ex - My 탭의 즐겨찾기한 커뮤니티 목록에서 들어온 경우)에서의 호출
+			if (community_obj.object.hasOwnProperty('_id')) {
+				if (community_obj.object._id != data._id) {
+					//현재 보고 있는 페이지와 다른 게시글이 호출된 경우
+					navigation.push('ArticleDetail', {community_object: community_obj.object}); //해당 게시글 상세로 이동
+				}
+			}
+		});
+		navigation.addListener('blur', () => {
+			community_obj.object = {};
+			community_obj.pageToMove = '';
+			community_obj.object.initial = true;
+		});
 		getComment();
 		getArticleList();
 		navigation.setOptions({title: '자유 게시글'});
+		return unsubscribe;
 	}, []);
 
 	//페이지 하단에 출력될 자유게시글 목록 api(페이징 필요)
@@ -52,7 +70,7 @@ export default ArticleDetail = props => {
 			result => {
 				// console.log('result / getCommunityList / ArticleMain :', result.msg.free);
 				const free = result.msg.free;
-				if (free < 6) {
+				if (free.length < 6) {
 					//전체글이 6개 이하라면 그냥 바로 출력
 					setArticleList(free);
 				} else {
@@ -109,6 +127,7 @@ export default ArticleDetail = props => {
 		let param = {
 			comment_contents: editData.comment_contents, //내용
 			comment_is_secure: privateComment, //공개여부 테스트때 반영
+			community_object_id: data._id,
 		};
 
 		if (editData.comment_photo_uri && editData.comment_photo_uri.length > 0) {
@@ -297,11 +316,26 @@ export default ArticleDetail = props => {
 		navigation.push('ArticleDetail', {community_object: articleList[index]});
 	};
 
+	//댓글 모두보기 클릭
 	const onPressReply = () => {
 		navigation.push('CommunityCommentList', {community_object: data});
 	};
 
-	const freeBoardContent = () => {};
+	//즐겨찾기 클릭
+	const onPressFavorite = bool => {
+		favoriteEtc(
+			{
+				collectionName: 'communityobjects',
+				post_object_id: data._id,
+				is_favorite: bool,
+			},
+			result => {
+				console.log('result / favoriteEtc / ArticleDetail : ', result.msg);
+				// setData({...data, })
+			},
+			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
+		);
+	};
 
 	if (comments == 'false') {
 		return <Loading isModal={false} />;
@@ -316,7 +350,7 @@ export default ArticleDetail = props => {
 							return (
 								<View style={[{width: 750 * DP, alignItems: 'center'}]}>
 									<View style={{alignItems: 'center'}}>
-										<Article data={data} onPressMeatball={onPressMeatball} route={props.route.name} />
+										<Article data={data} onPressMeatball={onPressMeatball} onPressFavorite={onPressFavorite} route={props.route.name} />
 										<View style={[style.separator]} />
 									</View>
 									{comments && comments.length > 0 ? (
@@ -351,8 +385,6 @@ export default ArticleDetail = props => {
 							);
 						}}
 						showsVerticalScrollIndicator={false}
-						// ListHeaderComponent={freeBoardContent}
-						// ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
 					/>
 				</View>
 			</View>

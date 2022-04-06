@@ -10,6 +10,8 @@ import Loading from 'Root/component/molecules/modal/Loading';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {likeEtc} from 'Root/api/likeetc';
+import {favoriteEtc} from 'Root/api/favoriteect';
 
 export default ReviewMain = ({route, navigation}) => {
 	const [data, setData] = React.useState('false');
@@ -227,19 +229,56 @@ export default ReviewMain = ({route, navigation}) => {
 		}
 	}
 
+	//리뷰 좋아요 클릭
+	const onPressLike = (index, bool) => {
+		console.log('index', index, bool);
+		likeEtc(
+			{
+				collectionName: 'communityobjects',
+				post_object_id: data[index]._id,
+				is_like: bool,
+			},
+			result => {
+				console.log('result/ onPressLike / ReviewMain : ', result.msg);
+				fetchData();
+			},
+			err => console.log('err / onPressLike / ReviewMain : ', err),
+		);
+	};
+
+	//댓글 모두 보기 클릭
 	const onPressReply = index => {
 		navigation.push('CommunityCommentList', {community_object: data[index]});
 	};
 
+	//리뷰 썸네일 클릭
 	const onPressReviewContent = index => {
 		navigation.push('ReviewDetail', {community_object: data[index]});
 	};
 
+	//글쓰기 아이콘 클릭
 	const onPressWrite = () => {
-		// navigation.push('CommunityWrite', {isReview: true});
 		navigation.navigate('CommunityWrite', {isReview: true});
 	};
 
+	//즐겨찾기 클릭
+	const onPressFavorite = (index, bool) => {
+		console.log('index', index, bool);
+		favoriteEtc(
+			{
+				collectionName: 'communityobjects',
+				post_object_id: data[index]._id,
+				is_favorite: bool,
+			},
+			result => {
+				console.log('result / favoriteEtc / ArticleDetail : ', result.msg);
+				// setData({...data, })
+			},
+			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
+		);
+	};
+
+	//리스트에 출력될 리스트 목록 필터
 	const getData = () => {
 		let filtered = [];
 		// console.log('data', data[0]);
@@ -333,6 +372,9 @@ export default ReviewMain = ({route, navigation}) => {
 									onPressReviewContent={onPressReviewContent}
 									onPressReply={onPressReply}
 									onPressMeatball={onPressMeatball}
+									onPressLike={index => onPressLike(index, true)}
+									onPressUnlike={index => onPressLike(index, false)}
+									onPressFavorite={onPressFavorite}
 								/>
 							</>
 						);

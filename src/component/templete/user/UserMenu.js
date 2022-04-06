@@ -132,7 +132,6 @@ export default UserMenu = props => {
 				navigation.push('UserFeeds');
 				break;
 			case TAGED_CONTENTS_FOR_ME:
-				// Modal.popInfoModal();
 				navigation.push('TagMeFeeds', {token: data});
 				break;
 			case APPLICATION_HISTORY:
@@ -151,7 +150,8 @@ export default UserMenu = props => {
 				navigation.push('SettingInformAsk');
 				break;
 			case COMUNITY:
-				Modal.popInfoModal();
+				// Modal.popInfoModal();
+				navigation.push('FavoriteCommunity');
 				break;
 			case ACCOUNT:
 				navigation.push('SettingAccount');

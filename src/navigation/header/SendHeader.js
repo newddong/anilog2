@@ -133,7 +133,6 @@ export default SendHeader = ({route, navigation, options}) => {
 								// console.log('data before Create', data);
 								let getImgTag = data.community_content.match(/<img[\w\W]+?\/?>/g); //img 태그 추출
 								const attachedCheck = !(getImgTag == null); //추가된 img 태그가 있다면 is_attatched_file은 true or false
-								console.log('data', data);
 								updateAndDeleteCommunity(
 									{
 										...data,
@@ -142,7 +141,9 @@ export default SendHeader = ({route, navigation, options}) => {
 									},
 									result => {
 										console.log('result / updateAndDeleteCommunity / SendHeader ', result.msg);
-										navigation.goBack();
+										result.msg.community_type == 'review'
+											? navigation.push('ReviewDetail', {community_object: result.msg})
+											: navigation.push('ArticleDetail', {community_object: result.msg});
 									},
 									err => {
 										console.log('err / updateAndDeleteCommunity / sendHeader ', err);

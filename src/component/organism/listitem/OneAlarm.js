@@ -8,6 +8,7 @@ import DP from 'Root/config/dp';
 import {GRAY10, APRI10, BLACK, APRI20, WHITE} from 'Root/config/color';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import {ProfileDefaultImg} from 'Root/component/atom/icon';
+import {useNavigation} from '@react-navigation/core';
 /**
  * 알람 객체
  * @param {object} props - Props Object
@@ -23,9 +24,6 @@ const OneAlarm = props => {
 	const [isNewNote, setIsNewNote] = React.useState(false);
 	const data = props.data;
 	const [value, setValue] = React.useState(0);
-	console.log('props', props);
-	console.log('newNote', props.newNote, props.index);
-	// console.log('time', data.memobox_date);
 	const colors = ['#FF9888', WHITE];
 	React.useEffect(() => {
 		if (props.index == 0 && props.isData && props.newNote) {
@@ -39,7 +37,17 @@ const OneAlarm = props => {
 		}, 2000);
 		// clearTimeout(timer);
 	}, []);
-	console.log('OneAlarm props', data);
+	// const onLabelClick = data => {
+	// 	console.log(data.notice_user_collection, data);
+	// 	switch (data.notice_user_collection) {
+	// 		case 'comment':
+	// 			break;
+	// 		case 'follow':
+	// 			navigation.navigate('UserProfile', {userobject: data.notice_user_related_id});
+	// 			// navigation.push('UserProfile', {userobject: data.notice_user_related_id});
+	// 			break;
+	// 	}
+	// };
 	return (
 		<View style={[isNewNote ? [styles.yescontainer, {backgroundColor: colors[value]}] : styles.container]}>
 			<TouchableOpacity onPress={() => props.onLabelClick(data)}>
@@ -68,22 +76,34 @@ const OneAlarm = props => {
 	);
 };
 const styles = StyleSheet.create({
-	container: {width: 690 * DP, height: 134 * DP, justifyContent: 'center', marginLeft: 30 * DP, borderRadius: 30 * DP},
-	yescontainer: {
+	container: {
 		width: 690 * DP,
-		height: 134 * DP,
+		minHeight: 134 * DP,
 		justifyContent: 'center',
 		marginLeft: 30 * DP,
 		borderRadius: 30 * DP,
+		// flexGrow: 0, flex: 1
+	},
+	yescontainer: {
+		width: 690 * DP,
+		minHeight: 134 * DP,
+		justifyContent: 'center',
+		marginLeft: 30 * DP,
+		borderRadius: 30 * DP,
+		flexGrow: 0,
+		flex: 1,
 		// backgroundColor: colors[value],
 	},
 	userAlarmContainer: {
 		width: 654 * DP,
+		minHeight: 82 * DP,
 		// height: 94 * DP,
 		flexDirection: 'row',
 		marginLeft: 18 * DP,
 		// backgroundColor: '#F2C2C2',
 		// backgroundColor: 'yellow',
+		// flexGrow: 0,
+		// flex: 1,
 	},
 
 	img_round_94: {
@@ -93,13 +113,14 @@ const styles = StyleSheet.create({
 	},
 	noProfileMessage: {
 		width: 566 * DP,
-		height: 82 * DP,
+		minHeight: 82 * DP,
 	},
-	messageContainer: {width: 442 * DP, height: 82 * DP, marginLeft: 30 * DP, marginTop: 6 * DP},
+	messageContainer: {width: 442 * DP, minHeight: 82 * DP, marginLeft: 30 * DP, marginTop: 6 * DP},
 
 	timeBeforeContainer: {
 		// width: 110 * DP,
-		height: 44 * DP,
+		minHeight: 44 * DP,
+		marginLeft: 10 * DP,
 		// backgroundColor: 'yellow',
 		// marginRight: 48 * DP,
 		justifyContent: 'center',
@@ -108,7 +129,7 @@ const styles = StyleSheet.create({
 });
 
 UserAccount.defaultProps = {
-	onLabelClick: e => console.log(e),
+	// onLabelClick: e => console.log(e),
 	onClickFollow: e => console.log(e),
 	onCheckBox: e => console.log(e),
 	checkBoxMode: false,

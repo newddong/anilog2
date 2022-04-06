@@ -18,13 +18,13 @@ import {GRAY40} from 'Root/config/color';
  */
 const stringList = ['오늘', '어제', '이번 주'];
 const DailyAlarm = props => {
-	console.log('Daily Alarm props', props.data, props.index);
-	console.log('newNote', props.index == 0 && props.newNote);
+	// console.log('Daily Alarm props', props.data, props.index);
+	// console.log('newNote', props.index == 0 && props.newNote);
 	const renderItem = ({item, index}) => {
-		console.log('item', item);
+		// console.log('item', item);
 		return (
 			<View style={[accountHashList.userAccount]}>
-				<OneAlarm data={item} onLabelClick={item => props.onClickLabel(item)} newNote={props.newNote} index={index} isData={props.isData} />
+				<OneAlarm data={item} onLabelClick={item => props.onLabelClick(item)} newNote={props.newNote} index={index} isData={props.isData} />
 			</View>
 		);
 	};
@@ -52,6 +52,8 @@ const styles = StyleSheet.create({
 		width: 750 * DP,
 		borderBottomColor: GRAY40,
 		borderBottomWidth: 2 * DP,
+		flexGrow: 0,
+		flex: 1,
 		// alignItems: 'center',
 	},
 	userContainer: {
@@ -60,13 +62,14 @@ const styles = StyleSheet.create({
 		marginBottom: 40 * DP,
 	},
 	listContainer: {
+		// flexGrow: 0,
 		flex: 1,
 	},
 });
 
 DailyAlarm.defaultProps = {
 	items: [],
-	onClickLabel: e => console.log(e),
+	// onClickLabel: e => console.log(e),
 	onCheckBox: e => console.log(e),
 	checkBoxMode: false, // CheckBox 콘테이너 Show T/F
 	showFollowBtn: false,

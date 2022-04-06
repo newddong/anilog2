@@ -4,7 +4,7 @@ import {View, TouchableOpacity, TextInput} from 'react-native';
 import DP from 'Root/config/dp';
 import {APRI10, GRAY30} from 'Root/config/color';
 import {Cross24_Filled, Cross48, Search48} from 'Atom/icon';
-
+import searchContext from 'Root/config/searchContext';
 /**
  * 검색 기능이 추가된 인풋 컴포넌트
  * @param {object} props - Props Object

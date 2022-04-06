@@ -23,11 +23,12 @@ const CategoryHelpTopTabNavigation = ({route, navigation}) => {
 	const [searchText, setSearchText] = React.useState('');
 	const [data, setData] = React.useState();
 	const [commonData, setCommomData] = React.useState();
+
 	React.useEffect(() => {
 		let temp = [];
 		let temp2 = {};
 		getCommonCodeDynamicQuery(
-			{common_code_c_name: 'helpbycategoryobjects'},
+			{common_code_c_name: 'helpbycategoryobjects', common_code_language: 'kor', common_code_out_type: 'list'},
 			result => {
 				console.log('result', result);
 				for (let i in result.msg) {
@@ -80,7 +81,6 @@ const CategoryHelpTopTabNavigation = ({route, navigation}) => {
 	const onPressAsk = () => {
 		navigation.push('ServiceTab');
 	};
-
 	if (loading) {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>

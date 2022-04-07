@@ -10,10 +10,17 @@ import {ArticleIcon, NextMark, ReviewIcon} from 'Root/component/atom/icon';
 export default FavoriteCommunity = ({route}) => {
 	const navigation = useNavigation();
 
+	const onPressArticle = () => {
+		route.name == 'MyCommunity' ? navigation.push('MyArticle') : navigation.push('FavoriteArticle');
+	};
+	const onPressReview = () => {
+		route.name == 'MyCommunity' ? navigation.push('MyReview') : navigation.push('FavoriteReview');
+	};
+
 	return (
 		<View style={[style.container]}>
 			<View style={[style.inside]}>
-				<TouchableOpacity onPress={() => navigation.push('FavoriteArticle')} style={[style.type]}>
+				<TouchableOpacity onPress={onPressArticle} style={[style.type]}>
 					<View style={[style.title]}>
 						<ArticleIcon />
 						<Text style={[txt.noto30b]}>{'    '}자유 게시글</Text>
@@ -23,7 +30,7 @@ export default FavoriteCommunity = ({route}) => {
 						<NextMark />
 					</View>
 				</TouchableOpacity>
-				<TouchableOpacity onPress={() => navigation.push('FavoriteReview')} style={[style.type]}>
+				<TouchableOpacity onPress={onPressReview} style={[style.type]}>
 					<View style={[style.title]}>
 						<ReviewIcon />
 						<Text style={[txt.noto30b]}>{'    '}리뷰</Text>

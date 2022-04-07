@@ -38,7 +38,7 @@ export default ArticleThumnails = props => {
 
 	const content = () => {
 		if (photos.length == 1) {
-			return <Image source={{uri: photos[0]}} style={[style.photo_1]} resizeMode={'stretch'} />;
+			return <Image source={{uri: photos[0]}} style={[style.photo_1]} />;
 		} else if (photos.length == 2) {
 			return (
 				<View style={[style.photo_2_container]}>
@@ -113,7 +113,7 @@ const style = StyleSheet.create({
 	photo3_right: {
 		width: 278 * DP,
 		marginLeft: 5 * DP,
-		alignItems: 'stretch',
+		alignItems: 'center',
 		justifyContent: 'space-between',
 	},
 	photo3_right_photo: {

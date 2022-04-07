@@ -15,6 +15,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import {favoriteEtc} from 'Root/api/favoriteect';
+import community_obj from 'Root/config/community_obj';
 
 /**
  * 후기 상세 내용
@@ -38,7 +39,6 @@ export default ReviewDetail = props => {
 		comment_contents: '',
 		comment_photo_uri: '',
 	});
-	// console.log('data', data);
 
 	React.useEffect(() => {
 		if (data.community_address.normal_address.address_name != '') {
@@ -61,6 +61,21 @@ export default ReviewDetail = props => {
 				console.log('err / getCommunityList / ReviewDEtail : ', err);
 			},
 		);
+		const unsubscribe = navigation.addListener('focus', () => {
+			//다른 탭(ex - My 탭의 즐겨찾기한 커뮤니티 목록에서 들어온 경우)에서의 호출
+			if (community_obj.object.hasOwnProperty('_id')) {
+				if (community_obj.object._id != data._id) {
+					//현재 보고 있는 페이지와 다른 게시글이 호출된 경우
+					navigation.push('ReviewDetail', {community_object: community_obj.object}); //해당 게시글 상세로 이동
+				}
+			}
+		});
+		navigation.addListener('blur', () => {
+			community_obj.object = {};
+			community_obj.pageToMove = '';
+			community_obj.object.initial = true;
+		});
+		return unsubscribe;
 	}, []);
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수

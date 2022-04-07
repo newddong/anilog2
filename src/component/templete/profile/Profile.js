@@ -20,6 +20,7 @@ import DP from 'Root/config/dp';
 import {getFeedListByUserId, getUserTaggedFeedList} from 'Root/api/feedapi';
 import {useNavigation} from '@react-navigation/core';
 import Loading from 'Root/component/molecules/modal/Loading';
+import CommunityList from '../community/CommunityList';
 
 export default Profile = ({route}) => {
 	const navigation = useNavigation();
@@ -317,7 +318,7 @@ export default Profile = ({route}) => {
 		);
 	};
 
-	//TabSelect 하단 AccountList
+	//TabSelect 하단 출력 리스트 컴포넌트
 	const showTabContent = () => {
 		const whenFeedThumbnailEmpty = () => {
 			return (
@@ -342,13 +343,15 @@ export default Profile = ({route}) => {
 				} else if (tabMenuSelected == 1) {
 					return <FeedThumbnailList items={item} whenEmpty={whenFeedThumbnailEmpty} onClickThumnail={onClick_Thumbnail_TagTab} />;
 				} else {
-					return <InfoScreen />;
+					// return <InfoScreen />;
+					return <CommunityList data={{free: [], review: []}} />;
 				}
 			} else {
 				if (tabMenuSelected != 2) {
 					return <FeedThumbnailList items={item} whenEmpty={whenFeedThumbnailEmpty} onClickThumnail={onClick_Thumbnail_FeedTab} />;
 					// return <InfoScreen />;
 				} else {
+					//커뮤니티 탭
 					return <InfoScreen />;
 				}
 			}

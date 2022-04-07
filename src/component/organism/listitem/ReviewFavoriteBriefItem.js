@@ -104,7 +104,7 @@ const ReviewFavoriteBriefItem = props => {
 				<></>
 			) : (
 				<View style={[style.img]}>
-					<Image style={[styles.img_square_round_186, {borderRadius: 0}]} source={{uri: image[0]}} />
+					<Image style={{borderRadius: 0, width: 186 * DP, height: 186 * DP}} source={{uri: image[0]}} />
 				</View>
 			)}
 			<View style={[style.content]}>

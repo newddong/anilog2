@@ -52,18 +52,18 @@ const ArticleContent = props => {
 	const onWebViewMessage = async event => {
 		if (Platform.OS == 'android') {
 			setTimeout(() => {
-				if (parseInt(event.nativeEvent.data) < 300) {
-					setHeight(300 * DP);
+				if (parseInt(event.nativeEvent.data) < 130) {
+					setHeight(130 * DP);
 				} else {
-					height >= 300 ? false : setHeight(parseInt(event.nativeEvent.data));
+					height >= 130 ? false : setHeight(parseInt(event.nativeEvent.data));
 					console.log('height and : ', parseInt(event.nativeEvent.data));
 				}
 			}, 150);
 		} else {
-			if (parseInt(event.nativeEvent.data) < 300) {
-				setHeight(300 * DP);
+			if (parseInt(event.nativeEvent.data) < 130) {
+				setHeight(130 * DP);
 			} else {
-				height >= 300 ? false : setHeight(parseInt(event.nativeEvent.data));
+				height >= 130 ? false : setHeight(parseInt(event.nativeEvent.data));
 				console.log('parseInt(event.nativeEvent.data)', parseInt(event.nativeEvent.data));
 			}
 		}
@@ -77,11 +77,9 @@ const ArticleContent = props => {
 						{getArticleType()}
 						{'  '}
 					</Text>
-					<View>
-						<Text numberOfLines={2} style={[txt.noto32b, {width: 450 * DP, height: 100 * DP}]}>
-							{data.community_title}
-						</Text>
-					</View>
+					<Text numberOfLines={2} style={[txt.noto32b, {width: 485 * DP, height: 100 * DP}]}>
+						{data.community_title}
+					</Text>
 				</View>
 				<View style={[style.header_icon]}>
 					{data.community_is_favorite ? (
@@ -95,7 +93,7 @@ const ArticleContent = props => {
 			<View style={[style.profile]}>
 				<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} />
 			</View>
-			<View style={[{width: 700 * DP, marginTop: 20 * DP, opacity: height >= 300 * DP ? 1 : 0}]}>
+			<View style={[{width: 700 * DP, marginTop: 20 * DP, opacity: height >= 130 * DP ? 1 : 0}]}>
 				{Platform.OS == 'ios' ? (
 					<WebView
 						originWhitelist={['*']}
@@ -134,7 +132,7 @@ const ArticleContent = props => {
 						}}
 						style={{
 							width: 670 * DP,
-							height: height == 0 ? 300 * DP : height,
+							height: height == 0 ? 130 * DP : height,
 							opacity: 0.99,
 						}}
 					/>

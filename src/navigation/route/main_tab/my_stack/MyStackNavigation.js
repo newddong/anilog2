@@ -356,6 +356,11 @@ export default MyStackNavigation = props => {
 				options={{header: props => <SimpleHeader {...props} />, title: '커뮤니티 즐겨찾기'}}
 			/>
 			<MyStack.Screen
+				name="MyCommunity"
+				component={FavoriteCommunity}
+				options={{header: props => <SimpleHeader {...props} />, title: '나의 커뮤니티 글'}}
+			/>
+			<MyStack.Screen
 				name="FavoriteArticle"
 				component={FavoriteArticle}
 				options={{header: props => <SimpleHeader {...props} />, title: '자유 게시글 즐겨찾기'}}
@@ -365,6 +370,8 @@ export default MyStackNavigation = props => {
 				component={FavoriteReview}
 				options={{header: props => <SimpleHeader {...props} />, title: '리뷰 즐겨찾기'}}
 			/>
+			<MyStack.Screen name="MyArticle" component={FavoriteArticle} options={{header: props => <SimpleHeader {...props} />, title: '나의 자유글'}} />
+			<MyStack.Screen name="MyReview" component={FavoriteReview} options={{header: props => <SimpleHeader {...props} />, title: '나의 리뷰'}} />
 		</MyStack.Navigator>
 	);
 };

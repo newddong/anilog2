@@ -76,17 +76,23 @@ export default FavoriteArticle = ({route}) => {
 
 	return (
 		<View style={[style.container]}>
-			<View style={[style.header]}>
-				<Text style={[txt.noto24]}>직접 책갈피 표시를 선택해 즐겨찾기를 해제할 수 있습니다.</Text>
-			</View>
+			{route.name == 'MyArticle' ? (
+				<></>
+			) : (
+				<View style={[style.header]}>
+					<Text style={[txt.noto24]}>직접 책갈피 표시를 선택해 즐겨찾기를 해제할 수 있습니다.</Text>
+				</View>
+			)}
 			{data == 'false' ? (
 				<Loading isModal={false} />
 			) : (
-				<ArticleList
-					items={data}
-					onPressArticle={onPressArticle} //게시글 내용 클릭
-					whenEmpty={whenEmpty}
-				/>
+				<View style={{paddingVertical: 20 * DP}}>
+					<ArticleList
+						items={data}
+						onPressArticle={onPressArticle} //게시글 내용 클릭
+						whenEmpty={whenEmpty}
+					/>
+				</View>
 			)}
 		</View>
 	);

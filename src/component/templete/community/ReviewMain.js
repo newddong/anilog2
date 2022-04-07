@@ -12,37 +12,10 @@ import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeEtc} from 'Root/api/likeetc';
 import {favoriteEtc} from 'Root/api/favoriteect';
+import community_obj from 'Root/config/community_obj';
 
 export default ReviewMain = ({route, navigation}) => {
 	const [data, setData] = React.useState('false');
-	const [isFilter, setIsFilter] = React.useState(false);
-
-	React.useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', () => fetchData());
-		fetchData();
-		return unsubscribe;
-	}, []);
-
-	React.useEffect(() => {
-		!isFilter ? fetchData() : false;
-	}, [isFilter]);
-
-	const fetchData = () => {
-		getCommunityList(
-			{
-				community_type: 'review',
-			},
-			result => {
-				// console.log('result / getCommunityList / ArticleMain :', result.msg);
-				setData(result.msg.review);
-			},
-			err => {
-				console.log('err / getCommunityList / ArticleMain : ', err);
-				Modal.alert(err);
-			},
-		);
-	};
-
 	const [filterData, setFilterData] = React.useState({
 		dog: false,
 		cat: false,
@@ -55,6 +28,48 @@ export default ReviewMain = ({route, navigation}) => {
 			category: [],
 		},
 	});
+
+	const filterRef = React.useRef(false);
+	// React navigation focus event listener return old state 관련 자료 참고
+	// https://stackoverflow.com/questions/65859385/react-navigation-focus-event-listener-return-old-state
+
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			// console.log('filterRef', filterRef);
+			filterRef.current ? false : fetchData(); // 필터가 적용된 상태라면 다시 데이터를 받아와서는 안됨
+			// console.log(' ReviewMain / object._id', community_obj.object._id);
+			// console.log(' ReviewMain / pageToMove', community_obj.pageToMove);
+			// console.log(' ReviewMain / initial', community_obj.initial);
+			community_obj.current = '';
+			if (community_obj.initial != true && community_obj.object._id != undefined) {
+				console.log('다른 탭에서의 호출 : 목적지 및 타이틀', community_obj.pageToMove, community_obj.object.community_title);
+				navigation.navigate(community_obj.pageToMove, {community_object: community_obj.object});
+			}
+		});
+		navigation.addListener('blur', () => {
+			community_obj.object = {};
+			community_obj.pageToMove = '';
+			community_obj.initial = true;
+		});
+		fetchData();
+		return unsubscribe;
+	}, []);
+
+	const fetchData = () => {
+		getCommunityList(
+			{
+				community_type: 'review',
+			},
+			result => {
+				console.log('result / getCommunityList / ArticleMain :', result.msg.review.length);
+				setData(result.msg.review);
+			},
+			err => {
+				console.log('err / getCommunityList / ArticleMain : ', err);
+				Modal.alert(err);
+			},
+		);
+	};
 
 	const onPressMeatball = index => {
 		console.log('index', index);
@@ -112,6 +127,7 @@ export default ReviewMain = ({route, navigation}) => {
 		);
 	};
 
+	//개 고양이 그외 버튼 필터 클릭
 	const onPressAnimalFilter = filter => {
 		switch (filter) {
 			case 'dog':
@@ -128,14 +144,24 @@ export default ReviewMain = ({route, navigation}) => {
 		}
 	};
 
+	//좌상단 필터 적용 해제
+	const onPressFilterOff = () => {
+		// setIsFilter(false);
+		filterRef.current = false;
+		fetchData();
+	};
+
+	//좌상단 필터 적용
 	const onPressFilter = () => {
-		setIsFilter(true);
+		filterRef.current = true;
+		// setIsFilter(true);
 		Modal.popInterestTagModal(
 			'Review',
 			{interests_etc: [], interests_hospital: [], interests_interior: [], interests_review: [], interests_trip: []},
 			() => Modal.close(),
 			() => {
-				setIsFilter(false);
+				filterRef.current = false;
+				// setIsFilter(false);
 				Modal.close();
 			},
 			arg => {
@@ -211,7 +237,8 @@ export default ReviewMain = ({route, navigation}) => {
 						setData(category_filtered_list);
 					} else {
 						console.log('도시선택 필터와 카테고리는 선택이 없으므로 전체 리스트와 동일');
-						setIsFilter(false);
+						filterRef.current = false;
+						// setIsFilter(false);
 						setData(filtered);
 					}
 				}
@@ -219,6 +246,7 @@ export default ReviewMain = ({route, navigation}) => {
 		);
 	};
 
+	//두 배열 간 비교 함수
 	function compareArray(a, b) {
 		for (let i = 0; i < a.length; i++) {
 			for (let j = 0; j < b.length; j++) {
@@ -310,7 +338,7 @@ export default ReviewMain = ({route, navigation}) => {
 		return (
 			<View style={[style.filter]}>
 				<View style={[style.shadow_filter]}>
-					{isFilter ? <Filter60Filled onPress={() => setIsFilter(false)} /> : <Filter60Border onPress={onPressFilter} />}
+					{filterRef.current ? <Filter60Filled onPress={onPressFilterOff} /> : <Filter60Border onPress={onPressFilter} />}
 				</View>
 				<View style={[style.animalFilter]}>
 					<View style={[style.shadow]}>

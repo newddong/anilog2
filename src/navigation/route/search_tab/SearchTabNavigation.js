@@ -17,6 +17,7 @@ import SearchAccountA from 'Root/component/templete/search/SearchAccountA';
 import SearchReview from 'Root/component/templete/search/SearchReview';
 import SearchCommunity from 'Root/component/templete/search/SearchCommunity';
 import {getSearchCommunityList} from 'Root/api/community';
+import SearchArticle from 'Root/component/templete/search/SearchArticle';
 
 const SearchTabNav = createMaterialTopTabNavigator();
 
@@ -47,7 +48,7 @@ export default SearchTabNavigation = props => {
 	React.useEffect(() => {
 		async function fetchData() {
 			setLoading(true);
-			if (searchContext.searchInfo.searchInput != '') {
+			if (searchContext.searchInfo.searchInput != '' && searchContext.searchInfo.searchInput.length > 1) {
 				const user = await getUserList(); //계정 검색
 				const hash = await getHashList(); //태그 검색
 				const comm = await getCommunityList(); //커뮤니티 검색
@@ -58,6 +59,7 @@ export default SearchTabNavigation = props => {
 			} else {
 				setUserList([]);
 				setHashList([]);
+				setCommList({free: [], review: []});
 				setLoading(false);
 			}
 		}
@@ -127,10 +129,16 @@ export default SearchTabNavigation = props => {
 						searchKeyword: searchContext.searchInfo.searchInput,
 					},
 					result => {
-						// console.log('result / getSearchCommunityList / SearchTabNav : ', result.msg);
+						console.log('searchContext.searchInfo.searchInput', searchContext.searchInfo.searchInput);
+						console.log('result / getSearchCommunityList / SearchTabNav : ', result.msg.free.length);
 						resolve(result.msg);
 					},
-					err => console.log('err / getSearchCommunityList / SearchTabNav : ', err),
+					err => {
+						console.log('err / getSearchCommunityList / SearchTabNav : ', err);
+						if (err == '검색 결과가 없습니다.') {
+							resolve({free: [], review: []});
+						}
+					},
 				);
 			} catch (error) {
 				console.log('error getHashList  :  ', error.message);
@@ -166,12 +174,20 @@ export default SearchTabNavigation = props => {
 				{props => <SearchHashTag {...props} data={hashList} loading={loading} />}
 			</SearchTabNav.Screen>
 			<SearchTabNav.Screen
-				name="COMMUNITYSEARCH"
+				name="ARTICLE"
 				options={{
-					title: '커뮤니티',
+					title: '자유글',
 					...searchTabLabelOption,
 				}}>
-				{props => <SearchCommunity {...props} data={commList} loading={loading} />}
+				{props => <SearchArticle {...props} data={commList} loading={loading} />}
+			</SearchTabNav.Screen>
+			<SearchTabNav.Screen
+				name="REVIEW"
+				options={{
+					title: '리뷰',
+					...searchTabLabelOption,
+				}}>
+				{props => <SearchReview {...props} data={commList} loading={loading} />}
 			</SearchTabNav.Screen>
 		</SearchTabNav.Navigator>
 	);

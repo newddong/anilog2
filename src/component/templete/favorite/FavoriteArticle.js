@@ -1,23 +1,18 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {txt} from 'Root/config/textstyle';
-import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
-import {ArticleIcon, NextMark, ReviewIcon} from 'Root/component/atom/icon';
 import {getCommunityList} from 'Root/api/community';
 import Modal from 'Root/component/modal/Modal';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import {styles} from 'Root/component/atom/image/imageStyle';
-import {community_object} from 'Root/config/searchContext';
 import community_obj from 'Root/config/community_obj';
-import {CommonActions} from '@react-navigation/routers';
 import Loading from 'Root/component/molecules/modal/Loading';
 
 //즐겨찾기한 커뮤니티 조회
 export default FavoriteArticle = ({route}) => {
 	const navigation = useNavigation();
-
 	const [data, setData] = React.useState('false');
 
 	React.useEffect(() => {

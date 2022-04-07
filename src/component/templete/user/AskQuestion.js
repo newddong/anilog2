@@ -35,7 +35,7 @@ const AskQuestion = ({route}) => {
 		let i;
 		let temp = [];
 		getCommonCodeDynamicQuery(
-			{common_code_c_name: 'helpbycategoryobjects'},
+			{common_code_c_name: 'helpbycategoryobjects', common_code_language: 'kor', common_code_out_type: 'list'},
 
 			result => {
 				// console.log('common code result', result.msg);

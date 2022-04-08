@@ -12,9 +12,10 @@ const CategoryHelp = ({route, props}) => {
 	const [data, setData] = React.useState();
 	const [loading, setLoading] = React.useState(false);
 	const [categoryList, setCategoryList] = React.useState([]);
-	let categoryName = route.params?.category;
+	const [categoryName, setCategoryName] = React.useState('');
+	// let categoryName = route.params?.category;
 	const [categoryLoad, setCategoryLoaded] = React.useState(false);
-
+	console.log('CategotyName', categoryName);
 	React.useEffect(() => {
 		getHelpByCategoryDynamicQuery(
 			{},
@@ -32,9 +33,9 @@ const CategoryHelp = ({route, props}) => {
 	React.useEffect(() => {
 		// console.log('categoryHelp', route);
 		getCommonCodeDynamicQuery(
-			{common_code_c_name: 'helpbycategoryobjects'},
+			{common_code_c_name: 'helpbycategoryobjects', common_code_language: 'kor', common_code_out_type: 'list'},
 			result => {
-				// console.log('111', result.msg);
+				console.log('111', result.msg);
 				setCategoryList(result.msg.slice(1));
 				setCategoryLoaded(true);
 			},
@@ -43,6 +44,11 @@ const CategoryHelp = ({route, props}) => {
 			},
 		);
 	}, [route]);
+	React.useEffect(() => {
+		setCategoryName(route.params?.category);
+		console.log('category list name', categoryList, categoryName);
+	}, [route.params?.category]);
+
 	React.useEffect(() => {
 		if (categoryName == '전체') {
 			getHelpByCategoryDynamicQuery(
@@ -60,8 +66,8 @@ const CategoryHelp = ({route, props}) => {
 
 		if (categoryLoad) {
 			for (let i in categoryList) {
-				// console.log('list', categoryList[i]);
 				if (categoryList[i].common_code_msg_kor == categoryName && categoryName != '전체') {
+					// console.log("조건 ");
 					getHelpByCategoryDynamicQuery(
 						{help_by_category_common_code_id: categoryList[i]._id},
 						result => {
@@ -75,7 +81,7 @@ const CategoryHelp = ({route, props}) => {
 				}
 			}
 		}
-	}, [categoryList]);
+	}, [categoryName]);
 
 	const renderItem = ({item, index}) => {
 		// console.log('item', item);

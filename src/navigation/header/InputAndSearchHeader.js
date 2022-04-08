@@ -46,6 +46,10 @@ export default InputAndSearchHeader = props => {
 		setSearchInput(text);
 		searchContext.searchInfo.searchInput = text;
 	};
+	const onClear = () => {
+		searchContext.searchInfo.searchInput = '';
+		setSearchInput('');
+	};
 
 	//뒤로 가기 클릭 시 탭이 initialRoute인 Feed로 가던 현상 수정
 	const onPressGoBack = () => {
@@ -68,7 +72,13 @@ export default InputAndSearchHeader = props => {
 				</TouchableOpacity>
 				{searchRoute != 'SearchFeed' ? (
 					<View style={{marginBottom: 20 * DP, flex: 1}}>
-						<InputWithSearchIcon placeholder={'검색어를 입력하세요.'} width={590} onChange={onChangeSearchText} onSearch={confirm} />
+						<InputWithSearchIcon
+							placeholder={'검색어를 입력하세요.'}
+							width={590}
+							onChange={onChangeSearchText}
+							onSearch={confirm}
+							onClear={onClear}
+						/>
 					</View>
 				) : (
 					<></>

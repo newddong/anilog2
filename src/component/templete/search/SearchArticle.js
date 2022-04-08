@@ -2,7 +2,7 @@ import React from 'react';
 import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import {BLACK, GRAY10} from 'Root/config/color';
-import {Check50, Rect50_Border, WriteBoard} from 'Atom/icon';
+import {Check50, EmptyIcon, Rect50_Border, WriteBoard} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
 import {useNavigation} from '@react-navigation/core';
 import Loading from 'Root/component/molecules/modal/Loading';
@@ -95,8 +95,9 @@ export default SearchArticle = props => {
 
 	const whenEmpty = () => {
 		return (
-			<View style={{paddingVertical: 170 * DP}}>
-				<Text style={[txt.roboto36b]}>목록이 없네요.</Text>
+			<View style={{paddingVertical: 150 * DP, alignItems: 'center'}}>
+				<EmptyIcon />
+				<Text style={[txt.noto28]}>검색 결과가 없습니다..</Text>
 			</View>
 		);
 	};

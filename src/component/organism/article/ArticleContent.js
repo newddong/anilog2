@@ -91,7 +91,7 @@ const ArticleContent = props => {
 				</View>
 			</View>
 			<View style={[style.profile]}>
-				<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} />
+				<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} time_expression={'full'} />
 			</View>
 			<View style={[{width: 700 * DP, marginTop: 20 * DP, opacity: height >= 130 * DP ? 1 : 0}]}>
 				{Platform.OS == 'ios' ? (

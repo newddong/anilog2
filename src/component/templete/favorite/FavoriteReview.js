@@ -11,36 +11,36 @@ import ReviewFavoriteBriefList from 'Root/component/organism/list/ReviewFavorite
 import Loading from 'Root/component/molecules/modal/Loading';
 import {likeEtc} from 'Root/api/likeetc';
 import community_obj from 'Root/config/community_obj';
+import {getFavoriteEtcListByUserId} from 'Root/api/favoriteect';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 //즐겨찾기한 피드목록을 조회
 export default FavoriteReview = ({route}) => {
 	const navigation = useNavigation();
-	const [selectMode, setSelectMode] = React.useState(false);
 	const [data, setData] = React.useState('false');
+	const [selectMode, setSelectMode] = React.useState(false);
 	const [selectCNT, setSelectCNT] = React.useState(0);
 
-	// console.log('token', token);
 	React.useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', () => fetchData());
-		return unsubscribe;
+		fetchData();
 	}, []);
 
 	const fetchData = () => {
-		getCommunityList(
+		getFavoriteEtcListByUserId(
 			{
-				community_type: 'review',
+				userobject_id: userGlobalObject.userInfo._id,
+				collectionName: 'communityobjects',
 			},
 			result => {
-				let copy = [...result.msg.review];
-				copy.map((v, i) => {
-					v._index = i;
-					v.checkBoxState = false;
-				});
-				setData(copy);
-				// setData(result.msg.review);
+				// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg);
+				let reviewCont = result.msg.filter(e => e.favorite_etc_post_id.community_type == 'review');
+				let reviewList = reviewCont.map(v => v.favorite_etc_post_id);
+				console.log('review length', reviewList.length);
+				setData(reviewList);
 			},
 			err => {
-				console.log('err / FavoriteReview / ReviewDEtail : ', err);
+				console.log('err / getFavoriteEtcListByUserId / FavoriteCommunity : ', err);
+				setData([]);
 			},
 		);
 	};
@@ -139,7 +139,7 @@ export default FavoriteReview = ({route}) => {
 				is_like: bool,
 			},
 			result => {
-				console.log('result/ onPressLike / ReviewMain : ', result.msg);
+				console.log('result/ onPressLike / ReviewMain : ', result.msg.targetPost.community_like_count);
 				fetchData();
 			},
 			err => console.log('err / onPressLike / ReviewMain : ', err),
@@ -164,7 +164,6 @@ export default FavoriteReview = ({route}) => {
 						<View style={[temp_style.selectstat, selectstat_view_style.selectstat]}>
 							<SelectStat
 								onSelectMode={checkSelectMode}
-								// onSelectMode={e => showCheckBox(e)}
 								onCancelSelectMode={cancelSelectMode}
 								onSelectAllClick={selectAll}
 								onDeleteSelectedItem={deleteSelectedItem}

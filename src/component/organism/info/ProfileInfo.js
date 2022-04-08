@@ -38,7 +38,6 @@ import {useNavigation} from '@react-navigation/core';
 const ProfileInfo = props => {
 	const [data, setData] = React.useState(props.data);
 	const navigation = useNavigation();
-	console.log('is Follow', data.is_follow);
 
 	const [showMore, setShowMore] = React.useState(false); // 프로필 Description 우측 더보기 클릭 State
 	const [ownerListState, setOwnerListState] = React.useState(false); // userType이 Pet일 경우 반려인계정 출력 여부 T/F

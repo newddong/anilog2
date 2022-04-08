@@ -363,6 +363,7 @@ export default ReviewDetail = props => {
 											privateComment={privateComment}
 											ref={input}
 											editData={editData}
+											shadow={false}
 										/>
 									</View>
 								</View>

@@ -18,6 +18,7 @@ import WriteEditorTest from 'Root/component/templete/community/WriteEditorTest';
 import ReviewStackNavigation from './review_tab/ReviewStackNavigation';
 import {getFocusedRouteNameFromRoute, useNavigation} from '@react-navigation/core';
 import CommunityEdit from 'Root/component/templete/community/CommunityEdit';
+import ChangeUserProfileImage from 'Root/component/templete/user/ChangeUserProfileImage';
 
 const CommunityMainStackNavi = createStackNavigator();
 
@@ -105,6 +106,22 @@ export default CommunityMainStack = props => {
 				options={({route}) => ({
 					header: props => <SimpleHeader {...props} />,
 					title: '주소 검색',
+				})}
+			/>
+			<CommunityMainStackNavi.Screen
+				name={'SocialRelation'}
+				component={SocialRelationTopTabNavigation}
+				options={({route}) => ({
+					header: props => <SimpleHeader {...props} />,
+					title: '주소 검색',
+				})}
+			/>
+			<CommunityMainStackNavi.Screen
+				name={'ChangeUserProfileImage'}
+				component={ChangeUserProfileImage}
+				options={({route}) => ({
+					header: props => <SimpleHeader {...props} />,
+					title: '프로필 수정',
 				})}
 			/>
 		</CommunityMainStackNavi.Navigator>

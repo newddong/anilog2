@@ -5,44 +5,96 @@ import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
 import {ArticleIcon, NextMark, ReviewIcon} from 'Root/component/atom/icon';
+import {getCommunityListByUserId} from 'Root/api/community';
+import Loading from 'Root/component/molecules/modal/Loading';
+import {getFavoriteEtcListByUserId} from 'Root/api/favoriteect';
 
 //즐겨찾기한 커뮤니티 조회
 export default FavoriteCommunity = ({route}) => {
 	const navigation = useNavigation();
+	const isFavorite = route.name == 'FavoriteCommunity';
+	const [review, setReview] = React.useState('false');
+	const [article, setArticle] = React.useState('false');
+
+	React.useEffect(() => {
+		!isFavorite
+			? getCommunityListByUserId(
+					{
+						userobject_id: userGlobalObject.userInfo._id,
+						community_type: 'all',
+					},
+					result => {
+						console.log('result / getCommunityListByUserId / FavoriteCommunity', result.msg.free.length);
+						console.log('result / getCommunityListByUserId / FavoriteCommunity', result.msg.review.length);
+						setReview(result.msg.review);
+						setArticle(result.msg.free);
+					},
+					err => {
+						console.log('err / getCommunityListByUserId / FavoriteCommunity : ', err);
+						setReview([]);
+						setArticle([]);
+					},
+			  )
+			: getFavoriteEtcListByUserId(
+					{
+						userobject_id: userGlobalObject.userInfo._id,
+						collectionName: 'communityobjects',
+					},
+					result => {
+						// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg);
+						let reviewCont = [];
+						let articleCont = [];
+						result.msg.map((v, i) => {
+							v.favorite_etc_post_id.community_is_favorite = true;
+							if (v.favorite_etc_post_id.community_type == 'review') {
+								reviewCont.push(v.favorite_etc_post_id);
+							} else articleCont.push(v.favorite_etc_post_id);
+						});
+						setReview(reviewCont);
+						setArticle(articleCont);
+					},
+					err => {
+						console.log('err / getFavoriteEtcListByUserId / FavoriteCommunity : ', err);
+					},
+			  );
+	}, []);
 
 	const onPressArticle = () => {
-		route.name == 'MyCommunity' ? navigation.push('MyArticle') : navigation.push('FavoriteArticle');
+		isFavorite ? navigation.push('FavoriteArticle', article) : navigation.push('MyArticle', article);
 	};
 	const onPressReview = () => {
-		route.name == 'MyCommunity' ? navigation.push('MyReview') : navigation.push('FavoriteReview');
+		isFavorite ? navigation.push('FavoriteReview', review) : navigation.push('MyReview', review);
 	};
 
-	return (
-		<View style={[style.container]}>
-			<View style={[style.inside]}>
-				<TouchableOpacity onPress={onPressArticle} style={[style.type]}>
-					<View style={[style.title]}>
-						<ArticleIcon />
-						<Text style={[txt.noto30b]}>{'    '}자유 게시글</Text>
-						<Text style={[txt.noto28]}> · 13개</Text>
-					</View>
-					<View style={[style.nextBtn]}>
-						<NextMark />
-					</View>
-				</TouchableOpacity>
-				<TouchableOpacity onPress={onPressReview} style={[style.type]}>
-					<View style={[style.title]}>
-						<ReviewIcon />
-						<Text style={[txt.noto30b]}>{'    '}리뷰</Text>
-						<Text style={[txt.noto28]}> · 13개</Text>
-					</View>
-					<View style={[style.nextBtn]}>
-						<NextMark />
-					</View>
-				</TouchableOpacity>
+	if (review == 'false' && article == 'false') {
+		return <Loading isModal={false} />;
+	} else
+		return (
+			<View style={[style.container]}>
+				<View style={[style.inside]}>
+					<TouchableOpacity onPress={onPressArticle} style={[style.type]}>
+						<View style={[style.title]}>
+							<ArticleIcon />
+							<Text style={[txt.noto30b]}>{'    '}자유 게시글</Text>
+							<Text style={[txt.noto28]}> · {article.length}개</Text>
+						</View>
+						<View style={[style.nextBtn]}>
+							<NextMark />
+						</View>
+					</TouchableOpacity>
+					<TouchableOpacity onPress={onPressReview} style={[style.type]}>
+						<View style={[style.title]}>
+							<ReviewIcon />
+							<Text style={[txt.noto30b]}>{'    '}리뷰</Text>
+							<Text style={[txt.noto28]}> · {review.length}개</Text>
+						</View>
+						<View style={[style.nextBtn]}>
+							<NextMark />
+						</View>
+					</TouchableOpacity>
+				</View>
 			</View>
-		</View>
-	);
+		);
 };
 
 const style = StyleSheet.create({

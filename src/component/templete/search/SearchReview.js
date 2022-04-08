@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View, ScrollView, FlatList, Image} from 'react-native';
 import {BLACK} from 'Root/config/color';
-import {Animal_another_off, Animal_cat_off, Animal_dog_off, Filter60Border, Filter60Filled, WriteBoard} from 'Root/component/atom/icon';
+import {Animal_another_off, Animal_cat_off, Animal_dog_off, EmptyIcon, Filter60Border, Filter60Filled, WriteBoard} from 'Root/component/atom/icon';
 import ReviewList from 'Root/component/organism/list/ReviewList';
 import {Animal_another, Animal_cat, Animal_dog} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
@@ -45,11 +45,6 @@ export default SearchReview = props => {
 			setData(props.data.review);
 		}
 	}, [props.data.review]);
-
-	// React.useEffect(() => {
-	// 	console.log('Filter', isFilter);
-	// 	!isFilter ? setData(props.data.review) : false;
-	// }, [isFilter]);
 
 	const onPressMeatball = index => {
 		const isMyArticle = userGlobalObject.userInfo._id == data[index].community_writer_id._id;
@@ -356,16 +351,10 @@ export default SearchReview = props => {
 
 	const whenEmpty = () => {
 		return (
-			<>
-				<Image
-					style={[styles.img_square_246, {marginTop: 150 * DP}]}
-					resizeMode={'stretch'}
-					source={{
-						uri: 'https://st.depositphotos.com/21121724/53932/v/600/depositphotos_539322694-stock-illustration-cartoon-home-pets-empty-feeder.jpg',
-					}}
-				/>
-				<Text style={[txt.roboto36b]}>목록이 없네요.</Text>
-			</>
+			<View style={{paddingVertical: 150 * DP, alignItems: 'center'}}>
+				<EmptyIcon />
+				<Text style={[txt.noto28]}>검색 결과가 없습니다..</Text>
+			</View>
 		);
 	};
 

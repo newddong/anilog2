@@ -44,9 +44,12 @@ const ArticleSummary = props => {
 			const time = moment(dbDate).format('HH:mm');
 			return time;
 		} else {
-			const time = moment(dbDate).format('YY.MM.DD');
-			// console.log('g', g);
-			return time;
+			const year = dbDate.getFullYear();
+			if (year == new Date().getFullYear()) {
+				return moment(dbDate).format('MM.DD');
+			} else {
+				return moment(dbDate).format('YY.MM.DD');
+			}
 		}
 	};
 

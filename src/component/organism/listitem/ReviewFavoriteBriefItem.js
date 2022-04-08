@@ -18,6 +18,7 @@ import moment from 'moment';
  */
 const ReviewFavoriteBriefItem = props => {
 	const data = props.data;
+	const [isLike, setIsLike] = React.useState(false);
 	const imageList = () => {
 		let imageList = [];
 		let getImgTag = data.community_content.match(/<img[\w\W]+?\/?>/g); //img 태그 추출
@@ -29,6 +30,8 @@ const ReviewFavoriteBriefItem = props => {
 		}
 		return imageList;
 	};
+
+	console.log('data.community_is_like', data.community_is_like, data.community_title);
 
 	const image = imageList();
 

@@ -189,7 +189,7 @@ export default Review = props => {
 									  )}
 							</Text>
 							<View style={[style.profile]}>
-								<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} />
+								<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} time_expression={'date'} />
 							</View>
 						</View>
 					</TouchableOpacity>

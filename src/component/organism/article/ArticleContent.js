@@ -52,18 +52,18 @@ const ArticleContent = props => {
 	const onWebViewMessage = async event => {
 		if (Platform.OS == 'android') {
 			setTimeout(() => {
-				if (parseInt(event.nativeEvent.data) < 130) {
-					setHeight(130 * DP);
+				if (parseInt(event.nativeEvent.data) < 100 * DP) {
+					setHeight(100 * DP);
 				} else {
-					height >= 130 ? false : setHeight(parseInt(event.nativeEvent.data));
+					height >= 100 * DP ? false : setHeight(parseInt(event.nativeEvent.data));
 					console.log('height and : ', parseInt(event.nativeEvent.data));
 				}
 			}, 150);
 		} else {
-			if (parseInt(event.nativeEvent.data) < 130) {
-				setHeight(130 * DP);
+			if (parseInt(event.nativeEvent.data) < 100 * DP) {
+				setHeight(100 * DP * DP);
 			} else {
-				height >= 130 ? false : setHeight(parseInt(event.nativeEvent.data));
+				height >= 100 * DP ? false : setHeight(parseInt(event.nativeEvent.data));
 				console.log('parseInt(event.nativeEvent.data)', parseInt(event.nativeEvent.data));
 			}
 		}
@@ -93,7 +93,7 @@ const ArticleContent = props => {
 			<View style={[style.profile]}>
 				<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} time_expression={'full'} />
 			</View>
-			<View style={[{width: 700 * DP, marginTop: 20 * DP, opacity: height >= 130 * DP ? 1 : 0}]}>
+			<View style={[{width: 700 * DP, marginTop: 20 * DP, opacity: height >= 99 * DP ? 1 : 1}]}>
 				{Platform.OS == 'ios' ? (
 					<WebView
 						originWhitelist={['*']}
@@ -132,7 +132,7 @@ const ArticleContent = props => {
 						}}
 						style={{
 							width: 670 * DP,
-							height: height == 0 ? 130 * DP : height,
+							height: height == 0 ? 100 * DP : height,
 							opacity: 0.99,
 						}}
 					/>

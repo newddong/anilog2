@@ -84,10 +84,10 @@ const ReviewContent = props => {
 	};
 
 	const onWebViewMessage = event => {
-		if (parseInt(event.nativeEvent.data) < 300) {
-			setHeight(300 * DP);
+		if (parseInt(event.nativeEvent.data) < 100 * DP) {
+			setHeight(100 * DP);
 		} else {
-			height >= 300 ? false : setHeight(parseInt(event.nativeEvent.data));
+			height >= 100 * DP ? false : setHeight(parseInt(event.nativeEvent.data));
 			Platform.OS == 'android'
 				? console.log('height and : ', parseInt(event.nativeEvent.data))
 				: console.log('parseInt(event.nativeEvent.data)', parseInt(event.nativeEvent.data));

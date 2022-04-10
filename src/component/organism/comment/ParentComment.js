@@ -66,7 +66,7 @@ export default ParentComment = React.memo((props, ref) => {
 		getChildCommentList(
 			{
 				commentobject_id: props.parentComment._id,
-				login_userobject_id: userGlobalObject.userInfo._id
+				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			result => {
 				console.log(result.msg);
@@ -84,23 +84,27 @@ export default ParentComment = React.memo((props, ref) => {
 
 	const onCLickHeart = () => {
 		setLikeState(!likeState);
-		likeComment({
-			commentobject_id : props.parentComment._id,
-			userobject_id: userGlobalObject.userInfo._id,
-			is_like: !likeState
-		},({msg}) =>{
-			setLikeCount(msg.targetComment.comment_like_count);
-		},error=>{
-			console.log(error);
-		})
-		props.like&&props.like(props.parentComment);
+		likeComment(
+			{
+				commentobject_id: props.parentComment._id,
+				userobject_id: userGlobalObject.userInfo._id,
+				is_like: !likeState,
+			},
+			({msg}) => {
+				setLikeCount(msg.targetComment.comment_like_count);
+			},
+			error => {
+				console.log(error);
+			},
+		);
+		props.like && props.like(props.parentComment);
 	};
 
 	const showChildComment = () => {
 		getChildCommentList(
 			{
 				commentobject_id: props.parentComment._id,
-				login_userobject_id: userGlobalObject.userInfo._id
+				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			result => {
 				console.log(result.msg);
@@ -112,20 +116,18 @@ export default ParentComment = React.memo((props, ref) => {
 	};
 
 	const onSelectReplyMeatballMenu = i => {};
-	
-	const onEdit = (data) => {
-		
-		props.onEdit&&props.onEdit(data);
-	}
+
+	const onEdit = data => {
+		props.onEdit && props.onEdit(data);
+	};
 
 	const like = data => {
-
-		props.like&&props.like(data);
-	}
+		props.like && props.like(data);
+	};
 
 	const onPressMeatball = () => {
 		// console.log('meatballREf', meatballRef);
-		
+
 		meatballRef.current.measure((fx, fy, width, height, px, py) => {
 			const isWriter = userGlobalObject.userInfo._id == data.comment_writer_id._id;
 			console.log('px', px);
@@ -273,7 +275,7 @@ export default ParentComment = React.memo((props, ref) => {
 			{/* Data - 대댓글List */}
 			{showChild ? (
 				<View style={[organism_style.childCommentList, parentComment.img_square_round_574]}>
-					<ChildCommentList items={child} showChildComment={showChildComment} onEdit={onEdit} like={like}/>
+					<ChildCommentList items={child} showChildComment={showChildComment} onEdit={onEdit} like={like} />
 				</View>
 			) : (
 				false

@@ -69,6 +69,7 @@ export default MainTabNavigation = ({route, navigation}) => {
 					tabBarVisible: getTabBarVisibility(route),
 					tabBarLabel: '커뮤니티',
 					tabBarHideOnKeyboard: true,
+					unmountOnBlur: true,
 					// header: props => (!getHeaderState() ? <LogoHeader {...props} /> : <></>),
 					header: props => false,
 				})}>

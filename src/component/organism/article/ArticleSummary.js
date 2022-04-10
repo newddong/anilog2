@@ -44,9 +44,12 @@ const ArticleSummary = props => {
 			const time = moment(dbDate).format('HH:mm');
 			return time;
 		} else {
-			const time = moment(dbDate).format('YY.MM.DD');
-			// console.log('g', g);
-			return time;
+			const year = dbDate.getFullYear();
+			if (year == new Date().getFullYear()) {
+				return moment(dbDate).format('MM.DD');
+			} else {
+				return moment(dbDate).format('YY.MM.DD');
+			}
 		}
 	};
 
@@ -56,34 +59,69 @@ const ArticleSummary = props => {
 
 	const getText = () => {
 		//타이틀이 한 줄로 처리가 되는 경우
+		let first = '';
+		let second = '';
+		first = text[0].text.split(new RegExp(`(${props.isSearch})`, 'gi'));
+
 		if (text.length == 1) {
 			return (
-				<Text style={[txt.noto28, {textAlignVertical: 'center'}]}>
+				<Text style={[txt.noto28, style.summaryText]}>
 					{props.isSearch == '' || props.isSearch.length < 2
 						? text[0].text
-						: text[0].text.split(' ').map((x, ind) => {
-								return x.includes(props.isSearch) ? (
-									<Text key={ind} style={{color: APRI10, fontWeight: 'bold'}}>
-										{x + ' '}
+						: first.map((part, i) =>
+								part.toLowerCase() === props.isSearch.toLowerCase() ? (
+									// <View style={{backgroundColor: 'red'}}>{part}</View>
+									<Text key={i} style={{color: APRI10, fontWeight: 'bold', marginRight: 10 * DP}}>
+										{part + ''}
 									</Text>
 								) : (
-									<Text key={ind} style={{color: BLACK}}>
-										{x + ' '}
+									<Text key={i} style={{color: BLACK, marginRight: 10 * DP}}>
+										{part + ''}
 									</Text>
-								);
-						  })}
+								),
+						  )}
 					{data.community_is_attached_file ? <Photo44 /> : <></>}{' '}
 					<Text style={[txt.roboto28, {color: APRI10}]}>{data.community_comment_count != 0 ? data.community_comment_count : ''}</Text>
 				</Text>
 			);
 		} else {
 			//타이틀이 두 줄 이상일 경우
+			second = text[1].text.split(new RegExp(`(${props.isSearch})`, 'gi'));
 			return (
 				<>
-					<Text style={[txt.noto28, {textAlignVertical: 'center'}]}>{text[0].text}</Text>
-					<View style={{flexDirection: 'row'}}>
+					<Text style={[txt.noto28, style.summaryText]}>
+						{props.isSearch == '' || props.isSearch.length < 2
+							? text[0].text
+							: first.map((part, i) =>
+									part.toLowerCase() === props.isSearch.toLowerCase() ? (
+										// <View style={{backgroundColor: 'red'}}>{part}</View>
+										<Text key={i} style={{color: APRI10, fontWeight: 'bold', marginRight: 10 * DP}}>
+											{part + ''}
+										</Text>
+									) : (
+										<Text key={i} style={{color: BLACK, marginRight: 10 * DP}}>
+											{part + ''}
+										</Text>
+									),
+							  )}
+					</Text>
+					<View style={[{flexDirection: 'row', width: 470 * DP, alignItems: 'center'}]}>
 						<Text style={[txt.noto28, {textAlignVertical: 'center', marginRight: 10 * DP, maxWidth: 400 * DP}]} numberOfLines={1}>
-							{text[1].text}{' '}
+							{props.isSearch == '' || props.isSearch.length < 2
+								? text[1].text
+								: second.map((part, i) =>
+										part.toLowerCase() === props.isSearch.toLowerCase() ? (
+											// <View style={{backgroundColor: 'red'}}>{part}</View>
+											<Text key={i} style={{color: APRI10, fontWeight: 'bold', marginRight: 10 * DP}}>
+												{part + ''}
+											</Text>
+										) : (
+											<Text key={i} style={{color: BLACK, marginRight: 10 * DP}}>
+												{part + ''}
+											</Text>
+										),
+								  )}
+							{/* {text[1].text}{' '} */}
 						</Text>
 						{data.community_is_attached_file ? <Photo44 /> : <></>}
 						<Text style={[txt.roboto28, {color: APRI10, textAlignVertical: 'center'}]}>
@@ -145,5 +183,9 @@ const style = StyleSheet.create({
 		width: 470 * DP,
 		maxHeight: 90 * DP,
 		// backgroundColor: 'yellow',
+	},
+	summaryText: {
+		textAlignVertical: 'center',
+		width: 470 * DP,
 	},
 });

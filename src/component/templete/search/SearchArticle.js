@@ -5,57 +5,48 @@ import {BLACK, GRAY10} from 'Root/config/color';
 import {Check50, EmptyIcon, Rect50_Border, WriteBoard} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
 import {useNavigation} from '@react-navigation/core';
-import {getCommunityList} from 'Root/api/community';
-import Modal from 'Root/component/modal/Modal';
 import Loading from 'Root/component/molecules/modal/Loading';
+import {styles} from 'Root/component/atom/image/imageStyle';
 import community_obj from 'Root/config/community_obj';
+import searchContext from 'Root/config/searchContext';
 
-export default ArticleMain = ({route}) => {
+export default SearchArticle = props => {
+	// console.log('ArticleMain');
 	const navigation = useNavigation();
-	const [data, setData] = React.useState('false');
+	const [data, setData] = React.useState(props.data.free ? props.data.free : []);
+	const [searchInput, setSearchInput] = React.useState('');
+
+	//검색탭 헤더의 인풋값이 바뀔 때마다 계정과 해쉬를 받아오는 api에 접속
 	React.useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', () => {
-			fetchData();
-			console.log('community_obj / ArticleMain / object._id : ', community_obj.object._id);
-			console.log('community_obj / ArticleMain / pageToMove : ', community_obj.pageToMove);
-			console.log('community_obj.initial / ArticleMain /  initial : ', community_obj.initial);
-			community_obj.current = '';
-			if (community_obj.initial != true && community_obj.object._id != undefined) {
-				console.log('community_obj.pageToMove', community_obj.pageToMove);
-				navigation.navigate(community_obj.pageToMove, {community_object: community_obj.object});
-			}
-		});
-		navigation.addListener('blur', () => {
-			community_obj.object = {};
-			community_obj.pageToMove = '';
-			community_obj.initial = true;
-		});
-		fetchData();
-		return unsubscribe;
-	}, []);
+		setSearchInput(searchContext.searchInfo.searchInput);
+	}, [searchContext.searchInfo.searchInput]);
 
-	// console.log('route.params.ArticleMain', route.params);
-
-	const fetchData = () => {
-		getCommunityList(
-			{
-				community_type: 'free',
-			},
-			result => {
-				// console.log('result / getCommunityList / ArticleMain :', result.msg.free[0]);
-				setData(result.msg.free);
-			},
-			err => {
-				console.log('err / getCommunityList / ArticleMain : ', err);
-				setData([]);
-				Modal.alert(err);
-			},
-		);
-	};
+	React.useEffect(() => {
+		if (props.data.free) {
+			console.log('props.data.free', props.data.free.length);
+			setData(props.data.free);
+		}
+	}, [props.data]);
 
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
-		navigation.push('ArticleDetail', {community_object: data[index]});
+		community_obj.object = data[index];
+		community_obj.pageToMove = 'ArticleDetail';
+		community_obj.initial = false;
+		console.log('community_obj.current / SearchArticle : ', community_obj.current);
+		if (community_obj.current == '') {
+			//탭 간의 이동을 간편히 하기 위해 만든 community_obj의 current 값이 빈값 == 현재 보고 있는 ArticleDetail이 없음
+			//우선 ArticleMain의 스택을 쌓기 위해 ArticleMain으로 먼저 보낸 뒤 바로 이동되어야 할 상세 자유 게시글을 여기서 선언 => Parameter로 보냄
+			console.log('community_object: data[index]', data[index].community_title);
+			navigation.navigate('COMMUNITY', {screen: 'ArticleMain', initial: false, params: {community_object: data[index], pageToMove: 'ArticleDetail'}});
+		} else {
+			//이미 보고 있는 ArticleDetail이 존재하므로 ArticleDetail 템플릿을 덮어씌우고 봐야할 상세 자유 게시글은 Parameter로 송신
+			navigation.navigate('COMMUNITY', {
+				screen: 'ArticleDetail',
+				initial: false,
+				params: {community_object: data[index], reset: true},
+			});
+		}
 	};
 
 	//글쓰기
@@ -118,29 +109,28 @@ export default ArticleMain = ({route}) => {
 				renderItem={({item, index}) => {
 					return (
 						<>
-							<View style={{width: 654 * DP, alignSelf: 'center'}}>
-								<View style={[style.kindFilter]}>
-									<View style={[style.kindFilterItem]}>
-										<Text style={[txt.noto28, {color: GRAY10}]}> 잡담</Text>
-										{onlyTalk ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
-									</View>
-									<View style={[style.kindFilterItem]}>
-										<Text style={[txt.noto28, {color: GRAY10}]}> 질문</Text>
-										{onlyQuestion ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
-									</View>
-									<View style={[style.kindFilterItem]}>
-										<Text style={[txt.noto28, {color: GRAY10}]}> 모임</Text>
-										{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
-									</View>
+							<View style={[style.kindFilter]}>
+								<View style={[style.kindFilterItem]}>
+									<Text style={[txt.noto28, {color: GRAY10}]}> 잡담</Text>
+									{onlyTalk ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
+								</View>
+								<View style={[style.kindFilterItem]}>
+									<Text style={[txt.noto28, {color: GRAY10}]}> 질문</Text>
+									{onlyQuestion ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
+								</View>
+								<View style={[style.kindFilterItem]}>
+									<Text style={[txt.noto28, {color: GRAY10}]}> 모임</Text>
+									{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
 								</View>
 							</View>
-							{data == 'false' ? (
+							{props.loading ? (
 								<Loading isModal={false} />
 							) : (
 								<ArticleList
 									items={getData()}
 									onPressArticle={onPressArticle} //게시글 내용 클릭
 									whenEmpty={whenEmpty}
+									isSearch={searchInput}
 								/>
 							)}
 						</>
@@ -157,7 +147,7 @@ export default ArticleMain = ({route}) => {
 	);
 };
 
-ArticleMain.defaultProps = {};
+SearchArticle.defaultProps = {};
 
 const style = StyleSheet.create({
 	container: {

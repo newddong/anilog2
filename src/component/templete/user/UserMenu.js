@@ -132,7 +132,6 @@ export default UserMenu = props => {
 				navigation.push('UserFeeds');
 				break;
 			case TAGED_CONTENTS_FOR_ME:
-				// Modal.popInfoModal();
 				navigation.push('TagMeFeeds', {token: data});
 				break;
 			case APPLICATION_HISTORY:
@@ -151,7 +150,12 @@ export default UserMenu = props => {
 				navigation.push('SettingInformAsk');
 				break;
 			case COMUNITY:
-				Modal.popInfoModal();
+				// Modal.popInfoModal();
+				navigation.push('FavoriteCommunity');
+				break;
+			case '커뮤니티 ':
+				// Modal.popInfoModal();
+				navigation.push('MyCommunity');
 				break;
 			case ACCOUNT:
 				navigation.push('SettingAccount');
@@ -264,7 +268,7 @@ export default UserMenu = props => {
 								menuItems={[
 									[MY_CONTENTS, TAGED_CONTENTS_FOR_ME],
 									[APPLICATION_HISTORY, ANIMAL_PROTECTION_STATE],
-									[COMUNITY, NOTE_LIST],
+									['커뮤니티 ', NOTE_LIST],
 								]}
 								onClick={menuClick}
 								titleIcon={<Paw46 />}

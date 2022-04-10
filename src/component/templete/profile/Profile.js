@@ -1,12 +1,10 @@
 import React from 'react';
-import {View, TouchableWithoutFeedback, ScrollView, Text, FlatList, Animated, Easing} from 'react-native';
-import {getProtectRequestListByShelterId, getShelterProtectAnimalList} from 'Root/api/shelterapi';
+import {View, Text, FlatList, Animated, Easing} from 'react-native';
 import {followUser, getUserProfile, unFollowUser} from 'Root/api/userapi';
 import {NORMAL, PET, SHELTER} from 'Root/i18n/msg';
 import {Message94, Write94} from 'Atom/icon';
 import TabSelectFilled_Type2 from 'Molecules/tab/TabSelectFilled_Type2';
 import ProfileInfo from 'Organism/info/ProfileInfo';
-import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import FeedThumbnailList from 'Organism/feed/FeedThumbnailList';
 import OwnerList from 'Organism/list/OwnerList';
 import PetList from 'Organism/list/PetList';
@@ -20,11 +18,14 @@ import DP from 'Root/config/dp';
 import {getFeedListByUserId, getUserTaggedFeedList} from 'Root/api/feedapi';
 import {useNavigation} from '@react-navigation/core';
 import Loading from 'Root/component/molecules/modal/Loading';
+import CommunityList from '../community/CommunityList';
+import {getCommunityListByUserId} from 'Root/api/community';
 
 export default Profile = ({route}) => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState({...route.params?.userobject, feedList: []}); //라벨을 클릭한 유저의 userObject data
 	const [feedList, setFeedList] = React.useState([]);
+	const [commList, setCommList] = React.useState('false');
 	const [tabMenuSelected, setTabMenuSelected] = React.useState(0); //프로필 Tab의 선택상태
 	const [showOwnerState, setShowOwnerState] = React.useState(false); // 현재 로드되어 있는 profile의 userType이 Pet인 경우 반려인 계정 리스트의 출력 여부
 	const [showCompanion, setShowCompanion] = React.useState(false); // User계정이 반려동물버튼을 클릭
@@ -56,9 +57,30 @@ export default Profile = ({route}) => {
 		}
 	};
 
+	const fetchCommunity = () => {
+		getCommunityListByUserId(
+			{
+				userobject_id: route.params.userobject._id,
+				community_type: 'all',
+			},
+			result => {
+				console.log('result / getCommunityListuser , ', result.msg.free.length);
+				setCommList(result.msg);
+			},
+			err => {
+				Modal.popOneBtn(err, '확인', () => {
+					Modal.close();
+					navigation.goBack();
+				});
+				setCommList({free: [], review: []});
+			},
+		);
+	};
+
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', async () => {
 			fetchData();
+			fetchCommunity();
 		});
 		return unsubscribe;
 	}, []);
@@ -317,7 +339,7 @@ export default Profile = ({route}) => {
 		);
 	};
 
-	//TabSelect 하단 AccountList
+	//TabSelect 하단 출력 리스트 컴포넌트
 	const showTabContent = () => {
 		const whenFeedThumbnailEmpty = () => {
 			return (
@@ -342,13 +364,17 @@ export default Profile = ({route}) => {
 				} else if (tabMenuSelected == 1) {
 					return <FeedThumbnailList items={item} whenEmpty={whenFeedThumbnailEmpty} onClickThumnail={onClick_Thumbnail_TagTab} />;
 				} else {
-					return <InfoScreen />;
+					// return <InfoScreen />;
+					if (commList == 'false') {
+						return <Loading isModal={false} />;
+					} else return <CommunityList data={commList} initializeCommList={fetchCommunity} />;
 				}
 			} else {
 				if (tabMenuSelected != 2) {
 					return <FeedThumbnailList items={item} whenEmpty={whenFeedThumbnailEmpty} onClickThumnail={onClick_Thumbnail_FeedTab} />;
 					// return <InfoScreen />;
 				} else {
+					//커뮤니티 탭
 					return <InfoScreen />;
 				}
 			}

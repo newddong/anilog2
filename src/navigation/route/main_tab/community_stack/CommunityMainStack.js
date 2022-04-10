@@ -16,11 +16,14 @@ import SearchMap from 'Root/component/templete/search/SearchMap';
 import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
 import WriteEditorTest from 'Root/component/templete/community/WriteEditorTest';
 import ReviewStackNavigation from './review_tab/ReviewStackNavigation';
-import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
+import {getFocusedRouteNameFromRoute, useNavigation} from '@react-navigation/core';
+import CommunityEdit from 'Root/component/templete/community/CommunityEdit';
+import ChangeUserProfileImage from 'Root/component/templete/user/ChangeUserProfileImage';
 
 const CommunityMainStackNavi = createStackNavigator();
 
 export default CommunityMainStack = props => {
+	// console.log('CommunityMainStack', props.route);
 	const routeName = getFocusedRouteNameFromRoute(props.route) ?? 'CommunityMain';
 
 	React.useEffect(() => {
@@ -81,6 +84,14 @@ export default CommunityMainStack = props => {
 				})}
 			/>
 			<CommunityMainStackNavi.Screen
+				name={'CommunityEdit'}
+				component={CommunityEdit}
+				options={({route}) => ({
+					header: props => <SendHeader {...props} />,
+					title: '리뷰 수정',
+				})}
+			/>
+			<CommunityMainStackNavi.Screen
 				name={'CommunityCommentList'}
 				component={CommunityCommentList}
 				options={({route}) => ({
@@ -95,6 +106,22 @@ export default CommunityMainStack = props => {
 				options={({route}) => ({
 					header: props => <SimpleHeader {...props} />,
 					title: '주소 검색',
+				})}
+			/>
+			<CommunityMainStackNavi.Screen
+				name={'SocialRelation'}
+				component={SocialRelationTopTabNavigation}
+				options={({route}) => ({
+					header: props => <SimpleHeader {...props} />,
+					title: '주소 검색',
+				})}
+			/>
+			<CommunityMainStackNavi.Screen
+				name={'ChangeUserProfileImage'}
+				component={ChangeUserProfileImage}
+				options={({route}) => ({
+					header: props => <SimpleHeader {...props} />,
+					title: '프로필 수정',
 				})}
 			/>
 		</CommunityMainStackNavi.Navigator>

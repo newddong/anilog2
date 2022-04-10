@@ -11,42 +11,20 @@ import {styles} from 'Root/component/atom/image/imageStyle';
 import {txt} from 'Root/config/textstyle';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import searchContext from 'Root/config/searchContext';
+import {useNavigation} from '@react-navigation/core';
 
-export default SearchCommunity = ({route, navigation}) => {
-	const [data, setData] = React.useState({
-		free: 'false',
-		review: 'false',
-	});
+export default SearchCommunity = props => {
+	const navigation = useNavigation();
 	const [searchInput, setSearchInput] = React.useState('');
-	const [reviewList, setReviewList] = React.useState('false');
-	const [articleList, setArticleList] = React.useState('false');
+	const reviewList = props.data.review;
+	const articleList = props.data.free;
 	const [isFilter, setIsFilter] = React.useState(false);
 	const [type, setType] = React.useState('free');
-
-	React.useEffect(() => {
-		fetchData();
-	}, []);
 
 	//검색탭 헤더의 인풋값이 바뀔 때마다 계정과 해쉬를 받아오는 api에 접속
 	React.useEffect(() => {
 		setSearchInput(searchContext.searchInfo.searchInput);
 	}, [searchContext.searchInfo.searchInput]);
-
-	const fetchData = arg => {
-		getCommunityList(
-			{
-				community_type: 'all', //required
-			},
-			result => {
-				// console.log('result / getCommunityList / ArticleMain :', arg, result.msg);
-				setArticleList(result.msg.free);
-				setReviewList(result.msg.review);
-			},
-			err => {
-				console.log('err / getCommunityList / ArticleMain : ', err);
-			},
-		);
-	};
 
 	const [filterData, setFilterData] = React.useState({
 		dog: false,
@@ -109,16 +87,16 @@ export default SearchCommunity = ({route, navigation}) => {
 
 	const whenEmpty = () => {
 		return (
-			<>
+			<View style={{paddingVertical: 150 * DP}}>
 				<Image
-					style={[styles.img_square_246, {marginTop: 150 * DP}]}
+					style={[styles.img_square_246]}
 					resizeMode={'stretch'}
 					source={{
 						uri: 'https://st.depositphotos.com/21121724/53932/v/600/depositphotos_539322694-stock-illustration-cartoon-home-pets-empty-feeder.jpg',
 					}}
 				/>
 				<Text style={[txt.roboto36b]}>목록이 없네요.</Text>
-			</>
+			</View>
 		);
 	};
 
@@ -134,19 +112,18 @@ export default SearchCommunity = ({route, navigation}) => {
 					</TouchableOpacity>
 					<Text style={[txt.noto24, {color: GRAY10}]}>{'    |    '}</Text>
 					<TouchableOpacity onPress={() => setType('review')} activeOpacity={0.6} style={[{paddingHorizontal: 10 * DP}]}>
-						<Text style={[txt.noto24, {color: type == 'review' ? APRI10 : GRAY10}]}>후기</Text>
+						<Text style={[txt.noto24, {color: type == 'review' ? APRI10 : GRAY10}]}>리뷰</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
 		);
 	};
-
-	return (
-		<View style={[style.container]}>
-			{header()}
-			{articleList == 'false' || reviewList == 'false' ? (
-				<Loading isModal={false} />
-			) : (
+	if (props.loading) {
+		return <Loading isModal={false} />;
+	} else
+		return (
+			<View style={[style.container]}>
+				{header()}
 				<FlatList
 					data={[{}]}
 					renderItem={({item, index}) => {
@@ -158,11 +135,18 @@ export default SearchCommunity = ({route, navigation}) => {
 											items={articleList}
 											isSearch={searchInput}
 											onPressArticle={onPressArticle} //게시글 내용 클릭
+											whenEmpty={whenEmpty}
 										/>
 									</>
 								) : (
 									<>
-										<ReviewList items={reviewList} whenEmpty={whenEmpty} onPressReviewContent={onPressReviewContent} onPressReply={onPressReply} />
+										<ReviewList
+											items={reviewList}
+											isSearch={searchInput}
+											whenEmpty={whenEmpty}
+											onPressReviewContent={onPressReviewContent}
+											onPressReply={onPressReply}
+										/>
 									</>
 								)}
 							</View>
@@ -171,9 +155,8 @@ export default SearchCommunity = ({route, navigation}) => {
 					showsVerticalScrollIndicator={false}
 					listKey={({item, index}) => index}
 				/>
-			)}
-		</View>
-	);
+			</View>
+		);
 };
 SearchCommunity.defaultProps = {};
 

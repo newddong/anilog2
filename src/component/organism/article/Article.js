@@ -14,22 +14,14 @@ import {GRAY10} from 'Root/config/color';
  * @param {()=>void)} props.onPressThumnails - 게시글 사진 클릭
  * @param {()=>void)} props.onPressReply - 댓글 모두 보기 클릭
  * @param {()=>void)} props.onPressMeatball - 미트볼 클릭
+ * @param {(bool:boolean)=>void)} props.onPressFavorite - 즐겨찾기 아이콘 클릭
  */
 const Article = props => {
 	const data = props.data;
-	//댓글 더 보기 클릭
-	const onPressReply = () => {
-		props.onPressReply();
-	};
-
-	//좋아요 클릭
-	const onPressLike = () => {
-		console.log('onPressLike');
-	};
 
 	//즐겨찾기 클릭
-	const onPressFavorite = () => {
-		console.log('onPressFavorite');
+	const onPressFavorite = bool => {
+		props.onPressFavorite(bool);
 	};
 
 	//미트볼 클릭
@@ -62,6 +54,7 @@ Article.defaultProps = {
 	onPressThumnails: () => {},
 	onPressReply: () => {},
 	onPressMeatball: () => {},
+	onPressFavorite: () => {},
 	route: undefined,
 };
 

@@ -8,8 +8,8 @@ import {txt} from 'Root/config/textstyle';
 import {GRAY10, WHITE} from 'Root/config/color';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from 'Component/modal/Modal';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { likeFeed } from 'Root/api/feedapi';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import {likeFeed} from 'Root/api/feedapi';
 import userGlobalObj from 'Root/config/userGlobalObject';
 
 export default Feed = React.memo(props => {
@@ -65,33 +65,34 @@ export default Feed = React.memo(props => {
 	};
 
 	const toggleFeedLike = () => {
-		if(isLike){
+		if (isLike) {
 			setLike(false);
-		}else{
+		} else {
 			setLike(true);
 		}
-		likeFeed({
-			feedobject_id: props.data._id,
-			userobject_id: userGlobalObj.userInfo._id,
-			is_like: !isLike
-		},(result)=>{
-			setLikeCount(result.msg.targetFeed.feed_like_count);
-		},
-		error=>console.log(error))
+		likeFeed(
+			{
+				feedobject_id: props.data._id,
+				userobject_id: userGlobalObj.userInfo._id,
+				is_like: !isLike,
+			},
+			result => {
+				setLikeCount(result.msg.targetFeed.feed_like_count);
+			},
+			error => console.log(error),
+		);
+	};
 
-	}
-
-	React.useEffect(()=>{
+	React.useEffect(() => {
 		setLike(feed_is_like);
 		setLikeCount(feed_like_count);
-	},[props.data])
-
+	}, [props.data]);
 
 	return (
 		<View style={[feed_templete_style.feed]} removeClippedSubviews>
 			<FeedContent data={props.data} />
 			{/* 270DP */}
-			<View style={[feed_templete_style.feedMedia_feed]}  >
+			<View style={[feed_templete_style.feedMedia_feed]}>
 				<FeedMedia data={props.data} />
 			</View>
 			<View style={[feed_templete_style.comment_feed_view]}>
@@ -99,9 +100,7 @@ export default Feed = React.memo(props => {
 					<View style={[feed_templete_style.likeCommentInfo_view_feed]}>
 						<TouchableWithoutFeedback onPress={toggleFeedLike}>
 							<View style={feed_templete_style.likeButtonWrapper}>
-								<View style={[feed_templete_style.like48]}>
-									{isLike?<Like48_Filled />:<Like48_Border />}
-								</View>
+								<View style={[feed_templete_style.like48]}>{isLike ? <Like48_Filled /> : <Like48_Border />}</View>
 								<View style={feed_templete_style.like_count_view_feed}>
 									<View style={[feed_templete_style.like_count_feed, feed_style.like_count]}>
 										<Text style={[txt.roboto24]}>{likeCount}</Text>
@@ -134,23 +133,24 @@ export default Feed = React.memo(props => {
 				</View>
 
 				{/* RecentComment */}
-				{feed_recent_comment&&<View style={[feed_templete_style.recentComment_view]}>
-					<View style={[feed_templete_style.writerID_feed_view]}>
-						<View style={[feed_templete_style.writerID_feed, {flex: 1}, {alignItems: 'flex-start'}]}>
-							<Text style={[txt.roboto24, feed_style.recent_comment_user, {color: GRAY10}]}>{feed_recent_comment?.comment_user_nickname}</Text>
-						</View>
-						<View style={(feed_templete_style.commentText_view, {flex: 3})}>
-							<Text style={[txt.noto24]} numberOfLines={2} ellipsizeMode="tail">
-								{feed_recent_comment?.comment_contents}
-							</Text>
+				{feed_recent_comment && (
+					<View style={[feed_templete_style.recentComment_view]}>
+						<View style={[feed_templete_style.writerID_feed_view]}>
+							<View style={[feed_templete_style.writerID_feed, {flex: 1}, {alignItems: 'flex-start'}]}>
+								<Text style={[txt.roboto24, feed_style.recent_comment_user, {color: GRAY10}]}>{feed_recent_comment?.comment_user_nickname}</Text>
+							</View>
+							<View style={(feed_templete_style.commentText_view, {flex: 3})}>
+								<Text style={[txt.noto24]} numberOfLines={2} ellipsizeMode="tail">
+									{feed_recent_comment?.comment_contents}
+								</Text>
+							</View>
 						</View>
 					</View>
-				</View>}
+				)}
 			</View>
 		</View>
 	);
 });
-
 
 const feed_templete_style = StyleSheet.create({
 	feed: {
@@ -170,9 +170,9 @@ const feed_templete_style = StyleSheet.create({
 		// backgroundColor:'green'
 	},
 	likeButtonWrapper: {
-		flexDirection:'row',
-		height:'100%',
-		alignItems:'center',
+		flexDirection: 'row',
+		height: '100%',
+		alignItems: 'center',
 	},
 	likeCommentButtons_view: {
 		flexDirection: 'row',
@@ -193,7 +193,7 @@ const feed_templete_style = StyleSheet.create({
 		width: 654 * DP,
 		height: 128 * DP,
 		justifyContent: 'space-between',
-		paddingVertical:24*DP,
+		paddingVertical: 24 * DP,
 	},
 	like48: {
 		width: 48 * DP,

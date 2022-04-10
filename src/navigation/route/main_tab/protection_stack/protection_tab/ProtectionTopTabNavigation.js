@@ -9,7 +9,7 @@ import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 const ProtectionTab = createMaterialTopTabNavigator();
 
 export default ProtectionTopTabNavigation = ({route, navigation}) => {
-	const tabList = ['보호 요청', '실종/제보', '참여 방법'];
+	const tabList = ['보호 요청', '실종/제보'];
 	const navName = ['ProtectRequestList', 'MissingReportList', 'ActivationList'];
 	//SearchHeader에서 작성한 검색어와 검색클릭이 행해지면 SearchInput에 값이 들어감
 
@@ -23,7 +23,7 @@ export default ProtectionTopTabNavigation = ({route, navigation}) => {
 	}, [routeName]);
 	return (
 		<ProtectionTab.Navigator
-			initialRouteName='ProtectRequestList'
+			initialRouteName="ProtectRequestList"
 			tabBar={({state, descriptors, navigation, position}) => {
 				const onSelectTab = pressedTab => {
 					navigation.navigate({

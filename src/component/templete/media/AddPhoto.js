@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Platform, PermissionsAndroid, Text, TouchableWithoutFeedback, Image, FlatList} from 'react-native';
+import {View, StyleSheet, Platform, PermissionsAndroid, Text, TouchableWithoutFeedback, Image, FlatList, NativeModules} from 'react-native';
 import {APRI10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
@@ -45,10 +45,11 @@ export default AddPhoto = props => {
 	 *@param {number} request - 불러올 미디어의 숫자 (기본값 20)
 	 *@param {string} type - 불러올 미디어의 타잎('Photos'|'All'|'Videos')
 	 */
-	const loadPhotosMilsec = (request = 30, timeStamp = 0, type = 'All') => {
-		CameraRoll.getPhotos({
+	const loadPhotosMilsec = (request = 5, timeStamp = 0, type = 'Photos') => {
+		console.log('타임스템프 ', timeStamp);
+		NativeModules.PhotoListModule.getPhotos({
 			first: request,
-			toTime: timeStamp ? timeStamp * 1000 - 1 : 0,
+			fromTime: timeStamp ? timeStamp * 1000 - 1 : 0,
 			assetType: type,
 			include: ['playableDuration'],
 		})
@@ -80,7 +81,7 @@ export default AddPhoto = props => {
 		// console.log('scrolllist bottom   ' + JSON.stringify(photolist));
 		let timeStamp = photolist.length > 1 ? photolist[photolist.length - 1].node.timestamp : 0;
 		console.log('스크롤이 바닥에 닿았습니다. '+timeStamp+ '이후의 사진을 로드합니다.');
-		loadPhotosMilsec(30,timeStamp);
+		loadPhotosMilsec(5,timeStamp);
 	};
 
 	const test = () => {
@@ -187,6 +188,11 @@ export default AddPhoto = props => {
 		// props.navigation.navigate(props.route.params?.navfrom,{})
 		// props.navigation.navigate({ name: props.route.params.navfrom, params: { localSelectedImages: exportUriList[0] }, merge: true });
 		// props.navigation.navigate({name: props.route.params?.navfrom, params: {image: exportUriList[0]}, merge: true});
+		
+		let timeStamp = photolist.length > 1 ? photolist[photolist.length - 1].node.timestamp : 0;
+		console.log('스크롤이 바닥에 닿았습니다. '+timeStamp+ '이후의 사진을 로드합니다.');
+		loadPhotosMilsec(5,timeStamp);
+
 		console.log(photolist);
 	};
 

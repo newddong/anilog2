@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, FlatList, RefreshControl, Platform} from 'react-native';
+import {StyleSheet, View, FlatList, RefreshControl, Platform, NativeModules} from 'react-native';
 import {WHITE} from 'Root/config/color';
 import {Write94, Camera54} from 'Atom/icon';
 import Feed from 'Organism/feed/Feed';
@@ -12,6 +12,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import {login_style, buttonstyle} from 'Templete/style_templete';
 import {getStringLength, getLinesOfString} from 'Root/util/stringutil';
 import {GRAY30} from 'Root/config/color';
+
 
 export default FeedList = ({route, navigation}) => {
 	const [feedList, setFeedList] = React.useState([]);
@@ -237,6 +238,7 @@ export default FeedList = ({route, navigation}) => {
 	};
 
 	const movetoCamera = () => {
+		// NativeModules.CalendarModule.createCalendarEvent('네이티브 테스트','스터디카페')
 		Modal.popTwoBtn(
 			'카메라롤 모드(임시)',
 			'단일선택',

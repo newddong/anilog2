@@ -566,7 +566,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = anilogProject;
+				PRODUCT_BUNDLE_IDENTIFIER = anilogProjectV02;
 				PRODUCT_NAME = anilog;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "anilog-Bridging-Header.h";
@@ -596,7 +596,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = anilogProject;
+				PRODUCT_BUNDLE_IDENTIFIER = anilogProjectV02;
 				PRODUCT_NAME = anilog;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "anilog-Bridging-Header.h";

@@ -111,7 +111,7 @@ export default ReceivedMessage = ({route}) => {
 		let copy = [...data];
 		copy[index].checkBoxState = !copy[index].checkBoxState;
 	};
-	if (data.length == 0) {
+	if (data?.length == 0) {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
 				<Text>쪽지 내역이 없습니다.</Text>

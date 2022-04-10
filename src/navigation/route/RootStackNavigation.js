@@ -300,7 +300,11 @@ export default RootStackNavigation = () => {
 						</RootStack.Screen>
 						{/* <RootStack.Screen name="SearchMap" component={SearchMap} options={{header: props => <SimpleHeader {...props} />, title: '주소 설정'}} /> */}
 						<RootStack.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
-						<RootStack.Screen name="Profile" component={Profile} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
+						<RootStack.Screen
+							name="Profile"
+							component={Profile}
+							options={{header: props => <MeatBallHeader {...props} menu={['신고하기', '신고']} />, title: '프로필'}}
+						/>
 					</RootStack.Navigator>
 				</NavigationContainer>
 

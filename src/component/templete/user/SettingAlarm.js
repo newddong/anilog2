@@ -14,6 +14,7 @@ import {
 	MY_APPLY_STATUS_CHANGE_ALRAM,
 	MY_POST_ALRAM,
 	MY_POST_COMMENT_ALRAM,
+	NEW_FOLLOWER,
 	PET_VACCIN_DATE_ALRAM,
 	TAG_OR_FOLLOW_ALRAM,
 } from 'Root/i18n/msg';
@@ -143,25 +144,21 @@ export default SettingAlarm = ({route}) => {
 					</View>
 					<View style={styles.serviceAlarmContainer}>
 						<Text style={[txt.noto32b, {color: GRAY10}]}>서비스별 알림</Text>
-						<View style={[styles.alarmDetailEachContainer, {marginTop: 30 * DP}]}>
+						{/* <View style={[styles.alarmDetailEachContainer, {marginTop: 30 * DP}]}>
 							<OneLineOnOff data={alarm} name={FOLLWER_NEW_POST_ALRAM} keys="notice_newfollower" switchButton={switchButton} />
-						</View>
-						<View style={[styles.alarmDetailEachContainer, {marginTop: 24 * DP}]}>
-							<OneLineOnOff
-								data={alarm}
-								name={FAVORITE_PROTECT_STATUS_CHANGE_ALRAM}
-								keys="notice_favorite_protect_request"
-								switchButton={switchButton}
-							/>
-						</View>
+						</View> */}
+
 						<View style={[styles.alarmDetailEachContainer, {marginTop: 24 * DP}]}>
 							<OneLineOnOff data={alarm} name={PET_VACCIN_DATE_ALRAM} keys="notice_pet_vaccination" switchButton={switchButton} />
+						</View>
+						<View style={[styles.alarmDetailEachContainer, {marginTop: 24 * DP}]}>
+							<OneLineOnOff data={alarm} name={'쪽지 수신 알림'} keys="notice_favorite_protect_request" switchButton={switchButton} />
 						</View>
 					</View>
 					<View style={styles.activityAlarmContainer}>
 						<Text style={[txt.noto32b, {color: GRAY10}]}>내 활동 알림</Text>
 						<View style={[styles.alarmDetailEachContainer, {marginTop: 30 * DP}]}>
-							<OneLineOnOff data={alarm} name={MY_POST_ALRAM} keys="notice_my_post" switchButton={switchButton} />
+							<OneLineOnOff data={alarm} name={NEW_FOLLOWER} keys="notice_newfollower" switchButton={switchButton} />
 						</View>
 						<View style={[styles.alarmDetailEachContainer, {marginTop: 24 * DP}]}>
 							<OneLineOnOff data={alarm} name={MY_POST_COMMENT_ALRAM} keys="notice_comment_on_my_post" switchButton={switchButton} />
@@ -195,7 +192,7 @@ export default SettingAlarm = ({route}) => {
 const styles = StyleSheet.create({
 	container: {
 		width: 750 * DP,
-		height: 1006 * DP,
+		height: 938 * DP,
 		marginTop: 10 * DP,
 		backgroundColor: '#FFFFFF',
 	},
@@ -207,7 +204,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	serviceAlarmContainer: {
-		height: 338 * DP,
+		height: 270 * DP,
 		paddingLeft: 48 * DP,
 		borderBottomColor: GRAY40,
 		borderBottomWidth: 2 * DP,

@@ -32,6 +32,7 @@ export default AddPhoto = props => {
 					width: null,
 					uri: 'http://src.hidoc.co.kr/image/lib/2016/7/21/20160721160807763_0.jpg',
 				},
+				imageID:"0"
 			},
 		},
 	]);
@@ -45,11 +46,12 @@ export default AddPhoto = props => {
 	 *@param {number} request - 불러올 미디어의 숫자 (기본값 20)
 	 *@param {string} type - 불러올 미디어의 타잎('Photos'|'All'|'Videos')
 	 */
-	const loadPhotosMilsec = (request = 5, timeStamp = 0, type = 'Photos') => {
-		console.log('타임스템프 ', timeStamp);
+	const loadPhotosMilsec = (request = 5, imageID = "123456789", type = 'Photos') => {
+		console.log('아이디',imageID);
 		NativeModules.PhotoListModule.getPhotos({
 			first: request,
-			fromTime: timeStamp ? timeStamp * 1000 - 1 : 0,
+			// fromTime: fromTime+'',
+			toID: imageID,
 			assetType: type,
 			include: ['playableDuration'],
 		})
@@ -79,9 +81,9 @@ export default AddPhoto = props => {
 	const scrollReachBottom = () => {
 		// loadPhotos(page.current);
 		// console.log('scrolllist bottom   ' + JSON.stringify(photolist));
-		let timeStamp = photolist.length > 1 ? photolist[photolist.length - 1].node.timestamp : 0;
-		console.log('스크롤이 바닥에 닿았습니다. '+timeStamp+ '이후의 사진을 로드합니다.');
-		loadPhotosMilsec(5,timeStamp);
+		let lastID = photolist.length > 1 ? photolist[photolist.length - 1].node.imageID : "123456789";
+		console.log('스크롤이 바닥에 닿았습니다. '+lastID+ '이후의 사진을 로드합니다.');
+		loadPhotosMilsec(5,lastID);
 	};
 
 	const test = () => {
@@ -189,9 +191,9 @@ export default AddPhoto = props => {
 		// props.navigation.navigate({ name: props.route.params.navfrom, params: { localSelectedImages: exportUriList[0] }, merge: true });
 		// props.navigation.navigate({name: props.route.params?.navfrom, params: {image: exportUriList[0]}, merge: true});
 		
-		let timeStamp = photolist.length > 1 ? photolist[photolist.length - 1].node.timestamp : 0;
-		console.log('스크롤이 바닥에 닿았습니다. '+timeStamp+ '이후의 사진을 로드합니다.');
-		loadPhotosMilsec(5,timeStamp);
+		let lastID = photolist.length > 1 ? photolist[photolist.length - 1].node.imageID : "123456789";
+		console.log('스크롤이 바닥에 닿았습니다. '+lastID+ '이후의 사진을 로드합니다.');
+		loadPhotosMilsec(5,lastID);
 
 		console.log(photolist);
 	};

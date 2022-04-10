@@ -103,13 +103,15 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
         String after = params.hasKey("after") ? params.getString("after") : null;
         String groupName = params.hasKey("groupName") ? params.getString("groupName") : null;
         String assetType = params.hasKey("assetType") ? params.getString("assetType") : ASSET_TYPE_PHOTOS;
-        long fromTime = params.hasKey("fromTime") ? (long) params.getDouble("fromTime") : 0;
-        long toTime = params.hasKey("toTime") ? (long) params.getDouble("toTime") : 0;
+        long fromTime = params.hasKey("fromTime") ? Long.parseLong(params.getString("fromTime")) : 0;
+        long toTime = params.hasKey("toTime") ? Long.parseLong(params.getString("toTime")) : 0;
+        String fromID = params.hasKey("fromID") ? params.getString("fromID") : null;
+        String toID = params.hasKey("toID") ? params.getString("toID") : null;
         ReadableArray mimeTypes = params.hasKey("mimeTypes")
                 ? params.getArray("mimeTypes")
                 : null;
         ReadableArray include = params.hasKey("include") ? params.getArray("include") : null;
-        Log.d("getPhotos query","fromTime: "+ fromTime + "1111 toTime: "+ toTime);
+        Log.d("getPhotos query","fromTime: "+ fromTime + "    toTime: "+ toTime + "    fromID: "+ fromID+ "  toID   "+ toID);
         new GetMediaTask(
                 getReactApplicationContext(),
                 first,
@@ -120,6 +122,8 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
                 fromTime,
                 toTime,
                 include,
+                fromID,
+                toID,
                 promise)
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -134,6 +138,8 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
         private final String mAssetType;
         private final long mFromTime;
         private final long mToTime;
+        private final String mFromID; //ID값으로 검색하기 위한 맴버 추가
+        private final String mToID; //ID값으로 검색하기 위한 맴버 추가
         private final Set<String> mInclude;
 
         private GetMediaTask(
@@ -146,6 +152,8 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
                 long fromTime,
                 long toTime,
                 @Nullable ReadableArray include,
+                String fromID, //ID값으로 검색하기 위한 맴버 추가
+                String toID, //ID값으로 검색하기 위한 맴버 추가
                 Promise promise) {
             super(context);
             mContext = context;
@@ -158,6 +166,8 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
             mFromTime = fromTime;
             mToTime = toTime;
             mInclude = createSetFromIncludeArray(include);
+            mFromID = fromID; //ID값으로 검색하기 위한 맴버 추가
+            mToID = toID; //ID값으로 검색하기 위한 맴버 추가
         }
 
         private static Set<String> createSetFromIncludeArray(@Nullable ReadableArray includeArray) {
@@ -216,14 +226,33 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
             }
 
             if (mFromTime > 0) {
-                selection.append(" AND " + Images.Media.DATE_MODIFIED + " > ?");
-                selectionArgs.add(mFromTime + "");
+//                selection.append(" AND " + Images.Media.DATE_TAKEN + " >= ?");
+//                selection.append(" AND " + Images.Media.DATE_MODIFIED + " > ?");
+                selection.append(" AND " + Images.Media.DATE_ADDED + " > ?");
+                long fromTimeSec = Long.parseLong( mFromTime / 1000+"");
+                selectionArgs.add(fromTimeSec + "");
+//                selectionArgs.add(mFromTime + "");
+//                selectionArgs.add(163833122 + "");
             }
             if (mToTime > 0) {
-                selection.append(" AND " + Images.Media.DATE_MODIFIED + " <= ?");
+//                selection.append(" AND " + Images.Media.DATE_TAKEN + " <= ?");
+//                selection.append(" AND " + Images.Media.DATE_MODIFIED + " <= ?");
+                selection.append(" AND " + Images.Media.DATE_ADDED + " <= ?");
                 selectionArgs.add(mToTime + "");
             }
 
+            if(mFromID !=null){
+                selection.append(" AND " + Images.Media._ID + " > ?");
+                selectionArgs.add(mFromID);
+                Log.d("query","아이디쿼리"+selection+"아규먼트"+selectionArgs.toString());
+            }
+            if(mToID !=null){
+                selection.append(" AND " + Images.Media._ID + " < ?");
+                selectionArgs.add(mToID + "");
+                Log.d("query","아이디쿼리"+selection+"아규먼트"+selectionArgs.toString());
+            }
+
+            Log.d("query","쿼리"+selection+"아규먼트"+selectionArgs.toString());
             WritableMap response = new WritableNativeMap();
             ContentResolver resolver = mContext.getContentResolver();
 
@@ -240,7 +269,7 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
                         PROJECTION,
                         selection.toString(),
                         selectionArgs.toArray(new String[selectionArgs.size()]),
-                        Images.Media.DATE_ADDED + " DESC, " + Images.Media.DATE_MODIFIED + " DESC");
+                        Images.Media._ID+ " DESC, " + Images.Media.DATE_ADDED + " DESC, " + Images.Media.DATE_MODIFIED + " DESC"); //이미지 정렬 추가
                 if (media == null) {
                     mPromise.reject(ERROR_UNABLE_TO_LOAD, "Could not get media");
                 } else {
@@ -248,6 +277,7 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
                         putEdges(resolver, media, response, mFirst, mInclude);
                         putPageInfo(media, response, mFirst, !TextUtils.isEmpty(mAfter) ? Integer.parseInt(mAfter) : 0);
                     } finally {
+                        Log.d("태그","미디어 개수"+media.getCount());
                         media.close();
                         mPromise.resolve(response);
                     }
@@ -283,6 +313,7 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
             Set<String> include) {
         WritableArray edges = new WritableNativeArray();
         media.moveToFirst();
+        int mediaIdIndex = media.getColumnIndex(Images.Media._ID); //ID인덱스 추가
         int mimeTypeIndex = media.getColumnIndex(Images.Media.MIME_TYPE);
         int groupNameIndex = media.getColumnIndex(Images.Media.BUCKET_DISPLAY_NAME);
         int dateTakenIndex = media.getColumnIndex(Images.Media.DATE_TAKEN);
@@ -298,14 +329,14 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
         boolean includeFileSize = include.contains(INCLUDE_FILE_SIZE);
         boolean includeImageSize = include.contains(INCLUDE_IMAGE_SIZE);
         boolean includePlayableDuration = include.contains(INCLUDE_PLAYABLE_DURATION);
-
+        Log.d("에지인포1", "dateTaken: "+dateTakenIndex + "   dateModifiedIndex : "+dateModifiedIndex + "  아이디 : ");
         for (int i = 0; i < limit && !media.isAfterLast(); i++) {
             WritableMap edge = new WritableNativeMap();
             WritableMap node = new WritableNativeMap();
             boolean imageInfoSuccess =
                     putImageInfo(resolver, media, node, widthIndex, heightIndex, sizeIndex, dataIndex,
                             mimeTypeIndex, includeFilename, includeFileSize, includeImageSize,
-                            includePlayableDuration);
+                            includePlayableDuration, mediaIdIndex);
             if (imageInfoSuccess) {
                 putBasicNodeInfo(media, node, mimeTypeIndex, groupNameIndex, dateTakenIndex, dateAddedIndex, dateModifiedIndex);
                 putLocationInfo(media, node, dataIndex, includeLocation);
@@ -339,6 +370,7 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
         }
         node.putDouble("timestamp", dateTaken / 1000d);
         node.putDouble("modified", media.getLong(dateModifiedIndex));
+        Log.d("에지인포", "dateTaken: "+media.getLong(dateTakenIndex) + "   dateModifiedIndex : "+media.getLong(dateModifiedIndex)+ "  아이디 : "+media.getString(media.getColumnIndex(Images.Media._ID)));
     }
 
     /**
@@ -357,7 +389,8 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
             boolean includeFilename,
             boolean includeFileSize,
             boolean includeImageSize,
-            boolean includePlayableDuration) {
+            boolean includePlayableDuration,
+            int mediaIdIndex) {
         WritableMap image = new WritableNativeMap();
         Uri photoUri = Uri.parse("file://" + media.getString(dataIndex));
         image.putString("uri", photoUri.toString());
@@ -382,7 +415,7 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
         } else {
             image.putNull("fileSize");
         }
-
+        node.putString("imageID",media.getString(mediaIdIndex));
         node.putMap("image", image);
         return putImageSizeSuccess && putPlayableDurationSuccess;
     }

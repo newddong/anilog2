@@ -67,14 +67,14 @@ const AlarmList = props => {
 		);
 	};
 	const onLabelClick = data => {
-		console.log(data.notice_user_collection, data, 'zz');
+		console.log(data.target_object_type, data, 'zz');
 		let navState = props.navigation.getState();
 		console.log('navState', navState);
 
-		switch (data.notice_user_collection) {
+		switch (data.target_object_type) {
 			case 'comment':
 				break;
-			case 'follow':
+			case 'FollowObject':
 				getUserProfile(
 					{userobject_id: data.notice_user_related_id._id},
 					result => {

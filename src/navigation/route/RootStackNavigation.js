@@ -105,6 +105,7 @@ export default RootStackNavigation = () => {
 					},
 					error => {
 						alert(error);
+						setLoading(false);
 					},
 				);
 

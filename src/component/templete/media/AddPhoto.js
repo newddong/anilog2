@@ -51,7 +51,7 @@ export default AddPhoto = props => {
 		console.log('아이디',imageID);
 		let param = {
 			first: request,
-			fromTime: timeStamp,
+			toTime: timeStamp?timeStamp * 1000 - 1:0,
 			toID: imageID,
 			assetType: type,
 			include: ['playableDuration'],

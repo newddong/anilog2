@@ -1,5 +1,18 @@
 import React, {useRef, useState} from 'react';
-import {Text, View, Button, TouchableOpacity, Platform, StyleSheet, TextInput, Keyboard, StatusBar, Dimensions, SafeAreaView} from 'react-native';
+import {
+	Text,
+	View,
+	Button,
+	TouchableOpacity,
+	Platform,
+	StyleSheet,
+	TextInput,
+	Keyboard,
+	StatusBar,
+	Dimensions,
+	SafeAreaView,
+	ScrollView,
+} from 'react-native';
 import axios from 'axios';
 import Geolocation from '@react-native-community/geolocation';
 import {txt} from 'Root/config/textstyle';
@@ -8,7 +21,7 @@ import MapView, {Callout, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {CurrentLocation, LocationMarker} from 'Root/component/atom/icon';
 import {APRI10, GRAY10, GRAY20, GRAY30} from 'Root/config/color';
 import AniButton from 'Root/component/molecules/button/AniButton';
-import {btn_w654} from 'Root/component/atom/btn/btn_style';
+import {btn_w194, btn_w654} from 'Root/component/atom/btn/btn_style';
 import X2JS from 'x2js';
 import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/core';
@@ -38,14 +51,24 @@ export default SearchMap = ({route}) => {
 
 	//주소 불러오기 api 호출
 	React.useEffect(() => {
+		console.log('changedLatitude', changedLatitude);
 		if (changedLatitude == '' || changedLongitude == '') {
-			callInitialAddress(init_longitude, init_latitude);
+			console.log('차라리');
+			callInitialAddress(changedLongitude, changedLatitude);
 			Modal.close();
 		} else if (changedLatitude != '') {
+			console.log('전부 거짓말');
 			callInitialAddress(changedLongitude, changedLatitude);
 			Modal.close();
 		}
-	}, [init_latitude, changedLatitude]);
+	}, [changedLatitude]);
+
+	React.useEffect(() => {
+		if (route.params.addr != undefined) {
+			const addr = route.params.addr.roadAddress;
+			connectGeoCoder(addr);
+		}
+	}, [route.params]);
 
 	//위도 경도 받아오기
 	const geoLocation = () => {
@@ -55,6 +78,8 @@ export default SearchMap = ({route}) => {
 				console.log('position.coords.longitude', position.coords.longitude);
 				setLatitude(position.coords.latitude);
 				setLogitude(position.coords.longitude);
+				setChangedLatitude(position.coords.latitude);
+				setChangedLongitude(position.coords.longitude);
 				callInitialAddress(position.coords.longitude, position.coords.latitude);
 			},
 			error => {
@@ -76,9 +101,6 @@ export default SearchMap = ({route}) => {
 				.then(async res => {
 					let location = res.data.documents[0];
 					if (location.road_address == null) {
-						// console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-						// console.log('road_addr is null?', location.road_address);
-						// console.log('changedLatitude  :  ', changedLatitude, 'changedLongitude :  ', changedLongitude);
 						console.log('address_name  : ', location.address.address_name);
 						//카카오 API에서 도로명주소가 간혹 Null값으로 오는 현상 발견
 						Modal.popLoading();
@@ -99,6 +121,7 @@ export default SearchMap = ({route}) => {
 						}
 					} else {
 						// 도로명주소가 null값이 아니라면 그대로 setState
+						console.log('location : ', location);
 						setLocationObj(location);
 						Modal.close();
 					}
@@ -116,7 +139,7 @@ export default SearchMap = ({route}) => {
 				// 관련 api 사이트 주소 : https://www.juso.go.kr/addrlink/devAddrLinkRequestSubmit.do
 				let res = await axios
 					.get(
-						`https://www.juso.go.kr/addrlink/addrLinkApi.do?currentPage=1&countPerPage=10 &keyword=${addr}&confmKey=devU01TX0FVVEgyMDIyMDMyMjIxNTUyMzExMjM3NDQ=&firstSort=road`,
+						`https://www.juso.go.kr/addrlink/addrLinkApi.do?currentPage=1&countPerPage=10&keyword=${addr}&confmKey=devU01TX0FVVEgyMDIyMDMyMjIxNTUyMzExMjM3NDQ=&firstSort=road`,
 					)
 					.then(responseText => {
 						var x2js = new X2JS(); //XML 형식의 데이터를 JSON으로 파싱
@@ -133,22 +156,26 @@ export default SearchMap = ({route}) => {
 
 	//현재 위치로 돌아감
 	const initializeRegion = () => {
-		if (map.current) {
-			map.current.animateToRegion(
-				{
-					latitude: init_latitude,
-					longitude: init_longitude,
-					latitudeDelta: 0.0002,
-					longitudeDelta: 0.0023,
-				},
-				400,
-			);
-			setTimeout(() => {
-				setChangedLatitude(init_latitude);
-				setChangedLongitude(init_longitude);
-			}, 500);
-			// setChangedLongitudeDelta(0.00002);
-			// setChangedLatitudeDelta(0.0023);
+		if (Platform.OS == 'android') {
+			setChangedLatitude(init_latitude);
+			setChangedLongitude(init_longitude);
+		} else {
+			if (map.current) {
+				console.log('map', map.current);
+				map.current.animateToRegion(
+					{
+						latitude: init_latitude,
+						longitude: init_longitude,
+						latitudeDelta: 0.0002,
+						longitudeDelta: 0.0023,
+					},
+					400,
+				);
+				setTimeout(() => {
+					setChangedLatitude(init_latitude);
+					setChangedLongitude(init_longitude);
+				}, 500);
+			}
 		}
 	};
 
@@ -159,7 +186,6 @@ export default SearchMap = ({route}) => {
 
 	//터치로 인한 위도 경도 변경 콜백
 	const goToLocation = region => {
-		console.log('region');
 		setChangedLatitude(region.latitude);
 		setChangedLongitude(region.longitude);
 		setChangedLongitudeDelta(region.longitudeDelta);
@@ -197,68 +223,69 @@ export default SearchMap = ({route}) => {
 			},
 		};
 		navigation.navigate({
-			name: 'CommunityWrite',
+			name: route.params.isEdit ? 'CommunityEdit' : 'CommunityWrite',
 			params: {data: data, isReview: route.params.isReview},
-			merge: false,
+			merge: true,
 		});
+	};
+
+	//주소검색을 통해서 받아왔을 경우
+	async function connectGeoCoder(addr) {
+		console.log('addr', addr);
+		let key = '7CC4F0EE-4F9E-353A-9B34-22B4D7F49CA9'; //https://www.vworld.kr - api 키 권상우 문의
+		return new Promise(async function (resolve, reject) {
+			try {
+				let res = await axios
+					.get(
+						`http://api.vworld.kr/req/address?service=address&request=getcoord&version=2.0&crs=epsg:4326&address=${addr}&refine=true&simple=true&format=json&type=ROAD&key=${key}`,
+					)
+					.then(responseText => {
+						// console.log('resoponse', JSON.stringify(responseText.data.response.result));
+						const result = responseText.data.response.result.point;
+						console.log('result, : ', result);
+						setChangedLatitude(parseFloat(result.y));
+						setChangedLongitude(parseFloat(result.x));
+						map.current = result;
+						// callInitialAddress(parseFloat(result.x), parseFloat(result.y));
+					});
+			} catch (error) {
+				console.log('error connectGeoCoder  :  ', error.message);
+				Modal.close(); //오류발생 시 Modal 종료
+			}
+		});
+	}
+
+	const goToAddressSearch = () => {
+		navigation.push('AddressSearchPage', {prevRoute: route.name});
 	};
 
 	const map = React.useRef();
 
 	return (
-		<View
-			style={[
-				style.container,
-				{
-					bottom: keyboardY, //테스트 필요한 부분
-				},
-			]}>
+		<View style={[style.container, {}]}>
 			{/* <Map /> */}
-			{init_latitude != '' && init_longitude != '' ? (
-				<View style={{zIndex: -1, marginTop: 10 * DP}}>
-					{/* 현재 위치로 돌아가는 아이콘 */}
-					<TouchableOpacity activeOpacity={0.6} onPress={initializeRegion} style={[style.currentLocationIcon]}>
-						<CurrentLocation />
-					</TouchableOpacity>
-					{Platform.OS == 'android' ? (
-						<MapView
-							style={[style.mapContainer]}
-							mapType={'standard'}
-							zoomEnabled
-							zoomControlEnabled
-							onRegionChangeComplete={(region, gesture) => {
-								if (gesture.isGesture) {
-									//클릭을 안했음에도 지속적으로 위도 경도가 바뀌는 현상 발생 -> 오로지 터치 시에만 반응하도록 적용
-									goToLocation(region); //탐색된 위도 경도를 바꿈
-								}
-							}}
-							region={{
-								latitude: changedLatitude != '' ? changedLatitude : init_latitude,
-								longitude: changedLongitude != '' ? changedLongitude : init_longitude,
-								latitudeDelta: changedLatitudeDelta, //지도의 초기줌 수치
-								longitudeDelta: changedLongitudeDelta, //지도의 초기줌 수치
-							}}>
-							{/* 현재 선택된 위도 경도의 마커 */}
-							<MapView.Marker
-								coordinate={{
-									latitude: changedLatitude != '' ? changedLatitude : init_latitude,
-									longitude: changedLongitude != '' ? changedLongitude : init_longitude,
-								}}
-								key={`${changedLongitude}${Date.now()}`} // 현재 마커의 위치가 바뀌어도 타이틀 및 description이 최신화 되지 않던 현상 발견 -> 키 값 부여
-							>
-								<LocationMarker />
-							</MapView.Marker>
-						</MapView>
-					) : (
-						<>
+			<ScrollView contentContainerStyle={{alignItems: 'center', bottom: keyboardY}}>
+				<View style={[{paddingVertical: 10 * DP, width: 654 * DP}]}>
+					<AniButton onPress={goToAddressSearch} btnTitle={'주소 검색'} btnLayout={btn_w194} btnStyle={'border'} titleFontStyle={24} />
+				</View>
+				{changedLongitude != '' && changedLatitude != '' ? (
+					<View style={{zIndex: -1, marginTop: 10 * DP, backgroundColor: '#fff'}}>
+						{/* 현재 위치로 돌아가는 아이콘 */}
+						<TouchableOpacity activeOpacity={0.6} onPress={initializeRegion} style={[style.currentLocationIcon]}>
+							<CurrentLocation />
+						</TouchableOpacity>
+						{Platform.OS == 'android' ? (
 							<MapView
 								ref={map}
-								// provider={PROVIDER_GOOGLE} // remove if not using Google Maps
 								style={[style.mapContainer]}
-								// customMapStyle={mapStyle}
+								mapType={'standard'}
+								zoomEnabled
+								zoomControlEnabled
 								onRegionChangeComplete={(region, gesture) => {
-									//클릭을 안했음에도 지속적으로 위도 경도가 바뀌는 현상 발생 -> 오로지 터치 시에만 반응하도록 적용
-									goToLocation(region); //탐색된 위도 경도를 바꿈
+									if (gesture.isGesture) {
+										//클릭을 안했음에도 지속적으로 위도 경도가 바뀌는 현상 발생 -> 오로지 터치 시에만 반응하도록 적용
+										goToLocation(region); //탐색된 위도 경도를 바꿈
+									}
 								}}
 								region={{
 									latitude: changedLatitude != '' ? changedLatitude : init_latitude,
@@ -266,48 +293,76 @@ export default SearchMap = ({route}) => {
 									latitudeDelta: changedLatitudeDelta, //지도의 초기줌 수치
 									longitudeDelta: changedLongitudeDelta, //지도의 초기줌 수치
 								}}>
+								{/* 현재 선택된 위도 경도의 마커 */}
 								<MapView.Marker
 									coordinate={{
-										latitude: changedLatitude != '' ? changedLatitude : y,
-										longitude: changedLongitude != '' ? changedLongitude : x,
+										latitude: changedLatitude != '' ? changedLatitude : init_latitude,
+										longitude: changedLongitude != '' ? changedLongitude : init_longitude,
 									}}
-									key={`${changedLongitude}${Date.now()}`}>
+									key={`${changedLongitude}${Date.now()}`} // 현재 마커의 위치가 바뀌어도 타이틀 및 description이 최신화 되지 않던 현상 발견 -> 키 값 부여
+								>
 									<LocationMarker />
 								</MapView.Marker>
 							</MapView>
-						</>
-					)}
-				</View>
-			) : (
-				<>
-					<Loading isModal={false} />
-				</>
-			)}
-			{locationObj != '' ? (
-				<View>
-					<View style={[style.currentLocation, {}]}>
-						<Text style={[txt.noto28b]}>
-							{locationObj.road_address != null ? locationObj.road_address.address_name : '도로명 주소가 없는 좌표입니다. '}
-						</Text>
-						<Text style={[txt.noto24, {color: GRAY10}]}>[지번] {locationObj.address.address_name}</Text>
+						) : (
+							<>
+								<MapView
+									ref={map}
+									// provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+									style={[style.mapContainer]}
+									onRegionChangeComplete={(region, gesture) => {
+										//클릭을 안했음에도 지속적으로 위도 경도가 바뀌는 현상 발생 -> 오로지 터치 시에만 반응하도록 적용
+										goToLocation(region); //탐색된 위도 경도를 바꿈
+									}}
+									region={{
+										latitude: changedLatitude != '' ? changedLatitude : init_latitude,
+										longitude: changedLongitude != '' ? changedLongitude : init_longitude,
+										latitudeDelta: changedLatitudeDelta, //지도의 초기줌 수치
+										longitudeDelta: changedLongitudeDelta, //지도의 초기줌 수치
+									}}>
+									<MapView.Marker
+										coordinate={{
+											latitude: changedLatitude != '' ? changedLatitude : init_latitude,
+											longitude: changedLongitude != '' ? changedLongitude : init_longitude,
+										}}
+										key={`${changedLongitude}${Date.now()}`}>
+										<LocationMarker />
+									</MapView.Marker>
+								</MapView>
+							</>
+						)}
 					</View>
-					<View style={[style.locationDetail]}>
-						<TextInput
-							onChangeText={onChangeDetailAddr}
-							style={[txt.noto26, style.detailInput]}
-							placeholder={'상세주소를 입력해주세요.'}
-							placeholderTextColor={GRAY20}
-							maxLength={25}
-						/>
-						<Text style={[txt.noto22, {color: GRAY20}]}>{detailAddr.length + '/' + 25} </Text>
+				) : (
+					<>
+						<Loading isModal={false} />
+					</>
+				)}
+				{locationObj != '' ? (
+					<View>
+						<View style={[style.currentLocation, {}]}>
+							<Text style={[txt.noto28b]}>
+								{locationObj.road_address != null ? locationObj.road_address.address_name : '도로명 주소가 없는 좌표입니다. '}
+							</Text>
+							<Text style={[txt.noto24, {color: GRAY10}]}>[지번] {locationObj.address.address_name}</Text>
+						</View>
+						<View style={[style.locationDetail]}>
+							<TextInput
+								onChangeText={onChangeDetailAddr}
+								style={[txt.noto26, style.detailInput]}
+								placeholder={'상세주소를 입력해주세요.'}
+								placeholderTextColor={GRAY20}
+								maxLength={25}
+							/>
+							<Text style={[txt.noto22, {color: GRAY20}]}>{detailAddr.length + '/' + 25} </Text>
+						</View>
+						<View style={[style.btnContainer]}>
+							<AniButton onPress={confirm} btnTitle={'선택한 위치로 설정'} btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} />
+						</View>
 					</View>
-					<View style={[style.btnContainer]}>
-						<AniButton onPress={confirm} btnTitle={'선택한 위치로 설정'} btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} />
-					</View>
-				</View>
-			) : (
-				<></>
-			)}
+				) : (
+					<></>
+				)}
+			</ScrollView>
 		</View>
 	);
 };
@@ -348,74 +403,10 @@ function useKeyboardBottom(tabheight) {
 	return KeyboardY;
 }
 
-const mapStyle = [
-	{
-		featureType: 'administrative',
-		elementType: 'geometry',
-		stylers: [
-			{
-				visibility: 'off',
-			},
-		],
-	},
-	{
-		featureType: 'poi',
-		stylers: [
-			{
-				visibility: 'on',
-			},
-		],
-	},
-	{
-		featureType: 'road',
-		elementType: 'labels.icon',
-		stylers: [
-			{
-				visibility: 'on',
-			},
-		],
-	},
-	{
-		featureType: 'transit',
-		stylers: [
-			{
-				visibility: 'on',
-			},
-		],
-	},
-];
-
-const mapStyle2 = [
-	{
-		featureType: 'poi.business',
-		stylers: [
-			{
-				visibility: 'on',
-			},
-		],
-	},
-	{
-		featureType: 'road',
-		elementType: 'labels.icon',
-		stylers: [
-			{
-				visibility: 'on',
-			},
-		],
-	},
-	{
-		featureType: 'transit',
-		stylers: [
-			{
-				visibility: 'on',
-			},
-		],
-	},
-];
-
 const style = StyleSheet.create({
 	container: {
-		flex: 1,
+		// flex: 1,
+		// height: 2000 * DP,
 		alignItems: 'center',
 		backgroundColor: '#fff',
 	},
@@ -455,12 +446,27 @@ const style = StyleSheet.create({
 		flexDirection: 'row',
 		// backgroundColor: 'yellow',
 	},
+	locationSearch: {
+		width: 654 * DP,
+		height: 100 * DP,
+		alignSelf: 'center',
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		marginTop: 10 * DP,
+		marginBottom: 20 * DP,
+		paddingVertical: 10 * DP,
+		paddingRight: 20 * DP,
+		// borderWidth: 2 * DP,
+		borderBottomWidth: 2 * DP,
+		borderBottomColor: GRAY30,
+		flexDirection: 'row',
+	},
 	detailInput: {
 		paddingLeft: 24 * DP,
 		// includeFontPadding: true,
 		// lineHeight: 56 * DP,
 	},
 	btnContainer: {
-		marginTop: 30 * DP,
+		paddingVertical: 30 * DP,
 	},
 });

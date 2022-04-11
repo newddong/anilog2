@@ -3886,32 +3886,29 @@ export const feedCommentList = StyleSheet.create({
 	},
 	editComment: {
 		width: 750 * DP,
-		shadowColor: 'black',
-		shadowOpacity: 0.5,
-		shadowRadius: 4.65,
-		shadowOffset: {
-			width: 1 * DP,
-			height: 2 * DP,
-		},
-		elevation: 2,
-		// position: 'absolute',
 		backgroundColor: WHITE,
 		bottom: 1,
 		alignItems: 'center',
 	},
-	editComment_photoAdded: {
-		width: 750 * DP,
+	shadow: {
 		shadowColor: '#000000',
 		shadowOpacity: 0.5,
-		shadowRadius: 4.65,
+		shadowRadius: 2.65,
+		shadowOffset: {
+			width: 1 * DP,
+			height: 1 * DP,
+		},
+		elevation: 2,
+	},
+	shadow_off: {
+		shadowColor: '#000000',
+		shadowOpacity: 0.2,
+		shadowRadius: 2.65,
 		shadowOffset: {
 			width: 1 * DP,
 			height: 2 * DP,
 		},
 		elevation: 2,
-		backgroundColor: WHITE,
-		bottom: 1,
-		alignItems: 'center',
 	},
 	editCommentFromRequest: {
 		width: 654 * DP,

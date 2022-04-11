@@ -4,9 +4,9 @@ import DP from 'Root/config/dp';
 import Postcode from '@actbase/react-daum-postcode';
 
 export default AddressSearchPage = props => {
-	console.log('props', props.route);
+	// console.log('props', props.route);
 	const onSelectData = data => {
-		console.log('data', data);
+		// console.log('data', data);
 		props.navigation.navigate({
 			name: props.route.params.prevRoute,
 			params: {addr: data},

@@ -21,14 +21,14 @@ export default ArticleThumnails = props => {
 		if (photos.length == 3) {
 			return (
 				<View style={[style.photo3_right_photo]}>
-					<Image source={{uri: photos[2]}} style={[{flex: 1}]} resizeMode={'stretch'} />
+					<Image source={{uri: photos[2]}} style={[{flex: 1, borderBottomRightRadius: 30 * DP}]} resizeMode={'stretch'} />
 				</View>
 			);
 		} else {
 			return (
 				<View style={[style.photo3_right_photo]}>
-					<Image source={{uri: photos[2]}} style={[style.photo3_right_photo]} resizeMode={'stretch'} />
-					<View style={[style.photo3_right_opacity]}>
+					<Image source={{uri: photos[2]}} style={[style.photo3_right_photo, {borderBottomRightRadius: 30 * DP}]} resizeMode={'stretch'} />
+					<View style={[style.photo3_right_opacity, {borderBottomRightRadius: 30 * DP}]}>
 						<Text style={[txt.roboto32b, style.text]}>+ {photos.length - 3}</Text>
 					</View>
 				</View>
@@ -38,20 +38,32 @@ export default ArticleThumnails = props => {
 
 	const content = () => {
 		if (photos.length == 1) {
-			return <Image source={{uri: photos[0]}} style={[style.photo_1]} resizeMode={'stretch'} />;
+			return <Image source={{uri: photos[0]}} style={[style.photo_1]} />;
 		} else if (photos.length == 2) {
 			return (
 				<View style={[style.photo_2_container]}>
-					<Image source={{uri: photos[0]}} style={[style.photo_2]} resizeMode={'stretch'} />
-					<Image source={{uri: photos[1]}} style={[style.photo_2]} resizeMode={'stretch'} />
+					<Image
+						source={{uri: photos[0]}}
+						style={[style.photo_2, {borderTopLeftRadius: 30 * DP, borderBottomLeftRadius: 30 * DP}]}
+						resizeMode={'stretch'}
+					/>
+					<Image
+						source={{uri: photos[1]}}
+						style={[style.photo_2, {borderTopRightRadius: 30 * DP, borderBottomRightRadius: 30 * DP}]}
+						resizeMode={'stretch'}
+					/>
 				</View>
 			);
 		} else if (photos.length >= 3) {
 			return (
 				<View style={[style.photo_3_container]}>
-					<Image source={{uri: photos[0]}} style={[style.photo3_first]} resizeMode={'stretch'} />
+					<Image
+						source={{uri: photos[0]}}
+						style={[style.photo3_first, {borderTopLeftRadius: 30 * DP, borderBottomLeftRadius: 30 * DP}]}
+						resizeMode={'stretch'}
+					/>
 					<View style={[style.photo3_right]}>
-						<Image source={{uri: photos[1]}} style={[style.photo3_right_photo]} resizeMode={'stretch'} />
+						<Image source={{uri: photos[1]}} style={[style.photo3_right_photo, {borderTopRightRadius: 30 * DP}]} resizeMode={'stretch'} />
 						{getThirdPhoto()}
 					</View>
 				</View>
@@ -79,6 +91,7 @@ const style = StyleSheet.create({
 	photo_1: {
 		width: 654 * DP,
 		height: 334 * DP,
+		borderRadius: 30 * DP,
 	},
 	photo_2_container: {
 		width: 654 * DP,
@@ -99,7 +112,8 @@ const style = StyleSheet.create({
 	},
 	photo3_right: {
 		width: 278 * DP,
-		alignItems: 'stretch',
+		marginLeft: 5 * DP,
+		alignItems: 'center',
 		justifyContent: 'space-between',
 	},
 	photo3_right_photo: {

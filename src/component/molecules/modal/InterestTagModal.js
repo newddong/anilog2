@@ -75,22 +75,6 @@ const InterestTagModal = props => {
 					cities.push(padding);
 					cities.push(padding);
 					setCity(cities);
-					getAddressList(
-						{
-							city: '강원도',
-						},
-						result => {
-							const padding = '';
-							let arr = [padding, padding];
-							let districts = arr.concat(result.msg);
-							districts.push(padding);
-							districts.push(padding);
-							setDistrict(districts);
-						},
-						err => {
-							console.log('err', err);
-						},
-					);
 				},
 				err => console.log('err', err),
 			);

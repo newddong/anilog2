@@ -32,7 +32,6 @@ export default MissingReportList = props => {
 			getList();
 		});
 
-		console.log('MissingReportList:feedlist of missing', filterData);
 		const getList = () => {
 			getMissingReportList(
 				filterData,
@@ -196,11 +195,11 @@ export default MissingReportList = props => {
 						</View>
 						<View style={[searchProtectRequest.kindFilter]}>
 							<View style={[searchProtectRequest.kindFilterItem]}>
-								<Text style={[txt.noto26, {color: GRAY10}]}> 실종글만 보기</Text>
+								<Text style={[txt.noto26, {color: GRAY10}]}> 제보글만 보기</Text>
 								{onlyMissing ? <Check50 onPress={onPressShowMissing} /> : <Rect50_Border onPress={onPressShowMissing} />}
 							</View>
 							<View style={[searchProtectRequest.kindFilterItem]}>
-								<Text style={[txt.noto26, {color: GRAY10}]}> 제보글만 보기</Text>
+								<Text style={[txt.noto26, {color: GRAY10}]}> 실종글만 보기</Text>
 								{onlyReport ? <Check50 onPress={onPressShowReport} /> : <Rect50_Border onPress={onPressShowReport} />}
 							</View>
 						</View>

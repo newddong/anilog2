@@ -58,6 +58,7 @@ export default AddPhoto = props => {
 		};
 		if(Platform.OS=='android'){
 			delete param.fromTime;
+			delete param.toTime;
 			NativeModules.PhotoListModule.getPhotos(param)
 			.then(photolistcallback)
 			.catch(err => {

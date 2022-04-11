@@ -23,14 +23,14 @@ export async function apiController(path, args) {
 		if (path.includes('userLogin')) {
 			try {
 				let cookie = await CookieManager.get(serveruri);
-				// console.log('경로 %s에 대한 쿠키정보 ', serveruri, cookie);
+				console.log('경로 %s에 대한 쿠키정보 ', serveruri, cookie);
 				if (cookie['connect.sid']) {
 					sid = cookie['connect.sid'].value;
-					// console.log('메모리에 sid정보 불러옴',sid);
+					console.log('메모리에 sid정보 불러옴', sid);
 					await AsyncStorage.setItem('sid', sid);
-					// console.log('디스크에 sid정보를 씀', sid);
+					console.log('디스크에 sid정보를 씀', sid);
 				}
-				// console.log('유저로그인', cookie);
+				console.log('유저로그인', cookie);
 			} catch (err) {
 				console.log('로그인 에러', err);
 				args[2](err + ''); //에러 처리 콜백

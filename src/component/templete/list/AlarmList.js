@@ -67,9 +67,9 @@ const AlarmList = props => {
 		);
 	};
 	const onLabelClick = data => {
-		console.log(data.target_object_type, data, 'zz');
+		console.log(data.target_object_type, data);
 		let navState = props.navigation.getState();
-		console.log('navState', navState);
+		// console.log('navState', navState);
 
 		switch (data.target_object_type) {
 			case 'comment':
@@ -91,6 +91,31 @@ const AlarmList = props => {
 					},
 				);
 
+				break;
+			case 'MemoBoxObject':
+				navigation.dispatch({
+					...CommonActions.reset({
+						index: 0,
+						routes: [
+							{name: 'MainTab'},
+							{name: 'AlarmList'},
+							{name: 'UserNotePage', params: {title: data.notice_user_related_id.user_nickname, _id: data.notice_user_related_id._id}},
+						],
+					}),
+				});
+				break;
+			case 'FeedObject':
+				if (data.notice_object_type == 'LikeFeedObject') {
+					const selected = {_id: data.target_object};
+					getUserProfile({userobject_id: data.notice_user_receive_id}, result => {
+						navigation.dispatch({
+							...CommonActions.reset({
+								index: 1,
+								routes: [{name: 'MainTab'}, {name: 'AlarmList'}, {name: 'UserFeedList', params: {userobject: result.msg, selected: selected}}],
+							}),
+						});
+					});
+				}
 				break;
 		}
 	};

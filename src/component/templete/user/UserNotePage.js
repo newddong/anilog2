@@ -24,7 +24,7 @@ import {createMemoBox} from 'Root/api/userapi';
  * @param {boolean} props.checkBoxState - 선택 여부 (default = false)
  */
 const UserNotePage = ({route}) => {
-	console.log('userNotePage', route.params);
+	// console.log('userNotePage', route.params);
 	const keyboardY = useKeyboardBottom(0 * DP);
 	const navigation = useNavigation();
 	const [data, setData] = React.useState();
@@ -32,7 +32,7 @@ const UserNotePage = ({route}) => {
 	const input = React.useRef();
 	const [content, setContent] = React.useState('');
 	const [sent, setSent] = React.useState(false);
-	console.log('data', data);
+	// console.log('data', data);
 
 	React.useLayoutEffect(() => {
 		navigation.setOptions({tabBarVisible: false});
@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
 	messageContainer: {
 		marginTop: 30 * DP,
 		height: 1150 * DP,
+		// backgroundColor: 'yellow',
 	},
 });
 

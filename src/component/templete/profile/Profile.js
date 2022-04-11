@@ -100,6 +100,7 @@ export default Profile = ({route}) => {
 	//프로필의 피드탭의 피드 썸네일 클릭
 	const onClick_Thumbnail_FeedTab = (index, item) => {
 		navigation.push('UserFeedList', {userobject: data, selected: item});
+		console.log('data and item', data, item);
 	};
 
 	//프로필의 태그탭의 피드 썸네일 클릭

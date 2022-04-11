@@ -86,9 +86,9 @@ export default ReceivedMessage = ({route}) => {
 	const deleteSelectedItem = () => {
 		let copy = [...data];
 		copy = copy.filter(e => e.checkBoxState == true);
-		console.log('filtered copy', copy);
+		// console.log('filtered copy', copy);
 		copy.map((v, i) => {
-			console.log('vvv', v);
+			// console.log('vvv', v);
 			deleteMemoBoxWithUserObjectID(
 				{user_object_id: v.opponent},
 				result => {
@@ -129,7 +129,7 @@ export default ReceivedMessage = ({route}) => {
 						received={received}
 					/>
 				</View>
-				<View style={[styles.noteList, {height: null}]}>
+				<View style={[styles.noteList]}>
 					<NoteList data={data} checkBoxMode={checkBoxMode} onClickLabel={onClickLabel} onCheckBox={onCheckBox} routeName={route.name} />
 				</View>
 				{/* <View style={[styles.messageBtnContainer]}>

@@ -42,10 +42,12 @@ const NoteMessageList = props => {
 const styles = StyleSheet.create({
 	container: {
 		width: 750 * DP,
+		height: 1150 * DP,
 	},
 	messageItemContainer: {
 		width: 750 * DP,
 		marginBottom: 30 * DP,
+		// minHeight: 1150 * DP,
 	},
 });
 

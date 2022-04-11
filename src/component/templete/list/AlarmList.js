@@ -11,7 +11,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {temp_inputLongText} from 'Root/i18n/msg';
 import {lo} from '../style_address';
 import {getUserProfile} from 'Root/api/userapi';
-
+import {CommonActions, useNavigationState} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 const wait = timeout => {
 	return new Promise(resolve => setTimeout(resolve, timeout));
 };
@@ -22,8 +23,10 @@ const AlarmList = props => {
 	const [data, setData] = React.useState();
 	const [isEmpty, setIsEmpty] = React.useState();
 	const [loading, setLoading] = React.useState(true);
+	const navigation = useNavigation();
 	let count = 0;
 	const [refreshing, setRefreshing] = React.useState(false);
+	const navState = useNavigationState(state => state);
 	console.log('props', props);
 	const onRefresh = React.useCallback(() => {
 		setRefreshing(true);
@@ -64,23 +67,55 @@ const AlarmList = props => {
 		);
 	};
 	const onLabelClick = data => {
-		console.log(data.notice_user_collection, data, 'zz');
-		switch (data.notice_user_collection) {
+		console.log(data.target_object_type, data);
+		let navState = props.navigation.getState();
+		// console.log('navState', navState);
+
+		switch (data.target_object_type) {
 			case 'comment':
 				break;
-			case 'follow':
+			case 'FollowObject':
 				getUserProfile(
 					{userobject_id: data.notice_user_related_id._id},
 					result => {
 						console.log('result', result.msg);
-						props.navigation.navigate('UserProfile', {userobject: result.msg});
+						navigation.dispatch({
+							...CommonActions.reset({
+								index: 1,
+								routes: [{name: 'MainTab'}, {name: 'AlarmList'}, {name: 'Profile', params: {userobject: result.msg}}],
+							}),
+						});
 					},
 					err => {
 						console.log('err', err);
 					},
 				);
-				// navigation.navigate('UserProfile', {userobject: data.notice_user_related_id});
-				// props.navigation.push('UserProfile', {userobject: data.notice_user_related_id});
+
+				break;
+			case 'MemoBoxObject':
+				navigation.dispatch({
+					...CommonActions.reset({
+						index: 0,
+						routes: [
+							{name: 'MainTab'},
+							{name: 'AlarmList'},
+							{name: 'UserNotePage', params: {title: data.notice_user_related_id.user_nickname, _id: data.notice_user_related_id._id}},
+						],
+					}),
+				});
+				break;
+			case 'FeedObject':
+				if (data.notice_object_type == 'LikeFeedObject') {
+					const selected = {_id: data.target_object};
+					getUserProfile({userobject_id: data.notice_user_receive_id}, result => {
+						navigation.dispatch({
+							...CommonActions.reset({
+								index: 1,
+								routes: [{name: 'MainTab'}, {name: 'AlarmList'}, {name: 'UserFeedList', params: {userobject: result.msg, selected: selected}}],
+							}),
+						});
+					});
+				}
 				break;
 		}
 	};
@@ -94,7 +129,7 @@ const AlarmList = props => {
 		} else {
 			isData = false;
 		}
-		return <DailyAlarm index={index} data={item} onLabelClick={item => onLabelClick(item)} newNote={newNote} isData={isData} />;
+		return <DailyAlarm index={index} data={item} onLabelClick={onLabelClick} newNote={newNote} isData={isData} />;
 	};
 	if (loading) {
 		return (
@@ -144,4 +179,4 @@ AlarmList.defaultProps = {
 	showFollowBtn: false,
 };
 
-export default AlarmList;
+export default React.memo(AlarmList);

@@ -86,9 +86,9 @@ export default ReceivedMessage = ({route}) => {
 	const deleteSelectedItem = () => {
 		let copy = [...data];
 		copy = copy.filter(e => e.checkBoxState == true);
-		console.log('filtered copy', copy);
+		// console.log('filtered copy', copy);
 		copy.map((v, i) => {
-			console.log('vvv', v);
+			// console.log('vvv', v);
 			deleteMemoBoxWithUserObjectID(
 				{user_object_id: v.opponent},
 				result => {
@@ -111,7 +111,7 @@ export default ReceivedMessage = ({route}) => {
 		let copy = [...data];
 		copy[index].checkBoxState = !copy[index].checkBoxState;
 	};
-	if (data.length == 0) {
+	if (data?.length == 0) {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
 				<Text>쪽지 내역이 없습니다.</Text>
@@ -129,7 +129,7 @@ export default ReceivedMessage = ({route}) => {
 						received={received}
 					/>
 				</View>
-				<View style={[styles.noteList, {height: null}]}>
+				<View style={[styles.noteList]}>
 					<NoteList data={data} checkBoxMode={checkBoxMode} onClickLabel={onClickLabel} onCheckBox={onCheckBox} routeName={route.name} />
 				</View>
 				{/* <View style={[styles.messageBtnContainer]}>

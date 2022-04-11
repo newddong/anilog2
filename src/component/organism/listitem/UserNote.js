@@ -19,9 +19,9 @@ import {ProfileDefaultImg} from 'Root/component/atom/icon';
 const UserNote = props => {
 	// console.log('UserAccount item', props.data);
 	const data = props.data;
-	console.log('time', data.memobox_date);
-	console.log('getTime', getTimeLapsed(data.memobox_date));
-	console.log('UserNote props', data);
+	// console.log('time', data.memobox_date);
+	// console.log('getTime', getTimeLapsed(data.memobox_date));
+	// console.log('UserNote props', data);
 
 	return (
 		<View style={[styles.userNoteContainer]}>

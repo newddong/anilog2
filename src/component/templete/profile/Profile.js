@@ -20,6 +20,8 @@ import {useNavigation} from '@react-navigation/core';
 import Loading from 'Root/component/molecules/modal/Loading';
 import CommunityList from '../community/CommunityList';
 import {getCommunityListByUserId} from 'Root/api/community';
+import {createMemoBox} from 'Root/api/userapi';
+
 
 export default Profile = ({route}) => {
 	const navigation = useNavigation();
@@ -30,7 +32,7 @@ export default Profile = ({route}) => {
 	const [showOwnerState, setShowOwnerState] = React.useState(false); // 현재 로드되어 있는 profile의 userType이 Pet인 경우 반려인 계정 리스트의 출력 여부
 	const [showCompanion, setShowCompanion] = React.useState(false); // User계정이 반려동물버튼을 클릭
 	// console.log('tabMenuselc', tabMenuSelected);
-
+	console.log('data', data, userGlobalObject);
 	const fetchData = async () => {
 		if (route.params && route.params.userobject) {
 			getUserProfile(
@@ -121,6 +123,7 @@ export default Profile = ({route}) => {
 	//프로필의 피드탭의 피드 썸네일 클릭
 	const onClick_Thumbnail_FeedTab = (index, item) => {
 		navigation.push('UserFeedList', {userobject: data, selected: item});
+		console.log('data and item', data, item);
 	};
 
 	//프로필의 태그탭의 피드 썸네일 클릭
@@ -178,8 +181,28 @@ export default Profile = ({route}) => {
 		navigation.push('UserProfile', {userobject: item});
 	};
 
-	const onPressSendMsg = () => {
-		alert('sendMsg');
+	const onPressSendMsg = (_id, name) => {
+		// alert('sendMsg');
+		setTimeout(() => {
+			Modal.popMessageModal(
+				name,
+				msg => {
+					createMemoBox(
+						{memobox_receive_id: _id, memobox_contents: msg},
+						result => {
+							console.log('message sent success', result);
+							Modal.popOneBtn('쪽지 전송하였습니다.', '확인', () => Modal.close());
+						},
+						err => {
+							console.log('message sent err', err);
+						},
+					);
+					console.log('msg', msg);
+					Modal.close();
+				},
+				() => alert('나가기'),
+			);
+		}, 100);
 	};
 
 	//보호 동물 추가
@@ -403,27 +426,68 @@ export default Profile = ({route}) => {
 			<TabSelectFilled_Type2 items={['피드', '태그', '커뮤니티']} onSelect={onSelectTabMenu} />
 		);
 	};
-
-	return (
-		<View style={[login_style.wrp_main, profile.container]}>
-			{data != '' ? (
-				<>
-					{showTabContent()}
-					{userGlobalObject.userInfo && (
-						<View style={[{width: 94 * DP}, {height: 94 * DP}, profile.floatingBtn, {alignItems: 'center'}, {justifyContent: 'center'}]}>
-							{data.user_type == 'pet' ? <Message94 onPress={onPressSendMsg} /> : <Write94 onPress={moveToFeedWrite} />}
+	if (data.user_type == 'pet') {
+		return (
+			<View style={[login_style.wrp_main, profile.container]}>
+				{data != '' ? (
+					<>
+						{showTabContent()}
+						<View
+							style={[
+								temp_style.floatingBtn,
+								profile.floatingBtn,
+								{alignItems: 'center'},
+								{justifyContent: 'center'},
+								// {backgroundColor: 'yellow'},
+							]}>
+							<Write94 onPress={moveToFeedWrite} />
 						</View>
-						// <View style={[temp_style.floatingBtn, profile.floatingBtn, {alignItems: 'center'}, {justifyContent: 'center'}, {backgroundColor: 'yellow'}]}>
-						// 	{data.user_type == 'pet' ? <Message94 onPress={onPressSendMsg} /> : <Write94 onPress={moveToFeedWrite} />}
-						// </View>
-					)}
-				</>
-			) : (
-				<>
-					<Loading isModal={false} />
-				</>
-			)}
-		</View>
-	);
+					</>
+				) : (
+					<>
+						<Loading isModal={false} />
+					</>
+				)}
+			</View>
+		);
+	} else {
+		return (
+			<View style={[login_style.wrp_main, profile.container]}>
+				{data != '' ? (
+					<>
+						{showTabContent()}
+						{userGlobalObject.userInfo._id == data._id ? (
+							<View
+								style={[
+									temp_style.floatingBtn,
+									profile.floatingBtn,
+									{alignItems: 'center'},
+									{justifyContent: 'center'},
+									// {backgroundColor: 'yellow'},
+								]}>
+								<Write94 onPress={moveToFeedWrite} />
+							</View>
+						) : (
+							<View
+								style={[
+									temp_style.floatingTwoBtn,
+									profile.floatingBtn,
+									{alignItems: 'center'},
+									{justifyContent: 'center'},
+									// {backgroundColor: 'yellow'},
+								]}>
+								<Message94 onPress={() => onPressSendMsg(data._id, data.user_nickname)} />
+								<Write94 onPress={moveToFeedWrite} />
+							</View>
+						)}
+					</>
+				) : (
+					<>
+						<Loading isModal={false} />
+					</>
+				)}
+			</View>
+		);
+	}
 };
 //PR충돌로 인한 해결

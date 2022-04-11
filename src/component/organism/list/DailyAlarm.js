@@ -23,9 +23,9 @@ const DailyAlarm = props => {
 	const renderItem = ({item, index}) => {
 		// console.log('item', item);
 		return (
-			<View style={[accountHashList.userAccount]}>
-				<OneAlarm data={item} onLabelClick={item => props.onLabelClick(item)} newNote={props.newNote} index={index} isData={props.isData} />
-			</View>
+			// <View style={[accountHashList.userAccount]}>
+			<OneAlarm data={item} onLabelClick={item => props.onLabelClick(item)} newNote={props.newNote} index={index} isData={props.isData} />
+			// </View>
 		);
 	};
 	if (props.data.length == 0) {
@@ -75,4 +75,4 @@ DailyAlarm.defaultProps = {
 	showFollowBtn: false,
 };
 
-export default DailyAlarm;
+export default React.memo(DailyAlarm);

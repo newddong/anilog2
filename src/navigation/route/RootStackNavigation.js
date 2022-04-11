@@ -40,7 +40,6 @@ import SearchTabNavigation from './search_tab/SearchTabNavigation';
 import AccountPicker from 'Templete/search/AccountPicker';
 
 import {PIC_SELECTION} from 'Root/i18n/msg';
-import FeedList from 'Templete/feed/FeedListForHashTag';
 
 import SimpleHeader from 'Navigation/header/SimpleHeader';
 import SendHeader from '../header/SendHeader';
@@ -67,8 +66,11 @@ import {userLogin} from 'Root/api/userapi';
 import userGlobalObj from 'Root/config/userGlobalObject';
 import CommunityWrite from 'Root/component/templete/community/CommunityWrite';
 import SearchMap from 'Root/component/templete/search/SearchMap';
-import AlarmList from 'Root/component/templete/list/AlarmList';
-import Profile from 'Root/component/templete/profile/Profile';
+import AlarmList from 'Templete/list/AlarmList';
+import Profile from 'Templete/profile/Profile';
+import UserNotePage from 'Templete/user/UserNotePage';
+import FeedList from 'Templete/feed/FeedList';
+import Feed from 'Root/component/organism/feed/Feed';
 const RootStack = createStackNavigator();
 
 export default RootStackNavigation = () => {
@@ -300,7 +302,13 @@ export default RootStackNavigation = () => {
 						</RootStack.Screen>
 						{/* <RootStack.Screen name="SearchMap" component={SearchMap} options={{header: props => <SimpleHeader {...props} />, title: '주소 설정'}} /> */}
 						<RootStack.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
-						<RootStack.Screen name="Profile" component={Profile} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
+						<RootStack.Screen
+							name="Profile"
+							component={Profile}
+							options={{header: props => <MeatBallHeader {...props} menu={['신고하기', '신고']} />, title: '프로필'}}
+						/>
+						<RootStack.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />}} />
+						<RootStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />}} />
 					</RootStack.Navigator>
 				</NavigationContainer>
 

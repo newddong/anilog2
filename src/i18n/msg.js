@@ -473,9 +473,10 @@ export const FOLLWER_NEW_POST_ALRAM = '팔로워 새 게시글 알림';
 export const FAVORITE_PROTECT_STATUS_CHANGE_ALRAM = '즐겨찾은 보호요청 상태 변경 알림';
 export const PET_VACCIN_DATE_ALRAM = '반려동물의 접종 예정일 알림';
 export const MY_POST_ALRAM = '내 게시글 알림';
-export const MY_POST_COMMENT_ALRAM = '내 게시글에 달린 댓글 알림';
-export const TAG_OR_FOLLOW_ALRAM = '나를 태그하거나 팔로우시 알림';
-export const MY_APPLY_STATUS_CHANGE_ALRAM = '내 신청서 상태 변경시 알림';
+export const MY_POST_COMMENT_ALRAM = '내가 쓴 글/댓글 업데이트 알림';
+export const TAG_OR_FOLLOW_ALRAM = '나를 태그할 시 알림';
+export const MY_APPLY_STATUS_CHANGE_ALRAM = '내 신청 상태 변경 알림';
+export const NEW_FOLLOWER = '나를 팔로우 시 알림';
 
 export const INITIAL_NUMBER = ['010', '02', '031', '033', '043', '041', '054', '055', '063', '061', '064'];
 

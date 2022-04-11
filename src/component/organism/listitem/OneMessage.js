@@ -10,7 +10,7 @@ import {APRI10, GRAY10, GRAY20, GRAY30, TEXTBASECOLOR, WHITE} from 'Root/config/
 import {ProfileDefaultImg} from 'Component/atom/icon';
 import {getTimeLapsed} from 'Root/util/dateutil';
 const OneMessage = props => {
-	console.log('NoteMessageList props', props.data);
+	// console.log('NoteMessageList props', props.data);
 	const data = props.data;
 	//사용자가 보낸메세지 일때
 	if (userGlobalObject.userInfo._id == data.memobox_send_id._id) {

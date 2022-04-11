@@ -158,13 +158,13 @@ export default SettingAlarm = ({route}) => {
 					<View style={styles.activityAlarmContainer}>
 						<Text style={[txt.noto32b, {color: GRAY10}]}>내 활동 알림</Text>
 						<View style={[styles.alarmDetailEachContainer, {marginTop: 30 * DP}]}>
-							<OneLineOnOff data={alarm} name={NEW_FOLLOWER} keys="notice_newfollower" switchButton={switchButton} />
+							<OneLineOnOff data={alarm} name={NEW_FOLLOWER} keys="notice_follow" switchButton={switchButton} />
 						</View>
 						<View style={[styles.alarmDetailEachContainer, {marginTop: 24 * DP}]}>
-							<OneLineOnOff data={alarm} name={MY_POST_COMMENT_ALRAM} keys="notice_comment_on_my_post" switchButton={switchButton} />
+							<OneLineOnOff data={alarm} name={MY_POST_COMMENT_ALRAM} keys="notice_my_post" switchButton={switchButton} />
 						</View>
 						<View style={[styles.alarmDetailEachContainer, {marginTop: 24 * DP}]}>
-							<OneLineOnOff data={alarm} name={TAG_OR_FOLLOW_ALRAM} keys="notice_tag_follower" switchButton={switchButton} />
+							<OneLineOnOff data={alarm} name={TAG_OR_FOLLOW_ALRAM} keys="notice_tag" switchButton={switchButton} />
 						</View>
 						<View style={[styles.alarmDetailEachContainer, {marginTop: 24 * DP}]}>
 							<OneLineOnOff data={alarm} name={MY_APPLY_STATUS_CHANGE_ALRAM} keys="notice_my_applicant" switchButton={switchButton} />

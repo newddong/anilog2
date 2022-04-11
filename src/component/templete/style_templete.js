@@ -531,6 +531,12 @@ export const temp_style = StyleSheet.create({
 		width: 110 * DP,
 		height: 110 * DP,
 	},
+	floatingTwoBtn: {
+		flexDirection: 'column',
+
+		width: 110 * DP,
+		height: 220 * DP,
+	},
 	editComment: {},
 	aidRequest: {
 		// width: 654 * DP,

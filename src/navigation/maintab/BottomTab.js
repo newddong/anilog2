@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet,Image} from 'react-native';
 import DP from 'Root/config/dp';
 import SvgWrapper, {SvgWrap} from 'Atom/svgwrapper';
 import {txt} from 'Root/config/textstyle';
@@ -15,8 +15,10 @@ import {
 	MyTabBorder,
 	MyTabFilled,
 } from 'Atom/icon';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default function BottomTab({state, descriptors, navigation}) {
+	console.log('바텀탭 유저 글로벌',userGlobalObject);
 	const focusedOptions = descriptors[state.routes[state.index].key].options;
 	const icons = [<FeedTabBorder />, <AnimalSavingTabBorder />, <CommunityTabBorder />, <MyTabBorder />];
 	const iconsFocused = [<FeedTabFilled />, <AnimalSavingTabFilled />, <CommunityTabFilled />, <MyTabFilled />];
@@ -81,13 +83,24 @@ export default function BottomTab({state, descriptors, navigation}) {
 						});
 					};
 
+					const renderIcons = index => {
+						if(userGlobalObject.userInfo){
+
+							return index==3?<Image style={[{height:54*DP,width:54*DP,borderRadius:27*DP,marginBottom:-10*DP},isFocused?{borderWidth:4*DP,borderColor:APRI10}:{}]} source={{uri:userGlobalObject.userInfo.user_profile_uri}}/> :(isFocused ? iconsFocused[index] : icons[index]);
+						}else{
+							return isFocused ? iconsFocused[index] : icons[index];
+						}
+					}
+
+
 					const renderTab = index => {
 						if (index == 4) {
 							return false;
 						} else {
 							return (
 								<View style={[tab.hitboxLayout, iconlayout[index]]}>
-									{isFocused ? iconsFocused[index] : icons[index]}
+									{/* {isFocused ? iconsFocused[index] : icons[index]} */}
+									{renderIcons(index)}
 									<Text style={[index === 3 ? textStyleEng : textStyle, {color: color, lineHeight: 36 * DP, marginTop: 7 * DP}]}>{label}</Text>
 								</View>
 							);

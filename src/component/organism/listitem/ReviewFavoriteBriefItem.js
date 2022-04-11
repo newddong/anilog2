@@ -31,7 +31,11 @@ const ReviewFavoriteBriefItem = props => {
 		return imageList;
 	};
 
-	console.log('data.community_is_like', data.community_is_like, data.community_title);
+	React.useEffect(() => {
+		setIsLike(data.community_is_like);
+	}, []);
+
+	// console.log('data.community_is_like', data.community_is_like, data.community_title);
 
 	const image = imageList();
 
@@ -40,10 +44,12 @@ const ReviewFavoriteBriefItem = props => {
 	};
 
 	const onPressLike = () => {
+		setIsLike(true);
 		props.onPressLike();
 	};
 
 	const onPressUnlike = () => {
+		setIsLike(false);
 		props.onPressUnlike();
 	};
 
@@ -135,7 +141,7 @@ const ReviewFavoriteBriefItem = props => {
 						<Text style={[txt.roboto26, {color: GRAY10}]}>{getDate()}</Text>
 					</View>
 					<View style={{alignItems: 'flex-end', flexDirection: 'row'}}>
-						{data.community_is_like ? <Like48_Filled onPress={onPressUnlike} /> : <Like48_Border onPress={onPressLike} />}
+						{isLike ? <Like48_Filled onPress={onPressUnlike} /> : <Like48_Border onPress={onPressLike} />}
 						<Text style={[txt.noto26, {color: GRAY10, marginLeft: 12 * DP}]}>{data.community_like_count}</Text>
 					</View>
 				</View>

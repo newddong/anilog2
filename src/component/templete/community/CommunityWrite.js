@@ -82,7 +82,6 @@ export default CommunityWrite = props => {
 
 	React.useEffect(() => {
 		const param = props.route.params;
-		console.log('param');
 		if (param?.data && data.community_address.region.latitude != param?.data.community_address.region.latitude) {
 			//다른 주소 검색 결과값 적용
 			setData(param.data);
@@ -93,6 +92,7 @@ export default CommunityWrite = props => {
 	//내용 입력
 	const onChange = editorData => {
 		console.log('editorData', editorData);
+
 		setData({...data, community_content: editorData});
 		scrollRef.current.scrollTo({y: cursor - 50, duration: 100, animated: true});
 	};
@@ -159,9 +159,13 @@ export default CommunityWrite = props => {
 		result.map((v, i) => {
 			richText.current?.insertHTML('<p><br/></p></div>');
 			richText.current?.insertHTML(
-				`<div  style="padding : 8px 10px 8px 0px; " ><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
+				`<div><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
 				 height="320px;" width="${editorLayout.width};" style="border-radius:15px; margin: 0 auto 4px;    "/></div>`,
 			);
+			// richText.current?.insertHTML(
+			// 	`<div  style="padding : 8px 10px 8px 0px; " ><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
+			// 	 height="320px;" width="${editorLayout.width};" style="border-radius:15px; margin: 0 auto 4px;    "/></div>`,
+			// );
 			// richText.current?.insertHTML('<p><br/></p></div>');
 		});
 
@@ -351,12 +355,12 @@ export default CommunityWrite = props => {
 	const getReviewButtonContainer = () => {
 		return (
 			<>
-				<TouchableOpacity activeOpacity={0.6} onPress={onPressTempSave}>
+				{/* <TouchableOpacity activeOpacity={0.6} onPress={onPressTempSave}>
 					<View style={[style.buttonItem]}>
 						<Save54 />
 						<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>임시저장</Text>
 					</View>
-				</TouchableOpacity>
+				</TouchableOpacity> */}
 				<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
 					<View style={[style.buttonItem]}>
 						<Camera54 />
@@ -388,6 +392,10 @@ export default CommunityWrite = props => {
 				</View>
 			</TouchableOpacity>
 		);
+	};
+
+	const onPaste = paste => {
+		console.log('paste', paste);
 	};
 
 	const moveToLocationPicker = () => {
@@ -423,7 +431,8 @@ export default CommunityWrite = props => {
 						<View style={[style.location]}>
 							<Location54_Filled />
 							<Text style={[txt.noto26b, {color: APRI10, marginLeft: 10 * DP, width: 550 * DP}]}>
-								{data.community_address.road_address.address_name == '도로명 주소가 없는 위치입니다. '
+								{data.community_address.road_address.address_name.includes('도로명 주소가 없는 위치입니다') ||
+								data.community_address.road_address.address_name == ''
 									? data.community_address.normal_address.address_name
 									: data.community_address.road_address.address_name}
 							</Text>
@@ -446,6 +455,7 @@ export default CommunityWrite = props => {
 								}}
 								placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
 								onCursorPosition={onCursorPosition}
+								onPaste={onPaste}
 								// onMessage={handleMessage}
 							/>
 						</ScrollView>
@@ -467,6 +477,7 @@ export default CommunityWrite = props => {
 								}}
 								placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
 								onCursorPosition={onCursorPosition}
+								onPaste={onPaste}
 								// onMessage={handleMessage2}
 							/>
 						</>
@@ -596,8 +607,9 @@ const style = StyleSheet.create({
 		// backgroundColor: 'yellow',
 		paddingVertical: 30 * DP,
 		flexDirection: 'row',
-		alignSelf: 'center',
-		width: 654 * DP,
+		alignSelf: 'flex-end',
+		marginRight: 48 * DP,
+		width: 442 * DP,
 		justifyContent: 'space-between',
 	},
 	buttonContainer_keyboard: {

@@ -153,6 +153,9 @@ export default UserMenu = props => {
 				// Modal.popInfoModal();
 				navigation.push('FavoriteCommunity');
 				break;
+			case PROTECTION_REQUEST: //보호요청(저장)
+				navigation.push('FavoriteProtectRequest');
+				break;
 			case '커뮤니티 ':
 				// Modal.popInfoModal();
 				navigation.push('MyCommunity');

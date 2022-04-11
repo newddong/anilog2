@@ -16,7 +16,7 @@ import {
 	SecureIcon40,
 } from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
-import {DEFAULT_PROFILE, REPLY_MEATBALL_MENU, REPLY_MEATBALL_MENU_MY_REPLY, SETTING_COMMENT, SETTING_OWN_COMMENT} from 'Root/i18n/msg';
+import {DEFAULT_PROFILE, REPLY_MEATBALL_MENU, REPLY_MEATBALL_MENU_MY_REPLY, REPORT_MENU, SETTING_COMMENT, SETTING_OWN_COMMENT} from 'Root/i18n/msg';
 import {GRAY10} from 'Root/config/color';
 import {getChildCommentList} from 'Root/api/commentapi';
 import Modal from 'Component/modal/Modal';
@@ -172,6 +172,18 @@ export default ParentComment = React.memo((props, ref) => {
 							case '공유하기':
 								alert('공유하기!');
 								break;
+							case '신고':
+								Modal.close();
+								setTimeout(() => {
+									Modal.popOneBtnSelectModal(
+										REPORT_MENU,
+										'이 게시물을 신고 하시겠습니까?',
+										selectedItem => {
+											alert(selectedItem);
+										},
+										'신고',
+									);
+								}, 200);
 							case '수정':
 								// alert('수정!');
 								// navigation.navigate('FeedEdit',props.data);

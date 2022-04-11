@@ -1,12 +1,13 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {ActivityIndicator, Linking, LogBox, Platform, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, Image, Linking, LogBox, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {APRI10} from 'Root/config/color';
 import {FavoriteTag46_Filled, FavoriteTag48_Border, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
 import WebView from 'react-native-webview';
 import Loading from 'Root/component/molecules/modal/Loading';
+import {styles} from 'Root/component/atom/image/imageStyle';
 /**
  * 게시글 컨텐츠
  * @param {object} props - Props Object
@@ -47,6 +48,34 @@ const ArticleContent = props => {
 			default:
 				break;
 		}
+	};
+
+	const onPressImage = uri => {
+		Modal.popPhotoListViewModal([uri]);
+	};
+
+	const getContents = () => {
+		let contents = data.contents;
+		console.log('contents', contents);
+		return contents.map((v, i) => {
+			if (v && v.image == null) {
+				const r1 = v.replace(/&nbsp;/g, '');
+				const r2 = r1.replace(/<br>/g, '');
+				return (
+					<Text key={i} style={[txt.noto28]}>
+						{r2}
+					</Text>
+				);
+			} else if (v == undefined) {
+				return <></>;
+			} else {
+				return (
+					<TouchableOpacity key={i} activeOpacity={0.8} onPress={() => onPressImage(v.image)}>
+						<Image style={[styles.img_square_round_654, {marginVertical: 10 * DP}]} source={{uri: v.image}} resizeMode={'stretch'} />
+					</TouchableOpacity>
+				);
+			}
+		});
 	};
 
 	const onWebViewMessage = async event => {
@@ -93,7 +122,9 @@ const ArticleContent = props => {
 			<View style={[style.profile]}>
 				<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} time_expression={'full'} />
 			</View>
-			<View style={[{width: 700 * DP, marginTop: 20 * DP, opacity: height >= 99 * DP ? 1 : 1}]}>
+			<View style={{width: 654 * DP, marginTop: 20 * DP}}>{getContents()}</View>
+
+			{/* <View style={[{width: 700 * DP, marginTop: 20 * DP, opacity: height >= 99 * DP ? 1 : 1}]}>
 				{Platform.OS == 'ios' ? (
 					<WebView
 						originWhitelist={['*']}
@@ -137,7 +168,7 @@ const ArticleContent = props => {
 						}}
 					/>
 				)}
-			</View>
+			</View> */}
 		</View>
 	);
 };

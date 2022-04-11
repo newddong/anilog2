@@ -6,12 +6,11 @@ import {login_style, temp_style, selectstat_view_style} from 'Templete/style_tem
 import Modal from 'Component/modal/Modal';
 import {txt} from 'Root/config/textstyle';
 import {GRAY10} from 'Root/config/color';
-import {getCommunityList} from 'Root/api/community';
 import ReviewFavoriteBriefList from 'Root/component/organism/list/ReviewFavoriteBriefList';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {likeEtc} from 'Root/api/likeetc';
 import community_obj from 'Root/config/community_obj';
-import {getFavoriteEtcListByUserId} from 'Root/api/favoriteect';
+import {favoriteEtc, getFavoriteEtcListByUserId} from 'Root/api/favoriteect';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 //즐겨찾기한 피드목록을 조회
@@ -22,7 +21,11 @@ export default FavoriteReview = ({route}) => {
 	const [selectCNT, setSelectCNT] = React.useState(0);
 
 	React.useEffect(() => {
-		fetchData();
+		const unsubscribe = navigation.addListener('focus', () => {
+			fetchData();
+		});
+		// fetchData();
+		return unsubscribe;
 	}, []);
 
 	const fetchData = () => {
@@ -47,6 +50,7 @@ export default FavoriteReview = ({route}) => {
 
 	//Check Box On
 	const checkSelectMode = state => {
+		console.log('state', state);
 		setSelectMode(state);
 		//전체 선택을 처음 누를 경우 무조건 체크 박스가 모두 선택되도록 하기 위해 setSelectCNT값을 0으로 초기화.
 		setSelectCNT(0);
@@ -76,8 +80,9 @@ export default FavoriteReview = ({route}) => {
 			console.log('삭제시작');
 			const doDelete = () => {
 				let copy = [...data];
-				copy = copy.filter(element => element.checkBoxState != true); //CheckBoxState가 true인 경우엔 걸러진다
+				copy = copy.filter(element => element.checkBoxState == true); //CheckBoxState가 true인 경우엔 걸러진다
 				console.log('copy length', copy.length);
+				doDeleteFavorite(copy);
 				setData(copy);
 				Modal.close();
 			};
@@ -85,6 +90,26 @@ export default FavoriteReview = ({route}) => {
 			// Modal.popTwoBtn(deleteMsg(), '취소', '해제', () => Modal.close(), doDelete);
 			Modal.popOneBtn('선택한 목록을 삭제하시겠습니까?', '해제', doDelete);
 		}
+	};
+
+	const doDeleteFavorite = list => {
+		list.map((v, i) => {
+			console.log('v.id', v._id, v.community_title);
+			favoriteEtc(
+				{
+					collectionName: 'communityobjects',
+					post_object_id: v._id,
+					is_favorite: false,
+				},
+				result => {
+					console.log('result/ onPressLike / ReviewMain : ', result.msg.targetPost);
+					cancelSelectMode(false);
+					checkSelectMode(false);
+					fetchData();
+				},
+				err => console.log('err / onPressLike / ReviewMain : ', err),
+			);
+		});
 	};
 
 	// 선택하기 => 전체 선택 클릭
@@ -97,15 +122,23 @@ export default FavoriteReview = ({route}) => {
 				copy[i].checkBoxState = true;
 			});
 		} else {
-			// alert('선택이 있다');
+			console.log('선택이 있다');
 			const filtered = data.filter(e => e.checkBoxState == true);
 			const len = data.length;
-			const ratio = filtered / len;
-			console.log('filtered', filtered);
+			const ratio = filtered.length / len;
+			// console.log('filtered', filtered);
 			console.log('len', data.length);
 			console.log('ratio', ratio);
+			if (ratio < 0.5) {
+				copy.map((v, i) => {
+					copy[i].checkBoxState = true;
+				});
+			} else {
+				copy.map((v, i) => {
+					copy[i].checkBoxState = false;
+				});
+			}
 		}
-
 		setData(copy);
 	};
 
@@ -146,10 +179,12 @@ export default FavoriteReview = ({route}) => {
 		);
 	};
 
-	// console.log('i', i);
-	const onCheckBox = i => {
+	//즐겨찾기 선택모드에서 체크박스 클릭
+	const onPressCheck = (i, bool) => {
+		console.log('i', i, bool);
 		let copy = [...data];
-		copy[i].checkBoxState = !copy[i].checkBoxState;
+		copy[i].checkBoxState = bool;
+		setData(copy);
 	};
 
 	if (data == 'false') {
@@ -163,6 +198,7 @@ export default FavoriteReview = ({route}) => {
 					<View style={[temp_style.selectstat_view]}>
 						<View style={[temp_style.selectstat, selectstat_view_style.selectstat]}>
 							<SelectStat
+								selectMode={selectMode}
 								onSelectMode={checkSelectMode}
 								onCancelSelectMode={cancelSelectMode}
 								onSelectAllClick={selectAll}
@@ -182,7 +218,7 @@ export default FavoriteReview = ({route}) => {
 							onPressReview={onPressReview}
 							onPressLike={i => onPressLike(i, true)}
 							onPressUnlike={i => onPressLike(i, false)}
-							onCheckBox={onCheckBox}
+							onPressCheck={onPressCheck}
 						/>
 					)}
 				</View>

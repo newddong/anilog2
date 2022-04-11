@@ -19,6 +19,7 @@ import ReviewStackNavigation from './review_tab/ReviewStackNavigation';
 import {getFocusedRouteNameFromRoute, useNavigation} from '@react-navigation/core';
 import CommunityEdit from 'Root/component/templete/community/CommunityEdit';
 import ChangeUserProfileImage from 'Root/component/templete/user/ChangeUserProfileImage';
+import FeedList from 'Root/component/templete/feed/FeedList';
 
 const CommunityMainStackNavi = createStackNavigator();
 
@@ -122,6 +123,22 @@ export default CommunityMainStack = props => {
 				options={({route}) => ({
 					header: props => <SimpleHeader {...props} />,
 					title: '프로필 수정',
+				})}
+			/>
+			<CommunityMainStackNavi.Screen
+				name={'UserFeedList'}
+				component={FeedList}
+				options={({route}) => ({
+					header: props => <SimpleHeader {...props} />,
+					title: '프로필',
+				})}
+			/>
+			<CommunityMainStackNavi.Screen
+				name={'UserTagFeedList'}
+				component={FeedList}
+				options={({route}) => ({
+					header: props => <SimpleHeader {...props} />,
+					title: '프로필',
 				})}
 			/>
 		</CommunityMainStackNavi.Navigator>

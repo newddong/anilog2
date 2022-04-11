@@ -12,6 +12,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeEtc} from 'Root/api/likeetc';
 import {favoriteEtc} from 'Root/api/favoriteect';
 import community_obj from 'Root/config/community_obj';
+import {REPORT_MENU} from 'Root/i18n/msg';
 
 export default ReviewMain = ({route, navigation}) => {
 	const [data, setData] = React.useState('false');
@@ -99,6 +100,7 @@ export default ReviewMain = ({route, navigation}) => {
 		Modal.popSelectBoxModal(
 			isMyArticle ? ['수정', '삭제'] : ['신고'],
 			select => {
+				console.log('select', select);
 				switch (select) {
 					case '수정':
 						navigation.push('CommunityEdit', {previous: data[index], isReview: true});
@@ -138,6 +140,18 @@ export default ReviewMain = ({route, navigation}) => {
 						}, 200);
 						break;
 					case '신고':
+						Modal.close();
+						setTimeout(() => {
+							Modal.popOneBtnSelectModal(
+								REPORT_MENU,
+								'이 게시물을 신고 하시겠습니까?',
+								selectedItem => {
+									alert(selectedItem);
+								},
+								'신고',
+							);
+						}, 200);
+
 						break;
 					default:
 						break;

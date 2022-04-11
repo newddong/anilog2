@@ -15,6 +15,8 @@ import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTi
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {useNavigation} from '@react-navigation/core';
 import WebView from 'react-native-webview';
+import {styles} from 'Root/component/atom/image/imageStyle';
+import Modal from 'Root/component/modal/Modal';
 /**
  * 후기 세부 페이지
  * @param {object} props - Props Object
@@ -97,6 +99,34 @@ const ReviewContent = props => {
 	const x = 126.937125; //초기값 더미
 	const y = 37.548721; //초기값 더미
 
+	const onPressImage = uri => {
+		Modal.popPhotoListViewModal([uri]);
+	};
+
+	const getContents = () => {
+		let contents = data.contents;
+		// console.log('contents', contents);
+		return contents.map((v, i) => {
+			if (v && v.image == null) {
+				const r1 = v.replace(/&nbsp;/g, '');
+				const r2 = r1.replace(/<br>/g, '');
+				return (
+					<Text key={i} style={[txt.noto28]}>
+						{r2}
+					</Text>
+				);
+			} else if (v == undefined) {
+				return <></>;
+			} else {
+				return (
+					<TouchableOpacity key={i} activeOpacity={0.8} onPress={() => onPressImage(v.image)}>
+						<Image style={[styles.img_square_round_654, {marginVertical: 10 * DP}]} source={{uri: v.image}} resizeMode={'stretch'} />
+					</TouchableOpacity>
+				);
+			}
+		});
+	};
+
 	return (
 		<View style={[style.container]}>
 			{/* 리뷰 헤더  */}
@@ -116,7 +146,8 @@ const ReviewContent = props => {
 			<View style={[style.profile]}>
 				<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} />
 			</View>
-			<View>
+			<View style={{width: 654 * DP, marginTop: 20 * DP}}>{getContents()}</View>
+			{/* <View>
 				<View style={[{width: 700 * DP, marginTop: 20 * DP}]}>
 					{Platform.OS == 'ios' ? (
 						<WebView
@@ -160,7 +191,7 @@ const ReviewContent = props => {
 						</ScrollView>
 					)}
 				</View>
-			</View>
+			</View> */}
 			<View style={[style.footer]}>
 				{data.community_address.region.latitude == '' ? (
 					<></>

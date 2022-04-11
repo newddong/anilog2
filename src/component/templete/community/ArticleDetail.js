@@ -17,6 +17,7 @@ import community_obj from 'Root/config/community_obj';
 import {favoriteEtc} from 'Root/api/favoriteect';
 import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
+import {REPORT_MENU} from 'Root/i18n/msg';
 
 /**
  * 자유게시글 상세 내용
@@ -48,6 +49,47 @@ export default ArticleDetail = props => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			//다른 탭(ex - My 탭의 즐겨찾기한 커뮤니티 목록에서 들어온 경우)에서의 호출
+			let lines = [];
+			if (data.community_content.includes('<span')) {
+				const parsingSpan = data.community_content.replaceAll('<span', '<div');
+				const parsingSpan2 = parsingSpan.replaceAll('</span>', '</div>');
+				let matches = parsingSpan2.match(/<div\b(?:(R)|(?:(?!<\/?div).))*<\/div>/gm);
+				// console.log('matched', matches);
+				matches.map((v, i) => {
+					// let remove = v.match(/<div\b(?:(R)|(?:(?!<\/?div).))*<\/div>/gm);
+					let getImgTag = v.match(/<img[\w\W]+?\/?>/g); //img 태그 추출
+					console.log('v', i, v);
+					const remove = v.match(/<div[^>]+>([^<]+?)<\/div>/);
+					console.log('remove', remove, i);
+					if (getImgTag) {
+						let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i); //img 태그가 있는 경우 src 추출
+						lines.push({image: src[1]});
+					} else {
+						if (remove != undefined) {
+							lines.push(remove[1]);
+						}
+					}
+				});
+				data.contents = lines;
+			} else {
+				let matches = data.community_content.match(/<div\b(?:(R)|(?:(?!<\/?div).))*<\/div>/gm);
+				matches.map((v, i) => {
+					let remove = v.match(/\<div\>(.+)\<\/div\>/);
+					let getImgTag = v.match(/<img[\w\W]+?\/?>/g);
+					// console.log('remove', i, remove, 'v', v);
+					if (getImgTag) {
+						let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i); //img 태그가 있는 경우 src 추출
+						console.log('src', src);
+						lines.push({image: src[1]});
+					} else {
+						if (remove != undefined) {
+							lines.push(remove[1]);
+						}
+					}
+				});
+				data.contents = lines;
+			}
+
 			if (community_obj.object.hasOwnProperty('_id')) {
 				if (community_obj.object._id != data._id) {
 					//현재 보고 있는 페이지와 다른 게시글이 호출된 경우
@@ -297,6 +339,17 @@ export default ArticleDetail = props => {
 						}, 200);
 						break;
 					case '신고':
+						Modal.close();
+						setTimeout(() => {
+							Modal.popOneBtnSelectModal(
+								REPORT_MENU,
+								'이 게시물을 신고 하시겠습니까?',
+								selectedItem => {
+									alert(selectedItem);
+								},
+								'신고',
+							);
+						}, 200);
 						break;
 					default:
 						break;

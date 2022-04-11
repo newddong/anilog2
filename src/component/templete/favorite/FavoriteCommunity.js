@@ -17,46 +17,49 @@ export default FavoriteCommunity = ({route}) => {
 	const [article, setArticle] = React.useState('false');
 
 	React.useEffect(() => {
-		!isFavorite
-			? getCommunityListByUserId(
-					{
-						userobject_id: userGlobalObject.userInfo._id,
-						community_type: 'all',
-					},
-					result => {
-						console.log('result / getCommunityListByUserId / FavoriteCommunity', result.msg.free.length);
-						console.log('result / getCommunityListByUserId / FavoriteCommunity', result.msg.review.length);
-						setReview(result.msg.review);
-						setArticle(result.msg.free);
-					},
-					err => {
-						console.log('err / getCommunityListByUserId / FavoriteCommunity : ', err);
-						setReview([]);
-						setArticle([]);
-					},
-			  )
-			: getFavoriteEtcListByUserId(
-					{
-						userobject_id: userGlobalObject.userInfo._id,
-						collectionName: 'communityobjects',
-					},
-					result => {
-						// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg);
-						let reviewCont = [];
-						let articleCont = [];
-						result.msg.map((v, i) => {
-							v.favorite_etc_post_id.community_is_favorite = true;
-							if (v.favorite_etc_post_id.community_type == 'review') {
-								reviewCont.push(v.favorite_etc_post_id);
-							} else articleCont.push(v.favorite_etc_post_id);
-						});
-						setReview(reviewCont);
-						setArticle(articleCont);
-					},
-					err => {
-						console.log('err / getFavoriteEtcListByUserId / FavoriteCommunity : ', err);
-					},
-			  );
+		const unsubscribe = navigation.addListener('focus', () => {
+			!isFavorite
+				? getCommunityListByUserId(
+						{
+							userobject_id: userGlobalObject.userInfo._id,
+							community_type: 'all',
+						},
+						result => {
+							console.log('result / getCommunityListByUserId / FavoriteCommunity', result.msg.free.length);
+							console.log('result / getCommunityListByUserId / FavoriteCommunity', result.msg.review.length);
+							setReview(result.msg.review);
+							setArticle(result.msg.free);
+						},
+						err => {
+							console.log('err / getCommunityListByUserId / FavoriteCommunity : ', err);
+							setReview([]);
+							setArticle([]);
+						},
+				  )
+				: getFavoriteEtcListByUserId(
+						{
+							userobject_id: userGlobalObject.userInfo._id,
+							collectionName: 'communityobjects',
+						},
+						result => {
+							// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg);
+							let reviewCont = [];
+							let articleCont = [];
+							result.msg.map((v, i) => {
+								v.favorite_etc_post_id.community_is_favorite = true;
+								if (v.favorite_etc_post_id.community_type == 'review') {
+									reviewCont.push(v.favorite_etc_post_id);
+								} else articleCont.push(v.favorite_etc_post_id);
+							});
+							setReview(reviewCont);
+							setArticle(articleCont);
+						},
+						err => {
+							console.log('err / getFavoriteEtcListByUserId / FavoriteCommunity : ', err);
+						},
+				  );
+		});
+		return unsubscribe;
 	}, []);
 
 	const onPressArticle = () => {

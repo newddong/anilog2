@@ -22,6 +22,7 @@ import {txt} from 'Root/config/textstyle';
  * isProtectRequest : 'boolean / 보호요청 게시글에서의 호출',
  * photo : 'Array / 사진 목록',
  * isMessage : 'boolean' /쪽지함에서의 호출,
+ * shadow : 'boolean' / 그림자 효과 on off,
  * }} props
  */
 
@@ -99,7 +100,7 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 		);
 	} else {
 		return (
-			<View style={[photo && photo.length > 0 ? feedCommentList.editComment : feedCommentList.editComment_photoAdded]}>
+			<View style={[feedCommentList.editComment, props.shadow ? feedCommentList.shadow : feedCommentList.shadow_off]}>
 				{/* 사진 추가를 통해서 받아온 사진이 한 개 이상인 경우 */}
 				{photo && photo.length > 0 ? (
 					<View style={[feedCommentList.commentBox_photo]}>
@@ -165,5 +166,6 @@ ReplyWriteBox.defaultProps = {
 	onPressReply: e => console.log(e), // 댓글입력(보호요청게시글일 경우) 클릭
 	privateComment: false, // 비밀 댓글 상태 여부
 	isMessage: false,
+	shadow: true,
 	photo: [],
 };

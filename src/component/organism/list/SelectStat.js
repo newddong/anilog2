@@ -11,11 +11,16 @@ import {selectStat} from 'Organism/style_organism copy';
  *  onCancelSelectMode: void,
  *  onSelectAllClick: void,
  *	onDeleteSelectedItem: void,
+ *	selectMode: boolean,
  * }} props
  */
 export default SelectStat = props => {
-	const [selectMode, setSelectMode] = React.useState(false);
+	const [selectMode, setSelectMode] = React.useState(props.selectMode || false);
 	let selectCNT = React.useRef(0);
+
+	React.useEffect(() => {
+		setSelectMode(props.selectMode);
+	}, [props.selectMode]);
 
 	//선택하기 버튼 클릭
 	const select = () => {
@@ -84,5 +89,6 @@ SelectStat.defaultProps = {
 	onCancelSelectMode: e => console.log(e), // 취소버튼 클릭
 	onSelectAllClick: e => console.log(e), // 전체 선택 클릭
 	onDeleteSelectedItem: e => console.log(e), // 선택 삭제 클릭
+	selectMode: false,
 };
 // media_uri: 'https://consecutionjiujitsu.com/wp-content/uploads/2017/04/default-image.jpg',

@@ -9,6 +9,7 @@ import {styles} from 'Atom/image/imageStyle';
 import {useNavigation} from '@react-navigation/native';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, ProfileDefaultImg} from 'Atom/icon';
+import moment from 'moment';
 
 /**
  * 유저의 프로필 사진, 닉네임, 댓글 작성 날짜 출력하는 라벨
@@ -16,6 +17,7 @@ import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, ProfileDefaultImg} from 'Atom/i
  * @param {object} props.data - UserObejct
  * @param {date} props.time - Date 타입 정보
  * @param {(data:object)=>void} props.onClickLabel - 버튼을 눌렸을때 동작하는 콜백, 제목 반환환
+ * @param {string} props.time_expression - 시간 표현 방식 ('date')
  */
 const UserLocationTimeLabel = props => {
 	const navigation = useNavigation();
@@ -40,7 +42,22 @@ const UserLocationTimeLabel = props => {
 		navigation.push('UserProfile', {userobject: props.data});
 	};
 
-	// const address = Object.assign({}, props.data.user_address);
+	const getTime = () => {
+		const dbDate = new Date(props.time);
+		if (props.time_expression == '') {
+			return props.time && getTimeLapsed(props.time);
+		} else if (props.time_expression == 'full') {
+			const year = dbDate.getFullYear();
+			if (year == new Date().getFullYear()) {
+				return moment(dbDate).format('MM.DD HH:mm');
+			} else {
+				return moment(dbDate).format('YY.MM.DD HH:mm');
+			}
+		} else if (props.time_expression == 'date') {
+			return moment(dbDate).format('YYYY.MM.DD ');
+		}
+	};
+
 	return (
 		<TouchableOpacity onPress={onClickLabel} style={{paddingBottom: 8 * DP}}>
 			<View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -86,7 +103,7 @@ const UserLocationTimeLabel = props => {
 					</View>
 					<Text style={[props.isLarge ? txt.noto26 : txt.noto24, {lineHeight: 36 * DP, color: GRAY20}]} numberOfLines={1}>
 						{/* {address?.city} {address?.district} · {props.data.feed_type == undefined ? getCommentedTime() : props.data.comment_date} */}
-						{props.time && getTimeLapsed(props.time)}
+						{getTime()}
 					</Text>
 				</View>
 			</View>
@@ -103,5 +120,6 @@ UserLocationTimeLabel.defaultProps = {
 		},
 	},
 	isLarge: false,
+	time_expression: '',
 };
 export default UserLocationTimeLabel;

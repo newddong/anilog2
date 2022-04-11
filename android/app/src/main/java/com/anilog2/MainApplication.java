@@ -2,6 +2,9 @@ package com.anilog;
 
 import android.app.Application;
 import android.content.Context;
+
+import com.anilog2.MyAppPackage;
+import com.anilog2.PhotoListPackage;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import fr.greweb.reactnativeviewshot.RNViewShotPackage;
@@ -27,6 +30,8 @@ public class MainApplication extends Application implements ReactApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
+            packages.add(new MyAppPackage());
+            packages.add(new PhotoListPackage());
           return packages;
         }
 

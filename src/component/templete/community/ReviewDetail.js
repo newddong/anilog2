@@ -13,7 +13,9 @@ import {createComment, getCommentListByCommunityId, getCommentListByFeedId, getC
 import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
+import {favoriteEtc} from 'Root/api/favoriteect';
+import community_obj from 'Root/config/community_obj';
+import {REPORT_MENU} from 'Root/i18n/msg';
 
 /**
  * 후기 상세 내용
@@ -37,13 +39,12 @@ export default ReviewDetail = props => {
 		comment_contents: '',
 		comment_photo_uri: '',
 	});
-	// console.log('data', data);
 
 	React.useEffect(() => {
 		if (data.community_address.normal_address.address_name != '') {
 			navigation.setOptions({title: `${data.community_address.normal_address.city} / ${data.community_address.normal_address.district}`});
 		} else {
-			navigation.setOptions({title: '후기 게시글'});
+			navigation.setOptions({title: '리뷰'});
 		}
 		getComment();
 		getCommunityList(
@@ -60,6 +61,62 @@ export default ReviewDetail = props => {
 				console.log('err / getCommunityList / ReviewDEtail : ', err);
 			},
 		);
+		const unsubscribe = navigation.addListener('focus', () => {
+			let lines = [];
+			if (data.community_content.includes('<span')) {
+				const parsingSpan = data.community_content.replaceAll('<span', '<div');
+				const parsingSpan2 = parsingSpan.replaceAll('</span>', '</div>');
+				let matches = parsingSpan2.match(/<div\b(?:(R)|(?:(?!<\/?div).))*<\/div>/gm);
+				// console.log('matched', matches);
+				matches.map((v, i) => {
+					// let remove = v.match(/<div\b(?:(R)|(?:(?!<\/?div).))*<\/div>/gm);
+					let getImgTag = v.match(/<img[\w\W]+?\/?>/g); //img 태그 추출
+					console.log('v', i, v);
+					const remove = v.match(/<div[^>]+>([^<]+?)<\/div>/);
+					console.log('remove', remove, i);
+					if (getImgTag) {
+						let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i); //img 태그가 있는 경우 src 추출
+						lines.push({image: src[1]});
+					} else {
+						if (remove != undefined) {
+							lines.push(remove[1]);
+						}
+					}
+				});
+				data.contents = lines;
+			} else {
+				let matches = data.community_content.match(/<div\b(?:(R)|(?:(?!<\/?div).))*<\/div>/gm);
+				matches.map((v, i) => {
+					let remove = v.match(/\<div\>(.+)\<\/div\>/);
+					let getImgTag = v.match(/<img[\w\W]+?\/?>/g);
+					// console.log('remove', i, remove, 'v', v);
+					if (getImgTag) {
+						let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i); //img 태그가 있는 경우 src 추출
+						console.log('src', src);
+						lines.push({image: src[1]});
+					} else {
+						if (remove != undefined) {
+							lines.push(remove[1]);
+						}
+					}
+				});
+				data.contents = lines;
+			}
+
+			//다른 탭(ex - My 탭의 즐겨찾기한 커뮤니티 목록에서 들어온 경우)에서의 호출
+			if (community_obj.object.hasOwnProperty('_id')) {
+				if (community_obj.object._id != data._id) {
+					//현재 보고 있는 페이지와 다른 게시글이 호출된 경우
+					navigation.push('ReviewDetail', {community_object: community_obj.object}); //해당 게시글 상세로 이동
+				}
+			}
+		});
+		navigation.addListener('blur', () => {
+			community_obj.object = {};
+			community_obj.pageToMove = '';
+			community_obj.object.initial = true;
+		});
+		return unsubscribe;
 	}, []);
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
@@ -69,6 +126,7 @@ export default ReviewDetail = props => {
 		let param = {
 			comment_contents: editData.comment_contents, //내용
 			comment_is_secure: privateComment, //공개여부 테스트때 반영
+			community_object_id: data._id,
 		};
 
 		if (editData.comment_photo_uri && editData.comment_photo_uri.length > 0) {
@@ -132,6 +190,8 @@ export default ReviewDetail = props => {
 						},
 						comments => {
 							!parentComment && setComments([]); //댓글목록 초기화
+							// if (props.parentComment.hasOwnProperty('comment_parent_writer_id')) {
+							// 	console.log('title', props.parentComment.comment_contents);
 							setComments(comments.msg);
 							parentComment && addChildCommentFn.current();
 							console.log('comments', comments);
@@ -213,12 +273,84 @@ export default ReviewDetail = props => {
 
 	//미트볼 클릭
 	const onPressMeatball = () => {
-		alert('onPressMeatball');
+		const isMyArticle = userGlobalObject.userInfo._id == data.community_writer_id._id;
+		Modal.popSelectBoxModal(
+			isMyArticle ? ['수정', '삭제'] : ['신고'],
+			select => {
+				switch (select) {
+					case '수정':
+						navigation.push('CommunityEdit', {previous: data, isReview: true});
+						break;
+					case '삭제':
+						Modal.close();
+						setTimeout(() => {
+							Modal.popTwoBtn(
+								'정말로 이 게시글을 \n 삭제하시겠습니까?',
+								'아니오',
+								'네',
+								() => Modal.close(),
+								() => {
+									updateAndDeleteCommunity(
+										{
+											community_object_id: data._id,
+											community_is_delete: true,
+										},
+										result => {
+											// console.log('result / updateAndDeleteCommunity / ArticleDetail : ', result.msg);
+											Modal.close();
+											setTimeout(() => {
+												Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
+												setTimeout(() => {
+													Modal.close();
+													navigation.goBack();
+												}, 600);
+											}, 200);
+										},
+										err => {
+											console.log('err / updateAndDeleteCommunity / ArticleDetail : ', err);
+											Modal.alert(err);
+										},
+									);
+								},
+							);
+						}, 200);
+						break;
+					case '신고':
+						Modal.close();
+						setTimeout(() => {
+							Modal.popOneBtnSelectModal(
+								REPORT_MENU,
+								'이 게시물을 신고 하시겠습니까?',
+								selectedItem => {
+									alert(selectedItem);
+								},
+								'신고',
+							);
+						}, 200);
+						break;
+					default:
+						break;
+				}
+			},
+			() => Modal.close(),
+			false,
+			false,
+		);
 	};
 
 	//즐겨찾기 클릭
-	const onPressFavorite = () => {
-		alert('onPressFavorite');
+	const onPressFavorite = bool => {
+		favoriteEtc(
+			{
+				collectionName: 'communityobjects',
+				post_object_id: data._id,
+				is_favorite: bool,
+			},
+			result => {
+				// console.log('result / favoriteEtc / ArticleDetail : ', result.msg);
+			},
+			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
+		);
 	};
 
 	//댓글 클릭
@@ -251,7 +383,7 @@ export default ReviewDetail = props => {
 					showsVerticalScrollIndicator={false}
 					onContentSizeChange={(width, height) => {
 						if (showMore) {
-							// scrollRef.current.scrollToEnd();
+							scrollRef.current.scrollToEnd();
 						}
 					}}
 					renderItem={({item, index}) => {
@@ -283,12 +415,13 @@ export default ReviewDetail = props => {
 											privateComment={privateComment}
 											ref={input}
 											editData={editData}
+											shadow={false}
 										/>
 									</View>
 								</View>
 
 								<View style={[style.reviewList]}>
-									<Text style={[txt.noto24, {}]}>관련후기 게시글</Text>
+									<Text style={[txt.noto24, {}]}>관련 리뷰</Text>
 									<ReviewBriefList
 										items={reviewList}
 										showMore={() => setShowMore(true)}

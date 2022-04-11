@@ -26,6 +26,9 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
+		<!-- 추가 22.04.11 권상우 / ios환경에서 특정 도메인 접근가능  -->
+	 	<key>NSAllowsArbitraryLoads</key><true/>
+		 <!-- 추가 종료 -->
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>localhost</key>

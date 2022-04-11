@@ -49,7 +49,7 @@ export default SearchCommunityTabNavigation = props => {
 			<SearchCommunityTabNav.Screen
 				name="SearchReview"
 				options={{
-					title: '후기',
+					title: '리뷰',
 					tabBarLabelStyle: [tabbarLabel('SearchReview')],
 				}}>
 				{props => <SearchReview {...props} />}

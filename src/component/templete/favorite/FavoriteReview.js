@@ -10,7 +10,7 @@ import ReviewFavoriteBriefList from 'Root/component/organism/list/ReviewFavorite
 import Loading from 'Root/component/molecules/modal/Loading';
 import {likeEtc} from 'Root/api/likeetc';
 import community_obj from 'Root/config/community_obj';
-import {favoriteEtc, getFavoriteEtcListByUserId} from 'Root/api/favoriteect';
+import {favoriteEtc, getFavoriteEtcListByUserId} from 'Root/api/favoriteetc';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 //즐겨찾기한 피드목록을 조회
@@ -209,18 +209,14 @@ export default FavoriteReview = ({route}) => {
 				)}
 
 				<View style={[temp_style.FeedThumbnailList, {flex: 1}]}>
-					{data.length == 0 ? (
-						<Text style={[txt.noto30, {alignSelf: 'center', marginTop: 130, color: GRAY10}]}>목록이 없네요.</Text>
-					) : (
-						<ReviewFavoriteBriefList
-							items={data}
-							selectMode={selectMode}
-							onPressReview={onPressReview}
-							onPressLike={i => onPressLike(i, true)}
-							onPressUnlike={i => onPressLike(i, false)}
-							onPressCheck={onPressCheck}
-						/>
-					)}
+					<ReviewFavoriteBriefList
+						items={data}
+						selectMode={selectMode}
+						onPressReview={onPressReview}
+						onPressLike={i => onPressLike(i, true)}
+						onPressUnlike={i => onPressLike(i, false)}
+						onPressCheck={onPressCheck}
+					/>
 				</View>
 			</View>
 		);

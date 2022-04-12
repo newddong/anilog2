@@ -1,10 +1,10 @@
 import React from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {searchHashTag, temp_style} from 'Templete/style_templete';
-import Modal from 'Root/component/modal/Modal';
+import {temp_style} from 'Templete/style_templete';
 import Loading from 'Root/component/molecules/modal/Loading';
+import {EmptyIcon} from 'Root/component/atom/icon';
 
 export default SearchHashTag = React.memo((props, ref) => {
 	// console.log('searchInput / SearchHashTag : ', props.search.searchInput);
@@ -30,36 +30,82 @@ export default SearchHashTag = React.memo((props, ref) => {
 			type: 'HashTagObject',
 		},
 	];
+
+	const whenEmpty = () => {
+		return (
+			<View style={{paddingVertical: 150 * DP, alignItems: 'center'}}>
+				<EmptyIcon />
+				<Text style={[txt.noto28, {marginTop: 10 * DP}]}>검색 결과가 없습니다..</Text>
+			</View>
+		);
+	};
+
 	if (props.loading) {
 		return <Loading isModal={false} />;
 	} else
 		return (
-			<View style={[searchHashTag.container, {backgroundColor: 'white'}]}>
-				{/* // 검색 내역이 존재할 경우 API를 통해 받아온 내역 출력 */}
-
-				{props.data.length != 0 ? (
-					<ScrollView horizontal={false} contentContainerStyle={{flex: 1}} showsVerticalScrollIndicator={false}>
-						<ScrollView horizontal={true} scrollEnabled={false}>
-							<View style={[temp_style.hashTagList]}>
-								<AccountHashList data={props.data} showFollowBtn={false} onClickLabel={onClickHashTag} onClickHash={hashSelect} />
+			<View style={[style.container]}>
+				<FlatList
+					data={[{}]}
+					renderItem={({item, index}) => {
+						return (
+							<View style={[style.listContainer]}>
+								{/* // 검색 내역이 존재할 경우 API를 통해 받아온 내역 출력 */}
+								{props.data.length != 0 ? (
+									<View style={[temp_style.hashTagList]}>
+										<AccountHashList data={props.data} showFollowBtn={false} onClickLabel={onClickHashTag} onClickHash={hashSelect} />
+									</View>
+								) : (
+									<>
+										{/* <View style={[temp_style.controllableHashTagList]}>
+											<Text style={[txt.noto24, {color: GRAY20}]}>최근 검색한 태그</Text>
+										</View>
+										<View style={[temp_style.hashTagList]}>
+											<AccountHashList data={dummy} showFollowBtn={false} onClickLabel={onClickHashTag} onClickHash={hashSelect} />
+										</View> */}
+										{whenEmpty()}
+									</>
+								)}
 							</View>
-						</ScrollView>
-					</ScrollView>
-				) : (
-					// {/* 검색내역이 없을 경우 최근 검색한 태그를 출력 */}
-					<ScrollView contentContainerStyle={{}}>
-						<View style={[temp_style.controllableHashTagList]}>
-							<Text style={[txt.noto24, {color: GRAY20}]}>최근 검색한 태그</Text>
-						</View>
-						<ScrollView horizontal={false} contentContainerStyle={{flex: 1}} showsVerticalScrollIndicator={false}>
-							<ScrollView horizontal={true} scrollEnabled={false}>
-								<View style={[temp_style.hashTagList]}>
-									<AccountHashList data={dummy} showFollowBtn={false} onClickLabel={onClickHashTag} onClickHash={hashSelect} />
-								</View>
-							</ScrollView>
-						</ScrollView>
-					</ScrollView>
-				)}
+						);
+					}}
+					showsVerticalScrollIndicator={false}
+					listKey={({item, index}) => index}
+				/>
 			</View>
 		);
+});
+
+const style = StyleSheet.create({
+	container: {
+		flex: 1,
+		alignItems: 'center',
+		backgroundColor: '#fff',
+	},
+	filter: {
+		width: 676 * DP,
+		paddingTop: 15 * DP,
+		paddingBottom: 10 * DP,
+		alignSelf: 'center',
+		alignItems: 'center',
+		backgroundColor: '#fff',
+		justifyContent: 'space-between',
+		flexDirection: 'row',
+	},
+	filter_community_type: {
+		flexDirection: 'row',
+	},
+	shadow_filter: {
+		// width: 140 * DP,
+		height: 60 * DP,
+		justifyContent: 'space-between',
+		flexDirection: 'row',
+		shadowOpacity: 0.5,
+		elevation: 2,
+		shadowOffset: {
+			height: 4 * DP,
+		},
+		borderRadius: 20 * DP,
+	},
+	listContainer: {},
 });

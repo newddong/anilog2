@@ -13,6 +13,7 @@ import {accountHashList} from 'Organism/style_organism copy';
  * @param {void} props.onCheckBox - 선택 체크박스 클릭
  * @param {boolean} props.checkBoxMode - 선택 삭제 모드 여부 (default= false)
  * @param {boolean} props.showFollowBtn - 선택 삭제 모드 여부 (default= false)
+ * @param {(component)=> void} props.whenEmpty - 빈 값 발생 시 출력 컴포넌트
  */
 export default AccountHashList = props => {
 	// console.log('props', props.data);
@@ -33,8 +34,14 @@ export default AccountHashList = props => {
 	};
 
 	return (
-		<View style={[accountHashList.container, {height: props.routeName && props.routeName != 'SaveFavorite' ? 300 * DP : null}]}>
-			<FlatList data={props.data} keyExtractor={item => item._id} renderItem={renderItem} showsVerticalScrollIndicator={false} />
+		<View style={[accountHashList.container, {height: props.routeName && props.routeName != 'FavoriteUser' ? 300 * DP : null}]}>
+			<FlatList
+				data={props.data}
+				keyExtractor={item => item._id}
+				renderItem={renderItem}
+				showsVerticalScrollIndicator={false}
+				ListEmptyComponent={props.whenEmpty}
+			/>
 		</View>
 	);
 };
@@ -47,4 +54,7 @@ AccountHashList.defaultProps = {
 	onCheckBox: e => console.log(e),
 	checkBoxMode: false, // CheckBox 콘테이너 Show T/F
 	showFollowBtn: false,
+	whenEmpty: () => {
+		return <></>;
+	},
 };

@@ -22,7 +22,6 @@ import CommunityList from '../community/CommunityList';
 import {getCommunityListByUserId} from 'Root/api/community';
 import {createMemoBox} from 'Root/api/userapi';
 
-
 export default Profile = ({route}) => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState({...route.params?.userobject, feedList: []}); //라벨을 클릭한 유저의 userObject data
@@ -32,7 +31,6 @@ export default Profile = ({route}) => {
 	const [showOwnerState, setShowOwnerState] = React.useState(false); // 현재 로드되어 있는 profile의 userType이 Pet인 경우 반려인 계정 리스트의 출력 여부
 	const [showCompanion, setShowCompanion] = React.useState(false); // User계정이 반려동물버튼을 클릭
 	// console.log('tabMenuselc', tabMenuSelected);
-	console.log('data', data, userGlobalObject);
 	const fetchData = async () => {
 		if (route.params && route.params.userobject) {
 			getUserProfile(
@@ -42,7 +40,7 @@ export default Profile = ({route}) => {
 				result => {
 					navigation.setOptions({title: result.msg.user_nickname, data: result.msg});
 					setData(result.msg);
-					// console.log('getUserProfile is Profile 갱신됨?', result.msg.is_follow);
+					console.log('getUserProfile is_follow?', result.msg.is_follow);
 				},
 				err => {
 					Modal.popOneBtn(err, '확인', () => {
@@ -337,29 +335,32 @@ export default Profile = ({route}) => {
 	};
 
 	const userProfileInfo = () => {
-		return (
-			<>
-				<View style={[profile.profileInfo]}>
-					<ProfileInfo
-						data={data}
-						showMyPet={e => alert(e)}
-						volunteerBtnClick={() => navigation.push('ApplyVolunteer')}
-						adoptionBtnClick={() => navigation.push('ApplyAnimalAdoptionA')}
-						onShowOwnerBtnClick={onShowOwnerBtnClick}
-						onHideOwnerBtnClick={onHideOwnerBtnClick}
-						onShowCompanion={onShowCompanion}
-						onHideCompanion={onHideCompanion}
-						onPressVolunteer={onClick_Volunteer_ShelterProfile}
-						onPressAddPetBtn={onPressAddPetBtn}
-						onPressAddArticleBtn={onPressAddArticleBtn}
-						onPressEditProfile={onPressEditProfile}
-						onPressUnFollow={onPressUnFollow}
-						onPressFollow={onPressFollow}
-					/>
-				</View>
-				{showPetOrOwnerList()}
-			</>
-		);
+		if (data.is_follow == undefined) {
+			return <Loading isModal={false} />;
+		} else
+			return (
+				<>
+					<View style={[profile.profileInfo]}>
+						<ProfileInfo
+							data={data}
+							showMyPet={e => alert(e)}
+							volunteerBtnClick={() => navigation.push('ApplyVolunteer')}
+							adoptionBtnClick={() => navigation.push('ApplyAnimalAdoptionA')}
+							onShowOwnerBtnClick={onShowOwnerBtnClick}
+							onHideOwnerBtnClick={onHideOwnerBtnClick}
+							onShowCompanion={onShowCompanion}
+							onHideCompanion={onHideCompanion}
+							onPressVolunteer={onClick_Volunteer_ShelterProfile}
+							onPressAddPetBtn={onPressAddPetBtn}
+							onPressAddArticleBtn={onPressAddArticleBtn}
+							onPressEditProfile={onPressEditProfile}
+							onPressUnFollow={onPressUnFollow}
+							onPressFollow={onPressFollow}
+						/>
+					</View>
+					{showPetOrOwnerList()}
+				</>
+			);
 	};
 
 	//TabSelect 하단 출력 리스트 컴포넌트

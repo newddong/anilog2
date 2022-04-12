@@ -47,14 +47,7 @@ export default SearchArticle = props => {
 		// 		params: {community_object: data[index], reset: true},
 		// 	});
 		// }
-		console.log('data[index]', data[index]);
-		navigation.push('ArticleDetail', {community_object: data[index]});
-	};
-
-	//글쓰기
-	const onPressWrite = () => {
-		navigation.navigate('CommunityWrite', {isReview: false});
-		// navigation.push('WriteEditorTest');
+		navigation.push('ArticleDetail', {community_object: data[index], searchInput: searchInput});
 	};
 
 	const [onlyTalk, setOnlyTalk] = React.useState(false);

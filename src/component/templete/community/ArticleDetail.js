@@ -14,7 +14,7 @@ import {createComment, getCommentListByCommunityId, updateComment} from 'Root/ap
 import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import community_obj from 'Root/config/community_obj';
-import {favoriteEtc} from 'Root/api/favoriteect';
+import {favoriteEtc} from 'Root/api/favoriteetc';
 import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
 import {REPORT_MENU} from 'Root/i18n/msg';
@@ -27,7 +27,7 @@ import {REPORT_MENU} from 'Root/i18n/msg';
 export default ArticleDetail = props => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.route.params.community_object);
-	// const [data, setData] = React.useState('false');
+	const [searchInput, setSearchInput] = React.useState('');
 	const [comments, setComments] = React.useState('false');
 	const [articleList, setArticleList] = React.useState([]);
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
@@ -44,6 +44,10 @@ export default ArticleDetail = props => {
 
 	React.useEffect(() => {
 		setData(props.route.params.community_object);
+		if (props.route.params.searchInput != '') {
+			console.log('props.route.params.searchInput', props.route.params.searchInput);
+			setSearchInput(props.route.params.searchInput);
+		}
 	}, [props.route.params]);
 
 	React.useEffect(() => {
@@ -79,7 +83,7 @@ export default ArticleDetail = props => {
 					// console.log('remove', i, remove, 'v', v);
 					if (getImgTag) {
 						let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i); //img 태그가 있는 경우 src 추출
-						console.log('src', src);
+						// console.log('src', src);
 						lines.push({image: src[1]});
 					} else {
 						if (remove != undefined) {
@@ -427,7 +431,13 @@ export default ArticleDetail = props => {
 							return (
 								<View style={[{width: 750 * DP, alignItems: 'center'}]}>
 									<View style={{alignItems: 'center'}}>
-										<Article data={data} onPressMeatball={onPressMeatball} onPressFavorite={onPressFavorite} route={props.route.name} />
+										<Article
+											data={data}
+											onPressMeatball={onPressMeatball}
+											onPressFavorite={onPressFavorite}
+											route={props.route.name}
+											searchInput={searchInput}
+										/>
 										<View style={[style.like, {}]}>
 											{data.community_is_like ? (
 												<Like48_Filled onPress={() => onPressLike(false)} />

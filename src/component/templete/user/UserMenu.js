@@ -117,7 +117,7 @@ export default UserMenu = props => {
 		switch (menuItem) {
 			case FRIENDS:
 				// Modal.popInfoModal();
-				navigation.push('SaveFavorite'); // FollowObject
+				navigation.push('FavoriteUser'); // FollowObject
 				break;
 			case PEED_CONTENTS:
 				// alert('업데이트 예정입니다');

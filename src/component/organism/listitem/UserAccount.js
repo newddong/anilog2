@@ -60,7 +60,7 @@ export default UserAccount = props => {
 				<View
 					onPress={onClickFollow}
 					style={[props.checkBoxMode ? userAccount.followingBtnContainer : userAccount.followingBtnContainer_noneCheckBox]}>
-					{props.data.follow ? (
+					{props.data.follow || props.data.is_follow ? (
 						<AniButton onPress={onClickFollow} btnTitle={'팔로잉'} btnTheme={'shadow'} btnStyle={'border'} btnLayout={btn_w108} />
 					) : (
 						<AniButton onPress={onClickFollow} btnTitle={'팔로우'} btnTheme={'shadow'} btnLayout={btn_w108} />

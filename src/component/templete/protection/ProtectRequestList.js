@@ -10,7 +10,7 @@ import {getProtectRequestList} from 'Root/api/shelterapi.js';
 import {btn_w306_h68} from 'Component/atom/btn/btn_style';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 import Modal from 'Root/component/modal/Modal';
-import {favoriteEtc} from 'Root/api/favoriteect';
+import {favoriteEtc} from 'Root/api/favoriteetc';
 
 export default ProtectRequestList = ({navigation, route}) => {
 	const [data, setData] = React.useState('false');

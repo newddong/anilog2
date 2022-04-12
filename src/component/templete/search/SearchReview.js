@@ -5,14 +5,12 @@ import {Animal_another_off, Animal_cat_off, Animal_dog_off, EmptyIcon, Filter60B
 import ReviewList from 'Root/component/organism/list/ReviewList';
 import {Animal_another, Animal_cat, Animal_dog} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
-import {getCommunityList, updateAndDeleteCommunity} from 'Root/api/community';
+import {updateAndDeleteCommunity} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {styles} from 'Root/component/atom/image/imageStyle';
 import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeEtc} from 'Root/api/likeetc';
-import {favoriteEtc} from 'Root/api/favoriteect';
-import community_obj from 'Root/config/community_obj';
+import {favoriteEtc} from 'Root/api/favoriteetc';
 import {useNavigation} from '@react-navigation/core';
 import searchContext from 'Root/config/searchContext';
 
@@ -40,7 +38,6 @@ export default SearchReview = props => {
 	}, [searchContext.searchInfo.searchInput]);
 
 	React.useEffect(() => {
-		console.log('fetchDFata');
 		if (props.data.review) {
 			setData(props.data.review);
 		}
@@ -264,7 +261,7 @@ export default SearchReview = props => {
 		// 		params: {community_object: data[index], reset: true},
 		// 	});
 		// }
-		navigation.push('ReviewDetail', {community_object: data[index]});
+		navigation.push('ReviewDetail', {community_object: data[index], searchInput: searchInput});
 	};
 
 	//글쓰기 아이콘 클릭
@@ -388,9 +385,9 @@ export default SearchReview = props => {
 					ListHeaderComponent={filterComponent()}
 					stickyHeaderIndices={[0]}
 				/>
-				<View style={[style.write, style.shadowButton]}>
+				{/* <View style={[style.write, style.shadowButton]}>
 					<WriteBoard onPress={onPressWrite} />
-				</View>
+				</View> */}
 			</View>
 		);
 };

@@ -1,11 +1,9 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import ReviewBriefItem from '../listitem/ReviewBriefItem';
-import {GRAY10} from 'Root/config/color';
-import {Arrow_Down_GRAY10, Arrow_Up_GRAY10, Check50, Rect50_Border} from 'Root/component/atom/icon';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {Check50, EmptyIcon, Rect50_Border} from 'Root/component/atom/icon';
 import ReviewFavoriteBriefItem from '../listitem/ReviewFavoriteBriefItem';
-import CheckBox from 'Root/component/molecules/select/CheckBox';
+import DP from 'Root/config/dp';
 
 /**
  * 후기 요약 컴포넌트 리스트
@@ -21,6 +19,15 @@ import CheckBox from 'Root/component/molecules/select/CheckBox';
 const ReviewFavoriteBriefList = props => {
 	const onPressToggle = (index, bool) => {
 		props.onPressCheck(index, bool);
+	};
+
+	const whenEmpty = () => {
+		return (
+			<View style={{paddingVertical: 150 * DP, alignItems: 'center'}}>
+				<EmptyIcon />
+				<Text style={[txt.noto28, {marginTop: 10 * DP}]}>즐겨찾기한 리뷰가 없습니다..</Text>
+			</View>
+		);
 	};
 
 	const renderItem = (item, index) => {
@@ -56,7 +63,7 @@ const ReviewFavoriteBriefList = props => {
 				showsVerticalScrollIndicator={false}
 				listKey={({item, index}) => index}
 				keyExtractor={item => item._id}
-				hori
+				ListEmptyComponent={whenEmpty}
 			/>
 		</View>
 	);

@@ -7,7 +7,7 @@ import DP from 'Root/config/dp';
 import {ArticleIcon, NextMark, ReviewIcon} from 'Root/component/atom/icon';
 import {getCommunityListByUserId} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {getFavoriteEtcListByUserId} from 'Root/api/favoriteect';
+import {getFavoriteEtcListByUserId} from 'Root/api/favoriteetc';
 
 //즐겨찾기한 커뮤니티 조회
 export default FavoriteCommunity = ({route}) => {
@@ -15,8 +15,10 @@ export default FavoriteCommunity = ({route}) => {
 	const isFavorite = route.name == 'FavoriteCommunity';
 	const [review, setReview] = React.useState('false');
 	const [article, setArticle] = React.useState('false');
+	console.log('route.name', route.name);
 
 	React.useEffect(() => {
+		isFavorite ? navigation.setOptions({title: '커뮤니티 즐겨찾기'}) : navigation.setOptions({title: '나의 커뮤니티'});
 		const unsubscribe = navigation.addListener('focus', () => {
 			!isFavorite
 				? getCommunityListByUserId(

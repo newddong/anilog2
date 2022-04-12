@@ -15,6 +15,7 @@ import {GRAY10} from 'Root/config/color';
  * @param {()=>void)} props.onPressReply - 댓글 모두 보기 클릭
  * @param {()=>void)} props.onPressMeatball - 미트볼 클릭
  * @param {(bool:boolean)=>void)} props.onPressFavorite - 즐겨찾기 아이콘 클릭
+ * @param {string} props.searchInput - 검색 키워드
  */
 const Article = props => {
 	const data = props.data;
@@ -42,6 +43,7 @@ const Article = props => {
 					onPressArticle={onPressArticle}
 					onPressFavorite={onPressFavorite}
 					onPressMeatball={onPressMeatball}
+					searchInput={props.searchInput}
 					route={props.route}
 				/>
 			</View>

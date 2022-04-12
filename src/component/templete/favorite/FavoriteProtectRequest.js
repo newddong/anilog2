@@ -4,7 +4,7 @@ import {Text, View} from 'react-native';
 import {login_style} from 'Templete/style_templete';
 import {txt} from 'Root/config/textstyle';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {favoriteEtc, getFavoriteEtcListByUserId} from 'Root/api/favoriteect';
+import {favoriteEtc, getFavoriteEtcListByUserId} from 'Root/api/favoriteetc';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
 import DP from 'Root/config/dp';

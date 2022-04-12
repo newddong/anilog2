@@ -10,7 +10,7 @@ import Loading from 'Root/component/molecules/modal/Loading';
 import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeEtc} from 'Root/api/likeetc';
-import {favoriteEtc} from 'Root/api/favoriteect';
+import {favoriteEtc} from 'Root/api/favoriteetc';
 import community_obj from 'Root/config/community_obj';
 import {REPORT_MENU} from 'Root/i18n/msg';
 

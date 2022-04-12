@@ -10,7 +10,7 @@ import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {updateAndDeleteCommunity} from 'Root/api/community';
 import community_obj from 'Root/config/community_obj';
-import {favoriteEtc} from 'Root/api/favoriteect';
+import {favoriteEtc} from 'Root/api/favoriteetc';
 import {EmptyIcon} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
 

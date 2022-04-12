@@ -247,23 +247,24 @@ export default SearchReview = props => {
 
 	//리뷰 썸네일 클릭
 	const onPressReviewContent = index => {
-		console.log('index', index);
-		community_obj.object = data[index];
-		community_obj.pageToMove = 'ReviewDetail';
-		community_obj.initial = false;
-		console.log('community_obj.current', community_obj.current);
-		if (community_obj.current == '') {
-			//탭 간의 이동을 간편히 하기 위해 만든 community_obj의 current 값이 빈값 == 현재 보고 있는 ArticleDetail이 없음
-			//우선 ArticleMain의 스택을 쌓기 위해 ArticleMain으로 먼저 보낸 뒤 바로 이동되어야 할 상세 자유 게시글을 여기서 선언 => Parameter로 보냄
-			navigation.navigate('COMMUNITY', {screen: 'ReviewMain', initial: false, params: {community_object: data[index], pageToMove: 'ReviewDetail'}});
-		} else {
-			//이미 보고 있는 ArticleDetail이 존재하므로 ArticleDetail 템플릿을 덮어씌우고 봐야할 상세 자유 게시글은 Parameter로 송신
-			navigation.navigate('COMMUNITY', {
-				screen: 'ReviewDetail',
-				initial: false,
-				params: {community_object: data[index], reset: true},
-			});
-		}
+		// console.log('index', index);
+		// community_obj.object = data[index];
+		// community_obj.pageToMove = 'ReviewDetail';
+		// community_obj.initial = false;
+		// console.log('community_obj.current', community_obj.current);
+		// if (community_obj.current == '') {
+		// 	//탭 간의 이동을 간편히 하기 위해 만든 community_obj의 current 값이 빈값 == 현재 보고 있는 ArticleDetail이 없음
+		// 	//우선 ArticleMain의 스택을 쌓기 위해 ArticleMain으로 먼저 보낸 뒤 바로 이동되어야 할 상세 자유 게시글을 여기서 선언 => Parameter로 보냄
+		// 	navigation.navigate('COMMUNITY', {screen: 'ReviewMain', initial: false, params: {community_object: data[index], pageToMove: 'ReviewDetail'}});
+		// } else {
+		// 	//이미 보고 있는 ArticleDetail이 존재하므로 ArticleDetail 템플릿을 덮어씌우고 봐야할 상세 자유 게시글은 Parameter로 송신
+		// 	navigation.navigate('COMMUNITY', {
+		// 		screen: 'ReviewDetail',
+		// 		initial: false,
+		// 		params: {community_object: data[index], reset: true},
+		// 	});
+		// }
+		navigation.push('ReviewDetail', {community_object: data[index]});
 	};
 
 	//글쓰기 아이콘 클릭

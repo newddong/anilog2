@@ -30,23 +30,25 @@ export default SearchArticle = props => {
 
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
-		community_obj.object = data[index];
-		community_obj.pageToMove = 'ArticleDetail';
-		community_obj.initial = false;
-		console.log('community_obj.current / SearchArticle : ', community_obj.current);
-		if (community_obj.current == '') {
-			//탭 간의 이동을 간편히 하기 위해 만든 community_obj의 current 값이 빈값 == 현재 보고 있는 ArticleDetail이 없음
-			//우선 ArticleMain의 스택을 쌓기 위해 ArticleMain으로 먼저 보낸 뒤 바로 이동되어야 할 상세 자유 게시글을 여기서 선언 => Parameter로 보냄
-			console.log('community_object: data[index]', data[index].community_title);
-			navigation.navigate('COMMUNITY', {screen: 'ArticleMain', initial: false, params: {community_object: data[index], pageToMove: 'ArticleDetail'}});
-		} else {
-			//이미 보고 있는 ArticleDetail이 존재하므로 ArticleDetail 템플릿을 덮어씌우고 봐야할 상세 자유 게시글은 Parameter로 송신
-			navigation.navigate('COMMUNITY', {
-				screen: 'ArticleDetail',
-				initial: false,
-				params: {community_object: data[index], reset: true},
-			});
-		}
+		// community_obj.object = data[index];
+		// community_obj.pageToMove = 'ArticleDetail';
+		// community_obj.initial = false;
+		// console.log('community_obj.current / SearchArticle : ', community_obj.current);
+		// if (community_obj.current == '') {
+		// 	//탭 간의 이동을 간편히 하기 위해 만든 community_obj의 current 값이 빈값 == 현재 보고 있는 ArticleDetail이 없음
+		// 	//우선 ArticleMain의 스택을 쌓기 위해 ArticleMain으로 먼저 보낸 뒤 바로 이동되어야 할 상세 자유 게시글을 여기서 선언 => Parameter로 보냄
+		// 	console.log('community_object: data[index]', data[index].community_title);
+		// 	navigation.navigate('COMMUNITY', {screen: 'ArticleMain', initial: false, params: {community_object: data[index], pageToMove: 'ArticleDetail'}});
+		// } else {
+		// 	//이미 보고 있는 ArticleDetail이 존재하므로 ArticleDetail 템플릿을 덮어씌우고 봐야할 상세 자유 게시글은 Parameter로 송신
+		// 	navigation.navigate('COMMUNITY', {
+		// 		screen: 'ArticleDetail',
+		// 		initial: false,
+		// 		params: {community_object: data[index], reset: true},
+		// 	});
+		// }
+		console.log('data[index]', data[index]);
+		navigation.push('ArticleDetail', {community_object: data[index]});
 	};
 
 	//글쓰기
@@ -140,9 +142,9 @@ export default SearchArticle = props => {
 				listKey={({item, index}) => index}
 			/>
 
-			<View style={[style.write, style.shadow]}>
+			{/* <View style={[style.write, style.shadow]}>
 				<WriteBoard onPress={onPressWrite} />
-			</View>
+			</View> */}
 		</View>
 	);
 };
@@ -181,6 +183,7 @@ const style = StyleSheet.create({
 		flexDirection: 'row',
 		alignSelf: 'flex-end',
 		justifyContent: 'space-between',
+		paddingRight: 48 * DP,
 	},
 	kindFilterItem: {
 		width: 120 * DP,

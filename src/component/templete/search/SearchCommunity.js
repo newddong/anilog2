@@ -1,11 +1,9 @@
 import React from 'react';
-import {StyleSheet, Text, View, ScrollView, FlatList, Image, TouchableOpacity} from 'react-native';
-import {APRI10, BLACK, GRAY10} from 'Root/config/color';
-import {Animal_another_off, Animal_cat_off, Animal_dog_off, Filter60Border, Filter60Filled, WriteBoard} from 'Root/component/atom/icon';
+import {StyleSheet, Text, View, FlatList, Image, TouchableOpacity} from 'react-native';
+import {APRI10, GRAY10} from 'Root/config/color';
+import {Filter60Border, Filter60Filled} from 'Root/component/atom/icon';
 import ReviewList from 'Root/component/organism/list/ReviewList';
-import {Animal_another, Animal_cat, Animal_dog} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
-import {getCommunityList} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import {txt} from 'Root/config/textstyle';

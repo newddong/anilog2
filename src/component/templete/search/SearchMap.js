@@ -1,18 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {
-	Text,
-	View,
-	Button,
-	TouchableOpacity,
-	Platform,
-	StyleSheet,
-	TextInput,
-	Keyboard,
-	StatusBar,
-	Dimensions,
-	SafeAreaView,
-	ScrollView,
-} from 'react-native';
+import {Text, View, Button, TouchableOpacity, Platform, StyleSheet, TextInput, Keyboard, StatusBar, ScrollView} from 'react-native';
 import axios from 'axios';
 import Geolocation from '@react-native-community/geolocation';
 import {txt} from 'Root/config/textstyle';
@@ -29,10 +16,7 @@ import Loading from 'Root/component/molecules/modal/Loading';
 
 export default SearchMap = ({route}) => {
 	const navigation = useNavigation();
-
 	const [locationObj, setLocationObj] = useState(''); //현재 위치 주소
-	const x = 126.937125; //초기값 더미
-	const y = 37.548721; //초기값 더미
 	const [init_latitude, setLatitude] = useState(''); //초기 위도
 	const [init_longitude, setLogitude] = useState(''); //초기 경도
 	const [changedLatitude, setChangedLatitude] = useState(''); //변경된 위도
@@ -41,6 +25,9 @@ export default SearchMap = ({route}) => {
 	const [changedLongitudeDelta, setChangedLongitudeDelta] = useState(0.0023);
 	const [detailAddr, setDetailAddr] = React.useState(''); //세부주소 텍스트
 	const keyboardY = useKeyboardBottom(0 * DP);
+	const [delay, setDelay] = React.useState(true);
+
+	const map = React.useRef();
 
 	// 템플릿 호출 시 바로 현재 모바일 위치를 기반으로 위치 정보 수령
 	React.useEffect(() => {
@@ -51,21 +38,27 @@ export default SearchMap = ({route}) => {
 
 	//주소 불러오기 api 호출
 	React.useEffect(() => {
-		console.log('changedLatitude', changedLatitude);
 		if (changedLatitude == '' || changedLongitude == '') {
-			console.log('차라리');
 			callInitialAddress(changedLongitude, changedLatitude);
 			Modal.close();
-		} else if (changedLatitude != '') {
-			console.log('전부 거짓말');
-			callInitialAddress(changedLongitude, changedLatitude);
-			Modal.close();
+		} else if (changedLatitude != '' && changedLongitude != '') {
+			if (route.params.addr != undefined && delay) {
+				//주소명 검색완료 후 첫 주소를 받아온 이후의 영역 변경
+				callInitialAddress(changedLongitude, changedLatitude);
+				Modal.close();
+			} else if (delay) {
+				//주소명 검색이 아닌 첫 좌표에서 이동한 경우
+				callInitialAddress(changedLongitude, changedLatitude);
+				Modal.close();
+			}
 		}
 	}, [changedLatitude]);
 
+	//주소명으로 검색된 string을 위도 경도 좌표로 변환
 	React.useEffect(() => {
 		if (route.params.addr != undefined) {
 			const addr = route.params.addr.roadAddress;
+			// console.log('route.params.addr', route.params.addr);
 			connectGeoCoder(addr);
 		}
 	}, [route.params]);
@@ -74,8 +67,6 @@ export default SearchMap = ({route}) => {
 	const geoLocation = () => {
 		Geolocation.getCurrentPosition(
 			position => {
-				console.log('position.coords.latitude', position.coords.latitude);
-				console.log('position.coords.longitude', position.coords.longitude);
 				setLatitude(position.coords.latitude);
 				setLogitude(position.coords.longitude);
 				setChangedLatitude(position.coords.latitude);
@@ -91,6 +82,7 @@ export default SearchMap = ({route}) => {
 
 	//위도 경도를 토대로 주소 받아오기
 	const callInitialAddress = async (long, lati) => {
+		console.log('callInitialAddress', long);
 		try {
 			let res = await axios
 				.get(`https://dapi.kakao.com/v2/local/geo/coord2address.json?input_coord=WGS84&x=${long}&y=${lati}`, {
@@ -100,7 +92,7 @@ export default SearchMap = ({route}) => {
 				})
 				.then(async res => {
 					let location = res.data.documents[0];
-					if (location.road_address == null) {
+					if (location.road_address == null || location.road_address == undefined) {
 						console.log('address_name  : ', location.address.address_name);
 						//카카오 API에서 도로명주소가 간혹 Null값으로 오는 현상 발견
 						Modal.popLoading();
@@ -125,6 +117,7 @@ export default SearchMap = ({route}) => {
 						setLocationObj(location);
 						Modal.close();
 					}
+					setDelay(true); //다시 주소검색이 가능하도록 처리
 				});
 		} catch (error) {
 			console.log('error callAddress  :  ', error.message);
@@ -154,6 +147,46 @@ export default SearchMap = ({route}) => {
 		});
 	}
 
+	//주소검색을 통해서 받아왔을 경우
+	async function connectGeoCoder(addr) {
+		console.log('addr', addr);
+		let key = '7CC4F0EE-4F9E-353A-9B34-22B4D7F49CA9'; //https://www.vworld.kr - api 키 권상우 문의
+		return new Promise(async function (resolve, reject) {
+			try {
+				let res = await axios
+					.get(
+						`http://api.vworld.kr/req/address?service=address&request=getcoord&version=2.0&crs=epsg:4326&address=${addr}&refine=true&simple=true&format=json&type=ROAD&key=${key}`,
+					)
+					.then(responseText => {
+						// console.log('resoponse', JSON.stringify(responseText.data.response.result));
+						const result = responseText.data.response.result.point;
+						// console.log('parse Result y : ', parseFloat(result.y));
+						setDelay(false);
+						callInitialAddress(parseFloat(result.x), parseFloat(result.y));
+						setChangedLatitude(parseFloat(result.y));
+						setChangedLongitude(parseFloat(result.x));
+						map.current = result;
+					});
+			} catch (error) {
+				console.log('error connectGeoCoder  :  ', error.message);
+				Modal.close(); //오류발생 시 Modal 종료
+			}
+		});
+	}
+
+	//세부주소
+	const onChangeDetailAddr = text => {
+		setDetailAddr(text);
+	};
+
+	//터치로 인한 위도 경도 변경 콜백
+	const goToLocation = region => {
+		setChangedLatitude(region.latitude);
+		setChangedLongitude(region.longitude);
+		setChangedLongitudeDelta(region.longitudeDelta);
+		setChangedLatitudeDelta(region.latitudeDelta);
+	};
+
 	//현재 위치로 돌아감
 	const initializeRegion = () => {
 		if (Platform.OS == 'android') {
@@ -179,17 +212,8 @@ export default SearchMap = ({route}) => {
 		}
 	};
 
-	//세부주소
-	const onChangeDetailAddr = text => {
-		setDetailAddr(text);
-	};
-
-	//터치로 인한 위도 경도 변경 콜백
-	const goToLocation = region => {
-		setChangedLatitude(region.latitude);
-		setChangedLongitude(region.longitude);
-		setChangedLongitudeDelta(region.longitudeDelta);
-		setChangedLatitudeDelta(region.latitudeDelta);
+	const goToAddressSearch = () => {
+		navigation.push('AddressSearchWeb', {prevRoute: route.name});
 	};
 
 	//선택한 위치로 설정 버튼 클릭
@@ -228,38 +252,6 @@ export default SearchMap = ({route}) => {
 			merge: true,
 		});
 	};
-
-	//주소검색을 통해서 받아왔을 경우
-	async function connectGeoCoder(addr) {
-		console.log('addr', addr);
-		let key = '7CC4F0EE-4F9E-353A-9B34-22B4D7F49CA9'; //https://www.vworld.kr - api 키 권상우 문의
-		return new Promise(async function (resolve, reject) {
-			try {
-				let res = await axios
-					.get(
-						`http://api.vworld.kr/req/address?service=address&request=getcoord&version=2.0&crs=epsg:4326&address=${addr}&refine=true&simple=true&format=json&type=ROAD&key=${key}`,
-					)
-					.then(responseText => {
-						// console.log('resoponse', JSON.stringify(responseText.data.response.result));
-						const result = responseText.data.response.result.point;
-						console.log('result, : ', result);
-						setChangedLatitude(parseFloat(result.y));
-						setChangedLongitude(parseFloat(result.x));
-						map.current = result;
-						// callInitialAddress(parseFloat(result.x), parseFloat(result.y));
-					});
-			} catch (error) {
-				console.log('error connectGeoCoder  :  ', error.message);
-				Modal.close(); //오류발생 시 Modal 종료
-			}
-		});
-	}
-
-	const goToAddressSearch = () => {
-		navigation.push('AddressSearchPage', {prevRoute: route.name});
-	};
-
-	const map = React.useRef();
 
 	return (
 		<View style={[style.container, {}]}>

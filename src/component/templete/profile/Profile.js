@@ -388,7 +388,6 @@ export default Profile = ({route}) => {
 				} else if (tabMenuSelected == 1) {
 					return <FeedThumbnailList items={item} whenEmpty={whenFeedThumbnailEmpty} onClickThumnail={onClick_Thumbnail_TagTab} />;
 				} else {
-					// return <InfoScreen />;
 					if (commList == 'false') {
 						return <Loading isModal={false} />;
 					} else return <CommunityList data={commList} initializeCommList={fetchCommunity} />;
@@ -396,10 +395,11 @@ export default Profile = ({route}) => {
 			} else {
 				if (tabMenuSelected != 2) {
 					return <FeedThumbnailList items={item} whenEmpty={whenFeedThumbnailEmpty} onClickThumnail={onClick_Thumbnail_FeedTab} />;
-					// return <InfoScreen />;
 				} else {
 					//커뮤니티 탭
-					return <InfoScreen />;
+					if (commList == 'false') {
+						return <Loading isModal={false} />;
+					} else return <CommunityList data={commList} initializeCommList={fetchCommunity} />;
 				}
 			}
 		};

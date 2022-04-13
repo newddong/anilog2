@@ -7,6 +7,9 @@ import {getProtectRequestListByShelterId} from 'Root/api/shelterapi';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import Loading from 'Root/component/molecules/modal/Loading';
+import {EmptyIcon} from 'Root/component/atom/icon';
+import DP from 'Root/config/dp';
 
 //ShelterMenu => 나의 보호소 출신 동물
 export default AnimalFromShelter = ({route}) => {
@@ -49,11 +52,7 @@ export default AnimalFromShelter = ({route}) => {
 	};
 
 	if (data == 'false') {
-		return (
-			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
-				<ActivityIndicator size={'large'}></ActivityIndicator>
-			</View>
-		);
+		return <Loading isModal={false} />;
 	} else {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
@@ -61,7 +60,10 @@ export default AnimalFromShelter = ({route}) => {
 					<ScrollView horizontal={true} scrollEnabled={false}>
 						<View style={[animalFromShelter_style.container]}>
 							{data.length == 0 ? (
-								<Text style={[txt.roboto28b, {marginTop: 200}]}>아직 입양 완료된 보호소 출신의 보호 동물이 없네요.</Text>
+								<View style={{paddingVertical: 100 * DP, alignItems: 'center'}}>
+									<EmptyIcon />
+									<Text style={[txt.roboto28b, {marginTop: 20 * DP}]}>아직 입양 완료된 보호소 출신의 보호 동물이 없네요.</Text>
+								</View>
 							) : (
 								<AnimalNeedHelpList
 									data={data}

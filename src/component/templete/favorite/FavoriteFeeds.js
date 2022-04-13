@@ -12,11 +12,13 @@ import {txt} from 'Root/config/textstyle';
 import {GRAY10} from 'Root/config/color';
 import {getUserProfile} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {EmptyIcon} from 'Root/component/atom/icon';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 //즐겨찾기한 피드목록을 조회
 export default FavoriteFeeds = ({route, navigation}) => {
 	const [selectMode, setSelectMode] = React.useState(false);
-	const [data, setData] = React.useState([]);
+	const [data, setData] = React.useState('false');
 	const [selectCNT, setSelectCNT] = React.useState(0);
 
 	// console.log('token', token);
@@ -33,6 +35,7 @@ export default FavoriteFeeds = ({route, navigation}) => {
 					},
 					err => {
 						console.log('err / getFeedListByUserId / FavoriteFeeds : ', err);
+						setData([]);
 					},
 				);
 				break;
@@ -47,35 +50,23 @@ export default FavoriteFeeds = ({route, navigation}) => {
 					},
 					err => {
 						console.log('err / getFeedListByUserId / FavoriteFeeds : ', err);
+						setData([]);
 					},
 				);
 				break;
 			case 'TagMeFeeds': //나의 활동 => 나를 태그한 글
 				getUserTaggedFeedList(
-					{ userobject_id:  userGlobalObject.userInfo._id},
-					result=> {
+					{userobject_id: userGlobalObject.userInfo._id},
+					result => {
 						console.log('유저의 태그된 피드 리스트', result);
 						setData(result.msg);
 					},
 					err => {
 						console.log(err);
 						setData([]);
-					}
-				)
-				// getFavoriteFeedListByUserId(
-				// 	{
-				// 		userobject_id: userGlobalObject.userInfo._id,
-				// 	},
-				// 	result => {
-				// 		// console.log('result / getFeedListByUserId / FavoriteFeeds  : ', result.msg);
-				// 		setData(result.msg);
-				// 	},
-				// 	err => {
-				// 		console.log('err / getFeedListByUserId / FavoriteFeeds : ', err);
-				// 	},
-				// );
+					},
+				);
 				break;
-
 			default:
 				break;
 		}
@@ -182,27 +173,33 @@ export default FavoriteFeeds = ({route, navigation}) => {
 		}
 	};
 
-	return (
-		<View style={[login_style.wrp_main, {flex: 1}]}>
-			<View style={[temp_style.selectstat_view]}>
-				<View style={[temp_style.selectstat, selectstat_view_style.selectstat]}>
-					<SelectStat
-						onSelectMode={checkSelectMode}
-						onCancelSelectMode={cancelSelectMode}
-						onSelectAllClick={selectAll}
-						onDeleteSelectedItem={deleteSelectedItem}
-					/>
+	if (data == 'false') {
+		return <Loading isModal={false} />;
+	} else
+		return (
+			<View style={[login_style.wrp_main, {flex: 1}]}>
+				<View style={[temp_style.selectstat_view]}>
+					<View style={[temp_style.selectstat, selectstat_view_style.selectstat]}>
+						<SelectStat
+							onSelectMode={checkSelectMode}
+							onCancelSelectMode={cancelSelectMode}
+							onSelectAllClick={selectAll}
+							onDeleteSelectedItem={deleteSelectedItem}
+						/>
+					</View>
+				</View>
+
+				{/* 즐겨찾기한 FeedList출력하는 FeedThumbnailList */}
+				<View style={[temp_style.FeedThumbnailList, {flex: 1}]}>
+					{data.length == 0 ? (
+						<View style={{paddingVertical: 100 * DP, alignItems: 'center'}}>
+							<EmptyIcon />
+							<Text style={[txt.roboto28b, {marginTop: 20 * DP}]}>즐겨찾기한 피드가 없습니다..</Text>
+						</View>
+					) : (
+						<FeedThumbnailList items={data} selectMode={selectMode} onClickThumnail={onClickThumnail} />
+					)}
 				</View>
 			</View>
-
-			{/* 즐겨찾기한 FeedList출력하는 FeedThumbnailList */}
-			<View style={[temp_style.FeedThumbnailList, {flex: 1}]}>
-				{data.length == 0 ? (
-					<Text style={[txt.noto30, {alignSelf: 'center', marginTop: 130, color: GRAY10}]}>목록이 없네요.</Text>
-				) : (
-					<FeedThumbnailList items={data} selectMode={selectMode} onClickThumnail={onClickThumnail} />
-				)}
-			</View>
-		</View>
-	);
+		);
 };

@@ -13,6 +13,7 @@ import {lo} from '../style_address';
 import {getUserProfile} from 'Root/api/userapi';
 import {CommonActions, useNavigationState} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
+import {getFeedDetailById} from 'Root/api/feedapi';
 const wait = timeout => {
 	return new Promise(resolve => setTimeout(resolve, timeout));
 };
@@ -27,7 +28,6 @@ const AlarmList = props => {
 	let count = 0;
 	const [refreshing, setRefreshing] = React.useState(false);
 	const navState = useNavigationState(state => state);
-	console.log('props', props);
 	const onRefresh = React.useCallback(() => {
 		setRefreshing(true);
 
@@ -79,12 +79,18 @@ const AlarmList = props => {
 					{userobject_id: data.notice_user_related_id._id},
 					result => {
 						console.log('result', result.msg);
-						navigation.dispatch({
-							...CommonActions.reset({
-								index: 1,
-								routes: [{name: 'MainTab'}, {name: 'AlarmList'}, {name: 'Profile', params: {userobject: result.msg}}],
+						// navigation.dispatch({
+						// 	...CommonActions.reset({
+						// 		index: 1,
+						// 		routes: [{name: 'MainTab'}, {name: 'AlarmList'}, {name: 'Profile', params: {userobject: result.msg}}],
+						// 	}),
+						// });
+						navigation.dispatch(
+							CommonActions.navigate({
+								name: 'Profile',
+								params: {userobject: result.msg},
 							}),
-						});
+						);
 					},
 					err => {
 						console.log('err', err);
@@ -93,29 +99,58 @@ const AlarmList = props => {
 
 				break;
 			case 'MemoBoxObject':
-				navigation.dispatch({
-					...CommonActions.reset({
-						index: 0,
-						routes: [
-							{name: 'MainTab'},
-							{name: 'AlarmList'},
-							{name: 'UserNotePage', params: {title: data.notice_user_related_id.user_nickname, _id: data.notice_user_related_id._id}},
-						],
+				navigation.dispatch(
+					CommonActions.navigate({
+						name: 'UserNotePage',
+						params: {title: data.notice_user_related_id.user_nickname, _id: data.notice_user_related_id._id},
 					}),
-				});
+				);
 				break;
 			case 'FeedObject':
 				if (data.notice_object_type == 'LikeFeedObject') {
-					const selected = {_id: data.target_object};
+					var selected = {_id: data.target_object};
 					getUserProfile({userobject_id: data.notice_user_receive_id}, result => {
-						navigation.dispatch({
-							...CommonActions.reset({
-								index: 1,
-								routes: [{name: 'MainTab'}, {name: 'AlarmList'}, {name: 'UserFeedList', params: {userobject: result.msg, selected: selected}}],
+						// navigation.dispatch({
+						// 	...CommonActions.reset({
+						// 		index: 1,
+						// 		routes: [{name: 'MainTab'}, {name: 'AlarmList'}, {name: 'UserFeedList', params: {userobject: result.msg, selected: selected}}],
+						// 	}),
+						// });
+						navigation.dispatch(
+							CommonActions.navigate({
+								name: 'UserFeedList',
+								params: {userobject: result.msg, selected: selected},
 							}),
-						});
+						);
 					});
+				} else if (data.notice_object_type == 'CommentObject') {
+					getFeedDetailById(
+						{feedobject_id: data.target_object},
+						result => {
+							navigation.dispatch(
+								CommonActions.navigate({
+									name: 'FeedCommentList',
+									params: {feedobject: result.msg, showAllContents: true},
+								}),
+							);
+						},
+						err => {
+							console.log('getFeedDetail err', err);
+						},
+					);
 				}
+				break;
+			case 'FeedUserTagObject':
+				var selected = {_id: data.target_object};
+				console.log('selected', selected);
+				getUserProfile({userobject_id: data.notice_user_related_id._id}, result => {
+					navigation.dispatch(
+						CommonActions.navigate({
+							name: 'UserFeedList',
+							params: {userobject: result.msg, selected: selected},
+						}),
+					);
+				});
 				break;
 		}
 	};

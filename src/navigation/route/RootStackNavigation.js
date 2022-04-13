@@ -71,6 +71,7 @@ import Profile from 'Templete/profile/Profile';
 import UserNotePage from 'Templete/user/UserNotePage';
 import FeedList from 'Templete/feed/FeedList';
 import Feed from 'Root/component/organism/feed/Feed';
+import FeedCommentList from 'Templete/feed/FeedCommentList';
 const RootStack = createStackNavigator();
 
 export default RootStackNavigation = () => {
@@ -310,6 +311,7 @@ export default RootStackNavigation = () => {
 						/>
 						<RootStack.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />}} />
 						<RootStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />}} />
+						<RootStack.Screen name="FeedCommentList" component={FeedCommentList} options={{header: props => <AlarmAndSearchHeader {...props} />}} />
 					</RootStack.Navigator>
 				</NavigationContainer>
 

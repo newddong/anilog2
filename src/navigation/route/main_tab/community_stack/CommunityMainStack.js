@@ -89,7 +89,7 @@ export default CommunityMainStack = props => {
 				component={CommunityEdit}
 				options={({route}) => ({
 					header: props => <SendHeader {...props} />,
-					title: '리뷰 수정',
+					title: ' ',
 				})}
 			/>
 			<CommunityMainStackNavi.Screen

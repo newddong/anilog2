@@ -932,9 +932,10 @@ export const temp_style = StyleSheet.create({
 		// backgroundColor: 'yellow',
 	},
 	button_animalProtectRequestDetail: {
-		width: 126 * DP,
+		// width: 126 * DP,
 		height: 84 * DP,
 		flexDirection: 'row',
+		// backgroundColor: 'red',
 	},
 	rescueSummary: {
 		width: 654 * DP,
@@ -3229,7 +3230,7 @@ export const appliesRecord = StyleSheet.create({
 		marginVertical: 30 * DP,
 	},
 	whenEmpty: {
-		paddingVertical: 60 * DP,
+		paddingVertical: 40 * DP,
 	},
 });
 
@@ -3930,7 +3931,7 @@ export const feedCommentList = StyleSheet.create({
 		width: 646 * DP,
 		marginLeft: 20 * DP,
 		fontSize: 28 * DP,
-		paddingVertical: 0,
+		paddingVertical: 0 * DP,
 		includeFontPadding: false,
 		// backgroundColor: 'yellow',
 	},
@@ -4006,13 +4007,11 @@ export const feedCommentList = StyleSheet.create({
 	},
 	commentBox_top: {
 		width: 694 * DP,
-		// height: 68 * DP,
-		maxHeight: 224 * DP,
+		// maxHeight: 224 * DP,
 		padding: 10 * DP,
 		borderRadius: 24 * DP,
 		marginBottom: 12 * DP,
-		justifyContent: 'center',
-		backgroundColor: GRAY30,
+		backgroundColor: GRAY40,
 	},
 	commentBox_bottom: {
 		width: 694 * DP,

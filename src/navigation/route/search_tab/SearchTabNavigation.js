@@ -1,21 +1,16 @@
 import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import SearchFeedTabNavigation from './feed_tab/SearchFeedTabNavigation';
 import {Dimensions, StyleSheet} from 'react-native';
 import {APRI10, GRAY10, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
-import SearchCommunityTabNavigation from './community_tab/SearchCommunityTabNavigation';
-import {CommonActions} from '@react-navigation/native';
 import searchContext from 'Root/config/searchContext';
 import {getUserListByNickname} from 'Root/api/userapi';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import Modal from 'Root/component/modal/Modal';
 import {getHashKeywords} from 'Root/api/hashapi';
 import SearchHashTag from 'Root/component/templete/search/SearchHashTag';
 import SearchAccountA from 'Root/component/templete/search/SearchAccountA';
 import SearchReview from 'Root/component/templete/search/SearchReview';
-import SearchCommunity from 'Root/component/templete/search/SearchCommunity';
 import {getSearchCommunityList} from 'Root/api/community';
 import SearchArticle from 'Root/component/templete/search/SearchArticle';
 

@@ -1,12 +1,10 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {ActivityIndicator, Image, Linking, LogBox, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, LogBox, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {APRI10} from 'Root/config/color';
+import {APRI10, BLACK} from 'Root/config/color';
 import {FavoriteTag46_Filled, FavoriteTag48_Border, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
-import WebView from 'react-native-webview';
-import Loading from 'Root/component/molecules/modal/Loading';
 import {styles} from 'Root/component/atom/image/imageStyle';
 /**
  * 게시글 컨텐츠
@@ -16,12 +14,11 @@ import {styles} from 'Root/component/atom/image/imageStyle';
  * @param {()=>void} props.onPressMeatball - 미트볼 클릭
  * @param {()=>void} props.onPressArticle - 내용 클릭
  * @param {string} props.route - 부모 컴포넌트 이름
+ * @param {string} props.searchInput - 검색 키워드
  */
 const ArticleContent = props => {
 	LogBox.ignoreAllLogs();
-
 	const [data, setData] = React.useState(props.data);
-	const [load, setLoad] = React.useState(false);
 	const [height, setHeight] = React.useState(0); // 게시글 내용의 Dynamic Height 수치
 
 	React.useEffect(() => {
@@ -56,16 +53,38 @@ const ArticleContent = props => {
 
 	const getContents = () => {
 		let contents = data.contents;
-		console.log('contents', contents);
+		// console.log('contents', contents);
 		return contents.map((v, i) => {
 			if (v && v.image == null) {
 				const r1 = v.replace(/&nbsp;/g, '');
 				const r2 = r1.replace(/<br>/g, '');
-				return (
-					<Text key={i} style={[txt.noto28]}>
-						{r2}
-					</Text>
-				);
+				if (props.searchInput == undefined) {
+					return (
+						<Text key={i} style={[txt.noto28]}>
+							{r2}
+						</Text>
+					);
+				} else if (props.searchInput.length > 1) {
+					console.log(props.searchInput);
+					let split = r2.split(new RegExp(`(${props.searchInput})`, 'gi'));
+					// console.log('split', split);
+					return (
+						<Text key={i} style={[txt.noto28]}>
+							{split.map((part, ind) =>
+								part.toLowerCase() === props.searchInput.toLowerCase() ? (
+									// <View style={{backgroundColor: 'red'}}>{part}</View>
+									<Text key={ind} style={[txt.noto28b, {color: APRI10, marginRight: 10 * DP}]}>
+										{part + ''}
+									</Text>
+								) : (
+									<Text key={ind} style={[txt.noto28, {marginRight: 10 * DP}]}>
+										{part + ''}
+									</Text>
+								),
+							)}
+						</Text>
+					);
+				}
 			} else if (v == undefined) {
 				return <></>;
 			} else {

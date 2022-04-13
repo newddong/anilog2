@@ -26,6 +26,14 @@ export default CommunityEdit = props => {
 		etc: false,
 	});
 
+	const [editorLayout, setEditorLayout] = React.useState({
+		//Rich Editor 레이아웃
+		height: 345,
+		width: 310,
+		x: 0,
+		y: 0,
+	});
+
 	const [cursor, setCursor] = React.useState(0);
 	const [height, setHeight] = React.useState(300);
 	const richText = React.useRef('');
@@ -40,6 +48,7 @@ export default CommunityEdit = props => {
 		if (Platform.OS === 'ios') {
 			Geolocation.requestAuthorization('always');
 		}
+		isReview ? navigation.setOptions({title: '리뷰 수정'}) : navigation.setOptions({title: '자유 게시글 수정'});
 	}, []);
 
 	React.useEffect(() => {
@@ -127,10 +136,9 @@ export default CommunityEdit = props => {
 		result.map((v, i) => {
 			richText.current?.insertHTML('<p><br/></p></div>');
 			richText.current?.insertHTML(
-				`<div  style="padding : 8px 10px 8px 0px; " ><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
-				 height="auto;" width="auto;" style="border-radius:15px; margin: 0 auto 4px; min-height:300px; max-width: 300px;  "/></div>`,
+				`<div><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
+				 height="320px;" width="${editorLayout.width};" style="border-radius:15px; margin:5px 0px 5px 0px; "/></div>`,
 			);
-			// richText.current?.insertHTML('<p><br/></p></div>');
 		});
 
 		richText.current?.focusContentEditor();
@@ -236,6 +244,11 @@ export default CommunityEdit = props => {
 			didhide.remove();
 		};
 	});
+
+	//Rich Editor 레이아웃
+	const onLayout = e => {
+		setEditorLayout(e.nativeEvent.layout);
+	};
 
 	//선택한 카테고리 목록 Stringify 함수
 	const getReviewCategory = list => {
@@ -395,6 +408,7 @@ export default CommunityEdit = props => {
 								editorStyle={{
 									contentCSSText: 'font-size:14px;',
 								}}
+								onLayout={onLayout}
 								onChange={onChange}
 								style={{
 									width: '100%',
@@ -422,6 +436,7 @@ export default CommunityEdit = props => {
 									contentCSSText: 'font-size:14px;',
 								}}
 								onChange={onChange}
+								onLayout={onLayout}
 								style={{
 									width: '100%',
 									opacity: 0.99,

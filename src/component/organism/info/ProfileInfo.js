@@ -18,6 +18,7 @@ import SelectInput from 'Root/component/molecules/button/SelectInput';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 import {FloatAddArticle_126x92} from 'Atom/icon';
 import {useNavigation} from '@react-navigation/core';
+import {favoriteEtc} from 'Root/api/favoriteetc';
 
 /**
  * 프로필 템플릿 상단의 유저 정보
@@ -38,14 +39,14 @@ import {useNavigation} from '@react-navigation/core';
 const ProfileInfo = props => {
 	const [data, setData] = React.useState(props.data);
 	const navigation = useNavigation();
-
+	console.log('data', data.is_follow);
+	// console.log('')
 	const [showMore, setShowMore] = React.useState(false); // 프로필 Description 우측 더보기 클릭 State
 	const [ownerListState, setOwnerListState] = React.useState(false); // userType이 Pet일 경우 반려인계정 출력 여부 T/F
 	const [companionListState, setCompanionListState] = React.useState(false); // userType이 User일 경우 반렫동물 리스트 출력 여부 T/F
 	const [into_height, setIntro_height] = React.useState(0); //user_introduction 의 길이 => 길이에 따른 '더보기' 버튼 출력 여부 결정
 
 	const isOwner = userGlobalObject.userInfo.user_my_pets.includes(data._id);
-
 	//더보기 클릭
 	const onPressShowMore = () => {
 		setShowMore(!showMore);
@@ -160,6 +161,42 @@ const ProfileInfo = props => {
 				break;
 		}
 	};
+	const doFavorite = () => {
+		Modal.close();
+		setTimeout(() => {
+			Modal.popTwoBtn(
+				data.user_nickname + '님을 \n 즐겨찾기 등록하시겠습니까?',
+				'아니오',
+				'등 록',
+				() => Modal.close(),
+				() => {
+					Modal.close();
+					setTimeout(() => {
+						favoriteEtc(
+							{
+								collectionName: 'userobjects',
+								is_favorite: true,
+								post_object_id: data._id,
+							},
+							result => {
+								console.log('result / favoriteEtc / profileInfo : ', result.msg.favoriteEtc);
+								Modal.close();
+								setTimeout(() => {
+									Modal.popNoBtn('즐겨찾기 등록이 \n 완료되었습니다.');
+									setTimeout(() => {
+										Modal.close();
+									}, 500);
+								}, 200);
+							},
+							err => {
+								console.log('err / favoriteEtc / profileInfo : ', err);
+							},
+						);
+					}, 200);
+				},
+			);
+		}, 200);
+	};
 
 	const onPressFollowingSetting = () => {
 		let isProtectingPet = data.pet_status == 'protect' || userGlobalObject.userInfo.user_my_pets.includes(data._id);
@@ -168,7 +205,7 @@ const ProfileInfo = props => {
 			selectedItem => {
 				switch (selectedItem) {
 					case '즐겨찾기 추가':
-						console.log('즐겨찾기 추가');
+						doFavorite();
 						break;
 					case '소식 받기':
 						console.log('소식받기');

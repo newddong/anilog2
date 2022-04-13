@@ -19,7 +19,7 @@ import AddFamilyAccount from 'Templete/pet/AddFamilyAccount';
 import AssignPetProfileImage from 'Templete/pet/AssignPetProfileImage';
 import AssignPetInfoA from 'Templete/pet/AssignPetInfoA';
 import AssignPetInfoB from 'Templete/pet/AssignPetInfoB';
-import SaveFavorite from 'Templete/favorite/SaveFavorite';
+import FavoriteUser from 'Root/component/templete/favorite/FavoriteUser';
 import SaveAnimalRequest from 'Templete/protection/SaveAnimalRequest';
 import FavoriteFeeds from 'Templete/favorite/FavoriteFeeds';
 import AppliesRecord from 'Templete/my/AppliesRecord';
@@ -161,7 +161,7 @@ export default MyStackNavigation = props => {
 				component={AssignPetInfoB}
 				options={{header: props => <SimpleHeader {...props} />, title: '반려동물 등록'}}
 			/>
-			<MyStack.Screen name="SaveFavorite" component={SaveFavorite} options={{header: props => <SimpleHeader {...props} />, title: '친구 즐겨찾기'}} />
+			<MyStack.Screen name="FavoriteUser" component={FavoriteUser} options={{header: props => <SimpleHeader {...props} />, title: '친구 즐겨찾기'}} />
 			<MyStack.Screen
 				name="UserSaveAnimalRequest"
 				component={SaveAnimalRequest}

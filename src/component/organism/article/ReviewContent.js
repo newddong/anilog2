@@ -10,7 +10,7 @@ import {
 	LocationMarker,
 	Meatball50_GRAY20_Horizontal,
 } from 'Root/component/atom/icon';
-import {BLACK, GRAY10, WHITE} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, WHITE} from 'Root/config/color';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {useNavigation} from '@react-navigation/core';
@@ -23,6 +23,7 @@ import Modal from 'Root/component/modal/Modal';
  * @param {object} props.data - 데이터
  * @param {(bool:boolean)=>void)} props.onPressFavorite - 즐겨찾기 클릭
  * @param {()=>void)} props.onPressMeatball - 미트볼 클릭
+ * @param {string} props.searchInput - 검색 키워드
  */
 const ReviewContent = props => {
 	const navigation = useNavigation();
@@ -110,11 +111,34 @@ const ReviewContent = props => {
 			if (v && v.image == null) {
 				const r1 = v.replace(/&nbsp;/g, '');
 				const r2 = r1.replace(/<br>/g, '');
-				return (
-					<Text key={i} style={[txt.noto28]}>
-						{r2}
-					</Text>
-				);
+				console.log('searchInput', props.searchInput);
+				if (props.searchInput == undefined) {
+					return (
+						<Text key={i} style={[txt.noto28]}>
+							{r2}
+						</Text>
+					);
+				} else if (props.searchInput.length > 1) {
+					console.log(props.searchInput);
+					let split = r2.split(new RegExp(`(${props.searchInput})`, 'gi'));
+					// console.log('split', split);
+					return (
+						<Text key={i} style={[txt.noto28]}>
+							{split.map((part, ind) =>
+								part.toLowerCase() === props.searchInput.toLowerCase() ? (
+									// <View style={{backgroundColor: 'red'}}>{part}</View>
+									<Text key={ind} style={[txt.noto28b, {color: APRI10, marginRight: 10 * DP}]}>
+										{part + ''}
+									</Text>
+								) : (
+									<Text key={ind} style={[txt.noto28, {marginRight: 10 * DP}]}>
+										{part + ''}
+									</Text>
+								),
+							)}
+						</Text>
+					);
+				}
 			} else if (v == undefined) {
 				return <></>;
 			} else {

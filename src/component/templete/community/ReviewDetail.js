@@ -13,7 +13,7 @@ import {createComment, getCommentListByCommunityId, getCommentListByFeedId, getC
 import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import {favoriteEtc} from 'Root/api/favoriteect';
+import {favoriteEtc} from 'Root/api/favoriteetc';
 import community_obj from 'Root/config/community_obj';
 import {REPORT_MENU} from 'Root/i18n/msg';
 
@@ -25,6 +25,7 @@ import {REPORT_MENU} from 'Root/i18n/msg';
 export default ReviewDetail = props => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.route.params.community_object);
+	const [searchInput, setSearchInput] = React.useState('');
 	const [reviewList, setReviewList] = React.useState('false');
 	const [comments, setComments] = React.useState([]);
 	const [showMore, setShowMore] = React.useState(false);
@@ -69,11 +70,10 @@ export default ReviewDetail = props => {
 				let matches = parsingSpan2.match(/<div\b(?:(R)|(?:(?!<\/?div).))*<\/div>/gm);
 				// console.log('matched', matches);
 				matches.map((v, i) => {
-					// let remove = v.match(/<div\b(?:(R)|(?:(?!<\/?div).))*<\/div>/gm);
 					let getImgTag = v.match(/<img[\w\W]+?\/?>/g); //img 태그 추출
-					console.log('v', i, v);
+					// console.log('v', i, v);
 					const remove = v.match(/<div[^>]+>([^<]+?)<\/div>/);
-					console.log('remove', remove, i);
+					// console.log('remove', remove, i);
 					if (getImgTag) {
 						let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i); //img 태그가 있는 경우 src 추출
 						lines.push({image: src[1]});
@@ -92,7 +92,7 @@ export default ReviewDetail = props => {
 					// console.log('remove', i, remove, 'v', v);
 					if (getImgTag) {
 						let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i); //img 태그가 있는 경우 src 추출
-						console.log('src', src);
+						// console.log('src', src);
 						lines.push({image: src[1]});
 					} else {
 						if (remove != undefined) {
@@ -116,6 +116,10 @@ export default ReviewDetail = props => {
 			community_obj.pageToMove = '';
 			community_obj.object.initial = true;
 		});
+		if (props.route.params.searchInput != '') {
+			console.log('props.route.params.searchInput', props.route.params.searchInput);
+			setSearchInput(props.route.params.searchInput);
+		}
 		return unsubscribe;
 	}, []);
 
@@ -135,7 +139,7 @@ export default ReviewDetail = props => {
 
 		if (parentComment) {
 			//대댓글일 경우 해당 부모 댓글에 대한 댓글을 추가
-			param = {...param, commentobject_id: parentComment};
+			param = {...param, commentobject_id: parentComment._id};
 		} else {
 			//부모댓글에 쓰는 경우가 아니라면 community 게시글에 대한 댓글을 추가
 			param = {...param, community_object_id: data._id};
@@ -347,7 +351,7 @@ export default ReviewDetail = props => {
 				is_favorite: bool,
 			},
 			result => {
-				// console.log('result / favoriteEtc / ArticleDetail : ', result.msg);
+				console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
 			},
 			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
 		);
@@ -389,7 +393,7 @@ export default ReviewDetail = props => {
 					renderItem={({item, index}) => {
 						return (
 							<View style={{alignItems: 'center', marginTop: 30 * DP}}>
-								<ReviewContent data={data} onPressFavorite={onPressFavorite} onPressMeatball={onPressMeatball} />
+								<ReviewContent data={data} onPressFavorite={onPressFavorite} onPressMeatball={onPressMeatball} searchInput={searchInput} />
 								<View style={[style.separator]} />
 								<View style={[style.commentList]}>
 									{comments && comments.length > 0 ? (
@@ -469,8 +473,8 @@ const style = StyleSheet.create({
 	},
 	commentContainer: {
 		alignItems: 'center',
-		paddingBottom: 10 * DP,
-		paddingTop: 20 * DP,
+		// paddingBottom: 10 * DP,
+		// paddingTop: 20 * DP,
 		// backgroundColor: 'yellow',
 	},
 });

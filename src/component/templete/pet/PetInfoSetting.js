@@ -1,21 +1,19 @@
-import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {ActivityIndicator, Platform, ScrollView, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Platform, ScrollView, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {APRI10, GRAY10, GRAY40} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {btn_w242} from 'Atom/btn/btn_style';
-import {AddItem64, AddItem92, Arrow_Down_GRAY10, Arrow_Up_GRAY10, Cross52, NextMark} from 'Atom/icon';
-import AniButton from 'Molecules/button/AniButton';
+import {AddItem92, Arrow_Down_GRAY10, Arrow_Up_GRAY10, Cross52, NextMark} from 'Atom/icon';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import PetImageLabel from 'Molecules/label/PetImageLabel';
-import {btn_style, login_style, petInfoSetting, temp_style} from 'Templete/style_templete';
+import {login_style, petInfoSetting, temp_style} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
 import {getUserInfoById, removeUserFromFamily} from 'Root/api/userapi';
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {familyAccountList_style} from 'Root/component/organism/style_organism copy';
 import DP from 'Root/config/dp';
-import {DOG_KIND, PET_KIND, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
+import {PET_KIND} from 'Root/i18n/msg';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 //이 화면에 들어오면서 특정 _id를 API 연동으로 데이터를 가져 옴.
 //이전 화면에서 모든 데이터를 가진 상태에서 들어오는 것이 아님.
@@ -170,11 +168,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 	};
 
 	if (petData == 'false') {
-		return (
-			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
-				<ActivityIndicator size={'large'} />
-			</View>
-		);
+		return <Loading isModal={false} />;
 	} else {
 		return (
 			<View style={[login_style.wrp_main, petInfoSetting.container]}>

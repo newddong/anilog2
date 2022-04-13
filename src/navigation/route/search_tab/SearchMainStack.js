@@ -16,6 +16,13 @@ import FeedCommentList from 'Root/component/templete/feed/FeedCommentList';
 import AlarmAndSearchHeader from 'Root/navigation/header/AlarmAndSearchHeader';
 import FeedListForHashTag from 'Root/component/templete/feed/FeedListForHashTag';
 import BookmarkHeader from 'Root/navigation/header/BookmarkHeader';
+import ArticleDetail from 'Root/component/templete/community/ArticleDetail';
+import ReviewDetail from 'Root/component/templete/community/ReviewDetail';
+import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
+import CommunityEdit from 'Root/component/templete/community/CommunityEdit';
+import SendHeader from 'Root/navigation/header/SendHeader';
+import SearchMap from 'Root/component/templete/search/SearchMap';
+import AddressSearchPage from 'Root/component/templete/search/AddressSearchPage';
 
 const SearchStackNav = createStackNavigator();
 
@@ -61,6 +68,54 @@ export default SearchMainStack = props => {
 				name="FeedListForHashTag"
 				component={FeedListForHashTag}
 				options={{header: props => <BookmarkHeader {...props} />, title: '#해시태그'}}
+			/>
+			<SearchStackNav.Screen
+				name={'ArticleDetail'}
+				component={ArticleDetail}
+				options={({route}) => ({
+					headerShown: true,
+					header: props => <SimpleHeader {...props} />,
+					title: ' ',
+				})}
+			/>
+			<SearchStackNav.Screen
+				name={'ReviewDetail'}
+				component={ReviewDetail}
+				options={({route}) => ({
+					headerShown: true,
+					header: props => <SimpleHeader {...props} />,
+					title: ' ',
+				})}
+			/>
+			<SearchStackNav.Screen
+				name={'CommunityEdit'}
+				component={CommunityEdit}
+				options={({route}) => ({
+					header: props => <SendHeader {...props} />,
+					title: '리뷰 수정',
+				})}
+			/>
+			<SearchStackNav.Screen
+				name={'CommunityCommentList'}
+				component={CommunityCommentList}
+				options={({route}) => ({
+					// headerShown: false,
+					header: props => <SimpleHeader {...props} />,
+					title: ' ',
+				})}
+			/>
+			<SearchStackNav.Screen
+				name={'SearchMap'}
+				component={SearchMap}
+				options={({route}) => ({
+					header: props => <SimpleHeader {...props} />,
+					title: '주소 검색',
+				})}
+			/>
+			<SearchStackNav.Screen
+				name="AddressSearchPage"
+				component={AddressSearchPage}
+				options={{header: props => <SimpleHeader {...props} />, title: '주소 설정'}}
 			/>
 			<SearchStackNav.Screen name="HashFeedList" component={FeedList} />
 		</SearchStackNav.Navigator>

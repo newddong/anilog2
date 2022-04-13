@@ -18,15 +18,7 @@ export default AnimalInfoList = props => {
 		);
 	};
 
-	return (
-		<ScrollView horizontal={false} contentContainerStyle={{flex: 0}}>
-			<ScrollView horizontal={true} contentContainerStyle={{flex: 1}} scrollEnabled={false}>
-				<View style={[animalInfoList.container]}>
-					<FlatList data={data} renderItem={({item, index}) => renderItem(item, index)} scrollEnabled={false} ListEmptyComponent={props.whenEmpty} />
-				</View>
-			</ScrollView>
-		</ScrollView>
-	);
+	return <FlatList data={data} renderItem={({item, index}) => renderItem(item, index)} scrollEnabled={false} ListEmptyComponent={props.whenEmpty} />;
 };
 
 AnimalInfoList.defaultProps = {

@@ -160,7 +160,7 @@ export default CommunityWrite = props => {
 			richText.current?.insertHTML('<p><br/></p></div>');
 			richText.current?.insertHTML(
 				`<div><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
-				 height="320px;" width="${editorLayout.width};" style="border-radius:15px; margin: 0 auto 4px;    "/></div>`,
+				 height="320px;" width="${editorLayout.width};" style="border-radius:15px; margin:5px 0px 5px 0px; "/></div>`,
 			);
 			// richText.current?.insertHTML(
 			// 	`<div  style="padding : 8px 10px 8px 0px; " ><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n

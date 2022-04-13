@@ -15,8 +15,9 @@ import {controllableAccountList} from 'Organism/style_organism copy';
  * onClickAccount : void,
  * showCheckBox : boolean,
  * showCheckBox :boolean,
- * showButtons : boolean
- * showFollowStatusText : boolean
+ * showButtons : boolean,
+ * showFollowStatusText : boolean,
+ * listEmptyText : string
  * }} props
  */
 export default ControllableAccountList = props => {
@@ -74,7 +75,7 @@ export default ControllableAccountList = props => {
 							data={props.items}
 							scrollEnabled={false}
 							renderItem={({item, index}) => renderItem(item, index)}
-							ListEmptyComponent={<ListEmptyInfo text={'목록이 없습니다.'} />}
+							ListEmptyComponent={<ListEmptyInfo text={props.listEmptyText} />}
 						/>
 					</View>
 				</View>
@@ -93,4 +94,5 @@ ControllableAccountList.defaultProps = {
 	showCrossMark: false,
 	showCheckBox: false,
 	showFollowStatusText: true,
+	listEmptyText: '목록이 없습니다.',
 };

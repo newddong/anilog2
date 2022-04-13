@@ -6,11 +6,43 @@ import DP from 'Root/config/dp';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import community_obj from 'Root/config/community_obj';
+import {getFavoriteEtcListByUserId} from 'Root/api/favoriteetc';
+import Loading from 'Root/component/molecules/modal/Loading';
+import userGlobalObject from 'Root/config/userGlobalObject';
+import {EmptyIcon} from 'Root/component/atom/icon';
 
 //즐겨찾기한 커뮤니티 조회
 export default FavoriteArticle = ({route}) => {
 	const navigation = useNavigation();
-	const data = route.params || [];
+	const [data, setData] = React.useState('false');
+
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			fetchData();
+		});
+		// fetchData();
+		return unsubscribe;
+	}, []);
+
+	const fetchData = () => {
+		getFavoriteEtcListByUserId(
+			{
+				userobject_id: userGlobalObject.userInfo._id,
+				collectionName: 'communityobjects',
+			},
+			result => {
+				// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg);
+				let articleCont = result.msg.filter(e => e.favorite_etc_post_id.community_type == 'free');
+				let articleList = articleCont.map(v => v.favorite_etc_post_id);
+				console.log('review length', articleList.length);
+				setData(articleList);
+			},
+			err => {
+				console.log('err / getFavoriteEtcListByUserId / FavoriteCommunity : ', err);
+				setData([]);
+			},
+		);
+	};
 
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
@@ -34,37 +66,34 @@ export default FavoriteArticle = ({route}) => {
 
 	const whenEmpty = () => {
 		return (
-			<>
-				<Image
-					style={[styles.img_square_246, {paddingVertical: 150 * DP}]}
-					resizeMode={'stretch'}
-					source={{
-						uri: 'https://st.depositphotos.com/21121724/53932/v/600/depositphotos_539322694-stock-illustration-cartoon-home-pets-empty-feeder.jpg',
-					}}
-				/>
-				<Text style={[txt.roboto36b]}>목록이 없네요.</Text>
-			</>
+			<View style={{paddingVertical: 150 * DP, alignItems: 'center'}}>
+				<EmptyIcon />
+				<Text style={[txt.noto28, {marginTop: 10 * DP}]}>즐겨찾기한 자유게시글이 없습니다..</Text>
+			</View>
 		);
 	};
 
-	return (
-		<View style={[style.container]}>
-			{route.name == 'MyArticle' ? (
-				<></>
-			) : (
-				<View style={[style.header]}>
-					<Text style={[txt.noto24]}>직접 책갈피 표시를 선택해 즐겨찾기를 해제할 수 있습니다.</Text>
+	if (data == 'false') {
+		return <Loading isModal={false} />;
+	} else
+		return (
+			<View style={[style.container]}>
+				{route.name == 'MyArticle' ? (
+					<></>
+				) : (
+					<View style={[style.header]}>
+						<Text style={[txt.noto24]}>직접 책갈피 표시를 선택해 즐겨찾기를 해제할 수 있습니다.</Text>
+					</View>
+				)}
+				<View style={{paddingVertical: 20 * DP}}>
+					<ArticleList
+						items={data}
+						onPressArticle={onPressArticle} //게시글 내용 클릭
+						whenEmpty={whenEmpty}
+					/>
 				</View>
-			)}
-			<View style={{paddingVertical: 20 * DP}}>
-				<ArticleList
-					items={data}
-					onPressArticle={onPressArticle} //게시글 내용 클릭
-					whenEmpty={whenEmpty}
-				/>
 			</View>
-		</View>
-	);
+		);
 };
 
 const style = StyleSheet.create({

@@ -78,8 +78,9 @@ export default ParentComment = React.memo((props, ref) => {
 	};
 
 	const onPressReplyBtn = () => {
-		console.log('대댓글 추가2');
-		props.onPressReplyBtn(props.parentComment._id, addChildComment);
+		// console.log('대댓글 추가2');
+		console.log('대댓글 추가 부모댓글 닉네임 : ', props.parentComment.comment_writer_id.user_nickname);
+		props.onPressReplyBtn(props.parentComment, addChildComment);
 	};
 
 	const onCLickHeart = () => {

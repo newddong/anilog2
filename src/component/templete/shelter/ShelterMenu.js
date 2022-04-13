@@ -137,7 +137,7 @@ export default ShelterMenu = ({route}) => {
 			//---------------즐겨찾기
 			//친구
 			case FRIENDS:
-				navigation.push('SaveFavorite');
+				navigation.push('FavoriteUser');
 				break;
 			//피드 게시글
 			case PEED_CONTENTS:

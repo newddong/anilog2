@@ -33,7 +33,7 @@ export default CommentList = props => {
 			<View
 				style={[
 					{
-						height: 100 * DP,
+						height: 70 * DP,
 						width: 654 * DP,
 						// backgroundColor: 'red',
 						marginVertical: 30 * DP,

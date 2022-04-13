@@ -5,14 +5,12 @@ import {Animal_another_off, Animal_cat_off, Animal_dog_off, EmptyIcon, Filter60B
 import ReviewList from 'Root/component/organism/list/ReviewList';
 import {Animal_another, Animal_cat, Animal_dog} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
-import {getCommunityList, updateAndDeleteCommunity} from 'Root/api/community';
+import {updateAndDeleteCommunity} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {styles} from 'Root/component/atom/image/imageStyle';
 import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeEtc} from 'Root/api/likeetc';
-import {favoriteEtc} from 'Root/api/favoriteect';
-import community_obj from 'Root/config/community_obj';
+import {favoriteEtc} from 'Root/api/favoriteetc';
 import {useNavigation} from '@react-navigation/core';
 import searchContext from 'Root/config/searchContext';
 
@@ -40,7 +38,6 @@ export default SearchReview = props => {
 	}, [searchContext.searchInfo.searchInput]);
 
 	React.useEffect(() => {
-		console.log('fetchDFata');
 		if (props.data.review) {
 			setData(props.data.review);
 		}
@@ -247,23 +244,24 @@ export default SearchReview = props => {
 
 	//리뷰 썸네일 클릭
 	const onPressReviewContent = index => {
-		console.log('index', index);
-		community_obj.object = data[index];
-		community_obj.pageToMove = 'ReviewDetail';
-		community_obj.initial = false;
-		console.log('community_obj.current', community_obj.current);
-		if (community_obj.current == '') {
-			//탭 간의 이동을 간편히 하기 위해 만든 community_obj의 current 값이 빈값 == 현재 보고 있는 ArticleDetail이 없음
-			//우선 ArticleMain의 스택을 쌓기 위해 ArticleMain으로 먼저 보낸 뒤 바로 이동되어야 할 상세 자유 게시글을 여기서 선언 => Parameter로 보냄
-			navigation.navigate('COMMUNITY', {screen: 'ReviewMain', initial: false, params: {community_object: data[index], pageToMove: 'ReviewDetail'}});
-		} else {
-			//이미 보고 있는 ArticleDetail이 존재하므로 ArticleDetail 템플릿을 덮어씌우고 봐야할 상세 자유 게시글은 Parameter로 송신
-			navigation.navigate('COMMUNITY', {
-				screen: 'ReviewDetail',
-				initial: false,
-				params: {community_object: data[index], reset: true},
-			});
-		}
+		// console.log('index', index);
+		// community_obj.object = data[index];
+		// community_obj.pageToMove = 'ReviewDetail';
+		// community_obj.initial = false;
+		// console.log('community_obj.current', community_obj.current);
+		// if (community_obj.current == '') {
+		// 	//탭 간의 이동을 간편히 하기 위해 만든 community_obj의 current 값이 빈값 == 현재 보고 있는 ArticleDetail이 없음
+		// 	//우선 ArticleMain의 스택을 쌓기 위해 ArticleMain으로 먼저 보낸 뒤 바로 이동되어야 할 상세 자유 게시글을 여기서 선언 => Parameter로 보냄
+		// 	navigation.navigate('COMMUNITY', {screen: 'ReviewMain', initial: false, params: {community_object: data[index], pageToMove: 'ReviewDetail'}});
+		// } else {
+		// 	//이미 보고 있는 ArticleDetail이 존재하므로 ArticleDetail 템플릿을 덮어씌우고 봐야할 상세 자유 게시글은 Parameter로 송신
+		// 	navigation.navigate('COMMUNITY', {
+		// 		screen: 'ReviewDetail',
+		// 		initial: false,
+		// 		params: {community_object: data[index], reset: true},
+		// 	});
+		// }
+		navigation.push('ReviewDetail', {community_object: data[index], searchInput: searchInput});
 	};
 
 	//글쓰기 아이콘 클릭
@@ -387,9 +385,9 @@ export default SearchReview = props => {
 					ListHeaderComponent={filterComponent()}
 					stickyHeaderIndices={[0]}
 				/>
-				<View style={[style.write, style.shadowButton]}>
+				{/* <View style={[style.write, style.shadowButton]}>
 					<WriteBoard onPress={onPressWrite} />
-				</View>
+				</View> */}
 			</View>
 		);
 };

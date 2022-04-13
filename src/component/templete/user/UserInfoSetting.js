@@ -14,6 +14,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 // import {getUserProfile} from 'Root/api/usermenuapi';
 import {getUserInfoById, getUserProfile, updateUserIntroduction} from 'Root/api/userapi';
 import DP from 'Root/config/dp';
+import Loading from 'Root/component/molecules/modal/Loading';
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 export default UserInfoSetting = ({route}) => {
 	// console.log('userInfoSetting', route);
@@ -107,11 +108,7 @@ export default UserInfoSetting = ({route}) => {
 		setData({...data, user_introduction: text});
 	};
 	if (data == 'false') {
-		return (
-			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
-				<ActivityIndicator size={'large'}></ActivityIndicator>
-			</View>
-		);
+		return <Loading isModal={false} />;
 	} else {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>

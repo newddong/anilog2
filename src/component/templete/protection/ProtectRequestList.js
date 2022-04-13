@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, ActivityIndicator, FlatList} from 'react-native';
+import {Text, View, FlatList} from 'react-native';
 import {login_style, searchProtectRequest, temp_style} from 'Templete/style_templete';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {GRAY10} from 'Root/config/color';
@@ -10,7 +10,8 @@ import {getProtectRequestList} from 'Root/api/shelterapi.js';
 import {btn_w306_h68} from 'Component/atom/btn/btn_style';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 import Modal from 'Root/component/modal/Modal';
-import {favoriteEtc} from 'Root/api/favoriteect';
+import {favoriteEtc} from 'Root/api/favoriteetc';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 export default ProtectRequestList = ({navigation, route}) => {
 	const [data, setData] = React.useState('false');
@@ -151,11 +152,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 	};
 
 	if (data == 'false') {
-		return (
-			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
-				<ActivityIndicator size={'large'}></ActivityIndicator>
-			</View>
-		);
+		return <Loading isModal={false} />;
 	} else {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>

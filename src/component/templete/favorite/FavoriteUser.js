@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
-import {followUser, getChekingFollow, getFollows, getUserListByNickname, unFollowUser} from 'Root/api/userapi';
+import {StyleSheet, Text, View} from 'react-native';
+import {followUser, getChekingFollow, unFollowUser} from 'Root/api/userapi';
 import AccountHashList from 'Organism/list/AccountHashList';
 import SelectStat from 'Organism/list/SelectStat';
 import {login_style, temp_style, selectstat_view_style} from 'Templete/style_templete';
@@ -32,27 +32,31 @@ export default FavoriteUser = props => {
 			result => {
 				console.log('result / getFavoriteEtcListByUserId : FavoriteUser ', result.msg.length);
 				let userList = [];
-				result.msg.map((v, i) => {
-					getChekingFollow(
-						{
-							follow_userobject_id: v.favorite_etc_post_id._id,
-						},
-						result => {
-							// console.log('result / getChekingFollow / FavoriteUser : ', result.msg);
-							if (result.msg) {
-								v.favorite_etc_post_id.is_follow = true;
-							} else {
-								v.favorite_etc_post_id.is_follow = false;
-							}
-							userList.push(v.favorite_etc_post_id);
-							setData(userList);
-						},
-						err => {
-							console.log(' err / getCheckingFollow / FavoriteUser : ', err);
-						},
-					);
-					// v.favorite_etc_post_id.is_follow = true;
-				});
+				if (result.msg.length == 0) {
+					setData([]);
+				} else {
+					result.msg.map((v, i) => {
+						getChekingFollow(
+							{
+								follow_userobject_id: v.favorite_etc_post_id._id,
+							},
+							result => {
+								// console.log('result / getChekingFollow / FavoriteUser : ', result.msg);
+								if (result.msg) {
+									v.favorite_etc_post_id.is_follow = true;
+								} else {
+									v.favorite_etc_post_id.is_follow = false;
+								}
+								userList.push(v.favorite_etc_post_id);
+								setData(userList);
+							},
+							err => {
+								console.log(' err / getCheckingFollow / FavoriteUser : ', err);
+							},
+						);
+						// v.favorite_etc_post_id.is_follow = true;
+					});
+				}
 			},
 			err => {
 				console.log(' err / getFavoriteEtcListByUserId : FavoriteUser : ', err);
@@ -91,14 +95,6 @@ export default FavoriteUser = props => {
 
 	// 선택하기 => 선택 삭제 클릭
 	const deleteSelectedItem = () => {
-		// let copy = [...data];
-		// copy = copy.filter(e => e.checkBoxState != true);
-		// copy.map((v, i) => {
-		// 	// console.log('index=>' + i);
-		// 	v._index = i;
-		// 	v.checkBoxState = false;
-		// });
-		// setData(copy);
 		if (data.findIndex(e => e.checkBoxState == true) == -1) {
 			Modal.popOneBtn('선택된 리뷰가 없습니다.', '확인', () => Modal.close());
 			// CheckBox 상태가 true인 것이 존재하는 경우 삭제 시작
@@ -112,8 +108,6 @@ export default FavoriteUser = props => {
 				setData(copy);
 				Modal.close();
 			};
-
-			// Modal.popTwoBtn(deleteMsg(), '취소', '해제', () => Modal.close(), doDelete);
 			Modal.popOneBtn('선택한 목록을 삭제하시겠습니까?', '해제', doDelete);
 		}
 	};
@@ -129,9 +123,6 @@ export default FavoriteUser = props => {
 				},
 				result => {
 					console.log('result/ onPressLike / FavoriteUser : ', result.msg.targetPost);
-					// cancelSelectMode(false);
-					// checkSelectMode(false);
-					// checkBoxMode(false)
 					fetchData();
 				},
 				err => console.log('err / onPressLike / FavoriteUser : ', err),
@@ -198,7 +189,7 @@ export default FavoriteUser = props => {
 				<Loading isModal={false} />
 			</View>
 		);
-	} else {
+	} else
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
 				<View style={[temp_style.selectstat_view]}>
@@ -211,7 +202,7 @@ export default FavoriteUser = props => {
 						/>
 					</View>
 				</View>
-				<View style={[style.accountHashList, {height: null}]}>
+				<View style={[style.accountHashList]}>
 					<AccountHashList
 						data={data}
 						checkBoxMode={checkBoxMode}
@@ -220,13 +211,12 @@ export default FavoriteUser = props => {
 						onClickFollow={onClickFollow}
 						onCheckBox={onCheckBox}
 						routeName={props.route.name}
-						showFollowBtn={true}
+						// showFollowBtn={true}
 						whenEmpty={whenEmpty}
 					/>
 				</View>
 			</View>
 		);
-	}
 };
 
 const style = StyleSheet.create({

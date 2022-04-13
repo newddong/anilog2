@@ -9,6 +9,7 @@ import AniButton from 'Molecules/button/AniButton';
 import AnimalProtectDetail from 'Organism/info/AnimalProtectDetail';
 import {login_style, btn_style, protectApplyForm} from 'Templete/style_templete';
 import {setShelterProtectAnimalStatus} from 'Root/api/shelterapi';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 //ShelterMenu -> 신청서조회 -> 신청서 클릭 -> 입양 확정 및 임시보호 확정
 export default ProtectApplyForm = ({route, navigation}) => {
@@ -120,11 +121,7 @@ export default ProtectApplyForm = ({route, navigation}) => {
 		);
 	};
 	if (data == 'false') {
-		return (
-			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
-				<ActivityIndicator size={'large'}></ActivityIndicator>
-			</View>
-		);
+		return <Loading isModal={false} />;
 	}
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>

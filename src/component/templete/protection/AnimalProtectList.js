@@ -7,6 +7,7 @@ import {txt} from 'Root/config/textstyle';
 import AnimalInfoList from 'Organism/list/AnimalInfoList';
 import {login_style, animalProtectList} from 'Templete/style_templete';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 //UserMenu => 동물 보호 현황
 export default AnimalProtectList = ({route}) => {
@@ -40,11 +41,7 @@ export default AnimalProtectList = ({route}) => {
 	};
 
 	if (data == 'false') {
-		return (
-			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
-				<ActivityIndicator size={'large'}></ActivityIndicator>
-			</View>
-		);
+		return <Loading isModal={false} />;
 	} else {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>

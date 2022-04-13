@@ -23,6 +23,7 @@ import ProtectAnimalInfoBox from 'Root/component/organism/info/ProtectAnimalInfo
 import {count_to_K} from 'Root/util/stringutil';
 import {getProtectRequestListByShelterId} from 'Root/api/shelterapi';
 import {getProtectRequestByProtectRequestId} from 'Root/api/protectapi';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 //AnimalProtectRequestDetail 호출 경로
 // - ProtectRequestList(보호활동탭) , AnimalFromShelter(게시글보기) , AidRequestManage(게시글보기), AidRequestAnimalList(게시글 보기)
@@ -220,11 +221,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const isLoaded = data == 'false' || writersAnotherRequests == 'false' || commentDataList == 'false';
 
 	if (isLoaded) {
-		return (
-			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
-				<ActivityIndicator size={'large'} />
-			</View>
-		);
+		return <Loading isModal={false} />;
 	} else
 		return (
 			<View style={[login_style.wrp_main]}>

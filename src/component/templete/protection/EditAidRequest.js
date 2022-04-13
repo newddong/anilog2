@@ -11,6 +11,7 @@ import {assignProtectAnimal_style, login_style, writeAidRequest} from 'Templete/
 import ImagePicker from 'react-native-image-crop-picker';
 import Modal from 'Component/modal/Modal';
 import {getProtectRequestByProtectRequestId} from 'Root/api/protectapi';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 //보호요청 게시글 수정
 export default EditAidRequest = ({route, navigation}) => {
@@ -134,11 +135,7 @@ export default EditAidRequest = ({route, navigation}) => {
 	};
 
 	if (data == 'false') {
-		return (
-			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
-				<ActivityIndicator size={'large'} />
-			</View>
-		);
+		return <Loading isModal={false} />;
 	}
 	return (
 		<View style={[login_style.wrp_main, style.container]}>

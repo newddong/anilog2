@@ -188,7 +188,7 @@ export default ArticleDetail = props => {
 
 		if (parentComment) {
 			//대댓글일 경우 해당 부모 댓글에 대한 댓글을 추가
-			param = {...param, commentobject_id: parentComment};
+			param = {...param, commentobject_id: parentComment._id};
 		} else {
 			//부모댓글에 쓰는 경우가 아니라면 community 게시글에 대한 댓글을 추가
 			param = {...param, community_object_id: data._id};
@@ -289,9 +289,9 @@ export default ArticleDetail = props => {
 		setEditData({...editData, comment_contents: text});
 	};
 
-	// 답글 쓰기 버튼 클릭 콜백함수
+	// 대댓글 쓰기 버튼 클릭 콜백함수
 	const onReplyBtnClick = (parentCommentId, addChildComment) => {
-		console.log('onReplyBtnClick : ', parentCommentId);
+		console.log('대댓글 쓰기 버튼 클릭 : ', parentCommentId);
 		setParentComment(parentCommentId);
 		input.current.focus();
 		editComment || setEditComment(true);
@@ -457,7 +457,6 @@ export default ArticleDetail = props => {
 											<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
 										</View>
 									)}
-
 									<View style={[style.commentContainer]}>
 										<CommentList items={comments} onPressReplyBtn={onReplyBtnClick} onEdit={onEdit} />
 									</View>
@@ -472,6 +471,7 @@ export default ArticleDetail = props => {
 											ref={input}
 											editData={editData}
 											shadow={false}
+											parentComment={parentComment}
 										/>
 									</View>
 									<ArticleList

@@ -139,7 +139,7 @@ export default ReviewDetail = props => {
 
 		if (parentComment) {
 			//대댓글일 경우 해당 부모 댓글에 대한 댓글을 추가
-			param = {...param, commentobject_id: parentComment};
+			param = {...param, commentobject_id: parentComment._id};
 		} else {
 			//부모댓글에 쓰는 경우가 아니라면 community 게시글에 대한 댓글을 추가
 			param = {...param, community_object_id: data._id};

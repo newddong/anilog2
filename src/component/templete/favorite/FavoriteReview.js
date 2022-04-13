@@ -35,7 +35,7 @@ export default FavoriteReview = ({route}) => {
 				collectionName: 'communityobjects',
 			},
 			result => {
-				// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg);
+				// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg[0]);
 				let reviewCont = result.msg.filter(e => e.favorite_etc_post_id.community_type == 'review');
 				let reviewList = reviewCont.map(v => v.favorite_etc_post_id);
 				console.log('review length', reviewList.length);
@@ -102,12 +102,12 @@ export default FavoriteReview = ({route}) => {
 					is_favorite: false,
 				},
 				result => {
-					console.log('result/ onPressLike / ReviewMain : ', result.msg.targetPost);
+					console.log('result/ onPressLike / FavoriteReview : ', result.msg.targetPost);
 					cancelSelectMode(false);
 					checkSelectMode(false);
 					fetchData();
 				},
-				err => console.log('err / onPressLike / ReviewMain : ', err),
+				err => console.log('err / onPressLike / FavoriteReview : ', err),
 			);
 		});
 	};
@@ -172,10 +172,10 @@ export default FavoriteReview = ({route}) => {
 				is_like: bool,
 			},
 			result => {
-				console.log('result/ onPressLike / ReviewMain : ', result.msg.targetPost.community_like_count);
+				console.log('result/ onPressLike / FavoriteReview : ', result.msg.targetPost.community_like_count);
 				fetchData();
 			},
-			err => console.log('err / onPressLike / ReviewMain : ', err),
+			err => console.log('err / onPressLike / FavoriteReview : ', err),
 		);
 	};
 

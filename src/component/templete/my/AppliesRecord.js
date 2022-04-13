@@ -8,6 +8,7 @@ import ShelterList from 'Organism/list/ShelterList';
 import {appliesRecord, login_style} from 'Templete/style_templete';
 import AnimalNeedHelp from 'Root/component/organism/listitem/AnimalNeedHelp';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 export default AppliesRecord = ({route}) => {
 	//첫번째 값만 신청내역에 보여주기 위함. AnimalNeedHelpList가 배열 데이터를 다루기 때문에 반드시 객체가 배열이어야 함.
@@ -126,11 +127,7 @@ export default AppliesRecord = ({route}) => {
 	const isLoaded = adopt_application_list == 'false' || protect_application_list == 'false' || volunteer_list == 'false';
 
 	if (isLoaded) {
-		return (
-			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
-				<ActivityIndicator size={'large'}></ActivityIndicator>
-			</View>
-		);
+		return <Loading isModal={false} />;
 	} else {
 		return (
 			<View style={[login_style.wrp_main, appliesRecord.container]}>

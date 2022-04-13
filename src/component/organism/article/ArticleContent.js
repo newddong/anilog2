@@ -1,12 +1,10 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {ActivityIndicator, Image, Linking, LogBox, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, LogBox, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {APRI10, BLACK} from 'Root/config/color';
 import {FavoriteTag46_Filled, FavoriteTag48_Border, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
-import WebView from 'react-native-webview';
-import Loading from 'Root/component/molecules/modal/Loading';
 import {styles} from 'Root/component/atom/image/imageStyle';
 /**
  * 게시글 컨텐츠
@@ -20,7 +18,6 @@ import {styles} from 'Root/component/atom/image/imageStyle';
  */
 const ArticleContent = props => {
 	LogBox.ignoreAllLogs();
-	console.log('searchInput : ArticleContent : ', props.searchInput);
 	const [data, setData] = React.useState(props.data);
 	const [height, setHeight] = React.useState(0); // 게시글 내용의 Dynamic Height 수치
 

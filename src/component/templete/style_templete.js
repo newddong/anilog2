@@ -932,9 +932,10 @@ export const temp_style = StyleSheet.create({
 		// backgroundColor: 'yellow',
 	},
 	button_animalProtectRequestDetail: {
-		width: 126 * DP,
+		// width: 126 * DP,
 		height: 84 * DP,
 		flexDirection: 'row',
+		// backgroundColor: 'red',
 	},
 	rescueSummary: {
 		width: 654 * DP,
@@ -3229,7 +3230,7 @@ export const appliesRecord = StyleSheet.create({
 		marginVertical: 30 * DP,
 	},
 	whenEmpty: {
-		paddingVertical: 60 * DP,
+		paddingVertical: 40 * DP,
 	},
 });
 

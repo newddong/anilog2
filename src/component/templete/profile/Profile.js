@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, FlatList, Animated, Easing} from 'react-native';
 import {followUser, getUserProfile, unFollowUser} from 'Root/api/userapi';
 import {NORMAL, PET, SHELTER} from 'Root/i18n/msg';
-import {Message94, Write94} from 'Atom/icon';
+import {EmptyIcon, Message94, Write94} from 'Atom/icon';
 import TabSelectFilled_Type2 from 'Molecules/tab/TabSelectFilled_Type2';
 import ProfileInfo from 'Organism/info/ProfileInfo';
 import FeedThumbnailList from 'Organism/feed/FeedThumbnailList';
@@ -368,7 +368,8 @@ export default Profile = ({route}) => {
 		const whenFeedThumbnailEmpty = () => {
 			return (
 				<View style={[profile.whenFeedThumbnailEmpty]}>
-					<Text style={[txt.roboto32b]}>피드 게시물이 없습니다.</Text>
+					<EmptyIcon />
+					<Text style={[txt.roboto32b, {marginTop: 10 * DP}]}>피드 게시물이 없습니다.</Text>
 				</View>
 			);
 		};

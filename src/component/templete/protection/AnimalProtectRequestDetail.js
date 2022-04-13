@@ -8,7 +8,7 @@ import RescueImage from 'Root/component/molecules/image/RescueImage';
 import {txt} from 'Root/config/textstyle';
 import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
 import ShelterSmallLabel from 'Root/component/molecules/label/ShelterSmallLabel';
-import {FavoriteTag48_Filled, Share48_Filled} from 'Atom/icon';
+import {FavoriteTag48_Border, FavoriteTag48_Filled, Share48_Filled} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import CommentList from 'Root/component/organism/comment/CommentList';
 import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
@@ -24,6 +24,7 @@ import {count_to_K} from 'Root/util/stringutil';
 import {getProtectRequestListByShelterId} from 'Root/api/shelterapi';
 import {getProtectRequestByProtectRequestId} from 'Root/api/protectapi';
 import Loading from 'Root/component/molecules/modal/Loading';
+import {favoriteEtc, getFavoriteEtcListByUserId} from 'Root/api/favoriteetc';
 
 //AnimalProtectRequestDetail 호출 경로
 // - ProtectRequestList(보호활동탭) , AnimalFromShelter(게시글보기) , AidRequestManage(게시글보기), AidRequestAnimalList(게시글 보기)
@@ -38,6 +39,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const shareRef = React.useRef();
 	const debug = false;
 	const isShelter = userGlobalObject.userInfo.user_type == 'shelter';
+	const isMyPost = data == 'false' ? false : data.protect_request_writer_id._id == userGlobalObject.userInfo._id;
 	debug && console.log('AnimalProtectRequestDetail data:', data);
 
 	React.useEffect(() => {
@@ -49,14 +51,18 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	}, []);
 
 	//보호요청게시글의 정보 가져오기
-	const getProtectRequestObject = () => {
+	const getProtectRequestObject = async () => {
 		getProtectRequestByProtectRequestId(
 			{
 				protect_request_object_id: route.params.id,
 			},
-			result => {
-				console.log('result /getProtectRequestByProtectRequestId / AnimalProtectRequestDetail : ', result.msg.protect_request_is_delete);
-				setData(result.msg);
+			async result => {
+				// console.log('result /getProtectRequestByProtectRequestId / AnimalProtectRequestDetail : ', result.msg);
+				console.log('작성자의 즐겨찾기 수', result.msg.protect_request_writer_id.user_favorite_count);
+				let res = result.msg;
+				let checkfav = await isMyFavoriteShelter(res.protect_request_writer_id);
+				res.protect_request_writer_id.is_favorite = checkfav;
+				setData(res);
 				navigation.setParams({...route.params, request_object: result.msg, isMissingOrReport: false});
 				// props.navigation.setParams({...props.route.params, feed_content: feedText});
 				getProtectRequestList(result.msg.protect_request_writer_id._id); //API에서 받아온 보호요청게시글의 작성자 _id를 토대로, 작성자의 다른 보호요청게시글을 받아옴
@@ -71,6 +77,40 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				}
 			},
 		);
+	};
+
+	const isMyFavoriteShelter = async writer_id => {
+		const checkFav = () => {
+			return new Promise((resolve, reject) => {
+				try {
+					getFavoriteEtcListByUserId(
+						{
+							userobject_id: userGlobalObject.userInfo._id,
+							collectionName: 'userobjects',
+						},
+						result => {
+							console.log('result / getFavoriteEtcListByUserId / AnimalProtectRequestDetail  ', result.msg.length);
+							let favoriteList = [];
+							result.msg.map((v, i) => {
+								favoriteList.push(v.favorite_etc_post_id._id);
+							});
+							console.log('내 즐겨찾기 리스트 : ', favoriteList);
+							console.log('작성자 : ', writer_id._id);
+							let res = favoriteList.includes(writer_id._id);
+							resolve(res);
+						},
+						err => {
+							console.log('err / getFavoriteEtcListByUserId / AnimalProtectRequestDetail ', err);
+						},
+					);
+				} catch {
+					console.log('err');
+				}
+			});
+		};
+		const result = await checkFav();
+		console.log('result', result);
+		return result;
 	};
 
 	//보호소의 다른 보호 요청게시글 불러오기
@@ -173,8 +213,22 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	};
 
 	//보호요청 게시글 작성 보호소 라벨의 좋아요 태그 클릭
-	const onPressShelterLabelFavorite = () => {
-		console.log('d');
+	const onPressShelterLabelFavorite = bool => {
+		favoriteEtc(
+			{
+				collectionName: 'userobjects',
+				post_object_id: data.protect_request_writer_id._id,
+				is_favorite: bool,
+			},
+			result => {
+				console.log('result / favoriteEtc / AnimalProtectRequestDetail : ', result.msg.favoriteEtc);
+				getProtectRequestObject();
+				setData({...data});
+			},
+			err => {
+				console.log('err / favoriteEtc / AnimalProtectRequestDetail : ', err);
+			},
+		);
 	};
 
 	//보호소 라벨 공유 클릭
@@ -249,12 +303,27 @@ export default AnimalProtectRequestDetail = ({route}) => {
 										<ShelterSmallLabel data={data.protect_request_writer_id} onClickLabel={onClickShelterLabel} />
 									</View>
 									<View style={[temp_style.button_animalProtectRequestDetail]}>
-										<TouchableOpacity onPress={onPressShelterLabelFavorite} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
-											<FavoriteTag48_Filled />
-											<Text style={[txt.roboto24, {color: APRI10, alignSelf: 'center', textAlign: 'center'}]}>
-												{data ? count_to_K(data.protect_request_writer_id.user_follow_count) : ''}
-											</Text>
-										</TouchableOpacity>
+										{isMyPost ? (
+											<></>
+										) : data.protect_request_writer_id.is_favorite ? (
+											<TouchableOpacity
+												onPress={() => onPressShelterLabelFavorite(false)}
+												style={[animalProtectRequestDetail_style.buttonItemContainer]}>
+												<FavoriteTag48_Filled />
+												<Text style={[txt.roboto24, {color: APRI10, alignSelf: 'center', textAlign: 'center'}]}>
+													{data ? count_to_K(data.protect_request_writer_id.user_favorite_count) : ''}
+												</Text>
+											</TouchableOpacity>
+										) : (
+											<TouchableOpacity
+												onPress={() => onPressShelterLabelFavorite(true)}
+												style={[animalProtectRequestDetail_style.buttonItemContainer]}>
+												<FavoriteTag48_Border />
+												<Text style={[txt.roboto24, {color: GRAY10, alignSelf: 'center', textAlign: 'center'}]}>
+													{data ? count_to_K(data.protect_request_writer_id.user_favorite_count) : ''}
+												</Text>
+											</TouchableOpacity>
+										)}
 										<View ref={shareRef} collapsable={false}>
 											<TouchableOpacity onPress={onPressShare} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
 												<Share48_Filled />

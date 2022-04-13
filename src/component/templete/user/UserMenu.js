@@ -115,58 +115,48 @@ export default UserMenu = props => {
 	//하단 메뉴 클릭
 	const menuClick = menuItem => {
 		switch (menuItem) {
-			case FRIENDS:
-				// Modal.popInfoModal();
+			case FRIENDS: //친구 즐겨찾기
 				navigation.push('FavoriteUser'); // FollowObject
 				break;
-			case PEED_CONTENTS:
-				// alert('업데이트 예정입니다');
-				// Modal.popInfoModal();
+			case PEED_CONTENTS: //피드게시글
 				navigation.push('FavoriteFeeds', {token: data}); // FavoriteFeedObject
 				break;
-			case REQ_PROTECTION_SAVE:
-				// navigation.push('UserSaveAnimalRequest'); // BookmarkProtectRequestObject
-				Modal.popInfoModal();
-				break;
-			case '내 게시글':
-				navigation.push('UserFeeds');
-				break;
-			case TAGED_CONTENTS_FOR_ME:
-				navigation.push('TagMeFeeds', {token: data});
-				break;
-			case APPLICATION_HISTORY:
-				navigation.push('AppliesRecord', data._id); // ShelterProtectAnimalObject
-				break;
-			case ANIMAL_PROTECTION_STATE:
-				navigation.push('AnimalProtectList', data._id); //ProtectAnimalObject
-				break;
-			case NOTE_LIST:
-				console.log('눌림');
-				navigation.push('ReceivedMessage', {token: data});
-				// Modal.popInfoModal();
-				break;
-			case INFO_QUESTION:
-				// Modal.popInfoModal();
-				navigation.push('SettingInformAsk');
-				break;
-			case COMUNITY:
-				// Modal.popInfoModal();
+			case COMUNITY: //즐겨찾기한 커뮤니티
 				navigation.push('FavoriteCommunity');
 				break;
+
 			case PROTECTION_REQUEST: //보호요청(저장)
 				navigation.push('FavoriteProtectRequest');
 				break;
-			case '커뮤니티 ':
-				// Modal.popInfoModal();
+			case '내 게시글': //내 게시글
+				navigation.push('UserFeeds');
+				break;
+			case TAGED_CONTENTS_FOR_ME: //나를 태그한 글
+				navigation.push('TagMeFeeds', {token: data});
+				break;
+			case APPLICATION_HISTORY: //신청 내역
+				navigation.push('AppliesRecord', data._id); // ShelterProtectAnimalObject
+				break;
+			case ANIMAL_PROTECTION_STATE: // 동물 보호 현황
+				navigation.push('AnimalProtectList', data._id); //ProtectAnimalObject
+				break;
+			case NOTE_LIST: // 쪽지함
+				navigation.push('ReceivedMessage', {token: data});
+				break;
+			case INFO_QUESTION: //정보 문의
+				navigation.push('SettingInformAsk');
+				break;
+
+			case '커뮤니티 ': //나의 활동 커뮤니티
 				navigation.push('MyCommunity');
 				break;
-			case ACCOUNT:
+			case ACCOUNT: //계정
 				navigation.push('SettingAccount');
 				break;
-			case INFO:
+			case INFO: //알림
 				navigation.push('SettingAlarm');
 				break;
-			case OPENSETTING:
+			case OPENSETTING: //공개설정
 				navigation.push('SettingOpen');
 				break;
 		}

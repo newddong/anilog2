@@ -3,7 +3,7 @@ import React from 'react';
 import {ActivityIndicator, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {getAppliesRecord} from 'Root/api/protectapi';
 import {txt} from 'Root/config/textstyle';
-import {NextMark} from 'Atom/icon';
+import {EmptyIcon, NextMark} from 'Atom/icon';
 import ShelterList from 'Organism/list/ShelterList';
 import {appliesRecord, login_style} from 'Templete/style_templete';
 import AnimalNeedHelp from 'Root/component/organism/listitem/AnimalNeedHelp';
@@ -147,7 +147,10 @@ export default AppliesRecord = ({route}) => {
 						{adopt_application_list != undefined && adopt_application_list.length > 0 ? (
 							<AnimalNeedHelp data={adopt_application_list[0]} onClickLabel={onClickAdoptApplication} />
 						) : (
-							<Text style={[txt.roboto32b, appliesRecord.whenEmpty]}>신청하신 입양건이 없습니다.</Text>
+							<>
+								<EmptyIcon />
+								<Text style={[txt.roboto32b, appliesRecord.whenEmpty]}>신청하신 입양건이 없습니다.</Text>
+							</>
 						)}
 					</View>
 					<View style={[appliesRecord.record]}>
@@ -165,7 +168,10 @@ export default AppliesRecord = ({route}) => {
 						{protect_application_list != undefined && protect_application_list.length > 0 ? (
 							<AnimalNeedHelp data={protect_application_list[0]} onClickLabel={onClickProtectApplication} />
 						) : (
-							<Text style={[txt.roboto32b, appliesRecord.whenEmpty]}>신청하신 임시보호건이 없습니다.</Text>
+							<>
+								<EmptyIcon />
+								<Text style={[txt.roboto32b, appliesRecord.whenEmpty]}>신청하신 임시보호건이 없습니다.</Text>
+							</>
 						)}
 					</View>
 					<View style={[appliesRecord.shelterList_container]}>
@@ -181,7 +187,10 @@ export default AppliesRecord = ({route}) => {
 						{volunteer_list != undefined && volunteer_list.length > 0 ? (
 							<ShelterList items={volunteer_list} onShelterLabelClick={onClickShelterLabel} />
 						) : (
-							<Text style={[txt.roboto32b, appliesRecord.whenEmpty]}>신청하신 봉사활동건이 없습니다.</Text>
+							<>
+								<EmptyIcon />
+								<Text style={[txt.roboto32b, appliesRecord.whenEmpty]}>신청하신 봉사활동건이 없습니다.</Text>
+							</>
 						)}
 					</View>
 				</ScrollView>

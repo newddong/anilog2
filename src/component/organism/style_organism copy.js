@@ -987,7 +987,7 @@ export const animalInfo = StyleSheet.create({
 
 export const animalInfoList = StyleSheet.create({
 	container: {
-		width: 750 * DP,
+		// width: 750 * DP,
 		// height: 723 * DP,
 	},
 	itemContainer: {

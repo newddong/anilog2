@@ -43,7 +43,6 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 	const [content, setContent] = React.useState('');
 	const [photo, setPhoto] = React.useState('');
 	const isChildComment = props.parentComment != '';
-	const [parentNickWidth, setParentNickWidth] = React.useState(0);
 
 	React.useEffect(() => {
 		if (props.editData) {
@@ -73,16 +72,15 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 		props.onPressReply();
 	};
 
-	const onLayout = e => {
-		console.log('e', e.nativeEvent.layout.width);
-		setParentNickWidth(e.nativeEvent.layout.width);
+	const onCancelChild = () => {
+		props.onCancelChild();
 	};
 
 	const getParent = () => {
 		if (isChildComment) {
 			return (
 				<View style={{flexDirection: 'row', alignItems: 'center'}}>
-					<Text onLayout={onLayout} style={[txt.noto26, {color: BLUE20, marginLeft: 10 * DP, paddingTop: 5 * DP}]}>
+					<Text style={[txt.noto26, {color: BLUE20, marginLeft: 10 * DP, paddingTop: 5 * DP}]}>
 						{' '}
 						@{props.parentComment.comment_writer_id.user_nickname}
 						{'  '}
@@ -91,7 +89,7 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 					<View style={{marginTop: 8 * DP}}>
 						<AniButton
 							btnStyle={'border'}
-							onPress={props.onCancelChild}
+							onPress={onCancelChild}
 							btnLayout={{paddingHorizontal: 10 * DP, height: 35 * DP, borderRadius: 20 * DP}}
 							titleFontStyle={18}
 							btnTitle={'답글취소'}
@@ -140,6 +138,7 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 					<View style={[feedCommentList.commentBox_photo]}>
 						<View style={[feedCommentList.commentBox_top_photo, {flexDirection: 'row'}]}>
 							<View style={[feedCommentList.commentBox_input_photo]}>
+								{getParent()}
 								<TextInput
 									defaultValue={content == '' ? null : content}
 									style={[feedCommentList.replyTextInput_photo]}
@@ -158,7 +157,7 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 				) : (
 					<View style={[feedCommentList.commentBox]}>
 						<View style={[feedCommentList.commentBox_top]}>
-							{/* {getParent()} */}
+							{getParent()}
 							<TextInput
 								defaultValue={content == '' ? null : content}
 								style={[feedCommentList.replyTextInput, {}]}

@@ -41,6 +41,7 @@ export default ArticleDetail = props => {
 		comment_photo_uri: '',
 	});
 	community_obj.current = data._id;
+	const flatListRef = React.useRef();
 
 	React.useEffect(() => {
 		setData(props.route.params.community_object);
@@ -243,7 +244,7 @@ export default ArticleDetail = props => {
 							!parentComment && setComments([]); //댓글목록 초기화
 							setComments(comments.msg);
 							parentComment && addChildCommentFn.current();
-							console.log('comments', comments);
+							// console.log('comments', comments);
 							input.current.blur();
 							// scrollRef.current.scrollToOffset({offset: 0});
 						},
@@ -291,11 +292,17 @@ export default ArticleDetail = props => {
 
 	// 대댓글 쓰기 버튼 클릭 콜백함수
 	const onReplyBtnClick = (parentCommentId, addChildComment) => {
-		console.log('대댓글 쓰기 버튼 클릭 : ', parentCommentId);
+		console.log('대댓글 쓰기 버튼 클릭 : ', parentCommentId.comment_writer_id.user_nickname);
 		setParentComment(parentCommentId);
 		input.current.focus();
 		editComment || setEditComment(true);
 		addChildCommentFn.current = addChildComment;
+		flatListRef.current.scrollToIndex({animated: true, index: 1});
+	};
+
+	//답글 쓰기 후 댓글 작성자 우측 답글취소 버튼 클릭
+	const onCancelChild = () => {
+		setParentComment();
 	};
 
 	//제목 우측 미트볼 클릭
@@ -418,6 +425,70 @@ export default ArticleDetail = props => {
 		);
 	};
 
+	const header = () => {
+		return (
+			<View>
+				<View style={{alignItems: 'center'}}>
+					<Article
+						data={data}
+						onPressMeatball={onPressMeatball}
+						onPressFavorite={onPressFavorite}
+						route={props.route.name}
+						searchInput={searchInput}
+					/>
+					<View style={[style.like, {}]}>
+						{data.community_is_like ? <Like48_Filled onPress={() => onPressLike(false)} /> : <Like48_Border onPress={() => onPressLike(true)} />}
+						<Text style={[txt.noto24, {color: GRAY10, marginLeft: 15 * DP}]}>{data.community_like_count}</Text>
+					</View>
+					<View style={[style.separator]} />
+				</View>
+				{comments && comments.length > 0 ? (
+					<TouchableOpacity onPress={onPressReply} style={[style.replyCountContainer]}>
+						<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개 모두 보기</Text>
+					</TouchableOpacity>
+				) : (
+					<View style={[style.replyCountContainer, {alignSelf: 'center', alignItems: 'flex-start'}]}>
+						<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
+					</View>
+				)}
+				<View style={[style.commentContainer, {alignItems: 'center'}]}>
+					<CommentList items={comments} onPressReplyBtn={onReplyBtnClick} onEdit={onEdit} />
+				</View>
+			</View>
+		);
+	};
+
+	const commentBox = () => {
+		return (
+			<View style={{alignItems: 'center'}}>
+				<View style={[{marginTop: 40 * DP, marginBottom: 80 * DP}]}>
+					<ReplyWriteBox
+						onAddPhoto={onAddPhoto}
+						onChangeReplyInput={onChangeReplyInput}
+						onLockBtnClick={onLockBtnClick}
+						onWrite={onWrite}
+						onDeleteImage={onDeleteImage}
+						privateComment={privateComment}
+						ref={input}
+						editData={editData}
+						shadow={false}
+						parentComment={parentComment}
+						onCancelChild={onCancelChild}
+					/>
+				</View>
+				<ArticleList
+					items={articleList}
+					onPressArticle={onPressArticle} //게시글 내용 클릭
+				/>
+			</View>
+		);
+	};
+	const components = [header(), commentBox()];
+
+	const renderItem = ({item, index}) => {
+		return item;
+	};
+
 	if (comments == 'false' || data == 'false') {
 		return <Loading isModal={false} />;
 	} else
@@ -425,62 +496,66 @@ export default ArticleDetail = props => {
 			<View style={[style.container]}>
 				<View style={[{alignItems: 'center', paddingBottom: 40 * DP}]}>
 					<FlatList
-						data={[{}]}
+						// data={[{}]}
+						data={components}
+						ref={flatListRef}
 						listKey={({item, index}) => index}
-						renderItem={({item, index}) => {
-							return (
-								<View style={[{width: 750 * DP, alignItems: 'center'}]}>
-									<View style={{alignItems: 'center'}}>
-										<Article
-											data={data}
-											onPressMeatball={onPressMeatball}
-											onPressFavorite={onPressFavorite}
-											route={props.route.name}
-											searchInput={searchInput}
-										/>
-										<View style={[style.like, {}]}>
-											{data.community_is_like ? (
-												<Like48_Filled onPress={() => onPressLike(false)} />
-											) : (
-												<Like48_Border onPress={() => onPressLike(true)} />
-											)}
-											<Text style={[txt.noto24, {color: GRAY10, marginLeft: 15 * DP}]}>{data.community_like_count}</Text>
-										</View>
-										<View style={[style.separator]} />
-									</View>
-									{comments && comments.length > 0 ? (
-										<TouchableOpacity onPress={onPressReply} style={[style.replyCountContainer]}>
-											<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개 모두 보기</Text>
-										</TouchableOpacity>
-									) : (
-										<View style={[style.replyCountContainer, {alignSelf: 'center', alignItems: 'flex-start'}]}>
-											<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
-										</View>
-									)}
-									<View style={[style.commentContainer]}>
-										<CommentList items={comments} onPressReplyBtn={onReplyBtnClick} onEdit={onEdit} />
-									</View>
-									<View style={[{marginTop: 40 * DP, marginBottom: 80 * DP}]}>
-										<ReplyWriteBox
-											onAddPhoto={onAddPhoto}
-											onChangeReplyInput={onChangeReplyInput}
-											onLockBtnClick={onLockBtnClick}
-											onWrite={onWrite}
-											onDeleteImage={onDeleteImage}
-											privateComment={privateComment}
-											ref={input}
-											editData={editData}
-											shadow={false}
-											parentComment={parentComment}
-										/>
-									</View>
-									<ArticleList
-										items={articleList}
-										onPressArticle={onPressArticle} //게시글 내용 클릭
-									/>
-								</View>
-							);
-						}}
+						renderItem={renderItem}
+						// renderItem={({item, index}) => {
+						// 	return (
+						// 		<View style={[{width: 750 * DP, alignItems: 'center'}]}>
+						// 			<View style={{alignItems: 'center'}}>
+						// 				<Article
+						// 					data={data}
+						// 					onPressMeatball={onPressMeatball}
+						// 					onPressFavorite={onPressFavorite}
+						// 					route={props.route.name}
+						// 					searchInput={searchInput}
+						// 				/>
+						// 				<View style={[style.like, {}]}>
+						// 					{data.community_is_like ? (
+						// 						<Like48_Filled onPress={() => onPressLike(false)} />
+						// 					) : (
+						// 						<Like48_Border onPress={() => onPressLike(true)} />
+						// 					)}
+						// 					<Text style={[txt.noto24, {color: GRAY10, marginLeft: 15 * DP}]}>{data.community_like_count}</Text>
+						// 				</View>
+						// 				<View style={[style.separator]} />
+						// 			</View>
+						// 			{comments && comments.length > 0 ? (
+						// 				<TouchableOpacity onPress={onPressReply} style={[style.replyCountContainer]}>
+						// 					<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개 모두 보기</Text>
+						// 				</TouchableOpacity>
+						// 			) : (
+						// 				<View style={[style.replyCountContainer, {alignSelf: 'center', alignItems: 'flex-start'}]}>
+						// 					<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
+						// 				</View>
+						// 			)}
+						// 			<View style={[style.commentContainer]}>
+						// 				<CommentList items={comments} onPressReplyBtn={onReplyBtnClick} onEdit={onEdit} />
+						// 			</View>
+						// 			<View style={[{marginTop: 40 * DP, marginBottom: 80 * DP}]} onLayout={onLayout}>
+						// 				<ReplyWriteBox
+						// 					onAddPhoto={onAddPhoto}
+						// 					onChangeReplyInput={onChangeReplyInput}
+						// 					onLockBtnClick={onLockBtnClick}
+						// 					onWrite={onWrite}
+						// 					onDeleteImage={onDeleteImage}
+						// 					privateComment={privateComment}
+						// 					ref={input}
+						// 					editData={editData}
+						// 					shadow={false}
+						// 					parentComment={parentComment}
+						// 					onCancelChild={onCancelChild}
+						// 				/>
+						// 			</View>
+						// 			<ArticleList
+						// 				items={articleList}
+						// 				onPressArticle={onPressArticle} //게시글 내용 클릭
+						// 			/>
+						// 		</View>
+						// 	);
+						// }}
 						showsVerticalScrollIndicator={false}
 					/>
 				</View>

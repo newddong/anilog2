@@ -4007,14 +4007,11 @@ export const feedCommentList = StyleSheet.create({
 	},
 	commentBox_top: {
 		width: 694 * DP,
-		// height: 68 * DP,
-		maxHeight: 224 * DP,
+		// maxHeight: 224 * DP,
 		padding: 10 * DP,
 		borderRadius: 24 * DP,
 		marginBottom: 12 * DP,
-		// justifyContent: 'center',
 		backgroundColor: GRAY40,
-		// flexDirection: 'row',
 	},
 	commentBox_bottom: {
 		width: 694 * DP,

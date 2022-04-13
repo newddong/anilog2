@@ -50,6 +50,7 @@ export default Feed = React.memo(props => {
 	} = props.data;
 	const [isLike, setLike] = React.useState(false);
 	const [likeCount, setLikeCount] = React.useState(0);
+	// console.log('feed content', props.data);
 	const moveToCommentList = async () => {
 		AsyncStorage.getItem('sid', (err, res) => {
 			console.log('res', res);
@@ -60,6 +61,7 @@ export default Feed = React.memo(props => {
 				}, 1500);
 			} else {
 				navigation.push('FeedCommentList', {feedobject: props.data});
+				console.log('move to FeedCommnetList', props.data);
 			}
 		});
 	};

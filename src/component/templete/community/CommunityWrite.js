@@ -432,7 +432,7 @@ export default CommunityWrite = props => {
 							<Location54_Filled />
 							<Text style={[txt.noto26b, {color: APRI10, marginLeft: 10 * DP, width: 550 * DP}]}>
 								{data.community_address.road_address.address_name.includes('도로명 주소가 없는 위치입니다') ||
-								data.community_address.road_address.address_name == ''
+								data.community_address.road_address.address_name == 'undefined '
 									? data.community_address.normal_address.address_name
 									: data.community_address.road_address.address_name}
 							</Text>

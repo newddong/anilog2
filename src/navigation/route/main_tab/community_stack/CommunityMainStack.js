@@ -59,7 +59,7 @@ export default CommunityMainStack = props => {
 				})}
 			/>
 			<CommunityMainStackNavi.Screen
-				name="AddressSearchPage"
+				name="AddressSearchWeb"
 				component={AddressSearchPage}
 				options={{header: props => <SimpleHeader {...props} />, title: '주소 설정'}}
 			/>

@@ -137,22 +137,20 @@ export default ShelterMenu = ({route}) => {
 			//---------------즐겨찾기
 			//친구
 			case FRIENDS:
-				// navigation.push('SaveFavorite');
-				Modal.popInfoModal();
+				navigation.push('SaveFavorite');
 				break;
 			//피드 게시글
 			case PEED_CONTENTS:
-				Modal.popInfoModal();
-				// navigation.push('FavoriteFeeds', {token: data._id});
+				// Modal.popInfoModal();
+				navigation.push('FavoriteFeeds', {token: data._id});
 				break;
 			//보호요청(저장)
 			case REQ_PROTECTION_SAVE:
-				// navigation.push('ShelterSaveAnimalRequest');
-				Modal.popInfoModal();
+				navigation.push('FavoriteProtectRequest');
 				break;
 			//커뮤니티
 			case COMUNITY:
-				Modal.popInfoModal();
+				navigation.push('FavoriteCommunity');
 				break;
 			//-------------나의 활동
 			//내 게시물
@@ -161,25 +159,22 @@ export default ShelterMenu = ({route}) => {
 				break;
 			// 나를 태그한 글
 			case TAGED_CONTENTS_FOR_ME:
-				// navigation.push('TagMeFeeds', {token: data._id});
-				Modal.popInfoModal();
+				navigation.push('TagMeFeeds', {token: data._id});
 				break;
 			//신청내역
 			case APPLICATION_HISTORY:
 				navigation.push('AppliesRecord', data._id);
-				Modal.popInfoModal();
 				break;
 			// 보호 요청 올린 게시글
 			case UPLOADED_POST_FOR_REQ_PROTECTION:
 				navigation.push('ShelterProtectRequests');
 				break;
 			//커뮤니티
-			case COMUNITY:
-				Modal.popInfoModal();
+			case '커뮤니티 ':
+				navigation.push('MyCommunity');
 				break;
 			// 신청내역
 			case NOTE_LIST:
-				// Modal.popInfoModal();
 				navigation.push('ReceivedMessage', {token: data});
 				break;
 			//-------------- 설정
@@ -314,7 +309,7 @@ export default ShelterMenu = ({route}) => {
 					<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
 						<ProfileMenu
 							menuTitle={MY_ACTIVITY_IN_SHELTER}
-							menuItems={[[MY_CONTENTS, TAGED_CONTENTS_FOR_ME], [COMUNITY, UPLOADED_POST_FOR_REQ_PROTECTION], [NOTE_LIST]]}
+							menuItems={[[MY_CONTENTS, TAGED_CONTENTS_FOR_ME], ['커뮤니티 ', UPLOADED_POST_FOR_REQ_PROTECTION], [NOTE_LIST]]}
 							onClick={click_menu}
 							titleIcon={<Paw46 />}
 						/>

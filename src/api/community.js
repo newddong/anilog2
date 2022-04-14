@@ -22,10 +22,21 @@ export async function getCommunityList(params, callback, errcallback) {
 }
 
 /**
+ * 커뮤니티 제목 내용 검색
+ * @param {object} params
+ * @param {string} params.searchKeyword - 검색 키워드
+ * @param {function} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getSearchCommunityList(params, callback, errcallback) {
+	apiController('/community/getSearchCommunityList', arguments);
+}
+
+/**
  * 특정 유저가 작성한 커뮤니티를 불러옴
  * @param {object} params
- * @param {string} params.userobject_id - 작성자 userobject_id
- * @param {string} params.community_type - 커뮤니티 타입 (전체글|'all'|'free'|'review')
+ * @param {string} params.userobject_id - 작성자 userobject _id
+ * @param {string} params.community_type - 게시글의 타입 (전체글|'all', 자유게시판|'free', 리뷰|'review')
  * @param {function} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Platform, PermissionsAndroid, Text, TouchableWithoutFeedback, Image, FlatList} from 'react-native';
+import {View, StyleSheet, Platform, PermissionsAndroid, Text, TouchableWithoutFeedback, Image, FlatList, NativeModules} from 'react-native';
 import {APRI10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
@@ -32,6 +32,7 @@ export default AddPhoto = props => {
 					width: null,
 					uri: 'http://src.hidoc.co.kr/image/lib/2016/7/21/20160721160807763_0.jpg',
 				},
+				imageID:"0"
 			},
 		},
 	]);
@@ -39,22 +40,42 @@ export default AddPhoto = props => {
 	const isSingle = props.route.name === 'SinglePhotoSelect';
 
 	/**
-	 * timeStamp를 이용하여 디바이스의 갤러리에 있는 미디어를 불러옴
+	 * timeStamp, imageID를 이용하여 디바이스의 갤러리에 있는 미디어를 불러옴
 	 *
 	 *@param {number} timeStamp - 갤러리의 미디어를 불러올 기준 timeStamp (기본값 0)
+	 *@param {String} imageID - 갤러리의 미디어를 불러올 기준 imageID (기본값 123456789)
 	 *@param {number} request - 불러올 미디어의 숫자 (기본값 20)
 	 *@param {string} type - 불러올 미디어의 타잎('Photos'|'All'|'Videos')
 	 */
-	const loadPhotosMilsec = (request = 30, timeStamp = 0, type = 'All') => {
-		CameraRoll.getPhotos({
+	const loadPhotosMilsec = (request = 5, timeStamp = 0, imageID = "123456789", type = 'Photos') => {
+		console.log('아이디',imageID);
+		let param = {
 			first: request,
-			toTime: timeStamp ? timeStamp * 1000 - 1 : 0,
+			toTime: timeStamp?timeStamp * 1000 - 1:0,
+			toID: imageID,
 			assetType: type,
 			include: ['playableDuration'],
-		})
-			.then(r => {
-				console.log('디바이스 사진 리스트', r);
-				// setPhotoList(photolist.concat(r.edges));
+		};
+		if(Platform.OS=='android'){
+			delete param.fromTime;
+			delete param.toTime;
+			NativeModules.PhotoListModule.getPhotos(param)
+			.then(photolistcallback)
+			.catch(err => {
+			// console.log('cameraroll error===>' + err);
+			});
+		}else{
+			delete param.toID;
+			CameraRoll.getPhotos(param)
+			.then(photolistcallback)
+			.catch(err=>{
+				// console.log('cameraroll error===>' + err);
+			})
+		}
+	};
+
+	const photolistcallback = (r) => {
+		console.log('디바이스 사진 리스트', r);
 				setPhotoList(photolist.concat(r.edges));
 				setSelectedPhoto(selectedPhoto);
 
@@ -66,21 +87,18 @@ export default AddPhoto = props => {
 					};
 				});
 				photoList.splice(0, 0, true); //목록 첫 인덱스는 Default Camera Icon (사진직접찍기 기능)
-				// console.log('포토리스트', JSON.stringify(photoList));
 				setPhotos(photoList);
-			})
-			.catch(err => {
-				// console.log('cameraroll error===>' + err);
-			});
-	};
+	}
+
 
 	/** 스크롤이 바닥에 닿을때 페이징 처리를 위한 함수 */
 	const scrollReachBottom = () => {
 		// loadPhotos(page.current);
 		// console.log('scrolllist bottom   ' + JSON.stringify(photolist));
+		let lastID = photolist.length > 1 ? photolist[photolist.length - 1].node.imageID : "123456789";
 		let timeStamp = photolist.length > 1 ? photolist[photolist.length - 1].node.timestamp : 0;
-		console.log('스크롤이 바닥에 닿았습니다. '+timeStamp+ '이후의 사진을 로드합니다.');
-		loadPhotosMilsec(30,timeStamp);
+		console.log('스크롤이 바닥에 닿았습니다. '+lastID+ '이후의 사진을 로드합니다.');
+		loadPhotosMilsec(15,timeStamp,lastID);
 	};
 
 	const test = () => {
@@ -187,6 +205,11 @@ export default AddPhoto = props => {
 		// props.navigation.navigate(props.route.params?.navfrom,{})
 		// props.navigation.navigate({ name: props.route.params.navfrom, params: { localSelectedImages: exportUriList[0] }, merge: true });
 		// props.navigation.navigate({name: props.route.params?.navfrom, params: {image: exportUriList[0]}, merge: true});
+		
+		let lastID = photolist.length > 1 ? photolist[photolist.length - 1].node.imageID : "123456789";
+		console.log('스크롤이 바닥에 닿았습니다. '+lastID+ '이후의 사진을 로드합니다.');
+		loadPhotosMilsec(15,lastID);
+
 		console.log(photolist);
 	};
 
@@ -196,7 +219,7 @@ export default AddPhoto = props => {
 				<View />
 			) : (
 				// <Video style={lo.box_img} source={{uri: selectedPhoto[selectedPhoto.length-1]?.uri}} muted />
-				<Image style={[lo.box_img,{height:375*DP}]} source={{uri: selectedPhoto[selectedPhoto.length - 1]?.uri}} />
+				<Image style={[lo.box_img,{height:300*DP}]} source={{uri: selectedPhoto[selectedPhoto.length - 1]?.uri}} />
 			)}
 			<View style={lo.box_title}>
 				<TouchableWithoutFeedback onPress={test}>

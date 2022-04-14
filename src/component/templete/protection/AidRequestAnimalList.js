@@ -9,6 +9,7 @@ import {AddItem64} from 'Root/component/atom/icon';
 import DP from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 //ShelterMenu => 보호요청 게시글 작성하기 버튼 클릭
 //연관 테이블 : ShelterProtectAnimalObject
@@ -93,11 +94,7 @@ export default AidRequestAnimalList = ({route, navigation}) => {
 	const isLoaded = hasPostAnimalList == 'false' || noPostAnimalList == 'false';
 
 	if (isLoaded) {
-		return (
-			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
-				<ActivityIndicator size={'large'}></ActivityIndicator>
-			</View>
-		);
+		return <Loading isModal={false} />;
 	} else {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>

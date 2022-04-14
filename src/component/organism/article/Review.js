@@ -2,8 +2,8 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {FavoriteTag46_Filled, Like48_Border, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
-import {BLACK, GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
+import {FavoriteTag46_Filled, FavoriteTag48_Border, Like48_Border, Like48_Filled, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
+import {APRI10, BLACK, GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
 import ArticleThumnails from './ArticleThumnails';
 import {useNavigation} from '@react-navigation/core';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
@@ -13,11 +13,21 @@ import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTi
  * @param {object} props.data - 리뷰 데이터 오브젝트
  * @param {()=>void} props.onPressReply - 댓글 모두 보기 클릭
  * @param {()=>void} props.onPressReviewContent - 리뷰 컨텐츠 클릭
+ * @param {()=>void} props.onPressMeatball - 미트볼 클릭
+ * @param {()=>void} props.onPressLike - 좋아요 클릭
+ * @param {()=>void} props.onPressUnlike - 좋아요 취소
+ * @param {(bool:boolean)=>void} props.onPressFavorite - 즐겨찾기 클릭
+ * @param {string} props.isSearch - 리뷰 컨텐츠 클릭
  */
 export default Review = props => {
 	const navigation = useNavigation();
-	const data = props.data;
+	const [data, setData] = React.useState(props.data);
 	const [moreCategory, setMoreCategory] = React.useState(false);
+
+	React.useEffect(() => {
+		setData(props.data);
+	}, [props.data]);
+
 	const onPressCategory = category => {
 		if (category == '접기') {
 			setMoreCategory(false);
@@ -115,15 +125,21 @@ export default Review = props => {
 	};
 
 	const onPressMeatball = () => {
-		alert('onPressMeatball');
+		props.onPressMeatball();
 	};
 
 	const onPressLike = () => {
-		alert('onPressLike');
+		props.onPressLike();
 	};
 
-	const onPressFavorite = () => {
-		alert('onPressFavorite');
+	const onPressUnlike = () => {
+		props.onPressUnlike();
+	};
+
+	const onPressFavorite = bool => {
+		// alert('onPressFavorite');
+		bool ? setData({...data, community_is_favorite: bool}) : setData({...data, community_is_favorite: bool});
+		props.onPressFavorite(bool);
 	};
 
 	const onPressReply = () => {
@@ -146,6 +162,8 @@ export default Review = props => {
 		return imageList;
 	};
 
+	const searchHighlight = data.community_title.split(new RegExp(`(${props.isSearch})`, 'gi'));
+
 	return (
 		<View style={[style.container]}>
 			{/* 리뷰 헤더  */}
@@ -155,16 +173,33 @@ export default Review = props => {
 					<TouchableOpacity activeOpacity={0.6} onPress={onPressReviewContent}>
 						<View style={[style.content]}>
 							<Text style={[txt.noto32b]} numberOfLines={1}>
-								{data.community_title}
+								{props.isSearch == '' || props.isSearch.length < 2
+									? data.community_title
+									: searchHighlight.map((part, i) =>
+											part.toLowerCase() === props.isSearch.toLowerCase() ? (
+												// <View style={{backgroundColor: 'red'}}>{part}</View>
+												<Text key={i} style={{color: APRI10, fontWeight: 'bold', marginRight: 10 * DP}}>
+													{part + ''}
+												</Text>
+											) : (
+												<Text key={i} style={{color: BLACK, marginRight: 10 * DP}}>
+													{part + ''}
+												</Text>
+											),
+									  )}
 							</Text>
 							<View style={[style.profile]}>
-								<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} />
+								<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} time_expression={'date'} />
 							</View>
 						</View>
 					</TouchableOpacity>
 				</View>
 				<View style={[style.icon]}>
-					<FavoriteTag46_Filled onPress={onPressFavorite} />
+					{data.community_is_favorite ? (
+						<FavoriteTag46_Filled onPress={() => onPressFavorite(false)} />
+					) : (
+						<FavoriteTag48_Border onPress={() => onPressFavorite(true)} />
+					)}
 					<Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />
 				</View>
 			</View>
@@ -179,7 +214,7 @@ export default Review = props => {
 			{/* 좋아요 및 댓글 모두 보기  */}
 			<View style={[style.likeComment]}>
 				<View style={[style.like]}>
-					<Like48_Border onPress={onPressLike} />
+					{data.community_is_like ? <Like48_Filled onPress={onPressUnlike} /> : <Like48_Border onPress={onPressLike} />}
 					<Text style={[txt.noto24, {color: GRAY10, marginLeft: 15 * DP}]}>{data.community_like_count}</Text>
 				</View>
 				<View style={[style.comment]}>
@@ -195,6 +230,10 @@ export default Review = props => {
 Review.defaultProps = {
 	onPressReply: () => {},
 	onPressReviewContent: () => {},
+	onPressMeatball: () => {},
+	onPressLike: () => {},
+	onPressFavorite: () => {},
+	isSearch: '',
 };
 
 const style = StyleSheet.create({
@@ -205,7 +244,6 @@ const style = StyleSheet.create({
 	},
 	header: {
 		width: 550 * DP,
-		// header: 50 * DP,
 	},
 	category: {
 		header: 38 * DP,

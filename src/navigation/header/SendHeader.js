@@ -7,7 +7,7 @@ import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 import {createProtectRequest, updateProtectRequest} from 'Root/api/shelterapi';
 import {RED} from 'Root/config/color';
-import {createCommunity} from 'Root/api/community';
+import {createCommunity, updateAndDeleteCommunity} from 'Root/api/community';
 
 export default SendHeader = ({route, navigation, options}) => {
 	// console.log('props SendHeader', route.params);
@@ -107,11 +107,46 @@ export default SendHeader = ({route, navigation, options}) => {
 										console.log('result / createCommunity / SendHeader ', result.msg);
 										navigation.reset({
 											index: 0,
-											routes: [{name: 'CommunityMain'}],
+											routes: [{name: 'CommunityMain', params: {isReview: data.community_type == 'free' ? 'ArticleMain' : 'ReviewMain'}}],
 										});
 									},
 									err => {
 										console.log('err / createCommunity / SendHeader ', err);
+									},
+								);
+								Modal.close();
+							},
+						);
+					}
+					break;
+				}
+				case 'CommunityEdit': {
+					if (!data.community_content || !data.community_title) {
+						Modal.popOneBtn('게시글 내용과 제목은 \n 반드시 입력해주셔야합니다.', '확인', () => Modal.close());
+					} else {
+						Modal.popTwoBtn(
+							'해당 내용으로 커뮤니티 \n 게시글을 수정하시겠습니까?',
+							'취소',
+							'확인',
+							() => Modal.close(),
+							() => {
+								// console.log('data before Create', data);
+								let getImgTag = data.community_content.match(/<img[\w\W]+?\/?>/g); //img 태그 추출
+								const attachedCheck = !(getImgTag == null); //추가된 img 태그가 있다면 is_attatched_file은 true or false
+								updateAndDeleteCommunity(
+									{
+										...data,
+										community_object_id: data._id,
+										community_is_attached_file: attachedCheck,
+									},
+									result => {
+										console.log('result / updateAndDeleteCommunity / SendHeader ', result.msg);
+										result.msg.community_type == 'review'
+											? navigation.push('ReviewDetail', {community_object: result.msg})
+											: navigation.push('ArticleDetail', {community_object: result.msg});
+									},
+									err => {
+										console.log('err / updateAndDeleteCommunity / sendHeader ', err);
 									},
 								);
 								Modal.close();

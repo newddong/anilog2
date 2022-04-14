@@ -7,16 +7,19 @@ import SelectStat from 'Organism/list/SelectStat';
 import {login_style, temp_style, selectstat_view_style} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
 import {CONFIRM_DELETE_FAVORITE_FEED, CONFIRM_DELETE_MY_FEED, CONFIRM_DELETE_TAG_ME_FEED} from 'Root/i18n/msg';
-import {getFeedListByUserId, getFavoriteFeedListByUserId, getUserTaggedFeedList} from 'Root/api/feedapi';
+import {getFeedListByUserId, getFavoriteFeedListByUserId, getUserTaggedFeedList, favoriteFeed} from 'Root/api/feedapi';
 import {txt} from 'Root/config/textstyle';
 import {GRAY10} from 'Root/config/color';
 import {getUserProfile} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {EmptyIcon} from 'Root/component/atom/icon';
+import Loading from 'Root/component/molecules/modal/Loading';
+import {favoriteEtc} from 'Root/api/favoriteetc';
 
 //즐겨찾기한 피드목록을 조회
 export default FavoriteFeeds = ({route, navigation}) => {
 	const [selectMode, setSelectMode] = React.useState(false);
-	const [data, setData] = React.useState([]);
+	const [data, setData] = React.useState('false');
 	const [selectCNT, setSelectCNT] = React.useState(0);
 
 	// console.log('token', token);
@@ -28,58 +31,51 @@ export default FavoriteFeeds = ({route, navigation}) => {
 						userobject_id: userGlobalObject.userInfo._id,
 					},
 					result => {
-						console.log('result / getFeedListByUserId / FavoriteFeeds  : ', result.msg[0]);
+						// console.log('result / getFeedListByUserId / FavoriteFeeds  : ', result.msg[0]);
 						setData(result.msg);
 					},
 					err => {
 						console.log('err / getFeedListByUserId / FavoriteFeeds : ', err);
+						setData([]);
 					},
 				);
 				break;
 			case 'FavoriteFeeds': //즐겨찾기한 피드 게시글
-				getFavoriteFeedListByUserId(
-					{
-						userobject_id: userGlobalObject.userInfo._id,
-					},
-					result => {
-						console.log('result / getFeedListByUserId / FavoriteFeeds  : ', result.msg);
-						setData(result.msg);
-					},
-					err => {
-						console.log('err / getFeedListByUserId / FavoriteFeeds : ', err);
-					},
-				);
+				fetchFavoriteFeed();
 				break;
 			case 'TagMeFeeds': //나의 활동 => 나를 태그한 글
 				getUserTaggedFeedList(
-					{ userobject_id:  userGlobalObject.userInfo._id},
-					result=> {
+					{userobject_id: userGlobalObject.userInfo._id},
+					result => {
 						console.log('유저의 태그된 피드 리스트', result);
 						setData(result.msg);
 					},
 					err => {
 						console.log(err);
 						setData([]);
-					}
-				)
-				// getFavoriteFeedListByUserId(
-				// 	{
-				// 		userobject_id: userGlobalObject.userInfo._id,
-				// 	},
-				// 	result => {
-				// 		// console.log('result / getFeedListByUserId / FavoriteFeeds  : ', result.msg);
-				// 		setData(result.msg);
-				// 	},
-				// 	err => {
-				// 		console.log('err / getFeedListByUserId / FavoriteFeeds : ', err);
-				// 	},
-				// );
+					},
+				);
 				break;
-
 			default:
 				break;
 		}
 	}, [route.params]);
+
+	const fetchFavoriteFeed = () => {
+		getFavoriteFeedListByUserId(
+			{
+				userobject_id: userGlobalObject.userInfo._id,
+			},
+			result => {
+				// console.log('result / getFeedListByUserId / FavoriteFeeds  : ', result.msg);
+				setData(result.msg);
+			},
+			err => {
+				console.log('err / getFeedListByUserId / FavoriteFeeds : ', err);
+				setData([]);
+			},
+		);
+	};
 
 	//Check Box On
 	const checkSelectMode = state => {
@@ -102,6 +98,27 @@ export default FavoriteFeeds = ({route, navigation}) => {
 		setSelectMode(e);
 	};
 
+	//즐겨찾기 삭제 api
+	const doDeltedFavorite = list => {
+		console.log('list', list.length);
+		list.map((v, i) => {
+			favoriteFeed(
+				{
+					feedobject_id: v._id,
+					userobject_id: userGlobalObject.userInfo._id,
+					is_favorite: false,
+				},
+				result => {
+					console.log('result / favoriteFeed / FavoriteFeeds : ', result.msg);
+					fetchFavoriteFeed();
+				},
+				err => {
+					console.log('err / favoriteFeed / FavoriteFeeds : ', err);
+				},
+			);
+		});
+	};
+
 	// 선택하기 => 선택 삭제 클릭
 	const deleteSelectedItem = () => {
 		//현재 dummyData 중 CheckBox 상태가 true인 것이 없는 경우
@@ -112,7 +129,8 @@ export default FavoriteFeeds = ({route, navigation}) => {
 			console.log('삭제시작');
 			const doDelete = () => {
 				let copy = [...data];
-				copy = copy.filter(element => element.checkBoxState != true); //CheckBoxState가 true인 경우엔 걸러진다
+				copy = copy.filter(element => element.checkBoxState == true); //CheckBoxState가 true인 경우엔 걸러진다
+				doDeltedFavorite(copy);
 				setData(copy);
 				Modal.close();
 			};
@@ -142,6 +160,15 @@ export default FavoriteFeeds = ({route, navigation}) => {
 		setData(copy);
 	};
 
+	const emptyMsg = () => {
+		//FavoriteFeeds는 총 세 개의 Screen 호출 - UserFeed, FavoriteFeeds, TagMeFeeds
+		if (route.name == 'TagMeFeeds') {
+			return '나를 태그한 피드가 없습니다..';
+		} else if (route.name == 'FavoriteFeeds') {
+			return '즐겨찾기한 피드가 없습니다..';
+		} else return '목록이 없습니다..';
+	};
+
 	//썸네일 클릭 - [ selecteMode에 따른 분기 ]
 	const onClickThumnail = (index, feed_id) => {
 		//선택하기 모드가 아닐 경우 (일반모드이며 썸네일 클릭시 네비게이션 동작)
@@ -163,7 +190,9 @@ export default FavoriteFeeds = ({route, navigation}) => {
 						// console.log('tageme');
 						navigation.push('TagMeFeedList', {title: titleValue + '님을 태그한 글', userobject: result.msg, selected: feed_id});
 					} else if (route.name == 'FavoriteFeeds') {
-						navigation.push('FavoriteFeedList', {title: titleValue + '님을 태그한 글', userobject: result.msg, selected: feed_id});
+						console.log('feed_id', feed_id);
+						navigation.push('UserFeedList', {title: titleValue, userobject: result.msg, selected: feed_id});
+						// navigation.push('UserFeedList', {userobject: data, selected: item});
 					}
 					//다른 route가 있을 경우 else if 확장 할 것
 					else {
@@ -182,27 +211,33 @@ export default FavoriteFeeds = ({route, navigation}) => {
 		}
 	};
 
-	return (
-		<View style={[login_style.wrp_main, {flex: 1}]}>
-			<View style={[temp_style.selectstat_view]}>
-				<View style={[temp_style.selectstat, selectstat_view_style.selectstat]}>
-					<SelectStat
-						onSelectMode={checkSelectMode}
-						onCancelSelectMode={cancelSelectMode}
-						onSelectAllClick={selectAll}
-						onDeleteSelectedItem={deleteSelectedItem}
-					/>
+	if (data == 'false') {
+		return <Loading isModal={false} />;
+	} else
+		return (
+			<View style={[login_style.wrp_main, {flex: 1}]}>
+				<View style={[temp_style.selectstat_view]}>
+					<View style={[temp_style.selectstat, selectstat_view_style.selectstat]}>
+						<SelectStat
+							onSelectMode={checkSelectMode}
+							onCancelSelectMode={cancelSelectMode}
+							onSelectAllClick={selectAll}
+							onDeleteSelectedItem={deleteSelectedItem}
+						/>
+					</View>
+				</View>
+
+				{/* 즐겨찾기한 FeedList출력하는 FeedThumbnailList */}
+				<View style={[temp_style.FeedThumbnailList, {flex: 1}]}>
+					{data.length == 0 ? (
+						<View style={{paddingVertical: 100 * DP, alignItems: 'center'}}>
+							<EmptyIcon />
+							<Text style={[txt.roboto28b, {marginTop: 20 * DP}]}>{emptyMsg()}</Text>
+						</View>
+					) : (
+						<FeedThumbnailList items={data} selectMode={selectMode} onClickThumnail={onClickThumnail} />
+					)}
 				</View>
 			</View>
-
-			{/* 즐겨찾기한 FeedList출력하는 FeedThumbnailList */}
-			<View style={[temp_style.FeedThumbnailList, {flex: 1}]}>
-				{data.length == 0 ? (
-					<Text style={[txt.noto30, {alignSelf: 'center', marginTop: 130, color: GRAY10}]}>목록이 없네요.</Text>
-				) : (
-					<FeedThumbnailList items={data} selectMode={selectMode} onClickThumnail={onClickThumnail} />
-				)}
-			</View>
-		</View>
-	);
+		);
 };

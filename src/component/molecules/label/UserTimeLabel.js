@@ -6,6 +6,7 @@ import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import DP from 'Root/config/dp';
 import {styles} from 'Atom/image/imageStyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {getTimeLapsed} from 'Root/util/dateutil';
 
 /**
  *  반려동물의 프로필 사진, 유저의 닉네임, 시간 정보를 출력하는 라벨
@@ -22,9 +23,11 @@ const UserTimeLabel = props => {
 	}, [props.data]);
 
 	const getCommentedTime = () => {
-		let date = props.data.comment_date.match(/(\d{4})-(\d{1,2})-(\d{1,2}).*?$/);
-		let timelapsed = Date.now() - new Date(date[1], date[2] - 1, date[3]);
-		return <>{Math.ceil(timelapsed / 1000 / 60 / 60 / 24) - 1} 일 전</>;
+		// let date = props.data.comment_date.match(/(\d{4})-(\d{1,2})-(\d{1,2}).*?$/);
+		// let timelapsed = Date.now() - new Date(date[1], date[2] - 1, date[3]);
+		// return <>{Math.ceil(timelapsed / 1000 / 60 / 60 / 24) - 1} 일 전</>;
+		let date = getTimeLapsed(props.data.comment_date);
+		return date;
 	};
 
 	const onClickLabel = e => {

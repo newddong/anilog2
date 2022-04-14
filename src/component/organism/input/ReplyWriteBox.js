@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import {Image, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {GRAY10} from 'Root/config/color';
+import {BLUE10, BLUE20, GRAY10} from 'Root/config/color';
 import {Lock60_Border, Lock60_Filled, Photo60, Send60} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import SelectedMedia from 'Molecules/media/SelectedMedia';
@@ -22,6 +22,8 @@ import {txt} from 'Root/config/textstyle';
  * isProtectRequest : 'boolean / 보호요청 게시글에서의 호출',
  * photo : 'Array / 사진 목록',
  * isMessage : 'boolean' /쪽지함에서의 호출,
+ * shadow : 'boolean' / 그림자 효과 on off,
+ * parentComment: 'object',
  * }} props
  */
 
@@ -37,8 +39,10 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 			onClear();
 		},
 	}));
+
 	const [content, setContent] = React.useState('');
 	const [photo, setPhoto] = React.useState('');
+	const isChildComment = props.parentComment != '';
 
 	React.useEffect(() => {
 		if (props.editData) {
@@ -68,6 +72,36 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 		props.onPressReply();
 	};
 
+	const onCancelChild = () => {
+		props.onCancelChild();
+	};
+
+	const getParent = () => {
+		if (isChildComment) {
+			return (
+				<View style={{flexDirection: 'row', alignItems: 'center'}}>
+					<Text style={[txt.noto26, {color: BLUE20, marginLeft: 10 * DP, paddingTop: 5 * DP}]}>
+						{' '}
+						@{props.parentComment.comment_writer_id.user_nickname}
+						{'  '}
+					</Text>
+					{/* <Text style={[txt.noto22, {color: BLUE20, paddingTop: 10 * DP}]}>{'  '}취소</Text> */}
+					<View style={{marginTop: 8 * DP}}>
+						<AniButton
+							btnStyle={'border'}
+							onPress={onCancelChild}
+							btnLayout={{paddingHorizontal: 10 * DP, height: 35 * DP, borderRadius: 20 * DP}}
+							titleFontStyle={18}
+							btnTitle={'답글취소'}
+						/>
+					</View>
+				</View>
+			);
+		} else {
+			return <></>;
+		}
+	};
+
 	if (props.isProtectRequest) {
 		return (
 			<View style={[feedCommentList.commentBox_protect_request]}>
@@ -76,7 +110,6 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 						댓글입력
 					</Text>
 				</TouchableOpacity>
-
 				<AniButton onPress={onPressReply} btnLayout={btn_w120} btnStyle={'border'} btnTitle={'댓글'} titleFontStyle={24} />
 			</View>
 		);
@@ -99,12 +132,13 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 		);
 	} else {
 		return (
-			<View style={[photo && photo.length > 0 ? feedCommentList.editComment : feedCommentList.editComment_photoAdded]}>
+			<View style={[feedCommentList.editComment, props.shadow ? feedCommentList.shadow : feedCommentList.shadow_off]}>
 				{/* 사진 추가를 통해서 받아온 사진이 한 개 이상인 경우 */}
 				{photo && photo.length > 0 ? (
 					<View style={[feedCommentList.commentBox_photo]}>
 						<View style={[feedCommentList.commentBox_top_photo, {flexDirection: 'row'}]}>
 							<View style={[feedCommentList.commentBox_input_photo]}>
+								{getParent()}
 								<TextInput
 									defaultValue={content == '' ? null : content}
 									style={[feedCommentList.replyTextInput_photo]}
@@ -123,14 +157,14 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 				) : (
 					<View style={[feedCommentList.commentBox]}>
 						<View style={[feedCommentList.commentBox_top]}>
+							{getParent()}
 							<TextInput
 								defaultValue={content == '' ? null : content}
-								style={[feedCommentList.replyTextInput]}
+								style={[feedCommentList.replyTextInput, {}]}
 								multiline={true}
 								placeholder={'댓글입력..'}
 								onChangeText={onChangeText}
-								ref={inputRef}
-							/>
+								ref={inputRef}></TextInput>
 						</View>
 						<CommentBoxBottom {...props} onWrite={onWrite} />
 					</View>
@@ -165,5 +199,8 @@ ReplyWriteBox.defaultProps = {
 	onPressReply: e => console.log(e), // 댓글입력(보호요청게시글일 경우) 클릭
 	privateComment: false, // 비밀 댓글 상태 여부
 	isMessage: false,
+	shadow: true,
 	photo: [],
+	parentComment: '',
+	onCancelChild: () => {},
 };

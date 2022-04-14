@@ -2,22 +2,32 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {CurrentLocation, FavoriteTag46_Filled, LocationGray, LocationMarker, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
-import {BLACK, GRAY10, WHITE} from 'Root/config/color';
+import {
+	CurrentLocation,
+	FavoriteTag46_Filled,
+	FavoriteTag48_Border,
+	LocationGray,
+	LocationMarker,
+	Meatball50_GRAY20_Horizontal,
+} from 'Root/component/atom/icon';
+import {APRI10, BLACK, GRAY10, WHITE} from 'Root/config/color';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {useNavigation} from '@react-navigation/core';
 import WebView from 'react-native-webview';
+import {styles} from 'Root/component/atom/image/imageStyle';
+import Modal from 'Root/component/modal/Modal';
 /**
  * 후기 세부 페이지
  * @param {object} props - Props Object
  * @param {object} props.data - 데이터
- * @param {()=>void)} props.onPressFavorite - 즐겨찾기 클릭
+ * @param {(bool:boolean)=>void)} props.onPressFavorite - 즐겨찾기 클릭
  * @param {()=>void)} props.onPressMeatball - 미트볼 클릭
+ * @param {string} props.searchInput - 검색 키워드
  */
 const ReviewContent = props => {
 	const navigation = useNavigation();
-	const data = props.data;
+	const [data, setData] = React.useState(props.data);
 	const [height, setHeight] = React.useState(0); // 게시글 내용의 Dynamic Height 수치
 	let arr = [];
 	const interests = arr.concat(
@@ -27,6 +37,10 @@ const ReviewContent = props => {
 		data.community_interests.interests_review,
 		data.community_interests.interests_trip,
 	);
+
+	React.useEffect(() => {
+		setData(props.data);
+	}, [props.data]);
 
 	const getCategory = (v, i) => {
 		// category_sum_list.push('테스트');
@@ -42,25 +56,8 @@ const ReviewContent = props => {
 					<View key={index} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
 						{sliced.map((v, i) => {
 							return (
-								<View
-									key={i}
-									activeOpacity={0.7}
-									style={[
-										style.category,
-										{
-											backgroundColor: WHITE,
-											borderColor: BLACK,
-										},
-									]}>
-									<Text
-										style={[
-											txt.noto24,
-											{
-												color: BLACK,
-											},
-										]}>
-										{v}
-									</Text>
+								<View key={i} activeOpacity={0.7} style={[style.category, {backgroundColor: WHITE, borderColor: BLACK}]}>
+									<Text style={[txt.noto24, {color: BLACK}]}>{v}</Text>
 								</View>
 							);
 						})}
@@ -74,25 +71,8 @@ const ReviewContent = props => {
 					<View key={index} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
 						{sliced.map((v, i) => {
 							return (
-								<View
-									key={i}
-									activeOpacity={0.7}
-									style={[
-										style.category,
-										{
-											backgroundColor: WHITE,
-											borderColor: BLACK,
-										},
-									]}>
-									<Text
-										style={[
-											txt.noto24,
-											{
-												color: BLACK,
-											},
-										]}>
-										{v}
-									</Text>
+								<View key={i} activeOpacity={0.7} style={[style.category, {backgroundColor: WHITE, borderColor: BLACK}]}>
+									<Text style={[txt.noto24, {color: BLACK}]}>{v}</Text>
 								</View>
 							);
 						})}
@@ -101,11 +81,16 @@ const ReviewContent = props => {
 			});
 	};
 
+	const onPressFavorite = bool => {
+		setData({...data, community_is_favorite: bool});
+		props.onPressFavorite(bool);
+	};
+
 	const onWebViewMessage = event => {
-		if (parseInt(event.nativeEvent.data) < 300) {
-			setHeight(300 * DP);
+		if (parseInt(event.nativeEvent.data) < 100 * DP) {
+			setHeight(100 * DP);
 		} else {
-			height >= 300 ? false : setHeight(parseInt(event.nativeEvent.data));
+			height >= 100 * DP ? false : setHeight(parseInt(event.nativeEvent.data));
 			Platform.OS == 'android'
 				? console.log('height and : ', parseInt(event.nativeEvent.data))
 				: console.log('parseInt(event.nativeEvent.data)', parseInt(event.nativeEvent.data));
@@ -115,6 +100,57 @@ const ReviewContent = props => {
 	const x = 126.937125; //초기값 더미
 	const y = 37.548721; //초기값 더미
 
+	const onPressImage = uri => {
+		Modal.popPhotoListViewModal([uri]);
+	};
+
+	const getContents = () => {
+		let contents = data.contents;
+		// console.log('contents', contents);
+		return contents.map((v, i) => {
+			if (v && v.image == null) {
+				const r1 = v.replace(/&nbsp;/g, '');
+				const r2 = r1.replace(/<br>/g, '');
+				console.log('searchInput', props.searchInput);
+				if (props.searchInput == undefined) {
+					return (
+						<Text key={i} style={[txt.noto28]}>
+							{r2}
+						</Text>
+					);
+				} else if (props.searchInput.length > 1) {
+					console.log(props.searchInput);
+					let split = r2.split(new RegExp(`(${props.searchInput})`, 'gi'));
+					// console.log('split', split);
+					return (
+						<Text key={i} style={[txt.noto28]}>
+							{split.map((part, ind) =>
+								part.toLowerCase() === props.searchInput.toLowerCase() ? (
+									// <View style={{backgroundColor: 'red'}}>{part}</View>
+									<Text key={ind} style={[txt.noto28b, {color: APRI10, marginRight: 10 * DP}]}>
+										{part + ''}
+									</Text>
+								) : (
+									<Text key={ind} style={[txt.noto28, {marginRight: 10 * DP}]}>
+										{part + ''}
+									</Text>
+								),
+							)}
+						</Text>
+					);
+				}
+			} else if (v == undefined) {
+				return <></>;
+			} else {
+				return (
+					<TouchableOpacity key={i} activeOpacity={0.8} onPress={() => onPressImage(v.image)}>
+						<Image style={[styles.img_square_round_654, {marginVertical: 10 * DP}]} source={{uri: v.image}} resizeMode={'stretch'} />
+					</TouchableOpacity>
+				);
+			}
+		});
+	};
+
 	return (
 		<View style={[style.container]}>
 			{/* 리뷰 헤더  */}
@@ -123,14 +159,19 @@ const ReviewContent = props => {
 					<Text style={[txt.noto32b]}>{data.community_title} </Text>
 				</View>
 				<View style={[style.header_icon]}>
-					<FavoriteTag46_Filled onPress={() => props.onPressFavorite()} />
+					{data.community_is_favorite ? (
+						<FavoriteTag46_Filled onPress={() => onPressFavorite(false)} />
+					) : (
+						<FavoriteTag48_Border onPress={() => onPressFavorite(true)} />
+					)}
 					<Meatball50_GRAY20_Horizontal onPress={() => props.onPressMeatball()} />
 				</View>
 			</View>
 			<View style={[style.profile]}>
 				<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} />
 			</View>
-			<View>
+			<View style={{width: 654 * DP, marginTop: 20 * DP}}>{getContents()}</View>
+			{/* <View>
 				<View style={[{width: 700 * DP, marginTop: 20 * DP}]}>
 					{Platform.OS == 'ios' ? (
 						<WebView
@@ -174,7 +215,7 @@ const ReviewContent = props => {
 						</ScrollView>
 					)}
 				</View>
-			</View>
+			</View> */}
 			<View style={[style.footer]}>
 				{data.community_address.region.latitude == '' ? (
 					<></>
@@ -263,6 +304,10 @@ const mapStyle2 = [
 	},
 ];
 
+ReviewContent.defaultProps = {
+	onPressFavorite: () => {},
+};
+
 export default ReviewContent;
 
 const style = StyleSheet.create({
@@ -283,7 +328,6 @@ const style = StyleSheet.create({
 		marginRight: 12 * DP,
 		paddingHorizontal: 15 * DP,
 		paddingVertical: 2 * DP,
-		backgroundColor: 'yellow',
 	},
 	categoryList: {
 		width: 510 * DP,

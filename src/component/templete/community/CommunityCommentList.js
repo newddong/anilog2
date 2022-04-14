@@ -12,6 +12,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
 import {GRAY10, GRAY20} from 'Root/config/color';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
+import community_obj from 'Root/config/community_obj';
 
 export default CommunityCommentList = props => {
 	// console.log('props.showAllContents', props.route.params.showAllContents);
@@ -34,7 +35,7 @@ export default CommunityCommentList = props => {
 	});
 
 	React.useEffect(() => {
-		// console.log('data._id', data._id);
+		console.log('data._id', data._id);
 		getCommentListByCommunityId(
 			{
 				community_object_id: data._id,
@@ -47,6 +48,11 @@ export default CommunityCommentList = props => {
 			err => console.log('err', err),
 		);
 		navigation.setOptions({title: '댓글 쓰기'});
+		navigation.addListener('blur', () => {
+			community_obj.object = {};
+			community_obj.pageToMove = '';
+			community_obj.object.initial = true;
+		});
 	}, []);
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
@@ -64,7 +70,7 @@ export default CommunityCommentList = props => {
 		}
 
 		if (parentComment) {
-			param = {...param, commentobject_id: parentComment};
+			param = {...param, commentobject_id: parentComment._id};
 		}
 		if (editMode) {
 			console.log('댓글편집', editData);

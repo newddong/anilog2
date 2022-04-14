@@ -39,16 +39,20 @@ export default ChildComment = props => {
 
 	const onCLickHeart = () => {
 		setLikeState(!likeState);
-		likeComment({
-			commentobject_id : props.data._id,
-			userobject_id: userGlobalObject.userInfo._id,
-			is_like: !likeState
-		},({msg}) =>{
-			setLikeCount(msg.targetComment.comment_like_count);
-		},error=>{
-			console.log(error);
-		})
-		props.like&&props.like(props.data);
+		likeComment(
+			{
+				commentobject_id: props.data._id,
+				userobject_id: userGlobalObject.userInfo._id,
+				is_like: !likeState,
+			},
+			({msg}) => {
+				setLikeCount(msg.targetComment.comment_like_count);
+			},
+			error => {
+				console.log(error);
+			},
+		);
+		props.like && props.like(props.data);
 	};
 
 	//대댓글 클릭
@@ -72,7 +76,7 @@ export default ChildComment = props => {
 							alert('공유하기!');
 							break;
 						case '수정':
-							props.onEdit&&props.onEdit(data);
+							props.onEdit && props.onEdit(data);
 							// alert('수정!');
 							// navigation.navigate('FeedEdit',props.data);
 							break;

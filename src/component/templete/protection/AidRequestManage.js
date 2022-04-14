@@ -9,6 +9,7 @@ import DP from 'Root/config/dp';
 import {AddItem64} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 //ShelterMenu => 보호중인 동물 [Nav명 - ShelterProtectAnimalList]
 export default AidRequestManage = ({route, navigation}) => {
@@ -93,11 +94,7 @@ export default AidRequestManage = ({route, navigation}) => {
 	const isLoaded = hasPostAnimalList == 'false' || noPostAnimalList == 'false';
 
 	if (isLoaded) {
-		return (
-			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
-				<ActivityIndicator size={'large'} />
-			</View>
-		);
+		return <Loading isModal={false} />;
 	} else {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>

@@ -37,7 +37,7 @@ export default ProtectCommentList = props => {
 			{
 				protect_request_object_id: data,
 				request_number: 1000,
-				login_userobject_id: userGlobalObject.userInfo._id
+				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			comments => {
 				setComments(comments.msg);
@@ -56,8 +56,10 @@ export default ProtectCommentList = props => {
 			comment_contents: content, //내용
 			comment_is_secure: privateComment, //공개여부 테스트때 반영
 		};
+
 		if (parentComment) {
-			param = {...param, commentobject_id: parentComment};
+			console.log('parentComment ProtectComment ', parentComment);
+			param = {...param, commentobject_id: parentComment._id};
 		} else {
 			param = {...param, protect_request_object_id: props.route.params.protectObject._id};
 		}
@@ -72,7 +74,7 @@ export default ProtectCommentList = props => {
 					{
 						protect_request_object_id: props.route.params.protectObject._id,
 						request_number: 1000,
-						login_userobject_id: userGlobalObject.userInfo._id
+						login_userobject_id: userGlobalObject.userInfo._id,
 					},
 					comments => {
 						!parentComment && setComments([]); //댓글목록 초기화

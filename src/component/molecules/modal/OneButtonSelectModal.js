@@ -58,12 +58,17 @@ const OneButtonSelectModal = props => {
 	const onScroll = event => {
 		// console.log('event', event.nativeEvent.contentOffset);
 		let y = event.nativeEvent.contentOffset.y;
-		let focused = Math.floor(y / (68 * DP));
-		// console.log('foucsed', focused);
+		let focused = Math.floor(y / (69 * DP));
 		if (focused < 1) {
 			setSelectedItem(2);
 		} else {
-			setSelectedItem(focused + 2);
+			if (focused >= data.length) {
+				// 마지막 배열을 넘어서서 스크롤을 할 경우 마지막으로 자동 회귀
+				console.log('focused', focused);
+				setSelectedItem(data.length + 1);
+			} else {
+				setSelectedItem(focused + 2);
+			}
 		}
 	};
 

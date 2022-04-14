@@ -19,7 +19,7 @@ import AddFamilyAccount from 'Templete/pet/AddFamilyAccount';
 import AssignPetProfileImage from 'Templete/pet/AssignPetProfileImage';
 import AssignPetInfoA from 'Templete/pet/AssignPetInfoA';
 import AssignPetInfoB from 'Templete/pet/AssignPetInfoB';
-import SaveFavorite from 'Templete/favorite/SaveFavorite';
+import FavoriteUser from 'Root/component/templete/favorite/FavoriteUser';
 import SaveAnimalRequest from 'Templete/protection/SaveAnimalRequest';
 import FavoriteFeeds from 'Templete/favorite/FavoriteFeeds';
 import AppliesRecord from 'Templete/my/AppliesRecord';
@@ -73,6 +73,10 @@ import ServiceCenterTopTabNavigation from './ServiceCenterTopTabNavigation';
 import CategoryHelpTopTabNavigation from './CategoryHelpTopTabNavigation';
 import TermsAndPolicy from 'Root/component/templete/user/TermsAndPolicy';
 import FrequentAsked from 'Root/component/templete/user/FrequentAsked';
+import FavoriteCommunity from 'Root/component/templete/favorite/FavoriteCommunity';
+import FavoriteArticle from 'Root/component/templete/favorite/FavoriteArticle';
+import FavoriteReview from 'Root/component/templete/favorite/FavoriteReview';
+import FavoriteProtectRequest from 'Root/component/templete/favorite/FavoriteProtectRequest';
 const MyStack = createStackNavigator();
 export default MyStackNavigation = props => {
 	return (
@@ -157,7 +161,7 @@ export default MyStackNavigation = props => {
 				component={AssignPetInfoB}
 				options={{header: props => <SimpleHeader {...props} />, title: '반려동물 등록'}}
 			/>
-			<MyStack.Screen name="SaveFavorite" component={SaveFavorite} options={{header: props => <SimpleHeader {...props} />, title: '친구 즐겨찾기'}} />
+			<MyStack.Screen name="FavoriteUser" component={FavoriteUser} options={{header: props => <SimpleHeader {...props} />, title: '친구 즐겨찾기'}} />
 			<MyStack.Screen
 				name="UserSaveAnimalRequest"
 				component={SaveAnimalRequest}
@@ -347,6 +351,33 @@ export default MyStackNavigation = props => {
 				component={FrequentAsked}
 				options={{header: props => <SimpleHeader {...props} />, title: '자주 묻는 질문'}}
 			/>
+			<MyStack.Screen
+				name="FavoriteCommunity"
+				component={FavoriteCommunity}
+				options={{header: props => <SimpleHeader {...props} />, title: '커뮤니티 즐겨찾기'}}
+			/>
+			<MyStack.Screen
+				name="MyCommunity"
+				component={FavoriteCommunity}
+				options={{header: props => <SimpleHeader {...props} />, title: '나의 커뮤니티 글'}}
+			/>
+			<MyStack.Screen
+				name="FavoriteArticle"
+				component={FavoriteArticle}
+				options={{header: props => <SimpleHeader {...props} />, title: '자유 게시글 즐겨찾기'}}
+			/>
+			<MyStack.Screen
+				name="FavoriteReview"
+				component={FavoriteReview}
+				options={{header: props => <SimpleHeader {...props} />, title: '리뷰 즐겨찾기'}}
+			/>
+			<MyStack.Screen
+				name="FavoriteProtectRequest"
+				component={FavoriteProtectRequest}
+				options={{header: props => <SimpleHeader {...props} />, title: '보호요청 즐겨찾기'}}
+			/>
+			<MyStack.Screen name="MyArticle" component={FavoriteArticle} options={{header: props => <SimpleHeader {...props} />, title: '나의 자유글'}} />
+			<MyStack.Screen name="MyReview" component={FavoriteReview} options={{header: props => <SimpleHeader {...props} />, title: '나의 리뷰'}} />
 		</MyStack.Navigator>
 	);
 };

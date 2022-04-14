@@ -531,6 +531,12 @@ export const temp_style = StyleSheet.create({
 		width: 110 * DP,
 		height: 110 * DP,
 	},
+	floatingTwoBtn: {
+		flexDirection: 'column',
+
+		width: 110 * DP,
+		height: 220 * DP,
+	},
 	editComment: {},
 	aidRequest: {
 		// width: 654 * DP,
@@ -926,9 +932,10 @@ export const temp_style = StyleSheet.create({
 		// backgroundColor: 'yellow',
 	},
 	button_animalProtectRequestDetail: {
-		width: 126 * DP,
+		// width: 126 * DP,
 		height: 84 * DP,
 		flexDirection: 'row',
+		// backgroundColor: 'red',
 	},
 	rescueSummary: {
 		width: 654 * DP,
@@ -3223,7 +3230,7 @@ export const appliesRecord = StyleSheet.create({
 		marginVertical: 30 * DP,
 	},
 	whenEmpty: {
-		paddingVertical: 60 * DP,
+		paddingVertical: 40 * DP,
 	},
 });
 
@@ -3880,32 +3887,29 @@ export const feedCommentList = StyleSheet.create({
 	},
 	editComment: {
 		width: 750 * DP,
-		shadowColor: 'black',
-		shadowOpacity: 0.5,
-		shadowRadius: 4.65,
-		shadowOffset: {
-			width: 1 * DP,
-			height: 2 * DP,
-		},
-		elevation: 2,
-		// position: 'absolute',
 		backgroundColor: WHITE,
 		bottom: 1,
 		alignItems: 'center',
 	},
-	editComment_photoAdded: {
-		width: 750 * DP,
+	shadow: {
 		shadowColor: '#000000',
 		shadowOpacity: 0.5,
-		shadowRadius: 4.65,
+		shadowRadius: 2.65,
+		shadowOffset: {
+			width: 1 * DP,
+			height: 1 * DP,
+		},
+		elevation: 2,
+	},
+	shadow_off: {
+		shadowColor: '#000000',
+		shadowOpacity: 0.2,
+		shadowRadius: 2.65,
 		shadowOffset: {
 			width: 1 * DP,
 			height: 2 * DP,
 		},
 		elevation: 2,
-		backgroundColor: WHITE,
-		bottom: 1,
-		alignItems: 'center',
 	},
 	editCommentFromRequest: {
 		width: 654 * DP,
@@ -3927,7 +3931,7 @@ export const feedCommentList = StyleSheet.create({
 		width: 646 * DP,
 		marginLeft: 20 * DP,
 		fontSize: 28 * DP,
-		paddingVertical: 0,
+		paddingVertical: 0 * DP,
 		includeFontPadding: false,
 		// backgroundColor: 'yellow',
 	},
@@ -4003,13 +4007,11 @@ export const feedCommentList = StyleSheet.create({
 	},
 	commentBox_top: {
 		width: 694 * DP,
-		// height: 68 * DP,
-		maxHeight: 224 * DP,
+		// maxHeight: 224 * DP,
 		padding: 10 * DP,
 		borderRadius: 24 * DP,
 		marginBottom: 12 * DP,
-		justifyContent: 'center',
-		backgroundColor: GRAY30,
+		backgroundColor: GRAY40,
 	},
 	commentBox_bottom: {
 		width: 694 * DP,

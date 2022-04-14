@@ -4,19 +4,21 @@ import {feedWrite, login_style, searchProtectRequest, temp_style} from 'Templete
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {GRAY10, WHITE} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {Check50, Rect50_Border, Urgent_Write1, Urgent_Write2} from 'Atom/icon';
+import {Check50, EmptyIcon, Rect50_Border, Urgent_Write1, Urgent_Write2} from 'Atom/icon';
 import {useNavigation} from '@react-navigation/core';
 import {PET_KIND, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
-import {getMissingReportList} from 'Root/api/feedapi.js';
+import {favoriteFeed, getMissingReportList} from 'Root/api/feedapi.js';
 import {btn_w306_h68} from 'Component/atom/btn/btn_style';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
+import Loading from 'Root/component/molecules/modal/Loading';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default MissingReportList = props => {
 	const navigation = useNavigation();
 	const [showUrgentBtns, setShowUrgentBtns] = React.useState(true); //긴급버튼목록
 	const [showActionButton, setShowActionButton] = React.useState(false); // 긴급게시(하얀버전) 클릭 시 - 실종/제보 버튼 출력 Boolean
 
-	const [data, setData] = React.useState([]);
+	const [data, setData] = React.useState('false');
 	const [filterData, setFilterData] = React.useState({
 		city: '',
 		missing_animal_species: '',
@@ -32,7 +34,6 @@ export default MissingReportList = props => {
 			getList();
 		});
 
-		console.log('MissingReportList:feedlist of missing', filterData);
 		const getList = () => {
 			getMissingReportList(
 				filterData,
@@ -64,7 +65,20 @@ export default MissingReportList = props => {
 
 	//실종제보 게시글의 좋아요 태그 클릭
 	const onOff_FavoriteTag = (value, index) => {
-		console.log('즐겨찾기=>' + value + ' ' + index);
+		// console.log('getData()[index]', getData()[index]);
+		favoriteFeed(
+			{
+				feedobject_id: getData()[index]._id,
+				userobject_id: userGlobalObject.userInfo._id,
+				is_favorite: value,
+			},
+			result => {
+				console.log('result / FavoriteFeed / MissingReportList : ', result.msg);
+			},
+			err => {
+				console.log('err / FavoriteFeed / MissingReportList : ', err);
+			},
+		);
 	};
 
 	const onClickLabel = (status, id, item) => {
@@ -137,14 +151,10 @@ export default MissingReportList = props => {
 		setOnlyMissing(false);
 	};
 
-	React.useEffect(() => {
-		console.log('showMissing : ', onlyMissing, 'showReport : ', onlyReport);
-	}, [onlyMissing, onlyReport]);
-
 	const getData = () => {
 		let filtered = data;
 		if (onlyMissing) {
-			console.log('data', data.slice(0, 2));
+			// console.log('data', data.slice(0, 2));
 			filtered = filtered.filter(v => v.feed_type != 'missing');
 		} else if (onlyReport) {
 			filtered = filtered.filter(v => v.feed_type != 'report');
@@ -154,8 +164,9 @@ export default MissingReportList = props => {
 
 	const whenEmpty = () => {
 		return (
-			<View style={[{height: 100 * DP, marginVertical: 30 * DP, alignItems: 'center', justifyContent: 'center'}]}>
-				<Text style={[txt.roboto36b, {}]}> 목록이 없습니다.</Text>
+			<View style={{paddingVertical: 100 * DP, alignItems: 'center'}}>
+				<EmptyIcon />
+				<Text style={[txt.roboto28b, {marginTop: 10 * DP}]}>목록이 없습니다.</Text>
 			</View>
 		);
 	};
@@ -196,22 +207,26 @@ export default MissingReportList = props => {
 						</View>
 						<View style={[searchProtectRequest.kindFilter]}>
 							<View style={[searchProtectRequest.kindFilterItem]}>
-								<Text style={[txt.noto26, {color: GRAY10}]}> 실종글만 보기</Text>
+								<Text style={[txt.noto26, {color: GRAY10}]}> 제보글만 보기</Text>
 								{onlyMissing ? <Check50 onPress={onPressShowMissing} /> : <Rect50_Border onPress={onPressShowMissing} />}
 							</View>
 							<View style={[searchProtectRequest.kindFilterItem]}>
-								<Text style={[txt.noto26, {color: GRAY10}]}> 제보글만 보기</Text>
+								<Text style={[txt.noto26, {color: GRAY10}]}> 실종글만 보기</Text>
 								{onlyReport ? <Check50 onPress={onPressShowReport} /> : <Rect50_Border onPress={onPressShowReport} />}
 							</View>
 						</View>
-						<View style={[searchProtectRequest.animalMissingReportList]}>
-							<AnimalNeedHelpList
-								data={getData()}
-								onFavoriteTag={(e, index) => onOff_FavoriteTag(e, index)}
-								onClickLabel={(status, id, item) => onClickLabel(status, id, item)}
-								whenEmpty={whenEmpty()}
-							/>
-						</View>
+						{data == 'false' ? (
+							<Loading isModal={false} />
+						) : (
+							<View style={[searchProtectRequest.animalMissingReportList]}>
+								<AnimalNeedHelpList
+									data={getData()}
+									onFavoriteTag={(e, index) => onOff_FavoriteTag(e, index)}
+									onClickLabel={(status, id, item) => onClickLabel(status, id, item)}
+									whenEmpty={whenEmpty()}
+								/>
+							</View>
+						)}
 					</View>
 				)}
 			/>

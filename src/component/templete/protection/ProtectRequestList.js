@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, ActivityIndicator, FlatList} from 'react-native';
+import {Text, View, FlatList} from 'react-native';
 import {login_style, searchProtectRequest, temp_style} from 'Templete/style_templete';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {GRAY10} from 'Root/config/color';
@@ -7,10 +7,11 @@ import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import {txt} from 'Root/config/textstyle';
 import {ONLY_CONTENT_FOR_ADOPTION, PET_KIND, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
 import {getProtectRequestList} from 'Root/api/shelterapi.js';
-import {getPettypes} from 'Root/api/userapi';
 import {btn_w306_h68} from 'Component/atom/btn/btn_style';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 import Modal from 'Root/component/modal/Modal';
+import {favoriteEtc} from 'Root/api/favoriteetc';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 export default ProtectRequestList = ({navigation, route}) => {
 	const [data, setData] = React.useState('false');
@@ -83,8 +84,23 @@ export default ProtectRequestList = ({navigation, route}) => {
 	};
 
 	//별도의 API 사용 예정.
-	const onOff_FavoriteTag = (value, index) => {
-		console.log('즐겨찾기=>' + value + ' ' + index);
+	const onOff_FavoriteTag = (bool, index) => {
+		// console.log('즐겨찾기=>' + value + ' ' + index);
+		console.log(' data[index]._id', data[index]._id);
+		console.log('bool', bool);
+		favoriteEtc(
+			{
+				collectionName: 'protectrequestobjects',
+				post_object_id: data[index]._id,
+				is_favorite: bool,
+			},
+			result => {
+				console.log('result / favoriteEtc / ProtectRequestList : ', result.msg);
+			},
+			err => {
+				console.log('err / favoriteEtc / PRotectRequestList : ', err);
+			},
+		);
 	};
 
 	//지역 필터
@@ -136,11 +152,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 	};
 
 	if (data == 'false') {
-		return (
-			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
-				<ActivityIndicator size={'large'}></ActivityIndicator>
-			</View>
-		);
+		return <Loading isModal={false} />;
 	} else {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>

@@ -19,17 +19,12 @@ const ArticleList = props => {
 	};
 
 	return (
-		<View style={[style.container]}>
+		<View style={[style.container, {borderBottomColor: props.items.length == 0 ? 'white' : GRAY40}]}>
 			<FlatList
 				data={props.items}
 				renderItem={({item, index}) => renderItem(item, index)}
 				showsVerticalScrollIndicator={false}
-				keyExtractor={item => item._id}
 				ListEmptyComponent={props.whenEmpty}
-				// ItemSeparatorComponent={() => {
-				// 	return <View style={{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY30}} />;
-				// }}
-				listKey={({item, index}) => index}
 				nestedScrollEnabled
 			/>
 		</View>
@@ -53,7 +48,7 @@ const style = StyleSheet.create({
 	container: {
 		width: 654 * DP,
 		alignItems: 'center',
-		borderBottomColor: GRAY40,
+
 		borderBottomWidth: 2 * DP,
 		// backgroundColor: 'red',
 	},

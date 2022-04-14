@@ -7,6 +7,7 @@ import {Arrow_Down_GRAY20, Arrow_Up_GRAY20} from 'Atom/icon';
 import VolunteerItemList from 'Organism/list/VolunteerItemList';
 import {login_style, manageVolunteer} from 'Templete/style_templete';
 import {getShelterVolunteerActivityList, getUserVolunteerActivityList} from 'Root/api/volunteerapi';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 export default ManageVolunteer = ({route}) => {
 	// console.log('route.name', route.name);
@@ -114,11 +115,7 @@ export default ManageVolunteer = ({route}) => {
 	const isLoaded = doneList == 'false' || notDoneList == 'false'; //활동 예정 및 지난 신청 중 단 하나라도 false(API 적용 이전값)가 있다면 아직 로딩중
 
 	if (isLoaded) {
-		return (
-			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
-				<ActivityIndicator size={'large'}></ActivityIndicator>
-			</View>
-		);
+		return <Loading isModal={false} />;
 	} else {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>

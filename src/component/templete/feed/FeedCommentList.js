@@ -85,8 +85,9 @@ export default FeedCommentList = props => {
 		}
 
 		if (parentComment) {
-			param = {...param, commentobject_id: parentComment};
+			param = {...param, commentobject_id: parentComment._id};
 		}
+
 		if (editMode) {
 			console.log('댓글편집', editData);
 			updateComment(

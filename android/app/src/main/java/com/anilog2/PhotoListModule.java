@@ -1,0 +1,609 @@
+package com.anilog2;
+
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.Context;
+import android.content.res.AssetFileDescriptor;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
+import android.text.TextUtils;
+import android.media.ExifInterface;
+
+import androidx.annotation.NonNull;
+
+import com.facebook.common.logging.FLog;
+import com.facebook.react.bridge.GuardedAsyncTask;
+import com.facebook.react.bridge.NativeModule;
+import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.ReactContextBaseJavaModule;
+import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.common.ReactConstants;
+import com.facebook.react.module.annotations.ReactModule;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Set;
+
+import javax.annotation.Nullable;
+import android.util.Log;
+
+public class PhotoListModule extends ReactContextBaseJavaModule{
+    public static final String NAME = "PhotoListModule";
+
+    private static final String ERROR_UNABLE_TO_LOAD = "E_UNABLE_TO_LOAD";
+    private static final String ERROR_UNABLE_TO_LOAD_PERMISSION = "E_UNABLE_TO_LOAD_PERMISSION";
+    private static final String ERROR_UNABLE_TO_SAVE = "E_UNABLE_TO_SAVE";
+    private static final String ERROR_UNABLE_TO_DELETE = "E_UNABLE_TO_DELETE";
+    private static final String ERROR_UNABLE_TO_FILTER = "E_UNABLE_TO_FILTER";
+
+    private static final String ASSET_TYPE_PHOTOS = "Photos";
+    private static final String ASSET_TYPE_VIDEOS = "Videos";
+    private static final String ASSET_TYPE_ALL = "All";
+
+    private static final String INCLUDE_FILENAME = "filename";
+    private static final String INCLUDE_FILE_SIZE = "fileSize";
+    private static final String INCLUDE_LOCATION = "location";
+    private static final String INCLUDE_IMAGE_SIZE = "imageSize";
+    private static final String INCLUDE_PLAYABLE_DURATION = "playableDuration";
+
+    private static final String[] PROJECTION = {
+            Images.Media._ID,
+            Images.Media.MIME_TYPE,
+            Images.Media.BUCKET_DISPLAY_NAME,
+            Images.Media.DATE_TAKEN,
+            MediaStore.MediaColumns.DATE_ADDED,
+            MediaStore.MediaColumns.DATE_MODIFIED,
+            MediaStore.MediaColumns.WIDTH,
+            MediaStore.MediaColumns.HEIGHT,
+            MediaStore.MediaColumns.SIZE,
+            MediaStore.MediaColumns.DATA
+    };
+
+    private static final String SELECTION_BUCKET = Images.Media.BUCKET_DISPLAY_NAME + " = ?";
+    private static final String SELECTION_DATE_TAKEN = Images.Media.DATE_TAKEN + " < ?";
+
+    public PhotoListModule(ReactApplicationContext reactContext) {
+        super(reactContext);
+    }
+
+    @NonNull
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
+    @ReactMethod
+    public void getPhotos(final ReadableMap params, final Promise promise) {
+        int first = params.getInt("first");
+        String after = params.hasKey("after") ? params.getString("after") : null;
+        String groupName = params.hasKey("groupName") ? params.getString("groupName") : null;
+        String assetType = params.hasKey("assetType") ? params.getString("assetType") : ASSET_TYPE_PHOTOS;
+        long fromTime = params.hasKey("fromTime") ? Long.parseLong(params.getString("fromTime")) : 0;
+        long toTime = params.hasKey("toTime") ? Long.parseLong(params.getString("toTime")) : 0;
+        String fromID = params.hasKey("fromID") ? params.getString("fromID") : null;
+        String toID = params.hasKey("toID") ? params.getString("toID") : null;
+        ReadableArray mimeTypes = params.hasKey("mimeTypes")
+                ? params.getArray("mimeTypes")
+                : null;
+        ReadableArray include = params.hasKey("include") ? params.getArray("include") : null;
+        Log.d("getPhotos query","fromTime: "+ fromTime + "    toTime: "+ toTime + "    fromID: "+ fromID+ "  toID   "+ toID);
+        new GetMediaTask(
+                getReactApplicationContext(),
+                first,
+                after,
+                groupName,
+                mimeTypes,
+                assetType,
+                fromTime,
+                toTime,
+                include,
+                fromID,
+                toID,
+                promise)
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private static class GetMediaTask extends GuardedAsyncTask<Void, Void> {
+        private final Context mContext;
+        private final int mFirst;
+        private final @Nullable String mAfter;
+        private final @Nullable String mGroupName;
+        private final @Nullable ReadableArray mMimeTypes;
+        private final Promise mPromise;
+        private final String mAssetType;
+        private final long mFromTime;
+        private final long mToTime;
+        private final String mFromID; //ID값으로 검색하기 위한 맴버 추가
+        private final String mToID; //ID값으로 검색하기 위한 맴버 추가
+        private final Set<String> mInclude;
+
+        private GetMediaTask(
+                ReactContext context,
+                int first,
+                @Nullable String after,
+                @Nullable String groupName,
+                @Nullable ReadableArray mimeTypes,
+                String assetType,
+                long fromTime,
+                long toTime,
+                @Nullable ReadableArray include,
+                String fromID, //ID값으로 검색하기 위한 맴버 추가
+                String toID, //ID값으로 검색하기 위한 맴버 추가
+                Promise promise) {
+            super(context);
+            mContext = context;
+            mFirst = first;
+            mAfter = after;
+            mGroupName = groupName;
+            mMimeTypes = mimeTypes;
+            mPromise = promise;
+            mAssetType = assetType;
+            mFromTime = fromTime;
+            mToTime = toTime;
+            mInclude = createSetFromIncludeArray(include);
+            mFromID = fromID; //ID값으로 검색하기 위한 맴버 추가
+            mToID = toID; //ID값으로 검색하기 위한 맴버 추가
+        }
+
+        private static Set<String> createSetFromIncludeArray(@Nullable ReadableArray includeArray) {
+            Set<String> includeSet = new HashSet<>();
+
+            if (includeArray == null) {
+                return includeSet;
+            }
+
+            for (int i = 0; i < includeArray.size(); i++) {
+                @Nullable String includeItem = includeArray.getString(i);
+                if (includeItem != null) {
+                    includeSet.add(includeItem);
+                }
+            }
+
+            return includeSet;
+        }
+
+        @Override
+        protected void doInBackgroundGuarded(Void... params) {
+            StringBuilder selection = new StringBuilder("1");
+            List<String> selectionArgs = new ArrayList<>();
+            if (!TextUtils.isEmpty(mGroupName)) {
+                selection.append(" AND " + SELECTION_BUCKET);
+                selectionArgs.add(mGroupName);
+            }
+
+            if (mAssetType.equals(ASSET_TYPE_PHOTOS)) {
+                selection.append(" AND " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = "
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE);
+            } else if (mAssetType.equals(ASSET_TYPE_VIDEOS)) {
+                selection.append(" AND " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = "
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO);
+            } else if (mAssetType.equals(ASSET_TYPE_ALL)) {
+                selection.append(" AND " + MediaStore.Files.FileColumns.MEDIA_TYPE + " IN ("
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO + ","
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE + ")");
+            } else {
+                mPromise.reject(
+                        ERROR_UNABLE_TO_FILTER,
+                        "Invalid filter option: '" + mAssetType + "'. Expected one of '"
+                                + ASSET_TYPE_PHOTOS + "', '" + ASSET_TYPE_VIDEOS + "' or '" + ASSET_TYPE_ALL + "'."
+                );
+                return;
+            }
+
+
+            if (mMimeTypes != null && mMimeTypes.size() > 0) {
+                selection.append(" AND " + Images.Media.MIME_TYPE + " IN (");
+                for (int i = 0; i < mMimeTypes.size(); i++) {
+                    selection.append("?,");
+                    selectionArgs.add(mMimeTypes.getString(i));
+                }
+                selection.replace(selection.length() - 1, selection.length(), ")");
+            }
+
+            if (mFromTime > 0) {
+//                selection.append(" AND " + Images.Media.DATE_TAKEN + " >= ?");
+//                selection.append(" AND " + Images.Media.DATE_MODIFIED + " > ?");
+                selection.append(" AND " + Images.Media.DATE_ADDED + " > ?");
+                long fromTimeSec = Long.parseLong( mFromTime / 1000+"");
+                selectionArgs.add(fromTimeSec + "");
+//                selectionArgs.add(mFromTime + "");
+//                selectionArgs.add(163833122 + "");
+            }
+            if (mToTime > 0) {
+//                selection.append(" AND " + Images.Media.DATE_TAKEN + " <= ?");
+//                selection.append(" AND " + Images.Media.DATE_MODIFIED + " <= ?");
+                selection.append(" AND " + Images.Media.DATE_ADDED + " <= ?");
+                selectionArgs.add(mToTime + "");
+            }
+
+            if(mFromID !=null){
+                selection.append(" AND " + Images.Media._ID + " > ?");
+                selectionArgs.add(mFromID);
+                Log.d("query","아이디쿼리"+selection+"아규먼트"+selectionArgs.toString());
+            }
+            if(mToID !=null){
+                selection.append(" AND " + Images.Media._ID + " < ?");
+                selectionArgs.add(mToID + "");
+                Log.d("query","아이디쿼리"+selection+"아규먼트"+selectionArgs.toString());
+            }
+
+            Log.d("query","쿼리"+selection+"아규먼트"+selectionArgs.toString());
+            WritableMap response = new WritableNativeMap();
+            ContentResolver resolver = mContext.getContentResolver();
+
+            try {
+                // set LIMIT to first + 1 so that we know how to populate page_info
+                String limit = "limit=" + (mFirst + 1);
+
+                if (!TextUtils.isEmpty(mAfter)) {
+                    limit = "limit=" + mAfter + "," + (mFirst + 1);
+                }
+
+                Cursor media = resolver.query(
+                        MediaStore.Files.getContentUri("external").buildUpon().encodedQuery(limit).build(),
+                        PROJECTION,
+                        selection.toString(),
+                        selectionArgs.toArray(new String[selectionArgs.size()]),
+                        Images.Media._ID+ " DESC, " + Images.Media.DATE_ADDED + " DESC, " + Images.Media.DATE_MODIFIED + " DESC"); //이미지 정렬 추가
+                if (media == null) {
+                    mPromise.reject(ERROR_UNABLE_TO_LOAD, "Could not get media");
+                } else {
+                    try {
+                        putEdges(resolver, media, response, mFirst, mInclude);
+                        putPageInfo(media, response, mFirst, !TextUtils.isEmpty(mAfter) ? Integer.parseInt(mAfter) : 0);
+                    } finally {
+                        Log.d("태그","미디어 개수"+media.getCount());
+                        media.close();
+                        mPromise.resolve(response);
+                    }
+                }
+            } catch (SecurityException e) {
+                mPromise.reject(
+                        ERROR_UNABLE_TO_LOAD_PERMISSION,
+                        "Could not get media: need READ_EXTERNAL_STORAGE permission",
+                        e);
+            }
+        }
+
+
+    }
+
+    private static void putPageInfo(Cursor media, WritableMap response, int limit, int offset) {
+        WritableMap pageInfo = new WritableNativeMap();
+        pageInfo.putBoolean("has_next_page", limit < media.getCount());
+        if (limit < media.getCount()) {
+            pageInfo.putString(
+                    "end_cursor",
+                    Integer.toString(offset + limit)
+            );
+        }
+        response.putMap("page_info", pageInfo);
+    }
+
+    private static void putEdges(
+            ContentResolver resolver,
+            Cursor media,
+            WritableMap response,
+            int limit,
+            Set<String> include) {
+        WritableArray edges = new WritableNativeArray();
+        media.moveToFirst();
+        int mediaIdIndex = media.getColumnIndex(Images.Media._ID); //ID인덱스 추가
+        int mimeTypeIndex = media.getColumnIndex(Images.Media.MIME_TYPE);
+        int groupNameIndex = media.getColumnIndex(Images.Media.BUCKET_DISPLAY_NAME);
+        int dateTakenIndex = media.getColumnIndex(Images.Media.DATE_TAKEN);
+        int dateAddedIndex = media.getColumnIndex(MediaStore.MediaColumns.DATE_ADDED);
+        int dateModifiedIndex = media.getColumnIndex(MediaStore.MediaColumns.DATE_MODIFIED);
+        int widthIndex = media.getColumnIndex(MediaStore.MediaColumns.WIDTH);
+        int heightIndex = media.getColumnIndex(MediaStore.MediaColumns.HEIGHT);
+        int sizeIndex = media.getColumnIndex(MediaStore.MediaColumns.SIZE);
+        int dataIndex = media.getColumnIndex(MediaStore.MediaColumns.DATA);
+
+        boolean includeLocation = include.contains(INCLUDE_LOCATION);
+        boolean includeFilename = include.contains(INCLUDE_FILENAME);
+        boolean includeFileSize = include.contains(INCLUDE_FILE_SIZE);
+        boolean includeImageSize = include.contains(INCLUDE_IMAGE_SIZE);
+        boolean includePlayableDuration = include.contains(INCLUDE_PLAYABLE_DURATION);
+        Log.d("에지인포1", "dateTaken: "+dateTakenIndex + "   dateModifiedIndex : "+dateModifiedIndex + "  아이디 : ");
+        for (int i = 0; i < limit && !media.isAfterLast(); i++) {
+            WritableMap edge = new WritableNativeMap();
+            WritableMap node = new WritableNativeMap();
+            boolean imageInfoSuccess =
+                    putImageInfo(resolver, media, node, widthIndex, heightIndex, sizeIndex, dataIndex,
+                            mimeTypeIndex, includeFilename, includeFileSize, includeImageSize,
+                            includePlayableDuration, mediaIdIndex);
+            if (imageInfoSuccess) {
+                putBasicNodeInfo(media, node, mimeTypeIndex, groupNameIndex, dateTakenIndex, dateAddedIndex, dateModifiedIndex);
+                putLocationInfo(media, node, dataIndex, includeLocation);
+
+                edge.putMap("node", node);
+                edges.pushMap(edge);
+            } else {
+                // we skipped an image because we couldn't get its details (e.g. width/height), so we
+                // decrement i in order to correctly reach the limit, if the cursor has enough rows
+                i--;
+            }
+            media.moveToNext();
+        }
+        response.putArray("edges", edges);
+    }
+
+    private static void putBasicNodeInfo(
+            Cursor media,
+            WritableMap node,
+            int mimeTypeIndex,
+            int groupNameIndex,
+            int dateTakenIndex,
+            int dateAddedIndex,
+            int dateModifiedIndex) {
+        node.putString("type", media.getString(mimeTypeIndex));
+        node.putString("group_name", media.getString(groupNameIndex));
+        long dateTaken = media.getLong(dateTakenIndex);
+        if (dateTaken == 0L) {
+            //date added is in seconds, date taken in milliseconds, thus the multiplication
+            dateTaken = media.getLong(dateAddedIndex) * 1000;
+        }
+        node.putDouble("timestamp", dateTaken / 1000d);
+        node.putDouble("modified", media.getLong(dateModifiedIndex));
+        Log.d("에지인포", "dateTaken: "+media.getLong(dateTakenIndex) + "   dateModifiedIndex : "+media.getLong(dateModifiedIndex)+ "  아이디 : "+media.getString(media.getColumnIndex(Images.Media._ID)));
+    }
+
+    /**
+     * @return Whether we successfully fetched all the information about the image that we were asked
+     * to include
+     */
+    private static boolean putImageInfo(
+            ContentResolver resolver,
+            Cursor media,
+            WritableMap node,
+            int widthIndex,
+            int heightIndex,
+            int sizeIndex,
+            int dataIndex,
+            int mimeTypeIndex,
+            boolean includeFilename,
+            boolean includeFileSize,
+            boolean includeImageSize,
+            boolean includePlayableDuration,
+            int mediaIdIndex) {
+        WritableMap image = new WritableNativeMap();
+        Uri photoUri = Uri.parse("file://" + media.getString(dataIndex));
+        image.putString("uri", photoUri.toString());
+        String mimeType = media.getString(mimeTypeIndex);
+
+        boolean isVideo = mimeType != null && mimeType.startsWith("video");
+        boolean putImageSizeSuccess = putImageSize(resolver, media, image, widthIndex, heightIndex,
+                photoUri, isVideo, includeImageSize);
+        boolean putPlayableDurationSuccess = putPlayableDuration(resolver, image, photoUri, isVideo,
+                includePlayableDuration);
+
+        if (includeFilename) {
+            File file = new File(media.getString(dataIndex));
+            String strFileName = file.getName();
+            image.putString("filename", strFileName);
+        } else {
+            image.putNull("filename");
+        }
+
+        if (includeFileSize) {
+            image.putDouble("fileSize", media.getLong(sizeIndex));
+        } else {
+            image.putNull("fileSize");
+        }
+        node.putString("imageID",media.getString(mediaIdIndex));
+        node.putMap("image", image);
+        return putImageSizeSuccess && putPlayableDurationSuccess;
+    }
+
+    /**
+     * @return Whether we succeeded in fetching and putting the playableDuration
+     */
+    private static boolean putPlayableDuration(
+            ContentResolver resolver,
+            WritableMap image,
+            Uri photoUri,
+            boolean isVideo,
+            boolean includePlayableDuration) {
+        image.putNull("playableDuration");
+
+        if (!includePlayableDuration || !isVideo) {
+            return true;
+        }
+
+        boolean success = true;
+        @Nullable Integer playableDuration = null;
+        @Nullable AssetFileDescriptor photoDescriptor = null;
+        try {
+            photoDescriptor = resolver.openAssetFileDescriptor(photoUri, "r");
+        } catch (FileNotFoundException e) {
+            success = false;
+            FLog.e(ReactConstants.TAG, "Could not open asset file " + photoUri.toString(), e);
+        }
+
+        if (photoDescriptor != null) {
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            try {
+                retriever.setDataSource(photoDescriptor.getFileDescriptor());
+            } catch (RuntimeException e) {
+                // Do nothing. We can't handle this, and this is usually a system problem
+            }
+            try {
+                int timeInMillisec = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+                playableDuration = timeInMillisec / 1000;
+            } catch (NumberFormatException e) {
+                success = false;
+                FLog.e(
+                        ReactConstants.TAG,
+                        "Number format exception occurred while trying to fetch video metadata for "
+                                + photoUri.toString(),
+                        e);
+            }
+            retriever.release();
+        }
+
+        if (photoDescriptor != null) {
+            try {
+                photoDescriptor.close();
+            } catch (IOException e) {
+                // Do nothing. We can't handle this, and this is usually a system problem
+            }
+        }
+
+        if (playableDuration != null) {
+            image.putInt("playableDuration", playableDuration);
+        }
+
+        return success;
+    }
+
+    private static boolean putImageSize(
+            ContentResolver resolver,
+            Cursor media,
+            WritableMap image,
+            int widthIndex,
+            int heightIndex,
+            Uri photoUri,
+            boolean isVideo,
+            boolean includeImageSize) {
+        image.putNull("width");
+        image.putNull("height");
+
+        if (!includeImageSize) {
+            return true;
+        }
+
+        boolean success = true;
+        @Nullable AssetFileDescriptor photoDescriptor = null;
+
+        /* Read height and width data from the gallery cursor columns */
+        int width = media.getInt(widthIndex);
+        int height = media.getInt(heightIndex);
+
+        /* If the columns don't contain the size information, read the media file */
+        if (width <= 0 || height <= 0) {
+            try {
+                photoDescriptor = resolver.openAssetFileDescriptor(photoUri, "r");
+                if (isVideo) {
+                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                    try {
+                        retriever.setDataSource(photoDescriptor.getFileDescriptor());
+                    } catch (RuntimeException e) {
+                        // Do nothing. We can't handle this, and this is usually a system problem
+                    }
+                    try {
+                        width = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+                        height = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+                    } catch (NumberFormatException e) {
+                        success = false;
+                        FLog.e(
+                                ReactConstants.TAG,
+                                "Number format exception occurred while trying to fetch video metadata for "
+                                        + photoUri.toString(),
+                                e);
+                    }
+                    retriever.release();
+                } else {
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    // Set inJustDecodeBounds to true so we don't actually load the Bitmap in memory,
+                    // but only get its dimensions
+                    options.inJustDecodeBounds = true;
+                    BitmapFactory.decodeFileDescriptor(photoDescriptor.getFileDescriptor(), null, options);
+                    width = options.outWidth;
+                    height = options.outHeight;
+                }
+            } catch (FileNotFoundException e) {
+                success = false;
+                FLog.e(ReactConstants.TAG, "Could not open asset file " + photoUri.toString(), e);
+            }
+        }
+
+        /* Read the EXIF photo data to update height and width in case a rotation is encoded */
+        if (success && !isVideo && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            try {
+                if (photoDescriptor == null) photoDescriptor = resolver.openAssetFileDescriptor(photoUri, "r");
+                ExifInterface exif = new ExifInterface(photoDescriptor.getFileDescriptor());
+                int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                if (rotation == ExifInterface.ORIENTATION_ROTATE_90 || rotation == ExifInterface.ORIENTATION_ROTATE_270) {
+                    // swap values
+                    int temp = width;
+                    width = height;
+                    height = temp;
+                }
+            } catch (FileNotFoundException e) {
+                success = false;
+                FLog.e(ReactConstants.TAG, "Could not open asset file " + photoUri.toString(), e);
+            } catch (IOException e) {
+                FLog.e(ReactConstants.TAG, "Could not get exif data for file " + photoUri.toString(), e);
+            }
+        }
+
+        if (photoDescriptor != null) {
+            try {
+                photoDescriptor.close();
+            } catch (IOException e) {
+                // Do nothing. We can't handle this, and this is usually a system problem
+            }
+        }
+
+        image.putInt("width", width);
+        image.putInt("height", height);
+        return success;
+    }
+
+    private static void putLocationInfo(
+            Cursor media,
+            WritableMap node,
+            int dataIndex,
+            boolean includeLocation) {
+        node.putNull("location");
+
+        if (!includeLocation) {
+            return;
+        }
+
+        try {
+            // location details are no longer indexed for privacy reasons using string Media.LATITUDE, Media.LONGITUDE
+            // we manually obtain location metadata using ExifInterface#getLatLong(float[]).
+            // ExifInterface is added in API level 5
+            final ExifInterface exif = new ExifInterface(media.getString(dataIndex));
+            float[] imageCoordinates = new float[2];
+            boolean hasCoordinates = exif.getLatLong(imageCoordinates);
+            if (hasCoordinates) {
+                double longitude = imageCoordinates[1];
+                double latitude = imageCoordinates[0];
+                WritableMap location = new WritableNativeMap();
+                location.putDouble("longitude", longitude);
+                location.putDouble("latitude", latitude);
+                node.putMap("location", location);
+            }
+        } catch (IOException e) {
+            FLog.e(ReactConstants.TAG, "Could not read the metadata", e);
+        }
+    }
+
+}

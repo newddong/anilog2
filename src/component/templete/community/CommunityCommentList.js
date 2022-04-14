@@ -3,7 +3,6 @@ import React from 'react';
 import {Text, View, FlatList, StyleSheet} from 'react-native';
 import CommentList from 'Organism/comment/CommentList';
 import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
-import {feedCommentList, login_style} from 'Templete/style_templete';
 import {createComment, getCommentListByCommunityId, getCommentListByFeedId, getCommentListByProtectId, updateComment} from 'Root/api/commentapi';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Component/modal/Modal';
@@ -13,6 +12,7 @@ import DP from 'Root/config/dp';
 import {GRAY10, GRAY20} from 'Root/config/color';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import community_obj from 'Root/config/community_obj';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 export default CommunityCommentList = props => {
 	// console.log('props.showAllContents', props.route.params.showAllContents);
@@ -21,7 +21,7 @@ export default CommunityCommentList = props => {
 	const navigation = useNavigation();
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
-	const [comments, setComments] = React.useState([]);
+	const [comments, setComments] = React.useState('false');
 	const [parentComment, setParentComment] = React.useState();
 	const input = React.useRef();
 	const addChildCommentFn = React.useRef(() => {});
@@ -35,7 +35,6 @@ export default CommunityCommentList = props => {
 	});
 
 	React.useEffect(() => {
-		console.log('data._id', data._id);
 		getCommentListByCommunityId(
 			{
 				community_object_id: data._id,
@@ -211,15 +210,19 @@ export default CommunityCommentList = props => {
 
 	return (
 		<View style={[style.container]}>
-			<FlatList
-				data={[{}, comments]}
-				extraData={refresh}
-				renderItem={render}
-				stickyHeaderIndices={[1]}
-				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
-				onScroll={onScroll}
-				ref={flatlist}
-			/>
+			{comments == 'false' ? (
+				<Loading isModal={false} />
+			) : (
+				<FlatList
+					data={[{}, comments]}
+					extraData={refresh}
+					renderItem={render}
+					stickyHeaderIndices={[1]}
+					ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
+					onScroll={onScroll}
+					ref={flatlist}
+				/>
+			)}
 			{/* Parent Comment 혹은 Child Comment 에서 답글쓰기를 클릭할 시 화면 최하단에 등장 */}
 			{/* 비로그인 유저일 경우 리플란이 안보이도록 처리 - 상우 */}
 			{userGlobalObject.userInfo._id != '' ? (

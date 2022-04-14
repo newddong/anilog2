@@ -10,7 +10,7 @@ import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {updateAndDeleteCommunity} from 'Root/api/community';
 import community_obj from 'Root/config/community_obj';
-import {favoriteEtc} from 'Root/api/favoriteetc';
+import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import {EmptyIcon} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
 
@@ -122,14 +122,14 @@ const CommunityList = React.memo(props => {
 	//리뷰 즐겨찾기 아이콘 클릭
 	const onPressFavorite = (index, bool) => {
 		console.log('index', index, bool);
-		favoriteEtc(
+		setFavoriteEtc(
 			{
 				collectionName: 'communityobjects',
-				post_object_id: data.review[index]._id,
+				target_object_id: data.review[index]._id,
 				is_favorite: bool,
 			},
 			result => {
-				console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc.favorite_etc_is_delete);
+				console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
 			},
 			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
 		);

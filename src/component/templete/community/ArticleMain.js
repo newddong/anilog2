@@ -16,9 +16,9 @@ export default ArticleMain = ({route}) => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			fetchData();
-			console.log('community_obj / ArticleMain / object._id : ', community_obj.object._id);
-			console.log('community_obj / ArticleMain / pageToMove : ', community_obj.pageToMove);
-			console.log('community_obj.initial / ArticleMain /  initial : ', community_obj.initial);
+			// console.log('community_obj / ArticleMain / object._id : ', community_obj.object._id);
+			// console.log('community_obj / ArticleMain / pageToMove : ', community_obj.pageToMove);
+			// console.log('community_obj.initial / ArticleMain /  initial : ', community_obj.initial);
 			community_obj.current = '';
 			if (community_obj.initial != true && community_obj.object._id != undefined) {
 				console.log('community_obj.pageToMove', community_obj.pageToMove);
@@ -33,8 +33,6 @@ export default ArticleMain = ({route}) => {
 		fetchData();
 		return unsubscribe;
 	}, []);
-
-	// console.log('route.params.ArticleMain', route.params);
 
 	const fetchData = () => {
 		getCommunityList(

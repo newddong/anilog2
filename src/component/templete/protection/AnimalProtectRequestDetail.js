@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Image, Text, TextInput, TouchableOpacity, View, Animated, Easing, ActivityIndicator, FlatList} from 'react-native';
+import {Text, TouchableOpacity, View, FlatList} from 'react-native';
 import {btn_w276} from 'Atom/btn/btn_style';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import {login_style, temp_style, animalProtectRequestDetail_style} from '../style_templete';
@@ -13,7 +13,6 @@ import DP from 'Root/config/dp';
 import CommentList from 'Root/component/organism/comment/CommentList';
 import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
-import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import moment from 'moment';
 import {getCommentListByProtectId} from 'Root/api/commentapi';
 import Modal from 'Root/component/modal/Modal';
@@ -24,7 +23,7 @@ import {count_to_K} from 'Root/util/stringutil';
 import {getProtectRequestListByShelterId} from 'Root/api/shelterapi';
 import {getProtectRequestByProtectRequestId} from 'Root/api/protectapi';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {favoriteEtc, getFavoriteEtcListByUserId} from 'Root/api/favoriteetc';
+import {getFavoriteEtcListByUserId, setFavoriteEtc} from 'Root/api/favoriteetc';
 
 //AnimalProtectRequestDetail 호출 경로
 // - ProtectRequestList(보호활동탭) , AnimalFromShelter(게시글보기) , AidRequestManage(게시글보기), AidRequestAnimalList(게시글 보기)
@@ -92,7 +91,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 							console.log('result / getFavoriteEtcListByUserId / AnimalProtectRequestDetail  ', result.msg.length);
 							let favoriteList = [];
 							result.msg.map((v, i) => {
-								favoriteList.push(v.favorite_etc_post_id._id);
+								favoriteList.push(v.favorite_etc_target_object_id._id);
 							});
 							console.log('내 즐겨찾기 리스트 : ', favoriteList);
 							console.log('작성자 : ', writer_id._id);
@@ -214,10 +213,10 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	//보호요청 게시글 작성 보호소 라벨의 좋아요 태그 클릭
 	const onPressShelterLabelFavorite = bool => {
-		favoriteEtc(
+		setFavoriteEtc(
 			{
 				collectionName: 'userobjects',
-				post_object_id: data.protect_request_writer_id._id,
+				target_object_id: data.protect_request_writer_id._id,
 				is_favorite: bool,
 			},
 			result => {

@@ -32,7 +32,7 @@ export default FavoriteProtectRequest = ({route}) => {
 				console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg);
 				let temp = [];
 				result.msg.map((v, i) => {
-					temp.push(v.favorite_etc_post_id);
+					temp.push(v.favorite_etc_target_object_id);
 				});
 				setData(temp);
 			},

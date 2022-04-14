@@ -10,7 +10,7 @@ import {getProtectRequestList} from 'Root/api/shelterapi.js';
 import {btn_w306_h68} from 'Component/atom/btn/btn_style';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 import Modal from 'Root/component/modal/Modal';
-import {favoriteEtc} from 'Root/api/favoriteetc';
+import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import Loading from 'Root/component/molecules/modal/Loading';
 
 export default ProtectRequestList = ({navigation, route}) => {
@@ -88,14 +88,14 @@ export default ProtectRequestList = ({navigation, route}) => {
 		// console.log('즐겨찾기=>' + value + ' ' + index);
 		console.log(' data[index]._id', data[index]._id);
 		console.log('bool', bool);
-		favoriteEtc(
+		setFavoriteEtc(
 			{
 				collectionName: 'protectrequestobjects',
-				post_object_id: data[index]._id,
+				target_object_id: data[index]._id,
 				is_favorite: bool,
 			},
 			result => {
-				console.log('result / favoriteEtc / ProtectRequestList : ', result.msg);
+				console.log('result / favoriteEtc / ProtectRequestList : ', result.msg.favoriteEtc);
 			},
 			err => {
 				console.log('err / favoriteEtc / PRotectRequestList : ', err);

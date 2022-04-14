@@ -1,6 +1,6 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, Image, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {GRAY10, GRAY20, GRAY30} from 'Root/config/color';
 import CommentList from 'Root/component/organism/comment/CommentList';
@@ -9,11 +9,11 @@ import {useNavigation} from '@react-navigation/core';
 import ReviewContent from 'Root/component/organism/article/ReviewContent';
 import {getCommunityList} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {createComment, getCommentListByCommunityId, getCommentListByFeedId, getCommentListByProtectId, updateComment} from 'Root/api/commentapi';
+import {createComment, getCommentListByCommunityId, updateComment} from 'Root/api/commentapi';
 import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import {favoriteEtc} from 'Root/api/favoriteetc';
+import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import community_obj from 'Root/config/community_obj';
 import {REPORT_MENU} from 'Root/i18n/msg';
 
@@ -40,6 +40,7 @@ export default ReviewDetail = props => {
 		comment_contents: '',
 		comment_photo_uri: '',
 	});
+	const commentListHeight = React.useRef(100);
 
 	React.useEffect(() => {
 		if (data.community_address.normal_address.address_name != '') {
@@ -55,7 +56,6 @@ export default ReviewDetail = props => {
 			result => {
 				const res = result.msg.review.slice(0, 4);
 				let removeThisReview = res.filter(e => e._id != data._id);
-				console.log('removeThisReview', removeThisReview.length);
 				setReviewList(removeThisReview);
 			},
 			err => {
@@ -63,46 +63,6 @@ export default ReviewDetail = props => {
 			},
 		);
 		const unsubscribe = navigation.addListener('focus', () => {
-			let lines = [];
-			if (data.community_content.includes('<span')) {
-				const parsingSpan = data.community_content.replaceAll('<span', '<div');
-				const parsingSpan2 = parsingSpan.replaceAll('</span>', '</div>');
-				let matches = parsingSpan2.match(/<div\b(?:(R)|(?:(?!<\/?div).))*<\/div>/gm);
-				// console.log('matched', matches);
-				matches.map((v, i) => {
-					let getImgTag = v.match(/<img[\w\W]+?\/?>/g); //img 태그 추출
-					// console.log('v', i, v);
-					const remove = v.match(/<div[^>]+>([^<]+?)<\/div>/);
-					// console.log('remove', remove, i);
-					if (getImgTag) {
-						let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i); //img 태그가 있는 경우 src 추출
-						lines.push({image: src[1]});
-					} else {
-						if (remove != undefined) {
-							lines.push(remove[1]);
-						}
-					}
-				});
-				data.contents = lines;
-			} else {
-				let matches = data.community_content.match(/<div\b(?:(R)|(?:(?!<\/?div).))*<\/div>/gm);
-				matches.map((v, i) => {
-					let remove = v.match(/\<div\>(.+)\<\/div\>/);
-					let getImgTag = v.match(/<img[\w\W]+?\/?>/g);
-					// console.log('remove', i, remove, 'v', v);
-					if (getImgTag) {
-						let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i); //img 태그가 있는 경우 src 추출
-						// console.log('src', src);
-						lines.push({image: src[1]});
-					} else {
-						if (remove != undefined) {
-							lines.push(remove[1]);
-						}
-					}
-				});
-				data.contents = lines;
-			}
-
 			//다른 탭(ex - My 탭의 즐겨찾기한 커뮤니티 목록에서 들어온 경우)에서의 호출
 			if (community_obj.object.hasOwnProperty('_id')) {
 				if (community_obj.object._id != data._id) {
@@ -117,7 +77,6 @@ export default ReviewDetail = props => {
 			community_obj.object.initial = true;
 		});
 		if (props.route.params.searchInput != '') {
-			console.log('props.route.params.searchInput', props.route.params.searchInput);
 			setSearchInput(props.route.params.searchInput);
 		}
 		return unsubscribe;
@@ -260,11 +219,23 @@ export default ReviewDetail = props => {
 
 	// 답글 쓰기 버튼 클릭 콜백함수
 	const onReplyBtnClick = (parentCommentId, addChildComment) => {
-		console.log('onReplyBtnClick : ', parentCommentId);
+		// console.log('onReplyBtnClick : ', parentCommentId);
 		setParentComment(parentCommentId);
-		input.current.focus();
 		editComment || setEditComment(true);
 		addChildCommentFn.current = addChildComment;
+		//답글쓰기 시 스크롤 영역 변경
+		if (Platform.OS == 'android') {
+			//안드로이드에서는 scrollToIndex의 최상단으로 이동
+			commentListHeight.current > 400
+				? scrollRef.current.scrollToIndex({animated: true, index: 2})
+				: scrollRef.current.scrollToIndex({animated: true, index: 1});
+		} else {
+			//ios scrollToIndex의 중간지점으로 이동하므로 댓글컴포넌트 영역의 높이와 상관없이 스크롤 가능
+			scrollRef.current.scrollToIndex({animated: true, index: 2});
+		}
+		setTimeout(() => {
+			input.current.focus();
+		}, 200);
 	};
 
 	//미트볼, 수정을 누르면 동작
@@ -344,10 +315,10 @@ export default ReviewDetail = props => {
 
 	//즐겨찾기 클릭
 	const onPressFavorite = bool => {
-		favoriteEtc(
+		setFavoriteEtc(
 			{
 				collectionName: 'communityobjects',
-				post_object_id: data._id,
+				target_object_id: data._id,
 				is_favorite: bool,
 			},
 			result => {
@@ -359,8 +330,6 @@ export default ReviewDetail = props => {
 
 	//댓글 클릭
 	const onPressReply = () => {
-		// console.log('replyY', replyY);
-		// scrollRef.current?.scrollToOffset({offset: (replyY.y - replyY.height) * DP, animated: true});
 		navigation.push('CommunityCommentList', {community_object: data});
 	};
 
@@ -374,68 +343,121 @@ export default ReviewDetail = props => {
 		navigation.push('ReviewDetail', {community_object: reviewList[index]});
 	};
 
+	//답글 쓰기 후 댓글 작성자 우측 답글취소 버튼 클릭
+	const onCancelChild = () => {
+		setParentComment();
+	};
+
+	const onLayoutCommentList = e => {
+		console.log('onLayoutCommentList', e.nativeEvent.layout);
+		commentListHeight.current = e.nativeEvent.layout.height;
+	};
+
+	//댓글 포커스 onOff
+	const onFocus = () => {
+		if (Platform.OS == 'android') {
+			let ind = 1;
+			// console.log('commentListHeight', commentListHeight.current);
+			comments.length > 4 ? (ind = 2) : (ind = 1);
+			// scrollRef.current.scrollToIndex({animated: true, index: ind});
+		} else {
+			scrollRef.current.scrollToIndex({animated: true, index: 2});
+		}
+	};
+
+	const header = () => {
+		return (
+			<View style={{alignItems: 'center'}}>
+				<ReviewContent data={data} onPressFavorite={onPressFavorite} onPressMeatball={onPressMeatball} searchInput={searchInput} />
+				<View style={[style.separator]} />
+				<View style={[style.commentList]}>
+					{comments && comments.length > 0 ? (
+						<TouchableOpacity onPress={onPressReply} style={[style.replyCountContainer]}>
+							<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개 모두 보기</Text>
+						</TouchableOpacity>
+					) : (
+						<View style={[style.replyCountContainer, {alignSelf: 'center', alignItems: 'flex-start'}]}>
+							<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
+						</View>
+					)}
+					{/* <View style={[style.commentContainer]}>
+						<CommentList items={comments} onPressReplyBtn={onReplyBtnClick} onEdit={onEdit} />
+					</View> */}
+				</View>
+			</View>
+		);
+	};
+
+	const commentListBox = () => {
+		return (
+			<View style={[style.commentContainer]} onLayout={onLayoutCommentList}>
+				<CommentList items={comments} onPressReplyBtn={onReplyBtnClick} onEdit={onEdit} />
+			</View>
+		);
+	};
+
+	const bottom = () => {
+		return (
+			<View style={{alignItems: 'center'}}>
+				<View style={[{marginTop: 20 * DP, marginBottom: 30 * DP}]}>
+					<ReplyWriteBox
+						onAddPhoto={onAddPhoto}
+						onChangeReplyInput={onChangeReplyInput}
+						onLockBtnClick={onLockBtnClick}
+						onWrite={onWrite}
+						onDeleteImage={onDeleteImage}
+						privateComment={privateComment}
+						ref={input}
+						editData={editData}
+						shadow={false}
+						parentComment={parentComment}
+						onCancelChild={onCancelChild}
+					/>
+				</View>
+
+				<View style={[style.reviewList]}>
+					<Text style={[txt.noto24, {}]}>관련 리뷰</Text>
+					<ReviewBriefList
+						items={reviewList}
+						showMore={() => setShowMore(true)}
+						onPressReview={onPressReviewBrief}
+						onPressLike={onPressLikeBriefItem}
+					/>
+				</View>
+			</View>
+		);
+	};
+
+	const indexToScroll = () => {
+		return <View style={{height: 10 * DP}}></View>;
+	};
+
+	const edge = () => {
+		return <View style={{height: 10 * DP}}></View>;
+	};
+
+	const components = [header(), commentListBox(), indexToScroll(), bottom(), edge()];
+
+	const renderItem = ({item, index}) => {
+		return item;
+	};
+
 	if (reviewList == 'false') {
 		return <Loading isModal={false} />;
 	} else
 		return (
 			<View style={[style.container]}>
 				<FlatList
-					data={[{}]}
+					data={components}
 					ref={scrollRef}
-					// keyExtractor={({item, index}) => index}
 					listKey={({item, index}) => index}
 					showsVerticalScrollIndicator={false}
 					onContentSizeChange={(width, height) => {
 						if (showMore) {
-							scrollRef.current.scrollToEnd();
+							Platform.OS == 'android' ? scrollRef.current.scrollToEnd() : scrollRef.current.scrollToIndex({index: 4});
 						}
 					}}
-					renderItem={({item, index}) => {
-						return (
-							<View style={{alignItems: 'center', marginTop: 30 * DP}}>
-								<ReviewContent data={data} onPressFavorite={onPressFavorite} onPressMeatball={onPressMeatball} searchInput={searchInput} />
-								<View style={[style.separator]} />
-								<View style={[style.commentList]}>
-									{comments && comments.length > 0 ? (
-										<TouchableOpacity onPress={onPressReply} style={[style.replyCountContainer]}>
-											<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개 모두 보기</Text>
-										</TouchableOpacity>
-									) : (
-										<View style={[style.replyCountContainer, {alignSelf: 'center', alignItems: 'flex-start'}]}>
-											<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
-										</View>
-									)}
-									<View style={[style.commentContainer]}>
-										<CommentList items={comments} onPressReplyBtn={onReplyBtnClick} onEdit={onEdit} />
-									</View>
-									<View style={[{marginTop: 20 * DP, marginBottom: 30 * DP}]}>
-										{/* <ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} /> */}
-										<ReplyWriteBox
-											onAddPhoto={onAddPhoto}
-											onChangeReplyInput={onChangeReplyInput}
-											onLockBtnClick={onLockBtnClick}
-											onWrite={onWrite}
-											onDeleteImage={onDeleteImage}
-											privateComment={privateComment}
-											ref={input}
-											editData={editData}
-											shadow={false}
-										/>
-									</View>
-								</View>
-
-								<View style={[style.reviewList]}>
-									<Text style={[txt.noto24, {}]}>관련 리뷰</Text>
-									<ReviewBriefList
-										items={reviewList}
-										showMore={() => setShowMore(true)}
-										onPressReview={onPressReviewBrief}
-										onPressLike={onPressLikeBriefItem}
-									/>
-								</View>
-							</View>
-						);
-					}}
+					renderItem={renderItem}
 				/>
 			</View>
 		);

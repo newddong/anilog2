@@ -1,10 +1,9 @@
 import React from 'react';
-import {Text, View, ScrollView, FlatList, TextInput, TouchableOpacity} from 'react-native';
+import {Text, View, ScrollView, TouchableOpacity} from 'react-native';
 import {BLACK, GRAY10, GRAY20, RED10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {AddItem64, Add_Volunteer, Calendar48_Filled, Cross46, Cross48, Person48, Phone48} from 'Atom/icon';
+import {AddItem64, Calendar48_Filled, Cross46, Cross48, Person48, Phone48} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
-import AccountList from 'Organism/list/AccountList';
 import ShelterInfo from 'Organism/info/ShelterInfo';
 import {applyVolunteer, btn_style, login_style} from 'Templete/style_templete';
 import DatePicker from 'Molecules/select/DatePicker';
@@ -14,6 +13,7 @@ import {getUserInfoById} from 'Root/api/userapi';
 import {assignVolunteerActivity, setVolunteerActivityAcceptByMember, setVolunteerActivityStatus} from 'Root/api/volunteerapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import UserDescriptionLabel from 'Root/component/molecules/label/UserDescriptionLabel';
+import {useKeyboardBottom} from 'Root/component/molecules/input/usekeyboardbottom';
 
 //관련 DB테이블 - VolunteerActivityApplicantObject
 export default ApplyVolunteer = ({route, navigation}) => {
@@ -198,11 +198,13 @@ export default ApplyVolunteer = ({route, navigation}) => {
 		);
 	};
 
+	const keyboardY = useKeyboardBottom(0 * DP);
+
 	if (loading) {
 		return <></>;
 	} else {
 		return (
-			<View style={[login_style.wrp_main, applyVolunteer.container]}>
+			<View style={[login_style.wrp_main, applyVolunteer.container, {bottom: keyboardY}]}>
 				<ScrollView style={{flex: 1}} contentContainerStyle={{alignItems: 'center'}}>
 					{/* 보호소 정보 박스 */}
 					<View style={[applyVolunteer.shelterInfo]}>

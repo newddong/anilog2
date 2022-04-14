@@ -1,6 +1,6 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {GRAY10, GRAY20, GRAY30} from 'Root/config/color';
 import CommentList from 'Root/component/organism/comment/CommentList';
@@ -14,10 +14,10 @@ import {createComment, getCommentListByCommunityId, updateComment} from 'Root/ap
 import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import community_obj from 'Root/config/community_obj';
-import {favoriteEtc} from 'Root/api/favoriteetc';
 import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
 import {REPORT_MENU} from 'Root/i18n/msg';
+import {setFavoriteEtc} from 'Root/api/favoriteetc';
 
 /**
  * 자유게시글 상세 내용
@@ -54,47 +54,6 @@ export default ArticleDetail = props => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			//다른 탭(ex - My 탭의 즐겨찾기한 커뮤니티 목록에서 들어온 경우)에서의 호출
-			let lines = [];
-			if (data.community_content.includes('<span')) {
-				const parsingSpan = data.community_content.replaceAll('<span', '<div');
-				const parsingSpan2 = parsingSpan.replaceAll('</span>', '</div>');
-				let matches = parsingSpan2.match(/<div\b(?:(R)|(?:(?!<\/?div).))*<\/div>/gm);
-				// console.log('matched', matches);
-				matches.map((v, i) => {
-					// let remove = v.match(/<div\b(?:(R)|(?:(?!<\/?div).))*<\/div>/gm);
-					let getImgTag = v.match(/<img[\w\W]+?\/?>/g); //img 태그 추출
-					console.log('v', i, v);
-					const remove = v.match(/<div[^>]+>([^<]+?)<\/div>/);
-					console.log('remove', remove, i);
-					if (getImgTag) {
-						let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i); //img 태그가 있는 경우 src 추출
-						lines.push({image: src[1]});
-					} else {
-						if (remove != undefined) {
-							lines.push(remove[1]);
-						}
-					}
-				});
-				data.contents = lines;
-			} else {
-				let matches = data.community_content.match(/<div\b(?:(R)|(?:(?!<\/?div).))*<\/div>/gm);
-				matches.map((v, i) => {
-					let remove = v.match(/\<div\>(.+)\<\/div\>/);
-					let getImgTag = v.match(/<img[\w\W]+?\/?>/g);
-					// console.log('remove', i, remove, 'v', v);
-					if (getImgTag) {
-						let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i); //img 태그가 있는 경우 src 추출
-						// console.log('src', src);
-						lines.push({image: src[1]});
-					} else {
-						if (remove != undefined) {
-							lines.push(remove[1]);
-						}
-					}
-				});
-				data.contents = lines;
-			}
-
 			if (community_obj.object.hasOwnProperty('_id')) {
 				if (community_obj.object._id != data._id) {
 					//현재 보고 있는 페이지와 다른 게시글이 호출된 경우
@@ -246,7 +205,6 @@ export default ArticleDetail = props => {
 							parentComment && addChildCommentFn.current();
 							// console.log('comments', comments);
 							input.current.blur();
-							// scrollRef.current.scrollToOffset({offset: 0});
 						},
 						err => console.log('getCommentListByFeedId', err),
 					);
@@ -393,14 +351,14 @@ export default ArticleDetail = props => {
 
 	//즐겨찾기 클릭
 	const onPressFavorite = bool => {
-		favoriteEtc(
+		setFavoriteEtc(
 			{
 				collectionName: 'communityobjects',
-				post_object_id: data._id,
+				target_object_id: data._id,
 				is_favorite: bool,
 			},
 			result => {
-				console.log('result / favoriteEtc / ArticleDetail : ', result.msg);
+				console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
 				// setData({...data, })
 			},
 			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
@@ -494,68 +452,12 @@ export default ArticleDetail = props => {
 	} else
 		return (
 			<View style={[style.container]}>
-				<View style={[{alignItems: 'center', paddingBottom: 40 * DP}]}>
+				<View style={[{paddingBottom: 40 * DP}]}>
 					<FlatList
-						// data={[{}]}
 						data={components}
 						ref={flatListRef}
 						listKey={({item, index}) => index}
 						renderItem={renderItem}
-						// renderItem={({item, index}) => {
-						// 	return (
-						// 		<View style={[{width: 750 * DP, alignItems: 'center'}]}>
-						// 			<View style={{alignItems: 'center'}}>
-						// 				<Article
-						// 					data={data}
-						// 					onPressMeatball={onPressMeatball}
-						// 					onPressFavorite={onPressFavorite}
-						// 					route={props.route.name}
-						// 					searchInput={searchInput}
-						// 				/>
-						// 				<View style={[style.like, {}]}>
-						// 					{data.community_is_like ? (
-						// 						<Like48_Filled onPress={() => onPressLike(false)} />
-						// 					) : (
-						// 						<Like48_Border onPress={() => onPressLike(true)} />
-						// 					)}
-						// 					<Text style={[txt.noto24, {color: GRAY10, marginLeft: 15 * DP}]}>{data.community_like_count}</Text>
-						// 				</View>
-						// 				<View style={[style.separator]} />
-						// 			</View>
-						// 			{comments && comments.length > 0 ? (
-						// 				<TouchableOpacity onPress={onPressReply} style={[style.replyCountContainer]}>
-						// 					<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개 모두 보기</Text>
-						// 				</TouchableOpacity>
-						// 			) : (
-						// 				<View style={[style.replyCountContainer, {alignSelf: 'center', alignItems: 'flex-start'}]}>
-						// 					<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
-						// 				</View>
-						// 			)}
-						// 			<View style={[style.commentContainer]}>
-						// 				<CommentList items={comments} onPressReplyBtn={onReplyBtnClick} onEdit={onEdit} />
-						// 			</View>
-						// 			<View style={[{marginTop: 40 * DP, marginBottom: 80 * DP}]} onLayout={onLayout}>
-						// 				<ReplyWriteBox
-						// 					onAddPhoto={onAddPhoto}
-						// 					onChangeReplyInput={onChangeReplyInput}
-						// 					onLockBtnClick={onLockBtnClick}
-						// 					onWrite={onWrite}
-						// 					onDeleteImage={onDeleteImage}
-						// 					privateComment={privateComment}
-						// 					ref={input}
-						// 					editData={editData}
-						// 					shadow={false}
-						// 					parentComment={parentComment}
-						// 					onCancelChild={onCancelChild}
-						// 				/>
-						// 			</View>
-						// 			<ArticleList
-						// 				items={articleList}
-						// 				onPressArticle={onPressArticle} //게시글 내용 클릭
-						// 			/>
-						// 		</View>
-						// 	);
-						// }}
 						showsVerticalScrollIndicator={false}
 					/>
 				</View>

@@ -10,9 +10,9 @@ import Loading from 'Root/component/molecules/modal/Loading';
 import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeEtc} from 'Root/api/likeetc';
-import {favoriteEtc} from 'Root/api/favoriteetc';
 import {useNavigation} from '@react-navigation/core';
 import searchContext from 'Root/config/searchContext';
+import {setFavoriteEtc} from 'Root/api/favoriteetc';
 
 export default SearchReview = props => {
 	const navigation = useNavigation();
@@ -39,7 +39,11 @@ export default SearchReview = props => {
 
 	React.useEffect(() => {
 		if (props.data.review) {
-			setData(props.data.review);
+			let temp = props.data.review;
+			temp.map((v, i) => {
+				v.community_is_favorite = v.is_favorite;
+			});
+			setData(temp);
 		}
 	}, [props.data.review]);
 
@@ -272,14 +276,14 @@ export default SearchReview = props => {
 	//즐겨찾기 클릭
 	const onPressFavorite = (index, bool) => {
 		console.log('index', index, bool);
-		favoriteEtc(
+		setFavoriteEtc(
 			{
 				collectionName: 'communityobjects',
-				post_object_id: data[index]._id,
+				target_object_id: data[index]._id,
 				is_favorite: bool,
 			},
 			result => {
-				console.log('result / favoriteEtc / ArticleDetail : ', result.msg);
+				console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
 				// setData({...data, })
 			},
 			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
@@ -440,10 +444,10 @@ const style = StyleSheet.create({
 		height: 60 * DP,
 		justifyContent: 'space-between',
 		flexDirection: 'row',
-		shadowOpacity: 0.5,
+		shadowOpacity: 0.3,
 		elevation: 2,
 		shadowOffset: {
-			height: 4 * DP,
+			height: 2 * DP,
 		},
 		borderRadius: 20 * DP,
 	},

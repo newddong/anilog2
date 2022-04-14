@@ -18,7 +18,7 @@ import SelectInput from 'Root/component/molecules/button/SelectInput';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 import {FloatAddArticle_126x92} from 'Atom/icon';
 import {useNavigation} from '@react-navigation/core';
-import {favoriteEtc} from 'Root/api/favoriteetc';
+import {setFavoriteEtc} from 'Root/api/favoriteetc';
 
 /**
  * 프로필 템플릿 상단의 유저 정보
@@ -39,7 +39,6 @@ import {favoriteEtc} from 'Root/api/favoriteetc';
 const ProfileInfo = props => {
 	const [data, setData] = React.useState(props.data);
 	const navigation = useNavigation();
-	console.log('data', data.is_follow);
 	// console.log('')
 	const [showMore, setShowMore] = React.useState(false); // 프로필 Description 우측 더보기 클릭 State
 	const [ownerListState, setOwnerListState] = React.useState(false); // userType이 Pet일 경우 반려인계정 출력 여부 T/F
@@ -161,7 +160,9 @@ const ProfileInfo = props => {
 				break;
 		}
 	};
-	const doFavorite = () => {
+
+	//즐겨찾기 onOff
+	const doFavorite = bool => {
 		Modal.close();
 		setTimeout(() => {
 			Modal.popTwoBtn(
@@ -172,17 +173,17 @@ const ProfileInfo = props => {
 				() => {
 					Modal.close();
 					setTimeout(() => {
-						favoriteEtc(
+						setFavoriteEtc(
 							{
 								collectionName: 'userobjects',
-								is_favorite: true,
-								post_object_id: data._id,
+								target_object_id: data._id,
+								is_favorite: bool,
 							},
 							result => {
 								console.log('result / favoriteEtc / profileInfo : ', result.msg.favoriteEtc);
 								Modal.close();
 								setTimeout(() => {
-									Modal.popNoBtn('즐겨찾기 등록이 \n 완료되었습니다.');
+									Modal.popNoBtn(bool ? '즐겨찾기 등록이 \n 완료되었습니다.' : '즐겨찾기 취소가 \n 완료되었습니다.');
 									setTimeout(() => {
 										Modal.close();
 									}, 500);
@@ -200,12 +201,17 @@ const ProfileInfo = props => {
 
 	const onPressFollowingSetting = () => {
 		let isProtectingPet = data.pet_status == 'protect' || userGlobalObject.userInfo.user_my_pets.includes(data._id);
+		const FOLLOWER_MENU = [data.is_favorite ? '즐겨찾기 취소' : '즐겨찾기 추가', '소식 받기', '차단', '팔로우 취소'];
+		const FOLLOWER_PET_MENU = [data.is_favorite ? '즐겨찾기 취소' : '즐겨찾기 추가', , '소식 받기', '차단', '팔로우 취소', '입양하기'];
 		Modal.popSelectBoxModal(
 			isProtectingPet ? FOLLOWER_PET_MENU : FOLLOWER_MENU,
 			selectedItem => {
 				switch (selectedItem) {
 					case '즐겨찾기 추가':
-						doFavorite();
+						doFavorite(true);
+						break;
+					case '즐겨찾기 취소':
+						doFavorite(false);
 						break;
 					case '소식 받기':
 						console.log('소식받기');

@@ -1743,8 +1743,8 @@ export const addVolunteers = StyleSheet.create({
 		marginTop: 20 * DP,
 	},
 	accountList: {
-		width: 730 * DP,
-		marginLeft: 48 * DP,
+		width: 654 * DP,
+		// marginLeft: 48 * DP,
 		marginTop: 30 * DP,
 	},
 	btn_w654: {
@@ -3936,7 +3936,7 @@ export const feedCommentList = StyleSheet.create({
 		// backgroundColor: 'yellow',
 	},
 	replyTextInput_photo: {
-		width: 442 * DP,
+		width: 460 * DP,
 		marginRight: 12 * DP,
 		paddingVertical: 0,
 		includeFontPadding: false,
@@ -3995,7 +3995,8 @@ export const feedCommentList = StyleSheet.create({
 		borderRadius: 30 * DP,
 		marginRight: 12 * DP,
 		paddingHorizontal: 20 * DP,
-		paddingVertical: 12 * DP,
+		// paddingVertical: 12 * DP,
+		paddingBottom: 20 * DP,
 		backgroundColor: GRAY30,
 	},
 	commentBox_top_photo: {

@@ -40,7 +40,8 @@ export default Profile = ({route}) => {
 				result => {
 					navigation.setOptions({title: result.msg.user_nickname, data: result.msg});
 					setData(result.msg);
-					console.log('getUserProfile is_follow?', result.msg.is_follow);
+					// console.log('getUserProfile is_follow?', result.msg.is_follow);
+					console.log('getUserProfile is_Favorite ', result.msg.is_favorite);
 				},
 				err => {
 					Modal.popOneBtn(err, '확인', () => {

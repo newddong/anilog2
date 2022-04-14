@@ -8,6 +8,7 @@ import AniButton from 'Molecules/button/AniButton';
 import {FavoriteTag48_Border, FavoriteTag48_Filled} from 'Atom/icon';
 import {DEFAULT_ANIMAL_PROFILE} from 'Root/i18n/msg';
 import {animalNeedHelp} from 'Organism/style_organism copy';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 /**
  *
@@ -26,7 +27,7 @@ import {animalNeedHelp} from 'Organism/style_organism copy';
 export default AnimalNeedHelp = props => {
 	// console.log('AnimalNeedHelp', props.data.protect_request_status);
 
-	const data = props.data;
+	const [data, setData] = React.useState(props.data);
 	const [selected, setSelected] = React.useState(false);
 	const [favorite, setFavorite] = React.useState(false);
 	const [thumbnailData, setThumbnailData] = React.useState({});
@@ -76,6 +77,7 @@ export default AnimalNeedHelp = props => {
 
 	React.useEffect(() => {
 		checkthumbnailData();
+		setFavorite(data.is_favorite);
 	}, [props.data]);
 
 	const checkSelected = () => {
@@ -84,6 +86,7 @@ export default AnimalNeedHelp = props => {
 
 	//우상단 즐겨찾기 깃발 아이콘 클릭 콜백
 	const onPressFavoriteTag = () => {
+		console.log('data.missing_animal_species_detail', data.is_favorite);
 		setFavorite(!favorite);
 		props.onFavoriteTag(!favorite);
 	};
@@ -132,6 +135,19 @@ export default AnimalNeedHelp = props => {
 		let splitAddress = address.split('"');
 		let newMissingLocation = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
 		return newMissingLocation;
+	};
+
+	const checkIsMyPost = () => {
+		let result = false;
+		const isProtectRqeust = data.type != 'FeedObject'; //보호요청게시글 여부
+		if (isProtectRqeust) {
+			if (data.protect_request_writer_id) {
+				result = data.protect_request_writer_id._id == userGlobalObject.userInfo._id;
+			}
+		} else {
+			result = data.feed_writer_id == userGlobalObject.userInfo._id;
+		}
+		return result;
 	};
 
 	// console.log('AnimalNeedHel', data);
@@ -247,8 +263,15 @@ export default AnimalNeedHelp = props => {
 							<View>{contents()}</View>
 						</TouchableOpacity>
 					)}
+
 					<View style={[animalNeedHelp.detail_upper_tag]}>
-						{favorite ? <FavoriteTag48_Filled onPress={onPressFavoriteTag} /> : <FavoriteTag48_Border onPress={onPressFavoriteTag} />}
+						{checkIsMyPost() ? (
+							<></>
+						) : favorite ? (
+							<FavoriteTag48_Filled onPress={onPressFavoriteTag} />
+						) : (
+							<FavoriteTag48_Border onPress={onPressFavoriteTag} />
+						)}
 					</View>
 				</View>
 				{props.borderMode == true

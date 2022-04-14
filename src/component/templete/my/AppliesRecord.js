@@ -24,7 +24,7 @@ export default AppliesRecord = ({route}) => {
 				userobject_id: userGlobalObject.userInfo._id,
 			},
 			result => {
-				// console.log('result / getAppliesRecord / AppliesRecord : ', JSON.stringify(result.msg));
+				// console.log('result / getAppliesRecord / AppliesRecord : ', JSON.stringify(result.msg.protect));
 				//입양
 				if (result.msg.adopt != undefined) {
 					let adopt = result.msg.adopt;
@@ -38,13 +38,14 @@ export default AppliesRecord = ({route}) => {
 					adopt.protect_animal_species = adopt.protect_act_request_article_id.protect_animal_species;
 					adopt.protect_animal_species_detail = adopt.protect_act_request_article_id.protect_animal_species_detail;
 					adopt.protect_animal_rescue_location = adopt.protect_act_request_article_id.protect_animal_id.protect_animal_rescue_location;
+					adopt.protect_request_writer_id = adopt.protect_act_request_article_id.protect_request_writer_id;
 					delete adopt.protect_act_request_article_id;
 					const adoptArr = [adopt];
 					setAdopt_application_list(adoptArr);
 				} else {
 					setAdopt_application_list([]);
 				}
-				//임보ㅇ
+				//임보
 				if (result.msg.protect != undefined) {
 					let protect = result.msg.protect;
 					let protect_animal_info = protect.protect_act_request_article_id.protect_animal_id;
@@ -54,6 +55,7 @@ export default AppliesRecord = ({route}) => {
 					protect.protect_request_date = protect.protect_act_request_article_id.protect_request_date;
 					protect.protect_request_status = protect.protect_act_request_article_id.protect_request_status;
 					protect.shelter_name = protect.protect_act_request_article_id.protect_request_writer_id.shelter_name;
+					protect.protect_request_writer_id = protect.protect_act_request_article_id.protect_request_writer_id;
 					delete protect.protect_act_request_article_id;
 					const protectArr = [protect];
 					setProtect_application_list(protectArr);

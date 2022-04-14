@@ -4,13 +4,11 @@ import {Text, View} from 'react-native';
 import SelectStat from 'Organism/list/SelectStat';
 import {login_style, temp_style, selectstat_view_style} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
-import {txt} from 'Root/config/textstyle';
-import {GRAY10} from 'Root/config/color';
 import ReviewFavoriteBriefList from 'Root/component/organism/list/ReviewFavoriteBriefList';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {likeEtc} from 'Root/api/likeetc';
 import community_obj from 'Root/config/community_obj';
-import {favoriteEtc, getFavoriteEtcListByUserId} from 'Root/api/favoriteetc';
+import {getFavoriteEtcListByUserId, setFavoriteEtc} from 'Root/api/favoriteetc';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 //즐겨찾기한 피드목록을 조회
@@ -36,8 +34,8 @@ export default FavoriteReview = ({route}) => {
 			},
 			result => {
 				// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg[0]);
-				let reviewCont = result.msg.filter(e => e.favorite_etc_post_id.community_type == 'review');
-				let reviewList = reviewCont.map(v => v.favorite_etc_post_id);
+				let reviewCont = result.msg.filter(e => e.favorite_etc_target_object_id.community_type == 'review');
+				let reviewList = reviewCont.map(v => v.favorite_etc_target_object_id);
 				console.log('review length', reviewList.length);
 				setData(reviewList);
 			},
@@ -95,14 +93,14 @@ export default FavoriteReview = ({route}) => {
 	const doDeleteFavorite = list => {
 		list.map((v, i) => {
 			console.log('v.id', v._id, v.community_title);
-			favoriteEtc(
+			setFavoriteEtc(
 				{
 					collectionName: 'communityobjects',
-					post_object_id: v._id,
+					target_object_id: v._id,
 					is_favorite: false,
 				},
 				result => {
-					console.log('result/ onPressLike / FavoriteReview : ', result.msg.targetPost);
+					console.log('result/ onPressLike / FavoriteReview : ', result.msg.favoriteEtc);
 					cancelSelectMode(false);
 					checkSelectMode(false);
 					fetchData();

@@ -32,8 +32,8 @@ export default FavoriteArticle = ({route}) => {
 			},
 			result => {
 				// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg);
-				let articleCont = result.msg.filter(e => e.favorite_etc_post_id.community_type == 'free');
-				let articleList = articleCont.map(v => v.favorite_etc_post_id);
+				let articleCont = result.msg.filter(e => e.favorite_etc_target_object_id.community_type == 'free');
+				let articleList = articleCont.map(v => v.favorite_etc_target_object_id);
 				console.log('review length', articleList.length);
 				setData(articleList);
 			},

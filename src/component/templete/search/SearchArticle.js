@@ -24,7 +24,11 @@ export default SearchArticle = props => {
 	React.useEffect(() => {
 		if (props.data.free) {
 			console.log('props.data.free', props.data.free.length);
-			setData(props.data.free);
+			let temp = props.data.free;
+			temp.map((v, i) => {
+				v.community_is_favorite = v.is_favorite;
+			});
+			setData(temp);
 		}
 	}, [props.data]);
 

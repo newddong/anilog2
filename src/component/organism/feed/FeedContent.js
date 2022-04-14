@@ -72,12 +72,12 @@ export default FeedContent = props => {
 	const [labelLayout, setlabelLayout] = React.useState({height: 0, width: 0});
 	const [show, setShow] = React.useState(false);
 	const [send, setSend] = React.useState();
-	console.log('35353', feed_avatar_id, 'sss', feed_writer_id);
+	// console.log('35353', feed_avatar_id, 'sss', feed_writer_id);
 	//코드 중복 해소를 위한 처리.
 	const feed_writer = props.data.feed_avatar_id ? props.data.feed_avatar_id : props.data.feed_writer_id;
 	React.useEffect(() => {
 		if (typeof feed_avatar_id == 'object') {
-			console.log('object');
+			// console.log('object');
 			// const send = feed_avatar_id;
 			setSend(feed_avatar_id);
 		} else {

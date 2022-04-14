@@ -38,7 +38,7 @@ export default MissingReportList = props => {
 			getMissingReportList(
 				filterData,
 				data => {
-					// console.log('getMissingReportList data', data.msg);
+					// console.log('getMissingReportList data', data.msg[0]);
 					setData(data.msg);
 				},
 				err => {
@@ -73,7 +73,7 @@ export default MissingReportList = props => {
 				is_favorite: value,
 			},
 			result => {
-				console.log('result / FavoriteFeed / MissingReportList : ', result.msg);
+				console.log('result / FavoriteFeed / MissingReportList : ', result.msg.targetFeed.missing_animal_features);
 			},
 			err => {
 				console.log('err / FavoriteFeed / MissingReportList : ', err);

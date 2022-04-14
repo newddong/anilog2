@@ -35,7 +35,6 @@ export default CommentList = props => {
 					{
 						height: 70 * DP,
 						width: 654 * DP,
-						// backgroundColor: 'red',
 						marginVertical: 30 * DP,
 						alignItems: 'center',
 						justifyContent: 'center',
@@ -58,6 +57,7 @@ export default CommentList = props => {
 				renderItem={renderItem}
 				ListEmptyComponent={whenEmpty}
 				scrollEnabled={false}
+				initialScrollIndex={2}
 				stickyHeaderIndices={[0]}
 			/>
 		</View>

@@ -2,20 +2,30 @@ import React from 'react';
 import {ScrollView, Text, View} from 'react-native';
 import InputWithSearchIcon from 'Root/component/molecules/input/InputWithSearchIcon';
 import AccountList from 'Root/component/organism/list/AccountList';
-import {login_style, temp_style, addFamilyAccount_style} from 'Templete/style_templete';
+import {temp_style, addFamilyAccount_style} from 'Templete/style_templete';
 import Modal from 'Root/component/modal/Modal';
 import {addUserToFamily, getUserListByNickname} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {txt} from 'Root/config/textstyle';
+import {EmptyIcon} from 'Root/component/atom/icon';
+import dp from 'Root/config/dp';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 export default AddFamilyAccount = ({route, navigation}) => {
 	// console.log('route', route.params);
 	const [searched_accountList, setSearched_accountList] = React.useState([]);
 	const [searchInput, setSearchInput] = React.useState('');
+	const [load, setLoad] = React.useState(false);
 
 	React.useEffect(() => {
-		Modal.popLoading();
-		search();
+		if (searchInput != '') {
+			//빈값 검색 막기
+			search();
+		} else if (searchInput == '') {
+			//빈값일 경우 로딩 종료 및 리스트 초기화
+			setSearched_accountList([]);
+			setLoad(false);
+		}
 	}, [searchInput]);
 
 	const search = () => {
@@ -34,25 +44,27 @@ export default AddFamilyAccount = ({route, navigation}) => {
 				let removeMine = result.msg.findIndex(e => e.user_nickname == userGlobalObject.userInfo.user_nickname);
 				removeMine == -1 ? false : filtered.splice(removeMine, 1);
 				setSearched_accountList(filtered);
-				Modal.close();
+				setLoad(false);
 			},
 			err => {
 				console.log('err / getUserListByNick / AddFamilyAccount', err);
+				setSearched_accountList([]);
 				if (err == '검색 결과가 없습니다.') {
 					Modal.close();
 					setSearched_accountList([]);
+					setLoad(false);
 				}
 			},
 		);
 	};
 
 	const onSearch = input => {
-		//검색어로 api 연결 후 결과 리스트로 ~
 		setSearched_accountList([]);
 	};
 
 	//검색어 Input값 변경 콜백
 	const onChangeKeyword = input => {
+		setLoad(true);
 		setSearchInput(input);
 	};
 
@@ -100,7 +112,8 @@ export default AddFamilyAccount = ({route, navigation}) => {
 	const listEmptyComponent = () => {
 		return (
 			<View style={[addFamilyAccount_style.listEmptyContainer]}>
-				<Text style={[txt.noto32b]}>검색 결과가 없습니다.</Text>
+				<EmptyIcon />
+				<Text style={[txt.roboto30b, {marginTop: 10 * dp}]}>검색 결과가 없습니다.</Text>
 			</View>
 		);
 	};
@@ -112,7 +125,11 @@ export default AddFamilyAccount = ({route, navigation}) => {
 			</View>
 
 			<ScrollView style={[addFamilyAccount_style.accountList]}>
-				<AccountList items={searched_accountList} showCrossMark={false} listEmptyComponent={listEmptyComponent} onClickLabel={onAccountClick} />
+				{load ? (
+					<Loading isModal={false} />
+				) : (
+					<AccountList items={searched_accountList} showCrossMark={false} listEmptyComponent={listEmptyComponent} onClickLabel={onAccountClick} />
+				)}
 			</ScrollView>
 		</View>
 	);

@@ -3,11 +3,12 @@ import {ScrollView, Text, View, TouchableOpacity, ActivityIndicator} from 'react
 import {useNavigation} from '@react-navigation/core';
 import moment from 'moment';
 import {txt} from 'Root/config/textstyle';
-import {Arrow_Down_GRAY20, Arrow_Up_GRAY20} from 'Atom/icon';
+import {Arrow_Down_GRAY20, Arrow_Up_GRAY20, EmptyIcon} from 'Atom/icon';
 import VolunteerItemList from 'Organism/list/VolunteerItemList';
 import {login_style, manageVolunteer} from 'Templete/style_templete';
 import {getShelterVolunteerActivityList, getUserVolunteerActivityList} from 'Root/api/volunteerapi';
 import Loading from 'Root/component/molecules/modal/Loading';
+import dp from 'Root/config/dp';
 
 export default ManageVolunteer = ({route}) => {
 	// console.log('route.name', route.name);
@@ -110,7 +111,12 @@ export default ManageVolunteer = ({route}) => {
 	};
 
 	const whenEmpty = () => {
-		return <Text style={[txt.roboto28b, manageVolunteer.whenEmpty]}>신청 내역이 없습니다. </Text>;
+		return (
+			<View style={{paddingVertical: 20 * dp}}>
+				<EmptyIcon />
+				<Text style={[txt.roboto28b, {marginTop: 20 * dp}]}>신청 내역이 없습니다. </Text>
+			</View>
+		);
 	};
 	const isLoaded = doneList == 'false' || notDoneList == 'false'; //활동 예정 및 지난 신청 중 단 하나라도 false(API 적용 이전값)가 있다면 아직 로딩중
 

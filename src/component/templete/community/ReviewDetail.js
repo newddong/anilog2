@@ -380,9 +380,6 @@ export default ReviewDetail = props => {
 							<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
 						</View>
 					)}
-					{/* <View style={[style.commentContainer]}>
-						<CommentList items={comments} onPressReplyBtn={onReplyBtnClick} onEdit={onEdit} />
-					</View> */}
 				</View>
 			</View>
 		);

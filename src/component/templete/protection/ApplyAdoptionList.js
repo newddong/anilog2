@@ -17,6 +17,7 @@ export default ApplyAdoptionList = props => {
 	};
 	const onLabelClick = item => {
 		// console.log('onLabelClick !!');
+		console.log('itme data', item);
 		navigation.push('ApplyAdoptionDetails', item);
 	};
 

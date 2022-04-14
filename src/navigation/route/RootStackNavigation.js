@@ -312,6 +312,16 @@ export default RootStackNavigation = () => {
 						<RootStack.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />}} />
 						<RootStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />}} />
 						<RootStack.Screen name="FeedCommentList" component={FeedCommentList} options={{header: props => <AlarmAndSearchHeader {...props} />}} />
+						<RootStack.Screen
+							name="ShelterVolunteerForm"
+							component={ApplicationFormVolunteer}
+							options={{header: props => <SimpleHeader {...props} />, title: '봉사활동 신청서'}}
+						/>
+						<RootStack.Screen
+							name="ApplyAdoptionDetails"
+							component={ApplyDetails}
+							options={{header: props => <SimpleHeader {...props} />, title: '입양 신청 내역'}}
+						/>
 					</RootStack.Navigator>
 				</NavigationContainer>
 

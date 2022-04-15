@@ -10,7 +10,7 @@ import ArticleList from 'Root/component/organism/list/ArticleList';
 import {useNavigation} from '@react-navigation/core';
 import {getCommunityList, updateAndDeleteCommunity} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {createComment, getCommentListByCommunityId, updateComment} from 'Root/api/commentapi';
+import {createComment, deleteComment, getCommentListByCommunityId, updateComment} from 'Root/api/commentapi';
 import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import community_obj from 'Root/config/community_obj';
@@ -124,7 +124,7 @@ export default ArticleDetail = props => {
 				request_number: 1000,
 			},
 			comments => {
-				setComments(comments.msg);
+				setComments(comments.msg.filter(e => e.comment_is_delete != true));
 				// console.log('comments', comments);
 			},
 			err => console.log('getCommentListByFeedId', err),
@@ -175,7 +175,7 @@ export default ArticleDetail = props => {
 						},
 						comments => {
 							!parentComment && setComments([]); //댓글목록 초기화
-							setComments(comments.msg);
+							setComments(comments.msg.filter(e => e.comment_is_delete != true));
 							parentComment && addChildCommentFn.current();
 							// console.log('comments', comments);
 						},
@@ -201,7 +201,7 @@ export default ArticleDetail = props => {
 						},
 						comments => {
 							!parentComment && setComments([]); //댓글목록 초기화
-							setComments(comments.msg);
+							setComments(comments.msg.filter(e => e.comment_is_delete != true));
 							parentComment && addChildCommentFn.current();
 							// console.log('comments', comments);
 							input.current.blur();
@@ -365,6 +365,23 @@ export default ArticleDetail = props => {
 		);
 	};
 
+	//댓글 대댓글 삭제
+	const onPressDelete = id => {
+		console.log('id', id);
+		deleteComment(
+			{
+				commentobject_id: id,
+			},
+			result => {
+				console.log('result / delectComment / ProtectCommentList : ', result.msg.comment_is_delete);
+				getComment();
+			},
+			err => {
+				console.log(' err / deleteComment / ProtectCommentList : ', err);
+			},
+		);
+	};
+
 	//좋아요 클릭
 	const onPressLike = bool => {
 		console.log('bool', bool);
@@ -410,7 +427,13 @@ export default ArticleDetail = props => {
 					</View>
 				)}
 				<View style={[style.commentContainer, {alignItems: 'center'}]}>
-					<CommentList items={comments} onPressReplyBtn={onReplyBtnClick} onEdit={onEdit} />
+					<CommentList
+						items={comments}
+						onPressReplyBtn={onReplyBtnClick}
+						onEdit={onEdit}
+						onPressDelete={onPressDelete}
+						onPressDeleteChild={onPressDelete}
+					/>
 				</View>
 			</View>
 		);

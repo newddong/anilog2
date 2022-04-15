@@ -1,104 +1,84 @@
-import React, {useEffect, useRef} from 'react';
-import {LogBox, ScrollView, Image, ActivityIndicator, TouchableOpacity, FlatList, TouchableWithoutFeedback} from 'react-native';
+import React, {useRef} from 'react';
+import {Image, TouchableOpacity, FlatList, TouchableWithoutFeedback} from 'react-native';
 import {Text, View} from 'react-native';
-import {login_style, reportDetail, temp_style, missingAnimalDetail} from 'Templete/style_templete';
+import {reportDetail, temp_style, missingAnimalDetail} from 'Templete/style_templete';
 import FeedContent from 'Organism/feed/FeedContent';
 import {useNavigation} from '@react-navigation/core';
-// import {_dummy_MissingReportDetail} from 'Root/config/dummy_data_hjs';
-import {_dummy_ReportDetail} from 'Root/config/dummy_data_hjs';
-import {dummy_CommentObject} from 'Root/config/dummyDate_json';
-import {getFeedDetailById} from 'Root/api/feedapi';
-import {getCommentListByFeedId, createComment} from 'Root/api/commentapi';
+import {favoriteFeed, getFeedDetailById, getMissingReportList} from 'Root/api/feedapi';
+import {deleteComment, getCommentListByFeedId} from 'Root/api/commentapi';
 import moment from 'moment';
-import {create} from 'react-test-renderer';
-import {launchImageLibrary} from 'react-native-image-picker';
 import {txt} from 'Root/config/textstyle';
 import ViewShot from 'react-native-view-shot';
 import CameraRoll from '@react-native-community/cameraroll';
 import Modal from 'Root/component/modal/Modal';
-import MissingReportInfo from 'Organism/info/MissingReportInfo';
 import {PosterSave} from 'Component/atom/icon';
 import {phoneFomatter} from 'Root/util/stringutil';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {GRAY10} from 'Root/config/color';
+import Loading from 'Root/component/molecules/modal/Loading';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
 
 export default MissingAnimalDetail = props => {
 	const navigation = useNavigation();
-	const [photo, setPhoto] = React.useState(props.route.params != null ? props.route.params : []); //PhotoSelect에서 사진 선택이 됐을 경우 photo에 담김
-	const [editComment, setEditComment] = React.useState(false); //답글 작성란 View 보이기 T/F
-	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
-	const [replyText, setReplyText] = React.useState(); //댓글 텍스트 state
-	const [showMore, setShowMore] = React.useState(false); //더보기 클릭 State
 	const [commentDataList, setCommentDataList] = React.useState(); //더보기 클릭 State
-	const [writeCommentData, setWriteCommentData] = React.useState(); //더보기 클릭 State
-	const [replyPressed, setReplyPressed] = React.useState(false);
-	const debug = true;
-
-	const [loading, setLoading] = React.useState(true); //로딩상태
+	const [missingList, setMissingList] = React.useState('false');
 	const viewShotRef = useRef();
 
-	React.useEffect(() => {
-		setPhoto(props.route.params);
-	}, [props.route.params]);
-
-	React.useEffect(() => {
-		navigation.addListener('blur', () => {
-			setPhoto([]);
-		});
-	});
-
 	//api 실제 작업 후 하단에 있는 data로 변경 예정 (현재는 에러 방지 코드)
-	const [data, setData] = React.useState({});
+	const [data, setData] = React.useState('false');
 
 	React.useEffect(() => {
-		console.log(' - MissingAnimalDetail -');
+		const unsubscribe = navigation.addListener('focus', () => {
+			fetchFeedData();
+			fetchMissingPostList();
+			getCommnetList();
+		});
+		return unsubscribe;
+	}, []);
+
+	const fetchFeedData = () => {
 		getFeedDetailById(
 			{
 				feedobject_id: props.route.params._id,
 			},
 			data => {
-				// debug && console.log(`MissingAnimalDetail data:${JSON.stringify(data.msg)}`);
 				setData(data.msg);
+				// console.log('data', data.msg);
 				navigation.setParams({writer: data.msg.feed_writer_id._id, isMissingOrReport: true, feed_object: data.msg});
 			},
 			errcallback => {
 				console.log(`errcallback:${JSON.stringify(errcallback)}`);
 			},
 		);
-	}, []);
+	};
 
-	//댓글 불러오기 (상단의 useEffect와 합칠지는 추후 결정)
-	React.useEffect(() => {
-		console.log(' - MissingAnimalDetail Comment -');
-		getCommnetList();
-		setLoading(false);
-	}, []);
-
-	// React.useEffect(() => {
-	// 	console.log('WriteCommnetData changed', writeCommentData);
-	// }, [writeCommentData]);
-
-	React.useEffect(() => {
-		if (replyPressed == true) {
-			createComment(
-				{...writeCommentData},
-
-				callback => {
-					// console.log('write commnet success', callback);
-					getCommnetList();
-				},
-				err => {
-					console.log('write comment error', err);
-				},
-			);
-			// setWriteCommentData();
-			delete writeCommentData.comment_photo_uri;
-			onDeleteImage();
-			setEditComment(!editComment);
-			setReplyPressed(false);
-		}
-	}, [replyPressed]);
+	const fetchMissingPostList = () => {
+		getMissingReportList(
+			{
+				city: '',
+				missing_animal_species: '',
+				request_number: 4,
+				feedobject_id: '',
+			},
+			result => {
+				// console.log('getMissingReportList result', result.msg[0]);
+				const filter = result.msg.filter(e => e.feed_type == 'missing');
+				const removeMine = filter.filter(e => e._id != data._id);
+				const slice = removeMine.slice(0, 4);
+				setMissingList(slice);
+			},
+			err => {
+				console.log('getMissingReportList Error', err);
+				if (err == '검색 결과가 없습니다.') {
+					setData([]);
+				}
+			},
+		);
+	};
 
 	const getCommnetList = () => {
+		Modal.popLoading();
 		getCommentListByFeedId(
 			{
 				feedobject_id: props.route.params._id,
@@ -138,7 +118,8 @@ export default MissingAnimalDetail = props => {
 						}
 					}
 				});
-				setCommentDataList(commentArray);
+				setCommentDataList(commentArray.filter(e => e.comment_is_delete != true));
+				Modal.close();
 			},
 			errcallback => {
 				console.log(`Comment errcallback:${JSON.stringify(errcallback)}`);
@@ -146,64 +127,48 @@ export default MissingAnimalDetail = props => {
 		);
 	};
 
-	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
-	const onWrite = () => {
-		debug && console.log('onWrite', replyText);
-		debug && console.log('writeCommentData=>' + writeCommentData.comment_contentsdsf);
-		// setWriteCommentData({...writeCommentData, comment_contents: replyText, comment_is_secure: privateComment, comment_feed_id: ''});
-		setWriteCommentData({...writeCommentData, comment_contents: replyText, comment_is_secure: privateComment});
-		console.log('wirteCommentData', writeCommentData);
-		setReplyPressed(true);
-	};
-
-	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
-	const onLockBtnClick = () => {
-		setPrivateComment(!privateComment);
-		!privateComment ? alert('비밀댓글로 설정되었습니다.') : alert('댓글이 공개설정되었습니다.');
-	};
-
-	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
-	const onAddPhoto = () => {
-		// navigation.push('SinglePhotoSelect', props.route.name);
-		launchImageLibrary(
+	//실종 게시글 즐겨찾기 아이콘 클릭
+	const onOff_FavoriteTag = (value, index) => {
+		console.log('value', value);
+		favoriteFeed(
 			{
-				mediaType: 'photo',
-				selectionLimit: 1,
+				feedobject_id: missingList[index]._id,
+				userobject_id: userGlobalObject.userInfo._id,
+				is_favorite: value,
 			},
-			responseObject => {
-				console.log('선택됨', responseObject);
-				setPhoto(responseObject.assets[responseObject.assets.length - 1].uri);
-				setWriteCommentData({...writeCommentData, comment_photo_uri: responseObject.assets[responseObject.assets.length - 1].uri});
+			result => {
+				console.log('result / FavoriteFeed / MissingReportList : ', result.msg.targetFeed.missing_animal_features);
+			},
+			err => {
+				console.log('err / FavoriteFeed / MissingReportList : ', err);
 			},
 		);
 	};
 
-	// 답글 쓰기 -> Input value 변경 콜백함수
-	const onChangeReplyInput = text => {
-		setReplyText(text);
-		console.log(replyText);
-	};
-
-	// 답글 쓰기 텍스트 버튼 클릭 콜백함수
-	const onReplyBtnClick = parent_id => {
-		setEditComment(!editComment);
-		console.log('onReplayBtnClick', parent_id);
-		setWriteCommentData({...writeCommentData, commentobject_id: parent_id, feedobject_id: props.route.params._id});
-	};
-
-	// 자식 답글에서 답글쓰기 버튼 클릭 콜백함수
-	const onChildReplyBtnClick = comment => {
-		setEditComment(!editComment);
-	};
-
-	// 답글 이미지 등록 후 지우기 버튼 클릭 콜백함수
-	const onDeleteImage = () => {
-		setPhoto([]);
-	};
-
-	//더보기 클릭
-	const onPressShowMore = () => {
-		setShowMore(!showMore);
+	//실종 게시글 리스트의 아이템 클릭
+	const onClickLabel = (status, id, item) => {
+		// console.log(`\nMissingReportList:onLabelClick() - status=>${status} id=>${id} item=>${JSON.stringify(item)}`);
+		let sexValue = '';
+		switch (status) {
+			case 'missing':
+				switch (item.missing_animal_sex) {
+					case 'male':
+						sexValue = '남';
+						break;
+					case 'female':
+						sexValue = '여';
+						break;
+					case 'male':
+						sexValue = '성별모름';
+						break;
+				}
+				const titleValue = item.missing_animal_species + '/' + item.missing_animal_species_detail + '/' + sexValue;
+				navigation.push('MissingAnimalDetail', {title: titleValue, _id: id});
+				break;
+			case 'report':
+				navigation.push('ReportDetail', {_id: id});
+				break;
+		}
 	};
 
 	//전단지 저장
@@ -246,6 +211,7 @@ export default MissingAnimalDetail = props => {
 			console.log('err', err);
 		}
 	};
+
 	function capture() {
 		try {
 			captureScreenShot();
@@ -253,6 +219,7 @@ export default MissingAnimalDetail = props => {
 			console.log('Screenshot Error', err);
 		}
 	}
+
 	function getPerMission() {
 		try {
 			getPermissionAndroid();
@@ -261,87 +228,124 @@ export default MissingAnimalDetail = props => {
 		}
 	}
 
-	const moveToCommentList = () => {
-		let feedobject = {};
-		feedobject._id = props.route.params._id;
-		navigation.push('FeedCommentList', {feedobject: data, showAllContents: true});
+	//댓글 대댓글 삭제
+	const onPressDelete = id => {
+		console.log('id', id);
+		deleteComment(
+			{
+				commentobject_id: id,
+			},
+			result => {
+				console.log('result / delectComment / ProtectCommentList : ', result.msg.comment_is_delete);
+				getCommnetList();
+			},
+			err => {
+				console.log(' err / deleteComment / ProtectCommentList : ', err);
+			},
+		);
+	};
+
+	//댓글 이동
+	const onPressReply = async () => {
+		AsyncStorage.getItem('sid', (err, res) => {
+			console.log('res', res);
+			if (res == null) {
+				Modal.popNoBtn('로그인이 필요합니다.');
+				setTimeout(() => {
+					Modal.close();
+				}, 1500);
+			} else {
+				navigation.push('FeedCommentList', {feedobject: data, showAllContents: true});
+			}
+		});
+	};
+
+	const whenEmpty = () => {
+		return <></>;
 	};
 
 	//로딩중일때 출력
-	if (loading) {
+	if (data == 'false' || missingList == 'false') {
+		return <Loading isModal={false} />;
+	} else
 		return (
-			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
-				<ActivityIndicator size={'large'}></ActivityIndicator>
+			<View style={[reportDetail.wrp_main]}>
+				<FlatList
+					contentContainerStyle={[reportDetail.container]}
+					data={[{}]}
+					showsVerticalScrollIndicator={false}
+					ListHeaderComponent={
+						<View style={{alignItems: 'center'}}>
+							<View>
+								<ViewShot ref={viewShotRef} options={{format: 'jpg', quality: 1.0}}>
+									<View style={[missingAnimalDetail.poster]}>
+										<View style={missingAnimalDetail.title}>
+											<MissingAnimalTitle data={data} />
+										</View>
+										<MissingAnimalPicture data={data} />
+										<MissingAnimalText data={data} />
+
+										<MissingAnimalPhone data={data} />
+										<Text style={missingAnimalDetail.missingText18}>반려동물 커뮤니티 애니로그</Text>
+									</View>
+								</ViewShot>
+								<TouchableWithoutFeedback onPress={capture}>
+									<View style={missingAnimalDetail.floatingBtnMissingReport}>
+										<PosterSave />
+										<Text style={[txt.noto20, {color: 'red'}, {fontWeight: 'bold'}]}>전단지 저장</Text>
+									</View>
+								</TouchableWithoutFeedback>
+							</View>
+
+							<View style={[temp_style.feedContent]}>
+								<FeedContent data={data} />
+							</View>
+
+							<View style={[reportDetail.basic_separator]}>
+								<View style={[reportDetail.separator]}></View>
+							</View>
+						</View>
+					}
+					renderItem={({item, index}) => (
+						<View style={{paddingVertical: 10 * DP, alignItems: 'center'}}>
+							{commentDataList && commentDataList.length > 0 ? (
+								<TouchableOpacity
+									onPress={onPressReply}
+									style={[
+										{
+											width: 654 * DP,
+											alignItems: 'flex-end',
+											alignSelf: 'center',
+										},
+									]}>
+									<Text style={[txt.noto26, {color: GRAY10, marginBottom: 10 * DP}]}> 댓글 {commentDataList.length}개 모두 보기</Text>
+								</TouchableOpacity>
+							) : (
+								<></>
+							)}
+							<View style={{marginTop: 0 * DP, alignItems: 'center'}}>
+								<CommentList
+									items={commentDataList}
+									onPressReplyBtn={onPressReply}
+									onPressDelete={onPressDelete}
+									onPressDeleteChild={onPressDelete}
+								/>
+							</View>
+							<ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} isProtectRequest={true} />
+							<View style={[{paddingVertical: 20 * DP}]}>
+								<Text style={[txt.noto24, {paddingVertical: 20 * DP, width: 684 * DP, alignSelf: 'center'}]}>실종글 더보기</Text>
+								<AnimalNeedHelpList
+									data={missingList}
+									onFavoriteTag={(e, index) => onOff_FavoriteTag(e, index)}
+									onClickLabel={(status, id, item) => onClickLabel(status, id, item)}
+									whenEmpty={whenEmpty()}
+								/>
+							</View>
+						</View>
+					)}
+				/>
 			</View>
 		);
-	}
-
-	return (
-		<View style={[reportDetail.wrp_main]}>
-			<FlatList
-				contentContainerStyle={[reportDetail.container]}
-				data={[{}]}
-				showsVerticalScrollIndicator={false}
-				ListHeaderComponent={
-					<View style={{alignItems: 'center'}}>
-						<View>
-							<ViewShot ref={viewShotRef} options={{format: 'jpg', quality: 1.0}}>
-								<View style={[missingAnimalDetail.poster]}>
-									<View style={missingAnimalDetail.title}>
-										<MissingAnimalTitle data={data} />
-									</View>
-									<MissingAnimalPicture data={data} />
-									<MissingAnimalText data={data} />
-
-									<MissingAnimalPhone data={data} />
-									<Text style={missingAnimalDetail.missingText18}>반려동물 커뮤니티 애니로그</Text>
-								</View>
-							</ViewShot>
-							<TouchableWithoutFeedback onPress={capture}>
-								<View style={missingAnimalDetail.floatingBtnMissingReport}>
-									<PosterSave />
-									<Text style={[txt.noto20, {color: 'red'}, {fontWeight: 'bold'}]}>전단지 저장</Text>
-								</View>
-							</TouchableWithoutFeedback>
-						</View>
-
-						<View style={[temp_style.feedContent]}>
-							{/* <MissingReportInfo data={data} /> */}
-							{/* DB에서 가져오는 제보 피드글 데이터를 FeedContent에 넘겨준다. */}
-							<FeedContent data={data} />
-						</View>
-						<View style={[reportDetail.allCommentCount]}>
-							<TouchableOpacity onPress={moveToCommentList}>
-								<Text style={[txt.noto24]}>댓글 쓰기</Text>
-							</TouchableOpacity>
-						</View>
-						<View style={[reportDetail.basic_separator]}>
-							<View style={[reportDetail.separator]}></View>
-						</View>
-					</View>
-				}
-				renderItem={({item, index}) => (
-					// <View style={[reportDetail.commentList]}>
-					<CommentList items={commentDataList} onPressReplyBtn={moveToCommentList} onPress_ChildComment_ReplyBtn={onChildReplyBtnClick} />
-					// </View>
-				)}
-			/>
-			<View>
-				{editComment ? (
-					<ReplyWriteBox
-						onAddPhoto={onAddPhoto}
-						onChangeReplyInput={text => onChangeReplyInput(text)}
-						onLockBtnClick={onLockBtnClick}
-						onWrite={onWrite}
-						privateComment={privateComment}
-						// isPhotoAdded={isPhotoAdded}
-						photo={photo}
-						onDeleteImage={onDeleteImage}
-					/>
-				) : null}
-			</View>
-		</View>
-	);
 };
 
 // 포스터 제목 컴포넌트
@@ -384,10 +388,8 @@ const MissingAnimalText = props => {
 	const data = props.data;
 	if (!data.missing_animal_date) return false;
 	let newText = data.missing_animal_date;
-	console.log('뉴 텍스트', newText);
 	let splitedNewText = newText.split('-');
 	let animalSex = '';
-	console.log('newDateDate', newText.split('-'));
 	let newYearText = splitedNewText[0] + '년 ';
 	let newDayText = splitedNewText[1] + '월 ' + '월 ' + splitedNewText[2].toString().substring(0, 2) + '일';
 	let splitAddress = data.missing_animal_lost_location.split('"');
@@ -400,8 +402,6 @@ const MissingAnimalText = props => {
 	} else {
 		animalSex = '';
 	}
-
-	console.log('missing_animal_lost_location', data.missing_animal_lost_location.split('"'));
 	return (
 		<View style={missingAnimalDetail.textBox}>
 			<Text style={missingAnimalDetail.missingText38}>
@@ -445,7 +445,6 @@ const MissingAnimalPhone = props => {
 const MissingAnimalPicture = props => {
 	const data = props.data;
 	const feed_medias = data.feed_medias;
-	console.log('data.feed_media length', data.feed_medias);
 	if (!feed_medias) return false;
 	if (feed_medias.length < 2) {
 		return (

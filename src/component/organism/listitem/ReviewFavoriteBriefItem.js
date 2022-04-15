@@ -32,7 +32,6 @@ const ReviewFavoriteBriefItem = props => {
 	};
 
 	React.useEffect(() => {
-		console.log('data.community_is_like', data.community_is_like);
 		setIsLike(data.community_is_like);
 	}, []);
 

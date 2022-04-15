@@ -198,7 +198,7 @@ export default CommunityCommentList = props => {
 			);
 		if (index > 0)
 			return (
-				<View style={{marginLeft: 20 * DP}}>
+				<View style={{marginLeft: 20 * DP, paddingBottom: 50 * DP}}>
 					<CommentList items={item} onPressReplyBtn={onReplyBtnClick} onEdit={onEdit} />
 				</View>
 			);
@@ -217,10 +217,11 @@ export default CommunityCommentList = props => {
 					data={[{}, comments]}
 					extraData={refresh}
 					renderItem={render}
-					stickyHeaderIndices={[1]}
+					// stickyHeaderIndices={[1]}
 					ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
 					onScroll={onScroll}
 					ref={flatlist}
+					showsVerticalScrollIndicator={false}
 				/>
 			)}
 			{/* Parent Comment 혹은 Child Comment 에서 답글쓰기를 클릭할 시 화면 최하단에 등장 */}

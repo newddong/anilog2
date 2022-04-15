@@ -14,7 +14,7 @@ import CommentList from 'Root/component/organism/comment/CommentList';
 import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
 import moment from 'moment';
-import {getCommentListByProtectId} from 'Root/api/commentapi';
+import {deleteComment, getCommentListByProtectId} from 'Root/api/commentapi';
 import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -57,7 +57,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 			},
 			async result => {
 				// console.log('result /getProtectRequestByProtectRequestId / AnimalProtectRequestDetail : ', result.msg);
-				console.log('작성자의 즐겨찾기 수', result.msg.protect_request_writer_id.user_favorite_count);
+				// console.log('작성자의 즐겨찾기 수', result.msg);
 				let res = result.msg;
 				let checkfav = await isMyFavoriteShelter(res.protect_request_writer_id);
 				res.protect_request_writer_id.is_favorite = checkfav;
@@ -78,6 +78,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		);
 	};
 
+	//보호요청 게시글 작성자가 나의 즐겨찾기 대상에 포함이 되는지 여부
 	const isMyFavoriteShelter = async writer_id => {
 		const checkFav = () => {
 			return new Promise((resolve, reject) => {
@@ -122,7 +123,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				protect_request_status: 'all', //하단 리스트
 			},
 			result => {
-				// console.log('result / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', result.msg);
+				console.log('result / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', result.msg.length);
 				//현재 보고 있는 보호요청게시글의 작성자(보호소)의 모든 보호요청게시글이 담겨 있는 writersAnotherRequests
 				//그러나 현재 보고 있는 보호요청게시글은 해당 리스트에 출력이 되어서는 안됨 => Filter처리
 				const filteredList = result.msg.filter(e => e._id != route.params.id);
@@ -179,8 +180,8 @@ export default AnimalProtectRequestDetail = ({route}) => {
 						}
 					}
 				});
-				// console.log('commentArray', commentArray.length);
-				setCommentDataList(commentArray);
+				const removeDelete = commentArray.filter(e => e.comment_is_delete != true);
+				setCommentDataList(removeDelete);
 				//댓글이 출력이 안되는 현상 발견으로 비동기 처리
 				debug && console.log('commentArray refresh', commentArray);
 			},
@@ -257,6 +258,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		navigation.push('UserProfile', {userobject: data});
 	};
 
+	//댓글 클릭
 	const onPressReply = async () => {
 		AsyncStorage.getItem('sid', (err, res) => {
 			console.log('res', res);
@@ -269,6 +271,23 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				navigation.push('ProtectCommentList', {protectObject: data});
 			}
 		});
+	};
+
+	//댓글 삭제 클릭
+	const onPressDeleteReply = id => {
+		console.log('id', id);
+		deleteComment(
+			{
+				commentobject_id: id,
+			},
+			result => {
+				console.log('result / delectComment / ProtectCommentList : ', result.msg);
+				getCommnetList();
+			},
+			err => {
+				console.log(' err / deleteComment / ProtectCommentList : ', err);
+			},
+		);
 	};
 
 	const isLoaded = data == 'false' || writersAnotherRequests == 'false' || commentDataList == 'false';
@@ -323,12 +342,12 @@ export default AnimalProtectRequestDetail = ({route}) => {
 												</Text>
 											</TouchableOpacity>
 										)}
-										<View ref={shareRef} collapsable={false}>
+										{/* <View ref={shareRef} collapsable={false}>
 											<TouchableOpacity onPress={onPressShare} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
 												<Share48_Filled />
 												<Text style={[txt.roboto24, {color: APRI10}]}>공유</Text>
 											</TouchableOpacity>
-										</View>
+										</View> */}
 									</View>
 								</View>
 								<ProtectAnimalInfoBox data={data} />
@@ -349,6 +368,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 										<CommentList
 											items={commentDataList && commentDataList.length > 2 ? commentDataList.slice(0, 2) : commentDataList}
 											onPressReplyBtn={onPressReply}
+											onPressDelete={onPressDeleteReply}
 										/>
 									</View>
 								</View>

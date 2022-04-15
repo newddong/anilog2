@@ -16,7 +16,7 @@ export default AppliesRecord = ({route}) => {
 	const [adopt_application_list, setAdopt_application_list] = React.useState('false');
 	const [protect_application_list, setProtect_application_list] = React.useState('false');
 	const [volunteer_list, setVolunteer_list] = React.useState('false');
-	//보호 요청 데이터 불러오기 (아직 API 미작업 )
+
 	React.useEffect(() => {
 		console.log('- getAppliesRecord data -');
 		getAppliesRecord(
@@ -102,8 +102,8 @@ export default AppliesRecord = ({route}) => {
 		navigation.push('ManageUserVolunteer'); // 활동 예정중인 신청, 지난 신청 등 나의 신청 목록을 보내줘야 알 수 있는 부분
 	};
 
-	const onOff_FavoriteTag = (value, index) => {
-		console.log('즐겨찾기=>' + value + ' ' + index);
+	const onOff_FavoriteTag = bool => {
+		console.log('즐겨찾기=>' + bool);
 	};
 
 	//봉사활동 신청 하단 라벨 클릭
@@ -147,7 +147,7 @@ export default AppliesRecord = ({route}) => {
 							)}
 						</View>
 						{adopt_application_list != undefined && adopt_application_list.length > 0 ? (
-							<AnimalNeedHelp data={adopt_application_list[0]} onClickLabel={onClickAdoptApplication} />
+							<AnimalNeedHelp data={adopt_application_list[0]} onClickLabel={onClickAdoptApplication} onFavoriteTag={onOff_FavoriteTag} />
 						) : (
 							<>
 								<EmptyIcon />

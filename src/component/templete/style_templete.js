@@ -927,7 +927,7 @@ export const temp_style = StyleSheet.create({
 		justifyContent: 'space-between',
 	},
 	shelterSmallLabel_animalProtectRequestDetail: {
-		width: 516 * DP,
+		width: 570 * DP,
 		height: 88 * DP,
 		// backgroundColor: 'yellow',
 	},
@@ -3828,6 +3828,8 @@ export const reportDetail = StyleSheet.create({
 		width: 654 * DP,
 		height: 44 * DP,
 		alignItems: 'flex-end',
+		marginBottom: 10 * DP,
+		// marginTop: 10 * DP,
 		// backgroundColor: '#F8DDDD',
 	},
 	wrp_main: {
@@ -3954,7 +3956,7 @@ export const feedCommentList = StyleSheet.create({
 		height: 72 * DP,
 		marginRight: 12 * DP,
 		borderRadius: 24 * DP,
-		backgroundColor: GRAY30,
+		backgroundColor: GRAY40,
 		justifyContent: 'center',
 		paddingLeft: 25 * DP,
 		paddingTop: 5 * DP,
@@ -4502,6 +4504,7 @@ export const animalProtectRequestDetail_style = StyleSheet.create({
 	container: {
 		width: 750 * DP,
 		alignItems: 'center',
+		paddingBottom: 40 * DP,
 	},
 	requestProtect: {
 		marginTop: 30 * DP,

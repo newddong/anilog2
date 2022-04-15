@@ -31,10 +31,15 @@ export default FavoriteArticle = ({route}) => {
 				collectionName: 'communityobjects',
 			},
 			result => {
-				// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg);
-				let articleCont = result.msg.filter(e => e.favorite_etc_target_object_id.community_type == 'free');
-				let articleList = articleCont.map(v => v.favorite_etc_target_object_id);
-				console.log('review length', articleList.length);
+				// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg[0]);
+				let articleList = [];
+				result.msg.map(v => {
+					if (v.favorite_etc_target_object_id.community_type == 'free') {
+						v.favorite_etc_target_object_id.community_is_like = v.is_like;
+						v.favorite_etc_target_object_id.community_is_favorite = v.is_favorite;
+						articleList.push(v.favorite_etc_target_object_id);
+					}
+				});
 				setData(articleList);
 			},
 			err => {

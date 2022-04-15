@@ -10,7 +10,7 @@ export const organism_style = StyleSheet.create({
 		alignItems: 'center',
 		paddingTop: 20 * DP,
 		backgroundColor: WHITE,
-		paddingBottom:15*DP,
+		paddingBottom: 15 * DP,
 		paddingHorizontal: 48 * DP,
 		overflow: 'hidden',
 	},
@@ -99,8 +99,7 @@ export const organism_style = StyleSheet.create({
 	},
 	button_view_feedContent: {
 		flexDirection: 'row',
-		width: 126 * DP,
-		right: 0,
+		// width: 126 * DP,
 		alignSelf: 'center',
 		justifyContent: 'space-between',
 	},

@@ -29,7 +29,6 @@ export default AnimalNeedHelp = props => {
 
 	const [data, setData] = React.useState(props.data);
 	const [selected, setSelected] = React.useState(false);
-	const [favorite, setFavorite] = React.useState(false);
 	const [thumbnailData, setThumbnailData] = React.useState({});
 
 	// 불러오는 db 필드명이 다르기에 일치시키기 위한 함수
@@ -77,7 +76,7 @@ export default AnimalNeedHelp = props => {
 
 	React.useEffect(() => {
 		checkthumbnailData();
-		setFavorite(data.is_favorite);
+		setData(props.data);
 	}, [props.data]);
 
 	const checkSelected = () => {
@@ -85,10 +84,10 @@ export default AnimalNeedHelp = props => {
 	};
 
 	//우상단 즐겨찾기 깃발 아이콘 클릭 콜백
-	const onPressFavoriteTag = () => {
-		console.log('data.missing_animal_species_detail', data.is_favorite);
-		setFavorite(!favorite);
-		props.onFavoriteTag(!favorite);
+	const onPressFavoriteTag = bool => {
+		// console.log('data.missing_animal_species_detail', data.is_favorite);
+		props.onFavoriteTag(bool);
+		setData({...data, is_favorite: bool});
 	};
 
 	//입양자 정보 클릭
@@ -267,10 +266,10 @@ export default AnimalNeedHelp = props => {
 					<View style={[animalNeedHelp.detail_upper_tag]}>
 						{checkIsMyPost() ? (
 							<></>
-						) : favorite ? (
-							<FavoriteTag48_Filled onPress={onPressFavoriteTag} />
+						) : data.is_favorite ? (
+							<FavoriteTag48_Filled onPress={() => onPressFavoriteTag(false)} />
 						) : (
-							<FavoriteTag48_Border onPress={onPressFavoriteTag} />
+							<FavoriteTag48_Border onPress={() => onPressFavoriteTag(true)} />
 						)}
 					</View>
 				</View>

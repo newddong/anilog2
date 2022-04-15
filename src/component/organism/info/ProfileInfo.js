@@ -186,6 +186,7 @@ const ProfileInfo = props => {
 									Modal.popNoBtn(bool ? '즐겨찾기 등록이 \n 완료되었습니다.' : '즐겨찾기 취소가 \n 완료되었습니다.');
 									setTimeout(() => {
 										Modal.close();
+										setData({...data, is_favorite: bool});
 									}, 500);
 								}, 200);
 							},

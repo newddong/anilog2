@@ -9,13 +9,14 @@ import {useNavigation} from '@react-navigation/core';
 import ReviewContent from 'Root/component/organism/article/ReviewContent';
 import {getCommunityList} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {createComment, getCommentListByCommunityId, updateComment} from 'Root/api/commentapi';
+import {createComment, deleteComment, getCommentListByCommunityId, updateComment} from 'Root/api/commentapi';
 import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import community_obj from 'Root/config/community_obj';
 import {REPORT_MENU} from 'Root/i18n/msg';
+import {likeEtc} from 'Root/api/likeetc';
 
 /**
  * 후기 상세 내용
@@ -49,19 +50,7 @@ export default ReviewDetail = props => {
 			navigation.setOptions({title: '리뷰'});
 		}
 		getComment();
-		getCommunityList(
-			{
-				community_type: 'review',
-			},
-			result => {
-				const res = result.msg.review.slice(0, 4);
-				let removeThisReview = res.filter(e => e._id != data._id);
-				setReviewList(removeThisReview);
-			},
-			err => {
-				console.log('err / getCommunityList / ReviewDEtail : ', err);
-			},
-		);
+		fetchCommunityList();
 		const unsubscribe = navigation.addListener('focus', () => {
 			//다른 탭(ex - My 탭의 즐겨찾기한 커뮤니티 목록에서 들어온 경우)에서의 호출
 			if (community_obj.object.hasOwnProperty('_id')) {
@@ -81,6 +70,22 @@ export default ReviewDetail = props => {
 		}
 		return unsubscribe;
 	}, []);
+
+	const fetchCommunityList = () => {
+		getCommunityList(
+			{
+				community_type: 'review',
+			},
+			result => {
+				const res = result.msg.review.slice(0, 4);
+				let removeThisReview = res.filter(e => e._id != data._id);
+				setReviewList(removeThisReview);
+			},
+			err => {
+				console.log('err / getCommunityList / ReviewDEtail : ', err);
+			},
+		);
+	};
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
 	const onWrite = () => {
@@ -126,7 +131,7 @@ export default ReviewDetail = props => {
 						},
 						comments => {
 							!parentComment && setComments([]); //댓글목록 초기화
-							setComments(comments.msg);
+							setComments(comments.msg.filter(e => e.comment_is_delete != true));
 							parentComment && addChildCommentFn.current();
 							// console.log('comments', comments);
 						},
@@ -153,13 +158,9 @@ export default ReviewDetail = props => {
 						},
 						comments => {
 							!parentComment && setComments([]); //댓글목록 초기화
-							// if (props.parentComment.hasOwnProperty('comment_parent_writer_id')) {
-							// 	console.log('title', props.parentComment.comment_contents);
-							setComments(comments.msg);
+							setComments(comments.msg.filter(e => e.comment_is_delete != true));
 							parentComment && addChildCommentFn.current();
-							console.log('comments', comments);
 							input.current.blur();
-							// scrollRef.current.scrollToOffset({offset: 0});
 						},
 						err => console.log('getCommentListByFeedId', err),
 					);
@@ -176,8 +177,9 @@ export default ReviewDetail = props => {
 				request_number: 1000,
 			},
 			comments => {
-				setComments(comments.msg);
 				// console.log('comments', comments);
+				setComments(comments.msg.filter(e => e.comment_is_delete != true));
+				Modal.close();
 			},
 			err => console.log('getCommentListByFeedId', err),
 		);
@@ -225,12 +227,12 @@ export default ReviewDetail = props => {
 		addChildCommentFn.current = addChildComment;
 		//답글쓰기 시 스크롤 영역 변경
 		if (Platform.OS == 'android') {
-			//안드로이드에서는 scrollToIndex의 최상단으로 이동
+			//안드로이드에서는 scrollToIndex의 최상단으로 이동하기 때문에 영역 설정을 댓글작성 박스보다 위에 두어야 중앙영역으로 이동가능
 			commentListHeight.current > 400
 				? scrollRef.current.scrollToIndex({animated: true, index: 2})
 				: scrollRef.current.scrollToIndex({animated: true, index: 1});
 		} else {
-			//ios scrollToIndex의 중간지점으로 이동하므로 댓글컴포넌트 영역의 높이와 상관없이 스크롤 가능
+			//ios scrollToIndex는 중간지점으로 이동하므로 댓글컴포넌트 영역의 높이와 상관없이 스크롤 가능
 			scrollRef.current.scrollToIndex({animated: true, index: 2});
 		}
 		setTimeout(() => {
@@ -244,6 +246,24 @@ export default ReviewDetail = props => {
 		setEditMode(true);
 		setEditData({...comment});
 		input.current?.focus();
+	};
+
+	//댓글 대댓글 삭제
+	const onPressDelete = id => {
+		console.log('id', id);
+		deleteComment(
+			{
+				commentobject_id: id,
+			},
+			result => {
+				console.log('result / delectComment / ProtectCommentList : ', result.msg.comment_is_delete);
+				Modal.popLoading();
+				getComment();
+			},
+			err => {
+				console.log(' err / deleteComment / ProtectCommentList : ', err);
+			},
+		);
 	};
 
 	//미트볼 클릭
@@ -333,9 +353,24 @@ export default ReviewDetail = props => {
 		navigation.push('CommunityCommentList', {community_object: data});
 	};
 
-	//카테고리 클릭
-	const onPressLikeBriefItem = index => {
-		alert('onPressLikeBriefItem');
+	//하단 리뷰 리스트 좋아요 클릭
+	const onPressLikeBriefItem = (bool, index) => {
+		console.log('index', index);
+		console.log('bool', bool);
+		likeEtc(
+			{
+				collectionName: 'communityobjects',
+				post_object_id: reviewList[index]._id,
+				is_like: bool,
+			},
+			result => {
+				console.log('result / likeEtc / ReviewDetail : ', result.msg.likeEtc);
+				fetchCommunityList();
+			},
+			err => {
+				console.log(' err / likeEtc / ReviewDetail :', err);
+			},
+		);
 	};
 
 	//다른 후기 게시글 클릭
@@ -351,18 +386,6 @@ export default ReviewDetail = props => {
 	const onLayoutCommentList = e => {
 		console.log('onLayoutCommentList', e.nativeEvent.layout);
 		commentListHeight.current = e.nativeEvent.layout.height;
-	};
-
-	//댓글 포커스 onOff
-	const onFocus = () => {
-		if (Platform.OS == 'android') {
-			let ind = 1;
-			// console.log('commentListHeight', commentListHeight.current);
-			comments.length > 4 ? (ind = 2) : (ind = 1);
-			// scrollRef.current.scrollToIndex({animated: true, index: ind});
-		} else {
-			scrollRef.current.scrollToIndex({animated: true, index: 2});
-		}
 	};
 
 	const header = () => {
@@ -388,7 +411,13 @@ export default ReviewDetail = props => {
 	const commentListBox = () => {
 		return (
 			<View style={[style.commentContainer]} onLayout={onLayoutCommentList}>
-				<CommentList items={comments} onPressReplyBtn={onReplyBtnClick} onEdit={onEdit} />
+				<CommentList
+					items={comments}
+					onPressReplyBtn={onReplyBtnClick}
+					onEdit={onEdit}
+					onPressDelete={onPressDelete}
+					onPressDeleteChild={onPressDelete}
+				/>
 			</View>
 		);
 	};

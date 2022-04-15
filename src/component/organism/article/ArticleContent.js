@@ -150,6 +150,8 @@ const ArticleContent = props => {
 		Modal.popPhotoListViewModal([src]);
 	};
 
+	console.log('data.community_is_favorite', data.community_is_favorite);
+
 	return (
 		<View style={[style.container]}>
 			<View style={[style.header]}>

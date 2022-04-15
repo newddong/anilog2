@@ -23,12 +23,25 @@ export default ProtectRequestList = ({navigation, route}) => {
 		request_number: 10000,
 	});
 	const [onlyAdoptable, setOnlyAdoptable] = React.useState(false);
+	React.useEffect(() => {
+		Modal.popLoading();
+		const unsubscribe = navigation.addListener('focus', () => {
+			getList();
+		});
+		getList(); //필터가 바뀔 때마다 호출되도록 설정
+		return unsubscribe;
+	}, [filterData]);
 
 	const getList = () => {
 		getProtectRequestList(
 			filterData,
 			result => {
-				// console.log('result / getProtectRequestList / ProtectRequestList : ', result.msg);
+				// console.log('result / getProtectRequestList / ProtectRequestList : ', result.msg[0]);
+				result.msg.map(v => {
+					if (v.protect_request_writer_id.shelter_name == '요한 보호소') {
+						console.log('is_favorite : ', v.is_favorite);
+					}
+				});
 				result.msg.forEach(each => {
 					each.protect_animal_sex = each.protect_animal_id.protect_animal_sex;
 					each.protect_animal_status = each.protect_animal_id.protect_animal_status;
@@ -45,15 +58,6 @@ export default ProtectRequestList = ({navigation, route}) => {
 			},
 		);
 	};
-
-	React.useEffect(() => {
-		Modal.popLoading();
-		const unsubscribe = navigation.addListener('focus', () => {
-			getList();
-		});
-		getList(); //필터가 바뀔 때마다 호출되도록 설정
-		return unsubscribe;
-	}, [filterData]);
 
 	const onClickLabel = (status, id, item) => {
 		let sexValue = '';
@@ -96,6 +100,9 @@ export default ProtectRequestList = ({navigation, route}) => {
 			},
 			result => {
 				console.log('result / favoriteEtc / ProtectRequestList : ', result.msg.favoriteEtc);
+				let prevData = [...data]; //
+				prevData[index].is_favorite = bool;
+				setData(prevData);
 			},
 			err => {
 				console.log('err / favoriteEtc / PRotectRequestList : ', err);

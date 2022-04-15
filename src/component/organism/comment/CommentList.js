@@ -11,6 +11,8 @@ import {txt} from 'Root/config/textstyle';
  * items : '댓글 목록들',
  * onPress_ChildComment_ReplyBtn : void,
  * onPressReplyBtn : void,
+ * onPressDelete: void,
+ * onPressDeleteChild : void
  * }} props
  */
 export default CommentList = props => {
@@ -23,6 +25,8 @@ export default CommentList = props => {
 				parentComment={item}
 				onPressReplyBtn={props.onPressReplyBtn} // 부모 댓글의 답글쓰기 클릭 이벤트
 				onEdit={props.onEdit}
+				onPressDelete={props.onPressDelete}
+				onPressDeleteChild={props.onPressDeleteChild}
 				like={like}
 			/>
 		);
@@ -68,4 +72,6 @@ CommentList.defaultProps = {
 	items: [],
 	onPressReplyBtn: e => console.log(e),
 	onPress_ChildComment_ReplyBtn: e => console.log(e),
+	onPressDelete: () => {},
+	onPressDeleteChild: () => {},
 };

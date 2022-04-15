@@ -1,10 +1,10 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View} from 'react-native';
+import {FlatList, Text, View} from 'react-native';
 import {login_style} from 'Templete/style_templete';
 import {txt} from 'Root/config/textstyle';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {favoriteEtc, getFavoriteEtcListByUserId} from 'Root/api/favoriteetc';
+import {getFavoriteEtcListByUserId, setFavoriteEtc} from 'Root/api/favoriteetc';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
 import DP from 'Root/config/dp';
@@ -18,7 +18,7 @@ export default FavoriteProtectRequest = ({route}) => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			fetchData();
 		});
-		fetchData();
+		// fetchData();
 		return unsubscribe;
 	}, []);
 
@@ -29,15 +29,16 @@ export default FavoriteProtectRequest = ({route}) => {
 				collectionName: 'protectrequestobjects',
 			},
 			result => {
-				console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg);
+				console.log('result / getFavoriteEtcListByUserId / FavoriteProtectRequest : ', result.msg.length);
 				let temp = [];
 				result.msg.map((v, i) => {
+					v.favorite_etc_target_object_id.is_favorite = v.is_favorite;
 					temp.push(v.favorite_etc_target_object_id);
 				});
 				setData(temp);
 			},
 			err => {
-				console.log('err / getFavoriteEtcListByUserId / FavoriteCommunity : ', err);
+				console.log('err / getFavoriteEtcListByUserId / FavoriteProtectRequest : ', err);
 				setData([]);
 			},
 		);
@@ -45,21 +46,28 @@ export default FavoriteProtectRequest = ({route}) => {
 
 	//별도의 API 사용 예정.
 	const onFavoriteTag = (bool, index) => {
-		// console.log('즐겨찾기=>' + value + ' ' + index);
-		console.log(' data[index]._id', data[index]._id);
 		console.log('bool', bool);
-		favoriteEtc(
+		setFavoriteEtc(
 			{
 				collectionName: 'protectrequestobjects',
-				post_object_id: data[index]._id,
+				target_object_id: data[index]._id,
 				is_favorite: bool,
 			},
 			result => {
-				console.log('result / favoriteEtc / ProtectRequestList : ', result.msg);
+				console.log('result / favoriteEtc / ProtectRequestList : ', result.msg.favoriteEtc);
+				fetchData();
 			},
 			err => {
 				console.log('err / favoriteEtc / PRotectRequestList : ', err);
 			},
+		);
+	};
+
+	const renderItem = ({item, index}) => {
+		return (
+			<View style={{marginTop: 20 * DP}}>
+				<AnimalNeedHelpList data={data} onFavoriteTag={onFavoriteTag} whenEmpty={whenEmpty} />
+			</View>
 		);
 	};
 
@@ -77,9 +85,7 @@ export default FavoriteProtectRequest = ({route}) => {
 	} else
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
-				<View style={{marginTop: 20 * DP}}>
-					<AnimalNeedHelpList data={data} onFavoriteTag={onFavoriteTag} whenEmpty={whenEmpty} />
-				</View>
+				<FlatList data={[{}]} listKey={({item, index}) => index} renderItem={renderItem} showsVerticalScrollIndicator={false} />
 			</View>
 		);
 };

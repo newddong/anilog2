@@ -8,7 +8,7 @@ import ReviewFavoriteBriefList from 'Root/component/organism/list/ReviewFavorite
 import Loading from 'Root/component/molecules/modal/Loading';
 import {likeEtc} from 'Root/api/likeetc';
 import community_obj from 'Root/config/community_obj';
-import {getFavoriteEtcListByUserId, setFavoriteEtc} from 'Root/api/favoriteetc';
+import {getFavoriteEtcListByUserId, setFavoriteEtc, setFavoriteEtcCancelList} from 'Root/api/favoriteetc';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 //즐겨찾기한 피드목록을 조회
@@ -34,9 +34,14 @@ export default FavoriteReview = ({route}) => {
 			},
 			result => {
 				// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg[0]);
-				let reviewCont = result.msg.filter(e => e.favorite_etc_target_object_id.community_type == 'review');
-				let reviewList = reviewCont.map(v => v.favorite_etc_target_object_id);
-				console.log('review length', reviewList.length);
+				let reviewList = [];
+				result.msg.map(v => {
+					if (v.favorite_etc_target_object_id.community_type == 'review') {
+						v.favorite_etc_target_object_id.community_is_favorite = v.is_favorite;
+						v.favorite_etc_target_object_id.community_is_like = v.is_like;
+						reviewList.push(v.favorite_etc_target_object_id);
+					}
+				});
 				setData(reviewList);
 			},
 			err => {
@@ -91,23 +96,22 @@ export default FavoriteReview = ({route}) => {
 	};
 
 	const doDeleteFavorite = list => {
-		list.map((v, i) => {
-			console.log('v.id', v._id, v.community_title);
-			setFavoriteEtc(
-				{
-					collectionName: 'communityobjects',
-					target_object_id: v._id,
-					is_favorite: false,
-				},
-				result => {
-					console.log('result/ onPressLike / FavoriteReview : ', result.msg.favoriteEtc);
-					cancelSelectMode(false);
-					checkSelectMode(false);
-					fetchData();
-				},
-				err => console.log('err / onPressLike / FavoriteReview : ', err),
-			);
-		});
+		const listToDelete = list.map(v => v._id);
+		console.log('listToDelete', listToDelete);
+		setFavoriteEtcCancelList(
+			{
+				collectionName: 'communityobjects',
+				target_object_id: listToDelete,
+				is_favorite: false,
+			},
+			result => {
+				console.log('result/ setFavoriteEtcCancelList / FavoriteReview : ', result.msg);
+				cancelSelectMode(false);
+				checkSelectMode(false);
+				fetchData();
+			},
+			err => console.log('err / setFavoriteEtcCancelList / FavoriteReview : ', err),
+		);
 	};
 
 	// 선택하기 => 전체 선택 클릭

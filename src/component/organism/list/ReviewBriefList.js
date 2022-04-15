@@ -26,7 +26,7 @@ const ReviewBriefList = props => {
 	const renderItem = (item, index) => {
 		return (
 			<View key={index} style={[style.listItem]}>
-				<ReviewBriefItem data={item} onPressReview={() => props.onPressReview(index)} onPressLike={() => props.onPressLike(index)} />
+				<ReviewBriefItem data={item} onPressReview={() => props.onPressReview(index)} onPressLike={bool => props.onPressLike(bool, index)} />
 			</View>
 		);
 	};

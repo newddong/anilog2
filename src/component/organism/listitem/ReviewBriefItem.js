@@ -3,7 +3,7 @@ import {txt} from 'Root/config/textstyle';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import {GRAY10} from 'Root/config/color';
-import {Like48_Border} from 'Root/component/atom/icon';
+import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {getTimeLapsed} from 'Root/util/dateutil';
 
 /**
@@ -14,7 +14,7 @@ import {getTimeLapsed} from 'Root/util/dateutil';
  * @param {()=>void)} props.onPressLike - 좋아요 클릭 이벤트
  */
 const ReviewBriefItem = props => {
-	const data = props.data;
+	const [data, setData] = React.useState(props.data);
 
 	const imageList = () => {
 		let imageList = [];
@@ -30,16 +30,21 @@ const ReviewBriefItem = props => {
 
 	const image = imageList();
 
+	React.useEffect(() => {
+		setData(props.data);
+	}, [props.data]);
+
 	const onPressReview = () => {
 		props.onPressReview();
 	};
 
-	const onPressLike = () => {
-		props.onPressLike();
+	const onPressLike = bool => {
+		props.onPressLike(bool);
+		setData({...data, community_is_like: bool});
 	};
 
 	return (
-		<TouchableOpacity onPress={onPressReview} style={[style.container]}>
+		<TouchableOpacity activeOpacity={0.8} onPress={onPressReview} style={[style.container]}>
 			{image.length == 0 ? (
 				<></>
 			) : (
@@ -68,7 +73,15 @@ const ReviewBriefItem = props => {
 						<Text style={[txt.noto26, {color: GRAY10}]}> {data.community_writer_id.user_nickname}</Text>
 					</View>
 					<View style={[style.like, {width: image.length == 0 ? 300 * DP : 116 * DP, justifyContent: 'flex-end'}]}>
-						<Like48_Border onPress={onPressLike} />
+						{data.community_is_like ? (
+							<TouchableOpacity onPress={() => onPressLike(false)} style={{height: 80 * DP, justifyContent: 'center'}}>
+								<Like48_Filled />
+							</TouchableOpacity>
+						) : (
+							<TouchableOpacity onPress={() => onPressLike(true)} style={{height: 80 * DP, justifyContent: 'center'}}>
+								<Like48_Border />
+							</TouchableOpacity>
+						)}
 						<Text style={[txt.noto26, {color: GRAY10, marginLeft: 12 * DP}]}>{data.community_like_count}</Text>
 					</View>
 				</View>

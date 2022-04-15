@@ -272,16 +272,24 @@ export default PetInfoSetting = ({route, navigation}) => {
 							<View style={[petInfoSetting.petProfileMenu.menuTitle]}>
 								<Text style={[txt.noto30b, {color: GRAY10}]}>소개</Text>
 							</View>
-							<TouchableOpacity onPress={editPetInfo} style={[petInfoSetting.petProfileMenu.bracket50]}>
-								<Text style={[txt.noto26b, {color: APRI10, textDecorationLine: 'underline'}]}>수정</Text>
-							</TouchableOpacity>
+							<View style={[petInfoSetting.petProfileMenu.bracket50]}>
+								{editMode ? (
+									<Text onPress={editPetInfo} style={[txt.noto26b, {color: GRAY10, textDecorationLine: 'underline'}]}>
+										완료
+									</Text>
+								) : (
+									<Text onPress={() => setEditMode(!editMode)} style={[txt.noto26b, {color: APRI10, textDecorationLine: 'underline'}]}>
+										수정
+									</Text>
+								)}
+							</View>
 						</View>
 						<View style={[petInfoSetting.petIntroduction]}>
 							{editMode ? (
 								<TextInput
 									defaultValue={petData.user_introduction || '등록된 반려동물 소개가 없습니다.'}
 									onChangeText={modifyIntroText}
-									style={[txt.noto26, {backgroundColor: GRAY40}]}
+									style={[txt.noto26, {backgroundColor: GRAY40, width: 654 * DP}]}
 									multiline={true}
 									maxLength={500}
 									ref={modifyRef}

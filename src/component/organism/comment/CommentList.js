@@ -4,6 +4,7 @@ import ParentComment from 'Organism/comment/ParentComment';
 import DP from 'Root/config/dp';
 import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
+import AniButton from 'Root/component/molecules/button/AniButton';
 
 /**
  *
@@ -32,6 +33,8 @@ export default CommentList = props => {
 		);
 	};
 
+	const scrollRef = React.useRef();
+
 	const whenEmpty = () => {
 		return (
 			<View
@@ -49,20 +52,32 @@ export default CommentList = props => {
 		);
 	};
 
+	const scrollTo = () => {
+		scrollRef.current.scrollToIndex({animated: true, index: 1});
+		// scrollRef.current.scrollToItem({
+		// 	animated: true,
+		// 	item: props.items[2],
+		// 	viewPosition: 0.5,
+		// });
+	};
+
 	return (
 		<View
 			style={{
 				width: 654 * DP,
-				// backgroundColor: 'red',
 			}}>
+			{/* <AniButton onPress={scrollTo} /> */}
 			<FlatList
 				listKey={({item, index}) => index}
+				keyExtractor={(item, index) => index.toString()}
+				nestedScrollEnabled
 				data={props.items}
 				renderItem={renderItem}
 				ListEmptyComponent={whenEmpty}
 				scrollEnabled={false}
 				initialScrollIndex={2}
 				stickyHeaderIndices={[0]}
+				ref={scrollRef}
 			/>
 		</View>
 	);

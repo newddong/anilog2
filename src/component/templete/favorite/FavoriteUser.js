@@ -22,7 +22,7 @@ export default FavoriteUser = props => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			fetchData();
 		});
-		fetchData();
+		// fetchData();
 		return unsubscribe;
 	}, []);
 
@@ -40,8 +40,8 @@ export default FavoriteUser = props => {
 				} else {
 					result.msg.map((v, i) => {
 						userList.push(v.favorite_etc_target_object_id);
-						setData(userList);
 					});
+					setData(userList);
 				}
 			},
 			err => {

@@ -123,7 +123,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				protect_request_status: 'all', //하단 리스트
 			},
 			result => {
-				console.log('result / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', result.msg.length);
+				// console.log('result / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', result.msg);
 				//현재 보고 있는 보호요청게시글의 작성자(보호소)의 모든 보호요청게시글이 담겨 있는 writersAnotherRequests
 				//그러나 현재 보고 있는 보호요청게시글은 해당 리스트에 출력이 되어서는 안됨 => Filter처리
 				const filteredList = result.msg.filter(e => e._id != route.params.id);
@@ -207,12 +207,24 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		}
 	};
 
-	//보호요청 더보기의 리스트 중 한 아이템의 좋아요 태그 클릭
-	const onPressFavoriteTag = (item, index) => {
-		console.log('FavoriteTag', index, item);
+	//보호요청 더보기의 리스트 중 한 아이템의 즐겨찾기 태그 클릭
+	const onPressFavoriteTag = (bool, index) => {
+		setFavoriteEtc(
+			{
+				collectionName: 'protectrequestobjects',
+				target_object_id: writersAnotherRequests[index]._id,
+				is_favorite: bool,
+			},
+			result => {
+				// console.log('result / setFavoriteEtc /  :', result.msg);
+			},
+			err => {
+				console.log('err / setFavoriteEtc / : ', err);
+			},
+		);
 	};
 
-	//보호요청 게시글 작성 보호소 라벨의 좋아요 태그 클릭
+	//보호요청 게시글 작성 보호소 라벨의 즐겨찾기 태그 클릭
 	const onPressShelterLabelFavorite = bool => {
 		setFavoriteEtc(
 			{

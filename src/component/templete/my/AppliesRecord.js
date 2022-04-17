@@ -9,6 +9,7 @@ import {appliesRecord, login_style} from 'Templete/style_templete';
 import AnimalNeedHelp from 'Root/component/organism/listitem/AnimalNeedHelp';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Loading from 'Root/component/molecules/modal/Loading';
+import {setFavoriteEtc} from 'Root/api/favoriteetc';
 
 export default AppliesRecord = ({route}) => {
 	//첫번째 값만 신청내역에 보여주기 위함. AnimalNeedHelpList가 배열 데이터를 다루기 때문에 반드시 객체가 배열이어야 함.
@@ -39,7 +40,7 @@ export default AppliesRecord = ({route}) => {
 					adopt.protect_animal_species_detail = adopt.protect_act_request_article_id.protect_animal_species_detail;
 					adopt.protect_animal_rescue_location = adopt.protect_act_request_article_id.protect_animal_id.protect_animal_rescue_location;
 					adopt.protect_request_writer_id = adopt.protect_act_request_article_id.protect_request_writer_id;
-					delete adopt.protect_act_request_article_id;
+					// delete adopt.protect_act_request_article_id;
 					const adoptArr = [adopt];
 					setAdopt_application_list(adoptArr);
 				} else {
@@ -56,7 +57,7 @@ export default AppliesRecord = ({route}) => {
 					protect.protect_request_status = protect.protect_act_request_article_id.protect_request_status;
 					protect.shelter_name = protect.protect_act_request_article_id.protect_request_writer_id.shelter_name;
 					protect.protect_request_writer_id = protect.protect_act_request_article_id.protect_request_writer_id;
-					delete protect.protect_act_request_article_id;
+					// delete protect.protect_act_request_article_id;
 					const protectArr = [protect];
 					setProtect_application_list(protectArr);
 				} else {
@@ -102,13 +103,27 @@ export default AppliesRecord = ({route}) => {
 		navigation.push('ManageUserVolunteer'); // 활동 예정중인 신청, 지난 신청 등 나의 신청 목록을 보내줘야 알 수 있는 부분
 	};
 
-	const onOff_FavoriteTag = bool => {
+	const onOff_FavoriteTag = (bool, isAdopt) => {
 		console.log('즐겨찾기=>' + bool);
+		setFavoriteEtc(
+			{
+				collectionName: 'protectrequestobjects',
+				target_object_id: isAdopt
+					? adopt_application_list[0].protect_act_request_article_id._id
+					: protect_application_list[0].protect_act_request_article_id._id,
+				is_favorite: bool,
+			},
+			result => {
+				console.log('result / setFavoriteEtc : ', result.msg.favoriteEtc);
+			},
+			err => {
+				console.log('err / setFavoriteEtc : ', err);
+			},
+		);
 	};
 
 	//봉사활동 신청 하단 라벨 클릭
 	const onClickShelterLabel = shelterInfo => {
-		console.log('shelterInfi', shelterInfo);
 		let volunteerData = shelterInfo;
 		volunteerData.route = route.name;
 		navigation.push('UserVolunteerForm', volunteerData); //봉사 활동 신청 관련
@@ -147,7 +162,11 @@ export default AppliesRecord = ({route}) => {
 							)}
 						</View>
 						{adopt_application_list != undefined && adopt_application_list.length > 0 ? (
-							<AnimalNeedHelp data={adopt_application_list[0]} onClickLabel={onClickAdoptApplication} onFavoriteTag={onOff_FavoriteTag} />
+							<AnimalNeedHelp
+								data={adopt_application_list[0]}
+								onClickLabel={onClickAdoptApplication}
+								onFavoriteTag={bool => onOff_FavoriteTag(bool, true)}
+							/>
 						) : (
 							<>
 								<EmptyIcon />
@@ -168,7 +187,11 @@ export default AppliesRecord = ({route}) => {
 							)}
 						</View>
 						{protect_application_list != undefined && protect_application_list.length > 0 ? (
-							<AnimalNeedHelp data={protect_application_list[0]} onClickLabel={onClickProtectApplication} />
+							<AnimalNeedHelp
+								data={protect_application_list[0]}
+								onClickLabel={onClickProtectApplication}
+								onFavoriteTag={bool => onOff_FavoriteTag(bool, false)}
+							/>
 						) : (
 							<>
 								<EmptyIcon />

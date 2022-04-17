@@ -3,7 +3,14 @@ import React from 'react';
 import {Text, View, FlatList, StyleSheet} from 'react-native';
 import CommentList from 'Organism/comment/CommentList';
 import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
-import {createComment, getCommentListByCommunityId, getCommentListByFeedId, getCommentListByProtectId, updateComment} from 'Root/api/commentapi';
+import {
+	createComment,
+	deleteComment,
+	getCommentListByCommunityId,
+	getCommentListByFeedId,
+	getCommentListByProtectId,
+	updateComment,
+} from 'Root/api/commentapi';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -13,6 +20,7 @@ import {GRAY10, GRAY20} from 'Root/config/color';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import community_obj from 'Root/config/community_obj';
 import Loading from 'Root/component/molecules/modal/Loading';
+import AniButton from 'Root/component/molecules/button/AniButton';
 
 export default CommunityCommentList = props => {
 	// console.log('props.showAllContents', props.route.params.showAllContents);
@@ -35,17 +43,7 @@ export default CommunityCommentList = props => {
 	});
 
 	React.useEffect(() => {
-		getCommentListByCommunityId(
-			{
-				community_object_id: data._id,
-				request_number: 1000,
-			},
-			comments => {
-				setComments(comments.msg);
-				// console.log('comments', comments);
-			},
-			err => console.log('err', err),
-		);
+		fetchData();
 		navigation.setOptions({title: '댓글 쓰기'});
 		navigation.addListener('blur', () => {
 			community_obj.object = {};
@@ -53,6 +51,24 @@ export default CommunityCommentList = props => {
 			community_obj.object.initial = true;
 		});
 	}, []);
+
+	const fetchData = () => {
+		getCommentListByCommunityId(
+			{
+				community_object_id: data._id,
+				request_number: 1000,
+			},
+			comments => {
+				setComments(comments.msg.filter(e => e.comment_is_delete != true));
+				// console.log('comments', comments);
+				Modal.close();
+			},
+			err => {
+				console.log('err', err);
+				Modal.close();
+			},
+		);
+	};
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
 	const onWrite = () => {
@@ -93,7 +109,7 @@ export default CommunityCommentList = props => {
 						},
 						comments => {
 							!parentComment && setComments([]); //댓글목록 초기화
-							setComments(comments.msg);
+							setComments(comments.msg.filter(e => e.comment_is_delete != true));
 							parentComment && addChildCommentFn.current();
 							// console.log('comments', comments);
 						},
@@ -119,7 +135,7 @@ export default CommunityCommentList = props => {
 						},
 						comments => {
 							!parentComment && setComments([]); //댓글목록 초기화
-							setComments(comments.msg);
+							setComments(comments.msg.filter(e => e.comment_is_delete != true));
 							parentComment && addChildCommentFn.current();
 							console.log('comments', comments);
 							input.current.blur();
@@ -182,6 +198,23 @@ export default CommunityCommentList = props => {
 		setReplyHeight(e.nativeEvent.layout.height);
 	};
 
+	//댓글 대댓글 삭제
+	const onPressDelete = id => {
+		deleteComment(
+			{
+				commentobject_id: id,
+			},
+			result => {
+				console.log('result / delectComment / ProtectCommentList : ', result.msg.comment_is_delete);
+				Modal.popLoading();
+				fetchData();
+			},
+			err => {
+				console.log(' err / deleteComment / ProtectCommentList : ', err);
+			},
+		);
+	};
+
 	//미트볼, 수정을 누르면 동작
 	const onEdit = comment => {
 		console.log('수정 데이터', comment);
@@ -199,7 +232,13 @@ export default CommunityCommentList = props => {
 		if (index > 0)
 			return (
 				<View style={{marginLeft: 20 * DP, paddingBottom: 50 * DP}}>
-					<CommentList items={item} onPressReplyBtn={onReplyBtnClick} onEdit={onEdit} />
+					<CommentList
+						items={item}
+						onPressReplyBtn={onReplyBtnClick}
+						onEdit={onEdit}
+						onPressDelete={onPressDelete}
+						onPressDeleteChild={onPressDelete}
+					/>
 				</View>
 			);
 	};
@@ -208,8 +247,13 @@ export default CommunityCommentList = props => {
 		currentPosition.current = e.nativeEvent.contentOffset.y;
 	};
 
+	const scrollToD = () => {
+		flatlist.current.scrollToIndex({index: 1, animated: true});
+	};
+
 	return (
 		<View style={[style.container]}>
+			{/* <AniButton onPress={scrollToD} /> */}
 			{comments == 'false' ? (
 				<Loading isModal={false} />
 			) : (

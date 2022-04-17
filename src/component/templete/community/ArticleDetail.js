@@ -42,6 +42,7 @@ export default ArticleDetail = props => {
 	});
 	community_obj.current = data._id;
 	const flatListRef = React.useRef();
+	const commentListHeight = React.useRef(100);
 
 	React.useEffect(() => {
 		setData(props.route.params.community_object);
@@ -255,7 +256,7 @@ export default ArticleDetail = props => {
 		input.current.focus();
 		editComment || setEditComment(true);
 		addChildCommentFn.current = addChildComment;
-		flatListRef.current.scrollToIndex({animated: true, index: 1});
+		scrollToReplyBox();
 	};
 
 	//답글 쓰기 후 댓글 작성자 우측 답글취소 버튼 클릭
@@ -335,7 +336,22 @@ export default ArticleDetail = props => {
 		console.log('수정 데이터', comment);
 		setEditMode(true);
 		setEditData({...comment});
-		input.current?.focus();
+		scrollToReplyBox();
+	};
+
+	const scrollToReplyBox = () => {
+		if (Platform.OS == 'android') {
+			//안드로이드에서는 scrollToIndex의 최상단으로 이동하기 때문에 영역 설정을 댓글작성 박스보다 위에 두어야 중앙영역으로 이동가능
+			commentListHeight.current > 400
+				? flatListRef.current.scrollToIndex({animated: true, index: 2})
+				: flatListRef.current.scrollToIndex({animated: true, index: 1});
+		} else {
+			//ios scrollToIndex는 중간지점으로 이동하므로 댓글컴포넌트 영역의 높이와 상관없이 스크롤 가능
+			flatListRef.current.scrollToIndex({animated: true, index: 1});
+		}
+		setTimeout(() => {
+			input.current.focus();
+		}, 200);
 	};
 
 	// 게시글 내용 클릭
@@ -400,6 +416,10 @@ export default ArticleDetail = props => {
 		);
 	};
 
+	const onLayoutCommentList = e => {
+		commentListHeight.current = e.nativeEvent.layout.height;
+	};
+
 	const header = () => {
 		return (
 			<View>
@@ -426,15 +446,20 @@ export default ArticleDetail = props => {
 						<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
 					</View>
 				)}
-				<View style={[style.commentContainer, {alignItems: 'center'}]}>
-					<CommentList
-						items={comments}
-						onPressReplyBtn={onReplyBtnClick}
-						onEdit={onEdit}
-						onPressDelete={onPressDelete}
-						onPressDeleteChild={onPressDelete}
-					/>
-				</View>
+			</View>
+		);
+	};
+
+	const commentListBox = () => {
+		return (
+			<View onLayout={onLayoutCommentList} style={[style.commentContainer, {alignItems: 'center'}]}>
+				<CommentList
+					items={comments}
+					onPressReplyBtn={onReplyBtnClick}
+					onEdit={onEdit}
+					onPressDelete={onPressDelete}
+					onPressDeleteChild={onPressDelete}
+				/>
 			</View>
 		);
 	};
@@ -464,7 +489,8 @@ export default ArticleDetail = props => {
 			</View>
 		);
 	};
-	const components = [header(), commentBox()];
+
+	const components = [header(), commentListBox(), commentBox()];
 
 	const renderItem = ({item, index}) => {
 		return item;

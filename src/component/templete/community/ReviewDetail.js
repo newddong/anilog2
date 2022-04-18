@@ -2,7 +2,7 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {FlatList, Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {GRAY10, GRAY20, GRAY30} from 'Root/config/color';
+import {GRAY10, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
 import CommentList from 'Root/component/organism/comment/CommentList';
 import ReviewBriefList from 'Root/component/organism/list/ReviewBriefList';
 import {useNavigation} from '@react-navigation/core';
@@ -19,6 +19,7 @@ import {REPORT_MENU} from 'Root/i18n/msg';
 import {likeEtc} from 'Root/api/likeetc';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import {ScrollView as GestureHandlerScrollView} from 'react-native-gesture-handler';
+import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 
 /**
  * 후기 상세 내용
@@ -92,7 +93,6 @@ export default ReviewDetail = props => {
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
 	const onWrite = () => {
 		console.log('edt', editData);
-		Modal.popLoading();
 		if (editData.comment_contents.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
 
 		let param = {
@@ -114,43 +114,19 @@ export default ReviewDetail = props => {
 		}
 
 		if (editMode) {
-			console.log('댓글편집', editData);
+			// console.log('댓글편집', editData);
+			let whichComment = '';
+			comments.map((v, i) => {
+				if (v._id == editData._id) {
+					whichComment = i;
+				}
+			});
 			updateComment(
 				{
 					...param,
 					commentobject_id: editData._id,
 					comment_photo_remove: !editData.comment_photo_uri || editData.comment_photo_uri == 0,
 				},
-				result => {
-					console.log(result);
-					setParentComment();
-					setEditData({
-						comment_contents: '',
-						comment_photo_uri: '',
-					});
-					getCommentListByCommunityId(
-						{
-							community_object_id: data._id,
-							request_number: 1000,
-						},
-						comments => {
-							!parentComment && setComments([]); //댓글목록 초기화
-							setComments(comments.msg.filter(e => e.comment_is_delete != true));
-							parentComment && addChildCommentFn.current();
-							// console.log('comments', comments);
-							Modal.close();
-						},
-						err => {
-							console.log('getCommentListByFeedId', err);
-							Modal.close();
-						},
-					);
-				},
-				err => Modal.alert(err),
-			);
-		} else {
-			createComment(
-				param,
 				result => {
 					// console.log(result);
 					setParentComment();
@@ -167,8 +143,54 @@ export default ReviewDetail = props => {
 							!parentComment && setComments([]); //댓글목록 초기화
 							setComments(comments.msg.filter(e => e.comment_is_delete != true));
 							parentComment && addChildCommentFn.current();
+							// console.log('comments', comments);
+							setTimeout(() => {
+								scrollRef.current.scrollToIndex({animated: true, index: whichComment});
+							}, 500);
+							Modal.close();
+						},
+						err => {
+							console.log('getCommentListByFeedId', err);
+							Modal.close();
+						},
+					);
+				},
+				err => Modal.alert(err),
+			);
+		} else {
+			let whichParent = '';
+			if (parentComment) {
+				comments.map((v, i) => {
+					if (v._id == param.commentobject_id) {
+						whichParent = i;
+					}
+				});
+			}
+			// console.log('whichParent', whichParent);
+			createComment(
+				param,
+				result => {
+					// console.log(result);
+					setParentComment();
+					setEditData({
+						comment_contents: '',
+						comment_photo_uri: '',
+					});
+					getCommentListByCommunityId(
+						{
+							community_object_id: data._id,
+							request_number: 1000,
+						},
+						result => {
+							!parentComment && setComments([]); //댓글목록 초기화
+							setComments(result.msg.filter(e => e.comment_is_delete != true));
+							parentComment && addChildCommentFn.current();
 							input.current.blur();
-							scrollRef.current.scrollToIndex({animated: true, index: 2});
+							setTimeout(() => {
+								whichParent == ''
+									? scrollRef.current.scrollToIndex({animated: true, index: 0})
+									: scrollRef.current.scrollToIndex({animated: true, index: whichParent});
+							}, 500);
 							Modal.close();
 						},
 						err => {
@@ -236,6 +258,7 @@ export default ReviewDetail = props => {
 		setParentComment(parentCommentId);
 		editComment || setEditComment(true);
 		addChildCommentFn.current = addChildComment;
+		// input.current?.focus();
 		scrollToReplyBox();
 	};
 
@@ -247,18 +270,10 @@ export default ReviewDetail = props => {
 	};
 
 	const scrollToReplyBox = () => {
-		if (Platform.OS == 'android') {
-			//안드로이드에서는 scrollToIndex의 최상단으로 이동하기 때문에 영역 설정을 댓글작성 박스보다 위에 두어야 중앙영역으로 이동가능
-			commentListHeight.current > 400
-				? scrollRef.current.scrollToIndex({animated: true, index: 2, viewPosition: 0})
-				: scrollRef.current.scrollToIndex({animated: true, index: 1, viewPosition: 0});
-		} else {
-			//ios scrollToIndex는 중간지점으로 이동하므로 댓글컴포넌트 영역의 높이와 상관없이 스크롤 가능
-			scrollRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 0});
-		}
+		scrollRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 0});
 		setTimeout(() => {
-			input.current.focus();
-		}, 200);
+			input.current?.focus();
+		}, 500);
 	};
 
 	//댓글 대댓글 삭제
@@ -405,13 +420,11 @@ export default ReviewDetail = props => {
 				<View style={[style.separator]} />
 				<View style={[style.commentList]}>
 					{comments && comments.length > 0 ? (
-						<TouchableOpacity onPress={onPressReply} style={[style.replyCountContainer]}>
-							<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개 모두 보기</Text>
-						</TouchableOpacity>
-					) : (
 						<View style={[style.replyCountContainer, {alignSelf: 'center', alignItems: 'flex-start'}]}>
 							<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
 						</View>
+					) : (
+						<></>
 					)}
 				</View>
 			</View>
@@ -421,6 +434,7 @@ export default ReviewDetail = props => {
 	const bottom = () => {
 		return (
 			<View style={{alignItems: 'center'}}>
+				<View style={[{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY40}]} />
 				<View style={[{marginTop: 20 * DP, marginBottom: 30 * DP}]}>
 					<ReplyWriteBox
 						onAddPhoto={onAddPhoto}
@@ -450,43 +464,6 @@ export default ReviewDetail = props => {
 		);
 	};
 
-	const indexToScroll = () => {
-		return <View style={{height: 10 * DP}}></View>;
-	};
-
-	const edge = () => {
-		return <View style={{height: 10 * DP}}></View>;
-	};
-
-	const [com, setComs] = React.useState([]);
-
-	React.useEffect(() => {
-		let temp = [...com];
-		if (reviewList != 'false' && comments != 'false') {
-			temp.push(header());
-			comments.map((v, i) => {
-				let com = () => {
-					return (
-						<View style={[style.commentContainer]} key={v._id} onLayout={onLayoutCommentList}>
-							<ParentComment
-								parentComment={v}
-								onPressReplyBtn={onReplyBtnClick} // 부모 댓글의 답글쓰기 클릭 이벤트
-								onEdit={onEdit}
-								onPressDelete={onPressDelete}
-								onPressDeleteChild={onPressDelete}
-							/>
-						</View>
-					);
-				};
-				// components.splice(1, 0, com());
-				temp.push(com());
-			});
-			temp.push(indexToScroll());
-			temp.push(bottom());
-			setComs(temp);
-		}
-	}, [comments, reviewList]);
-
 	const renderItem = ({item, index}) => {
 		// return item;
 		return (
@@ -502,8 +479,7 @@ export default ReviewDetail = props => {
 		);
 	};
 
-	// if (reviewList == 'false' || comments == 'false') {
-	if (com.length == 0) {
+	if (reviewList == 'false' || comments == 'false') {
 		return <Loading isModal={false} />;
 	} else
 		return (
@@ -514,12 +490,13 @@ export default ReviewDetail = props => {
 					listKey={({item, index}) => index}
 					ListHeaderComponent={header()}
 					ListFooterComponent={bottom()}
+					ListEmptyComponent={<Text style={[txt.roboto28b, {color: GRAY10, paddingVertical: 40 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>}
 					showsVerticalScrollIndicator={false}
-					onContentSizeChange={(width, height) => {
-						if (showMore) {
-							Platform.OS == 'android' ? scrollRef.current.scrollToEnd() : scrollRef.current.scrollToIndex({index: 2});
-						}
-					}}
+					// onContentSizeChange={(width, height) => {
+					// 	if (showMore) {
+					// 		Platform.OS == 'android' ? scrollRef.current.scrollToEnd() : scrollRef.current.scrollToEnd();
+					// 	}
+					// }}
 					renderItem={renderItem}
 				/>
 			</View>
@@ -539,7 +516,7 @@ const style = StyleSheet.create({
 	separator: {
 		width: 654 * DP,
 		height: 2 * DP,
-		backgroundColor: GRAY30,
+		backgroundColor: GRAY40,
 		marginTop: 30 * DP,
 	},
 	commentList: {},
@@ -558,8 +535,5 @@ const style = StyleSheet.create({
 	},
 	commentContainer: {
 		alignItems: 'center',
-		// paddingBottom: 10 * DP,
-		// paddingTop: 20 * DP,
-		// backgroundColor: 'yellow',
 	},
 });

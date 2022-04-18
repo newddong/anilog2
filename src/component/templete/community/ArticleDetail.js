@@ -18,6 +18,7 @@ import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
 import {REPORT_MENU} from 'Root/i18n/msg';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
+import ParentComment from 'Root/component/organism/comment/ParentComment';
 
 /**
  * 자유게시글 상세 내용
@@ -156,6 +157,12 @@ export default ArticleDetail = props => {
 		}
 
 		if (editMode) {
+			let whichComment = '';
+			comments.map((v, i) => {
+				if (v._id == editData._id) {
+					whichComment = i;
+				}
+			});
 			updateComment(
 				{
 					...param,
@@ -179,6 +186,9 @@ export default ArticleDetail = props => {
 							setComments(comments.msg.filter(e => e.comment_is_delete != true));
 							parentComment && addChildCommentFn.current();
 							// console.log('comments', comments);
+							setTimeout(() => {
+								flatListRef.current.scrollToIndex({animated: true, index: whichComment});
+							}, 500);
 						},
 						err => console.log('getCommentListByFeedId', err),
 					);
@@ -186,6 +196,14 @@ export default ArticleDetail = props => {
 				err => Modal.alert(err),
 			);
 		} else {
+			let whichParent = '';
+			if (parentComment) {
+				comments.map((v, i) => {
+					if (v._id == param.commentobject_id) {
+						whichParent = i;
+					}
+				});
+			}
 			createComment(
 				param,
 				result => {
@@ -205,6 +223,11 @@ export default ArticleDetail = props => {
 							setComments(comments.msg.filter(e => e.comment_is_delete != true));
 							parentComment && addChildCommentFn.current();
 							// console.log('comments', comments);
+							setTimeout(() => {
+								whichParent == ''
+									? flatListRef.current.scrollToIndex({animated: true, index: 0})
+									: flatListRef.current.scrollToIndex({animated: true, index: whichParent});
+							}, 500);
 							input.current.blur();
 						},
 						err => console.log('getCommentListByFeedId', err),
@@ -253,10 +276,24 @@ export default ArticleDetail = props => {
 	const onReplyBtnClick = (parentCommentId, addChildComment) => {
 		console.log('대댓글 쓰기 버튼 클릭 : ', parentCommentId.comment_writer_id.user_nickname);
 		setParentComment(parentCommentId);
-		input.current.focus();
 		editComment || setEditComment(true);
 		addChildCommentFn.current = addChildComment;
 		scrollToReplyBox();
+	};
+
+	//미트볼, 수정을 누르면 동작
+	const onEdit = comment => {
+		console.log('수정 데이터', comment);
+		setEditMode(true);
+		setEditData({...comment});
+		scrollToReplyBox();
+	};
+
+	const scrollToReplyBox = () => {
+		flatListRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 0});
+		setTimeout(() => {
+			input.current?.focus();
+		}, 500);
 	};
 
 	//답글 쓰기 후 댓글 작성자 우측 답글취소 버튼 클릭
@@ -331,29 +368,6 @@ export default ArticleDetail = props => {
 		);
 	};
 
-	//미트볼, 수정을 누르면 동작
-	const onEdit = comment => {
-		console.log('수정 데이터', comment);
-		setEditMode(true);
-		setEditData({...comment});
-		scrollToReplyBox();
-	};
-
-	const scrollToReplyBox = () => {
-		if (Platform.OS == 'android') {
-			//안드로이드에서는 scrollToIndex의 최상단으로 이동하기 때문에 영역 설정을 댓글작성 박스보다 위에 두어야 중앙영역으로 이동가능
-			commentListHeight.current > 400
-				? flatListRef.current.scrollToIndex({animated: true, index: 2})
-				: flatListRef.current.scrollToIndex({animated: true, index: 1});
-		} else {
-			//ios scrollToIndex는 중간지점으로 이동하므로 댓글컴포넌트 영역의 높이와 상관없이 스크롤 가능
-			flatListRef.current.scrollToIndex({animated: true, index: 1});
-		}
-		setTimeout(() => {
-			input.current.focus();
-		}, 200);
-	};
-
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
 		// console.log('articleList[index]', articleList[index]);
@@ -383,7 +397,6 @@ export default ArticleDetail = props => {
 
 	//댓글 대댓글 삭제
 	const onPressDelete = id => {
-		console.log('id', id);
 		deleteComment(
 			{
 				commentobject_id: id,
@@ -450,21 +463,7 @@ export default ArticleDetail = props => {
 		);
 	};
 
-	const commentListBox = () => {
-		return (
-			<View onLayout={onLayoutCommentList} style={[style.commentContainer, {alignItems: 'center'}]}>
-				<CommentList
-					items={comments}
-					onPressReplyBtn={onReplyBtnClick}
-					onEdit={onEdit}
-					onPressDelete={onPressDelete}
-					onPressDeleteChild={onPressDelete}
-				/>
-			</View>
-		);
-	};
-
-	const commentBox = () => {
+	const bottom = () => {
 		return (
 			<View style={{alignItems: 'center'}}>
 				<View style={[{marginTop: 40 * DP, marginBottom: 80 * DP}]}>
@@ -490,10 +489,19 @@ export default ArticleDetail = props => {
 		);
 	};
 
-	const components = [header(), commentListBox(), commentBox()];
-
 	const renderItem = ({item, index}) => {
-		return item;
+		// return item;
+		return (
+			<View style={[style.commentContainer]} key={item._id} onLayout={onLayoutCommentList}>
+				<ParentComment
+					parentComment={item}
+					onPressReplyBtn={onReplyBtnClick} // 부모 댓글의 답글쓰기 클릭 이벤트
+					onEdit={onEdit}
+					onPressDelete={onPressDelete}
+					onPressDeleteChild={onPressDelete}
+				/>
+			</View>
+		);
 	};
 
 	if (comments == 'false' || data == 'false') {
@@ -501,15 +509,15 @@ export default ArticleDetail = props => {
 	} else
 		return (
 			<View style={[style.container]}>
-				<View style={[{paddingBottom: 40 * DP}]}>
-					<FlatList
-						data={components}
-						ref={flatListRef}
-						listKey={({item, index}) => index}
-						renderItem={renderItem}
-						showsVerticalScrollIndicator={false}
-					/>
-				</View>
+				<FlatList
+					data={comments}
+					ref={flatListRef}
+					listKey={({item, index}) => index}
+					ListHeaderComponent={header()}
+					ListFooterComponent={bottom()}
+					showsVerticalScrollIndicator={false}
+					renderItem={renderItem}
+				/>
 			</View>
 		);
 };
@@ -554,6 +562,7 @@ const style = StyleSheet.create({
 	commentContainer: {
 		paddingBottom: 10 * DP,
 		paddingTop: 20 * DP,
+		alignItems: 'center',
 		// backgroundColor: 'yellow',
 	},
 	footer: {

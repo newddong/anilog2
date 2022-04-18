@@ -14,6 +14,9 @@ import {getUserProfile} from 'Root/api/userapi';
 import {CommonActions, useNavigationState} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 import {getFeedDetailById} from 'Root/api/feedapi';
+import {getUserVolunteerActivityList, getVolunteerActivityById} from 'Root/api/volunteerapi';
+import {getApplyDetailById} from 'Root/api/protectapi';
+import {getAppliesRecord} from 'Root/api/protectapi';
 const wait = timeout => {
 	return new Promise(resolve => setTimeout(resolve, timeout));
 };
@@ -151,6 +154,31 @@ const AlarmList = props => {
 						}),
 					);
 				});
+				break;
+			case 'VolunteerActivityApplicantObject':
+				getUserVolunteerActivityList({}, result => {
+					console.log('result', result.msg);
+					let result_msg = result.msg;
+
+					for (let i of result_msg) {
+						if (i._id == data.target_object) {
+							navigation.push('ShelterVolunteerForm', i);
+						}
+					}
+				});
+				break;
+			case 'ProtectionActivityApplicantObject':
+				// getAppliesRecord
+				getApplyDetailById({protect_act_object_id: data.target_object}, result => {
+					let result_msg = result.msg;
+					result_msg.shelter_name = result.msg.protect_act_request_shelter_id.shelter_name;
+					result_msg.protect_request_date = result.msg.protect_act_request_article_id.protect_request_date;
+					result_msg.protect_animal_rescue_location = result.msg.protect_act_request_article_id.protect_animal_id.protect_animal_rescue_location;
+					result.msg.protect_request_photos_uri = result.msg.protect_act_request_article_id.protect_request_photos_uri;
+					console.log('result', result_msg);
+					navigation.push('ApplyAdoptionDetails', result_msg);
+				});
+
 				break;
 		}
 	};

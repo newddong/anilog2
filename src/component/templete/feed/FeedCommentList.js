@@ -226,10 +226,16 @@ export default FeedCommentList = props => {
 	// 답글 쓰기 버튼 클릭 콜백함수
 	const onReplyBtnClick = (parentCommentId, addChildComment) => {
 		// console.log('onReplyBtnClick : ', parentCommentId);
-		setParentComment(parentCommentId);
-		input.current.focus();
-		editComment || setEditComment(true);
-		addChildCommentFn.current = addChildComment;
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setParentComment(parentCommentId);
+			input.current.focus();
+			editComment || setEditComment(true);
+			addChildCommentFn.current = addChildComment;
+		}
 	};
 
 	const [heightReply, setReplyHeight] = React.useState(0);

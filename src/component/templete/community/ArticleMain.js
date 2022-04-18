@@ -9,6 +9,7 @@ import {getCommunityList} from 'Root/api/community';
 import Modal from 'Root/component/modal/Modal';
 import Loading from 'Root/component/molecules/modal/Loading';
 import community_obj from 'Root/config/community_obj';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default ArticleMain = ({route}) => {
 	const navigation = useNavigation();
@@ -58,8 +59,14 @@ export default ArticleMain = ({route}) => {
 
 	//글쓰기
 	const onPressWrite = () => {
-		navigation.navigate('CommunityWrite', {isReview: false});
-		// navigation.push('WriteEditorTest');
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			navigation.navigate('CommunityWrite', {isReview: false});
+			// navigation.push('WriteEditorTest');
+		}
 	};
 
 	const [onlyTalk, setOnlyTalk] = React.useState(false);

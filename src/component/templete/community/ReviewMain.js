@@ -141,17 +141,24 @@ export default ReviewMain = ({route, navigation}) => {
 						break;
 					case '신고':
 						Modal.close();
-						setTimeout(() => {
-							Modal.popOneBtnSelectModal(
-								REPORT_MENU,
-								'이 게시물을 신고 하시겠습니까?',
-								selectedItem => {
-									alert(selectedItem);
-								},
-								'신고',
-							);
-						}, 200);
-
+						if (userGlobalObject.userInfo.isPreviewMode) {
+							setTimeout(() => {
+								Modal.popLoginRequestModal(() => {
+									navigation.navigate('Login');
+								});
+							}, 100);
+						} else {
+							setTimeout(() => {
+								Modal.popOneBtnSelectModal(
+									REPORT_MENU,
+									'이 게시물을 신고 하시겠습니까?',
+									selectedItem => {
+										alert(selectedItem);
+									},
+									'신고',
+								);
+							}, 200);
+						}
 						break;
 					default:
 						break;
@@ -326,18 +333,24 @@ export default ReviewMain = ({route, navigation}) => {
 	//리뷰 좋아요 클릭
 	const onPressLike = (index, bool) => {
 		console.log('index', index, bool);
-		likeEtc(
-			{
-				collectionName: 'communityobjects',
-				post_object_id: data[index]._id,
-				is_like: bool,
-			},
-			result => {
-				console.log('result/ onPressLike / ReviewMain : ', result.msg);
-				fetchData();
-			},
-			err => console.log('err / onPressLike / ReviewMain : ', err),
-		);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			likeEtc(
+				{
+					collectionName: 'communityobjects',
+					post_object_id: data[index]._id,
+					is_like: bool,
+				},
+				result => {
+					console.log('result/ onPressLike / ReviewMain : ', result.msg);
+					fetchData();
+				},
+				err => console.log('err / onPressLike / ReviewMain : ', err),
+			);
+		}
 	};
 
 	//댓글 모두 보기 클릭
@@ -352,7 +365,13 @@ export default ReviewMain = ({route, navigation}) => {
 
 	//글쓰기 아이콘 클릭
 	const onPressWrite = () => {
-		navigation.navigate('CommunityWrite', {isReview: true});
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			navigation.navigate('CommunityWrite', {isReview: true});
+		}
 	};
 
 	//즐겨찾기 클릭

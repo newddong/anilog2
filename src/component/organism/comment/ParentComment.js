@@ -63,21 +63,27 @@ export default ParentComment = React.memo((props, ref) => {
 	};
 
 	const onCLickHeart = () => {
-		setLikeState(!likeState);
-		likeComment(
-			{
-				commentobject_id: props.parentComment._id,
-				userobject_id: userGlobalObject.userInfo._id,
-				is_like: !likeState,
-			},
-			({msg}) => {
-				setLikeCount(msg.targetComment.comment_like_count);
-			},
-			error => {
-				console.log(error);
-			},
-		);
-		props.like && props.like(props.parentComment);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setLikeState(!likeState);
+			likeComment(
+				{
+					commentobject_id: props.parentComment._id,
+					userobject_id: userGlobalObject.userInfo._id,
+					is_like: !likeState,
+				},
+				({msg}) => {
+					setLikeCount(msg.targetComment.comment_like_count);
+				},
+				error => {
+					console.log(error);
+				},
+			);
+			props.like && props.like(props.parentComment);
+		}
 	};
 
 	//답글 ~개 보기 클릭

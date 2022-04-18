@@ -136,129 +136,147 @@ export default ArticleDetail = props => {
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
 	const onWrite = () => {
-		if (editData.comment_contents.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
-
-		let param = {
-			comment_contents: editData.comment_contents, //내용
-			comment_is_secure: privateComment, //공개여부 테스트때 반영
-			community_object_id: data._id,
-		};
-
-		if (editData.comment_photo_uri && editData.comment_photo_uri.length > 0) {
-			param.comment_photo_uri = editData.comment_photo_uri;
-		}
-
-		if (parentComment) {
-			//대댓글일 경우 해당 부모 댓글에 대한 댓글을 추가
-			param = {...param, commentobject_id: parentComment._id};
-		} else {
-			//부모댓글에 쓰는 경우가 아니라면 community 게시글에 대한 댓글을 추가
-			param = {...param, community_object_id: data._id};
-		}
-
-		if (editMode) {
-			let whichComment = '';
-			comments.map((v, i) => {
-				if (v._id == editData._id) {
-					whichComment = i;
-				}
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
 			});
-			updateComment(
-				{
-					...param,
-					commentobject_id: editData._id,
-					comment_photo_remove: !editData.comment_photo_uri || editData.comment_photo_uri == 0,
-				},
-				result => {
-					console.log(result);
-					setParentComment();
-					setEditData({
-						comment_contents: '',
-						comment_photo_uri: '',
-					});
-					getCommentListByCommunityId(
-						{
-							community_object_id: data._id,
-							request_number: 1000,
-						},
-						comments => {
-							!parentComment && setComments([]); //댓글목록 초기화
-							setComments(comments.msg.filter(e => e.comment_is_delete != true));
-							parentComment && addChildCommentFn.current();
-							// console.log('comments', comments);
-							setTimeout(() => {
-								flatListRef.current.scrollToIndex({animated: true, index: whichComment});
-							}, 500);
-						},
-						err => console.log('getCommentListByFeedId', err),
-					);
-				},
-				err => Modal.alert(err),
-			);
 		} else {
-			let whichParent = '';
+			if (editData.comment_contents.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
+
+			let param = {
+				comment_contents: editData.comment_contents, //내용
+				comment_is_secure: privateComment, //공개여부 테스트때 반영
+				community_object_id: data._id,
+			};
+
+			if (editData.comment_photo_uri && editData.comment_photo_uri.length > 0) {
+				param.comment_photo_uri = editData.comment_photo_uri;
+			}
+
 			if (parentComment) {
+				//대댓글일 경우 해당 부모 댓글에 대한 댓글을 추가
+				param = {...param, commentobject_id: parentComment._id};
+			} else {
+				//부모댓글에 쓰는 경우가 아니라면 community 게시글에 대한 댓글을 추가
+				param = {...param, community_object_id: data._id};
+			}
+
+			if (editMode) {
+				let whichComment = '';
 				comments.map((v, i) => {
-					if (v._id == param.commentobject_id) {
-						whichParent = i;
+					if (v._id == editData._id) {
+						whichComment = i;
 					}
 				});
-			}
-			createComment(
-				param,
-				result => {
-					console.log(result);
-					setParentComment();
-					setEditData({
-						comment_contents: '',
-						comment_photo_uri: '',
+				updateComment(
+					{
+						...param,
+						commentobject_id: editData._id,
+						comment_photo_remove: !editData.comment_photo_uri || editData.comment_photo_uri == 0,
+					},
+					result => {
+						console.log(result);
+						setParentComment();
+						setEditData({
+							comment_contents: '',
+							comment_photo_uri: '',
+						});
+						getCommentListByCommunityId(
+							{
+								community_object_id: data._id,
+								request_number: 1000,
+							},
+							comments => {
+								!parentComment && setComments([]); //댓글목록 초기화
+								setComments(comments.msg.filter(e => e.comment_is_delete != true));
+								parentComment && addChildCommentFn.current();
+								// console.log('comments', comments);
+								setTimeout(() => {
+									flatListRef.current.scrollToIndex({animated: true, index: whichComment});
+								}, 500);
+							},
+							err => console.log('getCommentListByFeedId', err),
+						);
+					},
+					err => Modal.alert(err),
+				);
+			} else {
+				let whichParent = '';
+				if (parentComment) {
+					comments.map((v, i) => {
+						if (v._id == param.commentobject_id) {
+							whichParent = i;
+						}
 					});
-					getCommentListByCommunityId(
-						{
-							community_object_id: data._id,
-							request_number: 1000,
-						},
-						comments => {
-							!parentComment && setComments([]); //댓글목록 초기화
-							setComments(comments.msg.filter(e => e.comment_is_delete != true));
-							parentComment && addChildCommentFn.current();
-							// console.log('comments', comments);
-							setTimeout(() => {
-								whichParent == ''
-									? flatListRef.current.scrollToIndex({animated: true, index: 0})
-									: flatListRef.current.scrollToIndex({animated: true, index: whichParent});
-							}, 500);
-							input.current.blur();
-						},
-						err => console.log('getCommentListByFeedId', err),
-					);
-				},
-				err => Modal.alert(err),
-			);
+				}
+				createComment(
+					param,
+					result => {
+						console.log(result);
+						setParentComment();
+						setEditData({
+							comment_contents: '',
+							comment_photo_uri: '',
+						});
+						getCommentListByCommunityId(
+							{
+								community_object_id: data._id,
+								request_number: 1000,
+							},
+							comments => {
+								!parentComment && setComments([]); //댓글목록 초기화
+								setComments(comments.msg.filter(e => e.comment_is_delete != true));
+								parentComment && addChildCommentFn.current();
+								// console.log('comments', comments);
+								setTimeout(() => {
+									whichParent == ''
+										? flatListRef.current.scrollToIndex({animated: true, index: 0})
+										: flatListRef.current.scrollToIndex({animated: true, index: whichParent});
+								}, 500);
+								input.current.blur();
+							},
+							err => console.log('getCommentListByFeedId', err),
+						);
+					},
+					err => Modal.alert(err),
+				);
+			}
 		}
 	};
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
 	const onLockBtnClick = () => {
-		setPrivateComment(!privateComment);
-		!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setPrivateComment(!privateComment);
+			!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+		}
 	};
 
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
 	const onAddPhoto = () => {
-		// navigation.push('SinglePhotoSelect', props.route.name);
-		console.log('onAddphoto');
-		ImagePicker.openPicker({
-			compressImageQuality: 0.8,
-			cropping: true,
-		})
-			.then(images => {
-				console.log('onAddphoto Imagepicker', images);
-				setEditData({...editData, comment_photo_uri: images.path});
-				Modal.close();
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			// navigation.push('SinglePhotoSelect', props.route.name);
+			console.log('onAddphoto');
+			ImagePicker.openPicker({
+				compressImageQuality: 0.8,
+				cropping: true,
 			})
-			.catch(err => console.log(err + ''));
-		Modal.close();
+				.then(images => {
+					console.log('onAddphoto Imagepicker', images);
+					setEditData({...editData, comment_photo_uri: images.path});
+					Modal.close();
+				})
+				.catch(err => console.log(err + ''));
+			Modal.close();
+		}
 	};
 
 	const onDeleteImage = () => {
@@ -274,11 +292,17 @@ export default ArticleDetail = props => {
 
 	// 대댓글 쓰기 버튼 클릭 콜백함수
 	const onReplyBtnClick = (parentCommentId, addChildComment) => {
-		console.log('대댓글 쓰기 버튼 클릭 : ', parentCommentId.comment_writer_id.user_nickname);
-		setParentComment(parentCommentId);
-		editComment || setEditComment(true);
-		addChildCommentFn.current = addChildComment;
-		scrollToReplyBox();
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			console.log('대댓글 쓰기 버튼 클릭 : ', parentCommentId.comment_writer_id.user_nickname);
+			setParentComment(parentCommentId);
+			editComment || setEditComment(true);
+			addChildCommentFn.current = addChildComment;
+			scrollToReplyBox();
+		}
 	};
 
 	//미트볼, 수정을 누르면 동작
@@ -347,16 +371,24 @@ export default ArticleDetail = props => {
 						break;
 					case '신고':
 						Modal.close();
-						setTimeout(() => {
-							Modal.popOneBtnSelectModal(
-								REPORT_MENU,
-								'이 게시물을 신고 하시겠습니까?',
-								selectedItem => {
-									alert(selectedItem);
-								},
-								'신고',
-							);
-						}, 200);
+						if (userGlobalObject.userInfo.isPreviewMode) {
+							setTimeout(() => {
+								Modal.popLoginRequestModal(() => {
+									navigation.navigate('Login');
+								});
+							}, 100);
+						} else {
+							setTimeout(() => {
+								Modal.popOneBtnSelectModal(
+									REPORT_MENU,
+									'이 게시물을 신고 하시겠습니까?',
+									selectedItem => {
+										alert(selectedItem);
+									},
+									'신고',
+								);
+							}, 200);
+						}
 						break;
 					default:
 						break;
@@ -381,18 +413,24 @@ export default ArticleDetail = props => {
 
 	//즐겨찾기 클릭
 	const onPressFavorite = bool => {
-		setFavoriteEtc(
-			{
-				collectionName: 'communityobjects',
-				target_object_id: data._id,
-				is_favorite: bool,
-			},
-			result => {
-				console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
-				// setData({...data, })
-			},
-			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
-		);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setFavoriteEtc(
+				{
+					collectionName: 'communityobjects',
+					target_object_id: data._id,
+					is_favorite: bool,
+				},
+				result => {
+					console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
+					// setData({...data, })
+				},
+				err => console.log('err / favoriteEtc / ArticleDetail : ', err),
+			);
+		}
 	};
 
 	//댓글 대댓글 삭제
@@ -414,19 +452,25 @@ export default ArticleDetail = props => {
 	//좋아요 클릭
 	const onPressLike = bool => {
 		console.log('bool', bool);
-		likeEtc(
-			{
-				collectionName: 'communityobjects',
-				post_object_id: data._id,
-				is_like: bool,
-			},
-			result => {
-				console.log('result/ onPressLike / ReviewMain : ', result.msg.targetPost);
-				setData({...data, community_is_like: bool, community_like_count: bool ? ++data.community_like_count : --data.community_like_count});
-				// setData({...data, community_like_count: bool ? data.community_like_count++ : data.community_like_count--});
-			},
-			err => console.log('err / onPressLike / ReviewMain : ', err),
-		);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			likeEtc(
+				{
+					collectionName: 'communityobjects',
+					post_object_id: data._id,
+					is_like: bool,
+				},
+				result => {
+					console.log('result/ onPressLike / ReviewMain : ', result.msg.targetPost);
+					setData({...data, community_is_like: bool, community_like_count: bool ? ++data.community_like_count : --data.community_like_count});
+					// setData({...data, community_like_count: bool ? data.community_like_count++ : data.community_like_count--});
+				},
+				err => console.log('err / onPressLike / ReviewMain : ', err),
+			);
+		}
 	};
 
 	const onLayoutCommentList = e => {

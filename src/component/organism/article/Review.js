@@ -7,6 +7,8 @@ import {APRI10, BLACK, GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
 import ArticleThumnails from './ArticleThumnails';
 import {useNavigation} from '@react-navigation/core';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
+import userGlobalObject from 'Root/config/userGlobalObject';
+import Modal from 'Root/component/modal/Modal';
 /**
  * 후기 아이템
  * @param {object} props - Props Object
@@ -138,8 +140,14 @@ export default Review = props => {
 
 	const onPressFavorite = bool => {
 		// alert('onPressFavorite');
-		bool ? setData({...data, community_is_favorite: bool}) : setData({...data, community_is_favorite: bool});
-		props.onPressFavorite(bool);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			bool ? setData({...data, community_is_favorite: bool}) : setData({...data, community_is_favorite: bool});
+			props.onPressFavorite(bool);
+		}
 	};
 
 	const onPressReply = () => {

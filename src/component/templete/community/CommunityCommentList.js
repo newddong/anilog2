@@ -151,25 +151,37 @@ export default CommunityCommentList = props => {
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
 	const onLockBtnClick = () => {
-		setPrivateComment(!privateComment);
-		!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setPrivateComment(!privateComment);
+			!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+		}
 	};
 
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
 	const onAddPhoto = () => {
 		// navigation.push('SinglePhotoSelect', props.route.name);
-		console.log('onAddphoto');
-		ImagePicker.openPicker({
-			compressImageQuality: 0.8,
-			cropping: true,
-		})
-			.then(images => {
-				console.log('onAddphoto Imagepicker', images);
-				setEditData({...editData, comment_photo_uri: images.path});
-				Modal.close();
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			console.log('onAddphoto');
+			ImagePicker.openPicker({
+				compressImageQuality: 0.8,
+				cropping: true,
 			})
-			.catch(err => console.log(err + ''));
-		Modal.close();
+				.then(images => {
+					console.log('onAddphoto Imagepicker', images);
+					setEditData({...editData, comment_photo_uri: images.path});
+					Modal.close();
+				})
+				.catch(err => console.log(err + ''));
+			Modal.close();
+		}
 	};
 
 	const onDeleteImage = () => {
@@ -185,11 +197,17 @@ export default CommunityCommentList = props => {
 
 	// 답글 쓰기 버튼 클릭 콜백함수
 	const onReplyBtnClick = (parentCommentId, addChildComment) => {
-		console.log('onReplyBtnClick : ', parentCommentId);
-		setParentComment(parentCommentId);
-		input.current.focus();
-		editComment || setEditComment(true);
-		addChildCommentFn.current = addChildComment;
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			console.log('onReplyBtnClick : ', parentCommentId);
+			setParentComment(parentCommentId);
+			input.current.focus();
+			editComment || setEditComment(true);
+			addChildCommentFn.current = addChildComment;
+		}
 	};
 
 	const [heightReply, setReplyHeight] = React.useState(0);

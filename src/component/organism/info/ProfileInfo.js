@@ -38,14 +38,12 @@ import {setFavoriteEtc} from 'Root/api/favoriteetc';
  */
 const ProfileInfo = props => {
 	const [data, setData] = React.useState(props.data);
-	const navigation = useNavigation();
 	// console.log('')
 	const [showMore, setShowMore] = React.useState(false); // 프로필 Description 우측 더보기 클릭 State
 	const [ownerListState, setOwnerListState] = React.useState(false); // userType이 Pet일 경우 반려인계정 출력 여부 T/F
 	const [companionListState, setCompanionListState] = React.useState(false); // userType이 User일 경우 반렫동물 리스트 출력 여부 T/F
 	const [into_height, setIntro_height] = React.useState(0); //user_introduction 의 길이 => 길이에 따른 '더보기' 버튼 출력 여부 결정
 
-	const isOwner = userGlobalObject.userInfo.user_my_pets.includes(data._id);
 	//더보기 클릭
 	const onPressShowMore = () => {
 		setShowMore(!showMore);
@@ -124,7 +122,7 @@ const ProfileInfo = props => {
 				/>
 			);
 		} else {
-			if (userGlobalObject.userInfo._id == data._id) {
+			if (!userGlobalObject.userInfo.isPreviewMode && userGlobalObject.userInfo._id == data._id) {
 				//보호소 프로필이며 자기 계정인 경우
 				return (
 					<View style={[profileInfo_style.shelterButtonContainer]}>
@@ -140,7 +138,13 @@ const ProfileInfo = props => {
 
 	//현재 프로필의 유저를 팔로우한다.
 	const onPressFollow = () => {
-		props.onPressFollow();
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			props.onPressFollow();
+		}
 	};
 
 	const socialAction = (v, i) => {
@@ -309,7 +313,7 @@ const ProfileInfo = props => {
 				<View style={[organism_style.btn_w280_profileInfo]}>
 					{userGlobalObject.userInfo._id == data._id ? ( //본인 계정이라면 프로필 수정 버튼
 						<AniButton onPress={onPressEditProfile} btnTitle={'프로필 수정'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} />
-					) : data.is_follow ? ( // 타인 계정이며 팔로우 중이라면 '팔로우 중' OR '팔로우'
+					) : data.is_follow && !userGlobalObject.userInfo.isPreviewMode ? ( // 타인 계정이며 팔로우 중이라면 '팔로우 중' OR '팔로우'
 						<ArrowDownButton btnTitle={'팔로우 중'} btnLayout={btn_w280x68} onPress={onPressFollowingSetting} />
 					) : (
 						<AniButton onPress={onPressFollow} btnTitle={'팔로우'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} />

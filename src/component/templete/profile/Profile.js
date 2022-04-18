@@ -40,8 +40,7 @@ export default Profile = ({route}) => {
 				result => {
 					navigation.setOptions({title: result.msg.user_nickname, data: result.msg});
 					setData(result.msg);
-					// console.log('getUserProfile is_follow?', result.msg.is_follow);
-					console.log('getUserProfile is_Favorite ', result.msg.is_favorite);
+					// console.log('getUserProfile is_Favorite ', result.msg);
 				},
 				err => {
 					Modal.popOneBtn(err, '확인', () => {
@@ -150,7 +149,11 @@ export default Profile = ({route}) => {
 
 	//피드글작성 버튼 클릭(액션버튼)
 	const moveToFeedWrite = () => {
-		if (userGlobalObject.userInfo.user_type == 'user') {
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else if (userGlobalObject.userInfo.user_type == 'user') {
 			Modal.popAvatarSelectFromWriteModal(obj => {
 				userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed', feed_avatar_id: obj});
 			});
@@ -181,27 +184,32 @@ export default Profile = ({route}) => {
 	};
 
 	const onPressSendMsg = (_id, name) => {
-		// alert('sendMsg');
-		setTimeout(() => {
-			Modal.popMessageModal(
-				name,
-				msg => {
-					createMemoBox(
-						{memobox_receive_id: _id, memobox_contents: msg},
-						result => {
-							console.log('message sent success', result);
-							Modal.popOneBtn('쪽지 전송하였습니다.', '확인', () => Modal.close());
-						},
-						err => {
-							console.log('message sent err', err);
-						},
-					);
-					console.log('msg', msg);
-					Modal.close();
-				},
-				() => alert('나가기'),
-			);
-		}, 100);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setTimeout(() => {
+				Modal.popMessageModal(
+					name,
+					msg => {
+						createMemoBox(
+							{memobox_receive_id: _id, memobox_contents: msg},
+							result => {
+								console.log('message sent success', result);
+								Modal.popOneBtn('쪽지 전송하였습니다.', '확인', () => Modal.close());
+							},
+							err => {
+								console.log('message sent err', err);
+							},
+						);
+						console.log('msg', msg);
+						Modal.close();
+					},
+					() => alert('나가기'),
+				);
+			}, 100);
+		}
 	};
 
 	//보호 동물 추가

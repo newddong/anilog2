@@ -15,8 +15,8 @@ import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTi
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {useNavigation} from '@react-navigation/core';
 import WebView from 'react-native-webview';
-import {styles} from 'Root/component/atom/image/imageStyle';
 import Modal from 'Root/component/modal/Modal';
+import userGlobalObject from 'Root/config/userGlobalObject';
 /**
  * 후기 세부 페이지
  * @param {object} props - Props Object
@@ -82,20 +82,15 @@ const ReviewContent = props => {
 	};
 
 	const onPressFavorite = bool => {
-		setData({...data, community_is_favorite: bool});
-		props.onPressFavorite(bool);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setData({...data, community_is_favorite: bool});
+			props.onPressFavorite(bool);
+		}
 	};
-
-	// const onWebViewMessage = event => {
-	// 	if (parseInt(event.nativeEvent.data) < 100 * DP) {
-	// 		setHeight(100 * DP);
-	// 	} else {
-	// 		height >= 100 * DP ? false : setHeight(parseInt(event.nativeEvent.data));
-	// 		Platform.OS == 'android'
-	// 			? console.log('height and : ', parseInt(event.nativeEvent.data))
-	// 			: console.log('parseInt(event.nativeEvent.data)', parseInt(event.nativeEvent.data));
-	// 	}
-	// };
 
 	const x = 126.937125; //초기값 더미
 	const y = 37.548721; //초기값 더미

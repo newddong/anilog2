@@ -80,37 +80,41 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	//보호요청 게시글 작성자가 나의 즐겨찾기 대상에 포함이 되는지 여부
 	const isMyFavoriteShelter = async writer_id => {
-		const checkFav = () => {
-			return new Promise((resolve, reject) => {
-				try {
-					getFavoriteEtcListByUserId(
-						{
-							userobject_id: userGlobalObject.userInfo._id,
-							collectionName: 'userobjects',
-						},
-						result => {
-							console.log('result / getFavoriteEtcListByUserId / AnimalProtectRequestDetail  ', result.msg.length);
-							let favoriteList = [];
-							result.msg.map((v, i) => {
-								favoriteList.push(v.favorite_etc_target_object_id._id);
-							});
-							console.log('내 즐겨찾기 리스트 : ', favoriteList);
-							console.log('작성자 : ', writer_id._id);
-							let res = favoriteList.includes(writer_id._id);
-							resolve(res);
-						},
-						err => {
-							console.log('err / getFavoriteEtcListByUserId / AnimalProtectRequestDetail ', err);
-						},
-					);
-				} catch {
-					console.log('err');
-				}
-			});
-		};
-		const result = await checkFav();
-		console.log('result', result);
-		return result;
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			return false;
+		} else {
+			const checkFav = () => {
+				return new Promise((resolve, reject) => {
+					try {
+						getFavoriteEtcListByUserId(
+							{
+								userobject_id: userGlobalObject.userInfo._id,
+								collectionName: 'userobjects',
+							},
+							result => {
+								console.log('result / getFavoriteEtcListByUserId / AnimalProtectRequestDetail  ', result.msg.length);
+								let favoriteList = [];
+								result.msg.map((v, i) => {
+									favoriteList.push(v.favorite_etc_target_object_id._id);
+								});
+								console.log('내 즐겨찾기 리스트 : ', favoriteList);
+								console.log('작성자 : ', writer_id._id);
+								let res = favoriteList.includes(writer_id._id);
+								resolve(res);
+							},
+							err => {
+								console.log('err / getFavoriteEtcListByUserId / AnimalProtectRequestDetail ', err);
+							},
+						);
+					} catch {
+						console.log('err');
+					}
+				});
+			};
+			const result = await checkFav();
+			console.log('result', result);
+			return result;
+		}
 	};
 
 	//보호소의 다른 보호 요청게시글 불러오기
@@ -226,21 +230,27 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	//보호요청 게시글 작성 보호소 라벨의 즐겨찾기 태그 클릭
 	const onPressShelterLabelFavorite = bool => {
-		setFavoriteEtc(
-			{
-				collectionName: 'userobjects',
-				target_object_id: data.protect_request_writer_id._id,
-				is_favorite: bool,
-			},
-			result => {
-				console.log('result / favoriteEtc / AnimalProtectRequestDetail : ', result.msg.favoriteEtc);
-				getProtectRequestObject();
-				setData({...data});
-			},
-			err => {
-				console.log('err / favoriteEtc / AnimalProtectRequestDetail : ', err);
-			},
-		);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setFavoriteEtc(
+				{
+					collectionName: 'userobjects',
+					target_object_id: data.protect_request_writer_id._id,
+					is_favorite: bool,
+				},
+				result => {
+					console.log('result / favoriteEtc / AnimalProtectRequestDetail : ', result.msg.favoriteEtc);
+					getProtectRequestObject();
+					setData({...data});
+				},
+				err => {
+					console.log('err / favoriteEtc / AnimalProtectRequestDetail : ', err);
+				},
+			);
+		}
 	};
 
 	//보호소 라벨 공유 클릭

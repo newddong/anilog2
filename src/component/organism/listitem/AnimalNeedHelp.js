@@ -9,6 +9,8 @@ import {FavoriteTag48_Border, FavoriteTag48_Filled} from 'Atom/icon';
 import {DEFAULT_ANIMAL_PROFILE} from 'Root/i18n/msg';
 import {animalNeedHelp} from 'Organism/style_organism copy';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import Modal from 'Root/component/modal/Modal';
+import {useNavigation} from '@react-navigation/core';
 
 /**
  *
@@ -26,7 +28,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
  */
 export default AnimalNeedHelp = props => {
 	// console.log('AnimalNeedHelp', props.data.protect_request_status);
-
+	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.data);
 	const [selected, setSelected] = React.useState(false);
 	const [thumbnailData, setThumbnailData] = React.useState({});
@@ -86,8 +88,14 @@ export default AnimalNeedHelp = props => {
 	//우상단 즐겨찾기 깃발 아이콘 클릭 콜백
 	const onPressFavoriteTag = bool => {
 		// console.log('data.missing_animal_species_detail', data.is_favorite);
-		props.onFavoriteTag(bool);
-		setData({...data, is_favorite: bool});
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			props.onFavoriteTag(bool);
+			setData({...data, is_favorite: bool});
+		}
 	};
 
 	//입양자 정보 클릭

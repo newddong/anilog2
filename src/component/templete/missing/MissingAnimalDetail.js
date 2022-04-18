@@ -247,17 +247,23 @@ export default MissingAnimalDetail = props => {
 
 	//댓글 이동
 	const onPressReply = async () => {
-		AsyncStorage.getItem('sid', (err, res) => {
-			console.log('res', res);
-			if (res == null) {
-				Modal.popNoBtn('로그인이 필요합니다.');
-				setTimeout(() => {
-					Modal.close();
-				}, 1500);
-			} else {
-				navigation.push('FeedCommentList', {feedobject: data, showAllContents: true});
-			}
-		});
+		if (userGlobalObject.userInfo.isPreviewMode && commentDataList.length == 0) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			AsyncStorage.getItem('sid', (err, res) => {
+				console.log('res', res);
+				if (res == null) {
+					Modal.popNoBtn('로그인이 필요합니다.');
+					setTimeout(() => {
+						Modal.close();
+					}, 1500);
+				} else {
+					navigation.push('FeedCommentList', {feedobject: data, showAllContents: true});
+				}
+			});
+		}
 	};
 
 	const whenEmpty = () => {

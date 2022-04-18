@@ -5,6 +5,8 @@ import {styles} from 'Root/component/atom/image/imageStyle';
 import {GRAY10} from 'Root/config/color';
 import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {getTimeLapsed} from 'Root/util/dateutil';
+import userGlobalObject from 'Root/config/userGlobalObject';
+import Modal from 'Root/component/modal/Modal';
 
 /**
  * 후기 요약 컴포넌트 아이템
@@ -39,8 +41,14 @@ const ReviewBriefItem = props => {
 	};
 
 	const onPressLike = bool => {
-		props.onPressLike(bool);
-		setData({...data, community_is_like: bool});
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			props.onPressLike(bool);
+			setData({...data, community_is_like: bool});
+		}
 	};
 
 	return (

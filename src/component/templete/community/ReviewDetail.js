@@ -221,25 +221,37 @@ export default ReviewDetail = props => {
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
 	const onLockBtnClick = () => {
-		setPrivateComment(!privateComment);
-		!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setPrivateComment(!privateComment);
+			!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+		}
 	};
 
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
 	const onAddPhoto = () => {
 		// navigation.push('SinglePhotoSelect', props.route.name);
-		console.log('onAddphoto');
-		ImagePicker.openPicker({
-			compressImageQuality: 0.8,
-			cropping: true,
-		})
-			.then(images => {
-				console.log('onAddphoto Imagepicker', images);
-				setEditData({...editData, comment_photo_uri: images.path});
-				Modal.close();
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			console.log('onAddphoto');
+			ImagePicker.openPicker({
+				compressImageQuality: 0.8,
+				cropping: true,
 			})
-			.catch(err => console.log(err + ''));
-		Modal.close();
+				.then(images => {
+					console.log('onAddphoto Imagepicker', images);
+					setEditData({...editData, comment_photo_uri: images.path});
+					Modal.close();
+				})
+				.catch(err => console.log(err + ''));
+			Modal.close();
+		}
 	};
 
 	const onDeleteImage = () => {
@@ -255,11 +267,17 @@ export default ReviewDetail = props => {
 
 	// 답글 쓰기 버튼 클릭 콜백함수
 	const onReplyBtnClick = (parentCommentId, addChildComment) => {
-		setParentComment(parentCommentId);
-		editComment || setEditComment(true);
-		addChildCommentFn.current = addChildComment;
-		// input.current?.focus();
-		scrollToReplyBox();
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setParentComment(parentCommentId);
+			editComment || setEditComment(true);
+			addChildCommentFn.current = addChildComment;
+			// input.current?.focus();
+			scrollToReplyBox();
+		}
 	};
 
 	//미트볼, 수정을 누르면 동작
@@ -340,16 +358,24 @@ export default ReviewDetail = props => {
 						break;
 					case '신고':
 						Modal.close();
-						setTimeout(() => {
-							Modal.popOneBtnSelectModal(
-								REPORT_MENU,
-								'이 게시물을 신고 하시겠습니까?',
-								selectedItem => {
-									alert(selectedItem);
-								},
-								'신고',
-							);
-						}, 200);
+						if (userGlobalObject.userInfo.isPreviewMode) {
+							setTimeout(() => {
+								Modal.popLoginRequestModal(() => {
+									navigation.navigate('Login');
+								});
+							}, 100);
+						} else {
+							setTimeout(() => {
+								Modal.popOneBtnSelectModal(
+									REPORT_MENU,
+									'이 게시물을 신고 하시겠습니까?',
+									selectedItem => {
+										alert(selectedItem);
+									},
+									'신고',
+								);
+							}, 200);
+						}
 						break;
 					default:
 						break;
@@ -363,17 +389,23 @@ export default ReviewDetail = props => {
 
 	//즐겨찾기 클릭
 	const onPressFavorite = bool => {
-		setFavoriteEtc(
-			{
-				collectionName: 'communityobjects',
-				target_object_id: data._id,
-				is_favorite: bool,
-			},
-			result => {
-				console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
-			},
-			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
-		);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setFavoriteEtc(
+				{
+					collectionName: 'communityobjects',
+					target_object_id: data._id,
+					is_favorite: bool,
+				},
+				result => {
+					console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
+				},
+				err => console.log('err / favoriteEtc / ArticleDetail : ', err),
+			);
+		}
 	};
 
 	//댓글 클릭
@@ -492,11 +524,6 @@ export default ReviewDetail = props => {
 					ListFooterComponent={bottom()}
 					ListEmptyComponent={<Text style={[txt.roboto28b, {color: GRAY10, paddingVertical: 40 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>}
 					showsVerticalScrollIndicator={false}
-					// onContentSizeChange={(width, height) => {
-					// 	if (showMore) {
-					// 		Platform.OS == 'android' ? scrollRef.current.scrollToEnd() : scrollRef.current.scrollToEnd();
-					// 	}
-					// }}
 					renderItem={renderItem}
 				/>
 			</View>

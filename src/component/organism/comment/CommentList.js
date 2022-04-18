@@ -52,21 +52,11 @@ export default CommentList = props => {
 		);
 	};
 
-	const scrollTo = () => {
-		scrollRef.current.scrollToIndex({animated: true, index: 1});
-		// scrollRef.current.scrollToItem({
-		// 	animated: true,
-		// 	item: props.items[2],
-		// 	viewPosition: 0.5,
-		// });
-	};
-
 	return (
 		<View
 			style={{
 				width: 654 * DP,
 			}}>
-			{/* <AniButton onPress={scrollTo} /> */}
 			<FlatList
 				listKey={({item, index}) => index}
 				keyExtractor={(item, index) => index.toString()}

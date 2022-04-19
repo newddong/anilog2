@@ -72,6 +72,7 @@ import UserNotePage from 'Templete/user/UserNotePage';
 import FeedList from 'Templete/feed/FeedList';
 import Feed from 'Root/component/organism/feed/Feed';
 import FeedCommentList from 'Templete/feed/FeedCommentList';
+import AlarmCommentList from 'Root/component/organism/comment/AlarmCommentList';
 const RootStack = createStackNavigator();
 
 export default RootStackNavigation = () => {
@@ -312,6 +313,7 @@ export default RootStackNavigation = () => {
 						<RootStack.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />}} />
 						<RootStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />}} />
 						<RootStack.Screen name="FeedCommentList" component={FeedCommentList} options={{header: props => <AlarmAndSearchHeader {...props} />}} />
+						<RootStack.Screen name="AlarmCommentList" component={AlarmCommentList} options={{header: props => <SimpleHeader {...props} />}} />
 						<RootStack.Screen
 							name="ShelterVolunteerForm"
 							component={ApplicationFormVolunteer}

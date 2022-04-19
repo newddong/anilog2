@@ -132,8 +132,9 @@ const AlarmList = props => {
 						result => {
 							navigation.dispatch(
 								CommonActions.navigate({
-									name: 'FeedCommentList',
-									params: {feedobject: result.msg, showAllContents: true},
+									// name: 'FeedCommentList',
+									name: 'AlarmCommentList',
+									params: {feedobject: result.msg, showAllContents: true, scroll: true, target: data.notice_object},
 								}),
 							);
 						},
@@ -168,14 +169,14 @@ const AlarmList = props => {
 				});
 				break;
 			case 'ProtectionActivityApplicantObject':
-				// getAppliesRecord
 				getApplyDetailById({protect_act_object_id: data.target_object}, result => {
 					let result_msg = result.msg;
 					result_msg.shelter_name = result.msg.protect_act_request_shelter_id.shelter_name;
 					result_msg.protect_request_date = result.msg.protect_act_request_article_id.protect_request_date;
 					result_msg.protect_animal_rescue_location = result.msg.protect_act_request_article_id.protect_animal_id.protect_animal_rescue_location;
-					result.msg.protect_request_photos_uri = result.msg.protect_act_request_article_id.protect_request_photos_uri;
-					console.log('result', result_msg);
+					result_msg.protect_request_photos_uri = result.msg.protect_act_request_article_id.protect_request_photos_uri;
+					result_msg.isNotification = true;
+					result_msg.approved_applicant = data.notice_approved_applicant;
 					navigation.push('ApplyAdoptionDetails', result_msg);
 				});
 

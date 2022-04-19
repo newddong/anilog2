@@ -22,6 +22,7 @@ import {getChildCommentList} from 'Root/api/commentapi';
 import Modal from 'Component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeComment} from 'Root/api/commentapi';
+import {createReport} from 'Root/api/report';
 /**
  *
  * @param {{
@@ -175,16 +176,34 @@ export default ParentComment = React.memo((props, ref) => {
 								break;
 							case '신고':
 								Modal.close();
+								console.log('data', data);
 								setTimeout(() => {
 									Modal.popOneBtnSelectModal(
 										REPORT_MENU,
-										'이 게시물을 신고 하시겠습니까?',
+										'이 댓글을 신고 하시겠습니까?',
 										selectedItem => {
-											alert(selectedItem);
+											createReport(
+												{
+													report_target_object_id: data._id,
+													report_target_object_type: 'commentsobjects',
+													report_target_reason: selectedItem,
+													report_is_delete: false,
+												},
+												result => {
+													console.log('신고 완료', result);
+													Modal.close();
+													Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
+												},
+												err => {
+													console.log('신고 err', err);
+													Modal.close();
+												},
+											);
 										},
 										'신고',
 									);
-								}, 200);
+								}, 100);
+
 							case '수정':
 								// alert('수정!');
 								// navigation.navigate('FeedEdit',props.data);

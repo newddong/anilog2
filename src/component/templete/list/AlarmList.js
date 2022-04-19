@@ -181,6 +181,10 @@ const AlarmList = props => {
 				});
 
 				break;
+			case 'CommunityObject':
+				console.log('data.target', data.target_object);
+
+				break;
 		}
 	};
 

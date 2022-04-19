@@ -29,7 +29,7 @@ import {favoriteFeed, getFavoriteFeedListByUserId} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import MissingReportInfo from 'Organism/info/MissingReportInfo';
 import {getStringLength, getLinesOfString} from 'Root/util/stringutil';
-
+import {createReport} from 'Root/api/report';
 export default FeedContent = props => {
 	const {
 		_id,
@@ -110,14 +110,34 @@ export default FeedContent = props => {
 	}, [textLayout]);
 
 	//피드 미트볼 메뉴 - 신고 클릭
-	const onPressReport = () => {
+	const onPressReport = context => {
+		console.log('신고 context', context, props.data._id);
 		Modal.close();
+
 		setTimeout(() => {
 			Modal.popOneBtnSelectModal(
 				REPORT_MENU,
 				'이 게시물을 신고 하시겠습니까?',
 				selectedItem => {
-					alert(selectedItem);
+					console.log('selected', selectedItem);
+					// alert(selectedItem);
+					createReport(
+						{
+							report_target_object_id: props.data._id,
+							report_target_object_type: 'feedobjects',
+							report_target_reason: selectedItem,
+							report_is_delete: false,
+						},
+						result => {
+							console.log('신고 완료', result);
+							Modal.close();
+							Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
+						},
+						err => {
+							console.log('신고 err', err);
+							Modal.close();
+						},
+					);
 				},
 				'신고',
 			);
@@ -322,7 +342,7 @@ export default FeedContent = props => {
 								selectedItem => {
 									Modal.close();
 									if (selectedItem == '신고') {
-										onPressReport();
+										onPressReport(context);
 									} else if (selectedItem == '공유하기') {
 										onPressShare();
 									} else if (selectedItem == '팔로우 취소') {
@@ -346,7 +366,7 @@ export default FeedContent = props => {
 								selectedItem => {
 									// alert(selectedItem);
 									if (selectedItem == '신고') {
-										onPressReport();
+										onPressReport(context);
 									} else if (selectedItem == '팔로우') {
 										onPressFollow();
 									} else if (selectedItem == '공유하기') {
@@ -406,7 +426,7 @@ export default FeedContent = props => {
 						if (selectedItem == '공유하기') {
 							onPressShare();
 						} else if (selectedItem == '신고') {
-							onPressReport();
+							onPressReport(context);
 						}
 						Modal.close();
 					},

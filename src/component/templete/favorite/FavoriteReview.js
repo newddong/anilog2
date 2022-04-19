@@ -10,6 +10,9 @@ import {likeEtc} from 'Root/api/likeetc';
 import community_obj from 'Root/config/community_obj';
 import {getFavoriteEtcListByUserId, setFavoriteEtc, setFavoriteEtcCancelList} from 'Root/api/favoriteetc';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {getCommunityListByUserId} from 'Root/api/community';
+import {EmptyIcon} from 'Root/component/atom/icon';
+import {txt} from 'Root/config/textstyle';
 
 //즐겨찾기한 피드목록을 조회
 export default FavoriteReview = ({route}) => {
@@ -27,28 +30,44 @@ export default FavoriteReview = ({route}) => {
 	}, []);
 
 	const fetchData = () => {
-		getFavoriteEtcListByUserId(
-			{
-				userobject_id: userGlobalObject.userInfo._id,
-				collectionName: 'communityobjects',
-			},
-			result => {
-				// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg[0]);
-				let reviewList = [];
-				result.msg.map(v => {
-					if (v.favorite_etc_target_object_id.community_type == 'review') {
-						v.favorite_etc_target_object_id.community_is_favorite = v.is_favorite;
-						v.favorite_etc_target_object_id.community_is_like = v.is_like;
-						reviewList.push(v.favorite_etc_target_object_id);
-					}
-				});
-				setData(reviewList);
-			},
-			err => {
-				console.log('err / getFavoriteEtcListByUserId / FavoriteCommunity : ', err);
-				setData([]);
-			},
-		);
+		route.name == 'MyReview'
+			? getCommunityListByUserId(
+					{
+						userobject_id: userGlobalObject.userInfo._id,
+						community_type: 'all',
+					},
+					result => {
+						console.log('result / getCommunityListByUserId / FavoriteCommunity', result.msg.free.length);
+						setData(result.msg.review);
+					},
+					err => {
+						console.log('err / getCommunityListByUserId / FavoriteCommunity : ', err);
+						setReview([]);
+						setArticle([]);
+					},
+			  )
+			: getFavoriteEtcListByUserId(
+					{
+						userobject_id: userGlobalObject.userInfo._id,
+						collectionName: 'communityobjects',
+					},
+					result => {
+						// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg[0]);
+						let reviewList = [];
+						result.msg.map(v => {
+							if (v.favorite_etc_target_object_id.community_type == 'review') {
+								v.favorite_etc_target_object_id.community_is_favorite = v.is_favorite;
+								v.favorite_etc_target_object_id.community_is_like = v.is_like;
+								reviewList.push(v.favorite_etc_target_object_id);
+							}
+						});
+						setData(reviewList);
+					},
+					err => {
+						console.log('err / getFavoriteEtcListByUserId / FavoriteCommunity : ', err);
+						setData([]);
+					},
+			  );
 	};
 
 	//Check Box On
@@ -189,6 +208,17 @@ export default FavoriteReview = ({route}) => {
 		setData(copy);
 	};
 
+	const whenEmpty = () => {
+		return (
+			<View style={{paddingVertical: 150 * DP, alignItems: 'center'}}>
+				<EmptyIcon />
+				<Text style={[txt.noto28, {marginTop: 10 * DP}]}>
+					{route.name == 'MyReview' ? '작성한 리뷰글이 없습니다..' : '즐겨찾기한 리뷰가 없습니다..'}{' '}
+				</Text>
+			</View>
+		);
+	};
+
 	if (data == 'false') {
 		return <Loading isModal={false} />;
 	} else
@@ -218,6 +248,7 @@ export default FavoriteReview = ({route}) => {
 						onPressLike={i => onPressLike(i, true)}
 						onPressUnlike={i => onPressLike(i, false)}
 						onPressCheck={onPressCheck}
+						whenEmpty={whenEmpty}
 					/>
 				</View>
 			</View>

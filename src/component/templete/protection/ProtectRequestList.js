@@ -89,7 +89,6 @@ export default ProtectRequestList = ({navigation, route}) => {
 
 	//별도의 API 사용 예정.
 	const onOff_FavoriteTag = (bool, index) => {
-		// console.log('즐겨찾기=>' + value + ' ' + index);
 		console.log(' data[index]._id', data[index]._id);
 		console.log('bool', bool);
 		setFavoriteEtc(

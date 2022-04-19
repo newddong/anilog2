@@ -7,6 +7,9 @@ import {FavoriteTag46_Filled, FavoriteTag48_Border, Meatball50_GRAY20_Horizontal
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import WebView from 'react-native-webview';
+import userGlobalObject from 'Root/config/userGlobalObject';
+import Modal from 'Root/component/modal/Modal';
+import {useNavigation} from '@react-navigation/core';
 /**
  * 게시글 컨텐츠
  * @param {object} props - Props Object
@@ -19,6 +22,7 @@ import WebView from 'react-native-webview';
  */
 const ArticleContent = props => {
 	LogBox.ignoreAllLogs();
+	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.data);
 	const [height, setHeight] = React.useState(0); // 게시글 내용의 Dynamic Height 수치
 
@@ -31,8 +35,14 @@ const ArticleContent = props => {
 	};
 
 	const onPressFavorite = bool => {
-		setData({...data, community_is_favorite: bool});
-		props.onPressFavorite(bool);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setData({...data, community_is_favorite: bool});
+			props.onPressFavorite(bool);
+		}
 	};
 
 	const getArticleType = () => {

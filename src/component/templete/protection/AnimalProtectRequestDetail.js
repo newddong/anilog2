@@ -220,7 +220,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				is_favorite: bool,
 			},
 			result => {
-				// console.log('result / setFavoriteEtc /  :', result.msg);
+				console.log('result / setFavoriteEtc /  :', result.msg.favoriteEtc);
 			},
 			err => {
 				console.log('err / setFavoriteEtc / : ', err);

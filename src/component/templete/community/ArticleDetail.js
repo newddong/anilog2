@@ -235,7 +235,7 @@ export default ArticleDetail = props => {
 								}, 500);
 								input.current.blur();
 							},
-							err => console.log('getCommentListByFeedId', err),
+							err => console.log('getCommentListByCommunityId', err),
 						);
 					},
 					err => Modal.alert(err),
@@ -413,24 +413,18 @@ export default ArticleDetail = props => {
 
 	//즐겨찾기 클릭
 	const onPressFavorite = bool => {
-		if (userGlobalObject.userInfo.isPreviewMode) {
-			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
-			});
-		} else {
-			setFavoriteEtc(
-				{
-					collectionName: 'communityobjects',
-					target_object_id: data._id,
-					is_favorite: bool,
-				},
-				result => {
-					console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
-					// setData({...data, })
-				},
-				err => console.log('err / favoriteEtc / ArticleDetail : ', err),
-			);
-		}
+		setFavoriteEtc(
+			{
+				collectionName: 'communityobjects',
+				target_object_id: data._id,
+				is_favorite: bool,
+			},
+			result => {
+				console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
+				// setData({...data, })
+			},
+			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
+		);
 	};
 
 	//댓글 대댓글 삭제

@@ -10,6 +10,7 @@ import {getFavoriteEtcListByUserId} from 'Root/api/favoriteetc';
 import Loading from 'Root/component/molecules/modal/Loading';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {EmptyIcon} from 'Root/component/atom/icon';
+import {getCommunityListByUserId} from 'Root/api/community';
 
 //즐겨찾기한 커뮤니티 조회
 export default FavoriteArticle = ({route}) => {
@@ -25,28 +26,44 @@ export default FavoriteArticle = ({route}) => {
 	}, []);
 
 	const fetchData = () => {
-		getFavoriteEtcListByUserId(
-			{
-				userobject_id: userGlobalObject.userInfo._id,
-				collectionName: 'communityobjects',
-			},
-			result => {
-				// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg[0]);
-				let articleList = [];
-				result.msg.map(v => {
-					if (v.favorite_etc_target_object_id.community_type == 'free') {
-						v.favorite_etc_target_object_id.community_is_like = v.is_like;
-						v.favorite_etc_target_object_id.community_is_favorite = v.is_favorite;
-						articleList.push(v.favorite_etc_target_object_id);
-					}
-				});
-				setData(articleList);
-			},
-			err => {
-				console.log('err / getFavoriteEtcListByUserId / FavoriteCommunity : ', err);
-				setData([]);
-			},
-		);
+		route.name == 'MyArticle'
+			? getCommunityListByUserId(
+					{
+						userobject_id: userGlobalObject.userInfo._id,
+						community_type: 'all',
+					},
+					result => {
+						console.log('result / getCommunityListByUserId / FavoriteCommunity', result.msg.free.length);
+						setData(result.msg.free);
+					},
+					err => {
+						console.log('err / getCommunityListByUserId / FavoriteCommunity : ', err);
+						setReview([]);
+						setArticle([]);
+					},
+			  )
+			: getFavoriteEtcListByUserId(
+					{
+						userobject_id: userGlobalObject.userInfo._id,
+						collectionName: 'communityobjects',
+					},
+					result => {
+						// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg[0]);
+						let articleList = [];
+						result.msg.map(v => {
+							if (v.favorite_etc_target_object_id.community_type == 'free') {
+								v.favorite_etc_target_object_id.community_is_like = v.is_like;
+								v.favorite_etc_target_object_id.community_is_favorite = v.is_favorite;
+								articleList.push(v.favorite_etc_target_object_id);
+							}
+						});
+						setData(articleList);
+					},
+					err => {
+						console.log('err / getFavoriteEtcListByUserId / FavoriteCommunity : ', err);
+						setData([]);
+					},
+			  );
 	};
 
 	// 게시글 내용 클릭
@@ -73,7 +90,9 @@ export default FavoriteArticle = ({route}) => {
 		return (
 			<View style={{paddingVertical: 150 * DP, alignItems: 'center'}}>
 				<EmptyIcon />
-				<Text style={[txt.noto28, {marginTop: 10 * DP}]}>즐겨찾기한 자유게시글이 없습니다..</Text>
+				<Text style={[txt.noto28, {marginTop: 10 * DP}]}>
+					{route.name == 'MyArticle' ? '작성한 자유게시글이 없습니다..' : '즐겨찾기한 자유게시글이 없습니다..'}{' '}
+				</Text>
 			</View>
 		);
 	};

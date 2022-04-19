@@ -87,7 +87,6 @@ export default AnimalNeedHelp = props => {
 
 	//우상단 즐겨찾기 깃발 아이콘 클릭 콜백
 	const onPressFavoriteTag = bool => {
-		// console.log('data.missing_animal_species_detail', data.is_favorite);
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate('Login');

@@ -64,7 +64,10 @@ export default CommunityCommentList = props => {
 				Modal.close();
 			},
 			err => {
-				console.log('err', err);
+				console.log('err / getCommentListByCommunityId', err);
+				if (err == '검색 결과가 없습니다.') {
+					setComments([]);
+				}
 				Modal.close();
 			},
 		);

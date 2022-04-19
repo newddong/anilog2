@@ -131,11 +131,13 @@ export default Review = props => {
 	};
 
 	const onPressLike = () => {
+		setData({...data, community_is_like: true, community_like_count: ++data.community_like_count});
 		props.onPressLike();
 	};
 
 	const onPressUnlike = () => {
 		props.onPressUnlike();
+		setData({...data, community_is_like: false, community_like_count: --data.community_like_count});
 	};
 
 	const onPressFavorite = bool => {

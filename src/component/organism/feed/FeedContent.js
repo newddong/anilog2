@@ -28,6 +28,7 @@ import {createMemoBox, followUser, getAnimalListNotRegisterWithCompanion, getFol
 import {favoriteFeed, getFavoriteFeedListByUserId} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import MissingReportInfo from 'Organism/info/MissingReportInfo';
+import {createReport} from 'Root/api/report';
 import {getStringLength, getLinesOfString, count_to_K} from 'Root/util/stringutil';
 
 export default FeedContent = props => {
@@ -72,8 +73,6 @@ export default FeedContent = props => {
 	const [labelLayout, setlabelLayout] = React.useState({height: 0, width: 0});
 	const [show, setShow] = React.useState(false);
 	const [send, setSend] = React.useState();
-	// console.log('35353', feed_avatar_id, 'sss', feed_writer_id);
-	//코드 중복 해소를 위한 처리.
 	const feed_writer = props.data.feed_avatar_id ? props.data.feed_avatar_id : props.data.feed_writer_id;
 	React.useEffect(() => {
 		if (typeof feed_avatar_id == 'object') {
@@ -109,14 +108,34 @@ export default FeedContent = props => {
 	}, [textLayout]);
 
 	//피드 미트볼 메뉴 - 신고 클릭
-	const onPressReport = () => {
+	const onPressReport = context => {
+		console.log('신고 context', context, props.data._id);
 		Modal.close();
+
 		setTimeout(() => {
 			Modal.popOneBtnSelectModal(
 				REPORT_MENU,
 				'이 게시물을 신고 하시겠습니까?',
 				selectedItem => {
-					alert(selectedItem);
+					console.log('selected', selectedItem);
+					// alert(selectedItem);
+					createReport(
+						{
+							report_target_object_id: props.data._id,
+							report_target_object_type: 'feedobjects',
+							report_target_reason: selectedItem,
+							report_is_delete: false,
+						},
+						result => {
+							console.log('신고 완료', result);
+							Modal.close();
+							Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
+						},
+						err => {
+							console.log('신고 err', err);
+							Modal.close();
+						},
+					);
 				},
 				'신고',
 			);
@@ -321,7 +340,7 @@ export default FeedContent = props => {
 								selectedItem => {
 									Modal.close();
 									if (selectedItem == '신고') {
-										onPressReport();
+										onPressReport(context);
 									} else if (selectedItem == '공유하기') {
 										onPressShare();
 									} else if (selectedItem == '팔로우 취소') {
@@ -345,7 +364,7 @@ export default FeedContent = props => {
 								selectedItem => {
 									// alert(selectedItem);
 									if (selectedItem == '신고') {
-										onPressReport();
+										onPressReport(context);
 									} else if (selectedItem == '팔로우') {
 										onPressFollow();
 									} else if (selectedItem == '공유하기') {
@@ -405,7 +424,7 @@ export default FeedContent = props => {
 						if (selectedItem == '공유하기') {
 							onPressShare();
 						} else if (selectedItem == '신고') {
-							onPressReport();
+							onPressReport(context);
 						}
 						Modal.close();
 					},

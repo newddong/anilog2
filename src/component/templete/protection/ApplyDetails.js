@@ -11,11 +11,17 @@ import {applyDetails, login_style, temp_style} from 'Templete/style_templete';
 
 export default ApplyDetails = ({route, navigation}) => {
 	const data = route.params;
+	console.log('apply details', data);
 	//모달창에서 최종 확인을 클릭
 	const isProtect = route.name == 'ApplyProtectActivityE' || route.name == 'ApplyTempProtectDetails';
 
 	React.useEffect(() => {
 		isProtect ? navigation.setOptions({title: '임시보호 신청'}) : navigation.setOptions({title: '입양 신청'});
+		if (data.protect_act_type == 'protect') {
+			navigation.setOptions({title: '임시보호 신청 내역'});
+		} else {
+			navigation.setOptions({title: '입양 신청 내역'});
+		}
 	}, []);
 
 	const onFinalize = () => {

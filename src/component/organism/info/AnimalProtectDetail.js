@@ -8,12 +8,31 @@ import {animalProtectList} from 'Templete/style_templete';
 import AnimalNeedHelp from 'Organism/listitem/AnimalNeedHelp';
 import {animalProtectDetail} from 'Organism/style_organism copy';
 import {hyphened} from 'Root/util/dateutil';
+import userGlobalObject from 'Root/config/userGlobalObject';
+import AniButton from 'Root/component/molecules/button/AniButton';
+import {btn_w116, btn_w654, btn_w654_h70} from 'Root/component/atom/btn/btn_style';
+import DP from 'Root/config/dp';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 
 export default AnimalProtectDetail = props => {
-	// console.log(' AnimalProtectDetail / props.data', props.data);
-
+	console.log(' AnimalProtectDetail / props.data', props.data);
+	const isLoginUser = userGlobalObject.userInfo?._id == props.data.protect_act_applicant_id;
+	const [statusText, setStatusText] = React.useState();
+	const [userText, setUserText] = React.useState('본 계정 보호자');
 	const data = props.data;
+
+	React.useEffect(() => {
+		if (props.data?.protect_act_type == 'protect') {
+			setStatusText('임시보호 중입니다.');
+		} else {
+			setStatusText('입양 완료되었습니다.');
+		}
+		if (props.data?.approved_applicant == userGlobalObject.userInfo?._id) {
+			setUserText('본 계정 보호자');
+		} else {
+			setUserText('다른 보호자');
+		}
+	}, []);
 	const getStatusText = arg => {
 		switch (arg) {
 			case 'living':
@@ -47,6 +66,26 @@ export default AnimalProtectDetail = props => {
 
 	const onClickLabel = data => {
 		props.onClickLabel(data);
+	};
+	const StatusButton = () => {
+		if (data?.approved_applicant) {
+			return (
+				<View>
+					{data?.protect_act_type == 'protect' ? (
+						<View style={[{marginTop: 70 * DP}]}>
+							<AniButton btnTitle={`${userText}가 ${statusText}`} btnLayout={btn_w654_h70} btnStyle={'border'} />
+						</View>
+					) : (
+						<View style={[{marginTop: 70 * DP}]}>
+							{/* <Text>입양</Text> */}
+							<AniButton btnTitle={`${userText}에게 ${statusText}`} btnLayout={btn_w654_h70} btnStyle={'border'} />
+						</View>
+					)}
+				</View>
+			);
+		} else {
+			return <></>;
+		}
 	};
 
 	return (
@@ -142,6 +181,17 @@ export default AnimalProtectDetail = props => {
 							<Text style={[txt.noto28]}>{data.protect_act_motivation || ''}</Text>
 						</View>
 					</View>
+					{/* 진행 과정 */}
+					{/* {data?.protect_act_type == 'protect' ? (
+						<View style={[{marginTop: 70 * DP}]}>
+							<AniButton btnTitle={`${userText}가 ${statusText}`} btnLayout={btn_w654_h70} btnStyle={'border'} />
+						</View>
+					) : (
+						<View style={[{marginTop: 70 * DP}]}>
+							<AniButton btnTitle={`${userText}에게 ${statusText}`} btnLayout={btn_w654_h70} btnStyle={'border'} />
+						</View>
+					)} */}
+					<StatusButton />
 				</View>
 			</View>
 		</ScrollView>

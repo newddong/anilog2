@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, FlatList, RefreshControl, Platform, NativeModules, Text, Dimensions, PixelRatio} from 'react-native';
+import {StyleSheet, View, FlatList, RefreshControl, Platform, NativeModules, Text,TextInput, Dimensions, PixelRatio} from 'react-native';
 import {WHITE} from 'Root/config/color';
 import {Write94, Camera54} from 'Atom/icon';
 import Feed from 'Organism/feed/Feed';
@@ -258,7 +258,7 @@ export default FeedList = ({route, navigation}) => {
 	};
 	const [tl, setTl] = React.useState({});
 	const [cl, setCl] = React.useState({});
-	const fontSize = 12;
+	const [fontSize,setSize] = React.useState(16);
 	return (
 		<View style={(login_style.wrp_main, {flex: 1, backgroundColor: WHITE})}>
 			<FlatList
@@ -300,22 +300,31 @@ export default FeedList = ({route, navigation}) => {
 					<Write94 onPress={moveToFeedWrite} />
 				</View>
 			)}
-			{/* <View style={{backgroundColor:'red',width:600*DP,height:1000*DP,position:'absolute',top:30,left:30}}>
+			{/* <View style={{backgroundColor:'red',width:600*DP,height:1000*DP,position:'absolute',top:0,left:30}}>
                     <View style={{backgroundColor:'yellow',marginBottom:20}}>
-                        <Text style={{fontSize:12}}>텍스트 사이즈 테스트용
-                            {'\n'}기기 레이아웃 {Dimensions.get('window').width} DP
+                        <Text style={{fontSize:10}}>텍스트 사이즈 테스트용
+                            {'\n'}기기 레이아웃 {Dimensions.get('window').width} DP,해상도{Dimensions.get('window').width*PixelRatio.get()}px
                             {'\n'}컨테이너 높이 : {cl.height}, {'\n'}너비 : {cl.width} {'\n'}W/H : {cl.width/cl.height}
                             {'\n\n'}ascender : {tl.ascender}, {'\n'}baseline : {tl.baseline}, {'\n'}capheight : {tl.capHeight},{'\n'}descender: {tl.descender},{'\n'}height: {tl.height},{'\n'}xHeight: {tl.xHeight},{'\n'}width:{tl.width},{'\n'} W/H : {tl.width/tl.height}
                             {'\n'}픽셀비 : {PixelRatio.get()}, 폰트스케일 : {PixelRatio.getFontScale()}
                             {'\n\n'}추정 텍스트 사이즈 pt는? {}
-                            {'\n'}글자 높이 px : {tl.height*3}, 폰트사이즈: {fontSize}
-                            {'\n'}글자 높이 인치 (445ppi) : {Math.round(tl.height*3)/445}
+                            {'\n'}글자 높이 px : {PixelRatio.roundToNearestPixel(tl.height*PixelRatio.get())}, 폰트사이즈: {fontSize}
+                            {'\n'}글자 높이 인치 (445ppi안드로이드) : {Math.round(tl.height*3)/445}
 							{'\n'}글자 높이와 폰트 사이즈 비 : {tl.height/fontSize}
-                            {'\n'}글자 포인트(1pt는 1/72인치) : {Math.round(tl.capHeight*3)/445*72}
+							{'\n'}글자 너비와 폰트 사이즈 비 : {tl.width/fontSize}
+                            {'\n'}글자 포인트(1pt는 1/72인치) : {Math.round(tl.capHeight*3)}
+							{'\n'}dp당 픽셀 : {1/PixelRatio.get()}
+							{'\n'}dp당 픽셀2 : {2/PixelRatio.get()}
+							{'\n'}dp당 픽셀3 : {3/PixelRatio.get()}
+							{'\n'}dp당 픽셀4 : {4/PixelRatio.get()}
+							{'\n'}dp당 픽셀5 : {5/PixelRatio.get()}
                         </Text>
-
+						<TextInput style={{backgroundColor:'white',fontSize:18,includeFontPadding:false,padding:0}}
+							onChange={e=>{console.log(e.nativeEvent.text);setSize(parseFloat(e.nativeEvent.text)>0?parseFloat(e.nativeEvent.text):16)}}
+						
+						></TextInput>
                     </View>
-                    <View style={{backgroundColor:'green',position:'absolute',top:'70%',left:'50%'}} onLayout={(e)=>{console.log('컨테이너',e.nativeEvent.layout);setCl(e.nativeEvent.layout)}}>
+                    <View style={{backgroundColor:'green',position:'absolute',bottom:0,left:'50%'}} onLayout={(e)=>{console.log('컨테이너',e.nativeEvent.layout);setCl(e.nativeEvent.layout)}}>
                         <Text 
                             onLayout={(e)=>{console.log('글',e.nativeEvent.layout)}}
                             onTextLayout={e=>{console.log('텍스트레이아웃', e.nativeEvent);setTl(e.nativeEvent.lines[0])}}

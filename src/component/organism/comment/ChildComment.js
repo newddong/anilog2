@@ -1,41 +1,34 @@
 import React from 'react';
-import {Image, Text, View, TouchableOpacity, StyleSheet} from 'react-native';
+import {Image, Text, View, StyleSheet} from 'react-native';
 import {GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {Heart30_Border, Heart30_Filled, Meatball50_GRAY20_Vertical} from 'Atom/icon';
-import {DEFAULT_PROFILE, REPLY_MEATBALL_MENU, REPLY_MEATBALL_MENU_MY_REPLY, SETTING_COMMENT, SETTING_OWN_COMMENT} from 'Root/i18n/msg';
+import {DEFAULT_PROFILE, REPLY_MEATBALL_MENU, REPLY_MEATBALL_MENU_MY_REPLY} from 'Root/i18n/msg';
 import {styles} from 'Atom/image/imageStyle';
-import MeatBallDropdown from 'Molecules/dropdown/MeatBallDropdown';
 import UserTimeLabel from 'Molecules/label/UserTimeLabel';
 import {useNavigation} from '@react-navigation/native';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeComment} from 'Root/api/commentapi';
 
 /**
- *
- * @param {{
- * data : Object,
- * onPressReplyBtn : void,
- * }} props
+ * 자식 댓글
+ * @param {object} props - Props Object
+ * @param {Object} props.data - 부모 comment data object
+ * @param {(id:string)=>void} props.onPressDeleteChild - 대댓글 삭제
+ * @param {(data:object)=>void} props.onEdit - 대댓글 수정
  */
-export default ChildComment = props => {
-	// console.log('ChildComment', props.data);
+const ChildComment = props => {
 	const [data, setData] = React.useState(props.data);
-	const [isMyComment, setIsMyComment] = React.useState(false);
 	const [likeCount, setLikeCount] = React.useState(0);
 	const [likeState, setLikeState] = React.useState(false);
 	const [meatball, setMeatball] = React.useState(false); // 해당 댓글의 미트볼 헤더 클릭 여부
-	// console.log('ChildCommnet Data', props);
+
 	const navigation = useNavigation();
 	React.useEffect(() => {
 		setData(props.data);
 		setLikeState(props.data.comment_is_like);
 		setLikeCount(props.data.comment_like_count);
 	}, [props.data]);
-
-	React.useEffect(() => {
-		setIsMyComment(userGlobalObject.userInfo._id == data.like_comment_id);
-	}, []);
 
 	const onCLickHeart = () => {
 		setLikeState(!likeState);
@@ -55,67 +48,48 @@ export default ChildComment = props => {
 		props.like && props.like(props.data);
 	};
 
-	//대댓글 클릭
-	const onPressReplyBtn = () => {
-		props.onPressReplyBtn(props.data.comment_parent);
-	};
-
+	//대댓글의 미트볼 클릭
 	const onPressMeatball = () => {
-		// console.log('meatballREf', meatballRef);
-
 		const isWriter = userGlobalObject.userInfo._id == data.comment_writer_id._id;
 		if (isWriter) {
 			Modal.popSelectBoxModal(
 				REPLY_MEATBALL_MENU_MY_REPLY,
 				selectedItem => {
 					switch (selectedItem) {
+						case '수정':
+							props.onEdit && props.onEdit(data);
+							break;
+						case '삭제':
+							props.onPressDeleteChild(data._id);
+							break;
+						default:
+							break;
 						case '상태 변경':
 							alert('상태 변경!');
 							break;
 						case '공유하기':
 							alert('공유하기!');
 							break;
-						case '수정':
-							props.onEdit && props.onEdit(data);
-							// alert('수정!');
-							// navigation.navigate('FeedEdit',props.data);
-							break;
-						case '삭제':
-							alert('삭제');
-							break;
-						default:
-							break;
 					}
 					Modal.close();
-					// setIsMeatballClicked(false);
 				},
 				() => Modal.close(),
 				false,
 				'',
 			);
 		} else {
+			//작성자가 아닐 시 신고만 출력
 			Modal.popSelectBoxModal(
 				REPLY_MEATBALL_MENU,
 				selectedItem => {
 					switch (selectedItem) {
-						case '상태 변경':
-							alert('상태 변경!');
-							break;
-						case '공유하기':
-							alert('공유하기!');
-							break;
-						case '수정':
-							// alert('수정!');
-							// navigation.navigate('FeedEdit',props.data);
-							break;
-						case '삭제':
-							alert('삭제');
+						case '신고':
+							alert('신고');
 							break;
 						default:
 							break;
 					}
 					Modal.close();
-					// setIsMeatballClicked(false);
 				},
 				() => Modal.close(),
 				false,
@@ -132,7 +106,6 @@ export default ChildComment = props => {
 				</View>
 				<View style={[childComment.meatBall50_vertical]}>
 					{meatball ? <Meatball50_APRI10_Vertical onPress={onPressMeatball} /> : <Meatball50_GRAY20_Vertical onPress={onPressMeatball} />}
-					{/* <MeatBallDropdown menu={isMyComment ? SETTING_OWN_COMMENT : SETTING_COMMENT} horizontal={false} /> */}
 				</View>
 			</View>
 			{/* 해당 대댓글이 photo_uri를 가지고 있는 경우만 IMage 출력 */}
@@ -155,11 +128,6 @@ export default ChildComment = props => {
 				<View style={[childComment.likeCount]}>
 					<Text style={(txt.roboto24, childComment.likeCountText)}>{likeCount}</Text>
 				</View>
-				{/* <TouchableOpacity style={[childComment.writeComment]} onPress={onPressReplyBtn}>
-					<Text style={(txt.noto22, childComment.writeCommentText)} numberOfLines={1}>
-						· 답글 쓰기
-					</Text>
-				</TouchableOpacity> */}
 			</View>
 		</View>
 	);
@@ -171,8 +139,10 @@ ChildComment.defaultProps = {
 		comment: '개',
 		likecount: 80,
 	},
-	onPressReplyBtn: e => console.log(e),
+	onPressDeleteChild: () => {},
 };
+
+export default ChildComment;
 
 export const childComment = StyleSheet.create({
 	container: {

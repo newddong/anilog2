@@ -20,13 +20,20 @@ const ReviewBriefList = props => {
 
 	const onPressShowMore = () => {
 		setShowMore(!showMore);
-		!showMore ? props.showMore() : false;
+		// !showMore ? props.showMore() : false;
+		// !showMore
+		// 	? setTimeout(() => {
+		// 			scrollRef.current.scrollToIndex({index: 0, animated: true, viewPosition: 0});
+		// 	  }, 500)
+		// 	: setTimeout(() => {
+		// 			scrollRef.current.scrollToIndex({index: props.items.length - 1, animated: true, viewPosition: 0});
+		// 	  }, 500);
 	};
 
 	const renderItem = (item, index) => {
 		return (
 			<View key={index} style={[style.listItem]}>
-				<ReviewBriefItem data={item} onPressReview={() => props.onPressReview(index)} onPressLike={() => props.onPressLike(index)} />
+				<ReviewBriefItem data={item} onPressReview={() => props.onPressReview(index)} onPressLike={bool => props.onPressLike(bool, index)} />
 			</View>
 		);
 	};
@@ -45,6 +52,20 @@ const ReviewBriefList = props => {
 			) : (
 				<></>
 			)}
+			{/* <FlatList
+				data={showMore ? props.items : props.items.slice(0, 2)}
+				renderItem={({item, index}) => renderItem(item, index)}
+				keyExtractor={item => item.id}
+				ref={scrollRef}
+			/>
+			{props.items && props.items.length > 2 ? ( //아이템이 두 개 이상일 경우 더보기 출력
+				<TouchableOpacity onPress={onPressShowMore} style={[style.showMore]}>
+					<Text style={[txt.noto24, {color: GRAY10}]}>더보기</Text>
+					{!showMore ? <Arrow_Down_GRAY10 /> : <Arrow_Up_GRAY10 />}
+				</TouchableOpacity>
+			) : (
+				<></>
+			)} */}
 		</View>
 	);
 };

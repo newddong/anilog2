@@ -44,14 +44,14 @@ export default FavoriteCommunity = ({route}) => {
 							collectionName: 'communityobjects',
 						},
 						result => {
-							// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg);
+							console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg.length);
 							let reviewCont = [];
 							let articleCont = [];
 							result.msg.map((v, i) => {
-								v.favorite_etc_post_id.community_is_favorite = true;
-								if (v.favorite_etc_post_id.community_type == 'review') {
-									reviewCont.push(v.favorite_etc_post_id);
-								} else articleCont.push(v.favorite_etc_post_id);
+								v.favorite_etc_target_object_id.community_is_favorite = true;
+								if (v.favorite_etc_target_object_id.community_type == 'review') {
+									reviewCont.push(v.favorite_etc_target_object_id);
+								} else articleCont.push(v.favorite_etc_target_object_id);
 							});
 							setReview(reviewCont);
 							setArticle(articleCont);

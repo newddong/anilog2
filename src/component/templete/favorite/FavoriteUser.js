@@ -1,12 +1,11 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {followUser, getChekingFollow, unFollowUser} from 'Root/api/userapi';
 import AccountHashList from 'Organism/list/AccountHashList';
 import SelectStat from 'Organism/list/SelectStat';
 import {login_style, temp_style, selectstat_view_style} from 'Templete/style_templete';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import {favoriteEtc, getFavoriteEtcListByUserId} from 'Root/api/favoriteetc';
+import {getFavoriteEtcListByUserId, setFavoriteEtcCancelList} from 'Root/api/favoriteetc';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {EmptyIcon} from 'Root/component/atom/icon';
 import {txt} from 'Root/config/textstyle';
@@ -20,7 +19,11 @@ export default FavoriteUser = props => {
 	let selectCNT = React.useRef(0);
 
 	React.useEffect(() => {
-		fetchData();
+		const unsubscribe = navigation.addListener('focus', () => {
+			fetchData();
+		});
+		// fetchData();
+		return unsubscribe;
 	}, []);
 
 	const fetchData = () => {
@@ -30,32 +33,15 @@ export default FavoriteUser = props => {
 				collectionName: 'userobjects',
 			},
 			result => {
-				console.log('result / getFavoriteEtcListByUserId : FavoriteUser ', result.msg.length);
+				// console.log('result / getFavoriteEtcListByUserId : FavoriteUser ', result.msg);
 				let userList = [];
 				if (result.msg.length == 0) {
-					setData([]);
+					setData(userList);
 				} else {
 					result.msg.map((v, i) => {
-						getChekingFollow(
-							{
-								follow_userobject_id: v.favorite_etc_post_id._id,
-							},
-							result => {
-								// console.log('result / getChekingFollow / FavoriteUser : ', result.msg);
-								if (result.msg) {
-									v.favorite_etc_post_id.is_follow = true;
-								} else {
-									v.favorite_etc_post_id.is_follow = false;
-								}
-								userList.push(v.favorite_etc_post_id);
-								setData(userList);
-							},
-							err => {
-								console.log(' err / getCheckingFollow / FavoriteUser : ', err);
-							},
-						);
-						// v.favorite_etc_post_id.is_follow = true;
+						userList.push(v.favorite_etc_target_object_id);
 					});
+					setData(userList);
 				}
 			},
 			err => {
@@ -96,7 +82,7 @@ export default FavoriteUser = props => {
 	// 선택하기 => 선택 삭제 클릭
 	const deleteSelectedItem = () => {
 		if (data.findIndex(e => e.checkBoxState == true) == -1) {
-			Modal.popOneBtn('선택된 리뷰가 없습니다.', '확인', () => Modal.close());
+			Modal.popOneBtn('선택된 친구가 없습니다.', '확인', () => Modal.close());
 			// CheckBox 상태가 true인 것이 존재하는 경우 삭제 시작
 		} else {
 			console.log('삭제시작');
@@ -113,57 +99,26 @@ export default FavoriteUser = props => {
 	};
 
 	const doDeleteFavorite = list => {
-		list.map((v, i) => {
-			console.log('v.id', v._id, v.community_title);
-			favoriteEtc(
-				{
-					collectionName: 'userobjects',
-					post_object_id: v._id,
-					is_favorite: false,
-				},
-				result => {
-					console.log('result/ onPressLike / FavoriteUser : ', result.msg.targetPost);
-					fetchData();
-				},
-				err => console.log('err / onPressLike / FavoriteUser : ', err),
-			);
-		});
+		const listToDelete = list.map(v => v._id);
+		setFavoriteEtcCancelList(
+			{
+				collectionName: 'userobjects',
+				target_object_id: listToDelete,
+			},
+			result => {
+				console.log('result / setFavoriteEtcCancelList : FavoriteUser :  ', result.msg);
+				fetchData();
+			},
+			err => {
+				console.log(' err / setFavoriteEtcCancelList / FavoriteUser ', err);
+			},
+		);
 	};
 
 	//CheckBox 클릭 시
 	const onCheckBox = (item, index) => {
 		let copy = [...data];
 		copy[index].checkBoxState = !copy[index].checkBoxState;
-	};
-
-	const onClickFollow = item => {
-		if (item.is_follow) {
-			unFollowUser(
-				{
-					follow_userobject_id: item._id,
-				},
-				result => {
-					console.log('result / unFollow / FavoriteUser : ', result.msg);
-					fetchData();
-				},
-				err => {
-					console.log('err / unFollow / FavoriteUser : ', err);
-				},
-			);
-		} else {
-			followUser(
-				{
-					follow_userobject_id: item._id,
-				},
-				result => {
-					console.log('result / unFollow / FavoriteUser : ', result.msg);
-					fetchData();
-				},
-				err => {
-					console.log('err / unFollow / FavoriteUser : ', err);
-				},
-			);
-		}
 	};
 
 	const onClickLabel = data => {
@@ -208,10 +163,8 @@ export default FavoriteUser = props => {
 						checkBoxMode={checkBoxMode}
 						onClickLabel={onClickLabel}
 						onClickHash={onClickHash}
-						onClickFollow={onClickFollow}
 						onCheckBox={onCheckBox}
 						routeName={props.route.name}
-						// showFollowBtn={true}
 						whenEmpty={whenEmpty}
 					/>
 				</View>

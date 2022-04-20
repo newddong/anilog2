@@ -10,7 +10,7 @@ import {getProtectRequestList} from 'Root/api/shelterapi.js';
 import {btn_w306_h68} from 'Component/atom/btn/btn_style';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 import Modal from 'Root/component/modal/Modal';
-import {favoriteEtc} from 'Root/api/favoriteetc';
+import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import Loading from 'Root/component/molecules/modal/Loading';
 
 export default ProtectRequestList = ({navigation, route}) => {
@@ -23,12 +23,25 @@ export default ProtectRequestList = ({navigation, route}) => {
 		request_number: 10000,
 	});
 	const [onlyAdoptable, setOnlyAdoptable] = React.useState(false);
+	React.useEffect(() => {
+		Modal.popLoading();
+		const unsubscribe = navigation.addListener('focus', () => {
+			getList();
+		});
+		getList(); //필터가 바뀔 때마다 호출되도록 설정
+		return unsubscribe;
+	}, [filterData]);
 
 	const getList = () => {
 		getProtectRequestList(
 			filterData,
 			result => {
-				// console.log('result / getProtectRequestList / ProtectRequestList : ', result.msg);
+				// console.log('result / getProtectRequestList / ProtectRequestList : ', result.msg[0]);
+				result.msg.map(v => {
+					if (v.protect_request_writer_id.shelter_name == '요한 보호소') {
+						console.log('is_favorite : ', v.is_favorite);
+					}
+				});
 				result.msg.forEach(each => {
 					each.protect_animal_sex = each.protect_animal_id.protect_animal_sex;
 					each.protect_animal_status = each.protect_animal_id.protect_animal_status;
@@ -45,15 +58,6 @@ export default ProtectRequestList = ({navigation, route}) => {
 			},
 		);
 	};
-
-	React.useEffect(() => {
-		Modal.popLoading();
-		const unsubscribe = navigation.addListener('focus', () => {
-			getList();
-		});
-		getList(); //필터가 바뀔 때마다 호출되도록 설정
-		return unsubscribe;
-	}, [filterData]);
 
 	const onClickLabel = (status, id, item) => {
 		let sexValue = '';
@@ -85,17 +89,19 @@ export default ProtectRequestList = ({navigation, route}) => {
 
 	//별도의 API 사용 예정.
 	const onOff_FavoriteTag = (bool, index) => {
-		// console.log('즐겨찾기=>' + value + ' ' + index);
 		console.log(' data[index]._id', data[index]._id);
 		console.log('bool', bool);
-		favoriteEtc(
+		setFavoriteEtc(
 			{
 				collectionName: 'protectrequestobjects',
-				post_object_id: data[index]._id,
+				target_object_id: data[index]._id,
 				is_favorite: bool,
 			},
 			result => {
-				console.log('result / favoriteEtc / ProtectRequestList : ', result.msg);
+				console.log('result / favoriteEtc / ProtectRequestList : ', result.msg.favoriteEtc);
+				let prevData = [...data]; //
+				prevData[index].is_favorite = bool;
+				setData(prevData);
 			},
 			err => {
 				console.log('err / favoriteEtc / PRotectRequestList : ', err);

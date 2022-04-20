@@ -22,7 +22,8 @@ import moment from 'moment';
 const UserLocationTimeLabel = props => {
 	const navigation = useNavigation();
 	const isLoginUser = userGlobalObject.userInfo._id == props.data._id;
-	const isMyPet = props.data.user_type == 'pet' && userGlobalObject.userInfo.user_my_pets.includes(props.data._id);
+	const isMyPet =
+		props.data.user_type == 'pet' && !userGlobalObject.userInfo.isPreviewMode && userGlobalObject.userInfo.user_my_pets.includes(props.data._id);
 
 	const getStatusMark = () => {
 		switch (props.data.pet_status) {

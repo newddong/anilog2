@@ -38,6 +38,7 @@ import PhotoListViewModal from 'Root/component/molecules/modal/PhotoListViewModa
 import Loading from 'Root/component/molecules/modal/Loading';
 import LocationCheckModal from 'Root/component/molecules/modal/LocationCheckModal';
 import AvatarSelectFromWriteModal from 'Root/component/molecules/modal/AvatarSelectFromWriteModal';
+import LoginRequestModal from 'Root/component/molecules/modal/LoginRequestModal';
 
 export function useModal() {
 	const [isPop, setPop] = React.useState(false);
@@ -254,6 +255,11 @@ export function useModal() {
 
 	Modal.popAvatarSelectFromWriteModal = onSelectPet => {
 		popIn(<AvatarSelectFromWriteModal onSelectPet={onSelectPet} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popLoginRequestModal = onOk => {
+		popIn(<LoginRequestModal onOk={onOk} />);
 		!isPop && setPop(true);
 	};
 

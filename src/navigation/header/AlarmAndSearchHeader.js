@@ -1,19 +1,15 @@
 import React from 'react';
-import {Text, TextInput, View, Image, ScrollView, Dimensions, SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
-
-import {Logo} from 'Asset/image';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {AlarmBadger48, Search48, BackArrow32} from 'Atom/icon';
 import DP from 'Root/config/dp';
-import {WHITE, APRI10} from 'Root/config/color';
+import {WHITE} from 'Root/config/color';
 
 export default AlarmAndSearchHeader = ({navigation, route, options, back}) => {
 	const clickSearch = () => {
-		// navigation.navigate('Search');
-		// alert('Search');
-		alert('이후 버전에서 제공할 예정입니다!');
+		navigation.navigate('Search', {mother: 0, child: 0, prevNav: route.name});
 	};
 	const clickAlarm = () => {
-		alert('이후 버전에서 제공할 예정입니다!');
+		navigation.navigate('AlarmList');
 	};
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
@@ -24,7 +20,6 @@ export default AlarmAndSearchHeader = ({navigation, route, options, back}) => {
 			</TouchableOpacity>
 			<View style={style.buttonContainer}>
 				<Search48 onPress={clickSearch} />
-
 				<AlarmBadger48 onPress={clickAlarm} />
 			</View>
 		</View>

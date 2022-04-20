@@ -927,7 +927,7 @@ export const temp_style = StyleSheet.create({
 		justifyContent: 'space-between',
 	},
 	shelterSmallLabel_animalProtectRequestDetail: {
-		width: 516 * DP,
+		width: 570 * DP,
 		height: 88 * DP,
 		// backgroundColor: 'yellow',
 	},
@@ -1743,8 +1743,8 @@ export const addVolunteers = StyleSheet.create({
 		marginTop: 20 * DP,
 	},
 	accountList: {
-		width: 730 * DP,
-		marginLeft: 48 * DP,
+		width: 654 * DP,
+		// marginLeft: 48 * DP,
 		marginTop: 30 * DP,
 	},
 	btn_w654: {
@@ -3828,6 +3828,8 @@ export const reportDetail = StyleSheet.create({
 		width: 654 * DP,
 		height: 44 * DP,
 		alignItems: 'flex-end',
+		marginBottom: 10 * DP,
+		// marginTop: 10 * DP,
 		// backgroundColor: '#F8DDDD',
 	},
 	wrp_main: {
@@ -3936,7 +3938,7 @@ export const feedCommentList = StyleSheet.create({
 		// backgroundColor: 'yellow',
 	},
 	replyTextInput_photo: {
-		width: 442 * DP,
+		width: 460 * DP,
 		marginRight: 12 * DP,
 		paddingVertical: 0,
 		includeFontPadding: false,
@@ -3954,7 +3956,7 @@ export const feedCommentList = StyleSheet.create({
 		height: 72 * DP,
 		marginRight: 12 * DP,
 		borderRadius: 24 * DP,
-		backgroundColor: GRAY30,
+		backgroundColor: GRAY40,
 		justifyContent: 'center',
 		paddingLeft: 25 * DP,
 		paddingTop: 5 * DP,
@@ -3995,7 +3997,8 @@ export const feedCommentList = StyleSheet.create({
 		borderRadius: 30 * DP,
 		marginRight: 12 * DP,
 		paddingHorizontal: 20 * DP,
-		paddingVertical: 12 * DP,
+		// paddingVertical: 12 * DP,
+		paddingBottom: 20 * DP,
 		backgroundColor: GRAY30,
 	},
 	commentBox_top_photo: {
@@ -4501,6 +4504,7 @@ export const animalProtectRequestDetail_style = StyleSheet.create({
 	container: {
 		width: 750 * DP,
 		alignItems: 'center',
+		paddingBottom: 40 * DP,
 	},
 	requestProtect: {
 		marginTop: 30 * DP,

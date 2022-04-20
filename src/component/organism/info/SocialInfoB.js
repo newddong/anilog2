@@ -31,7 +31,7 @@ export default SocialInfoB = props => {
 				<TouchableWithoutFeedback onPress={onPressUpload}>
 					<Text style={[txt.roboto40b, socialInfoB.number]}>{count_to_K(props.data.user_upload_count)}</Text>
 				</TouchableWithoutFeedback>
-				<Text style={[txt.noto24, socialInfoB.title]}>업로드</Text>
+				<Text style={[txt.noto28, socialInfoB.title]}>업로드</Text>
 			</View>
 			<View style={[socialInfoB.socialInfo]}>
 				<TouchableWithoutFeedback onPress={moveToSocialRelation}>

@@ -1,6 +1,6 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {GRAY10, GRAY20, GRAY30} from 'Root/config/color';
 import CommentList from 'Root/component/organism/comment/CommentList';
@@ -10,14 +10,15 @@ import ArticleList from 'Root/component/organism/list/ArticleList';
 import {useNavigation} from '@react-navigation/core';
 import {getCommunityList, updateAndDeleteCommunity} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {createComment, getCommentListByCommunityId, updateComment} from 'Root/api/commentapi';
+import {createComment, deleteComment, getCommentListByCommunityId, updateComment} from 'Root/api/commentapi';
 import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import community_obj from 'Root/config/community_obj';
-import {favoriteEtc} from 'Root/api/favoriteetc';
 import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
 import {REPORT_MENU} from 'Root/i18n/msg';
+import {setFavoriteEtc} from 'Root/api/favoriteetc';
+import ParentComment from 'Root/component/organism/comment/ParentComment';
 
 /**
  * 자유게시글 상세 내용
@@ -42,6 +43,7 @@ export default ArticleDetail = props => {
 	});
 	community_obj.current = data._id;
 	const flatListRef = React.useRef();
+	const commentListHeight = React.useRef(100);
 
 	React.useEffect(() => {
 		setData(props.route.params.community_object);
@@ -54,47 +56,6 @@ export default ArticleDetail = props => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			//다른 탭(ex - My 탭의 즐겨찾기한 커뮤니티 목록에서 들어온 경우)에서의 호출
-			let lines = [];
-			if (data.community_content.includes('<span')) {
-				const parsingSpan = data.community_content.replaceAll('<span', '<div');
-				const parsingSpan2 = parsingSpan.replaceAll('</span>', '</div>');
-				let matches = parsingSpan2.match(/<div\b(?:(R)|(?:(?!<\/?div).))*<\/div>/gm);
-				// console.log('matched', matches);
-				matches.map((v, i) => {
-					// let remove = v.match(/<div\b(?:(R)|(?:(?!<\/?div).))*<\/div>/gm);
-					let getImgTag = v.match(/<img[\w\W]+?\/?>/g); //img 태그 추출
-					console.log('v', i, v);
-					const remove = v.match(/<div[^>]+>([^<]+?)<\/div>/);
-					console.log('remove', remove, i);
-					if (getImgTag) {
-						let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i); //img 태그가 있는 경우 src 추출
-						lines.push({image: src[1]});
-					} else {
-						if (remove != undefined) {
-							lines.push(remove[1]);
-						}
-					}
-				});
-				data.contents = lines;
-			} else {
-				let matches = data.community_content.match(/<div\b(?:(R)|(?:(?!<\/?div).))*<\/div>/gm);
-				matches.map((v, i) => {
-					let remove = v.match(/\<div\>(.+)\<\/div\>/);
-					let getImgTag = v.match(/<img[\w\W]+?\/?>/g);
-					// console.log('remove', i, remove, 'v', v);
-					if (getImgTag) {
-						let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i); //img 태그가 있는 경우 src 추출
-						// console.log('src', src);
-						lines.push({image: src[1]});
-					} else {
-						if (remove != undefined) {
-							lines.push(remove[1]);
-						}
-					}
-				});
-				data.contents = lines;
-			}
-
 			if (community_obj.object.hasOwnProperty('_id')) {
 				if (community_obj.object._id != data._id) {
 					//현재 보고 있는 페이지와 다른 게시글이 호출된 경우
@@ -165,7 +126,7 @@ export default ArticleDetail = props => {
 				request_number: 1000,
 			},
 			comments => {
-				setComments(comments.msg);
+				setComments(comments.msg.filter(e => e.comment_is_delete != true));
 				// console.log('comments', comments);
 			},
 			err => console.log('getCommentListByFeedId', err),
@@ -175,108 +136,147 @@ export default ArticleDetail = props => {
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
 	const onWrite = () => {
-		if (editData.comment_contents.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
-
-		let param = {
-			comment_contents: editData.comment_contents, //내용
-			comment_is_secure: privateComment, //공개여부 테스트때 반영
-			community_object_id: data._id,
-		};
-
-		if (editData.comment_photo_uri && editData.comment_photo_uri.length > 0) {
-			param.comment_photo_uri = editData.comment_photo_uri;
-		}
-
-		if (parentComment) {
-			//대댓글일 경우 해당 부모 댓글에 대한 댓글을 추가
-			param = {...param, commentobject_id: parentComment._id};
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
 		} else {
-			//부모댓글에 쓰는 경우가 아니라면 community 게시글에 대한 댓글을 추가
-			param = {...param, community_object_id: data._id};
-		}
+			if (editData.comment_contents.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
 
-		if (editMode) {
-			updateComment(
-				{
-					...param,
-					commentobject_id: editData._id,
-					comment_photo_remove: !editData.comment_photo_uri || editData.comment_photo_uri == 0,
-				},
-				result => {
-					console.log(result);
-					setParentComment();
-					setEditData({
-						comment_contents: '',
-						comment_photo_uri: '',
+			let param = {
+				comment_contents: editData.comment_contents, //내용
+				comment_is_secure: privateComment, //공개여부 테스트때 반영
+				community_object_id: data._id,
+			};
+
+			if (editData.comment_photo_uri && editData.comment_photo_uri.length > 0) {
+				param.comment_photo_uri = editData.comment_photo_uri;
+			}
+
+			if (parentComment) {
+				//대댓글일 경우 해당 부모 댓글에 대한 댓글을 추가
+				param = {...param, commentobject_id: parentComment._id};
+			} else {
+				//부모댓글에 쓰는 경우가 아니라면 community 게시글에 대한 댓글을 추가
+				param = {...param, community_object_id: data._id};
+			}
+
+			if (editMode) {
+				let whichComment = '';
+				comments.map((v, i) => {
+					if (v._id == editData._id) {
+						whichComment = i;
+					}
+				});
+				updateComment(
+					{
+						...param,
+						commentobject_id: editData._id,
+						comment_photo_remove: !editData.comment_photo_uri || editData.comment_photo_uri == 0,
+					},
+					result => {
+						console.log(result);
+						setParentComment();
+						setEditData({
+							comment_contents: '',
+							comment_photo_uri: '',
+						});
+						getCommentListByCommunityId(
+							{
+								community_object_id: data._id,
+								request_number: 1000,
+							},
+							comments => {
+								!parentComment && setComments([]); //댓글목록 초기화
+								setComments(comments.msg.filter(e => e.comment_is_delete != true));
+								parentComment && addChildCommentFn.current();
+								// console.log('comments', comments);
+								setTimeout(() => {
+									flatListRef.current.scrollToIndex({animated: true, index: whichComment});
+								}, 500);
+							},
+							err => console.log('getCommentListByFeedId', err),
+						);
+					},
+					err => Modal.alert(err),
+				);
+			} else {
+				let whichParent = '';
+				if (parentComment) {
+					comments.map((v, i) => {
+						if (v._id == param.commentobject_id) {
+							whichParent = i;
+						}
 					});
-					getCommentListByCommunityId(
-						{
-							community_object_id: data._id,
-							request_number: 1000,
-						},
-						comments => {
-							!parentComment && setComments([]); //댓글목록 초기화
-							setComments(comments.msg);
-							parentComment && addChildCommentFn.current();
-							// console.log('comments', comments);
-						},
-						err => console.log('getCommentListByFeedId', err),
-					);
-				},
-				err => Modal.alert(err),
-			);
-		} else {
-			createComment(
-				param,
-				result => {
-					console.log(result);
-					setParentComment();
-					setEditData({
-						comment_contents: '',
-						comment_photo_uri: '',
-					});
-					getCommentListByCommunityId(
-						{
-							community_object_id: data._id,
-							request_number: 1000,
-						},
-						comments => {
-							!parentComment && setComments([]); //댓글목록 초기화
-							setComments(comments.msg);
-							parentComment && addChildCommentFn.current();
-							// console.log('comments', comments);
-							input.current.blur();
-							// scrollRef.current.scrollToOffset({offset: 0});
-						},
-						err => console.log('getCommentListByFeedId', err),
-					);
-				},
-				err => Modal.alert(err),
-			);
+				}
+				createComment(
+					param,
+					result => {
+						console.log(result);
+						setParentComment();
+						setEditData({
+							comment_contents: '',
+							comment_photo_uri: '',
+						});
+						getCommentListByCommunityId(
+							{
+								community_object_id: data._id,
+								request_number: 1000,
+							},
+							comments => {
+								!parentComment && setComments([]); //댓글목록 초기화
+								setComments(comments.msg.filter(e => e.comment_is_delete != true));
+								parentComment && addChildCommentFn.current();
+								// console.log('comments', comments);
+								setTimeout(() => {
+									whichParent == ''
+										? flatListRef.current.scrollToIndex({animated: true, index: 0})
+										: flatListRef.current.scrollToIndex({animated: true, index: whichParent});
+								}, 500);
+								input.current.blur();
+							},
+							err => console.log('getCommentListByCommunityId', err),
+						);
+					},
+					err => Modal.alert(err),
+				);
+			}
 		}
 	};
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
 	const onLockBtnClick = () => {
-		setPrivateComment(!privateComment);
-		!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setPrivateComment(!privateComment);
+			!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+		}
 	};
 
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
 	const onAddPhoto = () => {
-		// navigation.push('SinglePhotoSelect', props.route.name);
-		console.log('onAddphoto');
-		ImagePicker.openPicker({
-			compressImageQuality: 0.8,
-			cropping: true,
-		})
-			.then(images => {
-				console.log('onAddphoto Imagepicker', images);
-				setEditData({...editData, comment_photo_uri: images.path});
-				Modal.close();
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			// navigation.push('SinglePhotoSelect', props.route.name);
+			console.log('onAddphoto');
+			ImagePicker.openPicker({
+				compressImageQuality: 0.8,
+				cropping: true,
 			})
-			.catch(err => console.log(err + ''));
-		Modal.close();
+				.then(images => {
+					console.log('onAddphoto Imagepicker', images);
+					setEditData({...editData, comment_photo_uri: images.path});
+					Modal.close();
+				})
+				.catch(err => console.log(err + ''));
+			Modal.close();
+		}
 	};
 
 	const onDeleteImage = () => {
@@ -292,12 +292,32 @@ export default ArticleDetail = props => {
 
 	// 대댓글 쓰기 버튼 클릭 콜백함수
 	const onReplyBtnClick = (parentCommentId, addChildComment) => {
-		console.log('대댓글 쓰기 버튼 클릭 : ', parentCommentId.comment_writer_id.user_nickname);
-		setParentComment(parentCommentId);
-		input.current.focus();
-		editComment || setEditComment(true);
-		addChildCommentFn.current = addChildComment;
-		flatListRef.current.scrollToIndex({animated: true, index: 1});
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			console.log('대댓글 쓰기 버튼 클릭 : ', parentCommentId.comment_writer_id.user_nickname);
+			setParentComment(parentCommentId);
+			editComment || setEditComment(true);
+			addChildCommentFn.current = addChildComment;
+			scrollToReplyBox();
+		}
+	};
+
+	//미트볼, 수정을 누르면 동작
+	const onEdit = comment => {
+		console.log('수정 데이터', comment);
+		setEditMode(true);
+		setEditData({...comment});
+		scrollToReplyBox();
+	};
+
+	const scrollToReplyBox = () => {
+		flatListRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 0});
+		setTimeout(() => {
+			input.current?.focus();
+		}, 500);
 	};
 
 	//답글 쓰기 후 댓글 작성자 우측 답글취소 버튼 클릭
@@ -351,16 +371,24 @@ export default ArticleDetail = props => {
 						break;
 					case '신고':
 						Modal.close();
-						setTimeout(() => {
-							Modal.popOneBtnSelectModal(
-								REPORT_MENU,
-								'이 게시물을 신고 하시겠습니까?',
-								selectedItem => {
-									alert(selectedItem);
-								},
-								'신고',
-							);
-						}, 200);
+						if (userGlobalObject.userInfo.isPreviewMode) {
+							setTimeout(() => {
+								Modal.popLoginRequestModal(() => {
+									navigation.navigate('Login');
+								});
+							}, 100);
+						} else {
+							setTimeout(() => {
+								Modal.popOneBtnSelectModal(
+									REPORT_MENU,
+									'이 게시물을 신고 하시겠습니까?',
+									selectedItem => {
+										alert(selectedItem);
+									},
+									'신고',
+								);
+							}, 200);
+						}
 						break;
 					default:
 						break;
@@ -370,14 +398,6 @@ export default ArticleDetail = props => {
 			false,
 			false,
 		);
-	};
-
-	//미트볼, 수정을 누르면 동작
-	const onEdit = comment => {
-		console.log('수정 데이터', comment);
-		setEditMode(true);
-		setEditData({...comment});
-		input.current?.focus();
 	};
 
 	// 게시글 내용 클릭
@@ -393,36 +413,62 @@ export default ArticleDetail = props => {
 
 	//즐겨찾기 클릭
 	const onPressFavorite = bool => {
-		favoriteEtc(
+		setFavoriteEtc(
 			{
 				collectionName: 'communityobjects',
-				post_object_id: data._id,
+				target_object_id: data._id,
 				is_favorite: bool,
 			},
 			result => {
-				console.log('result / favoriteEtc / ArticleDetail : ', result.msg);
+				console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
 				// setData({...data, })
 			},
 			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
 		);
 	};
 
+	//댓글 대댓글 삭제
+	const onPressDelete = id => {
+		deleteComment(
+			{
+				commentobject_id: id,
+			},
+			result => {
+				console.log('result / delectComment / ProtectCommentList : ', result.msg.comment_is_delete);
+				getComment();
+			},
+			err => {
+				console.log(' err / deleteComment / ProtectCommentList : ', err);
+			},
+		);
+	};
+
 	//좋아요 클릭
 	const onPressLike = bool => {
 		console.log('bool', bool);
-		likeEtc(
-			{
-				collectionName: 'communityobjects',
-				post_object_id: data._id,
-				is_like: bool,
-			},
-			result => {
-				console.log('result/ onPressLike / ReviewMain : ', result.msg.targetPost);
-				setData({...data, community_is_like: bool, community_like_count: bool ? ++data.community_like_count : --data.community_like_count});
-				// setData({...data, community_like_count: bool ? data.community_like_count++ : data.community_like_count--});
-			},
-			err => console.log('err / onPressLike / ReviewMain : ', err),
-		);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			likeEtc(
+				{
+					collectionName: 'communityobjects',
+					post_object_id: data._id,
+					is_like: bool,
+				},
+				result => {
+					console.log('result/ onPressLike / ReviewMain : ', result.msg.targetPost);
+					setData({...data, community_is_like: bool, community_like_count: bool ? ++data.community_like_count : --data.community_like_count});
+					// setData({...data, community_like_count: bool ? data.community_like_count++ : data.community_like_count--});
+				},
+				err => console.log('err / onPressLike / ReviewMain : ', err),
+			);
+		}
+	};
+
+	const onLayoutCommentList = e => {
+		commentListHeight.current = e.nativeEvent.layout.height;
 	};
 
 	const header = () => {
@@ -451,14 +497,11 @@ export default ArticleDetail = props => {
 						<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
 					</View>
 				)}
-				<View style={[style.commentContainer, {alignItems: 'center'}]}>
-					<CommentList items={comments} onPressReplyBtn={onReplyBtnClick} onEdit={onEdit} />
-				</View>
 			</View>
 		);
 	};
 
-	const commentBox = () => {
+	const bottom = () => {
 		return (
 			<View style={{alignItems: 'center'}}>
 				<View style={[{marginTop: 40 * DP, marginBottom: 80 * DP}]}>
@@ -483,10 +526,20 @@ export default ArticleDetail = props => {
 			</View>
 		);
 	};
-	const components = [header(), commentBox()];
 
 	const renderItem = ({item, index}) => {
-		return item;
+		// return item;
+		return (
+			<View style={[style.commentContainer]} key={item._id} onLayout={onLayoutCommentList}>
+				<ParentComment
+					parentComment={item}
+					onPressReplyBtn={onReplyBtnClick} // 부모 댓글의 답글쓰기 클릭 이벤트
+					onEdit={onEdit}
+					onPressDelete={onPressDelete}
+					onPressDeleteChild={onPressDelete}
+				/>
+			</View>
+		);
 	};
 
 	if (comments == 'false' || data == 'false') {
@@ -494,71 +547,15 @@ export default ArticleDetail = props => {
 	} else
 		return (
 			<View style={[style.container]}>
-				<View style={[{alignItems: 'center', paddingBottom: 40 * DP}]}>
-					<FlatList
-						// data={[{}]}
-						data={components}
-						ref={flatListRef}
-						listKey={({item, index}) => index}
-						renderItem={renderItem}
-						// renderItem={({item, index}) => {
-						// 	return (
-						// 		<View style={[{width: 750 * DP, alignItems: 'center'}]}>
-						// 			<View style={{alignItems: 'center'}}>
-						// 				<Article
-						// 					data={data}
-						// 					onPressMeatball={onPressMeatball}
-						// 					onPressFavorite={onPressFavorite}
-						// 					route={props.route.name}
-						// 					searchInput={searchInput}
-						// 				/>
-						// 				<View style={[style.like, {}]}>
-						// 					{data.community_is_like ? (
-						// 						<Like48_Filled onPress={() => onPressLike(false)} />
-						// 					) : (
-						// 						<Like48_Border onPress={() => onPressLike(true)} />
-						// 					)}
-						// 					<Text style={[txt.noto24, {color: GRAY10, marginLeft: 15 * DP}]}>{data.community_like_count}</Text>
-						// 				</View>
-						// 				<View style={[style.separator]} />
-						// 			</View>
-						// 			{comments && comments.length > 0 ? (
-						// 				<TouchableOpacity onPress={onPressReply} style={[style.replyCountContainer]}>
-						// 					<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개 모두 보기</Text>
-						// 				</TouchableOpacity>
-						// 			) : (
-						// 				<View style={[style.replyCountContainer, {alignSelf: 'center', alignItems: 'flex-start'}]}>
-						// 					<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
-						// 				</View>
-						// 			)}
-						// 			<View style={[style.commentContainer]}>
-						// 				<CommentList items={comments} onPressReplyBtn={onReplyBtnClick} onEdit={onEdit} />
-						// 			</View>
-						// 			<View style={[{marginTop: 40 * DP, marginBottom: 80 * DP}]} onLayout={onLayout}>
-						// 				<ReplyWriteBox
-						// 					onAddPhoto={onAddPhoto}
-						// 					onChangeReplyInput={onChangeReplyInput}
-						// 					onLockBtnClick={onLockBtnClick}
-						// 					onWrite={onWrite}
-						// 					onDeleteImage={onDeleteImage}
-						// 					privateComment={privateComment}
-						// 					ref={input}
-						// 					editData={editData}
-						// 					shadow={false}
-						// 					parentComment={parentComment}
-						// 					onCancelChild={onCancelChild}
-						// 				/>
-						// 			</View>
-						// 			<ArticleList
-						// 				items={articleList}
-						// 				onPressArticle={onPressArticle} //게시글 내용 클릭
-						// 			/>
-						// 		</View>
-						// 	);
-						// }}
-						showsVerticalScrollIndicator={false}
-					/>
-				</View>
+				<FlatList
+					data={comments}
+					ref={flatListRef}
+					listKey={({item, index}) => index}
+					ListHeaderComponent={header()}
+					ListFooterComponent={bottom()}
+					showsVerticalScrollIndicator={false}
+					renderItem={renderItem}
+				/>
 			</View>
 		);
 };
@@ -603,6 +600,7 @@ const style = StyleSheet.create({
 	commentContainer: {
 		paddingBottom: 10 * DP,
 		paddingTop: 20 * DP,
+		alignItems: 'center',
 		// backgroundColor: 'yellow',
 	},
 	footer: {

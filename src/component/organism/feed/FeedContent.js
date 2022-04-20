@@ -1,11 +1,11 @@
 import React from 'react';
-import {Dimensions, Text, View, Platform} from 'react-native';
+import {Text, View, Platform} from 'react-native';
 import {organism_style, feedContent_style} from 'Organism/style_organism';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
 import {useNavigation, useRoute} from '@react-navigation/core';
-import {Meatball50_GRAY20_Horizontal, Share48_Filled} from 'Atom/icon';
+import {FavoriteTag48_Filled, Meatball50_GRAY20_Horizontal, Share48_Filled} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
-import {Arrow_Down_GRAY20, Arrow_Up_GRAY20} from 'Atom/icon';
+import {Arrow_Down_GRAY20} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {GRAY10} from 'Root/config/color';
 import {
@@ -28,7 +28,7 @@ import {createMemoBox, followUser, getAnimalListNotRegisterWithCompanion, getFol
 import {favoriteFeed, getFavoriteFeedListByUserId} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import MissingReportInfo from 'Organism/info/MissingReportInfo';
-import {getStringLength, getLinesOfString} from 'Root/util/stringutil';
+import {getStringLength, getLinesOfString, count_to_K} from 'Root/util/stringutil';
 
 export default FeedContent = props => {
 	const {
@@ -72,18 +72,17 @@ export default FeedContent = props => {
 	const [labelLayout, setlabelLayout] = React.useState({height: 0, width: 0});
 	const [show, setShow] = React.useState(false);
 	const [send, setSend] = React.useState();
+	// console.log('35353', feed_avatar_id, 'sss', feed_writer_id);
 	//코드 중복 해소를 위한 처리.
 	const feed_writer = props.data.feed_avatar_id ? props.data.feed_avatar_id : props.data.feed_writer_id;
 	React.useEffect(() => {
 		if (typeof feed_avatar_id == 'object') {
-			console.log('object');
-			// const send = feed_avatar_id;
 			setSend(feed_avatar_id);
 		} else {
-			// const sent = props.data.feed_writer_id;
 			setSend(props.data.feed_writer_id);
 		}
 	}, [props.data]);
+
 	//FeedText가 담긴 View 의 onLayout
 	const onLayoutText = event => {
 		const {width, height} = event.nativeEvent.layout;
@@ -506,29 +505,28 @@ export default FeedContent = props => {
 						</View> */}
 								</View>
 							) : (
+								//실종 및 제보게시글의 유저 라벨 우측에 출력되는 태그
 								<View style={[organism_style.button_view_feedContent]}>
-									{/* <View style={[organism_style.favoriteTag_view_feedContent]}>
+									<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
 										<View style={[organism_style.favoriteTag_feedContent]}>
 											<FavoriteTag48_Filled />
 										</View>
 										<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
-											<Text>{feed_favorite_count}</Text>
+											<Text style={[txt.roboto24, {color: GRAY10}]}>{count_to_K(props.data.feed_writer_id.user_favorite_count)}</Text>
 										</View>
-									</View> */}
-									<View style={[organism_style.share48_view_feedContent]}>
+									</View>
+									<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
+
+									{/* <View style={[organism_style.share48_view_feedContent]}>
 										<View style={[organism_style.share48_feedContent]}>
 											<Share48_Filled />
 										</View>
 										<View style={[organism_style.share_feedContent, feedContent_style.share]}>
 											<Text style={[txt.noto24, {color: GRAY10}]}>{SHARE}</Text>
 										</View>
-									</View>
+									</View> */}
 								</View>
 							)}
-							{/* <Text>{route.name}</Text> */}
-							{/* <Text>{lineCount}</Text> */}
-							<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
-							{/* <Text>{feed_type}</Text> */}
 						</View>
 					</View>
 

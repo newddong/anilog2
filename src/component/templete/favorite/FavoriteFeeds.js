@@ -1,7 +1,5 @@
-import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {Text, View} from 'react-native';
-
 import FeedThumbnailList from 'Organism/feed/FeedThumbnailList';
 import SelectStat from 'Organism/list/SelectStat';
 import {login_style, temp_style, selectstat_view_style} from 'Templete/style_templete';
@@ -14,7 +12,6 @@ import {getUserProfile} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {EmptyIcon} from 'Root/component/atom/icon';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {favoriteEtc} from 'Root/api/favoriteetc';
 
 //즐겨찾기한 피드목록을 조회
 export default FavoriteFeeds = ({route, navigation}) => {

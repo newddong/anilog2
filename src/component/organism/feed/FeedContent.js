@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions, Text, View, Platform} from 'react-native';
+import {Dimensions, Text, View, Platform, PixelRatio} from 'react-native';
 import {organism_style, feedContent_style} from 'Organism/style_organism';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
 import {useNavigation, useRoute} from '@react-navigation/core';

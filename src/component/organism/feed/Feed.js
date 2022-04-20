@@ -60,7 +60,7 @@ export default Feed = React.memo(props => {
 					Modal.close();
 				}, 1500);
 			} else {
-				navigation.push('FeedCommentList', {feedobject: props.data});
+				navigation.navigate('FeedCommentList', {feedobject: props.data});
 				console.log('move to FeedCommnetList', props.data);
 			}
 		});

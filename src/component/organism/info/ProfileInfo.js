@@ -18,7 +18,7 @@ import SelectInput from 'Root/component/molecules/button/SelectInput';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 import {FloatAddArticle_126x92} from 'Atom/icon';
 import {useNavigation} from '@react-navigation/core';
-import {favoriteEtc} from 'Root/api/favoriteetc';
+import {setFavoriteEtc} from 'Root/api/favoriteetc';
 
 /**
  * 프로필 템플릿 상단의 유저 정보
@@ -38,15 +38,12 @@ import {favoriteEtc} from 'Root/api/favoriteetc';
  */
 const ProfileInfo = props => {
 	const [data, setData] = React.useState(props.data);
-	const navigation = useNavigation();
-	console.log('data', data.is_follow);
 	// console.log('')
 	const [showMore, setShowMore] = React.useState(false); // 프로필 Description 우측 더보기 클릭 State
 	const [ownerListState, setOwnerListState] = React.useState(false); // userType이 Pet일 경우 반려인계정 출력 여부 T/F
 	const [companionListState, setCompanionListState] = React.useState(false); // userType이 User일 경우 반렫동물 리스트 출력 여부 T/F
 	const [into_height, setIntro_height] = React.useState(0); //user_introduction 의 길이 => 길이에 따른 '더보기' 버튼 출력 여부 결정
 
-	const isOwner = userGlobalObject.userInfo.user_my_pets.includes(data._id);
 	//더보기 클릭
 	const onPressShowMore = () => {
 		setShowMore(!showMore);
@@ -125,7 +122,7 @@ const ProfileInfo = props => {
 				/>
 			);
 		} else {
-			if (userGlobalObject.userInfo._id == data._id) {
+			if (!userGlobalObject.userInfo.isPreviewMode && userGlobalObject.userInfo._id == data._id) {
 				//보호소 프로필이며 자기 계정인 경우
 				return (
 					<View style={[profileInfo_style.shelterButtonContainer]}>
@@ -141,7 +138,13 @@ const ProfileInfo = props => {
 
 	//현재 프로필의 유저를 팔로우한다.
 	const onPressFollow = () => {
-		props.onPressFollow();
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			props.onPressFollow();
+		}
 	};
 
 	const socialAction = (v, i) => {
@@ -161,7 +164,9 @@ const ProfileInfo = props => {
 				break;
 		}
 	};
-	const doFavorite = () => {
+
+	//즐겨찾기 onOff
+	const doFavorite = bool => {
 		Modal.close();
 		setTimeout(() => {
 			Modal.popTwoBtn(
@@ -172,19 +177,20 @@ const ProfileInfo = props => {
 				() => {
 					Modal.close();
 					setTimeout(() => {
-						favoriteEtc(
+						setFavoriteEtc(
 							{
 								collectionName: 'userobjects',
-								is_favorite: true,
-								post_object_id: data._id,
+								target_object_id: data._id,
+								is_favorite: bool,
 							},
 							result => {
 								console.log('result / favoriteEtc / profileInfo : ', result.msg.favoriteEtc);
 								Modal.close();
 								setTimeout(() => {
-									Modal.popNoBtn('즐겨찾기 등록이 \n 완료되었습니다.');
+									Modal.popNoBtn(bool ? '즐겨찾기 등록이 \n 완료되었습니다.' : '즐겨찾기 취소가 \n 완료되었습니다.');
 									setTimeout(() => {
 										Modal.close();
+										setData({...data, is_favorite: bool});
 									}, 500);
 								}, 200);
 							},
@@ -200,12 +206,17 @@ const ProfileInfo = props => {
 
 	const onPressFollowingSetting = () => {
 		let isProtectingPet = data.pet_status == 'protect' || userGlobalObject.userInfo.user_my_pets.includes(data._id);
+		const FOLLOWER_MENU = [data.is_favorite ? '즐겨찾기 취소' : '즐겨찾기 추가', '소식 받기', '차단', '팔로우 취소'];
+		const FOLLOWER_PET_MENU = [data.is_favorite ? '즐겨찾기 취소' : '즐겨찾기 추가', , '소식 받기', '차단', '팔로우 취소', '입양하기'];
 		Modal.popSelectBoxModal(
 			isProtectingPet ? FOLLOWER_PET_MENU : FOLLOWER_MENU,
 			selectedItem => {
 				switch (selectedItem) {
 					case '즐겨찾기 추가':
-						doFavorite();
+						doFavorite(true);
+						break;
+					case '즐겨찾기 취소':
+						doFavorite(false);
 						break;
 					case '소식 받기':
 						console.log('소식받기');
@@ -302,7 +313,7 @@ const ProfileInfo = props => {
 				<View style={[organism_style.btn_w280_profileInfo]}>
 					{userGlobalObject.userInfo._id == data._id ? ( //본인 계정이라면 프로필 수정 버튼
 						<AniButton onPress={onPressEditProfile} btnTitle={'프로필 수정'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} />
-					) : data.is_follow ? ( // 타인 계정이며 팔로우 중이라면 '팔로우 중' OR '팔로우'
+					) : data.is_follow && !userGlobalObject.userInfo.isPreviewMode ? ( // 타인 계정이며 팔로우 중이라면 '팔로우 중' OR '팔로우'
 						<ArrowDownButton btnTitle={'팔로우 중'} btnLayout={btn_w280x68} onPress={onPressFollowingSetting} />
 					) : (
 						<AniButton onPress={onPressFollow} btnTitle={'팔로우'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} />

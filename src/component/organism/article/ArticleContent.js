@@ -6,6 +6,10 @@ import {APRI10, BLACK} from 'Root/config/color';
 import {FavoriteTag46_Filled, FavoriteTag48_Border, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
 import {styles} from 'Root/component/atom/image/imageStyle';
+import WebView from 'react-native-webview';
+import userGlobalObject from 'Root/config/userGlobalObject';
+import Modal from 'Root/component/modal/Modal';
+import {useNavigation} from '@react-navigation/core';
 /**
  * 게시글 컨텐츠
  * @param {object} props - Props Object
@@ -18,6 +22,7 @@ import {styles} from 'Root/component/atom/image/imageStyle';
  */
 const ArticleContent = props => {
 	LogBox.ignoreAllLogs();
+	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.data);
 	const [height, setHeight] = React.useState(0); // 게시글 내용의 Dynamic Height 수치
 
@@ -30,8 +35,14 @@ const ArticleContent = props => {
 	};
 
 	const onPressFavorite = bool => {
-		setData({...data, community_is_favorite: bool});
-		props.onPressFavorite(bool);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setData({...data, community_is_favorite: bool});
+			props.onPressFavorite(bool);
+		}
 	};
 
 	const getArticleType = () => {
@@ -45,10 +56,6 @@ const ArticleContent = props => {
 			default:
 				break;
 		}
-	};
-
-	const onPressImage = uri => {
-		Modal.popPhotoListViewModal([uri]);
 	};
 
 	const getContents = () => {
@@ -100,7 +107,10 @@ const ArticleContent = props => {
 	const onWebViewMessage = async event => {
 		if (Platform.OS == 'android') {
 			setTimeout(() => {
-				if (parseInt(event.nativeEvent.data) < 100 * DP) {
+				if (event.nativeEvent.data.includes('pinetreegy.s3')) {
+					console.log('event.nativeEvent.data', event.nativeEvent.data);
+					showImg(event.nativeEvent.data);
+				} else if (parseInt(event.nativeEvent.data) < 100 * DP) {
 					setHeight(100 * DP);
 				} else {
 					height >= 100 * DP ? false : setHeight(parseInt(event.nativeEvent.data));
@@ -108,7 +118,12 @@ const ArticleContent = props => {
 				}
 			}, 150);
 		} else {
-			if (parseInt(event.nativeEvent.data) < 100 * DP) {
+			// console.log('event IOS : ', JSON.stringify(event._dispatchInstances._debugOwner.memoizedProps));
+			console.log('event.nativeEvent.data', event.nativeEvent.data);
+			if (event.nativeEvent.data.includes('pinetreegy.s3')) {
+				console.log('event.nativeEvent.data', event.nativeEvent.data);
+				showImg(event.nativeEvent.data);
+			} else if (parseInt(event.nativeEvent.data) < 100 * DP) {
 				setHeight(100 * DP * DP);
 			} else {
 				height >= 100 * DP ? false : setHeight(parseInt(event.nativeEvent.data));
@@ -116,6 +131,36 @@ const ArticleContent = props => {
 			}
 		}
 	};
+
+	const runFirst = `
+	  window.ReactNativeWebView.postMessage(document.body.scrollHeight);
+      true; // note: this is required, or you'll sometimes get silent failures
+    `;
+
+	const webviewRef = React.useRef();
+
+	const changeHtmlTag = () => {
+		let result = data.community_content;
+		result = data.community_content.replace(/<img /g, '<img onclick="image(this)" ');
+		// console.log('data Content', data.community_content);
+		// console.log('result', result);
+		return `
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
+        <script>
+            function image(img){
+                window.ReactNativeWebView.postMessage(img.src);
+				// alert(img.src)
+            }
+        </script>
+        ${result}
+    `;
+	};
+
+	const showImg = src => {
+		Modal.popPhotoListViewModal([src]);
+	};
+
+	console.log('data.community_is_favorite', data.community_is_favorite);
 
 	return (
 		<View style={[style.container]}>
@@ -141,28 +186,25 @@ const ArticleContent = props => {
 			<View style={[style.profile]}>
 				<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} time_expression={'full'} />
 			</View>
-			<View style={{width: 654 * DP, marginTop: 20 * DP}}>{getContents()}</View>
+			{/* <View style={{width: 654 * DP, marginTop: 20 * DP}}>{getContents()}</View> */}
 
-			{/* <View style={[{width: 700 * DP, marginTop: 20 * DP, opacity: height >= 99 * DP ? 1 : 1}]}>
+			<View style={[{width: 700 * DP, marginTop: 20 * DP, opacity: height >= 99 * DP ? 1 : 1}]}>
 				{Platform.OS == 'ios' ? (
 					<WebView
 						originWhitelist={['*']}
 						onMessage={onWebViewMessage}
-						injectedJavaScript="window.ReactNativeWebView.postMessage(document.body.scrollHeight)" //Dynamic Height 수치 설정
-						onLoadEnd={() => setLoad(true)}
-						contentMode={'mobile'}
+						ref={webviewRef}
+						injectedJavaScript={runFirst} //Dynamic Height 수치 설정
 						scrollEnabled={false}
+						injectedJavaScriptBeforeContentLoaded={runFirst}
 						source={{
-							html: `
-        	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
-			${data.community_content} 
-        `,
+							html: changeHtmlTag(),
 						}}
 						style={[
 							style.webview,
 							{
 								height: height,
-								opacity: load ? 1 : 0,
+								// opacity: load ? 1 : 0,
 							},
 						]}
 					/>
@@ -171,14 +213,11 @@ const ArticleContent = props => {
 					<WebView
 						originWhitelist={['*']}
 						scalesPageToFit={true}
-						onLoadEnd={() => setLoad(true)}
+						ref={webviewRef}
 						onMessage={onWebViewMessage}
-						injectedJavaScript="window.ReactNativeWebView.postMessage(document.body.scrollHeight)" //Dynamic Height 수치 설정
+						injectedJavaScript={runFirst} //Dynamic Height 수치 설정
 						source={{
-							html: `
-        	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
-			${data.community_content} 
-        `,
+							html: changeHtmlTag(),
 						}}
 						style={{
 							width: 670 * DP,
@@ -187,7 +226,7 @@ const ArticleContent = props => {
 						}}
 					/>
 				)}
-			</View> */}
+			</View>
 		</View>
 	);
 };

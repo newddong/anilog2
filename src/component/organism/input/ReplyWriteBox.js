@@ -123,7 +123,6 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 						multiline={true}
 						placeholder={'메세지 입력..'}
 						onChangeText={onChangeText}
-						onFocus={props.onFocus}
 						ref={inputRef}
 					/>
 				</View>
@@ -138,14 +137,13 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 					<View style={[feedCommentList.commentBox_photo]}>
 						<View style={[feedCommentList.commentBox_top_photo, {flexDirection: 'row'}]}>
 							<View style={[feedCommentList.commentBox_input_photo]}>
-								{getParent()}
+								{/* {getParent()} */}
 								<TextInput
 									defaultValue={content == '' ? null : content}
 									style={[feedCommentList.replyTextInput_photo]}
 									multiline={true}
 									placeholder={'댓글입력..'}
 									onChangeText={onChangeText}
-									onFocus={props.onFocus}
 									ref={inputRef}
 								/>
 							</View>
@@ -157,7 +155,7 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 				) : (
 					<View style={[feedCommentList.commentBox]}>
 						<View style={[feedCommentList.commentBox_top]}>
-							{getParent()}
+							{/* {getParent()} */}
 							<TextInput
 								defaultValue={content == '' ? null : content}
 								style={[feedCommentList.replyTextInput, {}]}

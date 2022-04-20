@@ -1079,7 +1079,9 @@ export const animalNeedHelp = StyleSheet.create({
 		color: GRAY10,
 		lineHeight: 30 * DP,
 	},
-	detail_upper_tag: {},
+	detail_upper_tag: {
+		width: 48 * DP,
+	},
 	detail_lowerMenu: {
 		width: 410 * DP,
 		height: 214 * DP,

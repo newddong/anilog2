@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Image, Text, TextInput, TouchableOpacity, View, Animated, Easing, ActivityIndicator, FlatList} from 'react-native';
+import {Text, TouchableOpacity, View, FlatList} from 'react-native';
 import {btn_w276} from 'Atom/btn/btn_style';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import {login_style, temp_style, animalProtectRequestDetail_style} from '../style_templete';
@@ -13,9 +13,8 @@ import DP from 'Root/config/dp';
 import CommentList from 'Root/component/organism/comment/CommentList';
 import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
-import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import moment from 'moment';
-import {getCommentListByProtectId} from 'Root/api/commentapi';
+import {deleteComment, getCommentListByProtectId} from 'Root/api/commentapi';
 import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -24,7 +23,7 @@ import {count_to_K} from 'Root/util/stringutil';
 import {getProtectRequestListByShelterId} from 'Root/api/shelterapi';
 import {getProtectRequestByProtectRequestId} from 'Root/api/protectapi';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {favoriteEtc, getFavoriteEtcListByUserId} from 'Root/api/favoriteetc';
+import {getFavoriteEtcListByUserId, setFavoriteEtc} from 'Root/api/favoriteetc';
 
 //AnimalProtectRequestDetail 호출 경로
 // - ProtectRequestList(보호활동탭) , AnimalFromShelter(게시글보기) , AidRequestManage(게시글보기), AidRequestAnimalList(게시글 보기)
@@ -58,7 +57,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 			},
 			async result => {
 				// console.log('result /getProtectRequestByProtectRequestId / AnimalProtectRequestDetail : ', result.msg);
-				console.log('작성자의 즐겨찾기 수', result.msg.protect_request_writer_id.user_favorite_count);
+				// console.log('작성자의 즐겨찾기 수', result.msg);
 				let res = result.msg;
 				let checkfav = await isMyFavoriteShelter(res.protect_request_writer_id);
 				res.protect_request_writer_id.is_favorite = checkfav;
@@ -79,38 +78,43 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		);
 	};
 
+	//보호요청 게시글 작성자가 나의 즐겨찾기 대상에 포함이 되는지 여부
 	const isMyFavoriteShelter = async writer_id => {
-		const checkFav = () => {
-			return new Promise((resolve, reject) => {
-				try {
-					getFavoriteEtcListByUserId(
-						{
-							userobject_id: userGlobalObject.userInfo._id,
-							collectionName: 'userobjects',
-						},
-						result => {
-							console.log('result / getFavoriteEtcListByUserId / AnimalProtectRequestDetail  ', result.msg.length);
-							let favoriteList = [];
-							result.msg.map((v, i) => {
-								favoriteList.push(v.favorite_etc_post_id._id);
-							});
-							console.log('내 즐겨찾기 리스트 : ', favoriteList);
-							console.log('작성자 : ', writer_id._id);
-							let res = favoriteList.includes(writer_id._id);
-							resolve(res);
-						},
-						err => {
-							console.log('err / getFavoriteEtcListByUserId / AnimalProtectRequestDetail ', err);
-						},
-					);
-				} catch {
-					console.log('err');
-				}
-			});
-		};
-		const result = await checkFav();
-		console.log('result', result);
-		return result;
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			return false;
+		} else {
+			const checkFav = () => {
+				return new Promise((resolve, reject) => {
+					try {
+						getFavoriteEtcListByUserId(
+							{
+								userobject_id: userGlobalObject.userInfo._id,
+								collectionName: 'userobjects',
+							},
+							result => {
+								console.log('result / getFavoriteEtcListByUserId / AnimalProtectRequestDetail  ', result.msg.length);
+								let favoriteList = [];
+								result.msg.map((v, i) => {
+									favoriteList.push(v.favorite_etc_target_object_id._id);
+								});
+								console.log('내 즐겨찾기 리스트 : ', favoriteList);
+								console.log('작성자 : ', writer_id._id);
+								let res = favoriteList.includes(writer_id._id);
+								resolve(res);
+							},
+							err => {
+								console.log('err / getFavoriteEtcListByUserId / AnimalProtectRequestDetail ', err);
+							},
+						);
+					} catch {
+						console.log('err');
+					}
+				});
+			};
+			const result = await checkFav();
+			console.log('result', result);
+			return result;
+		}
 	};
 
 	//보호소의 다른 보호 요청게시글 불러오기
@@ -180,8 +184,8 @@ export default AnimalProtectRequestDetail = ({route}) => {
 						}
 					}
 				});
-				// console.log('commentArray', commentArray.length);
-				setCommentDataList(commentArray);
+				const removeDelete = commentArray.filter(e => e.comment_is_delete != true);
+				setCommentDataList(removeDelete);
 				//댓글이 출력이 안되는 현상 발견으로 비동기 처리
 				debug && console.log('commentArray refresh', commentArray);
 			},
@@ -207,28 +211,46 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		}
 	};
 
-	//보호요청 더보기의 리스트 중 한 아이템의 좋아요 태그 클릭
-	const onPressFavoriteTag = (item, index) => {
-		console.log('FavoriteTag', index, item);
-	};
-
-	//보호요청 게시글 작성 보호소 라벨의 좋아요 태그 클릭
-	const onPressShelterLabelFavorite = bool => {
-		favoriteEtc(
+	//보호요청 더보기의 리스트 중 한 아이템의 즐겨찾기 태그 클릭
+	const onPressFavoriteTag = (bool, index) => {
+		setFavoriteEtc(
 			{
-				collectionName: 'userobjects',
-				post_object_id: data.protect_request_writer_id._id,
+				collectionName: 'protectrequestobjects',
+				target_object_id: writersAnotherRequests[index]._id,
 				is_favorite: bool,
 			},
 			result => {
-				console.log('result / favoriteEtc / AnimalProtectRequestDetail : ', result.msg.favoriteEtc);
-				getProtectRequestObject();
-				setData({...data});
+				console.log('result / setFavoriteEtc /  :', result.msg.favoriteEtc);
 			},
 			err => {
-				console.log('err / favoriteEtc / AnimalProtectRequestDetail : ', err);
+				console.log('err / setFavoriteEtc / : ', err);
 			},
 		);
+	};
+
+	//보호요청 게시글 작성 보호소 라벨의 즐겨찾기 태그 클릭
+	const onPressShelterLabelFavorite = bool => {
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setFavoriteEtc(
+				{
+					collectionName: 'userobjects',
+					target_object_id: data.protect_request_writer_id._id,
+					is_favorite: bool,
+				},
+				result => {
+					console.log('result / favoriteEtc / AnimalProtectRequestDetail : ', result.msg.favoriteEtc);
+					getProtectRequestObject();
+					setData({...data});
+				},
+				err => {
+					console.log('err / favoriteEtc / AnimalProtectRequestDetail : ', err);
+				},
+			);
+		}
 	};
 
 	//보호소 라벨 공유 클릭
@@ -258,6 +280,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		navigation.push('UserProfile', {userobject: data});
 	};
 
+	//댓글 클릭
 	const onPressReply = async () => {
 		AsyncStorage.getItem('sid', (err, res) => {
 			console.log('res', res);
@@ -270,6 +293,23 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				navigation.push('ProtectCommentList', {protectObject: data});
 			}
 		});
+	};
+
+	//댓글 삭제 클릭
+	const onPressDeleteReply = id => {
+		console.log('id', id);
+		deleteComment(
+			{
+				commentobject_id: id,
+			},
+			result => {
+				console.log('result / delectComment / ProtectCommentList : ', result.msg);
+				getCommnetList();
+			},
+			err => {
+				console.log(' err / deleteComment / ProtectCommentList : ', err);
+			},
+		);
 	};
 
 	const isLoaded = data == 'false' || writersAnotherRequests == 'false' || commentDataList == 'false';
@@ -324,12 +364,12 @@ export default AnimalProtectRequestDetail = ({route}) => {
 												</Text>
 											</TouchableOpacity>
 										)}
-										<View ref={shareRef} collapsable={false}>
+										{/* <View ref={shareRef} collapsable={false}>
 											<TouchableOpacity onPress={onPressShare} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
 												<Share48_Filled />
 												<Text style={[txt.roboto24, {color: APRI10}]}>공유</Text>
 											</TouchableOpacity>
-										</View>
+										</View> */}
 									</View>
 								</View>
 								<ProtectAnimalInfoBox data={data} />
@@ -350,6 +390,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 										<CommentList
 											items={commentDataList && commentDataList.length > 2 ? commentDataList.slice(0, 2) : commentDataList}
 											onPressReplyBtn={onPressReply}
+											onPressDelete={onPressDeleteReply}
 										/>
 									</View>
 								</View>

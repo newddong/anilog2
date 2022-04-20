@@ -10,7 +10,7 @@ import Loading from 'Root/component/molecules/modal/Loading';
 import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeEtc} from 'Root/api/likeetc';
-import {favoriteEtc} from 'Root/api/favoriteetc';
+import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import community_obj from 'Root/config/community_obj';
 import {REPORT_MENU} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
@@ -37,9 +37,9 @@ export default ReviewMain = ({route, navigation}) => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			filterRef.current ? false : fetchData(); // 필터가 적용된 상태라면 다시 데이터를 받아와서는 안됨
-			console.log(' ReviewMain / object._id', community_obj.object._id);
-			console.log(' ReviewMain / pageToMove', community_obj.pageToMove);
-			console.log(' ReviewMain / initial', community_obj.initial);
+			// console.log(' ReviewMain / object._id', community_obj.object._id);
+			// console.log(' ReviewMain / pageToMove', community_obj.pageToMove);
+			// console.log(' ReviewMain / initial', community_obj.initial);
 			community_obj.current = '';
 			if (community_obj.initial != true && community_obj.object._id != undefined) {
 				console.log('다른 탭에서의 호출 : 목적지 및 타이틀', community_obj.pageToMove, community_obj.object.community_title);
@@ -142,34 +142,40 @@ export default ReviewMain = ({route, navigation}) => {
 						break;
 					case '신고':
 						Modal.close();
-						console.log('리뷰 메인', data[index]);
-						setTimeout(() => {
-							Modal.popOneBtnSelectModal(
-								REPORT_MENU,
-								'이 게시물을 신고 하시겠습니까?',
-								selectedItem => {
-									createReport(
-										{
-											report_target_object_id: data[index]._id,
-											report_target_object_type: 'communityobjects',
-											report_target_reason: selectedItem,
-											report_is_delete: false,
-										},
-										result => {
-											console.log('신고 완료', result);
-											Modal.close();
-											Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
-										},
-										err => {
-											console.log('신고 err', err);
-											Modal.close();
-										},
-									);
-								},
-								'신고',
-							);
-						}, 200);
-
+						if (userGlobalObject.userInfo.isPreviewMode) {
+							setTimeout(() => {
+								Modal.popLoginRequestModal(() => {
+									navigation.navigate('Login');
+								});
+							}, 100);
+						} else {
+							setTimeout(() => {
+								Modal.popOneBtnSelectModal(
+									REPORT_MENU,
+									'이 게시물을 신고 하시겠습니까?',
+									selectedItem => {
+										createReport(
+                      {
+                        report_target_object_id: data[index]._id,
+                        report_target_object_type: 'communityobjects',
+                        report_target_reason: selectedItem,
+                        report_is_delete: false,
+                      },
+                      result => {
+                        console.log('신고 완료', result);
+                        Modal.close();
+                        Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
+                      },
+                      err => {
+                        console.log('신고 err', err);
+                        Modal.close();
+                      },
+                    );
+									},
+									'신고',
+								);
+							}, 200);
+						}
 						break;
 					default:
 						break;
@@ -344,18 +350,24 @@ export default ReviewMain = ({route, navigation}) => {
 	//리뷰 좋아요 클릭
 	const onPressLike = (index, bool) => {
 		console.log('index', index, bool);
-		likeEtc(
-			{
-				collectionName: 'communityobjects',
-				post_object_id: data[index]._id,
-				is_like: bool,
-			},
-			result => {
-				console.log('result/ onPressLike / ReviewMain : ', result.msg);
-				fetchData();
-			},
-			err => console.log('err / onPressLike / ReviewMain : ', err),
-		);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			likeEtc(
+				{
+					collectionName: 'communityobjects',
+					post_object_id: data[index]._id,
+					is_like: bool,
+				},
+				result => {
+					console.log('result/ onPressLike / ReviewMain : ', result.msg);
+					fetchData();
+				},
+				err => console.log('err / onPressLike / ReviewMain : ', err),
+			);
+		}
 	};
 
 	//댓글 모두 보기 클릭
@@ -370,20 +382,27 @@ export default ReviewMain = ({route, navigation}) => {
 
 	//글쓰기 아이콘 클릭
 	const onPressWrite = () => {
-		navigation.navigate('CommunityWrite', {isReview: true});
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			navigation.navigate('CommunityWrite', {isReview: true});
+		}
 	};
 
 	//즐겨찾기 클릭
 	const onPressFavorite = (index, bool) => {
 		console.log('index', index, bool);
-		favoriteEtc(
+		console.log('data[index]._id,', data[index]._id);
+		setFavoriteEtc(
 			{
 				collectionName: 'communityobjects',
-				post_object_id: data[index]._id,
+				target_object_id: data[index]._id,
 				is_favorite: bool,
 			},
 			result => {
-				console.log('result / favoriteEtc / ArticleDetail : ', result.msg);
+				console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
 				// setData({...data, })
 			},
 			err => console.log('err / favoriteEtc / ArticleDetail : ', err),

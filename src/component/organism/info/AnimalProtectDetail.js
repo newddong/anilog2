@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, ScrollView, Linking, TouchableOpacity, ActivityIndicator} from 'react-native';
+import {View, Text, ScrollView, Linking, TouchableOpacity} from 'react-native';
 import {GRAY10, APRI10, BLUE20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {House48, Phone48, Paw48_APRI10, Check48, TextBalloon48, Person48} from 'Atom/icon';
@@ -12,6 +12,8 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import {btn_w116, btn_w654, btn_w654_h70} from 'Root/component/atom/btn/btn_style';
 import DP from 'Root/config/dp';
+import {setFavoriteEtc} from 'Root/api/favoriteetc';
+
 export default AnimalProtectDetail = props => {
 	console.log(' AnimalProtectDetail / props.data', props.data);
 	const isLoginUser = userGlobalObject.userInfo?._id == props.data.protect_act_applicant_id;
@@ -46,6 +48,22 @@ export default AnimalProtectDetail = props => {
 		Linking.openURL(`tel:${data.shelter_delegate_contact_number}`);
 	};
 
+	const onOffFavoriteTag = bool => {
+		setFavoriteEtc(
+			{
+				collectionName: 'protectrequestobjects',
+				target_object_id: data.protect_animal_protect_request_id,
+				is_favorite: bool,
+			},
+			result => {
+				console.log('result / setFavoriteEtc : ', result.msg);
+			},
+		),
+			err => {
+				console.log('err / setFavoriteEtc : ', err);
+			};
+	};
+
 	const onClickLabel = data => {
 		props.onClickLabel(data);
 	};
@@ -74,7 +92,7 @@ export default AnimalProtectDetail = props => {
 		<ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
 			<View style={[animalProtectDetail.container]}>
 				<View style={[animalProtectDetail.animalNeedHelp_container]}>
-					<AnimalNeedHelp data={data} inActiveOpacity={true} />
+					<AnimalNeedHelp data={data} inActiveOpacity={true} onFavoriteTag={onOffFavoriteTag} />
 				</View>
 				<View style={[animalProtectDetail.details_container]}>
 					{/* 보호장소 */}

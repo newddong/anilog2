@@ -4,42 +4,35 @@ import {organism_style, parentComment} from 'Organism/style_organism';
 import {styles} from 'Atom/image/imageStyle';
 import ChildCommentList from 'Organism/comment/ChildCommentList';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
-import {
-	Arrow_Down_GRAY10,
-	Heart30_Border,
-	Heart30_Filled,
-	Lock60_Border,
-	Lock60_Filled,
-	Meatball50_APRI10_Vertical,
-	Meatball50_GRAY20_Vertical,
-	ProfileDefaultImg,
-	SecureIcon40,
-} from 'Atom/icon';
+import {Arrow_Down_GRAY10, Heart30_Border, Heart30_Filled, Meatball50_APRI10_Vertical, Meatball50_GRAY20_Vertical, SecureIcon40} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
-import {DEFAULT_PROFILE, REPLY_MEATBALL_MENU, REPLY_MEATBALL_MENU_MY_REPLY, REPORT_MENU, SETTING_COMMENT, SETTING_OWN_COMMENT} from 'Root/i18n/msg';
+import {REPLY_MEATBALL_MENU, REPLY_MEATBALL_MENU_MY_REPLY, REPORT_MENU} from 'Root/i18n/msg';
 import {GRAY10} from 'Root/config/color';
 import {getChildCommentList} from 'Root/api/commentapi';
 import Modal from 'Component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeComment} from 'Root/api/commentapi';
 import {createReport} from 'Root/api/report';
+
+
+
 /**
- *
- * @param {{
- * data : Object,
- * onPress_ChildComment_ReplyBtn : void,
- * onPressReplyBtn : void,
- * }} props
+ * 부모 댓글
+ * @param {object} props - Props Object
+ * @param {Object} props.data - 부모 comment data object
+ * @param {void} props.onPressReplyBtn - 답글쓰기
+ * @param {(id:string)=>void} props.onPressDelete - 댓글 삭제
+ * @param {(id:string)=>void} props.onPressDeleteChild - 대댓글 삭제
+ * @param {(data:object)=>void} props.onEdit - 댓글 수정
  */
 export default ParentComment = React.memo((props, ref) => {
 	// console.log('ParentComment : ', props.parentComment.comment_writer_id.user_nickname, props.parentComment.comment_is_secure);
-	// console.log('ParentComment', props.parentComment.comment_is_secure);
+	// console.log('ParentComment : children_count', props.parentComment.comment_contents, props.parentComment.children_count);
 
 	const [data, setData] = React.useState(props.parentComment);
 	const [child, setChild] = React.useState([]);
 	const [likeCount, setLikeCount] = React.useState(0);
 	const [likeState, setLikeState] = React.useState(false); //해당 댓글의 좋아요 상태 - 로그인 유저가 좋아요를 누른 기록이 있다면 filled , or border
-	const [isMyComment, setIsMyComment] = React.useState(false); //해당 댓글 작성자가 본인인지 여부 Boolean
 	const [showChild, setShowChild] = React.useState(false); //해당 댓글의 답글들 출력 여부 Boolean
 	const [meatball, setMeatball] = React.useState(false); // 해당 댓글의 미트볼 헤더 클릭 여부
 
@@ -47,37 +40,25 @@ export default ParentComment = React.memo((props, ref) => {
 		setData(props.parentComment);
 		setLikeState(props.parentComment.comment_is_like);
 		setLikeCount(props.parentComment.comment_like_count);
-		// console.log('parantCommnet data', data);
-		//API 에서 해당 데이터가 들어온 후 재작업 예정.
-		//댓글의 Writer와 로그인유저가 일치하는 경우 내 댓글 처리
-		// AsyncStorage.getItem('token', (err, res) => {
-		// 	res == data.comment_writer_id ? setIsMyComment(true) : setIsMyComment(false);
-		// 	// data에 존재하는 좋아요를 클릭한 UserObejct _id들 중 로그인한 유저의 _id가 포함되어 있다면 좋아요 상태는 true, or false
-		// 	const like = data.like_comment_user_id.includes(parseInt(res));
-		// 	like ? setLikeState(true) : setLikeState(false);
-		// });
 	}, [props.parentComment]);
 
+	//대댓글 추가 시 콜백
 	const addChildComment = newChildComment => {
-		// newChildComment.comment_writer_id = userGlobalObject.userInfo;
-		// setChild([newChildComment].concat(child));
-		// setShowChild(true);
-		// console.log(newChildComment);
-		console.log('대댓글 추가');
 		getChildCommentList(
 			{
 				commentobject_id: props.parentComment._id,
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			result => {
-				console.log(result.msg);
-				setChild(result.msg);
+				// console.log(result.msg);
+				setChild(result.msg.filter(e => e.comment_is_delete != true));
 				!showChild && setShowChild(true);
 			},
 			err => Modal.alert(err),
 		);
 	};
 
+	//답글쓰기 클릭
 	const onPressReplyBtn = () => {
 		// console.log('대댓글 추가2');
 		console.log('대댓글 추가 부모댓글 닉네임 : ', props.parentComment.comment_writer_id.user_nickname);
@@ -85,23 +66,30 @@ export default ParentComment = React.memo((props, ref) => {
 	};
 
 	const onCLickHeart = () => {
-		setLikeState(!likeState);
-		likeComment(
-			{
-				commentobject_id: props.parentComment._id,
-				userobject_id: userGlobalObject.userInfo._id,
-				is_like: !likeState,
-			},
-			({msg}) => {
-				setLikeCount(msg.targetComment.comment_like_count);
-			},
-			error => {
-				console.log(error);
-			},
-		);
-		props.like && props.like(props.parentComment);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setLikeState(!likeState);
+			likeComment(
+				{
+					commentobject_id: props.parentComment._id,
+					userobject_id: userGlobalObject.userInfo._id,
+					is_like: !likeState,
+				},
+				({msg}) => {
+					setLikeCount(msg.targetComment.comment_like_count);
+				},
+				error => {
+					console.log(error);
+				},
+			);
+			props.like && props.like(props.parentComment);
+		}
 	};
 
+	//답글 ~개 보기 클릭
 	const showChildComment = () => {
 		getChildCommentList(
 			{
@@ -109,27 +97,37 @@ export default ParentComment = React.memo((props, ref) => {
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			result => {
-				console.log(result.msg);
-				setChild(result.msg);
+				// console.log('getChildCommentList', result.msg);
+				setChild(result.msg.filter(e => e.comment_is_delete != true));
 				setShowChild(!showChild);
 			},
 			err => Modal.alert(err),
 		);
 	};
 
-	const onSelectReplyMeatballMenu = i => {};
-
+	//미트볼 -> 수정 클릭
 	const onEdit = data => {
 		props.onEdit && props.onEdit(data);
 	};
 
+	const onDelete = () => {
+		props.onPressDelete(data._id);
+	};
+
+	const onPressDeleteChild = id => {
+		props.onPressDeleteChild(id);
+		setTimeout(() => {
+			showChildComment();
+		}, 200);
+	};
+
+	//좋아요 클릭
 	const like = data => {
 		props.like && props.like(data);
 	};
 
+	//미트볼 클릭
 	const onPressMeatball = () => {
-		// console.log('meatballREf', meatballRef);
-
 		meatballRef.current.measure((fx, fy, width, height, px, py) => {
 			const isWriter = userGlobalObject.userInfo._id == data.comment_writer_id._id;
 			console.log('px', px);
@@ -139,25 +137,22 @@ export default ParentComment = React.memo((props, ref) => {
 					REPLY_MEATBALL_MENU_MY_REPLY,
 					selectedItem => {
 						switch (selectedItem) {
+							case '수정':
+								onEdit(props.parentComment);
+								break;
+							case '삭제':
+								onDelete();
+								break;
 							case '상태 변경':
 								alert('상태 변경!');
 								break;
 							case '공유하기':
 								alert('공유하기!');
 								break;
-							case '수정':
-								onEdit(props.parentComment);
-								// alert('수정!');
-								// navigation.navigate('FeedEdit',props.data);
-								break;
-							case '삭제':
-								alert('삭제');
-								break;
 							default:
 								break;
 						}
 						Modal.close();
-						// setIsMeatballClicked(false);
 					},
 					() => Modal.close(),
 					false,
@@ -168,12 +163,6 @@ export default ParentComment = React.memo((props, ref) => {
 					REPLY_MEATBALL_MENU,
 					selectedItem => {
 						switch (selectedItem) {
-							case '상태 변경':
-								alert('상태 변경!');
-								break;
-							case '공유하기':
-								alert('공유하기!');
-								break;
 							case '신고':
 								Modal.close();
 								console.log('data', data);
@@ -203,7 +192,6 @@ export default ParentComment = React.memo((props, ref) => {
 										'신고',
 									);
 								}, 100);
-
 							case '수정':
 								// alert('수정!');
 								// navigation.navigate('FeedEdit',props.data);
@@ -215,7 +203,6 @@ export default ParentComment = React.memo((props, ref) => {
 								break;
 						}
 						Modal.close();
-						// setIsMeatballClicked(false);
 					},
 					() => Modal.close(),
 					false,
@@ -234,17 +221,16 @@ export default ParentComment = React.memo((props, ref) => {
 			//비밀댓글이지만 댓글의 작성자라면 public
 			result = false;
 		} else if (userGlobalObject.userInfo._id != data.comment_writer_id._id && userGlobalObject.userInfo._id == data.comment_feed_writer_id) {
-			//비밀댓글이면 댓글의 작성자는 아니지만 해당 피드의 작성자라면 public (차후 기획이 바뀐다면 피드 작성자도 볼 수 없다)
+			//댓글의 작성자는 아니지만 해당 피드의 작성자라면 public (차후 기획이 바뀐다면 피드 작성자도 볼 수 없다)
 			result = false;
 		} else {
-			// console.log('result', result);
 			return result;
 		}
 	};
-	// userGlobalObject.userInfo._id == data.comment_writer_id &&
 
 	const meatballRef = React.useRef();
 	const childrenCount = child.length > 0 ? child.length : props.parentComment.children_count;
+
 	return (
 		<View style={organism_style.parentComment}>
 			{/* 유저프로필 라벨 및 Meatball  */}
@@ -307,7 +293,7 @@ export default ParentComment = React.memo((props, ref) => {
 			{/* Data - 대댓글List */}
 			{showChild ? (
 				<View style={[organism_style.childCommentList, parentComment.img_square_round_574]}>
-					<ChildCommentList items={child} showChildComment={showChildComment} onEdit={onEdit} like={like} />
+					<ChildCommentList items={child} showChildComment={showChildComment} onPressDeleteChild={onPressDeleteChild} onEdit={onEdit} like={like} />
 				</View>
 			) : (
 				false
@@ -318,5 +304,6 @@ export default ParentComment = React.memo((props, ref) => {
 
 ParentComment.defaultProps = {
 	onPressReplyBtn: e => console.log(e), //부모 댓글의 답글 쓰기 클릭 이벤트
-	onPress_ChildComment_ReplyBtn: e => console.log(e), //자식 댓글의 답글 쓰기 클릭 이벤ㅌ
+	onPressDelete: () => {},
+	onPressDeleteChild: () => {},
 };

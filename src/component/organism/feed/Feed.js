@@ -11,6 +11,7 @@ import Modal from 'Component/modal/Modal';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {likeFeed} from 'Root/api/feedapi';
 import userGlobalObj from 'Root/config/userGlobalObject';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default Feed = React.memo(props => {
 	// console.log('Feed', props.data);
@@ -52,37 +53,49 @@ export default Feed = React.memo(props => {
 	const [likeCount, setLikeCount] = React.useState(0);
 	// console.log('feed content', props.data);
 	const moveToCommentList = async () => {
-		AsyncStorage.getItem('sid', (err, res) => {
-			console.log('res', res);
-			if (res == null && feed_comment_count == 0) {
-				Modal.popNoBtn('로그인이 필요합니다.');
-				setTimeout(() => {
-					Modal.close();
-				}, 1500);
-			} else {
-				navigation.navigate('FeedCommentList', {feedobject: props.data});
-				console.log('move to FeedCommnetList', props.data);
-			}
-		});
+		if (userGlobalObject.userInfo.isPreviewMode && feed_comment_count == 0) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			AsyncStorage.getItem('sid', (err, res) => {
+				console.log('res', res);
+				if (res == null && feed_comment_count == 0) {
+					Modal.popNoBtn('로그인이 필요합니다.');
+					setTimeout(() => {
+						Modal.close();
+					}, 1500);
+				} else {
+					navigation.push('FeedCommentList', {feedobject: props.data});
+					// console.log('move to FeedCommnetList', props.data);
+				}
+			});
+		}
 	};
 
 	const toggleFeedLike = () => {
-		if (isLike) {
-			setLike(false);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
 		} else {
-			setLike(true);
+			if (isLike) {
+				setLike(false);
+			} else {
+				setLike(true);
+			}
+			likeFeed(
+				{
+					feedobject_id: props.data._id,
+					userobject_id: userGlobalObj.userInfo._id,
+					is_like: !isLike,
+				},
+				result => {
+					setLikeCount(result.msg.targetFeed.feed_like_count);
+				},
+				error => console.log(error),
+			);
 		}
-		likeFeed(
-			{
-				feedobject_id: props.data._id,
-				userobject_id: userGlobalObj.userInfo._id,
-				is_like: !isLike,
-			},
-			result => {
-				setLikeCount(result.msg.targetFeed.feed_like_count);
-			},
-			error => console.log(error),
-		);
 	};
 
 	React.useEffect(() => {

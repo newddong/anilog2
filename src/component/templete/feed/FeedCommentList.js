@@ -5,7 +5,14 @@ import FeedContent from 'Organism/feed/FeedContent';
 import CommentList from 'Organism/comment/CommentList';
 import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
 import {feedCommentList, login_style} from 'Templete/style_templete';
-import {createComment, getCommentListByCommunityId, getCommentListByFeedId, getCommentListByProtectId, updateComment} from 'Root/api/commentapi';
+import {
+	createComment,
+	deleteComment,
+	getCommentListByCommunityId,
+	getCommentListByFeedId,
+	getCommentListByProtectId,
+	updateComment,
+} from 'Root/api/commentapi';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -13,6 +20,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
 import {GRAY10, GRAY20} from 'Root/config/color';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 export default FeedCommentList = props => {
 	// console.log('props.showAllContents', props.route.params.showAllContents);
@@ -20,7 +28,7 @@ export default FeedCommentList = props => {
 	const navigation = useNavigation();
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
-	const [comments, setComments] = React.useState([]);
+	const [comments, setComments] = React.useState('false');
 	const [parentComment, setParentComment] = React.useState();
 	const input = React.useRef();
 	const addChildCommentFn = React.useRef(() => {});
@@ -35,18 +43,7 @@ export default FeedCommentList = props => {
 
 	React.useEffect(() => {
 		if (props.route.name == 'FeedCommentList') {
-			getCommentListByFeedId(
-				{
-					feedobject_id: props.route.params.feedobject._id,
-					request_number: 1000,
-					login_userobject_id: userGlobalObject.userInfo._id,
-				},
-				comments => {
-					setComments(comments.msg);
-					console.log('comments', comments);
-				},
-				err => console.log('getCommentListByFeedId', err),
-			);
+			fetchData();
 		} else {
 			getCommentListByFeedId(
 				{
@@ -55,13 +52,35 @@ export default FeedCommentList = props => {
 					login_userobject_id: userGlobalObject.userInfo._id,
 				},
 				comments => {
-					setComments(comments.msg);
+					setComments(comments.msg.filter(e => e.comment_is_delete != true));
 					navigation.setOptions({title: '댓글 ' + comments.msg.length});
 				},
-				err => console.log('getCommentListByFeedId', err),
+				err => {
+					console.log('getCommentListByFeedId', err);
+				},
 			);
 		}
 	}, []);
+
+	const fetchData = () => {
+		getCommentListByFeedId(
+			{
+				feedobject_id: props.route.params.feedobject._id,
+				request_number: 1000,
+				login_userobject_id: userGlobalObject.userInfo._id,
+			},
+			comments => {
+				setComments(comments.msg.filter(e => e.comment_is_delete != true));
+				// console.log('getCommentListByFeedId / result', comments);
+			},
+			err => {
+				console.log('getCommentListByFeedId', err);
+				if (err == '검색 결과가 없습니다.') {
+					setComments([]);
+				}
+			},
+		);
+	};
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
 	const onWrite = () => {
@@ -110,9 +129,9 @@ export default FeedCommentList = props => {
 							},
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
-								setComments(comments.msg);
+								setComments(comments.msg.filter(e => e.comment_is_delete != true));
 								parentComment && addChildCommentFn.current();
-								console.log('comments', comments);
+								// console.log('comments', comments);
 								input.current.blur();
 								flatlist.current.scrollToOffset({offset: 0});
 							},
@@ -126,7 +145,6 @@ export default FeedCommentList = props => {
 			createComment(
 				param,
 				result => {
-					console.log(result);
 					setParentComment();
 					setEditData({
 						comment_contents: '',
@@ -140,9 +158,9 @@ export default FeedCommentList = props => {
 							},
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
-								setComments(comments.msg);
+								setComments(comments.msg.filter(e => e.comment_is_delete != true));
 								parentComment && addChildCommentFn.current();
-								console.log('comments', comments);
+								// console.log('comments', comments);
 								input.current.blur();
 								flatlist.current.scrollToOffset({offset: 0});
 							},
@@ -183,6 +201,22 @@ export default FeedCommentList = props => {
 		setEditData({...editData, comment_photo_uri: ''});
 	};
 
+	const onPressDelete = id => {
+		console.log('id', id);
+		deleteComment(
+			{
+				commentobject_id: id,
+			},
+			result => {
+				console.log('result / delectComment / ProtectCommentList : ', result.msg.comment_is_delete);
+				fetchData();
+			},
+			err => {
+				console.log(' err / deleteComment / ProtectCommentList : ', err);
+			},
+		);
+	};
+
 	// 답글 쓰기 -> Input value 변경 콜백함수
 	const onChangeReplyInput = text => {
 		console.log('onChangeReplyInput : ', text);
@@ -191,11 +225,17 @@ export default FeedCommentList = props => {
 
 	// 답글 쓰기 버튼 클릭 콜백함수
 	const onReplyBtnClick = (parentCommentId, addChildComment) => {
-		console.log('onReplyBtnClick : ', parentCommentId);
-		setParentComment(parentCommentId);
-		input.current.focus();
-		editComment || setEditComment(true);
-		addChildCommentFn.current = addChildComment;
+		// console.log('onReplyBtnClick : ', parentCommentId);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setParentComment(parentCommentId);
+			input.current.focus();
+			editComment || setEditComment(true);
+			addChildCommentFn.current = addChildComment;
+		}
 	};
 
 	const [heightReply, setReplyHeight] = React.useState(0);
@@ -221,7 +261,17 @@ export default FeedCommentList = props => {
 		if (index > 0)
 			return (
 				<View style={{marginLeft: 48 * DP}}>
-					<CommentList items={item} onPressReplyBtn={onReplyBtnClick} onEdit={onEdit} />
+					{comments == 'false' ? (
+						<Loading isModal={false} />
+					) : (
+						<CommentList
+							items={item}
+							onPressReplyBtn={onReplyBtnClick}
+							onEdit={onEdit}
+							onPressDelete={onPressDelete}
+							onPressDeleteChild={onPressDelete}
+						/>
+					)}
 				</View>
 			);
 	};

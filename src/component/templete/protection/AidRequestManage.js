@@ -1,12 +1,12 @@
 import React from 'react';
-import {ActivityIndicator, ScrollView, Text, View, StyleSheet, TouchableOpacity} from 'react-native';
+import {ScrollView, Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {login_style} from 'Templete/style_templete';
 import AidRequestList from 'Root/component/organism/list/AidRequestList';
 import {getShelterProtectAnimalList} from 'Root/api/shelterapi';
 import {txt} from 'Root/config/textstyle';
-import {APRI10, GRAY10} from 'Root/config/color';
+import {APRI10} from 'Root/config/color';
 import DP from 'Root/config/dp';
-import {AddItem64} from 'Root/component/atom/icon';
+import {AddItem64, EmptyIcon} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Loading from 'Root/component/molecules/modal/Loading';
@@ -83,11 +83,7 @@ export default AidRequestManage = ({route, navigation}) => {
 	};
 
 	const whenEmpty = () => {
-		return (
-			<View style={[{height: 100 * DP, width: '100%', marginVertical: 30 * DP, alignItems: 'center', justifyContent: 'center'}]}>
-				<Text style={[txt.roboto30b, {color: GRAY10}]}> 목록이 없습니다.</Text>
-			</View>
-		);
+		return <ListEmptyInfo text={'목록이 없습니다.'} />;
 	};
 
 	//API 접속 이전 상태인 false가 단 하나라도 없으면 이미 로딩완료

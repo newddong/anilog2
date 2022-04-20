@@ -18,6 +18,7 @@ import {getUserVolunteerActivityList, getVolunteerActivityById} from 'Root/api/v
 import {getApplyDetailById} from 'Root/api/protectapi';
 import {getAppliesRecord} from 'Root/api/protectapi';
 import {getCommunityByObjectId} from 'Root/api/community';
+
 const wait = timeout => {
 	return new Promise(resolve => setTimeout(resolve, timeout));
 };

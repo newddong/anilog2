@@ -35,9 +35,9 @@ export default RecommendedAccountList = ({route, navigation}) => {
 			<View style={[followerList.accountList_step1]}>
 				<ControllableAccountList items={recommendList} onClickAccount={onClickAccount} showCrossMark={true} />
 			</View>
-			<View style={[followerList.floatingBtn]}>
+			{/* <View style={[followerList.floatingBtn]}>
 				<Write94 onPress={onWrite} />
-			</View>
+			</View> */}
 		</View>
 	);
 };

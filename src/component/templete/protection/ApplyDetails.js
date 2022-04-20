@@ -13,7 +13,7 @@ export default ApplyDetails = ({route, navigation}) => {
 	const data = route.params;
 	console.log('apply details', data);
 	//모달창에서 최종 확인을 클릭
-	const isProtect = route.name == 'ApplyProtectActivityE';
+	const isProtect = route.name == 'ApplyProtectActivityE' || route.name == 'ApplyTempProtectDetails';
 
 	React.useEffect(() => {
 		isProtect ? navigation.setOptions({title: '임시보호 신청'}) : navigation.setOptions({title: '입양 신청'});

@@ -17,6 +17,7 @@ import {getFeedDetailById} from 'Root/api/feedapi';
 import {getUserVolunteerActivityList, getVolunteerActivityById} from 'Root/api/volunteerapi';
 import {getApplyDetailById} from 'Root/api/protectapi';
 import {getAppliesRecord} from 'Root/api/protectapi';
+import {getCommunityByObjectId} from 'Root/api/community';
 const wait = timeout => {
 	return new Promise(resolve => setTimeout(resolve, timeout));
 };
@@ -183,7 +184,20 @@ const AlarmList = props => {
 				break;
 			case 'CommunityObject':
 				console.log('data.target', data.target_object);
-
+				getCommunityByObjectId(
+					{community_object_id: data.target_object},
+					result => {
+						console.log('getCommunityByObjectId', result);
+						if (result.msg.community_type == 'free') {
+							navigation.push('ArticleDetail', {community_object: result.msg});
+						} else {
+							navigation.push('ReviewDetail', {community_object: result.msg});
+						}
+					},
+					err => {
+						console.log('err', err);
+					},
+				);
 				break;
 		}
 	};

@@ -38,7 +38,7 @@ export default MissingReportList = props => {
 			getMissingReportList(
 				filterData,
 				data => {
-					// console.log('getMissingReportList data', data.msg);
+					// console.log('getMissingReportList data', data.msg[0]);
 					setData(data.msg);
 				},
 				err => {
@@ -73,7 +73,7 @@ export default MissingReportList = props => {
 				is_favorite: value,
 			},
 			result => {
-				console.log('result / FavoriteFeed / MissingReportList : ', result.msg);
+				console.log('result / FavoriteFeed / MissingReportList : ', result.msg.targetFeed.missing_animal_features);
 			},
 			err => {
 				console.log('err / FavoriteFeed / MissingReportList : ', err);
@@ -171,6 +171,16 @@ export default MissingReportList = props => {
 		);
 	};
 
+	const onPressShowActionButton = () => {
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setShowActionButton(!showActionButton);
+		}
+	};
+
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
 			<FlatList
@@ -248,11 +258,7 @@ export default MissingReportList = props => {
 						</View>
 					) : null}
 					<View style={[feedWrite.urgentActionButton]}>
-						{showActionButton ? (
-							<Urgent_Write2 onPress={() => setShowActionButton(!showActionButton)} />
-						) : (
-							<Urgent_Write1 onPress={() => setShowActionButton(!showActionButton)} />
-						)}
+						{showActionButton ? <Urgent_Write2 onPress={onPressShowActionButton} /> : <Urgent_Write1 onPress={onPressShowActionButton} />}
 					</View>
 				</View>
 			) : (

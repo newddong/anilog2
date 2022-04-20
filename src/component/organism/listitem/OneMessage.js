@@ -9,10 +9,43 @@ import {txt} from 'Root/config/textstyle';
 import {APRI10, GRAY10, GRAY20, GRAY30, TEXTBASECOLOR, WHITE} from 'Root/config/color';
 import {ProfileDefaultImg} from 'Component/atom/icon';
 import {getTimeLapsed} from 'Root/util/dateutil';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {setMemoBoxWithReport} from 'Root/api/userapi';
+import Modal from 'Root/component/modal/Modal';
+import {REPORT_MENU} from 'Root/i18n/msg';
+import {createReport} from 'Root/api/report';
 const OneMessage = props => {
 	// console.log('NoteMessageList props', props.data);
 	const data = props.data;
 	//사용자가 보낸메세지 일때
+	const reportMessage = () => {
+		console.log('data', data);
+		Modal.popOneBtnSelectModal(
+			REPORT_MENU,
+			'사용자 쪽지를 신고하시겠습니까?',
+			selectedItem => {
+				console.log(data._id);
+				createReport(
+					{
+						report_target_object_id: data._id,
+						report_target_object_type: 'memoboxobjects',
+						report_target_reason: selectedItem,
+						report_is_delete: false,
+					},
+					result => {
+						console.log('reportMessage success', result);
+						Modal.close();
+						Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
+					},
+					err => {
+						console.log('reportMessage err', err);
+						Modal.close();
+					},
+				);
+			},
+			'신고',
+		);
+	};
 	if (userGlobalObject.userInfo._id == data.memobox_send_id._id) {
 		return (
 			<View style={[{alignItems: 'center'}]}>
@@ -49,7 +82,12 @@ const OneMessage = props => {
 								<View style={styles.receivedMessageBox}>
 									<Text style={[txt.noto28]}>{data.memobox_contents}</Text>
 								</View>
-								<Text style={styles.timeTextRight}>{data.memobox_date && getTimeLapsed(data.memobox_date)}</Text>
+								<View style={[{justifyContent: 'flex-end'}]}>
+									<TouchableOpacity onPress={reportMessage}>
+										<Text style={styles.timeTextRightReport}>신고</Text>
+									</TouchableOpacity>
+									<Text style={styles.timeTextRight}>{data.memobox_date && getTimeLapsed(data.memobox_date)}</Text>
+								</View>
 							</View>
 						</View>
 					</View>
@@ -108,6 +146,13 @@ const styles = StyleSheet.create({
 		marginRight: 14 * DP,
 		color: GRAY10,
 		marginBottom: 3 * DP,
+	},
+	timeTextRightReport: {
+		...txt.noto26b,
+		alignSelf: 'flex-end',
+		marginLeft: 14 * DP,
+		color: GRAY10,
+		textDecorationLine: 'underline',
 	},
 });
 

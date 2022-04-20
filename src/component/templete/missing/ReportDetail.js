@@ -1,54 +1,32 @@
 import React from 'react';
-import {LogBox, ScrollView, Image, ActivityIndicator, TouchableOpacity, FlatList} from 'react-native';
+import {Image, ActivityIndicator, TouchableOpacity, FlatList} from 'react-native';
 import {Text, View} from 'react-native';
-import {login_style, reportDetail, temp_style} from 'Templete/style_templete';
+import {reportDetail, temp_style} from 'Templete/style_templete';
 import FeedContent from 'Organism/feed/FeedContent';
 import {useNavigation} from '@react-navigation/core';
-import {_dummy_ReportDetail} from 'Root/config/dummy_data_hjs';
-import {dummy_CommentObject} from 'Root/config/dummyDate_json';
-import {getFeedDetailById} from 'Root/api/feedapi';
-import {getCommentListByFeedId, createComment} from 'Root/api/commentapi';
+import {favoriteFeed, getFeedDetailById, getMissingReportList} from 'Root/api/feedapi';
+import {getCommentListByFeedId} from 'Root/api/commentapi';
 import moment from 'moment';
-import {create} from 'react-test-renderer';
-import {launchImageLibrary} from 'react-native-image-picker';
 import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Loading from 'Root/component/molecules/modal/Loading';
+import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
 
 export default ReportDetail = props => {
 	const navigation = useNavigation();
-	// console.log('ReportDetail', props);
-	React.useEffect(() => {
-		LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
-	}, []);
-
-	const [photo, setPhoto] = React.useState(props.route.params != null ? props.route.params : []); //PhotoSelect에서 사진 선택이 됐을 경우 photo에 담김
+	const [data, setData] = React.useState('false');
+	const [commentDataList, setCommentDataList] = React.useState('false'); //더보기 클릭 State
+	const [reportList, setReportList] = React.useState('false');
 	const [editComment, setEditComment] = React.useState(false); //답글 작성란 View 보이기 T/F
-	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
-	const [replyText, setReplyText] = React.useState(); //댓글 텍스트 state
-	const [showMore, setShowMore] = React.useState(false); //더보기 클릭 State
-	const [commentDataList, setCommentDataList] = React.useState(); //더보기 클릭 State
-	const [writeCommentData, setWriteCommentData] = React.useState(); //더보기 클릭 State
-	const [replyPressed, setReplyPressed] = React.useState(false);
-	const debug = true;
-	const [loading, setLoading] = React.useState(true); //댓글 로딩상태
-	const [feedLoding, setFeedLoading] = React.useState(true); //피드 로딩상태
-
-	React.useEffect(() => {
-		setPhoto(props.route.params);
-	}, [props.route.params]);
-
-	React.useEffect(() => {
-		navigation.addListener('blur', () => {
-			setPhoto([]);
-		});
-	});
-
-	//api 실제 작업 후 하단에 있는 data로 변경 예정 (현재는 에러 방지 코드)
-	const [data, setData] = React.useState({});
-
 	// 제보 데이터 불러오기 (아직 API 미작업 )
 	React.useEffect(() => {
-		console.log(' - ReportDetail -');
+		fetchFeedDetail();
+		fetchReportList();
+		getCommnetList();
+	}, []);
+
+	const fetchFeedDetail = () => {
 		getFeedDetailById(
 			{
 				feedobject_id: props.route.params._id,
@@ -56,47 +34,37 @@ export default ReportDetail = props => {
 			data => {
 				// debug && console.log(`ReportDetail data:${JSON.stringify(data.msg)}`);
 				setData(data.msg);
-				// console.log('data', data.msg.feed_writer_id._id);
 				navigation.setParams({writer: data.msg.feed_writer_id._id, isMissingOrReport: true, feed_object: data.msg});
-				setFeedLoading(false);
 			},
 			errcallback => {
 				console.log(`errcallback:${JSON.stringify(errcallback)}`);
 			},
 		);
-	}, []);
+	};
 
-	//댓글 불러오기 (상단의 useEffect와 합칠지는 추후 결정)
-	React.useEffect(() => {
-		console.log(' - ReportDetail Comment -');
-		getCommnetList();
-		setLoading(false);
-	}, []);
-
-	// React.useEffect(() => {
-	// 	console.log('WriteCommnetData changed', writeCommentData);
-	// }, [writeCommentData]);
-
-	React.useEffect(() => {
-		if (replyPressed == true) {
-			createComment(
-				{...writeCommentData},
-
-				callback => {
-					// console.log('write commnet success', callback);
-					getCommnetList();
-				},
-				err => {
-					console.log('write comment error', err);
-				},
-			);
-			// setWriteCommentData();
-			delete writeCommentData.comment_photo_uri;
-			onDeleteImage();
-			setEditComment(!editComment);
-			setReplyPressed(false);
-		}
-	}, [replyPressed]);
+	const fetchReportList = () => {
+		getMissingReportList(
+			{
+				city: '',
+				missing_animal_species: '',
+				request_number: 4,
+				feedobject_id: '',
+			},
+			result => {
+				// console.log('getMissingReportList result', result.msg[0]);
+				const filter = result.msg.filter(e => e.feed_type == 'report');
+				const removeMine = filter.filter(e => e._id != data._id);
+				const slice = removeMine.slice(0, 4);
+				setReportList(slice);
+			},
+			err => {
+				console.log('getMissingReportList Error', err);
+				if (err == '검색 결과가 없습니다.') {
+					setData([]);
+				}
+			},
+		);
+	};
 
 	const getCommnetList = () => {
 		getCommentListByFeedId(
@@ -142,53 +110,68 @@ export default ReportDetail = props => {
 			},
 			errcallback => {
 				console.log(`Comment errcallback:${JSON.stringify(errcallback)}`);
+				setCommentDataList([]);
 			},
 		);
 	};
 
-	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
-	const onWrite = () => {
-		debug && console.log('onWrite', replyText);
-		debug && console.log('writeCommentData=>' + writeCommentData.comment_contentsdsf);
-		// setWriteCommentData({...writeCommentData, comment_contents: replyText, comment_is_secure: privateComment, comment_feed_id: ''});
-		setWriteCommentData({...writeCommentData, comment_contents: replyText, comment_is_secure: privateComment});
-		console.log('wirteCommentData', writeCommentData);
-		setReplyPressed(true);
-	};
-
-	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
-	const onLockBtnClick = () => {
-		setPrivateComment(!privateComment);
-		!privateComment ? alert('비밀댓글로 설정되었습니다.') : alert('댓글이 공개설정되었습니다.');
-	};
-
-	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
-	const onAddPhoto = () => {
-		// navigation.push('SinglePhotoSelect', props.route.name);
-		launchImageLibrary(
+	//실종 게시글 즐겨찾기 아이콘 클릭
+	const onOff_FavoriteTag = (value, index) => {
+		console.log('bool', value);
+		favoriteFeed(
 			{
-				mediaType: 'photo',
-				selectionLimit: 1,
+				feedobject_id: reportList[index]._id,
+				userobject_id: userGlobalObject.userInfo._id,
+				is_favorite: value,
 			},
-			responseObject => {
-				console.log('선택됨', responseObject);
-				setPhoto(responseObject.assets[responseObject.assets.length - 1].uri);
-				setWriteCommentData({...writeCommentData, comment_photo_uri: responseObject.assets[responseObject.assets.length - 1].uri});
+			result => {
+				console.log('result / FavoriteFeed / MissingReportList : ', result.msg.targetFeed);
+			},
+			err => {
+				console.log('err / FavoriteFeed / MissingReportList : ', err);
 			},
 		);
 	};
 
-	// 답글 쓰기 -> Input value 변경 콜백함수
-	const onChangeReplyInput = text => {
-		setReplyText(text);
-		console.log(replyText);
+	//실종 게시글 리스트의 아이템 클릭
+	const onClickLabel = (status, id, item) => {
+		// console.log(`\nMissingReportList:onLabelClick() - status=>${status} id=>${id} item=>${JSON.stringify(item)}`);
+		let sexValue = '';
+		switch (status) {
+			case 'missing':
+				switch (item.missing_animal_sex) {
+					case 'male':
+						sexValue = '남';
+						break;
+					case 'female':
+						sexValue = '여';
+						break;
+					case 'male':
+						sexValue = '성별모름';
+						break;
+				}
+				const titleValue = item.missing_animal_species + '/' + item.missing_animal_species_detail + '/' + sexValue;
+				navigation.push('MissingAnimalDetail', {title: titleValue, _id: id});
+				break;
+			case 'report':
+				navigation.push('ReportDetail', {_id: id});
+				break;
+		}
 	};
 
-	// 답글 쓰기 텍스트 버튼 클릭 콜백함수
-	const onReplyBtnClick = parent_id => {
-		setEditComment(!editComment);
-		console.log('onReplayBtnClick', parent_id);
-		setWriteCommentData({...writeCommentData, commentobject_id: parent_id, feedobject_id: props.route.params._id});
+	//댓글 클릭
+	const onPressReply = async () => {
+		AsyncStorage.getItem('sid', (err, res) => {
+			console.log('res', res);
+			if (res == null) {
+				Modal.popNoBtn('로그인이 필요합니다.');
+				setTimeout(() => {
+					Modal.close();
+				}, 1500);
+			} else {
+				navigation.push('FeedCommentList', {feedobject: data, showAllContents: true});
+			}
+		});
 	};
 
 	// 자식 답글에서 답글쓰기 버튼 클릭 콜백함수
@@ -196,82 +179,79 @@ export default ReportDetail = props => {
 		setEditComment(!editComment);
 	};
 
-	// 답글 이미지 등록 후 지우기 버튼 클릭 콜백함수
-	const onDeleteImage = () => {
-		setPhoto([]);
-	};
-
-	//더보기 클릭
-	const onPressShowMore = () => {
-		setShowMore(!showMore);
-	};
-
-	if (loading || feedLoding) {
-		return (
-			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
-				<ActivityIndicator size={'large'}></ActivityIndicator>
-			</View>
-		);
-	}
-
 	const moveToCommentList = () => {
 		let feedobject = {};
 		feedobject._id = props.route.params._id;
 		navigation.push('FeedCommentList', {feedobject: data, showAllContents: true});
 	};
 
-	return (
-		<View style={[reportDetail.wrp_main]}>
-			<FlatList
-				contentContainerStyle={[reportDetail.container]}
-				data={[{}]}
-				ListHeaderComponent={
-					<View style={{alignItems: 'center'}}>
-						<View style={[temp_style.img_square_750, reportDetail.img_square_750]}>
-							{/* 제보사진 */}
-							<Image
-								source={{
-									uri: data.feed_thumbnail,
-								}}
-								style={[temp_style.img_square_750]}
+	//로딩중일때 출력
+	if (data == 'false' || reportList == 'false' || commentDataList == 'false') {
+		return <Loading isModal={false} />;
+	} else
+		return (
+			<View style={[reportDetail.wrp_main]}>
+				<FlatList
+					contentContainerStyle={[reportDetail.container]}
+					data={[{}]}
+					ListHeaderComponent={
+						<View style={{alignItems: 'center'}}>
+							<View style={[temp_style.img_square_750, reportDetail.img_square_750]}>
+								{/* 제보사진 */}
+								<Image
+									source={{
+										uri: data.feed_thumbnail,
+									}}
+									style={[temp_style.img_square_750]}
+								/>
+							</View>
+							<View style={[temp_style.feedContent]}>
+								{/* DB에서 가져오는 제보 피드글 데이터를 FeedContent에 넘겨준다. */}
+								<FeedContent data={data} />
+							</View>
+
+							<View style={[reportDetail.basic_separator]}>
+								<View style={[reportDetail.separator]}></View>
+							</View>
+						</View>
+					}
+					renderItem={({item, index}) => (
+						<View style={{paddingVertical: 10 * DP, alignItems: 'center'}}>
+							{commentDataList && commentDataList.length > 0 ? (
+								<TouchableOpacity
+									onPress={onPressReply}
+									style={[
+										{
+											width: 654 * DP,
+											alignItems: 'flex-end',
+											alignSelf: 'center',
+										},
+									]}>
+									<Text style={[txt.noto26, {color: GRAY10, marginBottom: 10 * DP}]}> 댓글 {commentDataList.length}개 모두 보기</Text>
+								</TouchableOpacity>
+							) : (
+								<></>
+							)}
+							<CommentList
+								items={commentDataList}
+								onPressReplyBtn={moveToCommentList}
+								onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
 							/>
+							<ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} isProtectRequest={true} />
+							<View style={[{paddingVertical: 20 * DP}]}>
+								<Text style={[txt.noto24, {paddingVertical: 20 * DP, width: 684 * DP, alignSelf: 'center'}]}>제보글 더보기</Text>
+								<AnimalNeedHelpList
+									data={reportList}
+									onFavoriteTag={(e, index) => onOff_FavoriteTag(e, index)}
+									onClickLabel={(status, id, item) => onClickLabel(status, id, item)}
+									whenEmpty={() => {
+										return <></>;
+									}}
+								/>
+							</View>
 						</View>
-						<View style={[temp_style.feedContent]}>
-							{/* DB에서 가져오는 제보 피드글 데이터를 FeedContent에 넘겨준다. */}
-							<FeedContent data={data} />
-						</View>
-						<View style={[reportDetail.allCommentCount]}>
-							<TouchableOpacity onPress={moveToCommentList}>
-								<Text style={[txt.noto24]}>댓글 쓰기</Text>
-							</TouchableOpacity>
-						</View>
-						<View style={[reportDetail.basic_separator]}>
-							<View style={[reportDetail.separator]}></View>
-						</View>
-					</View>
-				}
-				renderItem={({item, index}) => (
-					<CommentList
-						items={commentDataList}
-						onPressReplyBtn={moveToCommentList}
-						onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
-					/>
-				)}
-			/>
-			<View>
-				{editComment ? (
-					<ReplyWriteBox
-						onAddPhoto={onAddPhoto}
-						onChangeReplyInput={text => onChangeReplyInput(text)}
-						onLockBtnClick={onLockBtnClick}
-						onWrite={onWrite}
-						privateComment={privateComment}
-						// isPhotoAdded={isPhotoAdded}
-						photo={photo}
-						onDeleteImage={onDeleteImage}
-					/>
-				) : null}
+					)}
+				/>
 			</View>
-		</View>
-	);
+		);
 };

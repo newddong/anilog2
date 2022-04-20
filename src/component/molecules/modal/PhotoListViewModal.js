@@ -100,8 +100,8 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 	},
 	crossMark: {
-		alignSelf: 'flex-end',
-		right: 30 * DP,
+		alignSelf: 'flex-start',
+		left: 30 * DP,
 		marginBottom: 70 * DP,
 	},
 	popUpWindow: {
@@ -111,8 +111,6 @@ const style = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		marginBottom: 70 * DP,
-
-		// paddingVertical: 50 * DP,
 	},
 	shadow: {
 		shadowColor: '#000000',
@@ -126,7 +124,7 @@ const style = StyleSheet.create({
 	},
 	photo: {
 		width: 750 * DP,
-		height: 1000 * DP,
+		height: 1100 * DP,
 	},
 });
 

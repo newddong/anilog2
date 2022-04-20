@@ -70,8 +70,10 @@ import AlarmList from 'Templete/list/AlarmList';
 import Profile from 'Templete/profile/Profile';
 import UserNotePage from 'Templete/user/UserNotePage';
 import FeedList from 'Templete/feed/FeedList';
-import Feed from 'Root/component/organism/feed/Feed';
+import Feed from 'Organism/feed/Feed';
 import FeedCommentList from 'Templete/feed/FeedCommentList';
+import AlarmCommentList from 'Organism/comment/AlarmCommentList';
+import ArticleDetail from 'Templete/community/ArticleDetail';
 const RootStack = createStackNavigator();
 
 export default RootStackNavigation = () => {
@@ -298,7 +300,11 @@ export default RootStackNavigation = () => {
 							component={GeoLocationSearch}
 							options={{header: props => <SimpleHeader {...props} />, title: '주소 검색'}}
 						/>
-						<RootStack.Screen name="RequestLogin" component={RequestLogin} />
+						<RootStack.Screen
+							name="RequestLogin"
+							component={RequestLogin}
+							options={{header: props => <SimpleHeader {...props} />, title: '회원가입 '}}
+						/>
 						<RootStack.Screen name="UserList" options={{header: props => <InputAndSearchHeader {...props} />, title: '계정'}}>
 							{props => <AccountPicker {...props} /*prevNav={props.prevNav} input={searchInput} onClickUser={onClickUser}*/ />}
 						</RootStack.Screen>
@@ -311,7 +317,8 @@ export default RootStackNavigation = () => {
 						/>
 						<RootStack.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />}} />
 						<RootStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />}} />
-						<RootStack.Screen name="FeedCommentList" component={FeedCommentList} options={{header: props => <AlarmAndSearchHeader {...props} />}} />
+						{/* <RootStack.Screen name="FeedCommentList" component={FeedCommentList} options={{header: props => <AlarmAndSearchHeader {...props} />}} /> */}
+						<RootStack.Screen name="AlarmCommentList" component={AlarmCommentList} options={{header: props => <SimpleHeader {...props} />}} />
 						<RootStack.Screen
 							name="ShelterVolunteerForm"
 							component={ApplicationFormVolunteer}
@@ -321,6 +328,23 @@ export default RootStackNavigation = () => {
 							name="ApplyAdoptionDetails"
 							component={ApplyDetails}
 							options={{header: props => <SimpleHeader {...props} />, title: '입양 신청 내역'}}
+						/>
+						<RootStack.Screen
+							name={'ArticleDetail'}
+							component={ArticleDetail}
+							options={({route}) => ({
+								headerShown: true,
+								header: props => <SimpleHeader {...props} />,
+								title: ' ',
+							})}
+						/>
+						<RootStack.Screen
+							name={'ReviewDetail'}
+							component={ReviewDetail}
+							options={({route}) => ({
+								header: props => <SimpleHeader {...props} />,
+								title: ' ',
+							})}
 						/>
 					</RootStack.Navigator>
 				</NavigationContainer>

@@ -5,6 +5,7 @@ import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {REPORT_MENU} from 'Root/i18n/msg';
 
 /**
  * 유저가 기르는 반려동물의 프로필 사진, 닉네임, 유저의 닉네임을 출력하는 라벨
@@ -17,7 +18,7 @@ export default MeatBallHeader = props => {
 	const userInfo = userGlobalObject.userInfo;
 
 	const onSelect = select => {
-		console.log('select', select);
+		console.log('select Item', select);
 		if (select == '정보') {
 			Modal.close();
 			setTimeout(() => {
@@ -30,8 +31,25 @@ export default MeatBallHeader = props => {
 					},
 				);
 			}, 100);
+		} else if (select == '신고') {
+			Modal.close();
+			setTimeout(() => {
+				if (userGlobalObject.userInfo.isPreviewMode) {
+					Modal.popLoginRequestModal(() => {
+						props.navigation.navigate('Login');
+					});
+				} else {
+					Modal.popOneBtnSelectModal(
+						REPORT_MENU,
+						'이 게시물을 신고 하시겠습니까?',
+						selectedItem => {
+							alert(selectedItem);
+						},
+						'신고',
+					);
+				}
+			}, 100);
 		} else if (select == '공유하기') {
-			console.log('dddd');
 			Modal.close();
 			setTimeout(() => {
 				Modal.popSocialModal(
@@ -63,14 +81,14 @@ export default MeatBallHeader = props => {
 			const isPetOwner = family_id_list.includes(userInfo._id); // 보고 있는 반려동물 프로필이 로그인한 계정의 반려동물인지 여부
 			isPetOwner
 				? Modal.popSelectBoxModal(
-						['정보', '계정 주소 공유하기', '신고'],
+						['정보', '신고'],
 						select => onSelect(select),
 						() => onClose(),
 						false,
 						false,
 				  )
 				: Modal.popSelectBoxModal(
-						['정보', '공유하기', '신고'],
+						['정보', '신고'],
 						select => onSelect(select),
 						() => onClose(),
 						false,
@@ -79,7 +97,7 @@ export default MeatBallHeader = props => {
 		} else if (props.options.data && props.options.data.user_type == 'user' && props.options.data._id != userInfo._id) {
 			//일반 유저 프로필이며 자신의 계정이 아닐 경우
 			Modal.popSelectBoxModal(
-				['공유하기', '신고'],
+				['신고'],
 				select => onSelect(select),
 				() => onClose(),
 				false,
@@ -87,10 +105,10 @@ export default MeatBallHeader = props => {
 			);
 		} else if (props.options.data && props.options.data.user_type == 'shelter' && props.options.data._id != userInfo._id) {
 			//보호소 프로필이며 자신의 계정이 아닐경우
-			Modal.popSelectBoxModal(['정보', '공유하기', '신고'], select => onSelect(select), onClose, false, false);
+			Modal.popSelectBoxModal(['정보', '신고'], select => onSelect(select), onClose, false, false);
 		} else if (props.options.data && props.options.data.user_type == 'shelter' && props.options.data._id == userInfo._id) {
 			//보호소 프로필이며 자신의 계정일 경우
-			Modal.popSelectBoxModal(['정보', '공유하기'], select => onSelect(select), onClose, false, false);
+			Modal.popSelectBoxModal(['정보'], select => onSelect(select), onClose, false, false);
 		}
 	};
 

@@ -15,6 +15,7 @@ import userGlobalObj from 'Root/config/userGlobalObject';
 import {ALIGNITEMS, CALENDAR_DAY, CALENDAR_MONTH, CALENDAR_YEAR, FEED_FOLLOWING_USER_CLICK, mobile_carrier, REPORT_CONTENT} from 'Root/i18n/msg';
 import {createSettingPublic, getSettingPublic} from 'Root/api/settingpublic';
 import {createNotice, getNotice} from 'Root/api/notice';
+import {NextMark} from 'Root/component/atom/icon';
 
 export default LoginTemplete = props => {
 	const [userSetting, setUserSetting] = React.useState();
@@ -169,6 +170,14 @@ export default LoginTemplete = props => {
 		// Modal.popSelectScrollBoxModal([mobile_carrier], '도, 광역시를 지정해주세요.', e => console.log('e', e));
 		console.log(userSetting);
 	};
+
+	const moveToMainTab = () => {
+		userGlobalObj.userInfo.isPreviewMode = true;
+		AsyncStorage.removeItem('userSetting');
+
+		props.navigation.reset({routes: [{name: 'MainTab'}]});
+	};
+
 	if (!userSetting) {
 		return (
 			<View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff'}}>
@@ -181,12 +190,14 @@ export default LoginTemplete = props => {
 			{/* confirm without login */}
 			<View style={[loginTemplete_style.innerContainer]}>
 				<View style={loginTemplete_style.without_login}>
-					{/* <TouchableOpacity onPress={moveToMainTab}>
-					<View style={[loginTemplete_style.without_login_text]}>
-						<Text style={[txt.noto24, {color: GRAY10}]}>로그인 없이 둘러보기</Text>
-						<View style={[loginTemplete_style.nextBtnView]}><NextMark /> </View>
-					</View>
-				</TouchableOpacity> */}
+					<TouchableOpacity onPress={moveToMainTab}>
+						<View style={[loginTemplete_style.without_login_text]}>
+							<Text style={[txt.noto24, {color: GRAY10}]}>로그인 없이 둘러보기</Text>
+							<View style={[loginTemplete_style.nextBtnView]}>
+								<NextMark />
+							</View>
+						</View>
+					</TouchableOpacity>
 				</View>
 
 				{/* LoginForm */}

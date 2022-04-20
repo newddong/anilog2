@@ -4,6 +4,7 @@ import ParentComment from 'Organism/comment/ParentComment';
 import DP from 'Root/config/dp';
 import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
+import AniButton from 'Root/component/molecules/button/AniButton';
 
 /**
  *
@@ -11,6 +12,8 @@ import {txt} from 'Root/config/textstyle';
  * items : '댓글 목록들',
  * onPress_ChildComment_ReplyBtn : void,
  * onPressReplyBtn : void,
+ * onPressDelete: void,
+ * onPressDeleteChild : void
  * }} props
  */
 export default CommentList = props => {
@@ -23,10 +26,14 @@ export default CommentList = props => {
 				parentComment={item}
 				onPressReplyBtn={props.onPressReplyBtn} // 부모 댓글의 답글쓰기 클릭 이벤트
 				onEdit={props.onEdit}
+				onPressDelete={props.onPressDelete}
+				onPressDeleteChild={props.onPressDeleteChild}
 				like={like}
 			/>
 		);
 	};
+
+	const scrollRef = React.useRef();
 
 	const whenEmpty = () => {
 		return (
@@ -35,7 +42,6 @@ export default CommentList = props => {
 					{
 						height: 70 * DP,
 						width: 654 * DP,
-						// backgroundColor: 'red',
 						marginVertical: 30 * DP,
 						alignItems: 'center',
 						justifyContent: 'center',
@@ -50,15 +56,18 @@ export default CommentList = props => {
 		<View
 			style={{
 				width: 654 * DP,
-				// backgroundColor: 'red',
 			}}>
 			<FlatList
 				listKey={({item, index}) => index}
+				keyExtractor={(item, index) => index.toString()}
+				nestedScrollEnabled
 				data={props.items}
 				renderItem={renderItem}
 				ListEmptyComponent={whenEmpty}
 				scrollEnabled={false}
+				initialScrollIndex={2}
 				stickyHeaderIndices={[0]}
+				ref={scrollRef}
 			/>
 		</View>
 	);
@@ -68,4 +77,6 @@ CommentList.defaultProps = {
 	items: [],
 	onPressReplyBtn: e => console.log(e),
 	onPress_ChildComment_ReplyBtn: e => console.log(e),
+	onPressDelete: () => {},
+	onPressDeleteChild: () => {},
 };

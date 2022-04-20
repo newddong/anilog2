@@ -69,7 +69,7 @@ const MissingReportInfo = props => {
 			</View>
 		);
 	} else if (feed_type == 'report') {
-		console.log('ReportMissing Date', report_witness_date);
+		// console.log('ReportMissing Date', report_witness_date);
 		//날짜 문자열 형식처리
 		const newReportDateText = report_witness_date.toString().split('-');
 		const newReportDate = newReportDateText[0] + '.' + newReportDateText[1] + '.' + newReportDateText[2].toString().substring(0, 2);

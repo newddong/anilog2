@@ -18,6 +18,7 @@ import {favoriteEtc} from 'Root/api/favoriteetc';
 import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
 import {REPORT_MENU} from 'Root/i18n/msg';
+import {createReport} from 'Root/api/report';
 
 /**
  * 자유게시글 상세 내용
@@ -351,12 +352,29 @@ export default ArticleDetail = props => {
 						break;
 					case '신고':
 						Modal.close();
+						console.log('ArticlDetail', data);
 						setTimeout(() => {
 							Modal.popOneBtnSelectModal(
 								REPORT_MENU,
 								'이 게시물을 신고 하시겠습니까?',
 								selectedItem => {
-									alert(selectedItem);
+									createReport(
+										{
+											report_target_object_id: data._id,
+											report_target_object_type: 'communityobjects',
+											report_target_reason: selectedItem,
+											report_is_delete: false,
+										},
+										result => {
+											console.log('신고 완료', result);
+											Modal.close();
+											Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
+										},
+										err => {
+											console.log('신고 err', err);
+											Modal.close();
+										},
+									);
 								},
 								'신고',
 							);
@@ -382,7 +400,7 @@ export default ArticleDetail = props => {
 
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
-		// console.log('articleList[index]', articleList[index]);
+		console.log('articleList[index]', articleList[index]);
 		navigation.push('ArticleDetail', {community_object: articleList[index]});
 	};
 

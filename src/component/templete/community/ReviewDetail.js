@@ -16,6 +16,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import {favoriteEtc} from 'Root/api/favoriteetc';
 import community_obj from 'Root/config/community_obj';
 import {REPORT_MENU} from 'Root/i18n/msg';
+import {createReport} from 'Root/api/report';
 
 /**
  * 후기 상세 내용
@@ -326,7 +327,23 @@ export default ReviewDetail = props => {
 								REPORT_MENU,
 								'이 게시물을 신고 하시겠습니까?',
 								selectedItem => {
-									alert(selectedItem);
+									createReport(
+										{
+											report_target_object_id: data._id,
+											report_target_object_type: 'communityobjects',
+											report_target_reason: selectedItem,
+											report_is_delete: false,
+										},
+										result => {
+											console.log('신고 완료', result);
+											Modal.close();
+											Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
+										},
+										err => {
+											console.log('신고 err', err);
+											Modal.close();
+										},
+									);
 								},
 								'신고',
 							);

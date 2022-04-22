@@ -43,7 +43,7 @@ export default ProtectionTopTabNavigation = ({route, navigation}) => {
 			}}>
 			<ProtectionTab.Screen name="ProtectRequestList" component={ProtectRequestList} />
 			<ProtectionTab.Screen name="MissingReportList" component={MissingReportList} />
-			<ProtectionTab.Screen name="ActivationList" component={ActivationList} />
+			{/* <ProtectionTab.Screen name="ActivationList" component={ActivationList} /> */}
 		</ProtectionTab.Navigator>
 	);
 };

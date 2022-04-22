@@ -9,6 +9,7 @@ import {getCommunityList} from 'Root/api/community';
 import Modal from 'Root/component/modal/Modal';
 import Loading from 'Root/component/molecules/modal/Loading';
 import community_obj from 'Root/config/community_obj';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default ArticleMain = ({route}) => {
 	const navigation = useNavigation();
@@ -16,9 +17,9 @@ export default ArticleMain = ({route}) => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			fetchData();
-			console.log('community_obj / ArticleMain / object._id : ', community_obj.object._id);
-			console.log('community_obj / ArticleMain / pageToMove : ', community_obj.pageToMove);
-			console.log('community_obj.initial / ArticleMain /  initial : ', community_obj.initial);
+			// console.log('community_obj / ArticleMain / object._id : ', community_obj.object._id);
+			// console.log('community_obj / ArticleMain / pageToMove : ', community_obj.pageToMove);
+			// console.log('community_obj.initial / ArticleMain /  initial : ', community_obj.initial);
 			community_obj.current = '';
 			if (community_obj.initial != true && community_obj.object._id != undefined) {
 				console.log('community_obj.pageToMove', community_obj.pageToMove);
@@ -33,8 +34,6 @@ export default ArticleMain = ({route}) => {
 		fetchData();
 		return unsubscribe;
 	}, []);
-
-	// console.log('route.params.ArticleMain', route.params);
 
 	const fetchData = () => {
 		getCommunityList(
@@ -56,12 +55,19 @@ export default ArticleMain = ({route}) => {
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
 		navigation.push('ArticleDetail', {community_object: data[index]});
+		console.log('comunity_object', data[index]);
 	};
 
 	//글쓰기
 	const onPressWrite = () => {
-		navigation.navigate('CommunityWrite', {isReview: false});
-		// navigation.push('WriteEditorTest');
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			navigation.navigate('CommunityWrite', {isReview: false});
+			// navigation.push('WriteEditorTest');
+		}
 	};
 
 	const [onlyTalk, setOnlyTalk] = React.useState(false);

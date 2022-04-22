@@ -21,15 +21,6 @@ const ReviewFavoriteBriefList = props => {
 		props.onPressCheck(index, bool);
 	};
 
-	const whenEmpty = () => {
-		return (
-			<View style={{paddingVertical: 150 * DP, alignItems: 'center'}}>
-				<EmptyIcon />
-				<Text style={[txt.noto28, {marginTop: 10 * DP}]}>즐겨찾기한 리뷰가 없습니다..</Text>
-			</View>
-		);
-	};
-
 	const renderItem = (item, index) => {
 		return (
 			<View key={index} style={[style.listItem, {}]}>
@@ -63,7 +54,7 @@ const ReviewFavoriteBriefList = props => {
 				showsVerticalScrollIndicator={false}
 				listKey={({item, index}) => index}
 				keyExtractor={item => item._id}
-				ListEmptyComponent={whenEmpty}
+				ListEmptyComponent={props.whenEmpty}
 			/>
 		</View>
 	);

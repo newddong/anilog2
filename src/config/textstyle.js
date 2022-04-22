@@ -1,4 +1,4 @@
-import {StyleSheet, Dimensions} from 'react-native';
+import {StyleSheet, Dimensions, PixelRatio} from 'react-native';
 import DP from 'Root/config/dp';
 import {TEXTBASECOLOR, GRAY, GRAY_BRIGHT, GRAY_PLACEHOLDER, MAINCOLOR, SLIGHT_TEXTBASECOLOR, LINK, WHITE, RED, GRAY_TXT_INPUT} from 'Root/config/color';
 
@@ -35,7 +35,7 @@ export const txt = StyleSheet.create({
 	},
 	noto28: {
 		fontFamily: 'NotoSansKR-Regular',
-		fontSize: 28 * DP,
+		fontSize: 28 * DP ,
 		color: TEXTBASECOLOR,
 		includeFontPadding:false,
 	},

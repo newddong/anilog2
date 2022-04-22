@@ -80,3 +80,14 @@ export async function createCommunity(params, callback, errcallback) {
 export async function updateAndDeleteCommunity(params, callback, errcallback) {
 	apiController('/community/updateAndDeleteCommunity', arguments);
 }
+
+/**
+ * 커뮤니티 오브젝트 ID로 상세 정보 불러오기
+ * @param {object} params
+ * @param {string} params.community_object_id - 커뮤니티 게시물 object _id
+ * @param {function} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getCommunityByObjectId(params, callback, errcallback) {
+	apiController('/community/getCommunityByObjectId', arguments);
+}

@@ -15,8 +15,8 @@ import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTi
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {useNavigation} from '@react-navigation/core';
 import WebView from 'react-native-webview';
-import {styles} from 'Root/component/atom/image/imageStyle';
 import Modal from 'Root/component/modal/Modal';
+import userGlobalObject from 'Root/config/userGlobalObject';
 /**
  * 후기 세부 페이지
  * @param {object} props - Props Object
@@ -82,73 +82,73 @@ const ReviewContent = props => {
 	};
 
 	const onPressFavorite = bool => {
-		setData({...data, community_is_favorite: bool});
-		props.onPressFavorite(bool);
-	};
-
-	const onWebViewMessage = event => {
-		if (parseInt(event.nativeEvent.data) < 100 * DP) {
-			setHeight(100 * DP);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
 		} else {
-			height >= 100 * DP ? false : setHeight(parseInt(event.nativeEvent.data));
-			Platform.OS == 'android'
-				? console.log('height and : ', parseInt(event.nativeEvent.data))
-				: console.log('parseInt(event.nativeEvent.data)', parseInt(event.nativeEvent.data));
+			setData({...data, community_is_favorite: bool});
+			props.onPressFavorite(bool);
 		}
 	};
 
 	const x = 126.937125; //초기값 더미
 	const y = 37.548721; //초기값 더미
 
-	const onPressImage = uri => {
-		Modal.popPhotoListViewModal([uri]);
+	const onWebViewMessage = async event => {
+		if (Platform.OS == 'android') {
+			setTimeout(() => {
+				if (event.nativeEvent.data.includes('pinetreegy.s3')) {
+					console.log('event.nativeEvent.data', event.nativeEvent.data);
+					showImg(event.nativeEvent.data);
+				} else if (parseInt(event.nativeEvent.data) < 100 * DP) {
+					setHeight(100 * DP);
+				} else {
+					height >= 100 * DP ? false : setHeight(parseInt(event.nativeEvent.data));
+					console.log('height and : ', parseInt(event.nativeEvent.data));
+				}
+			}, 150);
+		} else {
+			// console.log('event IOS : ', JSON.stringify(event._dispatchInstances._debugOwner.memoizedProps));
+			console.log('event.nativeEvent.data', event.nativeEvent.data);
+			if (event.nativeEvent.data.includes('pinetreegy.s3')) {
+				console.log('event.nativeEvent.data', event.nativeEvent.data);
+				showImg(event.nativeEvent.data);
+			} else if (parseInt(event.nativeEvent.data) < 100 * DP) {
+				setHeight(100 * DP * DP);
+			} else {
+				height >= 100 * DP ? false : setHeight(parseInt(event.nativeEvent.data));
+				console.log('parseInt(event.nativeEvent.data)', parseInt(event.nativeEvent.data));
+			}
+		}
 	};
 
-	const getContents = () => {
-		let contents = data.contents;
-		// console.log('contents', contents);
-		return contents.map((v, i) => {
-			if (v && v.image == null) {
-				const r1 = v.replace(/&nbsp;/g, '');
-				const r2 = r1.replace(/<br>/g, '');
-				console.log('searchInput', props.searchInput);
-				if (props.searchInput == undefined) {
-					return (
-						<Text key={i} style={[txt.noto28]}>
-							{r2}
-						</Text>
-					);
-				} else if (props.searchInput.length > 1) {
-					console.log(props.searchInput);
-					let split = r2.split(new RegExp(`(${props.searchInput})`, 'gi'));
-					// console.log('split', split);
-					return (
-						<Text key={i} style={[txt.noto28]}>
-							{split.map((part, ind) =>
-								part.toLowerCase() === props.searchInput.toLowerCase() ? (
-									// <View style={{backgroundColor: 'red'}}>{part}</View>
-									<Text key={ind} style={[txt.noto28b, {color: APRI10, marginRight: 10 * DP}]}>
-										{part + ''}
-									</Text>
-								) : (
-									<Text key={ind} style={[txt.noto28, {marginRight: 10 * DP}]}>
-										{part + ''}
-									</Text>
-								),
-							)}
-						</Text>
-					);
-				}
-			} else if (v == undefined) {
-				return <></>;
-			} else {
-				return (
-					<TouchableOpacity key={i} activeOpacity={0.8} onPress={() => onPressImage(v.image)}>
-						<Image style={[styles.img_square_round_654, {marginVertical: 10 * DP}]} source={{uri: v.image}} resizeMode={'stretch'} />
-					</TouchableOpacity>
-				);
-			}
-		});
+	const runFirst = `
+	  window.ReactNativeWebView.postMessage(document.body.scrollHeight);
+      true; // note: this is required, or you'll sometimes get silent failures
+    `;
+
+	const webviewRef = React.useRef();
+
+	const changeHtmlTag = () => {
+		let result = data.community_content;
+		result = data.community_content.replace(/<img /g, '<img onclick="image(this)" ');
+		// console.log('data Content', data.community_content);
+		// console.log('result', result);
+		return `
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
+        <script>
+            function image(img){
+                window.ReactNativeWebView.postMessage(img.src);
+				// alert(img.src)
+            }
+        </script>
+        ${result}
+    `;
+	};
+
+	const showImg = src => {
+		Modal.popPhotoListViewModal([src]);
 	};
 
 	return (
@@ -170,20 +170,19 @@ const ReviewContent = props => {
 			<View style={[style.profile]}>
 				<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} />
 			</View>
-			<View style={{width: 654 * DP, marginTop: 20 * DP}}>{getContents()}</View>
-			{/* <View>
+			{/* <View style={{width: 654 * DP, marginTop: 20 * DP}}>{getContents()}</View> */}
+			<View>
 				<View style={[{width: 700 * DP, marginTop: 20 * DP}]}>
 					{Platform.OS == 'ios' ? (
 						<WebView
 							originWhitelist={['*']}
 							onMessage={onWebViewMessage}
-							injectedJavaScript="window.ReactNativeWebView.postMessage(document.body.scrollHeight)" //Dynamic Height 수치 설정
+							ref={webviewRef}
+							injectedJavaScript={runFirst} //Dynamic Height 수치 설정
 							scrollEnabled={false}
+							injectedJavaScriptBeforeContentLoaded={runFirst}
 							source={{
-								html: `
-        	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
-			${data.community_content} 
-        `,
+								html: changeHtmlTag(),
 							}}
 							style={[
 								style.webview,
@@ -199,12 +198,11 @@ const ReviewContent = props => {
 								originWhitelist={['*']}
 								scalesPageToFit={true}
 								onMessage={onWebViewMessage}
-								injectedJavaScript="window.ReactNativeWebView.postMessage(document.body.scrollHeight)" //Dynamic Height 수치 설정
+								ref={webviewRef}
+								injectedJavaScript={runFirst} //Dynamic Height 수치 설정
+								scrollEnabled={false}
 								source={{
-									html: `
-        	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
-			${data.community_content} 
-        `,
+									html: changeHtmlTag(),
 								}}
 								style={{
 									width: 690 * DP,
@@ -215,7 +213,7 @@ const ReviewContent = props => {
 						</ScrollView>
 					)}
 				</View>
-			</View> */}
+			</View>
 			<View style={[style.footer]}>
 				{data.community_address.region.latitude == '' ? (
 					<></>

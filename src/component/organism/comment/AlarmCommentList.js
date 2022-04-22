@@ -1,68 +1,43 @@
-import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, FlatList} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import FeedContent from 'Organism/feed/FeedContent';
 import CommentList from 'Organism/comment/CommentList';
 import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
 import {feedCommentList, login_style} from 'Templete/style_templete';
-import {
-	createComment,
-	deleteComment,
-	getCommentListByCommunityId,
-	getCommentListByFeedId,
-	getCommentListByProtectId,
-	updateComment,
-} from 'Root/api/commentapi';
+import {createComment, getCommentListByCommunityId, getCommentListByFeedId, getCommentListByProtectId, updateComment} from 'Root/api/commentapi';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
-import {GRAY10, GRAY20} from 'Root/config/color';
+import {GRAY10, GRAY20, GRAY30} from 'Root/config/color';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
-import Loading from 'Root/component/molecules/modal/Loading';
-
-export default FeedCommentList = props => {
-	// console.log('props.showAllContents', props.route.params.showAllContents);
-	// console.log(props.route.name, '코멘트 리스트 네임');
+import {useNavigation} from '@react-navigation/core';
+const AlarmCommentList = props => {
+	console.log('AlarmCommentList props', props.route.params);
 	const navigation = useNavigation();
+	const [comments, setComments] = React.useState(false);
+	const [commentsLoaded, setCommentsLoaded] = React.useState(false);
+	const [searchInput, setSearchInput] = React.useState('');
+	const [articleList, setArticleList] = React.useState([]);
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
-	const [comments, setComments] = React.useState('false');
-	const [parentComment, setParentComment] = React.useState();
+	const [parentComment, setParentComment] = React.useState(); //대댓글을 쓰는 경우 해당 댓글의 id container
 	const input = React.useRef();
 	const addChildCommentFn = React.useRef(() => {});
-	const [refresh, setRefresh] = React.useState(true);
-	const keyboardY = useKeyboardBottom(0 * DP);
-	const flatlist = React.useRef();
 	const [editMode, setEditMode] = React.useState(false); //댓글 편집 모드
 	const [editData, setEditData] = React.useState({
 		comment_contents: '',
 		comment_photo_uri: '',
 	});
+	const [moveToIndex, setMoveToIndex] = React.useState(5);
+	const [loading, setLoading] = React.useState(true);
+	const flatListRef = React.useRef();
+	const keyboardY = useKeyboardBottom(0 * DP);
+	const commentListHeight = React.useRef(100);
+	const [placeholder, setPlaceholder] = React.useState('댓글입력..');
 
 	React.useEffect(() => {
-		if (props.route.name == 'FeedCommentList') {
-			fetchData();
-		} else {
-			getCommentListByFeedId(
-				{
-					feedobject_id: props.route.params.feedobject._id,
-					request_number: 1000,
-					login_userobject_id: userGlobalObject.userInfo._id,
-				},
-				comments => {
-					setComments(comments.msg.filter(e => e.comment_is_delete != true));
-					navigation.setOptions({title: '댓글 ' + comments.msg.length});
-				},
-				err => {
-					console.log('getCommentListByFeedId', err);
-				},
-			);
-		}
-	}, []);
-
-	const fetchData = () => {
 		getCommentListByFeedId(
 			{
 				feedobject_id: props.route.params.feedobject._id,
@@ -70,14 +45,50 @@ export default FeedCommentList = props => {
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			comments => {
-				setComments(comments.msg.filter(e => e.comment_is_delete != true));
-				// console.log('getCommentListByFeedId / result', comments);
+				setComments(comments.msg);
+				setCommentsLoaded(true);
+				console.log('comments', comments);
+			},
+			err => console.log('getCommentListByFeedId', err),
+		);
+	}, []);
+	React.useEffect(() => {
+		if (commentsLoaded) {
+			comments.forEach((current, index) => {
+				console.log('current', current);
+				if (current._id == props.route.params.target) {
+					console.log('targeted', current._id, props.route.params.target, index);
+					setMoveToIndex(index);
+					setTimeout(
+						() =>
+							flatListRef.current.scrollToIndex(
+								{
+									animated: true,
+									// index: comments.length - index - 1,
+									index: index,
+								},
+								console.log('index 번째로 이동', index),
+							),
+
+						500,
+					);
+				}
+			});
+		}
+		setLoading(false);
+	}, [commentsLoaded]);
+
+	const onPressDelete = id => {
+		deleteComment(
+			{
+				commentobject_id: id,
+			},
+			result => {
+				console.log('result / delectComment / ProtectCommentList : ', result.msg.comment_is_delete);
+				getComment();
 			},
 			err => {
-				console.log('getCommentListByFeedId', err);
-				if (err == '검색 결과가 없습니다.') {
-					setComments([]);
-				}
+				console.log(' err / deleteComment / ProtectCommentList : ', err);
 			},
 		);
 	};
@@ -129,9 +140,9 @@ export default FeedCommentList = props => {
 							},
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
-								setComments(comments.msg.filter(e => e.comment_is_delete != true));
+								setComments(comments.msg);
 								parentComment && addChildCommentFn.current();
-								// console.log('comments', comments);
+								console.log('comments', comments);
 								input.current.blur();
 								flatlist.current.scrollToOffset({offset: 0});
 							},
@@ -145,6 +156,7 @@ export default FeedCommentList = props => {
 			createComment(
 				param,
 				result => {
+					console.log(result);
 					setParentComment();
 					setEditData({
 						comment_contents: '',
@@ -158,9 +170,9 @@ export default FeedCommentList = props => {
 							},
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
-								setComments(comments.msg.filter(e => e.comment_is_delete != true));
+								setComments(comments.msg);
 								parentComment && addChildCommentFn.current();
-								// console.log('comments', comments);
+								console.log('comments', comments);
 								input.current.blur();
 								flatlist.current.scrollToOffset({offset: 0});
 							},
@@ -201,22 +213,6 @@ export default FeedCommentList = props => {
 		setEditData({...editData, comment_photo_uri: ''});
 	};
 
-	const onPressDelete = id => {
-		console.log('id', id);
-		deleteComment(
-			{
-				commentobject_id: id,
-			},
-			result => {
-				console.log('result / delectComment / ProtectCommentList : ', result.msg.comment_is_delete);
-				fetchData();
-			},
-			err => {
-				console.log(' err / deleteComment / ProtectCommentList : ', err);
-			},
-		);
-	};
-
 	// 답글 쓰기 -> Input value 변경 콜백함수
 	const onChangeReplyInput = text => {
 		console.log('onChangeReplyInput : ', text);
@@ -225,17 +221,12 @@ export default FeedCommentList = props => {
 
 	// 답글 쓰기 버튼 클릭 콜백함수
 	const onReplyBtnClick = (parentCommentId, addChildComment) => {
-		// console.log('onReplyBtnClick : ', parentCommentId);
-		if (userGlobalObject.userInfo.isPreviewMode) {
-			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
-			});
-		} else {
-			setParentComment(parentCommentId);
-			input.current.focus();
-			editComment || setEditComment(true);
-			addChildCommentFn.current = addChildComment;
-		}
+		console.log('onReplyBtnClick : ', parentCommentId);
+		setParentComment(parentCommentId);
+		input.current.focus();
+		editComment || setEditComment(true);
+		addChildCommentFn.current = addChildComment;
+		setPlaceholder('답글입력..');
 	};
 
 	const [heightReply, setReplyHeight] = React.useState(0);
@@ -250,51 +241,38 @@ export default FeedCommentList = props => {
 		setEditMode(true);
 		setEditData({...comment});
 	};
-
-	const render = ({item, index}) => {
-		if (index == 0)
-			return (
-				<View style={{justifyContent: 'flex-end', paddingBottom: 10 * DP, height: 60 * DP, backgroundColor: '#FFF', paddingHorizontal: 48 * DP}}>
-					<Text style={[txt.noto26, {color: GRAY10}]}>댓글 {comments.length}개 </Text>
-				</View>
-			);
-		if (index > 0)
-			return (
-				<View style={{marginLeft: 48 * DP}}>
-					{comments == 'false' ? (
-						<Loading isModal={false} />
-					) : (
-						<CommentList
-							items={item}
-							onPressReplyBtn={onReplyBtnClick}
-							onEdit={onEdit}
-							onPressDelete={onPressDelete}
-							onPressDeleteChild={onPressDelete}
-						/>
-					)}
-				</View>
-			);
+	const renderItem = ({item, index}) => {
+		// return item;
+		return (
+			<View style={[style.commentContainer]} key={item._id} onLayout={onLayoutCommentList}>
+				<ParentComment
+					parentComment={item}
+					onPressReplyBtn={onReplyBtnClick} // 부모 댓글의 답글쓰기 클릭 이벤트
+					onEdit={onEdit}
+					onPressDelete={onPressDelete}
+					onPressDeleteChild={onPressDelete}
+				/>
+			</View>
+		);
 	};
-	const currentPosition = React.useRef(0);
-	const onScroll = e => {
-		currentPosition.current = e.nativeEvent.contentOffset.y;
+	const onLayoutCommentList = e => {
+		commentListHeight.current = e.nativeEvent.layout.height;
+	};
+	const Header = () => {
+		return (
+			<View>
+				<FeedContent data={props.route.params.feedobject} showAllContents={true} />
+				<View style={[style.replyCountContainer, {alignSelf: 'center', alignItems: 'flex-start'}]}>
+					<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
+				</View>
+			</View>
+		);
 	};
 
-	return (
-		<View style={[login_style.wrp_main, feedCommentList.container]}>
-			<FlatList
-				data={[{}, comments]}
-				extraData={refresh}
-				renderItem={render}
-				stickyHeaderIndices={[1]}
-				ListHeaderComponent={<FeedContent data={props.route.params.feedobject} showAllContents={props.route.params.showAllContents} />}
-				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
-				onScroll={onScroll}
-				ref={flatlist}
-			/>
-			{/* Parent Comment 혹은 Child Comment 에서 답글쓰기를 클릭할 시 화면 최하단에 등장 */}
-			{/* 비로그인 유저일 경우 리플란이 안보이도록 처리 - 상우 */}
-			{userGlobalObject.userInfo._id != '' && (editComment || props.route.name == 'FeedCommentList') ? (
+	const Bottom = () => {
+		return (
+			<View>
+				<View style={{height: heightReply + keyboardY}}></View>
 				<View style={{position: 'absolute', bottom: keyboardY}} onLayout={onReplyBtnLayout}>
 					<ReplyWriteBox
 						onAddPhoto={onAddPhoto}
@@ -305,11 +283,103 @@ export default FeedCommentList = props => {
 						privateComment={privateComment}
 						ref={input}
 						editData={editData}
+						shadow={false}
+						parentComment={parentComment}
 					/>
 				</View>
-			) : (
-				false
-			)}
+			</View>
+		);
+	};
+
+	// const components = [header(), commentBox()];
+	return (
+		<View style={[login_style.wrp_main, feedCommentList.container]}>
+			<FlatList
+				data={comments}
+				renderItem={renderItem}
+				listKey={({item, index}) => index}
+				ListHeaderComponent={Header}
+				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
+				// ListFooterComponent={Bottom}
+				ref={flatListRef}
+				showsVerticalScrollIndicator={false}
+			/>
+			<View style={{position: 'absolute', bottom: keyboardY}} onLayout={onReplyBtnLayout}>
+				<ReplyWriteBox
+					onAddPhoto={onAddPhoto}
+					onChangeReplyInput={onChangeReplyInput}
+					onLockBtnClick={onLockBtnClick}
+					onWrite={onWrite}
+					onDeleteImage={onDeleteImage}
+					privateComment={privateComment}
+					ref={input}
+					editData={editData}
+				/>
+			</View>
 		</View>
 	);
 };
+
+const style = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: '#fff',
+		alignSelf: 'center',
+		alignItems: 'center',
+	},
+	header: {
+		flexDirection: 'row',
+		width: 654 * DP,
+		height: 50 * DP,
+		justifyContent: 'space-between',
+	},
+	header_title: {
+		width: 544 * DP,
+	},
+	header_icon: {
+		justifyContent: 'space-between',
+		flexDirection: 'row',
+	},
+	profile: {
+		alignSelf: 'flex-start',
+		marginTop: 12 * DP,
+	},
+	hashText: {
+		width: 634 * DP,
+		marginTop: 10 * DP,
+	},
+	replyCountContainer: {
+		width: 654 * DP,
+		alignItems: 'flex-end',
+		alignSelf: 'center',
+		marginTop: 30 * DP,
+		marginBottom: 20 * DP,
+	},
+	commentContainer: {
+		paddingBottom: 10 * DP,
+		paddingTop: 20 * DP,
+		alignItems: 'center',
+		// backgroundColor: 'yellow',
+	},
+	footer: {
+		// flex: 1,
+		width: 150 * DP,
+		alignSelf: 'flex-end',
+		flexDirection: 'row',
+		justifyContent: 'flex-end',
+		alignItems: 'center',
+	},
+	separator: {
+		width: 654 * DP,
+		height: 2 * DP,
+		backgroundColor: GRAY30,
+	},
+	like: {
+		width: 654 * DP,
+		paddingVertical: 10 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
+});
+
+export default AlarmCommentList;

@@ -1,25 +1,21 @@
-import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
-import FeedContent from 'Organism/feed/FeedContent';
+import {Text, View, FlatList, StyleSheet} from 'react-native';
 import CommentList from 'Organism/comment/CommentList';
 import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
-import {animalProtectRequestDetail_style, feedCommentList, login_style, temp_style} from 'Templete/style_templete';
-import {createComment, getCommentListByFeedId, getCommentListByProtectId} from 'Root/api/commentapi';
+import {createComment, deleteComment, getCommentListByProtectId} from 'Root/api/commentapi';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
-import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
+import {GRAY10} from 'Root/config/color';
 import ShelterSmallLabel from 'Root/component/molecules/label/ShelterSmallLabel';
-import {FavoriteTag48_Filled, Share48_Filled} from 'Root/component/atom/icon';
-import {count_to_K} from 'Root/util/stringutil';
-import ProtectAnimalInfoBox from 'Root/component/organism/info/ProtectAnimalInfoBox';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
+import {useNavigation} from '@react-navigation/core';
 
 export default ProtectCommentList = props => {
 	// console.log('props.showAllContents', props.route.params.showAllContents);
+	const navigation = useNavigation();
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
 	const [photo, setPhoto] = React.useState();
@@ -30,9 +26,14 @@ export default ProtectCommentList = props => {
 	const addChildCommentFn = React.useRef(() => {});
 	const [refresh, setRefresh] = React.useState(true);
 	const data = props.route.params.protectObject;
+	const [heightReply, setReplyHeight] = React.useState(0); //키보드 리플박스 높이
 	const keyboardY = useKeyboardBottom(0 * DP);
 
 	React.useEffect(() => {
+		fetchData();
+	}, []);
+
+	const fetchData = () => {
 		getCommentListByProtectId(
 			{
 				protect_request_object_id: data,
@@ -40,12 +41,13 @@ export default ProtectCommentList = props => {
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			comments => {
-				setComments(comments.msg);
+				const removeDelete = comments.msg.filter(e => e.comment_is_delete != true);
+				setComments(removeDelete);
 				// console.log('comments', comments);
 			},
 			err => console.log('err', err),
 		);
-	}, []);
+	};
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
 	const onWrite = () => {
@@ -55,14 +57,16 @@ export default ProtectCommentList = props => {
 			comment_photo_uri: photo, //사진uri
 			comment_contents: content, //내용
 			comment_is_secure: privateComment, //공개여부 테스트때 반영
+			// protect_request_object_id: data._id,
 		};
 
 		if (parentComment) {
-			console.log('parentComment ProtectComment ', parentComment);
+			// console.log('parentComment ProtectComment ', parentComment);
 			param = {...param, commentobject_id: parentComment._id};
 		} else {
-			param = {...param, protect_request_object_id: props.route.params.protectObject._id};
+			param = {...param, protect_request_object_id: data._id};
 		}
+		// console.log('parap', param);
 		createComment(
 			param,
 			result => {
@@ -78,9 +82,9 @@ export default ProtectCommentList = props => {
 					},
 					comments => {
 						!parentComment && setComments([]); //댓글목록 초기화
-						setComments(comments.msg);
+						setComments(comments.msg.filter(e => e.comment_is_delete != true));
 						parentComment && addChildCommentFn.current();
-						console.log('comments', comments);
+						// console.log('comments', comments);
 					},
 					err => console.log('getCommentListByProtectId', err),
 				);
@@ -119,9 +123,25 @@ export default ProtectCommentList = props => {
 		setContent(text);
 	};
 
+	const onPressDelete = id => {
+		console.log('id', id);
+		deleteComment(
+			{
+				commentobject_id: id,
+			},
+			result => {
+				console.log('result / delectComment / ProtectCommentList : ', result.msg);
+				fetchData();
+			},
+			err => {
+				console.log(' err / deleteComment / ProtectCommentList : ', err);
+			},
+		);
+	};
+
 	// 답글 쓰기 버튼 클릭 콜백함수
 	const onReplyBtnClick = (parentCommentId, addChildComment) => {
-		console.log('parentCommentId', parentCommentId);
+		// console.log('parentCommentId', parentCommentId);
 		setParentComment(parentCommentId);
 		input.current.focus();
 		editComment || setEditComment(true);
@@ -129,28 +149,9 @@ export default ProtectCommentList = props => {
 	};
 
 	const onClickShelterLabel = () => {
-		console.log('ddd');
+		navigation.push('UserProfile', {userobject: data.protect_request_writer_id});
 	};
 
-	//보호요청 더보기의 리스트 중 한 아이템의 좋아요 태그 클릭
-	const onPressFavoriteTag = (item, index) => {
-		console.log('FavoriteTag', index, item);
-	};
-
-	//보호요청 게시글 작성 보호소 라벨의 좋아요 태그 클릭
-	const onPressShelterLabelFavorite = () => {
-		console.log('d');
-	};
-	//보호소 라벨 공유 클릭
-	const onPressShare = e => {
-		Modal.popSocialModal(
-			() => alert('kakao'),
-			() => alert('Link'),
-			() => alert('link'),
-		);
-	};
-
-	const [heightReply, setReplyHeight] = React.useState(0);
 	const onReplyBtnLayout = e => {
 		setReplyHeight(e.nativeEvent.layout.height);
 	};
@@ -166,7 +167,8 @@ export default ProtectCommentList = props => {
 					<Text style={[txt.noto26, {color: GRAY10}]}>댓글 {comments.length}개 </Text>
 				</View>
 			);
-		if (index > 0) return <CommentList items={item} onPressReplyBtn={onReplyBtnClick} />;
+		if (index > 0)
+			return <CommentList items={item} onPressReplyBtn={onReplyBtnClick} onPressDelete={onPressDelete} onPressDeleteChild={onPressDelete} />;
 	};
 
 	const protectRequestContent = () => {

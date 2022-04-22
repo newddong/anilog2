@@ -12,6 +12,7 @@ import {login_style, btn_style, temp_style, changeUserProfileImage_style} from '
 import {updateUserInformation, nicknameDuplicationCheck} from 'Root/api/userapi';
 import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default ChangeUserProfileImage = ({route}) => {
 	// console.log('route / Profile', route.params);
@@ -63,6 +64,7 @@ export default ChangeUserProfileImage = ({route}) => {
 		})
 			.then(images => {
 				setData({...data, user_profile_uri: images.path || data.user_profile_uri});
+				userGlobalObject.userInfo.user_profile_uri = images.path;
 				setConfirmed(true);
 				Modal.close();
 			})

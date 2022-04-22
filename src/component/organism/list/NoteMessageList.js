@@ -15,6 +15,19 @@ import OneMessage from 'Organism/listitem/OneMessage';
  */
 const NoteMessageList = props => {
 	// console.log('NoteMessageList props', props.data);
+	const flatlistRef = React.useRef();
+
+	React.useEffect(() => {
+		setTimeout(
+			() =>
+				flatlistRef.current.scrollToIndex({
+					animated: true,
+					index: props.data.length - 1,
+				}),
+			500,
+		);
+		// flatlistRef.current?.scrollToIndex({index: props.data.length - 1, animated: true});
+	}, []);
 	const renderItem = ({item, index}) => {
 		// console.log('item', item);
 		//쪽지부분 정책 결정 필요
@@ -34,7 +47,7 @@ const NoteMessageList = props => {
 	return (
 		<View style={styles.container}>
 			{/* <Text>쪽지 내용 리스트 나오는 화면</Text> */}
-			<FlatList data={props.data} keyExtractor={item => item._id} renderItem={renderItem} showsVerticalScrollIndicator={false} />
+			<FlatList data={props.data} keyExtractor={item => item._id} renderItem={renderItem} showsVerticalScrollIndicator={false} ref={flatlistRef} />
 		</View>
 	);
 };
@@ -42,7 +55,7 @@ const NoteMessageList = props => {
 const styles = StyleSheet.create({
 	container: {
 		width: 750 * DP,
-		height: 1150 * DP,
+		height: 1230 * DP,
 	},
 	messageItemContainer: {
 		width: 750 * DP,

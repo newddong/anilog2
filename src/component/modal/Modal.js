@@ -367,6 +367,13 @@ export default Modal = {
 	 */
 	popLocationCheckModal: (onPressAddrSearch, onConfirm, searchedLocation) => {},
 
+	/**
+	 * 로그인 유도 모달
+	 * @param {Object} props - props object
+	 * @param {()=>void} props.onOk - 로그인 클릭
+	 */
+	popLoginRequestModal: onOk => {},
+
 	popInfoModal: () => {},
 
 	alert: () => {},

@@ -6,6 +6,8 @@ import {unFollowUser, followUser} from 'Root/api/userapi';
 import InputWithSearchIcon from 'Root/component/molecules/input/InputWithSearchIcon';
 import {useNavigation} from '@react-navigation/core';
 import Loading from 'Root/component/molecules/modal/Loading';
+import userGlobalObject from 'Root/config/userGlobalObject';
+import Modal from 'Root/component/modal/Modal';
 
 /**
  * 팔로워 팔로우 목록
@@ -33,35 +35,46 @@ export default FollowerList = props => {
 	}, [props.follows]);
 
 	const onClickFollowBtn = item => {
-		// console.log('followUser', item);
-		followUser(
-			{
-				follow_userobject_id: item._id,
-			},
-			result => {
-				console.log('result / followUser / FollwerList :', result.msg);
-				props.resetProfileInfo();
-			},
-			err => {
-				console.log('err / followUser  : ', err);
-			},
-		);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			followUser(
+				{
+					follow_userobject_id: item._id,
+				},
+				result => {
+					console.log('result / followUser / FollwerList :', result.msg);
+					props.resetProfileInfo();
+				},
+				err => {
+					console.log('err / followUser  : ', err);
+				},
+			);
+		}
 	};
 
 	const onClickUnFollowBtn = item => {
 		// console.log('onClickUnFollowBtn', item);
-		unFollowUser(
-			{
-				follow_userobject_id: item._id,
-			},
-			result => {
-				// console.log('result / onClickUnFollowBtn / FollwerList : ', result.msg);
-				props.resetProfileInfo();
-			},
-			err => {
-				console.log('err / onClickUnFollowBtn / FollwerList', err);
-			},
-		);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			unFollowUser(
+				{
+					follow_userobject_id: item._id,
+				},
+				result => {
+					// console.log('result / onClickUnFollowBtn / FollwerList : ', result.msg);
+					props.resetProfileInfo();
+				},
+				err => {
+					console.log('err / onClickUnFollowBtn / FollwerList', err);
+				},
+			);
+		}
 	};
 
 	const onClickAccount = item => {

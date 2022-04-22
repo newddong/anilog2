@@ -10,9 +10,10 @@ import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {updateAndDeleteCommunity} from 'Root/api/community';
 import community_obj from 'Root/config/community_obj';
-import {favoriteEtc} from 'Root/api/favoriteetc';
+import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import {EmptyIcon} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
+import {REPORT_MENU} from 'Root/i18n/msg';
 
 /**
  *  프로필탭 커뮤니티 글 출력용 컴포넌트
@@ -55,18 +56,24 @@ const CommunityList = React.memo(props => {
 	//리뷰 좋아요 클릭
 	const onPressLike = (index, bool) => {
 		// console.log('index', index, bool);
-		likeEtc(
-			{
-				collectionName: 'communityobjects',
-				post_object_id: data.review[index]._id,
-				is_like: bool,
-			},
-			result => {
-				console.log('result/ onPressLike / ReviewMain : ', result.msg.targetPost.community_like_count);
-				props.initializeCommList();
-			},
-			err => console.log('err / onPressLike / ReviewMain : ', err),
-		);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			likeEtc(
+				{
+					collectionName: 'communityobjects',
+					post_object_id: data.review[index]._id,
+					is_like: bool,
+				},
+				result => {
+					console.log('result/ onPressLike / ReviewMain : ', result.msg.targetPost.community_like_count);
+					props.initializeCommList();
+				},
+				err => console.log('err / onPressLike / ReviewMain : ', err),
+			);
+		}
 	};
 
 	//후기 게시글의 댓글쓰기 혹은 댓글 모두 보기 클릭 클릭
@@ -122,14 +129,14 @@ const CommunityList = React.memo(props => {
 	//리뷰 즐겨찾기 아이콘 클릭
 	const onPressFavorite = (index, bool) => {
 		console.log('index', index, bool);
-		favoriteEtc(
+		setFavoriteEtc(
 			{
 				collectionName: 'communityobjects',
-				post_object_id: data.review[index]._id,
+				target_object_id: data.review[index]._id,
 				is_favorite: bool,
 			},
 			result => {
-				console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc.favorite_etc_is_delete);
+				console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
 			},
 			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
 		);
@@ -182,6 +189,25 @@ const CommunityList = React.memo(props => {
 						}, 200);
 						break;
 					case '신고':
+						Modal.close();
+						if (userGlobalObject.userInfo.isPreviewMode) {
+							setTimeout(() => {
+								Modal.popLoginRequestModal(() => {
+									navigation.navigate('Login');
+								});
+							}, 100);
+						} else {
+							setTimeout(() => {
+								Modal.popOneBtnSelectModal(
+									REPORT_MENU,
+									'이 게시물을 신고 하시겠습니까?',
+									selectedItem => {
+										alert(selectedItem);
+									},
+									'신고',
+								);
+							}, 200);
+						}
 						break;
 					default:
 						break;

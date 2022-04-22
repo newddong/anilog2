@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet,Image} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import DP from 'Root/config/dp';
 import SvgWrapper, {SvgWrap} from 'Atom/svgwrapper';
 import {txt} from 'Root/config/textstyle';
@@ -14,11 +14,12 @@ import {
 	CommunityTabFilled,
 	MyTabBorder,
 	MyTabFilled,
+	ProfileDefaultImg,
 } from 'Atom/icon';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default function BottomTab({state, descriptors, navigation}) {
-	console.log('바텀탭 유저 글로벌',userGlobalObject);
+	// console.log('바텀탭 유저 글로벌',userGlobalObject);
 	const focusedOptions = descriptors[state.routes[state.index].key].options;
 	const icons = [<FeedTabBorder />, <AnimalSavingTabBorder />, <CommunityTabBorder />, <MyTabBorder />];
 	const iconsFocused = [<FeedTabFilled />, <AnimalSavingTabFilled />, <CommunityTabFilled />, <MyTabFilled />];
@@ -63,16 +64,22 @@ export default function BottomTab({state, descriptors, navigation}) {
 					const textStyleEng = isFocused ? txt.roboto22b : txt.roboto22;
 
 					const onPress = () => {
-						console.log('tabP');
-						const event = navigation.emit({
-							type: 'tabPress',
-							target: route.key,
-							canPreventDefault: true,
-						});
+						if (index == 3 && userGlobalObject.userInfo.isPreviewMode) {
+							Modal.popLoginRequestModal(() => {
+								navigation.navigate({name: 'Login', merge: true});
+							});
+						} else {
+							console.log('tabP');
+							const event = navigation.emit({
+								type: 'tabPress',
+								target: route.key,
+								canPreventDefault: true,
+							});
 
-						if (!isFocused && !event.defaultPrevented) {
-							console.log('click');
-							navigation.navigate({name: route.name, merge: true});
+							if (!isFocused && !event.defaultPrevented) {
+								console.log('click');
+								navigation.navigate({name: route.name, merge: true});
+							}
 						}
 					};
 
@@ -84,14 +91,28 @@ export default function BottomTab({state, descriptors, navigation}) {
 					};
 
 					const renderIcons = index => {
-						if(userGlobalObject.userInfo){
-
-							return index==3?<Image style={[{height:54*DP,width:54*DP,borderRadius:27*DP,marginBottom:-10*DP},isFocused?{borderWidth:4*DP,borderColor:APRI10}:{}]} source={{uri:userGlobalObject.userInfo.user_profile_uri}}/> :(isFocused ? iconsFocused[index] : icons[index]);
-						}else{
+						if (userGlobalObject.userInfo) {
+							return index == 3 ? (
+								userGlobalObject.userInfo.user_profile_uri == undefined ? (
+									<ProfileDefaultImg size={{height: 54 * DP, width: 54 * DP, borderRadius: 27 * DP, marginBottom: -10 * DP}} />
+								) : (
+									<Image
+										style={[
+											{height: 54 * DP, width: 54 * DP, borderRadius: 27 * DP, marginBottom: -10 * DP},
+											isFocused ? {borderWidth: 4 * DP, borderColor: APRI10} : {},
+										]}
+										source={{uri: userGlobalObject.userInfo.user_profile_uri}}
+									/>
+								)
+							) : isFocused ? (
+								iconsFocused[index]
+							) : (
+								icons[index]
+							);
+						} else {
 							return isFocused ? iconsFocused[index] : icons[index];
 						}
-					}
-
+					};
 
 					const renderTab = index => {
 						if (index == 4) {

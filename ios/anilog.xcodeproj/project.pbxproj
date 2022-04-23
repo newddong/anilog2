@@ -25,6 +25,9 @@
 		A6656D5242D64B84A760D9E9 /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 76509BC8278D4CF685E56AD9 /* Roboto-BoldItalic.ttf */; };
 		A72774053C0A480B90682CC4 /* Roboto-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9C12F8D39E3F46AA9ADA1233 /* Roboto-LightItalic.ttf */; };
 		B3C88654360E43C29548F8C8 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F3F8D1B05DA044339A2953BF /* Roboto-Regular.ttf */; };
+		BA879FE528141CB00052E1E1 /* RNCPermissionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = BA879FDF28141CB00052E1E1 /* RNCPermissionHandler.m */; };
+		BA879FE628141CB00052E1E1 /* RNCAssetsLibraryRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = BA879FE328141CB00052E1E1 /* RNCAssetsLibraryRequestHandler.m */; };
+		BA879FE728141CB00052E1E1 /* RNCCameraRollManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BA879FE428141CB00052E1E1 /* RNCCameraRollManager.m */; };
 		BADD4E1093BD4F9096A80D38 /* NotoSansKR-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5F41EF1252CC4F08B3BAF374 /* NotoSansKR-Regular.otf */; };
 		E6C58BF1C3784743B899A910 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FC408770C16F4B2F8C6E5B3C /* Roboto-Thin.ttf */; };
 		FA810DDFD3E9B502570DEDE0 /* libPods-anilog.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B079AF24774A2B10B60DFF49 /* libPods-anilog.a */; };
@@ -64,6 +67,12 @@
 		AAC775FFF43F4592ABC47E11 /* Roboto-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Light.ttf"; path = "../asset/fonts/Roboto-Light.ttf"; sourceTree = "<group>"; };
 		B079AF24774A2B10B60DFF49 /* libPods-anilog.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-anilog.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7CC3F2370A94A2B8E77E173 /* Roboto-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-MediumItalic.ttf"; path = "../asset/fonts/Roboto-MediumItalic.ttf"; sourceTree = "<group>"; };
+		BA879FDF28141CB00052E1E1 /* RNCPermissionHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNCPermissionHandler.m; path = anilog/RNCPermissionHandler.m; sourceTree = "<group>"; };
+		BA879FE028141CB00052E1E1 /* RNCAssetsLibraryRequestHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNCAssetsLibraryRequestHandler.h; path = anilog/RNCAssetsLibraryRequestHandler.h; sourceTree = "<group>"; };
+		BA879FE128141CB00052E1E1 /* RNCPermissionHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNCPermissionHandler.h; path = anilog/RNCPermissionHandler.h; sourceTree = "<group>"; };
+		BA879FE228141CB00052E1E1 /* RNCCameraRollManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNCCameraRollManager.h; path = anilog/RNCCameraRollManager.h; sourceTree = "<group>"; };
+		BA879FE328141CB00052E1E1 /* RNCAssetsLibraryRequestHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNCAssetsLibraryRequestHandler.m; path = anilog/RNCAssetsLibraryRequestHandler.m; sourceTree = "<group>"; };
+		BA879FE428141CB00052E1E1 /* RNCCameraRollManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNCCameraRollManager.m; path = anilog/RNCCameraRollManager.m; sourceTree = "<group>"; };
 		CD10A8244A6A41CDAC458879 /* Roboto-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Black.ttf"; path = "../asset/fonts/Roboto-Black.ttf"; sourceTree = "<group>"; };
 		E31176A5D1C6961F817358D8 /* Pods-anilog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-anilog.release.xcconfig"; path = "Target Support Files/Pods-anilog/Pods-anilog.release.xcconfig"; sourceTree = "<group>"; };
 		E3FFBA379F6EF570C62482AB /* Pods-anilog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-anilog.debug.xcconfig"; path = "Target Support Files/Pods-anilog/Pods-anilog.debug.xcconfig"; sourceTree = "<group>"; };
@@ -120,6 +129,12 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				BA879FE028141CB00052E1E1 /* RNCAssetsLibraryRequestHandler.h */,
+				BA879FE328141CB00052E1E1 /* RNCAssetsLibraryRequestHandler.m */,
+				BA879FE228141CB00052E1E1 /* RNCCameraRollManager.h */,
+				BA879FE428141CB00052E1E1 /* RNCCameraRollManager.m */,
+				BA879FE128141CB00052E1E1 /* RNCPermissionHandler.h */,
+				BA879FDF28141CB00052E1E1 /* RNCPermissionHandler.m */,
 			);
 			name = anilog;
 			sourceTree = "<group>";
@@ -475,7 +490,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				BA879FE728141CB00052E1E1 /* RNCCameraRollManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				BA879FE628141CB00052E1E1 /* RNCAssetsLibraryRequestHandler.m in Sources */,
+				BA879FE528141CB00052E1E1 /* RNCPermissionHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

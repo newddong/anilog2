@@ -52,7 +52,7 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 public class PhotoListUtil {
-        public static String fileNamePrefix = "rn_image_picker_lib_temp_";
+        public static String fileNamePrefix = "anilog_temp_";
 
         public static String errCameraUnavailable = "camera_unavailable";
         public static String errPermission = "permission";
@@ -478,7 +478,7 @@ public class PhotoListUtil {
         }
 
 
-    public class Options {
+    static public class Options {
         int selectionLimit;
         Boolean includeBase64;
         Boolean includeExtra;
@@ -493,25 +493,25 @@ public class PhotoListUtil {
 
 
         Options(ReadableMap options) {
-            mediaType = options.getString("mediaType");
-            selectionLimit = options.getInt("selectionLimit");
-            includeBase64 = options.getBoolean("includeBase64");
-            includeExtra = options.getBoolean("includeExtra");
+            mediaType = options.hasKey("mediaType")?options.getString("mediaType"):"photo";
+//            selectionLimit = options.getInt("selectionLimit");
+            includeBase64 = options.hasKey("includeBase64")?options.getBoolean("includeBase64"):false;
+            includeExtra = options.hasKey("includeExtra")?options.getBoolean("includeExtra"):true;
 
             String videoQualityString = options.getString("videoQuality");
             if(!TextUtils.isEmpty(videoQualityString) && !videoQualityString.toLowerCase().equals("high")) {
                 videoQuality = 0;
             }
 
-            if (options.getString("cameraType").equals("front")) {
-                useFrontCamera = true;
-            }
+//            if (options.getString("cameraType").equals("front")) {
+//                useFrontCamera = true;
+//            }
 
-            quality = (int) (options.getDouble("quality") * 100);
-            maxHeight = options.getInt("maxHeight");
-            maxWidth = options.getInt("maxWidth");
-            saveToPhotos = options.getBoolean("saveToPhotos");
-            durationLimit = options.getInt("durationLimit");
+            quality = (int) (options.hasKey("quality")?options.getDouble("quality") * 100:100);
+            maxHeight = options.hasKey("maxHeight")?options.getInt("maxHeight"):0;
+            maxWidth = options.hasKey("maxWidth")?options.getInt("maxWidth"):0;
+//            saveToPhotos = options.getBoolean("saveToPhotos");
+            durationLimit = options.hasKey("durationLimit")?options.getInt("durationLimit"):0;
         }
     }
 

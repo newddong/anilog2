@@ -51,6 +51,8 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
+
 import static com.anilog2.PhotoListUtil.*;
 
 public class PhotoListModule extends ReactContextBaseJavaModule{
@@ -133,13 +135,46 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
     }
 
     @ReactMethod
-    public void setPhotos(final ReadableMap options, final Promise promise){
+    public void transferPhotos(final ReadableMap options, final Promise promise){
         ReadableArray medias = options.hasKey("imageFiles")?options.getArray("imageFiles"):null;
-        Uri uri = new Uri();
 
+        PhotoListUtil.Options ops = new PhotoListUtil.Options(options);
+//        boolean isSingleSelect = ops.selectionLimit == 1; //필요없을듯
+//        boolean isPhoto = ops.mediaType.equals(mediaTypePhoto);
+//        boolean isVideo = ops.mediaType.equals(mediaTypeVideo);
+        List<Uri> uris = new ArrayList<Uri>();
+        for(int i=0;i<medias.size();i++){
+            uris.add(Uri.parse(medias.getString(i)));
+        }
+
+        onAssetsObtained(uris, ops, promise);
+
+        Toast myToast = Toast.makeText(reactContext,"우웩"+(medias.size()>0?medias.getString(0):"선택한 사진이 없음"), Toast.LENGTH_SHORT);
+        myToast.show();
 
     }
 
+    @ReactMethod
+    public void deletePhotos(final ReadableMap options, final Promise promise){
+        ReadableArray medias = options.hasKey("imageFiles")?options.getArray("imageFiles"):null;
+        WritableArray result = new WritableNativeArray();
+        List<Uri> uris = new ArrayList<Uri>();
+        for(int i=0;i<medias.size();i++){
+            result.pushString(Uri.parse(medias.getString(i)).getPath());
+            new File(Uri.parse(medias.getString(i)).getPath()).delete();
+        }
+
+        promise.resolve(result);
+    }
+
+
+    void onAssetsObtained(List<Uri> fileUris, PhotoListUtil.Options options, final Promise promise) {
+        try {
+            promise.resolve(PhotoListUtil.getResponseMap(fileUris, options, reactContext));
+        } catch (RuntimeException exception) {
+            promise.reject(errOthers, exception.getMessage());
+        }
+    }
 
     private static class GetMediaTask extends GuardedAsyncTask<Void, Void> {
         private final Context mContext;

@@ -51,6 +51,7 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 import android.util.Log;
+import static com.anilog2.PhotoListUtil.*;
 
 public class PhotoListModule extends ReactContextBaseJavaModule{
     public static final String NAME = "PhotoListModule";
@@ -87,8 +88,11 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
     private static final String SELECTION_BUCKET = Images.Media.BUCKET_DISPLAY_NAME + " = ?";
     private static final String SELECTION_DATE_TAKEN = Images.Media.DATE_TAKEN + " < ?";
 
+    final ReactApplicationContext reactContext;
+
     public PhotoListModule(ReactApplicationContext reactContext) {
         super(reactContext);
+        this.reactContext = reactContext;
     }
 
     @NonNull
@@ -127,6 +131,15 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
                 promise)
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
+    @ReactMethod
+    public void setPhotos(final ReadableMap options, final Promise promise){
+        ReadableArray medias = options.hasKey("imageFiles")?options.getArray("imageFiles"):null;
+        Uri uri = new Uri();
+
+
+    }
+
 
     private static class GetMediaTask extends GuardedAsyncTask<Void, Void> {
         private final Context mContext;
@@ -244,15 +257,12 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
             if(mFromID !=null){
                 selection.append(" AND " + Images.Media._ID + " > ?");
                 selectionArgs.add(mFromID);
-                Log.d("query","아이디쿼리"+selection+"아규먼트"+selectionArgs.toString());
             }
             if(mToID !=null){
                 selection.append(" AND " + Images.Media._ID + " < ?");
                 selectionArgs.add(mToID + "");
-                Log.d("query","아이디쿼리"+selection+"아규먼트"+selectionArgs.toString());
             }
 
-            Log.d("query","쿼리"+selection+"아규먼트"+selectionArgs.toString());
             WritableMap response = new WritableNativeMap();
             ContentResolver resolver = mContext.getContentResolver();
 
@@ -277,7 +287,6 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
                         putEdges(resolver, media, response, mFirst, mInclude);
                         putPageInfo(media, response, mFirst, !TextUtils.isEmpty(mAfter) ? Integer.parseInt(mAfter) : 0);
                     } finally {
-                        Log.d("태그","미디어 개수"+media.getCount());
                         media.close();
                         mPromise.resolve(response);
                     }
@@ -329,7 +338,7 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
         boolean includeFileSize = include.contains(INCLUDE_FILE_SIZE);
         boolean includeImageSize = include.contains(INCLUDE_IMAGE_SIZE);
         boolean includePlayableDuration = include.contains(INCLUDE_PLAYABLE_DURATION);
-        Log.d("에지인포1", "dateTaken: "+dateTakenIndex + "   dateModifiedIndex : "+dateModifiedIndex + "  아이디 : ");
+
         for (int i = 0; i < limit && !media.isAfterLast(); i++) {
             WritableMap edge = new WritableNativeMap();
             WritableMap node = new WritableNativeMap();
@@ -605,5 +614,8 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
             FLog.e(ReactConstants.TAG, "Could not read the metadata", e);
         }
     }
+
+
+
 
 }

@@ -18,8 +18,10 @@ import WriteEditorTest from 'Root/component/templete/community/WriteEditorTest';
 import ReviewStackNavigation from './review_tab/ReviewStackNavigation';
 import {getFocusedRouteNameFromRoute, useNavigation} from '@react-navigation/core';
 import CommunityEdit from 'Root/component/templete/community/CommunityEdit';
-import ChangeUserProfileImage from 'Root/component/templete/user/ChangeUserProfileImage';
-import FeedList from 'Root/component/templete/feed/FeedList';
+import ChangeUserProfileImage from 'Templete/user/ChangeUserProfileImage';
+import FeedList from 'Templete/feed/FeedList';
+import AlarmList from 'Templete/list/AlarmList';
+import AlarmCommentList from 'Organism/comment/AlarmCommentList';
 
 const CommunityMainStackNavi = createStackNavigator();
 
@@ -141,6 +143,8 @@ export default CommunityMainStack = props => {
 					title: '프로필',
 				})}
 			/>
+			<CommunityMainStackNavi.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
+			<CommunityMainStackNavi.Screen name="AlarmCommentList" component={AlarmCommentList} options={{header: props => <SimpleHeader {...props} />}} />
 		</CommunityMainStackNavi.Navigator>
 	);
 };

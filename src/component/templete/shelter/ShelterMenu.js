@@ -94,6 +94,21 @@ export default ShelterMenu = ({route}) => {
 		navigation.push('AidRequestAnimalList', data._id);
 	};
 
+	//로그아웃 기능
+	const logout = () => {
+		userLogout(
+			1,
+			e => {
+				console.log('e', e);
+				AsyncStorage.clear();
+				navigation.reset({routes: [{name: 'Login'}]});
+			},
+			err => {
+				console.log('err', err);
+			},
+		);
+	};
+
 	//더보기 state 바꾸기
 	const changeShowMore = () => {
 		setShowMoreIntro(!showMoreIntro);

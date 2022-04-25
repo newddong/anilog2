@@ -71,12 +71,14 @@ import QnA from 'Root/component/templete/user/AskQuestion';
 import CategoryHelp from 'Templete/user/CategoryHelp';
 import ServiceCenterTopTabNavigation from './ServiceCenterTopTabNavigation';
 import CategoryHelpTopTabNavigation from './CategoryHelpTopTabNavigation';
-import TermsAndPolicy from 'Root/component/templete/user/TermsAndPolicy';
-import FrequentAsked from 'Root/component/templete/user/FrequentAsked';
-import FavoriteCommunity from 'Root/component/templete/favorite/FavoriteCommunity';
-import FavoriteArticle from 'Root/component/templete/favorite/FavoriteArticle';
-import FavoriteReview from 'Root/component/templete/favorite/FavoriteReview';
-import FavoriteProtectRequest from 'Root/component/templete/favorite/FavoriteProtectRequest';
+import TermsAndPolicy from 'Templete/user/TermsAndPolicy';
+import FrequentAsked from 'Templete/user/FrequentAsked';
+import FavoriteCommunity from 'Templete/favorite/FavoriteCommunity';
+import FavoriteArticle from 'Templete/favorite/FavoriteArticle';
+import FavoriteReview from 'Templete/favorite/FavoriteReview';
+import FavoriteProtectRequest from 'Templete/favorite/FavoriteProtectRequest';
+import AlarmList from 'Templete/list/AlarmList';
+import AlarmCommentList from 'Organism/comment/AlarmCommentList';
 const MyStack = createStackNavigator();
 export default MyStackNavigation = props => {
 	return (
@@ -368,6 +370,8 @@ export default MyStackNavigation = props => {
 			/>
 			<MyStack.Screen name="MyArticle" component={FavoriteArticle} options={{header: props => <SimpleHeader {...props} />, title: '나의 자유글'}} />
 			<MyStack.Screen name="MyReview" component={FavoriteReview} options={{header: props => <SimpleHeader {...props} />, title: '나의 리뷰'}} />
+			<MyStack.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
+			<MyStack.Screen name="AlarmCommentList" component={AlarmCommentList} options={{header: props => <SimpleHeader {...props} />}} />
 		</MyStack.Navigator>
 	);
 };

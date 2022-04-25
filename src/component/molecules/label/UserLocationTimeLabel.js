@@ -9,6 +9,7 @@ import {styles} from 'Atom/image/imageStyle';
 import {useNavigation} from '@react-navigation/native';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, ProfileDefaultImg} from 'Atom/icon';
+import {CommonActions} from '@react-navigation/native';
 import moment from 'moment';
 
 /**
@@ -20,6 +21,7 @@ import moment from 'moment';
  * @param {string} props.time_expression - 시간 표현 방식 ('date')
  */
 const UserLocationTimeLabel = props => {
+	// console.log('UserLocationTimeLabel props', props);
 	const navigation = useNavigation();
 	const isLoginUser = userGlobalObject.userInfo._id == props.data._id;
 	const isMyPet =
@@ -41,6 +43,12 @@ const UserLocationTimeLabel = props => {
 	const onClickLabel = e => {
 		// console.log('props.data', props.data);
 		navigation.push('UserProfile', {userobject: props.data});
+		// if (props.target) {
+		// 	navigation.push('UserProfile', {userobject: props.data});
+		// } else {
+		// 	navigation.push('UserProfile', {userobject: props.data});
+
+		// }
 	};
 
 	const getTime = () => {

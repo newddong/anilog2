@@ -78,27 +78,25 @@ export default SettingAlarm = ({route}) => {
 			setAlarm(prevState => ({
 				...prevState,
 				notice_all: false,
-				notice_newfollower: false,
-				notice_favorite_protect_request: false,
+				notice_follow: false,
+				notice_memobox: false,
 				notice_pet_vaccination: false,
 				notice_my_post: false,
-				notice_comment_on_my_post: false,
-				notice_tag_follower: false,
+				notice_tag: false,
 				notice_my_applicant: false,
 				notice_alarm: false,
 			}));
 			setOnCount(0);
-			// setApiPost(!apiPost);
+			// setApiPost(!apiPost);1
 		} else {
 			setAlarm(prevState => ({
 				...prevState,
 				notice_all: true,
-				notice_newfollower: true,
-				notice_favorite_protect_request: true,
+				notice_follow: true,
+				notice_memobox: true,
 				notice_pet_vaccination: true,
 				notice_my_post: true,
-				notice_comment_on_my_post: true,
-				notice_tag_follower: true,
+				notice_tag: true,
 				notice_my_applicant: true,
 				notice_alarm: true,
 			}));
@@ -152,7 +150,7 @@ export default SettingAlarm = ({route}) => {
 							<OneLineOnOff data={alarm} name={PET_VACCIN_DATE_ALRAM} keys="notice_pet_vaccination" switchButton={switchButton} />
 						</View>
 						<View style={[styles.alarmDetailEachContainer, {marginTop: 24 * DP}]}>
-							<OneLineOnOff data={alarm} name={'쪽지 수신 알림'} keys="notice_favorite_protect_request" switchButton={switchButton} />
+							<OneLineOnOff data={alarm} name={'쪽지 수신 알림'} keys="notice_memobox" switchButton={switchButton} />
 						</View>
 					</View>
 					<View style={styles.activityAlarmContainer}>

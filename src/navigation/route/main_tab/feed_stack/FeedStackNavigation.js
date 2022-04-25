@@ -14,6 +14,7 @@ import BookmarkHeader from 'Navigation/header/BookmarkHeader';
 import SocialRelationTopTabNavigation from '../protection_stack/socialRelation_tab/SocialRelationTopTabNavigation';
 import SimpleHeader from 'Navigation/header/SimpleHeader';
 import ChangeUserProfileImage from 'Root/component/templete/user/ChangeUserProfileImage';
+import SetPetInformation from 'Root/component/templete/pet/SetPetInformation';
 
 const FeedStack = createStackNavigator();
 
@@ -51,6 +52,11 @@ export default FeedStackNavigation = () => {
 				name="ChangeUserProfileImage"
 				component={ChangeUserProfileImage}
 				options={{header: props => <SimpleHeader {...props} />, title: '프로필 변경'}}
+			/>
+			<FeedStack.Screen
+				name="SetPetInformation"
+				component={SetPetInformation}
+				options={{header: props => <SaveButtonHeader {...props} />, title: '반려동물 상세 정보'}}
 			/>
 		</FeedStack.Navigator>
 	);

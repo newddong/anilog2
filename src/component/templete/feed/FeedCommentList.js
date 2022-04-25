@@ -60,6 +60,11 @@ export default FeedCommentList = props => {
 				},
 			);
 		}
+		if (props.route.params.edit != undefined) {
+			input.current.focus();
+			setEditMode(true);
+			setEditData({...props.route.params.edit});
+		}
 	}, []);
 
 	const fetchData = () => {

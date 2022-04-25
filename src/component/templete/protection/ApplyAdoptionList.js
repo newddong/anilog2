@@ -78,6 +78,7 @@ export default ApplyAdoptionList = props => {
 								onFavoriteTag={(e, index) => onOff_FavoriteTag(e, index)}
 								onClickLabel={(status, id, item) => onLabelClick(item)}
 								callFrom={props.route.name}
+								showFavorite={false}
 							/>
 						</View>
 					</ScrollView>

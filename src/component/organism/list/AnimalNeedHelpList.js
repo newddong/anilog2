@@ -17,6 +17,7 @@ import {dummy_AnimalNeedHelpList} from 'Root/config/dummyDate_json';
  *onPressReporter : 'void / 제보 게시글의 제보자 닉네임 클릭',
  *whenEmpty : 'component / 목록이 없을 시 출력되는 컴포넌트',
  *onLayout : void,
+ *showFavorite : 'boolean / 즐겨찾기 아이콘 출력 여부 ',
  * }} props
  */
 export default AnimalNeedHelpList = props => {
@@ -44,6 +45,7 @@ export default AnimalNeedHelpList = props => {
 					onPressAdoptorInfo={() => props.onPressAdoptorInfo(item)}
 					onPressProtectRequest={() => props.onPressProtectRequest(item)}
 					callFrom={props.callFrom}
+					showFavorite={props.showFavorite}
 				/>
 			</View>
 		);
@@ -72,4 +74,5 @@ AnimalNeedHelpList.defaultProps = {
 	onHashClick: e => console.log('HashClick AnimalNeedHelpList', e),
 	checkBoxState: false,
 	borderMode: false,
+	showFavorite: true,
 };

@@ -3,7 +3,6 @@ import {FlatList, StyleSheet, Text, View} from 'react-native';
 import Article from '../article/Article';
 import {GRAY30, GRAY40} from 'Root/config/color';
 import DP from 'Root/config/dp';
-import RecommendArticle from '../article/RecommendArticle';
 import ArticleSummary from '../article/ArticleSummary';
 
 /**
@@ -36,7 +35,7 @@ ArticleList.defaultProps = {
 		return <></>;
 	},
 	onPressArticle: () => {},
-	onPressRecommendArticle: () => {},
+	onPressRecommendReview: () => {},
 	onPressThumnails: () => {},
 	onPressReply: () => {},
 	isSearch: '',

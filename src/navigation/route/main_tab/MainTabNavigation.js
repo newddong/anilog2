@@ -23,10 +23,10 @@ export default MainTabNavigation = ({route, navigation}) => {
 	const getTabBarVisibility = route => {
 		switch (current) {
 			case 'CommunityWrite':
-				return Platform.OS == 'android' ? false : true;
 			case 'ShelterInfoSetting':
 			case 'UserInfoSetting':
 			case 'FeedCommentList':
+			case 'AddressSearchWeb':
 				// case 'Search':
 				return false;
 				break;

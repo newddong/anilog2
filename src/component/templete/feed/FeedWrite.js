@@ -1,6 +1,6 @@
 import React from 'react';
 import {ScrollView, Text, TouchableOpacity, View, TouchableWithoutFeedback, TextInput, Platform, Keyboard} from 'react-native';
-import {APRI10, WHITE, GRAY20, GRAY10} from 'Root/config/color';
+import {APRI10, WHITE, GRAY20, GRAY10, GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Paw54_Border} from 'Root/component/atom/icon/index';
@@ -389,7 +389,7 @@ export default FeedWrite = props => {
 //실종 컴포넌트
 const MissingForm = props => {
 	const route = useRoute();
-	console.log('실종 컴포넌트 데이터', route);
+	// console.log('실종 컴포넌트 데이터', route);
 	const [types, setTypes] = React.useState([
 		{
 			pet_species: '개',
@@ -399,7 +399,7 @@ const MissingForm = props => {
 	const [isSpeciesChanged, setIsSpeciesChanged] = React.useState(false);
 
 	const [city, setCity] = React.useState(['광역시, 도']);
-	const [district, setDistrict] = React.useState(['구를 선택해 주세요']);
+	const [district, setDistrict] = React.useState(['구를 선택']);
 	React.useEffect(() => {
 		getAddressList(
 			{},
@@ -571,6 +571,13 @@ const MissingForm = props => {
 		);
 	};
 
+	const phoneValidate = num => {
+		// console.log('num', num);
+		let regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+		let regHomePhone = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))(\d{3,4})(\d{4})$/;
+		return regPhone.test(num) || regHomePhone.test(num);
+	};
+
 	return (
 		<View style={[feedWrite.lostAnimalForm]} showsVerticalScrollIndicator={false}>
 			{/* DropDownSelect */}
@@ -628,14 +635,19 @@ const MissingForm = props => {
 			<View style={[temp_style.input24, feedWrite.missing_location_input]}>
 				<Text style={[txt.noto24, {color: APRI10}]}>실종된 위치</Text>
 				<View style={[{flexDirection: 'row', justifyContent: 'space-between'}]}>
-					<SelectInput onPressInput={onPressCity} width={292} value={data.missing_animal_lost_location.city} />
-					<SelectInput onPressInput={onPressDistrict} width={292} value={data.missing_animal_lost_location.district} />
+					<SelectInput onPressInput={onPressCity} width={292} defaultText={'광역시, 도'} value={data.missing_animal_lost_location.city} />
+					<SelectInput onPressInput={onPressDistrict} width={292} value={data.missing_animal_lost_location.district} defaultText={'구를 선택'} />
 				</View>
 				<TextInput
 					onChangeText={onChangeMissingLocationDetail}
-					style={[feedWrite.missing_location_detail_input]}
+					style={[
+						txt.noto28,
+						feedWrite.missing_location_detail_input,
+						{borderBottomColor: data.missing_animal_lost_location.detail == '' ? GRAY30 : APRI10},
+					]}
 					placeholder={'반려동물이 실종된 구체적인 장소를 설명해주세요.'}
 					placeholderTextColor={GRAY10}
+					maxLength={30}
 					onPressIn={onPressIn(inputLocationRef)}
 					ref={inputLocationRef}
 				/>
@@ -645,13 +657,16 @@ const MissingForm = props => {
 					title={'연락처'}
 					placeholder="연락받으실 연락처를 입력하세요"
 					width={654}
-					descriptionType={'none'}
 					onChange={inputContact}
 					keyboardType={'number-pad'}
 					maxlength={15}
 					value={data.missing_animal_contact}
 					onPressIn={onPressIn(inputContactRef)}
 					ref={inputContactRef}
+					alert_msg={'전화번호는 - 을 제외하고 10~11자로 작성해주세요'}
+					showMsg
+					confirm_msg={'올바른 전화번호 양식입니다.'}
+					validator={phoneValidate}
 				/>
 			</View>
 			<View style={[temp_style.inputBalloon, feedWrite.inputBalloon]}>
@@ -684,9 +699,9 @@ const ReportForm = props => {
 		},
 	]);
 
-	const [city, setCity] = React.useState(['광역시도']); //광역시도 API자료 컨테이너
+	const [city, setCity] = React.useState(['광역시, 도']); //광역시도 API자료 컨테이너
 	const [isCityChanged, setIsCityChanged] = React.useState(false); //광역시도 선택되었는지 여부
-	const [district, setDistrict] = React.useState(['시군']); //시군 API자료 컨테이너
+	const [district, setDistrict] = React.useState(['시군 선택']); //시군 API자료 컨테이너
 	const [isDistrictChanged, setIsDistrictChanged] = React.useState(false); // 시군 선택되었는지 여부
 	const [neighbor, setNeighbor] = React.useState(['동읍면']); //동읍면 API 자료 컨테이너
 	const [data, setData] = React.useState({
@@ -802,18 +817,6 @@ const ReportForm = props => {
 			report_location: {city: data.report_location.city, district: data.report_location.district, neighbor: item},
 		});
 	};
-
-	// const searchAddress = () => {
-	// 	navigation.navigate('AddressSearch', {from: route.name, fromkey: route.key});
-	// };
-
-	// const onChangeAddr = addr => {
-	// 	setAddr(addr);
-	// };
-
-	// const onClearAddr = () => {
-	// 	setAddr('');
-	// };
 
 	const onClearDetailAddr = () => {
 		// setDetailAddr('');
@@ -946,12 +949,12 @@ const ReportForm = props => {
 					<View style={[temp_style.input24, feedWrite.report_location]}>
 						<Text style={[txt.noto24, {color: APRI10}]}>제보 장소</Text>
 						<View style={[{flexDirection: 'row', justifyContent: 'space-between'}]}>
-							<SelectInput onPressInput={onPressCity} width={292} value={data.report_location.city} />
-							<SelectInput onPressInput={onPressDistrict} width={292} value={data.report_location.district} />
+							<SelectInput onPressInput={onPressCity} width={292} defaultText={'광역시, 도'} value={data.report_location.city} />
+							<SelectInput onPressInput={onPressDistrict} width={292} defaultText={'시군 선택'} value={data.report_location.district} />
 						</View>
 						<TextInput
 							onChangeText={onChangeMissingLocationDetail}
-							style={[feedWrite.missing_location_detail_input]}
+							style={[feedWrite.missing_location_detail_input, {borderBottomColor: data.report_location.detail == '' ? GRAY30 : APRI10}]}
 							placeholder={'제보하려는 장소의 위치를 설명해주세요.'}
 							placeholderTextColor={GRAY10}
 							onPressIn={onPressIn(inputLocationRef)}

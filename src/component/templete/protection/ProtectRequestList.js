@@ -12,6 +12,7 @@ import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 import Modal from 'Root/component/modal/Modal';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import Loading from 'Root/component/molecules/modal/Loading';
+import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 
 export default ProtectRequestList = ({navigation, route}) => {
 	const [data, setData] = React.useState('false');
@@ -37,11 +38,6 @@ export default ProtectRequestList = ({navigation, route}) => {
 			filterData,
 			result => {
 				// console.log('result / getProtectRequestList / ProtectRequestList : ', result.msg[0]);
-				result.msg.map(v => {
-					if (v.protect_request_writer_id.shelter_name == '요한 보호소') {
-						console.log('is_favorite : ', v.is_favorite);
-					}
-				});
 				result.msg.forEach(each => {
 					each.protect_animal_sex = each.protect_animal_id.protect_animal_sex;
 					each.protect_animal_status = each.protect_animal_id.protect_animal_status;
@@ -128,6 +124,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 	const onSelectKind = async () => {
 		const fetchPetKindData = await PET_KIND();
 		let petKind = fetchPetKindData.map((v, i) => v.pet_species);
+		petKind.splice(0, 0, '동물종류');
 		Modal.popSelectScrollBoxModal(
 			[petKind],
 			'동물 종류 선택',
@@ -146,11 +143,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 
 	//검색결과가 없을 경우
 	const whenEmpty = () => {
-		return (
-			<View style={[{height: 100 * DP, marginVertical: 30 * DP, alignItems: 'center', justifyContent: 'center'}]}>
-				<Text style={[txt.roboto30b, {color: GRAY10}]}> 검색결과가 없습니다.</Text>
-			</View>
-		);
+		return <ListEmptyInfo text={'목록이 없습니다..'} />;
 	};
 
 	const getData = () => {

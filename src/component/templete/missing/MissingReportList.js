@@ -12,6 +12,7 @@ import {btn_w306_h68} from 'Component/atom/btn/btn_style';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 import Loading from 'Root/component/molecules/modal/Loading';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 
 export default MissingReportList = props => {
 	const navigation = useNavigation();
@@ -125,6 +126,7 @@ export default MissingReportList = props => {
 	const onSelectKind = async kind => {
 		const fetchPetKindData = await PET_KIND();
 		let petKind = fetchPetKindData.map((v, i) => v.pet_species);
+		petKind.splice(0, 0, '동물종류');
 		Modal.popSelectScrollBoxModal(
 			[petKind],
 			'동물 종류 선택',
@@ -132,7 +134,6 @@ export default MissingReportList = props => {
 				selected == '동물종류'
 					? setFilterData({...filterData, missing_animal_species: ''})
 					: setFilterData({...filterData, missing_animal_species: selected});
-
 				Modal.close();
 			},
 			() => {
@@ -140,6 +141,10 @@ export default MissingReportList = props => {
 			},
 		);
 	};
+
+	React.useEffect(() => {
+		console.log('filterData', filterData);
+	}, [filterData]);
 
 	const onPressShowMissing = () => {
 		setOnlyMissing(!onlyMissing);
@@ -163,12 +168,7 @@ export default MissingReportList = props => {
 	};
 
 	const whenEmpty = () => {
-		return (
-			<View style={{paddingVertical: 100 * DP, alignItems: 'center'}}>
-				<EmptyIcon />
-				<Text style={[txt.roboto28b, {marginTop: 10 * DP}]}>목록이 없습니다.</Text>
-			</View>
-		);
+		return <ListEmptyInfo text={'목록이 없습니다..'} />;
 	};
 
 	const onPressShowActionButton = () => {

@@ -25,7 +25,45 @@ export default AppliesRecord = ({route}) => {
 				userobject_id: userGlobalObject.userInfo._id,
 			},
 			result => {
-				// console.log('result / getAppliesRecord / AppliesRecord : ', JSON.stringify(result.msg.protect));
+				console.log('result / getAppliesRecord / AppliesRecord : ', JSON.stringify(result.msg.adopt.is_favorite));
+				console.log('result / getAppliesRecord / AppliesRecord prote : ', JSON.stringify(result.msg.protect.is_favorite));
+				const rr = {
+					protect_act_request_article_id: {
+						protect_recent_comment: {comment_contents: 'ㄱㄷ노', comment_id: '6260d97063b169f22178435c', comment_user_nickname: '자네는고양이어딘가'},
+						_id: '62600f9ce72f72547638753e',
+						protect_request_status: 'rescue',
+						protect_request_is_delete: false,
+						protect_request_date: '2022-04-20T13:50:20.166Z',
+						protect_request_update_date: '2022-04-20T14:32:59.659Z',
+						protect_animal_id: {
+							_id: '62600f58e72f72547638753b',
+							protect_animal_photo_uri_list: [
+								'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1650462552268_DA4098C0-3FB6-4812-9FA4-FC9063CB8E51.jpg',
+							],
+							protect_animal_rescue_date: '2022-04-20T00:00:00.000Z',
+							protect_animal_rescue_location:
+								'호소감 지닌다 아아아아소서서서바바바바바바바바바바바바바바ㅏ밥ㅃㄱㅈㅅㄴㅅㄴㅅㅁㅅㅁㅅㅈㅅㅈㄹㄷㅎㄴㅎㅈㄹㅈㄷㅎㄴㅎ',
+							protect_animal_species: '고양이',
+							protect_animal_species_detail: '아메리칸 와이어헤어',
+							protect_animal_sex: 'female',
+							protect_animal_neutralization: 'yes',
+							protect_animal_estimate_age: '11년',
+							protect_animal_weight: 1000,
+							protect_animal_status: 'rescue',
+							protect_animal_belonged_shelter_id: '6256bf50d6ffa0fefe0387c9',
+							protect_animal_protector_discussion_id: [],
+							protect_act_applicants: [],
+							__v: 0,
+							protect_animal_protect_request_id: '62600f9ce72f72547638753e',
+						},
+						__v: 1,
+					},
+					protect_act_status: 'wait',
+					protect_act_request_shelter_id: '6256bf50d6ffa0fefe0387c9',
+					protect_act_protect_animal_id: '62600f58e72f72547638753b',
+					__v: 0,
+					is_favorite: false,
+				};
 				//입양
 				if (result.msg.adopt != undefined) {
 					let adopt = result.msg.adopt;
@@ -104,7 +142,7 @@ export default AppliesRecord = ({route}) => {
 	};
 
 	const onOff_FavoriteTag = (bool, isAdopt) => {
-		console.log('즐겨찾기=>' + bool);
+		console.log('즐겨찾기=>' + bool, isAdopt);
 		setFavoriteEtc(
 			{
 				collectionName: 'protectrequestobjects',
@@ -166,6 +204,7 @@ export default AppliesRecord = ({route}) => {
 								data={adopt_application_list[0]}
 								onClickLabel={onClickAdoptApplication}
 								onFavoriteTag={bool => onOff_FavoriteTag(bool, true)}
+								showFavorite={false}
 							/>
 						) : (
 							<>
@@ -191,6 +230,7 @@ export default AppliesRecord = ({route}) => {
 								data={protect_application_list[0]}
 								onClickLabel={onClickProtectApplication}
 								onFavoriteTag={bool => onOff_FavoriteTag(bool, false)}
+								showFavorite={false}
 							/>
 						) : (
 							<>

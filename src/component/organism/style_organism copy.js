@@ -731,63 +731,6 @@ export const protectedPetList = StyleSheet.create({
 	},
 });
 
-export const petList = StyleSheet.create({
-	container: {
-		width: 750 * DP,
-		height: 220 * DP,
-		justifyContent: 'center',
-	},
-	insideContainer: {
-		width: 750 * DP,
-		marginLeft: 30 * DP,
-		marginRight: 22 * DP,
-	},
-	itemContainer: {
-		width: 152 * DP,
-		height: 196 * DP,
-		marginRight: 30 * DP,
-		alignItems: 'center',
-	},
-	petProfileImageMedium: {
-		width: 120 * DP,
-		height: 120 * DP,
-	},
-	petProfileInfo: {
-		width: 152 * DP,
-		height: 76 * DP,
-		alignItems: 'center',
-	},
-});
-
-export const ownerList = StyleSheet.create({
-	container: {
-		width: 750 * DP,
-		height: 220 * DP,
-		justifyContent: 'center',
-	},
-	insideContainer: {
-		width: 750 * DP,
-		marginLeft: 30 * DP,
-		marginRight: 22 * DP,
-	},
-	itemContainer: {
-		width: 152 * DP,
-		height: 172 * DP,
-		marginRight: 30 * DP,
-		alignItems: 'center',
-	},
-	petProfileImageMedium: {
-		width: 120 * DP,
-		height: 120 * DP,
-	},
-	petProfileInfo: {
-		width: 152 * DP,
-		height: 40 * DP,
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
-});
-
 export const aidRequest = StyleSheet.create({
 	container: {
 		width: 672 * DP,

@@ -176,8 +176,8 @@ export default PetInfoSetting = ({route, navigation}) => {
 					{/* 프로필 컨테이너 */}
 					<View style={[petInfoSetting.profileContainer]}>
 						<View style={[petInfoSetting.profileInside]}>
-							<TouchableOpacity onPress={changeProfile} style={[petInfoSetting.petImageLabel]}>
-								<PetImageLabel data={petData} showNickname={false} />
+							<TouchableOpacity onPress={changeProfile} activeOpacity={0.8} style={[petInfoSetting.petImageLabel, {}]}>
+								<PetImageLabel data={petData} showNickname={false} onPressLabel={changeProfile} />
 								<View style={[Platform.OS == 'ios' ? petInfoSetting.profileEditMark : petInfoSetting.profileEditMark_and]}>
 									<AddItem92 />
 								</View>

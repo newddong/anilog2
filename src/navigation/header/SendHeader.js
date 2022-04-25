@@ -140,10 +140,16 @@ export default SendHeader = ({route, navigation, options}) => {
 										community_is_attached_file: attachedCheck,
 									},
 									result => {
-										console.log('result / updateAndDeleteCommunity / SendHeader ', result.msg);
+										// console.log('result / updateAndDeleteCommunity / SendHeader ', result.msg);
 										result.msg.community_type == 'review'
-											? navigation.push('ReviewDetail', {community_object: result.msg})
-											: navigation.push('ArticleDetail', {community_object: result.msg});
+											? navigation.reset({
+													index: 1,
+													routes: [{name: 'CommunityMain'}, {name: 'ReviewDetail', params: {community_object: result.msg}}],
+											  })
+											: navigation.reset({
+													index: 1,
+													routes: [{name: 'CommunityMain'}, {name: 'ArticleDetail', params: {community_object: result.msg}}],
+											  });
 									},
 									err => {
 										console.log('err / updateAndDeleteCommunity / sendHeader ', err);
@@ -173,7 +179,7 @@ export default SendHeader = ({route, navigation, options}) => {
 			</TouchableOpacity>
 
 			<View style={style.titleContainer}>
-				<Text style={titleStyle}>{options.title}</Text>
+				<Text style={[titleStyle]}>{options.title}</Text>
 			</View>
 			<Send60_Big onPress={onSend} />
 		</View>

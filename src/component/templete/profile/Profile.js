@@ -242,7 +242,7 @@ export default Profile = ({route}) => {
 		Animated.timing(animatedHeight, {
 			duration: 300,
 			toValue: 0,
-			easing: Easing.linear,
+			// easing: Easing.linear,
 			useNativeDriver: false,
 		}).start(() => setShowCompanion(false));
 	};
@@ -255,16 +255,16 @@ export default Profile = ({route}) => {
 		Animated.timing(animatedHeight, {
 			duration: 300,
 			toValue: 0,
-			easing: Easing.linear,
+			// easing: Easing.linear,
 			useNativeDriver: false,
 		}).start(() => setShowOwnerState(false));
 	};
 
 	const animationOpen = () => {
 		Animated.timing(animatedHeight, {
-			duration: 300,
+			duration: 400,
 			toValue: 212 * DP,
-			easing: Easing.linear,
+			// easing: Easing.linear,
 			useNativeDriver: false,
 		}).start();
 	};

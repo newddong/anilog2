@@ -3,7 +3,8 @@ import {View, StyleSheet, Platform, PermissionsAndroid, Text, TouchableWithoutFe
 import {APRI10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import CameraRoll from '@react-native-community/cameraroll';
+// import CameraRoll from '@react-native-community/cameraroll';
+import CameraRoll from 'Root/module/CameraRollIos';
 // import { hasAndroidPermission } from './camerapermission';
 // import { requestPermission, reqeustCameraPermission } from 'permission';
 import LocalMedia from 'Molecules/media/LocalMedia';

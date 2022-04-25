@@ -4,7 +4,7 @@ import {txt} from 'Root/config/textstyle';
 import {Bracket48} from 'Atom/icon';
 import LocalMedia from 'Molecules/media/LocalMedia';
 import {login_style, temp_style, photoSelect} from 'Templete/style_templete';
-import CameraRoll from '@react-native-community/cameraroll';
+// import CameraRoll from '@react-native-community/cameraroll';
 
 /**
  * 사진선택 템플릿
@@ -34,32 +34,32 @@ const PhotoSelect = props => {
 	 */
 
 	const loadPhotosMilsec = (request = 20, timeStamp = 0, type = 'Photos') => {
-		CameraRoll.getAlbums({assetType: 'All'}).then(val => {
-			console.log('GetAlbums', val);
-		});
+		// CameraRoll.getAlbums({assetType: 'All'}).then(val => {
+		// 	console.log('GetAlbums', val);
+		// });
 
-		CameraRoll.getPhotos({
-			first: request,
-			toTime: timeStamp ? (timeStamp - 1) * 1000 : 0,
-			assetType: 'Photos',
-			include: ['playableDuration'],
-		})
-			.then(r => {
-				// console.log('r', JSON.stringify(r));
-				let copy = [...r.edges];
-				copy.map((v, i) => {
-					copy[i] = {
-						img_uri: v.node.image.uri,
-						state: false,
-					};
-				});
-				copy.splice(0, 0, true); //목록 첫 인덱스는 Default Camera Icon (사진직접찍기 기능)
-				// console.log(copy);
-				setPhotos(copy);
-			})
-			.catch(err => {
-				console.log(err);
-			});
+		// CameraRoll.getPhotos({
+		// 	first: request,
+		// 	toTime: timeStamp ? (timeStamp - 1) * 1000 : 0,
+		// 	assetType: 'Photos',
+		// 	include: ['playableDuration'],
+		// })
+		// 	.then(r => {
+		// 		// console.log('r', JSON.stringify(r));
+		// 		let copy = [...r.edges];
+		// 		copy.map((v, i) => {
+		// 			copy[i] = {
+		// 				img_uri: v.node.image.uri,
+		// 				state: false,
+		// 			};
+		// 		});
+		// 		copy.splice(0, 0, true); //목록 첫 인덱스는 Default Camera Icon (사진직접찍기 기능)
+		// 		// console.log(copy);
+		// 		setPhotos(copy);
+		// 	})
+		// 	.catch(err => {
+		// 		console.log(err);
+		// 	});
 		return () => {};
 	};
 

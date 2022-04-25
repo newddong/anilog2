@@ -16,7 +16,6 @@ import PropsTypes, { arrayOf, bool, func, string } from 'prop-types';
 import {CameraIconWhite} from 'Asset/image';
 import DP from 'Root/config/dp';
 import SvgWrapper from 'Atom/svgwrapper';
-import CameraRoll from '@react-native-community/cameraroll';
 // import {hasAndroidPermission} from './camerapermission';
 // import {requestPermission, reqeustCameraPermission} from 'permission';
 import FastImage from 'react-native-fast-image';

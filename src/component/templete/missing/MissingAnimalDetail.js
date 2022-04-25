@@ -9,7 +9,7 @@ import {deleteComment, getCommentListByFeedId} from 'Root/api/commentapi';
 import moment from 'moment';
 import {txt} from 'Root/config/textstyle';
 import ViewShot from 'react-native-view-shot';
-import CameraRoll from '@react-native-community/cameraroll';
+// import CameraRoll from '@react-native-community/cameraroll';
 import Modal from 'Root/component/modal/Modal';
 import {PosterSave} from 'Component/atom/icon';
 import {phoneFomatter} from 'Root/util/stringutil';
@@ -207,11 +207,11 @@ export default MissingAnimalDetail = props => {
 				if (!granted) {
 					return;
 				}
-				const image = CameraRoll.save(imageURI, 'photo');
-				if (image) {
-					// Alert.alert('', 'Image saved successfully.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
-					Modal.popOneBtn('전단지가 저장되었습니다.', '확인', Modal.close);
-				}
+				// const image = CameraRoll.save(imageURI, 'photo');
+				// if (image) {
+				// 	// Alert.alert('', 'Image saved successfully.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
+				// 	Modal.popOneBtn('전단지가 저장되었습니다.', '확인', Modal.close);
+				// }
 			}
 			// Share.share({title: 'Image', url: imageURI});
 		} catch (error) {

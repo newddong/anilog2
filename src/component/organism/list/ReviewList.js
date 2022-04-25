@@ -15,7 +15,7 @@ import RecommendReview from '../article/RecommendReview';
  * @param {(index:number)=>void} props.onPressReviewContent - 리뷰 컨텐츠 클릭
  * @param {(index:number)=>void} props.onPressLike - 좋아요 클릭
  * @param {(index:number)=>void} props.onPressUnlike - 좋아요 취소
- * @param {(index:number)=>void} props.onPressRecommendArticle - 추천 게시글 클릭
+ * @param {(data:object)=>void} props.onPressRecommendReview - 추천 게시글 클릭
  * @param {(bool:boolean)=>void} props.onPressFavorite - 즐겨찾기 클릭
  * @param {()=>void} props.onPressMeatball - 미트볼 클릭
  * @param {string} props.isSearch - 리뷰 컨텐츠 클릭
@@ -38,7 +38,7 @@ export default ReviewList = props => {
 
 	return (
 		<View style={[style.container]}>
-			<RecommendReview data={props.recommend} onPressRecommendReview={() => props.onPressRecommendReview(index)} />
+			<RecommendReview data={props.recommend} onPressRecommendReview={data => props.onPressRecommendReview(data)} />
 			<FlatList
 				data={props.items}
 				renderItem={({item, index}) => renderItem(item, index)}

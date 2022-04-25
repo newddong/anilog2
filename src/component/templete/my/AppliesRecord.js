@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {ActivityIndicator, ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {getAppliesRecord} from 'Root/api/protectapi';
 import {txt} from 'Root/config/textstyle';
 import {EmptyIcon, NextMark} from 'Atom/icon';
@@ -9,7 +9,6 @@ import {appliesRecord, login_style} from 'Templete/style_templete';
 import AnimalNeedHelp from 'Root/component/organism/listitem/AnimalNeedHelp';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {setFavoriteEtc} from 'Root/api/favoriteetc';
 
 export default AppliesRecord = ({route}) => {
 	//첫번째 값만 신청내역에 보여주기 위함. AnimalNeedHelpList가 배열 데이터를 다루기 때문에 반드시 객체가 배열이어야 함.
@@ -25,45 +24,7 @@ export default AppliesRecord = ({route}) => {
 				userobject_id: userGlobalObject.userInfo._id,
 			},
 			result => {
-				console.log('result / getAppliesRecord / AppliesRecord : ', JSON.stringify(result.msg.adopt.is_favorite));
-				console.log('result / getAppliesRecord / AppliesRecord prote : ', JSON.stringify(result.msg.protect.is_favorite));
-				const rr = {
-					protect_act_request_article_id: {
-						protect_recent_comment: {comment_contents: 'ㄱㄷ노', comment_id: '6260d97063b169f22178435c', comment_user_nickname: '자네는고양이어딘가'},
-						_id: '62600f9ce72f72547638753e',
-						protect_request_status: 'rescue',
-						protect_request_is_delete: false,
-						protect_request_date: '2022-04-20T13:50:20.166Z',
-						protect_request_update_date: '2022-04-20T14:32:59.659Z',
-						protect_animal_id: {
-							_id: '62600f58e72f72547638753b',
-							protect_animal_photo_uri_list: [
-								'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1650462552268_DA4098C0-3FB6-4812-9FA4-FC9063CB8E51.jpg',
-							],
-							protect_animal_rescue_date: '2022-04-20T00:00:00.000Z',
-							protect_animal_rescue_location:
-								'호소감 지닌다 아아아아소서서서바바바바바바바바바바바바바바ㅏ밥ㅃㄱㅈㅅㄴㅅㄴㅅㅁㅅㅁㅅㅈㅅㅈㄹㄷㅎㄴㅎㅈㄹㅈㄷㅎㄴㅎ',
-							protect_animal_species: '고양이',
-							protect_animal_species_detail: '아메리칸 와이어헤어',
-							protect_animal_sex: 'female',
-							protect_animal_neutralization: 'yes',
-							protect_animal_estimate_age: '11년',
-							protect_animal_weight: 1000,
-							protect_animal_status: 'rescue',
-							protect_animal_belonged_shelter_id: '6256bf50d6ffa0fefe0387c9',
-							protect_animal_protector_discussion_id: [],
-							protect_act_applicants: [],
-							__v: 0,
-							protect_animal_protect_request_id: '62600f9ce72f72547638753e',
-						},
-						__v: 1,
-					},
-					protect_act_status: 'wait',
-					protect_act_request_shelter_id: '6256bf50d6ffa0fefe0387c9',
-					protect_act_protect_animal_id: '62600f58e72f72547638753b',
-					__v: 0,
-					is_favorite: false,
-				};
+				// console.log('result / getAppliesRecord / AppliesRecord : ', JSON.stringify(result.msg.adopt.is_favorite));
 				//입양
 				if (result.msg.adopt != undefined) {
 					let adopt = result.msg.adopt;
@@ -141,25 +102,6 @@ export default AppliesRecord = ({route}) => {
 		navigation.push('ManageUserVolunteer'); // 활동 예정중인 신청, 지난 신청 등 나의 신청 목록을 보내줘야 알 수 있는 부분
 	};
 
-	const onOff_FavoriteTag = (bool, isAdopt) => {
-		console.log('즐겨찾기=>' + bool, isAdopt);
-		setFavoriteEtc(
-			{
-				collectionName: 'protectrequestobjects',
-				target_object_id: isAdopt
-					? adopt_application_list[0].protect_act_request_article_id._id
-					: protect_application_list[0].protect_act_request_article_id._id,
-				is_favorite: bool,
-			},
-			result => {
-				console.log('result / setFavoriteEtc : ', result.msg.favoriteEtc);
-			},
-			err => {
-				console.log('err / setFavoriteEtc : ', err);
-			},
-		);
-	};
-
 	//봉사활동 신청 하단 라벨 클릭
 	const onClickShelterLabel = shelterInfo => {
 		let volunteerData = shelterInfo;
@@ -200,12 +142,7 @@ export default AppliesRecord = ({route}) => {
 							)}
 						</View>
 						{adopt_application_list != undefined && adopt_application_list.length > 0 ? (
-							<AnimalNeedHelp
-								data={adopt_application_list[0]}
-								onClickLabel={onClickAdoptApplication}
-								onFavoriteTag={bool => onOff_FavoriteTag(bool, true)}
-								showFavorite={false}
-							/>
+							<AnimalNeedHelp data={adopt_application_list[0]} onClickLabel={onClickAdoptApplication} showFavorite={false} />
 						) : (
 							<>
 								<EmptyIcon />
@@ -226,12 +163,7 @@ export default AppliesRecord = ({route}) => {
 							)}
 						</View>
 						{protect_application_list != undefined && protect_application_list.length > 0 ? (
-							<AnimalNeedHelp
-								data={protect_application_list[0]}
-								onClickLabel={onClickProtectApplication}
-								onFavoriteTag={bool => onOff_FavoriteTag(bool, false)}
-								showFavorite={false}
-							/>
+							<AnimalNeedHelp data={protect_application_list[0]} onClickLabel={onClickProtectApplication} showFavorite={false} />
 						) : (
 							<>
 								<EmptyIcon />

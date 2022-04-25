@@ -1083,6 +1083,9 @@ export const animalNeedHelpList = StyleSheet.create({
 	},
 	itemContainer: {
 		alignItems: 'center',
+		width: 654 * DP,
+		alignSelf: 'center',
+		flexDirection: 'row',
 		marginBottom: 40 * DP,
 	},
 });

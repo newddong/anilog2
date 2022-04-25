@@ -1,9 +1,9 @@
 import React from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
-import Article from '../article/Article';
-import {GRAY30, GRAY40} from 'Root/config/color';
+import {FlatList, StyleSheet, View} from 'react-native';
+import {GRAY40} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import ArticleSummary from '../article/ArticleSummary';
+import {Check50, Rect50_Border} from 'Root/component/atom/icon';
 
 /**
  * 자유 게시글 리스트
@@ -13,8 +13,28 @@ import ArticleSummary from '../article/ArticleSummary';
  * @param {string} props.isSearch - 검색어
  */
 const ArticleList = props => {
+	const onPressToggle = (index, bool) => {
+		props.onPressCheck(index, bool);
+	};
+
 	const renderItem = (item, index) => {
-		return <ArticleSummary data={item} isSearch={props.isSearch} onPressArticle={() => props.onPressArticle(index)} />;
+		return (
+			<View style={{flexDirection: 'row'}}>
+				{props.selectMode ? (
+					<View style={{justifyContent: 'center', marginRight: 20 * DP}}>
+						{/* <CheckBox state={item.checkBoxState} onCheck={() => props.onCheckBox(index)} /> */}
+						{item.checkBoxState ? (
+							<Check50 onPress={() => onPressToggle(index, false)} />
+						) : (
+							<Rect50_Border onPress={() => onPressToggle(index, true)} />
+						)}
+					</View>
+				) : (
+					<></>
+				)}
+				<ArticleSummary data={item} isSearch={props.isSearch} onPressArticle={() => props.onPressArticle(index)} />
+			</View>
+		);
 	};
 
 	return (

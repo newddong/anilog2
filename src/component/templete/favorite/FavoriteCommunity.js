@@ -15,7 +15,7 @@ export default FavoriteCommunity = ({route}) => {
 	const isFavorite = route.name == 'FavoriteCommunity';
 	const [review, setReview] = React.useState('false');
 	const [article, setArticle] = React.useState('false');
-	console.log('route.name', route.name);
+	// console.log('route.name', route.name);
 
 	React.useEffect(() => {
 		isFavorite ? navigation.setOptions({title: '커뮤니티 즐겨찾기'}) : navigation.setOptions({title: '나의 커뮤니티'});

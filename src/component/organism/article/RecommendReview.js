@@ -9,11 +9,11 @@ import {getTimeLapsed} from 'Root/util/dateutil';
  * 추천 게시글
  * @param {object} props - Props Object
  * @param {object} props.data - 데이터 오브젝트
- * @param {()=>void)} props.onPressRecommendReview - 추천 게시글 클릭
+ * @param {(data:object)=>void)} props.onPressRecommendReview - 추천 게시글 클릭
  */
 const RecommendReview = props => {
-	const onPressRecommendReview = () => {
-		props.onPressRecommendReview();
+	const onPressRecommendReview = data => {
+		props.onPressRecommendReview(data);
 	};
 	const first = props.data[0];
 	const second = props.data[1];
@@ -31,7 +31,7 @@ const RecommendReview = props => {
 			return imageList;
 		};
 		return (
-			<TouchableOpacity onPress={onPressRecommendReview} activeOpacity={0.7} style={[{}]}>
+			<TouchableOpacity onPress={() => onPressRecommendReview(data)} activeOpacity={0.7} style={[{}]}>
 				<View style={{flexDirection: 'row'}}>
 					<View>
 						<View style={[style.userLabel]}>

@@ -389,8 +389,9 @@ export default ReviewMain = ({route, navigation}) => {
 		navigation.push('ReviewDetail', {community_object: getData()[index]});
 	};
 
-	const onPressRecommendArticle = index => {
-		console.log('index', index);
+	const onPressRecommendReview = data => {
+		console.log('index', data);
+		navigation.push('ReviewDetail', {community_object: data});
 	};
 
 	//글쓰기 아이콘 클릭
@@ -514,7 +515,7 @@ export default ReviewMain = ({route, navigation}) => {
 									onPressLike={index => onPressLike(index, true)}
 									onPressUnlike={index => onPressLike(index, false)}
 									onPressFavorite={onPressFavorite}
-									onPressRecommendArticle={onPressRecommendArticle}
+									onPressRecommendReview={onPressRecommendReview}
 								/>
 							</>
 						);

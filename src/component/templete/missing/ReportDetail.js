@@ -5,14 +5,14 @@ import {reportDetail, temp_style} from 'Templete/style_templete';
 import FeedContent from 'Organism/feed/FeedContent';
 import {useNavigation} from '@react-navigation/core';
 import {favoriteFeed, getFeedDetailById, getMissingReportList} from 'Root/api/feedapi';
-import {getCommentListByFeedId} from 'Root/api/commentapi';
+import {deleteComment, getCommentListByFeedId} from 'Root/api/commentapi';
 import moment from 'moment';
 import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loading from 'Root/component/molecules/modal/Loading';
 import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
-
+import {GRAY10} from 'Root/config/color';
 export default ReportDetail = props => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
@@ -21,9 +21,12 @@ export default ReportDetail = props => {
 	const [editComment, setEditComment] = React.useState(false); //답글 작성란 View 보이기 T/F
 	// 제보 데이터 불러오기 (아직 API 미작업 )
 	React.useEffect(() => {
-		fetchFeedDetail();
-		fetchReportList();
-		getCommnetList();
+		const unsubscribe = navigation.addListener('focus', () => {
+			fetchFeedDetail();
+			fetchReportList();
+			getCommnetList();
+		});
+		return unsubscribe;
 	}, []);
 
 	const fetchFeedDetail = () => {
@@ -106,7 +109,7 @@ export default ReportDetail = props => {
 						}
 					}
 				});
-				setCommentDataList(commentArray);
+				setCommentDataList(commentArray.filter(e => e.comment_is_delete != true));
 			},
 			errcallback => {
 				console.log(`Comment errcallback:${JSON.stringify(errcallback)}`);
@@ -179,6 +182,29 @@ export default ReportDetail = props => {
 		setEditComment(!editComment);
 	};
 
+	//댓글 대댓글 삭제
+	const onPressDelete = id => {
+		console.log('id', id);
+		deleteComment(
+			{
+				commentobject_id: id,
+			},
+			result => {
+				console.log('result / delectComment / ReportDetail : ', result.msg.comment_is_delete);
+				getCommnetList();
+			},
+			err => {
+				console.log(' err / deleteComment / ReportDetail : ', err);
+			},
+		);
+	};
+
+	//댓글 수정 클릭
+	const onEdit = comment => {
+		console.log('comment', comment);
+		navigation.push('FeedCommentList', {feedobject: data, edit: comment});
+	};
+
 	const moveToCommentList = () => {
 		let feedobject = {};
 		feedobject._id = props.route.params._id;
@@ -236,6 +262,9 @@ export default ReportDetail = props => {
 								items={commentDataList}
 								onPressReplyBtn={moveToCommentList}
 								onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
+								onPressDelete={onPressDelete}
+								onPressDeleteChild={onPressDelete}
+								onEdit={onEdit}
 							/>
 							<ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} isProtectRequest={true} />
 							<View style={[{paddingVertical: 20 * DP}]}>

@@ -43,10 +43,12 @@ const InformationModal = props => {
 	};
 	const [numberOfLines, setNumberOfLines] = React.useState(0);
 	const [showMore, setShowMore] = React.useState(false);
-	const dummyInteres = ['노환', '도그스포츠', '펫간식', '펫올림픽', '츄르를 맛있게 먹이는 법', '강형욱의 애견교실', '인천 보호소'];
+	const dummyInteres = [];
 	const getBirthDate = () => {
 		const dateFormat = moment(data.pet_birthday).format('yyyy.MM.DD');
-		return dateFormat;
+		if (dateFormat == 'Invalid date') {
+			return '미지정 상태입니다.';
+		} else return dateFormat;
 	};
 
 	const getNeutralization = () => {

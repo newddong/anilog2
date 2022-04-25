@@ -14,8 +14,12 @@ import BookmarkHeader from 'Navigation/header/BookmarkHeader';
 import SocialRelationTopTabNavigation from '../protection_stack/socialRelation_tab/SocialRelationTopTabNavigation';
 import SimpleHeader from 'Navigation/header/SimpleHeader';
 import ChangeUserProfileImage from 'Root/component/templete/user/ChangeUserProfileImage';
+
 import AlarmList from 'Root/component/templete/list/AlarmList';
 import AlarmCommentList from 'Root/component/organism/comment/AlarmCommentList';
+
+import SetPetInformation from 'Root/component/templete/pet/SetPetInformation';
+
 
 const FeedStack = createStackNavigator();
 
@@ -54,6 +58,7 @@ export default FeedStackNavigation = () => {
 				component={ChangeUserProfileImage}
 				options={{header: props => <SimpleHeader {...props} />, title: '프로필 변경'}}
 			/>
+
 			<FeedStack.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
 			<FeedStack.Screen name="AlarmCommentList" component={AlarmCommentList} options={{header: props => <SimpleHeader {...props} />}} />
 			{/* <FeedStack.Screen
@@ -91,6 +96,11 @@ export default FeedStackNavigation = () => {
 				name="ApplyAdoptionDetails"
 				component={ApplyDetails}
 				options={{header: props => <SimpleHeader {...props} />, title: '입양 신청 내역'}}
+      />
+			<FeedStack.Screen
+				name="SetPetInformation"
+				component={SetPetInformation}
+				options={{header: props => <SaveButtonHeader {...props} />, title: '반려동물 상세 정보'}}
 			/>
 		</FeedStack.Navigator>
 	);

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, TouchableWithoutFeedback, KeyboardAvoidingView, StyleSheet} from 'react-native';
+import {Text, View, TouchableWithoutFeedback, KeyboardAvoidingView, StyleSheet, Dimensions, ScrollView} from 'react-native';
 import DP from 'Root/config/dp';
 import Postcode from '@actbase/react-daum-postcode';
 
@@ -15,9 +15,9 @@ export default AddressSearchPage = props => {
 	};
 
 	return (
-		<View style={[styles.container]}>
-			<Postcode style={{width: 654 * DP, height: 800, alignSelf: 'center'}} onSelected={data => onSelectData(data)} />
-		</View>
+		<ScrollView contentContainerStyle={[styles.container]}>
+			<Postcode style={{width: 750 * DP, minHeight: 1500 * DP, alignSelf: 'center'}} onSelected={data => onSelectData(data)} />
+		</ScrollView>
 	);
 };
 
@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		flex: 1,
 		backgroundColor: '#FFF',
+		// paddingVertical: 150 * DP,
 	},
 	infoMsg: {
 		flexDirection: 'row',

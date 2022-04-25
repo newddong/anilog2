@@ -1,14 +1,15 @@
 import React from 'react';
 import {Text, View, TouchableOpacity, TouchableWithoutFeedback, StyleSheet} from 'react-native';
 import {Arrow_Down_GRAY10} from 'Root/component/atom/icon';
-import {APRI10, GRAY20, WHITE} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, GRAY20, GRAY30, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 
 /**
  * 셀렉트 모달 View 컴포넌트
  * @param {object} props - Props Object
- * @param {value} props.value - 현재 선택 값
+ * @param {string} props.value - 현재 선택 값
+ * @param {string} props.defaultText - 디폴트 선택 값
  * @param {string} props.textColor - 텍스트 색깔
  * @param {number} props.width - 인풋 너비
  * @param {number} props.fontSize - 인풋 너비
@@ -20,6 +21,8 @@ const SelectInput = props => {
 		props.onPressInput();
 	};
 
+	const isDefault = props.defaultText == props.value;
+
 	return (
 		<TouchableOpacity
 			onPress={onPressInput}
@@ -28,6 +31,7 @@ const SelectInput = props => {
 				{
 					width: props.width * DP,
 					borderBottomColor: props.noBorder ? WHITE : APRI10,
+					borderBottomColor: isDefault ? GRAY30 : APRI10,
 					// backgroundColor: 'yellow',
 				},
 			]}>
@@ -37,6 +41,7 @@ const SelectInput = props => {
 					{
 						fontSize: props.fontSize * DP,
 						color: props.textColor,
+						color: isDefault ? GRAY10 : BLACK,
 						width: (props.width - 70) * DP,
 						textAlign: 'center',
 						// backgroundColor: 'red',
@@ -69,6 +74,7 @@ SelectInput.defaultProps = {
 	onPressInput: () => {},
 	noBorder: false,
 	fontSize: 28,
+	defaultText: '',
 };
 
 export default SelectInput;

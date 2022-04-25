@@ -29,6 +29,7 @@ export default ReviewMain = ({route, navigation}) => {
 			category: [],
 		},
 	});
+	const [recommend, setRecommend] = React.useState([]);
 
 	const filterRef = React.useRef(false);
 	// React navigation focus event listener return old state 관련 자료 참고
@@ -61,8 +62,16 @@ export default ReviewMain = ({route, navigation}) => {
 				community_type: 'review',
 			},
 			result => {
-				console.log('result / getCommunityList / ArticleMain :', result.msg.review.length);
-				setData(result.msg.review);
+				// console.log('result / getCommunityList / ArticleMain :', result.msg.review[0]);
+				let recommendList = [];
+				result.msg.review.map((v, i) => {
+					// console.log('community_is_recomment', v.community_is_recomment);
+					if (v.community_is_recomment) {
+						recommendList.push(v);
+					}
+				});
+				setRecommend(recommendList);
+				setData(result.msg.review.filter(e => e.community_is_recomment != true));
 				if (!hasNoFilter()) {
 					doFilter(community_obj.reviewFilter, result.msg.review);
 				}
@@ -77,7 +86,7 @@ export default ReviewMain = ({route, navigation}) => {
 	//필터 존재 여부 테스트
 	const hasNoFilter = () => {
 		const previousFilter = community_obj.reviewFilter.userInterestReview;
-		console.log('previousFilter', previousFilter);
+		// console.log('previousFilter', previousFilter);
 		let arr = [];
 		const selectedCategoryFilter = arr.concat(
 			previousFilter.interests_review,
@@ -86,25 +95,25 @@ export default ReviewMain = ({route, navigation}) => {
 			previousFilter.interests_hospital,
 			previousFilter.interests_interior,
 		);
-		console.log('selectedCategoryFilter', selectedCategoryFilter);
+		// console.log('selectedCategoryFilter', selectedCategoryFilter);
 		const isCategoryNotSelected = selectedCategoryFilter.length == 0;
 		const none_interests_location = previousFilter.interests_location.city == '';
-		console.log('isCategoryNotSelected', isCategoryNotSelected);
-		console.log('none_interests_location', none_interests_location);
-		console.log('isCategoryNotSelected && none_interests_location;', isCategoryNotSelected && none_interests_location);
+		// console.log('isCategoryNotSelected', isCategoryNotSelected);
+		// console.log('none_interests_location', none_interests_location);
+		// console.log('isCategoryNotSelected && none_interests_location;', isCategoryNotSelected && none_interests_location);
 		return isCategoryNotSelected && none_interests_location;
 	};
 
 	const onPressMeatball = index => {
 		console.log('index', index);
-		const isMyArticle = userGlobalObject.userInfo._id == data[index].community_writer_id._id;
+		const isMyArticle = userGlobalObject.userInfo._id == getData()[index].community_writer_id._id;
 		Modal.popSelectBoxModal(
 			isMyArticle ? ['수정', '삭제'] : ['신고'],
 			select => {
 				console.log('select', select);
 				switch (select) {
 					case '수정':
-						navigation.push('CommunityEdit', {previous: data[index], isReview: true});
+						navigation.push('CommunityEdit', {previous: getData()[index], isReview: true});
 						break;
 					case '삭제':
 						Modal.close();
@@ -117,7 +126,7 @@ export default ReviewMain = ({route, navigation}) => {
 								() => {
 									updateAndDeleteCommunity(
 										{
-											community_object_id: data[index]._id,
+											community_object_id: getData()[index]._id,
 											community_is_delete: true,
 										},
 										result => {
@@ -155,22 +164,22 @@ export default ReviewMain = ({route, navigation}) => {
 									'이 게시물을 신고 하시겠습니까?',
 									selectedItem => {
 										createReport(
-                      {
-                        report_target_object_id: data[index]._id,
-                        report_target_object_type: 'communityobjects',
-                        report_target_reason: selectedItem,
-                        report_is_delete: false,
-                      },
-                      result => {
-                        console.log('신고 완료', result);
-                        Modal.close();
-                        Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
-                      },
-                      err => {
-                        console.log('신고 err', err);
-                        Modal.close();
-                      },
-                    );
+											{
+												report_target_object_id: getData()[index]._id,
+												report_target_object_type: 'communityobjects',
+												report_target_reason: selectedItem,
+												report_is_delete: false,
+											},
+											result => {
+												console.log('신고 완료', result);
+												Modal.close();
+												Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
+											},
+											err => {
+												console.log('신고 err', err);
+												Modal.close();
+											},
+										);
 									},
 									'신고',
 								);
@@ -372,12 +381,17 @@ export default ReviewMain = ({route, navigation}) => {
 
 	//댓글 모두 보기 클릭
 	const onPressReply = index => {
-		navigation.push('CommunityCommentList', {community_object: data[index]});
+		navigation.push('CommunityCommentList', {community_object: getData()[index]});
 	};
 
 	//리뷰 썸네일 클릭
 	const onPressReviewContent = index => {
-		navigation.push('ReviewDetail', {community_object: data[index]});
+		navigation.push('ReviewDetail', {community_object: getData()[index]});
+	};
+
+	const onPressRecommendReview = data => {
+		console.log('index', data);
+		navigation.push('ReviewDetail', {community_object: data});
 	};
 
 	//글쓰기 아이콘 클릭
@@ -394,11 +408,11 @@ export default ReviewMain = ({route, navigation}) => {
 	//즐겨찾기 클릭
 	const onPressFavorite = (index, bool) => {
 		console.log('index', index, bool);
-		console.log('data[index]._id,', data[index]._id);
+		console.log('data[index]._id,', getData()[index]._id);
 		setFavoriteEtc(
 			{
 				collectionName: 'communityobjects',
-				target_object_id: data[index]._id,
+				target_object_id: getData()[index]._id,
 				is_favorite: bool,
 			},
 			result => {
@@ -493,6 +507,7 @@ export default ReviewMain = ({route, navigation}) => {
 							<>
 								<ReviewList
 									items={getData()}
+									recommend={recommend}
 									whenEmpty={whenEmpty}
 									onPressReviewContent={onPressReviewContent}
 									onPressReply={onPressReply}
@@ -500,6 +515,7 @@ export default ReviewMain = ({route, navigation}) => {
 									onPressLike={index => onPressLike(index, true)}
 									onPressUnlike={index => onPressLike(index, false)}
 									onPressFavorite={onPressFavorite}
+									onPressRecommendReview={onPressRecommendReview}
 								/>
 							</>
 						);

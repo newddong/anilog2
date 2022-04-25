@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.anilog2.MyAppPackage;
 import com.anilog2.PhotoListPackage;
+import com.anilog2.TextMeasurePackage;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import fr.greweb.reactnativeviewshot.RNViewShotPackage;
@@ -32,6 +33,7 @@ public class MainApplication extends Application implements ReactApplication {
           // packages.add(new MyReactNativePackage());
             packages.add(new MyAppPackage());
             packages.add(new PhotoListPackage());
+            packages.add(new TextMeasurePackage());
           return packages;
         }
 

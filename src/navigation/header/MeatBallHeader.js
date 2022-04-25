@@ -26,7 +26,7 @@ export default MeatBallHeader = props => {
 					props.options.data,
 					() => onClose(),
 					() => {
-						props.navigation.push('UserInfoSetting');
+						props.navigation.push('SetPetInformation', props.options.data);
 						//프로필 수정하는 페이지 이동
 					},
 				);
@@ -123,7 +123,9 @@ export default MeatBallHeader = props => {
 					<BackArrow32 onPress={props.navigation.goBack} />
 				</View>
 			</TouchableOpacity>
-			<Text style={txt.roboto40b}>{props.options.title ? props.options.title : props.route.params.title}</Text>
+			<Text style={[txt.roboto40b, {maxWidth: 500 * DP}]} numberOfLines={1}>
+				{props.options.title ? props.options.title : props.route.params.title}
+			</Text>
 			{/* <MeatBallDropdown menu={PROTECT_STATUS} onSelect={onPressMeatball} /> */}
 			<Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />
 		</View>

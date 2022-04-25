@@ -101,8 +101,16 @@ export default AddPhoto = props => {
 		loadPhotosMilsec(15,timeStamp,lastID);
 	};
 
+	//네이티브 모듈 테스트
 	const test = () => {
 		// console.log(props.route.params);
+
+		NativeModules.PhotoListModule.deletePhotos({imageFiles:selectedPhoto})
+			.then(r=>console.log(r))
+			.catch(err => {
+			// console.log('cameraroll error===>' + err);
+			});
+
 		console.log(selectedPhoto);
 	};
 

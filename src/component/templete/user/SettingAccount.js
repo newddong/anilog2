@@ -6,6 +6,7 @@ import {txt} from 'Root/config/textstyle';
 import {userLogout} from 'Root/api/userapi';
 import DP from 'Root/config/dp';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import Modal from 'Root/component/modal/Modal';
 export default SettingAccount = ({route}) => {
 	const navigation = useNavigation();
 	const logout = () => {

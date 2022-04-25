@@ -207,7 +207,7 @@ const ProfileInfo = props => {
 	const onPressFollowingSetting = () => {
 		let isProtectingPet = data.pet_status == 'protect' || userGlobalObject.userInfo.user_my_pets.includes(data._id);
 		const FOLLOWER_MENU = [data.is_favorite ? '즐겨찾기 취소' : '즐겨찾기 추가', '소식 받기', '차단', '팔로우 취소'];
-		const FOLLOWER_PET_MENU = [data.is_favorite ? '즐겨찾기 취소' : '즐겨찾기 추가', , '소식 받기', '차단', '팔로우 취소', '입양하기'];
+		const FOLLOWER_PET_MENU = [data.is_favorite ? '즐겨찾기 취소' : '즐겨찾기 추가', '소식 받기', '차단', '팔로우 취소'];
 		Modal.popSelectBoxModal(
 			isProtectingPet ? FOLLOWER_PET_MENU : FOLLOWER_MENU,
 			selectedItem => {
@@ -266,6 +266,15 @@ const ProfileInfo = props => {
 		}
 	};
 
+	//대상 계정이 반려동물 계정이며 나의 펫인지 여부
+	const isMyPet = () => {
+		let result = false;
+		if (data.user_type == 'pet' && data.pet_family[0]._id == userGlobalObject.userInfo._id) {
+			result = true;
+		}
+		return result;
+	};
+
 	return (
 		<View style={organism_style.profileInfo_main}>
 			{/* 프로필 INFO */}
@@ -311,7 +320,7 @@ const ProfileInfo = props => {
 			{/* 프로필 관련 버튼 */}
 			<View style={[organism_style.btn_w280_view_profileInfo, profileInfo_style.btn_w280_view]}>
 				<View style={[organism_style.btn_w280_profileInfo]}>
-					{userGlobalObject.userInfo._id == data._id ? ( //본인 계정이라면 프로필 수정 버튼
+					{userGlobalObject.userInfo._id == data._id || isMyPet() ? ( //본인 계정이라면 프로필 수정 버튼
 						<AniButton onPress={onPressEditProfile} btnTitle={'프로필 수정'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} />
 					) : data.is_follow && !userGlobalObject.userInfo.isPreviewMode ? ( // 타인 계정이며 팔로우 중이라면 '팔로우 중' OR '팔로우'
 						<ArrowDownButton btnTitle={'팔로우 중'} btnLayout={btn_w280x68} onPress={onPressFollowingSetting} />

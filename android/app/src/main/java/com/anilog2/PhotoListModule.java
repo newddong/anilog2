@@ -51,6 +51,9 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
+
+import static com.anilog2.PhotoListUtil.*;
 
 public class PhotoListModule extends ReactContextBaseJavaModule{
     public static final String NAME = "PhotoListModule";
@@ -87,8 +90,11 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
     private static final String SELECTION_BUCKET = Images.Media.BUCKET_DISPLAY_NAME + " = ?";
     private static final String SELECTION_DATE_TAKEN = Images.Media.DATE_TAKEN + " < ?";
 
+    final ReactApplicationContext reactContext;
+
     public PhotoListModule(ReactApplicationContext reactContext) {
         super(reactContext);
+        this.reactContext = reactContext;
     }
 
     @NonNull
@@ -126,6 +132,48 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
                 toID,
                 promise)
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @ReactMethod
+    public void transferPhotos(final ReadableMap options, final Promise promise){
+        ReadableArray medias = options.hasKey("imageFiles")?options.getArray("imageFiles"):null;
+
+        PhotoListUtil.Options ops = new PhotoListUtil.Options(options);
+//        boolean isSingleSelect = ops.selectionLimit == 1; //필요없을듯
+//        boolean isPhoto = ops.mediaType.equals(mediaTypePhoto);
+//        boolean isVideo = ops.mediaType.equals(mediaTypeVideo);
+        List<Uri> uris = new ArrayList<Uri>();
+        for(int i=0;i<medias.size();i++){
+            uris.add(Uri.parse(medias.getString(i)));
+        }
+
+        onAssetsObtained(uris, ops, promise);
+
+        Toast myToast = Toast.makeText(reactContext,"우웩"+(medias.size()>0?medias.getString(0):"선택한 사진이 없음"), Toast.LENGTH_SHORT);
+        myToast.show();
+
+    }
+
+    @ReactMethod
+    public void deletePhotos(final ReadableMap options, final Promise promise){
+        ReadableArray medias = options.hasKey("imageFiles")?options.getArray("imageFiles"):null;
+        WritableArray result = new WritableNativeArray();
+        List<Uri> uris = new ArrayList<Uri>();
+        for(int i=0;i<medias.size();i++){
+            result.pushString(Uri.parse(medias.getString(i)).getPath());
+            new File(Uri.parse(medias.getString(i)).getPath()).delete();
+        }
+
+        promise.resolve(result);
+    }
+
+
+    void onAssetsObtained(List<Uri> fileUris, PhotoListUtil.Options options, final Promise promise) {
+        try {
+            promise.resolve(PhotoListUtil.getResponseMap(fileUris, options, reactContext));
+        } catch (RuntimeException exception) {
+            promise.reject(errOthers, exception.getMessage());
+        }
     }
 
     private static class GetMediaTask extends GuardedAsyncTask<Void, Void> {
@@ -244,15 +292,12 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
             if(mFromID !=null){
                 selection.append(" AND " + Images.Media._ID + " > ?");
                 selectionArgs.add(mFromID);
-                Log.d("query","아이디쿼리"+selection+"아규먼트"+selectionArgs.toString());
             }
             if(mToID !=null){
                 selection.append(" AND " + Images.Media._ID + " < ?");
                 selectionArgs.add(mToID + "");
-                Log.d("query","아이디쿼리"+selection+"아규먼트"+selectionArgs.toString());
             }
 
-            Log.d("query","쿼리"+selection+"아규먼트"+selectionArgs.toString());
             WritableMap response = new WritableNativeMap();
             ContentResolver resolver = mContext.getContentResolver();
 
@@ -277,7 +322,6 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
                         putEdges(resolver, media, response, mFirst, mInclude);
                         putPageInfo(media, response, mFirst, !TextUtils.isEmpty(mAfter) ? Integer.parseInt(mAfter) : 0);
                     } finally {
-                        Log.d("태그","미디어 개수"+media.getCount());
                         media.close();
                         mPromise.resolve(response);
                     }
@@ -329,7 +373,7 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
         boolean includeFileSize = include.contains(INCLUDE_FILE_SIZE);
         boolean includeImageSize = include.contains(INCLUDE_IMAGE_SIZE);
         boolean includePlayableDuration = include.contains(INCLUDE_PLAYABLE_DURATION);
-        Log.d("에지인포1", "dateTaken: "+dateTakenIndex + "   dateModifiedIndex : "+dateModifiedIndex + "  아이디 : ");
+
         for (int i = 0; i < limit && !media.isAfterLast(); i++) {
             WritableMap edge = new WritableNativeMap();
             WritableMap node = new WritableNativeMap();
@@ -605,5 +649,8 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
             FLog.e(ReactConstants.TAG, "Could not read the metadata", e);
         }
     }
+
+
+
 
 }

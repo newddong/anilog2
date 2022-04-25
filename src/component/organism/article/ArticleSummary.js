@@ -161,7 +161,7 @@ ArticleSummary.defaultProps = {
 	isSearch: '',
 };
 
-export default ArticleSummary;
+export default React.memo(ArticleSummary);
 
 const style = StyleSheet.create({
 	container: {

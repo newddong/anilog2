@@ -3,7 +3,7 @@ import {txt} from 'Root/config/textstyle';
 import {Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {Calendar48_Border} from 'Atom/icon';
-import {APRI10, BLACK, GRAY10, GRAY20} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, GRAY20, GRAY30} from 'Root/config/color';
 import Modal from 'Component/modal/Modal';
 import {object} from 'prop-types';
 
@@ -70,7 +70,7 @@ const DatePicker = props => {
 			)}
 			<View
 				style={{
-					borderBottomColor: APRI10,
+					borderBottomColor: selectedDate == '눌러서 지정해주세요!' ? GRAY30 : APRI10,
 					borderBottomWidth: 2 * DP,
 					flexDirection: 'row',
 					alignItems: 'center',

@@ -18,6 +18,7 @@ import {GRAY10} from 'Root/config/color';
 import Loading from 'Root/component/molecules/modal/Loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
+import {setFavoriteEtc} from 'Root/api/favoriteetc';
 
 export default MissingAnimalDetail = props => {
 	const navigation = useNavigation();
@@ -43,7 +44,9 @@ export default MissingAnimalDetail = props => {
 				feedobject_id: props.route.params._id,
 			},
 			data => {
-				setData(data.msg);
+				let result = data.msg;
+				result.feed_writer_id.is_favorite = result.is_favorite;
+				setData(result);
 				// console.log('data', data.msg);
 				navigation.setParams({writer: data.msg.feed_writer_id._id, isMissingOrReport: true, feed_object: data.msg});
 			},
@@ -143,6 +146,29 @@ export default MissingAnimalDetail = props => {
 				console.log('err / FavoriteFeed / MissingReportList : ', err);
 			},
 		);
+	};
+
+	const onPressFavoriteWriter = bool => {
+		console.log('bool', bool);
+		const isMyMissingFeed = data.feed_writer_id._id == userGlobalObject.userInfo._id;
+		if (isMyMissingFeed) {
+			Modal.popOneBtn('본인 계정의 즐겨찾기는 \n 불가능합니다.', '확 인', () => Modal.close());
+		} else {
+			setFavoriteEtc(
+				{
+					collectionName: 'userobjects',
+					target_object_id: data.feed_writer_id._id,
+					is_favorite: bool,
+				},
+				result => {
+					console.log('result / favoriteEtc / profileInfo : ', result.msg.favoriteEtc);
+					fetchFeedData();
+				},
+				err => {
+					console.log('err / favoriteEtc / profileInfo : ', err);
+				},
+			);
+		}
 	};
 
 	//실종 게시글 리스트의 아이템 클릭
@@ -266,6 +292,12 @@ export default MissingAnimalDetail = props => {
 		}
 	};
 
+	//댓글 수정 클릭
+	const onEdit = comment => {
+		console.log('comment', comment);
+		navigation.push('FeedCommentList', {feedobject: data, edit: comment});
+	};
+
 	const whenEmpty = () => {
 		return <></>;
 	};
@@ -304,7 +336,7 @@ export default MissingAnimalDetail = props => {
 							</View>
 
 							<View style={[temp_style.feedContent]}>
-								<FeedContent data={data} />
+								<FeedContent data={data} onPressFavorite={onPressFavoriteWriter} />
 							</View>
 
 							<View style={[reportDetail.basic_separator]}>
@@ -335,6 +367,7 @@ export default MissingAnimalDetail = props => {
 									onPressReplyBtn={onPressReply}
 									onPressDelete={onPressDelete}
 									onPressDeleteChild={onPressDelete}
+									onEdit={onEdit}
 								/>
 							</View>
 							<ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} isProtectRequest={true} />

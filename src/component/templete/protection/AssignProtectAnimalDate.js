@@ -72,6 +72,7 @@ export default AssignProtectAnimalDate = props => {
 							onChange={onChangeLocation}
 							descriptionType={'none'}
 							placeholder={'구조장소를 적어주세요.'}
+							maxlength={30}
 							value={data.protect_animal_rescue_location}
 						/>
 					</View>

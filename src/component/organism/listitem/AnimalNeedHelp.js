@@ -11,6 +11,7 @@ import {animalNeedHelp} from 'Organism/style_organism copy';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/core';
+import DP from 'Root/config/dp';
 
 /**
  *
@@ -24,6 +25,8 @@ import {useNavigation} from '@react-navigation/core';
  *onPressProtectRequest : 'void / 테두리 모드 게시글보기 클릭',
  *onPressReporter : 'void / 제보 게시글의 제보자 닉네임 클릭',
  *inActiveOpacity : 'boolean / 클릭 애니메이션 여부 default false',
+ *showFavorite : 'boolean / 즐겨찾기 아이콘 출력 여부 default true',
+ *selectMode : 'boolean / 즐겨찾기 해제 모드 여부 default true',
  * }} props
  */
 export default AnimalNeedHelp = props => {
@@ -156,11 +159,10 @@ export default AnimalNeedHelp = props => {
 		return result;
 	};
 
-	// console.log('AnimalNeedHel', data);
 	const contents = () => {
 		return (
 			<View style={[animalNeedHelp.detailContainer]}>
-				<View style={[animalNeedHelp.detail_lowerMenu]}>
+				<View style={[animalNeedHelp.detail_lowerMenu, {width: props.selectMode ? 350 * DP : 410 * DP}]}>
 					{data.feed_type != 'missing' && data.feed_type != 'report' && (
 						<>
 							{/* 동물 종류 및 품종 */}
@@ -225,7 +227,7 @@ export default AnimalNeedHelp = props => {
 							<View style={[animalNeedHelp.lowerMenu_helpDetail]}>
 								<Text style={[txt.noto28b]}>제보일: {getParsedDate()}</Text>
 								<Text style={[txt.noto28, {width: 408 * DP}]} numberOfLines={1}>
-									실종위치: {data.report_witness_location || ''}
+									제보 위치: {data.report_witness_location || ''}
 								</Text>
 								<Text style={[txt.noto28, {width: 408 * DP}]} numberOfLines={2}>
 									제보 내용: {data.feed_content}
@@ -237,6 +239,8 @@ export default AnimalNeedHelp = props => {
 			</View>
 		);
 	};
+
+	// console.log('data is favori', data.is_favorite);
 
 	return (
 		<>
@@ -269,14 +273,17 @@ export default AnimalNeedHelp = props => {
 							<View>{contents()}</View>
 						</TouchableOpacity>
 					)}
-
 					<View style={[animalNeedHelp.detail_upper_tag]}>
-						{checkIsMyPost() ? (
-							<></>
-						) : data.is_favorite ? (
-							<FavoriteTag48_Filled onPress={() => onPressFavoriteTag(false)} />
+						{props.showFavorite ? (
+							checkIsMyPost() ? (
+								<></>
+							) : data.is_favorite ? (
+								<FavoriteTag48_Filled onPress={() => onPressFavoriteTag(false)} />
+							) : (
+								<FavoriteTag48_Border onPress={() => onPressFavoriteTag(true)} />
+							)
 						) : (
-							<FavoriteTag48_Border onPress={() => onPressFavoriteTag(true)} />
+							<></>
 						)}
 					</View>
 				</View>
@@ -300,4 +307,6 @@ AnimalNeedHelp.defaultProps = {
 	onPressAdoptorInfo: e => console.log('e'),
 	isChecked: false,
 	inActiveOpacity: false,
+	showFavorite: true,
+	selectMode: false,
 };

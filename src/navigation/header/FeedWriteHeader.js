@@ -42,16 +42,17 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 				break;
 			case 'Missing':
 				{
-					console.log('Before Write Report ', param);
+					// console.log('Before Write Report ', param);
 					const data = param;
 					let check = /^[0-9]+$/;
-					if (!check.test(data.missing_animal_age)) {
+					if (data.missing_animal_lost_location.city == '광역시, 도' || data.missing_animal_lost_location.district == '구를 선택') {
+						Modal.alert('실종위치는 반드시 \n선택해주셔야합니다!');
+					} else if (!check.test(data.missing_animal_age)) {
 						Modal.alert('실종동물의 나이는 \n숫자만 입력가능합니다!');
 					} else if (
 						data.missing_animal_species &&
 						data.missing_animal_species_detail &&
-						data.feed_content &&
-						data.feed_medias &&
+						(data.feed_content || data.feed_medias) &&
 						data.media_uri.length > 0 &&
 						data.missing_animal_age &&
 						data.missing_animal_features &&
@@ -62,7 +63,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 						data.missing_animal_contact
 					) {
 						console.log('NotNull 통과');
-						createMissing(param, complete, handleError);
+						// createMissing(param, complete, handleError);
 						Modal.close();
 					} else {
 						Modal.popOneBtn('작성란은 모두 작성해주셔야합니다.\n (사진 포함)', '확인', () => Modal.close());
@@ -79,8 +80,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 					console.log('Before Write Report ', data);
 					if (
 						// data.addr &&
-						data.feed_content &&
-						data.feed_medias &&
+						(data.feed_content || data.feed_medias) &&
 						data.media_uri.length > 0 &&
 						data.report_animal_species &&
 						data.report_witness_date &&
@@ -118,8 +118,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
 		};
 		editFeed(param, complete, handleError);
-
-		console.log('수정 파라메터', param, route.params);
+		console.log('수정 파라메터', param);
 		switch (route.params?.feedType) {
 			case 'Feed':
 				break;
@@ -151,13 +150,15 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			{userInfo.userInfo.user_type == 'user' && route.params?.feedType == 'Feed' ? (
 				<TouchableWithoutFeedback onPress={avartarSelect}>
 					<View style={style.titleContainer}>
-						<Text style={titleStyle}>{options.title}</Text>
+						<Text style={[titleStyle, {maxWidth: 450 * DP}]} numberOfLines={1}>
+							{options.title}
+						</Text>
 						<Bracket48 />
 					</View>
 				</TouchableWithoutFeedback>
 			) : (
 				<View style={style.titleContainer}>
-					<Text style={titleStyle}>{options.title}</Text>
+					<Text style={[titleStyle, {maxWidth: 450 * DP}]}>{options.title}</Text>
 				</View>
 			)}
 			<Send60_Big onPress={route.name == 'FeedEdit' ? onEdit : onCreate} />

@@ -21,6 +21,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 	const param = route.params;
 	const [loading, setLoading] = React.useState(true);
 	const [shelter_data, setShelter_data] = React.useState(route.params); //선택한 보호소프로필의 userObject가 담겨있음
+	const [contactNumCheck, setContactNumCheck] = React.useState(false);
 	const userInfo = userGlobalObject.userInfo;
 
 	React.useEffect(() => {
@@ -162,6 +163,9 @@ export default ApplyVolunteer = ({route, navigation}) => {
 	//봉사활동자 연락처 변경 콜백
 	const onChangePhoneNumber = num => {
 		setData({...data, volunteer_delegate_contact: num});
+		let regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+		let regHomePhone = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))(\d{3,4})(\d{4})$/;
+		regPhone.test(num) || regHomePhone.test(num) ? setContactNumCheck(true) : setContactNumCheck(false);
 	};
 
 	//봉사활동 날짜 Item 우측 지우기마크 클릭 시 해당 Item 삭제 및 View도 삭제
@@ -196,6 +200,13 @@ export default ApplyVolunteer = ({route, navigation}) => {
 			},
 			() => Modal.close(),
 		);
+	};
+
+	const phoneValidate = num => {
+		// console.log('num', num);
+		let regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+		let regHomePhone = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))(\d{3,4})(\d{4})$/;
+		return regPhone.test(num) || regHomePhone.test(num);
 	};
 
 	const keyboardY = useKeyboardBottom(0 * DP);
@@ -304,6 +315,10 @@ export default ApplyVolunteer = ({route, navigation}) => {
 								keyboardType={'phone-pad'}
 								onChange={onChangePhoneNumber}
 								value={data.volunteer_delegate_contact}
+								alert_msg={'전화번호는 - 을 제외하고 10~11자로 작성해주세요'}
+								showMsg
+								confirm_msg={'올바른 전화번호 양식입니다.'}
+								validator={phoneValidate}
 							/>
 						</View>
 					</View>
@@ -312,11 +327,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 						<AniButton
 							onPress={onRegister}
 							btnTitle={'신청'}
-							disable={
-								data.volunteer_accompany_number != '' && data.volunteer_delegate_contact.length > 0 && data.volunteer_wish_date.length > 0
-									? false
-									: true
-							}
+							disable={data.volunteer_accompany_number != '' && contactNumCheck && data.volunteer_wish_date.length > 0 ? false : true}
 						/>
 					</View>
 				</ScrollView>

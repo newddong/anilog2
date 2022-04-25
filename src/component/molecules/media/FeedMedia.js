@@ -59,7 +59,7 @@ export default FeedMedia = props => {
 	const emergency_location = missing_animal_lost_location || report_witness_location;
 	let newMissingDate = '';
 	let splitAddress = '';
-	let newMissingAddress = ''
+	let newMissingAddress = '';
 
 	if (feed_type == 'missing') {
 		const newMissingDateText = missing_animal_date.toString().split('-');
@@ -193,9 +193,14 @@ export default FeedMedia = props => {
 							<Text style={[txt.roboto36b, {color: 'white'}, {paddingTop: 10 * DP}]}>나이 : {missing_animal_age}살</Text>
 						</View>
 						<View style={style.missing_detail_container}>
-							<Text style={[txt.roboto26, {color: 'white'}]} numberOfLines={2}>
-								{/* {emergency_location} */}- {newMissingAddress}
-							</Text>
+							{newMissingAddress == '' ? (
+								<></>
+							) : (
+								<Text style={[txt.roboto26, {color: 'white'}]} numberOfLines={2}>
+									-{newMissingAddress}
+								</Text>
+							)}
+
 							<Text style={[txt.roboto26, {color: 'white'}]} numberOfLines={2}>
 								- {missing_animal_features}
 							</Text>

@@ -37,9 +37,11 @@ const Calendar = props => {
 	const years = () => {
 		let years = [];
 		let this_year = new Date().getFullYear();
+		console.log('props.future', props.future);
+		console.log('props.past', props.past);
 		if (props.past) {
 			for (let i = 0; i < 40; i++) {
-				const year_to_String = JSON.stringify(this_year + 4 - i);
+				const year_to_String = JSON.stringify(this_year - i);
 				years.push(year_to_String);
 			}
 			return years;

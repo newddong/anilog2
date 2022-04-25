@@ -974,7 +974,7 @@ export const temp_style = StyleSheet.create({
 		marginTop: 50 * DP,
 	},
 	addMoreRequest: {
-		width: 186 * DP,
+		// width: 186 * DP,
 		height: 36 * DP,
 		// marginTop: 0 * DP,
 	},

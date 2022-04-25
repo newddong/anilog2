@@ -14,7 +14,6 @@ export default SettingAccount = ({route}) => {
 			e => {
 				console.log('e', e);
 				userGlobalObject.userInfo = {};
-				alert('Logout 성공');
 				navigation.reset({routes: [{name: 'Login'}]});
 			},
 			err => {

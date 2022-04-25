@@ -101,7 +101,7 @@ export default ShelterMenu = ({route}) => {
 			e => {
 				console.log('e', e);
 				AsyncStorage.clear();
-				alert('Logout 성공');
+				// alert('Logout 성공');
 				navigation.reset({routes: [{name: 'Login'}]});
 			},
 			err => {

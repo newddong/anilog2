@@ -14,6 +14,8 @@ import BookmarkHeader from 'Navigation/header/BookmarkHeader';
 import SocialRelationTopTabNavigation from '../protection_stack/socialRelation_tab/SocialRelationTopTabNavigation';
 import SimpleHeader from 'Navigation/header/SimpleHeader';
 import ChangeUserProfileImage from 'Root/component/templete/user/ChangeUserProfileImage';
+import AlarmList from 'Root/component/templete/list/AlarmList';
+import AlarmCommentList from 'Root/component/organism/comment/AlarmCommentList';
 
 const FeedStack = createStackNavigator();
 
@@ -51,6 +53,44 @@ export default FeedStackNavigation = () => {
 				name="ChangeUserProfileImage"
 				component={ChangeUserProfileImage}
 				options={{header: props => <SimpleHeader {...props} />, title: '프로필 변경'}}
+			/>
+			<FeedStack.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
+			<FeedStack.Screen name="AlarmCommentList" component={AlarmCommentList} options={{header: props => <SimpleHeader {...props} />}} />
+			{/* <FeedStack.Screen
+				name={'CommunityCommentList'}
+				component={CommunityCommentList}
+				options={({route}) => ({
+					// headerShown: false,
+					header: props => <SimpleHeader {...props} />,
+					title: ' ',
+				})}
+			/> */}
+			<FeedStack.Screen
+				name={'ArticleDetail'}
+				component={ArticleDetail}
+				options={({route}) => ({
+					headerShown: true,
+					header: props => <SimpleHeader {...props} />,
+					title: ' ',
+				})}
+			/>
+			<FeedStack.Screen
+				name={'ReviewDetail'}
+				component={ReviewDetail}
+				options={({route}) => ({
+					header: props => <SimpleHeader {...props} />,
+					title: ' ',
+				})}
+			/>
+			<FeedStack.Screen
+				name="ShelterVolunteerForm"
+				component={ApplicationFormVolunteer}
+				options={{header: props => <SimpleHeader {...props} />, title: '봉사활동 신청서'}}
+			/>
+			<FeedStack.Screen
+				name="ApplyAdoptionDetails"
+				component={ApplyDetails}
+				options={{header: props => <SimpleHeader {...props} />, title: '입양 신청 내역'}}
 			/>
 		</FeedStack.Navigator>
 	);

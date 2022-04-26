@@ -136,7 +136,13 @@ const AlarmList = props => {
 								CommonActions.navigate({
 									// name: 'FeedCommentList',
 									name: 'AlarmCommentList',
-									params: {feedobject: result.msg, showAllContents: true, scroll: true, target: data.notice_object},
+									params: {
+										feedobject: result.msg,
+										showAllContents: true,
+										scroll: true,
+										target: data.notice_object,
+										parent: data?.notice_comment_parent,
+									},
 								}),
 							);
 						},
@@ -173,7 +179,7 @@ const AlarmList = props => {
 			case 'ProtectionActivityApplicantObject':
 				getApplyDetailById({protect_act_object_id: data.target_object}, result => {
 					let result_msg = result.msg;
-					result_msg.shelter_name = result.msg.protect_act_request_shelter_id.shelter_name;
+					result_msg.shelter_name = result.msg.proect_act_request_shelter_id.shelter_name;
 					result_msg.protect_request_date = result.msg.protect_act_request_article_id.protect_request_date;
 					result_msg.protect_animal_rescue_location = result.msg.protect_act_request_article_id.protect_animal_id.protect_animal_rescue_location;
 					result_msg.protect_request_photos_uri = result.msg.protect_act_request_article_id.protect_request_photos_uri;

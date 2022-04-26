@@ -13,8 +13,10 @@ import DP from 'Root/config/dp';
 import {GRAY10, GRAY20, GRAY30} from 'Root/config/color';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import {useNavigation} from '@react-navigation/core';
+import {deleteComment} from 'Root/api/commentapi';
+
 const AlarmCommentList = props => {
-	console.log('AlarmCommentList props', props.route.params);
+	// console.log('AlarmCommentList props', props.route.params);
 	const navigation = useNavigation();
 	const [comments, setComments] = React.useState(false);
 	const [commentsLoaded, setCommentsLoaded] = React.useState(false);
@@ -30,19 +32,31 @@ const AlarmCommentList = props => {
 		comment_contents: '',
 		comment_photo_uri: '',
 	});
-	const [moveToIndex, setMoveToIndex] = React.useState(5);
+	const [moveToIndex, setMoveToIndex] = React.useState();
 	const [loading, setLoading] = React.useState(true);
 	const flatListRef = React.useRef();
 	const keyboardY = useKeyboardBottom(0 * DP);
 	const commentListHeight = React.useRef(100);
-	const [placeholder, setPlaceholder] = React.useState('댓글입력..');
 
 	React.useEffect(() => {
+		fetchData();
+		// navigation.setOptions({title: '댓글 쓰기'});
+		// navigation.addListener('blur', () => {
+		// 	community_obj.object = {};
+		// 	community_obj.pageToMove = '';
+		// 	community_obj.object.initial = true;
+		// });
+	}, []);
+
+	// React.useEffect(() => {
+	// 	fetchData();
+	// }, [comments]);
+	const fetchData = () => {
 		getCommentListByFeedId(
 			{
 				feedobject_id: props.route.params.feedobject._id,
 				request_number: 1000,
-				login_userobject_id: userGlobalObject.userInfo._id,
+				// login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			comments => {
 				setComments(comments.msg);
@@ -51,30 +65,52 @@ const AlarmCommentList = props => {
 			},
 			err => console.log('getCommentListByFeedId', err),
 		);
-	}, []);
+	};
+
 	React.useEffect(() => {
 		if (commentsLoaded) {
 			comments.forEach((current, index) => {
-				console.log('current', current);
-				if (current._id == props.route.params.target) {
-					console.log('targeted', current._id, props.route.params.target, index);
-					setMoveToIndex(index);
-					setTimeout(
-						() =>
-							flatListRef.current.scrollToIndex(
-								{
-									animated: true,
-									// index: comments.length - index - 1,
-									index: index,
-								},
-								console.log('index 번째로 이동', index),
-							),
+				// console.log('current', current);
+				if (props.route.params.parent) {
+					if (current._id == props.route.params.parent) {
+						console.log('targeted', current._id, props.route.params.target, index);
+						setMoveToIndex(index);
+						setTimeout(
+							() =>
+								flatListRef.current.scrollToIndex(
+									{
+										animated: true,
+										// index: comments.length - index - 1,
+										index: index,
+									},
+									console.log('index 번째로 이동', index),
+								),
 
-						500,
-					);
+							500,
+						);
+					}
+				} else {
+					if (current._id == props.route.params.target) {
+						console.log('targeted', current._id, props.route.params.target, index);
+						setMoveToIndex(index);
+						setTimeout(
+							() =>
+								flatListRef.current.scrollToIndex(
+									{
+										animated: true,
+										// index: comments.length - index - 1,
+										index: index,
+									},
+									console.log('index 번째로 이동', index),
+								),
+
+							500,
+						);
+					}
 				}
 			});
 		}
+
 		setLoading(false);
 	}, [commentsLoaded]);
 
@@ -85,7 +121,7 @@ const AlarmCommentList = props => {
 			},
 			result => {
 				console.log('result / delectComment / ProtectCommentList : ', result.msg.comment_is_delete);
-				getComment();
+				fetchData();
 			},
 			err => {
 				console.log(' err / deleteComment / ProtectCommentList : ', err);
@@ -107,13 +143,13 @@ const AlarmCommentList = props => {
 		} else {
 			param.comment_photo_remove = true;
 		}
-
-		if (props.route.name == 'FeedCommentList') {
-			param = {...param, feedobject_id: props.route.params.feedobject._id};
-		} else if (props.route.name == '동물보호요청') {
-			param = {...param, protect_request_object_id: props.route.params.feedobject._id};
-		}
-
+		console.log('porps.routename', props.route.name);
+		// if (props.route.name == 'FeedCommentList') {
+		// 	param = {...param, feedobject_id: props.route.params.feedobject._id};
+		// } else if (props.route.name == '동물보호요청') {
+		// 	param = {...param, protect_request_object_id: props.route.params.feedobject._id};
+		// }
+		param = {...param, feedobject_id: props.route.params.feedobject._id};
 		if (parentComment) {
 			param = {...param, commentobject_id: parentComment._id};
 		}
@@ -132,7 +168,8 @@ const AlarmCommentList = props => {
 						comment_contents: '',
 						comment_photo_uri: '',
 					});
-					if (props.route.name == 'FeedCommentList') {
+					// if (props.route.name == 'FeedCommentList') {
+					if (props.route.name == 'AlarmCommentList') {
 						getCommentListByFeedId(
 							{
 								feedobject_id: props.route.params.feedobject._id,
@@ -144,7 +181,7 @@ const AlarmCommentList = props => {
 								parentComment && addChildCommentFn.current();
 								console.log('comments', comments);
 								input.current.blur();
-								flatlist.current.scrollToOffset({offset: 0});
+								flatListRef.current.scrollToOffset({offset: 0});
 							},
 							err => console.log(err),
 						);
@@ -162,7 +199,8 @@ const AlarmCommentList = props => {
 						comment_contents: '',
 						comment_photo_uri: '',
 					});
-					if (props.route.name == 'FeedCommentList') {
+					if (props.route.name == 'AlarmCommentList') {
+						// if (props.route.name == 'FeedCommentList') {
 						getCommentListByFeedId(
 							{
 								feedobject_id: props.route.params.feedobject._id,
@@ -174,7 +212,7 @@ const AlarmCommentList = props => {
 								parentComment && addChildCommentFn.current();
 								console.log('comments', comments);
 								input.current.blur();
-								flatlist.current.scrollToOffset({offset: 0});
+								flatListRef.current.scrollToOffset({offset: 0});
 							},
 							err => console.log(err),
 						);
@@ -221,12 +259,19 @@ const AlarmCommentList = props => {
 
 	// 답글 쓰기 버튼 클릭 콜백함수
 	const onReplyBtnClick = (parentCommentId, addChildComment) => {
-		console.log('onReplyBtnClick : ', parentCommentId);
-		setParentComment(parentCommentId);
-		input.current.focus();
-		editComment || setEditComment(true);
-		addChildCommentFn.current = addChildComment;
-		setPlaceholder('답글입력..');
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			console.log('onReplyBtnClick : ', parentCommentId);
+			setParentComment(parentCommentId);
+			input.current.focus();
+			editComment || setEditComment(true);
+			addChildCommentFn.current = addChildComment;
+			// scrollToReplyBox();
+			// setPlaceholder('답글입력..');
+		}
 	};
 
 	const [heightReply, setReplyHeight] = React.useState(0);
@@ -240,6 +285,13 @@ const AlarmCommentList = props => {
 		console.log('수정 데이터', comment);
 		setEditMode(true);
 		setEditData({...comment});
+		// scrollToReplyBox();
+	};
+	const scrollToReplyBox = () => {
+		flatListRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 0});
+		setTimeout(() => {
+			input.current?.focus();
+		}, 500);
 	};
 	const renderItem = ({item, index}) => {
 		// return item;
@@ -251,6 +303,8 @@ const AlarmCommentList = props => {
 					onEdit={onEdit}
 					onPressDelete={onPressDelete}
 					onPressDeleteChild={onPressDelete}
+					target={props.route.params.target}
+					parent={props.route.params.parent}
 				/>
 			</View>
 		);

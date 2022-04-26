@@ -15,6 +15,8 @@ import SimpleHeader from 'Root/navigation/header/SimpleHeader';
 import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballHeader';
 import ProtectCommentList from 'Root/component/templete/protection/ProtectCommentList';
 import EditAidRequest from 'Root/component/templete/protection/EditAidRequest';
+import AlarmList from 'Root/component/templete/list/AlarmList';
+import AlarmCommentList from 'Root/component/organism/comment/AlarmCommentList';
 
 const ProtectionStack = createStackNavigator();
 
@@ -65,6 +67,8 @@ export default ProtectionStackNavigation = () => {
 				component={Profile}
 				options={{header: props => <MeatBallHeader {...props} />, title: '프로필'}}
 			/>
+			<ProtectionStack.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
+			<ProtectionStack.Screen name="AlarmCommentList" component={AlarmCommentList} options={{header: props => <SimpleHeader {...props} />}} />
 		</ProtectionStack.Navigator>
 	);
 };

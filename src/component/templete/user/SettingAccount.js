@@ -6,6 +6,7 @@ import {txt} from 'Root/config/textstyle';
 import {userLogout} from 'Root/api/userapi';
 import DP from 'Root/config/dp';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import Modal from 'Root/component/modal/Modal';
 export default SettingAccount = ({route}) => {
 	const navigation = useNavigation();
 	const logout = () => {
@@ -14,7 +15,6 @@ export default SettingAccount = ({route}) => {
 			e => {
 				console.log('e', e);
 				userGlobalObject.userInfo = {};
-				alert('Logout 성공');
 				navigation.reset({routes: [{name: 'Login'}]});
 			},
 			err => {

@@ -41,7 +41,11 @@ export default SettingInformAsk = ({route}) => {
 		navigation.push('TermsAndPolicy', {name: 'privacy', term: term[1]});
 	};
 	const onPressOpenSource = () => {
-		navigation.push('TermsAndPolicy', {name: 'opensource'});
+		if (term[4]) {
+			navigation.push('TermsAndPolicy', {name: 'privacy', term: term[4]});
+		} else {
+			navigation.push('TermsAndPolicy', {name: 'opensource', term: {terms_of_service_contents: '추후 추가되야됨'}});
+		}
 	};
 
 	return (

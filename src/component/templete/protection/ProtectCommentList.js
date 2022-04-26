@@ -2,7 +2,7 @@ import React from 'react';
 import {Text, View, FlatList, StyleSheet} from 'react-native';
 import CommentList from 'Organism/comment/CommentList';
 import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
-import {createComment, deleteComment, getCommentListByProtectId} from 'Root/api/commentapi';
+import {createComment, deleteComment, getCommentListByProtectId, updateComment} from 'Root/api/commentapi';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -28,9 +28,19 @@ export default ProtectCommentList = props => {
 	const data = props.route.params.protectObject;
 	const [heightReply, setReplyHeight] = React.useState(0); //키보드 리플박스 높이
 	const keyboardY = useKeyboardBottom(0 * DP);
+	const [editMode, setEditMode] = React.useState(false); //댓글 편집 모드
+	const [editData, setEditData] = React.useState({
+		comment_contents: '',
+		comment_photo_uri: '',
+	});
 
 	React.useEffect(() => {
 		fetchData();
+		if (props.route.params.edit != undefined) {
+			input.current.focus();
+			setEditMode(true);
+			setEditData({...props.route.params.edit});
+		}
 	}, []);
 
 	const fetchData = () => {
@@ -67,30 +77,68 @@ export default ProtectCommentList = props => {
 			param = {...param, protect_request_object_id: data._id};
 		}
 		// console.log('parap', param);
-		createComment(
-			param,
-			result => {
-				console.log('createComment : ', result);
-				setPhoto();
-				setParentComment();
-				setContent('');
-				getCommentListByProtectId(
-					{
-						protect_request_object_id: props.route.params.protectObject._id,
-						request_number: 1000,
-						login_userobject_id: userGlobalObject.userInfo._id,
-					},
-					comments => {
-						!parentComment && setComments([]); //댓글목록 초기화
-						setComments(comments.msg.filter(e => e.comment_is_delete != true));
-						parentComment && addChildCommentFn.current();
-						// console.log('comments', comments);
-					},
-					err => console.log('getCommentListByProtectId', err),
-				);
-			},
-			err => Modal.alert(err),
-		);
+		if (editMode) {
+			console.log('댓글편집', editData);
+			updateComment(
+				{
+					...param,
+					commentobject_id: editData._id,
+					comment_photo_remove: !editData.comment_photo_uri || editData.comment_photo_uri == 0,
+				},
+				result => {
+					console.log(result);
+					setParentComment();
+					setEditData({
+						comment_contents: '',
+						comment_photo_uri: '',
+					});
+					setEditMode(false);
+					getCommentListByProtectId(
+						{
+							protect_request_object_id: props.route.params.protectObject._id,
+							request_number: 1000,
+						},
+						comments => {
+							!parentComment && setComments([]); //댓글목록 초기화
+							setComments(comments.msg.filter(e => e.comment_is_delete != true));
+							parentComment && addChildCommentFn.current();
+							// console.log('comments', comments);
+						},
+						err => console.log('getCommentListByFeedId', err),
+					);
+				},
+				err => Modal.alert(err),
+			);
+		} else {
+			createComment(
+				param,
+				result => {
+					console.log('createComment : ', result);
+					setPhoto();
+					setParentComment();
+					setEditData({
+						comment_contents: '',
+						comment_photo_uri: '',
+					});
+					setContent('');
+					getCommentListByProtectId(
+						{
+							protect_request_object_id: props.route.params.protectObject._id,
+							request_number: 1000,
+							login_userobject_id: userGlobalObject.userInfo._id,
+						},
+						comments => {
+							!parentComment && setComments([]); //댓글목록 초기화
+							setComments(comments.msg.filter(e => e.comment_is_delete != true));
+							parentComment && addChildCommentFn.current();
+							// console.log('comments', comments);
+						},
+						err => console.log('getCommentListByProtectId', err),
+					);
+				},
+				err => Modal.alert(err),
+			);
+		}
 	};
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
@@ -116,6 +164,14 @@ export default ProtectCommentList = props => {
 
 	const onDeleteImage = () => {
 		setPhoto();
+	};
+
+	//미트볼, 수정을 누르면 동작
+	const onEdit = comment => {
+		// console.log('수정 데이터', comment);
+		input.current.focus();
+		setEditMode(true);
+		setEditData({...comment});
 	};
 
 	// 답글 쓰기 -> Input value 변경 콜백함수
@@ -168,7 +224,15 @@ export default ProtectCommentList = props => {
 				</View>
 			);
 		if (index > 0)
-			return <CommentList items={item} onPressReplyBtn={onReplyBtnClick} onPressDelete={onPressDelete} onPressDeleteChild={onPressDelete} />;
+			return (
+				<CommentList
+					items={item}
+					onPressReplyBtn={onReplyBtnClick}
+					onEdit={onEdit}
+					onPressDelete={onPressDelete}
+					onPressDeleteChild={onPressDelete}
+				/>
+			);
 	};
 
 	const protectRequestContent = () => {
@@ -204,6 +268,16 @@ export default ProtectCommentList = props => {
 			/>
 			{userGlobalObject.userInfo._id != '' ? (
 				<View style={{position: 'absolute', bottom: keyboardY}} onLayout={onReplyBtnLayout}>
+					{/* <ReplyWriteBox
+						onAddPhoto={onAddPhoto}
+						onChangeReplyInput={onChangeReplyInput}
+						onLockBtnClick={onLockBtnClick}
+						onWrite={onWrite}
+						onDeleteImage={onDeleteImage}
+						privateComment={privateComment}
+						editData={editData}
+						ref={input}
+					/> */}
 					<ReplyWriteBox
 						onAddPhoto={onAddPhoto}
 						onChangeReplyInput={onChangeReplyInput}
@@ -211,8 +285,8 @@ export default ProtectCommentList = props => {
 						onWrite={onWrite}
 						onDeleteImage={onDeleteImage}
 						privateComment={privateComment}
-						photo={photo}
 						ref={input}
+						editData={editData}
 					/>
 				</View>
 			) : (

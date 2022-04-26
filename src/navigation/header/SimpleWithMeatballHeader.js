@@ -28,11 +28,11 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 						break;
 					case PROTECT_REQUEST_STATUS[1]:
 						//완료
-						selectedStatus = 'complete';
+						selectedStatus = 'rainbowbridge';
 						break;
 					case PROTECT_REQUEST_STATUS[2]:
 						//사망
-						selectedStatus = 'rainbowbridge';
+						selectedStatus = 'rescue';
 						break;
 					case PROTECT_REQUEST_STATUS[3]:
 						//입양가능
@@ -69,10 +69,11 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 							// protect_animal_protector_id
 						},
 						result => {
-							console.log('result / setShelterProtectAnimalStatus / SimpleWithMeatballHeader', result.msg.protect_animal_status);
+							// console.log('result / setShelterProtectAnimalStatus / SimpleWithMeatballHeader', result.msg);
 							Modal.popNoBtn('보호 요청 게시글의 상태변경이 \n 완료되었습니다.');
 							setTimeout(() => {
 								Modal.close();
+								navigation.setParams({...route.params, reset: true});
 							}, 1000);
 						},
 						err => {

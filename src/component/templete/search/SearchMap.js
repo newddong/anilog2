@@ -287,13 +287,14 @@ export default SearchMap = ({route}) => {
 								}}>
 								{/* 현재 선택된 위도 경도의 마커 */}
 								<MapView.Marker
+									tracksViewChanges={false}
 									coordinate={{
 										latitude: changedLatitude != '' ? changedLatitude : init_latitude,
 										longitude: changedLongitude != '' ? changedLongitude : init_longitude,
 									}}
-									key={`${changedLongitude}${Date.now()}`} // 현재 마커의 위치가 바뀌어도 타이틀 및 description이 최신화 되지 않던 현상 발견 -> 키 값 부여
-								>
-									<LocationMarker />
+									icon={require('Atom/icon/marker.png')} // https://lifesaver.codes/answer/custom-markers-cause-extreme-lag-and-slow-down-on-android-2658
+									key={`${changedLongitude}${Date.now()}`}>
+									{/* <LocationMarker /> */}
 								</MapView.Marker>
 							</MapView>
 						) : (
@@ -397,7 +398,7 @@ function useKeyboardBottom(tabheight) {
 
 const style = StyleSheet.create({
 	container: {
-		// flex: 1,
+		flex: 1,
 		// height: 2000 * DP,
 		alignItems: 'center',
 		backgroundColor: '#fff',
@@ -454,9 +455,8 @@ const style = StyleSheet.create({
 		flexDirection: 'row',
 	},
 	detailInput: {
-		paddingLeft: 24 * DP,
-		// includeFontPadding: true,
-		// lineHeight: 56 * DP,
+		paddingHorizontal: 24 * DP,
+		flex: 1,
 	},
 	btnContainer: {
 		paddingVertical: 30 * DP,

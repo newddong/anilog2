@@ -101,7 +101,6 @@ export default ShelterMenu = ({route}) => {
 			e => {
 				console.log('e', e);
 				AsyncStorage.clear();
-				alert('Logout 성공');
 				navigation.reset({routes: [{name: 'Login'}]});
 			},
 			err => {
@@ -109,6 +108,7 @@ export default ShelterMenu = ({route}) => {
 			},
 		);
 	};
+
 	//더보기 state 바꾸기
 	const changeShowMore = () => {
 		setShowMoreIntro(!showMoreIntro);

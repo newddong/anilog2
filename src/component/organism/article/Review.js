@@ -52,20 +52,75 @@ export default Review = props => {
 		const page = Math.floor(category_sum_list.length / 4) + 1;
 		let arr = [];
 		arr.length = page;
-		arr.fill('a', 0, page);
-
-		if (category_sum_list.length > 3 && !moreCategory) {
-			arr = ['a'];
-			return arr.map((value, index) => {
-				let sliced = category_sum_list.slice(0, 3);
-				sliced.push('+' + (category_sum_list.length - 4));
+		arr.fill([], 0, page);
+		let newArr = [];
+		let totalWidth = 0;
+		let index = 0;
+		category_sum_list.map((val, ind) => {
+			totalWidth = totalWidth + 20 + val.length * 10;
+			if (totalWidth < 280) {
+				// console.log('totalWidth', totalWidth);
+				newArr.push({group: index, item: val});
+			} else {
+				newArr.push({group: index + 1, item: val});
+				totalWidth = 0;
+				++index;
+			}
+		});
+		let categoryArr = [];
+		categoryArr.length = index + 1;
+		categoryArr.fill([]);
+		categoryArr.map((val, ind) => {
+			categoryArr[ind] = newArr.filter(e => e.group === ind);
+		});
+		if (category_sum_list.length > 3 && !moreCategory && categoryArr.length > 0) {
+			return (
+				<View style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
+					{categoryArr[0].map((v, i) => {
+						// const isLast = v.item == '+' + (category_sum_list.length - 4);
+						let isLast = false;
+						if (i == categoryArr[0].length - 1) {
+							isLast = true;
+							v.item = '+' + (category_sum_list.length - categoryArr[0].length);
+						}
+						if (v.item == '+' + 0) {
+							return <View key={i}></View>;
+						}
+						return (
+							<TouchableOpacity
+								onPress={() => (isLast ? setMoreCategory(true) : onPressCategory(v.item))}
+								key={i}
+								activeOpacity={0.7}
+								style={[
+									style.category,
+									{
+										backgroundColor: WHITE,
+										borderColor: isLast ? GRAY10 : BLACK,
+									},
+								]}>
+								<Text
+									style={[
+										txt.noto24,
+										{
+											color: isLast ? GRAY10 : BLACK,
+										},
+									]}>
+									{v.item}
+								</Text>
+							</TouchableOpacity>
+						);
+					})}
+				</View>
+			);
+		} else {
+			return categoryArr.map((val, ind) => {
 				return (
-					<View key={index} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
-						{sliced.map((v, i) => {
-							const isLast = v == '+' + (category_sum_list.length - 4);
+					<View key={ind} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
+						{val.map((v, i) => {
+							const isLast = v.item == '접기';
 							return (
 								<TouchableOpacity
-									onPress={() => (isLast ? setMoreCategory(true) : onPressCategory(v))}
+									onPress={() => (isLast ? setMoreCategory(!true) : onPressCategory(v.item))}
 									key={i}
 									activeOpacity={0.7}
 									style={[
@@ -82,7 +137,7 @@ export default Review = props => {
 												color: isLast ? GRAY10 : BLACK,
 											},
 										]}>
-										{v}
+										{v.item}
 									</Text>
 								</TouchableOpacity>
 							);
@@ -90,40 +145,113 @@ export default Review = props => {
 					</View>
 				);
 			});
-		} else
-			return arr.map((value, index) => {
-				let sliced = category_sum_list.slice(index * 4, (index + 1) * 4);
-				return (
-					<View key={index} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
-						{sliced.map((v, i) => {
-							const isLast = v == '접기';
-							return (
-								<TouchableOpacity
-									onPress={() => onPressCategory(v)}
-									key={i}
-									activeOpacity={0.7}
-									style={[
-										style.category,
-										{
-											backgroundColor: isLast ? GRAY20 : WHITE,
-											borderColor: isLast ? GRAY40 : BLACK,
-										},
-									]}>
-									<Text
-										style={[
-											txt.noto24,
-											{
-												color: isLast ? WHITE : BLACK,
-											},
-										]}>
-										{v}
-									</Text>
-								</TouchableOpacity>
-							);
-						})}
-					</View>
-				);
-			});
+			// return categoryArr.map((val, ind) => {
+			// 	return (
+			// 		<View key={ind} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
+			// 			{val.map((v, i) => {
+			// 				const isLast = v.item == '접기';
+			// 				return (
+			// 					<TouchableOpacity
+			// 						onPress={() => onPressCategory(v)}
+			// 						key={i}
+			// 						activeOpacity={0.7}
+			// 						style={[
+			// 							style.category,
+			// 							{
+			// 								backgroundColor: isLast ? GRAY20 : WHITE,
+			// 								borderColor: isLast ? GRAY40 : BLACK,
+			// 							},
+			// 						]}>
+			// 						<Text
+			// 							style={[
+			// 								txt.noto24,
+			// 								{
+			// 									color: isLast ? WHITE : BLACK,
+			// 								},
+			// 							]}>
+			// 							{v.item}
+			// 						</Text>
+			// 					</TouchableOpacity>
+			// 				);
+			// 			})}
+			// 		</View>
+			// 	);
+			// });
+		}
+
+		// if (category_sum_list.length > 3 && !moreCategory) {
+		// 	arr = ['a'];
+		// 	return arr.map((value, index) => {
+		// 		let sliced = category_sum_list.slice(0, 3);
+		// 		sliced.push('+' + (category_sum_list.length - 4));
+		// 		return (
+		// 			<View key={index} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
+		// 				{sliced.map((v, i) => {
+		// 					const isLast = v == '+' + (category_sum_list.length - 4);
+		// 					return (
+		// 						<TouchableOpacity
+		// 							onPress={() => (isLast ? setMoreCategory(true) : onPressCategory(v))}
+		// 							key={i}
+		// 							activeOpacity={0.7}
+		// 							style={[
+		// 								style.category,
+		// 								{
+		// 									backgroundColor: WHITE,
+		// 									borderColor: isLast ? GRAY10 : BLACK,
+		// 								},
+		// 							]}>
+		// 							<Text
+		// 								style={[
+		// 									txt.noto24,
+		// 									{
+		// 										color: isLast ? GRAY10 : BLACK,
+		// 									},
+		// 								]}>
+		// 								{v}
+		// 							</Text>
+		// 						</TouchableOpacity>
+		// 					);
+		// 				})}
+		// 			</View>
+		// 		);
+		// 	});
+		// } else
+		// 	return arr.map((value, index) => {
+		// 		let sliced = category_sum_list.slice(index * 4, (index + 1) * 4);
+		// 		return (
+		// 			<View key={index} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
+		// 				{sliced.map((v, i) => {
+		// 					const isLast = v == '접기';
+		// 					return (
+		// 						<TouchableOpacity
+		// 							onPress={() => onPressCategory(v)}
+		// 							onLayout={e => {
+		// 								console.log(v, '텍스트길이 : ', v.length, 'width : ', e.nativeEvent.layout.width);
+		// 							}}
+		// 							key={i}
+		// 							activeOpacity={0.7}
+		// 							style={[
+		// 								style.category,
+		// 								{
+		// 									backgroundColor: isLast ? GRAY20 : WHITE,
+		// 									borderColor: isLast ? GRAY40 : BLACK,
+		// 								},
+		// 							]}>
+		// 							<Text
+		// 								style={[
+		// 									txt.noto24,
+		// 									{
+		// 										color: isLast ? WHITE : BLACK,
+		// 									},
+		// 								]}>
+		// 								{v}
+		// 							</Text>
+		// 						</TouchableOpacity>
+		// 					);
+		// 				})}
+		// 			</View>
+		// 		);
+		// 	});
 	};
 
 	const onPressMeatball = () => {

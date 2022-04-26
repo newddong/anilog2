@@ -47,7 +47,7 @@ const ProtectAnimalInfoBox = props => {
 				</View>
 				<View style={[styles.rescueSummary_insideItem]}>
 					<Text style={[txt.noto24, styles.rescueSummary_insideItem_category]}>발견장소</Text>
-					<Text style={[txt.noto24, styles.rescueSummary_insideItem_content]}>
+					<Text style={[txt.noto24, styles.rescueSummary_insideItem_content, {maxWidth: 500 * DP}]}>
 						{data.protect_animal_id ? data.protect_animal_id.protect_animal_rescue_location : ''}
 					</Text>
 				</View>
@@ -61,7 +61,6 @@ const styles = StyleSheet.create({
 		marginTop: 28 * DP,
 		zIndex: -1,
 		width: 654 * DP,
-		height: 202 * DP,
 		borderWidth: 4 * DP,
 		borderColor: APRI10,
 		borderRadius: 40 * DP,
@@ -70,11 +69,11 @@ const styles = StyleSheet.create({
 	},
 	rescueSummary_insideContainer: {
 		width: 594 * DP,
-		height: 128 * DP,
+		paddingVertical: 20 * DP,
 	},
 	rescueSummary_insideItem: {
 		width: 594 * DP,
-		height: 36 * DP,
+		// height: 36 * DP,
 		marginBottom: 10 * DP,
 		flexDirection: 'row',
 	},

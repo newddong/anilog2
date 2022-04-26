@@ -3,7 +3,7 @@ import {Text, View, Platform} from 'react-native';
 import {organism_style, feedContent_style} from 'Organism/style_organism';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
 import {useNavigation, useRoute} from '@react-navigation/core';
-import {FavoriteTag48_Filled, Meatball50_GRAY20_Horizontal, Share48_Filled} from 'Atom/icon';
+import {FavoriteTag48_Border, FavoriteTag48_Filled, Meatball50_GRAY20_Horizontal, Share48_Filled} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
 import {Arrow_Down_GRAY20} from 'Atom/icon';
 import DP from 'Root/config/dp';
@@ -79,6 +79,7 @@ export default FeedContent = props => {
 			setSend(feed_avatar_id);
 		} else {
 			setSend(props.data.feed_writer_id);
+			// console.log('props.data.feed_writer_id', props.data.feed_writer_id.is_favorite);
 		}
 	}, [props.data]);
 
@@ -346,7 +347,7 @@ export default FeedContent = props => {
 									} else if (selectedItem == '팔로우 취소') {
 										onPressCancelFollow();
 									} else if (selectedItem == '쪽지 보내기') {
-										onPressSendMsg();
+										onPressSendMsg(context._id);
 									} else if (selectedItem == '즐겨찾기') {
 										onFavorite(true);
 									} else if (selectedItem == '즐겨찾기 취소') {
@@ -519,22 +520,26 @@ export default FeedContent = props => {
 									</View>
 
 									{/* 연결되는 기능 개발 후 추후 연결 */}
-									{/* <View style={[organism_style.meatball, feedContent_style.meatball]}>
-							<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
-						</View> */}
+									<View style={[organism_style.meatball, feedContent_style.meatball]}>
+										<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
+									</View>
 								</View>
 							) : (
 								//실종 및 제보게시글의 유저 라벨 우측에 출력되는 태그
 								<View style={[organism_style.button_view_feedContent]}>
 									<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
 										<View style={[organism_style.favoriteTag_feedContent]}>
-											<FavoriteTag48_Filled />
+											{props.data.feed_writer_id.is_favorite ? (
+												<FavoriteTag48_Filled onPress={() => props.onPressFavorite(false)} />
+											) : (
+												<FavoriteTag48_Border onPress={() => props.onPressFavorite(true)} />
+											)}
 										</View>
 										<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
 											<Text style={[txt.roboto24, {color: GRAY10}]}>{count_to_K(props.data.feed_writer_id.user_favorite_count)}</Text>
 										</View>
 									</View>
-									<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
+									{/* <Meatball50_GRAY20_Horizontal onPress={onClickMeatball} /> */}
 
 									{/* <View style={[organism_style.share48_view_feedContent]}>
 										<View style={[organism_style.share48_feedContent]}>

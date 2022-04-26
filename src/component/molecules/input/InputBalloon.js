@@ -64,7 +64,7 @@ const InputBalloon = React.forwardRef((props, ref) => {
 					marginTop: 12 * DP,
 					borderRadius: 30 * DP,
 					borderWidth: 2 * DP,
-					borderColor: APRI10,
+					borderColor: text.length == 0 ? GRAY30 : APRI10,
 					padding: 24 * DP,
 					alignItems: 'center',
 					justifyContent: 'center',

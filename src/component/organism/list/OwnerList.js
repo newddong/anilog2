@@ -1,9 +1,8 @@
 import React from 'react';
-import {FlatList, ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import ProfileImageMedium120 from 'Molecules/image/ProfileImageMedium120';
-import {ownerList} from 'Organism/style_organism copy';
 
 export default OwnerList = props => {
 	const onClickLabel = item => {
@@ -12,28 +11,26 @@ export default OwnerList = props => {
 
 	const renderItem = (item, index) => {
 		return (
-			<View style={[ownerList.itemContainer]}>
-				<View style={[ownerList.petProfileImageMedium]}>
+			<View style={[style.itemContainer]}>
+				<View style={[style.petProfileImageMedium]}>
 					<TouchableOpacity onPress={() => onClickLabel(item)}>
 						<ProfileImageMedium120 data={item} />
 					</TouchableOpacity>
 				</View>
 
-				<View style={[ownerList.petProfileInfo]}>
-					<Text style={[txt.noto24, {color: GRAY10}]}> {item.user_nickname}</Text>
+				<View style={[style.petProfileInfo]}>
+					<Text style={[txt.noto24, {color: GRAY10}]} numberOfLines={2}>
+						{item.user_nickname}
+					</Text>
 				</View>
 			</View>
 		);
 	};
 
 	return (
-		<View style={[ownerList.container]}>
-			<View style={[ownerList.insideContainer]}>
-				<ScrollView horizontal={false} contentContainerStyle={{flex: 0}}>
-					<ScrollView horizontal={true} contentContainerStyle={{flex: 1}} scrollEnabled={false}>
-						<FlatList data={props.items} renderItem={({item, index}) => renderItem(item, index)} horizontal={true} />
-					</ScrollView>
-				</ScrollView>
+		<View style={[style.container, {}]}>
+			<View style={[style.insideContainer]}>
+				<FlatList data={props.items} renderItem={({item, index}) => renderItem(item, index)} horizontal={true} />
 			</View>
 		</View>
 	);
@@ -43,3 +40,33 @@ OwnerList.defaultProps = {
 	items: [],
 	onClickLabel: e => console.log(e),
 };
+
+const style = StyleSheet.create({
+	container: {
+		width: 750 * DP,
+		height: 220 * DP,
+		paddingBottom: 20 * DP,
+		justifyContent: 'center',
+	},
+	insideContainer: {
+		width: 750 * DP,
+		marginLeft: 30 * DP,
+		marginRight: 22 * DP,
+	},
+	itemContainer: {
+		width: 152 * DP,
+		// height: 172 * DP,
+		marginRight: 30 * DP,
+		alignItems: 'center',
+	},
+	petProfileImageMedium: {
+		width: 120 * DP,
+		height: 120 * DP,
+	},
+	petProfileInfo: {
+		width: 152 * DP,
+		// maxHeight: 80 * DP,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+});

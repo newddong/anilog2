@@ -14,8 +14,6 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeComment} from 'Root/api/commentapi';
 import {createReport} from 'Root/api/report';
 
-
-
 /**
  * 부모 댓글
  * @param {object} props - Props Object
@@ -28,19 +26,25 @@ import {createReport} from 'Root/api/report';
 export default ParentComment = React.memo((props, ref) => {
 	// console.log('ParentComment : ', props.parentComment.comment_writer_id.user_nickname, props.parentComment.comment_is_secure);
 	// console.log('ParentComment : children_count', props.parentComment.comment_contents, props.parentComment.children_count);
-
+	// console.log('parentComment props', props);
 	const [data, setData] = React.useState(props.parentComment);
 	const [child, setChild] = React.useState([]);
 	const [likeCount, setLikeCount] = React.useState(0);
 	const [likeState, setLikeState] = React.useState(false); //해당 댓글의 좋아요 상태 - 로그인 유저가 좋아요를 누른 기록이 있다면 filled , or border
 	const [showChild, setShowChild] = React.useState(false); //해당 댓글의 답글들 출력 여부 Boolean
 	const [meatball, setMeatball] = React.useState(false); // 해당 댓글의 미트볼 헤더 클릭 여부
-
 	React.useEffect(() => {
 		setData(props.parentComment);
 		setLikeState(props.parentComment.comment_is_like);
 		setLikeCount(props.parentComment.comment_like_count);
 	}, [props.parentComment]);
+
+	React.useEffect(() => {
+		if (props.parentComment._id == props.parent) {
+			console.log('대댓글 부모댓글');
+			showChildComment();
+		}
+	}, []);
 
 	//대댓글 추가 시 콜백
 	const addChildComment = newChildComment => {
@@ -97,7 +101,12 @@ export default ParentComment = React.memo((props, ref) => {
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			result => {
-				// console.log('getChildCommentList', result.msg);
+				// result.msg.forEach((current, index) => {
+				// 	if (current._id == props.target) {
+				// 		console.log('이 parent로 이동', index);
+				// 		setMoveToIndex(index);
+				// 	}
+				// });
 				setChild(result.msg.filter(e => e.comment_is_delete != true));
 				setShowChild(!showChild);
 			},
@@ -236,7 +245,7 @@ export default ParentComment = React.memo((props, ref) => {
 			{/* 유저프로필 라벨 및 Meatball  */}
 			<View style={[organism_style.UserLocationTimeLabel_view_parentComment, {}]}>
 				<View style={[parentComment.userLabelContainer, {}]} collapsable={false} ref={meatballRef}>
-					<UserLocationTimeLabel data={data.comment_writer_id} time={data.comment_update_date} />
+					<UserLocationTimeLabel data={data.comment_writer_id} time={data.comment_update_date} target={props.target} />
 					{isNotAuthorized() ? (
 						<View style={[parentComment.secureIcon]}>
 							<SecureIcon40 />

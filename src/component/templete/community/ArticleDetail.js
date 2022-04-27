@@ -191,6 +191,7 @@ export default ArticleDetail = props => {
 								!parentComment && setComments([]); //댓글목록 초기화
 								setComments(comments.msg.filter(e => e.comment_is_delete != true));
 								parentComment && addChildCommentFn.current();
+								setPrivateComment(false);
 								// console.log('comments', comments);
 								setTimeout(() => {
 									flatListRef.current.scrollToIndex({animated: true, index: whichComment});
@@ -228,6 +229,7 @@ export default ArticleDetail = props => {
 								!parentComment && setComments([]); //댓글목록 초기화
 								setComments(comments.msg.filter(e => e.comment_is_delete != true));
 								parentComment && addChildCommentFn.current();
+								setPrivateComment(false);
 								// console.log('comments', comments);
 								setTimeout(() => {
 									whichParent == ''

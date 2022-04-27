@@ -167,7 +167,7 @@ export const PET = 'pet';
 export const SHELTER = 'shelter';
 
 //통신사
-export const mobile_carrier = ['SK텔레콤', 'LG U+', 'KT', '알뜰'];
+export const mobile_carrier = ['SK텔레콤', 'LG U+', 'KT', '알뜰폰'];
 
 //이메일 도메인
 export const EMAIL_DOMAIN = [

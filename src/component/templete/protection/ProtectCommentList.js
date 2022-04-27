@@ -61,105 +61,123 @@ export default ProtectCommentList = props => {
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
 	const onWrite = () => {
-		if (content.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
-
-		let param = {
-			comment_photo_uri: photo, //사진uri
-			comment_contents: content, //내용
-			comment_is_secure: privateComment, //공개여부 테스트때 반영
-			// protect_request_object_id: data._id,
-		};
-
-		if (parentComment) {
-			// console.log('parentComment ProtectComment ', parentComment);
-			param = {...param, commentobject_id: parentComment._id};
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
 		} else {
-			param = {...param, protect_request_object_id: data._id};
-		}
-		// console.log('parap', param);
-		if (editMode) {
-			console.log('댓글편집', editData);
-			updateComment(
-				{
-					...param,
-					commentobject_id: editData._id,
-					comment_photo_remove: !editData.comment_photo_uri || editData.comment_photo_uri == 0,
-				},
-				result => {
-					console.log(result);
-					setParentComment();
-					setEditData({
-						comment_contents: '',
-						comment_photo_uri: '',
-					});
-					setEditMode(false);
-					getCommentListByProtectId(
-						{
-							protect_request_object_id: props.route.params.protectObject._id,
-							request_number: 1000,
-						},
-						comments => {
-							!parentComment && setComments([]); //댓글목록 초기화
-							setComments(comments.msg.filter(e => e.comment_is_delete != true));
-							parentComment && addChildCommentFn.current();
-							// console.log('comments', comments);
-						},
-						err => console.log('getCommentListByFeedId', err),
-					);
-				},
-				err => Modal.alert(err),
-			);
-		} else {
-			createComment(
-				param,
-				result => {
-					console.log('createComment : ', result);
-					setPhoto();
-					setParentComment();
-					setEditData({
-						comment_contents: '',
-						comment_photo_uri: '',
-					});
-					setContent('');
-					getCommentListByProtectId(
-						{
-							protect_request_object_id: props.route.params.protectObject._id,
-							request_number: 1000,
-							login_userobject_id: userGlobalObject.userInfo._id,
-						},
-						comments => {
-							!parentComment && setComments([]); //댓글목록 초기화
-							setComments(comments.msg.filter(e => e.comment_is_delete != true));
-							parentComment && addChildCommentFn.current();
-							// console.log('comments', comments);
-						},
-						err => console.log('getCommentListByProtectId', err),
-					);
-				},
-				err => Modal.alert(err),
-			);
+			if (content.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
+
+			let param = {
+				comment_photo_uri: photo, //사진uri
+				comment_contents: content, //내용
+				comment_is_secure: privateComment, //공개여부 테스트때 반영
+				// protect_request_object_id: data._id,
+			};
+
+			if (parentComment) {
+				// console.log('parentComment ProtectComment ', parentComment);
+				param = {...param, commentobject_id: parentComment._id};
+			} else {
+				param = {...param, protect_request_object_id: data._id};
+			}
+			// console.log('parap', param);
+			if (editMode) {
+				console.log('댓글편집', editData);
+				updateComment(
+					{
+						...param,
+						commentobject_id: editData._id,
+						comment_photo_remove: !editData.comment_photo_uri || editData.comment_photo_uri == 0,
+					},
+					result => {
+						console.log(result);
+						setParentComment();
+						setEditData({
+							comment_contents: '',
+							comment_photo_uri: '',
+						});
+						setEditMode(false);
+						getCommentListByProtectId(
+							{
+								protect_request_object_id: props.route.params.protectObject._id,
+								request_number: 1000,
+							},
+							comments => {
+								!parentComment && setComments([]); //댓글목록 초기화
+								setComments(comments.msg.filter(e => e.comment_is_delete != true));
+								parentComment && addChildCommentFn.current();
+								// console.log('comments', comments);
+							},
+							err => console.log('getCommentListByFeedId', err),
+						);
+					},
+					err => Modal.alert(err),
+				);
+			} else {
+				createComment(
+					param,
+					result => {
+						console.log('createComment : ', result);
+						setPhoto();
+						setParentComment();
+						setEditData({
+							comment_contents: '',
+							comment_photo_uri: '',
+						});
+						setContent('');
+						getCommentListByProtectId(
+							{
+								protect_request_object_id: props.route.params.protectObject._id,
+								request_number: 1000,
+								login_userobject_id: userGlobalObject.userInfo._id,
+							},
+							comments => {
+								!parentComment && setComments([]); //댓글목록 초기화
+								setComments(comments.msg.filter(e => e.comment_is_delete != true));
+								parentComment && addChildCommentFn.current();
+								// console.log('comments', comments);
+							},
+							err => console.log('getCommentListByProtectId', err),
+						);
+					},
+					err => Modal.alert(err),
+				);
+			}
 		}
 	};
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
 	const onLockBtnClick = () => {
-		setPrivateComment(!privateComment);
-		!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setPrivateComment(!privateComment);
+			!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+		}
 	};
 
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
 	const onAddPhoto = () => {
 		// navigation.push('SinglePhotoSelect', props.route.name);
-		ImagePicker.openPicker({
-			compressImageQuality: 0.8,
-			cropping: true,
-		})
-			.then(images => {
-				setPhoto(images.path);
-				Modal.close();
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			ImagePicker.openPicker({
+				compressImageQuality: 0.8,
+				cropping: true,
 			})
-			.catch(err => console.log(err + ''));
-		Modal.close();
+				.then(images => {
+					setPhoto(images.path);
+					Modal.close();
+				})
+				.catch(err => console.log(err + ''));
+			Modal.close();
+		}
 	};
 
 	const onDeleteImage = () => {
@@ -197,11 +215,17 @@ export default ProtectCommentList = props => {
 
 	// 답글 쓰기 버튼 클릭 콜백함수
 	const onReplyBtnClick = (parentCommentId, addChildComment) => {
-		// console.log('parentCommentId', parentCommentId);
-		setParentComment(parentCommentId);
-		input.current.focus();
-		editComment || setEditComment(true);
-		addChildCommentFn.current = addChildComment;
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			// console.log('parentCommentId', parentCommentId);
+			setParentComment(parentCommentId);
+			input.current.focus();
+			editComment || setEditComment(true);
+			addChildCommentFn.current = addChildComment;
+		}
 	};
 
 	const onClickShelterLabel = () => {
@@ -266,32 +290,18 @@ export default ProtectCommentList = props => {
 				ListHeaderComponent={protectRequestContent}
 				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
 			/>
-			{userGlobalObject.userInfo._id != '' ? (
-				<View style={{position: 'absolute', bottom: keyboardY}} onLayout={onReplyBtnLayout}>
-					{/* <ReplyWriteBox
-						onAddPhoto={onAddPhoto}
-						onChangeReplyInput={onChangeReplyInput}
-						onLockBtnClick={onLockBtnClick}
-						onWrite={onWrite}
-						onDeleteImage={onDeleteImage}
-						privateComment={privateComment}
-						editData={editData}
-						ref={input}
-					/> */}
-					<ReplyWriteBox
-						onAddPhoto={onAddPhoto}
-						onChangeReplyInput={onChangeReplyInput}
-						onLockBtnClick={onLockBtnClick}
-						onWrite={onWrite}
-						onDeleteImage={onDeleteImage}
-						privateComment={privateComment}
-						ref={input}
-						editData={editData}
-					/>
-				</View>
-			) : (
-				false
-			)}
+			<View style={{position: 'absolute', bottom: keyboardY}} onLayout={onReplyBtnLayout}>
+				<ReplyWriteBox
+					onAddPhoto={onAddPhoto}
+					onChangeReplyInput={onChangeReplyInput}
+					onLockBtnClick={onLockBtnClick}
+					onWrite={onWrite}
+					onDeleteImage={onDeleteImage}
+					privateComment={privateComment}
+					ref={input}
+					editData={editData}
+				/>
+			</View>
 		</View>
 	);
 };

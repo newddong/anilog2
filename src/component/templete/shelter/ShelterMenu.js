@@ -212,7 +212,9 @@ export default ShelterMenu = ({route}) => {
 							<View style={[shelterMenu.shelterInfo_container_right]}>
 								{/* 보호소 이름 */}
 								<View style={[shelterMenu.shelterInfo_user_id]}>
-									<Text style={txt.noto40b}>{data.user_nickname || ''}</Text>
+									<Text numberOfLines={1} style={[txt.noto40b]}>
+										{data.user_nickname || ''}
+									</Text>
 								</View>
 								{/* SocialInfo */}
 								<View style={[shelterMenu.shelterInfo_contents, {marginTop: 18 * DP}]}>

@@ -174,33 +174,41 @@ export default ParentComment = React.memo((props, ref) => {
 						switch (selectedItem) {
 							case '신고':
 								Modal.close();
-								console.log('data', data);
-								setTimeout(() => {
-									Modal.popOneBtnSelectModal(
-										REPORT_MENU,
-										'이 댓글을 신고 하시겠습니까?',
-										selectedItem => {
-											createReport(
-												{
-													report_target_object_id: data._id,
-													report_target_object_type: 'commentsobjects',
-													report_target_reason: selectedItem,
-													report_is_delete: false,
-												},
-												result => {
-													console.log('신고 완료', result);
-													Modal.close();
-													Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
-												},
-												err => {
-													console.log('신고 err', err);
-													Modal.close();
-												},
-											);
-										},
-										'신고',
-									);
-								}, 100);
+								if (userGlobalObject.userInfo.isPreviewMode) {
+									setTimeout(() => {
+										Modal.popLoginRequestModal(() => {
+											props.navigation.navigate('Login');
+										});
+									}, 100);
+								} else {
+									setTimeout(() => {
+										Modal.popOneBtnSelectModal(
+											REPORT_MENU,
+											'이 댓글을 신고 하시겠습니까?',
+											selectedItem => {
+												createReport(
+													{
+														report_target_object_id: data._id,
+														report_target_object_type: 'commentsobjects',
+														report_target_reason: selectedItem,
+														report_is_delete: false,
+													},
+													result => {
+														console.log('신고 완료', result);
+														Modal.close();
+														Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
+													},
+													err => {
+														console.log('신고 err', err);
+														Modal.close();
+													},
+												);
+											},
+											'신고',
+										);
+									}, 100);
+								}
+
 							case '수정':
 								// alert('수정!');
 								// navigation.navigate('FeedEdit',props.data);

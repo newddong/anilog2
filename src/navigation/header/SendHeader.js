@@ -32,6 +32,8 @@ export default SendHeader = ({route, navigation, options}) => {
 							'확인',
 							() => Modal.close(),
 							() => {
+								// Modal.close();
+								navigation.setParams({onConfirm: true});
 								createProtectRequest(
 									{
 										protect_request_photos_uri: data.protect_request_photos_uri,
@@ -40,9 +42,10 @@ export default SendHeader = ({route, navigation, options}) => {
 										protect_request_content: data.protect_request_content,
 									},
 									successed => {
-										console.log('successed / createProtectRequest / SendHeader', successed);
+										// console.log('successed / createProtectRequest / SendHeader', successed);
 										Modal.popNoBtn('보호요청 게시글 \n 작성이 완료되었습니다!');
 										Modal.close();
+										navigation.setParams({onConfirm: false});
 										navigation.reset({
 											index: 0,
 											routes: [{name: 'ShelterMenu'}],
@@ -52,7 +55,6 @@ export default SendHeader = ({route, navigation, options}) => {
 										console.log('err, createProtectRequest / SendHeader', err);
 									},
 								);
-								Modal.close();
 							},
 						);
 					}

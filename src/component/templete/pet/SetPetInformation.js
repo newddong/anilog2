@@ -75,9 +75,31 @@ export default SetPetInformation = ({route, navigation}) => {
 
 	//성별 변경 발생
 	const onSexChange = e => {
-		let gender = '';
-		e == 0 ? (gender = 'male') : (gender = 'female');
-		setData({...data, pet_sex: gender});
+		switch (e) {
+			//male
+			case 0:
+				setData({...data, pet_sex: 'male'});
+			//female
+			case 1:
+				setData({...data, pet_sex: 'female'});
+			//unknown
+			case 2:
+				setData({...data, pet_sex: 'unknown'});
+		}
+	};
+
+	const getPetSex = () => {
+		switch (data.pet_sex) {
+			//male
+			case 'male':
+				return 0;
+			//female
+			case 'female':
+				return 1;
+			//unknown
+			case 'unknown':
+				return 2;
+		}
 	};
 
 	//중성화 선택
@@ -122,7 +144,7 @@ export default SetPetInformation = ({route, navigation}) => {
 						</View>
 					</View>
 					<View style={[temp_style.tabSelectFilled_Type1]}>
-						<TabSelectFilled_Type1 items={['남아', '여아']} defaultIndex={data.pet_sex == 'male' ? 0 : 1} onSelect={onSexChange} width={520} />
+						<TabSelectFilled_Type1 items={['남아', '여아', '모름']} defaultIndex={getPetSex()} onSelect={onSexChange} width={520} />
 					</View>
 				</View>
 				{/* 생일 */}
@@ -162,6 +184,7 @@ export default SetPetInformation = ({route, navigation}) => {
 									keyboardType={'numeric'}
 									maxLength={4}
 									confirm_msg=""
+									defaultValue={data.pet_weight}
 								/>
 								<View style={[setPetInformation.kg]}>
 									<Text style={[txt.noto28]}> kg </Text>

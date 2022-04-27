@@ -922,6 +922,7 @@ export const animalInfo = StyleSheet.create({
 	},
 	infoContainer_petNickname: {
 		height: 46 * DP,
+		maxWidth: 420 * DP,
 	},
 	infoContainer_petDetail: {
 		height: 38 * DP,
@@ -1033,6 +1034,7 @@ export const animalNeedHelp = StyleSheet.create({
 	lowerMenu_kindAndBreed: {
 		height: 50 * DP,
 		// justifyContent: 'center',
+		marginBottom: -5 * DP,
 		alignItems: 'center',
 		flexDirection: 'row',
 	},
@@ -1043,6 +1045,7 @@ export const animalNeedHelp = StyleSheet.create({
 	lowerMenu_helpDetail: {
 		// height: 38 * DP,
 		// marginTop: 10 * DP,
+		// backgroundColor: 'yellow',
 	},
 	container_with_Line: {
 		width: 705 * DP,

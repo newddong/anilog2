@@ -618,7 +618,7 @@ export const temp_style = StyleSheet.create({
 	},
 	textMsg_assignPetProfileImage: {
 		width: 654 * DP,
-		height: 76 * DP,
+		// height: 76 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
@@ -629,7 +629,7 @@ export const temp_style = StyleSheet.create({
 	},
 	input30_assignPetProfileImage: {
 		width: 654 * DP,
-		height: 82 * DP,
+		height: 122 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
@@ -1862,15 +1862,16 @@ export const userInfoSetting_style = StyleSheet.create({
 		marginLeft: 364 * DP,
 	},
 	user_introModifyContainer: {
-		height: 140 * DP,
+		// height: 140 * DP,
 		// borderBottomColor: APRI10,
 		// borderBottomWidth: 3 * DP,
 	},
 	user_intro_modifyMode: {
 		// maxHeight: 200 * DP,
-		paddingVertical: 10 * DP,
-		paddingLeft: 10 * DP,
+		paddingHorizontal: 24 * DP,
+		paddingVertical: 24 * DP,
 		color: GRAY10,
+		borderRadius: 24 * DP,
 		// shadowOpacity: 0.27,
 		// shadowRadius: 4.65,
 		// shadowOffset: {
@@ -2361,7 +2362,9 @@ export const shelterInfoSetting = StyleSheet.create({
 		marginBottom: 15 * DP,
 	},
 	modificationTextInput: {
-		paddingLeft: 10 * DP,
+		paddingHorizontal: 24 * DP,
+		paddingVertical: 24 * DP,
+		borderRadius: 24 * DP,
 		color: GRAY10,
 	},
 	btn_w114: {
@@ -2383,9 +2386,9 @@ export const shelterInfoSetting = StyleSheet.create({
 		borderRightWidth: 2 * DP,
 	},
 	modificationTextCont: {
-		height: 140 * DP,
-		borderBottomColor: APRI10,
-		borderBottomWidth: 3 * DP,
+		// height: 140 * DP,
+		// borderBottomColor: APRI10,
+		// borderBottomWidth: 3 * DP,
 	},
 });
 
@@ -3126,13 +3129,15 @@ export const searchProtectRequest = StyleSheet.create({
 	},
 	filterView: {
 		width: 750 * DP,
-		height: 68 * DP,
+		// height: 68 * DP,
+		backgroundColor: '#fff',
 		marginTop: 30 * DP,
+		marginBottom: 20 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 		inside: {
 			width: 654 * DP,
-			height: 68 * DP,
+			// height: 68 * DP,
 		},
 		onOffBtnView: {
 			width: 344 * DP,
@@ -3226,8 +3231,9 @@ export const appliesRecord = StyleSheet.create({
 	shelterList_container: {
 		marginTop: 48 * DP,
 		alignItems: 'center',
-		height: 312 * DP,
-		marginVertical: 30 * DP,
+		// height: 312 * DP,
+		// marginVertical: 30 * DP,
+		// paddingVertical: 30 * DP,
 	},
 	whenEmpty: {
 		paddingVertical: 40 * DP,
@@ -3904,14 +3910,14 @@ export const feedCommentList = StyleSheet.create({
 		elevation: 2,
 	},
 	shadow_off: {
-		shadowColor: '#000000',
-		shadowOpacity: 0.2,
-		shadowRadius: 2.65,
-		shadowOffset: {
-			width: 1 * DP,
-			height: 2 * DP,
-		},
-		elevation: 2,
+		// shadowColor: '#000000',
+		// shadowOpacity: 0.2,
+		// shadowRadius: 2.65,
+		// shadowOffset: {
+		// 	width: 1 * DP,
+		// 	height: 2 * DP,
+		// },
+		// elevation: 2,
 	},
 	editCommentFromRequest: {
 		width: 654 * DP,
@@ -4520,7 +4526,7 @@ export const animalProtectRequestDetail_style = StyleSheet.create({
 		// marginBottom: 70 * DP,
 		paddingBottom: 70 * DP,
 		borderBottomWidth: 2 * DP,
-		borderBottomColor: GRAY20,
+		borderBottomColor: GRAY40,
 	},
 	floatingBtnAapply: {
 		position: 'absolute',

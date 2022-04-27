@@ -63,8 +63,16 @@ export default AssignPetInfoA = props => {
 
 	//성별 선택
 	const onSelectGender = item => {
-		const gender = item == 0 ? 'male' : 'female';
-		setData({...data, pet_sex: gender});
+		switch (item) {
+			case 0:
+				setData({...data, pet_sex: 'male'});
+			case 1:
+				setData({...data, pet_sex: 'female'});
+			case 2:
+				setData({...data, pet_sex: 'unknown'});
+			default:
+				break;
+		}
 	};
 
 	//중성화 RadioBox 선택
@@ -166,7 +174,7 @@ export default AssignPetInfoA = props => {
 				<View style={[temp_style.inputForm_assignPetInfo_line2, assignPetInfo_style.line2]}>
 					<Text style={[temp_style.text_assignPetInfo, txt.noto28, {color: GRAY10}]}>성별</Text>
 					<View style={[temp_style.tabSelectFilled_Type1, assignPetInfo_style.tabSelectFilled_Type1]}>
-						<TabSelectFilled_Type1 items={[MALE, FEMALE]} width={450} onSelect={onSelectGender} defaultIndex={getDefaultGender()} />
+						<TabSelectFilled_Type1 items={[MALE, FEMALE, '모름']} width={500} onSelect={onSelectGender} defaultIndex={getDefaultGender()} />
 					</View>
 				</View>
 

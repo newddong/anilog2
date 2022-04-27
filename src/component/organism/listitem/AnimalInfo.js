@@ -7,7 +7,7 @@ import {animalInfo} from 'Organism/style_organism copy';
 import DP from 'Root/config/dp';
 export default AnimalInfo = props => {
 	const [data, setData] = React.useState(props.data);
-	console.log('AnimalInfo', props.data);
+	// console.log('AnimalInfo', props.data);
 	React.useEffect(() => {
 		let register_date = data.user_register_date;
 		const date = new Date(register_date);
@@ -24,7 +24,9 @@ export default AnimalInfo = props => {
 		<View style={[animalInfo.container]}>
 			<PetImageLabel data={data} onPressLabel={() => props.onPressLabel()} showNickname={false} />
 			<View style={[animalInfo.infoContainer]}>
-				<Text style={[animalInfo.infoContainer_petNickname, txt.noto32b]}>{data.user_nickname || ''}</Text>
+				<Text style={[animalInfo.infoContainer_petNickname, txt.noto32b]} numberOfLines={1}>
+					{data.user_nickname || ''}
+				</Text>
 				<Text style={[animalInfo.infoContainer_petDetail, txt.noto28, {marginTop: 12 * DP}]}>
 					{data.pet_species || ''}/{data.pet_species_detail || ''}
 				</Text>

@@ -1,9 +1,10 @@
 import React from 'react';
-import {FlatList, TouchableOpacity, View, Text, ScrollView} from 'react-native';
+import {FlatList, View} from 'react-native';
 import AnimalNeedHelp from 'Organism/listitem/AnimalNeedHelp';
 import {animalNeedHelpList} from 'Organism/style_organism copy';
 import {dummy_AnimalNeedHelpList} from 'Root/config/dummyDate_json';
 import {Check50, Rect50_Border} from 'Root/component/atom/icon';
+import DP from 'Root/config/dp';
 /**
  *
  *@param {{
@@ -69,6 +70,9 @@ export default AnimalNeedHelpList = props => {
 			</View>
 		);
 	};
+	const ITEM_HEIGHT = 214 * DP;
+
+	const keyExtractor = React.useCallback(item => item._id.toString(), []);
 
 	return (
 		<View style={[!props.borderMode ? animalNeedHelpList.container_bordermode : animalNeedHelpList.container]}>
@@ -78,7 +82,10 @@ export default AnimalNeedHelpList = props => {
 				renderItem={({item, index}) => renderItem(item, index)}
 				scrollEnabled={false}
 				showsVerticalScrollIndicator={false}
-				keyExtractor={item => item._id}
+				keyExtractor={keyExtractor}
+				getItemLayout={(data, index) => {
+					return {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index};
+				}}
 				ListEmptyComponent={props.whenEmpty}
 				listKey={({item, index}) => index}
 			/>

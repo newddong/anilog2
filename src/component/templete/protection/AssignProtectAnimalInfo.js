@@ -16,6 +16,7 @@ import Input30 from 'Molecules/input/Input30';
 import {assignShelterAnimal} from 'Root/api/shelterapi';
 import {Arrow_Down_GRAY10} from 'Root/component/atom/icon';
 import SelectInput from 'Root/component/molecules/button/SelectInput';
+import Input24 from 'Root/component/molecules/input/Input24';
 
 export default AssignProtectAnimalInfo = ({route}) => {
 	// console.log('Assing', route.params);
@@ -129,9 +130,11 @@ export default AssignProtectAnimalInfo = ({route}) => {
 	};
 
 	const weigthValid = e => {
-		var regExp = /^[0-9]{1,2}(\.[0-9]{0,1})?$/;
-		// var regExp = /^[\D]{1,20}$/;
-		setBtnOn(!regExp.test(e));
+		let regExp = /^[0-9]{1,2}(\.[0-9]{0,1})?$/;
+		let noFrom0 = e.startsWith('0');
+		if (!noFrom0) {
+			setBtnOn(!regExp.test(e));
+		}
 		return regExp.test(e);
 	};
 
@@ -182,10 +185,43 @@ export default AssignProtectAnimalInfo = ({route}) => {
 						<Text style={[txt.noto28, {color: GRAY10}]}>체중</Text>
 					</View>
 					<View style={[assignProtectAnimal_style.weight]}>
-						<Input30
+						{/* <Input24
+							alert_msg={'두자리 숫자, 소수점 한자리'}
+							description="info"
+							// showmsg={true}
+							showMsg
+							confirm={true}
+							showTitle={false}
+							width={300}
+							placeholder={'몸무게 입력'}
+							showCrossMark={false}
+							onChange={onChangeKg}
+							value={data.protect_animal_weight || ''}
+							// value={data.protect_act_phone_number || ''}
+							// defaultValue={data.pet_weight.toString()}
+							validator={weigthValid}
+							keyboardType={'number-pad'}
+							maxLength={4}
+							confirm_msg=""
+							// ref={weightRef}
+						/> */}
+						<Input24
+							keyboardType={'number-pad'}
+							value={data.protect_animal_weight || ''}
+							width={300}
+							alert_msg={'두자리 숫자, 소수점 한자리'}
+							showMsg
+							confirm_msg="올바른 양식입니다."
+							onChange={onChangeKg}
+							validator={weigthValid}
+							placeholder={'몸무게 입력'}
+							showCrossMark={false}
+							maxLength={4}
+						/>
+						{/* <Input30
+							alert_msg={'두자리 숫자, 소수점 한자리'}
 							description="info"
 							showmsg={true}
-							alert_msg={WEIGHT_INPUT_FORM_INFO}
 							confirm={true}
 							showTitle={false}
 							width={206}
@@ -194,10 +230,10 @@ export default AssignProtectAnimalInfo = ({route}) => {
 							onChange={onChangeKg}
 							value={data.pet_weight}
 							validator={weigthValid}
-							keyboardType={'numeric'}
+							keyboardType={'number-pad'}
 							maxLength={4}
 							confirm_msg=""
-						/>
+						/> */}
 						<Text style={[txt.noto28, assignProtectAnimal_style.weightText]}>kg</Text>
 					</View>
 				</View>
@@ -208,7 +244,7 @@ export default AssignProtectAnimalInfo = ({route}) => {
 					<AniButton btnTitle={'뒤로'} btnTheme={'shadow'} btnStyle={'border'} btnLayout={btn_w226} onPress={goBack} />
 				</View>
 				<View style={[btn_style.btn_w226]}>
-					<AniButton btnTitle={'완료'} btnTheme={'shadow'} btnLayout={btn_w226} onPress={gotoNextStep} />
+					<AniButton btnTitle={'완료'} btnTheme={'shadow'} disable={btnOn} btnLayout={btn_w226} onPress={gotoNextStep} />
 				</View>
 			</View>
 		</View>

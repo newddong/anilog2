@@ -13,6 +13,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loading from 'Root/component/molecules/modal/Loading';
 import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
 import {GRAY10} from 'Root/config/color';
+import Modal from 'Root/component/modal/Modal';
+import {setFavoriteEtc} from 'Root/api/favoriteetc';
 export default ReportDetail = props => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
@@ -35,7 +37,8 @@ export default ReportDetail = props => {
 				feedobject_id: props.route.params._id,
 			},
 			data => {
-				// debug && console.log(`ReportDetail data:${JSON.stringify(data.msg)}`);
+				let result = data.msg;
+				result.feed_writer_id.is_favorite = result.is_favorite;
 				setData(data.msg);
 				navigation.setParams({writer: data.msg.feed_writer_id._id, isMissingOrReport: true, feed_object: data.msg});
 			},
@@ -162,6 +165,29 @@ export default ReportDetail = props => {
 		}
 	};
 
+	const onPressFavoriteWriter = bool => {
+		console.log('bool', bool);
+		const isMyReportFeed = data.feed_writer_id._id == userGlobalObject.userInfo._id;
+		if (isMyReportFeed) {
+			Modal.popOneBtn('본인 계정의 즐겨찾기는 \n 불가능합니다.', '확 인', () => Modal.close());
+		} else {
+			setFavoriteEtc(
+				{
+					collectionName: 'userobjects',
+					target_object_id: data.feed_writer_id._id,
+					is_favorite: bool,
+				},
+				result => {
+					console.log('result / favoriteEtc / profileInfo : ', result.msg.favoriteEtc);
+					fetchFeedDetail();
+				},
+				err => {
+					console.log('err / favoriteEtc / profileInfo : ', err);
+				},
+			);
+		}
+	};
+
 	//댓글 클릭
 	const onPressReply = async () => {
 		AsyncStorage.getItem('sid', (err, res) => {
@@ -233,7 +259,7 @@ export default ReportDetail = props => {
 							</View>
 							<View style={[temp_style.feedContent]}>
 								{/* DB에서 가져오는 제보 피드글 데이터를 FeedContent에 넘겨준다. */}
-								<FeedContent data={data} />
+								<FeedContent data={data} onPressFavorite={onPressFavoriteWriter} />
 							</View>
 
 							<View style={[reportDetail.basic_separator]}>

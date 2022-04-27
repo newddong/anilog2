@@ -44,7 +44,7 @@ export default AnimalProtectDetail = props => {
 	};
 
 	const onPressPhoneNum = () => {
-		Linking.openURL(`tel:${data.shelter_delegate_contact_number}`);
+		Linking.openURL(`tel:${data.protect_act_phone_number}`);
 	};
 
 	const onClickLabel = data => {

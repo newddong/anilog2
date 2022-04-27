@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet, TouchableWithoutFeedback, FlatList} from 'react-native';
 import {GRAY10, GRAY40, APRI10, GRAY20, TEXTBASECOLOR} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {deleteMemoBoxWithUserObjectID, getMemoBoxAllList, userLogout} from 'Root/api/userapi';
@@ -120,18 +120,28 @@ export default ReceivedMessage = ({route}) => {
 	} else {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
-				<View style={[temp_style.selectstat_view]}>
-					<SelectStat
-						onSelectMode={e => showCheckBox(e)}
-						onCancelSelectMode={e => hideCheckBox(e)}
-						onSelectAllClick={selectAll}
-						onDeleteSelectedItem={deleteSelectedItem}
-						received={received}
-					/>
-				</View>
-				<View style={[styles.noteList]}>
-					<NoteList data={data} checkBoxMode={checkBoxMode} onClickLabel={onClickLabel} onCheckBox={onCheckBox} routeName={route.name} />
-				</View>
+				<FlatList
+					data={[{}]}
+					showsVerticalScrollIndicator={false}
+					ListHeaderComponent={
+						<View style={[temp_style.selectstat_view]}>
+							<SelectStat
+								onSelectMode={e => showCheckBox(e)}
+								onCancelSelectMode={e => hideCheckBox(e)}
+								onSelectAllClick={selectAll}
+								onDeleteSelectedItem={deleteSelectedItem}
+								received={received}
+							/>
+						</View>
+					}
+					renderItem={() => {
+						return (
+							<View style={[styles.noteList]}>
+								<NoteList data={data} checkBoxMode={checkBoxMode} onClickLabel={onClickLabel} onCheckBox={onCheckBox} routeName={route.name} />
+							</View>
+						);
+					}}
+				/>
 				{/* <View style={[styles.messageBtnContainer]}>
 						<TouchableWithoutFeedback onPress={onPressSendMsg}>
 							<View style={[styles.messageActionButton]}>{checkBoxMode ? <Message94 /> : <Message94 />}</View>
@@ -145,13 +155,10 @@ export default ReceivedMessage = ({route}) => {
 const styles = StyleSheet.create({
 	noteList: {
 		width: 654 * DP,
-		// height: 1324 * DP,
 		marginTop: 30 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
-		// backgroundColor: '#F2C2C2',
 	},
-
 	messageBtnContainer: {
 		width: 94 * DP,
 		height: 94 * DP,

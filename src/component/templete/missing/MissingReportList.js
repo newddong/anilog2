@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, TouchableWithoutFeedback, FlatList} from 'react-native';
+import {Text, View, TouchableWithoutFeedback, FlatList, TouchableOpacity} from 'react-native';
 import {feedWrite, login_style, searchProtectRequest, temp_style} from 'Templete/style_templete';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {GRAY10, WHITE} from 'Root/config/color';
@@ -245,16 +245,12 @@ export default MissingReportList = props => {
 				<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
 					{showActionButton ? (
 						<View>
-							<View style={[feedWrite.urgentBtnItemContainer]}>
-								<TouchableWithoutFeedback onPress={moveToMissingForm}>
-									<Text style={[txt.noto32, {color: WHITE}]}>실종</Text>
-								</TouchableWithoutFeedback>
-							</View>
-							<View style={[feedWrite.urgentBtnItemContainer]}>
-								<TouchableWithoutFeedback onPress={moveToReportForm}>
-									<Text style={[txt.noto32, {color: WHITE}]}>제보</Text>
-								</TouchableWithoutFeedback>
-							</View>
+							<TouchableOpacity onPress={moveToMissingForm} activeOpacity={0.8} style={[feedWrite.urgentBtnItemContainer]}>
+								<Text style={[txt.noto32, {color: WHITE}]}>실종</Text>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={moveToReportForm} activeOpacity={0.8} style={[feedWrite.urgentBtnItemContainer]}>
+								<Text style={[txt.noto32, {color: WHITE}]}>제보</Text>
+							</TouchableOpacity>
 						</View>
 					) : null}
 					<View style={[feedWrite.urgentActionButton]}>

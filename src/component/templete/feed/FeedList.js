@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, FlatList, RefreshControl, Platform, NativeModules, Text,TextInput, Dimensions, PixelRatio} from 'react-native';
+import {StyleSheet, View, FlatList, RefreshControl, Platform, NativeModules, Text, TextInput, Dimensions, PixelRatio} from 'react-native';
 import {WHITE} from 'Root/config/color';
 import {Write94, Camera54} from 'Atom/icon';
 import Feed from 'Organism/feed/Feed';
@@ -257,113 +257,138 @@ export default FeedList = ({route, navigation}) => {
 		);
 	};
 	const [tl, setTl] = React.useState({});
-    const [cl, setCl] = React.useState({});
-    const [fontSize,setSize] = React.useState(16);
-    const [testTx, setTx] = React.useState('한');
-	const [code, setCode] =React.useState(62);
-    return (
-        <View style={(login_style.wrp_main, {flex: 1, backgroundColor: WHITE})}>
-            <FlatList
-                data={feedList}
-                renderItem={renderItem}
-                keyExtractor={(item, index) => {
-                    let key = item._id + item.feed_update_date + item.feed_is_like;
-                    return key;
-                }}
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-                getItemLayout={(data, index) => {
-                    if (!data[index]) return {length: 0, offset: 0, index: index};
-                    return {length: data[index].height, offset: data[index].offset, index: index};
-                }}
-                ref={flatlist}
-                refreshing
-                extraData={refresh}
-                onScroll={rememberScroll}
-                ItemSeparatorComponent={({highlited}) => (
-                    <View style={{alignItems: 'center'}}>
-                        <View style={{height: 2 * DP, backgroundColor: GRAY30, width: 654 * DP}}></View>
-                    </View>
-                )}
-            />
-            {userGlobalObject.userInfo && (
-                <View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}, buttonstyle.shadow]}>
-                    <View
-                        style={{
-                            height: 84 * DP,
-                            width: 84 * DP,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: '#FFF',
-                            borderRadius: 30 * DP,
-                            marginBottom: 20 * DP,
-                        }}>
-                        <Camera54 onPress={movetoCamera} />
-                    </View>
-                    <Write94 onPress={moveToFeedWrite} />
-                </View>
-            )}
-            
-			{false&&<View style={{backgroundColor:'red',width:750*DP,top:0,position:'absolute'}}>
-                    <View style={{backgroundColor:'yellow',marginBottom:20}}>
-                        <Text style={{fontSize:8}}>텍스트 사이즈 테스트용
-                            {'\n'}기기 레이아웃 {Dimensions.get('window').width} DP,해상도{Dimensions.get('window').width*PixelRatio.get()}px
-                            {'\n'}컨테이너 높이 : {cl.height}, {'\n'}너비 : {cl.width} {'\n'}W/H : {cl.width/cl.height}
-                            {'\n\n'}ascender : {tl.ascender}, rPx:{PixelRatio.roundToNearestPixel(tl.ascender)} {'\n'}baseline : {tl.baseline}, rPx:{PixelRatio.roundToNearestPixel(tl.baseline)}  {'\n'}capheight : {tl.capHeight}, rPx:{PixelRatio.roundToNearestPixel(tl.capHeight)}
-                            {'\n'}descender: {tl.descender}, rPx:{PixelRatio.roundToNearestPixel(tl.descender)}{'\n'}height: {tl.height}, rPx:{PixelRatio.roundToNearestPixel(tl.height)}{'\n'}xHeight: {tl.xHeight}, rPx:{PixelRatio.roundToNearestPixel(tl.xHeight)}
-                            {'\n'}width:{tl.width}, rPx:{PixelRatio.roundToNearestPixel(tl.width)}{'\n'} W/H : {tl.width/tl.height}
-                            {'\n'}픽셀비 : {PixelRatio.get()}, 폰트스케일 : {PixelRatio.getFontScale()}
-                            {'\n\n'}추정 텍스트 사이즈 pt는? {}
-                            {'\n'}글자 높이 px : {tl.height*PixelRatio.get()}, 폰트사이즈: {fontSize}
-                            {'\n'}글자 높이 인치 (445ppi안드로이드) : {Math.round(tl.height*3)/445}
-                            {'\n'}글자 높이와 폰트 사이즈 비 : {tl.height/fontSize}
-                            {'\n'}글자 너비와 폰트 사이즈 비 : {tl.width/fontSize}
-                            {'\n'}글자 포인트(1pt는 1/72인치) : {Math.round(tl.capHeight*3)}
-                            {'\n'}dp당 픽셀 : {1/PixelRatio.get()}
-                            {'\n'}dp당 픽셀2 : {2/PixelRatio.get()}
-                            {'\n'}dp당 픽셀3 : {3/PixelRatio.get()}
-                            {'\n'}dp당 픽셀4 : {4/PixelRatio.get()}
-                            {'\n'}dp당 픽셀5 : {5/PixelRatio.get()}
-							{'\n'}
-                        </Text>
-						<View style={{flexDirection:'row'}}>
-							<Text style={{backgroundColor:'gold',height:'100%'}}>폰트 사이즈 : </Text>
-                        <TextInput style={{backgroundColor:'white',fontSize:12,includeFontPadding:false,padding:0}}
-                            onChange={e=>{console.log(e.nativeEvent.text);setSize(parseFloat(e.nativeEvent.text)>0?parseFloat(e.nativeEvent.text):16)}}
-                        
-                        ></TextInput>
-						</View>
-						<View style={{flexDirection:'row',backgroundColor:'gold'}}>
-							<Text style={{backgroundColor:'gold',height:'100%'}}>측정할 문자 : </Text>
-                        <TextInput style={{backgroundColor:'white',fontSize:12,includeFontPadding:false,padding:0}}
-                        onChange={e=>{console.log(e.nativeEvent.text);e.nativeEvent.text.length>0?setTx(e.nativeEvent.text):setTx(' ')}}
-                    
-                        ></TextInput>
-						<Text>문자코드번호 {testTx.codePointAt(0)}</Text>
-						</View>
-						<View style={{flexDirection:'row'}}>
-							<Text style={{backgroundColor:'gold',height:'100%'}}>코드번호 입력 : </Text>
-                        <TextInput style={{backgroundColor:'white',fontSize:12,includeFontPadding:false,padding:0}}
-                            onChange={e=>{console.log(e.nativeEvent.text);setCode(parseInt(e.nativeEvent.text))}}
-                        
-                        ></TextInput>
-							<Text>해당 코드의 문자 : {String.fromCodePoint(code>0?code:1)}</Text>
-						</View>
-                    </View>
-                    <View style={{backgroundColor:'green',position:'absolute',bottom:-100000000,left:'50%'}} onLayout={(e)=>{console.log('컨테이너',e.nativeEvent.layout);setCl(e.nativeEvent.layout);navigation.setOptions({header:props=>false})}}>
-                        <Text 
-                            onLayout={(e)=>{console.log('글',e.nativeEvent.layout)}}
-                            onTextLayout={e=>{console.log('텍스트레이아웃', e.nativeEvent);setTl(e.nativeEvent.lines[0])}}
-                            // style={{fontFamily:'NotoSansKR-Regular',fontSize:fontSize,includeFontPadding:false,padding:0}}
-                            style={{fontFamily:'NotoSansKR-Bold',fontSize:fontSize,includeFontPadding:false,padding:0}}
-                            // style={{fontFamily:'Roboto-Regular',fontSize:fontSize,includeFontPadding:false,padding:0}}
-                            // style={{fontFamily:'Roboto-Bold',fontSize:fontSize,includeFontPadding:false,padding:0}}
-                            // style={{fontFamily:'NotoSansKR-Regular',fontSize:fontSize}}
-                            // style={{fontSize:fontSize,includeFontPadding:false,padding:0}}
-                            // style={{fontSize:fontSize}}
-                        >{testTx}</Text>
-                    </View>
+	const [cl, setCl] = React.useState({});
+	const [fontSize, setSize] = React.useState(16);
+	const [testTx, setTx] = React.useState('한');
+	const [code, setCode] = React.useState(62);
+	return (
+		<View style={(login_style.wrp_main, {flex: 1, backgroundColor: WHITE})}>
+			<FlatList
+				data={feedList}
+				renderItem={renderItem}
+				keyExtractor={(item, index) => {
+					let key = item._id + item.feed_update_date + item.feed_is_like;
+					return key;
+				}}
+				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+				getItemLayout={(data, index) => {
+					if (!data[index]) return {length: 0, offset: 0, index: index};
+					return {length: data[index].height, offset: data[index].offset, index: index};
+				}}
+				ref={flatlist}
+				refreshing
+				extraData={refresh}
+				onScroll={rememberScroll}
+				ItemSeparatorComponent={({highlited}) => (
+					<View style={{alignItems: 'center'}}>
+						<View style={{height: 2 * DP, backgroundColor: GRAY30, width: 654 * DP}}></View>
+					</View>
+				)}
+			/>
+			{userGlobalObject.userInfo && (
+				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}, buttonstyle.shadow]}>
+					<View
+						style={{
+							height: 84 * DP,
+							width: 84 * DP,
+							justifyContent: 'center',
+							alignItems: 'center',
+							backgroundColor: '#FFF',
+							borderRadius: 30 * DP,
+							marginBottom: 20 * DP,
+						}}>
+						<Camera54 onPress={movetoCamera} />
+					</View>
+					<Write94 onPress={moveToFeedWrite} />
+				</View>
+			)}
 
-            </View>}
-        </View>
-    );
+			{false && (
+				<View style={{backgroundColor: 'red', width: 750 * DP, top: 0, position: 'absolute'}}>
+					<View style={{backgroundColor: 'yellow', marginBottom: 20}}>
+						<Text style={{fontSize: 8}}>
+							텍스트 사이즈 테스트용
+							{'\n'}기기 레이아웃 {Dimensions.get('window').width} DP,해상도{Dimensions.get('window').width * PixelRatio.get()}px
+							{'\n'}컨테이너 높이 : {cl.height}, {'\n'}너비 : {cl.width} {'\n'}W/H : {cl.width / cl.height}
+							{'\n\n'}ascender : {tl.ascender}, rPx:{PixelRatio.roundToNearestPixel(tl.ascender)} {'\n'}baseline : {tl.baseline}, rPx:
+							{PixelRatio.roundToNearestPixel(tl.baseline)} {'\n'}capheight : {tl.capHeight}, rPx:{PixelRatio.roundToNearestPixel(tl.capHeight)}
+							{'\n'}descender: {tl.descender}, rPx:{PixelRatio.roundToNearestPixel(tl.descender)}
+							{'\n'}height: {tl.height}, rPx:{PixelRatio.roundToNearestPixel(tl.height)}
+							{'\n'}xHeight: {tl.xHeight}, rPx:{PixelRatio.roundToNearestPixel(tl.xHeight)}
+							{'\n'}width:{tl.width}, rPx:{PixelRatio.roundToNearestPixel(tl.width)}
+							{'\n'} W/H : {tl.width / tl.height}
+							{'\n'}픽셀비 : {PixelRatio.get()}, 폰트스케일 : {PixelRatio.getFontScale()}
+							{'\n\n'}추정 텍스트 사이즈 pt는? {}
+							{'\n'}글자 높이 px : {tl.height * PixelRatio.get()}, 폰트사이즈: {fontSize}
+							{'\n'}글자 높이 인치 (445ppi안드로이드) : {Math.round(tl.height * 3) / 445}
+							{'\n'}글자 높이와 폰트 사이즈 비 : {tl.height / fontSize}
+							{'\n'}글자 너비와 폰트 사이즈 비 : {tl.width / fontSize}
+							{'\n'}글자 포인트(1pt는 1/72인치) : {Math.round(tl.capHeight * 3)}
+							{'\n'}dp당 픽셀 : {1 / PixelRatio.get()}
+							{'\n'}dp당 픽셀2 : {2 / PixelRatio.get()}
+							{'\n'}dp당 픽셀3 : {3 / PixelRatio.get()}
+							{'\n'}dp당 픽셀4 : {4 / PixelRatio.get()}
+							{'\n'}dp당 픽셀5 : {5 / PixelRatio.get()}
+							{'\n'}
+						</Text>
+						<View style={{flexDirection: 'row'}}>
+							<Text style={{backgroundColor: 'gold', height: '100%'}}>폰트 사이즈 : </Text>
+							<TextInput
+								style={{backgroundColor: 'white', fontSize: 12, includeFontPadding: false, padding: 0}}
+								onChange={e => {
+									console.log(e.nativeEvent.text);
+									setSize(parseFloat(e.nativeEvent.text) > 0 ? parseFloat(e.nativeEvent.text) : 16);
+								}}></TextInput>
+						</View>
+						<View style={{flexDirection: 'row', backgroundColor: 'gold'}}>
+							<Text style={{backgroundColor: 'gold', height: '100%'}}>측정할 문자 : </Text>
+							<TextInput
+								style={{backgroundColor: 'white', fontSize: 12, includeFontPadding: false, padding: 0}}
+								onChange={e => {
+									console.log(e.nativeEvent.text);
+									e.nativeEvent.text.length > 0 ? setTx(e.nativeEvent.text) : setTx(' ');
+								}}></TextInput>
+							<Text>문자코드번호 {testTx.codePointAt(0)}</Text>
+						</View>
+						<View style={{flexDirection: 'row'}}>
+							<Text style={{backgroundColor: 'gold', height: '100%'}}>코드번호 입력 : </Text>
+							<TextInput
+								style={{backgroundColor: 'white', fontSize: 12, includeFontPadding: false, padding: 0}}
+								onChange={e => {
+									console.log(e.nativeEvent.text);
+									setCode(parseInt(e.nativeEvent.text));
+								}}></TextInput>
+							<Text>해당 코드의 문자 : {String.fromCodePoint(code > 0 ? code : 1)}</Text>
+						</View>
+					</View>
+					<View
+						style={{backgroundColor: 'green', position: 'absolute', bottom: -100000000, left: '50%'}}
+						onLayout={e => {
+							console.log('컨테이너', e.nativeEvent.layout);
+							setCl(e.nativeEvent.layout);
+							navigation.setOptions({header: props => false});
+						}}>
+						<Text
+							onLayout={e => {
+								console.log('글', e.nativeEvent.layout);
+							}}
+							onTextLayout={e => {
+								console.log('텍스트레이아웃', e.nativeEvent);
+								setTl(e.nativeEvent.lines[0]);
+							}}
+							// style={{fontFamily:'NotoSansKR-Regular',fontSize:fontSize,includeFontPadding:false,padding:0}}
+							style={{fontFamily: 'NotoSansKR-Bold', fontSize: fontSize, includeFontPadding: false, padding: 0}}
+							// style={{fontFamily:'Roboto-Regular',fontSize:fontSize,includeFontPadding:false,padding:0}}
+							// style={{fontFamily:'Roboto-Bold',fontSize:fontSize,includeFontPadding:false,padding:0}}
+							// style={{fontFamily:'NotoSansKR-Regular',fontSize:fontSize}}
+							// style={{fontSize:fontSize,includeFontPadding:false,padding:0}}
+							// style={{fontSize:fontSize}}
+						>
+							{testTx}
+						</Text>
+					</View>
+				</View>
+			)}
+		</View>
+	);
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {GRAY10, GRAY20, GRAY30} from 'Root/config/color';
+import {GRAY10, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
 import CommentList from 'Root/component/organism/comment/CommentList';
 import Modal from 'Root/component/modal/Modal';
 import Article from 'Root/component/organism/article/Article';
@@ -510,9 +510,7 @@ export default ArticleDetail = props => {
 						<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개 모두 보기</Text>
 					</TouchableOpacity>
 				) : (
-					<View style={[style.replyCountContainer, {alignSelf: 'center', alignItems: 'flex-start'}]}>
-						<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
-					</View>
+					<></>
 				)}
 			</View>
 		);
@@ -521,7 +519,8 @@ export default ArticleDetail = props => {
 	const bottom = () => {
 		return (
 			<View style={{alignItems: 'center'}}>
-				<View style={[{marginTop: 40 * DP, marginBottom: 80 * DP}]}>
+				<View style={[{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY40}]} />
+				<View style={[{marginTop: 20 * DP, marginBottom: 30 * DP}]}>
 					<ReplyWriteBox
 						onAddPhoto={onAddPhoto}
 						onChangeReplyInput={onChangeReplyInput}
@@ -572,6 +571,7 @@ export default ArticleDetail = props => {
 					ListFooterComponent={bottom()}
 					showsVerticalScrollIndicator={false}
 					renderItem={renderItem}
+					ListEmptyComponent={<Text style={[txt.roboto28b, {color: GRAY10, paddingVertical: 40 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>}
 				/>
 			</View>
 		);
@@ -631,11 +631,12 @@ const style = StyleSheet.create({
 	separator: {
 		width: 654 * DP,
 		height: 2 * DP,
-		backgroundColor: GRAY30,
+		backgroundColor: GRAY40,
 	},
 	like: {
 		width: 654 * DP,
 		paddingVertical: 10 * DP,
+		marginBottom: 10 * DP,
 		flexDirection: 'row',
 		alignItems: 'center',
 	},

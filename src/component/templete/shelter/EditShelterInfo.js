@@ -1,12 +1,12 @@
 import React from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import {KeyboardAvoidingView, ScrollView, Text, View} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {login_style, temp_style, editShelterInfo, btn_style, assignPetInfo_style} from 'Templete/style_templete';
 import AddressInput from 'Organism/input/AddressInput';
 import Input30 from 'Molecules/input/Input30';
 import InputWithEmail from 'Molecules/input/InputWithEmail';
 import DatePicker from 'Molecules/select/DatePicker';
-import {COMPLETE_MODIFY, EMAIL_DOMAIN} from 'Root/i18n/msg';
+import {COMPLETE_MODIFY, EMAIL_DOMAIN, NICKNAME_FORM} from 'Root/i18n/msg';
 import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import {GRAY10} from 'Root/config/color';
@@ -15,12 +15,14 @@ import Modal from 'Component/modal/Modal';
 import {updateShelterDetailInformation} from 'Root/api/userapi';
 import DP from 'Root/config/dp';
 import {useNavigation} from '@react-navigation/native';
+import Input24 from 'Root/component/molecules/input/Input24';
 
 export default EditShelterInfo = ({route, navigation}) => {
 	const [data, setData] = React.useState(route.params.data);
 	// console.log('dataEmail  : ', data);
 	// console.log('data phone', data.shelter_delegate_contact_number);
 	const isDirectInput = !EMAIL_DOMAIN.some(e => e == data.user_email.split('@')[1]);
+	const nickRef = React.useRef();
 	console.log(route.params.data);
 	React.useEffect(() => {
 		if (route.params.addr) {
@@ -38,7 +40,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 
 	//보호소 이름 변경 콜백
 	const onChangeShelterName = name => {
-		setData({...data, shelter_name: name});
+		setData({...data, user_nickname: name});
 	};
 
 	//주소찾기 클릭
@@ -71,11 +73,8 @@ export default EditShelterInfo = ({route, navigation}) => {
 
 	//보호소 네임 Validation
 	const shelterNameValidator = text => {
-		// ('* 2자 이상 15자 이내의 영문,숫자, _ 의 입력만 가능합니다.');
-		// console.log('text', text);
-		var regExp2 = /^[가-힣a-zA-Z\s]{3,15}$/;
-		// console.log('regExp2', regExp2.test(text));
-		return regExp2.test(text);
+		let regExp = /^[가-힣a-zA-Z0-9_]{2,20}$/;
+		return regExp.test(text);
 	};
 
 	//이메일 도메인 드롭다운 설정 콜백
@@ -107,25 +106,29 @@ export default EditShelterInfo = ({route, navigation}) => {
 		}
 	};
 
+	const phoneValidate = num => {
+		// console.log('num', num);
+		let regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+		let regHomePhone = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))(\d{3,4})(\d{4})$/;
+		return regPhone.test(num) || regHomePhone.test(num);
+	};
+
 	//수정 완료 클릭
 	const finalized = () => {
-		// console.log('email', data.user_email);
-		Modal.popTwoBtn(
-			'정말 보호소 정보를 수정하시겠습니까?',
-			'아니오',
-			'예',
-			() => Modal.close(),
-			() => {
-				let regEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
-				// let regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
-				let regPhone = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
-				const regexPhone = regPhone.test(data.shelter_delegate_contact_number);
-				const regexEmail = regEmail.test(data.user_email);
-				console.log('data.email  :', data.user_email);
-				console.log('regexEmail', regexEmail);
-				console.log('regexPhone', regexPhone);
-				if (regexEmail && regexPhone) {
-					// console.log('Test', data);
+		let regEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+		let regPhone = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
+		let regHomePhone = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))(\d{3,4})(\d{4})$/;
+		let regNick = /^[가-힣a-zA-Z0-9_]{2,20}$/;
+		const regexPhone = regPhone.test(data.shelter_delegate_contact_number) || regHomePhone.test(data.shelter_delegate_contact_number);
+		const regexEmail = regEmail.test(data.user_email);
+		const regexNick = regNick.test(data.user_nickname);
+		if (regexEmail && regexPhone && regexNick) {
+			Modal.popTwoBtn(
+				'정말 보호소 정보를 수정하시겠습니까?',
+				'아니오',
+				'예',
+				() => Modal.close(),
+				() => {
 					updateShelterDetailInformation(
 						{
 							userobject_id: data._id,
@@ -146,22 +149,29 @@ export default EditShelterInfo = ({route, navigation}) => {
 						},
 					);
 					// navigation.navigate('ShelterInfoSetting');
-					// navigation.goBack();
-				} else if (!regexEmail || !regexPhone) {
+					navigation.goBack();
+				},
+			);
+		} else if (!regexEmail || !regexPhone) {
+			Modal.close();
+			setTimeout(() => {
+				Modal.popOneBtn('이메일 혹은 전화번호를 \n 다시 확인해주세요.', '확인', () => Modal.close());
+			}, 150);
+		} else if (!regexNick) {
+			Modal.close();
+			setTimeout(() => {
+				Modal.popOneBtn('보호소 닉네임 양식을 \n 확인해주세요.', '확인', () => {
 					Modal.close();
-					setTimeout(() => {
-						Modal.popOneBtn('이메일 혹은 전화번호를 \n 다시 확인해주세요.', '확인', () => Modal.close());
-					}, 500);
-				} else {
-				}
-			},
-		);
+					nickRef.current.focus();
+				});
+			}, 150);
+		}
 	};
 
 	return (
-		<View style={[login_style.wrp_main, editShelterInfo.container]}>
-			<ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
-				<View style={[editShelterInfo.shelterInfoForm]}>
+		<KeyboardAvoidingView style={[login_style.wrp_main, {flex: 1}]} behavior={'position'} contentContainerStyle={{alignItems: 'center'}}>
+			<View style={[editShelterInfo.shelterInfoForm]}>
+				<ScrollView>
 					{/* 보호소 이름 */}
 					<View style={[editShelterInfo.input30WithMsg]}>
 						<View style={[editShelterInfo.category, {width: null}]}>
@@ -170,18 +180,20 @@ export default EditShelterInfo = ({route, navigation}) => {
 							</View>
 						</View>
 						<View style={[editShelterInfo.input30, {}]}>
-							<Input30
-								// value={data.shelter_name}
-								defaultValue={data.shelter_name}
-								showTitle={false}
-								width={520}
-								showmsg={false}
+							<Input24
+								value={data.user_nickname}
+								defaultValue={data.user_nickname}
+								width={500}
+								maxlength={20}
+								showMsg
+								showCrossMark={false}
 								confirm_msg={'사용 가능한 보호소명입니다.'}
-								alert_msg={'사용 불가능한 보호소 이름입니다.'}
+								alert_msg={NICKNAME_FORM}
 								placeholder={'보호소 이름을 입력해 주세요.'}
 								confirm={shelterNameValidator}
 								validator={shelterNameValidator}
 								onChange={onChangeShelterName}
+								ref={nickRef}
 							/>
 						</View>
 					</View>
@@ -204,19 +216,30 @@ export default EditShelterInfo = ({route, navigation}) => {
 							</View>
 						</View>
 						<View style={[editShelterInfo.input30]}>
-							<Input30
+							{/* <Input30
 								value={data.shelter_delegate_contact_number}
 								defaultValue={data.shelter_delegate_contact_number}
 								showTitle={false}
 								showmsg={false}
-								confirm={true}
-								validator={() => {
-									return data.shelter_delegate_contact_number != '';
-								}}
+								validator={phoneValidate}
 								keyboardType={'numeric'}
 								width={520}
 								placeholder={'전화번호를 기재해주세요.'}
 								onChange={onChangeContact}
+							/> */}
+							<Input24
+								value={data.shelter_delegate_contact_number}
+								defaultValue={data.shelter_delegate_contact_number}
+								keyboardType={'number-pad'}
+								width={500}
+								alert_msg={'전화번호는 - 을 제외하고 10~11자로 작성해주세요'}
+								showMsg
+								confirm_msg={'올바른 전화번호 양식입니다.'}
+								onChange={onChangeContact}
+								validator={phoneValidate}
+								descriptionType={'star'}
+								placeholder={'전화번호를 기재해주세요.'}
+								showCrossMark={false}
 							/>
 						</View>
 					</View>
@@ -246,14 +269,15 @@ export default EditShelterInfo = ({route, navigation}) => {
 							</View>
 						</View>
 						<View style={[editShelterInfo.input30]}>
-							<Input30
-								// value={data.shelter_homepage || ''}
+							<Input24
+								value={data.shelter_homepage || ''}
 								defaultValue={data.shelter_homepage || ''}
 								placeholder={'홈페이지 입력'}
-								showTitle={false}
-								showmsg={false}
-								width={520}
+								showMsg={false}
+								showCrossMark={false}
+								width={500}
 								onClear={onClearHomepage}
+								maxLength={80}
 								confirm={true}
 								validator={txt => {
 									return txt != '';
@@ -270,15 +294,15 @@ export default EditShelterInfo = ({route, navigation}) => {
 							</View>
 						</View>
 						<View style={[editShelterInfo.input30]}>
-							<DatePicker width={475} onDateChange={onChangeDate} defaultDate={getFoundationDate()} future={false} />
+							<DatePicker width={500} onDateChange={onChangeDate} defaultDate={getFoundationDate()} future={false} />
 						</View>
 					</View>
-				</View>
+				</ScrollView>
+			</View>
 
-				<View style={[editShelterInfo.btn_w654, {marginTop: 110 * DP}]}>
-					<AniButton btnLayout={btn_w654} btnStyle={'border'} btnTitle={COMPLETE_MODIFY} titleFontStyle={32} onPress={finalized} />
-				</View>
-			</ScrollView>
-		</View>
+			<View style={[editShelterInfo.btn_w654, {marginTop: 110 * DP}]}>
+				<AniButton btnLayout={btn_w654} btnStyle={'border'} btnTitle={COMPLETE_MODIFY} titleFontStyle={32} onPress={finalized} />
+			</View>
+		</KeyboardAvoidingView>
 	);
 };

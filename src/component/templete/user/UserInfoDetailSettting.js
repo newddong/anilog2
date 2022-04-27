@@ -3,43 +3,32 @@ import {ScrollView, Text, View} from 'react-native';
 import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import TabSelectFilled_Type1 from 'Molecules/tab/TabSelectFilled_Type1';
-import DatePicker from 'Molecules/select/DatePicker';
 import {login_style, btn_style, temp_style, userInfoDetailSettting_style} from '../style_templete';
 import InterestTagList from 'Organism/list/InterestTagList';
-import {GENDER_TAB_SELECT, INPUT_PHONE_NUM, INTEREST_ACT, INTEREST_REGION, mobile_carrier} from 'Root/i18n/msg';
+import {GENDER_TAB_SELECT, INPUT_PHONE_NUM, INTEREST_ACT, INTEREST_REGION} from 'Root/i18n/msg';
 import Modal from 'Component/modal/Modal';
 import Input24 from 'Molecules/input/Input24';
 import {getAddressList} from 'Root/api/address';
-import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
-import InputWithSelect from 'Root/component/molecules/input/InputWithSelect';
 import SelectInput from 'Root/component/molecules/button/SelectInput';
 import {getInterestsList} from 'Root/api/interestsapi';
-import ReactPropTypesSecret from 'prop-types/lib/ReactPropTypesSecret';
 export default UserInfoDetailSettting = ({route, navigation}) => {
 	const debug = false;
-	// console.log('UserInfoDetailSetting route.params : ', route.params);
-	// console.log('UserInfoDetailSetting route.params : ', route.params.data.user_interests);
 	const [data, setData] = React.useState(route.params); //기존 유저의 데이터가 담겨있음
 	const [loaded, setLoaded] = React.useState(false);
-	const [addrSearched, setAddrSearched] = React.useState(false);
 	const [locationInterest, setLocationInterest] = React.useState([]);
 	const [contentInterest, setContentInterest] = React.useState([]);
 	const [interestList, setInterestList] = React.useState();
 	const [interestLoaded, setInterestLoaded] = React.useState(false);
-	const [contentSendObejct, setContentSendObject] = React.useState();
 	const [refresh, setRefresh] = React.useState(false);
+
 	let temp = [];
 	// 갱신되는 데이터는 Header에도 Json형태로 전해짐
 	React.useEffect(() => {
 		navigation.setParams({data: data, route_name: route.name});
-		// console.log('user_mobile_company', data.user_mobile_company);
 	}, [data]);
 
 	React.useEffect(() => {
 		navigation.setParams({data: route.params, route_name: route.name});
-		console.log(data);
-		// console.log('ahhh', route.params?.user_interests[0]);
-
 		getInterestsList({}, interests => {
 			setInterestList(interests.msg);
 			setInterestLoaded(true);
@@ -60,6 +49,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 		setLocationInterest(data.user_interests.interests_location);
 		setLoaded(true);
 	}, []);
+
 	//변경된 locationObject와 contentInterest를 저장형식에 맞게 파싱
 	React.useEffect(() => {
 		console.log('interset', locationInterest, contentInterest);
@@ -91,26 +81,13 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 				user_interests: locationObject,
 			}));
 		}
-		console.log('setData', data);
+		// console.log('setData', data);
 	}, [refresh, locationInterest, contentInterest]);
 
 	function getKeyByValue(object, value) {
 		// console.log(Object.keys(object).find(key => object[key] == value));
 		return Object.keys(object).find(key => object[key] == value);
 	}
-	React.useEffect(() => {
-		// if (route.params != null) {
-		// 	if (route.params.addr && !addrSearched) {
-		// 		// console.log('route.params.Address Changed?   ', route.params.addr);
-		// 		const addr = route.params.addr;
-		// 		setData({
-		// 			...data,
-		// 			user_address: {city: addr.siNm, district: addr.sggNm, neighbor: addr.emdNm, brief: addr.roadAddr, detail: addr.detailAddr},
-		// 		});
-		// 		setAddrSearched(true);
-		// 	}
-		// }
-	}, [route.params]);
 
 	React.useEffect(() => {
 		getAddressList(
@@ -199,16 +176,6 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 		);
 	};
 
-	// const onPressSearchAddress = () => {
-	// 	setAddrSearched(false);
-	// 	navigation.push('AddressSearch', {addr: data.user_address.brief, from: route.name});
-	// };
-
-	//생일 값 변경 콜백
-	// const onDateChange = date => {
-	// 	setData({...data, user_birthday: date});
-	// };
-
 	const onSelectGender = index => {
 		console.log('OnSelectGender', index);
 		index == 0 ? setData({...data, user_sex: 'male'}) : setData({...data, user_sex: 'female'});
@@ -222,31 +189,20 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 	const phoneValidate = num => {
 		// console.log('num', num);
 		let regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
-		if (regPhone.test(num) === true) {
-			console.log('입력된 값은 휴대전화번호입니다.');
-		}
-		return regPhone.test(num);
+		let regHomePhone = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))(\d{3,4})(\d{4})$/;
+		return regPhone.test(num) || regHomePhone.test(num);
 	};
 
 	//관심지역 태그 X마크 삭제클릭
 	const onDeleteInterestRegion = index => {
-		// let copy = data.user_interests.location;
 		let copy = locationInterest;
 		copy.splice(index, 1);
-
 		setLocationInterest(copy);
 		setRefresh(!refresh);
-		// setData({
-		// 	...data,
-		// 	user_interests: {
-		// 		interests_location: copy,
-		// 	},
-		// });
 	};
 
 	//관심활동 태그 X마크 삭제 클릭
 	const onDeleteInterestAct = index => {
-		// let copy = data.user_interests.activity;
 		let copy = contentInterest;
 		copy.splice(index, 1);
 		console.log('copy', copy);
@@ -258,7 +214,6 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 		console.log(contentInterest);
 		Modal.popInterestTagModal(
 			'Activity',
-			// route.params.user_interests,
 			contentInterest || [],
 			() => alert('저장'),
 			() => Modal.close(),
@@ -269,16 +224,11 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 	const onPressAddInterestLocation = () => {
 		Modal.popInterestTagModal(
 			'Location',
-			// route.params.user_interests,
 			locationInterest || [],
 			() => alert('저장'),
 			() => Modal.close(),
 			setLocationInterest,
 		);
-		// setData(prevState => ({
-		// 	...prevState,
-		// 	user_interests: interest,
-		// }));
 		console.log('next State', data);
 	};
 
@@ -317,6 +267,9 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 									placeholder={'연락처를 입력해주세요.'}
 									showCrossMark={false}
 									keyboardType={'number-pad'}
+									alert_msg={'- 을 제외하고 10~11자로 작성해주세요'}
+									showMsg
+									confirm_msg={'올바른 전화번호 양식입니다.'}
 								/>
 							</View>
 						</View>

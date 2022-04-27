@@ -17,10 +17,17 @@ import ProtectCommentList from 'Root/component/templete/protection/ProtectCommen
 import EditAidRequest from 'Root/component/templete/protection/EditAidRequest';
 import AlarmList from 'Root/component/templete/list/AlarmList';
 import AlarmCommentList from 'Root/component/organism/comment/AlarmCommentList';
+import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
+import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
 
 const ProtectionStack = createStackNavigator();
 
-export default ProtectionStackNavigation = () => {
+export default ProtectionStackNavigation = props => {
+	const routeName = getFocusedRouteNameFromRoute(props.route) ?? 'ProtectionTab';
+	React.useEffect(() => {
+		props.sendRoute(routeName);
+	}, [routeName]);
+
 	return (
 		<ProtectionStack.Navigator initialRouteName="ProtectionTab">
 			<ProtectionStack.Screen name="ProtectionTab" component={ProtectionTopTabNavigation} options={{header: props => <LogoHeader {...props} />}} />
@@ -69,6 +76,11 @@ export default ProtectionStackNavigation = () => {
 			/>
 			<ProtectionStack.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
 			<ProtectionStack.Screen name="AlarmCommentList" component={AlarmCommentList} options={{header: props => <SimpleHeader {...props} />}} />
+			<ProtectionStack.Screen
+				name="EditShelterInfo"
+				component={EditShelterInfo}
+				options={{header: props => <SimpleHeader {...props} />, title: '보호소 정보 수정'}}
+			/>
 		</ProtectionStack.Navigator>
 	);
 };

@@ -16,15 +16,16 @@ const ShelterInfo = props => {
 	const [data, setData] = React.useState(props.data);
 
 	const onPressPhoneNum = () => {
-		Linking.openURL(`tel:${data.shelter_delegate_contact_number}`);
+		Linking.openURL(`tel:${data.volunteer_target_shelter.shelter_delegate_contact_number}`);
 	};
-	// const
-	// console.log('data.shelter_delegate_contact_number', data.shelter_delegate_contact_number);
+
 	return (
 		<View style={[styles.container]}>
 			<View style={[styles.profile_container]}>
 				<ProfileImageSmall data={data} />
-				<Text style={[txt.noto28b, styles.shelter_name_text]}>{data.shelter_name || ''}</Text>
+				<Text style={[txt.noto28b, styles.shelter_name_text]} numberOfLines={1}>
+					{data.user_nickname || ''}
+				</Text>
 			</View>
 			<View style={[styles.text_container]}>
 				<Text style={[txt.noto24, {alignSelf: 'flex-end', color: GRAY10}]}>
@@ -33,7 +34,7 @@ const ShelterInfo = props => {
 				<TouchableOpacity onPress={onPressPhoneNum}>
 					<Text style={[txt.noto24, {alignSelf: 'flex-end', color: BLUE20, textDecorationLine: 'underline'}]}>
 						{/* {data.shelter_delegate_contact_number || ''} */}
-						{hyphened(data.shelter_delegate_contact_number || data.volunteer_delegate_contact)}
+						{hyphened(data.shelter_delegate_contact_number || data.volunteer_target_shelter.shelter_delegate_contact_number)}{' '}
 					</Text>
 				</TouchableOpacity>
 			</View>
@@ -63,6 +64,7 @@ const styles = StyleSheet.create({
 	shelter_name_text: {
 		marginLeft: 24 * DP,
 		paddingVertical: 26 * DP,
+		maxWidth: 500 * DP,
 		justifyContent: 'center',
 	},
 });

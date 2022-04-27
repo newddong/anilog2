@@ -5,6 +5,7 @@ import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {Mercy_Killing, Female48, Male48} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
+import FastImage from 'react-native-fast-image';
 
 /**
  * 버튼 컴포넌트트

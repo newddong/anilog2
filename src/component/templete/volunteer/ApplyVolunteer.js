@@ -135,7 +135,12 @@ export default ApplyVolunteer = ({route, navigation}) => {
 
 	//계정추가 버튼 클릭
 	const addVolunteer = () => {
-		navigation.push('AddVolunteers');
+		console.log('::', data.volunteer_accompany_number - data.volunteer_accompany.length);
+		if (data.volunteer_accompany_number - data.volunteer_accompany.length <= 0) {
+			Modal.popOneBtn('참여인원보다 많은 봉사자를\n 추가하실 수 없습니다.', '확 인', () => Modal.close());
+		} else {
+			navigation.push('AddVolunteers');
+		}
 	};
 
 	//DatePicker로 날짜 지정할 시, 하단에 봉사활동 날짜 Item이 View로 보여짐
@@ -152,7 +157,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 	const canOpenCalendar = () => {
 		let result = true;
 		if (data.volunteer_wish_date.length == 3) {
-			Modal.popOneBtn('희망날짜는 3일 이상 선택이 불가능합니다.', '확인', () => Modal.close());
+			Modal.popOneBtn('희망날짜는 3일 이상 \n 선택이 불가능합니다.', '확인', () => Modal.close());
 			result = false;
 		} else {
 			result = true;

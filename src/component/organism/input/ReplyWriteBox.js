@@ -9,6 +9,8 @@ import AniButton from 'Root/component/molecules/button/AniButton';
 import DP from 'Root/config/dp';
 import {btn_w116, btn_w120} from 'Root/component/atom/btn/btn_style';
 import {txt} from 'Root/config/textstyle';
+import userGlobalObject from 'Root/config/userGlobalObject';
+import Modal from 'Root/component/modal/Modal';
 /**
  * @param {{
  * onLockBtnClick : void ,
@@ -123,6 +125,7 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 						multiline={true}
 						placeholder={'메세지 입력..'}
 						onChangeText={onChangeText}
+						onFocus={onFocus}
 						ref={inputRef}
 					/>
 				</View>

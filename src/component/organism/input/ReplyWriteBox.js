@@ -1,16 +1,14 @@
 import React, {useRef} from 'react';
-import {Image, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {BLUE10, BLUE20, GRAY10} from 'Root/config/color';
+import {Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {BLUE20} from 'Root/config/color';
 import {Lock60_Border, Lock60_Filled, Photo60, Send60} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import SelectedMedia from 'Molecules/media/SelectedMedia';
 import {feedCommentList} from 'Templete/style_templete';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import DP from 'Root/config/dp';
-import {btn_w116, btn_w120} from 'Root/component/atom/btn/btn_style';
+import {btn_w120} from 'Root/component/atom/btn/btn_style';
 import {txt} from 'Root/config/textstyle';
-import userGlobalObject from 'Root/config/userGlobalObject';
-import Modal from 'Root/component/modal/Modal';
 /**
  * @param {{
  * onLockBtnClick : void ,
@@ -125,7 +123,6 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 						multiline={true}
 						placeholder={'메세지 입력..'}
 						onChangeText={onChangeText}
-						onFocus={onFocus}
 						ref={inputRef}
 					/>
 				</View>

@@ -71,10 +71,12 @@ export default EditShelterInfo = ({route, navigation}) => {
 		setData({...data, shelter_foundation_date: date});
 	};
 
+	let regNick = /^[가-힣a-zA-Z0-9_]{2,20}$/;
+	let regPhone = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
+	let regHomePhone = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))(\d{3,4})(\d{4})$/;
 	//보호소 네임 Validation
 	const shelterNameValidator = text => {
-		let regExp = /^[가-힣a-zA-Z0-9_]{2,20}$/;
-		return regExp.test(text);
+		return regNick.test(text);
 	};
 
 	//이메일 도메인 드롭다운 설정 콜백
@@ -108,17 +110,12 @@ export default EditShelterInfo = ({route, navigation}) => {
 
 	const phoneValidate = num => {
 		// console.log('num', num);
-		let regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
-		let regHomePhone = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))(\d{3,4})(\d{4})$/;
 		return regPhone.test(num) || regHomePhone.test(num);
 	};
 
 	//수정 완료 클릭
 	const finalized = () => {
 		let regEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
-		let regPhone = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
-		let regHomePhone = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))(\d{3,4})(\d{4})$/;
-		let regNick = /^[가-힣a-zA-Z0-9_]{2,20}$/;
 		const regexPhone = regPhone.test(data.shelter_delegate_contact_number) || regHomePhone.test(data.shelter_delegate_contact_number);
 		const regexEmail = regEmail.test(data.user_email);
 		const regexNick = regNick.test(data.user_nickname);

@@ -107,6 +107,7 @@ export default ProtectCommentList = props => {
 								!parentComment && setComments([]); //댓글목록 초기화
 								setComments(comments.msg.filter(e => e.comment_is_delete != true));
 								parentComment && addChildCommentFn.current();
+								setPrivateComment(false);
 								// console.log('comments', comments);
 							},
 							err => console.log('getCommentListByFeedId', err),
@@ -136,7 +137,7 @@ export default ProtectCommentList = props => {
 								!parentComment && setComments([]); //댓글목록 초기화
 								setComments(comments.msg.filter(e => e.comment_is_delete != true));
 								parentComment && addChildCommentFn.current();
-								// console.log('comments', comments);
+								setPrivateComment(false);
 							},
 							err => console.log('getCommentListByProtectId', err),
 						);

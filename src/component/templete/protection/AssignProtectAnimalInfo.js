@@ -44,7 +44,11 @@ export default AssignProtectAnimalInfo = ({route}) => {
 
 	//체중 Value 변동 시 실행
 	const onChangeKg = kg => {
-		setData({...data, protect_animal_weight: kg});
+		let res = kg;
+		if (res.startsWith('0') && !res.includes('.') && res.length > 1) {
+			res = res.replace('0', '');
+		}
+		setData({...data, protect_animal_weight: res});
 	};
 
 	//등록 버튼 => 모달에서 '새 글 작성' 클릭
@@ -131,10 +135,6 @@ export default AssignProtectAnimalInfo = ({route}) => {
 
 	const weigthValid = e => {
 		let regExp = /^[0-9]{1,2}(\.[0-9]{0,1})?$/;
-		let noFrom0 = e.startsWith('0');
-		if (!noFrom0) {
-			setBtnOn(!regExp.test(e));
-		}
 		return regExp.test(e);
 	};
 
@@ -244,7 +244,7 @@ export default AssignProtectAnimalInfo = ({route}) => {
 					<AniButton btnTitle={'뒤로'} btnTheme={'shadow'} btnStyle={'border'} btnLayout={btn_w226} onPress={goBack} />
 				</View>
 				<View style={[btn_style.btn_w226]}>
-					<AniButton btnTitle={'완료'} btnTheme={'shadow'} disable={btnOn} btnLayout={btn_w226} onPress={gotoNextStep} />
+					<AniButton btnTitle={'완료'} btnTheme={'shadow'} disable={!btnOn} btnLayout={btn_w226} onPress={gotoNextStep} />
 				</View>
 			</View>
 		</View>

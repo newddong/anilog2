@@ -73,6 +73,17 @@ export default AnimalNeedHelpList = props => {
 	const ITEM_HEIGHT = 214 * DP;
 
 	const keyExtractor = React.useCallback(item => item._id.toString(), []);
+	const getItemLayout = React.useCallback(
+		(data, index) =>
+			!data[index]
+				? {length: 0, offset: 0, index: index}
+				: {
+						length: ITEM_HEIGHT,
+						offset: ITEM_HEIGHT * index,
+						index,
+				  },
+		[],
+	);
 
 	return (
 		<View style={[!props.borderMode ? animalNeedHelpList.container_bordermode : animalNeedHelpList.container]}>
@@ -83,9 +94,7 @@ export default AnimalNeedHelpList = props => {
 				scrollEnabled={false}
 				showsVerticalScrollIndicator={false}
 				keyExtractor={keyExtractor}
-				getItemLayout={(data, index) => {
-					return {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index};
-				}}
+				getItemLayout={getItemLayout}
 				ListEmptyComponent={props.whenEmpty}
 				listKey={({item, index}) => index}
 			/>

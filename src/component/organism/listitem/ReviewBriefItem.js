@@ -33,8 +33,6 @@ const ReviewBriefItem = props => {
 
 	const image = imageList();
 
-	console.log('image', image);
-
 	React.useEffect(() => {
 		setData(props.data);
 	}, [props.data]);

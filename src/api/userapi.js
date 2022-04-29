@@ -73,7 +73,7 @@ export async function assignPet(params, callback, errcallback) {
  * @param {string} params.shelter_delegate_contact_number - 보호소 대표전화번호
  * @param {string} params.shelter_foundation_date - 보호소 설립일자
  * @param {string} params.shelter_homepage - 보호소 홈페이지 uri
- * @param {string} params.shelter_name - 보호소 이름
+ * @param {string} params.user_nickname - 보호소 이름
  * @param {'private'|'public'} params.shleter_type - 보호소 타잎 ('private'|'public')
  * @param {string} params.user_email - 보호소 이메일
  * @param {string} params.user_password - 보호소 접속 패스워드
@@ -262,7 +262,7 @@ export async function updateUserIntroduction(params, callback, errcallback) {
  *
  * @param {object} params
  * @param {string} userobject_id - 수정할 보호소 오브젝트 아이디
- * @param {string} shelter_name - 보호소 이름
+ * @param {string} user_nickname - 보호소 이름
  * @param {object} params.shelter_address
  * @param {string} params.shelter_address.brief - 보호소 주소
  * @param {string} params.shelter_address.detail - 보호소 상세 주소

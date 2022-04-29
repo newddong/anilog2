@@ -249,6 +249,7 @@ export async function getUserInfoById(params, callback, errcallback) {
  * 유저의 소개글 변경(로그인 필요)
  *
  * @param {object} params
+ * @param {string} params.userobject_id - 사용자 오브젝트 ID
  * @param {string} params.user_introduction - 변경할 소개글
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백

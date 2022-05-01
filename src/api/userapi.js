@@ -443,3 +443,21 @@ export async function setMemoBoxWithReport(params, callback, errcallback) {
 export async function getChekingFollow(params, callback, errcallback) {
 	apiController('/user/getChekingFollow', arguments);
 }
+
+/** sms 인증을 위한 토큰 발행
+ * @param {object} params
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getSMStoken(params, callback, errcallback) {
+	apiController('/user/getSMStoken', arguments);
+}
+
+/** sms 인증을 위한 가맹점 식별코드
+ * @param {object} params
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getSMSimpcode(params, callback, errcallback) {
+	apiController('/user/getSMSimpcode', arguments);
+}

@@ -9,6 +9,7 @@ import {appliesRecord, login_style} from 'Templete/style_templete';
 import AnimalNeedHelp from 'Root/component/organism/listitem/AnimalNeedHelp';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Loading from 'Root/component/molecules/modal/Loading';
+import dp from 'Root/config/dp';
 
 export default AppliesRecord = ({route}) => {
 	//첫번째 값만 신청내역에 보여주기 위함. AnimalNeedHelpList가 배열 데이터를 다루기 때문에 반드시 객체가 배열이어야 함.
@@ -39,6 +40,7 @@ export default AppliesRecord = ({route}) => {
 					adopt.protect_animal_species_detail = adopt.protect_act_request_article_id.protect_animal_species_detail;
 					adopt.protect_animal_rescue_location = adopt.protect_act_request_article_id.protect_animal_id.protect_animal_rescue_location;
 					adopt.protect_request_writer_id = adopt.protect_act_request_article_id.protect_request_writer_id;
+					// console.log('adopt.protect_request_writer_id', adopt.protect_request_writer_id);
 					// delete adopt.protect_act_request_article_id;
 					const adoptArr = [adopt];
 					setAdopt_application_list(adoptArr);
@@ -55,7 +57,9 @@ export default AppliesRecord = ({route}) => {
 					protect.protect_request_date = protect.protect_act_request_article_id.protect_request_date;
 					protect.protect_request_status = protect.protect_act_request_article_id.protect_request_status;
 					protect.shelter_name = protect.protect_act_request_article_id.protect_request_writer_id.shelter_name;
+					protect.user_nickname = protect.protect_act_request_article_id.protect_request_writer_id.user_nickname;
 					protect.protect_request_writer_id = protect.protect_act_request_article_id.protect_request_writer_id;
+					// console.log('protect.protect_request_writer_id', protect.protect_request_writer_id);
 					// delete protect.protect_act_request_article_id;
 					const protectArr = [protect];
 					setProtect_application_list(protectArr);
@@ -68,10 +72,11 @@ export default AppliesRecord = ({route}) => {
 					volunteerList.map((v, i) => {
 						v.shelter_address = v.volunteer_target_shelter.shelter_address;
 						v.shelter_name = v.volunteer_target_shelter.shelter_name;
+						v.user_nickname = v.volunteer_target_shelter.user_nickname;
 						v.user_type = v.volunteer_target_shelter.user_type;
 						v.user_profile_uri = v.volunteer_target_shelter.user_profile_uri;
 						v.shelter_type = v.volunteer_target_shelter.shelter_type;
-						delete v.volunteer_target_shelter;
+						// delete v.volunteer_target_shelter;
 					});
 					setVolunteer_list(volunteerList);
 				} else {
@@ -127,8 +132,8 @@ export default AppliesRecord = ({route}) => {
 		return <Loading isModal={false} />;
 	} else {
 		return (
-			<View style={[login_style.wrp_main, appliesRecord.container]}>
-				<ScrollView>
+			<View style={[login_style.wrp_main, {flex: 1}]}>
+				<ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
 					<View style={[appliesRecord.record]}>
 						<View style={[appliesRecord.animalNeedHelp.headerContainer]}>
 							<Text style={[appliesRecord.animalNeedHelp.headerContainer.title]}>입양 신청 </Text>

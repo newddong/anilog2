@@ -85,28 +85,32 @@ export default AddFamilyAccount = ({route, navigation}) => {
 	//초대하기 클릭
 	const onCheckFamilyMembers = item => {
 		// console.log('리스트 인원 수 체크 후 3인이 넘어갈때 초대하면 3인까지만 가능하다는 메세지 필요 ~  3인이 안되면 API로 추가 후 goback');
-		addUserToFamily(
-			{
-				userobject_id: route.params.pet_id,
-				family_userobject_id: item._id,
-			},
-			result => {
-				console.log('result / addUserToFamily / AddFamilyAccount    :  ', result);
-				Modal.close();
-				navigation.navigate({
-					name: 'PetInfoSetting',
-					params: {addedAccount: result.msg},
-					merge: true,
-				});
-			},
-			err => {
-				console.log('err / addUserToFamily / AddFamilyAccount   :  ', err);
-				if (err == '반려동물 끼리는 가족이 될 수 없습니다.') {
+		Modal.close();
+		setTimeout(() => {
+			Modal.popLoading();
+			addUserToFamily(
+				{
+					userobject_id: route.params.pet_id,
+					family_userobject_id: item._id,
+				},
+				result => {
+					console.log('result / addUserToFamily / AddFamilyAccount    :  ', result);
 					Modal.close();
-					Modal.popOneBtn('반려동물 끼리는 가족이 될 수 없습니다.', '확인', () => Modal.close());
-				}
-			},
-		);
+					navigation.navigate({
+						name: 'PetInfoSetting',
+						params: {addedAccount: result.msg},
+						merge: true,
+					});
+				},
+				err => {
+					console.log('err / addUserToFamily / AddFamilyAccount   :  ', err);
+					if (err == '반려동물 끼리는 가족이 될 수 없습니다.') {
+						Modal.close();
+						Modal.popOneBtn('반려동물 끼리는 가족이 될 수 없습니다.', '확인', () => Modal.close());
+					}
+				},
+			);
+		}, 100);
 	};
 
 	const listEmptyComponent = () => {

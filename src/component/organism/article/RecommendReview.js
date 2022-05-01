@@ -19,40 +19,44 @@ const RecommendReview = props => {
 	const second = props.data[1];
 
 	const recommendReview = data => {
-		const imageList = () => {
-			let imageList = [];
-			let getImgTag = data.community_content.match(/<img[\w\W]+?\/?>/g); //img 태그 추출
-			if (getImgTag) {
-				getImgTag.map((v, i) => {
-					let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i); //img 태그가 있는 경우 src 추출
-					imageList.push(src[1]);
-				});
-			}
-			return imageList;
-		};
-		return (
-			<TouchableOpacity onPress={() => onPressRecommendReview(data)} activeOpacity={0.7} style={[{}]}>
-				<View style={{flexDirection: 'row'}}>
-					<View>
-						<View style={[style.userLabel]}>
-							<ProfileImageSmall data={data.community_writer_id} size={46} />
-							<Text style={[txt.noto24, {marginLeft: 24 * DP}]}>{data.community_writer_id.user_nickname}</Text>
+		if (data) {
+			const imageList = () => {
+				let imageList = [];
+				let getImgTag = data.community_content.match(/<img[\w\W]+?\/?>/g); //img 태그 추출
+				if (getImgTag) {
+					getImgTag.map((v, i) => {
+						let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i); //img 태그가 있는 경우 src 추출
+						imageList.push(src[1]);
+					});
+				}
+				return imageList;
+			};
+			return (
+				<TouchableOpacity onPress={() => onPressRecommendReview(data)} activeOpacity={0.7} style={[{}]}>
+					<View style={{flexDirection: 'row'}}>
+						<View>
+							<View style={[style.userLabel]}>
+								<ProfileImageSmall data={data.community_writer_id} size={46} />
+								<Text style={[txt.noto24, {marginLeft: 24 * DP, width: 350 * DP}]} numberOfLines={1}>
+									{data.community_writer_id.user_nickname}
+								</Text>
+							</View>
+							<View style={[style.article_content, {}]}>
+								<Text style={[txt.noto24, {color: GRAY10}]} numberOfLines={2}>
+									{data.community_content_without_html}
+								</Text>
+								<Text style={[txt.noto24, {color: GRAY20, marginTop: 16 * DP}]}>{getTimeLapsed(data.community_date)}</Text>
+							</View>
 						</View>
-						<View style={[style.article_content, {}]}>
-							<Text style={[txt.noto24, {color: GRAY10}]} numberOfLines={2}>
-								{data.community_content_without_html}
-							</Text>
-							<Text style={[txt.noto24, {color: GRAY20, marginTop: 16 * DP}]}>{getTimeLapsed(data.community_date)}</Text>
-						</View>
+						{imageList().length == 0 ? (
+							<Image style={[{width: 158 * DP, height: 158 * DP, borderRadius: 30 * DP}]} source={require('Atom/icon/document2.png')} />
+						) : (
+							<Image style={[{width: 158 * DP, height: 158 * DP, borderRadius: 30 * DP}]} source={{uri: imageList()[0]}} />
+						)}
 					</View>
-					{imageList().length == 0 ? (
-						<Image style={[{width: 158 * DP, height: 158 * DP, borderRadius: 30 * DP}]} source={require('Atom/icon/document2.png')} />
-					) : (
-						<Image style={[{width: 158 * DP, height: 158 * DP, borderRadius: 30 * DP}]} source={{uri: imageList()[0]}} />
-					)}
-				</View>
-			</TouchableOpacity>
-		);
+				</TouchableOpacity>
+			);
+		} else return <></>;
 	};
 
 	return (
@@ -62,7 +66,7 @@ const RecommendReview = props => {
 			</View>
 			<View style={[style.content, style.shadow]}>
 				{recommendReview(first)}
-				<View style={[style.separatorLine]} />
+				{props.data.length > 1 ? <View style={[style.separatorLine]} /> : <></>}
 				{recommendReview(second)}
 			</View>
 		</View>

@@ -13,6 +13,7 @@ import {likeEtc} from 'Root/api/likeetc';
 import {useNavigation} from '@react-navigation/core';
 import searchContext from 'Root/config/searchContext';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
+import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 
 export default SearchReview = props => {
 	const navigation = useNavigation();
@@ -307,45 +308,43 @@ export default SearchReview = props => {
 	};
 
 	const filterComponent = () => {
-		return (
-			<View style={[style.filter]}>
-				<View style={[style.shadow_filter]}>
-					{isFilter ? <Filter60Filled onPress={onPressFilterOff} /> : <Filter60Border onPress={onPressFilter} />}
+		if (getData().length == 0) {
+			return <></>;
+		} else
+			return (
+				<View style={[style.filter]}>
+					<View style={[style.shadow_filter]}>
+						{isFilter ? <Filter60Filled onPress={onPressFilterOff} /> : <Filter60Border onPress={onPressFilter} />}
+					</View>
+					<View style={[style.animalFilter]}>
+						<View style={[style.shadow]}>
+							{!filterData.dog ? (
+								<Animal_dog onPress={() => onPressAnimalFilter('dog')} />
+							) : (
+								<Animal_dog_off onPress={() => onPressAnimalFilter('dog')} />
+							)}
+						</View>
+						<View style={[style.shadow]}>
+							{!filterData.cat ? (
+								<Animal_cat onPress={() => onPressAnimalFilter('cat')} />
+							) : (
+								<Animal_cat_off onPress={() => onPressAnimalFilter('cat')} />
+							)}
+						</View>
+						<View style={[style.shadow]}>
+							{!filterData.etc ? (
+								<Animal_another onPress={() => onPressAnimalFilter('etc')} />
+							) : (
+								<Animal_another_off onPress={() => onPressAnimalFilter('etc')} />
+							)}
+						</View>
+					</View>
 				</View>
-				<View style={[style.animalFilter]}>
-					<View style={[style.shadow]}>
-						{!filterData.dog ? (
-							<Animal_dog onPress={() => onPressAnimalFilter('dog')} />
-						) : (
-							<Animal_dog_off onPress={() => onPressAnimalFilter('dog')} />
-						)}
-					</View>
-					<View style={[style.shadow]}>
-						{!filterData.cat ? (
-							<Animal_cat onPress={() => onPressAnimalFilter('cat')} />
-						) : (
-							<Animal_cat_off onPress={() => onPressAnimalFilter('cat')} />
-						)}
-					</View>
-					<View style={[style.shadow]}>
-						{!filterData.etc ? (
-							<Animal_another onPress={() => onPressAnimalFilter('etc')} />
-						) : (
-							<Animal_another_off onPress={() => onPressAnimalFilter('etc')} />
-						)}
-					</View>
-				</View>
-			</View>
-		);
+			);
 	};
 
 	const whenEmpty = () => {
-		return (
-			<View style={{paddingVertical: 150 * DP, alignItems: 'center'}}>
-				<EmptyIcon />
-				<Text style={[txt.noto28]}>검색 결과가 없습니다..</Text>
-			</View>
-		);
+		return <ListEmptyInfo text={'검색 결과가 없습니다..'} />;
 	};
 
 	if (props.loading) {

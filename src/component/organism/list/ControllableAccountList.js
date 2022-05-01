@@ -17,7 +17,8 @@ import {controllableAccountList} from 'Organism/style_organism copy';
  * showCheckBox :boolean,
  * showButtons : boolean,
  * showFollowStatusText : boolean,
- * listEmptyText : string
+ * listEmptyText : string,
+ * width : number,
  * }} props
  */
 export default ControllableAccountList = props => {
@@ -56,6 +57,7 @@ export default ControllableAccountList = props => {
 					onClickFollowBtn={() => onClickFollowBtn(item)}
 					onClickUnFollowBtn={() => onClickUnFollowBtn(item)}
 					showFollowStatusText={props.showFollowStatusText}
+					width={props.width}
 				/>
 			</View>
 		);

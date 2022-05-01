@@ -4,7 +4,7 @@ import {Text, View, TouchableOpacity, ScrollView, Image, TouchableWithoutFeedbac
 import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import {DEFAULT_PROFILE} from 'Root/i18n/msg';
+import {AVAILABLE_NICK, DEFAULT_PROFILE, NICKNAME_FORM} from 'Root/i18n/msg';
 import {btn_w654} from 'Atom/btn/btn_style';
 import {Check50, Rect50_Border} from 'Atom/icon';
 import Modal from 'Component/modal/Modal';
@@ -18,6 +18,7 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {checkProtectPet, getAnimalListNotRegisterWithCompanion, nicknameDuplicationCheck} from 'Root/api/userapi';
 import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import Input24 from 'Root/component/molecules/input/Input24';
 
 export default AssignPetProfileImage = ({route}) => {
 	const navigation = useNavigation();
@@ -125,8 +126,7 @@ export default AssignPetProfileImage = ({route}) => {
 
 	//닉네임 Validation
 	const nickName_validator = text => {
-		// ('* 2자 이상 15자 이내의 영문,숫자, _ 의 입력만 가능합니다.');
-		let regExp = /^[\w\ㄱ-ㅎㅏ-ㅣ가-힣]{2,20}$/;
+		let regExp = /^[가-힣a-zA-Z0-9_]{2,20}$/;
 		let blank_pattern = /\s/g;
 		console.log('nickname valid', regExp.test(text));
 		return regExp.test(text) && !blank_pattern.test(text);
@@ -183,7 +183,6 @@ export default AssignPetProfileImage = ({route}) => {
 
 	return (
 		<KeyboardAvoidingView style={[login_style.wrp_main, {flex: 1}]} behavior={'position'} contentContainerStyle={{alignItems: 'center'}}>
-			{/* contentContainerStyle​ : The style of the content container (View) when behavior is 'position'. */}
 			<View style={[login_style.wrp_main, {flex: 1}]}>
 				{/* (M)StageBar	 */}
 				<View style={[temp_style.stageBar, progressbar_style.stageBar]}>
@@ -196,11 +195,8 @@ export default AssignPetProfileImage = ({route}) => {
 						width={600 * DP} //bar의 너비
 					/>
 				</View>
-
-				{/* Text Msg */}
 				<View style={[temp_style.textMsg_assignPetProfileImage, assignPetProfileImage_style.textMsg]}>
 					<Text style={[txt.noto24, {color: GRAY10}]}>반려동물 프로필의 대표 이미지가 될 사진과 이름을 알려주세요.</Text>
-					<Text style={[txt.noto24, {color: GRAY10}]}>반려동물의 이름은 수정이 불가합니다.</Text>
 				</View>
 
 				{/* (M)ProfileImageSelect */}
@@ -210,19 +206,18 @@ export default AssignPetProfileImage = ({route}) => {
 
 				{/* InputForm */}
 				<View style={[temp_style.inputForm_assignPetProfileImage, assignPetProfileImage_style.inputForm]}>
-					<View style={[temp_style.input30_assignPetProfileImage, {backgroundColor: 'white'}]}>
-						<Input30
+					<View style={[temp_style.input30_assignPetProfileImage]}>
+						<Input24
 							value={data.user_nickname}
-							showTitle={false}
-							showmsg={false}
-							width={350}
-							confirm_msg={'사용 가능한 닉네임입니다.'}
-							alert_msg={'사용 불가능한 닉네임입니다.'}
+							width={654}
+							confirm_msg={AVAILABLE_NICK}
+							alert_msg={NICKNAME_FORM}
 							placeholder={'반려동물의 닉네임을 입력해주세요.'}
 							validator={nickName_validator}
 							onChange={onNicknameChange}
 							onValid={onNicknameValid}
 							ref={nicknameInput}
+							showMsg
 							maxLength={25}
 						/>
 					</View>

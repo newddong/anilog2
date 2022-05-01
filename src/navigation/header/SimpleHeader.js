@@ -15,7 +15,7 @@ export default SimpleHeader = ({navigation, route, options, back}) => {
 					<BackArrow32 onPress={navigation.goBack} />
 				</View>
 			</TouchableOpacity>
-			<Text style={[{flex: 1, textAlign: 'center', marginLeft: 30 * DP, marginRight: 80 * DP}, txt.roboto40b]}>
+			<Text numberOfLines={1} style={[{flex: 1, textAlign: 'center', marginLeft: 30 * DP, marginRight: 80 * DP}, txt.roboto40b]}>
 				{options.title ? options.title : route.params.title}
 			</Text>
 		</View>

@@ -276,12 +276,24 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	//임시보호 버튼 클릭
 	const onPressProtectRequest = () => {
-		navigation.push('ApplyProtectActivityA', {protect_request_pet_data: data});
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			navigation.push('ApplyProtectActivityA', {protect_request_pet_data: data});
+		}
 	};
 
 	//입양하기 버튼 클릭
 	const onPressAdoptionRequest = () => {
-		navigation.push('ApplyAnimalAdoptionA', {protect_request_pet_data: data});
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			navigation.push('ApplyAnimalAdoptionA', {protect_request_pet_data: data});
+		}
 	};
 
 	const onClickShelterLabel = data => {
@@ -419,7 +431,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 								{/* 보호요청 더 보기addMoreRequest */}
 								<View style={[temp_style.addMoreRequest_view]}>
 									<Text style={[txt.noto24, temp_style.addMoreRequest, {color: GRAY20}]}>
-										{data.protect_request_writer_id.shelter_name}님의 보호요청 더보기
+										{data.protect_request_writer_id.user_nickname}님의 보호요청 더보기
 									</Text>
 								</View>
 

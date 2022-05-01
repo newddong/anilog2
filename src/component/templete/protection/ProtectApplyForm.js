@@ -1,9 +1,8 @@
 import React from 'react';
-import {ActivityIndicator, ScrollView, View} from 'react-native';
+import {View} from 'react-native';
 import {getProtectRequestByProtectRequestId, setProtectActivityStatus, setProtectRequestStatus} from 'Root/api/protectapi';
-import {assignPet} from 'Root/api/userapi';
 import {PROTECT_ACT_ADOPT_CONFIRM, PROTECT_ACT_PROTECT_CONFIRM} from 'Root/i18n/msg';
-import {btn_w226, btn_w654} from 'Atom/btn/btn_style';
+import {btn_w654} from 'Atom/btn/btn_style';
 import Modal from 'Component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
 import AnimalProtectDetail from 'Organism/info/AnimalProtectDetail';
@@ -13,8 +12,7 @@ import Loading from 'Root/component/molecules/modal/Loading';
 
 //ShelterMenu -> 신청서조회 -> 신청서 클릭 -> 입양 확정 및 임시보호 확정
 export default ProtectApplyForm = ({route, navigation}) => {
-	console.log('ProtectApplyForm props', route.params.data.protect_act_applicant_id._id);
-
+	// console.log('ProtectApplyForm props', route.params.data.protect_act_applicant_id._id);
 	const [data, setData] = React.useState('false');
 
 	React.useEffect(() => {
@@ -32,6 +30,7 @@ export default ProtectApplyForm = ({route, navigation}) => {
 				addedData.protect_request_photos_uri = result.msg.protect_request_photos_uri;
 				addedData.protect_animal_id = result.msg.protect_animal_id;
 				addedData.shelter_name = result.msg.protect_request_writer_id.user_nickname;
+				addedData.user_nickname = result.msg.protect_request_writer_id.user_nickname;
 				setData(addedData);
 			},
 			err => {

@@ -358,25 +358,18 @@ export default ReviewMain = ({route, navigation}) => {
 
 	//리뷰 좋아요 클릭
 	const onPressLike = (index, bool) => {
-		console.log('index', index, bool);
-		if (userGlobalObject.userInfo.isPreviewMode) {
-			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
-			});
-		} else {
-			likeEtc(
-				{
-					collectionName: 'communityobjects',
-					post_object_id: data[index]._id,
-					is_like: bool,
-				},
-				result => {
-					console.log('result/ onPressLike / ReviewMain : ', result.msg);
-					fetchData();
-				},
-				err => console.log('err / onPressLike / ReviewMain : ', err),
-			);
-		}
+		likeEtc(
+			{
+				collectionName: 'communityobjects',
+				post_object_id: data[index]._id,
+				is_like: bool,
+			},
+			result => {
+				console.log('result/ onPressLike / ReviewMain : ', result.msg);
+				fetchData();
+			},
+			err => console.log('err / onPressLike / ReviewMain : ', err),
+		);
 	};
 
 	//댓글 모두 보기 클릭
@@ -390,7 +383,6 @@ export default ReviewMain = ({route, navigation}) => {
 	};
 
 	const onPressRecommendReview = data => {
-		console.log('index', data);
 		navigation.push('ReviewDetail', {community_object: data});
 	};
 
@@ -407,7 +399,6 @@ export default ReviewMain = ({route, navigation}) => {
 
 	//즐겨찾기 클릭
 	const onPressFavorite = (index, bool) => {
-		console.log('index', index, bool);
 		console.log('data[index]._id,', getData()[index]._id);
 		setFavoriteEtc(
 			{

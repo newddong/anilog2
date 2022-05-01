@@ -34,9 +34,12 @@ export default WriteAidRequest = ({route, navigation}) => {
 		}
 	}, [route.params.isRePost]);
 
+	React.useEffect(() => {
+		route.params.onConfirm ? Modal.popLoading() : Modal.close();
+	}, [route.params.onConfirm]);
+
 	//헤더로 데이터 보내기
 	React.useEffect(() => {
-		// console.log('ProtectRequestData / WriteAidRequest ', protectRequestData);
 		navigation.setParams({data: protectRequestData, nav: route.name});
 	}, [protectRequestData]);
 
@@ -127,6 +130,7 @@ export default WriteAidRequest = ({route, navigation}) => {
 							placeholder={'제목 입력'}
 							placeholderTextColor={GRAY20}
 							// numberOfLines={1}
+							maxLength={100}
 							style={[txt.noto30, writeAidRequest.titleInput, {borderBottomColor: APRI10}]}
 						/>
 					</View>

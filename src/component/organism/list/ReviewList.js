@@ -38,7 +38,7 @@ export default ReviewList = props => {
 
 	return (
 		<View style={[style.container]}>
-			<RecommendReview data={props.recommend} onPressRecommendReview={data => props.onPressRecommendReview(data)} />
+			{props.recommend ? <RecommendReview data={props.recommend} onPressRecommendReview={data => props.onPressRecommendReview(data)} /> : <></>}
 			<FlatList
 				data={props.items}
 				renderItem={({item, index}) => renderItem(item, index)}

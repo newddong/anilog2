@@ -39,6 +39,8 @@ export default ChangeUserProfileImage = ({route}) => {
 				},
 				success => {
 					Modal.close();
+					userGlobalObject.userInfo.user_nickname = newNick;
+					userGlobalObject.userInfo.user_profile_uri = data.user_profile_uri;
 					navigation.navigate({
 						name: route.params.routeInfo.name,
 						key: route.params.routeInfo.key,
@@ -64,7 +66,6 @@ export default ChangeUserProfileImage = ({route}) => {
 		})
 			.then(images => {
 				setData({...data, user_profile_uri: images.path || data.user_profile_uri});
-				userGlobalObject.userInfo.user_profile_uri = images.path;
 				setConfirmed(true);
 				Modal.close();
 			})
@@ -144,6 +145,7 @@ export default ChangeUserProfileImage = ({route}) => {
 							confirm_msg={AVAILABLE_NICK}
 							width={654}
 							onClear={onClearNickname}
+							maxlength={20}
 						/>
 					</View>
 				</View>

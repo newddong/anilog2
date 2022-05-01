@@ -22,7 +22,6 @@ import ParentComment from 'Root/component/organism/comment/ParentComment';
 import {ScrollView as GestureHandlerScrollView} from 'react-native-gesture-handler';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 
-
 /**
  * 후기 상세 내용
  * @param {object} props - Props Object
@@ -145,6 +144,7 @@ export default ReviewDetail = props => {
 							!parentComment && setComments([]); //댓글목록 초기화
 							setComments(comments.msg.filter(e => e.comment_is_delete != true));
 							parentComment && addChildCommentFn.current();
+							setPrivateComment(false);
 							// console.log('comments', comments);
 							setTimeout(() => {
 								scrollRef.current.scrollToIndex({animated: true, index: whichComment});
@@ -188,6 +188,7 @@ export default ReviewDetail = props => {
 							setComments(result.msg.filter(e => e.comment_is_delete != true));
 							parentComment && addChildCommentFn.current();
 							input.current.blur();
+							setPrivateComment(false);
 							setTimeout(() => {
 								whichParent == ''
 									? scrollRef.current.scrollToIndex({animated: true, index: 0})
@@ -373,22 +374,22 @@ export default ReviewDetail = props => {
 									'이 게시물을 신고 하시겠습니까?',
 									selectedItem => {
 										createReport(
-                      {
-                        report_target_object_id: data._id,
-                        report_target_object_type: 'communityobjects',
-                        report_target_reason: selectedItem,
-                        report_is_delete: false,
-                      },
-                      result => {
-                        console.log('신고 완료', result);
-                        Modal.close();
-                        Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
-                      },
-                      err => {
-                        console.log('신고 err', err);
-                        Modal.close();
-                      },
-                    );
+											{
+												report_target_object_id: data._id,
+												report_target_object_type: 'communityobjects',
+												report_target_reason: selectedItem,
+												report_is_delete: false,
+											},
+											result => {
+												console.log('신고 완료', result);
+												Modal.close();
+												Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
+											},
+											err => {
+												console.log('신고 err', err);
+												Modal.close();
+											},
+										);
 									},
 									'신고',
 								);

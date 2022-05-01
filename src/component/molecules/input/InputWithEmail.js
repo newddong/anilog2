@@ -94,36 +94,23 @@ const InputWithEmail = props => {
 			) : (
 				false
 			)}
-			{/* <View style={{flexDirection: 'row', alignItems: 'center', borderBottomWidth: 2 * DP, borderColor: input.length == 0 ? GRAY30 : APRI10}}> */}
 			<View
 				style={{
 					flexDirection: 'row',
 					alignItems: 'center',
-
 					borderBottomColor: APRI10,
 					borderBottomWidth: 2 * DP,
 				}}>
 				{/* 이메일 주소 */}
-				{/* <Input24
-					placeholder={props.placeholder}
-					value={input.split('@')[0]}
-					defaultValue={props.defaultValue ? props.defaultValue.split('@')[0] : ''}
-					onChange={onChange}
-					showMsg={props.showMsg}
-					showCrossMark={false}
-					maxlength={30}
-					// onClear={onClear}
-					numberOfLinst={1}
-					width={props.width || 240}
-					validator={validator}
-					onValid={onValid}
-				/> */}
 				<TextInput
-					style={{
-						width: props.width * DP,
-						height: 80 * DP,
-						paddingHorizontal: 20 * DP,
-					}}
+					style={[
+						txt.roboto32,
+						{
+							width: props.width * DP,
+							height: 80 * DP,
+							paddingHorizontal: 20 * DP,
+						},
+					]}
 					placeholder={props.placeholder}
 					defaultValue={props.defaultValue ? props.defaultValue.split('@')[0] : ''}
 					onChangeText={onChange}

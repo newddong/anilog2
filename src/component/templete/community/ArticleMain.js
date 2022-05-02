@@ -41,7 +41,7 @@ export default ArticleMain = ({route}) => {
 				community_type: 'free',
 			},
 			result => {
-				// console.log('result / getCommunityList / ArticleMain :', result.msg.free[0]);
+				console.log('result / getCommunityList / ArticleMain :', result.msg.free[0]);
 				setData(result.msg.free);
 			},
 			err => {

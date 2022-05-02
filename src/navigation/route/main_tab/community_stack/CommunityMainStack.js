@@ -169,6 +169,7 @@ export default CommunityMainStack = props => {
 				name="FeedCommentList"
 				component={FeedCommentList}
 				options={{header: props => <AlarmAndSearchHeader {...props} />}}
+			/>
 			<CommunityMainStackNavi.Screen
 				name="EditShelterInfo"
 				component={EditShelterInfo}

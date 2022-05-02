@@ -23,11 +23,19 @@ const Loading = props => {
 					backgroundColor: '#0009',
 				},
 			]}>
-			<FastImage
-				style={{width: 200, height: 200}}
-				source={Image.resolveAssetSource(require('Atom/icon/loading.gif'))}
-				resizeMode={FastImage.resizeMode.contain}
-			/>
+			{Platform.OS == 'android' ? (
+				<FastImage
+					style={{width: 200, height: 200}}
+					source={Image.resolveAssetSource(require('Atom/icon/loading.gif'))}
+					resizeMode={FastImage.resizeMode.contain}
+				/>
+			) : (
+				<FastImage
+					style={{width: 200, height: 200}}
+					source={Image.resolveAssetSource(require('Atom/icon/loading.gif'))}
+					resizeMode={FastImage.resizeMode.contain}
+				/>
+			)}
 		</View>
 	) : (
 		<View

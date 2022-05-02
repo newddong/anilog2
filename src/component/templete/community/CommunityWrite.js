@@ -91,8 +91,7 @@ export default CommunityWrite = props => {
 
 	//내용 입력
 	const onChange = editorData => {
-		console.log('editorData', editorData);
-
+		// console.log('editorData', editorData);
 		setData({...data, community_content: editorData});
 		scrollRef.current.scrollTo({y: cursor - 50, duration: 100, animated: true});
 	};
@@ -124,52 +123,44 @@ export default CommunityWrite = props => {
 		}
 	};
 
-	async function changePath(src) {
-		return new Promise(async function (resolve, reject) {
-			try {
-				changeLocalPathToS3Path(
-					{
-						s3path_uri: src,
-					},
-					result => {
-						// console.log('result / s3path / Write ', result.msg);
-						resolve(result.msg);
-					},
-					err => {
-						console.log('err', err);
-					},
-				);
-			} catch (error) {
-				console.log('error changePath  :  ', error.message);
-				Modal.close(); //오류발생 시 Modal 종료
-			}
-		});
-	}
-
 	//Rich Editor 레이아웃
 	const onLayout = e => {
 		setEditorLayout(e.nativeEvent.layout);
 	};
 
 	//이미지 입력
-	const insertImage = async imageList => {
+	const insertImage = imageList => {
 		// console.log('imageList', imageList);
-		data != 'false' ? richText.current?.insertHTML('<p><br/></p></div>') : false; //이미지를 넣을 시 바로 다음줄로 이동하도록 처리
-		const result = await changePath(imageList);
-		result.map((v, i) => {
-			richText.current?.insertHTML('<p><br/></p></div>');
-			richText.current?.insertHTML(
-				`<div><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick');" \n
-				 height="320px;" width="${editorLayout.width};" style="border-radius:15px; margin:5px 0px 5px 0px; "/></div>`,
+		setTimeout(() => {
+			data != 'false' ? richText.current?.insertHTML('<p><br/></p></div>') : false; //이미지를 넣을 시 바로 다음줄로 이동하도록 처리
+			// const result = await changePath(imageList);
+			changeLocalPathToS3Path(
+				{
+					s3path_uri: imageList,
+				},
+				result => {
+					Modal.popLoading(true);
+					// console.log('result / s3path / Write ', result.msg);
+					// resolve(result.msg);
+					result.msg.map((v, i) => {
+						richText.current?.insertHTML('<p><br/></p></div>');
+						richText.current?.insertHTML(
+							`<div><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick');" \n
+							 height="320px;" width="${editorLayout.width};" style="border-radius:15px; margin:5px 0px 5px 0px; "/></div>`,
+						);
+						// richText.current?.insertHTML(
+						// 	`<div  style="padding : 8px 10px 8px 0px; " ><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
+						// 	 height="320px;" width="${editorLayout.width};" style="border-radius:15px; margin: 0 auto 4px;    "/></div>`,
+						// );
+						// richText.current?.insertHTML('<p><br/></p></div>');
+					});
+					// richText.current?.focusContentEditor();
+				},
+				err => {
+					console.log('err', err);
+				},
 			);
-			// richText.current?.insertHTML(
-			// 	`<div  style="padding : 8px 10px 8px 0px; " ><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
-			// 	 height="320px;" width="${editorLayout.width};" style="border-radius:15px; margin: 0 auto 4px;    "/></div>`,
-			// );
-			// richText.current?.insertHTML('<p><br/></p></div>');
-		});
-
-		richText.current?.focusContentEditor();
+		}, 100);
 	};
 
 	const onPressAddVideo = () => {
@@ -271,16 +262,25 @@ export default CommunityWrite = props => {
 	})();
 
 	React.useEffect(() => {
-		let didshow = Keyboard.addListener('keyboardDidShow', e => {
-			scrollRef.current.scrollTo({y: cursor - 30, duration: 100, animated: true});
+		let willshow = Keyboard.addListener('keyboardWillShow', e => {
 			setKeyboardY(e.endCoordinates.height + KeyboardBorderLine);
-			Platform.OS == 'android' ? setShowBtn(true) : false;
+			Platform.OS == 'android' ? setShowBtn(true) : setShowBtn(true);
+		});
+		let didshow = Keyboard.addListener('keyboardDidShow', e => {
+			setKeyboardY(e.endCoordinates.height + KeyboardBorderLine);
+			Platform.OS == 'android' ? setShowBtn(true) : setShowBtn(true);
 		});
 		let didhide = Keyboard.addListener('keyboardDidHide', e => {
 			setKeyboardY(0);
-			Platform.OS == 'android' ? setShowBtn(false) : false;
+			Platform.OS == 'android' ? setShowBtn(false) : setShowBtn(false);
+		});
+		let willhide = Keyboard.addListener('keyboardWillHide', e => {
+			setKeyboardY(0);
+			Platform.OS == 'android' ? setShowBtn(false) : setShowBtn(false);
 		});
 		return () => {
+			willshow.remove();
+			willhide.remove();
 			didshow.remove();
 			didhide.remove();
 		};
@@ -396,6 +396,13 @@ export default CommunityWrite = props => {
 
 	const onPaste = paste => {
 		console.log('paste', paste);
+		if (paste == '') {
+			Modal.alert('이미지 붙여넣기는 불가합니다.');
+		}
+	};
+
+	const removeEditor = () => {
+		richText.current.dismissKeyboard();
 	};
 
 	const moveToLocationPicker = () => {
@@ -426,62 +433,67 @@ export default CommunityWrite = props => {
 					</View>
 				)}
 				{/* 텍스트 입력 박스 */}
-				<View style={[style.content, {}]}>
-					{data.community_address.normal_address.address_name != '' ? (
-						<View style={[style.location]}>
-							<Location54_Filled />
-							<Text style={[txt.noto26b, {color: APRI10, marginLeft: 10 * DP, width: 550 * DP}]}>
-								{data.community_address.road_address.address_name.includes('도로명 주소가 없는 위치입니다') ||
-								data.community_address.road_address.address_name == 'undefined '
-									? data.community_address.normal_address.address_name
-									: data.community_address.road_address.address_name}
-							</Text>
-						</View>
-					) : (
-						<></>
-					)}
-					{Platform.OS == 'android' ? (
-						<ScrollView>
-							<RichEditor
-								ref={richText}
-								editorStyle={{
-									contentCSSText: 'font-size:14px;',
-								}}
-								onChange={onChange}
-								onLayout={onLayout}
-								style={{
-									width: '100%',
-									opacity: 0.99,
-								}}
-								placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
-								onCursorPosition={onCursorPosition}
-								onPaste={onPaste}
-								// onMessage={handleMessage}
-							/>
-						</ScrollView>
-					) : (
-						<>
-							<RichEditor
-								ref={richText}
-								showSoftInputOnFocus={false}
-								onFocus={() => setShowBtn(true)}
-								onBlur={() => setShowBtn(false)}
-								keyboardDisplayRequiresUserAction={true}
-								editorStyle={{
-									contentCSSText: 'font-size:14px;',
-								}}
-								onChange={onChange}
-								style={{
-									width: '100%',
-									opacity: 0.99,
-								}}
-								placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
-								onCursorPosition={onCursorPosition}
-								onPaste={onPaste}
-								// onMessage={handleMessage2}
-							/>
-						</>
-					)}
+				<View style={{flexDirection: 'row'}}>
+					<TouchableOpacity onPress={removeEditor} activeOpacity={1} style={{width: 48 * DP}}></TouchableOpacity>
+					<View style={[style.content, {}]}>
+						{data.community_address.normal_address.address_name != '' ? (
+							<View style={[style.location]}>
+								<Location54_Filled />
+								<Text style={[txt.noto26b, {color: APRI10, marginLeft: 10 * DP, width: 550 * DP}]}>
+									{data.community_address.road_address.address_name.includes('도로명 주소가 없는 위치입니다') ||
+									data.community_address.road_address.address_name == 'undefined '
+										? data.community_address.normal_address.address_name
+										: data.community_address.road_address.address_name}
+								</Text>
+							</View>
+						) : (
+							<></>
+						)}
+						{Platform.OS == 'android' ? (
+							<ScrollView>
+								<RichEditor
+									ref={richText}
+									editorStyle={{
+										contentCSSText: 'font-size:14px;',
+									}}
+									onChange={onChange}
+									onLayout={onLayout}
+									keyboardDisplayRequiresUserAction={true}
+									style={{
+										width: '100%',
+										opacity: 0.99,
+									}}
+									placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
+									onCursorPosition={onCursorPosition}
+									onPaste={onPaste}
+									pasteAsPlainText={true}
+									// onMessage={handleMessage}
+								/>
+							</ScrollView>
+						) : (
+							<View style={{flexDirection: 'row'}}>
+								<RichEditor
+									ref={richText}
+									keyboardDisplayRequiresUserAction={true}
+									editorStyle={{
+										contentCSSText: 'font-size:14px;',
+									}}
+									onChange={onChange}
+									style={{
+										width: '100%',
+										opacity: 0.99,
+									}}
+									contentMode={'mobile'}
+									placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
+									onCursorPosition={onCursorPosition}
+									onPaste={onPaste}
+									pasteAsPlainText={true}
+									// onMessage={handleMessage2}
+								/>
+							</View>
+						)}
+					</View>
+					<TouchableOpacity activeOpacity={1} onPress={removeEditor} style={{width: 48 * DP}}></TouchableOpacity>
 				</View>
 				{/* 하단 버튼 컴포넌트  */}
 				{isReview ? (
@@ -524,12 +536,12 @@ export default CommunityWrite = props => {
 				<View
 					style={[
 						style.buttonContainer_keyboard,
-						{justifyContent: 'space-between', bottom: Platform.OS == 'android' ? 0 : KeyboardY - 50, opacity: showBtn == false ? 0 : 1},
+						{justifyContent: 'space-between', bottom: Platform.OS == 'android' ? 0 : KeyboardY, opacity: showBtn == false ? 0 : 1},
 					]}>
 					{getReviewButtonContainer()}
 				</View>
 			) : (
-				<View style={[style.buttonContainer_keyboard, {bottom: Platform.OS == 'android' ? 0 : KeyboardY - 50, opacity: showBtn == false ? 0 : 1}]}>
+				<View style={[style.buttonContainer_keyboard, {bottom: Platform.OS == 'android' ? 0 : KeyboardY, opacity: showBtn == false ? 0 : 1}]}>
 					{getArticleButtonContainer()}
 				</View>
 			)}
@@ -613,7 +625,7 @@ const style = StyleSheet.create({
 		justifyContent: 'space-between',
 	},
 	buttonContainer_keyboard: {
-		// backgroundColor: 'yellow',
+		backgroundColor: 'yellow',
 		paddingVertical: 15 * DP,
 		flexDirection: 'row',
 		alignSelf: 'center',

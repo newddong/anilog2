@@ -5,7 +5,8 @@ import Modal from 'Component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
 import PasswordChecker from 'Organism/form/PasswordChecker';
 import {login_style, btn_style, temp_style, passwordReset_style} from 'Templete/style_templete';
-
+import {changeUserPassword} from 'Root/api/userapi';
+import {updateUserPassword} from 'Root/api/userapi';
 // 각각 뷰에 컴포넌트 삽입시 style의 첫번째 index 삭제할 것. 두번째 index는 상.하 간격 style이라서 이 컴포넌트에만 해당 됨.
 //ex) 변경 전: <View style={[btn_style.btn_w654, findAccount_style.btn_w654]}>   변경 후:  <View style={[findAccount_style.btn_w654]}>
 
@@ -16,6 +17,7 @@ export default PasswordReset = ({route, navigation}) => {
 	const [pwdValid, setPwdValid] = React.useState(false); // 비밀번호 양식 체크 (8자이상~~)
 	const [pwdCheck, setPwdCheck] = React.useState(false); // 비밀번호 더블 체크 통과 여부
 	const [presentPwdValid, setPresentPwdValid] = React.useState(true); // 현재 비밀번호 입력값이 실제 DB와 일치하는지 여부
+	console.log('PassworRest', route);
 
 	React.useEffect(() => {
 		console.log('pwd', pwd);
@@ -84,12 +86,18 @@ export default PasswordReset = ({route, navigation}) => {
 
 	//확인 버튼 클릭 => 최종 확인 모달에서 확인버튼 다시 클릭 => DB접근 Update 예정
 	const changeFinalize = () => {
-		Modal.close();
-		changeUserPassword(
-			{user_password: prevpwd, new_user_password: pwd},
+		// Modal.close();
+		console.log('파라미터들', route.params, pwd);
+		//changePassword 가 아닌 reset Password api가있어야된다.
+		updateUserPassword(
+			{userobject_id: route.params, new_password: pwd},
 			success => {
 				console.log('success', success);
-				navigation.goBack();
+				Modal.popNoBtn('비밀번호 설정이 완료되었습니다.');
+				setTimeout(() => {
+					Modal.close();
+					navigation.navigate('Login');
+				}, 1000);
 			},
 			err => {
 				alert('비밀번호를 다시 입력해주세요.');
@@ -98,13 +106,7 @@ export default PasswordReset = ({route, navigation}) => {
 		);
 	};
 
-	const onPressConfirm = () => {
-		Modal.popNoBtn('비밀번호 설정이 완료되었습니다.');
-		setTimeout(() => {
-			Modal.close();
-			navigation.navigate('Login');
-		}, 1000);
-	};
+	// const onPressConfirm = () => {};
 
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
@@ -122,7 +124,7 @@ export default PasswordReset = ({route, navigation}) => {
 			</View>
 
 			<View style={[btn_style.btn_w654, passwordReset_style.btn_w654]}>
-				<AniButton onPress={onPressConfirm} btnTitle={'확인'} btnStyle={'border'} btnLayout={btn_w654} titleFontStyle={32} />
+				<AniButton onPress={changeFinalize} btnTitle={'확인'} btnStyle={'border'} btnLayout={btn_w654} titleFontStyle={32} />
 			</View>
 		</View>
 	);

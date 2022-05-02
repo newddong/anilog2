@@ -195,8 +195,8 @@ export async function updateUserDetailInformation(params, callback, errcallback)
  *
  * @param {object} params
  * @param {string} params.userobject_id - 반려동물 유저 객체 ID
- * @param {string} params.pet_species - 반려동물 종
- * @param {string} params.pet_species_detail - 반려동물 상세 품종
+ * @param {string} params.pet_species - 반려동물 종 (개, 고양이 등등)
+ * @param {string} params.pet_species_detail - 반려동물 품종 (말티즈, 불독 등등)
  * @param {'male'|'female'|'unknown'} params.pet_sex - 반려동물의 성별
  * @param {'yes'|'no'|'unknown'} params.pet_neutralization - 반려동물 중성화 여부
  * @param {Date} params.pet_birthday - 반려동물 생일
@@ -463,4 +463,15 @@ export async function getSMStoken(params, callback, errcallback) {
  */
 export async function getSMSimpcode(params, callback, errcallback) {
 	apiController('/user/getSMSimpcode', arguments);
+}
+
+/** 비밀번호 변경
+ * @param {object} params
+ * @param {string} params.user_phone_number  - 사용자 핸드폰 번호
+ * @param {string} params.new_password  - 변경할 유저의 비밀번호
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function updateUserPassword(params, callback, errcallback) {
+	apiController('/user/updateUserPassword', arguments);
 }

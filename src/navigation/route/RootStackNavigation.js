@@ -74,6 +74,8 @@ import FeedCommentList from 'Templete/feed/FeedCommentList';
 import ArticleDetail from 'Templete/community/ArticleDetail';
 import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
 import TermsAndPolicy from 'Root/component/templete/user/TermsAndPolicy';
+import Certification from 'Root/component/templete/login/Certification';
+
 const RootStack = createStackNavigator();
 
 export default RootStackNavigation = () => {
@@ -350,6 +352,12 @@ export default RootStackNavigation = () => {
 								title: ' ',
 							})}
 						/> */}
+
+						<RootStack.Screen
+							name="Certification"
+							component={Certification}
+							options={{header: props => <SimpleHeader {...props} />, title: '사용자 인증'}}
+						/>
 					</RootStack.Navigator>
 
 					{/* <RootStack.Screen

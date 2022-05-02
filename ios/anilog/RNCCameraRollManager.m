@@ -513,6 +513,7 @@ RCT_EXPORT_METHOD(compressImage:(NSString* _Nonnull)uri
                   compressionQuality:(NSNumber* _Nonnull)quality
                   resolver:(RCTPromiseResolveBlock) resolve
                   rejecter:(RCTPromiseRejectBlock) reject){
+  //일단 ph로 시작하는 주소만 받게 해 둠
   if ([uri containsString:@"ph://"] == false) {
     reject(@"Invalid image uri format.", @"Correct format is 'ph://{local identifier}'", nil);
     return;
@@ -573,6 +574,87 @@ RCT_EXPORT_METHOD(compressImage:(NSString* _Nonnull)uri
       self.resolve(savedPath);
     }
     }];
+}
+
+//#MARK: @RCT savaeImage
+/// 이미지를 저장하는 함수. 성공시 nil, 실패시 error를 리턴한다.
+RCT_EXPORT_METHOD(saveImage:(NSString*) uri
+                  resolver:(RCTPromiseResolveBlock) resolve
+                  rejecter:(RCTPromiseRejectBlock) reject){
+//  NSLog(@"saveImage native");
+  if(uri == nil) {
+    reject(@"URI is nil", nil, nil);
+    return;
+  }
+  //!!저장 뒤 메타데이터는 확인하지 않았으므로 아직 확실하지 않은 상태!!
+  //!
+  //프로퍼티에 저장하지 않는 방법 강구
+  self.resolve = resolve;
+  self.reject = reject;
+  __block NSData *imageData = nil;
+  
+  void (^save)(void) = ^void() {
+      if ([PHAssetCreationRequest class]) {
+          [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+              [[PHAssetCreationRequest creationRequestForAsset] addResourceWithType:PHAssetResourceTypePhoto
+                                                                               data:imageData options:nil];
+          } completionHandler:^(BOOL success, NSError * _Nullable error) {
+              if (success) {
+                self.resolve(nil);
+              } else {
+                self.reject(@"Fail to save image", error.localizedDescription, error);
+              }
+          }];
+      } else {
+        //UIImageWriteToSavedPhotosAlbum도 사용 가능하지만 그러면 메타데이터가 전부 날아가기 때문에 임시로 저장한 뒤 카메라 앨범에 저장한다
+        NSString* savedPath = [self createTempImage:imageData];
+        [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+          [PHAssetChangeRequest creationRequestForAssetFromImageAtFileURL:[NSURL URLWithString:savedPath]];
+        } completionHandler:^(BOOL success, NSError * _Nullable error) {
+            if (success) {
+              self.resolve(nil);
+            } else {
+              self.reject(@"Fail to save image", error.localizedDescription, error);
+            }
+            [[NSFileManager defaultManager] removeItemAtURL:[NSURL URLWithString:savedPath] error:nil];
+        }];
+      }
+  }; //end of block function save()
+  
+  dispatch_sync(dispatch_get_main_queue(), ^{
+    if([uri containsString:@"ph://"]) //이게 최신 방법
+    {
+      PHFetchResult<PHAsset *> *asset = [PHAsset fetchAssetsWithLocalIdentifiers:@[[uri substringFromIndex:5]] options:nil];
+      
+      if(asset == nil || asset.count == 0) {
+        self.reject(@"Image fetch result is nil.", nil, nil);
+        return;
+      } else if(asset.firstObject == nil) {
+        self.reject(@"Image is nil", nil, nil);
+        return;
+      }
+      
+      PHImageRequestOptions* options = [[PHImageRequestOptions alloc] init];
+      options.synchronous = true;
+      
+      [[PHImageManager defaultManager] requestImageDataForAsset:asset.firstObject
+                                                        options:options
+                                                  resultHandler:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+        imageData = resultData;
+        save();
+      }];
+    } else {  //원격 이미지 파일 로드 시.. 다른 방법 필요 // 이건 보통 ios 8~9 //임시
+      [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+        [PHAssetCreationRequest creationRequestForAssetFromImageAtFileURL:[NSURL URLWithString:uri]];
+      } completionHandler:^(BOOL success, NSError * _Nullable error) {
+        if(success){
+          self.resolve(nil);
+        } else {
+          self.reject(@"Fail to save image", error.localizedDescription, error);
+        }
+      }];
+    }
+  });
 }
 
 //#MARK: checkPhotoLibraryConfig

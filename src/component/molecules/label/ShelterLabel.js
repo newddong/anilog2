@@ -15,14 +15,7 @@ import {DEFAULT_PROFILE} from 'Root/i18n/msg';
  * @param {(data:object)=>void} props.onClickLabel - 보호소 UserObject
  */
 const ShelterLabel = props => {
-	const [validation, setValidation] = React.useState(false);
-	//user_nickname Text 색깔 조건부적용을 위한 세션아이디 비교
-	React.useEffect(() => {
-		if (props.data.user_id == userGlobalObj.userInfo._id) {
-			setValidation(true); //일치한다면 Validation True로 nickname text color를 바꿈
-		}
-		return () => {};
-	});
+	const validation = props.data.user_id == userGlobalObj.userInfo._id;
 
 	const getStatusMark = () => {
 		switch (props.data.shelter_type) {
@@ -46,8 +39,8 @@ const ShelterLabel = props => {
 			</TouchableOpacity>
 			<View style={{position: 'absolute', left: 66 * DP, top: 46 * DP}}>{getStatusMark()}</View>
 			<View style={{marginLeft: 30 * DP, paddingVertical: 4 * DP}}>
-				<Text style={[txt.roboto28b, {color: validation ? APRI10 : BLACK}]} numberOfLines={1} ellipsizeMode="tail">
-					{props.data.shelter_name || ''}
+				<Text style={[txt.roboto28b, {color: validation ? APRI10 : BLACK, maxWidth: 420 * DP}]} numberOfLines={1} ellipsizeMode="tail">
+					{props.data.user_nickname || ''}
 				</Text>
 				<Text style={[txt.noto24, {width: 400 * DP, lineHeight: 44 * DP, color: GRAY10}]} numberOfLines={1} ellipsizeMode="tail">
 					{props.data.shelter_address.brief || ''} {props.data.shelter_address.detail || ''}

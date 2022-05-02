@@ -73,7 +73,7 @@ export async function assignPet(params, callback, errcallback) {
  * @param {string} params.shelter_delegate_contact_number - 보호소 대표전화번호
  * @param {string} params.shelter_foundation_date - 보호소 설립일자
  * @param {string} params.shelter_homepage - 보호소 홈페이지 uri
- * @param {string} params.shelter_name - 보호소 이름
+ * @param {string} params.user_nickname - 보호소 이름
  * @param {'private'|'public'} params.shleter_type - 보호소 타잎 ('private'|'public')
  * @param {string} params.user_email - 보호소 이메일
  * @param {string} params.user_password - 보호소 접속 패스워드
@@ -195,6 +195,8 @@ export async function updateUserDetailInformation(params, callback, errcallback)
  *
  * @param {object} params
  * @param {string} params.userobject_id - 반려동물 유저 객체 ID
+ * @param {string} params.pet_species - 반려동물 종 (개, 고양이 등등)
+ * @param {string} params.pet_species_detail - 반려동물 품종 (말티즈, 불독 등등)
  * @param {'male'|'female'|'unknown'} params.pet_sex - 반려동물의 성별
  * @param {'yes'|'no'|'unknown'} params.pet_neutralization - 반려동물 중성화 여부
  * @param {Date} params.pet_birthday - 반려동물 생일
@@ -262,7 +264,7 @@ export async function updateUserIntroduction(params, callback, errcallback) {
  *
  * @param {object} params
  * @param {string} userobject_id - 수정할 보호소 오브젝트 아이디
- * @param {string} shelter_name - 보호소 이름
+ * @param {string} user_nickname - 보호소 이름
  * @param {object} params.shelter_address
  * @param {string} params.shelter_address.brief - 보호소 주소
  * @param {string} params.shelter_address.detail - 보호소 상세 주소
@@ -442,4 +444,33 @@ export async function setMemoBoxWithReport(params, callback, errcallback) {
  */
 export async function getChekingFollow(params, callback, errcallback) {
 	apiController('/user/getChekingFollow', arguments);
+}
+
+/** sms 인증을 위한 토큰 발행
+ * @param {object} params
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getSMStoken(params, callback, errcallback) {
+	apiController('/user/getSMStoken', arguments);
+}
+
+/** sms 인증을 위한 가맹점 식별코드
+ * @param {object} params
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getSMSimpcode(params, callback, errcallback) {
+	apiController('/user/getSMSimpcode', arguments);
+}
+
+/** 비밀번호 변경
+ * @param {object} params
+ * @param {string} params.user_phone_number  - 사용자 핸드폰 번호
+ * @param {string} params.new_password  - 변경할 유저의 비밀번호
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function updateUserPassword(params, callback, errcallback) {
+	apiController('/user/updateUserPassword', arguments);
 }

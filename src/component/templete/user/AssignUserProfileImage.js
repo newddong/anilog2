@@ -9,6 +9,7 @@ import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';
 import {login_style, btn_style, temp_style, assignUserProfileImage_style} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
 import {assignUser, nicknameDuplicationCheck} from 'Root/api/userapi';
+import {AVAILABLE_NICK, NICKNAME_FORM} from 'Root/i18n/msg';
 
 export default AssignUserProfileImage = props => {
 	const [imgSelected, setImgSelected] = React.useState();
@@ -152,12 +153,9 @@ export default AssignUserProfileImage = props => {
 				<Input30
 					value={nickname}
 					showTitle={false}
-					title={'닉네임'}
-					info={'띄어쓰기 없이 2자 이상 15자 이내의 한글, 영문, 숫자, "_",의 입력만 가능합니다. '}
-					description={'* 2자 이상 15자 이내의 영문,숫자, _ 의 입력만 가능합니다.'}
-					width={344} //
-					confirm_msg={'사용 가능한 닉네임입니다.'}
-					alert_msg={'사용 불가능한 닉네임입니다.'}
+					width={344}
+					confirm_msg={AVAILABLE_NICK}
+					alert_msg={NICKNAME_FORM}
 					placeholder={'닉네임을 입력해주세요.'}
 					validator={nickName_validator}
 					onChange={onNicknameChange}

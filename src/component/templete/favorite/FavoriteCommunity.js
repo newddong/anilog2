@@ -58,6 +58,8 @@ export default FavoriteCommunity = ({route}) => {
 						},
 						err => {
 							console.log('err / getFavoriteEtcListByUserId / FavoriteCommunity : ', err);
+							setReview([]);
+							setArticle([]);
 						},
 				  );
 		});

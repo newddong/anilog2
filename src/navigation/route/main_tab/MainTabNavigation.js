@@ -27,6 +27,7 @@ export default MainTabNavigation = ({route, navigation}) => {
 			case 'UserInfoSetting':
 			case 'FeedCommentList':
 			case 'AddressSearchWeb':
+			case 'AnimalProtectRequestDetail':
 				// case 'Search':
 				return false;
 				break;
@@ -55,21 +56,21 @@ export default MainTabNavigation = ({route, navigation}) => {
 			/>
 			<MainTabNav.Screen
 				name="PROTECTION"
-				component={ProtectionStackNavigation}
 				options={({route}) => ({
 					tabBarVisible: getTabBarVisibility(route),
 					tabBarLabel: '동물보호',
 					tabBarHideOnKeyboard: true,
 					header: props => false,
-				})}
-			/>
+				})}>
+				{props => <ProtectionStackNavigation {...props} sendRoute={sendRoute} />}
+			</MainTabNav.Screen>
 			<MainTabNav.Screen
 				name="COMMUNITY"
 				options={({route}) => ({
 					tabBarVisible: getTabBarVisibility(route),
 					tabBarLabel: '커뮤니티',
 					tabBarHideOnKeyboard: true,
-					unmountOnBlur: true,
+					// unmountOnBlur: true,
 					// header: props => (!getHeaderState() ? <LogoHeader {...props} /> : <></>),
 					header: props => false,
 				})}>

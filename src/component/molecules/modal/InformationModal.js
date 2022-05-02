@@ -62,7 +62,7 @@ const InformationModal = props => {
 	};
 
 	const onPressEdit = () => {
-		props.onPressEdit();
+		props.onPressEdit(data.user_type);
 	};
 
 	const getContents = () => {
@@ -157,7 +157,7 @@ const InformationModal = props => {
 			return (
 				<>
 					<View style={[style.shelter_name]}>
-						<Text style={[txt.noto32b]}>{data.shelter_name}</Text>
+						<Text style={[txt.noto32b]}>{data.user_nickname}</Text>
 					</View>
 					{/* 주소 */}
 					<View style={[style.shelter_address]}>
@@ -206,7 +206,7 @@ const InformationModal = props => {
 					</View>
 					{isOwner() ? (
 						<View>
-							<AniButton btnLayout={btn_w136} btnStyle={'border'} btnTitle={'수정'} />
+							<AniButton btnLayout={btn_w136} btnStyle={'border'} btnTitle={'수정'} onPress={onPressEdit} />
 						</View>
 					) : (
 						<></>

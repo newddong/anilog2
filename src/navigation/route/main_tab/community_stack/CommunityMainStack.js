@@ -23,6 +23,7 @@ import FeedList from 'Templete/feed/FeedList';
 import AlarmList from 'Templete/list/AlarmList';
 import AlarmCommentList from 'Organism/comment/AlarmCommentList';
 import UserNotePage from 'Templete/user/UserNotePage';
+import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
 
 const CommunityMainStackNavi = createStackNavigator();
 
@@ -148,7 +149,6 @@ export default CommunityMainStack = props => {
 			{/* 알람용 */}
 			<CommunityMainStackNavi.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
 			<CommunityMainStackNavi.Screen name="AlarmCommentList" component={AlarmCommentList} options={{header: props => <SimpleHeader {...props} />}} />
-
 			<CommunityMainStackNavi.Screen
 				name="ShelterVolunteerForm"
 				component={ApplicationFormVolunteer}
@@ -169,6 +169,10 @@ export default CommunityMainStack = props => {
 				name="FeedCommentList"
 				component={FeedCommentList}
 				options={{header: props => <AlarmAndSearchHeader {...props} />}}
+			<CommunityMainStackNavi.Screen
+				name="EditShelterInfo"
+				component={EditShelterInfo}
+				options={{header: props => <SimpleHeader {...props} />, title: '보호소 정보 수정'}}
 			/>
 		</CommunityMainStackNavi.Navigator>
 	);

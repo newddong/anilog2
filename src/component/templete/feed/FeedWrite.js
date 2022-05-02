@@ -50,13 +50,19 @@ export default FeedWrite = props => {
 	React.useEffect(() => {
 		if (props.route.name != 'FeedEdit') {
 			const param = props.route.params;
+
+			console.log('param.feed_avatar_id', param.feed_avatar_id);
 			param.feed_avatar_id //피드 글쓰기 클릭시 즉시 작성자 아바타 계정을 선택하는 절차가 추가됨에 따라 분기처리가 필요해짐
 				? // - 유저 계정에서 피드글쓰기를 누른 경우
 				  props.navigation.setParams({
 						...props.route.params,
 						media_uri: selectedImg,
 						feed_medias: selectedImg.map(v => ({media_uri: v, is_video: false, duration: 0, tags: []})),
-						feed_avatar_id: props.route.params.feed_avatar_id ? props.route.params.feed_avatar_id?._id : userGlobalObject.userInfo._id,
+						feed_avatar_id: param.feed_avatar_id._id
+							? param.feed_avatar_id._id
+							: param.feed_avatar_id
+							? param.feed_avatar_id
+							: userGlobalObject.userInfo._id,
 				  })
 				: // - 보호소 계정에서 피드 글쓰기를 누른 경우
 				  props.navigation.setParams({

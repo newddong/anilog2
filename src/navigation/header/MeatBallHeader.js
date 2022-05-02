@@ -25,8 +25,11 @@ export default MeatBallHeader = props => {
 				Modal.popInformationModal(
 					props.options.data,
 					() => onClose(),
-					() => {
-						props.navigation.push('SetPetInformation', props.options.data);
+					type => {
+						console.log('type', type);
+						type == 'shelter'
+							? props.navigation.push('EditShelterInfo', {data: props.options.data})
+							: props.navigation.push('SetPetInformation', props.options.data);
 						//프로필 수정하는 페이지 이동
 					},
 				);

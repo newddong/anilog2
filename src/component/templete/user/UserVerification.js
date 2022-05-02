@@ -155,7 +155,7 @@ export default UserVerification = props => {
 
 	const nameValidator = name => {
 		// let regExp = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,20}$/;
-		let regExp = /^[ㄱ-ㅎ가-힣a-zA-Z0-9_-]{2,20}$/;
+		let regExp = /^[가-힣a-zA-Z0-9_]{2,20}$/;
 		let pattern = /\s/g;
 		// console.log('trimmed:' + trimmed.length);
 		// console.log('regex', !pattern.test(trimmed) && regExp.test(trimmed));

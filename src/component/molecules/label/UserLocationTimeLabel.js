@@ -84,7 +84,7 @@ const UserLocationTimeLabel = props => {
 
 				<View style={{marginLeft: 20 * DP}}>
 					<View style={{flexDirection: 'row'}}>
-						<Text style={[props.isLarge ? txt.roboto32b : txt.roboto24, {color: isLoginUser ? APRI10 : BLACK}]} numberOfLines={1}>
+						<Text style={[props.isLarge ? txt.roboto32b : txt.roboto24, {color: isLoginUser ? APRI10 : BLACK, maxWidth: 500 * DP}]} numberOfLines={1}>
 							{props.data.user_nickname || ''}
 						</Text>
 						{isMyPet ? (

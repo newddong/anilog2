@@ -126,6 +126,9 @@ export default MissingAnimalDetail = props => {
 			},
 			errcallback => {
 				console.log(`Comment errcallback:${JSON.stringify(errcallback)}`);
+				if (errcallback == '검색 결과가 없습니다.') {
+					setCommentDataList([]);
+				}
 			},
 		);
 	};
@@ -161,11 +164,11 @@ export default MissingAnimalDetail = props => {
 					is_favorite: bool,
 				},
 				result => {
-					console.log('result / favoriteEtc / profileInfo : ', result.msg.favoriteEtc);
+					console.log('result / favoriteEtc / missingAnimalDetail : ', result.msg.favoriteEtc);
 					fetchFeedData();
 				},
 				err => {
-					console.log('err / favoriteEtc / profileInfo : ', err);
+					console.log('err / favoriteEtc / missingAnimalDetail : ', err);
 				},
 			);
 		}

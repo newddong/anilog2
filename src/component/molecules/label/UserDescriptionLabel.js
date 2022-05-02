@@ -93,7 +93,10 @@ const UserDescriptionLabel = props => {
 				{getLabel()}
 				<View style={{marginLeft: 30 * DP}}>
 					<View style={{flexDirection: 'row'}}>
-						<Text style={(txt.roboto28b, {color: userGlobalObject.userInfo._id == data._id ? APRI10 : BLACK})} numberOfLines={1} ellipsizeMode="tail">
+						<Text
+							style={(txt.roboto28b, {maxWidth: 400 * DP, color: userGlobalObject.userInfo._id == data._id ? APRI10 : BLACK})}
+							numberOfLines={1}
+							ellipsizeMode="tail">
 							{data.user_nickname || ''}
 						</Text>
 						{props.showFollowStatusText ? (
@@ -115,7 +118,6 @@ const UserDescriptionLabel = props => {
 									color: GRAY10,
 									width: props.width * DP || null, //22.02.24 추가 KSW UserDescriptionLabel이 사용되는 모든 템플릿  확인 완료 출력 오류 없는 상태 (And, ios)
 									maxWidth: props.width * DP || 400 * DP,
-									// backgroundColor: 'yellow',
 								},
 							]}
 							numberOfLines={1}

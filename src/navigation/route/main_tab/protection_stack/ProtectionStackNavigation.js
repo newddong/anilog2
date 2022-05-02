@@ -18,10 +18,17 @@ import EditAidRequest from 'Templete/protection/EditAidRequest';
 import AlarmList from 'Templete/list/AlarmList';
 import AlarmCommentList from 'Organism/comment/AlarmCommentList';
 import UserNotePage from 'Templete/user/UserNotePage';
+import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
+import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
 
 const ProtectionStack = createStackNavigator();
 
-export default ProtectionStackNavigation = () => {
+export default ProtectionStackNavigation = props => {
+	const routeName = getFocusedRouteNameFromRoute(props.route) ?? 'ProtectionTab';
+	React.useEffect(() => {
+		props.sendRoute(routeName);
+	}, [routeName]);
+
 	return (
 		<ProtectionStack.Navigator initialRouteName="ProtectionTab">
 			<ProtectionStack.Screen name="ProtectionTab" component={ProtectionTopTabNavigation} options={{header: props => <LogoHeader {...props} />}} />
@@ -89,6 +96,10 @@ export default ProtectionStackNavigation = () => {
 					header: props => <SimpleHeader {...props} />,
 					title: ' ',
 				})}
+			<ProtectionStack.Screen
+				name="EditShelterInfo"
+				component={EditShelterInfo}
+				options={{header: props => <SimpleHeader {...props} />, title: '보호소 정보 수정'}}
 			/>
 		</ProtectionStack.Navigator>
 	);

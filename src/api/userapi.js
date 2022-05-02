@@ -464,7 +464,7 @@ export async function getSMSimpcode(params, callback, errcallback) {
 
 /** 비밀번호 변경
  * @param {object} params
- * @param {string} params.userobject_id  - 사용자 object_id
+ * @param {string} params.user_phone_number  - 사용자 핸드폰 번호
  * @param {string} params.new_password  - 변경할 유저의 비밀번호
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백

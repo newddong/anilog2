@@ -243,10 +243,10 @@ export default LoginTemplete = props => {
 					<TouchableOpacity onPress={moveToShelterCodeCheck}>
 						<Text style={[txt.noto24, {color: GRAY20}]}> 보호소 등록</Text>
 					</TouchableOpacity>
-					<Text style={{color: GRAY20}}> | </Text>
+					{/* <Text style={{color: GRAY20}}> | </Text>
 					<TouchableOpacity onPress={findMyId}>
 						<Text style={[txt.noto24, {color: GRAY20}]}> 내 계정 찾기 </Text>
-					</TouchableOpacity>
+					</TouchableOpacity> */}
 					<Text style={{color: GRAY20}}> | </Text>
 					<TouchableOpacity onPress={changePassword}>
 						<Text style={[txt.noto24, {color: GRAY20}]}> 비밀번호 재설정</Text>

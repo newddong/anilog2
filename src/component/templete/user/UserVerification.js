@@ -9,6 +9,7 @@ import {stagebar_style} from 'Organism/style_organism copy';
 import {login_style, btn_style, temp_style, progressbar_style, userAssign} from 'Templete/style_templete';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
+import {getSMStoken} from 'Root/api/userapi';
 // DropDown 컴포넌트 해결될 시 props처리와 data처리 추가해야함
 // 이메일부분 삭제 컨펌 나면 삭제 실시 예정
 
@@ -22,13 +23,15 @@ export default UserVerification = props => {
 	}).current;
 
 	const [tabState, setTabState] = React.useState(0);
-	const [verified, setVerified] = React.useState(false);
 	const [verified_num, setVerified_num] = React.useState();
+	const [verified, setVerified] = React.useState(false); //입력값 verifiled boolean
 	const [time, setTime] = React.useState(0);
 	const [async, setAsync] = React.useState({isConfirm: false});
 	const [token, setToken] = React.useState();
 	const [loaded, setLoaded] = React.useState(false);
 	const [impid, setImpid] = React.useState();
+	const [failed, setFailed] = React.useState(false); // 인증 실패 boolean
+	const [phoneVerified, setPhoneVerified] = React.useState(false); //핸드폰 번호 인증 완료
 	const navigation = useNavigation();
 	const goToNextStep = () => {
 		console.log(user_data);
@@ -39,11 +42,17 @@ export default UserVerification = props => {
 			console.log('props changed', props);
 			const response = props.route.params.response;
 
-			if (response.success) {
+			if (response.success == true) {
 				console.log('imp_uid', response.imp_uid);
-				setVerified(true);
+				setPhoneVerified(true);
+				// setVerified(true);
 				setImpid(response.imp_uid);
 				getToken();
+				setFailed(false);
+			}
+			// 인증에 실패했을때
+			else {
+				setFailed(true);
 			}
 		}
 	}, [props]);
@@ -54,21 +63,17 @@ export default UserVerification = props => {
 	}, [loaded]);
 
 	async function getToken() {
-		try {
-			const response = await axios({
-				url: 'https://api.iamport.kr/users/getToken',
-				method: 'post', // POST method
-				headers: {'Content-Type': 'application/json'}, // "Content-Type": "application/json"
-				data: {
-					imp_key: '8427182330724644', // REST API키
-					imp_secret: '7a968900ca1ae8e30ec448bf9c5f7b0716424e80f8c5aea716f88b8a01453efe9498764041c35122', // REST API Secret
-				},
-			});
-			setToken(response.data.response);
-			setLoaded(true);
-		} catch (e) {
-			console.log('getToken err', e);
-		}
+		getSMStoken(
+			{},
+			result => {
+				// console.log('result', result);
+				setToken(result.msg.access_token);
+				setLoaded(true);
+			},
+			err => {
+				console.log('인증 토큰 받아오기 err', err);
+			},
+		);
 	}
 	async function getCertifications(imp_key) {
 		console.log('imp_key, token', imp_key, token);
@@ -77,7 +82,7 @@ export default UserVerification = props => {
 			const response = await axios({
 				url: `https://api.iamport.kr/certifications/${imp_key}`, // imp_uid 전달
 				method: 'get', // GET method
-				headers: {Authorization: token.access_token}, // 인증 토큰 Authorization header에 추가
+				headers: {Authorization: token}, // 인증 토큰 Authorization header에 추가
 			});
 			const certificationInfo = response.data.response;
 			console.log('certificationInfo', certificationInfo);
@@ -85,6 +90,10 @@ export default UserVerification = props => {
 			console.log('getCertificataions err', e);
 		}
 	}
+	React.useEffect(() => {
+		console.log('verified changed', verified);
+		// console.log('verified??', v);
+	}, [verified]);
 
 	const changeTabState = state => {
 		setTabState(state);
@@ -111,36 +120,31 @@ export default UserVerification = props => {
 	const verificationRequest = () => {
 		console.log('인증요청');
 
-		// setTime(30);
-		// setTimeout(() => {
-		// 	setAsync({isConfirm: true});
-		// }, 500);
-		//번호 인증 요청(비동기)
-		// let user_carrier = '';
-		// console.log('인증요청 눌림', user_data);
-		// switch (user_data.user_mobile_company) {
-		// 	case 'SK텔레콤':
-		// 		user_carrier = 'SKT';
-		// 		break;
-		// 	case 'KT':
-		// 		user_carrier = 'KTF';
-		// 		break;
-		// 	case 'LG U+':
-		// 		user_carrier = 'LGT';
-		// 		break;
-		// 	case '알뜰폰':
-		// 		user_carrier = 'MVNO';
-		// 		break;
-		// }
+		let user_carrier = '';
+		console.log('인증요청 눌림', user_data);
+		switch (user_data.user_mobile_company) {
+			case 'SK텔레콤':
+				user_carrier = 'SKT';
+				break;
+			case 'KT':
+				user_carrier = 'KTF';
+				break;
+			case 'LG U+':
+				user_carrier = 'LGT';
+				break;
+			case '알뜰폰':
+				user_carrier = 'MVNO';
+				break;
+		}
 		const data = {
 			params: {
 				// merchant_uid: merchantUid,
-				carrier: '',
-				name: user_data.name,
+				carrier: user_carrier,
+				name: user_data.user_name,
 				phone: user_data.user_phone_number,
 			},
 		};
-		navigation.navigate('Certification', {data: data});
+		navigation.navigate('Certification', {data: data, navigationName: 'UserVerification'});
 	};
 
 	const reVerificationRequest = () => {
@@ -161,7 +165,7 @@ export default UserVerification = props => {
 	const mobileNumValidator = text => {
 		// console.log('text', text);
 		// console.log('상단 폼 체크 : ', text.length > 6);
-		return text.length > 2;
+		return text.length == 11;
 		//휴대폰 인증함수
 	};
 
@@ -171,6 +175,7 @@ export default UserVerification = props => {
 	};
 
 	const onVaild = isValid => {
+		console.log('isValid', isValid, verified);
 		setVerified(isValid);
 	};
 
@@ -191,7 +196,7 @@ export default UserVerification = props => {
 				<View style={[temp_style.textMassageLeftTop]}>
 					<Text style={userAssign.textMessageInside}>휴대폰 번호로 가입이 가능합니다.</Text>
 				</View>
-				{/* <View style={[temp_style.phoneNumVerification]}>
+				<View style={[temp_style.phoneNumVerification]}>
 					<PhoneNumVerification
 						requestVerification={verificationRequest}
 						requestReVerification={reVerificationRequest}
@@ -206,20 +211,26 @@ export default UserVerification = props => {
 						verifyTimeLimit={time}
 						asyncConfirm={async}
 						userData={user_data}
+						failed={failed}
+						phoneVerified={phoneVerified}
 					/>
-				</View> */}
+				</View>
 				{/* (A)Btn_w654 */}
-				{verified ? (
-					<AniButton btnTitle="인증 완료" btnLayout={btn_w654} titleFontStyle={32} onPress={verificationRequest} disable={true} />
-				) : (
-					<AniButton btnTitle="인증 하기" btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} onPress={verificationRequest} />
-				)}
+				{/* <View style={[btn_style.btn_w654, userAssign.btn_w654]}>
+					{verified ? (
+						<AniButton btnTitle="인증 완료" btnLayout={btn_w654} titleFontStyle={32} onPress={verificationRequest} disable={true} />
+					) : (
+						<AniButton btnTitle="인증 하기" btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} onPress={verificationRequest} />
+					)}
+				</View> */}
 
 				<View style={[btn_style.btn_w654, userAssign.btn_w654]}>
-					{verified ? (
-						<AniButton btnTitle={'다음 단계로'} btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} onPress={goToNextStep} />
+					{phoneVerified ? (
+						<AniButton btnTitle={'다음'} btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} onPress={goToNextStep} />
+					) : verified ? (
+						<AniButton btnTitle={'인증하기'} btnLayout={btn_w654} disable={false} titleFontStyle={32} onPress={verificationRequest} />
 					) : (
-						<AniButton btnTitle={'인증 확인'} btnLayout={btn_w654} disable={true} titleFontStyle={32} onPress={goToNextStep} />
+						<AniButton btnTitle={'인증하기'} btnLayout={btn_w654} disable={true} titleFontStyle={32} onPress={verificationRequest} />
 					)}
 				</View>
 			</ScrollView>

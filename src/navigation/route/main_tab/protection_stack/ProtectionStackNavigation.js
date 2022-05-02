@@ -96,6 +96,7 @@ export default ProtectionStackNavigation = props => {
 					header: props => <SimpleHeader {...props} />,
 					title: ' ',
 				})}
+			/>
 			<ProtectionStack.Screen
 				name="EditShelterInfo"
 				component={EditShelterInfo}

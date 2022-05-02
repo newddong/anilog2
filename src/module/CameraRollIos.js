@@ -167,6 +167,10 @@
  
      return RNCCameraRoll.compressImage(uri, compressWidth, compressHeight, compressionQuality);
    }
+
+  static saveImage(uri: string): Promise<void>{
+    return RNCCameraRoll.saveImage(uri);
+  }
    
    static getAlbums(
      params: GetAlbumsParams = {

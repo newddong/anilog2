@@ -29,7 +29,7 @@ import DP from 'Root/config/dp';
  *selectMode : 'boolean / 즐겨찾기 해제 모드 여부 default true',
  * }} props
  */
-export default AnimalNeedHelp = props => {
+export default AnimalNeedHelp = React.memo(props => {
 	// console.log('AnimalNeedHelp', props.data.protect_request_status);
 	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.data);
@@ -164,7 +164,7 @@ export default AnimalNeedHelp = props => {
 			<View style={[animalNeedHelp.detailContainer]}>
 				<View style={[animalNeedHelp.detail_lowerMenu, {width: props.selectMode ? 350 * DP : 410 * DP}]}>
 					{data.feed_type != 'missing' && data.feed_type != 'report' && (
-						<>
+						<View style={{justifyContent: 'space-between'}}>
 							{/* 동물 종류 및 품종 */}
 							<View style={[animalNeedHelp.lowerMenu_kindAndBreed]}>
 								<Text style={[txt.noto34b]}>{data.protect_animal_species || ''}</Text>
@@ -173,9 +173,9 @@ export default AnimalNeedHelp = props => {
 							{/* 보호요청 관련 Details */}
 							<View style={[animalNeedHelp.lowerMenu_helpDetail]}>
 								<Text style={[txt.noto28]}>등&nbsp; 록&nbsp; 일 : {getParsedDate()}</Text>
-								<Text style={[txt.noto28]}>
+								<Text style={[txt.noto28]} numberOfLines={1}>
 									{/* 보호장소 : {data.protect_request_writer_id != null ? data.protect_request_writer_id.shelter_name : data.shelter_name} */}
-									보호장소 : {data.shelter_name ? data.shelter_name : data.protect_request_writer_id.shelter_name}
+									보호장소 : {data.user_nickname ? data.user_nickname : data.protect_request_writer_id.user_nickname}
 								</Text>
 								<Text style={[txt.noto28]} numberOfLines={1}>
 									구조지역 :{' '}
@@ -186,7 +186,7 @@ export default AnimalNeedHelp = props => {
 										: '작성되지 않았습니다.'}
 								</Text>
 							</View>
-						</>
+						</View>
 					)}
 					{data.feed_type == 'missing' && (
 						<>
@@ -240,11 +240,9 @@ export default AnimalNeedHelp = props => {
 		);
 	};
 
-	// console.log('data is favori', data.is_favorite);
-
 	return (
 		<>
-			<View style={[selected ? animalNeedHelp.container_seleted : animalNeedHelp.container]}>
+			<View style={[selected ? animalNeedHelp.container_seleted : animalNeedHelp.container, {}]}>
 				<View style={[animalNeedHelp.container_basicInfo]}>
 					{/* CheckBox */}
 					{props.checkBoxMode ? (
@@ -298,7 +296,7 @@ export default AnimalNeedHelp = props => {
 			</View>
 		</>
 	);
-};
+});
 
 AnimalNeedHelp.defaultProps = {
 	selected: false,

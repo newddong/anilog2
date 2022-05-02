@@ -5,6 +5,7 @@ import {txt} from 'Root/config/textstyle';
 import {temp_style} from 'Templete/style_templete';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {EmptyIcon} from 'Root/component/atom/icon';
+import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 
 export default SearchHashTag = React.memo((props, ref) => {
 	// console.log('searchInput / SearchHashTag : ', props.search.searchInput);
@@ -32,12 +33,7 @@ export default SearchHashTag = React.memo((props, ref) => {
 	];
 
 	const whenEmpty = () => {
-		return (
-			<View style={{paddingVertical: 150 * DP, alignItems: 'center'}}>
-				<EmptyIcon />
-				<Text style={[txt.noto28, {marginTop: 10 * DP}]}>검색 결과가 없습니다..</Text>
-			</View>
-		);
+		return <ListEmptyInfo text={'검색 결과가 없습니다..'} />;
 	};
 
 	if (props.loading) {

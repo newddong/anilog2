@@ -9,6 +9,7 @@ import Loading from 'Root/component/molecules/modal/Loading';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import community_obj from 'Root/config/community_obj';
 import searchContext from 'Root/config/searchContext';
+import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 
 export default SearchArticle = props => {
 	// console.log('ArticleMain');
@@ -93,12 +94,7 @@ export default SearchArticle = props => {
 	};
 
 	const whenEmpty = () => {
-		return (
-			<View style={{paddingVertical: 150 * DP, alignItems: 'center'}}>
-				<EmptyIcon />
-				<Text style={[txt.noto28]}>검색 결과가 없습니다..</Text>
-			</View>
-		);
+		return <ListEmptyInfo text={'검색 결과가 없습니다..'} />;
 	};
 
 	return (
@@ -108,29 +104,35 @@ export default SearchArticle = props => {
 				renderItem={({item, index}) => {
 					return (
 						<>
-							<View style={[style.kindFilter]}>
-								<View style={[style.kindFilterItem]}>
-									<Text style={[txt.noto28, {color: GRAY10}]}> 잡담</Text>
-									{onlyTalk ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
-								</View>
-								<View style={[style.kindFilterItem]}>
-									<Text style={[txt.noto28, {color: GRAY10}]}> 질문</Text>
-									{onlyQuestion ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
-								</View>
-								<View style={[style.kindFilterItem]}>
-									<Text style={[txt.noto28, {color: GRAY10}]}> 모임</Text>
-									{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
-								</View>
-							</View>
 							{props.loading ? (
 								<Loading isModal={false} />
 							) : (
-								<ArticleList
-									items={getData()}
-									onPressArticle={onPressArticle} //게시글 내용 클릭
-									whenEmpty={whenEmpty}
-									isSearch={searchInput}
-								/>
+								<>
+									{getData().length == 0 ? (
+										<></>
+									) : (
+										<View style={[style.kindFilter]}>
+											<View style={[style.kindFilterItem]}>
+												<Text style={[txt.noto28, {color: GRAY10}]}> 잡담</Text>
+												{onlyTalk ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
+											</View>
+											<View style={[style.kindFilterItem]}>
+												<Text style={[txt.noto28, {color: GRAY10}]}> 질문</Text>
+												{onlyQuestion ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
+											</View>
+											<View style={[style.kindFilterItem]}>
+												<Text style={[txt.noto28, {color: GRAY10}]}> 모임</Text>
+												{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
+											</View>
+										</View>
+									)}
+									<ArticleList
+										items={getData()}
+										onPressArticle={onPressArticle} //게시글 내용 클릭
+										whenEmpty={whenEmpty}
+										isSearch={searchInput}
+									/>
+								</>
 							)}
 						</>
 					);

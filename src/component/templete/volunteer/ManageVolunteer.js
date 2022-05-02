@@ -34,6 +34,7 @@ export default ManageVolunteer = ({route}) => {
 						//ShelterLabel을 채우기 위한 필드명 1depth 올리기 작업
 						v.shelter_address = v.volunteer_target_shelter.shelter_address;
 						v.shelter_name = v.volunteer_target_shelter.shelter_name;
+						v.user_nickname = v.volunteer_target_shelter.user_nickname;
 						v.user_type = v.volunteer_target_shelter.user_type;
 						v.user_profile_uri = v.volunteer_target_shelter.user_profile_uri;
 						// 비교 후 '지난 내역' / '활동 예정' 각 배열에 푸쉬

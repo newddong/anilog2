@@ -11,6 +11,7 @@ import {getUserInfoById, updateUserIntroduction} from 'Root/api/userapi';
 import {TextInput} from 'react-native';
 import moment from 'moment';
 import {Arrow_Down_GRAY20, Arrow_Up_GRAY20, ProfileDefaultImg} from 'Atom/icon';
+import DP from 'Root/config/dp';
 
 export default ShelterInfoSetting = ({route}) => {
 	// console.log('ShelterInfoSetting', route.params);
@@ -122,7 +123,9 @@ export default ShelterInfoSetting = ({route}) => {
 							<Text style={[txt.noto30b, {color: GRAY10}]}>계정정보</Text>
 						</View>
 						<View style={[temp_style.accountInfo_email_shelterInfoSetting_view, shelterInfoSetting.email_view]}>
-							<Text style={[txt.roboto26]}>{data.user_nickname}</Text>
+							<Text style={[txt.roboto26, {maxWidth: 440 * DP}]} numberOfLines={1}>
+								{data.user_nickname}
+							</Text>
 							<TouchableOpacity onPress={moveToChangePassword}>
 								<Text style={[txt.noto26, {color: APRI10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>비밀번호 변경하기</Text>
 							</TouchableOpacity>
@@ -161,7 +164,7 @@ export default ShelterInfoSetting = ({route}) => {
 										multiline={true}
 										maxLength={500}
 										ref={modifyRef}
-										selectTextOnFocus
+										// selectTextOnFocus
 									/>
 								</View>
 							) : (
@@ -208,7 +211,9 @@ export default ShelterInfoSetting = ({route}) => {
 								<Text style={[txt.noto30, {color: GRAY10}]}>보호소</Text>
 							</View>
 							<View style={temp_style.littleContents}>
-								<Text style={[txt.noto28]}>{data.shelter_name}</Text>
+								<Text style={[txt.noto28]} numberOfLines={1}>
+									{data.user_nickname}
+								</Text>
 							</View>
 						</View>
 						<View style={temp_style.address_type_shelterInfoSetting_view}>

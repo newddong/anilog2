@@ -49,6 +49,7 @@ export default ControllableAccount = props => {
 	};
 
 	// console.log('props.data.follow', props.data.follow);
+	console.log('props.width ', props.width);
 	return (
 		<View style={[controllableAccount.container]}>
 			{showCheckBox ? (
@@ -59,7 +60,12 @@ export default ControllableAccount = props => {
 				false
 			)}
 			<View style={[showCheckBox || showCrossMark ? controllableAccount.userDescriptionLabel_checked : controllableAccount.userDescriptionLabel]}>
-				<UserDescriptionLabel data={props.data} onClickLabel={onClickLabel} width={480} showFollowStatusText={props.showFollowStatusText} />
+				<UserDescriptionLabel
+					data={props.data}
+					onClickLabel={onClickLabel}
+					width={props.width || 480}
+					showFollowStatusText={props.showFollowStatusText}
+				/>
 			</View>
 			{props.showButtons && !isMyAccount ? (
 				<View style={[controllableAccount.rightContainer]}>

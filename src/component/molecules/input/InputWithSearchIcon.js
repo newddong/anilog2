@@ -78,7 +78,7 @@ const InputWithSearchIcon = props => {
 					]}
 				/>
 				<View style={{flexDirection: 'row', position: 'absolute', alignItems: 'center', right: 0}}>
-					<Cross24_Filled onPress={onClear} />
+					{input.length == 0 ? <></> : <Cross24_Filled onPress={onClear} />}
 					{/* SearchIcon은 X 마크와 14px 차이 */}
 					<TouchableOpacity onPress={onSearch} style={{marginHorizontal: 20 * DP}}>
 						<Search48 />

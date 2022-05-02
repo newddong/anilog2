@@ -31,6 +31,7 @@ export default UserInfoSetting = ({route}) => {
 				userobject_id: userGlobalObject.userInfo._id,
 			},
 			userObject => {
+				console.log('userObject', userObject);
 				setData(userObject.msg);
 				navigation.setOptions({title: userGlobalObject.userInfo.user_nickname});
 			},
@@ -41,8 +42,8 @@ export default UserInfoSetting = ({route}) => {
 	};
 
 	React.useEffect(() => {
-		// fetchData();
 		navigation.addListener('focus', () => fetchData());
+		navigation.addListener('blur', () => setModifyMode(false)); //소개글 수정모드 종료
 		fetchData();
 		//스크린 포커스, 프로필 변경이 있을 시 getUSerInfoById에 접속
 	}, [route.params?.changedPhoto]);
@@ -132,7 +133,9 @@ export default UserInfoSetting = ({route}) => {
 							{/* 이메일, 비밀번호 변경하기*/}
 							<View style={[temp_style.accountInfo_depth2]}>
 								<View style={[temp_style.user_email_userInfoSetting, userInfoSetting_style.user_email]}>
-									<Text style={[txt.roboto26]}>{data.user_nickname || ''}</Text>
+									<Text style={[txt.roboto26, {maxWidth: 440 * DP}]} numberOfLines={1}>
+										{data.user_nickname || ''}
+									</Text>
 								</View>
 								<View style={[temp_style.changePassword_userInfoSetting, userInfoSetting_style.changePassword]}>
 									<TouchableOpacity onPress={onPressChangePwd}>
@@ -189,7 +192,6 @@ export default UserInfoSetting = ({route}) => {
 											multiline={true}
 											maxLength={500}
 											ref={modifyRef}
-											selectTextOnFocus
 										/>
 									</View>
 								) : (

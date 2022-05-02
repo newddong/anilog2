@@ -1,8 +1,7 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View} from 'react-native';
-import {launchImageLibrary} from 'react-native-image-picker';
-import {AVAILABLE_NICK, NEW_NICK_REQUEST, UNAVAILABLE_NICK, PREVIOUS_NICK_TITLE, NEW_NICK_TITLE} from 'Root/i18n/msg';
+import {KeyboardAvoidingView, Text, View} from 'react-native';
+import {AVAILABLE_NICK, NEW_NICK_REQUEST, UNAVAILABLE_NICK, PREVIOUS_NICK_TITLE, NEW_NICK_TITLE, NICKNAME_FORM} from 'Root/i18n/msg';
 import {btn_w654} from 'Atom/btn/btn_style';
 import Modal from 'Component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
@@ -10,33 +9,17 @@ import Input24 from 'Molecules/input/Input24';
 import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';
 import {login_style, btn_style, temp_style, changePetProfileImage_style, changeUserProfileImage_style} from 'Templete/style_templete';
 import ImagePicker from 'react-native-image-crop-picker';
-import {updateUserInformation} from 'Root/api/userapi';
+import {nicknameDuplicationCheck, updateUserInformation} from 'Root/api/userapi';
+import {useKeyboardBottom} from 'Root/component/molecules/input/usekeyboardbottom';
 
 export default ChangePetProfileImage = props => {
 	const navigation = useNavigation();
 	const [petData, setPetData] = React.useState(props.route.params);
-
 	const [newNick, setNewNick] = React.useState('');
 	const [confirmed, setConfirmed] = React.useState(false);
-
-	const onConfirmed = () => {
-		navigation.goBack();
-	};
+	const [dupCheck, setDupCheck] = React.useState(false);
 
 	const selectPhoto = () => {
-		// navigation.push('SinglePhotoSelect', props.route.name);
-		// launchImageLibrary(
-		// 	{
-		// 		mediaType: 'photo',
-		// 		selectionLimit: 1,
-		// 	},
-		// 	responseObject => {
-		// 		console.log('선택됨', responseObject);
-		// 		responseObject.didCancel
-		// 			? console.log('선택취소')
-		// 			: setPetData({...petData, user_profile_uri: responseObject.assets[responseObject.assets.length - 1].uri || petData.user_profile_uri});
-		// 	},
-		// );
 		ImagePicker.openPicker({
 			compressImageQuality: 0.8,
 			cropping: true,
@@ -49,12 +32,6 @@ export default ChangePetProfileImage = props => {
 			})
 			.catch(err => console.log(err + ''));
 		Modal.close();
-	};
-	console.log('petDetail', props.route.params);
-	//중복 처리
-	const checkDuplicateNickname = nick => {
-		const result = true;
-		return result;
 	};
 
 	//닉네임 Validation
@@ -71,49 +48,50 @@ export default ChangePetProfileImage = props => {
 		setConfirmed(isValid);
 	};
 
-	const validateNewNick = nick => {
-		console.log('nic', nick);
-		// ('* 2자 이상 15자 이내의 영문,숫자, _ 의 입력만 가능합니다.');
-		// 영문자, 소문자, 숫자, "-","_" 로만 구성된 길이 2~10자리 사이의 문자열
-		let regExp = /^[ㄱ-ㅎ가-힣a-zA-Z0-9_-]{2,15}$/;
-		return regExp.test(nick) && checkDuplicateNickname(nick);
-	};
-	const onPressConfirm = () => {
-		console.log('props.nv', props.navigation);
-		// Modal.popNoBtn('잠시만 기다려주세요.');
-		// setTimeout(() => {
-		// 	Modal.close();
-		// 	Modal.popNoBtn('프로필 변경이 완료되었습니다!');
-		// }, 1000);
-		// setTimeout(() => {
-		// 	Modal.close();
-		// 	navigation.goBack();
-		// }, 3000);
-		Modal.popNoBtn('프로필을 바꾸는 중입니다.');
-		updateUserInformation(
-			{
-				userobject_id: petData._id,
-				user_nickname: newNick == '' ? petData.user_nickname : newNick,
-				// user_nickname: newNick,
-				user_profile_uri: petData.user_profile_uri,
-			},
-			success => {
-				// setChanged(true);
-				console.log('profileChange success', success);
-				Modal.close();
-				navigation.goBack();
-			},
-			// console.log('userObject', userObject);
-			err => {
-				Modal.close();
+	let regExp = /^[가-힣a-zA-Z0-9_]{2,20}$/;
 
-				console.log('err', err);
+	const validateNewNick = nick => {
+		return regExp.test(nick);
+	};
+
+	const onPressConfirm = () => {
+		nicknameDuplicationCheck(
+			{user_nickname: newNick},
+			result => {
+				if (result.msg) {
+					Modal.alert('중복된 닉네임이 있습니다.');
+				} else {
+					Modal.popNoBtn('프로필을 바꾸는 중입니다.');
+
+					updateUserInformation(
+						{
+							userobject_id: petData._id,
+							user_nickname: newNick == '' ? petData.user_nickname : newNick,
+							// user_nickname: newNick,
+							user_profile_uri: petData.user_profile_uri,
+						},
+						success => {
+							console.log('profileChange success', success);
+							Modal.close();
+							navigation.goBack();
+						},
+						// console.log('userObject', userObject);
+						err => {
+							Modal.close();
+
+							console.log('err', err);
+						},
+					);
+				}
+			},
+			error => {
+				Modal.popOneBtn(error, '확인', () => Modal.close());
 			},
 		);
 	};
 
 	return (
-		<View style={[login_style.wrp_main, {flex: 1}]}>
+		<KeyboardAvoidingView style={[login_style.wrp_main, {flex: 1}]} behavior={'position'} contentContainerStyle={{alignItems: 'center'}}>
 			<View style={[temp_style.profileImageSelect, changePetProfileImage_style.ProfileImageSelect]}>
 				<ProfileImageSelect onClick={selectPhoto} selectedImageUri={petData.user_profile_uri} />
 			</View>
@@ -133,18 +111,6 @@ export default ChangePetProfileImage = props => {
 					/>
 				</View>
 				<View style={[temp_style.input24_changeUserProfileImage]}>
-					{/* <Input24
-						onChange={text => nickName_validator(text)}
-						validator={validateNewNick}
-						onValid={onValidName}
-						value={newNick}
-						placeholder={NEW_NICK_REQUEST}
-						showMsg={true}
-						alert_msg={UNAVAILABLE_NICK}
-						confirm_msg={AVAILABLE_NICK}
-						width={654}
-						onClear={onClearNickname}
-					/> */}
 					<Input24
 						onChange={nickName_validator}
 						validator={validateNewNick}
@@ -154,8 +120,8 @@ export default ChangePetProfileImage = props => {
 						descriptionType={'none'}
 						placeholder={NEW_NICK_REQUEST}
 						showMsg={true}
-						alert_msg={UNAVAILABLE_NICK}
-						confirm_msg={AVAILABLE_NICK}
+						alert_msg={NICKNAME_FORM}
+						confirm_msg={''}
 						width={654}
 						onClear={onClearNickname}
 					/>
@@ -163,7 +129,7 @@ export default ChangePetProfileImage = props => {
 			</View>
 
 			<View style={[changePetProfileImage_style.btn_w654]}>
-				{confirmed ? (
+				{confirmed && dupCheck ? (
 					<AniButton
 						onPress={onPressConfirm}
 						// disable={confirmed ? false : true}
@@ -176,6 +142,6 @@ export default ChangePetProfileImage = props => {
 					<AniButton onPress={onPressConfirm} disable btnTitle={'확인'} titleFontStyle={32} btnLayout={btn_w654} />
 				)}
 			</View>
-		</View>
+		</KeyboardAvoidingView>
 	);
 };

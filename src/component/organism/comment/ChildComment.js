@@ -11,6 +11,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeComment} from 'Root/api/commentapi';
 import {REPORT_MENU} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
+import Modal from 'Root/component/modal/Modal';
 /**
  * 자식 댓글
  * @param {object} props - Props Object
@@ -32,21 +33,27 @@ const ChildComment = props => {
 	}, [props.data]);
 
 	const onCLickHeart = () => {
-		setLikeState(!likeState);
-		likeComment(
-			{
-				commentobject_id: props.data._id,
-				userobject_id: userGlobalObject.userInfo._id,
-				is_like: !likeState,
-			},
-			({msg}) => {
-				setLikeCount(msg.targetComment.comment_like_count);
-			},
-			error => {
-				console.log(error);
-			},
-		);
-		props.like && props.like(props.data);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setLikeState(!likeState);
+			likeComment(
+				{
+					commentobject_id: props.data._id,
+					userobject_id: userGlobalObject.userInfo._id,
+					is_like: !likeState,
+				},
+				({msg}) => {
+					setLikeCount(msg.targetComment.comment_like_count);
+				},
+				error => {
+					console.log(error);
+				},
+			);
+			props.like && props.like(props.data);
+		}
 	};
 
 	//대댓글의 미트볼 클릭
@@ -88,32 +95,40 @@ const ChildComment = props => {
 							// alert('신고');
 							Modal.close();
 							console.log('data', data);
-							setTimeout(() => {
-								Modal.popOneBtnSelectModal(
-									REPORT_MENU,
-									'이 댓글을 신고 하시겠습니까?',
-									selectedItem => {
-										createReport(
-											{
-												report_target_object_id: data._id,
-												report_target_object_type: 'commentsobjects',
-												report_target_reason: selectedItem,
-												report_is_delete: false,
-											},
-											result => {
-												console.log('신고 완료', result);
-												Modal.close();
-												Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
-											},
-											err => {
-												console.log('신고 err', err);
-												Modal.close();
-											},
-										);
-									},
-									'신고',
-								);
-							}, 100);
+							if (userGlobalObject.userInfo.isPreviewMode) {
+								setTimeout(() => {
+									Modal.popLoginRequestModal(() => {
+										navigation.navigate('Login');
+									});
+								}, 100);
+							} else {
+								setTimeout(() => {
+									Modal.popOneBtnSelectModal(
+										REPORT_MENU,
+										'이 댓글을 신고 하시겠습니까?',
+										selectedItem => {
+											createReport(
+												{
+													report_target_object_id: data._id,
+													report_target_object_type: 'commentsobjects',
+													report_target_reason: selectedItem,
+													report_is_delete: false,
+												},
+												result => {
+													console.log('신고 완료', result);
+													Modal.close();
+													Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
+												},
+												err => {
+													console.log('신고 err', err);
+													Modal.close();
+												},
+											);
+										},
+										'신고',
+									);
+								}, 100);
+							}
 							break;
 						default:
 							break;

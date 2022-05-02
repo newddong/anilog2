@@ -31,24 +31,26 @@ const AvatarSelectModal = props => {
 		Modal.close();
 	};
 
+	const onClickLabel = index => {
+		if (props.isWriteMode) {
+			setSelectedItem(index);
+		} else {
+			props.onSelectPet && props.onSelectPet(items[index]);
+		}
+	};
+
 	const renderItem = (item, index) => {
-		const onClickLabel = () => {
-			if (props.isWriteMode) {
-				setSelectedItem(index);
-			} else {
-				props.onSelectPet && props.onSelectPet(items[index]);
-			}
-		};
 		if (item.user_type == 'pet') {
 			return (
 				<View key={index} style={[style.listItem, {backgroundColor: index == selectedItem ? APRI10 : WHITE}]}>
-					<PetLabel data={item} onLabelClick={onClickLabel} />
+					<PetLabel data={item} onLabelClick={() => onClickLabel(index)} />
 				</View>
 			);
 		} else {
 			return (
-				<View
+				<TouchableOpacity
 					key={index}
+					onPress={() => onClickLabel(index)}
 					style={[
 						style.listItem,
 						{
@@ -72,7 +74,7 @@ const AvatarSelectModal = props => {
 						ellipsizeMode="tail">
 						{item.user_nickname || ''}
 					</Text>
-				</View>
+				</TouchableOpacity>
 			);
 		}
 	};

@@ -6,6 +6,8 @@ import {AlarmBadger48, MainLogo, Search48} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {WHITE, APRI10} from 'Root/config/color';
 import SvgWrapper, {SvgWrap} from 'Atom/svgwrapper';
+import userGlobalObject from 'Root/config/userGlobalObject';
+import Modal from 'Root/component/modal/Modal';
 
 export default LogoHeader = ({navigation, route, options, back}) => {
 	const clickLogo = () => {
@@ -17,7 +19,13 @@ export default LogoHeader = ({navigation, route, options, back}) => {
 	};
 	const clickAlarm = () => {
 		// alert('이후 버전에서 제공할 예정입앙!');
-		navigation.navigate('AlarmList');
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			navigation.navigate('AlarmList');
+		}
 	};
 	return (
 		<View style={[style.headerContainer, style.shadow]}>

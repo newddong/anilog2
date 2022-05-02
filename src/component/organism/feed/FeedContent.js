@@ -228,7 +228,7 @@ export default FeedContent = props => {
 		Modal.close();
 		setTimeout(() => {
 			Modal.popMessageModal(
-				_id.user_name,
+				_id.user_nickname,
 				msg => {
 					createMemoBox(
 						{memobox_receive_id: _id._id, memobox_contents: msg},
@@ -438,21 +438,27 @@ export default FeedContent = props => {
 	};
 
 	const onClickMeatball = () => {
-		getFavoriteFeedListByUserId(
-			{
-				userobject_id: userGlobalObject.userInfo._id,
-			},
-			r => {
-				let context = {
-					favorite_feeds: r.msg,
-					_id: feed_writer_id,
-				};
-				meatballActions(context);
-			},
-			err => {
-				console.log(err);
-			},
-		);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			getFavoriteFeedListByUserId(
+				{
+					userobject_id: userGlobalObject.userInfo._id,
+				},
+				r => {
+					let context = {
+						favorite_feeds: r.msg,
+						_id: feed_writer_id,
+					};
+					meatballActions(context);
+				},
+				err => {
+					console.log('getFavoriteFeedListByUserId / FeedContent', err);
+				},
+			);
+		}
 	};
 
 	const isMissingReportRoute = route.name == 'MissingAnimalDetail' || route.name == 'ReportDetail';
@@ -465,6 +471,16 @@ export default FeedContent = props => {
 	const showMore = () => {
 		setNumLine(0);
 		setShow(true);
+	};
+
+	const onPressFavoriteWriter = bool => {
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			props.onPressFavorite(bool);
+		}
 	};
 
 	const layoutStyle = () => {
@@ -530,9 +546,9 @@ export default FeedContent = props => {
 									<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
 										<View style={[organism_style.favoriteTag_feedContent]}>
 											{props.data.feed_writer_id.is_favorite ? (
-												<FavoriteTag48_Filled onPress={() => props.onPressFavorite(false)} />
+												<FavoriteTag48_Filled onPress={() => onPressFavoriteWriter(false)} />
 											) : (
-												<FavoriteTag48_Border onPress={() => props.onPressFavorite(true)} />
+												<FavoriteTag48_Border onPress={() => onPressFavoriteWriter(true)} />
 											)}
 										</View>
 										<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>

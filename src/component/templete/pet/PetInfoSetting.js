@@ -32,7 +32,10 @@ export default PetInfoSetting = ({route, navigation}) => {
 	const modifyRef = React.useRef('');
 
 	React.useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', () => setFamily());
+		const unsubscribe = navigation.addListener('focus', () => {
+			setFamily();
+			Modal.close();
+		});
 		return unsubscribe;
 	}, [familyAccountList]);
 

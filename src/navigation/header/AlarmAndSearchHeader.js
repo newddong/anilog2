@@ -3,13 +3,21 @@ import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {AlarmBadger48, Search48, BackArrow32} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {WHITE} from 'Root/config/color';
+import userGlobalObject from 'Root/config/userGlobalObject';
+import Modal from 'Root/component/modal/Modal';
 
 export default AlarmAndSearchHeader = ({navigation, route, options, back}) => {
 	const clickSearch = () => {
 		navigation.navigate('Search', {mother: 0, child: 0, prevNav: route.name});
 	};
 	const clickAlarm = () => {
-		navigation.navigate('AlarmList');
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			navigation.navigate('AlarmList');
+		}
 	};
 	return (
 		<View style={[style.headerContainer, style.shadow]}>

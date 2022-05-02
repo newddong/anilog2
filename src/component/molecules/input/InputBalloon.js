@@ -52,7 +52,7 @@ const InputBalloon = React.forwardRef((props, ref) => {
 			) : (
 				<Text style={[txt.noto24, {color: APRI10, lineHeight: 34 * DP}]}>
 					{/* Title을 props로 받을 것인지 Input으로 컴포넌트 내에서 처리할 것인지 확인 필요 */}
-					{props.title} <Text style={{color: 'red'}}> * </Text>
+					{props.title}
 				</Text>
 			)}
 

@@ -591,9 +591,7 @@ const MissingForm = props => {
 			{/* DropDownSelect */}
 			<View style={[feedWrite.lostAnimalForm_Form]}>
 				<View style={[feedWrite.formTitle]}>
-					<Text style={[txt.noto24, {color: APRI10}]}>
-						분류 <Text style={{color: 'red'}}> * </Text>
-					</Text>
+					<Text style={[txt.noto24, {color: APRI10}]}>분류</Text>
 				</View>
 				<View style={[feedWrite.formContentContainer]}>
 					<View style={[temp_style.dropdownSelect, feedWrite.dropdownSelect]}>
@@ -608,9 +606,7 @@ const MissingForm = props => {
 			{/* DatePicker */}
 			<View style={[feedWrite.lostAnimalForm_Form]}>
 				<View style={[feedWrite.formTitle]}>
-					<Text style={[txt.noto24, {color: APRI10}]}>
-						실종된 날짜 <Text style={{color: 'red'}}> * </Text>
-					</Text>
+					<Text style={[txt.noto24, {color: APRI10}]}>실종된 날짜</Text>
 				</View>
 				<View style={[feedWrite.formContentContainer]}>
 					<View style={[temp_style.datePicker_assignShelterInformation, feedWrite.datePicker]}>
@@ -621,9 +617,7 @@ const MissingForm = props => {
 			{/* tabSelectFilled_Type1 */}
 			<View style={[feedWrite.lostAnimalForm_Form]}>
 				<View style={[feedWrite.formTitle]}>
-					<Text style={[txt.noto24, {color: APRI10}]}>
-						실종 동물의 성별 <Text style={{color: 'red'}}> * </Text>{' '}
-					</Text>
+					<Text style={[txt.noto24, {color: APRI10}]}>실종 동물의 성별</Text>
 				</View>
 				<View style={[feedWrite.formContentContainer]}>
 					<View style={[temp_style.tabSelectFilled_Type1, feedWrite.tabSelectFilled_Type1]}>
@@ -637,7 +631,7 @@ const MissingForm = props => {
 					title={'실종 동물의 나이'}
 					placeholder="실종 동물의 나이를 입력하세요(년단위)"
 					width={654}
-					descriptionType={'star'}
+					descriptionType={'none'}
 					onChange={inputAge}
 					maxlength={2}
 					keyboardType={'number-pad'}
@@ -647,9 +641,7 @@ const MissingForm = props => {
 				/>
 			</View>
 			<View style={[temp_style.input24, feedWrite.missing_location_input]}>
-				<Text style={[txt.noto24, {color: APRI10}]}>
-					실종된 위치 <Text style={{color: 'red'}}> * </Text>
-				</Text>
+				<Text style={[txt.noto24, {color: APRI10}]}>실종된 위치</Text>
 				<View style={[{flexDirection: 'row', justifyContent: 'space-between'}]}>
 					<SelectInput onPressInput={onPressCity} width={292} defaultText={'광역시, 도'} value={data.missing_animal_lost_location.city} />
 					<SelectInput onPressInput={onPressDistrict} width={292} value={data.missing_animal_lost_location.district} defaultText={'구를 선택'} />
@@ -674,6 +666,7 @@ const MissingForm = props => {
 					placeholder="연락받으실 연락처를 입력하세요"
 					width={654}
 					onChange={inputContact}
+					descriptionType={'none'}
 					keyboardType={'number-pad'}
 					maxlength={15}
 					value={data.missing_animal_contact}

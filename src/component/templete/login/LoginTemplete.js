@@ -140,7 +140,6 @@ export default LoginTemplete = props => {
 	//아이디 저장 박스 클릭
 	const onCheckSaveId = state => {
 		console.log('아이디저장', state);
-		AsyncStorage.setItem('userId', JSON.stringify(userSetting.id));
 		setUserSetting({...userSetting, isSaveId: state});
 	};
 

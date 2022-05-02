@@ -131,9 +131,6 @@ export default PetInfoSetting = ({route, navigation}) => {
 
 	//가족계정 추가 버튼
 	const goToAddFamilyAccount = () => {
-		console.log('result.msg.pet_family[0].user_nickname', petData.pet_family[0].user_nickname);
-		// userGlobalObject.userInfo.user_nickname == result.msg.pet_family[0].user_nickname ? setIsChiefUser(true) : setIsChiefUser(false);
-
 		if (!isChiefUser) {
 			Modal.popOneBtn('가족계정 추가 / 삭제는 해당 반려동물을 \n 처음으로 등록한 유저만 가능합니다. ', '확 인', () => Modal.close());
 		} else if (familyAccountList.length == 3) {

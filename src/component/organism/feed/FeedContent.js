@@ -186,10 +186,6 @@ export default FeedContent = props => {
 						err => {
 							console.log('err / unFollowUser / FeedContent', err);
 							Modal.close();
-							Modal.popNoBtn(feed_writer.user_nickname + '님을 \n 팔로우 취소하였습니다.');
-							setTimeout(() => {
-								Modal.close();
-							}, 2000);
 						},
 					);
 				},

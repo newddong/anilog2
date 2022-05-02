@@ -31,7 +31,14 @@ const NoteList = props => {
 
 	return (
 		<View style={[styles.container]}>
-			<FlatList data={props.data} keyExtractor={item => item._id} renderItem={renderItem} showsVerticalScrollIndicator={false} />
+			<FlatList
+				// extraData={props.data}
+				data={props.data}
+				// keyExtractor={item => item._id}
+				renderItem={renderItem}
+				showsVerticalScrollIndicator={false}
+				ListEmptyComponent={props.whenEmpty}
+			/>
 		</View>
 	);
 };

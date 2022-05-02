@@ -461,3 +461,14 @@ export async function getSMStoken(params, callback, errcallback) {
 export async function getSMSimpcode(params, callback, errcallback) {
 	apiController('/user/getSMSimpcode', arguments);
 }
+
+/** 비밀번호 변경
+ * @param {object} params
+ * @param {string} params.userobject_id  - 사용자 object_id
+ * @param {string} params.new_password  - 변경할 유저의 비밀번호
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function updateUserPassword(params, callback, errcallback) {
+	apiController('/user/updateUserPassword', arguments);
+}

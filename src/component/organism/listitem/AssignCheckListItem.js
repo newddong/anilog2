@@ -37,11 +37,11 @@ export default AssignCheckListItem = props => {
 	return (
 		<View style={[assignCheckListItem.container]}>
 			<View style={[assignCheckListItem.check50]}>
-				<CheckBox onCheck={onCheck} state={props.state} />
+				<CheckBox onCheck={onCheck} state={chekced} />
 			</View>
-			<View style={[assignCheckListItem.textContainer]}>
+			<TouchableOpacity activeOpacity={0.8} onPress={() => onCheck(!chekced)} style={[assignCheckListItem.textContainer]}>
 				<Text style={[txt.noto28, {color: chekced ? APRI10 : BLACK}]}>{props.data.text}</Text>
-			</View>
+			</TouchableOpacity>
 			{props.data.detail ? (
 				<TouchableOpacity onPress={onPressDetail} style={[assignCheckListItem.detailText]}>
 					<Text style={[txt.roboto28b, {color: GRAY20, textDecorationLine: 'underline'}]}>보기</Text>

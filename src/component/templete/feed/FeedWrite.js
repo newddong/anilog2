@@ -8,7 +8,7 @@ import {Urgent_Write1, Urgent_Write2} from 'Atom/icon';
 import {btn_style, feedWrite, login_style, temp_style, buttonstyle} from 'Templete/style_templete';
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w176, btn_w194} from 'Atom/btn/btn_style';
-import {DOG_KIND, PET_KIND, pet_kind, PUBLIC_SETTING} from 'Root/i18n/msg';
+import {DOG_KIND, PET_KIND, pet_kind, PHONE_FORM, PUBLIC_SETTING} from 'Root/i18n/msg';
 import DatePicker from 'Molecules/select/DatePicker';
 import TabSelectFilled_Type1 from 'Molecules/tab/TabSelectFilled_Type1';
 import Input24 from 'Molecules/input/Input24';
@@ -121,6 +121,8 @@ export default FeedWrite = props => {
 						responseObject.assets.map(v => tempContainer.push(v.uri));
 						setSelectedImg(tempContainer.slice(-5));
 						Modal.close();
+					} else {
+						// props.navigation.goBack(); //사진 추가 취소시 바로 뒤로가기?
 					}
 				},
 			);
@@ -664,12 +666,13 @@ const MissingForm = props => {
 					placeholder="연락받으실 연락처를 입력하세요"
 					width={654}
 					onChange={inputContact}
+					descriptionType={'none'}
 					keyboardType={'number-pad'}
 					maxlength={15}
 					value={data.missing_animal_contact}
 					onPressIn={onPressIn(inputContactRef)}
 					ref={inputContactRef}
-					alert_msg={'전화번호는 - 을 제외하고 10~11자로 작성해주세요'}
+					alert_msg={PHONE_FORM}
 					showMsg
 					confirm_msg={'올바른 전화번호 양식입니다.'}
 					validator={phoneValidate}
@@ -942,7 +945,7 @@ const ReportForm = props => {
 								<SelectInput onPressInput={onSelectSpecies} width={292} value={data.report_animal_species} />
 							</View>
 							<View style={[temp_style.dropdownSelect, feedWrite.dropdownSelect]}>
-								<SelectInput onPressInput={onSelectSpeciesDetail} width={292} value={data.report_animal_species_detail} />
+								{/* <SelectInput onPressInput={onSelectSpeciesDetail} width={292} value={data.report_animal_species_detail} /> */}
 							</View>
 						</View>
 					</View>

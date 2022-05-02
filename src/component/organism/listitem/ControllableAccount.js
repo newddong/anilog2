@@ -48,8 +48,6 @@ export default ControllableAccount = props => {
 		props.onClickLabel(data);
 	};
 
-	// console.log('props.data.follow', props.data.follow);
-	console.log('props.width ', props.width);
 	return (
 		<View style={[controllableAccount.container]}>
 			{showCheckBox ? (

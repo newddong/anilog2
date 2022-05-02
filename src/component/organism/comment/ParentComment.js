@@ -254,8 +254,8 @@ export default ParentComment = React.memo((props, ref) => {
 			<View style={[organism_style.UserLocationTimeLabel_view_parentComment, {}]}>
 				<View style={[parentComment.userLabelContainer, {}]} collapsable={false} ref={meatballRef}>
 					<UserLocationTimeLabel data={data.comment_writer_id} time={data.comment_update_date} target={props.target} />
-					{isNotAuthorized() ? (
-						<View style={[parentComment.secureIcon]}>
+					{data.comment_is_secure ? (
+						<View style={[parentComment.secureIcon, {justifyContent: 'center'}]}>
 							<SecureIcon40 />
 						</View>
 					) : (

@@ -60,8 +60,8 @@ export function useModal() {
 		setPopupComponent([...popupComponent]);
 		popupComponent.length === 0 && setPop(false);
 	};
-	Modal.popTwoBtn = (msg, noMsg, yesMsg, onNo, onYes) => {
-		popIn(<TwoBtnModal popUpMsg={msg} onNo={onNo} onYes={onYes} noMsg={noMsg} yesMsg={yesMsg} />);
+	Modal.popTwoBtn = (msg, noMsg, yesMsg, onNo, onYes, onClose) => {
+		popIn(<TwoBtnModal popUpMsg={msg} onNo={onNo} onYes={onYes} noMsg={noMsg} yesMsg={yesMsg} onClose={onClose} />);
 		!isPop && setPop(true);
 	};
 

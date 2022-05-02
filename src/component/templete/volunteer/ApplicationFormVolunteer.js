@@ -113,6 +113,7 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 			'활동 거절을 하시겠습니까? \n  거절 사유를 선택해주세요.',
 			selected => {
 				// alert(selected);
+				Modal.close();
 				setVolunteerActivityStatus(
 					{
 						volunteer_activity_object_id: data._id,
@@ -123,9 +124,8 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 						console.log('result / setVolunteerActivityStatus / 활동 거절', result);
 						Modal.popNoBtn('봉사활동이 거절 되었습니다.');
 						setTimeout(() => {
-							Modal.close();
 							navigation.navigate('ShelterMenu');
-						}, 1000);
+						}, 500);
 					},
 					err => {
 						console.log('err / acceptVolunteer', err);
@@ -133,7 +133,7 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 				);
 			},
 			'확인',
-			30,
+			24,
 		);
 	};
 
@@ -340,10 +340,19 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 					</View>
 				);
 			} else if (data.volunteer_status == 'waiting' || data.volunteer_status == 'accept') {
+				console.log('data.volunteer_status', data.volunteer_status);
 				//봉사활동 신청이 수락되었거나 보호소 승락 대기 상태 중인 경우
 				if (data.volunteer_accompany[0].member._id == userGlobalObject.userInfo._id) {
 					//봉사활동 신청 당사자인 경우
-					return <AniButton onPress={onPressCancel} btnTitle={'신청 취소'} btnStyle={'border'} />;
+					if (data.volunteer_status == 'accept') {
+						return (
+							<View style={[applicationFormVolunteer.notAcceptText]}>
+								<Text style={[txt.roboto28, {color: APRI10}]}>신청 승락 상태입니다.</Text>
+							</View>
+						);
+					} else {
+						return <AniButton onPress={onPressCancel} btnTitle={'신청 취소'} btnStyle={'border'} />;
+					}
 				} else if (find.confirm == 'accept') {
 					//accept(참여 확정 상태일 경우 )
 					return <AniButton onPress={onPressAlreadyConfirm} btnTitle={'참여 확정 상태'} btnStyle={'border'} />;

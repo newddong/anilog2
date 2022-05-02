@@ -86,7 +86,7 @@ const Input24 = React.forwardRef((props, ref) => {
 		if (props.descriptionType == 'info') {
 			return <Text style={[txt.noto22, {color: GRAY10, marginLeft: 20 * DP}]}> *{props.info} </Text>;
 		} else if (props.descriptionType == 'star') {
-			return <Text style={[txt.noto28, {color: RED10, marginLeft: 60 * DP}]}>*</Text>;
+			return <Text style={[txt.noto28, {color: RED10, marginLeft: 40 * DP}]}>*</Text>;
 		} else if (props.descriptionType == 'none') {
 			return <></>;
 		}

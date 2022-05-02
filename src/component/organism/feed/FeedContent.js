@@ -176,13 +176,20 @@ export default FeedContent = props => {
 							// console.log('result / unFollowUser / FeedContent', result.msg);
 							Modal.close();
 							// Modal.popNoBtn(props.data.feed_writer_id.user_nickname + '님을 \n 팔로우 취소하였습니다.');
+							setTimeout(() => {
+								Modal.popNoBtn(feed_writer.user_nickname + '님을 \n 팔로우 취소하였습니다.');
+								setTimeout(() => {
+									Modal.close();
+								}, 2000);
+							}, 100);
+						},
+						err => {
+							console.log('err / unFollowUser / FeedContent', err);
+							Modal.close();
 							Modal.popNoBtn(feed_writer.user_nickname + '님을 \n 팔로우 취소하였습니다.');
 							setTimeout(() => {
 								Modal.close();
 							}, 2000);
-						},
-						err => {
-							console.log('err / unFollowUser / FeedContent', err);
 						},
 					);
 				},
@@ -192,6 +199,7 @@ export default FeedContent = props => {
 
 	//팔로우 버튼
 	const onPressFollow = () => {
+		console.log('feed_writer._id,', feed_writer._id);
 		Modal.close();
 		setTimeout(() => {
 			Modal.popTwoBtn(
@@ -397,7 +405,7 @@ export default FeedContent = props => {
 			if (isMyFeed) {
 				// 긴급피드 올린 작성자일 경우
 				Modal.popSelectBoxModal(
-					FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS,
+					['수정', '삭제'],
 					selectedItem => {
 						console.log(selectedItem);
 						if (selectedItem == '상태변경') {
@@ -419,14 +427,25 @@ export default FeedContent = props => {
 			} else if (!isMyFeed) {
 				// 긴급피드 올린 작성자가 아닐 경우
 				Modal.popSelectBoxModal(
-					FEED_MEATBALL_MENU,
+					// FEED_MEATBALL_MENU,
+					!isFavorite ? FEED_MEATBALL_MENU_UNFOLLOWING : FEED_MEATBALL_MENU_UNFOLLOWING_UNFAVORITE,
 					selectedItem => {
-						console.log(selectedItem);
-						if (selectedItem == '공유하기') {
-							onPressShare();
-						} else if (selectedItem == '신고') {
+						if (selectedItem == '신고') {
 							onPressReport(context);
+						} else if (selectedItem == '팔로우') {
+							onPressFollow();
+						} else if (selectedItem == '공유하기') {
+							onPressShare();
+						} else if (selectedItem == '팔로우 취소') {
+							onPressCancelFollow();
+						} else if (selectedItem == '쪽지 보내기') {
+							onPressSendMsg(context._id);
+						} else if (selectedItem == '즐겨찾기') {
+							onFavorite(true);
+						} else if (selectedItem == '즐겨찾기 취소') {
+							onFavorite(false);
 						}
+						Modal.close();
 						Modal.close();
 					},
 					() => Modal.close(),
@@ -540,8 +559,10 @@ export default FeedContent = props => {
 										<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
 									</View>
 								</View>
+							) : //실종 및 제보게시글의 유저 라벨 우측에 출력되는 즐겨찾기아이콘, 내 게시글일 경우 미출력
+							props.data.feed_writer_id._id == userGlobalObject.userInfo._id ? (
+								<></>
 							) : (
-								//실종 및 제보게시글의 유저 라벨 우측에 출력되는 태그
 								<View style={[organism_style.button_view_feedContent]}>
 									<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
 										<View style={[organism_style.favoriteTag_feedContent]}>

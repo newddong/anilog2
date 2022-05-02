@@ -25,7 +25,6 @@ export default ReportDetail = props => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			fetchFeedDetail();
-			fetchReportList();
 			getCommnetList();
 		});
 		return unsubscribe;
@@ -41,6 +40,7 @@ export default ReportDetail = props => {
 				result.feed_writer_id.is_favorite = result.is_favorite;
 				setData(data.msg);
 				navigation.setParams({writer: data.msg.feed_writer_id._id, isMissingOrReport: true, feed_object: data.msg});
+				fetchReportList(result._id);
 			},
 			errcallback => {
 				console.log(`errcallback:${JSON.stringify(errcallback)}`);
@@ -48,7 +48,7 @@ export default ReportDetail = props => {
 		);
 	};
 
-	const fetchReportList = () => {
+	const fetchReportList = data_id => {
 		getMissingReportList(
 			{
 				city: '',
@@ -59,7 +59,7 @@ export default ReportDetail = props => {
 			result => {
 				// console.log('getMissingReportList result', result.msg[0]);
 				const filter = result.msg.filter(e => e.feed_type == 'report');
-				const removeMine = filter.filter(e => e._id != data._id);
+				const removeMine = filter.filter(e => e._id != data_id);
 				const slice = removeMine.slice(0, 4);
 				setReportList(slice);
 			},

@@ -34,10 +34,6 @@ export default WriteAidRequest = ({route, navigation}) => {
 		}
 	}, [route.params.isRePost]);
 
-	React.useEffect(() => {
-		route.params.onConfirm ? Modal.popLoading() : Modal.close();
-	}, [route.params.onConfirm]);
-
 	//헤더로 데이터 보내기
 	React.useEffect(() => {
 		navigation.setParams({data: protectRequestData, nav: route.name});

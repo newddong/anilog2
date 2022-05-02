@@ -32,7 +32,6 @@ export default MissingAnimalDetail = props => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			fetchFeedData();
-			fetchMissingPostList();
 			getCommnetList();
 		});
 		return unsubscribe;
@@ -49,6 +48,7 @@ export default MissingAnimalDetail = props => {
 				setData(result);
 				// console.log('data', data.msg);
 				navigation.setParams({writer: data.msg.feed_writer_id._id, isMissingOrReport: true, feed_object: data.msg});
+				fetchMissingPostList(result._id);
 			},
 			errcallback => {
 				console.log(`errcallback:${JSON.stringify(errcallback)}`);
@@ -56,7 +56,7 @@ export default MissingAnimalDetail = props => {
 		);
 	};
 
-	const fetchMissingPostList = () => {
+	const fetchMissingPostList = data_id => {
 		getMissingReportList(
 			{
 				city: '',
@@ -67,7 +67,8 @@ export default MissingAnimalDetail = props => {
 			result => {
 				// console.log('getMissingReportList result', result.msg[0]);
 				const filter = result.msg.filter(e => e.feed_type == 'missing');
-				const removeMine = filter.filter(e => e._id != data._id);
+				// console.log('dataID', data_id);
+				const removeMine = filter.filter(e => e._id != data_id);
 				const slice = removeMine.slice(0, 4);
 				setMissingList(slice);
 			},

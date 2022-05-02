@@ -1,18 +1,11 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, FlatList} from 'react-native';
+import {Text, View, FlatList, Keyboard} from 'react-native';
 import FeedContent from 'Organism/feed/FeedContent';
 import CommentList from 'Organism/comment/CommentList';
 import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
 import {feedCommentList, login_style} from 'Templete/style_templete';
-import {
-	createComment,
-	deleteComment,
-	getCommentListByCommunityId,
-	getCommentListByFeedId,
-	getCommentListByProtectId,
-	updateComment,
-} from 'Root/api/commentapi';
+import {createComment, deleteComment, getCommentListByFeedId, updateComment} from 'Root/api/commentapi';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -101,6 +94,7 @@ export default FeedCommentList = props => {
 		} else {
 			param.comment_photo_remove = true;
 		}
+		param.comment_photo_uri = editData.comment_photo_uri == '' ? 'https:// ' : editData.comment_photo_uri;
 
 		if (props.route.name == 'FeedCommentList') {
 			param = {...param, feedobject_id: props.route.params.feedobject._id};
@@ -113,10 +107,11 @@ export default FeedCommentList = props => {
 		}
 
 		if (editMode) {
-			console.log('댓글편집', editData);
+			delete param.comment_is_secure;
 			updateComment(
 				{
 					...param,
+					comment_is_secure: privateComment,
 					commentobject_id: editData._id,
 				},
 				result => {
@@ -136,6 +131,8 @@ export default FeedCommentList = props => {
 								!parentComment && setComments([]); //댓글목록 초기화
 								setComments(comments.msg.filter(e => e.comment_is_delete != true));
 								parentComment && addChildCommentFn.current();
+								setPrivateComment(false);
+								setEditMode(false);
 								// console.log('comments', comments);
 								input.current.blur();
 								flatlist.current.scrollToOffset({offset: 0});
@@ -165,6 +162,8 @@ export default FeedCommentList = props => {
 								!parentComment && setComments([]); //댓글목록 초기화
 								setComments(comments.msg.filter(e => e.comment_is_delete != true));
 								parentComment && addChildCommentFn.current();
+								setPrivateComment(false);
+								setEditMode(false);
 								// console.log('comments', comments);
 								input.current.blur();
 								flatlist.current.scrollToOffset({offset: 0});
@@ -180,6 +179,7 @@ export default FeedCommentList = props => {
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
 	const onLockBtnClick = () => {
+		// setEditData({...editData, comment_is_secure: !editData.comment_is_secure});
 		setPrivateComment(!privateComment);
 		!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
 	};
@@ -238,6 +238,11 @@ export default FeedCommentList = props => {
 		} else {
 			setParentComment(parentCommentId);
 			input.current.focus();
+			setEditMode(false);
+			setEditData({
+				comment_contents: '',
+				comment_photo_uri: '',
+			});
 			editComment || setEditComment(true);
 			addChildCommentFn.current = addChildComment;
 		}
@@ -251,17 +256,25 @@ export default FeedCommentList = props => {
 
 	//미트볼, 수정을 누르면 동작
 	const onEdit = comment => {
-		console.log('수정 데이터', comment);
+		console.log('수정 데이터', comment.comment_is_secure);
 		setEditMode(true);
+		setPrivateComment(comment.comment_is_secure);
 		setEditData({...comment});
+		input.current.focus();
 	};
 
 	const render = ({item, index}) => {
 		if (index == 0)
 			return (
-				<View style={{justifyContent: 'flex-end', paddingBottom: 10 * DP, height: 60 * DP, backgroundColor: '#FFF', paddingHorizontal: 48 * DP}}>
-					<Text style={[txt.noto26, {color: GRAY10}]}>댓글 {comments.length}개 </Text>
-				</View>
+				<>
+					{comments.length == 0 ? (
+						<></>
+					) : (
+						<View style={{justifyContent: 'flex-end', paddingBottom: 10 * DP, height: 60 * DP, backgroundColor: '#FFF', paddingHorizontal: 48 * DP}}>
+							<Text style={[txt.noto26, {color: GRAY10}]}>댓글 {comments.length}개 </Text>
+						</View>
+					)}
+				</>
 			);
 		if (index > 0)
 			return (
@@ -284,6 +297,29 @@ export default FeedCommentList = props => {
 	const onScroll = e => {
 		currentPosition.current = e.nativeEvent.contentOffset.y;
 	};
+
+	React.useEffect(() => {
+		let didshow = Keyboard.addListener('keyboardDidShow', e => {
+			console.log('keyboarddidshow');
+			setTimeout(() => flatlist.current.scrollToIndex({animated: true, index: 1}), 100);
+		});
+		let didhide = Keyboard.addListener('keyboardDidHide', e => {
+			console.log('keyboarddidhide');
+		});
+		let willshow = Keyboard.addListener('keyboardWillShow', e => {
+			console.log('keyboardwillshow');
+			setTimeout(() => flatlist.current.scrollToIndex({animated: true, index: 1}), 100);
+		});
+		let willhide = Keyboard.addListener('keyboardWillHide', e => {
+			console.log('keyboardwillhide');
+		});
+		return () => {
+			didshow.remove();
+			didhide.remove();
+			willshow.remove();
+			willhide.remove();
+		};
+	});
 
 	return (
 		<View style={[login_style.wrp_main, feedCommentList.container]}>

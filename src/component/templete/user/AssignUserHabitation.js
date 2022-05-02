@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, TouchableOpacity,KeyboardAvoidingView} from 'react-native';
+import {Text, View, TouchableOpacity, StyleSheet} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {btn_w522, btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
@@ -42,7 +42,14 @@ const AssignUserHabitation = props => {
 		getAddressList(
 			{},
 			cities => {
-				setCity(cities.msg), handleError;
+				let res = cities.msg;
+				let find = res.findIndex(e => e == '서울특별시');
+				let find2 = res.findIndex(e => e == '경기도');
+				res.splice(find, 1);
+				res.splice(find2, 1);
+				res.splice(0, 0, '서울특별시');
+				res.splice(1, 0, '경기도');
+				setCity(res), handleError;
 			},
 			err => Modal.alert(err),
 		);
@@ -50,52 +57,16 @@ const AssignUserHabitation = props => {
 
 	React.useEffect(() => {
 		console.log('data.user_address:', data.user_address);
-		if (data.user_address.city != '' && data.user_address.district != '' && data.user_address.neighbor != '') {
+		if (
+			data.user_address.city != '' &&
+			data.user_address.district != '군, 구를 선택해주세요.' &&
+			data.user_address.neighbor != '동, 읍을 선택해주세요.'
+		) {
 			setAdressValid(true);
+		} else {
+			setAdressValid(false);
 		}
 	}, [data.user_address]);
-
-	const onSelectCity = (value, index) => {
-		debug && console.log('city:', value);
-		getAddressList(
-			{city: value},
-			districts => {
-				setDistrict(districts.msg);
-				debug && console.log('districts:', districts.msg);
-				setData({...data, user_address: {...data.user_address, city: value, district: districts.msg[0], neighbor: ''}});
-				if (value != data.user_address.city) {
-					setIsCityChanged(!isCityChanged);
-				}
-			},
-			handleError,
-		);
-	};
-
-	const onSelectDistrict = (value, index) => {
-		debug && console.log('district:', value);
-		getAddressList(
-			{city: data.user_address.city, district: value},
-			neighbor => {
-				if (neighbor.msg.length == 0) {
-					setNeighbor(['목록없음']);
-				} else {
-					setNeighbor(neighbor.msg);
-				}
-				debug && console.log('neighbors:', neighbor.msg);
-				setData({...data, user_address: {...data.user_address, district: value, neighbor: neighbor.msg[0] ? neighbor.msg[0] : ''}});
-				if (value != data.user_address.district) {
-					setIsDistrictChanged(!isDistrictChanged);
-				}
-			},
-			handleError,
-		);
-	};
-
-	const onSelectNeighbor = (value, index) => {
-		debug && console.log('neighbor:', value);
-		console.log('value=>', value);
-		setData({...data, user_address: {...data.user_address, neighbor: value == '목록없음' ? '' : value}});
-	};
 
 	const handleError = error => {
 		Modal.popOneBtn(error, '확인', () => Modal.close());
@@ -105,63 +76,6 @@ const AssignUserHabitation = props => {
 		props.navigation.push('AssignUserProfileImage', data);
 	};
 
-	// const onSelectCity = () => {
-	// 	// Modal.rollingSelect(
-	// 	// 	'시를 선택해 주세요',
-	// 	// 	city,
-	// 	// 	city => {
-	// 	// 		setData({...data, user_address: {...data.user_address, city: city}});
-	// 	// 		getAddressList(
-	// 	// 			{city: city},
-	// 	// 			districts => {
-	// 	// 				setDistrict(districts.msg);
-	// 	// 			},
-	// 	// 			handleError,
-	// 	// 		);
-	// 	// 		// cityDrop.current.press();
-	// 	// 	},
-	// 	// 	() => {
-	// 	// 		cityDrop.current.press();
-	// 	// 	},
-	// 	// );
-	// };
-	// const onSelectDistrict = selectedItem => {
-	// 	Modal.rollingSelect(
-	// 		'구를 선택해 주세요',
-	// 		district,
-	// 		district => {
-	// 			setData({...data, user_address: {...data.user_address, district: district}});
-	// 			getAddressList(
-	// 				{city: data.user_address.city, district: district},
-	// 				neighbors => {
-	// 					setNeighbor(neighbors.msg);
-	// 				},
-	// 				handleError,
-	// 			);
-	// 			districDrop.current.press();
-	// 		},
-	// 		district => {
-	// 			districDrop.current.press();
-	// 		},
-	// 	);
-	// };
-	// const onSelectNeighbor = selectedItem => {
-	// 	Modal.rollingSelect(
-	// 		'동을 선택해 주세요',
-	// 		neighbor,
-	// 		e => {
-	// 			setData({...data, user_address: {...data.user_address, neighbor: e}});
-	// 			neighborDrop.current.press();
-	// 		},
-	// 		() => {
-	// 			neighborDrop.current.press();
-	// 		},
-	// 	);
-	// };
-	const cityDrop = React.useRef();
-	const districDrop = React.useRef();
-	const neighborDrop = React.useRef();
-
 	const onPressCity = () => {
 		Modal.popSelectScrollBoxModal([city], '도, 광역시를 지정해주세요.', value => {
 			getAddressList(
@@ -169,7 +83,11 @@ const AssignUserHabitation = props => {
 				districts => {
 					setDistrict(districts.msg);
 					debug && console.log('districts:', districts.msg);
-					setData({...data, user_address: {...data.user_address, city: value, district: districts.msg[0], neighbor: '동, 읍을 선택해주세요.'}});
+					// setData({...data, user_address: {...data.user_address, city: value, district: districts.msg[0], neighbor: '동, 읍을 선택해주세요.'}});
+					setData({
+						...data,
+						user_address: {...data.user_address, city: value, district: '군, 구를 선택해주세요.', neighbor: '동, 읍을 선택해주세요.'},
+					});
 					if (value != data.user_address.city) {
 						setIsCityChanged(!isCityChanged);
 					}
@@ -191,7 +109,8 @@ const AssignUserHabitation = props => {
 						setNeighbor(neighbor.msg);
 					}
 					debug && console.log('neighbors:', neighbor.msg);
-					setData({...data, user_address: {...data.user_address, district: value, neighbor: neighbor.msg[0] ? neighbor.msg[0] : ''}});
+					// setData({...data, user_address: {...data.user_address, district: value, neighbor: neighbor.msg[0] ? neighbor.msg[0] : ''}});
+					setData({...data, user_address: {...data.user_address, district: value, neighbor: '동, 읍을 선택해주세요.'}});
 					if (value != data.user_address.district) {
 						setIsDistrictChanged(!isDistrictChanged);
 					}
@@ -210,7 +129,7 @@ const AssignUserHabitation = props => {
 	};
 
 	return (
-		<KeyboardAvoidingView style={[login_style.wrp_main, {flex: 1}]} behavior='position'>
+		<View style={[login_style.wrp_main, {flex: 1}]}>
 			{/* (M)StageBar	 */}
 			<View style={[temp_style.stageBar, progressbar_style.stageBar]}>
 				<StageBar
@@ -222,67 +141,26 @@ const AssignUserHabitation = props => {
 					width={600 * DP} //bar의 너비
 				/>
 			</View>
-
 			{/* Text Msg */}
 			<View style={[assignUserHabitation_style.textContainer]}>
 				<Text style={[txt.noto24, assignUserHabitation_style.info_text]}>사는 지역을 대략적으로 알려주세요.</Text>
 			</View>
 			{/* HabitationForm */}
 			<View style={[assignUserHabitation_style.habitationForm]}>
-				<TouchableOpacity
-					onPress={onPressCity}
-					style={{
-						width: 634 * DP,
-						borderBottomColor: APRI10,
-						borderBottomWidth: 2 * DP,
-						paddingVertical: 12 * DP,
-						flexDirection: 'row',
-						justifyContent: 'space-between',
-						alignItems: 'center',
-						paddingLeft: 24 * DP,
-					}}>
-					<Text style={[txt.noto28, {width: 538 * DP, textAlign: 'center'}]}>
-						{data.user_address.city ? data.user_address.city : '도, 광역시를 선택해주세요.'}
-					</Text>
+				<TouchableOpacity onPress={onPressCity} style={[style.addressContainer]}>
+					<Text style={[txt.noto28, style.addressText]}>{data.user_address.city ? data.user_address.city : '도, 광역시를 선택해주세요.'}</Text>
 					<Arrow_Down_GRAY10 />
 				</TouchableOpacity>
-				<TouchableOpacity
-					onPress={onPressDistrict}
-					style={{
-						width: 634 * DP,
-						borderBottomColor: APRI10,
-						borderBottomWidth: 2 * DP,
-						paddingVertical: 12 * DP,
-						flexDirection: 'row',
-						justifyContent: 'space-between',
-						alignItems: 'center',
-						paddingLeft: 24 * DP,
-					}}>
-					<Text style={[txt.noto28, {width: 538 * DP, textAlign: 'center'}]}>{data.user_address.district}</Text>
+				<TouchableOpacity onPress={onPressDistrict} style={[style.addressContainer]}>
+					<Text style={[txt.noto28, style.addressText]}>{data.user_address.district}</Text>
 					<Arrow_Down_GRAY10 />
 				</TouchableOpacity>
-				<TouchableOpacity
-					onPress={onPressNeighbor}
-					style={{
-						width: 634 * DP,
-						borderBottomColor: APRI10,
-						borderBottomWidth: 2 * DP,
-						paddingVertical: 12 * DP,
-						flexDirection: 'row',
-						justifyContent: 'space-between',
-						alignItems: 'center',
-						paddingLeft: 24 * DP,
-					}}>
-					<Text style={[txt.noto28, {width: 538 * DP, textAlign: 'center'}]}>{data.user_address.neighbor}</Text>
+				<TouchableOpacity onPress={onPressNeighbor} style={[style.addressContainer]}>
+					<Text style={[txt.noto28, style.addressText]}>{data.user_address.neighbor}</Text>
 					<Arrow_Down_GRAY10 />
 				</TouchableOpacity>
-
-				{/* <DropdownSelect width={522} value={data.user_address.city} onOpen={onSelectCity} ref={cityDrop} /> */}
-				{/* <DropdownSelect width={522} value={data.user_address.district} onOpen={onSelectDistrict} ref={districDrop} />
-				<DropdownSelect width={522} value={data.user_address.neighbor} onOpen={onSelectNeighbor} ref={neighborDrop} /> */}
 			</View>
-
-			{/* (A)Btn_w654 */}
+			{/* 버튼 */}
 			<View style={[btn_style.btn_w654, assignUserHabitation_style.btn_w654]}>
 				{adressValid ? (
 					<AniButton btnTitle={'확인'} titleFontStyle={32} btnStyle={'border'} btnTheme={'shadow'} btnLayout={btn_w654} onPress={goToNextStep} />
@@ -290,8 +168,25 @@ const AssignUserHabitation = props => {
 					<AniButton btnTitle={'확인'} titleFontStyle={32} disable={true} btnLayout={btn_w654} />
 				)}
 			</View>
-		</KeyboardAvoidingView>
+		</View>
 	);
 };
 
 export default AssignUserHabitation;
+
+const style = StyleSheet.create({
+	addressContainer: {
+		width: 634 * DP,
+		borderBottomColor: APRI10,
+		borderBottomWidth: 2 * DP,
+		paddingVertical: 12 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		paddingLeft: 24 * DP,
+	},
+	addressText: {
+		width: 538 * DP,
+		textAlign: 'center',
+	},
+});

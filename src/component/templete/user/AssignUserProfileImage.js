@@ -85,14 +85,18 @@ export default AssignUserProfileImage = props => {
 							routes: [{name: 'Login'}, {name: 'AssignPetProfileImage', params: {userobject_id: successmsg.msg._id, previousRouteName: 'Login'}}],
 						});
 					},
+					() => {
+						Modal.close();
+						//네비게이션 초기화, 로그인으로 이동
+						props.navigation.reset({
+							index: 0,
+							routes: [{name: 'Login'}],
+						});
+					},
 				);
 			},
 			errormsg => {
-				Modal.close();
-				//에러메세지 표시
-				Modal.popOneBtn(errormsg, '확인', () => {
-					Modal.close();
-				});
+				Modal.alert(errormsg);
 			},
 		);
 	};
@@ -161,7 +165,7 @@ export default AssignUserProfileImage = props => {
 					onChange={onNicknameChange}
 					onValid={onNicknameValid}
 					confirm={nickName_validator}
-					maxLength={15}
+					maxLength={20}
 					showmsg
 				/>
 			</View>

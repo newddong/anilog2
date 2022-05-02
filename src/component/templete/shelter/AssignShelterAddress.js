@@ -9,7 +9,6 @@ import Input24 from 'Molecules/input/Input24';
 import AddressInput from 'Organism/input/AddressInput';
 import {stagebar_style} from 'Root/component/organism/style_organism copy';
 import StageBar from 'Root/component/molecules/info/Stagebar';
-import {NICKNAME_FORM} from 'Root/i18n/msg';
 
 export default AssignShelterAddress = props => {
 	const [confirmed, setConfirmed] = React.useState(false); //주소란이 모두 작성되었다며 통과가능
@@ -25,7 +24,6 @@ export default AssignShelterAddress = props => {
 			detail: '', //세부주소
 		},
 	});
-	let regExp = /^[가-힣a-zA-Z0-9_]{2,20}$/;
 
 	React.useEffect(() => {
 		if (props.route.params.addr) {
@@ -42,7 +40,7 @@ export default AssignShelterAddress = props => {
 	}, [props.route.params.addr]);
 
 	React.useEffect(() => {
-		if (data.shelter_address.brief.length > 0 && data.shelter_address.detail != '' && regExp.test(data.shelter_name)) {
+		if (data.shelter_address.brief.length > 0 && data.shelter_address.detail != '' && data.shelter_name.length > 0) {
 			setConfirmed(true);
 		} else {
 			setConfirmed(false);
@@ -76,8 +74,10 @@ export default AssignShelterAddress = props => {
 	};
 
 	const nameValidator = name => {
+		var regExp = /^[\wㄱ-ㅎㅏ-ㅣ가-힣]{2,20}$/;
 		return regExp.test(name);
 	};
+
 	const onValidName = isValid => {
 		setConfirmName(isValid);
 	};
@@ -125,7 +125,7 @@ export default AssignShelterAddress = props => {
 					showMsg
 					width={654}
 					confirm_msg={''}
-					alert_msg={NICKNAME_FORM}
+					alert_msg={'2~20자의 한글로 작성해주세요.'}
 				/>
 			</View>
 

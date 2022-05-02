@@ -6,7 +6,7 @@ import AddressInput from 'Organism/input/AddressInput';
 import Input30 from 'Molecules/input/Input30';
 import InputWithEmail from 'Molecules/input/InputWithEmail';
 import DatePicker from 'Molecules/select/DatePicker';
-import {COMPLETE_MODIFY, EMAIL_DOMAIN, NICKNAME_FORM} from 'Root/i18n/msg';
+import {COMPLETE_MODIFY, EMAIL_DOMAIN, NICKNAME_FORM, PHONE_FORM} from 'Root/i18n/msg';
 import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import {GRAY10} from 'Root/config/color';
@@ -129,7 +129,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 					updateShelterDetailInformation(
 						{
 							userobject_id: data._id,
-							shelter_name: data.shelter_name,
+							user_nickname: data.user_nickname,
 							shelter_address: data.shelter_address,
 							shelter_delegate_contact_number: data.shelter_delegate_contact_number,
 							user_email: data.user_email,
@@ -229,7 +229,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 								defaultValue={data.shelter_delegate_contact_number}
 								keyboardType={'number-pad'}
 								width={500}
-								alert_msg={'전화번호는 - 을 제외하고 10~11자로 작성해주세요'}
+								alert_msg={PHONE_FORM}
 								showMsg
 								confirm_msg={'올바른 전화번호 양식입니다.'}
 								onChange={onChangeContact}

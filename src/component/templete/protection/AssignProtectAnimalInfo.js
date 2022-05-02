@@ -83,8 +83,17 @@ export default AssignProtectAnimalInfo = ({route}) => {
 					data,
 					result => {
 						console.log(`assignShelterAnimal result.ms:${JSON.stringify(result.msg)}`);
-						Modal.popTwoBtn('보호 동물이 등록되었습니다. \n바로 보호요청 글을 작성하시겠습니까?', '아니오', '새 글 작성', goToShelterMenu, () =>
-							goToWriteAidRequest(result.msg),
+						Modal.popTwoBtn(
+							'보호 동물이 등록되었습니다. \n바로 보호요청 글을 작성하시겠습니까?',
+							'아니오',
+							'새 글 작성',
+							goToShelterMenu,
+							() => {
+								goToWriteAidRequest(result.msg);
+							},
+							() => {
+								console.log('종료');
+							},
 						);
 					},
 					err => {

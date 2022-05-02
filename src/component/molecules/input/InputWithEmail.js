@@ -1,10 +1,9 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {Text, View, TouchableOpacity, TextInput, TouchableWithoutFeedback, StyleSheet} from 'react-native';
+import {Text, View, TouchableOpacity, TextInput, StyleSheet, Keyboard} from 'react-native';
 import DP from 'Root/config/dp';
-import {Arrow_Down_GRAY20, Arrow_Up_GRAY20, Cross52, NextMark} from 'Root/component/atom/icon';
+import {NextMark} from 'Root/component/atom/icon';
 import {APRI10, BLACK, GRAY10, GRAY20, GRAY30, RED10} from 'Root/config/color';
-import Input24 from './Input24';
 import {EMAIL_DOMAIN} from 'Root/i18n/msg';
 import Modal from 'Root/component/modal/Modal';
 
@@ -65,6 +64,7 @@ const InputWithEmail = props => {
 	};
 
 	const selectEmailModal = () => {
+		Keyboard.dismiss();
 		const onSelectEmail = selectedItem => {
 			if (selectedItem == '직접입력') {
 				console.log('직접입력');
@@ -94,6 +94,7 @@ const InputWithEmail = props => {
 			) : (
 				false
 			)}
+			{/* <View style={{flexDirection: 'row', alignItems: 'center', borderBottomWidth: 2 * DP, borderColor: input.length == 0 ? GRAY30 : APRI10}}> */}
 			<View
 				style={{
 					flexDirection: 'row',
@@ -102,15 +103,26 @@ const InputWithEmail = props => {
 					borderBottomWidth: 2 * DP,
 				}}>
 				{/* 이메일 주소 */}
+				{/* <Input24
+					placeholder={props.placeholder}
+					value={input.split('@')[0]}
+					defaultValue={props.defaultValue ? props.defaultValue.split('@')[0] : ''}
+					onChange={onChange}
+					showMsg={props.showMsg}
+					showCrossMark={false}
+					maxlength={30}
+					// onClear={onClear}
+					numberOfLinst={1}
+					width={props.width || 240}
+					validator={validator}
+					onValid={onValid}
+				/> */}
 				<TextInput
-					style={[
-						txt.roboto32,
-						{
-							width: props.width * DP,
-							height: 80 * DP,
-							paddingHorizontal: 20 * DP,
-						},
-					]}
+					style={{
+						width: props.width * DP,
+						height: 80 * DP,
+						paddingHorizontal: 20 * DP,
+					}}
 					placeholder={props.placeholder}
 					defaultValue={props.defaultValue ? props.defaultValue.split('@')[0] : ''}
 					onChangeText={onChange}

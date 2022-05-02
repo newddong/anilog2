@@ -6,7 +6,7 @@ import {txt} from 'Root/config/textstyle';
 import DP, {isNotch} from 'Root/config/dp';
 import MapView, {Callout, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {CurrentLocation, LocationMarker} from 'Root/component/atom/icon';
-import {APRI10, GRAY10, GRAY20, GRAY30} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, GRAY20, GRAY30} from 'Root/config/color';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import {btn_w194, btn_w654} from 'Root/component/atom/btn/btn_style';
 import X2JS from 'x2js';
@@ -257,12 +257,12 @@ export default SearchMap = ({route}) => {
 		<View style={[style.container, {}]}>
 			{/* <Map /> */}
 			<ScrollView contentContainerStyle={{alignItems: 'center', bottom: keyboardY}}>
-				<View style={[{paddingVertical: 10 * DP, width: 654 * DP}]}>
-					<AniButton onPress={goToAddressSearch} btnTitle={'주소 검색'} btnLayout={btn_w194} btnStyle={'border'} titleFontStyle={24} />
-				</View>
 				{changedLongitude != '' && changedLatitude != '' ? (
 					<View style={{zIndex: -1, marginTop: 10 * DP, backgroundColor: '#fff'}}>
 						{/* 현재 위치로 돌아가는 아이콘 */}
+						<View style={[{paddingVertical: 10 * DP, width: 654 * DP, alignSelf: 'center'}]}>
+							<AniButton onPress={goToAddressSearch} btnTitle={'주소 검색'} btnLayout={btn_w194} btnStyle={'border'} titleFontStyle={24} />
+						</View>
 						<TouchableOpacity activeOpacity={0.6} onPress={initializeRegion} style={[style.currentLocationIcon]}>
 							<CurrentLocation />
 						</TouchableOpacity>
@@ -349,7 +349,7 @@ export default SearchMap = ({route}) => {
 							<Text style={[txt.noto22, {color: GRAY20}]}>{detailAddr.length + '/' + 25} </Text>
 						</View>
 						<View style={[style.btnContainer]}>
-							<AniButton onPress={confirm} btnTitle={'선택한 위치로 설정'} btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} />
+							<AniButton onPress={confirm} btnTitle={'선택한 위치로 선택'} btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} />
 						</View>
 					</View>
 				) : (
@@ -405,7 +405,7 @@ const style = StyleSheet.create({
 	},
 	mapContainer: {
 		width: 750 * DP,
-		height: 800 * DP,
+		height: 750 * DP,
 		borderColor: GRAY10,
 		borderWidth: 2 * DP,
 	},
@@ -434,8 +434,8 @@ const style = StyleSheet.create({
 		marginBottom: 20 * DP,
 		paddingVertical: 10 * DP,
 		paddingRight: 20 * DP,
-		borderWidth: 2 * DP,
-		borderColor: GRAY30,
+		borderBottomWidth: 2 * DP,
+		borderBottomColor: BLACK,
 		flexDirection: 'row',
 		// backgroundColor: 'yellow',
 	},

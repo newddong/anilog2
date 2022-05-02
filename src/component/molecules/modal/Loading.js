@@ -25,11 +25,7 @@ const Loading = props => {
 			]}>
 			<FastImage
 				style={{width: 200, height: 200}}
-				source={{
-					uri: 'https://i.imgur.com/u94DlJb.gif',
-					headers: {Authorization: 'someAuthToken'},
-					priority: FastImage.priority.normal,
-				}}
+				source={Image.resolveAssetSource(require('Atom/icon/loading.gif'))}
 				resizeMode={FastImage.resizeMode.contain}
 			/>
 		</View>

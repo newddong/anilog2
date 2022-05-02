@@ -43,7 +43,7 @@ export default ApplyAdoptionList = props => {
 					result.msg[index].protect_request_date = result.msg[index].protect_act_request_article_id.protect_animal_id.protect_animal_rescue_date;
 					result.msg[index].protect_animal_species = result.msg[index].protect_act_request_article_id.protect_animal_species;
 					result.msg[index].protect_animal_species_detail = result.msg[index].protect_act_request_article_id.protect_animal_species_detail;
-					result.msg[index].shelter_name = result.msg[index].protect_act_request_article_id.protect_request_writer_id.shelter_name;
+					result.msg[index].user_nickname = result.msg[index].protect_act_request_article_id.protect_request_writer_id.user_nickname;
 					result.msg[index].protect_animal_sex = result.msg[index].protect_act_request_article_id.protect_animal_id.protect_animal_sex;
 					result.msg[index].protect_animal_status = result.msg[index].protect_act_request_article_id.protect_animal_id.protect_animal_status;
 				}

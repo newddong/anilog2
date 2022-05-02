@@ -37,7 +37,8 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 		let param = {...route.params, hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1))};
 		switch (route.params?.feedType) {
 			case 'Feed':
-				console.log(param);
+				console.log('feed Param', param);
+				// Modal.close();
 				createFeed(param, complete, handleError);
 				break;
 			case 'Missing':
@@ -63,7 +64,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 						data.missing_animal_contact
 					) {
 						console.log('NotNull 통과');
-						// createMissing(param, complete, handleError);
+						createMissing(param, complete, handleError);
 						Modal.close();
 					} else {
 						Modal.popOneBtn('작성란은 모두 작성해주셔야합니다.\n (사진 포함)', '확인', () => Modal.close());

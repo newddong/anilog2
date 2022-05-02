@@ -259,13 +259,25 @@ export default Review = props => {
 	};
 
 	const onPressLike = () => {
-		setData({...data, community_is_like: true, community_like_count: ++data.community_like_count});
-		props.onPressLike();
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setData({...data, community_is_like: true, community_like_count: ++data.community_like_count});
+			props.onPressLike();
+		}
 	};
 
 	const onPressUnlike = () => {
-		props.onPressUnlike();
-		setData({...data, community_is_like: false, community_like_count: --data.community_like_count});
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			props.onPressUnlike();
+			setData({...data, community_is_like: false, community_like_count: --data.community_like_count});
+		}
 	};
 
 	const onPressFavorite = bool => {
@@ -281,7 +293,17 @@ export default Review = props => {
 	};
 
 	const onPressReply = () => {
-		props.onPressReply();
+		if (data.community_comment_count == 0) {
+			if (userGlobalObject.userInfo.isPreviewMode) {
+				Modal.popLoginRequestModal(() => {
+					navigation.navigate('Login');
+				});
+			} else {
+				props.onPressReply();
+			}
+		} else {
+			props.onPressReply();
+		}
 	};
 
 	const onPressReviewContent = () => {

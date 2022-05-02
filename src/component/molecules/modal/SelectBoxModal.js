@@ -53,9 +53,9 @@ const SelectBoxModal = props => {
 						</TouchableOpacity>
 					</View>
 				) : (
-					<View style={style.crossMarkContainer_withoutTitle}>
-						<Cross24_Filled onPress={() => props.onClose()} />
-					</View>
+					<TouchableOpacity onPress={() => props.onClose()} activeOpacity={0.8} style={[style.crossMarkContainer_withoutTitle, {}]}>
+						<Cross24_Filled />
+					</TouchableOpacity>
 				)}
 				<View style={[style.insideContainer]}>
 					<FlatList
@@ -91,7 +91,6 @@ const style = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		backgroundColor: WHITE,
-		opacity: 0.9,
 		borderRadius: 50 * DP,
 	},
 	insideContainer: {

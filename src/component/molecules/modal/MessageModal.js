@@ -34,7 +34,9 @@ const MessageModal = props => {
 	return (
 		<TouchableOpacity onPress={() => Modal.close()} activeOpacity={1} style={style.background}>
 			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
-				<Text style={[txt.noto28, style.receiver]}>받는이 : {props.receiver}</Text>
+				<Text style={[txt.noto28, style.receiver]} numberOfLines={1}>
+					받는이 : {props.receiver}
+				</Text>
 				<View style={[style.inputLongText]}>
 					<TextInput onChangeText={onChangeMsg} style={[txt.noto24, style.textInput]} placeholder={'내용입력...'} maxLength={400} multiline={true} />
 					<Text style={[txt.noto24, {color: GRAY20, alignSelf: 'flex-end'}]}>{msg.length} / 400 </Text>

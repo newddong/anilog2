@@ -29,10 +29,23 @@ const ProtectedPetDetailModal = props => {
 		let neutralization = 'O';
 		if (data.protect_animal_neutralization == 'no') {
 			neutralization = 'X';
-		} else if (data.protect_animal_neutralization == 'no') {
+		} else if (data.protect_animal_neutralization == 'unknown') {
 			neutralization = '모름';
 		}
 		return neutralization;
+	};
+
+	const getGender = () => {
+		switch (data.pet_sex) {
+			case 'male':
+				return <Male48 />;
+			case 'female':
+				return <Female48 />;
+			case 'unknown':
+				return <></>;
+			default:
+				break;
+		}
 	};
 
 	const getOverLap = leng => {
@@ -83,7 +96,7 @@ const ProtectedPetDetailModal = props => {
 					</View>
 					<View style={[style.detailBox]}>
 						<View style={[style.detail_step1]}>
-							{data.pet_sex == 'female' ? <Female48 /> : <Male48 />}
+							{getGender()}
 							<Text style={[txt.noto28b]}>
 								{'  '}
 								{data.pet_species + ' / ' + data.pet_species_detail}
@@ -93,7 +106,7 @@ const ProtectedPetDetailModal = props => {
 							<Text style={[txt.noto24, {color: GRAY20}]}>예상연령 : </Text>
 							<Text style={[txt.noto24]}>{data.protect_animal_estimate_age || ''}</Text>
 							<Text style={[txt.noto24, {color: GRAY20, marginLeft: 40 * DP}]}>체중 : </Text>
-							<Text style={[txt.noto24]}>{data.protect_animal_weight + ' kg' || ''}</Text>
+							<Text style={[txt.noto24]}>{data.protect_animal_weight == '' ? '모름' : data.protect_animal_weight + ' kg' || ''}</Text>
 							<Text style={[txt.noto24, {color: GRAY20, marginLeft: 40 * DP}]}>중성화: </Text>
 							<Text style={[txt.noto24]}>{getNeutralization()}</Text>
 						</View>

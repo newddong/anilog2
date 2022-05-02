@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, FlatList} from 'react-native';
+import {Text, View, FlatList, RefreshControl, TouchableOpacity} from 'react-native';
 import {login_style, searchProtectRequest, temp_style} from 'Templete/style_templete';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {GRAY10} from 'Root/config/color';
@@ -13,6 +13,9 @@ import Modal from 'Root/component/modal/Modal';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import Loading from 'Root/component/molecules/modal/Loading';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
+import {animalNeedHelpList} from 'Root/component/organism/style_organism copy';
+import AnimalNeedHelpTest from 'Root/component/organism/listitem/ProtectRequest';
+import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 
 export default ProtectRequestList = ({navigation, route}) => {
 	const [data, setData] = React.useState('false');
@@ -21,13 +24,12 @@ export default ProtectRequestList = ({navigation, route}) => {
 		protect_animal_species: '',
 		// adoptable_posts: 'false', // 입양 가능한 게시글만 보기 필터는 굳이 api에 한 번 더 접속할 필요가 없으므로 제외처리
 		protect_request_object_id: '',
-		request_number: 10000,
+		request_number: 1000,
 	});
 	const [onlyAdoptable, setOnlyAdoptable] = React.useState(false);
 	React.useEffect(() => {
-		Modal.popLoading();
 		const unsubscribe = navigation.addListener('focus', () => {
-			getList();
+			// getList();
 		});
 		getList(); //필터가 바뀔 때마다 호출되도록 설정
 		return unsubscribe;
@@ -35,9 +37,9 @@ export default ProtectRequestList = ({navigation, route}) => {
 
 	const getList = () => {
 		getProtectRequestList(
-			filterData,
+			{...filterData},
 			result => {
-				// console.log('result / getProtectRequestList / ProtectRequestList : ', result.msg[0]);
+				console.log('result / getProtectRequestList / ProtectRequestList : ', result.msg.length);
 				result.msg.forEach(each => {
 					each.protect_animal_sex = each.protect_animal_id.protect_animal_sex;
 					each.protect_animal_status = each.protect_animal_id.protect_animal_status;
@@ -150,56 +152,128 @@ export default ProtectRequestList = ({navigation, route}) => {
 		return onlyAdoptable ? data.filter(v => v.protect_request_status == 'rescue') : data;
 	};
 
+	const renderItem = ({item, index}) => {
+		// return <MyListItem item={item} index={index} />;
+		return (
+			<>
+				{index == 0 ? (
+					<>
+						<View style={[searchProtectRequest.filterView]} key={'header'}>
+							<View style={[searchProtectRequest.filterView.inside]}>
+								<View style={{flexDirection: 'row'}}>
+									<View style={[temp_style.filterBtn]}>
+										<ArrowDownButton
+											onPress={onSelectLocation}
+											btnTitle={filterData.city || '지역'}
+											btnLayout={btn_w306_h68}
+											btnStyle={'border'}
+											btnTheme={'gray'}
+										/>
+									</View>
+									<View style={[temp_style.filterBtn]}>
+										<ArrowDownButton
+											onPress={onSelectKind}
+											btnTitle={filterData.protect_animal_species || '동물 종류'}
+											btnLayout={btn_w306_h68}
+											btnStyle={'border'}
+											btnTheme={'gray'}
+										/>
+									</View>
+								</View>
+								<View style={[searchProtectRequest.filterView.onOffBtnView]}>
+									<View style={[searchProtectRequest.filterView.onOffBtnMsg]}>
+										<Text style={[txt.noto20, {color: GRAY10}]}>{ONLY_CONTENT_FOR_ADOPTION}</Text>
+									</View>
+									<View style={[temp_style.onOffSwitch, searchProtectRequest.filterView.onOffSwitch]}>
+										<OnOffSwitch onSwtichOn={filterOn} onSwtichOff={filterOff} />
+									</View>
+								</View>
+							</View>
+						</View>
+						<ProtectRequest
+							data={item}
+							onClickLabel={(status, id) => onClickLabel(status, id, item)}
+							onFavoriteTag={e => onOff_FavoriteTag(e, index)}
+							onPressProtectRequest={() => onPressProtectRequest(item)}
+						/>
+					</>
+				) : (
+					<></>
+				)}
+
+				<ProtectRequest
+					data={item}
+					onClickLabel={(status, id) => onClickLabel(status, id, item)}
+					onFavoriteTag={e => onOff_FavoriteTag(e, index)}
+					onPressProtectRequest={() => onPressProtectRequest(item)}
+				/>
+			</>
+		);
+	};
+
+	class MyListItem extends React.PureComponent {
+		render() {
+			return (
+				<>
+					<View style={[animalNeedHelpList.itemContainer]}>
+						<AnimalNeedHelp
+							index={this.props.index}
+							data={this.props.item}
+							onClickLabel={(status, id) => onClickLabel(status, id, this.props.item)}
+							onFavoriteTag={e => onOff_FavoriteTag(e, this.props.index)}
+							onPressProtectRequest={() => onPressProtectRequest(this.props.item)}
+						/>
+					</View>
+				</>
+			);
+		}
+	}
+
+	const wait = timeout => {
+		return new Promise(resolve => setTimeout(resolve, timeout));
+	};
+	const onRefresh = () => {
+		setRefreshing(true);
+		wait(0).then(() => setRefreshing(false));
+	};
+
+	const ITEM_HEIGHT = 244 * DP;
+	const [refreshing, setRefreshing] = React.useState(false);
+	const keyExtractor = React.useCallback(item => item._id.toString(), []);
+	const getItemLayout = React.useCallback(
+		(data, index) =>
+			!data[index]
+				? {length: 0, offset: 0, index: index}
+				: {
+						length: ITEM_HEIGHT,
+						offset: ITEM_HEIGHT * index,
+						index,
+				  },
+		[],
+	);
+
 	if (data == 'false') {
 		return <Loading isModal={false} />;
 	} else {
 		return (
-			<View style={[login_style.wrp_main, {flex: 1}]}>
-				<FlatList
-					horizontal={false}
-					data={[{}]}
-					listKey={({item, index}) => index}
-					renderItem={({item, index}) => (
-						<View style={{}}>
-							<View style={[searchProtectRequest.filterView]}>
-								<View style={[searchProtectRequest.filterView.inside]}>
-									<View style={{flexDirection: 'row'}}>
-										<View style={[temp_style.filterBtn]}>
-											<ArrowDownButton
-												onPress={onSelectLocation}
-												btnTitle={filterData.city || '지역'}
-												btnLayout={btn_w306_h68}
-												btnStyle={'border'}
-												btnTheme={'gray'}
-											/>
-										</View>
-										<View style={[temp_style.filterBtn]}>
-											<ArrowDownButton
-												onPress={onSelectKind}
-												btnTitle={filterData.protect_animal_species || '동물 종류'}
-												btnLayout={btn_w306_h68}
-												btnStyle={'border'}
-												btnTheme={'gray'}
-											/>
-										</View>
-									</View>
-									<View style={[searchProtectRequest.filterView.onOffBtnView]}>
-										<View style={[searchProtectRequest.filterView.onOffBtnMsg]}>
-											<Text style={[txt.noto20, {color: GRAY10}]}>{ONLY_CONTENT_FOR_ADOPTION}</Text>
-										</View>
-										<View style={[temp_style.onOffSwitch, searchProtectRequest.filterView.onOffSwitch]}>
-											<OnOffSwitch onSwtichOn={filterOn} onSwtichOff={filterOff} />
-										</View>
-									</View>
-								</View>
-							</View>
-							<View style={[searchProtectRequest.animalNeedHelpList]}>
-								<AnimalNeedHelpList data={getData()} onClickLabel={onClickLabel} onFavoriteTag={onOff_FavoriteTag} whenEmpty={whenEmpty()} />
-							</View>
-						</View>
-					)}
-				/>
-			</View>
+			<FlatList
+				data={getData()}
+				style={{backgroundColor: '#fff'}}
+				renderItem={renderItem}
+				showsVerticalScrollIndicator={false}
+				keyExtractor={keyExtractor}
+				getItemLayout={getItemLayout}
+				refreshing
+				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+				ListEmptyComponent={whenEmpty}
+				// https://reactnative.dev/docs/optimizing-flatlist-configuration
+				removeClippedSubviews={true}
+				extraData={refreshing}
+				initialNumToRender={15}
+				maxToRenderPerBatch={5}
+				windowSize={11}
+				// https://reactnative.dev/docs/optimizing-flatlist-configuration
+			/>
 		);
 	}
 };

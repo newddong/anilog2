@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {ActivityIndicator, FlatList, ScrollView, Text, View} from 'react-native';
+import {FlatList, Text, View} from 'react-native';
 import {getUserProtectAnimalList} from 'Root/api/protectapi';
 import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
@@ -8,7 +8,7 @@ import AnimalInfoList from 'Organism/list/AnimalInfoList';
 import {login_style, animalProtectList} from 'Templete/style_templete';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {EmptyIcon} from 'Root/component/atom/icon';
+import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 
 //UserMenu => 동물 보호 현황
 export default AnimalProtectList = ({route}) => {
@@ -19,7 +19,7 @@ export default AnimalProtectList = ({route}) => {
 		getUserProtectAnimalList(
 			{userobject_id: userGlobalObject.userInfo._id},
 			result => {
-				console.log('success / AnimalProtectList', result);
+				// console.log('success / AnimalProtectList', result);
 				setData(result.msg);
 			},
 			err => {
@@ -30,12 +30,7 @@ export default AnimalProtectList = ({route}) => {
 	}, [route.params]);
 
 	const listEmpty = () => {
-		return (
-			<View style={{paddingVertical: 150 * DP, alignItems: 'center'}}>
-				<EmptyIcon />
-				<Text style={[txt.roboto32b, {marginTop: 10 * DP}]}>보호 중인 동물이 없습니다.</Text>
-			</View>
-		);
+		return <ListEmptyInfo text={'보호 중인 동물이 없습니다.'} />;
 	};
 
 	const onPressLabel = (item, index) => {

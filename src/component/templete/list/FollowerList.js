@@ -110,6 +110,7 @@ export default FollowerList = props => {
 								onClickFollowBtn={onClickFollowBtn}
 								onClickUnFollowBtn={onClickUnFollowBtn}
 								showFollowStatusText={false}
+								width={400}
 							/>
 						) : (
 							<ControllableAccountList
@@ -120,6 +121,7 @@ export default FollowerList = props => {
 								onClickUnFollowBtn={onClickUnFollowBtn}
 								onClickFollowBtn={onClickFollowBtn}
 								showFollowStatusText={false}
+								width={400}
 							/>
 						)}
 					</View>

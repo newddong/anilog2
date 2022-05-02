@@ -173,7 +173,9 @@ export default UserMenu = props => {
 
 						<View style={[{marginLeft: 46 * DP}, {height: 194 * DP}, {justifyContent: 'flex-end'}]}>
 							<TouchableOpacity onPress={onPressMyName} style={[userMenu_style.user_id]}>
-								<Text style={[txt.roboto40b]}>{data.user_nickname || ''}</Text>
+								<Text style={[txt.roboto40b]} numberOfLines={1}>
+									{data.user_nickname || ''}
+								</Text>
 							</TouchableOpacity>
 							{/* 업로드 팔로워 팔로잉 */}
 							<View style={[{width: 408 * DP}, {marginTop: 18 * DP}]}>

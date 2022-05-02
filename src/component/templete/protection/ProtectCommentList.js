@@ -18,10 +18,8 @@ export default ProtectCommentList = props => {
 	const navigation = useNavigation();
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
-	const [photo, setPhoto] = React.useState();
 	const [comments, setComments] = React.useState([]);
 	const [parentComment, setParentComment] = React.useState();
-	const [content, setContent] = React.useState('');
 	const input = React.useRef();
 	const addChildCommentFn = React.useRef(() => {});
 	const [refresh, setRefresh] = React.useState(true);
@@ -36,6 +34,8 @@ export default ProtectCommentList = props => {
 
 	React.useEffect(() => {
 		fetchData();
+		props.route.params.showKeyboard ? input.current.focus() : false;
+
 		if (props.route.params.edit != undefined) {
 			input.current.focus();
 			setEditMode(true);
@@ -66,14 +66,31 @@ export default ProtectCommentList = props => {
 				navigation.navigate('Login');
 			});
 		} else {
-			if (content.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
+			if (editData.comment_contents.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
+
+			// let param = {
+			// 	comment_contents: editData.comment_contents, //내용
+			// 	comment_is_secure: privateComment, //공개여부 테스트때 반영
+			// };
+
+			// if (parentComment) {
+			// 	// console.log('parentComment ProtectComment ', parentComment);
+			// 	param = {...param, commentobject_id: parentComment._id};
+			// } else {
+			// 	param = {...param, protect_request_object_id: data._id};
+			// }
 
 			let param = {
-				comment_photo_uri: photo, //사진uri
-				comment_contents: content, //내용
+				comment_contents: editData.comment_contents, //내용
 				comment_is_secure: privateComment, //공개여부 테스트때 반영
-				// protect_request_object_id: data._id,
 			};
+
+			if (editData.comment_photo_uri && editData.comment_photo_uri.length > 0) {
+				param.comment_photo_uri = editData.comment_photo_uri;
+			} else {
+				param.comment_photo_remove = true;
+			}
+			param.comment_photo_uri = editData.comment_photo_uri == '' ? 'https:// ' : editData.comment_photo_uri;
 
 			if (parentComment) {
 				// console.log('parentComment ProtectComment ', parentComment);
@@ -81,14 +98,16 @@ export default ProtectCommentList = props => {
 			} else {
 				param = {...param, protect_request_object_id: data._id};
 			}
-			// console.log('parap', param);
+
 			if (editMode) {
-				console.log('댓글편집', editData);
+				// delete param.comment_is_secure;
+				delete param.protect_request_object_id;
+				console.log('param', param);
+				console.log('privateComment', privateComment);
 				updateComment(
 					{
 						...param,
 						commentobject_id: editData._id,
-						comment_photo_remove: !editData.comment_photo_uri || editData.comment_photo_uri == 0,
 					},
 					result => {
 						console.log(result);
@@ -97,7 +116,6 @@ export default ProtectCommentList = props => {
 							comment_contents: '',
 							comment_photo_uri: '',
 						});
-						setEditMode(false);
 						getCommentListByProtectId(
 							{
 								protect_request_object_id: props.route.params.protectObject._id,
@@ -108,9 +126,11 @@ export default ProtectCommentList = props => {
 								setComments(comments.msg.filter(e => e.comment_is_delete != true));
 								parentComment && addChildCommentFn.current();
 								setPrivateComment(false);
+								setEditMode(false);
 								// console.log('comments', comments);
+								input.current.blur();
 							},
-							err => console.log('getCommentListByFeedId', err),
+							err => console.log(err),
 						);
 					},
 					err => Modal.alert(err),
@@ -119,27 +139,26 @@ export default ProtectCommentList = props => {
 				createComment(
 					param,
 					result => {
-						console.log('createComment : ', result);
-						setPhoto();
 						setParentComment();
 						setEditData({
 							comment_contents: '',
 							comment_photo_uri: '',
 						});
-						setContent('');
 						getCommentListByProtectId(
 							{
 								protect_request_object_id: props.route.params.protectObject._id,
 								request_number: 1000,
-								login_userobject_id: userGlobalObject.userInfo._id,
 							},
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
 								setComments(comments.msg.filter(e => e.comment_is_delete != true));
 								parentComment && addChildCommentFn.current();
 								setPrivateComment(false);
+								setEditMode(false);
+								// console.log('comments', comments);
+								input.current.blur();
 							},
-							err => console.log('getCommentListByProtectId', err),
+							err => console.log(err),
 						);
 					},
 					err => Modal.alert(err),
@@ -173,7 +192,8 @@ export default ProtectCommentList = props => {
 				cropping: true,
 			})
 				.then(images => {
-					setPhoto(images.path);
+					console.log('onAddphoto Imagepicker', images);
+					setEditData({...editData, comment_photo_uri: images.path});
 					Modal.close();
 				})
 				.catch(err => console.log(err + ''));
@@ -182,24 +202,24 @@ export default ProtectCommentList = props => {
 	};
 
 	const onDeleteImage = () => {
-		setPhoto();
+		setEditData({...editData, comment_photo_uri: ''});
 	};
 
 	//미트볼, 수정을 누르면 동작
 	const onEdit = comment => {
-		// console.log('수정 데이터', comment);
-		input.current.focus();
+		console.log('수정 데이터', comment.comment_is_secure);
 		setEditMode(true);
+		setPrivateComment(comment.comment_is_secure);
 		setEditData({...comment});
+		input.current.focus();
 	};
 
 	// 답글 쓰기 -> Input value 변경 콜백함수
 	const onChangeReplyInput = text => {
-		setContent(text);
+		setEditData({...editData, comment_contents: text});
 	};
 
 	const onPressDelete = id => {
-		console.log('id', id);
 		deleteComment(
 			{
 				commentobject_id: id,
@@ -223,6 +243,11 @@ export default ProtectCommentList = props => {
 		} else {
 			// console.log('parentCommentId', parentCommentId);
 			setParentComment(parentCommentId);
+			setEditMode(false);
+			setEditData({
+				comment_contents: '',
+				comment_photo_uri: '',
+			});
 			input.current.focus();
 			editComment || setEditComment(true);
 			addChildCommentFn.current = addChildComment;

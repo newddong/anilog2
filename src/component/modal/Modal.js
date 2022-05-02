@@ -19,7 +19,7 @@ export default Modal = {
 	 * @param {string} yesMsg - 확인 버튼 메시지
 	 * @param {()=>void} onNo - 취소 버튼의 콜백함수
 	 * @param {()=>void} onYes - 확인 버튼의 콜백함수
-	 * @param {()=>void} onClose - 모달종료 콜백함수
+	 * @param {()=>void} onClose - 확인 버튼의 콜백함수
 	 */
 	popTwoBtn: (msg, noMsg, yesMsg, onNo, onYes, onClose) => {},
 

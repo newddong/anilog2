@@ -22,6 +22,7 @@ import Modal from 'Root/component/modal/Modal';
  * @param {boolean} props.title_star - 제목 부분의 별표(강조용) 출력 여부 Default=false
  * @param {number} props.defaultIndex - 드롭 다운의 초기값 인덱스
  * @param {number} props.width - 인풋 너비(드롭다운은 제외) , default=200
+ * @param {number} props.maxlength - 인풋 길이, default = 100
  * @param {string} props.delimiter - 드롭다운 결과값과 인풋 값과의 구분문자
  * @param {(input:string)=>void} props.onChange - 인풋 값 변경 시 동작하는 콜백, 인풋 반환
  * @param {()=>void} props.onClear - 지우기 버튼 클릭 시 동작하는 콜백, 제목 반환환
@@ -86,6 +87,7 @@ const InputWithSelect = props => {
 						// defaultValue={props.defaultValue}
 						onChange={onChange}
 						validator={validator}
+						maxlength={props.maxlength}
 						onValid={onValid}
 						width={props.width || 450}
 					/>

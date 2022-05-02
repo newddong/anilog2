@@ -17,7 +17,6 @@ import Modal from 'Root/component/modal/Modal';
  */
 const SelectMultipleScrollBoxModal = props => {
 	const data = props.data;
-	// console.log('data', JSON.stringify(data));
 
 	const [selectedItem, setSelectedItem] = React.useState(2);
 	const [selectedItem2, setSelectedItem2] = React.useState(2);
@@ -31,7 +30,7 @@ const SelectMultipleScrollBoxModal = props => {
 		if (data.length == 1) {
 			props.onSelect(data[0][selectedItem - 2]);
 		} else {
-			props.onSelect(data[0][selectedItem], data[1][selectedItem2]);
+			props.onSelect(first[selectedItem - 2], second[selectedItem2 - 2]);
 		}
 	};
 
@@ -44,20 +43,17 @@ const SelectMultipleScrollBoxModal = props => {
 	};
 
 	React.useEffect(() => {
-		// refContainerLeft.current.scrollToIndex({animated: true, index: selectedItem});
 		getSecondCategory();
-	}, [selectedItem]);
-
-	React.useEffect(() => {
-		// refContainerRight.current.scrollToIndex({animated: true, index: selectedItem});
 	}, [selectedItem]);
 
 	const onScroll = event => {
 		let y = event.nativeEvent.contentOffset.y;
 		let focused = Math.floor(y / (68 * DP));
-		console.log('foucsed', focused);
+		// console.log('foucsed', focused);
 		if (focused < 1) {
 			setSelectedItem(2);
+		} else if (focused >= first.length - 1) {
+			setSelectedItem(first.length + 1);
 		} else {
 			setSelectedItem(focused + 2);
 		}
@@ -65,7 +61,6 @@ const SelectMultipleScrollBoxModal = props => {
 
 	const onScroll_second = event => {
 		let y = event.nativeEvent.contentOffset.y;
-
 		let focused = '';
 		if (second.length < 5) {
 			focused = Math.floor(y / (63 * DP));
@@ -75,17 +70,11 @@ const SelectMultipleScrollBoxModal = props => {
 		console.log('foucsed', focused);
 		if (focused < 1) {
 			setSelectedItem2(2);
+		} else if (focused >= second.length - 1) {
+			setSelectedItem2(second.length + 1);
 		} else {
 			setSelectedItem2(focused + 2);
 		}
-	};
-
-	const getWidth = () => {
-		return 324 * DP;
-	};
-
-	const onScrollToIndexFailed = e => {
-		console.log('e', e);
 	};
 
 	const getFirst = () => {
@@ -141,8 +130,7 @@ const SelectMultipleScrollBoxModal = props => {
 												style.listItem,
 												index == selectedItem && item != padding ? {backgroundColor: APRI10} : null,
 												{
-													width: getWidth(),
-													// zIndex: 3,
+													width: 324 * DP,
 												},
 											]}>
 											<Text style={[txt.roboto34, {color: item == padding ? GRAY20 : BLACK}]}>{item}</Text>
@@ -169,7 +157,7 @@ const SelectMultipleScrollBoxModal = props => {
 												style.listItem,
 												index == selectedItem2 && item != padding ? {backgroundColor: APRI10} : null,
 												{
-													width: getWidth(),
+													width: 324 * DP,
 													// zIndex: 3,
 												},
 											]}>

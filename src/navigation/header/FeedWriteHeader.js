@@ -74,6 +74,11 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			case 'Report':
 				{
 					const data = param;
+					if (data.report_location.city == '광역시, 도' || data.report_location.district == '구를 선택') {
+						Modal.alert('제보위치는 반드시 \n선택해주셔야합니다.');
+					} else if (data.report_witness_date == '') {
+						Modal.alert('제보 날짜를 선택해주세요.');
+					}
 
 					data.report_witness_location =
 						(data.report_location.city || '') + ' ' + (data.report_location.district || '') + ' ' + (data.report_location.detail || '');
@@ -90,8 +95,6 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 						console.log('NotNull 통과');
 						createReport(param, complete, handleError);
 						Modal.close();
-					} else {
-						Modal.popOneBtn('제보 동물의 품종 이외에는 \n 모두 작성해주셔야합니다.\n (사진 포함)', '확인', () => Modal.close());
 					}
 					// Modal.close();
 				}

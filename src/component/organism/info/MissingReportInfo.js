@@ -86,8 +86,8 @@ const MissingReportInfo = props => {
 		const newReportDate = newReportDateText[0] + '.' + newReportDateText[1] + '.' + newReportDateText[2].toString().substring(0, 2);
 		return (
 			<View style={style.container}>
-				<InfoOneLine title="제보 날짜 : " content={newReportDate} />
-				<InfoOneLine title="제보 장소 : " content={report_witness_location} />
+				<InfoOneLine title="제보 날짜  " content={newReportDate} />
+				<InfoOneLine title="제보 장소  " content={report_witness_location} />
 			</View>
 		);
 	}

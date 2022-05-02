@@ -73,7 +73,7 @@ const PhotoListViewModal = props => {
 					{props.photoList != undefined &&
 						props.photoList.map((data, idx) => (
 							<View key={idx}>
-								<Image source={{uri: data}} style={style.photo} />
+								<Image source={{uri: data}} style={style.photo} resizeMode={'contain'} />
 								<View style={[style.swiper_index]}>
 									<Text style={[txt.roboto24, {color: 'white'}]}>
 										{idx + 1}/{props.photoList.length}
@@ -125,6 +125,7 @@ const style = StyleSheet.create({
 	photo: {
 		width: 750 * DP,
 		height: 1100 * DP,
+		backgroundColor: 'black',
 	},
 });
 

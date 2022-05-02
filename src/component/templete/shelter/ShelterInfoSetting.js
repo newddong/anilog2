@@ -12,6 +12,7 @@ import {TextInput} from 'react-native';
 import moment from 'moment';
 import {Arrow_Down_GRAY20, Arrow_Up_GRAY20, ProfileDefaultImg} from 'Atom/icon';
 import DP from 'Root/config/dp';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default ShelterInfoSetting = ({route}) => {
 	// console.log('ShelterInfoSetting', route.params);
@@ -73,7 +74,7 @@ export default ShelterInfoSetting = ({route}) => {
 		setData({...data, user_introduction: intro_modified});
 		console.log('intro', intro_modified, typeof intro_modified);
 		updateUserIntroduction(
-			{user_introduction: intro_modified},
+			{userobject_id: userGlobalObject.userInfo._id, user_introduction: intro_modified},
 			success => {
 				console.log('suceess', success);
 			},

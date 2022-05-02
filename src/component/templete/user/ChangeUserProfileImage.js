@@ -51,7 +51,6 @@ export default ChangeUserProfileImage = ({route}) => {
 				// console.log('userObject', userObject);
 				err => {
 					Modal.close();
-
 					console.log('err', err);
 				},
 			);

@@ -12,7 +12,6 @@ import Modal from 'Component/modal/Modal';
 import {userLogin} from 'Root/api/userapi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import userGlobalObj from 'Root/config/userGlobalObject';
-import {ALIGNITEMS, CALENDAR_DAY, CALENDAR_MONTH, CALENDAR_YEAR, FEED_FOLLOWING_USER_CLICK, mobile_carrier, REPORT_CONTENT} from 'Root/i18n/msg';
 import {createSettingPublic, getSettingPublic} from 'Root/api/settingpublic';
 import {createNotice, getNotice} from 'Root/api/notice';
 import {NextMark} from 'Root/component/atom/icon';
@@ -41,77 +40,79 @@ export default LoginTemplete = props => {
 
 	const tryToLogin = () => {
 		Modal.popNoBtn('로그인을 요청합니다.');
-		// if (!userSetting.isSaveId) {
-		// 	userSetting.id = '';
-		// 	userSetting.password = '';
-		// }
 		AsyncStorage.setItem('userSetting', JSON.stringify(userSetting));
 		console.log('userSetting', userSetting);
-		userLogin(
-			{
-				login_id: userSetting.id,
-				login_password: userSetting.password,
-			},
-			userObject => {
-				Modal.close();
-				Modal.popNoBtn(userObject.msg.user_nickname + '님 \n로그인이 성공하였습니다.');
-
-				if (!userObject.msg._id) {
-					AsyncStorage.getItem('userInfo').then(user => {
-						userGlobalObj.userInfo = JSON.parse(user);
-					});
-				} else {
-					AsyncStorage.setItem('userInfo', JSON.stringify(userObject.msg));
-					userGlobalObj.userInfo = userObject.msg;
-				}
-				Modal.close();
-				getSettingPublic(
-					{},
-					result => {
-						if (result.msg.length == []) {
-							createSettingPublic(
-								{},
-								result => {
-									console.log('SettingPublic 생성', result);
-								},
-								err => {
-									'settingPublic 생성 err', err;
-								},
-							);
-						}
-					},
-					err => {
-						console.log('getSettingPublic err', err);
-					},
-				);
-				getNotice(
-					{},
-					result => {
-						if (result.msg.length == 0) {
-							createNotice(
-								{},
-								result => {
-									console.log('createNotice 생성', result);
-								},
-								err => {
-									console.log('createNotice err', err);
-								},
-							);
-						}
-					},
-					err => {
-						console.log('getNotice err', err);
-					},
-				);
-				props.navigation.reset({routes: [{name: 'MainTab', params: userObject.msg.user_type}]});
-			},
-			error => {
-				Modal.close();
-				Modal.popOneBtn(error, '확인', () => {
+		if (userSetting.id == '' && userSetting.password == '') {
+			Modal.alert('로그인 정보를 입력해주세요.');
+		} else if (userSetting.id == '' && userSetting.password != '') {
+			Modal.alert('전화번호를 입력해주세요.');
+		} else if (userSetting.id != '' && userSetting.password == '') {
+			Modal.alert('비밀번호 입력해주세요.');
+		} else {
+			userLogin(
+				{
+					login_id: userSetting.id,
+					login_password: userSetting.password,
+				},
+				userObject => {
 					Modal.close();
-				});
-			},
-		);
+					Modal.popNoBtn(userObject.msg.user_nickname + '님 \n로그인이 성공하였습니다.');
+
+					if (!userObject.msg._id) {
+						AsyncStorage.getItem('userInfo').then(user => {
+							userGlobalObj.userInfo = JSON.parse(user);
+						});
+					} else {
+						AsyncStorage.setItem('userInfo', JSON.stringify(userObject.msg));
+						userGlobalObj.userInfo = userObject.msg;
+					}
+					Modal.close();
+					getSettingPublic(
+						{},
+						result => {
+							if (result.msg.length == []) {
+								createSettingPublic(
+									{},
+									result => {
+										console.log('SettingPublic 생성', result);
+									},
+									err => {
+										'settingPublic 생성 err', err;
+									},
+								);
+							}
+						},
+						err => {
+							console.log('getSettingPublic err', err);
+						},
+					);
+					getNotice(
+						{},
+						result => {
+							if (result.msg.length == 0) {
+								createNotice(
+									{},
+									result => {
+										console.log('createNotice 생성', result);
+									},
+									err => {
+										console.log('createNotice err', err);
+									},
+								);
+							}
+						},
+						err => {
+							console.log('getNotice err', err);
+						},
+					);
+					props.navigation.reset({routes: [{name: 'MainTab', params: userObject.msg.user_type}]});
+				},
+				error => {
+					Modal.close();
+					Modal.alert(error + '.');
+				},
+			);
+		}
 	};
 
 	const moveToAssign = () => {
@@ -135,9 +136,11 @@ export default LoginTemplete = props => {
 		console.log('자동로그인', state);
 		setUserSetting({...userSetting, isAutoLogin: state});
 	};
+
 	//아이디 저장 박스 클릭
 	const onCheckSaveId = state => {
 		console.log('아이디저장', state);
+		AsyncStorage.setItem('userId', JSON.stringify(userSetting.id));
 		setUserSetting({...userSetting, isSaveId: state});
 	};
 

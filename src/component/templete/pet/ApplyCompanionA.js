@@ -10,6 +10,7 @@ import Stagebar from 'Molecules/info/Stagebar';
 import AddressInput from 'Organism/input/AddressInput';
 import {applyCompanionA, btn_style, login_style, temp_style} from 'Templete/style_templete';
 import {stagebar_style} from 'Root/component/organism/style_organism copy';
+import {PHONE_FORM} from 'Root/i18n/msg';
 
 // 참조 DB테이블 :
 // ProtectionActivityApplicantObject - [ ApplyCompanion A,B,C,D,E 에 걸쳐 Write 해나갈 Data]
@@ -142,7 +143,7 @@ export default ApplyCompanionA = ({route}) => {
 						keyboardType={'number-pad'}
 						value={data.protect_act_phone_number || ''}
 						width={654}
-						alert_msg={'전화번호는 - 을 제외하고 10~11자로 작성해주세요'}
+						alert_msg={PHONE_FORM}
 						showMsg
 						confirm_msg={'올바른 전화번호 양식입니다.'}
 						onChange={onChangePhoneNum}

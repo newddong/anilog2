@@ -252,27 +252,6 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 							</View>
 						</View>
 
-						{/* 전화번호 */}
-						<View style={[userInfoDetailSettting_style.inputWithSelect]}>
-							<View style={[temp_style.text_userInfoDetailSettting, userInfoDetailSettting_style.text]}>
-								<Text style={[txt.noto28, {color: GRAY10}]}>전화번호</Text>
-							</View>
-							<View style={[userInfoDetailSettting_style.phone_num_input, {}]}>
-								<Input24
-									value={data.user_phone_number}
-									width={654}
-									onChange={onChangePhoneNum}
-									descriptionType={'none'}
-									validator={phoneValidate}
-									placeholder={'연락처를 입력해주세요.'}
-									showCrossMark={false}
-									keyboardType={'number-pad'}
-									alert_msg={'- 을 제외하고 10~11자로 작성해주세요'}
-									showMsg
-									confirm_msg={'올바른 전화번호 양식입니다.'}
-								/>
-							</View>
-						</View>
 						{/* 나의 지역 */}
 						<View style={[temp_style.addressInput]}>
 							<Text style={[txt.noto28, {color: GRAY10}]}>나의 지역</Text>

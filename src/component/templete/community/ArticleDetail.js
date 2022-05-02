@@ -152,7 +152,10 @@ export default ArticleDetail = props => {
 
 			if (editData.comment_photo_uri && editData.comment_photo_uri.length > 0) {
 				param.comment_photo_uri = editData.comment_photo_uri;
+			} else {
+				param.comment_photo_remove = true;
 			}
+			param.comment_photo_uri = editData.comment_photo_uri == '' ? 'https:// ' : editData.comment_photo_uri;
 
 			if (parentComment) {
 				//대댓글일 경우 해당 부모 댓글에 대한 댓글을 추가
@@ -173,7 +176,7 @@ export default ArticleDetail = props => {
 					{
 						...param,
 						commentobject_id: editData._id,
-						comment_photo_remove: !editData.comment_photo_uri || editData.comment_photo_uri == 0,
+						// comment_photo_remove: !editData.comment_photo_uri || editData.comment_photo_uri == 0,
 					},
 					result => {
 						console.log(result);
@@ -192,7 +195,7 @@ export default ArticleDetail = props => {
 								setComments(comments.msg.filter(e => e.comment_is_delete != true));
 								parentComment && addChildCommentFn.current();
 								setPrivateComment(false);
-								// console.log('comments', comments);
+								setEditMode(false); // console.log('comments', comments);
 								setTimeout(() => {
 									flatListRef.current.scrollToIndex({animated: true, index: whichComment});
 								}, 500);
@@ -230,7 +233,7 @@ export default ArticleDetail = props => {
 								setComments(comments.msg.filter(e => e.comment_is_delete != true));
 								parentComment && addChildCommentFn.current();
 								setPrivateComment(false);
-								// console.log('comments', comments);
+								setEditMode(false); // console.log('comments', comments);
 								setTimeout(() => {
 									whichParent == ''
 										? flatListRef.current.scrollToIndex({animated: true, index: 0})
@@ -283,13 +286,11 @@ export default ArticleDetail = props => {
 	};
 
 	const onDeleteImage = () => {
-		console.log('onDelete Img');
 		setEditData({...editData, comment_photo_uri: ''});
 	};
 
 	// 답글 쓰기 -> Input value 변경 콜백함수
 	const onChangeReplyInput = text => {
-		console.log('onChangeReplyInput : ', text);
 		setEditData({...editData, comment_contents: text});
 	};
 
@@ -303,6 +304,11 @@ export default ArticleDetail = props => {
 			console.log('대댓글 쓰기 버튼 클릭 : ', parentCommentId.comment_writer_id.user_nickname);
 			setParentComment(parentCommentId);
 			editComment || setEditComment(true);
+			setEditMode(false);
+			setEditData({
+				comment_contents: '',
+				comment_photo_uri: '',
+			});
 			addChildCommentFn.current = addChildComment;
 			scrollToReplyBox();
 		}
@@ -313,11 +319,12 @@ export default ArticleDetail = props => {
 		console.log('수정 데이터', comment);
 		setEditMode(true);
 		setEditData({...comment});
+		setPrivateComment(comment.comment_is_secure);
 		scrollToReplyBox();
 	};
 
 	const scrollToReplyBox = () => {
-		flatListRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 0});
+		flatListRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 0.5});
 		setTimeout(() => {
 			input.current?.focus();
 		}, 500);

@@ -13,6 +13,7 @@ import Input30 from 'Molecules/input/Input30';
 import {assignPet} from 'Root/api/userapi';
 import {stagebar_style} from 'Organism/style_organism copy';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import Input24 from 'Root/component/molecules/input/Input24';
 
 export default AssignPetInfoB = props => {
 	// console.log('AssignPetInfoB', props.route.params.data);
@@ -23,7 +24,7 @@ export default AssignPetInfoB = props => {
 	const [data, setData] = React.useState({
 		...props.route.params.data,
 		pet_birthday: '',
-		pet_weight: '0',
+		pet_weight: '',
 	});
 
 	React.useEffect(() => {
@@ -61,19 +62,29 @@ export default AssignPetInfoB = props => {
 
 	//체중 Input Value 바뀌었을 때
 	const onChangeKg = kg => {
-		setData({...data, pet_weight: kg});
+		let res = kg;
+		if (res.startsWith('0') && !res.includes('.') && res.length > 1) {
+			res = res.replace('0', '');
+		}
+		console.log('res', res);
+		setData({...data, pet_weight: res});
 	};
 
 	//등록 완료
 	const onRegister = () => {
 		let isCopied = {...data};
+		if (isCopied.user_profile_uri == '') {
+			isCopied.user_profile_uri = 'https://';
+		}
 		console.log('isCop', isCopied);
+		Modal.popLoading(false);
 		assignPet(
 			{
 				...isCopied,
 				userobject_id: data.userobject_id,
 			},
 			success => {
+				Modal.close();
 				console.log('success', success.msg);
 				Modal.popNoBtn('반려동물 등록이 완료되었습니다.');
 				setTimeout(() => {
@@ -96,6 +107,9 @@ export default AssignPetInfoB = props => {
 									{name: 'AssignPetProfileImage', params: {previousRouteName: 'UserInfoSetting'}},
 								],
 							});
+						},
+						() => {
+							props.navigation.navigate(data.previousRouteName);
 						},
 					);
 				}, 500);
@@ -148,7 +162,7 @@ export default AssignPetInfoB = props => {
 				<View style={[temp_style.inputForm_assignPetInfo_line2, assignPetInfo_style.line2]}>
 					<Text style={[txt.noto28, temp_style.text_assignPetInfo, {color: GRAY10}]}>체중</Text>
 					<View style={[temp_style.inputNoTitle_assignPetInfo, assignPetInfo_style.inputNoTitle]}>
-						<Input30
+						{/* <Input30
 							alert_msg={'두자리 숫자, 소수점 한자리'}
 							description="info"
 							showmsg={true}
@@ -165,6 +179,19 @@ export default AssignPetInfoB = props => {
 							maxLength={4}
 							confirm_msg=""
 							ref={weightRef}
+						/> */}
+						<Input24
+							keyboardType={'number-pad'}
+							value={data.pet_weight}
+							width={300}
+							alert_msg={'두자리 숫자, 소수점 한자리'}
+							showMsg
+							confirm_msg="올바른 양식입니다."
+							onChange={onChangeKg}
+							validator={weigthValid}
+							placeholder={'몸무게 입력'}
+							showCrossMark={false}
+							maxLength={4}
 						/>
 					</View>
 					<Text style={[temp_style.text68_assignPetInfo, assignPetInfo_style.text68, txt.noto28]}>kg</Text>

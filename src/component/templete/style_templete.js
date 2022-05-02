@@ -3132,7 +3132,7 @@ export const searchProtectRequest = StyleSheet.create({
 		// height: 68 * DP,
 		backgroundColor: '#fff',
 		marginTop: 30 * DP,
-		marginBottom: 20 * DP,
+		marginBottom: 10 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 		inside: {
@@ -3159,7 +3159,7 @@ export const searchProtectRequest = StyleSheet.create({
 	},
 	kindFilter: {
 		// width: 270 * DP,
-		marginTop: 30 * DP,
+		marginTop: 10 * DP,
 		flexDirection: 'row',
 		alignSelf: 'flex-end',
 		marginRight: 48 * DP,
@@ -3947,6 +3947,7 @@ export const feedCommentList = StyleSheet.create({
 		width: 460 * DP,
 		marginRight: 12 * DP,
 		paddingVertical: 0,
+		paddingHorizontal: 10 * DP,
 		includeFontPadding: false,
 		// backgroundColor: 'pink',
 	},
@@ -4004,8 +4005,8 @@ export const feedCommentList = StyleSheet.create({
 		marginRight: 12 * DP,
 		paddingHorizontal: 20 * DP,
 		// paddingVertical: 12 * DP,
-		paddingBottom: 20 * DP,
-		backgroundColor: GRAY30,
+		paddingVertical: 20 * DP,
+		backgroundColor: GRAY40,
 	},
 	commentBox_top_photo: {
 		width: 694 * DP,

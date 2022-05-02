@@ -17,7 +17,6 @@ export default ChangePetProfileImage = props => {
 	const [petData, setPetData] = React.useState(props.route.params);
 	const [newNick, setNewNick] = React.useState('');
 	const [confirmed, setConfirmed] = React.useState(false);
-	const [dupCheck, setDupCheck] = React.useState(false);
 
 	const selectPhoto = () => {
 		ImagePicker.openPicker({
@@ -116,6 +115,7 @@ export default ChangePetProfileImage = props => {
 						validator={validateNewNick}
 						onValid={onValidName}
 						value={newNick}
+						defaultValue={petData.user_nickname}
 						title={NEW_NICK_TITLE}
 						descriptionType={'none'}
 						placeholder={NEW_NICK_REQUEST}

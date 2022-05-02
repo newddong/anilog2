@@ -1,9 +1,8 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {FlatList, Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {GRAY10, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
-import CommentList from 'Root/component/organism/comment/CommentList';
 import ReviewBriefList from 'Root/component/organism/list/ReviewBriefList';
 import {useNavigation} from '@react-navigation/core';
 import ReviewContent from 'Root/component/organism/article/ReviewContent';
@@ -19,8 +18,6 @@ import {REPORT_MENU} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
 import {likeEtc} from 'Root/api/likeetc';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
-import {ScrollView as GestureHandlerScrollView} from 'react-native-gesture-handler';
-import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 
 /**
  * 후기 상세 내용
@@ -93,7 +90,7 @@ export default ReviewDetail = props => {
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
 	const onWrite = () => {
-		console.log('edt', editData);
+		// console.log('edt', editData);
 		if (editData.comment_contents.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
 
 		let param = {
@@ -104,7 +101,10 @@ export default ReviewDetail = props => {
 
 		if (editData.comment_photo_uri && editData.comment_photo_uri.length > 0) {
 			param.comment_photo_uri = editData.comment_photo_uri;
+		} else {
+			param.comment_photo_remove = true;
 		}
+		param.comment_photo_uri = editData.comment_photo_uri == '' ? 'https:// ' : editData.comment_photo_uri;
 
 		if (parentComment) {
 			//대댓글일 경우 해당 부모 댓글에 대한 댓글을 추가
@@ -126,7 +126,7 @@ export default ReviewDetail = props => {
 				{
 					...param,
 					commentobject_id: editData._id,
-					comment_photo_remove: !editData.comment_photo_uri || editData.comment_photo_uri == 0,
+					// comment_photo_remove: !editData.comment_photo_uri || editData.comment_photo_uri == 0,
 				},
 				result => {
 					// console.log(result);
@@ -145,6 +145,7 @@ export default ReviewDetail = props => {
 							setComments(comments.msg.filter(e => e.comment_is_delete != true));
 							parentComment && addChildCommentFn.current();
 							setPrivateComment(false);
+							setEditMode(false);
 							// console.log('comments', comments);
 							setTimeout(() => {
 								scrollRef.current.scrollToIndex({animated: true, index: whichComment});
@@ -189,6 +190,7 @@ export default ReviewDetail = props => {
 							parentComment && addChildCommentFn.current();
 							input.current.blur();
 							setPrivateComment(false);
+							setEditMode(false); // console.log('comments', comments);
 							setTimeout(() => {
 								whichParent == ''
 									? scrollRef.current.scrollToIndex({animated: true, index: 0})
@@ -258,13 +260,11 @@ export default ReviewDetail = props => {
 	};
 
 	const onDeleteImage = () => {
-		console.log('onDelete Img');
 		setEditData({...editData, comment_photo_uri: ''});
 	};
 
 	// 답글 쓰기 -> Input value 변경 콜백함수
 	const onChangeReplyInput = text => {
-		console.log('onChangeReplyInput : ', text);
 		setEditData({...editData, comment_contents: text});
 	};
 
@@ -277,6 +277,11 @@ export default ReviewDetail = props => {
 		} else {
 			setParentComment(parentCommentId);
 			editComment || setEditComment(true);
+			setEditMode(false);
+			setEditData({
+				comment_contents: '',
+				comment_photo_uri: '',
+			});
 			addChildCommentFn.current = addChildComment;
 			// input.current?.focus();
 			scrollToReplyBox();
@@ -288,6 +293,7 @@ export default ReviewDetail = props => {
 		setEditMode(true);
 		setEditData({...comment});
 		scrollToReplyBox();
+		setPrivateComment(comment.comment_is_secure);
 	};
 
 	const scrollToReplyBox = () => {

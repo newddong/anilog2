@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {View} from 'react-native';
+import {FlatList, View} from 'react-native';
 import {login_style, selectstat_view_style, temp_style} from 'Templete/style_templete';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {getFavoriteEtcListByUserId, setFavoriteEtc, setFavoriteEtcCancelList} from 'Root/api/favoriteetc';
@@ -166,16 +166,58 @@ export default FavoriteProtectRequest = ({route}) => {
 		);
 	};
 
+	//보호요청글 클릭
+	const onClickLabel = (status, id, item) => {
+		let gender = '남';
+		switch (item.protect_animal_sex) {
+			case 'male':
+				gender = '남';
+				break;
+			case 'female':
+				gender = '여';
+				break;
+			case 'male':
+				gender = '성별모름';
+				break;
+		}
+		const title = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + gender;
+		navigation.push('AnimalProtectRequestDetail', {id: item._id, title: title, writer: item.protect_request_writer_id._id});
+	};
+
 	const renderItem = ({item, index}) => {
 		return (
-			<View style={{marginTop: 20 * DP}}>
-				<AnimalNeedHelpList data={data} selectMode={selectMode} onFavoriteTag={onFavoriteTag} whenEmpty={whenEmpty} showFavorite={false} />
+			<View style={{marginTop: 20 * DP, alignItems: 'center', alignSelf: 'center'}}>
+				<AnimalNeedHelpList
+					data={data}
+					selectMode={selectMode}
+					onPressCheck={onPressCheck}
+					onFavoriteTag={onFavoriteTag}
+					whenEmpty={whenEmpty}
+					showFavorite={false}
+					onClickLabel={onClickLabel}
+				/>
+			</View>
+		);
+	};
+
+	const header = () => {
+		return (
+			<View style={[temp_style.selectstat_view, {alignItems: 'center'}]}>
+				<View style={[temp_style.selectstat, selectstat_view_style.selectstat]}>
+					<SelectStat
+						selectMode={selectMode}
+						onSelectMode={checkSelectMode}
+						onCancelSelectMode={cancelSelectMode}
+						onSelectAllClick={selectAll}
+						onDeleteSelectedItem={deleteSelectedItem}
+					/>
+				</View>
 			</View>
 		);
 	};
 
 	const whenEmpty = () => {
-		return <ListEmptyInfo text={'즐겨찾기한 보호요청글이 \n 없습니다.'} />;
+		return <ListEmptyInfo text={'즐겨찾기한 보호요청글이 없습니다.'} />;
 	};
 
 	if (data == 'false') {
@@ -183,27 +225,7 @@ export default FavoriteProtectRequest = ({route}) => {
 	} else
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
-				<View style={[temp_style.selectstat_view]}>
-					<View style={[temp_style.selectstat, selectstat_view_style.selectstat]}>
-						<SelectStat
-							selectMode={selectMode}
-							onSelectMode={checkSelectMode}
-							onCancelSelectMode={cancelSelectMode}
-							onSelectAllClick={selectAll}
-							onDeleteSelectedItem={deleteSelectedItem}
-						/>
-					</View>
-				</View>
-				<View style={{marginTop: 20 * DP}}>
-					<AnimalNeedHelpList
-						data={data}
-						selectMode={selectMode}
-						onPressCheck={onPressCheck}
-						onFavoriteTag={onFavoriteTag}
-						whenEmpty={whenEmpty}
-						showFavorite={false}
-					/>
-				</View>
+				<FlatList data={[{}]} contentContainerStyle={{alignItems: 'center'}} ListHeaderComponent={header} renderItem={renderItem} />
 			</View>
 		);
 };

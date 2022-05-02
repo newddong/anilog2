@@ -7,9 +7,10 @@ import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import PetImageLabel from 'Molecules/label/PetImageLabel';
 import {login_style, petInfoSetting, temp_style} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
-import {getUserInfoById, removeUserFromFamily} from 'Root/api/userapi';
+import {getUserInfoById, removeUserFromFamily, updatePetDetailInformation} from 'Root/api/userapi';
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {updateUserIntroduction} from 'Root/api/userapi';
 import {familyAccountList_style} from 'Root/component/organism/style_organism copy';
 import DP from 'Root/config/dp';
 import {PET_KIND} from 'Root/i18n/msg';
@@ -36,6 +37,8 @@ export default PetInfoSetting = ({route, navigation}) => {
 			setFamily();
 			Modal.close();
 		});
+		navigation.addListener('blur', () => setEditMode(false));
+
 		return unsubscribe;
 	}, [familyAccountList]);
 
@@ -62,28 +65,53 @@ export default PetInfoSetting = ({route, navigation}) => {
 	};
 
 	//계정정보 - '종' 변경하기 버튼 클릭
-	const changePetInfo = () => {
-		const petKind = PET_KIND();
-		setTimeout(() => {
-			let category = {
-				large: [],
-				sub: [],
-			};
-			petKind._W.map((v, i) => {
-				category.large.push(v.pet_species);
-				category.sub.push(v.pet_species_detail);
-			});
-			Modal.popMultipleScrollBoxModal(
-				category,
-				'동물종 선택',
-				(sel1, sel2) => {
-					alert(sel1);
-					alert(sel2);
-					Modal.close();
-				},
-				() => Modal.close(),
-			);
-		}, 200);
+	const changePetInfo = async () => {
+		Modal.popLoading(true);
+		const petKind = await PET_KIND();
+		Modal.close();
+		// console.log('petKind', petKind);
+		let category = {
+			large: [],
+			sub: [],
+		};
+		petKind.map((v, i) => {
+			category.large.push(v.pet_species);
+			category.sub.push(v.pet_species_detail);
+		});
+		Modal.popMultipleScrollBoxModal(
+			category,
+			'동물종 선택',
+			(sel1, sel2) => {
+				// console.log('sel', sel1, sel2);
+				Modal.close();
+				setTimeout(() => {
+					Modal.popLoading(true);
+					updatePetDetailInformation(
+						{
+							userobject_id: petData._id,
+							pet_species: sel1,
+							pet_species_detail: sel2,
+						},
+						result => {
+							// console.log('updatePetDetailInformation / PetInfoSetting Result : ', result.msg);
+							setPetData({...petData, pet_species: result.msg.pet_species, pet_species_detail: result.msg.pet_species_detail});
+							Modal.close();
+							setTimeout(() => {
+								Modal.popNoBtn('반려동물의 정보가 성공적으로 \n 변경되었습니다.');
+								setTimeout(() => {
+									Modal.close();
+								}, 1000);
+							}, 100);
+						},
+						err => {
+							console.log('updatePetDetailInformation / PetinfoSetting err : ', err);
+							Modal.close();
+						},
+					);
+				}, 100);
+			},
+			() => Modal.close(),
+		);
 	};
 
 	//프로필 변경 버튼
@@ -155,10 +183,18 @@ export default PetInfoSetting = ({route, navigation}) => {
 
 	//반려동물 소개란의 수정버튼 클릭
 	const editPetInfo = () => {
-		console.log('eidt');
 		//현재 반려동물의 소개란을 바꾸는 aPI가 없는 상태
 		setEditMode(!editMode);
-		// modifyRef.current.focus();
+		updateUserIntroduction(
+			{userobject_id: petData._id, user_introduction: userIntro_temp},
+			success => {
+				console.log('updateUserIntroduction success', success);
+				setFamily();
+			},
+			err => {
+				console.log('introduction modify api', err);
+			},
+		);
 	};
 
 	// 소개란 반려동물 소개란 수정
@@ -290,13 +326,15 @@ export default PetInfoSetting = ({route, navigation}) => {
 						<View style={[petInfoSetting.petIntroduction]}>
 							{editMode ? (
 								<TextInput
-									defaultValue={petData.user_introduction || '등록된 반려동물 소개가 없습니다.'}
+									defaultValue={petData.user_introduction || ''}
 									onChangeText={modifyIntroText}
-									style={[txt.noto26, {backgroundColor: GRAY40, width: 654 * DP}]}
+									style={[
+										txt.noto26,
+										{backgroundColor: GRAY40, width: 654 * DP, borderRadius: 30 * DP, paddingVertical: 20 * DP, paddingHorizontal: 20 * DP},
+									]}
 									multiline={true}
 									maxLength={500}
 									ref={modifyRef}
-									selectTextOnFocus
 								/>
 							) : (
 								<Text style={[txt.noto26, {color: GRAY10}]}>{petData.user_introduction || '반려동물 소개가 없습니다.'}</Text>

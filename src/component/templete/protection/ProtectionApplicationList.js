@@ -18,11 +18,11 @@ export default ProtectionApplicationList = ({route, navigation}) => {
 		fetchData();
 	}, []);
 
-	const fetchData = async () => {
+	const fetchData = () => {
 		getAnimalListWithApplicant(
 			{},
-			async result => {
-				// console.log('result / getAnimalListWithApplicant / ProtectApplyList', JSON.stringify(result.msg.adopt));
+			result => {
+				// console.log('result / getAnimalListWithApplicant / ProtectApplyList', JSON.stringify(result.msg));
 				let filtered_adopt = result.msg.adopt.filter(e => e.protect_act_status == 'wait'); //완료 목록도 출력되던 오류 수정 22.03.18
 				let filtered_protect = result.msg.protect.filter(e => e.protect_act_status == 'wait');
 				setAdoptionList(filtered_adopt);
@@ -88,9 +88,9 @@ export default ProtectionApplicationList = ({route, navigation}) => {
 					onClickLabel={() => (isAdopt ? onClickAdoptionItem(i) : onClickProtectItem(i))}
 				/>
 				{v.is_follow ? (
-					<Star50_Filled onPress={() => onCliclFollow(v.protect_act_applicant_id._id, false)} />
+					<Star50_Filled onPress={() => onCliclFollow(v.protect_act_applicant_id._id, false, i)} />
 				) : (
-					<Star50_Border onPress={() => onCliclFollow(v.protect_act_applicant_id._id, true)} />
+					<Star50_Border onPress={() => onCliclFollow(v.protect_act_applicant_id._id, true, i)} />
 				)}
 			</View>
 		);

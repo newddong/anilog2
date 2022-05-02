@@ -38,6 +38,10 @@ export default ProtectRequest = React.memo(props => {
 		gender: data.protect_animal_sex,
 	};
 
+	React.useEffect(() => {
+		setData(props.data);
+	}, [props.data]);
+
 	//우상단 즐겨찾기 깃발 아이콘 클릭 콜백
 	const onPressFavoriteTag = bool => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
@@ -98,14 +102,9 @@ export default ProtectRequest = React.memo(props => {
 		);
 	};
 
-	const onLayout = e => {
-		console.log('e', e.nativeEvent.layout.height);
-		console.log('214', 244 * DP);
-	};
-
 	return (
 		<>
-			<View onLayout={onLayout} style={[animalNeedHelp.container, {height: 244 * DP}]}>
+			<View style={[animalNeedHelp.container, {height: 244 * DP}]}>
 				<View style={[animalNeedHelp.container_basicInfo]}>
 					<View style={[animalNeedHelp.protectedThumbnail_container]}>
 						<ProtectedThumbnail data={thumbnailData} onLabelClick={(status, id) => props.onClickLabel(status, id)} />

@@ -261,17 +261,9 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		}
 	};
 
-	//보호소 라벨 공유 클릭
-	const onPressShare = e => {
-		setIsSharePressed(!isSharePressed);
-		shareRef.current.measure((fx, fy, width, height, px, py) => {
-			Modal.popShareModal(
-				{x: px, y: py},
-				() => alert('kakao'),
-				() => alert('link'),
-				() => alert('msg'),
-			);
-		});
+	const onPressReqeustPhoto = () => {
+		console.log('v', data.protect_request_photos_uri);
+		Modal.popPhotoListViewModal(data.protect_request_photos_uri);
 	};
 
 	//임시보호 버튼 클릭
@@ -310,7 +302,22 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					Modal.close();
 				}, 1500);
 			} else {
-				navigation.push('ProtectCommentList', {protectObject: data});
+				navigation.push('ProtectCommentList', {protectObject: data, showKeyboard: true});
+			}
+		});
+	};
+
+	//댓글 모두보기 클릭
+	const moveToCommentPage = () => {
+		AsyncStorage.getItem('sid', (err, res) => {
+			console.log('res', res);
+			if (res == null) {
+				Modal.popNoBtn('로그인이 필요합니다.');
+				setTimeout(() => {
+					Modal.close();
+				}, 1500);
+			} else {
+				navigation.push('ProtectCommentList', {protectObject: data, showKeyboard: false});
 			}
 		});
 	};
@@ -358,7 +365,11 @@ export default AnimalProtectRequestDetail = ({route}) => {
 							<View style={[animalProtectRequestDetail_style.container]}>
 								{/* 임시보호 후보자 협의 중 사진 */}
 								<View style={[temp_style.rescueImage]}>
-									<RescueImage status={data.protect_request_status || 'adopt'} img_uri={data.protect_request_photos_uri} />
+									<RescueImage
+										onPressReqeustPhoto={onPressReqeustPhoto}
+										status={data.protect_request_status || 'adopt'}
+										img_uri={data.protect_request_photos_uri}
+									/>
 								</View>
 								<View style={[temp_style.requestProtect_view]}>
 									<Text style={[txt.noto24, temp_style.requestProtect, {color: GRAY10}]}>보호요청</Text>
@@ -410,7 +421,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 								{/* {console.log('commentDataList.length', commentDataList.length)} */}
 								<View style={[animalProtectRequestDetail_style.replyContainer, {}]}>
 									{commentDataList && commentDataList.length > 0 ? (
-										<TouchableOpacity onPress={onPressReply} style={[animalProtectRequestDetail_style.replyCountContainer]}>
+										<TouchableOpacity onPress={moveToCommentPage} style={[animalProtectRequestDetail_style.replyCountContainer]}>
 											<Text style={[txt.noto26, {color: GRAY10}]}> 댓글 {commentDataList.length}개 모두 보기</Text>
 										</TouchableOpacity>
 									) : (

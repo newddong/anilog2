@@ -129,6 +129,7 @@ export default AssignShelterInformation = props => {
 						onChange={onChangePhoneNumber}
 						onValid={onValidPhoneNumber}
 						confirm={phoneConfirmed}
+						maxlength={8}
 						width={420}
 					/>
 					<Text style={{color: GRAY10}}>*기재한 전화번호로 로그인이 가능합니다.</Text>
@@ -157,6 +158,7 @@ export default AssignShelterInformation = props => {
 						showHttp={true}
 						width={654}
 						showCrossMark={true}
+						maxlength={80}
 						onClear={onClearHomepage}
 						onChange={onChangeHp}
 					/>

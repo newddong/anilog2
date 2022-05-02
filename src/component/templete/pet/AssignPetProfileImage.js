@@ -27,7 +27,7 @@ export default AssignPetProfileImage = ({route}) => {
 		user_nickname: '',
 		pet_status: 'companion', //입양, 임시보호중인 동물일때는 초기값을 다르게 표기하도록(여기서는 임시보호, 반려동물 상태밖에 없음,입양된 동물은 더이상 정보수정 불가)
 		pet_is_temp_protection: false,
-		userobject_id: userGlobalObject.userInfo._id,
+		userobject_id: route.params.userobject_id ? route.params.userobject_id : userGlobalObject.userInfo._id,
 		previousRouteName: route.params?.previousRouteName,
 	});
 	const [confirmed, setConfirmed] = React.useState(false); // 닉네임 폼 Validator 통과 ?
@@ -37,91 +37,93 @@ export default AssignPetProfileImage = ({route}) => {
 	const nicknameInput = React.useRef();
 
 	React.useEffect(() => {
-		getAnimalListNotRegisterWithCompanion(
-			{},
-			result => {
-				// console.log('result / getAnimalListNotRegisterWithCompanion / AssignPetProfileImage : ', result.msg.length);
-				if (result.msg != undefined) {
-					if (result.msg.length == 1) {
-						//한마리의 입양 임보 대기 동물이 있을 경우
-						Modal.popAnimalToRegisterModal(
-							result.msg,
-							'새로 입양하시는 동물이 있습니다. \n 해당 동물을 등록하시겠습니까?',
-							'등록',
-							'아니오',
-							() => {
-								const selectedAnimal = result.msg[0];
-								const isProtect = selectedAnimal.protect_animal_status == 'protect'; //입양 임보 확정 동물이 임시보호인가?
-								setIsAdoptRegist(true);
-								setData({
-									user_profile: selectedAnimal.protect_animal_photo_uri_list[0],
-									user_profile_uri: selectedAnimal.protect_animal_photo_uri_list[0],
-									user_nickname: '',
-									pet_status: isProtect ? 'protect' : 'companion',
-									pet_is_temp_protection: isProtect ? true : false,
-									pet_neutralization: selectedAnimal.protect_animal_neutralization,
-									pet_sex: selectedAnimal.protect_animal_sex,
-									pet_species: selectedAnimal.protect_animal_species,
-									pet_species_detail: selectedAnimal.protect_animal_species_detail,
-									pet_weight: selectedAnimal.protect_animal_weight,
-									protect_act_protect_animal_id: selectedAnimal._id,
-									protect_animal_status: isProtect ? 'registered_protect' : 'registered_adopt',
-									userobject_id: userGlobalObject.userInfo._id,
-									previousRouteName: route.params?.previousRouteName,
-								});
-								console.log('isProtect', isProtect);
-								isProtect ? setProtect(true) : setProtect(false);
-								nicknameInput.current.focus();
-								Modal.close();
-							},
-							() => {
-								Modal.close();
-							},
-						);
-					} else if (result.msg.length > 1) {
-						//두 개 이상의 입양 임보 대기 동물이 있을 경우
-						Modal.popAnimalToRegisterModal(
-							result.msg,
-							'새로 입양하시는 동물들이 있습니다. \n 한 마리씩 등록 해주세요. \n 지금 등록하시겠습니까?',
-							'등록',
-							'아니오',
-							i => {
-								// console.log('Selected Object', result.msg[i]);
-								const selectedAnimal = result.msg[i];
-								const isProtect = selectedAnimal.protect_animal_status == 'protect'; //입양 임보 확정 동물이 임시보호인가?
-								setIsAdoptRegist(true);
-								setData({
-									user_profile: selectedAnimal.protect_animal_photo_uri_list[0],
-									user_profile_uri: selectedAnimal.protect_animal_photo_uri_list[0],
-									user_nickname: '',
-									pet_status: isProtect ? 'protect' : 'companion',
-									pet_is_temp_protection: isProtect ? true : false,
-									pet_neutralization: selectedAnimal.protect_animal_neutralization,
-									pet_sex: selectedAnimal.protect_animal_sex,
-									pet_species: selectedAnimal.protect_animal_species,
-									pet_species_detail: selectedAnimal.protect_animal_species_detail,
-									pet_weight: selectedAnimal.protect_animal_weight,
-									protect_act_protect_animal_id: selectedAnimal._id,
-									protect_animal_status: isProtect ? 'registered_protect' : 'registered_adopt',
-									userobject_id: userGlobalObject.userInfo._id,
-									previousRouteName: route.params?.previousRouteName,
-								});
-								console.log('isProtect', isProtect);
-								isProtect ? setProtect(true) : setProtect(false);
-								nicknameInput.current.focus();
-								Modal.close();
-							},
-							() => {
-								Modal.close();
-							},
-						);
+		if (userGlobalObject.userInfo._id != '') {
+			getAnimalListNotRegisterWithCompanion(
+				{},
+				result => {
+					console.log('result / getAnimalListNotRegisterWithCompanion / AssignPetProfileImage : ', result.msg.length);
+					if (result.msg != undefined) {
+						if (result.msg.length == 1) {
+							//한마리의 입양 임보 대기 동물이 있을 경우
+							Modal.popAnimalToRegisterModal(
+								result.msg,
+								'새로 입양하시는 동물이 있습니다. \n 해당 동물을 등록하시겠습니까?',
+								'등록',
+								'아니오',
+								() => {
+									const selectedAnimal = result.msg[0];
+									const isProtect = selectedAnimal.protect_animal_status == 'protect'; //입양 임보 확정 동물이 임시보호인가?
+									setIsAdoptRegist(true);
+									setData({
+										user_profile: selectedAnimal.protect_animal_photo_uri_list[0],
+										user_profile_uri: selectedAnimal.protect_animal_photo_uri_list[0],
+										user_nickname: '',
+										pet_status: isProtect ? 'protect' : 'companion',
+										pet_is_temp_protection: isProtect ? true : false,
+										pet_neutralization: selectedAnimal.protect_animal_neutralization,
+										pet_sex: selectedAnimal.protect_animal_sex,
+										pet_species: selectedAnimal.protect_animal_species,
+										pet_species_detail: selectedAnimal.protect_animal_species_detail,
+										pet_weight: selectedAnimal.protect_animal_weight,
+										protect_act_protect_animal_id: selectedAnimal._id,
+										protect_animal_status: isProtect ? 'registered_protect' : 'registered_adopt',
+										userobject_id: userGlobalObject.userInfo._id,
+										previousRouteName: route.params?.previousRouteName,
+									});
+									console.log('isProtect', isProtect);
+									isProtect ? setProtect(true) : setProtect(false);
+									nicknameInput.current.focus();
+									Modal.close();
+								},
+								() => {
+									Modal.close();
+								},
+							);
+						} else if (result.msg.length > 1) {
+							//두 개 이상의 입양 임보 대기 동물이 있을 경우
+							Modal.popAnimalToRegisterModal(
+								result.msg,
+								'새로 입양하시는 동물들이 있습니다. \n 한 마리씩 등록 해주세요. \n 지금 등록하시겠습니까?',
+								'등록',
+								'아니오',
+								i => {
+									// console.log('Selected Object', result.msg[i]);
+									const selectedAnimal = result.msg[i];
+									const isProtect = selectedAnimal.protect_animal_status == 'protect'; //입양 임보 확정 동물이 임시보호인가?
+									setIsAdoptRegist(true);
+									setData({
+										user_profile: selectedAnimal.protect_animal_photo_uri_list[0],
+										user_profile_uri: selectedAnimal.protect_animal_photo_uri_list[0],
+										user_nickname: '',
+										pet_status: isProtect ? 'protect' : 'companion',
+										pet_is_temp_protection: isProtect ? true : false,
+										pet_neutralization: selectedAnimal.protect_animal_neutralization,
+										pet_sex: selectedAnimal.protect_animal_sex,
+										pet_species: selectedAnimal.protect_animal_species,
+										pet_species_detail: selectedAnimal.protect_animal_species_detail,
+										pet_weight: selectedAnimal.protect_animal_weight,
+										protect_act_protect_animal_id: selectedAnimal._id,
+										protect_animal_status: isProtect ? 'registered_protect' : 'registered_adopt',
+										userobject_id: userGlobalObject.userInfo._id,
+										previousRouteName: route.params?.previousRouteName,
+									});
+									console.log('isProtect', isProtect);
+									isProtect ? setProtect(true) : setProtect(false);
+									nicknameInput.current.focus();
+									Modal.close();
+								},
+								() => {
+									Modal.close();
+								},
+							);
+						}
 					}
-				}
-			},
-			err => {
-				console.log('err / getAnimalListNotRegisterWithCompanion / AssignPetProfileImage  : ', err);
-			},
-		);
+				},
+				err => {
+					console.log('err / getAnimalListNotRegisterWithCompanion / AssignPetProfileImage  : ', err);
+				},
+			);
+		}
 	}, []);
 
 	//닉네임 Validation
@@ -172,6 +174,7 @@ export default AssignPetProfileImage = ({route}) => {
 				if (result.msg) {
 					Modal.popOneBtn('이미 사용자가 있는 닉네임입니다.', '확인', () => Modal.close());
 				} else {
+					console.log('data', data);
 					navigation.push('AssignPetInfoA', {data: data, isAdoptRegist: isAdoptRegist});
 				}
 			},

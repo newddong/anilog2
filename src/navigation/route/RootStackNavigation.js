@@ -73,6 +73,7 @@ import Feed from 'Organism/feed/Feed';
 import FeedCommentList from 'Templete/feed/FeedCommentList';
 import ArticleDetail from 'Templete/community/ArticleDetail';
 import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
+import TermsAndPolicy from 'Root/component/templete/user/TermsAndPolicy';
 import Certification from 'Root/component/templete/login/Certification';
 
 const RootStack = createStackNavigator();
@@ -318,6 +319,12 @@ export default RootStackNavigation = () => {
 						<RootStack.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />}} />
 						<RootStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />}} />
 						<RootStack.Screen name="FeedCommentList" component={FeedCommentList} options={{header: props => <AlarmAndSearchHeader {...props} />}} />
+						<RootStack.Screen
+							name="TermsAndPolicy"
+							component={TermsAndPolicy}
+							options={{header: props => <SimpleHeader {...props} />, title: '약관'}}
+						/>
+
 						{/* <RootStack.Screen
 							name="ShelterVolunteerForm"
 							component={ApplicationFormVolunteer}

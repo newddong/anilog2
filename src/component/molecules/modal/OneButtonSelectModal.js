@@ -149,7 +149,7 @@ const OneButtonSelectModal = props => {
 				<Text style={[txt.noto28, style.msg]}>{props.msg}</Text>
 				<TouchableOpacity onPress={onOpen} style={style.dropdownContainer} activeOpacity={1}>
 					<View style={style.selectedItem}>
-						<Text style={[txt.noto28, {fontSize: props.fontSize * DP - 3}]}>{data[selectedItem - 2]}</Text>
+						<Text style={[txt.noto28, {fontSize: props.fontSize * DP - 5}]}>{data[selectedItem - 2]}</Text>
 					</View>
 					<View style={style.dropdownIcon}>{!selectOpen ? <Arrow_Down_GRAY10 onPress={onOpen} /> : <Arrow_Up_GRAY10 onPress={onOpen} />}</View>
 				</TouchableOpacity>

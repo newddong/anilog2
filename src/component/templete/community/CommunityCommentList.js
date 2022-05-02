@@ -83,9 +83,16 @@ export default CommunityCommentList = props => {
 			community_object_id: data._id,
 		};
 
+		// if (editData.comment_photo_uri && editData.comment_photo_uri.length > 0) {
+		// 	param.comment_photo_uri = editData.comment_photo_uri;
+		// }
+
 		if (editData.comment_photo_uri && editData.comment_photo_uri.length > 0) {
 			param.comment_photo_uri = editData.comment_photo_uri;
+		} else {
+			param.comment_photo_remove = true;
 		}
+		param.comment_photo_uri = editData.comment_photo_uri == '' ? 'https:// ' : editData.comment_photo_uri;
 
 		if (parentComment) {
 			param = {...param, commentobject_id: parentComment._id};
@@ -114,6 +121,8 @@ export default CommunityCommentList = props => {
 							!parentComment && setComments([]); //댓글목록 초기화
 							setComments(comments.msg.filter(e => e.comment_is_delete != true));
 							parentComment && addChildCommentFn.current();
+							setPrivateComment(false);
+							setEditMode(false);
 							// console.log('comments', comments);
 						},
 						err => console.log('getCommentListByFeedId', err),
@@ -140,7 +149,9 @@ export default CommunityCommentList = props => {
 							!parentComment && setComments([]); //댓글목록 초기화
 							setComments(comments.msg.filter(e => e.comment_is_delete != true));
 							parentComment && addChildCommentFn.current();
-							console.log('comments', comments);
+							// console.log('comments', comments);
+							setPrivateComment(false);
+							setEditMode(false);
 							input.current.blur();
 							flatlist.current.scrollToOffset({offset: 0});
 						},
@@ -208,6 +219,11 @@ export default CommunityCommentList = props => {
 			console.log('onReplyBtnClick : ', parentCommentId);
 			setParentComment(parentCommentId);
 			input.current.focus();
+			setEditMode(false);
+			setEditData({
+				comment_contents: '',
+				comment_photo_uri: '',
+			});
 			editComment || setEditComment(true);
 			addChildCommentFn.current = addChildComment;
 		}
@@ -238,9 +254,11 @@ export default CommunityCommentList = props => {
 
 	//미트볼, 수정을 누르면 동작
 	const onEdit = comment => {
-		console.log('수정 데이터', comment);
+		console.log('수정 데이터', comment.comment_is_secure);
 		setEditMode(true);
+		setPrivateComment(comment.comment_is_secure);
 		setEditData({...comment});
+		input.current.focus();
 	};
 
 	const render = ({item, index}) => {

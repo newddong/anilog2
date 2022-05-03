@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import CameraRoll from './src/module/CameraRollIos';
+import CameraRoll from './src/module/CameraRoll.js';
 import PermissionIos from './src/module/PermissionIos';
 import { PERMISSION_IOS_STATUS, PERMISSION_IOS_TYPES } from './src/module/PermissionIosStatics';
 

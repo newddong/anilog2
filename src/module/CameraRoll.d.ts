@@ -4,14 +4,13 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @flow
- * @format
+ * 
+ * 
  */
  'use strict';
- import { Platform } from 'react-native';
- import RNCCameraRoll from './CameraRollNative';
+ import { Platform, NativeModules } from 'react-native';
  
- const invariant = require('fbjs/lib/invariant');
+ const RNCCameraRoll  = Platform.OS=='ios'?NativeModules.RNCCameraRoll:NativeModules.PhotoListModule;
  
  const GROUP_TYPES_OPTIONS = {
    Album: 'Album',
@@ -36,7 +35,7 @@
    SmartAlbum: 'SmartAlbum',
  };
  
- export type GroupTypes = $Keys<typeof GROUP_TYPES_OPTIONS>;
+ export type GroupTypes = keyof typeof GROUP_TYPES_OPTIONS;
  
  export type Include =
    | 'filename'
@@ -141,8 +140,8 @@
  };
  
  export type GetAlbumsParams = {
-   assetType?: $Keys<typeof ASSET_TYPE_OPTIONS>,
-   albumType?: $Keys<typeof ALBUM_TYPE_OPTIONS>,
+   assetType?: keyof typeof ASSET_TYPE_OPTIONS,
+   albumType?: keyof typeof ALBUM_TYPE_OPTIONS,
  };
  
  export type Album = {
@@ -218,5 +217,6 @@
      return RNCCameraRoll.clean();
    }
  }
- 
- module.exports = CameraRoll;
+
+ export {CameraRoll};
+ export default CameraRoll;

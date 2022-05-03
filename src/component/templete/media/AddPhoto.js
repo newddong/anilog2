@@ -4,7 +4,7 @@ import {APRI10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 // import CameraRoll from '@react-native-community/cameraroll';
-import CameraRoll from 'Root/module/CameraRollIos';
+import CameraRoll from 'Root/module/CameraRoll';
 // import { hasAndroidPermission } from './camerapermission';
 // import { requestPermission, reqeustCameraPermission } from 'permission';
 import LocalMedia from 'Molecules/media/LocalMedia';
@@ -60,19 +60,19 @@ export default AddPhoto = props => {
 		if(Platform.OS=='android'){
 			delete param.fromTime;
 			delete param.toTime;
-			NativeModules.PhotoListModule.getPhotos(param)
-			.then(photolistcallback)
-			.catch(err => {
+			// NativeModules.PhotoListModule.getPhotos(param)
+			// .then(photolistcallback)
+			// .catch(err => {
 			// console.log('cameraroll error===>' + err);
-			});
+			// });
 		}else{
 			delete param.toID;
-			CameraRoll.getPhotos(param)
+		}
+		CameraRoll.getPhotos(param)
 			.then(photolistcallback)
 			.catch(err=>{
 				// console.log('cameraroll error===>' + err);
-			})
-		}
+		})
 	};
 
 	const photolistcallback = (r) => {

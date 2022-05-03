@@ -594,6 +594,12 @@ RCT_EXPORT_METHOD(saveImage:(NSString*) uri
   __block NSData *imageData = nil;
   
   void (^save)(void) = ^void() {
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+      //여기서 루프 돌려서 큐 잡아두는 테스트 함
+//      for(int i = 0; i < 100000; ++i){
+//        NSLog(@"cur i: %d", i);
+//      }
+      
       if ([PHAssetCreationRequest class]) {
           [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
               [[PHAssetCreationRequest creationRequestForAsset] addResourceWithType:PHAssetResourceTypePhoto
@@ -619,42 +625,41 @@ RCT_EXPORT_METHOD(saveImage:(NSString*) uri
             [[NSFileManager defaultManager] removeItemAtURL:[NSURL URLWithString:savedPath] error:nil];
         }];
       }
+    });
   }; //end of block function save()
   
-  dispatch_sync(dispatch_get_main_queue(), ^{
-    if([uri containsString:@"ph://"]) //이게 최신 방법
-    {
-      PHFetchResult<PHAsset *> *asset = [PHAsset fetchAssetsWithLocalIdentifiers:@[[uri substringFromIndex:5]] options:nil];
-      
-      if(asset == nil || asset.count == 0) {
-        self.reject(@"Image fetch result is nil.", nil, nil);
-        return;
-      } else if(asset.firstObject == nil) {
-        self.reject(@"Image is nil", nil, nil);
-        return;
-      }
-      
-      PHImageRequestOptions* options = [[PHImageRequestOptions alloc] init];
-      options.synchronous = true;
-      
-      [[PHImageManager defaultManager] requestImageDataForAsset:asset.firstObject
-                                                        options:options
-                                                  resultHandler:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
-        imageData = resultData;
-        save();
-      }];
-    } else {  //원격 이미지 파일 로드 시.. 다른 방법 필요 // 이건 보통 ios 8~9 //임시
-      [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-        [PHAssetCreationRequest creationRequestForAssetFromImageAtFileURL:[NSURL URLWithString:uri]];
-      } completionHandler:^(BOOL success, NSError * _Nullable error) {
-        if(success){
-          self.resolve(nil);
-        } else {
-          self.reject(@"Fail to save image", error.localizedDescription, error);
-        }
-      }];
+  if([uri containsString:@"ph://"]) //이게 최신 방법
+  {
+    PHFetchResult<PHAsset *> *asset = [PHAsset fetchAssetsWithLocalIdentifiers:@[[uri substringFromIndex:5]] options:nil];
+    
+    if(asset == nil || asset.count == 0) {
+      self.reject(@"Image fetch result is nil.", nil, nil);
+      return;
+    } else if(asset.firstObject == nil) {
+      self.reject(@"Image is nil", nil, nil);
+      return;
     }
-  });
+    
+    PHImageRequestOptions* options = [[PHImageRequestOptions alloc] init];
+    options.synchronous = true;
+    
+    [[PHImageManager defaultManager] requestImageDataForAsset:asset.firstObject
+                                                      options:options
+                                                resultHandler:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+      imageData = resultData;
+      save();
+    }];
+  } else {  //원격 이미지 파일 로드 시.. 다른 방법 필요 // 이건 보통 ios 8~9 //임시
+    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+      [PHAssetCreationRequest creationRequestForAssetFromImageAtFileURL:[NSURL URLWithString:uri]];
+    } completionHandler:^(BOOL success, NSError * _Nullable error) {
+      if(success){
+        self.resolve(nil);
+      } else {
+        self.reject(@"Fail to save image", error.localizedDescription, error);
+      }
+    }];
+  }
 }
 
 //#MARK: checkPhotoLibraryConfig

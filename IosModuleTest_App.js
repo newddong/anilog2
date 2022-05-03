@@ -93,21 +93,24 @@ export default class App extends Component {
 
   //cameraroll에서 이미지 불러오는 건 공식페이지 샘플과 동일, 다만 smart album이 추가되어 있음.
   //관련하여 안내 작성 예정
-  //이 함수는 전체앨범에서 0번째 인덱스의 이미지를 가져옴
-  getImage(){
+  getImage(maxLoadImage = 3, whichIndexImage = 0){
     CameraRoll.getPhotos({
-      first: 3,
+      first: maxLoadImage,
       toTime: 0,
       assetType: 'Photos',
       include: ['imageSize', 'filename', 'filesize'],
       groupTypes: 'All',
     })
       .then(r => {
+        if(r.edges.length < whichIndexImage){
+          console.log("이미지가 적음");
+          return;
+        }
         this.setState({
               image: {
-                uri: r.edges[0].node.image.uri,
-                width: r.edges[0].node.image.width,
-                height: r.edges[0].node.image.height,
+                uri: r.edges[whichIndexImage].node.image.uri,
+                width: r.edges[whichIndexImage].node.image.width,
+                height: r.edges[whichIndexImage].node.image.height,
               },
               images: null,
             });
@@ -159,7 +162,7 @@ export default class App extends Component {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => this.getImage()}
+          onPress={() => this.getImage(3, 0)}
           style={styles.button}>
           <Text style={styles.text}>getImage</Text>
         </TouchableOpacity>
@@ -179,6 +182,8 @@ export default class App extends Component {
             .catch(err => {
               console.log(err);
             });
+            //save queue 추가하고 대기 중 ui 변경되는지 테스트용도 (현재 save loop 주석처리힘)
+            // this.getImage(5, 4);
           }}
           style={styles.button}>
           <Text style={styles.text}>save selected Image</Text>

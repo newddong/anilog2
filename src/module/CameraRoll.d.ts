@@ -161,6 +161,14 @@
    static AssetTypeOptions = ASSET_TYPE_OPTIONS;
    static AlbumTypeOptions = ALBUM_TYPE_OPTIONS;
  
+   /**
+    * uri 리스트를 넘겨주고 해당 리스트의 uri에 해당하는 파일을 압축
+    * @param uri 
+    * @param compressWidth 
+    * @param compressHeight 
+    * @param compressionQuality 
+    * @returns 
+    */
    static compressImage(uri: string, 
      compressWidth: number,  compressHeight: number, compressionQuality: number): Promise<string>{
  

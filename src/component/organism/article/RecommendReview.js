@@ -2,9 +2,10 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {BLACK, GRAY10, GRAY20, WHITE} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, GRAY20, WHITE} from 'Root/config/color';
 import ProfileImageSmall from 'Root/component/molecules/image/ProfileImageSmall';
 import {getTimeLapsed} from 'Root/util/dateutil';
+import userGlobalObject from 'Root/config/userGlobalObject';
 /**
  * 추천 게시글
  * @param {object} props - Props Object
@@ -37,7 +38,12 @@ const RecommendReview = props => {
 						<View>
 							<View style={[style.userLabel]}>
 								<ProfileImageSmall data={data.community_writer_id} size={46} />
-								<Text style={[txt.noto24, {marginLeft: 24 * DP, width: 350 * DP}]} numberOfLines={1}>
+								<Text
+									style={[
+										txt.noto24,
+										{marginLeft: 24 * DP, width: 350 * DP, color: data.community_writer_id._id == userGlobalObject.userInfo._id ? APRI10 : BLACK},
+									]}
+									numberOfLines={1}>
 									{data.community_writer_id.user_nickname}
 								</Text>
 							</View>

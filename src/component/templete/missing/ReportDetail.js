@@ -15,6 +15,7 @@ import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList'
 import {GRAY10} from 'Root/config/color';
 import Modal from 'Root/component/modal/Modal';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
+import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
 export default ReportDetail = props => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
@@ -123,7 +124,6 @@ export default ReportDetail = props => {
 
 	//실종 게시글 즐겨찾기 아이콘 클릭
 	const onOff_FavoriteTag = (value, index) => {
-		console.log('bool', value);
 		favoriteFeed(
 			{
 				feedobject_id: reportList[index]._id,
@@ -166,7 +166,6 @@ export default ReportDetail = props => {
 	};
 
 	const onPressFavoriteWriter = bool => {
-		console.log('bool', bool);
 		const isMyReportFeed = data.feed_writer_id._id == userGlobalObject.userInfo._id;
 		if (isMyReportFeed) {
 			Modal.popOneBtn('본인 계정의 즐겨찾기는 \n 불가능합니다.', '확 인', () => Modal.close());
@@ -190,17 +189,13 @@ export default ReportDetail = props => {
 
 	//댓글 클릭
 	const onPressReply = async () => {
-		AsyncStorage.getItem('sid', (err, res) => {
-			console.log('res', res);
-			if (res == null) {
-				Modal.popNoBtn('로그인이 필요합니다.');
-				setTimeout(() => {
-					Modal.close();
-				}, 1500);
-			} else {
-				navigation.push('FeedCommentList', {feedobject: data, showAllContents: true});
-			}
-		});
+		if (userGlobalObject.userInfo.isPreviewMode && commentDataList.length == 0) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			navigation.push('FeedCommentList', {feedobject: data, showAllContents: true});
+		}
 	};
 
 	// 자식 답글에서 답글쓰기 버튼 클릭 콜백함수
@@ -226,14 +221,17 @@ export default ReportDetail = props => {
 	};
 
 	//댓글 수정 클릭
-	const onEdit = comment => {
-		console.log('comment', comment);
-		navigation.push('FeedCommentList', {feedobject: data, edit: comment});
+	const onEdit = (comment, parent) => {
+		let comment_obj = comment; //수정할 댓글의 오브젝트 정보
+		const findParentIndex = commentDataList.findIndex(e => e._id == parent); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
+		const isChild = commentDataList.findIndex(e => e._id == comment._id) == -1; // 수정하려는 댓글이 자식댓글인지 여부
+		comment_obj.isChild = isChild;
+		comment_obj.comment_index = findParentIndex;
+		navigation.push('FeedCommentList', {feedobject: data, edit: comment}); // 수정하려는 댓글 정보를 포함해서 보냄
 	};
 
+	//댓글 더보기 클릭
 	const moveToCommentList = () => {
-		let feedobject = {};
-		feedobject._id = props.route.params._id;
 		navigation.push('FeedCommentList', {feedobject: data, showAllContents: true});
 	};
 
@@ -246,6 +244,7 @@ export default ReportDetail = props => {
 				<FlatList
 					contentContainerStyle={[reportDetail.container]}
 					data={[{}]}
+					showsVerticalScrollIndicator={false}
 					ListHeaderComponent={
 						<View style={{alignItems: 'center'}}>
 							<View style={[temp_style.img_square_750, reportDetail.img_square_750]}>
@@ -279,20 +278,22 @@ export default ReportDetail = props => {
 											alignSelf: 'center',
 										},
 									]}>
-									<Text style={[txt.noto26, {color: GRAY10, marginBottom: 10 * DP}]}> 댓글 {commentDataList.length}개 모두 보기</Text>
+									<Text style={[txt.noto26, {color: GRAY10, marginBottom: 20 * DP}]}> 댓글 {commentDataList.length}개 모두 보기</Text>
 								</TouchableOpacity>
 							) : (
 								<></>
 							)}
 							<CommentList
-								items={commentDataList}
+								items={commentDataList.length > 2 ? commentDataList.slice(0, 2) : commentDataList}
 								onPressReplyBtn={moveToCommentList}
 								onPress_ChildComment_ReplyBtn={comment => onChildReplyBtnClick(comment)}
 								onPressDelete={onPressDelete}
 								onPressDeleteChild={onPressDelete}
 								onEdit={onEdit}
 							/>
-							<ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} isProtectRequest={true} />
+							<View style={{marginTop: 20 * DP}}>
+								<ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} isProtectRequest={true} />
+							</View>
 							<View style={[{paddingVertical: 20 * DP}]}>
 								<Text style={[txt.noto24, {paddingVertical: 20 * DP, width: 684 * DP, alignSelf: 'center'}]}>제보글 더보기</Text>
 								<AnimalNeedHelpList

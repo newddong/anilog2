@@ -19,15 +19,16 @@ import Loading from 'Root/component/molecules/modal/Loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
+import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
 
 export default MissingAnimalDetail = props => {
 	const navigation = useNavigation();
+	const [data, setData] = React.useState('false');
 	const [commentDataList, setCommentDataList] = React.useState(); //더보기 클릭 State
 	const [missingList, setMissingList] = React.useState('false');
 	const viewShotRef = useRef();
 
 	//api 실제 작업 후 하단에 있는 data로 변경 예정 (현재는 에러 방지 코드)
-	const [data, setData] = React.useState('false');
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
@@ -282,24 +283,20 @@ export default MissingAnimalDetail = props => {
 				navigation.navigate('Login');
 			});
 		} else {
-			AsyncStorage.getItem('sid', (err, res) => {
-				console.log('res', res);
-				if (res == null) {
-					Modal.popNoBtn('로그인이 필요합니다.');
-					setTimeout(() => {
-						Modal.close();
-					}, 1500);
-				} else {
-					navigation.push('FeedCommentList', {feedobject: data, showAllContents: true});
-				}
-			});
+			navigation.push('FeedCommentList', {feedobject: data, showAllContents: true});
 		}
 	};
 
 	//댓글 수정 클릭
-	const onEdit = comment => {
-		console.log('comment', comment);
-		navigation.push('FeedCommentList', {feedobject: data, edit: comment});
+	const onEdit = (comment, parent) => {
+		// console.log('comment', comment);
+		// navigation.push('FeedCommentList', {feedobject: data, edit: comment});
+		let comment_obj = comment; //수정할 댓글의 오브젝트 정보
+		const findParentIndex = commentDataList.findIndex(e => e._id == parent); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
+		const isChild = commentDataList.findIndex(e => e._id == comment._id) == -1; // 수정하려는 댓글이 자식댓글인지 여부
+		comment_obj.isChild = isChild;
+		comment_obj.comment_index = findParentIndex;
+		navigation.push('FeedCommentList', {feedobject: data, edit: comment}); // 수정하려는 댓글 정보를 포함해서 보냄
 	};
 
 	const whenEmpty = () => {
@@ -367,7 +364,7 @@ export default MissingAnimalDetail = props => {
 							)}
 							<View style={{marginTop: 0 * DP, alignItems: 'center'}}>
 								<CommentList
-									items={commentDataList}
+									items={commentDataList.length > 2 ? commentDataList.slice(0, 2) : commentDataList}
 									onPressReplyBtn={onPressReply}
 									onPressDelete={onPressDelete}
 									onPressDeleteChild={onPressDelete}

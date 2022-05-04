@@ -463,7 +463,9 @@ export default CommunityWrite = props => {
 										width: '100%',
 										opacity: 0.99,
 									}}
-									placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
+									placeholder={
+										isReview ? '서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.' : '내용을 작성해 주세요.'
+									}
 									onCursorPosition={onCursorPosition}
 									onPaste={onPaste}
 									pasteAsPlainText={true}

@@ -121,8 +121,14 @@ export default FavoriteUser = props => {
 		copy[index].checkBoxState = !copy[index].checkBoxState;
 	};
 
-	const onClickLabel = data => {
-		navigation.push('UserProfile', {userobject: data});
+	const onClickLabel = (user, index) => {
+		let copy = [...data];
+		if (checkBoxMode) {
+			copy[index].checkBoxState = !copy[index].checkBoxState;
+			setData(copy);
+		} else {
+			navigation.push('UserProfile', {userobject: user});
+		}
 	};
 
 	const onClickHash = data => {

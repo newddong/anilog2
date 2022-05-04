@@ -41,7 +41,7 @@ export default ArticleMain = ({route}) => {
 				community_type: 'free',
 			},
 			result => {
-				console.log('result / getCommunityList / ArticleMain :', result.msg.free[0]);
+				// console.log('result / getCommunityList / ArticleMain :', result.msg.free[0]);
 				setData(result.msg.free);
 			},
 			err => {
@@ -55,7 +55,6 @@ export default ArticleMain = ({route}) => {
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
 		navigation.push('ArticleDetail', {community_object: data[index]});
-		console.log('comunity_object', data[index]);
 	};
 
 	//글쓰기

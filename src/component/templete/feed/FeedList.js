@@ -388,20 +388,17 @@ export default FeedList = ({route, navigation}) => {
 							{testTx}
 						</Text>
 					</View>
-					<TouchableWithoutFeedback onPress={() => {
-						NativeModules.TextMeasureModule.getTextWidthTable({
-							fontFamily:'NotoSansKR-Bold',
-							fontSize:fontSize,
-						}).then(
-							r=>console.log('폰트정보',r)
-						)
-					}}>
-				<View style={{ backgroundColor: 'blue', width: 100, height: 100, bottom: 0,left:0}} />
-			</TouchableWithoutFeedback>
+					<TouchableWithoutFeedback
+						onPress={() => {
+							NativeModules.TextMeasureModule.getTextWidthTable({
+								fontFamily: 'NotoSansKR-Bold',
+								fontSize: fontSize,
+							}).then(r => console.log('폰트정보', r));
+						}}>
+						<View style={{backgroundColor: 'blue', width: 100, height: 100, bottom: 0, left: 0}} />
+					</TouchableWithoutFeedback>
 				</View>
-				
 			)}
-			
 		</View>
 	);
 };

@@ -1701,6 +1701,7 @@ export const userInfoDetailSettting_style = StyleSheet.create({
 		flexDirection: 'row',
 		width: 654 * DP,
 		alignItems: 'center',
+		marginBottom: 20 * DP,
 		justifyContent: 'space-between',
 		backgroundColor: '#FFF',
 	},
@@ -3030,7 +3031,7 @@ export const feedListForHashTag = StyleSheet.create({
 	},
 	hashTagInfo: {
 		width: 702 * DP,
-		height: 232 * DP,
+		// height: 232 * DP,
 		alignItems: 'center',
 		// backgroundColor: 'lightblue',
 	},
@@ -3041,6 +3042,7 @@ export const feedListForHashTag = StyleSheet.create({
 		borderWidth: 2 * DP,
 		borderRadius: 40 * DP,
 		paddingLeft: 40 * DP,
+		marginBottom: 10 * DP,
 		borderColor: APRI10,
 		justifyContent: 'center',
 	},
@@ -4031,6 +4033,12 @@ export const feedCommentList = StyleSheet.create({
 	},
 	commentBox_bottom_left: {
 		flexDirection: 'row',
+	},
+	commentContainer: {
+		paddingBottom: 10 * DP,
+		paddingTop: 20 * DP,
+		alignItems: 'center',
+		// backgroundColor: 'yellow',
 	},
 });
 

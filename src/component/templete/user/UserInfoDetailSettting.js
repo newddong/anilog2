@@ -52,9 +52,6 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 
 	//변경된 locationObject와 contentInterest를 저장형식에 맞게 파싱
 	React.useEffect(() => {
-		console.log('interset', locationInterest, contentInterest);
-		// console.log('interest list', interestList);
-
 		if (interestLoaded) {
 			for (let props of contentInterest) {
 				const getKey = Object.entries(interestList[0]).map(content => {
@@ -75,7 +72,6 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 			}
 			let locationObject = {interests_location: locationInterest};
 			Object.assign(locationObject, temp);
-			console.log('mergedObjecct', locationObject);
 			setData(prevState => ({
 				...prevState,
 				user_interests: locationObject,
@@ -132,9 +128,9 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 					{city: selected},
 					districts => {
 						setDistrict(districts.msg);
+						// console.log()
 						debug && console.log('districts:', districts);
-						setData({...data, user_address: {...data.user_address, city: selected, district: districts.msg[0]}});
-
+						setData({...data, user_address: {...data.user_address, city: selected, district: districts.msg[0], neighbor: '동/읍을 선택'}});
 						Modal.close();
 					},
 					handleError,
@@ -147,7 +143,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 	const onSelectDistrict = () => {
 		Modal.popSelectScrollBoxModal(
 			[district],
-			'광역시,도 선택',
+			'시,군,구를 선택',
 			selected => {
 				getAddressList(
 					{city: data.user_address.city, district: selected},
@@ -167,7 +163,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 	const onSelectNeighbor = (v, i) => {
 		Modal.popSelectScrollBoxModal(
 			[neighbor],
-			'광역시,도 선택',
+			'동, 읍을 선택',
 			selected => {
 				setData({...data, user_address: {...data.user_address, neighbor: selected}});
 				Modal.close();
@@ -229,7 +225,6 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 			() => Modal.close(),
 			setLocationInterest,
 		);
-		console.log('next State', data);
 	};
 
 	if (loaded) {
@@ -256,10 +251,10 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 						<View style={[temp_style.addressInput]}>
 							<Text style={[txt.noto28, {color: GRAY10}]}>나의 지역</Text>
 							<View style={[userInfoDetailSettting_style.adressSelect]}>
-								<SelectInput onPressInput={onSelectCity} width={210} value={data.user_address.city} />
-								<SelectInput onPressInput={onSelectDistrict} width={210} fontSize={28} value={data.user_address.district} />
-								<SelectInput onPressInput={onSelectNeighbor} width={210} value={data.user_address.neighbor} />
+								<SelectInput onPressInput={onSelectCity} width={320} value={data.user_address.city} />
+								<SelectInput onPressInput={onSelectDistrict} width={320} value={data.user_address.district} />
 							</View>
+							<SelectInput onPressInput={onSelectNeighbor} width={654} defaultText={'동/읍을 선택'} value={data.user_address.neighbor} />
 						</View>
 						{/* 관심지역 및 활동 */}
 						<View style={[userInfoDetailSettting_style.tagListContainer]}>

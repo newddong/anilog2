@@ -524,7 +524,7 @@ const MissingForm = props => {
 		Modal.popSelectScrollBoxModal([city], '도, 광역, 특별시', selectedItem => {
 			let lost_location_container = data.missing_animal_lost_location;
 			lost_location_container.city = selectedItem;
-
+			lost_location_container.district = '구를 선택';
 			setData({...data, missing_animal_lost_location: lost_location_container});
 			getAddressList(
 				{city: selectedItem},
@@ -655,7 +655,7 @@ const MissingForm = props => {
 					]}
 					placeholder={'반려동물이 실종된 구체적인 장소를 설명해주세요.'}
 					placeholderTextColor={GRAY10}
-					maxLength={30}
+					maxLength={50}
 					onPressIn={onPressIn(inputLocationRef)}
 					ref={inputLocationRef}
 				/>
@@ -879,6 +879,7 @@ const ReportForm = props => {
 		Modal.popSelectScrollBoxModal([city], '도, 광역, 특별시', selectedItem => {
 			let report_location = data.report_location;
 			report_location.city = selectedItem;
+			report_location.district = '시군 선택';
 			setData({...data, report_location: report_location});
 			getAddressList(
 				{city: selectedItem},
@@ -903,7 +904,6 @@ const ReportForm = props => {
 	const onChangeMissingLocationDetail = text => {
 		let report_location = data.report_location;
 		report_location.detail = text;
-
 		setData({...data, report_location: report_location});
 		console.log('text input :', data.report_location);
 	};
@@ -967,6 +967,7 @@ const ReportForm = props => {
 							placeholder={'제보하려는 장소의 위치를 설명해주세요.'}
 							placeholderTextColor={GRAY10}
 							onPressIn={onPressIn(inputLocationRef)}
+							maxLength={50}
 							ref={inputLocationRef}
 						/>
 					</View>

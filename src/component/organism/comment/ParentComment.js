@@ -59,11 +59,13 @@ export default ParentComment = React.memo((props, ref) => {
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			result => {
-				// console.log(result.msg);
+				// console.log('getChildCommentList', result.msg.length);
 				setChild(result.msg.filter(e => e.comment_is_delete != true));
 				!showChild && setShowChild(true);
 			},
-			err => Modal.alert(err),
+			error => {
+				console.log(error);
+			},
 		);
 	};
 
@@ -116,7 +118,9 @@ export default ParentComment = React.memo((props, ref) => {
 				setShowChild(!showChild);
 				props.showChild();
 			},
-			err => Modal.alert(err),
+			error => {
+				console.log(error);
+			},
 		);
 	};
 

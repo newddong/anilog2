@@ -4644,8 +4644,8 @@ export const animalProtectRequestDetail_style = StyleSheet.create({
 		alignItems: 'flex-end',
 		alignSelf: 'flex-end',
 		marginTop: 30 * DP,
+		marginRight: 48 * DP,
 		marginBottom: 20 * DP,
-		// backgroundColor: 'red',
 	},
 });
 

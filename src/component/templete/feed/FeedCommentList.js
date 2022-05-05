@@ -55,6 +55,12 @@ export default FeedCommentList = props => {
 				},
 			);
 		}
+		props.route.params.showKeyboard
+			? setTimeout(() => {
+					input.current.focus();
+			  }, 200)
+			: false;
+
 		if (props.route.params.edit != undefined) {
 			// 실종,제보에서 댓글 수정 클릭시 수정데이터 덮어씌우고 스크롤 수행
 			setEditMode(true);
@@ -64,10 +70,16 @@ export default FeedCommentList = props => {
 				copy.push(props.route.params.edit.comment_index);
 				setChildOpenList(copy);
 			}
-
 			setTimeout(() => {
 				input.current.focus();
-				// scrollToReply(props.route.params.edit.comment_index);
+			}, 200);
+		} else if (props.route.params.reply != undefined) {
+			console.log('props.route.params.reply', props.route.params.reply.comment_index);
+			let copy = [...childOpenList];
+			copy.push(props.route.params.reply.comment_index);
+			setChildOpenList(copy);
+			setTimeout(() => {
+				input.current.focus();
 			}, 200);
 		}
 	}, []);
@@ -85,11 +97,15 @@ export default FeedCommentList = props => {
 				setIsLoading(false);
 				if (props.route.params.edit != undefined) {
 					scrollToReply(props.route.params.edit.comment_index || 0);
+				} else if (props.route.params.reply != undefined) {
+					setParentComment(props.route.params.reply);
+					scrollToReply(props.route.params.reply.comment_index || 0);
 				}
 				// console.log('getCommentListByFeedId / result', comments);
 			},
 			err => {
 				console.log('getCommentListByFeedId', err);
+				setIsLoading(false);
 				if (err == '검색 결과가 없습니다.') {
 					setComments([]);
 				}
@@ -206,6 +222,8 @@ export default FeedCommentList = props => {
 											? flatlist.current.scrollToIndex({animated: true, index: 0, viewPosition: 0.5})
 											: flatlist.current.scrollToIndex({animated: true, index: whichParent, viewPosition: 1});
 									}, 500);
+									if (props.route.params.reply) {
+									}
 								},
 								err => {
 									console.log(err);
@@ -279,6 +297,7 @@ export default FeedCommentList = props => {
 			});
 		} else {
 			setParentComment(parentCommentId);
+			// console.log('parentCommentId', parentCommentId);
 			const findParentIndex = comments.findIndex(e => e._id == parentCommentId._id);
 			input.current.focus();
 			scrollToReply(findParentIndex);

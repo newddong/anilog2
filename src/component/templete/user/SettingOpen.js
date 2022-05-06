@@ -12,6 +12,8 @@ import {INFO_QUESTION} from 'Root/i18n/msg';
 import FastImage from 'react-native-fast-image';
 import {useState} from 'react/cjs/react.production.min';
 import OneOnOffLine from 'Root/component/organism/form/OneLineOnOff';
+import {lo} from '../style_address';
+import OnOffSwitchForSetting from 'Root/component/molecules/select/OnOffSwitchForSetting';
 
 export default SettingOpen = ({route}) => {
 	const [openObject, setOpenObject] = React.useState();
@@ -54,19 +56,20 @@ export default SettingOpen = ({route}) => {
 	}, []);
 
 	React.useEffect(() => {
-		console.log('openObject', openObject);
-		// console.log('type of Open', typeof openObject, typeof openObject.setting_public_all);
-		updateSettingPublic(
-			openObject,
+		if (!loading) {
+			updateSettingPublic(
+				openObject,
 
-			callback => {
-				console.log('success callback', callback);
-			},
-			err => {
-				console.log('err', err);
-			},
-		);
-	}, [openObject]);
+				callback => {
+					console.log('success callback', callback);
+				},
+				err => {
+					console.log('err', err);
+				},
+			);
+		}
+		// console.log('type of Open', typeof openObject, typeof openObject.setting_public_all);
+	}, [openObject, loading]);
 
 	const onSwtichAll = () => {
 		if (openObject.setting_public_all) {
@@ -126,7 +129,13 @@ export default SettingOpen = ({route}) => {
 						<View style={{width: 550 * DP}}>
 							<Text style={[txt.noto32b, {color: APRI10}]}>전체 공개</Text>
 						</View>
-						<OnOffSwitch default={openObject.setting_public_all} onSwtichOff={onSwtichAll} onSwtichOn={onSwtichAll} />
+						<OnOffSwitchForSetting
+							default={openObject.setting_public_all}
+							keys="setting_public_all"
+							onSwtichOff={onSwtichAll}
+							onSwtichOn={onSwtichAll}
+						/>
+						{/* <OnOffSwitch default={openObject.setting_public_all} onSwtichOff={onSwtichAll} onSwtichOn={onSwtichAll} /> */}
 					</View>
 					<View style={[styles.openDetailContainer]}>
 						<OneOnOffLine data={openObject} name="내 피드 비공개" keys="setting_public_my_feed" switchButton={switchButton} />

@@ -154,7 +154,7 @@ export default AssignPetInfoA = props => {
 					<Text style={[temp_style.text_assignPetInfo, txt.noto28, {color: GRAY10}]}>분류</Text>
 					<TouchableOpacity
 						onPress={onPressPetSpecies}
-						style={[temp_style.dropdownSelect_assignPetInfo_depth1, assignPetInfo_style.dropdownSelect_depth1]}>
+						style={[temp_style.dropdownSelect_assignPetInfo_depth1, assignPetInfo_style.dropdownSelect_depth1, {alignSelf: 'flex-start'}]}>
 						<View style={[assignPetInfo_style.petKind]}>
 							<Text style={[txt.noto28, assignPetInfo_style.petKind_text]}>{data.pet_species}</Text>
 							<Arrow_Down_GRAY10 />

@@ -27,10 +27,19 @@ const OneNotice = props => {
 		<View style={[styles.noticeContainer]}>
 			<TouchableOpacity onPress={onPressNotice}>
 				<View style={[{flexDirection: 'row'}]}>
-					<View style={[{width: 564 * DP}]}>
-						<Text style={[styles.dataText, txt.noto26, {color: GRAY20}]}>{props.uptitle}</Text>
-						<Text style={[styles.titleText, txt.noto30]}>{props.downtitle}</Text>
-					</View>
+					{/* 564 */}
+					{props.long ? (
+						<View style={[{width: 654 * DP}]}>
+							<Text style={[styles.dataText, txt.noto26, {color: GRAY20}]}>{props.uptitle}</Text>
+							<Text style={[styles.titleText, txt.noto30]}>{props.downtitle}</Text>
+						</View>
+					) : (
+						<View style={[{width: 564 * DP}]}>
+							<Text style={[styles.dataText, txt.noto26, {color: GRAY20}]}>{props.uptitle}</Text>
+							<Text style={[styles.titleText, txt.noto30]}>{props.downtitle}</Text>
+						</View>
+					)}
+
 					{props.status ? (
 						<View style={[{justifyContent: 'center'}]}>
 							{props.answered ? (

@@ -642,6 +642,7 @@ RCT_EXPORT_METHOD(saveImage:(NSString*) uri
   //!!저장 뒤 메타데이터는 확인하지 않았으므로 아직 확실하지 않은 상태!!
   //!
   __block NSData *imageData = nil;
+  __block NSString* mimeType = @"jpg";
   
   void (^save)(void) = ^void() {
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
@@ -663,7 +664,7 @@ RCT_EXPORT_METHOD(saveImage:(NSString*) uri
         }];
       } else {
         //UIImageWriteToSavedPhotosAlbum도 사용 가능하지만 그러면 메타데이터가 전부 날아가기 때문에 임시로 저장한 뒤 카메라 앨범에 저장한다
-        NSString* savedPath = [self createTempImage:imageData mimeType:NULL];
+        NSString* savedPath = [self createTempImage:imageData mimeType:mimeType];
         [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
           [PHAssetChangeRequest creationRequestForAssetFromImageAtFileURL:[NSURL URLWithString:savedPath]];
         } completionHandler:^(BOOL success, NSError * _Nullable error) {
@@ -694,12 +695,23 @@ RCT_EXPORT_METHOD(saveImage:(NSString*) uri
     PHImageRequestOptions* options = [[PHImageRequestOptions alloc] init];
     options.synchronous = true;
     
-    [[PHImageManager defaultManager] requestImageDataForAsset:asset.firstObject
-                                                      options:options
-                                                resultHandler:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
-      imageData = resultData;
-      save();
-    }];
+    if (@available(iOS 13, *)) {
+      [[PHImageManager defaultManager] requestImageDataAndOrientationForAsset:asset.firstObject
+                                                                      options:options
+                                                                resultHandler:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, CGImagePropertyOrientation orientation, NSDictionary * _Nullable info) {
+        imageData = resultData;
+        mimeType = [dataUTI componentsSeparatedByString:@"."].lastObject;
+      }];
+    } else {
+      [[PHImageManager defaultManager] requestImageDataForAsset:asset.firstObject
+                                                        options:options
+                                                  resultHandler:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+
+        imageData = resultData;
+        mimeType = [dataUTI componentsSeparatedByString:@"."].lastObject;
+      }];
+    }
+    save();
   } else {  //원격 이미지 파일 로드 시.. 다른 방법 필요 // 이건 보통 ios 8~9 //임시
     [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
       [PHAssetCreationRequest creationRequestForAssetFromImageAtFileURL:[NSURL URLWithString:uri]];

@@ -74,17 +74,25 @@ export default class App extends Component {
       return;
     }
 
-    CameraRoll.compressImage(this.state.image.uri, 160, 240, 0.5)
+    CameraRoll.compressImage({imageFiles: [this.state.image.uri],
+		 maxHeight: 160, 
+		 maxWidth: 240, 
+		 quality:0.5,
+     mimeType:"png" })
     .then(r => {
       console.log(r);
-      this.setState({
-        image: {
-          uri: r,
-          width: 10,
-          height: 500,
-        },
-        images: null,
-      });
+	  if (r== null || r.assets == null || r. assets.length == 0){
+		  console.log("assets are nil or length 0");
+	  } else {
+		this.setState({
+			image: {
+			  uri: r.assets[0].uri,
+			  width: r.assets[0].width,
+			  height: r.assets[0].height,
+			},
+			images: null,
+		  });
+	  }
     })
     .catch(err => {
       console.log(err);
@@ -191,8 +199,6 @@ export default class App extends Component {
 
         <TouchableOpacity
           onPress={() => {
-            test++;
-            console.log(test);
             this.compress();
           }}
           style={styles.button}>

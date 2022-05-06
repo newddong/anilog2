@@ -8,7 +8,7 @@
  * 
  */
  'use strict';
- import { Platform, NativeModules } from 'react-native';
+ import { Platform, NativeModules, Image } from 'react-native';
  
  const RNCCameraRoll  = Platform.OS=='ios'?NativeModules.RNCCameraRoll:NativeModules.PhotoListModule;
  
@@ -134,6 +134,7 @@
      end_cursor?: string,
    },
  };
+
  export type SaveToCameraRollOptions = {
    type?: 'photo' | 'video' | 'auto',
    album?: string,
@@ -150,6 +151,36 @@
    subType: string,
    count: number,
  };
+
+ export type CompressionParams = {
+   /**
+    * 압축할 이미지 파일의 uri.
+    * 포맷은 ph://{local identifier}이다.
+    * cameraRoll에서 반환하는 이미지 경로라면 문제없이 작동함
+    */
+  imageFiles: string[],
+
+  /**
+   * 압축 퀄리티. 0 ~ 1 사이의 실수. 미지정 시 디폴트 1
+   */
+  quality?: number,
+
+  /**
+   * 이미지 압축 시 최대 세로 길이. 미지정 시 디폴트 0
+   */
+  maxHeight?: number,
+
+  /**
+   * 이미지 압축 시 최대 가로 길이. 미지정 시 0
+   */
+  maxWidth?: number,
+
+  /**
+   * 이미지 형식. jpg, png만 가능
+   * 지정하지 않을 경우 jpg
+   */
+  mimeType?: string,
+};
  
  /**
   * `CameraRoll` provides access to the local camera roll or photo library.
@@ -163,16 +194,11 @@
  
    /**
     * uri 리스트를 넘겨주고 해당 리스트의 uri에 해당하는 파일을 압축
-    * @param uri 
-    * @param compressWidth 
-    * @param compressHeight 
-    * @param compressionQuality 
+    * @param CompressionParams CameraRoll.d.ts 참조
     * @returns 
     */
-   static compressImage(uri: string, 
-     compressWidth: number,  compressHeight: number, compressionQuality: number): Promise<string>{
- 
-     return RNCCameraRoll.compressImage(uri, compressWidth, compressHeight, compressionQuality);
+   static compressImage(params: CompressionParams): Promise<Image[]>{
+    return RNCCameraRoll.compressImage(params);
    }
 
   static saveImage(uri: string): Promise<void>{

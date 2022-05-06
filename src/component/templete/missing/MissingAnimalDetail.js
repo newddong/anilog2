@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {Image, TouchableOpacity, FlatList, TouchableWithoutFeedback} from 'react-native';
+import {Image, TouchableOpacity, FlatList, TouchableWithoutFeedback, Platform} from 'react-native';
 import {Text, View} from 'react-native';
 import {reportDetail, temp_style, missingAnimalDetail} from 'Templete/style_templete';
 import FeedContent from 'Organism/feed/FeedContent';
@@ -20,15 +20,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import CameraRoll from '@react-native-community/cameraroll';
+import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
+
 
 export default MissingAnimalDetail = props => {
 	const navigation = useNavigation();
+	const [data, setData] = React.useState('false');
 	const [commentDataList, setCommentDataList] = React.useState(); //더보기 클릭 State
 	const [missingList, setMissingList] = React.useState('false');
 	const viewShotRef = useRef();
+	const flatlist = useRef();
 
 	//api 실제 작업 후 하단에 있는 data로 변경 예정 (현재는 에러 방지 코드)
-	const [data, setData] = React.useState('false');
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
@@ -277,35 +280,136 @@ export default MissingAnimalDetail = props => {
 		);
 	};
 
+	//특정 댓글로 스크롤 이동 함수
+	const scrollToReply = i => {
+		if (Platform.OS == 'ios') {
+			setTimeout(() => {
+				flatlist.current.scrollToIndex({animated: true, index: i, viewPosition: 0});
+			}, 200);
+		} else {
+			flatlist.current.scrollToIndex({animated: true, index: i, viewPosition: 0});
+		}
+	};
+
 	//댓글 이동
-	const onPressReply = async () => {
+	const onPressReply = comment => {
 		if (userGlobalObject.userInfo.isPreviewMode && commentDataList.length == 0) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate('Login');
 			});
 		} else {
-			AsyncStorage.getItem('sid', (err, res) => {
-				console.log('res', res);
-				if (res == null) {
-					Modal.popNoBtn('로그인이 필요합니다.');
-					setTimeout(() => {
-						Modal.close();
-					}, 1500);
-				} else {
-					navigation.push('FeedCommentList', {feedobject: data, showAllContents: true});
-				}
-			});
+			const findParentIndex = commentDataList.findIndex(e => e._id == comment._id); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
+			let comment_obj = comment;
+			comment_obj.comment_index = findParentIndex;
+			navigation.push('FeedCommentList', {feedobject: data, showAllContents: true, reply: comment_obj});
 		}
 	};
 
+	//댓글 모두보기 클릭
+	const moveToCommentPage = () => {
+		navigation.push('FeedCommentList', {feedobject: data, showAllContents: true, showKeyboard: true});
+	};
+
+	//답글 더보기 클릭
+	const showChild = index => {
+		console.log('showChild', index);
+		scrollToReply(index);
+	};
+
 	//댓글 수정 클릭
-	const onEdit = comment => {
-		console.log('comment', comment);
-		navigation.push('FeedCommentList', {feedobject: data, edit: comment});
+	const onEdit = (comment, parent) => {
+		// console.log('comment', comment);
+		// navigation.push('FeedCommentList', {feedobject: data, edit: comment});
+		let comment_obj = comment; //수정할 댓글의 오브젝트 정보
+		const findParentIndex = commentDataList.findIndex(e => e._id == parent); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
+		const isChild = commentDataList.findIndex(e => e._id == comment._id) == -1; // 수정하려는 댓글이 자식댓글인지 여부
+		comment_obj.isChild = isChild;
+		comment_obj.comment_index = findParentIndex;
+		navigation.push('FeedCommentList', {feedobject: data, edit: comment}); // 수정하려는 댓글 정보를 포함해서 보냄
 	};
 
 	const whenEmpty = () => {
 		return <></>;
+	};
+
+	const header = () => {
+		return (
+			<View style={{alignItems: 'center'}}>
+				<View>
+					<ViewShot ref={viewShotRef} options={{format: 'jpg', quality: 1.0}}>
+						<View style={[missingAnimalDetail.poster]}>
+							<View style={missingAnimalDetail.title}>
+								<MissingAnimalTitle data={data} />
+							</View>
+							<MissingAnimalPicture data={data} />
+							<MissingAnimalText data={data} />
+							<MissingAnimalPhone data={data} />
+							<Text style={missingAnimalDetail.missingText18}>반려동물 커뮤니티 애니로그</Text>
+						</View>
+					</ViewShot>
+					<TouchableWithoutFeedback onPress={capture}>
+						<View style={missingAnimalDetail.floatingBtnMissingReport}>
+							<PosterSave />
+							<Text style={[txt.noto20, {color: 'red'}, {fontWeight: 'bold'}]}>전단지 저장</Text>
+						</View>
+					</TouchableWithoutFeedback>
+				</View>
+
+				<View style={[temp_style.feedContent]}>
+					<FeedContent data={data} onPressFavorite={onPressFavoriteWriter} />
+				</View>
+
+				<View style={[reportDetail.basic_separator]}>
+					<View style={[reportDetail.separator]}></View>
+				</View>
+
+				{commentDataList && commentDataList.length > 0 ? (
+					<TouchableOpacity
+						onPress={onPressReply}
+						style={[
+							{
+								width: 654 * DP,
+								alignItems: 'flex-end',
+								alignSelf: 'center',
+							},
+						]}>
+						<Text style={[txt.noto26, {color: GRAY10, marginBottom: 10 * DP}]}> 댓글 {commentDataList.length}개 모두 보기</Text>
+					</TouchableOpacity>
+				) : (
+					<></>
+				)}
+			</View>
+		);
+	};
+
+	const renderItem = ({item, index}) => {
+		return (
+			<ParentComment
+				parentComment={item}
+				onPressReplyBtn={onPressReply} // 부모 댓글의 답글쓰기 클릭 이벤트
+				onEdit={onEdit}
+				onPressDelete={onPressDelete}
+				onPressDeleteChild={onPressDelete}
+				showChild={() => showChild(index)}
+			/>
+		);
+	};
+
+	const footer = () => {
+		return (
+			<View style={{alignItems: 'center'}}>
+				<ReplyWriteBox onPressReply={moveToCommentPage} onWrite={moveToCommentPage} isProtectRequest={true} />
+				<View style={[{paddingVertical: 20 * DP}]}>
+					<Text style={[txt.noto24, {paddingVertical: 20 * DP, width: 684 * DP, alignSelf: 'center'}]}>실종글 더보기</Text>
+					<AnimalNeedHelpList
+						data={missingList}
+						onFavoriteTag={(e, index) => onOff_FavoriteTag(e, index)}
+						onClickLabel={(status, id, item) => onClickLabel(status, id, item)}
+						whenEmpty={whenEmpty()}
+					/>
+				</View>
+			</View>
+		);
 	};
 
 	//로딩중일때 출력
@@ -315,79 +419,14 @@ export default MissingAnimalDetail = props => {
 		return (
 			<View style={[reportDetail.wrp_main]}>
 				<FlatList
+					ref={flatlist}
 					contentContainerStyle={[reportDetail.container]}
-					data={[{}]}
+					data={commentDataList.length > 2 ? commentDataList.slice(0, 2) : commentDataList}
 					showsVerticalScrollIndicator={false}
-					ListHeaderComponent={
-						<View style={{alignItems: 'center'}}>
-							<View>
-								<ViewShot ref={viewShotRef} options={{format: 'jpg', quality: 1.0}}>
-									<View style={[missingAnimalDetail.poster]}>
-										<View style={missingAnimalDetail.title}>
-											<MissingAnimalTitle data={data} />
-										</View>
-										<MissingAnimalPicture data={data} />
-										<MissingAnimalText data={data} />
-
-										<MissingAnimalPhone data={data} />
-										<Text style={missingAnimalDetail.missingText18}>반려동물 커뮤니티 애니로그</Text>
-									</View>
-								</ViewShot>
-								<TouchableWithoutFeedback onPress={capture}>
-									<View style={missingAnimalDetail.floatingBtnMissingReport}>
-										<PosterSave />
-										<Text style={[txt.noto20, {color: 'red'}, {fontWeight: 'bold'}]}>전단지 저장</Text>
-									</View>
-								</TouchableWithoutFeedback>
-							</View>
-
-							<View style={[temp_style.feedContent]}>
-								<FeedContent data={data} onPressFavorite={onPressFavoriteWriter} />
-							</View>
-
-							<View style={[reportDetail.basic_separator]}>
-								<View style={[reportDetail.separator]}></View>
-							</View>
-						</View>
-					}
-					renderItem={({item, index}) => (
-						<View style={{paddingVertical: 10 * DP, alignItems: 'center'}}>
-							{commentDataList && commentDataList.length > 0 ? (
-								<TouchableOpacity
-									onPress={onPressReply}
-									style={[
-										{
-											width: 654 * DP,
-											alignItems: 'flex-end',
-											alignSelf: 'center',
-										},
-									]}>
-									<Text style={[txt.noto26, {color: GRAY10, marginBottom: 10 * DP}]}> 댓글 {commentDataList.length}개 모두 보기</Text>
-								</TouchableOpacity>
-							) : (
-								<></>
-							)}
-							<View style={{marginTop: 0 * DP, alignItems: 'center'}}>
-								<CommentList
-									items={commentDataList}
-									onPressReplyBtn={onPressReply}
-									onPressDelete={onPressDelete}
-									onPressDeleteChild={onPressDelete}
-									onEdit={onEdit}
-								/>
-							</View>
-							<ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} isProtectRequest={true} />
-							<View style={[{paddingVertical: 20 * DP}]}>
-								<Text style={[txt.noto24, {paddingVertical: 20 * DP, width: 684 * DP, alignSelf: 'center'}]}>실종글 더보기</Text>
-								<AnimalNeedHelpList
-									data={missingList}
-									onFavoriteTag={(e, index) => onOff_FavoriteTag(e, index)}
-									onClickLabel={(status, id, item) => onClickLabel(status, id, item)}
-									whenEmpty={whenEmpty()}
-								/>
-							</View>
-						</View>
-					)}
+					ListHeaderComponent={header()}
+					renderItem={renderItem}
+					ListFooterComponent={footer()}
+					ListEmptyComponent={<Text style={[txt.roboto28b, {color: GRAY10, paddingVertical: 40 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>}
 				/>
 			</View>
 		);

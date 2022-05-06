@@ -15,7 +15,6 @@ import ReviewDetail from 'Root/component/templete/community/ReviewDetail';
 import SearchMap from 'Root/component/templete/search/SearchMap';
 import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
 import WriteEditorTest from 'Root/component/templete/community/WriteEditorTest';
-import ReviewStackNavigation from './review_tab/ReviewStackNavigation';
 import {getFocusedRouteNameFromRoute, useNavigation} from '@react-navigation/core';
 import CommunityEdit from 'Root/component/templete/community/CommunityEdit';
 import ChangeUserProfileImage from 'Templete/user/ChangeUserProfileImage';

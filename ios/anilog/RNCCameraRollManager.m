@@ -20,8 +20,6 @@
 #import <React/RCTLog.h>
 #import <React/RCTUtils.h>
 
-#import "RNCAssetsLibraryRequestHandler.h"
-
 //#MARK: PHAssetCollectionSubtype
 @implementation RCTConvert (PHAssetCollectionSubtype)
 
@@ -507,30 +505,41 @@ RCT_EXPORT_METHOD(deletePhotos:(NSArray<NSString *>*)assets
 ///options로 인자 받는 방식으로 변경 예정. 이미지를 정해진 크기로 변환한다. 세로 기준으로 파일 사이즈를 줄인다.
 ///현재는 cameraroll에서 리턴받는 ph://{local identifier} 주소로만 동작한다.
 ///quality는 1.0~0.0
-RCT_EXPORT_METHOD(compressImage:(NSString* _Nonnull)uri
-                  compressWidth:(NSNumber* _Nonnull)width
-                  compressHeight:(NSNumber* _Nonnull)height
-                  compressionQuality:(NSNumber* _Nonnull)quality
+//RCT_EXPORT_METHOD(compressImage:(NSString* _Nonnull)uri
+RCT_EXPORT_METHOD(compressImage:(NSDictionary * _Nonnull)params
+//                  compressWidth:(NSNumber* _Nonnull)width
+//                  compressHeight:(NSNumber* _Nonnull)height
+//                  compressionQuality:(NSNumber* _Nonnull)quality
                   resolver:(RCTPromiseResolveBlock) resolve
                   rejecter:(RCTPromiseRejectBlock) reject){
+NSArray<NSString *>* imageUris = [params objectForKey:@"imageFiles"]?[RCTConvert NSArray:[params objectForKey:@"imageFiles"]]:@[];
+CGFloat const quality = [params objectForKey:@"quality"]?[RCTConvert CGFloat:[params objectForKey:@"quality"]]:1;
+CGFloat const maxHeight = [params objectForKey:@"maxHeight"]?[RCTConvert CGFloat:[params objectForKey:@"maxHeight"]]:0;
+CGFloat const maxWidth = [params objectForKey:@"maxWidth"]?[RCTConvert CGFloat:[params objectForKey:@"maxWidth"]]:0;
+NSString *const mimeType = [params objectForKey:@"mimeType"]?[RCTConvert NSString:[params objectForKey:@"mimeType"]]:@"jpg";
+  
+  
   //일단 ph로 시작하는 주소만 받게 해 둠
-  if ([uri containsString:@"ph://"] == false) {
-    reject(@"Invalid image uri format.", @"Correct format is 'ph://{local identifier}'", nil);
-    return;
-  }
+//  if ([uri containsString:@"ph://"] == false) {
+//    reject(@"Invalid image uri format.", @"Correct format is 'ph://{local identifier}'", nil);
+//    return;
+//  }
   
-  //프로퍼티에 저장하지 않는 방법 강구
-  self.resolve = resolve;
-  self.reject = reject;
+__block CGFloat oldWidth = 0;
+__block CGFloat oldHeight = 0;
+__block CGFloat newWidth = 0;
+__block CGFloat newHeight = 0;
+__block NSDictionary * result;
+__block NSMutableArray<NSDictionary *>* assets = [NSMutableArray array];
+//프로퍼티에 저장하지 않는 방법 강구
+//self.resolve = resolve;
+//self.reject = reject;
   
-  CGFloat oldWidth = 0;
-  CGFloat oldHeight = 0;
-  
-  CGFloat newWidth = width.floatValue;
-  CGFloat newHeight = height.floatValue;
-  
+
+dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
+  [imageUris enumerateObjectsUsingBlock:^(NSString * _Nonnull uri, NSUInteger idx, BOOL * _Nonnull stop) {
   //camera roll에서 반환하는 uri는 ph:// + (localIdentifier) 라서 5번째 인덱스부터
-  PHFetchResult<PHAsset *> *asset = [PHAsset fetchAssetsWithLocalIdentifiers:@[[uri substringFromIndex:5]] options:nil];
+  PHFetchResult<PHAsset *> *asset = [PHAsset fetchAssetsWithLocalIdentifiers:@[[uri substringFromIndex:@"ph://".length]] options:nil];
   
   if(asset == nil || asset.count == 0) {
     self.reject(@"Image fetch result error", @"Image fetch result is nil.", nil);
@@ -543,37 +552,72 @@ RCT_EXPORT_METHOD(compressImage:(NSString* _Nonnull)uri
   oldWidth = asset.firstObject.pixelWidth;
   oldHeight = asset.firstObject.pixelHeight;
   
-  if (newWidth < newHeight) {
-      newHeight = (oldHeight / oldWidth) * newWidth;
-  } else {
-      newWidth = (oldWidth / oldHeight) * newHeight;
+  if(maxWidth == 0 || maxHeight == 0){
+    newHeight = oldHeight;
+    newWidth = oldWidth;
+  }else{
+    if(maxWidth < oldWidth){
+      newHeight = (int)((maxWidth / oldWidth) * oldHeight);
+      newWidth = maxWidth;
+    }
+    
+    if(maxHeight < oldHeight){
+      newWidth = (int)((maxHeight / oldHeight)*oldWidth);
+      newHeight = maxHeight;
+    }
   }
+    
+  
+  
   CGSize newSize = CGSizeMake(newWidth, newHeight);
-
   PHImageRequestOptions* options = [PHImageRequestOptions new];
   options.synchronous = true;
   [[PHImageManager defaultManager] requestImageForAsset:asset.firstObject
                                              targetSize:newSize
                                             contentMode:PHImageContentModeAspectFit
                                                 options:options
-                                          resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-    
-    if(result == nil){
-      self.reject(@"nil error", @"image result is nil", nil);
+                                          resultHandler:^(UIImage * _Nullable img, NSDictionary * _Nullable info) {
+    if(img == nil){
+      reject(@"nil error", @"image result is nil", nil);
       return;
     }
     
     //압축된 데이터
-    NSData *imageData = UIImageJPEGRepresentation(result, quality.floatValue);
+    NSData *imageData = [NSData data];
+    if([mimeType.lowercaseString isEqualToString:@"jpg"]){
+      imageData = UIImageJPEGRepresentation(img, quality);
+    }
+    if([mimeType.lowercaseString isEqualToString:@"png"]){
+      imageData = UIImagePNGRepresentation(img);
+    }
+    
     NSString* savedPath = [self createTempImage:imageData];
 
-    if (savedPath == nil) {
-      self.reject(@"Fail to save", @"Failed to save compressed image", nil);
-      return;
-    } else {
-      self.resolve(savedPath);
+//    if (savedPath == nil) {
+//      reject(@"Fail to save", @"Failed to save compressed image", nil);
+//      return;
+//    } else {
+//      resolve(savedPath);
+//    }
+    if(savedPath == nil){
+      savedPath=@"Fail to Save Image";
     }
+    NSDictionary* imgRes = @{
+      @"uri":savedPath,
+      @"fileSize":@([imageData length]),
+      @"fileName":savedPath,
+      @"type":mimeType,
+      @"width":@(newWidth),
+      @"height":@(newHeight),
+    };
+    [assets addObject:imgRes];
+    
     }];
+  }];
+  result = @{@"assets":assets};
+  resolve(result);
+});
+  
 }
 
 //#MARK: @RCT savaeImage
@@ -594,6 +638,12 @@ RCT_EXPORT_METHOD(saveImage:(NSString*) uri
   __block NSData *imageData = nil;
   
   void (^save)(void) = ^void() {
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+      //여기서 루프 돌려서 큐 잡아두는 테스트 함
+//      for(int i = 0; i < 100000; ++i){
+//        NSLog(@"cur i: %d", i);
+//      }
+      
       if ([PHAssetCreationRequest class]) {
           [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
               [[PHAssetCreationRequest creationRequestForAsset] addResourceWithType:PHAssetResourceTypePhoto
@@ -619,42 +669,41 @@ RCT_EXPORT_METHOD(saveImage:(NSString*) uri
             [[NSFileManager defaultManager] removeItemAtURL:[NSURL URLWithString:savedPath] error:nil];
         }];
       }
+    });
   }; //end of block function save()
   
-  dispatch_sync(dispatch_get_main_queue(), ^{
-    if([uri containsString:@"ph://"]) //이게 최신 방법
-    {
-      PHFetchResult<PHAsset *> *asset = [PHAsset fetchAssetsWithLocalIdentifiers:@[[uri substringFromIndex:5]] options:nil];
-      
-      if(asset == nil || asset.count == 0) {
-        self.reject(@"Image fetch result is nil.", nil, nil);
-        return;
-      } else if(asset.firstObject == nil) {
-        self.reject(@"Image is nil", nil, nil);
-        return;
-      }
-      
-      PHImageRequestOptions* options = [[PHImageRequestOptions alloc] init];
-      options.synchronous = true;
-      
-      [[PHImageManager defaultManager] requestImageDataForAsset:asset.firstObject
-                                                        options:options
-                                                  resultHandler:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
-        imageData = resultData;
-        save();
-      }];
-    } else {  //원격 이미지 파일 로드 시.. 다른 방법 필요 // 이건 보통 ios 8~9 //임시
-      [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-        [PHAssetCreationRequest creationRequestForAssetFromImageAtFileURL:[NSURL URLWithString:uri]];
-      } completionHandler:^(BOOL success, NSError * _Nullable error) {
-        if(success){
-          self.resolve(nil);
-        } else {
-          self.reject(@"Fail to save image", error.localizedDescription, error);
-        }
-      }];
+  if([uri containsString:@"ph://"]) //이게 최신 방법
+  {
+    PHFetchResult<PHAsset *> *asset = [PHAsset fetchAssetsWithLocalIdentifiers:@[[uri substringFromIndex:5]] options:nil];
+    
+    if(asset == nil || asset.count == 0) {
+      self.reject(@"Image fetch result is nil.", nil, nil);
+      return;
+    } else if(asset.firstObject == nil) {
+      self.reject(@"Image is nil", nil, nil);
+      return;
     }
-  });
+    
+    PHImageRequestOptions* options = [[PHImageRequestOptions alloc] init];
+    options.synchronous = true;
+    
+    [[PHImageManager defaultManager] requestImageDataForAsset:asset.firstObject
+                                                      options:options
+                                                resultHandler:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+      imageData = resultData;
+      save();
+    }];
+  } else {  //원격 이미지 파일 로드 시.. 다른 방법 필요 // 이건 보통 ios 8~9 //임시
+    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+      [PHAssetCreationRequest creationRequestForAssetFromImageAtFileURL:[NSURL URLWithString:uri]];
+    } completionHandler:^(BOOL success, NSError * _Nullable error) {
+      if(success){
+        self.resolve(nil);
+      } else {
+        self.reject(@"Fail to save image", error.localizedDescription, error);
+      }
+    }];
+  }
 }
 
 //#MARK: checkPhotoLibraryConfig

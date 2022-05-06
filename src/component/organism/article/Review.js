@@ -9,6 +9,7 @@ import {useNavigation} from '@react-navigation/core';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
+import {getTimeLapsed} from 'Root/util/dateutil';
 /**
  * 후기 아이템
  * @param {object} props - Props Object
@@ -145,113 +146,7 @@ export default Review = props => {
 					</View>
 				);
 			});
-			// return categoryArr.map((val, ind) => {
-			// 	return (
-			// 		<View key={ind} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
-			// 			{val.map((v, i) => {
-			// 				const isLast = v.item == '접기';
-			// 				return (
-			// 					<TouchableOpacity
-			// 						onPress={() => onPressCategory(v)}
-			// 						key={i}
-			// 						activeOpacity={0.7}
-			// 						style={[
-			// 							style.category,
-			// 							{
-			// 								backgroundColor: isLast ? GRAY20 : WHITE,
-			// 								borderColor: isLast ? GRAY40 : BLACK,
-			// 							},
-			// 						]}>
-			// 						<Text
-			// 							style={[
-			// 								txt.noto24,
-			// 								{
-			// 									color: isLast ? WHITE : BLACK,
-			// 								},
-			// 							]}>
-			// 							{v.item}
-			// 						</Text>
-			// 					</TouchableOpacity>
-			// 				);
-			// 			})}
-			// 		</View>
-			// 	);
-			// });
 		}
-
-		// if (category_sum_list.length > 3 && !moreCategory) {
-		// 	arr = ['a'];
-		// 	return arr.map((value, index) => {
-		// 		let sliced = category_sum_list.slice(0, 3);
-		// 		sliced.push('+' + (category_sum_list.length - 4));
-		// 		return (
-		// 			<View key={index} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
-		// 				{sliced.map((v, i) => {
-		// 					const isLast = v == '+' + (category_sum_list.length - 4);
-		// 					return (
-		// 						<TouchableOpacity
-		// 							onPress={() => (isLast ? setMoreCategory(true) : onPressCategory(v))}
-		// 							key={i}
-		// 							activeOpacity={0.7}
-		// 							style={[
-		// 								style.category,
-		// 								{
-		// 									backgroundColor: WHITE,
-		// 									borderColor: isLast ? GRAY10 : BLACK,
-		// 								},
-		// 							]}>
-		// 							<Text
-		// 								style={[
-		// 									txt.noto24,
-		// 									{
-		// 										color: isLast ? GRAY10 : BLACK,
-		// 									},
-		// 								]}>
-		// 								{v}
-		// 							</Text>
-		// 						</TouchableOpacity>
-		// 					);
-		// 				})}
-		// 			</View>
-		// 		);
-		// 	});
-		// } else
-		// 	return arr.map((value, index) => {
-		// 		let sliced = category_sum_list.slice(index * 4, (index + 1) * 4);
-		// 		return (
-		// 			<View key={index} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
-		// 				{sliced.map((v, i) => {
-		// 					const isLast = v == '접기';
-		// 					return (
-		// 						<TouchableOpacity
-		// 							onPress={() => onPressCategory(v)}
-		// 							onLayout={e => {
-		// 								console.log(v, '텍스트길이 : ', v.length, 'width : ', e.nativeEvent.layout.width);
-		// 							}}
-		// 							key={i}
-		// 							activeOpacity={0.7}
-		// 							style={[
-		// 								style.category,
-		// 								{
-		// 									backgroundColor: isLast ? GRAY20 : WHITE,
-		// 									borderColor: isLast ? GRAY40 : BLACK,
-		// 								},
-		// 							]}>
-		// 							<Text
-		// 								style={[
-		// 									txt.noto24,
-		// 									{
-		// 										color: isLast ? WHITE : BLACK,
-		// 									},
-		// 								]}>
-		// 								{v}
-		// 							</Text>
-		// 						</TouchableOpacity>
-		// 					);
-		// 				})}
-		// 			</View>
-		// 		);
-		// 	});
 	};
 
 	const onPressMeatball = () => {
@@ -322,6 +217,10 @@ export default Review = props => {
 		return imageList;
 	};
 
+	const onPressProfile = () => {
+		navigation.push('UserProfile', {userobject: data.community_writer_id});
+	};
+
 	const searchHighlight = data.community_title.split(new RegExp(`(${props.isSearch})`, 'gi'));
 
 	return (
@@ -348,8 +247,17 @@ export default Review = props => {
 											),
 									  )}
 							</Text>
-							<View style={[style.profile]}>
-								<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} time_expression={'date'} />
+							<View activeOpacity={0.8} style={[style.profile, {}]}>
+								{/* <UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} time_expression={'date'} /> */}
+								<Text
+									onPress={onPressProfile}
+									style={[
+										txt.roboto24,
+										{flex: 1, alignSelf: 'flex-start', color: data.community_writer_id._id == userGlobalObject.userInfo._id ? APRI10 : BLACK},
+									]}>
+									{data.community_writer_id.user_nickname}{' '}
+								</Text>
+								<Text style={[txt.noto24, {color: GRAY10}]}>{getTimeLapsed(data.community_date)}</Text>
 							</View>
 						</View>
 					</TouchableOpacity>
@@ -412,7 +320,6 @@ const style = StyleSheet.create({
 		marginRight: 12 * DP,
 		paddingHorizontal: 15 * DP,
 		paddingVertical: 2 * DP,
-		// backgroundColor: 'yellow',
 	},
 	categoryList: {
 		width: 510 * DP,
@@ -424,16 +331,18 @@ const style = StyleSheet.create({
 	icon: {
 		flexDirection: 'row',
 		alignSelf: 'flex-start',
+		marginTop: 10 * DP,
+		// justifyContent: 'space-between',
 	},
 	content: {
 		// top: -8 * DP,
 		// backgroundColor: 'palegreen',
 	},
 	thumbnail: {
-		marginTop: 8 * DP,
+		// marginTop: 8 * DP,
 	},
 	likeComment: {
-		// marginTop: 20 * DP,
+		marginTop: 20 * DP,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		width: 654 * DP,

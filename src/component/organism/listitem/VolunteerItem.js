@@ -51,8 +51,6 @@ export default VolunteerItem = props => {
 		let text = '활동 완료';
 		if (props.isShelterUser) {
 			switch (data.volunteer_status) {
-				case 'accept':
-				case 'done':
 				case 'waiting':
 					text = '만료';
 					break;
@@ -62,13 +60,14 @@ export default VolunteerItem = props => {
 				case 'cancel':
 					text = '신청취소';
 					break;
+				case 'accept':
+				case 'done':
+					text = '활동 완료';
 				default:
 					break;
 			}
 		} else {
 			switch (data.volunteer_status) {
-				case 'accept':
-				case 'done':
 				case 'waiting':
 					text = '만료';
 					break;
@@ -77,7 +76,9 @@ export default VolunteerItem = props => {
 					break;
 				case 'notaccept':
 					text = '활동 거절';
-
+				case 'accept':
+				case 'done':
+					text = '활동 완료';
 				default:
 					break;
 			}

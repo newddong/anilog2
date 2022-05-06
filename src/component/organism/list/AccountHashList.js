@@ -23,7 +23,7 @@ export default AccountHashList = props => {
 				<UserAccount
 					data={item}
 					checkBoxMode={props.checkBoxMode}
-					onLabelClick={item => props.onClickLabel(item)}
+					onLabelClick={item => props.onClickLabel(item, index)}
 					onHashClick={() => props.onClickHash(item)}
 					onClickFollow={() => props.onClickFollow(item)}
 					onCheckBox={e => props.onCheckBox(e, index)}

@@ -4,7 +4,7 @@ import {APRI10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 // import CameraRoll from '@react-native-community/cameraroll';
-import CameraRoll from 'Root/module/CameraRollIos';
+import CameraRoll from 'Root/module/CameraRoll';
 // import { hasAndroidPermission } from './camerapermission';
 // import { requestPermission, reqeustCameraPermission } from 'permission';
 import LocalMedia from 'Molecules/media/LocalMedia';
@@ -60,19 +60,14 @@ export default AddPhoto = props => {
 		if(Platform.OS=='android'){
 			delete param.fromTime;
 			delete param.toTime;
-			NativeModules.PhotoListModule.getPhotos(param)
-			.then(photolistcallback)
-			.catch(err => {
-			// console.log('cameraroll error===>' + err);
-			});
 		}else{
 			delete param.toID;
-			CameraRoll.getPhotos(param)
+		}
+		CameraRoll.getPhotos(param)
 			.then(photolistcallback)
 			.catch(err=>{
 				// console.log('cameraroll error===>' + err);
-			})
-		}
+		})
 	};
 
 	const photolistcallback = (r) => {
@@ -104,9 +99,10 @@ export default AddPhoto = props => {
 
 	//네이티브 모듈 테스트
 	const test = () => {
-		// console.log(props.route.params);
+		const Native = Platform.OS=='ios'?NativeModules.RNCCameraRoll:NativeModules.PhotoListModule;		
 
-		NativeModules.PhotoListModule.deletePhotos({imageFiles:selectedPhoto})
+
+		Native.compressImage({imageFiles:selectedPhoto,quality:0.5,maxWidth:750*DP, maxHeight:750*DP})
 			.then(r=>console.log(r))
 			.catch(err => {
 			// console.log('cameraroll error===>' + err);

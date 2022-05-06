@@ -117,7 +117,7 @@ export default SearchMainStack = props => {
 				component={AddressSearchPage}
 				options={{header: props => <SimpleHeader {...props} />, title: '주소 설정'}}
 			/>
-			<SearchStackNav.Screen name="HashFeedList" component={FeedList} />
+			<SearchStackNav.Screen name="HashFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: ''}} />
 		</SearchStackNav.Navigator>
 	);
 };

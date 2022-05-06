@@ -446,9 +446,9 @@ export const FOLLOWER_MENU = ['즐겨찾기 추가', '소식 받기', '차단', 
 export const FOLLOWER_PET_MENU = ['즐겨찾기 추가', '소식 받기', '차단', '팔로우 취소', '입양하기'];
 
 //피드 미트볼 메뉴 리스트
-export const FEED_MEATBALL_MENU_FOLLOWING = ['쪽지 보내기', '즐겨찾기', '게시물 알람 설정', '팔로우 취소', '신고'];
+export const FEED_MEATBALL_MENU_FOLLOWING = ['쪽지 보내기', '즐겨찾기', '팔로우 취소', '신고'];
 export const FEED_MEATBALL_MENU_UNFOLLOWING = ['쪽지 보내기', '팔로우', '즐겨찾기', '신고'];
-export const FEED_MEATBALL_MENU_FOLLOWING_UNFAVORITE = ['쪽지 보내기', '즐겨찾기 취소', '게시물 알람 설정', '팔로우 취소', '신고'];
+export const FEED_MEATBALL_MENU_FOLLOWING_UNFAVORITE = ['쪽지 보내기', '즐겨찾기 취소', '팔로우 취소', '신고'];
 export const FEED_MEATBALL_MENU_UNFOLLOWING_UNFAVORITE = ['쪽지 보내기', '팔로우', '즐겨찾기 취소', '신고'];
 export const FEED_MEATBALL_MENU_MY_FEED = ['수정', '삭제'];
 export const FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS = ['상태변경', '수정', '삭제'];

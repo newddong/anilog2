@@ -125,7 +125,7 @@ export default SearchTabNavigation = props => {
 					},
 					result => {
 						console.log('searchContext.searchInfo.searchInput', searchContext.searchInfo.searchInput);
-						console.log('result / getSearchCommunityList / SearchTabNav : ', result.msg.free.length);
+						// console.log('result / getSearchCommunityList / SearchTabNav : ', result.msg.review);
 						resolve(result.msg);
 					},
 					err => {

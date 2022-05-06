@@ -71,7 +71,7 @@ export default ReviewMain = ({route, navigation}) => {
 					}
 				});
 				setRecommend(recommendList);
-				setData(result.msg.review.filter(e => e.community_is_recomment != true));
+				setData(result.msg.review);
 				if (!hasNoFilter()) {
 					doFilter(community_obj.reviewFilter, result.msg.review);
 				}

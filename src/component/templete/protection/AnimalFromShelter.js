@@ -40,15 +40,29 @@ export default AnimalFromShelter = ({route}) => {
 		// console.log('protectAnimalObject', protectAnimalObject);
 		Modal.popAnimalInfoModal(
 			protectAnimalObject,
-			() => navigation.push('ProtectRequestManage', {id: protectAnimalObject._id}),
+			() => {
+				let gender = '남';
+				switch (protectAnimalObject.protect_animal_sex) {
+					case 'male':
+						gender = '남';
+						break;
+					case 'female':
+						gender = '여';
+						break;
+					case 'male':
+						gender = '성별모름';
+						break;
+				}
+				const title = protectAnimalObject.protect_animal_species + '/' + protectAnimalObject.protect_animal_species_detail + '/' + gender;
+				navigation.push('AnimalProtectRequestDetail', {
+					id: protectAnimalObject._id,
+					title: title,
+					writer: protectAnimalObject.protect_request_writer_id._id,
+				});
+				// navigation.push('ProtectRequestManage', {id: protectAnimalObject._id})
+			},
 			() => navigation.push('AdoptorInformation', protectAnimalObject.protect_animal_id._id),
 		);
-	};
-
-	// 테두리 모드 On 상태에서 게시글보기 클릭 => AnimapProtectRequestDetail == ProtectRequestManage
-	const onPressProtectRequest = item => {
-		// console.log('item', item);
-		navigation.push('ProtectRequestManage', {item: item, list: data});
 	};
 
 	if (data == 'false') {
@@ -65,13 +79,7 @@ export default AnimalFromShelter = ({route}) => {
 									<Text style={[txt.roboto28b, {marginTop: 20 * DP}]}>아직 입양 완료된 보호소 출신의 보호 동물이 없네요.</Text>
 								</View>
 							) : (
-								<AnimalNeedHelpList
-									data={data}
-									// borderMode={true}
-									onClickLabel={onClickLabel}
-									// onPressAdoptorInfo={onPressAdoptorInfo}
-									onPressProtectRequest={onPressProtectRequest}
-								/>
+								<AnimalNeedHelpList data={data} onClickLabel={onClickLabel} />
 							)}
 						</View>
 					</ScrollView>

@@ -25,7 +25,9 @@ export default SettingAlarm = ({route}) => {
 	const [loading, setLoading] = React.useState(true);
 	const [apiPost, setApiPost] = React.useState(false);
 	const [onCount, setOnCount] = React.useState(0);
-
+	React.useEffect(() => {
+		console.log('count', onCount);
+	}, [onCount]);
 	React.useEffect(() => {
 		getNotice(
 			{},
@@ -38,7 +40,7 @@ export default SettingAlarm = ({route}) => {
 				delete temp.__v;
 				// console.log('temp', temp);
 				if (temp.notice_all) {
-					setOnCount(8);
+					setOnCount(7);
 				} else {
 					for (let i of Object.values(temp)) {
 						console.log('iii', i);
@@ -58,19 +60,19 @@ export default SettingAlarm = ({route}) => {
 		);
 	}, []);
 	React.useEffect(() => {
-		console.log('alarm', alarm, apiPost);
-		console.log('spread alarm', {...alarm});
-		updateNotice(
-			alarm,
-			callback => {
-				console.log('updateNotice', callback);
-			},
+		if (!loading) {
+			updateNotice(
+				alarm,
+				callback => {
+					console.log('updateNotice', callback);
+				},
 
-			err => {
-				console.log('er', err);
-			},
-		);
-	}, [alarm]);
+				err => {
+					console.log('er', err);
+				},
+			);
+		}
+	}, [alarm, loading]);
 
 	const onSwtichAll = () => {
 		//전체 알람이 true이면
@@ -137,7 +139,7 @@ export default SettingAlarm = ({route}) => {
 							<View style={{width: 550 * DP}}>
 								<Text style={[txt.noto32b, {color: APRI10}]}>전체 알림</Text>
 							</View>
-							<OnOffSwitchForSetting default={alarm.notice_all} onSwtichOff={onSwtichAll} onSwtichOn={onSwtichAll} />
+							<OnOffSwitchForSetting default={alarm.notice_all} keys="notice_all" onSwtichOff={onSwtichAll} onSwtichOn={onSwtichAll} />
 						</View>
 					</View>
 					<View style={styles.serviceAlarmContainer}>

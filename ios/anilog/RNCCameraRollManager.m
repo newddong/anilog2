@@ -20,21 +20,19 @@
 #import <React/RCTLog.h>
 #import <React/RCTUtils.h>
 
-#import "RNCAssetsLibraryRequestHandler.h"
-
 //#MARK: PHAssetCollectionSubtype
 @implementation RCTConvert (PHAssetCollectionSubtype)
 
 RCT_ENUM_CONVERTER(PHAssetCollectionSubtype, (@{
-   @"album": @(PHAssetCollectionSubtypeAny),
-   @"all": @(PHAssetCollectionSubtypeSmartAlbumUserLibrary),
-   @"event": @(PHAssetCollectionSubtypeAlbumSyncedEvent),
-   @"faces": @(PHAssetCollectionSubtypeAlbumSyncedFaces),
-   @"library": @(PHAssetCollectionSubtypeSmartAlbumUserLibrary),
-   @"photo-stream": @(PHAssetCollectionSubtypeAlbumMyPhotoStream), // incorrect, but legacy
-   @"photostream": @(PHAssetCollectionSubtypeAlbumMyPhotoStream),
-   @"saved-photos": @(PHAssetCollectionSubtypeAny), // incorrect, but legacy correspondence in PHAssetCollectionSubtype
-   @"savedphotos": @(PHAssetCollectionSubtypeAny), // This was ALAssetsGroupSavedPhotos, seems to have no direct correspondence in PHAssetCollectionSubtype
+  @"album": @(PHAssetCollectionSubtypeAny),
+  @"all": @(PHAssetCollectionSubtypeSmartAlbumUserLibrary),
+  @"event": @(PHAssetCollectionSubtypeAlbumSyncedEvent),
+  @"faces": @(PHAssetCollectionSubtypeAlbumSyncedFaces),
+  @"library": @(PHAssetCollectionSubtypeSmartAlbumUserLibrary),
+  @"photo-stream": @(PHAssetCollectionSubtypeAlbumMyPhotoStream), // incorrect, but legacy
+  @"photostream": @(PHAssetCollectionSubtypeAlbumMyPhotoStream),
+  @"saved-photos": @(PHAssetCollectionSubtypeAny), // incorrect, but legacy correspondence in PHAssetCollectionSubtype
+  @"savedphotos": @(PHAssetCollectionSubtypeAny), // This was ALAssetsGroupSavedPhotos, seems to have no direct correspondence in PHAssetCollectionSubtype
 }), PHAssetCollectionSubtypeAny, integerValue)
 
 
@@ -133,13 +131,13 @@ RCT_EXPORT_METHOD(saveToCameraRoll:(NSURLRequest *)request
   __block PHFetchResult *photosAsset;
   __block PHAssetCollection *collection;
   __block PHObjectPlaceholder *placeholder;
-
+  
   void (^saveBlock)(void) = ^void() {
     // performChanges and the completionHandler are called on
     // arbitrary threads, not the main thread - this is safe
     // for now since all JS is queued and executed on a single thread.
     // We should reevaluate this if that assumption changes.
-
+    
     [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
       PHAssetChangeRequest *assetRequest ;
       if ([options[@"type"] isEqualToString:@"video"]) {
@@ -167,7 +165,7 @@ RCT_EXPORT_METHOD(saveToCameraRoll:(NSURLRequest *)request
   };
   void (^saveWithOptions)(void) = ^void() {
     if (![options[@"album"] isEqualToString:@""]) {
-  
+      
       PHFetchOptions *fetchOptions = [[PHFetchOptions alloc] init];
       fetchOptions.predicate = [NSPredicate predicateWithFormat:@"title = %@", options[@"album"] ];
       collection = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum
@@ -195,12 +193,12 @@ RCT_EXPORT_METHOD(saveToCameraRoll:(NSURLRequest *)request
       saveBlock();
     }
   };
-
+  
   void (^loadBlock)(void) = ^void() {
     inputURI = request.URL;
     saveWithOptions();
   };
-
+  
   requestPhotoLibraryAccess(reject, loadBlock);
 }
 
@@ -211,7 +209,7 @@ RCT_EXPORT_METHOD(getAlbums:(NSDictionary *)params
 {
   NSString *const mediaType = [params objectForKey:@"assetType"] ? [RCTConvert NSString:params[@"assetType"]] : @"All";
   NSString *const albumType = [params objectForKey:@"albumType"] ? [RCTConvert NSString:params[@"albumType"]] : @"Album";
-
+  
   NSMutableArray * result = [NSMutableArray new];
   NSString *__block fetchedAlbumType = nil;
   
@@ -223,23 +221,23 @@ RCT_EXPORT_METHOD(getAlbums:(NSDictionary *)params
   //methodBlockName은 exampleMethodName 함수 안에서 쓸 블록 이름입니다.
   //exampleMethodName 안에서 methodBlockName()으로 호출도 가능합니다.
   void (^convertAsset)(PHAssetCollection * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) =
-    ^(PHAssetCollection * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-      PHFetchOptions *const assetFetchOptions = [RCTConvert PHFetchOptionsFromMediaType:mediaType fromTime:0 toTime:0];
-      // Enumerate assets within the collection
-      PHFetchResult<PHAsset *> *const assetsFetchResult = [PHAsset
-                                                           fetchAssetsInAssetCollection:obj
-                                                           options:assetFetchOptions];
-      //리턴형태
-      if (assetsFetchResult.count > 0) {
-        [result addObject:@{
-          @"title": [obj localizedTitle],
-          @"count": @(assetsFetchResult.count),
-          @"type": fetchedAlbumType,
-          @"subType": @(obj.assetCollectionSubtype)
-        }];
-      }
-    };
-
+  ^(PHAssetCollection * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    PHFetchOptions *const assetFetchOptions = [RCTConvert PHFetchOptionsFromMediaType:mediaType fromTime:0 toTime:0];
+    // Enumerate assets within the collection
+    PHFetchResult<PHAsset *> *const assetsFetchResult = [PHAsset
+                                                         fetchAssetsInAssetCollection:obj
+                                                         options:assetFetchOptions];
+    //리턴형태
+    if (assetsFetchResult.count > 0) {
+      [result addObject:@{
+        @"title": [obj localizedTitle],
+        @"count": @(assetsFetchResult.count),
+        @"type": fetchedAlbumType,
+        @"subType": @(obj.assetCollectionSubtype)
+      }];
+    }
+  };
+  
   PHFetchOptions* options = [[PHFetchOptions alloc] init];
   //album 받아오기
   if ([albumType isEqualToString:@"Album"] || [albumType isEqualToString:@"All"]) {
@@ -259,7 +257,7 @@ RCT_EXPORT_METHOD(getAlbums:(NSDictionary *)params
                                                         options:options];
     [assets enumerateObjectsUsingBlock:convertAsset];
   }
-
+  
   resolve(result);
 }
 
@@ -294,7 +292,7 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
                   reject:(RCTPromiseRejectBlock)reject)
 {
   checkPhotoLibraryConfig();
-
+  
   NSUInteger const first = [RCTConvert NSInteger:params[@"first"]];
   NSString *const afterCursor = [RCTConvert NSString:params[@"after"]];
   NSString *const groupName = [RCTConvert NSString:params[@"groupName"]];
@@ -305,7 +303,7 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
   NSUInteger const toTime = [RCTConvert NSInteger:params[@"toTime"]];
   NSArray<NSString *> *const mimeTypes = [RCTConvert NSStringArray:params[@"mimeTypes"]];
   NSArray<NSString *> *const include = [RCTConvert NSStringArray:params[@"include"]];
-
+  
   BOOL __block includeFilename = [include indexOfObject:@"filename"] != NSNotFound;
   BOOL __block includeFileSize = [include indexOfObject:@"fileSize"] != NSNotFound;
   BOOL __block includeLocation = [include indexOfObject:@"location"] != NSNotFound;
@@ -335,7 +333,7 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
   
   BOOL __block stopCollections_;
   NSString __block *currentCollectionName;
-
+  
   requestPhotoLibraryAccess(reject, ^{
     void (^collectAsset)(PHAsset*, NSUInteger, BOOL*) = ^(PHAsset * _Nonnull asset, NSUInteger assetIdx, BOOL * _Nonnull stopAssets) {
       NSString *const uri = [NSString stringWithFormat:@"ph://%@", [asset localIdentifier]];
@@ -365,12 +363,12 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
           }
           return; // skip until we get to the first one
         }
-
-
+        
+        
         if ([mimeTypes count] > 0 && resource) {
           CFStringRef const uti = (__bridge CFStringRef _Nonnull)(resource.uniformTypeIdentifier);
           NSString *const mimeType = (NSString *)CFBridgingRelease(UTTypeCopyPreferredTagWithClass(uti, kUTTagClassMIMEType));
-
+          
           BOOL __block mimeTypeFound = NO;
           [mimeTypes enumerateObjectsUsingBlock:^(NSString * _Nonnull mimeTypeFilter, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([mimeType isEqualToString:mimeTypeFilter]) {
@@ -378,13 +376,13 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
               *stop = YES;
             }
           }];
-
+          
           if (!mimeTypeFound) {
             return;
           }
         }
       }
-
+      
       // If we've accumulated enough results to resolve a single promise
       if (first == assets.count) {
         *stopAssets = YES;
@@ -395,43 +393,43 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
         resolvedPromise = YES;
         return;
       }
-
+      
       NSString *const assetMediaTypeLabel = (asset.mediaType == PHAssetMediaTypeVideo
-                                            ? @"video"
-                                            : (asset.mediaType == PHAssetMediaTypeImage
+                                             ? @"video"
+                                             : (asset.mediaType == PHAssetMediaTypeImage
                                                 ? @"image"
                                                 : (asset.mediaType == PHAssetMediaTypeAudio
-                                                  ? @"audio"
-                                                  : @"unknown")));
+                                                   ? @"audio"
+                                                   : @"unknown")));
       CLLocation *const loc = asset.location;
-
+      
       [assets addObject:@{
         @"node": @{
           @"type": assetMediaTypeLabel, // TODO: switch to mimeType?
           @"group_name": currentCollectionName,
           @"image": @{
-              @"uri": uri,
-              @"filename": (includeFilename && originalFilename ? originalFilename : [NSNull null]),
-              @"height": (includeImageSize ? @([asset pixelHeight]) : [NSNull null]),
-              @"width": (includeImageSize ? @([asset pixelWidth]) : [NSNull null]),
-              @"fileSize": (includeFileSize ? fileSize : [NSNull null]),
-              @"playableDuration": (includePlayableDuration && asset.mediaType != PHAssetMediaTypeImage
-                                    ? @([asset duration]) // fractional seconds
-                                    : [NSNull null]),
-              @"path": path
+            @"uri": uri,
+            @"filename": (includeFilename && originalFilename ? originalFilename : [NSNull null]),
+            @"height": (includeImageSize ? @([asset pixelHeight]) : [NSNull null]),
+            @"width": (includeImageSize ? @([asset pixelWidth]) : [NSNull null]),
+            @"fileSize": (includeFileSize ? fileSize : [NSNull null]),
+            @"playableDuration": (includePlayableDuration && asset.mediaType != PHAssetMediaTypeImage
+              ? @([asset duration]) // fractional seconds
+              : [NSNull null]),
+            @"path": path
           },
           @"timestamp": @(asset.creationDate.timeIntervalSince1970),
           @"location": (includeLocation && loc ? @{
-              @"latitude": @(loc.coordinate.latitude),
-              @"longitude": @(loc.coordinate.longitude),
-              @"altitude": @(loc.altitude),
-              @"heading": @(loc.course),
-              @"speed": @(loc.speed), // speed in m/s
-            } : [NSNull null])
-          }
+            @"latitude": @(loc.coordinate.latitude),
+            @"longitude": @(loc.coordinate.longitude),
+            @"altitude": @(loc.altitude),
+            @"heading": @(loc.course),
+            @"speed": @(loc.speed), // speed in m/s
+          } : [NSNull null])
+        }
       }];
     };
-
+    
     if ([groupTypes isEqualToString:@"all"]) {
       PHFetchResult <PHAsset *> *const assetFetchResult = [PHAsset fetchAssetsWithOptions: assetFetchOptions];
       currentCollectionName = @"All Photos";
@@ -441,15 +439,15 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
       if ([groupTypes isEqualToString:@"smartalbum"]) {
         assetCollectionFetchResult = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:subType options:nil];
         [assetCollectionFetchResult enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull assetCollection, NSUInteger collectionIdx, BOOL * _Nonnull stopCollections) {
-            PHFetchResult<PHAsset *> *const assetsFetchResult = [PHAsset fetchAssetsInAssetCollection:assetCollection options:assetFetchOptions];
-            currentCollectionName = [assetCollection localizedTitle];
-            [assetsFetchResult enumerateObjectsUsingBlock:collectAsset];
-        
+          PHFetchResult<PHAsset *> *const assetsFetchResult = [PHAsset fetchAssetsInAssetCollection:assetCollection options:assetFetchOptions];
+          currentCollectionName = [assetCollection localizedTitle];
+          [assetsFetchResult enumerateObjectsUsingBlock:collectAsset];
+          
           *stopCollections = stopCollections_;
         }];
       } else {
         PHAssetCollectionSubtype const collectionSubtype = [RCTConvert PHAssetCollectionSubtype:groupTypes];
-
+        
         // Filter collection name ("group")
         PHFetchOptions *const collectionFetchOptions = [PHFetchOptions new];
         collectionFetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"endDate" ascending:NO]];
@@ -458,7 +456,7 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
         }
         assetCollectionFetchResult = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:collectionSubtype options:collectionFetchOptions];
         [assetCollectionFetchResult enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull assetCollection, NSUInteger collectionIdx, BOOL * _Nonnull stopCollections) {
-            // Enumerate assets within the collection
+          // Enumerate assets within the collection
           PHFetchResult<PHAsset *> *const assetsFetchResult = [PHAsset fetchAssetsInAssetCollection:assetCollection options:assetFetchOptions];
           currentCollectionName = [assetCollection localizedTitle];
           [assetsFetchResult enumerateObjectsUsingBlock:collectAsset];
@@ -466,7 +464,7 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
         }];
       } // else of "if ([groupTypes isEqualToString:@"all"])"
     }
-
+    
     // If we get this far and haven't resolved the promise yet, we reached the end of the list of photos
     if (!resolvedPromise) {
       hasNextPage = NO;
@@ -486,13 +484,13 @@ RCT_EXPORT_METHOD(deletePhotos:(NSArray<NSString *>*)assets
   for (NSString *asset in assets) {
     [convertedAssets addObject: [asset stringByReplacingOccurrencesOfString:@"ph://" withString:@""]];
   }
-
+  
   [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-      PHFetchResult<PHAsset *> *fetched =
-        [PHAsset fetchAssetsWithLocalIdentifiers:convertedAssets options:nil];
-      [PHAssetChangeRequest deleteAssets:fetched];
-    }
-  completionHandler:^(BOOL success, NSError *error) {
+    PHFetchResult<PHAsset *> *fetched =
+    [PHAsset fetchAssetsWithLocalIdentifiers:convertedAssets options:nil];
+    [PHAssetChangeRequest deleteAssets:fetched];
+  }
+                                    completionHandler:^(BOOL success, NSError *error) {
     if (success == YES) {
       resolve(@(success));
     }
@@ -507,73 +505,129 @@ RCT_EXPORT_METHOD(deletePhotos:(NSArray<NSString *>*)assets
 ///options로 인자 받는 방식으로 변경 예정. 이미지를 정해진 크기로 변환한다. 세로 기준으로 파일 사이즈를 줄인다.
 ///현재는 cameraroll에서 리턴받는 ph://{local identifier} 주소로만 동작한다.
 ///quality는 1.0~0.0
-RCT_EXPORT_METHOD(compressImage:(NSString* _Nonnull)uri
-                  compressWidth:(NSNumber* _Nonnull)width
-                  compressHeight:(NSNumber* _Nonnull)height
-                  compressionQuality:(NSNumber* _Nonnull)quality
+RCT_EXPORT_METHOD(compressImage:(NSDictionary * _Nonnull)params
                   resolver:(RCTPromiseResolveBlock) resolve
                   rejecter:(RCTPromiseRejectBlock) reject){
-  //일단 ph로 시작하는 주소만 받게 해 둠
-  if ([uri containsString:@"ph://"] == false) {
-    reject(@"Invalid image uri format.", @"Correct format is 'ph://{local identifier}'", nil);
-    return;
-  }
+  NSArray<NSString *>* imageUris = [params objectForKey:@"imageFiles"] ? [RCTConvert NSArray:[params objectForKey:@"imageFiles"]]:@[];
+  CGFloat const quality = [params objectForKey:@"quality"] ? [RCTConvert CGFloat:[params objectForKey:@"quality"]]:1;
+  CGFloat const maxHeight = [params objectForKey:@"maxHeight"] ? [RCTConvert CGFloat:[params objectForKey:@"maxHeight"]]:0;
+  CGFloat const maxWidth = [params objectForKey:@"maxWidth"] ? [RCTConvert CGFloat:[params objectForKey:@"maxWidth"]]:0;
+  NSString *const mimeType = [params objectForKey:@"mimeType"] ? [RCTConvert NSString:[params objectForKey:@"mimeType"]]:@"jpg";
   
-  //프로퍼티에 저장하지 않는 방법 강구
-  self.resolve = resolve;
-  self.reject = reject;
+  //이후 reject 여부 체크에서 errCode length로 판별하므로 빈 스트링 넣어줌
+  __block NSString* errCode = @"";
+  __block NSString* errMsg;
   
-  CGFloat oldWidth = 0;
-  CGFloat oldHeight = 0;
-  
-  CGFloat newWidth = width.floatValue;
-  CGFloat newHeight = height.floatValue;
-  
-  //camera roll에서 반환하는 uri는 ph:// + (localIdentifier) 라서 5번째 인덱스부터
-  PHFetchResult<PHAsset *> *asset = [PHAsset fetchAssetsWithLocalIdentifiers:@[[uri substringFromIndex:5]] options:nil];
-  
-  if(asset == nil || asset.count == 0) {
-    self.reject(@"Image fetch result error", @"Image fetch result is nil.", nil);
-    return;
-  } else if(asset.firstObject == nil) {
-    self.reject(@"Nil error", @"Image is nil", nil);
-    return;
-  }
-  
-  oldWidth = asset.firstObject.pixelWidth;
-  oldHeight = asset.firstObject.pixelHeight;
-  
-  if (newWidth < newHeight) {
-      newHeight = (oldHeight / oldWidth) * newWidth;
-  } else {
-      newWidth = (oldWidth / oldHeight) * newHeight;
-  }
-  CGSize newSize = CGSizeMake(newWidth, newHeight);
-
-  PHImageRequestOptions* options = [PHImageRequestOptions new];
-  options.synchronous = true;
-  [[PHImageManager defaultManager] requestImageForAsset:asset.firstObject
-                                             targetSize:newSize
-                                            contentMode:PHImageContentModeAspectFit
-                                                options:options
-                                          resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-    
-    if(result == nil){
-      self.reject(@"nil error", @"image result is nil", nil);
+  //enumerateObjectsUsingBlocks가 빈 문자열을 대상으로 순환을 시도할 때 에러가 나므로 위에서 잡아주어야 함
+  NSUInteger nUris = imageUris.count;
+  for (int i = 0; i < nUris; ++i){
+    if(imageUris[i].length == 0) {
+      errCode = @"String empty";
+      errMsg = @"Uri is an empty string";
+      reject(errCode, errMsg, nil);
       return;
     }
-    
-    //압축된 데이터
-    NSData *imageData = UIImageJPEGRepresentation(result, quality.floatValue);
-    NSString* savedPath = [self createTempImage:imageData];
-
-    if (savedPath == nil) {
-      self.reject(@"Fail to save", @"Failed to save compressed image", nil);
-      return;
-    } else {
-      self.resolve(savedPath);
-    }
+  }
+  
+  __block CGFloat oldWidth = 0;
+  __block CGFloat oldHeight = 0;
+  __block CGFloat newWidth = 0;
+  __block CGFloat newHeight = 0;
+  __block NSDictionary * result;
+  __block NSMutableArray<NSDictionary *>* assets = [NSMutableArray array];
+  
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
+    [imageUris enumerateObjectsUsingBlock:^(NSString * _Nonnull uri, NSUInteger idx, BOOL * _Nonnull stop) {
+      if (![uri hasPrefix:@"ph://"]) {
+        errCode = @"Uri format error";
+        errMsg = @"Uri format doesn't fit with photoKit ('ph://')";
+        *stop = YES;
+        return;
+      }
+      
+      PHFetchResult<PHAsset *> *asset = [PHAsset fetchAssetsWithLocalIdentifiers:@[[uri substringFromIndex:@"ph://".length]] options:nil];
+      
+      if(asset == nil || asset.count == 0) {
+        errCode = @"Nil error";
+        errMsg = @"Image fetch result is nil";
+        *stop = YES;
+        return;
+      } else if(asset.firstObject == nil) {
+        errMsg = @"Image fetch result is nil";
+        *stop = YES;
+        return;
+      }
+      
+      oldWidth = asset.firstObject.pixelWidth;
+      oldHeight = asset.firstObject.pixelHeight;
+      
+      if(maxWidth == 0 || maxHeight == 0){
+        newHeight = oldHeight;
+        newWidth = oldWidth;
+      } else {
+        if(maxWidth < oldWidth){
+          newHeight = (int)((maxWidth / oldWidth) * oldHeight);
+          newWidth = maxWidth;
+        }
+        
+        if(maxHeight < oldHeight){
+          newWidth = (int)((maxHeight / oldHeight)*oldWidth);
+          newHeight = maxHeight;
+        }
+      }
+      
+      CGSize newSize = CGSizeMake(newWidth, newHeight);
+      PHImageRequestOptions* options = [PHImageRequestOptions new];
+      options.synchronous = true;
+      [[PHImageManager defaultManager] requestImageForAsset:asset.firstObject
+                                                 targetSize:newSize
+                                                contentMode:PHImageContentModeAspectFit
+                                                    options:options
+                                              resultHandler:^(UIImage * _Nullable img, NSDictionary * _Nullable info) {
+        if(img == nil){
+          errCode = @"Nil error";
+          errMsg = @"Image result is nil";
+          *stop = YES;
+          return;
+        }
+        
+        //압축된 데이터
+        NSData *imageData = [NSData data];
+        if([mimeType.lowercaseString isEqualToString:@"jpg"]){
+          imageData = UIImageJPEGRepresentation(img, quality);
+        } else if([mimeType.lowercaseString isEqualToString:@"png"]){
+          imageData = UIImagePNGRepresentation(img);
+        }
+        
+        NSString* savedPath = [self createTempImage:imageData mimeType:mimeType];
+        if(savedPath == nil){
+          errCode = @"Image save error";
+          errMsg = @"Fail to save image";
+          *stop = YES;
+          return;
+        }
+        
+        NSDictionary* imgRes = @{
+          @"uri":savedPath,
+          @"fileSize":@([imageData length]),
+          @"fileName":savedPath,
+          @"type":mimeType,
+          @"width":@(newWidth),
+          @"height":@(newHeight),
+        };
+        [assets addObject:imgRes];
+      }];
     }];
+    
+    if(assets == nil || assets.count == 0) {
+      reject(errCode, errMsg, nil);
+    } else if (errCode.length != 0) {
+      reject(errCode, errMsg, nil);
+    } else {
+      result = @{@"assets":assets};
+      resolve(result);
+    }
+  });
 }
 
 //#MARK: @RCT savaeImage
@@ -581,80 +635,94 @@ RCT_EXPORT_METHOD(compressImage:(NSString* _Nonnull)uri
 RCT_EXPORT_METHOD(saveImage:(NSString*) uri
                   resolver:(RCTPromiseResolveBlock) resolve
                   rejecter:(RCTPromiseRejectBlock) reject){
-//  NSLog(@"saveImage native");
   if(uri == nil) {
     reject(@"URI is nil", nil, nil);
     return;
   }
   //!!저장 뒤 메타데이터는 확인하지 않았으므로 아직 확실하지 않은 상태!!
   //!
-  //프로퍼티에 저장하지 않는 방법 강구
-  self.resolve = resolve;
-  self.reject = reject;
   __block NSData *imageData = nil;
+  __block NSString* mimeType = @"jpg";
   
   void (^save)(void) = ^void() {
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+      //여기서 루프 돌려서 큐 잡아두는 테스트 함
+      //      for(int i = 0; i < 100000; ++i){
+      //        NSLog(@"cur i: %d", i);
+      //      }
+      
       if ([PHAssetCreationRequest class]) {
-          [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-              [[PHAssetCreationRequest creationRequestForAsset] addResourceWithType:PHAssetResourceTypePhoto
-                                                                               data:imageData options:nil];
-          } completionHandler:^(BOOL success, NSError * _Nullable error) {
-              if (success) {
-                self.resolve(nil);
-              } else {
-                self.reject(@"Fail to save image", error.localizedDescription, error);
-              }
-          }];
+        [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+          [[PHAssetCreationRequest creationRequestForAsset] addResourceWithType:PHAssetResourceTypePhoto
+                                                                           data:imageData options:nil];
+        } completionHandler:^(BOOL success, NSError * _Nullable error) {
+          if (success) {
+            resolve(nil);
+          } else {
+            reject(@"Fail to save image", error.localizedDescription, error);
+          }
+        }];
       } else {
         //UIImageWriteToSavedPhotosAlbum도 사용 가능하지만 그러면 메타데이터가 전부 날아가기 때문에 임시로 저장한 뒤 카메라 앨범에 저장한다
-        NSString* savedPath = [self createTempImage:imageData];
+        NSString* savedPath = [self createTempImage:imageData mimeType:mimeType];
         [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
           [PHAssetChangeRequest creationRequestForAssetFromImageAtFileURL:[NSURL URLWithString:savedPath]];
         } completionHandler:^(BOOL success, NSError * _Nullable error) {
-            if (success) {
-              self.resolve(nil);
-            } else {
-              self.reject(@"Fail to save image", error.localizedDescription, error);
-            }
-            [[NSFileManager defaultManager] removeItemAtURL:[NSURL URLWithString:savedPath] error:nil];
+          if (success) {
+            resolve(nil);
+          } else {
+            reject(@"Fail to save image", error.localizedDescription, error);
+          }
+          //임시로 저장했던 파일은 삭제하고 함수 종료
+          [[NSFileManager defaultManager] removeItemAtURL:[NSURL URLWithString:savedPath] error:nil];
         }];
       }
+    });
   }; //end of block function save()
   
-  dispatch_sync(dispatch_get_main_queue(), ^{
-    if([uri containsString:@"ph://"]) //이게 최신 방법
-    {
-      PHFetchResult<PHAsset *> *asset = [PHAsset fetchAssetsWithLocalIdentifiers:@[[uri substringFromIndex:5]] options:nil];
-      
-      if(asset == nil || asset.count == 0) {
-        self.reject(@"Image fetch result is nil.", nil, nil);
-        return;
-      } else if(asset.firstObject == nil) {
-        self.reject(@"Image is nil", nil, nil);
-        return;
-      }
-      
-      PHImageRequestOptions* options = [[PHImageRequestOptions alloc] init];
-      options.synchronous = true;
-      
+  if([uri containsString:@"ph://"]) //이게 최신 방법
+  {
+    PHFetchResult<PHAsset *> *asset = [PHAsset fetchAssetsWithLocalIdentifiers:@[[uri substringFromIndex:5]] options:nil];
+    
+    if(asset == nil || asset.count == 0) {
+      reject(@"Image fetch result is nil.", nil, nil);
+      return;
+    } else if(asset.firstObject == nil) {
+      reject(@"Image is nil", nil, nil);
+      return;
+    }
+    
+    PHImageRequestOptions* options = [[PHImageRequestOptions alloc] init];
+    options.synchronous = true;
+    
+    if (@available(iOS 13, *)) {
+      [[PHImageManager defaultManager] requestImageDataAndOrientationForAsset:asset.firstObject
+                                                                      options:options
+                                                                resultHandler:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, CGImagePropertyOrientation orientation, NSDictionary * _Nullable info) {
+        imageData = resultData;
+        mimeType = [dataUTI componentsSeparatedByString:@"."].lastObject;
+      }];
+    } else {
       [[PHImageManager defaultManager] requestImageDataForAsset:asset.firstObject
                                                         options:options
                                                   resultHandler:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+
         imageData = resultData;
-        save();
-      }];
-    } else {  //원격 이미지 파일 로드 시.. 다른 방법 필요 // 이건 보통 ios 8~9 //임시
-      [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-        [PHAssetCreationRequest creationRequestForAssetFromImageAtFileURL:[NSURL URLWithString:uri]];
-      } completionHandler:^(BOOL success, NSError * _Nullable error) {
-        if(success){
-          self.resolve(nil);
-        } else {
-          self.reject(@"Fail to save image", error.localizedDescription, error);
-        }
+        mimeType = [dataUTI componentsSeparatedByString:@"."].lastObject;
       }];
     }
-  });
+    save();
+  } else {  //원격 이미지 파일 로드 시.. 다른 방법 필요 // 이건 보통 ios 8~9 //임시
+    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+      [PHAssetCreationRequest creationRequestForAssetFromImageAtFileURL:[NSURL URLWithString:uri]];
+    } completionHandler:^(BOOL success, NSError * _Nullable error) {
+      if(success){
+        resolve(nil);
+      } else {
+        reject(@"Fail to save image", error.localizedDescription, error);
+      }
+    }];
+  }
 }
 
 //#MARK: checkPhotoLibraryConfig
@@ -668,48 +736,49 @@ static void checkPhotoLibraryConfig()
 }
 
 //#MARK: @createTempImage
-- (NSString*) createTempImage:(NSData*)data {
-    NSString *tmpDirFullPath = [self getTmpDirectory];
-    NSString *filePath = [tmpDirFullPath stringByAppendingString:[[NSUUID UUID] UUIDString]];
-    filePath = [filePath stringByAppendingString:@".jpg"];
-    
-    BOOL status = [data writeToFile:filePath atomically:YES];
-    if (!status) {
-        return nil;
-    }
-    
-    return filePath;
+- (NSString*) createTempImage:(NSData*)data
+                     mimeType:(NSString* _Nullable )mimeType{
+  NSString *tmpDirFullPath = [self getTmpDirectory];
+  NSString *filePath = [tmpDirFullPath stringByAppendingString:[[NSUUID UUID] UUIDString]];
+  NSString* type = (mimeType != NULL || mimeType.length != 0) ? mimeType:@"jpg";
+  filePath = [filePath stringByAppendingString:[NSString stringWithFormat:@".%@", type]];
+  
+  BOOL status = [data writeToFile:filePath atomically:YES];
+  if (!status) {
+    return nil;
+  }
+  
+  return filePath;
 }
-
 
 //#MARK: @getTmpDirectory
 - (NSString*) getTmpDirectory {
   NSString *tmpFullPath = [NSTemporaryDirectory() stringByAppendingString:tempDirectoryPath];
-    
-    BOOL isDir;
-    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:tmpFullPath isDirectory:&isDir];
-    if (!exists) {
-        [[NSFileManager defaultManager] createDirectoryAtPath: tmpFullPath
-                                  withIntermediateDirectories:YES attributes:nil error:nil];
-    }
-    
-    return tmpFullPath;
+  
+  BOOL isDir;
+  BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:tmpFullPath isDirectory:&isDir];
+  if (!exists) {
+    [[NSFileManager defaultManager] createDirectoryAtPath: tmpFullPath
+                              withIntermediateDirectories:YES attributes:nil error:nil];
+  }
+  
+  return tmpFullPath;
 }
 
 //#MARK: @cleanTmpdirectory
 - (BOOL)cleanTmpDirectory {
-    NSString* tmpDirectoryPath = [self getTmpDirectory];
-    NSArray* tmpDirectory = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:tmpDirectoryPath error:nil];
+  NSString* tmpDirectoryPath = [self getTmpDirectory];
+  NSArray* tmpDirectory = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:tmpDirectoryPath error:nil];
+  
+  for (NSString *file in tmpDirectory) {
+    BOOL deleted = [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@%@", tmpDirectoryPath, file] error:nil];
     
-    for (NSString *file in tmpDirectory) {
-        BOOL deleted = [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@%@", tmpDirectoryPath, file] error:nil];
-        
-        if (!deleted) {
-            return false;
-        }
+    if (!deleted) {
+      return false;
     }
-    
-    return true;
+  }
+  
+  return true;
 }
 
 ////#MARK: @RCT cleanSingle
@@ -729,11 +798,11 @@ static void checkPhotoLibraryConfig()
 RCT_REMAP_METHOD(clean,
                  resolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject) {
-    if (![self cleanTmpDirectory]) {
-        reject(@"ERROR_CLEANUP_ERROR_KEY", @"ERROR_CLEANUP_ERROR_MSG", nil);
-    } else {
-        resolve(nil);
-    }
+  if (![self cleanTmpDirectory]) {
+    reject(@"Fail to clean", @"Fail to clean temp directory", nil);
+  } else {
+    resolve(nil);
+  }
 }
 
 @end

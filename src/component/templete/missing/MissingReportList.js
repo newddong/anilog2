@@ -187,7 +187,7 @@ export default MissingReportList = props => {
 		render() {
 			return (
 				<MissingReportItem
-					data={data[this.props.index]}
+					data={getData()[this.props.index]}
 					onClickLabel={(status, id) => onClickLabel(status, id, this.props.item)}
 					onFavoriteTag={e => onOff_FavoriteTag(e, this.props.index)}
 					onPressProtectRequest={() => onPressProtectRequest(this.props.item)}

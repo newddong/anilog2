@@ -39,8 +39,7 @@ export default ShelterCodeCheck = props => {
 		);
 	};
 	const onInquery = () => {
-		// props.navigation.push('');
-		alert('문의하기');
+		props.navigation.push('ShelterAsk');
 	};
 
 	const codeChecker = code => {

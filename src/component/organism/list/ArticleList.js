@@ -44,7 +44,13 @@ const ArticleList = props => {
 				renderItem={({item, index}) => renderItem(item, index)}
 				showsVerticalScrollIndicator={false}
 				ListEmptyComponent={props.whenEmpty}
-				nestedScrollEnabled
+				// https://reactnative.dev/docs/optimizing-flatlist-configuration
+				removeClippedSubviews={true}
+				// extraData={refreshing}
+				initialNumToRender={15}
+				maxToRenderPerBatch={5} // re-render를 막는군요.
+				windowSize={11}
+				// https://reactnative.dev/docs/optimizing-flatlist-configuration
 			/>
 		</View>
 	);

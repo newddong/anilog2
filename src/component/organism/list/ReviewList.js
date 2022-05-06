@@ -21,7 +21,7 @@ import RecommendReview from '../article/RecommendReview';
  * @param {string} props.isSearch - 리뷰 컨텐츠 클릭
  */
 export default ReviewList = props => {
-	const renderItem = (item, index) => {
+	const renderItem = ({item, index}) => {
 		return (
 			<Review
 				data={item}
@@ -41,7 +41,7 @@ export default ReviewList = props => {
 			{props.recommend ? <RecommendReview data={props.recommend} onPressRecommendReview={data => props.onPressRecommendReview(data)} /> : <></>}
 			<FlatList
 				data={props.items}
-				renderItem={({item, index}) => renderItem(item, index)}
+				renderItem={renderItem}
 				showsVerticalScrollIndicator={false}
 				keyExtractor={item => item._id}
 				ListEmptyComponent={props.whenEmpty}

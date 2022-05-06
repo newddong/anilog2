@@ -17,7 +17,6 @@ export default ChangePetProfileImage = props => {
 	const [petData, setPetData] = React.useState(props.route.params);
 	const [newNick, setNewNick] = React.useState('');
 	const [confirmed, setConfirmed] = React.useState(false);
-
 	const selectPhoto = () => {
 		ImagePicker.openPicker({
 			compressImageQuality: 0.8,
@@ -129,6 +128,7 @@ export default ChangePetProfileImage = props => {
 			</View>
 
 			<View style={[changePetProfileImage_style.btn_w654]}>
+			{/* {confirmed && dupCheck ? ( */}
 				{confirmed ? (
 					<AniButton
 						onPress={onPressConfirm}

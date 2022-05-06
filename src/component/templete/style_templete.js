@@ -1972,12 +1972,14 @@ export const assignPetInfo_style = StyleSheet.create({
 		borderBottomColor: APRI10,
 	},
 	petKind_text: {
-		width: 120 * DP,
+		minWidth: 120 * DP,
+		// width: 120 * DP,
 		height: 44 * DP,
 		textAlign: 'center',
 	},
 	pet_species_detail_text: {
-		width: 208 * DP,
+		minWidth: 208 * DP,
+		// width: 208 * DP,
 		height: 44 * DP,
 		textAlign: 'center',
 	},

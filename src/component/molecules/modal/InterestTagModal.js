@@ -25,9 +25,9 @@ const InterestTagModal = props => {
 	// console.log('InterestTagModa', props.data);
 	//유저 오브젝트의 user_interests 의 더미데이터
 	// user_interests는 크게 location 및 activity로 구성
-
+	console.log('IntrestTagModal', props);
 	const [userInterestContent, setUserInterestContent] = React.useState([]);
-	const [userInterestLocation, setUserInterestLocation] = React.useState([]);
+	const [userInterestLocation, setUserInterestLocation] = React.useState(props.data);
 	const [userInterestReview, setUserInterestReview] = React.useState(props.data);
 
 	const [isSaved, setIsSaved] = React.useState(false); // '저장하지 않고 나가시겠습니까?' 메시지 출력 여부 판별
@@ -46,6 +46,10 @@ const InterestTagModal = props => {
 	const [selectedDistrict, setSelectedDistrict] = React.useState(''); // 시군구 선택 아이템
 	const [selectCityOpen, setSelectCityOpen] = React.useState(false);
 	const [selectDistrictOpen, setSelectDistrictOpen] = React.useState(false);
+
+	React.useEffect(() => {
+		console.log('ddddddd userInterest', userInterestLocation);
+	}, [userInterestLocation]);
 
 	React.useEffect(() => {
 		//커뮤니티 후기 글쓰기에서 호출한 관심태그 모달
@@ -99,16 +103,17 @@ const InterestTagModal = props => {
 			});
 			//현재 유저의 관심사 리스트를 목록들에 적용
 			const saveUserInterest = Object.entries(props.data).map(interest => {
-				// console.log('object', interest);
+				console.log('object', interest);
 				if (props.isActivation) {
 					tempUserInterestContentList.push(interest[1]);
 				} else {
 					tempUserInterestLocationList.push(interest[1]);
 				}
 
-				// console.log('아오..', tempUserInterestLocationList, tempUserInterestContentList);
+				console.log('아오..', tempUserInterestLocationList, tempUserInterestContentList);
 				setUserInterestContent(tempUserInterestContentList);
-				setUserInterestLocation(tempUserInterestLocationList);
+				// setUserInterestLocation(tempUserInterestLocationList);
+				setUserInterestLocation(tempUserInterestContentList);
 			});
 		}
 	}, []);

@@ -75,6 +75,8 @@ import ArticleDetail from 'Templete/community/ArticleDetail';
 import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
 import TermsAndPolicy from 'Root/component/templete/user/TermsAndPolicy';
 import Certification from 'Root/component/templete/login/Certification';
+import AskQuestion from 'Root/component/templete/user/AskQuestion';
+import ShelterAsk from 'Root/component/templete/shelter/ShelterAsk';
 
 const RootStack = createStackNavigator();
 
@@ -324,6 +326,7 @@ export default RootStackNavigation = () => {
 							component={TermsAndPolicy}
 							options={{header: props => <SimpleHeader {...props} />, title: '약관'}}
 						/>
+						<RootStack.Screen name="ShelterAsk" component={ShelterAsk} options={{header: props => <SimpleHeader {...props} />, title: '문의사항'}} />
 
 						{/* <RootStack.Screen
 							name="ShelterVolunteerForm"

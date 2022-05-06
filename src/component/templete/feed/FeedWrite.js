@@ -3,7 +3,7 @@ import {ScrollView, Text, TouchableOpacity, View, TouchableWithoutFeedback, Text
 import {APRI10, WHITE, GRAY20, GRAY10, GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Paw54_Border} from 'Root/component/atom/icon/index';
+import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Location54_GRAY30, Paw54_Border} from 'Root/component/atom/icon/index';
 import {Urgent_Write1, Urgent_Write2} from 'Atom/icon';
 import {btn_style, feedWrite, login_style, temp_style, buttonstyle} from 'Templete/style_templete';
 import AniButton from 'Molecules/button/AniButton';
@@ -25,6 +25,7 @@ import SelectInput from 'Molecules/button/SelectInput';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import {FlatList} from 'react-native-gesture-handler';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import Geolocation from '@react-native-community/geolocation';
 
 export default FeedWrite = props => {
 	const [showPetAccountList, setShowPetAccountList] = React.useState(false); //PetAccount 계정
@@ -39,6 +40,7 @@ export default FeedWrite = props => {
 	const [selectedImg, setSelectedImg] = React.useState([]); //사진 uri리스트
 	const [isSearchTag, setSearchTag] = React.useState(false);
 	const [publicSetting, setPublicSetting] = React.useState('전체 공개'); //공개 여부
+
 	const keyboardArea = useKeyboardBottom(0 * DP);
 	const scrollref = React.useRef();
 	const lastTouchY = React.useRef(0);
@@ -51,7 +53,7 @@ export default FeedWrite = props => {
 		if (props.route.name != 'FeedEdit') {
 			const param = props.route.params;
 
-			console.log('param.feed_avatar_id', param.feed_avatar_id);
+			// console.log('param.feed_avatar_id', param.feed_avatar_id);
 			param.feed_avatar_id //피드 글쓰기 클릭시 즉시 작성자 아바타 계정을 선택하는 절차가 추가됨에 따라 분기처리가 필요해짐
 				? // - 유저 계정에서 피드글쓰기를 누른 경우
 				  props.navigation.setParams({
@@ -152,6 +154,17 @@ export default FeedWrite = props => {
 		props.navigation.setParams({...props.route.params, feed_content: feedText});
 	}, [feedText]);
 
+	const param = props.route.params;
+
+	//위치추가 결과
+	React.useEffect(() => {
+		if (param?.feed_location) {
+			// console.log('param', JSON.stringify(param));
+			const location = param.feed_location;
+			console.log('address', location);
+		}
+	}, [props.route.params?.feed_location]);
+
 	const onPressMissingWrite = () => {
 		setShowLostAnimalForm(true);
 		props.navigation.setParams({...props.route.params, feedType: 'Missing'});
@@ -242,7 +255,10 @@ export default FeedWrite = props => {
 
 	//위치추가
 	const moveToLocationPicker = () => {
-		// props.navigation.push('LocationPicker');
+		if (Platform.OS === 'ios') {
+			Geolocation.requestAuthorization('always');
+		}
+		props.navigation.push('FeedSearchMap', {});
 	};
 
 	//태그 추가
@@ -293,12 +309,21 @@ export default FeedWrite = props => {
 							<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>사진추가</Text>
 						</View>
 					</TouchableWithoutFeedback>
-					{/* <TouchableWithoutFeedback onPress={moveToLocationPicker}>
-							<View style={[feedWrite.btnItemContainer]}>
-								<Location54_APRI10 />
-								<Text style={[txt.noto24, {color: APRI10, alignSelf: 'center', marginLeft: 10 * DP}]}>위치추가</Text>
-							</View>
-						</TouchableWithoutFeedback> */}
+					<TouchableWithoutFeedback onPress={moveToLocationPicker}>
+						<View style={[feedWrite.btnItemContainer]}>
+							{!showReportForm && !showLostAnimalForm ? (
+								<>
+									<Location54_APRI10 />
+									<Text style={[txt.noto24, {color: APRI10, alignSelf: 'center', marginLeft: 10 * DP}]}>위치추가</Text>
+								</>
+							) : (
+								<>
+									<Location54_GRAY30 />
+									<Text style={[txt.noto24, {color: GRAY30, alignSelf: 'center', marginLeft: 10 * DP}]}>위치추가</Text>
+								</>
+							)}
+						</View>
+					</TouchableWithoutFeedback>
 					<TouchableWithoutFeedback onPress={moveToFeedMediaTagEdit}>
 						<View style={[feedWrite.btnItemContainer]}>
 							<Paw54_Border />
@@ -358,6 +383,7 @@ export default FeedWrite = props => {
 								selectedImg={selectedImg}
 								onDelete={deletePhoto}
 								value={editText}
+								location={!showReportForm && !showLostAnimalForm ? param.feed_location : undefined}
 							/>
 							{!isSearchTag && setWriteModeState()}
 						</View>

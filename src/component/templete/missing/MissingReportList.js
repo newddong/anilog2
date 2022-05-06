@@ -28,8 +28,8 @@ export default MissingReportList = props => {
 		feedobject_id: '',
 		request_number: 10,
 	});
-	const [onlyMissing, setOnlyMissing] = React.useState(false);
-	const [onlyReport, setOnlyReport] = React.useState(false);
+	const [onlyMissing, setOnlyMissing] = React.useState(false); //실종글만 보기
+	const [onlyReport, setOnlyReport] = React.useState(false); // 제보글만 보기
 
 	// 실종 데이터 불러오기 (아직 API 미작업 )
 	React.useEffect(() => {
@@ -58,12 +58,12 @@ export default MissingReportList = props => {
 
 	//제보 게시글 쓰기 클릭
 	const moveToReportForm = () => {
-		navigation.push('FeedWrite', {feedType: 'Report'});
+		navigation.push('FeedWrite', {feedType: 'Report', tab: 'Protection'});
 	};
 
 	//실종 게시글 쓰기 클릭
 	const moveToMissingForm = () => {
-		navigation.push('FeedWrite', {feedType: 'Missing'});
+		navigation.push('FeedWrite', {feedType: 'Missing', tab: 'Protection'});
 	};
 
 	//실종제보 게시글의 좋아요 태그 클릭
@@ -96,7 +96,7 @@ export default MissingReportList = props => {
 					case 'female':
 						sexValue = '여';
 						break;
-					case 'male':
+					case 'unknown':
 						sexValue = '성별모름';
 						break;
 				}

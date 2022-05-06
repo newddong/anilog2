@@ -51,6 +51,22 @@ const UserLocationTimeLabel = props => {
 		// }
 	};
 
+	// console.log('data feed_location', props.location);
+
+	const getLocation = () => {
+		let result = '';
+		const location = props.location;
+		const detail = props.location.detail == undefined ? '' : ' ' + props.location.detail;
+		if (location.road_address?.address_name == '') {
+			result = '';
+		} else if (location.road_address?.address_name == '도로명 주소가 없는 위치입니다. ' || location.road_address?.address_name == 'undefined ') {
+			result = location.normal_address.city + ' ' + location.normal_address.district + detail;
+		} else {
+			result = location.road_address.city + ' ' + location.road_address.district + detail;
+		}
+		return '· ' + result + '에서';
+	};
+
 	const getTime = () => {
 		const dbDate = new Date(props.time);
 		if (props.time_expression == '') {
@@ -110,9 +126,9 @@ const UserLocationTimeLabel = props => {
 							<></>
 						)}
 					</View>
-					<Text style={[props.isLarge ? txt.noto26 : txt.noto24, {lineHeight: 36 * DP, color: GRAY20}]} numberOfLines={1}>
+					<Text style={[props.isLarge ? txt.noto26 : txt.noto24, {lineHeight: 36 * DP, color: GRAY20, maxWidth: 470 * DP}]} numberOfLines={1}>
 						{/* {address?.city} {address?.district} · {props.data.feed_type == undefined ? getCommentedTime() : props.data.comment_date} */}
-						{getTime()}
+						{getTime()} {props.location == undefined ? '' : getLocation()}
 					</Text>
 				</View>
 			</View>

@@ -213,44 +213,77 @@ export default SearchMap = ({route}) => {
 	};
 
 	const goToAddressSearch = () => {
-		navigation.push('AddressSearchWeb', {prevRoute: route.name});
+		if (route.name == 'FeedSearchMap') {
+			navigation.push('FeedAddressSearchWeb', {prevRoute: route.name});
+		} else {
+			navigation.push('AddressSearchWeb', {prevRoute: route.name});
+		}
 	};
 
 	//선택한 위치로 설정 버튼 클릭
 	const confirm = () => {
 		let finalized = locationObj;
 		finalized.detailAddr = detailAddr;
-		const data = {
-			...route.params.data,
-			community_interests: {
-				...route.params.data.community_interests,
-				interests_location: {
-					city: finalized.address.region_1depth_name,
-					district: finalized.address.region_2depth_name,
+		if (route.name == 'FeedSearchMap') {
+			const data = {
+				...route.params.data,
+				address: {
+					road_address: {
+						address_name: finalized.road_address.address_name + ' ' + finalized.detailAddr,
+						city: finalized.road_address.region_1depth_name,
+						district: finalized.road_address.region_2depth_name,
+					},
+					normal_address: {
+						address_name: finalized.address.address_name + ' ' + finalized.detailAddr,
+						city: finalized.address.region_1depth_name,
+						district: finalized.address.region_2depth_name,
+					},
+					region: {
+						latitude: changedLatitude != '' ? changedLatitude : init_latitude,
+						longitude: changedLongitude != '' ? changedLongitude : init_longitude,
+					},
+					detail: finalized.detailAddr,
 				},
-			},
-			community_address: {
-				road_address: {
-					address_name: finalized.road_address.address_name + ' ' + finalized.detailAddr,
-					city: finalized.road_address.region_1depth_name,
-					district: finalized.road_address.region_2depth_name,
+			};
+			navigation.navigate({
+				name: 'FeedWrite',
+				params: {feed_location: data.address},
+				merge: true,
+			});
+		} else {
+			const data = {
+				...route.params.data,
+				community_interests: {
+					...route.params.data.community_interests,
+					interests_location: {
+						city: finalized.address.region_1depth_name,
+						district: finalized.address.region_2depth_name,
+					},
 				},
-				normal_address: {
-					address_name: finalized.address.address_name + ' ' + finalized.detailAddr,
-					city: finalized.address.region_1depth_name,
-					district: finalized.address.region_2depth_name,
+				community_address: {
+					road_address: {
+						address_name: finalized.road_address.address_name + ' ' + finalized.detailAddr,
+						city: finalized.road_address.region_1depth_name,
+						district: finalized.road_address.region_2depth_name,
+					},
+					normal_address: {
+						address_name: finalized.address.address_name + ' ' + finalized.detailAddr,
+						city: finalized.address.region_1depth_name,
+						district: finalized.address.region_2depth_name,
+					},
+					region: {
+						latitude: changedLatitude != '' ? changedLatitude : init_latitude,
+						longitude: changedLongitude != '' ? changedLongitude : init_longitude,
+					},
+					detail: finalized.detailAddr,
 				},
-				region: {
-					latitude: changedLatitude != '' ? changedLatitude : init_latitude,
-					longitude: changedLongitude != '' ? changedLongitude : init_longitude,
-				},
-			},
-		};
-		navigation.navigate({
-			name: route.params.isEdit ? 'CommunityEdit' : 'CommunityWrite',
-			params: {data: data, isReview: route.params.isReview},
-			merge: true,
-		});
+			};
+			navigation.navigate({
+				name: route.params.isEdit ? 'CommunityEdit' : 'CommunityWrite',
+				params: {data: data, isReview: route.params.isReview},
+				merge: true,
+			});
+		}
 	};
 
 	return (

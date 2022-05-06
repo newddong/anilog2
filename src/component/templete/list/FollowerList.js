@@ -16,13 +16,14 @@ import Modal from 'Root/component/modal/Modal';
  * @param {object} props.follows - 팔로우 리스트
  * @param {void} props.resetProfileInfo - 프로필 정보 갱신
  * @param {(text:string)=>void} props.onChangeSearchInput - 프로필 정보 갱신
+ * @param {boolean} props.loading - 로딩 여부
  */
 export default FollowerList = props => {
 	const navigation = useNavigation();
 	const isFollowing = props.route.name != 'FollowingList';
 	const [loading, setLoading] = React.useState(false);
-	const [follower, setFollower] = React.useState('false');
-	const [follow, setFollow] = React.useState('false');
+	const [follower, setFollower] = React.useState([]);
+	const [follow, setFollow] = React.useState([]);
 
 	React.useEffect(() => {
 		setFollower(props.followers);
@@ -91,48 +92,53 @@ export default FollowerList = props => {
 		console.log('');
 	};
 
-	return (
-		<View style={[followerList.container]}>
-			<ScrollView style={[{flex: 0}]}>
-				<View style={[followerList.inputWitchSearch, {alignSelf: 'center'}]}>
-					<InputWithSearchIcon onChange={onChangeSearchInput} onSearch={onSearch} placeholder={'검색어를 입력해주세요.'} />
-				</View>
-				{loading ? (
-					<Loading isModal={false} />
-				) : (
-					<View style={[{alignItems: 'center'}]}>
-						{props.route.name != 'FollowingList' ? (
-							<ControllableAccountList
-								items={follower}
-								showButtons={true}
-								onClickAccount={onClickAccount}
-								title={!isFollowing ? '' : '팔로잉'}
-								onClickFollowBtn={onClickFollowBtn}
-								onClickUnFollowBtn={onClickUnFollowBtn}
-								showFollowStatusText={false}
-								width={400}
-							/>
-						) : (
-							<ControllableAccountList
-								items={follow}
-								showButtons={true}
-								onClickAccount={onClickAccount}
-								title={!isFollowing ? '' : '팔로잉'}
-								onClickUnFollowBtn={onClickUnFollowBtn}
-								onClickFollowBtn={onClickFollowBtn}
-								showFollowStatusText={false}
-								width={400}
-							/>
-						)}
+	console.log('loading', props.loading);
+
+	if (props.loading) {
+		return <Loading isModal={false} />;
+	} else
+		return (
+			<View style={[followerList.container]}>
+				<ScrollView style={[{flex: 0}]}>
+					<View style={[followerList.inputWitchSearch, {alignSelf: 'center'}]}>
+						<InputWithSearchIcon onChange={onChangeSearchInput} onSearch={onSearch} placeholder={'검색어를 입력해주세요.'} />
 					</View>
-				)}
-			</ScrollView>
-			{/* <View style={[followerList.floatingBtn]}>
+					{loading ? (
+						<Loading isModal={false} />
+					) : (
+						<View style={[{alignItems: 'center'}]}>
+							{props.route.name != 'FollowingList' ? (
+								<ControllableAccountList
+									items={follower}
+									showButtons={true}
+									onClickAccount={onClickAccount}
+									title={!isFollowing ? '' : '팔로잉'}
+									onClickFollowBtn={onClickFollowBtn}
+									onClickUnFollowBtn={onClickUnFollowBtn}
+									showFollowStatusText={false}
+									width={400}
+								/>
+							) : (
+								<ControllableAccountList
+									items={follow}
+									showButtons={true}
+									onClickAccount={onClickAccount}
+									title={!isFollowing ? '' : '팔로잉'}
+									onClickUnFollowBtn={onClickUnFollowBtn}
+									onClickFollowBtn={onClickFollowBtn}
+									showFollowStatusText={false}
+									width={400}
+								/>
+							)}
+						</View>
+					)}
+				</ScrollView>
+				{/* <View style={[followerList.floatingBtn]}>
 				<Write94 onPress={onWrite} />
 			</View> */}
-			{/* <Loading isModal={false} /> */}
-		</View>
-	);
+				{/* <Loading isModal={false} /> */}
+			</View>
+		);
 };
 
 FollowerList.defaultProps = {

@@ -323,9 +323,9 @@ export const socialInfoA = StyleSheet.create({
 		justifyContent: 'space-between',
 	},
 	socialInfo: {
-		width: 82 * DP,
+		width: 100 * DP,
 		height: 84 * DP,
-		marginRight: 60 * DP,
+		marginRight: 30 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',
 	},

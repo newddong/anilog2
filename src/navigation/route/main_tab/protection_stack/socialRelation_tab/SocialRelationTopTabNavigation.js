@@ -1,28 +1,26 @@
 import React from 'react';
-import {View, StyleSheet, Dimensions, Text, TouchableOpacity, Animated} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import LinkedAccountList from 'Templete/list/LinkedAccountList';
 import FollowerList from 'Templete/list/FollowerList';
 import RecommendedAccountList from 'Templete/list/RecommendedAccountList';
 import DP from 'Root/config/dp';
 import {APRI10, GRAY10, WHITE} from 'Root/config/color';
-import {txt} from 'Root/config/textstyle';
 import {count_to_K} from 'Root/util/stringutil';
 import {getFollowers, getFollows, getUserProfile} from 'Root/api/userapi';
 import {useNavigation} from '@react-navigation/core';
-import userGlobalObject from 'Root/config/userGlobalObject';
 
 const SocialRelationTab = createMaterialTopTabNavigator();
 
 export default SocialRelationTopTabNavigation = props => {
 	const navigation = useNavigation();
-	const [data, setData] = React.useState(props.route.params?.userobject); //유저 프로필 데이터
-	const [followers, setFollwers] = React.useState(''); // 팔로워리스트
-	const [follows, setFollows] = React.useState(''); // 팔로우 리스트
+	const [data, setData] = React.useState('false'); //유저 프로필 데이터
+	const [followers, setFollwers] = React.useState([]); // 팔로워리스트
+	const [follows, setFollows] = React.useState([]); // 팔로우 리스트
 	const [followerInput, setFollowerInput] = React.useState(''); // 팔로워 검색
 	const [followInput, setFollowInput] = React.useState(''); // 팔로우 검색
-	const tabBarItems = [count_to_K(data.user_follower_count) + ' 팔로워', count_to_K(data.user_follow_count) + ' 팔로잉', '추천'];
-
+	const [loading, setLoading] = React.useState(true);
+	const initial = props.route.params.initial != undefined ? props.route.params.initial : 'FollowerList';
+	// console.log('type', data.user_type);
 	//헤더 타이틀 설정 작업 및 유저 오브젝트 할당
 	React.useEffect(() => {
 		navigation.setOptions({title: props.route.params.userobject.user_nickname});
@@ -45,9 +43,12 @@ export default SocialRelationTopTabNavigation = props => {
 
 	const fetchData = async () => {
 		const profileInfo = await getProfileInfo();
-		fetchFollowData();
-		fetchFollowerData();
+		const followList = await getFollow();
+		const followerList = await getFollower();
 		setData(profileInfo);
+		setFollows(followList);
+		setFollwers(followerList);
+		setLoading(false);
 	};
 
 	const fetchFollowData = async () => {
@@ -144,7 +145,7 @@ export default SocialRelationTopTabNavigation = props => {
 
 	return (
 		<SocialRelationTab.Navigator
-			initialRouteName={'FollowerList'}
+			initialRouteName={initial}
 			screenOptions={{
 				tabBarItemStyle: {height: 70 * DP},
 				tabBarIndicatorStyle: {backgroundColor: APRI10, height: 2 * DP},
@@ -161,16 +162,23 @@ export default SocialRelationTopTabNavigation = props => {
 				options={{
 					tabBarLabel: count_to_K(followers.length) + ' ' + '팔로워',
 				}}>
-				{props => <FollowerList {...props} followers={followers} resetProfileInfo={fetchData} onChangeSearchInput={onChangeFollower} />}
+				{props => (
+					<FollowerList {...props} followers={followers} resetProfileInfo={fetchData} onChangeSearchInput={onChangeFollower} loading={loading} />
+				)}
 			</SocialRelationTab.Screen>
-			<SocialRelationTab.Screen
-				name="FollowingList"
-				initialParams={{userobject: data}}
-				options={{
-					tabBarLabel: count_to_K(follows.length) + ' ' + '팔로잉',
-				}}>
-				{props => <FollowerList {...props} follows={follows} resetProfileInfo={fetchData} onChangeSearchInput={onChangeFollow} />}
-			</SocialRelationTab.Screen>
+			{props.route.params.userobject.user_type == 'user' ? (
+				<SocialRelationTab.Screen
+					name="FollowingList"
+					initialParams={{userobject: data}}
+					options={{
+						tabBarLabel: count_to_K(follows.length) + ' ' + '팔로잉',
+					}}>
+					{props => <FollowerList {...props} follows={follows} resetProfileInfo={fetchData} onChangeSearchInput={onChangeFollow} loading={loading} />}
+				</SocialRelationTab.Screen>
+			) : (
+				<></>
+			)}
+
 			<SocialRelationTab.Screen
 				name="RecommendedAccountList"
 				options={{

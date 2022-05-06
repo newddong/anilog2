@@ -28,9 +28,7 @@ export default SaveButtonHeader = ({navigation, route, options, back}) => {
 			//일반 유저의 상세정보 수정
 
 			if (route.params.route_name == 'UserInfoDetailSetting') {
-				console.log('data!!!', data.data);
-				console.log('저장 버튼 param', data.data._id, data.data.user_birthday, data.data.user_interests, data.data.user_address, data.data.user_sex),
-					console.log('data.data', typeof data.data.user_interests);
+				Modal.popLoading(true);
 				updateUserDetailInformation(
 					{
 						// userobject_id: received._id,
@@ -54,12 +52,15 @@ export default SaveButtonHeader = ({navigation, route, options, back}) => {
 
 					result => {
 						console.log('result / updateUserDetailInformation / SaveButtonHeader   : ', result);
-						Modal.popOneBtn('저장되었습니다.', '확인', Modal.close);
-						navigation.goBack();
+						// Modal.popOneBtn('저장되었습니다.', '확인', Modal.close);
+						setTimeout(() => {
+							Modal.close();
+							navigation.goBack();
+						}, 200);
 					},
 					err => {
 						console.log('err / updateUserDetailInformation / SaveButtonHeader    :  ', err);
-						Modal.popOneBtn('저장실패 하였습니다.' + err, '확인', Modal.close);
+						Modal.close();
 					},
 				);
 			} else if (route.params.route_name == 'SetPetInformation') {

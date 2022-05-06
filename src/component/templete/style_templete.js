@@ -2787,10 +2787,10 @@ export const petInfoSetting = StyleSheet.create({
 		// backgroundColor: 'blue',
 	},
 	petInfo_topside_upload: {
-		width: 80 * DP,
+		width: 100 * DP,
+		alignItems: 'center',
 		height: 85 * DP,
 		justifyContent: 'space-between',
-		// backgroundColor: 'red',
 	},
 	petInfo_bottom: {
 		width: 394 * DP,

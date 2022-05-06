@@ -590,11 +590,14 @@ export default FeedContent = props => {
 					{/* type값이 status일 경우 status 버튼이 나오고 그렇지 않으면 다른 버튼 표기 */}
 				</View>
 				{/* line 1-1 (실종/제보관련 내용) */}
-				{!route.name.includes('MainHomeFeedList') && !route.name.includes('UserFeedList') && (feed_type == 'report' || feed_type == 'missing') && (
-					<View style={[organism_style.tipOff_feedContent, feedContent_style.tipOff]} onLayout={onLayoutReport}>
-						<MissingReportInfo data={props.data} />
-					</View>
-				)}
+				{!route.name.includes('MainHomeFeedList') &&
+					!route.name.includes('UserFeedList') &&
+					!route.name.includes('FavoriteFeedList') &&
+					(feed_type == 'report' || feed_type == 'missing') && (
+						<View style={[organism_style.tipOff_feedContent, feedContent_style.tipOff]} onLayout={onLayoutReport}>
+							<MissingReportInfo data={props.data} />
+						</View>
+					)}
 				{(route.name.includes('FeedList') || feed_type == 'report' || feed_type == 'missing' || route.name.includes('FeedCommentList') || show) && (
 					<View style={[organism_style.content_feedContent, feedContent_style.content_Top10]}>
 						<HashText style={[txt.noto28]} numberOfLines={numLine} ellipsizeMode={'tail'}>

@@ -244,7 +244,8 @@ const ReviewContent = props => {
 								<View style={[{alignItems: 'center', marginBottom: 20 * DP}]}>
 									<Text style={[txt.noto22b, style.locationText]}>
 										{' '}
-										{data.community_address.road_address.address_name == '도로명 주소가 없는 위치입니다. '
+										{data.community_address.road_address.address_name == '도로명 주소가 없는 위치입니다. ' ||
+										data.community_address.road_address.address_name == 'undefined '
 											? data.community_address.normal_address.address_name
 											: data.community_address.road_address.address_name}
 									</Text>
@@ -256,7 +257,8 @@ const ReviewContent = props => {
 						<View style={[style.location]}>
 							<LocationGray />
 							<Text style={[txt.noto26b, {color: GRAY10, marginLeft: 10 * DP}]}>
-								{data.community_address.road_address.address_name == '도로명 주소가 없는 위치입니다. '
+								{data.community_address.road_address.address_name == '도로명 주소가 없는 위치입니다. ' ||
+								data.community_address.road_address.address_name == 'undefined '
 									? data.community_address.normal_address.address_name
 									: data.community_address.road_address.address_name}
 							</Text>

@@ -179,7 +179,11 @@ export default MyStackNavigation = props => {
 				component={FavoriteFeeds}
 				options={{header: props => <SimpleHeader {...props} />, title: '피드 즐겨찾기'}}
 			/>
-			<MyStack.Screen name="FavoriteFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: '즐겨찾기'}} />
+			<MyStack.Screen
+				name="FavoriteFeedList"
+				component={FeedList}
+				options={{header: props => <SimpleHeader {...props} />, title: '즐겨찾기한 게시글'}}
+			/>
 			<MyStack.Screen name="TagMeFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />}} />
 			<MyStack.Screen name="TagMeFeeds" component={FavoriteFeeds} options={{header: props => <SimpleHeader {...props} />, title: '나를 태그한 글'}} />
 			<MyStack.Screen

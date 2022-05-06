@@ -1,13 +1,16 @@
 import React from 'react';
 import {View, Text, TextInput, TouchableWithoutFeedback, Platform, StyleSheet} from 'react-native';
 import AccountHashList from 'Organism/list/AccountHashList';
-import {GRAY20} from 'Root/config/color';
+import {APRI10, GRAY20} from 'Root/config/color';
 import {findTagAt, isTag, getTagName, findStartIndexOfTag, findEndIndexOfTag} from 'Root/util/stringutil';
 import {getUserListByNickname} from 'Root/api/userapi';
 import {getHashKeywords} from 'Root/api/hashapi';
 import Modal from 'Component/modal/Modal';
 import SelectedMedia from '../media/SelectedMedia';
 import {styles} from 'Root/component/atom/image/imageStyle';
+import {txt} from 'Root/config/textstyle';
+import {Location54_Filled} from 'Root/component/atom/icon';
+import DP from 'Root/config/dp';
 
 export default function HashInput(props) {
 	const [value, setValue] = React.useState(props.value ? props.value : '');
@@ -218,15 +221,34 @@ export default function HashInput(props) {
 		console.log('delete Photo', index);
 		props.onDelete(index);
 	};
+
+	const location = props.location;
+
+	const getLocation = () => {
+		let result = '';
+		if (location.road_address?.address_name == '') {
+			result = '';
+		} else if (location.road_address?.address_name == '도로명 주소가 없는 위치입니다. ' || location.road_address?.address_name == 'undefined ') {
+			result = location.normal_address.address_name;
+		} else {
+			result = location.road_address.address_name;
+		}
+		return result;
+	};
+
 	return (
 		<>
-			<View
-				style={[
-					props.containerStyle,
-					{
-						justifyContent: 'space-between',
-					},
-				]}>
+			<View style={[props.containerStyle, {justifyContent: 'space-between'}]}>
+				{location == undefined ? (
+					<></>
+				) : (
+					<View style={{flexDirection: 'row', alignItems: 'center', maxWidth: 550 * DP}}>
+						<Location54_Filled />
+						<Text style={[txt.noto26b, {color: APRI10, marginLeft: 10 * DP}]} numberOfLines={2}>
+							{getLocation()}
+						</Text>
+					</View>
+				)}
 				<TextInput
 					{...props} //props override
 					textAlignVertical={'top'}

@@ -39,8 +39,10 @@ export default ChangeUserProfileImage = ({route}) => {
 				},
 				success => {
 					Modal.close();
-					userGlobalObject.userInfo.user_nickname = newNick;
-					userGlobalObject.userInfo.user_profile_uri = data.user_profile_uri;
+					if (data.user_type == 'user') {
+						userGlobalObject.userInfo.user_nickname = newNick;
+						userGlobalObject.userInfo.user_profile_uri = data.user_profile_uri;
+					}
 					navigation.navigate({
 						name: route.params.routeInfo.name,
 						key: route.params.routeInfo.key,

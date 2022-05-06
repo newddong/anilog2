@@ -86,7 +86,7 @@ ArticleThumnails.defaultProps = {
 const style = StyleSheet.create({
 	container: {
 		alignSelf: 'center',
-		paddingVertical: 30 * DP,
+		paddingVertical: 10 * DP,
 	},
 	photo_1: {
 		width: 654 * DP,

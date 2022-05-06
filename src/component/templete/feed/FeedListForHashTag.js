@@ -17,6 +17,7 @@ export default FeedListForHashTag = props => {
 	const moveToHashFeedList = (index, item) => {
 		navigation.push('HashFeedList', {selected: item, hashtag_keyword: hashInfo.hashtag_keyword});
 	};
+
 	const [showRecent, setShowRecent] = React.useState(true);
 
 	//최근 게시글 버튼 클릭
@@ -56,12 +57,12 @@ export default FeedListForHashTag = props => {
 	return (
 		<View style={[feedListForHashTag.container, {}]}>
 			{/* HashTagInfo */}
-			<View style={[feedListForHashTag.hashTagInfo]}>
+			<View style={[feedListForHashTag.hashTagInfo, {}]}>
 				<View style={[feedListForHashTag.hashLabel]}>
 					<HashLabel keyword={hashInfo.hashtag_keyword} keywordBold={hashInfo.keywordBold} count={hashInfo.hashtag_feed_count} />
 				</View>
 				{/* 최근 게시글 / 추천 게시글 */}
-				<View style={[feedListForHashTag.postCategory]}>
+				{/* <View style={[feedListForHashTag.postCategory]}>
 					<View style={[feedListForHashTag.categoryText]}>
 						<Text onPress={showRecentFeed} style={[txt.noto24, {color: showRecent ? APRI10 : 'black'}]}>
 							피드
@@ -73,7 +74,7 @@ export default FeedListForHashTag = props => {
 							커뮤니티
 						</Text>
 					</View>
-				</View>
+				</View> */}
 			</View>
 			{/* FeedThumbnailList */}
 			<ScrollView horizontal={false} contentContainerStyle={{flex: 1}} showsVerticalScrollIndicator={false}>

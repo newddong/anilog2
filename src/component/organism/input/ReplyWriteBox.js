@@ -9,25 +9,14 @@ import AniButton from 'Root/component/molecules/button/AniButton';
 import DP from 'Root/config/dp';
 import {btn_w120} from 'Root/component/atom/btn/btn_style';
 import {txt} from 'Root/config/textstyle';
-/**
- * @param {{
- * onLockBtnClick : void ,
- * onChangeReplyInput : void,
- * onAddPhoto : void,
- * onDeleteImage : 'void / 댓글창에서 추가한 사진 삭제 버튼 클릭',
- * onWrite : void,
- * onFocusReplyBox : void,
- * onPressReply : void,
- * privateComment : 'boolean / 비밀글 여부',
- * isProtectRequest : 'boolean / 보호요청 게시글에서의 호출',
- * photo : 'Array / 사진 목록',
- * isMessage : 'boolean' /쪽지함에서의 호출,
- * shadow : 'boolean' / 그림자 효과 on off,
- * parentComment: 'object',
- * }} props
- */
+import PropsTypes, {any, array, bool, func, number, object, oneOf, oneOfType, string} from 'prop-types';
 
-export default ReplyWriteBox = React.forwardRef((props, ref) => {
+/**
+ * 댓글 작성 박스
+ * @type {React.ForwardRefRenderFunction<?,ReplyWriteBoxProps>}
+ *
+ */
+const ReplyWriteBox = React.forwardRef((props, ref) => {
 	React.useImperativeHandle(ref, () => ({
 		focus: () => {
 			inputRef.current.focus();
@@ -74,6 +63,10 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 
 	const onCancelChild = () => {
 		props.onCancelChild();
+	};
+
+	const onFocus = () => {
+		props.onFocus();
 	};
 
 	const getParent = () => {
@@ -147,7 +140,6 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 									ref={inputRef}
 								/>
 							</View>
-
 							<SelectedMedia media_uri={photo} layout={styles.img_square_round_190} onDelete={onDeleteImage} />
 						</View>
 						<CommentBoxBottom {...props} onWrite={onWrite} />
@@ -162,6 +154,7 @@ export default ReplyWriteBox = React.forwardRef((props, ref) => {
 								multiline={true}
 								placeholder={'댓글입력..'}
 								onChangeText={onChangeText}
+								onFocus={onFocus}
 								ref={inputRef}></TextInput>
 						</View>
 						<CommentBoxBottom {...props} onWrite={onWrite} />
@@ -187,6 +180,36 @@ const CommentBoxBottom = props => {
 	);
 };
 
+const ReplyWriteBoxProps = {
+	/** @type {boolean} 쪽지함에서의 호출 여부 */
+	isMessage: bool,
+	/** @type {boolean} 댓글 박스 그림자효과의 on Off default is 'true' */
+	shadow: bool,
+	/** @type {boolean} 보호요청 게시글에서의 호출 default */
+	isProtectRequest: bool,
+	/** @type {boolean} 비밀글 */
+	privateComment: bool,
+	/** @type {()=>void} 답글쓰기 눌렀을 때 동작하는 콜백 */
+	onPressReply: func,
+	/** @type {()=>void} 댓글 버튼 눌렀을 때 동작하는 콜백 */
+	onWrite: func,
+	/** @type {()=>void} 댓글에서 이미지 삭제하였을 때 동작하는 콜백 */
+	onDeleteImage: func,
+	/** @type {()=>void} 댓글에서 이미지 추가하였을 때 동작하는 콜백 */
+	onAddPhoto: func,
+	/** @type {()=>void} 댓글박스 인풋 포커스 입력 콜백 */
+	onFocus: func,
+	/** @type {()=>void} 댓글박스 인풋 메시지 입력 콜백 */
+	onChangeReplyInput: func,
+	/** @type {()=>void} 댓글의 비밀댓글 여부 */
+	onLockBtnClick: func,
+	/** @type {()=>void} 댓글의 사진 리스트 */
+	photo: array,
+	/** @type {()=>void} 부모댓글의 오브젝트 */
+	parentComment: string,
+};
+ReplyWriteBox.propTypes = ReplyWriteBoxProps;
+
 ReplyWriteBox.defaultProps = {
 	onLockBtnClick: e => console.log(e), // 비밀 댓글 클릭
 	onAddPhoto: e => console.log(e), // 사진추가하기 버튼 클릭
@@ -201,4 +224,7 @@ ReplyWriteBox.defaultProps = {
 	photo: [],
 	parentComment: '',
 	onCancelChild: () => {},
+	onFocus: () => {},
 };
+
+export default ReplyWriteBox;

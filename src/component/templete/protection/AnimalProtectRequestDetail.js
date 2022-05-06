@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, TouchableOpacity, View, FlatList} from 'react-native';
+import {Text, TouchableOpacity, View, FlatList, Platform} from 'react-native';
 import {btn_w276} from 'Atom/btn/btn_style';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import {login_style, temp_style, animalProtectRequestDetail_style} from '../style_templete';
@@ -25,6 +25,7 @@ import {getProtectRequestByProtectRequestId} from 'Root/api/protectapi';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {getFavoriteEtcListByUserId, setFavoriteEtc} from 'Root/api/favoriteetc';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
+import ParentComment from 'Root/component/organism/comment/ParentComment';
 
 //AnimalProtectRequestDetail 호출 경로
 // - ProtectRequestList(보호활동탭) , AnimalFromShelter(게시글보기) , AidRequestManage(게시글보기), AidRequestAnimalList(게시글 보기)
@@ -35,11 +36,10 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const [data, setData] = React.useState('false');
 	const [writersAnotherRequests, setWritersAnotherRequests] = React.useState('false'); //해당 게시글 작성자의 따른 보호요청게시글 목록
 	const [commentDataList, setCommentDataList] = React.useState('false'); //comment list 정보
-	const [isSharePressed, setIsSharePressed] = React.useState(false); //공유하기 클릭 여부
-	const shareRef = React.useRef();
 	const debug = false;
 	const isShelter = userGlobalObject.userInfo.user_type == 'shelter';
 	const isMyPost = data == 'false' ? false : data.protect_request_writer_id._id == userGlobalObject.userInfo._id;
+	const flatlist = React.useRef();
 	debug && console.log('AnimalProtectRequestDetail data:', data);
 
 	React.useEffect(() => {
@@ -288,38 +288,45 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		}
 	};
 
+	//보호소 프로필 클릭
 	const onClickShelterLabel = data => {
 		navigation.push('UserProfile', {userobject: data});
 	};
 
+	//특정 댓글로 스크롤 이동 함수
+	const scrollToReply = i => {
+		if (Platform.OS == 'ios') {
+			setTimeout(() => {
+				flatlist.current.scrollToIndex({animated: true, index: i, viewPosition: 0});
+			}, 200);
+		} else {
+			flatlist.current.scrollToIndex({animated: true, index: i, viewPosition: 0});
+		}
+	};
+
 	//댓글 클릭
-	const onPressReply = async () => {
-		AsyncStorage.getItem('sid', (err, res) => {
-			console.log('res', res);
-			if (res == null) {
-				Modal.popNoBtn('로그인이 필요합니다.');
-				setTimeout(() => {
-					Modal.close();
-				}, 1500);
-			} else {
-				navigation.push('ProtectCommentList', {protectObject: data, showKeyboard: true});
-			}
-		});
+	const onPressReply = comment => {
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			const findParentIndex = commentDataList.findIndex(e => e._id == comment._id); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
+			let comment_obj = comment;
+			comment_obj.comment_index = findParentIndex;
+			navigation.push('ProtectCommentList', {protectObject: data, showKeyboard: true, reply: comment_obj});
+		}
 	};
 
 	//댓글 모두보기 클릭
 	const moveToCommentPage = () => {
-		AsyncStorage.getItem('sid', (err, res) => {
-			console.log('res', res);
-			if (res == null) {
-				Modal.popNoBtn('로그인이 필요합니다.');
-				setTimeout(() => {
-					Modal.close();
-				}, 1500);
-			} else {
-				navigation.push('ProtectCommentList', {protectObject: data, showKeyboard: false});
-			}
-		});
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			navigation.push('ProtectCommentList', {protectObject: data, showKeyboard: true});
+		}
 	};
 
 	//댓글 삭제 클릭
@@ -339,14 +346,124 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		);
 	};
 
+	//답글 더보기 클릭
+	const showChild = index => {
+		scrollToReply(index);
+	};
+
 	//댓글 수정 클릭
-	const onEdit = comment => {
-		console.log('comment', comment);
+	const onEdit = (comment, parent) => {
+		// console.log('comment', comment);
+		let comment_obj = comment; //수정할 댓글의 오브젝트 정보
+		const findParentIndex = commentDataList.findIndex(e => e._id == parent); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
+		const isChild = commentDataList.findIndex(e => e._id == comment._id) == -1; // 수정하려는 댓글이 자식댓글인지 여부
+		comment_obj.isChild = isChild;
+		comment_obj.comment_index = findParentIndex;
+		console.log('findParentIndex', findParentIndex);
 		navigation.push('ProtectCommentList', {protectObject: data, edit: comment});
 	};
 
+	//페이지 하단 보호요청 게시글 listEmptyComponent
 	const whenEmpty = () => {
 		return <ListEmptyInfo text={'목록이 없습니다..'} />;
+	};
+
+	const header = () => {
+		return (
+			<View style={{alignItems: 'center'}}>
+				{/* 임시보호 후보자 협의 중 사진 */}
+				<View style={[temp_style.rescueImage]}>
+					<RescueImage
+						onPressReqeustPhoto={onPressReqeustPhoto}
+						status={data.protect_request_status || 'adopt'}
+						img_uri={data.protect_request_photos_uri}
+					/>
+				</View>
+				<View style={[temp_style.requestProtect_view]}>
+					<Text style={[txt.noto24, temp_style.requestProtect, {color: GRAY10}]}>보호요청</Text>
+				</View>
+				{/* RescueContentTitle */}
+				<View style={[temp_style.rescueContentTitle]}>
+					<Text style={[txt.noto28b]}>{data.protect_request_title || ''}</Text>
+				</View>
+				{/* 보호소 라벨 */}
+				<View style={[temp_style.shelterSmallLabel_view_animalProtectRequestDetail]}>
+					<View style={[temp_style.shelterSmallLabel_animalProtectRequestDetail]}>
+						<ShelterSmallLabel data={data.protect_request_writer_id} onClickLabel={onClickShelterLabel} />
+					</View>
+					<View style={[temp_style.button_animalProtectRequestDetail]}>
+						{isMyPost ? (
+							<></>
+						) : data.protect_request_writer_id.is_favorite ? (
+							<TouchableOpacity onPress={() => onPressShelterLabelFavorite(false)} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
+								<FavoriteTag48_Filled />
+								<Text style={[txt.roboto24, {color: APRI10, alignSelf: 'center', textAlign: 'center'}]}>
+									{data ? count_to_K(data.protect_request_writer_id.user_favorite_count) : ''}
+								</Text>
+							</TouchableOpacity>
+						) : (
+							<TouchableOpacity onPress={() => onPressShelterLabelFavorite(true)} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
+								<FavoriteTag48_Border />
+								<Text style={[txt.roboto24, {color: GRAY10, alignSelf: 'center', textAlign: 'center'}]}>
+									{data ? count_to_K(data.protect_request_writer_id.user_favorite_count) : ''}
+								</Text>
+							</TouchableOpacity>
+						)}
+					</View>
+				</View>
+				<ProtectAnimalInfoBox data={data} />
+
+				<View style={[animalProtectRequestDetail_style.rescueText]}>
+					<Text style={[txt.noto24]}>{data.protect_request_content || ''}</Text>
+				</View>
+
+				{commentDataList && commentDataList.length > 0 ? (
+					<TouchableOpacity onPress={moveToCommentPage} style={[animalProtectRequestDetail_style.replyCountContainer]}>
+						<Text style={[txt.noto26, {color: GRAY10}]}> 댓글 {commentDataList.length}개 모두 보기</Text>
+					</TouchableOpacity>
+				) : (
+					<></>
+				)}
+			</View>
+		);
+	};
+
+	const renderItem = ({item, index}) => {
+		return (
+			<View style={{alignItems: 'center'}}>
+				<ParentComment
+					parentComment={item}
+					onPressReplyBtn={onPressReply} // 부모 댓글의 답글쓰기 클릭 이벤트
+					onEdit={onEdit} // 수정 클릭
+					onPressDelete={onPressDeleteReply}
+					showChild={() => showChild(index)}
+				/>
+			</View>
+		);
+	};
+
+	//보호요청 더보기 및 댓글 입력란
+	const footer = () => {
+		return (
+			<View style={{alignItems: 'center', paddingBottom: 50 * DP}}>
+				<View style={[animalProtectRequestDetail_style.replyWriteBox]}>
+					<ReplyWriteBox onPressReply={moveToCommentPage} onWrite={onPressReply} isProtectRequest={true} />
+				</View>
+				<View style={[temp_style.addMoreRequest_view]}>
+					<Text style={[txt.noto24, temp_style.addMoreRequest, {color: GRAY20}]}>
+						{data.protect_request_writer_id.user_nickname}님의 보호요청 더보기
+					</Text>
+				</View>
+				<View style={[animalProtectRequestDetail_style.accountList]}>
+					<AnimalNeedHelpList
+						data={writersAnotherRequests}
+						onClickLabel={onClick_ProtectedThumbLabel}
+						onFavoriteTag={onPressFavoriteTag}
+						whenEmpty={whenEmpty}
+					/>
+				</View>
+			</View>
+		);
 	};
 
 	const isLoaded = data == 'false' || writersAnotherRequests == 'false' || commentDataList == 'false';
@@ -357,108 +474,13 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		return (
 			<View style={[login_style.wrp_main]}>
 				<FlatList
-					data={[{}]}
-					// keyExtractor={({item, index}) => index}
+					data={commentDataList && commentDataList.length > 2 ? commentDataList.slice(0, 2) : commentDataList}
+					ref={flatlist}
 					listKey={({item, index}) => index}
-					renderItem={({item, index}) => {
-						return (
-							<View style={[animalProtectRequestDetail_style.container]}>
-								{/* 임시보호 후보자 협의 중 사진 */}
-								<View style={[temp_style.rescueImage]}>
-									<RescueImage
-										onPressReqeustPhoto={onPressReqeustPhoto}
-										status={data.protect_request_status || 'adopt'}
-										img_uri={data.protect_request_photos_uri}
-									/>
-								</View>
-								<View style={[temp_style.requestProtect_view]}>
-									<Text style={[txt.noto24, temp_style.requestProtect, {color: GRAY10}]}>보호요청</Text>
-								</View>
-								{/* RescueContentTitle */}
-								<View style={[temp_style.rescueContentTitle]}>
-									<Text style={[txt.noto28b]}>{data.protect_request_title || ''}</Text>
-								</View>
-								{/* 보호소 라벨 */}
-								<View style={[temp_style.shelterSmallLabel_view_animalProtectRequestDetail]}>
-									<View style={[temp_style.shelterSmallLabel_animalProtectRequestDetail]}>
-										<ShelterSmallLabel data={data.protect_request_writer_id} onClickLabel={onClickShelterLabel} />
-									</View>
-									<View style={[temp_style.button_animalProtectRequestDetail]}>
-										{isMyPost ? (
-											<></>
-										) : data.protect_request_writer_id.is_favorite ? (
-											<TouchableOpacity
-												onPress={() => onPressShelterLabelFavorite(false)}
-												style={[animalProtectRequestDetail_style.buttonItemContainer]}>
-												<FavoriteTag48_Filled />
-												<Text style={[txt.roboto24, {color: APRI10, alignSelf: 'center', textAlign: 'center'}]}>
-													{data ? count_to_K(data.protect_request_writer_id.user_favorite_count) : ''}
-												</Text>
-											</TouchableOpacity>
-										) : (
-											<TouchableOpacity
-												onPress={() => onPressShelterLabelFavorite(true)}
-												style={[animalProtectRequestDetail_style.buttonItemContainer]}>
-												<FavoriteTag48_Border />
-												<Text style={[txt.roboto24, {color: GRAY10, alignSelf: 'center', textAlign: 'center'}]}>
-													{data ? count_to_K(data.protect_request_writer_id.user_favorite_count) : ''}
-												</Text>
-											</TouchableOpacity>
-										)}
-										{/* <View ref={shareRef} collapsable={false}>
-											<TouchableOpacity onPress={onPressShare} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
-												<Share48_Filled />
-												<Text style={[txt.roboto24, {color: APRI10}]}>공유</Text>
-											</TouchableOpacity>
-										</View> */}
-									</View>
-								</View>
-								<ProtectAnimalInfoBox data={data} />
-
-								<View style={[animalProtectRequestDetail_style.rescueText]}>
-									<Text style={[txt.noto24]}>{data.protect_request_content || ''}</Text>
-								</View>
-								{/* {console.log('commentDataList.length', commentDataList.length)} */}
-								<View style={[animalProtectRequestDetail_style.replyContainer, {}]}>
-									{commentDataList && commentDataList.length > 0 ? (
-										<TouchableOpacity onPress={moveToCommentPage} style={[animalProtectRequestDetail_style.replyCountContainer]}>
-											<Text style={[txt.noto26, {color: GRAY10}]}> 댓글 {commentDataList.length}개 모두 보기</Text>
-										</TouchableOpacity>
-									) : (
-										<></>
-									)}
-									<View style={[temp_style.commentList]}>
-										<CommentList
-											items={commentDataList && commentDataList.length > 2 ? commentDataList.slice(0, 2) : commentDataList}
-											onPressReplyBtn={onPressReply}
-											onPressDelete={onPressDeleteReply}
-											onEdit={onEdit}
-										/>
-									</View>
-								</View>
-								<View style={[animalProtectRequestDetail_style.replyWriteBox]}>
-									<ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} isProtectRequest={true} />
-								</View>
-								{/* 보호요청 더 보기addMoreRequest */}
-								<View style={[temp_style.addMoreRequest_view]}>
-									<Text style={[txt.noto24, temp_style.addMoreRequest, {color: GRAY20}]}>
-										{data.protect_request_writer_id.user_nickname}님의 보호요청 더보기
-									</Text>
-								</View>
-
-								{/* AnimalNeedHelpList */}
-								<View style={[animalProtectRequestDetail_style.accountList]}>
-									<AnimalNeedHelpList
-										data={writersAnotherRequests}
-										onClickLabel={onClick_ProtectedThumbLabel}
-										onFavoriteTag={onPressFavoriteTag}
-										whenEmpty={whenEmpty}
-									/>
-								</View>
-								{/* 보호소 계정이 나의 보호요청 게시글을 통해 들어왔을 경우 버튼 출력 X */}
-							</View>
-						);
-					}}
+					ListHeaderComponent={header()}
+					renderItem={renderItem}
+					ListFooterComponent={footer()}
+					ListEmptyComponent={<Text style={[txt.roboto28b, {color: GRAY10, paddingVertical: 40 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>}
 				/>
 				{isShelter || data.protect_request_status == 'complete' ? (
 					//보호소메뉴에서 자신의 보호요청게시글을 보는 경우 or 작성자 본인인 경우에는 임보/입양 버튼이 출력이 안됨

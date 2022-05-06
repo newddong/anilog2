@@ -11,6 +11,7 @@ import {getInterestsList} from 'Root/api/interestsapi';
 import ArrowDownButton from '../button/ArrowDownButton';
 import {btn_w242, btn_w280, btn_w280x68} from 'Root/component/atom/btn/btn_style';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
+import Loading from './Loading';
 /**
  * 관심사 추가 및 수정 모달
  * @param {'Activity'|'Location'|'Review'} category -  관심활동 / 관심지역 / 커뮤니티후기 분기
@@ -453,51 +454,54 @@ const InterestTagModal = props => {
 	};
 
 	const getActivityList = () => {
-		return (
-			<ScrollView>
-				{activityLists.map((v, i) => {
-					return (
-						<View key={i} style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
-							<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>{v.category}</Text>
-							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-								{v.content.length
-									? v.content.map((d, i) => {
-											if (i % 2 == 0) {
-												return null;
-											}
-											return (
-												<TouchableOpacity
-													onPress={() => onPressInterestActivationTag(d)}
-													key={i}
-													style={[userInterestContent.includes(d) ? style.contentText_userInterest : style.contentText]}>
-													<Text style={[txt.noto28, {color: userInterestContent.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
-												</TouchableOpacity>
-											);
-									  })
-									: null}
+		if (activityLists.length == 0) {
+			return <Loading isModal={false} smallBox={true} />;
+		} else
+			return (
+				<ScrollView>
+					{activityLists.map((v, i) => {
+						return (
+							<View key={i} style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
+								<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>{v.category}</Text>
+								<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+									{v.content.length
+										? v.content.map((d, i) => {
+												if (i % 2 == 0) {
+													return null;
+												}
+												return (
+													<TouchableOpacity
+														onPress={() => onPressInterestActivationTag(d)}
+														key={i}
+														style={[userInterestContent.includes(d) ? style.contentText_userInterest : style.contentText]}>
+														<Text style={[txt.noto28, {color: userInterestContent.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
+													</TouchableOpacity>
+												);
+										  })
+										: null}
+								</View>
+								<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+									{v.content.length
+										? v.content.map((d, i) => {
+												if (i % 2 != 0) {
+													return null;
+												}
+												return (
+													<TouchableOpacity
+														key={i}
+														onPress={() => onPressInterestActivationTag(d)}
+														style={[userInterestContent.includes(d) ? style.contentText_userInterest : style.contentText]}>
+														<Text style={[txt.noto28, {color: userInterestContent.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
+													</TouchableOpacity>
+												);
+										  })
+										: null}
+								</View>
 							</View>
-							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-								{v.content.length
-									? v.content.map((d, i) => {
-											if (i % 2 != 0) {
-												return null;
-											}
-											return (
-												<TouchableOpacity
-													key={i}
-													onPress={() => onPressInterestActivationTag(d)}
-													style={[userInterestContent.includes(d) ? style.contentText_userInterest : style.contentText]}>
-													<Text style={[txt.noto28, {color: userInterestContent.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
-												</TouchableOpacity>
-											);
-									  })
-									: null}
-							</View>
-						</View>
-					);
-				})}
-			</ScrollView>
-		);
+						);
+					})}
+				</ScrollView>
+			);
 	};
 
 	const getLocationList = () => {

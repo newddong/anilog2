@@ -108,26 +108,26 @@ const ArticleContent = props => {
 		if (Platform.OS == 'android') {
 			setTimeout(() => {
 				if (event.nativeEvent.data.includes('pinetreegy.s3')) {
-					console.log('event.nativeEvent.data', event.nativeEvent.data);
+					// console.log('event.nativeEvent.data', event.nativeEvent.data);
 					showImg(event.nativeEvent.data);
 				} else if (parseInt(event.nativeEvent.data) < 100 * DP) {
 					setHeight(100 * DP);
 				} else {
 					height >= 100 * DP ? false : setHeight(parseInt(event.nativeEvent.data));
-					console.log('height and : ', parseInt(event.nativeEvent.data));
+					// console.log('height and : ', parseInt(event.nativeEvent.data));
 				}
 			}, 150);
 		} else {
 			// console.log('event IOS : ', JSON.stringify(event._dispatchInstances._debugOwner.memoizedProps));
-			console.log('event.nativeEvent.data', event.nativeEvent.data);
+			// console.log('event.nativeEvent.data', event.nativeEvent.data);
 			if (event.nativeEvent.data.includes('pinetreegy.s3')) {
-				console.log('event.nativeEvent.data', event.nativeEvent.data);
+				// console.log('event.nativeEvent.data', event.nativeEvent.data);
 				showImg(event.nativeEvent.data);
 			} else if (parseInt(event.nativeEvent.data) < 100 * DP) {
 				setHeight(100 * DP * DP);
 			} else {
 				height >= 100 * DP ? false : setHeight(parseInt(event.nativeEvent.data));
-				console.log('parseInt(event.nativeEvent.data)', parseInt(event.nativeEvent.data));
+				// console.log('parseInt(event.nativeEvent.data)', parseInt(event.nativeEvent.data));
 			}
 		}
 	};
@@ -159,8 +159,6 @@ const ArticleContent = props => {
 	const showImg = src => {
 		Modal.popPhotoListViewModal([src]);
 	};
-
-	console.log('data.community_is_favorite', data.community_is_favorite);
 
 	return (
 		<View style={[style.container]}>

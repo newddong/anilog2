@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, TouchableWithoutFeedback, FlatList, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableWithoutFeedback, FlatList, TouchableOpacity, RefreshControl} from 'react-native';
 import {feedWrite, login_style, searchProtectRequest, temp_style} from 'Templete/style_templete';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {GRAY10, WHITE} from 'Root/config/color';
@@ -13,6 +13,8 @@ import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 import Loading from 'Root/component/molecules/modal/Loading';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
+import AnimalNeedHelp from 'Root/component/organism/listitem/AnimalNeedHelp';
+import MissingReportItem from 'Root/component/organism/listitem/MissingReportItem';
 
 export default MissingReportList = props => {
 	const navigation = useNavigation();
@@ -142,10 +144,6 @@ export default MissingReportList = props => {
 		);
 	};
 
-	React.useEffect(() => {
-		console.log('filterData', filterData);
-	}, [filterData]);
-
 	const onPressShowMissing = () => {
 		setOnlyMissing(!onlyMissing);
 		setOnlyReport(false);
@@ -181,65 +179,108 @@ export default MissingReportList = props => {
 		}
 	};
 
+	const renderItem = ({item, index}) => {
+		return <MissingReport item={item} index={index} />;
+	};
+
+	class MissingReport extends React.PureComponent {
+		render() {
+			return (
+				<MissingReportItem
+					data={getData()[this.props.index]}
+					onClickLabel={(status, id) => onClickLabel(status, id, this.props.item)}
+					onFavoriteTag={e => onOff_FavoriteTag(e, this.props.index)}
+					onPressProtectRequest={() => onPressProtectRequest(this.props.item)}
+				/>
+			);
+		}
+	}
+
+	const wait = timeout => {
+		return new Promise(resolve => setTimeout(resolve, timeout));
+	};
+	const onRefresh = () => {
+		setRefreshing(true);
+		wait(0).then(() => setRefreshing(false));
+	};
+
+	const ITEM_HEIGHT = 244 * DP;
+	const [refreshing, setRefreshing] = React.useState(false);
+	const keyExtractor = React.useCallback(item => item._id.toString(), []);
+	const getItemLayout = React.useCallback(
+		(data, index) =>
+			!data[index]
+				? {length: 0, offset: 0, index: index}
+				: {
+						length: ITEM_HEIGHT,
+						offset: ITEM_HEIGHT * index,
+						index,
+				  },
+		[],
+	);
+
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
-			<FlatList
-				horizontal={false}
-				data={[{}]}
-				listKey={({item, index}) => index}
-				renderItem={({item, index}) => (
-					<View style={{}}>
-						<View style={[searchProtectRequest.filterView]}>
-							<View style={[searchProtectRequest.filterView.inside]}>
-								<View style={{flexDirection: 'row'}}>
-									<View style={[temp_style.filterBtn]}>
-										{/* <FilterButton menu={PET_PROTECT_LOCATION} btnLayout={btn_w306_h68} onSelect={onSelectLocation} width={306} height={700} /> */}
-										<ArrowDownButton
-											onPress={onSelectLocation}
-											btnTitle={filterData.city || '지역'}
-											btnLayout={btn_w306_h68}
-											btnStyle={'border'}
-											btnTheme={'gray'}
-										/>
-									</View>
-									<View style={[temp_style.filterBtn]}>
-										{/* <FilterButton menu={petTypes} btnLayout={btn_w306_h68} onSelect={onSelectKind} width={306} /> */}
-										<ArrowDownButton
-											onPress={onSelectKind}
-											btnTitle={filterData.missing_animal_species || '동물 종류'}
-											btnLayout={btn_w306_h68}
-											btnStyle={'border'}
-											btnTheme={'gray'}
-										/>
-									</View>
-								</View>
-							</View>
-						</View>
-						<View style={[searchProtectRequest.kindFilter]}>
-							<View style={[searchProtectRequest.kindFilterItem]}>
-								<Text style={[txt.noto26, {color: GRAY10}]}> 제보글만 보기</Text>
-								{onlyMissing ? <Check50 onPress={onPressShowMissing} /> : <Rect50_Border onPress={onPressShowMissing} />}
-							</View>
-							<View style={[searchProtectRequest.kindFilterItem]}>
-								<Text style={[txt.noto26, {color: GRAY10}]}> 실종글만 보기</Text>
-								{onlyReport ? <Check50 onPress={onPressShowReport} /> : <Rect50_Border onPress={onPressShowReport} />}
-							</View>
-						</View>
-						{data == 'false' ? (
-							<Loading isModal={false} />
-						) : (
-							<View style={[searchProtectRequest.animalMissingReportList]}>
-								<AnimalNeedHelpList
-									data={getData()}
-									onFavoriteTag={(e, index) => onOff_FavoriteTag(e, index)}
-									onClickLabel={(status, id, item) => onClickLabel(status, id, item)}
-									whenEmpty={whenEmpty()}
+			<View style={{}}>
+				<View style={[searchProtectRequest.filterView]}>
+					<View style={[searchProtectRequest.filterView.inside]}>
+						<View style={{flexDirection: 'row'}}>
+							<View style={[temp_style.filterBtn]}>
+								{/* <FilterButton menu={PET_PROTECT_LOCATION} btnLayout={btn_w306_h68} onSelect={onSelectLocation} width={306} height={700} /> */}
+								<ArrowDownButton
+									onPress={onSelectLocation}
+									btnTitle={filterData.city || '지역'}
+									btnLayout={btn_w306_h68}
+									btnStyle={'border'}
+									btnTheme={'gray'}
 								/>
 							</View>
-						)}
+							<View style={[temp_style.filterBtn]}>
+								{/* <FilterButton menu={petTypes} btnLayout={btn_w306_h68} onSelect={onSelectKind} width={306} /> */}
+								<ArrowDownButton
+									onPress={onSelectKind}
+									btnTitle={filterData.missing_animal_species || '동물 종류'}
+									btnLayout={btn_w306_h68}
+									btnStyle={'border'}
+									btnTheme={'gray'}
+								/>
+							</View>
+						</View>
 					</View>
+				</View>
+				<View style={[searchProtectRequest.kindFilter]}>
+					<View style={[searchProtectRequest.kindFilterItem]}>
+						<Text style={[txt.noto26, {color: GRAY10}]}> 제보글만 보기</Text>
+						{onlyMissing ? <Check50 onPress={onPressShowMissing} /> : <Rect50_Border onPress={onPressShowMissing} />}
+					</View>
+					<View style={[searchProtectRequest.kindFilterItem]}>
+						<Text style={[txt.noto26, {color: GRAY10}]}> 실종글만 보기</Text>
+						{onlyReport ? <Check50 onPress={onPressShowReport} /> : <Rect50_Border onPress={onPressShowReport} />}
+					</View>
+				</View>
+				{data == 'false' ? (
+					<Loading isModal={false} />
+				) : (
+					<FlatList
+						data={getData()}
+						style={{backgroundColor: '#fff'}}
+						renderItem={renderItem}
+						showsVerticalScrollIndicator={false}
+						keyExtractor={keyExtractor}
+						getItemLayout={getItemLayout}
+						refreshing
+						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+						ListEmptyComponent={whenEmpty}
+						// https://reactnative.dev/docs/optimizing-flatlist-configuration
+						removeClippedSubviews={true}
+						extraData={refreshing}
+						initialNumToRender={15}
+						// maxToRenderPerBatch={5} // re-render를 막는군요.
+						windowSize={11}
+						// https://reactnative.dev/docs/optimizing-flatlist-configuration
+					/>
 				)}
-			/>
+			</View>
 
 			{showUrgentBtns ? (
 				<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>

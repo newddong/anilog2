@@ -13,10 +13,11 @@ import ProtectionTopTabNavigation from './protection_tab/ProtectionTopTabNavigat
 import AlarmAndSearchHeader from 'Root/navigation/header/AlarmAndSearchHeader';
 import SimpleHeader from 'Root/navigation/header/SimpleHeader';
 import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballHeader';
-import ProtectCommentList from 'Root/component/templete/protection/ProtectCommentList';
-import EditAidRequest from 'Root/component/templete/protection/EditAidRequest';
-import AlarmList from 'Root/component/templete/list/AlarmList';
-import AlarmCommentList from 'Root/component/organism/comment/AlarmCommentList';
+import ProtectCommentList from 'Templete/protection/ProtectCommentList';
+import EditAidRequest from 'Templete/protection/EditAidRequest';
+import AlarmList from 'Templete/list/AlarmList';
+import AlarmCommentList from 'Organism/comment/AlarmCommentList';
+import UserNotePage from 'Templete/user/UserNotePage';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
 
@@ -74,8 +75,28 @@ export default ProtectionStackNavigation = props => {
 				component={Profile}
 				options={{header: props => <MeatBallHeader {...props} />, title: '프로필'}}
 			/>
+
+			{/* 알람용 */}
 			<ProtectionStack.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
 			<ProtectionStack.Screen name="AlarmCommentList" component={AlarmCommentList} options={{header: props => <SimpleHeader {...props} />}} />
+			<ProtectionStack.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />}} />
+			<ProtectionStack.Screen
+				name={'ArticleDetail'}
+				component={ArticleDetail}
+				options={({route}) => ({
+					headerShown: true,
+					header: props => <SimpleHeader {...props} />,
+					title: ' ',
+				})}
+			/>
+			<ProtectionStack.Screen
+				name={'ReviewDetail'}
+				component={ReviewDetail}
+				options={({route}) => ({
+					header: props => <SimpleHeader {...props} />,
+					title: ' ',
+				})}
+			/>
 			<ProtectionStack.Screen
 				name="EditShelterInfo"
 				component={EditShelterInfo}

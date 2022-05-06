@@ -1,6 +1,17 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet} from 'react-native';
+import {
+	Text,
+	View,
+	ScrollView,
+	TouchableOpacity,
+	TextInput,
+	ActivityIndicator,
+	StyleSheet,
+	KeyboardAvoidingView,
+	Platform,
+	Keyboard,
+} from 'react-native';
 import {GRAY10, GRAY40, APRI10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {DEFAULT_PROFILE, MODIFY_PROFILE} from 'Root/i18n/msg';
@@ -15,6 +26,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import {getUserInfoById, getUserProfile, updateUserIntroduction} from 'Root/api/userapi';
 import DP from 'Root/config/dp';
 import Loading from 'Root/component/molecules/modal/Loading';
+import {useKeyboardBottom} from 'Root/component/molecules/input/usekeyboardbottom';
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 export default UserInfoSetting = ({route}) => {
 	// console.log('userInfoSetting', route);
@@ -94,7 +106,7 @@ export default UserInfoSetting = ({route}) => {
 	const modify_finalize = () => {
 		setModifyMode(!modifyMode);
 		updateUserIntroduction(
-			{user_introduction: data.user_introduction},
+			{userobject_id: data._id, user_introduction: data.user_introduction},
 			success => {
 				console.log('introduction modify api', success);
 			},
@@ -108,11 +120,15 @@ export default UserInfoSetting = ({route}) => {
 	const modifyIntroText = text => {
 		setData({...data, user_introduction: text});
 	};
+
 	if (data == 'false') {
 		return <Loading isModal={false} />;
 	} else {
 		return (
-			<View style={[login_style.wrp_main, {flex: 1}]}>
+			<KeyboardAvoidingView
+				style={[login_style.wrp_main, {flex: 1}]}
+				behavior={Platform.OS == 'ios' ? 'position' : 'height'}
+				contentContainerStyle={{alignItems: 'center'}}>
 				<ScrollView>
 					{/* step1 */}
 					<View style={[temp_style.userInfoSetting_step1]}>
@@ -224,6 +240,8 @@ export default UserInfoSetting = ({route}) => {
 							</View>
 						</View>
 					</View>
+					<View style={[temp_style.vertical_border, {marginTop: 30 * DP}]}></View>
+
 					{/* step3 - MyPetList */}
 					<View style={[temp_style.myPetList]}>
 						<View style={[temp_style.myPetList_title]}>
@@ -236,7 +254,7 @@ export default UserInfoSetting = ({route}) => {
 						</View>
 					</View>
 				</ScrollView>
-			</View>
+			</KeyboardAvoidingView>
 		);
 	}
 };

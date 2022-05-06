@@ -14,6 +14,7 @@ import {assignVolunteerActivity, setVolunteerActivityAcceptByMember, setVoluntee
 import userGlobalObject from 'Root/config/userGlobalObject';
 import UserDescriptionLabel from 'Root/component/molecules/label/UserDescriptionLabel';
 import {useKeyboardBottom} from 'Root/component/molecules/input/usekeyboardbottom';
+import {PHONE_FORM} from 'Root/i18n/msg';
 
 //관련 DB테이블 - VolunteerActivityApplicantObject
 export default ApplyVolunteer = ({route, navigation}) => {
@@ -320,7 +321,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 								keyboardType={'phone-pad'}
 								onChange={onChangePhoneNumber}
 								value={data.volunteer_delegate_contact}
-								alert_msg={'전화번호는 - 을 제외하고 10~11자로 작성해주세요'}
+								alert_msg={PHONE_FORM}
 								showMsg
 								confirm_msg={'올바른 전화번호 양식입니다.'}
 								validator={phoneValidate}

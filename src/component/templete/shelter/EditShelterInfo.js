@@ -1,12 +1,12 @@
 import React from 'react';
-import {KeyboardAvoidingView, ScrollView, Text, View} from 'react-native';
+import {KeyboardAvoidingView, Platform, ScrollView, Text, View} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {login_style, temp_style, editShelterInfo, btn_style, assignPetInfo_style} from 'Templete/style_templete';
 import AddressInput from 'Organism/input/AddressInput';
 import Input30 from 'Molecules/input/Input30';
 import InputWithEmail from 'Molecules/input/InputWithEmail';
 import DatePicker from 'Molecules/select/DatePicker';
-import {COMPLETE_MODIFY, EMAIL_DOMAIN, NICKNAME_FORM} from 'Root/i18n/msg';
+import {COMPLETE_MODIFY, EMAIL_DOMAIN, NICKNAME_FORM, PHONE_FORM} from 'Root/i18n/msg';
 import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import {GRAY10} from 'Root/config/color';
@@ -16,6 +16,7 @@ import {updateShelterDetailInformation} from 'Root/api/userapi';
 import DP from 'Root/config/dp';
 import {useNavigation} from '@react-navigation/native';
 import Input24 from 'Root/component/molecules/input/Input24';
+import {useKeyboardBottom} from 'Root/component/molecules/input/usekeyboardbottom';
 
 export default EditShelterInfo = ({route, navigation}) => {
 	const [data, setData] = React.useState(route.params.data);
@@ -113,6 +114,14 @@ export default EditShelterInfo = ({route, navigation}) => {
 		return regPhone.test(num) || regHomePhone.test(num);
 	};
 
+	const onFocusHomePage = () => {
+		setKeyboardPadding(200);
+	};
+
+	const onBlurHomePage = () => {
+		setKeyboardPadding(0);
+	};
+
 	//수정 완료 클릭
 	const finalized = () => {
 		let regEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
@@ -129,7 +138,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 					updateShelterDetailInformation(
 						{
 							userobject_id: data._id,
-							shelter_name: data.shelter_name,
+							user_nickname: data.user_nickname,
 							shelter_address: data.shelter_address,
 							shelter_delegate_contact_number: data.shelter_delegate_contact_number,
 							user_email: data.user_email,
@@ -165,10 +174,11 @@ export default EditShelterInfo = ({route, navigation}) => {
 		}
 	};
 
+	const [keyboardPadding, setKeyboardPadding] = React.useState(0);
 	return (
-		<KeyboardAvoidingView style={[login_style.wrp_main, {flex: 1}]} behavior={'position'} contentContainerStyle={{alignItems: 'center'}}>
+		<View style={[login_style.wrp_main, {height: 2000 * DP, bottom: keyboardPadding * DP}]}>
 			<View style={[editShelterInfo.shelterInfoForm]}>
-				<ScrollView>
+				<ScrollView showsVerticalScrollIndicator={false}>
 					{/* 보호소 이름 */}
 					<View style={[editShelterInfo.input30WithMsg]}>
 						<View style={[editShelterInfo.category, {width: null}]}>
@@ -229,7 +239,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 								defaultValue={data.shelter_delegate_contact_number}
 								keyboardType={'number-pad'}
 								width={500}
-								alert_msg={'전화번호는 - 을 제외하고 10~11자로 작성해주세요'}
+								alert_msg={PHONE_FORM}
 								showMsg
 								confirm_msg={'올바른 전화번호 양식입니다.'}
 								onChange={onChangeContact}
@@ -273,6 +283,8 @@ export default EditShelterInfo = ({route, navigation}) => {
 								showMsg={false}
 								showCrossMark={false}
 								width={500}
+								onFocus={onFocusHomePage}
+								onBlur={onBlurHomePage}
 								onClear={onClearHomepage}
 								maxLength={80}
 								confirm={true}
@@ -300,6 +312,6 @@ export default EditShelterInfo = ({route, navigation}) => {
 			<View style={[editShelterInfo.btn_w654, {marginTop: 110 * DP}]}>
 				<AniButton btnLayout={btn_w654} btnStyle={'border'} btnTitle={COMPLETE_MODIFY} titleFontStyle={32} onPress={finalized} />
 			</View>
-		</KeyboardAvoidingView>
+		</View>
 	);
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, Dimensions, Platform, FlatList, TouchableOpacity, ActivityIndicator, Image, ScrollView} from 'react-native';
 import {WHITE, GRAY10, APRI10} from 'Root/config/color';
-import DP from 'Root/config/dp';
+import DP, {isNotch} from 'Root/config/dp';
 import Modal from 'Component/modal/Modal';
 import {getUserInfoById} from 'Root/api/userapi';
 import userGlobalObj from 'Root/config/userGlobalObject';
@@ -20,10 +20,6 @@ const AvatarSelectFromWriteModal = props => {
 	const [items, setItems] = React.useState('');
 	const scrollViewRef = React.useRef();
 	const [scrollIndex, setScrollIndex] = React.useState(0);
-
-	React.useEffect(() => {
-		console.log('scrollIndex', scrollIndex);
-	}, [scrollIndex]);
 
 	React.useEffect(() => {
 		getUserInfoById(
@@ -59,7 +55,7 @@ const AvatarSelectFromWriteModal = props => {
 		};
 		if (item.user_type == 'pet') {
 			return (
-				<View key={index} style={[style.listItem]}>
+				<View key={index} style={[style.listItem, {}]}>
 					<TouchableOpacity onPress={onClickLabel} style={[style.avatarName]}>
 						<Text numberOfLines={1} ellipsizeMode={'tail'} style={[txt.noto26, {paddingHorizontal: 10 * DP}]}>
 							{item.user_nickname}
@@ -107,18 +103,10 @@ const AvatarSelectFromWriteModal = props => {
 	} else
 		return (
 			<TouchableOpacity onPress={() => Modal.close()} activeOpacity={1} style={style.background}>
-				{/* <View
-					style={[
-						{
-							width: 654 * DP,
-							alignSelf: 'center',
-							alignItems: 'center',
-							// backgroundColor: 'yellow',
-						},
-					]}>
-					<Text style={[txt.roboto40b, {color: WHITE}]}>계정을 선택해주세요.  </Text>
-				</View> */}
-				<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
+				<TouchableOpacity
+					activeOpacity={1}
+					onPress={() => Modal.close()}
+					style={[style.popUpWindow, {marginBottom: Platform.OS == 'android' ? 180 * DP : 235 * DP}]}>
 					{scrollIndex >= Math.floor(items.length / 4) || items.length <= 4 ? (
 						<></>
 					) : (
@@ -148,9 +136,6 @@ const AvatarSelectFromWriteModal = props => {
 							keyExtractor={item => item._id}
 							inverted={true}
 							scrollEnabled={false}
-							// onScroll={onScroll}
-							// onScrollAnimationEnd={e => console.log('e', e.nativeEvent.locationY)}
-							// onEndReached={() => setScrollIndex(Math.floor(1 + items.length / 4))}
 							showsVerticalScrollIndicator={false}
 						/>
 					</View>
@@ -200,7 +185,7 @@ const style = StyleSheet.create({
 		// width: 488 * DP,
 		marginBottom: 235 * DP,
 		marginRight: 35 * DP,
-		// backgroundColor: 'green',
+		// backgroundColor: 'white',
 	},
 	avatarList: {
 		maxHeight: 114 * 4 * DP,
@@ -208,10 +193,11 @@ const style = StyleSheet.create({
 	},
 	avatarName: {
 		// maxWidth: 340 * DP,
-		height: 54 * DP,
+		// height: 54 * DP,
 		borderRadius: 20 * DP,
 		marginRight: 10 * DP,
 		paddingHorizontal: 5 * DP,
+		padding: 20 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 		backgroundColor: 'white',
@@ -229,6 +215,7 @@ const style = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'flex-end',
+		// backgroundColor: 'red',
 	},
 	triangle: {
 		alignSelf: 'flex-end',

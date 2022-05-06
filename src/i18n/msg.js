@@ -167,7 +167,7 @@ export const PET = 'pet';
 export const SHELTER = 'shelter';
 
 //통신사
-export const mobile_carrier = ['SK텔레콤', 'LG U+', 'KT', '알뜰'];
+export const mobile_carrier = ['SK텔레콤', 'LG U+', 'KT', '알뜰폰'];
 
 //이메일 도메인
 export const EMAIL_DOMAIN = [
@@ -406,6 +406,9 @@ export const NEW_NICK_TITLE = '새 닉네임';
 export const UNAVAILABLE_NICK = '사용 불가한 닉네임입니다.';
 export const AVAILABLE_NICK = '사용 가능한 닉네임입니다!';
 
+//연락처 설정 관련
+export const PHONE_FORM = '전화번호는 - 을 제외하고 9~11자로 작성해주세요';
+
 //FilterButton 관련
 
 //Meatball
@@ -443,12 +446,12 @@ export const FOLLOWER_MENU = ['즐겨찾기 추가', '소식 받기', '차단', 
 export const FOLLOWER_PET_MENU = ['즐겨찾기 추가', '소식 받기', '차단', '팔로우 취소', '입양하기'];
 
 //피드 미트볼 메뉴 리스트
-export const FEED_MEATBALL_MENU_FOLLOWING = ['쪽지 보내기', '즐겨찾기', '게시물 알람 설정', '팔로우 취소', '신고'];
+export const FEED_MEATBALL_MENU_FOLLOWING = ['쪽지 보내기', '즐겨찾기', '팔로우 취소', '신고'];
 export const FEED_MEATBALL_MENU_UNFOLLOWING = ['쪽지 보내기', '팔로우', '즐겨찾기', '신고'];
-export const FEED_MEATBALL_MENU_FOLLOWING_UNFAVORITE = ['쪽지 보내기', '즐겨찾기 취소', '게시물 알람 설정', '팔로우 취소', '신고'];
+export const FEED_MEATBALL_MENU_FOLLOWING_UNFAVORITE = ['쪽지 보내기', '즐겨찾기 취소', '팔로우 취소', '신고'];
 export const FEED_MEATBALL_MENU_UNFOLLOWING_UNFAVORITE = ['쪽지 보내기', '팔로우', '즐겨찾기 취소', '신고'];
 export const FEED_MEATBALL_MENU_MY_FEED = ['수정', '삭제'];
-export const FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS = ['수정', '삭제'];
+export const FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS = ['상태변경', '수정', '삭제'];
 export const FEED_MEATBALL_MENU = ['신고'];
 
 //신고 목록

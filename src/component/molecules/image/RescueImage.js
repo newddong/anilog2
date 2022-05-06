@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, Image, StyleSheet} from 'react-native';
+import {Text, View, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import Swiper from 'react-native-swiper';
 import {APRI10, BLACK, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
@@ -13,6 +13,7 @@ import {RainbowBridge} from 'Root/component/atom/icon';
  * @param {object} props - Props Object
  * @param {string} props.img_uri - 이미지 Uri
  * @param {'rescue'|'discuss'|'nearrainbow'|'adopt'|'protect'} props.status - 동물의 보호활동 상태
+ * @param {()=>void)} props.onPressReqeustPhoto - 보호 게시글 이미지 클릭시
  */
 const RescueImage = props => {
 	// console.log('props / RescueImage', props.status);
@@ -35,7 +36,7 @@ const RescueImage = props => {
 		}
 	};
 	return (
-		<View style={[styles.img_rect_654x542, {zIndex: -2}]}>
+		<TouchableOpacity activeOpacity={0.8} onPress={() => props.onPressReqeustPhoto()} style={[styles.img_rect_654x542, {zIndex: -2}]}>
 			<Swiper showsPagination={false} autoplay={false} loop={false} horizontal={true}>
 				{props.img_uri != undefined &&
 					props.img_uri.map((data, idx) => (
@@ -63,12 +64,13 @@ const RescueImage = props => {
 			) : (
 				<></>
 			)}
-		</View>
+		</TouchableOpacity>
 	);
 };
 
 RescueImage.defaultProps = {
 	status: 'rescue',
+	onPressReqeustPhoto: () => {},
 };
 
 const style = StyleSheet.create({

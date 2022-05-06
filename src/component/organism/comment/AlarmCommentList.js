@@ -180,6 +180,7 @@ const AlarmCommentList = props => {
 								setComments(comments.msg);
 								parentComment && addChildCommentFn.current();
 								console.log('comments', comments);
+								setPrivateComment(false);
 								input.current.blur();
 								flatListRef.current.scrollToOffset({offset: 0});
 							},
@@ -211,6 +212,7 @@ const AlarmCommentList = props => {
 								setComments(comments.msg);
 								parentComment && addChildCommentFn.current();
 								console.log('comments', comments);
+								setPrivateComment(false);
 								input.current.blur();
 								flatListRef.current.scrollToOffset({offset: 0});
 							},

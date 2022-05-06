@@ -22,6 +22,8 @@ import {createReport} from 'Root/api/report';
  * @param {(id:string)=>void} props.onPressDelete - 댓글 삭제
  * @param {(id:string)=>void} props.onPressDeleteChild - 대댓글 삭제
  * @param {(data:object)=>void} props.onEdit - 댓글 수정
+ * @param {(data:object)=>void} props.showChild - 답글 ~~개보기 클릭
+ * @param {boolean} props.openChild - 자식 댓글 보이기 여부
  */
 export default ParentComment = React.memo((props, ref) => {
 	// console.log('ParentComment : ', props.parentComment.comment_writer_id.user_nickname, props.parentComment.comment_is_secure);
@@ -41,7 +43,10 @@ export default ParentComment = React.memo((props, ref) => {
 
 	React.useEffect(() => {
 		if (props.parentComment._id == props.parent) {
-			console.log('대댓글 부모댓글');
+			showChildComment();
+		}
+		if (props.openChild) {
+			//자식댓글을 여는 props
 			showChildComment();
 		}
 	}, []);
@@ -54,11 +59,13 @@ export default ParentComment = React.memo((props, ref) => {
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			result => {
-				// console.log(result.msg);
+				// console.log('getChildCommentList', result.msg.length);
 				setChild(result.msg.filter(e => e.comment_is_delete != true));
 				!showChild && setShowChild(true);
 			},
-			err => Modal.alert(err),
+			error => {
+				console.log(error);
+			},
 		);
 	};
 
@@ -109,14 +116,18 @@ export default ParentComment = React.memo((props, ref) => {
 				// });
 				setChild(result.msg.filter(e => e.comment_is_delete != true));
 				setShowChild(!showChild);
+				props.showChild();
 			},
-			err => Modal.alert(err),
+			error => {
+				console.log(error);
+			},
 		);
 	};
 
 	//미트볼 -> 수정 클릭
 	const onEdit = data => {
-		props.onEdit && props.onEdit(data);
+		// console.log('props.parentComment', props.parentComment);
+		props.onEdit && props.onEdit(data, props.parentComment._id);
 	};
 
 	const onDelete = () => {
@@ -139,8 +150,6 @@ export default ParentComment = React.memo((props, ref) => {
 	const onPressMeatball = () => {
 		meatballRef.current.measure((fx, fy, width, height, px, py) => {
 			const isWriter = userGlobalObject.userInfo._id == data.comment_writer_id._id;
-			console.log('px', px);
-			console.log('py', py);
 			if (isWriter) {
 				Modal.popSelectBoxModal(
 					REPLY_MEATBALL_MENU_MY_REPLY,
@@ -254,8 +263,8 @@ export default ParentComment = React.memo((props, ref) => {
 			<View style={[organism_style.UserLocationTimeLabel_view_parentComment, {}]}>
 				<View style={[parentComment.userLabelContainer, {}]} collapsable={false} ref={meatballRef}>
 					<UserLocationTimeLabel data={data.comment_writer_id} time={data.comment_update_date} target={props.target} />
-					{isNotAuthorized() ? (
-						<View style={[parentComment.secureIcon]}>
+					{data.comment_is_secure ? (
+						<View style={[parentComment.secureIcon, {justifyContent: 'center'}]}>
 							<SecureIcon40 />
 						</View>
 					) : (
@@ -323,4 +332,6 @@ ParentComment.defaultProps = {
 	onPressReplyBtn: e => console.log(e), //부모 댓글의 답글 쓰기 클릭 이벤트
 	onPressDelete: () => {},
 	onPressDeleteChild: () => {},
+	showChild: () => {},
+	openChild: false,
 };

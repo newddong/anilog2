@@ -78,6 +78,7 @@ export default AssignShelterAddress = props => {
 	const nameValidator = name => {
 		return regExp.test(name);
 	};
+
 	const onValidName = isValid => {
 		setConfirmName(isValid);
 	};

@@ -27,7 +27,18 @@ export default VolunteerItem = props => {
 
 	const getStatusText_notDone = () => {
 		let text = '활동 예정';
-		data.volunteer_status == 'waiting' ? (text = '수락 대기중') : (text = '활동 예정');
+		const findMyStatus = data.volunteer_accompany.findIndex(e => e.member._id == userGlobalObject.userInfo._id);
+		if (userGlobalObject.userInfo.user_type == 'user') {
+			data.volunteer_status == 'waiting' //보호소가 승락하지 않은 상태라면 '수락 대기중'
+				? (text = '수락 대기중')
+				: data.volunteer_accompany[findMyStatus].confirm == 'accept' // 보호소가 승락을 하였으면 사용자 계정의 승락여부에 따른 출력 텍스트 분기처리
+				? (text = '활동 예정')
+				: (text = '참여 거절');
+		} else {
+			data.volunteer_status == 'waiting' //보호소가 승락하지 않은 상태라면 '수락 대기중'
+				? (text = '수락 대기중')
+				: (text = '활동 예정');
+		}
 		return text;
 	};
 
@@ -40,8 +51,6 @@ export default VolunteerItem = props => {
 		let text = '활동 완료';
 		if (props.isShelterUser) {
 			switch (data.volunteer_status) {
-				case 'accept':
-				case 'done':
 				case 'waiting':
 					text = '만료';
 					break;
@@ -51,13 +60,14 @@ export default VolunteerItem = props => {
 				case 'cancel':
 					text = '신청취소';
 					break;
+				case 'accept':
+				case 'done':
+					text = '활동 완료';
 				default:
 					break;
 			}
 		} else {
 			switch (data.volunteer_status) {
-				case 'accept':
-				case 'done':
 				case 'waiting':
 					text = '만료';
 					break;
@@ -66,7 +76,9 @@ export default VolunteerItem = props => {
 					break;
 				case 'notaccept':
 					text = '활동 거절';
-
+				case 'accept':
+				case 'done':
+					text = '활동 완료';
 				default:
 					break;
 			}

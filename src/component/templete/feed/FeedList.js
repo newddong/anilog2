@@ -13,6 +13,7 @@ import {login_style, buttonstyle} from 'Templete/style_templete';
 import {getStringLength, getLinesOfString} from 'Root/util/stringutil';
 import {GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 export default FeedList = ({route, navigation}) => {
 	const [feedList, setFeedList] = React.useState([]);
 	const [refreshing, setRefreshing] = React.useState(false);
@@ -306,7 +307,7 @@ export default FeedList = ({route, navigation}) => {
 			{false && (
 				<View style={{backgroundColor: 'red', width: 750 * DP, top: 0, position: 'absolute'}}>
 					<View style={{backgroundColor: 'yellow', marginBottom: 20}}>
-						<Text style={{fontSize: 8}}>
+						<Text style={{fontSize: 12}}>
 							텍스트 사이즈 테스트용
 							{'\n'}기기 레이아웃 {Dimensions.get('window').width} DP,해상도{Dimensions.get('window').width * PixelRatio.get()}px
 							{'\n'}컨테이너 높이 : {cl.height}, {'\n'}너비 : {cl.width} {'\n'}W/H : {cl.width / cl.height}
@@ -387,6 +388,15 @@ export default FeedList = ({route, navigation}) => {
 							{testTx}
 						</Text>
 					</View>
+					<TouchableWithoutFeedback
+						onPress={() => {
+							NativeModules.TextMeasureModule.getTextWidthTable({
+								fontFamily: 'NotoSansKR-Bold',
+								fontSize: fontSize,
+							}).then(r => console.log('폰트정보', r));
+						}}>
+						<View style={{backgroundColor: 'blue', width: 100, height: 100, bottom: 0, left: 0}} />
+					</TouchableWithoutFeedback>
 				</View>
 			)}
 		</View>

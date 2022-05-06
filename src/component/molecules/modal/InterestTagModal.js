@@ -11,6 +11,7 @@ import {getInterestsList} from 'Root/api/interestsapi';
 import ArrowDownButton from '../button/ArrowDownButton';
 import {btn_w242, btn_w280, btn_w280x68} from 'Root/component/atom/btn/btn_style';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
+import Loading from './Loading';
 /**
  * 관심사 추가 및 수정 모달
  * @param {'Activity'|'Location'|'Review'} category -  관심활동 / 관심지역 / 커뮤니티후기 분기
@@ -24,9 +25,9 @@ const InterestTagModal = props => {
 	// console.log('InterestTagModa', props.data);
 	//유저 오브젝트의 user_interests 의 더미데이터
 	// user_interests는 크게 location 및 activity로 구성
-
+	console.log('IntrestTagModal', props);
 	const [userInterestContent, setUserInterestContent] = React.useState([]);
-	const [userInterestLocation, setUserInterestLocation] = React.useState([]);
+	const [userInterestLocation, setUserInterestLocation] = React.useState(props.data);
 	const [userInterestReview, setUserInterestReview] = React.useState(props.data);
 
 	const [isSaved, setIsSaved] = React.useState(false); // '저장하지 않고 나가시겠습니까?' 메시지 출력 여부 판별
@@ -45,6 +46,10 @@ const InterestTagModal = props => {
 	const [selectedDistrict, setSelectedDistrict] = React.useState(''); // 시군구 선택 아이템
 	const [selectCityOpen, setSelectCityOpen] = React.useState(false);
 	const [selectDistrictOpen, setSelectDistrictOpen] = React.useState(false);
+
+	React.useEffect(() => {
+		console.log('ddddddd userInterest', userInterestLocation);
+	}, [userInterestLocation]);
 
 	React.useEffect(() => {
 		//커뮤니티 후기 글쓰기에서 호출한 관심태그 모달
@@ -98,16 +103,17 @@ const InterestTagModal = props => {
 			});
 			//현재 유저의 관심사 리스트를 목록들에 적용
 			const saveUserInterest = Object.entries(props.data).map(interest => {
-				// console.log('object', interest);
+				console.log('object', interest);
 				if (props.isActivation) {
 					tempUserInterestContentList.push(interest[1]);
 				} else {
 					tempUserInterestLocationList.push(interest[1]);
 				}
 
-				// console.log('아오..', tempUserInterestLocationList, tempUserInterestContentList);
+				console.log('아오..', tempUserInterestLocationList, tempUserInterestContentList);
 				setUserInterestContent(tempUserInterestContentList);
-				setUserInterestLocation(tempUserInterestLocationList);
+				// setUserInterestLocation(tempUserInterestLocationList);
+				setUserInterestLocation(tempUserInterestContentList);
 			});
 		}
 	}, []);
@@ -453,51 +459,54 @@ const InterestTagModal = props => {
 	};
 
 	const getActivityList = () => {
-		return (
-			<ScrollView>
-				{activityLists.map((v, i) => {
-					return (
-						<View key={i} style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
-							<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>{v.category}</Text>
-							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-								{v.content.length
-									? v.content.map((d, i) => {
-											if (i % 2 == 0) {
-												return null;
-											}
-											return (
-												<TouchableOpacity
-													onPress={() => onPressInterestActivationTag(d)}
-													key={i}
-													style={[userInterestContent.includes(d) ? style.contentText_userInterest : style.contentText]}>
-													<Text style={[txt.noto28, {color: userInterestContent.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
-												</TouchableOpacity>
-											);
-									  })
-									: null}
+		if (activityLists.length == 0) {
+			return <Loading isModal={false} smallBox={true} />;
+		} else
+			return (
+				<ScrollView>
+					{activityLists.map((v, i) => {
+						return (
+							<View key={i} style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
+								<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>{v.category}</Text>
+								<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+									{v.content.length
+										? v.content.map((d, i) => {
+												if (i % 2 == 0) {
+													return null;
+												}
+												return (
+													<TouchableOpacity
+														onPress={() => onPressInterestActivationTag(d)}
+														key={i}
+														style={[userInterestContent.includes(d) ? style.contentText_userInterest : style.contentText]}>
+														<Text style={[txt.noto28, {color: userInterestContent.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
+													</TouchableOpacity>
+												);
+										  })
+										: null}
+								</View>
+								<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+									{v.content.length
+										? v.content.map((d, i) => {
+												if (i % 2 != 0) {
+													return null;
+												}
+												return (
+													<TouchableOpacity
+														key={i}
+														onPress={() => onPressInterestActivationTag(d)}
+														style={[userInterestContent.includes(d) ? style.contentText_userInterest : style.contentText]}>
+														<Text style={[txt.noto28, {color: userInterestContent.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
+													</TouchableOpacity>
+												);
+										  })
+										: null}
+								</View>
 							</View>
-							<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-								{v.content.length
-									? v.content.map((d, i) => {
-											if (i % 2 != 0) {
-												return null;
-											}
-											return (
-												<TouchableOpacity
-													key={i}
-													onPress={() => onPressInterestActivationTag(d)}
-													style={[userInterestContent.includes(d) ? style.contentText_userInterest : style.contentText]}>
-													<Text style={[txt.noto28, {color: userInterestContent.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
-												</TouchableOpacity>
-											);
-									  })
-									: null}
-							</View>
-						</View>
-					);
-				})}
-			</ScrollView>
-		);
+						);
+					})}
+				</ScrollView>
+			);
 	};
 
 	const getLocationList = () => {

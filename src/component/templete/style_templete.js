@@ -1701,6 +1701,7 @@ export const userInfoDetailSettting_style = StyleSheet.create({
 		flexDirection: 'row',
 		width: 654 * DP,
 		alignItems: 'center',
+		marginBottom: 20 * DP,
 		justifyContent: 'space-between',
 		backgroundColor: '#FFF',
 	},
@@ -1971,12 +1972,14 @@ export const assignPetInfo_style = StyleSheet.create({
 		borderBottomColor: APRI10,
 	},
 	petKind_text: {
-		width: 120 * DP,
+		minWidth: 120 * DP,
+		// width: 120 * DP,
 		height: 44 * DP,
 		textAlign: 'center',
 	},
 	pet_species_detail_text: {
-		width: 208 * DP,
+		minWidth: 208 * DP,
+		// width: 208 * DP,
 		height: 44 * DP,
 		textAlign: 'center',
 	},
@@ -3030,7 +3033,7 @@ export const feedListForHashTag = StyleSheet.create({
 	},
 	hashTagInfo: {
 		width: 702 * DP,
-		height: 232 * DP,
+		// height: 232 * DP,
 		alignItems: 'center',
 		// backgroundColor: 'lightblue',
 	},
@@ -3041,6 +3044,7 @@ export const feedListForHashTag = StyleSheet.create({
 		borderWidth: 2 * DP,
 		borderRadius: 40 * DP,
 		paddingLeft: 40 * DP,
+		marginBottom: 10 * DP,
 		borderColor: APRI10,
 		justifyContent: 'center',
 	},
@@ -3132,7 +3136,7 @@ export const searchProtectRequest = StyleSheet.create({
 		// height: 68 * DP,
 		backgroundColor: '#fff',
 		marginTop: 30 * DP,
-		marginBottom: 20 * DP,
+		marginBottom: 10 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 		inside: {
@@ -3159,7 +3163,7 @@ export const searchProtectRequest = StyleSheet.create({
 	},
 	kindFilter: {
 		// width: 270 * DP,
-		marginTop: 30 * DP,
+		marginTop: 10 * DP,
 		flexDirection: 'row',
 		alignSelf: 'flex-end',
 		marginRight: 48 * DP,
@@ -3947,6 +3951,7 @@ export const feedCommentList = StyleSheet.create({
 		width: 460 * DP,
 		marginRight: 12 * DP,
 		paddingVertical: 0,
+		paddingHorizontal: 10 * DP,
 		includeFontPadding: false,
 		// backgroundColor: 'pink',
 	},
@@ -4004,8 +4009,8 @@ export const feedCommentList = StyleSheet.create({
 		marginRight: 12 * DP,
 		paddingHorizontal: 20 * DP,
 		// paddingVertical: 12 * DP,
-		paddingBottom: 20 * DP,
-		backgroundColor: GRAY30,
+		paddingVertical: 20 * DP,
+		backgroundColor: GRAY40,
 	},
 	commentBox_top_photo: {
 		width: 694 * DP,
@@ -4030,6 +4035,12 @@ export const feedCommentList = StyleSheet.create({
 	},
 	commentBox_bottom_left: {
 		flexDirection: 'row',
+	},
+	commentContainer: {
+		paddingBottom: 10 * DP,
+		paddingTop: 20 * DP,
+		alignItems: 'center',
+		// backgroundColor: 'yellow',
 	},
 });
 
@@ -4635,8 +4646,8 @@ export const animalProtectRequestDetail_style = StyleSheet.create({
 		alignItems: 'flex-end',
 		alignSelf: 'flex-end',
 		marginTop: 30 * DP,
+		marginRight: 48 * DP,
 		marginBottom: 20 * DP,
-		// backgroundColor: 'red',
 	},
 });
 

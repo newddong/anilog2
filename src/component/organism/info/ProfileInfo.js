@@ -170,9 +170,9 @@ const ProfileInfo = props => {
 		Modal.close();
 		setTimeout(() => {
 			Modal.popTwoBtn(
-				data.user_nickname + '님을 \n 즐겨찾기 등록하시겠습니까?',
+				bool ? data.user_nickname + '님을 \n 즐겨찾기 등록하시겠습니까?' : data.user_nickname + '님을 \n 즐겨찾기 취소하시겠습니까?',
 				'아니오',
-				'등 록',
+				'확 인',
 				() => Modal.close(),
 				() => {
 					Modal.close();

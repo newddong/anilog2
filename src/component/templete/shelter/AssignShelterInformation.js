@@ -129,6 +129,7 @@ export default AssignShelterInformation = props => {
 						onChange={onChangePhoneNumber}
 						onValid={onValidPhoneNumber}
 						confirm={phoneConfirmed}
+						maxlength={8}
 						width={420}
 					/>
 					<Text style={{color: GRAY10}}>*기재한 전화번호로 로그인이 가능합니다.</Text>
@@ -140,7 +141,7 @@ export default AssignShelterInformation = props => {
 						value={data.user_email}
 						placeholder={'이메일 입력란'}
 						title={'E-mail'}
-						title_star={true}
+						title_star={false}
 						width={370}
 						onChange={onChangeEmail}
 						onValid={onValidEmail}
@@ -157,6 +158,7 @@ export default AssignShelterInformation = props => {
 						showHttp={true}
 						width={654}
 						showCrossMark={true}
+						maxlength={80}
 						onClear={onClearHomepage}
 						onChange={onChangeHp}
 					/>
@@ -174,7 +176,7 @@ export default AssignShelterInformation = props => {
 
 			{/* (A)Btn_w654 */}
 			<View style={[btn_style.btn_w654, assignShelterInformation_style.btn_w654]}>
-				{!phoneConfirmed || !emailConfirmed ? (
+				{!phoneConfirmed ? (
 					<AniButton btnTitle={'확인'} btnLayout={btn_w654} disable titleFontStyle={32} onPress={goToNextStep} />
 				) : (
 					<AniButton btnTitle={'확인'} btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} onPress={goToNextStep} />

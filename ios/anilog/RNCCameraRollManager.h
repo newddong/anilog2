@@ -22,10 +22,10 @@
 
 @interface RNCCameraRollManager : NSObject <RCTBridgeModule>
 
-@property (nonatomic, strong) RCTPromiseResolveBlock resolve;
-@property (nonatomic, strong) RCTPromiseRejectBlock reject;
-
-- (void)  image:(UIImage *)image
-  didFinishSavingWithError:(NSError *)error
-  contextInfo:(void *)contextInfo;
+//@property (nonatomic, strong) RCTPromiseResolveBlock resolve;
+//@property (nonatomic, strong) RCTPromiseRejectBlock reject;
+//
+//- (void)  image:(UIImage *)image
+//  didFinishSavingWithError:(NSError *)error
+//  contextInfo:(void *)contextInfo;
 @end

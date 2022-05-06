@@ -84,12 +84,13 @@ const CategoryHelp = ({route, props}) => {
 	}, [categoryName]);
 
 	const renderItem = ({item, index}) => {
-		// console.log('item', item);
+		console.log('item', item);
 		return (
 			<OneNotice
 				uptitle={item.common_code_msg_kor}
 				downtitle={item.help_by_category_title}
 				contents={item.help_by_category_contents.replace(/\\n/g, `\n`)}
+				long={true}
 			/>
 		);
 	};

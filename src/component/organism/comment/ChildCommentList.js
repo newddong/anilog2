@@ -20,7 +20,7 @@ const ChildCommentList = props => {
 		props.like && props.like(data);
 	};
 
-	const renderItem = (item, index) => {
+	const renderItem = ({item, index}) => {
 		return (
 			<View style={[organism_style.childCommentList]}>
 				<ChildCommentLinker />
@@ -28,7 +28,7 @@ const ChildCommentList = props => {
 			</View>
 		);
 	};
-	return <FlatList data={props.items} extraData={props.items} renderItem={({item, index}) => renderItem(item, index)} scrollEnabled={false} />;
+	return <FlatList data={props.items} extraData={props.items} renderItem={renderItem} scrollEnabled={false} />;
 };
 
 ChildCommentList.defaultProps = {

@@ -11,7 +11,7 @@ import DP from 'Root/config/dp';
  *
  * @param {Object} props - props object
  * @param {boolean} props.isModal - 모달인지 여부
- * @param {number} props.height - 컴포넌트 형식일 경우 height
+ * @param {boolean} props.smallBox - 컴포넌트 형식일 경우 height
  *
  */
 const Loading = props => {
@@ -23,11 +23,19 @@ const Loading = props => {
 					backgroundColor: '#0009',
 				},
 			]}>
-			<FastImage
-				style={{width: 200, height: 200}}
-				source={Image.resolveAssetSource(require('Atom/icon/loading.gif'))}
-				resizeMode={FastImage.resizeMode.contain}
-			/>
+			{Platform.OS == 'android' ? (
+				<FastImage
+					style={{width: 200, height: 200}}
+					source={Image.resolveAssetSource(require('Atom/icon/loading.gif'))}
+					resizeMode={FastImage.resizeMode.contain}
+				/>
+			) : (
+				<FastImage
+					style={{width: 200, height: 200}}
+					source={Image.resolveAssetSource(require('Atom/icon/loading.gif'))}
+					resizeMode={FastImage.resizeMode.contain}
+				/>
+			)}
 		</View>
 	) : (
 		<View
@@ -38,6 +46,14 @@ const Loading = props => {
 					justifyContent: 'flex-start',
 					flex: 1,
 				},
+				props.smallBox
+					? {
+							width: 400 * DP,
+							height: 400 * DP,
+							// alignItems: 'center',
+							alignSelf: 'center',
+					  }
+					: {},
 			]}>
 			<FastImage
 				style={{width: 200, height: 200}}
@@ -51,6 +67,7 @@ const Loading = props => {
 Loading.defaultProps = {
 	popUpMsg: 'popUp',
 	isModal: true,
+	smallBox: false,
 	height: 700 * DP,
 };
 

@@ -1,12 +1,12 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, SafeAreaView, StyleSheet, Platform, Dimensions, TextInput} from 'react-native';
+import {View, Text, TouchableOpacity, SafeAreaView, StyleSheet, Platform, Dimensions, TextInput, Keyboard, StatusBar} from 'react-native';
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
-import {WHITE, GRAY10, APRI10, GRAY20} from 'Root/config/color';
+import {WHITE, GRAY10, APRI10, GRAY20, GRAY40} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import DP from 'Root/config/dp';
-import InputLongText from '../input/InputLongText';
+import DP, {isNotch} from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
+import {useKeyboardBottom} from '../input/usekeyboardbottom';
 
 /**
  * 두 버튼을 띄우는 모달 컴포넌트
@@ -18,7 +18,29 @@ import Modal from 'Root/component/modal/Modal';
  *
  */
 const MessageModal = props => {
+	const [KeyboardY, setKeyboardY] = React.useState(0);
 	const [msg, setMsg] = React.useState('');
+
+	React.useEffect(() => {
+		let didshow = Keyboard.addListener('keyboardDidShow', e => {
+			setKeyboardY(120 * DP);
+		});
+		let didhide = Keyboard.addListener('keyboardDidHide', e => {
+			setKeyboardY(0);
+		});
+		let willshow = Keyboard.addListener('keyboardWillShow', e => {
+			setKeyboardY(120 * DP);
+		});
+		let willhide = Keyboard.addListener('keyboardWillHide', e => {
+			setKeyboardY(0);
+		});
+		return () => {
+			didshow.remove();
+			didhide.remove();
+			willshow.remove();
+			willhide.remove();
+		};
+	});
 
 	const onSend = () => {
 		props.onSend(msg);
@@ -31,9 +53,26 @@ const MessageModal = props => {
 		setMsg(text);
 	};
 
+	const onTouchOutSide = () => {
+		if (KeyboardY > 0) {
+			console.log('KeyboardY', KeyboardY);
+			Keyboard.dismiss();
+		} else {
+			Modal.close();
+		}
+	};
+
 	return (
-		<TouchableOpacity onPress={() => Modal.close()} activeOpacity={1} style={style.background}>
-			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
+		<TouchableOpacity onPress={onTouchOutSide} activeOpacity={1} style={style.background}>
+			<TouchableOpacity
+				activeOpacity={1}
+				style={[
+					style.popUpWindow,
+					style.shadow,
+					{
+						bottom: Platform.OS == 'ios' ? KeyboardY : null,
+					},
+				]}>
 				<Text style={[txt.noto28, style.receiver]} numberOfLines={1}>
 					받는이 : {props.receiver}
 				</Text>
@@ -73,7 +112,7 @@ const style = StyleSheet.create({
 	popUpWindow: {
 		width: 654 * DP,
 		height: 590 * DP,
-		backgroundColor: WHITE,
+		backgroundColor: GRAY40,
 		paddingTop: 50 * DP,
 		paddingBottom: 40 * DP,
 		paddingHorizontal: 26 * DP,
@@ -91,6 +130,7 @@ const style = StyleSheet.create({
 		borderColor: APRI10,
 		borderWidth: 2 * DP,
 		padding: 24 * DP,
+		backgroundColor: WHITE,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},

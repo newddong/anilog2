@@ -15,13 +15,13 @@ import ReviewDetail from 'Root/component/templete/community/ReviewDetail';
 import SearchMap from 'Root/component/templete/search/SearchMap';
 import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
 import WriteEditorTest from 'Root/component/templete/community/WriteEditorTest';
-import ReviewStackNavigation from './review_tab/ReviewStackNavigation';
 import {getFocusedRouteNameFromRoute, useNavigation} from '@react-navigation/core';
 import CommunityEdit from 'Root/component/templete/community/CommunityEdit';
 import ChangeUserProfileImage from 'Templete/user/ChangeUserProfileImage';
 import FeedList from 'Templete/feed/FeedList';
 import AlarmList from 'Templete/list/AlarmList';
 import AlarmCommentList from 'Organism/comment/AlarmCommentList';
+import UserNotePage from 'Templete/user/UserNotePage';
 import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
 
 const CommunityMainStackNavi = createStackNavigator();
@@ -144,8 +144,31 @@ export default CommunityMainStack = props => {
 					title: '프로필',
 				})}
 			/>
+
+			{/* 알람용 */}
 			<CommunityMainStackNavi.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
 			<CommunityMainStackNavi.Screen name="AlarmCommentList" component={AlarmCommentList} options={{header: props => <SimpleHeader {...props} />}} />
+			<CommunityMainStackNavi.Screen
+				name="ShelterVolunteerForm"
+				component={ApplicationFormVolunteer}
+				options={{header: props => <SimpleHeader {...props} />, title: '봉사활동 신청서'}}
+			/>
+			<CommunityMainStackNavi.Screen
+				name="ApplyAdoptionDetails"
+				component={ApplyDetails}
+				options={{header: props => <SimpleHeader {...props} />, title: '입양 신청 내역'}}
+			/>
+			<CommunityMainStackNavi.Screen
+				name="SetPetInformation"
+				component={SetPetInformation}
+				options={{header: props => <SaveButtonHeader {...props} />, title: '반려동물 상세 정보'}}
+			/>
+			<CommunityMainStackNavi.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />}} />
+			<CommunityMainStackNavi.Screen
+				name="FeedCommentList"
+				component={FeedCommentList}
+				options={{header: props => <AlarmAndSearchHeader {...props} />}}
+			/>
 			<CommunityMainStackNavi.Screen
 				name="EditShelterInfo"
 				component={EditShelterInfo}

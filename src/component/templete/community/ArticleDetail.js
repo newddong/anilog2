@@ -20,6 +20,7 @@ import {REPORT_MENU} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
+import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
 
 /**
  * 자유게시글 상세 내용
@@ -127,11 +128,16 @@ export default ArticleDetail = props => {
 				request_number: 1000,
 			},
 			comments => {
-				setComments(comments.msg.filter(e => e.comment_is_delete != true));
 				// console.log('comments', comments);
+				let res = comments.msg.filter(e => e.comment_is_delete != true);
+				let dummyForBox = res[res.length - 1];
+				res.push(dummyForBox);
+				setComments(res);
 			},
-			err => console.log('getCommentListByFeedId', err),
-			setComments([]),
+			err => {
+				console.log('getCommentListByFeedId', err);
+				setComments([]);
+			},
 		);
 	};
 
@@ -143,7 +149,7 @@ export default ArticleDetail = props => {
 			});
 		} else {
 			if (editData.comment_contents.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
-
+			Modal.popLoading(true);
 			let param = {
 				comment_contents: editData.comment_contents, //내용
 				comment_is_secure: privateComment, //공개여부 테스트때 반영
@@ -152,7 +158,10 @@ export default ArticleDetail = props => {
 
 			if (editData.comment_photo_uri && editData.comment_photo_uri.length > 0) {
 				param.comment_photo_uri = editData.comment_photo_uri;
+			} else {
+				param.comment_photo_remove = true;
 			}
+			param.comment_photo_uri = editData.comment_photo_uri == '' ? 'https:// ' : editData.comment_photo_uri;
 
 			if (parentComment) {
 				//대댓글일 경우 해당 부모 댓글에 대한 댓글을 추가
@@ -163,6 +172,7 @@ export default ArticleDetail = props => {
 			}
 
 			if (editMode) {
+				// console.log('editData', editData.parent);
 				let whichComment = '';
 				comments.map((v, i) => {
 					if (v._id == editData._id) {
@@ -173,10 +183,10 @@ export default ArticleDetail = props => {
 					{
 						...param,
 						commentobject_id: editData._id,
-						comment_photo_remove: !editData.comment_photo_uri || editData.comment_photo_uri == 0,
+						// comment_photo_remove: !editData.comment_photo_uri || editData.comment_photo_uri == 0,
 					},
 					result => {
-						console.log(result);
+						// console.log(result);
 						setParentComment();
 						setEditData({
 							comment_contents: '',
@@ -189,12 +199,18 @@ export default ArticleDetail = props => {
 							},
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
-								setComments(comments.msg.filter(e => e.comment_is_delete != true));
+								let res = comments.msg.filter(e => e.comment_is_delete != true);
+								let dummyForBox = res[res.length - 1];
+								res.push(dummyForBox);
+								setComments(res);
+								// setComments(comments.msg.filter(e => e.comment_is_delete != true));
 								parentComment && addChildCommentFn.current();
 								setPrivateComment(false);
-								// console.log('comments', comments);
+								setEditMode(false); // console.log('comments', comments);
+								Modal.close();
 								setTimeout(() => {
-									flatListRef.current.scrollToIndex({animated: true, index: whichComment});
+									console.log('whichComment', whichComment);
+									flatListRef.current.scrollToIndex({animated: true, index: whichComment == '' ? editData.parent : whichComment, viewPosition: 0.5});
 								}, 500);
 							},
 							err => console.log('getCommentListByFeedId', err),
@@ -205,16 +221,12 @@ export default ArticleDetail = props => {
 			} else {
 				let whichParent = '';
 				if (parentComment) {
-					comments.map((v, i) => {
-						if (v._id == param.commentobject_id) {
-							whichParent = i;
-						}
-					});
+					whichParent = comments.findIndex(e => e._id == param.commentobject_id);
 				}
 				createComment(
 					param,
 					result => {
-						console.log(result);
+						// console.log(result);
 						setParentComment();
 						setEditData({
 							comment_contents: '',
@@ -227,14 +239,19 @@ export default ArticleDetail = props => {
 							},
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
-								setComments(comments.msg.filter(e => e.comment_is_delete != true));
+								// setComments(comments.msg.filter(e => e.comment_is_delete != true));
+								let res = comments.msg.filter(e => e.comment_is_delete != true);
+								let dummyForBox = res[res.length - 1];
+								res.push(dummyForBox);
+								setComments(res);
 								parentComment && addChildCommentFn.current();
 								setPrivateComment(false);
-								// console.log('comments', comments);
+								setEditMode(false); // console.log('comments', comments);
+								Modal.close();
 								setTimeout(() => {
 									whichParent == ''
-										? flatListRef.current.scrollToIndex({animated: true, index: 0})
-										: flatListRef.current.scrollToIndex({animated: true, index: whichParent});
+										? flatListRef.current.scrollToIndex({animated: true, index: 0, viewPosition: 0.5})
+										: flatListRef.current.scrollToIndex({animated: true, index: whichParent, viewPosition: 1});
 								}, 500);
 								input.current.blur();
 							},
@@ -245,6 +262,11 @@ export default ArticleDetail = props => {
 				);
 			}
 		}
+	};
+
+	const onFocus = () => {
+		console.log('onFocus');
+		scrollToReplyBox();
 	};
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
@@ -283,13 +305,11 @@ export default ArticleDetail = props => {
 	};
 
 	const onDeleteImage = () => {
-		console.log('onDelete Img');
 		setEditData({...editData, comment_photo_uri: ''});
 	};
 
 	// 답글 쓰기 -> Input value 변경 콜백함수
 	const onChangeReplyInput = text => {
-		console.log('onChangeReplyInput : ', text);
 		setEditData({...editData, comment_contents: text});
 	};
 
@@ -300,27 +320,40 @@ export default ArticleDetail = props => {
 				navigation.navigate('Login');
 			});
 		} else {
-			console.log('대댓글 쓰기 버튼 클릭 : ', parentCommentId.comment_writer_id.user_nickname);
+			// console.log('대댓글 쓰기 버튼 클릭 : ', parentCommentId.comment_writer_id.user_nickname);
 			setParentComment(parentCommentId);
 			editComment || setEditComment(true);
+			setEditMode(false);
+			setEditData({
+				comment_contents: '',
+				comment_photo_uri: '',
+			});
 			addChildCommentFn.current = addChildComment;
 			scrollToReplyBox();
 		}
 	};
 
 	//미트볼, 수정을 누르면 동작
-	const onEdit = comment => {
-		console.log('수정 데이터', comment);
+	const onEdit = (comment, parent) => {
+		// console.log('수정 데이터', comment);
 		setEditMode(true);
-		setEditData({...comment});
+		const findParentIndex = comments.findIndex(e => e._id == parent);
+		setEditData({...comment, parent: findParentIndex});
+		setPrivateComment(comment.comment_is_secure);
 		scrollToReplyBox();
 	};
 
+	//수정이나 답글쓰기 눌렀을 때 스크롤 함수
 	const scrollToReplyBox = () => {
-		flatListRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 0});
+		flatListRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 0.5});
 		setTimeout(() => {
 			input.current?.focus();
 		}, 500);
+	};
+
+	//답글 더보기 클릭
+	const showChild = index => {
+		flatListRef.current.scrollToIndex({animated: true, index: index, viewPosition: 0, viewOffset: 0});
 	};
 
 	//답글 쓰기 후 댓글 작성자 우측 답글취소 버튼 클릭
@@ -421,7 +454,6 @@ export default ArticleDetail = props => {
 
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
-		console.log('articleList[index]', articleList[index]);
 		navigation.push('ArticleDetail', {community_object: articleList[index]});
 	};
 
@@ -492,28 +524,23 @@ export default ArticleDetail = props => {
 
 	const header = () => {
 		return (
-			<View>
-				<View style={{alignItems: 'center'}}>
-					<Article
-						data={data}
-						onPressMeatball={onPressMeatball}
-						onPressFavorite={onPressFavorite}
-						route={props.route.name}
-						searchInput={searchInput}
-					/>
-					<View style={[style.like, {}]}>
+			<View style={{alignItems: 'center'}}>
+				<Article data={data} onPressMeatball={onPressMeatball} onPressFavorite={onPressFavorite} route={props.route.name} searchInput={searchInput} />
+				<View style={[{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY40}]} />
+				<View style={[style.like, {}]}>
+					<View style={{flexDirection: 'row', width: 100 * DP, alignItems: 'center'}}>
 						{data.community_is_like ? <Like48_Filled onPress={() => onPressLike(false)} /> : <Like48_Border onPress={() => onPressLike(true)} />}
 						<Text style={[txt.noto24, {color: GRAY10, marginLeft: 15 * DP}]}>{data.community_like_count}</Text>
 					</View>
-					<View style={[style.separator]} />
+					{comments && comments.length > 0 ? (
+						<View style={[{alignItems: 'flex-end'}]}>
+							<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
+						</View>
+					) : (
+						<></>
+					)}
 				</View>
-				{comments && comments.length > 0 ? (
-					<TouchableOpacity onPress={onPressReply} style={[style.replyCountContainer]}>
-						<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개 모두 보기</Text>
-					</TouchableOpacity>
-				) : (
-					<></>
-				)}
+				{/* <View style={[style.separator]} /> */}
 			</View>
 		);
 	};
@@ -521,22 +548,26 @@ export default ArticleDetail = props => {
 	const bottom = () => {
 		return (
 			<View style={{alignItems: 'center'}}>
-				<View style={[{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY40}]} />
-				<View style={[{marginTop: 20 * DP, marginBottom: 30 * DP}]}>
-					<ReplyWriteBox
-						onAddPhoto={onAddPhoto}
-						onChangeReplyInput={onChangeReplyInput}
-						onLockBtnClick={onLockBtnClick}
-						onWrite={onWrite}
-						onDeleteImage={onDeleteImage}
-						privateComment={privateComment}
-						ref={input}
-						editData={editData}
-						shadow={false}
-						parentComment={parentComment}
-						onCancelChild={onCancelChild}
-					/>
-				</View>
+				{comments.length == 0 ? (
+					<View style={[{marginTop: 20 * DP, marginBottom: 30 * DP}]}>
+						<ReplyWriteBox
+							onAddPhoto={onAddPhoto}
+							onChangeReplyInput={onChangeReplyInput}
+							onLockBtnClick={onLockBtnClick}
+							onWrite={onWrite}
+							onDeleteImage={onDeleteImage}
+							privateComment={privateComment}
+							ref={input}
+							editData={editData}
+							shadow={false}
+							parentComment={parentComment}
+							onCancelChild={onCancelChild}
+							onFocus={onFocus}
+						/>
+					</View>
+				) : (
+					<></>
+				)}
 				<ArticleList
 					items={articleList}
 					onPressArticle={onPressArticle} //게시글 내용 클릭
@@ -546,18 +577,40 @@ export default ArticleDetail = props => {
 	};
 
 	const renderItem = ({item, index}) => {
-		// return item;
-		return (
-			<View style={[style.commentContainer]} key={item._id} onLayout={onLayoutCommentList}>
-				<ParentComment
-					parentComment={item}
-					onPressReplyBtn={onReplyBtnClick} // 부모 댓글의 답글쓰기 클릭 이벤트
-					onEdit={onEdit}
-					onPressDelete={onPressDelete}
-					onPressDeleteChild={onPressDelete}
-				/>
-			</View>
-		);
+		if (index == comments.length - 1) {
+			return (
+				<>
+					<View style={[{marginTop: 0 * DP, marginBottom: 30 * DP}]}>
+						<ReplyWriteBox
+							onAddPhoto={onAddPhoto}
+							onChangeReplyInput={onChangeReplyInput}
+							onLockBtnClick={onLockBtnClick}
+							onWrite={onWrite}
+							onDeleteImage={onDeleteImage}
+							privateComment={privateComment}
+							ref={input}
+							editData={editData}
+							shadow={false}
+							parentComment={parentComment}
+							onCancelChild={onCancelChild}
+							onFocus={onFocus}
+						/>
+					</View>
+				</>
+			);
+		} else
+			return (
+				<View style={[style.commentContainer, {}]} key={item._id} onLayout={onLayoutCommentList}>
+					<ParentComment
+						parentComment={item}
+						onPressReplyBtn={onReplyBtnClick} // 부모 댓글의 답글쓰기 클릭 이벤트
+						onEdit={onEdit}
+						onPressDelete={onPressDelete}
+						onPressDeleteChild={onPressDelete}
+						showChild={() => showChild(index)}
+					/>
+				</View>
+			);
 	};
 
 	if (comments == 'false' || data == 'false') {
@@ -574,6 +627,7 @@ export default ArticleDetail = props => {
 					showsVerticalScrollIndicator={false}
 					renderItem={renderItem}
 					ListEmptyComponent={<Text style={[txt.roboto28b, {color: GRAY10, paddingVertical: 40 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>}
+					removeClippedSubviews={false}
 				/>
 			</View>
 		);
@@ -639,7 +693,9 @@ const style = StyleSheet.create({
 		width: 654 * DP,
 		paddingVertical: 10 * DP,
 		marginBottom: 10 * DP,
+		marginTop: 10 * DP,
 		flexDirection: 'row',
 		alignItems: 'center',
+		justifyContent: 'space-between',
 	},
 });

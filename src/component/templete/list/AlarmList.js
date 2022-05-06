@@ -92,7 +92,7 @@ const AlarmList = props => {
 						// });
 						navigation.dispatch(
 							CommonActions.navigate({
-								name: 'Profile',
+								name: 'UserProfile',
 								params: {userobject: result.msg},
 							}),
 						);

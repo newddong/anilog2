@@ -135,7 +135,7 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
     }
 
     @ReactMethod
-    public void transferPhotos(final ReadableMap options, final Promise promise){
+    public void compressImage(final ReadableMap options, final Promise promise){
         ReadableArray medias = options.hasKey("imageFiles")?options.getArray("imageFiles"):null;
 
         PhotoListUtil.Options ops = new PhotoListUtil.Options(options);

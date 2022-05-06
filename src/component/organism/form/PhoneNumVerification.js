@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View} from 'react-native';
-import {GREEN} from 'Root/config/color';
+import {APRI10, GRAY10, GREEN} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {mobile_carrier} from 'Root/i18n/msg';
 import {btn_w226} from 'Atom/btn/btn_style';
@@ -11,6 +11,8 @@ import InputTimeLimit from 'Molecules/input/InputTimeLimit';
 import InputWithSelect from 'Molecules/input/InputWithSelect';
 import {btn_style, temp_style} from 'Templete/style_templete';
 import {phoneNumVerification} from 'Organism/style_organism copy';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import DP from 'Root/config/dp';
 /**
  *
  *@param {{
@@ -22,35 +24,36 @@ import {phoneNumVerification} from 'Organism/style_organism copy';
  * }} props
  */
 export default PhoneNumVerification = props => {
-	const [timeOut, setTimeOut] = React.useState(false);
-	const [timeLimit, setTimeLimit] = React.useState({limit: props.verifyTimeLimit});
-	const [userName, setUserName] = React.useState('');
+	// const [timeOut, setTimeOut] = React.useState(false);
+	// const [timeLimit, setTimeLimit] = React.useState({limit: props.verifyTimeLimit});
 	// const [validMobile, setValidMobile] = React.useState(false);
+	// const [validVerifyNum, setValidVerifyNum] = React.useState(false);
+	const [userName, setUserName] = React.useState('');
 	const validMobile = React.useRef(false);
 	const validVerifyNum = React.useRef(false);
 	const [validName, setValidName] = React.useState(false);
 	const [validPhone, setValidPhone] = React.useState(false);
-	// const [validVerifyNum, setValidVerifyNum] = React.useState(false);
-	const onEndTimer = () => {
-		setTimeOut(true);
-	};
-	const requestReVerification = () => {
-		if (!validMobile.current) {
-			Modal.popOneBtn('휴대전화번호를 먼저 입력해주세요.', '확인', () => Modal.close());
-		} else {
-			setTimeOut(false);
-			setTimeLimit({limit: props.verifyTimeLimit});
-			props.requestReVerification();
-		}
-	};
-	const requestVerification = () => {
-		console.log('validMobile', validMobile);
-		if (!validMobile.current) {
-			Modal.popOneBtn('휴대전화번호를 먼저 입력해주세요.', '확인', () => Modal.close());
-		} else {
-			props.requestVerification();
-		}
-	};
+
+	// const onEndTimer = () => {
+	// 	setTimeOut(true);
+	// };
+	// const requestReVerification = () => {
+	// 	if (!validMobile.current) {
+	// 		Modal.popOneBtn('휴대전화번호를 먼저 입력해주세요.', '확인', () => Modal.close());
+	// 	} else {
+	// 		setTimeOut(false);
+	// 		setTimeLimit({limit: props.verifyTimeLimit});
+	// 		props.requestReVerification();
+	// 	}
+	// };
+	// const requestVerification = () => {
+	// 	console.log('validMobile', validMobile);
+	// 	if (!validMobile.current) {
+	// 		Modal.popOneBtn('휴대전화번호를 먼저 입력해주세요.', '확인', () => Modal.close());
+	// 	} else {
+	// 		props.requestVerification();
+	// 	}
+	// };
 	const onNameInputChange = text => {
 		setUserName(text);
 		props.onNameInputChange(text);
@@ -97,7 +100,15 @@ export default PhoneNumVerification = props => {
 	};
 
 	React.useEffect(() => {
+		console.log('plzz valid', validName, validMobile.current, validPhone);
+		if (validName && validPhone) {
+			props.onValid(true);
+		}
+	}, [userName, validPhone]);
+
+	React.useEffect(() => {
 		let isValid = validVerifyNum.current && validMobile.current && props.asyncConfirm.isConfirm && validName;
+		console.log('isValid', isValid);
 		if (!isValid) {
 			// !validVerifyNum.current ? console.log('validVerifyNum.current') : null;
 			!validMobile.current ? console.log('validMobile.current') : null;
@@ -107,17 +118,17 @@ export default PhoneNumVerification = props => {
 		props.onValid && props.onValid(isValid);
 	}, [validVerifyNum, validName, validMobile, props.asyncConfirm]);
 
-	React.useEffect(() => {
-		setTimeLimit({...timeLimit, limit: props.verifyTimeLimit});
-		console.log('시간 재설정');
-	}, [props.verifyTimeLimit]);
+	// React.useEffect(() => {
+	// 	setTimeLimit({...timeLimit, limit: props.verifyTimeLimit});
+	// 	console.log('시간 재설정');
+	// }, [props.verifyTimeLimit]);
 
 	return (
 		<View style={[phoneNumVerification.container]}>
 			<View style={[temp_style.input30, phoneNumVerification.input30]}>
 				<Input30
 					showTitle={false}
-					width={654}
+					width={654 * DP}
 					placeholder={'이름 입력'}
 					onChange={onNameInputChange}
 					onValid={onValidName}
@@ -128,11 +139,13 @@ export default PhoneNumVerification = props => {
 					showmsg
 					alert_msg={'이름은 2자 이상으로 설정해주세요 '}
 					confirm_msg={'양식에 맞는 이름입니다.'}
+					maxLength={15}
 				/>
 			</View>
-			<View style={[temp_style.inputWithSelect, phoneNumVerification.inputWithSelect]}>
+			{/* <View style={[temp_style.input30, phoneNumVerification.input30]}> */}
+			<View style={[temp_style.inputWithSelect, {justifyContent: 'flex-start'}, {alignItems: 'flex-start'}, {flexDirection: 'row'}]}>
 				<InputWithSelect
-					width={654}
+					width={800 * DP}
 					items={mobile_carrier}
 					delimiter="|"
 					placeholder={'휴대폰 번호 입력(-제외)'}
@@ -140,19 +153,39 @@ export default PhoneNumVerification = props => {
 					onSelectDropDown={onMobileCompanyInputChange}
 					onValid={onValidMobileNum}
 					validator={mobileValidator}
+					maxlength={12}
 					// showMsg
 					// confirm_msg={'휴대전화 양식과 일치합니다.'}
 					keyboardType="numeric"
 				/>
+				{props.failed ? (
+					<View style={[{position: 'absolute', right: 5, bottom: 12}]}>
+						<TouchableOpacity onPress={props.requestVerification}>
+							<Text style={[txt.noto28b, {color: APRI10}, {textDecorationLine: 'underline'}]}>재인증</Text>
+						</TouchableOpacity>
+					</View>
+				) : (
+					<Text></Text>
+				)}
+				{props.phoneVerified ? (
+					<View style={[{position: 'absolute', right: 50, bottom: 12}]}>
+						<Text style={[txt.noto28b, {color: APRI10}]}>인증완료</Text>
+					</View>
+				) : (
+					<Text></Text>
+				)}
 			</View>
-			{validPhone ? (
+
+			<Text style={[txt.noto24, {color: GRAY10}]}>입력한 내용이 인증시 자동 입력됩니다.</Text>
+			{/* {validPhone ? (
 				<Text style={[txt.noto26, phoneNumVerification.phoneNumValidPassedText, {color: GREEN}]}>휴대전화번호 양식과 일치합니다. </Text>
 			) : (
 				<Text style={[txt.noto26, phoneNumVerification.phoneNumValidPassedText]}>휴대전화번호 양식에 맞춰주세요.</Text>
-			)}
+				<Text style={[txt.noto26, phoneNumVerification.phoneNumValidPassedText]}>휴대전화번호 양식에 맞춰주세요.</Text>
+			)} */}
 
 			<View style={[phoneNumVerification.inputTimeLimitContainer]}>
-				<View style={[phoneNumVerification.inputTimeLimit]}>
+				{/* <View style={[phoneNumVerification.inputTimeLimit]}>
 					<InputTimeLimit
 						width={400}
 						timelimit={timeLimit}
@@ -165,14 +198,14 @@ export default PhoneNumVerification = props => {
 						validator={verifyNumValidator}
 						onValid={onValidVerifyNum}
 					/>
-				</View>
-				<View style={[btn_style.btn_w226, phoneNumVerification.btn_w226]}>
+				</View> */}
+				{/* <View style={[btn_style.btn_w226, phoneNumVerification.btn_w226]}>
 					{timeOut ? (
 						<AniButton btnTitle={'인증 재요청'} btnStyle={'border'} onPress={requestReVerification} />
 					) : (
 						<AniButton btnTitle={'인증 요청'} onPress={requestVerification} />
 					)}
-				</View>
+				</View> */}
 			</View>
 		</View>
 	);

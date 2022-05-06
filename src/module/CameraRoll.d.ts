@@ -4,14 +4,13 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @flow
- * @format
+ * 
+ * 
  */
  'use strict';
- import { Platform } from 'react-native';
- import RNCCameraRoll from './CameraRollNative';
+ import { Platform, NativeModules, Image } from 'react-native';
  
- const invariant = require('fbjs/lib/invariant');
+ const RNCCameraRoll  = Platform.OS=='ios'?NativeModules.RNCCameraRoll:NativeModules.PhotoListModule;
  
  const GROUP_TYPES_OPTIONS = {
    Album: 'Album',
@@ -36,7 +35,7 @@
    SmartAlbum: 'SmartAlbum',
  };
  
- export type GroupTypes = $Keys<typeof GROUP_TYPES_OPTIONS>;
+ export type GroupTypes = keyof typeof GROUP_TYPES_OPTIONS;
  
  export type Include =
    | 'filename'
@@ -135,14 +134,15 @@
      end_cursor?: string,
    },
  };
+
  export type SaveToCameraRollOptions = {
    type?: 'photo' | 'video' | 'auto',
    album?: string,
  };
  
  export type GetAlbumsParams = {
-   assetType?: $Keys<typeof ASSET_TYPE_OPTIONS>,
-   albumType?: $Keys<typeof ALBUM_TYPE_OPTIONS>,
+   assetType?: keyof typeof ASSET_TYPE_OPTIONS,
+   albumType?: keyof typeof ALBUM_TYPE_OPTIONS,
  };
  
  export type Album = {
@@ -151,6 +151,36 @@
    subType: string,
    count: number,
  };
+
+ export type CompressionParams = {
+   /**
+    * 압축할 이미지 파일의 uri.
+    * 포맷은 ph://{local identifier}이다.
+    * cameraRoll에서 반환하는 이미지 경로라면 문제없이 작동함
+    */
+  imageFiles: string[],
+
+  /**
+   * 압축 퀄리티. 0 ~ 1 사이의 실수. 미지정 시 디폴트 1
+   */
+  quality?: number,
+
+  /**
+   * 이미지 압축 시 최대 세로 길이. 미지정 시 디폴트 0
+   */
+  maxHeight?: number,
+
+  /**
+   * 이미지 압축 시 최대 가로 길이. 미지정 시 0
+   */
+  maxWidth?: number,
+
+  /**
+   * 이미지 형식. jpg, png만 가능
+   * 지정하지 않을 경우 jpg
+   */
+  mimeType?: string,
+};
  
  /**
   * `CameraRoll` provides access to the local camera roll or photo library.
@@ -162,11 +192,18 @@
    static AssetTypeOptions = ASSET_TYPE_OPTIONS;
    static AlbumTypeOptions = ALBUM_TYPE_OPTIONS;
  
-   static compressImage(uri: string, 
-     compressWidth: number,  compressHeight: number, compressionQuality: number): Promise<string>{
- 
-     return RNCCameraRoll.compressImage(uri, compressWidth, compressHeight, compressionQuality);
+   /**
+    * uri 리스트를 넘겨주고 해당 리스트의 uri에 해당하는 파일을 압축
+    * @param CompressionParams CameraRoll.d.ts 참조
+    * @returns 
+    */
+   static compressImage(params: CompressionParams): Promise<Image[]>{
+    return RNCCameraRoll.compressImage(params);
    }
+
+  static saveImage(uri: string): Promise<void>{
+    return RNCCameraRoll.saveImage(uri);
+  }
    
    static getAlbums(
      params: GetAlbumsParams = {
@@ -214,5 +251,6 @@
      return RNCCameraRoll.clean();
    }
  }
- 
- module.exports = CameraRoll;
+
+ export {CameraRoll};
+ export default CameraRoll;

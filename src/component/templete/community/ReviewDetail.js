@@ -1,9 +1,8 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {FlatList, Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {GRAY10, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
-import CommentList from 'Root/component/organism/comment/CommentList';
 import ReviewBriefList from 'Root/component/organism/list/ReviewBriefList';
 import {useNavigation} from '@react-navigation/core';
 import ReviewContent from 'Root/component/organism/article/ReviewContent';
@@ -19,8 +18,9 @@ import {REPORT_MENU} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
 import {likeEtc} from 'Root/api/likeetc';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
-import {ScrollView as GestureHandlerScrollView} from 'react-native-gesture-handler';
-import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
+import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
+import {ScrollView} from 'react-native';
+import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
 
 /**
  * 후기 상세 내용
@@ -93,7 +93,7 @@ export default ReviewDetail = props => {
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
 	const onWrite = () => {
-		console.log('edt', editData);
+		// console.log('edt', editData);
 		if (editData.comment_contents.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
 
 		let param = {
@@ -104,7 +104,10 @@ export default ReviewDetail = props => {
 
 		if (editData.comment_photo_uri && editData.comment_photo_uri.length > 0) {
 			param.comment_photo_uri = editData.comment_photo_uri;
+		} else {
+			param.comment_photo_remove = true;
 		}
+		param.comment_photo_uri = editData.comment_photo_uri == '' ? 'https:// ' : editData.comment_photo_uri;
 
 		if (parentComment) {
 			//대댓글일 경우 해당 부모 댓글에 대한 댓글을 추가
@@ -126,7 +129,7 @@ export default ReviewDetail = props => {
 				{
 					...param,
 					commentobject_id: editData._id,
-					comment_photo_remove: !editData.comment_photo_uri || editData.comment_photo_uri == 0,
+					// comment_photo_remove: !editData.comment_photo_uri || editData.comment_photo_uri == 0,
 				},
 				result => {
 					// console.log(result);
@@ -143,11 +146,13 @@ export default ReviewDetail = props => {
 						comments => {
 							!parentComment && setComments([]); //댓글목록 초기화
 							setComments(comments.msg.filter(e => e.comment_is_delete != true));
-							parentComment && addChildCommentFn.current();
+							// parentComment && addChildCommentFn.current();
 							setPrivateComment(false);
+							setEditMode(false);
 							// console.log('comments', comments);
 							setTimeout(() => {
-								scrollRef.current.scrollToIndex({animated: true, index: whichComment});
+								// scrollRef.current.scrollToIndex({animated: true, index: whichComment});
+								scrollRef.current.scrollToIndex({animated: true, index: whichComment == '' ? editData.parent : whichComment, viewPosition: 0.5});
 							}, 500);
 							Modal.close();
 						},
@@ -189,6 +194,7 @@ export default ReviewDetail = props => {
 							parentComment && addChildCommentFn.current();
 							input.current.blur();
 							setPrivateComment(false);
+							setEditMode(false); // console.log('comments', comments);
 							setTimeout(() => {
 								whichParent == ''
 									? scrollRef.current.scrollToIndex({animated: true, index: 0})
@@ -197,7 +203,7 @@ export default ReviewDetail = props => {
 							Modal.close();
 						},
 						err => {
-							console.log('getCommentListByFeedId', err);
+							console.log('getCommentListByCommunityId', err);
 							Modal.close();
 						},
 					);
@@ -214,12 +220,22 @@ export default ReviewDetail = props => {
 				request_number: 1000,
 			},
 			comments => {
-				// console.log('comments', comments);
+				// console.log('comments', comments.msg);
 				setComments(comments.msg.filter(e => e.comment_is_delete != true));
 				Modal.close();
 			},
-			err => console.log('getCommentListByFeedId', err),
+			err => {
+				console.log('getCommentListByCommunityId', err);
+				if (err == '검색 결과가 없습니다.') {
+					setComments([]);
+				}
+			},
 		);
+	};
+
+	const onFocus = () => {
+		console.log('onFocus');
+		scrollToReplyBox();
 	};
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
@@ -258,13 +274,11 @@ export default ReviewDetail = props => {
 	};
 
 	const onDeleteImage = () => {
-		console.log('onDelete Img');
 		setEditData({...editData, comment_photo_uri: ''});
 	};
 
 	// 답글 쓰기 -> Input value 변경 콜백함수
 	const onChangeReplyInput = text => {
-		console.log('onChangeReplyInput : ', text);
 		setEditData({...editData, comment_contents: text});
 	};
 
@@ -277,6 +291,11 @@ export default ReviewDetail = props => {
 		} else {
 			setParentComment(parentCommentId);
 			editComment || setEditComment(true);
+			setEditMode(false);
+			setEditData({
+				comment_contents: '',
+				comment_photo_uri: '',
+			});
 			addChildCommentFn.current = addChildComment;
 			// input.current?.focus();
 			scrollToReplyBox();
@@ -284,14 +303,17 @@ export default ReviewDetail = props => {
 	};
 
 	//미트볼, 수정을 누르면 동작
-	const onEdit = comment => {
+	const onEdit = (comment, parent) => {
 		setEditMode(true);
-		setEditData({...comment});
+		const findParentIndex = comments.findIndex(e => e._id == parent);
+		setEditData({...comment, parent: findParentIndex});
 		scrollToReplyBox();
+		setPrivateComment(comment.comment_is_secure);
 	};
 
 	const scrollToReplyBox = () => {
-		scrollRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 0});
+		// scrollRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 0, viewOffset: 0});
+		scrollRef.current.scrollToEnd({animated: true});
 		setTimeout(() => {
 			input.current?.focus();
 		}, 500);
@@ -427,11 +449,6 @@ export default ReviewDetail = props => {
 		}
 	};
 
-	//댓글 클릭
-	const onPressReply = () => {
-		navigation.push('CommunityCommentList', {community_object: data});
-	};
-
 	//하단 리뷰 리스트 좋아요 클릭
 	const onPressLikeBriefItem = (bool, index) => {
 		likeEtc(
@@ -464,19 +481,54 @@ export default ReviewDetail = props => {
 		commentListHeight.current = e.nativeEvent.layout.height;
 	};
 
+	const showChild = index => {
+		console.log('showChild', index);
+		scrollRef.current.scrollToIndex({animated: true, index: index, viewPosition: 0});
+	};
+
+	//좋아요 클릭
+	const onPressLike = bool => {
+		console.log('bool', bool);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			likeEtc(
+				{
+					collectionName: 'communityobjects',
+					post_object_id: data._id,
+					is_like: bool,
+				},
+				result => {
+					console.log('result/ onPressLike / ReviewMain : ', result.msg.targetPost);
+					setData({...data, community_is_like: bool, community_like_count: bool ? ++data.community_like_count : --data.community_like_count});
+					// setData({...data, community_like_count: bool ? data.community_like_count++ : data.community_like_count--});
+				},
+				err => console.log('err / onPressLike / ReviewMain : ', err),
+			);
+		}
+	};
+
 	const header = () => {
 		return (
 			<View style={{alignItems: 'center'}}>
 				<ReviewContent data={data} onPressFavorite={onPressFavorite} onPressMeatball={onPressMeatball} searchInput={searchInput} />
 				<View style={[style.separator]} />
-				<View style={[style.commentList]}>
-					{comments && comments.length > 0 ? (
-						<View style={[style.replyCountContainer, {alignSelf: 'center', alignItems: 'flex-start'}]}>
-							<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
-						</View>
-					) : (
-						<></>
-					)}
+				<View style={[style.like, {}]}>
+					<View style={{flexDirection: 'row', width: 100 * DP, alignItems: 'center'}}>
+						{data.community_is_like ? <Like48_Filled onPress={() => onPressLike(false)} /> : <Like48_Border onPress={() => onPressLike(true)} />}
+						<Text style={[txt.noto24, {color: GRAY10, marginLeft: 15 * DP}]}>{data.community_like_count}</Text>
+					</View>
+					<View style={[style.commentList]}>
+						{comments && comments.length > 0 ? (
+							<View style={[style.replyCountContainer, {alignSelf: 'center', alignItems: 'flex-start'}]}>
+								<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
+							</View>
+						) : (
+							<></>
+						)}
+					</View>
 				</View>
 			</View>
 		);
@@ -485,9 +537,10 @@ export default ReviewDetail = props => {
 	const bottom = () => {
 		return (
 			<View style={{alignItems: 'center'}}>
-				<View style={[{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY40}]} />
+				{/* <View style={[{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY40}]} /> */}
 				<View style={[{marginTop: 20 * DP, marginBottom: 30 * DP}]}>
 					<ReplyWriteBox
+						onFocus={onFocus}
 						onAddPhoto={onAddPhoto}
 						onChangeReplyInput={onChangeReplyInput}
 						onLockBtnClick={onLockBtnClick}
@@ -503,7 +556,7 @@ export default ReviewDetail = props => {
 				</View>
 
 				<View style={[style.reviewList]}>
-					<Text style={[txt.noto24, {}]}>관련 리뷰</Text>
+					<Text style={[txt.noto24, {}]}>관련 리뷰 게시글</Text>
 					<ReviewBriefList
 						items={reviewList}
 						showMore={() => setShowMore(true)}
@@ -525,9 +578,14 @@ export default ReviewDetail = props => {
 					onEdit={onEdit}
 					onPressDelete={onPressDelete}
 					onPressDeleteChild={onPressDelete}
+					showChild={() => showChild(index)}
 				/>
 			</View>
 		);
+	};
+
+	const listEmpty = () => {
+		return <Text style={[txt.roboto28b, {color: GRAY10, paddingVertical: 40 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>;
 	};
 
 	if (reviewList == 'false' || comments == 'false') {
@@ -541,9 +599,11 @@ export default ReviewDetail = props => {
 					listKey={({item, index}) => index}
 					ListHeaderComponent={header()}
 					ListFooterComponent={bottom()}
-					ListEmptyComponent={<Text style={[txt.roboto28b, {color: GRAY10, paddingVertical: 40 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>}
+					ListEmptyComponent={listEmpty}
 					showsVerticalScrollIndicator={false}
+					keyboardDismissMode={'none'}
 					renderItem={renderItem}
+					removeClippedSubviews={false}
 				/>
 			</View>
 		);
@@ -571,9 +631,10 @@ const style = StyleSheet.create({
 	},
 	reviewList: {
 		width: 654 * DP,
+		marginTop: 30 * DP,
 	},
 	replyCountContainer: {
-		width: 654 * DP,
+		// width: 654 * DP,
 		alignItems: 'flex-end',
 		alignSelf: 'center',
 		marginTop: 30 * DP,
@@ -581,5 +642,14 @@ const style = StyleSheet.create({
 	},
 	commentContainer: {
 		alignItems: 'center',
+	},
+	like: {
+		width: 654 * DP,
+		paddingVertical: 10 * DP,
+		marginBottom: 10 * DP,
+		marginTop: 10 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between',
 	},
 });

@@ -16,6 +16,7 @@ import Modal from 'Root/component/modal/Modal';
  * @param {string} props.yesMsg - 확인 버튼 메시지
  * @param {()=>void} props.onNo - 취소 버튼 콜백
  * @param {()=>void} props.onYes - 확인 버튼 콜백
+ * @param {()=>void} props.onClose - 확인 버튼 콜백
  *
  */
 const TwoBtnModal = props => {
@@ -25,8 +26,11 @@ const TwoBtnModal = props => {
 	const pressNo = () => {
 		props.onNo();
 	};
+	const onClose = () => {
+		props.onClose();
+	};
 	return (
-		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={style.background}>
+		<TouchableOpacity activeOpacity={1} onPress={onClose} style={style.background}>
 			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
 				<Text style={[txt.noto28, style.msg]}>{props.popUpMsg}</Text>
 				<View style={style.buttonContainer}>
@@ -47,6 +51,9 @@ TwoBtnModal.defaultProps = {
 	},
 	onYes: () => {
 		alert('YES');
+	},
+	onClose: () => {
+		Modal.close();
 	},
 };
 

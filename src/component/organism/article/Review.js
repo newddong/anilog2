@@ -1,6 +1,6 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {FavoriteTag46_Filled, FavoriteTag48_Border, Like48_Border, Like48_Filled, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
 import {APRI10, BLACK, GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
@@ -10,6 +10,7 @@ import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTi
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {getTimeLapsed} from 'Root/util/dateutil';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 /**
  * 후기 아이템
  * @param {object} props - Props Object

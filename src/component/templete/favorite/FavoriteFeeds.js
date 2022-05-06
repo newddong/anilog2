@@ -188,8 +188,8 @@ export default FavoriteFeeds = ({route, navigation}) => {
 						navigation.push('TagMeFeedList', {title: titleValue + '님을 태그한 글', userobject: result.msg, selected: feed_id});
 					} else if (route.name == 'FavoriteFeeds') {
 						console.log('feed_id', feed_id);
-						navigation.push('UserFeedList', {title: titleValue, userobject: result.msg, selected: feed_id});
-						// navigation.push('UserFeedList', {userobject: data, selected: item});
+						// navigation.push('UserFeedList', {title: titleValue, userobject: result.msg, selected: feed_id});
+						navigation.push('FavoriteFeedList', {title: '즐겨찾기한 게시글', userobject: result.msg, selected: feed_id});
 					}
 					//다른 route가 있을 경우 else if 확장 할 것
 					else {

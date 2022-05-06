@@ -136,8 +136,29 @@ export default FeedList = ({route, navigation}) => {
 						{userobject_id: userGlobalObject.userInfo._id},
 						({msg}) => {
 							// setIndex(msg.feeds.findIndex(v => v.hashtag_feed_id._id == route.params?.selected._id));
+							// setFeedList(msg);
+							setFeedList(
+								msg
+									.map((v, i, a) => {
+										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
+										lines = lines > 3 ? 3 : lines;
+										if (v.feed_recent_comment) {
+											return {...v, height: (750 + 200 + 120 + 2 + lines * 54) * DP};
+										} else {
+											return {...v, height: (750 + 72 + 120 + 2 + lines * 54) * DP};
+										}
+									})
+									.map((v, i, a) => {
+										let offset = a.slice(0, i).reduce((prev, current) => {
+											return current.height + prev;
+										}, 0);
+										return {
+											...v,
+											offset: offset,
+										};
+									}),
+							);
 
-							setFeedList(msg);
 							console.log('즐겨찾기 리스트', msg);
 						},
 						error => {

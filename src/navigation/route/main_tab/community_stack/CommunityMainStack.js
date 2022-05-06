@@ -109,7 +109,7 @@ export default CommunityMainStack = props => {
 				component={SearchMap}
 				options={({route}) => ({
 					header: props => <SimpleHeader {...props} />,
-					title: '주소 검색',
+					title: '위치 추가',
 				})}
 			/>
 			<CommunityMainStackNavi.Screen
@@ -117,7 +117,7 @@ export default CommunityMainStack = props => {
 				component={SocialRelationTopTabNavigation}
 				options={({route}) => ({
 					header: props => <SimpleHeader {...props} />,
-					title: '주소 검색',
+					title: '프로필',
 				})}
 			/>
 			<CommunityMainStackNavi.Screen

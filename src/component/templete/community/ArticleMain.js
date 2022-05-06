@@ -117,7 +117,7 @@ export default ArticleMain = ({route}) => {
 	};
 
 	return (
-		<View style={[style.container]}>
+		<View style={[style.container]} onpan>
 			<FlatList
 				data={[{}]}
 				renderItem={({item, index}) => {

@@ -197,6 +197,10 @@ export default PetInfoSetting = ({route, navigation}) => {
 		);
 	};
 
+	//업로드 및 팔로우 클릭
+	const onClickUserInfo = () => {
+		navigation.push('UserProfile', {userobject: petData});
+	};
 	// 소개란 반려동물 소개란 수정
 	const modifyIntroText = text => {
 		setUserIntro_temp(text);
@@ -224,16 +228,16 @@ export default PetInfoSetting = ({route, navigation}) => {
 							<View style={[petInfoSetting.petInfoContainer]}>
 								<View style={[petInfoSetting.petInfo_topside]}>
 									<View style={[petInfoSetting.petInfo_topside_item]}>
-										<View style={[petInfoSetting.petInfo_topside_upload]}>
+										<TouchableOpacity onPress={onClickUserInfo} activeOpacity={1} style={[petInfoSetting.petInfo_topside_upload]}>
 											<Text style={[txt.roboto36b, {textAlign: 'center'}]}>{petData.user_upload_count}</Text>
 											<Text style={[txt.noto24]}>업로드</Text>
-										</View>
+										</TouchableOpacity>
 									</View>
 									<View style={[petInfoSetting.petInfo_topside_item]}>
-										<View style={[petInfoSetting.petInfo_topside_upload]}>
+										<TouchableOpacity onPress={onClickUserInfo} activeOpacity={1} style={[petInfoSetting.petInfo_topside_upload]}>
 											<Text style={[txt.roboto36b, {textAlign: 'center'}]}>{petData.user_follower_count}</Text>
 											<Text style={[txt.noto24]}>팔로워</Text>
-										</View>
+										</TouchableOpacity>
 									</View>
 								</View>
 								<View style={[petInfoSetting.petInfo_bottom]}>

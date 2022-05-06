@@ -35,6 +35,7 @@ import {setFavoriteEtc} from 'Root/api/favoriteetc';
  * @param {()=>void} props.onPressEditProfile - 일반 혹은 보호소 계정(계정 주인)의 프로필 수정 버튼 클릭
  * @param {()=>void} props.onPressUnFollow - 팔로우 중 버튼 클릭 =>  팔로우취소 버튼 클릭
  * @param {()=>void} props.onPressFollow - 팔로우 버튼 클릭
+ * @param {()=>void} props.onClickUpload - 프로필 상단 업로드 클릭
  */
 const ProfileInfo = props => {
 	const [data, setData] = React.useState(props.data);
@@ -238,6 +239,10 @@ const ProfileInfo = props => {
 		);
 	};
 
+	const onClickUpload = () => {
+		props.onClickUpload();
+	};
+
 	const onPressEditProfile = () => {
 		props.onPressEditProfile();
 	};
@@ -283,7 +288,7 @@ const ProfileInfo = props => {
 					<ProfileImageLarge160 data={props.data} />
 				</View>
 				<View style={[organism_style.socialInfo_profileInfo, profileInfo_style.socialInfo]}>
-					<SocialInfoA data={data} />
+					<SocialInfoA data={data} onClickUpload={onClickUpload} />
 				</View>
 			</View>
 
@@ -345,5 +350,6 @@ ProfileInfo.defaultProps = {
 	onPressEditProfile: () => {},
 	onPressFollow: () => {},
 	onPressUnFollow: () => {},
+	onClickUpload: () => {},
 };
 export default ProfileInfo;

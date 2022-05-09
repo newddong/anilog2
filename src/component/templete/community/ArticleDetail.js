@@ -1,6 +1,6 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, Keyboard, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {GRAY10, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
 import CommentList from 'Root/component/organism/comment/CommentList';
@@ -135,8 +135,10 @@ export default ArticleDetail = props => {
 				setComments(res);
 			},
 			err => {
-				console.log('getCommentListByFeedId', err);
-				setComments([]);
+				console.log('getCommentListByCommunityId', err);
+				if (err == '검색 결과가 없습니다.') {
+					setComments([{}]);
+				}
 			},
 		);
 	};
@@ -213,7 +215,12 @@ export default ArticleDetail = props => {
 									flatListRef.current.scrollToIndex({animated: true, index: whichComment == '' ? editData.parent : whichComment, viewPosition: 0.5});
 								}, 500);
 							},
-							err => console.log('getCommentListByFeedId', err),
+							err => {
+								console.log('getCommentListByCommunityId', err);
+								if (err == '검색 결과가 없습니다.') {
+									setComments([{}]);
+								}
+							},
 						);
 					},
 					err => Modal.alert(err),
@@ -255,7 +262,12 @@ export default ArticleDetail = props => {
 								}, 500);
 								input.current.blur();
 							},
-							err => console.log('getCommentListByCommunityId', err),
+							err => {
+								console.log('getCommentListByCommunityId', err);
+								if (err == '검색 결과가 없습니다.') {
+									setComments([{}]);
+								}
+							},
 						);
 					},
 					err => Modal.alert(err),
@@ -345,10 +357,15 @@ export default ArticleDetail = props => {
 
 	//수정이나 답글쓰기 눌렀을 때 스크롤 함수
 	const scrollToReplyBox = () => {
-		flatListRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 0.5});
-		setTimeout(() => {
+		if (Platform.OS == 'android') {
 			input.current?.focus();
-		}, 500);
+			setTimeout(() => {
+				flatListRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 1, viewOffset: 0});
+			}, 200);
+		} else {
+			flatListRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 0.5, viewOffset: 0});
+			input.current?.focus();
+		}
 	};
 
 	//답글 더보기 클릭
@@ -534,7 +551,7 @@ export default ArticleDetail = props => {
 					</View>
 					{comments && comments.length > 0 ? (
 						<View style={[{alignItems: 'flex-end'}]}>
-							<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
+							<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length - 1}개</Text>
 						</View>
 					) : (
 						<></>
@@ -627,6 +644,13 @@ export default ArticleDetail = props => {
 					showsVerticalScrollIndicator={false}
 					renderItem={renderItem}
 					ListEmptyComponent={<Text style={[txt.roboto28b, {color: GRAY10, paddingVertical: 40 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>}
+					onScrollToIndexFailed={err => {
+						setTimeout(() => {
+							if (comments.length !== 0 && flatListRef !== null) {
+								flatListRef.current.scrollToIndex({index: err.index != -1 ? err.index : 0, animated: true, viewPosition: 0});
+							}
+						}, 200);
+					}}
 					removeClippedSubviews={false}
 				/>
 			</View>

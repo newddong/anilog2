@@ -255,7 +255,10 @@ export default FeedContent = props => {
 	//피드 미트볼 메뉴 - 수정 클릭
 	const onPressEdit = () => {
 		Modal.close();
-		navigation.navigate('FeedEdit', props.data);
+		// console.log('props.', props.routeName);
+		let editData = props.data;
+		editData.routeName = props.routeName;
+		navigation.navigate('FeedEdit', editData);
 	};
 
 	//피드 미트볼 메뉴 - 삭제 클릭

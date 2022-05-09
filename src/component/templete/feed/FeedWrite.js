@@ -309,7 +309,7 @@ export default FeedWrite = props => {
 							<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>사진추가</Text>
 						</View>
 					</TouchableWithoutFeedback>
-					<TouchableWithoutFeedback onPress={moveToLocationPicker}>
+					<TouchableWithoutFeedback onPress={!showReportForm && !showLostAnimalForm ? moveToLocationPicker : () => {}}>
 						<View style={[feedWrite.btnItemContainer]}>
 							{!showReportForm && !showLostAnimalForm ? (
 								<>
@@ -369,6 +369,7 @@ export default FeedWrite = props => {
 				<View style={{backgroundColor: 'red', width: 50, height: 50}}></View>
 			</TouchableWithoutFeedback> */}
 			<FlatList
+				keyboardDismissMode={'on-drag'}
 				renderItem={({item, index}) => {
 					return (
 						<View contentContainerStyle={[login_style.wrp_main, {backgroundColor: '#000'}]} ref={container}>
@@ -390,6 +391,7 @@ export default FeedWrite = props => {
 					);
 				}}
 				data={[{}]}
+				keyboardShouldPersistTaps={'handled'}
 				ref={scrollref}></FlatList>
 			{showUrgentBtns && !isSearchTag ? (
 				<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
@@ -587,7 +589,7 @@ const MissingForm = props => {
 
 	React.useEffect(() => {
 		props.scrollref.current.scrollToOffset({offset: currentPosition.current});
-		currentPosition.current = 0;
+		// currentPosition.current = 0;
 	}, [keyboardArea]);
 
 	const onPressIn = inputRef => () => {
@@ -607,7 +609,7 @@ const MissingForm = props => {
 
 	const phoneValidate = num => {
 		// console.log('num', num);
-		let regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+		let regPhone = /^01([0|1|6|7|8|9|])-?([0-9]{3,4})-?([0-9]{4})$/;
 		let regHomePhone = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))(\d{3,4})(\d{4})$/;
 		return regPhone.test(num) || regHomePhone.test(num);
 	};
@@ -902,6 +904,7 @@ const ReportForm = props => {
 	};
 
 	const onPressCity = () => {
+		Keyboard.dismiss();
 		Modal.popSelectScrollBoxModal([city], '도, 광역, 특별시', selectedItem => {
 			let report_location = data.report_location;
 			report_location.city = selectedItem;
@@ -919,6 +922,7 @@ const ReportForm = props => {
 		});
 	};
 	const onPressDistrict = () => {
+		Keyboard.dismiss();
 		Modal.popSelectScrollBoxModal([district], '도, 광역, 특별시', selectedItem => {
 			let report_location = data.report_location;
 			report_location.district = selectedItem;

@@ -19,13 +19,12 @@ const SearchTabNav = createMaterialTopTabNavigator();
 export default SearchTabNavigation = props => {
 	// navigation.push('Search', {mother: 0, child: 1});
 	// ㄴ 위와 같이 호출할 경우 mother는 상위TopTab의 Tab인덱스를, child는 하단TopTab의 인덱스를 설정해줄 수 있음.
-	// const prevNav = props.route.params.prevNav;
+	const prevNav = props.prevNav;
 	// const [searchInput, setSearchInput] = React.useState('');
 	const [userList, setUserList] = React.useState('false');
 	const [hashList, setHashList] = React.useState('false');
 	const [commList, setCommList] = React.useState('false');
 	const [loading, setLoading] = React.useState(false);
-
 	const onClickUser = sendUserobject => {
 		props.navigation.navigate('SearchTabUserProfile', {userobject: sendUserobject});
 	};
@@ -37,7 +36,7 @@ export default SearchTabNavigation = props => {
 		tabBarPressColor: WHITE,
 	};
 
-	searchContext.searchInfo.routeName = getFocusedRouteNameFromRoute(props.route); //현재 보고 있는 템플릿
+	// searchContext.searchInfo.routeName = getFocusedRouteNameFromRoute(props.route); //현재 보고 있는 템플릿
 
 	//검색탭 헤더의 인풋값이 바뀔 때마다 계정과 해쉬를 받아오는 api에 접속
 	React.useEffect(() => {

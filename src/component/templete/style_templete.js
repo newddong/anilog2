@@ -2773,6 +2773,7 @@ export const petInfoSetting = StyleSheet.create({
 	},
 	petInfoContainer: {
 		width: 396 * DP,
+		justifyContent: 'space-between',
 		// backgroundColor: 'pink',
 	},
 	petInfo_topside: {
@@ -2967,6 +2968,13 @@ export const petInfoSetting = StyleSheet.create({
 			alignItems: 'center',
 			alignSelf: 'flex-end',
 		},
+	},
+	introInput: {
+		backgroundColor: GRAY40,
+		width: 654 * DP,
+		borderRadius: 30 * DP,
+		paddingVertical: 20 * DP,
+		paddingHorizontal: 20 * DP,
 	},
 });
 
@@ -3847,6 +3855,18 @@ export const reportDetail = StyleSheet.create({
 		alignItems: 'center',
 		// justifyContent: 'center',
 		backgroundColor: '#FFF',
+	},
+	swiper_index: {
+		position: 'absolute',
+		borderRadius: 24 * DP,
+		width: 76 * DP,
+		height: 50 * DP,
+		backgroundColor: 'black',
+		opacity: 0.6,
+		right: 20 * DP,
+		bottom: 20 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
 });
 

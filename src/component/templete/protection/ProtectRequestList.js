@@ -26,7 +26,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 	const [onlyAdoptable, setOnlyAdoptable] = React.useState(false);
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
-			// getList();
+			getList();
 		});
 		getList(); //필터가 바뀔 때마다 호출되도록 설정
 		return unsubscribe;
@@ -84,17 +84,17 @@ export default ProtectRequestList = ({navigation, route}) => {
 
 	//별도의 API 사용 예정.
 	const onOff_FavoriteTag = (bool, index) => {
-		console.log(' data[index]._id', data[index]._id);
+		console.log(' data[index]._id', getData()[index]);
 		console.log('bool', bool);
 		setFavoriteEtc(
 			{
 				collectionName: 'protectrequestobjects',
-				target_object_id: data[index]._id,
+				target_object_id: getData()[index]._id,
 				is_favorite: bool,
 			},
 			result => {
 				console.log('result / favoriteEtc / ProtectRequestList : ', result.msg.favoriteEtc);
-				let prevData = [...data]; //
+				let prevData = [...getData()]; //
 				prevData[index].is_favorite = bool;
 				setData(prevData);
 			},
@@ -146,7 +146,13 @@ export default ProtectRequestList = ({navigation, route}) => {
 	};
 
 	const getData = () => {
-		return onlyAdoptable ? data.filter(v => v.protect_request_status == 'rescue') : data;
+		let result = data;
+		if (onlyAdoptable) {
+			result = data.filter(v => v.protect_request_status == 'rescue');
+		} else {
+			result = data;
+		}
+		return result;
 	};
 
 	const renderItem = ({item, index}) => {
@@ -166,7 +172,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 			return (
 				<>
 					<ProtectRequest
-						data={data[this.props.index]}
+						data={getData()[this.props.index]}
 						onClickLabel={(status, id) => onClickLabel(status, id, this.props.item)}
 						onFavoriteTag={e => onOff_FavoriteTag(e, this.props.index)}
 						onPressProtectRequest={() => onPressProtectRequest(this.props.item)}

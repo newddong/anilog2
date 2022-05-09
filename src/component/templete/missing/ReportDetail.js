@@ -17,6 +17,7 @@ import Modal from 'Root/component/modal/Modal';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
+import Swiper from 'react-native-swiper';
 export default ReportDetail = props => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
@@ -252,17 +253,73 @@ export default ReportDetail = props => {
 		navigation.push('FeedCommentList', {feedobject: data, showAllContents: true, showKeyboard: true});
 	};
 
+	const ee = {
+		__v: 0,
+		_id: '6277c40a9bb7f9adc934aa80',
+		feed_comment_count: 0,
+		feed_content: '',
+		feed_date: '2022-05-08T13:22:18.749Z',
+		feed_favorite_count: 0,
+		feed_is_protect_diary: false,
+		feed_like_count: 0,
+		feed_medias: [
+			{
+				_id: '6277c40a9bb7f9adc934aa81',
+				media_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1652016138494_B12F4375-3663-4F64-9770-6F3C1B38DE60.jpg',
+				tags: [Array],
+			},
+			{
+				_id: '6277c40a9bb7f9adc934aa82',
+				media_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1652016138495_75F49633-4767-419C-962B-A4FBEFB67AF8.jpg',
+				tags: [Array],
+			},
+			{
+				_id: '6277c40a9bb7f9adc934aa83',
+				media_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1652016138532_29371B8A-3124-46BB-9557-CB151529B6E8.jpg',
+				tags: [Array],
+			},
+			{
+				_id: '6277c40a9bb7f9adc934aa84',
+				media_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1652016138591_E5E8E099-6A66-4549-B2ED-B93EA8695AF5.jpg',
+				tags: [Array],
+			},
+		],
+		feed_thumbnail: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1652016138494_B12F4375-3663-4F64-9770-6F3C1B38DE60.jpg',
+		feed_type: 'report',
+		feed_update_date: '2022-05-08T13:22:18.749Z',
+
+		is_favorite: false,
+		missing_animal_date: '2022-05-08T13:22:18.749Z',
+		report_animal_species: '개',
+		report_witness_date: '2022-05-02T00:00:00.000Z',
+		report_witness_location: '강원도 태백시 ㅇㅇㅋ',
+		type: 'FeedObject',
+	};
+
 	const header = () => {
 		return (
 			<View style={{alignItems: 'center'}}>
 				<View style={[temp_style.img_square_750, reportDetail.img_square_750]}>
 					{/* 제보사진 */}
-					<Image
+					{/* <Image
 						source={{
 							uri: data.feed_thumbnail,
 						}}
 						style={[temp_style.img_square_750]}
-					/>
+					/> */}
+					<Swiper showsPagination={false} autoplay={false} loop={false} horizontal={true}>
+						{data.feed_medias != undefined &&
+							data.feed_medias.map((val, idx) => (
+								<View key={idx}>
+									<Image source={{uri: val.media_uri}} style={[temp_style.img_square_750]} />
+									<View style={[reportDetail.swiper_index]}>
+										<Text style={[txt.roboto24, {color: 'white'}]}>
+											{idx + 1}/{data.feed_medias.length}
+										</Text>
+									</View>
+								</View>
+							))}
+					</Swiper>
 				</View>
 				<View style={[temp_style.feedContent]}>
 					{/* DB에서 가져오는 제보 피드글 데이터를 FeedContent에 넘겨준다. */}

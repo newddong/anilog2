@@ -25,7 +25,7 @@ import {createMemoBox} from 'Root/api/userapi';
 export default Profile = ({route}) => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState({...route.params?.userobject, feedList: []}); //라벨을 클릭한 유저의 userObject data
-	const [feedList, setFeedList] = React.useState([]);
+	const [feedList, setFeedList] = React.useState('false');
 	const [commList, setCommList] = React.useState('false');
 	const [tabMenuSelected, setTabMenuSelected] = React.useState(0); //프로필 Tab의 선택상태
 	const [showOwnerState, setShowOwnerState] = React.useState(false); // 현재 로드되어 있는 profile의 userType이 Pet인 경우 반려인 계정 리스트의 출력 여부
@@ -400,7 +400,9 @@ export default Profile = ({route}) => {
 				);
 			}
 			if (data.user_type != SHELTER) {
-				if (tabMenuSelected == 0) {
+				if (feedList == 'false') {
+					return <Loading isModal={false} />;
+				} else if (tabMenuSelected == 0) {
 					return <FeedThumbnailList items={item} whenEmpty={whenFeedThumbnailEmpty} onClickThumnail={onClick_Thumbnail_FeedTab} />;
 				} else if (tabMenuSelected == 1) {
 					return <FeedThumbnailList items={item} whenEmpty={whenFeedThumbnailEmpty} onClickThumnail={onClick_Thumbnail_TagTab} />;

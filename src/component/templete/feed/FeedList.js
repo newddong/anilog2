@@ -76,10 +76,9 @@ export default FeedList = ({route, navigation}) => {
 					);
 					break;
 				case 'TagMeFeedList':
-				case 'UserTagFeedList':
 					getUserTaggedFeedList(
 						{
-							userobject_id: route.params?.userobject._id,
+							userobject_id: userGlobalObject.userInfo._id,
 							request_number: 9999,
 						},
 						({msg}) => {
@@ -87,6 +86,40 @@ export default FeedList = ({route, navigation}) => {
 								'태그',
 								msg.findIndex(v => v._id == route.params?.selected._id),
 							);
+							setFeedList(
+								msg
+									.map((v, i, a) => {
+										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
+										lines = lines > 3 ? 3 : lines;
+										if (v.feed_recent_comment) {
+											return {...v, height: (750 + 200 + 120 + 2 + lines * 54) * DP};
+										} else {
+											return {...v, height: (750 + 72 + 120 + 2 + lines * 54) * DP};
+										}
+									})
+									.map((v, i, a) => {
+										let offset = a.slice(0, i).reduce((prev, current) => {
+											return current.height + prev;
+										}, 0);
+										return {
+											...v,
+											offset: offset,
+										};
+									}),
+							);
+						},
+						errormsg => {
+							Modal.alert(errormsg);
+						},
+					);
+					break;
+				case 'UserTagFeedList':
+					getUserTaggedFeedList(
+						{
+							userobject_id: route.params?.userobject._id,
+							request_number: 9999,
+						},
+						({msg}) => {
 							setFeedList(
 								msg
 									.map((v, i, a) => {
@@ -118,9 +151,30 @@ export default FeedList = ({route, navigation}) => {
 					getFeedsByHash(
 						{hashtag_keyword: route.params?.hashtag_keyword},
 						({msg}) => {
-							setIndex(msg.feeds.findIndex(v => v.hashtag_feed_id._id == route.params?.selected._id));
-
-							setFeedList(msg.feeds.map(v => v.hashtag_feed_id));
+							// setIndex(msg.feeds.findIndex(v => v.hashtag_feed_id._id == route.params?.selected._id));
+							// setFeedList(msg.feeds.map(v => v.hashtag_feed_id));
+							setFeedList(
+								msg.feeds
+									.map(v => v.hashtag_feed_id)
+									.map((v, i, a) => {
+										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
+										lines = lines > 3 ? 3 : lines;
+										if (v.feed_recent_comment) {
+											return {...v, height: (750 + 200 + 120 + 2 + lines * 54) * DP};
+										} else {
+											return {...v, height: (750 + 72 + 120 + 2 + lines * 54) * DP};
+										}
+									})
+									.map((v, i, a) => {
+										let offset = a.slice(0, i).reduce((prev, current) => {
+											return current.height + prev;
+										}, 0);
+										return {
+											...v,
+											offset: offset,
+										};
+									}),
+							);
 						},
 						error => {
 							Modal.popOneBtn(error, '확인', () => {

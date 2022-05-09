@@ -187,7 +187,7 @@ export default UserMenu = props => {
 					<View style={{flexDirection: 'row', width: 654 * DP}}>
 						<View style={[userMenu_style.introduceBox, {alignSelf: 'flex-start'}]}>
 							{data._id != undefined && (
-								<Text numberOfLines={!showMoreIntro ? 10 : 2} style={[txt.noto26]}>
+								<Text numberOfLines={!showMoreIntro ? 15 : 2} style={[txt.noto26]}>
 									{data.user_introduction || '자기소개가 없습니다.'}
 								</Text>
 							)}

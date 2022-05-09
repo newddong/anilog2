@@ -1,6 +1,6 @@
 import React from 'react';
 import {Platform, ScrollView, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {APRI10, GRAY10, GRAY40} from 'Root/config/color';
+import {APRI10, GRAY10, GRAY20, GRAY40} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {AddItem92, Arrow_Down_GRAY10, Arrow_Up_GRAY10, Cross52, NextMark} from 'Atom/icon';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
@@ -25,10 +25,10 @@ export default PetInfoSetting = ({route, navigation}) => {
 	const [petData, setPetData] = React.useState('false'); // 현재 반려동물 프로필 데이터
 	const [familyAccountList, setFamilyAccountList] = React.useState([]); //가족 계정 목록 데이터
 	const [isChiefUser, setIsChiefUser] = React.useState(false);
-	const [showMore, setShowmore] = React.useState(false); // 소개 더보기 클릭 여부
+	const [showMore, setShowmore] = React.useState(true); // 소개 더보기 클릭 여부
 	const [editMode, setEditMode] = React.useState(false); // 소개 수정 클릭 여부
 	const [introOriginLine, setIntroOriginLine] = React.useState(0);
-
+	const scrollRef = React.useRef();
 	const [userIntro_temp, setUserIntro_temp] = React.useState('');
 	const modifyRef = React.useRef('');
 
@@ -181,7 +181,16 @@ export default PetInfoSetting = ({route, navigation}) => {
 		setShowmore(!showMore);
 	};
 
-	//반려동물 소개란의 수정버튼 클릭
+	//수정버튼 클릭
+	const onPressModifyIntro = () => {
+		scrollRef.current?.scrollTo({
+			y: 300,
+			animated: true,
+		});
+		setEditMode(!editMode);
+	};
+
+	//반려동물 소개란 수정후 완료 클릭
 	const editPetInfo = () => {
 		//현재 반려동물의 소개란을 바꾸는 aPI가 없는 상태
 		setEditMode(!editMode);
@@ -190,6 +199,10 @@ export default PetInfoSetting = ({route, navigation}) => {
 			success => {
 				console.log('updateUserIntroduction success', success);
 				setFamily();
+				scrollRef.current?.scrollTo({
+					y: 0,
+					animated: true,
+				});
 			},
 			err => {
 				console.log('introduction modify api', err);
@@ -203,7 +216,13 @@ export default PetInfoSetting = ({route, navigation}) => {
 	};
 	// 소개란 반려동물 소개란 수정
 	const modifyIntroText = text => {
-		setUserIntro_temp(text);
+		const breaks = text.split(/\r\n|\r|\n/).length;
+		console.log('breaks', breaks);
+		if (breaks > 15) {
+			return;
+		} else {
+			setUserIntro_temp(text);
+		}
 	};
 
 	const deleteAccount = () => {
@@ -215,7 +234,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 	} else {
 		return (
 			<View style={[login_style.wrp_main, petInfoSetting.container]}>
-				<ScrollView contentContainerStyle={{alignItems: 'center'}}>
+				<ScrollView contentContainerStyle={{alignItems: 'center'}} ref={scrollRef}>
 					{/* 프로필 컨테이너 */}
 					<View style={[petInfoSetting.profileContainer]}>
 						<View style={[petInfoSetting.profileInside]}>
@@ -225,7 +244,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 									<AddItem92 />
 								</View>
 							</TouchableOpacity>
-							<View style={[petInfoSetting.petInfoContainer]}>
+							<View style={[petInfoSetting.petInfoContainer, {}]}>
 								<View style={[petInfoSetting.petInfo_topside]}>
 									<View style={[petInfoSetting.petInfo_topside_item]}>
 										<TouchableOpacity onPress={onClickUserInfo} activeOpacity={1} style={[petInfoSetting.petInfo_topside_upload]}>
@@ -240,41 +259,46 @@ export default PetInfoSetting = ({route, navigation}) => {
 										</TouchableOpacity>
 									</View>
 								</View>
-								<View style={[petInfoSetting.petInfo_bottom]}>
-									<View style={[petInfoSetting.user_introBox, !showMore ? {height: null} : null]}>
-										<Text numberOfLines={showMore ? 2 : 10} style={[txt.noto26, {color: GRAY10}]}>
-											{petData.user_introduction || '반려동물 소개가 없습니다.'}
-										</Text>
-									</View>
-									<View style={[petInfoSetting.user_introBox, {position: 'absolute', opacity: 0}]}>
-										<Text
-											onTextLayout={({nativeEvent: {lines}}) => {
-												setIntroOriginLine(lines.length);
-												// console.log('lines.length', lines.length);
-											}}
-											style={[txt.noto26, {color: GRAY10}]}>
-											{petData.user_introduction || '반려동물 소개가 없습니다.'}
-										</Text>
-									</View>
-									{introOriginLine < 2 ? (
-										<></>
-									) : (
-										<TouchableOpacity onPress={showMoreIntro} style={[petInfoSetting.petInfo_bottom_showMore]}>
-											{!showMore ? (
-												<>
-													<Text style={[txt.noto26, {color: GRAY10}]}>접기</Text>
-													<Arrow_Up_GRAY10 />
-												</>
-											) : (
-												<>
-													<Text style={[txt.noto26, {color: GRAY10}]}>더보기</Text>
-													<Arrow_Down_GRAY10 />
-												</>
-											)}
-										</TouchableOpacity>
-									)}
+								<View style={[petInfoSetting.petInfo_bottom, {}]}>
+									<TouchableOpacity activeOpacity={0.8} onPress={onClickUserInfo}>
+										<Text style={[txt.noto24b, {color: APRI10, textDecorationLine: 'underline', textAlign: 'right'}]}>프로필홈으로</Text>
+									</TouchableOpacity>
 								</View>
 							</View>
+						</View>
+						<View style={{marginTop: 10 * DP, width: 654 * DP}}>
+							<View style={[petInfoSetting.user_introBox, !showMore ? {height: null} : null]}>
+								<Text numberOfLines={showMore ? 2 : 10} style={[txt.noto26, {color: GRAY10}]}>
+									{petData.user_introduction || '반려동물 소개가 없습니다.'}
+								</Text>
+							</View>
+							<View style={[petInfoSetting.user_introBox, {position: 'absolute', opacity: 0}]}>
+								<Text
+									onTextLayout={({nativeEvent: {lines}}) => {
+										setIntroOriginLine(lines.length);
+										// console.log('lines.length', lines.length);
+									}}
+									style={[txt.noto26, {color: GRAY10}]}>
+									{petData.user_introduction || '반려동물 소개가 없습니다.'}
+								</Text>
+							</View>
+							{introOriginLine < 2 ? (
+								<></>
+							) : (
+								<TouchableOpacity onPress={showMoreIntro} style={[petInfoSetting.petInfo_bottom_showMore]}>
+									{!showMore ? (
+										<>
+											<Text style={[txt.noto26, {color: GRAY10}]}>접기</Text>
+											<Arrow_Up_GRAY10 />
+										</>
+									) : (
+										<>
+											<Text style={[txt.noto26, {color: GRAY10}]}>더보기</Text>
+											<Arrow_Down_GRAY10 />
+										</>
+									)}
+								</TouchableOpacity>
+							)}
 						</View>
 					</View>
 					{/* 계정정보 */}
@@ -313,7 +337,9 @@ export default PetInfoSetting = ({route, navigation}) => {
 					<View style={[petInfoSetting.petProfileMenu.container]}>
 						<View style={[petInfoSetting.petProfileMenu.insideContainer]}>
 							<View style={[petInfoSetting.petProfileMenu.menuTitle]}>
-								<Text style={[txt.noto30b, {color: GRAY10}]}>소개</Text>
+								<Text style={[txt.noto30b, {color: GRAY10}]}>
+									소개 <Text style={[txt.noto22b, {color: GRAY20}]}> (최대 500자, 15줄)</Text>{' '}
+								</Text>
 							</View>
 							<View style={[petInfoSetting.petProfileMenu.bracket50]}>
 								{editMode ? (
@@ -321,7 +347,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 										완료
 									</Text>
 								) : (
-									<Text onPress={() => setEditMode(!editMode)} style={[txt.noto26b, {color: APRI10, textDecorationLine: 'underline'}]}>
+									<Text onPress={onPressModifyIntro} style={[txt.noto26b, {color: APRI10, textDecorationLine: 'underline'}]}>
 										수정
 									</Text>
 								)}
@@ -332,16 +358,17 @@ export default PetInfoSetting = ({route, navigation}) => {
 								<TextInput
 									defaultValue={petData.user_introduction || ''}
 									onChangeText={modifyIntroText}
-									style={[
-										txt.noto26,
-										{backgroundColor: GRAY40, width: 654 * DP, borderRadius: 30 * DP, paddingVertical: 20 * DP, paddingHorizontal: 20 * DP},
-									]}
+									style={[txt.noto26, petInfoSetting.introInput]}
+									value={userIntro_temp}
+									placeholder={'반려동물 소개를 입력해주세요.(최대 500자, 15줄)'}
 									multiline={true}
 									maxLength={500}
 									ref={modifyRef}
 								/>
 							) : (
-								<Text style={[txt.noto26, {color: GRAY10}]}>{petData.user_introduction || '반려동물 소개가 없습니다.'}</Text>
+								<Text style={[txt.noto26, {color: GRAY10}]} numberOfLines={15}>
+									{petData.user_introduction || '반려동물 소개가 없습니다.'}
+								</Text>
 							)}
 						</View>
 					</View>

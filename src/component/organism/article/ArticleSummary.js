@@ -14,6 +14,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
  * @param {object} props.data - 데이터
  * @param {()=>void)} props.onPressArticle - 내용 클릭
  * @param {string} props.isSearch - 검색어
+ * @param {boolean} props.selectMode - 검색어
  */
 const ArticleSummary = props => {
 	const data = props.data;
@@ -139,7 +140,7 @@ const ArticleSummary = props => {
 		<View style={[style.container]}>
 			<View style={[style.inside]}>
 				<Text style={[txt.noto28, {color: GRAY10}]}>{getArticleType()}</Text>
-				<TouchableOpacity onPress={onPressArticle} activeOpacity={0.6} style={[style.content]}>
+				<TouchableOpacity onPress={onPressArticle} activeOpacity={props.selectMode ? 1 : 0.6} style={[style.content]}>
 					{text == '' ? <></> : getText()}
 				</TouchableOpacity>
 				<TouchableOpacity onPress={onPressArticle} activeOpacity={0} style={[style.content, {position: 'absolute', opacity: 0}]}>
@@ -160,9 +161,10 @@ const ArticleSummary = props => {
 ArticleSummary.defaultProps = {
 	onPressArticle: () => {},
 	isSearch: '',
+	selectMode: false,
 };
 
-export default React.memo(ArticleSummary);
+export default ArticleSummary;
 
 const style = StyleSheet.create({
 	container: {

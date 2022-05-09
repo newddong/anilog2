@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TextInput, TouchableWithoutFeedback, Platform, StyleSheet} from 'react-native';
+import {View, Text, TouchableWithoutFeedback, Platform, StyleSheet, TextInput} from 'react-native';
 import AccountHashList from 'Organism/list/AccountHashList';
 import {APRI10, GRAY20} from 'Root/config/color';
 import {findTagAt, isTag, getTagName, findStartIndexOfTag, findEndIndexOfTag} from 'Root/util/stringutil';
@@ -11,6 +11,7 @@ import {styles} from 'Root/component/atom/image/imageStyle';
 import {txt} from 'Root/config/textstyle';
 import {Location54_Filled} from 'Root/component/atom/icon';
 import DP from 'Root/config/dp';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export default function HashInput(props) {
 	const [value, setValue] = React.useState(props.value ? props.value : '');

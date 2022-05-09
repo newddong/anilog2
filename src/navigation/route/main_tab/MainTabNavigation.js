@@ -48,14 +48,14 @@ export default MainTabNavigation = ({route, navigation}) => {
 		<MainTabNav.Navigator initialRouteName={'FEED'} tabBar={props => <BottomTab {...props} />}>
 			<MainTabNav.Screen
 				name="FEED"
-				component={FeedStackNavigation}
 				options={({route}) => ({
 					tabBarVisible: getTabBarVisibility(route),
 					tabBarLabel: '피드',
 					tabBarHideOnKeyboard: true,
 					header: props => false,
-				})}
-			/>
+				})}>
+				{props => <FeedStackNavigation {...props} sendRoute={sendRoute} />}
+			</MainTabNav.Screen>
 			<MainTabNav.Screen
 				name="PROTECTION"
 				options={({route}) => ({

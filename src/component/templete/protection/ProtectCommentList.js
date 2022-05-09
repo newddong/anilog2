@@ -332,7 +332,7 @@ export default ProtectCommentList = props => {
 					<Text style={[txt.noto32b, {}]}>{data.protect_request_title || ''}</Text>
 				</View>
 				<View style={{marginBottom: 20 * DP, alignItems: 'flex-end', width: 654 * DP}}>
-					<Text style={[txt.noto26, {color: GRAY10}]}>댓글 {comments.length}개 </Text>
+					{comments.length == 0 ? <></> : <Text style={[txt.noto26, {color: GRAY10}]}>댓글 {comments.length}개 </Text>}
 				</View>
 			</View>
 		);

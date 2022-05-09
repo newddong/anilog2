@@ -25,7 +25,7 @@ export default SearchFeedTabNavigation = props => {
 		props.onClickUser(sendUserobject);
 	};
 
-	searchContext.searchInfo.routeName = getFocusedRouteNameFromRoute(props.route); //현재 보고 있는 템플릿
+	// searchContext.searchInfo.routeName = getFocusedRouteNameFromRoute(props.route); //현재 보고 있는 템플릿
 
 	//검색탭 헤더의 인풋값이 바뀔 때마다 계정과 해쉬를 받아오는 api에 접속
 	React.useEffect(() => {

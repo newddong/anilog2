@@ -92,8 +92,6 @@ export default FollowerList = props => {
 		console.log('');
 	};
 
-	console.log('loading', props.loading);
-
 	if (props.loading) {
 		return <Loading isModal={false} />;
 	} else

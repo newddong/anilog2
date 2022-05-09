@@ -6,7 +6,7 @@ import {WHITE, APRI10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 import {RED} from 'Root/config/color';
-import {createFeed, createMissing, createReport, editFeed} from 'Root/api/feedapi';
+import {createFeed, createMissing, createReport, editFeed, getFeedDetailById} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default FeedWriteHeader = ({route, navigation, options}) => {
@@ -38,7 +38,27 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 					navigation.navigate('MissingAnimalDetail', {title: titleValue, _id: result.msg._id});
 				}
 			} else {
-				navigation.goBack();
+				if (route.name == 'FeedEdit') {
+					if (param.routeName == 'FeedCommentList') {
+						getFeedDetailById(
+							{feedobject_id: param._id},
+							result => {
+								// navigation.navigate('FeedCommentList', {feedobject: result.msg});
+								setTimeout(() => {
+									navigation.reset({
+										index: 1,
+										routes: [{name: 'MainTab'}, {name: 'FeedCommentList', params: {feedobject: result.msg}}],
+									});
+								}, 200);
+							},
+							err => {
+								console.log('err / getFeedDetailById / FeedWriteHeader : ', err);
+							},
+						);
+					}
+				} else {
+					navigation.goBack();
+				}
 			}
 		}, 200);
 	};
@@ -139,6 +159,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 		// }
 		// console.log('route.params:', route.params);
 		// Modal.popNoBtn('게시물을 수정중입니다.');
+		Modal.popLoading(true);
 		let changeTextRegex = /([#@])([^#@\s]+)/gm;
 		let param = {
 			...route.params,
@@ -147,17 +168,17 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
 		};
 		editFeed(param, complete, handleError);
-		console.log('수정 파라메터', param);
-		switch (route.params?.feedType) {
-			case 'Feed':
-				break;
-			case 'Missing':
-				break;
-			case 'Report':
-				break;
-			default:
-				break;
-		}
+		// console.log('수정 파라메터', param);
+		// switch (route.params?.feedType) {
+		// 	case 'Feed':
+		// 		break;
+		// 	case 'Missing':
+		// 		break;
+		// 	case 'Report':
+		// 		break;
+		// 	default:
+		// 		break;
+		// }
 	};
 
 	const titleStyle = [{textAlign: 'center'}, txt.noto40b, route.params?.feedType != 'Feed' ? {color: RED} : {color: '#000'}];

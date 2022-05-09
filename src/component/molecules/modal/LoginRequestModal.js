@@ -32,7 +32,12 @@ const LoginRequestModal = props => {
 				</View>
 				<TouchableOpacity
 					onPress={() => Modal.close()}
-					style={{flexDirection: 'row', alignItems: 'center', width: 228 * DP, alignSelf: 'center', marginTop: 20 * DP}}>
+					style={{
+						flexDirection: 'row',
+						alignItems: 'center',
+						alignSelf: 'center',
+						padding: 20 * DP,
+					}}>
 					<Text style={[txt.noto24, {color: GRAY10}]}> 로그인 없이 볼게요.{'   '}</Text>
 					<NextMark />
 				</TouchableOpacity>

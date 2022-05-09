@@ -372,6 +372,11 @@ export default RootStackNavigation = () => {
 							component={Certification}
 							options={{header: props => <SimpleHeader {...props} />, title: '사용자 인증'}}
 						/>
+						<RootStack.Screen
+							name="ShelterAsk"
+							component={ShelterAsk}
+							options={{header: props => <SimpleHeader {...props} />, title: '보호소 문의하기'}}
+						/>
 					</RootStack.Navigator>
 
 					{/* <RootStack.Screen

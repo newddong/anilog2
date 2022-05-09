@@ -21,10 +21,16 @@ import AlarmCommentList from 'Root/component/organism/comment/AlarmCommentList';
 import SetPetInformation from 'Root/component/templete/pet/SetPetInformation';
 import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
 import SearchMap from 'Root/component/templete/search/SearchMap';
+import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
+import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 
 const FeedStack = createStackNavigator();
 
-export default FeedStackNavigation = () => {
+export default FeedStackNavigation = props => {
+	const routeName = getFocusedRouteNameFromRoute(props.route) ?? 'MainHomeFeedList';
+	React.useEffect(() => {
+		props.sendRoute(routeName);
+	}, [routeName]);
 	return (
 		<FeedStack.Navigator initialRouteName="MainHomeFeedList">
 			<FeedStack.Screen name="MainHomeFeedList" component={FeedList} options={{header: props => <LogoHeader {...props} />}} />
@@ -43,11 +49,7 @@ export default FeedStackNavigation = () => {
 				component={AnimalProtectRequestDetail}
 				options={{header: props => <SimpleHeader {...props} />}}
 			/>
-			<FeedStack.Screen
-				name="FeedCommentList"
-				component={FeedCommentList}
-				options={{header: props => <AlarmAndSearchHeader {...props} />, title: '몰라'}}
-			/>
+			<FeedStack.Screen name="FeedCommentList" component={FeedCommentList} options={{header: props => <SimpleHeader {...props} />, title: '댓글'}} />
 			<FeedStack.Screen
 				name="FeedListForHashTag"
 				component={FeedListForHashTag}
@@ -61,16 +63,20 @@ export default FeedStackNavigation = () => {
 			/>
 
 			<FeedStack.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
-			<FeedStack.Screen name="AlarmCommentList" component={AlarmCommentList} options={{header: props => <SimpleHeader {...props} />}} />
-			{/* <FeedStack.Screen
+			<FeedStack.Screen
+				name="AlarmCommentList"
+				component={AlarmCommentList}
+				options={{header: props => <SimpleHeader {...props} />, title: '댓글'}}
+			/>
+			<FeedStack.Screen
 				name={'CommunityCommentList'}
 				component={CommunityCommentList}
 				options={({route}) => ({
 					// headerShown: false,
 					header: props => <SimpleHeader {...props} />,
-					title: ' ',
+					title: '댓글',
 				})}
-			/> */}
+			/>
 			<FeedStack.Screen
 				name={'ArticleDetail'}
 				component={ArticleDetail}

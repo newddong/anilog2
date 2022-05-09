@@ -44,7 +44,7 @@ export default FavoriteFeeds = ({route, navigation}) => {
 				getUserTaggedFeedList(
 					{userobject_id: userGlobalObject.userInfo._id},
 					result => {
-						console.log('유저의 태그된 피드 리스트', result);
+						// console.log('유저의 태그된 피드 리스트', result.msg);
 						setData(result.msg);
 					},
 					err => {
@@ -185,7 +185,11 @@ export default FavoriteFeeds = ({route, navigation}) => {
 						navigation.push('UserFeedList', {title: titleValue, userobject: result.msg, selected: feed_id});
 					} else if (route.name == 'TagMeFeeds') {
 						// console.log('tageme');
-						navigation.push('TagMeFeedList', {title: titleValue + '님을 태그한 글', userobject: result.msg, selected: feed_id});
+						navigation.push('TagMeFeedList', {
+							title: userGlobalObject.userInfo.user_nickname + '님을 태그한 글',
+							userobject: result.msg,
+							selected: feed_id,
+						});
 					} else if (route.name == 'FavoriteFeeds') {
 						console.log('feed_id', feed_id);
 						// navigation.push('UserFeedList', {title: titleValue, userobject: result.msg, selected: feed_id});

@@ -168,20 +168,24 @@ export default FavoriteProtectRequest = ({route}) => {
 
 	//보호요청글 클릭
 	const onClickLabel = (status, id, item) => {
-		let gender = '남';
-		switch (item.protect_animal_sex) {
-			case 'male':
-				gender = '남';
-				break;
-			case 'female':
-				gender = '여';
-				break;
-			case 'male':
-				gender = '성별모름';
-				break;
+		if (selectMode) {
+			return false;
+		} else {
+			let gender = '남';
+			switch (item.protect_animal_sex) {
+				case 'male':
+					gender = '남';
+					break;
+				case 'female':
+					gender = '여';
+					break;
+				case 'male':
+					gender = '성별모름';
+					break;
+			}
+			const title = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + gender;
+			navigation.push('AnimalProtectRequestDetail', {id: item._id, title: title, writer: item.protect_request_writer_id._id});
 		}
-		const title = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + gender;
-		navigation.push('AnimalProtectRequestDetail', {id: item._id, title: title, writer: item.protect_request_writer_id._id});
 	};
 
 	const renderItem = ({item, index}) => {

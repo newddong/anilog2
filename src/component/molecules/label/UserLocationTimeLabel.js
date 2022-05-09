@@ -56,7 +56,7 @@ const UserLocationTimeLabel = props => {
 	const getLocation = () => {
 		let result = '';
 		const location = props.location;
-		const detail = props.location.detail == undefined ? '' : ' ' + props.location.detail;
+		const detail = props.location.detail == undefined ? '' : '' + props.location.detail;
 		if (location.road_address?.address_name == '') {
 			result = '';
 		} else if (location.road_address?.address_name == '도로명 주소가 없는 위치입니다. ' || location.road_address?.address_name == 'undefined ') {

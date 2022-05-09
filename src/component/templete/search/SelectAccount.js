@@ -7,7 +7,6 @@ import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 import dp from 'Root/config/dp';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import searchContext from 'Root/config/searchContext';
 
 export default SelectAccount = ({route, navigation}) => {
 	const [data, setData] = React.useState([]);

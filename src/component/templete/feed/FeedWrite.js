@@ -369,7 +369,6 @@ export default FeedWrite = props => {
 				<View style={{backgroundColor: 'red', width: 50, height: 50}}></View>
 			</TouchableWithoutFeedback> */}
 			<FlatList
-				keyboardDismissMode={'on-drag'}
 				renderItem={({item, index}) => {
 					return (
 						<View contentContainerStyle={[login_style.wrp_main, {backgroundColor: '#000'}]} ref={container}>

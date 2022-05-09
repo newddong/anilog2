@@ -246,7 +246,6 @@ const ReviewContent = props => {
 									longitude: parseFloat(data.community_address.region.longitude),
 									latitude: parseFloat(data.community_address.region.latitude),
 								}}
-								onCalloutPress={() => alert('Clicked')}
 								key={`${x}${Date.now()}`} // 현재 마커의 위치가 바뀌어도 타이틀 및 description이 최신화 되지 않던 현상 발견 -> 키 값 부여
 							>
 								<View style={[{alignItems: 'center', marginBottom: 20 * DP}]}>

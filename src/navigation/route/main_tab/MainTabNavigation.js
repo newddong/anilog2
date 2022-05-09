@@ -18,7 +18,7 @@ const MainTabNav = createBottomTabNavigator();
 export default MainTabNavigation = ({route, navigation}) => {
 	const routeName = getFocusedRouteNameFromRoute(route) ?? '';
 	// console.log('getFocusedRouteNameFromRoute / MainTab  : ', routeName);
-	const [current, setCurrent] = React.useState('ArticleMain');
+	const [current, setCurrent] = React.useState('FEED');
 
 	const getTabBarVisibility = route => {
 		switch (current) {

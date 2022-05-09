@@ -195,7 +195,7 @@ export default ReviewDetail = props => {
 							community_object_id: data._id,
 							request_number: 1000,
 						},
-						result => {
+						comments => {
 							!parentComment && setComments([]); //댓글목록 초기화
 							// setComments(result.msg.filter(e => e.comment_is_delete != true));
 							let res = comments.msg.filter(e => e.comment_is_delete != true);

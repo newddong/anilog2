@@ -179,7 +179,7 @@ export default ShelterInfoSetting = ({route}) => {
 							) : (
 								<View style={{}}>
 									<Text style={[txt.noto26, {color: GRAY10}]} ellipsizeMode={'tail'} numberOfLines={showMore ? null : 3}>
-										{data.user_introduction || ''}
+										{data.user_introduction || '소개란이 비어있습니다.'}
 									</Text>
 									<Text
 										style={[txt.noto24, {position: 'absolute', opacity: 0, backgroundColor: 'red'}]}

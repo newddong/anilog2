@@ -20,6 +20,7 @@ import AlarmCommentList from 'Root/component/organism/comment/AlarmCommentList';
 
 import SetPetInformation from 'Root/component/templete/pet/SetPetInformation';
 import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
+import ProtectCommentList from 'Root/component/templete/protection/ProtectCommentList';
 
 const FeedStack = createStackNavigator();
 
@@ -107,6 +108,7 @@ export default FeedStackNavigation = () => {
 				component={EditShelterInfo}
 				options={{header: props => <SimpleHeader {...props} />, title: '보호소 정보 수정'}}
 			/>
+			<FeedStack.Screen name="ProtectCommentList" component={ProtectCommentList} options={{header: props => <SimpleHeader {...props} />}} />
 		</FeedStack.Navigator>
 	);
 };

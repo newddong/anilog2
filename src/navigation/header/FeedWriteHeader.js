@@ -36,9 +36,12 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 					}
 					const titleValue = result.msg.missing_animal_species + '/' + result.msg.missing_animal_species_detail + '/' + sexValue;
 					navigation.navigate('MissingAnimalDetail', {title: titleValue, _id: result.msg._id});
+				} else {
+					navigation.goBack();
 				}
 			} else {
 				if (route.name == 'FeedEdit') {
+					console.log('dd', param.routeName);
 					if (param.routeName == 'FeedCommentList') {
 						getFeedDetailById(
 							{feedobject_id: param._id},
@@ -55,6 +58,8 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 								console.log('err / getFeedDetailById / FeedWriteHeader : ', err);
 							},
 						);
+					} else {
+						navigation.goBack();
 					}
 				} else {
 					navigation.goBack();

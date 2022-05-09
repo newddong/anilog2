@@ -21,7 +21,7 @@ import {DEFAULT_PROFILE} from 'Root/i18n/msg';
  */
 
 const FeedThumbnail = React.memo(props => {
-	console.log('FeedThumbnail', props.data);
+	// console.log('FeedThumbnail', props.data);
 	const [selected, setSelected] = React.useState(false);
 	React.useEffect(() => {
 		setSelected(props.data.checkBoxState);

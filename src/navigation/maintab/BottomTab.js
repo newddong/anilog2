@@ -81,6 +81,9 @@ export default function BottomTab({state, descriptors, navigation}) {
 							});
 						} else {
 							console.log('tabP');
+							if (state.index == 4) {
+								navigation.navigate({name: route.name, merge: true});
+							}
 							const event = navigation.emit({
 								type: 'tabPress',
 								target: route.key,

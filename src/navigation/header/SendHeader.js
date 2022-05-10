@@ -148,15 +148,34 @@ export default SendHeader = ({route, navigation, options}) => {
 									},
 									result => {
 										// console.log('result / updateAndDeleteCommunity / SendHeader ', result.msg);
-										result.msg.community_type == 'review'
-											? navigation.reset({
-													index: 1,
-													routes: [{name: 'CommunityMain'}, {name: 'ReviewDetail', params: {community_object: result.msg}}],
-											  })
-											: navigation.reset({
-													index: 1,
-													routes: [{name: 'CommunityMain'}, {name: 'ArticleDetail', params: {community_object: result.msg}}],
-											  });
+										console.log('param', route.params.isSearch);
+										if (route.params.isSearch) {
+											result.msg.community_type == 'review'
+												? navigation.reset({
+														index: 1,
+														routes: [
+															{name: 'SearchTab', params: {tab: 'REVIEW'}},
+															{name: 'ReviewDetail', params: {community_object: result.msg, searchInput: route.params.isSearch}},
+														],
+												  })
+												: navigation.reset({
+														index: 1,
+														routes: [
+															{name: 'SearchTab', params: {tab: 'ARTICLE'}},
+															{name: 'ArticleDetail', params: {community_object: result.msg, searchInput: route.params.isSearch}},
+														],
+												  });
+										} else {
+											result.msg.community_type == 'review'
+												? navigation.reset({
+														index: 1,
+														routes: [{name: 'CommunityMain'}, {name: 'ReviewDetail', params: {community_object: result.msg}}],
+												  })
+												: navigation.reset({
+														index: 1,
+														routes: [{name: 'CommunityMain'}, {name: 'ArticleDetail', params: {community_object: result.msg}}],
+												  });
+										}
 									},
 									err => {
 										console.log('err / updateAndDeleteCommunity / sendHeader ', err);

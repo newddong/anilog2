@@ -14,11 +14,11 @@ import searchContext from 'Root/config/searchContext';
  * @param {(input:string)=>void} props.onChange - 인풋 값 변경시 동작하는 콜백, 인풋 반환환
  * @param {(input:string)=>void} props.onSearch - 검색버튼을 눌렸을때 동작하는 콜백, 저장된 인풋을 반환
  * @param {()=>void} props.onClear - 지우기 버튼(X) 클릭시 동작하는 콜백
+ * @param {string} props.default - 기존 검색어
  */
 const InputWithSearchIcon = props => {
 	const [input, setInput] = React.useState('');
 	const inputRef = React.useRef();
-
 	//인풋 값 변경 콜백
 	const onChange = text => {
 		setInput(text);
@@ -91,6 +91,7 @@ const InputWithSearchIcon = props => {
 InputWithSearchIcon.defaultProps = {
 	value: 'Value',
 	placeholder: 'placeholder',
+	default: '',
 	width: 654, //전체View Width
 	onChange: e => console.log(e),
 	onSearch: e => console.log(e),

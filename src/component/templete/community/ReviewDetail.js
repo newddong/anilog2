@@ -366,7 +366,7 @@ export default ReviewDetail = props => {
 			select => {
 				switch (select) {
 					case '수정':
-						navigation.push('CommunityEdit', {previous: data, isReview: true});
+						navigation.push('CommunityEdit', {previous: data, isReview: true, isSearch: props.route.params.searchInput});
 						break;
 					case '삭제':
 						Modal.close();
@@ -490,7 +490,7 @@ export default ReviewDetail = props => {
 
 	//다른 후기 게시글 클릭
 	const onPressReviewBrief = index => {
-		navigation.push('ReviewDetail', {community_object: reviewList[index]});
+		navigation.push('ReviewDetail', {community_object: reviewList[index], searchInput: searchInput});
 	};
 
 	//답글 쓰기 후 댓글 작성자 우측 답글취소 버튼 클릭

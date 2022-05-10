@@ -592,14 +592,15 @@ RCT_EXPORT_METHOD(compressImage:(NSDictionary * _Nonnull)params
         }
         
         //압축된 데이터
-        NSData *imageData = [NSData data];
-        if([mimeType.lowercaseString isEqualToString:@"jpg"]){
-          imageData = UIImageJPEGRepresentation(img, quality);
-        } else if([mimeType.lowercaseString isEqualToString:@"png"]){
-          imageData = UIImagePNGRepresentation(img);
-        }
+        //220510 compress시 저장 타입 jpg로 통일
+        NSData *imageData = UIImageJPEGRepresentation(img, quality);
+//        if([mimeType.lowercaseString isEqualToString:@"jpg"]){
+//          imageData = UIImageJPEGRepresentation(img, quality);
+//        } else if([mimeType.lowercaseString isEqualToString:@"png"]){
+//          imageData = UIImagePNGRepresentation(img);
+//        }
         
-        NSString* savedPath = [self createTempImage:imageData mimeType:mimeType];
+        NSString* savedPath = [self createTempImage:imageData mimeType:@"jpg"];
         if(savedPath == nil){
           errCode = @"Image save error";
           errMsg = @"Fail to save image";

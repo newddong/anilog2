@@ -7,17 +7,18 @@ import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 import dp from 'Root/config/dp';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import InputWithSearchIcon from 'Root/component/molecules/input/InputWithSearchIcon';
 
 export default SelectAccount = ({route, navigation}) => {
 	const [data, setData] = React.useState([]);
+	const [searchInput, setSearchInput] = React.useState('');
 
 	React.useEffect(() => {
-		console.log('searchInput / SelectAccount', route.params.searchInput);
 		// if (route.params?.searchInput != '') {
-		Modal.popLoading();
+		console.log('searchInput', searchInput);
 		getUserListByNickname(
 			{
-				user_nickname: route.params.searchInput,
+				user_nickname: searchInput,
 				request_number: '',
 				userobject_id: '',
 				user_type: 'user',
@@ -36,7 +37,7 @@ export default SelectAccount = ({route, navigation}) => {
 			},
 		);
 		// }
-	}, [route.params?.searchInput]);
+	}, [searchInput]);
 
 	const onSelect = (item, index) => {
 		console.log('props route params', route.userobject_id);
@@ -75,8 +76,14 @@ export default SelectAccount = ({route, navigation}) => {
 		);
 	};
 
+	const onChange = text => {
+		// console.log('text', text);
+		setSearchInput(text);
+	};
+
 	return (
 		<View style={[login_style.wrp_main, selectAccount.container]}>
+			<InputWithSearchIcon onChange={onChange} width={654} placeholder={'닉네임을 검색해주세요.'} />
 			{data.length > 0 ? (
 				<View style={[selectAccount.accountList]}>
 					<AccountList items={data} onSelect={onSelect} showCrossMark={false} />

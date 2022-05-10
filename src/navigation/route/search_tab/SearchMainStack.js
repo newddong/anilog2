@@ -35,7 +35,7 @@ export default SearchMainStack = props => {
 					header: prop => <InputAndSearchHeader {...props} />,
 					tabBarShowLabel: false,
 				}}>
-				{props => <SearchTabNavigation {...props} />}
+				{() => <SearchTabNavigation {...props} />}
 			</SearchStackNav.Screen>
 			<SearchStackNav.Screen
 				name="UserProfile"

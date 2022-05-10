@@ -4133,6 +4133,7 @@ export const selectAccount = StyleSheet.create({
 	},
 	accountList: {
 		marginTop: 32 * DP,
+		paddingBottom: 80 * DP,
 		width: 654 * DP,
 	},
 });

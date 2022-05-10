@@ -13,18 +13,25 @@ import SearchAccountA from 'Root/component/templete/search/SearchAccountA';
 import SearchReview from 'Root/component/templete/search/SearchReview';
 import {getSearchCommunityList} from 'Root/api/community';
 import SearchArticle from 'Root/component/templete/search/SearchArticle';
+import {useNavigation} from '@react-navigation/core';
 
 const SearchTabNav = createMaterialTopTabNavigator();
 
 export default SearchTabNavigation = props => {
+	// console.log('props.', props.route.params);
+
 	// navigation.push('Search', {mother: 0, child: 1});
 	// ㄴ 위와 같이 호출할 경우 mother는 상위TopTab의 Tab인덱스를, child는 하단TopTab의 인덱스를 설정해줄 수 있음.
+	const navigation = useNavigation();
 	const prevNav = props.prevNav;
 	// const [searchInput, setSearchInput] = React.useState('');
 	const [userList, setUserList] = React.useState('false');
 	const [hashList, setHashList] = React.useState('false');
 	const [commList, setCommList] = React.useState('false');
 	const [loading, setLoading] = React.useState(false);
+
+	const initial = 'ACCOUNT';
+
 	const onClickUser = sendUserobject => {
 		props.navigation.navigate('SearchTabUserProfile', {userobject: sendUserobject});
 	};
@@ -58,6 +65,9 @@ export default SearchTabNavigation = props => {
 			}
 		}
 		fetchData(); // effect Hook에서 async await 구문을 쓰기 위한 처리
+		navigation.addListener('focus', () => {
+			fetchData();
+		});
 	}, [searchContext.searchInfo.searchInput]);
 
 	//검색된 입력값과 일치하는 계정 리스트 받아오기
@@ -123,9 +133,14 @@ export default SearchTabNavigation = props => {
 						searchKeyword: searchContext.searchInfo.searchInput,
 					},
 					result => {
-						console.log('searchContext.searchInfo.searchInput', searchContext.searchInfo.searchInput);
-						// console.log('result / getSearchCommunityList / SearchTabNav : ', result.msg.review);
-						resolve(result.msg);
+						// console.log('searchContext.searchInfo.searchInput', searchContext.searchInfo.searchInput);
+						// console.log('result / getSearchCommunityList / SearchTabNav : ', result.msg);
+						let res = result.msg;
+						const noneDeletedReview = result.msg.review.filter(e => e.community_is_delete != true);
+						const noneDeletedArticle = result.msg.free.filter(e => e.community_is_delete != true);
+						res.free = noneDeletedArticle;
+						res.review = noneDeletedReview;
+						resolve(res);
 					},
 					err => {
 						console.log('err / getSearchCommunityList / SearchTabNav : ', err);
@@ -148,7 +163,7 @@ export default SearchTabNavigation = props => {
 				lazy: true,
 			}}
 			initialLayout={{width: Dimensions.get('window').width}}
-			initialRouteName={'FEED'}
+			initialRouteName={initial}
 			optimizationsEnabled={true}>
 			<SearchTabNav.Screen
 				name="ACCOUNT"

@@ -10,6 +10,7 @@ export default InputAndSearchHeader = props => {
 	const routeName = props.route.name != undefined ? props.route.name : '';
 	const [searchInput, setSearchInput] = React.useState('');
 	const [searchRoute, setSearchRoute] = React.useState('');
+	// console.log('props', props.route.params.searchInput);
 
 	const confirm = () => {
 		//헤더에서 작성한 인풋입력값을 템플릿에 전달

@@ -41,7 +41,7 @@ export default CommunityEdit = props => {
 	const article_type = ['talk', 'question', 'meeting'];
 
 	React.useEffect(() => {
-		props.navigation.setParams({data: data, nav: 'CommunityEdit'});
+		props.navigation.setParams({data: data, nav: 'CommunityEdit', isSearch: props.route.params.isSearch});
 	}, [data]);
 
 	React.useEffect(() => {

@@ -17,6 +17,7 @@ import {
 	ProfileDefaultImg,
 } from 'Atom/icon';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {useScrollToTop} from '@react-navigation/native';
 
 export default function BottomTab({state, descriptors, navigation}) {
 	// console.log('바텀탭 유저 글로벌',userGlobalObject);
@@ -25,7 +26,7 @@ export default function BottomTab({state, descriptors, navigation}) {
 	const iconsFocused = [<FeedTabFilled />, <AnimalSavingTabFilled />, <CommunityTabFilled />, <MyTabFilled />];
 
 	const iconlayout = [tab.tab_feed, tab.tab_animal_saving, tab.tab_community, tab.tab_my];
-
+	const ref = React.useRef();
 	let currentIndex = null;
 	if (focusedOptions.tabBarVisible === false) {
 		return null;
@@ -69,7 +70,10 @@ export default function BottomTab({state, descriptors, navigation}) {
 								navigation.navigate({name: 'Login', merge: true});
 							});
 						} else {
-							console.log('tabP');
+							console.log('tabP', route);
+							if (route.name == 'FEED') {
+								// navigation.navigate(name: "FeedList");
+							}
 							const event = navigation.emit({
 								type: 'tabPress',
 								target: route.key,

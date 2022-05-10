@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {Text, View, TouchableOpacity, ScrollView, Image, TouchableWithoutFeedback, KeyboardAvoidingView} from 'react-native';
-import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
+import {APRI10, GRAY10, GRAY20, GRAY30} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {AVAILABLE_NICK, DEFAULT_PROFILE, NICKNAME_FORM} from 'Root/i18n/msg';
@@ -199,7 +199,9 @@ export default AssignPetProfileImage = ({route}) => {
 					/>
 				</View>
 				<View style={[temp_style.textMsg_assignPetProfileImage, assignPetProfileImage_style.textMsg]}>
-					<Text style={[txt.noto24, {color: GRAY10}]}>반려동물 프로필의 대표 이미지가 될 사진과 이름을 알려주세요.</Text>
+					<Text style={[txt.noto24, {color: GRAY10}]}>
+						{`반려동물 프로필의 대표 이미지가 될 사진과 이름을 알려주세요.\n반려동물의 이름은 수정이 불가합니다.`}
+					</Text>
 				</View>
 
 				{/* (M)ProfileImageSelect */}

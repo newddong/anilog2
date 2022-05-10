@@ -151,6 +151,12 @@ const ReviewContent = props => {
 		Modal.popPhotoListViewModal([src]);
 	};
 
+	const getLocation =
+		data.community_address.road_address.address_name.includes('도로명 주소가 없는 위치입니다. ') ||
+		data.community_address.road_address.address_name == 'undefined '
+			? data.community_address.normal_address.address_name
+			: data.community_address.road_address.address_name;
+
 	return (
 		<View style={[style.container]}>
 			{/* 리뷰 헤더  */}
@@ -226,6 +232,7 @@ const ReviewContent = props => {
 							zoomEnabled
 							zoomControlEnabled
 							showsUserLocation={true}
+							toolbarEnabled={false}
 							mapType="standard"
 							region={{
 								longitude: parseFloat(data.community_address.region.longitude),
@@ -242,12 +249,7 @@ const ReviewContent = props => {
 								key={`${x}${Date.now()}`} // 현재 마커의 위치가 바뀌어도 타이틀 및 description이 최신화 되지 않던 현상 발견 -> 키 값 부여
 							>
 								<View style={[{alignItems: 'center', marginBottom: 20 * DP}]}>
-									<Text style={[txt.noto22b, style.locationText]}>
-										{' '}
-										{data.community_address.road_address.address_name == '도로명 주소가 없는 위치입니다. '
-											? data.community_address.normal_address.address_name
-											: data.community_address.road_address.address_name}
-									</Text>
+									<Text style={[txt.noto22b, style.locationText]}> {getLocation}</Text>
 									<View style={[style.triangle]}></View>
 									<LocationMarker />
 								</View>
@@ -255,11 +257,7 @@ const ReviewContent = props => {
 						</MapView>
 						<View style={[style.location]}>
 							<LocationGray />
-							<Text style={[txt.noto26b, {color: GRAY10, marginLeft: 10 * DP}]}>
-								{data.community_address.road_address.address_name == '도로명 주소가 없는 위치입니다. '
-									? data.community_address.normal_address.address_name
-									: data.community_address.road_address.address_name}
-							</Text>
+							<Text style={[txt.noto26b, {color: GRAY10, marginLeft: 10 * DP}]}>{getLocation}</Text>
 						</View>
 					</>
 				)}

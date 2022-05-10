@@ -118,7 +118,13 @@ export default UserInfoSetting = ({route}) => {
 
 	//수정 TextInput 콜백 함수
 	const modifyIntroText = text => {
-		setData({...data, user_introduction: text});
+		const breaks = text.split(/\r\n|\r|\n/).length;
+		console.log('breaks', breaks);
+		if (breaks > 15) {
+			return;
+		} else {
+			setData({...data, user_introduction: text});
+		}
 	};
 
 	if (data == 'false') {
@@ -178,8 +184,10 @@ export default UserInfoSetting = ({route}) => {
 						{/* 소개 */}
 						<View style={[temp_style.introduceInfo]}>
 							<View style={[temp_style.introduceInfo_depth1]}>
-								<View style={[temp_style.title, userInfoSetting_style.title_detail]}>
-									<Text style={[txt.noto30b, {color: GRAY10}]}>소개</Text>
+								<View style={[userInfoSetting_style.title_detail]}>
+									<Text style={[txt.noto30b, {color: GRAY10}]}>
+										소개 <Text style={[txt.noto22b, {color: GRAY20}]}> (최대 500자, 15줄)</Text>
+									</Text>
 								</View>
 								<View style={[btn_style.btn_w114, userInfoSetting_style.btn_w114]}>
 									{modifyMode ? (
@@ -206,6 +214,8 @@ export default UserInfoSetting = ({route}) => {
 											style={[txt.noto26, userInfoSetting_style.user_intro_modifyMode, {backgroundColor: GRAY40}]}
 											defaultValue={data.user_introduction || ''}
 											multiline={true}
+											value={data.user_introduction}
+											placeholder={'소개를 입력해주세요. (최대 500자, 15줄)'}
 											maxLength={500}
 											ref={modifyRef}
 										/>

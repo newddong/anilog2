@@ -238,7 +238,7 @@ export default ShelterMenu = ({route}) => {
 								{data.user_introduction || ''}
 							</Text>
 							{/* 삭제금지 */}
-							<Text numberOfLines={showMoreIntro ? 10 : 2} style={[txt.noto26]}>
+							<Text numberOfLines={showMoreIntro ? 15 : 2} style={[txt.noto26]}>
 								{data.user_introduction || '자기소개가 없습니다.'}
 							</Text>
 						</View>

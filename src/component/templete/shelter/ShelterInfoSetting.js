@@ -97,7 +97,13 @@ export default ShelterInfoSetting = ({route}) => {
 
 	//수정 TextInput 콜백 함수
 	const modifyIntroText = text => {
-		setIntro_modified(text);
+		const breaks = text.split(/\r\n|\r|\n/).length;
+		console.log('breaks', breaks);
+		if (breaks > 15) {
+			return;
+		} else {
+			setIntro_modified(text);
+		}
 	};
 	//더보기 state 바꾸기
 	const changeShowMore = () => {
@@ -161,7 +167,9 @@ export default ShelterInfoSetting = ({route}) => {
 									<TextInput
 										onChangeText={modifyIntroText}
 										style={[txt.noto26, shelterInfoSetting.modificationTextInput, {backgroundColor: GRAY40}]}
-										defaultValue={data.user_introduction || '소개란이 비어있습니다.'}
+										defaultValue={data.user_introduction || ''}
+										value={intro_modified}
+										placeholder={'보호소 소개를 입력해주세요. (최대 500자, 15줄)'}
 										multiline={true}
 										maxLength={500}
 										ref={modifyRef}
@@ -171,7 +179,7 @@ export default ShelterInfoSetting = ({route}) => {
 							) : (
 								<View style={{}}>
 									<Text style={[txt.noto26, {color: GRAY10}]} ellipsizeMode={'tail'} numberOfLines={showMore ? null : 3}>
-										{data.user_introduction || ''}
+										{data.user_introduction || '소개란이 비어있습니다.'}
 									</Text>
 									<Text
 										style={[txt.noto24, {position: 'absolute', opacity: 0, backgroundColor: 'red'}]}

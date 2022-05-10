@@ -79,6 +79,9 @@ import FavoriteReview from 'Templete/favorite/FavoriteReview';
 import FavoriteProtectRequest from 'Templete/favorite/FavoriteProtectRequest';
 import AlarmList from 'Templete/list/AlarmList';
 import AlarmCommentList from 'Organism/comment/AlarmCommentList';
+import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
+import ArticleDetail from 'Root/component/templete/community/ArticleDetail';
+import ReviewDetail from 'Root/component/templete/community/ReviewDetail';
 const MyStack = createStackNavigator();
 export default MyStackNavigation = props => {
 	return (
@@ -179,7 +182,11 @@ export default MyStackNavigation = props => {
 				component={FavoriteFeeds}
 				options={{header: props => <SimpleHeader {...props} />, title: '피드 즐겨찾기'}}
 			/>
-			<MyStack.Screen name="FavoriteFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: '즐겨찾기'}} />
+			<MyStack.Screen
+				name="FavoriteFeedList"
+				component={FeedList}
+				options={{header: props => <SimpleHeader {...props} />, title: '즐겨찾기한 게시글'}}
+			/>
 			<MyStack.Screen name="TagMeFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />}} />
 			<MyStack.Screen name="TagMeFeeds" component={FavoriteFeeds} options={{header: props => <SimpleHeader {...props} />, title: '나를 태그한 글'}} />
 			<MyStack.Screen
@@ -316,7 +323,11 @@ export default MyStackNavigation = props => {
 				component={SettingInformAsk}
 				options={{header: props => <SimpleHeader {...props} />, title: '정보/문의'}}
 			/>
-			<MyStack.Screen name="ProtectCommentList" component={ProtectCommentList} options={{header: props => <AlarmAndSearchHeader {...props} />}} />
+			<MyStack.Screen
+				name="ProtectCommentList"
+				component={ProtectCommentList}
+				options={{header: props => <SimpleHeader {...props} />, title: '댓글'}}
+			/>
 			<MyStack.Screen name="SettingAccount" component={SettingAccount} options={{header: props => <SimpleHeader {...props} />, title: '계정'}} />
 			<MyStack.Screen name="SettingAlarm" component={SettingAlarm} options={{header: props => <SimpleHeader {...props} />, title: '알림'}} />
 			<MyStack.Screen name="SettingOpen" component={SettingOpen} options={{header: props => <SimpleHeader {...props} />, title: '공개 설정'}} />
@@ -372,6 +383,33 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen name="MyReview" component={FavoriteReview} options={{header: props => <SimpleHeader {...props} />, title: '나의 리뷰'}} />
 			<MyStack.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
 			<MyStack.Screen name="AlarmCommentList" component={AlarmCommentList} options={{header: props => <SimpleHeader {...props} />}} />
+			<MyStack.Screen
+				name={'CommunityCommentList'}
+				component={CommunityCommentList}
+				options={({route}) => ({
+					// headerShown: false,
+					header: props => <SimpleHeader {...props} />,
+					title: ' ',
+				})}
+			/>
+			<MyStack.Screen
+				name={'ArticleDetail'}
+				component={ArticleDetail}
+				options={({route}) => ({
+					headerShown: true,
+					header: props => <SimpleHeader {...props} />,
+					title: ' ',
+				})}
+			/>
+			<MyStack.Screen
+				name={'ReviewDetail'}
+				component={ReviewDetail}
+				options={({route}) => ({
+					headerShown: true,
+					header: props => <SimpleHeader {...props} />,
+					title: ' ',
+				})}
+			/>
 		</MyStack.Navigator>
 	);
 };

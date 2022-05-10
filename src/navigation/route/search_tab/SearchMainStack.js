@@ -32,7 +32,7 @@ export default SearchMainStack = props => {
 			<SearchStackNav.Screen
 				name="SearchTab"
 				options={{
-					header: props => <InputAndSearchHeader {...props} />,
+					header: prop => <InputAndSearchHeader {...props} />,
 					tabBarShowLabel: false,
 				}}>
 				{props => <SearchTabNavigation {...props} />}

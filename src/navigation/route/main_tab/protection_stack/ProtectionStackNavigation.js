@@ -20,6 +20,8 @@ import AlarmCommentList from 'Organism/comment/AlarmCommentList';
 import UserNotePage from 'Templete/user/UserNotePage';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
+import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
+import SearchMainStack from '../../search_tab/SearchMainStack';
 
 const ProtectionStack = createStackNavigator();
 
@@ -75,7 +77,15 @@ export default ProtectionStackNavigation = props => {
 				component={Profile}
 				options={{header: props => <MeatBallHeader {...props} />, title: '프로필'}}
 			/>
-
+			<ProtectionStack.Screen
+				name={'CommunityCommentList'}
+				component={CommunityCommentList}
+				options={({route}) => ({
+					// headerShown: false,
+					header: props => <SimpleHeader {...props} />,
+					title: ' ',
+				})}
+			/>
 			{/* 알람용 */}
 			<ProtectionStack.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
 			<ProtectionStack.Screen name="AlarmCommentList" component={AlarmCommentList} options={{header: props => <SimpleHeader {...props} />}} />

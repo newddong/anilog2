@@ -326,8 +326,19 @@ export default RootStackNavigation = () => {
 							component={TermsAndPolicy}
 							options={{header: props => <SimpleHeader {...props} />, title: '약관'}}
 						/>
-						<RootStack.Screen name="ShelterAsk" component={ShelterAsk} options={{header: props => <SimpleHeader {...props} />, title: '문의사항'}} />
-
+						<RootStack.Screen
+							name={'FeedSearchMap'}
+							component={SearchMap}
+							options={({route}) => ({
+								header: props => <SimpleHeader {...props} />,
+								title: '위치 추가',
+							})}
+						/>
+						<RootStack.Screen
+							name="FeedAddressSearchWeb"
+							component={AddressSearchPage}
+							options={{header: props => <SimpleHeader {...props} />, title: '주소 설정'}}
+						/>
 						{/* <RootStack.Screen
 							name="ShelterVolunteerForm"
 							component={ApplicationFormVolunteer}
@@ -360,6 +371,11 @@ export default RootStackNavigation = () => {
 							name="Certification"
 							component={Certification}
 							options={{header: props => <SimpleHeader {...props} />, title: '사용자 인증'}}
+						/>
+						<RootStack.Screen
+							name="ShelterAsk"
+							component={ShelterAsk}
+							options={{header: props => <SimpleHeader {...props} />, title: '보호소 문의하기'}}
 						/>
 					</RootStack.Navigator>
 

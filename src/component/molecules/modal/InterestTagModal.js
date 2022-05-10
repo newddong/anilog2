@@ -48,10 +48,6 @@ const InterestTagModal = props => {
 	const [selectDistrictOpen, setSelectDistrictOpen] = React.useState(false);
 
 	React.useEffect(() => {
-		console.log('ddddddd userInterest', userInterestLocation);
-	}, [userInterestLocation]);
-
-	React.useEffect(() => {
 		//커뮤니티 후기 글쓰기에서 호출한 관심태그 모달
 		if (props.category == 'ReviewWrite' || props.category == 'Review') {
 			getCommonCodeDynamicQuery(
@@ -204,21 +200,69 @@ const InterestTagModal = props => {
 			props.onClose();
 			Modal.close();
 		} else {
-			setShowBtnModal(true);
+			const prev = props.data;
+			let equals = true;
+			if (props.category == 'Location' && prev.length == userInterestLocation.length) {
+				prev.map((v, i) => {
+					if (!userInterestLocation.includes(v)) {
+						equals = false;
+					}
+				});
+				if (equals) {
+					props.onClose();
+					Modal.close();
+				} else {
+					setShowBtnModal(true);
+				}
+			} else if (props.category == 'Activity' && prev.length == userInterestContent.length) {
+				prev.map((v, i) => {
+					if (!userInterestContent.includes(v)) {
+						equals = false;
+					}
+				});
+				if (equals) {
+					props.onClose();
+					Modal.close();
+				} else {
+					setShowBtnModal(true);
+				}
+			} else {
+				let arr = [];
+				const review_category_list = arr.concat(
+					userInterestReview.interests_review,
+					userInterestReview.interests_trip,
+					userInterestReview.interests_etc,
+					userInterestReview.interests_hospital,
+					userInterestReview.interests_interior,
+				);
+				if (review_category_list.length == 0) {
+					props.onClose();
+					Modal.close();
+				} else {
+					setShowBtnModal(true);
+				}
+			}
 		}
 	};
 
 	//X마크 클릭 후 저장 후 나감 클릭
 	const onPressExitAfterSave = () => {
 		onPressSave();
-		props.onClose();
-		Modal.close();
+		// props.onClose();
+		// Modal.close();
 	};
 
 	//X마크 클릭 후 나가기 클릭
 	const onPressExitWithoutSave = () => {
 		props.onClose();
 		Modal.close();
+	};
+
+	const onPressBackground = () => {
+		if (showBtnModal) {
+			setShowBtnModal(false);
+		} else {
+		}
 	};
 
 	const getList = () => {
@@ -534,17 +578,17 @@ const InterestTagModal = props => {
 
 	return (
 		<View style={style.background}>
-			<View style={[style.popUpWindow]}>
+			<TouchableOpacity activeOpacity={0.9} onPress={onPressBackground} style={[style.popUpWindow, {}]}>
 				<View style={[style.header]}>
 					<TouchableOpacity onPress={onClose} style={[style.crossMark]}>
 						<Cross24_Filled />
 					</TouchableOpacity>
 					<TouchableOpacity onPress={onPressSave} style={[style.saveText]}>
-						<Text style={[txt.noto36b, {color: APRI10}]}>저장</Text>
+						<Text style={[txt.noto36b, {color: APRI10}]}>{props.category == 'Review' ? '확인' : '저장'}</Text>
 					</TouchableOpacity>
 				</View>
 				{getList()}
-			</View>
+			</TouchableOpacity>
 			{showBtnModal ? (
 				<View style={[style.btnModalContainer, style.shadow]}>
 					<View style={[style.btnModalTitle]}>

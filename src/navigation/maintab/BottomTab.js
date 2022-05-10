@@ -38,10 +38,21 @@ export default function BottomTab({state, descriptors, navigation}) {
 	if (state.index == 4 && state.routes) {
 		// console.log('state', state?.routes[state.index].params.prevNav);
 		if (state.routes[state.index].params != undefined) {
-			// console.log('state', state.routes ? state.routes[state.index].params.prevNav : 'dd');
 			let prevNav = state.routes[state.index].params.prevNav;
-			//현재는 서치탭이동이 두가지 경우 (보호활동탭, 피드탭)밖에 없으므로 이하와 같이 처리
-			prevNav == 'ProtectionTab' ? (currentIndex = '1') : (currentIndex = '0');
+			switch (prevNav) {
+				case 'MainHomeFeedList':
+					currentIndex = 0;
+					break;
+				case 'ProtectionTab':
+					currentIndex = 1;
+					break;
+				case 'CommunityMain':
+					currentIndex = 2;
+					break;
+				default:
+					break;
+			}
+			// prevNav == 'ProtectionTab' ? (currentIndex = '1') : (currentIndex = '0');
 		}
 	}
 

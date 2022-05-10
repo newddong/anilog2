@@ -39,17 +39,19 @@ const CommunityList = React.memo(props => {
 		community_obj.initial = false;
 		console.log('community_obj.current', community_obj.current);
 		if (community_obj.current == '') {
-			navigation.navigate('COMMUNITY', {
-				screen: 'ArticleMain',
-				initial: false,
-				params: {community_object: data.free[index], pageToMove: 'ArticleDetail'},
-			});
+			// navigation.navigate('COMMUNITY', {
+			// 	screen: 'ArticleMain',
+			// 	initial: false,
+			// 	params: {community_object: data.free[index], pageToMove: 'ArticleDetail'},
+			// });
+			navigation.push('ArticleDetail', {community_object: data.free[index]});
 		} else {
-			navigation.navigate('COMMUNITY', {
-				screen: 'ArticleDetail',
-				initial: false,
-				params: {community_object: data.free[index], reset: true},
-			});
+			navigation.push('ArticleDetail', {community_object: data.free[index]});
+			// navigation.navigate('COMMUNITY', {
+			// 	screen: 'ArticleDetail',
+			// 	initial: false,
+			// 	params: {community_object: data.free[index], reset: true},
+			// });
 		}
 	};
 
@@ -86,18 +88,20 @@ const CommunityList = React.memo(props => {
 		if (community_obj.current == '') {
 			//탭 간의 이동을 간편히 하기 위해 만든 community_obj의 current 값이 빈값 == 현재 쌓여있는 화면이 없음
 			//우선 ArticleMain의 스택을 쌓기 위해 ArticleMain으로 먼저 보낸 뒤 바로 이동되어야 할 상세 자유 게시글을 여기서 선언 => Parameter로 보냄
-			navigation.navigate('COMMUNITY', {
-				screen: 'ArticleMain',
-				initial: false,
-				params: {community_object: data.review[index], pageToMove: 'CommunityCommentList'},
-			});
+			// navigation.navigate('COMMUNITY', {
+			// 	screen: 'ArticleMain',
+			// 	initial: false,
+			// 	params: {community_object: data.review[index], pageToMove: 'CommunityCommentList'},
+			// });
+			navigation.push('CommunityCommentList', {community_object: data.review[index]});
 		} else {
 			//이미 보고 있는 ArticleDetail이 존재하므로 ArticleDetail 템플릿을 덮어씌우고 봐야할 상세 자유 게시글은 Parameter로 송신
-			navigation.navigate('COMMUNITY', {
-				screen: 'CommunityCommentList',
-				initial: false,
-				params: {community_object: data.review[index], reset: true},
-			});
+			// navigation.navigate('COMMUNITY', {
+			// 	screen: 'CommunityCommentList',
+			// 	initial: false,
+			// 	params: {community_object: data.review[index], reset: true},
+			// });
+			navigation.push('CommunityCommentList', {community_object: data.review[index]});
 		}
 	};
 
@@ -111,18 +115,20 @@ const CommunityList = React.memo(props => {
 		if (community_obj.current == '') {
 			//탭 간의 이동을 간편히 하기 위해 만든 community_obj의 current 값이 빈값 == 현재 보고 있는 ArticleDetail이 없음
 			//우선 ArticleMain의 스택을 쌓기 위해 ArticleMain으로 먼저 보낸 뒤 바로 이동되어야 할 상세 자유 게시글을 여기서 선언 => Parameter로 보냄
-			navigation.navigate('COMMUNITY', {
-				screen: 'ReviewMain',
-				initial: false,
-				params: {community_object: data.review[index], pageToMove: 'ReviewDetail'},
-			});
+			// navigation.navigate('COMMUNITY', {
+			// 	screen: 'ReviewMain',
+			// 	initial: false,
+			// 	params: {community_object: data.review[index], pageToMove: 'ReviewDetail'},
+			// });
+			navigation.push('ReviewDetail', {community_object: data.review[index]});
 		} else {
 			//이미 보고 있는 ArticleDetail이 존재하므로 ArticleDetail 템플릿을 덮어씌우고 봐야할 상세 자유 게시글은 Parameter로 송신
-			navigation.navigate('COMMUNITY', {
-				screen: 'ReviewDetail',
-				initial: false,
-				params: {community_object: data.review[index], reset: true},
-			});
+			// navigation.navigate('COMMUNITY', {
+			// 	screen: 'ReviewDetail',
+			// 	initial: false,
+			// 	params: {community_object: data.review[index], reset: true},
+			// });
+			navigation.push('ReviewDetail', {community_object: data.review[index]});
 		}
 	};
 

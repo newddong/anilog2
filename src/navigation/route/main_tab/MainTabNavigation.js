@@ -18,7 +18,7 @@ const MainTabNav = createBottomTabNavigator();
 export default MainTabNavigation = ({route, navigation}) => {
 	const routeName = getFocusedRouteNameFromRoute(route) ?? '';
 	// console.log('getFocusedRouteNameFromRoute / MainTab  : ', routeName);
-	const [current, setCurrent] = React.useState('ArticleMain');
+	const [current, setCurrent] = React.useState('FEED');
 
 	const getTabBarVisibility = route => {
 		switch (current) {
@@ -48,14 +48,14 @@ export default MainTabNavigation = ({route, navigation}) => {
 		<MainTabNav.Navigator initialRouteName={'FEED'} tabBar={props => <BottomTab {...props} />}>
 			<MainTabNav.Screen
 				name="FEED"
-				component={FeedStackNavigation}
 				options={({route}) => ({
 					tabBarVisible: getTabBarVisibility(route),
 					tabBarLabel: '피드',
 					tabBarHideOnKeyboard: true,
 					header: props => false,
-				})}
-			/>
+				})}>
+				{props => <FeedStackNavigation {...props} sendRoute={sendRoute} />}
+			</MainTabNav.Screen>
 			<MainTabNav.Screen
 				name="PROTECTION"
 				options={({route}) => ({

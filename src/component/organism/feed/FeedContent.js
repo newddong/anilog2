@@ -506,6 +506,8 @@ export default FeedContent = props => {
 			return {};
 		} else if (isCommentList) {
 			return {};
+		} else if (route.name == 'AlarmCommentList') {
+			return {};
 		} else {
 			let lines = getLinesOfString(feed_content, Platform.OS == 'android' ? 48 : 50);
 			return {

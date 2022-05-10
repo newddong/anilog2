@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, FlatList, RefreshControl, Platform, NativeModules, Text, TextInput, Dimensions, PixelRatio} from 'react-native';
-import {WHITE} from 'Root/config/color';
+import {GRAY10, GRAY20, WHITE} from 'Root/config/color';
 import {Write94, Camera54} from 'Atom/icon';
 import Feed from 'Organism/feed/Feed';
 import {getSuggestFeedList} from 'Root/api/feedapi';
@@ -14,6 +14,7 @@ import {getStringLength, getLinesOfString} from 'Root/util/stringutil';
 import {GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import {useScrollToTop} from '@react-navigation/native';
 export default FeedList = ({route, navigation}) => {
 	const [feedList, setFeedList] = React.useState([]);
 	const [refreshing, setRefreshing] = React.useState(false);
@@ -315,6 +316,9 @@ export default FeedList = ({route, navigation}) => {
 			userGlobalObject.t = e.nativeEvent.contentOffset;
 		}
 	};
+	const moveToTop = () => {
+		useScrollToTop(flatlist);
+	};
 
 	const movetoCamera = () => {
 		// NativeModules.CalendarModule.createCalendarEvent('네이티브 테스트','스터디카페')
@@ -338,7 +342,7 @@ export default FeedList = ({route, navigation}) => {
 	const [testTx, setTx] = React.useState('한');
 	const [code, setCode] = React.useState(62);
 	return (
-		<View style={(login_style.wrp_main, {flex: 1, backgroundColor: WHITE})}>
+		<View style={(login_style.wrp_main, {flex: 1, backgroundColor: WHITE, borderTopWidth: 2 * DP, borderTopColor: GRAY30})}>
 			<FlatList
 				data={feedList}
 				renderItem={renderItem}

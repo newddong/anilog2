@@ -14,6 +14,7 @@ import {GRAY10, GRAY20, GRAY30} from 'Root/config/color';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import {useNavigation} from '@react-navigation/core';
 import {deleteComment} from 'Root/api/commentapi';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const AlarmCommentList = props => {
 	// console.log('AlarmCommentList props', props.route.params);
@@ -52,6 +53,7 @@ const AlarmCommentList = props => {
 	// 	fetchData();
 	// }, [comments]);
 	const fetchData = () => {
+		console.log('getCommentList by ', props.route.params.feedobject._id);
 		getCommentListByFeedId(
 			{
 				feedobject_id: props.route.params.feedobject._id,
@@ -59,7 +61,7 @@ const AlarmCommentList = props => {
 				// login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			comments => {
-				setComments(comments.msg);
+				setComments(comments.msg.filter(e => e.comment_is_delete != true));
 				setCommentsLoaded(true);
 				console.log('comments', comments);
 			},
@@ -318,6 +320,7 @@ const AlarmCommentList = props => {
 		return (
 			<View>
 				<FeedContent data={props.route.params.feedobject} showAllContents={true} />
+
 				<View style={[style.replyCountContainer, {alignSelf: 'center', alignItems: 'flex-start'}]}>
 					<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
 				</View>
@@ -350,11 +353,13 @@ const AlarmCommentList = props => {
 	// const components = [header(), commentBox()];
 	return (
 		<View style={[login_style.wrp_main, feedCommentList.container]}>
+			<Header />
+
 			<FlatList
 				data={comments}
 				renderItem={renderItem}
 				listKey={({item, index}) => index}
-				ListHeaderComponent={Header}
+				// ListHeaderComponent={Header}
 				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
 				// ListFooterComponent={Bottom}
 				ref={flatListRef}

@@ -766,6 +766,8 @@ static void checkPhotoLibraryConfig()
   
   return true;
 }
+
+//#MARK: @requestImageData
    /**
      ph://{local identifier} 형식의 uri에서 이미지를 가져오는 함수
     가져온 데이터를 받는 건 handler callback

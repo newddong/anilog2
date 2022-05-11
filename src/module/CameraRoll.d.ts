@@ -184,12 +184,10 @@
 
 export type CropParams = {
   uri: string,
-  destWidth: number,
-  destHeight: number,
-  destScaleX?: number, //default 1
-  destScaleY?: number, //default 1
-  offsetX?: number, //default 0
-  offsetY?: number, // default 0
+  destWidth: number, //uint
+  destHeight: number, //uint
+  offsetX?: number, //uint, default 0
+  offsetY?: number, // uint, default 0
   angle?: number, //default 0
   isCircular?: boolean,//deefault false
 }

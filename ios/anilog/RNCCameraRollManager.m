@@ -744,15 +744,18 @@ RCT_EXPORT_METHOD(cropImage:(NSDictionary* _Nonnull) params
     return;
   }
   
-  CGFloat const destWidth = [params objectForKey:@"destWidth"] ? [RCTConvert CGFloat:[params objectForKey:@"destWidth"]] : -1;
-  CGFloat const destHeight = [params objectForKey:@"destHeight"] ? [RCTConvert CGFloat:[params objectForKey:@"destHeight"]] : -1;
-  if(destWidth == -1 || destHeight == -1) {
+  CGFloat const destWidth = [params objectForKey:@"destWidth"] ? [RCTConvert CGFloat:[params objectForKey:@"destWidth"]] : 0;
+  CGFloat const destHeight = [params objectForKey:@"destHeight"] ? [RCTConvert CGFloat:[params objectForKey:@"destHeight"]] : 0;
+  if(destWidth <= 0 || destHeight <= 0) {
     reject(@"Mandatory parameter has no value", @"Mandatory parameter has no value", nil);
     return;
   }
   
   CGFloat const offsetX = [params objectForKey:@"offsetX"] ? [RCTConvert CGFloat:[params objectForKey:@"offsetX"]] : 0;
   CGFloat const offsetY = [params objectForKey:@"offsetY"] ? [RCTConvert CGFloat:[params objectForKey:@"offsetY"]] : 0;
+  
+  //현재 rotate 안 됨
+//  CGFloat const angle = [params objectForKey:@"angle"] ? [RCTConvert CGFloat:[params objectForKey:@"angle"]] : 0;
   BOOL const isCircular = [params objectForKey:@"isCircular"] ? [RCTConvert BOOL:[params objectForKey:@"isCircular"]] : NO;
   
   CGRect destRect = {
@@ -760,7 +763,6 @@ RCT_EXPORT_METHOD(cropImage:(NSDictionary* _Nonnull) params
     CGSizeMake(destWidth, destHeight)
   };
   
-  //현재 scale, angle 안 됨
   UIImage* targetImage = [UIImage imageWithData:imageData];
   UIImage* croppedImage = nil;
   
@@ -773,7 +775,9 @@ RCT_EXPORT_METHOD(cropImage:(NSDictionary* _Nonnull) params
   }
   
   //crop
+  //crop 자체가 scale과 비슷한 효과를 내므로 scale 삭제
   CGContextTranslateCTM(context, -destRect.origin.x, -destRect.origin.y);
+  
   [targetImage drawAtPoint:CGPointZero];
   croppedImage = UIGraphicsGetImageFromCurrentImageContext();
   UIGraphicsEndImageContext();

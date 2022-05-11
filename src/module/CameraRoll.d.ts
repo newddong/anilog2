@@ -181,6 +181,18 @@
    */
   mimeType?: string,
 };
+
+export type CropParams = {
+  uri: string,
+  destWidth: number,
+  destHeight: number,
+  destScaleX?: number, //default 1
+  destScaleY?: number, //default 1
+  offsetX?: number, //default 0
+  offsetY?: number, // default 0
+  angle?: number, //default 0
+  isCircular?: boolean,//deefault false
+}
  
  /**
   * `CameraRoll` provides access to the local camera roll or photo library.
@@ -199,6 +211,10 @@
     */
    static compressImage(params: CompressionParams): Promise<Image[]>{
     return RNCCameraRoll.compressImage(params);
+   }
+
+   static cropImage(params: CropParams): Promise<Image>{
+     return RNCCameraRoll.cropImage(params);
    }
 
   static saveImage(uri: string): Promise<void>{

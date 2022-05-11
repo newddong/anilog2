@@ -711,6 +711,91 @@ imageRequestResultHandler:^(NSData * _Nullable resultData, NSString * _Nullable 
   }
 }
 
+//#MARK: @RCT cropImage
+//ph://{local identifier} 형태만 지원
+RCT_EXPORT_METHOD(cropImage:(NSDictionary* _Nonnull) params
+                  resolver:(RCTPromiseResolveBlock) resolve
+                  rejecter:(RCTPromiseRejectBlock) reject) {
+  NSString *const uri = [params objectForKey:@"uri"] ? [RCTConvert NSString:[params objectForKey:@"uri"]]:nil;
+  if(uri == nil || uri.length == 0) {
+    reject(@"Nil error", @"Uri is an empty string", nil);
+    return;
+  } else if (![uri hasPrefix:@"ph://"]) {
+    reject(@"Uri format error", @"Uri format doesn't fit with photoKit ('ph://')", nil);
+    return;
+  }
+  __block NSData* imageData;
+  
+  NSArray* errorOccured = [self requestImageData:uri
+              imageRequestResultHandlerOverAPI13:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, CGImagePropertyOrientation orientation, NSDictionary * _Nullable info) {
+    imageData = resultData;
+  }
+                       imageRequestResultHandler:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+    imageData = resultData;
+  }];
+  
+  if(errorOccured != nil){
+    reject(([errorOccured[0] length] == 0) ? nil : errorOccured[0],
+           ([errorOccured[1] length] == 0) ? nil : errorOccured[1],
+           ([errorOccured[2] length] == 0) ? nil : errorOccured[2]);
+    return;
+  } else if (imageData == nil) {
+    reject(@"Nil error", @"Image data is nil", nil);
+    return;
+  }
+  
+  CGFloat const destWidth = [params objectForKey:@"destWidth"] ? [RCTConvert CGFloat:[params objectForKey:@"destWidth"]] : -1;
+  CGFloat const destHeight = [params objectForKey:@"destHeight"] ? [RCTConvert CGFloat:[params objectForKey:@"destHeight"]] : -1;
+  if(destWidth == -1 || destHeight == -1) {
+    reject(@"Mandatory parameter has no value", @"Mandatory parameter has no value", nil);
+    return;
+  }
+  
+  CGFloat const offsetX = [params objectForKey:@"offsetX"] ? [RCTConvert CGFloat:[params objectForKey:@"offsetX"]] : 0;
+  CGFloat const offsetY = [params objectForKey:@"offsetY"] ? [RCTConvert CGFloat:[params objectForKey:@"offsetY"]] : 0;
+  BOOL const isCircular = [params objectForKey:@"isCircular"] ? [RCTConvert BOOL:[params objectForKey:@"isCircular"]] : NO;
+  
+  CGRect destRect = {
+    CGPointMake(offsetX, offsetY),
+    CGSizeMake(destWidth, destHeight)
+  };
+  
+  //현재 scale, angle 안 됨
+  UIImage* targetImage = [UIImage imageWithData:imageData];
+  UIImage* croppedImage = nil;
+  
+  UIGraphicsBeginImageContextWithOptions(destRect.size, !isCircular, 0.0f);
+  CGContextRef context = UIGraphicsGetCurrentContext();
+  
+  if (isCircular) {
+    CGContextAddEllipseInRect(context, (CGRect){CGPointZero, destRect.size});
+    CGContextClip(context);
+  }
+  
+  //crop
+  CGContextTranslateCTM(context, -destRect.origin.x, -destRect.origin.y);
+  [targetImage drawAtPoint:CGPointZero];
+  croppedImage = UIGraphicsGetImageFromCurrentImageContext();
+  UIGraphicsEndImageContext();
+  
+  NSString* tempSavePath = [self createTempImage:UIImageJPEGRepresentation(croppedImage, 1) mimeType:nil];
+  if(tempSavePath == nil) {
+    reject(@"Fail to save image", @"Fail to save cropped image", nil);
+    return;
+  }
+  
+  NSDictionary* cropResult = @{
+    @"uri":tempSavePath,
+    @"fileSize":@([imageData length]),
+    @"fileName":tempSavePath,
+    @"type":@"jpg",
+    @"width":@(destWidth),
+    @"height":@(destHeight),
+  };
+  resolve(cropResult);
+}
+
+
 //#MARK: checkPhotoLibraryConfig
 static void checkPhotoLibraryConfig()
 {

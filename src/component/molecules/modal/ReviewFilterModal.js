@@ -7,11 +7,10 @@ import Modal from 'Component/modal/Modal';
 import AniButton from '../button/AniButton';
 import {Cross24_Filled} from 'Root/component/atom/icon';
 import {getAddressList} from 'Root/api/address';
-import {getInterestsList} from 'Root/api/interestsapi';
 import ArrowDownButton from '../button/ArrowDownButton';
-import {btn_w242, btn_w280, btn_w280x68} from 'Root/component/atom/btn/btn_style';
+import {btn_w242, btn_w280} from 'Root/component/atom/btn/btn_style';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
-import Loading from './Loading';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 /**
  * 리뷰 필터 추가 및 수정 모달
  * @param {'Review'|'ReviewWrite'} category -  리뷰/리뷰글쓰기
@@ -22,18 +21,12 @@ import Loading from './Loading';
  *
  */
 const ReviewFilterModal = props => {
-	// console.log('InterestTagModa', props.data);
-	//유저 오브젝트의 user_interests 의 더미데이터
-	// user_interests는 크게 location 및 activity로 구성
-	// console.log('ReviewFilterModal', props);
 	const [userInterestReview, setUserInterestReview] = React.useState(props.data);
-
 	const [isSaved, setIsSaved] = React.useState(false); // '저장하지 않고 나가시겠습니까?' 메시지 출력 여부 판별
 
 	//커뮤니티 카테고리 선택 관련 state
 	const [communityInterests, setCommunityInterests] = React.useState('');
 	const [showBtnModal, setShowBtnModal] = React.useState(false); //모달창 대체 View 출력 여부
-	const [addressList, setAddressList] = React.useState([]);
 	const [city, setCity] = React.useState(''); // 리뷰의 지역 필터 중 광역시, 도 파라미터
 	const [district, setDistrict] = React.useState(['', '', '광역시, 도를 먼저 선택해주세요.']); // 리뷰의 지역 필터 중 시군구 파라미터
 	const [selectedItem, setSelectedItem] = React.useState(2); // 광역시 도 선택 인덱스
@@ -67,8 +60,6 @@ const ReviewFilterModal = props => {
 				{},
 				result => {
 					const padding = '';
-					let res = result.msg;
-
 					let arr = [padding, padding];
 					let cities = arr.concat(result.msg);
 					let find = cities.findIndex(e => e == '서울특별시');
@@ -191,15 +182,16 @@ const ReviewFilterModal = props => {
 
 	//모달이 열린 상태에서 모달 이외 영역 클릭
 	const onPressBackground = () => {
-		if (showBtnModal) {
-			setShowBtnModal(false);
-			setSelectCityOpen(false);
-			setSelectDistrictOpen(false);
-		}
+		setShowBtnModal(false);
+		setSelectCityOpen(false);
+		setSelectDistrictOpen(false);
 	};
 
 	//필터 초기화
 	const onPressInitialize = () => {
+		setShowBtnModal(false);
+		setSelectCityOpen(false);
+		setSelectDistrictOpen(false);
 		const init = {
 			interests_etc: [],
 			interests_hospital: [],
@@ -211,9 +203,6 @@ const ReviewFilterModal = props => {
 		setUserInterestReview(init);
 		setSelectedCity('');
 		setSelectedDistrict('');
-		// props.setState({
-		// 	userInterestReview: init,
-		// });
 	};
 
 	//상단 모달창에서 광역시, 도 드롭다운 열기 클릭
@@ -423,12 +412,12 @@ const ReviewFilterModal = props => {
 			);
 		} else
 			return (
-				<ScrollView style={{flex: 1}} ref={scrollRef}>
+				<ScrollView style={{flex: 1}} onResponderMove={onPressBackground} ref={scrollRef}>
 					<View style={[style.review_container]}>
 						{props.category == 'ReviewWrite' ? (
 							<></>
 						) : (
-							<View style={[style.review_location]}>
+							<TouchableOpacity activeOpacity={1} onPress={onPressBackground} style={[style.review_location]}>
 								<ArrowDownButton onPress={onOpenCity} btnStyle={'border'} btnLayout={btn_w242} btnTitle={selectedCity || '도, 광역시'} />
 								<ArrowDownButton
 									onPress={onOpenDistrict}
@@ -437,13 +426,15 @@ const ReviewFilterModal = props => {
 									titleFontStyle={22}
 									btnTitle={selectedDistrict || '시군구'}
 								/>
-							</View>
+							</TouchableOpacity>
 						)}
-						{getCommuntyInterestList(communityInterests.interests_trip, 0)}
-						{getCommuntyInterestList(communityInterests.interests_interior, 1)}
-						{getCommuntyInterestList(communityInterests.interests_hospital, 2)}
-						{getCommuntyInterestList(communityInterests.interests_review, 3)}
-						{getCommuntyInterestList(communityInterests.interests_etc, 4)}
+						<TouchableOpacity activeOpacity={1} onPress={onPressBackground}>
+							{getCommuntyInterestList(communityInterests.interests_trip, 0)}
+							{getCommuntyInterestList(communityInterests.interests_interior, 1)}
+							{getCommuntyInterestList(communityInterests.interests_hospital, 2)}
+							{getCommuntyInterestList(communityInterests.interests_review, 3)}
+							{getCommuntyInterestList(communityInterests.interests_etc, 4)}
+						</TouchableOpacity>
 					</View>
 				</ScrollView>
 			);
@@ -451,20 +442,8 @@ const ReviewFilterModal = props => {
 
 	return (
 		<View style={style.background}>
-			<TouchableOpacity
-				activeOpacity={1}
-				onPressIn={event => {
-					console.log('showBtnModal', showBtnModal);
-					setShowBtnModal(false);
-					setSelectCityOpen(false);
-					setSelectDistrictOpen(false);
-					if (!showBtnModal && !selectCityOpen && !selectDistrictOpen) {
-						scrollRef.current.scrollTo({x: 0, y: event.nativeEvent.pageY - 250, animated: true});
-					}
-				}}
-				onPress={onPressBackground}
-				style={[style.popUpWindow, {}]}>
-				<View style={[style.header]}>
+			<View style={[style.popUpWindow, {}]}>
+				<TouchableOpacity onPress={onPressBackground} activeOpacity={1} style={[style.header]}>
 					<TouchableOpacity onPress={onClose} style={[style.crossMark]}>
 						<Cross24_Filled />
 					</TouchableOpacity>
@@ -488,9 +467,9 @@ const ReviewFilterModal = props => {
 							<Text style={[txt.noto36b, {color: APRI10}]}>저장</Text>
 						</TouchableOpacity>
 					)}
-				</View>
+				</TouchableOpacity>
 				{getReviewCategory()}
-			</TouchableOpacity>
+			</View>
 			{showBtnModal ? (
 				<View style={[style.btnModalContainer, style.shadow]}>
 					<View style={[style.btnModalTitle]}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Platform, Dimensions, ScrollView, FlatList, ActivityIndicator, Animated, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, Platform, Dimensions, ScrollView, FlatList, ActivityIndicator, Animated} from 'react-native';
 import {WHITE, GRAY10, APRI10, GRAY20, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
@@ -11,6 +11,7 @@ import {getInterestsList} from 'Root/api/interestsapi';
 import ArrowDownButton from '../button/ArrowDownButton';
 import {btn_w242, btn_w280, btn_w280x68} from 'Root/component/atom/btn/btn_style';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import Loading from './Loading';
 /**
  * 관심사 추가 및 수정 모달
@@ -263,6 +264,7 @@ const InterestTagModal = props => {
 
 	//
 	const onPressBackground = () => {
+		console.log('ddd');
 		if (showBtnModal) {
 			setShowBtnModal(false);
 		}
@@ -590,15 +592,15 @@ const InterestTagModal = props => {
 		<View style={style.background}>
 			<TouchableOpacity
 				activeOpacity={1}
-				onPressIn={event => {
-					if (!showBtnModal) {
-						if (props.category == 'Location') {
-							scrollRef.current.scrollToOffset({offset: event.nativeEvent.pageY - 250, animated: true});
-						} else {
-							scrollRef.current.scrollTo({x: 0, y: event.nativeEvent.pageY - 250, animated: true});
-						}
-					}
-				}}
+				// onPressIn={event => {
+				// 	if (!showBtnModal) {
+				// 		if (props.category == 'Location') {
+				// 			scrollRef.current.scrollToOffset({offset: event.nativeEvent.pageY - 250, animated: true});
+				// 		} else {
+				// 			scrollRef.current.scrollTo({x: 0, y: event.nativeEvent.pageY - 250, animated: true});
+				// 		}
+				// 	}
+				// }}
 				onPress={onPressBackground}
 				style={[style.popUpWindow, {}]}>
 				<View style={[style.header]}>

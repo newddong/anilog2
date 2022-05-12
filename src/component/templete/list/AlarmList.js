@@ -15,7 +15,7 @@ import {CommonActions, useNavigationState} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 import {getFeedDetailById} from 'Root/api/feedapi';
 import {getUserVolunteerActivityList, getVolunteerActivityById} from 'Root/api/volunteerapi';
-import {getApplyDetailById} from 'Root/api/protectapi';
+import {getApplyDetailById, getProtectRequestByProtectRequestId} from 'Root/api/protectapi';
 import {getAppliesRecord} from 'Root/api/protectapi';
 import {getCommunityByObjectId} from 'Root/api/community';
 
@@ -72,7 +72,7 @@ const AlarmList = props => {
 		);
 	};
 	const onLabelClick = data => {
-		console.log(data.target_object_type, data);
+		console.log('aa', data.target_object_type, data);
 		let navState = props.navigation.getState();
 		// console.log('navState', navState);
 
@@ -206,6 +206,17 @@ const AlarmList = props => {
 					},
 				);
 				break;
+			case 'ProtectRequestObject':
+				getProtectRequestByProtectRequestId(
+					{protect_request_object_id: data.target_object},
+					result => {
+						console.log('result', result.msg);
+						navigation.push('ProtectCommentList', {protectObject: result.msg, showKeyboard: false});
+					},
+					err => {
+						console.log('getProtectRequestByProtectRequestId err', err);
+					},
+				);
 		}
 	};
 

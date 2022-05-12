@@ -17,6 +17,7 @@ import {
 	ProfileDefaultImg,
 } from 'Atom/icon';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {useScrollToTop} from '@react-navigation/native';
 
 export default function BottomTab({state, descriptors, navigation}) {
 	// console.log('바텀탭 유저 글로벌',userGlobalObject);
@@ -25,7 +26,7 @@ export default function BottomTab({state, descriptors, navigation}) {
 	const iconsFocused = [<FeedTabFilled />, <AnimalSavingTabFilled />, <CommunityTabFilled />, <MyTabFilled />];
 
 	const iconlayout = [tab.tab_feed, tab.tab_animal_saving, tab.tab_community, tab.tab_my];
-
+	const ref = React.useRef();
 	let currentIndex = null;
 	if (focusedOptions.tabBarVisible === false) {
 		return null;
@@ -37,10 +38,21 @@ export default function BottomTab({state, descriptors, navigation}) {
 	if (state.index == 4 && state.routes) {
 		// console.log('state', state?.routes[state.index].params.prevNav);
 		if (state.routes[state.index].params != undefined) {
-			// console.log('state', state.routes ? state.routes[state.index].params.prevNav : 'dd');
 			let prevNav = state.routes[state.index].params.prevNav;
-			//현재는 서치탭이동이 두가지 경우 (보호활동탭, 피드탭)밖에 없으므로 이하와 같이 처리
-			prevNav == 'ProtectionTab' ? (currentIndex = '1') : (currentIndex = '0');
+			switch (prevNav) {
+				case 'MainHomeFeedList':
+					currentIndex = 0;
+					break;
+				case 'ProtectionTab':
+					currentIndex = 1;
+					break;
+				case 'CommunityMain':
+					currentIndex = 2;
+					break;
+				default:
+					break;
+			}
+			// prevNav == 'ProtectionTab' ? (currentIndex = '1') : (currentIndex = '0');
 		}
 	}
 
@@ -69,7 +81,10 @@ export default function BottomTab({state, descriptors, navigation}) {
 								navigation.navigate({name: 'Login', merge: true});
 							});
 						} else {
-							console.log('tabP');
+							console.log('tabP', route);
+							if (route.name == 'FEED') {
+								// navigation.navigate(name: "FeedList");
+							}
 							const event = navigation.emit({
 								type: 'tabPress',
 								target: route.key,

@@ -6,17 +6,65 @@ import {WHITE, APRI10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 import {RED} from 'Root/config/color';
-import {createFeed, createMissing, createReport, editFeed} from 'Root/api/feedapi';
+import {createFeed, createMissing, createReport, editFeed, getFeedDetailById} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default FeedWriteHeader = ({route, navigation, options}) => {
 	const userInfo = userGlobalObject;
+	const param = route.params;
 	const complete = result => {
 		Modal.close();
 		Modal.popNoBtn('게시물 등록이 완료되었습니다.');
+		// console.log('route.params', route.params);
 		setTimeout(() => {
 			Modal.close();
-			navigation.goBack();
+			if (param.tab == 'Protection') {
+				if (param.feedType == 'Report') {
+					navigation.navigate('ReportDetail', {_id: result.msg._id});
+				} else if (param.feedType == 'Missing') {
+					let sexValue = '';
+					switch (result.msg.missing_animal_sex) {
+						case 'male':
+							sexValue = '남';
+							break;
+						case 'female':
+							sexValue = '여';
+							break;
+						case 'unknown':
+							sexValue = '성별모름';
+							break;
+					}
+					const titleValue = result.msg.missing_animal_species + '/' + result.msg.missing_animal_species_detail + '/' + sexValue;
+					navigation.navigate('MissingAnimalDetail', {title: titleValue, _id: result.msg._id});
+				} else {
+					navigation.goBack();
+				}
+			} else {
+				if (route.name == 'FeedEdit') {
+					console.log('dd', param.routeName);
+					if (param.routeName == 'FeedCommentList') {
+						getFeedDetailById(
+							{feedobject_id: param._id},
+							result => {
+								// navigation.navigate('FeedCommentList', {feedobject: result.msg});
+								setTimeout(() => {
+									navigation.reset({
+										index: 1,
+										routes: [{name: 'MainTab'}, {name: 'FeedCommentList', params: {feedobject: result.msg}}],
+									});
+								}, 200);
+							},
+							err => {
+								console.log('err / getFeedDetailById / FeedWriteHeader : ', err);
+							},
+						);
+					} else {
+						navigation.goBack();
+					}
+				} else {
+					navigation.goBack();
+				}
+			}
 		}, 200);
 	};
 	const handleError = err => {
@@ -37,7 +85,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 		let param = {...route.params, hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1))};
 		switch (route.params?.feedType) {
 			case 'Feed':
-				console.log('feed Param', param);
+				console.log('feed Param', JSON.stringify(param));
 				// Modal.close();
 				createFeed(param, complete, handleError);
 				break;
@@ -45,6 +93,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 				{
 					// console.log('Before Write Report ', param);
 					const data = param;
+					delete data.feed_location;
 					let check = /^[0-9]+$/;
 					if (data.missing_animal_lost_location.city == '광역시, 도' || data.missing_animal_lost_location.district == '구를 선택') {
 						Modal.alert('실종위치는 반드시 \n선택해주셔야합니다!');
@@ -84,6 +133,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 						(data.report_location.city || '') + ' ' + (data.report_location.district || '') + ' ' + (data.report_location.detail || '');
 
 					console.log('Before Write Report ', data);
+					delete data.feed_location;
 					if (
 						// data.addr &&
 						(data.feed_content || data.feed_medias) &&
@@ -114,6 +164,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 		// }
 		// console.log('route.params:', route.params);
 		// Modal.popNoBtn('게시물을 수정중입니다.');
+		Modal.popLoading(true);
 		let changeTextRegex = /([#@])([^#@\s]+)/gm;
 		let param = {
 			...route.params,
@@ -122,17 +173,17 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
 		};
 		editFeed(param, complete, handleError);
-		console.log('수정 파라메터', param);
-		switch (route.params?.feedType) {
-			case 'Feed':
-				break;
-			case 'Missing':
-				break;
-			case 'Report':
-				break;
-			default:
-				break;
-		}
+		// console.log('수정 파라메터', param);
+		// switch (route.params?.feedType) {
+		// 	case 'Feed':
+		// 		break;
+		// 	case 'Missing':
+		// 		break;
+		// 	case 'Report':
+		// 		break;
+		// 	default:
+		// 		break;
+		// }
 	};
 
 	const titleStyle = [{textAlign: 'center'}, txt.noto40b, route.params?.feedType != 'Feed' ? {color: RED} : {color: '#000'}];

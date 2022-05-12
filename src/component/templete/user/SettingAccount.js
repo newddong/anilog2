@@ -10,15 +10,23 @@ import Modal from 'Root/component/modal/Modal';
 export default SettingAccount = ({route}) => {
 	const navigation = useNavigation();
 	const logout = () => {
-		userLogout(
-			1,
-			e => {
-				console.log('e', e);
-				userGlobalObject.userInfo = {};
-				navigation.reset({routes: [{name: 'Login'}]});
-			},
-			err => {
-				console.log('err', err);
+		Modal.popTwoBtn(
+			'정말로 로그아웃 하시겠습니까?',
+			'아니오',
+			'네',
+			() => Modal.close(),
+			() => {
+				userLogout(
+					1,
+					e => {
+						console.log('e', e);
+						userGlobalObject.userInfo = {};
+						navigation.reset({routes: [{name: 'Login'}]});
+					},
+					err => {
+						console.log('err', err);
+					},
+				);
 			},
 		);
 	};

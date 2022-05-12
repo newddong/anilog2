@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, FlatList, RefreshControl, Platform, NativeModules, Text, TextInput, Dimensions, PixelRatio} from 'react-native';
-import {WHITE} from 'Root/config/color';
+import {GRAY10, GRAY20, WHITE} from 'Root/config/color';
 import {Write94, Camera54} from 'Atom/icon';
 import Feed from 'Organism/feed/Feed';
 import {getSuggestFeedList} from 'Root/api/feedapi';
@@ -14,6 +14,7 @@ import {getStringLength, getLinesOfString} from 'Root/util/stringutil';
 import {GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import {useScrollToTop} from '@react-navigation/native';
 export default FeedList = ({route, navigation}) => {
 	const [feedList, setFeedList] = React.useState([]);
 	const [refreshing, setRefreshing] = React.useState(false);
@@ -76,10 +77,9 @@ export default FeedList = ({route, navigation}) => {
 					);
 					break;
 				case 'TagMeFeedList':
-				case 'UserTagFeedList':
 					getUserTaggedFeedList(
 						{
-							userobject_id: route.params?.userobject._id,
+							userobject_id: userGlobalObject.userInfo._id,
 							request_number: 9999,
 						},
 						({msg}) => {
@@ -87,6 +87,40 @@ export default FeedList = ({route, navigation}) => {
 								'태그',
 								msg.findIndex(v => v._id == route.params?.selected._id),
 							);
+							setFeedList(
+								msg
+									.map((v, i, a) => {
+										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
+										lines = lines > 3 ? 3 : lines;
+										if (v.feed_recent_comment) {
+											return {...v, height: (750 + 200 + 120 + 2 + lines * 54) * DP};
+										} else {
+											return {...v, height: (750 + 72 + 120 + 2 + lines * 54) * DP};
+										}
+									})
+									.map((v, i, a) => {
+										let offset = a.slice(0, i).reduce((prev, current) => {
+											return current.height + prev;
+										}, 0);
+										return {
+											...v,
+											offset: offset,
+										};
+									}),
+							);
+						},
+						errormsg => {
+							Modal.alert(errormsg);
+						},
+					);
+					break;
+				case 'UserTagFeedList':
+					getUserTaggedFeedList(
+						{
+							userobject_id: route.params?.userobject._id,
+							request_number: 9999,
+						},
+						({msg}) => {
 							setFeedList(
 								msg
 									.map((v, i, a) => {
@@ -118,9 +152,30 @@ export default FeedList = ({route, navigation}) => {
 					getFeedsByHash(
 						{hashtag_keyword: route.params?.hashtag_keyword},
 						({msg}) => {
-							setIndex(msg.feeds.findIndex(v => v.hashtag_feed_id._id == route.params?.selected._id));
-
-							setFeedList(msg.feeds.map(v => v.hashtag_feed_id));
+							// setIndex(msg.feeds.findIndex(v => v.hashtag_feed_id._id == route.params?.selected._id));
+							// setFeedList(msg.feeds.map(v => v.hashtag_feed_id));
+							setFeedList(
+								msg.feeds
+									.map(v => v.hashtag_feed_id)
+									.map((v, i, a) => {
+										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
+										lines = lines > 3 ? 3 : lines;
+										if (v.feed_recent_comment) {
+											return {...v, height: (750 + 200 + 120 + 2 + lines * 54) * DP};
+										} else {
+											return {...v, height: (750 + 72 + 120 + 2 + lines * 54) * DP};
+										}
+									})
+									.map((v, i, a) => {
+										let offset = a.slice(0, i).reduce((prev, current) => {
+											return current.height + prev;
+										}, 0);
+										return {
+											...v,
+											offset: offset,
+										};
+									}),
+							);
 						},
 						error => {
 							Modal.popOneBtn(error, '확인', () => {
@@ -136,8 +191,29 @@ export default FeedList = ({route, navigation}) => {
 						{userobject_id: userGlobalObject.userInfo._id},
 						({msg}) => {
 							// setIndex(msg.feeds.findIndex(v => v.hashtag_feed_id._id == route.params?.selected._id));
+							// setFeedList(msg);
+							setFeedList(
+								msg
+									.map((v, i, a) => {
+										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
+										lines = lines > 3 ? 3 : lines;
+										if (v.feed_recent_comment) {
+											return {...v, height: (750 + 200 + 120 + 2 + lines * 54) * DP};
+										} else {
+											return {...v, height: (750 + 72 + 120 + 2 + lines * 54) * DP};
+										}
+									})
+									.map((v, i, a) => {
+										let offset = a.slice(0, i).reduce((prev, current) => {
+											return current.height + prev;
+										}, 0);
+										return {
+											...v,
+											offset: offset,
+										};
+									}),
+							);
 
-							setFeedList(msg);
 							console.log('즐겨찾기 리스트', msg);
 						},
 						error => {
@@ -240,6 +316,9 @@ export default FeedList = ({route, navigation}) => {
 			userGlobalObject.t = e.nativeEvent.contentOffset;
 		}
 	};
+	const moveToTop = () => {
+		useScrollToTop(flatlist);
+	};
 
 	const movetoCamera = () => {
 		// NativeModules.CalendarModule.createCalendarEvent('네이티브 테스트','스터디카페')
@@ -263,7 +342,7 @@ export default FeedList = ({route, navigation}) => {
 	const [testTx, setTx] = React.useState('한');
 	const [code, setCode] = React.useState(62);
 	return (
-		<View style={(login_style.wrp_main, {flex: 1, backgroundColor: WHITE})}>
+		<View style={(login_style.wrp_main, {flex: 1, backgroundColor: WHITE, borderTopWidth: 2 * DP, borderTopColor: GRAY30})}>
 			<FlatList
 				data={feedList}
 				renderItem={renderItem}

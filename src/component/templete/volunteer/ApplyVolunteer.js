@@ -146,11 +146,13 @@ export default ApplyVolunteer = ({route, navigation}) => {
 
 	//DatePicker로 날짜 지정할 시, 하단에 봉사활동 날짜 Item이 View로 보여짐
 	const onDateChange = date => {
-		let filteredDates = [...data.volunteer_wish_date];
-		date.map((v, i) => {
-			const isDup = data.volunteer_wish_date.some(e => e == v);
-			isDup ? false : filteredDates.push(v);
-		});
+		console.log('date', date);
+		// let filteredDates = [...data.volunteer_wish_date];
+		let filteredDates = date;
+		// date.map((v, i) => {
+		// 	const isDup = data.volunteer_wish_date.some(e => e == v);
+		// 	isDup ? false : filteredDates.push(v);
+		// });
 		setData({...data, volunteer_wish_date: filteredDates});
 	};
 
@@ -268,6 +270,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 							<View style={[applyVolunteer.title]}>
 								<Text style={[txt.noto24b, {color: GRAY10}]}>참여 인원</Text>
 								<Text style={[txt.noto22, {color: GRAY20}]}>(총 인원 수 기입 - 최대 5인)</Text>
+								<Text style={[txt.noto28, {color: RED10}]}> *</Text>
 							</View>
 						</View>
 						<View style={[applyVolunteer.number_of_volunteerers]}>

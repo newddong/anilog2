@@ -349,10 +349,10 @@ export default FeedCommentList = props => {
 	const header = () => {
 		return (
 			<>
-				<FeedContent data={props.route.params.feedobject} showAllContents={props.route.params.showAllContents} />
+				<FeedContent data={props.route.params.feedobject} showAllContents={props.route.params.showAllContents} routeName={props.route.name} />
 				<View style={[{width: 654 * DP, height: 2 * DP, marginTop: 10 * DP, backgroundColor: GRAY40, alignSelf: 'center'}]} />
 				<View style={[{width: 654 * DP, alignSelf: 'center', marginTop: 20 * DP}]}>
-					<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
+					{comments.length == 0 ? <></> : <Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>}
 				</View>
 			</>
 		);

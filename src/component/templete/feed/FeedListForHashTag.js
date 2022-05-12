@@ -38,10 +38,9 @@ export default FeedListForHashTag = props => {
 			getFeedsByHash(
 				{hashtag_keyword: hashInfo.hashtag_keyword},
 				result => {
-					console.log('해쉬 피드리스트', result);
+					// console.log('해쉬 피드리스트', result);
 					setFeeds(result.msg.feeds.map(v => v.hashtag_feed_id));
 					setHashInfo(result.msg.hash);
-					// setFeeds(result.msg.feeds.map(v=>v.hashtag_feed_id));
 				},
 				error => {
 					Modal.popOneBtn(error, '확인', () => {

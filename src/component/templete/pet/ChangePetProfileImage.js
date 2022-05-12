@@ -128,7 +128,6 @@ export default ChangePetProfileImage = props => {
 			</View>
 
 			<View style={[changePetProfileImage_style.btn_w654]}>
-			{/* {confirmed && dupCheck ? ( */}
 				{confirmed ? (
 					<AniButton
 						onPress={onPressConfirm}

@@ -32,7 +32,7 @@ const ArticleList = props => {
 				) : (
 					<></>
 				)}
-				<ArticleSummary data={item} isSearch={props.isSearch} onPressArticle={() => props.onPressArticle(index)} />
+				<ArticleSummary data={item} isSearch={props.isSearch} selectMode={props.selectMode} onPressArticle={() => props.onPressArticle(index)} />
 			</View>
 		);
 	};
@@ -41,6 +41,8 @@ const ArticleList = props => {
 		<View style={[style.container, {borderBottomColor: props.items.length == 0 ? 'white' : GRAY40}]}>
 			<FlatList
 				data={props.items}
+				keyExtractor={item => item._id}
+				listKey={({item, index}) => index}
 				renderItem={({item, index}) => renderItem(item, index)}
 				showsVerticalScrollIndicator={false}
 				ListEmptyComponent={props.whenEmpty}

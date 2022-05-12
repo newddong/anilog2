@@ -1,18 +1,20 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {APRI10, BLACK, GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
 import {Photo44} from 'Root/component/atom/icon';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import moment from 'moment';
 import Loading from 'Root/component/molecules/modal/Loading';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 /**
  * 게시글 컨텐츠
  * @param {object} props - Props Object
  * @param {object} props.data - 데이터
  * @param {()=>void)} props.onPressArticle - 내용 클릭
  * @param {string} props.isSearch - 검색어
+ * @param {boolean} props.selectMode - 검색어
  */
 const ArticleSummary = props => {
 	const data = props.data;
@@ -138,7 +140,7 @@ const ArticleSummary = props => {
 		<View style={[style.container]}>
 			<View style={[style.inside]}>
 				<Text style={[txt.noto28, {color: GRAY10}]}>{getArticleType()}</Text>
-				<TouchableOpacity onPress={onPressArticle} activeOpacity={0.6} style={[style.content]}>
+				<TouchableOpacity onPress={onPressArticle} activeOpacity={props.selectMode ? 1 : 0.6} style={[style.content]}>
 					{text == '' ? <></> : getText()}
 				</TouchableOpacity>
 				<TouchableOpacity onPress={onPressArticle} activeOpacity={0} style={[style.content, {position: 'absolute', opacity: 0}]}>
@@ -159,9 +161,10 @@ const ArticleSummary = props => {
 ArticleSummary.defaultProps = {
 	onPressArticle: () => {},
 	isSearch: '',
+	selectMode: false,
 };
 
-export default React.memo(ArticleSummary);
+export default ArticleSummary;
 
 const style = StyleSheet.create({
 	container: {

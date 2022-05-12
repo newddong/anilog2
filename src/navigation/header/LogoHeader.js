@@ -43,7 +43,7 @@ export default LogoHeader = ({navigation, route, options, back}) => {
 
 const style = StyleSheet.create({
 	headerContainer: {
-		alignItems: 'flex-end',
+		alignItems: 'center',
 		justifyContent: 'space-between',
 		height: 105 * DP,
 		flexDirection: 'row',
@@ -51,7 +51,8 @@ const style = StyleSheet.create({
 		paddingHorizontal: 48 * DP,
 	},
 	logoContainer: {
-		marginBottom: 26 * DP,
+		// marginBottom: 26 * DP,
+		// backgroundColor: 'red',
 		width: 167 * DP,
 		height: 74 * DP,
 	},
@@ -59,7 +60,7 @@ const style = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		width: 126 * DP,
-		marginBottom: 26 * DP,
+		// marginBottom: 26 * DP,
 		backgroundColor: '#fff',
 	},
 	shadow: {

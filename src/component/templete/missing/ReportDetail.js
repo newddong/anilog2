@@ -17,6 +17,7 @@ import Modal from 'Root/component/modal/Modal';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
+import Swiper from 'react-native-swiper';
 export default ReportDetail = props => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
@@ -257,12 +258,25 @@ export default ReportDetail = props => {
 			<View style={{alignItems: 'center'}}>
 				<View style={[temp_style.img_square_750, reportDetail.img_square_750]}>
 					{/* 제보사진 */}
-					<Image
+					{/* <Image
 						source={{
 							uri: data.feed_thumbnail,
 						}}
 						style={[temp_style.img_square_750]}
-					/>
+					/> */}
+					<Swiper showsPagination={false} autoplay={false} loop={false} horizontal={true}>
+						{data.feed_medias != undefined &&
+							data.feed_medias.map((val, idx) => (
+								<View key={idx}>
+									<Image source={{uri: val.media_uri}} style={[temp_style.img_square_750]} />
+									<View style={[reportDetail.swiper_index]}>
+										<Text style={[txt.roboto24, {color: 'white'}]}>
+											{idx + 1}/{data.feed_medias.length}
+										</Text>
+									</View>
+								</View>
+							))}
+					</Swiper>
 				</View>
 				<View style={[temp_style.feedContent]}>
 					{/* DB에서 가져오는 제보 피드글 데이터를 FeedContent에 넘겨준다. */}

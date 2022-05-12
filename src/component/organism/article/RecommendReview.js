@@ -1,11 +1,12 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {APRI10, BLACK, GRAY10, GRAY20, WHITE} from 'Root/config/color';
 import ProfileImageSmall from 'Root/component/molecules/image/ProfileImageSmall';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 /**
  * 추천 게시글
  * @param {object} props - Props Object

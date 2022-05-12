@@ -44,7 +44,7 @@ export default FavoriteFeeds = ({route, navigation}) => {
 				getUserTaggedFeedList(
 					{userobject_id: userGlobalObject.userInfo._id},
 					result => {
-						console.log('유저의 태그된 피드 리스트', result);
+						// console.log('유저의 태그된 피드 리스트', result.msg);
 						setData(result.msg);
 					},
 					err => {
@@ -185,11 +185,15 @@ export default FavoriteFeeds = ({route, navigation}) => {
 						navigation.push('UserFeedList', {title: titleValue, userobject: result.msg, selected: feed_id});
 					} else if (route.name == 'TagMeFeeds') {
 						// console.log('tageme');
-						navigation.push('TagMeFeedList', {title: titleValue + '님을 태그한 글', userobject: result.msg, selected: feed_id});
+						navigation.push('TagMeFeedList', {
+							title: userGlobalObject.userInfo.user_nickname + '님을 태그한 글',
+							userobject: result.msg,
+							selected: feed_id,
+						});
 					} else if (route.name == 'FavoriteFeeds') {
 						console.log('feed_id', feed_id);
-						navigation.push('UserFeedList', {title: titleValue, userobject: result.msg, selected: feed_id});
-						// navigation.push('UserFeedList', {userobject: data, selected: item});
+						// navigation.push('UserFeedList', {title: titleValue, userobject: result.msg, selected: feed_id});
+						navigation.push('FavoriteFeedList', {title: '즐겨찾기한 게시글', userobject: result.msg, selected: feed_id});
 					}
 					//다른 route가 있을 경우 else if 확장 할 것
 					else {

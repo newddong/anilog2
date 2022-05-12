@@ -18,7 +18,6 @@ export default SearchFeed = React.memo((props, ref) => {
 	const [showOnlyProtect, setShowOnlyProtect] = React.useState(false);
 
 	React.useEffect(() => {
-		searchContext.searchInfo.routeName = props.route.name;
 		async function fetchData() {
 			const feed = await getFeedList();
 			setFeedList(feed);

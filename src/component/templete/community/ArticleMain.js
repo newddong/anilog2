@@ -54,7 +54,7 @@ export default ArticleMain = ({route}) => {
 
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
-		navigation.push('ArticleDetail', {community_object: data[index]});
+		navigation.push('ArticleDetail', {community_object: getData()[index]});
 	};
 
 	//글쓰기

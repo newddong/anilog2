@@ -92,8 +92,17 @@ export default CommunityWrite = props => {
 	//내용 입력
 	const onChange = editorData => {
 		// console.log('editorData', editorData);
-		setData({...data, community_content: editorData});
-		scrollRef.current.scrollTo({y: cursor - 50, duration: 100, animated: true});
+		if (editorData != data.community_content) {
+			// console.log('editorData.replace(/<[^>]*>/g,).length ', editorData.replace(/<[^>]*>/g, '').length);
+			if (editorData.replace(/<[^>]*>/g, '').length > 1500) {
+				// 1500자 이하
+				Modal.alert('1500자 이하로 작성이 가능합니다!');
+				richText.current?.setContentHTML(data.community_content);
+			} else {
+				setData({...data, community_content: editorData});
+				scrollRef.current.scrollTo({y: cursor - 50, duration: 100, animated: true});
+			}
+		}
 	};
 
 	//제목 입력
@@ -131,6 +140,7 @@ export default CommunityWrite = props => {
 	//이미지 입력
 	const insertImage = imageList => {
 		// console.log('imageList', imageList);
+		Modal.popLoading(true);
 		setTimeout(() => {
 			data != 'false' ? richText.current?.insertHTML('<p><br/></p></div>') : false; //이미지를 넣을 시 바로 다음줄로 이동하도록 처리
 			// const result = await changePath(imageList);
@@ -139,7 +149,6 @@ export default CommunityWrite = props => {
 					s3path_uri: imageList,
 				},
 				result => {
-					Modal.popLoading(true);
 					// console.log('result / s3path / Write ', result.msg);
 					// resolve(result.msg);
 					result.msg.map((v, i) => {
@@ -155,9 +164,11 @@ export default CommunityWrite = props => {
 						// richText.current?.insertHTML('<p><br/></p></div>');
 					});
 					// richText.current?.focusContentEditor();
+					Modal.close();
 				},
 				err => {
 					console.log('err', err);
+					Modal.close();
 				},
 			);
 		}, 100);
@@ -413,7 +424,13 @@ export default CommunityWrite = props => {
 		<View style={[style.container, {}]}>
 			<ScrollView contentContainerStyle={[style.insideScrollView, {}]} ref={scrollRef} showsVerticalScrollIndicator={false}>
 				{/* //제목 및 카테고리 선택 */}
-				<TextInput onChangeText={onChangeTitle} style={[txt.noto30, style.title_text]} placeholder={'제목 입력...'} placeholderTextColor={GRAY20} />
+				<TextInput
+					onChangeText={onChangeTitle}
+					maxLength={30}
+					style={[txt.noto30, style.title_text]}
+					placeholder={'제목 입력...'}
+					placeholderTextColor={GRAY20}
+				/>
 				{isReview ? (
 					<>
 						<TouchableOpacity activeOpacity={0.6} onPress={onPressFilter} style={[style.category]}>
@@ -469,6 +486,7 @@ export default CommunityWrite = props => {
 									onCursorPosition={onCursorPosition}
 									onPaste={onPaste}
 									pasteAsPlainText={true}
+
 									// onMessage={handleMessage}
 								/>
 							</ScrollView>

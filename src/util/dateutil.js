@@ -44,6 +44,7 @@ export function parsingDate(date_mongo) {
  * hyphened('01096450422') => return 010-9645-0422
  */
 export function hyphened(target) {
-	const result = target.replace(/[^0-9]/, '').replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
+	let result = '';
+	result = target.replace(/[^0-9]/, '').replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
 	return result;
 }

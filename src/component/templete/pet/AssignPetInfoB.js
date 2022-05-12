@@ -89,29 +89,33 @@ export default AssignPetInfoB = props => {
 				Modal.popNoBtn('반려동물 등록이 완료되었습니다.');
 				setTimeout(() => {
 					Modal.close();
-					Modal.popTwoBtn(
-						'추가로 등록할 반려동물이 있나요?',
-						'아니오',
-						'추가 등록',
-						() => {
-							console.log('data.previousRouteName', data.previousRouteName);
-							props.navigation.navigate(data.previousRouteName);
-						},
-						() => {
-							//reset 설정 시 기존의 state값들은 초기화됨
-							props.navigation.reset({
-								index: 2,
-								routes: [
-									{name: 'UserMenu'},
-									{name: 'UserInfoSetting', params: {token: userGlobalObject.userInfo._id}},
-									{name: 'AssignPetProfileImage', params: {previousRouteName: 'UserInfoSetting'}},
-								],
-							});
-						},
-						() => {
-							props.navigation.navigate(data.previousRouteName);
-						},
-					);
+					console.log('반려 추가 등록 전 userGlobal', userGlobalObject.userInfo);
+					if (userGlobalObject.userInfo._id == '') {
+						props.navigation.navigate(data.previousRouteName);
+					} else {
+						Modal.popTwoBtn(
+							'추가로 등록할 반려동물이 있나요?',
+							'아니오',
+							'추가 등록',
+							() => {
+								props.navigation.navigate(data.previousRouteName);
+							},
+							() => {
+								//reset 설정 시 기존의 state값들은 초기화됨
+								props.navigation.reset({
+									index: 2,
+									routes: [
+										{name: 'UserMenu'},
+										{name: 'UserInfoSetting', params: {token: userGlobalObject.userInfo._id}},
+										{name: 'AssignPetProfileImage', params: {previousRouteName: 'UserInfoSetting'}},
+									],
+								});
+							},
+							() => {
+								props.navigation.navigate(data.previousRouteName);
+							},
+						);
+					}
 				}, 500);
 			},
 			error => {

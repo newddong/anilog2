@@ -299,6 +299,17 @@ export default Modal = {
 	popInterestTagModal: (category, data, onSave, onClose, setState) => {},
 
 	/**
+	 * 리뷰 필터 모달
+	 * @param {'ReviewWrite'|'Review'} category - 관심활동 / 관심지역 / 관심 후기 분기
+	 * @param {object} data - 기존 필터정보
+	 * @param {(selectedData)=>void)} onSave - 저장 버튼 클릭 콜백 / 선택된 항목의 오브젝트( ex : 지역, 미용, 놀이, 건강 등)
+	 * @param {()=>void)} onClose - 페이지 좌상단 x버튼 클릭 / 종료 콜백
+	 *
+	 * @example
+	 */
+	popReviewFilterModal: (category, data, onSave, onClose, setState) => {},
+
+	/**
 	 * 공유 - 공유 목록 출력 모달
 	 * @param {()=>void} props.onPressKakao - 카카오톡 클릭
 	 * @param {()=>void} props.onPressLinkCopy - 링크복사 클릭

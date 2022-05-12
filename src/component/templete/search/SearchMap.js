@@ -158,14 +158,19 @@ export default SearchMap = ({route}) => {
 						`http://api.vworld.kr/req/address?service=address&request=getcoord&version=2.0&crs=epsg:4326&address=${addr}&refine=true&simple=true&format=json&type=ROAD&key=${key}`,
 					)
 					.then(responseText => {
-						// console.log('resoponse', JSON.stringify(responseText.data.response.result));
-						const result = responseText.data.response.result.point;
-						// console.log('parse Result y : ', parseFloat(result.y));
-						setDelay(false);
-						callInitialAddress(parseFloat(result.x), parseFloat(result.y));
-						setChangedLatitude(parseFloat(result.y));
-						setChangedLongitude(parseFloat(result.x));
-						map.current = result;
+						// console.log()
+						console.log('resoponse', JSON.stringify(responseText.data.response.status));
+						if (responseText.data.response.status == 'ERROR') {
+							Modal.alert('주소를 받아오는 과정에서 \n 오류가 발생하였습니다. \n 잠시후 다시 이용해주세요.');
+						} else {
+							const result = responseText.data.response.result.point;
+							// console.log('parse Result y : ', parseFloat(result.y));
+							setDelay(false);
+							callInitialAddress(parseFloat(result.x), parseFloat(result.y));
+							setChangedLatitude(parseFloat(result.y));
+							setChangedLongitude(parseFloat(result.x));
+							map.current = result;
+						}
 					});
 			} catch (error) {
 				console.log('error connectGeoCoder  :  ', error.message);

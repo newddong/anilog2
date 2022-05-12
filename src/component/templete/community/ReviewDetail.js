@@ -206,10 +206,12 @@ export default ReviewDetail = props => {
 							input.current.blur();
 							setPrivateComment(false);
 							setEditMode(false); // console.log('comments', comments);
+							console.log('whichComment', whichParent);
+
 							setTimeout(() => {
 								whichParent == ''
 									? scrollRef.current.scrollToIndex({animated: true, index: 0})
-									: scrollRef.current.scrollToIndex({animated: true, index: whichParent});
+									: scrollRef.current.scrollToIndex({animated: true, index: whichParent - 1});
 							}, 500);
 							Modal.close();
 						},

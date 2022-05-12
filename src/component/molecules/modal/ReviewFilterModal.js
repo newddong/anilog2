@@ -13,26 +13,22 @@ import {btn_w242, btn_w280, btn_w280x68} from 'Root/component/atom/btn/btn_style
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
 import Loading from './Loading';
 /**
- * 관심사 추가 및 수정 모달
- * @param {'Activity'|'Location'|'Review'} category -  관심활동 / 관심지역 / 커뮤니티후기 분기
+ * 리뷰 필터 추가 및 수정 모달
+ * @param {'Review'|'ReviewWrite'} category -  리뷰/리뷰글쓰기
  * @param {object} data - 관심사 추가할 계정 object(반려동물 혹은 유저)
  * @param {(selectedData)=>void)} onSave - 저장 버튼 클릭 콜백 / 선택된 항목의 오브젝트( ex : 지역, 미용, 놀이, 건강 등)
  * @param {()=>void)} onClose - 페이지 좌상단 x버튼 클릭 / 종료 콜백
  * @param {(selectedItems:object)=>void)} setState - 선택 목록
  *
  */
-const InterestTagModal = props => {
+const ReviewFilterModal = props => {
 	// console.log('InterestTagModa', props.data);
 	//유저 오브젝트의 user_interests 의 더미데이터
 	// user_interests는 크게 location 및 activity로 구성
-	console.log('IntrestTagModal', props);
-	const [userInterestContent, setUserInterestContent] = React.useState([]);
-	const [userInterestLocation, setUserInterestLocation] = React.useState(props.data);
+	// console.log('ReviewFilterModal', props);
 	const [userInterestReview, setUserInterestReview] = React.useState(props.data);
 
 	const [isSaved, setIsSaved] = React.useState(false); // '저장하지 않고 나가시겠습니까?' 메시지 출력 여부 판별
-
-	const [activityLists, setActivityLists] = React.useState([]);
 
 	//커뮤니티 카테고리 선택 관련 state
 	const [communityInterests, setCommunityInterests] = React.useState('');
@@ -41,9 +37,9 @@ const InterestTagModal = props => {
 	const [city, setCity] = React.useState(''); // 리뷰의 지역 필터 중 광역시, 도 파라미터
 	const [district, setDistrict] = React.useState(['', '', '광역시, 도를 먼저 선택해주세요.']); // 리뷰의 지역 필터 중 시군구 파라미터
 	const [selectedItem, setSelectedItem] = React.useState(2); // 광역시 도 선택 인덱스
-	const [selectedCity, setSelectedCity] = React.useState('');
+	const [selectedCity, setSelectedCity] = React.useState(props.data.interests_location?.city);
 	const [selectedItem_dis, setSelectedItem_dis] = React.useState(2); // 시군구 선택 인덱스
-	const [selectedDistrict, setSelectedDistrict] = React.useState(''); // 시군구 선택 아이템
+	const [selectedDistrict, setSelectedDistrict] = React.useState(props.data.interests_location?.district); // 시군구 선택 아이템
 	const [selectCityOpen, setSelectCityOpen] = React.useState(false);
 	const [selectDistrictOpen, setSelectDistrictOpen] = React.useState(false);
 
@@ -71,46 +67,22 @@ const InterestTagModal = props => {
 				{},
 				result => {
 					const padding = '';
+					let res = result.msg;
+
 					let arr = [padding, padding];
 					let cities = arr.concat(result.msg);
+					let find = cities.findIndex(e => e == '서울특별시');
+					let find2 = cities.findIndex(e => e == '경기도');
+					cities.splice(find, 1);
+					cities.splice(find2, 1);
+					cities.splice(2, 0, '서울특별시');
+					cities.splice(3, 0, '경기도');
 					cities.push(padding);
 					cities.push(padding);
 					setCity(cities);
 				},
 				err => console.log('err', err),
 			);
-		} else {
-			let tempUserInterestContentList = [];
-			let tempUserInterestLocationList = [];
-			//유저 관심사 목록 DB에서 받아오기
-			getInterestsList({}, interests => {
-				var acitivityList = [];
-				const nameList = {interests_beauty: '미용', interests_activity: '놀이', interests_food: '사료&간식', interests_health: '건강'};
-				const interestObj = interests.msg[0];
-				const getinterest = Object.entries(interestObj).map((category, idx) => {
-					if (idx == 2) {
-						setAddressList(category[1]);
-					}
-					if (idx >= 3) {
-						acitivityList.push({category: nameList[category[0]], content: category[1]});
-					}
-				});
-				setActivityLists(acitivityList);
-			});
-			//현재 유저의 관심사 리스트를 목록들에 적용
-			const saveUserInterest = Object.entries(props.data).map(interest => {
-				console.log('object', interest);
-				if (props.isActivation) {
-					tempUserInterestContentList.push(interest[1]);
-				} else {
-					tempUserInterestLocationList.push(interest[1]);
-				}
-
-				console.log('아오..', tempUserInterestLocationList, tempUserInterestContentList);
-				setUserInterestContent(tempUserInterestContentList);
-				// setUserInterestLocation(tempUserInterestLocationList);
-				setUserInterestLocation(tempUserInterestContentList);
-			});
 		}
 	}, []);
 
@@ -145,38 +117,9 @@ const InterestTagModal = props => {
 		}).start();
 	};
 
-	//관심활동 태그를 클릭
-	const onPressInterestActivationTag = tag => {
-		let copy = [...userInterestContent];
-		if (copy.includes(tag)) {
-			let findIndex = copy.findIndex(e => e == tag);
-			copy.splice(findIndex, 1);
-		} else {
-			copy.push(tag);
-		}
-		setUserInterestContent(copy);
-	};
-
-	//관심지역 태그를 클릭
-	const onPressInterestLocationTag = tag => {
-		let copy = [...userInterestLocation];
-		if (copy.includes(tag)) {
-			let findIndex = copy.findIndex(e => e == tag);
-			copy.splice(findIndex, 1);
-		} else {
-			copy.push(tag);
-		}
-		setUserInterestLocation(copy);
-		// userInterestContent.push(tag);
-	};
-
 	//저장
 	const onPressSave = () => {
-		if (props.category == 'Activity') {
-			props.setState(userInterestContent);
-		} else if (props.category == 'Location') {
-			props.setState(userInterestLocation);
-		} else if (props.category == 'ReviewWrite') {
+		if (props.category == 'ReviewWrite') {
 			props.setState({
 				userInterestReview: userInterestReview,
 			});
@@ -197,6 +140,19 @@ const InterestTagModal = props => {
 	//모달 종료
 	const onClose = () => {
 		if (props.category == 'Review') {
+			let arr = [];
+			const review_category_list = arr.concat(
+				userInterestReview.interests_review,
+				userInterestReview.interests_trip,
+				userInterestReview.interests_etc,
+				userInterestReview.interests_hospital,
+				userInterestReview.interests_interior,
+			);
+			if (review_category_list.length == 0 && userInterestReview.interests_location.city == '') {
+				props.setState({
+					userInterestReview: userInterestReview,
+				});
+			}
 			props.onClose();
 			Modal.close();
 		} else if (isSaved) {
@@ -205,45 +161,19 @@ const InterestTagModal = props => {
 		} else {
 			const prev = props.data;
 			let equals = true;
-			if (props.category == 'Location' && prev.length == userInterestLocation.length) {
-				prev.map((v, i) => {
-					if (!userInterestLocation.includes(v)) {
-						equals = false;
-					}
-				});
-				if (equals) {
-					props.onClose();
-					Modal.close();
-				} else {
-					setShowBtnModal(true);
-				}
-			} else if (props.category == 'Activity' && prev.length == userInterestContent.length) {
-				prev.map((v, i) => {
-					if (!userInterestContent.includes(v)) {
-						equals = false;
-					}
-				});
-				if (equals) {
-					props.onClose();
-					Modal.close();
-				} else {
-					setShowBtnModal(true);
-				}
+			let arr = [];
+			const review_category_list = arr.concat(
+				userInterestReview.interests_review,
+				userInterestReview.interests_trip,
+				userInterestReview.interests_etc,
+				userInterestReview.interests_hospital,
+				userInterestReview.interests_interior,
+			);
+			if (review_category_list.length == 0) {
+				props.onClose();
+				Modal.close();
 			} else {
-				let arr = [];
-				const review_category_list = arr.concat(
-					userInterestReview.interests_review,
-					userInterestReview.interests_trip,
-					userInterestReview.interests_etc,
-					userInterestReview.interests_hospital,
-					userInterestReview.interests_interior,
-				);
-				if (review_category_list.length == 0) {
-					props.onClose();
-					Modal.close();
-				} else {
-					setShowBtnModal(true);
-				}
+				setShowBtnModal(true);
 			}
 		}
 	};
@@ -251,8 +181,6 @@ const InterestTagModal = props => {
 	//X마크 클릭 후 저장 후 나감 클릭
 	const onPressExitAfterSave = () => {
 		onPressSave();
-		// props.onClose();
-		// Modal.close();
 	};
 
 	//X마크 클릭 후 나가기 클릭
@@ -261,26 +189,31 @@ const InterestTagModal = props => {
 		Modal.close();
 	};
 
-	//
+	//모달이 열린 상태에서 모달 이외 영역 클릭
 	const onPressBackground = () => {
 		if (showBtnModal) {
 			setShowBtnModal(false);
+			setSelectCityOpen(false);
+			setSelectDistrictOpen(false);
 		}
 	};
 
 	//필터 초기화
 	const onPressInitialize = () => {
-		console.log('필터초기화');
-	};
-
-	const getList = () => {
-		if (props.category == 'Review' || props.category == 'ReviewWrite') {
-			return getReviewCategory();
-		} else if (props.category == 'Activity') {
-			return getActivityList();
-		} else if (props.category == 'Location') {
-			return getLocationList();
-		}
+		const init = {
+			interests_etc: [],
+			interests_hospital: [],
+			interests_interior: [],
+			interests_location: {city: '', district: ''},
+			interests_review: [],
+			interests_trip: [],
+		};
+		setUserInterestReview(init);
+		setSelectedCity('');
+		setSelectedDistrict('');
+		// props.setState({
+		// 	userInterestReview: init,
+		// });
 	};
 
 	//상단 모달창에서 광역시, 도 드롭다운 열기 클릭
@@ -483,7 +416,11 @@ const InterestTagModal = props => {
 	//커뮤니티 카테고리 분기
 	const getReviewCategory = () => {
 		if (communityInterests == '') {
-			return <ActivityIndicator />;
+			return (
+				<View style={{paddingVertical: 100 * DP}}>
+					<ActivityIndicator size={'large'} />
+				</View>
+			);
 		} else
 			return (
 				<ScrollView style={{flex: 1}} ref={scrollRef}>
@@ -512,91 +449,17 @@ const InterestTagModal = props => {
 			);
 	};
 
-	const getActivityList = () => {
-		if (activityLists.length == 0) {
-			return <Loading isModal={false} smallBox={true} />;
-		} else
-			return (
-				<ScrollView ref={scrollRef}>
-					{activityLists.map((v, i) => {
-						return (
-							<View key={i} style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
-								<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>{v.category}</Text>
-								<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-									{v.content.length
-										? v.content.map((d, i) => {
-												if (i % 2 == 0) {
-													return null;
-												}
-												return (
-													<TouchableOpacity
-														onPress={() => onPressInterestActivationTag(d)}
-														key={i}
-														style={[userInterestContent.includes(d) ? style.contentText_userInterest : style.contentText]}>
-														<Text style={[txt.noto28, {color: userInterestContent.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
-													</TouchableOpacity>
-												);
-										  })
-										: null}
-								</View>
-								<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-									{v.content.length
-										? v.content.map((d, i) => {
-												if (i % 2 != 0) {
-													return null;
-												}
-												return (
-													<TouchableOpacity
-														key={i}
-														onPress={() => onPressInterestActivationTag(d)}
-														style={[userInterestContent.includes(d) ? style.contentText_userInterest : style.contentText]}>
-														<Text style={[txt.noto28, {color: userInterestContent.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
-													</TouchableOpacity>
-												);
-										  })
-										: null}
-								</View>
-							</View>
-						);
-					})}
-				</ScrollView>
-			);
-	};
-
-	const getLocationList = () => {
-		const renderItem = (v, index) => {
-			return (
-				<View style={{alignSelf: 'center', width: 270 * DP, alignItems: 'center'}}>
-					{userInterestLocation.includes(v) ? (
-						<TouchableOpacity
-							onPress={() => onPressInterestLocationTag(v)}
-							style={[style.contentText_userInterest, {width: 226 * DP, marginBottom: 40 * DP, paddingHorizontal: 20 * DP}]}>
-							<Text style={[txt.noto28b, {color: WHITE, textAlign: 'center'}]}>{v}</Text>
-						</TouchableOpacity>
-					) : (
-						<TouchableOpacity
-							onPress={() => onPressInterestLocationTag(v)}
-							style={[style.contentText, {width: 226 * DP, marginBottom: 40 * DP, paddingHorizontal: 20 * DP}]}>
-							<Text style={[txt.noto28, {color: GRAY10, textAlign: 'center'}]}>{v}</Text>
-						</TouchableOpacity>
-					)}
-				</View>
-			);
-		};
-		return <FlatList data={addressList} ref={scrollRef} renderItem={({item, index}) => renderItem(item, index)} numColumns={2} />;
-	};
-
 	return (
 		<View style={style.background}>
 			<TouchableOpacity
 				activeOpacity={1}
 				onPressIn={event => {
-					if (!showBtnModal) {
-						if (props.category == 'Location') {
-							scrollRef.current.scrollToOffset({offset: event.nativeEvent.pageY - 250, animated: true});
-						} else {
-							scrollRef.current.scrollTo({x: 0, y: event.nativeEvent.pageY - 250, animated: true});
-						}
+					console.log('showBtnModal', showBtnModal);
+					setShowBtnModal(false);
+					setSelectCityOpen(false);
+					setSelectDistrictOpen(false);
+					if (!showBtnModal && !selectCityOpen && !selectDistrictOpen) {
+						scrollRef.current.scrollTo({x: 0, y: event.nativeEvent.pageY - 250, animated: true});
 					}
 				}}
 				onPress={onPressBackground}
@@ -626,7 +489,7 @@ const InterestTagModal = props => {
 						</TouchableOpacity>
 					)}
 				</View>
-				{getList()}
+				{getReviewCategory()}
 			</TouchableOpacity>
 			{showBtnModal ? (
 				<View style={[style.btnModalContainer, style.shadow]}>
@@ -719,7 +582,7 @@ const InterestTagModal = props => {
 	);
 };
 
-InterestTagModal.defaultProps = {
+ReviewFilterModal.defaultProps = {
 	onSave: () => {},
 	onClose: () => {},
 	isActivation: true,
@@ -873,4 +736,4 @@ const style = StyleSheet.create({
 	},
 });
 
-export default InterestTagModal;
+export default ReviewFilterModal;

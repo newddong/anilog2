@@ -242,6 +242,12 @@ export default SearchReview = props => {
 				},
 				result => {
 					console.log('result/ onPressLike / SearchReview : ', result.msg);
+					// const findIndex = data.findIndex(e => e._id == getData()[index]._id);
+					// console.log('find', findIndex);
+					// let copy = data;
+					// copy[findIndex].community_is_like = bool;
+					// setData(copy);
+					props.resetCommunityList();
 				},
 				err => console.log('err / onPressLike / SearchReview : ', err),
 			);
@@ -309,39 +315,36 @@ export default SearchReview = props => {
 	};
 
 	const filterComponent = () => {
-		if (getData().length == 0) {
-			return <></>;
-		} else
-			return (
-				<View style={[style.filter]}>
-					<View style={[style.shadow_filter]}>
-						{isFilter ? <Filter60Filled onPress={onPressFilterOff} /> : <Filter60Border onPress={onPressFilter} />}
+		return (
+			<View style={[style.filter]}>
+				<View style={[style.shadow_filter]}>
+					{isFilter ? <Filter60Filled onPress={onPressFilterOff} /> : <Filter60Border onPress={onPressFilter} />}
+				</View>
+				<View style={[style.animalFilter]}>
+					<View style={[style.shadow]}>
+						{!filterData.dog ? (
+							<Animal_dog onPress={() => onPressAnimalFilter('dog')} />
+						) : (
+							<Animal_dog_off onPress={() => onPressAnimalFilter('dog')} />
+						)}
 					</View>
-					<View style={[style.animalFilter]}>
-						<View style={[style.shadow]}>
-							{!filterData.dog ? (
-								<Animal_dog onPress={() => onPressAnimalFilter('dog')} />
-							) : (
-								<Animal_dog_off onPress={() => onPressAnimalFilter('dog')} />
-							)}
-						</View>
-						<View style={[style.shadow]}>
-							{!filterData.cat ? (
-								<Animal_cat onPress={() => onPressAnimalFilter('cat')} />
-							) : (
-								<Animal_cat_off onPress={() => onPressAnimalFilter('cat')} />
-							)}
-						</View>
-						<View style={[style.shadow]}>
-							{!filterData.etc ? (
-								<Animal_another onPress={() => onPressAnimalFilter('etc')} />
-							) : (
-								<Animal_another_off onPress={() => onPressAnimalFilter('etc')} />
-							)}
-						</View>
+					<View style={[style.shadow]}>
+						{!filterData.cat ? (
+							<Animal_cat onPress={() => onPressAnimalFilter('cat')} />
+						) : (
+							<Animal_cat_off onPress={() => onPressAnimalFilter('cat')} />
+						)}
+					</View>
+					<View style={[style.shadow]}>
+						{!filterData.etc ? (
+							<Animal_another onPress={() => onPressAnimalFilter('etc')} />
+						) : (
+							<Animal_another_off onPress={() => onPressAnimalFilter('etc')} />
+						)}
 					</View>
 				</View>
-			);
+			</View>
+		);
 	};
 
 	const whenEmpty = () => {

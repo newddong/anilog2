@@ -349,7 +349,7 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen
 				name="CategoryHelpTab"
 				component={CategoryHelpTopTabNavigation}
-				options={{header: props => <InputAndSearchHeader {...props} />}}
+				options={{header: props => <InputAndSearchHeader {...props} isHelpTab />}}
 			/>
 			<MyStack.Screen
 				name="FrequentAsked"

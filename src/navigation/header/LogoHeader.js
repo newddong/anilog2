@@ -8,11 +8,14 @@ import {WHITE, APRI10} from 'Root/config/color';
 import SvgWrapper, {SvgWrap} from 'Atom/svgwrapper';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
+import {useNavigation} from '@react-navigation/core';
 
-export default LogoHeader = ({navigation, route, options, back}) => {
+export default LogoHeader = ({route, options, back}) => {
+	const navigation = useNavigation();
 	const clickLogo = () => {
 		// alert('Logo!');
 	};
+
 	const clickSearch = () => {
 		navigation.navigate('Search', {mother: 0, child: 0, prevNav: route.name});
 		// alert('이후 버전에서 제공할 예정입니다!');

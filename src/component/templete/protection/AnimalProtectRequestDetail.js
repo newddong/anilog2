@@ -58,38 +58,13 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	}, [route.params]);
 
 	//보호요청게시글의 정보 가져오기
-	const getProtectRequestObject = async () => {
+	const getProtectRequestObject = () => {
 		getProtectRequestByProtectRequestId(
 			{
 				protect_request_object_id: route.params.id,
 			},
-			async result => {
+			result => {
 				// console.log('result /AnimalProtectRequestDetail / getProtectRequestByProtectRequestId /  : ', result.msg.protect_request_writer_id);
-				const ee = {
-					__v: 0,
-					_id: '627bdcf6eb81e68c65d15ee1',
-					is_favorite: false,
-					user_contacted: false,
-					user_denied: false,
-					user_email: '',
-					user_favorite_count: 0,
-					user_follow_count: 0,
-					user_follower_count: 0,
-					user_interests: {interests_activity: [], interests_beauty: [], interests_food: [], interests_health: [], interests_location: []},
-					user_introduction: '강동리본센터07041637350',
-					user_is_verified_email: false,
-					user_is_verified_phone_number: false,
-					user_my_pets: [],
-					user_name: '강동리본센터',
-					user_nickname: '강동리본센터',
-					user_password: '59nzzxms',
-					user_phone_number: '07041637350',
-					user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1652351934385_6346cd21-25e7-4fa3-be06-ec7ddd85c880.jpg',
-					user_register_date: '2022-05-11T15:57:42.195Z',
-					user_type: 'shelter',
-					user_update_date: '2022-05-11T15:57:42.195Z',
-					user_upload_count: 0,
-				};
 				// console.log('작성자의 즐겨찾기 수', result.msg);
 				let res = result.msg;
 				// let checkfav = await isMyFavoriteShelter(res.protect_request_writer_id);

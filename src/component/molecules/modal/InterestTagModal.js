@@ -39,14 +39,6 @@ const InterestTagModal = props => {
 	const [communityInterests, setCommunityInterests] = React.useState('');
 	const [showBtnModal, setShowBtnModal] = React.useState(false); //모달창 대체 View 출력 여부
 	const [addressList, setAddressList] = React.useState([]);
-	const [city, setCity] = React.useState(''); // 리뷰의 지역 필터 중 광역시, 도 파라미터
-	const [district, setDistrict] = React.useState(['', '', '광역시, 도를 먼저 선택해주세요.']); // 리뷰의 지역 필터 중 시군구 파라미터
-	const [selectedItem, setSelectedItem] = React.useState(2); // 광역시 도 선택 인덱스
-	const [selectedCity, setSelectedCity] = React.useState('');
-	const [selectedItem_dis, setSelectedItem_dis] = React.useState(2); // 시군구 선택 인덱스
-	const [selectedDistrict, setSelectedDistrict] = React.useState(''); // 시군구 선택 아이템
-	const [selectCityOpen, setSelectCityOpen] = React.useState(false);
-	const [selectDistrictOpen, setSelectDistrictOpen] = React.useState(false);
 
 	React.useEffect(() => {
 		//커뮤니티 후기 글쓰기에서 호출한 관심태그 모달
@@ -64,21 +56,6 @@ const InterestTagModal = props => {
 				err => {
 					console.log('common code err', err);
 				},
-			);
-		}
-		if (props.category == 'Review') {
-			//커뮤니티 후기글 상세에서 호출한 관심태그 모달
-			getAddressList(
-				{},
-				result => {
-					const padding = '';
-					let arr = [padding, padding];
-					let cities = arr.concat(result.msg);
-					cities.push(padding);
-					cities.push(padding);
-					setCity(cities);
-				},
-				err => console.log('err', err),
 			);
 		} else {
 			let tempUserInterestContentList = [];
@@ -115,37 +92,6 @@ const InterestTagModal = props => {
 		}
 	}, []);
 
-	const citySelectHeight = React.useRef(new Animated.Value(0)).current;
-	const districtSelectHeight = React.useRef(new Animated.Value(0)).current;
-
-	const cityInterpolatedHeight = citySelectHeight.interpolate({
-		inputRange: [0, 100],
-		outputRange: [0, 100],
-	});
-
-	const districtInterpolatedHeight = districtSelectHeight.interpolate({
-		inputRange: [0, 100],
-		outputRange: [0, 100],
-	});
-
-	React.useEffect(() => {
-		animateSelectModal(citySelectHeight, selectCityOpen);
-	}, [selectCityOpen]);
-
-	React.useEffect(() => {
-		animateSelectModal(districtSelectHeight, selectDistrictOpen);
-	}, [selectDistrictOpen]);
-
-	const animateSelectModal = (kind, bool) => {
-		const toValue = bool ? 465 : 0;
-		Animated.timing(kind, {
-			duration: 500,
-			toValue: toValue * DP,
-			// easing: Easing.linear,
-			useNativeDriver: false,
-		}).start();
-	};
-
 	//관심활동 태그를 클릭
 	const onPressInterestActivationTag = tag => {
 		let copy = [...userInterestContent];
@@ -168,7 +114,6 @@ const InterestTagModal = props => {
 			copy.push(tag);
 		}
 		setUserInterestLocation(copy);
-		// userInterestContent.push(tag);
 	};
 
 	//저장
@@ -178,15 +123,6 @@ const InterestTagModal = props => {
 		} else if (props.category == 'Location') {
 			props.setState(userInterestLocation);
 		} else if (props.category == 'ReviewWrite') {
-			props.setState({
-				userInterestReview: userInterestReview,
-			});
-		} else if (props.category == 'Review') {
-			let temp = userInterestReview;
-			temp.interests_location = {
-				city: selectedCity,
-				district: selectedDistrict,
-			};
 			props.setState({
 				userInterestReview: userInterestReview,
 			});
@@ -252,8 +188,6 @@ const InterestTagModal = props => {
 	//X마크 클릭 후 저장 후 나감 클릭
 	const onPressExitAfterSave = () => {
 		onPressSave();
-		// props.onClose();
-		// Modal.close();
 	};
 
 	//X마크 클릭 후 나가기 클릭
@@ -262,17 +196,11 @@ const InterestTagModal = props => {
 		Modal.close();
 	};
 
-	//
 	const onPressBackground = () => {
 		console.log('ddd');
 		if (showBtnModal) {
 			setShowBtnModal(false);
 		}
-	};
-
-	//필터 초기화
-	const onPressInitialize = () => {
-		console.log('필터초기화');
 	};
 
 	const getList = () => {
@@ -283,80 +211,6 @@ const InterestTagModal = props => {
 		} else if (props.category == 'Location') {
 			return getLocationList();
 		}
-	};
-
-	//상단 모달창에서 광역시, 도 드롭다운 열기 클릭
-	const onOpenCity = () => {
-		setSelectDistrictOpen(false); // 광역시가 열리면 시군구는 닫힘
-		setSelectCityOpen(!selectCityOpen);
-	};
-
-	//상단 모달창에서 시군구 드롭다운 열기 클릭
-	const onOpenDistrict = () => {
-		setSelectCityOpen(false); // 시군구가 열리면 광역시는 닫힘
-		setSelectDistrictOpen(!selectDistrictOpen);
-	};
-
-	//광역시 도  모달 스크롤
-	const onScroll = event => {
-		let y = event.nativeEvent.contentOffset.y; //스크롤 영역 데이터
-		let focused = Math.floor(y / (68 * DP));
-		if (focused < 1) {
-			setSelectedItem(2);
-		} else {
-			if (focused + 2 >= city.length - 2) {
-				// 마지막 배열을 넘어서서 스크롤을 할 경우 마지막으로 자동 회귀
-				setSelectedItem(city.length - 3);
-			} else {
-				setSelectedItem(focused + 2);
-			}
-		}
-	};
-
-	//시군구 모달 스크롤
-	const onScroll_dis = event => {
-		let y = event.nativeEvent.contentOffset.y;
-		let focused = Math.floor(y / (68 * DP));
-		if (focused < 1) {
-			setSelectedItem_dis(2);
-		} else {
-			if (focused + 2 >= district.length - 2) {
-				// 마지막 배열을 넘어서서 스크롤을 할 경우 마지막으로 자동 회귀
-				setSelectedItem_dis(district.length - 3);
-			} else {
-				setSelectedItem_dis(focused + 2);
-			}
-		}
-	};
-
-	//하단 드롭다운에서 완료 버튼 클릭
-	const onSelect = () => {
-		setSelectCityOpen(false);
-		setSelectedCity(city[selectedItem]);
-		getAddressList(
-			{
-				city: city[selectedItem],
-			},
-			result => {
-				const padding = '';
-				let arr = [padding, padding];
-				let districts = arr.concat(result.msg);
-				districts.push(padding);
-				districts.push(padding);
-				setDistrict(districts);
-				setSelectedDistrict(result.msg[0]);
-				setSelectedItem_dis(2);
-			},
-			err => {
-				console.log('err', err);
-			},
-		);
-	};
-
-	//하단 드롭다운에서 완료 버튼 클릭
-	const onSelect_dis = arg => {
-		setSelectDistrictOpen(false);
-		setSelectedDistrict(district[selectedItem_dis]);
 	};
 
 	//관심 리뷰 태그를 클릭
@@ -490,20 +344,6 @@ const InterestTagModal = props => {
 			return (
 				<ScrollView style={{flex: 1}} ref={scrollRef}>
 					<View style={[style.review_container]}>
-						{props.category == 'ReviewWrite' ? (
-							<></>
-						) : (
-							<View style={[style.review_location]}>
-								<ArrowDownButton onPress={onOpenCity} btnStyle={'border'} btnLayout={btn_w242} btnTitle={selectedCity || '도, 광역시'} />
-								<ArrowDownButton
-									onPress={onOpenDistrict}
-									btnStyle={'border'}
-									btnLayout={btn_w280}
-									titleFontStyle={22}
-									btnTitle={selectedDistrict || '시군구'}
-								/>
-							</View>
-						)}
 						{getCommuntyInterestList(communityInterests.interests_trip, 0)}
 						{getCommuntyInterestList(communityInterests.interests_interior, 1)}
 						{getCommuntyInterestList(communityInterests.interests_hospital, 2)}
@@ -590,43 +430,14 @@ const InterestTagModal = props => {
 
 	return (
 		<View style={style.background}>
-			<TouchableOpacity
-				activeOpacity={1}
-				// onPressIn={event => {
-				// 	if (!showBtnModal) {
-				// 		if (props.category == 'Location') {
-				// 			scrollRef.current.scrollToOffset({offset: event.nativeEvent.pageY - 250, animated: true});
-				// 		} else {
-				// 			scrollRef.current.scrollTo({x: 0, y: event.nativeEvent.pageY - 250, animated: true});
-				// 		}
-				// 	}
-				// }}
-				onPress={onPressBackground}
-				style={[style.popUpWindow, {}]}>
+			<TouchableOpacity activeOpacity={1} onPress={onPressBackground} style={[style.popUpWindow, {}]}>
 				<View style={[style.header]}>
 					<TouchableOpacity onPress={onClose} style={[style.crossMark]}>
 						<Cross24_Filled />
 					</TouchableOpacity>
-					{props.category == 'Review' ? (
-						<View style={{width: 320 * DP, flexDirection: 'row', justifyContent: 'space-between'}}>
-							<AniButton
-								btnTitle={'필터 초기화'}
-								onPress={onPressInitialize}
-								btnStyle={'border'}
-								btnLayout={{width: 160 * DP, height: 50 * DP, borderRadius: 30 * DP}}
-							/>
-							<AniButton
-								onPress={onPressSave}
-								btnTitle={'검색'}
-								btnStyle={'filled'}
-								btnLayout={{width: 140 * DP, height: 50 * DP, borderRadius: 30 * DP}}
-							/>
-						</View>
-					) : (
-						<TouchableOpacity onPress={onPressSave} style={[style.saveText]}>
-							<Text style={[txt.noto36b, {color: APRI10}]}>저장</Text>
-						</TouchableOpacity>
-					)}
+					<TouchableOpacity onPress={onPressSave} style={[style.saveText]}>
+						<Text style={[txt.noto36b, {color: APRI10}]}>저장</Text>
+					</TouchableOpacity>
 				</View>
 				{getList()}
 			</TouchableOpacity>
@@ -643,80 +454,6 @@ const InterestTagModal = props => {
 			) : (
 				<></>
 			)}
-			{/* 하단 스크롤뷰 영역 - 광역시 도 */}
-			<Animated.View
-				style={[
-					style.downScrollSelectContainer,
-					{
-						height: cityInterpolatedHeight,
-					},
-				]}>
-				<View style={[style.modal_header]}>
-					<Text onPress={() => setSelectCityOpen(false)} style={[txt.noto30, {color: WHITE, paddingVertical: 22 * DP}]}>
-						취소
-					</Text>
-					<TouchableOpacity onPress={onSelect}>
-						<Text style={[txt.noto30, {color: WHITE}]}>완료</Text>
-					</TouchableOpacity>
-				</View>
-				<View style={[style.list, {}]}>
-					<FlatList
-						data={city}
-						onScroll={onScroll}
-						showsVerticalScrollIndicator={false}
-						renderItem={({item, index}) => {
-							return (
-								<TouchableOpacity
-									activeOpacity={1}
-									onPress={() => setSelectedItem(index)}
-									key={index}
-									style={[style.listItem, index == selectedItem && item != '' ? {backgroundColor: APRI10} : null]}>
-									<>
-										<Text style={[txt.roboto34, {color: index == selectedItem && item != '' ? WHITE : GRAY10}]}>{item}</Text>
-									</>
-								</TouchableOpacity>
-							);
-						}}
-					/>
-				</View>
-			</Animated.View>
-			{/* 하단 스크롤뷰 영역 - 시군구 */}
-			<Animated.View
-				style={[
-					style.downScrollSelectContainer,
-					{
-						height: districtInterpolatedHeight,
-					},
-				]}>
-				<View style={[style.modal_header]}>
-					<Text onPress={() => setSelectDistrictOpen(false)} style={[txt.noto30, {color: WHITE, paddingVertical: 22 * DP}]}>
-						취소
-					</Text>
-					<TouchableOpacity onPress={onSelect_dis}>
-						<Text style={[txt.noto30, {color: WHITE}]}>완료</Text>
-					</TouchableOpacity>
-				</View>
-				<View style={[style.list, {}]}>
-					<FlatList
-						data={district}
-						onScroll={onScroll_dis}
-						showsVerticalScrollIndicator={false}
-						renderItem={({item, index}) => {
-							return (
-								<TouchableOpacity
-									activeOpacity={1}
-									onPress={() => setSelectedItem_dis(index)}
-									key={index}
-									style={[style.listItem, index == selectedItem_dis && item != '' ? {backgroundColor: APRI10} : null]}>
-									<>
-										<Text style={[txt.roboto34, {color: index == selectedItem_dis && item != '' ? WHITE : GRAY10}]}>{item}</Text>
-									</>
-								</TouchableOpacity>
-							);
-						}}
-					/>
-				</View>
-			</Animated.View>
 		</View>
 	);
 };

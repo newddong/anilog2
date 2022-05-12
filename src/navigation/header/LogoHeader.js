@@ -10,8 +10,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/core';
 
-export default LogoHeader = ({route, options, back}) => {
-	const navigation = useNavigation();
+export default LogoHeader = ({navigation, route, options, back}) => {
 	const clickLogo = () => {
 		// alert('Logo!');
 	};

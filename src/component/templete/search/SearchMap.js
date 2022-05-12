@@ -173,8 +173,9 @@ export default SearchMap = ({route}) => {
 						}
 					});
 			} catch (error) {
-				console.log('error connectGeoCoder  :  ', error.message);
-				Modal.close(); //오류발생 시 Modal 종료
+				console.log(error);
+				Modal.alert('주소를 받아오는 과정에서 \n 오류가 발생하였습니다. \n 잠시후 다시 이용해주세요.');
+				// Modal.close(); //오류발생 시 Modal 종료
 			}
 		});
 	}

@@ -18,7 +18,6 @@ import searchContext from 'Root/config/searchContext';
 const InputWithSearchIcon = props => {
 	const [input, setInput] = React.useState('');
 	const inputRef = React.useRef();
-
 	//인풋 값 변경 콜백
 	const onChange = text => {
 		setInput(text);

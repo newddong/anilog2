@@ -99,9 +99,9 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 						Modal.alert('실종위치는 반드시 \n선택해주셔야합니다!');
 					} else if (!check.test(data.missing_animal_age)) {
 						Modal.alert('실종동물의 나이는 \n숫자만 입력가능합니다!');
+					} else if (data.missing_animal_species == '동물종류' || data.missing_animal_species_detail == '품종') {
+						Modal.alert('동물종류와 품종은 \n 필수입력사항입니다.');
 					} else if (
-						data.missing_animal_species &&
-						data.missing_animal_species_detail &&
 						(data.feed_content || data.feed_medias) &&
 						data.media_uri.length > 0 &&
 						data.missing_animal_age &&

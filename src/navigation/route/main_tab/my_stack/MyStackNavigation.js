@@ -148,9 +148,11 @@ export default MyStackNavigation = props => {
 				options={{header: props => <SimpleHeader {...props} />, title: '가족 계정 추가'}}
 			/>
 			<MyStack.Screen name="AnimalAdoption" component={AnimalAdoption} options={{header: props => <SimpleHeader {...props} />, title: '상태 변경'}} />
-			<MyStack.Screen name="SelectAccount" options={{header: props => <InputAndSearchHeader {...props} />, title: ''}}>
-				{props => <SelectAccount {...props} input={props.route.params} prevNav={props.route.params.prevNav} />}
-			</MyStack.Screen>
+			<MyStack.Screen
+				name="SelectAccount"
+				component={SelectAccount}
+				options={{header: props => <SimpleHeader {...props} />, title: '입양자 계정 찾기'}}
+			/>
 			<MyStack.Screen
 				name="AssignPetProfileImage"
 				component={AssignPetProfileImage}
@@ -347,7 +349,7 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen
 				name="CategoryHelpTab"
 				component={CategoryHelpTopTabNavigation}
-				options={{header: props => <InputAndSearchHeader {...props} />}}
+				options={{header: props => <InputAndSearchHeader {...props} isHelpTab />}}
 			/>
 			<MyStack.Screen
 				name="FrequentAsked"

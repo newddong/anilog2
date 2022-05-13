@@ -5,5 +5,6 @@ export default searchInfo = {
 	searchInfo: {
 		routeName: '',
 		searchInput: '',
+		searchInputForHelp: '',
 	},
 };

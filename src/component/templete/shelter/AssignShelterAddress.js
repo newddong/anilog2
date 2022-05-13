@@ -42,7 +42,7 @@ export default AssignShelterAddress = props => {
 	}, [props.route.params.addr]);
 
 	React.useEffect(() => {
-		if (data.shelter_address.brief.length > 0 && data.shelter_address.detail != '' && regExp.test(data.shelter_name)) {
+		if (data.shelter_address.brief.length > 0 && regExp.test(data.shelter_name)) {
 			setConfirmed(true);
 		} else {
 			setConfirmed(false);

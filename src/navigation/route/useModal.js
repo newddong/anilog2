@@ -39,6 +39,7 @@ import Loading from 'Root/component/molecules/modal/Loading';
 import LocationCheckModal from 'Root/component/molecules/modal/LocationCheckModal';
 import AvatarSelectFromWriteModal from 'Root/component/molecules/modal/AvatarSelectFromWriteModal';
 import LoginRequestModal from 'Root/component/molecules/modal/LoginRequestModal';
+import ReviewFilterModal from 'Root/component/molecules/modal/ReviewFilterModal';
 
 export function useModal() {
 	const [isPop, setPop] = React.useState(false);
@@ -215,6 +216,11 @@ export function useModal() {
 
 	Modal.popInterestTagModal = (category, data, onSave, onClose, setState) => {
 		popIn(<InterestTagModal category={category} data={data} onSave={onSave} onClose={onClose} setState={setState} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popReviewFilterModal = (category, data, onSave, onClose, setState) => {
+		popIn(<ReviewFilterModal category={category} data={data} onSave={onSave} onClose={onClose} setState={setState} />);
 		!isPop && setPop(true);
 	};
 

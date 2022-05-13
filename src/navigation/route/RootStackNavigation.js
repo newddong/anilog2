@@ -271,7 +271,7 @@ export default RootStackNavigation = () => {
 						{/* <RootStack.Screen name="MultiPhotoSelect" component={PhotoSelect} /> */}
 						<RootStack.Screen name="MultiPhotoSelect" component={AddPhoto} />
 						{/* 카메라 컴포넌트 임시 추가 */}
-						<RootStack.Screen name="FeedListForHashTag" component={FeedListForHashTag} options={{header: props => <BookmarkHeader {...props} />}} />
+						<RootStack.Screen name="FeedListForHashTag" component={FeedListForHashTag} options={{header: props => <SimpleHeader {...props} />}} />
 
 						<RootStack.Screen
 							name="AssignPetProfileImage"
@@ -320,7 +320,11 @@ export default RootStackNavigation = () => {
 						/>
 						<RootStack.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />}} />
 						<RootStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />}} />
-						<RootStack.Screen name="FeedCommentList" component={FeedCommentList} options={{header: props => <AlarmAndSearchHeader {...props} />}} />
+						<RootStack.Screen
+							name="FeedCommentList"
+							component={FeedCommentList}
+							options={{header: props => <SimpleHeader {...props} />, title: '댓글'}}
+						/>
 						<RootStack.Screen
 							name="TermsAndPolicy"
 							component={TermsAndPolicy}

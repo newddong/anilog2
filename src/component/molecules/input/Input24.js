@@ -146,6 +146,7 @@ const Input24 = React.forwardRef((props, ref) => {
 					maxLength={props.maxlength}
 					numberOfLines={props.numberOfLines}
 					multiline={props.multiline}
+					autoCapitalize={'none'}
 					style={[
 						txt.noto28,
 						props.style,

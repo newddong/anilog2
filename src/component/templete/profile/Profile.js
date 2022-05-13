@@ -144,7 +144,12 @@ export default Profile = ({route}) => {
 		if (userType == 'shelter') {
 			Modal.popOneBtn('보호소 계정은 봉사활동을 \n 신청하실 수 없습니다.', '확인', () => Modal.close());
 		} else {
-			navigation.push('ApplyVolunteer', {token: data._id});
+			console.log('data', data);
+			if (!data.user_contacted) {
+				Modal.alert('정식 애니로그 등록된 \n 보호소가 아닙니다!');
+			} else {
+				navigation.push('ApplyVolunteer', {token: data._id});
+			}
 		}
 	};
 

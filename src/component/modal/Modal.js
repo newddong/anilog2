@@ -19,7 +19,7 @@ export default Modal = {
 	 * @param {string} yesMsg - 확인 버튼 메시지
 	 * @param {()=>void} onNo - 취소 버튼의 콜백함수
 	 * @param {()=>void} onYes - 확인 버튼의 콜백함수
-	 * @param {()=>void} onClose - 확인 버튼의 콜백함수
+	 * @param {()=>void} onClose - 모달 바깥 영역 클릭(모달 종료) 콜백함수
 	 */
 	popTwoBtn: (msg, noMsg, yesMsg, onNo, onYes, onClose) => {},
 
@@ -297,6 +297,17 @@ export default Modal = {
 	 * @example
 	 */
 	popInterestTagModal: (category, data, onSave, onClose, setState) => {},
+
+	/**
+	 * 리뷰 필터 모달
+	 * @param {'ReviewWrite'|'Review'} category - 관심활동 / 관심지역 / 관심 후기 분기
+	 * @param {object} data - 기존 필터정보
+	 * @param {(selectedData)=>void)} onSave - 저장 버튼 클릭 콜백 / 선택된 항목의 오브젝트( ex : 지역, 미용, 놀이, 건강 등)
+	 * @param {()=>void)} onClose - 페이지 좌상단 x버튼 클릭 / 종료 콜백
+	 *
+	 * @example
+	 */
+	popReviewFilterModal: (category, data, onSave, onClose, setState) => {},
 
 	/**
 	 * 공유 - 공유 목록 출력 모달

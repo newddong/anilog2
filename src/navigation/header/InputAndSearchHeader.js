@@ -9,7 +9,7 @@ import searchContext from 'Root/config/searchContext';
 export default InputAndSearchHeader = props => {
 	const routeName = props.route.name != undefined ? props.route.name : '';
 	const [searchInput, setSearchInput] = React.useState('');
-	const [searchRoute, setSearchRoute] = React.useState('');
+	// console.log('props', props.route.params.searchInput);
 
 	const confirm = () => {
 		//헤더에서 작성한 인풋입력값을 템플릿에 전달
@@ -31,9 +31,18 @@ export default InputAndSearchHeader = props => {
 	const onChangeSearchText = text => {
 		// props.navigation.setParams({...props.route.params, searchInput: text});
 		setSearchInput(text);
-		searchContext.searchInfo.searchInput = text;
+		if (props.isHelpTab) {
+			searchContext.searchInfo.searchInputForHelp = text;
+		} else {
+			searchContext.searchInfo.searchInput = text;
+		}
 	};
 	const onClear = () => {
+		if (props.isHelpTab) {
+			searchContext.searchInfo.searchInputForHelp = '';
+		} else {
+			searchContext.searchInfo.searchInput = '';
+		}
 		searchContext.searchInfo.searchInput = '';
 		setSearchInput('');
 	};
@@ -50,26 +59,14 @@ export default InputAndSearchHeader = props => {
 
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
-			<>
-				<TouchableOpacity onPress={onPressGoBack}>
-					<View style={style.backButtonContainer}>
-						<BackArrow32 onPress={onPressGoBack} />
-					</View>
-				</TouchableOpacity>
-				{searchRoute != 'SearchFeed' ? (
-					<View style={{marginBottom: 20 * DP, flex: 1}}>
-						<InputWithSearchIcon
-							placeholder={'검색어를 입력하세요.'}
-							width={590}
-							onChange={onChangeSearchText}
-							onSearch={confirm}
-							onClear={onClear}
-						/>
-					</View>
-				) : (
-					<></>
-				)}
-			</>
+			<TouchableOpacity onPress={onPressGoBack}>
+				<View style={style.backButtonContainer}>
+					<BackArrow32 onPress={onPressGoBack} />
+				</View>
+			</TouchableOpacity>
+			<View style={{marginBottom: 20 * DP, flex: 1}}>
+				<InputWithSearchIcon placeholder={'검색어를 입력하세요.'} width={590} onChange={onChangeSearchText} onSearch={confirm} onClear={onClear} />
+			</View>
 		</View>
 	);
 };

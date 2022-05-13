@@ -386,7 +386,7 @@ export default ArticleDetail = props => {
 			select => {
 				switch (select) {
 					case '수정':
-						navigation.push('CommunityEdit', {previous: data, isReview: false});
+						navigation.push('CommunityEdit', {previous: data, isReview: false, isSearch: props.route.params.searchInput});
 						break;
 					case '삭제':
 						Modal.close();
@@ -471,7 +471,8 @@ export default ArticleDetail = props => {
 
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
-		navigation.push('ArticleDetail', {community_object: articleList[index]});
+		console.log('searchInput', searchInput);
+		navigation.push('ArticleDetail', {community_object: articleList[index], searchInput: searchInput});
 	};
 
 	//댓글 모두보기 클릭

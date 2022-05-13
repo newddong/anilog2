@@ -81,9 +81,9 @@ export default function BottomTab({state, descriptors, navigation}) {
 								navigation.navigate({name: 'Login', merge: true});
 							});
 						} else {
-							console.log('tabP', route);
-							if (route.name == 'FEED') {
-								// navigation.navigate(name: "FeedList");
+							console.log('tabP');
+							if (state.index == 4) {
+								navigation.navigate({name: route.name, merge: true});
 							}
 							const event = navigation.emit({
 								type: 'tabPress',

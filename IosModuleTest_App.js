@@ -128,6 +128,29 @@ export default class App extends Component {
       });
   }
 
+  cropImage(){
+    CameraRoll.cropImage({
+      destWidth: 1100,
+      destHeight: 300,
+      offsetX: 500,
+      offsetY: 1000,
+      uri: this.state.image.uri
+    })
+    .then(r => {
+      this.setState({
+        image: {
+          uri: r.uri,
+          width: r.width,
+          height: r.height,
+        },
+        images: null,
+      });
+    })
+    .catch(err => {
+      console.log(err);
+    })
+  }
+
   cleanupImages() {
     CameraRoll.clean()
       .then(() => {
@@ -170,7 +193,7 @@ export default class App extends Component {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => this.getImage(3, 0)}
+          onPress={() => this.getImage(15, 14)}
           style={styles.button}>
           <Text style={styles.text}>getImage</Text>
         </TouchableOpacity>
@@ -190,8 +213,6 @@ export default class App extends Component {
             .catch(err => {
               console.log(err);
             });
-            //save queue 추가하고 대기 중 ui 변경되는지 테스트용도 (현재 save loop 주석처리힘)
-            // this.getImage(5, 4);
           }}
           style={styles.button}>
           <Text style={styles.text}>save selected Image</Text>
@@ -203,6 +224,14 @@ export default class App extends Component {
           }}
           style={styles.button}>
           <Text style={styles.text}>compress selected Image</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => {
+            this.cropImage();
+          }}
+          style={styles.button}>
+          <Text style={styles.text}>crop selected Image</Text>
         </TouchableOpacity>
 
         <TouchableOpacity

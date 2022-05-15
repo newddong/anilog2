@@ -167,7 +167,7 @@ export default CommunityMainStack = props => {
 			<CommunityMainStackNavi.Screen
 				name="FeedCommentList"
 				component={FeedCommentList}
-				options={{header: props => <AlarmAndSearchHeader {...props} />}}
+				options={{header: props => <SimpleHeader {...props} />, title: '댓글'}}
 			/>
 			<CommunityMainStackNavi.Screen
 				name="EditShelterInfo"

@@ -233,6 +233,10 @@ export default UserVerification = props => {
 						<AniButton btnTitle={'인증하기'} btnLayout={btn_w654} disable={true} titleFontStyle={32} onPress={verificationRequest} />
 					)}
 				</View>
+				{/* 개발용 다음 버튼 */}
+				<View style={[btn_style.btn_w654, userAssign.btn_w654]}>
+					<AniButton btnTitle={'다음'} btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} onPress={goToNextStep} />
+				</View>
 			</ScrollView>
 		</View>
 	);

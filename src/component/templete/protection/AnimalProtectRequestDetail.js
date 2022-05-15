@@ -58,16 +58,13 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	}, [route.params]);
 
 	//보호요청게시글의 정보 가져오기
-	const getProtectRequestObject = async () => {
+	const getProtectRequestObject = () => {
 		getProtectRequestByProtectRequestId(
 			{
 				protect_request_object_id: route.params.id,
 			},
-			async result => {
-				console.log(
-					'result /AnimalProtectRequestDetail / getProtectRequestByProtectRequestId /  : ',
-					result.msg.protect_request_writer_id.is_favorite,
-				);
+			result => {
+				// console.log('result /AnimalProtectRequestDetail / getProtectRequestByProtectRequestId /  : ', result.msg.protect_request_writer_id);
 				// console.log('작성자의 즐겨찾기 수', result.msg);
 				let res = result.msg;
 				// let checkfav = await isMyFavoriteShelter(res.protect_request_writer_id);
@@ -273,7 +270,12 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				navigation.navigate('Login');
 			});
 		} else {
-			navigation.push('ApplyProtectActivityA', {protect_request_pet_data: data});
+			console.log('data.protect_request_writer_id.user_contacted', data.protect_request_writer_id.user_contacted);
+			if (!data.protect_request_writer_id.user_contacted) {
+				Modal.alert('정식 애니로그 등록된 \n 보호소가 아닙니다!');
+			} else {
+				navigation.push('ApplyProtectActivityA', {protect_request_pet_data: data});
+			}
 		}
 	};
 
@@ -284,7 +286,12 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				navigation.navigate('Login');
 			});
 		} else {
-			navigation.push('ApplyAnimalAdoptionA', {protect_request_pet_data: data});
+			console.log('data.protect_request_writer_id.user_contacted', data.protect_request_writer_id.user_contacted);
+			if (!data.protect_request_writer_id.user_contacted) {
+				Modal.alert('정식 애니로그 등록된 \n 보호소가 아닙니다!');
+			} else {
+				navigation.push('ApplyAnimalAdoptionA', {protect_request_pet_data: data});
+			}
 		}
 	};
 
@@ -348,7 +355,8 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	//답글 더보기 클릭
 	const showChild = index => {
-		scrollToReply(index);
+		// scrollToReply(index);
+		flatlist.current.scrollToIndex({animated: true, index: index, viewPosition: 0.5});
 	};
 
 	//댓글 수정 클릭

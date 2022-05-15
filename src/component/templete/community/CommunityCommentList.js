@@ -265,7 +265,7 @@ export default CommunityCommentList = props => {
 		if (index == 0)
 			return (
 				<View style={[style.commentLength]}>
-					<Text style={[txt.noto26, {color: GRAY10}]}>댓글 {comments.length}개 </Text>
+					{comments.length == 0 ? <></> : <Text style={[txt.noto26, {color: GRAY10}]}>댓글 {comments.length}개 </Text>}
 				</View>
 			);
 		if (index > 0)

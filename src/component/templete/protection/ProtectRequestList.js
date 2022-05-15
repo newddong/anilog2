@@ -36,7 +36,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 		getProtectRequestList(
 			{...filterData},
 			result => {
-				console.log('result / getProtectRequestList / ProtectRequestList : ', result.msg.length);
+				// console.log('result / getProtectRequestList / ProtectRequestList : ', result.msg[0]);
 				result.msg.forEach(each => {
 					each.protect_animal_sex = each.protect_animal_id.protect_animal_sex;
 					each.protect_animal_status = each.protect_animal_id.protect_animal_status;

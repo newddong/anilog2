@@ -182,13 +182,6 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 		// setData({...data, user_mobile_company: phone_company});
 	};
 
-	const phoneValidate = num => {
-		// console.log('num', num);
-		let regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
-		let regHomePhone = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))(\d{3,4})(\d{4})$/;
-		return regPhone.test(num) || regHomePhone.test(num);
-	};
-
 	//관심지역 태그 X마크 삭제클릭
 	const onDeleteInterestRegion = index => {
 		let copy = locationInterest;

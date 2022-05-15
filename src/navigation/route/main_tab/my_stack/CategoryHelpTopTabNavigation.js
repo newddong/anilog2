@@ -30,7 +30,7 @@ const CategoryHelpTopTabNavigation = ({route, navigation}) => {
 		getCommonCodeDynamicQuery(
 			{common_code_c_name: 'helpbycategoryobjects', common_code_language: 'kor', common_code_out_type: 'list'},
 			result => {
-				console.log('result', result);
+				// console.log('result', result);
 				for (let i in result.msg) {
 					if (i >= 1) {
 						temp.push(result.msg[i].common_code_msg_kor);
@@ -39,8 +39,6 @@ const CategoryHelpTopTabNavigation = ({route, navigation}) => {
 				}
 				setCommomData(temp2);
 				setCategoryList(temp);
-				console.log('categoryList', categoryList);
-				console.log('CommonData', commonData);
 				setLoading(false);
 			},
 			err => {
@@ -48,15 +46,15 @@ const CategoryHelpTopTabNavigation = ({route, navigation}) => {
 			},
 		);
 	}, []);
-	React.useEffect(() => {
-		console.log('serach', searchContext.searchInfo.searchInput);
 
-		setSearchText(searchContext.searchInfo.searchInput);
+	React.useEffect(() => {
+		console.log('searchInputForHelp : ', searchContext.searchInfo.searchInputForHelp);
+		setSearchText(searchContext.searchInfo.searchInputForHelp);
 		if (!loading) {
 			getSearchHelpByCategoryList(
-				{searchKeyword: searchContext.searchInfo.searchInput},
+				{searchKeyword: searchContext.searchInfo.searchInputForHelp},
 				result => {
-					console.log('result', result.msg);
+					// console.log('result', result.msg);
 					setData(result.msg);
 				},
 				err => {
@@ -65,11 +63,9 @@ const CategoryHelpTopTabNavigation = ({route, navigation}) => {
 				},
 			);
 		}
-		console.log('category', categoryList);
-	}, [searchContext.searchInfo.searchInput]);
+	}, [searchContext.searchInfo.searchInputForHelp]);
 
 	const renderItem = ({item, index}) => {
-		console.log('item', item, item._id);
 		return (
 			<OneNotice
 				uptitle={commonData[item.help_by_category_common_code_id]}
@@ -78,9 +74,11 @@ const CategoryHelpTopTabNavigation = ({route, navigation}) => {
 			/>
 		);
 	};
+
 	const onPressAsk = () => {
 		navigation.push('ServiceTab');
 	};
+
 	if (loading) {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>

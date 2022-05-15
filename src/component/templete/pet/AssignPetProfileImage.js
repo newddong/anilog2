@@ -199,9 +199,7 @@ export default AssignPetProfileImage = ({route}) => {
 					/>
 				</View>
 				<View style={[temp_style.textMsg_assignPetProfileImage, assignPetProfileImage_style.textMsg]}>
-					<Text style={[txt.noto24, {color: GRAY10}]}>
-						{`반려동물 프로필의 대표 이미지가 될 사진과 이름을 알려주세요.\n반려동물의 이름은 수정이 불가합니다.`}
-					</Text>
+					<Text style={[txt.noto24, {color: GRAY10}]}>{`반려동물 프로필의 대표 이미지가 될 사진과 이름을 알려주세요.\n`}</Text>
 				</View>
 
 				{/* (M)ProfileImageSelect */}

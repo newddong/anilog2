@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, View, Text} from 'react-native';
 import {GRAY40} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import ArticleSummary from '../article/ArticleSummary';
@@ -13,16 +13,18 @@ import {Check50, Rect50_Border} from 'Root/component/atom/icon';
  * @param {string} props.isSearch - 검색어
  */
 const ArticleList = props => {
+	const [refresh, setRefresh] = React.useState(true);
+
 	const onPressToggle = (index, bool) => {
 		props.onPressCheck(index, bool);
 	};
 
 	const renderItem = (item, index) => {
 		return (
-			<View style={{flexDirection: 'row'}}>
+			<View style={[{flexDirection: 'row'}]}>
 				{props.selectMode ? (
 					<View style={{justifyContent: 'center', marginRight: 20 * DP}}>
-						{/* <CheckBox state={item.checkBoxState} onCheck={() => props.onCheckBox(index)} /> */}
+						<CheckBox state={item.checkBoxState} onCheck={() => props.onCheckBox(index)} />
 						{item.checkBoxState ? (
 							<Check50 onPress={() => onPressToggle(index, false)} />
 						) : (
@@ -47,10 +49,9 @@ const ArticleList = props => {
 				showsVerticalScrollIndicator={false}
 				ListEmptyComponent={props.whenEmpty}
 				// https://reactnative.dev/docs/optimizing-flatlist-configuration
-				removeClippedSubviews={true}
-				// extraData={refreshing}
+				extraData={refresh}
 				initialNumToRender={15}
-				maxToRenderPerBatch={5} // re-render를 막는군요.
+				// maxToRenderPerBatch={5} // re-render를 막는군요.
 				windowSize={11}
 				// https://reactnative.dev/docs/optimizing-flatlist-configuration
 			/>
@@ -73,10 +74,8 @@ export default ArticleList;
 
 const style = StyleSheet.create({
 	container: {
-		width: 654 * DP,
+		width: 750 * DP,
 		alignItems: 'center',
-
 		borderBottomWidth: 2 * DP,
-		// backgroundColor: 'red',
 	},
 });

@@ -59,8 +59,9 @@ export default ParentComment = React.memo((props, ref) => {
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			result => {
-				// console.log('getChildCommentList', result.msg.length);
-				setChild(result.msg.filter(e => e.comment_is_delete != true));
+				console.log('getChildCommentList', result.msg[0]);
+				setChild(result.msg);
+				// setChild(result.msg.filter(e => e.comment_is_delete != true));
 				!showChild && setShowChild(true);
 			},
 			error => {
@@ -108,13 +109,9 @@ export default ParentComment = React.memo((props, ref) => {
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			result => {
-				// result.msg.forEach((current, index) => {
-				// 	if (current._id == props.target) {
-				// 		console.log('이 parent로 이동', index);
-				// 		setMoveToIndex(index);
-				// 	}
-				// });
-				setChild(result.msg.filter(e => e.comment_is_delete != true));
+				// console.log('getChildCommentList', result.msg[0]);
+				setChild(result.msg);
+				// setChild(result.msg.filter(e => e.comment_is_delete != true));
 				setShowChild(!showChild);
 				props.showChild();
 			},
@@ -249,9 +246,8 @@ export default ParentComment = React.memo((props, ref) => {
 		} else if (userGlobalObject.userInfo._id != data.comment_writer_id._id && userGlobalObject.userInfo._id == data.comment_feed_writer_id) {
 			//댓글의 작성자는 아니지만 해당 피드의 작성자라면 public (차후 기획이 바뀐다면 피드 작성자도 볼 수 없다)
 			result = false;
-		} else {
-			return result;
 		}
+		return result;
 	};
 
 	const meatballRef = React.useRef();

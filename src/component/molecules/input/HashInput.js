@@ -11,7 +11,6 @@ import {styles} from 'Root/component/atom/image/imageStyle';
 import {txt} from 'Root/config/textstyle';
 import {Location54_Filled} from 'Root/component/atom/icon';
 import DP from 'Root/config/dp';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export default function HashInput(props) {
 	const [value, setValue] = React.useState(props.value ? props.value : '');

@@ -5,6 +5,7 @@ import {NORMAL, PET, SHELTER} from 'Root/i18n/msg';
 import {txt} from 'Root/config/textstyle';
 import {GRAY10} from 'Root/config/color';
 import ListEmptyInfo from 'Molecules/info/ListEmptyInfo';
+import DP from 'Root/config/dp';
 /**
  *
  *@param {{
@@ -22,7 +23,7 @@ export default FeedThumbnailList = props => {
 	};
 	// console.log('items', props.items.length);
 	return (
-		<View style={{marginBottom: 0}}>
+		<View style={[{marginBottom: 0}, {height: props?.height}, {marginTop: -10 * DP}]}>
 			{/* {props.items.length > 0 && ( */}
 			<FlatList
 				data={props.items}

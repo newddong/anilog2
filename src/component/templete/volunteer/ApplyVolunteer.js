@@ -213,7 +213,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 	const phoneValidate = num => {
 		// console.log('num', num);
 		let regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
-		let regHomePhone = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))(\d{3,4})(\d{4})$/;
+		let regHomePhone = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]|505|70))(\d{3,4})(\d{4})$/;
 		return regPhone.test(num) || regHomePhone.test(num);
 	};
 
@@ -324,7 +324,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 								keyboardType={'phone-pad'}
 								onChange={onChangePhoneNumber}
 								value={data.volunteer_delegate_contact}
-								alert_msg={PHONE_FORM}
+								alert_msg={`올바른 형식의 번호를 기입해주세요.\n${PHONE_FORM}`}
 								showMsg
 								confirm_msg={'올바른 전화번호 양식입니다.'}
 								validator={phoneValidate}

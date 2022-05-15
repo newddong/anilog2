@@ -150,9 +150,7 @@ const ShelterAsk = ({route}) => {
 					/>
 				</View>
 			</TouchableWithoutFeedback>
-			<View style={[{marginTop: 10 * DP}]}>
-				<AssignCheckList items={userAssign_agreementCheckList} onCheck={onPressAcceptItem} onPressDetail={onPressDetail} />
-			</View>
+
 			<View style={[{marginTop: 80 * DP}]}>
 				<AniButton btnTitle={'문의접수'} titleFontStyle={32} btnStyle={'border'} btnLayout={btn_w654} onPress={onPressAsk} />
 			</View>

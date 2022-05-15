@@ -31,6 +31,12 @@ export default MissingReportList = props => {
 	const [onlyMissing, setOnlyMissing] = React.useState(false); //실종글만 보기
 	const [onlyReport, setOnlyReport] = React.useState(false); // 제보글만 보기
 
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			setShowActionButton(false);
+		});
+		return unsubscribe;
+	}, [props]);
 	// 실종 데이터 불러오기 (아직 API 미작업 )
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {

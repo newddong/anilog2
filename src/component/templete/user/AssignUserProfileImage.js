@@ -17,17 +17,6 @@ export default AssignUserProfileImage = props => {
 	const [confirmed, setConfirmed] = React.useState(false);
 
 	const selectPhoto = () => {
-		// props.navigation.push('SinglePhotoSelect');
-		// launchImageLibrary(
-		// 	{
-		// 		mediaType: 'photo',
-		// 		selectionLimit: 1,
-		// 	},
-		// 	responseObject => {
-		// 		console.log('선택됨', responseObject);
-		// 		responseObject.didCancel ? console.log('선택취소') : setImgSelected(responseObject.assets[responseObject.assets.length - 1].uri);
-		// 	},
-		// );
 		ImagePicker.openPicker({
 			compressImageQuality: 0.8,
 			cropping: true,

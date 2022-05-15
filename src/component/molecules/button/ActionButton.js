@@ -84,6 +84,14 @@ const ActionButton = React.forwardRef((props, ref) => {
 						flexDirection: 'row',
 						justifyContent: 'center',
 						alignItems: 'center',
+						shadowColor: '#000000',
+						shadowOpacity: 0.1,
+						shadowRadius: 4.65,
+						shadowOffset: {
+							width: 1 * DP,
+							height: 1 * DP,
+						},
+						elevation: 1,
 					},
 				]}>
 				<Text

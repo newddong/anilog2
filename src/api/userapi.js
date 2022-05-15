@@ -475,3 +475,24 @@ export async function getSMSimpcode(params, callback, errcallback) {
 export async function updateUserPassword(params, callback, errcallback) {
 	apiController('/user/updateUserPassword', arguments);
 }
+
+/** 알람 상태 변경
+ * @param {object} params
+ * @param {string} params.user_object_id  - 사용자 object_id
+ * @param {boolean} params.user_alarm  - 알람 존재 여부
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function setAlarmStatus(params, callback, errcallback) {
+	apiController('/user/setAlarmStatus', arguments);
+}
+
+/** 알람 상태 확인
+ * @param {object} params
+ * @param {string} params.user_object_id  - 사용자 object_id
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getAlarmStatus(params, callback, errcallback) {
+	apiController('/user/getAlarmStatus', arguments);
+}

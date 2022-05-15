@@ -1,10 +1,9 @@
-import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet} from 'react-native';
-import {GRAY10, GRAY40, APRI10, GRAY20} from 'Root/config/color';
+import {Text, View, ActivityIndicator, StyleSheet} from 'react-native';
+import {GRAY40, APRI10, GRAY20} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {FlatList} from 'react-native-gesture-handler';
-import {getHelpByCategoryDynamicQuery, getSearchHelpByCategoryList} from 'Root/api/helpbycategory';
+import {getHelpByCategoryDynamicQuery} from 'Root/api/helpbycategory';
 import OneNotice from 'Organism/listitem/OneNotice';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
 //카테고리별 도움말 화면
@@ -15,12 +14,11 @@ const CategoryHelp = ({route, props}) => {
 	const [categoryName, setCategoryName] = React.useState('');
 	// let categoryName = route.params?.category;
 	const [categoryLoad, setCategoryLoaded] = React.useState(false);
-	console.log('CategotyName', categoryName);
 	React.useEffect(() => {
 		getHelpByCategoryDynamicQuery(
 			{},
 			result => {
-				console.log('all the list', result.msg);
+				// console.log('all the list', result.msg);
 				setData(result.msg);
 				setLoading(false);
 			},
@@ -35,7 +33,7 @@ const CategoryHelp = ({route, props}) => {
 		getCommonCodeDynamicQuery(
 			{common_code_c_name: 'helpbycategoryobjects', common_code_language: 'kor', common_code_out_type: 'list'},
 			result => {
-				console.log('111', result.msg);
+				// console.log('111', result.msg);
 				setCategoryList(result.msg.slice(1));
 				setCategoryLoaded(true);
 			},
@@ -46,7 +44,7 @@ const CategoryHelp = ({route, props}) => {
 	}, [route]);
 	React.useEffect(() => {
 		setCategoryName(route.params?.category);
-		console.log('category list name', categoryList, categoryName);
+		// console.log('category list name', categoryList, categoryName);
 	}, [route.params?.category]);
 
 	React.useEffect(() => {
@@ -84,7 +82,6 @@ const CategoryHelp = ({route, props}) => {
 	}, [categoryName]);
 
 	const renderItem = ({item, index}) => {
-		console.log('item', item);
 		return (
 			<OneNotice
 				uptitle={item.common_code_msg_kor}

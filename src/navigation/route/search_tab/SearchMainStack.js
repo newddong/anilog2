@@ -40,9 +40,7 @@ export default SearchMainStack = props => {
 			<SearchStackNav.Screen
 				name="UserProfile"
 				component={Profile}
-				options={({route, navigation}) => ({
-					header: props => <SimpleHeader {...props} />,
-				})}
+				options={{header: props => <MeatBallHeader {...props} />, title: '피드 게시글'}}
 			/>
 			<SearchStackNav.Screen
 				name="UserFeedList"
@@ -62,12 +60,12 @@ export default SearchMainStack = props => {
 			<SearchStackNav.Screen
 				name="FeedCommentList"
 				component={FeedCommentList}
-				options={{header: props => <AlarmAndSearchHeader {...props} />, title: '몰라'}}
+				options={{header: props => <SimpleHeader {...props} />, title: '댓글'}}
 			/>
 			<SearchStackNav.Screen
 				name="FeedListForHashTag"
 				component={FeedListForHashTag}
-				options={{header: props => <BookmarkHeader {...props} />, title: '#해시태그'}}
+				options={{header: props => <SimpleHeader {...props} />, title: '#해시태그'}}
 			/>
 			<SearchStackNav.Screen
 				name={'ArticleDetail'}

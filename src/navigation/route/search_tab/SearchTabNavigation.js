@@ -5,26 +5,26 @@ import {APRI10, GRAY10, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import searchContext from 'Root/config/searchContext';
 import {getUserListByNickname} from 'Root/api/userapi';
-import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
-import userGlobalObject from 'Root/config/userGlobalObject';
 import {getHashKeywords} from 'Root/api/hashapi';
 import SearchHashTag from 'Root/component/templete/search/SearchHashTag';
 import SearchAccountA from 'Root/component/templete/search/SearchAccountA';
 import SearchReview from 'Root/component/templete/search/SearchReview';
 import {getSearchCommunityList} from 'Root/api/community';
 import SearchArticle from 'Root/component/templete/search/SearchArticle';
+import {useNavigation} from '@react-navigation/core';
 
 const SearchTabNav = createMaterialTopTabNavigator();
 
 export default SearchTabNavigation = props => {
-	// navigation.push('Search', {mother: 0, child: 1});
-	// ㄴ 위와 같이 호출할 경우 mother는 상위TopTab의 Tab인덱스를, child는 하단TopTab의 인덱스를 설정해줄 수 있음.
-	const prevNav = props.prevNav;
+	// console.log('props.', props.route.params);
 	// const [searchInput, setSearchInput] = React.useState('');
 	const [userList, setUserList] = React.useState('false');
 	const [hashList, setHashList] = React.useState('false');
 	const [commList, setCommList] = React.useState('false');
 	const [loading, setLoading] = React.useState(false);
+
+	const initial = 'ACCOUNT';
+
 	const onClickUser = sendUserobject => {
 		props.navigation.navigate('SearchTabUserProfile', {userobject: sendUserobject});
 	};
@@ -36,29 +36,32 @@ export default SearchTabNavigation = props => {
 		tabBarPressColor: WHITE,
 	};
 
-	// searchContext.searchInfo.routeName = getFocusedRouteNameFromRoute(props.route); //현재 보고 있는 템플릿
-
 	//검색탭 헤더의 인풋값이 바뀔 때마다 계정과 해쉬를 받아오는 api에 접속
 	React.useEffect(() => {
-		async function fetchData() {
-			setLoading(true);
-			if (searchContext.searchInfo.searchInput != '' && searchContext.searchInfo.searchInput.length > 1) {
-				const user = await getUserList(); //계정 검색
-				const hash = await getHashList(); //태그 검색
-				const comm = await getCommunityList(); //커뮤니티 검색
-				setUserList(user);
-				setHashList(hash);
-				setCommList(comm);
-				setLoading(false);
-			} else {
-				setUserList([]);
-				setHashList([]);
-				setCommList({free: [], review: []});
-				setLoading(false);
-			}
-		}
+		console.log('searchContext.searchInfo.searchInput', searchContext.searchInfo.searchInput);
 		fetchData(); // effect Hook에서 async await 구문을 쓰기 위한 처리
+		// navigation.addListener('focus', () => {
+		// 	fetchData();
+		// });
 	}, [searchContext.searchInfo.searchInput]);
+
+	async function fetchData() {
+		setLoading(true);
+		if (searchContext.searchInfo.searchInput != '' && searchContext.searchInfo.searchInput.length > 1) {
+			const user = await getUserList(); //계정 검색
+			const hash = await getHashList(); //태그 검색
+			const comm = await getCommunityList(); //커뮤니티 검색
+			setUserList(user);
+			setHashList(hash);
+			setCommList(comm);
+			setLoading(false);
+		} else {
+			setUserList([]);
+			setHashList([]);
+			setCommList({free: [], review: []});
+			setLoading(false);
+		}
+	}
 
 	//검색된 입력값과 일치하는 계정 리스트 받아오기
 	const getUserList = async () => {
@@ -74,8 +77,8 @@ export default SearchTabNavigation = props => {
 					result => {
 						// console.log('result', result.msg.length);
 						let filtered = result.msg;
-						let removeMine = result.msg.findIndex(e => e.user_nickname == userGlobalObject.userInfo.user_nickname);
-						removeMine == -1 ? false : filtered.splice(removeMine, 1); // 자기 계정은 출력 안되도록
+						// let removeMine = result.msg.findIndex(e => e.user_nickname == userGlobalObject.userInfo.user_nickname);
+						// removeMine == -1 ? false : filtered.splice(removeMine, 1); // 자기 계정은 출력 안되도록
 						resolve(filtered);
 					},
 					err => {
@@ -123,9 +126,14 @@ export default SearchTabNavigation = props => {
 						searchKeyword: searchContext.searchInfo.searchInput,
 					},
 					result => {
-						console.log('searchContext.searchInfo.searchInput', searchContext.searchInfo.searchInput);
-						// console.log('result / getSearchCommunityList / SearchTabNav : ', result.msg.review);
-						resolve(result.msg);
+						// console.log('searchContext.searchInfo.searchInput', searchContext.searchInfo.searchInput);
+						// console.log('result / getSearchCommunityList / SearchTabNav : ', result.msg);
+						let res = result.msg;
+						const noneDeletedReview = result.msg.review.filter(e => e.community_is_delete != true);
+						const noneDeletedArticle = result.msg.free.filter(e => e.community_is_delete != true);
+						res.free = noneDeletedArticle;
+						res.review = noneDeletedReview;
+						resolve(res);
 					},
 					err => {
 						console.log('err / getSearchCommunityList / SearchTabNav : ', err);
@@ -140,6 +148,11 @@ export default SearchTabNavigation = props => {
 		});
 	};
 
+	const resetCommunityList = async () => {
+		const comm = await getCommunityList(); //커뮤니티 검색
+		setCommList(comm);
+	};
+
 	return (
 		<SearchTabNav.Navigator
 			screenOptions={{
@@ -148,8 +161,7 @@ export default SearchTabNavigation = props => {
 				lazy: true,
 			}}
 			initialLayout={{width: Dimensions.get('window').width}}
-			initialRouteName={'FEED'}
-			optimizationsEnabled={true}>
+			initialRouteName={initial}>
 			<SearchTabNav.Screen
 				name="ACCOUNT"
 				options={{
@@ -181,7 +193,7 @@ export default SearchTabNavigation = props => {
 					title: '리뷰',
 					...searchTabLabelOption,
 				}}>
-				{props => <SearchReview {...props} data={commList} loading={loading} />}
+				{props => <SearchReview {...props} data={commList} loading={loading} resetCommunityList={resetCommunityList} />}
 			</SearchTabNav.Screen>
 		</SearchTabNav.Navigator>
 	);

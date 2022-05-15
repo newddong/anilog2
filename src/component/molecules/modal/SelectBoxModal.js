@@ -26,8 +26,18 @@ const SelectBoxModal = props => {
 
 	const renderItem = (item, index) => {
 		return (
-			<TouchableOpacity onPress={() => onSelect(item)} style={[style.listItem, {}]}>
-				<Text style={[txt.noto30, {height: 48 * DP}]}>{item}</Text>
+			<TouchableOpacity onPress={() => onSelect(item)} style={[style.listItem, props.headerRoof ? {} : {flexDirection: 'row'}]}>
+				<Text style={[txt.noto30, {height: 48 * DP, maxWidth: 400 * DP}]}>{item}</Text>
+				{!props.headerRoof && index == 0 ? (
+					<TouchableOpacity
+						onPress={() => props.onClose()}
+						activeOpacity={0.8}
+						style={[style.crossMarkContainer_withoutTitle, {position: 'absolute', right: 0, top: -30 * DP}]}>
+						<Cross24_Filled />
+					</TouchableOpacity>
+				) : (
+					<></>
+				)}
 			</TouchableOpacity>
 		);
 	};
@@ -38,24 +48,19 @@ const SelectBoxModal = props => {
 
 	return (
 		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={style.background}>
-			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow]}>
+			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, props.headerRoof ? {paddingBottom: 40 * DP} : {paddingVertical: 40 * DP}]}>
 				{props.headerRoof ? (
-					<View
-						style={[
-							style.roof,
-							{
-								flexDirection: 'row',
-							},
-						]}>
+					<View style={[style.roof, {flexDirection: 'row'}]}>
 						<Text style={[txt.noto30, style.headerTitle]}>{props.headerTitle}</Text>
 						<TouchableOpacity onPress={() => props.onClose()} style={[style.crossMarkContainer]}>
 							<Cross24_White />
 						</TouchableOpacity>
 					</View>
 				) : (
-					<TouchableOpacity onPress={() => props.onClose()} activeOpacity={0.8} style={[style.crossMarkContainer_withoutTitle, {}]}>
-						<Cross24_Filled />
-					</TouchableOpacity>
+					// <TouchableOpacity onPress={() => props.onClose()} activeOpacity={0.8} style={[style.crossMarkContainer_withoutTitle, {}]}>
+					// 	<Cross24_Filled />
+					// </TouchableOpacity>
+					<></>
 				)}
 				<View style={[style.insideContainer]}>
 					<FlatList
@@ -87,7 +92,7 @@ const style = StyleSheet.create({
 	},
 	popUpWindow: {
 		// paddingHorizontal: 40 * DP,
-		paddingBottom: 40 * DP,
+		// paddingVertical: 40 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',
 		backgroundColor: WHITE,

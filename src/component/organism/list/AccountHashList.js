@@ -16,7 +16,7 @@ import {accountHashList} from 'Organism/style_organism copy';
  * @param {(component)=> void} props.whenEmpty - 빈 값 발생 시 출력 컴포넌트
  */
 export default AccountHashList = props => {
-	// console.log('props', props.data);
+	console.log('props Account List', props);
 	const renderItem = ({item, index}) => {
 		return (
 			<View style={[accountHashList.userAccount]}>
@@ -34,7 +34,7 @@ export default AccountHashList = props => {
 	};
 
 	return (
-		<View style={[accountHashList.container, {height: props.routeName && props.routeName != 'FavoriteUser' ? 300 * DP : null}]}>
+		<View style={[accountHashList.container, {height: props.routeName && props.routeName != 'FavoriteUser' ? 300 * DP : 1100 * DP}]}>
 			<FlatList
 				data={props.data}
 				keyExtractor={item => item._id}

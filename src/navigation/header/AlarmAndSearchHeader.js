@@ -7,6 +7,8 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 
 export default AlarmAndSearchHeader = ({navigation, route, options, back}) => {
+	const [isNewAlarm, setIsNewAlarm] = React.useState();
+	const isLoginUser = userGlobalObject.userInfo?._id;
 	const clickSearch = () => {
 		navigation.navigate('Search', {mother: 0, child: 0, prevNav: route.name});
 	};
@@ -16,9 +18,32 @@ export default AlarmAndSearchHeader = ({navigation, route, options, back}) => {
 				navigation.navigate('Login');
 			});
 		} else {
-			navigation.navigate('AlarmList');
+			navigation.navigate('AlarmList', {isNewAlarm: isNewAlarm});
 		}
 	};
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			// The screen is focused
+			// Call any action
+			console.log('logoHeader foucesed', isLoginUser);
+			getAlarmStatus(
+				{user_object_id: isLoginUser},
+				result => {
+					console.log('result', result);
+					if (result.msg.user_alarm) {
+						// console.log('reuslt isNewAlarm', result.msg.user_alarm);
+						setIsNewAlarm(result.msg.user_alarm);
+					} else {
+						setIsNewAlarm(result.msg.user_alarm);
+					}
+				},
+				err => {
+					console.log('err', err);
+				},
+			);
+		});
+		return unsubscribe;
+	}, [navigation]);
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
 			<TouchableOpacity onPress={navigation.goBack}>
@@ -28,7 +53,7 @@ export default AlarmAndSearchHeader = ({navigation, route, options, back}) => {
 			</TouchableOpacity>
 			<View style={style.buttonContainer}>
 				<Search48 onPress={clickSearch} />
-				<AlarmBadger48 onPress={clickAlarm} />
+				{isNewAlarm ? <AlarmBadgerNotice onPress={clickAlarm} /> : <AlarmBadger48 onPress={clickAlarm} />}
 			</View>
 		</View>
 	);

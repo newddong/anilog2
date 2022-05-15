@@ -205,14 +205,16 @@ export default FavoriteArticle = ({route}) => {
 						</View>
 					</View>
 				)}
-				<View style={{paddingBottom: 20 * DP}}>
-					<ArticleList
-						items={data}
-						selectMode={selectMode}
-						onPressCheck={onPressCheck}
-						onPressArticle={onPressArticle} //게시글 내용 클릭
-						whenEmpty={whenEmpty}
-					/>
+				<View style={[{marginTop: 5 * DP}]}>
+					<View style={[{paddingBottom: 20 * DP}]}>
+						<ArticleList
+							items={data}
+							selectMode={selectMode}
+							onPressCheck={onPressCheck}
+							onPressArticle={onPressArticle} //게시글 내용 클릭
+							whenEmpty={whenEmpty}
+						/>
+					</View>
 				</View>
 			</View>
 		);

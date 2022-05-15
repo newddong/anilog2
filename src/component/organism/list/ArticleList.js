@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, View, Text} from 'react-native';
 import {GRAY40} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import ArticleSummary from '../article/ArticleSummary';
@@ -19,10 +19,10 @@ const ArticleList = props => {
 
 	const renderItem = (item, index) => {
 		return (
-			<View style={{flexDirection: 'row'}}>
+			<View style={[{flexDirection: 'row'}]}>
 				{props.selectMode ? (
 					<View style={{justifyContent: 'center', marginRight: 20 * DP}}>
-						{/* <CheckBox state={item.checkBoxState} onCheck={() => props.onCheckBox(index)} /> */}
+						<CheckBox state={item.checkBoxState} onCheck={() => props.onCheckBox(index)} />
 						{item.checkBoxState ? (
 							<Check50 onPress={() => onPressToggle(index, false)} />
 						) : (

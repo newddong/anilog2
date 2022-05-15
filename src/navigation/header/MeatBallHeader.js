@@ -45,7 +45,7 @@ export default MeatBallHeader = props => {
 				} else {
 					Modal.popOneBtnSelectModal(
 						REPORT_MENU,
-						'이 게시물을 신고 하시겠습니까?',
+						'이 유저를 신고 하시겠습니까?',
 						selectedItem => {
 							console.log('props.options.data', props.options.data.user_nickname);
 							// createReport(

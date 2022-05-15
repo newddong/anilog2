@@ -33,7 +33,7 @@ export default FeedWrite = props => {
 	const [showLostAnimalForm, setShowLostAnimalForm] = React.useState(false); //실종버튼
 	const [showReportForm, setShowRepotForm] = React.useState(false); //제보버튼
 	const [showActionButton, setShowActionButton] = React.useState(false); // 긴급게시(하얀버전) 클릭 시 - 실종/제보 버튼 출력 Boolean
-	const [isDiary, setDiary] = React.useState(false); //임보일기여부
+	const [isDiary, setDiary] = React.useState(props.route.params.feed_is_protect_diary); //임보일기여부
 	const [feedText, setFeedText] = React.useState(
 		props.route.params.feed_content ? props.route.params.feed_content.replace(/(&@|&#){2}(.*?)%&%.*?(&@|&#){2}/gm, '$2') : '',
 	); //피드 TextInput Value
@@ -48,11 +48,13 @@ export default FeedWrite = props => {
 	const [editText, setEditText] = React.useState(
 		props.route.params.feed_content ? props.route.params.feed_content.replace(/(&@|&#){2}(.*?)%&%.*?(&@|&#){2}/gm, '$2') : '',
 	);
-
+	React.useEffect(() => {
+		console.log('props ...', props.route.params);
+	}, [props]);
 	React.useEffect(() => {
 		if (props.route.name != 'FeedEdit') {
 			const param = props.route.params;
-
+			console.log('param', param);
 			// console.log('param.feed_avatar_id', param.feed_avatar_id);
 			param.feed_avatar_id //피드 글쓰기 클릭시 즉시 작성자 아바타 계정을 선택하는 절차가 추가됨에 따라 분기처리가 필요해짐
 				? // - 유저 계정에서 피드글쓰기를 누른 경우
@@ -378,11 +380,13 @@ export default FeedWrite = props => {
 								multiline={true}
 								placeholder="게시물을 작성하세요 (150자)"
 								onChangeText={inputFeedTxt}
+								// onChangeText={inputMissingTxt}
 								maxLength={150}
 								onFind={onFindTag}
 								selectedImg={selectedImg}
 								onDelete={deletePhoto}
 								value={editText}
+								// value={feedText}
 								location={!showReportForm && !showLostAnimalForm ? param.feed_location : undefined}
 							/>
 							{!isSearchTag && setWriteModeState()}

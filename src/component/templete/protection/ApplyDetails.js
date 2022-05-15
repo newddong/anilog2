@@ -8,6 +8,8 @@ import Modal from 'Component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
 import AnimalProtectDetail from 'Organism/info/AnimalProtectDetail';
 import {applyDetails, login_style, temp_style} from 'Templete/style_templete';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {lo} from '../style_address';
 
 export default ApplyDetails = ({route, navigation}) => {
 	const data = route.params;
@@ -54,6 +56,18 @@ export default ApplyDetails = ({route, navigation}) => {
 	const onPressRegister = () => {
 		const isProtectRoute = route.name == 'ApplyProtectActivityE'; //임시보호 루트로 왔는지 여부 확인 - 아닐 경우 입양 루트
 		Modal.popTwoBtn(isProtectRoute ? CONFIRM_PROTECT_REQUEST : CONFIRM_ADOPT_REQUEST, '취소', '확인', () => Modal.close(), onFinalize);
+	};
+	const onClickLabel = () => {
+		console.log('proptec');
+		if (data.protect_act_type == 'protect') {
+			//임시보호 세부 페이지로 이동
+			// navigation.setOptions({title: '임시보호 신청 내역'});
+			console.log('임시호보');
+		} else {
+			//입양 신청 세부 페이지로 이동
+			// navigation.setOptions({title: '입양 신청 내역'});
+			console.log('입양');
+		}
 	};
 
 	return (

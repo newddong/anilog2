@@ -45,7 +45,7 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 		Modal.popTwoBtn(
 			'봉사활동 신청을 취소하시겠습니까? ',
 			'아니오',
-			'그래요',
+			'예',
 			() => Modal.close(),
 			() => {
 				Modal.close();

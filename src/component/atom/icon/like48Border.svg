@@ -1,7 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="38" height="40" viewBox="0 0 38 40">
   <defs>
     <clipPath id="clip-path">
-      <rect id="사각형_1119" data-name="사각형 1119" width="38" height="40" transform="translate(0 0.001)" fill="#767676"/>
+      <rect id="사각형_1119" data-name="사각형 1119" width="38" height="40" transform="translate(0 0.001)" 
+      fill="#767676"
+      />
     </clipPath>
   </defs>
   <g id="그룹_5013" data-name="그룹 5013" transform="translate(0 -0.001)">

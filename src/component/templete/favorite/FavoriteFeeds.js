@@ -170,14 +170,24 @@ export default FavoriteFeeds = ({route, navigation}) => {
 	const onClickThumnail = (index, feed_id) => {
 		//선택하기 모드가 아닐 경우 (일반모드이며 썸네일 클릭시 네비게이션 동작)
 		console.log('선택한 피드의 작성자 Id', feed_id.feed_writer_id._id);
-		console.log('선택한 route.name', route.name);
-
+		console.log('선택한 route.name, feed_id', route.name, feed_id);
+		let passing_id = '';
 		if (!selectMode) {
+			if (feed_id.feed_type == 'feed') {
+				if (feed_id.feed_avatar_id) {
+					console.log('아바타로 작성한 글');
+					passing_id = feed_id.feed_avatar_id;
+				} else {
+					passing_id = feed_id.feed_writer_id._id;
+				}
+			} else {
+				passing_id = feed_id.feed_writer_id._id;
+			}
 			const titleValue = feed_id.feed_writer_id.user_nickname;
 			//선택모드 true값과 false값이 반대로 주는 이유 확인 후 case 문으로 변경 필요
 			getUserProfile(
 				{
-					userobject_id: feed_id.feed_writer_id._id,
+					userobject_id: passing_id,
 				},
 				result => {
 					console.log('result / getUserProfile / FavoriteFeeds   :', result.msg.feedList[0]);
@@ -236,7 +246,7 @@ export default FavoriteFeeds = ({route, navigation}) => {
 							<Text style={[txt.roboto28b, {marginTop: 20 * DP}]}>{emptyMsg()}</Text>
 						</View>
 					) : (
-						<FeedThumbnailList items={data} selectMode={selectMode} onClickThumnail={onClickThumnail} />
+						<FeedThumbnailList items={data} selectMode={selectMode} onClickThumnail={onClickThumnail} height={1300} />
 					)}
 				</View>
 			</View>

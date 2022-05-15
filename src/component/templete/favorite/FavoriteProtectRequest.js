@@ -190,7 +190,7 @@ export default FavoriteProtectRequest = ({route}) => {
 
 	const renderItem = ({item, index}) => {
 		return (
-			<View style={{marginTop: 20 * DP, alignItems: 'center', alignSelf: 'center'}}>
+			<View style={{marginTop: 40 * DP, alignItems: 'center', alignSelf: 'center'}}>
 				<AnimalNeedHelpList
 					data={data}
 					selectMode={selectMode}

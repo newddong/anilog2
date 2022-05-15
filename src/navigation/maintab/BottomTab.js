@@ -4,7 +4,7 @@ import DP from 'Root/config/dp';
 import SvgWrapper, {SvgWrap} from 'Atom/svgwrapper';
 import {txt} from 'Root/config/textstyle';
 import {tab, layout} from './style_BottomTab';
-import {APRI10, GRAY20} from 'Root/config/color';
+import {APRI10, BLACK, GRAY20} from 'Root/config/color';
 import {
 	FeedTabFilled,
 	FeedTabBorder,
@@ -70,8 +70,8 @@ export default function BottomTab({state, descriptors, navigation}) {
 					//SearchTab으로 왔을 경우 현재 포커스되어야할 인덱스는 state.index(Tabindex)가 아닌 이전의 Index로 처리되어야 함 [상우]
 					const isFocused = (currentIndex != null ? currentIndex : state.index) == index;
 					// const isFocused = state.index == index;
-					//확인 필
-					const color = isFocused ? APRI10 : GRAY20;
+					//확인 필   바텀탭 텍스트 색깔 조정
+					const color = isFocused ? BLACK : GRAY20;
 					const textStyle = isFocused ? txt.noto22b : txt.noto22;
 					const textStyleEng = isFocused ? txt.roboto22b : txt.roboto22;
 
@@ -114,7 +114,7 @@ export default function BottomTab({state, descriptors, navigation}) {
 									<Image
 										style={[
 											{height: 54 * DP, width: 54 * DP, borderRadius: 27 * DP, marginBottom: -10 * DP},
-											isFocused ? {borderWidth: 4 * DP, borderColor: APRI10} : {},
+											isFocused ? {borderWidth: 4 * DP, borderColor: BLACK} : {},
 										]}
 										source={{uri: userGlobalObject.userInfo.user_profile_uri}}
 									/>

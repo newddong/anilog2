@@ -324,7 +324,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 								keyboardType={'phone-pad'}
 								onChange={onChangePhoneNumber}
 								value={data.volunteer_delegate_contact}
-								alert_msg={PHONE_FORM}
+								alert_msg={`올바른 형식의 번호를 기입해주세요.\n${PHONE_FORM}`}
 								showMsg
 								confirm_msg={'올바른 전화번호 양식입니다.'}
 								validator={phoneValidate}

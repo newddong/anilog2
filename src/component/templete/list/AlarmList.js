@@ -10,7 +10,7 @@ import _ from 'lodash';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {temp_inputLongText} from 'Root/i18n/msg';
 import {lo} from '../style_address';
-import {getUserProfile} from 'Root/api/userapi';
+import {getUserProfile, setAlarmStatus} from 'Root/api/userapi';
 import {CommonActions, useNavigationState} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 import {getFeedDetailById} from 'Root/api/feedapi';
@@ -18,6 +18,7 @@ import {getUserVolunteerActivityList, getVolunteerActivityById} from 'Root/api/v
 import {getApplyDetailById, getProtectRequestByProtectRequestId} from 'Root/api/protectapi';
 import {getAppliesRecord} from 'Root/api/protectapi';
 import {getCommunityByObjectId} from 'Root/api/community';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 const wait = timeout => {
 	return new Promise(resolve => setTimeout(resolve, timeout));
@@ -25,7 +26,9 @@ const wait = timeout => {
 
 const AlarmList = props => {
 	const [checkBoxMode, setCheckBoxMode] = React.useState(true);
-	const [newNote, setNewNote] = React.useState(false);
+	// const [newNote, setNewNote] = React.useState(false);
+	const [newNote, setNewNote] = React.useState(props.route.params.isNewAlarm);
+
 	const [data, setData] = React.useState();
 	const [isEmpty, setIsEmpty] = React.useState();
 	const [loading, setLoading] = React.useState(true);
@@ -41,6 +44,15 @@ const AlarmList = props => {
 
 	React.useEffect(() => {
 		getAlarmList();
+		setAlarmStatus(
+			{user_object_id: userGlobalObject.userInfo?._id, user_alarm: false},
+			result => {
+				console.log('setAlarmStatus result', result);
+			},
+			err => {
+				console.log('setAlarmStatus err', err);
+			},
+		);
 	}, []);
 	const getAlarmList = () => {
 		let asyncAlarm;
@@ -57,11 +69,11 @@ const AlarmList = props => {
 				temp[2] = [...result.msg.thisweek];
 				console.log('temp', temp[0].length, temp[1].length, temp[2].length);
 				setData(temp);
-				if (!_.isEqual(JSON.stringify(result.msg), asyncAlarm)) {
-					AsyncStorage.setItem('AlarmList', JSON.stringify(result.msg));
-					// console.log(asyncAlarm, '둘이 다르다');
-					setNewNote(true);
-				}
+				// if (!_.isEqual(JSON.stringify(result.msg), asyncAlarm)) {
+				// 	AsyncStorage.setItem('AlarmList', JSON.stringify(result.msg));
+				// 	// console.log(asyncAlarm, '둘이 다르다');
+				// 	setNewNote(true);
+				// }
 				setIsEmpty(_.isEmpty(temp[0]) && _.isEmpty(temp[1]) && _.isEmpty(temp[2]));
 				setLoading(false);
 				setRefreshing(false);

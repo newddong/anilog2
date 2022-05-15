@@ -2,31 +2,57 @@ import React from 'react';
 import {Text, TextInput, View, Image, ScrollView, Dimensions, SafeAreaView, StyleSheet} from 'react-native';
 
 import {Logo} from 'Asset/image';
-import {AlarmBadger48, MainLogo, Search48} from 'Atom/icon';
+import {AlarmBadger48, MainLogo, Search48, AlarmBadgerNotice} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {WHITE, APRI10} from 'Root/config/color';
 import SvgWrapper, {SvgWrap} from 'Atom/svgwrapper';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
-import {useNavigation} from '@react-navigation/core';
+import {getAlarmStatus} from 'Root/api/userapi';
+
 
 export default LogoHeader = ({navigation, route, options, back}) => {
+	const isLoginUser = userGlobalObject.userInfo?._id;
+	const [isNewAlarm, setIsNewAlarm] = React.useState();
 	const clickLogo = () => {
 		// alert('Logo!');
 	};
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			// The screen is focused
+			// Call any action
+			console.log('logoHeader foucesed', isLoginUser);
+			getAlarmStatus(
+				{user_object_id: isLoginUser},
+				result => {
+					console.log('result', result);
+					if (result.msg.user_alarm) {
+						// console.log('reuslt isNewAlarm', result.msg.user_alarm);
+						setIsNewAlarm(result.msg.user_alarm);
+					} else {
+						setIsNewAlarm(result.msg.user_alarm);
+					}
+				},
+				err => {
+					console.log('err', err);
+				},
+			);
+		});
+		return unsubscribe;
+	}, [navigation]);
+
 
 	const clickSearch = () => {
 		navigation.navigate('Search', {mother: 0, child: 0, prevNav: route.name});
 		// alert('이후 버전에서 제공할 예정입니다!');
 	};
 	const clickAlarm = () => {
-		// alert('이후 버전에서 제공할 예정입앙!');
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate('Login');
 			});
 		} else {
-			navigation.navigate('AlarmList');
+			navigation.navigate('AlarmList', {isNewAlarm: isNewAlarm});
 		}
 	};
 	return (
@@ -36,8 +62,7 @@ export default LogoHeader = ({navigation, route, options, back}) => {
 			</View>
 			<View style={style.buttonContainer}>
 				<Search48 onPress={clickSearch} />
-
-				<AlarmBadger48 onPress={clickAlarm} />
+				{isNewAlarm ? <AlarmBadgerNotice onPress={clickAlarm} /> : <AlarmBadger48 onPress={clickAlarm} />}
 			</View>
 		</View>
 	);

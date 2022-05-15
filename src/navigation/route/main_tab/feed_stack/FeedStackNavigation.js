@@ -27,7 +27,6 @@ import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 
 import ProtectCommentList from 'Root/component/templete/protection/ProtectCommentList';
 
-
 const FeedStack = createStackNavigator();
 
 export default FeedStackNavigation = props => {
@@ -57,7 +56,7 @@ export default FeedStackNavigation = props => {
 			<FeedStack.Screen
 				name="FeedListForHashTag"
 				component={FeedListForHashTag}
-				options={{header: props => <BookmarkHeader {...props} />, title: '#해시태그'}}
+				options={{header: props => <SimpleHeader {...props} />, title: '#해시태그'}}
 			/>
 			<FeedStack.Screen name="FeedUserProfile" component={Profile} options={{header: props => <MeatBallHeader {...props} />, title: '프로필'}} />
 			<FeedStack.Screen

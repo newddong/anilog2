@@ -207,8 +207,8 @@ const ProfileInfo = props => {
 
 	const onPressFollowingSetting = () => {
 		let isProtectingPet = data.pet_status == 'protect' || userGlobalObject.userInfo.user_my_pets.includes(data._id);
-		const FOLLOWER_MENU = [data.is_favorite ? '즐겨찾기 취소' : '즐겨찾기 추가', '소식 받기', '차단', '팔로우 취소'];
-		const FOLLOWER_PET_MENU = [data.is_favorite ? '즐겨찾기 취소' : '즐겨찾기 추가', '소식 받기', '차단', '팔로우 취소'];
+		const FOLLOWER_MENU = [data.is_favorite ? '즐겨찾기 취소' : '즐겨찾기 추가', '팔로우 취소'];
+		const FOLLOWER_PET_MENU = [data.is_favorite ? '즐겨찾기 취소' : '즐겨찾기 추가', '팔로우 취소'];
 		Modal.popSelectBoxModal(
 			isProtectingPet ? FOLLOWER_PET_MENU : FOLLOWER_MENU,
 			selectedItem => {

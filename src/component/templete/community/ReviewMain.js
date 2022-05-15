@@ -14,6 +14,7 @@ import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import community_obj from 'Root/config/community_obj';
 import {REPORT_MENU} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
+import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 
 export default ReviewMain = ({route, navigation}) => {
 	const [data, setData] = React.useState('false');
@@ -21,12 +22,15 @@ export default ReviewMain = ({route, navigation}) => {
 		dog: false,
 		cat: false,
 		etc: false,
-		filter: {
-			location: {
-				city: '',
-				district: '',
+		box: {
+			userInterestReview: {
+				interests_etc: [],
+				interests_hospital: [],
+				interests_interior: [],
+				interests_review: [],
+				interests_trip: [],
+				interests_location: {city: '', district: ''},
 			},
-			category: [],
 		},
 	});
 	const [recommend, setRecommend] = React.useState([]);
@@ -234,6 +238,7 @@ export default ReviewMain = ({route, navigation}) => {
 	const doFilter = (arg, review) => {
 		console.log('필터가 존재하므로 호출!');
 		console.log('dofilter arg', arg);
+		setFilterData({...filterData, box: arg});
 		const userInterestObj = arg.userInterestReview;
 		let filtered = [];
 		if (review == undefined) {
@@ -251,6 +256,7 @@ export default ReviewMain = ({route, navigation}) => {
 			userInterestObj.interests_hospital,
 			userInterestObj.interests_interior,
 		);
+		// console.log()
 		const isCategoryNotSelected = selectedCategoryFilter.length == 0;
 		if (!arg.userInterestReview.interests_location.city && isCategoryNotSelected) {
 			filterRef.current = false;
@@ -318,18 +324,18 @@ export default ReviewMain = ({route, navigation}) => {
 			} else {
 				console.log('도시선택 필터와 카테고리는 선택이 없으므로 전체 리스트와 동일');
 				filterRef.current = false;
-				// setIsFilter(false);
-				setData(filtered);
+				// console.log(filtered);
+				fetchData();
 			}
 		}
 	};
 
 	//좌상단 필터 모달 호출
 	const onPressFilter = () => {
-		// setIsFilter(true);
-		Modal.popInterestTagModal(
+		// console.log('filter', JSON.stringify(filterData));
+		Modal.popReviewFilterModal(
 			'Review',
-			{interests_etc: [], interests_hospital: [], interests_interior: [], interests_review: [], interests_trip: []},
+			filterData.box.userInterestReview,
 			() => Modal.close(),
 			() => {
 				filterRef.current = false;
@@ -446,7 +452,7 @@ export default ReviewMain = ({route, navigation}) => {
 		return (
 			<View style={[style.filter]}>
 				<View style={[style.shadow_filter]}>
-					{filterRef.current ? <Filter60Filled onPress={onPressFilterOff} /> : <Filter60Border onPress={onPressFilter} />}
+					{filterRef.current ? <Filter60Filled onPress={onPressFilter} /> : <Filter60Border onPress={onPressFilter} />}
 				</View>
 				<View style={[style.animalFilter]}>
 					<View style={[style.shadow]}>
@@ -476,12 +482,7 @@ export default ReviewMain = ({route, navigation}) => {
 	};
 
 	const whenEmpty = () => {
-		return (
-			<View style={{paddingVertical: 150 * DP, alignItems: 'center'}}>
-				<EmptyIcon />
-				<Text style={[txt.roboto36b, {marginTop: 10 * DP}]}>목록이 없네요.</Text>
-			</View>
-		);
+		return <ListEmptyInfo text={'리뷰글이 없습니다.'} />;
 	};
 
 	if (data == 'false') {
@@ -498,7 +499,7 @@ export default ReviewMain = ({route, navigation}) => {
 							<>
 								<ReviewList
 									items={getData()}
-									recommend={recommend}
+									recommend={filterRef.current ? [] : recommend}
 									whenEmpty={whenEmpty}
 									onPressReviewContent={onPressReviewContent}
 									onPressReply={onPressReply}

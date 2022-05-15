@@ -64,9 +64,8 @@ export default ApplyCompanionA = ({route}) => {
 	};
 
 	const phoneValidate = num => {
-		// console.log('num', num);
 		let regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
-		let regHomePhone = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))(\d{3,4})(\d{4})$/;
+		let regHomePhone = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]|505|70))(\d{3,4})(\d{4})$/;
 		return regPhone.test(num) || regHomePhone.test(num);
 	};
 
@@ -153,17 +152,6 @@ export default ApplyCompanionA = ({route}) => {
 						placeholder={'연락처를 입력해주세요.'}
 						showCrossMark={false}
 					/>
-
-					{/* <InputWithSelect
-						onChange={onChangePhoneNum}
-						validator={phoneValidate}
-						keyboardType={'number-pad'}
-						title={'연락처'}
-						title_star={true}
-						items={mobile_carrier}
-						width={360}
-						placeholder={'연락처를 입력해주세요.'}
-					/> */}
 				</View>
 			</View>
 			{/* (A)Btn_w654 */}

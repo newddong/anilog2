@@ -1,14 +1,12 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {BackHandler, ScrollView, Text, View} from 'react-native';
-import {launchImageLibrary} from 'react-native-image-picker';
+import {ScrollView, Text, View} from 'react-native';
 import {AVAILABLE_NICK, DEFAULT_PROFILE, NEW_NICK_REQUEST, NEW_NICK_TITLE, NICKNAME_FORM, PREVIOUS_NICK_TITLE, UNAVAILABLE_NICK} from 'Root/i18n/msg';
 import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import Input24 from 'Molecules/input/Input24';
 import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';
 import {login_style, btn_style, temp_style, changeUserProfileImage_style} from 'Templete/style_templete';
-// import {nicknameDuplicationCheck} from 'Root/api/usermenuapi';
 import {updateUserInformation, nicknameDuplicationCheck} from 'Root/api/userapi';
 import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -106,7 +104,12 @@ export default ChangeUserProfileImage = ({route}) => {
 	const validateNewNick = nick => {
 		let regExp = /^[가-힣a-zA-Z0-9_]{2,20}$/;
 		setValidated(regExp.test(nick));
-		return regExp.test(nick) && !checkDuplicateNickname(nick);
+		if (userGlobalObject.userInfo.user_type == 'user') {
+			console.log('닉네임중복인가? ', checkDuplicateNickname(nick));
+			return regExp.test(nick) && !checkDuplicateNickname(nick);
+		} else {
+			return regExp.test(nick);
+		}
 	};
 
 	return (

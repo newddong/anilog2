@@ -81,20 +81,11 @@ export default MeatBallHeader = props => {
 			}, 100);
 		}
 	};
-
+	const isUserProfile = props.options.data && props.options.data.user_type == 'user';
 	const isMyProfile = props.options.data && props.options.data.user_type == 'user' && props.options.data._id == userInfo._id; //일반 유저 프로필이며 자신의 계정일 경우
 
 	const onPressMeatball = () => {
-		if (isMyProfile) {
-			//일반 유저 프로필이며 자신의 계정일 경우
-			Modal.popSelectBoxModal(
-				['계정 주소 공유하기'],
-				select => onSelect(select),
-				() => onClose(),
-				false,
-				false,
-			);
-		} else if (props.options.data && props.options.data.user_type == 'pet') {
+		if (props.options.data && props.options.data.user_type == 'pet') {
 			//반려동물 프로필
 			const pet_family = props.options.data.pet_family;
 			let family_id_list = [];
@@ -104,31 +95,22 @@ export default MeatBallHeader = props => {
 			const isPetOwner = family_id_list.includes(userInfo._id); // 보고 있는 반려동물 프로필이 로그인한 계정의 반려동물인지 여부
 			isPetOwner
 				? Modal.popSelectBoxModal(
-						['정보', '신고'],
+						['정보'],
 						select => onSelect(select),
 						() => onClose(),
 						false,
 						false,
 				  )
 				: Modal.popSelectBoxModal(
-						['정보', '신고'],
+						['정보'],
 						select => onSelect(select),
 						() => onClose(),
 						false,
 						false,
 				  );
-		} else if (props.options.data && props.options.data.user_type == 'user' && props.options.data._id != userInfo._id) {
-			//일반 유저 프로필이며 자신의 계정이 아닐 경우
-			Modal.popSelectBoxModal(
-				['신고'],
-				select => onSelect(select),
-				() => onClose(),
-				false,
-				false,
-			);
 		} else if (props.options.data && props.options.data.user_type == 'shelter' && props.options.data._id != userInfo._id) {
 			//보호소 프로필이며 자신의 계정이 아닐경우
-			Modal.popSelectBoxModal(['정보', '신고'], select => onSelect(select), onClose, false, false);
+			Modal.popSelectBoxModal(['정보'], select => onSelect(select), onClose, false, false);
 		} else if (props.options.data && props.options.data.user_type == 'shelter' && props.options.data._id == userInfo._id) {
 			//보호소 프로필이며 자신의 계정일 경우
 			Modal.popSelectBoxModal(['정보'], select => onSelect(select), onClose, false, false);
@@ -147,10 +129,10 @@ export default MeatBallHeader = props => {
 				</View>
 			</TouchableOpacity>
 			<Text style={[txt.roboto40b, {maxWidth: 500 * DP}]} numberOfLines={1}>
-				{props.options.title ? props.options.title : props.route.params.title}
+				{props.options?.title ? props.options.title : props.route.params.title}
 			</Text>
 			{/* <MeatBallDropdown menu={PROTECT_STATUS} onSelect={onPressMeatball} /> */}
-			{isMyProfile ? <View></View> : <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />}
+			{isUserProfile ? <View></View> : <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />}
 		</View>
 	);
 };

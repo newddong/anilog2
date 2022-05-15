@@ -24,7 +24,6 @@ export default SearchArticle = props => {
 
 	React.useEffect(() => {
 		if (props.data.free) {
-			console.log('props.data.free', props.data.free.length);
 			let temp = props.data.free;
 			temp.map((v, i) => {
 				v.community_is_favorite = v.is_favorite;
@@ -35,7 +34,7 @@ export default SearchArticle = props => {
 
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
-		navigation.push('ArticleDetail', {community_object: data[index], searchInput: searchInput});
+		navigation.push('ArticleDetail', {community_object: getData()[index], searchInput: searchInput});
 	};
 
 	const [onlyTalk, setOnlyTalk] = React.useState(false);
@@ -80,55 +79,53 @@ export default SearchArticle = props => {
 		return <ListEmptyInfo text={'검색 결과가 없습니다..'} />;
 	};
 
-	return (
-		<View style={[style.container]}>
-			<FlatList
-				data={[{}]}
-				renderItem={({item, index}) => {
-					return (
-						<>
-							{props.loading ? (
-								<Loading isModal={false} />
-							) : (
-								<>
-									{getData().length == 0 ? (
-										<></>
-									) : (
-										<View style={[style.kindFilter]}>
-											<View style={[style.kindFilterItem]}>
-												<Text style={[txt.noto28, {color: GRAY10}]}> 잡담</Text>
-												{onlyTalk ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
-											</View>
-											<View style={[style.kindFilterItem]}>
-												<Text style={[txt.noto28, {color: GRAY10}]}> 질문</Text>
-												{onlyQuestion ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
-											</View>
-											<View style={[style.kindFilterItem]}>
-												<Text style={[txt.noto28, {color: GRAY10}]}> 모임</Text>
-												{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
-											</View>
-										</View>
-									)}
-									<ArticleList
-										items={getData()}
-										onPressArticle={onPressArticle} //게시글 내용 클릭
-										whenEmpty={whenEmpty}
-										isSearch={searchInput}
-									/>
-								</>
-							)}
-						</>
-					);
-				}}
-				showsVerticalScrollIndicator={false}
-				listKey={({item, index}) => index}
-			/>
+	const header = () => {
+		return (
+			<View style={[style.filterCont]}>
+				<View style={[style.kindFilter]}>
+					<View style={[style.kindFilterItem]}>
+						<Text style={[txt.noto28, {color: GRAY10}]}> 잡담</Text>
+						{onlyTalk ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
+					</View>
+					<View style={[style.kindFilterItem]}>
+						<Text style={[txt.noto28, {color: GRAY10}]}> 질문</Text>
+						{onlyQuestion ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
+					</View>
+					<View style={[style.kindFilterItem]}>
+						<Text style={[txt.noto28, {color: GRAY10}]}> 모임</Text>
+						{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
+					</View>
+				</View>
+			</View>
+		);
+	};
 
-			{/* <View style={[style.write, style.shadow]}>
-				<WriteBoard onPress={onPressWrite} />
-			</View> */}
-		</View>
-	);
+	const renderItem = ({item, index}) => {
+		return (
+			<ArticleList
+				items={getData()}
+				onPressArticle={onPressArticle} //게시글 내용 클릭
+				whenEmpty={whenEmpty}
+				isSearch={searchInput}
+			/>
+		);
+	};
+
+	if (props.loading) {
+		return <Loading isModal={false} />;
+	} else
+		return (
+			<View style={[style.container]}>
+				<FlatList
+					data={[{}]}
+					listKey={({item, index}) => index}
+					renderItem={renderItem}
+					ListHeaderComponent={header()}
+					showsVerticalScrollIndicator={false}
+					stickyHeaderIndices={[0]}
+				/>
+			</View>
+		);
 };
 
 SearchArticle.defaultProps = {};
@@ -158,10 +155,15 @@ const style = StyleSheet.create({
 		},
 		elevation: 3,
 	},
+	filterCont: {
+		width: 750 * DP,
+		paddingVertical: 20 * DP,
+		backgroundColor: 'white',
+	},
 	kindFilter: {
 		width: 420 * DP,
-		backgroundColor: 'white',
-		marginVertical: 30 * DP,
+		// backgroundColor: 'yellow',
+		// margin: 30 * DP,
 		flexDirection: 'row',
 		alignSelf: 'flex-end',
 		justifyContent: 'space-between',

@@ -26,7 +26,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import {getUserInfoById, getUserProfile, updateUserIntroduction} from 'Root/api/userapi';
 import DP from 'Root/config/dp';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {useKeyboardBottom} from 'Root/component/molecules/input/usekeyboardbottom';
+
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 export default UserInfoSetting = ({route}) => {
 	// console.log('userInfoSetting', route);
@@ -43,7 +43,7 @@ export default UserInfoSetting = ({route}) => {
 				userobject_id: userGlobalObject.userInfo._id,
 			},
 			userObject => {
-				console.log('userObject', userObject);
+				// console.log('userObject', userObject);
 				setData(userObject.msg);
 				navigation.setOptions({title: userGlobalObject.userInfo.user_nickname});
 			},

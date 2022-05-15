@@ -13,6 +13,8 @@ import {Check50, Rect50_Border} from 'Root/component/atom/icon';
  * @param {string} props.isSearch - 검색어
  */
 const ArticleList = props => {
+	const [refresh, setRefresh] = React.useState(true);
+
 	const onPressToggle = (index, bool) => {
 		props.onPressCheck(index, bool);
 	};
@@ -47,10 +49,9 @@ const ArticleList = props => {
 				showsVerticalScrollIndicator={false}
 				ListEmptyComponent={props.whenEmpty}
 				// https://reactnative.dev/docs/optimizing-flatlist-configuration
-				removeClippedSubviews={true}
-				// extraData={refreshing}
+				extraData={refresh}
 				initialNumToRender={15}
-				maxToRenderPerBatch={5} // re-render를 막는군요.
+				// maxToRenderPerBatch={5} // re-render를 막는군요.
 				windowSize={11}
 				// https://reactnative.dev/docs/optimizing-flatlist-configuration
 			/>
@@ -73,10 +74,8 @@ export default ArticleList;
 
 const style = StyleSheet.create({
 	container: {
-		width: 654 * DP,
+		width: 750 * DP,
 		alignItems: 'center',
-
 		borderBottomWidth: 2 * DP,
-		// backgroundColor: 'red',
 	},
 });

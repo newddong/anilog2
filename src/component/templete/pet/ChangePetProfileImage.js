@@ -10,7 +10,6 @@ import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';
 import {login_style, btn_style, temp_style, changePetProfileImage_style, changeUserProfileImage_style} from 'Templete/style_templete';
 import ImagePicker from 'react-native-image-crop-picker';
 import {nicknameDuplicationCheck, updateUserInformation} from 'Root/api/userapi';
-import {useKeyboardBottom} from 'Root/component/molecules/input/usekeyboardbottom';
 
 export default ChangePetProfileImage = props => {
 	const navigation = useNavigation();
@@ -53,37 +52,24 @@ export default ChangePetProfileImage = props => {
 	};
 
 	const onPressConfirm = () => {
-		nicknameDuplicationCheck(
-			{user_nickname: newNick},
-			result => {
-				if (result.msg) {
-					Modal.alert('중복된 닉네임이 있습니다.');
-				} else {
-					Modal.popNoBtn('프로필을 바꾸는 중입니다.');
-
-					updateUserInformation(
-						{
-							userobject_id: petData._id,
-							user_nickname: newNick == '' ? petData.user_nickname : newNick,
-							// user_nickname: newNick,
-							user_profile_uri: petData.user_profile_uri,
-						},
-						success => {
-							console.log('profileChange success', success);
-							Modal.close();
-							navigation.goBack();
-						},
-						// console.log('userObject', userObject);
-						err => {
-							Modal.close();
-
-							console.log('err', err);
-						},
-					);
-				}
+		Modal.popNoBtn('프로필을 바꾸는 중입니다.');
+		updateUserInformation(
+			{
+				userobject_id: petData._id,
+				user_nickname: newNick == '' ? petData.user_nickname : newNick,
+				// user_nickname: newNick,
+				user_profile_uri: petData.user_profile_uri,
 			},
-			error => {
-				Modal.popOneBtn(error, '확인', () => Modal.close());
+			success => {
+				console.log('profileChange success', success);
+				Modal.close();
+				navigation.goBack();
+			},
+			// console.log('userObject', userObject);
+			err => {
+				Modal.close();
+
+				console.log('err', err);
 			},
 		);
 	};

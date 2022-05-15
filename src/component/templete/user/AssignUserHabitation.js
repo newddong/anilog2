@@ -99,7 +99,7 @@ const AssignUserHabitation = props => {
 	};
 
 	const onPressDistrict = () => {
-		Modal.popSelectScrollBoxModal([district], '도, 광역시를 지정해주세요.', value => {
+		Modal.popSelectScrollBoxModal([district], '시, 군, 구를 지정해주세요', value => {
 			getAddressList(
 				{city: data.user_address.city, district: value},
 				neighbor => {
@@ -122,7 +122,7 @@ const AssignUserHabitation = props => {
 	};
 
 	const onPressNeighbor = () => {
-		Modal.popSelectScrollBoxModal([neighbor], '도, 광역시를 지정해주세요.', value => {
+		Modal.popSelectScrollBoxModal([neighbor], '동, 읍을 지정해주세요.', value => {
 			setData({...data, user_address: {...data.user_address, neighbor: value == '목록없음' ? '' : value}});
 			Modal.close();
 		});

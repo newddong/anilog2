@@ -2,7 +2,6 @@ import React from 'react';
 import {FlatList, View} from 'react-native';
 import AnimalNeedHelp from 'Organism/listitem/AnimalNeedHelp';
 import {animalNeedHelpList} from 'Organism/style_organism copy';
-import {dummy_AnimalNeedHelpList} from 'Root/config/dummyDate_json';
 import {Check50, Rect50_Border} from 'Root/component/atom/icon';
 import DP from 'Root/config/dp';
 /**
@@ -103,7 +102,7 @@ export default AnimalNeedHelpList = props => {
 };
 
 AnimalNeedHelpList.defaultProps = {
-	data: dummy_AnimalNeedHelpList,
+	data: {},
 	onClickLabel: e => console.log(e),
 	onFavoriteTag: e => console.log('FavoriteTag ', e),
 	onHashClick: e => console.log('HashClick AnimalNeedHelpList', e),

@@ -431,8 +431,8 @@ const MissingForm = props => {
 	// console.log('실종 컴포넌트 데이터', route);
 	const [types, setTypes] = React.useState([
 		{
-			pet_species: '개',
-			pet_species_detail: DOG_KIND,
+			pet_species: '동물종류',
+			pet_species_detail: ['품종'],
 		},
 	]);
 	const [isSpeciesChanged, setIsSpeciesChanged] = React.useState(false);
@@ -484,7 +484,11 @@ const MissingForm = props => {
 		getPettypes(
 			{},
 			types => {
-				setTypes(types.msg);
+				// console.log('types', types.msg);
+				const init = {pet_species: '동물종류', pet_species_detail: ['품종']};
+				let res = types.msg;
+				res.unshift(init);
+				setTypes(res);
 			},
 			err => Modal.alert(err),
 		);
@@ -611,9 +615,8 @@ const MissingForm = props => {
 	};
 
 	const phoneValidate = num => {
-		// console.log('num', num);
 		let regPhone = /^01([0|1|6|7|8|9|])-?([0-9]{3,4})-?([0-9]{4})$/;
-		let regHomePhone = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))(\d{3,4})(\d{4})$/;
+		let regHomePhone = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]|505|70))(\d{3,4})(\d{4})$/;
 		return regPhone.test(num) || regHomePhone.test(num);
 	};
 
@@ -627,10 +630,10 @@ const MissingForm = props => {
 				<View style={[feedWrite.formContentContainer]}>
 					<View style={[temp_style.dropdownSelect, feedWrite.dropdownSelect]}>
 						{/* <NormalDropDown items={pet_kind} menu={types.map(v => v.pet_species)} width={292} onSelect={onSelectSpecies} defaultIndex={0} /> */}
-						<SelectInput onPressInput={onSelectSpecies} width={292} value={data.missing_animal_species} />
+						<SelectInput onPressInput={onSelectSpecies} width={292} defaultText={'동물종류'} value={data.missing_animal_species} />
 					</View>
 					<View style={[temp_style.dropdownSelect, feedWrite.dropdownSelect]}>
-						<SelectInput onPressInput={onSelectSpeciesDetail} width={292} value={data.missing_animal_species_detail} />
+						<SelectInput onPressInput={onSelectSpeciesDetail} width={292} defaultText={'품종'} value={data.missing_animal_species_detail} />
 					</View>
 				</View>
 			</View>

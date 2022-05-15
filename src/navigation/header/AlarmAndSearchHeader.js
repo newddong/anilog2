@@ -12,6 +12,7 @@ export default AlarmAndSearchHeader = ({navigation, route, options, back}) => {
 	const clickSearch = () => {
 		navigation.navigate('Search', {mother: 0, child: 0, prevNav: route.name});
 	};
+
 	const clickAlarm = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {

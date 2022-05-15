@@ -41,21 +41,23 @@ export default SearchReview = props => {
 	React.useEffect(() => {
 		if (props.data.review) {
 			let temp = props.data.review;
+			// console.log('temp', temp);
 			temp.map((v, i) => {
 				v.community_is_favorite = v.is_favorite;
+				v.is_follow = v.community_is_like;
 			});
 			setData(temp);
 		}
 	}, [props.data.review]);
 
 	const onPressMeatball = index => {
-		const isMyArticle = userGlobalObject.userInfo._id == data[index].community_writer_id._id;
+		const isMyArticle = userGlobalObject.userInfo._id == getData()[index].community_writer_id._id;
 		Modal.popSelectBoxModal(
 			isMyArticle ? ['수정', '삭제'] : ['신고'],
 			select => {
 				switch (select) {
 					case '수정':
-						navigation.push('CommunityEdit', {previous: data[index], isReview: true});
+						navigation.push('CommunityEdit', {previous: getData()[index], isReview: true, isSearch: searchInput});
 						break;
 					case '삭제':
 						Modal.close();
@@ -68,7 +70,7 @@ export default SearchReview = props => {
 								() => {
 									updateAndDeleteCommunity(
 										{
-											community_object_id: data[index]._id,
+											community_object_id: getData()[index]._id,
 											community_is_delete: true,
 										},
 										result => {
@@ -78,7 +80,6 @@ export default SearchReview = props => {
 												Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
 												setTimeout(() => {
 													Modal.close();
-													fetchData();
 												}, 600);
 											}, 200);
 										},
@@ -236,11 +237,17 @@ export default SearchReview = props => {
 			likeEtc(
 				{
 					collectionName: 'communityobjects',
-					post_object_id: data[index]._id,
+					post_object_id: getData()[index]._id,
 					is_like: bool,
 				},
 				result => {
 					console.log('result/ onPressLike / SearchReview : ', result.msg);
+					// const findIndex = data.findIndex(e => e._id == getData()[index]._id);
+					// console.log('find', findIndex);
+					// let copy = data;
+					// copy[findIndex].community_is_like = bool;
+					// setData(copy);
+					props.resetCommunityList();
 				},
 				err => console.log('err / onPressLike / SearchReview : ', err),
 			);
@@ -249,12 +256,12 @@ export default SearchReview = props => {
 
 	//댓글 모두 보기 클릭
 	const onPressReply = index => {
-		navigation.push('CommunityCommentList', {community_object: data[index]});
+		navigation.push('CommunityCommentList', {community_object: getData()[index]});
 	};
 
 	//리뷰 썸네일 클릭
 	const onPressReviewContent = index => {
-		navigation.push('ReviewDetail', {community_object: data[index], searchInput: searchInput});
+		navigation.push('ReviewDetail', {community_object: getData()[index], searchInput: searchInput});
 	};
 
 	//글쓰기 아이콘 클릭
@@ -268,7 +275,7 @@ export default SearchReview = props => {
 		setFavoriteEtc(
 			{
 				collectionName: 'communityobjects',
-				target_object_id: data[index]._id,
+				target_object_id: getData()[index]._id,
 				is_favorite: bool,
 			},
 			result => {
@@ -308,39 +315,36 @@ export default SearchReview = props => {
 	};
 
 	const filterComponent = () => {
-		if (getData().length == 0) {
-			return <></>;
-		} else
-			return (
-				<View style={[style.filter]}>
-					<View style={[style.shadow_filter]}>
-						{isFilter ? <Filter60Filled onPress={onPressFilterOff} /> : <Filter60Border onPress={onPressFilter} />}
+		return (
+			<View style={[style.filter]}>
+				<View style={[style.shadow_filter]}>
+					{isFilter ? <Filter60Filled onPress={onPressFilterOff} /> : <Filter60Border onPress={onPressFilter} />}
+				</View>
+				<View style={[style.animalFilter]}>
+					<View style={[style.shadow]}>
+						{!filterData.dog ? (
+							<Animal_dog onPress={() => onPressAnimalFilter('dog')} />
+						) : (
+							<Animal_dog_off onPress={() => onPressAnimalFilter('dog')} />
+						)}
 					</View>
-					<View style={[style.animalFilter]}>
-						<View style={[style.shadow]}>
-							{!filterData.dog ? (
-								<Animal_dog onPress={() => onPressAnimalFilter('dog')} />
-							) : (
-								<Animal_dog_off onPress={() => onPressAnimalFilter('dog')} />
-							)}
-						</View>
-						<View style={[style.shadow]}>
-							{!filterData.cat ? (
-								<Animal_cat onPress={() => onPressAnimalFilter('cat')} />
-							) : (
-								<Animal_cat_off onPress={() => onPressAnimalFilter('cat')} />
-							)}
-						</View>
-						<View style={[style.shadow]}>
-							{!filterData.etc ? (
-								<Animal_another onPress={() => onPressAnimalFilter('etc')} />
-							) : (
-								<Animal_another_off onPress={() => onPressAnimalFilter('etc')} />
-							)}
-						</View>
+					<View style={[style.shadow]}>
+						{!filterData.cat ? (
+							<Animal_cat onPress={() => onPressAnimalFilter('cat')} />
+						) : (
+							<Animal_cat_off onPress={() => onPressAnimalFilter('cat')} />
+						)}
+					</View>
+					<View style={[style.shadow]}>
+						{!filterData.etc ? (
+							<Animal_another onPress={() => onPressAnimalFilter('etc')} />
+						) : (
+							<Animal_another_off onPress={() => onPressAnimalFilter('etc')} />
+						)}
 					</View>
 				</View>
-			);
+			</View>
+		);
 	};
 
 	const whenEmpty = () => {

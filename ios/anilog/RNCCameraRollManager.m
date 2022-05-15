@@ -592,14 +592,15 @@ RCT_EXPORT_METHOD(compressImage:(NSDictionary * _Nonnull)params
         }
         
         //압축된 데이터
-        NSData *imageData = [NSData data];
-        if([mimeType.lowercaseString isEqualToString:@"jpg"]){
-          imageData = UIImageJPEGRepresentation(img, quality);
-        } else if([mimeType.lowercaseString isEqualToString:@"png"]){
-          imageData = UIImagePNGRepresentation(img);
-        }
+        //220510 compress시 저장 타입 jpg로 통일
+        NSData *imageData = UIImageJPEGRepresentation(img, quality);
+//        if([mimeType.lowercaseString isEqualToString:@"jpg"]){
+//          imageData = UIImageJPEGRepresentation(img, quality);
+//        } else if([mimeType.lowercaseString isEqualToString:@"png"]){
+//          imageData = UIImagePNGRepresentation(img);
+//        }
         
-        NSString* savedPath = [self createTempImage:imageData mimeType:mimeType];
+        NSString* savedPath = [self createTempImage:imageData mimeType:@"jpg"];
         if(savedPath == nil){
           errCode = @"Image save error";
           errMsg = @"Fail to save image";
@@ -646,11 +647,6 @@ RCT_EXPORT_METHOD(saveImage:(NSString*) uri
   
   void (^save)(void) = ^void() {
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
-      //여기서 루프 돌려서 큐 잡아두는 테스트 함
-      //      for(int i = 0; i < 100000; ++i){
-      //        NSLog(@"cur i: %d", i);
-      //      }
-      
       if ([PHAssetCreationRequest class]) {
         [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
           [[PHAssetCreationRequest creationRequestForAsset] addResourceWithType:PHAssetResourceTypePhoto
@@ -680,38 +676,28 @@ RCT_EXPORT_METHOD(saveImage:(NSString*) uri
     });
   }; //end of block function save()
   
-  if([uri containsString:@"ph://"]) //이게 최신 방법
+  if([uri hasPrefix:@"ph://"]) //이게 최신 방법
   {
-    PHFetchResult<PHAsset *> *asset = [PHAsset fetchAssetsWithLocalIdentifiers:@[[uri substringFromIndex:5]] options:nil];
-    
-    if(asset == nil || asset.count == 0) {
-      reject(@"Image fetch result is nil.", nil, nil);
-      return;
-    } else if(asset.firstObject == nil) {
-      reject(@"Image is nil", nil, nil);
-      return;
+    //err array는 무조건 3 length로 구성하게 해 둠
+    NSArray* errorOccured = [self requestImageData:uri
+imageRequestResultHandlerOverAPI13:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, CGImagePropertyOrientation orientation, NSDictionary * _Nullable info) {
+      imageData = resultData;
+      mimeType = [dataUTI componentsSeparatedByString:@"."].lastObject;
     }
+imageRequestResultHandler:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+      imageData = resultData;
+      mimeType = [dataUTI componentsSeparatedByString:@"."].lastObject;
+    }];
     
-    PHImageRequestOptions* options = [[PHImageRequestOptions alloc] init];
-    options.synchronous = true;
-    
-    if (@available(iOS 13, *)) {
-      [[PHImageManager defaultManager] requestImageDataAndOrientationForAsset:asset.firstObject
-                                                                      options:options
-                                                                resultHandler:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, CGImagePropertyOrientation orientation, NSDictionary * _Nullable info) {
-        imageData = resultData;
-        mimeType = [dataUTI componentsSeparatedByString:@"."].lastObject;
-      }];
+    if(errorOccured == nil) {
+      save();
+    } else if(errorOccured.count == 0){
+      reject(@"Unknown error occured", nil, nil);
     } else {
-      [[PHImageManager defaultManager] requestImageDataForAsset:asset.firstObject
-                                                        options:options
-                                                  resultHandler:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
-
-        imageData = resultData;
-        mimeType = [dataUTI componentsSeparatedByString:@"."].lastObject;
-      }];
+      reject(([errorOccured[0] length] == 0) ? nil : errorOccured[0],
+             ([errorOccured[1] length] == 0) ? nil : errorOccured[1],
+             ([errorOccured[2] length] == 0) ? nil : errorOccured[2]);
     }
-    save();
   } else {  //원격 이미지 파일 로드 시.. 다른 방법 필요 // 이건 보통 ios 8~9 //임시
     [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
       [PHAssetCreationRequest creationRequestForAssetFromImageAtFileURL:[NSURL URLWithString:uri]];
@@ -724,6 +710,95 @@ RCT_EXPORT_METHOD(saveImage:(NSString*) uri
     }];
   }
 }
+
+//#MARK: @RCT cropImage
+//ph://{local identifier} 형태만 지원
+RCT_EXPORT_METHOD(cropImage:(NSDictionary* _Nonnull) params
+                  resolver:(RCTPromiseResolveBlock) resolve
+                  rejecter:(RCTPromiseRejectBlock) reject) {
+  NSString *const uri = [params objectForKey:@"uri"] ? [RCTConvert NSString:[params objectForKey:@"uri"]]:nil;
+  if(uri == nil || uri.length == 0) {
+    reject(@"Nil error", @"Uri is an empty string", nil);
+    return;
+  } else if (![uri hasPrefix:@"ph://"]) {
+    reject(@"Uri format error", @"Uri format doesn't fit with photoKit ('ph://')", nil);
+    return;
+  }
+  __block NSData* imageData;
+  
+  NSArray* errorOccured = [self requestImageData:uri
+              imageRequestResultHandlerOverAPI13:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, CGImagePropertyOrientation orientation, NSDictionary * _Nullable info) {
+    imageData = resultData;
+  }
+                       imageRequestResultHandler:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+    imageData = resultData;
+  }];
+  
+  if(errorOccured != nil){
+    reject(([errorOccured[0] length] == 0) ? nil : errorOccured[0],
+           ([errorOccured[1] length] == 0) ? nil : errorOccured[1],
+           ([errorOccured[2] length] == 0) ? nil : errorOccured[2]);
+    return;
+  } else if (imageData == nil) {
+    reject(@"Nil error", @"Image data is nil", nil);
+    return;
+  }
+  
+  CGFloat const destWidth = [params objectForKey:@"destWidth"] ? [RCTConvert CGFloat:[params objectForKey:@"destWidth"]] : 0;
+  CGFloat const destHeight = [params objectForKey:@"destHeight"] ? [RCTConvert CGFloat:[params objectForKey:@"destHeight"]] : 0;
+  if(destWidth <= 0 || destHeight <= 0) {
+    reject(@"Mandatory parameter has no value", @"Mandatory parameter has no value", nil);
+    return;
+  }
+  
+  CGFloat const offsetX = [params objectForKey:@"offsetX"] ? [RCTConvert CGFloat:[params objectForKey:@"offsetX"]] : 0;
+  CGFloat const offsetY = [params objectForKey:@"offsetY"] ? [RCTConvert CGFloat:[params objectForKey:@"offsetY"]] : 0;
+  
+  //현재 rotate 안 됨
+//  CGFloat const angle = [params objectForKey:@"angle"] ? [RCTConvert CGFloat:[params objectForKey:@"angle"]] : 0;
+  BOOL const isCircular = [params objectForKey:@"isCircular"] ? [RCTConvert BOOL:[params objectForKey:@"isCircular"]] : NO;
+  
+  CGRect destRect = {
+    CGPointMake(offsetX, offsetY),
+    CGSizeMake(destWidth, destHeight)
+  };
+  
+  UIImage* targetImage = [UIImage imageWithData:imageData];
+  UIImage* croppedImage = nil;
+  
+  UIGraphicsBeginImageContextWithOptions(destRect.size, !isCircular, 0.0f);
+  CGContextRef context = UIGraphicsGetCurrentContext();
+  
+  if (isCircular) {
+    CGContextAddEllipseInRect(context, (CGRect){CGPointZero, destRect.size});
+    CGContextClip(context);
+  }
+  
+  //crop
+  //crop 자체가 scale과 비슷한 효과를 내므로 scale 삭제
+  CGContextTranslateCTM(context, -destRect.origin.x, -destRect.origin.y);
+  
+  [targetImage drawAtPoint:CGPointZero];
+  croppedImage = UIGraphicsGetImageFromCurrentImageContext();
+  UIGraphicsEndImageContext();
+  
+  NSString* tempSavePath = [self createTempImage:UIImageJPEGRepresentation(croppedImage, 1) mimeType:nil];
+  if(tempSavePath == nil) {
+    reject(@"Fail to save image", @"Fail to save cropped image", nil);
+    return;
+  }
+  
+  NSDictionary* cropResult = @{
+    @"uri":tempSavePath,
+    @"fileSize":@([imageData length]),
+    @"fileName":tempSavePath,
+    @"type":@"jpg",
+    @"width":@(destWidth),
+    @"height":@(destHeight),
+  };
+  resolve(cropResult);
+}
+
 
 //#MARK: checkPhotoLibraryConfig
 static void checkPhotoLibraryConfig()
@@ -779,6 +854,46 @@ static void checkPhotoLibraryConfig()
   }
   
   return true;
+}
+
+//#MARK: @requestImageData
+   /**
+     ph://{local identifier} 형식의 uri에서 이미지를 가져오는 함수
+    가져온 데이터를 받는 건 handler callback
+    에러가 난 경우 핸들러로 넘어가지 않고 리턴한다. 즉, 에러가 나지 않으면 nil이 리턴된다
+      - Returns:  RCTRejectBlock에 넘길 NSArray* 형태 [ errCode, errMsg, {empty string} ]
+    */
+- (NSArray *_Nullable)        requestImageData: (NSString*) uri
+            imageRequestResultHandlerOverAPI13: (void (^)(NSData *_Nullable imageData, NSString *_Nullable dataUTI, CGImagePropertyOrientation orientation, NSDictionary *_Nullable info)) imageRequestResultHandlerOverAPI13
+                     imageRequestResultHandler:(void (^)(NSData *_Nullable imageData, NSString *_Nullable dataUTI, UIImageOrientation orientation, NSDictionary *_Nullable info)) imageRequestResultHandler
+{
+  if(![uri hasPrefix:@"ph://"]) {
+    NSArray* rejectArray = [NSArray arrayWithObjects:@"Uri format error", @"Uri format doesn't fit with photoKit ('ph://')", @"", nil];
+    return rejectArray;
+  }
+
+    PHFetchResult<PHAsset *> *asset = [PHAsset fetchAssetsWithLocalIdentifiers:@[[uri substringFromIndex:@"ph://".length]] options:nil];
+    
+    if(asset == nil || asset.count == 0) {
+      NSArray* rejectArray = [NSArray arrayWithObjects:@"Image fetch result is nil", @"Check image fetch result", @"", nil];
+      return rejectArray;
+    } else if(asset.firstObject == nil) {
+      NSArray* rejectArray = [NSArray arrayWithObjects:@"Image is nil", @"Check image", @"", nil];
+      return rejectArray;
+    }
+    
+    PHImageRequestOptions* options = [[PHImageRequestOptions alloc] init];
+    options.synchronous = true;
+    if (@available(iOS 13, *)) {
+      [[PHImageManager defaultManager] requestImageDataAndOrientationForAsset:asset.firstObject
+                                                                      options:options
+                                                                resultHandler:imageRequestResultHandlerOverAPI13];
+    } else {
+      [[PHImageManager defaultManager] requestImageDataForAsset:asset.firstObject
+                                                        options:options
+                                                  resultHandler:imageRequestResultHandler];
+  }
+  return nil;
 }
 
 ////#MARK: @RCT cleanSingle

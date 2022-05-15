@@ -10,6 +10,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {getAlarmStatus} from 'Root/api/userapi';
 
+
 export default LogoHeader = ({navigation, route, options, back}) => {
 	const isLoginUser = userGlobalObject.userInfo?._id;
 	const [isNewAlarm, setIsNewAlarm] = React.useState();
@@ -39,6 +40,7 @@ export default LogoHeader = ({navigation, route, options, back}) => {
 		});
 		return unsubscribe;
 	}, [navigation]);
+
 
 	const clickSearch = () => {
 		navigation.navigate('Search', {mother: 0, child: 0, prevNav: route.name});

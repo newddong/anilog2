@@ -112,6 +112,7 @@ const InputWithEmail = props => {
 						},
 					]}
 					placeholder={props.placeholder}
+					autoCapitalize={'none'}
 					defaultValue={props.defaultValue ? props.defaultValue.split('@')[0] : ''}
 					onChangeText={onChange}
 					maxlength={30}

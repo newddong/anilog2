@@ -2,7 +2,7 @@ import React from 'react';
 import {Image, Text, View, StyleSheet} from 'react-native';
 import {GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {Heart30_Border, Heart30_Filled, Meatball50_GRAY20_Vertical} from 'Atom/icon';
+import {Heart30_Border, Heart30_Filled, Meatball50_GRAY20_Vertical, SecureIcon40} from 'Atom/icon';
 import {DEFAULT_PROFILE, REPLY_MEATBALL_MENU, REPLY_MEATBALL_MENU_MY_REPLY} from 'Root/i18n/msg';
 import {styles} from 'Atom/image/imageStyle';
 import UserTimeLabel from 'Molecules/label/UserTimeLabel';
@@ -12,6 +12,7 @@ import {likeComment} from 'Root/api/commentapi';
 import {REPORT_MENU} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
 import Modal from 'Root/component/modal/Modal';
+import DP from 'Root/config/dp';
 /**
  * 자식 댓글
  * @param {object} props - Props Object
@@ -142,37 +143,72 @@ const ChildComment = props => {
 		}
 	};
 
+	//비밀댓글일 경우 public 여부 판별
+	const isNotAuthorized = () => {
+		if (!data.comment_is_secure || userGlobalObject.userInfo._id == data.comment_writer_id._id) {
+			//비밀댓글이 아니라면 public
+			return false;
+		} else {
+			return true;
+		}
+	};
+
 	return (
 		<View style={[childComment.container]}>
-			<View style={[childComment.profileContainer]}>
-				<View style={[childComment.userTimeLabel]}>
-					<UserTimeLabel data={data || null} onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})} />
-				</View>
-				<View style={[childComment.meatBall50_vertical]}>
-					{meatball ? <Meatball50_APRI10_Vertical onPress={onPressMeatball} /> : <Meatball50_GRAY20_Vertical onPress={onPressMeatball} />}
-				</View>
-			</View>
-			{/* 해당 대댓글이 photo_uri를 가지고 있는 경우만 IMage 출력 */}
-			{data.comment_photo_uri != null ? (
-				<View style={[childComment.img_square_round_484]}>
-					<Image style={[styles.img_square_round_484]} source={{uri: data ? data.comment_photo_uri : DEFAULT_PROFILE}} />
+			{data.comment_is_delete ? (
+				<View style={{}}>
+					<Text style={[txt.noto28, {marginLeft: 20 * DP}]}> 작성자가 삭제한 댓글입니다.</Text>
 				</View>
 			) : (
-				<></>
+				<>
+					<View style={[childComment.profileContainer]}>
+						{data.comment_is_secure ? (
+							<View style={[{justifyContent: 'center'}]}>
+								<SecureIcon40 />
+							</View>
+						) : (
+							<></>
+						)}
+						<View style={[childComment.userTimeLabel]}>
+							<UserTimeLabel data={data || null} onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})} />
+						</View>
+						<View style={[childComment.meatBall50_vertical]}>
+							{meatball ? <Meatball50_APRI10_Vertical onPress={onPressMeatball} /> : <Meatball50_GRAY20_Vertical onPress={onPressMeatball} />}
+						</View>
+					</View>
+					{/* 해당 대댓글이 photo_uri를 가지고 있는 경우만 IMage 출력 */}
+					{data.comment_photo_uri != null && !isNotAuthorized() ? (
+						<View style={[childComment.img_square_round_484]}>
+							<Image style={[styles.img_square_round_484]} source={{uri: data ? data.comment_photo_uri : DEFAULT_PROFILE}} />
+						</View>
+					) : (
+						<></>
+					)}
+					{/* 댓글 텍스트 */}
+					<View style={[childComment.commentContainer]}>
+						{isNotAuthorized() ? (
+							<Text style={[txt.noto26, {}]}> 비밀 댓글 입니다.</Text>
+						) : (
+							<Text style={[txt.noto24]}>{data ? data.comment_contents : ''}</Text>
+						)}
+					</View>
+					{/* 좋아요 버튼, 좋아요 숫자 , 답글쓰기 컨테이너 */}
+					<View style={[childComment.likeReplyButton]}>
+						{isNotAuthorized() ? (
+							<></>
+						) : (
+							<>
+								<View style={[childComment.heart30]}>
+									{likeState ? <Heart30_Filled onPress={onCLickHeart} /> : <Heart30_Border onPress={onCLickHeart} />}
+								</View>
+								<View style={[childComment.likeCount]}>
+									<Text style={(txt.roboto24, childComment.likeCountText)}>{likeCount}</Text>
+								</View>
+							</>
+						)}
+					</View>
+				</>
 			)}
-			{/* 댓글 텍스트 */}
-			<View style={[childComment.commentContainer]}>
-				<Text style={[txt.noto24]}>{data ? data.comment_contents : ''}</Text>
-			</View>
-			{/* 좋아요 버튼, 좋아요 숫자 , 답글쓰기 컨테이너 */}
-			<View style={[childComment.likeReplyButton]}>
-				<View style={[childComment.heart30]}>
-					{likeState ? <Heart30_Filled onPress={onCLickHeart} /> : <Heart30_Border onPress={onCLickHeart} />}
-				</View>
-				<View style={[childComment.likeCount]}>
-					<Text style={(txt.roboto24, childComment.likeCountText)}>{likeCount}</Text>
-				</View>
-			</View>
 		</View>
 	);
 };
@@ -198,6 +234,7 @@ export const childComment = StyleSheet.create({
 		width: 574 * DP,
 		height: 50 * DP,
 		// marginBottom: 10 * DP,
+		justifyContent: 'space-between',
 		flexDirection: 'row',
 	},
 	commentMark: {
@@ -216,7 +253,7 @@ export const childComment = StyleSheet.create({
 	meatBall50_vertical: {
 		width: 50 * DP,
 		height: 50 * DP,
-		marginLeft: 58 * DP,
+		// marginLeft: 58 * DP,
 	},
 	img_square_round_484: {
 		alignSelf: 'flex-end',

@@ -16,7 +16,7 @@ const ShelterInfo = props => {
 	const [data, setData] = React.useState(props.data);
 
 	const onPressPhoneNum = () => {
-		Linking.openURL(`tel:${data.volunteer_target_shelter.shelter_delegate_contact_number}`);
+		Linking.openURL(`tel:${data.shelter_delegate_contact_number || data.volunteer_target_shelter?.shelter_delegate_contact_number}`);
 	};
 
 	return (
@@ -32,10 +32,14 @@ const ShelterInfo = props => {
 					{data ? data.shelter_address.brief : ''} {data.shelter_address.detail || ''}
 				</Text>
 				<TouchableOpacity onPress={onPressPhoneNum}>
-					<Text style={[txt.noto24, {alignSelf: 'flex-end', color: BLUE20, textDecorationLine: 'underline'}]}>
-						{/* {data.shelter_delegate_contact_number || ''} */}
-						{hyphened(data.shelter_delegate_contact_number || data.volunteer_target_shelter.shelter_delegate_contact_number)}{' '}
-					</Text>
+					{data.shelter_delegate_contact_number || data.volunteer_target_shelter?.shelter_delegate_contact_number ? (
+						<Text style={[txt.noto24, {alignSelf: 'flex-end', color: BLUE20, textDecorationLine: 'underline'}]}>
+							{/* {data.shelter_delegate_contact_number || ''} */}
+							{hyphened(data.shelter_delegate_contact_number || data.volunteer_target_shelter?.shelter_delegate_contact_number)}{' '}
+						</Text>
+					) : (
+						<></>
+					)}
 				</TouchableOpacity>
 			</View>
 		</View>

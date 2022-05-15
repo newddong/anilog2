@@ -74,7 +74,7 @@ export default EditShelterInfo = ({route, navigation}) => {
 
 	let regNick = /^[가-힣a-zA-Z0-9_]{2,20}$/;
 	let regPhone = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
-	let regHomePhone = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))(\d{3,4})(\d{4})$/;
+	let regHomePhone = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]|505|70))(\d{3,4})(\d{4})$/;
 	//보호소 네임 Validation
 	const shelterNameValidator = text => {
 		return regNick.test(text);

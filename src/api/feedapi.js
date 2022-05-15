@@ -200,6 +200,7 @@ export async function editFeed(params, callback, errcallback){
  */
  export async function getUserTaggedFeedList(params, callback, errcallback){
 	apiController('/feed/getUserTaggedFeedList',arguments);
+}
 
 /**
  * 실종/제보 정보 수정

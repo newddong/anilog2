@@ -232,3 +232,14 @@ export async function editFeed(params, callback, errcallback){
 export async function editMissingReport(params, callback, errcallback) {
 	apiController('/feed/editMissingReport', arguments);
 }
+
+/**
+ * 피드/실종/제보 삭제
+ * @param {object} params
+ * @param {string} params.feed_object_id - 삭제할 피드/실종/제보 게시물 object _id
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function deleteFeed(params, callback, errcallback) {
+	apiController('/feed/deleteFeed', arguments);
+}

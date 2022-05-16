@@ -295,6 +295,37 @@ export async function editMissingReport(params, callback, errcallback) {
 }
 
 /**
+ * 실종/제보 정보 수정
+ * @param {object} params
+ * @param {string} params.feedobject_id - 수정할 게시물 object_id
+ * @param {string} params.feed_content - 내용
+ * @param {Array.<string>} params.hashtag_keyword - 피드에 들어갈 해시태그 키워드의 목록
+ * @param {Array.<integer>} params.photos_to_delete - 삭제할 게시물 사진 인덱스 (인덱스 숫자만 기입)
+ * @param {Array.<string>} params.media_uri - 게시물 첨부파일 uri리스트
+ * @param {string} params.missing_animal_species - 실종 동물 종류
+ * @param {string} params.missing_animal_species_detail - 실종 동물 종류 상세
+ * @param {string} params.missing_animal_sex - 실종 동물 성별 ('male'|'female'|'unknown')
+ * @param {integer} params.missing_animal_age - 실종 동물 나이
+ * @param {string} params.missing_animal_lost_location - 실종 동물의 실종 지역 혹은 장소
+ * @param {string} params.missing_animal_contact - 실종 동물의 제보를 받을 사람의 연락처
+ * @param {string} params.missing_animal_features - 실종 동물의 특징
+ * @param {string} params.missing_animal_date - 동물이 실종된 추정일자
+ * @param {string} params.report_witness_date - 제보일자(해당 동물의 목격일)
+ * @param {string} params.report_witness_location - 제보장소(목격장소)
+ * @param {string} params.report_animal_species - 제보 동물의 종류(ex 강아지, 고양이, 토끼 등)
+ * @param {string} params.report_animal_species_detail - 제보 동물의 세부 종류(ex 리트리버, 불독, 진돗개 등)
+ * @param {string} params.report_animal_sex - 제보 동물의 성별 ('male'|'female'|'unknown')
+ * @param {string} params.report_animal_age - 제보 동물의 나이
+ * @param {string} params.report_animal_contact - 제보자  연락처
+ * @param {string} params.report_animal_features - 제보 동물의 특징
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function editMissingReport(params, callback, errcallback) {
+	apiController('/feed/editMissingReport', arguments);
+}
+
+/**
  * 피드/실종/제보 삭제
  * @param {object} params
  * @param {string} params.feed_object_id - 삭제할 피드/실종/제보 게시물 object _id

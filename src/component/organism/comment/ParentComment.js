@@ -287,14 +287,21 @@ export default ParentComment = React.memo((props, ref) => {
 				</View>
 			)}
 			{/* 댓글 내용 */}
-			<View style={[parentComment.comment_contents]}>
-				{isNotAuthorized() ? (
-					<Text style={[txt.noto26, {}]}> 비밀 댓글 입니다.</Text>
-				) : (
-					<Text style={[txt.noto26]}>{data ? data.comment_contents : ''}</Text>
-				)}
-			</View>
-			{isNotAuthorized() ? (
+			{data.comment_is_delete ? (
+				<View style={[parentComment.comment_contents]}>
+					<Text style={[txt.noto26, {color: GRAY20}]}> 작성자에의해 삭제된 댓글 입니다.</Text>
+				</View>
+			) : (
+				<View style={[parentComment.comment_contents]}>
+					{isNotAuthorized() ? (
+						<Text style={[txt.noto26, {}]}> 비밀 댓글 입니다.</Text>
+					) : (
+						<Text style={[txt.noto26]}>{data ? data.comment_contents : ''}</Text>
+					)}
+				</View>
+			)}
+
+			{isNotAuthorized() || data.comment_is_delete ? (
 				<></>
 			) : (
 				<View style={[parentComment.likeReplyButton]}>

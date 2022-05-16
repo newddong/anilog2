@@ -124,7 +124,7 @@ export default MissingAnimalDetail = props => {
 						}
 					}
 				});
-				setCommentDataList(commentArray.filter(e => e.comment_is_delete != true));
+				setCommentDataList(commentArray);
 				Modal.close();
 			},
 			errcallback => {

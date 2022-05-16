@@ -37,6 +37,7 @@ import Geolocation from '@react-native-community/geolocation';
 import LocationButton from 'Root/component/molecules/button/LocationButton';
 import axios from 'axios';
 import X2JS from 'x2js';
+import moment from 'moment';
 
 export default FeedWrite = props => {
 	const [showPetAccountList, setShowPetAccountList] = React.useState(false); //PetAccount 계정
@@ -93,19 +94,17 @@ export default FeedWrite = props => {
 					return {media_uri: img, is_video: false, duration: 0, tags: media ? media.tags : []};
 				}),
 			});
-			console.log('첨부 이미지 변화', selectedImg);
+			// console.log('첨부 이미지 변화', selectedImg);
 		}
 	}, [selectedImg]); //네비게이션 파라메터에 이미지 리스트를 넣음(헤더에서 처리하도록)
 
 	React.useEffect(() => {
 		if (props.route.name == 'FeedEdit') {
-			console.log('feedEdit 진입', props.route.params);
+			// console.log('feedEdit 진입', props.route.params);
 			if (props.route.params?.feed_type == 'missing') {
-				console.log('실종 편집');
 				onPressMissingWrite();
 			}
 			if (props.route.params?.feed_type == 'report') {
-				console.log('제보 편집');
 				onPressReportWrite();
 			}
 			setSelectedImg(props.route.params.feed_medias.map(v => v.media_uri));
@@ -286,9 +285,22 @@ export default FeedWrite = props => {
 	const setUrgBtnsClickedView = () => {
 		//긴급 버튼 중 '제보' 클릭한 경우
 		if (showReportForm) {
-			return <ReportForm onDataChange={onReportForm} container={container} scrollref={scrollref} />;
+			return (
+				<ReportForm onDataChange={onReportForm} data={props.route.params} routeName={props.route.name} container={container} scrollref={scrollref} />
+			);
 		} // 긴급 게시 버튼 중 '실종' 클릭한 경우
-		else return showLostAnimalForm ? <MissingForm onDataChange={onMissingForm} container={container} scrollref={scrollref} /> : false;
+		else
+			return showLostAnimalForm ? (
+				<MissingForm
+					onDataChange={onMissingForm}
+					data={props.route.params}
+					routeName={props.route.name}
+					container={container}
+					scrollref={scrollref}
+				/>
+			) : (
+				false
+			);
 	};
 
 	//태그 검색중 리스트 외의 다른화면 가리기
@@ -823,11 +835,6 @@ const MissingForm = props => {
 
 //제보 컴포넌트
 const ReportForm = props => {
-	const navigation = useNavigation();
-	const route = useRoute();
-	const [addr, setAddr] = React.useState('');
-	const [detailAddr, setDetailAddr] = React.useState('');
-
 	const [types, setTypes] = React.useState([
 		{
 			pet_species: '개',
@@ -840,6 +847,7 @@ const ReportForm = props => {
 	const [district, setDistrict] = React.useState(['시군 선택']); //시군 API자료 컨테이너
 	const [isDistrictChanged, setIsDistrictChanged] = React.useState(false); // 시군 선택되었는지 여부
 	const [neighbor, setNeighbor] = React.useState(['동읍면']); //동읍면 API 자료 컨테이너
+	const [isSpeciesChanged, setIsSpeciesChanged] = React.useState(false);
 	const [data, setData] = React.useState({
 		report_witness_date: '',
 		report_witness_location: '',
@@ -850,11 +858,37 @@ const ReportForm = props => {
 			detail: '', //상세 주솧
 		},
 		report_animal_species: types[0].pet_species,
-		report_animal_species_detail: types[0].pet_species_detail[0],
 		type: types[0],
 	});
 
-	const [isSpeciesChanged, setIsSpeciesChanged] = React.useState(false);
+	React.useEffect(() => {
+		if (props.routeName == 'FeedEdit') {
+			const prevData = props.data;
+			const getDetailAddr = () => {
+				let addr = prevData.report_witness_location.split(' ');
+				let result = '';
+				addr.map((v, i) => {
+					if (i > 1) {
+						result = result + addr[i];
+					}
+				});
+				return result;
+			};
+			setData({
+				...data,
+				report_witness_date: '',
+				report_witness_location: prevData.report_witness_location,
+				report_location: {
+					// 필드명 조정 필요 (상우)
+					city: prevData.report_witness_location.split(' ')[0], //시,도
+					district: prevData.report_witness_location.split(' ')[1], //군,구
+					detail: getDetailAddr(), //상세 주솧
+				},
+				report_animal_species: prevData.report_animal_species,
+				// type: types[0],
+			});
+		}
+	}, []);
 
 	React.useEffect(() => {
 		props.onDataChange && props.onDataChange(data);
@@ -880,21 +914,6 @@ const ReportForm = props => {
 		);
 	}, []);
 
-	const onSelectCity = (item, index) => {
-		// console.log('item', item);
-		getAddressList(
-			{
-				city: item,
-			},
-			district => {
-				// console.log('district  ', district.msg);
-				setDistrict(district.msg);
-				setData({...data, report_location: {city: item, district: district.msg[0], neighbor: ''}});
-				item == data.report_location.city ? false : setIsCityChanged(!isCityChanged);
-			},
-		);
-	};
-
 	React.useEffect(() => {
 		getAddressList(
 			{
@@ -902,7 +921,6 @@ const ReportForm = props => {
 				district: data.report_location.district,
 			},
 			neighbor => {
-				console.log('neighbor  ', neighbor.msg);
 				if (neighbor.msg.length == 0) {
 					setNeighbor(['목록없음']);
 				} else {
@@ -925,7 +943,7 @@ const ReportForm = props => {
 			'동물 종 선택',
 			selected => {
 				const find = types.find(e => e.pet_species == selected);
-				setData({...data, report_animal_species: selected, report_animal_species_detail: find.pet_species_detail[0]});
+				setData({...data, report_animal_species: selected});
 				setIsSpeciesChanged(!isSpeciesChanged);
 			},
 			() => Modal.close(),
@@ -1073,7 +1091,7 @@ const ReportForm = props => {
 						<Text style={[txt.noto24, {color: APRI10}]}>제보 날짜</Text>
 					</View>
 					<View style={[temp_style.datePicker_assignShelterInformation, feedWrite.datePicker]}>
-						<DatePicker width={654} onDateChange={onDateChange} defaultDate={''} />
+						<DatePicker width={654} onDateChange={onDateChange} defaultDate={data.report_witness_date || ''} />
 					</View>
 					<View style={[feedWrite.report_location]}>
 						<View style={{flexDirection: 'row'}}>

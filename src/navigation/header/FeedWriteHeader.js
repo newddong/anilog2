@@ -6,7 +6,7 @@ import {WHITE, APRI10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 import {RED} from 'Root/config/color';
-import {createFeed, createMissing, createReport, editFeed, getFeedDetailById} from 'Root/api/feedapi';
+import {createFeed, createMissing, createReport, editFeed, editMissingReport, getFeedDetailById} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default FeedWriteHeader = ({route, navigation, options}) => {
@@ -169,10 +169,80 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			feedobject_id: route.params._id,
 			feed_content: route.params.isEdit ? route.params.feed_content : route.params.feed_content.replace(changeTextRegex, '&$1&$1$1$2%&%&$1&$1'),
 			hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
-			// feed
 		};
-		console.log('onEdit', param);
-		editFeed(param, complete, handleError);
+		if (param.feed_type == 'feed') {
+			editFeed(param, complete, handleError);
+		} else if (param.feed_type == 'report') {
+			const data = param;
+			if (data.report_location.city == '광역시, 도' || data.report_location.district == '구를 선택') {
+				Modal.alert('제보위치는 반드시 \n선택해주셔야합니다.');
+			} else if (data.report_witness_date == '') {
+				// console.log('ddddd');
+				Modal.close();
+				setTimeout(() => {
+					Modal.alert('제보 날짜를 선택해주세요.');
+				}, 200);
+			} else {
+				console.log('제보날짜 제보위치는 넘어감', data);
+				data.report_witness_location =
+					(data.report_location.city || '') + ' ' + (data.report_location.district || '') + ' ' + (data.report_location.detail || '');
+
+				delete data.report_location;
+				delete data.offset;
+				if (
+					(data.feed_content || data.feed_medias) &&
+					// data.media_uri.length > 0 &&
+					data.report_animal_species &&
+					data.report_witness_date &&
+					data.report_witness_location
+				) {
+					// console.log('NotNull 통과', data);
+					const ee = {
+						__v: 0,
+						_id: '6282570f85f5e373d6230d7b',
+						feedType: 'Report',
+						feed_comment_count: 0,
+						feed_content: 'ㅇㅋ',
+						feed_date: '2022-05-16T13:52:15.412Z',
+						feed_favorite_count: 0,
+						feed_is_delete: false,
+						feed_is_like: false,
+						feed_is_protect_diary: false,
+						feed_like_count: 0,
+						feed_medias: [
+							{
+								duration: 0,
+								is_video: false,
+								media_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1652709135163_E01788CA-FF51-4061-B9C9-4DBE3CAFEC77.jpg',
+								tags: [Array],
+							},
+						],
+						feed_thumbnail: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1652709135163_E01788CA-FF51-4061-B9C9-4DBE3CAFEC77.jpg',
+						feed_type: 'report',
+						feed_update_date: '2022-05-16T13:52:15.412Z',
+						feed_writer_id: {
+							__v: 20,
+							_id: '623b17ed400ac30b877dd7d9',
+						},
+						feedobject_id: '6282570f85f5e373d6230d7b',
+						hashtag_keyword: undefined,
+						height: 479.44,
+						isEdit: true,
+						media_uri: [],
+						missing_animal_date: '2022-05-16T13:52:15.412Z',
+						offset: 479.44,
+						report_animal_species: '개',
+						report_location: {city: '부산광역시', detail: 'Dzq', district: '서구'},
+						report_witness_date: '2022.05.16',
+						report_witness_location: '부산광역시 서구 Dzq',
+						routeName: undefined,
+					};
+					editMissingReport(param, complete, handleError);
+					Modal.close();
+				}
+			}
+			Modal.close();
+		}
 	};
 
 	const titleStyle = [{textAlign: 'center'}, txt.noto40b, route.params?.feedType != 'Feed' ? {color: RED} : {color: '#000'}];

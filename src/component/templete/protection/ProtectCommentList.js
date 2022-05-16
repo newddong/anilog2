@@ -75,7 +75,7 @@ export default ProtectCommentList = props => {
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			comments => {
-				const removeDelete = comments.msg.filter(e => e.comment_is_delete != true);
+				const removeDelete = comments.msg;
 				setComments(removeDelete);
 				setIsLoading(false);
 				if (props.route.params.edit != undefined) {
@@ -144,7 +144,7 @@ export default ProtectCommentList = props => {
 							},
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
-								setComments(comments.msg.filter(e => e.comment_is_delete != true));
+								setComments(comments.msg);
 								parentComment && addChildCommentFn.current();
 								setPrivateComment(false);
 								setEditMode(false);
@@ -172,7 +172,7 @@ export default ProtectCommentList = props => {
 							},
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
-								setComments(comments.msg.filter(e => e.comment_is_delete != true));
+								setComments(comments.msg);
 								parentComment && addChildCommentFn.current();
 								setPrivateComment(false);
 								setEditMode(false);

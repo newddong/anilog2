@@ -242,7 +242,7 @@ export default CommunityCommentList = props => {
 				commentobject_id: id,
 			},
 			result => {
-				console.log('result / delectComment / ProtectCommentList : ', result.msg.comment_is_delete);
+				// console.log('result / delectComment / ProtectCommentList : ', result.msg.comment_is_delete);
 				Modal.popLoading();
 				fetchData();
 			},

@@ -205,7 +205,6 @@ export default ArticleDetail = props => {
 								let dummyForBox = res[res.length - 1];
 								res.push(dummyForBox);
 								setComments(res);
-								// setComments(comments.msg.filter(e => e.comment_is_delete != true));
 								parentComment && addChildCommentFn.current();
 								setPrivateComment(false);
 								setEditMode(false); // console.log('comments', comments);
@@ -246,7 +245,6 @@ export default ArticleDetail = props => {
 							},
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
-								// setComments(comments.msg.filter(e => e.comment_is_delete != true));
 								let res = comments.msg;
 								let dummyForBox = res[res.length - 1];
 								res.push(dummyForBox);

@@ -47,7 +47,7 @@ export default FeedCommentList = props => {
 					login_userobject_id: userGlobalObject.userInfo._id,
 				},
 				comments => {
-					setComments(comments.msg.filter(e => e.comment_is_delete != true));
+					setComments(comments.msg);
 					navigation.setOptions({title: '댓글 ' + comments.msg.length});
 				},
 				err => {
@@ -93,7 +93,7 @@ export default FeedCommentList = props => {
 			},
 			comments => {
 				console.log('getCommentListByFeedId', comments.msg.length);
-				setComments(comments.msg.filter(e => e.comment_is_delete != true));
+				setComments(comments.msg);
 				setIsLoading(false);
 				if (props.route.params.edit != undefined) {
 					scrollToReply(props.route.params.edit.comment_index || 0);
@@ -170,7 +170,7 @@ export default FeedCommentList = props => {
 								comments => {
 									// console.log('comments', comments);
 									!parentComment && setComments([]); //댓글목록 초기화
-									setComments(comments.msg.filter(e => e.comment_is_delete != true));
+									setComments(comments.msg);
 									parentComment && addChildCommentFn.current();
 									setPrivateComment(false);
 									setEditMode(false);
@@ -210,7 +210,7 @@ export default FeedCommentList = props => {
 								},
 								comments => {
 									!parentComment && setComments([]); //댓글목록 초기화
-									setComments(comments.msg.filter(e => e.comment_is_delete != true));
+									setComments(comments.msg);
 									parentComment && addChildCommentFn.current();
 									setPrivateComment(false);
 									setEditMode(false);

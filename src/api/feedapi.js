@@ -28,9 +28,9 @@ import {apiController, apiFormController} from './apiController';
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
-export async function createFeed(params, callback, errcallback){
-	apiController('/feed/createFeed',arguments);
-};
+export async function createFeed(params, callback, errcallback) {
+	apiController('/feed/createFeed', arguments);
+}
 
 /**
  * 실종 게시물 작성
@@ -52,10 +52,9 @@ export async function createFeed(params, callback, errcallback){
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
-export async function createMissing(params, callback, errcallback){
-	apiController('/feed/createMissing',arguments);
-};
-
+export async function createMissing(params, callback, errcallback) {
+	apiController('/feed/createMissing', arguments);
+}
 
 /**
  * 제보 게시물 작성
@@ -76,10 +75,9 @@ export async function createMissing(params, callback, errcallback){
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
-export async function createReport(params, callback, errcallback){
-	apiController('/feed/createReport',arguments);
-};
-
+export async function createReport(params, callback, errcallback) {
+	apiController('/feed/createReport', arguments);
+}
 
 /**
  * 특정 유저가 작성한 피드 리스트를 불러온다.
@@ -90,11 +88,9 @@ export async function createReport(params, callback, errcallback){
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
-export async function getFeedListByUserId(params, callback, errcallback){
-	apiController('/feed/getFeedListByUserId',arguments);
-};
-
-
+export async function getFeedListByUserId(params, callback, errcallback) {
+	apiController('/feed/getFeedListByUserId', arguments);
+}
 
 /**
  * 실종/제보 가져오기
@@ -105,11 +101,10 @@ export async function getFeedListByUserId(params, callback, errcallback){
  * @param {number} params.request_number - 요청할 숫자
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
-*/
- export async function getMissingReportList(params, callback, errcallback){
-	apiController('/feed/getMissingReportList',arguments);
-};
-
+ */
+export async function getMissingReportList(params, callback, errcallback) {
+	apiController('/feed/getMissingReportList', arguments);
+}
 
 /**
  * 피드,실종,제보 게시글 상세정보 가져오기
@@ -119,11 +114,9 @@ export async function getFeedListByUserId(params, callback, errcallback){
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
- export async function getFeedDetailById(params, callback, errcallback){
-	apiController('/feed/getFeedDetailById',arguments);
-};
-
-
+export async function getFeedDetailById(params, callback, errcallback) {
+	apiController('/feed/getFeedDetailById', arguments);
+}
 
 /**
  * 추천 피드 리스트를 불러온다(홈)
@@ -131,9 +124,9 @@ export async function getFeedListByUserId(params, callback, errcallback){
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
- export async function getSuggestFeedList(params, callback, errcallback){
-	apiController('/feed/getSuggestFeedList',arguments);
-};
+export async function getSuggestFeedList(params, callback, errcallback) {
+	apiController('/feed/getSuggestFeedList', arguments);
+}
 
 /**
  * 선택한 피드를 수정한다.
@@ -148,10 +141,9 @@ export async function getFeedListByUserId(params, callback, errcallback){
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
-export async function editFeed(params, callback, errcallback){
-	apiController('/feed/editFeed',arguments);
+export async function editFeed(params, callback, errcallback) {
+	apiController('/feed/editFeed', arguments);
 }
-
 
 /**
  * 선택한 피드에 좋아요를 설정/해제한다.
@@ -162,8 +154,8 @@ export async function editFeed(params, callback, errcallback){
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
- export async function likeFeed(params, callback, errcallback){
-	apiController('/feed/likeFeed',arguments);
+export async function likeFeed(params, callback, errcallback) {
+	apiController('/feed/likeFeed', arguments);
 }
 
 /**
@@ -175,8 +167,8 @@ export async function editFeed(params, callback, errcallback){
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
- export async function favoriteFeed(params, callback, errcallback){
-	apiController('/feed/favoriteFeed',arguments);
+export async function favoriteFeed(params, callback, errcallback) {
+	apiController('/feed/favoriteFeed', arguments);
 }
 
 /**
@@ -186,10 +178,9 @@ export async function editFeed(params, callback, errcallback){
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
- export async function getFavoriteFeedListByUserId(params, callback, errcallback){
-	apiController('/feed/getFavoriteFeedListByUserId',arguments);
+export async function getFavoriteFeedListByUserId(params, callback, errcallback) {
+	apiController('/feed/getFavoriteFeedListByUserId', arguments);
 }
-
 
 /**
  * 특정 유저가 태그된 피드의 리스트를 불러온다.
@@ -198,6 +189,46 @@ export async function editFeed(params, callback, errcallback){
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
- export async function getUserTaggedFeedList(params, callback, errcallback){
-	apiController('/feed/getUserTaggedFeedList',arguments);
+export async function getUserTaggedFeedList(params, callback, errcallback) {
+	apiController('/feed/getUserTaggedFeedList', arguments);
+}
+/**
+ * 실종/제보 정보 수정
+ * @param {object} params
+ * @param {string} params.feedobject_id - 수정할 게시물 object_id
+ * @param {string} params.feed_content - 내용
+ * @param {Array.<string>} params.hashtag_keyword - 피드에 들어갈 해시태그 키워드의 목록
+ * @param {Array.<integer>} params.photos_to_delete - 삭제할 게시물 사진 인덱스 (인덱스 숫자만 기입)
+ * @param {Array.<string>} params.media_uri - 게시물 첨부파일 uri리스트
+ * @param {string} params.missing_animal_species - 실종 동물 종류
+ * @param {string} params.missing_animal_species_detail - 실종 동물 종류 상세
+ * @param {string} params.missing_animal_sex - 실종 동물 성별 ('male'|'female'|'unknown')
+ * @param {integer} params.missing_animal_age - 실종 동물 나이
+ * @param {string} params.missing_animal_lost_location - 실종 동물의 실종 지역 혹은 장소
+ * @param {string} params.missing_animal_contact - 실종 동물의 제보를 받을 사람의 연락처
+ * @param {string} params.missing_animal_features - 실종 동물의 특징
+ * @param {string} params.missing_animal_date - 동물이 실종된 추정일자
+ * @param {string} params.report_witness_date - 제보일자(해당 동물의 목격일)
+ * @param {string} params.report_witness_location - 제보장소(목격장소)
+ * @param {string} params.report_animal_species - 제보 동물의 종류(ex 강아지, 고양이, 토끼 등)
+ * @param {string} params.report_animal_species_detail - 제보 동물의 세부 종류(ex 리트리버, 불독, 진돗개 등)
+ * @param {string} params.report_animal_sex - 제보 동물의 성별 ('male'|'female'|'unknown')
+ * @param {string} params.report_animal_age - 제보 동물의 나이
+ * @param {string} params.report_animal_contact - 제보자  연락처
+ * @param {string} params.report_animal_features - 제보 동물의 특징
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function editMissingReport(params, callback, errcallback) {
+	apiController('/feed/editMissingReport', arguments);
+}
+/**
+ * 피드/실종/제보 삭제
+ * @param {object} params
+ * @param {string} params.feed_object_id - 삭제할 피드/실종/제보 게시물 object _id
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function deleteFeed(params, callback, errcallback) {
+	apiController('/feed/deleteFeed', arguments);
 }

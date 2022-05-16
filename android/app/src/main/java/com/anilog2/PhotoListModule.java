@@ -54,6 +54,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import static com.anilog2.PhotoListUtil.*;
+import com.anilog2.GetMediaTask;
 
 public class PhotoListModule extends ReactContextBaseJavaModule{
     public static final String NAME = "PhotoListModule";
@@ -130,7 +131,9 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
                 include,
                 fromID,
                 toID,
-                promise)
+                promise,
+                this
+                )
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -139,7 +142,7 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
         ReadableArray medias = options.hasKey("imageFiles")?options.getArray("imageFiles"):null;
 
         PhotoListUtil.Options ops = new PhotoListUtil.Options(options);
-//        boolean isSingleSelect = ops.selectionLimit == 1; //필요없을듯
+//        boolean isSingleSelect = ops.selectionLimit == 1;
 //        boolean isPhoto = ops.mediaType.equals(mediaTypePhoto);
 //        boolean isVideo = ops.mediaType.equals(mediaTypeVideo);
         List<Uri> uris = new ArrayList<Uri>();
@@ -176,168 +179,9 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
         }
     }
 
-    private static class GetMediaTask extends GuardedAsyncTask<Void, Void> {
-        private final Context mContext;
-        private final int mFirst;
-        private final @Nullable String mAfter;
-        private final @Nullable String mGroupName;
-        private final @Nullable ReadableArray mMimeTypes;
-        private final Promise mPromise;
-        private final String mAssetType;
-        private final long mFromTime;
-        private final long mToTime;
-        private final String mFromID; //ID값으로 검색하기 위한 맴버 추가
-        private final String mToID; //ID값으로 검색하기 위한 맴버 추가
-        private final Set<String> mInclude;
-
-        private GetMediaTask(
-                ReactContext context,
-                int first,
-                @Nullable String after,
-                @Nullable String groupName,
-                @Nullable ReadableArray mimeTypes,
-                String assetType,
-                long fromTime,
-                long toTime,
-                @Nullable ReadableArray include,
-                String fromID, //ID값으로 검색하기 위한 맴버 추가
-                String toID, //ID값으로 검색하기 위한 맴버 추가
-                Promise promise) {
-            super(context);
-            mContext = context;
-            mFirst = first;
-            mAfter = after;
-            mGroupName = groupName;
-            mMimeTypes = mimeTypes;
-            mPromise = promise;
-            mAssetType = assetType;
-            mFromTime = fromTime;
-            mToTime = toTime;
-            mInclude = createSetFromIncludeArray(include);
-            mFromID = fromID; //ID값으로 검색하기 위한 맴버 추가
-            mToID = toID; //ID값으로 검색하기 위한 맴버 추가
-        }
-
-        private static Set<String> createSetFromIncludeArray(@Nullable ReadableArray includeArray) {
-            Set<String> includeSet = new HashSet<>();
-
-            if (includeArray == null) {
-                return includeSet;
-            }
-
-            for (int i = 0; i < includeArray.size(); i++) {
-                @Nullable String includeItem = includeArray.getString(i);
-                if (includeItem != null) {
-                    includeSet.add(includeItem);
-                }
-            }
-
-            return includeSet;
-        }
-
-        @Override
-        protected void doInBackgroundGuarded(Void... params) {
-            StringBuilder selection = new StringBuilder("1");
-            List<String> selectionArgs = new ArrayList<>();
-            if (!TextUtils.isEmpty(mGroupName)) {
-                selection.append(" AND " + SELECTION_BUCKET);
-                selectionArgs.add(mGroupName);
-            }
-
-            if (mAssetType.equals(ASSET_TYPE_PHOTOS)) {
-                selection.append(" AND " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = "
-                        + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE);
-            } else if (mAssetType.equals(ASSET_TYPE_VIDEOS)) {
-                selection.append(" AND " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = "
-                        + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO);
-            } else if (mAssetType.equals(ASSET_TYPE_ALL)) {
-                selection.append(" AND " + MediaStore.Files.FileColumns.MEDIA_TYPE + " IN ("
-                        + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO + ","
-                        + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE + ")");
-            } else {
-                mPromise.reject(
-                        ERROR_UNABLE_TO_FILTER,
-                        "Invalid filter option: '" + mAssetType + "'. Expected one of '"
-                                + ASSET_TYPE_PHOTOS + "', '" + ASSET_TYPE_VIDEOS + "' or '" + ASSET_TYPE_ALL + "'."
-                );
-                return;
-            }
 
 
-            if (mMimeTypes != null && mMimeTypes.size() > 0) {
-                selection.append(" AND " + Images.Media.MIME_TYPE + " IN (");
-                for (int i = 0; i < mMimeTypes.size(); i++) {
-                    selection.append("?,");
-                    selectionArgs.add(mMimeTypes.getString(i));
-                }
-                selection.replace(selection.length() - 1, selection.length(), ")");
-            }
-
-            if (mFromTime > 0) {
-//                selection.append(" AND " + Images.Media.DATE_TAKEN + " >= ?");
-//                selection.append(" AND " + Images.Media.DATE_MODIFIED + " > ?");
-                selection.append(" AND " + Images.Media.DATE_ADDED + " > ?");
-                long fromTimeSec = Long.parseLong( mFromTime / 1000+"");
-                selectionArgs.add(fromTimeSec + "");
-//                selectionArgs.add(mFromTime + "");
-//                selectionArgs.add(163833122 + "");
-            }
-            if (mToTime > 0) {
-//                selection.append(" AND " + Images.Media.DATE_TAKEN + " <= ?");
-//                selection.append(" AND " + Images.Media.DATE_MODIFIED + " <= ?");
-                selection.append(" AND " + Images.Media.DATE_ADDED + " <= ?");
-                selectionArgs.add(mToTime + "");
-            }
-
-            if(mFromID !=null){
-                selection.append(" AND " + Images.Media._ID + " > ?");
-                selectionArgs.add(mFromID);
-            }
-            if(mToID !=null){
-                selection.append(" AND " + Images.Media._ID + " < ?");
-                selectionArgs.add(mToID + "");
-            }
-
-            WritableMap response = new WritableNativeMap();
-            ContentResolver resolver = mContext.getContentResolver();
-
-            try {
-                // set LIMIT to first + 1 so that we know how to populate page_info
-                String limit = "limit=" + (mFirst + 1);
-
-                if (!TextUtils.isEmpty(mAfter)) {
-                    limit = "limit=" + mAfter + "," + (mFirst + 1);
-                }
-
-                Cursor media = resolver.query(
-                        MediaStore.Files.getContentUri("external").buildUpon().encodedQuery(limit).build(),
-                        PROJECTION,
-                        selection.toString(),
-                        selectionArgs.toArray(new String[selectionArgs.size()]),
-                        Images.Media._ID+ " DESC, " + Images.Media.DATE_ADDED + " DESC, " + Images.Media.DATE_MODIFIED + " DESC"); //이미지 정렬 추가
-                if (media == null) {
-                    mPromise.reject(ERROR_UNABLE_TO_LOAD, "Could not get media");
-                } else {
-                    try {
-                        putEdges(resolver, media, response, mFirst, mInclude);
-                        putPageInfo(media, response, mFirst, !TextUtils.isEmpty(mAfter) ? Integer.parseInt(mAfter) : 0);
-                    } finally {
-                        media.close();
-                        mPromise.resolve(response);
-                    }
-                }
-            } catch (SecurityException e) {
-                mPromise.reject(
-                        ERROR_UNABLE_TO_LOAD_PERMISSION,
-                        "Could not get media: need READ_EXTERNAL_STORAGE permission",
-                        e);
-            }
-        }
-
-
-    }
-
-    private static void putPageInfo(Cursor media, WritableMap response, int limit, int offset) {
+    public static void putPageInfo(Cursor media, WritableMap response, int limit, int offset) {
         WritableMap pageInfo = new WritableNativeMap();
         pageInfo.putBoolean("has_next_page", limit < media.getCount());
         if (limit < media.getCount()) {
@@ -349,7 +193,7 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
         response.putMap("page_info", pageInfo);
     }
 
-    private static void putEdges(
+    public static void putEdges(
             ContentResolver resolver,
             Cursor media,
             WritableMap response,

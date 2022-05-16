@@ -59,9 +59,7 @@ export default FeedWrite = props => {
 	const [editText, setEditText] = React.useState(
 		props.route.params.feed_content ? props.route.params.feed_content.replace(/(&@|&#){2}(.*?)%&%.*?(&@|&#){2}/gm, '$2') : '',
 	);
-	React.useEffect(() => {
-		console.log('props ...', props.route.params);
-	}, [props]);
+
 	React.useEffect(() => {
 		if (props.route.name != 'FeedEdit') {
 			const param = props.route.params;
@@ -271,7 +269,8 @@ export default FeedWrite = props => {
 		if (Platform.OS === 'ios') {
 			Geolocation.requestAuthorization('always');
 		}
-		props.navigation.push('FeedSearchMap', {});
+		console.log('route name', props.route.name);
+		props.navigation.push('FeedSearchMap', {routeName: props.route.name});
 	};
 
 	//태그 추가
@@ -1076,7 +1075,7 @@ const ReportForm = props => {
 					<View style={[temp_style.datePicker_assignShelterInformation, feedWrite.datePicker]}>
 						<DatePicker width={654} onDateChange={onDateChange} defaultDate={''} />
 					</View>
-					<View style={[temp_style.input24, feedWrite.report_location]}>
+					<View style={[feedWrite.report_location]}>
 						<View style={{flexDirection: 'row'}}>
 							<Text style={[txt.noto24, {color: APRI10}]}>제보 장소</Text>
 							<View style={{marginLeft: 20 * DP}}>

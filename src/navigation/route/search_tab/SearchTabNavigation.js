@@ -127,7 +127,7 @@ export default SearchTabNavigation = props => {
 					},
 					result => {
 						// console.log('searchContext.searchInfo.searchInput', searchContext.searchInfo.searchInput);
-						// console.log('result / getSearchCommunityList / SearchTabNav : ', result.msg);
+						// console.log('result / getSearchCommunityList / SearchTabNav : ', result.msg.review);
 						let res = result.msg;
 						const noneDeletedReview = result.msg.review.filter(e => e.community_is_delete != true);
 						const noneDeletedArticle = result.msg.free.filter(e => e.community_is_delete != true);

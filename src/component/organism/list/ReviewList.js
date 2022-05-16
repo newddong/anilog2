@@ -38,7 +38,7 @@ export default ReviewList = props => {
 
 	return (
 		<View style={[style.container]}>
-			{props.recommend.length > 0 ? (
+			{props.recommend?.length > 0 ? (
 				<RecommendReview data={props.recommend} onPressRecommendReview={data => props.onPressRecommendReview(data)} />
 			) : (
 				<></>

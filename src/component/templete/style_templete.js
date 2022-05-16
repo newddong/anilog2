@@ -4471,7 +4471,7 @@ export const feedWrite = StyleSheet.create({
 		borderBottomColor: APRI10,
 	},
 	report_location: {
-		height: 230 * DP,
+		// height: 230 * DP,
 		width: 654 * DP,
 		marginVertical: 30 * DP,
 	},

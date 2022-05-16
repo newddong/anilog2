@@ -14,10 +14,6 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 	const param = route.params;
 	const [sent, setSent] = React.useState(false);
 
-	React.useEffect(() => {
-		console.log('sent change', sent);
-		console.log('param', param);
-	}, [sent]);
 	const complete = result => {
 		setSent(true);
 		Modal.close();
@@ -166,14 +162,6 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 	};
 
 	const onEdit = () => {
-		// if (route.params.feed_medias[0] == undefined) {
-		// 	Modal.popOneBtn('이미지 등록은 필수 사항입니다.', '확인', () => {
-		// 		Modal.close();
-		// 	});
-		// 	return;
-		// }
-		// console.log('route.params:', route.params);
-		// Modal.popNoBtn('게시물을 수정중입니다.');
 		Modal.popLoading(true);
 		let changeTextRegex = /([#@])([^#@\s]+)/gm;
 		let param = {
@@ -181,19 +169,111 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			feedobject_id: route.params._id,
 			feed_content: route.params.isEdit ? route.params.feed_content : route.params.feed_content.replace(changeTextRegex, '&$1&$1$1$2%&%&$1&$1'),
 			hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
+			// feed
+		};
+		console.log('onEdit', param);
+		const e = {
+			__v: 1,
+			_id: '6282088a4d98981bd3c08e33',
+			feed_avatar_id: {
+				__v: 20,
+				_id: '623b17ed400ac30b877dd7d9',
+			},
+			feed_comment_count: 0,
+			feed_content: 'ㅋㅇㅇㅋ',
+			feed_date: '2022-05-16T08:17:14.881Z',
+			feed_favorite_count: 0,
+			feed_is_delete: false,
+			feed_is_like: false,
+			feed_is_protect_diary: false,
+			feed_like_count: 0,
+			feed_medias: [
+				{
+					duration: 0,
+					is_video: false,
+					media_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1652689034763_9D1B37AE-4873-4FF9-944B-B78E045C4043.jpg',
+					tags: [Array],
+				},
+			],
+			feed_thumbnail: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1652689034763_9D1B37AE-4873-4FF9-944B-B78E045C4043.jpg',
+			feed_type: 'feed',
+			feed_update_date: '2022-05-16T08:17:39.387Z',
+			feed_writer_id: {
+				__v: 20,
+				_id: '623b17ed400ac30b877dd7d9',
+			},
+			feedobject_id: '6282088a4d98981bd3c08e33',
+			hashtag_keyword: undefined,
+			height: 479.44,
+			isEdit: true,
+			media_uri: [],
+			missing_animal_date: '2022-05-16T08:17:14.881Z',
+			offset: 958.88,
+			report_witness_date: '2022-05-16T08:17:14.881Z',
+			routeName: undefined,
+			type: 'FeedObject',
+		};
+
+		const gg = {
+			__v: 0,
+			_id: '62820a3b4d98981bd3c08f41',
+			feed_avatar_id: {
+				__v: 20,
+				_id: '623b17ed400ac30b877dd7d9',
+			},
+			feed_comment_count: 0,
+			feed_content: '고향밥',
+			feed_date: '2022-05-16T08:24:27.475Z',
+			feed_favorite_count: 0,
+			feed_is_delete: false,
+			feed_is_like: false,
+			feed_is_protect_diary: false,
+			feed_like_count: 0,
+			feed_location: {
+				_id: '62820a3b4d98981bd3c08f42',
+				detail: '까페',
+				normal_address: {
+					_id: '62820a3b4d98981bd3c08f44',
+					address_name: '제주특별자치도 서귀포시 대정읍 무릉리 310 까페',
+					city: '제주특별자치도',
+					district: '서귀포시',
+				},
+				region: {_id: '62820a3b4d98981bd3c08f45', latitude: '33.28278213', longitude: '126.243010844'},
+				road_address: {
+					_id: '62820a3b4d98981bd3c08f43',
+					address_name: '제주특별자치도 서귀포시 대정읍 대한로 632 까페',
+					city: '제주특별자치도',
+					district: '서귀포시',
+				},
+			},
+			feed_medias: [
+				{
+					duration: 0,
+					is_video: false,
+					media_uri:
+						'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1652689467337_rn_image_picker_lib_temp_f82ed968-a49c-4daa-93ef-f7f29bfb5a12.jpg',
+					tags: [Array],
+				},
+			],
+			feed_thumbnail:
+				'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1652689467337_rn_image_picker_lib_temp_f82ed968-a49c-4daa-93ef-f7f29bfb5a12.jpg',
+			feed_type: 'feed',
+			feed_update_date: '2022-05-16T08:24:27.475Z',
+			feed_writer_id: {
+				__v: 20,
+				_id: '623b17ed400ac30b877dd7d9',
+			},
+			feedobject_id: '62820a3b4d98981bd3c08f41',
+			hashtag_keyword: [],
+			height: 479.44,
+			media_uri: [],
+			missing_animal_date: '2022-05-16T08:24:27.475Z',
+			offset: 0,
+			report_witness_date: '2022-05-16T08:24:27.475Z',
+			routeName: undefined,
+			type: 'FeedObject',
 		};
 		editFeed(param, complete, handleError);
-		// console.log('수정 파라메터', param);
-		// switch (route.params?.feedType) {
-		// 	case 'Feed':
-		// 		break;
-		// 	case 'Missing':
-		// 		break;
-		// 	case 'Report':
-		// 		break;
-		// 	default:
-		// 		break;
-		// }
 	};
 
 	const titleStyle = [{textAlign: 'center'}, txt.noto40b, route.params?.feedType != 'Feed' ? {color: RED} : {color: '#000'}];
@@ -205,6 +285,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			petObject && navigation.setParams({...route.params, feed_avatar_id: petObject._id});
 		}, '이 계정 글쓰기');
 	};
+
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
 			<TouchableOpacity onPress={navigation.goBack}>

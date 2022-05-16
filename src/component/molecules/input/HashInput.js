@@ -242,7 +242,7 @@ export default function HashInput(props) {
 				{location == undefined ? (
 					<></>
 				) : (
-					<View style={{flexDirection: 'row', alignItems: 'center', maxWidth: 550 * DP}}>
+					<View style={{flexDirection: 'row', alignItems: 'center', maxWidth: 550 * DP, backgroundColor: 'yellow'}}>
 						<Location54_Filled />
 						<Text style={[txt.noto26b, {color: APRI10, marginLeft: 10 * DP}]} numberOfLines={2}>
 							{getLocation()}
@@ -251,6 +251,7 @@ export default function HashInput(props) {
 				)}
 				<TextInput
 					{...props} //props override
+					style={{marginTop: 10 * DP}}
 					textAlignVertical={'top'}
 					multiline={true}
 					value={value}
@@ -290,6 +291,6 @@ const style = StyleSheet.create({
 	mediaListContainer: {
 		width: 600 * DP,
 		// height: 190 * DP,
-		marginTop: 10 * DP,
+		marginTop: 20 * DP,
 	},
 });

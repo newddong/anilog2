@@ -20,15 +20,18 @@ import {
 } from 'Root/i18n/msg';
 import OneLineOnOff from 'Organism/form/OneLineOnOff';
 import OnOffSwitchForSetting from 'Root/component/molecules/select/OnOffSwitchForSetting';
+import {lo} from '../style_address';
 export default SettingAlarm = ({route}) => {
 	const [alarm, setAlarm] = React.useState();
 	const [loading, setLoading] = React.useState(true);
 	const [apiPost, setApiPost] = React.useState(false);
-	const [onCount, setOnCount] = React.useState(0);
+	const [onCount, setOnCount] = React.useState();
+	const [all, setAll] = React.useState();
 	React.useEffect(() => {
-		console.log('count', onCount);
-	}, [onCount]);
+		console.log('count', onCount, alarm, all);
+	}, [onCount, all]);
 	React.useEffect(() => {
+		console.log('getting notice!!');
 		getNotice(
 			{},
 			noticeObject => {
@@ -72,10 +75,22 @@ export default SettingAlarm = ({route}) => {
 				},
 			);
 		}
+		let tempInt = 0;
+		if (alarm) {
+			for (let i of Object.values(alarm)) {
+				console.log('iii', i);
+				if (i == true) {
+					tempInt++;
+				}
+			}
+			setOnCount(tempInt);
+		}
 	}, [alarm, loading]);
 
 	const onSwtichAll = () => {
+		console.log('onSwitchAll on');
 		//전체 알람이 true이면
+		let tempInt = 0;
 		if (alarm.notice_all) {
 			setAlarm(prevState => ({
 				...prevState,
@@ -88,7 +103,9 @@ export default SettingAlarm = ({route}) => {
 				notice_my_applicant: false,
 				notice_alarm: false,
 			}));
-			setOnCount(0);
+
+			// setOnCount(tempInt);
+			// setOnCount(0);
 			// setApiPost(!apiPost);1
 		} else {
 			setAlarm(prevState => ({
@@ -102,29 +119,69 @@ export default SettingAlarm = ({route}) => {
 				notice_my_applicant: true,
 				notice_alarm: true,
 			}));
-			setOnCount(8);
+
+			// setOnCount(tempInt);
+			// setOnCount(7);
 			// setApiPost(!apiPost);
 		}
 	};
+	const onSwtichAllOn = () => {
+		console.log('onSwitchAll on');
+		//전체 알람이 true이면
 
+		setAlarm(prevState => ({
+			...prevState,
+			notice_all: true,
+			notice_follow: true,
+			notice_memobox: true,
+			notice_pet_vaccination: true,
+			notice_my_post: true,
+			notice_tag: true,
+			notice_my_applicant: true,
+			notice_alarm: true,
+		}));
+
+		// setOnCount(7);
+	};
+	const onSwtichAllOff = () => {
+		console.log('onSwitchAll off');
+		//전체 알람이 true이면
+
+		setAlarm(prevState => ({
+			...prevState,
+			notice_all: false,
+			notice_follow: false,
+			notice_memobox: false,
+			notice_pet_vaccination: false,
+			notice_my_post: false,
+			notice_tag: false,
+			notice_my_applicant: false,
+			notice_alarm: false,
+		}));
+		// setOnCount(0);
+	};
 	const switchButton = keys => {
+		let tempInt = 0;
 		const tempObject = {...alarm};
 		tempObject[keys] = !tempObject[keys];
 		setAlarm(tempObject);
 		if (alarm[keys]) {
-			setOnCount(onCount - 1);
+			// if (tempObject[keys]) {
+			// setOnCount(tempInt);
+			// setOnCount(onCount - 1);
 			setAlarm(prevState => ({
 				...prevState,
 				notice_all: false,
 			}));
 		} else {
-			onCount == 7
-				? setAlarm(prevState => ({
-						...prevState,
-						notice_all: true,
-				  }))
-				: null;
-			setOnCount(onCount + 1);
+			if (onCount == 6) {
+				setAlarm(prevState => ({
+					...prevState,
+					notice_all: true,
+				}));
+			}
+			// setOnCount(tempInt);
+			// setOnCount(onCount + 1);
 		}
 	};
 
@@ -139,7 +196,7 @@ export default SettingAlarm = ({route}) => {
 							<View style={{width: 550 * DP}}>
 								<Text style={[txt.noto32b, {color: APRI10}]}>전체 알림</Text>
 							</View>
-							<OnOffSwitchForSetting default={alarm.notice_all} keys="notice_all" onSwtichOff={onSwtichAll} onSwtichOn={onSwtichAll} />
+							<OnOffSwitchForSetting default={alarm.notice_all} keys="notice_all" onSwtichOff={onSwtichAllOff} onSwtichOn={onSwtichAllOn} />
 						</View>
 					</View>
 					<View style={styles.serviceAlarmContainer}>

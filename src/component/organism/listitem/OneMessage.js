@@ -38,8 +38,10 @@ const OneMessage = props => {
 						Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
 					},
 					err => {
-						console.log('reportMessage err', err);
 						Modal.close();
+						if (err == '이미 신고되었습니다.') {
+							Modal.popOneBtn('이미 신고하셨습니다.', '확인', () => Modal.close());
+						}
 					},
 				);
 			},

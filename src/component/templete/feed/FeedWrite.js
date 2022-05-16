@@ -3,7 +3,15 @@ import {ScrollView, Text, TouchableOpacity, View, TouchableWithoutFeedback, Text
 import {APRI10, WHITE, GRAY20, GRAY10, GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Location54_GRAY30, Paw54_Border} from 'Root/component/atom/icon/index';
+import {
+	Arrow_Down_APRI10,
+	Camera54,
+	Location54_APRI10,
+	Location54_Filled,
+	Location54_GRAY30,
+	Paw54_Border,
+	Paw54_Gray,
+} from 'Root/component/atom/icon/index';
 import {Urgent_Write1, Urgent_Write2} from 'Atom/icon';
 import {btn_style, feedWrite, login_style, temp_style, buttonstyle} from 'Templete/style_templete';
 import AniButton from 'Molecules/button/AniButton';
@@ -26,6 +34,9 @@ import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import {FlatList} from 'react-native-gesture-handler';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Geolocation from '@react-native-community/geolocation';
+import LocationButton from 'Root/component/molecules/button/LocationButton';
+import axios from 'axios';
+import X2JS from 'x2js';
 
 export default FeedWrite = props => {
 	const [showPetAccountList, setShowPetAccountList] = React.useState(false); //PetAccount 계정
@@ -326,10 +337,19 @@ export default FeedWrite = props => {
 							)}
 						</View>
 					</TouchableWithoutFeedback>
-					<TouchableWithoutFeedback onPress={moveToFeedMediaTagEdit}>
+					<TouchableWithoutFeedback onPress={!showReportForm && !showLostAnimalForm ? moveToFeedMediaTagEdit : () => {}}>
 						<View style={[feedWrite.btnItemContainer]}>
-							<Paw54_Border />
-							<Text style={[txt.noto24, {color: APRI10, alignSelf: 'center', marginLeft: 10 * DP}]}>태그하기</Text>
+							{!showReportForm && !showLostAnimalForm ? (
+								<>
+									<Paw54_Border />
+									<Text style={[txt.noto24, {color: APRI10, alignSelf: 'center', marginLeft: 10 * DP}]}>태그하기</Text>
+								</>
+							) : (
+								<>
+									<Paw54_Gray />
+									<Text style={[txt.noto24, {color: GRAY30, alignSelf: 'center', marginLeft: 10 * DP}]}>태그하기</Text>
+								</>
+							)}
 						</View>
 					</TouchableWithoutFeedback>
 				</View>
@@ -594,6 +614,69 @@ const MissingForm = props => {
 	const inputBalloonRef = React.useRef();
 	const currentPosition = React.useRef(0);
 
+	//위도 경도 받아오기
+	const onPressCurrentLocation = () => {
+		Modal.popLoading(true);
+		Geolocation.getCurrentPosition(
+			position => {
+				callInitialAddress(position.coords.longitude, position.coords.latitude);
+			},
+			error => {
+				console.log('error get GEOLOCation', error.code, error.message);
+				Modal.close();
+				setTimeout(() => {
+					Modal.alert('주소 받아오기에 실패하였습니다. \n 잠시후 다시 이용부탁드립니다.');
+				}, 200);
+			},
+			{enableHighAccuracy: false, timeout: 6000, maximumAge: 10000},
+		);
+	};
+
+	//위도 경도를 토대로 주소 받아오기
+	const callInitialAddress = async (long, lati) => {
+		try {
+			let res = await axios
+				.get(`https://dapi.kakao.com/v2/local/geo/coord2address.json?input_coord=WGS84&x=${long}&y=${lati}`, {
+					headers: {
+						Authorization: 'KakaoAK 27b7c22d57bc044bc63e280b29db100e', // REST API 키
+					},
+				})
+				.then(async res => {
+					console.log('res', res.data.documents[0]);
+					let location = res.data.documents[0];
+					const addr = location.address;
+
+					if (location.road_address == null || location.road_address == undefined) {
+						console.log('도로명이 Null  : ', location.address);
+						let lost_location_container = data.missing_animal_lost_location;
+						lost_location_container.city = addr.region_1depth_name;
+						lost_location_container.district = addr.region_2depth_name;
+						lost_location_container.detail = addr.region_3depth_name + ' ' + addr.main_address_no + '-' + addr.sub_address_no;
+						setData({...data, missing_animal_lost_location: lost_location_container});
+						// onChangeMissingLocationDetail(lost_location_container.detail);
+						//카카오 API에서 도로명주소가 간혹 Null값으로 오는 현상 발견
+						Modal.close();
+					} else {
+						console.log('도로명 주소를 받아온경우  : ', location);
+						let lost_location_container = data.missing_animal_lost_location;
+						lost_location_container.city = addr.region_1depth_name;
+						lost_location_container.district = addr.region_2depth_name;
+						lost_location_container.detail = addr.region_3depth_name + ' ' + addr.main_address_no + '-' + addr.sub_address_no;
+						setData({...data, missing_animal_lost_location: lost_location_container});
+						Modal.close();
+					}
+					Modal.close();
+				});
+		} catch (error) {
+			console.log('error callInitialAddress', error.code, error.message);
+			Modal.close();
+			setTimeout(() => {
+				Modal.alert('주소 받아오기에 실패하였습니다. \n 잠시후 다시 이용부탁드립니다.');
+			}, 200);
+			Modal.close();
+		}
+	};
+
 	React.useEffect(() => {
 		props.scrollref.current.scrollToOffset({offset: currentPosition.current});
 		// currentPosition.current = 0;
@@ -674,14 +757,25 @@ const MissingForm = props => {
 					ref={inputAgeRef}
 				/>
 			</View>
-			<View style={[temp_style.input24, feedWrite.missing_location_input]}>
-				<Text style={[txt.noto24, {color: APRI10}]}>실종된 위치</Text>
-				<View style={[{flexDirection: 'row', justifyContent: 'space-between'}]}>
+			<View style={[feedWrite.missing_location_input]}>
+				<View style={{flexDirection: 'row'}}>
+					<Text style={[txt.noto24, {color: APRI10}]}>실종된 위치</Text>
+					<View style={{marginLeft: 20 * DP}}>
+						<AniButton
+							onPress={onPressCurrentLocation}
+							btnStyle={'border'}
+							btnTitle={'현위치'}
+							btnLayout={{height: 50 * DP, borderRadius: 30 * DP, width: 100 * DP}}
+						/>
+					</View>
+				</View>
+				<View style={[{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 * DP}]}>
 					<SelectInput onPressInput={onPressCity} width={292} defaultText={'광역시, 도'} value={data.missing_animal_lost_location.city} />
 					<SelectInput onPressInput={onPressDistrict} width={292} value={data.missing_animal_lost_location.district} defaultText={'구를 선택'} />
 				</View>
 				<TextInput
 					onChangeText={onChangeMissingLocationDetail}
+					value={data.missing_animal_lost_location.detail}
 					style={[
 						txt.noto28,
 						feedWrite.missing_location_detail_input,
@@ -767,17 +861,6 @@ const ReportForm = props => {
 		props.onDataChange && props.onDataChange(data);
 	}, [data]);
 
-	// React.useEffect(() => {
-	// 	if (route.params.addr) {
-	// 		setAddr(route.params.addr.jibunAddr);
-	// 		setDetailAddr(route.params.addr.detailAddr);
-	// 	}
-	// }, [route.params?.addr]);
-
-	// React.useEffect(() => {
-	// 	setData({...data, report_witness_location: addr + ' ' + detailAddr});
-	// }, [addr, detailAddr]);
-
 	React.useEffect(() => {
 		getPettypes(
 			{},
@@ -814,8 +897,6 @@ const ReportForm = props => {
 	};
 
 	React.useEffect(() => {
-		console.log('district update -------');
-		console.log('data.report_location.district -------', data.report_location.district);
 		getAddressList(
 			{
 				city: data.report_location.city,
@@ -835,52 +916,8 @@ const ReportForm = props => {
 		);
 	}, [data.report_location.district]);
 
-	const onSelectDistrict = (item, index) => {
-		getAddressList(
-			{
-				city: data.report_location.city,
-				district: item,
-			},
-			neighbor => {
-				console.log('neighbor  ', neighbor.msg);
-				if (neighbor.msg.length == 0) {
-					setNeighbor(['목록없음']);
-				} else {
-					setNeighbor(neighbor.msg);
-				}
-				setData({...data, report_location: {city: data.report_location.city, district: item, neighbor: neighbor.msg[0]}});
-				item == data.report_location.district ? false : setIsDistrictChanged(!isDistrictChanged);
-			},
-		);
-	};
-
-	const onSelectNeighbor = (item, index) => {
-		setData({
-			...data,
-			report_location: {city: data.report_location.city, district: data.report_location.district, neighbor: item},
-		});
-	};
-
-	const onClearDetailAddr = () => {
-		// setDetailAddr('');
-		let copied_location = data.report_location;
-		copied_location.detailAddr = '';
-		setData({...data, report_location: copied_location});
-	};
-
-	const onChangeDetailAddr = addr => {
-		let copied_location = data.report_location;
-		copied_location.detailAddr = addr;
-		console.log('addr:', addr);
-		console.log('copied_location:', copied_location);
-		setData({...data, report_location: copied_location});
-		// setDetailAddr(addr);
-	};
 	const onDateChange = date => {
 		setData({...data, report_witness_date: date});
-	};
-	const inputFeature = feature => {
-		setData({...data, report_animal_features: feature});
 	};
 
 	const onSelectSpecies = () => {
@@ -894,19 +931,6 @@ const ReportForm = props => {
 			},
 			() => Modal.close(),
 		);
-	};
-
-	const onSelectSpeciesDetail = () => {
-		const find = types.find(e => e.pet_species == data.report_animal_species);
-		Modal.popSelectScrollBoxModal(
-			[find.pet_species_detail],
-			'품종 선택',
-			selected => {
-				setData({...data, report_animal_species_detail: selected});
-			},
-			() => Modal.close(),
-		);
-		// setData({...data, missing_animal_species_detail: data.type.pet_species_detail[i]});
 	};
 
 	const onPressCity = () => {
@@ -968,6 +992,67 @@ const ReportForm = props => {
 		);
 	};
 
+	//위도 경도 받아오기
+	const onPressCurrentLocation = () => {
+		Modal.popLoading(true);
+		Geolocation.getCurrentPosition(
+			position => {
+				callInitialAddress(position.coords.longitude, position.coords.latitude);
+			},
+			error => {
+				console.log('error get GEOLOCation', error.code, error.message);
+				Modal.close();
+				setTimeout(() => {
+					Modal.alert('주소 받아오기에 실패하였습니다. \n 잠시후 다시 이용부탁드립니다.');
+				}, 200);
+			},
+			{enableHighAccuracy: false, timeout: 6000, maximumAge: 10000},
+		);
+	};
+
+	//위도 경도를 토대로 주소 받아오기
+	const callInitialAddress = async (long, lati) => {
+		try {
+			let res = await axios
+				.get(`https://dapi.kakao.com/v2/local/geo/coord2address.json?input_coord=WGS84&x=${long}&y=${lati}`, {
+					headers: {
+						Authorization: 'KakaoAK 27b7c22d57bc044bc63e280b29db100e', // REST API 키
+					},
+				})
+				.then(async res => {
+					console.log('res', res.data.documents[0]);
+					let location = res.data.documents[0];
+					const addr = location.address;
+					if (location.road_address == null || location.road_address == undefined) {
+						console.log('도로명이 Null  : ', location.address);
+						let report_location = data.report_location;
+						report_location.city = addr.region_1depth_name;
+						report_location.district = addr.region_2depth_name;
+						report_location.detail = addr.region_3depth_name + ' ' + addr.main_address_no + '-' + addr.sub_address_no;
+						setData({...data, report_location: report_location});
+
+						Modal.close();
+					} else {
+						console.log('도로명 주소를 받아온경우  : ', location);
+						let report_location = data.report_location;
+						report_location.city = addr.region_1depth_name;
+						report_location.district = addr.region_2depth_name;
+						report_location.detail = addr.region_3depth_name + ' ' + addr.main_address_no + '-' + addr.sub_address_no;
+						setData({...data, report_location: report_location});
+						Modal.close();
+					}
+					Modal.close();
+				});
+		} catch (error) {
+			console.log('error callInitialAddress', error.code, error.message);
+			Modal.close();
+			setTimeout(() => {
+				Modal.alert('주소 받아오기에 실패하였습니다. \n 잠시후 다시 이용부탁드립니다.');
+			}, 200);
+			Modal.close();
+		}
+	};
+
 	return (
 		<View style={[feedWrite.reportForm_container]} showsVerticalScrollIndicator={false}>
 			<View style={[feedWrite.reportForm]}>
@@ -992,13 +1077,25 @@ const ReportForm = props => {
 						<DatePicker width={654} onDateChange={onDateChange} defaultDate={''} />
 					</View>
 					<View style={[temp_style.input24, feedWrite.report_location]}>
-						<Text style={[txt.noto24, {color: APRI10}]}>제보 장소</Text>
+						<View style={{flexDirection: 'row'}}>
+							<Text style={[txt.noto24, {color: APRI10}]}>제보 장소</Text>
+							<View style={{marginLeft: 20 * DP}}>
+								<AniButton
+									onPress={onPressCurrentLocation}
+									btnStyle={'border'}
+									btnTitle={'현위치'}
+									btnLayout={{height: 50 * DP, borderRadius: 30 * DP, width: 100 * DP}}
+								/>
+							</View>
+						</View>
+
 						<View style={[{flexDirection: 'row', justifyContent: 'space-between'}]}>
 							<SelectInput onPressInput={onPressCity} width={292} defaultText={'광역시, 도'} value={data.report_location.city} />
 							<SelectInput onPressInput={onPressDistrict} width={292} defaultText={'시군 선택'} value={data.report_location.district} />
 						</View>
 						<TextInput
 							onChangeText={onChangeMissingLocationDetail}
+							value={data.report_location.detail}
 							style={[feedWrite.missing_location_detail_input, {borderBottomColor: data.report_location.detail == '' ? GRAY30 : APRI10}]}
 							placeholder={'제보하려는 장소의 위치를 설명해주세요.'}
 							placeholderTextColor={GRAY10}

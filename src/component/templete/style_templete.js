@@ -4421,7 +4421,7 @@ export const feedWrite = StyleSheet.create({
 		marginBottom: 4 * DP,
 	},
 	missing_location_input: {
-		height: 230 * DP,
+		// height: 230 * DP,
 		width: 654 * DP,
 		marginBottom: 30 * DP,
 	},

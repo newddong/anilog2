@@ -5,6 +5,7 @@ package com.anilog2;
 //import static com.imagepicker.ImagePickerModule.REQUEST_LAUNCH_VIDEO_CAPTURE;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ContentResolver;
@@ -26,10 +27,11 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
+import android.media.ExifInterface;
 
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
-import androidx.exifinterface.media.ExifInterface;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
@@ -62,7 +64,41 @@ public class PhotoListUtil {
         public static String mediaTypeVideo = "video";
 
         public static String cameraPermissionDescription = "This library does not require Manifest.permission.CAMERA, if you add this permission in manifest then you have to obtain the same.";
+        public static final List<String> LOCAL_URI_PREFIXES = Arrays.asList(
+                ContentResolver.SCHEME_FILE,
+                ContentResolver.SCHEME_CONTENT,
+                ContentResolver.SCHEME_ANDROID_RESOURCE
+        );
 
+        @SuppressLint("InlinedApi") private static final String[] EXIF_ATTRIBUTES = new String[] {
+                ExifInterface.TAG_APERTURE,
+                ExifInterface.TAG_DATETIME,
+                ExifInterface.TAG_DATETIME_DIGITIZED,
+                ExifInterface.TAG_EXPOSURE_TIME,
+                ExifInterface.TAG_FLASH,
+                ExifInterface.TAG_FOCAL_LENGTH,
+                ExifInterface.TAG_GPS_ALTITUDE,
+                ExifInterface.TAG_GPS_ALTITUDE_REF,
+                ExifInterface.TAG_GPS_DATESTAMP,
+                ExifInterface.TAG_GPS_LATITUDE,
+                ExifInterface.TAG_GPS_LATITUDE_REF,
+                ExifInterface.TAG_GPS_LONGITUDE,
+                ExifInterface.TAG_GPS_LONGITUDE_REF,
+                ExifInterface.TAG_GPS_PROCESSING_METHOD,
+                ExifInterface.TAG_GPS_TIMESTAMP,
+                ExifInterface.TAG_IMAGE_LENGTH,
+                ExifInterface.TAG_IMAGE_WIDTH,
+                ExifInterface.TAG_ISO,
+                ExifInterface.TAG_MAKE,
+                ExifInterface.TAG_MODEL,
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.TAG_SUBSEC_TIME,
+                ExifInterface.TAG_SUBSEC_TIME_DIG,
+                ExifInterface.TAG_SUBSEC_TIME_ORIG,
+                ExifInterface.TAG_WHITE_BALANCE
+        };
+
+        //createTempFile
         public static File createFile(Context reactContext, String fileType) {
             try {
                 String filename = fileNamePrefix  + UUID.randomUUID() + "." + fileType;
@@ -78,6 +114,15 @@ public class PhotoListUtil {
                 e.printStackTrace();
                 return null;
             }
+        }
+
+        public static boolean isLocalUri(String uri){
+            for (String localPrefix : LOCAL_URI_PREFIXES){
+                if(uri.startsWith(localPrefix)){
+                    return true;
+                }
+            }
+            return false;
         }
 
         public static Uri createUri(File file, Context reactContext) {
@@ -118,6 +163,28 @@ public class PhotoListUtil {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        public static @Nullable File getFileFromUrl(Context context, Uri uri){
+            if(uri.getScheme().equals("file")){
+                return new File(uri.getPath());
+            }else if(uri.getScheme().equals("content")){
+                Cursor cursor = context.getContentResolver()
+                        .query(uri, new String[]{ MediaStore.MediaColumns.DATA},null,null,null);
+                if(cursor != null){
+                    try{
+                        if(cursor.moveToFirst()){
+                            String path = cursor.getString(0);
+                            if(!TextUtils.isEmpty(path)){
+                                return new File(path);
+                            }
+                        }
+                    }finally {
+                        cursor.close();
+                    }
+                }
+            }
+            return null;
         }
 
         // Make a copy of shared storage files inside app specific storage so that users can access it later.
@@ -223,11 +290,12 @@ public class PhotoListUtil {
             }
         }
 
+        //Exif정보
         static String getOrientation(Uri uri, Context context) throws IOException {
             ExifInterface exifInterface = new ExifInterface(context.getContentResolver().openInputStream(uri));
             return exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION);
         }
-
+        //Exif정보 설정
         // ExifInterface.saveAttributes is costly operation so don't set exif for unnecessary orientations
         static void setOrientation(File file, String orientation, Context context) throws IOException {
             if (orientation.equals(String.valueOf(ExifInterface.ORIENTATION_NORMAL)) || orientation.equals(String.valueOf(ExifInterface.ORIENTATION_UNDEFINED))) {

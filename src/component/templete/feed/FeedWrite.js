@@ -34,10 +34,7 @@ import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import {FlatList} from 'react-native-gesture-handler';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Geolocation from '@react-native-community/geolocation';
-import LocationButton from 'Root/component/molecules/button/LocationButton';
 import axios from 'axios';
-import X2JS from 'x2js';
-import moment from 'moment';
 
 export default FeedWrite = props => {
 	const [showPetAccountList, setShowPetAccountList] = React.useState(false); //PetAccount 계정
@@ -229,7 +226,6 @@ export default FeedWrite = props => {
 					},
 					responseObject => {
 						console.log('선택됨', responseObject);
-
 						if (!responseObject.didCancel) {
 							let tempContainer = [...selectedImg];
 							responseObject.assets.map(v => tempContainer.push(v.uri));
@@ -251,10 +247,6 @@ export default FeedWrite = props => {
 		temp.push(findIndex);
 		setPhotoToDelete(temp);
 	};
-
-	React.useEffect(() => {
-		console.log('photoToDelete', photoToDelete);
-	}, [photoToDelete]);
 
 	const onMissingForm = missing => {
 		props.navigation.setParams({...props.route.params, ...missing});
@@ -472,7 +464,6 @@ export default FeedWrite = props => {
 //실종 컴포넌트
 const MissingForm = props => {
 	const route = useRoute();
-	// console.log('실종 컴포넌트 데이터', route);
 	const [types, setTypes] = React.useState([
 		{
 			pet_species: '동물종류',
@@ -496,89 +487,44 @@ const MissingForm = props => {
 		);
 	}, []);
 
-	const initData = () => {
-		if (route.name == 'FeedEdit') {
-			// console.log('route.params', route.params);
-			console.log('data.missing_animal_age', route.params.missing_animal_age);
-			const rt = {
-				__v: 0,
-				_id: '628261f085f5e373d6230e98',
-				feedType: 'Missing',
-				feed_comment_count: 0,
-				feed_content: '',
-				feed_date: '2022-05-16T14:38:40.733Z',
-				feed_favorite_count: 0,
-				feed_is_delete: false,
-				feed_is_like: false,
-				feed_is_protect_diary: false,
-				feed_like_count: 0,
-				feed_medias: [
-					{
-						_id: '628261f085f5e373d6230e99',
-						media_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1652711920217_E30E821D-592D-4555-900A-B1AC4CDA5D91.jpg',
-						tags: [Array],
-					},
-				],
-				feed_thumbnail: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1652711920217_E30E821D-592D-4555-900A-B1AC4CDA5D91.jpg',
-				feed_type: 'missing',
-				feed_update_date: '2022-05-16T14:38:40.733Z',
-				feed_writer_id: {
-					__v: 20,
-					_id: '623b17ed400ac30b877dd7d9',
-				},
-				hashtag_keyword: [],
-				height: 479.44,
-				media_uri: [],
-				missing_animal_age: 11,
-				missing_animal_contact: '0109644212',
-				missing_animal_date: '2022-05-09T00:00:00.000Z',
-				missing_animal_features: 'ㅇㅇㅋ',
-				missing_animal_lost_location: '{"city":"광주광역시","district":"광산구","detail":"23"}',
-				missing_animal_sex: 'female',
-				missing_animal_species: '고양이',
-				missing_animal_species_detail: '믹스묘',
-				offset: 1917.76,
-				photoToDelete: [],
-				report_witness_date: '2022-05-16T14:38:40.733Z',
-				routeName: undefined,
-				type: 'FeedObject',
-			};
-
-			return {
+	React.useEffect(() => {
+		if (props.routeName == 'FeedEdit') {
+			const stringToJson = JSON.parse(route.params.missing_animal_lost_location);
+			console.log('stringToJson', stringToJson);
+			setData({
+				...data,
 				missing_animal_species: route.params.missing_animal_species,
 				missing_animal_species_detail: route.params.missing_animal_species_detail,
 				missing_animal_sex: route.params.missing_animal_sex,
 				missing_animal_age: route.params.missing_animal_age,
 				missing_animal_lost_location: {
-					city: route.params.missing_animal_lost_location.city,
-					district: '구를 선택',
-					detail: '',
+					city: stringToJson.city,
+					district: stringToJson.district,
+					detail: stringToJson.detail,
 				},
 				missing_animal_features: route.params.missing_animal_features,
 				missing_animal_date: route.params.missing_animal_date,
 				missing_animal_contact: route.params.missing_animal_contact,
 				type: types[0],
-			};
-		} else {
-			return {
-				missing_animal_species: types[0].pet_species,
-				missing_animal_species_detail: types[0].pet_species_detail[0],
-				missing_animal_sex: 'male',
-				missing_animal_age: '',
-				missing_animal_lost_location: {
-					city: city[0],
-					district: '구를 선택',
-					detail: '',
-				},
-				missing_animal_features: '',
-				missing_animal_date: '',
-				missing_animal_contact: '',
-				type: types[0],
-			};
+			});
 		}
-	};
+	}, []);
 
-	const [data, setData] = React.useState(initData());
+	const [data, setData] = React.useState({
+		missing_animal_species: types[0].pet_species,
+		missing_animal_species_detail: types[0].pet_species_detail[0],
+		missing_animal_sex: 'male',
+		missing_animal_age: '',
+		missing_animal_lost_location: {
+			city: city[0],
+			district: '구를 선택',
+			detail: '',
+		},
+		missing_animal_features: '',
+		missing_animal_date: '',
+		missing_animal_contact: '',
+		type: types[0],
+	});
 
 	React.useEffect(() => {
 		props.onDataChange && props.onDataChange(data);
@@ -613,7 +559,6 @@ const MissingForm = props => {
 			default:
 				break;
 		}
-		console.log('result gender', result);
 		return result;
 	};
 
@@ -855,7 +800,8 @@ const MissingForm = props => {
 					onChange={inputAge}
 					maxlength={2}
 					keyboardType={'number-pad'}
-					value={data.missing_animal_age}
+					value={data.missing_animal_age.toString()}
+					// defaultValue={data.missing_animal_age || ''}
 					onPressIn={onPressIn(inputAgeRef)}
 					ref={inputAgeRef}
 				/>
@@ -918,6 +864,7 @@ const MissingForm = props => {
 					maxLength={200}
 					onPressIn={onPressIn(inputBalloonRef)}
 					ref={inputBalloonRef}
+					defaultValue={data.missing_animal_features}
 				/>
 			</View>
 			<View style={{height: keyboardArea, width: '100%', backgroundColor: '#FFF'}}></View>

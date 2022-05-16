@@ -28,6 +28,10 @@ const InputBalloon = React.forwardRef((props, ref) => {
 	const inputRef = React.useRef();
 	const [text, setText] = React.useState('');
 
+	React.useEffect(() => {
+		setText(props.defaultValue);
+	}, [props.defaultValue]);
+
 	const blur = () => {
 		inputRef.current.blur();
 	};
@@ -78,6 +82,7 @@ const InputBalloon = React.forwardRef((props, ref) => {
 					maxLength={props.maxLength}
 					placeholderTextColor={GRAY10}
 					onPressIn={props.onPressIn}
+					value={props.defaultValue}
 				/>
 				<Text style={[txt.roboto24, {color: GRAY10, alignSelf: 'flex-end'}]}> {text.length} /200</Text>
 			</View>
@@ -90,12 +95,15 @@ InputBalloon.defaultProps = {
 	title: '',
 	maxLength: 300,
 	onChange: e => console.log(e),
+	defaultValue: '',
 };
 const InputBalloonProps = {
 	/** @type {string} 인풋 타이틀 */
 	title: string,
 	/** @type {string} 텍스트 초기 상태 */
 	placeholder: string,
+	/** @type {string} 텍스트 디폴트 */
+	defaultValue: string,
 	/** @type {()=>void)} 텍스트 변경 콜백 */
 	onChange: func,
 	/** @type {number} 최대 길이 */

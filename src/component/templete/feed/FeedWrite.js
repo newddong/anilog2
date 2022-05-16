@@ -50,6 +50,8 @@ export default FeedWrite = props => {
 		props.route.params.feed_content ? props.route.params.feed_content.replace(/(&@|&#){2}(.*?)%&%.*?(&@|&#){2}/gm, '$2') : '',
 	); //피드 TextInput Value
 	const [selectedImg, setSelectedImg] = React.useState([]); //사진 uri리스트
+	const [previousPhotoList, setPreviousPhotoList] = React.useState([]);
+	const [photoToDelete, setPhotoToDelete] = React.useState([]); // 삭제된 사진 인덱스 리스트
 	const [isSearchTag, setSearchTag] = React.useState(false);
 	const [publicSetting, setPublicSetting] = React.useState('전체 공개'); //공개 여부
 
@@ -93,6 +95,7 @@ export default FeedWrite = props => {
 					let media = props.route.params.feed_medias.find(v => v.media_uri == img);
 					return {media_uri: img, is_video: false, duration: 0, tags: media ? media.tags : []};
 				}),
+				photoToDelete: photoToDelete,
 			});
 			// console.log('첨부 이미지 변화', selectedImg);
 		}
@@ -108,6 +111,7 @@ export default FeedWrite = props => {
 				onPressReportWrite();
 			}
 			setSelectedImg(props.route.params.feed_medias.map(v => v.media_uri));
+			setPreviousPhotoList(props.route.params.feed_medias.map(v => v.media_uri));
 			let regEx = new RegExp(`&#&#(.*?)%&%&`, `gm`);
 			let hashes = [];
 			let match = [];
@@ -241,7 +245,16 @@ export default FeedWrite = props => {
 	//사진 삭제
 	const deletePhoto = index => {
 		setSelectedImg(selectedImg.filter((v, i) => i != index));
+		const findIndex = previousPhotoList.findIndex(e => e == selectedImg[index]);
+		console.log('findIndex', findIndex);
+		let temp = [...photoToDelete];
+		temp.push(findIndex);
+		setPhotoToDelete(temp);
 	};
+
+	React.useEffect(() => {
+		console.log('photoToDelete', photoToDelete);
+	}, [photoToDelete]);
 
 	const onMissingForm = missing => {
 		props.navigation.setParams({...props.route.params, ...missing});
@@ -467,9 +480,9 @@ const MissingForm = props => {
 		},
 	]);
 	const [isSpeciesChanged, setIsSpeciesChanged] = React.useState(false);
-
 	const [city, setCity] = React.useState(['광역시, 도']);
 	const [district, setDistrict] = React.useState(['구를 선택']);
+
 	React.useEffect(() => {
 		getAddressList(
 			{},
@@ -485,7 +498,67 @@ const MissingForm = props => {
 
 	const initData = () => {
 		if (route.name == 'FeedEdit') {
-			return route.params;
+			// console.log('route.params', route.params);
+			console.log('data.missing_animal_age', route.params.missing_animal_age);
+			const rt = {
+				__v: 0,
+				_id: '628261f085f5e373d6230e98',
+				feedType: 'Missing',
+				feed_comment_count: 0,
+				feed_content: '',
+				feed_date: '2022-05-16T14:38:40.733Z',
+				feed_favorite_count: 0,
+				feed_is_delete: false,
+				feed_is_like: false,
+				feed_is_protect_diary: false,
+				feed_like_count: 0,
+				feed_medias: [
+					{
+						_id: '628261f085f5e373d6230e99',
+						media_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1652711920217_E30E821D-592D-4555-900A-B1AC4CDA5D91.jpg',
+						tags: [Array],
+					},
+				],
+				feed_thumbnail: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1652711920217_E30E821D-592D-4555-900A-B1AC4CDA5D91.jpg',
+				feed_type: 'missing',
+				feed_update_date: '2022-05-16T14:38:40.733Z',
+				feed_writer_id: {
+					__v: 20,
+					_id: '623b17ed400ac30b877dd7d9',
+				},
+				hashtag_keyword: [],
+				height: 479.44,
+				media_uri: [],
+				missing_animal_age: 11,
+				missing_animal_contact: '0109644212',
+				missing_animal_date: '2022-05-09T00:00:00.000Z',
+				missing_animal_features: 'ㅇㅇㅋ',
+				missing_animal_lost_location: '{"city":"광주광역시","district":"광산구","detail":"23"}',
+				missing_animal_sex: 'female',
+				missing_animal_species: '고양이',
+				missing_animal_species_detail: '믹스묘',
+				offset: 1917.76,
+				photoToDelete: [],
+				report_witness_date: '2022-05-16T14:38:40.733Z',
+				routeName: undefined,
+				type: 'FeedObject',
+			};
+
+			return {
+				missing_animal_species: route.params.missing_animal_species,
+				missing_animal_species_detail: route.params.missing_animal_species_detail,
+				missing_animal_sex: route.params.missing_animal_sex,
+				missing_animal_age: route.params.missing_animal_age,
+				missing_animal_lost_location: {
+					city: route.params.missing_animal_lost_location.city,
+					district: '구를 선택',
+					detail: '',
+				},
+				missing_animal_features: route.params.missing_animal_features,
+				missing_animal_date: route.params.missing_animal_date,
+				missing_animal_contact: route.params.missing_animal_contact,
+				type: types[0],
+			};
 		} else {
 			return {
 				missing_animal_species: types[0].pet_species,
@@ -524,6 +597,25 @@ const MissingForm = props => {
 			err => Modal.alert(err),
 		);
 	}, []);
+
+	const getDefaultGender = () => {
+		let result = 0;
+		switch (data.missing_animal_sex) {
+			case 'male':
+				result = 0;
+				break;
+			case 'female':
+				result = 1;
+				break;
+			case 'unknown':
+				result = 2;
+				break;
+			default:
+				break;
+		}
+		console.log('result gender', result);
+		return result;
+	};
 
 	const onDateChange = date => {
 		setData({...data, missing_animal_date: date});
@@ -749,7 +841,7 @@ const MissingForm = props => {
 				</View>
 				<View style={[feedWrite.formContentContainer]}>
 					<View style={[temp_style.tabSelectFilled_Type1, feedWrite.tabSelectFilled_Type1]}>
-						<TabSelectFilled_Type1 items={['남아', '여아', '모름']} onSelect={selectSex} />
+						<TabSelectFilled_Type1 items={['남아', '여아', '모름']} defaultIndex={getDefaultGender()} onSelect={selectSex} />
 					</View>
 				</View>
 			</View>

@@ -65,6 +65,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 						navigation.goBack();
 					}
 				} else {
+					console.log('result', result);
 					navigation.goBack();
 				}
 			}
@@ -183,10 +184,9 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 					Modal.alert('제보 날짜를 선택해주세요.');
 				}, 200);
 			} else {
-				console.log('제보날짜 제보위치는 넘어감', data);
+				console.log('제보날짜 제보위치는 넘어감', data.photoToDelete);
 				data.report_witness_location =
 					(data.report_location.city || '') + ' ' + (data.report_location.district || '') + ' ' + (data.report_location.detail || '');
-
 				delete data.report_location;
 				delete data.offset;
 				if (
@@ -197,51 +197,49 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 					data.report_witness_location
 				) {
 					// console.log('NotNull 통과', data);
-					const ee = {
-						__v: 0,
-						_id: '6282570f85f5e373d6230d7b',
-						feedType: 'Report',
-						feed_comment_count: 0,
-						feed_content: 'ㅇㅋ',
-						feed_date: '2022-05-16T13:52:15.412Z',
-						feed_favorite_count: 0,
-						feed_is_delete: false,
-						feed_is_like: false,
-						feed_is_protect_diary: false,
-						feed_like_count: 0,
-						feed_medias: [
-							{
-								duration: 0,
-								is_video: false,
-								media_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1652709135163_E01788CA-FF51-4061-B9C9-4DBE3CAFEC77.jpg',
-								tags: [Array],
-							},
-						],
-						feed_thumbnail: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1652709135163_E01788CA-FF51-4061-B9C9-4DBE3CAFEC77.jpg',
-						feed_type: 'report',
-						feed_update_date: '2022-05-16T13:52:15.412Z',
-						feed_writer_id: {
-							__v: 20,
-							_id: '623b17ed400ac30b877dd7d9',
+					editMissingReport(
+						{
+							feedobject_id: data.feedobject_id,
+							feed_content: data.feed_content,
+							hashtag_keyword: data.hashtag_keyword,
+							media_uri: data.media_uri,
+							photos_to_delete: data.photoToDelete,
+							report_witness_date: data.report_witness_date,
+							report_witness_location: data.report_witness_location,
+							report_animal_species: data.report_animal_species,
 						},
-						feedobject_id: '6282570f85f5e373d6230d7b',
-						hashtag_keyword: undefined,
-						height: 479.44,
-						isEdit: true,
-						media_uri: [],
-						missing_animal_date: '2022-05-16T13:52:15.412Z',
-						offset: 479.44,
-						report_animal_species: '개',
-						report_location: {city: '부산광역시', detail: 'Dzq', district: '서구'},
-						report_witness_date: '2022.05.16',
-						report_witness_location: '부산광역시 서구 Dzq',
-						routeName: undefined,
-					};
-					editMissingReport(param, complete, handleError);
+						complete,
+						handleError,
+					);
 					Modal.close();
 				}
 			}
-			Modal.close();
+		} else if (param.feed_type == 'missing') {
+			const data = param;
+			delete data.feed_location;
+			let check = /^[0-9]+$/;
+			if (data.missing_animal_lost_location.city == '광역시, 도' || data.missing_animal_lost_location.district == '구를 선택') {
+				Modal.alert('실종위치는 반드시 \n선택해주셔야합니다!');
+			} else if (!check.test(data.missing_animal_age)) {
+				Modal.alert('실종동물의 나이는 \n숫자만 입력가능합니다!');
+			} else if (
+				data.missing_animal_species &&
+				data.missing_animal_species_detail &&
+				(data.feed_content || data.feed_medias) &&
+				data.media_uri.length > 0 &&
+				data.missing_animal_age &&
+				data.missing_animal_features &&
+				data.missing_animal_date &&
+				data.missing_animal_sex &&
+				data.missing_animal_date &&
+				data.missing_animal_lost_location &&
+				data.missing_animal_contact
+			) {
+				console.log('NotNull 통과');
+				editMissingReport(param, complete, handleError);
+			} else {
+				Modal.popOneBtn('작성란은 모두 작성해주셔야합니다.\n (사진 포함)', '확인', () => Modal.close());
+			}
 		}
 	};
 

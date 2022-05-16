@@ -242,7 +242,7 @@ export default function HashInput(props) {
 				{location == undefined ? (
 					<></>
 				) : (
-					<View style={{flexDirection: 'row', alignItems: 'center', maxWidth: 550 * DP, backgroundColor: 'yellow'}}>
+					<View style={{flexDirection: 'row', alignItems: 'center', maxWidth: 550 * DP}}>
 						<Location54_Filled />
 						<Text style={[txt.noto26b, {color: APRI10, marginLeft: 10 * DP}]} numberOfLines={2}>
 							{getLocation()}

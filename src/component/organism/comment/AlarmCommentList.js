@@ -61,7 +61,7 @@ const AlarmCommentList = props => {
 				// login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			comments => {
-				setComments(comments.msg.filter(e => e.comment_is_delete != true));
+				setComments(comments.msg);
 				setCommentsLoaded(true);
 				console.log('comments', comments);
 			},

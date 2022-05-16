@@ -129,7 +129,7 @@ export default ArticleDetail = props => {
 			},
 			comments => {
 				// console.log('comments', comments);
-				let res = comments.msg.filter(e => e.comment_is_delete != true);
+				let res = comments.msg;
 				let dummyForBox = res[res.length - 1];
 				res.push(dummyForBox);
 				setComments(res);
@@ -201,7 +201,7 @@ export default ArticleDetail = props => {
 							},
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
-								let res = comments.msg.filter(e => e.comment_is_delete != true);
+								let res = comments.msg;
 								let dummyForBox = res[res.length - 1];
 								res.push(dummyForBox);
 								setComments(res);
@@ -247,7 +247,7 @@ export default ArticleDetail = props => {
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
 								// setComments(comments.msg.filter(e => e.comment_is_delete != true));
-								let res = comments.msg.filter(e => e.comment_is_delete != true);
+								let res = comments.msg;
 								let dummyForBox = res[res.length - 1];
 								res.push(dummyForBox);
 								setComments(res);
@@ -498,6 +498,7 @@ export default ArticleDetail = props => {
 
 	//댓글 대댓글 삭제
 	const onPressDelete = id => {
+		Modal.popLoading(true);
 		deleteComment(
 			{
 				commentobject_id: id,
@@ -505,9 +506,11 @@ export default ArticleDetail = props => {
 			result => {
 				console.log('result / delectComment / ProtectCommentList : ', result.msg.comment_is_delete);
 				getComment();
+				Modal.close();
 			},
 			err => {
 				console.log(' err / deleteComment / ProtectCommentList : ', err);
+				Modal.close();
 			},
 		);
 	};

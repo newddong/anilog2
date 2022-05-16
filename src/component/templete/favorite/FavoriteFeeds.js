@@ -5,7 +5,7 @@ import SelectStat from 'Organism/list/SelectStat';
 import {login_style, temp_style, selectstat_view_style} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
 import {CONFIRM_DELETE_FAVORITE_FEED, CONFIRM_DELETE_MY_FEED, CONFIRM_DELETE_TAG_ME_FEED} from 'Root/i18n/msg';
-import {getFeedListByUserId, getFavoriteFeedListByUserId, getUserTaggedFeedList, favoriteFeed} from 'Root/api/feedapi';
+import {getFeedListByUserId, getFavoriteFeedListByUserId, getUserTaggedFeedList, favoriteFeed, deleteFeed} from 'Root/api/feedapi';
 import {txt} from 'Root/config/textstyle';
 import {GRAY10} from 'Root/config/color';
 import {getUserProfile} from 'Root/api/userapi';
@@ -28,7 +28,7 @@ export default FavoriteFeeds = ({route, navigation}) => {
 						userobject_id: userGlobalObject.userInfo._id,
 					},
 					result => {
-						// console.log('result / getFeedListByUserId / FavoriteFeeds  : ', result.msg[0]);
+						console.log('result / getFeedListByUserId / FavoriteFeeds  : ', result.msg);
 						setData(result.msg);
 					},
 					err => {
@@ -125,10 +125,37 @@ export default FavoriteFeeds = ({route, navigation}) => {
 		} else {
 			console.log('삭제시작');
 			const doDelete = () => {
+				console.log('route name', route.name);
 				let copy = [...data];
 				copy = copy.filter(element => element.checkBoxState == true); //CheckBoxState가 true인 경우엔 걸러진다
-				doDeltedFavorite(copy);
-				setData(copy);
+				console.log('copy', copy);
+				switch (route.name) {
+					case 'UserFeeds':
+						for (const element of copy) {
+							deleteFeed(
+								{feed_object_id: element._id},
+								result => {
+									console.log('deleteFeed Success', result);
+
+									let difference = data.filter(x => !copy.includes(x));
+									setData(difference);
+								},
+								err => {
+									console.log('deleteFeed err', err);
+								},
+							);
+						}
+						Modal.popOneBtn('삭제 되었습니다.', '확인', () => Modal.close());
+						break;
+					case 'FavoriteFeeds':
+						doDeltedFavorite(copy);
+						break;
+					case 'TagMeFeeds':
+						console.log('tagtag');
+						break;
+				}
+
+				// setData(copy);
 				Modal.close();
 			};
 			const deleteMsg = () => {
@@ -227,7 +254,7 @@ export default FavoriteFeeds = ({route, navigation}) => {
 	} else
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
-				<View style={[temp_style.selectstat_view]}>
+				<View style={[temp_style.selectstat_view, , {marginTop: -20 * DP}]}>
 					<View style={[temp_style.selectstat, selectstat_view_style.selectstat]}>
 						<SelectStat
 							onSelectMode={checkSelectMode}
@@ -246,7 +273,7 @@ export default FavoriteFeeds = ({route, navigation}) => {
 							<Text style={[txt.roboto28b, {marginTop: 20 * DP}]}>{emptyMsg()}</Text>
 						</View>
 					) : (
-						<FeedThumbnailList items={data} selectMode={selectMode} onClickThumnail={onClickThumnail} height={1300} />
+						<FeedThumbnailList items={data} selectMode={selectMode} onClickThumnail={onClickThumnail} height={1200 * DP} />
 					)}
 				</View>
 			</View>

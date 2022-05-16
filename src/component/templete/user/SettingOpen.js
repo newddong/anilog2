@@ -69,6 +69,16 @@ export default SettingOpen = ({route}) => {
 			);
 		}
 		// console.log('type of Open', typeof openObject, typeof openObject.setting_public_all);
+		let tempInt = 0;
+		if (openObject) {
+			for (let i of Object.values(openObject)) {
+				console.log('iii', i);
+				if (i == true) {
+					tempInt++;
+				}
+			}
+			setOnCount(tempInt);
+		}
 	}, [openObject, loading]);
 
 	const onSwtichAll = () => {
@@ -80,7 +90,7 @@ export default SettingOpen = ({route}) => {
 				setting_public_my_tag_post: false,
 				setting_public_community_post: false,
 			}));
-			setOnCount(0);
+			// setOnCount(0);
 		} else {
 			setOpenObject(prevState => ({
 				...prevState,
@@ -89,7 +99,7 @@ export default SettingOpen = ({route}) => {
 				setting_public_my_tag_post: true,
 				setting_public_community_post: true,
 			}));
-			setOnCount(3);
+			// setOnCount(3);
 		}
 		// setSend(!send);
 		// postApi();
@@ -99,19 +109,25 @@ export default SettingOpen = ({route}) => {
 		tempObject[keys] = !tempObject[keys];
 		setOpenObject(tempObject);
 		if (openObject[keys]) {
-			setOnCount(onCount - 1);
+			// setOnCount(onCount - 1);
 			setOpenObject(prevState => ({
 				...prevState,
 				setting_public_all: false,
 			}));
 		} else {
-			onCount == 2
-				? setOpenObject(prevState => ({
-						...prevState,
-						setting_public_all: true,
-				  }))
-				: null;
-			setOnCount(onCount + 1);
+			if (onCount == 2) {
+				setOpenObject(prevState => ({
+					...prevState,
+					setting_public_all: true,
+				}));
+			}
+			// onCount == 2
+			// 	? setOpenObject(prevState => ({
+			// 			...prevState,
+			// 			setting_public_all: true,
+			// 	  }))
+			// 	: null;
+			// setOnCount(onCount + 1);
 		}
 	};
 

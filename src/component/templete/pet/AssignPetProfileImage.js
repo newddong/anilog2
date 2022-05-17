@@ -4,7 +4,7 @@ import {Text, View, TouchableOpacity, ScrollView, Image, TouchableWithoutFeedbac
 import {APRI10, GRAY10, GRAY20, GRAY30} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import {AVAILABLE_NICK, DEFAULT_PROFILE, NICKNAME_FORM} from 'Root/i18n/msg';
+import {AVAILABLE_NICK, DEFAULT_PROFILE, NICKNAME_FORM, PET_NICKNAME_FORM} from 'Root/i18n/msg';
 import {btn_w654} from 'Atom/btn/btn_style';
 import {Check50, Rect50_Border} from 'Atom/icon';
 import Modal from 'Component/modal/Modal';
@@ -128,7 +128,7 @@ export default AssignPetProfileImage = ({route}) => {
 
 	//닉네임 Validation
 	const nickName_validator = text => {
-		let regExp = /^[가-힣a-zA-Z0-9_]{2,20}$/;
+		let regExp = /^[가-힣a-zA-Z0-9_]{1,20}$/;
 		let blank_pattern = /\s/g;
 		console.log('nickname valid', regExp.test(text));
 		return regExp.test(text) && !blank_pattern.test(text);
@@ -214,7 +214,7 @@ export default AssignPetProfileImage = ({route}) => {
 							value={data.user_nickname}
 							width={654}
 							confirm_msg={AVAILABLE_NICK}
-							alert_msg={NICKNAME_FORM}
+							alert_msg={PET_NICKNAME_FORM}
 							placeholder={'반려동물의 닉네임을 입력해주세요.'}
 							validator={nickName_validator}
 							onChange={onNicknameChange}

@@ -145,7 +145,7 @@ export default ReviewDetail = props => {
 						},
 						comments => {
 							!parentComment && setComments([]); //댓글목록 초기화
-							let res = comments.msg;
+							let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
 							let dummyForBox = res[res.length - 1];
 							res.push(dummyForBox);
 							setComments(res);
@@ -196,7 +196,7 @@ export default ReviewDetail = props => {
 						},
 						comments => {
 							!parentComment && setComments([]); //댓글목록 초기화
-							let res = comments.msg;
+							let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
 							let dummyForBox = res[res.length - 1];
 							res.push(dummyForBox);
 							setComments(res);
@@ -235,7 +235,7 @@ export default ReviewDetail = props => {
 			},
 			comments => {
 				// console.log('comments', comments.msg);
-				let res = comments.msg;
+				let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
 				let dummyForBox = res[res.length - 1];
 				res.push(dummyForBox);
 				setComments(res);
@@ -243,6 +243,7 @@ export default ReviewDetail = props => {
 			},
 			err => {
 				console.log('getCommentListByCommunityId', err);
+				Modal.close();
 				if (err == '검색 결과가 없습니다.') {
 					setComments([{}]);
 				}
@@ -263,7 +264,10 @@ export default ReviewDetail = props => {
 			});
 		} else {
 			setPrivateComment(!privateComment);
-			!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+			!privateComment ? Modal.popNoBtn('비밀댓글로 설정되었습니다.') : Modal.popNoBtn('댓글이 공개설정되었습니다.');
+			setTimeout(() => {
+				Modal.close();
+			}, 1000);
 		}
 	};
 
@@ -342,13 +346,13 @@ export default ReviewDetail = props => {
 
 	//댓글 대댓글 삭제
 	const onPressDelete = id => {
+		Modal.popLoading(true);
 		deleteComment(
 			{
 				commentobject_id: id,
 			},
 			result => {
 				console.log('result / delectComment / ProtectCommentList : ', result.msg.comment_is_delete);
-				Modal.popLoading();
 				getComment();
 			},
 			err => {

@@ -42,8 +42,14 @@ const ProfileInfo = props => {
 	// console.log('')
 	const [showMore, setShowMore] = React.useState(false); // 프로필 Description 우측 더보기 클릭 State
 	const [ownerListState, setOwnerListState] = React.useState(false); // userType이 Pet일 경우 반려인계정 출력 여부 T/F
-	const [companionListState, setCompanionListState] = React.useState(false); // userType이 User일 경우 반렫동물 리스트 출력 여부 T/F
+	const [companionListState, setCompanionListState] = React.useState(true); // userType이 User일 경우 반렫동물 리스트 출력 여부 T/F
 	const [into_height, setIntro_height] = React.useState(0); //user_introduction 의 길이 => 길이에 따른 '더보기' 버튼 출력 여부 결정
+
+	React.useEffect(() => {
+		if (data.user_type == 'user') {
+			showCompanion();
+		}
+	}, []);
 
 	//더보기 클릭
 	const onPressShowMore = () => {
@@ -115,6 +121,7 @@ const ProfileInfo = props => {
 			return (
 				<ActionButton
 					btnTitle={'반려동물'}
+					initState={true}
 					btnStyle={companionListState ? 'filled' : 'border'}
 					titleFontStyle={26}
 					btnLayout={btn_w280x68}

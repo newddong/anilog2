@@ -155,60 +155,52 @@ const ChildComment = props => {
 
 	return (
 		<View style={[childComment.container]}>
-			{data.comment_is_delete ? (
-				<View style={{}}>
-					<Text style={[txt.noto28, {marginLeft: 20 * DP}]}> 작성자가 삭제한 댓글입니다.</Text>
+			<View style={[childComment.profileContainer]}>
+				{data.comment_is_secure ? (
+					<View style={[{justifyContent: 'center'}]}>
+						<SecureIcon40 />
+					</View>
+				) : (
+					<></>
+				)}
+				<View style={[childComment.userTimeLabel]}>
+					<UserTimeLabel data={data || null} onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})} />
+				</View>
+				<View style={[childComment.meatBall50_vertical]}>
+					{meatball ? <Meatball50_APRI10_Vertical onPress={onPressMeatball} /> : <Meatball50_GRAY20_Vertical onPress={onPressMeatball} />}
+				</View>
+			</View>
+			{/* 해당 대댓글이 photo_uri를 가지고 있는 경우만 IMage 출력 */}
+			{data.comment_photo_uri != null && !isNotAuthorized() ? (
+				<View style={[childComment.img_square_round_484]}>
+					<Image style={[styles.img_square_round_484]} source={{uri: data ? data.comment_photo_uri : DEFAULT_PROFILE}} />
 				</View>
 			) : (
-				<>
-					<View style={[childComment.profileContainer]}>
-						{data.comment_is_secure ? (
-							<View style={[{justifyContent: 'center'}]}>
-								<SecureIcon40 />
-							</View>
-						) : (
-							<></>
-						)}
-						<View style={[childComment.userTimeLabel]}>
-							<UserTimeLabel data={data || null} onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})} />
-						</View>
-						<View style={[childComment.meatBall50_vertical]}>
-							{meatball ? <Meatball50_APRI10_Vertical onPress={onPressMeatball} /> : <Meatball50_GRAY20_Vertical onPress={onPressMeatball} />}
-						</View>
-					</View>
-					{/* 해당 대댓글이 photo_uri를 가지고 있는 경우만 IMage 출력 */}
-					{data.comment_photo_uri != null && !isNotAuthorized() ? (
-						<View style={[childComment.img_square_round_484]}>
-							<Image style={[styles.img_square_round_484]} source={{uri: data ? data.comment_photo_uri : DEFAULT_PROFILE}} />
-						</View>
-					) : (
-						<></>
-					)}
-					{/* 댓글 텍스트 */}
-					<View style={[childComment.commentContainer]}>
-						{isNotAuthorized() ? (
-							<Text style={[txt.noto26, {}]}> 비밀 댓글 입니다.</Text>
-						) : (
-							<Text style={[txt.noto24]}>{data ? data.comment_contents : ''}</Text>
-						)}
-					</View>
-					{/* 좋아요 버튼, 좋아요 숫자 , 답글쓰기 컨테이너 */}
-					<View style={[childComment.likeReplyButton]}>
-						{isNotAuthorized() ? (
-							<></>
-						) : (
-							<>
-								<View style={[childComment.heart30]}>
-									{likeState ? <Heart30_Filled onPress={onCLickHeart} /> : <Heart30_Border onPress={onCLickHeart} />}
-								</View>
-								<View style={[childComment.likeCount]}>
-									<Text style={(txt.roboto24, childComment.likeCountText)}>{likeCount}</Text>
-								</View>
-							</>
-						)}
-					</View>
-				</>
+				<></>
 			)}
+			{/* 댓글 텍스트 */}
+			<View style={[childComment.commentContainer]}>
+				{isNotAuthorized() ? (
+					<Text style={[txt.noto26, {}]}> 비밀 댓글 입니다.</Text>
+				) : (
+					<Text style={[txt.noto24]}>{data ? data.comment_contents : ''}</Text>
+				)}
+			</View>
+			{/* 좋아요 버튼, 좋아요 숫자 , 답글쓰기 컨테이너 */}
+			<View style={[childComment.likeReplyButton]}>
+				{isNotAuthorized() ? (
+					<></>
+				) : (
+					<>
+						<View style={[childComment.heart30]}>
+							{likeState ? <Heart30_Filled onPress={onCLickHeart} /> : <Heart30_Border onPress={onCLickHeart} />}
+						</View>
+						<View style={[childComment.likeCount]}>
+							<Text style={(txt.roboto24, childComment.likeCountText)}>{likeCount}</Text>
+						</View>
+					</>
+				)}
+			</View>
 		</View>
 	);
 };

@@ -61,7 +61,8 @@ const AlarmCommentList = props => {
 				// login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			comments => {
-				setComments(comments.msg);
+				let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+				setComments(res);
 				setCommentsLoaded(true);
 				console.log('comments', comments);
 			},
@@ -179,7 +180,8 @@ const AlarmCommentList = props => {
 							},
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
-								setComments(comments.msg);
+								let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+								setComments(res);
 								parentComment && addChildCommentFn.current();
 								console.log('comments', comments);
 								setPrivateComment(false);
@@ -211,7 +213,8 @@ const AlarmCommentList = props => {
 							},
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
-								setComments(comments.msg);
+								let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+								setComments(res);
 								parentComment && addChildCommentFn.current();
 								console.log('comments', comments);
 								setPrivateComment(false);
@@ -230,7 +233,10 @@ const AlarmCommentList = props => {
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
 	const onLockBtnClick = () => {
 		setPrivateComment(!privateComment);
-		!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+		!privateComment ? Modal.popNoBtn('비밀댓글로 설정되었습니다.') : Modal.popNoBtn('댓글이 공개설정되었습니다.');
+		setTimeout(() => {
+			Modal.close();
+		}, 1000);
 	};
 
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수

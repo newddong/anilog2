@@ -24,7 +24,7 @@ import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
 export default MissingAnimalDetail = props => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
-	const [commentDataList, setCommentDataList] = React.useState(); //더보기 클릭 State
+	const [comments, setComments] = React.useState(); //더보기 클릭 State
 	const [missingList, setMissingList] = React.useState('false');
 	const viewShotRef = useRef();
 	const flatlist = useRef();
@@ -124,13 +124,14 @@ export default MissingAnimalDetail = props => {
 						}
 					}
 				});
-				setCommentDataList(commentArray);
+				let res = commentArray.filter(e => !e.comment_is_delete || e.children_count != 0);
+				setComments(res);
 				Modal.close();
 			},
 			errcallback => {
 				console.log(`Comment errcallback:${JSON.stringify(errcallback)}`);
 				if (errcallback == '검색 결과가 없습니다.') {
-					setCommentDataList([]);
+					setComments([]);
 				}
 			},
 		);
@@ -291,12 +292,12 @@ export default MissingAnimalDetail = props => {
 
 	//댓글 이동
 	const onPressReply = comment => {
-		if (userGlobalObject.userInfo.isPreviewMode && commentDataList.length == 0) {
+		if (userGlobalObject.userInfo.isPreviewMode && comments.length == 0) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate('Login');
 			});
 		} else {
-			const findParentIndex = commentDataList.findIndex(e => e._id == comment._id); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
+			const findParentIndex = comments.findIndex(e => e._id == comment._id); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
 			let comment_obj = comment;
 			comment_obj.comment_index = findParentIndex;
 			navigation.push('FeedCommentList', {feedobject: data, showAllContents: true, reply: comment_obj});
@@ -319,8 +320,8 @@ export default MissingAnimalDetail = props => {
 		// console.log('comment', comment);
 		// navigation.push('FeedCommentList', {feedobject: data, edit: comment});
 		let comment_obj = comment; //수정할 댓글의 오브젝트 정보
-		const findParentIndex = commentDataList.findIndex(e => e._id == parent); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
-		const isChild = commentDataList.findIndex(e => e._id == comment._id) == -1; // 수정하려는 댓글이 자식댓글인지 여부
+		const findParentIndex = comments.findIndex(e => e._id == parent); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
+		const isChild = comments.findIndex(e => e._id == comment._id) == -1; // 수정하려는 댓글이 자식댓글인지 여부
 		comment_obj.isChild = isChild;
 		comment_obj.comment_index = findParentIndex;
 		navigation.push('FeedCommentList', {feedobject: data, edit: comment}); // 수정하려는 댓글 정보를 포함해서 보냄
@@ -361,7 +362,7 @@ export default MissingAnimalDetail = props => {
 					<View style={[reportDetail.separator]}></View>
 				</View>
 
-				{commentDataList && commentDataList.length > 0 ? (
+				{comments && comments.length > 0 ? (
 					<TouchableOpacity
 						onPress={onPressReply}
 						style={[
@@ -371,7 +372,7 @@ export default MissingAnimalDetail = props => {
 								alignSelf: 'center',
 							},
 						]}>
-						<Text style={[txt.noto26, {color: GRAY10, marginBottom: 10 * DP}]}> 댓글 {commentDataList.length}개 모두 보기</Text>
+						<Text style={[txt.noto26, {color: GRAY10, marginBottom: 10 * DP}]}> 댓글 {comments.length}개 모두 보기</Text>
 					</TouchableOpacity>
 				) : (
 					<></>
@@ -419,7 +420,7 @@ export default MissingAnimalDetail = props => {
 				<FlatList
 					ref={flatlist}
 					contentContainerStyle={[reportDetail.container]}
-					data={commentDataList.length > 2 ? commentDataList.slice(0, 2) : commentDataList}
+					data={comments.length > 2 ? comments.slice(0, 2) : comments}
 					showsVerticalScrollIndicator={false}
 					ListHeaderComponent={header()}
 					renderItem={renderItem}

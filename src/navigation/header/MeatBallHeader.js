@@ -22,16 +22,27 @@ export default MeatBallHeader = props => {
 		console.log('select Item', select);
 		if (select == '정보') {
 			Modal.close();
+			console.log('props.options.data', props.options.data.user_interests);
 			setTimeout(() => {
 				Modal.popInformationModal(
 					props.options.data,
 					() => onClose(),
 					type => {
 						console.log('type', type);
-						type == 'shelter'
-							? props.navigation.push('EditShelterInfo', {data: props.options.data})
-							: props.navigation.push('SetPetInformation', props.options.data);
-						//프로필 수정하는 페이지 이동
+						switch (type) {
+							case 'user':
+								props.navigation.push('UserInfoDetailSetting', props.options.data);
+								break;
+							case 'shelter':
+								props.navigation.push('EditShelterInfo', {data: props.options.data});
+								break;
+							case 'pet':
+								props.navigation.push('SetPetInformation', props.options.data);
+								break;
+
+							default:
+								break;
+						}
 					},
 				);
 			}, 100);
@@ -85,7 +96,15 @@ export default MeatBallHeader = props => {
 	const isMyProfile = props.options.data && props.options.data.user_type == 'user' && props.options.data._id == userInfo._id; //일반 유저 프로필이며 자신의 계정일 경우
 
 	const onPressMeatball = () => {
-		if (props.options.data && props.options.data.user_type == 'pet') {
+		if (isMyProfile) {
+			Modal.popSelectBoxModal(
+				['정보'],
+				select => onSelect(select),
+				() => onClose(),
+				false,
+				false,
+			);
+		} else if (props.options.data && props.options.data.user_type == 'pet') {
 			//반려동물 프로필
 			const pet_family = props.options.data.pet_family;
 			let family_id_list = [];
@@ -132,7 +151,7 @@ export default MeatBallHeader = props => {
 				{props.options?.title ? props.options.title : props.route.params.title}
 			</Text>
 			{/* <MeatBallDropdown menu={PROTECT_STATUS} onSelect={onPressMeatball} /> */}
-			{isUserProfile ? <View></View> : <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />}
+			<Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />
 		</View>
 	);
 };

@@ -129,7 +129,7 @@ export default ArticleDetail = props => {
 			},
 			comments => {
 				// console.log('comments', comments);
-				let res = comments.msg;
+				let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
 				let dummyForBox = res[res.length - 1];
 				res.push(dummyForBox);
 				setComments(res);
@@ -201,7 +201,7 @@ export default ArticleDetail = props => {
 							},
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
-								let res = comments.msg;
+								let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
 								let dummyForBox = res[res.length - 1];
 								res.push(dummyForBox);
 								setComments(res);
@@ -245,7 +245,7 @@ export default ArticleDetail = props => {
 							},
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
-								let res = comments.msg;
+								let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
 								let dummyForBox = res[res.length - 1];
 								res.push(dummyForBox);
 								setComments(res);
@@ -287,7 +287,10 @@ export default ArticleDetail = props => {
 			});
 		} else {
 			setPrivateComment(!privateComment);
-			!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+			!privateComment ? Modal.popNoBtn('비밀댓글로 설정되었습니다.') : Modal.popNoBtn('댓글이 공개설정되었습니다.');
+			setTimeout(() => {
+				Modal.close();
+			}, 1000);
 		}
 	};
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
+import {Text, View, TouchableOpacity, TouchableWithoutFeedback, TouchableHighlight} from 'react-native';
 import {APRI10, GRAY20, GRAY30, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
@@ -86,7 +86,9 @@ const AniButton = props => {
 	return props.disable ? (
 		<TouchableWithoutFeedback onPress={onPress}>{insideView()}</TouchableWithoutFeedback>
 	) : (
-		<TouchableOpacity onPress={onPress}>{insideView()}</TouchableOpacity>
+		<TouchableHighlight underlayColor={'white'} activeOpacity={0.8} onPress={onPress}>
+			{insideView()}
+		</TouchableHighlight>
 	);
 };
 

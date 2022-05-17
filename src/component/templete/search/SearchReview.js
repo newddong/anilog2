@@ -7,7 +7,6 @@ import {Animal_another, Animal_cat, Animal_dog} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
 import {updateAndDeleteCommunity} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeEtc} from 'Root/api/likeetc';
 import {useNavigation} from '@react-navigation/core';
@@ -24,12 +23,15 @@ export default SearchReview = props => {
 		dog: false,
 		cat: false,
 		etc: false,
-		filter: {
-			location: {
-				city: '',
-				district: '',
+		box: {
+			userInterestReview: {
+				interests_etc: [],
+				interests_hospital: [],
+				interests_interior: [],
+				interests_review: [],
+				interests_trip: [],
+				interests_location: {city: '', district: ''},
 			},
-			category: [],
 		},
 	});
 
@@ -127,18 +129,18 @@ export default SearchReview = props => {
 
 	const onPressFilter = () => {
 		setIsFilter(true);
-		Modal.popInterestTagModal(
+		Modal.popReviewFilterModal(
 			'Review',
-			{interests_etc: [], interests_hospital: [], interests_interior: [], interests_review: [], interests_trip: []},
+			// {interests_etc: [], interests_hospital: [], interests_interior: [], interests_review: [], interests_trip: []},
+			filterData.box.userInterestReview,
 			() => Modal.close(),
 			() => {
-				setIsFilter(false);
 				Modal.close();
 			},
 			arg => {
-				// console.log('arg', arg);
 				let filtered = getData();
 				const userInterestObj = arg.userInterestReview;
+				setFilterData({...filterData, box: arg});
 				let arr = [];
 				const selectedCategoryFilter = arr.concat(
 					userInterestObj.interests_review,
@@ -209,7 +211,7 @@ export default SearchReview = props => {
 					} else {
 						console.log('도시선택 필터와 카테고리는 선택이 없으므로 전체 리스트와 동일');
 						setIsFilter(false);
-						setData(filtered);
+						setData(props.data.review || []);
 					}
 				}
 			},
@@ -242,11 +244,6 @@ export default SearchReview = props => {
 				},
 				result => {
 					console.log('result/ onPressLike / SearchReview : ', result.msg);
-					// const findIndex = data.findIndex(e => e._id == getData()[index]._id);
-					// console.log('find', findIndex);
-					// let copy = data;
-					// copy[findIndex].community_is_like = bool;
-					// setData(copy);
 					props.resetCommunityList();
 				},
 				err => console.log('err / onPressLike / SearchReview : ', err),
@@ -280,7 +277,6 @@ export default SearchReview = props => {
 			},
 			result => {
 				console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
-				// setData({...data, })
 			},
 			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
 		);
@@ -318,7 +314,7 @@ export default SearchReview = props => {
 		return (
 			<View style={[style.filter]}>
 				<View style={[style.shadow_filter]}>
-					{isFilter ? <Filter60Filled onPress={onPressFilterOff} /> : <Filter60Border onPress={onPressFilter} />}
+					{isFilter ? <Filter60Filled onPress={onPressFilter} /> : <Filter60Border onPress={onPressFilter} />}
 				</View>
 				<View style={[style.animalFilter]}>
 					<View style={[style.shadow]}>

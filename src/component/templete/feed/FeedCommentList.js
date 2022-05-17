@@ -93,7 +93,8 @@ export default FeedCommentList = props => {
 			},
 			comments => {
 				console.log('getCommentListByFeedId', comments.msg.length);
-				setComments(comments.msg);
+				let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+				setComments(res);
 				setIsLoading(false);
 				if (props.route.params.edit != undefined) {
 					scrollToReply(props.route.params.edit.comment_index || 0);
@@ -170,7 +171,8 @@ export default FeedCommentList = props => {
 								comments => {
 									// console.log('comments', comments);
 									!parentComment && setComments([]); //댓글목록 초기화
-									setComments(comments.msg);
+									let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+									setComments(res);
 									parentComment && addChildCommentFn.current();
 									setPrivateComment(false);
 									setEditMode(false);
@@ -210,7 +212,8 @@ export default FeedCommentList = props => {
 								},
 								comments => {
 									!parentComment && setComments([]); //댓글목록 초기화
-									setComments(comments.msg);
+									let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+									setComments(res);
 									parentComment && addChildCommentFn.current();
 									setPrivateComment(false);
 									setEditMode(false);
@@ -242,7 +245,10 @@ export default FeedCommentList = props => {
 	const onLockBtnClick = () => {
 		// setEditData({...editData, comment_is_secure: !editData.comment_is_secure});
 		setPrivateComment(!privateComment);
-		!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+		!privateComment ? Modal.popNoBtn('비밀댓글로 설정되었습니다.') : Modal.popNoBtn('댓글이 공개설정되었습니다.');
+		setTimeout(() => {
+			Modal.close();
+		}, 1000);
 	};
 
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
@@ -260,6 +266,11 @@ export default FeedCommentList = props => {
 			})
 			.catch(err => console.log(err + ''));
 		Modal.close();
+	};
+
+	//답글 쓰기 후 댓글 작성자 우측 답글취소 버튼 클릭
+	const onCancelChild = () => {
+		setParentComment();
 	};
 
 	const onDeleteImage = () => {
@@ -414,6 +425,8 @@ export default FeedCommentList = props => {
 						privateComment={privateComment}
 						ref={input}
 						editData={editData}
+						parentComment={parentComment}
+						onCancelChild={onCancelChild}
 					/>
 				</View>
 			) : (
@@ -422,26 +435,3 @@ export default FeedCommentList = props => {
 		</View>
 	);
 };
-
-// React.useEffect(() => {
-// 	let didshow = Keyboard.addListener('keyboardDidShow', e => {
-// 		console.log('keyboarddidshow');
-// 		setTimeout(() => flatlist.current.scrollToIndex({animated: true, index: 1, viewPosition: 0}), 100);
-// 	});
-// 	let didhide = Keyboard.addListener('keyboardDidHide', e => {
-// 		console.log('keyboarddidhide');
-// 	});
-// 	let willshow = Keyboard.addListener('keyboardWillShow', e => {
-// 		console.log('keyboardwillshow');
-// 		setTimeout(() => flatlist.current.scrollToIndex({animated: true, index: 1, viewPosition: 0}), 100);
-// 	});
-// 	let willhide = Keyboard.addListener('keyboardWillHide', e => {
-// 		console.log('keyboardwillhide');
-// 	});
-// 	return () => {
-// 		didshow.remove();
-// 		didhide.remove();
-// 		willshow.remove();
-// 		willhide.remove();
-// 	};
-// });

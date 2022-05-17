@@ -25,7 +25,7 @@ import dp from 'Root/config/dp';
 
 /**
  * 부모 댓글
- * @param {object} props - Props Object
+ * @param {Object} props - Props Object
  * @param {Object} props.data - 부모 comment data object
  * @param {void} props.onPressReplyBtn - 답글쓰기
  * @param {(id:string)=>void} props.onPressDelete - 댓글 삭제
@@ -33,11 +33,11 @@ import dp from 'Root/config/dp';
  * @param {(data:object)=>void} props.onEdit - 댓글 수정
  * @param {(data:object)=>void} props.showChild - 답글 ~~개보기 클릭
  * @param {boolean} props.openChild - 자식 댓글 보이기 여부
+ * @param {Object} props.parentComment - 자식 댓글 보이기 여부
  */
 export default ParentComment = React.memo((props, ref) => {
 	// console.log('ParentComment : ', props.parentComment.comment_writer_id.user_nickname, props.parentComment.comment_is_secure);
-	// console.log('ParentComment : children_count', props.parentComment.comment_contents, props.parentComment.children_count);
-	// console.log('parentComment props', props);
+	// console.log('parentComment props', props.parentComment.comment_contents, props.parentComment.children_count);
 	const [data, setData] = React.useState(props.parentComment);
 	const [child, setChild] = React.useState([]);
 	const [likeCount, setLikeCount] = React.useState(0);
@@ -68,8 +68,8 @@ export default ParentComment = React.memo((props, ref) => {
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			result => {
-				console.log('getChildCommentList', result.msg[0]);
-				setChild(result.msg);
+				// console.log('getChildCommentList', result.msg[0]);
+				setChild(result.msg.filter(e => e.comment_is_delete != true));
 				!showChild && setShowChild(true);
 			},
 			error => {
@@ -118,7 +118,7 @@ export default ParentComment = React.memo((props, ref) => {
 			},
 			result => {
 				// console.log('getChildCommentList', result.msg[0]);
-				setChild(result.msg);
+				setChild(result.msg.filter(e => e.comment_is_delete != true));
 				setShowChild(!showChild);
 				props.showChild();
 			},
@@ -274,9 +274,13 @@ export default ParentComment = React.memo((props, ref) => {
 						<></>
 					)}
 				</View>
-				<View style={[]}>
-					{meatball ? <Meatball50_APRI10_Vertical onPress={onPressMeatball} /> : <Meatball50_GRAY20_Vertical onPress={onPressMeatball} />}
-				</View>
+				{data.comment_is_delete ? (
+					<></>
+				) : (
+					<View style={[]}>
+						{meatball ? <Meatball50_APRI10_Vertical onPress={onPressMeatball} /> : <Meatball50_GRAY20_Vertical onPress={onPressMeatball} />}
+					</View>
+				)}
 			</View>
 			{/* 댓글 Dummy 이미지 및 대댓글 목록 */}
 			{data.comment_photo_uri == undefined || isNotAuthorized() ? ( //img_square_round_574
@@ -289,7 +293,7 @@ export default ParentComment = React.memo((props, ref) => {
 			{/* 댓글 내용 */}
 			{data.comment_is_delete ? (
 				<View style={[parentComment.comment_contents]}>
-					<Text style={[txt.noto26, {color: GRAY20}]}> 작성자에의해 삭제된 댓글 입니다.</Text>
+					<Text style={[txt.noto26, {color: GRAY20}]}>삭제된 댓글 입니다.</Text>
 				</View>
 			) : (
 				<View style={[parentComment.comment_contents]}>

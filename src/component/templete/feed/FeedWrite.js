@@ -1119,7 +1119,7 @@ const ReportForm = props => {
 						</View>
 						<View style={[feedWrite.formContentContainer]}>
 							<View style={[temp_style.dropdownSelect, feedWrite.dropdownSelect]}>
-								<SelectInput onPressInput={onSelectSpecies} width={292} value={data.report_animal_species} />
+								<SelectInput onPressInput={onSelectSpecies} width={292} defaultText={'동물종류'} value={data.report_animal_species} />
 							</View>
 							<View style={[temp_style.dropdownSelect, feedWrite.dropdownSelect]}>
 								{/* <SelectInput onPressInput={onSelectSpeciesDetail} width={292} value={data.report_animal_species_detail} /> */}

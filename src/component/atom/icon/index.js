@@ -154,6 +154,7 @@ import alarmBadgerNotice48 from './alarmBadgerNotice48';
 import articleIcon from './articleIcon';
 import reviewIcon from './reviewIcon';
 import emptyIcon from './emptyIcon';
+import pawBorder54Gray from './pawBorder54Gray';
 import DP from 'Root/config/dp';
 
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
@@ -276,6 +277,7 @@ export const Location54_GRAY30 = makeSvg(location54_gray30, size54);
 export const Location54_Filled = makeSvg(location54Filled, size54);
 export const Camera54 = makeSvg(camera54, size54);
 export const Paw54_Border = makeSvg(pawBorder54, size54);
+export const Paw54_Gray = makeSvg(pawBorder54Gray, size54);
 export const Siren58_Red = makeSvg(sirenRed58, size58);
 export const Siren58_White = makeSvg(sirenWhite58, size58);
 export const Star60_Border = makeSvg(starBorder, size60);

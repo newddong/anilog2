@@ -19,7 +19,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
-import CameraRoll from 'Root/module/CameraRoll';
 // import CameraRoll from '@react-native-community/cameraroll';
 
 export default MissingAnimalDetail = props => {
@@ -125,7 +124,7 @@ export default MissingAnimalDetail = props => {
 						}
 					}
 				});
-				setCommentDataList(commentArray.filter(e => e.comment_is_delete != true));
+				setCommentDataList(commentArray);
 				Modal.close();
 			},
 			errcallback => {
@@ -215,7 +214,7 @@ export default MissingAnimalDetail = props => {
 					return;
 				}
 			}
-			const image = CameraRoll.save(imageURI, 'photo');
+			// const image = CameraRoll.save(imageURI, 'photo');
 			if (image) {
 				// Alert.alert('', 'Image saved successfully.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
 				Modal.popOneBtn('전단지가 저장되었습니다.', '확인', Modal.close);

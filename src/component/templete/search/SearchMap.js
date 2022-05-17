@@ -251,8 +251,9 @@ export default SearchMap = ({route}) => {
 					detail: finalized.detailAddr,
 				},
 			};
+			const routeName = route.params.routeName; // 피드 수정에서 호출인지 피드 글쓰기에서 호출인지
 			navigation.navigate({
-				name: 'FeedWrite',
+				name: routeName,
 				params: {feed_location: data.address},
 				merge: true,
 			});

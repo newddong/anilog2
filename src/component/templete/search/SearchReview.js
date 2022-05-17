@@ -44,7 +44,7 @@ export default SearchReview = props => {
 			// console.log('temp', temp);
 			temp.map((v, i) => {
 				v.community_is_favorite = v.is_favorite;
-				v.is_follow = v.community_is_like;
+				v.community_is_like = v.is_like;
 			});
 			setData(temp);
 		}

@@ -4,15 +4,24 @@ import {organism_style, parentComment} from 'Organism/style_organism';
 import {styles} from 'Atom/image/imageStyle';
 import ChildCommentList from 'Organism/comment/ChildCommentList';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
-import {Arrow_Down_GRAY10, Heart30_Border, Heart30_Filled, Meatball50_APRI10_Vertical, Meatball50_GRAY20_Vertical, SecureIcon40} from 'Atom/icon';
+import {
+	Arrow_Down_GRAY10,
+	Heart30_Border,
+	Heart30_Filled,
+	Meatball50_APRI10_Vertical,
+	Meatball50_GRAY20_Vertical,
+	ProfileDefaultImg,
+	SecureIcon40,
+} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
 import {REPLY_MEATBALL_MENU, REPLY_MEATBALL_MENU_MY_REPLY, REPORT_MENU} from 'Root/i18n/msg';
-import {GRAY10} from 'Root/config/color';
+import {GRAY10, GRAY20} from 'Root/config/color';
 import {getChildCommentList} from 'Root/api/commentapi';
 import Modal from 'Component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeComment} from 'Root/api/commentapi';
 import {createReport} from 'Root/api/report';
+import dp from 'Root/config/dp';
 
 /**
  * 부모 댓글
@@ -61,7 +70,6 @@ export default ParentComment = React.memo((props, ref) => {
 			result => {
 				console.log('getChildCommentList', result.msg[0]);
 				setChild(result.msg);
-				// setChild(result.msg.filter(e => e.comment_is_delete != true));
 				!showChild && setShowChild(true);
 			},
 			error => {
@@ -111,7 +119,6 @@ export default ParentComment = React.memo((props, ref) => {
 			result => {
 				// console.log('getChildCommentList', result.msg[0]);
 				setChild(result.msg);
-				// setChild(result.msg.filter(e => e.comment_is_delete != true));
 				setShowChild(!showChild);
 				props.showChild();
 			},
@@ -282,14 +289,21 @@ export default ParentComment = React.memo((props, ref) => {
 				</View>
 			)}
 			{/* 댓글 내용 */}
-			<View style={[parentComment.comment_contents]}>
-				{isNotAuthorized() ? (
-					<Text style={[txt.noto26, {}]}> 비밀 댓글 입니다.</Text>
-				) : (
-					<Text style={[txt.noto26]}>{data ? data.comment_contents : ''}</Text>
-				)}
-			</View>
-			{isNotAuthorized() ? (
+			{data.comment_is_delete ? (
+				<View style={[parentComment.comment_contents]}>
+					<Text style={[txt.noto26, {color: GRAY20}]}> 작성자에의해 삭제된 댓글 입니다.</Text>
+				</View>
+			) : (
+				<View style={[parentComment.comment_contents]}>
+					{isNotAuthorized() ? (
+						<Text style={[txt.noto26, {}]}> 비밀 댓글 입니다.</Text>
+					) : (
+						<Text style={[txt.noto26]}>{data ? data.comment_contents : ''}</Text>
+					)}
+				</View>
+			)}
+
+			{isNotAuthorized() || data.comment_is_delete ? (
 				<></>
 			) : (
 				<View style={[parentComment.likeReplyButton]}>
@@ -306,7 +320,6 @@ export default ParentComment = React.memo((props, ref) => {
 					</TouchableOpacity>
 				</View>
 			)}
-
 			{/* {data.children_count > 0 && <Text style={[txt.noto24, {color: GRAY10}]}> 답글{data.children_count}개 보기 </Text>} */}
 			{childrenCount > 0 && (
 				<TouchableOpacity onPress={showChildComment} style={[parentComment.showChildComment]}>

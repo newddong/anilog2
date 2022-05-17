@@ -59,7 +59,7 @@ export default CommunityCommentList = props => {
 				request_number: 1000,
 			},
 			comments => {
-				setComments(comments.msg.filter(e => e.comment_is_delete != true));
+				setComments(comments.msg);
 				// console.log('comments', comments);
 				Modal.close();
 			},
@@ -119,7 +119,7 @@ export default CommunityCommentList = props => {
 						},
 						comments => {
 							!parentComment && setComments([]); //댓글목록 초기화
-							setComments(comments.msg.filter(e => e.comment_is_delete != true));
+							setComments(comments.msg);
 							parentComment && addChildCommentFn.current();
 							setPrivateComment(false);
 							setEditMode(false);
@@ -147,7 +147,7 @@ export default CommunityCommentList = props => {
 						},
 						comments => {
 							!parentComment && setComments([]); //댓글목록 초기화
-							setComments(comments.msg.filter(e => e.comment_is_delete != true));
+							setComments(comments.msg);
 							parentComment && addChildCommentFn.current();
 							// console.log('comments', comments);
 							setPrivateComment(false);
@@ -242,7 +242,7 @@ export default CommunityCommentList = props => {
 				commentobject_id: id,
 			},
 			result => {
-				console.log('result / delectComment / ProtectCommentList : ', result.msg.comment_is_delete);
+				// console.log('result / delectComment / ProtectCommentList : ', result.msg.comment_is_delete);
 				Modal.popLoading();
 				fetchData();
 			},

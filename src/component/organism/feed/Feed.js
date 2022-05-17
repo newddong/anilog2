@@ -103,9 +103,13 @@ export default Feed = React.memo(props => {
 		setLikeCount(feed_like_count);
 	}, [props.data]);
 
+	const deleteFeed = id => {
+		props.deleteFeed(id);
+	};
+
 	return (
 		<View style={[feed_templete_style.feed]} removeClippedSubviews>
-			<FeedContent data={props.data} />
+			<FeedContent data={props.data} deleteFeed={deleteFeed} />
 			{/* 270DP */}
 			<View style={[feed_templete_style.feedMedia_feed]}>
 				<FeedMedia data={props.data} />

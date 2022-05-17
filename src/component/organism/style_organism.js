@@ -484,4 +484,10 @@ export const parentComment = StyleSheet.create({
 	secureIcon: {
 		marginLeft: 10 * DP,
 	},
+	deletedComment: {
+		width: 654 * DP,
+		paddingVertical: 20 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
 });

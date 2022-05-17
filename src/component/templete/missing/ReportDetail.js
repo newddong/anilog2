@@ -116,7 +116,7 @@ export default ReportDetail = props => {
 						}
 					}
 				});
-				setCommentDataList(commentArray.filter(e => e.comment_is_delete != true));
+				setCommentDataList(commentArray);
 			},
 			errcallback => {
 				console.log(`Comment errcallback:${JSON.stringify(errcallback)}`);

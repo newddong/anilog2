@@ -145,8 +145,7 @@ export default ReviewDetail = props => {
 						},
 						comments => {
 							!parentComment && setComments([]); //댓글목록 초기화
-							// setComments(comments.msg.filter(e => e.comment_is_delete != true));
-							let res = comments.msg.filter(e => e.comment_is_delete != true);
+							let res = comments.msg;
 							let dummyForBox = res[res.length - 1];
 							res.push(dummyForBox);
 							setComments(res);
@@ -197,8 +196,7 @@ export default ReviewDetail = props => {
 						},
 						comments => {
 							!parentComment && setComments([]); //댓글목록 초기화
-							// setComments(result.msg.filter(e => e.comment_is_delete != true));
-							let res = comments.msg.filter(e => e.comment_is_delete != true);
+							let res = comments.msg;
 							let dummyForBox = res[res.length - 1];
 							res.push(dummyForBox);
 							setComments(res);
@@ -237,8 +235,7 @@ export default ReviewDetail = props => {
 			},
 			comments => {
 				// console.log('comments', comments.msg);
-				// setComments(comments.msg.filter(e => e.comment_is_delete != true));
-				let res = comments.msg.filter(e => e.comment_is_delete != true);
+				let res = comments.msg;
 				let dummyForBox = res[res.length - 1];
 				res.push(dummyForBox);
 				setComments(res);

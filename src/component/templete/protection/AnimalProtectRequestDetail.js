@@ -189,8 +189,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 						}
 					}
 				});
-				const removeDelete = commentArray.filter(e => e.comment_is_delete != true);
-				setCommentDataList(removeDelete);
+				setCommentDataList(commentArray);
 				//댓글이 출력이 안되는 현상 발견으로 비동기 처리
 				debug && console.log('commentArray refresh', commentArray);
 			},

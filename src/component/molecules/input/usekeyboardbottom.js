@@ -14,19 +14,19 @@ export function useKeyboardBottom(tabheight) {
 	})();
 	React.useEffect(() => {
 		let didshow = Keyboard.addListener('keyboardDidShow', e => {
-			console.log('keyboarddidshow');
+			// console.log('keyboarddidshow');
 			setKeyboardY(e.endCoordinates.height + KeyboardBorderLine - tabheight);
 		});
 		let didhide = Keyboard.addListener('keyboardDidHide', e => {
-			console.log('keyboarddidhide');
+			// console.log('keyboarddidhide');
 			setKeyboardY(0);
 		});
 		let willshow = Keyboard.addListener('keyboardWillShow', e => {
-			console.log('keyboardwillshow');
+			// console.log('keyboardwillshow');
 			setKeyboardY(e.endCoordinates.height + KeyboardBorderLine - tabheight);
 		});
 		let willhide = Keyboard.addListener('keyboardWillHide', e => {
-			console.log('keyboardwillhide');
+			// console.log('keyboardwillhide');
 			setKeyboardY(0);
 		});
 		return () => {

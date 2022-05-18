@@ -33,7 +33,7 @@ import dp from 'Root/config/dp';
  * @param {(data:object)=>void} props.onEdit - 댓글 수정
  * @param {(data:object)=>void} props.showChild - 답글 ~~개보기 클릭
  * @param {boolean} props.openChild - 자식 댓글 보이기 여부
- * @param {Object} props.parentComment - 자식 댓글 보이기 여부
+ * @param {Object} props.parentComment - 부모 댓글이 있는 경우 부모댓글의 오브젝트
  */
 export default ParentComment = React.memo((props, ref) => {
 	// console.log('ParentComment : ', props.parentComment.comment_writer_id.user_nickname, props.parentComment.comment_is_secure);

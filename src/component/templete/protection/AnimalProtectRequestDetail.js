@@ -191,6 +191,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				});
 				let res = commentArray.filter(e => !e.comment_is_delete || e.children_count != 0);
 				setComments(res);
+				//댓글이 출력이 안되는 현상 발견으로 비동기 처리
 				debug && console.log('commentArray refresh', commentArray);
 			},
 			err => {
@@ -398,7 +399,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					<View style={[temp_style.shelterSmallLabel_animalProtectRequestDetail]}>
 						<ShelterSmallLabel data={data.protect_request_writer_id} onClickLabel={onClickShelterLabel} />
 					</View>
-					<View style={[temp_style.button_animalProtectRequestDetail]}>
+					{/* <View style={[temp_style.button_animalProtectRequestDetail]}>
 						{isMyPost ? (
 							<></>
 						) : data.protect_request_writer_id.is_favorite ? (
@@ -416,7 +417,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 								</Text>
 							</TouchableOpacity>
 						)}
-					</View>
+					</View> */}
 				</View>
 				<ProtectAnimalInfoBox data={data} />
 

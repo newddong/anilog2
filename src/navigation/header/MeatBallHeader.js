@@ -96,7 +96,7 @@ export default MeatBallHeader = props => {
 	const isMyProfile = props.options.data && props.options.data.user_type == 'user' && props.options.data._id == userInfo._id; //일반 유저 프로필이며 자신의 계정일 경우
 
 	const onPressMeatball = () => {
-		if (isMyProfile) {
+		if (isUserProfile) {
 			Modal.popSelectBoxModal(
 				['정보'],
 				select => onSelect(select),

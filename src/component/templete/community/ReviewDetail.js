@@ -204,8 +204,6 @@ export default ReviewDetail = props => {
 							input.current.blur();
 							setPrivateComment(false);
 							setEditMode(false); // console.log('comments', comments);
-							console.log('whichComment', whichParent);
-
 							setTimeout(() => {
 								whichParent == ''
 									? scrollRef.current.scrollToIndex({animated: true, index: 0})

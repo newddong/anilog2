@@ -99,8 +99,6 @@ export default FeedMedia = props => {
 
 	const swiperRef = React.useRef();
 
-	// console.log('swiperRef', swiperRef.current);
-
 	return (
 		<View>
 			{/* Select된 상태일 때 불투명도 40% 적용 및 배경색  Black */}
@@ -152,14 +150,7 @@ export default FeedMedia = props => {
 					horizontal={true}>
 					{feed_medias.map((data, idx) => {
 						return (
-							<PhotoTagItem
-								style={styles.img_square_750x750}
-								uri={data.media_uri}
-								data={data.media_uri}
-								taglist={data.tags}
-								key={idx}
-								viewmode={true}
-							/>
+							<PhotoTagItem style={styles.img_square_750x750} uri={data.media_uri} data={props.data} taglist={data.tags} key={idx} viewmode={true} />
 						);
 						// return <Image source={{uri: data.media_uri}} style={styles.img_square_750x750} key={idx} />;
 					})}

@@ -347,8 +347,8 @@ export default FeedWrite = props => {
 								</>
 							) : (
 								<>
-									<Location54_GRAY30 />
-									<Text style={[txt.noto24, {color: GRAY30, alignSelf: 'center', marginLeft: 10 * DP}]}>위치추가</Text>
+									{/* <Location54_GRAY30 />
+									<Text style={[txt.noto24, {color: GRAY30, alignSelf: 'center', marginLeft: 10 * DP}]}>위치추가</Text> */}
 								</>
 							)}
 						</View>
@@ -361,10 +361,10 @@ export default FeedWrite = props => {
 									<Text style={[txt.noto24, {color: APRI10, alignSelf: 'center', marginLeft: 10 * DP}]}>태그하기</Text>
 								</>
 							) : (
-								<>
-									<Paw54_Gray />
-									<Text style={[txt.noto24, {color: GRAY30, alignSelf: 'center', marginLeft: 10 * DP}]}>태그하기</Text>
-								</>
+								<View style={[{width: 200 * DP}]}>
+									{/* <Paw54_Gray />
+									<Text style={[txt.noto24, {color: GRAY30, alignSelf: 'center', marginLeft: 10 * DP}]}>태그하기</Text> */}
+								</View>
 							)}
 						</View>
 					</TouchableWithoutFeedback>
@@ -450,9 +450,13 @@ export default FeedWrite = props => {
 					) : (
 						false
 					)}
-					<TouchableWithoutFeedback onPress={() => setShowActionButton(!showActionButton)}>
-						<View style={[feedWrite.urgentActionButton]}>{showActionButton ? <Urgent_Write2 /> : <Urgent_Write1 />}</View>
-					</TouchableWithoutFeedback>
+					{props.route.name == 'FeedEdit' ? (
+						<></>
+					) : (
+						<TouchableWithoutFeedback onPress={() => setShowActionButton(!showActionButton)}>
+							<View style={[feedWrite.urgentActionButton]}>{showActionButton ? <Urgent_Write2 /> : <Urgent_Write1 />}</View>
+						</TouchableWithoutFeedback>
+					)}
 				</View>
 			) : (
 				false
@@ -876,8 +880,8 @@ const MissingForm = props => {
 const ReportForm = props => {
 	const [types, setTypes] = React.useState([
 		{
-			pet_species: '개',
-			pet_species_detail: DOG_KIND,
+			pet_species: '동물종류',
+			pet_species_detail: ['품종'],
 		},
 	]);
 
@@ -937,7 +941,10 @@ const ReportForm = props => {
 		getPettypes(
 			{},
 			types => {
-				setTypes(types.msg);
+				const init = {pet_species: '동물종류', pet_species_detail: ['품종']};
+				let res = types.msg;
+				res.unshift(init);
+				setTypes(res);
 			},
 			err => Modal.alert(err),
 		);

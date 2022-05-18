@@ -4009,9 +4009,9 @@ export const feedCommentList = StyleSheet.create({
 	},
 	commentBox_photo: {
 		width: 750 * DP,
-		height: 318 * DP,
+		// height: 318 * DP,
 		// paddingBottom: 12 * DP,
-		paddingTop: 30 * DP,
+		paddingTop: 20 * DP,
 		paddingBottom: 20 * DP,
 		paddingHorizontal: 20 * DP,
 		alignItems: 'center',

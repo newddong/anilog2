@@ -236,6 +236,12 @@ const InformationModal = props => {
 			return (
 				<>
 					<View style={[style.info_step2]}>
+						<View style={[{marginBottom: 20 * DP, alignSelf: 'center'}]}>
+							<Text style={[txt.noto32b]}>
+								{data.user_nickname || ''}
+								<Text style={[txt.noto28, {color: BLACK}]}> 님의 정보</Text>
+							</Text>
+						</View>
 						{/* 관심사 */}
 						<View style={[style.category_step2]}>
 							<View style={[style.category_title]}>

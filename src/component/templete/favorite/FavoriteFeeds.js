@@ -169,8 +169,8 @@ export default FavoriteFeeds = ({route, navigation}) => {
 	//썸네일 클릭 - [ selecteMode에 따른 분기 ]
 	const onClickThumnail = (index, feed_id) => {
 		//선택하기 모드가 아닐 경우 (일반모드이며 썸네일 클릭시 네비게이션 동작)
-		console.log('선택한 피드의 작성자 Id', feed_id.feed_writer_id._id);
-		console.log('선택한 route.name, feed_id', route.name, feed_id);
+		// console.log('선택한 피드의 작성자 Id', feed_id.feed_writer_id._id);
+		// console.log('선택한 route.name, feed_id', route.name, feed_id);
 		let passing_id = '';
 		if (!selectMode) {
 			if (feed_id.feed_type == 'feed') {
@@ -190,7 +190,7 @@ export default FavoriteFeeds = ({route, navigation}) => {
 					userobject_id: passing_id,
 				},
 				result => {
-					console.log('result / getUserProfile / FavoriteFeeds   :', result.msg.feedList[0]);
+					// console.log('result / getUserProfile / FavoriteFeeds   :', result.msg.feedList[0]);
 					if (route.name == 'UserFeeds') {
 						navigation.push('UserFeedList', {title: titleValue, userobject: result.msg, selected: feed_id});
 					} else if (route.name == 'TagMeFeeds') {

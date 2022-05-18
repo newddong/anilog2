@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, FlatList, Keyboard, Platform, ActivityIndicator} from 'react-native';
+import {Text, View, FlatList, Keyboard, Platform, ActivityIndicator, Animated} from 'react-native';
 import FeedContent from 'Organism/feed/FeedContent';
 import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
 import {feedCommentList, login_style} from 'Templete/style_templete';
@@ -10,10 +10,11 @@ import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
-import {GRAY10, GRAY20, GRAY40} from 'Root/config/color';
+import {BLACK, GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import Loading from 'Root/component/molecules/modal/Loading';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
+import {deleteFeed} from 'Root/api/feedapi';
 
 export default FeedCommentList = props => {
 	// console.log('props.showAllContents', props.route.params.showAllContents);
@@ -68,6 +69,7 @@ export default FeedCommentList = props => {
 			if (props.route.params.edit.isChild) {
 				let copy = [...childOpenList];
 				copy.push(props.route.params.edit.comment_index);
+				console.log('copy', copy);
 				setChildOpenList(copy);
 			}
 			setTimeout(() => {
@@ -93,7 +95,8 @@ export default FeedCommentList = props => {
 			},
 			comments => {
 				console.log('getCommentListByFeedId', comments.msg.length);
-				setComments(comments.msg);
+				let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+				setComments(res);
 				setIsLoading(false);
 				if (props.route.params.edit != undefined) {
 					scrollToReply(props.route.params.edit.comment_index || 0);
@@ -170,14 +173,15 @@ export default FeedCommentList = props => {
 								comments => {
 									// console.log('comments', comments);
 									!parentComment && setComments([]); //댓글목록 초기화
-									setComments(comments.msg);
+									let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+									setComments(res);
 									parentComment && addChildCommentFn.current();
 									setPrivateComment(false);
 									setEditMode(false);
 									input.current.blur();
 									Modal.close();
 									setTimeout(() => {
-										flatlist.current.scrollToIndex({animated: true, index: whichComment == '' ? editData.parent : whichComment, viewPosition: 0.5});
+										flatlist.current.scrollToIndex({animated: true, index: whichComment == -1 ? editData.parent : whichComment, viewPosition: 0.5});
 									}, 500);
 								},
 								err => {
@@ -210,7 +214,8 @@ export default FeedCommentList = props => {
 								},
 								comments => {
 									!parentComment && setComments([]); //댓글목록 초기화
-									setComments(comments.msg);
+									let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+									setComments(res);
 									parentComment && addChildCommentFn.current();
 									setPrivateComment(false);
 									setEditMode(false);
@@ -218,7 +223,7 @@ export default FeedCommentList = props => {
 									input.current.blur();
 									Modal.close();
 									setTimeout(() => {
-										whichParent == ''
+										whichParent == '' || whichParent == -1
 											? flatlist.current.scrollToIndex({animated: true, index: 0, viewPosition: 0.5})
 											: flatlist.current.scrollToIndex({animated: true, index: whichParent, viewPosition: 1});
 									}, 500);
@@ -242,7 +247,10 @@ export default FeedCommentList = props => {
 	const onLockBtnClick = () => {
 		// setEditData({...editData, comment_is_secure: !editData.comment_is_secure});
 		setPrivateComment(!privateComment);
-		!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+		!privateComment ? Modal.popNoBtn('비밀댓글로 설정되었습니다.') : Modal.popNoBtn('댓글이 공개설정되었습니다.');
+		setTimeout(() => {
+			Modal.close();
+		}, 1000);
 	};
 
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
@@ -262,13 +270,19 @@ export default FeedCommentList = props => {
 		Modal.close();
 	};
 
+	//답글 쓰기 후 댓글 작성자 우측 답글취소 버튼 클릭
+	const onCancelChild = () => {
+		setParentComment();
+	};
+
+	//댓글 사진을 취소할 때(X마크 클릭)
 	const onDeleteImage = () => {
 		console.log('onDelete Img');
 		setEditData({...editData, comment_photo_uri: ''});
 	};
 
+	//댓글 미트볼 -> 삭제클릭
 	const onPressDelete = id => {
-		console.log('id', id);
 		deleteComment(
 			{
 				commentobject_id: id,
@@ -297,9 +311,9 @@ export default FeedCommentList = props => {
 			});
 		} else {
 			setParentComment(parentCommentId);
-			// console.log('parentCommentId', parentCommentId);
 			const findParentIndex = comments.findIndex(e => e._id == parentCommentId._id);
 			input.current.focus();
+			// console.log('findParentIndex', findParentIndex);
 			scrollToReply(findParentIndex);
 			setEditMode(false);
 			setEditData({
@@ -338,6 +352,7 @@ export default FeedCommentList = props => {
 		// console.log('수정 데이터', comment.comment_is_secure);
 		const findParentIndex = comments.findIndex(e => e._id == parent);
 		setEditMode(true);
+		setParentComment(); // 수정모드로 전환시
 		setPrivateComment(comment.comment_is_secure);
 		setEditData({...comment, parent: findParentIndex});
 		setTimeout(() => {
@@ -346,10 +361,61 @@ export default FeedCommentList = props => {
 		scrollToReply(findParentIndex);
 	};
 
+	//미트볼의 삭제버튼을 클릭
+	const deleteFeedItem = id => {
+		Modal.close();
+		setTimeout(() => {
+			Modal.popLoading(true);
+			deleteFeed(
+				{feed_object_id: id},
+				result => {
+					// console.log('result / DeleteFeed / FeedContent : ', result.msg);
+					Modal.close();
+					if (props.navigation.getState().routes[0].name == 'ProtectionTab') {
+						navigation.navigate('ProtectionTab');
+					} else {
+						console.log(props.navigation.getState().routes);
+						navigation.goBack();
+					}
+				},
+				err => {
+					console.log('err / DeleteFeed / FeedContent : ', err);
+					Modal.close();
+					setTimeout(() => {
+						Modal.alert('네트워크 오류입니다.');
+					}, 100);
+				},
+			);
+		}, 100);
+	};
+
+	//댓글 수정 => 키보드 해제시 수정모드가 종료되도록 적용
+	React.useEffect(() => {
+		const cancelEditMode = () => {
+			setPrivateComment(false);
+			setEditMode(false);
+			setEditData({
+				comment_contents: '',
+				comment_photo_uri: '',
+			});
+		};
+		let didhide = Keyboard.addListener('keyboardDidHide', e => {
+			cancelEditMode();
+		});
+		return () => {
+			didhide.remove();
+		};
+	}, []);
+
 	const header = () => {
 		return (
 			<>
-				<FeedContent data={props.route.params.feedobject} showAllContents={props.route.params.showAllContents} routeName={props.route.name} />
+				<FeedContent
+					data={props.route.params.feedobject}
+					deleteFeed={deleteFeedItem}
+					showAllContents={props.route.params.showAllContents}
+					routeName={props.route.name}
+				/>
 				<View style={[{width: 654 * DP, height: 2 * DP, marginTop: 10 * DP, backgroundColor: GRAY40, alignSelf: 'center'}]} />
 				<View style={[{width: 654 * DP, alignSelf: 'center', marginTop: 20 * DP}]}>
 					{comments.length == 0 ? <></> : <Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>}
@@ -360,8 +426,20 @@ export default FeedCommentList = props => {
 
 	const renderItem = ({item, index}) => {
 		const isOpen = childOpenList.includes(index);
+
+		//수정 혹은 답글쓰기 때, 대상 부모 댓글의 배경색을 바꾸는 함수
+		const getBgColor = () => {
+			let result = WHITE;
+			if (editMode && editData.parent == index) {
+				result = GRAY40;
+			} else if (parentComment && parentComment._id == item._id) {
+				result = GRAY40;
+			}
+			return result;
+		};
+
 		return (
-			<View style={[feedCommentList.commentContainer]} key={item._id}>
+			<View style={[feedCommentList.commentContainer, {backgroundColor: getBgColor()}]} key={item._id}>
 				<ParentComment
 					parentComment={item}
 					onPressReplyBtn={onReplyBtnClick} // 부모 댓글의 답글쓰기 클릭 이벤트
@@ -414,6 +492,8 @@ export default FeedCommentList = props => {
 						privateComment={privateComment}
 						ref={input}
 						editData={editData}
+						parentComment={editMode ? '' : parentComment} //댓글 수정모드일 때 부모댓글 정보를 막는다
+						onCancelChild={onCancelChild}
 					/>
 				</View>
 			) : (
@@ -422,26 +502,3 @@ export default FeedCommentList = props => {
 		</View>
 	);
 };
-
-// React.useEffect(() => {
-// 	let didshow = Keyboard.addListener('keyboardDidShow', e => {
-// 		console.log('keyboarddidshow');
-// 		setTimeout(() => flatlist.current.scrollToIndex({animated: true, index: 1, viewPosition: 0}), 100);
-// 	});
-// 	let didhide = Keyboard.addListener('keyboardDidHide', e => {
-// 		console.log('keyboarddidhide');
-// 	});
-// 	let willshow = Keyboard.addListener('keyboardWillShow', e => {
-// 		console.log('keyboardwillshow');
-// 		setTimeout(() => flatlist.current.scrollToIndex({animated: true, index: 1, viewPosition: 0}), 100);
-// 	});
-// 	let willhide = Keyboard.addListener('keyboardWillHide', e => {
-// 		console.log('keyboardwillhide');
-// 	});
-// 	return () => {
-// 		didshow.remove();
-// 		didhide.remove();
-// 		willshow.remove();
-// 		willhide.remove();
-// 	};
-// });

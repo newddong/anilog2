@@ -75,8 +75,8 @@ export default ProtectCommentList = props => {
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			comments => {
-				const removeDelete = comments.msg;
-				setComments(removeDelete);
+				let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+				setComments(res);
 				setIsLoading(false);
 				if (props.route.params.edit != undefined) {
 					scrollToReply(props.route.params.edit.comment_index || 0);
@@ -144,7 +144,8 @@ export default ProtectCommentList = props => {
 							},
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
-								setComments(comments.msg);
+								let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+								setComments(res);
 								parentComment && addChildCommentFn.current();
 								setPrivateComment(false);
 								setEditMode(false);
@@ -172,7 +173,8 @@ export default ProtectCommentList = props => {
 							},
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
-								setComments(comments.msg);
+								let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+								setComments(res);
 								parentComment && addChildCommentFn.current();
 								setPrivateComment(false);
 								setEditMode(false);
@@ -196,8 +198,16 @@ export default ProtectCommentList = props => {
 			});
 		} else {
 			setPrivateComment(!privateComment);
-			!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+			!privateComment ? Modal.popNoBtn('비밀댓글로 설정되었습니다.') : Modal.popNoBtn('댓글이 공개설정되었습니다.');
+			setTimeout(() => {
+				Modal.close();
+			}, 1000);
 		}
+	};
+
+	//답글 쓰기 후 댓글 작성자 우측 답글취소 버튼 클릭
+	const onCancelChild = () => {
+		setParentComment();
 	};
 
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
@@ -373,6 +383,8 @@ export default ProtectCommentList = props => {
 					privateComment={privateComment}
 					ref={input}
 					editData={editData}
+					parentComment={parentComment}
+					onCancelChild={onCancelChild}
 				/>
 			</View>
 		</View>

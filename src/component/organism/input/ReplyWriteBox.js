@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
-import {Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {BLUE20} from 'Root/config/color';
-import {Lock60_Border, Lock60_Filled, Photo60, Send60} from 'Atom/icon';
+import {Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {APRI10, BLUE20, GRAY10, GRAY30, GRAY40, WHITE} from 'Root/config/color';
+import {Cross46, Lock60_Border, Lock60_Filled, Photo60, Send60} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import SelectedMedia from 'Molecules/media/SelectedMedia';
 import {feedCommentList} from 'Templete/style_templete';
@@ -62,6 +62,7 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 	};
 
 	const onCancelChild = () => {
+		Keyboard.dismiss();
 		props.onCancelChild();
 	};
 
@@ -72,22 +73,16 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 	const getParent = () => {
 		if (isChildComment) {
 			return (
-				<View style={{flexDirection: 'row', alignItems: 'center'}}>
-					<Text style={[txt.noto26, {color: BLUE20, marginLeft: 10 * DP, paddingTop: 5 * DP}]}>
+				<View style={style.parentComment_box}>
+					<Text style={[txt.noto26b, {marginLeft: 10 * DP, paddingTop: 5 * DP}]}>
 						{' '}
-						@{props.parentComment.comment_writer_id.user_nickname}
-						{'  '}
+						{props.parentComment.comment_writer_id.user_nickname}
+						<Text style={[txt.noto26]}>님에게 </Text>
 					</Text>
 					{/* <Text style={[txt.noto22, {color: BLUE20, paddingTop: 10 * DP}]}>{'  '}취소</Text> */}
-					<View style={{marginTop: 8 * DP}}>
-						<AniButton
-							btnStyle={'border'}
-							onPress={onCancelChild}
-							btnLayout={{paddingHorizontal: 10 * DP, height: 35 * DP, borderRadius: 20 * DP}}
-							titleFontStyle={18}
-							btnTitle={'답글취소'}
-						/>
-					</View>
+					<TouchableOpacity activeOpacity={0.6} onPress={onCancelChild} style={style.crossMark}>
+						<Cross46 />
+					</TouchableOpacity>
 				</View>
 			);
 		} else {
@@ -97,9 +92,9 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 
 	if (props.isProtectRequest) {
 		return (
-			<View style={[feedCommentList.commentBox_protect_request]}>
-				<TouchableOpacity activeOpacity={0.6} onPress={onPressReply} style={[feedCommentList.commentBox_protect_request_left]}>
-					<Text style={[txt.noto26, feedCommentList.replyTextInput_protect_request, {}]} ref={inputRef}>
+			<View style={[style.commentBox_protect_request]}>
+				<TouchableOpacity activeOpacity={0.6} onPress={onPressReply} style={[style.commentBox_protect_request_left]}>
+					<Text style={[txt.noto26, style.replyTextInput_protect_request, {}]} ref={inputRef}>
 						댓글입력
 					</Text>
 				</TouchableOpacity>
@@ -108,11 +103,11 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 		);
 	} else if (props.isMessage) {
 		return (
-			<View style={[feedCommentList.commentBox, {flexDirection: 'row'}]}>
-				<View style={[feedCommentList.commentBox_top, {width: 550 * DP}, , {marginRight: 24 * DP}]}>
+			<View style={[style.commentBox, {flexDirection: 'row'}]}>
+				<View style={[style.commentBox_top, {width: 550 * DP}, , {marginRight: 24 * DP}]}>
 					<TextInput
 						defaultValue={content == '' ? null : content}
-						style={[feedCommentList.replyTextInput]}
+						style={[style.replyTextInput]}
 						multiline={true}
 						placeholder={'메세지 입력..'}
 						onChangeText={onChangeText}
@@ -124,16 +119,16 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 		);
 	} else {
 		return (
-			<View style={[feedCommentList.editComment, props.shadow ? feedCommentList.shadow : feedCommentList.shadow_off]}>
+			<View style={[style.editComment, props.shadow ? style.shadow : style.shadow_off]}>
 				{/* 사진 추가를 통해서 받아온 사진이 한 개 이상인 경우 */}
 				{photo && photo.length > 0 ? (
-					<View style={[feedCommentList.commentBox_photo]}>
-						<View style={[feedCommentList.commentBox_top_photo, {flexDirection: 'row'}]}>
-							<View style={[feedCommentList.commentBox_input_photo]}>
-								{/* {getParent()} */}
+					<View style={[style.commentBox_photo]}>
+						{getParent()}
+						<View style={[style.commentBox_top_photo, {flexDirection: 'row'}]}>
+							<View style={[style.commentBox_input_photo]}>
 								<TextInput
 									defaultValue={content == '' ? null : content}
-									style={[feedCommentList.replyTextInput_photo]}
+									style={[style.replyTextInput_photo]}
 									multiline={true}
 									placeholder={'댓글입력..'}
 									onChangeText={onChangeText}
@@ -145,12 +140,12 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 						<CommentBoxBottom {...props} onWrite={onWrite} />
 					</View>
 				) : (
-					<View style={[feedCommentList.commentBox]}>
-						<View style={[feedCommentList.commentBox_top]}>
-							{/* {getParent()} */}
+					<View style={[style.commentBox]}>
+						{getParent()}
+						<View style={[style.commentBox_top]}>
 							<TextInput
 								defaultValue={content == '' ? null : content}
-								style={[feedCommentList.replyTextInput, {}]}
+								style={[style.replyTextInput, {}]}
 								multiline={true}
 								placeholder={'댓글입력..'}
 								onChangeText={onChangeText}
@@ -166,14 +161,23 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 });
 
 const CommentBoxBottom = props => {
+	const getBtnTitle = () => {
+		let result = '댓글';
+		if (props.parentComment) {
+			result = '답글';
+		} else if (props.editData._id) {
+			result = '수정';
+		}
+		return result;
+	};
 	return (
-		<View style={[feedCommentList.commentBox_bottom]}>
-			<View style={[feedCommentList.commentBox_bottom_left]}>
+		<View style={[style.commentBox_bottom]}>
+			<View style={[style.commentBox_bottom_left]}>
 				{props.privateComment ? <Lock60_Filled onPress={props.onLockBtnClick} /> : <Lock60_Border onPress={props.onLockBtnClick} />}
 				<Photo60 onPress={props.onAddPhoto} />
 			</View>
-			<View style={[feedCommentList.commentBox_bottom_right]}>
-				<AniButton onPress={props.onWrite} btnLayout={btn_w120} btnStyle={'border'} btnTitle={'댓글'} titleFontStyle={24} />
+			<View style={[style.commentBox_bottom_right]}>
+				<AniButton onPress={props.onWrite} btnLayout={btn_w120} btnStyle={'border'} btnTitle={getBtnTitle()} titleFontStyle={24} />
 			</View>
 			{/* <Send60 onPress={onWrite} /> */}
 		</View>
@@ -205,8 +209,6 @@ const ReplyWriteBoxProps = {
 	onLockBtnClick: func,
 	/** @type {()=>void} 댓글의 사진 리스트 */
 	photo: array,
-	/** @type {()=>void} 부모댓글의 오브젝트 */
-	parentComment: string,
 };
 ReplyWriteBox.propTypes = ReplyWriteBoxProps;
 
@@ -226,5 +228,147 @@ ReplyWriteBox.defaultProps = {
 	onCancelChild: () => {},
 	onFocus: () => {},
 };
+
+const style = StyleSheet.create({
+	editComment: {
+		width: 750 * DP,
+		backgroundColor: WHITE,
+		bottom: 1,
+		alignItems: 'center',
+	},
+	shadow: {
+		shadowColor: '#000000',
+		shadowOpacity: 0.5,
+		shadowRadius: 2.65,
+		shadowOffset: {
+			width: 1 * DP,
+			height: 1 * DP,
+		},
+		elevation: 2,
+	},
+	shadow_off: {
+		// shadowColor: '#000000',
+		// shadowOpacity: 0.2,
+		// shadowRadius: 2.65,
+		// shadowOffset: {
+		// 	width: 1 * DP,
+		// 	height: 2 * DP,
+		// },
+		// elevation: 2,
+	},
+	replyTextInput: {
+		width: 646 * DP,
+		marginLeft: 20 * DP,
+		fontSize: 28 * DP,
+		paddingVertical: 0 * DP,
+		includeFontPadding: false,
+		// backgroundColor: 'yellow',
+	},
+	replyTextInput_photo: {
+		width: 460 * DP,
+		marginRight: 12 * DP,
+		paddingVertical: 0,
+		paddingHorizontal: 10 * DP,
+		includeFontPadding: false,
+		// backgroundColor: 'pink',
+	},
+	replyTextInput_protect_request: {
+		// textAlignVertical: 'center',
+		height: 55 * DP,
+		color: GRAY10,
+		// lineHeight: 22 * DP,
+		// backgroundColor: 'yellow',
+	},
+	commentBox_protect_request_left: {
+		width: 550 * DP,
+		height: 72 * DP,
+		marginRight: 12 * DP,
+		borderRadius: 24 * DP,
+		backgroundColor: GRAY40,
+		justifyContent: 'center',
+		paddingLeft: 25 * DP,
+		paddingTop: 5 * DP,
+	},
+	commentBox: {
+		width: 750 * DP,
+		// height: 186 * DP,
+		// backgroundColor: 'yellow',
+		paddingVertical: 28 * DP,
+		paddingHorizontal: 20 * DP,
+		alignItems: 'center',
+	},
+	commentBox_photo: {
+		width: 750 * DP,
+		// height: 318 * DP,
+		// paddingBottom: 12 * DP,
+		paddingTop: 20 * DP,
+		paddingBottom: 20 * DP,
+		paddingHorizontal: 20 * DP,
+		alignItems: 'center',
+	},
+	commentBox_protect_request: {
+		width: 694 * DP,
+		height: 68 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
+	commentBox_input_photo: {
+		width: 492 * DP,
+		height: 190 * DP,
+		borderRadius: 30 * DP,
+		marginRight: 12 * DP,
+		paddingHorizontal: 20 * DP,
+		// paddingVertical: 12 * DP,
+		paddingVertical: 20 * DP,
+		backgroundColor: GRAY40,
+	},
+	commentBox_top_photo: {
+		width: 694 * DP,
+		height: 190 * DP,
+		borderRadius: 24 * DP,
+		marginBottom: 12 * DP,
+		// justifyContent: 'space-between',
+	},
+	commentBox_top: {
+		width: 694 * DP,
+		// maxHeight: 224 * DP,
+		padding: 10 * DP,
+		borderRadius: 24 * DP,
+		marginBottom: 12 * DP,
+		backgroundColor: GRAY40,
+	},
+	commentBox_bottom: {
+		width: 694 * DP,
+		height: 68 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+	},
+	commentBox_bottom_left: {
+		flexDirection: 'row',
+	},
+	commentContainer: {
+		paddingBottom: 10 * DP,
+		paddingTop: 20 * DP,
+		alignItems: 'center',
+		// backgroundColor: 'yellow',
+	},
+	parentComment_box: {
+		paddingBottom: 16 * DP,
+		paddingLeft: 10 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		alignSelf: 'flex-start',
+		justifyContent: 'center',
+	},
+	crossMark: {
+		width: 60 * DP,
+		height: 60 * DP,
+		marginTop: 8 * DP,
+		marginLeft: 20 * DP,
+		alignSelf: 'center',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+});
 
 export default ReplyWriteBox;

@@ -194,7 +194,7 @@ export default CommunityEdit = props => {
 	const onPressFilter = () => {
 		// console.log('data.community_interests', data.community_interests);
 		richText.current?.dismissKeyboard(); //일반적인 input과 달리 RichText에서는 이와같이 키보드를 hide
-		Modal.popInterestTagModal(
+		Modal.popReviewFilterModal(
 			'ReviewWrite',
 			// data.community_interests == '카테고리 선택' ? [] : data.community_interests,
 			data.community_interests,
@@ -319,12 +319,12 @@ export default CommunityEdit = props => {
 	const getReviewButtonContainer = () => {
 		return (
 			<>
-				<TouchableOpacity activeOpacity={0.6} onPress={onPressTempSave}>
+				{/* <TouchableOpacity activeOpacity={0.6} onPress={onPressTempSave}>
 					<View style={[style.buttonItem]}>
 						<Save54 />
 						<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>임시저장</Text>
 					</View>
-				</TouchableOpacity>
+				</TouchableOpacity> */}
 				<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
 					<View style={[style.buttonItem]}>
 						<Camera54 />
@@ -571,8 +571,9 @@ const style = StyleSheet.create({
 		// backgroundColor: 'yellow',
 		paddingVertical: 30 * DP,
 		flexDirection: 'row',
-		alignSelf: 'center',
-		width: 654 * DP,
+		alignSelf: 'flex-end',
+		marginRight: 48 * DP,
+		width: 442 * DP,
 		justifyContent: 'space-between',
 	},
 	buttonContainer_keyboard: {

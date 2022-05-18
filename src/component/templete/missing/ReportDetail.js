@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, ActivityIndicator, TouchableOpacity, FlatList, Platform} from 'react-native';
+import {Image, TouchableOpacity, FlatList, Platform} from 'react-native';
 import {Text, View} from 'react-native';
 import {reportDetail, temp_style} from 'Templete/style_templete';
 import FeedContent from 'Organism/feed/FeedContent';
@@ -9,7 +9,6 @@ import {deleteComment, getCommentListByFeedId} from 'Root/api/commentapi';
 import moment from 'moment';
 import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loading from 'Root/component/molecules/modal/Loading';
 import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
 import {GRAY10} from 'Root/config/color';
@@ -21,9 +20,8 @@ import Swiper from 'react-native-swiper';
 export default ReportDetail = props => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
-	const [commentDataList, setCommentDataList] = React.useState('false'); //더보기 클릭 State
+	const [comments, setComments] = React.useState('false'); //더보기 클릭 State
 	const [reportList, setReportList] = React.useState('false');
-	const [editComment, setEditComment] = React.useState(false); //답글 작성란 View 보이기 T/F
 	const flatlist = React.useRef();
 	// 제보 데이터 불러오기 (아직 API 미작업 )
 	React.useEffect(() => {
@@ -116,11 +114,12 @@ export default ReportDetail = props => {
 						}
 					}
 				});
-				setCommentDataList(commentArray);
+				let res = commentArray.filter(e => !e.comment_is_delete || e.children_count != 0);
+				setComments(res);
 			},
 			errcallback => {
 				console.log(`Comment errcallback:${JSON.stringify(errcallback)}`);
-				setCommentDataList([]);
+				setComments([]);
 			},
 		);
 	};
@@ -203,12 +202,12 @@ export default ReportDetail = props => {
 
 	//댓글 클릭
 	const onPressReply = comment => {
-		if (userGlobalObject.userInfo.isPreviewMode && commentDataList.length == 0) {
+		if (userGlobalObject.userInfo.isPreviewMode && comments.length == 0) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate('Login');
 			});
 		} else {
-			const findParentIndex = commentDataList.findIndex(e => e._id == comment._id); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
+			const findParentIndex = comments.findIndex(e => e._id == comment._id); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
 			let comment_obj = comment;
 			comment_obj.comment_index = findParentIndex;
 			navigation.push('FeedCommentList', {feedobject: data, showAllContents: true, reply: comment_obj});
@@ -241,8 +240,8 @@ export default ReportDetail = props => {
 	//댓글 수정 클릭
 	const onEdit = (comment, parent) => {
 		let comment_obj = comment; //수정할 댓글의 오브젝트 정보
-		const findParentIndex = commentDataList.findIndex(e => e._id == parent); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
-		const isChild = commentDataList.findIndex(e => e._id == comment._id) == -1; // 수정하려는 댓글이 자식댓글인지 여부
+		const findParentIndex = comments.findIndex(e => e._id == parent); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
+		const isChild = comments.findIndex(e => e._id == comment._id) == -1; // 수정하려는 댓글이 자식댓글인지 여부
 		comment_obj.isChild = isChild;
 		comment_obj.comment_index = findParentIndex;
 		navigation.push('FeedCommentList', {feedobject: data, edit: comment}); // 수정하려는 댓글 정보를 포함해서 보냄
@@ -286,7 +285,7 @@ export default ReportDetail = props => {
 				<View style={[reportDetail.basic_separator]}>
 					<View style={[reportDetail.separator]}></View>
 				</View>
-				{commentDataList && commentDataList.length > 0 ? (
+				{comments && comments.length > 0 ? (
 					<TouchableOpacity
 						onPress={moveToCommentList}
 						style={[
@@ -296,7 +295,7 @@ export default ReportDetail = props => {
 								alignSelf: 'center',
 							},
 						]}>
-						<Text style={[txt.noto26, {color: GRAY10, marginBottom: 20 * DP}]}> 댓글 {commentDataList.length}개 모두 보기</Text>
+						<Text style={[txt.noto26, {color: GRAY10, marginBottom: 20 * DP}]}> 댓글 {comments.length}개 모두 보기</Text>
 					</TouchableOpacity>
 				) : (
 					<></>
@@ -340,7 +339,7 @@ export default ReportDetail = props => {
 	};
 
 	//로딩중일때 출력
-	if (data == 'false' || reportList == 'false' || commentDataList == 'false') {
+	if (data == 'false' || reportList == 'false' || comments == 'false') {
 		return <Loading isModal={false} />;
 	} else
 		return (
@@ -348,7 +347,7 @@ export default ReportDetail = props => {
 				<FlatList
 					ref={flatlist}
 					contentContainerStyle={[reportDetail.container]}
-					data={commentDataList.length > 2 ? commentDataList.slice(0, 2) : commentDataList}
+					data={comments.length > 2 ? comments.slice(0, 2) : comments}
 					showsVerticalScrollIndicator={false}
 					ListHeaderComponent={header()}
 					renderItem={renderItem}

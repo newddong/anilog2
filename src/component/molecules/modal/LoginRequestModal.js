@@ -37,6 +37,7 @@ const LoginRequestModal = props => {
 						alignItems: 'center',
 						alignSelf: 'center',
 						padding: 20 * DP,
+						height: 130 * DP,
 					}}>
 					<Text style={[txt.noto24, {color: GRAY10}]}> 로그인 없이 볼게요.{'   '}</Text>
 					<NextMark />
@@ -66,7 +67,7 @@ const style = StyleSheet.create({
 		width: 614 * DP,
 		backgroundColor: WHITE,
 		paddingTop: 60 * DP,
-		paddingBottom: 52 * DP,
+		// paddingBottom: 52 * DP,
 		paddingHorizontal: 64 * DP,
 		borderRadius: 40 * DP,
 	},

@@ -23,6 +23,8 @@ import CommunityEdit from 'Root/component/templete/community/CommunityEdit';
 import SendHeader from 'Root/navigation/header/SendHeader';
 import SearchMap from 'Root/component/templete/search/SearchMap';
 import AddressSearchPage from 'Root/component/templete/search/AddressSearchPage';
+import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailSettting';
+import SaveButtonHeader from 'Root/navigation/header/SaveButtonHeader';
 
 const SearchStackNav = createStackNavigator();
 
@@ -114,6 +116,11 @@ export default SearchMainStack = props => {
 				name="AddressSearchPage"
 				component={AddressSearchPage}
 				options={{header: props => <SimpleHeader {...props} />, title: '주소 설정'}}
+			/>
+			<SearchStackNav.Screen
+				name="UserInfoDetailSetting"
+				component={UserInfoDetailSettting}
+				options={{header: props => <SaveButtonHeader {...props} />, title: '프로필 상세 정보'}}
 			/>
 			<SearchStackNav.Screen name="HashFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: ''}} />
 		</SearchStackNav.Navigator>

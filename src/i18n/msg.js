@@ -400,6 +400,7 @@ export const PWD_CHECK_INFO = '비밀번호를 다시 한 번 적어주세요.';
 
 //Nickname 설정 관련
 export const NICKNAME_FORM = '2~20자 이내의 영문,한글,숫자,_의 입력만 가능합니다';
+export const PET_NICKNAME_FORM = '1~20자 이내의 영문,한글,숫자,_의 입력만 가능합니다';
 export const NEW_NICK_REQUEST = '닉네임을 입력 해주세요.';
 export const PREVIOUS_NICK_TITLE = '기존 닉네임';
 

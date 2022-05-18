@@ -28,6 +28,8 @@ export default MainTabNavigation = ({route, navigation}) => {
 			case 'FeedCommentList':
 			case 'AddressSearchWeb':
 			case 'AnimalProtectRequestDetail':
+			case 'MissingAnimalDetail':
+			case 'ReportDetail':
 			case 'ArticleDetail':
 			case 'ReviewDetail':
 				// case 'Search':

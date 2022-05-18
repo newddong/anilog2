@@ -166,7 +166,7 @@ export default SocialRelationTopTabNavigation = props => {
 					<FollowerList {...props} followers={followers} resetProfileInfo={fetchData} onChangeSearchInput={onChangeFollower} loading={loading} />
 				)}
 			</SocialRelationTab.Screen>
-			{props.route.params.userobject.user_type == 'user' ? (
+			{props.route.params.userobject.user_type != 'pet' ? (
 				<SocialRelationTab.Screen
 					name="FollowingList"
 					initialParams={{userobject: data}}

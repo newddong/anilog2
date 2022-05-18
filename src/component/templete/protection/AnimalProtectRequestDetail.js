@@ -35,7 +35,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
 	const [writersAnotherRequests, setWritersAnotherRequests] = React.useState('false'); //해당 게시글 작성자의 따른 보호요청게시글 목록
-	const [commentDataList, setCommentDataList] = React.useState('false'); //comment list 정보
+	const [comments, setComments] = React.useState('false'); //comment list 정보
 	const debug = false;
 	const isShelter = userGlobalObject.userInfo.user_type == 'shelter';
 	const isMyPost = data == 'false' ? false : data.protect_request_writer_id._id == userGlobalObject.userInfo._id;
@@ -156,22 +156,22 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				request_number: 2,
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
-			commentdata => {
+			comments => {
 				// debug && console.log('AnimalProtectRequestDetail / getCommentListByProtectId:', commentdata.msg);
-				commentdata.msg.map((v, i) => {
+				comments.msg.map((v, i) => {
 					//1depth를 올려준다.
-					commentdata.msg[i].user_address = commentdata.msg[i].comment_writer_id.user_address;
-					commentdata.msg[i].user_profile_uri = commentdata.msg[i].comment_writer_id.user_profile_uri;
-					commentdata.msg[i].user_nickname = commentdata.msg[i].comment_writer_id.user_nickname;
-					commentdata.msg[i].comment_date = moment(JSON.stringify(commentdata.msg[i].comment_date).replace(/\"/g, '')).format('YYYY.MM.DD hh:mm:ss');
+					comments.msg[i].user_address = comments.msg[i].comment_writer_id.user_address;
+					comments.msg[i].user_profile_uri = comments.msg[i].comment_writer_id.user_profile_uri;
+					comments.msg[i].user_nickname = comments.msg[i].comment_writer_id.user_nickname;
+					comments.msg[i].comment_date = moment(JSON.stringify(comments.msg[i].comment_date).replace(/\"/g, '')).format('YYYY.MM.DD hh:mm:ss');
 					//일반 피드글과 구분하기 위해 feed_type 속성 추가 (다른 템플릿들과 시간 표기가 달라서 실종/제보에만 feed_type을 추가하고 시간 표기시 해당 속성 존재 여부만 판단)
-					commentdata.msg[i].feed_type = 'report';
+					comments.msg[i].feed_type = 'report';
 				});
 
 				//댓글과 대댓글 작업 (부모 댓글과 자식 댓글 그룹 형성- 부모 댓글에서 부모의 childArray 속성에 자식 댓글 속성들을 추가)
 				//부모 댓글은 실제 삭제불가하며 필드로 삭제 여부 값 형성 필요. (네이버나 다음 까페에서도 대댓글 존재시 댓글은 삭제해도 댓글 자리는 존재하고 그 밑으로 대댓글 그대로 노출됨)
 				let commentArray = [];
-				let tempComment = commentdata.msg;
+				let tempComment = comments.msg;
 
 				tempComment.map((v, i) => {
 					// comment_parent가 없으면 일반 댓글
@@ -189,13 +189,14 @@ export default AnimalProtectRequestDetail = ({route}) => {
 						}
 					}
 				});
-				setCommentDataList(commentArray);
+				let res = commentArray.filter(e => !e.comment_is_delete || e.children_count != 0);
+				setComments(res);
 				//댓글이 출력이 안되는 현상 발견으로 비동기 처리
 				debug && console.log('commentArray refresh', commentArray);
 			},
 			err => {
 				console.log(`Comment errcallback:${JSON.stringify(err)}`);
-				setCommentDataList([]);
+				setComments([]);
 			},
 		);
 	};
@@ -317,7 +318,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				navigation.navigate('Login');
 			});
 		} else {
-			const findParentIndex = commentDataList.findIndex(e => e._id == comment._id); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
+			const findParentIndex = comments.findIndex(e => e._id == comment._id); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
 			let comment_obj = comment;
 			comment_obj.comment_index = findParentIndex;
 			navigation.push('ProtectCommentList', {protectObject: data, showKeyboard: true, reply: comment_obj});
@@ -362,8 +363,8 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const onEdit = (comment, parent) => {
 		// console.log('comment', comment);
 		let comment_obj = comment; //수정할 댓글의 오브젝트 정보
-		const findParentIndex = commentDataList.findIndex(e => e._id == parent); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
-		const isChild = commentDataList.findIndex(e => e._id == comment._id) == -1; // 수정하려는 댓글이 자식댓글인지 여부
+		const findParentIndex = comments.findIndex(e => e._id == parent); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
+		const isChild = comments.findIndex(e => e._id == comment._id) == -1; // 수정하려는 댓글이 자식댓글인지 여부
 		comment_obj.isChild = isChild;
 		comment_obj.comment_index = findParentIndex;
 		console.log('findParentIndex', findParentIndex);
@@ -398,7 +399,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					<View style={[temp_style.shelterSmallLabel_animalProtectRequestDetail]}>
 						<ShelterSmallLabel data={data.protect_request_writer_id} onClickLabel={onClickShelterLabel} />
 					</View>
-					<View style={[temp_style.button_animalProtectRequestDetail]}>
+					{/* <View style={[temp_style.button_animalProtectRequestDetail]}>
 						{isMyPost ? (
 							<></>
 						) : data.protect_request_writer_id.is_favorite ? (
@@ -416,7 +417,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 								</Text>
 							</TouchableOpacity>
 						)}
-					</View>
+					</View> */}
 				</View>
 				<ProtectAnimalInfoBox data={data} />
 
@@ -424,9 +425,9 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					<Text style={[txt.noto24]}>{data.protect_request_content || ''}</Text>
 				</View>
 
-				{commentDataList && commentDataList.length > 0 ? (
+				{comments && comments.length > 0 ? (
 					<TouchableOpacity onPress={moveToCommentPage} style={[animalProtectRequestDetail_style.replyCountContainer]}>
-						<Text style={[txt.noto26, {color: GRAY10}]}> 댓글 {commentDataList.length}개 모두 보기</Text>
+						<Text style={[txt.noto26, {color: GRAY10}]}> 댓글 {comments.length}개 모두 보기</Text>
 					</TouchableOpacity>
 				) : (
 					<></>
@@ -473,7 +474,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		);
 	};
 
-	const isLoaded = data == 'false' || writersAnotherRequests == 'false' || commentDataList == 'false';
+	const isLoaded = data == 'false' || writersAnotherRequests == 'false' || comments == 'false';
 
 	if (isLoaded) {
 		return <Loading isModal={false} />;
@@ -481,7 +482,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		return (
 			<View style={[login_style.wrp_main]}>
 				<FlatList
-					data={commentDataList && commentDataList.length > 2 ? commentDataList.slice(0, 2) : commentDataList}
+					data={comments && comments.length > 2 ? comments.slice(0, 2) : comments}
 					ref={flatlist}
 					listKey={({item, index}) => index}
 					ListHeaderComponent={header()}

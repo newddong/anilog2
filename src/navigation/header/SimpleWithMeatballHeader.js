@@ -8,6 +8,7 @@ import Modal from 'Root/component/modal/Modal';
 import {FEED_MEATBALL_MENU_MY_FEED, FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS, PROTECT_REQUEST_STATUS} from 'Root/i18n/msg';
 import {deleteProtectRequest, setShelterProtectAnimalStatus} from 'Root/api/shelterapi';
 import {setProtectRequestStatus} from 'Root/api/protectapi';
+import {deleteFeed} from 'Root/api/feedapi';
 
 //보호 요청게시글 및 제보, 실종글 작성자일 경우 미트볼 아이콘 출력이 되는 헤더
 export default SimpleWithMeatballHeader = ({navigation, route, options, back}) => {
@@ -110,7 +111,35 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 
 	//제보 실종 미트볼 메뉴 - 삭제 클릭
 	const onPressDeleteFeed = () => {
-		console.log('삭제 제보 실종');
+		console.log('삭제 제보 실종', route.params);
+
+		Modal.close();
+		setTimeout(() => {
+			Modal.popTwoBtn(
+				'정말로 이 게시글을 \n 삭제하시겠습니까?',
+				'아니오',
+				'예',
+				() => Modal.close(),
+				() => {
+					Modal.close();
+					setTimeout(() => {
+						Modal.popLoading(true);
+						deleteFeed(
+							{feed_object_id: route.params._id},
+							result => {
+								console.log('result / DeleteFeed / FeedContent : ', result.msg);
+								Modal.close();
+								navigation.goBack();
+							},
+							err => {
+								console.log('err / DeleteFeed / FeedContent : ', err);
+								// Modal.alert('네트워크 오류입니다.');
+							},
+						);
+					}, 100);
+				},
+			);
+		}, 200);
 	};
 
 	//게시글 삭제

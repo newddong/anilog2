@@ -59,7 +59,8 @@ export default CommunityCommentList = props => {
 				request_number: 1000,
 			},
 			comments => {
-				setComments(comments.msg);
+				let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+				setComments(res);
 				// console.log('comments', comments);
 				Modal.close();
 			},
@@ -119,7 +120,8 @@ export default CommunityCommentList = props => {
 						},
 						comments => {
 							!parentComment && setComments([]); //댓글목록 초기화
-							setComments(comments.msg);
+							let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+							setComments(res);
 							parentComment && addChildCommentFn.current();
 							setPrivateComment(false);
 							setEditMode(false);
@@ -147,9 +149,9 @@ export default CommunityCommentList = props => {
 						},
 						comments => {
 							!parentComment && setComments([]); //댓글목록 초기화
-							setComments(comments.msg);
+							let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+							setComments(res);
 							parentComment && addChildCommentFn.current();
-							// console.log('comments', comments);
 							setPrivateComment(false);
 							setEditMode(false);
 							input.current.blur();
@@ -171,7 +173,10 @@ export default CommunityCommentList = props => {
 			});
 		} else {
 			setPrivateComment(!privateComment);
-			!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+			!privateComment ? Modal.popNoBtn('비밀댓글로 설정되었습니다.') : Modal.popNoBtn('댓글이 공개설정되었습니다.');
+			setTimeout(() => {
+				Modal.close();
+			}, 1000);
 		}
 	};
 
@@ -201,6 +206,11 @@ export default CommunityCommentList = props => {
 	const onDeleteImage = () => {
 		console.log('onDelete Img');
 		setEditData({...editData, comment_photo_uri: ''});
+	};
+
+	//답글 쓰기 후 댓글 작성자 우측 답글취소 버튼 클릭
+	const onCancelChild = () => {
+		setParentComment();
 	};
 
 	// 답글 쓰기 -> Input value 변경 콜백함수
@@ -320,6 +330,8 @@ export default CommunityCommentList = props => {
 						privateComment={privateComment}
 						ref={input}
 						editData={editData}
+						parentComment={parentComment}
+						onCancelChild={onCancelChild}
 					/>
 				</View>
 			) : (

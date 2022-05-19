@@ -137,6 +137,12 @@ const AvatarSelectFromWriteModal = props => {
 							inverted={true}
 							scrollEnabled={false}
 							showsVerticalScrollIndicator={false}
+							onScrollToIndexFailed={err => {
+								console.log('err', err);
+								if (items.length !== 0 && scrollViewRef !== null) {
+									scrollViewRef.current.scrollToIndex({index: err.index != -1 ? err.index : 0, animated: true, viewPosition: 0});
+								}
+							}}
 						/>
 					</View>
 

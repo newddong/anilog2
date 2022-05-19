@@ -1,7 +1,15 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {KeyboardAvoidingView, Text, View} from 'react-native';
-import {AVAILABLE_NICK, NEW_NICK_REQUEST, UNAVAILABLE_NICK, PREVIOUS_NICK_TITLE, NEW_NICK_TITLE, NICKNAME_FORM} from 'Root/i18n/msg';
+import {
+	AVAILABLE_NICK,
+	NEW_NICK_REQUEST,
+	UNAVAILABLE_NICK,
+	PREVIOUS_NICK_TITLE,
+	NEW_NICK_TITLE,
+	NICKNAME_FORM,
+	PET_NICKNAME_FORM,
+} from 'Root/i18n/msg';
 import {btn_w654} from 'Atom/btn/btn_style';
 import Modal from 'Component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
@@ -45,7 +53,7 @@ export default ChangePetProfileImage = props => {
 		setConfirmed(isValid);
 	};
 
-	let regExp = /^[가-힣a-zA-Z0-9_]{2,20}$/;
+	let regExp = /^[가-힣a-zA-Z0-9_]{1,20}$/;
 
 	const validateNewNick = nick => {
 		return regExp.test(nick);
@@ -105,7 +113,7 @@ export default ChangePetProfileImage = props => {
 						descriptionType={'none'}
 						placeholder={NEW_NICK_REQUEST}
 						showMsg={true}
-						alert_msg={NICKNAME_FORM}
+						alert_msg={PET_NICKNAME_FORM}
 						confirm_msg={''}
 						width={654}
 						onClear={onClearNickname}

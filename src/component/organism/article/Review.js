@@ -218,9 +218,9 @@ export default Review = props => {
 		return imageList;
 	};
 
-	const onPressProfile = () => {
-		navigation.push('UserProfile', {userobject: data.community_writer_id});
-	};
+	// const onPressProfile = () => {
+	// 	navigation.push('UserProfile', {userobject: data.community_writer_id});
+	// };
 
 	const searchHighlight = data.community_title.split(new RegExp(`(${props.isSearch})`, 'gi'));
 
@@ -251,7 +251,6 @@ export default Review = props => {
 							<View activeOpacity={0.8} style={[style.profile, {}]}>
 								{/* <UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} time_expression={'date'} /> */}
 								<Text
-									onPress={onPressProfile}
 									style={[
 										txt.roboto24,
 										{flex: 1, alignSelf: 'flex-start', color: data.community_writer_id._id == userGlobalObject.userInfo._id ? APRI10 : BLACK},

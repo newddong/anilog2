@@ -138,7 +138,7 @@ export default MissingReportItem = React.memo(props => {
 							{/* 제보 / 제보위치 / 특징 */}
 							{/* 동물 종류 및 품종 */}
 							<View style={[animalNeedHelp.lowerMenu_kindAndBreed]}>
-								<Text style={[txt.noto34b]}>{data.report_animal_species || ''}</Text>
+								<Text style={[txt.noto34b]}>{data.report_animal_species == '동물종류' ? '' : data.report_animal_species || ''}</Text>
 							</View>
 							{/* 실종/제보 관련 Details */}
 							<View style={[animalNeedHelp.lowerMenu_helpDetail]}>

@@ -23,6 +23,8 @@ import AlarmList from 'Templete/list/AlarmList';
 import AlarmCommentList from 'Organism/comment/AlarmCommentList';
 import UserNotePage from 'Templete/user/UserNotePage';
 import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
+import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailSettting';
+import SaveButtonHeader from 'Root/navigation/header/SaveButtonHeader';
 
 const CommunityMainStackNavi = createStackNavigator();
 
@@ -173,6 +175,11 @@ export default CommunityMainStack = props => {
 				name="EditShelterInfo"
 				component={EditShelterInfo}
 				options={{header: props => <SimpleHeader {...props} />, title: '보호소 정보 수정'}}
+			/>
+			<CommunityMainStackNavi.Screen
+				name="UserInfoDetailSetting"
+				component={UserInfoDetailSettting}
+				options={{header: props => <SaveButtonHeader {...props} />, title: '프로필 상세 정보'}}
 			/>
 		</CommunityMainStackNavi.Navigator>
 	);

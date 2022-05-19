@@ -183,6 +183,14 @@ export default FeedCommentList = props => {
 									setTimeout(() => {
 										flatlist.current.scrollToIndex({animated: true, index: whichComment == -1 ? editData.parent : whichComment, viewPosition: 0.5});
 									}, 500);
+									setTimeout(() => {
+										if (whichComment == -1) {
+											let copy = [...childOpenList];
+											copy.push(editData.parent);
+											console.log('copy', copy);
+											setChildOpenList(copy);
+										}
+									}, 200);
 								},
 								err => {
 									console.log(err);
@@ -227,8 +235,6 @@ export default FeedCommentList = props => {
 											? flatlist.current.scrollToIndex({animated: true, index: 0, viewPosition: 0.5})
 											: flatlist.current.scrollToIndex({animated: true, index: whichParent, viewPosition: 1});
 									}, 500);
-									if (props.route.params.reply) {
-									}
 								},
 								err => {
 									console.log(err);

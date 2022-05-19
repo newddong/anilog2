@@ -203,7 +203,6 @@ const InterestTagModal = props => {
 	};
 
 	const getList = () => {
-		console.log('props.category', props.category);
 		if (props.category == 'Review' || props.category == 'ReviewWrite') {
 			return getReviewCategory();
 		} else if (props.category == 'Activity') {
@@ -342,12 +341,7 @@ const InterestTagModal = props => {
 			return <ActivityIndicator />;
 		} else
 			return (
-				<ScrollView
-					onResponderMove={e => {
-						console.log('e', e.nativeEvent.pageY);
-					}}
-					style={{flex: 1}}
-					ref={scrollRef}>
+				<ScrollView style={{flex: 1}} ref={scrollRef}>
 					<View style={[style.review_container]}>
 						{getCommuntyInterestList(communityInterests.interests_trip, 0)}
 						{getCommuntyInterestList(communityInterests.interests_interior, 1)}

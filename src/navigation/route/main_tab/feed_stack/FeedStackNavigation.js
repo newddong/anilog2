@@ -26,6 +26,7 @@ import CommunityCommentList from 'Root/component/templete/community/CommunityCom
 import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 
 import ProtectCommentList from 'Root/component/templete/protection/ProtectCommentList';
+import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailSettting';
 
 const FeedStack = createStackNavigator();
 
@@ -116,6 +117,11 @@ export default FeedStackNavigation = props => {
 				name="EditShelterInfo"
 				component={EditShelterInfo}
 				options={{header: props => <SimpleHeader {...props} />, title: '보호소 정보 수정'}}
+			/>
+			<FeedStack.Screen
+				name="UserInfoDetailSetting"
+				component={UserInfoDetailSettting}
+				options={{header: props => <SaveButtonHeader {...props} />, title: '프로필 상세 정보'}}
 			/>
 			<FeedStack.Screen name="ProtectCommentList" component={ProtectCommentList} options={{header: props => <SimpleHeader {...props} />}} />
 		</FeedStack.Navigator>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, FlatList, StyleSheet, Platform} from 'react-native';
+import {Text, View, FlatList, StyleSheet, Platform, Keyboard} from 'react-native';
 import CommentList from 'Organism/comment/CommentList';
 import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
 import {createComment, deleteComment, getCommentListByProtectId, updateComment} from 'Root/api/commentapi';
@@ -8,12 +8,13 @@ import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
-import {GRAY10} from 'Root/config/color';
+import {GRAY10, GRAY40, WHITE} from 'Root/config/color';
 import ShelterSmallLabel from 'Root/component/molecules/label/ShelterSmallLabel';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import {useNavigation} from '@react-navigation/core';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import Loading from 'Root/component/molecules/modal/Loading';
+import {feedCommentList} from '../style_templete';
 
 export default ProtectCommentList = props => {
 	// console.log('props.showAllContents', props.route.params.showAllContents);
@@ -75,8 +76,8 @@ export default ProtectCommentList = props => {
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			comments => {
-				const removeDelete = comments.msg.filter(e => e.comment_is_delete != true);
-				setComments(removeDelete);
+				let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+				setComments(res);
 				setIsLoading(false);
 				if (props.route.params.edit != undefined) {
 					scrollToReply(props.route.params.edit.comment_index || 0);
@@ -121,17 +122,14 @@ export default ProtectCommentList = props => {
 			}
 
 			if (editMode) {
-				// delete param.comment_is_secure;
+				let whichComment = comments.findIndex(e => e._id == editData._id);
 				delete param.protect_request_object_id;
-				console.log('param', param);
-				console.log('privateComment', privateComment);
 				updateComment(
 					{
 						...param,
 						commentobject_id: editData._id,
 					},
 					result => {
-						console.log(result);
 						setParentComment();
 						setEditData({
 							comment_contents: '',
@@ -143,13 +141,27 @@ export default ProtectCommentList = props => {
 								request_number: 1000,
 							},
 							comments => {
+								// console.log('comments', comments);
 								!parentComment && setComments([]); //댓글목록 초기화
-								setComments(comments.msg.filter(e => e.comment_is_delete != true));
+								let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+								setComments(res);
 								parentComment && addChildCommentFn.current();
 								setPrivateComment(false);
 								setEditMode(false);
-								// console.log('comments', comments);
 								input.current.blur();
+								setTimeout(() => {
+									console.log('whichComment', whichComment);
+									console.log('editData.parent', editData.parent);
+									flatlist.current.scrollToIndex({animated: true, index: whichComment == -1 ? editData.parent : whichComment, viewPosition: 0.5});
+								}, 500);
+								setTimeout(() => {
+									if (whichComment == -1) {
+										let copy = [...childOpenList];
+										copy.push(editData.parent);
+										console.log('copy', copy);
+										setChildOpenList(copy);
+									}
+								}, 200);
 							},
 							err => console.log(err),
 						);
@@ -157,6 +169,10 @@ export default ProtectCommentList = props => {
 					err => console.log(err),
 				);
 			} else {
+				let whichParent = '';
+				if (parentComment) {
+					whichParent = comments.findIndex(e => e._id == param.commentobject_id);
+				}
 				createComment(
 					param,
 					result => {
@@ -171,13 +187,20 @@ export default ProtectCommentList = props => {
 								request_number: 1000,
 							},
 							comments => {
+								// console.log('comments', comments);
 								!parentComment && setComments([]); //댓글목록 초기화
-								setComments(comments.msg.filter(e => e.comment_is_delete != true));
+								let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+								setComments(res);
 								parentComment && addChildCommentFn.current();
 								setPrivateComment(false);
 								setEditMode(false);
-								// console.log('comments', comments);
 								input.current.blur();
+								setTimeout(() => {
+									console.log('whichParent', whichParent);
+									whichParent == '' || whichParent == -1
+										? flatlist.current.scrollToIndex({animated: true, index: 0, viewPosition: 0})
+										: flatlist.current.scrollToIndex({animated: true, index: whichParent, viewPosition: 0});
+								}, 500);
 							},
 							err => console.log(err),
 						);
@@ -188,6 +211,11 @@ export default ProtectCommentList = props => {
 		}
 	};
 
+	//페이지 상단 보호소 프로필 클릭
+	const onClickShelterLabel = () => {
+		navigation.push('UserProfile', {userobject: data.protect_request_writer_id});
+	};
+
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
 	const onLockBtnClick = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
@@ -196,8 +224,16 @@ export default ProtectCommentList = props => {
 			});
 		} else {
 			setPrivateComment(!privateComment);
-			!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+			!privateComment ? Modal.popNoBtn('비밀댓글로 설정되었습니다.') : Modal.popNoBtn('댓글이 공개설정되었습니다.');
+			setTimeout(() => {
+				Modal.close();
+			}, 1000);
 		}
+	};
+
+	//답글 쓰기 후 댓글 작성자 우측 답글취소 버튼 클릭
+	const onCancelChild = () => {
+		setParentComment();
 	};
 
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
@@ -243,6 +279,7 @@ export default ProtectCommentList = props => {
 		const findParentIndex = comments.findIndex(e => e._id == parent);
 		setEditMode(true);
 		setPrivateComment(comment.comment_is_secure);
+		setParentComment(); // 수정모드로 전환시
 		setEditData({...comment, parent: findParentIndex});
 		setTimeout(() => {
 			input.current.focus();
@@ -293,10 +330,6 @@ export default ProtectCommentList = props => {
 		}
 	};
 
-	const onClickShelterLabel = () => {
-		navigation.push('UserProfile', {userobject: data.protect_request_writer_id});
-	};
-
 	//답글 더보기 클릭
 	const showChild = index => {
 		scrollToReply(index);
@@ -306,18 +339,51 @@ export default ProtectCommentList = props => {
 		setReplyHeight(e.nativeEvent.layout.height);
 	};
 
+	//댓글 수정 => 키보드 해제시 수정모드가 종료되도록 적용
+	React.useEffect(() => {
+		const cancelEditMode = () => {
+			setPrivateComment(false);
+			setEditMode(false);
+			setEditData({
+				comment_contents: '',
+				comment_photo_uri: '',
+			});
+		};
+		let didhide = Keyboard.addListener('keyboardDidHide', e => {
+			cancelEditMode();
+		});
+		return () => {
+			didhide.remove();
+		};
+	}, []);
+
 	const render = ({item, index}) => {
 		const isOpen = childOpenList.includes(index);
+		if (isOpen) {
+			console.log('isOpen', index, isOpen);
+		}
+		//수정 혹은 답글쓰기 때, 대상 부모 댓글의 배경색을 바꾸는 함수
+		const getBgColor = () => {
+			let result = WHITE;
+			if (editMode && editData.parent == index) {
+				result = GRAY40;
+			} else if (parentComment && parentComment._id == item._id) {
+				result = GRAY40;
+			}
+			return result;
+		};
 		return (
-			<ParentComment
-				parentComment={item}
-				onPressReplyBtn={onReplyBtnClick} // 부모 댓글의 답글쓰기 클릭 이벤트
-				onEdit={onEdit}
-				onPressDelete={onPressDelete}
-				onPressDeleteChild={onPressDelete}
-				showChild={() => showChild(index)}
-				openChild={isOpen}
-			/>
+			<View style={[feedCommentList.commentContainer, {backgroundColor: getBgColor(), alignItems: 'center', width: 750 * DP}]} key={item._id}>
+				<ParentComment
+					parentComment={item}
+					onPressReplyBtn={onReplyBtnClick} // 부모 댓글의 답글쓰기 클릭 이벤트
+					onEdit={onEdit}
+					onPressDelete={onPressDelete}
+					onPressDeleteChild={onPressDelete}
+					showChild={() => showChild(index)}
+					openChild={isOpen}
+				/>
+			</View>
 		);
 	};
 
@@ -373,6 +439,8 @@ export default ProtectCommentList = props => {
 					privateComment={privateComment}
 					ref={input}
 					editData={editData}
+					parentComment={parentComment}
+					onCancelChild={onCancelChild}
 				/>
 			</View>
 		</View>
@@ -381,7 +449,7 @@ export default ProtectCommentList = props => {
 
 const style = StyleSheet.create({
 	contentContainer: {
-		width: 654 * DP,
+		width: 750 * DP,
 		alignSelf: 'center',
 		alignItems: 'center',
 		marginBottom: 20 * DP,

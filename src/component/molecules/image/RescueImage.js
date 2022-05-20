@@ -36,18 +36,18 @@ const RescueImage = props => {
 		}
 	};
 	return (
-		<TouchableOpacity activeOpacity={0.8} onPress={() => props.onPressReqeustPhoto()} style={[styles.img_rect_654x542, {zIndex: -2}]}>
+		<View style={[styles.img_rect_654x542, {zIndex: -2}]}>
 			<Swiper showsPagination={false} autoplay={false} loop={false} horizontal={true}>
 				{props.img_uri != undefined &&
 					props.img_uri.map((data, idx) => (
-						<View key={idx}>
-							<Image source={{uri: data}} style={styles.img_rect_654x542} />
+						<TouchableOpacity activeOpacity={0.8} onPress={() => props.onPressReqeustPhoto()} key={idx}>
+							<Image onP source={{uri: data}} style={styles.img_rect_654x542} />
 							<View style={[style.swiper_index]}>
 								<Text style={[txt.roboto24, {color: 'white'}]}>
 									{idx + 1}/{props.img_uri.length}
 								</Text>
 							</View>
-						</View>
+						</TouchableOpacity>
 					))}
 			</Swiper>
 			{props.status != 'rainbowbridge' ? (
@@ -64,7 +64,7 @@ const RescueImage = props => {
 			) : (
 				<></>
 			)}
-		</TouchableOpacity>
+		</View>
 	);
 };
 

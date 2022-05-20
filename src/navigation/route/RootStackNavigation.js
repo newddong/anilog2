@@ -77,6 +77,9 @@ import TermsAndPolicy from 'Root/component/templete/user/TermsAndPolicy';
 import Certification from 'Root/component/templete/login/Certification';
 import AskQuestion from 'Root/component/templete/user/AskQuestion';
 import ShelterAsk from 'Root/component/templete/shelter/ShelterAsk';
+import ReportDetail from 'Root/component/templete/missing/ReportDetail';
+import MissingAnimalDetail from 'Root/component/templete/missing/MissingAnimalDetail';
+import SimpleWithMeatballHeader from '../header/SimpleWithMeatballHeader';
 
 const RootStack = createStackNavigator();
 
@@ -380,6 +383,16 @@ export default RootStackNavigation = () => {
 							name="ShelterAsk"
 							component={ShelterAsk}
 							options={{header: props => <SimpleHeader {...props} />, title: '보호소 문의하기'}}
+						/>
+						<RootStack.Screen
+							name="MissingAnimalDetail"
+							component={MissingAnimalDetail}
+							options={{header: props => <SimpleWithMeatballHeader {...props} />}}
+						/>
+						<RootStack.Screen
+							name="ReportDetail"
+							component={ReportDetail}
+							options={{header: props => <SimpleWithMeatballHeader {...props} />, title: '제보글'}}
 						/>
 					</RootStack.Navigator>
 

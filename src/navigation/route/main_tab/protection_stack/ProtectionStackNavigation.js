@@ -22,6 +22,8 @@ import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
 import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
 import SearchMainStack from '../../search_tab/SearchMainStack';
+import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailSettting';
+import SaveButtonHeader from 'Root/navigation/header/SaveButtonHeader';
 
 const ProtectionStack = createStackNavigator();
 
@@ -115,6 +117,11 @@ export default ProtectionStackNavigation = props => {
 				name="EditShelterInfo"
 				component={EditShelterInfo}
 				options={{header: props => <SimpleHeader {...props} />, title: '보호소 정보 수정'}}
+			/>
+			<ProtectionStack.Screen
+				name="UserInfoDetailSetting"
+				component={UserInfoDetailSettting}
+				options={{header: props => <SaveButtonHeader {...props} />, title: '프로필 상세 정보'}}
 			/>
 		</ProtectionStack.Navigator>
 	);

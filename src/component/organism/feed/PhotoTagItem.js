@@ -23,8 +23,9 @@ import Tag from 'Root/component/molecules/tag/Tag';
 import Swiper from 'react-native-swiper';
 import {styles} from 'Atom/image/imageStyle';
 import {Tag70} from 'Atom/icon';
+import Modal from 'Root/component/modal/Modal';
 
-export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, viewmode}) => {
+export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, viewmode, feedType}) => {
 	const [tags, setTags] = React.useState(taglist ? taglist : []);
 	const [showTags, setShowTags] = React.useState(!viewmode);
 	const nav = useNavigation();
@@ -34,7 +35,32 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 	const makeTag = e => {
 		clickedPost.current = {x: e.nativeEvent.locationX, y: e.nativeEvent.locationY};
 		console.log(clickedPost.current);
-		!viewmode && nav.navigate({name: 'UserList'});
+		if (viewmode) {
+			if (data.feed_type == 'report' || data.feed_type == 'missing') {
+				if (data.feed_type == 'report') {
+					nav.navigate('ReportDetail', {_id: data._id});
+				} else {
+					let sexValue = '';
+					switch (data.missing_animal_sex) {
+						case 'male':
+							sexValue = '남';
+							break;
+						case 'female':
+							sexValue = '여';
+							break;
+						case 'unknown':
+							sexValue = '성별모름';
+							break;
+					}
+					const titleValue = data.missing_animal_species + '/' + data.missing_animal_species_detail + '/' + sexValue;
+					nav.navigate('MissingAnimalDetail', {title: titleValue, _id: data._id});
+				}
+			} else {
+				Modal.popPhotoListViewModal([uri]);
+			}
+		} else {
+			!viewmode && nav.navigate({name: 'UserList'});
+		}
 	};
 
 	const deleteTag = user => {

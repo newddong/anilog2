@@ -4009,9 +4009,9 @@ export const feedCommentList = StyleSheet.create({
 	},
 	commentBox_photo: {
 		width: 750 * DP,
-		height: 318 * DP,
+		// height: 318 * DP,
 		// paddingBottom: 12 * DP,
-		paddingTop: 30 * DP,
+		paddingTop: 20 * DP,
 		paddingBottom: 20 * DP,
 		paddingHorizontal: 20 * DP,
 		alignItems: 'center',
@@ -4421,7 +4421,7 @@ export const feedWrite = StyleSheet.create({
 		marginBottom: 4 * DP,
 	},
 	missing_location_input: {
-		height: 230 * DP,
+		// height: 230 * DP,
 		width: 654 * DP,
 		marginBottom: 30 * DP,
 	},
@@ -4471,7 +4471,7 @@ export const feedWrite = StyleSheet.create({
 		borderBottomColor: APRI10,
 	},
 	report_location: {
-		height: 230 * DP,
+		// height: 230 * DP,
 		width: 654 * DP,
 		marginVertical: 30 * DP,
 	},

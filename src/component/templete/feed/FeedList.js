@@ -3,7 +3,7 @@ import {StyleSheet, View, FlatList, RefreshControl, Platform, NativeModules, Tex
 import {GRAY10, GRAY20, WHITE} from 'Root/config/color';
 import {Write94, Camera54} from 'Atom/icon';
 import Feed from 'Organism/feed/Feed';
-import {getSuggestFeedList} from 'Root/api/feedapi';
+import {deleteFeed, getSuggestFeedList} from 'Root/api/feedapi';
 import Modal from 'Component/modal/Modal';
 import DP from 'Root/config/dp';
 import {getFeedListByUserId, getFavoriteFeedListByUserId, getUserTaggedFeedList} from 'Root/api/feedapi';
@@ -283,6 +283,25 @@ export default FeedList = ({route, navigation}) => {
 		setRefresh(!refresh);
 	}, [feedList]);
 
+	const deleteFeedItem = id => {
+		Modal.close();
+		setTimeout(() => {
+			Modal.popLoading(true);
+			deleteFeed(
+				{feed_object_id: id},
+				result => {
+					console.log('result / DeleteFeed / FeedContent : ', result.msg);
+					onRefresh();
+					Modal.close();
+				},
+				err => {
+					console.log('err / DeleteFeed / FeedContent : ', err);
+					// Modal.alert('네트워크 오류입니다.');
+				},
+			);
+		}, 100);
+	};
+
 	const moveToFeedWrite = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
@@ -298,7 +317,7 @@ export default FeedList = ({route, navigation}) => {
 	};
 
 	const renderItem = ({item}) => {
-		return <Feed data={item} />;
+		return <Feed data={item} deleteFeed={deleteFeedItem} />;
 	};
 
 	const wait = timeout => {

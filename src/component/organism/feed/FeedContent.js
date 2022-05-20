@@ -25,7 +25,7 @@ import {getTimeLapsed, parsingDate} from 'Root/util/dateutil';
 import HashText from 'Molecules/info/HashText';
 import Modal from 'Root/component/modal/Modal';
 import {createMemoBox, followUser, getAnimalListNotRegisterWithCompanion, getFollows, unFollowUser} from 'Root/api/userapi';
-import {favoriteFeed, getFavoriteFeedListByUserId} from 'Root/api/feedapi';
+import {deleteFeed, favoriteFeed, getFavoriteFeedListByUserId} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import MissingReportInfo from 'Organism/info/MissingReportInfo';
 import {createReport} from 'Root/api/report';
@@ -266,7 +266,19 @@ export default FeedContent = props => {
 	//피드 미트볼 메뉴 - 삭제 클릭
 	const onPressDelete = () => {
 		Modal.close();
-		console.log('삭제');
+		// console.log('삭제');
+		console.log('props.data before Delete', props.data._id);
+		setTimeout(() => {
+			Modal.popTwoBtn(
+				'정말로 이 게시글을 \n 삭제하시겠습니까?',
+				'아니오',
+				'예',
+				() => Modal.close(),
+				() => {
+					props.deleteFeed(props.data._id);
+				},
+			);
+		}, 200);
 	};
 
 	//피드 미트볼 - 즐겨찾기 설정
@@ -567,7 +579,7 @@ export default FeedContent = props => {
 								<></>
 							) : (
 								<View style={[organism_style.button_view_feedContent]}>
-									<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
+									{/* <View style={[organism_style.favoriteTag_view_feedContent, {}]}>
 										<View style={[organism_style.favoriteTag_feedContent]}>
 											{props.data.feed_writer_id.is_favorite ? (
 												<FavoriteTag48_Filled onPress={() => onPressFavoriteWriter(false)} />
@@ -578,7 +590,7 @@ export default FeedContent = props => {
 										<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
 											<Text style={[txt.roboto24, {color: GRAY10}]}>{count_to_K(props.data.feed_writer_id.user_favorite_count)}</Text>
 										</View>
-									</View>
+									</View> */}
 									{/* <Meatball50_GRAY20_Horizontal onPress={onClickMeatball} /> */}
 
 									{/* <View style={[organism_style.share48_view_feedContent]}>
@@ -598,8 +610,11 @@ export default FeedContent = props => {
 				</View>
 				{/* line 1-1 (실종/제보관련 내용) */}
 				{!route.name.includes('MainHomeFeedList') &&
+					!route.name.includes('UserTagFeedList') &&
 					!route.name.includes('UserFeedList') &&
 					!route.name.includes('FavoriteFeedList') &&
+					!route.name.includes('HashFeedList') &&
+					!route.name.includes('TagMeFeedList') &&
 					(feed_type == 'report' || feed_type == 'missing') && (
 						<View style={[organism_style.tipOff_feedContent, feedContent_style.tipOff]} onLayout={onLayoutReport}>
 							<MissingReportInfo data={props.data} />
@@ -638,4 +653,5 @@ FeedContent.defaultProps = {
 		tipOff: true,
 		content: 'comment 내용을 넣어야 합니다.',
 	},
+	deleteFeed: () => {},
 };

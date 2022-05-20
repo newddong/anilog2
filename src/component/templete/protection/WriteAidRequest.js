@@ -127,10 +127,10 @@ export default WriteAidRequest = ({route, navigation}) => {
 					<View style={[writeAidRequest.titleContainer]}>
 						<TextInput
 							onChangeText={onChangeTitle}
-							placeholder={'제목 입력'}
+							placeholder={'제목 입력 (최대30자)'}
 							placeholderTextColor={GRAY20}
 							// numberOfLines={1}
-							maxLength={100}
+							maxLength={30}
 							style={[txt.noto30, writeAidRequest.titleInput, {borderBottomColor: APRI10}]}
 						/>
 					</View>

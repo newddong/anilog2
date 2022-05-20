@@ -251,6 +251,7 @@ export default function HashInput(props) {
 				)}
 				<TextInput
 					{...props} //props override
+					style={{marginTop: 10 * DP}}
 					textAlignVertical={'top'}
 					multiline={true}
 					value={value}
@@ -290,6 +291,6 @@ const style = StyleSheet.create({
 	mediaListContainer: {
 		width: 600 * DP,
 		// height: 190 * DP,
-		marginTop: 10 * DP,
+		marginTop: 20 * DP,
 	},
 });

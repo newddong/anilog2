@@ -496,3 +496,13 @@ export async function setAlarmStatus(params, callback, errcallback) {
 export async function getAlarmStatus(params, callback, errcallback) {
 	apiController('/user/getAlarmStatus', arguments);
 }
+
+/** 사용자 가입 계정 개수
+ * @param {object} params
+ * @param {string} params.user_phone_number  - 사용자 user_phone_number
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getUserAccountCount(params, callback, errcallback) {
+	apiController('/user/getUserAccountCount', arguments);
+}

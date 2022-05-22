@@ -23,7 +23,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
  * @param {(bool:boolean)=>void} props.onPressFavorite - 즐겨찾기 클릭
  * @param {string} props.isSearch - 리뷰 컨텐츠 클릭
  */
-export default Review = props => {
+export default Review = React.memo(props => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.data);
 	const [moreCategory, setMoreCategory] = React.useState(false);
@@ -293,7 +293,7 @@ export default Review = props => {
 			</View>
 		</View>
 	);
-};
+});
 
 Review.defaultProps = {
 	onPressReply: () => {},

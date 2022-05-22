@@ -470,30 +470,17 @@ export default ReviewMain = ({route, navigation}) => {
 	} else
 		return (
 			<View style={[style.container]}>
-				<FlatList
-					data={[{}]}
-					listKey={({item, index}) => index}
-					showsVerticalScrollIndicator={false}
-					renderItem={({item, index}) => {
-						return (
-							<>
-								<ReviewList
-									items={getData()}
-									recommend={filterRef.current ? [] : recommend}
-									whenEmpty={whenEmpty}
-									onPressReviewContent={onPressReviewContent}
-									onPressReply={onPressReply}
-									onPressMeatball={onPressMeatball}
-									onPressLike={index => onPressLike(index, true)}
-									onPressUnlike={index => onPressLike(index, false)}
-									onPressFavorite={onPressFavorite}
-									onPressRecommendReview={onPressRecommendReview}
-								/>
-							</>
-						);
-					}}
-					ListHeaderComponent={filterComponent()}
-					stickyHeaderIndices={[0]}
+				<ReviewList
+					items={getData()}
+					recommend={filterRef.current ? [] : recommend}
+					whenEmpty={whenEmpty}
+					onPressReviewContent={onPressReviewContent}
+					onPressReply={onPressReply}
+					onPressMeatball={onPressMeatball}
+					onPressLike={index => onPressLike(index, true)}
+					onPressUnlike={index => onPressLike(index, false)}
+					onPressFavorite={onPressFavorite}
+					onPressRecommendReview={onPressRecommendReview}
 				/>
 				<View style={[style.write, style.shadowButton]}>
 					<WriteBoard onPress={onPressWrite} />

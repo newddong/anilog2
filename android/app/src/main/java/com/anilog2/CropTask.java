@@ -15,8 +15,10 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactContext;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -34,7 +36,6 @@ public class CropTask extends GuardedAsyncTask<Void, Void> {
     int mTargetHeight = 0;
     final Promise mPromise;
     PhotoListModule mModule;
-    PhotoListUtil utii;
 
     public CropTask(
             ReactContext context,
@@ -106,16 +107,29 @@ public class CropTask extends GuardedAsyncTask<Void, Void> {
             }
 
             File tempFile = PhotoListUtil.createFile(mContext, PhotoListUtil.getFileTypeFromMime(mimeType));
+            writeCompressedBitmapToFile(cropped, mimeType, tempFile);
 
             if(mimeType.equals("image/jpeg")){
-
+                String tempOri = PhotoListUtil.getOrientation(Uri.parse(mUri),mContext);
+                PhotoListUtil.setOrientation(tempFile, tempOri, mContext);
             }
+            mPromise.resolve(Uri.fromFile(tempFile).toString());
 
         }catch (Exception e){
             mPromise.reject(e);
         }
     }
 
+    private static void writeCompressedBitmapToFile(Bitmap cropped, String mimeType, File tempFile) throws IOException{
+        OutputStream out = new FileOutputStream(tempFile);
+        try{
+            cropped.compress(PhotoListUtil.getBitmapCompressFormat(mimeType), 90, out);
+        }finally {
+            if(out!=null){
+                out.close();
+            }
+        }
+    }
 
     private Bitmap crop(BitmapFactory.Options outOptions) throws IOException{
         InputStream inputStream = openBitmapInputStream();

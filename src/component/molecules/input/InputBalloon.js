@@ -74,7 +74,7 @@ const InputBalloon = React.forwardRef((props, ref) => {
 					justifyContent: 'center',
 				}}>
 				<TextInput
-					style={[txt.noto24, {width: 606 * DP, height: 182 * DP, textAlignVertical: 'top'}]}
+					style={[txt.noto28, {width: 606 * DP, height: 182 * DP, textAlignVertical: 'top'}]}
 					onChangeText={text => onChange(text)}
 					placeholder={props.placeholder}
 					multiline={true}

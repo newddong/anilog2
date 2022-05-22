@@ -131,6 +131,7 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 									style={[style.replyTextInput_photo]}
 									multiline={true}
 									placeholder={'댓글입력..'}
+									onFocus={onFocus}
 									onChangeText={onChangeText}
 									ref={inputRef}
 								/>
@@ -145,12 +146,12 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 						<View style={[style.commentBox_top]}>
 							<TextInput
 								defaultValue={content == '' ? null : content}
-								style={[style.replyTextInput, {}]}
+								style={[style.replyTextInput]}
 								multiline={true}
 								placeholder={'댓글입력..'}
 								onChangeText={onChangeText}
 								onFocus={onFocus}
-								ref={inputRef}></TextInput>
+								ref={inputRef}/>
 						</View>
 						<CommentBoxBottom {...props} onWrite={onWrite} />
 					</View>

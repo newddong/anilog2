@@ -5,9 +5,9 @@ import DP from 'Root/config/dp';
 import {day} from 'Root/i18n/msg';
 import {txt} from 'Root/config/textstyle';
 import {WHITE, APRI10, BLACK, GRAY10, GRAY20, GRAY30, MIDNIGHT_BLUE, BLUE10, RED10} from 'Root/config/color';
-import {NextMark} from 'Root/component/atom/icon';
+import {ArrowMarkForCalendar, NextMark} from 'Root/component/atom/icon';
 import AniButton from '../button/AniButton';
-import {btn_w108, btn_w116, btn_w176, btn_w92} from 'Root/component/atom/btn/btn_style';
+import {btn_w116, btn_w92} from 'Root/component/atom/btn/btn_style';
 import Modal from 'Root/component/modal/Modal';
 
 const Calendar_Multiple = props => {
@@ -16,6 +16,7 @@ const Calendar_Multiple = props => {
 	const [getMoment, setMoment] = React.useState(moment()); //현재 시각 정보
 	const [selectedDates, setSelectedDates] = React.useState([]); //선택된 날짜 목록
 	const [isMaximum, setIsMaximum] = React.useState(false); //선택가능 숫자 초과 선택 여부
+	const [errorMsg, setErrorMsg] = React.useState();
 	const animatedOpacity = React.useRef(new Animated.Value(0)).current;
 	const today = getMoment;
 	const firstWeek = today.clone().startOf('month').week(); //현재 날짜 정보가 가지는 month의 첫째 주 정보를 가져온다
@@ -66,12 +67,19 @@ const Calendar_Multiple = props => {
 			// console.log('filtered', filtered);
 			setSelectedDates(filtered);
 		} else if (selectedDates.length + 1 > props.maxLength) {
+			setErrorMsg(props.maxLength + '일 이상의 선택은 불가합니다.');
 			setIsMaximum(true);
 		} else {
 			let copy = [...selectedDates];
 			copy.push(dateFormat);
 			setSelectedDates(copy);
 		}
+	};
+
+	//이전날짜 클릭
+	const onPressPrevious = () => {
+		setErrorMsg('오늘 날짜 기준으로 이전의 날짜만 \n 선택이 가능합니다.');
+		setIsMaximum(true);
 	};
 
 	const days_selectableMode = week => {
@@ -104,9 +112,9 @@ const Calendar_Multiple = props => {
 						} else {
 							//미래의 날짜들
 							return (
-								<View key={index} style={styles.days_this_month}>
+								<TouchableOpacity onPress={onPressPrevious} activeOpacity={1} key={index} style={styles.days_this_month}>
 									<Text style={[txt.roboto28, {color: GRAY20}]}>{days.format('D')}</Text>
-								</View>
+								</TouchableOpacity>
 							);
 						}
 					})}
@@ -139,23 +147,23 @@ const Calendar_Multiple = props => {
 				<View style={[styles.headerCont, {}]}>
 					{/* 지난달 */}
 					<TouchableOpacity
-						style={styles.changeMonthBtn}
+						style={[styles.changeMonthBtn]}
 						onPress={() => {
 							setMoment(getMoment.clone().subtract(1, 'month'));
 						}}>
 						<View style={[styles.monthConatiner]}>
 							<Text style={[txt.roboto32b, {color: GRAY20, marginRight: 50 * DP}]}>{getMoment.clone().subtract(1, 'month').month() + 1}</Text>
-							<View style={{transform: [{rotate: '180deg'}]}}>
-								<NextMark />
+							<View style={{transform: [{rotate: '0deg'}]}}>
+								<ArrowMarkForCalendar />
 							</View>
 						</View>
 					</TouchableOpacity>
 					{/* 현재월 */}
-					<TouchableWithoutFeedback style={styles.changeMonthBtn}>
+					<View style={[styles.changeMonthBtn, {width: 160 * DP, marginHorizontal: 20 * DP}]}>
 						<Text style={[txt.roboto32b, {justifyContent: 'center', textAlign: 'center', width: 130, paddingTop: 20 * DP}]}>
 							{today.format('MM')}
 						</Text>
-					</TouchableWithoutFeedback>
+					</View>
 					{/* 다음달 */}
 					<TouchableOpacity
 						style={styles.changeMonthBtn}
@@ -163,7 +171,9 @@ const Calendar_Multiple = props => {
 							setMoment(getMoment.clone().add(1, 'month'));
 						}}>
 						<View style={[styles.monthConatiner]}>
-							<NextMark />
+							<View style={{transform: [{rotate: '180deg'}]}}>
+								<ArrowMarkForCalendar />
+							</View>
 							<Text style={[txt.roboto32b, {color: GRAY20, marginLeft: 50 * DP}]}>{getMoment.clone().add(1, 'month').month() + 1}</Text>
 						</View>
 					</TouchableOpacity>
@@ -200,31 +210,9 @@ const Calendar_Multiple = props => {
 			</TouchableOpacity>
 			{/* 3개 이상 선택 시 출력되는 컴포넌트 */}
 			{isMaximum ? (
-				<Animated.View
-					style={[
-						styles.infoContainer,
-						styles.shadow,
-						{
-							opacity: animatedOpacity,
-						},
-					]}>
-					<Text
-						style={[
-							{
-								color: GRAY10,
-								textAlign: 'center',
-							},
-						]}>
-						{props.maxLength}일 이상의 선택은 불가합니다.
-					</Text>
-					<View
-						style={[
-							styles.infoBtnContainer,
-							{
-								alignItems: 'center',
-								marginTop: 50 * DP,
-							},
-						]}>
+				<Animated.View style={[styles.infoContainer, styles.shadow, {opacity: animatedOpacity}]}>
+					<Text style={[{color: GRAY10, textAlign: 'center'}]}>{errorMsg}</Text>
+					<View style={[styles.infoBtnContainer, {alignItems: 'center', marginTop: 50 * DP}]}>
 						<AniButton btnTitle={'확인'} btnStyle={'border'} onPress={() => setIsMaximum(!isMaximum)} />
 					</View>
 				</Animated.View>
@@ -297,8 +285,9 @@ const styles = StyleSheet.create({
 	changeMonthBtn: {
 		alignItems: 'center',
 		alignSelf: 'center',
-		width: 80 * DP,
+		width: 120 * DP,
 		height: 80 * DP,
+		// backgroundColor: 'red',
 		// marginHorizontal: 40 * DP,
 	},
 	changeMonthText: {

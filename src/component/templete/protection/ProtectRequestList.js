@@ -13,17 +13,23 @@ import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import Loading from 'Root/component/molecules/modal/Loading';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
+import {Filter60Border, Filter60Filled} from 'Root/component/atom/icon';
 
 export default ProtectRequestList = ({navigation, route}) => {
 	const [data, setData] = React.useState('false');
 	const [filterData, setFilterData] = React.useState({
+		from: '22.05.21',
+		to: '22.05.24',
 		city: '',
 		protect_animal_species: '',
 		// adoptable_posts: 'false', // 입양 가능한 게시글만 보기 필터는 굳이 api에 한 번 더 접속할 필요가 없으므로 제외처리
 		protect_request_object_id: '',
 		request_number: 1000,
+		shelter_name: '',
 	});
 	const [onlyAdoptable, setOnlyAdoptable] = React.useState(false);
+	const filterRef = React.useRef(false);
+
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			getList();
@@ -37,11 +43,14 @@ export default ProtectRequestList = ({navigation, route}) => {
 			{...filterData},
 			result => {
 				// console.log('result / getProtectRequestList / ProtectRequestList : ', result.msg[0]);
-				result.msg.forEach(each => {
-					each.protect_animal_sex = each.protect_animal_id.protect_animal_sex;
-					each.protect_animal_status = each.protect_animal_id.protect_animal_status;
+				console.log(result.msg.length);
+				let res = result.msg;
+				res.filter(e => e != null);
+				res.map((v, i) => {
+					v.protect_animal_sex = v.protect_animal_id.protect_animal_sex;
+					v.protect_animal_status = v.protect_animal_id.protect_animal_status;
 				});
-				setData(result.msg);
+				setData(res);
 				Modal.close();
 			},
 			err => {
@@ -140,6 +149,27 @@ export default ProtectRequestList = ({navigation, route}) => {
 		);
 	};
 
+	//좌상단 필터 모달 호출
+	const onPressFilter = () => {
+		// console.log('filter', JSON.stringify(filterData));
+		Modal.popProtectRequestFilterModal(
+			{
+				from: '22.05.21',
+				to: '22.05.24',
+				city: filterData.city,
+				shelter: filterData.shelter_name,
+				protect_animal_species: filterData.protect_animal_species,
+			},
+			arg => {
+				console.log('arg', arg);
+				Modal.close();
+			},
+			() => {
+				Modal.close();
+			},
+		);
+	};
+
 	//검색결과가 없을 경우
 	const whenEmpty = () => {
 		return <ListEmptyInfo text={'목록이 없습니다..'} />;
@@ -157,14 +187,6 @@ export default ProtectRequestList = ({navigation, route}) => {
 
 	const renderItem = ({item, index}) => {
 		return <ProtectRequestItem item={item} index={index} />;
-		// return (
-		// 	<ProtectRequest
-		// 		data={data[index]}
-		// 		onClickLabel={(status, id) => onClickLabel(status, id, item)}
-		// 		onFavoriteTag={e => onOff_FavoriteTag(e, index)}
-		// 		onPressProtectRequest={() => onPressProtectRequest(item)}
-		// 	/>
-		// );
 	};
 
 	class ProtectRequestItem extends React.PureComponent {
@@ -211,7 +233,10 @@ export default ProtectRequestList = ({navigation, route}) => {
 		return (
 			<View style={{flex: 1, backgroundColor: '#fff', alignItems: 'center'}}>
 				<View style={[searchProtectRequest.filterView]} key={'header'}>
-					<View style={[searchProtectRequest.filterView.inside]}>
+					<View style={[searchProtectRequest.inside]}>
+						{/* <View style={[searchProtectRequest.shadow_filter]}>
+							{filterRef.current ? <Filter60Filled onPress={onPressFilter} /> : <Filter60Border onPress={onPressFilter} />}
+						</View> */}
 						<View style={{flexDirection: 'row'}}>
 							<View style={[temp_style.filterBtn]}>
 								<ArrowDownButton
@@ -232,13 +257,13 @@ export default ProtectRequestList = ({navigation, route}) => {
 								/>
 							</View>
 						</View>
-						<View style={[searchProtectRequest.filterView.onOffBtnView]}>
-							<View style={[searchProtectRequest.filterView.onOffBtnMsg]}>
-								<Text style={[txt.noto20, {color: GRAY10}]}>{ONLY_CONTENT_FOR_ADOPTION}</Text>
-							</View>
-							<View style={[temp_style.onOffSwitch, searchProtectRequest.filterView.onOffSwitch]}>
-								<OnOffSwitch onSwtichOn={filterOn} onSwtichOff={filterOff} />
-							</View>
+					</View>
+					<View style={[searchProtectRequest.onOffBtnView]}>
+						<View style={[searchProtectRequest.onOffBtnMsg]}>
+							<Text style={[txt.noto20, {color: GRAY10}]}>{ONLY_CONTENT_FOR_ADOPTION}</Text>
+						</View>
+						<View style={[searchProtectRequest.onOffSwitch]}>
+							<OnOffSwitch onSwtichOn={filterOn} onSwtichOff={filterOff} />
 						</View>
 					</View>
 				</View>
@@ -253,7 +278,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					ListEmptyComponent={whenEmpty}
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
-					removeClippedSubviews={true}
+					// removeClippedSubviews={true}
 					extraData={refreshing}
 					initialNumToRender={15}
 					// maxToRenderPerBatch={5} // re-render를 막는군요.

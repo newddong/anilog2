@@ -13,6 +13,7 @@ export default userGlobalObj = {
 		user_type: '',
 		_id: '',
 		favorite_feedlist: [],
+		user_avatar: '',
 	},
 	t: {
 		y: 0,

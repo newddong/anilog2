@@ -1,5 +1,16 @@
 import React from 'react';
-import {ScrollView, Text, TouchableOpacity, View, TouchableWithoutFeedback, TextInput, Platform, Keyboard} from 'react-native';
+import {
+	ScrollView,
+	Text,
+	TouchableOpacity,
+	View,
+	TouchableWithoutFeedback,
+	TextInput,
+	Platform,
+	Keyboard,
+	NativeModules,
+	AppState,
+} from 'react-native';
 import {APRI10, WHITE, GRAY20, GRAY10, GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
@@ -35,6 +46,8 @@ import {FlatList} from 'react-native-gesture-handler';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
+import {openSettings, PERMISSIONS, request} from 'react-native-permissions';
+import LocationButton from 'Root/component/molecules/button/LocationButton';
 
 export default FeedWrite = props => {
 	const [showPetAccountList, setShowPetAccountList] = React.useState(false); //PetAccount 계정
@@ -548,6 +561,33 @@ const MissingForm = props => {
 		);
 	}, []);
 
+	//위치 권한이 설정되어 있지 않을 경우 디바이스 세팅으로 안내
+	const getToSetting = error => {
+		let msg = '위치 서비스를 사용할 수 없습니다. \n 기기의 설정 > 개인정보 보호 에서 위치 \n 서비스를 켜주세요.';
+		if (error == 'blocked') {
+			msg = '현재 해당 앱의 위치서비스 이용이 거절되어 있는 상태입니다. 설정에서 앱에 대한 \n위치서비스를 허용해주세요.';
+		}
+		Modal.popTwoBtn(
+			msg,
+			'취소',
+			'설정으로',
+			() => {
+				Modal.close();
+				props.navigation.goBack();
+			},
+			() => {
+				if (Platform.OS == 'android') {
+					NativeModules.OpenExternalURLModule.generalSettings();
+				} else {
+					openSettings().catch(() => console.warn('cannot open settings'));
+				}
+			},
+			() => {
+				console.log('취소 불가능');
+			},
+		);
+	};
+
 	const getDefaultGender = () => {
 		let result = 0;
 		switch (data.missing_animal_sex) {
@@ -666,6 +706,50 @@ const MissingForm = props => {
 	const inputBalloonRef = React.useRef();
 	const currentPosition = React.useRef(0);
 
+	//위치 권한을 위해 Background로 갔다가 앱으로 돌아왔을 경우 권한을 다시 확인
+	React.useEffect(() => {
+		const subscription = AppState.addEventListener('change', nextAppState => {
+			console.log('appState', nextAppState);
+			Modal.close();
+			if (nextAppState == 'active') {
+				requestPermission(); //다시 권한 요구
+			}
+		});
+		return () => {
+			subscription.remove();
+		};
+	}, []);
+
+	//위치 권한 요구 체크
+	async function requestPermission() {
+		try {
+			request(
+				//위치 권한 요청 (gps가 꺼져있을 경우 출력이 안됨)
+				Platform.select({
+					ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+					android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+				}),
+			).then(res => {
+				console.log('res', res);
+				if (res == 'granted') {
+					//허용
+					onPressCurrentLocation();
+				} else if (res == 'denied') {
+					//거절
+					getToSetting();
+				} else if (res == 'unavailable') {
+					//gps자체가 꺼짐 상태
+					getToSetting();
+				} else if (res == 'blocked') {
+					// anilog앱만 '안함' 상태
+					getToSetting('blocked');
+				}
+			});
+		} catch (error) {
+			console.log('location set error:', error);
+		}
+	}
+
 	//위도 경도 받아오기
 	const onPressCurrentLocation = () => {
 		Modal.popLoading(true);
@@ -676,9 +760,19 @@ const MissingForm = props => {
 			error => {
 				console.log('error get GEOLOCation', error.code, error.message);
 				Modal.close();
-				setTimeout(() => {
-					Modal.alert('주소 받아오기에 실패하였습니다. \n 잠시후 다시 이용부탁드립니다.');
-				}, 200);
+				//User denied access
+				if (error.code == 1) {
+					getToSetting();
+				} else if (error.code == 2) {
+					//Failed
+					getToSetting();
+				} else if (error.code == 3) {
+					//Timeout
+					Modal.popNoBtn('주소를 받아오는데 실패했습니다. \n 잠시후 다시 이용해주세요.');
+					setTimeout(() => {
+						Modal.close();
+					}, 1500);
+				}
 			},
 			{enableHighAccuracy: false, timeout: 6000, maximumAge: 10000},
 		);
@@ -779,7 +873,7 @@ const MissingForm = props => {
 				</View>
 				<View style={[feedWrite.formContentContainer]}>
 					<View style={[temp_style.datePicker_assignShelterInformation, feedWrite.datePicker]}>
-						<DatePicker width={654} onDateChange={onDateChange} />
+						<DatePicker width={654} onDateChange={onDateChange} previous={[data.missing_animal_date]} />
 					</View>
 				</View>
 			</View>
@@ -1055,6 +1149,76 @@ const ReportForm = props => {
 		);
 	};
 
+	//위치 권한을 위해 Background로 갔다가 앱으로 돌아왔을 경우 권한을 다시 확인
+	React.useEffect(() => {
+		const subscription = AppState.addEventListener('change', nextAppState => {
+			Modal.close();
+			if (nextAppState == 'active') {
+				requestPermission(); //다시 권한 요구
+			}
+		});
+		return () => {
+			subscription.remove();
+		};
+	}, []);
+
+	//위치 권한이 설정되어 있지 않을 경우 디바이스 세팅으로 안내
+	const getToSetting = error => {
+		let msg = '위치 서비스를 사용할 수 없습니다. \n 기기의 설정 > 개인정보 보호 에서 위치 \n 서비스를 켜주세요.';
+		if (error == 'blocked') {
+			msg = '현재 해당 앱의 위치서비스 이용이 거절되어 있는 상태입니다. 설정에서 앱에 대한 \n위치서비스를 허용해주세요.';
+		}
+		Modal.popTwoBtn(
+			msg,
+			'취소',
+			'설정으로',
+			() => {
+				Modal.close();
+				props.navigation.goBack();
+			},
+			() => {
+				if (Platform.OS == 'android') {
+					NativeModules.OpenExternalURLModule.generalSettings();
+				} else {
+					openSettings().catch(() => console.warn('cannot open settings'));
+				}
+			},
+			() => {
+				console.log('취소 불가능');
+			},
+		);
+	};
+
+	//위치 권한 요구 체크
+	async function requestPermission() {
+		try {
+			request(
+				//위치 권한 요청 (gps가 꺼져있을 경우 출력이 안됨)
+				Platform.select({
+					ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+					android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+				}),
+			).then(res => {
+				console.log('res', res);
+				if (res == 'granted') {
+					//허용
+					onPressCurrentLocation();
+				} else if (res == 'denied') {
+					//거절
+					getToSetting();
+				} else if (res == 'unavailable') {
+					//gps자체가 꺼짐 상태
+					getToSetting();
+				} else if (res == 'blocked') {
+					// anilog앱만 '안함' 상태
+					getToSetting('blocked');
+				}
+			});
+		} catch (error) {
+			console.log('location set error:', error);
+		}
+	}
+
 	//위도 경도 받아오기
 	const onPressCurrentLocation = () => {
 		Modal.popLoading(true);
@@ -1065,9 +1229,19 @@ const ReportForm = props => {
 			error => {
 				console.log('error get GEOLOCation', error.code, error.message);
 				Modal.close();
-				setTimeout(() => {
-					Modal.alert('주소 받아오기에 실패하였습니다. \n 잠시후 다시 이용부탁드립니다.');
-				}, 200);
+				//User denied access
+				if (error.code == 1) {
+					getToSetting();
+				} else if (error.code == 2) {
+					//Failed
+					getToSetting();
+				} else if (error.code == 3) {
+					//Timeout
+					Modal.popNoBtn('주소를 받아오는데 실패했습니다. \n 잠시후 다시 이용해주세요.');
+					setTimeout(() => {
+						Modal.close();
+					}, 1500);
+				}
 			},
 			{enableHighAccuracy: false, timeout: 6000, maximumAge: 10000},
 		);
@@ -1137,17 +1311,23 @@ const ReportForm = props => {
 						<Text style={[txt.noto24, {color: APRI10}]}>제보 날짜</Text>
 					</View>
 					<View style={[temp_style.datePicker_assignShelterInformation, feedWrite.datePicker]}>
-						<DatePicker width={654} onDateChange={onDateChange} defaultDate={data.report_witness_date || ''} />
+						<DatePicker width={654} onDateChange={onDateChange} previous={[data.report_witness_date]} />
 					</View>
 					<View style={[feedWrite.report_location]}>
-						<View style={{flexDirection: 'row'}}>
+						<View
+							style={{
+								width: 654 * DP,
+								height: 62 * DP,
+								marginBottom: 16 * DP,
+								flexDirection: 'row',
+								justifyContent: 'space-between',
+							}}>
 							<Text style={[txt.noto24, {color: APRI10}]}>제보 장소</Text>
-							<View style={{marginLeft: 20 * DP}}>
-								<AniButton
-									onPress={onPressCurrentLocation}
-									btnStyle={'border'}
+							<View style={{}}>
+								<LocationButton
+									onPress={requestPermission}
 									btnTitle={'현위치'}
-									btnLayout={{height: 50 * DP, borderRadius: 30 * DP, width: 100 * DP}}
+									btnLayout={{width: 164 * DP, height: 62 * DP, borderRadius: 40 * DP}}
 								/>
 							</View>
 						</View>

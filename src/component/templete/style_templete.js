@@ -1368,7 +1368,7 @@ export const buttonstyle = StyleSheet.create({
 			width: 1,
 			height: 2,
 		},
-		elevation: 2,
+		elevation: 4,
 	},
 });
 

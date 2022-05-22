@@ -15,6 +15,7 @@ import community_obj from 'Root/config/community_obj';
 import {REPORT_MENU} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
+import {buttonstyle} from 'Templete/style_templete';
 
 export default ReviewMain = ({route, navigation}) => {
 	const [data, setData] = React.useState('false');
@@ -483,7 +484,18 @@ export default ReviewMain = ({route, navigation}) => {
 					onPressRecommendReview={onPressRecommendReview}
 				/>
 				<View style={[style.write, style.shadowButton]}>
-					<WriteBoard onPress={onPressWrite} />
+					<View
+						style={[{
+							height: 94 * DP,
+							width: 94 * DP,
+							justifyContent: 'center',
+							alignItems: 'center',
+							backgroundColor: '#ff9888',
+							borderRadius: 35 * DP,
+							marginBottom: 20 * DP,
+						},buttonstyle.shadow]}>
+						<WriteBoard onPress={onPressWrite} />
+					</View>
 				</View>
 			</View>
 		);

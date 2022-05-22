@@ -8,7 +8,7 @@ import ProfileInfo from 'Organism/info/ProfileInfo';
 import FeedThumbnailList from 'Organism/feed/FeedThumbnailList';
 import OwnerList from 'Organism/list/OwnerList';
 import PetList from 'Organism/list/PetList';
-import {login_style, profile, temp_style} from 'Templete/style_templete';
+import {login_style, profile, temp_style,buttonstyle} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import InfoScreen from 'Organism/info/InfoScreen';
@@ -502,8 +502,31 @@ export default Profile = ({route}) => {
 									{justifyContent: 'center'},
 									// {backgroundColor: 'yellow'},
 								]}>
-								<Message94 onPress={() => onPressSendMsg(data._id, data.user_nickname)} />
-								<Write94 onPress={moveToFeedWrite} />
+								<View
+									style={[{
+										height: 94 * DP,
+										width: 94 * DP,
+										justifyContent: 'center',
+										alignItems: 'center',
+										backgroundColor: '#ff9888',
+										borderRadius: 35 * DP,
+										marginBottom: 20 * DP,
+									},buttonstyle.shadow]}>
+									<Message94 onPress={() => onPressSendMsg(data._id, data.user_nickname)} />
+								</View>
+								
+								<View
+									style={[{
+										height: 94 * DP,
+										width: 94 * DP,
+										justifyContent: 'center',
+										alignItems: 'center',
+										backgroundColor: '#ff9888',
+										borderRadius: 35 * DP,
+										marginBottom: 20 * DP,
+									},buttonstyle.shadow]}>
+									<Write94 onPress={moveToFeedWrite} />
+								</View>
 							</View>
 						)}
 					</>

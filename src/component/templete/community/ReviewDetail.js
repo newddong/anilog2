@@ -252,10 +252,16 @@ export default ReviewDetail = props => {
 		);
 	};
 
+	const [isReplyFocused, setReplyFocus] = React.useState(false);
 	const onFocus = () => {
 		console.log('onFocus');
+		Platform.OS=='android'&&setReplyFocus(true);
 		scrollToReplyBox();
 	};
+
+	const onBlur = () => {
+		Platform.OS=='android'&&setReplyFocus(false);
+	}
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
 	const onLockBtnClick = () => {
@@ -311,6 +317,7 @@ export default ReviewDetail = props => {
 				navigation.navigate('Login');
 			});
 		} else {
+			input.current?.focus();
 			setParentComment(parentCommentId);
 			editComment || setEditComment(true);
 			setEditMode(false);
@@ -336,9 +343,10 @@ export default ReviewDetail = props => {
 	const scrollToReplyBox = () => {
 		if (Platform.OS == 'android') {
 			input.current?.focus();
-			setTimeout(() => {
-				scrollRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 1, viewOffset: 0});
-			}, 200);
+			scrollRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 1, viewOffset: 0});
+			// setTimeout(() => {
+			// 	scrollRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 1, viewOffset: 0});
+			// }, 200);
 		} else {
 			scrollRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 0.5, viewOffset: 0});
 		}
@@ -579,7 +587,7 @@ export default ReviewDetail = props => {
 	const renderItem = ({item, index}) => {
 		if (index == comments.length - 1) {
 			return (
-					<View style={[{marginTop: 0 * DP, marginBottom: 30 * DP,opacity:key>0?0:1}]}>
+					<View style={[{marginTop: 0 * DP, marginBottom: 30 * DP,opacity:key>0||isReplyFocused?0:1}]}>
 						<ReplyWriteBox
 							onAddPhoto={onAddPhoto}
 							onChangeReplyInput={onChangeReplyInput}
@@ -593,6 +601,7 @@ export default ReviewDetail = props => {
 							parentComment={parentComment}
 							onCancelChild={onCancelChild}
 							onFocus={onFocus}
+							onBlur={onBlur}
 						/>
 					</View>
 			);
@@ -640,7 +649,7 @@ export default ReviewDetail = props => {
 					}}
 					scrollToOverflowEnabled={true} // Just put in here
 				/>
-				{key>0&&<View style={{position:'absolute',bottom:key-2}}>
+				{key>0||isReplyFocused&&<View style={{position:'absolute',bottom:key-2}}>
 				<ReplyWriteBox
 							onAddPhoto={onAddPhoto}
 							onChangeReplyInput={onChangeReplyInput}
@@ -654,6 +663,7 @@ export default ReviewDetail = props => {
 							parentComment={parentComment}
 							onCancelChild={onCancelChild}
 							onFocus={onFocus}
+							onBlur={onBlur}
 				/></View>}
 			</View>
 		);

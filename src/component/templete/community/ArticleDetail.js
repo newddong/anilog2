@@ -275,11 +275,16 @@ export default ArticleDetail = props => {
 			}
 		}
 	};
-
+	const [isReplyFocused, setReplyFocus] = React.useState(false);
 	const onFocus = () => {
 		console.log('onFocus');
+		Platform.OS=='android'&&setReplyFocus(true);
 		scrollToReplyBox();
 	};
+
+	const onBlur = () => {
+		Platform.OS=='android'&&setReplyFocus(false);
+	}
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
 	const onLockBtnClick = () => {
@@ -336,6 +341,7 @@ export default ArticleDetail = props => {
 			});
 		} else {
 			// console.log('대댓글 쓰기 버튼 클릭 : ', parentCommentId.comment_writer_id.user_nickname);
+			input.current?.focus();
 			setParentComment(parentCommentId);
 			editComment || setEditComment(true);
 			setEditMode(false);
@@ -361,10 +367,11 @@ export default ArticleDetail = props => {
 	//수정이나 답글쓰기 눌렀을 때 스크롤 함수
 	const scrollToReplyBox = () => {
 		if (Platform.OS == 'android') {
-			input.current?.focus();
-			setTimeout(() => {
-				flatListRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 1, viewOffset: 0});
-			}, 200);
+			// input.current?.focus();
+			flatListRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 1, viewOffset: 0});
+			// setTimeout(() => {
+			// 	flatListRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 1, viewOffset: 0});
+			// }, 200);
 		} else {
 			flatListRef.current.scrollToIndex({animated: false, index: comments.length - 1, viewPosition: 0.5, viewOffset: 0});
 		}
@@ -588,6 +595,7 @@ export default ArticleDetail = props => {
 							parentComment={parentComment}
 							onCancelChild={onCancelChild}
 							onFocus={onFocus}
+							onBlur={onBlur}
 						/>
 					</View>
 				) : (
@@ -606,7 +614,7 @@ export default ArticleDetail = props => {
 	const renderItem = ({item, index}) => {
 		if (index == comments.length - 1) {
 			return (
-					<View style={[{marginTop: 0 * DP, marginBottom: 30 * DP, opacity:key>0?0:1}]}>
+					<View style={[{marginTop: 0 * DP, marginBottom: 30 * DP, opacity:key>0||isReplyFocused?0:1}]}>
 						
 						<ReplyWriteBox
 							onAddPhoto={onAddPhoto}
@@ -621,6 +629,7 @@ export default ArticleDetail = props => {
 							parentComment={parentComment}
 							onCancelChild={onCancelChild}
 							onFocus={onFocus}
+							onBlur={onBlur}
 						/>
 					</View>
 			);
@@ -662,7 +671,7 @@ export default ArticleDetail = props => {
 					}}
 					removeClippedSubviews={false}
 				/>
-				{key>0&&<View style={{position:'absolute',bottom:key-2}}>
+				{key>0||isReplyFocused&&<View style={{position:'absolute',bottom:key-2}}>
 				<ReplyWriteBox
 							onAddPhoto={onAddPhoto}
 							onChangeReplyInput={onChangeReplyInput}
@@ -676,6 +685,7 @@ export default ArticleDetail = props => {
 							parentComment={parentComment}
 							onCancelChild={onCancelChild}
 							onFocus={onFocus}
+							onBlur={onBlur}
 				/></View>}
 			</View>
 		);

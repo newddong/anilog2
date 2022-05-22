@@ -9,7 +9,8 @@ import {stagebar_style} from 'Organism/style_organism copy';
 import {login_style, btn_style, temp_style, progressbar_style, userAssign} from 'Templete/style_templete';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
-import {getSMStoken} from 'Root/api/userapi';
+import {getSMStoken, getUserAccountCount} from 'Root/api/userapi';
+import Modal from 'Root/component/modal/Modal';
 // DropDown 컴포넌트 해결될 시 props처리와 data처리 추가해야함
 // 이메일부분 삭제 컨펌 나면 삭제 실시 예정
 
@@ -152,7 +153,35 @@ export default UserVerification = props => {
 		setTime(30);
 		//인증번호 재설정
 	};
-
+	//사용자의 전화번호 조회 가입한 계정인지 확인
+	const alreadyUser = () => {
+		getUserAccountCount(
+			{user_phone_number: user_data.user_phone_number},
+			result => {
+				console.log('getUserAccountCount result', result);
+				if (result.msg > 0) {
+					console.log('계정 이미 존재');
+					Modal.popTwoBtn(
+						'이미 가입한 전화번호 입니다.',
+						'로그인하기',
+						'확인',
+						() => {
+							console.log('login');
+							navigation.navigate('Login');
+						},
+						() => {
+							Modal.close();
+						},
+					);
+				} else {
+					verificationRequest;
+				}
+			},
+			err => {
+				console.log('getUserAccountCount result', err);
+			},
+		);
+	};
 	const nameValidator = name => {
 		// let regExp = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,20}$/;
 		let regExp = /^[가-힣a-zA-Z0-9_]{2,20}$/;
@@ -228,15 +257,15 @@ export default UserVerification = props => {
 					{phoneVerified ? (
 						<AniButton btnTitle={'다음'} btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} onPress={goToNextStep} />
 					) : verified ? (
-						<AniButton btnTitle={'인증하기'} btnLayout={btn_w654} disable={false} titleFontStyle={32} onPress={verificationRequest} />
+						<AniButton btnTitle={'인증하기'} btnLayout={btn_w654} disable={false} titleFontStyle={32} onPress={alreadyUser} />
 					) : (
 						<AniButton btnTitle={'인증하기'} btnLayout={btn_w654} disable={true} titleFontStyle={32} onPress={verificationRequest} />
 					)}
 				</View>
 				{/* 개발용 다음 버튼 */}
-				<View style={[btn_style.btn_w654, userAssign.btn_w654]}>
+				{/* <View style={[btn_style.btn_w654, userAssign.btn_w654]}>
 					<AniButton btnTitle={'다음'} btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} onPress={goToNextStep} />
-				</View>
+				</View> */}
 			</ScrollView>
 		</View>
 	);

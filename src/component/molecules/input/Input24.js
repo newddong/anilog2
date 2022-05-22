@@ -4,7 +4,7 @@ import PropsTypes, {any, bool, func, number, object, oneOf, oneOfType, string} f
 import {Text, View, TextInput, Platform} from 'react-native';
 import DP from 'Root/config/dp';
 import {APRI10, GRAY10, GRAY20, GRAY30, GRAY40, GREEN, RED10} from 'Root/config/color';
-import {Cross46, Eye52_APRI10, Eye52_GRAY20} from 'Atom/icon';
+import {CheckFilled, Cross46, Eye52_APRI10, Eye52_GRAY20} from 'Atom/icon';
 import Modal from 'Component/modal/Modal';
 /**
  * 인풋 크기 24
@@ -12,7 +12,7 @@ import Modal from 'Component/modal/Modal';
  *
  */
 const Input24 = React.forwardRef((props, ref) => {
-	// console.log('props', props);
+	console.log('props', props);
 	React.useImperativeHandle(ref, () => ({
 		focus: () => {
 			inputRef.current.focus();
@@ -160,13 +160,24 @@ const Input24 = React.forwardRef((props, ref) => {
 					]}
 					onPressIn={props.onPressIn}
 				/>
-				{props.value.length > 0 && props.showCrossMark ? (
+				{props.verified ? (
+					<View style={{position: 'absolute', right: 0}}>
+						<CheckFilled />
+					</View>
+				) : props.value.length > 0 && props.showCrossMark ? (
 					<View style={{position: 'absolute', right: 0}}>
 						<Cross46 onPress={onClear} />
 					</View>
 				) : (
 					false
 				)}
+				{/* {props.value.length > 0 && props.showCrossMark ? (
+					<View style={{position: 'absolute', right: 0}}>
+						<Cross46 onPress={onClear} />
+					</View>
+				) : (
+					false
+				)} */}
 			</View>
 			{getMsg()}
 		</View>

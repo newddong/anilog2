@@ -3,7 +3,7 @@ import {StyleSheet, View, FlatList, RefreshControl, Platform, NativeModules, Tex
 import {GRAY10, GRAY20, WHITE} from 'Root/config/color';
 import {Write94, Camera54} from 'Atom/icon';
 import Feed from 'Organism/feed/Feed';
-import {deleteFeed, getSuggestFeedList} from 'Root/api/feedapi';
+import {deleteFeed, getMissingReportList, getSuggestFeedList} from 'Root/api/feedapi';
 import Modal from 'Component/modal/Modal';
 import DP from 'Root/config/dp';
 import {getFeedListByUserId, getFavoriteFeedListByUserId, getUserTaggedFeedList} from 'Root/api/feedapi';
@@ -15,12 +15,20 @@ import {GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {useScrollToTop} from '@react-navigation/native';
+import NewMissingReportList from '../list/NewMissingReportList';
 export default FeedList = ({route, navigation}) => {
 	const [feedList, setFeedList] = React.useState([]);
 	const [refreshing, setRefreshing] = React.useState(false);
 	const [index, setIndex] = React.useState(0);
+	const [toTop, setToTop] = React.useState(0);
 	const flatlist = React.useRef();
 	//피드썸네일 클릭 리스트일 경우
+
+	React.useEffect(() => {
+		if (route.params?.pressed != 0) {
+			moveToTop();
+		}
+	}, [route.params]);
 	React.useEffect(() => {
 		// console.log('userobject', route.params?.userobject);
 		switch (route.name) {
@@ -270,7 +278,7 @@ export default FeedList = ({route, navigation}) => {
 	const [refresh, setRefresh] = React.useState(false);
 	React.useEffect(() => {
 		if (feedList.length > 0) {
-			let indx = feedList.findIndex(v => v._id == route.params?.selected._id);
+			let indx = feedList.findIndex(v => v._id == route.params?.selected?._id);
 			if (route.params?.selected) {
 				setTimeout(() => {
 					flatlist.current.scrollToItem({
@@ -336,7 +344,7 @@ export default FeedList = ({route, navigation}) => {
 		}
 	};
 	const moveToTop = () => {
-		useScrollToTop(flatlist);
+		flatlist.current.scrollToOffset({animated: true, offset: 0});
 	};
 
 	const movetoCamera = () => {
@@ -355,13 +363,32 @@ export default FeedList = ({route, navigation}) => {
 			},
 		);
 	};
+
 	const [tl, setTl] = React.useState({});
 	const [cl, setCl] = React.useState({});
 	const [fontSize, setSize] = React.useState(16);
 	const [testTx, setTx] = React.useState('한');
 	const [code, setCode] = React.useState(62);
 	return (
-		<View style={(login_style.wrp_main, {flex: 1, backgroundColor: WHITE, borderTopWidth: 2 * DP, borderTopColor: GRAY30})}>
+		<View
+			style={
+				(login_style.wrp_main,
+				{
+					flex: 1,
+					backgroundColor: WHITE,
+					// borderTopWidth: 2 * DP,
+					// borderTopColor: GRAY30
+				})
+			}>
+			{route.name == 'MainHomeFeedList' ? (
+				<View style={[styles.container]}>
+					<Text style={[txt.noto28b]}>새로운 실종/제보</Text>
+					<NewMissingReportList isfeed={route.name == 'MainHomeFeedList'} />
+				</View>
+			) : (
+				<></>
+			)}
+
 			<FlatList
 				data={feedList}
 				renderItem={renderItem}
@@ -500,3 +527,18 @@ export default FeedList = ({route, navigation}) => {
 		</View>
 	);
 };
+
+const styles = StyleSheet.create({
+	container: {
+		width: 654 * DP,
+		// height: 496 * DP,
+		alignContent: 'center',
+		alignSelf: 'center',
+		marginBottom: 22 * DP,
+	},
+	userContainer: {
+		width: 750 * DP,
+		// height: 94 * DP,
+		marginBottom: 40 * DP,
+	},
+});

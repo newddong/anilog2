@@ -195,8 +195,15 @@ export default FeedWrite = props => {
 			Modal.alert('첨부파일은 5개까지만 가능합니다');
 			return;
 		}
+		let selectPhoto;
+		if (props.route.params.feedType == 'Report') {
+			selectPhoto = '사진 선택 모드를 선택하세요 \n 사진 추가시 2장까지 가능합니다.';
+		} else {
+			selectPhoto = '사진 선택 모드를 선택하세요';
+		}
+		console.log('route11', props.route.params.feedType);
 		Modal.popTwoBtn(
-			'사진 선택 모드를 선택하세요',
+			selectPhoto,
 			'하나씩선택',
 			'여러개선택',
 			() => {

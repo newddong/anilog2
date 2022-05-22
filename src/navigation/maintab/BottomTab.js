@@ -17,21 +17,21 @@ import {
 	ProfileDefaultImg,
 } from 'Atom/icon';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import {useScrollToTop} from '@react-navigation/native';
+import {useNavigationState} from '@react-navigation/native';
+import {merge} from 'qs/lib/utils';
 
 export default function BottomTab({state, descriptors, navigation}) {
 	// console.log('바텀탭 유저 글로벌',userGlobalObject);
 	const focusedOptions = descriptors[state.routes[state.index].key].options;
 	const icons = [<FeedTabBorder />, <AnimalSavingTabBorder />, <CommunityTabBorder />, <MyTabBorder />];
 	const iconsFocused = [<FeedTabFilled />, <AnimalSavingTabFilled />, <CommunityTabFilled />, <MyTabFilled />];
-
 	const iconlayout = [tab.tab_feed, tab.tab_animal_saving, tab.tab_community, tab.tab_my];
 	const ref = React.useRef();
+	const [pressed, setPressed] = React.useState(0);
 	let currentIndex = null;
 	if (focusedOptions.tabBarVisible === false) {
 		return null;
 	}
-
 	//SearchTab이 MainTab으로 편입되면서 불가피하게 제작
 	//서치탭이 포커스(돋보기 클릭)되지만 탭의 선택상태는 이전의 Tab상태로 유지를 해야함
 	//더 좋은 방법이 있을 시 개선 [상우]
@@ -74,7 +74,6 @@ export default function BottomTab({state, descriptors, navigation}) {
 					const color = isFocused ? BLACK : GRAY20;
 					const textStyle = isFocused ? txt.noto22b : txt.noto22;
 					const textStyleEng = isFocused ? txt.roboto22b : txt.roboto22;
-
 					const onPress = () => {
 						if (index == 3 && userGlobalObject.userInfo.isPreviewMode) {
 							Modal.popLoginRequestModal(() => {
@@ -82,6 +81,7 @@ export default function BottomTab({state, descriptors, navigation}) {
 							});
 						} else {
 							console.log('tabP');
+
 							if (state.index == 4) {
 								navigation.navigate({name: route.name, merge: true});
 							}
@@ -94,6 +94,13 @@ export default function BottomTab({state, descriptors, navigation}) {
 							if (!isFocused && !event.defaultPrevented) {
 								console.log('click');
 								navigation.navigate({name: route.name, merge: true});
+							} else {
+								if (route.name == 'FEED') {
+									//바텀탭 클릭시 Pressed 1 값을 보내 위로 스크롤하는 기능
+									navigation.navigate({name: 'MainHomeFeedList', params: {pressed: pressed + 1}, merge: true});
+
+									setPressed(0);
+								}
 							}
 						}
 					};

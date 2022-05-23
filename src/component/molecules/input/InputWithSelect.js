@@ -40,7 +40,6 @@ const InputWithSelect = props => {
 		props.onChange(dropdownVal + props.delimiter + text);
 		setInput(text);
 	};
-
 	const onSelectDropDown = (v, i) => {
 		// console.log('드롭다운 선택확인 ', v, i);
 		Modal.popSelectScrollBoxModal([props.items], '통신사 선택', selected => {
@@ -90,6 +89,7 @@ const InputWithSelect = props => {
 						maxlength={props.maxlength}
 						onValid={onValid}
 						width={props.width || 450}
+						verified={props.verified}
 					/>
 				</View>
 			</View>

@@ -13,6 +13,7 @@ import {btn_style, temp_style} from 'Templete/style_templete';
 import {phoneNumVerification} from 'Organism/style_organism copy';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import DP from 'Root/config/dp';
+import {style} from 'Root/component/templete/protection/EditAidRequest';
 /**
  *
  *@param {{
@@ -157,9 +158,13 @@ export default PhoneNumVerification = props => {
 					// showMsg
 					// confirm_msg={'휴대전화 양식과 일치합니다.'}
 					keyboardType="numeric"
+					verified={props?.phoneVerified}
 				/>
+			</View>
+			<View style={[{flexDirection: 'row'}, {marginTop: 14 * DP}]}>
+				<Text style={[txt.noto24, {color: GRAY10}]}>입력한 내용이 인증시 자동 입력됩니다.</Text>
 				{props.failed ? (
-					<View style={[{position: 'absolute', right: 5, bottom: 12}]}>
+					<View style={[{position: 'absolute', right: 5, bottom: 0}]}>
 						<TouchableOpacity onPress={props.requestVerification}>
 							<Text style={[txt.noto28b, {color: APRI10}, {textDecorationLine: 'underline'}]}>재인증</Text>
 						</TouchableOpacity>
@@ -167,16 +172,15 @@ export default PhoneNumVerification = props => {
 				) : (
 					<Text></Text>
 				)}
-				{props.phoneVerified ? (
-					<View style={[{position: 'absolute', right: 50, bottom: 12}]}>
+				{/* {props.phoneVerified ? (
+					<View style={[{position: 'absolute', right: 50, bottom: 0}]}>
 						<Text style={[txt.noto28b, {color: APRI10}]}>인증완료</Text>
 					</View>
 				) : (
 					<Text></Text>
-				)}
+				)} */}
 			</View>
 
-			<Text style={[txt.noto24, {color: GRAY10}]}>입력한 내용이 인증시 자동 입력됩니다.</Text>
 			{/* {validPhone ? (
 				<Text style={[txt.noto26, phoneNumVerification.phoneNumValidPassedText, {color: GREEN}]}>휴대전화번호 양식과 일치합니다. </Text>
 			) : (

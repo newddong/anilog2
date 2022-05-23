@@ -32,8 +32,8 @@ export default ChangePassword = ({route, navigation}) => {
 
 	//암호 양식
 	const passwordValidator = pwd => {
-		// '최소 8자 이상(~30자 이하), 영문과 숫자만 입력 가능합니다.'
-		var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,30}$/;
+		// 8~20자 사이의 영문 대소문자, 숫자, 특수문자(!@#$%^&*만 허용)를 포함
+		var regExp = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
 		if (regExp.test(pwd)) {
 			setPwd(pwd);
 			setPwdValid(true);

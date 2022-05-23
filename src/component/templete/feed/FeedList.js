@@ -375,7 +375,7 @@ export default FeedList = ({route, navigation}) => {
 				</View>
 			);
 		} else {
-			<></>;
+			return <></>;
 		}
 	};
 
@@ -420,7 +420,7 @@ export default FeedList = ({route, navigation}) => {
 			/>
 			{userGlobalObject.userInfo && (
 				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}]}>
-					<View
+					{/* <View
 						style={[
 							{
 								height: 94 * DP,
@@ -434,7 +434,7 @@ export default FeedList = ({route, navigation}) => {
 							buttonstyle.shadow,
 						]}>
 						<Camera54 onPress={movetoCamera} />
-					</View>
+					</View> */}
 					<View
 						style={[
 							{

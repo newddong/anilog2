@@ -43,8 +43,8 @@ export default UserVerification = props => {
 			console.log('props changed', props);
 			const response = props.route.params.response;
 
-			if (response.success == true) {
-				console.log('imp_uid', response.imp_uid);
+			if (response.success == 'true') {
+				console.log('imp_uid', response);
 				setPhoneVerified(true);
 				// setVerified(true);
 				setImpid(response.imp_uid);
@@ -174,7 +174,7 @@ export default UserVerification = props => {
 						},
 					);
 				} else {
-					verificationRequest;
+					verificationRequest();
 				}
 			},
 			err => {
@@ -241,6 +241,7 @@ export default UserVerification = props => {
 						asyncConfirm={async}
 						userData={user_data}
 						failed={failed}
+						// faile={false}
 						phoneVerified={phoneVerified}
 					/>
 				</View>

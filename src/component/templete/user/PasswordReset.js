@@ -17,11 +17,14 @@ export default PasswordReset = ({route, navigation}) => {
 	const [pwdValid, setPwdValid] = React.useState(false); // 비밀번호 양식 체크 (8자이상~~)
 	const [pwdCheck, setPwdCheck] = React.useState(false); // 비밀번호 더블 체크 통과 여부
 	const [presentPwdValid, setPresentPwdValid] = React.useState(true); // 현재 비밀번호 입력값이 실제 DB와 일치하는지 여부
+	const [valid, setValid] = React.useState(false);
 	console.log('PassworRest', route);
 
 	React.useEffect(() => {
 		console.log('pwd', pwd);
 		console.log('prevpwd', prevpwd);
+		console.log('ddd', pwd && pwdCheck);
+		setValid(pwd && pwdCheck);
 	}, [pwd, prevpwd]);
 
 	//현재 비밀번호, 새로운 비밀번호의 양식, 새로운 비밀번호 확인 모두 통과 시 확인 버튼이 활성화
@@ -124,7 +127,7 @@ export default PasswordReset = ({route, navigation}) => {
 			</View>
 
 			<View style={[btn_style.btn_w654, passwordReset_style.btn_w654]}>
-				<AniButton onPress={changeFinalize} btnTitle={'확인'} btnStyle={'border'} btnLayout={btn_w654} titleFontStyle={32} />
+				<AniButton onPress={changeFinalize} btnTitle={'확인'} btnLayout={btn_w654} titleFontStyle={32} disable={!pwdCheck} />
 			</View>
 		</View>
 	);

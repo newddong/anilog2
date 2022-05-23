@@ -366,6 +366,18 @@ export default FeedList = ({route, navigation}) => {
 			},
 		);
 	};
+	const MissingReport = () => {
+		if (route.name == 'MainHomeFeedList') {
+			return (
+				<View style={[styles.container]}>
+					<Text style={[txt.noto28b]}>새로운 실종/제보</Text>
+					<NewMissingReportList isfeed={route.name == 'MainHomeFeedList'} />
+				</View>
+			);
+		} else {
+			<></>;
+		}
+	};
 
 	const [tl, setTl] = React.useState({});
 	const [cl, setCl] = React.useState({});
@@ -383,15 +395,6 @@ export default FeedList = ({route, navigation}) => {
 					// borderTopColor: GRAY30
 				})
 			}>
-			{route.name == 'MainHomeFeedList' ? (
-				<View style={[styles.container]}>
-					<Text style={[txt.noto28b]}>새로운 실종/제보</Text>
-					<NewMissingReportList isfeed={route.name == 'MainHomeFeedList'} />
-				</View>
-			) : (
-				<></>
-			)}
-
 			<FlatList
 				data={feedList}
 				renderItem={renderItem}
@@ -404,6 +407,7 @@ export default FeedList = ({route, navigation}) => {
 					if (!data[index]) return {length: 0, offset: 0, index: index};
 					return {length: data[index].height, offset: data[index].offset, index: index};
 				}}
+				ListHeaderComponent={MissingReport}
 				ref={flatlist}
 				refreshing
 				extraData={refresh}
@@ -417,30 +421,35 @@ export default FeedList = ({route, navigation}) => {
 			{userGlobalObject.userInfo && (
 				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}]}>
 					<View
-						style={[{
-							height: 94 * DP,
-							width: 94 * DP,
-							justifyContent: 'center',
-							alignItems: 'center',
-							backgroundColor: '#FFF',
-							borderRadius: 30 * DP,
-							marginBottom: 20 * DP,
-						},buttonstyle.shadow]}>
+						style={[
+							{
+								height: 94 * DP,
+								width: 94 * DP,
+								justifyContent: 'center',
+								alignItems: 'center',
+								backgroundColor: '#FFF',
+								borderRadius: 30 * DP,
+								marginBottom: 20 * DP,
+							},
+							buttonstyle.shadow,
+						]}>
 						<Camera54 onPress={movetoCamera} />
 					</View>
 					<View
-						style={[{
-							height: 94 * DP,
-							width: 94 * DP,
-							justifyContent: 'center',
-							alignItems: 'center',
-							backgroundColor: '#ff9888',
-							borderRadius: 35 * DP,
-							marginBottom: 20 * DP,
-						},buttonstyle.shadow]}>
+						style={[
+							{
+								height: 94 * DP,
+								width: 94 * DP,
+								justifyContent: 'center',
+								alignItems: 'center',
+								backgroundColor: '#ff9888',
+								borderRadius: 35 * DP,
+								marginBottom: 20 * DP,
+							},
+							buttonstyle.shadow,
+						]}>
 						<Write94 onPress={moveToFeedWrite} />
 					</View>
-						
 				</View>
 			)}
 

@@ -348,6 +348,7 @@ export default FeedList = ({route, navigation}) => {
 			() => {
 				Modal.close();
 				navigation.push('SinglePhotoSelect');
+				// navigation.push('Crop');
 			},
 			() => {
 				Modal.close();

@@ -11,11 +11,13 @@ import LocalMedia from 'Molecules/media/LocalMedia';
 import {Bracket48} from 'Atom/icon';
 // import FastImage from 'react-native-fast-image';
 // import Video from 'react-native-video';
+import { useNavigation } from '@react-navigation/native';
 
 export var exportUriList = []; //겔러리 속 사진들 로컬 주소
 export var exportUri = {}; //겔러리 속 사진 로컬 주소
 
 export default AddPhoto = props => {
+	const navigation = useNavigation();
 	const [isVideo, setVideo] = React.useState(false);
 	const [photolist, setPhotoList] = React.useState([
 		{
@@ -102,13 +104,15 @@ export default AddPhoto = props => {
 		const Native = Platform.OS=='ios'?NativeModules.RNCCameraRoll:NativeModules.PhotoListModule;		
 
 
-		Native.compressImage({imageFiles:selectedPhoto,quality:0.5,maxWidth:750*DP, maxHeight:750*DP})
-			.then(r=>console.log(r))
-			.catch(err => {
-			// console.log('cameraroll error===>' + err);
-			});
-
+		// Native.compressImage({imageFiles:selectedPhoto,quality:0.5,maxWidth:750*DP, maxHeight:750*DP})
+		// 	.then(r=>console.log(r))
+		// 	.catch(err => {
+		// 	// console.log('cameraroll error===>' + err);
+		// 	});
+		navigation.push('Crop',{cropImage:selectedPhoto})
 		console.log(selectedPhoto);
+
+
 	};
 
 	/** 이전 페이지에서 이미 선택한 사진이 있을 경우 선택한 것으로 표시 */

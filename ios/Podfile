@@ -7,13 +7,16 @@ platform :ios, '11.0'
 target 'anilog' do
 
   config = use_native_modules!
-
+  permissions_path = '../node_modules/react-native-permissions/ios' # ios환경에서 gps location right detecting을 위한 추가
   use_react_native!(
     :path => config[:reactNativePath],
     # to enable hermes on iOS, change `false` to `true` and then install pods
     :hermes_enabled => false
   )
   pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
+  pod 'Permission-LocationAccuracy', :path => "#{permissions_path}/LocationAccuracy" # ios환경에서 gps location right detecting을 위한 추가
+  pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways" # ios환경에서 gps location right detecting을 위한 추가
+  pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse" # ios환경에서 gps location right detecting을 위한 추가
   # pod 'react-native-google-maps', :path => rn_maps_path 
   # pod 'GoogleMaps' 
   # pod 'Google-Maps-iOS-Utils'

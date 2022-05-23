@@ -155,8 +155,11 @@ import articleIcon from './articleIcon';
 import reviewIcon from './reviewIcon';
 import emptyIcon from './emptyIcon';
 import pawBorder54Gray from './pawBorder54Gray';
+import checkFilled from './checkFilled';
+import arrowMarkForCalendar from './arrowMarkForCalendar';
+import hyhpen from './hyhpen';
+import phoneIcon from './phoneIcon';
 import DP from 'Root/config/dp';
-
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
 
 const size30 = {width: 30 * DP, height: 30 * DP};
@@ -388,3 +391,8 @@ export const AlarmBadgerNotice = makeSvg(alarmBadgerNotice48, size48);
 export const ArticleIcon = makeSvg(articleIcon, {width: 46 * DP, height: 54 * DP});
 export const ReviewIcon = makeSvg(reviewIcon, {width: 46 * DP, height: 54 * DP});
 export const EmptyIcon = makeSvg(emptyIcon, {width: 210 * DP, height: 218 * DP});
+export const CheckFilled = makeSvg(checkFilled, size52);
+export const ArrowMarkForCalendar = makeSvg(arrowMarkForCalendar, {width: 22 * DP, height: 22 * DP});
+export const Location42_APRI10 = makeSvg(location54_apri10, {width: 42 * DP, height: 42 * DP});
+export const Hyhpen = makeSvg(hyhpen, {width: 26 * DP, height: 2 * DP});
+export const PhoneIcon = makeSvg(phoneIcon, {width: 32 * DP, height: 32 * DP});

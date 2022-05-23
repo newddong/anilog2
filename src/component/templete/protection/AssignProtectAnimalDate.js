@@ -57,7 +57,7 @@ export default AssignProtectAnimalDate = props => {
 				<View style={[temp_style.inputForm_assignProtectAnimal_line1]}>
 					<Text style={txt.noto28}>구조날짜</Text>
 					<View style={assignProtectAnimal_style.marginLeft16}>
-						<DatePicker width={520} onDateChange={onDateChange} future={false} />
+						<DatePicker width={520} onDateChange={onDateChange} previous={[data.protect_animal_rescue_date]} future={false} />
 					</View>
 				</View>
 

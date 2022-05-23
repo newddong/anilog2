@@ -2,23 +2,61 @@ import {Dimensions, StyleSheet} from 'react-native';
 import {APRI10, BLUE10, GRAY10, LIGHT_SALMON, MIDNIGHT_BLUE, PALETUR, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 export const styles = StyleSheet.create({
-	yearCont: {
-		flexDirection: 'row',
+	background: {
+		backgroundColor: '#0009',
+		height: Platform.OS == 'ios' ? Dimensions.get('window').height : '100%',
+		width: Platform.OS == 'ios' ? Dimensions.get('window').width : '100%',
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
 	outside: {
-		// marginTop: 200 * DP,
-		// borderRadius: 40 * DP,
-		// height: '100%',
+		width: 658 * DP,
+		height: 1000 * DP,
+		borderRadius: 50 * DP,
+		justifyContent: 'space-between',
 		backgroundColor: 'white',
 	},
-	popUpWindow: {
-		// backgroundColor: BLUE10,
+	inside: {
+		justifyContent: 'center',
 		alignItems: 'center',
+		marginTop: 30 * DP,
+		// backgroundColor: WHITE,
 	},
 	headerCont: {
 		// backgroundColor: BLUE10,
+		width: 402 * DP,
 		flexDirection: 'row',
+		justifyContent: 'space-between',
 		alignSelf: 'center',
+	},
+	monthConatiner: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		width: 80 * DP,
+		height: 80 * DP,
+		// backgroundColor: 'red',
+	},
+	currentMonthContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		width: 80 * DP,
+		height: 80 * DP,
+		// backgroundColor: 'red',
+	},
+	arrowMarkContainer: {
+		width: 48 * DP,
+		height: 48 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		// backgroundColor: 'red',
+	},
+	yearCont: {
+		flexDirection: 'row',
+	},
+	popUpWindow: {
+		alignItems: 'center',
 	},
 	headerText: {
 		fontSize: 58 * DP,
@@ -27,13 +65,7 @@ export const styles = StyleSheet.create({
 		color: MIDNIGHT_BLUE,
 		textAlign: 'center',
 	},
-	monthConatiner: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'center',
-		width: 120 * DP,
-		height: 80 * DP,
-	},
+
 	changeMonthBtn: {
 		alignItems: 'center',
 		alignSelf: 'center',
@@ -56,19 +88,20 @@ export const styles = StyleSheet.create({
 	},
 	dateContainer: {
 		flexDirection: 'row',
-		alignSelf: 'center',
-		justifyContent: 'center',
+		// alignSelf: 'center',
+		justifyContent: 'space-between',
 		// marginTop: 50 * DP,
 		// backgroundColor: 'pink',
 	},
 	daysCont: {
 		flexDirection: 'row',
 		alignSelf: 'center',
+		// backgroundColor: 'red',
 	},
 	daysView: {
 		width: 94 * DP,
 		height: 54 * DP,
-		marginBottom: -20 * DP,
+		// marginBottom: -20 * DP,
 		paddingTop: 16 * DP,
 		opacity: 0.7,
 	},
@@ -92,17 +125,17 @@ export const styles = StyleSheet.create({
 	},
 	days_this_month: {
 		width: 94 * DP,
-		height: 116 * DP,
+		height: 96 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
 	today: {
 		width: 94 * DP,
-		height: 116 * DP,
+		height: 96 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',
+		// backgroundColor: 'yellow',
 	},
-
 	msg: {
 		marginBottom: 30 * DP,
 		color: GRAY10,
@@ -121,5 +154,12 @@ export const styles = StyleSheet.create({
 			height: 2 * DP,
 		},
 		elevation: 2,
+	},
+	btnCont: {
+		width: 604 * DP,
+		alignSelf: 'center',
+		marginBottom: 30 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
 	},
 });

@@ -7,17 +7,14 @@ import DP from 'Root/config/dp';
 import {day} from 'Root/i18n/msg';
 import {txt} from 'Root/config/textstyle';
 import {APRI10, BLACK, GRAY10, GRAY20, GRAY30, WHITE} from 'Root/config/color';
-import {NextMark} from 'Root/component/atom/icon';
+import {ArrowMarkForCalendar, NextMark} from 'Root/component/atom/icon';
 import YearDropDown from 'Molecules/dropdown/YearDropDown';
 import AniButton from 'Molecules/button/AniButton';
+import Modal from 'Root/component/modal/Modal';
 
 const Calendar = props => {
-	const HEIGHT = Dimensions.get('screen').height;
-
-	// console.log('props', props.future);
-	const BG = 'yellow';
-
 	const [getMoment, setMoment] = React.useState(moment()); //현재 시각 정보
+	const [selectedDate, setSelectedDate] = React.useState(props.previous ? props.previous[0] : '');
 
 	const today = getMoment;
 	const firstWeek = today.clone().startOf('month').week(); //현재 날짜 정보가 가지는 month의 첫째 주 정보를 가져온다
@@ -30,15 +27,23 @@ const Calendar = props => {
 		props.modalOff();
 	};
 
+	const onPressConfirm = () => {
+		if (selectedDate === '') {
+			Modal.close();
+		} else {
+			props.selectDate(selectedDate);
+		}
+	};
+
 	const onSelectDate = date => {
-		props.selectDate(date.format('yyyy.MM.DD'));
+		setSelectedDate(date.format('yyyy.MM.DD'));
 	};
 
 	const years = () => {
 		let years = [];
 		let this_year = new Date().getFullYear();
-		console.log('props.future', props.future);
-		console.log('props.past', props.past);
+		// console.log('props.future', props.future);
+		// console.log('props.past', props.past);
 		if (props.past) {
 			for (let i = 0; i < 40; i++) {
 				const year_to_String = JSON.stringify(this_year - i);
@@ -64,7 +69,7 @@ const Calendar = props => {
 	const days_selectableMode = week => {
 		if (props.past && props.future) {
 			return (
-				<View style={styles.dateContainer}>
+				<View style={[styles.dateContainer]}>
 					{Array(7) //today를 기준으로 조회한 이번 달의 첫째 주부터 마지막 주까지 Array
 						.fill(0)
 						.map((data, index) => {
@@ -74,13 +79,17 @@ const Calendar = props => {
 							if (moment().format('YYYYMMDD') === days.format('YYYYMMDD')) {
 								//정확히 오늘 날짜와 일치하는 date
 								return (
-									<TouchableOpacity onPress={() => onSelectDate(days)} key={index} style={styles.today}>
+									<TouchableOpacity
+										onPress={() => onSelectDate(days)}
+										key={index}
+										style={[styles.today, {backgroundColor: selectedDate == days.format('yyyy.MM.DD') ? APRI10 : WHITE}]}>
 										<View
 											style={{
 												width: 66 * DP,
-												height: 116 * DP,
+												// height: 116 * DP,
 												alignItems: 'center',
 												justifyContent: 'center',
+												// backgroundColor: 'red',
 											}}>
 											<Text style={[txt.roboto28b, {color: WHITE, lineHeight: 66 * DP, backgroundColor: APRI10}]}>{days.format('D')}</Text>
 										</View>
@@ -95,8 +104,13 @@ const Calendar = props => {
 								);
 							} else {
 								//이외의 이번달 날짜들은 하얀색으로 출력
+								console.log('selectedDate', selectedDate);
+								console.log('days.format', days.format('yyyy.MM.DD'));
 								return (
-									<TouchableOpacity onPress={() => onSelectDate(days)} key={index} style={styles.days_this_month}>
+									<TouchableOpacity
+										onPress={() => onSelectDate(days)}
+										key={index}
+										style={[styles.days_this_month, {backgroundColor: selectedDate == days.format('yyyy.MM.DD') ? APRI10 : WHITE}]}>
 										<Text style={[txt.roboto28, {}]}>{days.format('D')}</Text>
 									</TouchableOpacity>
 								);
@@ -114,15 +128,21 @@ const Calendar = props => {
 							let days = today.clone().startOf('year').week(week).startOf('week').add(index, 'day'); //d로해도되지만 직관성 - index값에  day정보
 							if (moment() > days) {
 								return (
-									<TouchableOpacity onPress={() => onSelectDate(days)} key={index} style={styles.today}>
+									<TouchableOpacity
+										onPress={() => onSelectDate(days)}
+										key={index}
+										style={[styles.today, selectedDate == days.format('yyyy.MM.DD') ? {backgroundColor: APRI10, borderRadius: 100} : {}]}>
 										<View
 											style={{
 												width: 66 * DP,
-												height: 116 * DP,
+												// height: 116 * DP,
 												alignItems: 'center',
 												justifyContent: 'center',
+												// backgroundColor: 'red',
 											}}>
-											<Text style={[txt.roboto28b, {color: BLACK, lineHeight: 66 * DP}]}>{days.format('D')}</Text>
+											<Text style={[txt.roboto28b, {color: selectedDate == days.format('yyyy.MM.DD') ? WHITE : BLACK, lineHeight: 66 * DP}]}>
+												{days.format('D')}
+											</Text>
 										</View>
 									</TouchableOpacity>
 								);
@@ -152,9 +172,10 @@ const Calendar = props => {
 										<View
 											style={{
 												width: 66 * DP,
-												height: 116 * DP,
+												// height: 116 * DP,
 												alignItems: 'center',
 												justifyContent: 'center',
+												// backgroundColor: 'red',
 											}}>
 											<Text style={[txt.roboto28b, {color: BLACK, lineHeight: 66 * DP}]}>{days.format('D')}</Text>
 										</View>
@@ -174,6 +195,16 @@ const Calendar = props => {
 		}
 	};
 
+	const nextMonth = () => {
+		if (props.future == false) {
+			if (getMoment.clone().add(1, 'month').year() > moment().year()) {
+				Alert.alert('과거 날짜만 선택가능합니다.');
+			} else {
+				setMoment(getMoment.clone().add(1, 'month'));
+			}
+		}
+	};
+
 	const calendarArr = () => {
 		//달력 각 Booth에 들어갈 날짜정보
 		let result = [];
@@ -182,52 +213,51 @@ const Calendar = props => {
 			//첫째주부터 마지막째 주까지 반복해서 7개씩 흩뿌린다
 			result = result.concat(
 				//날짜 정보를 하나씩 추가해간다.
-				<TouchableWithoutFeedback key={week} onPress={() => {}}>
+				<View key={week} onPress={() => {}}>
 					{days_selectableMode(week)}
-				</TouchableWithoutFeedback>,
+				</View>,
 			);
 		}
 		return result;
 	};
 
 	return (
-		<TouchableWithoutFeedback>
-			<View style={[styles.outside, {height: HEIGHT}]}>
-				<View style={{justifyContent: 'center', alignItems: 'center', marginTop: 200 * DP, backgroundColor: WHITE}}>
+		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={[styles.background]}>
+			<TouchableOpacity activeOpacity={1} style={[styles.outside]}>
+				<View style={[styles.inside]}>
+					{/* 년도 */}
 					<YearDropDown menu={years()} defaultIndex={4} index={getMoment.year()} onSelect={onSelectYear} />
+					{/* 월선택 */}
 					<View style={[styles.headerCont, {}]}>
 						<TouchableOpacity
 							style={styles.changeMonthBtn}
 							onPress={() => {
 								setMoment(getMoment.clone().subtract(1, 'month'));
 							}}>
-							<View style={[styles.monthConatiner]}>
+							<View style={[styles.monthConatiner, {}]}>
 								<Text style={[txt.roboto32b, {color: GRAY20, marginRight: 12 * DP}]}>{getMoment.clone().subtract(1, 'month').month() + 1}</Text>
-								<View style={{transform: [{rotate: '180deg'}]}}>
-									<NextMark />
+								<View style={[styles.arrowMarkContainer, {transform: [{rotate: '0deg'}]}]}>
+									<ArrowMarkForCalendar />
 								</View>
 							</View>
 						</TouchableOpacity>
-						<TouchableWithoutFeedback style={styles.changeMonthBtn}>
-							<Text style={[txt.roboto32b, {justifyContent: 'center', textAlign: 'center', width: 130, paddingTop: 20 * DP}]}>
-								{today.format('MM')}
-							</Text>
-						</TouchableWithoutFeedback>
-						<TouchableOpacity
-							style={styles.changeMonthBtn}
-							onPress={() => {
-								setMoment(getMoment.clone().add(1, 'month'));
-							}}>
+						<TouchableOpacity activeOpacity={1} style={styles.currentMonthContainer}>
+							<Text style={[txt.roboto32b, {}]}>{today.format('MM')}</Text>
+						</TouchableOpacity>
+						<TouchableOpacity style={styles.changeMonthBtn} onPress={nextMonth}>
 							<View style={[styles.monthConatiner]}>
-								<NextMark />
+								<View style={[styles.arrowMarkContainer, {transform: [{rotate: '180deg'}]}]}>
+									<ArrowMarkForCalendar />
+								</View>
 								<Text style={[txt.roboto32b, {color: GRAY20, marginLeft: 15 * DP}]}>{getMoment.clone().add(1, 'month').month() + 1}</Text>
 							</View>
 						</TouchableOpacity>
 					</View>
-					<View style={{backgroundColor: APRI10, width: '100%', height: 2 * DP}} />
+					<View style={{backgroundColor: GRAY10, width: '100%', height: 2 * DP}} />
+					{/* 월화수목금토일 정보 */}
 					<View style={styles.daysCont}>
 						{Array(7)
-							.fill(day) //월화수목금토일 정보
+							.fill(day)
 							.map((data, index) => {
 								//data가 없으면 안되는구나.
 								return (
@@ -243,15 +273,16 @@ const Calendar = props => {
 								);
 							})}
 					</View>
+					{/* 일자 컴포넌트 */}
 					<View style={{marginTop: 15 * DP, marginBottom: 5 * DP}}>{calendarArr()}</View>
-					{/* 모달바깥쪽 클릭이 modalOFF로 처리되게끔 한 View 목록 */}
-
-					<View style={{backgroundColor: APRI10, width: '100%', height: 2 * DP, marginBottom: 20}} />
-
-					<AniButton btnTitle={'나가기'} onPress={modalOff}></AniButton>
 				</View>
-			</View>
-		</TouchableWithoutFeedback>
+				{/* 하단 나가기 버튼 */}
+				<View style={[styles.btnCont]}>
+					<AniButton btnTitle={'취소'} btnStyle={'border'} btnLayout={{width: 136 * DP, borderRadius: 40 * DP, height: 70 * DP}} onPress={modalOff} />
+					<AniButton btnTitle={'완료'} btnLayout={{width: 136 * DP, borderRadius: 40 * DP, height: 70 * DP}} onPress={onPressConfirm} />
+				</View>
+			</TouchableOpacity>
+		</TouchableOpacity>
 	);
 };
 export default Calendar;

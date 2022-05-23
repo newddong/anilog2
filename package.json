@@ -38,6 +38,7 @@
 		"react-native-modal": "^13.0.0",
 		"react-native-pager-view": "5.4.6",
 		"react-native-pell-rich-editor": "^1.8.8",
+		"react-native-permissions": "^3.3.1",
 		"react-native-safe-area-context": "3.3.2",
 		"react-native-screens": "3.8.0",
 		"react-native-shadow-2": "5.1.0",

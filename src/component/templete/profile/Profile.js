@@ -8,7 +8,7 @@ import ProfileInfo from 'Organism/info/ProfileInfo';
 import FeedThumbnailList from 'Organism/feed/FeedThumbnailList';
 import OwnerList from 'Organism/list/OwnerList';
 import PetList from 'Organism/list/PetList';
-import {login_style, profile, temp_style} from 'Templete/style_templete';
+import {login_style, profile, temp_style,buttonstyle} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import InfoScreen from 'Organism/info/InfoScreen';
@@ -29,7 +29,7 @@ export default Profile = ({route}) => {
 	const [commList, setCommList] = React.useState('false');
 	const [tabMenuSelected, setTabMenuSelected] = React.useState(0); //프로필 Tab의 선택상태
 	const [showOwnerState, setShowOwnerState] = React.useState(false); // 현재 로드되어 있는 profile의 userType이 Pet인 경우 반려인 계정 리스트의 출력 여부
-	const [showCompanion, setShowCompanion] = React.useState(false); // User계정이 반려동물버튼을 클릭
+	const [showCompanion, setShowCompanion] = React.useState(true); // User계정이 반려동물버튼을 클릭
 	const flatlist = React.useRef();
 	// console.log('tabMenuselc', tabMenuSelected);
 	const fetchData = async () => {
@@ -240,11 +240,13 @@ export default Profile = ({route}) => {
 	const animatedHeight = React.useRef(new Animated.Value(0)).current;
 
 	const onShowCompanion = () => {
+		console.log('show');
 		setShowCompanion(true);
 		animationOpen();
 	};
 
 	const onHideCompanion = () => {
+		console.log('hide');
 		Animated.timing(animatedHeight, {
 			duration: 300,
 			toValue: 0,
@@ -500,8 +502,31 @@ export default Profile = ({route}) => {
 									{justifyContent: 'center'},
 									// {backgroundColor: 'yellow'},
 								]}>
-								<Message94 onPress={() => onPressSendMsg(data._id, data.user_nickname)} />
-								<Write94 onPress={moveToFeedWrite} />
+								<View
+									style={[{
+										height: 94 * DP,
+										width: 94 * DP,
+										justifyContent: 'center',
+										alignItems: 'center',
+										backgroundColor: '#ff9888',
+										borderRadius: 35 * DP,
+										marginBottom: 20 * DP,
+									},buttonstyle.shadow]}>
+									<Message94 onPress={() => onPressSendMsg(data._id, data.user_nickname)} />
+								</View>
+								
+								<View
+									style={[{
+										height: 94 * DP,
+										width: 94 * DP,
+										justifyContent: 'center',
+										alignItems: 'center',
+										backgroundColor: '#ff9888',
+										borderRadius: 35 * DP,
+										marginBottom: 20 * DP,
+									},buttonstyle.shadow]}>
+									<Write94 onPress={moveToFeedWrite} />
+								</View>
 							</View>
 						)}
 					</>

@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 
 import com.facebook.common.logging.FLog;
 import com.facebook.react.bridge.GuardedAsyncTask;
+import com.facebook.react.bridge.JSApplicationIllegalArgumentException;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -55,6 +56,7 @@ import android.widget.Toast;
 
 import static com.anilog2.PhotoListUtil.*;
 import com.anilog2.GetMediaTask;
+import com.anilog2.CropTask;
 
 public class PhotoListModule extends ReactContextBaseJavaModule{
     public static final String NAME = "PhotoListModule";
@@ -170,6 +172,42 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
         promise.resolve(result);
     }
 
+    @ReactMethod
+    public void cropImage(
+            ReadableMap params,
+            Promise promise) {
+        String uri = params.hasKey("uri") ? params.getString("uri") : null;
+        double targetWidth = params.hasKey("destWidth") ? params.getDouble("destWidth") : 0;
+        double targetHeight = params.hasKey("destHeight") ? params.getDouble("destHeight") : 0;
+        double offsetX = params.hasKey("offsetX") ? params.getDouble("offsetX") : 0;
+        double offsetY = params.hasKey("offsetY") ? params.getDouble("offsetY") : 0;
+        boolean isCircular = params.hasKey("isCircular") ? params.getBoolean("isCircular") : false;
+
+        if (!params.hasKey("destWidth") || !params.hasKey("destHeight") ||
+                !params.hasKey("offsetX") || !params.hasKey("offsetY")) {
+            throw new JSApplicationIllegalArgumentException("Please specify offset and size");
+        }
+        if (uri == null || uri.isEmpty()) {
+            throw new JSApplicationIllegalArgumentException("Please specify a URI");
+        }
+
+        CropTask cropTask = new CropTask(
+                getReactApplicationContext(),
+                uri,
+                (int) offsetX,
+                (int) offsetY,
+                (int) targetWidth,
+                (int) targetHeight,
+                promise,
+                this);
+        if (params.hasKey("displaySize")) {
+            ReadableMap targetSize = params.getMap("displaySize");
+            cropTask.setTargetSize(
+                    (int) targetSize.getDouble("width"),
+                    (int) targetSize.getDouble("height"));
+        }
+        cropTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
     void onAssetsObtained(List<Uri> fileUris, PhotoListUtil.Options options, final Promise promise) {
         try {

@@ -285,9 +285,31 @@ export const DOG_KIND = [
 	'기타',
 ];
 
-//보호 지역
+//실종/제보 지역
 export const PET_PROTECT_LOCATION = [
-	'지역',
+	'실종/제보 지역',
+	'서울',
+	'부산',
+	'인천',
+	'대구',
+	'대전',
+	'광주',
+	'울산',
+	'경기',
+	'강원',
+	'충청북도',
+	'충청남도',
+	'전라북도',
+	'전라남도',
+	'경상남도',
+	'경상북도',
+	'세종특별자치시',
+	'제주특별자치도',
+];
+
+//동물보호 지역
+export const PROTECT_LOCATION = [
+	'모든 지역',
 	'서울',
 	'부산',
 	'인천',
@@ -400,6 +422,7 @@ export const PWD_CHECK_INFO = '비밀번호를 다시 한 번 적어주세요.';
 
 //Nickname 설정 관련
 export const NICKNAME_FORM = '2~20자 이내의 영문,한글,숫자,_의 입력만 가능합니다';
+export const PET_NICKNAME_FORM = '1~20자 이내의 영문,한글,숫자,_의 입력만 가능합니다';
 export const NEW_NICK_REQUEST = '닉네임을 입력 해주세요.';
 export const PREVIOUS_NICK_TITLE = '기존 닉네임';
 

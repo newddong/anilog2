@@ -29,6 +29,7 @@ import FeedWrite from 'Templete/feed/FeedWrite';
 import LocationPicker from 'Templete/search/LocationPicker';
 
 import PhotoSelect from 'Templete/media/PhotoSelect';
+import Crop from 'Templete/media/Crop';
 import AddPhoto from 'Templete/media/AddPhoto';
 import AddressSearch from 'Templete/search/AddressSearch';
 import AssignPetProfileImage from 'Templete/pet/AssignPetProfileImage';
@@ -77,6 +78,9 @@ import TermsAndPolicy from 'Root/component/templete/user/TermsAndPolicy';
 import Certification from 'Root/component/templete/login/Certification';
 import AskQuestion from 'Root/component/templete/user/AskQuestion';
 import ShelterAsk from 'Root/component/templete/shelter/ShelterAsk';
+import ReportDetail from 'Root/component/templete/missing/ReportDetail';
+import MissingAnimalDetail from 'Root/component/templete/missing/MissingAnimalDetail';
+import SimpleWithMeatballHeader from '../header/SimpleWithMeatballHeader';
 
 const RootStack = createStackNavigator();
 
@@ -272,7 +276,8 @@ export default RootStackNavigation = () => {
 						<RootStack.Screen name="MultiPhotoSelect" component={AddPhoto} />
 						{/* 카메라 컴포넌트 임시 추가 */}
 						<RootStack.Screen name="FeedListForHashTag" component={FeedListForHashTag} options={{header: props => <SimpleHeader {...props} />}} />
-
+						{/* 이미지 크롭 화면 */}
+						<RootStack.Screen name="Crop" component={Crop} />
 						<RootStack.Screen
 							name="AssignPetProfileImage"
 							component={AssignPetProfileImage}
@@ -380,6 +385,16 @@ export default RootStackNavigation = () => {
 							name="ShelterAsk"
 							component={ShelterAsk}
 							options={{header: props => <SimpleHeader {...props} />, title: '보호소 문의하기'}}
+						/>
+						<RootStack.Screen
+							name="MissingAnimalDetail"
+							component={MissingAnimalDetail}
+							options={{header: props => <SimpleWithMeatballHeader {...props} />}}
+						/>
+						<RootStack.Screen
+							name="ReportDetail"
+							component={ReportDetail}
+							options={{header: props => <SimpleWithMeatballHeader {...props} />, title: '제보글'}}
 						/>
 					</RootStack.Navigator>
 

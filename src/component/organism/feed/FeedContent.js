@@ -579,7 +579,7 @@ export default FeedContent = props => {
 								<></>
 							) : (
 								<View style={[organism_style.button_view_feedContent]}>
-									<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
+									{/* <View style={[organism_style.favoriteTag_view_feedContent, {}]}>
 										<View style={[organism_style.favoriteTag_feedContent]}>
 											{props.data.feed_writer_id.is_favorite ? (
 												<FavoriteTag48_Filled onPress={() => onPressFavoriteWriter(false)} />
@@ -590,7 +590,7 @@ export default FeedContent = props => {
 										<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
 											<Text style={[txt.roboto24, {color: GRAY10}]}>{count_to_K(props.data.feed_writer_id.user_favorite_count)}</Text>
 										</View>
-									</View>
+									</View> */}
 									{/* <Meatball50_GRAY20_Horizontal onPress={onClickMeatball} /> */}
 
 									{/* <View style={[organism_style.share48_view_feedContent]}>
@@ -610,8 +610,11 @@ export default FeedContent = props => {
 				</View>
 				{/* line 1-1 (실종/제보관련 내용) */}
 				{!route.name.includes('MainHomeFeedList') &&
+					!route.name.includes('UserTagFeedList') &&
 					!route.name.includes('UserFeedList') &&
 					!route.name.includes('FavoriteFeedList') &&
+					!route.name.includes('HashFeedList') &&
+					!route.name.includes('TagMeFeedList') &&
 					(feed_type == 'report' || feed_type == 'missing') && (
 						<View style={[organism_style.tipOff_feedContent, feedContent_style.tipOff]} onLayout={onLayoutReport}>
 							<MissingReportInfo data={props.data} />

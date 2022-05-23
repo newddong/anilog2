@@ -38,6 +38,7 @@ const InformationModal = props => {
 			//보호소 프로필의 주인인지 여부 판별
 			return data._id == userInfo._id;
 		} else {
+			result = data._id == userInfo._id;
 			return result;
 		}
 	};
@@ -67,6 +68,16 @@ const InformationModal = props => {
 
 	const getContents = () => {
 		if (data.user_type == 'pet') {
+			// console.log('data', data);
+			let user_interest_list = [];
+			user_interest_list = user_interest_list.concat(data.pet_family[0].user_interests.interests_activity);
+			user_interest_list = user_interest_list.concat(data.pet_family[0].user_interests.interests_beauty);
+			user_interest_list = user_interest_list.concat(data.pet_family[0].user_interests.interests_food);
+			user_interest_list = user_interest_list.concat(data.pet_family[0].user_interests.interests_health);
+			user_interest_list = user_interest_list.filter(e => e != undefined);
+			user_interest_list = new Set(user_interest_list);
+			user_interest_list = [...user_interest_list];
+			console.log('user_interest_list', user_interest_list);
 			return (
 				<>
 					<View style={[style.info_step1]}>
@@ -83,7 +94,7 @@ const InformationModal = props => {
 								<Text style={[txt.noto24]}>생일</Text>
 							</View>
 							<View style={[style.category_content]}>
-								<Text>{getBirthDate()}</Text>
+								<Text style={[txt.roboto30, {color: GRAY10}]}>{getBirthDate()}</Text>
 							</View>
 						</View>
 						{/* 중성화 */}
@@ -109,15 +120,15 @@ const InformationModal = props => {
 									onTextLayout={({nativeEvent: {lines}}) => {
 										setNumberOfLines(lines.length);
 									}}>
-									{dummyInteres.map((v, i) => {
-										return v + ', ';
+									{user_interest_list.map((v, i) => {
+										return v + (i != user_interest_list.length - 1 ? ', ' : '');
 									})}
 								</Text>
 								{/* 더미 텍스트 컴포넌트 종료 */}
 								<View style={{flexDirection: 'row', width: 502 * DP, marginBottom: 20 * DP}}>
 									<Text style={[txt.noto30, {color: GRAY10}]} numberOfLines={showMore ? numberOfLines : 2}>
-										{dummyInteres.map((v, i) => {
-											return v + ', ';
+										{user_interest_list.map((v, i) => {
+											return v + (i != user_interest_list.length - 1 ? ', ' : '');
 										})}
 									</Text>
 								</View>
@@ -207,6 +218,80 @@ const InformationModal = props => {
 					{isOwner() ? (
 						<View>
 							<AniButton btnLayout={btn_w136} btnStyle={'border'} btnTitle={'수정'} onPress={onPressEdit} />
+						</View>
+					) : (
+						<></>
+					)}
+				</>
+			);
+		} else {
+			let user_interest_list = [];
+			user_interest_list = user_interest_list.concat(data.user_interests.interests_activity);
+			user_interest_list = user_interest_list.concat(data.user_interests.interests_beauty);
+			user_interest_list = user_interest_list.concat(data.user_interests.interests_food);
+			user_interest_list = user_interest_list.concat(data.user_interests.interests_health);
+			user_interest_list = user_interest_list.filter(e => e != undefined);
+			user_interest_list = new Set(user_interest_list);
+			user_interest_list = [...user_interest_list];
+			return (
+				<>
+					<View style={[style.info_step2]}>
+						<View style={[{marginBottom: 20 * DP, alignSelf: 'center'}]}>
+							<Text style={[txt.noto32b]}>
+								{data.user_nickname || ''}
+								<Text style={[txt.noto28, {color: BLACK}]}> 님의 정보</Text>
+							</Text>
+						</View>
+						{/* 관심사 */}
+						<View style={[style.category_step2]}>
+							<View style={[style.category_title]}>
+								<Text style={[txt.noto24]}>관심사</Text>
+							</View>
+							<View style={[style.category_step2_content]}>
+								{/* 더미 텍스트컴포넌트 - 조정되기 이전의 numberOfLine 판별용 */}
+								<Text
+									style={[txt.noto30, {color: GRAY10, position: 'absolute', opacity: 0}]}
+									onTextLayout={({nativeEvent: {lines}}) => {
+										setNumberOfLines(lines.length);
+									}}>
+									{user_interest_list.map((v, i) => {
+										return v + (i != user_interest_list.length - 1 ? ', ' : '');
+									})}
+								</Text>
+								{/* 더미 텍스트 컴포넌트 종료 */}
+								<View style={{flexDirection: 'row', width: 502 * DP, marginBottom: 20 * DP}}>
+									<Text style={[txt.noto30, {color: GRAY10}]} numberOfLines={showMore ? numberOfLines : 2}>
+										{user_interest_list.map((v, i) => {
+											return v + (i != user_interest_list.length - 1 ? ', ' : '');
+										})}
+									</Text>
+								</View>
+								{numberOfLines > 2 ? (
+									//관심사 항목이 2줄을 넘은 경우 '펼치기 / 접기' 를 출력
+									showMore ? (
+										<TouchableOpacity onPress={() => setShowMore(!showMore)}>
+											<View style={{flexDirection: 'row'}}>
+												<Text style={[txt.noto24, {color: GRAY10}]}>접기</Text>
+												<Arrow_Up_GRAY20 />
+											</View>
+										</TouchableOpacity>
+									) : (
+										<TouchableOpacity onPress={() => setShowMore(!showMore)}>
+											<View style={{flexDirection: 'row'}}>
+												<Text style={[txt.noto24, {color: GRAY10}]}>펼치기</Text>
+												<Arrow_Down_GRAY10 />
+											</View>
+										</TouchableOpacity>
+									)
+								) : (
+									<></>
+								)}
+							</View>
+						</View>
+					</View>
+					{data._id == userInfo._id ? (
+						<View>
+							<AniButton onPress={onPressEdit} btnLayout={btn_w136} btnStyle={'border'} btnTitle={'수정'} />
 						</View>
 					) : (
 						<></>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, TouchableWithoutFeedback, FlatList, TouchableOpacity, RefreshControl} from 'react-native';
+import {Text, View, TouchableWithoutFeedback, FlatList, TouchableOpacity, RefreshControl, Pressable, StyleSheet, Animated} from 'react-native';
 import {feedWrite, login_style, searchProtectRequest, temp_style} from 'Templete/style_templete';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {GRAY10, WHITE} from 'Root/config/color';
@@ -15,11 +15,10 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import AnimalNeedHelp from 'Root/component/organism/listitem/AnimalNeedHelp';
 import MissingReportItem from 'Root/component/organism/listitem/MissingReportItem';
+import ActionButton from 'Root/component/molecules/button/ActionButton';
 
 export default MissingReportList = props => {
 	const navigation = useNavigation();
-	const [showUrgentBtns, setShowUrgentBtns] = React.useState(true); //긴급버튼목록
-	const [showActionButton, setShowActionButton] = React.useState(false); // 긴급게시(하얀버전) 클릭 시 - 실종/제보 버튼 출력 Boolean
 
 	const [data, setData] = React.useState('false');
 	const [filterData, setFilterData] = React.useState({
@@ -30,6 +29,7 @@ export default MissingReportList = props => {
 	});
 	const [onlyMissing, setOnlyMissing] = React.useState(false); //실종글만 보기
 	const [onlyReport, setOnlyReport] = React.useState(false); // 제보글만 보기
+	const [showActionButton, setShowActionButton] = React.useState(false); // 긴급게시(하얀버전) 클릭 시 - 실종/제보 버튼 출력 Boolean
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
@@ -37,6 +37,7 @@ export default MissingReportList = props => {
 		});
 		return unsubscribe;
 	}, [props]);
+
 	// 실종 데이터 불러오기 (아직 API 미작업 )
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
@@ -121,7 +122,7 @@ export default MissingReportList = props => {
 			[PET_PROTECT_LOCATION],
 			'보호 지역 선택',
 			selected => {
-				selected == '지역' ? setFilterData({...filterData, city: ''}) : setFilterData({...filterData, city: selected});
+				selected == '실종/제보 지역' ? setFilterData({...filterData, city: ''}) : setFilterData({...filterData, city: selected});
 				Modal.close();
 			},
 			() => {
@@ -175,7 +176,7 @@ export default MissingReportList = props => {
 		return <ListEmptyInfo text={'목록이 없습니다..'} />;
 	};
 
-	const onPressShowActionButton = () => {
+	const onPressShowActionButton = bool => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate('Login');
@@ -229,20 +230,17 @@ export default MissingReportList = props => {
 		<View style={[login_style.wrp_main, {flex: 1}]}>
 			<View style={{}}>
 				<View style={[searchProtectRequest.filterView]}>
-					<View style={[searchProtectRequest.filterView.inside]}>
-						<View style={{flexDirection: 'row'}}>
-							<View style={[temp_style.filterBtn]}>
-								{/* <FilterButton menu={PET_PROTECT_LOCATION} btnLayout={btn_w306_h68} onSelect={onSelectLocation} width={306} height={700} /> */}
-								<ArrowDownButton
-									onPress={onSelectLocation}
-									btnTitle={filterData.city || '지역'}
-									btnLayout={btn_w306_h68}
-									btnStyle={'border'}
-									btnTheme={'gray'}
-								/>
-							</View>
-							<View style={[temp_style.filterBtn]}>
-								{/* <FilterButton menu={petTypes} btnLayout={btn_w306_h68} onSelect={onSelectKind} width={306} /> */}
+					<View style={[searchProtectRequest.filterView.inside, {flexDirection: 'row', justifyContent: 'space-between'}]}>
+						<View style={[temp_style.filterBtn, {}]}>
+							<ArrowDownButton
+								onPress={onSelectLocation}
+								btnTitle={filterData.city || '실종/제보 지역'}
+								btnLayout={btn_w306_h68}
+								btnStyle={'border'}
+								btnTheme={'gray'}
+							/>
+						</View>
+						{/* <View style={[temp_style.filterBtn]}>
 								<ArrowDownButton
 									onPress={onSelectKind}
 									btnTitle={filterData.missing_animal_species || '동물 종류'}
@@ -250,20 +248,20 @@ export default MissingReportList = props => {
 									btnStyle={'border'}
 									btnTheme={'gray'}
 								/>
+							</View> */}
+						<View style={[searchProtectRequest.kindFilter, {}]}>
+							<View style={[searchProtectRequest.kindFilterItem]}>
+								<Text style={[txt.noto26, {color: GRAY10, marginRight: 10 * DP}]}> 제보</Text>
+								{onlyMissing ? <Check50 onPress={onPressShowMissing} /> : <Rect50_Border onPress={onPressShowMissing} />}
+							</View>
+							<View style={[searchProtectRequest.kindFilterItem]}>
+								<Text style={[txt.noto26, {color: GRAY10, marginRight: 10 * DP}]}> 실종</Text>
+								{onlyReport ? <Check50 onPress={onPressShowReport} /> : <Rect50_Border onPress={onPressShowReport} />}
 							</View>
 						</View>
 					</View>
 				</View>
-				<View style={[searchProtectRequest.kindFilter]}>
-					<View style={[searchProtectRequest.kindFilterItem]}>
-						<Text style={[txt.noto26, {color: GRAY10}]}> 제보글만 보기</Text>
-						{onlyMissing ? <Check50 onPress={onPressShowMissing} /> : <Rect50_Border onPress={onPressShowMissing} />}
-					</View>
-					<View style={[searchProtectRequest.kindFilterItem]}>
-						<Text style={[txt.noto26, {color: GRAY10}]}> 실종글만 보기</Text>
-						{onlyReport ? <Check50 onPress={onPressShowReport} /> : <Rect50_Border onPress={onPressShowReport} />}
-					</View>
-				</View>
+
 				{data == 'false' ? (
 					<Loading isModal={false} />
 				) : (
@@ -278,9 +276,9 @@ export default MissingReportList = props => {
 						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 						ListEmptyComponent={whenEmpty}
 						// https://reactnative.dev/docs/optimizing-flatlist-configuration
-						removeClippedSubviews={true}
+						// removeClippedSubviews={true}
 						extraData={refreshing}
-						initialNumToRender={15}
+						initialNumToRender={5}
 						// maxToRenderPerBatch={5} // re-render를 막는군요.
 						windowSize={11}
 						// https://reactnative.dev/docs/optimizing-flatlist-configuration
@@ -288,25 +286,39 @@ export default MissingReportList = props => {
 				)}
 			</View>
 
-			{showUrgentBtns ? (
-				<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
-					{showActionButton ? (
-						<View>
-							<TouchableOpacity onPress={moveToMissingForm} activeOpacity={0.8} style={[feedWrite.urgentBtnItemContainer]}>
-								<Text style={[txt.noto32, {color: WHITE}]}>실종</Text>
-							</TouchableOpacity>
-							<TouchableOpacity onPress={moveToReportForm} activeOpacity={0.8} style={[feedWrite.urgentBtnItemContainer]}>
-								<Text style={[txt.noto32, {color: WHITE}]}>제보</Text>
-							</TouchableOpacity>
-						</View>
-					) : null}
-					<View style={[feedWrite.urgentActionButton]}>
-						{showActionButton ? <Urgent_Write2 onPress={onPressShowActionButton} /> : <Urgent_Write1 onPress={onPressShowActionButton} />}
+			<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
+				{showActionButton ? (
+					<View>
+						<TouchableOpacity onPress={moveToMissingForm} activeOpacity={0.8} style={[feedWrite.urgentBtnItemContainer]}>
+							<Text style={[txt.noto32, {color: WHITE}]}>실종</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={moveToReportForm} activeOpacity={0.8} style={[feedWrite.urgentBtnItemContainer]}>
+							<Text style={[txt.noto32, {color: WHITE}]}>제보</Text>
+						</TouchableOpacity>
 					</View>
+				) : (
+					<></>
+				)}
+				<View style={[feedWrite.urgentActionButton]}>
+					{showActionButton ? (
+						<TouchableOpacity activeOpacity={0.8} onPress={onPressShowActionButton}>
+							<Urgent_Write2 />
+						</TouchableOpacity>
+					) : (
+						<TouchableOpacity activeOpacity={0.8} onPress={onPressShowActionButton}>
+							<Urgent_Write1 />
+						</TouchableOpacity>
+					)}
 				</View>
-			) : (
-				false
-			)}
+			</View>
 		</View>
 	);
 };
+
+const styles = StyleSheet.create({
+	actionButtonIcon: {
+		fontSize: 20,
+		height: 22,
+		color: 'white',
+	},
+});

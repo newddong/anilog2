@@ -26,7 +26,6 @@ const InterestTagModal = props => {
 	// console.log('InterestTagModa', props.data);
 	//유저 오브젝트의 user_interests 의 더미데이터
 	// user_interests는 크게 location 및 activity로 구성
-	console.log('IntrestTagModal', props);
 	const [userInterestContent, setUserInterestContent] = React.useState([]);
 	const [userInterestLocation, setUserInterestLocation] = React.useState(props.data);
 	const [userInterestReview, setUserInterestReview] = React.useState(props.data);

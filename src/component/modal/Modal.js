@@ -386,6 +386,15 @@ export default Modal = {
 	 */
 	popLoginRequestModal: onOk => {},
 
+	/**
+	 * 보호요청 게시글 필터 모달
+	 * @param {Object} props - props object
+	 * @param {Object} props.previous - 기존 필터 정보
+	 * @param {(filterData:object)=>void} props.onConfirm - 완료 버튼 클릭
+	 * @param {()=>void} props.onClose -  바깥쪽 클릭 콜백
+	 */
+	popProtectRequestFilterModal: (previous, onConfirm, onClose) => {},
+
 	popInfoModal: () => {},
 
 	alert: () => {},

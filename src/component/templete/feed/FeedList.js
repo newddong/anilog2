@@ -16,6 +16,8 @@ import {txt} from 'Root/config/textstyle';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {useScrollToTop} from '@react-navigation/native';
 import NewMissingReportList from '../list/NewMissingReportList';
+import {getUserInfoById} from 'Root/api/userapi';
+
 export default FeedList = ({route, navigation}) => {
 	const [feedList, setFeedList] = React.useState([]);
 	const [refreshing, setRefreshing] = React.useState(false);
@@ -412,20 +414,32 @@ export default FeedList = ({route, navigation}) => {
 				)}
 			/>
 			{userGlobalObject.userInfo && (
-				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}, buttonstyle.shadow]}>
+				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}]}>
 					<View
-						style={{
-							height: 84 * DP,
-							width: 84 * DP,
+						style={[{
+							height: 94 * DP,
+							width: 94 * DP,
 							justifyContent: 'center',
 							alignItems: 'center',
 							backgroundColor: '#FFF',
 							borderRadius: 30 * DP,
 							marginBottom: 20 * DP,
-						}}>
+						},buttonstyle.shadow]}>
 						<Camera54 onPress={movetoCamera} />
 					</View>
-					<Write94 onPress={moveToFeedWrite} />
+					<View
+						style={[{
+							height: 94 * DP,
+							width: 94 * DP,
+							justifyContent: 'center',
+							alignItems: 'center',
+							backgroundColor: '#ff9888',
+							borderRadius: 35 * DP,
+							marginBottom: 20 * DP,
+						},buttonstyle.shadow]}>
+						<Write94 onPress={moveToFeedWrite} />
+					</View>
+						
 				</View>
 			)}
 

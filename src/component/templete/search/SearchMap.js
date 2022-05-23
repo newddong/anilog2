@@ -1,5 +1,17 @@
 import React, {useRef, useState} from 'react';
-import {Text, View, Button, TouchableOpacity, Platform, StyleSheet, TextInput, Keyboard, StatusBar, ScrollView} from 'react-native';
+import {
+	Text,
+	View,
+	TouchableOpacity,
+	Platform,
+	StyleSheet,
+	TextInput,
+	Keyboard,
+	StatusBar,
+	ScrollView,
+	PermissionsAndroid,
+	AppState,
+} from 'react-native';
 import axios from 'axios';
 import Geolocation from '@react-native-community/geolocation';
 import {txt} from 'Root/config/textstyle';
@@ -13,9 +25,12 @@ import X2JS from 'x2js';
 import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/core';
 import Loading from 'Root/component/molecules/modal/Loading';
+import {check, checkMultiple, checkNotifications, openSettings, PERMISSIONS, request, RESULTS} from 'react-native-permissions';
+import {NativeModules} from 'react-native';
 
 export default SearchMap = ({route}) => {
 	const navigation = useNavigation();
+	const [permission, setPermission] = React.useState(false);
 	const [locationObj, setLocationObj] = useState(''); //현재 위치 주소
 	const [init_latitude, setLatitude] = useState(''); //초기 위도
 	const [init_longitude, setLogitude] = useState(''); //초기 경도
@@ -31,25 +46,95 @@ export default SearchMap = ({route}) => {
 
 	// 템플릿 호출 시 바로 현재 모바일 위치를 기반으로 위치 정보 수령
 	React.useEffect(() => {
-		Modal.popLoading();
-		geoLocation();
-		initializeRegion();
+		const unsubscribe = navigation.addListener('focus', () => {
+			requestPermission();
+		});
+		//위치 권한을 위해 Background로 갔다가 앱으로 돌아왔을 경우 권한을 다시 확인
+		const subscription = AppState.addEventListener('change', nextAppState => {
+			Modal.close();
+			if (nextAppState == 'active') {
+				requestPermission();
+			}
+		});
+		return () => {
+			unsubscribe;
+			subscription.remove();
+		};
 	}, []);
+
+	const getToSetting = error => {
+		let msg = '위치 서비스를 사용할 수 없습니다. \n 기기의 설정 > 개인정보 보호 에서 위치 \n 서비스를 켜주세요.';
+		if (error == 'blocked') {
+			msg = '현재 해당 앱의 위치서비스 이용이 거절되어 있는 상태입니다. 설정에서 앱에 대한 \n위치서비스를 허용해주세요.';
+		}
+		Modal.popTwoBtn(
+			msg,
+			'취소',
+			'설정으로',
+			() => {
+				Modal.close();
+				navigation.goBack();
+			},
+			() => {
+				if (Platform.OS == 'android') {
+					NativeModules.OpenExternalURLModule.generalSettings();
+				} else {
+					openSettings().catch(() => console.warn('cannot open settings'));
+				}
+			},
+			() => {
+				console.log('취소 불가능');
+			},
+		);
+	};
+
+	async function requestPermission() {
+		try {
+			request(
+				//위치 권한 요청 (gps가 꺼져있을 경우 출력이 안됨)
+				Platform.select({
+					ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+					android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+				}),
+			).then(res => {
+				console.log('res', res);
+				if (res == 'granted') {
+					//허용
+					setPermission(true);
+					geoLocation();
+					initializeRegion();
+				} else if (res == 'denied') {
+					//거절
+					getToSetting();
+				} else if (res == 'unavailable') {
+					//gps자체가 꺼짐 상태
+					getToSetting();
+				} else if (res == 'blocked') {
+					// anilog앱만 '안함' 상태
+					getToSetting('blocked');
+				}
+			});
+		} catch (error) {
+			console.log('location set error:', error);
+		}
+	}
 
 	//주소 불러오기 api 호출
 	React.useEffect(() => {
-		if (changedLatitude == '' || changedLongitude == '') {
-			callInitialAddress(changedLongitude, changedLatitude);
-			Modal.close();
-		} else if (changedLatitude != '' && changedLongitude != '') {
-			if (route.params.addr != undefined && delay) {
-				//주소명 검색완료 후 첫 주소를 받아온 이후의 영역 변경
+		if (permission == true) {
+			if (changedLatitude == '' || changedLongitude == '') {
 				callInitialAddress(changedLongitude, changedLatitude);
 				Modal.close();
-			} else if (delay) {
-				//주소명 검색이 아닌 첫 좌표에서 이동한 경우
-				callInitialAddress(changedLongitude, changedLatitude);
-				Modal.close();
+			} else if (changedLatitude != '' && changedLongitude != '') {
+				if (route.params.addr != undefined && delay) {
+					//주소명 검색완료 후 첫 주소를 받아온 이후의 영역 변경
+					callInitialAddress(changedLongitude, changedLatitude);
+					Modal.close();
+				} else if (delay) {
+					//주소명 검색이 아닌 첫 좌표에서 이동한 경우
+					callInitialAddress(changedLongitude, changedLatitude);
+					Modal.close();
+				}
 			}
 		}
 	}, [changedLatitude]);
@@ -58,7 +143,6 @@ export default SearchMap = ({route}) => {
 	React.useEffect(() => {
 		if (route.params.addr != undefined) {
 			const addr = route.params.addr.roadAddress;
-			// console.log('route.params.addr', route.params.addr);
 			connectGeoCoder(addr);
 		}
 	}, [route.params]);
@@ -75,8 +159,22 @@ export default SearchMap = ({route}) => {
 			},
 			error => {
 				console.log('error get GEOLOCation', error.code, error.message);
+				//User denied access
+				if (error.code == 1) {
+					getToSetting();
+				} else if (error.code == 2) {
+					//Failed
+					getToSetting();
+				} else if (error.code == 3) {
+					//Timeout
+					Modal.popNoBtn('주소를 받아오는데 실패했습니다. \n 잠시후 다시 이용해주세요.');
+					setTimeout(() => {
+						Modal.close();
+						navigation.goBack();
+					}, 1500);
+				}
 			},
-			{enableHighAccuracy: false, timeout: 20000, maximumAge: 10000},
+			{enableHighAccuracy: false, timeout: 6000, maximumAge: 10000},
 		);
 	};
 
@@ -201,15 +299,15 @@ export default SearchMap = ({route}) => {
 		} else {
 			if (map.current) {
 				console.log('map', map.current);
-				map.current.animateToRegion(
-					{
-						latitude: init_latitude,
-						longitude: init_longitude,
-						latitudeDelta: 0.0002,
-						longitudeDelta: 0.0023,
-					},
-					400,
-				);
+				// map.current.animateToRegion(
+				// 	{
+				// 		latitude: init_latitude,
+				// 		longitude: init_longitude,
+				// 		latitudeDelta: 0.0002,
+				// 		longitudeDelta: 0.0023,
+				// 	},
+				// 	400,
+				// );
 				setTimeout(() => {
 					setChangedLatitude(init_latitude);
 					setChangedLongitude(init_longitude);
@@ -220,8 +318,10 @@ export default SearchMap = ({route}) => {
 
 	const goToAddressSearch = () => {
 		if (route.name == 'FeedSearchMap') {
+			//피드 위치추가 경로
 			navigation.push('FeedAddressSearchWeb', {prevRoute: route.name});
 		} else {
+			// 커뮤니티 위치추가 경로
 			navigation.push('AddressSearchWeb', {prevRoute: route.name});
 		}
 	};
@@ -411,19 +511,15 @@ function useKeyboardBottom(tabheight) {
 	})();
 	React.useEffect(() => {
 		let didshow = Keyboard.addListener('keyboardDidShow', e => {
-			console.log('keyboarddidshow');
 			setKeyboardY(e.endCoordinates.height + KeyboardBorderLine - tabheight);
 		});
 		let didhide = Keyboard.addListener('keyboardDidHide', e => {
-			console.log('keyboarddidhide');
 			setKeyboardY(0);
 		});
 		let willshow = Keyboard.addListener('keyboardWillShow', e => {
-			console.log('keyboardwillshow');
 			setKeyboardY(e.endCoordinates.height + KeyboardBorderLine - tabheight);
 		});
 		let willhide = Keyboard.addListener('keyboardWillHide', e => {
-			console.log('keyboardwillhide');
 			setKeyboardY(0);
 		});
 		return () => {

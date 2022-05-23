@@ -233,7 +233,7 @@ export default CommunityWrite = props => {
 	const onPressFilter = () => {
 		// console.log('data.community_interests', data.community_interests);
 		richText.current?.dismissKeyboard(); //일반적인 input과 달리 RichText에서는 이와같이 키보드를 hide
-		Modal.popInterestTagModal(
+		Modal.popReviewFilterModal(
 			'ReviewWrite',
 			// data.community_interests == '카테고리 선택' ? [] : data.community_interests,
 			data.community_interests,
@@ -404,6 +404,7 @@ export default CommunityWrite = props => {
 			</TouchableOpacity>
 		);
 	};
+	console.log('data.community_address', data.community_address);
 
 	const onPaste = paste => {
 		console.log('paste', paste);

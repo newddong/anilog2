@@ -1,9 +1,8 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions, TouchableWithoutFeedback, FlatList} from 'react-native';
-import {WHITE, GRAY10, APRI10, GRAY30, GREEN} from 'Root/config/color';
+import {View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions, FlatList, Animated, Easing} from 'react-native';
+import {WHITE, APRI10, GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {Cross24, Cross24_Filled, Cross24_White} from 'Atom/icon';
 import Modal from 'Root/component/modal/Modal';
 
 /**
@@ -20,57 +19,60 @@ import Modal from 'Root/component/modal/Modal';
 const SelectBoxModal = props => {
 	const data = props.data;
 
+	const animatedHeight = React.useRef(new Animated.Value(0)).current;
+
+	React.useEffect(() => {
+		animateSelectModal();
+	}, []);
+
+	const animateSelectModal = () => {
+		Animated.timing(animatedHeight, {
+			duration: 300,
+			toValue: (200 + data.length * 88) * DP,
+			easing: Easing.linear,
+			useNativeDriver: false,
+		}).start();
+	};
+
+	const closeSelectModal = () => {
+		Animated.timing(animatedHeight, {
+			duration: 200,
+			toValue: 0,
+			easing: Easing.linear,
+			useNativeDriver: false,
+		}).start(() => {
+			Modal.close();
+		});
+	};
+
 	const onSelect = item => {
 		props.onSelect(item);
 	};
 
-	const renderItem = (item, index) => {
+	const renderItem = ({item, index}) => {
 		return (
-			<TouchableOpacity onPress={() => onSelect(item)} style={[style.listItem, props.headerRoof ? {} : {flexDirection: 'row'}]}>
-				<Text style={[txt.noto30, {height: 48 * DP, maxWidth: 400 * DP}]}>{item}</Text>
-				{!props.headerRoof && index == 0 ? (
-					<TouchableOpacity
-						onPress={() => props.onClose()}
-						activeOpacity={0.8}
-						style={[style.crossMarkContainer_withoutTitle, {position: 'absolute', right: 0, top: -30 * DP}]}>
-						<Cross24_Filled />
-					</TouchableOpacity>
-				) : (
-					<></>
-				)}
+			<TouchableOpacity onPress={() => onSelect(item)} style={[style.listItem]}>
+				<Text style={[txt.noto30, {textAlignVertical: 'center', maxWidth: 400 * DP, fontWeight: item == '삭제' ? 'bold' : 'normal'}]}>{item}</Text>
 			</TouchableOpacity>
 		);
 	};
 
 	const ItemSeparatorComponent = () => {
-		return <View style={{width: 470 * DP, height: 2 * DP, backgroundColor: GRAY30}}></View>;
+		return <View style={{alignSelf: 'center', width: 470 * DP, height: 2 * DP, backgroundColor: GRAY30}}></View>;
 	};
 
 	return (
-		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={style.background}>
-			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, props.headerRoof ? {paddingBottom: 40 * DP} : {paddingVertical: 40 * DP}]}>
-				{props.headerRoof ? (
-					<View style={[style.roof, {flexDirection: 'row'}]}>
-						<Text style={[txt.noto30, style.headerTitle]}>{props.headerTitle}</Text>
-						<TouchableOpacity onPress={() => props.onClose()} style={[style.crossMarkContainer]}>
-							<Cross24_White />
-						</TouchableOpacity>
+		<TouchableOpacity activeOpacity={1} onPress={closeSelectModal} style={[style.background]}>
+			<Animated.View style={[style.container, {height: animatedHeight}]}>
+				<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, {paddingVertical: 30 * DP}]}>
+					<View style={[style.insideContainer]}>
+						<FlatList data={data} renderItem={renderItem} scrollEnabled={false} ItemSeparatorComponent={ItemSeparatorComponent} />
 					</View>
-				) : (
-					// <TouchableOpacity onPress={() => props.onClose()} activeOpacity={0.8} style={[style.crossMarkContainer_withoutTitle, {}]}>
-					// 	<Cross24_Filled />
-					// </TouchableOpacity>
-					<></>
-				)}
-				<View style={[style.insideContainer]}>
-					<FlatList
-						data={data}
-						renderItem={({item, index}) => renderItem(item, index)}
-						scrollEnabled={false}
-						ItemSeparatorComponent={ItemSeparatorComponent}
-					/>
-				</View>
-			</TouchableOpacity>
+				</TouchableOpacity>
+				<TouchableOpacity onPress={closeSelectModal} activeOpacity={0.8} style={[style.closeBox]}>
+					<Text style={[txt.noto30]}>취소</Text>
+				</TouchableOpacity>
+			</Animated.View>
 		</TouchableOpacity>
 	);
 };
@@ -87,7 +89,14 @@ const style = StyleSheet.create({
 		backgroundColor: '#0009',
 		height: Platform.OS == 'ios' ? Dimensions.get('window').height : '100%',
 		width: Platform.OS == 'ios' ? Dimensions.get('window').width : '100%',
-		justifyContent: 'center',
+		justifyContent: 'flex-end',
+		alignItems: 'center',
+		paddingBottom: 30 * DP,
+	},
+	container: {
+		// backgroundColor: 'yellow',
+		marginBottom: 50 * DP,
+		justifyContent: 'flex-end',
 		alignItems: 'center',
 	},
 	popUpWindow: {
@@ -96,57 +105,28 @@ const style = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		backgroundColor: WHITE,
-		borderRadius: 50 * DP,
+		borderRadius: 30 * DP,
+		marginBottom: 20 * DP,
 	},
 	insideContainer: {
-		width: 486 * DP,
+		width: 658 * DP,
+		// height: 88 * DP,
+		// backgroundColor: 'red',
 		// paddingTop: 24 * DP,
 	},
-	roof: {
-		paddingHorizontal: 40 * DP,
-		marginBottom: 20 * DP,
-		height: 88 * DP,
-		backgroundColor: APRI10,
-		borderTopLeftRadius: 50 * DP,
-		borderTopRightRadius: 50 * DP,
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	roofInside: {
-		// paddingHorizontal: 40 * DP,
-		paddingVertical: 18 * DP,
-		width: 486 * DP,
-		height: 75 * DP,
-		// backgroundColor: 'green',
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	headerTitle: {
-		color: WHITE,
-		width: 434 * DP,
-	},
 	listItem: {
-		width: 470 * DP,
+		width: 658 * DP,
 		height: 88 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
-	crossMarkContainer: {
-		width: 60 * DP,
-		height: 60 * DP,
+	closeBox: {
+		width: 658 * DP,
+		height: 128 * DP,
+		borderRadius: 30 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
-	},
-	crossMarkContainer_withoutTitle: {
-		alignSelf: 'flex-end',
-		marginRight: 20 * DP,
-		width: 60 * DP,
-		height: 60 * DP,
-		marginTop: 20 * DP,
-		alignItems: 'center',
-		justifyContent: 'center',
-		// backgroundColor: 'red',
+		backgroundColor: 'white',
 	},
 });
 

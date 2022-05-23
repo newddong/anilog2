@@ -15,6 +15,7 @@ import community_obj from 'Root/config/community_obj';
 import {REPORT_MENU} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
+import {buttonstyle} from 'Templete/style_templete';
 
 export default ReviewMain = ({route, navigation}) => {
 	const [data, setData] = React.useState('false');
@@ -90,7 +91,6 @@ export default ReviewMain = ({route, navigation}) => {
 	//필터 존재 여부 테스트
 	const hasNoFilter = () => {
 		const previousFilter = community_obj.reviewFilter.userInterestReview;
-		// console.log('previousFilter', previousFilter);
 		let arr = [];
 		const selectedCategoryFilter = arr.concat(
 			previousFilter.interests_review,
@@ -99,15 +99,12 @@ export default ReviewMain = ({route, navigation}) => {
 			previousFilter.interests_hospital,
 			previousFilter.interests_interior,
 		);
-		// console.log('selectedCategoryFilter', selectedCategoryFilter);
 		const isCategoryNotSelected = selectedCategoryFilter.length == 0;
 		const none_interests_location = previousFilter.interests_location.city == '';
-		// console.log('isCategoryNotSelected', isCategoryNotSelected);
-		// console.log('none_interests_location', none_interests_location);
-		// console.log('isCategoryNotSelected && none_interests_location;', isCategoryNotSelected && none_interests_location);
 		return isCategoryNotSelected && none_interests_location;
 	};
 
+	//미트볼 클릭
 	const onPressMeatball = index => {
 		console.log('index', index);
 		const isMyArticle = userGlobalObject.userInfo._id == getData()[index].community_writer_id._id;
@@ -219,25 +216,18 @@ export default ReviewMain = ({route, navigation}) => {
 		}
 	};
 
-	//좌상단 필터 적용 해제
-	const onPressFilterOff = () => {
-		filterRef.current = false;
-		//필터 초기화
-		community_obj.reviewFilter = {
-			userInterestReview: {
-				interests_review: [],
-				interests_trip: [],
-				interests_etc: [],
-				interests_hospital: [],
-				interests_interior: [],
-				interests_location: {city: '', district: ''},
-			},
-		};
-		fetchData();
-	};
-
 	//필터 적용(community_obj reviewFilter 존재 시 호출)
 	const doFilter = (arg, review) => {
+		//두 배열 간 비교 함수
+		function compareArray(a, b) {
+			for (let i = 0; i < a.length; i++) {
+				for (let j = 0; j < b.length; j++) {
+					if (a[i] == b[j]) {
+						return true;
+					}
+				}
+			}
+		}
 		console.log('필터가 존재하므로 호출!');
 		console.log('dofilter arg', arg);
 		setFilterData({...filterData, box: arg});
@@ -352,17 +342,6 @@ export default ReviewMain = ({route, navigation}) => {
 			},
 		);
 	};
-
-	//두 배열 간 비교 함수
-	function compareArray(a, b) {
-		for (let i = 0; i < a.length; i++) {
-			for (let j = 0; j < b.length; j++) {
-				if (a[i] == b[j]) {
-					return true;
-				}
-			}
-		}
-	}
 
 	//리뷰 좋아요 클릭
 	const onPressLike = (index, bool) => {
@@ -492,33 +471,31 @@ export default ReviewMain = ({route, navigation}) => {
 	} else
 		return (
 			<View style={[style.container]}>
-				<FlatList
-					data={[{}]}
-					listKey={({item, index}) => index}
-					showsVerticalScrollIndicator={false}
-					renderItem={({item, index}) => {
-						return (
-							<>
-								<ReviewList
-									items={getData()}
-									recommend={filterRef.current ? [] : recommend}
-									whenEmpty={whenEmpty}
-									onPressReviewContent={onPressReviewContent}
-									onPressReply={onPressReply}
-									onPressMeatball={onPressMeatball}
-									onPressLike={index => onPressLike(index, true)}
-									onPressUnlike={index => onPressLike(index, false)}
-									onPressFavorite={onPressFavorite}
-									onPressRecommendReview={onPressRecommendReview}
-								/>
-							</>
-						);
-					}}
-					ListHeaderComponent={filterComponent()}
-					stickyHeaderIndices={[0]}
+				<ReviewList
+					items={getData()}
+					recommend={filterRef.current ? [] : recommend}
+					whenEmpty={whenEmpty}
+					onPressReviewContent={onPressReviewContent}
+					onPressReply={onPressReply}
+					onPressMeatball={onPressMeatball}
+					onPressLike={index => onPressLike(index, true)}
+					onPressUnlike={index => onPressLike(index, false)}
+					onPressFavorite={onPressFavorite}
+					onPressRecommendReview={onPressRecommendReview}
 				/>
 				<View style={[style.write, style.shadowButton]}>
-					<WriteBoard onPress={onPressWrite} />
+					<View
+						style={[{
+							height: 94 * DP,
+							width: 94 * DP,
+							justifyContent: 'center',
+							alignItems: 'center',
+							backgroundColor: '#ff9888',
+							borderRadius: 35 * DP,
+							marginBottom: 20 * DP,
+						},buttonstyle.shadow]}>
+						<WriteBoard onPress={onPressWrite} />
+					</View>
 				</View>
 			</View>
 		);

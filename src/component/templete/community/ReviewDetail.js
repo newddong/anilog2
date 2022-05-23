@@ -21,6 +21,7 @@ import ParentComment from 'Root/component/organism/comment/ParentComment';
 import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {ScrollView} from 'react-native';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
+import { useKeyboardBottom } from 'Root/component/molecules/input/usekeyboardbottom';
 
 /**
  * 후기 상세 내용
@@ -28,6 +29,7 @@ import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
  * @param {object} props.data - 리뷰 데이터 오브젝트
  */
 export default ReviewDetail = props => {
+	const key = useKeyboardBottom(0);
 	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.route.params.community_object);
 	const [searchInput, setSearchInput] = React.useState('');
@@ -46,6 +48,7 @@ export default ReviewDetail = props => {
 		comment_photo_uri: '',
 	});
 	const commentListHeight = React.useRef(100);
+	const floatInput = React.useRef();
 
 	React.useEffect(() => {
 		if (data.community_address.normal_address.address_name != '') {
@@ -145,7 +148,7 @@ export default ReviewDetail = props => {
 						},
 						comments => {
 							!parentComment && setComments([]); //댓글목록 초기화
-							let res = comments.msg;
+							let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
 							let dummyForBox = res[res.length - 1];
 							res.push(dummyForBox);
 							setComments(res);
@@ -196,7 +199,7 @@ export default ReviewDetail = props => {
 						},
 						comments => {
 							!parentComment && setComments([]); //댓글목록 초기화
-							let res = comments.msg;
+							let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
 							let dummyForBox = res[res.length - 1];
 							res.push(dummyForBox);
 							setComments(res);
@@ -204,8 +207,6 @@ export default ReviewDetail = props => {
 							input.current.blur();
 							setPrivateComment(false);
 							setEditMode(false); // console.log('comments', comments);
-							console.log('whichComment', whichParent);
-
 							setTimeout(() => {
 								whichParent == ''
 									? scrollRef.current.scrollToIndex({animated: true, index: 0})
@@ -235,7 +236,7 @@ export default ReviewDetail = props => {
 			},
 			comments => {
 				// console.log('comments', comments.msg);
-				let res = comments.msg;
+				let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
 				let dummyForBox = res[res.length - 1];
 				res.push(dummyForBox);
 				setComments(res);
@@ -243,6 +244,7 @@ export default ReviewDetail = props => {
 			},
 			err => {
 				console.log('getCommentListByCommunityId', err);
+				Modal.close();
 				if (err == '검색 결과가 없습니다.') {
 					setComments([{}]);
 				}
@@ -250,10 +252,16 @@ export default ReviewDetail = props => {
 		);
 	};
 
+	const [isReplyFocused, setReplyFocus] = React.useState(false);
 	const onFocus = () => {
 		console.log('onFocus');
+		Platform.OS=='android'&&setReplyFocus(true);
 		scrollToReplyBox();
 	};
+
+	const onBlur = () => {
+		Platform.OS=='android'&&setReplyFocus(false);
+	}
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
 	const onLockBtnClick = () => {
@@ -263,7 +271,10 @@ export default ReviewDetail = props => {
 			});
 		} else {
 			setPrivateComment(!privateComment);
-			!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+			!privateComment ? Modal.popNoBtn('비밀댓글로 설정되었습니다.') : Modal.popNoBtn('댓글이 공개설정되었습니다.');
+			setTimeout(() => {
+				Modal.close();
+			}, 1000);
 		}
 	};
 
@@ -306,6 +317,7 @@ export default ReviewDetail = props => {
 				navigation.navigate('Login');
 			});
 		} else {
+			input.current?.focus();
 			setParentComment(parentCommentId);
 			editComment || setEditComment(true);
 			setEditMode(false);
@@ -331,24 +343,24 @@ export default ReviewDetail = props => {
 	const scrollToReplyBox = () => {
 		if (Platform.OS == 'android') {
 			input.current?.focus();
-			setTimeout(() => {
-				scrollRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 1, viewOffset: 0});
-			}, 200);
+			scrollRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 1, viewOffset: 0});
+			// setTimeout(() => {
+			// 	scrollRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 1, viewOffset: 0});
+			// }, 200);
 		} else {
 			scrollRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 0.5, viewOffset: 0});
-			input.current?.focus();
 		}
 	};
 
 	//댓글 대댓글 삭제
 	const onPressDelete = id => {
+		Modal.popLoading(true);
 		deleteComment(
 			{
 				commentobject_id: id,
 			},
 			result => {
 				console.log('result / delectComment / ProtectCommentList : ', result.msg.comment_is_delete);
-				Modal.popLoading();
 				getComment();
 			},
 			err => {
@@ -575,8 +587,7 @@ export default ReviewDetail = props => {
 	const renderItem = ({item, index}) => {
 		if (index == comments.length - 1) {
 			return (
-				<>
-					<View style={[{marginTop: 0 * DP, marginBottom: 30 * DP}]}>
+					<View style={[{marginTop: 0 * DP, marginBottom: 30 * DP,opacity:key>0||isReplyFocused?0:1}]}>
 						<ReplyWriteBox
 							onAddPhoto={onAddPhoto}
 							onChangeReplyInput={onChangeReplyInput}
@@ -590,9 +601,9 @@ export default ReviewDetail = props => {
 							parentComment={parentComment}
 							onCancelChild={onCancelChild}
 							onFocus={onFocus}
+							onBlur={onBlur}
 						/>
 					</View>
-				</>
 			);
 		} else
 			return (
@@ -638,6 +649,22 @@ export default ReviewDetail = props => {
 					}}
 					scrollToOverflowEnabled={true} // Just put in here
 				/>
+				{key>0||isReplyFocused&&<View style={{position:'absolute',bottom:key-2}}>
+				<ReplyWriteBox
+							onAddPhoto={onAddPhoto}
+							onChangeReplyInput={onChangeReplyInput}
+							onLockBtnClick={onLockBtnClick}
+							onWrite={onWrite}
+							onDeleteImage={onDeleteImage}
+							privateComment={privateComment}
+							ref={floatInput}
+							editData={editData}
+							shadow={false}
+							parentComment={parentComment}
+							onCancelChild={onCancelChild}
+							onFocus={onFocus}
+							onBlur={onBlur}
+				/></View>}
 			</View>
 		);
 };

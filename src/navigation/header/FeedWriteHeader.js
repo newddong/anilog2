@@ -104,6 +104,8 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 							Modal.alert('실종위치는 반드시 \n선택해주셔야합니다!');
 						} else if (!check.test(data.missing_animal_age)) {
 							Modal.alert('실종동물의 나이는 \n숫자만 입력가능합니다!');
+						} else if (data.missing_animal_date == '눌러서 지정해주세요!') {
+							Modal.alert('실종 날짜를 선택해주세요.');
 						} else if (
 							data.missing_animal_species &&
 							data.missing_animal_species_detail &&
@@ -128,30 +130,31 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 				case 'Report':
 					{
 						const data = param;
+						console.log('data.report_witness_date', data.report_witness_date);
 						if (data.report_location.city == '광역시, 도' || data.report_location.district == '구를 선택') {
 							Modal.alert('제보위치는 반드시 \n선택해주셔야합니다.');
-						} else if (data.report_witness_date == '') {
+						} else if (data.report_witness_date == '' || data.report_witness_date == '눌러서 지정해주세요!') {
 							Modal.alert('제보 날짜를 선택해주세요.');
-						}
+						} else {
+							data.report_witness_location =
+								(data.report_location.city || '') + ' ' + (data.report_location.district || '') + ' ' + (data.report_location.detail || '');
 
-						data.report_witness_location =
-							(data.report_location.city || '') + ' ' + (data.report_location.district || '') + ' ' + (data.report_location.detail || '');
-
-						console.log('Before Write Report ', data);
-						delete data.feed_location;
-						if (
-							// data.addr &&
-							(data.feed_content || data.feed_medias) &&
-							data.media_uri.length > 0 &&
-							data.report_animal_species &&
-							data.report_witness_date &&
-							data.report_witness_location
-						) {
-							console.log('NotNull 통과');
-							createReport(param, complete, handleError);
-							Modal.close();
+							console.log('Before Write Report ', data);
+							delete data.feed_location;
+							if (
+								// data.addr &&
+								(data.feed_content || data.feed_medias) &&
+								data.media_uri.length > 0 &&
+								// data.report_animal_species &&
+								data.report_witness_date &&
+								data.report_witness_location
+							) {
+								console.log('NotNull 통과');
+								createReport(param, complete, handleError);
+								Modal.close();
+							}
+							// Modal.close();
 						}
-						// Modal.close();
 					}
 					break;
 				default:
@@ -192,7 +195,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 				if (
 					(data.feed_content || data.feed_medias) &&
 					// data.media_uri.length > 0 &&
-					data.report_animal_species &&
+					// data.report_animal_species &&
 					data.report_witness_date &&
 					data.report_witness_location
 				) {

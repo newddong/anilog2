@@ -40,6 +40,7 @@ import LocationCheckModal from 'Root/component/molecules/modal/LocationCheckModa
 import AvatarSelectFromWriteModal from 'Root/component/molecules/modal/AvatarSelectFromWriteModal';
 import LoginRequestModal from 'Root/component/molecules/modal/LoginRequestModal';
 import ReviewFilterModal from 'Root/component/molecules/modal/ReviewFilterModal';
+import ProtectRequestFilterModal from 'Root/component/molecules/modal/ProtectRequestFilterModal';
 
 export function useModal() {
 	const [isPop, setPop] = React.useState(false);
@@ -95,7 +96,7 @@ export function useModal() {
 						maxLength={maxLength}
 					/>,
 			  )
-			: popIn(<Calendar modalOn={visible} modalOff={onOff} selectDate={date} past={past} future={future} />);
+			: popIn(<Calendar modalOn={visible} modalOff={onOff} selectDate={date} past={past} future={future} previous={previous} />);
 		!isPop && setPop(true);
 	};
 
@@ -266,6 +267,11 @@ export function useModal() {
 
 	Modal.popLoginRequestModal = onOk => {
 		popIn(<LoginRequestModal onOk={onOk} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popProtectRequestFilterModal = (previous, onConfirm, onClose) => {
+		popIn(<ProtectRequestFilterModal previous={previous} onConfirm={onConfirm} onClose={onClose} />);
 		!isPop && setPop(true);
 	};
 

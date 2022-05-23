@@ -1,6 +1,6 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {FlatList, Keyboard, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View,ScrollView} from 'react-native';
 import DP from 'Root/config/dp';
 import {GRAY10, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
 import CommentList from 'Root/component/organism/comment/CommentList';
@@ -21,13 +21,14 @@ import {createReport} from 'Root/api/report';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
-
+import { useKeyboardBottom } from 'Root/component/molecules/input/usekeyboardbottom';
 /**
  * 자유게시글 상세 내용
  * @param {object} props - Props Object
  * @param {object} props.data - 자유 게시글 오브젝트
  */
 export default ArticleDetail = props => {
+	const key = useKeyboardBottom(0);
 	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.route.params.community_object);
 	const [searchInput, setSearchInput] = React.useState('');
@@ -37,6 +38,7 @@ export default ArticleDetail = props => {
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
 	const [parentComment, setParentComment] = React.useState(); //대댓글을 쓰는 경우 해당 댓글의 id container
 	const input = React.useRef();
+	const floatInput = React.useRef();
 	const addChildCommentFn = React.useRef(() => {});
 	const [editMode, setEditMode] = React.useState(false); //댓글 편집 모드
 	const [editData, setEditData] = React.useState({
@@ -129,7 +131,7 @@ export default ArticleDetail = props => {
 			},
 			comments => {
 				// console.log('comments', comments);
-				let res = comments.msg;
+				let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
 				let dummyForBox = res[res.length - 1];
 				res.push(dummyForBox);
 				setComments(res);
@@ -201,7 +203,7 @@ export default ArticleDetail = props => {
 							},
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
-								let res = comments.msg;
+								let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
 								let dummyForBox = res[res.length - 1];
 								res.push(dummyForBox);
 								setComments(res);
@@ -245,7 +247,7 @@ export default ArticleDetail = props => {
 							},
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
-								let res = comments.msg;
+								let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
 								let dummyForBox = res[res.length - 1];
 								res.push(dummyForBox);
 								setComments(res);
@@ -273,11 +275,16 @@ export default ArticleDetail = props => {
 			}
 		}
 	};
-
+	const [isReplyFocused, setReplyFocus] = React.useState(false);
 	const onFocus = () => {
 		console.log('onFocus');
+		Platform.OS=='android'&&setReplyFocus(true);
 		scrollToReplyBox();
 	};
+
+	const onBlur = () => {
+		Platform.OS=='android'&&setReplyFocus(false);
+	}
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
 	const onLockBtnClick = () => {
@@ -287,7 +294,10 @@ export default ArticleDetail = props => {
 			});
 		} else {
 			setPrivateComment(!privateComment);
-			!privateComment ? Modal.alert('비밀댓글로 설정되었습니다.') : Modal.alert('댓글이 공개설정되었습니다.');
+			!privateComment ? Modal.popNoBtn('비밀댓글로 설정되었습니다.') : Modal.popNoBtn('댓글이 공개설정되었습니다.');
+			setTimeout(() => {
+				Modal.close();
+			}, 1000);
 		}
 	};
 
@@ -331,6 +341,7 @@ export default ArticleDetail = props => {
 			});
 		} else {
 			// console.log('대댓글 쓰기 버튼 클릭 : ', parentCommentId.comment_writer_id.user_nickname);
+			input.current?.focus();
 			setParentComment(parentCommentId);
 			editComment || setEditComment(true);
 			setEditMode(false);
@@ -356,13 +367,13 @@ export default ArticleDetail = props => {
 	//수정이나 답글쓰기 눌렀을 때 스크롤 함수
 	const scrollToReplyBox = () => {
 		if (Platform.OS == 'android') {
-			input.current?.focus();
-			setTimeout(() => {
-				flatListRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 1, viewOffset: 0});
-			}, 200);
+			// input.current?.focus();
+			flatListRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 1, viewOffset: 0});
+			// setTimeout(() => {
+			// 	flatListRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 1, viewOffset: 0});
+			// }, 200);
 		} else {
-			flatListRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 0.5, viewOffset: 0});
-			input.current?.focus();
+			flatListRef.current.scrollToIndex({animated: false, index: comments.length - 1, viewPosition: 0.5, viewOffset: 0});
 		}
 	};
 
@@ -584,15 +595,18 @@ export default ArticleDetail = props => {
 							parentComment={parentComment}
 							onCancelChild={onCancelChild}
 							onFocus={onFocus}
+							onBlur={onBlur}
 						/>
 					</View>
 				) : (
 					<></>
 				)}
+				
 				<ArticleList
 					items={articleList}
 					onPressArticle={onPressArticle} //게시글 내용 클릭
 				/>
+				
 			</View>
 		);
 	};
@@ -600,8 +614,8 @@ export default ArticleDetail = props => {
 	const renderItem = ({item, index}) => {
 		if (index == comments.length - 1) {
 			return (
-				<>
-					<View style={[{marginTop: 0 * DP, marginBottom: 30 * DP}]}>
+					<View style={[{marginTop: 0 * DP, marginBottom: 30 * DP, opacity:key>0||isReplyFocused?0:1}]}>
+						
 						<ReplyWriteBox
 							onAddPhoto={onAddPhoto}
 							onChangeReplyInput={onChangeReplyInput}
@@ -615,13 +629,13 @@ export default ArticleDetail = props => {
 							parentComment={parentComment}
 							onCancelChild={onCancelChild}
 							onFocus={onFocus}
+							onBlur={onBlur}
 						/>
 					</View>
-				</>
 			);
 		} else
 			return (
-				<View style={[style.commentContainer, {}]} key={item._id} onLayout={onLayoutCommentList}>
+				<View style={[style.commentContainer]} key={item._id} onLayout={onLayoutCommentList}>
 					<ParentComment
 						parentComment={item}
 						onPressReplyBtn={onReplyBtnClick} // 부모 댓글의 답글쓰기 클릭 이벤트
@@ -657,6 +671,22 @@ export default ArticleDetail = props => {
 					}}
 					removeClippedSubviews={false}
 				/>
+				{key>0||isReplyFocused&&<View style={{position:'absolute',bottom:key-2}}>
+				<ReplyWriteBox
+							onAddPhoto={onAddPhoto}
+							onChangeReplyInput={onChangeReplyInput}
+							onLockBtnClick={onLockBtnClick}
+							onWrite={onWrite}
+							onDeleteImage={onDeleteImage}
+							privateComment={privateComment}
+							ref={floatInput}
+							editData={editData}
+							shadow={false}
+							parentComment={parentComment}
+							onCancelChild={onCancelChild}
+							onFocus={onFocus}
+							onBlur={onBlur}
+				/></View>}
 			</View>
 		);
 };

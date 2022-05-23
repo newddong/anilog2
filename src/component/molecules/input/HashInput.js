@@ -228,7 +228,10 @@ export default function HashInput(props) {
 		let result = '';
 		if (location.road_address?.address_name == '') {
 			result = '';
-		} else if (location.road_address?.address_name == '도로명 주소가 없는 위치입니다. ' || location.road_address?.address_name == 'undefined ') {
+		} else if (
+			location.road_address?.address_name.includes('도로명 주소가 없는 위치입니다.') ||
+			location.road_address?.address_name == 'undefined '
+		) {
 			result = location.normal_address.address_name;
 		} else {
 			result = location.road_address.address_name;
@@ -251,7 +254,7 @@ export default function HashInput(props) {
 				)}
 				<TextInput
 					{...props} //props override
-					style={{marginTop: 10 * DP}}
+					style={[{marginTop: 10 * DP},txt.noto28]}
 					textAlignVertical={'top'}
 					multiline={true}
 					value={value}

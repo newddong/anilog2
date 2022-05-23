@@ -311,7 +311,7 @@ export const organism_style = StyleSheet.create({
 	},
 	childCommentList: {
 		width: 574 * DP,
-		marginBottom: 30 * DP,
+		// marginBottom: 30 * DP,
 
 		//UI 끝이 보이지 않아 임시적으로 marginRight 값 15 넣음.
 		// marginRight: 15 * DP,

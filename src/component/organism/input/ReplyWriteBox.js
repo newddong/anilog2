@@ -70,6 +70,9 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 		props.onFocus();
 	};
 
+	const onBlur = () => {
+		props.onBlur();
+	}
 	const getParent = () => {
 		if (isChildComment) {
 			return (
@@ -111,6 +114,7 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 						multiline={true}
 						placeholder={'메세지 입력..'}
 						onChangeText={onChangeText}
+						onBlur={onBlur}
 						ref={inputRef}
 					/>
 				</View>
@@ -131,7 +135,9 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 									style={[style.replyTextInput_photo]}
 									multiline={true}
 									placeholder={'댓글입력..'}
+									onFocus={onFocus}
 									onChangeText={onChangeText}
+									onBlur={onBlur}
 									ref={inputRef}
 								/>
 							</View>
@@ -145,12 +151,13 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 						<View style={[style.commentBox_top]}>
 							<TextInput
 								defaultValue={content == '' ? null : content}
-								style={[style.replyTextInput, {}]}
+								style={[style.replyTextInput]}
 								multiline={true}
 								placeholder={'댓글입력..'}
 								onChangeText={onChangeText}
 								onFocus={onFocus}
-								ref={inputRef}></TextInput>
+								onBlur={onBlur}
+								ref={inputRef}/>
 						</View>
 						<CommentBoxBottom {...props} onWrite={onWrite} />
 					</View>
@@ -203,6 +210,8 @@ const ReplyWriteBoxProps = {
 	onAddPhoto: func,
 	/** @type {()=>void} 댓글박스 인풋 포커스 입력 콜백 */
 	onFocus: func,
+	/** @type {()=>void} 댓글박스 인풋 포커스 해제 콜백 */
+	onBlur: func,
 	/** @type {()=>void} 댓글박스 인풋 메시지 입력 콜백 */
 	onChangeReplyInput: func,
 	/** @type {()=>void} 댓글의 비밀댓글 여부 */
@@ -227,6 +236,7 @@ ReplyWriteBox.defaultProps = {
 	parentComment: '',
 	onCancelChild: () => {},
 	onFocus: () => {},
+	onBlur: () => {},
 };
 
 const style = StyleSheet.create({

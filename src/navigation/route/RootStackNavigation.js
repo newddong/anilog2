@@ -29,6 +29,7 @@ import FeedWrite from 'Templete/feed/FeedWrite';
 import LocationPicker from 'Templete/search/LocationPicker';
 
 import PhotoSelect from 'Templete/media/PhotoSelect';
+import Crop from 'Templete/media/Crop';
 import AddPhoto from 'Templete/media/AddPhoto';
 import AddressSearch from 'Templete/search/AddressSearch';
 import AssignPetProfileImage from 'Templete/pet/AssignPetProfileImage';
@@ -275,7 +276,8 @@ export default RootStackNavigation = () => {
 						<RootStack.Screen name="MultiPhotoSelect" component={AddPhoto} />
 						{/* 카메라 컴포넌트 임시 추가 */}
 						<RootStack.Screen name="FeedListForHashTag" component={FeedListForHashTag} options={{header: props => <SimpleHeader {...props} />}} />
-
+						{/* 이미지 크롭 화면 */}
+						<RootStack.Screen name="Crop" component={Crop} />
 						<RootStack.Screen
 							name="AssignPetProfileImage"
 							component={AssignPetProfileImage}

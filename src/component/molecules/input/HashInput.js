@@ -254,7 +254,7 @@ export default function HashInput(props) {
 				)}
 				<TextInput
 					{...props} //props override
-					style={{marginTop: 10 * DP}}
+					style={[{marginTop: 10 * DP},txt.noto28]}
 					textAlignVertical={'top'}
 					multiline={true}
 					value={value}

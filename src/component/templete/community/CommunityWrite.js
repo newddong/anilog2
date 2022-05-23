@@ -404,6 +404,7 @@ export default CommunityWrite = props => {
 			</TouchableOpacity>
 		);
 	};
+	console.log('data.community_address', data.community_address);
 
 	const onPaste = paste => {
 		console.log('paste', paste);

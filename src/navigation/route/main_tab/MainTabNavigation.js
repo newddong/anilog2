@@ -12,7 +12,7 @@ import CommunityMain from './community_stack/CommunityMain';
 import CommunityMainStack from './community_stack/CommunityMainStack';
 import SearchMainStack from '../search_tab/SearchMainStack';
 import {Platform} from 'react-native';
-
+import userGlobalObject from 'Root/config/userGlobalObject';
 const MainTabNav = createBottomTabNavigator();
 
 export default MainTabNavigation = ({route, navigation}) => {
@@ -56,7 +56,7 @@ export default MainTabNavigation = ({route, navigation}) => {
 					tabBarHideOnKeyboard: true,
 					header: props => false,
 				})}>
-				{props => <FeedStackNavigation {...props} sendRoute={sendRoute} />}
+				{props => <FeedStackNavigation {...props} sendRoute={sendRoute} rePressed={route.params?.pressed} />}
 			</MainTabNav.Screen>
 			<MainTabNav.Screen
 				name="PROTECTION"

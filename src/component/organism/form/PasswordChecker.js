@@ -35,7 +35,7 @@ export default PasswordChecker = props => {
 	const checkerRef = React.useRef();
 	const passwordValue = React.useRef('');
 	const passwordCheck = React.useRef('');
-
+	const [firstRight, setFirstRight] = React.useState(false);
 	//비밀번호 입력 콜백함수 or 새로운 비밀번호(암호 변경 모드일 경우) 입력 콜백함수
 	const onChangePwd = pwd => {
 		passwordValue.current = pwd; //불필요한 랜더링을 줄이기 위해 set을 쓰지않음
@@ -71,6 +71,11 @@ export default PasswordChecker = props => {
 		let isMatch = password === passwordCheck.current;
 		checkerRef.current.valid(passwordCheck.current);
 		props.onConfirmAndChecked && props.onConfirmAndChecked(isValid && isMatch);
+		if (isValid) {
+			setFirstRight(true);
+		} else {
+			setFirstRight(false);
+		}
 		return isValid;
 	};
 
@@ -95,9 +100,10 @@ export default PasswordChecker = props => {
 			<View style={[passwordChecker_style.passwordInput_initMode]}>
 				<PasswordInput
 					title={PASSWORD_TITLE}
-					description={PASSWORD_FORM_DESCRIPTION}
+					// description={PASSWORD_FORM_DESCRIPTION}
 					placeholder={REQ_PASSWORD}
-					information={PASSWORD_FORM_DESCRIPTION}
+					// information={PASSWORD_FORM_DESCRIPTION}
+					information={'8~20자 이상 영문, 숫자 특수문자(!@#$%^&*만 허용)'}
 					alert_msg={FORM_UNMATCHED_DESC}
 					confirm_msg={FORM_MATCHED_DESC}
 					onChange={onChangePwd}

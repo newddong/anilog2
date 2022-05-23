@@ -40,11 +40,11 @@
 	<key>NSCameraUsageDescription</key>
 	<string>YOUR TEXT</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Program requires GPS to track cars and job orders</string>
+	<string>서비스 동작을 위해 위치 정보가 필요합니다</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Program requires GPS to track cars and job orders</string>
+	<string>서비스 동작을 위해 위치 정보가 필요합니다</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>서비스 동작을 위해 위치 정보가 필요합니다</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>YOUR TEXT</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -65,6 +65,10 @@
 		<string>Roboto-Regular.ttf</string>
 		<string>Roboto-Thin.ttf</string>
 		<string>Roboto-ThinItalic.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

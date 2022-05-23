@@ -12,14 +12,14 @@ import Modal from 'Component/modal/Modal';
 import Input30 from 'Molecules/input/Input30';
 import {assignPet} from 'Root/api/userapi';
 import {stagebar_style} from 'Organism/style_organism copy';
-import userGlobalObject from 'Root/config/userGlobalObject';
+import userGlobalObj from 'Root/config/userGlobalObject';
 import Input24 from 'Root/component/molecules/input/Input24';
 
 export default AssignPetInfoB = props => {
 	// console.log('AssignPetInfoB', props.route.params.data);
 	const navigation = useNavigation();
 	const isAdoptRegist = props.route.params.isAdoptRegist;
-	const weightRef = React.useRef();
+	const weightRef = React.useRef(0);
 	const params = props.route.params.data;
 	const [data, setData] = React.useState({
 		...props.route.params.data,
@@ -85,14 +85,20 @@ export default AssignPetInfoB = props => {
 			},
 			success => {
 				Modal.close();
-				console.log('success', success.msg);
+				// console.log('success', success.msg);
+				// console.log('아바타', userGlobalObj.userInfo.user_avatar);
+				if (userGlobalObj.userInfo.user_avatar != undefined) {
+					userGlobalObj.userInfo.user_avatar = userGlobalObj.userInfo.user_avatar.push(success.msg);
+				}
 				Modal.popNoBtn('반려동물 등록이 완료되었습니다.');
 				setTimeout(() => {
 					Modal.close();
-					console.log('반려 추가 등록 전 userGlobal', userGlobalObject.userInfo);
-					if (userGlobalObject.userInfo._id == '') {
+					console.log('반려 추가 등록 전 userGlobal', userGlobalObj.userInfo.hasOwnProperty('_id'));
+					if (!userGlobalObj.userInfo.hasOwnProperty('_id')) {
+						//회원가입 루트일 경우 바로 로그인 템플릿으로 이동
 						props.navigation.navigate(data.previousRouteName);
 					} else {
+						// 일반유저가 MY탭에서 반려동물을 추가할 경우 계속 추가 등록이 가능하도록 네비게이션 초기화 처리
 						Modal.popTwoBtn(
 							'추가로 등록할 반려동물이 있나요?',
 							'아니오',
@@ -106,7 +112,7 @@ export default AssignPetInfoB = props => {
 									index: 2,
 									routes: [
 										{name: 'UserMenu'},
-										{name: 'UserInfoSetting', params: {token: userGlobalObject.userInfo._id}},
+										{name: 'UserInfoSetting', params: {token: userGlobalObj.userInfo._id}},
 										{name: 'AssignPetProfileImage', params: {previousRouteName: 'UserInfoSetting'}},
 									],
 								});
@@ -157,35 +163,17 @@ export default AssignPetInfoB = props => {
 				<View style={[temp_style.inputForm_assignPetInfo_line1]}>
 					<Text style={[txt.noto28, temp_style.text_assignPetInfo, {color: GRAY10}]}>생일</Text>
 					<View style={[temp_style.datePicker_assignPetInfo_depth1, assignPetInfo_style.datePicker_depth1]}>
-						<DatePicker width={290} onDateChange={onSelectBirthDate} defaultDate={selectedBirthDate} future={false} />
+						<DatePicker width={290} onDateChange={onSelectBirthDate} defaultDate={'눌러서 지정!'} future={false} />
 					</View>
-					<Text style={[temp_style.text218_assignPetInfo, assignPetInfo_style.text218]}>{getBirthDate()}</Text>
+					{data.pet_birthday != '' ? <Text style={[temp_style.text218_assignPetInfo, assignPetInfo_style.text218]}>{getBirthDate()}</Text> : <></>}
 				</View>
-
 				{/* InputForm 체중 */}
 				<View style={[temp_style.inputForm_assignPetInfo_line2, assignPetInfo_style.line2]}>
 					<Text style={[txt.noto28, temp_style.text_assignPetInfo, {color: GRAY10}]}>체중</Text>
 					<View style={[temp_style.inputNoTitle_assignPetInfo, assignPetInfo_style.inputNoTitle]}>
-						{/* <Input30
-							alert_msg={'두자리 숫자, 소수점 한자리'}
-							description="info"
-							showmsg={true}
-							confirm={true}
-							showTitle={false}
-							width={206}
-							placeholder={'몸무게 입력'}
-							showCrossMark={false}
-							onChange={onChangeKg}
-							value={data.pet_weight}
-							// defaultValue={data.pet_weight.toString()}
-							validator={weigthValid}
-							keyboardType={'number-pad'}
-							maxLength={4}
-							confirm_msg=""
-							ref={weightRef}
-						/> */}
 						<Input24
 							keyboardType={'number-pad'}
+							ref={weightRef}
 							value={data.pet_weight}
 							width={300}
 							alert_msg={'두자리 숫자, 소수점 한자리'}

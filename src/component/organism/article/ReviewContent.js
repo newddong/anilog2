@@ -98,7 +98,7 @@ const ReviewContent = props => {
 	const onWebViewMessage = async event => {
 		if (Platform.OS == 'android') {
 			setTimeout(() => {
-				if (event.nativeEvent.data.includes('pinetreegy.s3')) {
+				if (event.nativeEvent.data.includes('pinefriend.s3')) {
 					console.log('event.nativeEvent.data', event.nativeEvent.data);
 					showImg(event.nativeEvent.data);
 				} else if (parseInt(event.nativeEvent.data) < 100 * DP) {
@@ -111,7 +111,7 @@ const ReviewContent = props => {
 		} else {
 			// console.log('event IOS : ', JSON.stringify(event._dispatchInstances._debugOwner.memoizedProps));
 			console.log('event.nativeEvent.data', event.nativeEvent.data);
-			if (event.nativeEvent.data.includes('pinetreegy.s3')) {
+			if (event.nativeEvent.data.includes('pinefriend.s3')) {
 				console.log('event.nativeEvent.data', event.nativeEvent.data);
 				showImg(event.nativeEvent.data);
 			} else if (parseInt(event.nativeEvent.data) < 100 * DP) {
@@ -148,6 +148,7 @@ const ReviewContent = props => {
 	};
 
 	const showImg = src => {
+		console.log('dd');
 		Modal.popPhotoListViewModal([src]);
 	};
 
@@ -364,7 +365,7 @@ const style = StyleSheet.create({
 	},
 	locationText: {
 		maxWidth: 520 * DP,
-		height: 60 * DP,
+		// height: 60 * DP,
 		borderRadius: 20 * DP,
 		padding: 10 * DP,
 		borderWidth: 2 * DP,

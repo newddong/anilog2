@@ -1,5 +1,16 @@
 import React from 'react';
-import {ScrollView, Text, TouchableOpacity, View, TouchableWithoutFeedback, TextInput, Platform, Keyboard} from 'react-native';
+import {
+	ScrollView,
+	Text,
+	TouchableOpacity,
+	View,
+	TouchableWithoutFeedback,
+	TextInput,
+	Platform,
+	Keyboard,
+	NativeModules,
+	AppState,
+} from 'react-native';
 import {APRI10, WHITE, GRAY20, GRAY10, GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
@@ -34,6 +45,8 @@ import {FlatList} from 'react-native-gesture-handler';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
+import {openSettings, PERMISSIONS, request} from 'react-native-permissions';
+import LocationButton from 'Root/component/molecules/button/LocationButton';
 import MissingForm from 'Templete/feed/MissingForm';
 import ReportForm from 'Templete/feed/ReportForm';
 
@@ -197,8 +210,15 @@ export default FeedWrite = props => {
 			Modal.alert('첨부파일은 5개까지만 가능합니다');
 			return;
 		}
+		let selectPhoto;
+		if (props.route.params.feedType == 'Report') {
+			selectPhoto = '사진 선택 모드를 선택하세요 \n 사진 추가시 2장까지 가능합니다.';
+		} else {
+			selectPhoto = '사진 선택 모드를 선택하세요';
+		}
+		console.log('route11', props.route.params.feedType);
 		Modal.popTwoBtn(
-			'사진 선택 모드를 선택하세요',
+			selectPhoto,
 			'하나씩선택',
 			'여러개선택',
 			() => {
@@ -473,4 +493,6 @@ export default FeedWrite = props => {
 			)}
 		</View>
 	);
+
 };
+

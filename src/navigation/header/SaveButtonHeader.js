@@ -31,28 +31,15 @@ export default SaveButtonHeader = ({navigation, route, options, back}) => {
 				Modal.popLoading(true);
 				updateUserDetailInformation(
 					{
-						// userobject_id: received._id,
-						// user_birthday: received.user_birthday,
-						// user_interests: received.user_interests,
-						// user_address: received.user_address,
-						// user_sex: received.user_sex,
 						userobject_id: data.data._id,
 						user_birthday: '',
 						user_interests: data.data.user_interests,
-						// user_interests: {
-						// 	interests_activity: ['의류'],
-						// 	interests_beauty: ['미용'],
-						// 	interests_food: ['독스포츠'],
-						// 	interests_health: ['노환'],
-						// 	interests_location: ['서울 특별시'],
-						// },
 						user_address: data.data.user_address,
 						user_sex: data.data.user_sex,
 					},
 
 					result => {
-						console.log('result / updateUserDetailInformation / SaveButtonHeader   : ', result);
-						// Modal.popOneBtn('저장되었습니다.', '확인', Modal.close);
+						console.log('result / updateUserDetailInformation / SaveButtonHeader   : ', result.msg);
 						setTimeout(() => {
 							Modal.close();
 							navigation.goBack();

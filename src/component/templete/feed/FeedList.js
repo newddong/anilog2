@@ -15,6 +15,7 @@ import {GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {useScrollToTop} from '@react-navigation/native';
+import {getUserInfoById} from 'Root/api/userapi';
 export default FeedList = ({route, navigation}) => {
 	const [feedList, setFeedList] = React.useState([]);
 	const [refreshing, setRefreshing] = React.useState(false);

@@ -38,7 +38,6 @@ const DatePicker = props => {
 	};
 
 	const openCalendar = () => {
-		// console.log('openCale');
 		if (props.canOpenCalendar()) {
 			props.multiple
 				? Modal.popCalendar(
@@ -51,7 +50,7 @@ const DatePicker = props => {
 						props.previous,
 						props.maxLength,
 				  )
-				: Modal.popCalendar(showCalendar, closeCalendar, date => onDateChange(date), props.past, props.future);
+				: Modal.popCalendar(showCalendar, closeCalendar, date => onDateChange(date), props.past, props.future, false, props.previous);
 			setShowCalendar(true);
 		}
 	};
@@ -70,7 +69,7 @@ const DatePicker = props => {
 			)}
 			<View
 				style={{
-					borderBottomColor: selectedDate == '눌러서 지정해주세요!' ? GRAY30 : APRI10,
+					borderBottomColor: selectedDate == '눌러서 지정해주세요!' || selectedDate == '눌러서 지정!' ? GRAY30 : APRI10,
 					borderBottomWidth: 2 * DP,
 					flexDirection: 'row',
 					alignItems: 'center',
@@ -82,7 +81,7 @@ const DatePicker = props => {
 							lineHeight: 44 * DP,
 							paddingLeft: 14 * DP,
 							paddingVertical: 18 * DP, // Value와 최상위 View와의 paddingVertical 16px
-							color: selectedDate == '눌러서 지정해주세요!' ? GRAY10 : BLACK,
+							color: selectedDate == '눌러서 지정해주세요!' || selectedDate == '눌러서 지정!' ? GRAY10 : BLACK,
 						},
 					]}>
 					{typeof selectedDate === 'object' ? '눌러서 지정해주세요!' : selectedDate}

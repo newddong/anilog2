@@ -1,10 +1,10 @@
 import React from 'react';
-import {Text, View, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
+import {Text, View, TouchableOpacity, TouchableWithoutFeedback, StyleSheet} from 'react-native';
 import {APRI10, GRAY20, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {btn_w176, btn_w226} from 'Atom/btn/btn_style';
-import {Location54_APRI10} from 'Atom/icon';
+import {Location42_APRI10, Location54_APRI10} from 'Atom/icon';
 
 /**
  * 로케이션 마크가 추가된 AniButton
@@ -33,12 +33,12 @@ const LocationButton = props => {
 
 	const insideView = () => {
 		return (
-			<View style={[btn_w176, {backgroundColor: WHITE, justifyContent: 'center', borderColor: APRI10, borderWidth: 4 * DP}]}>
+			<View style={[btn_w176, style.container, style.shadow]}>
 				<View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginRight: 5 * DP}}>
-					<Location54_APRI10 />
+					<Location42_APRI10 />
 					<Text
 						style={[
-							txt.noto24b,
+							txt.noto24,
 							{
 								marginLeft: 12 * DP,
 								fontSize: props.titleFontStyle * DP,
@@ -71,3 +71,22 @@ LocationButton.defaultProps = {
 	onPress: e => console.log(e), // 버튼을 탭했을때 발생하는 콜백
 };
 export default LocationButton;
+
+const style = StyleSheet.create({
+	container: {
+		backgroundColor: WHITE,
+		justifyContent: 'center',
+		borderColor: APRI10,
+		borderWidth: 2 * DP,
+	},
+	shadow: {
+		shadowColor: '#000000',
+		shadowOpacity: 0.1,
+		shadowRadius: 4.65,
+		shadowOffset: {
+			width: 1 * DP,
+			height: 1 * DP,
+		},
+		elevation: 1,
+	},
+});

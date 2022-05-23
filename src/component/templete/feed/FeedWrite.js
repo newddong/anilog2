@@ -1,5 +1,16 @@
 import React from 'react';
-import {ScrollView, Text, TouchableOpacity, View, TouchableWithoutFeedback, TextInput, Platform, Keyboard} from 'react-native';
+import {
+	ScrollView,
+	Text,
+	TouchableOpacity,
+	View,
+	TouchableWithoutFeedback,
+	TextInput,
+	Platform,
+	Keyboard,
+	NativeModules,
+	AppState,
+} from 'react-native';
 import {APRI10, WHITE, GRAY20, GRAY10, GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
@@ -34,6 +45,8 @@ import {FlatList} from 'react-native-gesture-handler';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
+import {openSettings, PERMISSIONS, request} from 'react-native-permissions';
+import LocationButton from 'Root/component/molecules/button/LocationButton';
 import MissingForm from 'Templete/feed/MissingForm';
 import ReportForm from 'Templete/feed/ReportForm';
 
@@ -473,4 +486,6 @@ export default FeedWrite = props => {
 			)}
 		</View>
 	);
+
 };
+

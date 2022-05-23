@@ -8,6 +8,7 @@ import userGlobalObj from 'Root/config/userGlobalObject';
 import {txt} from 'Root/config/textstyle';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, ProfileDefaultImg, Triangle, Write94} from 'Atom/icon';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 /**
  * 글쓰기 선택 후 아바타 동물을 선택하는 모달창
@@ -20,22 +21,27 @@ const AvatarSelectFromWriteModal = props => {
 	const [items, setItems] = React.useState('');
 	const scrollViewRef = React.useRef();
 	const [scrollIndex, setScrollIndex] = React.useState(0);
-
 	React.useEffect(() => {
-		getUserInfoById(
-			{userobject_id: userGlobalObj.userInfo._id},
-			user => {
-				let avatarList = user.msg?.user_my_pets;
-				const filter = avatarList.filter(e => e.pet_status != 'adopt'); //입양 동물은 글을 못씀
-				filter.push(userGlobalObj.userInfo);
-				const reverse = filter.reverse();
-
-				setItems(reverse);
-			},
-			err => {
-				Modal.popOneBtn(err, '확인', () => Modal.close());
-			},
-		);
+		if (userGlobalObj.userInfo.user_avatar == undefined) {
+			console.log('전역변수 없음');
+			getUserInfoById(
+				{userobject_id: userGlobalObj.userInfo._id},
+				user => {
+					let avatarList = user.msg?.user_my_pets;
+					const filter = avatarList.filter(e => e.pet_status != 'adopt'); //입양 동물은 글을 못씀
+					filter.push(userGlobalObj.userInfo);
+					const reverse = filter.reverse();
+					setItems(reverse);
+					userGlobalObj.userInfo.user_avatar = reverse;
+				},
+				err => {
+					Modal.popOneBtn(err, '확인', () => Modal.close());
+				},
+			);
+		} else {
+			console.log('전역변수 있음');
+			setItems(userGlobalObj.userInfo.user_avatar);
+		}
 	}, []);
 
 	const getStatusMark = status => {
@@ -51,7 +57,11 @@ const AvatarSelectFromWriteModal = props => {
 
 	const renderItem = (item, index) => {
 		const onClickLabel = () => {
-			props.onSelectPet && props.onSelectPet(items[index]);
+			if (index == 0) {
+				props.onSelectPet && props.onSelectPet(userGlobalObj.userInfo);
+			} else {
+				props.onSelectPet && props.onSelectPet(items[index]);
+			}
 		};
 		if (item.user_type == 'pet') {
 			return (
@@ -94,8 +104,27 @@ const AvatarSelectFromWriteModal = props => {
 		}
 	};
 
-	const onScroll = e => {
-		console.log('y : ', e.nativeEvent.contentOffset.y);
+	const scrollUp = () => {
+		if (scrollIndex + 1 == items.length / 4) {
+			return <></>;
+		} else if (scrollIndex >= Math.floor(items.length / 4) || items.length <= 4) {
+			return <></>;
+		} else {
+			return (
+				<TouchableOpacity
+					activeOpacity={1}
+					onPress={() => {
+						setScrollIndex(scrollIndex + 1);
+						scrollViewRef.current.scrollToIndex({
+							animated: true,
+							index: 4 * (scrollIndex + 1) >= items.length ? 4 * scrollIndex : 4 * (scrollIndex + 1),
+						});
+					}}
+					style={[style.triangle, {transform: [{rotate: '180deg'}]}]}>
+					<Triangle />
+				</TouchableOpacity>
+			);
+		}
 	};
 
 	if (items == '') {
@@ -107,27 +136,7 @@ const AvatarSelectFromWriteModal = props => {
 					activeOpacity={1}
 					onPress={() => Modal.close()}
 					style={[style.popUpWindow, {marginBottom: Platform.OS == 'android' ? 180 * DP : 235 * DP}]}>
-					{scrollIndex >= Math.floor(items.length / 4) || items.length <= 4 ? (
-						<></>
-					) : (
-						<TouchableOpacity
-							activeOpacity={1}
-							onPress={() => {
-								setScrollIndex(scrollIndex + 1);
-								scrollViewRef.current.scrollToIndex({
-									animated: true,
-									index: 4 * (scrollIndex + 1),
-								});
-							}}
-							style={[
-								style.triangle,
-								{
-									transform: [{rotate: '180deg'}],
-								},
-							]}>
-							<Triangle />
-						</TouchableOpacity>
-					)}
+					{scrollUp()}
 					<View style={[style.avatarList]}>
 						<FlatList
 							data={items}

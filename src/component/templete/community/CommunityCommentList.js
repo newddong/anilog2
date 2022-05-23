@@ -3,14 +3,7 @@ import React from 'react';
 import {Text, View, FlatList, StyleSheet} from 'react-native';
 import CommentList from 'Organism/comment/CommentList';
 import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
-import {
-	createComment,
-	deleteComment,
-	getCommentListByCommunityId,
-	getCommentListByFeedId,
-	getCommentListByProtectId,
-	updateComment,
-} from 'Root/api/commentapi';
+import {createComment, deleteComment, getCommentListByCommunityId, updateComment} from 'Root/api/commentapi';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';

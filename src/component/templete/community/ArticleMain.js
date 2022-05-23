@@ -10,7 +10,7 @@ import Modal from 'Root/component/modal/Modal';
 import Loading from 'Root/component/molecules/modal/Loading';
 import community_obj from 'Root/config/community_obj';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import {buttonstyle} from 'Templete/style_templete';
+import {NETWORK_ERROR} from 'Root/i18n/msg';
 
 export default ArticleMain = ({route}) => {
 	const navigation = useNavigation();
@@ -47,8 +47,14 @@ export default ArticleMain = ({route}) => {
 			},
 			err => {
 				console.log('err / getCommunityList / ArticleMain : ', err);
-				setData([]);
-				Modal.alert(err);
+				if (err.includes('code 500')) {
+					setData([]);
+					setTimeout(() => {
+						Modal.alert(NETWORK_ERROR);
+					}, 2000);
+				} else if (err.includes('없습니다')) {
+					setData([]);
+				}
 			},
 		);
 	};
@@ -109,12 +115,11 @@ export default ArticleMain = ({route}) => {
 	};
 
 	const whenEmpty = () => {
-		return (
-			<View style={{paddingVertical: 150 * DP, alignItems: 'center'}}>
-				<EmptyIcon />
-				<Text style={[txt.noto28]}>검색 결과가 없습니다..</Text>
-			</View>
-		);
+		let text = '목록이 없습니다..';
+		if (onlyTalk || onlyQuestion || onlyMeeting) {
+			text = '검색 결과가 없습니다..';
+		}
+		return <ListEmptyInfo text={text} />;
 	};
 
 	return (
@@ -157,19 +162,7 @@ export default ArticleMain = ({route}) => {
 			/>
 
 			<View style={[style.write, style.shadow]}>
-				<View
-					style={[{
-						height: 94 * DP,
-						width: 94 * DP,
-						justifyContent: 'center',
-						alignItems: 'center',
-						backgroundColor: '#ff9888',
-						borderRadius: 35 * DP,
-						marginBottom: 20 * DP,
-					},buttonstyle.shadow]}>
-					<WriteBoard onPress={onPressWrite} />
-				</View>
-				
+				<WriteBoard onPress={onPressWrite} />
 			</View>
 		</View>
 	);

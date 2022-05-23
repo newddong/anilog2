@@ -11,6 +11,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import Loading from 'Root/component/molecules/modal/Loading';
 import dp from 'Root/config/dp';
 import {GRAY10, GRAY20} from 'Root/config/color';
+import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 
 export default AppliesRecord = ({route}) => {
 	//첫번째 값만 신청내역에 보여주기 위함. AnimalNeedHelpList가 배열 데이터를 다루기 때문에 반드시 객체가 배열이어야 함.
@@ -41,6 +42,9 @@ export default AppliesRecord = ({route}) => {
 					adopt.protect_animal_species_detail = adopt.protect_act_request_article_id.protect_animal_species_detail;
 					adopt.protect_animal_rescue_location = adopt.protect_act_request_article_id.protect_animal_id.protect_animal_rescue_location;
 					adopt.protect_request_writer_id = adopt.protect_act_request_article_id.protect_request_writer_id;
+					adopt.protect_animal_id = {
+						protect_animal_rescue_location: adopt.protect_act_request_article_id.protect_animal_id.protect_animal_rescue_location,
+					};
 					// console.log('adopt.protect_request_writer_id', adopt.protect_request_writer_id);
 					// delete adopt.protect_act_request_article_id;
 					const adoptArr = [adopt];
@@ -60,6 +64,9 @@ export default AppliesRecord = ({route}) => {
 					protect.shelter_name = protect.protect_act_request_article_id.protect_request_writer_id.shelter_name;
 					protect.user_nickname = protect.protect_act_request_article_id.protect_request_writer_id.user_nickname;
 					protect.protect_request_writer_id = protect.protect_act_request_article_id.protect_request_writer_id;
+					protect.protect_animal_id = {
+						protect_animal_rescue_location: protect.protect_act_request_article_id.protect_animal_id.protect_animal_rescue_location,
+					};
 					// console.log('protect.protect_request_writer_id', protect.protect_request_writer_id);
 					// delete protect.protect_act_request_article_id;
 					const protectArr = [protect];
@@ -148,7 +155,7 @@ export default AppliesRecord = ({route}) => {
 							)}
 						</View>
 						{adopt_application_list != undefined && adopt_application_list.length > 0 ? (
-							<AnimalNeedHelp data={adopt_application_list[0]} onClickLabel={onClickAdoptApplication} showFavorite={false} />
+							<ProtectRequest data={adopt_application_list[0]} onClickLabel={onClickAdoptApplication} showFavorite={false} />
 						) : (
 							<>
 								<Text style={[txt.roboto32b, {color: GRAY10}, appliesRecord.whenEmpty]}>신청하신 입양건이 없습니다.</Text>
@@ -168,7 +175,7 @@ export default AppliesRecord = ({route}) => {
 							)}
 						</View>
 						{protect_application_list != undefined && protect_application_list.length > 0 ? (
-							<AnimalNeedHelp data={protect_application_list[0]} onClickLabel={onClickProtectApplication} showFavorite={false} />
+							<ProtectRequest data={protect_application_list[0]} onClickLabel={onClickProtectApplication} showFavorite={false} />
 						) : (
 							<>
 								<Text style={[txt.roboto32b, {color: GRAY10}, appliesRecord.whenEmpty]}>신청하신 임시보호건이 없습니다.</Text>

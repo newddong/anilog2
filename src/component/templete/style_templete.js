@@ -464,7 +464,7 @@ export const temp_style = StyleSheet.create({
 		width: 306 * DP,
 		height: 60 * DP,
 		alignItems: 'center',
-		marginRight: 42 * DP,
+		// marginRight: 42 * DP,
 	},
 	animalNeedHelpList: {
 		width: 654 * DP,
@@ -3153,15 +3153,15 @@ export const searchProtectRequest = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
+		// backgroundColor: 'red',
 	},
 	onOffBtnView: {
 		// width: 344 * DP,
 		height: 36 * DP,
-		marginTop: 30 * DP,
-		marginRight: 30 * DP,
+		// marginTop: 30 * DP,
+		// marginRight: 30 * DP,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
-		alignSelf: 'flex-end',
 	},
 	onOffBtnMsg: {
 		width: 240 * DP,
@@ -4678,7 +4678,7 @@ export const animalProtectRequestDetail_style = StyleSheet.create({
 		// width: 750 * DP,
 	},
 	accountList: {
-		marginTop: 20 * DP,
+		paddingVertical: 40 * DP,
 	},
 	replyCountContainer: {
 		width: 474 * DP,

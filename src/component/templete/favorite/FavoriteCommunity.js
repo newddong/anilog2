@@ -8,6 +8,7 @@ import {ArticleIcon, NextMark, ReviewIcon} from 'Root/component/atom/icon';
 import {getCommunityListByUserId} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {getFavoriteEtcListByUserId} from 'Root/api/favoriteetc';
+import {NETWORK_ERROR} from 'Root/i18n/msg';
 
 //즐겨찾기한 커뮤니티 조회
 export default FavoriteCommunity = ({route}) => {
@@ -34,8 +35,16 @@ export default FavoriteCommunity = ({route}) => {
 						},
 						err => {
 							console.log('err / getCommunityListByUserId / FavoriteCommunity : ', err);
-							setReview([]);
-							setArticle([]);
+							if (err.includes('code 500')) {
+								setReview([]);
+								setArticle([]);
+								setTimeout(() => {
+									Modal.alert(NETWORK_ERROR);
+								}, 2000);
+							} else if (err.includes('없습니다')) {
+								setReview([]);
+								setArticle([]);
+							}
 						},
 				  )
 				: getFavoriteEtcListByUserId(
@@ -58,8 +67,16 @@ export default FavoriteCommunity = ({route}) => {
 						},
 						err => {
 							console.log('err / getFavoriteEtcListByUserId / FavoriteCommunity : ', err);
-							setReview([]);
-							setArticle([]);
+							if (err.includes('code 500')) {
+								setReview([]);
+								setArticle([]);
+								setTimeout(() => {
+									Modal.alert(NETWORK_ERROR);
+								}, 2000);
+							} else if (err.includes('없습니다')) {
+								setReview([]);
+								setArticle([]);
+							}
 						},
 				  );
 		});

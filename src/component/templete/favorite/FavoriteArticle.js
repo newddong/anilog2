@@ -13,6 +13,7 @@ import {getCommunityListByUserId} from 'Root/api/community';
 import SelectStat from 'Root/component/organism/list/SelectStat';
 import {selectstat_view_style, temp_style} from '../style_templete';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
+import {NETWORK_ERROR} from 'Root/i18n/msg';
 
 //즐겨찾기한 커뮤니티 조회
 export default FavoriteArticle = ({route}) => {
@@ -43,8 +44,16 @@ export default FavoriteArticle = ({route}) => {
 					},
 					err => {
 						console.log('err / getCommunityListByUserId / FavoriteCommunity : ', err);
-						setReview([]);
-						setArticle([]);
+						if (err.includes('code 500')) {
+							setReview([]);
+							setArticle([]);
+							setTimeout(() => {
+								Modal.alert(NETWORK_ERROR);
+							}, 2000);
+						} else if (err.includes('없습니다')) {
+							setReview([]);
+							setArticle([]);
+						}
 					},
 			  )
 			: getFavoriteEtcListByUserId(

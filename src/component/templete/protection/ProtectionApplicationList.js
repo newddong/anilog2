@@ -22,7 +22,7 @@ export default ProtectionApplicationList = ({route, navigation}) => {
 		getAnimalListWithApplicant(
 			{},
 			result => {
-				// console.log('result / getAnimalListWithApplicant / ProtectApplyList', JSON.stringify(result.msg));
+				// console.log('result / getAnimalListWithApplicant / ProtectApplyList', JSON.stringify(result.msg.adopt));
 				let filtered_adopt = result.msg.adopt.filter(e => e.protect_act_status == 'wait'); //완료 목록도 출력되던 오류 수정 22.03.18
 				let filtered_protect = result.msg.protect.filter(e => e.protect_act_status == 'wait');
 				setAdoptionList(filtered_adopt);
@@ -79,7 +79,6 @@ export default ProtectionApplicationList = ({route, navigation}) => {
 	};
 
 	const listItem = (v, i, isAdopt) => {
-		console.log('i', i, v.is_follow);
 		return (
 			<View style={[style.listItem]} key={i}>
 				<UserDescriptionLabel

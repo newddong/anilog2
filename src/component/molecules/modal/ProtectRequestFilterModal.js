@@ -24,7 +24,8 @@ import moment from 'moment';
 const ProtectRequestFilterModal = props => {
 	const [data, setData] = React.useState({
 		city: '모든 지역',
-		shelter_name: '모든 보호소',
+		shelter_list: [],
+		shleter_label: '모든 보호소',
 		from: '시작일',
 		to: '종료일',
 		dog: false,
@@ -96,6 +97,7 @@ const ProtectRequestFilterModal = props => {
 		}
 	};
 
+	//모달 바깥쪽 영역 클릭
 	const onPressOutSide = () => {
 		console.log('onPressOutSide');
 		if (startDateOpen || endDateOpen || regionOpen || shelterOpen) {
@@ -108,6 +110,7 @@ const ProtectRequestFilterModal = props => {
 		}
 	};
 
+	//모달의 메인 박스 클릭
 	const onPressMainContainer = () => {
 		console.log('onPressMainContainer');
 		if (regionOpen || shelterOpen) {
@@ -116,19 +119,42 @@ const ProtectRequestFilterModal = props => {
 		}
 	};
 
-	//날짜 선택 클릭
+	//날짜 선택 클릭(시작일/종료일)
 	const onPressDuration = type => {
 		console.log('타입 클릭', type);
 		if (!regionOpen && !shelterOpen) {
 			type == 'to' ? setEndDateOpen(true) : setStartDateOpen(true);
+		} else {
+			setRegionOpen(false);
+			setShelterOpen(false);
 		}
 	};
 
 	//날짜 선택
 	const onSelectDate = (date, type) => {
-		console.log('날짜 및 타입 ', date, type);
+		// console.log('날짜 및 타입 ', date, type);
 		type == 'to' ? setEndDateOpen(false) : setStartDateOpen(false);
-		type == 'to' ? setData({...data, to: date}) : setData({...data, from: date});
+		if (type == 'to') {
+			let split_to = date.split('.');
+			let split_from = data.from.split('.');
+			const toDate = new Date(split_to[0], split_to[1] - 1, split_to[2]);
+			const fromDate = new Date(split_from[0], split_from[1] - 1, split_from[2]);
+			if (toDate.getTime() < fromDate.getTime()) {
+				setData({...data, to: data.from, from: date});
+			} else {
+				setData({...data, to: date});
+			}
+		} else {
+			let split_to = data.to.split('.');
+			let split_from = date.split('.');
+			const toDate = new Date(split_to[0], split_to[1] - 1, split_to[2]);
+			const fromDate = new Date(split_from[0], split_from[1] - 1, split_from[2]);
+			if (toDate.getTime() < fromDate.getTime()) {
+				setData({...data, from: data.to, to: date});
+			} else {
+				setData({...data, from: date});
+			}
+		}
 	};
 
 	//달력 컴포넌트 종료
@@ -137,32 +163,38 @@ const ProtectRequestFilterModal = props => {
 		type == 'to' ? setEndDateOpen(false) : setStartDateOpen(false);
 	};
 
-	// 지역 버튼 클릭
+	//지역 버튼 클릭
 	const onPressRegion = () => {
 		setShelterOpen(false);
 		setRegionOpen(!regionOpen);
 	};
 
-	// 보호소 버튼 클릭
+	//보호소 버튼 클릭
 	const onPressShelter = () => {
 		setRegionOpen(false);
 		setShelterOpen(!shelterOpen);
 	};
 
-	//바텀 모달 닫기
+	//지역 선택 모달 닫기
 	const onCloseBottomBox = () => {
 		setRegionOpen(false);
 	};
 
-	//하단 드롭다운에서 완료 버튼 클릭
+	//지역 선택 모달의 완료 버튼 클릭
 	const onSelectRegion = value => {
 		console.log('value', value);
 		setData({...data, city: value});
 		setRegionOpen(false);
 	};
 
+	//보호소 선택 모달의 완료 버튼 클릭
 	const onSelectShelterList = value => {
 		console.log('onSelectShelterList', value);
+		let label = '모든 보호소';
+		if (value[0]) {
+			label = value[0].name + ' 외 ' + (value.length - 1) + '개';
+		}
+		setData({...data, shelter_list: value, shleter_label: label});
 		setShelterOpen(false);
 	};
 
@@ -201,7 +233,7 @@ const ProtectRequestFilterModal = props => {
 				</TouchableOpacity>
 				{/* 보호소 필터 */}
 				<TouchableOpacity onPress={onPressShelter} activeOpacity={0.8} style={[style.dropdownContainer]}>
-					<Text style={[txt.noto28]}>모든 보호소</Text>
+					<Text style={[txt.noto28]}>{data.shleter_label}</Text>
 					<View activeOpacity={0.8} style={style.arrowMark}>
 						<ArrowMarkForCalendar />
 					</View>
@@ -233,6 +265,7 @@ const ProtectRequestFilterModal = props => {
 				<Animated.View style={[style.calendarCont, {opacity: startDateOpen}]}>
 					<CalendarInFilter
 						previous={data.from}
+						to={data.to}
 						selectDate={val => onSelectDate(val, 'from')}
 						modalOff={() => closeCalendar('from')}
 						future={false}
@@ -247,6 +280,7 @@ const ProtectRequestFilterModal = props => {
 				<Animated.View style={[style.calendarCont, {opacity: endDateOpen}]}>
 					<CalendarInFilter
 						previous={data.to}
+						from={data.from}
 						selectDate={val => onSelectDate(val, 'to')}
 						modalOff={() => closeCalendar('to')}
 						future={false}
@@ -517,18 +551,12 @@ const CalendarInFilter = props => {
 						let days = today.clone().startOf('year').week(week).startOf('week').add(index, 'day'); //d로해도되지만 직관성 - index값에  day정보
 						if (moment() > days) {
 							return (
-								<TouchableOpacity
-									onPress={() => onSelectDate(days)}
-									key={index}
-									style={[calendar_style.today, selectedDate == days.format('yyyy.MM.DD') ? {backgroundColor: APRI10, borderRadius: 100} : {}]}>
+								<TouchableOpacity onPress={() => onSelectDate(days)} key={index} style={[calendar_style.today]}>
 									<View
-										style={{
-											width: 66 * DP,
-											// height: 116 * DP,
-											alignItems: 'center',
-											justifyContent: 'center',
-											// backgroundColor: 'red',
-										}}>
+										style={[
+											{width: 66 * DP, alignItems: 'center', justifyContent: 'center'},
+											selectedDate == days.format('yyyy.MM.DD') ? {backgroundColor: APRI10, borderRadius: 100 * DP} : {},
+										]}>
 										<Text style={[txt.roboto28b, {color: selectedDate == days.format('yyyy.MM.DD') ? WHITE : BLACK, lineHeight: 66 * DP}]}>
 											{days.format('D')}
 										</Text>
@@ -722,15 +750,15 @@ const ScrollSelectBox = props => {
 
 const ShelterSelectBox = props => {
 	const [data, setData] = React.useState([
-		{_id: 1, state: false},
-		{_id: 2, state: false},
-		{_id: 3, state: false},
-		{_id: 4, state: false},
-		{_id: 5, state: false},
-		{_id: 6, state: false},
-		{_id: 7, state: false},
-		{_id: 8, state: false},
-		{_id: 9, state: false},
+		{_id: 1, name: '하늘보호소', state: false},
+		{_id: 2, name: '소천보호소', state: false},
+		{_id: 3, name: '아현보호소', state: false},
+		{_id: 4, name: '유공보호소', state: false},
+		{_id: 5, name: '한천보호소', state: false},
+		{_id: 6, name: '백천보호소', state: false},
+		{_id: 7, name: '조걸보호소', state: false},
+		{_id: 8, name: '감전보호소', state: false},
+		{_id: 9, name: '사상보호소', state: false},
 	]);
 	const [selectedList, setSelectedList] = React.useState([]);
 
@@ -742,28 +770,30 @@ const ShelterSelectBox = props => {
 	};
 
 	const onConfirm = () => {
-		console.log('보호소 선택 완료');
 		let list = data.filter(e => e.state);
-		console.log('list', list);
-		props.onConfirm(selectedList);
+		console.log('보호소 선택 완료', list);
+		props.onConfirm(list);
 	};
 
 	const render = ({item, index}) => {
 		const checked = item.state;
 		return (
-			<TouchableOpacity activeOpacity={0.6} onPress={() => onSelect(index)} style={[style.shelterItemCont]}>
-				<View style={[style.shelterInfo]}>
-					<Text style={[txt.noto30]}>펫토이 동물병원</Text>
-					<Text style={[txt.roboto26, {color: GRAY10, maxWidth: 654 * DP}]} numberOfLines={1}>
-						서울 특별시
-					</Text>
-					<View style={{flexDirection: 'row'}}>
-						<PhoneIcon />
-						<Text style={[txt.roboto26, {marginLeft: 12 * DP, color: GRAY10}]}>02-797-6677</Text>
+			<>
+				<TouchableOpacity activeOpacity={0.6} onPress={() => onSelect(index)} style={[style.shelterItemCont]}>
+					<View style={[style.shelterInfo]}>
+						<Text style={[txt.noto30]}>펫토이 동물병원</Text>
+						<Text style={[txt.roboto26, {color: GRAY10, maxWidth: 654 * DP}]} numberOfLines={1}>
+							서울 특별시
+						</Text>
+						<View style={{flexDirection: 'row'}}>
+							<PhoneIcon />
+							<Text style={[txt.roboto26, {marginLeft: 12 * DP, color: GRAY10}]}>02-797-6677</Text>
+						</View>
 					</View>
-				</View>
-				<View>{checked ? <Check50 onPress={() => onSelect(index)} /> : <Rect50_Border onPress={() => onSelect(index)} />}</View>
-			</TouchableOpacity>
+					<View>{checked ? <Check50 onPress={() => onSelect(index)} /> : <Rect50_Border onPress={() => onSelect(index)} />}</View>
+				</TouchableOpacity>
+				{index == data.length - 1 ? <View style={[{width: 750 * DP, height: 100 * DP}]} /> : <></>}
+			</>
 		);
 	};
 

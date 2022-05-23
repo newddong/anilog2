@@ -5,7 +5,7 @@ import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
-import {FEED_MEATBALL_MENU_MY_FEED, FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS, PROTECT_REQUEST_STATUS} from 'Root/i18n/msg';
+import {FEED_MEATBALL_MENU_MY_FEED, FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS, NETWORK_ERROR, PROTECT_REQUEST_STATUS} from 'Root/i18n/msg';
 import {deleteProtectRequest, setShelterProtectAnimalStatus} from 'Root/api/shelterapi';
 import {setProtectRequestStatus} from 'Root/api/protectapi';
 import {deleteFeed} from 'Root/api/feedapi';
@@ -133,7 +133,7 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 							},
 							err => {
 								console.log('err / DeleteFeed / FeedContent : ', err);
-								// Modal.alert('네트워크 오류입니다.');
+								Modal.alert(NETWORK_ERROR);
 							},
 						);
 					}, 100);

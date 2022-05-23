@@ -17,6 +17,7 @@ import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {useScrollToTop} from '@react-navigation/native';
 import NewMissingReportList from '../list/NewMissingReportList';
 import {getUserInfoById} from 'Root/api/userapi';
+import {NETWORK_ERROR} from 'Root/i18n/msg';
 
 export default FeedList = ({route, navigation}) => {
 	const [feedList, setFeedList] = React.useState([]);
@@ -306,7 +307,7 @@ export default FeedList = ({route, navigation}) => {
 				},
 				err => {
 					console.log('err / DeleteFeed / FeedContent : ', err);
-					// Modal.alert('네트워크 오류입니다.');
+					Modal.alert(NETWORK_ERROR);
 				},
 			);
 		}, 100);
@@ -417,30 +418,35 @@ export default FeedList = ({route, navigation}) => {
 			{userGlobalObject.userInfo && (
 				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}]}>
 					<View
-						style={[{
-							height: 94 * DP,
-							width: 94 * DP,
-							justifyContent: 'center',
-							alignItems: 'center',
-							backgroundColor: '#FFF',
-							borderRadius: 30 * DP,
-							marginBottom: 20 * DP,
-						},buttonstyle.shadow]}>
+						style={[
+							{
+								height: 94 * DP,
+								width: 94 * DP,
+								justifyContent: 'center',
+								alignItems: 'center',
+								backgroundColor: '#FFF',
+								borderRadius: 30 * DP,
+								marginBottom: 20 * DP,
+							},
+							buttonstyle.shadow,
+						]}>
 						<Camera54 onPress={movetoCamera} />
 					</View>
 					<View
-						style={[{
-							height: 94 * DP,
-							width: 94 * DP,
-							justifyContent: 'center',
-							alignItems: 'center',
-							backgroundColor: '#ff9888',
-							borderRadius: 35 * DP,
-							marginBottom: 20 * DP,
-						},buttonstyle.shadow]}>
+						style={[
+							{
+								height: 94 * DP,
+								width: 94 * DP,
+								justifyContent: 'center',
+								alignItems: 'center',
+								backgroundColor: '#ff9888',
+								borderRadius: 35 * DP,
+								marginBottom: 20 * DP,
+							},
+							buttonstyle.shadow,
+						]}>
 						<Write94 onPress={moveToFeedWrite} />
 					</View>
-						
 				</View>
 			)}
 

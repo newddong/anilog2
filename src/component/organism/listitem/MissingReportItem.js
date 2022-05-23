@@ -104,7 +104,7 @@ export default MissingReportItem = React.memo(props => {
 	const contents = () => {
 		return (
 			<View style={[animalNeedHelp.detailContainer]}>
-				<View style={[animalNeedHelp.detail_lowerMenu, {width: 410 * DP}]}>
+				<View style={[animalNeedHelp.detail_lowerMenu, {width: 410 * DP, justifyContent: 'center'}]}>
 					{data.feed_type == 'missing' && (
 						<>
 							{/* 동물 종류 및 품종 */}
@@ -127,7 +127,7 @@ export default MissingReportItem = React.memo(props => {
 								<Text style={[txt.noto28, {width: 408 * DP}]} numberOfLines={1}>
 									실종위치: {getParsedAddress() || ''}
 								</Text>
-								<Text style={[txt.noto28]} numberOfLines={1}>
+								<Text style={[txt.noto28, {height: 40 * DP}]} numberOfLines={1}>
 									특징: {data.missing_animal_features || ''}
 								</Text>
 							</View>
@@ -137,9 +137,14 @@ export default MissingReportItem = React.memo(props => {
 						<>
 							{/* 제보 / 제보위치 / 특징 */}
 							{/* 동물 종류 및 품종 */}
-							<View style={[animalNeedHelp.lowerMenu_kindAndBreed]}>
-								<Text style={[txt.noto34b]}>{data.report_animal_species == '동물종류' ? '' : data.report_animal_species || ''}</Text>
-							</View>
+							{data.report_animal_species == '동물종류' || data.report_animal_species == undefined ? (
+								<></>
+							) : (
+								<View style={[animalNeedHelp.lowerMenu_kindAndBreed]}>
+									<Text style={[txt.noto34b]}>{data.report_animal_species == '동물종류' ? '' : data.report_animal_species || ''}</Text>
+								</View>
+							)}
+
 							{/* 실종/제보 관련 Details */}
 							<View style={[animalNeedHelp.lowerMenu_helpDetail]}>
 								<Text style={[txt.noto28b]}>제보일: {getParsedDate()}</Text>
@@ -147,7 +152,7 @@ export default MissingReportItem = React.memo(props => {
 									제보 위치: {data.report_witness_location || ''}
 								</Text>
 								<Text style={[txt.noto28, {width: 408 * DP}]} numberOfLines={2}>
-									제보 내용: {data.feed_content}
+									제보 내용: {data.feed_content || '내용 없음'}
 								</Text>
 							</View>
 						</>

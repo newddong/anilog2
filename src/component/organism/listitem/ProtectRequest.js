@@ -31,10 +31,24 @@ export default ProtectRequest = React.memo(props => {
 	// console.log('AnimalNeedHelp', props.data.protect_request_status);
 	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.data);
+	const {
+		_id,
+		feed_type,
+		protect_request_status,
+		protect_request_photos_uri,
+		protect_animal_sex,
+		is_favorite,
+		protect_request_date,
+		protect_request_writer_id, // {user_nickname,_id }
+		protect_animal_species,
+		protect_animal_species_detail,
+		protect_animal_id, //protect_animal_rescue_location
+	} = props.data;
+
 	const thumbnailData = {
 		status: data.protect_request_status,
 		_id: data._id,
-		img_uri: data.protect_request_photos_uri[0] ? data.protect_request_photos_uri[0] : DEFAULT_ANIMAL_PROFILE,
+		img_uri: data.protect_request_photos_uri && data.protect_request_photos_uri[0] ? data.protect_request_photos_uri[0] : DEFAULT_ANIMAL_PROFILE,
 		gender: data.protect_animal_sex,
 	};
 
@@ -74,8 +88,8 @@ export default ProtectRequest = React.memo(props => {
 
 	const contents = () => {
 		return (
-			<View style={[animalNeedHelp.detailContainer]}>
-				<View style={[animalNeedHelp.detail_lowerMenu, {width: 410 * DP}]}>
+			<View style={[animalNeedHelp.detailContainer, {width: props.selectMode ? 320 * DP : 380 * DP}]}>
+				<View style={[animalNeedHelp.detail_lowerMenu, {justifyContent: 'center'}]}>
 					<View style={{justifyContent: 'space-between'}}>
 						{/* 동물 종류 및 품종 */}
 						<View style={[animalNeedHelp.lowerMenu_kindAndBreed]}>
@@ -85,11 +99,11 @@ export default ProtectRequest = React.memo(props => {
 						{/* 보호요청 관련 Details */}
 						<View style={[animalNeedHelp.lowerMenu_helpDetail]}>
 							<Text style={[txt.noto28]}>등&nbsp; 록&nbsp; 일 : {getParsedDate()}</Text>
-							<Text style={[txt.noto28]} numberOfLines={1}>
+							<Text style={[txt.noto28, {maxWidth: props.selectMode ? 320 * DP : 380 * DP}]} numberOfLines={1}>
 								{/* 보호장소 : {data.protect_request_writer_id != null ? data.protect_request_writer_id.shelter_name : data.shelter_name} */}
 								보호장소 : {data.protect_request_writer_id.user_nickname}
 							</Text>
-							<Text style={[txt.noto28]} numberOfLines={1}>
+							<Text style={[txt.noto28, {maxWidth: props.selectMode ? 320 * DP : 380 * DP}]} numberOfLines={1}>
 								구조지역 :{' '}
 								{data.protect_animal_id.protect_animal_rescue_location
 									? data.protect_animal_id.protect_animal_rescue_location
@@ -107,13 +121,17 @@ export default ProtectRequest = React.memo(props => {
 			<View style={[animalNeedHelp.container, {height: 244 * DP}]}>
 				<View style={[animalNeedHelp.container_basicInfo]}>
 					<View style={[animalNeedHelp.protectedThumbnail_container]}>
-						<ProtectedThumbnail data={thumbnailData} onLabelClick={(status, id) => props.onClickLabel(status, id)} />
+						<ProtectedThumbnail
+							data={thumbnailData}
+							inActiveOpacity={props.inActiveOpacity}
+							onLabelClick={(status, id) => props.onClickLabel(status, id)}
+						/>
 					</View>
-					<TouchableOpacity onPress={() => props.onClickLabel(data.feed_type, data._id)}>
+					<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.6} onPress={() => props.onClickLabel(data.feed_type, data._id)}>
 						<View>{contents()}</View>
 					</TouchableOpacity>
 					<View style={[animalNeedHelp.detail_upper_tag]}>
-						{checkIsMyPost() ? (
+						{!props.showFavorite || checkIsMyPost() ? (
 							<></>
 						) : data.is_favorite ? (
 							<FavoriteTag48_Filled onPress={() => onPressFavoriteTag(false)} />

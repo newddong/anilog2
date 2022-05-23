@@ -4,7 +4,7 @@ import {searchProtectRequest, temp_style} from 'Templete/style_templete';
 import {GRAY10} from 'Root/config/color';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import {txt} from 'Root/config/textstyle';
-import {ONLY_CONTENT_FOR_ADOPTION, PET_KIND, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
+import {ONLY_CONTENT_FOR_ADOPTION, PET_KIND, PET_PROTECT_LOCATION, PROTECT_LOCATION} from 'Root/i18n/msg';
 import {getProtectRequestList} from 'Root/api/shelterapi.js';
 import {btn_w306_h68} from 'Component/atom/btn/btn_style';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
@@ -22,7 +22,6 @@ export default ProtectRequestList = ({navigation, route}) => {
 		to: '22.05.24',
 		city: '',
 		protect_animal_species: '',
-		// adoptable_posts: 'false', // 입양 가능한 게시글만 보기 필터는 굳이 api에 한 번 더 접속할 필요가 없으므로 제외처리
 		protect_request_object_id: '',
 		request_number: 1000,
 		shelter_name: '',
@@ -43,7 +42,6 @@ export default ProtectRequestList = ({navigation, route}) => {
 			{...filterData},
 			result => {
 				// console.log('result / getProtectRequestList / ProtectRequestList : ', result.msg[0]);
-				console.log(result.msg.length);
 				let res = result.msg;
 				res.filter(e => e != null);
 				res.map((v, i) => {
@@ -116,7 +114,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 	//지역 필터
 	const onSelectLocation = () => {
 		Modal.popSelectScrollBoxModal(
-			[PET_PROTECT_LOCATION],
+			[PROTECT_LOCATION],
 			'보호 지역 선택',
 			selected => {
 				selected == '지역' ? setFilterData({...filterData, city: ''}) : setFilterData({...filterData, city: selected});
@@ -182,6 +180,8 @@ export default ProtectRequestList = ({navigation, route}) => {
 		} else {
 			result = data;
 		}
+		// let temp = result.filter(e => e.protect_request_status != 'rescue');
+		// temp = result.filter(e => e.protect_request_status != 'rainbowbridge' && e.protect_request_status != 'rescue');
 		return result;
 	};
 
@@ -234,10 +234,18 @@ export default ProtectRequestList = ({navigation, route}) => {
 			<View style={{flex: 1, backgroundColor: '#fff', alignItems: 'center'}}>
 				<View style={[searchProtectRequest.filterView]} key={'header'}>
 					<View style={[searchProtectRequest.inside]}>
-						{/* <View style={[searchProtectRequest.shadow_filter]}>
+						<View style={[searchProtectRequest.shadow_filter]}>
 							{filterRef.current ? <Filter60Filled onPress={onPressFilter} /> : <Filter60Border onPress={onPressFilter} />}
-						</View> */}
-						<View style={{flexDirection: 'row'}}>
+						</View>
+						<View style={[searchProtectRequest.onOffBtnView]}>
+							<View style={[searchProtectRequest.onOffBtnMsg]}>
+								<Text style={[txt.noto20, {color: GRAY10}]}>{ONLY_CONTENT_FOR_ADOPTION}</Text>
+							</View>
+							<View style={[searchProtectRequest.onOffSwitch]}>
+								<OnOffSwitch onSwtichOn={filterOn} onSwtichOff={filterOff} />
+							</View>
+						</View>
+						{/* <View style={{flexDirection: 'row'}}>
 							<View style={[temp_style.filterBtn]}>
 								<ArrowDownButton
 									onPress={onSelectLocation}
@@ -256,15 +264,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 									btnTheme={'gray'}
 								/>
 							</View>
-						</View>
-					</View>
-					<View style={[searchProtectRequest.onOffBtnView]}>
-						<View style={[searchProtectRequest.onOffBtnMsg]}>
-							<Text style={[txt.noto20, {color: GRAY10}]}>{ONLY_CONTENT_FOR_ADOPTION}</Text>
-						</View>
-						<View style={[searchProtectRequest.onOffSwitch]}>
-							<OnOffSwitch onSwtichOn={filterOn} onSwtichOff={filterOff} />
-						</View>
+						</View> */}
 					</View>
 				</View>
 				<FlatList
@@ -280,7 +280,6 @@ export default ProtectRequestList = ({navigation, route}) => {
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
 					// removeClippedSubviews={true}
 					extraData={refreshing}
-					initialNumToRender={15}
 					// maxToRenderPerBatch={5} // re-render를 막는군요.
 					windowSize={11}
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration

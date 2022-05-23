@@ -26,6 +26,8 @@ import Loading from 'Root/component/molecules/modal/Loading';
 import {getFavoriteEtcListByUserId, setFavoriteEtc} from 'Root/api/favoriteetc';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
+import {NETWORK_ERROR, UNAVAILABLE_REQUEST_STATUS} from 'Root/i18n/msg';
+import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 
 //AnimalProtectRequestDetail 호출 경로
 // - ProtectRequestList(보호활동탭) , AnimalFromShelter(게시글보기) , AidRequestManage(게시글보기), AidRequestAnimalList(게시글 보기)
@@ -78,6 +80,10 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				console.log('err / getProtectRequestByProtectRequestId / AnimalProtectRequestDetail : ', err);
 				if (err == '검색 결과가 없습니다.') {
 					Modal.popOneBtn('이미 삭제된 요청건입니다.', '확 인', () => {
+						navigation.goBack();
+					});
+				} else if (err.includes('Network')) {
+					Modal.popOneBtn(NETWORK_ERROR, '확 인', () => {
 						navigation.goBack();
 					});
 				}
@@ -371,6 +377,14 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		navigation.push('ProtectCommentList', {protectObject: data, edit: comment});
 	};
 
+	const shouldHideProtectAct = () => {
+		if (UNAVAILABLE_REQUEST_STATUS.includes(data.protect_request_status)) {
+			return true;
+		} else {
+			return false;
+		}
+	};
+
 	//페이지 하단 보호요청 게시글 listEmptyComponent
 	const whenEmpty = () => {
 		return <ListEmptyInfo text={'목록이 없습니다..'} />;
@@ -452,6 +466,16 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	//보호요청 더보기 및 댓글 입력란
 	const footer = () => {
+		const renderOtherRequest = ({item, index}) => {
+			return (
+				<ProtectRequest
+					data={item}
+					onClickLabel={(status, id) => onClick_ProtectedThumbLabel(status, id, item)}
+					onFavoriteTag={e => onPressFavoriteTag(e, index)}
+				/>
+			);
+		};
+
 		return (
 			<View style={{alignItems: 'center', paddingBottom: 50 * DP}}>
 				<View style={[animalProtectRequestDetail_style.replyWriteBox]}>
@@ -463,11 +487,12 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					</Text>
 				</View>
 				<View style={[animalProtectRequestDetail_style.accountList]}>
-					<AnimalNeedHelpList
+					<FlatList
 						data={writersAnotherRequests}
-						onClickLabel={onClick_ProtectedThumbLabel}
-						onFavoriteTag={onPressFavoriteTag}
-						whenEmpty={whenEmpty}
+						renderItem={renderOtherRequest}
+						style={{backgroundColor: '#fff'}}
+						showsVerticalScrollIndicator={false}
+						ListEmptyComponent={whenEmpty}
 					/>
 				</View>
 			</View>
@@ -489,8 +514,9 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					renderItem={renderItem}
 					ListFooterComponent={footer()}
 					ListEmptyComponent={<Text style={[txt.roboto28b, {color: GRAY10, paddingVertical: 40 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>}
+					showsVerticalScrollIndicator={false}
 				/>
-				{isShelter || data.protect_request_status == 'complete' ? (
+				{isShelter || shouldHideProtectAct() ? (
 					//보호소메뉴에서 자신의 보호요청게시글을 보는 경우 or 작성자 본인인 경우에는 임보/입양 버튼이 출력이 안됨
 					<></>
 				) : (

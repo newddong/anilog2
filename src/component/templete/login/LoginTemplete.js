@@ -108,6 +108,7 @@ export default LoginTemplete = props => {
 					props.navigation.reset({routes: [{name: 'MainTab', params: userObject.msg.user_type}]});
 				},
 				error => {
+					console.log('error', error);
 					Modal.close();
 					Modal.alert(error + '.');
 				},

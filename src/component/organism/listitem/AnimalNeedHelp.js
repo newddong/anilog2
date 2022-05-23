@@ -162,7 +162,7 @@ export default AnimalNeedHelp = React.memo(props => {
 	const contents = () => {
 		return (
 			<View style={[animalNeedHelp.detailContainer]}>
-				<View style={[animalNeedHelp.detail_lowerMenu, {width: props.selectMode ? 350 * DP : 410 * DP}]}>
+				<View style={[animalNeedHelp.detail_lowerMenu, {width: props.selectMode ? 350 * DP : 410 * DP, justifyContent: 'center'}]}>
 					{data.feed_type != 'missing' && data.feed_type != 'report' && (
 						<View style={{justifyContent: 'space-between'}}>
 							{/* 동물 종류 및 품종 */}

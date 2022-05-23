@@ -123,6 +123,7 @@ const ReviewContent = props => {
 		}
 	};
 
+	//상세글이 처음 마운트 될 때 height를 조정
 	const runFirst = `
 	  window.ReactNativeWebView.postMessage(document.body.scrollHeight);
       true; // note: this is required, or you'll sometimes get silent failures
@@ -131,15 +132,13 @@ const ReviewContent = props => {
 	const webviewRef = React.useRef();
 
 	const changeHtmlTag = () => {
-		let result = data.community_content;
-		result = data.community_content.replace(/<img /g, '<img onclick="image(this)" ');
-		// console.log('data Content', data.community_content);
-		// console.log('result', result);
+		let result = data.community_content; //기존의 html 코드
+		result = data.community_content.replace(/<img /g, '<img onclick="image(this)" '); //img 태그에 onClick 이벤트 장착
 		return `
 		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
         <script>
             function image(img){
-                window.ReactNativeWebView.postMessage(img.src);
+                window.ReactNativeWebView.postMessage(img.src); 
 				// alert(img.src)
             }
         </script>
@@ -200,24 +199,21 @@ const ReviewContent = props => {
 							]}
 						/>
 					) : (
-						<ScrollView scrollEnabled={false}>
-							<WebView
-								originWhitelist={['*']}
-								scalesPageToFit={true}
-								onMessage={onWebViewMessage}
-								ref={webviewRef}
-								injectedJavaScript={runFirst} //Dynamic Height 수치 설정
-								scrollEnabled={false}
-								source={{
-									html: changeHtmlTag(),
-								}}
-								style={{
-									width: 690 * DP,
-									// minHeight: 500 * DP,
-									height: height == 0 ? 500 * DP : height,
-								}}
-							/>
-						</ScrollView>
+						<WebView
+							originWhitelist={['*']}
+							onMessage={onWebViewMessage}
+							ref={webviewRef}
+							injectedJavaScript={runFirst} //Dynamic Height 수치 설정
+							scrollEnabled={false}
+							source={{
+								html: changeHtmlTag(),
+							}}
+							style={{
+								width: 690 * DP,
+								// minHeight: 500 * DP,
+								height: height == 0 ? 100 * DP : height,
+							}}
+						/>
 					)}
 				</View>
 			</View>

@@ -1,6 +1,6 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View,ScrollView} from 'react-native';
+import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View, ScrollView} from 'react-native';
 import DP from 'Root/config/dp';
 import {GRAY10, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
 import CommentList from 'Root/component/organism/comment/CommentList';
@@ -16,12 +16,12 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import community_obj from 'Root/config/community_obj';
 import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
-import {REPORT_MENU} from 'Root/i18n/msg';
+import {NETWORK_ERROR, REPORT_MENU} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
-import { useKeyboardBottom } from 'Root/component/molecules/input/usekeyboardbottom';
+import {useKeyboardBottom} from 'Root/component/molecules/input/usekeyboardbottom';
 /**
  * 자유게시글 상세 내용
  * @param {object} props - Props Object
@@ -117,7 +117,14 @@ export default ArticleDetail = props => {
 			},
 			err => {
 				console.log('err / getCommunityList / ArticleMain : ', err);
-				Modal.alert(err);
+				if (err.includes('code 500')) {
+					setData([]);
+					setTimeout(() => {
+						Modal.alert(NETWORK_ERROR);
+					}, 2000);
+				} else if (err.includes('없습니다')) {
+					setData([]);
+				}
 			},
 		);
 	};
@@ -278,13 +285,13 @@ export default ArticleDetail = props => {
 	const [isReplyFocused, setReplyFocus] = React.useState(false);
 	const onFocus = () => {
 		console.log('onFocus');
-		Platform.OS=='android'&&setReplyFocus(true);
+		Platform.OS == 'android' && setReplyFocus(true);
 		scrollToReplyBox();
 	};
 
 	const onBlur = () => {
-		Platform.OS=='android'&&setReplyFocus(false);
-	}
+		Platform.OS == 'android' && setReplyFocus(false);
+	};
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
 	const onLockBtnClick = () => {
@@ -601,12 +608,11 @@ export default ArticleDetail = props => {
 				) : (
 					<></>
 				)}
-				
+
 				<ArticleList
 					items={articleList}
 					onPressArticle={onPressArticle} //게시글 내용 클릭
 				/>
-				
 			</View>
 		);
 	};
@@ -614,24 +620,23 @@ export default ArticleDetail = props => {
 	const renderItem = ({item, index}) => {
 		if (index == comments.length - 1) {
 			return (
-					<View style={[{marginTop: 0 * DP, marginBottom: 30 * DP, opacity:key>0||isReplyFocused?0:1}]}>
-						
-						<ReplyWriteBox
-							onAddPhoto={onAddPhoto}
-							onChangeReplyInput={onChangeReplyInput}
-							onLockBtnClick={onLockBtnClick}
-							onWrite={onWrite}
-							onDeleteImage={onDeleteImage}
-							privateComment={privateComment}
-							ref={input}
-							editData={editData}
-							shadow={false}
-							parentComment={parentComment}
-							onCancelChild={onCancelChild}
-							onFocus={onFocus}
-							onBlur={onBlur}
-						/>
-					</View>
+				<View style={[{marginTop: 0 * DP, marginBottom: 30 * DP, opacity: key > 0 || isReplyFocused ? 0 : 1}]}>
+					<ReplyWriteBox
+						onAddPhoto={onAddPhoto}
+						onChangeReplyInput={onChangeReplyInput}
+						onLockBtnClick={onLockBtnClick}
+						onWrite={onWrite}
+						onDeleteImage={onDeleteImage}
+						privateComment={privateComment}
+						ref={input}
+						editData={editData}
+						shadow={false}
+						parentComment={parentComment}
+						onCancelChild={onCancelChild}
+						onFocus={onFocus}
+						onBlur={onBlur}
+					/>
+				</View>
 			);
 		} else
 			return (
@@ -671,22 +676,26 @@ export default ArticleDetail = props => {
 					}}
 					removeClippedSubviews={false}
 				/>
-				{key>0||isReplyFocused&&<View style={{position:'absolute',bottom:key-2}}>
-				<ReplyWriteBox
-							onAddPhoto={onAddPhoto}
-							onChangeReplyInput={onChangeReplyInput}
-							onLockBtnClick={onLockBtnClick}
-							onWrite={onWrite}
-							onDeleteImage={onDeleteImage}
-							privateComment={privateComment}
-							ref={floatInput}
-							editData={editData}
-							shadow={false}
-							parentComment={parentComment}
-							onCancelChild={onCancelChild}
-							onFocus={onFocus}
-							onBlur={onBlur}
-				/></View>}
+				{key > 0 ||
+					(isReplyFocused && (
+						<View style={{position: 'absolute', bottom: key - 2}}>
+							<ReplyWriteBox
+								onAddPhoto={onAddPhoto}
+								onChangeReplyInput={onChangeReplyInput}
+								onLockBtnClick={onLockBtnClick}
+								onWrite={onWrite}
+								onDeleteImage={onDeleteImage}
+								privateComment={privateComment}
+								ref={floatInput}
+								editData={editData}
+								shadow={false}
+								parentComment={parentComment}
+								onCancelChild={onCancelChild}
+								onFocus={onFocus}
+								onBlur={onBlur}
+							/>
+						</View>
+					))}
 			</View>
 		);
 };

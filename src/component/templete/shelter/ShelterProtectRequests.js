@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import {FlatList, ScrollView, Text, View} from 'react-native';
 import {login_style, temp_style, protectRequestList_style} from 'Templete/style_templete';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {PROTECT_STATUS, PROTECT_STATUS_VAR} from 'Root/i18n/msg';
@@ -11,6 +11,7 @@ import {Filter60Border, Filter60Filled, NewMeatBall60} from 'Root/component/atom
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 import {btn_w306_h68} from 'Root/component/atom/btn/btn_style';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 
 // ShelterMenu - 보호요청 올린 게시글 클릭
 // params - 로그인한 보호소 유저의 _id
@@ -119,7 +120,11 @@ export default ShelterProtectRequests = ({route, navigation}) => {
 	};
 
 	const whenEmpty = () => {
-		return <Text style={[txt.roboto28b, {marginTop: 50, textAlign: 'center'}]}>보호 요청 게시목록이 없습니다. </Text>;
+		return <ListEmptyInfo text={'보호 요청 게시목록이 없습니다.'} />;
+	};
+
+	const render = ({item, index}) => {
+		return <ProtectRequest data={item} onClickLabel={(status, id) => onClickLabel(status, id, item)} onFavoriteTag={e => onFavoriteTag(e, index)} />;
 	};
 
 	return (
@@ -147,7 +152,8 @@ export default ShelterProtectRequests = ({route, navigation}) => {
 			<ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
 				<ScrollView horizontal={true} scrollEnabled={false}>
 					<View style={[protectRequestList_style.listContainer]}>
-						<AnimalNeedHelpList data={protectAnimalList} onClickLabel={onClickLabel} onFavoriteTag={onFavoriteTag} whenEmpty={whenEmpty()} />
+						{/* <AnimalNeedHelpList data={protectAnimalList} onClickLabel={onClickLabel} onFavoriteTag={onFavoriteTag} whenEmpty={whenEmpty()} /> */}
+						<FlatList data={protectAnimalList} renderItem={render} ListEmptyComponent={whenEmpty()} />
 					</View>
 				</ScrollView>
 			</ScrollView>

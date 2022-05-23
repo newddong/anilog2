@@ -14,14 +14,14 @@ import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import community_obj from 'Root/config/community_obj';
-import {REPORT_MENU} from 'Root/i18n/msg';
+import {NETWORK_ERROR, REPORT_MENU} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
 import {likeEtc} from 'Root/api/likeetc';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {ScrollView} from 'react-native';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
-import { useKeyboardBottom } from 'Root/component/molecules/input/usekeyboardbottom';
+import {useKeyboardBottom} from 'Root/component/molecules/input/usekeyboardbottom';
 
 /**
  * 후기 상세 내용
@@ -90,6 +90,14 @@ export default ReviewDetail = props => {
 			},
 			err => {
 				console.log('err / getCommunityList / ReviewDEtail : ', err);
+				if (err.includes('code 500')) {
+					setData([]);
+					setTimeout(() => {
+						Modal.alert(NETWORK_ERROR);
+					}, 2000);
+				} else if (err.includes('없습니다')) {
+					setData([]);
+				}
 			},
 		);
 	};
@@ -255,13 +263,13 @@ export default ReviewDetail = props => {
 	const [isReplyFocused, setReplyFocus] = React.useState(false);
 	const onFocus = () => {
 		console.log('onFocus');
-		Platform.OS=='android'&&setReplyFocus(true);
+		Platform.OS == 'android' && setReplyFocus(true);
 		scrollToReplyBox();
 	};
 
 	const onBlur = () => {
-		Platform.OS=='android'&&setReplyFocus(false);
-	}
+		Platform.OS == 'android' && setReplyFocus(false);
+	};
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
 	const onLockBtnClick = () => {
@@ -587,23 +595,23 @@ export default ReviewDetail = props => {
 	const renderItem = ({item, index}) => {
 		if (index == comments.length - 1) {
 			return (
-					<View style={[{marginTop: 0 * DP, marginBottom: 30 * DP,opacity:key>0||isReplyFocused?0:1}]}>
-						<ReplyWriteBox
-							onAddPhoto={onAddPhoto}
-							onChangeReplyInput={onChangeReplyInput}
-							onLockBtnClick={onLockBtnClick}
-							onWrite={onWrite}
-							onDeleteImage={onDeleteImage}
-							privateComment={privateComment}
-							ref={input}
-							editData={editData}
-							shadow={false}
-							parentComment={parentComment}
-							onCancelChild={onCancelChild}
-							onFocus={onFocus}
-							onBlur={onBlur}
-						/>
-					</View>
+				<View style={[{marginTop: 0 * DP, marginBottom: 30 * DP, opacity: key > 0 || isReplyFocused ? 0 : 1}]}>
+					<ReplyWriteBox
+						onAddPhoto={onAddPhoto}
+						onChangeReplyInput={onChangeReplyInput}
+						onLockBtnClick={onLockBtnClick}
+						onWrite={onWrite}
+						onDeleteImage={onDeleteImage}
+						privateComment={privateComment}
+						ref={input}
+						editData={editData}
+						shadow={false}
+						parentComment={parentComment}
+						onCancelChild={onCancelChild}
+						onFocus={onFocus}
+						onBlur={onBlur}
+					/>
+				</View>
 			);
 		} else
 			return (
@@ -649,22 +657,26 @@ export default ReviewDetail = props => {
 					}}
 					scrollToOverflowEnabled={true} // Just put in here
 				/>
-				{key>0||isReplyFocused&&<View style={{position:'absolute',bottom:key-2}}>
-				<ReplyWriteBox
-							onAddPhoto={onAddPhoto}
-							onChangeReplyInput={onChangeReplyInput}
-							onLockBtnClick={onLockBtnClick}
-							onWrite={onWrite}
-							onDeleteImage={onDeleteImage}
-							privateComment={privateComment}
-							ref={floatInput}
-							editData={editData}
-							shadow={false}
-							parentComment={parentComment}
-							onCancelChild={onCancelChild}
-							onFocus={onFocus}
-							onBlur={onBlur}
-				/></View>}
+				{key > 0 ||
+					(isReplyFocused && (
+						<View style={{position: 'absolute', bottom: key - 2}}>
+							<ReplyWriteBox
+								onAddPhoto={onAddPhoto}
+								onChangeReplyInput={onChangeReplyInput}
+								onLockBtnClick={onLockBtnClick}
+								onWrite={onWrite}
+								onDeleteImage={onDeleteImage}
+								privateComment={privateComment}
+								ref={floatInput}
+								editData={editData}
+								shadow={false}
+								parentComment={parentComment}
+								onCancelChild={onCancelChild}
+								onFocus={onFocus}
+								onBlur={onBlur}
+							/>
+						</View>
+					))}
 			</View>
 		);
 };

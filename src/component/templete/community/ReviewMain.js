@@ -12,7 +12,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeEtc} from 'Root/api/likeetc';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import community_obj from 'Root/config/community_obj';
-import {REPORT_MENU} from 'Root/i18n/msg';
+import {NETWORK_ERROR, REPORT_MENU} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import {buttonstyle} from 'Templete/style_templete';
@@ -83,7 +83,14 @@ export default ReviewMain = ({route, navigation}) => {
 			},
 			err => {
 				console.log('err / getCommunityList / ArticleMain : ', err);
-				Modal.alert(err);
+				if (err.includes('code 500')) {
+					setData([]);
+					setTimeout(() => {
+						Modal.alert(NETWORK_ERROR);
+					}, 2000);
+				} else if (err.includes('없습니다')) {
+					setData([]);
+				}
 			},
 		);
 	};
@@ -485,15 +492,18 @@ export default ReviewMain = ({route, navigation}) => {
 				/>
 				<View style={[style.write, style.shadowButton]}>
 					<View
-						style={[{
-							height: 94 * DP,
-							width: 94 * DP,
-							justifyContent: 'center',
-							alignItems: 'center',
-							backgroundColor: '#ff9888',
-							borderRadius: 35 * DP,
-							marginBottom: 20 * DP,
-						},buttonstyle.shadow]}>
+						style={[
+							{
+								height: 94 * DP,
+								width: 94 * DP,
+								justifyContent: 'center',
+								alignItems: 'center',
+								backgroundColor: '#ff9888',
+								borderRadius: 35 * DP,
+								marginBottom: 20 * DP,
+							},
+							buttonstyle.shadow,
+						]}>
 						<WriteBoard onPress={onPressWrite} />
 					</View>
 				</View>

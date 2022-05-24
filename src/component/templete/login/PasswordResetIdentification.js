@@ -14,6 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 import {btn_style, login_style, temp_style, userAssign} from '../style_templete';
 import {userLogin} from 'Root/api/userapi';
 import {updateUserPassword} from 'Root/api/userapi';
+import {getUserAccountCount} from 'Root/api/userapi';
 export default PasswordResetIdentification = props => {
 	const [name, setName] = React.useState('');
 	const [mobile_number, setMobile_number] = React.useState('');
@@ -49,7 +50,7 @@ export default PasswordResetIdentification = props => {
 		console.log('props changed', props);
 		if (props.route.params?.response) {
 			const response = props.route.params.response;
-			if (response.success == true) {
+			if (response.success == 'true') {
 				console.log('imp_uid', response.imp_uid);
 				setFailed(false);
 				// setPhoneVerified(true);
@@ -95,7 +96,34 @@ export default PasswordResetIdentification = props => {
 		console.log('Userverification onMobileCompanyInputChange      ', company, index);
 		user_data.user_mobile_company = company;
 	};
-
+	const notUser = () => {
+		getUserAccountCount(
+			{user_phone_number: user_data.user_phone_number},
+			result => {
+				console.log('getUserAccountCount result', result);
+				if (result.msg == 0) {
+					console.log('계정 없음');
+					Modal.popTwoBtn(
+						'해당 전화번호로 가입된 계정이 없습니다',
+						'회원가입 하기',
+						'확인',
+						() => {
+							console.log('login');
+							navigation.navigate('AgreementCheck');
+						},
+						() => {
+							Modal.close();
+						},
+					);
+				} else {
+					verificationRequest();
+				}
+			},
+			err => {
+				console.log('getUserAccountCount result', err);
+			},
+		);
+	};
 	const verificationRequest = () => {
 		console.log('인증요청');
 
@@ -188,6 +216,7 @@ export default PasswordResetIdentification = props => {
 			<View style={[temp_style.phoneNumVerification]}>
 				<PhoneNumVerification
 					requestVerification={verificationRequest}
+					requestReVerification={reVerificationRequest}
 					onVerificationNumberChange={onVerificationNumberChange}
 					onNameInputChange={onNameInputChange}
 					onPhoneNumberInputChange={onPhoneNumberInputChange}
@@ -208,7 +237,7 @@ export default PasswordResetIdentification = props => {
 				{phoneVerified ? (
 					<AniButton btnTitle={'다음'} btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} onPress={onPressConfirm} />
 				) : verified ? (
-					<AniButton btnTitle={'인증하기'} btnLayout={btn_w654} disable={false} titleFontStyle={32} onPress={verificationRequest} />
+					<AniButton btnTitle={'인증하기'} btnLayout={btn_w654} disable={false} titleFontStyle={32} onPress={notUser} />
 				) : (
 					<AniButton btnTitle={'인증하기'} btnLayout={btn_w654} disable={true} titleFontStyle={32} onPress={verificationRequest} />
 				)}

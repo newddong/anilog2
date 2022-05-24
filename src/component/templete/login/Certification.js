@@ -52,8 +52,8 @@ export default function Certification({route}) {
 						data={params}
 						loading={<Loading />}
 						callback={response => {
-							navigation.navigate(route.params.navigationName, {response: response});
 							console.log('reponse', response);
+							(response.imp_success||response.success)&&navigation.navigate(route.params.navigationName, {response: response});
 						}}
 					/>
 				</SafeAreaView>

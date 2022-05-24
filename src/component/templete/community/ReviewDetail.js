@@ -649,22 +649,23 @@ export default ReviewDetail = props => {
 					}}
 					scrollToOverflowEnabled={true} // Just put in here
 				/>
-				{key>0||isReplyFocused&&<View style={{position:'absolute',bottom:key-2}}>
-				<ReplyWriteBox
-							onAddPhoto={onAddPhoto}
-							onChangeReplyInput={onChangeReplyInput}
-							onLockBtnClick={onLockBtnClick}
-							onWrite={onWrite}
-							onDeleteImage={onDeleteImage}
-							privateComment={privateComment}
-							ref={floatInput}
-							editData={editData}
-							shadow={false}
-							parentComment={parentComment}
-							onCancelChild={onCancelChild}
-							onFocus={onFocus}
-							onBlur={onBlur}
-				/></View>}
+				{(key>0||isReplyFocused)&&<View style={{position:'absolute',bottom:key-2}}>
+					<ReplyWriteBox
+								onAddPhoto={onAddPhoto}
+								onChangeReplyInput={onChangeReplyInput}
+								onLockBtnClick={onLockBtnClick}
+								onWrite={onWrite}
+								onDeleteImage={onDeleteImage}
+								privateComment={privateComment}
+								ref={floatInput}
+								editData={editData}
+								shadow={false}
+								parentComment={parentComment}
+								onCancelChild={onCancelChild}
+								onFocus={onFocus}
+								onBlur={onBlur}
+					/>
+				</View>}
 			</View>
 		);
 };

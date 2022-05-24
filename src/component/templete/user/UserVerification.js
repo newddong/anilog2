@@ -43,8 +43,8 @@ export default UserVerification = props => {
 			console.log('props changed', props);
 			const response = props.route.params.response;
 
-			if (response.success == true) {
-				console.log('imp_uid', response.imp_uid);
+			if (response.success == 'true') {
+				console.log('imp_uid', response);
 				setPhoneVerified(true);
 				// setVerified(true);
 				setImpid(response.imp_uid);
@@ -159,7 +159,7 @@ export default UserVerification = props => {
 			{user_phone_number: user_data.user_phone_number},
 			result => {
 				console.log('getUserAccountCount result', result);
-				if (result.msg > 0) {
+				if (parseInt(result.msg) > 0) {
 					console.log('계정 이미 존재');
 					Modal.popTwoBtn(
 						'이미 가입한 전화번호 입니다.',
@@ -174,7 +174,7 @@ export default UserVerification = props => {
 						},
 					);
 				} else {
-					verificationRequest;
+					verificationRequest();
 				}
 			},
 			err => {
@@ -241,6 +241,7 @@ export default UserVerification = props => {
 						asyncConfirm={async}
 						userData={user_data}
 						failed={failed}
+						// faile={false}
 						phoneVerified={phoneVerified}
 					/>
 				</View>

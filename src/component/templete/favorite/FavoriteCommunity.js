@@ -40,7 +40,7 @@ export default FavoriteCommunity = ({route}) => {
 								setArticle([]);
 								setTimeout(() => {
 									Modal.alert(NETWORK_ERROR);
-								}, 2000);
+								}, 500);
 							} else if (err.includes('없습니다')) {
 								setReview([]);
 								setArticle([]);
@@ -72,7 +72,7 @@ export default FavoriteCommunity = ({route}) => {
 								setArticle([]);
 								setTimeout(() => {
 									Modal.alert(NETWORK_ERROR);
-								}, 2000);
+								}, 500);
 							} else if (err.includes('없습니다')) {
 								setReview([]);
 								setArticle([]);

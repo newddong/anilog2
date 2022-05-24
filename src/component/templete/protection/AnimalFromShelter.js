@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, ScrollView, Text, View} from 'react-native';
+import {ActivityIndicator, FlatList, ScrollView, Text, View} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {login_style, animalFromShelter_style} from 'Templete/style_templete';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
@@ -10,6 +10,8 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {EmptyIcon} from 'Root/component/atom/icon';
 import DP from 'Root/config/dp';
+import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
+import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 
 //ShelterMenu => 나의 보호소 출신 동물
 export default AnimalFromShelter = ({route}) => {
@@ -65,6 +67,12 @@ export default AnimalFromShelter = ({route}) => {
 		);
 	};
 
+	const render = ({item, index}) => {
+		return (
+			<ProtectRequest data={item} onClickLabel={(status, id) => onClickLabel(status, id, item)} onFavoriteTag={e => onPressFavoriteTag(e, index)} />
+		);
+	};
+
 	if (data == 'false') {
 		return <Loading isModal={false} />;
 	} else {
@@ -74,12 +82,10 @@ export default AnimalFromShelter = ({route}) => {
 					<ScrollView horizontal={true} scrollEnabled={false}>
 						<View style={[animalFromShelter_style.container]}>
 							{data.length == 0 ? (
-								<View style={{paddingVertical: 100 * DP, alignItems: 'center'}}>
-									<EmptyIcon />
-									<Text style={[txt.roboto28b, {marginTop: 20 * DP}]}>아직 입양 완료된 보호소 출신의 보호 동물이 없네요.</Text>
-								</View>
+								<ListEmptyInfo text={'아직 입양 완료된 보호소 출신의 보호 동물이 없네요.'} />
 							) : (
-								<AnimalNeedHelpList data={data} onClickLabel={onClickLabel} />
+								// <AnimalNeedHelpList data={data} onClickLabel={onClickLabel} />
+								<FlatList data={data} renderItem={render} showsVerticalScrollIndicator={false} />
 							)}
 						</View>
 					</ScrollView>

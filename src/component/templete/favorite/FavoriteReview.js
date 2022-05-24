@@ -13,6 +13,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import {getCommunityListByUserId} from 'Root/api/community';
 import {EmptyIcon} from 'Root/component/atom/icon';
 import {txt} from 'Root/config/textstyle';
+import {NETWORK_ERROR} from 'Root/i18n/msg';
 
 //즐겨찾기한 피드목록을 조회
 export default FavoriteReview = ({route}) => {
@@ -42,8 +43,16 @@ export default FavoriteReview = ({route}) => {
 					},
 					err => {
 						console.log('err / getCommunityListByUserId / FavoriteCommunity : ', err);
-						setReview([]);
-						setArticle([]);
+						if (err.includes('code 500')) {
+							setReview([]);
+							setArticle([]);
+							setTimeout(() => {
+								Modal.alert(NETWORK_ERROR);
+							}, 500);
+						} else if (err.includes('없습니다')) {
+							setReview([]);
+							setArticle([]);
+						}
 					},
 			  )
 			: getFavoriteEtcListByUserId(
@@ -65,7 +74,14 @@ export default FavoriteReview = ({route}) => {
 					},
 					err => {
 						console.log('err / getFavoriteEtcListByUserId / FavoriteCommunity : ', err);
-						setData([]);
+						if (err.includes('code 500')) {
+							setData([]);
+							setTimeout(() => {
+								Modal.alert(NETWORK_ERROR);
+							}, 500);
+						} else if (err.includes('없습니다')) {
+							setData([]);
+						}
 					},
 			  );
 	};

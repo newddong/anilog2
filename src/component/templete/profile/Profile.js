@@ -1,14 +1,14 @@
 import React from 'react';
 import {View, Text, FlatList, Animated, Easing} from 'react-native';
 import {followUser, getUserProfile, unFollowUser} from 'Root/api/userapi';
-import {NORMAL, PET, SHELTER} from 'Root/i18n/msg';
+import {NETWORK_ERROR, NORMAL, PET, SHELTER} from 'Root/i18n/msg';
 import {EmptyIcon, Message94, Write94} from 'Atom/icon';
 import TabSelectFilled_Type2 from 'Molecules/tab/TabSelectFilled_Type2';
 import ProfileInfo from 'Organism/info/ProfileInfo';
 import FeedThumbnailList from 'Organism/feed/FeedThumbnailList';
 import OwnerList from 'Organism/list/OwnerList';
 import PetList from 'Organism/list/PetList';
-import {login_style, profile, temp_style,buttonstyle} from 'Templete/style_templete';
+import {login_style, profile, temp_style, buttonstyle} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import InfoScreen from 'Organism/info/InfoScreen';
@@ -69,11 +69,15 @@ export default Profile = ({route}) => {
 				setCommList(result.msg);
 			},
 			err => {
-				Modal.popOneBtn(err, '확인', () => {
-					Modal.close();
-					navigation.goBack();
-				});
-				setCommList({free: [], review: []});
+				if (err.includes('code 500')) {
+					setCommList({free: [], review: []});
+					Modal.popOneBtn(NETWORK_ERROR, '확인', () => {
+						Modal.close();
+						navigation.goBack();
+					});
+				} else if (err.includes('없습니다')) {
+					setCommList({free: [], review: []});
+				}
 			},
 		);
 	};
@@ -503,28 +507,34 @@ export default Profile = ({route}) => {
 									// {backgroundColor: 'yellow'},
 								]}>
 								<View
-									style={[{
-										height: 94 * DP,
-										width: 94 * DP,
-										justifyContent: 'center',
-										alignItems: 'center',
-										backgroundColor: '#ff9888',
-										borderRadius: 35 * DP,
-										marginBottom: 20 * DP,
-									},buttonstyle.shadow]}>
+									style={[
+										{
+											height: 94 * DP,
+											width: 94 * DP,
+											justifyContent: 'center',
+											alignItems: 'center',
+											backgroundColor: '#ff9888',
+											borderRadius: 35 * DP,
+											marginBottom: 20 * DP,
+										},
+										buttonstyle.shadow,
+									]}>
 									<Message94 onPress={() => onPressSendMsg(data._id, data.user_nickname)} />
 								</View>
-								
+
 								<View
-									style={[{
-										height: 94 * DP,
-										width: 94 * DP,
-										justifyContent: 'center',
-										alignItems: 'center',
-										backgroundColor: '#ff9888',
-										borderRadius: 35 * DP,
-										marginBottom: 20 * DP,
-									},buttonstyle.shadow]}>
+									style={[
+										{
+											height: 94 * DP,
+											width: 94 * DP,
+											justifyContent: 'center',
+											alignItems: 'center',
+											backgroundColor: '#ff9888',
+											borderRadius: 35 * DP,
+											marginBottom: 20 * DP,
+										},
+										buttonstyle.shadow,
+									]}>
 									<Write94 onPress={moveToFeedWrite} />
 								</View>
 							</View>

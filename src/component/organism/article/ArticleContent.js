@@ -210,7 +210,6 @@ const ArticleContent = props => {
 					//안드로이드
 					<WebView
 						originWhitelist={['*']}
-						scalesPageToFit={true}
 						ref={webviewRef}
 						onMessage={onWebViewMessage}
 						injectedJavaScript={runFirst} //Dynamic Height 수치 설정

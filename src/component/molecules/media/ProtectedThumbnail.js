@@ -12,6 +12,7 @@ import FastImage from 'react-native-fast-image';
  * @param {object} props - Props Object
  * @param {object} props.data - 썸네일 오브젝트 (img_uri, gender(female, male), status(protected, missing, reported, onNegotiation, adoption_available, adopted)
  * @param {(status:string, _id:number)=>void} props.onLabelClick - 썸네일 클릭할 때 동작하는 콜백, 썸네일 클릭 상태와 클릭한 썸네일의 고유 _id반환
+ * @param {boolean} props.inActiveOpacity - 전시용일 경우 Touch 액션 제거
  */
 const ProtectedThumbnail = props => {
 	// console.log('props ProtectThumb', props.data);
@@ -67,14 +68,20 @@ const ProtectedThumbnail = props => {
 				return '입양 가능';
 			case 'emergency':
 				return '안락사 임박';
+			case 'found':
+				return '주인 찾음';
 			case 'missing':
 				return '실종';
+			case 'rainbowbridge_euthanasia':
+			case 'rainbowbridge':
+				return '무지개다리';
 			case 'report':
 				return '제보';
 			case 'discuss':
+			case undefined:
 				return '협의 중';
-			case 'rainbowbridge':
-				return '무지개다리';
+			case 'donation':
+				return '기증';
 			case 'complete':
 			case 'accept':
 			case 'done':
@@ -89,7 +96,7 @@ const ProtectedThumbnail = props => {
 
 	return (
 		<View style={styles.img_square_round_214}>
-			<TouchableOpacity onPress={onClickLabel}>
+			<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.4} onPress={onClickLabel}>
 				<Image source={{uri: props.data.img_uri}} style={[styles.img_square_round_214, borderByStatus()]} />
 				{/* 펫 성별마크 */}
 				<View style={{position: 'absolute', right: 10 * DP, top: 10 * DP}}>{getGenderMark()}</View>
@@ -117,5 +124,6 @@ const ProtectedThumbnail = props => {
 
 ProtectedThumbnail.defaultProps = {
 	onLabelClick: e => console.log(e),
+	inActiveOpacity: false,
 };
 export default ProtectedThumbnail;

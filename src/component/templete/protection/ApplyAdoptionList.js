@@ -1,10 +1,11 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {ActivityIndicator, ScrollView, Text, View} from 'react-native';
+import {ActivityIndicator, FlatList, ScrollView, Text, View} from 'react-native';
 import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {login_style, baseInfo_style} from 'Templete/style_templete';
 import {getUserAdoptProtectionList} from 'Root/api/protectapi';
 import AnimalNeedHelp from 'Root/component/organism/listitem/AnimalNeedHelp';
+import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 
 // UserMenu => 신청 내역 => 입양 신청 더보기 클릭
 export default ApplyAdoptionList = props => {
@@ -12,12 +13,8 @@ export default ApplyAdoptionList = props => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState(false);
 
-	const onOff_FavoriteTag = (value, index) => {
-		// console.log('즐겨찾기=>' + value + ' ' + index);
-	};
 	const onLabelClick = item => {
-		// console.log('onLabelClick !!');
-		console.log('itme data', item);
+		// console.log('itme data', item);
 		navigation.push('ApplyAdoptionDetails', item);
 	};
 
@@ -34,20 +31,25 @@ export default ApplyAdoptionList = props => {
 				protect_act_object_id: '', //페이징을 위한 오브젝트 객체 아이디
 			},
 			result => {
-				// console.log(`ApplyAdoptionList getUserAdoptProtectionList: ${JSON.stringify(result.msg)}`);
-				//1depth 올려줌.
-				for (let index = 0; index < result.msg.length; index++) {
-					result.msg[index].protect_request_photo_thumbnail = result.msg[index].protect_act_request_article_id.protect_request_photos_uri[0];
-					result.msg[index].protect_animal_rescue_location =
-						result.msg[index].protect_act_request_article_id.protect_animal_id.protect_animal_rescue_location;
-					result.msg[index].protect_request_date = result.msg[index].protect_act_request_article_id.protect_animal_id.protect_animal_rescue_date;
-					result.msg[index].protect_animal_species = result.msg[index].protect_act_request_article_id.protect_animal_species;
-					result.msg[index].protect_animal_species_detail = result.msg[index].protect_act_request_article_id.protect_animal_species_detail;
-					result.msg[index].user_nickname = result.msg[index].protect_act_request_article_id.protect_request_writer_id.user_nickname;
-					result.msg[index].protect_animal_sex = result.msg[index].protect_act_request_article_id.protect_animal_id.protect_animal_sex;
-					result.msg[index].protect_animal_status = result.msg[index].protect_act_request_article_id.protect_animal_id.protect_animal_status;
-				}
-				setData(result.msg);
+				// console.log(`ApplyAdoptionList getUserAdoptProtectionList: `, result.msg[0]);
+				let res = result.msg;
+				let temp = [];
+				res.map((v, i) => {
+					let value = {
+						...v,
+						_id: v._id,
+						protect_request_status: v.protect_act_request_article_id.protect_request_status,
+						protect_request_photos_uri: v.protect_act_request_article_id.protect_request_photos_uri,
+						protect_animal_sex: v.protect_act_request_article_id.protect_animal_sex,
+						protect_request_date: v.protect_act_request_article_id.protect_request_date,
+						protect_request_writer_id: v.protect_act_request_article_id.protect_request_writer_id,
+						protect_animal_species: v.protect_act_request_article_id.protect_animal_species,
+						protect_animal_species_detail: v.protect_act_request_article_id.protect_animal_species_detail,
+						protect_animal_id: v.protect_act_request_article_id.protect_animal_id,
+					};
+					temp.push(value);
+				});
+				setData(temp);
 			},
 			err => {
 				console.log('err / getAppliesRecord / AppliesRecord', err);
@@ -55,6 +57,10 @@ export default ApplyAdoptionList = props => {
 			},
 		);
 	}, []);
+
+	const render = ({item, index}) => {
+		return <ProtectRequest data={item} callFrom={props.route.name} showFavorite={false} onClickLabel={() => onLabelClick(item)} />;
+	};
 
 	if (data == '') {
 		return (
@@ -68,7 +74,7 @@ export default ApplyAdoptionList = props => {
 				<ScrollView horizontal={false}>
 					<ScrollView horizontal={true} scrollEnabled={false}>
 						<View style={[baseInfo_style.list]}>
-							<AnimalNeedHelpList
+							{/* <AnimalNeedHelpList
 								data={data}
 								onItemClick={
 									props.route.name == 'ApplyTempProtectList'
@@ -79,7 +85,8 @@ export default ApplyAdoptionList = props => {
 								onClickLabel={(status, id, item) => onLabelClick(item)}
 								callFrom={props.route.name}
 								showFavorite={false}
-							/>
+							/> */}
+							<FlatList data={data} renderItem={render} />
 						</View>
 					</ScrollView>
 				</ScrollView>

@@ -22,7 +22,7 @@ export default ProtectApplyForm = ({route, navigation}) => {
 			},
 			result => {
 				// console.log('result / getProtectRequestByProtectRequestId / ProtectApplyForm ', result.msg);
-				const addedData = {...route.params.data};
+				let addedData = {...route.params.data};
 				addedData.protect_animal_species = result.msg.protect_animal_species;
 				addedData.protect_animal_species_detail = result.msg.protect_animal_species_detail;
 				addedData.protect_animal_rescue_location = result.msg.protect_animal_id.protect_animal_rescue_location;
@@ -31,6 +31,9 @@ export default ProtectApplyForm = ({route, navigation}) => {
 				addedData.protect_animal_id = result.msg.protect_animal_id;
 				addedData.shelter_name = result.msg.protect_request_writer_id.user_nickname;
 				addedData.user_nickname = result.msg.protect_request_writer_id.user_nickname;
+				addedData.protect_animal_sex = result.msg.protect_animal_id.protect_animal_sex;
+				addedData.protect_request_status = result.msg.protect_request_status;
+				addedData.protect_request_writer_id = result.msg.protect_request_writer_id;
 				setData(addedData);
 			},
 			err => {

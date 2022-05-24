@@ -12,6 +12,8 @@ import SearchReview from 'Root/component/templete/search/SearchReview';
 import {getSearchCommunityList} from 'Root/api/community';
 import SearchArticle from 'Root/component/templete/search/SearchArticle';
 import {useNavigation} from '@react-navigation/core';
+import {NETWORK_ERROR} from 'Root/i18n/msg';
+import Modal from 'Root/component/modal/Modal';
 
 const SearchTabNav = createMaterialTopTabNavigator();
 
@@ -137,7 +139,12 @@ export default SearchTabNavigation = props => {
 					},
 					err => {
 						console.log('err / getSearchCommunityList / SearchTabNav : ', err);
-						if (err == '검색 결과가 없습니다.') {
+						if (err.includes('code 500')) {
+							resolve({free: [], review: []});
+							setTimeout(() => {
+								Modal.alert(NETWORK_ERROR);
+							}, 500);
+						} else if (err.includes('없습니다')) {
 							resolve({free: [], review: []});
 						}
 					},

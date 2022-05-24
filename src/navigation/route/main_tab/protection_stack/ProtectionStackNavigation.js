@@ -24,6 +24,7 @@ import CommunityCommentList from 'Root/component/templete/community/CommunityCom
 import SearchMainStack from '../../search_tab/SearchMainStack';
 import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailSettting';
 import SaveButtonHeader from 'Root/navigation/header/SaveButtonHeader';
+import ChangeUserProfileImage from 'Root/component/templete/user/ChangeUserProfileImage';
 
 const ProtectionStack = createStackNavigator();
 
@@ -122,6 +123,14 @@ export default ProtectionStackNavigation = props => {
 				name="UserInfoDetailSetting"
 				component={UserInfoDetailSettting}
 				options={{header: props => <SaveButtonHeader {...props} />, title: '프로필 상세 정보'}}
+			/>
+			<ProtectionStack.Screen
+				name={'ChangeUserProfileImage'}
+				component={ChangeUserProfileImage}
+				options={({route}) => ({
+					header: props => <SimpleHeader {...props} />,
+					title: '프로필 수정',
+				})}
 			/>
 		</ProtectionStack.Navigator>
 	);

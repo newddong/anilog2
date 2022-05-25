@@ -1,52 +1,22 @@
 import React from 'react';
-import {
-	ScrollView,
-	Text,
-	TouchableOpacity,
-	View,
-	TouchableWithoutFeedback,
-	TextInput,
-	Platform,
-	Keyboard,
-	NativeModules,
-	AppState,
-} from 'react-native';
+import {Text, TouchableOpacity, View, TouchableWithoutFeedback} from 'react-native';
 import {APRI10, WHITE, GRAY20, GRAY10, GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {
-	Arrow_Down_APRI10,
-	Camera54,
-	Location54_APRI10,
-	Location54_Filled,
-	Location54_GRAY30,
-	Paw54_Border,
-	Paw54_Gray,
-} from 'Root/component/atom/icon/index';
+import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Paw54_Border} from 'Root/component/atom/icon/index';
 import {Urgent_Write1, Urgent_Write2} from 'Atom/icon';
 import {btn_style, feedWrite, login_style, temp_style, buttonstyle} from 'Templete/style_templete';
 import AniButton from 'Molecules/button/AniButton';
-import {btn_w176, btn_w194} from 'Atom/btn/btn_style';
-import {DOG_KIND, PET_KIND, pet_kind, PHONE_FORM, PUBLIC_SETTING} from 'Root/i18n/msg';
-import DatePicker from 'Molecules/select/DatePicker';
-import TabSelectFilled_Type1 from 'Molecules/tab/TabSelectFilled_Type1';
-import Input24 from 'Molecules/input/Input24';
+import {btn_w194} from 'Atom/btn/btn_style';
+import {PUBLIC_SETTING} from 'Root/i18n/msg';
 import {launchImageLibrary} from 'react-native-image-picker';
 import Modal from 'Component/modal/Modal';
 import userGlobalObj from 'Root/config/userGlobalObject';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {getPettypes} from 'Root/api/userapi';
 import ImagePicker from 'react-native-image-crop-picker';
 import HashInput from 'Molecules/input/HashInput';
-import {getAddressList} from 'Root/api/address';
-import SelectInput from 'Molecules/button/SelectInput';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import {FlatList} from 'react-native-gesture-handler';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import Geolocation from '@react-native-community/geolocation';
-import axios from 'axios';
-import {openSettings, PERMISSIONS, request} from 'react-native-permissions';
-import LocationButton from 'Root/component/molecules/button/LocationButton';
 import MissingForm from 'Templete/feed/MissingForm';
 import ReportForm from 'Templete/feed/ReportForm';
 

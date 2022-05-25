@@ -404,7 +404,6 @@ export default CommunityWrite = props => {
 			</TouchableOpacity>
 		);
 	};
-	console.log('data.community_address', data.community_address);
 
 	const onPaste = paste => {
 		console.log('paste', paste);
@@ -418,7 +417,8 @@ export default CommunityWrite = props => {
 	};
 
 	const moveToLocationPicker = () => {
-		props.navigation.push('SearchMap', {data: data, isReview: isReview});
+		// props.navigation.push('SearchMap', {data: data, isReview: isReview});
+		props.navigation.push('CommunityLocationPicker', {data: data, isReview: isReview});
 	};
 
 	return (

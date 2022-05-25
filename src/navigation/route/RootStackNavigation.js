@@ -272,6 +272,11 @@ export default RootStackNavigation = () => {
 							component={LocationPicker}
 							options={{header: props => <SimpleHeader {...props} />, title: '위치'}}
 						/>
+						<RootStack.Screen
+							name="CommunityLocationPicker"
+							component={LocationPicker}
+							options={{header: props => <SimpleHeader {...props} />, title: '위치'}}
+						/>
 
 						{/* 카메라 관련 기능은 네이티브 모듈이 안정화 혹은 자체 개발이 될때까지 추가 보류 */}
 						{/* <RootStack.Screen name="SinglePhotoSelect" component={PhotoSelect} /> */}

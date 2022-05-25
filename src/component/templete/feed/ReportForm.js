@@ -1,40 +1,19 @@
 import React from 'react';
-import {ScrollView, Text, TouchableOpacity, View, TouchableWithoutFeedback, TextInput, Platform, Keyboard} from 'react-native';
+import {Text, View, TextInput, Platform, Keyboard, AppState, NativeModules} from 'react-native';
 import {APRI10, WHITE, GRAY20, GRAY10, GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {
-	Arrow_Down_APRI10,
-	Camera54,
-	Location54_APRI10,
-	Location54_Filled,
-	Location54_GRAY30,
-	Paw54_Border,
-	Paw54_Gray,
-} from 'Root/component/atom/icon/index';
-import {Urgent_Write1, Urgent_Write2} from 'Atom/icon';
-import {btn_style, feedWrite, login_style, temp_style, buttonstyle} from 'Templete/style_templete';
+import {btn_style, feedWrite, temp_style, buttonstyle} from 'Templete/style_templete';
 import AniButton from 'Molecules/button/AniButton';
-import {btn_w176, btn_w194} from 'Atom/btn/btn_style';
-import {DOG_KIND, PET_KIND, pet_kind, PHONE_FORM, PUBLIC_SETTING} from 'Root/i18n/msg';
 import DatePicker from 'Molecules/select/DatePicker';
-import TabSelectFilled_Type1 from 'Molecules/tab/TabSelectFilled_Type1';
-import Input24 from 'Molecules/input/Input24';
-import InputBalloon from 'Molecules/input/InputBalloon';
-import {launchImageLibrary} from 'react-native-image-picker';
 import Modal from 'Component/modal/Modal';
-import userGlobalObj from 'Root/config/userGlobalObject';
-import {useNavigation, useRoute} from '@react-navigation/native';
 import {getPettypes} from 'Root/api/userapi';
-import ImagePicker from 'react-native-image-crop-picker';
-import HashInput from 'Molecules/input/HashInput';
 import {getAddressList} from 'Root/api/address';
 import SelectInput from 'Molecules/button/SelectInput';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
-import {FlatList} from 'react-native-gesture-handler';
-import userGlobalObject from 'Root/config/userGlobalObject';
 import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
+import {openSettings} from 'react-native-permissions';
 
 //제보 컴포넌트
 export default ReportForm = props => {
@@ -46,7 +25,6 @@ export default ReportForm = props => {
 	]);
 
 	const [city, setCity] = React.useState(['광역시, 도']); //광역시도 API자료 컨테이너
-	const [isCityChanged, setIsCityChanged] = React.useState(false); //광역시도 선택되었는지 여부
 	const [district, setDistrict] = React.useState(['시군 선택']); //시군 API자료 컨테이너
 	const [isDistrictChanged, setIsDistrictChanged] = React.useState(false); // 시군 선택되었는지 여부
 	const [neighbor, setNeighbor] = React.useState(['동읍면']); //동읍면 API 자료 컨테이너
@@ -215,6 +193,76 @@ export default ReportForm = props => {
 		);
 	};
 
+	//위치 권한을 위해 Background로 갔다가 앱으로 돌아왔을 경우 권한을 다시 확인
+	React.useEffect(() => {
+		const subscription = AppState.addEventListener('change', nextAppState => {
+			Modal.close();
+			if (nextAppState == 'active') {
+				requestPermission(); //다시 권한 요구
+			}
+		});
+		return () => {
+			subscription.remove();
+		};
+	}, []);
+
+	//위치 권한이 설정되어 있지 않을 경우 디바이스 세팅으로 안내
+	const getToSetting = error => {
+		let msg = '위치 서비스를 사용할 수 없습니다. \n 기기의 설정 > 개인정보 보호 에서 위치 \n 서비스를 켜주세요.';
+		if (error == 'blocked') {
+			msg = '현재 해당 앱의 위치서비스 이용이 거절되어 있는 상태입니다. 설정에서 앱에 대한 \n위치서비스를 허용해주세요.';
+		}
+		Modal.popTwoBtn(
+			msg,
+			'취소',
+			'설정으로',
+			() => {
+				Modal.close();
+				props.navigation.goBack();
+			},
+			() => {
+				if (Platform.OS == 'android') {
+					NativeModules.OpenExternalURLModule.generalSettings();
+				} else {
+					openSettings().catch(() => console.warn('cannot open settings'));
+				}
+			},
+			() => {
+				console.log('취소 불가능');
+			},
+		);
+	};
+
+	//위치 권한 요구 체크
+	async function requestPermission() {
+		try {
+			request(
+				//위치 권한 요청 (gps가 꺼져있을 경우 출력이 안됨)
+				Platform.select({
+					ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+					android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+				}),
+			).then(res => {
+				console.log('res', res);
+				if (res == 'granted') {
+					//허용
+					onPressCurrentLocation();
+				} else if (res == 'denied') {
+					//거절
+					getToSetting();
+				} else if (res == 'unavailable') {
+					//gps자체가 꺼짐 상태
+					getToSetting();
+				} else if (res == 'blocked') {
+					// anilog앱만 '안함' 상태
+					getToSetting('blocked');
+				}
+			});
+		} catch (error) {
+			console.log('location set error:', error);
+		}
+	}
+
 	//위도 경도 받아오기
 	const onPressCurrentLocation = () => {
 		Modal.popLoading(true);
@@ -225,9 +273,19 @@ export default ReportForm = props => {
 			error => {
 				console.log('error get GEOLOCation', error.code, error.message);
 				Modal.close();
-				setTimeout(() => {
-					Modal.alert('주소 받아오기에 실패하였습니다. \n 잠시후 다시 이용부탁드립니다.');
-				}, 200);
+				//User denied access
+				if (error.code == 1) {
+					getToSetting();
+				} else if (error.code == 2) {
+					//Failed
+					getToSetting();
+				} else if (error.code == 3) {
+					//Timeout
+					Modal.popNoBtn('주소를 받아오는데 실패했습니다. \n 잠시후 다시 이용해주세요.');
+					setTimeout(() => {
+						Modal.close();
+					}, 1500);
+				}
 			},
 			{enableHighAccuracy: false, timeout: 6000, maximumAge: 10000},
 		);
@@ -272,7 +330,6 @@ export default ReportForm = props => {
 			setTimeout(() => {
 				Modal.alert('주소 받아오기에 실패하였습니다. \n 잠시후 다시 이용부탁드립니다.');
 			}, 200);
-			Modal.close();
 		}
 	};
 
@@ -319,7 +376,7 @@ export default ReportForm = props => {
 						<TextInput
 							onChangeText={onChangeMissingLocationDetail}
 							value={data.report_location.detail}
-							style={[txt.noto28,feedWrite.missing_location_detail_input, {borderBottomColor: data.report_location.detail == '' ? GRAY30 : APRI10}]}
+							style={[txt.noto28, feedWrite.missing_location_detail_input, {borderBottomColor: data.report_location.detail == '' ? GRAY30 : APRI10}]}
 							placeholder={'제보하려는 장소의 위치를 설명해주세요.'}
 							placeholderTextColor={GRAY10}
 							onPressIn={onPressIn(inputLocationRef)}

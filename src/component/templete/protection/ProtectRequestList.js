@@ -21,7 +21,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 	const one_month_before = today.clone().subtract(1, 'month').format('YY.MM.DD');
 	const [data, setData] = React.useState('false');
 	const [offset, setOffset] = React.useState(1);
-	const LIMIT = 8;
+	const LIMIT = 10;
 	const [loading, setLoading] = React.useState(false);
 	const [filterData, setFilterData] = React.useState({
 		from: '',
@@ -96,7 +96,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 			},
 			result => {
 				// console.log('result 첫값 :', result.msg[0].protect_animal_id.protect_animal_rescue_location);
-				// console.log('result length  ', result.msg.length);
+				console.log('result length  ', result.msg.length);
 				let res = result.msg;
 				res.filter(e => e != null);
 				res.map((v, i) => {

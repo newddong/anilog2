@@ -27,7 +27,8 @@ import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 
 import ProtectCommentList from 'Root/component/templete/protection/ProtectCommentList';
 import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailSettting';
-
+import MissingAnimalDetail from 'Templete/missing/MissingAnimalDetail';
+import ReportDetail from 'Templete/missing/ReportDetail';
 const FeedStack = createStackNavigator();
 
 export default FeedStackNavigation = props => {
@@ -124,6 +125,8 @@ export default FeedStackNavigation = props => {
 				options={{header: props => <SaveButtonHeader {...props} />, title: '프로필 상세 정보'}}
 			/>
 			<FeedStack.Screen name="ProtectCommentList" component={ProtectCommentList} options={{header: props => <SimpleHeader {...props} />}} />
+			<FeedStack.Screen name="MissingAnimalDetail" component={MissingAnimalDetail} options={{header: props => <SimpleHeader {...props} />}} />
+			<FeedStack.Screen name="ReportDetail" component={ReportDetail} options={{header: props => <SimpleHeader {...props} />}} />
 		</FeedStack.Navigator>
 	);
 };

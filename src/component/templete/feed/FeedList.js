@@ -23,6 +23,7 @@ export default FeedList = ({route, navigation}) => {
 	const [refreshing, setRefreshing] = React.useState(false);
 	const [index, setIndex] = React.useState(0);
 	const [toTop, setToTop] = React.useState(0);
+	const [topList, setTopList] = React.useState([]);
 	const flatlist = React.useRef();
 	//피드썸네일 클릭 리스트일 경우
 
@@ -49,6 +50,18 @@ export default FeedList = ({route, navigation}) => {
 	}, [route.params?.userobject]);
 
 	React.useEffect(() => {
+		if (route.name == 'MainHomeFeedList') {
+			getMissingReportList(
+				{request_number: 10},
+				result => {
+					console.log('result', result.msg[0]);
+					setTopList(result.msg);
+				},
+				err => {
+					console.log('getMissingReportList err', err);
+				},
+			);
+		}
 		const getList = () => {
 			switch (route.name) {
 				case 'UserFeedList':
@@ -85,6 +98,7 @@ export default FeedList = ({route, navigation}) => {
 							Modal.popOneBtn(errormsg, '확인', () => Modal.close());
 						},
 					);
+
 					break;
 				case 'TagMeFeedList':
 					getUserTaggedFeedList(
@@ -366,12 +380,13 @@ export default FeedList = ({route, navigation}) => {
 			},
 		);
 	};
+	//피드 상단 새로운 실종/제보
 	const MissingReport = () => {
 		if (route.name == 'MainHomeFeedList') {
 			return (
 				<View style={[styles.container]}>
 					<Text style={[txt.noto28b]}>새로운 실종/제보</Text>
-					<NewMissingReportList isfeed={route.name == 'MainHomeFeedList'} />
+					<NewMissingReportList data={topList} />
 				</View>
 			);
 		} else {
@@ -407,7 +422,7 @@ export default FeedList = ({route, navigation}) => {
 					if (!data[index]) return {length: 0, offset: 0, index: index};
 					return {length: data[index].height, offset: data[index].offset, index: index};
 				}}
-				ListHeaderComponent={MissingReport}
+				ListHeaderComponent={route.name == 'MainHomeFeedList' ? MissingReport : <></>}
 				ref={flatlist}
 				refreshing
 				extraData={refresh}

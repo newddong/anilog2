@@ -22,7 +22,7 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 
 	const data = route.params; // 봉사활동 Object
 	const isShelterOwner = route.name == 'ShelterVolunteerForm'; // 보호소 계정의 봉사활동 신청관리 루트로 들어왔는지 여부
-
+	console.log('datadata', data);
 	React.useEffect(() => {
 		if (route.name == 'UserVolunteerForm') {
 			// console.log('BeforeSplice', data);
@@ -220,12 +220,17 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 
 	//보호소의 봉사활동 신청서 관리일 경우
 	const getButtonWhenShelter = () => {
-		let wishdate = moment(data.volunteer_wish_date[0]).toDate(); //봉사활동 희망날짜 배열에서 첫번째 값을 받아와 Date타입으로 치환
-		let thisTime = new Date().getTime(); // 현재 시간
+		// let wishdate = moment(data.volunteer_wish_date[0]).toDate(); //봉사활동 희망날짜 배열에서 첫번째 값을 받아와 Date타입으로 치환
+		let wishdate = moment(data.volunteer_wish_date[data.volunteer_wish_date.length - 1]).toDate(); //봉사활동 희망날짜 배열에서 마지막 값을 받아와 Date타입으로 치환
+		let thisTime = moment(new Date().getTime()).toDate(); // 현재 시간
+		// thisTime = moment(thisTime).toDate();
+		console.log('data.vooojw', data.volunteer_wish_date);
+		console.log('this Time', wishdate, thisTime, wishdate < thisTime);
 		if (wishdate < thisTime) {
 			//봉사활동 날짜가 이미 지난 경우
-			const volunteerDate = moment(data.volunteer_wish_date[0]).format('YY.MM.DD');
+			const volunteerDate = moment(data.volunteer_wish_date[data.volunteer_wish_date.length - 1]).format('YY.MM.DD');
 			let title = '활동 완료';
+			console.log('qewtoi', wishdate, thisTime, moment(wishdate).isBefore(thisTime));
 			switch (data.volunteer_status) {
 				case 'accept':
 				case 'done':
@@ -289,11 +294,12 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 		//활동승인대기(waiting) : 참여인원 수락 대기중 [App에서 표기 : '수락 대기중']
 		let find = data.volunteer_accompany.find(e => e.member._id == userGlobalObject.userInfo._id);
 		// console.log('find', find);
-		let wishdate = moment(data.volunteer_wish_date[0]).toDate(); //봉사활동 희망날짜 배열에서 첫번째 값을 받아와 Date타입으로 치환
+		// let wishdate = moment(data.volunteer_wish_date[0]).toDate(); //봉사활동 희망날짜 배열에서 첫번째 값을 받아와 Date타입으로 치환
+		let wishdate = moment(data.volunteer_wish_date[data.volunteer_wish_date.length - 1]).toDate();
 		let thisTime = new Date().getTime(); // 현재 시간
 		if (wishdate < thisTime) {
 			//현재 시간보다 이전인 모든 봉사활동 신청서는 넓은 버튼에 내역을 담는다
-			const volunteerDate = moment(data.volunteer_wish_date[0]).format('YY.MM.DD');
+			const volunteerDate = moment(data.volunteer_wish_date[data.volunteer_wish_date.length - 1]).format('YY.MM.DD');
 			let title = '활동 완료';
 			switch (data.volunteer_status) {
 				case 'accept':

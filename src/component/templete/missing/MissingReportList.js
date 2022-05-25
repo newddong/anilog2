@@ -1,7 +1,6 @@
 import React from 'react';
 import {Text, View, TouchableWithoutFeedback, FlatList, TouchableOpacity, RefreshControl, Pressable, StyleSheet, Animated} from 'react-native';
 import {feedWrite, login_style, searchProtectRequest, temp_style} from 'Templete/style_templete';
-import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {GRAY10, WHITE} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {Check50, EmptyIcon, Rect50_Border, Urgent_Write1, Urgent_Write2} from 'Atom/icon';
@@ -13,9 +12,7 @@ import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 import Loading from 'Root/component/molecules/modal/Loading';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
-import AnimalNeedHelp from 'Root/component/organism/listitem/AnimalNeedHelp';
 import MissingReportItem from 'Root/component/organism/listitem/MissingReportItem';
-import ActionButton from 'Root/component/molecules/button/ActionButton';
 
 export default MissingReportList = props => {
 	const navigation = useNavigation();

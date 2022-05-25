@@ -276,7 +276,7 @@ export default Review = React.memo(props => {
 					) : (
 						<FavoriteTag48_Border onPress={() => onPressFavorite(true)} />
 					)}
-					<Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />
+					{data.community_writer_id ? <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} /> : <></>}
 				</View>
 			</View>
 			{/* 리뷰 사진 썸네일 */}

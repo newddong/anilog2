@@ -14,6 +14,8 @@ import searchContext from 'Root/config/searchContext';
  * @param {(input:string)=>void} props.onChange - 인풋 값 변경시 동작하는 콜백, 인풋 반환환
  * @param {(input:string)=>void} props.onSearch - 검색버튼을 눌렸을때 동작하는 콜백, 저장된 인풋을 반환
  * @param {()=>void} props.onClear - 지우기 버튼(X) 클릭시 동작하는 콜백
+ * @param {()=>void} props.onFocus - 포커스 콜백
+ * @param {()=>void} props.onBlur - 인풋 포커스 해제 콜백
  */
 const InputWithSearchIcon = props => {
 	const [input, setInput] = React.useState('');
@@ -39,11 +41,13 @@ const InputWithSearchIcon = props => {
 
 	//인풋 포커스가 해제되었을 때 콜백
 	const blur = () => {
+		props.onBlur();
 		inputRef.current.blur();
 	};
 
 	//인풋 포커스가 적용되었을 때 콜백
 	const focus = () => {
+		props.onFocus();
 		inputRef.current.focus();
 	};
 
@@ -65,6 +69,9 @@ const InputWithSearchIcon = props => {
 					onChangeText={text => onChange(text)}
 					placeholder={props.placeholder}
 					ref={inputRef}
+					value={props.value}
+					onFocus={focus}
+					onBlur={blur}
 					style={[
 						txt.roboto28,
 						{
@@ -88,12 +95,14 @@ const InputWithSearchIcon = props => {
 	);
 };
 InputWithSearchIcon.defaultProps = {
-	value: 'Value',
+	value: '',
 	placeholder: 'placeholder',
 	width: 654, //전체View Width
 	onChange: e => console.log(e),
 	onSearch: e => console.log(e),
 	onClear: e => console.log(e),
+	onFocus: () => {},
+	onBlur: () => {},
 };
 
 export default InputWithSearchIcon;

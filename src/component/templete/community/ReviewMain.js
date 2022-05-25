@@ -113,97 +113,99 @@ export default ReviewMain = ({route, navigation}) => {
 
 	//미트볼 클릭
 	const onPressMeatball = index => {
-		console.log('index', index);
-		const isMyArticle = userGlobalObject.userInfo._id == getData()[index].community_writer_id._id;
-		Modal.popSelectBoxModal(
-			isMyArticle ? ['수정', '삭제'] : ['신고'],
-			select => {
-				console.log('select', select);
-				switch (select) {
-					case '수정':
-						navigation.push('CommunityEdit', {previous: getData()[index], isReview: true});
-						break;
-					case '삭제':
-						Modal.close();
-						setTimeout(() => {
-							Modal.popTwoBtn(
-								'정말로 이 게시글을 \n 삭제하시겠습니까?',
-								'아니오',
-								'네',
-								() => Modal.close(),
-								() => {
-									updateAndDeleteCommunity(
-										{
-											community_object_id: getData()[index]._id,
-											community_is_delete: true,
-										},
-										result => {
-											// console.log('result / updateAndDeleteCommunity / ArticleDetail : ', result.msg);
-											Modal.close();
-											setTimeout(() => {
-												Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
-												setTimeout(() => {
-													Modal.close();
-													fetchData();
-												}, 600);
-											}, 200);
-										},
-										err => {
-											console.log('err / updateAndDeleteCommunity / ArticleDetail : ', err);
-											Modal.alert(err);
-										},
-									);
-								},
-							);
-						}, 200);
-						break;
-					case '신고':
-						Modal.close();
-						if (userGlobalObject.userInfo.isPreviewMode) {
+		console.log('getData()[index].community_writer_id', getData()[index].community_writer_id);
+		if (getData()[index].community_writer_id) {
+			const isMyArticle = userGlobalObject.userInfo._id == getData()[index].community_writer_id._id;
+			Modal.popSelectBoxModal(
+				isMyArticle ? ['수정', '삭제'] : ['신고'],
+				select => {
+					console.log('select', select);
+					switch (select) {
+						case '수정':
+							navigation.push('CommunityEdit', {previous: getData()[index], isReview: true});
+							break;
+						case '삭제':
+							Modal.close();
 							setTimeout(() => {
-								Modal.popLoginRequestModal(() => {
-									navigation.navigate('Login');
-								});
-							}, 100);
-						} else {
-							setTimeout(() => {
-								Modal.popOneBtnSelectModal(
-									REPORT_MENU,
-									'이 게시물을 신고 하시겠습니까?',
-									selectedItem => {
-										createReport(
+								Modal.popTwoBtn(
+									'정말로 이 게시글을 \n 삭제하시겠습니까?',
+									'아니오',
+									'네',
+									() => Modal.close(),
+									() => {
+										updateAndDeleteCommunity(
 											{
-												report_target_object_id: getData()[index]._id,
-												report_target_object_type: 'communityobjects',
-												report_target_reason: selectedItem,
-												report_is_delete: false,
+												community_object_id: getData()[index]._id,
+												community_is_delete: true,
 											},
 											result => {
-												console.log('신고 완료', result);
+												// console.log('result / updateAndDeleteCommunity / ArticleDetail : ', result.msg);
 												Modal.close();
-												Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
+												setTimeout(() => {
+													Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
+													setTimeout(() => {
+														Modal.close();
+														fetchData();
+													}, 600);
+												}, 200);
 											},
 											err => {
-												Modal.close();
-												if (err == '이미 신고되었습니다.') {
-													Modal.popOneBtn('이미 신고하셨습니다.', '확인', () => Modal.close());
-												}
+												console.log('err / updateAndDeleteCommunity / ArticleDetail : ', err);
+												Modal.alert(err);
 											},
 										);
 									},
-									'신고',
 								);
 							}, 200);
-						}
-						break;
-					default:
-						break;
-				}
-			},
-			() => Modal.close(),
-			false,
-			false,
-		);
+							break;
+						case '신고':
+							Modal.close();
+							if (userGlobalObject.userInfo.isPreviewMode) {
+								setTimeout(() => {
+									Modal.popLoginRequestModal(() => {
+										navigation.navigate('Login');
+									});
+								}, 100);
+							} else {
+								setTimeout(() => {
+									Modal.popOneBtnSelectModal(
+										REPORT_MENU,
+										'이 게시물을 신고 하시겠습니까?',
+										selectedItem => {
+											createReport(
+												{
+													report_target_object_id: getData()[index]._id,
+													report_target_object_type: 'communityobjects',
+													report_target_reason: selectedItem,
+													report_is_delete: false,
+												},
+												result => {
+													console.log('신고 완료', result);
+													Modal.close();
+													Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
+												},
+												err => {
+													Modal.close();
+													if (err == '이미 신고되었습니다.') {
+														Modal.popOneBtn('이미 신고하셨습니다.', '확인', () => Modal.close());
+													}
+												},
+											);
+										},
+										'신고',
+									);
+								}, 200);
+							}
+							break;
+						default:
+							break;
+					}
+				},
+				() => Modal.close(),
+				false,
+				false,
+			);
+		}
 	};
 
 	//개 고양이 그외 버튼 필터 클릭
@@ -478,34 +480,33 @@ export default ReviewMain = ({route, navigation}) => {
 	} else
 		return (
 			<View style={[style.container]}>
-				<ReviewList
-					items={getData()}
-					recommend={filterRef.current ? [] : recommend}
-					whenEmpty={whenEmpty}
-					onPressReviewContent={onPressReviewContent}
-					onPressReply={onPressReply}
-					onPressMeatball={onPressMeatball}
-					onPressLike={index => onPressLike(index, true)}
-					onPressUnlike={index => onPressLike(index, false)}
-					onPressFavorite={onPressFavorite}
-					onPressRecommendReview={onPressRecommendReview}
+				<FlatList
+					data={[{}]}
+					listKey={({item, index}) => index}
+					showsVerticalScrollIndicator={false}
+					renderItem={({item, index}) => {
+						return (
+							<>
+								<ReviewList
+									items={getData()}
+									recommend={filterRef.current ? [] : recommend}
+									whenEmpty={whenEmpty}
+									onPressReviewContent={onPressReviewContent}
+									onPressReply={onPressReply}
+									onPressMeatball={onPressMeatball}
+									onPressLike={index => onPressLike(index, true)}
+									onPressUnlike={index => onPressLike(index, false)}
+									onPressFavorite={onPressFavorite}
+									onPressRecommendReview={onPressRecommendReview}
+								/>
+							</>
+						);
+					}}
+					ListHeaderComponent={filterComponent()}
+					stickyHeaderIndices={[0]}
 				/>
 				<View style={[style.write, style.shadowButton]}>
-					<View
-						style={[
-							{
-								height: 94 * DP,
-								width: 94 * DP,
-								justifyContent: 'center',
-								alignItems: 'center',
-								backgroundColor: '#ff9888',
-								borderRadius: 35 * DP,
-								marginBottom: 20 * DP,
-							},
-							buttonstyle.shadow,
-						]}>
-						<WriteBoard onPress={onPressWrite} />
-					</View>
+					<WriteBoard onPress={onPressWrite} />
 				</View>
 			</View>
 		);

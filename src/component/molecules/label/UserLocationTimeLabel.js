@@ -49,8 +49,6 @@ const UserLocationTimeLabel = props => {
 		}
 	};
 
-	// console.log('data feed_location', props.location);
-
 	const getLocation = () => {
 		let result = '';
 		const location = props.location;
@@ -63,9 +61,9 @@ const UserLocationTimeLabel = props => {
 			location.road_address?.address_name == 'undefined ' ||
 			location.road_address?.city == undefined
 		) {
-			result = location.normal_address.city + ' ' + location.normal_address.district + detail;
+			result = location.normal_address.city + ' ' + location.normal_address.district + ' ' + detail;
 		} else {
-			result = location.road_address.city + ' ' + location.road_address.district + detail;
+			result = location.road_address.city + ' ' + location.road_address.district + ' ' + detail;
 		}
 		// console.log('result', result);
 		return '· ' + result + '에서';
@@ -105,7 +103,7 @@ const UserLocationTimeLabel = props => {
 				<View style={{marginLeft: 20 * DP}}>
 					<View style={{flexDirection: 'row'}}>
 						<Text style={[props.isLarge ? txt.roboto32b : txt.roboto24, {color: isLoginUser ? APRI10 : BLACK, maxWidth: 500 * DP}]} numberOfLines={1}>
-							{props.data.user_nickname || '탈퇴한 사용자입니다.'}
+							{props.data.user_nickname || '탈퇴한 계정입니다.'}
 						</Text>
 						{isMyPet ? (
 							<Text

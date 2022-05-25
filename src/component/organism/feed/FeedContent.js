@@ -470,6 +470,7 @@ export default FeedContent = props => {
 	};
 
 	const onClickMeatball = () => {
+		// console.log('props.data ', props.data);
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate('Login');
@@ -571,10 +572,13 @@ export default FeedContent = props => {
 										)}
 									</View>
 
-									{/* 연결되는 기능 개발 후 추후 연결 */}
-									<View style={[organism_style.meatball, feedContent_style.meatball]}>
-										<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
-									</View>
+									{props.data.feed_writer_id ? (
+										<View style={[organism_style.meatball, feedContent_style.meatball]}>
+											<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
+										</View>
+									) : (
+										<></>
+									)}
 								</View>
 							) : //실종 및 제보게시글의 유저 라벨 우측에 출력되는 즐겨찾기아이콘, 내 게시글일 경우 미출력
 							props.data.feed_writer_id._id == userGlobalObject.userInfo._id ? (

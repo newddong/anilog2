@@ -284,7 +284,10 @@ export default ArticleDetail = props => {
 							},
 						);
 					},
-					err => Modal.alert(err),
+					err => {
+						console.log('err', err);
+						Modal.close();
+					},
 				);
 			}
 		}
@@ -403,95 +406,98 @@ export default ArticleDetail = props => {
 
 	//제목 우측 미트볼 클릭
 	const onPressMeatball = () => {
-		const isMyArticle = userGlobalObject.userInfo._id == data.community_writer_id._id;
-		Modal.popSelectBoxModal(
-			isMyArticle ? ['수정', '삭제'] : ['신고'],
-			select => {
-				switch (select) {
-					case '수정':
-						navigation.push('CommunityEdit', {previous: data, isReview: false, isSearch: props.route.params.searchInput});
-						break;
-					case '삭제':
-						Modal.close();
-						setTimeout(() => {
-							Modal.popTwoBtn(
-								'정말로 이 게시글을 \n 삭제하시겠습니까?',
-								'아니오',
-								'네',
-								() => Modal.close(),
-								() => {
-									updateAndDeleteCommunity(
-										{
-											community_object_id: data._id,
-											community_is_delete: true,
-										},
-										result => {
-											// console.log('result / updateAndDeleteCommunity / ArticleDetail : ', result.msg);
-											Modal.close();
-											setTimeout(() => {
-												Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
-												setTimeout(() => {
-													Modal.close();
-													navigation.goBack();
-												}, 600);
-											}, 200);
-										},
-										err => {
-											console.log('err / updateAndDeleteCommunity / ArticleDetail : ', err);
-											Modal.alert(err);
-										},
-									);
-								},
-							);
-						}, 200);
-						break;
-					case '신고':
-						Modal.close();
-						if (userGlobalObject.userInfo.isPreviewMode) {
+		console.log(' data.community_writer_id', data.community_writer_id);
+		if (data.community_writer_id) {
+			const isMyArticle = userGlobalObject.userInfo._id == data.community_writer_id._id;
+			Modal.popSelectBoxModal(
+				isMyArticle ? ['수정', '삭제'] : ['신고'],
+				select => {
+					switch (select) {
+						case '수정':
+							navigation.push('CommunityEdit', {previous: data, isReview: false, isSearch: props.route.params.searchInput});
+							break;
+						case '삭제':
+							Modal.close();
 							setTimeout(() => {
-								Modal.popLoginRequestModal(() => {
-									navigation.navigate('Login');
-								});
-							}, 100);
-						} else {
-							setTimeout(() => {
-								Modal.popOneBtnSelectModal(
-									REPORT_MENU,
-									'이 게시물을 신고 하시겠습니까?',
-									selectedItem => {
-										createReport(
+								Modal.popTwoBtn(
+									'정말로 이 게시글을 \n 삭제하시겠습니까?',
+									'아니오',
+									'네',
+									() => Modal.close(),
+									() => {
+										updateAndDeleteCommunity(
 											{
-												report_target_object_id: data._id,
-												report_target_object_type: 'communityobjects',
-												report_target_reason: selectedItem,
-												report_is_delete: false,
+												community_object_id: data._id,
+												community_is_delete: true,
 											},
 											result => {
-												console.log('신고 완료', result);
+												// console.log('result / updateAndDeleteCommunity / ArticleDetail : ', result.msg);
 												Modal.close();
-												Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
+												setTimeout(() => {
+													Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
+													setTimeout(() => {
+														Modal.close();
+														navigation.goBack();
+													}, 600);
+												}, 200);
 											},
 											err => {
-												Modal.close();
-												if (err == '이미 신고되었습니다.') {
-													Modal.popOneBtn('이미 신고하셨습니다.', '확인', () => Modal.close());
-												}
+												console.log('err / updateAndDeleteCommunity / ArticleDetail : ', err);
+												Modal.alert(err);
 											},
 										);
 									},
-									'신고',
 								);
 							}, 200);
-						}
-						break;
-					default:
-						break;
-				}
-			},
-			() => Modal.close(),
-			false,
-			false,
-		);
+							break;
+						case '신고':
+							Modal.close();
+							if (userGlobalObject.userInfo.isPreviewMode) {
+								setTimeout(() => {
+									Modal.popLoginRequestModal(() => {
+										navigation.navigate('Login');
+									});
+								}, 100);
+							} else {
+								setTimeout(() => {
+									Modal.popOneBtnSelectModal(
+										REPORT_MENU,
+										'이 게시물을 신고 하시겠습니까?',
+										selectedItem => {
+											createReport(
+												{
+													report_target_object_id: data._id,
+													report_target_object_type: 'communityobjects',
+													report_target_reason: selectedItem,
+													report_is_delete: false,
+												},
+												result => {
+													console.log('신고 완료', result);
+													Modal.close();
+													Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
+												},
+												err => {
+													Modal.close();
+													if (err == '이미 신고되었습니다.') {
+														Modal.popOneBtn('이미 신고하셨습니다.', '확인', () => Modal.close());
+													}
+												},
+											);
+										},
+										'신고',
+									);
+								}, 200);
+							}
+							break;
+						default:
+							break;
+					}
+				},
+				() => Modal.close(),
+				false,
+				false,
+			);
+		}
 	};
 
 	// 게시글 내용 클릭
@@ -559,7 +565,10 @@ export default ArticleDetail = props => {
 					setData({...data, community_is_like: bool, community_like_count: bool ? ++data.community_like_count : --data.community_like_count});
 					// setData({...data, community_like_count: bool ? data.community_like_count++ : data.community_like_count--});
 				},
-				err => console.log('err / onPressLike / ReviewMain : ', err),
+				err => {
+					console.log('err / onPressLike / ReviewMain : ', err);
+					setData({...data, community_is_like: bool, community_like_count: bool ? ++data.community_like_count : --data.community_like_count});
+				},
 			);
 		}
 	};

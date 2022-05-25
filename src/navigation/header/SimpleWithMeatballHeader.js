@@ -8,7 +8,7 @@ import Modal from 'Root/component/modal/Modal';
 import {FEED_MEATBALL_MENU_MY_FEED, FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS, NETWORK_ERROR, PROTECT_REQUEST_STATUS} from 'Root/i18n/msg';
 import {deleteProtectRequest, setShelterProtectAnimalStatus} from 'Root/api/shelterapi';
 import {setProtectRequestStatus} from 'Root/api/protectapi';
-import {deleteFeed} from 'Root/api/feedapi';
+import {deleteFeed, favoriteFeed} from 'Root/api/feedapi';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 
 //보호 요청게시글 및 제보, 실종글 작성자일 경우 미트볼 아이콘 출력이 되는 헤더
@@ -16,6 +16,16 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 	const isWriter = userGlobalObject.userInfo._id == route.params.writer; //작성자인지 여부 판단
 	const isProtect = route.params?.isMissingOrReport;
 	// console.log('simple Animal', route.params);
+	const [favoriteTag, setFavoriteTag] = React.useState(false);
+
+	//즐겨찾기 상태 아이콘 출력인 경우
+	React.useEffect(() => {
+		if (route.params.request_object) {
+			!route.params.request_object?.protect_request_is_favorite ? setFavoriteTag(false) : setFavoriteTag(true);
+		} else if (route.params.feed_object) {
+			!route.params.request_object?.is_favorite ? setFavoriteTag(false) : setFavoriteTag(true);
+		}
+	}, []);
 
 	const onPressChangeProtectRequestStatus = () => {
 		Modal.close();
@@ -234,17 +244,42 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 				navigation.navigate('Login');
 			});
 		} else {
-			setFavoriteEtc(
-				{
-					collectionName: 'protectrequestobjects',
-					target_object_id: route.params.id,
-					is_favorite: bool,
-				},
-				result => {
-					console.log('result / setFavoriteEtc / SimpleWith : ', result.msg.favoriteEtc);
-				},
-				err => console.log('err / setFavoriteEtc / SimpleWith : ', err),
-			);
+			if (!isProtect) {
+				setFavoriteEtc(
+					{
+						collectionName: 'protectrequestobjects',
+						target_object_id: route.params.id,
+						is_favorite: bool,
+					},
+					result => {
+						console.log('result / setFavoriteEtc / SimpleWith : ', result.msg.favoriteEtc);
+						setFavoriteTag(!favoriteTag);
+					},
+					err => console.log('err / setFavoriteEtc / SimpleWith : ', err),
+				);
+			} else {
+				setFavoriteTag(!favoriteTag);
+				favoriteFeed(
+					{
+						feedobject_id: route.params._id,
+						userobject_id: userGlobalObject.userInfo._id,
+						is_favorite: bool,
+					},
+					result => {
+						// console.log('result / favoriteFeed / SimpleWith', result.msg);
+						Modal.close();
+						Modal.popNoBtn('즐겨찾기 ' + (bool ? '추가' : '삭제') + '가 완료되었습니다.');
+						setTimeout(() => {
+							Modal.close();
+						}, 1000);
+					},
+					err => {
+						console.log('err / favoriteFeed', err);
+						setFavoriteTag(!favoriteTag);
+						Modal.alert(NETWORK_ERROR);
+					},
+				);
+			}
 		}
 	};
 
@@ -253,13 +288,13 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 		// console.log('isProtect', isProtect);
 		if (isWriter) {
 			return <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />;
-		} else if (!isProtect) {
-			if (!route.params.request_object?.protect_request_is_favorite) {
+		} else {
+			if (favoriteTag) {
 				return <FavoriteTag48_Border onPress={() => onPressFavorite(true)} />;
 			} else {
 				return <FavoriteTag48_Filled onPress={() => onPressFavorite(false)} />;
 			}
-		} else return <></>;
+		}
 	};
 
 	return (

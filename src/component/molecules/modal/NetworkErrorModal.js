@@ -16,24 +16,26 @@ import Modal from 'Root/component/modal/Modal';
 const NetworkErrorModal = props => {
 	React.useEffect(() => {
 		Animated.timing(animatedOpacity, {
-			duration: 300,
+			duration: 500,
 			toValue: 1,
 			useNativeDriver: false,
 		}).start();
 		setTimeout(() => {
 			Animated.timing(animatedOpacity, {
-				duration: 300,
+				duration: 500,
 				toValue: 0,
 				useNativeDriver: false,
-			}).start();
+			}).start(({finished}) => {
+				Modal.close();
+			});
 		}, 4000);
 	}, []);
 
-	const animatedOpacity = React.useRef(new Animated.Value(1)).current;
+	const animatedOpacity = React.useRef(new Animated.Value(0)).current;
 
 	return (
 		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={[style.background]}>
-			<Animated.View style={[style.popUpWindow, {opacity: 1}]}>
+			<Animated.View style={[style.popUpWindow, {opacity: animatedOpacity}]}>
 				<Text style={[txt.noto26]}>{props.msg}</Text>
 			</Animated.View>
 		</TouchableOpacity>

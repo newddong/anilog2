@@ -140,20 +140,31 @@ export default MeatBallHeader = props => {
 		Modal.close();
 	};
 
-	return (
-		<View style={[style.headerContainer, style.shadow]}>
-			<TouchableOpacity onPress={props.navigation.goBack}>
-				<View style={style.backButtonContainer}>
+	console.log('props.options,', props.options.data);
+
+	const shouldShowMeatball = () => {
+		let result = true;
+		if (props.options.data.user_type == 'pet' && props.options.data.pet_family && props.options.data.pet_family.length == 0) {
+			result = false;
+		}
+		return result;
+	};
+	if (props.options.data == undefined) {
+		return <></>;
+	} else
+		return (
+			<View style={[style.headerContainer, style.shadow]}>
+				<TouchableOpacity style={style.backButtonContainer} onPress={props.navigation.goBack}>
 					<BackArrow32 onPress={props.navigation.goBack} />
+				</TouchableOpacity>
+				<View style={{justifyContent: 'center', alignItems: 'center'}}>
+					<Text style={[txt.roboto40b, {width: 550 * DP, textAlign: 'center'}]} numberOfLines={1}>
+						{props.options?.title ? props.options.title : props.route.params.title}
+					</Text>
 				</View>
-			</TouchableOpacity>
-			<Text style={[txt.roboto40b, {maxWidth: 500 * DP}]} numberOfLines={1}>
-				{props.options?.title ? props.options.title : props.route.params.title}
-			</Text>
-			{/* <MeatBallDropdown menu={PROTECT_STATUS} onSelect={onPressMeatball} /> */}
-			<Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />
-		</View>
-	);
+				{shouldShowMeatball() ? <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} /> : <></>}
+			</View>
+		);
 };
 
 MeatBallHeader.defaultProps = {
@@ -166,7 +177,7 @@ const style = StyleSheet.create({
 		height: 95 * DP,
 		flexDirection: 'row',
 		backgroundColor: '#FFFFFF',
-		justifyContent: 'space-between',
+		// justifyContent: 'space-between',
 		paddingHorizontal: 48 * DP,
 		// backgroundColor: 'yellow',
 	},

@@ -1,17 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {
-	Text,
-	View,
-	TouchableOpacity,
-	Platform,
-	StyleSheet,
-	TextInput,
-	Keyboard,
-	StatusBar,
-	ScrollView,
-	PermissionsAndroid,
-	AppState,
-} from 'react-native';
+import {Text, View, TouchableOpacity, Platform, StyleSheet, TextInput, Keyboard, StatusBar, ScrollView, AppState} from 'react-native';
 import axios from 'axios';
 import Geolocation from '@react-native-community/geolocation';
 import {txt} from 'Root/config/textstyle';
@@ -25,7 +13,7 @@ import X2JS from 'x2js';
 import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/core';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {check, checkMultiple, checkNotifications, openSettings, PERMISSIONS, request, RESULTS} from 'react-native-permissions';
+import {openSettings, PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 import {NativeModules} from 'react-native';
 
 export default SearchMap = ({route}) => {

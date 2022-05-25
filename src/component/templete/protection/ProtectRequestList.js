@@ -1,7 +1,7 @@
 import React from 'react';
-import {Text, View, FlatList, RefreshControl} from 'react-native';
+import {Text, View, FlatList, RefreshControl, ActivityIndicator} from 'react-native';
 import {searchProtectRequest} from 'Templete/style_templete';
-import {GRAY10} from 'Root/config/color';
+import {APRI10, GRAY10} from 'Root/config/color';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import {txt} from 'Root/config/textstyle';
 import {NETWORK_ERROR, ONLY_CONTENT_FOR_ADOPTION, PET_KIND, PROTECT_LOCATION} from 'Root/i18n/msg';
@@ -13,13 +13,16 @@ import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 import {Filter60Border, Filter60Filled} from 'Root/component/atom/icon';
 import moment from 'moment';
+import {getSearchResultProtectRequest} from 'Root/api/protectapi';
 
 export default ProtectRequestList = ({navigation, route}) => {
 	const today = moment();
 	const current_date = moment().format('YY.MM.DD');
 	const one_month_before = today.clone().subtract(1, 'month').format('YY.MM.DD');
 	const [data, setData] = React.useState('false');
-
+	const [offset, setOffset] = React.useState(1);
+	const LIMIT = 8;
+	const [loading, setLoading] = React.useState(false);
 	const [filterData, setFilterData] = React.useState({
 		from: '',
 		to: '',
@@ -35,7 +38,9 @@ export default ProtectRequestList = ({navigation, route}) => {
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
-			getList();
+			if (data != 'false') {
+				getList();
+			}
 		});
 		getList(); //필터가 바뀔 때마다 호출되도록 설정
 		return unsubscribe;
@@ -43,27 +48,118 @@ export default ProtectRequestList = ({navigation, route}) => {
 
 	//보호요청리스트 목록 받기
 	const getList = () => {
-		const filter = {...filterData, request_number: 100, protect_request_object_id: ''};
-		getProtectRequestList(
-			{...filter},
+		setLoading(true);
+		let filter = {protect_animal_species: []}; // api 필터 데이터
+		let sdt = ''; //시작일
+		let edt = ''; //종료일
+		//필터에서 시작일이 선택된 경우
+		if (filterData.from != '') {
+			let split = filterData.from.split('.'); //시작일 날짜 포맷 일치화 작업
+			sdt = '20' + split[0] + split[1] + split[2];
+		} else {
+			//초기 상태는 현재 날짜에서 한달 이전으로
+			sdt = today.clone().subtract(1, 'month').format('YYYYMMDD');
+		}
+		//필터에서 종료일이 선택된 경우
+		if (filterData.to != '') {
+			let split = filterData.to.split('.'); //종료일 날짜 포맷 일치화 작업
+			edt = '20' + split[0] + split[1] + split[2];
+		} else {
+			//초기 상태는 현재 날짜
+			edt = moment().format('YYYYMMDD');
+		}
+		//필터에서 보호소 목록이 선택됐을 경우 filter에 추가
+		if (filterData.shelter_list.length != 0) {
+			filter.shelter_object_id_list = filterData.shelter_list.map(v => v._id);
+		}
+		//필터에서 지역이 선택됐을 경우 filter에 추가
+		if (filterData.city != '' && filterData.city != '모든 지역') {
+			filter.city = filterData.city;
+		}
+		// 개, 고양이, 그 외 선택 상태가 true일 경우 protect_animal_species 배열에 push
+		filterData.dog ? filter.protect_animal_species.push('개') : false;
+		filterData.cat ? filter.protect_animal_species.push('고양이') : false;
+		filterData.etc ? filter.protect_animal_species.push('그 외') : false;
+		filter.protect_request_notice_sdt = sdt;
+		filter.protect_request_notice_edt = edt;
+		// console.log('filterData', filterData);
+		// console.log('filter', filter);
+		//api 접속
+		console.log('offset', offset);
+		console.log('data Lenth', data.length);
+		// console.log('')
+		getSearchResultProtectRequest(
+			{
+				...filter,
+				page: offset,
+				limit: LIMIT,
+			},
 			result => {
-				console.log('result / getProtectRequestList / ProtectRequestList : ', result.msg.length);
+				// console.log('result 첫값 :', result.msg[0].protect_animal_id.protect_animal_rescue_location);
+				// console.log('result length  ', result.msg.length);
 				let res = result.msg;
 				res.filter(e => e != null);
 				res.map((v, i) => {
 					v.protect_animal_sex = v.protect_animal_id.protect_animal_sex;
 					v.protect_animal_status = v.protect_animal_id.protect_animal_status;
 				});
-				setData(res);
+				if (data != 'false') {
+					let temp = [...data];
+					res.map((v, i) => {
+						console.log('i', i, v.protect_animal_id.protect_animal_rescue_location);
+						temp.push(v);
+					});
+					console.log('temp lenth', temp.length);
+					setData(temp);
+					// setData([...data, ...res.slice(offset * LIMIT, offset * LIMIT + 1)]);
+				} else {
+					res.map((v, i) => {
+						console.log('첫값 : ', i, v.protect_animal_id.protect_animal_rescue_location);
+					});
+					setData(res);
+				}
+				setOffset(offset + 1);
 				Modal.close();
+				setLoading(false);
 			},
 			err => {
-				console.log(`errcallback:${JSON.stringify(err)}`);
-				if (err == '검색 결과가 없습니다.') {
-					setData([]);
-				} else if (err.includes('code 500')) {
-					Modal.alert(NETWORK_ERROR);
+				console.log('err / getSearchResultProtectRequest / ProtectRequestList  ', err);
+				if (err.includes('code 500')) {
+					Modal.popNetworkErrorModal('서버로부터 보호요청 게시글을 받아오지 못했습니다. 잠시후 다시 시도해주세요.');
 				}
+				setLoading(false);
+			},
+		);
+	};
+
+	//좌상단 필터 모달 호출
+	const onPressFilter = () => {
+		// console.log('filter', JSON.stringify(filterData));
+		Modal.popProtectRequestFilterModal(
+			{...filterData},
+			arg => {
+				if (
+					!arg.cat &&
+					!arg.dog &&
+					!arg.etc &&
+					arg.city == '' &&
+					arg.from == one_month_before &&
+					arg.to == current_date &&
+					arg.shelter_list.length == 0
+				) {
+					console.log('arg', arg);
+					setData('false');
+					setFilterData(arg);
+					filterRef.current = false;
+				} else {
+					console.log('arg', arg);
+					setData('false');
+					setFilterData(arg);
+					filterRef.current = true;
+				}
+				Modal.close();
+			},
+			() => {
 				Modal.close();
 			},
 		);
@@ -155,39 +251,6 @@ export default ProtectRequestList = ({navigation, route}) => {
 		);
 	};
 
-	//좌상단 필터 모달 호출
-	const onPressFilter = () => {
-		// console.log('filter', JSON.stringify(filterData));
-		Modal.popProtectRequestFilterModal(
-			{...filterData},
-			arg => {
-				if (
-					!arg.cat &&
-					!arg.dog &&
-					!arg.etc &&
-					arg.city == '' &&
-					arg.from == one_month_before &&
-					arg.to == current_date &&
-					arg.shelter_list.length == 0
-				) {
-					console.log('arg', arg);
-					setFilterData(arg);
-					getList();
-					filterRef.current = false;
-				} else {
-					console.log('arg', arg);
-					setFilterData(arg);
-					getList();
-					filterRef.current = true;
-				}
-				Modal.close();
-			},
-			() => {
-				Modal.close();
-			},
-		);
-	};
-
 	//검색결과가 없을 경우
 	const whenEmpty = () => {
 		return <ListEmptyInfo text={'목록이 없습니다..'} />;
@@ -195,60 +258,16 @@ export default ProtectRequestList = ({navigation, route}) => {
 
 	//필터가 적용된 상태의 데이터
 	const getData = () => {
-		// console.log('data result ', data[0]);
-		let filtered = [];
-		// console.log('data', data[0]);
-		if (filterData.dog) {
-			const getDogType = data.filter(e => e.protect_animal_species == '개');
-			getDogType.map((v, i) => {
-				filtered.push(v);
-			});
-		}
-		if (filterData.cat) {
-			const getCatType = data.filter(e => e.protect_animal_species == '고양이');
-			getCatType.map((v, i) => {
-				filtered.push(v);
-			});
-		}
-		if (filterData.etc) {
-			const getEtcType = data.filter(e => e.protect_animal_species != '개' && e.protect_animal_species != '고양이');
-			getEtcType.map((v, i) => {
-				filtered.push(v);
-			});
-		}
-		if (!filterData.dog && !filterData.cat && !filterData.etc) {
-			filtered = data;
-		}
+		let filtered = [...data];
 		if (onlyAdoptable) {
 			filtered = filtered.filter(v => v.protect_request_status == 'rescue');
 		}
-		// console.log('시작', filterData.from == today.clone().subtract(1, 'month').format('YY.MM.DD'));
-		// console.log('종료', filterData.to == current_date);
-		if (!(filterData.from == '') || !(filterData.to == '')) {
-			// console.log('디폴트 기간이 아님!!');
-			let temp = [];
-			console.log(filtered.length);
-			filtered.map((v, i) => {
-				let split_to = filterData.to.split('.');
-				let split_from = filterData.from.split('.');
-				let fromDate = new Date(parseInt(split_from[0]), split_from[1] - 1, split_from[2]);
-				let toDate = new Date(parseInt(split_to[0]), split_to[1] - 1, split_to[2]);
-				toDate.setFullYear(toDate.getFullYear() + 100);
-				fromDate.setFullYear(fromDate.getFullYear() + 100);
-				const register = moment(v.protect_request_date).valueOf();
-				const from = fromDate.getTime();
-				const to = toDate.getTime();
-				// console.log('register ', moment(register), 'time', v.protect_request_date);
-				// console.log('종료일보단 적다', register <= to);
-				// console.log('시작일보단 이후다', register >= from);
-				if (register <= to && register >= from) {
-					temp.push(v);
-				}
-			});
-			console.log('temp ', temp.length);
-			filtered = temp;
-		}
 		return filtered;
+	};
+
+	const onEndReached = () => {
+		console.log('EndReached');
+		getList();
 	};
 
 	const renderItem = ({item, index}) => {
@@ -341,15 +360,33 @@ export default ProtectRequestList = ({navigation, route}) => {
 					keyExtractor={keyExtractor}
 					getItemLayout={getItemLayout}
 					refreshing
+					onEndReached={onEndReached}
+					onEndReachedThreshold={0.6}
 					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					ListEmptyComponent={whenEmpty}
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
 					// removeClippedSubviews={true}
-					extraData={refreshing}
+					extraData={data}
 					// maxToRenderPerBatch={5} // re-render를 막는군요.
 					windowSize={11}
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
 				/>
+				{loading ? (
+					<View
+						style={{
+							position: 'absolute',
+							left: 0,
+							right: 0,
+							top: 0,
+							bottom: 0,
+							alignItems: 'center',
+							justifyContent: 'center',
+						}}>
+						<ActivityIndicator size="large" color={APRI10} />
+					</View>
+				) : (
+					<></>
+				)}
 			</View>
 		);
 	}

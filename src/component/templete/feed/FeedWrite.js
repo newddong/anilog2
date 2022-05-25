@@ -78,7 +78,7 @@ export default FeedWrite = props => {
 	React.useEffect(() => {
 		if (props.route.name != 'FeedEdit') {
 			const param = props.route.params;
-			console.log('param', param);
+			// console.log('param', param);
 			// console.log('param.feed_avatar_id', param.feed_avatar_id);
 			param.feed_avatar_id //피드 글쓰기 클릭시 즉시 작성자 아바타 계정을 선택하는 절차가 추가됨에 따라 분기처리가 필요해짐
 				? // - 유저 계정에서 피드글쓰기를 누른 경우
@@ -134,26 +134,26 @@ export default FeedWrite = props => {
 		}
 		if (props.route.params?.feedType == 'Feed') {
 			// 피드 글쓰기 진입시 바로 사진부터 적용하는 방식으로 변경 22.03.28
-			launchImageLibrary(
-				{
-					mediaType: 'photo',
-					selectionLimit: 5 - selectedImg.length, //다중선택 모드일 경우 상시 5개면 4개 상태에서 최대 5개를 더해 9개가 가능해짐
-					maxHeight: 750,
-					maxWidth: 750,
-					quality: 0.8,
-				},
-				responseObject => {
-					console.log('선택됨', responseObject);
-					if (!responseObject.didCancel) {
-						let tempContainer = [...selectedImg];
-						responseObject.assets.map(v => tempContainer.push(v.uri));
-						setSelectedImg(tempContainer.slice(-5));
-						Modal.close();
-					} else {
-						// props.navigation.goBack(); //사진 추가 취소시 바로 뒤로가기?
-					}
-				},
-			);
+			// launchImageLibrary(
+			// 	{
+			// 		mediaType: 'photo',
+			// 		selectionLimit: 5 - selectedImg.length, //다중선택 모드일 경우 상시 5개면 4개 상태에서 최대 5개를 더해 9개가 가능해짐
+			// 		maxHeight: 750,
+			// 		maxWidth: 750,
+			// 		quality: 0.8,
+			// 	},
+			// 	responseObject => {
+			// 		console.log('선택됨', responseObject);
+			// 		if (!responseObject.didCancel) {
+			// 			let tempContainer = [...selectedImg];
+			// 			responseObject.assets.map(v => tempContainer.push(v.uri));
+			// 			setSelectedImg(tempContainer.slice(-5));
+			// 			Modal.close();
+			// 		} else {
+			// 			// props.navigation.goBack(); //사진 추가 취소시 바로 뒤로가기?
+			// 		}
+			// 	},
+			// );
 			//피드 글쓰기 클릭하면 즉시 작성자 아바타 계정을 선택하는 절차가 추가됨에 따라 분기처리가 필요해짐
 			props.route.params.feed_avatar_id
 				? props.navigation.setOptions({title: props.route.params.feed_avatar_id.user_nickname})
@@ -292,11 +292,9 @@ export default FeedWrite = props => {
 
 	//위치추가
 	const moveToLocationPicker = () => {
-		if (Platform.OS === 'ios') {
-			Geolocation.requestAuthorization('always');
-		}
 		console.log('route name', props.route.name);
-		props.navigation.push('FeedSearchMap', {routeName: props.route.name});
+		// props.navigation.push('FeedSearchMap', {routeName: props.route.name});
+		props.navigation.push('FeedLocationPicker', {routeName: props.route.name});
 	};
 
 	//태그 추가
@@ -313,7 +311,14 @@ export default FeedWrite = props => {
 		//긴급 버튼 중 '제보' 클릭한 경우
 		if (showReportForm) {
 			return (
-				<ReportForm onDataChange={onReportForm} data={props.route.params} routeName={props.route.name} container={container} scrollref={scrollref} currentScrollOffset={scrolloffset.current}/>
+				<ReportForm
+					onDataChange={onReportForm}
+					data={props.route.params}
+					routeName={props.route.name}
+					container={container}
+					scrollref={scrollref}
+					currentScrollOffset={scrolloffset.current}
+				/>
 			);
 		} // 긴급 게시 버튼 중 '실종' 클릭한 경우
 		else
@@ -425,9 +430,9 @@ export default FeedWrite = props => {
 		console.log(props.route);
 	};
 
-	const getCurrentScrollOffset = (e) => {
+	const getCurrentScrollOffset = e => {
 		scrolloffset.current = e.nativeEvent.contentOffset.y;
-	}
+	};
 
 	return (
 		<View style={{flex: 1, backgroundColor: '#FFF'}}>
@@ -460,8 +465,7 @@ export default FeedWrite = props => {
 				data={[{}]}
 				keyboardShouldPersistTaps={'handled'}
 				ref={scrollref}
-				onScroll={getCurrentScrollOffset}
-				></FlatList>
+				onScroll={getCurrentScrollOffset}></FlatList>
 			{showUrgentBtns && !isSearchTag ? (
 				<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
 					{showActionButton ? (
@@ -493,6 +497,4 @@ export default FeedWrite = props => {
 			)}
 		</View>
 	);
-
 };
-

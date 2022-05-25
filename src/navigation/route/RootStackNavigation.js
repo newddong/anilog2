@@ -268,7 +268,7 @@ export default RootStackNavigation = () => {
 							options={{header: props => <FeedWriteHeader {...props} />, title: '제보 게시물'}}
 						/>
 						<RootStack.Screen
-							name="LocationPicker"
+							name="FeedLocationPicker"
 							component={LocationPicker}
 							options={{header: props => <SimpleHeader {...props} />, title: '위치'}}
 						/>

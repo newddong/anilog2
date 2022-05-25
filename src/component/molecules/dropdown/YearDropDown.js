@@ -37,7 +37,10 @@ const YearDropDown = props => {
 			buttonComponent={<YearDropDownSelect width={props.width} value={value} />}
 			dropdownList={
 				<View style={[styles.container]}>
-					<ScrollView style={styles.listCont} contentContainerStyle={{}} showsHorizontalScrollIndicator={false}>
+					<ScrollView
+						style={[styles.listCont, {height: (200 + 40 * props.menu.length) * DP, maxHeight: 900 * DP}]}
+						contentContainerStyle={{}}
+						showsHorizontalScrollIndicator={false}>
 						{props.menu.map((v, i) => (
 							<View key={i}>
 								<TouchableWithoutFeedback onPress={() => onSelect(v, i)}>
@@ -69,7 +72,6 @@ export const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	listCont: {
-		height: 900 * DP,
 		right: 10 * DP,
 	},
 	itemContainer: {

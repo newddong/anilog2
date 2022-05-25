@@ -38,6 +38,7 @@ export default ProtectRequest = React.memo(props => {
 		protect_request_photos_uri,
 		protect_animal_sex,
 		is_favorite,
+		notice_day,
 		protect_request_date,
 		protect_request_writer_id, // {user_nickname,_id }
 		protect_animal_species,
@@ -101,6 +102,10 @@ export default ProtectRequest = React.memo(props => {
 						<View style={[animalNeedHelp.lowerMenu_helpDetail]}>
 							<Text style={[txt.noto28]}>등&nbsp; 록&nbsp; 일 : {getParsedDate()}</Text>
 							<Text style={[txt.noto28, {maxWidth: props.selectMode ? 320 * DP : 380 * DP}]} numberOfLines={1}>
+								{/* 보호장소 :{' '}
+								{data.protect_request_writer_id.user_nickname
+									? data.protect_request_writer_id.user_nickname
+									: data.protect_animal_id.protect_animal_rescue_location} */}
 								{/* 보호장소 : {data.protect_request_writer_id != null ? data.protect_request_writer_id.shelter_name : data.shelter_name} */}
 								보호장소 : {data.protect_request_writer_id.user_nickname}
 							</Text>

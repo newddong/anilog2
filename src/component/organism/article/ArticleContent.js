@@ -178,7 +178,7 @@ const ArticleContent = props => {
 					) : (
 						<FavoriteTag48_Border onPress={() => onPressFavorite(true)} />
 					)}
-					<Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />
+					{data.community_writer_id ? <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} /> : <></>}
 				</View>
 			</View>
 			{data.community_writer_id ? (

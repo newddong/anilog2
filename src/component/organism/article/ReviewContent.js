@@ -157,6 +157,7 @@ const ReviewContent = props => {
 			? data.community_address.normal_address.address_name
 			: data.community_address.road_address.address_name;
 
+	console.log('data REview', data.community_writer_id);
 	return (
 		<View style={[style.container]}>
 			{/* 리뷰 헤더  */}
@@ -170,7 +171,7 @@ const ReviewContent = props => {
 					) : (
 						<FavoriteTag48_Border onPress={() => onPressFavorite(true)} />
 					)}
-					<Meatball50_GRAY20_Horizontal onPress={() => props.onPressMeatball()} />
+					{data.community_writer_id ? <Meatball50_GRAY20_Horizontal onPress={() => props.onPressMeatball()} /> : <></>}
 				</View>
 			</View>
 			{data.community_writer_id ? (

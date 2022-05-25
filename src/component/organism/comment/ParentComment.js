@@ -80,9 +80,12 @@ export default ParentComment = React.memo((props, ref) => {
 
 	//답글쓰기 클릭
 	const onPressReplyBtn = () => {
-		// console.log('대댓글 추가2');
-		console.log('대댓글 추가 부모댓글 닉네임 : ', props.parentComment.comment_writer_id.user_nickname);
-		props.onPressReplyBtn(props.parentComment, addChildComment);
+		// console.log('대댓글 추가 부모댓글 닉네임 : ', props.parentComment.comment_writer_id.user_nickname);
+		if (props.parentComment.comment_writer_id) {
+			props.onPressReplyBtn(props.parentComment, addChildComment);
+		} else {
+			Modal.popNetworkErrorModal('이미 탈퇴한 계정의 댓글입니다.');
+		}
 	};
 
 	const onCLickHeart = () => {

@@ -48,13 +48,18 @@ const ProtectRequestFilterModal = props => {
 	const animatedShelter = React.useRef(new Animated.Value(0)).current; // 보호소
 
 	React.useEffect(() => {
-		setData({...props.previous, from: today.clone().subtract(1, 'month').format('YY.MM.DD'), to: current_date});
-		getShleterData('all');
+		console.log('previous', props.previous);
+		setData({
+			...props.previous,
+			from: props.previous.from != '' ? props.previous.from : today.clone().subtract(1, 'month').format('YY.MM.DD'),
+			to: props.previous.to != '' ? props.previous.to : current_date,
+		});
+		getShleterData(props.previous.city ? props.previous.city : 'all');
 	}, []);
 
 	const getShleterData = city => {
 		getShelterInfo(
-			{},
+			{city: city == '모든 지역' ? 'all' : city},
 			result => {
 				console.log('result / getShelterInfo / ProtectRequestFilterModal ', result.msg.length);
 				let shelter_list = result.msg.map(
@@ -607,7 +612,7 @@ const CalendarInFilter = props => {
 		// console.log('props.future', props.future);
 		// console.log('props.past', props.past);
 		if (props.past) {
-			for (let i = 0; i < 40; i++) {
+			for (let i = 0; i < 10; i++) {
 				const year_to_String = JSON.stringify(this_year - i);
 				years.push(year_to_String);
 			}

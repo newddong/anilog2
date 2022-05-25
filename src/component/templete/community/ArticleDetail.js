@@ -8,7 +8,7 @@ import Modal from 'Root/component/modal/Modal';
 import Article from 'Root/component/organism/article/Article';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import {useNavigation} from '@react-navigation/core';
-import {getCommunityList, updateAndDeleteCommunity} from 'Root/api/community';
+import {getCommunityByObjectId, getCommunityList, updateAndDeleteCommunity} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {createComment, deleteComment, getCommentListByCommunityId, updateComment} from 'Root/api/commentapi';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -30,7 +30,7 @@ import {useKeyboardBottom} from 'Root/component/molecules/input/usekeyboardbotto
 export default ArticleDetail = props => {
 	const key = useKeyboardBottom(0);
 	const navigation = useNavigation();
-	const [data, setData] = React.useState(props.route.params.community_object);
+	const [data, setData] = React.useState('false');
 	const [searchInput, setSearchInput] = React.useState('');
 	const [comments, setComments] = React.useState('false');
 	const [articleList, setArticleList] = React.useState([]);
@@ -50,34 +50,39 @@ export default ArticleDetail = props => {
 	const commentListHeight = React.useRef(100);
 
 	React.useEffect(() => {
-		setData(props.route.params.community_object);
+		const unsubscribe = navigation.addListener('focus', () => {
+			//다른 탭(ex - My 탭의 즐겨찾기한 커뮤니티 목록에서 들어온 경우)에서의 호출
+		});
+		getArticleData();
+		getComment();
+		getArticleList();
+		navigation.setOptions({title: '자유 게시글'});
+		return unsubscribe;
+	}, []);
+
+	React.useEffect(() => {
 		if (props.route.params.searchInput != '') {
 			console.log('props.route.params.searchInput', props.route.params.searchInput);
 			setSearchInput(props.route.params.searchInput);
 		}
 	}, [props.route.params]);
 
-	React.useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', () => {
-			//다른 탭(ex - My 탭의 즐겨찾기한 커뮤니티 목록에서 들어온 경우)에서의 호출
-			if (community_obj.object.hasOwnProperty('_id')) {
-				if (community_obj.object._id != data._id) {
-					//현재 보고 있는 페이지와 다른 게시글이 호출된 경우
-					console.log('보고 있는 페이지와 다른 게시글이 호출된 경우');
-					navigation.push('ArticleDetail', {community_object: community_obj.object}); //해당 게시글 상세로 이동
-				}
-			}
-		});
-		navigation.addListener('blur', () => {
-			community_obj.object = {};
-			community_obj.pageToMove = '';
-			community_obj.object.initial = true;
-		});
-		getComment();
-		getArticleList();
-		navigation.setOptions({title: '자유 게시글'});
-		return unsubscribe;
-	}, []);
+	//커뮤니티 데이터
+	const getArticleData = () => {
+		getCommunityByObjectId(
+			{
+				community_object_id: props.route.params.community_object._id,
+			},
+			result => {
+				// console.log('result / getCommunityByObjectId / ArticleDetail', result.msg);
+				setData(result.msg);
+			},
+			err => {
+				console.log('err / getCommunityByObjectId / ArticleDetail ', err);
+				setData('false');
+			},
+		);
+	};
 
 	//페이지 하단에 출력될 자유게시글 목록 api(페이징 필요)
 	const getArticleList = () => {
@@ -118,12 +123,12 @@ export default ArticleDetail = props => {
 			err => {
 				console.log('err / getCommunityList / ArticleMain : ', err);
 				if (err.includes('code 500')) {
-					setData([]);
+					setArticleList([]);
 					setTimeout(() => {
 						Modal.alert(NETWORK_ERROR);
 					}, 500);
 				} else if (err.includes('없습니다')) {
-					setData([]);
+					setArticleList([]);
 				}
 			},
 		);
@@ -133,7 +138,7 @@ export default ArticleDetail = props => {
 	const getComment = () => {
 		getCommentListByCommunityId(
 			{
-				community_object_id: data._id,
+				community_object_id: props.route.params.community_object._id,
 				request_number: 1000,
 			},
 			comments => {
@@ -147,6 +152,8 @@ export default ArticleDetail = props => {
 				console.log('getCommentListByCommunityId', err);
 				if (err == '검색 결과가 없습니다.') {
 					setComments([{}]);
+				} else if (err.includes('code 500')) {
+					Modal.popNetworkErrorModal('네트워크 오류로 댓글 정보를 \n 받아오는데 실패하였습니다.');
 				}
 			},
 		);

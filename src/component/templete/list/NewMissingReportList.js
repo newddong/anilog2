@@ -36,19 +36,28 @@ const NewMissingReportList = props => {
 
 		wait(1000).then(() => getAlarmList());
 	}, []);
+
 	React.useEffect(() => {
+		fetchMissingAndReport();
+		return () => setLoading(false);
+	}, []);
+
+	const fetchMissingAndReport = () => {
 		getMissingReportList(
 			{request_number: 10},
 			result => {
-				console.log('result', result.msg[0]);
-				setData(result.msg);
+				// console.log('result', result.msg[0]);
 				setLoading(false);
+				setData(result.msg);
 			},
 			err => {
 				console.log('getMissingReportList err', err);
 			},
 		);
-	}, []);
+	};
+
+	React.useEffect(() => {}, []);
+
 	const onLabelClick = data => {
 		console.log('aa', data);
 	};

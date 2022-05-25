@@ -77,14 +77,18 @@ const ReviewBriefItem = props => {
 					</Text>
 					<Text style={[txt.noto26, {color: GRAY10, marginLeft: 5 * DP}]}>{getTimeLapsed(data.community_date)} </Text>
 				</View>
-				<View style={[style.footer]}>
-					<View style={[style.nick]}>
-						<Text style={[txt.noto26, {color: GRAY10, width: image.length == 0 ? 500 * DP : 330 * DP}]} numberOfLines={1}>
-							{' '}
-							{data.community_writer_id.user_nickname}
-						</Text>
-					</View>
-					<View style={[style.like, {width: image.length == 0 ? 150 * DP : 100 * DP, justifyContent: 'flex-end'}]}>
+				<View style={[style.footer, {}]}>
+					{data.community_writer_id ? (
+						<View style={[style.nick]}>
+							<Text style={[txt.noto26, {color: GRAY10, width: image.length == 0 ? 500 * DP : 330 * DP}]} numberOfLines={1}>
+								{' '}
+								{data.community_writer_id.user_nickname}
+							</Text>
+						</View>
+					) : (
+						<></>
+					)}
+					<View style={[style.like, {width: image.length == 0 ? 150 * DP : 100 * DP, justifyContent: 'flex-end', right: 0, position: 'absolute'}]}>
 						{data.community_is_like ? (
 							<TouchableOpacity onPress={() => onPressLike(false)} style={{height: 80 * DP, justifyContent: 'center'}}>
 								<Like48_Filled />

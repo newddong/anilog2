@@ -314,6 +314,7 @@ export default FeedList = ({route, navigation}) => {
 	};
 
 	const moveToFeedWrite = () => {
+		// navigation.push('LocationPicker');
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate({name: 'Login', merge: true});

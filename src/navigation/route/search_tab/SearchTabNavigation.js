@@ -20,6 +20,7 @@ const SearchTabNav = createMaterialTopTabNavigator();
 export default SearchTabNavigation = props => {
 	// console.log('props.', props.route.params);
 	// const [searchInput, setSearchInput] = React.useState('');
+	const navigation = useNavigation();
 	const [userList, setUserList] = React.useState('false');
 	const [hashList, setHashList] = React.useState('false');
 	const [commList, setCommList] = React.useState('false');
@@ -42,9 +43,9 @@ export default SearchTabNavigation = props => {
 	React.useEffect(() => {
 		console.log('searchContext.searchInfo.searchInput', searchContext.searchInfo.searchInput);
 		fetchData(); // effect Hook에서 async await 구문을 쓰기 위한 처리
-		// navigation.addListener('focus', () => {
-		// 	fetchData();
-		// });
+		navigation.addListener('focus', () => {
+			fetchData();
+		});
 	}, [searchContext.searchInfo.searchInput]);
 
 	async function fetchData() {
@@ -87,6 +88,8 @@ export default SearchTabNavigation = props => {
 						console.log('err /getUserListByNickname /  ', err);
 						if (err == '검색 결과가 없습니다.') {
 							resolve([]);
+						} else if (err.includes('code 500')) {
+							Modal.popNetworkErrorModal('네트워크 오류가 발생했습니다. \n 잠시후 다시 시도해주세요.');
 						}
 					},
 				);
@@ -107,10 +110,12 @@ export default SearchTabNavigation = props => {
 						// console.log('hash editing', result.msg.length);
 						resolve(result.msg);
 					},
-					error => {
-						console.log(error);
-						if (error == '검색 결과가 없습니다.') {
+					err => {
+						console.log(err);
+						if (err == '검색 결과가 없습니다.') {
 							resolve([]);
+						} else if (err.includes('code 500')) {
+							Modal.popNetworkErrorModal('네트워크 오류가 발생했습니다. \n 잠시후 다시 시도해주세요.');
 						}
 					},
 				);
@@ -142,7 +147,7 @@ export default SearchTabNavigation = props => {
 						if (err.includes('code 500')) {
 							resolve({free: [], review: []});
 							setTimeout(() => {
-								Modal.alert(NETWORK_ERROR);
+								Modal.popNetworkErrorModal('네트워크 오류가 발생했습니다. \n 잠시후 다시 시도해주세요.');
 							}, 500);
 						} else if (err.includes('없습니다')) {
 							resolve({free: [], review: []});

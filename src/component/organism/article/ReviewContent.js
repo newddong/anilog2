@@ -173,9 +173,14 @@ const ReviewContent = props => {
 					<Meatball50_GRAY20_Horizontal onPress={() => props.onPressMeatball()} />
 				</View>
 			</View>
-			<View style={[style.profile]}>
-				<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} />
-			</View>
+			{data.community_writer_id ? (
+				<View style={[style.profile]}>
+					<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} />
+				</View>
+			) : (
+				<UserLocationTimeLabel empty={true} time={data.community_date} />
+			)}
+
 			{/* <View style={{width: 654 * DP, marginTop: 20 * DP}}>{getContents()}</View> */}
 			<View>
 				<View style={[{width: 700 * DP, marginTop: 20 * DP}]}>
@@ -187,16 +192,8 @@ const ReviewContent = props => {
 							injectedJavaScript={runFirst} //Dynamic Height 수치 설정
 							scrollEnabled={false}
 							injectedJavaScriptBeforeContentLoaded={runFirst}
-							source={{
-								html: changeHtmlTag(),
-							}}
-							style={[
-								style.webview,
-								{
-									height: height,
-									opacity: 0.99,
-								},
-							]}
+							source={{html: changeHtmlTag()}}
+							style={[style.webview, {height: height, opacity: 0.99}]}
 						/>
 					) : (
 						<WebView
@@ -205,14 +202,8 @@ const ReviewContent = props => {
 							ref={webviewRef}
 							injectedJavaScript={runFirst} //Dynamic Height 수치 설정
 							scrollEnabled={false}
-							source={{
-								html: changeHtmlTag(),
-							}}
-							style={{
-								width: 690 * DP,
-								// minHeight: 500 * DP,
-								height: height == 0 ? 100 * DP : height,
-							}}
+							source={{html: changeHtmlTag()}}
+							style={{width: 690 * DP, height: height == 0 ? 100 * DP : height}}
 						/>
 					)}
 				</View>

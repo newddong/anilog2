@@ -4,6 +4,7 @@ import {Text, View, TouchableOpacity, StyleSheet} from 'react-native';
 import DP from 'Root/config/dp';
 import {APRI10, BLUE20, GRAY10, GRAY20} from 'Root/config/color';
 import {animalProtectRequestDetail_style, temp_style} from 'Root/component/templete/style_templete';
+import moment from 'moment';
 
 /**
  * 보호소 Object 정보 박스
@@ -12,11 +13,37 @@ import {animalProtectRequestDetail_style, temp_style} from 'Root/component/templ
  */
 const ProtectAnimalInfoBox = props => {
 	const data = props.data;
-	// console.log('data', data);
+	// console.log('ProtectAnimalInfoBox', data);
+	const parseDateToString = date => {
+		let str = moment(date).format('yyyy.MM.DD');
+		return str;
+	};
 
 	return (
 		<View style={[styles.rescueSummary]}>
 			<View style={[styles.rescueSummary_insideContainer]}>
+				{/* 공고번호 */}
+				{data.protect_animal_noticeNo ? (
+					<View style={[styles.rescueSummary_insideItem]}>
+						<Text style={[txt.noto24, styles.rescueSummary_insideItem_category]}>공고번호</Text>
+						<Text style={[txt.noto24, styles.rescueSummary_insideItem_content]}>
+							{data.protect_animal_noticeNo ? data.protect_animal_noticeNo : ''}
+						</Text>
+					</View>
+				) : (
+					<></>
+				)}
+				{/* 공고일자 */}
+				{data.protect_request_notice_sdt && data.protect_request_notice_edt ? (
+					<View style={[styles.rescueSummary_insideItem]}>
+						<Text style={[txt.noto24, styles.rescueSummary_insideItem_category]}>공고일자</Text>
+						<Text style={[txt.noto24, styles.rescueSummary_insideItem_content]}>
+							{parseDateToString(data.protect_request_notice_sdt)} ~ {parseDateToString(data.protect_request_notice_edt)}
+						</Text>
+					</View>
+				) : (
+					<></>
+				)}
 				<View style={[styles.rescueSummary_insideItem]}>
 					<Text style={[txt.noto24, styles.rescueSummary_insideItem_category]}>분류</Text>
 					<Text style={[txt.noto24, styles.rescueSummary_insideItem_content]}>

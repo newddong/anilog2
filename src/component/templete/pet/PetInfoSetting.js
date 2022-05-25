@@ -433,7 +433,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 					</View>
 					{/* )} */}
 					{/* 계정 공개 여부 변경 */}
-					<View style={[petInfoSetting.exposureSetting.container]}>
+					{/* <View style={[petInfoSetting.exposureSetting.container]}>
 						<View style={[petInfoSetting.exposureSetting.insideContainer]}>
 							<View style={[petInfoSetting.exposureSetting.menuView]}>
 								<View style={[petInfoSetting.petProfileMenu.menuTitle]}>
@@ -449,7 +449,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 								</View>
 							</View>
 						</View>
-					</View>
+					</View> */}
 					{/* 반려동물 입양 상태 변경 */}
 					{petData.pet_status == 'protect' && ( //오로지 임보일때만 출력
 						<View style={[petInfoSetting.changeAdoptionStatus.container]}>

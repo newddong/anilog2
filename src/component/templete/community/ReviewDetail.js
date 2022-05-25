@@ -6,7 +6,7 @@ import {GRAY10, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
 import ReviewBriefList from 'Root/component/organism/list/ReviewBriefList';
 import {useNavigation} from '@react-navigation/core';
 import ReviewContent from 'Root/component/organism/article/ReviewContent';
-import {getCommunityList} from 'Root/api/community';
+import {getCommunityByObjectId, getCommunityList} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {createComment, deleteComment, getCommentListByCommunityId, updateComment} from 'Root/api/commentapi';
 import Modal from 'Component/modal/Modal';
@@ -31,7 +31,7 @@ import {useKeyboardBottom} from 'Root/component/molecules/input/usekeyboardbotto
 export default ReviewDetail = props => {
 	const key = useKeyboardBottom(0);
 	const navigation = useNavigation();
-	const [data, setData] = React.useState(props.route.params.community_object);
+	const [data, setData] = React.useState('false');
 	const [searchInput, setSearchInput] = React.useState('');
 	const [reviewList, setReviewList] = React.useState('false');
 	const [comments, setComments] = React.useState([]);
@@ -51,32 +51,37 @@ export default ReviewDetail = props => {
 	const floatInput = React.useRef();
 
 	React.useEffect(() => {
-		if (data.community_address.normal_address.address_name != '') {
-			navigation.setOptions({title: `${data.community_address.normal_address.city} / ${data.community_address.normal_address.district}`});
-		} else {
-			navigation.setOptions({title: '리뷰'});
-		}
+		getReviewData();
 		getComment();
 		fetchCommunityList();
-		const unsubscribe = navigation.addListener('focus', () => {
-			//다른 탭(ex - My 탭의 즐겨찾기한 커뮤니티 목록에서 들어온 경우)에서의 호출
-			if (community_obj.object.hasOwnProperty('_id')) {
-				if (community_obj.object._id != data._id) {
-					//현재 보고 있는 페이지와 다른 게시글이 호출된 경우
-					navigation.push('ReviewDetail', {community_object: community_obj.object}); //해당 게시글 상세로 이동
-				}
-			}
-		});
-		navigation.addListener('blur', () => {
-			community_obj.object = {};
-			community_obj.pageToMove = '';
-			community_obj.object.initial = true;
-		});
 		if (props.route.params.searchInput != '') {
 			setSearchInput(props.route.params.searchInput);
 		}
-		return unsubscribe;
 	}, []);
+
+	//커뮤니티 데이터
+	const getReviewData = () => {
+		getCommunityByObjectId(
+			{
+				community_object_id: props.route.params.community_object._id,
+			},
+			result => {
+				// console.log('result / getCommunityByObjectId / ArticleDetail', result.msg);
+				setData(result.msg);
+				if (result.msg.community_address.normal_address.address_name != '') {
+					navigation.setOptions({
+						title: `${result.msg.community_address.normal_address.city} / ${result.msg.community_address.normal_address.district}`,
+					});
+				} else {
+					navigation.setOptions({title: '리뷰'});
+				}
+			},
+			err => {
+				console.log('err / getCommunityByObjectId / ArticleDetail ', err);
+				setData('false');
+			},
+		);
+	};
 
 	const fetchCommunityList = () => {
 		getCommunityList(
@@ -239,7 +244,7 @@ export default ReviewDetail = props => {
 	const getComment = () => {
 		getCommentListByCommunityId(
 			{
-				community_object_id: data._id,
+				community_object_id: props.route.params.community_object._id,
 				request_number: 1000,
 			},
 			comments => {
@@ -632,7 +637,7 @@ export default ReviewDetail = props => {
 		return <Text style={[txt.roboto28b, {color: GRAY10, paddingVertical: 40 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>;
 	};
 
-	if (reviewList == 'false' || comments == 'false') {
+	if (data == 'false' || reviewList == 'false' || comments == 'false') {
 		return <Loading isModal={false} />;
 	} else
 		return (

@@ -181,6 +181,7 @@ export default SearchMap = ({route}) => {
 	//위도 경도를 토대로 주소 받아오기
 	const callInitialAddress = async (long, lati) => {
 		console.log('callInitialAddress', long);
+		console.log('callInitialAddress', lati);
 		try {
 			let res = await axios
 				.get(`https://dapi.kakao.com/v2/local/geo/coord2address.json?input_coord=WGS84&x=${long}&y=${lati}`, {
@@ -219,6 +220,9 @@ export default SearchMap = ({route}) => {
 				});
 		} catch (error) {
 			console.log('error callAddress  :  ', error.message);
+			if (error.message.includes('code 400')) {
+				requestPermission();
+			}
 			Modal.close();
 		}
 	};

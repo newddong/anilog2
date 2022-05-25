@@ -395,6 +395,13 @@ export default Modal = {
 	 */
 	popProtectRequestFilterModal: (previous, onConfirm, onClose) => {},
 
+	/**
+	 * 네트워크 오류 알림 모달
+	 * @param {Object} props - props object
+	 * @param {Object} props.msg - 네트워크 오류 메시지
+	 */
+	popNetworkErrorModal: msg => {},
+
 	popInfoModal: () => {},
 
 	alert: () => {},

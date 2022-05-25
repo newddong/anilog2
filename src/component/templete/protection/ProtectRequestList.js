@@ -1,30 +1,34 @@
 import React from 'react';
 import {Text, View, FlatList, RefreshControl} from 'react-native';
-import {searchProtectRequest, temp_style} from 'Templete/style_templete';
+import {searchProtectRequest} from 'Templete/style_templete';
 import {GRAY10} from 'Root/config/color';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import {txt} from 'Root/config/textstyle';
-import {ONLY_CONTENT_FOR_ADOPTION, PET_KIND, PET_PROTECT_LOCATION, PROTECT_LOCATION} from 'Root/i18n/msg';
+import {NETWORK_ERROR, ONLY_CONTENT_FOR_ADOPTION, PET_KIND, PROTECT_LOCATION} from 'Root/i18n/msg';
 import {getProtectRequestList} from 'Root/api/shelterapi.js';
-import {btn_w306_h68} from 'Component/atom/btn/btn_style';
-import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 import Modal from 'Root/component/modal/Modal';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import Loading from 'Root/component/molecules/modal/Loading';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 import {Filter60Border, Filter60Filled} from 'Root/component/atom/icon';
+import moment from 'moment';
 
 export default ProtectRequestList = ({navigation, route}) => {
+	const today = moment();
+	const current_date = moment().format('YY.MM.DD');
+	const one_month_before = today.clone().subtract(1, 'month').format('YY.MM.DD');
 	const [data, setData] = React.useState('false');
+
 	const [filterData, setFilterData] = React.useState({
-		from: '22.05.21',
-		to: '22.05.24',
+		from: '',
+		to: '',
 		city: '',
 		protect_animal_species: '',
-		protect_request_object_id: '',
-		request_number: 1000,
-		shelter_name: '',
+		shelter_list: [],
+		dog: false,
+		cat: false,
+		etc: false,
 	});
 	const [onlyAdoptable, setOnlyAdoptable] = React.useState(false);
 	const filterRef = React.useRef(false);
@@ -37,11 +41,13 @@ export default ProtectRequestList = ({navigation, route}) => {
 		return unsubscribe;
 	}, [filterData]);
 
+	//보호요청리스트 목록 받기
 	const getList = () => {
+		const filter = {...filterData, request_number: 100, protect_request_object_id: ''};
 		getProtectRequestList(
-			{...filterData},
+			{...filter},
 			result => {
-				// console.log('result / getProtectRequestList / ProtectRequestList : ', result.msg[0]);
+				console.log('result / getProtectRequestList / ProtectRequestList : ', result.msg.length);
 				let res = result.msg;
 				res.filter(e => e != null);
 				res.map((v, i) => {
@@ -55,12 +61,15 @@ export default ProtectRequestList = ({navigation, route}) => {
 				console.log(`errcallback:${JSON.stringify(err)}`);
 				if (err == '검색 결과가 없습니다.') {
 					setData([]);
+				} else if (err.includes('code 500')) {
+					Modal.alert(NETWORK_ERROR);
 				}
 				Modal.close();
 			},
 		);
 	};
 
+	//보호요청게시글 클릭
 	const onClickLabel = (status, id, item) => {
 		let sexValue = '';
 		switch (item.protect_animal_sex) {
@@ -78,21 +87,20 @@ export default ProtectRequestList = ({navigation, route}) => {
 		navigation.navigate('AnimalProtectRequestDetail', {id: item._id, title: titleValue, writer: item.protect_request_writer_id._id});
 	};
 
+	//입양 가능한 게시글만 보기 On
 	const filterOn = () => {
-		console.log('입양 가능한 게시글만 보기');
 		// setFilterData({...filterData, adoptable_posts: 'true'});
 		setOnlyAdoptable(true);
 	};
+
+	//입양 가능한 게시글만 보기 Off
 	const filterOff = () => {
-		console.log('입양 가능한 게시글만 OFF');
 		// setFilterData({...filterData, adoptable_posts: 'false'});
 		setOnlyAdoptable(false);
 	};
 
 	//별도의 API 사용 예정.
 	const onOff_FavoriteTag = (bool, index) => {
-		console.log(' data[index]._id', getData()[index]);
-		console.log('bool', bool);
 		setFavoriteEtc(
 			{
 				collectionName: 'protectrequestobjects',
@@ -151,15 +159,27 @@ export default ProtectRequestList = ({navigation, route}) => {
 	const onPressFilter = () => {
 		// console.log('filter', JSON.stringify(filterData));
 		Modal.popProtectRequestFilterModal(
-			{
-				from: '22.05.21',
-				to: '22.05.24',
-				city: filterData.city,
-				shelter: filterData.shelter_name,
-				protect_animal_species: filterData.protect_animal_species,
-			},
+			{...filterData},
 			arg => {
-				console.log('arg', arg);
+				if (
+					!arg.cat &&
+					!arg.dog &&
+					!arg.etc &&
+					arg.city == '' &&
+					arg.from == one_month_before &&
+					arg.to == current_date &&
+					arg.shelter_list.length == 0
+				) {
+					console.log('arg', arg);
+					setFilterData(arg);
+					getList();
+					filterRef.current = false;
+				} else {
+					console.log('arg', arg);
+					setFilterData(arg);
+					getList();
+					filterRef.current = true;
+				}
 				Modal.close();
 			},
 			() => {
@@ -173,16 +193,62 @@ export default ProtectRequestList = ({navigation, route}) => {
 		return <ListEmptyInfo text={'목록이 없습니다..'} />;
 	};
 
+	//필터가 적용된 상태의 데이터
 	const getData = () => {
-		let result = data;
-		if (onlyAdoptable) {
-			result = data.filter(v => v.protect_request_status == 'rescue');
-		} else {
-			result = data;
+		// console.log('data result ', data[0]);
+		let filtered = [];
+		// console.log('data', data[0]);
+		if (filterData.dog) {
+			const getDogType = data.filter(e => e.protect_animal_species == '개');
+			getDogType.map((v, i) => {
+				filtered.push(v);
+			});
 		}
-		// let temp = result.filter(e => e.protect_request_status != 'rescue');
-		// temp = result.filter(e => e.protect_request_status != 'rainbowbridge' && e.protect_request_status != 'rescue');
-		return result;
+		if (filterData.cat) {
+			const getCatType = data.filter(e => e.protect_animal_species == '고양이');
+			getCatType.map((v, i) => {
+				filtered.push(v);
+			});
+		}
+		if (filterData.etc) {
+			const getEtcType = data.filter(e => e.protect_animal_species != '개' && e.protect_animal_species != '고양이');
+			getEtcType.map((v, i) => {
+				filtered.push(v);
+			});
+		}
+		if (!filterData.dog && !filterData.cat && !filterData.etc) {
+			filtered = data;
+		}
+		if (onlyAdoptable) {
+			filtered = filtered.filter(v => v.protect_request_status == 'rescue');
+		}
+		// console.log('시작', filterData.from == today.clone().subtract(1, 'month').format('YY.MM.DD'));
+		// console.log('종료', filterData.to == current_date);
+		if (!(filterData.from == '') || !(filterData.to == '')) {
+			// console.log('디폴트 기간이 아님!!');
+			let temp = [];
+			console.log(filtered.length);
+			filtered.map((v, i) => {
+				let split_to = filterData.to.split('.');
+				let split_from = filterData.from.split('.');
+				let fromDate = new Date(parseInt(split_from[0]), split_from[1] - 1, split_from[2]);
+				let toDate = new Date(parseInt(split_to[0]), split_to[1] - 1, split_to[2]);
+				toDate.setFullYear(toDate.getFullYear() + 100);
+				fromDate.setFullYear(fromDate.getFullYear() + 100);
+				const register = moment(v.protect_request_date).valueOf();
+				const from = fromDate.getTime();
+				const to = toDate.getTime();
+				// console.log('register ', moment(register), 'time', v.protect_request_date);
+				// console.log('종료일보단 적다', register <= to);
+				// console.log('시작일보단 이후다', register >= from);
+				if (register <= to && register >= from) {
+					temp.push(v);
+				}
+			});
+			console.log('temp ', temp.length);
+			filtered = temp;
+		}
+		return filtered;
 	};
 
 	const renderItem = ({item, index}) => {

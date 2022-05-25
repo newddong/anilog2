@@ -41,6 +41,7 @@ import AvatarSelectFromWriteModal from 'Root/component/molecules/modal/AvatarSel
 import LoginRequestModal from 'Root/component/molecules/modal/LoginRequestModal';
 import ReviewFilterModal from 'Root/component/molecules/modal/ReviewFilterModal';
 import ProtectRequestFilterModal from 'Root/component/molecules/modal/ProtectRequestFilterModal';
+import NetworkErrorModal from 'Root/component/molecules/modal/NetworkErrorModal';
 
 export function useModal() {
 	const [isPop, setPop] = React.useState(false);
@@ -272,6 +273,11 @@ export function useModal() {
 
 	Modal.popProtectRequestFilterModal = (previous, onConfirm, onClose) => {
 		popIn(<ProtectRequestFilterModal previous={previous} onConfirm={onConfirm} onClose={onClose} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popNetworkErrorModal = msg => {
+		popIn(<NetworkErrorModal msg={msg} />);
 		!isPop && setPop(true);
 	};
 

@@ -17,8 +17,8 @@ const RecommendReview = props => {
 	const onPressRecommendReview = data => {
 		props.onPressRecommendReview(data);
 	};
-	const first = props.data[0];
-	const second = props.data[1];
+	const first = props.data ? props.data[0] : '';
+	const second = props.data ? props.data[1] : '';
 
 	const recommendReview = data => {
 		if (data) {

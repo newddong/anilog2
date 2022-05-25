@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
-import {BackArrow32, Meatball50_GRAY20_Horizontal} from 'Atom/icon';
+import {BackArrow32, FavoriteTag48_Border, FavoriteTag48_Filled, Meatball50_GRAY20_Horizontal} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
@@ -9,10 +9,13 @@ import {FEED_MEATBALL_MENU_MY_FEED, FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS, NETW
 import {deleteProtectRequest, setShelterProtectAnimalStatus} from 'Root/api/shelterapi';
 import {setProtectRequestStatus} from 'Root/api/protectapi';
 import {deleteFeed} from 'Root/api/feedapi';
+import {setFavoriteEtc} from 'Root/api/favoriteetc';
 
 //보호 요청게시글 및 제보, 실종글 작성자일 경우 미트볼 아이콘 출력이 되는 헤더
 export default SimpleWithMeatballHeader = ({navigation, route, options, back}) => {
 	const isWriter = userGlobalObject.userInfo._id == route.params.writer; //작성자인지 여부 판단
+	const isProtect = route.params?.isMissingOrReport;
+	// console.log('simple Animal', route.params);
 
 	const onPressChangeProtectRequestStatus = () => {
 		Modal.close();
@@ -225,6 +228,40 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 		}
 	};
 
+	const onPressFavorite = bool => {
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			setFavoriteEtc(
+				{
+					collectionName: 'protectrequestobjects',
+					target_object_id: route.params.id,
+					is_favorite: bool,
+				},
+				result => {
+					console.log('result / setFavoriteEtc / SimpleWith : ', result.msg.favoriteEtc);
+				},
+				err => console.log('err / setFavoriteEtc / SimpleWith : ', err),
+			);
+		}
+	};
+
+	const getMenuIcon = () => {
+		// console.log('isWriter', isWriter);
+		// console.log('isProtect', isProtect);
+		if (isWriter) {
+			return <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />;
+		} else if (!isProtect) {
+			if (!route.params.request_object?.protect_request_is_favorite) {
+				return <FavoriteTag48_Border onPress={() => onPressFavorite(true)} />;
+			} else {
+				return <FavoriteTag48_Filled onPress={() => onPressFavorite(false)} />;
+			}
+		} else return <></>;
+	};
+
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
 			<TouchableOpacity onPress={navigation.goBack}>
@@ -232,20 +269,10 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 					<BackArrow32 onPress={navigation.goBack} />
 				</View>
 			</TouchableOpacity>
-			<Text
-				style={[
-					{
-						flex: 1,
-						textAlign: 'center',
-						// marginLeft: 30 * DP,
-						marginRight: 25 * DP,
-					},
-					txt.roboto40b,
-				]}
-				numberOfLines={1}>
+			<Text style={[{flex: 1, textAlign: 'center', marginRight: 25 * DP}, txt.roboto40b]} numberOfLines={1}>
 				{options.title ? options.title : route.params.title}
 			</Text>
-			{isWriter ? <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} /> : <></>}
+			{getMenuIcon()}
 		</View>
 	);
 };

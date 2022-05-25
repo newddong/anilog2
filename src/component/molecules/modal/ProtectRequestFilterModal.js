@@ -11,6 +11,7 @@ import {day, PROTECT_LOCATION} from 'Root/i18n/msg';
 import YearDropDown from 'Molecules/dropdown/YearDropDown';
 import Modal from 'Root/component/modal/Modal';
 import moment from 'moment';
+import {getShelterInfo} from 'Root/api/protectapi';
 
 /**
  * 버튼 한 개의 셀렉트 모달창
@@ -22,16 +23,20 @@ import moment from 'moment';
  *
  */
 const ProtectRequestFilterModal = props => {
+	const today = moment();
+	const current_date = moment().format('YY.MM.DD');
 	const [data, setData] = React.useState({
-		city: '모든 지역',
+		city: '',
 		shelter_list: [],
 		shleter_label: '모든 보호소',
-		from: '시작일',
-		to: '종료일',
+		from: today.clone().subtract(1, 'month').format('YY.MM.DD'),
+		to: current_date,
 		dog: false,
 		cat: false,
 		etc: false,
 	});
+
+	const [shelterData, setShelterData] = React.useState('false');
 	const [startDateOpen, setStartDateOpen] = React.useState(false); //시작일
 	const [endDateOpen, setEndDateOpen] = React.useState(false); //종료일
 	const [regionOpen, setRegionOpen] = React.useState(false); // 지역
@@ -41,6 +46,34 @@ const ProtectRequestFilterModal = props => {
 	const animatedEndDate = React.useRef(new Animated.Value(0)).current; // 종료일
 	const animatedRegion = React.useRef(new Animated.Value(0)).current; // 지역
 	const animatedShelter = React.useRef(new Animated.Value(0)).current; // 보호소
+
+	React.useEffect(() => {
+		setData({...props.previous, from: today.clone().subtract(1, 'month').format('YY.MM.DD'), to: current_date});
+		getShleterData('all');
+	}, []);
+
+	const getShleterData = city => {
+		getShelterInfo(
+			{},
+			result => {
+				console.log('result / getShelterInfo / ProtectRequestFilterModal ', result.msg.length);
+				let shelter_list = result.msg.map(
+					v =>
+						(v = {
+							user_nickname: v.user_nickname,
+							_id: v._id,
+							shelter_address: v.shelter_address,
+							shelter_delegate_contact_number: v.shelter_delegate_contact_number,
+						}),
+				);
+				setShelterData(shelter_list);
+				// console.log('shelter_list', shelter_list.slice(50, 52));
+			},
+			err => {
+				console.log('err / getShelterInfo / ProtectRequestFilterModal', err);
+			},
+		);
+	};
 
 	//애니메이션 처리
 	const animate = (type, value) => {
@@ -71,8 +104,15 @@ const ProtectRequestFilterModal = props => {
 
 	//최종 완료 버튼 클릭
 	const onConfrim = () => {
-		props.onConfirm(data);
-		Modal.close();
+		if (startDateOpen || endDateOpen || regionOpen || shelterOpen) {
+			setStartDateOpen(false);
+			setEndDateOpen(false);
+			setRegionOpen(false);
+			setShelterOpen(false);
+		} else {
+			props.onConfirm(data);
+			Modal.close();
+		}
 	};
 
 	//메인 모달 우상단 X마크 클릭
@@ -182,29 +222,62 @@ const ProtectRequestFilterModal = props => {
 
 	//지역 선택 모달의 완료 버튼 클릭
 	const onSelectRegion = value => {
-		console.log('value', value);
-		setData({...data, city: value});
+		setData({...data, city: value, shelter_list: [], shleter_label: '모든 보호소'});
+		getShleterData(value);
 		setRegionOpen(false);
 	};
 
 	//보호소 선택 모달의 완료 버튼 클릭
 	const onSelectShelterList = value => {
-		console.log('onSelectShelterList', value);
+		// console.log('onSelectShelterList', value);
 		let label = '모든 보호소';
 		if (value[0]) {
-			label = value[0].name + ' 외 ' + (value.length - 1) + '개';
+			if (value.length == 1) {
+				label = value[0].user_nickname;
+			} else {
+				label = value[0].user_nickname + ' 외 ' + (value.length - 1) + '개';
+			}
 		}
 		setData({...data, shelter_list: value, shleter_label: label});
 		setShelterOpen(false);
+	};
+
+	//필터 초기화
+	const onPressInitialize = () => {
+		if (startDateOpen || endDateOpen || regionOpen || shelterOpen) {
+			setStartDateOpen(false);
+			setEndDateOpen(false);
+			setRegionOpen(false);
+			setShelterOpen(false);
+		} else {
+			setData({
+				city: '',
+				shelter_list: [],
+				shleter_label: '모든 보호소',
+				from: today.clone().subtract(1, 'month').format('YY.MM.DD'),
+				to: current_date,
+				dog: false,
+				cat: false,
+				etc: false,
+			});
+		}
 	};
 
 	return (
 		<TouchableOpacity activeOpacity={1} onPress={onPressOutSide} style={[style.background]}>
 			{/* 상단 선택영역  */}
 			<TouchableOpacity onPress={onPressMainContainer} activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
-				<TouchableOpacity activeOpacity={0.6} onPress={closeModal} style={[{alignSelf: 'flex-end'}]}>
-					<Cross46 />
-				</TouchableOpacity>
+				<View style={{flexDirection: 'row', width: 694 * DP, paddingHorizontal: 44 * DP, justifyContent: 'space-between'}}>
+					<AniButton
+						btnTitle={'필터 초기화'}
+						onPress={onPressInitialize}
+						btnStyle={'border'}
+						btnLayout={{width: 160 * DP, height: 50 * DP, borderRadius: 30 * DP}}
+					/>
+					<TouchableOpacity activeOpacity={0.6} onPress={closeModal} style={[{alignSelf: 'flex-end'}]}>
+						<Cross46 />
+					</TouchableOpacity>
+				</View>
 				{/* 기간필터 */}
 				<View style={[style.durationCont]}>
 					<Text style={[txt.noto28]}>기간</Text>
@@ -212,7 +285,7 @@ const ProtectRequestFilterModal = props => {
 						onPress={() => onPressDuration('from')}
 						activeOpacity={0.6}
 						style={[style.durationItem, {borderBottomColor: data.from == '시작일' ? GRAY20 : BLACK}]}>
-						<Text style={[txt.noto28, {color: data.from == '시작일' ? GRAY20 : BLACK}]}>{data.from}</Text>
+						<Text style={[txt.noto28, {color: data.from == '시작일' ? GRAY20 : BLACK}]}>{data.from == '시작일' ? '시작일' : data.from}</Text>
 					</TouchableOpacity>
 					<View style={[style.hyphen]}>
 						<Hyhpen />
@@ -221,19 +294,21 @@ const ProtectRequestFilterModal = props => {
 						activeOpacity={0.8}
 						onPress={() => onPressDuration('to')}
 						style={[style.durationItem, {marginLeft: 0 * DP, borderBottomColor: data.to == '종료일' ? GRAY20 : BLACK}]}>
-						<Text style={[txt.noto28, {color: data.to == '종료일' ? GRAY20 : BLACK}]}>{data.to}</Text>
+						<Text style={[txt.noto28, {color: data.to == '종료일' ? GRAY20 : BLACK}]}> {data.to == '종료일' ? '종료일' : data.to}</Text>
 					</TouchableOpacity>
 				</View>
 				{/* 지역 필터 */}
 				<TouchableOpacity onPress={onPressRegion} activeOpacity={0.8} style={[style.dropdownContainer, {}]}>
-					<Text style={[txt.noto28]}>{data.city}</Text>
+					<Text style={[txt.noto26]}>{data.city == '' ? '모든 지역' : data.city}</Text>
 					<View style={[style.arrowMark]}>
 						<ArrowMarkForCalendar />
 					</View>
 				</TouchableOpacity>
 				{/* 보호소 필터 */}
 				<TouchableOpacity onPress={onPressShelter} activeOpacity={0.8} style={[style.dropdownContainer]}>
-					<Text style={[txt.noto28]}>{data.shleter_label}</Text>
+					<Text style={[txt.noto26, {maxWidth: 320 * DP}]} numberOfLines={1}>
+						{data.shelter_list.length == 0 ? '모든 보호소' : data.shleter_label}
+					</Text>
 					<View activeOpacity={0.8} style={style.arrowMark}>
 						<ArrowMarkForCalendar />
 					</View>
@@ -262,7 +337,7 @@ const ProtectRequestFilterModal = props => {
 			{/* 하단 스크롤뷰 영역 */}
 			{/* 시작일 */}
 			{startDateOpen ? (
-				<Animated.View style={[style.calendarCont, {opacity: startDateOpen}]}>
+				<Animated.View style={[style.calendarCont, {}]}>
 					<CalendarInFilter
 						previous={data.from}
 						to={data.to}
@@ -277,7 +352,7 @@ const ProtectRequestFilterModal = props => {
 			)}
 			{/* 종료일 */}
 			{endDateOpen ? (
-				<Animated.View style={[style.calendarCont, {opacity: endDateOpen}]}>
+				<Animated.View style={[style.calendarCont, {}]}>
 					<CalendarInFilter
 						previous={data.to}
 						from={data.from}
@@ -295,9 +370,13 @@ const ProtectRequestFilterModal = props => {
 				<ScrollSelectBox data={PROTECT_LOCATION} onSelectRegion={onSelectRegion} onCloseBottomBox={onCloseBottomBox} />
 			</Animated.View>
 			{/* 보호소 */}
-			<Animated.View style={[style.shelterSelectContainer, {height: animatedShelter}]}>
-				<ShelterSelectBox data={PROTECT_LOCATION} onConfirm={onSelectShelterList} onCloseBottomBox={onCloseBottomBox} />
-			</Animated.View>
+			{shelterData == 'false' ? (
+				<></>
+			) : (
+				<Animated.View style={[style.shelterSelectContainer, {height: animatedShelter}]}>
+					<ShelterSelectBox data={shelterData} onConfirm={onSelectShelterList} onCloseBottomBox={onCloseBottomBox} />
+				</Animated.View>
+			)}
 		</TouchableOpacity>
 	);
 };
@@ -311,7 +390,7 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 	},
 	popUpWindow: {
-		width: 654 * DP,
+		width: 694 * DP,
 		height: 784 * DP,
 		backgroundColor: 'white',
 		alignItems: 'center',
@@ -319,6 +398,14 @@ const style = StyleSheet.create({
 		paddingBottom: 32 * DP,
 		paddingHorizontal: 36 * DP,
 		borderRadius: 40 * DP,
+		shadowColor: BLACK,
+		shadowOpacity: 0.5,
+		shadowRadius: 1 * DP,
+		shadowOffset: {
+			height: 2 * DP,
+			width: 2 * DP,
+		},
+		elevation: 3,
 		// backgroundColor: 'yellow',
 	},
 	durationCont: {
@@ -443,7 +530,7 @@ const style = StyleSheet.create({
 	shelterSelectHeader: {
 		width: 750 * DP,
 		flexDirection: 'row',
-		backgroundColor: WHITE,
+		backgroundColor: APRI10,
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		paddingHorizontal: 40 * DP,
@@ -510,8 +597,8 @@ const CalendarInFilter = props => {
 	};
 
 	const onSelectDate = date => {
-		console.log('date', date.format('yyyy.MM.DD'));
-		setSelectedDate(date.format('yyyy.MM.DD'));
+		console.log('date', date.format('YY.MM.DD'));
+		setSelectedDate(date.format('YY.MM.DD'));
 	};
 
 	const years = () => {
@@ -555,9 +642,9 @@ const CalendarInFilter = props => {
 									<View
 										style={[
 											{width: 66 * DP, alignItems: 'center', justifyContent: 'center'},
-											selectedDate == days.format('yyyy.MM.DD') ? {backgroundColor: APRI10, borderRadius: 100 * DP} : {},
+											selectedDate == days.format('YY.MM.DD') ? {backgroundColor: APRI10, borderRadius: 100 * DP} : {},
 										]}>
-										<Text style={[txt.roboto28b, {color: selectedDate == days.format('yyyy.MM.DD') ? WHITE : BLACK, lineHeight: 66 * DP}]}>
+										<Text style={[txt.roboto28b, {color: selectedDate == days.format('YY.MM.DD') ? WHITE : BLACK, lineHeight: 66 * DP}]}>
 											{days.format('D')}
 										</Text>
 									</View>
@@ -749,18 +836,11 @@ const ScrollSelectBox = props => {
 };
 
 const ShelterSelectBox = props => {
-	const [data, setData] = React.useState([
-		{_id: 1, name: '하늘보호소', state: false},
-		{_id: 2, name: '소천보호소', state: false},
-		{_id: 3, name: '아현보호소', state: false},
-		{_id: 4, name: '유공보호소', state: false},
-		{_id: 5, name: '한천보호소', state: false},
-		{_id: 6, name: '백천보호소', state: false},
-		{_id: 7, name: '조걸보호소', state: false},
-		{_id: 8, name: '감전보호소', state: false},
-		{_id: 9, name: '사상보호소', state: false},
-	]);
-	const [selectedList, setSelectedList] = React.useState([]);
+	const [data, setData] = React.useState(props.data);
+
+	React.useEffect(() => {
+		setData(props.data);
+	}, [props.data]);
 
 	//체크박스 선택
 	const onSelect = i => {
@@ -781,13 +861,15 @@ const ShelterSelectBox = props => {
 			<>
 				<TouchableOpacity activeOpacity={0.6} onPress={() => onSelect(index)} style={[style.shelterItemCont]}>
 					<View style={[style.shelterInfo]}>
-						<Text style={[txt.noto30]}>펫토이 동물병원</Text>
+						<Text style={[txt.noto30]}>{item.user_nickname || ''}</Text>
 						<Text style={[txt.roboto26, {color: GRAY10, maxWidth: 654 * DP}]} numberOfLines={1}>
-							서울 특별시
+							{item.shelter_address.brief || '주소 미등록 상태입니다.'}
 						</Text>
 						<View style={{flexDirection: 'row'}}>
 							<PhoneIcon />
-							<Text style={[txt.roboto26, {marginLeft: 12 * DP, color: GRAY10}]}>02-797-6677</Text>
+							<Text style={[txt.roboto26, {marginLeft: 12 * DP, color: GRAY10}]}>
+								{item.shelter_delegate_contact_number || '전화번호 미등록 상태입니다.'}
+							</Text>
 						</View>
 					</View>
 					<View>{checked ? <Check50 onPress={() => onSelect(index)} /> : <Rect50_Border onPress={() => onSelect(index)} />}</View>
@@ -800,27 +882,19 @@ const ShelterSelectBox = props => {
 	return (
 		<>
 			<TouchableOpacity activeOpacity={1} style={[style.shelterSelectHeader, style.shadow]}>
-				<Text style={[txt.noto30, {color: APRI10, paddingVertical: 22 * DP}]}>보호소 선택</Text>
+				<Text style={[txt.noto30, {color: WHITE, paddingVertical: 22 * DP}]}>보호소 선택</Text>
 				<TouchableOpacity onPress={onConfirm}>
-					<Text style={[txt.noto30b, {color: BLACK}]}>완료</Text>
+					<Text style={[txt.noto30b, {color: WHITE}]}>완료</Text>
 				</TouchableOpacity>
 			</TouchableOpacity>
-			<TouchableOpacity
-				activeOpacity={1}
-				style={[
-					{
-						flex: 1,
-						// width: 750 * DP,
-						alignItems: 'center',
-						backgroundColor: 'white',
-					},
-				]}>
+			<TouchableOpacity activeOpacity={1} style={[{flex: 1, alignItems: 'center', backgroundColor: 'white'}]}>
 				<FlatList
 					data={data}
 					showsVerticalScrollIndicator={false}
 					renderItem={render}
+					ListEmptyComponent={<ListEmptyInfo text={'해당 지역에 위치한 보호소가 없습니다.'} />}
 					ItemSeparatorComponent={() => {
-						return <View style={{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY30}} />;
+						return <View style={{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY30, alignSelf: 'center'}} />;
 					}}
 				/>
 			</TouchableOpacity>
@@ -838,7 +912,7 @@ ProtectRequestFilterModal.defaultProps = {
 
 const calendar_style = StyleSheet.create({
 	outside: {
-		width: 654 * DP,
+		width: 694 * DP,
 		height: 1000 * DP,
 		borderRadius: 50 * DP,
 		alignSelf: 'center',

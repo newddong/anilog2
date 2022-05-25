@@ -550,3 +550,6 @@ export const UNAVAILABLE_REQUEST_STATUS = [
 	undefined,
 	'donation',
 ];
+
+//유저 프로필 없음 메시지
+export const IS_LEAVE_USER = '탈퇴한 계정입니다.';

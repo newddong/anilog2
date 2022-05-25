@@ -83,7 +83,7 @@ export default ProtectionApplicationList = ({route, navigation}) => {
 			<View style={[style.listItem]} key={i}>
 				<UserDescriptionLabel
 					data={v.protect_act_applicant_id}
-					width={360}
+					width={300}
 					onClickLabel={() => (isAdopt ? onClickAdoptionItem(i) : onClickProtectItem(i))}
 				/>
 				{v.is_follow ? (

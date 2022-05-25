@@ -409,7 +409,7 @@ export default FeedContent = props => {
 						}
 					},
 					err => {
-						console.log('err', err);
+						console.log('err / getFollows : FeedContent /', err);
 					},
 				);
 			}
@@ -537,16 +537,18 @@ export default FeedContent = props => {
 				<View style={[organism_style.userLocationLabel_view_feedContent]} onLayout={onLayoutLabel}>
 					{/* UserLocationLabel */}
 					<View style={[organism_style.userLocationLabel_feedContent]}>
-						<UserLocationTimeLabel
-							// data={props.data.feed_writer_id}
-							// data={feed_avatar_id || feed_writer_id || undefined}
-							// data={feed_avatar_id || props.data.feed_writer_id || undefined}
-							data={send}
-							onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})}
-							location={feed_location}
-							time={feed_date}
-							isLarge
-						/>
+						{send ? (
+							<UserLocationTimeLabel
+								data={send}
+								onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})}
+								location={feed_location}
+								time={feed_date}
+								isLarge
+							/>
+						) : (
+							<UserLocationTimeLabel empty={true} time={feed_date} isLarge location={feed_location} />
+						)}
+
 						<View style={{flexDirection: 'row', alignItems: 'center'}}>
 							{!isMissingReportRoute ? (
 								<View style={{flexDirection: 'row', alignItems: 'center'}}>

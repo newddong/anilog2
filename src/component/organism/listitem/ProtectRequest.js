@@ -50,6 +50,7 @@ export default ProtectRequest = React.memo(props => {
 		_id: data._id,
 		img_uri: data.protect_request_photos_uri && data.protect_request_photos_uri[0] ? data.protect_request_photos_uri[0] : DEFAULT_ANIMAL_PROFILE,
 		gender: data.protect_animal_sex,
+		notice_day: data.notice_day,
 	};
 
 	React.useEffect(() => {

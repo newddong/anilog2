@@ -202,6 +202,9 @@ export default AnimalProtectRequestDetail = ({route}) => {
 			},
 			err => {
 				console.log(`Comment errcallback:${JSON.stringify(err)}`);
+				if (err.includes('code 500')) {
+					Modal.alert('네트워크 오류로 댓글목록을 불러오지 못했습니다. 지속적으로 발생할 경우 고객센터로 문의해주세요.');
+				}
 				setComments([]);
 			},
 		);
@@ -235,33 +238,11 @@ export default AnimalProtectRequestDetail = ({route}) => {
 			},
 			err => {
 				console.log('err / setFavoriteEtc / : ', err);
+				if (err.includes('code 500')) {
+					Modal.alert(NETWORK_ERROR);
+				}
 			},
 		);
-	};
-
-	//보호요청 게시글 작성 보호소 라벨의 즐겨찾기 태그 클릭
-	const onPressShelterLabelFavorite = bool => {
-		if (userGlobalObject.userInfo.isPreviewMode) {
-			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
-			});
-		} else {
-			setFavoriteEtc(
-				{
-					collectionName: 'userobjects',
-					target_object_id: data.protect_request_writer_id._id,
-					is_favorite: bool,
-				},
-				result => {
-					console.log('result / favoriteEtc / AnimalProtectRequestDetail : ', result.msg.favoriteEtc);
-					getProtectRequestObject();
-					setData({...data});
-				},
-				err => {
-					console.log('err / favoriteEtc / AnimalProtectRequestDetail : ', err);
-				},
-			);
-		}
 	};
 
 	const onPressReqeustPhoto = () => {
@@ -355,6 +336,9 @@ export default AnimalProtectRequestDetail = ({route}) => {
 			},
 			err => {
 				console.log(' err / deleteComment / ProtectCommentList : ', err);
+				if (err.includes('code 500')) {
+					Modal.alert(NETWORK_ERROR);
+				}
 			},
 		);
 	};

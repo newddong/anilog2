@@ -154,8 +154,8 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
 
         onAssetsObtained(uris, ops, promise);
 
-        Toast myToast = Toast.makeText(reactContext,"우웩"+(medias.size()>0?medias.getString(0):"선택한 사진이 없음"), Toast.LENGTH_SHORT);
-        myToast.show();
+//        Toast myToast = Toast.makeText(reactContext,"우웩"+(medias.size()>0?medias.getString(0):"선택한 사진이 없음"), Toast.LENGTH_SHORT);
+//        myToast.show();
 
     }
 

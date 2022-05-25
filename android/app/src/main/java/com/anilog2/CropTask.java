@@ -13,6 +13,7 @@ import com.facebook.react.bridge.GuardedAsyncTask;
 import com.facebook.react.bridge.JSApplicationIllegalArgumentException;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableMap;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,6 +25,7 @@ import java.net.URLConnection;
 
 import com.anilog2.PhotoListModule;
 import com.anilog2.PhotoListUtil;
+import com.facebook.react.bridge.WritableNativeMap;
 
 public class CropTask extends GuardedAsyncTask<Void, Void> {
     final Context mContext;
@@ -113,7 +115,14 @@ public class CropTask extends GuardedAsyncTask<Void, Void> {
                 String tempOri = PhotoListUtil.getOrientation(Uri.parse(mUri),mContext);
                 PhotoListUtil.setOrientation(tempFile, tempOri, mContext);
             }
-            mPromise.resolve(Uri.fromFile(tempFile).toString());
+
+            WritableMap response = new WritableNativeMap();
+            response.putString("uri",Uri.fromFile(tempFile).toString());
+            response.putDouble("fileSize",tempFile.length());
+            response.putString("fileName",Uri.fromFile(tempFile).toString());
+            response.putInt("width",mWidth);
+            response.putInt("height",mHeight);
+            mPromise.resolve(response);
 
         }catch (Exception e){
             mPromise.reject(e);

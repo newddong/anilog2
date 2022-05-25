@@ -1,7 +1,9 @@
 import React from 'react';
-import {Animated, PanResponder, View, Text, Button, ScrollView, Image, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+import {Animated, PanResponder, View, Text,Platform, Button, ScrollView, Image, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import CameraRoll from 'Root/module/CameraRoll';
 import DP from 'Root/config/dp';
+import FastImage from 'react-native-fast-image';
+import { transform } from '@babel/core';
 
 export default Crop = prop => {
 	const pan = React.useRef(new Animated.ValueXY({x: 0, y: 0})).current;
@@ -9,7 +11,12 @@ export default Crop = prop => {
 	const scalePrev = React.useRef(1);
 	const panStart = React.useRef({x: 0, y: 0}).current;
 	const panPrev = React.useRef({x: 0, y: 0}).current;
+	const imgLayout = React.useRef({width:0,height:0}).current;
 	const initDistance = React.useRef(1);
+	const [cropUri, setCropUri] = React.useState();
+	const [imgUri, setImgUri] = React.useState();
+	const [imgDimension, setImgDimension] = React.useState({width:750*DP,height:750*DP});
+	
 	const panResponder = React.useRef(
 		PanResponder.create({
 			onMoveShouldSetPanResponder: () => true,
@@ -23,7 +30,6 @@ export default Crop = prop => {
 				pan.setOffset({x: panPrev.x - nativeEvent.pageX, y: panPrev.y - nativeEvent.pageY});
 			},
 			onPanResponderMove: ({nativeEvent}) => {
-				// console.log(nativeEvent);
 				if (nativeEvent.touches.length > 1) {
 					let pos1 = {x: nativeEvent.touches[0].pageX, y: nativeEvent.touches[0].pageY};
 					let pos2 = {x: nativeEvent.touches[1].pageX, y: nativeEvent.touches[1].pageY};
@@ -33,53 +39,138 @@ export default Crop = prop => {
 				pan.setValue({x: nativeEvent.pageX, y: nativeEvent.pageY});
 			},
 			onPanResponderRelease: ({nativeEvent}) => {
+				
 				if (nativeEvent.changedTouches.length > 1) {
 					scalePrev.current = scale._value;
-					return;
+				}else{
+					let w = imgLayout.width * (1-scalePrev.current);
+					let h = imgLayout.height * (1-scalePrev.current);
+	
+					panPrev.x = pan.x._value + pan.x._offset;
+					panPrev.y = pan.y._value + pan.y._offset;
+			
+					if(panPrev.x>75*DP){
+						Animated.spring(
+							pan,{toValue:{x:75*DP-pan.x._offset,y:panPrev.y-pan.y._offset},speed:50,useNativeDriver:false}
+						).start();
+						panPrev.x = 75*DP;
+					}
+					if(panPrev.y>75*DP){
+						Animated.spring(
+							pan,{toValue:{x:panPrev.x-pan.x._offset,y:75*DP-pan.y._offset},speed:50,useNativeDriver:false}
+						).start();
+						panPrev.y = 75*DP;
+					}
+					if(panPrev.x+imgLayout.width<675*DP){
+						Animated.spring(
+							pan,{toValue:{x:675*DP-imgLayout.width-pan.x._offset,y:panPrev.y-pan.y._offset},speed:50,useNativeDriver:false}
+						).start();
+						panPrev.x = 675*DP-imgLayout.width;
+					}
+					if(panPrev.y+imgLayout.height<675*DP){
+						Animated.spring(
+							pan,{toValue:{x:panPrev.x-pan.x._offset,y:675*DP-imgLayout.height-pan.y._offset},speed:50,useNativeDriver:false}
+						).start();
+						panPrev.y = 675*DP-imgLayout.height;
+					}
 				}
-				panPrev.x = pan.x._value + pan.x._offset;
-				panPrev.y = pan.y._value + pan.y._offset;
-				// console.log(pan);
+
+
 			},
 		}),
 	).current;
 
-	const panResponder1 = React.useRef(
-		PanResponder.create({
-			onMoveShouldSetPanResponder: () => false,
-		}),
-	);
+	React.useEffect(()=>{
+		imgUri&&Image.getSize(imgUri,(w,h)=>{
+			if(w>h){
+				let newWidth = (w/h)*750*DP;
+				let initPositionX = (750*DP - newWidth)/2;
+				panPrev.x = initPositionX;
+				pan.setValue({x:initPositionX,y:0});
+				imgLayout.width = newWidth;
+				imgLayout.height = 750*DP;
+				setImgDimension({
+					width: newWidth,
+					height: 750*DP
+				});
+			}
+			if(h>w){
+				let newHeight = (h/w)*750*DP;
+				let initPositionY = (750*DP-newHeight)/2;
+				panPrev.y = initPositionY;
+				pan.setValue({x:0,y:initPositionY});
+				imgLayout.width = 750*DP;
+				imgLayout.height = newHeight;
+				setImgDimension({
+					width: 750*DP,
+					height: newHeight
+				});
+			}
+			//w==h 인 경우는 정사각형이라 750X750이 됨
+		});
+
+
+	},[imgUri])
+
 
 	React.useEffect(() => {
-		// console.log(prop.route.params);
-	});
-    const bluerect = React.useRef();
+		setImgUri(prop.route.params.cropImage[0]);
+	},[prop.route.params]);
+    
+	
+	
+	const bluerect = React.useRef();
     const image = React.useRef();
 	const test1 = () => {
-		image.current.measure((x,y,width,height,px,py)=>{console.log('x:'+x+'  y:'+y+'  w:'+width+'  h:'+height+'  px:'+px+'  py:'+py)})
+		image.current.measure((x,y,width,height,px,py)=>{
+			console.log('x:'+x+'  y:'+y+'  w:'+width+'  h:'+height+'  px:'+px+'  py:'+py);
+			console.log('w: '+imgLayout.width*scalePrev.current + '  h: '+ imgLayout.height*scalePrev.current);
+		}
+		);
 	};
 
     const test2 =() => {
-
+		Image.getSize(imgUri,(w,h)=>console.log(w+' : '+h))
     }
 
     const test3 =() => {
-        
+        CameraRoll.cropImage({uri:prop.route.params.cropImage[0],destHeight:300,destWidth:300,offsetX:10,offsetY:10})
+		.then((r)=>{
+			console.log(r);
+			setCropUri(r.uri);
+		});
     }
     const test4 =() => {
-        
+		console.log('scale',scalePrev.current);
+		console.log('move: ',panPrev);
+		console.log('ani',pan);
+		let dim = {height:imgLayout.height*scalePrev.current,width:imgLayout.width*scalePrev.current};
+		console.log('dimension',dim);
+		console.log('setvalue',imgDimension);
     }
 	return (
 		<View style={{flexDirection: 'column', flex: 1}}>
 			<View style={{width: 750 * DP, flexBasis: 750 * DP, backgroundColor: 'green'}}>
             <View style={{position:'absolute',top:75*DP,left:75*DP,width:600*DP, height:600*DP,backgroundColor:'blue'}} ref={bluerect}/>
-				<Animated.View style={{transform: [{translateX: pan.x}, {translateY: pan.y}, {scale: scale}]}} {...panResponder.panHandlers} ref={image}>
-					<Image
-						style={{backgroundColor: 'yellow', width: 750 * DP, height: 750 * DP}}
-						source={{uri: prop.route.params.cropImage[0]}}
-						resizeMode={'center'}
-					/>
+				<Animated.View style={{transform: [{translateX: pan.x}, {translateY: pan.y}, {scale: scale}]}} {...panResponder.panHandlers}>
+					{imgUri&&<Img
+						style={{ width: imgDimension.width, height: imgDimension.height}}
+						source={{uri: imgUri}}
+						resizeMode={'repeat'}
+						ref={image}
+					/>}
 				</Animated.View>
+				{/* <Animated.View style={{transform: [{translateX: pan.x}, {translateY: pan.y}, {scale: scale}]}} {...panResponder.panHandlers} ref={image}>
+					{imgUri&&<Animated.Image
+						style={{ width: 750 * DP, height: 750 * DP,backgroundColor:'yellow' }}
+						source={{uri: imgUri}}
+						resizeMode={'center'}
+					/>}
+				</Animated.View> */}
+				{/* <View style={{backgroundColor:'green',width:750*DP,height:750*DP}}>
+					<View style={{backgroundColor:'yellow',marginTop:75*DP,width:600*DP,marginLeft:75*DP,height:600*DP}}>
+					</View>
+				</View> */}
                 <View style={{position:'absolute',top:75*DP,left:75*DP,width:600*DP, height:4*DP,backgroundColor:'red'}}/>
                 <View style={{position:'absolute',top:75*DP,left:75*DP,width:4*DP, height:600*DP,backgroundColor:'red'}}/>
                 <View style={{position:'absolute',bottom:75*DP,left:75*DP,width:600*DP, height:4*DP,backgroundColor:'red'}}/>
@@ -89,12 +180,12 @@ export default Crop = prop => {
 				<View style={{flexDirection: 'row'}}>
 					<TouchableWithoutFeedback onPress={test1}>
 						<View style={{width: 150, height: 30, marginVertical: 10, marginHorizontal: 10, backgroundColor: 'yellow'}}>
-							<Text>크롭 테스트</Text>
+							<Text>이미지 위치 표시</Text>
 						</View>
 					</TouchableWithoutFeedback>
 					<TouchableWithoutFeedback onPress={test2}>
 						<View style={{width: 150, height: 30, marginVertical: 10, backgroundColor: 'yellow'}}>
-							<Text>크롭 테스트</Text>
+							<Text>이미지 사이즈 픽셀단위</Text>
 						</View>
 					</TouchableWithoutFeedback>
 				</View>
@@ -106,10 +197,11 @@ export default Crop = prop => {
 					</TouchableWithoutFeedback>
 					<TouchableWithoutFeedback onPress={test4}>
 						<View style={{width: 150, height: 30, marginVertical: 10, backgroundColor: 'yellow'}}>
-							<Text>크롭 테스트</Text>
+							<Text>이동 결과</Text>
 						</View>
 					</TouchableWithoutFeedback>
 				</View>
+				{<Img source={{uri:cropUri||imgUri}} style={{marginLeft:10,marginTop:10,width:180,height:180}} resizeMode={'contain'}/>}
 			</View>
 		</View>
 	);
@@ -121,3 +213,14 @@ function getDistance(pos1, pos2) {
 	let square = dx ** 2 + dy ** 2;
 	return Math.sqrt(square);
 }
+
+
+const Img =React.forwardRef((props,ref) => {
+	if(Platform.OS=='ios'){
+		return <Image {...props} ref={ref}></Image>
+
+	}
+	if(Platform.OS=='android'){
+		return <FastImage {...props} ref={ref}></FastImage>
+	}
+})

@@ -183,12 +183,33 @@
 };
 
 export type CropParams = {
+  /**
+   * 이미지 주소
+   */
   uri: string,
+  /**
+   * 바꾸고자 하는 너비 픽셀단위
+   */
   destWidth: number, //uint
+  /**
+   * 바꾸고자 하는 넓이 픽셀단위
+   */
   destHeight: number, //uint
+  /**
+   * 대상의 X오프셋 픽셀단위
+   */
   offsetX?: number, //uint, default 0
+  /**
+   * 대상의 Y오프셋 픽셀단위
+   */
   offsetY?: number, // uint, default 0
+  /**
+   * 회전 각도
+   */
   angle?: number, //default 0
+  /**
+   * 회전 여부
+   */
   isCircular?: boolean,//deefault false
 }
  
@@ -211,6 +232,10 @@ export type CropParams = {
     return RNCCameraRoll.compressImage(params);
    }
 
+   /**
+    * uri에 해당하는 이미지를 크롭, 결과는 promise로 반환
+    * @param {CropParams} params
+    */
    static cropImage(params: CropParams): Promise<Image>{
      return RNCCameraRoll.cropImage(params);
    }

@@ -17,6 +17,7 @@ import {useNavigation} from '@react-navigation/core';
 import WebView from 'react-native-webview';
 import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {serveruri} from 'Root/config/server';
 /**
  * 후기 세부 페이지
  * @param {object} props - Props Object
@@ -98,7 +99,7 @@ const ReviewContent = props => {
 	const onWebViewMessage = async event => {
 		if (Platform.OS == 'android') {
 			setTimeout(() => {
-				if (event.nativeEvent.data.includes('pinefriend.s3')) {
+				if (event.nativeEvent.data.includes('amazonaws.com')) {
 					console.log('event.nativeEvent.data', event.nativeEvent.data);
 					showImg(event.nativeEvent.data);
 				} else if (parseInt(event.nativeEvent.data) < 100 * DP) {
@@ -111,8 +112,7 @@ const ReviewContent = props => {
 		} else {
 			// console.log('event IOS : ', JSON.stringify(event._dispatchInstances._debugOwner.memoizedProps));
 			console.log('event.nativeEvent.data', event.nativeEvent.data);
-			if (event.nativeEvent.data.includes('pinefriend.s3')) {
-				console.log('event.nativeEvent.data', event.nativeEvent.data);
+			if (event.nativeEvent.data.includes('amazonaws.com')) {
 				showImg(event.nativeEvent.data);
 			} else if (parseInt(event.nativeEvent.data) < 100 * DP) {
 				setHeight(100 * DP * DP);
@@ -147,7 +147,7 @@ const ReviewContent = props => {
 	};
 
 	const showImg = src => {
-		console.log('dd');
+		console.log('ser', src);
 		Modal.popPhotoListViewModal([src]);
 	};
 
@@ -194,7 +194,7 @@ const ReviewContent = props => {
 							scrollEnabled={false}
 							injectedJavaScriptBeforeContentLoaded={runFirst}
 							source={{html: changeHtmlTag()}}
-							style={[style.webview, {height: height, opacity: 0.99}]}
+							style={[style.webview, {height: height == 0 ? 100 * DP : height, opacity: 0.99}]}
 						/>
 					) : (
 						<WebView

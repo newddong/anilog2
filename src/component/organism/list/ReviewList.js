@@ -51,11 +51,7 @@ export default ReviewList = props => {
 				keyExtractor={item => item._id}
 				ListEmptyComponent={props.whenEmpty}
 				ItemSeparatorComponent={() => {
-					return (
-						<View style={{alignItems: 'center'}}>
-							<View style={{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY30}} />
-						</View>
-					);
+					return <View style={{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY30, alignSelf: 'center'}} />;
 				}}
 				ListHeaderComponent={recommend}
 				listKey={({item, index}) => index}

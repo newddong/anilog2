@@ -244,7 +244,7 @@ export default MissingReportList = props => {
 
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
-			<View style={{}}>
+			<View style={{alignItems: 'center'}}>
 				<View style={[searchProtectRequest.filterView]}>
 					<View style={[searchProtectRequest.inside, {flexDirection: 'row', justifyContent: 'space-between'}]}>
 						<View style={[temp_style.filterBtn, {}]}>

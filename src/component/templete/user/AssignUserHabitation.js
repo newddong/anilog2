@@ -143,7 +143,7 @@ const AssignUserHabitation = props => {
 			</View>
 			{/* Text Msg */}
 			<View style={[assignUserHabitation_style.textContainer]}>
-				<Text style={[txt.noto24, assignUserHabitation_style.info_text]}>사는 지역을 대략적으로 알려주세요.</Text>
+				<Text style={[txt.noto24, assignUserHabitation_style.info_text]}>사는 지역을 알려주세요.</Text>
 			</View>
 			{/* HabitationForm */}
 			<View style={[assignUserHabitation_style.habitationForm]}>

@@ -7,7 +7,7 @@ import ProfileImageMedium140 from 'Molecules/image/ProfileImageMedium140';
 import {shelterLabel} from 'Organism/style_organism copy';
 
 export default ShelterVerticalLabel = props => {
-	// console.log('props', props.data);
+	console.log('props', props.data);
 	const data = props.data;
 	return (
 		<View style={[shelterLabel.container]}>
@@ -17,7 +17,7 @@ export default ShelterVerticalLabel = props => {
 			<View style={[shelterLabel.shelterInfo]}>
 				<Text style={[txt.noto28, {color: BLACK, textAlign: 'center'}]}>{data.user_nickname}</Text>
 				<Text style={[txt.noto24, {color: GRAY10, width: 160 * DP, textAlign: 'center'}]} numberOfLines={1}>
-					{data.shelter_address.brief}
+					{data.shelter_address?.brief || ''}
 				</Text>
 			</View>
 		</View>

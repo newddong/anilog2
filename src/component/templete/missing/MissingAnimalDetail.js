@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {Image, TouchableOpacity, FlatList, TouchableWithoutFeedback, Platform} from 'react-native';
+import {Image, TouchableOpacity, FlatList, TouchableWithoutFeedback, Platform, PermissionsAndroid} from 'react-native';
 import {Text, View} from 'react-native';
 import {reportDetail, temp_style, missingAnimalDetail} from 'Templete/style_templete';
 import FeedContent from 'Organism/feed/FeedContent';
@@ -21,7 +21,7 @@ import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
 import MissingReportItem from 'Root/component/organism/listitem/MissingReportItem';
 import {NETWORK_ERROR} from 'Root/i18n/msg';
-// import CameraRoll from '@react-native-community/cameraroll';
+import CameraRoll from 'Root/module/CameraRoll';
 
 export default MissingAnimalDetail = props => {
 	const navigation = useNavigation();
@@ -215,12 +215,13 @@ export default MissingAnimalDetail = props => {
 			const imageURI = await viewShotRef.current.capture();
 			if (Platform.OS === 'android') {
 				// const granted = await getPermissionAndroid();
-				const granted = getPerMission();
+				const granted = await getPerMission();
 				if (!granted) {
+					console.log('not granted');
 					return;
 				}
 			}
-			// const image = CameraRoll.save(imageURI, 'photo');
+			const image = await CameraRoll.saveImage(imageURI);
 			if (image) {
 				// Alert.alert('', 'Image saved successfully.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
 				Modal.popOneBtn('전단지가 저장되었습니다.', '확인', Modal.close);
@@ -259,12 +260,14 @@ export default MissingAnimalDetail = props => {
 		}
 	}
 
-	function getPerMission() {
+	async function getPerMission() {
+		let confirmed = false;
 		try {
-			getPermissionAndroid();
+			confirmed = await getPermissionAndroid();
 		} catch (err) {
 			console.log('Android Image Permisson Failed', err);
 		}
+		return confirmed;
 	}
 
 	//댓글 대댓글 삭제

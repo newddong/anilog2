@@ -57,6 +57,7 @@ import android.widget.Toast;
 import static com.anilog2.PhotoListUtil.*;
 import com.anilog2.GetMediaTask;
 import com.anilog2.CropTask;
+import com.anilog2.SaveTask;
 
 public class PhotoListModule extends ReactContextBaseJavaModule{
     public static final String NAME = "PhotoListModule";
@@ -212,6 +213,21 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
         }
         cropTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
+    /**
+     * Save an image to the gallery (i.e. {@link MediaStore.Images}). This copies the original file
+     * from wherever it may be to the external storage pictures directory, so that it can be scanned
+     * by the MediaScanner.
+     *
+     * @param uri the file:// URI of the image to save
+     * @param promise to be resolved or rejected
+     */
+    @ReactMethod
+    public void saveImage(String uri, Promise promise) {
+        new SaveTask(getReactApplicationContext(), Uri.parse(uri), promise)
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
 
     void onAssetsObtained(List<Uri> fileUris, PhotoListUtil.Options options, final Promise promise) {
         try {

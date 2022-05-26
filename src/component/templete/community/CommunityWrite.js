@@ -202,6 +202,11 @@ export default CommunityWrite = props => {
 							 style=" object-fit: contain; border-radius:15px; background-color: #0a0a0a; margin:5px 0px 5px 0px; "/>
 							 </div>`,
 						);
+						if (i == result.msg.length - 1) {
+							setTimeout(() => {
+								richText.current?.insertHTML('<p><br/></p></div>');
+							}, 1000);
+						}
 					});
 					// richText.current?.focusContentEditor();
 					Modal.close();

@@ -5,7 +5,6 @@ import {APRI10, GRAY10} from 'Root/config/color';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import {txt} from 'Root/config/textstyle';
 import {NETWORK_ERROR, ONLY_CONTENT_FOR_ADOPTION, PET_KIND, PROTECT_LOCATION} from 'Root/i18n/msg';
-import {getProtectRequestList} from 'Root/api/shelterapi.js';
 import Modal from 'Root/component/modal/Modal';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import Loading from 'Root/component/molecules/modal/Loading';
@@ -21,7 +20,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 	const one_month_before = today.clone().subtract(1, 'month').format('YY.MM.DD');
 	const [data, setData] = React.useState('false');
 	const [offset, setOffset] = React.useState(1);
-	const LIMIT = 10;
+	const LIMIT = 50;
 	const [loading, setLoading] = React.useState(false);
 	const [filterData, setFilterData] = React.useState({
 		from: '',
@@ -39,6 +38,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			if (data != 'false') {
+				//처음 페이지 진입시 두번 호출안하도록
 				getList();
 			}
 		});
@@ -149,11 +149,13 @@ export default ProtectRequestList = ({navigation, route}) => {
 				) {
 					console.log('arg', arg);
 					setData('false');
+					setOffset(1);
 					setFilterData(arg);
 					filterRef.current = false;
 				} else {
 					console.log('arg', arg);
 					setData('false');
+					setOffset(1);
 					setFilterData(arg);
 					filterRef.current = true;
 				}
@@ -185,17 +187,15 @@ export default ProtectRequestList = ({navigation, route}) => {
 
 	//입양 가능한 게시글만 보기 On
 	const filterOn = () => {
-		// setFilterData({...filterData, adoptable_posts: 'true'});
 		setOnlyAdoptable(true);
 	};
 
 	//입양 가능한 게시글만 보기 Off
 	const filterOff = () => {
-		// setFilterData({...filterData, adoptable_posts: 'false'});
 		setOnlyAdoptable(false);
 	};
 
-	//별도의 API 사용 예정.
+	//즐겨찾기 onOff
 	const onOff_FavoriteTag = (bool, index) => {
 		setFavoriteEtc(
 			{
@@ -215,42 +215,6 @@ export default ProtectRequestList = ({navigation, route}) => {
 		);
 	};
 
-	//지역 필터
-	const onSelectLocation = () => {
-		Modal.popSelectScrollBoxModal(
-			[PROTECT_LOCATION],
-			'보호 지역 선택',
-			selected => {
-				selected == '지역' ? setFilterData({...filterData, city: ''}) : setFilterData({...filterData, city: selected});
-				Modal.close();
-			},
-			() => {
-				Modal.close();
-			},
-		);
-	};
-
-	//동물종류 필터
-	const onSelectKind = async () => {
-		const fetchPetKindData = await PET_KIND();
-		let petKind = fetchPetKindData.map((v, i) => v.pet_species);
-		petKind.splice(0, 0, '동물종류');
-		Modal.popSelectScrollBoxModal(
-			[petKind],
-			'동물 종류 선택',
-			selected => {
-				selected == '동물종류'
-					? setFilterData({...filterData, protect_animal_species: ''})
-					: setFilterData({...filterData, protect_animal_species: selected});
-
-				Modal.close();
-			},
-			() => {
-				Modal.close();
-			},
-		);
-	};
-
 	//검색결과가 없을 경우
 	const whenEmpty = () => {
 		return <ListEmptyInfo text={'목록이 없습니다..'} />;
@@ -265,9 +229,14 @@ export default ProtectRequestList = ({navigation, route}) => {
 		return filtered;
 	};
 
+	//리스트 페이징 작업
 	const onEndReached = () => {
-		console.log('EndReached');
-		getList();
+		console.log('EndReached', getData().length % LIMIT);
+		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
+
+		if (getData().length % LIMIT == 0) {
+			getList();
+		}
 	};
 
 	const renderItem = ({item, index}) => {
@@ -330,26 +299,6 @@ export default ProtectRequestList = ({navigation, route}) => {
 								<OnOffSwitch onSwtichOn={filterOn} onSwtichOff={filterOff} />
 							</View>
 						</View>
-						{/* <View style={{flexDirection: 'row'}}>
-							<View style={[temp_style.filterBtn]}>
-								<ArrowDownButton
-									onPress={onSelectLocation}
-									btnTitle={filterData.city || '지역'}
-									btnLayout={btn_w306_h68}
-									btnStyle={'border'}
-									btnTheme={'gray'}
-								/>
-							</View>
-							<View style={[temp_style.filterBtn]}>
-								<ArrowDownButton
-									onPress={onSelectKind}
-									btnTitle={filterData.protect_animal_species || '동물 종류'}
-									btnLayout={btn_w306_h68}
-									btnStyle={'border'}
-									btnTheme={'gray'}
-								/>
-							</View>
-						</View> */}
 					</View>
 				</View>
 				<FlatList
@@ -360,8 +309,8 @@ export default ProtectRequestList = ({navigation, route}) => {
 					keyExtractor={keyExtractor}
 					getItemLayout={getItemLayout}
 					refreshing
-					onEndReached={onEndReached}
-					onEndReachedThreshold={0.6}
+					onEndReached={onEndReached} //Flatlist 페이징
+					onEndReachedThreshold={0.6} //페이징을 하는 타이밍
 					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					ListEmptyComponent={whenEmpty}
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
@@ -372,16 +321,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
 				/>
 				{loading ? (
-					<View
-						style={{
-							position: 'absolute',
-							left: 0,
-							right: 0,
-							top: 0,
-							bottom: 0,
-							alignItems: 'center',
-							justifyContent: 'center',
-						}}>
+					<View style={searchProtectRequest.indicatorCont}>
 						<ActivityIndicator size="large" color={APRI10} />
 					</View>
 				) : (

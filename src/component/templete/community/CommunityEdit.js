@@ -29,7 +29,7 @@ export default CommunityEdit = props => {
 	const [editorLayout, setEditorLayout] = React.useState({
 		//Rich Editor 레이아웃
 		height: 345,
-		width: 310,
+		width: 654 * DP,
 		x: 0,
 		y: 0,
 	});
@@ -45,9 +45,6 @@ export default CommunityEdit = props => {
 	}, [data]);
 
 	React.useEffect(() => {
-		if (Platform.OS === 'ios') {
-			Geolocation.requestAuthorization('always');
-		}
 		isReview ? navigation.setOptions({title: '리뷰 수정'}) : navigation.setOptions({title: '자유 게시글 수정'});
 	}, []);
 
@@ -65,7 +62,6 @@ export default CommunityEdit = props => {
 	const onHeightChange = e => {
 		console.log('onHeightChange', e);
 		if (e < 300 * DP) {
-			console.log('dd');
 			setHeight(300 * DP);
 		} else {
 			setHeight(e);
@@ -129,18 +125,37 @@ export default CommunityEdit = props => {
 	}
 
 	//이미지 입력
-	const insertImage = async imageList => {
+	const insertImage = imageList => {
 		// console.log('imageList', imageList);
-		data != 'false' ? richText.current?.insertHTML('<p><br/></p></div>') : false; //이미지를 넣을 시 바로 다음줄로 이동하도록 처리
-		const result = await changePath(imageList);
-		result.map((v, i) => {
-			richText.current?.insertHTML('<p><br/></p></div>');
-			richText.current?.insertHTML(
-				`<div><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
-				 height="320px;" width="${editorLayout.width};" style="border-radius:15px; margin:5px 0px 5px 0px; "/></div>`,
+		// console.log('imageList', imageList);
+		console.log('editorLayout.width', editorLayout.width);
+		Modal.popLoading(true);
+		setTimeout(() => {
+			data != 'false' ? richText.current?.insertHTML('<p><br/></p></div>') : false; //이미지를 넣을 시 바로 다음줄로 이동하도록 처리
+			// const result = await changePath(imageList);
+			changeLocalPathToS3Path(
+				{
+					s3path_uri: imageList,
+				},
+				result => {
+					// console.log('result / s3path / Write ', result.msg);
+					// resolve(result.msg);
+					result.msg.map((v, i) => {
+						richText.current?.insertHTML('<p><br/></p></div>');
+						richText.current?.insertHTML(
+							`<div><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick');" \n
+							 height="320px;" width="${editorLayout.width};" style="border-radius:15px; margin:5px 0px 5px 0px; "/></div>`,
+						);
+					});
+					// richText.current?.focusContentEditor();
+					Modal.close();
+				},
+				err => {
+					console.log('err', err);
+					Modal.close();
+				},
 			);
-		});
-
+		}, 100);
 		richText.current?.focusContentEditor();
 	};
 
@@ -206,11 +221,6 @@ export default CommunityEdit = props => {
 				Modal.close();
 			},
 		);
-	};
-
-	const onPressTempSave = () => {
-		richText.current?.dismissKeyboard(); //일반적인 input과 달리 RichText에서는 이와같이 키보드를 hide
-		alert('onPressTempSave');
 	};
 
 	const onCursorPosition = scrollY => {
@@ -296,22 +306,8 @@ export default CommunityEdit = props => {
 				key={type}
 				onPress={() => onPressType(type)}
 				activeOpacity={0.6}
-				style={[
-					style.category_item_free,
-					{
-						backgroundColor: data.community_free_type == type ? APRI10 : GRAY40,
-					},
-				]}>
-				<Text
-					style={[
-						txt.noto28,
-						style.category_item_text,
-						{
-							color: data.community_free_type == type ? WHITE : GRAY10,
-						},
-					]}>
-					{text}
-				</Text>
+				style={[style.category_item_free, {backgroundColor: data.community_free_type == type ? APRI10 : GRAY40}]}>
+				<Text style={[txt.noto28, {color: data.community_free_type == type ? WHITE : GRAY10}]}>{text}</Text>
 			</TouchableOpacity>
 		);
 	};
@@ -319,12 +315,6 @@ export default CommunityEdit = props => {
 	const getReviewButtonContainer = () => {
 		return (
 			<>
-				{/* <TouchableOpacity activeOpacity={0.6} onPress={onPressTempSave}>
-					<View style={[style.buttonItem]}>
-						<Save54 />
-						<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>임시저장</Text>
-					</View>
-				</TouchableOpacity> */}
 				<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
 					<View style={[style.buttonItem]}>
 						<Camera54 />
@@ -353,7 +343,7 @@ export default CommunityEdit = props => {
 	};
 
 	const moveToLocationPicker = () => {
-		props.navigation.push('SearchMap', {data: data, isReview: isReview, isEdit: true});
+		props.navigation.push('CommunityLocationPicker', {data: data, isReview: isReview, isEdit: true});
 	};
 
 	return (
@@ -400,31 +390,48 @@ export default CommunityEdit = props => {
 						<></>
 					)}
 					{Platform.OS == 'android' ? (
+						// <ScrollView>
+						// 	<RichEditor
+						// 		ref={richText}
+						// 		initialContentHTML={data.community_content}
+						// 		initialFocus={true}
+						// 		editorStyle={{
+						// 			contentCSSText: 'font-size:14px;',
+						// 		}}
+						// 		onLayout={onLayout}
+						// 		onChange={onChange}
+						// 		style={{
+						// 			width: '100%',
+						// 			opacity: 0.99,
+						// 			height: height,
+						// 			// flex: 1,
+						// 		}}
+						// 		// initialHeight={1000}
+						// 		onHeightChange={onHeightChange}
+						// 		placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
+						// 		onCursorPosition={onCursorPosition}
+						// 	/>
+						// </ScrollView>
 						<ScrollView>
 							<RichEditor
 								ref={richText}
 								initialContentHTML={data.community_content}
-								initialFocus={true}
-								editorStyle={{
-									contentCSSText: 'font-size:14px;',
-								}}
-								onLayout={onLayout}
+								editorStyle={{contentCSSText: 'font-size:13px;'}}
 								onChange={onChange}
-								style={{
-									width: '100%',
-									opacity: 0.99,
-									height: height,
-									// flex: 1,
-								}}
-								// initialHeight={1000}
-								onHeightChange={onHeightChange}
-								placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
+								onLayout={onLayout}
+								keyboardDisplayRequiresUserAction={true}
+								style={{width: '100%', opacity: 0.99}}
+								placeholder={
+									isReview ? '서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.' : '내용을 작성해 주세요.'
+								}
 								onCursorPosition={onCursorPosition}
+								onHeightChange={onHeightChange}
+								pasteAsPlainText={true}
 							/>
 						</ScrollView>
 					) : (
 						<>
-							<RichEditor
+							{/* <RichEditor
 								ref={richText}
 								initialContentHTML={data.community_content}
 								showSoftInputOnFocus={false}
@@ -443,7 +450,27 @@ export default CommunityEdit = props => {
 								}}
 								placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
 								onCursorPosition={onCursorPosition}
-							/>
+							/> */}
+							<View style={{flexDirection: 'row'}}>
+								<RichEditor
+									ref={richText}
+									initialContentHTML={data.community_content}
+									showSoftInputOnFocus={false}
+									initialFocus={true}
+									keyboardDisplayRequiresUserAction={true}
+									editorStyle={{contentCSSText: 'font-size:13px;'}}
+									onChange={onChange}
+									onFocus={() => setShowBtn(true)}
+									onBlur={() => setShowBtn(false)}
+									style={{width: '100%', opacity: 0.99}}
+									contentMode={'mobile'}
+									placeholder={
+										isReview ? '서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.' : '내용을 작성해 주세요.'
+									}
+									onCursorPosition={onCursorPosition}
+									pasteAsPlainText={true}
+								/>
+							</View>
 						</>
 					)}
 				</View>

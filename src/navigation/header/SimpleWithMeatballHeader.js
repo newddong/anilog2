@@ -21,11 +21,12 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 	//즐겨찾기 상태 아이콘 출력인 경우
 	React.useEffect(() => {
 		if (route.params.request_object) {
+			console.log('route.params.request_object?.protect_request_is_favorite ', route.params.request_object?.protect_request_is_favorite);
 			!route.params.request_object?.protect_request_is_favorite ? setFavoriteTag(false) : setFavoriteTag(true);
 		} else if (route.params.feed_object) {
 			!route.params.request_object?.is_favorite ? setFavoriteTag(false) : setFavoriteTag(true);
 		}
-	}, []);
+	}, [route.params]);
 
 	const onPressChangeProtectRequestStatus = () => {
 		Modal.close();
@@ -290,9 +291,9 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 			return <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />;
 		} else {
 			if (favoriteTag) {
-				return <FavoriteTag48_Border onPress={() => onPressFavorite(true)} />;
-			} else {
 				return <FavoriteTag48_Filled onPress={() => onPressFavorite(false)} />;
+			} else {
+				return <FavoriteTag48_Border onPress={() => onPressFavorite(true)} />;
 			}
 		}
 	};

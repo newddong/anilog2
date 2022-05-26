@@ -84,7 +84,7 @@ export default PasswordChecker = props => {
 		let isMatch = passwordValue.current == pwdcheck;
 		props.passwordChecker(pwdcheck);
 		props.onConfirmAndChecked && props.onConfirmAndChecked(isValid && isMatch);
-		return isMatch;
+		return isMatch && props?.firstValid;
 	};
 
 	// 비밀번호 변경 루트 => 현재 암호 확인
@@ -103,7 +103,7 @@ export default PasswordChecker = props => {
 					// description={PASSWORD_FORM_DESCRIPTION}
 					placeholder={REQ_PASSWORD}
 					// information={PASSWORD_FORM_DESCRIPTION}
-					information={'8~20자 이상 영문, 숫자 특수문자(!@#$%^&*만 허용)'}
+					information={'8~20자 영문, 숫자 특수문자(!@#$%^&*만 허용) 모두 포함'}
 					alert_msg={FORM_UNMATCHED_DESC}
 					confirm_msg={FORM_MATCHED_DESC}
 					onChange={onChangePwd}

@@ -137,12 +137,13 @@ export async function getProtectApplicantList(params, callback, errcallback) {
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
-export async function getProtectRequestByProtectRequestId(params, callback, errcallback) {
-	apiController('/protect/getProtectRequestByProtectRequestId', arguments);
-}
+ export async function getProtectRequestByProtectRequestId(params, callback, errcallback){
+	apiController( '/protect/getProtectRequestByProtectRequestId', arguments);
+	};
 
 /**
- * 보호소 리스트
+ * 지역에 따른 보호소 정보
+
  * @param {object} params
  * @param {string} params.city - 보호소 지역(시,도) (all | '모든지역', 그외 지역은 해당 시,도 - 카카오 주소체계 )
  * @param {({}:object)=>void} callback - API응답처리 콜백

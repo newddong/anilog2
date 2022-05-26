@@ -1,18 +1,26 @@
 package com.anilog2;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
+import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import com.facebook.infer.annotation.Assertions;
 import com.facebook.react.bridge.GuardedAsyncTask;
 import com.facebook.react.bridge.JSApplicationIllegalArgumentException;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableMap;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,6 +32,7 @@ import java.net.URLConnection;
 
 import com.anilog2.PhotoListModule;
 import com.anilog2.PhotoListUtil;
+import com.facebook.react.bridge.WritableNativeMap;
 
 public class CropTask extends GuardedAsyncTask<Void, Void> {
     final Context mContext;
@@ -32,6 +41,8 @@ public class CropTask extends GuardedAsyncTask<Void, Void> {
     final int mY;
     final int mWidth;
     final int mHeight;
+    final int mImgWidth;
+    final int mImgHeight;
     int mTargetWidth = 0;
     int mTargetHeight = 0;
     final Promise mPromise;
@@ -44,6 +55,8 @@ public class CropTask extends GuardedAsyncTask<Void, Void> {
             int y,
             int width,
             int height,
+            int imgWidth,
+            int imgHeight,
             Promise promise,
             PhotoListModule module
     ){
@@ -61,6 +74,8 @@ public class CropTask extends GuardedAsyncTask<Void, Void> {
         mHeight = height;
         mPromise = promise;
         mModule = module;
+        mImgHeight = imgHeight;
+        mImgWidth = imgWidth;
     }
 
     public void setTargetSize(int width, int height){
@@ -95,11 +110,12 @@ public class CropTask extends GuardedAsyncTask<Void, Void> {
             boolean hasTargetSize = (mTargetWidth > 0) && (mTargetHeight > 0);
 
             Bitmap cropped;
-            if(hasTargetSize){
-                cropped = cropAndResize(mTargetWidth, mTargetHeight, outOptions);
-            } else{
-                cropped = crop(outOptions);
-            }
+            cropped = cropBitmap(outOptions);
+//            if(hasTargetSize){
+//                cropped = cropAndResize(mTargetWidth, mTargetHeight, outOptions);
+//            } else{
+//                cropped = crop(outOptions);
+//            }
 
             String mimeType = outOptions.outMimeType;
             if(mimeType == null || mimeType.isEmpty()){
@@ -113,7 +129,14 @@ public class CropTask extends GuardedAsyncTask<Void, Void> {
                 String tempOri = PhotoListUtil.getOrientation(Uri.parse(mUri),mContext);
                 PhotoListUtil.setOrientation(tempFile, tempOri, mContext);
             }
-            mPromise.resolve(Uri.fromFile(tempFile).toString());
+
+            WritableMap response = new WritableNativeMap();
+            response.putString("uri",Uri.fromFile(tempFile).toString());
+            response.putDouble("fileSize",tempFile.length());
+            response.putString("fileName",Uri.fromFile(tempFile).toString());
+            response.putInt("width",mWidth);
+            response.putInt("height",mHeight);
+            mPromise.resolve(response);
 
         }catch (Exception e){
             mPromise.reject(e);
@@ -130,6 +153,56 @@ public class CropTask extends GuardedAsyncTask<Void, Void> {
             }
         }
     }
+    @SuppressLint({"SupportAnnotationUsage", "NewApi"})
+    private Bitmap cropBitmap(BitmapFactory.Options outOptions) throws IOException{
+        InputStream inputStream = openBitmapInputStream();
+        Bitmap bitmap;
+        ExifInterface exif = null;
+        int ro = 0;
+        try{
+            outOptions.inSampleSize = 1;
+            bitmap = BitmapFactory.decodeStream(inputStream, null, outOptions);
+
+            File temp = new File(Uri.parse(mUri).getPath());
+            exif = new ExifInterface(temp);
+            ro = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,ExifInterface.ORIENTATION_NORMAL);
+
+            if(bitmap == null){
+                throw new IOException("Cannot decode bitmap: "+ mUri);
+            }
+        } finally {
+            if(inputStream!=null){
+                inputStream.close();
+            }
+        }
+        Matrix matrix = new Matrix();
+        if(ro==ExifInterface.ORIENTATION_ROTATE_90){
+            matrix.postRotate(90);
+        }else if(ro==ExifInterface.ORIENTATION_ROTATE_180){
+            matrix.postRotate(180);
+        }else if(ro==ExifInterface.ORIENTATION_ROTATE_270){
+            matrix.postRotate(270);
+        }
+
+
+        Log.d("crop","crop  mX:"+mX+"  mY:"+mY+"   mW:"+mWidth+"   mH:"+mHeight+"   bW:"+bitmap.getWidth()+"  bH:"+bitmap.getHeight()+"  imgW:"+mImgWidth+"  imgH:"+mImgHeight + "  rotate:"+ro);
+        double ratio = (double) bitmap.getWidth()/mImgWidth;
+        int x,y,w,h;
+        if(ro!=0){
+            x = (int) Math.round(ratio * (mHeight-mY));
+            y = (int) Math.round(ratio * mX);
+            w = (int) Math.round(ratio * mHeight);
+            h = (int) Math.round(ratio * mWidth);
+        }else {
+            x = (int) Math.round(ratio * mX);
+            y = (int) Math.round(ratio * mY);
+            w = (int) Math.round(ratio * mWidth);
+            h = (int) Math.round(ratio * mHeight);
+        }
+        Log.d("crop","crop  X:"+x+"  Y:"+y+"   w:"+w+"   h:"+h+"  ratio:"+ratio);
+        return Bitmap.createBitmap(bitmap,x,y,w,h);
+//        return Bitmap.createBitmap(bitmap,mX,mY,mWidth,mHeight);
+    }
 
     private Bitmap crop(BitmapFactory.Options outOptions) throws IOException{
         InputStream inputStream = openBitmapInputStream();
@@ -137,6 +210,10 @@ public class CropTask extends GuardedAsyncTask<Void, Void> {
         BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(inputStream, false);
         try{
             Rect rect = new Rect(mX, mY, mX + mWidth, mY + mHeight);
+//            Rect rect = new Rect(mY, mX, mY + mHeight, mX+mWidth);
+//            Toast myToast = Toast.makeText(mContext,"크롭"+" offx: "+mX + "  offY"+mY, Toast.LENGTH_SHORT);
+//            myToast.show();
+            Log.d("크롭","크롭"+" offx: "+mX + "  offY:"+mY+"  width:"+mWidth+"   height:"+mHeight);
             return decoder.decodeRegion(rect, outOptions);
         } finally {
             if(inputStream != null){

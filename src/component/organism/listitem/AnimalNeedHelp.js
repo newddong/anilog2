@@ -31,6 +31,7 @@ import DP from 'Root/config/dp';
  */
 export default AnimalNeedHelp = React.memo(props => {
 	// console.log('AnimalNeedHelp', props.data.protect_request_status);
+	console.log('props.data', props.data);
 	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.data);
 	const [selected, setSelected] = React.useState(false);
@@ -175,7 +176,7 @@ export default AnimalNeedHelp = React.memo(props => {
 								<Text style={[txt.noto28]}>등&nbsp; 록&nbsp; 일 : {getParsedDate()}</Text>
 								<Text style={[txt.noto28]} numberOfLines={1}>
 									{/* 보호장소 : {data.protect_request_writer_id != null ? data.protect_request_writer_id.shelter_name : data.shelter_name} */}
-									보호장소 : {data.user_nickname ? data.user_nickname : data.protect_request_writer_id.user_nickname}
+									보호장소 : {data.user_nickname ? data.user_nickname : data.protect_request_writer_id?.user_nickname}
 								</Text>
 								<Text style={[txt.noto28]} numberOfLines={1}>
 									구조지역 :{' '}

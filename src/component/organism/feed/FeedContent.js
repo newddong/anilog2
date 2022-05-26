@@ -75,12 +75,19 @@ export default FeedContent = props => {
 	const [send, setSend] = React.useState();
 	const feed_writer = props.data.feed_avatar_id ? props.data.feed_avatar_id : props.data.feed_writer_id;
 	React.useEffect(() => {
-		if (typeof feed_avatar_id == 'object') {
-			setSend(feed_avatar_id);
-		} else {
-			setSend(props.data.feed_writer_id);
-			// console.log('props.data.feed_writer_id', props.data.feed_writer_id.is_favorite);
+		if(feed_avatar_id){
+			setSend(feed_avatar_id)
+		}else{
+			setSend(feed_writer_id)
 		}
+		
+		
+		// if (typeof feed_avatar_id == 'object') {
+		// 	setSend(feed_avatar_id);
+		// } else {
+		// 	setSend(props.data.feed_writer_id);
+		// 	// console.log('props.data.feed_writer_id', props.data.feed_writer_id.is_favorite);
+		// }
 	}, [props.data]);
 
 	//FeedText가 담긴 View 의 onLayout
@@ -538,6 +545,7 @@ export default FeedContent = props => {
 				<View style={[organism_style.userLocationLabel_view_feedContent]} onLayout={onLayoutLabel}>
 					{/* UserLocationLabel */}
 					<View style={[organism_style.userLocationLabel_feedContent]}>
+
 						{send ? (
 							<UserLocationTimeLabel
 								data={send}

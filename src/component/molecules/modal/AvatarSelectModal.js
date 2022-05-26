@@ -117,6 +117,21 @@ const AvatarSelectModal = props => {
 					{items.length > 0 ? (
 						<View style={[style.avatarList, {}]}>
 							{/* <Text> {nativeEvent}</Text> */}
+							<View
+								style={[
+									{
+										height: 94 * DP,
+										width: 94 * DP,
+										justifyContent: 'center',
+										alignItems: 'center',
+										backgroundColor: '#ff9888',
+										borderRadius: 35 * DP,
+										marginBottom: 20 * DP,
+									},
+									buttonstyle.shadow,
+								]}>
+								<Write94 onPress={moveToFeedWrite} />
+							</View>
 							{platform === 'android' ? (
 								<FlatList data={items} renderItem={({item, index}) => renderItem(item, index)} persistentScrollbar={true}></FlatList>
 							) : (
@@ -140,6 +155,7 @@ const AvatarSelectModal = props => {
 							<View style={style.buttonContainer}>
 								<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.okButtonnMsg} onPress={pressOk} />
 							</View>
+
 							{(checkApi.current = false)}
 						</>
 					) : (

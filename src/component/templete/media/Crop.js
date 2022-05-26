@@ -3,6 +3,7 @@ import {Animated, PanResponder, View, Text,Platform, Button, ScrollView, Image, 
 import CameraRoll from 'Root/module/CameraRoll';
 import DP from 'Root/config/dp';
 import FastImage from 'react-native-fast-image';
+import { getFavoriteFeedListByUserId } from 'Root/api/feedapi';
 
 export default Crop = prop => {
 	const pan = React.useRef(new Animated.ValueXY({x: 0, y: 0})).current;
@@ -182,7 +183,7 @@ export default Crop = prop => {
 
 
 	React.useEffect(() => {
-		setImgUri(prop.route.params.cropImage[0]);
+		setImgUri(prop.route.params.cropImage);
 	},[prop.route.params]);
     
 	
@@ -224,11 +225,15 @@ export default Crop = prop => {
 			.then((r)=>{
 				console.log(r);
 				setCropUri(r.uri);
+				// setImgUri(r.uri);
+				// prop.navigation.navigate({name:prop.route.params.prev,key:prop.route.params.key,params:{cropImg:r.uri},merge:true})
 			});
 		})
 
         
     }
+
+
     const test4 =() => {
 		console.log('scale',scalePrev.current);
 		console.log('move: ',panPrev);
@@ -239,8 +244,8 @@ export default Crop = prop => {
     }
 	return (
 		<View style={{flexDirection: 'column', flex: 1}}>
-			<View style={{width: 750 * DP, flexBasis: 750 * DP, backgroundColor: 'green'}}>
-            <View style={{position:'absolute',top:75*DP,left:75*DP,width:600*DP, height:600*DP,backgroundColor:'blue'}} ref={bluerect}/>
+			<View style={{width: 750 * DP, flexBasis: 750 * DP, backgroundColor: '#fff'}}>
+            <View style={{position:'absolute',top:75*DP,left:75*DP,width:600*DP, height:600*DP,backgroundColor:'#fff'}} ref={bluerect}/>
 				<Animated.View style={{width: imgDimension.width, height: imgDimension.height,alignItems:'center',backgroundColor:'red',transform: [{translateX: pan.x}, {translateY: pan.y}, {scale: scale}]}} {...panResponder.panHandlers}>
 					{imgUri&&<Img
 						style={{ width: imgDimension.width, height: imgDimension.height}}
@@ -249,18 +254,18 @@ export default Crop = prop => {
 						ref={image}
 					/>}
 				</Animated.View>
-				<View style={{backgroundColor:'green',width:750*DP,height:750*DP}}>
-					<View style={{backgroundColor:'yellow',marginTop:75*DP,width:600*DP,marginLeft:75*DP,height:600*DP
+				<View style={{backgroundColor:'#fff',width:750*DP,height:750*DP}}>
+					<View style={{backgroundColor:'#fff',marginTop:75*DP,width:600*DP,marginLeft:75*DP,height:600*DP
 				,transform:[{scale:1}]
 				}}>
 					</View>
 				</View>
-                <View style={{position:'absolute',top:75*DP,left:75*DP,width:600*DP, height:4*DP,backgroundColor:'red'}}/>
-                <View style={{position:'absolute',top:75*DP,left:75*DP,width:4*DP, height:600*DP,backgroundColor:'red'}}/>
-                <View style={{position:'absolute',bottom:75*DP,left:75*DP,width:600*DP, height:4*DP,backgroundColor:'red'}}/>
-                <View style={{position:'absolute',top:75*DP,right:75*DP,width:4*DP, height:600*DP,backgroundColor:'red'}}/>
+                <View style={{position:'absolute',top:75*DP,left:75*DP,width:600*DP, height:4*DP,backgroundColor:'black'}}/>
+                <View style={{position:'absolute',top:75*DP,left:75*DP,width:4*DP, height:600*DP,backgroundColor:'black'}}/>
+                <View style={{position:'absolute',bottom:75*DP,left:75*DP,width:600*DP, height:4*DP,backgroundColor:'black'}}/>
+                <View style={{position:'absolute',top:75*DP,right:75*DP,width:4*DP, height:600*DP,backgroundColor:'black'}}/>
 			</View>
-			<View style={{backgroundColor: '#fff', width: 750 * DP, flex: 1}}>
+			{true?<View style={{backgroundColor: '#fff', width: 750 * DP, flex: 1}}>
 				<View style={{flexDirection: 'row'}}>
 					<TouchableWithoutFeedback onPress={test1}>
 						<View style={{width: 150, height: 30, marginVertical: 10, marginHorizontal: 10, backgroundColor: 'yellow'}}>
@@ -286,7 +291,19 @@ export default Crop = prop => {
 					</TouchableWithoutFeedback>
 				</View>
 				{<Img source={{uri:cropUri||imgUri}} style={{marginLeft:10,marginTop:10,width:180,height:180}} resizeMode={'contain'}/>}
-			</View>
+			</View>:
+			<View style={{backgroundColor: '#fff', width: 750 * DP, flex: 1,justifyContent:'center',alignItems:'center'}}>
+			<View style={{flexDirection: 'row'}}>
+					<TouchableWithoutFeedback onPress={test3}>
+						<View style={{width: 250, height: 50, marginVertical: 10, marginHorizontal: 10, backgroundColor: 'yellow'}}>
+							<Text>크롭 테스트</Text>
+						</View>
+					</TouchableWithoutFeedback>
+				</View>
+			{/* {<Img source={{uri:cropUri||imgUri}} style={{marginLeft:10,marginTop:10,width:180,height:180}} resizeMode={'contain'}/>} */}
+		</View>
+			
+			}
 		</View>
 	);
 };

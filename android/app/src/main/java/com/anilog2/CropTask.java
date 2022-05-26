@@ -186,14 +186,16 @@ public class CropTask extends GuardedAsyncTask<Void, Void> {
 
 
         Log.d("crop","crop  mX:"+mX+"  mY:"+mY+"   mW:"+mWidth+"   mH:"+mHeight+"   bW:"+bitmap.getWidth()+"  bH:"+bitmap.getHeight()+"  imgW:"+mImgWidth+"  imgH:"+mImgHeight + "  rotate:"+ro);
-        double ratio = (double) bitmap.getWidth()/mImgWidth;
+        double ratio = 1;
         int x,y,w,h;
-        if(ro!=0){
-            x = (int) Math.round(ratio * (mHeight-mY));
-            y = (int) Math.round(ratio * mX);
+        if(ro>1){
+            ratio = (double) bitmap.getWidth()/mImgHeight;
+            x = (int) Math.round(ratio * mY);
+            y = (int) Math.round(ratio * (mImgWidth-mWidth-mX));
             w = (int) Math.round(ratio * mHeight);
             h = (int) Math.round(ratio * mWidth);
         }else {
+            ratio = (double) bitmap.getWidth()/mImgWidth;
             x = (int) Math.round(ratio * mX);
             y = (int) Math.round(ratio * mY);
             w = (int) Math.round(ratio * mWidth);

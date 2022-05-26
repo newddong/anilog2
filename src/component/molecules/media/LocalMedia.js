@@ -5,6 +5,7 @@ import DP from 'Root/config/dp';
 import {styles} from 'Atom/image/imageStyle';
 import {APRI10, WHITE} from 'Root/config/color';
 import {Paw94x90} from 'Atom/icon';
+import FastImage from 'react-native-fast-image';
 
 /**
  * 디바이스의 미디어 썸네일을 표시, 선택할때 사용하는 최소단위 컴포넌트
@@ -39,12 +40,16 @@ const LocalMedia = React.memo(props => {
 		props.data.state ? setSelected(true) : setSelected(false);
 	}, [props.data.state]);
 
+	React.useEffect(()=>{
+		setSelected(props.selected);
+	},[props.selected])
+
 	const onPressMedia = e => {
 		if (isSelect) {
 			setSelected(false);
 			props.onCancel(props.data.image.uri);
 		} else {
-			setSelected(true);
+			// setSelected(true);
 			props.onSelect(props.data.image.uri);
 		}
 	};
@@ -105,7 +110,7 @@ const LocalMedia = React.memo(props => {
 	return (
 		<TouchableOpacity onPress={onPressMedia} style={[styles.img_square_186,{marginHorizontal:1*DP,marginVertical:1*DP}]}>
 			{/* <Image source={{uri: props.data.img_uri}} style={getStyleOfSelectedItem()} /> */}
-			<Image source={{uri: props.data.image.uri}} style={getStyleOfSelectedItem()} />
+			<Img source={{uri: props.data.image.uri}} style={getStyleOfSelectedItem()} />
 			{isSelect && getImageOfSelectedItem()}
 			{/* {props.data.image.playableDuration != null && (
 				<Text style={[txt.roboto22, {color: WHITE, position: 'absolute', left: 10 * DP, bottom: 6 * DP}]}>{props.data.image.playableDuration}</Text>
@@ -142,5 +147,17 @@ const style = StyleSheet.create({
 		paddingHorizontal: 46 * DP,
 	},
 });
+
+
+//안드로이드에서 FastImage를 사용하도록하는 커스텀 컴포넌트
+const Img =React.forwardRef((props,ref) => {
+	if(Platform.OS=='ios'){
+		return <Image {...props} ref={ref}></Image>
+
+	}
+	if(Platform.OS=='android'){
+		return <FastImage {...props} ref={ref}></FastImage>
+	}
+})
 
 export default LocalMedia;

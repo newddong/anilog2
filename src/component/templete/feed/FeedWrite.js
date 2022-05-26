@@ -313,7 +313,14 @@ export default FeedWrite = props => {
 		//긴급 버튼 중 '제보' 클릭한 경우
 		if (showReportForm) {
 			return (
-				<ReportForm onDataChange={onReportForm} data={props.route.params} routeName={props.route.name} container={container} scrollref={scrollref} currentScrollOffset={scrolloffset.current}/>
+				<ReportForm
+					onDataChange={onReportForm}
+					data={props.route.params}
+					routeName={props.route.name}
+					container={container}
+					scrollref={scrollref}
+					currentScrollOffset={scrolloffset.current}
+				/>
 			);
 		} // 긴급 게시 버튼 중 '실종' 클릭한 경우
 		else
@@ -403,12 +410,12 @@ export default FeedWrite = props => {
 								onPress={onSetDiary}
 							/>
 						</View>
-
-						<TouchableOpacity onPress={onPressPublicSetting} style={[feedWrite.public_setting_btn]}>
-							{/* <ActionButton btnTitle={'전체 공개'} onOpen={() => alert('dd')} btnStyle={'border'} titleFontStyle={24} btnLayout={btn_w194} /> */}
-							<Text style={[txt.noto24, {color: APRI10}]}>{publicSetting}</Text>
-							<Arrow_Down_APRI10 />
-						</TouchableOpacity>
+						{/* 기능 개발되면 다시 열릴 공개 설정 버튼 */}
+						{/* <TouchableOpacity onPress={onPressPublicSetting} style={[feedWrite.public_setting_btn]}> */}
+						{/* <ActionButton btnTitle={'전체 공개'} onOpen={() => alert('dd')} btnStyle={'border'} titleFontStyle={24} btnLayout={btn_w194} /> */}
+						{/* <Text style={[txt.noto24, {color: APRI10}]}>{publicSetting}</Text> */}
+						{/* <Arrow_Down_APRI10 /> */}
+						{/* </TouchableOpacity> */}
 					</View>
 				)}
 				{/* {selectedImg.length > 0 && (
@@ -425,9 +432,9 @@ export default FeedWrite = props => {
 		console.log(props.route);
 	};
 
-	const getCurrentScrollOffset = (e) => {
+	const getCurrentScrollOffset = e => {
 		scrolloffset.current = e.nativeEvent.contentOffset.y;
-	}
+	};
 
 	return (
 		<View style={{flex: 1, backgroundColor: '#FFF'}}>
@@ -460,8 +467,7 @@ export default FeedWrite = props => {
 				data={[{}]}
 				keyboardShouldPersistTaps={'handled'}
 				ref={scrollref}
-				onScroll={getCurrentScrollOffset}
-				></FlatList>
+				onScroll={getCurrentScrollOffset}></FlatList>
 			{showUrgentBtns && !isSearchTag ? (
 				<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
 					{showActionButton ? (
@@ -493,6 +499,4 @@ export default FeedWrite = props => {
 			)}
 		</View>
 	);
-
 };
-

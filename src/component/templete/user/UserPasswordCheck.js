@@ -15,6 +15,7 @@ import {login_style, btn_style, temp_style, progressbar_style, userPasswordCheck
 
 export default UserPasswordCheck = props => {
 	const [pwdValid, setPwdValid] = React.useState(false); // 비밀번호 양식 체크 (8자이상~~)
+	const [firstPwdValid, setFirstPwdValid] = React.useState(false);
 	console.log('UserPasswordCheck', props);
 	const user_data = React.useRef({
 		...props.route.params,
@@ -37,6 +38,7 @@ export default UserPasswordCheck = props => {
 		// '최소 8자 이상(~20자 이하), 영문과 숫자만 입력 가능합니다.'
 		// 8~20자 사이의 영문 대소문자, 숫자, 특수문자(!@#$%^&*만 허용)를 포함
 		var regExp = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
+		setFirstPwdValid(regExp.test(pwd));
 		return regExp.test(pwd);
 	};
 
@@ -67,6 +69,7 @@ export default UserPasswordCheck = props => {
 					passwordValidator={passwordValidator}
 					onConfirmAndChecked={onConfirmAndChecked}
 					isResetPwdMode={false}
+					firstValid={firstPwdValid}
 				/>
 			</View>
 

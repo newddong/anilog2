@@ -1,11 +1,9 @@
 import React from 'react';
 import {FlatList, ScrollView, Text, View, StyleSheet, SafeAreaView, Image, Platform} from 'react-native';
-import UserAccount from 'Organism/listitem/UserAccount';
-import {accountHashList} from 'Organism/style_organism copy';
-import UserNote from '../listitem/UserNote';
-import OneAlarm from '../listitem/OneAlarm';
 import {txt} from 'Root/config/textstyle';
 import {BLACK, GRAY10, GRAY40, WHITE} from 'Root/config/color';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useNavigation} from '@react-navigation/native';
 /**
  * 알람 리스트 출력 컴포넌트
  * @param {object} props - Props Object
@@ -15,11 +13,9 @@ import {BLACK, GRAY10, GRAY40, WHITE} from 'Root/config/color';
  * @param {boolean} props.isData - 오늘, 어제 , 이번주 각각의 array에 data가 있으면 true 없으면 false
  * @param {void} props.onClickLabel - 알림 라벨 클릭
  */
-const stringList = ['오늘', '어제', '이번 주'];
 const MissingReportBox = props => {
-	// console.log('Daily Alarm props', props.data, props.index);
-	// console.log('newNote', props.index == 0 && props.newNote);
 	const [objCity, setObjCity] = React.useState('');
+	const navigation = useNavigation();
 	React.useEffect(() => {
 		try {
 			let objCitys = JSON.parse(`${props.data?.missing_animal_lost_location}`);
@@ -28,51 +24,76 @@ const MissingReportBox = props => {
 			// console.log('err', err);
 		}
 	}, []);
-
+	const onLabelClick = () => {
+		console.log('new MissingData', props.data);
+		let sexValue = '';
+		switch (props.data.feed_type) {
+			case 'missing':
+				switch (props.data.missing_animal_sex) {
+					case 'male':
+						sexValue = '남';
+						break;
+					case 'female':
+						sexValue = '여';
+						break;
+					case 'unknown':
+						sexValue = '성별모름';
+						break;
+				}
+				const titleValue = props.data.missing_animal_species + '/' + props.data.missing_animal_species_detail + '/' + sexValue;
+				navigation.navigate('MissingAnimalDetail', {title: titleValue, _id: props.data._id});
+				break;
+			case 'report':
+				navigation.navigate('ReportDetail', {_id: props.data._id});
+				break;
+		}
+	};
 	return (
 		<View style={[styles.content, styles.shadow]}>
-			{props.data.feed_type == 'missing' ? (
-				<View>
-					<View style={[styles.absolute_missing]}>
-						<Text style={[txt.noto28b, {color: '#FFFFFF'}, {textAlign: 'center'}, {margin: 6 * DP}]}>실종</Text>
+			<TouchableOpacity onPress={onLabelClick}>
+				{props.data.feed_type == 'missing' ? (
+					<View>
+						<View style={[styles.absolute_missing]}>
+							<Text style={[txt.noto28b, {color: '#FFFFFF'}, {textAlign: 'center'}, {margin: 6 * DP}]}>실종</Text>
+						</View>
+						<Image
+							style={[styles.img_210]}
+							source={{
+								uri: props.data.feed_thumbnail,
+							}}
+						/>
+						<View style={[styles.date_txt]}>
+							<Text style={[txt.noto28b, {textAlign: 'center'}, {color: 'black'}]}>{props.data.missing_animal_date.slice(0, 9)} 실종</Text>
+							<Text style={[txt.noto28b, {textAlign: 'center'}, {color: 'black'}]}>
+								{props.data.missing_animal_species} / {props.data.missing_animal_age}살
+							</Text>
+							<Text style={[txt.noto26, {textAlign: 'center'}, {color: GRAY10}]} numberOfLines={1}>
+								{objCity}
+							</Text>
+						</View>
 					</View>
-					<Image
-						style={[styles.img_210]}
-						source={{
-							uri: props.data.feed_thumbnail,
-						}}
-					/>
-					<View style={[styles.date_txt]}>
-						<Text style={[txt.noto28b, {textAlign: 'center'}, {color: 'black'}]}>{props.data.missing_animal_date.slice(0, 9)} 실종</Text>
-						<Text style={[txt.noto28b, {textAlign: 'center'}, {color: 'black'}]}>
-							{props.data.missing_animal_species} / {props.data.missing_animal_age}살
-						</Text>
-						<Text style={[txt.noto26, {textAlign: 'center'}, {color: GRAY10}]} numberOfLines={1}>
-							{objCity}
-						</Text>
+				) : (
+					<View>
+						<View style={[styles.absolute_report]}>
+							<Text style={[txt.noto28b, {color: '#FFFFFF'}, {textAlign: 'center'}, {margin: 6 * DP}]}>제보</Text>
+						</View>
+						<Image
+							style={[styles.img_210]}
+							source={{
+								uri: props.data.feed_thumbnail,
+							}}
+						/>
+						<View style={[styles.date_txt]}>
+							<Text style={[txt.noto28b, {textAlign: 'center'}, {color: 'black'}]} numberOfLines={1}>
+								{props.data.report_witness_location}
+							</Text>
+							<Text style={[txt.noto26, {textAlign: 'center'}, {color: GRAY10}]} numberOfLines={2}>
+								{props.data.feed_content || '내용 없음'}
+							</Text>
+						</View>
 					</View>
-				</View>
-			) : (
-				<View>
-					<View style={[styles.absolute_report]}>
-						<Text style={[txt.noto28b, {color: '#FFFFFF'}, {textAlign: 'center'}, {margin: 6 * DP}]}>제보</Text>
-					</View>
-					<Image
-						style={[styles.img_210]}
-						source={{
-							uri: props.data.feed_thumbnail,
-						}}
-					/>
-					<View style={[styles.date_txt]}>
-						<Text style={[txt.noto28b, {textAlign: 'center'}, {color: 'black'}]} numberOfLines={1}>
-							{props.data.report_witness_location}
-						</Text>
-						<Text style={[txt.noto26, {textAlign: 'center'}, {color: GRAY10}]} numberOfLines={2}>
-							{props.data.feed_content || '내용 없음'}
-						</Text>
-					</View>
-				</View>
-			)}
+				)}
+			</TouchableOpacity>
 		</View>
 	);
 };
@@ -158,10 +179,8 @@ const styles = StyleSheet.create({
 
 MissingReportBox.defaultProps = {
 	items: [],
-	// onClickLabel: e => console.log(e),
+	onClickLabel: e => console.log(e),
 	onCheckBox: e => console.log(e),
-	checkBoxMode: false, // CheckBox 콘테이너 Show T/F
-	showFollowBtn: false,
 };
 
 export default React.memo(MissingReportBox);

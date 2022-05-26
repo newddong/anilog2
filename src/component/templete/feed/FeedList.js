@@ -25,6 +25,7 @@ export default FeedList = ({route, navigation}) => {
 	const [toTop, setToTop] = React.useState(0);
 	const [topList, setTopList] = React.useState([]);
 	const flatlist = React.useRef();
+	const requestNum = 99;
 	//피드썸네일 클릭 리스트일 경우
 
 	React.useEffect(() => {
@@ -68,7 +69,7 @@ export default FeedList = ({route, navigation}) => {
 					getFeedListByUserId(
 						{
 							userobject_id: route.params?.userobject._id,
-							request_number: 9999,
+							request_number: requestNum,
 							login_userobject_id: userGlobalObject.userInfo._id,
 						},
 						({msg}) => {
@@ -104,7 +105,7 @@ export default FeedList = ({route, navigation}) => {
 					getUserTaggedFeedList(
 						{
 							userobject_id: userGlobalObject.userInfo._id,
-							request_number: 9999,
+							request_number: requestNum,
 						},
 						({msg}) => {
 							console.log(
@@ -142,7 +143,7 @@ export default FeedList = ({route, navigation}) => {
 					getUserTaggedFeedList(
 						{
 							userobject_id: route.params?.userobject._id,
-							request_number: 9999,
+							request_number: requestNum,
 						},
 						({msg}) => {
 							setFeedList(
@@ -380,6 +381,7 @@ export default FeedList = ({route, navigation}) => {
 			},
 		);
 	};
+
 	//피드 상단 새로운 실종/제보
 	const MissingReport = () => {
 		if (route.name == 'MainHomeFeedList') {

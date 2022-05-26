@@ -159,7 +159,7 @@ export default UserVerification = props => {
 			{user_phone_number: user_data.user_phone_number},
 			result => {
 				console.log('getUserAccountCount result', result);
-				if (result.msg > 0) {
+				if (parseInt(result.msg) > 0) {
 					console.log('계정 이미 존재');
 					Modal.popTwoBtn(
 						'이미 가입한 전화번호 입니다.',

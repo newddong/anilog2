@@ -112,10 +112,7 @@ const ReviewContent = props => {
 		} else {
 			// console.log('event IOS : ', JSON.stringify(event._dispatchInstances._debugOwner.memoizedProps));
 			console.log('event.nativeEvent.data', event.nativeEvent.data);
-			const whichServer = serveruri;
-
 			if (event.nativeEvent.data.includes('amazonaws.com')) {
-				console.log('Clicked img uri', event.nativeEvent.data);
 				showImg(event.nativeEvent.data);
 			} else if (parseInt(event.nativeEvent.data) < 100 * DP) {
 				setHeight(100 * DP * DP);
@@ -197,7 +194,7 @@ const ReviewContent = props => {
 							scrollEnabled={false}
 							injectedJavaScriptBeforeContentLoaded={runFirst}
 							source={{html: changeHtmlTag()}}
-							style={[style.webview, {height: height, opacity: 0.99}]}
+							style={[style.webview, {height: height == 0 ? 100 * DP : height, opacity: 0.99}]}
 						/>
 					) : (
 						<WebView

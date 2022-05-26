@@ -76,7 +76,7 @@ export default CommunityWrite = props => {
 	const [editorLayout, setEditorLayout] = React.useState({
 		//Rich Editor 레이아웃
 		height: 345,
-		width: 654 * DP,
+		width: 640 * DP,
 		x: 0,
 		y: 0,
 	});
@@ -160,10 +160,8 @@ export default CommunityWrite = props => {
 	// scale-down	none 또는 contain 중에 더 적절한 방향으로 이미지 사이즈를 조절합니다.
 
 	//이미지 입력
-	const insertImage = async imageList => {
-		const resize = 'fill';
+	const insertImage = imageList => {
 		// console.log('imageList', imageList);
-		console.log('editorLayout.width', editorLayout.width);
 		Modal.popLoading(true);
 		setTimeout(() => {
 			data != 'false' ? richText.current?.insertHTML('<p><br/></p></div>') : false; //이미지를 넣을 시 바로 다음줄로 이동하도록 처리
@@ -175,38 +173,17 @@ export default CommunityWrite = props => {
 				result => {
 					// console.log('result / s3path / Write ', result.msg);
 					// resolve(result.msg);
-					result.msg.map(async (v, i) => {
-						// let height = 640 * DP;
-						// let width = 654 * DP;
-						// await Image.getSize(v.location, (hei, wid) => {
-						// 	console.log('he', hei);
-						// 	console.log('wi', wid);
-						// 	height = hei;
-						// 	width = wid;
-						// 	richText.current?.insertHTML('<p><br/></p></div>');
-						// 	richText.current?.insertHTML(
-						// 		`<div>
-						// 		<img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick');" \n
-						// 	 	height="${height * DP};"  width="${
-						// 			wid * DP
-						// 		};"  style=" object-fit: contain; border-radius:15px; margin:5px 0px 5px 0px; background-color: #0a0a0a; "/>
-						// 		</div>`,
-						// 	);
-						// });
-						// console.log('height smae ? ', 640 * DP, '==?', height);
-						// console.log('height width ? ', 654 * DP, '==?', width);
+					result.msg.map((v, i) => {
 						richText.current?.insertHTML('<p><br/></p></div>');
 						richText.current?.insertHTML(
 							`<div><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick');" \n
-							 height="auto;"  width="${editorLayout.width};"  
-							 style=" object-fit: contain; border-radius:15px; background-color: #0a0a0a; margin:5px 0px 5px 0px; "/>
-							 </div>`,
+							 height="320px;" width="${editorLayout.width};" style="border-radius:15px; margin:5px 0px 5px 0px; "/></div>`,
 						);
-						if (i == result.msg.length - 1) {
-							setTimeout(() => {
-								richText.current?.insertHTML('<p><br/></p></div>');
-							}, 1000);
-						}
+						// richText.current?.insertHTML(
+						// 	`<div  style="padding : 8px 10px 8px 0px; " ><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
+						// 	 height="320px;" width="${editorLayout.width};" style="border-radius:15px; margin: 0 auto 4px;    "/></div>`,
+						// );
+						// richText.current?.insertHTML('<p><br/></p></div>');
 					});
 					// richText.current?.focusContentEditor();
 					Modal.close();

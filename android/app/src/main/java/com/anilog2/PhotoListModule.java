@@ -181,6 +181,8 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
         double targetHeight = params.hasKey("destHeight") ? params.getDouble("destHeight") : 0;
         double offsetX = params.hasKey("offsetX") ? params.getDouble("offsetX") : 0;
         double offsetY = params.hasKey("offsetY") ? params.getDouble("offsetY") : 0;
+        double imgWidth = params.hasKey("imgWidth") ? params.getDouble("imgWidth") : 0;
+        double imgHeight = params.hasKey("imgHeight") ? params.getDouble("imgHeight") : 0;
         boolean isCircular = params.hasKey("isCircular") ? params.getBoolean("isCircular") : false;
 
         if (!params.hasKey("destWidth") || !params.hasKey("destHeight") ||
@@ -198,6 +200,8 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
                 (int) offsetY,
                 (int) targetWidth,
                 (int) targetHeight,
+                (int) imgWidth,
+                (int) imgHeight,
                 promise,
                 this);
         if (params.hasKey("displaySize")) {

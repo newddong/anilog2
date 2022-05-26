@@ -34,7 +34,7 @@ const NewMissingReportList = props => {
 	const onRefresh = React.useCallback(() => {
 		setRefreshing(true);
 
-		wait(1000).then(() => getAlarmList());
+		wait(10).then(() => getAlarmList());
 	}, []);
 	React.useEffect(() => {
 		getMissingReportList(

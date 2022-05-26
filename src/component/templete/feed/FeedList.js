@@ -24,6 +24,7 @@ export default FeedList = ({route, navigation}) => {
 	const [index, setIndex] = React.useState(0);
 	const [toTop, setToTop] = React.useState(0);
 	const flatlist = React.useRef();
+	const requestNum = 99;
 	//피드썸네일 클릭 리스트일 경우
 
 	React.useEffect(() => {
@@ -55,7 +56,7 @@ export default FeedList = ({route, navigation}) => {
 					getFeedListByUserId(
 						{
 							userobject_id: route.params?.userobject._id,
-							request_number: 9999,
+							request_number: requestNum,
 							login_userobject_id: userGlobalObject.userInfo._id,
 						},
 						({msg}) => {
@@ -90,7 +91,7 @@ export default FeedList = ({route, navigation}) => {
 					getUserTaggedFeedList(
 						{
 							userobject_id: userGlobalObject.userInfo._id,
-							request_number: 9999,
+							request_number: requestNum,
 						},
 						({msg}) => {
 							console.log(
@@ -128,7 +129,7 @@ export default FeedList = ({route, navigation}) => {
 					getUserTaggedFeedList(
 						{
 							userobject_id: route.params?.userobject._id,
-							request_number: 9999,
+							request_number: requestNum,
 						},
 						({msg}) => {
 							setFeedList(
@@ -420,7 +421,7 @@ export default FeedList = ({route, navigation}) => {
 			/>
 			{userGlobalObject.userInfo && (
 				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}]}>
-					{/* <View
+					<View
 						style={[
 							{
 								height: 94 * DP,
@@ -434,7 +435,7 @@ export default FeedList = ({route, navigation}) => {
 							buttonstyle.shadow,
 						]}>
 						<Camera54 onPress={movetoCamera} />
-					</View> */}
+					</View>
 					<View
 						style={[
 							{

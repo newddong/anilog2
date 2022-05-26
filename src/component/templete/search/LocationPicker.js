@@ -346,6 +346,7 @@ export default LocationPicker = ({route}) => {
 	//선택한 위치로 설정 버튼 클릭
 	const confirm = () => {
 		let finalized = locationObj;
+		console.log('finalized', finalized.road_address.address_name);
 		finalized.detailAddr = detailAddr;
 		if (route.name == 'FeedLocationPicker') {
 			const data = {
@@ -402,6 +403,8 @@ export default LocationPicker = ({route}) => {
 					detail: finalized.detailAddr,
 				},
 			};
+			console.log('route.params.isEdit', route.params.isEdit);
+			console.log('data', data);
 			navigation.navigate({
 				name: route.params.isEdit ? 'CommunityEdit' : 'CommunityWrite',
 				params: {data: data, isReview: route.params.isReview},

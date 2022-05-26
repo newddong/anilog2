@@ -56,8 +56,6 @@ const NewMissingReportList = props => {
 		);
 	};
 
-	React.useEffect(() => {}, []);
-
 	const onLabelClick = data => {
 		console.log('aa', data);
 	};

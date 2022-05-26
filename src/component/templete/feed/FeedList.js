@@ -17,6 +17,7 @@ import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {useScrollToTop} from '@react-navigation/native';
 import NewMissingReportList from '../list/NewMissingReportList';
 import {getUserInfoById} from 'Root/api/userapi';
+import {NETWORK_ERROR} from 'Root/i18n/msg';
 
 export default FeedList = ({route, navigation}) => {
 	const [feedList, setFeedList] = React.useState([]);
@@ -321,13 +322,14 @@ export default FeedList = ({route, navigation}) => {
 				},
 				err => {
 					console.log('err / DeleteFeed / FeedContent : ', err);
-					// Modal.alert('네트워크 오류입니다.');
+					Modal.alert(NETWORK_ERROR);
 				},
 			);
 		}, 100);
 	};
 
 	const moveToFeedWrite = () => {
+		// navigation.push('LocationPicker');
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate({name: 'Login', merge: true});

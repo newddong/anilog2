@@ -123,6 +123,7 @@ const ReviewContent = props => {
 		}
 	};
 
+	//상세글이 처음 마운트 될 때 height를 조정
 	const runFirst = `
 	  window.ReactNativeWebView.postMessage(document.body.scrollHeight);
       true; // note: this is required, or you'll sometimes get silent failures
@@ -131,15 +132,13 @@ const ReviewContent = props => {
 	const webviewRef = React.useRef();
 
 	const changeHtmlTag = () => {
-		let result = data.community_content;
-		result = data.community_content.replace(/<img /g, '<img onclick="image(this)" ');
-		// console.log('data Content', data.community_content);
-		// console.log('result', result);
+		let result = data.community_content; //기존의 html 코드
+		result = data.community_content.replace(/<img /g, '<img onclick="image(this)" '); //img 태그에 onClick 이벤트 장착
 		return `
 		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
         <script>
             function image(img){
-                window.ReactNativeWebView.postMessage(img.src);
+                window.ReactNativeWebView.postMessage(img.src); 
 				// alert(img.src)
             }
         </script>
@@ -158,6 +157,7 @@ const ReviewContent = props => {
 			? data.community_address.normal_address.address_name
 			: data.community_address.road_address.address_name;
 
+	console.log('data REview', data.community_writer_id);
 	return (
 		<View style={[style.container]}>
 			{/* 리뷰 헤더  */}
@@ -171,12 +171,17 @@ const ReviewContent = props => {
 					) : (
 						<FavoriteTag48_Border onPress={() => onPressFavorite(true)} />
 					)}
-					<Meatball50_GRAY20_Horizontal onPress={() => props.onPressMeatball()} />
+					{data.community_writer_id ? <Meatball50_GRAY20_Horizontal onPress={() => props.onPressMeatball()} /> : <></>}
 				</View>
 			</View>
-			<View style={[style.profile]}>
-				<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} />
-			</View>
+			{data.community_writer_id ? (
+				<View style={[style.profile]}>
+					<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} />
+				</View>
+			) : (
+				<UserLocationTimeLabel empty={true} time={data.community_date} />
+			)}
+
 			{/* <View style={{width: 654 * DP, marginTop: 20 * DP}}>{getContents()}</View> */}
 			<View>
 				<View style={[{width: 700 * DP, marginTop: 20 * DP}]}>
@@ -188,36 +193,19 @@ const ReviewContent = props => {
 							injectedJavaScript={runFirst} //Dynamic Height 수치 설정
 							scrollEnabled={false}
 							injectedJavaScriptBeforeContentLoaded={runFirst}
-							source={{
-								html: changeHtmlTag(),
-							}}
-							style={[
-								style.webview,
-								{
-									height: height,
-									opacity: 0.99,
-								},
-							]}
+							source={{html: changeHtmlTag()}}
+							style={[style.webview, {height: height, opacity: 0.99}]}
 						/>
 					) : (
-						<ScrollView scrollEnabled={false}>
-							<WebView
-								originWhitelist={['*']}
-								scalesPageToFit={true}
-								onMessage={onWebViewMessage}
-								ref={webviewRef}
-								injectedJavaScript={runFirst} //Dynamic Height 수치 설정
-								scrollEnabled={false}
-								source={{
-									html: changeHtmlTag(),
-								}}
-								style={{
-									width: 690 * DP,
-									// minHeight: 500 * DP,
-									height: height == 0 ? 500 * DP : height,
-								}}
-							/>
-						</ScrollView>
+						<WebView
+							originWhitelist={['*']}
+							onMessage={onWebViewMessage}
+							ref={webviewRef}
+							injectedJavaScript={runFirst} //Dynamic Height 수치 설정
+							scrollEnabled={false}
+							source={{html: changeHtmlTag()}}
+							style={{width: 690 * DP, height: height == 0 ? 100 * DP : height}}
+						/>
 					)}
 				</View>
 			</View>

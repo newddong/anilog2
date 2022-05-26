@@ -178,14 +178,18 @@ const ArticleContent = props => {
 					) : (
 						<FavoriteTag48_Border onPress={() => onPressFavorite(true)} />
 					)}
-					<Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />
+					{data.community_writer_id ? <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} /> : <></>}
 				</View>
 			</View>
-			<View style={[style.profile]}>
-				<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} time_expression={'full'} />
-			</View>
-			{/* <View style={{width: 654 * DP, marginTop: 20 * DP}}>{getContents()}</View> */}
-
+			{data.community_writer_id ? (
+				<View style={[style.profile]}>
+					<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} time_expression={'full'} />
+				</View>
+			) : (
+				<View style={[style.profile]}>
+					<UserLocationTimeLabel empty={true} time={data.community_date} />
+				</View>
+			)}
 			<View style={[{width: 700 * DP, marginTop: 20 * DP, opacity: height >= 99 * DP ? 1 : 1}]}>
 				{Platform.OS == 'ios' ? (
 					<WebView
@@ -210,7 +214,6 @@ const ArticleContent = props => {
 					//안드로이드
 					<WebView
 						originWhitelist={['*']}
-						scalesPageToFit={true}
 						ref={webviewRef}
 						onMessage={onWebViewMessage}
 						injectedJavaScript={runFirst} //Dynamic Height 수치 설정

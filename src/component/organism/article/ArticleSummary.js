@@ -63,13 +63,14 @@ const ArticleSummary = props => {
 		//타이틀이 한 줄로 처리가 되는 경우
 		let first = '';
 		let second = '';
-		first = text[0].text.split(new RegExp(`(${props.isSearch})`, 'gi'));
-
+		const trim_first = text[0].text.trim();
+		first = trim_first.split(new RegExp(`(${props.isSearch})`, 'gi'));
+		// console.log('text[0].text', text[0].text, 'ddd');
 		if (text.length == 1) {
 			return (
 				<Text style={[txt.noto28, style.summaryText]}>
 					{props.isSearch == '' || props.isSearch.length < 2
-						? text[0].text
+						? trim_first
 						: first.map((part, i) =>
 								part.toLowerCase() === props.isSearch.toLowerCase() ? (
 									// <View style={{backgroundColor: 'red'}}>{part}</View>
@@ -88,12 +89,13 @@ const ArticleSummary = props => {
 			);
 		} else {
 			//타이틀이 두 줄 이상일 경우
-			second = text[1].text.split(new RegExp(`(${props.isSearch})`, 'gi'));
+			const trim_second = text[1].text.trim();
+			second = trim_second.split(new RegExp(`(${props.isSearch})`, 'gi'));
 			return (
 				<>
 					<Text style={[txt.noto28, style.summaryText]}>
 						{props.isSearch == '' || props.isSearch.length < 2
-							? text[0].text
+							? trim_first
 							: first.map((part, i) =>
 									part.toLowerCase() === props.isSearch.toLowerCase() ? (
 										// <View style={{backgroundColor: 'red'}}>{part}</View>
@@ -110,7 +112,7 @@ const ArticleSummary = props => {
 					<View style={[{flexDirection: 'row', width: 470 * DP, alignItems: 'center'}]}>
 						<Text style={[txt.noto28, {textAlignVertical: 'center', marginRight: 10 * DP, maxWidth: 400 * DP}]} numberOfLines={1}>
 							{props.isSearch == '' || props.isSearch.length < 2
-								? text[1].text
+								? trim_second
 								: second.map((part, i) =>
 										part.toLowerCase() === props.isSearch.toLowerCase() ? (
 											// <View style={{backgroundColor: 'red'}}>{part}</View>
@@ -140,7 +142,7 @@ const ArticleSummary = props => {
 		<View style={[style.container]}>
 			<View style={[style.inside]}>
 				<Text style={[txt.noto28, {color: GRAY10}]}>{getArticleType()}</Text>
-				<TouchableOpacity onPress={onPressArticle} activeOpacity={props.selectMode ? 1 : 0.6} style={[style.content]}>
+				<TouchableOpacity onPress={onPressArticle} activeOpacity={props.selectMode ? 1 : 0.6} style={[style.content, {marginLeft: 0 * DP}]}>
 					{text == '' ? <></> : getText()}
 				</TouchableOpacity>
 				<TouchableOpacity onPress={onPressArticle} activeOpacity={0} style={[style.content, {position: 'absolute', opacity: 0}]}>

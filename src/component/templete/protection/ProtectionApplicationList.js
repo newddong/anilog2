@@ -8,6 +8,7 @@ import UserDescriptionLabel from 'Root/component/molecules/label/UserDescription
 import {EmptyIcon, Star50_Border, Star50_Filled} from 'Root/component/atom/icon';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {followUser, getChekingFollow, unFollowUser} from 'Root/api/userapi';
+import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 
 //ShelterMenu => 신청서 조회 [Nav명 - ProtectionAplicationList]
 export default ProtectionApplicationList = ({route, navigation}) => {
@@ -22,10 +23,12 @@ export default ProtectionApplicationList = ({route, navigation}) => {
 		getAnimalListWithApplicant(
 			{},
 			result => {
-				// console.log('result / getAnimalListWithApplicant / ProtectApplyList', JSON.stringify(result.msg));
-				let filtered_adopt = result.msg.adopt.filter(e => e.protect_act_status == 'wait'); //완료 목록도 출력되던 오류 수정 22.03.18
-				let filtered_protect = result.msg.protect.filter(e => e.protect_act_status == 'wait');
+				// console.log('result / getAnimalListWithApplicant / ProtectApplyList', JSON.stringify(result.msg.adopt));
+				let filtered_adopt = result.msg.adopt.filter(e => e.protect_act_status == 'wait' && e.protect_act_applicant_id); //완료 목록도 출력되던 오류 수정 22.03.18
+				let filtered_protect = result.msg.protect.filter(e => e.protect_act_status == 'wait' && e.protect_act_applicant_id);
 				setAdoptionList(filtered_adopt);
+				console.log('입양 1번', filtered_adopt[0]);
+				console.log(filtered_protect);
 				setProtectList(filtered_protect);
 			},
 			err => {
@@ -79,30 +82,28 @@ export default ProtectionApplicationList = ({route, navigation}) => {
 	};
 
 	const listItem = (v, i, isAdopt) => {
-		console.log('i', i, v.is_follow);
-		return (
-			<View style={[style.listItem]} key={i}>
-				<UserDescriptionLabel
-					data={v.protect_act_applicant_id}
-					width={360}
-					onClickLabel={() => (isAdopt ? onClickAdoptionItem(i) : onClickProtectItem(i))}
-				/>
-				{v.is_follow ? (
-					<Star50_Filled onPress={() => onCliclFollow(v.protect_act_applicant_id._id, false, i)} />
-				) : (
-					<Star50_Border onPress={() => onCliclFollow(v.protect_act_applicant_id._id, true, i)} />
-				)}
-			</View>
-		);
+		// console.log('listItem', i, v.protect_act_applicant_id);
+		if (!v.protect_act_applicant_id) {
+			return <></>;
+		} else
+			return (
+				<View style={[style.listItem]} key={i}>
+					<UserDescriptionLabel
+						data={v.protect_act_applicant_id}
+						width={300}
+						onClickLabel={() => (isAdopt ? onClickAdoptionItem(i) : onClickProtectItem(i))}
+					/>
+					{v.is_follow ? (
+						<Star50_Filled onPress={() => onCliclFollow(v.protect_act_applicant_id._id, false, i)} />
+					) : (
+						<Star50_Border onPress={() => onCliclFollow(v.protect_act_applicant_id._id, true, i)} />
+					)}
+				</View>
+			);
 	};
 
 	const whenEmpty = type => {
-		return (
-			<View style={[{marginVertical: 30 * DP, alignItems: 'center', justifyContent: 'center'}]}>
-				<EmptyIcon />
-				<Text style={[txt.roboto30b, {marginTop: 15 * DP}]}> {type}건이 없습니다.</Text>
-			</View>
-		);
+		return <ListEmptyInfo text={type + '건이 없습니다.'} />;
 	};
 
 	const isLoaded = protectList == 'false' || adoptionList == 'false';

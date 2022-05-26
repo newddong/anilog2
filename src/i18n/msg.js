@@ -534,3 +534,22 @@ export const applyComanionCheckList = [
 		state: false,
 	},
 ];
+
+//api 오류 메시지
+export const NETWORK_ERROR = '네트워크 오류입니다.';
+
+//보호요청게시글 상태값 종류
+export const UNAVAILABLE_REQUEST_STATUS = [
+	'complete',
+	'rainbowbridge_euthanasia',
+	'rainbowbridge',
+	'discuss',
+	'done',
+	'found',
+	'emergency',
+	undefined,
+	'donation',
+];
+
+//유저 프로필 없음 메시지
+export const IS_LEAVE_USER = '탈퇴한 계정입니다.';

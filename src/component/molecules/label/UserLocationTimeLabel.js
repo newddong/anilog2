@@ -3,7 +3,7 @@ import React from 'react';
 import {Text, View, Image, TouchableOpacity} from 'react-native';
 import {APRI10, GRAY20, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {DEFAULT_PROFILE} from 'Root/i18n/msg';
+import {DEFAULT_PROFILE, IS_LEAVE_USER} from 'Root/i18n/msg';
 import DP from 'Root/config/dp';
 import {styles} from 'Atom/image/imageStyle';
 import {useNavigation} from '@react-navigation/native';
@@ -11,6 +11,7 @@ import {getTimeLapsed} from 'Root/util/dateutil';
 import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, ProfileDefaultImg} from 'Atom/icon';
 import {CommonActions} from '@react-navigation/native';
 import moment from 'moment';
+import Modal from 'Root/component/modal/Modal';
 
 /**
  * 유저의 프로필 사진, 닉네임, 댓글 작성 날짜 출력하는 라벨
@@ -21,7 +22,7 @@ import moment from 'moment';
  * @param {string} props.time_expression - 시간 표현 방식 ('date')
  */
 const UserLocationTimeLabel = props => {
-	// console.log('UserLocationTimeLabel props', props);
+	// console.log('UserLocationTimeLabel props', JSON.stringify(props));
 	const navigation = useNavigation();
 	const isLoginUser = userGlobalObject.userInfo._id == props.data._id;
 	const isMyPet =
@@ -41,17 +42,12 @@ const UserLocationTimeLabel = props => {
 	};
 
 	const onClickLabel = e => {
-		// console.log('props.data', props.data);
-		navigation.push('UserProfile', {userobject: props.data});
-		// if (props.target) {
-		// 	navigation.push('UserProfile', {userobject: props.data});
-		// } else {
-		// 	navigation.push('UserProfile', {userobject: props.data});
-
-		// }
+		if (props.empty) {
+			Modal.alert(IS_LEAVE_USER);
+		} else {
+			navigation.push('UserProfile', {userobject: props.data});
+		}
 	};
-
-	// console.log('data feed_location', props.location);
 
 	const getLocation = () => {
 		let result = '';
@@ -65,9 +61,9 @@ const UserLocationTimeLabel = props => {
 			location.road_address?.address_name == 'undefined ' ||
 			location.road_address?.city == undefined
 		) {
-			result = location.normal_address.city + ' ' + location.normal_address.district + detail;
+			result = location.normal_address.city + ' ' + location.normal_address.district + ' ' + detail;
 		} else {
-			result = location.road_address.city + ' ' + location.road_address.district + detail;
+			result = location.road_address.city + ' ' + location.road_address.district + ' ' + detail;
 		}
 		// console.log('result', result);
 		return '· ' + result + '에서';
@@ -107,7 +103,7 @@ const UserLocationTimeLabel = props => {
 				<View style={{marginLeft: 20 * DP}}>
 					<View style={{flexDirection: 'row'}}>
 						<Text style={[props.isLarge ? txt.roboto32b : txt.roboto24, {color: isLoginUser ? APRI10 : BLACK, maxWidth: 500 * DP}]} numberOfLines={1}>
-							{props.data.user_nickname || ''}
+							{props.data.user_nickname || '탈퇴한 계정입니다.'}
 						</Text>
 						{isMyPet ? (
 							<Text

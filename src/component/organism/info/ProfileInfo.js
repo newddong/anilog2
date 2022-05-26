@@ -281,7 +281,7 @@ const ProfileInfo = props => {
 	//대상 계정이 반려동물 계정이며 나의 펫인지 여부
 	const isMyPet = () => {
 		let result = false;
-		if (data.user_type == 'pet' && data.pet_family[0]._id == userGlobalObject.userInfo._id) {
+		if (data.user_type == 'pet' && data.pet_family.length != 0 && data.pet_family[0]._id == userGlobalObject.userInfo._id) {
 			result = true;
 		}
 		return result;

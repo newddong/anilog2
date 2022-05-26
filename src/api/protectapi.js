@@ -126,10 +126,9 @@ export async function setProtectRequestStatus(params, callback, errcallback) {
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
- export async function getProtectApplicantList(params, callback, errcallback){
-	apiController( '/protect/getProtectApplicantList', arguments);
-};
-
+export async function getProtectApplicantList(params, callback, errcallback) {
+	apiController('/protect/getProtectApplicantList', arguments);
+}
 
 /**
  * 동물보호 요청 게시글 상세조회
@@ -144,6 +143,7 @@ export async function setProtectRequestStatus(params, callback, errcallback) {
 
 /**
  * 지역에 따른 보호소 정보
+
  * @param {object} params
  * @param {string} params.city - 보호소 지역(시,도) (all | '모든지역', 그외 지역은 해당 시,도 - 카카오 주소체계 )
  * @param {({}:object)=>void} callback - API응답처리 콜백
@@ -156,6 +156,8 @@ export async function getShelterInfo(params, callback, errcallback) {
 /**
  * 보호요청 필터 검색
  * @param {object} params
+ * @param {number} params.page
+ * @param {number} params.limit
  * @param {string} params.protect_request_notice_sdt - 검색 시작일 ex) 20220521
  * @param {string} params.protect_request_notice_edt - 검색 종료일 ex) 20220524
  * @param {string} params.city - 보호소 지역(시,도) ('모든지역' 일경우 필드 보내지 말 것, 그외 지역은 해당 시,도 - 카카오 주소체계로 입력 )

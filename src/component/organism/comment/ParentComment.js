@@ -80,9 +80,12 @@ export default ParentComment = React.memo((props, ref) => {
 
 	//답글쓰기 클릭
 	const onPressReplyBtn = () => {
-		// console.log('대댓글 추가2');
-		console.log('대댓글 추가 부모댓글 닉네임 : ', props.parentComment.comment_writer_id.user_nickname);
-		props.onPressReplyBtn(props.parentComment, addChildComment);
+		// console.log('대댓글 추가 부모댓글 닉네임 : ', props.parentComment.comment_writer_id.user_nickname);
+		if (props.parentComment.comment_writer_id) {
+			props.onPressReplyBtn(props.parentComment, addChildComment);
+		} else {
+			Modal.popNetworkErrorModal('이미 탈퇴한 계정의 댓글입니다.');
+		}
 	};
 
 	const onCLickHeart = () => {
@@ -152,96 +155,99 @@ export default ParentComment = React.memo((props, ref) => {
 
 	//미트볼 클릭
 	const onPressMeatball = () => {
-		meatballRef.current.measure((fx, fy, width, height, px, py) => {
-			const isWriter = userGlobalObject.userInfo._id == data.comment_writer_id._id;
-			if (isWriter) {
-				Modal.popSelectBoxModal(
-					REPLY_MEATBALL_MENU_MY_REPLY,
-					selectedItem => {
-						switch (selectedItem) {
-							case '수정':
-								onEdit(props.parentComment);
-								break;
-							case '삭제':
-								onDelete();
-								break;
-							case '상태 변경':
-								alert('상태 변경!');
-								break;
-							case '공유하기':
-								alert('공유하기!');
-								break;
-							default:
-								break;
-						}
-						Modal.close();
-					},
-					() => Modal.close(),
-					false,
-					'',
-				);
-			} else {
-				Modal.popSelectBoxModal(
-					REPLY_MEATBALL_MENU,
-					selectedItem => {
-						switch (selectedItem) {
-							case '신고':
-								Modal.close();
-								if (userGlobalObject.userInfo.isPreviewMode) {
-									setTimeout(() => {
-										Modal.popLoginRequestModal(() => {
-											props.navigation.navigate('Login');
-										});
-									}, 100);
-								} else {
-									setTimeout(() => {
-										Modal.popOneBtnSelectModal(
-											REPORT_MENU,
-											'이 댓글을 신고 하시겠습니까?',
-											selectedItem => {
-												createReport(
-													{
-														report_target_object_id: data._id,
-														report_target_object_type: 'commentsobjects',
-														report_target_reason: selectedItem,
-														report_is_delete: false,
-													},
-													result => {
-														console.log('신고 완료', result);
-														Modal.close();
-														Modal.popOneBtn('이 댓글은 신고 되었습니다.', '확인', () => Modal.close());
-													},
-													err => {
-														Modal.close();
-														if (err == '이미 신고되었습니다.') {
-															Modal.popOneBtn('이미 신고하셨습니다.', '확인', () => Modal.close());
-														}
-													},
-												);
-											},
-											'신고',
-										);
-									}, 100);
-								}
+		// console.log('data', data.comment_writer_id);
+		if (data.comment_writer_id) {
+			meatballRef.current.measure((fx, fy, width, height, px, py) => {
+				const isWriter = userGlobalObject.userInfo._id == data.comment_writer_id._id;
+				if (isWriter) {
+					Modal.popSelectBoxModal(
+						REPLY_MEATBALL_MENU_MY_REPLY,
+						selectedItem => {
+							switch (selectedItem) {
+								case '수정':
+									onEdit(props.parentComment);
+									break;
+								case '삭제':
+									onDelete();
+									break;
+								case '상태 변경':
+									alert('상태 변경!');
+									break;
+								case '공유하기':
+									alert('공유하기!');
+									break;
+								default:
+									break;
+							}
+							Modal.close();
+						},
+						() => Modal.close(),
+						false,
+						'',
+					);
+				} else {
+					Modal.popSelectBoxModal(
+						REPLY_MEATBALL_MENU,
+						selectedItem => {
+							switch (selectedItem) {
+								case '신고':
+									Modal.close();
+									if (userGlobalObject.userInfo.isPreviewMode) {
+										setTimeout(() => {
+											Modal.popLoginRequestModal(() => {
+												props.navigation.navigate('Login');
+											});
+										}, 100);
+									} else {
+										setTimeout(() => {
+											Modal.popOneBtnSelectModal(
+												REPORT_MENU,
+												'이 댓글을 신고 하시겠습니까?',
+												selectedItem => {
+													createReport(
+														{
+															report_target_object_id: data._id,
+															report_target_object_type: 'commentsobjects',
+															report_target_reason: selectedItem,
+															report_is_delete: false,
+														},
+														result => {
+															console.log('신고 완료', result);
+															Modal.close();
+															Modal.popOneBtn('이 댓글은 신고 되었습니다.', '확인', () => Modal.close());
+														},
+														err => {
+															Modal.close();
+															if (err == '이미 신고되었습니다.') {
+																Modal.popOneBtn('이미 신고하셨습니다.', '확인', () => Modal.close());
+															}
+														},
+													);
+												},
+												'신고',
+											);
+										}, 100);
+									}
 
-							case '수정':
-								// alert('수정!');
-								// navigation.navigate('FeedEdit',props.data);
-								break;
-							case '삭제':
-								alert('삭제');
-								break;
-							default:
-								break;
-						}
-						Modal.close();
-					},
-					() => Modal.close(),
-					false,
-					'',
-				);
-			}
-		});
+								case '수정':
+									// alert('수정!');
+									// navigation.navigate('FeedEdit',props.data);
+									break;
+								case '삭제':
+									alert('삭제');
+									break;
+								default:
+									break;
+							}
+							Modal.close();
+						},
+						() => Modal.close(),
+						false,
+						'',
+					);
+				}
+			});
+		}
 	};
 
 	const isNotAuthorized = () => {
@@ -267,7 +273,11 @@ export default ParentComment = React.memo((props, ref) => {
 			{/* 유저프로필 라벨 및 Meatball  */}
 			<View style={[organism_style.UserLocationTimeLabel_view_parentComment, {}]}>
 				<View style={[parentComment.userLabelContainer, {}]} collapsable={false} ref={meatballRef}>
-					<UserLocationTimeLabel data={data.comment_writer_id} time={data.comment_update_date} target={props.target} />
+					{data.comment_writer_id ? (
+						<UserLocationTimeLabel data={data.comment_writer_id} time={data.comment_update_date} target={props.target} />
+					) : (
+						<UserLocationTimeLabel empty={true} time={data.comment_update_date} />
+					)}
 					{data.comment_is_secure ? (
 						<View style={[parentComment.secureIcon, {justifyContent: 'center'}]}>
 							<SecureIcon40 />
@@ -276,7 +286,7 @@ export default ParentComment = React.memo((props, ref) => {
 						<></>
 					)}
 				</View>
-				{data.comment_is_delete ? (
+				{data.comment_is_delete || !data.comment_writer_id ? (
 					<></>
 				) : (
 					<View style={[]}>

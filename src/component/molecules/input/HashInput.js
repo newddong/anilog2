@@ -241,7 +241,7 @@ export default function HashInput(props) {
 
 	return (
 		<>
-			<View style={[props.containerStyle, {justifyContent: 'space-between'}]}>
+			<View style={[props.containerStyle, {}]}>
 				{location == undefined ? (
 					<></>
 				) : (
@@ -254,7 +254,7 @@ export default function HashInput(props) {
 				)}
 				<TextInput
 					{...props} //props override
-					style={[{marginTop: 10 * DP},txt.noto28]}
+					style={[{marginBottom: props.selectedImg.length > 0 ? 10 * DP : 0}, txt.noto28]}
 					textAlignVertical={'top'}
 					multiline={true}
 					value={value}

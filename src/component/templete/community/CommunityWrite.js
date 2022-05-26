@@ -404,7 +404,6 @@ export default CommunityWrite = props => {
 			</TouchableOpacity>
 		);
 	};
-	console.log('data.community_address', data.community_address);
 
 	const onPaste = paste => {
 		console.log('paste', paste);
@@ -418,7 +417,8 @@ export default CommunityWrite = props => {
 	};
 
 	const moveToLocationPicker = () => {
-		props.navigation.push('SearchMap', {data: data, isReview: isReview});
+		// props.navigation.push('SearchMap', {data: data, isReview: isReview});
+		props.navigation.push('CommunityLocationPicker', {data: data, isReview: isReview});
 	};
 
 	return (
@@ -471,24 +471,17 @@ export default CommunityWrite = props => {
 							<ScrollView>
 								<RichEditor
 									ref={richText}
-									editorStyle={{
-										contentCSSText: 'font-size:14px;',
-									}}
+									editorStyle={{contentCSSText: 'font-size:13px;'}}
 									onChange={onChange}
 									onLayout={onLayout}
 									keyboardDisplayRequiresUserAction={true}
-									style={{
-										width: '100%',
-										opacity: 0.99,
-									}}
+									style={{width: '100%', opacity: 0.99}}
 									placeholder={
 										isReview ? '서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.' : '내용을 작성해 주세요.'
 									}
 									onCursorPosition={onCursorPosition}
 									onPaste={onPaste}
 									pasteAsPlainText={true}
-
-									// onMessage={handleMessage}
 								/>
 							</ScrollView>
 						) : (
@@ -496,20 +489,16 @@ export default CommunityWrite = props => {
 								<RichEditor
 									ref={richText}
 									keyboardDisplayRequiresUserAction={true}
-									editorStyle={{
-										contentCSSText: 'font-size:14px;',
-									}}
+									editorStyle={{contentCSSText: 'font-size:13px;'}}
 									onChange={onChange}
-									style={{
-										width: '100%',
-										opacity: 0.99,
-									}}
+									style={{width: '100%', opacity: 0.99}}
 									contentMode={'mobile'}
-									placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
+									placeholder={
+										isReview ? '서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.' : '내용을 작성해 주세요.'
+									}
 									onCursorPosition={onCursorPosition}
 									onPaste={onPaste}
 									pasteAsPlainText={true}
-									// onMessage={handleMessage2}
 								/>
 							</View>
 						)}

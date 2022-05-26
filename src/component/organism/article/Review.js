@@ -249,13 +249,21 @@ export default Review = React.memo(props => {
 									  )}
 							</Text>
 							<View activeOpacity={0.8} style={[style.profile, {}]}>
-								{/* <UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} time_expression={'date'} /> */}
+								{data.community_writer_id ? (
+									<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} time_expression={'date'} />
+								) : (
+									<UserLocationTimeLabel empty={true} time={data.community_date} />
+								)}
 								<Text
 									style={[
 										txt.roboto24,
-										{flex: 1, alignSelf: 'flex-start', color: data.community_writer_id._id == userGlobalObject.userInfo._id ? APRI10 : BLACK},
+										{
+											flex: 1,
+											alignSelf: 'flex-start',
+											color: data.community_writer_id && data.community_writer_id._id == userGlobalObject.userInfo._id ? APRI10 : BLACK,
+										},
 									]}>
-									{data.community_writer_id.user_nickname}{' '}
+									{data.community_writer_id?.user_nickname}{' '}
 								</Text>
 								<Text style={[txt.noto24, {color: GRAY10}]}>{getTimeLapsed(data.community_date)}</Text>
 							</View>
@@ -268,7 +276,7 @@ export default Review = React.memo(props => {
 					) : (
 						<FavoriteTag48_Border onPress={() => onPressFavorite(true)} />
 					)}
-					<Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />
+					{data.community_writer_id ? <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} /> : <></>}
 				</View>
 			</View>
 			{/* 리뷰 사진 썸네일 */}

@@ -21,18 +21,24 @@ const RescueImage = props => {
 		switch (props.status) {
 			case 'rescue':
 				return RESCUE;
+			case 'found':
+				return '주인 찾음';
 			case 'complete':
 				return ADOPT;
 			case 'discuss':
+			case undefined:
 				return DISCUSS;
 			case 'rainbowbridge':
 				return '';
 			case 'nearrainbow':
-				return NEAR_RAINBOWBRIDGE;
+			case 'rainbowbridge_euthanasia':
+				return '무지개다리';
 			case 'adopt':
 				return ADOPT;
 			case 'protect':
 				return PROTECT;
+			default:
+				return DISCUSS;
 		}
 	};
 	return (

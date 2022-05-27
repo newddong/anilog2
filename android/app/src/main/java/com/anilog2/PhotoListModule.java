@@ -57,6 +57,7 @@ import android.widget.Toast;
 import static com.anilog2.PhotoListUtil.*;
 import com.anilog2.GetMediaTask;
 import com.anilog2.CropTask;
+import com.anilog2.SaveTask;
 
 public class PhotoListModule extends ReactContextBaseJavaModule{
     public static final String NAME = "PhotoListModule";
@@ -154,8 +155,8 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
 
         onAssetsObtained(uris, ops, promise);
 
-        Toast myToast = Toast.makeText(reactContext,"우웩"+(medias.size()>0?medias.getString(0):"선택한 사진이 없음"), Toast.LENGTH_SHORT);
-        myToast.show();
+//        Toast myToast = Toast.makeText(reactContext,"우웩"+(medias.size()>0?medias.getString(0):"선택한 사진이 없음"), Toast.LENGTH_SHORT);
+//        myToast.show();
 
     }
 
@@ -181,6 +182,8 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
         double targetHeight = params.hasKey("destHeight") ? params.getDouble("destHeight") : 0;
         double offsetX = params.hasKey("offsetX") ? params.getDouble("offsetX") : 0;
         double offsetY = params.hasKey("offsetY") ? params.getDouble("offsetY") : 0;
+        double imgWidth = params.hasKey("imgWidth") ? params.getDouble("imgWidth") : 0;
+        double imgHeight = params.hasKey("imgHeight") ? params.getDouble("imgHeight") : 0;
         boolean isCircular = params.hasKey("isCircular") ? params.getBoolean("isCircular") : false;
 
         if (!params.hasKey("destWidth") || !params.hasKey("destHeight") ||
@@ -198,6 +201,8 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
                 (int) offsetY,
                 (int) targetWidth,
                 (int) targetHeight,
+                (int) imgWidth,
+                (int) imgHeight,
                 promise,
                 this);
         if (params.hasKey("displaySize")) {
@@ -208,6 +213,21 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
         }
         cropTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
+    /**
+     * Save an image to the gallery (i.e. {@link MediaStore.Images}). This copies the original file
+     * from wherever it may be to the external storage pictures directory, so that it can be scanned
+     * by the MediaScanner.
+     *
+     * @param uri the file:// URI of the image to save
+     * @param promise to be resolved or rejected
+     */
+    @ReactMethod
+    public void saveImage(String uri, Promise promise) {
+        new SaveTask(getReactApplicationContext(), Uri.parse(uri), promise)
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
 
     void onAssetsObtained(List<Uri> fileUris, PhotoListUtil.Options options, final Promise promise) {
         try {

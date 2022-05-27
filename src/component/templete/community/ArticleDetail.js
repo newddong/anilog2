@@ -1,6 +1,6 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View,ScrollView} from 'react-native';
+import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View, ScrollView} from 'react-native';
 import DP from 'Root/config/dp';
 import {GRAY10, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
 import CommentList from 'Root/component/organism/comment/CommentList';
@@ -8,7 +8,7 @@ import Modal from 'Root/component/modal/Modal';
 import Article from 'Root/component/organism/article/Article';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import {useNavigation} from '@react-navigation/core';
-import {getCommunityList, updateAndDeleteCommunity} from 'Root/api/community';
+import {getCommunityByObjectId, getCommunityList, updateAndDeleteCommunity} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {createComment, deleteComment, getCommentListByCommunityId, updateComment} from 'Root/api/commentapi';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -16,12 +16,12 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import community_obj from 'Root/config/community_obj';
 import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
-import {REPORT_MENU} from 'Root/i18n/msg';
+import {NETWORK_ERROR, REPORT_MENU} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
-import { useKeyboardBottom } from 'Root/component/molecules/input/usekeyboardbottom';
+import {useKeyboardBottom} from 'Root/component/molecules/input/usekeyboardbottom';
 /**
  * 자유게시글 상세 내용
  * @param {object} props - Props Object
@@ -30,7 +30,7 @@ import { useKeyboardBottom } from 'Root/component/molecules/input/usekeyboardbot
 export default ArticleDetail = props => {
 	const key = useKeyboardBottom(0);
 	const navigation = useNavigation();
-	const [data, setData] = React.useState(props.route.params.community_object);
+	const [data, setData] = React.useState('false');
 	const [searchInput, setSearchInput] = React.useState('');
 	const [comments, setComments] = React.useState('false');
 	const [articleList, setArticleList] = React.useState([]);
@@ -50,34 +50,39 @@ export default ArticleDetail = props => {
 	const commentListHeight = React.useRef(100);
 
 	React.useEffect(() => {
-		setData(props.route.params.community_object);
+		const unsubscribe = navigation.addListener('focus', () => {
+			//다른 탭(ex - My 탭의 즐겨찾기한 커뮤니티 목록에서 들어온 경우)에서의 호출
+		});
+		getArticleData();
+		getComment();
+		getArticleList();
+		navigation.setOptions({title: '자유 게시글'});
+		return unsubscribe;
+	}, []);
+
+	React.useEffect(() => {
 		if (props.route.params.searchInput != '') {
 			console.log('props.route.params.searchInput', props.route.params.searchInput);
 			setSearchInput(props.route.params.searchInput);
 		}
 	}, [props.route.params]);
 
-	React.useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', () => {
-			//다른 탭(ex - My 탭의 즐겨찾기한 커뮤니티 목록에서 들어온 경우)에서의 호출
-			if (community_obj.object.hasOwnProperty('_id')) {
-				if (community_obj.object._id != data._id) {
-					//현재 보고 있는 페이지와 다른 게시글이 호출된 경우
-					console.log('보고 있는 페이지와 다른 게시글이 호출된 경우');
-					navigation.push('ArticleDetail', {community_object: community_obj.object}); //해당 게시글 상세로 이동
-				}
-			}
-		});
-		navigation.addListener('blur', () => {
-			community_obj.object = {};
-			community_obj.pageToMove = '';
-			community_obj.object.initial = true;
-		});
-		getComment();
-		getArticleList();
-		navigation.setOptions({title: '자유 게시글'});
-		return unsubscribe;
-	}, []);
+	//커뮤니티 데이터
+	const getArticleData = () => {
+		getCommunityByObjectId(
+			{
+				community_object_id: props.route.params.community_object._id,
+			},
+			result => {
+				// console.log('result / getCommunityByObjectId / ArticleDetail', result.msg);
+				setData(result.msg);
+			},
+			err => {
+				console.log('err / getCommunityByObjectId / ArticleDetail ', err);
+				setData('false');
+			},
+		);
+	};
 
 	//페이지 하단에 출력될 자유게시글 목록 api(페이징 필요)
 	const getArticleList = () => {
@@ -117,7 +122,14 @@ export default ArticleDetail = props => {
 			},
 			err => {
 				console.log('err / getCommunityList / ArticleMain : ', err);
-				Modal.alert(err);
+				if (err.includes('code 500')) {
+					setArticleList([]);
+					setTimeout(() => {
+						Modal.alert(NETWORK_ERROR);
+					}, 500);
+				} else if (err.includes('없습니다')) {
+					setArticleList([]);
+				}
 			},
 		);
 	};
@@ -126,7 +138,7 @@ export default ArticleDetail = props => {
 	const getComment = () => {
 		getCommentListByCommunityId(
 			{
-				community_object_id: data._id,
+				community_object_id: props.route.params.community_object._id,
 				request_number: 1000,
 			},
 			comments => {
@@ -140,6 +152,8 @@ export default ArticleDetail = props => {
 				console.log('getCommentListByCommunityId', err);
 				if (err == '검색 결과가 없습니다.') {
 					setComments([{}]);
+				} else if (err.includes('code 500')) {
+					Modal.popNetworkErrorModal('네트워크 오류로 댓글 정보를 \n 받아오는데 실패하였습니다.');
 				}
 			},
 		);
@@ -270,7 +284,10 @@ export default ArticleDetail = props => {
 							},
 						);
 					},
-					err => Modal.alert(err),
+					err => {
+						console.log('err', err);
+						Modal.close();
+					},
 				);
 			}
 		}
@@ -278,13 +295,13 @@ export default ArticleDetail = props => {
 	const [isReplyFocused, setReplyFocus] = React.useState(false);
 	const onFocus = () => {
 		console.log('onFocus');
-		Platform.OS=='android'&&setReplyFocus(true);
+		Platform.OS == 'android' && setReplyFocus(true);
 		scrollToReplyBox();
 	};
 
 	const onBlur = () => {
-		Platform.OS=='android'&&setReplyFocus(false);
-	}
+		Platform.OS == 'android' && setReplyFocus(false);
+	};
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
 	const onLockBtnClick = () => {
@@ -389,95 +406,98 @@ export default ArticleDetail = props => {
 
 	//제목 우측 미트볼 클릭
 	const onPressMeatball = () => {
-		const isMyArticle = userGlobalObject.userInfo._id == data.community_writer_id._id;
-		Modal.popSelectBoxModal(
-			isMyArticle ? ['수정', '삭제'] : ['신고'],
-			select => {
-				switch (select) {
-					case '수정':
-						navigation.push('CommunityEdit', {previous: data, isReview: false, isSearch: props.route.params.searchInput});
-						break;
-					case '삭제':
-						Modal.close();
-						setTimeout(() => {
-							Modal.popTwoBtn(
-								'정말로 이 게시글을 \n 삭제하시겠습니까?',
-								'아니오',
-								'네',
-								() => Modal.close(),
-								() => {
-									updateAndDeleteCommunity(
-										{
-											community_object_id: data._id,
-											community_is_delete: true,
-										},
-										result => {
-											// console.log('result / updateAndDeleteCommunity / ArticleDetail : ', result.msg);
-											Modal.close();
-											setTimeout(() => {
-												Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
-												setTimeout(() => {
-													Modal.close();
-													navigation.goBack();
-												}, 600);
-											}, 200);
-										},
-										err => {
-											console.log('err / updateAndDeleteCommunity / ArticleDetail : ', err);
-											Modal.alert(err);
-										},
-									);
-								},
-							);
-						}, 200);
-						break;
-					case '신고':
-						Modal.close();
-						if (userGlobalObject.userInfo.isPreviewMode) {
+		console.log(' data.community_writer_id', data.community_writer_id);
+		if (data.community_writer_id) {
+			const isMyArticle = userGlobalObject.userInfo._id == data.community_writer_id._id;
+			Modal.popSelectBoxModal(
+				isMyArticle ? ['수정', '삭제'] : ['신고'],
+				select => {
+					switch (select) {
+						case '수정':
+							navigation.push('CommunityEdit', {previous: data, isReview: false, isSearch: props.route.params.searchInput});
+							break;
+						case '삭제':
+							Modal.close();
 							setTimeout(() => {
-								Modal.popLoginRequestModal(() => {
-									navigation.navigate('Login');
-								});
-							}, 100);
-						} else {
-							setTimeout(() => {
-								Modal.popOneBtnSelectModal(
-									REPORT_MENU,
-									'이 게시물을 신고 하시겠습니까?',
-									selectedItem => {
-										createReport(
+								Modal.popTwoBtn(
+									'정말로 이 게시글을 \n 삭제하시겠습니까?',
+									'아니오',
+									'네',
+									() => Modal.close(),
+									() => {
+										updateAndDeleteCommunity(
 											{
-												report_target_object_id: data._id,
-												report_target_object_type: 'communityobjects',
-												report_target_reason: selectedItem,
-												report_is_delete: false,
+												community_object_id: data._id,
+												community_is_delete: true,
 											},
 											result => {
-												console.log('신고 완료', result);
+												// console.log('result / updateAndDeleteCommunity / ArticleDetail : ', result.msg);
 												Modal.close();
-												Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
+												setTimeout(() => {
+													Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
+													setTimeout(() => {
+														Modal.close();
+														navigation.goBack();
+													}, 600);
+												}, 200);
 											},
 											err => {
-												Modal.close();
-												if (err == '이미 신고되었습니다.') {
-													Modal.popOneBtn('이미 신고하셨습니다.', '확인', () => Modal.close());
-												}
+												console.log('err / updateAndDeleteCommunity / ArticleDetail : ', err);
+												Modal.alert(err);
 											},
 										);
 									},
-									'신고',
 								);
 							}, 200);
-						}
-						break;
-					default:
-						break;
-				}
-			},
-			() => Modal.close(),
-			false,
-			false,
-		);
+							break;
+						case '신고':
+							Modal.close();
+							if (userGlobalObject.userInfo.isPreviewMode) {
+								setTimeout(() => {
+									Modal.popLoginRequestModal(() => {
+										navigation.navigate('Login');
+									});
+								}, 100);
+							} else {
+								setTimeout(() => {
+									Modal.popOneBtnSelectModal(
+										REPORT_MENU,
+										'이 게시물을 신고 하시겠습니까?',
+										selectedItem => {
+											createReport(
+												{
+													report_target_object_id: data._id,
+													report_target_object_type: 'communityobjects',
+													report_target_reason: selectedItem,
+													report_is_delete: false,
+												},
+												result => {
+													console.log('신고 완료', result);
+													Modal.close();
+													Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
+												},
+												err => {
+													Modal.close();
+													if (err == '이미 신고되었습니다.') {
+														Modal.popOneBtn('이미 신고하셨습니다.', '확인', () => Modal.close());
+													}
+												},
+											);
+										},
+										'신고',
+									);
+								}, 200);
+							}
+							break;
+						default:
+							break;
+					}
+				},
+				() => Modal.close(),
+				false,
+				false,
+			);
+		}
 	};
 
 	// 게시글 내용 클릭
@@ -545,7 +565,10 @@ export default ArticleDetail = props => {
 					setData({...data, community_is_like: bool, community_like_count: bool ? ++data.community_like_count : --data.community_like_count});
 					// setData({...data, community_like_count: bool ? data.community_like_count++ : data.community_like_count--});
 				},
-				err => console.log('err / onPressLike / ReviewMain : ', err),
+				err => {
+					console.log('err / onPressLike / ReviewMain : ', err);
+					setData({...data, community_is_like: bool, community_like_count: bool ? ++data.community_like_count : --data.community_like_count});
+				},
 			);
 		}
 	};
@@ -601,12 +624,11 @@ export default ArticleDetail = props => {
 				) : (
 					<></>
 				)}
-				
+
 				<ArticleList
 					items={articleList}
 					onPressArticle={onPressArticle} //게시글 내용 클릭
 				/>
-				
 			</View>
 		);
 	};
@@ -614,24 +636,23 @@ export default ArticleDetail = props => {
 	const renderItem = ({item, index}) => {
 		if (index == comments.length - 1) {
 			return (
-					<View style={[{marginTop: 0 * DP, marginBottom: 30 * DP, opacity:key>0||isReplyFocused?0:1}]}>
-						
-						<ReplyWriteBox
-							onAddPhoto={onAddPhoto}
-							onChangeReplyInput={onChangeReplyInput}
-							onLockBtnClick={onLockBtnClick}
-							onWrite={onWrite}
-							onDeleteImage={onDeleteImage}
-							privateComment={privateComment}
-							ref={input}
-							editData={editData}
-							shadow={false}
-							parentComment={parentComment}
-							onCancelChild={onCancelChild}
-							onFocus={onFocus}
-							onBlur={onBlur}
-						/>
-					</View>
+				<View style={[{marginTop: 0 * DP, marginBottom: 30 * DP, opacity: key > 0 || isReplyFocused ? 0 : 1}]}>
+					<ReplyWriteBox
+						onAddPhoto={onAddPhoto}
+						onChangeReplyInput={onChangeReplyInput}
+						onLockBtnClick={onLockBtnClick}
+						onWrite={onWrite}
+						onDeleteImage={onDeleteImage}
+						privateComment={privateComment}
+						ref={input}
+						editData={editData}
+						shadow={false}
+						parentComment={parentComment}
+						onCancelChild={onCancelChild}
+						onFocus={onFocus}
+						onBlur={onBlur}
+					/>
+				</View>
 			);
 		} else
 			return (
@@ -671,23 +692,25 @@ export default ArticleDetail = props => {
 					}}
 					removeClippedSubviews={false}
 				/>
-				{(key>0||isReplyFocused)&&<View style={{position:'absolute',bottom:key-2}}>
-					<ReplyWriteBox
-								onAddPhoto={onAddPhoto}
-								onChangeReplyInput={onChangeReplyInput}
-								onLockBtnClick={onLockBtnClick}
-								onWrite={onWrite}
-								onDeleteImage={onDeleteImage}
-								privateComment={privateComment}
-								ref={floatInput}
-								editData={editData}
-								shadow={false}
-								parentComment={parentComment}
-								onCancelChild={onCancelChild}
-								onFocus={onFocus}
-								onBlur={onBlur}
-					/>
-				</View>}
+				{(key > 0 || isReplyFocused) && (
+					<View style={{position: 'absolute', bottom: key - 2}}>
+						<ReplyWriteBox
+							onAddPhoto={onAddPhoto}
+							onChangeReplyInput={onChangeReplyInput}
+							onLockBtnClick={onLockBtnClick}
+							onWrite={onWrite}
+							onDeleteImage={onDeleteImage}
+							privateComment={privateComment}
+							ref={floatInput}
+							editData={editData}
+							shadow={false}
+							parentComment={parentComment}
+							onCancelChild={onCancelChild}
+							onFocus={onFocus}
+							onBlur={onBlur}
+						/>
+					</View>
+				)}
 			</View>
 		);
 };

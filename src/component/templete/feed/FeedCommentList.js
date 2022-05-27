@@ -15,6 +15,7 @@ import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import Loading from 'Root/component/molecules/modal/Loading';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import {deleteFeed} from 'Root/api/feedapi';
+import {NETWORK_ERROR} from 'Root/i18n/msg';
 
 export default FeedCommentList = props => {
 	// console.log('props.showAllContents', props.route.params.showAllContents);
@@ -388,7 +389,7 @@ export default FeedCommentList = props => {
 					console.log('err / DeleteFeed / FeedContent : ', err);
 					Modal.close();
 					setTimeout(() => {
-						Modal.alert('네트워크 오류입니다.');
+						Modal.alert(NETWORK_ERROR);
 					}, 100);
 				},
 			);

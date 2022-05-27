@@ -3,13 +3,15 @@ import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 're
 import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import ProfileImageMedium120 from 'Molecules/image/ProfileImageMedium120';
+import {ProfileDefaultImg} from 'Root/component/atom/icon';
+import {styles} from 'Root/component/atom/image/imageStyle';
 
 export default OwnerList = props => {
 	const onClickLabel = item => {
 		props.onClickLabel(item);
 	};
 
-	const renderItem = (item, index) => {
+	const renderItem = ({item, index}) => {
 		return (
 			<View style={[style.itemContainer]}>
 				<View style={[style.petProfileImageMedium]}>
@@ -27,10 +29,26 @@ export default OwnerList = props => {
 		);
 	};
 
+	const noOwner = () => {
+		return (
+			<View style={[style.itemContainer]}>
+				<View style={[style.petProfileImageMedium]}>
+					<ProfileDefaultImg size={styles.img_round_120} />
+				</View>
+
+				<View style={[style.petProfileInfo]}>
+					<Text style={[txt.noto24, {color: GRAY10}]} numberOfLines={2}>
+						탈퇴한 계정입니다.
+					</Text>
+				</View>
+			</View>
+		);
+	};
+
 	return (
 		<View style={[style.container, {}]}>
 			<View style={[style.insideContainer]}>
-				<FlatList data={props.items} renderItem={({item, index}) => renderItem(item, index)} horizontal={true} />
+				<FlatList data={props.items} renderItem={renderItem} horizontal={true} ListEmptyComponent={noOwner} />
 			</View>
 		</View>
 	);

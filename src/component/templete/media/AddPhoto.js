@@ -9,7 +9,8 @@ import CameraRoll from 'Root/module/CameraRoll';
 // import { requestPermission, reqeustCameraPermission } from 'permission';
 import LocalMedia from 'Molecules/media/LocalMedia';
 import {Bracket48} from 'Atom/icon';
-// import FastImage from 'react-native-fast-image';
+import FastImage from 'react-native-fast-image';
+import Modal from 'Root/component/modal/Modal';
 // import Video from 'react-native-video';
 import { useNavigation } from '@react-navigation/native';
 
@@ -17,27 +18,28 @@ export var exportUriList = []; //겔러리 속 사진들 로컬 주소
 export var exportUri = {}; //겔러리 속 사진 로컬 주소
 
 export default AddPhoto = props => {
+	const limit = 5;
 	const navigation = useNavigation();
 	const [isVideo, setVideo] = React.useState(false);
 	const [photolist, setPhotoList] = React.useState([
-		{
-			node: {
-				location: null,
-				modified: 123456789.066,
-				group_name: 'Pictures',
-				timestamp: 123456789.067,
-				type: 'image/jpeg',
-				image: {
-					fileSize: null,
-					filename: null,
-					playableDuration: null,
-					height: null,
-					width: null,
-					uri: 'http://src.hidoc.co.kr/image/lib/2016/7/21/20160721160807763_0.jpg',
-				},
-				imageID:"0"
-			},
-		},
+		// {
+		// 	node: {
+		// 		location: null,
+		// 		modified: 123456789.066,
+		// 		group_name: 'Pictures',
+		// 		timestamp: 123456789.067,
+		// 		type: 'image/jpeg',
+		// 		image: {
+		// 			fileSize: null,
+		// 			filename: null,
+		// 			playableDuration: null,
+		// 			height: null,
+		// 			width: null,
+		// 			uri: 'http://src.hidoc.co.kr/image/lib/2016/7/21/20160721160807763_0.jpg',
+		// 		},
+		// 		imageID:"0"
+		// 	},
+		// },
 	]);
 	const [selectedPhoto, setSelectedPhoto] = React.useState([]);
 	const isSingle = props.route.name === 'SinglePhotoSelect';
@@ -50,7 +52,7 @@ export default AddPhoto = props => {
 	 *@param {number} request - 불러올 미디어의 숫자 (기본값 20)
 	 *@param {string} type - 불러올 미디어의 타잎('Photos'|'All'|'Videos')
 	 */
-	const loadPhotosMilsec = (request = 5, timeStamp = 0, imageID = "123456789", type = 'Photos') => {
+	const loadPhotosMilsec = (request = 30, timeStamp = 0, imageID = "123456789", type = 'Photos') => {
 		console.log('아이디',imageID);
 		let param = {
 			first: request,
@@ -91,12 +93,10 @@ export default AddPhoto = props => {
 
 	/** 스크롤이 바닥에 닿을때 페이징 처리를 위한 함수 */
 	const scrollReachBottom = () => {
-		// loadPhotos(page.current);
-		// console.log('scrolllist bottom   ' + JSON.stringify(photolist));
 		let lastID = photolist.length > 1 ? photolist[photolist.length - 1].node.imageID : "123456789";
 		let timeStamp = photolist.length > 1 ? photolist[photolist.length - 1].node.timestamp : 0;
 		console.log('스크롤이 바닥에 닿았습니다. '+lastID+ '이후의 사진을 로드합니다.');
-		loadPhotosMilsec(15,timeStamp,lastID);
+		loadPhotosMilsec(30,timeStamp,lastID);
 	};
 
 	//네이티브 모듈 테스트
@@ -104,12 +104,12 @@ export default AddPhoto = props => {
 		const Native = Platform.OS=='ios'?NativeModules.RNCCameraRoll:NativeModules.PhotoListModule;		
 
 
-		// Native.compressImage({imageFiles:selectedPhoto,quality:0.5,maxWidth:750*DP, maxHeight:750*DP})
-		// 	.then(r=>console.log(r))
-		// 	.catch(err => {
-		// 	// console.log('cameraroll error===>' + err);
-		// 	});
-		navigation.push('Crop',{cropImage:selectedPhoto})
+		Native.compressImage({imageFiles:selectedPhoto,quality:0.5,maxWidth:750*DP, maxHeight:750*DP})
+			.then(r=>console.log(r))
+			.catch(err => {
+			// console.log('cameraroll error===>' + err);
+			});
+		// navigation.push('Crop',{cropImage:selectedPhoto})
 		console.log(selectedPhoto);
 
 
@@ -167,44 +167,46 @@ export default AddPhoto = props => {
 	// 		loadPhotosMilsec();
 	// 	});
 	// });
+	React.useEffect(()=>{
+		navigation.setParams({selectedPhoto:selectedPhoto});
+	},[selectedPhoto])
 
+	React.useEffect(()=>{
+		if(props.route.params.cropImg){
+			setSelectedPhoto([props.route.params.cropImg]);
+		}
+	},[props.route.params.cropImg])
 	const selectPhoto = photo => {
-		if (isSingle) {
-			exportUriList.splice(0);
-			exportUriList.push(photo);
-			setSelectedPhoto(exportUriList.map(v => v));
+		console.log('photo select', photo);
+		if(selectedPhoto.length>=limit){
+			Modal.alert("사진은 "+limit+"개 까지 선택가능합니다.");
 			return;
 		}
-		exportUriList.push(photo);
-		setSelectedPhoto(exportUriList.map(v => v));
+		if(isSingle){
+			setSelectedPhoto([photo]);
+			navigation.push('Crop',{cropImage:photo,prev:props.route.name,key:props.route.key});
+		}else{
+			setSelectedPhoto(selectedPhoto.concat(photo));
+		}
 	};
 
 	const cancelPhoto = photo => {
-		if (isSingle) {
-			exportUriList.splice(0);
-			setSelectedPhoto(exportUriList.map(v => v));
-			return;
+		console.log('cancel select', photo);
+		if(isSingle){
+			setSelectedPhoto([]);
+		}else{
+			setSelectedPhoto(
+				selectedPhoto.filter(v=>photo!=v)
+			)
 		}
-		exportUriList.forEach((v, i, a) => {
-			if (v.uri === photo.uri) a.splice(i, 1);
-		});
-		setSelectedPhoto(exportUriList.map(v => v));
 	};
 
 	const renderList = ({item, index}) => {
-		// if (index === 0) {
-		// 	return <Photos isSingle={isSingle} isCamera navigation={props.navigation} />;
-		// } else {
-		// 	return <Photos isSingle={isSingle} data={item.node} onSelect={selectPhoto} onCancel={cancelPhoto} selectedList={selectedPhoto} />
-		// }
+		const isSelected = selectedPhoto.find(v=>item.node.image.uri==v);
+		const selectedindex = selectedPhoto.findIndex(v=>item.node.image.uri==v)+1;
+
 		return (
-			// <Photos isCamera={false} isSingle={isSingle} data={item.node} onSelect={selectPhoto} onCancel={cancelPhoto} selectedList={selectedPhoto} />
-			<LocalMedia data={item.node} isSingleSelection={isSingle} onSelect={selectPhoto} onCancel={cancelPhoto} index={0} />
-		);
-		return (
-			<View>
-				<Text>{index}</Text>
-			</View>
+			<LocalMedia data={item.node} isSingleSelection={isSingle} onSelect={selectPhoto} onCancel={cancelPhoto} index={selectedindex} selected={isSelected}/>
 		);
 	};
 
@@ -215,11 +217,11 @@ export default AddPhoto = props => {
 		// props.navigation.navigate({ name: props.route.params.navfrom, params: { localSelectedImages: exportUriList[0] }, merge: true });
 		// props.navigation.navigate({name: props.route.params?.navfrom, params: {image: exportUriList[0]}, merge: true});
 		
-		let lastID = photolist.length > 1 ? photolist[photolist.length - 1].node.imageID : "123456789";
-		console.log('스크롤이 바닥에 닿았습니다. '+lastID+ '이후의 사진을 로드합니다.');
-		loadPhotosMilsec(15,lastID);
-
-		console.log(photolist);
+		// let lastID = photolist.length > 1 ? photolist[photolist.length - 1].node.imageID : "123456789";
+		// console.log('스크롤이 바닥에 닿았습니다. '+lastID+ '이후의 사진을 로드합니다.');
+		// loadPhotosMilsec(15,lastID);
+		console.log(selectedPhoto);
+		// console.log(photolist);
 	};
 
 	return (
@@ -228,7 +230,7 @@ export default AddPhoto = props => {
 				<View />
 			) : (
 				// <Video style={lo.box_img} source={{uri: selectedPhoto[selectedPhoto.length-1]?.uri}} muted />
-				<Image style={[lo.box_img,{height:300*DP}]} source={{uri: selectedPhoto[selectedPhoto.length - 1]?.uri}} />
+				<Img style={[lo.box_img]} source={{uri: selectedPhoto[selectedPhoto.length - 1]}} />
 			)}
 			<View style={lo.box_title}>
 				<TouchableWithoutFeedback onPress={test}>
@@ -237,7 +239,7 @@ export default AddPhoto = props => {
 						<Bracket48 />
 					</View>
 				</TouchableWithoutFeedback>
-				{isSingle && (
+				{(isSingle&&false) && (
 					<TouchableWithoutFeedback onPress={clickcheck}>
 						<View style={[btn.confirm_button, btn.shadow]}>
 							<Text style={[txt.noto28b, txt.white]}>사진등록</Text>
@@ -251,11 +253,12 @@ export default AddPhoto = props => {
 				renderItem={renderList}
 				extraData={selectedPhoto}
 				// columnWrapperStyle={{backgroundColor:'green',borderColor:'red',borderWidth:3*DP}}
-				keyExtractor={(item,index) => index+item.node.timestamp+item.node?.image.uri}
+				// keyExtractor={(item,index) => index+item.node.timestamp+item.node?.image.uri}
 				// keyExtractor={item => item.node.timestamp}
+				keyExtractor={item => item.node.image.uri}
 				horizontal={false}
 				numColumns={4}
-				onEndReachedThreshold={0.1}
+				onEndReachedThreshold={0.2}
 				onEndReached={scrollReachBottom}
 				// initialNumToRender={20}
 				windowSize={6}
@@ -263,6 +266,17 @@ export default AddPhoto = props => {
 		</View>
 	);
 };
+
+//안드로이드에서 FastImage를 사용하도록하는 커스텀 컴포넌트
+const Img =React.forwardRef((props,ref) => {
+	if(Platform.OS=='ios'){
+		return <Image {...props} ref={ref}></Image>
+
+	}
+	if(Platform.OS=='android'){
+		return <FastImage {...props} ref={ref}></FastImage>
+	}
+})
 
 const lo = StyleSheet.create({
 	wrp_main: {

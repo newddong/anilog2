@@ -9,6 +9,8 @@ import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList'
 import DP from 'Root/config/dp';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import SelectStat from 'Root/component/organism/list/SelectStat';
+import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
+import {Check50, Rect50_Border} from 'Root/component/atom/icon';
 
 export default FavoriteProtectRequest = ({route}) => {
 	const navigation = useNavigation();
@@ -31,11 +33,11 @@ export default FavoriteProtectRequest = ({route}) => {
 				collectionName: 'protectrequestobjects',
 			},
 			result => {
-				console.log('result / getFavoriteEtcListByUserId / FavoriteProtectRequest : ', result.msg.length);
+				console.log('result / getFavoriteEtcListByUserId / FavoriteProtectRequest : ', result.msg[0]);
 				let temp = [];
 				result.msg.map((v, i) => {
-					v.favorite_etc_target_object_id.is_favorite = v.is_favorite;
-					temp.push(v.favorite_etc_target_object_id);
+					// v.favorite_etc_target_object_id.is_favorite = v.is_favorite;
+					// temp.push(v.favorite_etc_target_object_id);
 				});
 				setData(temp);
 			},
@@ -72,7 +74,7 @@ export default FavoriteProtectRequest = ({route}) => {
 	const deleteSelectedItem = () => {
 		//현재 dummyData 중 CheckBox 상태가 true인 것이 없는 경우
 		if (data.findIndex(e => e.checkBoxState == true) == -1) {
-			Modal.popOneBtn('선택된 리뷰가 없습니다.', '확인', () => Modal.close());
+			Modal.popOneBtn('선택된 보호요청이 없습니다.', '확인', () => Modal.close());
 			// CheckBox 상태가 true인 것이 존재하는 경우 삭제 시작
 		} else {
 			console.log('삭제시작');
@@ -188,25 +190,29 @@ export default FavoriteProtectRequest = ({route}) => {
 		}
 	};
 
-	const renderItem = ({item, index}) => {
+	const render = ({item, index}) => {
+		console.log('item checkbox', item.checkBoxState);
 		return (
-			<View style={{marginTop: 40 * DP, alignItems: 'center', alignSelf: 'center'}}>
-				<AnimalNeedHelpList
-					data={data}
-					selectMode={selectMode}
-					onPressCheck={onPressCheck}
-					onFavoriteTag={onFavoriteTag}
-					whenEmpty={whenEmpty}
-					showFavorite={false}
-					onClickLabel={onClickLabel}
-				/>
+			<View style={{flexDirection: 'row', alignItems: 'center'}}>
+				{selectMode ? (
+					<View style={{marginRight: 10 * DP}}>
+						{item.checkBoxState ? (
+							<Check50 onPress={() => onPressCheck(index, false)} />
+						) : (
+							<Rect50_Border onPress={() => onPressCheck(index, true)} />
+						)}
+					</View>
+				) : (
+					<></>
+				)}
+				<ProtectRequest data={item} onFavoriteTag={bool => onFavoriteTag(bool, index)} selectMode={selectMode} />
 			</View>
 		);
 	};
 
 	const header = () => {
 		return (
-			<View style={[temp_style.selectstat_view, {alignItems: 'center'}]}>
+			<View style={[temp_style.selectstat_view, {alignItems: 'center', marginBottom: 20 * DP}]}>
 				<View style={[temp_style.selectstat, selectstat_view_style.selectstat]}>
 					<SelectStat
 						selectMode={selectMode}
@@ -228,8 +234,14 @@ export default FavoriteProtectRequest = ({route}) => {
 		return <Loading isModal={false} />;
 	} else
 		return (
-			<View style={[login_style.wrp_main, {flex: 1}]}>
-				<FlatList data={[{}]} contentContainerStyle={{alignItems: 'center'}} ListHeaderComponent={header} renderItem={renderItem} />
-			</View>
+			<FlatList
+				data={data}
+				style={{backgroundColor: '#fff'}}
+				contentContainerStyle={{alignItems: 'center'}}
+				renderItem={render}
+				showsVerticalScrollIndicator={false}
+				ListHeaderComponent={header}
+				ListEmptyComponent={whenEmpty}
+			/>
 		);
 };

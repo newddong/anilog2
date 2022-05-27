@@ -1,17 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {
-	Text,
-	View,
-	TouchableOpacity,
-	Platform,
-	StyleSheet,
-	TextInput,
-	Keyboard,
-	StatusBar,
-	ScrollView,
-	PermissionsAndroid,
-	AppState,
-} from 'react-native';
+import {Text, View, TouchableOpacity, Platform, StyleSheet, TextInput, Keyboard, StatusBar, ScrollView, AppState} from 'react-native';
 import axios from 'axios';
 import Geolocation from '@react-native-community/geolocation';
 import {txt} from 'Root/config/textstyle';
@@ -25,7 +13,7 @@ import X2JS from 'x2js';
 import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/core';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {check, checkMultiple, checkNotifications, openSettings, PERMISSIONS, request, RESULTS} from 'react-native-permissions';
+import {openSettings, PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 import {NativeModules} from 'react-native';
 
 export default SearchMap = ({route}) => {
@@ -181,6 +169,7 @@ export default SearchMap = ({route}) => {
 	//위도 경도를 토대로 주소 받아오기
 	const callInitialAddress = async (long, lati) => {
 		console.log('callInitialAddress', long);
+		console.log('callInitialAddress', lati);
 		try {
 			let res = await axios
 				.get(`https://dapi.kakao.com/v2/local/geo/coord2address.json?input_coord=WGS84&x=${long}&y=${lati}`, {
@@ -219,6 +208,9 @@ export default SearchMap = ({route}) => {
 				});
 		} catch (error) {
 			console.log('error callAddress  :  ', error.message);
+			if (error.message.includes('code 400')) {
+				requestPermission();
+			}
 			Modal.close();
 		}
 	};

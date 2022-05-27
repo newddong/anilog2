@@ -12,11 +12,14 @@ import FastImage from 'react-native-fast-image';
  * @param {object} props - Props Object
  * @param {object} props.data - 썸네일 오브젝트 (img_uri, gender(female, male), status(protected, missing, reported, onNegotiation, adoption_available, adopted)
  * @param {(status:string, _id:number)=>void} props.onLabelClick - 썸네일 클릭할 때 동작하는 콜백, 썸네일 클릭 상태와 클릭한 썸네일의 고유 _id반환
+ * @param {boolean} props.inActiveOpacity - 전시용일 경우 Touch 액션 제거
  */
 const ProtectedThumbnail = props => {
 	// console.log('props ProtectThumb', props.data);
+	const data = props.data;
+
 	const borderByStatus = () => {
-		if (props.data.status == 'emergency') {
+		if (data.status == 'emergency') {
 			return {
 				borderWidth: 8 * DP,
 				borderColor: RED10,
@@ -26,7 +29,7 @@ const ProtectedThumbnail = props => {
 	};
 
 	const getEmergencyMsg = () => {
-		return props.data.status == 'emergency' ? (
+		return data.status == 'emergency' ? (
 			<View style={{position: 'absolute', alignSelf: 'center', bottom: 46 * DP}}>
 				<Mercy_Killing />
 			</View>
@@ -36,7 +39,7 @@ const ProtectedThumbnail = props => {
 	};
 
 	const getGenderMark = () => {
-		switch (props.data.gender) {
+		switch (data.gender) {
 			case 'male':
 				return <Male48 />;
 				break;
@@ -50,47 +53,57 @@ const ProtectedThumbnail = props => {
 	};
 
 	const getStatusContainerStyle = () => {
-		if (props.data.status == 'missing') {
+		if (data.status == 'missing') {
 			return {backgroundColor: RED20};
-		} else if (props.data.status == 'report') {
+		} else if (data.status == 'report') {
 			return {backgroundColor: YELL20, borderWidth: 2 * DP, borderColor: YELL20};
-		} else if (props.data.status == 'emergency') {
+		} else if (data.status == 'emergency') {
 			return {backgroundColor: RED20, borderWidth: 2 * DP, borderColor: RED20};
 		} else return {backgroundColor: GRAY10};
 	};
 
 	const getStatusText = () => {
-		switch (props.data.status) {
-			case 'rescue':
-			case 'wait':
-			case 'protect':
-				return '입양 가능';
-			case 'emergency':
-				return '안락사 임박';
-			case 'missing':
-				return '실종';
-			case 'report':
-				return '제보';
-			case 'discuss':
-				return '협의 중';
-			case 'rainbowbridge':
-				return '무지개다리';
-			case 'complete':
-			case 'accept':
-			case 'done':
-				return '입양 완료';
+		if (data.notice_day < 0) {
+			return '공고중 D' + data.notice_day;
+		} else {
+			switch (data.status) {
+				case 'rescue':
+				case 'wait':
+				case 'protect':
+					return '입양 가능';
+				case 'emergency':
+					return '안락사 임박';
+				case 'found':
+					return '주인 찾음';
+				case 'missing':
+					return '실종';
+				case 'rainbowbridge_euthanasia':
+				case 'rainbowbridge':
+					return '무지개다리';
+				case 'report':
+					return '제보';
+				case 'discuss':
+				case undefined:
+					return '협의 중';
+				case 'donation':
+					return '기증';
+				case 'complete':
+				case 'accept':
+				case 'done':
+					return '입양 완료';
+			}
 		}
 	};
 
 	const onClickLabel = () => {
-		// console.log(`--onClickLabel-- props.data=>${JSON.stringify(props.data)}`);
-		props.onLabelClick(props.data.status, props.data._id);
+		// console.log(`--onClickLabel-- data=>${JSON.stringify(data)}`);
+		props.onLabelClick(data.status, data._id);
 	};
 
 	return (
 		<View style={styles.img_square_round_214}>
-			<TouchableOpacity onPress={onClickLabel}>
-				<Image source={{uri: props.data.img_uri}} style={[styles.img_square_round_214, borderByStatus()]} />
+			<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.4} onPress={onClickLabel}>
+				<Image source={{uri: data.img_uri}} style={[styles.img_square_round_214, borderByStatus()]} />
 				{/* 펫 성별마크 */}
 				<View style={{position: 'absolute', right: 10 * DP, top: 10 * DP}}>{getGenderMark()}</View>
 				{/* 펫 보호상태 */}
@@ -117,5 +130,6 @@ const ProtectedThumbnail = props => {
 
 ProtectedThumbnail.defaultProps = {
 	onLabelClick: e => console.log(e),
+	inActiveOpacity: false,
 };
 export default ProtectedThumbnail;

@@ -59,89 +59,92 @@ const ChildComment = props => {
 
 	//대댓글의 미트볼 클릭
 	const onPressMeatball = () => {
-		const isWriter = userGlobalObject.userInfo._id == data.comment_writer_id._id;
-		if (isWriter) {
-			Modal.popSelectBoxModal(
-				REPLY_MEATBALL_MENU_MY_REPLY,
-				selectedItem => {
-					switch (selectedItem) {
-						case '수정':
-							props.onEdit && props.onEdit(data);
-							break;
-						case '삭제':
-							props.onPressDeleteChild(data._id);
-							break;
-						default:
-							break;
-						case '상태 변경':
-							alert('상태 변경!');
-							break;
-						case '공유하기':
-							alert('공유하기!');
-							break;
-					}
-					Modal.close();
-				},
-				() => Modal.close(),
-				false,
-				'',
-			);
-		} else {
-			//작성자가 아닐 시 신고만 출력
-			Modal.popSelectBoxModal(
-				REPLY_MEATBALL_MENU,
-				selectedItem => {
-					switch (selectedItem) {
-						case '신고':
-							// alert('신고');
-							Modal.close();
-							console.log('data', data);
-							if (userGlobalObject.userInfo.isPreviewMode) {
-								setTimeout(() => {
-									Modal.popLoginRequestModal(() => {
-										navigation.navigate('Login');
-									});
-								}, 100);
-							} else {
-								setTimeout(() => {
-									Modal.popOneBtnSelectModal(
-										REPORT_MENU,
-										'이 댓글을 신고 하시겠습니까?',
-										selectedItem => {
-											createReport(
-												{
-													report_target_object_id: data._id,
-													report_target_object_type: 'commentsobjects',
-													report_target_reason: selectedItem,
-													report_is_delete: false,
-												},
-												result => {
-													console.log('신고 완료', result);
-													Modal.close();
-													Modal.popOneBtn('이 댓글은 신고 되었습니다.', '확인', () => Modal.close());
-												},
-												err => {
-													Modal.close();
-													if (err == '이미 신고되었습니다.') {
-														Modal.popOneBtn('이미 신고하셨습니다.', '확인', () => Modal.close());
-													}
-												},
-											);
-										},
-										'신고',
-									);
-								}, 100);
-							}
-							break;
-						default:
-							break;
-					}
-					Modal.close();
-				},
-				() => Modal.close(),
-				false,
-				'',
-			);
+		console.log('comment_writer_id', data.comment_writer_id);
+		if (data.comment_writer_id) {
+			const isWriter = userGlobalObject.userInfo._id == data.comment_writer_id._id;
+			if (isWriter) {
+				Modal.popSelectBoxModal(
+					REPLY_MEATBALL_MENU_MY_REPLY,
+					selectedItem => {
+						switch (selectedItem) {
+							case '수정':
+								props.onEdit && props.onEdit(data);
+								break;
+							case '삭제':
+								props.onPressDeleteChild(data._id);
+								break;
+							default:
+								break;
+							case '상태 변경':
+								alert('상태 변경!');
+								break;
+							case '공유하기':
+								alert('공유하기!');
+								break;
+						}
+						Modal.close();
+					},
+					() => Modal.close(),
+					false,
+					'',
+				);
+			} else {
+				//작성자가 아닐 시 신고만 출력
+				Modal.popSelectBoxModal(
+					REPLY_MEATBALL_MENU,
+					selectedItem => {
+						switch (selectedItem) {
+							case '신고':
+								// alert('신고');
+								Modal.close();
+								console.log('data', data);
+								if (userGlobalObject.userInfo.isPreviewMode) {
+									setTimeout(() => {
+										Modal.popLoginRequestModal(() => {
+											navigation.navigate('Login');
+										});
+									}, 100);
+								} else {
+									setTimeout(() => {
+										Modal.popOneBtnSelectModal(
+											REPORT_MENU,
+											'이 댓글을 신고 하시겠습니까?',
+											selectedItem => {
+												createReport(
+													{
+														report_target_object_id: data._id,
+														report_target_object_type: 'commentsobjects',
+														report_target_reason: selectedItem,
+														report_is_delete: false,
+													},
+													result => {
+														console.log('신고 완료', result);
+														Modal.close();
+														Modal.popOneBtn('이 댓글은 신고 되었습니다.', '확인', () => Modal.close());
+													},
+													err => {
+														Modal.close();
+														if (err == '이미 신고되었습니다.') {
+															Modal.popOneBtn('이미 신고하셨습니다.', '확인', () => Modal.close());
+														}
+													},
+												);
+											},
+											'신고',
+										);
+									}, 100);
+								}
+								break;
+							default:
+								break;
+						}
+						Modal.close();
+					},
+					() => Modal.close(),
+					false,
+					'',
+				);
+			}
 		}
 	};
 
@@ -166,11 +169,19 @@ const ChildComment = props => {
 					<></>
 				)}
 				<View style={[childComment.userTimeLabel]}>
-					<UserTimeLabel data={data || null} onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})} />
+					{!data ? (
+						<UserTimeLabel data={data} onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})} />
+					) : (
+						<UserTimeLabel data={data} empty={true} />
+					)}
 				</View>
-				<View style={[childComment.meatBall50_vertical]}>
-					{meatball ? <Meatball50_APRI10_Vertical onPress={onPressMeatball} /> : <Meatball50_GRAY20_Vertical onPress={onPressMeatball} />}
-				</View>
+				{data.comment_writer_id ? (
+					<View style={[childComment.meatBall50_vertical]}>
+						{meatball ? <Meatball50_APRI10_Vertical onPress={onPressMeatball} /> : <Meatball50_GRAY20_Vertical onPress={onPressMeatball} />}
+					</View>
+				) : (
+					<></>
+				)}
 			</View>
 			{/* 해당 대댓글이 photo_uri를 가지고 있는 경우만 IMage 출력 */}
 			{data.comment_photo_uri != null && !isNotAuthorized() ? (

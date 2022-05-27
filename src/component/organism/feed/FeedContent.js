@@ -75,12 +75,19 @@ export default FeedContent = props => {
 	const [send, setSend] = React.useState();
 	const feed_writer = props.data.feed_avatar_id ? props.data.feed_avatar_id : props.data.feed_writer_id;
 	React.useEffect(() => {
-		if (typeof feed_avatar_id == 'object') {
-			setSend(feed_avatar_id);
-		} else {
-			setSend(props.data.feed_writer_id);
-			// console.log('props.data.feed_writer_id', props.data.feed_writer_id.is_favorite);
+		if(feed_avatar_id){
+			setSend(feed_avatar_id)
+		}else{
+			setSend(feed_writer_id)
 		}
+		
+		
+		// if (typeof feed_avatar_id == 'object') {
+		// 	setSend(feed_avatar_id);
+		// } else {
+		// 	setSend(props.data.feed_writer_id);
+		// 	// console.log('props.data.feed_writer_id', props.data.feed_writer_id.is_favorite);
+		// }
 	}, [props.data]);
 
 	//FeedText가 담긴 View 의 onLayout
@@ -409,7 +416,7 @@ export default FeedContent = props => {
 						}
 					},
 					err => {
-						console.log('err', err);
+						console.log('err / getFollows : FeedContent /', err);
 					},
 				);
 			}
@@ -470,6 +477,7 @@ export default FeedContent = props => {
 	};
 
 	const onClickMeatball = () => {
+		// console.log('props.data ', props.data);
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate('Login');
@@ -537,16 +545,19 @@ export default FeedContent = props => {
 				<View style={[organism_style.userLocationLabel_view_feedContent]} onLayout={onLayoutLabel}>
 					{/* UserLocationLabel */}
 					<View style={[organism_style.userLocationLabel_feedContent]}>
-						<UserLocationTimeLabel
-							// data={props.data.feed_writer_id}
-							// data={feed_avatar_id || feed_writer_id || undefined}
-							// data={feed_avatar_id || props.data.feed_writer_id || undefined}
-							data={send}
-							onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})}
-							location={feed_location}
-							time={feed_date}
-							isLarge
-						/>
+
+						{send ? (
+							<UserLocationTimeLabel
+								data={send}
+								onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})}
+								location={feed_location}
+								time={feed_date}
+								isLarge
+							/>
+						) : (
+							<UserLocationTimeLabel empty={true} time={feed_date} isLarge location={feed_location} />
+						)}
+
 						<View style={{flexDirection: 'row', alignItems: 'center'}}>
 							{!isMissingReportRoute ? (
 								<View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -569,10 +580,13 @@ export default FeedContent = props => {
 										)}
 									</View>
 
-									{/* 연결되는 기능 개발 후 추후 연결 */}
-									<View style={[organism_style.meatball, feedContent_style.meatball]}>
-										<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
-									</View>
+									{props.data.feed_writer_id ? (
+										<View style={[organism_style.meatball, feedContent_style.meatball]}>
+											<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
+										</View>
+									) : (
+										<></>
+									)}
 								</View>
 							) : //실종 및 제보게시글의 유저 라벨 우측에 출력되는 즐겨찾기아이콘, 내 게시글일 경우 미출력
 							props.data.feed_writer_id._id == userGlobalObject.userInfo._id ? (

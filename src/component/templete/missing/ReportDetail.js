@@ -17,6 +17,7 @@ import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import Swiper from 'react-native-swiper';
+import MissingReportItem from 'Root/component/organism/listitem/MissingReportItem';
 export default ReportDetail = props => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
@@ -318,6 +319,16 @@ export default ReportDetail = props => {
 	};
 
 	const footer = () => {
+		const renderMissingReport = ({item, index}) => {
+			return (
+				<MissingReportItem
+					data={item}
+					onClickLabel={(status, id) => onClickLabel(status, id, item)}
+					onFavoriteTag={e => onOff_FavoriteTag(e, index)}
+					onPressProtectRequest={() => onPressProtectRequest(item)}
+				/>
+			);
+		};
 		return (
 			<View style={{alignItems: 'center'}}>
 				<View style={{marginTop: 20 * DP}}>
@@ -325,14 +336,15 @@ export default ReportDetail = props => {
 				</View>
 				<View style={[{paddingVertical: 20 * DP}]}>
 					<Text style={[txt.noto24, {paddingVertical: 20 * DP, width: 684 * DP, alignSelf: 'center'}]}>제보글 더보기</Text>
-					<AnimalNeedHelpList
+					{/* <AnimalNeedHelpList
 						data={reportList}
 						onFavoriteTag={(e, index) => onOff_FavoriteTag(e, index)}
 						onClickLabel={(status, id, item) => onClickLabel(status, id, item)}
 						whenEmpty={() => {
 							return <></>;
 						}}
-					/>
+					/> */}
+					<FlatList data={reportList} renderItem={renderMissingReport} />
 				</View>
 			</View>
 		);

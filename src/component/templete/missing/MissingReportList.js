@@ -1,7 +1,6 @@
 import React from 'react';
 import {Text, View, TouchableWithoutFeedback, FlatList, TouchableOpacity, RefreshControl, Pressable, StyleSheet, Animated} from 'react-native';
 import {feedWrite, login_style, searchProtectRequest, temp_style} from 'Templete/style_templete';
-import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {GRAY10, WHITE} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {Check50, EmptyIcon, Rect50_Border, Urgent_Write1, Urgent_Write2} from 'Atom/icon';
@@ -13,9 +12,7 @@ import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
 import Loading from 'Root/component/molecules/modal/Loading';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
-import AnimalNeedHelp from 'Root/component/organism/listitem/AnimalNeedHelp';
 import MissingReportItem from 'Root/component/organism/listitem/MissingReportItem';
-import ActionButton from 'Root/component/molecules/button/ActionButton';
 
 export default MissingReportList = props => {
 	const navigation = useNavigation();
@@ -164,10 +161,29 @@ export default MissingReportList = props => {
 	const getData = () => {
 		let filtered = data;
 		if (onlyMissing) {
-			// console.log('data', data.slice(0, 2));
 			filtered = filtered.filter(v => v.feed_type != 'missing');
 		} else if (onlyReport) {
 			filtered = filtered.filter(v => v.feed_type != 'report');
+		}
+		if (filterData.city != '') {
+			let temp = [];
+			filtered.map((v, i) => {
+				if (v.report_witness_location) {
+					let split = v.report_witness_location.split(' ');
+					if (split[0].includes(filterData.city)) {
+						temp.push(v);
+					}
+				} else {
+					let address = v.missing_animal_lost_location;
+					let splitAddress = address.split('"');
+					let newMissingLocation = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
+					let split = newMissingLocation.split(' ');
+					if (split[0].includes(filterData.city)) {
+						temp.push(v);
+					}
+				}
+			});
+			filtered = temp;
 		}
 		return filtered;
 	};
@@ -228,9 +244,9 @@ export default MissingReportList = props => {
 
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
-			<View style={{}}>
+			<View style={{alignItems: 'center'}}>
 				<View style={[searchProtectRequest.filterView]}>
-					<View style={[searchProtectRequest.filterView.inside, {flexDirection: 'row', justifyContent: 'space-between'}]}>
+					<View style={[searchProtectRequest.inside, {flexDirection: 'row', justifyContent: 'space-between'}]}>
 						<View style={[temp_style.filterBtn, {}]}>
 							<ArrowDownButton
 								onPress={onSelectLocation}

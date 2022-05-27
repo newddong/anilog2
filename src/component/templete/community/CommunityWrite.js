@@ -1,5 +1,17 @@
 import React from 'react';
-import {ScrollView, Text, TouchableOpacity, View, TextInput, Platform, StatusBar, Keyboard, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+import {
+	ScrollView,
+	Text,
+	TouchableOpacity,
+	View,
+	TextInput,
+	Platform,
+	StatusBar,
+	Keyboard,
+	StyleSheet,
+	TouchableWithoutFeedback,
+	Image,
+} from 'react-native';
 import {APRI10, WHITE, GRAY20, GRAY10, GRAY40, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP, {isNotch} from 'Root/config/dp';
@@ -64,10 +76,13 @@ export default CommunityWrite = props => {
 	const [editorLayout, setEditorLayout] = React.useState({
 		//Rich Editor 레이아웃
 		height: 345,
-		width: 310,
+		width: 640 * DP,
 		x: 0,
 		y: 0,
 	});
+	React.useEffect(() => {
+		console.log('editorLayout', editorLayout);
+	}, [editorLayout]);
 
 	React.useEffect(() => {
 		props.navigation.setParams({data: data, nav: 'CommunityWrite'});
@@ -82,6 +97,7 @@ export default CommunityWrite = props => {
 
 	React.useEffect(() => {
 		const param = props.route.params;
+		// console.log('param', param.community_address);
 		if (param?.data && data.community_address.region.latitude != param?.data.community_address.region.latitude) {
 			//다른 주소 검색 결과값 적용
 			setData(param.data);
@@ -136,6 +152,12 @@ export default CommunityWrite = props => {
 	const onLayout = e => {
 		setEditorLayout(e.nativeEvent.layout);
 	};
+
+	// fill	기본값. 주어진 너비와 높이에 딱 맞도록 사이즈를 조절합니다. 이미지의 가로세로 비율은 유지되지 않아요.
+	// contain	가로세로 비율을 유지한 채로 사이즈가 조절되지만, 이미지와 컨테이너 간의 비율이 맞지 않는 경우엔 자리가 남게 됩니다.
+	// cover	가로세로 비율을 유지한 채로 사이즈가 조절되며, 비율이 맞지 않더라도 이미지를 확대해 컨테이너를 완전히 채웁니다.
+	// none	아무것도 하지 않고 본래의 이미지 사이즈를 유지합니다. 그래도 이미지 가운데가 보여지도록 하는 센스가 있어요.
+	// scale-down	none 또는 contain 중에 더 적절한 방향으로 이미지 사이즈를 조절합니다.
 
 	//이미지 입력
 	const insertImage = imageList => {
@@ -343,22 +365,8 @@ export default CommunityWrite = props => {
 				key={type}
 				onPress={() => onPressType(type)}
 				activeOpacity={0.6}
-				style={[
-					style.category_item_free,
-					{
-						backgroundColor: data.community_free_type == type ? APRI10 : GRAY40,
-					},
-				]}>
-				<Text
-					style={[
-						txt.noto28,
-						style.category_item_text,
-						{
-							color: data.community_free_type == type ? WHITE : GRAY10,
-						},
-					]}>
-					{text}
-				</Text>
+				style={[style.category_item_free, {backgroundColor: data.community_free_type == type ? APRI10 : GRAY40}]}>
+				<Text style={[txt.noto28, {color: data.community_free_type == type ? WHITE : GRAY10}]}>{text}</Text>
 			</TouchableOpacity>
 		);
 	};
@@ -366,12 +374,6 @@ export default CommunityWrite = props => {
 	const getReviewButtonContainer = () => {
 		return (
 			<>
-				{/* <TouchableOpacity activeOpacity={0.6} onPress={onPressTempSave}>
-					<View style={[style.buttonItem]}>
-						<Save54 />
-						<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>임시저장</Text>
-					</View>
-				</TouchableOpacity> */}
 				<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
 					<View style={[style.buttonItem]}>
 						<Camera54 />
@@ -404,7 +406,6 @@ export default CommunityWrite = props => {
 			</TouchableOpacity>
 		);
 	};
-	console.log('data.community_address', data.community_address);
 
 	const onPaste = paste => {
 		console.log('paste', paste);
@@ -418,7 +419,8 @@ export default CommunityWrite = props => {
 	};
 
 	const moveToLocationPicker = () => {
-		props.navigation.push('SearchMap', {data: data, isReview: isReview});
+		// props.navigation.push('SearchMap', {data: data, isReview: isReview});
+		props.navigation.push('CommunityLocationPicker', {data: data, isReview: isReview});
 	};
 
 	return (
@@ -471,24 +473,17 @@ export default CommunityWrite = props => {
 							<ScrollView>
 								<RichEditor
 									ref={richText}
-									editorStyle={{
-										contentCSSText: 'font-size:14px;',
-									}}
+									editorStyle={{contentCSSText: 'font-size:13px;'}}
 									onChange={onChange}
 									onLayout={onLayout}
 									keyboardDisplayRequiresUserAction={true}
-									style={{
-										width: '100%',
-										opacity: 0.99,
-									}}
+									style={{width: '100%', opacity: 0.99}}
 									placeholder={
 										isReview ? '서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.' : '내용을 작성해 주세요.'
 									}
 									onCursorPosition={onCursorPosition}
 									onPaste={onPaste}
 									pasteAsPlainText={true}
-
-									// onMessage={handleMessage}
 								/>
 							</ScrollView>
 						) : (
@@ -496,20 +491,16 @@ export default CommunityWrite = props => {
 								<RichEditor
 									ref={richText}
 									keyboardDisplayRequiresUserAction={true}
-									editorStyle={{
-										contentCSSText: 'font-size:14px;',
-									}}
+									editorStyle={{contentCSSText: 'font-size:13px;'}}
 									onChange={onChange}
-									style={{
-										width: '100%',
-										opacity: 0.99,
-									}}
+									style={{width: '100%', opacity: 0.99}}
 									contentMode={'mobile'}
-									placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
+									placeholder={
+										isReview ? '서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.' : '내용을 작성해 주세요.'
+									}
 									onCursorPosition={onCursorPosition}
 									onPaste={onPaste}
 									pasteAsPlainText={true}
-									// onMessage={handleMessage2}
 								/>
 							</View>
 						)}
@@ -547,7 +538,7 @@ export default CommunityWrite = props => {
 					<></>
 				)}
 				{isReview ? (
-					<View style={[style.buttonContainer, {opacity: showBtn == true ? 0 : 1}]}>{getReviewButtonContainer()}</View>
+					<View style={[style.buttonContainer, {opacity: showBtn == true ? 0 : 1, zIndex: 1}]}>{getReviewButtonContainer()}</View>
 				) : (
 					<View style={[style.buttonContainer, {justifyContent: 'flex-end', opacity: showBtn == true ? 0 : 1}]}>{getArticleButtonContainer()}</View>
 				)}
@@ -557,7 +548,12 @@ export default CommunityWrite = props => {
 				<View
 					style={[
 						style.buttonContainer_keyboard,
-						{justifyContent: 'space-between', bottom: Platform.OS == 'android' ? 0 : KeyboardY, opacity: showBtn == false ? 0 : 1},
+						{
+							justifyContent: 'space-between',
+							bottom: Platform.OS == 'android' ? 0 : KeyboardY,
+							opacity: showBtn == false ? 0 : 1,
+							zIndex: showBtn ? 3 : -1,
+						},
 					]}>
 					{getReviewButtonContainer()}
 				</View>

@@ -17,13 +17,16 @@ import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {useScrollToTop} from '@react-navigation/native';
 import NewMissingReportList from '../list/NewMissingReportList';
 import {getUserInfoById} from 'Root/api/userapi';
+import {NETWORK_ERROR} from 'Root/i18n/msg';
 
 export default FeedList = ({route, navigation}) => {
 	const [feedList, setFeedList] = React.useState([]);
 	const [refreshing, setRefreshing] = React.useState(false);
 	const [index, setIndex] = React.useState(0);
 	const [toTop, setToTop] = React.useState(0);
+	const [topList, setTopList] = React.useState([]);
 	const flatlist = React.useRef();
+	const requestNum = 99;
 	//피드썸네일 클릭 리스트일 경우
 
 	React.useEffect(() => {
@@ -49,13 +52,25 @@ export default FeedList = ({route, navigation}) => {
 	}, [route.params?.userobject]);
 
 	React.useEffect(() => {
+		if (route.name == 'MainHomeFeedList') {
+			getMissingReportList(
+				{request_number: 10},
+				result => {
+					console.log('result', result.msg[0]);
+					setTopList(result.msg);
+				},
+				err => {
+					console.log('getMissingReportList err', err);
+				},
+			);
+		}
 		const getList = () => {
 			switch (route.name) {
 				case 'UserFeedList':
 					getFeedListByUserId(
 						{
 							userobject_id: route.params?.userobject._id,
-							request_number: 9999,
+							request_number: requestNum,
 							login_userobject_id: userGlobalObject.userInfo._id,
 						},
 						({msg}) => {
@@ -85,12 +100,13 @@ export default FeedList = ({route, navigation}) => {
 							Modal.popOneBtn(errormsg, '확인', () => Modal.close());
 						},
 					);
+
 					break;
 				case 'TagMeFeedList':
 					getUserTaggedFeedList(
 						{
 							userobject_id: userGlobalObject.userInfo._id,
-							request_number: 9999,
+							request_number: requestNum,
 						},
 						({msg}) => {
 							console.log(
@@ -128,7 +144,7 @@ export default FeedList = ({route, navigation}) => {
 					getUserTaggedFeedList(
 						{
 							userobject_id: route.params?.userobject._id,
-							request_number: 9999,
+							request_number: requestNum,
 						},
 						({msg}) => {
 							setFeedList(
@@ -306,13 +322,14 @@ export default FeedList = ({route, navigation}) => {
 				},
 				err => {
 					console.log('err / DeleteFeed / FeedContent : ', err);
-					// Modal.alert('네트워크 오류입니다.');
+					Modal.alert(NETWORK_ERROR);
 				},
 			);
 		}, 100);
 	};
 
 	const moveToFeedWrite = () => {
+		// navigation.push('LocationPicker');
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate({name: 'Login', merge: true});
@@ -357,25 +374,27 @@ export default FeedList = ({route, navigation}) => {
 			'다중선택',
 			() => {
 				Modal.close();
-				navigation.push('SinglePhotoSelect');
+				navigation.push("SinglePhotoSelect",{prev:{name:route.name,key:route.key}});
 				// navigation.push('Crop');
 			},
 			() => {
 				Modal.close();
-				navigation.push('MultiPhotoSelect');
+				navigation.push('MultiPhotoSelect',{prev:{name:route.name,key:route.key}});
 			},
 		);
 	};
+
+	//피드 상단 새로운 실종/제보
 	const MissingReport = () => {
 		if (route.name == 'MainHomeFeedList') {
 			return (
 				<View style={[styles.container]}>
 					<Text style={[txt.noto28b]}>새로운 실종/제보</Text>
-					<NewMissingReportList isfeed={route.name == 'MainHomeFeedList'} />
+					<NewMissingReportList data={topList} />
 				</View>
 			);
 		} else {
-			return <></>;
+			<></>;
 		}
 	};
 
@@ -407,7 +426,7 @@ export default FeedList = ({route, navigation}) => {
 					if (!data[index]) return {length: 0, offset: 0, index: index};
 					return {length: data[index].height, offset: data[index].offset, index: index};
 				}}
-				ListHeaderComponent={MissingReport}
+				ListHeaderComponent={route.name == 'MainHomeFeedList' ? MissingReport : <></>}
 				ref={flatlist}
 				refreshing
 				extraData={refresh}

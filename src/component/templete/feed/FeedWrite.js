@@ -1,52 +1,22 @@
 import React from 'react';
-import {
-	ScrollView,
-	Text,
-	TouchableOpacity,
-	View,
-	TouchableWithoutFeedback,
-	TextInput,
-	Platform,
-	Keyboard,
-	NativeModules,
-	AppState,
-} from 'react-native';
+import {Text, TouchableOpacity, View, TouchableWithoutFeedback} from 'react-native';
 import {APRI10, WHITE, GRAY20, GRAY10, GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {
-	Arrow_Down_APRI10,
-	Camera54,
-	Location54_APRI10,
-	Location54_Filled,
-	Location54_GRAY30,
-	Paw54_Border,
-	Paw54_Gray,
-} from 'Root/component/atom/icon/index';
+import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Paw54_Border} from 'Root/component/atom/icon/index';
 import {Urgent_Write1, Urgent_Write2} from 'Atom/icon';
 import {btn_style, feedWrite, login_style, temp_style, buttonstyle} from 'Templete/style_templete';
 import AniButton from 'Molecules/button/AniButton';
-import {btn_w176, btn_w194} from 'Atom/btn/btn_style';
-import {DOG_KIND, PET_KIND, pet_kind, PHONE_FORM, PUBLIC_SETTING} from 'Root/i18n/msg';
-import DatePicker from 'Molecules/select/DatePicker';
-import TabSelectFilled_Type1 from 'Molecules/tab/TabSelectFilled_Type1';
-import Input24 from 'Molecules/input/Input24';
+import {btn_w194} from 'Atom/btn/btn_style';
+import {PUBLIC_SETTING} from 'Root/i18n/msg';
 import {launchImageLibrary} from 'react-native-image-picker';
 import Modal from 'Component/modal/Modal';
 import userGlobalObj from 'Root/config/userGlobalObject';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {getPettypes} from 'Root/api/userapi';
 import ImagePicker from 'react-native-image-crop-picker';
 import HashInput from 'Molecules/input/HashInput';
-import {getAddressList} from 'Root/api/address';
-import SelectInput from 'Molecules/button/SelectInput';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import {FlatList} from 'react-native-gesture-handler';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import Geolocation from '@react-native-community/geolocation';
-import axios from 'axios';
-import {openSettings, PERMISSIONS, request} from 'react-native-permissions';
-import LocationButton from 'Root/component/molecules/button/LocationButton';
 import MissingForm from 'Templete/feed/MissingForm';
 import ReportForm from 'Templete/feed/ReportForm';
 
@@ -78,7 +48,7 @@ export default FeedWrite = props => {
 	React.useEffect(() => {
 		if (props.route.name != 'FeedEdit') {
 			const param = props.route.params;
-			console.log('param', param);
+			// console.log('param', param);
 			// console.log('param.feed_avatar_id', param.feed_avatar_id);
 			param.feed_avatar_id //피드 글쓰기 클릭시 즉시 작성자 아바타 계정을 선택하는 절차가 추가됨에 따라 분기처리가 필요해짐
 				? // - 유저 계정에서 피드글쓰기를 누른 경우
@@ -134,26 +104,26 @@ export default FeedWrite = props => {
 		}
 		if (props.route.params?.feedType == 'Feed') {
 			// 피드 글쓰기 진입시 바로 사진부터 적용하는 방식으로 변경 22.03.28
-			launchImageLibrary(
-				{
-					mediaType: 'photo',
-					selectionLimit: 5 - selectedImg.length, //다중선택 모드일 경우 상시 5개면 4개 상태에서 최대 5개를 더해 9개가 가능해짐
-					maxHeight: 750,
-					maxWidth: 750,
-					quality: 0.8,
-				},
-				responseObject => {
-					console.log('선택됨', responseObject);
-					if (!responseObject.didCancel) {
-						let tempContainer = [...selectedImg];
-						responseObject.assets.map(v => tempContainer.push(v.uri));
-						setSelectedImg(tempContainer.slice(-5));
-						Modal.close();
-					} else {
-						// props.navigation.goBack(); //사진 추가 취소시 바로 뒤로가기?
-					}
-				},
-			);
+			// launchImageLibrary(
+			// 	{
+			// 		mediaType: 'photo',
+			// 		selectionLimit: 5 - selectedImg.length, //다중선택 모드일 경우 상시 5개면 4개 상태에서 최대 5개를 더해 9개가 가능해짐
+			// 		maxHeight: 750,
+			// 		maxWidth: 750,
+			// 		quality: 0.8,
+			// 	},
+			// 	responseObject => {
+			// 		console.log('선택됨', responseObject);
+			// 		if (!responseObject.didCancel) {
+			// 			let tempContainer = [...selectedImg];
+			// 			responseObject.assets.map(v => tempContainer.push(v.uri));
+			// 			setSelectedImg(tempContainer.slice(-5));
+			// 			Modal.close();
+			// 		} else {
+			// 			// props.navigation.goBack(); //사진 추가 취소시 바로 뒤로가기?
+			// 		}
+			// 	},
+			// );
 			//피드 글쓰기 클릭하면 즉시 작성자 아바타 계정을 선택하는 절차가 추가됨에 따라 분기처리가 필요해짐
 			props.route.params.feed_avatar_id
 				? props.navigation.setOptions({title: props.route.params.feed_avatar_id.user_nickname})
@@ -189,7 +159,15 @@ export default FeedWrite = props => {
 			const location = param.feed_location;
 			console.log('address', location);
 		}
+
 	}, [props.route.params?.feed_location]);
+
+	React.useEffect(()=>{
+		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+			
+			setSelectedImg(props.route.params.selectedPhoto);
+		}
+	},[props.route.params?.selectedPhoto]);
 
 	const onPressMissingWrite = () => {
 		setShowLostAnimalForm(true);
@@ -222,40 +200,43 @@ export default FeedWrite = props => {
 			'하나씩선택',
 			'여러개선택',
 			() => {
-				ImagePicker.openPicker({
-					// multiple: true,
-					compressImageQuality: 0.8,
-					width: 750,
-					height: 750,
-					cropping: true,
-				})
-					.then(images => {
-						console.log('images', images);
-						setSelectedImg(selectedImg.concat(images.path));
-						Modal.close();
-					})
-					.catch(err => console.log(err + ''));
+				// ImagePicker.openPicker({
+				// 	// multiple: true,
+				// 	compressImageQuality: 0.8,
+				// 	width: 750,
+				// 	height: 750,
+				// 	cropping: true,
+				// })
+				// 	.then(images => {
+				// 		console.log('images', images);
+				// 		setSelectedImg(selectedImg.concat(images.path));
+				// 		Modal.close();
+				// 	})
+				// 	.catch(err => console.log(err + ''));
 				Modal.close();
+				props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
 			},
 			() => {
-				launchImageLibrary(
-					{
-						mediaType: 'photo',
-						selectionLimit: 5 - selectedImg.length, //다중선택 모드일 경우 상시 5개면 4개 상태에서 최대 5개를 더해 9개가 가능해짐
-						maxHeight: 750,
-						maxWidth: 750,
-						quality: 0.8,
-					},
-					responseObject => {
-						console.log('선택됨', responseObject);
-						if (!responseObject.didCancel) {
-							let tempContainer = [...selectedImg];
-							responseObject.assets.map(v => tempContainer.push(v.uri));
-							setSelectedImg(tempContainer.slice(-5));
-							Modal.close();
-						}
-					},
-				);
+				// launchImageLibrary(
+				// 	{
+				// 		mediaType: 'photo',
+				// 		selectionLimit: 5 - selectedImg.length, //다중선택 모드일 경우 상시 5개면 4개 상태에서 최대 5개를 더해 9개가 가능해짐
+				// 		maxHeight: 750,
+				// 		maxWidth: 750,
+				// 		quality: 0.8,
+				// 	},
+				// 	responseObject => {
+				// 		console.log('선택됨', responseObject);
+				// 		if (!responseObject.didCancel) {
+				// 			let tempContainer = [...selectedImg];
+				// 			responseObject.assets.map(v => tempContainer.push(v.uri));
+				// 			setSelectedImg(tempContainer.slice(-5));
+				// 			Modal.close();
+				// 		}
+				// 	},
+				// );
+				Modal.close();
+				props.navigation.push("MultiPhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
 			},
 		);
 	};
@@ -292,11 +273,9 @@ export default FeedWrite = props => {
 
 	//위치추가
 	const moveToLocationPicker = () => {
-		if (Platform.OS === 'ios') {
-			Geolocation.requestAuthorization('always');
-		}
 		console.log('route name', props.route.name);
-		props.navigation.push('FeedSearchMap', {routeName: props.route.name});
+		// props.navigation.push('FeedSearchMap', {routeName: props.route.name});
+		props.navigation.push('FeedLocationPicker', {routeName: props.route.name});
 	};
 
 	//태그 추가
@@ -313,7 +292,14 @@ export default FeedWrite = props => {
 		//긴급 버튼 중 '제보' 클릭한 경우
 		if (showReportForm) {
 			return (
-				<ReportForm onDataChange={onReportForm} data={props.route.params} routeName={props.route.name} container={container} scrollref={scrollref} currentScrollOffset={scrolloffset.current}/>
+				<ReportForm
+					onDataChange={onReportForm}
+					data={props.route.params}
+					routeName={props.route.name}
+					container={container}
+					scrollref={scrollref}
+					currentScrollOffset={scrolloffset.current}
+				/>
 			);
 		} // 긴급 게시 버튼 중 '실종' 클릭한 경우
 		else
@@ -403,12 +389,12 @@ export default FeedWrite = props => {
 								onPress={onSetDiary}
 							/>
 						</View>
-
-						<TouchableOpacity onPress={onPressPublicSetting} style={[feedWrite.public_setting_btn]}>
-							{/* <ActionButton btnTitle={'전체 공개'} onOpen={() => alert('dd')} btnStyle={'border'} titleFontStyle={24} btnLayout={btn_w194} /> */}
-							<Text style={[txt.noto24, {color: APRI10}]}>{publicSetting}</Text>
-							<Arrow_Down_APRI10 />
-						</TouchableOpacity>
+						{/* 기능 개발되면 다시 열릴 공개 설정 버튼 */}
+						{/* <TouchableOpacity onPress={onPressPublicSetting} style={[feedWrite.public_setting_btn]}> */}
+						{/* <ActionButton btnTitle={'전체 공개'} onOpen={() => alert('dd')} btnStyle={'border'} titleFontStyle={24} btnLayout={btn_w194} /> */}
+						{/* <Text style={[txt.noto24, {color: APRI10}]}>{publicSetting}</Text> */}
+						{/* <Arrow_Down_APRI10 /> */}
+						{/* </TouchableOpacity> */}
 					</View>
 				)}
 				{/* {selectedImg.length > 0 && (
@@ -425,9 +411,9 @@ export default FeedWrite = props => {
 		console.log(props.route);
 	};
 
-	const getCurrentScrollOffset = (e) => {
+	const getCurrentScrollOffset = e => {
 		scrolloffset.current = e.nativeEvent.contentOffset.y;
-	}
+	};
 
 	return (
 		<View style={{flex: 1, backgroundColor: '#FFF'}}>
@@ -460,8 +446,7 @@ export default FeedWrite = props => {
 				data={[{}]}
 				keyboardShouldPersistTaps={'handled'}
 				ref={scrollref}
-				onScroll={getCurrentScrollOffset}
-				></FlatList>
+				onScroll={getCurrentScrollOffset}></FlatList>
 			{showUrgentBtns && !isSearchTag ? (
 				<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
 					{showActionButton ? (
@@ -493,6 +478,4 @@ export default FeedWrite = props => {
 			)}
 		</View>
 	);
-
 };
-

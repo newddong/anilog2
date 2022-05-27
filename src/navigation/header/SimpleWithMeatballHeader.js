@@ -1,18 +1,32 @@
 import React from 'react';
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
-import {BackArrow32, Meatball50_GRAY20_Horizontal} from 'Atom/icon';
+import {BackArrow32, FavoriteTag48_Border, FavoriteTag48_Filled, Meatball50_GRAY20_Horizontal} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
-import {FEED_MEATBALL_MENU_MY_FEED, FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS, PROTECT_REQUEST_STATUS} from 'Root/i18n/msg';
+import {FEED_MEATBALL_MENU_MY_FEED, FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS, NETWORK_ERROR, PROTECT_REQUEST_STATUS} from 'Root/i18n/msg';
 import {deleteProtectRequest, setShelterProtectAnimalStatus} from 'Root/api/shelterapi';
 import {setProtectRequestStatus} from 'Root/api/protectapi';
-import {deleteFeed} from 'Root/api/feedapi';
+import {deleteFeed, favoriteFeed} from 'Root/api/feedapi';
+import {setFavoriteEtc} from 'Root/api/favoriteetc';
 
 //보호 요청게시글 및 제보, 실종글 작성자일 경우 미트볼 아이콘 출력이 되는 헤더
 export default SimpleWithMeatballHeader = ({navigation, route, options, back}) => {
 	const isWriter = userGlobalObject.userInfo._id == route.params.writer; //작성자인지 여부 판단
+	const isProtect = route.params?.isMissingOrReport;
+	// console.log('simple Animal', route.params);
+	const [favoriteTag, setFavoriteTag] = React.useState(false);
+
+	//즐겨찾기 상태 아이콘 출력인 경우
+	React.useEffect(() => {
+		if (route.params.request_object) {
+			console.log('route.params.request_object?.protect_request_is_favorite ', route.params.request_object?.protect_request_is_favorite);
+			!route.params.request_object?.protect_request_is_favorite ? setFavoriteTag(false) : setFavoriteTag(true);
+		} else if (route.params.feed_object) {
+			!route.params.request_object?.is_favorite ? setFavoriteTag(false) : setFavoriteTag(true);
+		}
+	}, [route.params]);
 
 	const onPressChangeProtectRequestStatus = () => {
 		Modal.close();
@@ -133,7 +147,7 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 							},
 							err => {
 								console.log('err / DeleteFeed / FeedContent : ', err);
-								// Modal.alert('네트워크 오류입니다.');
+								Modal.alert(NETWORK_ERROR);
 							},
 						);
 					}, 100);
@@ -225,6 +239,65 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 		}
 	};
 
+	const onPressFavorite = bool => {
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			if (!isProtect) {
+				setFavoriteEtc(
+					{
+						collectionName: 'protectrequestobjects',
+						target_object_id: route.params.id,
+						is_favorite: bool,
+					},
+					result => {
+						console.log('result / setFavoriteEtc / SimpleWith : ', result.msg.favoriteEtc);
+						setFavoriteTag(!favoriteTag);
+					},
+					err => console.log('err / setFavoriteEtc / SimpleWith : ', err),
+				);
+			} else {
+				setFavoriteTag(!favoriteTag);
+				favoriteFeed(
+					{
+						feedobject_id: route.params._id,
+						userobject_id: userGlobalObject.userInfo._id,
+						is_favorite: bool,
+					},
+					result => {
+						// console.log('result / favoriteFeed / SimpleWith', result.msg);
+						Modal.close();
+						Modal.popNoBtn('즐겨찾기 ' + (bool ? '추가' : '삭제') + '가 완료되었습니다.');
+						setTimeout(() => {
+							Modal.close();
+						}, 1000);
+					},
+					err => {
+						console.log('err / favoriteFeed', err);
+						setFavoriteTag(!favoriteTag);
+						Modal.alert(NETWORK_ERROR);
+					},
+				);
+			}
+		}
+	};
+
+	const getMenuIcon = () => {
+		// console.log('isWriter', isWriter);
+		// console.log('isProtect', isProtect);
+		if (isWriter) {
+			return <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />;
+		} else {
+			if (favoriteTag) {
+				return <FavoriteTag48_Filled onPress={() => onPressFavorite(false)} />;
+			} else {
+				return <FavoriteTag48_Border onPress={() => onPressFavorite(true)} />;
+			}
+		}
+	};
+
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
 			<TouchableOpacity onPress={navigation.goBack}>
@@ -232,20 +305,10 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 					<BackArrow32 onPress={navigation.goBack} />
 				</View>
 			</TouchableOpacity>
-			<Text
-				style={[
-					{
-						flex: 1,
-						textAlign: 'center',
-						// marginLeft: 30 * DP,
-						marginRight: 25 * DP,
-					},
-					txt.roboto40b,
-				]}
-				numberOfLines={1}>
+			<Text style={[{flex: 1, textAlign: 'center', marginRight: 25 * DP}, txt.roboto40b]} numberOfLines={1}>
 				{options.title ? options.title : route.params.title}
 			</Text>
-			{isWriter ? <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} /> : <></>}
+			{getMenuIcon()}
 		</View>
 	);
 };

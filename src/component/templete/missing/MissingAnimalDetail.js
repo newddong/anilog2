@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {Image, TouchableOpacity, FlatList, TouchableWithoutFeedback, Platform} from 'react-native';
+import {Image, TouchableOpacity, FlatList, TouchableWithoutFeedback, Platform, PermissionsAndroid} from 'react-native';
 import {Text, View} from 'react-native';
 import {reportDetail, temp_style, missingAnimalDetail} from 'Templete/style_templete';
 import FeedContent from 'Organism/feed/FeedContent';
@@ -19,7 +19,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
-// import CameraRoll from '@react-native-community/cameraroll';
+import MissingReportItem from 'Root/component/organism/listitem/MissingReportItem';
+import {NETWORK_ERROR} from 'Root/i18n/msg';
+import CameraRoll from 'Root/module/CameraRoll';
 
 export default MissingAnimalDetail = props => {
 	const navigation = useNavigation();
@@ -151,6 +153,9 @@ export default MissingAnimalDetail = props => {
 			},
 			err => {
 				console.log('err / FavoriteFeed / MissingReportList : ', err);
+				if (err.includes('error')) {
+					Modal.alert(NETWORK_ERROR);
+				}
 			},
 		);
 	};
@@ -210,12 +215,13 @@ export default MissingAnimalDetail = props => {
 			const imageURI = await viewShotRef.current.capture();
 			if (Platform.OS === 'android') {
 				// const granted = await getPermissionAndroid();
-				const granted = getPerMission();
+				const granted = await getPerMission();
 				if (!granted) {
+					console.log('not granted');
 					return;
 				}
 			}
-			// const image = CameraRoll.save(imageURI, 'photo');
+			const image = await CameraRoll.saveImage(imageURI);
 			if (image) {
 				// Alert.alert('', 'Image saved successfully.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
 				Modal.popOneBtn('전단지가 저장되었습니다.', '확인', Modal.close);
@@ -254,12 +260,14 @@ export default MissingAnimalDetail = props => {
 		}
 	}
 
-	function getPerMission() {
+	async function getPerMission() {
+		let confirmed = false;
 		try {
-			getPermissionAndroid();
+			confirmed = await getPermissionAndroid();
 		} catch (err) {
 			console.log('Android Image Permisson Failed', err);
 		}
+		return confirmed;
 	}
 
 	//댓글 대댓글 삭제
@@ -355,7 +363,7 @@ export default MissingAnimalDetail = props => {
 				</View>
 
 				<View style={[temp_style.feedContent]}>
-					<FeedContent data={data} onPressFavorite={onPressFavoriteWriter} />
+					<FeedContent data={data} />
 				</View>
 
 				<View style={[reportDetail.basic_separator]}>
@@ -395,17 +403,28 @@ export default MissingAnimalDetail = props => {
 	};
 
 	const footer = () => {
+		const renderMissingReport = ({item, index}) => {
+			return (
+				<MissingReportItem
+					data={item}
+					onClickLabel={(status, id) => onClickLabel(status, id, item)}
+					onFavoriteTag={e => onOff_FavoriteTag(e, index)}
+					onPressProtectRequest={() => onPressProtectRequest(item)}
+				/>
+			);
+		};
 		return (
 			<View style={{alignItems: 'center'}}>
 				<ReplyWriteBox onPressReply={moveToCommentPage} onWrite={moveToCommentPage} isProtectRequest={true} />
 				<View style={[{paddingVertical: 20 * DP}]}>
 					<Text style={[txt.noto24, {paddingVertical: 20 * DP, width: 684 * DP, alignSelf: 'center'}]}>실종글 더보기</Text>
-					<AnimalNeedHelpList
+					{/* <AnimalNeedHelpList
 						data={missingList}
 						onFavoriteTag={(e, index) => onOff_FavoriteTag(e, index)}
 						onClickLabel={(status, id, item) => onClickLabel(status, id, item)}
 						whenEmpty={whenEmpty()}
-					/>
+					/> */}
+					<FlatList data={missingList} renderItem={renderMissingReport} />
 				</View>
 			</View>
 		);

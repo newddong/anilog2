@@ -72,7 +72,8 @@ export default ManageVolunteer = ({route}) => {
 				data => {
 					// console.log('success / getUserVolunterItemList / ManageShelterVolunteer', data.msg[1]);
 					data.msg.map((v, i) => {
-						let wishdate = moment(v.volunteer_wish_date[0]).toDate(); //봉사활동 희망날짜 배열에서 첫번째 값을 받아와 Date타입으로 치환
+						// let wishdate = moment(v.volunteer_wish_date[0]).toDate(); //봉사활동 희망날짜 배열에서 첫번째 값을 받아와 Date타입으로 치환
+						let wishdate = moment(v.volunteer_wish_date[v.volunteer_wish_date.length - 1]).toDate(); //봉사활동 희망날짜 배열에서 첫번째 값을 받아와 Date타입으로 치환
 						let thisTime = new Date().getTime(); // 현재 시간
 						if (wishdate.getTime() < thisTime) {
 							// 시간이 지난 신청서는 우선 지난 신청서로 푸쉬

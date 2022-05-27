@@ -35,8 +35,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 		});
 		if (data.user_interests) {
 			const getContentInteres = Object.entries(data.user_interests).map(content => {
-				console.log('ohhh', content);
-
+				// console.log('ohhh', content);
 				if (content[0] != 'interests_location' && content[0] != '_id') {
 					Object.entries(content[1]).map(contents => {
 						// console.log('contents', contents[1]);
@@ -220,6 +219,24 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 		);
 	};
 
+	const getGender = () => {
+		let result = 0;
+		switch (data.user_sex) {
+			case undefined:
+				result = -1;
+				break;
+			case 'male':
+				result = 0;
+				break;
+			case 'female':
+				result = 1;
+				break;
+			default:
+				break;
+		}
+		return result;
+	};
+
 	if (loaded) {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
@@ -231,12 +248,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 								<Text style={[txt.noto28, {color: GRAY10}]}>성별</Text>
 							</View>
 							<View style={[temp_style.tabSelectFilled_Type1]}>
-								<TabSelectFilled_Type1
-									items={GENDER_TAB_SELECT}
-									width={500}
-									onSelect={onSelectGender}
-									defaultIndex={data.user_sex == 'male' ? 0 : 1}
-								/>
+								<TabSelectFilled_Type1 items={GENDER_TAB_SELECT} width={500} onSelect={onSelectGender} defaultIndex={getGender()} />
 							</View>
 						</View>
 

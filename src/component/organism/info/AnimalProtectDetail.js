@@ -12,10 +12,10 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import {btn_w654_h70} from 'Root/component/atom/btn/btn_style';
 import DP from 'Root/config/dp';
+import ProtectRequest from '../listitem/ProtectRequest';
 
 export default AnimalProtectDetail = props => {
 	// console.log(' AnimalProtectDetail / props.data', props.data);
-	const isLoginUser = userGlobalObject.userInfo?._id == props.data.protect_act_applicant_id;
 	const [statusText, setStatusText] = React.useState();
 	const [userText, setUserText] = React.useState('본 계정 보호자');
 	const data = props.data;
@@ -75,7 +75,8 @@ export default AnimalProtectDetail = props => {
 		<ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
 			<View style={[animalProtectDetail.container]}>
 				<View style={[animalProtectDetail.animalNeedHelp_container]}>
-					<AnimalNeedHelp data={data} inActiveOpacity={true} showFavorite={false} />
+					{/* <AnimalNeedHelp data={data} inActiveOpacity={true} showFavorite={false} /> */}
+					<ProtectRequest data={data} inActiveOpacity={true} showFavorite={false} />
 				</View>
 				<View style={[animalProtectDetail.details_container]}>
 					{/* 보호장소 */}

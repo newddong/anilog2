@@ -17,8 +17,8 @@ const RecommendReview = props => {
 	const onPressRecommendReview = data => {
 		props.onPressRecommendReview(data);
 	};
-	const first = props.data[0];
-	const second = props.data[1];
+	const first = props.data ? props.data[0] : '';
+	const second = props.data ? props.data[1] : '';
 
 	const recommendReview = data => {
 		if (data) {
@@ -38,15 +38,21 @@ const RecommendReview = props => {
 					<View style={{flexDirection: 'row'}}>
 						<View>
 							<View style={[style.userLabel]}>
-								<ProfileImageSmall data={data.community_writer_id} size={46} />
-								<Text
-									style={[
-										txt.noto24,
-										{marginLeft: 24 * DP, width: 350 * DP, color: data.community_writer_id._id == userGlobalObject.userInfo._id ? APRI10 : BLACK},
-									]}
-									numberOfLines={1}>
-									{data.community_writer_id.user_nickname}
-								</Text>
+								{data.community_writer_id ? <ProfileImageSmall data={data.community_writer_id} size={46} /> : <ProfileImageSmall size={46} />}
+								{data.community_writer_id ? (
+									<Text
+										style={[
+											txt.noto24,
+											{marginLeft: 24 * DP, width: 350 * DP, color: data.community_writer_id._id == userGlobalObject.userInfo._id ? APRI10 : BLACK},
+										]}
+										numberOfLines={1}>
+										{data.community_writer_id.user_nickname}
+									</Text>
+								) : (
+									<Text style={[txt.noto24, {marginLeft: 24 * DP, width: 350 * DP}]} numberOfLines={1}>
+										이미 탈퇴한 계정입니다.
+									</Text>
+								)}
 							</View>
 							<View style={[style.article_content, {}]}>
 								<Text style={[txt.noto24, {color: GRAY10}]} numberOfLines={2}>

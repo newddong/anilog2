@@ -12,7 +12,7 @@ import Modal from 'Component/modal/Modal';
  *
  */
 const Input24 = React.forwardRef((props, ref) => {
-	console.log('props', props);
+	// console.log('props', props);
 	React.useImperativeHandle(ref, () => ({
 		focus: () => {
 			inputRef.current.focus();

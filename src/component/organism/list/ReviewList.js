@@ -21,16 +21,7 @@ import RecommendReview from '../article/RecommendReview';
  * @param {string} props.isSearch - 리뷰 컨텐츠 클릭
  */
 export default ReviewList = props => {
-	const reviewdata = () => {
-
-	}
-
-
 	const renderItem = ({item, index}) => {
-		if(index==0){
-			if(props.recommend?.length == 0)return false;
-			return (<RecommendReview data={props.recommend} onPressRecommendReview={data => props.onPressRecommendReview(data)} />);
-		}else{
 		return (
 			<Review
 				data={item}
@@ -43,7 +34,12 @@ export default ReviewList = props => {
 				onPressFavorite={bool => props.onPressFavorite(index, bool)}
 			/>
 		);
-	}
+	};
+
+	const recommend = () => {
+		if (props.recommend && props.recommend.length != 0) {
+			return <RecommendReview data={props.recommend} onPressRecommendReview={data => props.onPressRecommendReview(data)} />;
+		} else return <></>;
 	};
 
 	return (
@@ -55,10 +51,9 @@ export default ReviewList = props => {
 				keyExtractor={item => item._id}
 				ListEmptyComponent={props.whenEmpty}
 				ItemSeparatorComponent={() => {
-					return <View style={{alignItems:'center'}}>
-						<View style={{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY30}} />
-						</View>;
+					return <View style={{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY30, alignSelf: 'center'}} />;
 				}}
+				ListHeaderComponent={recommend}
 				listKey={({item, index}) => index}
 				nestedScrollEnabled
 			/>

@@ -96,7 +96,9 @@ export default ProtectRequest = React.memo(props => {
 						{/* 동물 종류 및 품종 */}
 						<View style={[animalNeedHelp.lowerMenu_kindAndBreed]}>
 							<Text style={[txt.noto34b]}>{data.protect_animal_species || ''}</Text>
-							<Text style={[txt.noto28, animalNeedHelp.breedText]}>{data.protect_animal_species_detail || ''}</Text>
+							<Text style={[txt.noto28, animalNeedHelp.breedText]} numberOfLines={1}>
+								{data.protect_animal_species_detail || ''}
+							</Text>
 						</View>
 						{/* 보호요청 관련 Details */}
 						<View style={[animalNeedHelp.lowerMenu_helpDetail]}>
@@ -122,33 +124,36 @@ export default ProtectRequest = React.memo(props => {
 		);
 	};
 
-	return (
-		<>
-			<View style={[animalNeedHelp.container, {height: 244 * DP}]}>
-				<View style={[animalNeedHelp.container_basicInfo]}>
-					<View style={[animalNeedHelp.protectedThumbnail_container]}>
-						<ProtectedThumbnail
-							data={thumbnailData}
-							inActiveOpacity={props.inActiveOpacity}
-							onLabelClick={(status, id) => props.onClickLabel(status, id)}
-						/>
-					</View>
-					<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.6} onPress={() => props.onClickLabel(data.feed_type, data._id)}>
-						<View>{contents()}</View>
-					</TouchableOpacity>
-					<View style={[animalNeedHelp.detail_upper_tag]}>
-						{!props.showFavorite || checkIsMyPost() ? (
-							<></>
-						) : data.is_favorite ? (
-							<FavoriteTag48_Filled onPress={() => onPressFavoriteTag(false)} />
-						) : (
-							<FavoriteTag48_Border onPress={() => onPressFavoriteTag(true)} />
-						)}
+	if (!data) {
+		return <></>;
+	} else
+		return (
+			<>
+				<View style={[animalNeedHelp.container, {height: 244 * DP}]}>
+					<View style={[animalNeedHelp.container_basicInfo]}>
+						<View style={[animalNeedHelp.protectedThumbnail_container]}>
+							<ProtectedThumbnail
+								data={thumbnailData}
+								inActiveOpacity={props.inActiveOpacity}
+								onLabelClick={(status, id) => props.onClickLabel(status, id)}
+							/>
+						</View>
+						<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.6} onPress={() => props.onClickLabel(data.feed_type, data._id)}>
+							<View>{contents()}</View>
+						</TouchableOpacity>
+						<View style={[animalNeedHelp.detail_upper_tag]}>
+							{!props.showFavorite || checkIsMyPost() ? (
+								<></>
+							) : data.is_favorite ? (
+								<FavoriteTag48_Filled onPress={() => onPressFavoriteTag(false)} />
+							) : (
+								<FavoriteTag48_Border onPress={() => onPressFavoriteTag(true)} />
+							)}
+						</View>
 					</View>
 				</View>
-			</View>
-		</>
-	);
+			</>
+		);
 });
 
 ProtectRequest.defaultProps = {

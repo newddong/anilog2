@@ -259,6 +259,7 @@ export default CommunityCommentList = props => {
 	const onEdit = comment => {
 		console.log('수정 데이터', comment.comment_is_secure);
 		setEditMode(true);
+		setParentComment(); // 수정모드로 전환시 기존의 답글쓰기 데이터 출력 취소
 		setPrivateComment(comment.comment_is_secure);
 		setEditData({...comment});
 		input.current.focus();

@@ -1041,6 +1041,7 @@ export const animalNeedHelp = StyleSheet.create({
 	breedText: {
 		alignSelf: 'center',
 		marginLeft: 20 * DP,
+		maxWidth: 250 * DP,
 	},
 	lowerMenu_helpDetail: {
 		// height: 38 * DP,

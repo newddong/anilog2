@@ -47,7 +47,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 	}, [filterData]);
 
 	//보호요청리스트 목록 받기
-	const getList = () => {
+	const getList = isRefresh => {
 		setLoading(true);
 		let filter = {protect_animal_species: []}; // api 필터 데이터
 		let sdt = ''; //시작일
@@ -82,12 +82,9 @@ export default ProtectRequestList = ({navigation, route}) => {
 		filterData.etc ? filter.protect_animal_species.push('그 외') : false;
 		filter.protect_request_notice_sdt = sdt;
 		filter.protect_request_notice_edt = edt;
-		// console.log('filterData', filterData);
-		// console.log('filter', filter);
 		//api 접속
 		console.log('offset', offset);
 		console.log('data Lenth', data.length);
-		// console.log('')
 		getSearchResultProtectRequest(
 			{
 				...filter,
@@ -103,19 +100,16 @@ export default ProtectRequestList = ({navigation, route}) => {
 					v.protect_animal_sex = v.protect_animal_id.protect_animal_sex;
 					v.protect_animal_status = v.protect_animal_id.protect_animal_status;
 				});
+				console.log('isRefresh', isRefresh);
 				if (data != 'false') {
 					let temp = [...data];
 					res.map((v, i) => {
-						console.log('i', i, v.protect_animal_id.protect_animal_rescue_location);
 						temp.push(v);
 					});
 					console.log('temp lenth', temp.length);
 					setData(temp);
 					// setData([...data, ...res.slice(offset * LIMIT, offset * LIMIT + 1)]);
 				} else {
-					res.map((v, i) => {
-						console.log('첫값 : ', i, v.protect_animal_id.protect_animal_rescue_location);
-					});
 					setData(res);
 				}
 				setOffset(offset + 1);
@@ -262,6 +256,8 @@ export default ProtectRequestList = ({navigation, route}) => {
 		return new Promise(resolve => setTimeout(resolve, timeout));
 	};
 	const onRefresh = () => {
+		setData('false');
+		setOffset(1);
 		setRefreshing(true);
 		wait(0).then(() => setRefreshing(false));
 	};
@@ -280,6 +276,10 @@ export default ProtectRequestList = ({navigation, route}) => {
 				  },
 		[],
 	);
+
+	React.useEffect(() => {
+		refreshing ? getList(true) : false;
+	}, [refreshing]);
 
 	if (data == 'false') {
 		return <Loading isModal={false} />;
@@ -315,7 +315,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 					ListEmptyComponent={whenEmpty}
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
 					// removeClippedSubviews={true}
-					extraData={data}
+					extraData={refreshing}
 					// maxToRenderPerBatch={5} // re-render를 막는군요.
 					windowSize={11}
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration

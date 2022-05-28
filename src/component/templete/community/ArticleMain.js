@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import {BLACK, GRAY10} from 'Root/config/color';
 import {Check50, EmptyIcon, Rect50_Border, WriteBoard} from 'Atom/icon';
@@ -161,9 +161,9 @@ export default ArticleMain = ({route}) => {
 				listKey={({item, index}) => index}
 			/>
 
-			<View style={[style.write, style.shadow]}>
-				<WriteBoard onPress={onPressWrite} />
-			</View>
+			<TouchableOpacity onPress={onPressWrite} activeOpacity={0.8} style={[style.write, style.shadow]}>
+				<WriteBoard />
+			</TouchableOpacity>
 		</View>
 	);
 };

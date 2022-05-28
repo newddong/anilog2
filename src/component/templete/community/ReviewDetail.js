@@ -6,7 +6,7 @@ import {GRAY10, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
 import ReviewBriefList from 'Root/component/organism/list/ReviewBriefList';
 import {useNavigation} from '@react-navigation/core';
 import ReviewContent from 'Root/component/organism/article/ReviewContent';
-import {getCommunityByObjectId, getCommunityList} from 'Root/api/community';
+import {getCommunityByObjectId, getCommunityList, updateAndDeleteCommunity} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {createComment, deleteComment, getCommentListByCommunityId, updateComment} from 'Root/api/commentapi';
 import Modal from 'Component/modal/Modal';
@@ -349,6 +349,7 @@ export default ReviewDetail = props => {
 		setEditMode(true);
 		const findParentIndex = comments.findIndex(e => e._id == parent);
 		setEditData({...comment, parent: findParentIndex});
+		setParentComment(); // 수정모드로 전환시 기존의 답글쓰기 데이터 출력 취소
 		scrollToReplyBox();
 		setPrivateComment(comment.comment_is_secure);
 	};
@@ -673,7 +674,7 @@ export default ReviewDetail = props => {
 							privateComment={privateComment}
 							ref={floatInput}
 							editData={editData}
-							shadow={false}
+							shadow={true}
 							parentComment={parentComment}
 							onCancelChild={onCancelChild}
 							onFocus={onFocus}

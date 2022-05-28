@@ -18,6 +18,7 @@ import WebView from 'react-native-webview';
 import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {serveruri} from 'Root/config/server';
+import AutoHeightWebView from 'Root/module/AutoHeightWebview';
 /**
  * 후기 세부 페이지
  * @param {object} props - Props Object
@@ -157,7 +158,6 @@ const ReviewContent = props => {
 			? data.community_address.normal_address.address_name
 			: data.community_address.road_address.address_name;
 
-	console.log('data REview', data.community_writer_id);
 	return (
 		<View style={[style.container]}>
 			{/* 리뷰 헤더  */}
@@ -186,15 +186,31 @@ const ReviewContent = props => {
 			<View>
 				<View style={[{width: 700 * DP, marginTop: 20 * DP}]}>
 					{Platform.OS == 'ios' ? (
-						<WebView
-							originWhitelist={['*']}
+						// <WebView
+						// 	originWhitelist={['*']}
+						// 	onMessage={onWebViewMessage}
+						// 	ref={webviewRef}
+						// 	injectedJavaScript={runFirst} //Dynamic Height 수치 설정
+						// 	scrollEnabled={false}
+						// 	injectedJavaScriptBeforeContentLoaded={runFirst}
+						// 	source={{html: changeHtmlTag()}}
+						// 	style={[style.webview, {height: height == 0 ? 100 * DP : height, opacity: 0.99}]}
+						// />
+						<AutoHeightWebView
+							// style={{width: 670 * DP, marginTop: 30 * DP}}
+							style={[style.webview, {opacity: 0.99}]}
+							customScript={runFirst}
+							scrollEnabled={false}
+							onSizeUpdated={size => {
+								console.log('size.height', size.height);
+								setHeight(size.height);
+							}}
+							files={[{href: 'cssfileaddress', type: 'text/css', rel: 'stylesheet'}]}
 							onMessage={onWebViewMessage}
 							ref={webviewRef}
-							injectedJavaScript={runFirst} //Dynamic Height 수치 설정
-							scrollEnabled={false}
-							injectedJavaScriptBeforeContentLoaded={runFirst}
 							source={{html: changeHtmlTag()}}
-							style={[style.webview, {height: height == 0 ? 100 * DP : height, opacity: 0.99}]}
+							scalesPageToFit={true}
+							viewportContent={'width=device-width, user-scalable=no'}
 						/>
 					) : (
 						<WebView
@@ -206,6 +222,17 @@ const ReviewContent = props => {
 							source={{html: changeHtmlTag()}}
 							style={{width: 690 * DP, height: height == 0 ? 100 * DP : height}}
 						/>
+						// <AutoHeightWebView
+						// 	style={[style.webview]}
+						// 	customScript={runFirst}
+						// 	scrollEnabled={false}
+						// 	onSizeUpdated={size => console.log('size.height', size.height)}
+						// 	files={[{href: 'cssfileaddress', type: 'text/css', rel: 'stylesheet'}]}
+						// 	onMessage={onWebViewMessage}
+						// 	ref={webviewRef}
+						// 	source={{html: changeHtmlTag()}}
+						// 	viewportContent={'width=device-width, user-scalable=no'}
+						// />
 					)}
 				</View>
 			</View>

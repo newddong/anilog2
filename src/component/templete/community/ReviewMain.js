@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, ScrollView, FlatList, Image} from 'react-native';
+import {StyleSheet, Text, View, ScrollView, FlatList, Image, TouchableOpacity} from 'react-native';
 import {BLACK} from 'Root/config/color';
 import {Animal_another_off, Animal_cat_off, Animal_dog_off, EmptyIcon, Filter60Border, Filter60Filled, WriteBoard} from 'Root/component/atom/icon';
 import ReviewList from 'Root/component/organism/list/ReviewList';
@@ -113,7 +113,6 @@ export default ReviewMain = ({route, navigation}) => {
 
 	//미트볼 클릭
 	const onPressMeatball = index => {
-		console.log('getData()[index].community_writer_id', getData()[index].community_writer_id);
 		if (getData()[index].community_writer_id) {
 			const isMyArticle = userGlobalObject.userInfo._id == getData()[index].community_writer_id._id;
 			Modal.popSelectBoxModal(
@@ -505,9 +504,9 @@ export default ReviewMain = ({route, navigation}) => {
 					ListHeaderComponent={filterComponent()}
 					stickyHeaderIndices={[0]}
 				/>
-				<View style={[style.write, style.shadowButton]}>
-					<WriteBoard onPress={onPressWrite} />
-				</View>
+				<TouchableOpacity activeOpacity={0.8} onPress={onPressWrite} style={[style.write, style.shadowButton]}>
+					<WriteBoard />
+				</TouchableOpacity>
 			</View>
 		);
 };

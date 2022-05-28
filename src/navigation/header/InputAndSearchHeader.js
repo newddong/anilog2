@@ -65,7 +65,14 @@ export default InputAndSearchHeader = props => {
 				</View>
 			</TouchableOpacity>
 			<View style={{marginBottom: 20 * DP, flex: 1}}>
-				<InputWithSearchIcon placeholder={'검색어를 입력하세요.'} width={590} onChange={onChangeSearchText} onSearch={confirm} onClear={onClear} />
+				<InputWithSearchIcon
+					placeholder={'검색어를 입력하세요.'}
+					value={searchInput}
+					width={590}
+					onChange={onChangeSearchText}
+					onSearch={confirm}
+					onClear={onClear}
+				/>
 			</View>
 		</View>
 	);

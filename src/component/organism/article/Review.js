@@ -249,11 +249,6 @@ export default Review = React.memo(props => {
 									  )}
 							</Text>
 							<View activeOpacity={0.8} style={[style.profile, {}]}>
-								{data.community_writer_id ? (
-									<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} time_expression={'date'} />
-								) : (
-									<UserLocationTimeLabel empty={true} time={data.community_date} />
-								)}
 								<Text
 									style={[
 										txt.roboto24,

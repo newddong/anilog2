@@ -46,6 +46,7 @@ const ProtectRequestFilterModal = props => {
 	const animatedEndDate = React.useRef(new Animated.Value(0)).current; // 종료일
 	const animatedRegion = React.useRef(new Animated.Value(0)).current; // 지역
 	const animatedShelter = React.useRef(new Animated.Value(0)).current; // 보호소
+	const animatedMainHeight = React.useRef(new Animated.Value(784 * DP)).current; // 메인창 높이 조절(안드로이드 스크롤 버그 수정)
 
 	React.useEffect(() => {
 		console.log('previous', props.previous);
@@ -105,6 +106,7 @@ const ProtectRequestFilterModal = props => {
 
 	React.useEffect(() => {
 		shelterOpen ? animate(animatedShelter, 951 * DP) : animate(animatedShelter, 0);
+		// shelterOpen ? animate(animatedMainHeight, 500 * DP) : animate(animatedMainHeight, 784 * DP);
 	}, [shelterOpen]);
 
 	//최종 완료 버튼 클릭
@@ -151,7 +153,7 @@ const ProtectRequestFilterModal = props => {
 			setRegionOpen(false);
 			setShelterOpen(false);
 		} else {
-			// Modal.close();
+			Modal.close();
 		}
 	};
 
@@ -271,74 +273,78 @@ const ProtectRequestFilterModal = props => {
 	return (
 		<TouchableOpacity activeOpacity={1} onPress={onPressOutSide} style={[style.background]}>
 			{/* 상단 선택영역  */}
-			<TouchableOpacity onPress={onPressMainContainer} activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
-				<View style={{flexDirection: 'row', width: 694 * DP, paddingHorizontal: 44 * DP, justifyContent: 'space-between'}}>
-					<AniButton
-						btnTitle={'필터 초기화'}
-						onPress={onPressInitialize}
-						btnStyle={'border'}
-						btnLayout={{width: 160 * DP, height: 50 * DP, borderRadius: 30 * DP}}
-					/>
-					<TouchableOpacity activeOpacity={0.6} onPress={closeModal} style={[{alignSelf: 'flex-end'}]}>
-						<Cross46 />
+			{shelterOpen ? (
+				<></>
+			) : (
+				<TouchableOpacity onPress={onPressMainContainer} activeOpacity={1} style={[style.popUpWindow, style.shadow, {}]}>
+					<View style={{flexDirection: 'row', width: 694 * DP, paddingHorizontal: 44 * DP, justifyContent: 'space-between'}}>
+						<AniButton
+							btnTitle={'필터 초기화'}
+							onPress={onPressInitialize}
+							btnStyle={'border'}
+							btnLayout={{width: 160 * DP, height: 50 * DP, borderRadius: 30 * DP}}
+						/>
+						<TouchableOpacity activeOpacity={0.6} onPress={closeModal} style={[{alignSelf: 'flex-end'}]}>
+							<Cross46 />
+						</TouchableOpacity>
+					</View>
+					{/* 기간필터 */}
+					<View style={[style.durationCont]}>
+						<Text style={[txt.noto28]}>기간</Text>
+						<TouchableOpacity
+							onPress={() => onPressDuration('from')}
+							activeOpacity={0.6}
+							style={[style.durationItem, {borderBottomColor: data.from == '시작일' ? GRAY20 : BLACK}]}>
+							<Text style={[txt.noto28, {color: data.from == '시작일' ? GRAY20 : BLACK}]}>{data.from == '시작일' ? '시작일' : data.from}</Text>
+						</TouchableOpacity>
+						<View style={[style.hyphen]}>
+							<Hyhpen />
+						</View>
+						<TouchableOpacity
+							activeOpacity={0.8}
+							onPress={() => onPressDuration('to')}
+							style={[style.durationItem, {marginLeft: 0 * DP, borderBottomColor: data.to == '종료일' ? GRAY20 : BLACK}]}>
+							<Text style={[txt.noto28, {color: data.to == '종료일' ? GRAY20 : BLACK}]}> {data.to == '종료일' ? '종료일' : data.to}</Text>
+						</TouchableOpacity>
+					</View>
+					{/* 지역 필터 */}
+					<TouchableOpacity onPress={onPressRegion} activeOpacity={0.8} style={[style.dropdownContainer, {}]}>
+						<Text style={[txt.noto26]}>{data.city == '' ? '모든 지역' : data.city}</Text>
+						<View style={[style.arrowMark]}>
+							<ArrowMarkForCalendar />
+						</View>
 					</TouchableOpacity>
-				</View>
-				{/* 기간필터 */}
-				<View style={[style.durationCont]}>
-					<Text style={[txt.noto28]}>기간</Text>
-					<TouchableOpacity
-						onPress={() => onPressDuration('from')}
-						activeOpacity={0.6}
-						style={[style.durationItem, {borderBottomColor: data.from == '시작일' ? GRAY20 : BLACK}]}>
-						<Text style={[txt.noto28, {color: data.from == '시작일' ? GRAY20 : BLACK}]}>{data.from == '시작일' ? '시작일' : data.from}</Text>
+					{/* 보호소 필터 */}
+					<TouchableOpacity onPress={onPressShelter} activeOpacity={0.8} style={[style.dropdownContainer]}>
+						<Text style={[txt.noto26, {maxWidth: 320 * DP}]} numberOfLines={1}>
+							{data.shelter_list.length == 0 ? '모든 보호소' : data.shleter_label}
+						</Text>
+						<View activeOpacity={0.8} style={style.arrowMark}>
+							<ArrowMarkForCalendar />
+						</View>
 					</TouchableOpacity>
-					<View style={[style.hyphen]}>
-						<Hyhpen />
+					{/* 동물종류 필터 */}
+					<View style={[style.animalFilter]}>
+						<View style={[style.shadow_filter]}>
+							{!data.dog ? <Animal_dog onPress={() => onPressAnimalFilter('dog')} /> : <Animal_dog_off onPress={() => onPressAnimalFilter('dog')} />}
+						</View>
+						<View style={[style.shadow_filter]}>
+							{!data.cat ? <Animal_cat onPress={() => onPressAnimalFilter('cat')} /> : <Animal_cat_off onPress={() => onPressAnimalFilter('cat')} />}
+						</View>
+						<View style={[style.shadow_filter]}>
+							{!data.etc ? (
+								<Animal_another onPress={() => onPressAnimalFilter('etc')} />
+							) : (
+								<Animal_another_off onPress={() => onPressAnimalFilter('etc')} />
+							)}
+						</View>
 					</View>
-					<TouchableOpacity
-						activeOpacity={0.8}
-						onPress={() => onPressDuration('to')}
-						style={[style.durationItem, {marginLeft: 0 * DP, borderBottomColor: data.to == '종료일' ? GRAY20 : BLACK}]}>
-						<Text style={[txt.noto28, {color: data.to == '종료일' ? GRAY20 : BLACK}]}> {data.to == '종료일' ? '종료일' : data.to}</Text>
-					</TouchableOpacity>
-				</View>
-				{/* 지역 필터 */}
-				<TouchableOpacity onPress={onPressRegion} activeOpacity={0.8} style={[style.dropdownContainer, {}]}>
-					<Text style={[txt.noto26]}>{data.city == '' ? '모든 지역' : data.city}</Text>
-					<View style={[style.arrowMark]}>
-						<ArrowMarkForCalendar />
-					</View>
-				</TouchableOpacity>
-				{/* 보호소 필터 */}
-				<TouchableOpacity onPress={onPressShelter} activeOpacity={0.8} style={[style.dropdownContainer]}>
-					<Text style={[txt.noto26, {maxWidth: 320 * DP}]} numberOfLines={1}>
-						{data.shelter_list.length == 0 ? '모든 보호소' : data.shleter_label}
-					</Text>
-					<View activeOpacity={0.8} style={style.arrowMark}>
-						<ArrowMarkForCalendar />
-					</View>
-				</TouchableOpacity>
-				{/* 동물종류 필터 */}
-				<View style={[style.animalFilter]}>
-					<View style={[style.shadow_filter]}>
-						{!data.dog ? <Animal_dog onPress={() => onPressAnimalFilter('dog')} /> : <Animal_dog_off onPress={() => onPressAnimalFilter('dog')} />}
-					</View>
-					<View style={[style.shadow_filter]}>
-						{!data.cat ? <Animal_cat onPress={() => onPressAnimalFilter('cat')} /> : <Animal_cat_off onPress={() => onPressAnimalFilter('cat')} />}
-					</View>
-					<View style={[style.shadow_filter]}>
-						{!data.etc ? (
-							<Animal_another onPress={() => onPressAnimalFilter('etc')} />
-						) : (
-							<Animal_another_off onPress={() => onPressAnimalFilter('etc')} />
-						)}
-					</View>
-				</View>
 
-				<View style={style.buttonContainer}>
-					<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={'완료'} onPress={onConfrim} />
-				</View>
-			</TouchableOpacity>
+					<View style={style.buttonContainer}>
+						<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={'완료'} onPress={onConfrim} />
+					</View>
+				</TouchableOpacity>
+			)}
 			{/* 하단 스크롤뷰 영역 */}
 			{/* 시작일 */}
 			{startDateOpen ? (
@@ -371,7 +377,7 @@ const ProtectRequestFilterModal = props => {
 				<></>
 			)}
 			{/* 지역 */}
-			<Animated.View style={[style.downScrollSelectContainer, {height: animatedRegion}]}>
+			<Animated.View style={[style.downScrollSelectContainer, {height: animatedRegion, zIndex: 2}]}>
 				<ScrollSelectBox data={PROTECT_LOCATION} onSelectRegion={onSelectRegion} onCloseBottomBox={onCloseBottomBox} />
 			</Animated.View>
 			{/* 보호소 */}

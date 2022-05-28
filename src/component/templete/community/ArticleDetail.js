@@ -375,6 +375,7 @@ export default ArticleDetail = props => {
 	const onEdit = (comment, parent) => {
 		// console.log('수정 데이터', comment);
 		setEditMode(true);
+		setParentComment(); // 수정모드로 전환시 기존의 답글쓰기 데이터 출력 취소
 		const findParentIndex = comments.findIndex(e => e._id == parent);
 		setEditData({...comment, parent: findParentIndex});
 		setPrivateComment(comment.comment_is_secure);
@@ -703,7 +704,7 @@ export default ArticleDetail = props => {
 							privateComment={privateComment}
 							ref={floatInput}
 							editData={editData}
-							shadow={false}
+							shadow={true}
 							parentComment={parentComment}
 							onCancelChild={onCancelChild}
 							onFocus={onFocus}

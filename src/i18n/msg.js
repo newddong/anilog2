@@ -553,3 +553,7 @@ export const UNAVAILABLE_REQUEST_STATUS = [
 
 //유저 프로필 없음 메시지
 export const IS_LEAVE_USER = '탈퇴한 계정입니다.';
+
+//커뮤니티 글쓰기 Placeholder
+export const WRITE_REVIEW_INFO = '서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.';
+export const WRITE_FREE_INFO = '내용을 작성해 주세요.';

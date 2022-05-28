@@ -157,7 +157,6 @@ export default LocationPicker = ({route}) => {
 						var x2js = new X2JS(); //XML 형식의 데이터를 JSON으로 파싱
 						var json = x2js.xml2js(responseText.data);
 						console.log('json', json);
-						console.log('도로명주소 받아오기: ', json.results.juso.roadAddr);
 						resolve(json.results);
 					});
 			} catch (error) {
@@ -177,8 +176,8 @@ export default LocationPicker = ({route}) => {
 
 	//위도 경도를 토대로 주소 받아오기
 	const callInitialAddress = async (long, lati) => {
-		console.log('long', long);
-		console.log('lati', lati);
+		// console.log('long', long);
+		// console.log('lati', lati);
 		try {
 			let res = await axios
 				.get(`https://dapi.kakao.com/v2/local/geo/coord2address.json?input_coord=WGS84&x=${long}&y=${lati}`, {
@@ -301,8 +300,9 @@ export default LocationPicker = ({route}) => {
 		if (keyword == '') {
 			setPlaces([]);
 		}
-		setKeyword(keyword);
+		setKeyword(keyword); //키워드 적용
 		setSelected({
+			//초기화
 			address_name: '',
 			category_group_code: '',
 			category_group_name: '',
@@ -316,9 +316,10 @@ export default LocationPicker = ({route}) => {
 			x: '',
 			y: '',
 		});
-		searchPlaceByKeyword(keyword);
+		searchPlaceByKeyword(keyword); //장소 검색 실시
 	};
 
+	// X마크 클릭
 	const onClear = () => {
 		console.log('onClear');
 		setPlaces([]);
@@ -329,6 +330,7 @@ export default LocationPicker = ({route}) => {
 		setDetailAddr(text);
 	};
 
+	//검색된 장소 클릭
 	const onSelectPlace = item => {
 		console.log('item', item);
 		setPlaces([]);

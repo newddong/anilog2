@@ -38,12 +38,8 @@ export default ArticleMain = ({route}) => {
 				if (isRefresh) {
 					setData(res);
 				} else if (data != 'false') {
-					let temp = [...data];
-					res.map((v, i) => {
-						temp.push(v);
-					});
-					console.log('temp lenth', temp.length);
-					setData(temp);
+					console.log('temp lenth', [...data, ...res].length);
+					setData([...data, ...res]);
 				} else {
 					setData(res);
 				}

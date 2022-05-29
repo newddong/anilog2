@@ -47,12 +47,8 @@ export default FavoriteArticle = ({route}) => {
 						);
 						console.log('result / getCommunityListByUserId / FavoriteArticle', res.length);
 						if (data != 'false') {
-							let temp = [...data];
-							res.map((v, i) => {
-								temp.push(v);
-							});
-							console.log('temp lenth', temp.length);
-							setData(temp);
+							console.log('temp lenth', [...data, ...res].length);
+							setData([...data, ...res]);
 						} else {
 							setData(res);
 						}
@@ -236,17 +232,15 @@ export default FavoriteArticle = ({route}) => {
 						</View>
 					</View>
 				)}
-				<View style={[{marginTop: 5 * DP}]}>
-					<View style={[{paddingBottom: 20 * DP}]}>
-						<ArticleList
-							items={data}
-							selectMode={selectMode}
-							onPressCheck={onPressCheck}
-							onPressArticle={onPressArticle} //게시글 내용 클릭
-							whenEmpty={whenEmpty}
-							onEndReached={onEndReached}
-						/>
-					</View>
+				<View style={[{marginTop: 5 * DP, flex: 1}]}>
+					<ArticleList
+						items={data}
+						selectMode={selectMode}
+						onPressCheck={onPressCheck}
+						onPressArticle={onPressArticle} //게시글 내용 클릭
+						whenEmpty={whenEmpty}
+						onEndReached={onEndReached}
+					/>
 				</View>
 			</View>
 		);

@@ -101,12 +101,8 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				const res = result.msg.filter(e => e._id != route.params.id);
 				console.log('res.length', res.length);
 				if (writersAnotherRequests != 'false') {
-					let temp = [...writersAnotherRequests];
-					res.map((v, i) => {
-						temp.push(v);
-					});
-					console.log('temp lenth', temp.length);
-					setWritersAnotherRequests(temp);
+					console.log('temp lenth', [...writersAnotherRequests, ...res].length);
+					setWritersAnotherRequests([...writersAnotherRequests, ...res]);
 				} else {
 					setWritersAnotherRequests(res);
 				}

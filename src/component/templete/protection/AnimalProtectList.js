@@ -28,12 +28,7 @@ export default AnimalProtectList = ({route}) => {
 				console.log('success / AnimalProtectList', result.msg.length);
 				const res = result.msg;
 				if (data != 'false') {
-					let temp = [...data];
-					res.map((v, i) => {
-						temp.push(v);
-					});
-					console.log('temp lenth', temp.length);
-					setData(temp);
+					setData([...data, ...res]);
 				} else {
 					setData(res);
 				}

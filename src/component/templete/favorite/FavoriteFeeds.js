@@ -228,7 +228,7 @@ export default FavoriteFeeds = ({route, navigation}) => {
 							selected: feed_id,
 						});
 					} else if (route.name == 'FavoriteFeeds') {
-						console.log('feed_id', feed_id);
+						// console.log('feed_id', feed_id);
 						// navigation.push('UserFeedList', {title: titleValue, userobject: result.msg, selected: feed_id});
 						navigation.push('FavoriteFeedList', {title: '즐겨찾기한 게시글', userobject: result.msg, selected: feed_id});
 					}

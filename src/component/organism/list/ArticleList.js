@@ -11,6 +11,7 @@ import {Check50, Rect50_Border} from 'Root/component/atom/icon';
  * @param {object} props.items - 데이터
  * @param {(data:object)=>void)} props.onPressArticle - 게시글 컨텐츠 클릭(사진 이외 영역)
  * @param {string} props.isSearch - 검색어
+ * @param {()=>void)} props.onEndReached - 최하단 스크롤 콜백
  */
 const ArticleList = props => {
 	const [refresh, setRefresh] = React.useState(true);
@@ -39,6 +40,10 @@ const ArticleList = props => {
 		);
 	};
 
+	const onEndReached = () => {
+		props.onEndReached();
+	};
+
 	return (
 		<View style={[style.container, {borderBottomColor: props.items.length == 0 ? 'white' : GRAY40}]}>
 			<FlatList
@@ -51,6 +56,8 @@ const ArticleList = props => {
 				// https://reactnative.dev/docs/optimizing-flatlist-configuration
 				extraData={refresh}
 				initialNumToRender={15}
+				onEndReached={onEndReached} //Flatlist 페이징
+				onEndReachedThreshold={0.6} //페이징을 하는 타이밍
 				// maxToRenderPerBatch={5} // re-render를 막는군요.
 				windowSize={11}
 				// https://reactnative.dev/docs/optimizing-flatlist-configuration
@@ -68,6 +75,7 @@ ArticleList.defaultProps = {
 	onPressThumnails: () => {},
 	onPressReply: () => {},
 	isSearch: '',
+	onEndReached: () => {},
 };
 
 export default ArticleList;

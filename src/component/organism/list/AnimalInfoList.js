@@ -10,7 +10,7 @@ export default AnimalInfoList = props => {
 		setData(props.items);
 	}, [props.items]);
 
-	const renderItem = (item, index) => {
+	const renderItem = ({item, index}) => {
 		return (
 			<TouchableOpacity onPress={() => props.onPressLabel(item, index)} style={[animalInfoList.itemContainer]}>
 				<AnimalInfo data={item} onPressLabel={() => props.onPressLabel(item, index)} />
@@ -18,7 +18,16 @@ export default AnimalInfoList = props => {
 		);
 	};
 
-	return <FlatList data={data} renderItem={({item, index}) => renderItem(item, index)} scrollEnabled={false} ListEmptyComponent={props.whenEmpty} />;
+	return (
+		<FlatList
+			data={data}
+			renderItem={renderItem}
+			scrollEnabled={false}
+			onEndReachedThreshold={0.6}
+			onEndReached={() => props.onEndReached()}
+			ListEmptyComponent={props.whenEmpty}
+		/>
+	);
 };
 
 AnimalInfoList.defaultProps = {
@@ -26,4 +35,5 @@ AnimalInfoList.defaultProps = {
 	listEmpty: () => {
 		return <></>;
 	},
+	onEndReached: () => {},
 };

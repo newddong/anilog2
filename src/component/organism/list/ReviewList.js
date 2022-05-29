@@ -18,6 +18,7 @@ import RecommendReview from '../article/RecommendReview';
  * @param {(data:object)=>void} props.onPressRecommendReview - 추천 게시글 클릭
  * @param {(bool:boolean)=>void} props.onPressFavorite - 즐겨찾기 클릭
  * @param {()=>void} props.onPressMeatball - 미트볼 클릭
+ * @param {()=>void} props.onEndReached - 스크롤 최하단 콜백
  * @param {string} props.isSearch - 리뷰 컨텐츠 클릭
  */
 export default ReviewList = props => {
@@ -56,6 +57,7 @@ export default ReviewList = props => {
 				ListHeaderComponent={recommend}
 				listKey={({item, index}) => index}
 				nestedScrollEnabled
+				onEndReached={() => props.onEndReached()}
 			/>
 		</View>
 	);
@@ -71,6 +73,7 @@ ReviewList.defaultProps = {
 	onPressUnlike: () => {},
 	onPressFavorite: () => {},
 	onPressRecommendArticle: () => {},
+	onEndReached: () => {},
 };
 
 const style = StyleSheet.create({

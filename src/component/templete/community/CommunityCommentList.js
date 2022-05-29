@@ -38,11 +38,6 @@ export default CommunityCommentList = props => {
 	React.useEffect(() => {
 		fetchData();
 		navigation.setOptions({title: '댓글 쓰기'});
-		navigation.addListener('blur', () => {
-			community_obj.object = {};
-			community_obj.pageToMove = '';
-			community_obj.object.initial = true;
-		});
 	}, []);
 
 	const fetchData = () => {
@@ -259,6 +254,7 @@ export default CommunityCommentList = props => {
 	const onEdit = comment => {
 		console.log('수정 데이터', comment.comment_is_secure);
 		setEditMode(true);
+		setParentComment(); // 수정모드로 전환시 기존의 답글쓰기 데이터 출력 취소
 		setPrivateComment(comment.comment_is_secure);
 		setEditData({...comment});
 		input.current.focus();

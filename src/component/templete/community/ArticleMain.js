@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
+import {FlatList, Image, RefreshControl, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import {BLACK, GRAY10} from 'Root/config/color';
 import {Check50, EmptyIcon, Rect50_Border, WriteBoard} from 'Atom/icon';
@@ -8,42 +8,42 @@ import {useNavigation} from '@react-navigation/core';
 import {getCommunityList} from 'Root/api/community';
 import Modal from 'Root/component/modal/Modal';
 import Loading from 'Root/component/molecules/modal/Loading';
-import community_obj from 'Root/config/community_obj';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import {NETWORK_ERROR} from 'Root/i18n/msg';
+import {FREE_LIMIT, NETWORK_ERROR} from 'Root/i18n/msg';
 
 export default ArticleMain = ({route}) => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
+	const [offset, setOffset] = React.useState(1);
+	const [refreshing, setRefreshing] = React.useState(false);
+
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			fetchData();
-			// console.log('community_obj / ArticleMain / object._id : ', community_obj.object._id);
-			// console.log('community_obj / ArticleMain / pageToMove : ', community_obj.pageToMove);
-			// console.log('community_obj.initial / ArticleMain /  initial : ', community_obj.initial);
-			community_obj.current = '';
-			if (community_obj.initial != true && community_obj.object._id != undefined) {
-				console.log('community_obj.pageToMove', community_obj.pageToMove);
-				navigation.navigate(community_obj.pageToMove, {community_object: community_obj.object});
-			}
 		});
-		navigation.addListener('blur', () => {
-			community_obj.object = {};
-			community_obj.pageToMove = '';
-			community_obj.initial = true;
-		});
-		fetchData();
+		// fetchData(); //페이지 진입시 api를 두 번 접속하게 됨.
 		return unsubscribe;
 	}, []);
 
-	const fetchData = () => {
+	const fetchData = isRefresh => {
 		getCommunityList(
 			{
+				limit: FREE_LIMIT, //50
+				page: offset,
 				community_type: 'free',
 			},
 			result => {
-				// console.log('result / getCommunityList / ArticleMain :', result.msg.free[0]);
-				setData(result.msg.free);
+				console.log('result / getCommunityList / ArticleMain :', result.msg.free.length);
+				const res = result.msg.free;
+				if (isRefresh) {
+					setData(res);
+				} else if (data != 'false') {
+					console.log('temp lenth', [...data, ...res].length);
+					setData([...data, ...res]);
+				} else {
+					setData(res);
+				}
+				setOffset(offset + 1);
 			},
 			err => {
 				console.log('err / getCommunityList / ArticleMain : ', err);
@@ -57,6 +57,15 @@ export default ArticleMain = ({route}) => {
 				}
 			},
 		);
+	};
+
+	//리스트 페이징 작업
+	const onEndReached = () => {
+		// console.log('EndReached', getData().length % FREE_LIMIT);
+		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
+		if (getData().length % FREE_LIMIT == 0) {
+			fetchData();
+		}
 	};
 
 	// 게시글 내용 클릭
@@ -102,6 +111,19 @@ export default ArticleMain = ({route}) => {
 		}
 	};
 
+	const wait = timeout => {
+		return new Promise(resolve => setTimeout(resolve, timeout));
+	};
+	const onRefresh = () => {
+		setOffset(1);
+		setRefreshing(true);
+		wait(0).then(() => setRefreshing(false));
+	};
+
+	React.useEffect(() => {
+		refreshing ? fetchData(true) : false;
+	}, [refreshing]);
+
 	const getData = () => {
 		let filtered = data;
 		if (onlyTalk) {
@@ -126,6 +148,9 @@ export default ArticleMain = ({route}) => {
 		<View style={[style.container]}>
 			<FlatList
 				data={[{}]}
+				refreshing
+				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+				extraData={refreshing}
 				renderItem={({item, index}) => {
 					return (
 						<>
@@ -152,6 +177,7 @@ export default ArticleMain = ({route}) => {
 									items={getData()}
 									onPressArticle={onPressArticle} //게시글 내용 클릭
 									whenEmpty={whenEmpty}
+									onEndReached={onEndReached}
 								/>
 							)}
 						</>
@@ -161,9 +187,9 @@ export default ArticleMain = ({route}) => {
 				listKey={({item, index}) => index}
 			/>
 
-			<View style={[style.write, style.shadow]}>
-				<WriteBoard onPress={onPressWrite} />
-			</View>
+			<TouchableOpacity onPress={onPressWrite} activeOpacity={0.8} style={[style.write, style.shadow]}>
+				<WriteBoard />
+			</TouchableOpacity>
 		</View>
 	);
 };

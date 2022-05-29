@@ -24,14 +24,24 @@ export default FavoriteCommunity = ({route}) => {
 			!isFavorite
 				? getCommunityListByUserId(
 						{
+							limit: 1000,
+							page: 1,
 							userobject_id: userGlobalObject.userInfo._id,
 							community_type: 'all',
 						},
 						result => {
-							console.log('result / getCommunityListByUserId / FavoriteCommunity', result.msg.free.length);
-							console.log('result / getCommunityListByUserId / FavoriteCommunity', result.msg.review.length);
-							setReview(result.msg.review);
-							setArticle(result.msg.free);
+							// console.log('result / getCommunityListByUserId / free', result.msg.free.length);
+							// console.log('result / getCommunityListByUserId / review', result.msg.review.length);
+							const free = result.msg.free.filter(
+								e => e.community_writer_id != null && e.community_writer_id.user_nickname == userGlobalObject.userInfo.user_nickname,
+							);
+							const review = result.msg.review.filter(
+								e => e.community_writer_id != null && e.community_writer_id.user_nickname == userGlobalObject.userInfo.user_nickname,
+							);
+							console.log('free', free.length);
+							console.log('review', review.length);
+							setReview(review);
+							setArticle(free);
 						},
 						err => {
 							console.log('err / getCommunityListByUserId / FavoriteCommunity : ', err);

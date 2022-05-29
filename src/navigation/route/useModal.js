@@ -251,8 +251,8 @@ export function useModal() {
 		!isPop && setPop(true);
 	};
 
-	Modal.popLoading = isModal => {
-		popIn(<Loading isModal={isModal} />);
+	Modal.popLoading = (isModal, timeout) => {
+		popIn(<Loading isModal={isModal} timeout={timeout} />);
 		!isPop && setPop(true);
 	};
 

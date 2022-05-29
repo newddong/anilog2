@@ -1,6 +1,6 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {Image, LogBox, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Dimensions, Image, LogBox, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {APRI10, BLACK} from 'Root/config/color';
 import {FavoriteTag46_Filled, FavoriteTag48_Border, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
@@ -10,6 +10,7 @@ import WebView from 'react-native-webview';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/core';
+import AutoHeightWebView from 'Root/module/AutoHeightWebview';
 /**
  * 게시글 컨텐츠
  * @param {object} props - Props Object
@@ -43,6 +44,10 @@ const ArticleContent = props => {
 			setData({...data, community_is_favorite: bool});
 			props.onPressFavorite(bool);
 		}
+	};
+
+	const showImg = src => {
+		Modal.popPhotoListViewModal([src]);
 	};
 
 	const getArticleType = () => {
@@ -124,17 +129,16 @@ const ArticleContent = props => {
 				// console.log('event.nativeEvent.data', event.nativeEvent.data);
 				showImg(event.nativeEvent.data);
 			} else if (parseInt(event.nativeEvent.data) < 100 * DP) {
-				setHeight(100 * DP * DP);
+				setHeight(100 * DP);
 			} else {
 				height >= 100 * DP ? false : setHeight(parseInt(event.nativeEvent.data));
 				// console.log('parseInt(event.nativeEvent.data)', parseInt(event.nativeEvent.data));
 			}
 		}
 	};
-
 	const runFirst = `
-	  window.ReactNativeWebView.postMessage(document.body.scrollHeight);
-      true; // note: this is required, or you'll sometimes get silent failures
+	window.ReactNativeWebView.postMessage(document.body.scrollHeight);
+    true; 
     `;
 
 	const webviewRef = React.useRef();
@@ -154,10 +158,6 @@ const ArticleContent = props => {
         </script>
         ${result}
     `;
-	};
-
-	const showImg = src => {
-		Modal.popPhotoListViewModal([src]);
 	};
 
 	return (
@@ -190,25 +190,29 @@ const ArticleContent = props => {
 					<UserLocationTimeLabel empty={true} time={data.community_date} />
 				</View>
 			)}
-			<View style={[{width: 700 * DP, marginTop: 20 * DP, opacity: height >= 99 * DP ? 1 : 1}]}>
+			<View style={[{width: 700 * DP, marginTop: 20 * DP, opacity: height >= 99 * DP ? 1 : 1, flex: 1}]}>
+				{/* IOS환경에서 Height가 최신화 되지 않던 현상 발견. 관련 라이브러리 참조하여 커스텀 컴포넌트 활용  */}
 				{Platform.OS == 'ios' ? (
-					<WebView
-						originWhitelist={['*']}
+					// <WebView
+					// 	originWhitelist={['*']}
+					// 	ref={webviewRef}
+					// 	onMessage={onWebViewMessage}
+					// 	injectedJavaScript={runFirst} //Dynamic Height 수치 설정
+					// 	scrollEnabled={false}
+					// 	source={{html: changeHtmlTag()}}
+					// 	style={[style.webview, {height: height}]}
+					// />
+					<AutoHeightWebView
+						style={{width: 670 * DP, marginTop: 30 * DP}}
+						customScript={runFirst}
+						scrollEnabled={false}
+						// onSizeUpdated={size => console.log('size.height', size.height)}
+						files={[{href: 'cssfileaddress', type: 'text/css', rel: 'stylesheet'}]}
 						onMessage={onWebViewMessage}
 						ref={webviewRef}
-						injectedJavaScript={runFirst} //Dynamic Height 수치 설정
-						scrollEnabled={false}
-						injectedJavaScriptBeforeContentLoaded={runFirst}
-						source={{
-							html: changeHtmlTag(),
-						}}
-						style={[
-							style.webview,
-							{
-								height: height,
-								// opacity: load ? 1 : 0,
-							},
-						]}
+						source={{html: changeHtmlTag()}}
+						scalesPageToFit={true}
+						viewportContent={'width=device-width, user-scalable=no'}
 					/>
 				) : (
 					//안드로이드
@@ -217,15 +221,25 @@ const ArticleContent = props => {
 						ref={webviewRef}
 						onMessage={onWebViewMessage}
 						injectedJavaScript={runFirst} //Dynamic Height 수치 설정
-						source={{
-							html: changeHtmlTag(),
-						}}
+						source={{html: changeHtmlTag()}}
 						style={{
 							width: 670 * DP,
 							height: height == 0 ? 100 * DP : height,
 							opacity: 0.99,
 						}}
 					/>
+					// <AutoHeightWebView
+					// 	style={{width: 670 * DP, marginTop: 30 * DP}}
+					// 	customScript={runFirst}
+					// 	scrollEnabled={false}
+					// 	onSizeUpdated={size => console.log('size.height', size.height)}
+					// 	files={[{href: 'cssfileaddress', type: 'text/css', rel: 'stylesheet'}]}
+					// 	onMessage={onWebViewMessage}
+					// 	ref={webviewRef}
+					// 	source={{html: changeHtmlTag()}}
+					// 	scalesPageToFit={true}
+					// 	viewportContent={'width=device-width, user-scalable=no'}
+					// />
 				)}
 			</View>
 		</View>

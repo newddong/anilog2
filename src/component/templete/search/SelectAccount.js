@@ -83,7 +83,7 @@ export default SelectAccount = ({route, navigation}) => {
 
 	return (
 		<View style={[login_style.wrp_main, selectAccount.container]}>
-			<InputWithSearchIcon onChange={onChange} width={654} placeholder={'닉네임을 검색해주세요.'} />
+			<InputWithSearchIcon value={searchInput} onChange={onChange} width={654} placeholder={'닉네임을 검색해주세요.'} />
 			{data.length > 0 ? (
 				<View style={[selectAccount.accountList]}>
 					<AccountList items={data} onSelect={onSelect} showCrossMark={false} />

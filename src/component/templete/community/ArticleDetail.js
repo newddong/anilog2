@@ -104,17 +104,17 @@ export default ArticleDetail = props => {
 				} else if (free.length - findIndex < 11) {
 					//현재 보고 있는 게시글이 전체 인덱스 중 10이하라면?
 					console.log('findIndex < 11');
-					for (let ind = findIndex + 1; ind < free.length; ind++) {
+					for (let ind = findIndex + 1; ind < free.length - 1; ind++) {
 						//이후 글만 차례로 출력
 						list.push(free[ind]);
 					}
+					setArticleList(list);
 				} else {
 					for (let ind = findIndex + 1; ind < findIndex + 11; ind++) {
 						list.push(free[ind]);
 					}
+					setArticleList(list);
 				}
-				console.log('list', list.length);
-				setArticleList(list);
 			},
 			err => {
 				console.log('err / getCommunityList / ArticleDetail : ', err);

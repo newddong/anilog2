@@ -27,11 +27,11 @@ export default FavoriteCommunity = ({route}) => {
 							limit: 1000,
 							page: 1,
 							userobject_id: userGlobalObject.userInfo._id,
-							community_type: 'free',
+							community_type: 'all',
 						},
 						result => {
 							// console.log('result / getCommunityListByUserId / free', result.msg.free.length);
-							// console.log('result / getCommunityListByUserId / review', result.msg.review.length);
+							console.log('result / getCommunityListByUserId / review', result.msg.review);
 							const free = result.msg.free.filter(
 								e => e.community_writer_id != null && e.community_writer_id.user_nickname == userGlobalObject.userInfo.user_nickname,
 							);

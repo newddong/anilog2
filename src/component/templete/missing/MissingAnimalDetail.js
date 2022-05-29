@@ -65,16 +65,32 @@ export default MissingAnimalDetail = props => {
 			{
 				city: '',
 				missing_animal_species: '',
-				request_number: 4,
 				feedobject_id: '',
+				limit: 1000,
 			},
 			result => {
 				console.log('getMissingReportList result', result.msg.length);
-				const filter = result.msg.filter(e => e.feed_type == 'missing');
+				const res = result.msg.filter(e => e.feed_type == 'missing');
+				const findIndex = res.findIndex(e => e._id == props.route.params._id);
+				console.log('findIndex', findIndex);
+				let temp = [];
+				if (res.length < 5) {
+					setMissingList(res);
+				} else if (res.length - findIndex < 5) {
+					for (let ind = findIndex + 1; ind < res.length - 1; ind++) {
+						temp.push(res[ind]);
+					}
+					setMissingList(temp);
+				} else {
+					for (let ind = findIndex + 1; ind < findIndex + 5; ind++) {
+						temp.push(res[ind]);
+					}
+					setMissingList(temp);
+				}
 				// console.log('dataID', data_id);
-				const removeMine = filter.filter(e => e._id != data_id);
-				const slice = removeMine.slice(0, 4);
-				setMissingList(slice);
+				// const removeMine = res.filter(e => e._id != data_id);
+				// const slice = removeMine.slice(0, 4);
+				// setMissingList(slice);
 			},
 			err => {
 				console.log('getMissingReportList Error', err);

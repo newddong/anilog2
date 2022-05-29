@@ -50,7 +50,7 @@ export default MissingReportList = props => {
 	}, []);
 
 	const getList = () => {
-		setLoading(true);
+		// setLoading(true);
 		console.log('filterData', filterData);
 		getMissingReportList(
 			{...filterData, limit: PROTECT_REQUEST_MAIN_LIMIT, page: offset},
@@ -294,15 +294,6 @@ export default MissingReportList = props => {
 								btnTheme={'gray'}
 							/>
 						</View>
-						{/* <View style={[temp_style.filterBtn]}>
-								<ArrowDownButton
-									onPress={onSelectKind}
-									btnTitle={filterData.missing_animal_species || '동물 종류'}
-									btnLayout={btn_w306_h68}
-									btnStyle={'border'}
-									btnTheme={'gray'}
-								/>
-							</View> */}
 						<View style={[searchProtectRequest.kindFilter, {}]}>
 							<View style={[searchProtectRequest.kindFilterItem]}>
 								<Text style={[txt.noto26, {color: GRAY10, marginRight: 10 * DP}]}> 제보</Text>

@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, Text, View, ScrollView, FlatList, Image, TouchableOpacity} from 'react-native';
-import {BLACK} from 'Root/config/color';
+import {StyleSheet, Text, View, ScrollView, FlatList, Image, TouchableOpacity, RefreshControl, ActivityIndicator} from 'react-native';
+import {APRI10, BLACK} from 'Root/config/color';
 import {Animal_another_off, Animal_cat_off, Animal_dog_off, EmptyIcon, Filter60Border, Filter60Filled, WriteBoard} from 'Root/component/atom/icon';
 import ReviewList from 'Root/component/organism/list/ReviewList';
 import {Animal_another, Animal_cat, Animal_dog} from 'Root/component/atom/icon';
@@ -12,10 +12,10 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeEtc} from 'Root/api/likeetc';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import community_obj from 'Root/config/community_obj';
-import {NETWORK_ERROR, REPORT_MENU} from 'Root/i18n/msg';
+import {NETWORK_ERROR, REPORT_MENU, REVIEW_LIMIT} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
-import {buttonstyle} from 'Templete/style_templete';
+import {buttonstyle, searchProtectRequest} from 'Templete/style_templete';
 
 export default ReviewMain = ({route, navigation}) => {
 	const [data, setData] = React.useState('false');
@@ -35,6 +35,9 @@ export default ReviewMain = ({route, navigation}) => {
 		},
 	});
 	const [recommend, setRecommend] = React.useState([]);
+	const [offset, setOffset] = React.useState(1);
+	const [refreshing, setRefreshing] = React.useState(false);
+	const [loading, setLoading] = React.useState(false);
 
 	const filterRef = React.useRef(false);
 	// React navigation focus event listener return old state 관련 자료 참고
@@ -43,43 +46,46 @@ export default ReviewMain = ({route, navigation}) => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			filterRef.current ? false : fetchData(); // 필터가 적용된 상태라면 다시 데이터를 받아와서는 안됨
-			// console.log(' ReviewMain / object._id', community_obj.object._id);
-			// console.log(' ReviewMain / pageToMove', community_obj.pageToMove);
-			// console.log(' ReviewMain / initial', community_obj.initial);
-			community_obj.current = '';
-			if (community_obj.initial != true && community_obj.object._id != undefined) {
-				console.log('다른 탭에서의 호출 : 목적지 및 타이틀', community_obj.pageToMove, community_obj.object.community_title);
-				navigation.navigate(community_obj.pageToMove, {community_object: community_obj.object});
-			}
 		});
-		navigation.addListener('blur', () => {
-			community_obj.object = {};
-			community_obj.pageToMove = '';
-			community_obj.initial = true;
-		});
-		fetchData();
+		// fetchData();
 		return unsubscribe;
 	}, []);
 
-	const fetchData = () => {
+	const fetchData = isRefresh => {
+		setLoading(true);
 		getCommunityList(
 			{
+				limit: REVIEW_LIMIT,
+				page: offset,
 				community_type: 'review',
 			},
 			result => {
-				// console.log('result / getCommunityList / ArticleMain :', result.msg.review[0]);
+				console.log('result / getCommunityList / ReviewMain :', result.msg.review.length);
+				const res = result.msg.review;
 				let recommendList = [];
-				result.msg.review.map((v, i) => {
-					// console.log('community_is_recomment', v.community_is_recomment);
+				res.map((v, i) => {
 					if (v.community_is_recomment) {
 						recommendList.push(v);
 					}
 				});
 				setRecommend(recommendList);
-				setData(result.msg.review);
+				if (isRefresh) {
+					setData(res);
+				} else if (data != 'false') {
+					let temp = [...data];
+					res.map((v, i) => {
+						temp.push(v);
+					});
+					console.log('temp lenth', temp.length);
+					setData(temp);
+				} else {
+					setData(res);
+				}
+				setOffset(offset + 1);
 				if (!hasNoFilter()) {
 					doFilter(community_obj.reviewFilter, result.msg.review);
 				}
+				setLoading(false);
 			},
 			err => {
 				console.log('err / getCommunityList / ArticleMain : ', err);
@@ -91,6 +97,7 @@ export default ReviewMain = ({route, navigation}) => {
 				} else if (err.includes('없습니다')) {
 					setData([]);
 				}
+				setLoading(false);
 			},
 		);
 	};
@@ -325,8 +332,19 @@ export default ReviewMain = ({route, navigation}) => {
 				console.log('도시선택 필터와 카테고리는 선택이 없으므로 전체 리스트와 동일');
 				filterRef.current = false;
 				// console.log(filtered);
+				setOffset(1);
 				fetchData();
 			}
+		}
+	};
+
+	//리스트 페이징 작업
+	const onEndReached = () => {
+		console.log('EndReached', getData().length % REVIEW_LIMIT);
+		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
+		//리뷰 메인 페이지에서는 필터가 적용이 되었을 때도 api 접속 불필요
+		if (getData().length % REVIEW_LIMIT == 0) {
+			fetchData();
 		}
 	};
 
@@ -409,6 +427,19 @@ export default ReviewMain = ({route, navigation}) => {
 		);
 	};
 
+	const wait = timeout => {
+		return new Promise(resolve => setTimeout(resolve, timeout));
+	};
+	const onRefresh = () => {
+		setOffset(1);
+		setRefreshing(true);
+		wait(0).then(() => setRefreshing(false));
+	};
+
+	React.useEffect(() => {
+		refreshing ? fetchData(true) : false;
+	}, [refreshing]);
+
 	//리스트에 출력될 리스트 목록 필터
 	const getData = () => {
 		let filtered = [];
@@ -483,6 +514,9 @@ export default ReviewMain = ({route, navigation}) => {
 					data={[{}]}
 					listKey={({item, index}) => index}
 					showsVerticalScrollIndicator={false}
+					refreshing
+					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+					extraData={refreshing}
 					renderItem={({item, index}) => {
 						return (
 							<>
@@ -497,6 +531,7 @@ export default ReviewMain = ({route, navigation}) => {
 									onPressUnlike={index => onPressLike(index, false)}
 									onPressFavorite={onPressFavorite}
 									onPressRecommendReview={onPressRecommendReview}
+									onEndReached={onEndReached}
 								/>
 							</>
 						);
@@ -507,6 +542,13 @@ export default ReviewMain = ({route, navigation}) => {
 				<TouchableOpacity activeOpacity={0.8} onPress={onPressWrite} style={[style.write, style.shadowButton]}>
 					<WriteBoard />
 				</TouchableOpacity>
+				{loading ? (
+					<View style={searchProtectRequest.indicatorCont}>
+						<ActivityIndicator size="large" color={APRI10} />
+					</View>
+				) : (
+					<></>
+				)}
 			</View>
 		);
 };

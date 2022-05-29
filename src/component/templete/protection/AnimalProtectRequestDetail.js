@@ -8,25 +8,20 @@ import RescueImage from 'Root/component/molecules/image/RescueImage';
 import {txt} from 'Root/config/textstyle';
 import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
 import ShelterSmallLabel from 'Root/component/molecules/label/ShelterSmallLabel';
-import {FavoriteTag48_Border, FavoriteTag48_Filled, Share48_Filled} from 'Atom/icon';
 import DP from 'Root/config/dp';
-import CommentList from 'Root/component/organism/comment/CommentList';
-import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
 import moment from 'moment';
 import {deleteComment, getCommentListByProtectId} from 'Root/api/commentapi';
 import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import ProtectAnimalInfoBox from 'Root/component/organism/info/ProtectAnimalInfoBox';
-import {count_to_K} from 'Root/util/stringutil';
 import {getProtectRequestListByShelterId} from 'Root/api/shelterapi';
 import {getProtectRequestByProtectRequestId} from 'Root/api/protectapi';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {getFavoriteEtcListByUserId, setFavoriteEtc} from 'Root/api/favoriteetc';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
-import {NETWORK_ERROR, UNAVAILABLE_REQUEST_STATUS} from 'Root/i18n/msg';
+import {NETWORK_ERROR, PROTECT_REQUEST_DETAIL_LIMIT, UNAVAILABLE_REQUEST_STATUS} from 'Root/i18n/msg';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 
 //AnimalProtectRequestDetail 호출 경로
@@ -38,9 +33,9 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const [data, setData] = React.useState('false');
 	const [writersAnotherRequests, setWritersAnotherRequests] = React.useState('false'); //해당 게시글 작성자의 따른 보호요청게시글 목록
 	const [comments, setComments] = React.useState('false'); //comment list 정보
+	const [offset, setOffset] = React.useState(1);
 	const debug = false;
 	const isShelter = userGlobalObject.userInfo.user_type == 'shelter';
-	const isMyPost = data == 'false' ? false : data.protect_request_writer_id._id == userGlobalObject.userInfo._id;
 	const flatlist = React.useRef();
 	debug && console.log('AnimalProtectRequestDetail data:', data);
 
@@ -67,10 +62,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 			},
 			result => {
 				// console.log('result /AnimalProtectRequestDetail / getProtectRequestByProtectRequestId /  : ', result.msg.protect_request_writer_id);
-				// console.log('작성자의 즐겨찾기 수', result.msg);
 				let res = result.msg;
-				// let checkfav = await isMyFavoriteShelter(res.protect_request_writer_id);
-				// res.protect_request_writer_id.is_favorite = checkfav;
 				setData(res);
 				navigation.setParams({...route.params, request_object: result.msg, isMissingOrReport: false, reset: false});
 				getProtectRequestList(result.msg.protect_request_writer_id._id); //API에서 받아온 보호요청게시글의 작성자 _id를 토대로, 작성자의 다른 보호요청게시글을 받아옴
@@ -82,7 +74,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					Modal.popOneBtn('이미 삭제된 요청건입니다.', '확 인', () => {
 						navigation.goBack();
 					});
-				} else if (err.includes('Network')) {
+				} else if (err.includes('Network') || err.includes('code 500')) {
 					Modal.popOneBtn(NETWORK_ERROR, '확 인', () => {
 						navigation.goBack();
 					});
@@ -91,58 +83,34 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		);
 	};
 
-	//보호요청 게시글 작성자가 나의 즐겨찾기 대상에 포함이 되는지 여부
-	const isMyFavoriteShelter = async writer_id => {
-		if (userGlobalObject.userInfo.isPreviewMode) {
-			return false;
-		} else {
-			const checkFav = () => {
-				return new Promise((resolve, reject) => {
-					try {
-						getFavoriteEtcListByUserId(
-							{
-								userobject_id: userGlobalObject.userInfo._id,
-								collectionName: 'userobjects',
-							},
-							result => {
-								// console.log('result / getFavoriteEtcListByUserId / AnimalProtectRequestDetail  ', result.msg.length);
-								let favoriteList = [];
-								result.msg.map((v, i) => {
-									favoriteList.push(v.favorite_etc_target_object_id._id);
-								});
-								let res = favoriteList.includes(writer_id._id);
-								resolve(res);
-							},
-							err => {
-								console.log('err / getFavoriteEtcListByUserId / AnimalProtectRequestDetail ', err);
-							},
-						);
-					} catch {
-						console.log('err');
-					}
-				});
-			};
-			const result = await checkFav();
-			console.log('result', result);
-			return result;
-		}
-	};
-
 	//보호소의 다른 보호 요청게시글 불러오기
 	const getProtectRequestList = id => {
 		getProtectRequestListByShelterId(
 			{
 				shelter_userobject_id: id,
-				protect_request_object_id: '',
-				request_number: 5,
+				// protect_request_object_id: '',
 				protect_request_status: 'all', //하단 리스트
+				// limit: 1000,
+				limit: PROTECT_REQUEST_DETAIL_LIMIT,
+				page: offset,
 			},
 			result => {
-				// console.log('result / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', result.msg[0]);
+				// console.log('result / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', result.msg.length);
 				//현재 보고 있는 보호요청게시글의 작성자(보호소)의 모든 보호요청게시글이 담겨 있는 writersAnotherRequests
 				//그러나 현재 보고 있는 보호요청게시글은 해당 리스트에 출력이 되어서는 안됨 => Filter처리
-				const filteredList = result.msg.filter(e => e._id != route.params.id);
-				setWritersAnotherRequests(filteredList);
+				const res = result.msg.filter(e => e._id != route.params.id);
+				console.log('res.length', res.length);
+				if (writersAnotherRequests != 'false') {
+					let temp = [...writersAnotherRequests];
+					res.map((v, i) => {
+						temp.push(v);
+					});
+					console.log('temp lenth', temp.length);
+					setWritersAnotherRequests(temp);
+				} else {
+					setWritersAnotherRequests(res);
+				}
+				setOffset(offset + 1);
 			},
 			err => {
 				console.log('err / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', err);
@@ -151,6 +119,16 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				}
 			},
 		);
+	};
+
+	//리스트 페이징 작업
+	const onEndReached = () => {
+		console.log('EndReached', writersAnotherRequests.length % PROTECT_REQUEST_DETAIL_LIMIT);
+		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
+		//리뷰 메인 페이지에서는 필터가 적용이 되었을 때도 api 접속 불필요
+		if (writersAnotherRequests.length % PROTECT_REQUEST_DETAIL_LIMIT == 0) {
+			getProtectRequestList();
+		}
 	};
 
 	//댓글 목록 불러오기
@@ -477,6 +455,8 @@ export default AnimalProtectRequestDetail = ({route}) => {
 						style={{backgroundColor: '#fff'}}
 						showsVerticalScrollIndicator={false}
 						ListEmptyComponent={whenEmpty}
+						onEndReached={onEndReached}
+						onEndReachedThreshold={0.6}
 					/>
 				</View>
 			</View>

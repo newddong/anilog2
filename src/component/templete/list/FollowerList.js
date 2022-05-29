@@ -112,7 +112,7 @@ export default FollowerList = props => {
 									items={follower}
 									showButtons={true}
 									onClickAccount={onClickAccount}
-									title={!isFollowing ? '' : '팔로잉'}
+									title={!isFollowing ? '팔로우' : '팔로잉'}
 									onClickFollowBtn={onClickFollowBtn}
 									onClickUnFollowBtn={onClickUnFollowBtn}
 									showFollowStatusText={false}
@@ -123,7 +123,7 @@ export default FollowerList = props => {
 									items={follow}
 									showButtons={true}
 									onClickAccount={onClickAccount}
-									title={!isFollowing ? '' : '팔로잉'}
+									title={!isFollowing ? '팔로우' : '팔로잉'}
 									onClickUnFollowBtn={onClickUnFollowBtn}
 									onClickFollowBtn={onClickFollowBtn}
 									showFollowStatusText={false}

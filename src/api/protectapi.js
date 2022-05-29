@@ -4,6 +4,8 @@ import {apiController, apiFormController} from './apiController';
  * 유저의 보호동물(프로필에서 보여지는) 목록 조회
  *
  * @param {object} params - token아이디
+ * @param {number} limit - 한번에 불러올 개수
+ * @param {number} page - 현재 페이지
  * @param {string} params.userobject_id - 보호동물을 조회하고 싶은 유저의 오브젝트 아이디.
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
@@ -137,9 +139,9 @@ export async function getProtectApplicantList(params, callback, errcallback) {
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
- export async function getProtectRequestByProtectRequestId(params, callback, errcallback){
-	apiController( '/protect/getProtectRequestByProtectRequestId', arguments);
-	};
+export async function getProtectRequestByProtectRequestId(params, callback, errcallback) {
+	apiController('/protect/getProtectRequestByProtectRequestId', arguments);
+}
 
 /**
  * 지역에 따른 보호소 정보

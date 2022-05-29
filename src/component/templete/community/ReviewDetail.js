@@ -83,15 +83,38 @@ export default ReviewDetail = props => {
 		);
 	};
 
+	//하단 리뷰
 	const fetchCommunityList = () => {
 		getCommunityList(
 			{
+				limit: 10000,
 				community_type: 'review',
 			},
 			result => {
-				const res = result.msg.review.slice(0, 4);
-				let removeThisReview = res.filter(e => e._id != data._id);
-				setReviewList(removeThisReview);
+				const res = result.msg.review;
+				const findIndex = res.findIndex(e => e._id == props.route.params.community_object._id);
+				let list = [];
+				const number_to_list = 4;
+				if (res.length < number_to_list) {
+					//전체글이 11 이하라면 그냥 바로 출력
+					console.log('review.length < number_to_list', res.length < number_to_list);
+					setReviewList(res);
+				} else if (res.length - findIndex < number_to_list) {
+					//현재 보고 있는 게시글이 전체 인덱스 중 10이하라면?
+					console.log('findIndex < number_to_list');
+					for (let ind = findIndex + 1; ind < res.length; ind++) {
+						//이후 글만 차례로 출력
+						list.push(res[ind]);
+					}
+				} else {
+					for (let ind = findIndex + 1; ind < findIndex + number_to_list; ind++) {
+						list.push(res[ind]);
+					}
+				}
+				setReviewList(list);
+				// let removeThisReview = res.filter(e => e._id != data._id);
+				// console.log('removeThisReview', removeThisReview.length);
+				// setReviewList(removeThisReview);
 			},
 			err => {
 				console.log('err / getCommunityList / ReviewDEtail : ', err);

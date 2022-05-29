@@ -1,7 +1,7 @@
 import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {Dimensions, StyleSheet} from 'react-native';
-import {APRI10, GRAY10, WHITE} from 'Root/config/color';
+import {APRI10, BLACK, BLUE10, GRAY10, GRAY40, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import searchContext from 'Root/config/searchContext';
 import {getUserListByNickname} from 'Root/api/userapi';
@@ -31,14 +31,6 @@ export default SearchTabNavigation = props => {
 	const onClickUser = sendUserobject => {
 		props.navigation.navigate('SearchTabUserProfile', {userobject: sendUserobject});
 	};
-
-	const searchTabLabelOption = {
-		tabBarActiveTintColor: 'white',
-		tabBarLabelStyle: [styles.tabbarLabelStyle],
-		tabBarInactiveTintColor: GRAY10,
-		tabBarPressColor: WHITE,
-	};
-
 	//검색탭 헤더의 인풋값이 바뀔 때마다 계정과 해쉬를 받아오는 api에 접속
 	React.useEffect(() => {
 		console.log('searchContext.searchInfo.searchInput', searchContext.searchInfo.searchInput);
@@ -165,10 +157,24 @@ export default SearchTabNavigation = props => {
 		setCommList(comm);
 	};
 
+	const searchTabLabelOption = {
+		tabBarActiveTintColor: WHITE,
+		tabBarLabelStyle: [styles.tabbarLabelStyle],
+		tabBarPressColor: WHITE,
+		tabBarActiveTintColor: BLACK,
+		tabBarInactiveTintColor: GRAY10,
+	};
+
 	return (
 		<SearchTabNav.Navigator
 			screenOptions={{
-				tabBarItemStyle: {height: 70 * DP},
+				tabBarItemStyle: {height: 78 * DP},
+				tabBarStyle: {
+					borderBottomWidth: 2 * DP,
+					borderTopWidth: 2 * DP,
+					borderTopColor: GRAY40,
+					borderBottomColor: GRAY40,
+				},
 				tabBarIndicatorStyle: styles.tabBarIndicatorStyle,
 				lazy: true,
 			}}
@@ -214,13 +220,14 @@ export default SearchTabNavigation = props => {
 const styles = StyleSheet.create({
 	tabbarLabelStyle: {
 		fontFamily: 'NotoSansKR-Bold',
-		fontSize: 30 * DP,
-		marginTop: -20 * DP,
+		fontSize: 28 * DP,
+		marginTop: -10 * DP,
+		// color: GRAY10,
 	},
 	tabBarIndicatorStyle: {
-		backgroundColor: APRI10,
-		height: 70 * DP,
-		borderTopRightRadius: 40 * DP,
-		borderTopLeftRadius: 40 * DP,
+		backgroundColor: WHITE,
+		borderBottomColor: BLACK,
+		borderBottomWidth: 6 * DP,
+		height: 78 * DP,
 	},
 });

@@ -27,32 +27,14 @@ const CommunityList = React.memo(props => {
 	const [data, setData] = React.useState('false' || {review: [], free: []});
 	const [type, setType] = React.useState('free');
 
+	//즐겨찾기버튼을 클릭할 시 data를 최신상태로 갱신하기 위한 setState처리
 	React.useEffect(() => {
 		setData(props.data);
 	}, [props.data]);
 
 	//자유 게시글 아이템 클릭
 	const onPressArticle = index => {
-		// navigation.navigate('COMMUNITY', {screen: 'ArticleDetail', params: {community_object: data.free[index]}});
-		community_obj.object = data.free[index];
-		community_obj.pageToMove = 'ArticleDetail';
-		community_obj.initial = false;
-		console.log('community_obj.current', community_obj.current);
-		if (community_obj.current == '') {
-			// navigation.navigate('COMMUNITY', {
-			// 	screen: 'ArticleMain',
-			// 	initial: false,
-			// 	params: {community_object: data.free[index], pageToMove: 'ArticleDetail'},
-			// });
-			navigation.push('ArticleDetail', {community_object: data.free[index]});
-		} else {
-			navigation.push('ArticleDetail', {community_object: data.free[index]});
-			// navigation.navigate('COMMUNITY', {
-			// 	screen: 'ArticleDetail',
-			// 	initial: false,
-			// 	params: {community_object: data.free[index], reset: true},
-			// });
-		}
+		navigation.push('ArticleDetail', {community_object: data.free[index]});
 	};
 
 	//리뷰 좋아요 클릭
@@ -80,56 +62,12 @@ const CommunityList = React.memo(props => {
 
 	//후기 게시글의 댓글쓰기 혹은 댓글 모두 보기 클릭 클릭
 	const onPressReply = index => {
-		// navigation.navigate('COMMUNITY', {screen: 'CommunityCommentList', params: {community_object: data.review[index]}});
-		community_obj.object = data.review[index];
-		community_obj.pageToMove = 'CommunityCommentList';
-		community_obj.initial = false;
-		console.log('community_obj.current', community_obj.current);
-		if (community_obj.current == '') {
-			//탭 간의 이동을 간편히 하기 위해 만든 community_obj의 current 값이 빈값 == 현재 쌓여있는 화면이 없음
-			//우선 ArticleMain의 스택을 쌓기 위해 ArticleMain으로 먼저 보낸 뒤 바로 이동되어야 할 상세 자유 게시글을 여기서 선언 => Parameter로 보냄
-			// navigation.navigate('COMMUNITY', {
-			// 	screen: 'ArticleMain',
-			// 	initial: false,
-			// 	params: {community_object: data.review[index], pageToMove: 'CommunityCommentList'},
-			// });
-			navigation.push('CommunityCommentList', {community_object: data.review[index]});
-		} else {
-			//이미 보고 있는 ArticleDetail이 존재하므로 ArticleDetail 템플릿을 덮어씌우고 봐야할 상세 자유 게시글은 Parameter로 송신
-			// navigation.navigate('COMMUNITY', {
-			// 	screen: 'CommunityCommentList',
-			// 	initial: false,
-			// 	params: {community_object: data.review[index], reset: true},
-			// });
-			navigation.push('CommunityCommentList', {community_object: data.review[index]});
-		}
+		navigation.push('CommunityCommentList', {community_object: data.review[index]});
 	};
 
 	//후게 게시글 컨텐츠 클릭
 	const onPressReviewContent = index => {
-		// navigation.navigate('COMMUNITY', {screen: 'ReviewDetail', params: {community_object: data.review[index]}});
-		community_obj.object = data.review[index];
-		community_obj.pageToMove = 'ReviewDetail';
-		community_obj.initial = false;
-		console.log('community_obj.current', community_obj.current);
-		if (community_obj.current == '') {
-			//탭 간의 이동을 간편히 하기 위해 만든 community_obj의 current 값이 빈값 == 현재 보고 있는 ArticleDetail이 없음
-			//우선 ArticleMain의 스택을 쌓기 위해 ArticleMain으로 먼저 보낸 뒤 바로 이동되어야 할 상세 자유 게시글을 여기서 선언 => Parameter로 보냄
-			// navigation.navigate('COMMUNITY', {
-			// 	screen: 'ReviewMain',
-			// 	initial: false,
-			// 	params: {community_object: data.review[index], pageToMove: 'ReviewDetail'},
-			// });
-			navigation.push('ReviewDetail', {community_object: data.review[index]});
-		} else {
-			//이미 보고 있는 ArticleDetail이 존재하므로 ArticleDetail 템플릿을 덮어씌우고 봐야할 상세 자유 게시글은 Parameter로 송신
-			// navigation.navigate('COMMUNITY', {
-			// 	screen: 'ReviewDetail',
-			// 	initial: false,
-			// 	params: {community_object: data.review[index], reset: true},
-			// });
-			navigation.push('ReviewDetail', {community_object: data.review[index]});
-		}
+		navigation.push('ReviewDetail', {community_object: data.review[index]});
 	};
 
 	//리뷰 즐겨찾기 아이콘 클릭

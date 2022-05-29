@@ -69,7 +69,7 @@ export default MissingAnimalDetail = props => {
 				feedobject_id: '',
 			},
 			result => {
-				// console.log('getMissingReportList result', result.msg[0]);
+				console.log('getMissingReportList result', result.msg.length);
 				const filter = result.msg.filter(e => e.feed_type == 'missing');
 				// console.log('dataID', data_id);
 				const removeMine = filter.filter(e => e._id != data_id);

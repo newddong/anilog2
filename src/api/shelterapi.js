@@ -73,6 +73,8 @@ export async function getShelterProtectAnimalList(params, callback, errcallback)
 /**
  * 대상 유저 오브젝트 아이디의 보호소가 올린 동물보호 요청 게시물 리스트를 불러온다.
  * @param {object} params - token아이디
+ * @param {number} limit - 페이징에 출력할 아이템 개수
+ * @param {number} page - 현재 페이징
  * @param {string} params.shelter_userobject_id - 동물보호 요청 리스트를 불러올 대상
  * @param {string} params.protect_request_object_id - 커서 역할을 할 보호요청 오브잭트(페이징 처리)
  * @param {number} params.request_number - 요청할 게시물의 숫자

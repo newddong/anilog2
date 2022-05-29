@@ -40,7 +40,7 @@ export default UserAccount = props => {
 	};
 
 	return (
-		<View style={[userAccount.container]}>
+		<View style={[userAccount.container, {}]}>
 			{/* {console.log(`props.checkBoxMode=>${props.checkBoxMode}`)}
 			{console.log(`props.data.checkBoxState=>${props.data.checkBoxState}`)} */}
 			{/* CheckBox */}

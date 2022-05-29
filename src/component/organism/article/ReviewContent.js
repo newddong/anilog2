@@ -111,15 +111,14 @@ const ReviewContent = props => {
 				}
 			}, 150);
 		} else {
-			// console.log('event IOS : ', JSON.stringify(event._dispatchInstances._debugOwner.memoizedProps));
-			console.log('event.nativeEvent.data', event.nativeEvent.data);
+			// console.log('event.nativeEvent.data', event.nativeEvent.data);
 			if (event.nativeEvent.data.includes('amazonaws.com')) {
 				showImg(event.nativeEvent.data);
 			} else if (parseInt(event.nativeEvent.data) < 100 * DP) {
 				setHeight(100 * DP * DP);
 			} else {
 				height >= 100 * DP ? false : setHeight(parseInt(event.nativeEvent.data));
-				console.log('parseInt(event.nativeEvent.data)', parseInt(event.nativeEvent.data));
+				// console.log('parseInt(event.nativeEvent.data)', parseInt(event.nativeEvent.data));
 			}
 		}
 	};
@@ -202,7 +201,7 @@ const ReviewContent = props => {
 							customScript={runFirst}
 							scrollEnabled={false}
 							onSizeUpdated={size => {
-								console.log('size.height', size.height);
+								// console.log('size.height', size.height);
 								setHeight(size.height);
 							}}
 							files={[{href: 'cssfileaddress', type: 'text/css', rel: 'stylesheet'}]}

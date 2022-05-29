@@ -99,20 +99,18 @@ export const organism_style = StyleSheet.create({
 
 export const controllableAccount = StyleSheet.create({
 	container: {
-		width: 654 * DP,
+		width: 694 * DP,
 		flexDirection: 'row',
 		marginBottom: 40 * DP,
 		alignItems: 'center',
 	},
 	userDescriptionLabel: {
 		width: 460 * DP,
-
 		justifyContent: 'center',
 		alignItems: 'flex-start',
 	},
 	userDescriptionLabel_checked: {
 		width: 400 * DP,
-
 		justifyContent: 'center',
 		alignItems: 'flex-start',
 	},
@@ -1179,7 +1177,7 @@ export const familyAccountList_style = StyleSheet.create({
 
 export const userAccount = StyleSheet.create({
 	container: {
-		width: 654 * DP,
+		width: 694 * DP,
 		height: 94 * DP,
 		flexDirection: 'row',
 		alignSelf: 'center',

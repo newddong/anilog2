@@ -19,9 +19,10 @@ import Loading from 'Root/component/molecules/modal/Loading';
 import Modal from 'Root/component/modal/Modal';
 
 export default LocationPicker = ({route}) => {
-	const [keyword, setKeyword] = useState('');
-	const [places, setPlaces] = useState([]);
+	const [keyword, setKeyword] = useState(''); // 검색 키워드
+	const [places, setPlaces] = useState([]); // 장소 검색 결과 리스트
 	const [selected, setSelected] = useState({
+		// 장소 초기값 오브젝트
 		address_name: '',
 		category_group_code: '',
 		category_group_name: '',
@@ -46,7 +47,7 @@ export default LocationPicker = ({route}) => {
 	const [changedLongitudeDelta, setChangedLongitudeDelta] = useState(0.0023);
 	const [detailAddr, setDetailAddr] = useState(''); //세부주소 텍스트
 	const keyboardY = useKeyboardBottom(0 * DP);
-	const [searchFocus, setSearchFocus] = React.useState(false);
+	const [searchFocus, setSearchFocus] = React.useState(false); //주소검색 인풋의 포커스 상태 여부
 	const [delay, setDelay] = useState(true);
 
 	const map = React.useRef();
@@ -69,19 +70,7 @@ export default LocationPicker = ({route}) => {
 		};
 	}, []);
 
-	//주소 불러오기 api 호출
-	React.useEffect(() => {
-		if (permission == true) {
-			if (changedLatitude == '' || changedLongitude == '') {
-				callInitialAddress(changedLongitude, changedLatitude);
-				Modal.close();
-			} else if (changedLatitude != '' && changedLongitude != '') {
-				callInitialAddress(changedLongitude, changedLatitude);
-				Modal.close();
-			}
-		}
-	}, [changedLatitude]);
-
+	//위치 권한 요청
 	async function requestPermission() {
 		try {
 			request(
@@ -113,6 +102,47 @@ export default LocationPicker = ({route}) => {
 		}
 	}
 
+	//현재 위치로 돌아감
+	const initializeRegion = () => {
+		if (Platform.OS == 'android') {
+			setChangedLatitude(init_latitude);
+			setChangedLongitude(init_longitude);
+		} else {
+			if (map.current) {
+				console.log('map', map.current);
+				map.current.animateToRegion(
+					{
+						latitude: init_latitude,
+						longitude: init_longitude,
+						latitudeDelta: 0.0002,
+						longitudeDelta: 0.0023,
+					},
+					400,
+				);
+				setTimeout(() => {
+					setChangedLatitude(init_latitude);
+					setChangedLongitude(init_longitude);
+				}, 500);
+			}
+		}
+	};
+
+	//주소 불러오기 api 호출
+	React.useEffect(() => {
+		if (permission == true) {
+			if (changedLatitude == '' || changedLongitude == '') {
+				//위도 경도 없는 상태(첫진입)
+				Modal.popLoading(true);
+				callInitialAddress(changedLongitude, changedLatitude);
+				// Modal.close();
+			} else if (changedLatitude != '' && changedLongitude != '') {
+				Modal.popLoading(true);
+				callInitialAddress(changedLongitude, changedLatitude);
+				// Modal.close();
+			}
+		}
+	}, [changedLatitude]);
+
 	//위도 경도 받아오기
 	const geoLocation = () => {
 		Geolocation.getCurrentPosition(
@@ -136,7 +166,7 @@ export default LocationPicker = ({route}) => {
 					Modal.popNoBtn('주소를 받아오는데 실패했습니다. \n 잠시후 다시 이용해주세요.');
 					setTimeout(() => {
 						Modal.close();
-						navigation.goBack();
+						// navigation.goBack();
 					}, 1500);
 				}
 			},
@@ -223,6 +253,7 @@ export default LocationPicker = ({route}) => {
 		}
 	};
 
+	//위치정보 권한이 없을 시 디바이스 설정 호출
 	const getToSetting = error => {
 		let msg = '위치 서비스를 사용할 수 없습니다. \n 기기의 설정 > 개인정보 보호 에서 위치 \n 서비스를 켜주세요.';
 		if (error == 'blocked') {
@@ -247,31 +278,6 @@ export default LocationPicker = ({route}) => {
 				console.log('취소 불가능');
 			},
 		);
-	};
-
-	//현재 위치로 돌아감
-	const initializeRegion = () => {
-		if (Platform.OS == 'android') {
-			setChangedLatitude(init_latitude);
-			setChangedLongitude(init_longitude);
-		} else {
-			if (map.current) {
-				console.log('map', map.current);
-				map.current.animateToRegion(
-					{
-						latitude: init_latitude,
-						longitude: init_longitude,
-						latitudeDelta: 0.0002,
-						longitudeDelta: 0.0023,
-					},
-					400,
-				);
-				setTimeout(() => {
-					setChangedLatitude(init_latitude);
-					setChangedLongitude(init_longitude);
-				}, 500);
-			}
-		}
 	};
 
 	//위도 경도를 토대로 주소 받아오
@@ -330,19 +336,31 @@ export default LocationPicker = ({route}) => {
 		setDetailAddr(text);
 	};
 
+	//검색어 인풋 포커스
+	const onFocusSearch = () => {
+		setSearchFocus(true);
+	};
+
+	//검색어 인풋 포커스 해제
+	const onBlurSearch = () => {
+		setTimeout(() => {
+			setSearchFocus(false);
+		}, 500);
+	};
+
 	//검색된 장소 클릭
 	const onSelectPlace = item => {
 		console.log('item', item);
-		setPlaces([]);
-		setKeyword(item.place_name);
-		setSelected(item);
+		setPlaces([]); //기존 장소 리스트 삭제
+		setKeyword(item.place_name); //검색인풋값도 선택한 곳으로 변경
+		setSelected(item); // 현재 선택 장소 state 변경
 		let temp = {...locationObj};
 		temp.address = {...temp.address, address_name: item.road_address_name != '' ? item.road_address_name : item.address_name};
-		setLocationObj(temp);
-		setDetailAddr(item.place_name);
-		setChangedLongitude(parseFloat(item.x));
-		setChangedLatitude(parseFloat(item.y));
-		Keyboard.dismiss();
+		setLocationObj(temp); // 현재 선택 장소의 주소 오브젝트 반영
+		setDetailAddr(item.place_name); // 현재 선택 장소가 상세주소로 자동 저장(수정 가능)
+		setChangedLongitude(parseFloat(item.x)); // 위도
+		setChangedLatitude(parseFloat(item.y)); // 경도
+		Keyboard.dismiss(); // 키보드 내리기
 	};
 
 	//선택한 위치로 설정 버튼 클릭
@@ -351,6 +369,7 @@ export default LocationPicker = ({route}) => {
 		console.log('finalized', finalized.road_address.address_name);
 		finalized.detailAddr = detailAddr;
 		if (route.name == 'FeedLocationPicker') {
+			//피드의 위치 추가 기능
 			const data = {
 				...route.params.data,
 				address: {
@@ -378,6 +397,7 @@ export default LocationPicker = ({route}) => {
 				merge: true,
 			});
 		} else {
+			//커뮤니티글쓰기의 위치 추가 기능
 			const data = {
 				...route.params.data,
 				community_interests: {
@@ -428,30 +448,6 @@ export default LocationPicker = ({route}) => {
 				</TouchableOpacity>
 			</View>
 		);
-	};
-
-	const onFocusSearch = () => {
-		setSearchFocus(true);
-	};
-
-	const onBlurSearch = () => {
-		setTimeout(() => {
-			setSearchFocus(false);
-		}, 500);
-	};
-
-	const [numOfTouch, setNumOfTouch] = React.useState(0);
-
-	const onPressOut = () => {
-		console.log('onPressOut');
-		console.log('num', numOfTouch);
-		if (numOfTouch > 4) {
-			setNumOfTouch(0);
-			setPlaces([]);
-		} else {
-			setNumOfTouch(numOfTouch + 1);
-		}
-		Keyboard.dismiss();
 	};
 
 	if (changedLongitude == '' && changedLatitude == '') {
@@ -525,6 +521,7 @@ export default LocationPicker = ({route}) => {
 										</MapView.Marker>
 									</MapView>
 								) : (
+									//ios
 									<>
 										<MapView
 											ref={map}

@@ -124,7 +124,7 @@ const ArticleContent = props => {
 			}, 150);
 		} else {
 			// console.log('event IOS : ', JSON.stringify(event._dispatchInstances._debugOwner.memoizedProps));
-			console.log('event.nativeEvent.data', event.nativeEvent.data);
+			// console.log('event.nativeEvent.data', event.nativeEvent.data);
 			if (event.nativeEvent.data.includes('amazonaws.com')) {
 				// console.log('event.nativeEvent.data', event.nativeEvent.data);
 				showImg(event.nativeEvent.data);
@@ -206,7 +206,7 @@ const ArticleContent = props => {
 						style={{width: 670 * DP, marginTop: 30 * DP}}
 						customScript={runFirst}
 						scrollEnabled={false}
-						onSizeUpdated={size => console.log('size.height', size.height)}
+						// onSizeUpdated={size => console.log('size.height', size.height)}
 						files={[{href: 'cssfileaddress', type: 'text/css', rel: 'stylesheet'}]}
 						onMessage={onWebViewMessage}
 						ref={webviewRef}

@@ -38,11 +38,6 @@ export default CommunityCommentList = props => {
 	React.useEffect(() => {
 		fetchData();
 		navigation.setOptions({title: '댓글 쓰기'});
-		navigation.addListener('blur', () => {
-			community_obj.object = {};
-			community_obj.pageToMove = '';
-			community_obj.object.initial = true;
-		});
 	}, []);
 
 	const fetchData = () => {

@@ -1,11 +1,22 @@
 import React from 'react';
-import {Text, View, TouchableWithoutFeedback, FlatList, TouchableOpacity, RefreshControl, Pressable, StyleSheet, Animated} from 'react-native';
+import {
+	Text,
+	View,
+	TouchableWithoutFeedback,
+	FlatList,
+	TouchableOpacity,
+	RefreshControl,
+	Pressable,
+	StyleSheet,
+	Animated,
+	ActivityIndicator,
+} from 'react-native';
 import {feedWrite, login_style, searchProtectRequest, temp_style} from 'Templete/style_templete';
-import {GRAY10, WHITE} from 'Root/config/color';
+import {APRI10, GRAY10, WHITE} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {Check50, EmptyIcon, Rect50_Border, Urgent_Write1, Urgent_Write2} from 'Atom/icon';
 import {useNavigation} from '@react-navigation/core';
-import {PET_KIND, PET_PROTECT_LOCATION} from 'Root/i18n/msg';
+import {PET_KIND, PET_PROTECT_LOCATION, PROTECT_REQUEST_MAIN_LIMIT} from 'Root/i18n/msg';
 import {favoriteFeed, getMissingReportList} from 'Root/api/feedapi.js';
 import {btn_w306_h68} from 'Component/atom/btn/btn_style';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
@@ -18,6 +29,8 @@ export default MissingReportList = props => {
 	const navigation = useNavigation();
 
 	const [data, setData] = React.useState('false');
+	const [offset, setOffset] = React.useState(1);
+	const [loading, setLoading] = React.useState(false);
 	const [filterData, setFilterData] = React.useState({
 		city: '',
 		missing_animal_species: '',
@@ -31,33 +44,47 @@ export default MissingReportList = props => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			setShowActionButton(false);
+			getList();
 		});
 		return unsubscribe;
-	}, [props]);
+	}, []);
+
+	const getList = () => {
+		setLoading(true);
+		console.log('filterData', filterData);
+		getMissingReportList(
+			{...filterData, limit: PROTECT_REQUEST_MAIN_LIMIT, page: offset},
+			result => {
+				console.log('getMissingReportList length', result.msg.length);
+				const res = result.msg;
+				if (data != 'false') {
+					let temp = [...data];
+					res.map((v, i) => {
+						temp.push(v);
+					});
+					console.log('temp lenth', temp.length);
+					setData(temp);
+				} else {
+					setData(res);
+				}
+				setOffset(offset + 1);
+				setLoading(false);
+			},
+			err => {
+				console.log('getMissingReportList Error', err);
+				if (err == '검색 결과가 없습니다.') {
+					setData([]);
+				}
+				setLoading(false);
+			},
+		);
+	};
 
 	// 실종 데이터 불러오기 (아직 API 미작업 )
 	React.useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', () => {
-			getList();
-		});
-
-		const getList = () => {
-			getMissingReportList(
-				filterData,
-				data => {
-					// console.log('getMissingReportList data', data.msg[0]);
-					setData(data.msg);
-				},
-				err => {
-					console.log('getMissingReportList Error', err);
-					if (err == '검색 결과가 없습니다.') {
-						setData([]);
-					}
-				},
-			);
-		};
 		getList();
-		return unsubscribe;
+		setData('false');
+		setOffset(1);
 	}, [filterData]);
 
 	//제보 게시글 쓰기 클릭
@@ -120,6 +147,8 @@ export default MissingReportList = props => {
 			'보호 지역 선택',
 			selected => {
 				selected == '실종/제보 지역' ? setFilterData({...filterData, city: ''}) : setFilterData({...filterData, city: selected});
+				setData('false');
+				setOffset(1);
 				Modal.close();
 			},
 			() => {
@@ -158,6 +187,15 @@ export default MissingReportList = props => {
 		setOnlyMissing(false);
 	};
 
+	//리스트 페이징 작업
+	const onEndReached = () => {
+		console.log('EndReached', getData().length % PROTECT_REQUEST_MAIN_LIMIT);
+		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
+		if (getData().length % PROTECT_REQUEST_MAIN_LIMIT == 0) {
+			getList();
+		}
+	};
+
 	const getData = () => {
 		let filtered = data;
 		if (onlyMissing) {
@@ -165,26 +203,26 @@ export default MissingReportList = props => {
 		} else if (onlyReport) {
 			filtered = filtered.filter(v => v.feed_type != 'report');
 		}
-		if (filterData.city != '') {
-			let temp = [];
-			filtered.map((v, i) => {
-				if (v.report_witness_location) {
-					let split = v.report_witness_location.split(' ');
-					if (split[0].includes(filterData.city)) {
-						temp.push(v);
-					}
-				} else {
-					let address = v.missing_animal_lost_location;
-					let splitAddress = address.split('"');
-					let newMissingLocation = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
-					let split = newMissingLocation.split(' ');
-					if (split[0].includes(filterData.city)) {
-						temp.push(v);
-					}
-				}
-			});
-			filtered = temp;
-		}
+		// if (filterData.city != '') {
+		// 	let temp = [];
+		// 	filtered.map((v, i) => {
+		// 		if (v.report_witness_location) {
+		// 			let split = v.report_witness_location.split(' ');
+		// 			if (split[0].includes(filterData.city)) {
+		// 				temp.push(v);
+		// 			}
+		// 		} else {
+		// 			let address = v.missing_animal_lost_location;
+		// 			let splitAddress = address.split('"');
+		// 			let newMissingLocation = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
+		// 			let split = newMissingLocation.split(' ');
+		// 			if (split[0].includes(filterData.city)) {
+		// 				temp.push(v);
+		// 			}
+		// 		}
+		// 	});
+		// 	filtered = temp;
+		// }
 		return filtered;
 	};
 
@@ -291,6 +329,8 @@ export default MissingReportList = props => {
 						refreshing
 						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 						ListEmptyComponent={whenEmpty}
+						onEndReached={onEndReached} //Flatlist 페이징
+						onEndReachedThreshold={0.6} //페이징을 하는 타이밍
 						// https://reactnative.dev/docs/optimizing-flatlist-configuration
 						// removeClippedSubviews={true}
 						extraData={refreshing}
@@ -327,6 +367,13 @@ export default MissingReportList = props => {
 					)}
 				</View>
 			</View>
+			{loading ? (
+				<View style={searchProtectRequest.indicatorCont}>
+					<ActivityIndicator size="large" color={APRI10} />
+				</View>
+			) : (
+				<></>
+			)}
 		</View>
 	);
 };

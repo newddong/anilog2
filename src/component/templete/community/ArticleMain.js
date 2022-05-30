@@ -1,7 +1,7 @@
 import React from 'react';
-import {FlatList, Image, RefreshControl, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, FlatList, Image, RefreshControl, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import ArticleList from 'Root/component/organism/list/ArticleList';
-import {BLACK, GRAY10} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10} from 'Root/config/color';
 import {Check50, EmptyIcon, Rect50_Border, WriteBoard} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
 import {useNavigation} from '@react-navigation/core';
@@ -10,12 +10,14 @@ import Modal from 'Root/component/modal/Modal';
 import Loading from 'Root/component/molecules/modal/Loading';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {FREE_LIMIT, NETWORK_ERROR} from 'Root/i18n/msg';
+import {searchProtectRequest} from '../style_templete';
 
 export default ArticleMain = ({route}) => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
 	const [offset, setOffset] = React.useState(1);
 	const [refreshing, setRefreshing] = React.useState(false);
+	const [loading, setLoading] = React.useState(false);
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
@@ -31,6 +33,7 @@ export default ArticleMain = ({route}) => {
 	}, [refreshing]);
 
 	const fetchData = isRefresh => {
+		isRefresh ? false : setLoading(true);
 		getCommunityList(
 			{
 				limit: FREE_LIMIT, //50
@@ -49,6 +52,7 @@ export default ArticleMain = ({route}) => {
 					setData(res);
 				}
 				setOffset(offset + 1);
+				setLoading(false);
 			},
 			err => {
 				console.log('err / getCommunityList / ArticleMain : ', err);
@@ -60,6 +64,7 @@ export default ArticleMain = ({route}) => {
 				} else if (err.includes('없습니다')) {
 					setData([]);
 				}
+				setLoading(false);
 			},
 		);
 	};
@@ -144,55 +149,61 @@ export default ArticleMain = ({route}) => {
 		}
 		return <ListEmptyInfo text={text} />;
 	};
-
-	return (
-		<View style={[style.container]}>
-			<FlatList
-				data={[{}]}
-				refreshing
-				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-				extraData={refreshing}
-				renderItem={({item, index}) => {
-					return (
-						<>
-							<View style={{width: 654 * DP, alignSelf: 'center'}}>
-								<View style={[style.kindFilter]}>
-									<View style={[style.kindFilterItem]}>
-										<Text style={[txt.noto28, {color: GRAY10}]}> 잡담</Text>
-										{onlyTalk ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
-									</View>
-									<View style={[style.kindFilterItem]}>
-										<Text style={[txt.noto28, {color: GRAY10}]}> 질문</Text>
-										{onlyQuestion ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
-									</View>
-									<View style={[style.kindFilterItem]}>
-										<Text style={[txt.noto28, {color: GRAY10}]}> 모임</Text>
-										{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
+	if (data == 'false') {
+		return <Loading isModal={false} />;
+	} else
+		return (
+			<View style={[style.container]}>
+				<FlatList
+					data={[{}]}
+					refreshing
+					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+					extraData={refreshing}
+					renderItem={({item, index}) => {
+						return (
+							<>
+								<View style={{width: 654 * DP, alignSelf: 'center'}}>
+									<View style={[style.kindFilter]}>
+										<View style={[style.kindFilterItem]}>
+											<Text style={[txt.noto28, {color: GRAY10}]}> 잡담</Text>
+											{onlyTalk ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
+										</View>
+										<View style={[style.kindFilterItem]}>
+											<Text style={[txt.noto28, {color: GRAY10}]}> 질문</Text>
+											{onlyQuestion ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
+										</View>
+										<View style={[style.kindFilterItem]}>
+											<Text style={[txt.noto28, {color: GRAY10}]}> 모임</Text>
+											{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
+										</View>
 									</View>
 								</View>
-							</View>
-							{data == 'false' ? (
-								<Loading isModal={false} />
-							) : (
+
 								<ArticleList
 									items={getData()}
 									onPressArticle={onPressArticle} //게시글 내용 클릭
 									whenEmpty={whenEmpty}
 									onEndReached={onEndReached}
 								/>
-							)}
-						</>
-					);
-				}}
-				showsVerticalScrollIndicator={false}
-				listKey={({item, index}) => index}
-			/>
+							</>
+						);
+					}}
+					showsVerticalScrollIndicator={false}
+					listKey={({item, index}) => index}
+				/>
 
-			<TouchableOpacity onPress={onPressWrite} activeOpacity={0.8} style={[style.write, style.shadow]}>
-				<WriteBoard />
-			</TouchableOpacity>
-		</View>
-	);
+				<TouchableOpacity onPress={onPressWrite} activeOpacity={0.8} style={[style.write, style.shadow]}>
+					<WriteBoard />
+				</TouchableOpacity>
+				{loading ? (
+					<View style={searchProtectRequest.indicatorCont}>
+						<ActivityIndicator size="large" color={APRI10} />
+					</View>
+				) : (
+					<></>
+				)}
+			</View>
+		);
 };
 
 ArticleMain.defaultProps = {};

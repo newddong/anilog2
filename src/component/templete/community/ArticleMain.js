@@ -19,11 +19,16 @@ export default ArticleMain = ({route}) => {
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
-			fetchData();
+			// fetchData(); //포커스마다 새로 fetch를 시도하면 상세글을 갔다가 메인페이지로 돌아와도 기존의 스크롤로 이동을 하지 않음
 		});
-		// fetchData(); //페이지 진입시 api를 두 번 접속하게 됨.
+		fetchData(); //
 		return unsubscribe;
 	}, []);
+
+	//리프레싱 시도(페이지 상단으로 스크롤) => 데이터 최신화 및 페이징 초기화
+	React.useEffect(() => {
+		refreshing ? fetchData(true) : false;
+	}, [refreshing]);
 
 	const fetchData = isRefresh => {
 		getCommunityList(
@@ -61,7 +66,7 @@ export default ArticleMain = ({route}) => {
 
 	//리스트 페이징 작업
 	const onEndReached = () => {
-		// console.log('EndReached', getData().length % FREE_LIMIT);
+		console.log('EndReached', getData().length % FREE_LIMIT);
 		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
 		if (getData().length % FREE_LIMIT == 0) {
 			fetchData();
@@ -115,14 +120,10 @@ export default ArticleMain = ({route}) => {
 		return new Promise(resolve => setTimeout(resolve, timeout));
 	};
 	const onRefresh = () => {
-		setOffset(1);
+		setOffset(1); //리프레싱 시도 시, 데이터 및 페이징 초기화
 		setRefreshing(true);
 		wait(0).then(() => setRefreshing(false));
 	};
-
-	React.useEffect(() => {
-		refreshing ? fetchData(true) : false;
-	}, [refreshing]);
 
 	const getData = () => {
 		let filtered = data;

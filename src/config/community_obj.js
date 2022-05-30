@@ -13,4 +13,37 @@ export default community_obj = {
 			interests_location: {city: '', district: ''},
 		},
 	},
+	review: [],
+};
+
+export const updateReview = (isLike, id, bool) => {
+	console.log('updateReview isLike', isLike, 'id : ', id);
+	if (isLike) {
+		if (community_obj.review.length != 0) {
+			const findIndex = community_obj.review.findIndex(e => e._id == id);
+			console.log('updateReview : findIndex', findIndex);
+			if (findIndex != -1) {
+				let temp = [...community_obj.review];
+				temp[findIndex] = {
+					...temp[findIndex],
+					community_is_like: bool,
+					community_like_count: bool ? ++temp[findIndex].community_like_count : --temp[findIndex].community_like_count,
+				};
+				community_obj.review = temp;
+			}
+		}
+	} else {
+		if (community_obj.review.length != 0) {
+			const findIndex = community_obj.review.findIndex(e => e._id == id);
+			console.log('updateReview : findIndex', findIndex);
+			if (findIndex != -1) {
+				let temp = [...community_obj.review];
+				temp[findIndex] = {
+					...temp[findIndex],
+					community_is_favorite: bool,
+				};
+				community_obj.review = temp;
+			}
+		}
+	}
 };

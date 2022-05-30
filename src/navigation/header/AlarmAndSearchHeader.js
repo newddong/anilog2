@@ -26,11 +26,11 @@ export default AlarmAndSearchHeader = ({navigation, route, options, back}) => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			// The screen is focused
 			// Call any action
-			console.log('logoHeader foucesed', isLoginUser);
+			// console.log('logoHeader foucesed', isLoginUser);
 			getAlarmStatus(
 				{user_object_id: isLoginUser},
 				result => {
-					console.log('result', result);
+					// console.log('result', result);
 					if (result.msg.user_alarm) {
 						// console.log('reuslt isNewAlarm', result.msg.user_alarm);
 						setIsNewAlarm(result.msg.user_alarm);

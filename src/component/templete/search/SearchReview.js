@@ -13,6 +13,7 @@ import {useNavigation} from '@react-navigation/core';
 import searchContext from 'Root/config/searchContext';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
+import community_obj, {updateReview} from 'Root/config/community_obj';
 
 export default SearchReview = props => {
 	const navigation = useNavigation();
@@ -228,6 +229,38 @@ export default SearchReview = props => {
 		}
 	}
 
+	//댓글 모두 보기 클릭
+	const onPressReply = index => {
+		navigation.push('CommunityCommentList', {community_object: getData()[index]});
+	};
+
+	//리뷰 썸네일 클릭
+	const onPressReviewContent = index => {
+		navigation.push('ReviewDetail', {community_object: getData()[index], searchInput: searchInput});
+	};
+
+	//글쓰기 아이콘 클릭
+	const onPressWrite = () => {
+		navigation.navigate('CommunityWrite', {isReview: true});
+	};
+
+	//리뷰 즐겨찾기 클릭
+	const onPressFavorite = (index, bool) => {
+		console.log('index', index, bool);
+		setFavoriteEtc(
+			{
+				collectionName: 'communityobjects',
+				target_object_id: getData()[index]._id,
+				is_favorite: bool,
+			},
+			result => {
+				console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
+				updateReview(false, getData()[index]._id, bool);
+			},
+			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
+		);
+	};
+
 	//리뷰 좋아요 클릭
 	const onPressLike = (index, bool) => {
 		console.log('index', index, bool);
@@ -245,41 +278,11 @@ export default SearchReview = props => {
 				result => {
 					console.log('result/ onPressLike / SearchReview : ', result.msg);
 					props.resetCommunityList();
+					updateReview(true, getData()[index]._id, bool);
 				},
 				err => console.log('err / onPressLike / SearchReview : ', err),
 			);
 		}
-	};
-
-	//댓글 모두 보기 클릭
-	const onPressReply = index => {
-		navigation.push('CommunityCommentList', {community_object: getData()[index]});
-	};
-
-	//리뷰 썸네일 클릭
-	const onPressReviewContent = index => {
-		navigation.push('ReviewDetail', {community_object: getData()[index], searchInput: searchInput});
-	};
-
-	//글쓰기 아이콘 클릭
-	const onPressWrite = () => {
-		navigation.navigate('CommunityWrite', {isReview: true});
-	};
-
-	//즐겨찾기 클릭
-	const onPressFavorite = (index, bool) => {
-		console.log('index', index, bool);
-		setFavoriteEtc(
-			{
-				collectionName: 'communityobjects',
-				target_object_id: getData()[index]._id,
-				is_favorite: bool,
-			},
-			result => {
-				console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
-			},
-			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
-		);
 	};
 
 	//리스트에 출력될 리스트 목록 필터

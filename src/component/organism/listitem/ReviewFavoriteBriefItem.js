@@ -17,7 +17,7 @@ import moment from 'moment';
  * @param {boolean)} props.selectMode - 체크 박스 모드 여부
  */
 const ReviewFavoriteBriefItem = props => {
-	const data = props.data;
+	const [data, setData] = React.useState(props.data);
 	const [isLike, setIsLike] = React.useState(false);
 	const imageList = () => {
 		let imageList = [];
@@ -45,11 +45,13 @@ const ReviewFavoriteBriefItem = props => {
 
 	const onPressLike = () => {
 		setIsLike(true);
+		setData({...data, community_like_count: ++data.community_like_count});
 		props.onPressLike();
 	};
 
 	const onPressUnlike = () => {
 		setIsLike(false);
+		setData({...data, community_like_count: --data.community_like_count});
 		props.onPressUnlike();
 	};
 

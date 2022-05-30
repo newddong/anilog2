@@ -11,6 +11,7 @@ import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import SelectStat from 'Root/component/organism/list/SelectStat';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 import {Check50, Rect50_Border} from 'Root/component/atom/icon';
+import {updateProtect} from 'Root/config/protect_obj';
 
 export default FavoriteProtectRequest = ({route}) => {
 	const navigation = useNavigation();
@@ -108,6 +109,9 @@ export default FavoriteProtectRequest = ({route}) => {
 				cancelSelectMode(false);
 				checkSelectMode(false);
 				fetchData();
+				listToDelete.map((v, i) => {
+					updateProtect(v, false);
+				});
 			},
 			err => console.log('err / setFavoriteEtcCancelList / FavoriteReview : ', err),
 		);
@@ -163,6 +167,7 @@ export default FavoriteProtectRequest = ({route}) => {
 			result => {
 				console.log('result / favoriteEtc / ProtectRequestList : ', result.msg.favoriteEtc);
 				fetchData();
+				updateProtect(data[index]._id, bool);
 			},
 			err => {
 				console.log('err / favoriteEtc / PRotectRequestList : ', err);

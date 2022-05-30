@@ -257,6 +257,7 @@ export default FeedList = ({route, navigation}) => {
 							login_userobject_id: userGlobalObject.userInfo._id,
 						},
 						({msg}) => {
+							console.log(msg.length);
 							setFeedList(
 								msg
 									.map((v, i, a) => {
@@ -343,6 +344,20 @@ export default FeedList = ({route, navigation}) => {
 		}
 	};
 
+	//피드 상단 새로운 실종/제보
+	const MissingReport = () => {
+		if (route.name == 'MainHomeFeedList') {
+			return (
+				<View style={[styles.container]}>
+					<Text style={[txt.noto28b]}>새로운 실종/제보</Text>
+					<NewMissingReportList data={topList} />
+				</View>
+			);
+		} else {
+			<></>;
+		}
+	};
+
 	const renderItem = ({item}) => {
 		return <Feed data={item} deleteFeed={deleteFeedItem} />;
 	};
@@ -374,12 +389,12 @@ export default FeedList = ({route, navigation}) => {
 			'다중선택',
 			() => {
 				Modal.close();
-				navigation.push("SinglePhotoSelect",{prev:{name:route.name,key:route.key}});
+				navigation.push('SinglePhotoSelect', {prev: {name: route.name, key: route.key}});
 				// navigation.push('Crop');
 			},
 			() => {
 				Modal.close();
-				navigation.push('MultiPhotoSelect',{prev:{name:route.name,key:route.key}});
+				navigation.push('MultiPhotoSelect', {prev: {name: route.name, key: route.key}});
 			},
 		);
 	};

@@ -10,7 +10,6 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {getAlarmStatus} from 'Root/api/userapi';
 
-
 export default LogoHeader = ({navigation, route, options, back}) => {
 	const isLoginUser = userGlobalObject.userInfo?._id;
 	const [isNewAlarm, setIsNewAlarm] = React.useState();
@@ -21,11 +20,11 @@ export default LogoHeader = ({navigation, route, options, back}) => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			// The screen is focused
 			// Call any action
-			console.log('logoHeader foucesed', isLoginUser);
+			// console.log('logoHeader foucesed', isLoginUser);
 			getAlarmStatus(
 				{user_object_id: isLoginUser},
 				result => {
-					console.log('result', result);
+					// console.log('result', result);
 					if (result.msg.user_alarm) {
 						// console.log('reuslt isNewAlarm', result.msg.user_alarm);
 						setIsNewAlarm(result.msg.user_alarm);
@@ -40,7 +39,6 @@ export default LogoHeader = ({navigation, route, options, back}) => {
 		});
 		return unsubscribe;
 	}, [navigation]);
-
 
 	const clickSearch = () => {
 		navigation.navigate('Search', {mother: 0, child: 0, prevNav: route.name});

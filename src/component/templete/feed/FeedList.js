@@ -398,18 +398,18 @@ export default FeedList = ({route, navigation}) => {
 	};
 
 	//피드 상단 새로운 실종/제보
-	const MissingReport = () => {
-		if (route.name == 'MainHomeFeedList') {
-			return (
-				<View style={[styles.container]}>
-					<Text style={[txt.noto28b]}>새로운 실종/제보</Text>
-					<NewMissingReportList data={topList} />
-				</View>
-			);
-		} else {
-			<></>;
-		}
-	};
+	// const MissingReport = () => {
+	// 	if (route.name == 'MainHomeFeedList') {
+	// 		return (
+	// 			<View style={[styles.container]}>
+	// 				<Text style={[txt.noto28b]}>새로운 실종/제보</Text>
+	// 				<NewMissingReportList data={topList} />
+	// 			</View>
+	// 		);
+	// 	} else {
+	// 		<></>;
+	// 	}
+	// };
 
 	const [tl, setTl] = React.useState({});
 	const [cl, setCl] = React.useState({});

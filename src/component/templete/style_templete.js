@@ -112,6 +112,15 @@ export const login_style = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
+	basic_info2: {
+		flexDirection: 'row',
+		// width: 426 * DP,
+		width: 426 * DP,
+		height: 40 * DP,
+		// justifyContent: 'center',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+	},
 	social_info: {
 		width: 410 * DP,
 		height: 130 * DP,
@@ -132,6 +141,13 @@ export const btn_style = StyleSheet.create({
 		height: 60 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
+	},
+	btn_w694: {
+		width: 694 * DP,
+		height: 104 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		// backgroundColor: '#DEB5B5',
 	},
 	btn_w654: {
 		width: 654 * DP,
@@ -197,7 +213,7 @@ export const temp_style = StyleSheet.create({
 	},
 
 	stageBar: {
-		width: 654 * DP,
+		width: 640 * DP,
 		height: 32 * DP,
 	},
 	agreementCheckList: {
@@ -225,7 +241,7 @@ export const temp_style = StyleSheet.create({
 		paddingTop: 10,
 	},
 	phoneNumVerification: {
-		width: 654 * DP,
+		width: 659 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
@@ -1072,13 +1088,13 @@ export const loginTemplete_style = StyleSheet.create({
 		backgroundColor: '#A07A7A',
 	},
 	innerContainer: {
-		marginTop: 30,
+		// marginTop: 30,
 		alignItems: 'center',
 	},
 	without_login: {
-		width: 654 * DP,
+		width: 694 * DP,
 		height: 216 * DP,
-		marginTop: 80 * DP,
+		marginTop: 30 * DP,
 	},
 	without_login_text: {
 		width: 278 * DP,
@@ -1096,33 +1112,35 @@ export const loginTemplete_style = StyleSheet.create({
 		height: 346 * DP,
 	},
 	idInput: {
-		marginBottom: 30 * DP,
+		marginBottom: 20 * DP,
 	},
 	pwdInput: {},
 	checkBox_loginFormContainer: {
-		width: 522 * DP,
-		height: 89 * DP,
+		width: 450 * DP,
+		height: 42 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',
 		alignSelf: 'center',
+		// backgroundColor: 'yellow',
 	},
 	checkBox_loginForm: {
-		width: 432 * DP,
-		height: 50 * DP,
+		width: 450 * DP,
+		height: 42 * DP,
 		flexDirection: 'row',
+		justifyContent: 'space-between',
 	},
 	checkBoxContainer: {
 		marginTop: 10 * DP,
-		marginHorizontal: 20 * DP,
+		// marginHorizontal: 20 * DP,
 	},
 	btn_w522_login: {
-		marginTop: 88 * DP,
+		marginTop: 92 * DP,
 	},
 	btn_w522_assign: {
-		marginTop: 50 * DP,
+		marginTop: 30 * DP,
 	},
 	basic_info: {
-		marginTop: 32 * DP,
+		marginTop: 50 * DP,
 	},
 	social_info: {
 		flexDirection: 'row',
@@ -1244,17 +1262,18 @@ export const assignUserHabitation_style = StyleSheet.create({
 		width: 654 * DP,
 	},
 	info_text: {
-		width: 654 * DP,
+		width: 694 * DP,
 		marginTop: 12 * DP,
 		color: GRAY10,
 		alignSelf: 'flex-start',
 	},
 	habitationForm: {
-		width: 654 * DP,
-		height: 366 * DP,
+		width: 694 * DP,
+		// height: 366 * DP,
+		height: 554 * DP,
 		marginTop: 80 * DP,
 		justifyContent: 'space-between',
-		alignItems: 'center',
+		// alignItems: 'center',
 	},
 });
 

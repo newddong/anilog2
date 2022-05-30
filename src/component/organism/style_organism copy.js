@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {APRI10, GRAY10, GRAY20, GRAY30, GRAY40, WHITE} from 'Root/config/color';
+import {APRI10, GRAY10, GRAY20, GRAY30, GRAY40, MAINBLACK, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 
 export const BGCOLOR = '#B5DED8';
@@ -1254,13 +1254,15 @@ export const stagebar_style = StyleSheet.create({
 		backgroundColor: 'white',
 		borderRadius: 20 * DP,
 		borderWidth: 4 * DP,
-		borderColor: APRI10,
+		// borderColor: APRI10,
+		borderColor: MAINBLACK,
 	},
 	insideBar: {
 		width: 80 * DP,
 		height: 20 * DP,
-		backgroundColor: APRI10,
+		// backgroundColor: APRI10,
 		borderRadius: 18 * DP,
+		backgroundColor: MAINBLACK,
 	},
 	text: {
 		marginLeft: 18 * DP,

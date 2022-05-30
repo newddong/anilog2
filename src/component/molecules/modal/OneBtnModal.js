@@ -27,7 +27,7 @@ const OneBtnModal = props => {
 			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
 				<Text style={[txt.noto28, style.msg]}>{props.popUpMsg}</Text>
 				<View style={style.buttonContainer}>
-					<AniButton btnLayout={btn_w226} btnStyle={'filled'} btnTitle={props.okMsg} onPress={pressOk} />
+					<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.okMsg} onPress={pressOk} />
 				</View>
 			</TouchableOpacity>
 		</TouchableOpacity>

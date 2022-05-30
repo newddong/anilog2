@@ -7,7 +7,7 @@ import {login_style, btn_style, temp_style, progressbar_style, assignUserHabitat
 import Modal from 'Component/modal/Modal';
 import {stagebar_style} from 'Organism/style_organism copy';
 import {getAddressList} from 'Root/api/address';
-import {APRI10} from 'Root/config/color';
+import {APRI10, GRAY10, GRAY20, GRAY30, GRAY40, MAINBLACK} from 'Root/config/color';
 import {Arrow_Down_GRAY10} from 'Atom/icon';
 import StageBar from 'Molecules/info/Stagebar';
 
@@ -131,32 +131,36 @@ const AssignUserHabitation = props => {
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
 			{/* (M)StageBar	 */}
-			<View style={[temp_style.stageBar, progressbar_style.stageBar]}>
+			<View style={[temp_style.stageBar, {marginTop: 20 * DP}]}>
 				<StageBar
-					backgroundBarStyle={stagebar_style.backgroundBar} //배경이 되는 bar의 style, width props으로 너비결정됨
-					insideBarStyle={stagebar_style.insideBar} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
+					backgroundBarStyle={styles.backgroundBar} //배경이 되는 bar의 style, width props으로 너비결정됨
+					// insideBarStyle={stagebar_style.insideBar} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
 					textStyle={[txt.roboto24, stagebar_style.text]} //text의 스타일
+					insideBarStyle={{width: 160 * DP, height: 20 * DP, backgroundColor: MAINBLACK, borderRadius: 18 * DP}} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
 					current={4} //현재 단계를 정의
 					maxstage={4} //전체 단계를 정의
-					width={600 * DP} //bar의 너비
+					width={640 * DP} //bar의 너비
 				/>
 			</View>
 			{/* Text Msg */}
 			<View style={[assignUserHabitation_style.textContainer]}>
-				<Text style={[txt.noto24, assignUserHabitation_style.info_text]}>사는 지역을 알려주세요.</Text>
+				<Text style={[txt.noto26, assignUserHabitation_style.info_text]}>거주하시는 지역을 대략적으로 알려주세요</Text>
 			</View>
 			{/* HabitationForm */}
 			<View style={[assignUserHabitation_style.habitationForm]}>
-				<TouchableOpacity onPress={onPressCity} style={[style.addressContainer]}>
-					<Text style={[txt.noto28, style.addressText]}>{data.user_address.city ? data.user_address.city : '도, 광역시를 선택해주세요.'}</Text>
+				<Text style={[txt.noto28, {height: 44 * DP}]}>시도</Text>
+				<TouchableOpacity onPress={onPressCity} style={[styles.addressContainer]}>
+					<Text style={[txt.noto28, styles.addressText]}>{data.user_address.city ? data.user_address.city : '도, 광역시를 선택해주세요.'}</Text>
 					<Arrow_Down_GRAY10 />
 				</TouchableOpacity>
-				<TouchableOpacity onPress={onPressDistrict} style={[style.addressContainer]}>
-					<Text style={[txt.noto28, style.addressText]}>{data.user_address.district}</Text>
+				<Text style={[txt.noto28]}>시군구</Text>
+				<TouchableOpacity onPress={onPressDistrict} style={[styles.addressContainer]}>
+					<Text style={[txt.noto28, styles.addressText]}>{data.user_address.district}</Text>
 					<Arrow_Down_GRAY10 />
 				</TouchableOpacity>
-				<TouchableOpacity onPress={onPressNeighbor} style={[style.addressContainer]}>
-					<Text style={[txt.noto28, style.addressText]}>{data.user_address.neighbor}</Text>
+				<Text style={[txt.noto28]}>읍면동</Text>
+				<TouchableOpacity onPress={onPressNeighbor} style={[styles.addressContainer]}>
+					<Text style={[txt.noto28, styles.addressText]}>{data.user_address.neighbor}</Text>
 					<Arrow_Down_GRAY10 />
 				</TouchableOpacity>
 			</View>
@@ -174,19 +178,32 @@ const AssignUserHabitation = props => {
 
 export default AssignUserHabitation;
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
 	addressContainer: {
-		width: 634 * DP,
-		borderBottomColor: APRI10,
-		borderBottomWidth: 2 * DP,
-		paddingVertical: 12 * DP,
+		width: 694 * DP,
+		height: 104 * DP,
+		// borderBottomColor: APRI10,
+		// borderBottomWidth: 2 * DP,
+		borderRadius: 30 * DP,
+
+		// paddingVertical: 12 * DP,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		paddingLeft: 24 * DP,
+		backgroundColor: '#FAFAFA',
 	},
 	addressText: {
-		width: 538 * DP,
+		width: 586 * DP,
 		textAlign: 'center',
+	},
+	backgroundBar: {
+		width: 640 * DP,
+		height: 20 * DP,
+		backgroundColor: 'white',
+		borderRadius: 20 * DP,
+		borderWidth: 4 * DP,
+		// borderColor: APRI10,
+		borderColor: MAINBLACK,
 	},
 });

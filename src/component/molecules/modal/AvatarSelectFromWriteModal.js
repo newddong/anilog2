@@ -135,7 +135,9 @@ const AvatarSelectFromWriteModal = props => {
 				<TouchableOpacity
 					activeOpacity={1}
 					onPress={() => Modal.close()}
-					style={[style.popUpWindow, {marginBottom: Platform.OS == 'android' ? 180 * DP : 235 * DP}]}>
+					// android 180 ios 235 였음
+					// style={[style.popUpWindow, {marginBottom: Platform.OS == 'android' ? 180 * DP : 275 * DP}, {backgroundColor: 'yellow'}]}>
+					style={[style.popUpWindow, {marginBottom: Platform.OS == 'android' ? 145 * DP : 240 * DP}]}>
 					{scrollUp()}
 					<View style={[style.avatarList]}>
 						<FlatList
@@ -173,6 +175,24 @@ const AvatarSelectFromWriteModal = props => {
 							</TouchableOpacity>
 						)}
 					</View>
+
+					<View
+						style={[
+							{
+								// height: 94 * DP,
+								// width: 94 * DP,
+								alignSelf: 'flex-end',
+								justifyContent: 'center',
+								alignItems: 'center',
+								// backgroundColor: '#ff9888',
+								backgroundColor: 'red',
+								borderRadius: 35 * DP,
+								marginBottom: -5 * DP,
+							},
+							// style.shadow,
+						]}>
+						<Write94 />
+					</View>
 				</TouchableOpacity>
 			</TouchableOpacity>
 		);
@@ -199,6 +219,7 @@ const style = StyleSheet.create({
 	popUpWindow: {
 		// width: 488 * DP,
 		marginBottom: 235 * DP,
+
 		marginRight: 35 * DP,
 		// backgroundColor: 'white',
 	},

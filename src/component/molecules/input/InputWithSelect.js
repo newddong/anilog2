@@ -73,8 +73,8 @@ const InputWithSelect = props => {
 					alignItems: 'center',
 				}}>
 				{/* <NormalDropDown menu={props.items} width={200} defaultIndex={props.defaultIndex ? props.defaultIndex : 0} onSelect={onSelectDropDown} /> */}
-				<SelectInput onPressInput={onSelectDropDown} noBorder={false} value={dropdownVal} width={200} />
-				<View style={{marginLeft: 20 * DP}}>
+				<SelectInput onPressInput={onSelectDropDown} noBorder={true} value={dropdownVal} width={200} />
+				<View>
 					<Input24
 						placeholder={props.placeholder}
 						value={input}
@@ -89,6 +89,7 @@ const InputWithSelect = props => {
 						maxlength={props.maxlength}
 						onValid={onValid}
 						width={props.width || 450}
+						height={104}
 						verified={props.verified}
 					/>
 				</View>

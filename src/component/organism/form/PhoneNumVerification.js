@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Text, View, StyleSheet} from 'react-native';
 import {APRI10, GRAY10, GREEN} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {mobile_carrier} from 'Root/i18n/msg';
@@ -14,6 +14,7 @@ import {phoneNumVerification} from 'Organism/style_organism copy';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import DP from 'Root/config/dp';
 import {style} from 'Root/component/templete/protection/EditAidRequest';
+import Input24 from 'Root/component/molecules/input/Input24';
 /**
  *
  *@param {{
@@ -126,8 +127,8 @@ export default PhoneNumVerification = props => {
 
 	return (
 		<View style={[phoneNumVerification.container]}>
-			<View style={[temp_style.input30, phoneNumVerification.input30]}>
-				<Input30
+			<View style={[styles.input30]}>
+				{/* <Input30
 					showTitle={false}
 					width={654 * DP}
 					placeholder={'이름 입력'}
@@ -141,12 +142,36 @@ export default PhoneNumVerification = props => {
 					alert_msg={'이름은 2자 이상으로 설정해주세요 '}
 					confirm_msg={'양식에 맞는 이름입니다.'}
 					maxLength={15}
+				/> */}
+				<Input24
+					showTitle={false}
+					width={694}
+					height={104}
+					placeholder={'이름 입력'}
+					onChange={onNameInputChange}
+					onValid={onValidName}
+					validator={nameValidator}
+					value={userName}
+					confirm={nameValidator}
+					// confirm
+
+					// showMsg={true}
+					alert_msg={'이름은 2자 이상으로 설정해주세요 '}
+					confirm_msg={'양식에 맞는 이름입니다.'}
+					maxLength={15}
 				/>
 			</View>
 			{/* <View style={[temp_style.input30, phoneNumVerification.input30]}> */}
-			<View style={[temp_style.inputWithSelect, {justifyContent: 'flex-start'}, {alignItems: 'flex-start'}, {flexDirection: 'row'}]}>
+			<View
+				style={[
+					styles.inputWithSelect,
+					{justifyContent: 'flex-start'},
+					{alignItems: 'flex-start'},
+					{flexDirection: 'row'},
+					// {backgroundColor: 'yellow'},
+				]}>
 				<InputWithSelect
-					width={800 * DP}
+					width={492}
 					items={mobile_carrier}
 					delimiter="|"
 					placeholder={'휴대폰 번호 입력(-제외)'}
@@ -155,7 +180,7 @@ export default PhoneNumVerification = props => {
 					onValid={onValidMobileNum}
 					validator={mobileValidator}
 					maxlength={12}
-					// showMsg
+					// showMsg={true}
 					// confirm_msg={'휴대전화 양식과 일치합니다.'}
 					keyboardType="numeric"
 					verified={props?.phoneVerified}
@@ -224,3 +249,23 @@ PhoneNumVerification.defaultProps = {
 	onMobileCompanyInputChange: e => console.log(e),
 	asyncConfirm: true,
 };
+const styles = StyleSheet.create({
+	inputWithSelect: {
+		width: 694 * DP,
+		// height: 122 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	// input30: {
+	// 	height: 104 * DP,
+	// 	marginBottom: 60 * DP,
+	// },
+	input30: {
+		width: 694 * DP,
+		height: 104 * DP,
+		marginBottom: 60 * DP,
+		// paddingBottom: 60 * DP,
+
+		// backgroundColor: '#DEB5B5',
+	},
+});

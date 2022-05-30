@@ -21,6 +21,7 @@ import Modal from 'Root/component/modal/Modal';
 export default FollowerList = props => {
 	const navigation = useNavigation();
 	const isFollowing = props.route.name != 'FollowingList';
+	const [input, setInput] = React.useState('');
 	const [loading, setLoading] = React.useState(false);
 	const [follower, setFollower] = React.useState([]);
 	const [follow, setFollow] = React.useState([]);
@@ -85,6 +86,7 @@ export default FollowerList = props => {
 	const onChangeSearchInput = text => {
 		// setSearchInput(text);
 		setLoading(true);
+		setInput(text);
 		props.onChangeSearchInput(text);
 	};
 
@@ -99,7 +101,7 @@ export default FollowerList = props => {
 			<View style={[followerList.container]}>
 				<ScrollView style={[{flex: 0}]}>
 					<View style={[followerList.inputWitchSearch, {alignSelf: 'center'}]}>
-						<InputWithSearchIcon onChange={onChangeSearchInput} onSearch={onSearch} placeholder={'검색어를 입력해주세요.'} />
+						<InputWithSearchIcon value={input} onChange={onChangeSearchInput} onSearch={onSearch} placeholder={'검색어를 입력해주세요.'} />
 					</View>
 					{loading ? (
 						<Loading isModal={false} />
@@ -110,7 +112,7 @@ export default FollowerList = props => {
 									items={follower}
 									showButtons={true}
 									onClickAccount={onClickAccount}
-									title={!isFollowing ? '' : '팔로잉'}
+									title={!isFollowing ? '팔로우' : '팔로잉'}
 									onClickFollowBtn={onClickFollowBtn}
 									onClickUnFollowBtn={onClickUnFollowBtn}
 									showFollowStatusText={false}
@@ -121,7 +123,7 @@ export default FollowerList = props => {
 									items={follow}
 									showButtons={true}
 									onClickAccount={onClickAccount}
-									title={!isFollowing ? '' : '팔로잉'}
+									title={!isFollowing ? '팔로우' : '팔로잉'}
 									onClickUnFollowBtn={onClickUnFollowBtn}
 									onClickFollowBtn={onClickFollowBtn}
 									showFollowStatusText={false}

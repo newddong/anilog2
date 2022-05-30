@@ -2,9 +2,7 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {View, TouchableOpacity, TextInput} from 'react-native';
 import DP from 'Root/config/dp';
-import {APRI10, GRAY30} from 'Root/config/color';
 import {Cross24_Filled, Cross48, Search48} from 'Atom/icon';
-import searchContext from 'Root/config/searchContext';
 /**
  * 검색 기능이 추가된 인풋 컴포넌트
  * @param {object} props - Props Object
@@ -16,6 +14,7 @@ import searchContext from 'Root/config/searchContext';
  * @param {()=>void} props.onClear - 지우기 버튼(X) 클릭시 동작하는 콜백
  * @param {()=>void} props.onFocus - 포커스 콜백
  * @param {()=>void} props.onBlur - 인풋 포커스 해제 콜백
+ * @param {boolean} props.showCrossMark - X마크 출력 여부
  */
 const InputWithSearchIcon = props => {
 	const [input, setInput] = React.useState('');
@@ -52,13 +51,13 @@ const InputWithSearchIcon = props => {
 	};
 
 	return (
-		<View style={{flexDirection: 'row'}}>
+		<View style={{flexDirection: 'row', backgroundColor: '#FAFAFA', height: 104 * DP, borderRadius: 30 * DP}}>
 			{/* 하단테두리는 2px, APRI설정 */}
 			<View
 				style={{
-					height: 82 * DP,
-					borderBottomWidth: 2 * DP,
-					borderBottomColor: input.length == 0 ? GRAY30 : APRI10,
+					height: 104 * DP,
+					// borderBottomWidth: 2 * DP,
+					// borderBottomColor: input.length == 0 ? GRAY30 : APRI10,
 					width: props.width * DP,
 					alignItems: 'center',
 					flexDirection: 'row',
@@ -75,7 +74,6 @@ const InputWithSearchIcon = props => {
 					style={[
 						txt.roboto28,
 						{
-							//TextInput과 바깥 View와의 거리 24px, lineHeight는 글꼴크기와 일치
 							paddingLeft: 24 * DP,
 							// lineHeight: 48 * DP,
 							// backgroundColor: 'red',
@@ -84,7 +82,7 @@ const InputWithSearchIcon = props => {
 					]}
 				/>
 				<View style={{flexDirection: 'row', position: 'absolute', alignItems: 'center', right: 0}}>
-					{input.length == 0 ? <></> : <Cross24_Filled onPress={onClear} />}
+					{props.showCrossMark ? input.length == 0 ? <></> : <Cross24_Filled onPress={onClear} /> : <></>}
 					{/* SearchIcon은 X 마크와 14px 차이 */}
 					<TouchableOpacity onPress={onSearch} style={{marginHorizontal: 20 * DP}}>
 						<Search48 />
@@ -103,6 +101,7 @@ InputWithSearchIcon.defaultProps = {
 	onClear: e => console.log(e),
 	onFocus: () => {},
 	onBlur: () => {},
+	showCrossMark: true,
 };
 
 export default InputWithSearchIcon;

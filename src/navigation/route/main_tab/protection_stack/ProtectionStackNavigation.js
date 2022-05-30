@@ -57,7 +57,11 @@ export default ProtectionStackNavigation = props => {
 				component={EditAidRequest}
 				options={{header: props => <SendHeader {...props} />, title: '보호 요청 게시글 수정'}}
 			/>
-			<ProtectionStack.Screen name="FeedListForHashTag" component={FeedListForHashTag} />
+			<ProtectionStack.Screen
+				name="FeedListForHashTag"
+				component={FeedListForHashTag}
+				options={{header: props => <SimpleHeader {...props} />, title: '#해시태그'}}
+			/>
 			<ProtectionStack.Screen
 				name="FeedCommentList"
 				component={FeedCommentList}

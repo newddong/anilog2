@@ -13,7 +13,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import {getCommunityListByUserId} from 'Root/api/community';
 import {EmptyIcon} from 'Root/component/atom/icon';
 import {txt} from 'Root/config/textstyle';
-import {NETWORK_ERROR} from 'Root/i18n/msg';
+import {NETWORK_ERROR, REVIEW_BRIEF_LIMIT, REVIEW_LIMIT} from 'Root/i18n/msg';
 
 //즐겨찾기한 피드목록을 조회
 export default FavoriteReview = ({route}) => {
@@ -21,6 +21,7 @@ export default FavoriteReview = ({route}) => {
 	const [data, setData] = React.useState('false');
 	const [selectMode, setSelectMode] = React.useState(false);
 	const [selectCNT, setSelectCNT] = React.useState(0);
+	const [offset, setOffset] = React.useState(1);
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
@@ -34,12 +35,24 @@ export default FavoriteReview = ({route}) => {
 		route.name == 'MyReview'
 			? getCommunityListByUserId(
 					{
+						limit: REVIEW_BRIEF_LIMIT,
+						page: offset,
 						userobject_id: userGlobalObject.userInfo._id,
-						community_type: 'all',
+						community_type: 'review',
 					},
 					result => {
-						console.log('result / getCommunityListByUserId / FavoriteCommunity', result.msg.free.length);
-						setData(result.msg.review);
+						console.log('result.msg.review', result.msg.review.length);
+						const res = result.msg.review.filter(
+							e => e.community_writer_id != null && e.community_writer_id.user_nickname == userGlobalObject.userInfo.user_nickname,
+						);
+						console.log('result / getCommunityListByUserId / FavoriteCommunity', res.length);
+						if (data != 'false') {
+							console.log('temp lenth', [...data, ...res].length);
+							setData([...data, ...res]);
+						} else {
+							setData(res);
+						}
+						setOffset(offset + 1);
 					},
 					err => {
 						console.log('err / getCommunityListByUserId / FavoriteCommunity : ', err);
@@ -84,6 +97,16 @@ export default FavoriteReview = ({route}) => {
 						}
 					},
 			  );
+	};
+
+	//리스트 페이징 작업
+	const onEndReached = () => {
+		console.log('EndReached', data.length % REVIEW_BRIEF_LIMIT);
+		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
+		//리뷰 메인 페이지에서는 필터가 적용이 되었을 때도 api 접속 불필요
+		if (data.length % REVIEW_BRIEF_LIMIT == 0) {
+			fetchData();
+		}
 	};
 
 	//Check Box On
@@ -181,25 +204,7 @@ export default FavoriteReview = ({route}) => {
 
 	//선택모드가 아닌 상태에서 리뷰를 클릭
 	const onPressReview = index => {
-		console.log('index', index);
-		community_obj.object = data[index];
-		community_obj.pageToMove = 'ReviewDetail';
-		community_obj.initial = false;
-		console.log('community_obj.current', community_obj.current);
-		if (community_obj.current == '') {
-			//탭 간의 이동을 간편히 하기 위해 만든 community_obj의 current 값이 빈값 == 현재 보고 있는 ArticleDetail이 없음
-			//우선 ArticleMain의 스택을 쌓기 위해 ArticleMain으로 먼저 보낸 뒤 바로 이동되어야 할 상세 자유 게시글을 여기서 선언 => Parameter로 보냄
-			// navigation.navigate('COMMUNITY', {screen: 'ReviewMain', initial: false, params: {community_object: data[index], pageToMove: 'ReviewDetail'}});
-			navigation.push('ReviewDetail', {community_object: data[index]});
-		} else {
-			//이미 보고 있는 ArticleDetail이 존재하므로 ArticleDetail 템플릿을 덮어씌우고 봐야할 상세 자유 게시글은 Parameter로 송신
-			navigation.push('ReviewDetail', {community_object: data[index]});
-			// navigation.navigate('COMMUNITY', {
-			// 	screen: 'ReviewDetail',
-			// 	initial: false,
-			// 	params: {community_object: data[index], reset: true},
-			// });
-		}
+		navigation.push('ReviewDetail', {community_object: data[index]});
 	};
 
 	//리뷰 좋아요 클릭
@@ -267,6 +272,7 @@ export default FavoriteReview = ({route}) => {
 						onPressUnlike={i => onPressLike(i, false)}
 						onPressCheck={onPressCheck}
 						whenEmpty={whenEmpty}
+						onEndReached={onEndReached}
 					/>
 				</View>
 			</View>

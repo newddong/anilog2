@@ -96,7 +96,13 @@ export default AddVolunteers = ({route, navigation}) => {
 	return (
 		<View style={[style.container]}>
 			<View style={[addVolunteers.inputWithSearchIcon]}>
-				<InputWithSearchIcon onSearch={search} onChange={onChangeKeyword} width={654} placeholder={'봉사 활동을 함께 할 계정을 검색해주세요.'} />
+				<InputWithSearchIcon
+					value={searchInput}
+					onSearch={search}
+					onChange={onChangeKeyword}
+					width={654}
+					placeholder={'봉사 활동을 함께 할 계정을 검색해주세요.'}
+				/>
 			</View>
 			<ScrollView contentContainerStyle={[addVolunteers.accountList]}>
 				{load ? (

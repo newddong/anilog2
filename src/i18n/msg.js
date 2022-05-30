@@ -553,3 +553,17 @@ export const UNAVAILABLE_REQUEST_STATUS = [
 
 //유저 프로필 없음 메시지
 export const IS_LEAVE_USER = '탈퇴한 계정입니다.';
+
+//커뮤니티 글쓰기 Placeholder
+export const WRITE_REVIEW_INFO = '서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.';
+export const WRITE_FREE_INFO = '내용을 작성해 주세요.';
+
+//FlatList LIMIT 모음
+export const PROTECT_REQUEST_MAIN_LIMIT = 50; //보호요청게시글 메인
+export const FREE_LIMIT = 50; //자유게시판 메인
+export const REVIEW_LIMIT = 10; //리뷰게시판 메인
+export const REVIEW_BRIEF_LIMIT = 20; //리뷰게시물 요약 컴포넌트
+export const FEED_LIMIT = 10; //피드 메인
+export const ANIMAL_PROTECT_LIMIT = 10; //Usermenu => 동물보호 현황(임시보호 중인 동물 현황)
+export const ANIMAL_ADOPT_LIMIT = 20; //UserMenu => 신청 내역 => 입양 신청 더보기 클릭
+export const PROTECT_REQUEST_DETAIL_LIMIT = 10; //보호요청게시글 상세 하단 리스트

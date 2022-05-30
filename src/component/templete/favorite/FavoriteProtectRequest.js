@@ -33,11 +33,13 @@ export default FavoriteProtectRequest = ({route}) => {
 				collectionName: 'protectrequestobjects',
 			},
 			result => {
-				console.log('result / getFavoriteEtcListByUserId / FavoriteProtectRequest : ', result.msg[0]);
+				// console.log('result / getFavoriteEtcListByUserId / FavoriteProtectRequest : ', result.msg[0]);
 				let temp = [];
 				result.msg.map((v, i) => {
-					// v.favorite_etc_target_object_id.is_favorite = v.is_favorite;
-					// temp.push(v.favorite_etc_target_object_id);
+					if (v) {
+						v.favorite_etc_target_object_id.is_favorite = v.is_favorite;
+						temp.push(v.favorite_etc_target_object_id);
+					}
 				});
 				setData(temp);
 			},

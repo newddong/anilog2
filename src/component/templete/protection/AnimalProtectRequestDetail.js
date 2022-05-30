@@ -23,6 +23,7 @@ import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import {NETWORK_ERROR, PROTECT_REQUEST_DETAIL_LIMIT, UNAVAILABLE_REQUEST_STATUS} from 'Root/i18n/msg';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
+import {updateProtect} from 'Root/config/protect_obj';
 
 //AnimalProtectRequestDetail 호출 경로
 // - ProtectRequestList(보호활동탭) , AnimalFromShelter(게시글보기) , AidRequestManage(게시글보기), AidRequestAnimalList(게시글 보기)
@@ -209,6 +210,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 			},
 			result => {
 				console.log('result / setFavoriteEtc /  :', result.msg.favoriteEtc);
+				updateProtect(writersAnotherRequests[index]._id, bool);
 			},
 			err => {
 				console.log('err / setFavoriteEtc / : ', err);
@@ -219,6 +221,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		);
 	};
 
+	//사진 썸네일 클릭
 	const onPressReqeustPhoto = () => {
 		console.log('v', data.protect_request_photos_uri);
 		Modal.popPhotoListViewModal(data.protect_request_photos_uri);

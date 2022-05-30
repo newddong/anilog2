@@ -8,33 +8,148 @@ import ArticleList from 'Root/component/organism/list/ArticleList';
 import {useNavigation} from '@react-navigation/core';
 import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import {updateAndDeleteCommunity} from 'Root/api/community';
-import community_obj from 'Root/config/community_obj';
+import {getCommunityListByUserId, updateAndDeleteCommunity} from 'Root/api/community';
+import community_obj, {updateReview} from 'Root/config/community_obj';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import {EmptyIcon} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
-import {REPORT_MENU} from 'Root/i18n/msg';
+import {FREE_LIMIT, REPORT_MENU, REVIEW_LIMIT} from 'Root/i18n/msg';
 
 /**
  *  프로필탭 커뮤니티 글 출력용 컴포넌트
  * @param {object} props - Props Object
  * @param {object} props.data - 데이터
  * @param {()=>void)} props.onPressArticle - 내용 클릭
+ * @param {()=>void)} props.onPressArticle - 내용 클릭
  * @param {string} props.isSearch - 검색어
+ * @param {boolean} props.initializeCommList - 커뮤니티 리스트 초기화
  */
 const CommunityList = React.memo(props => {
 	const navigation = useNavigation();
-	const [data, setData] = React.useState('false' || {review: [], free: []});
+	const [free, setFree] = React.useState('false');
+	const [review, setReview] = React.useState('false');
 	const [type, setType] = React.useState('free');
+	const [freeOffset, setFreeOffset] = React.useState(1);
+	const [reviewOffset, setReviewOffset] = React.useState(1);
+	const [refresh, setRefresh] = React.useState(false);
+
+	React.useEffect(() => {
+		getArticleList();
+		getReviewList();
+	}, []);
 
 	//즐겨찾기버튼을 클릭할 시 data를 최신상태로 갱신하기 위한 setState처리
 	React.useEffect(() => {
-		setData(props.data);
+		if (free != 'false' && review != 'false') {
+			setReviewOffset(1);
+			setFreeOffset(1);
+			onRefresh();
+		}
 	}, [props.data]);
+
+	React.useEffect(() => {
+		if (refresh) {
+			getArticleList(true);
+			getReviewList(true);
+		}
+	}, [refresh]);
+
+	const wait = timeout => {
+		return new Promise(resolve => setTimeout(resolve, timeout));
+	};
+	const onRefresh = () => {
+		setRefresh(true);
+		wait(0).then(() => setRefresh(false));
+	};
+
+	const getArticleList = isRefresh => {
+		console.log('isRefresh', isRefresh, freeOffset);
+		getCommunityListByUserId(
+			{
+				userobject_id: props.user_id,
+				community_type: 'free',
+				limit: FREE_LIMIT,
+				page: freeOffset,
+			},
+			result => {
+				console.log('result / getCommunityListuser / CommunityList : Free', result.msg.free.length);
+				const res = result.msg.free;
+				if (isRefresh) {
+					setFree(res);
+				} else if (free != 'false') {
+					console.log('temp lenth', [...free, ...res].length);
+					setFree([...free, ...res]);
+				} else {
+					setFree(res);
+				}
+				setFreeOffset(freeOffset + 1);
+			},
+			err => {
+				if (err.includes('code 500')) {
+					setFree([]);
+					Modal.popNetworkErrorModal('서버에서 정보를 받아오지 못했습니다.');
+				} else if (err.includes('없습니다')) {
+					setFree([]);
+				}
+			},
+		);
+	};
+
+	const getReviewList = isRefresh => {
+		console.log('isRefresh', isRefresh, reviewOffset);
+		getCommunityListByUserId(
+			{
+				userobject_id: props.user_id,
+				community_type: 'review',
+				limit: REVIEW_LIMIT,
+				page: reviewOffset,
+			},
+			result => {
+				console.log('result / getCommunityListuser / CommunityList : Review ', result.msg.review.length);
+				const res = result.msg.review;
+				if (isRefresh) {
+					setReview(res);
+				} else if (review != 'false') {
+					console.log('temp lenth', [...review, ...res].length);
+					setReview([...review, ...res]);
+				} else {
+					setReview(res);
+				}
+				setReviewOffset(reviewOffset + 1);
+			},
+			err => {
+				if (err.includes('code 500')) {
+					setReview([]);
+					Modal.popNetworkErrorModal('서버에서 정보를 받아오지 못했습니다.');
+				} else if (err.includes('없습니다')) {
+					setReview([]);
+				}
+			},
+		);
+	};
+
+	//리스트 페이징 작업
+	const onEndReached = commtype => {
+		if (commtype == 'free') {
+			console.log('EndReached Free', free.length % FREE_LIMIT);
+			//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
+			//리뷰 메인 페이지에서는 필터가 적용이 되었을 때도 api 접속 불필요
+			if (free.length % FREE_LIMIT == 0) {
+				type == 'free' ? getArticleList() : false;
+			}
+		} else {
+			console.log('EndReached Review', review.length % REVIEW_LIMIT);
+			//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
+			//리뷰 메인 페이지에서는 필터가 적용이 되었을 때도 api 접속 불필요
+			if (review.length % REVIEW_LIMIT == 0) {
+				type == 'free' ? false : getReviewList();
+			}
+		}
+	};
 
 	//자유 게시글 아이템 클릭
 	const onPressArticle = index => {
-		navigation.push('ArticleDetail', {community_object: data.free[index]});
+		navigation.push('ArticleDetail', {community_object: free[index]});
 	};
 
 	//리뷰 좋아요 클릭
@@ -48,12 +163,12 @@ const CommunityList = React.memo(props => {
 			likeEtc(
 				{
 					collectionName: 'communityobjects',
-					post_object_id: data.review[index]._id,
+					post_object_id: review[index]._id,
 					is_like: bool,
 				},
 				result => {
 					console.log('result/ onPressLike / ReviewMain : ', result.msg.targetPost.community_like_count);
-					props.initializeCommList();
+					updateReview(true, review[index]._id, bool);
 				},
 				err => console.log('err / onPressLike / ReviewMain : ', err),
 			);
@@ -62,12 +177,12 @@ const CommunityList = React.memo(props => {
 
 	//후기 게시글의 댓글쓰기 혹은 댓글 모두 보기 클릭 클릭
 	const onPressReply = index => {
-		navigation.push('CommunityCommentList', {community_object: data.review[index]});
+		navigation.push('CommunityCommentList', {community_object: review[index]});
 	};
 
 	//후게 게시글 컨텐츠 클릭
 	const onPressReviewContent = index => {
-		navigation.push('ReviewDetail', {community_object: data.review[index]});
+		navigation.push('ReviewDetail', {community_object: review[index]});
 	};
 
 	//리뷰 즐겨찾기 아이콘 클릭
@@ -76,11 +191,12 @@ const CommunityList = React.memo(props => {
 		setFavoriteEtc(
 			{
 				collectionName: 'communityobjects',
-				target_object_id: data.review[index]._id,
+				target_object_id: review[index]._id,
 				is_favorite: bool,
 			},
 			result => {
 				console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
+				updateReview(false, review[index]._id, bool);
 			},
 			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
 		);
@@ -89,14 +205,14 @@ const CommunityList = React.memo(props => {
 	//리뷰 미트볼 클릭
 	const onPressMeatball = index => {
 		console.log('index', index);
-		const isMyArticle = userGlobalObject.userInfo._id == data.review[index].community_writer_id._id;
+		const isMyArticle = userGlobalObject.userInfo._id == review[index].community_writer_id._id;
 		Modal.popSelectBoxModal(
 			isMyArticle ? ['수정', '삭제'] : ['신고'],
 			select => {
 				switch (select) {
 					case '수정':
 						// navigation.push('CommunityEdit', {previous: reviewList[index], isReview: true});
-						navigation.navigate('COMMUNITY', {screen: 'CommunityEdit', params: {previous: data.review[index], isReview: true}});
+						navigation.navigate('COMMUNITY', {screen: 'CommunityEdit', params: {previous: review[index], isReview: true}});
 						break;
 					case '삭제':
 						Modal.close();
@@ -109,7 +225,7 @@ const CommunityList = React.memo(props => {
 								() => {
 									updateAndDeleteCommunity(
 										{
-											community_object_id: data.review[index]._id,
+											community_object_id: review[index]._id,
 											community_is_delete: true,
 										},
 										result => {
@@ -193,7 +309,7 @@ const CommunityList = React.memo(props => {
 			</View>
 		);
 	};
-	if (data == 'false') {
+	if (free == 'false' || review == 'false') {
 		return <Loading isModal={false} />;
 	} else
 		return (
@@ -207,15 +323,19 @@ const CommunityList = React.memo(props => {
 								{type == 'free' ? (
 									<>
 										<ArticleList
-											items={data.free}
+											items={free}
 											onPressArticle={onPressArticle} //게시글 내용 클릭
 											whenEmpty={whenEmpty}
+											onEndReached={() => {
+												console.log('type at ArticleList : ', type);
+												type == 'free' ? onEndReached('free') : false;
+											}}
 										/>
 									</>
 								) : (
 									<>
 										<ReviewList
-											items={data.review}
+											items={review}
 											whenEmpty={whenEmpty}
 											onPressReviewContent={onPressReviewContent}
 											onPressReply={onPressReply}
@@ -223,6 +343,10 @@ const CommunityList = React.memo(props => {
 											onPressFavorite={onPressFavorite}
 											onPressLike={i => onPressLike(i, true)}
 											onPressUnlike={i => onPressLike(i, false)}
+											onEndReached={() => {
+												console.log('type at REviewList', type);
+												type == 'free' ? false : onEndReached('review');
+											}}
 										/>
 									</>
 								)}

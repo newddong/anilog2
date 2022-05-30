@@ -52,8 +52,8 @@ export default ArticleDetail = props => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			//다른 탭(ex - My 탭의 즐겨찾기한 커뮤니티 목록에서 들어온 경우)에서의 호출
+			getArticleData();
 		});
-		getArticleData();
 		getComment();
 		getArticleList();
 		navigation.setOptions({title: '자유 게시글'});
@@ -74,7 +74,7 @@ export default ArticleDetail = props => {
 				community_object_id: props.route.params.community_object._id,
 			},
 			result => {
-				// console.log('result / getCommunityByObjectId / ArticleDetail', result.msg);
+				console.log('ArticleDetail / getCommunityByObjectId / Result', result.status);
 				setData(result.msg);
 			},
 			err => {
@@ -95,7 +95,6 @@ export default ArticleDetail = props => {
 				// console.log('result / getCommunityList / ArticleDetail :', result.msg.free.length);
 				const free = result.msg.free;
 				const findIndex = result.msg.free.findIndex(e => e._id == props.route.params.community_object._id);
-				console.log('findIndex', findIndex);
 				let list = [];
 				if (free.length < 11) {
 					//전체글이 11 이하라면 그냥 바로 출력

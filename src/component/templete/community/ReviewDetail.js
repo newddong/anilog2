@@ -13,7 +13,7 @@ import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
-import community_obj from 'Root/config/community_obj';
+import community_obj, {updateReview} from 'Root/config/community_obj';
 import {NETWORK_ERROR, REPORT_MENU} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
 import {likeEtc} from 'Root/api/likeetc';
@@ -51,12 +51,16 @@ export default ReviewDetail = props => {
 	const floatInput = React.useRef();
 
 	React.useEffect(() => {
-		getReviewData();
+		const unsubscribe = navigation.addListener('focus', () => {
+			getReviewData();
+		});
+		// getReviewData();
 		getComment();
 		fetchCommunityList();
 		if (props.route.params.searchInput != '') {
 			setSearchInput(props.route.params.searchInput);
 		}
+		return unsubscribe;
 	}, []);
 
 	//커뮤니티 데이터
@@ -66,7 +70,7 @@ export default ReviewDetail = props => {
 				community_object_id: props.route.params.community_object._id,
 			},
 			result => {
-				// console.log('result / getCommunityByObjectId / ArticleDetail', result.msg);
+				console.log('ArticleDetail / getCommunityByObjectId / Result : ', result.status);
 				setData(result.msg);
 				if (result.msg.community_address.normal_address.address_name != '') {
 					navigation.setOptions({
@@ -514,8 +518,33 @@ export default ReviewDetail = props => {
 				},
 				result => {
 					console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
+					updateReview(false, data._id, bool);
 				},
 				err => console.log('err / favoriteEtc / ArticleDetail : ', err),
+			);
+		}
+	};
+
+	//좋아요 클릭
+	const onPressLike = bool => {
+		console.log('bool', bool);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			likeEtc(
+				{
+					collectionName: 'communityobjects',
+					post_object_id: data._id,
+					is_like: bool,
+				},
+				result => {
+					console.log('result/ onPressLike / ReviewMain : ', result.msg.targetPost);
+					setData({...data, community_is_like: bool, community_like_count: bool ? ++data.community_like_count : --data.community_like_count});
+					updateReview(true, data._id, bool);
+				},
+				err => console.log('err / onPressLike / ReviewMain : ', err),
 			);
 		}
 	};
@@ -531,6 +560,7 @@ export default ReviewDetail = props => {
 			result => {
 				console.log('result / likeEtc / ReviewDetail : ', result.msg.likeEtc);
 				fetchCommunityList();
+				updateReview(true, reviewList[index]._id, bool); // 리뷰 메인 페이지 데이터 전역변수 최신화
 			},
 			err => {
 				console.log(' err / likeEtc / ReviewDetail :', err);
@@ -555,29 +585,6 @@ export default ReviewDetail = props => {
 	const showChild = index => {
 		console.log('showChild', index);
 		scrollRef.current.scrollToIndex({animated: true, index: index, viewPosition: 0});
-	};
-
-	//좋아요 클릭
-	const onPressLike = bool => {
-		console.log('bool', bool);
-		if (userGlobalObject.userInfo.isPreviewMode) {
-			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
-			});
-		} else {
-			likeEtc(
-				{
-					collectionName: 'communityobjects',
-					post_object_id: data._id,
-					is_like: bool,
-				},
-				result => {
-					console.log('result/ onPressLike / ReviewMain : ', result.msg.targetPost);
-					setData({...data, community_is_like: bool, community_like_count: bool ? ++data.community_like_count : --data.community_like_count});
-				},
-				err => console.log('err / onPressLike / ReviewMain : ', err),
-			);
-		}
 	};
 
 	const header = () => {

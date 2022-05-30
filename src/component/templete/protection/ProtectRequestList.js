@@ -4,7 +4,7 @@ import {searchProtectRequest} from 'Templete/style_templete';
 import {APRI10, GRAY10} from 'Root/config/color';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import {txt} from 'Root/config/textstyle';
-import {NETWORK_ERROR, ONLY_CONTENT_FOR_ADOPTION, PET_KIND, PROTECT_LOCATION, PROTECT_REQUEST_MAIN_LIMIT} from 'Root/i18n/msg';
+import {NETWORK_ERROR, ONLY_CONTENT_FOR_ADOPTION, PROTECT_REQUEST_MAIN_LIMIT} from 'Root/i18n/msg';
 import Modal from 'Root/component/modal/Modal';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import Loading from 'Root/component/molecules/modal/Loading';
@@ -13,8 +13,11 @@ import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 import {Filter60Border, Filter60Filled} from 'Root/component/atom/icon';
 import moment from 'moment';
 import {getSearchResultProtectRequest} from 'Root/api/protectapi';
+import protect_obj from 'Root/config/protect_obj';
+import {useNavigation} from '@react-navigation/core';
 
-export default ProtectRequestList = ({navigation, route}) => {
+export default ProtectRequestList = ({route}) => {
+	const navigation = useNavigation();
 	const today = moment();
 	const current_date = moment().format('YY.MM.DD');
 	const one_month_before = today.clone().subtract(1, 'month').format('YY.MM.DD');
@@ -36,9 +39,13 @@ export default ProtectRequestList = ({navigation, route}) => {
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
-			if (data != 'false') {
-				//처음 페이지 진입시 두번 호출안하도록
-				getList();
+			// filterRef.current ? false : fetchData(); //포커스마다 새로 fetch를 시도하면 상세글을 갔다가 메인페이지로 돌아와도 기존의 스크롤로 이동을 하지 않음
+			// console.log('리뷰 게시글 전역변수 길이 :  ', community_obj.review.length);
+			console.log('protect_obj.protect.length : ', protect_obj.protect.length);
+			if (protect_obj.protect.length > 0) {
+				// let temp = [...data];
+				console.log('protect_obj. on Focus :: ', protect_obj.protect[0].is_favorite);
+				setData(protect_obj.protect);
 			}
 		});
 		return unsubscribe;
@@ -50,7 +57,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 
 	//보호요청리스트 목록 받기
 	const getList = isRefresh => {
-		setLoading(true);
+		isRefresh ? false : setLoading(true);
 		let filter = {protect_animal_species: []}; // api 필터 데이터
 		let sdt = ''; //시작일
 		let edt = ''; //종료일
@@ -90,7 +97,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 		getSearchResultProtectRequest(
 			{
 				...filter,
-				page: offset,
+				page: isRefresh ? 1 : offset,
 				limit: PROTECT_REQUEST_MAIN_LIMIT,
 			},
 			result => {
@@ -104,8 +111,9 @@ export default ProtectRequestList = ({navigation, route}) => {
 					v.protect_animal_status = v.protect_animal_id.protect_animal_status;
 				});
 				//data=='false'라면 첫 페이지 호출임
-				if (data == 'false') {
-					setData(res);
+				let list = [];
+				if (isRefresh || data == 'false') {
+					list = res;
 				} else {
 					// 페이징 호출 분기
 					let temp = [...data];
@@ -113,8 +121,10 @@ export default ProtectRequestList = ({navigation, route}) => {
 						temp.push(v);
 					});
 					console.log('temp lenth', temp.length);
-					setData(temp);
+					list = temp;
 				}
+				setData(list);
+				protect_obj.protect = list;
 				setOffset(offset + 1); //데이터를 추가한 뒤 페이지 ++
 				Modal.close();
 				setLoading(false); //로딩 Indicator 종료
@@ -260,7 +270,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 		return new Promise(resolve => setTimeout(resolve, timeout));
 	};
 	const onRefresh = () => {
-		setData('false');
+		// setData('false');
 		setOffset(1);
 		setRefreshing(true);
 		wait(0).then(() => setRefreshing(false));

@@ -7,7 +7,7 @@ import Modal from 'Component/modal/Modal';
 import ReviewFavoriteBriefList from 'Root/component/organism/list/ReviewFavoriteBriefList';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {likeEtc} from 'Root/api/likeetc';
-import community_obj from 'Root/config/community_obj';
+import community_obj, {updateReview} from 'Root/config/community_obj';
 import {getFavoriteEtcListByUserId, setFavoriteEtc, setFavoriteEtcCancelList} from 'Root/api/favoriteetc';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {getCommunityListByUserId} from 'Root/api/community';
@@ -167,6 +167,9 @@ export default FavoriteReview = ({route}) => {
 				cancelSelectMode(false);
 				checkSelectMode(false);
 				fetchData();
+				listToDelete.map((v, i) => {
+					updateReview(false, v, false);
+				});
 			},
 			err => console.log('err / setFavoriteEtcCancelList / FavoriteReview : ', err),
 		);
@@ -218,6 +221,7 @@ export default FavoriteReview = ({route}) => {
 			result => {
 				console.log('result/ onPressLike / FavoriteReview : ', result.msg.targetPost.community_like_count);
 				fetchData();
+				updateReview(true, data[index]._id, bool); // 리뷰 메인 페이지 데이터 전역변수 최신화
 			},
 			err => console.log('err / onPressLike / FavoriteReview : ', err),
 		);

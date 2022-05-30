@@ -31,7 +31,7 @@ const SelectInput = props => {
 				{
 					width: props.width * DP,
 					borderBottomColor: props.noBorder ? WHITE : APRI10,
-					borderBottomColor: isDefault ? GRAY30 : APRI10,
+					// borderBottomColor: isDefault ? GRAY30 : APRI10,
 					// backgroundColor: 'yellow',
 				},
 			]}>

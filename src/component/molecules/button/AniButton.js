@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View, TouchableOpacity, TouchableWithoutFeedback, TouchableHighlight} from 'react-native';
-import {APRI10, GRAY20, GRAY30, WHITE} from 'Root/config/color';
+import {APRI10, GRAY10, GRAY20, GRAY30, MAINBLACK, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {btn_w226} from 'Atom/btn/btn_style';
@@ -17,18 +17,20 @@ import {btn_w226} from 'Atom/btn/btn_style';
  */
 const AniButton = props => {
 	const btnTheme = () => {
-		//btnTheme이 shadow일 경우 Button의 View에 아래의 style을 추가한다
+		// btnTheme이 shadow일 경우 Button의 View에 아래의 style을 추가한다
 		if (props.btnTheme == 'shadow') {
 			return {
-				shadowColor: '#000000',
-				shadowOpacity: 0.1,
-				shadowRadius: 4.65,
-				shadowOffset: {
-					width: 1 * DP,
-					height: 1 * DP,
-				},
-				elevation: 1,
+				// shadowColor: '#000000',
+				// shadowOpacity: 0.1,
+				// shadowRadius: 4.65,
+				// shadowOffset: {
+				// 	width: 1 * DP,
+				// 	height: 1 * DP,
+				// },
+				// elevation: 1,
 			};
+		} else if (props.btnTheme == undefined) {
+			return {};
 		}
 	};
 
@@ -38,7 +40,8 @@ const AniButton = props => {
 			return WHITE;
 		} else if (props.btnTheme == 'gray' && props.btnStyle == 'border') {
 			return GRAY20;
-		} else return APRI10;
+		} else return MAINBLACK;
+		// APRI10;
 	};
 
 	//default는 APRI10, Gray의 경우 GRAY20
@@ -46,7 +49,8 @@ const AniButton = props => {
 		if (props.btnStyle == 'border' && props.btnTheme == 'gray') {
 			return {borderColor: GRAY20, borderWidth: 2 * DP};
 		} else if (props.btnStyle == 'border') {
-			return {borderColor: APRI10, borderWidth: 2 * DP};
+			return {borderColor: GRAY30, borderWidth: 2 * DP};
+			// {borderColor: APRI10, borderWidth: 2 * DP};
 		}
 	};
 
@@ -55,7 +59,8 @@ const AniButton = props => {
 			return GRAY30;
 		} //disable일 경우 배경색 GRAY30
 		else if (props.btnStyle == 'filled') {
-			return APRI10;
+			// return APRI10;
+			return MAINBLACK;
 		} //FILLED일 경우 배경색 APRI10
 		else {
 			return WHITE;
@@ -94,7 +99,7 @@ const AniButton = props => {
 
 AniButton.defaultProps = {
 	btnTitle: 'title', //버튼의 제목
-	btnTheme: 'shadow', // btnTheme - ’shadow’, ‘noShadow’, ‘gray’에서 결정
+	btnTheme: 'noShadow', // btnTheme - ’shadow’, ‘noShadow’, ‘gray’에서 결정
 	btnStyle: 'filled', // btnStyle - ‘filled’, ‘border’, ‘noBorder’ 에서 결정
 	disable: false, // disable - 기본값은 false true일 경우 버튼 탭을 할수없도록 하고 표시를 바
 	titleFontStyle: 24, // titleFontStyle - title의 폰트 크기

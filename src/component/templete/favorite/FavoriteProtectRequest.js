@@ -176,7 +176,8 @@ export default FavoriteProtectRequest = ({route}) => {
 	};
 
 	//보호요청글 클릭
-	const onClickLabel = (status, id, item) => {
+	const onClickLabel = item => {
+		console.log('item', item);
 		if (selectMode) {
 			return false;
 		} else {
@@ -212,7 +213,12 @@ export default FavoriteProtectRequest = ({route}) => {
 				) : (
 					<></>
 				)}
-				<ProtectRequest data={item} onFavoriteTag={bool => onFavoriteTag(bool, index)} selectMode={selectMode} />
+				<ProtectRequest
+					data={item}
+					onClickLabel={() => onClickLabel(item)}
+					onFavoriteTag={bool => onFavoriteTag(bool, index)}
+					selectMode={selectMode}
+				/>
 			</View>
 		);
 	};

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Text, TextInput} from 'react-native';
 import {BackArrow32} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {WHITE, APRI10} from 'Root/config/color';
@@ -29,11 +29,12 @@ export default InputAndSearchHeader = props => {
 	}, [searchInput]);
 
 	const onChangeSearchText = text => {
-		// props.navigation.setParams({...props.route.params, searchInput: text});
 		setSearchInput(text);
+		//고객센터 문의하기에서 호출된 경우 searchInputForHelp 전역변수를 활용
 		if (props.isHelpTab) {
 			searchContext.searchInfo.searchInputForHelp = text;
 		} else {
+			//검색탭에서 호출된 경우 searchInput 전역변수를 활용
 			searchContext.searchInfo.searchInput = text;
 		}
 	};
@@ -58,14 +59,20 @@ export default InputAndSearchHeader = props => {
 	};
 
 	return (
-		<View style={[style.headerContainer, style.shadow]}>
-			<TouchableOpacity onPress={onPressGoBack}>
-				<View style={style.backButtonContainer}>
-					<BackArrow32 onPress={onPressGoBack} />
-				</View>
+		<View style={[style.headerContainer, style.shadow, {}]}>
+			<TouchableOpacity style={[style.backButtonContainer, {}]} onPress={onPressGoBack}>
+				<BackArrow32 onPress={onPressGoBack} />
 			</TouchableOpacity>
-			<View style={{marginBottom: 20 * DP, flex: 1}}>
-				<InputWithSearchIcon placeholder={'검색어를 입력하세요.'} width={590} onChange={onChangeSearchText} onSearch={confirm} onClear={onClear} />
+			<View style={{marginBottom: 20 * DP, flex: 1, justifyContent: 'center', paddingTop: 20 * DP}}>
+				<InputWithSearchIcon
+					placeholder={'검색어를 입력하세요.'}
+					value={searchInput}
+					width={630}
+					onChange={onChangeSearchText}
+					onSearch={confirm}
+					onClear={onClear}
+					showCrossMark={false}
+				/>
 			</View>
 		</View>
 	);
@@ -73,19 +80,27 @@ export default InputAndSearchHeader = props => {
 
 const style = StyleSheet.create({
 	headerContainer: {
+		width: 750 * DP,
+		paddingHorizontal: 28 * DP,
+		alignSelf: 'center',
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		height: 135 * DP,
 		flexDirection: 'row',
 		backgroundColor: WHITE,
-		paddingHorizontal: 48 * DP,
-		paddingTop: 30 * DP,
 	},
 	buttonContainer: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		width: 67 * DP,
 		marginBottom: 22 * DP,
+	},
+	backButtonContainer: {
+		width: 52 * DP,
+		height: 52 * DP,
+		justifyContent: 'center',
+		// backgroundColor: 'blue',
+		marginBottom: 18 * DP,
 	},
 	shadow: {
 		// shadowColor: '#000000',
@@ -96,12 +111,5 @@ const style = StyleSheet.create({
 		// 	height: 4,
 		// },
 		// elevation: 4,
-	},
-	backButtonContainer: {
-		width: 80 * DP,
-		height: 66 * DP,
-		justifyContent: 'center',
-		// backgroundColor:'red',
-		marginBottom: 18 * DP,
 	},
 });

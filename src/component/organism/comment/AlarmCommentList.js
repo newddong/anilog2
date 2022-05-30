@@ -41,17 +41,8 @@ const AlarmCommentList = props => {
 
 	React.useEffect(() => {
 		fetchData();
-		// navigation.setOptions({title: '댓글 쓰기'});
-		// navigation.addListener('blur', () => {
-		// 	community_obj.object = {};
-		// 	community_obj.pageToMove = '';
-		// 	community_obj.object.initial = true;
-		// });
 	}, []);
 
-	// React.useEffect(() => {
-	// 	fetchData();
-	// }, [comments]);
 	const fetchData = () => {
 		console.log('getCommentList by ', props.route.params.feedobject._id);
 		getCommentListByFeedId(

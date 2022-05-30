@@ -13,7 +13,7 @@ import {getCommunityListByUserId} from 'Root/api/community';
 import SelectStat from 'Root/component/organism/list/SelectStat';
 import {selectstat_view_style, temp_style} from '../style_templete';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
-import {NETWORK_ERROR} from 'Root/i18n/msg';
+import {FREE_LIMIT, NETWORK_ERROR} from 'Root/i18n/msg';
 
 //즐겨찾기한 커뮤니티 조회
 export default FavoriteArticle = ({route}) => {
@@ -22,6 +22,7 @@ export default FavoriteArticle = ({route}) => {
 
 	const [selectMode, setSelectMode] = React.useState(false);
 	const [selectCNT, setSelectCNT] = React.useState(0);
+	const [offset, setOffset] = React.useState(1);
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
@@ -35,15 +36,26 @@ export default FavoriteArticle = ({route}) => {
 		route.name == 'MyArticle'
 			? getCommunityListByUserId(
 					{
+						limit: FREE_LIMIT,
+						page: offset,
 						userobject_id: userGlobalObject.userInfo._id,
-						community_type: 'all',
+						community_type: 'free',
 					},
 					result => {
-						console.log('result / getCommunityListByUserId / FavoriteCommunity', result.msg.free.length);
-						setData(result.msg.free);
+						const res = result.msg.free.filter(
+							e => e.community_writer_id != null && e.community_writer_id.user_nickname == userGlobalObject.userInfo.user_nickname,
+						);
+						console.log('result / getCommunityListByUserId / FavoriteArticle', res.length);
+						if (data != 'false') {
+							console.log('temp lenth', [...data, ...res].length);
+							setData([...data, ...res]);
+						} else {
+							setData(res);
+						}
+						setOffset(offset + 1);
 					},
 					err => {
-						console.log('err / getCommunityListByUserId / FavoriteCommunity : ', err);
+						console.log('err / getCommunityListByUserId / FavoriteArticle : ', err);
 						if (err.includes('code 500')) {
 							setReview([]);
 							setArticle([]);
@@ -80,12 +92,18 @@ export default FavoriteArticle = ({route}) => {
 			  );
 	};
 
+	//리스트 페이징 작업
+	const onEndReached = () => {
+		console.log('EndReached', data.length % FREE_LIMIT);
+		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
+		//리뷰 메인 페이지에서는 필터가 적용이 되었을 때도 api 접속 불필요
+		if (data.length % FREE_LIMIT == 0) {
+			fetchData();
+		}
+	};
+
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
-		community_obj.object = data[index];
-		community_obj.pageToMove = 'ArticleDetail';
-		community_obj.initial = false;
-		console.log('community_obj.current', community_obj.current);
 		selectMode ? false : navigation.push('ArticleDetail', {community_object: data[index], reset: true});
 	};
 
@@ -214,16 +232,15 @@ export default FavoriteArticle = ({route}) => {
 						</View>
 					</View>
 				)}
-				<View style={[{marginTop: 5 * DP}]}>
-					<View style={[{paddingBottom: 20 * DP}]}>
-						<ArticleList
-							items={data}
-							selectMode={selectMode}
-							onPressCheck={onPressCheck}
-							onPressArticle={onPressArticle} //게시글 내용 클릭
-							whenEmpty={whenEmpty}
-						/>
-					</View>
+				<View style={[{marginTop: 5 * DP, flex: 1}]}>
+					<ArticleList
+						items={data}
+						selectMode={selectMode}
+						onPressCheck={onPressCheck}
+						onPressArticle={onPressArticle} //게시글 내용 클릭
+						whenEmpty={whenEmpty}
+						onEndReached={onEndReached}
+					/>
 				</View>
 			</View>
 		);

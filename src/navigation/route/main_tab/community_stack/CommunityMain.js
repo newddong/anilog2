@@ -10,8 +10,8 @@ const CommunityTabNav = createMaterialTopTabNavigator();
 
 export default CommunityMain = props => {
 	// LogBox.ignoreAllLogs(); //로그 무시
-	// console.log('props', props.route.params);
-	const initailRoute = props.route.params ? props.route.params.isReview : 'ArticleMain';
+	// console.log('props.isReview', props.route.params.isReview);
+	const initailRoute = props.route.params && props.route.params.isReview ? 'ReviewMain' : 'ArticleMain';
 
 	return (
 		<CommunityTabNav.Navigator

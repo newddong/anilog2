@@ -77,7 +77,7 @@ export default AssignPetInfoB = props => {
 			isCopied.user_profile_uri = 'https://';
 		}
 		console.log('isCop', isCopied);
-		Modal.popLoading(false);
+		Modal.popLoading();
 		assignPet(
 			{
 				...isCopied,

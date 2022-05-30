@@ -374,15 +374,16 @@ export default FeedList = ({route, navigation}) => {
 			'다중선택',
 			() => {
 				Modal.close();
-				navigation.push('SinglePhotoSelect');
+				navigation.push("SinglePhotoSelect",{prev:{name:route.name,key:route.key}});
 				// navigation.push('Crop');
 			},
 			() => {
 				Modal.close();
-				navigation.push('MultiPhotoSelect');
+				navigation.push('MultiPhotoSelect',{prev:{name:route.name,key:route.key}});
 			},
 		);
 	};
+
 	//피드 상단 새로운 실종/제보
 	const MissingReport = () => {
 		if (route.name == 'MainHomeFeedList') {
@@ -410,6 +411,7 @@ export default FeedList = ({route, navigation}) => {
 	// 		<></>;
 	// 	}
 	// };
+
 
 	const [tl, setTl] = React.useState({});
 	const [cl, setCl] = React.useState({});
@@ -452,7 +454,7 @@ export default FeedList = ({route, navigation}) => {
 			/>
 			{userGlobalObject.userInfo && (
 				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}]}>
-					<View
+					{/* <View
 						style={[
 							{
 								height: 94 * DP,
@@ -466,7 +468,7 @@ export default FeedList = ({route, navigation}) => {
 							buttonstyle.shadow,
 						]}>
 						<Camera54 onPress={movetoCamera} />
-					</View>
+					</View> */}
 					<View
 						style={[
 							{

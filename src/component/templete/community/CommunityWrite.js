@@ -1,17 +1,5 @@
 import React from 'react';
-import {
-	ScrollView,
-	Text,
-	TouchableOpacity,
-	View,
-	TextInput,
-	Platform,
-	StatusBar,
-	Keyboard,
-	StyleSheet,
-	TouchableWithoutFeedback,
-	Image,
-} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View, TextInput, Platform, StatusBar, Keyboard, StyleSheet, Image} from 'react-native';
 import {APRI10, WHITE, GRAY20, GRAY10, GRAY40, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP, {isNotch} from 'Root/config/dp';
@@ -24,7 +12,6 @@ import {changeLocalPathToS3Path} from 'Root/api/community';
 import {RichEditor} from 'react-native-pell-rich-editor';
 import {Animal_another_off, Animal_cat_off, Animal_dog_off} from 'Root/component/atom/icon';
 import {Animal_another, Animal_cat, Animal_dog} from 'Root/component/atom/icon';
-import Geolocation from '@react-native-community/geolocation';
 
 export default CommunityWrite = props => {
 	const navigation = useNavigation();
@@ -76,13 +63,10 @@ export default CommunityWrite = props => {
 	const [editorLayout, setEditorLayout] = React.useState({
 		//Rich Editor 레이아웃
 		height: 345,
-		width: 640 * DP,
+		width: 630 * DP,
 		x: 0,
 		y: 0,
 	});
-	React.useEffect(() => {
-		console.log('editorLayout', editorLayout);
-	}, [editorLayout]);
 
 	React.useEffect(() => {
 		props.navigation.setParams({data: data, nav: 'CommunityWrite'});
@@ -90,9 +74,6 @@ export default CommunityWrite = props => {
 
 	React.useEffect(() => {
 		isReview ? navigation.setOptions({title: '리뷰'}) : navigation.setOptions({title: '자유 게시글'});
-		if (Platform.OS === 'ios') {
-			Geolocation.requestAuthorization('always');
-		}
 	}, []);
 
 	React.useEffect(() => {
@@ -101,6 +82,7 @@ export default CommunityWrite = props => {
 		if (param?.data && data.community_address.region.latitude != param?.data.community_address.region.latitude) {
 			//다른 주소 검색 결과값 적용
 			setData(param.data);
+			scrollRef.current.scrollTo({x: 0, y: 0, animated: true});
 			// richText.current?.focusContentEditor();
 		}
 	}, [props.route.params?.data]);
@@ -162,37 +144,37 @@ export default CommunityWrite = props => {
 	//이미지 입력
 	const insertImage = imageList => {
 		// console.log('imageList', imageList);
-		Modal.popLoading(true);
 		setTimeout(() => {
-			data != 'false' ? richText.current?.insertHTML('<p><br/></p></div>') : false; //이미지를 넣을 시 바로 다음줄로 이동하도록 처리
-			// const result = await changePath(imageList);
-			changeLocalPathToS3Path(
-				{
-					s3path_uri: imageList,
-				},
-				result => {
-					// console.log('result / s3path / Write ', result.msg);
-					// resolve(result.msg);
-					result.msg.map((v, i) => {
-						richText.current?.insertHTML('<p><br/></p></div>');
-						richText.current?.insertHTML(
-							`<div><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick');" \n
-							 height="320px;" width="${editorLayout.width};" style="border-radius:15px; margin:5px 0px 5px 0px; "/></div>`,
-						);
-						// richText.current?.insertHTML(
-						// 	`<div  style="padding : 8px 10px 8px 0px; " ><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick')" \n
-						// 	 height="320px;" width="${editorLayout.width};" style="border-radius:15px; margin: 0 auto 4px;    "/></div>`,
-						// );
-						// richText.current?.insertHTML('<p><br/></p></div>');
-					});
-					// richText.current?.focusContentEditor();
-					Modal.close();
-				},
-				err => {
-					console.log('err', err);
-					Modal.close();
-				},
-			);
+			Modal.popLoading(true);
+			setTimeout(() => {
+				data != 'false' ? richText.current?.insertHTML('<p><br/></p></div>') : false; //이미지를 넣을 시 바로 다음줄로 이동하도록 처리
+				// const result = await changePath(imageList);
+				changeLocalPathToS3Path(
+					{
+						s3path_uri: imageList,
+					},
+					result => {
+						result.msg.map((v, i) => {
+							richText.current?.insertHTML('<p><br/></p></div>');
+							richText.current?.insertHTML(
+								`<div><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick');" \n
+							  style="height: auto; width: ${editorLayout.width};  border-radius:15px; object-fit:contain;  margin:5px 0px 5px 0px; "/></div>`,
+							);
+							if (i == result.msg.length - 1) {
+								setTimeout(() => {
+									richText.current?.insertHTML('<p><br/></p></div>');
+									Modal.close();
+								}, 1000);
+							}
+						});
+						// richText.current?.focusContentEditor();
+					},
+					err => {
+						console.log('err', err);
+						Modal.close();
+					},
+				);
+			}, 100);
 		}, 100);
 	};
 

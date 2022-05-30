@@ -140,8 +140,6 @@ export default MeatBallHeader = props => {
 		Modal.close();
 	};
 
-	console.log('props.options,', props.options.data);
-
 	const shouldShowMeatball = () => {
 		let result = true;
 		if (props.options.data.user_type == 'pet' && props.options.data.pet_family && props.options.data.pet_family.length == 0) {

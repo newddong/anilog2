@@ -3,6 +3,8 @@ import {View, Text, StyleSheet, Platform, Dimensions, Image, Animated, Easing} f
 import FastImage from 'react-native-fast-image';
 import {WHITE, GRAY10, APRI10} from 'Root/config/color';
 import DP from 'Root/config/dp';
+import Modal from 'Root/component/modal/Modal';
+import {useNavigation} from '@react-navigation/core';
 
 /**
  * 버튼이 없는 모달
@@ -12,9 +14,30 @@ import DP from 'Root/config/dp';
  * @param {Object} props - props object
  * @param {boolean} props.isModal - 모달인지 여부
  * @param {boolean} props.smallBox - 컴포넌트 형식일 경우 height
+ * @param {()=>void)} props.timeout - 타임아웃 콜백
  *
  */
 const Loading = props => {
+	const timerRef = useRef(null);
+	React.useEffect(() => {
+		timerRef.current = setTimeout(() => {
+			if (props.isModal) {
+				Modal.close();
+				setTimeout(() => {
+					Modal.popOneBtn('오류가 발생하였습니다. \n 잠시후 다시 이용해주세요. ', '확인', () => {
+						props.timeout();
+					});
+				}, 200);
+			}
+		}, 10000);
+		return () => {
+			if (timerRef.current) {
+				// console.log('timerRef.current', timerRef.current);
+				clearTimeout(timerRef.current);
+			}
+		};
+	}, []);
+
 	return props.isModal ? (
 		<View
 			style={[
@@ -69,6 +92,7 @@ Loading.defaultProps = {
 	isModal: true,
 	smallBox: false,
 	height: 700 * DP,
+	timeout: () => {},
 };
 
 const style = StyleSheet.create({

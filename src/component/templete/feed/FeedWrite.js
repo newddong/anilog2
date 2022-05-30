@@ -159,7 +159,15 @@ export default FeedWrite = props => {
 			const location = param.feed_location;
 			console.log('address', location);
 		}
+
 	}, [props.route.params?.feed_location]);
+
+	React.useEffect(()=>{
+		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+			
+			setSelectedImg(props.route.params.selectedPhoto);
+		}
+	},[props.route.params?.selectedPhoto]);
 
 	const onPressMissingWrite = () => {
 		setShowLostAnimalForm(true);
@@ -192,40 +200,43 @@ export default FeedWrite = props => {
 			'하나씩선택',
 			'여러개선택',
 			() => {
-				ImagePicker.openPicker({
-					// multiple: true,
-					compressImageQuality: 0.8,
-					width: 750,
-					height: 750,
-					cropping: true,
-				})
-					.then(images => {
-						console.log('images', images);
-						setSelectedImg(selectedImg.concat(images.path));
-						Modal.close();
-					})
-					.catch(err => console.log(err + ''));
+				// ImagePicker.openPicker({
+				// 	// multiple: true,
+				// 	compressImageQuality: 0.8,
+				// 	width: 750,
+				// 	height: 750,
+				// 	cropping: true,
+				// })
+				// 	.then(images => {
+				// 		console.log('images', images);
+				// 		setSelectedImg(selectedImg.concat(images.path));
+				// 		Modal.close();
+				// 	})
+				// 	.catch(err => console.log(err + ''));
 				Modal.close();
+				props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
 			},
 			() => {
-				launchImageLibrary(
-					{
-						mediaType: 'photo',
-						selectionLimit: 5 - selectedImg.length, //다중선택 모드일 경우 상시 5개면 4개 상태에서 최대 5개를 더해 9개가 가능해짐
-						maxHeight: 750,
-						maxWidth: 750,
-						quality: 0.8,
-					},
-					responseObject => {
-						console.log('선택됨', responseObject);
-						if (!responseObject.didCancel) {
-							let tempContainer = [...selectedImg];
-							responseObject.assets.map(v => tempContainer.push(v.uri));
-							setSelectedImg(tempContainer.slice(-5));
-							Modal.close();
-						}
-					},
-				);
+				// launchImageLibrary(
+				// 	{
+				// 		mediaType: 'photo',
+				// 		selectionLimit: 5 - selectedImg.length, //다중선택 모드일 경우 상시 5개면 4개 상태에서 최대 5개를 더해 9개가 가능해짐
+				// 		maxHeight: 750,
+				// 		maxWidth: 750,
+				// 		quality: 0.8,
+				// 	},
+				// 	responseObject => {
+				// 		console.log('선택됨', responseObject);
+				// 		if (!responseObject.didCancel) {
+				// 			let tempContainer = [...selectedImg];
+				// 			responseObject.assets.map(v => tempContainer.push(v.uri));
+				// 			setSelectedImg(tempContainer.slice(-5));
+				// 			Modal.close();
+				// 		}
+				// 	},
+				// );
+				Modal.close();
+				props.navigation.push("MultiPhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
 			},
 		);
 	};

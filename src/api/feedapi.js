@@ -83,6 +83,8 @@ export async function createReport(params, callback, errcallback) {
  * 특정 유저가 작성한 피드 리스트를 불러온다.
  *
  * @param {object} params
+ * @param {number} params.limit - 페이징 개수
+ * @param {number} params.page - 현재 페이지
  * @param {string} params.userobject_id - 피드 리스트를 불로오고자 하는 유저의 몽고디비 아이디
  * @param {number} params.request_number - 요청할 리스트의 갯수
  * @param {({}:object)=>void} callback - API응답처리 콜백
@@ -96,6 +98,8 @@ export async function getFeedListByUserId(params, callback, errcallback) {
  * 실종/제보 가져오기
  *
  * @param {string} params.city - 제보지역 (서울,부산,인천 등등)
+ * @param {number} params.limit - 페이징 개수
+ * @param {number} params.page - 현재 페이지
  * @param {string} params.missing_animal_species - 보호중인 동물의 종류 (개, 고양이, 새 등등)
  * @param {string} params.feedobject_id - 커서 역할을 할 실종/제보 피드오브잭트(페이징 처리)
  * @param {number} params.request_number - 요청할 숫자
@@ -120,7 +124,8 @@ export async function getFeedDetailById(params, callback, errcallback) {
 
 /**
  * 추천 피드 리스트를 불러온다(홈)
- *
+ * @param {number} params.page
+ * @param {number} params.limit
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */

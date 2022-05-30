@@ -20,18 +20,6 @@ export default SearchHashTag = React.memo((props, ref) => {
 		props.navigation.push('FeedListForHashTag', e);
 	};
 
-	const dummy = [
-		{
-			__v: 0,
-			_id: '61d3094cce5bd4c9dba4b7b5',
-			hashtag_date: '2022-01-03T14:33:48.354Z',
-			hashtag_feed_count: 1,
-			hashtag_keyword: '고양이',
-			hashtag_update_date: '2022-01-03T14:33:48.354Z',
-			type: 'HashTagObject',
-		},
-	];
-
 	const whenEmpty = () => {
 		return <ListEmptyInfo text={'검색 결과가 없습니다..'} />;
 	};
@@ -45,24 +33,16 @@ export default SearchHashTag = React.memo((props, ref) => {
 					data={[{}]}
 					renderItem={({item, index}) => {
 						return (
-							<View style={[style.listContainer]}>
+							<>
 								{/* // 검색 내역이 존재할 경우 API를 통해 받아온 내역 출력 */}
 								{props.data.length != 0 ? (
 									<View style={[temp_style.hashTagList]}>
 										<AccountHashList data={props.data} showFollowBtn={false} onClickLabel={onClickHashTag} onClickHash={hashSelect} />
 									</View>
 								) : (
-									<>
-										{/* <View style={[temp_style.controllableHashTagList]}>
-											<Text style={[txt.noto24, {color: GRAY20}]}>최근 검색한 태그</Text>
-										</View>
-										<View style={[temp_style.hashTagList]}>
-											<AccountHashList data={dummy} showFollowBtn={false} onClickLabel={onClickHashTag} onClickHash={hashSelect} />
-										</View> */}
-										{whenEmpty()}
-									</>
+									<>{whenEmpty()}</>
 								)}
-							</View>
+							</>
 						);
 					}}
 					showsVerticalScrollIndicator={false}

@@ -3065,7 +3065,8 @@ export const feedListForHashTag = StyleSheet.create({
 		// backgroundColor: 'lightblue',
 	},
 	hashLabel: {
-		width: 622 * DP,
+		width: 694 * DP,
+		// backgroundColor: 'yellow',
 		height: 144 * DP,
 		marginTop: 12 * DP,
 		borderWidth: 2 * DP,

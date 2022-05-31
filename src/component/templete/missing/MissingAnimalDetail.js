@@ -54,8 +54,14 @@ export default MissingAnimalDetail = props => {
 				navigation.setParams({writer: data.msg.feed_writer_id._id, isMissingOrReport: true, feed_object: data.msg});
 				fetchMissingPostList(result._id);
 			},
-			errcallback => {
-				console.log(`errcallback:${JSON.stringify(errcallback)}`);
+			err => {
+				console.log('getFeedDetailById / Error / MissingAnimalDetail : ', err);
+				if (err.includes('code 500')) {
+					setData('false');
+					setTimeout(() => {
+						Modal.popOneBtn(NETWORK_ERROR, '확인', () => navigation.goBack());
+					}, 500);
+				}
 			},
 		);
 	};

@@ -9,6 +9,7 @@ import Swiper from 'react-native-swiper';
 import {number} from 'prop-types';
 import {phoneFomatter} from 'Root/util/stringutil';
 import PhotoTagItem from 'Organism/feed/PhotoTagItem';
+import Modal from 'Root/component/modal/Modal';
 
 /**
  *
@@ -97,6 +98,10 @@ export default FeedMedia = props => {
 		} else return false;
 	};
 
+	const onPressPhoto = () => {
+		Modal.popPhotoListViewModal(feed_medias.map(v => v.media_uri));
+	};
+
 	const swiperRef = React.useRef();
 
 	return (
@@ -150,7 +155,15 @@ export default FeedMedia = props => {
 					horizontal={true}>
 					{feed_medias.map((data, idx) => {
 						return (
-							<PhotoTagItem style={styles.img_square_750x750} uri={data.media_uri} data={props.data} taglist={data.tags} key={idx} viewmode={true} />
+							<PhotoTagItem
+								style={styles.img_square_750x750}
+								uri={data.media_uri}
+								data={props.data}
+								taglist={data.tags}
+								key={idx}
+								viewmode={true}
+								onPressPhoto={onPressPhoto}
+							/>
 						);
 						// return <Image source={{uri: data.media_uri}} style={styles.img_square_750x750} key={idx} />;
 					})}

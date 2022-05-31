@@ -1,12 +1,10 @@
 import React from 'react';
-import {Text, View, Image, TouchableOpacity} from 'react-native';
-import {GRAY10, RED10, RED20, WHITE, APRI10, YELL20} from 'Root/config/color';
+import {Text, View, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import {GRAY10, RED10, RED20, WHITE, APRI10, YELL20, BLACK} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import {Mercy_Killing, Female48, Male48} from 'Atom/icon';
+import {Female48, Male48, Blur} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
-import FastImage from 'react-native-fast-image';
-
 /**
  * 버튼 컴포넌트트
  * @param {object} props - Props Object
@@ -26,16 +24,6 @@ const ProtectedThumbnail = props => {
 				borderRadius: 30 * DP,
 			};
 		} else return false;
-	};
-
-	const getEmergencyMsg = () => {
-		return data.status == 'emergency' ? (
-			<View style={{position: 'absolute', alignSelf: 'center', bottom: 46 * DP}}>
-				<Mercy_Killing />
-			</View>
-		) : (
-			false
-		);
 	};
 
 	const getGenderMark = () => {
@@ -100,31 +88,50 @@ const ProtectedThumbnail = props => {
 		props.onLabelClick(data.status, data._id);
 	};
 
-	return (
-		<View style={styles.img_square_round_214}>
-			<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.4} onPress={onClickLabel}>
-				<Image source={{uri: data.img_uri}} style={[styles.img_square_round_214, borderByStatus()]} />
-				{/* 펫 성별마크 */}
-				<View style={{position: 'absolute', right: 10 * DP, top: 10 * DP}}>{getGenderMark()}</View>
-				{/* 펫 보호상태 */}
-				<View
-					style={[
-						getStatusContainerStyle(),
-						{
-							position: 'absolute',
-							width: '100%',
-							height: 36 * DP,
-							opacity: 1,
-							bottom: 0,
-							borderBottomLeftRadius: 30 * DP,
-							borderBottomRightRadius: 30 * DP,
-						},
-					]}>
+	const getStatus = () => {
+		if (data.status == 'missing' || data.status == 'report') {
+			return (
+				<View style={[style.upperStatus, {backgroundColor: data.status == 'missing' ? '#FF3120' : '#FFD153', zIndex: 3}]}>
+					<Text style={[txt.noto28, {color: WHITE}]}>{data.status == 'missing' ? '실종' : '제보'}</Text>
+				</View>
+			);
+		}
+	};
+
+	const getBottomStatus = () => {
+		if (data.status != 'missing' && data.status != 'report') {
+			return (
+				<View style={[style.bottomCont]}>
 					<Text style={[txt.noto24, {color: WHITE, textAlign: 'center', lineHeight: 32 * DP}]}>{getStatusText()}</Text>
 				</View>
-				{getEmergencyMsg()}
-			</TouchableOpacity>
-		</View>
+			);
+		}
+	};
+
+	const getBlur = () => {
+		if (data.status != 'missing' && data.status != 'report') {
+			return (
+				<View style={[style.blur, {zIndex: -1}]}>
+					<Blur />
+				</View>
+			);
+		}
+	};
+
+	return (
+		<>
+			<View style={styles.img_square_round_214}>
+				<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.4} onPress={onClickLabel}>
+					<Image source={{uri: data.img_uri}} style={[styles.img_square_round_214, borderByStatus(), {zIndex: -3}]} />
+					{/* 펫 성별마크 */}
+					<View style={{position: 'absolute', right: 10 * DP, top: 10 * DP}}>{getGenderMark()}</View>
+					{/* 펫 보호상태 */}
+					{getBottomStatus()}
+					{getStatus()}
+					{getBlur()}
+				</TouchableOpacity>
+			</View>
+		</>
 	);
 };
 
@@ -133,3 +140,36 @@ ProtectedThumbnail.defaultProps = {
 	inActiveOpacity: false,
 };
 export default ProtectedThumbnail;
+
+const style = StyleSheet.create({
+	upperStatus: {
+		width: 96 * DP,
+		height: 56 * DP,
+		position: 'absolute',
+		borderTopLeftRadius: 30 * DP,
+		borderBottomRightRadius: 20 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	blur: {
+		position: 'absolute',
+		bottom: 0,
+		left: 0,
+		top: 0,
+		right: 0,
+		opacity: 0.8,
+		borderRadius: 30 * DP,
+		zIndex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	bottomCont: {
+		position: 'absolute',
+		width: '100%',
+		height: 36 * DP,
+		opacity: 1,
+		bottom: 0,
+		borderBottomLeftRadius: 30 * DP,
+		borderBottomRightRadius: 30 * DP,
+	},
+});

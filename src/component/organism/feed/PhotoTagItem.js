@@ -25,7 +25,7 @@ import {styles} from 'Atom/image/imageStyle';
 import {Tag70} from 'Atom/icon';
 import Modal from 'Root/component/modal/Modal';
 
-export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, viewmode, feedType}) => {
+export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, viewmode, feedType, onPressPhoto}) => {
 	const [tags, setTags] = React.useState(taglist ? taglist : []);
 	const [showTags, setShowTags] = React.useState(!viewmode);
 	const nav = useNavigation();
@@ -56,7 +56,7 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 					nav.navigate('MissingAnimalDetail', {title: titleValue, _id: data._id});
 				}
 			} else {
-				Modal.popPhotoListViewModal([uri]);
+				onPressPhoto();
 			}
 		} else {
 			!viewmode && nav.navigate({name: 'UserList'});

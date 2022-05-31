@@ -1389,6 +1389,15 @@ export const buttonstyle = StyleSheet.create({
 		},
 		elevation: 4,
 	},
+	writeButton: {
+		height: 94 * DP,
+		width: 94 * DP,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: '#ff9888',
+		borderRadius: 35 * DP,
+		marginBottom: 20 * DP,
+	},
 });
 
 export const textstyles = StyleSheet.create({

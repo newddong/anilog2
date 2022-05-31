@@ -11,6 +11,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import community_obj from 'Root/config/community_obj';
 /**
  * 후기 아이템
  * @param {object} props - Props Object
@@ -217,10 +218,6 @@ export default Review = React.memo(props => {
 		}
 		return imageList;
 	};
-
-	// const onPressProfile = () => {
-	// 	navigation.push('UserProfile', {userobject: data.community_writer_id});
-	// };
 
 	const searchHighlight = data.community_title.split(new RegExp(`(${props.isSearch})`, 'gi'));
 

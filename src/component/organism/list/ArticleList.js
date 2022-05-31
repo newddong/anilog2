@@ -25,7 +25,7 @@ const ArticleList = props => {
 			<View style={[{flexDirection: 'row'}]}>
 				{props.selectMode ? (
 					<View style={{justifyContent: 'center', marginRight: 20 * DP}}>
-						<CheckBox state={item.checkBoxState} onCheck={() => props.onCheckBox(index)} />
+						{/* <CheckBox state={item.checkBoxState} onCheck={() => props.onCheckBox(index)} /> */}
 						{item.checkBoxState ? (
 							<Check50 onPress={() => onPressToggle(index, false)} />
 						) : (

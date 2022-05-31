@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, ScrollView, FlatList, Image, TouchableOpacity, RefreshControl, ActivityIndicator} from 'react-native';
+import {StyleSheet, View, FlatList, TouchableOpacity, RefreshControl, ActivityIndicator} from 'react-native';
 import {APRI10, BLACK} from 'Root/config/color';
 import {Animal_another_off, Animal_cat_off, Animal_dog_off, EmptyIcon, Filter60Border, Filter60Filled, WriteBoard} from 'Root/component/atom/icon';
 import ReviewList from 'Root/component/organism/list/ReviewList';
@@ -15,7 +15,7 @@ import community_obj from 'Root/config/community_obj';
 import {NETWORK_ERROR, REPORT_MENU, REVIEW_LIMIT} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
-import {buttonstyle, searchProtectRequest} from 'Templete/style_templete';
+import {searchProtectRequest} from 'Templete/style_templete';
 
 export default ReviewMain = ({route, navigation}) => {
 	const [data, setData] = React.useState('false');
@@ -40,19 +40,28 @@ export default ReviewMain = ({route, navigation}) => {
 	const [loading, setLoading] = React.useState(false);
 
 	const filterRef = React.useRef(false);
-	// React navigation focus event listener return old state 관련 자료 참고
-	// https://stackoverflow.com/questions/65859385/react-navigation-focus-event-listener-return-old-state
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
-			filterRef.current ? false : fetchData(); // 필터가 적용된 상태라면 다시 데이터를 받아와서는 안됨
+			// filterRef.current ? false : fetchData(); //포커스마다 새로 fetch를 시도하면 상세글을 갔다가 메인페이지로 돌아와도 기존의 스크롤로 이동을 하지 않음
+			// console.log('리뷰 게시글 전역변수 길이 :  ', community_obj.review.length);
+			console.log('community_obj.review.length : ', community_obj.review.length);
+			if (community_obj.review.length > 0) {
+				// let temp = [...data];
+				setData(community_obj.review);
+			}
 		});
-		// fetchData();
+		fetchData();
 		return unsubscribe;
 	}, []);
 
+	//리프레시 시도 시, 데이터 및 페이징 초기화
+	React.useEffect(() => {
+		refreshing ? fetchData(true) : false;
+	}, [refreshing]);
+
 	const fetchData = isRefresh => {
-		setLoading(true);
+		isRefresh ? false : setLoading(true); //refresh시도로 인한 api 접속은 loading indicator 미출력
 		getCommunityList(
 			{
 				limit: REVIEW_LIMIT,
@@ -68,15 +77,18 @@ export default ReviewMain = ({route, navigation}) => {
 						recommendList.push(v);
 					}
 				});
-				setRecommend(recommendList);
+				let list = [];
 				if (isRefresh) {
-					setData(res);
+					list = res;
 				} else if (data != 'false') {
 					console.log('temp lenth', [...data, ...res].length);
-					setData([...data, ...res]);
+					list = [...data, ...res];
 				} else {
-					setData(res);
+					list = res;
 				}
+				setRecommend(recommendList);
+				setData(list);
+				community_obj.review = list;
 				setOffset(offset + 1);
 				if (!hasNoFilter()) {
 					doFilter(community_obj.reviewFilter, result.msg.review);
@@ -147,7 +159,7 @@ export default ReviewMain = ({route, navigation}) => {
 													Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
 													setTimeout(() => {
 														Modal.close();
-														fetchData();
+														// fetchData();
 													}, 600);
 												}, 200);
 											},
@@ -375,7 +387,7 @@ export default ReviewMain = ({route, navigation}) => {
 			},
 			result => {
 				console.log('result/ onPressLike / ReviewMain : ', result.msg);
-				fetchData();
+				// fetchData(); //offSet이 자동 increment되는 문제 발생 우선 보류
 			},
 			err => console.log('err / onPressLike / ReviewMain : ', err),
 		);
@@ -431,10 +443,6 @@ export default ReviewMain = ({route, navigation}) => {
 		setRefreshing(true);
 		wait(0).then(() => setRefreshing(false));
 	};
-
-	React.useEffect(() => {
-		refreshing ? fetchData(true) : false;
-	}, [refreshing]);
 
 	//리스트에 출력될 리스트 목록 필터
 	const getData = () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, FlatList, Animated, Easing} from 'react-native';
 import {followUser, getUserProfile, unFollowUser} from 'Root/api/userapi';
-import {NETWORK_ERROR, NORMAL, PET, SHELTER} from 'Root/i18n/msg';
+import {COMMUNITY_PROFILE_LIMIT, FREE_LIMIT, NETWORK_ERROR, NORMAL, PET, REVIEW_LIMIT, SHELTER} from 'Root/i18n/msg';
 import {EmptyIcon, Message94, Write94} from 'Atom/icon';
 import TabSelectFilled_Type2 from 'Molecules/tab/TabSelectFilled_Type2';
 import ProfileInfo from 'Organism/info/ProfileInfo';
@@ -24,6 +24,7 @@ import {createMemoBox} from 'Root/api/userapi';
 import {getProtectRequestListByShelterId} from 'Root/api/shelterapi';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
+import {updateProtect} from 'Root/config/protect_obj';
 
 export default Profile = ({route}) => {
 	const navigation = useNavigation();
@@ -35,8 +36,21 @@ export default Profile = ({route}) => {
 	const [showOwnerState, setShowOwnerState] = React.useState(false); // 현재 로드되어 있는 profile의 userType이 Pet인 경우 반려인 계정 리스트의 출력 여부
 	const [showCompanion, setShowCompanion] = React.useState(true); // User계정이 반려동물버튼을 클릭
 	const flatlist = React.useRef();
-	// console.log('tabMenuselc', tabMenuSelected);
-	const fetchData = async () => {
+
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			fetchData();
+			if (data.user_type == 'user') {
+				fetchCommunity();
+				console.log('user focus profile');
+			} else if (data.user_type == 'shelter') {
+				fetchProtectRequest();
+			}
+		});
+		return unsubscribe;
+	}, []);
+
+	const fetchData = () => {
 		if (route.params && route.params.userobject) {
 			getUserProfile(
 				{
@@ -62,14 +76,18 @@ export default Profile = ({route}) => {
 		}
 	};
 
+	//유저 프로필일 경우 하단의 커뮤니티 탭
 	const fetchCommunity = () => {
 		getCommunityListByUserId(
 			{
 				userobject_id: route.params.userobject._id,
 				community_type: 'all',
+				limit: 10000,
+				// page: offset,
 			},
 			result => {
-				console.log('result / getCommunityListuser , ', result.msg.free.length);
+				console.log('result / getCommunityListuser , free ', result.msg.free.length);
+				console.log('result / getCommunityListuser , review ', result.msg.review.length);
 				setCommList(result.msg);
 			},
 			err => {
@@ -106,18 +124,6 @@ export default Profile = ({route}) => {
 	};
 
 	React.useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', async () => {
-			fetchData();
-			if (data.user_type == 'user') {
-				fetchCommunity();
-			} else if (data.user_type == 'shelter') {
-				fetchProtectRequest();
-			}
-		});
-		return unsubscribe;
-	}, []);
-
-	React.useEffect(() => {
 		switch (tabMenuSelected) {
 			case 0:
 				getFeedListByUserId(
@@ -136,7 +142,7 @@ export default Profile = ({route}) => {
 				getUserTaggedFeedList(
 					{userobject_id: route.params.userobject._id},
 					result => {
-						console.log('유저의 태그된 피드 리스트', result);
+						// console.log('유저의 태그된 피드 리스트', result);
 						setFeedList(result.msg);
 					},
 					err => {
@@ -415,7 +421,7 @@ export default Profile = ({route}) => {
 		// navigation.push('ProtectAnimalFeedList');
 	};
 
-	//보호소프로필의 피드 및 태그 탭 썸네일 클릭xx
+	//보호소프로필의 보호요청게시글 즐겨찾기 클릭
 	const onOff_FavoriteTag = (bool, index) => {
 		setFavoriteEtc(
 			{
@@ -425,6 +431,7 @@ export default Profile = ({route}) => {
 			},
 			result => {
 				console.log('result / favoriteEtc / Profile : ', result.msg.favoriteEtc);
+				updateProtect(protectList[index]._id, bool);
 			},
 			err => console.log('err / favoriteEtc / Profile : ', err),
 		);
@@ -472,9 +479,7 @@ export default Profile = ({route}) => {
 						/>
 					);
 				} else {
-					if (commList == 'false') {
-						return <Loading isModal={false} />;
-					} else return <CommunityList data={commList} initializeCommList={fetchCommunity} />;
+					return <CommunityList data={commList} user_id={route.params.userobject._id} />;
 				}
 			} else if (data.user_type == 'pet') {
 				if (tabMenuSelected != 2) {
@@ -485,11 +490,6 @@ export default Profile = ({route}) => {
 							onClickThumnail={onClick_Thumbnail_FeedTab}
 						/>
 					);
-				} else {
-					//커뮤니티 탭
-					if (commList == 'false') {
-						return <Loading isModal={false} />;
-					} else return <CommunityList data={commList} initializeCommList={fetchCommunity} />;
 				}
 			} else {
 				if (tabMenuSelected == 0) {
@@ -557,14 +557,7 @@ export default Profile = ({route}) => {
 				{data != '' ? (
 					<>
 						{showTabContent()}
-						<View
-							style={[
-								temp_style.floatingBtn,
-								profile.floatingBtn,
-								{alignItems: 'center'},
-								{justifyContent: 'center'},
-								// {backgroundColor: 'yellow'},
-							]}>
+						<View style={[temp_style.floatingBtn, profile.floatingBtn, {alignItems: 'center', justifyContent: 'center'}]}>
 							<Write94 onPress={moveToFeedWrite} />
 						</View>
 					</>
@@ -582,54 +575,15 @@ export default Profile = ({route}) => {
 					<>
 						{showTabContent()}
 						{userGlobalObject.userInfo._id == data._id ? (
-							<View
-								style={[
-									temp_style.floatingBtn,
-									profile.floatingBtn,
-									{alignItems: 'center'},
-									{justifyContent: 'center'},
-									// {backgroundColor: 'yellow'},
-								]}>
+							<View style={[temp_style.floatingBtn, profile.floatingBtn, {alignItems: 'center', justifyContent: 'center'}]}>
 								<Write94 onPress={moveToFeedWrite} />
 							</View>
 						) : (
-							<View
-								style={[
-									temp_style.floatingTwoBtn,
-									profile.floatingBtn,
-									{alignItems: 'center'},
-									{justifyContent: 'center'},
-									// {backgroundColor: 'yellow'},
-								]}>
-								<View
-									style={[
-										{
-											height: 94 * DP,
-											width: 94 * DP,
-											justifyContent: 'center',
-											alignItems: 'center',
-											backgroundColor: '#ff9888',
-											borderRadius: 35 * DP,
-											marginBottom: 20 * DP,
-										},
-										buttonstyle.shadow,
-									]}>
+							<View style={[temp_style.floatingTwoBtn, profile.floatingBtn, {alignItems: 'center', justifyContent: 'center'}]}>
+								<View style={[buttonstyle.writeButton, buttonstyle.shadow]}>
 									<Message94 onPress={() => onPressSendMsg(data._id, data.user_nickname)} />
 								</View>
-
-								<View
-									style={[
-										{
-											height: 94 * DP,
-											width: 94 * DP,
-											justifyContent: 'center',
-											alignItems: 'center',
-											backgroundColor: '#ff9888',
-											borderRadius: 35 * DP,
-											marginBottom: 20 * DP,
-										},
-										buttonstyle.shadow,
-									]}>
+								<View style={[buttonstyle.writeButton, buttonstyle.shadow]}>
 									<Write94 onPress={moveToFeedWrite} />
 								</View>
 							</View>

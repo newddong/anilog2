@@ -48,32 +48,40 @@ const OneAlarm = props => {
 	// 			break;
 	// 	}
 	// };
-	return (
-		<View style={[isNewNote ? [styles.yescontainer, {backgroundColor: colors[value]}] : styles.container]}>
-			<TouchableOpacity onPress={() => props.onLabelClick(data)}>
-				{data.notice_user_related_id.user_profile_uri ? (
-					<View style={[styles.userAlarmContainer]}>
-						<Image source={{uri: data.notice_user_related_id.user_profile_uri}} style={[styles.img_round_94]} />
-						<Text style={[styles.messageContainer, txt.noto26]}>{data.notice_user_contents_kor}</Text>
-						<View style={[{justifyContent: 'flex-end'}]}>
-							<View style={styles.timeBeforeContainer}>
-								<Text style={[txt.noto24, {color: GRAY10}]}>{data.notice_user_date && getTimeLapsed(data.notice_user_date)}</Text>
+
+	if (!data) {
+		return <></>;
+	} else
+		return (
+			<View style={[isNewNote ? [styles.yescontainer, {backgroundColor: colors[value]}] : styles.container]}>
+				<TouchableOpacity onPress={() => props.onLabelClick(data)}>
+					{data.notice_user_related_id ? (
+						<View style={[styles.userAlarmContainer]}>
+							{data.notice_user_related_id.user_profile_uri ? (
+								<Image source={{uri: data.notice_user_related_id.user_profile_uri}} style={[styles.img_round_94]} />
+							) : (
+								<></>
+							)}
+							<Text style={[styles.messageContainer, txt.noto26]}>{data.notice_user_contents_kor}</Text>
+							<View style={[{justifyContent: 'flex-end'}]}>
+								<View style={styles.timeBeforeContainer}>
+									<Text style={[txt.noto24, {color: GRAY10}]}>{data.notice_user_date && getTimeLapsed(data.notice_user_date)}</Text>
+								</View>
 							</View>
 						</View>
-					</View>
-				) : (
-					<View style={[styles.userAlarmContainer]}>
-						<Text style={[styles.noProfileMessage, txt.noto26]}>{data.notice_user_contents_kor}</Text>
-						<View style={[{justifyContent: 'flex-end'}]}>
-							<View style={styles.timeBeforeContainer}>
-								<Text style={[txt.noto24, {color: GRAY10}]}>{data.notice_user_date && getTimeLapsed(data.notice_user_date)}</Text>
+					) : (
+						<View style={[styles.userAlarmContainer]}>
+							<Text style={[styles.noProfileMessage, txt.noto26]}>{data.notice_user_contents_kor}</Text>
+							<View style={[{justifyContent: 'flex-end'}]}>
+								<View style={styles.timeBeforeContainer}>
+									<Text style={[txt.noto24, {color: GRAY10}]}>{data.notice_user_date && getTimeLapsed(data.notice_user_date)}</Text>
+								</View>
 							</View>
 						</View>
-					</View>
-				)}
-			</TouchableOpacity>
-		</View>
-	);
+					)}
+				</TouchableOpacity>
+			</View>
+		);
 };
 const styles = StyleSheet.create({
 	container: {

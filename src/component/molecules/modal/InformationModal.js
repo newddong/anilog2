@@ -302,8 +302,8 @@ const InformationModal = props => {
 	};
 
 	return (
-		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={style.background}>
-			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow]}>
+		<TouchableOpacity activeOpacity={0.9} onPress={() => Modal.close()} style={style.background}>
+			<TouchableOpacity activeOpacity={0.9} style={[style.popUpWindow]}>
 				<View style={[style.header]}>
 					<Cross24_Filled onPress={() => props.onClose()} />
 				</View>

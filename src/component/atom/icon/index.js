@@ -159,6 +159,7 @@ import checkFilled from './checkFilled';
 import arrowMarkForCalendar from './arrowMarkForCalendar';
 import hyhpen from './hyhpen';
 import phoneIcon from './phoneIcon';
+import blur from './blur';
 import DP from 'Root/config/dp';
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
 
@@ -401,3 +402,4 @@ export const ArrowMarkForCalendar = makeSvg(arrowMarkForCalendar, {width: 22 * D
 export const Location42_APRI10 = makeSvg(location54_apri10, {width: 42 * DP, height: 42 * DP});
 export const Hyhpen = makeSvg(hyhpen, {width: 26 * DP, height: 2 * DP});
 export const PhoneIcon = makeSvg(phoneIcon, {width: 32 * DP, height: 32 * DP});
+export const Blur = makeSvg(blur, {width: 214 * DP, height: 214 * DP});

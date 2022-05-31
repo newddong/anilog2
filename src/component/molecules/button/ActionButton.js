@@ -1,11 +1,11 @@
 import React from 'react';
 import {Text, View, TouchableOpacity} from 'react-native';
 import PropsTypes, {any, bool, func, number, object, oneOf, oneOfType, string} from 'prop-types';
-import {APRI10, GRAY30} from 'Root/config/color';
+import {APRI10, GRAY20, GRAY30, MAINBLACK} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {btn_w226} from 'Atom/btn/btn_style';
-import {Arrow_Down_APRI10, Arrow_Down_GRAY30, Arrow_Down_White, Arrow_Up_APRI10, Arrow_Up_GRAY30, Arrow_Up_White} from 'Atom/icon';
+import {Arrow_Down_APRI10, Arrow_Down_GRAY10, Arrow_Down_GRAY30, Arrow_Down_White, Arrow_Up_APRI10, Arrow_Up_GRAY30, Arrow_Up_White} from 'Atom/icon';
 
 /**
  * 인풋 크기 24
@@ -29,7 +29,7 @@ const ActionButton = React.forwardRef((props, ref) => {
 		else if (props.btnStyle == 'filled') {
 			return 'white';
 		} //filled상태
-		return APRI10; //border 상태
+		return MAINBLACK; //border 상태
 	};
 
 	const border = () => {
@@ -37,7 +37,7 @@ const ActionButton = React.forwardRef((props, ref) => {
 		if (props.disable) {
 			return {borderColor: GRAY30, borderWidth: 2 * DP};
 		} else if (props.btnStyle == 'border') {
-			return {borderColor: APRI10, borderWidth: 2 * DP};
+			return {borderColor: GRAY30, borderWidth: 2 * DP};
 		}
 	};
 
@@ -48,7 +48,7 @@ const ActionButton = React.forwardRef((props, ref) => {
 		} else if (props.btnStyle == 'filled') {
 			return btnStatus ? <Arrow_Up_White /> : <Arrow_Down_White />;
 		} else if (props.btnStyle == 'border' || props.btnStyle == 'noBorder') {
-			return btnStatus ? <Arrow_Up_APRI10 /> : <Arrow_Down_APRI10 />;
+			return btnStatus ? <Arrow_Up_GRAY30 /> : <Arrow_Down_GRAY10 />;
 		}
 	};
 
@@ -80,18 +80,18 @@ const ActionButton = React.forwardRef((props, ref) => {
 					border(), // 버튼 테두리
 					{
 						//이외 스타일 적용
-						backgroundColor: props.btnStyle == 'filled' ? APRI10 : 'white',
+						backgroundColor: props.btnStyle == 'filled' ? MAINBLACK : 'white',
 						flexDirection: 'row',
 						justifyContent: 'center',
 						alignItems: 'center',
-						shadowColor: '#000000',
-						shadowOpacity: 0.1,
-						shadowRadius: 4.65,
-						shadowOffset: {
-							width: 1 * DP,
-							height: 1 * DP,
-						},
-						elevation: 1,
+						// shadowColor: '#000000',
+						// shadowOpacity: 0.1,
+						// shadowRadius: 4.65,
+						// shadowOffset: {
+						// 	width: 1 * DP,
+						// 	height: 1 * DP,
+						// },
+						// elevation: 1,
 					},
 				]}>
 				<Text

@@ -174,6 +174,7 @@ export default SearchTabNavigation = props => {
 					borderTopWidth: 2 * DP,
 					borderTopColor: GRAY40,
 					borderBottomColor: GRAY40,
+					elevation: 0,
 				},
 				tabBarIndicatorStyle: styles.tabBarIndicatorStyle,
 				lazy: true,

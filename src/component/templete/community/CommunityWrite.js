@@ -10,8 +10,7 @@ import {useNavigation} from '@react-navigation/native';
 import ImagePicker from 'react-native-image-crop-picker';
 import {changeLocalPathToS3Path} from 'Root/api/community';
 import {RichEditor} from 'react-native-pell-rich-editor';
-import {Animal_another_off, Animal_cat_off, Animal_dog_off} from 'Root/component/atom/icon';
-import {Animal_another, Animal_cat, Animal_dog} from 'Root/component/atom/icon';
+import AnimalButton from 'Root/component/molecules/button/AnimalButton';
 
 export default CommunityWrite = props => {
 	const navigation = useNavigation();
@@ -493,25 +492,25 @@ export default CommunityWrite = props => {
 				{isReview ? (
 					<View style={[style.animalFilter_container]}>
 						<View style={[style.animalFilter]}>
-							<View style={[style.shadow]}>
+							<View style={[]}>
 								{!animalType.dog ? (
-									<Animal_dog onPress={() => onPressAnimalFilter('dog')} />
+									<AnimalButton type={'dog'} on={false} onPress={() => onPressAnimalFilter('dog')} />
 								) : (
-									<Animal_dog_off onPress={() => onPressAnimalFilter('dog')} />
+									<AnimalButton type={'dog'} on={true} onPress={() => onPressAnimalFilter('dog')} />
 								)}
 							</View>
-							<View style={[style.shadow]}>
+							<View style={[]}>
 								{!animalType.cat ? (
-									<Animal_cat onPress={() => onPressAnimalFilter('cat')} />
+									<AnimalButton type={'cat'} on={false} onPress={() => onPressAnimalFilter('cat')} />
 								) : (
-									<Animal_cat_off onPress={() => onPressAnimalFilter('cat')} />
+									<AnimalButton type={'cat'} on={true} onPress={() => onPressAnimalFilter('cat')} />
 								)}
 							</View>
-							<View style={[style.shadow]}>
+							<View style={[]}>
 								{!animalType.etc ? (
-									<Animal_another onPress={() => onPressAnimalFilter('etc')} />
+									<AnimalButton type={'another'} on={false} onPress={() => onPressAnimalFilter('etc')} />
 								) : (
-									<Animal_another_off onPress={() => onPressAnimalFilter('etc')} />
+									<AnimalButton type={'another'} on={true} onPress={() => onPressAnimalFilter('etc')} />
 								)}
 							</View>
 						</View>
@@ -654,7 +653,7 @@ const style = StyleSheet.create({
 		width: 654 * DP,
 	},
 	animalFilter: {
-		width: 396 * DP,
+		width: 446 * DP,
 		marginTop: 20 * DP,
 		flexDirection: 'row',
 		alignSelf: 'flex-end',

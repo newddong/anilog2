@@ -3178,7 +3178,7 @@ export const searchProtectRequest = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	inside: {
-		width: 654 * DP,
+		width: 694 * DP,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
@@ -3206,7 +3206,7 @@ export const searchProtectRequest = StyleSheet.create({
 		// width: 330 * DP,
 		marginTop: 10 * DP,
 		flexDirection: 'row',
-		alignSelf: 'flex-end',
+		alignSelf: 'center',
 		// marginRight: 48 * DP,
 		// backgroundColor: 'yellow',
 		// justifyContent: 'space-between',
@@ -4408,7 +4408,7 @@ export const feedWrite = StyleSheet.create({
 		alignSelf: 'flex-end',
 		// backgroundColor: 'white',
 		shadowColor: '#000000',
-		shadowOpacity: 0.5,
+		shadowOpacity: 0.2,
 		borderRadius: 40 * DP,
 		shadowOffset: {
 			width: 2,
@@ -4419,7 +4419,7 @@ export const feedWrite = StyleSheet.create({
 		// 	width: 2 * DP,
 		// 	height: 1 * DP,
 		// },
-		elevation: 4,
+		elevation: 2,
 	},
 	public_setting_btn: {
 		width: 194 * DP,

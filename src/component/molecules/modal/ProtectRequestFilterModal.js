@@ -1,17 +1,17 @@
 import React from 'react';
-import {View, Text, StyleSheet, Dimensions, Platform, FlatList, TouchableOpacity, Animated, TextInput, Alert, Easing} from 'react-native';
+import {View, Text, StyleSheet, Dimensions, Platform, FlatList, TouchableOpacity, Animated, TextInput, Alert, Easing, Image} from 'react-native';
 import AniButton from '../button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
-import {WHITE, GRAY10, APRI10, GRAY20, BLACK, MIDNIGHT_BLUE, GRAY40, GRAY30} from 'Root/config/color';
+import {WHITE, GRAY10, APRI10, GRAY20, BLACK, MIDNIGHT_BLUE, GRAY40, GRAY30, RED10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import {Animal_another, Animal_another_off, Animal_cat, Animal_cat_off, Animal_dog, Check50, PhoneIcon, Rect50_Border} from 'Atom/icon';
-import {Animal_dog_off, ArrowMarkForCalendar, Cross46, Hyhpen} from 'Atom/icon';
+import {Check50, PhoneIcon, Rect50_Border, ArrowMarkForCalendar, Cross46, Hyhpen} from 'Atom/icon';
 import {day, PROTECT_LOCATION} from 'Root/i18n/msg';
 import YearDropDown from 'Molecules/dropdown/YearDropDown';
 import Modal from 'Root/component/modal/Modal';
 import moment from 'moment';
 import {getShelterInfo} from 'Root/api/protectapi';
+import AnimalButton from '../button/AnimalButton';
 
 /**
  * 버튼 한 개의 셀렉트 모달창
@@ -46,7 +46,6 @@ const ProtectRequestFilterModal = props => {
 	const animatedEndDate = React.useRef(new Animated.Value(0)).current; // 종료일
 	const animatedRegion = React.useRef(new Animated.Value(0)).current; // 지역
 	const animatedShelter = React.useRef(new Animated.Value(0)).current; // 보호소
-	const animatedMainHeight = React.useRef(new Animated.Value(784 * DP)).current; // 메인창 높이 조절(안드로이드 스크롤 버그 수정)
 
 	React.useEffect(() => {
 		console.log('previous', props.previous);
@@ -291,19 +290,13 @@ const ProtectRequestFilterModal = props => {
 					{/* 기간필터 */}
 					<View style={[style.durationCont]}>
 						<Text style={[txt.noto28]}>기간</Text>
-						<TouchableOpacity
-							onPress={() => onPressDuration('from')}
-							activeOpacity={0.6}
-							style={[style.durationItem, {borderBottomColor: data.from == '시작일' ? GRAY20 : BLACK}]}>
+						<TouchableOpacity onPress={() => onPressDuration('from')} activeOpacity={0.6} style={[style.durationItem]}>
 							<Text style={[txt.noto28, {color: data.from == '시작일' ? GRAY20 : BLACK}]}>{data.from == '시작일' ? '시작일' : data.from}</Text>
 						</TouchableOpacity>
 						<View style={[style.hyphen]}>
 							<Hyhpen />
 						</View>
-						<TouchableOpacity
-							activeOpacity={0.8}
-							onPress={() => onPressDuration('to')}
-							style={[style.durationItem, {marginLeft: 0 * DP, borderBottomColor: data.to == '종료일' ? GRAY20 : BLACK}]}>
+						<TouchableOpacity activeOpacity={0.8} onPress={() => onPressDuration('to')} style={[style.durationItem, {marginLeft: 0 * DP}]}>
 							<Text style={[txt.noto28, {color: data.to == '종료일' ? GRAY20 : BLACK}]}> {data.to == '종료일' ? '종료일' : data.to}</Text>
 						</TouchableOpacity>
 					</View>
@@ -325,17 +318,26 @@ const ProtectRequestFilterModal = props => {
 					</TouchableOpacity>
 					{/* 동물종류 필터 */}
 					<View style={[style.animalFilter]}>
-						<View style={[style.shadow_filter]}>
-							{!data.dog ? <Animal_dog onPress={() => onPressAnimalFilter('dog')} /> : <Animal_dog_off onPress={() => onPressAnimalFilter('dog')} />}
-						</View>
-						<View style={[style.shadow_filter]}>
-							{!data.cat ? <Animal_cat onPress={() => onPressAnimalFilter('cat')} /> : <Animal_cat_off onPress={() => onPressAnimalFilter('cat')} />}
-						</View>
-						<View style={[style.shadow_filter]}>
-							{!data.etc ? (
-								<Animal_another onPress={() => onPressAnimalFilter('etc')} />
+						<View style={[]}>
+							{!data.dog ? (
+								<AnimalButton type={'dog'} on={false} onPress={() => onPressAnimalFilter('dog')} />
 							) : (
-								<Animal_another_off onPress={() => onPressAnimalFilter('etc')} />
+								<AnimalButton type={'dog'} on={true} onPress={() => onPressAnimalFilter('dog')} />
+							)}
+						</View>
+						<View style={[]}>
+							{/* {!data.cat ? <Animal_cat onPress={() => onPressAnimalFilter('cat')} /> : <Animal_cat_off onPress={() => onPressAnimalFilter('cat')} />} */}
+							{!data.cat ? (
+								<AnimalButton type={'cat'} on={false} onPress={() => onPressAnimalFilter('cat')} />
+							) : (
+								<AnimalButton type={'cat'} on={true} onPress={() => onPressAnimalFilter('cat')} />
+							)}
+						</View>
+						<View style={[]}>
+							{!data.etc ? (
+								<AnimalButton type={'another'} on={false} onPress={() => onPressAnimalFilter('etc')} />
+							) : (
+								<AnimalButton type={'another'} on={true} onPress={() => onPressAnimalFilter('etc')} />
 							)}
 						</View>
 					</View>
@@ -401,7 +403,7 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 	},
 	popUpWindow: {
-		width: 694 * DP,
+		width: 654 * DP,
 		height: 784 * DP,
 		backgroundColor: 'white',
 		alignItems: 'center',
@@ -431,10 +433,11 @@ const style = StyleSheet.create({
 	},
 	durationItem: {
 		marginLeft: 20 * DP,
-		width: 178 * DP,
-		height: 82 * DP,
-		borderBottomColor: BLACK,
-		borderBottomWidth: 2 * DP,
+		width: 198 * DP,
+		height: 68 * DP,
+		borderRadius: 30 * DP,
+		borderColor: GRAY30,
+		borderWidth: 2 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',
 		// backgroundColor: 'lightblue',
@@ -470,7 +473,7 @@ const style = StyleSheet.create({
 		borderRadius: 22 * DP,
 	},
 	animalFilter: {
-		width: 420 * DP,
+		width: 440 * DP,
 		marginTop: 60 * DP,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
@@ -492,6 +495,7 @@ const style = StyleSheet.create({
 		borderRadius: 40 * DP,
 		marginTop: 60 * DP,
 		backgroundColor: WHITE,
+		borderColor: GRAY30,
 		borderWidth: 2 * DP,
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -531,7 +535,7 @@ const style = StyleSheet.create({
 	header: {
 		width: 750 * DP,
 		flexDirection: 'row',
-		backgroundColor: APRI10,
+		backgroundColor: GRAY30,
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		paddingHorizontal: 40 * DP,
@@ -541,7 +545,7 @@ const style = StyleSheet.create({
 	shelterSelectHeader: {
 		width: 750 * DP,
 		flexDirection: 'row',
-		backgroundColor: APRI10,
+		backgroundColor: GRAY30,
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		paddingHorizontal: 40 * DP,
@@ -615,8 +619,6 @@ const CalendarInFilter = props => {
 	const years = () => {
 		let years = [];
 		let this_year = new Date().getFullYear();
-		// console.log('props.future', props.future);
-		// console.log('props.past', props.past);
 		if (props.past) {
 			for (let i = 0; i < 10; i++) {
 				const year_to_String = JSON.stringify(this_year - i);
@@ -647,6 +649,16 @@ const CalendarInFilter = props => {
 					.map((data, index) => {
 						//result에는 해당 날짜를 하나씩 붙여간다.
 						let days = today.clone().startOf('year').week(week).startOf('week').add(index, 'day'); //d로해도되지만 직관성 - index값에  day정보
+						// console.log('days', new Date(days).getDay());
+						const getDayColor = () => {
+							let color = BLACK;
+							if (selectedDate == days.format('YY.MM.DD')) {
+								color = WHITE;
+							} else if (moment(days).day() == 0) {
+								color = RED10;
+							}
+							return color;
+						};
 						if (moment() > days) {
 							return (
 								<TouchableOpacity onPress={() => onSelectDate(days)} key={index} style={[calendar_style.today]}>
@@ -655,9 +667,7 @@ const CalendarInFilter = props => {
 											{width: 66 * DP, alignItems: 'center', justifyContent: 'center'},
 											selectedDate == days.format('YY.MM.DD') ? {backgroundColor: APRI10, borderRadius: 100 * DP} : {},
 										]}>
-										<Text style={[txt.roboto28b, {color: selectedDate == days.format('YY.MM.DD') ? WHITE : BLACK, lineHeight: 66 * DP}]}>
-											{days.format('D')}
-										</Text>
+										<Text style={[txt.roboto28b, {color: getDayColor(), lineHeight: 66 * DP}]}>{days.format('D')}</Text>
 									</View>
 								</TouchableOpacity>
 							);
@@ -817,11 +827,11 @@ const ScrollSelectBox = props => {
 	return (
 		<>
 			<TouchableOpacity activeOpacity={1} style={[style.header]}>
-				<Text onPress={onClose} style={[txt.noto30, {color: WHITE, paddingVertical: 22 * DP}]}>
+				<Text onPress={onClose} style={[txt.noto30, {paddingVertical: 22 * DP}]}>
 					취소
 				</Text>
 				<TouchableOpacity onPress={onSelectRegion}>
-					<Text style={[txt.noto30, {color: WHITE}]}>완료</Text>
+					<Text style={[txt.noto30b]}>완료</Text>
 				</TouchableOpacity>
 			</TouchableOpacity>
 			<View style={[style.list, {}]}>
@@ -835,7 +845,7 @@ const ScrollSelectBox = props => {
 								activeOpacity={1}
 								onPress={() => setSelectedItem(index)}
 								key={index}
-								style={[style.listItem, index == selectedItem && item != padding ? {backgroundColor: APRI10} : null]}>
+								style={[style.listItem, index == selectedItem && item != padding ? {backgroundColor: GRAY30} : null]}>
 								<Text style={[txt.roboto34, {color: getTextColor(index), fontSize: 32 * DP}]}>{item}</Text>
 							</TouchableOpacity>
 						);
@@ -893,9 +903,9 @@ const ShelterSelectBox = props => {
 	return (
 		<>
 			<TouchableOpacity activeOpacity={1} style={[style.shelterSelectHeader, style.shadow]}>
-				<Text style={[txt.noto30, {color: WHITE, paddingVertical: 22 * DP}]}>보호소 선택</Text>
+				<Text style={[txt.noto30, {paddingVertical: 22 * DP}]}>보호소 선택</Text>
 				<TouchableOpacity onPress={onConfirm}>
-					<Text style={[txt.noto30b, {color: WHITE}]}>완료</Text>
+					<Text style={[txt.noto30b]}>완료</Text>
 				</TouchableOpacity>
 			</TouchableOpacity>
 			<TouchableOpacity activeOpacity={1} style={[{flex: 1, alignItems: 'center', backgroundColor: 'white'}]}>
@@ -1017,7 +1027,8 @@ const calendar_style = StyleSheet.create({
 	},
 	weekend: {
 		fontSize: 30 * DP,
-		color: 'red',
+		fontWeight: 'bold',
+		color: RED10,
 		textAlign: 'center',
 	},
 

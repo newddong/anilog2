@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import moment from 'moment';
 import {txt} from 'Root/config/textstyle';
 import ProtectedThumbnail from 'Molecules/media/ProtectedThumbnail';
@@ -103,24 +103,24 @@ export default MissingReportItem = React.memo(props => {
 
 	const contents = () => {
 		return (
-			<View style={[animalNeedHelp.detailContainer]}>
-				<View style={[animalNeedHelp.detail_lowerMenu, {width: 410 * DP, justifyContent: 'center'}]}>
+			<View style={[style.detailContainer]}>
+				<View style={[style.detail_lowerMenu, {width: 410 * DP, justifyContent: 'center'}]}>
 					{data.feed_type == 'missing' && (
 						<>
 							{/* 동물 종류 및 품종 */}
-							<View style={[animalNeedHelp.lowerMenu_kindAndBreed]}>
+							<View style={[style.lowerMenu_kindAndBreed]}>
 								<Text style={[txt.noto34b, {}]}>{data.missing_animal_species || ''}</Text>
-								<Text style={[txt.noto28b, {}, animalNeedHelp.breedText]} numberOfLines={1}>
+								<Text style={[txt.noto28b, {}, style.breedText]} numberOfLines={1}>
 									{data.missing_animal_species_detail || ''}
 								</Text>
 							</View>
 							{/* 실종/제보 관련 Details */}
-							<View style={[animalNeedHelp.lowerMenu_helpDetail]}>
+							<View style={[style.lowerMenu_helpDetail]}>
 								{/* <Text style={[txt.noto24, {color: RED10}]}>실종일: {data.missing_animal_date || ''}</Text> */}
 								<Text style={[txt.noto28b]} numberOfLines={1}>
 									실종일: {getParsedDate()}
 								</Text>
-								<Text style={[txt.noto28b, {}]}>
+								<Text style={[txt.noto28, {}]}>
 									나이:{data.missing_animal_age + '살' || ''} / 성별: {getParsedSex()}
 									{/* {data.missing_animal_sex} */}
 								</Text>
@@ -137,21 +137,21 @@ export default MissingReportItem = React.memo(props => {
 						<>
 							{/* 제보 / 제보위치 / 특징 */}
 							{/* 동물 종류 및 품종 */}
-							{data.report_animal_species == '동물종류' || data.report_animal_species == undefined ? (
+							{/* {data.report_animal_species == '동물종류' || data.report_animal_species == undefined ? (
 								<></>
 							) : (
-								<View style={[animalNeedHelp.lowerMenu_kindAndBreed]}>
+								<View style={[style.lowerMenu_kindAndBreed]}>
 									<Text style={[txt.noto34b]}>{data.report_animal_species == '동물종류' ? '' : data.report_animal_species || ''}</Text>
 								</View>
-							)}
+							)} */}
 
 							{/* 실종/제보 관련 Details */}
-							<View style={[animalNeedHelp.lowerMenu_helpDetail]}>
+							<View style={[style.lowerMenu_helpDetail]}>
 								<Text style={[txt.noto28b]}>제보일: {getParsedDate()}</Text>
 								<Text style={[txt.noto28, {width: 408 * DP}]} numberOfLines={1}>
 									제보 위치: {data.report_witness_location || ''}
 								</Text>
-								<Text style={[txt.noto28, {width: 408 * DP}]} numberOfLines={2}>
+								<Text style={[txt.noto28, {width: 408 * DP}]} numberOfLines={3}>
 									제보 내용: {data.feed_content || '내용 없음'}
 								</Text>
 							</View>
@@ -163,15 +163,15 @@ export default MissingReportItem = React.memo(props => {
 	};
 
 	return (
-		<View style={[animalNeedHelp.container, {height: 244 * DP}]}>
-			<View style={[animalNeedHelp.container_basicInfo]}>
-				<View style={[animalNeedHelp.protectedThumbnail_container]}>
+		<View style={[style.container, {height: 266 * DP}]}>
+			<View style={[style.container_basicInfo]}>
+				<View style={[style.protectedThumbnail_container]}>
 					<ProtectedThumbnail data={thumbnailData} onLabelClick={(status, id) => props.onClickLabel(status, id)} />
 				</View>
 				<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.2} onPress={() => props.onClickLabel(data.feed_type, data._id)}>
 					<View>{contents()}</View>
 				</TouchableOpacity>
-				<View style={[animalNeedHelp.detail_upper_tag]}>
+				<View style={[style.detail_upper_tag]}>
 					{checkIsMyPost() ? (
 						<></>
 					) : data.is_favorite ? (
@@ -195,3 +195,60 @@ MissingReportItem.defaultProps = {
 	showFavorite: true,
 	selectMode: false,
 };
+
+const style = StyleSheet.create({
+	container: {
+		// width: 654 * DP,
+		// height: 214 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		flexDirection: 'column',
+		item_bracket: '#FF00FF',
+	},
+	protectedThumbnail_container: {
+		width: 226 * DP,
+		height: 226 * DP,
+	},
+	gender: {
+		width: 48 * DP,
+		height: 48 * DP,
+		position: 'absolute',
+		right: 10 * DP,
+		top: 10 * DP,
+	},
+	detailContainer: {
+		width: 380 * DP,
+		height: 214 * DP,
+		marginLeft: 30 * DP,
+		// marginTop: 10 * DP,
+	},
+	detail_upper_tag: {
+		width: 48 * DP,
+	},
+	detail_lowerMenu: {
+		width: 410 * DP,
+		height: 226 * DP,
+		paddingVertical: 4 * DP,
+	},
+	lowerMenu_kindAndBreed: {
+		height: 50 * DP,
+		// justifyContent: 'center',
+		marginBottom: -5 * DP,
+		alignItems: 'center',
+		flexDirection: 'row',
+	},
+	breedText: {
+		alignSelf: 'center',
+		marginLeft: 20 * DP,
+		maxWidth: 250 * DP,
+	},
+	lowerMenu_helpDetail: {
+		// height: 226 * DP,
+		// marginTop: 10 * DP,
+		// backgroundColor: 'yellow',
+	},
+	container_basicInfo: {
+		flexDirection: 'row',
+		// backgroundColor: '#FF00FF',
+	},
+});

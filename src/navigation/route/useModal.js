@@ -42,6 +42,7 @@ import LoginRequestModal from 'Root/component/molecules/modal/LoginRequestModal'
 import ReviewFilterModal from 'Root/component/molecules/modal/ReviewFilterModal';
 import ProtectRequestFilterModal from 'Root/component/molecules/modal/ProtectRequestFilterModal';
 import NetworkErrorModal from 'Root/component/molecules/modal/NetworkErrorModal';
+import UrgentBtnModal from 'Root/component/molecules/modal/UrgentBtnModal';
 
 export function useModal() {
 	const [isPop, setPop] = React.useState(false);
@@ -278,6 +279,11 @@ export function useModal() {
 
 	Modal.popNetworkErrorModal = msg => {
 		popIn(<NetworkErrorModal msg={msg} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popUrgentBtnModal = (onReport, onMissing, layout) => {
+		popIn(<UrgentBtnModal onReport={onReport} onMissing={onMissing} layout={layout} />);
 		!isPop && setPop(true);
 	};
 

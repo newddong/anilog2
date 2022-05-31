@@ -1,6 +1,5 @@
 import React from 'react';
-import {Text, View, FlatList, RefreshControl, ActivityIndicator} from 'react-native';
-import {searchProtectRequest} from 'Templete/style_templete';
+import {Text, View, FlatList, RefreshControl, ActivityIndicator, StyleSheet} from 'react-native';
 import {APRI10, GRAY10} from 'Root/config/color';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import {txt} from 'Root/config/textstyle';
@@ -300,16 +299,16 @@ export default ProtectRequestList = ({route}) => {
 	} else {
 		return (
 			<View style={{flex: 1, backgroundColor: '#fff', alignItems: 'center'}}>
-				<View style={[searchProtectRequest.filterView]} key={'header'}>
-					<View style={[searchProtectRequest.inside]}>
-						<View style={[searchProtectRequest.shadow_filter]}>
+				<View style={[style.filterView]} key={'header'}>
+					<View style={[style.inside]}>
+						<View style={[style.shadow_filter, filterRef.current ? style.shadow : false]}>
 							{filterRef.current ? <Filter60Filled onPress={onPressFilter} /> : <Filter60Border onPress={onPressFilter} />}
 						</View>
-						<View style={[searchProtectRequest.onOffBtnView]}>
-							<View style={[searchProtectRequest.onOffBtnMsg]}>
+						<View style={[style.onOffBtnView]}>
+							<View style={[style.onOffBtnMsg]}>
 								<Text style={[txt.noto20, {color: GRAY10}]}>{ONLY_CONTENT_FOR_ADOPTION}</Text>
 							</View>
-							<View style={[searchProtectRequest.onOffSwitch]}>
+							<View style={[style.onOffSwitch]}>
 								<OnOffSwitch onSwtichOn={filterOn} onSwtichOff={filterOff} />
 							</View>
 						</View>
@@ -335,7 +334,7 @@ export default ProtectRequestList = ({route}) => {
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
 				/>
 				{loading ? (
-					<View style={searchProtectRequest.indicatorCont}>
+					<View style={style.indicatorCont}>
 						<ActivityIndicator size="large" color={APRI10} />
 					</View>
 				) : (
@@ -347,3 +346,97 @@ export default ProtectRequestList = ({route}) => {
 };
 
 ProtectRequestList.defaultProps = {};
+
+const style = StyleSheet.create({
+	container: {
+		flex: 1,
+	},
+	filterView: {
+		width: 750 * DP,
+		// height: 68 * DP,
+		backgroundColor: '#fff',
+		marginTop: 30 * DP,
+		marginBottom: 30 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	inside: {
+		width: 694 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		// backgroundColor: 'red',
+	},
+	onOffBtnView: {
+		// width: 344 * DP,
+		height: 36 * DP,
+		// marginTop: 30 * DP,
+		// marginRight: 30 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+	},
+	onOffBtnMsg: {
+		width: 240 * DP,
+		height: 32 * DP,
+		alignSelf: 'center',
+		// position: 'absolute',
+	},
+	onOffSwitch: {
+		// position: 'absolute',
+		// right: 0,
+	},
+	kindFilter: {
+		// width: 330 * DP,
+		marginTop: 10 * DP,
+		flexDirection: 'row',
+		alignSelf: 'flex-end',
+		// marginRight: 48 * DP,
+		// backgroundColor: 'yellow',
+		// justifyContent: 'space-between',
+	},
+	kindFilterItem: {
+		width: 110 * DP,
+		// backgroundColor: 'red',
+		marginLeft: 20 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between',
+	},
+	animalNeedHelpList: {
+		marginTop: 80 * DP,
+		width: 750 * DP,
+		alignSelf: 'center',
+		// backgroundColor: '#FF00FF',
+	},
+	animalMissingReportList: {
+		marginTop: 30 * DP,
+		width: 750 * DP,
+		alignSelf: 'center',
+		// backgroundColor: '#FF00FF',
+	},
+	shadow_filter: {
+		height: 60 * DP,
+		justifyContent: 'space-between',
+		flexDirection: 'row',
+
+		borderRadius: 20 * DP,
+	},
+	shadow: {
+		shadowOpacity: 0.5,
+		shadowRadius: 1 * DP,
+		elevation: 2,
+		shadowOffset: {
+			height: 2 * DP,
+			width: 2 * DP,
+		},
+	},
+	indicatorCont: {
+		position: 'absolute',
+		left: 0,
+		right: 0,
+		top: 0,
+		bottom: 0,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+});

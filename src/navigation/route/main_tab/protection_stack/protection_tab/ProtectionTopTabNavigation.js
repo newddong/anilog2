@@ -3,7 +3,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import ProtectRequestList from 'Templete/protection/ProtectRequestList';
 import MissingReportList from 'Templete/missing/MissingReportList';
 import {Dimensions, StyleSheet} from 'react-native';
-import {APRI10, GRAY10} from 'Root/config/color';
+import {APRI10, GRAY10, GRAY40} from 'Root/config/color';
 import DP from 'Root/config/dp';
 
 const ProtectionTab = createMaterialTopTabNavigator();
@@ -14,9 +14,16 @@ export default ProtectionTopTabNavigation = ({route, navigation}) => {
 			initialRouteName="ProtectRequestList"
 			screenOptions={{
 				tabBarItemStyle: {height: 70 * DP},
-				tabBarIndicatorStyle: {backgroundColor: 'black', height: 2 * DP},
+				tabBarIndicatorStyle: {backgroundColor: 'black', height: 6 * DP},
 				tabBarLabelStyle: [styles.tabbarLabelStyle],
 				tabBarInactiveTintColor: GRAY10,
+				tabBarStyle: {
+					borderBottomWidth: 2 * DP,
+					borderTopWidth: 2 * DP,
+					borderTopColor: GRAY40,
+					borderBottomColor: GRAY40,
+					elevation: 0,
+				},
 				// swipeEnabled: false,
 				// lazy: true,
 			}}

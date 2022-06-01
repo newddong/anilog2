@@ -18,4 +18,7 @@ export default userGlobalObj = {
 	t: {
 		y: 0,
 	},
+	protectionTab: {
+		t: true,
+	},
 };

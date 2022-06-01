@@ -11,6 +11,7 @@ import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import SelectStat from 'Root/component/organism/list/SelectStat';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 import {Check50, Rect50_Border} from 'Root/component/atom/icon';
+import {updateProtect} from 'Root/config/protect_obj';
 
 export default FavoriteProtectRequest = ({route}) => {
 	const navigation = useNavigation();
@@ -33,11 +34,13 @@ export default FavoriteProtectRequest = ({route}) => {
 				collectionName: 'protectrequestobjects',
 			},
 			result => {
-				console.log('result / getFavoriteEtcListByUserId / FavoriteProtectRequest : ', result.msg[0]);
+				// console.log('result / getFavoriteEtcListByUserId / FavoriteProtectRequest : ', result.msg[0]);
 				let temp = [];
 				result.msg.map((v, i) => {
-					// v.favorite_etc_target_object_id.is_favorite = v.is_favorite;
-					// temp.push(v.favorite_etc_target_object_id);
+					if (v) {
+						v.favorite_etc_target_object_id.is_favorite = v.is_favorite;
+						temp.push(v.favorite_etc_target_object_id);
+					}
 				});
 				setData(temp);
 			},
@@ -106,6 +109,9 @@ export default FavoriteProtectRequest = ({route}) => {
 				cancelSelectMode(false);
 				checkSelectMode(false);
 				fetchData();
+				listToDelete.map((v, i) => {
+					updateProtect(v, false);
+				});
 			},
 			err => console.log('err / setFavoriteEtcCancelList / FavoriteReview : ', err),
 		);
@@ -161,6 +167,7 @@ export default FavoriteProtectRequest = ({route}) => {
 			result => {
 				console.log('result / favoriteEtc / ProtectRequestList : ', result.msg.favoriteEtc);
 				fetchData();
+				updateProtect(data[index]._id, bool);
 			},
 			err => {
 				console.log('err / favoriteEtc / PRotectRequestList : ', err);
@@ -169,7 +176,8 @@ export default FavoriteProtectRequest = ({route}) => {
 	};
 
 	//보호요청글 클릭
-	const onClickLabel = (status, id, item) => {
+	const onClickLabel = item => {
+		console.log('item', item);
 		if (selectMode) {
 			return false;
 		} else {
@@ -205,7 +213,12 @@ export default FavoriteProtectRequest = ({route}) => {
 				) : (
 					<></>
 				)}
-				<ProtectRequest data={item} onFavoriteTag={bool => onFavoriteTag(bool, index)} selectMode={selectMode} />
+				<ProtectRequest
+					data={item}
+					onClickLabel={() => onClickLabel(item)}
+					onFavoriteTag={bool => onFavoriteTag(bool, index)}
+					selectMode={selectMode}
+				/>
 			</View>
 		);
 	};

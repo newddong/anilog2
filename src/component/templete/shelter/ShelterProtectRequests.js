@@ -29,7 +29,7 @@ export default ShelterProtectRequests = ({route, navigation}) => {
 			{
 				shelter_userobject_id: userGlobalObject.userInfo._id,
 				protect_request_status: filterStatus,
-				protect_request_object_id: null,
+				protect_request_object_id: '',
 				request_number: 10,
 			},
 			result => {

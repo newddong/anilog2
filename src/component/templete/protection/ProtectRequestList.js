@@ -4,7 +4,7 @@ import {searchProtectRequest} from 'Templete/style_templete';
 import {APRI10, GRAY10} from 'Root/config/color';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import {txt} from 'Root/config/textstyle';
-import {NETWORK_ERROR, ONLY_CONTENT_FOR_ADOPTION, PET_KIND, PROTECT_LOCATION} from 'Root/i18n/msg';
+import {NETWORK_ERROR, ONLY_CONTENT_FOR_ADOPTION, PROTECT_REQUEST_MAIN_LIMIT} from 'Root/i18n/msg';
 import Modal from 'Root/component/modal/Modal';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import Loading from 'Root/component/molecules/modal/Loading';
@@ -13,14 +13,17 @@ import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 import {Filter60Border, Filter60Filled} from 'Root/component/atom/icon';
 import moment from 'moment';
 import {getSearchResultProtectRequest} from 'Root/api/protectapi';
+import protect_obj from 'Root/config/protect_obj';
+import {useNavigation} from '@react-navigation/core';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
-export default ProtectRequestList = ({navigation, route}) => {
+export default ProtectRequestList = ({route}) => {
+	const navigation = useNavigation();
 	const today = moment();
 	const current_date = moment().format('YY.MM.DD');
 	const one_month_before = today.clone().subtract(1, 'month').format('YY.MM.DD');
 	const [data, setData] = React.useState('false');
 	const [offset, setOffset] = React.useState(1);
-	const LIMIT = 50;
 	const [loading, setLoading] = React.useState(false);
 	const [filterData, setFilterData] = React.useState({
 		from: '',
@@ -34,21 +37,35 @@ export default ProtectRequestList = ({navigation, route}) => {
 	});
 	const [onlyAdoptable, setOnlyAdoptable] = React.useState(false);
 	const filterRef = React.useRef(false);
-
+	const flatlist = React.useRef();
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
-			if (data != 'false') {
-				//처음 페이지 진입시 두번 호출안하도록
-				getList();
+			// filterRef.current ? false : fetchData(); //포커스마다 새로 fetch를 시도하면 상세글을 갔다가 메인페이지로 돌아와도 기존의 스크롤로 이동을 하지 않음
+			// console.log('리뷰 게시글 전역변수 길이 :  ', community_obj.review.length);
+			console.log('protect_obj.protect.length : ', protect_obj.protect.length);
+			if (protect_obj.protect.length > 0) {
+				// let temp = [...data];
+				console.log('protect_obj. on Focus :: ', protect_obj.protect[0].is_favorite);
+				setData(protect_obj.protect);
 			}
 		});
-		getList(); //필터가 바뀔 때마다 호출되도록 설정
 		return unsubscribe;
+		userGlobalObject.protectionTab.t = true;
+	}, []);
+
+	React.useEffect(() => {
+		getList(); //필터가 바뀔 때마다 호출되도록 설정
 	}, [filterData]);
 
+	// React.useEffect(() => {
+	// 	if (route.params?.pressed != 0) {
+	// 		moveToTop();
+	// 		// console.log('represseddddd');
+	// 	}
+	// }, [route.params]);
 	//보호요청리스트 목록 받기
-	const getList = () => {
-		setLoading(true);
+	const getList = isRefresh => {
+		isRefresh ? false : setLoading(true);
 		let filter = {protect_animal_species: []}; // api 필터 데이터
 		let sdt = ''; //시작일
 		let edt = ''; //종료일
@@ -82,45 +99,43 @@ export default ProtectRequestList = ({navigation, route}) => {
 		filterData.etc ? filter.protect_animal_species.push('그 외') : false;
 		filter.protect_request_notice_sdt = sdt;
 		filter.protect_request_notice_edt = edt;
-		// console.log('filterData', filterData);
-		// console.log('filter', filter);
 		//api 접속
 		console.log('offset', offset);
 		console.log('data Lenth', data.length);
-		// console.log('')
 		getSearchResultProtectRequest(
 			{
 				...filter,
-				page: offset,
-				limit: LIMIT,
+				page: isRefresh ? 1 : offset,
+				limit: PROTECT_REQUEST_MAIN_LIMIT,
 			},
 			result => {
 				// console.log('result 첫값 :', result.msg[0].protect_animal_id.protect_animal_rescue_location);
 				console.log('result length  ', result.msg.length);
 				let res = result.msg;
-				res.filter(e => e != null);
+				res.filter(e => e != null); //간헐적으로 오는 null 익셉션 처리
+				//오브젝트 뎁스 일치화 작업
 				res.map((v, i) => {
 					v.protect_animal_sex = v.protect_animal_id.protect_animal_sex;
 					v.protect_animal_status = v.protect_animal_id.protect_animal_status;
 				});
-				if (data != 'false') {
+				//data=='false'라면 첫 페이지 호출임
+				let list = [];
+				if (isRefresh || data == 'false') {
+					list = res;
+				} else {
+					// 페이징 호출 분기
 					let temp = [...data];
 					res.map((v, i) => {
-						console.log('i', i, v.protect_animal_id.protect_animal_rescue_location);
 						temp.push(v);
 					});
 					console.log('temp lenth', temp.length);
-					setData(temp);
-					// setData([...data, ...res.slice(offset * LIMIT, offset * LIMIT + 1)]);
-				} else {
-					res.map((v, i) => {
-						console.log('첫값 : ', i, v.protect_animal_id.protect_animal_rescue_location);
-					});
-					setData(res);
+					list = temp;
 				}
-				setOffset(offset + 1);
+				setData(list);
+				protect_obj.protect = list;
+				setOffset(offset + 1); //데이터를 추가한 뒤 페이지 ++
 				Modal.close();
-				setLoading(false);
+				setLoading(false); //로딩 Indicator 종료
 			},
 			err => {
 				console.log('err / getSearchResultProtectRequest / ProtectRequestList  ', err);
@@ -138,6 +153,7 @@ export default ProtectRequestList = ({navigation, route}) => {
 		Modal.popProtectRequestFilterModal(
 			{...filterData},
 			arg => {
+				//필터에 변동사항이 없을 경우 필터 처리 미적용
 				if (
 					!arg.cat &&
 					!arg.dog &&
@@ -148,16 +164,16 @@ export default ProtectRequestList = ({navigation, route}) => {
 					arg.shelter_list.length == 0
 				) {
 					console.log('arg', arg);
+					filterRef.current = false; //필터에 변동사항이 없을 경우 필터 처리 미적용
 					setData('false');
 					setOffset(1);
 					setFilterData(arg);
-					filterRef.current = false;
 				} else {
 					console.log('arg', arg);
 					setData('false');
 					setOffset(1);
 					setFilterData(arg);
-					filterRef.current = true;
+					filterRef.current = true; //필터에 변동사항이 존재할시 필터 처리 적용
 				}
 				Modal.close();
 			},
@@ -231,12 +247,15 @@ export default ProtectRequestList = ({navigation, route}) => {
 
 	//리스트 페이징 작업
 	const onEndReached = () => {
-		console.log('EndReached', getData().length % LIMIT);
+		console.log('EndReached', getData().length % PROTECT_REQUEST_MAIN_LIMIT);
 		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
 
-		if (getData().length % LIMIT == 0) {
+		if (getData().length % PROTECT_REQUEST_MAIN_LIMIT == 0) {
 			getList();
 		}
+	};
+	const moveToTop = () => {
+		flatlist.current.scrollToOffset({animated: true, offset: 0});
 	};
 
 	const renderItem = ({item, index}) => {
@@ -262,6 +281,8 @@ export default ProtectRequestList = ({navigation, route}) => {
 		return new Promise(resolve => setTimeout(resolve, timeout));
 	};
 	const onRefresh = () => {
+		// setData('false');
+		setOffset(1);
 		setRefreshing(true);
 		wait(0).then(() => setRefreshing(false));
 	};
@@ -280,6 +301,10 @@ export default ProtectRequestList = ({navigation, route}) => {
 				  },
 		[],
 	);
+
+	React.useEffect(() => {
+		refreshing ? getList(true) : false;
+	}, [refreshing]);
 
 	if (data == 'false') {
 		return <Loading isModal={false} />;
@@ -315,9 +340,10 @@ export default ProtectRequestList = ({navigation, route}) => {
 					ListEmptyComponent={whenEmpty}
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
 					// removeClippedSubviews={true}
-					extraData={data}
+					extraData={refreshing}
 					// maxToRenderPerBatch={5} // re-render를 막는군요.
 					windowSize={11}
+					ref={flatlist}
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
 				/>
 				{loading ? (

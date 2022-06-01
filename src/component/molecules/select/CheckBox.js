@@ -2,8 +2,8 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {Text, View, TouchableWithoutFeedback} from 'react-native';
 import DP from 'Root/config/dp';
-import {Check50, Rect48_GRAY30, Rect50_Border} from 'Atom/icon';
-import {GRAY10, GRAY20} from 'Root/config/color';
+import {Check42, Check50, Rect42_Border, Rect48_GRAY30, Rect50_Border} from 'Atom/icon';
+import {GRAY10, GRAY20, MAINBLACK} from 'Root/config/color';
 import {findAccount_style} from 'Root/component/templete/style_templete';
 /**
  *
@@ -35,17 +35,19 @@ export default CheckBox = props => {
 	}, [checked]);
 
 	return (
-		<View style={{flexDirection: 'row'}}>
+		<View style={[{flexDirection: 'row'}, {justifyContent: 'center'}]}>
 			{/* {console.log('checked=>' + checked)} */}
-			{props.disable ? <Rect48_GRAY30 /> : checked ? <Check50 onPress={toggleCheck} /> : <Rect50_Border onPress={toggleCheck} />}
+			{/* 원래 50크기의 check 를 사용하고 있었음 */}
+			{props.disable ? <Rect48_GRAY30 /> : checked ? <Check42 onPress={toggleCheck} /> : <Rect42_Border onPress={toggleCheck} />}
 			<Text
 				style={[
-					txt.noto24,
+					props.txtSize == 28 ? txt.noto28 : txt.noto24,
 					{
 						// 사용불가 boolean에 따른 style 적용
-						color: props.disable ? GRAY20 : GRAY10,
+						// color: props.disable ? GRAY20 : GRAY10,
+						color: MAINBLACK,
 						paddingLeft: 12 * DP,
-						marginTop: 5 * DP,
+						// marginTop: 5 * DP,
 					},
 				]}>
 				{props.value}

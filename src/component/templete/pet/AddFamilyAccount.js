@@ -125,7 +125,7 @@ export default AddFamilyAccount = ({route, navigation}) => {
 	return (
 		<View style={[addFamilyAccount_style.container]}>
 			<View style={[temp_style.inputWithSearchIcon, addFamilyAccount_style.inputWithSearchIcon]}>
-				<InputWithSearchIcon onSearch={search} onChange={onChangeKeyword} width={654} placeholder={'가족 계정을 검색해주세요.'} />
+				<InputWithSearchIcon onSearch={search} value={searchInput} onChange={onChangeKeyword} width={654} placeholder={'가족 계정을 검색해주세요.'} />
 			</View>
 
 			<ScrollView style={[addFamilyAccount_style.accountList]}>

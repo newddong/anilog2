@@ -6,14 +6,14 @@ import {GRAY10, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
 import ReviewBriefList from 'Root/component/organism/list/ReviewBriefList';
 import {useNavigation} from '@react-navigation/core';
 import ReviewContent from 'Root/component/organism/article/ReviewContent';
-import {getCommunityByObjectId, getCommunityList} from 'Root/api/community';
+import {getCommunityByObjectId, getCommunityList, updateAndDeleteCommunity} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {createComment, deleteComment, getCommentListByCommunityId, updateComment} from 'Root/api/commentapi';
 import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
-import community_obj from 'Root/config/community_obj';
+import community_obj, {updateReview} from 'Root/config/community_obj';
 import {NETWORK_ERROR, REPORT_MENU} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
 import {likeEtc} from 'Root/api/likeetc';
@@ -51,12 +51,16 @@ export default ReviewDetail = props => {
 	const floatInput = React.useRef();
 
 	React.useEffect(() => {
-		getReviewData();
+		const unsubscribe = navigation.addListener('focus', () => {
+			getReviewData();
+		});
+		// getReviewData();
 		getComment();
 		fetchCommunityList();
 		if (props.route.params.searchInput != '') {
 			setSearchInput(props.route.params.searchInput);
 		}
+		return unsubscribe;
 	}, []);
 
 	//커뮤니티 데이터
@@ -66,7 +70,7 @@ export default ReviewDetail = props => {
 				community_object_id: props.route.params.community_object._id,
 			},
 			result => {
-				// console.log('result / getCommunityByObjectId / ArticleDetail', result.msg);
+				console.log('ArticleDetail / getCommunityByObjectId / Result : ', result.status);
 				setData(result.msg);
 				if (result.msg.community_address.normal_address.address_name != '') {
 					navigation.setOptions({
@@ -83,15 +87,38 @@ export default ReviewDetail = props => {
 		);
 	};
 
+	//하단 리뷰
 	const fetchCommunityList = () => {
 		getCommunityList(
 			{
+				limit: 10000,
 				community_type: 'review',
 			},
 			result => {
-				const res = result.msg.review.slice(0, 4);
-				let removeThisReview = res.filter(e => e._id != data._id);
-				setReviewList(removeThisReview);
+				const res = result.msg.review;
+				const findIndex = res.findIndex(e => e._id == props.route.params.community_object._id);
+				let list = [];
+				const number_to_list = 4;
+				if (res.length < number_to_list) {
+					//전체글이 11 이하라면 그냥 바로 출력
+					console.log('review.length < number_to_list', res.length < number_to_list);
+					setReviewList(res);
+				} else if (res.length - findIndex < number_to_list) {
+					//현재 보고 있는 게시글이 전체 인덱스 중 10이하라면?
+					console.log('findIndex < number_to_list');
+					for (let ind = findIndex + 1; ind < res.length; ind++) {
+						//이후 글만 차례로 출력
+						list.push(res[ind]);
+					}
+				} else {
+					for (let ind = findIndex + 1; ind < findIndex + number_to_list; ind++) {
+						list.push(res[ind]);
+					}
+				}
+				setReviewList(list);
+				// let removeThisReview = res.filter(e => e._id != data._id);
+				// console.log('removeThisReview', removeThisReview.length);
+				// setReviewList(removeThisReview);
 			},
 			err => {
 				console.log('err / getCommunityList / ReviewDEtail : ', err);
@@ -349,6 +376,7 @@ export default ReviewDetail = props => {
 		setEditMode(true);
 		const findParentIndex = comments.findIndex(e => e._id == parent);
 		setEditData({...comment, parent: findParentIndex});
+		setParentComment(); // 수정모드로 전환시 기존의 답글쓰기 데이터 출력 취소
 		scrollToReplyBox();
 		setPrivateComment(comment.comment_is_secure);
 	};
@@ -490,8 +518,33 @@ export default ReviewDetail = props => {
 				},
 				result => {
 					console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
+					updateReview(false, data._id, bool);
 				},
 				err => console.log('err / favoriteEtc / ArticleDetail : ', err),
+			);
+		}
+	};
+
+	//좋아요 클릭
+	const onPressLike = bool => {
+		console.log('bool', bool);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			likeEtc(
+				{
+					collectionName: 'communityobjects',
+					post_object_id: data._id,
+					is_like: bool,
+				},
+				result => {
+					console.log('result/ onPressLike / ReviewMain : ', result.msg.targetPost);
+					setData({...data, community_is_like: bool, community_like_count: bool ? ++data.community_like_count : --data.community_like_count});
+					updateReview(true, data._id, bool);
+				},
+				err => console.log('err / onPressLike / ReviewMain : ', err),
 			);
 		}
 	};
@@ -507,6 +560,7 @@ export default ReviewDetail = props => {
 			result => {
 				console.log('result / likeEtc / ReviewDetail : ', result.msg.likeEtc);
 				fetchCommunityList();
+				updateReview(true, reviewList[index]._id, bool); // 리뷰 메인 페이지 데이터 전역변수 최신화
 			},
 			err => {
 				console.log(' err / likeEtc / ReviewDetail :', err);
@@ -531,29 +585,6 @@ export default ReviewDetail = props => {
 	const showChild = index => {
 		console.log('showChild', index);
 		scrollRef.current.scrollToIndex({animated: true, index: index, viewPosition: 0});
-	};
-
-	//좋아요 클릭
-	const onPressLike = bool => {
-		console.log('bool', bool);
-		if (userGlobalObject.userInfo.isPreviewMode) {
-			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
-			});
-		} else {
-			likeEtc(
-				{
-					collectionName: 'communityobjects',
-					post_object_id: data._id,
-					is_like: bool,
-				},
-				result => {
-					console.log('result/ onPressLike / ReviewMain : ', result.msg.targetPost);
-					setData({...data, community_is_like: bool, community_like_count: bool ? ++data.community_like_count : --data.community_like_count});
-				},
-				err => console.log('err / onPressLike / ReviewMain : ', err),
-			);
-		}
 	};
 
 	const header = () => {
@@ -673,7 +704,7 @@ export default ReviewDetail = props => {
 							privateComment={privateComment}
 							ref={floatInput}
 							editData={editData}
-							shadow={false}
+							shadow={true}
 							parentComment={parentComment}
 							onCancelChild={onCancelChild}
 							onFocus={onFocus}

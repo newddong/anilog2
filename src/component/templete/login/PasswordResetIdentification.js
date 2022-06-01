@@ -1,8 +1,8 @@
 import React from 'react';
 import {Text, View, StyleSheet} from 'react-native';
-import {GRAY10, GRAY20} from 'Root/config/color';
+import {GRAY10, GRAY20, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {btn_w654} from 'Atom/btn/btn_style';
+import {btn_w654, btn_w694_r30} from 'Atom/btn/btn_style';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import Modal from 'Component/modal/Modal';
 import DP from 'Root/config/dp';
@@ -190,7 +190,7 @@ export default PasswordResetIdentification = props => {
 		<View style={[login_style.wrp_main, {flex: 1}]}>
 			{/* <View style={[styles.container, {flex: 1}]}> */}
 			<View style={[styles.infoMessageBox, {marginBottom: 80 * DP}]}>
-				<Text style={[txt.noto30, {color: GRAY10, textAlign: 'center'}]}>회원가입시 등록한 정보로 {'\n'} 비밀번호를 재설정 할 수 있습니다.</Text>
+				<Text style={[txt.noto30, {color: MAINBLACK, textAlign: 'center'}]}>회원가입시 등록한 정보로 {'\n'} 비밀번호를 재설정 할 수 있습니다.</Text>
 			</View>
 			{/* <View style={[styles.nameInputBox]}>
 				<Input30
@@ -213,7 +213,8 @@ export default PasswordResetIdentification = props => {
 			{/* <View style={[styles.buttonContainer]}>
 				<AniButton onPress={onPressConfirm} btnTitle={'확인'} btnStyle={'border'} btnLayout={btn_w654} titleFontStyle={32} />
 			</View> */}
-			<View style={[temp_style.phoneNumVerification]}>
+			<View style={[styles.phoneNumVerification]}>
+				{/* <View> */}
 				<PhoneNumVerification
 					requestVerification={verificationRequest}
 					requestReVerification={reVerificationRequest}
@@ -233,13 +234,13 @@ export default PasswordResetIdentification = props => {
 				/>
 			</View>
 
-			<View style={[btn_style.btn_w654, userAssign.btn_w654]}>
+			<View style={[btn_style.btn_w694, {marginTop: 120 * DP}]}>
 				{phoneVerified ? (
-					<AniButton btnTitle={'다음'} btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} onPress={onPressConfirm} />
+					<AniButton btnTitle={'다음'} btnLayout={btn_w694_r30} btnStyle={'border'} titleFontStyle={32} onPress={onPressConfirm} />
 				) : verified ? (
-					<AniButton btnTitle={'인증하기'} btnLayout={btn_w654} disable={false} titleFontStyle={32} onPress={notUser} />
+					<AniButton btnTitle={'인증하기'} btnLayout={btn_w694_r30} disable={false} titleFontStyle={32} onPress={notUser} />
 				) : (
-					<AniButton btnTitle={'인증하기'} btnLayout={btn_w654} disable={true} titleFontStyle={32} onPress={verificationRequest} />
+					<AniButton btnTitle={'인증하기'} btnLayout={btn_w694_r30} disable={true} titleFontStyle={32} onPress={verificationRequest} />
 				)}
 			</View>
 		</View>
@@ -266,5 +267,8 @@ const styles = StyleSheet.create({
 	},
 	buttonContainer: {
 		marginTop: 110 * DP,
+	},
+	phoneNumVerification: {
+		width: 694 * DP,
 	},
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View, ScrollView} from 'react-native';
+import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View, ScrollView, ActivityIndicator} from 'react-native';
 import DP from 'Root/config/dp';
 import {GRAY10, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
 import CommentList from 'Root/component/organism/comment/CommentList';
@@ -33,7 +33,7 @@ export default ArticleDetail = props => {
 	const [data, setData] = React.useState('false');
 	const [searchInput, setSearchInput] = React.useState('');
 	const [comments, setComments] = React.useState('false');
-	const [articleList, setArticleList] = React.useState([]);
+	const [articleList, setArticleList] = React.useState('false');
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
 	const [parentComment, setParentComment] = React.useState(); //대댓글을 쓰는 경우 해당 댓글의 id container
@@ -52,8 +52,8 @@ export default ArticleDetail = props => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			//다른 탭(ex - My 탭의 즐겨찾기한 커뮤니티 목록에서 들어온 경우)에서의 호출
+			getArticleData();
 		});
-		getArticleData();
 		getComment();
 		getArticleList();
 		navigation.setOptions({title: '자유 게시글'});
@@ -74,7 +74,7 @@ export default ArticleDetail = props => {
 				community_object_id: props.route.params.community_object._id,
 			},
 			result => {
-				// console.log('result / getCommunityByObjectId / ArticleDetail', result.msg);
+				console.log('ArticleDetail / getCommunityByObjectId / Result', result.status);
 				setData(result.msg);
 			},
 			err => {
@@ -88,40 +88,35 @@ export default ArticleDetail = props => {
 	const getArticleList = () => {
 		getCommunityList(
 			{
+				limit: 10000,
 				community_type: 'free',
 			},
 			result => {
-				// console.log('result / getCommunityList / ArticleMain :', result.msg.free);
+				// console.log('result / getCommunityList / ArticleDetail :', result.msg.free.length);
 				const free = result.msg.free;
-				if (free.length < 6) {
-					//전체글이 6개 이하라면 그냥 바로 출력
+				const findIndex = result.msg.free.findIndex(e => e._id == props.route.params.community_object._id);
+				let list = [];
+				if (free.length < 11) {
+					//전체글이 11 이하라면 그냥 바로 출력
+					console.log('free.length < 11', free.length < 11);
 					setArticleList(free);
-				} else {
-					let temp = [];
-					free.map((e, i) => {
-						const arg_date = new Date(e.community_date).getTime();
-						const this_date = new Date(data.community_date).getTime();
-						this_date > arg_date ? temp.push(e) : false;
-					});
-					if (temp.length > 5) {
-						//전체글이 6개 이상이며 이전의 작성글도 6개 미만이라면 그 이전의 글을 모두 긁어온다
-						setArticleList(temp);
-					} else {
-						//전체글이 6개 이상이지만 해당 작성글 작성일자보다 이전의 작성글이 6개 이하라면 그 이후의 글도 긁어온다.
-						let near = [];
-						let index = free.findIndex(function (item, i) {
-							return item._id === data._id;
-						});
-						const remain = free.length - index;
-						for (let ind = index - (6 - remain); ind < index + remain; ind++) {
-							free[ind]._id != data._id ? near.push(free[ind]) : false;
-						}
-						setArticleList(near);
+				} else if (free.length - findIndex < 11) {
+					//현재 보고 있는 게시글이 전체 인덱스 중 10이하라면?
+					console.log('findIndex < 11');
+					for (let ind = findIndex + 1; ind < free.length - 1; ind++) {
+						//이후 글만 차례로 출력
+						list.push(free[ind]);
 					}
+					setArticleList(list);
+				} else {
+					for (let ind = findIndex + 1; ind < findIndex + 11; ind++) {
+						list.push(free[ind]);
+					}
+					setArticleList(list);
 				}
 			},
 			err => {
-				console.log('err / getCommunityList / ArticleMain : ', err);
+				console.log('err / getCommunityList / ArticleDetail : ', err);
 				if (err.includes('code 500')) {
 					setArticleList([]);
 					setTimeout(() => {
@@ -375,6 +370,7 @@ export default ArticleDetail = props => {
 	const onEdit = (comment, parent) => {
 		// console.log('수정 데이터', comment);
 		setEditMode(true);
+		setParentComment(); // 수정모드로 전환시 기존의 답글쓰기 데이터 출력 취소
 		const findParentIndex = comments.findIndex(e => e._id == parent);
 		setEditData({...comment, parent: findParentIndex});
 		setPrivateComment(comment.comment_is_secure);
@@ -601,6 +597,9 @@ export default ArticleDetail = props => {
 	};
 
 	const bottom = () => {
+		const noMoreArticle = () => {
+			return <Text style={[txt.noto28]}>다음 글이 없습니다.</Text>;
+		};
 		return (
 			<View style={{alignItems: 'center'}}>
 				{comments.length == 0 ? (
@@ -624,11 +623,15 @@ export default ArticleDetail = props => {
 				) : (
 					<></>
 				)}
-
-				<ArticleList
-					items={articleList}
-					onPressArticle={onPressArticle} //게시글 내용 클릭
-				/>
+				{articleList != 'false' ? (
+					<ArticleList
+						items={articleList}
+						onPressArticle={onPressArticle} //게시글 내용 클릭
+						whenEmpty={noMoreArticle}
+					/>
+				) : (
+					<ActivityIndicator size={'large'} />
+				)}
 			</View>
 		);
 	};
@@ -703,7 +706,7 @@ export default ArticleDetail = props => {
 							privateComment={privateComment}
 							ref={floatInput}
 							editData={editData}
-							shadow={false}
+							shadow={true}
 							parentComment={parentComment}
 							onCancelChild={onCancelChild}
 							onFocus={onFocus}

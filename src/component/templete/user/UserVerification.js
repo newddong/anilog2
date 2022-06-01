@@ -1,7 +1,7 @@
 import React from 'react';
-import {Text, View, ScrollView} from 'react-native';
+import {Text, View, ScrollView, StyleSheet} from 'react-native';
 import {txt} from 'Root/config/textstyle';
-import {btn_w654} from 'Atom/btn/btn_style';
+import {btn_w654, btn_w694_r30} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import StageBar from 'Molecules/info/Stagebar';
 import PhoneNumVerification from 'Organism/form/PhoneNumVerification';
@@ -11,6 +11,8 @@ import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import {getSMStoken, getUserAccountCount} from 'Root/api/userapi';
 import Modal from 'Root/component/modal/Modal';
+import {GRAY10, MAINBLACK} from 'Root/config/color';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 // DropDown 컴포넌트 해결될 시 props처리와 data처리 추가해야함
 // 이메일부분 삭제 컨펌 나면 삭제 실시 예정
 
@@ -33,6 +35,7 @@ export default UserVerification = props => {
 	const [impid, setImpid] = React.useState();
 	const [failed, setFailed] = React.useState(false); // 인증 실패 boolean
 	const [phoneVerified, setPhoneVerified] = React.useState(false); //핸드폰 번호 인증 완료
+	const [easter, setEaster] = React.useState(0);
 	const navigation = useNavigation();
 	const goToNextStep = () => {
 		console.log(user_data);
@@ -207,23 +210,33 @@ export default UserVerification = props => {
 		console.log('isValid', isValid, verified);
 		setVerified(isValid);
 	};
+	const easterFunc = () => {
+		console.log('easter', easter);
+		if (easter < 5) {
+			setEaster(easter + 1);
+		} else {
+			goToNextStep();
+			setEaster(0);
+		}
+	};
 
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
 			<ScrollView>
 				{/* (M)StageBar	 */}
-				<View style={[temp_style.stageBar, progressbar_style.stageBar]}>
+				<View style={[styles.stageBar, {marginTop: 20 * DP}]}>
 					<StageBar
-						backgroundBarStyle={stagebar_style.backgroundBar} //배경이 되는 bar의 style, width props으로 너비결정됨
-						insideBarStyle={stagebar_style.insideBar} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
+						backgroundBarStyle={styles.backgroundBar} //배경이 되는 bar의 style, width props으로 너비결정됨
+						// insideBarStyle={stagebar_style.insideBar} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
 						textStyle={[txt.roboto24, stagebar_style.text]} //text의 스타일
+						insideBarStyle={{width: 160 * DP, height: 20 * DP, backgroundColor: MAINBLACK, borderRadius: 18 * DP}} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
 						current={2} //현재 단계를 정의
 						maxstage={4} //전체 단계를 정의
-						width={600 * DP} //bar의 너비
+						width={640 * DP} //bar의 너비
 					/>
 				</View>
 				<View style={[temp_style.textMassageLeftTop]}>
-					<Text style={userAssign.textMessageInside}>휴대폰 번호로 가입이 가능합니다.</Text>
+					<Text style={styles.textMessageInside}>기재한 전화번호로 로그인이 가능합니다.</Text>
 				</View>
 				<View style={[temp_style.phoneNumVerification]}>
 					<PhoneNumVerification
@@ -254,20 +267,49 @@ export default UserVerification = props => {
 					)}
 				</View> */}
 
-				<View style={[btn_style.btn_w654, userAssign.btn_w654]}>
+				<View style={[btn_style.btn_w694, {marginTop: 100 * DP}]}>
 					{phoneVerified ? (
-						<AniButton btnTitle={'다음'} btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} onPress={goToNextStep} />
+						<AniButton btnTitle={'다음'} btnLayout={btn_w694_r30} btnStyle={'border'} titleFontStyle={32} onPress={goToNextStep} />
 					) : verified ? (
-						<AniButton btnTitle={'인증하기'} btnLayout={btn_w654} disable={false} titleFontStyle={32} onPress={alreadyUser} />
+						<AniButton btnTitle={'인증하기'} btnLayout={btn_w694_r30} btnStyle={'border'} disable={false} titleFontStyle={32} onPress={alreadyUser} />
 					) : (
-						<AniButton btnTitle={'인증하기'} btnLayout={btn_w654} disable={true} titleFontStyle={32} onPress={verificationRequest} />
+						<AniButton
+							btnTitle={'인증하기'}
+							btnLayout={btn_w694_r30}
+							btnStyle={'border'}
+							disable={true}
+							titleFontStyle={32}
+							onPress={verificationRequest}
+						/>
 					)}
 				</View>
 				{/* 개발용 다음 버튼 */}
-				<View style={[btn_style.btn_w654, userAssign.btn_w654]}>
-					<AniButton btnTitle={'다음'} btnLayout={btn_w654} btnStyle={'border'} titleFontStyle={32} onPress={goToNextStep} />
-				</View>
+				{/* <View style={[btn_style.btn_w694, userAssign.btn_w654, {backgroundColor: 'yellow'}, {marginTop: 430 * DP}]}> */}
+				{/* <AniButton btnTitle={'다음'} btnLayout={btn_w694_r30} btnStyle={'border'} titleFontStyle={32} onPress={goToNextStep} /> */}
+				<TouchableWithoutFeedback
+					style={[btn_style.btn_w694, userAssign.btn_w654, {marginTop: 430 * DP}]}
+					onPress={easterFunc}></TouchableWithoutFeedback>
+				{/* </View> */}
 			</ScrollView>
 		</View>
 	);
 };
+const styles = StyleSheet.create({
+	textMessageInside: {
+		textAlign: 'left',
+		color: GRAY10,
+	},
+	stageBar: {
+		width: 694 * DP,
+		height: 32 * DP,
+	},
+	backgroundBar: {
+		width: 640 * DP,
+		height: 20 * DP,
+		backgroundColor: 'white',
+		borderRadius: 20 * DP,
+		borderWidth: 4 * DP,
+		// borderColor: APRI10,
+		borderColor: MAINBLACK,
+	},
+});

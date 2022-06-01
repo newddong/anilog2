@@ -12,13 +12,14 @@ import {changeLocalPathToS3Path} from 'Root/api/community';
 import {RichEditor} from 'react-native-pell-rich-editor';
 import {Animal_another_off, Animal_cat_off, Animal_dog_off} from 'Root/component/atom/icon';
 import {Animal_another, Animal_cat, Animal_dog} from 'Root/component/atom/icon';
-import Geolocation from '@react-native-community/geolocation';
+import {WRITE_FREE_INFO, WRITE_REVIEW_INFO} from 'Root/i18n/msg';
 
 export default CommunityEdit = props => {
 	const navigation = useNavigation();
 	const previous = props.route.params.previous;
 	const isReview = props.route.params.isReview; //후기 게시글 여부 boolean
 	const [data, setData] = React.useState(previous);
+	const [updateHeight, setUpdateHeight] = React.useState(false);
 
 	const [animalType, setAnimalType] = React.useState({
 		dog: false,
@@ -61,6 +62,13 @@ export default CommunityEdit = props => {
 
 	const onHeightChange = e => {
 		console.log('onHeightChange', e);
+		setTimeout(() => {
+			if (!updateHeight) {
+				richText.current?.insertHTML('<br/>');
+				richText.current?.focusContentEditor();
+				setUpdateHeight(true);
+			}
+		}, 500);
 		if (e < 300 * DP) {
 			setHeight(300 * DP);
 		} else {
@@ -70,7 +78,7 @@ export default CommunityEdit = props => {
 
 	//내용 입력
 	const onChange = editorData => {
-		console.log('editorData', editorData);
+		// console.log('editorData', editorData);
 		setData({...data, community_content: editorData});
 		scrollRef.current.scrollTo({y: cursor - 50, duration: 100, animated: true});
 	};
@@ -138,17 +146,19 @@ export default CommunityEdit = props => {
 					s3path_uri: imageList,
 				},
 				result => {
-					// console.log('result / s3path / Write ', result.msg);
-					// resolve(result.msg);
 					result.msg.map((v, i) => {
 						richText.current?.insertHTML('<p><br/></p></div>');
 						richText.current?.insertHTML(
 							`<div><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick');" \n
-							 height="320px;" width="${editorLayout.width};" style="border-radius:15px; margin:5px 0px 5px 0px; "/></div>`,
+						  style="height: auto; width: ${editorLayout.width};  border-radius:15px; object-fit:contain;  margin:5px 0px 5px 0px; "/></div>`,
 						);
+						if (i == result.msg.length - 1) {
+							setTimeout(() => {
+								richText.current?.insertHTML('<p><br/></p></div>');
+								Modal.close();
+							}, 1000);
+						}
 					});
-					// richText.current?.focusContentEditor();
-					Modal.close();
 				},
 				err => {
 					console.log('err', err);
@@ -158,6 +168,16 @@ export default CommunityEdit = props => {
 		}, 100);
 		richText.current?.focusContentEditor();
 	};
+
+	const onMessage = async event => {
+		console.log('e', event);
+	};
+
+	//상세글이 처음 마운트 될 때 height를 조정
+	const runFirst = `
+	  window.ReactNativeWebView.postMessage(document.body.scrollHeight);
+      true; // note: this is required, or you'll sometimes get silent failures
+    `;
 
 	//사진 불러오기
 	const onPressPhotoSelect = () => {
@@ -286,6 +306,10 @@ export default CommunityEdit = props => {
 		setData({...data, community_free_type: select});
 	};
 
+	const removeEditor = () => {
+		richText.current.dismissKeyboard();
+	};
+
 	const article_type_box = type => {
 		let text = '';
 		switch (type) {
@@ -348,7 +372,7 @@ export default CommunityEdit = props => {
 
 	return (
 		<View style={[style.container, {}]}>
-			<ScrollView contentContainerStyle={[style.insideScrollView, {}]} ref={scrollRef} showsVerticalScrollIndicator={false}>
+			<ScrollView contentContainerStyle={[style.insideScrollView]} ref={scrollRef} showsVerticalScrollIndicator={false}>
 				{/* //제목 및 카테고리 선택 */}
 				<TextInput
 					onChangeText={onChangeTitle}
@@ -376,107 +400,70 @@ export default CommunityEdit = props => {
 					</View>
 				)}
 				{/* 텍스트 입력 박스 */}
-				<View style={[style.content, {}]}>
-					{data.community_address.normal_address.address_name != '' ? (
-						<View style={[style.location]}>
-							<Location54_Filled />
-							<Text style={[txt.noto26b, {color: APRI10, marginLeft: 10 * DP, width: 550 * DP}]}>
-								{data.community_address.road_address.address_name == '도로명 주소가 없는 위치입니다. '
-									? data.community_address.normal_address.address_name
-									: data.community_address.road_address.address_name}
-							</Text>
-						</View>
-					) : (
-						<></>
-					)}
-					{Platform.OS == 'android' ? (
-						// <ScrollView>
-						// 	<RichEditor
-						// 		ref={richText}
-						// 		initialContentHTML={data.community_content}
-						// 		initialFocus={true}
-						// 		editorStyle={{
-						// 			contentCSSText: 'font-size:14px;',
-						// 		}}
-						// 		onLayout={onLayout}
-						// 		onChange={onChange}
-						// 		style={{
-						// 			width: '100%',
-						// 			opacity: 0.99,
-						// 			height: height,
-						// 			// flex: 1,
-						// 		}}
-						// 		// initialHeight={1000}
-						// 		onHeightChange={onHeightChange}
-						// 		placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
-						// 		onCursorPosition={onCursorPosition}
-						// 	/>
-						// </ScrollView>
-						<ScrollView>
-							<RichEditor
-								ref={richText}
-								initialContentHTML={data.community_content}
-								editorStyle={{contentCSSText: 'font-size:13px;'}}
-								onChange={onChange}
-								onLayout={onLayout}
-								keyboardDisplayRequiresUserAction={true}
-								style={{width: '100%', opacity: 0.99}}
-								placeholder={
-									isReview ? '서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.' : '내용을 작성해 주세요.'
-								}
-								onCursorPosition={onCursorPosition}
-								onHeightChange={onHeightChange}
-								pasteAsPlainText={true}
-							/>
-						</ScrollView>
-					) : (
-						<>
-							{/* <RichEditor
-								ref={richText}
-								initialContentHTML={data.community_content}
-								showSoftInputOnFocus={false}
-								initialFocus={true}
-								onFocus={() => setShowBtn(true)}
-								onBlur={() => setShowBtn(false)}
-								keyboardDisplayRequiresUserAction={true}
-								editorStyle={{
-									contentCSSText: 'font-size:14px;',
-								}}
-								onChange={onChange}
-								onLayout={onLayout}
-								style={{
-									width: '100%',
-									opacity: 0.99,
-								}}
-								placeholder={'서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.'}
-								onCursorPosition={onCursorPosition}
-							/> */}
-							<View style={{flexDirection: 'row'}}>
+				<View style={{flexDirection: 'row'}}>
+					<TouchableOpacity onPress={removeEditor} activeOpacity={1} style={{width: 48 * DP}}></TouchableOpacity>
+					<View style={[style.content, {}]}>
+						{data.community_address.normal_address.address_name != '' ? (
+							<View style={[style.location]}>
+								<Location54_Filled />
+								<Text style={[txt.noto26b, {color: APRI10, marginLeft: 10 * DP, width: 550 * DP}]}>
+									{data.community_address.road_address.address_name == '도로명 주소가 없는 위치입니다. '
+										? data.community_address.normal_address.address_name
+										: data.community_address.road_address.address_name}
+								</Text>
+							</View>
+						) : (
+							<></>
+						)}
+						{Platform.OS == 'android' ? (
+							<ScrollView>
 								<RichEditor
 									ref={richText}
 									initialContentHTML={data.community_content}
-									showSoftInputOnFocus={false}
-									initialFocus={true}
-									keyboardDisplayRequiresUserAction={true}
 									editorStyle={{contentCSSText: 'font-size:13px;'}}
 									onChange={onChange}
-									onFocus={() => setShowBtn(true)}
-									onBlur={() => setShowBtn(false)}
-									style={{width: '100%', opacity: 0.99}}
-									contentMode={'mobile'}
-									placeholder={
-										isReview ? '서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.' : '내용을 작성해 주세요.'
-									}
-									onCursorPosition={onCursorPosition}
+									onLayout={onLayout}
+									keyboardDisplayRequiresUserAction={true}
+									style={{width: '100%', opacity: 0.99, height: height}}
+									placeholder={isReview ? WRITE_REVIEW_INFO : WRITE_FREE_INFO}
 									pasteAsPlainText={true}
+									onCursorPosition={onCursorPosition}
+									onHeightChange={onHeightChange}
+									onMessage={onMessage}
+									injectedJavaScriptBeforeContentLoaded={runFirst}
 								/>
-							</View>
-						</>
-					)}
+							</ScrollView>
+						) : (
+							<>
+								<View style={{flexDirection: 'row'}}>
+									<RichEditor
+										ref={richText}
+										initialContentHTML={data.community_content}
+										showSoftInputOnFocus={false}
+										keyboardDisplayRequiresUserAction={true}
+										editorStyle={{contentCSSText: 'font-size:13px;'}}
+										onChange={onChange}
+										onFocus={() => setShowBtn(true)}
+										onBlur={() => setShowBtn(false)}
+										style={{width: '100%', opacity: 0.99}}
+										contentMode={'mobile'}
+										placeholder={isReview ? WRITE_REVIEW_INFO : WRITE_FREE_INFO}
+										onCursorPosition={onCursorPosition}
+										onMessage={onMessage}
+										onHeightChange={onHeightChange}
+										injectedJavaScript={runFirst}
+										pasteAsPlainText={true}
+									/>
+								</View>
+							</>
+						)}
+					</View>
+					<TouchableOpacity onPress={removeEditor} activeOpacity={1} style={{width: 48 * DP}}></TouchableOpacity>
 				</View>
+
 				{/* 하단 버튼 컴포넌트  */}
 				{isReview ? (
-					<View style={[style.animalFilter_container]}>
+					<TouchableOpacity activeOpacity={1} onPress={removeEditor} style={[style.animalFilter_container, {}]}>
 						<View style={[style.animalFilter]}>
 							<View style={[style.shadow]}>
 								{!animalType.dog ? (
@@ -500,7 +487,7 @@ export default CommunityEdit = props => {
 								)}
 							</View>
 						</View>
-					</View>
+					</TouchableOpacity>
 				) : (
 					<></>
 				)}
@@ -631,7 +618,8 @@ const style = StyleSheet.create({
 		paddingVertical: 15 * DP,
 	},
 	animalFilter_container: {
-		width: 654 * DP,
+		width: 750 * DP,
+		paddingHorizontal: 48 * DP,
 	},
 	animalFilter: {
 		width: 396 * DP,

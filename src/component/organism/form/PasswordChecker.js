@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View, Text} from 'react-native';
 import {
 	CURRENT_PWD_INFO,
 	CURRENT_PWD_TITLE,
@@ -17,6 +17,7 @@ import {
 } from 'Root/i18n/msg';
 import PasswordInput from 'Molecules/input/PasswordInput';
 import {passwordChecker_style} from 'Organism/style_organism copy';
+import DP from 'Root/config/dp';
 /**
  *
  * @param {{
@@ -99,7 +100,8 @@ export default PasswordChecker = props => {
 		<View style={[passwordChecker_style.container_initMode]}>
 			<View style={[passwordChecker_style.passwordInput_initMode]}>
 				<PasswordInput
-					title={PASSWORD_TITLE}
+					// title={PASSWORD_TITLE}
+					title="비밀번호"
 					// description={PASSWORD_FORM_DESCRIPTION}
 					placeholder={REQ_PASSWORD}
 					// information={PASSWORD_FORM_DESCRIPTION}
@@ -110,6 +112,7 @@ export default PasswordChecker = props => {
 					validator={passwordValidator}
 					// confirm={props.pwdValid} confirm은 validator의 값 반환여부에 따라 컴포넌트 내부에서 결정
 					onClear={onPressClear}
+					height={104}
 				/>
 			</View>
 			<View style={[passwordChecker_style.passwordInput_doubleCheck]}>
@@ -123,6 +126,7 @@ export default PasswordChecker = props => {
 					validator={passwordMatcher}
 					ref={checkerRef}
 					onClear={onPressCheckClear}
+					height={104}
 				/>
 			</View>
 		</View>

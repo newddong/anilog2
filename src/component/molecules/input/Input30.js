@@ -89,14 +89,18 @@ const Input30 = React.forwardRef((props, ref) => {
 				{/* 하단테두리 2px이 있기 때문에 inputValue와 82px가 차이가 나도 -2한 80값을 height로 줌 */}
 				{showTitle()}
 				<View
-					style={{
-						height: 80 * DP,
-						borderBottomWidth: 2 * DP,
-						// borderBottomColor: input == undefined || input.length == 0 ? GRAY30 : APRI10,
-						borderBottomColor: props.value == undefined || props.value.length == 0 ? GRAY30 : APRI10,
-						flexDirection: 'row',
-						alignItems: 'center',
-					}}>
+					style={[
+						props.height ? {height: props.height * DP} : {height: 80 * DP},
+						{
+							backgroundColor: '#FAFAFA',
+							borderRadius: 30 * DP,
+							// borderBottomWidth: 2 * DP,
+							// borderBottomColor: input == undefined || input.length == 0 ? GRAY30 : APRI10,
+							// borderBottomColor: props.value == undefined || props.value.length == 0 ? GRAY30 : APRI10,
+							flexDirection: 'row',
+							alignItems: 'center',
+						},
+					]}>
 					<TextInput
 						ref={inputRef}
 						onChangeText={onChange}
@@ -117,7 +121,8 @@ const Input30 = React.forwardRef((props, ref) => {
 								textAlignVertical: 'bottom',
 								color: confirmed ? BLACK : RED10,
 								// width: props.width * DP,
-								width: props.width ? props.width - 46 * DP : null,
+								// width: props.width ? props.width - 46 * DP : null,
+								width: props.width ? props.width * DP : null,
 								// textAlign: 'center',
 							},
 						]}

@@ -10,6 +10,8 @@ import userGlobalObj from 'Root/config/userGlobalObject';
 import {txt} from 'Root/config/textstyle';
 import PetLabel from '../label/PetLabel';
 import {styles} from 'Root/component/atom/image/imageStyle';
+import {buttonstyle} from 'Root/component/templete/style_templete';
+import {Write94} from 'Root/component/atom/icon';
 
 /**
  * 아바타 동물을 선택하는 모달창
@@ -104,6 +106,10 @@ const AvatarSelectModal = props => {
 		}, 500);
 	}, []);
 
+	const moveToFeedWrite = () => {
+		console.log('moveToFeedWrite');
+	};
+
 	const scrollViewRef = React.useRef();
 
 	if (items == '') {
@@ -117,7 +123,7 @@ const AvatarSelectModal = props => {
 					{items.length > 0 ? (
 						<View style={[style.avatarList, {}]}>
 							{/* <Text> {nativeEvent}</Text> */}
-							<View
+							{/* <View
 								style={[
 									{
 										height: 94 * DP,
@@ -130,8 +136,7 @@ const AvatarSelectModal = props => {
 									},
 									buttonstyle.shadow,
 								]}>
-								<Write94 onPress={moveToFeedWrite} />
-							</View>
+							</View> */}
 							{platform === 'android' ? (
 								<FlatList data={items} renderItem={({item, index}) => renderItem(item, index)} persistentScrollbar={true}></FlatList>
 							) : (

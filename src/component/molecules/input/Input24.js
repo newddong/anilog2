@@ -95,6 +95,7 @@ const Input24 = React.forwardRef((props, ref) => {
 	const getMsg = () => {
 		if (props.showMsg) {
 			// if (input.length == 0) {
+			console.log('showmasg', props.showMsg);
 			if (props.value == undefined || props.value.length == 0) {
 				// return <Text style={(txt.noto22, {color: RED10, lineHeight: 36 * DP})}></Text>;
 				return false;
@@ -124,13 +125,18 @@ const Input24 = React.forwardRef((props, ref) => {
 			)}
 			{/* 하단테두리 2px이 있기 때문에 inputValue와 82px가 차이가 나도 -2한 80값을 height로 줌 */}
 			<View
-				style={{
-					height: 80 * DP,
-					borderBottomWidth: 2 * DP,
-					borderBottomColor: setBorderColor(),
-					flexDirection: 'row',
-					alignItems: 'center',
-				}}>
+				style={[
+					props.height ? {height: props.height * DP} : {height: 80 * DP},
+					{
+						backgroundColor: '#FAFAFA',
+						borderRadius: 30 * DP,
+
+						// borderBottomWidth: 2 * DP,
+						// borderBottomColor: setBorderColor(),
+						flexDirection: 'row',
+						alignItems: 'center',
+					},
+				]}>
 				<TextInput
 					ref={inputRef}
 					onChangeText={onChange}
@@ -154,6 +160,7 @@ const Input24 = React.forwardRef((props, ref) => {
 							width: props.width ? props.width * DP - 46 * DP : null,
 							paddingLeft: 24 * DP,
 							height: '100%', //ios에서 안드로이드와 동작 일치시키기 위함
+							// height: props.height,
 							lineHeight: 44 * DP,
 							// minWidth: 300 * DP,
 						},
@@ -165,7 +172,7 @@ const Input24 = React.forwardRef((props, ref) => {
 						<CheckFilled />
 					</View>
 				) : props.value.length > 0 && props.showCrossMark ? (
-					<View style={{position: 'absolute', right: 0}}>
+					<View style={{position: 'absolute', right: 10}}>
 						<Cross46 onPress={onClear} />
 					</View>
 				) : (

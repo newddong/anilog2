@@ -373,7 +373,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 						</View>
 					</View>
 					{/* 접종내역 */}
-					<View style={[petInfoSetting.petProfileMenu.container]}>
+					{/* <View style={[petInfoSetting.petProfileMenu.container]}>
 						<View style={[petInfoSetting.petProfileMenu.insideContainer]}>
 							<View style={[petInfoSetting.petProfileMenu.menuTitle]}>
 								<TouchableOpacity onPress={goToVaccinationRecord}>
@@ -384,7 +384,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 								<NextMark />
 							</TouchableOpacity>
 						</View>
-					</View>
+					</View> */}
 					{/* 가족 계정 추가 */}
 					{/* 반려 동물 상태가 companion인 경우에만 보이도록 추후 변경 예정 */}
 					{/* {data.pet_status == 'companion' && ( */}

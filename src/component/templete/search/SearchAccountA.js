@@ -5,8 +5,9 @@ import {searchAccountA} from 'Templete/style_templete';
 import {followUser, unFollowUser} from 'Root/api/userapi';
 import Modal from 'Root/component/modal/Modal';
 import {txt} from 'Root/config/textstyle';
-import dp from 'Root/config/dp';
+import DP from 'Root/config/dp';
 import Loading from 'Root/component/molecules/modal/Loading';
+import {GRAY10} from 'Root/config/color';
 
 export default SearchAccountA = React.memo((props, ref) => {
 	// console.log('SearchAccountA', props.data);
@@ -53,11 +54,14 @@ export default SearchAccountA = React.memo((props, ref) => {
 		return (
 			<View style={[searchAccountA.container]}>
 				{props.data == 'false' ? (
-					<View style={[{alignItems: 'flex-start', width: 654 * dp, marginTop: 20 * dp}]}>
+					<View style={[{alignItems: 'flex-start', width: 694 * DP, marginTop: 20 * DP}]}>
 						<Text style={[txt.noto24]}>최근 본 계정</Text>
 					</View>
 				) : (
-					<ScrollView>
+					<ScrollView contentContainerStyle={{alignItems: 'center'}}>
+						<View style={{marginTop: 12 * DP, width: 694 * DP}}>
+							<Text style={[txt.noto24, {color: GRAY10}]}>검색 결과 {props.data.length}개</Text>
+						</View>
 						<ControllableAccountList
 							items={props.data}
 							onClickAccount={onClickAccount}

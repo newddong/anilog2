@@ -49,7 +49,7 @@ export default ControllableAccount = props => {
 	};
 
 	return (
-		<View style={[controllableAccount.container]}>
+		<View style={[controllableAccount.container, {}]}>
 			{showCheckBox ? (
 				<View style={[controllableAccount.check50]}>
 					<CheckBox />

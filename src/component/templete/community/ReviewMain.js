@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, Text, View, ScrollView, FlatList, Image} from 'react-native';
-import {BLACK} from 'Root/config/color';
+import {StyleSheet, View, FlatList, TouchableOpacity, RefreshControl, ActivityIndicator} from 'react-native';
+import {APRI10, BLACK} from 'Root/config/color';
 import {Animal_another_off, Animal_cat_off, Animal_dog_off, EmptyIcon, Filter60Border, Filter60Filled, WriteBoard} from 'Root/component/atom/icon';
 import ReviewList from 'Root/component/organism/list/ReviewList';
 import {Animal_another, Animal_cat, Animal_dog} from 'Root/component/atom/icon';
@@ -12,10 +12,10 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeEtc} from 'Root/api/likeetc';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import community_obj from 'Root/config/community_obj';
-import {NETWORK_ERROR, REPORT_MENU} from 'Root/i18n/msg';
+import {NETWORK_ERROR, REPORT_MENU, REVIEW_LIMIT} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
-import {buttonstyle} from 'Templete/style_templete';
+import {searchProtectRequest} from 'Templete/style_templete';
 
 export default ReviewMain = ({route, navigation}) => {
 	const [data, setData] = React.useState('false');
@@ -35,51 +35,65 @@ export default ReviewMain = ({route, navigation}) => {
 		},
 	});
 	const [recommend, setRecommend] = React.useState([]);
+	const [offset, setOffset] = React.useState(1);
+	const [refreshing, setRefreshing] = React.useState(false);
+	const [loading, setLoading] = React.useState(false);
 
 	const filterRef = React.useRef(false);
-	// React navigation focus event listener return old state 관련 자료 참고
-	// https://stackoverflow.com/questions/65859385/react-navigation-focus-event-listener-return-old-state
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
-			filterRef.current ? false : fetchData(); // 필터가 적용된 상태라면 다시 데이터를 받아와서는 안됨
-			// console.log(' ReviewMain / object._id', community_obj.object._id);
-			// console.log(' ReviewMain / pageToMove', community_obj.pageToMove);
-			// console.log(' ReviewMain / initial', community_obj.initial);
-			community_obj.current = '';
-			if (community_obj.initial != true && community_obj.object._id != undefined) {
-				console.log('다른 탭에서의 호출 : 목적지 및 타이틀', community_obj.pageToMove, community_obj.object.community_title);
-				navigation.navigate(community_obj.pageToMove, {community_object: community_obj.object});
+			// filterRef.current ? false : fetchData(); //포커스마다 새로 fetch를 시도하면 상세글을 갔다가 메인페이지로 돌아와도 기존의 스크롤로 이동을 하지 않음
+			// console.log('리뷰 게시글 전역변수 길이 :  ', community_obj.review.length);
+			console.log('community_obj.review.length : ', community_obj.review.length);
+			if (community_obj.review.length > 0) {
+				// let temp = [...data];
+				setData(community_obj.review);
 			}
-		});
-		navigation.addListener('blur', () => {
-			community_obj.object = {};
-			community_obj.pageToMove = '';
-			community_obj.initial = true;
 		});
 		fetchData();
 		return unsubscribe;
 	}, []);
 
-	const fetchData = () => {
+	//리프레시 시도 시, 데이터 및 페이징 초기화
+	React.useEffect(() => {
+		refreshing ? fetchData(true) : false;
+	}, [refreshing]);
+
+	const fetchData = isRefresh => {
+		isRefresh ? false : setLoading(true); //refresh시도로 인한 api 접속은 loading indicator 미출력
 		getCommunityList(
 			{
+				limit: REVIEW_LIMIT,
+				page: offset,
 				community_type: 'review',
 			},
 			result => {
-				// console.log('result / getCommunityList / ArticleMain :', result.msg.review[0]);
+				console.log('result / getCommunityList / ReviewMain :', result.msg.review.length);
+				const res = result.msg.review;
 				let recommendList = [];
-				result.msg.review.map((v, i) => {
-					// console.log('community_is_recomment', v.community_is_recomment);
+				res.map((v, i) => {
 					if (v.community_is_recomment) {
 						recommendList.push(v);
 					}
 				});
+				let list = [];
+				if (isRefresh) {
+					list = res;
+				} else if (data != 'false') {
+					console.log('temp lenth', [...data, ...res].length);
+					list = [...data, ...res];
+				} else {
+					list = res;
+				}
 				setRecommend(recommendList);
-				setData(result.msg.review);
+				setData(list);
+				community_obj.review = list;
+				setOffset(offset + 1);
 				if (!hasNoFilter()) {
 					doFilter(community_obj.reviewFilter, result.msg.review);
 				}
+				setLoading(false);
 			},
 			err => {
 				console.log('err / getCommunityList / ArticleMain : ', err);
@@ -91,6 +105,7 @@ export default ReviewMain = ({route, navigation}) => {
 				} else if (err.includes('없습니다')) {
 					setData([]);
 				}
+				setLoading(false);
 			},
 		);
 	};
@@ -113,7 +128,6 @@ export default ReviewMain = ({route, navigation}) => {
 
 	//미트볼 클릭
 	const onPressMeatball = index => {
-		console.log('getData()[index].community_writer_id', getData()[index].community_writer_id);
 		if (getData()[index].community_writer_id) {
 			const isMyArticle = userGlobalObject.userInfo._id == getData()[index].community_writer_id._id;
 			Modal.popSelectBoxModal(
@@ -145,7 +159,7 @@ export default ReviewMain = ({route, navigation}) => {
 													Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
 													setTimeout(() => {
 														Modal.close();
-														fetchData();
+														// fetchData();
 													}, 600);
 												}, 200);
 											},
@@ -326,8 +340,19 @@ export default ReviewMain = ({route, navigation}) => {
 				console.log('도시선택 필터와 카테고리는 선택이 없으므로 전체 리스트와 동일');
 				filterRef.current = false;
 				// console.log(filtered);
+				setOffset(1);
 				fetchData();
 			}
+		}
+	};
+
+	//리스트 페이징 작업
+	const onEndReached = () => {
+		console.log('EndReached', getData().length % REVIEW_LIMIT);
+		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
+		//리뷰 메인 페이지에서는 필터가 적용이 되었을 때도 api 접속 불필요
+		if (getData().length % REVIEW_LIMIT == 0) {
+			fetchData();
 		}
 	};
 
@@ -362,7 +387,7 @@ export default ReviewMain = ({route, navigation}) => {
 			},
 			result => {
 				console.log('result/ onPressLike / ReviewMain : ', result.msg);
-				fetchData();
+				// fetchData(); //offSet이 자동 increment되는 문제 발생 우선 보류
 			},
 			err => console.log('err / onPressLike / ReviewMain : ', err),
 		);
@@ -408,6 +433,15 @@ export default ReviewMain = ({route, navigation}) => {
 			},
 			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
 		);
+	};
+
+	const wait = timeout => {
+		return new Promise(resolve => setTimeout(resolve, timeout));
+	};
+	const onRefresh = () => {
+		setOffset(1);
+		setRefreshing(true);
+		wait(0).then(() => setRefreshing(false));
 	};
 
 	//리스트에 출력될 리스트 목록 필터
@@ -484,6 +518,9 @@ export default ReviewMain = ({route, navigation}) => {
 					data={[{}]}
 					listKey={({item, index}) => index}
 					showsVerticalScrollIndicator={false}
+					refreshing
+					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+					extraData={refreshing}
 					renderItem={({item, index}) => {
 						return (
 							<>
@@ -498,6 +535,7 @@ export default ReviewMain = ({route, navigation}) => {
 									onPressUnlike={index => onPressLike(index, false)}
 									onPressFavorite={onPressFavorite}
 									onPressRecommendReview={onPressRecommendReview}
+									onEndReached={onEndReached}
 								/>
 							</>
 						);
@@ -505,9 +543,16 @@ export default ReviewMain = ({route, navigation}) => {
 					ListHeaderComponent={filterComponent()}
 					stickyHeaderIndices={[0]}
 				/>
-				<View style={[style.write, style.shadowButton]}>
-					<WriteBoard onPress={onPressWrite} />
-				</View>
+				<TouchableOpacity activeOpacity={0.8} onPress={onPressWrite} style={[style.write, style.shadowButton]}>
+					<WriteBoard />
+				</TouchableOpacity>
+				{loading ? (
+					<View style={searchProtectRequest.indicatorCont}>
+						<ActivityIndicator size="large" color={APRI10} />
+					</View>
+				) : (
+					<></>
+				)}
 			</View>
 		);
 };

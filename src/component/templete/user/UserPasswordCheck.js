@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, KeyboardAvoidingView} from 'react-native';
+import {Text, View, KeyboardAvoidingView, StyleSheet} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
@@ -9,6 +9,7 @@ import StageBar from 'Molecules/info/Stagebar';
 import PasswordChecker from 'Organism/form/PasswordChecker';
 import {stagebar_style} from 'Organism/style_organism copy';
 import {login_style, btn_style, temp_style, progressbar_style, userPasswordCheck} from 'Templete/style_templete';
+import {MAINBLACK} from 'Root/config/color';
 
 // 각각 뷰에 컴포넌트 삽입시 style의 첫번째 index 삭제할 것. 두번째 index는 상.하 간격 style이라서 이 컴포넌트에만 해당 됨.
 //ex) 변경 전: <View style={[btn_style.btn_w654, findAccount_style.btn_w654]}>   변경 후:  <View style={[findAccount_style.btn_w654]}>
@@ -51,7 +52,7 @@ export default UserPasswordCheck = props => {
 	return (
 		<KeyboardAvoidingView style={[login_style.wrp_main, {flex: 1}]} behavior={'padding'}>
 			{/* (M)StageBar	 */}
-			<View style={[temp_style.stageBar, progressbar_style.stageBar]}>
+			<View style={[styles.stageBar, progressbar_style.stageBar]}>
 				<StageBar
 					backgroundBarStyle={stagebar_style.backgroundBar} //배경이 되는 bar의 style, width props으로 너비결정됨
 					insideBarStyle={stagebar_style.insideBar} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
@@ -61,7 +62,10 @@ export default UserPasswordCheck = props => {
 					width={600 * DP} //bar의 너비
 				/>
 			</View>
-
+			<View style={[{alignItems: 'center'}]}>
+				<Text style={[{textAlign: 'center'}, txt.noto30, {marginTop: 105 * DP}]}>*최소 8자 이상</Text>
+				<Text style={([{textAlign: 'center'}], txt.noto30)}>영문과 숫자가 포함되어야 합니다.</Text>
+			</View>
 			{/* (O)PasswordChecker */}
 			<View style={[temp_style.passwordChecker, userPasswordCheck.passwordChecker]}>
 				<PasswordChecker
@@ -84,3 +88,18 @@ export default UserPasswordCheck = props => {
 		</KeyboardAvoidingView>
 	);
 };
+const styles = StyleSheet.create({
+	stageBar: {
+		width: 694 * DP,
+		height: 32 * DP,
+	},
+	backgroundBar: {
+		width: 640 * DP,
+		height: 20 * DP,
+		backgroundColor: 'white',
+		borderRadius: 20 * DP,
+		borderWidth: 4 * DP,
+		// borderColor: APRI10,
+		borderColor: MAINBLACK,
+	},
+});

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
-import {APRI10, BLACK, GRAY20} from 'Root/config/color';
+import {APRI10, BLACK, GRAY20, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import CheckBox from 'Molecules/select/CheckBox';
 import {assignCheckListItem} from 'Organism/style_organism copy';
@@ -44,7 +44,7 @@ export default AssignCheckListItem = props => {
 			</TouchableOpacity>
 			{props.data.detail ? (
 				<TouchableOpacity onPress={onPressDetail} style={[assignCheckListItem.detailText]}>
-					<Text style={[txt.roboto28b, {color: GRAY20, textDecorationLine: 'underline'}]}>보기</Text>
+					<Text style={[txt.roboto28b, {color: MAINBLACK, textDecorationLine: 'underline'}]}>보기</Text>
 				</TouchableOpacity>
 			) : (
 				false

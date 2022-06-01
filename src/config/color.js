@@ -15,7 +15,7 @@
 // export const GREEN = '#13BE00';
 // export const APRI10 = '#FF9888';
 export const TEXTBASECOLOR = '#191919';
-
+export const MAINBLACK = '#000000';
 export const APRI10 = '#FF9888';
 
 export const APRI20 = '#FF6558';

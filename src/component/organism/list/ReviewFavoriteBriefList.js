@@ -15,6 +15,7 @@ import DP from 'Root/config/dp';
  * @param {(index:number, bool:boolean)=>void} props.onPressCheck - 체크박스 클릭
  * @param {boolean} props.selectMode - 선택모드
  * @param {boolean} props.onCheckBox - 선택모드
+ * @param {()=>void)} props.onEndReached - 하단 스크롤 도착 콜백
  */
 const ReviewFavoriteBriefList = props => {
 	const onPressToggle = (index, bool) => {
@@ -55,6 +56,8 @@ const ReviewFavoriteBriefList = props => {
 				listKey={({item, index}) => index}
 				keyExtractor={item => item._id}
 				ListEmptyComponent={props.whenEmpty}
+				onEndReachedThreshold={0.6}
+				onEndReached={() => props.onEndReached()}
 			/>
 		</View>
 	);
@@ -66,6 +69,7 @@ ReviewFavoriteBriefList.defaultProps = {
 	onPressUnlike: () => {},
 	onCheckBox: () => {},
 	onPressCheck: () => {},
+	onEndReached: () => {},
 };
 
 export default ReviewFavoriteBriefList;

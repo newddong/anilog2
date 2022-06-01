@@ -1,8 +1,8 @@
 import React from 'react';
-import {Text, View, KeyboardAvoidingView} from 'react-native';
+import {Text, View, KeyboardAvoidingView, StyleSheet} from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import {txt} from 'Root/config/textstyle';
-import {btn_w654} from 'Atom/btn/btn_style';
+import {btn_w654, btn_w694_r30} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import Input30 from 'Molecules/input/Input30';
 import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';
@@ -132,9 +132,9 @@ export default AssignUserProfileImage = props => {
 		<KeyboardAvoidingView style={[login_style.wrp_main, {flex: 1}]} behavior={'position'} contentContainerStyle={{alignItems: 'center'}}>
 			{/* contentContainerStyle​ : The style of the content container (View) when behavior is 'position'. */}
 			{/* Text Msg */}
-			<View style={[temp_style.textMsg_AssignUserProfileImage, assignUserProfileImage_style.txt_msg]}>
+			{/* <View style={[temp_style.textMsg_AssignUserProfileImage, assignUserProfileImage_style.txt_msg]}>
 				<Text style={[txt.noto24]}>프로필 사진과 닉네임은 나중에도 변경 할 수 있어요.</Text>
-			</View>
+			</View> */}
 
 			{/* (M)ProfileImageSelect */}
 			<View style={[temp_style.profileImageSelect, assignUserProfileImage_style.profileImageSelect]}>
@@ -142,13 +142,14 @@ export default AssignUserProfileImage = props => {
 			</View>
 
 			{/* (M)Input30 */}
-			<View style={[temp_style.input30_assignUserProfileImage, assignUserProfileImage_style.input30, {backgroundColor: 'white'}]}>
+			<View style={[styles.input30_assignUserProfileImage, {marginTop: 42 * DP}]}>
 				<Input30
 					value={nickname}
 					showTitle={false}
-					width={344}
+					width={694}
 					confirm_msg={AVAILABLE_NICK}
-					alert_msg={NICKNAME_FORM}
+					// alert_msg={NICKNAME_FORM}
+					alert_msg={''}
 					placeholder={'닉네임을 입력해주세요.'}
 					validator={nickName_validator}
 					onChange={onNicknameChange}
@@ -156,17 +157,37 @@ export default AssignUserProfileImage = props => {
 					confirm={nickName_validator}
 					maxLength={20}
 					showmsg
+					height={104}
 				/>
 			</View>
-
+			<Text style={[{width: 694 * DP}, {textAlign: 'left'}, txt.noto24]}>
+				*띄어쓰기 없이 2자 이상 15자 이내의 한글, 영문, 숫자, '_' 의 입력만 가능합니다.
+			</Text>
 			{/* (A)Btn_w654 */}
-			<View style={[btn_style.btn_w654, assignUserProfileImage_style.btn_w654]}>
+			<View style={[styles.btn_w654]}>
 				{confirmed ? (
-					<AniButton btnTitle={'확인'} titleFontStyle={32} btnStyle={'border'} btnLayout={btn_w654} onPress={pressConfirm} />
+					<AniButton btnTitle={'확인'} titleFontStyle={32} btnStyle={'border'} btnLayout={btn_w694_r30} onPress={pressConfirm} />
 				) : (
-					<AniButton btnTitle={'확인'} titleFontStyle={32} disable={true} btnLayout={btn_w654} />
+					<AniButton btnTitle={'확인'} titleFontStyle={32} disable={true} btnLayout={btn_w694_r30} />
 				)}
 			</View>
 		</KeyboardAvoidingView>
 	);
 };
+const styles = StyleSheet.create({
+	btn_w654: {
+		width: 654 * DP,
+		height: 104 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		marginTop: 120 * DP,
+		// backgroundColor: '#DEB5B5',
+	},
+	input30_assignUserProfileImage: {
+		width: 694 * DP,
+		height: 154 * DP,
+		// alignItems: 'center',
+		justifyContent: 'flex-start',
+		alignItems: 'center',
+	},
+});

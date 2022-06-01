@@ -2,7 +2,7 @@ import React from 'react';
 import {Text, View, TouchableOpacity} from 'react-native';
 import {GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {btn_w522} from 'Atom/btn/btn_style';
+import {btn_w522, btn_w522_r30} from 'Atom/btn/btn_style';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import CheckBox from 'Root/component/molecules/select/CheckBox';
 import Input24 from 'Root/component/molecules/input/Input24';
@@ -14,7 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import userGlobalObj from 'Root/config/userGlobalObject';
 import {createSettingPublic, getSettingPublic} from 'Root/api/settingpublic';
 import {createNotice, getNotice} from 'Root/api/notice';
-import {NextMark} from 'Root/component/atom/icon';
+import {NextMark, NextMark48} from 'Root/component/atom/icon';
 
 export default LoginTemplete = props => {
 	const [userSetting, setUserSetting] = React.useState();
@@ -206,12 +206,20 @@ export default LoginTemplete = props => {
 				{/* LoginForm */}
 				<View style={[loginTemplete_style.loginForm]}>
 					<View style={[loginTemplete_style.idInput]}>
-						<Input24 placeholder={'전화번호를 입력해주세요.'} keyboardType={'number-pad'} width={520} onChange={onChangeId} value={userSetting.id} />
+						<Input24
+							placeholder={'전화번호를 입력해주세요.'}
+							keyboardType={'number-pad'}
+							width={522}
+							height={104}
+							onChange={onChangeId}
+							value={userSetting.id}
+						/>
 					</View>
 					<View style={[loginTemplete_style.pwdInput]}>
 						<PasswordInput
 							placeholder={'비밀번호 입력'}
 							width={520}
+							height={104}
 							validator={passwordValidator}
 							onChange={onChangePassword}
 							information={''}
@@ -222,10 +230,10 @@ export default LoginTemplete = props => {
 					<View style={[loginTemplete_style.checkBox_loginFormContainer]}>
 						<View style={[loginTemplete_style.checkBox_loginForm]}>
 							<View style={[loginTemplete_style.checkBoxContainer]}>
-								<CheckBox value={'자동 로그인'} onCheck={onCheckAutoLogin} state={userSetting.isAutoLogin} />
+								<CheckBox value={'자동 로그인'} onCheck={onCheckAutoLogin} state={userSetting.isAutoLogin} txtSize={28} color={'black'} />
 							</View>
 							<View style={[loginTemplete_style.checkBoxContainer]}>
-								<CheckBox value={'아이디저장'} onCheck={onCheckSaveId} state={userSetting.isSaveId} />
+								<CheckBox value={'아이디저장'} onCheck={onCheckSaveId} state={userSetting.isSaveId} txtSize={28} color={'black'} />
 							</View>
 						</View>
 					</View>
@@ -233,26 +241,48 @@ export default LoginTemplete = props => {
 
 				{/* Btn_w522 */}
 				<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_login]}>
-					<AniButton btnLayout={btn_w522} btnTitle={'로그인'} btnTheme={'shadow'} titleFontStyle={32} onPress={tryToLogin} />
+					<AniButton
+						btnLayout={btn_w522_r30}
+						btnTitle={'로그인'}
+						// btnTheme={'shadow'}
+						btnStyle={'filled'}
+						titleFontStyle={32}
+						onPress={tryToLogin}
+						//
+					/>
 				</View>
 
 				{/* Btn_w522 */}
 				<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_assign]}>
-					<AniButton btnLayout={btn_w522} btnTitle={'회원가입'} btnStyle={'border'} btnTheme={'shadow'} titleFontStyle={32} onPress={moveToAssign} />
+					<AniButton
+						btnLayout={btn_w522_r30}
+						btnTitle={'회원 가입'}
+						btnStyle={'border'}
+						// btnTheme={'gray'}
+						titleFontStyle={32}
+						onPress={moveToAssign}
+					/>
 				</View>
 
 				{/* basic info */}
-				<View style={[login_style.basic_info, loginTemplete_style.basic_info]}>
+				<View style={[login_style.basic_info2, loginTemplete_style.basic_info]}>
 					<TouchableOpacity onPress={moveToShelterCodeCheck}>
-						<Text style={[txt.noto24, {color: GRAY20}]}> 보호소 등록</Text>
+						<Text style={[txt.noto24, {color: GRAY10}, {marginRight: 15 * DP}]}>보호소 등록</Text>
 					</TouchableOpacity>
 					{/* <Text style={{color: GRAY20}}> | </Text>
 					<TouchableOpacity onPress={findMyId}>
 						<Text style={[txt.noto24, {color: GRAY20}]}> 내 계정 찾기 </Text>
 					</TouchableOpacity> */}
-					<Text style={{color: GRAY20}}> | </Text>
+					<Text style={{color: GRAY10}}>|</Text>
 					<TouchableOpacity onPress={changePassword}>
-						<Text style={[txt.noto24, {color: GRAY20}]}> 비밀번호 재설정</Text>
+						<Text
+							style={[
+								txt.noto24,
+								{color: GRAY10},
+								//  {marginLeft: 60 * DP}
+							]}>
+							비밀번호 재설정
+						</Text>
 					</TouchableOpacity>
 				</View>
 			</View>

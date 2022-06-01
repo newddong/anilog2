@@ -12,6 +12,7 @@ import axios from 'axios';
 import {getSMStoken, getUserAccountCount} from 'Root/api/userapi';
 import Modal from 'Root/component/modal/Modal';
 import {GRAY10, MAINBLACK} from 'Root/config/color';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 // DropDown 컴포넌트 해결될 시 props처리와 data처리 추가해야함
 // 이메일부분 삭제 컨펌 나면 삭제 실시 예정
 
@@ -34,6 +35,7 @@ export default UserVerification = props => {
 	const [impid, setImpid] = React.useState();
 	const [failed, setFailed] = React.useState(false); // 인증 실패 boolean
 	const [phoneVerified, setPhoneVerified] = React.useState(false); //핸드폰 번호 인증 완료
+	const [easter, setEaster] = React.useState(0);
 	const navigation = useNavigation();
 	const goToNextStep = () => {
 		console.log(user_data);
@@ -208,6 +210,15 @@ export default UserVerification = props => {
 		console.log('isValid', isValid, verified);
 		setVerified(isValid);
 	};
+	const easterFunc = () => {
+		console.log('easter', easter);
+		if (easter < 5) {
+			setEaster(easter + 1);
+		} else {
+			goToNextStep();
+			setEaster(0);
+		}
+	};
 
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
@@ -273,9 +284,12 @@ export default UserVerification = props => {
 					)}
 				</View>
 				{/* 개발용 다음 버튼 */}
-				<View style={[btn_style.btn_w694, userAssign.btn_w654]}>
-					<AniButton btnTitle={'다음'} btnLayout={btn_w694_r30} btnStyle={'border'} titleFontStyle={32} onPress={goToNextStep} />
-				</View>
+				{/* <View style={[btn_style.btn_w694, userAssign.btn_w654, {backgroundColor: 'yellow'}, {marginTop: 430 * DP}]}> */}
+				{/* <AniButton btnTitle={'다음'} btnLayout={btn_w694_r30} btnStyle={'border'} titleFontStyle={32} onPress={goToNextStep} /> */}
+				<TouchableWithoutFeedback
+					style={[btn_style.btn_w694, userAssign.btn_w654, {marginTop: 430 * DP}]}
+					onPress={easterFunc}></TouchableWithoutFeedback>
+				{/* </View> */}
 			</ScrollView>
 		</View>
 	);

@@ -132,9 +132,9 @@ export default AssignUserProfileImage = props => {
 		<KeyboardAvoidingView style={[login_style.wrp_main, {flex: 1}]} behavior={'position'} contentContainerStyle={{alignItems: 'center'}}>
 			{/* contentContainerStyle​ : The style of the content container (View) when behavior is 'position'. */}
 			{/* Text Msg */}
-			<View style={[temp_style.textMsg_AssignUserProfileImage, assignUserProfileImage_style.txt_msg]}>
+			{/* <View style={[temp_style.textMsg_AssignUserProfileImage, assignUserProfileImage_style.txt_msg]}>
 				<Text style={[txt.noto24]}>프로필 사진과 닉네임은 나중에도 변경 할 수 있어요.</Text>
-			</View>
+			</View> */}
 
 			{/* (M)ProfileImageSelect */}
 			<View style={[temp_style.profileImageSelect, assignUserProfileImage_style.profileImageSelect]}>
@@ -160,7 +160,9 @@ export default AssignUserProfileImage = props => {
 					height={104}
 				/>
 			</View>
-
+			<Text style={[{width: 694 * DP}, {textAlign: 'left'}, txt.noto24]}>
+				*띄어쓰기 없이 2자 이상 15자 이내의 한글, 영문, 숫자, '_' 의 입력만 가능합니다.
+			</Text>
 			{/* (A)Btn_w654 */}
 			<View style={[styles.btn_w654]}>
 				{confirmed ? (

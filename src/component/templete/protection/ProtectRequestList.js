@@ -15,6 +15,7 @@ import moment from 'moment';
 import {getSearchResultProtectRequest} from 'Root/api/protectapi';
 import protect_obj from 'Root/config/protect_obj';
 import {useNavigation} from '@react-navigation/core';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default ProtectRequestList = ({route}) => {
 	const navigation = useNavigation();
@@ -36,7 +37,7 @@ export default ProtectRequestList = ({route}) => {
 	});
 	const [onlyAdoptable, setOnlyAdoptable] = React.useState(false);
 	const filterRef = React.useRef(false);
-
+	const flatlist = React.useRef();
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			// filterRef.current ? false : fetchData(); //포커스마다 새로 fetch를 시도하면 상세글을 갔다가 메인페이지로 돌아와도 기존의 스크롤로 이동을 하지 않음
@@ -49,12 +50,19 @@ export default ProtectRequestList = ({route}) => {
 			}
 		});
 		return unsubscribe;
+		userGlobalObject.protectionTab.t = true;
 	}, []);
 
 	React.useEffect(() => {
 		getList(); //필터가 바뀔 때마다 호출되도록 설정
 	}, [filterData]);
 
+	// React.useEffect(() => {
+	// 	if (route.params?.pressed != 0) {
+	// 		moveToTop();
+	// 		// console.log('represseddddd');
+	// 	}
+	// }, [route.params]);
 	//보호요청리스트 목록 받기
 	const getList = isRefresh => {
 		isRefresh ? false : setLoading(true);
@@ -246,6 +254,9 @@ export default ProtectRequestList = ({route}) => {
 			getList();
 		}
 	};
+	const moveToTop = () => {
+		flatlist.current.scrollToOffset({animated: true, offset: 0});
+	};
 
 	const renderItem = ({item, index}) => {
 		return <ProtectRequestItem item={item} index={index} />;
@@ -332,6 +343,7 @@ export default ProtectRequestList = ({route}) => {
 					extraData={refreshing}
 					// maxToRenderPerBatch={5} // re-render를 막는군요.
 					windowSize={11}
+					ref={flatlist}
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
 				/>
 				{loading ? (

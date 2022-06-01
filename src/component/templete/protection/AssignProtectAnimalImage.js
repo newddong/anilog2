@@ -12,7 +12,6 @@ import {AddItem64, Camera54} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
 import {styles} from 'Atom/image/imageStyle';
 import {stagebar_style} from 'Organism/style_organism copy';
-import {launchImageLibrary} from 'react-native-image-picker';
 
 export default AssignProtectAnimalImage = props => {
 	const navigation = useNavigation();
@@ -37,29 +36,17 @@ export default AssignProtectAnimalImage = props => {
 		navigation.push('AssignProtectAnimalDate', data);
 	};
 
+	React.useEffect(()=>{
+		if(props.route.params?.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+			let selected = props.route.params.selectedPhoto;
+			let photoList = selected.map(v=>{return v.cropUri??v.uri});
+			setImageList(photoList);
+			setData({...data, protect_animal_photo_uri_list: photoList || data.protect_animal_photo_uri_list});
+		}
+	},[props.route.params?.selectedPhoto]);
+
 	const gotoSelectPicture = () => {
-		// navigation.push('SinglePhotoSelect', route.name);
-		launchImageLibrary(
-			{
-				mediaType: 'photo',
-				selectionLimit: 5,
-				maxHeight: 1500,
-				maxWidth: 1500,
-				quality: 0.8,
-			},
-			responseObject => {
-				console.log('선택됨', responseObject);
-				if (!responseObject.didCancel) {
-					let photoList = [...imageList];
-					responseObject.assets.map((v, i) => {
-						console.log('v', i, v.uri);
-						photoList.push(v.uri);
-					});
-					setImageList(photoList);
-					setData({...data, protect_animal_photo_uri_list: photoList || data.protect_animal_photo_uri_list});
-				}
-			},
-		);
+		props.navigation.push("MultiPhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
 	};
 
 	return (

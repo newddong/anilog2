@@ -8,7 +8,7 @@ import {addUserToFamily, getUserListByNickname} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {txt} from 'Root/config/textstyle';
 import {EmptyIcon} from 'Root/component/atom/icon';
-import dp from 'Root/config/dp';
+import DP from 'Root/config/dp';
 import Loading from 'Root/component/molecules/modal/Loading';
 
 export default AddFamilyAccount = ({route, navigation}) => {
@@ -117,7 +117,7 @@ export default AddFamilyAccount = ({route, navigation}) => {
 		return (
 			<View style={[addFamilyAccount_style.listEmptyContainer]}>
 				<EmptyIcon />
-				<Text style={[txt.roboto30b, {marginTop: 10 * dp}]}>검색 결과가 없습니다.</Text>
+				<Text style={[txt.roboto30b, {marginTop: 10 * DP}]}>검색 결과가 없습니다.</Text>
 			</View>
 		);
 	};

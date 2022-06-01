@@ -11,7 +11,6 @@ import {useNavigation} from '@react-navigation/core';
 import {getCommunityByObjectId, getCommunityList, updateAndDeleteCommunity} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {createComment, deleteComment, getCommentListByCommunityId, updateComment} from 'Root/api/commentapi';
-import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import community_obj from 'Root/config/community_obj';
 import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
@@ -313,6 +312,13 @@ export default ArticleDetail = props => {
 		}
 	};
 
+	React.useEffect(()=>{
+		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+			let selected = props.route.params.selectedPhoto[0];
+			setEditData({...editData, comment_photo_uri: selected.cropUri??selected.uri});
+		}
+	},[props.route.params?.selectedPhoto]);
+
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
 	const onAddPhoto = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
@@ -320,19 +326,8 @@ export default ArticleDetail = props => {
 				navigation.navigate('Login');
 			});
 		} else {
-			// navigation.push('SinglePhotoSelect', props.route.name);
 			console.log('onAddphoto');
-			ImagePicker.openPicker({
-				compressImageQuality: 0.8,
-				cropping: true,
-			})
-				.then(images => {
-					console.log('onAddphoto Imagepicker', images);
-					setEditData({...editData, comment_photo_uri: images.path});
-					Modal.close();
-				})
-				.catch(err => console.log(err + ''));
-			Modal.close();
+			props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
 		}
 	};
 

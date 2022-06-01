@@ -365,7 +365,7 @@ export default ProtectCommentList = props => {
 		//수정 혹은 답글쓰기 때, 대상 부모 댓글의 배경색을 바꾸는 함수
 		const getBgColor = () => {
 			let result = WHITE;
-			if (editMode && editData.parent == index) {
+			if (editMode && editData.parent == index && editData._id == item._id) {
 				result = GRAY40;
 			} else if (parentComment && parentComment._id == item._id) {
 				result = GRAY40;
@@ -397,7 +397,8 @@ export default ProtectCommentList = props => {
 					<Text style={[txt.noto28, {color: GRAY10}]}>보호요청</Text>
 					<Text style={[txt.noto32b, {}]}>{data.protect_request_title || ''}</Text>
 				</View>
-				<View style={{marginBottom: 20 * DP, alignItems: 'flex-end', width: 654 * DP}}>
+				<View style={{height: 2 * DP, width: 694 * DP, backgroundColor: GRAY40, marginVertical: 30 * DP}}></View>
+				<View style={{alignItems: 'flex-end', width: 694 * DP}}>
 					{comments.length == 0 ? <></> : <Text style={[txt.noto26, {color: GRAY10}]}>댓글 {comments.length}개 </Text>}
 				</View>
 			</View>
@@ -456,16 +457,16 @@ const style = StyleSheet.create({
 		// backgroundColor: 'lightblue',
 	},
 	cotent_container_header: {
-		width: 654 * DP,
+		width: 694 * DP,
 		marginTop: 20 * DP,
 	},
 	content_container_label: {
-		width: 654 * DP,
+		width: 694 * DP,
 		marginTop: 15 * DP,
 		flexDirection: 'row',
 	},
 	cotent_container_info: {
-		width: 654 * DP,
+		width: 694 * DP,
 		marginBottom: 20 * DP,
 	},
 });

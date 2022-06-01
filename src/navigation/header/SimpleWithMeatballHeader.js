@@ -11,6 +11,7 @@ import {setProtectRequestStatus} from 'Root/api/protectapi';
 import {deleteFeed, favoriteFeed} from 'Root/api/feedapi';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import protect_obj, {updateProtect} from 'Root/config/protect_obj';
+import {WHITE} from 'Root/config/color';
 
 //보호 요청게시글 및 제보, 실종글 작성자일 경우 미트볼 아이콘 출력이 되는 헤더
 export default SimpleWithMeatballHeader = ({navigation, route, options, back}) => {
@@ -320,9 +321,9 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 		height: 135 * DP,
 		flexDirection: 'row',
-		backgroundColor: '#FFFFFF',
+		backgroundColor: WHITE,
 		justifyContent: 'flex-start',
-		paddingHorizontal: 48 * DP,
+		paddingHorizontal: 28 * DP,
 	},
 	backButtonContainer: {
 		width: 80 * DP,

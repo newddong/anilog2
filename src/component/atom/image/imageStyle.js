@@ -19,6 +19,11 @@ export const styles = StyleSheet.create({
 		height: 654 * DP,
 		borderRadius: 30 * DP,
 	},
+	img_square_round_614: {
+		width: 614 * DP,
+		height: 614 * DP,
+		borderRadius: 30 * DP,
+	},
 	img_square_round_606: {
 		width: 606 * DP,
 		height: 606 * DP,
@@ -27,6 +32,11 @@ export const styles = StyleSheet.create({
 	img_square_round_574: {
 		width: 574 * DP,
 		height: 574 * DP,
+		borderRadius: 30 * DP,
+	},
+	img_square_round_544: {
+		width: 544 * DP,
+		height: 544 * DP,
 		borderRadius: 30 * DP,
 	},
 	img_square_round_484: {

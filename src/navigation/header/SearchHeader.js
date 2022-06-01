@@ -43,9 +43,7 @@ const style = StyleSheet.create({
 		flexDirection: 'row',
 		backgroundColor: '#FFFFFF',
 		justifyContent: 'space-between',
-		// paddingHorizontal: 48 * DP,
-		paddingLeft: 24 * DP,
-		paddingRight: 48 * DP,
+		paddingHorizontal: 28 * DP,
 	},
 	cntr_txtinput: {
 		flexDirection: 'row',

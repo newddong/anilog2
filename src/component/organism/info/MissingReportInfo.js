@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View, Platform, StyleSheet} from 'react-native';
-import {APRI10} from 'Root/config/color';
+import {APRI10, GRAY50} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 
@@ -23,6 +23,7 @@ const MissingReportInfo = props => {
 		feed_type,
 		report_witness_date,
 		report_witness_location,
+		feed_content,
 	} = props.data;
 
 	let newAnimalSex = '';
@@ -44,26 +45,16 @@ const MissingReportInfo = props => {
 	//MissingReportInfo 하나의 정보 컴포넌트
 	const InfoOneLine = props => {
 		return (
-			<View
-				style={{
-					flexDirection: 'row',
-					alignItems: 'flex-start',
-					minHeight: 40 * DP,
-					width: 606 * DP,
-					marginBottom: 5 * DP,
-				}}>
+			<View style={[style.infoOneLineCont]}>
 				<View style={{width: 144 * DP, justifyContent: 'center'}}>
-					<Text style={[txt.noto30b, {color: APRI10, justifyContent: 'space-between'}]}>{props.title}</Text>
+					<Text style={[txt.noto26b, {justifyContent: 'space-between'}]}>{props.title}:</Text>
 				</View>
-				<View style={{width: 462 * DP, justifyContent: 'center', paddingTop: 3 * DP}}>
-					<Text style={[txt.noto28]}>
-						<Text style={[txt.noto28b, {color: APRI10}]}>: </Text> {props.content}
-					</Text>
+				<View style={{width: 462 * DP, justifyContent: 'center'}}>
+					<Text style={[txt.noto28]}>{props.content}</Text>
 				</View>
 			</View>
 		);
 	};
-	//
 	if (feed_type == 'missing') {
 		const newMissingDateText = missing_animal_date.toString().split('-');
 		const newMissingDate = newMissingDateText[0] + '.' + newMissingDateText[1] + '.' + newMissingDateText[2].toString().substring(0, 2);
@@ -88,6 +79,7 @@ const MissingReportInfo = props => {
 			<View style={style.container}>
 				<InfoOneLine title="제보 날짜  " content={newReportDate} />
 				<InfoOneLine title="제보 장소  " content={report_witness_location} />
+				<InfoOneLine title="제보 내용  " content={feed_content} />
 			</View>
 		);
 	}
@@ -108,14 +100,12 @@ MissingReportInfo.defaultProps = {
 
 const style = StyleSheet.create({
 	container: {
-		width: 654 * DP,
-		// height: 488 * DP,
-		borderColor: '#FFB6A5',
-		borderWidth: 4 * DP,
-		borderRadius: 15,
-		paddingTop: 30 * DP,
-		paddingLeft: 24 * DP,
-		paddingBottom: 30 * DP,
+		width: 694 * DP,
+		// borderWidth: 4 * DP,
+		borderRadius: 40 * DP,
+		backgroundColor: GRAY50,
+		paddingVertical: 28 * DP,
+		paddingHorizontal: 28 * DP,
 		overflow: 'hidden',
 	},
 	missingTextMainColor: {
@@ -128,6 +118,13 @@ const style = StyleSheet.create({
 	missingTextMainBox: {
 		width: 144 * DP,
 		height: 48 * DP,
+	},
+	infoOneLineCont: {
+		flexDirection: 'row',
+		alignItems: 'flex-start',
+		minHeight: 40 * DP,
+		width: 606 * DP,
+		marginBottom: 5 * DP,
 	},
 });
 

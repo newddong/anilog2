@@ -4419,7 +4419,7 @@ export const feedWrite = StyleSheet.create({
 		// 	width: 2 * DP,
 		// 	height: 1 * DP,
 		// },
-		elevation: 2,
+		// elevation: 1,
 	},
 	public_setting_btn: {
 		width: 194 * DP,

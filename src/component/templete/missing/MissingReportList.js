@@ -325,7 +325,7 @@ export default MissingReportList = props => {
 			</View>
 
 			<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
-				<View style={[feedWrite.urgentActionButton, {}]} onLayout={e => (urgentBtnRef.current = e.nativeEvent.layout)}>
+				<View style={[styles.urgentActionButton, {}]} onLayout={e => (urgentBtnRef.current = e.nativeEvent.layout)}>
 					<TouchableOpacity activeOpacity={0.8} onPress={onPressShowActionButton}>
 						<Urgent_Write1 />
 					</TouchableOpacity>
@@ -388,5 +388,24 @@ const styles = StyleSheet.create({
 		bottom: 0,
 		alignItems: 'center',
 		justifyContent: 'center',
+	},
+	urgentActionButton: {
+		width: 110 * DP,
+		height: 110 * DP,
+		alignSelf: 'flex-end',
+		// backgroundColor: 'white',
+		shadowColor: '#000000',
+		shadowOpacity: 0.2,
+		borderRadius: 40 * DP,
+		shadowOffset: {
+			width: 2,
+			height: 2,
+		},
+		shadowRadius: 4.65,
+		// shadowOffset: {
+		// 	width: 2 * DP,
+		// 	height: 1 * DP,
+		// },
+		// elevation: 1,
 	},
 });

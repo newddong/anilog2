@@ -10,7 +10,7 @@ import Modal from 'Component/modal/Modal';
 import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
-import {BLACK, GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
+import {BLACK, GRAY10, GRAY20, GRAY30, GRAY40, WHITE} from 'Root/config/color';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import Loading from 'Root/component/molecules/modal/Loading';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
@@ -336,10 +336,10 @@ export default FeedCommentList = props => {
 	const scrollToReply = i => {
 		if (Platform.OS == 'ios') {
 			setTimeout(() => {
-				flatlist.current.scrollToIndex({animated: true, index: i, viewPosition: 0});
+				flatlist.current.scrollToIndex({animated: true, index: i != -1 ? i : 0, viewPosition: 0});
 			}, 200);
 		} else {
-			flatlist.current.scrollToIndex({animated: true, index: i, viewPosition: 0});
+			flatlist.current.scrollToIndex({animated: true, index: i != -1 ? i : 0, viewPosition: 0});
 		}
 	};
 
@@ -356,7 +356,8 @@ export default FeedCommentList = props => {
 
 	//미트볼, 수정을 누르면 동작
 	const onEdit = (comment, parent) => {
-		// console.log('수정 데이터', comment.comment_is_secure);
+		// console.log('수정 데이터', comment);
+		// console.log('parent', parent);
 		const findParentIndex = comments.findIndex(e => e._id == parent);
 		setEditMode(true);
 		setParentComment(); // 수정모드로 전환시
@@ -437,7 +438,7 @@ export default FeedCommentList = props => {
 		//수정 혹은 답글쓰기 때, 대상 부모 댓글의 배경색을 바꾸는 함수
 		const getBgColor = () => {
 			let result = WHITE;
-			if (editMode && editData.parent == index) {
+			if (editMode && editData.parent == index && editData._id == item._id) {
 				result = GRAY40;
 			} else if (parentComment && parentComment._id == item._id) {
 				result = GRAY40;
@@ -455,6 +456,7 @@ export default FeedCommentList = props => {
 					onPressDeleteChild={onPressDelete}
 					showChild={() => showChild(index)}
 					openChild={isOpen}
+					editData={editData}
 				/>
 			</View>
 		);

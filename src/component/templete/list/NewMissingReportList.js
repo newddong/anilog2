@@ -11,7 +11,6 @@ const wait = timeout => {
 
 const NewMissingReportList = props => {
 	const renderItem = ({item, index}) => {
-		console.log('missingreportbox', item);
 		return (<MissingReportBox index={index} data={item} />);
 	};
 	// if (loading) {
@@ -32,6 +31,7 @@ const NewMissingReportList = props => {
 				getItemLayout={(data,index)=>{
 					return {length: 284*DP, offset: 284*DP*index, index: index};
 				}}
+				windowSize={2}
 			/>
 		</View>
 	);
@@ -40,7 +40,7 @@ const NewMissingReportList = props => {
 
 const styles = StyleSheet.create({
 	container: {
-		width: 643 * DP,
+		width: 750 * DP,
 		// height: 396 * DP,
 		// alignItems: 'center',
 		backgroundColor: WHITE,

@@ -349,7 +349,7 @@ export default FeedList = ({route, navigation}) => {
 		if (route.name == 'MainHomeFeedList') {
 			return (
 				<View style={[styles.container]}>
-					<Text style={[txt.noto28b]}>새로운 실종/제보</Text>
+					<Text style={[txt.noto28b,{marginLeft:26*DP}]}>새로운 실종/제보</Text>
 					<NewMissingReportList data={topList} />
 				</View>
 			);
@@ -437,6 +437,7 @@ export default FeedList = ({route, navigation}) => {
 						<View style={{height: 2 * DP, backgroundColor: GRAY30, width: 654 * DP}}></View>
 					</View>
 				)}
+				windowSize={3}
 			/>
 			{userGlobalObject.userInfo && (
 				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}]}>
@@ -574,7 +575,7 @@ export default FeedList = ({route, navigation}) => {
 
 const styles = StyleSheet.create({
 	container: {
-		width: 654 * DP,
+		width: 750 * DP,
 		// height: 496 * DP,
 		alignContent: 'center',
 		alignSelf: 'center',

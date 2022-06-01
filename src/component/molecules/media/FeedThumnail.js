@@ -34,7 +34,7 @@ const FeedThumbnail = React.memo(props => {
 	};
 
 	const getFeedIcon = () => {
-		const find = props.data.feed_medias.some(v => {
+		const find = props.data.feed_medias?.some(v => {
 			if (v.is_video) {
 				return v.is_video == true;
 			}
@@ -44,7 +44,7 @@ const FeedThumbnail = React.memo(props => {
 		if (find) {
 			return <VideoPlay48 />;
 			//data.medias 배열의 길이가 1개 이상인 경우
-		} else if (props.data.feed_medias.length > 1) {
+		} else if (props.data.feed_medias?.length > 1) {
 			return <ImageList48 />;
 		} else return;
 	};

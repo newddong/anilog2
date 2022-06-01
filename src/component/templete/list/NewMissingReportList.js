@@ -11,7 +11,8 @@ const wait = timeout => {
 
 const NewMissingReportList = props => {
 	const renderItem = ({item, index}) => {
-		return <MissingReportBox index={index} data={item} />;
+		console.log('missingreportbox', item);
+		return (<MissingReportBox index={index} data={item} />);
 	};
 	// if (loading) {
 	// 	return (
@@ -22,7 +23,16 @@ const NewMissingReportList = props => {
 	// } else {
 	return (
 		<View style={[styles.container]}>
-			<FlatList data={props.data} renderItem={renderItem} showsHorizontalScrollIndicator={false} horizontal={true} />
+			<FlatList
+				data={props.data}
+				renderItem={renderItem}
+				showsHorizontalScrollIndicator={false}
+				horizontal={true}
+				keyExtractor={(item, index) => item._id}
+				getItemLayout={(data,index)=>{
+					return {length: 284*DP, offset: 284*DP*index, index: index};
+				}}
+			/>
 		</View>
 	);
 	// }

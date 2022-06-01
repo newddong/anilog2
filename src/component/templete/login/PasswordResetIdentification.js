@@ -213,7 +213,8 @@ export default PasswordResetIdentification = props => {
 			{/* <View style={[styles.buttonContainer]}>
 				<AniButton onPress={onPressConfirm} btnTitle={'확인'} btnStyle={'border'} btnLayout={btn_w654} titleFontStyle={32} />
 			</View> */}
-			<View style={[temp_style.phoneNumVerification]}>
+			<View style={[styles.phoneNumVerification]}>
+				{/* <View> */}
 				<PhoneNumVerification
 					requestVerification={verificationRequest}
 					requestReVerification={reVerificationRequest}
@@ -266,5 +267,8 @@ const styles = StyleSheet.create({
 	},
 	buttonContainer: {
 		marginTop: 110 * DP,
+	},
+	phoneNumVerification: {
+		width: 694 * DP,
 	},
 });

@@ -13,6 +13,7 @@ import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import protect_obj, {updateProtect} from 'Root/config/protect_obj';
 import {WHITE} from 'Root/config/color';
 
+
 //보호 요청게시글 및 제보, 실종글 작성자일 경우 미트볼 아이콘 출력이 되는 헤더
 export default SimpleWithMeatballHeader = ({navigation, route, options, back}) => {
 	const isWriter = userGlobalObject.userInfo._id == route.params.writer; //작성자인지 여부 판단

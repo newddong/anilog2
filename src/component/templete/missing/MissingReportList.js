@@ -38,6 +38,7 @@ export default MissingReportList = props => {
 			getList();
 		});
 		return unsubscribe;
+		userGlobalObject.protectionTab.t = false;
 	}, []);
 
 	const getList = () => {

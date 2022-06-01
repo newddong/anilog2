@@ -12,8 +12,9 @@ import {useNavigation} from '@react-navigation/core';
 import searchContext from 'Root/config/searchContext';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
-import {updateReview} from 'Root/config/community_obj';
 import AnimalButton from 'Root/component/molecules/button/AnimalButton';
+import community_obj, {updateReview} from 'Root/config/community_obj';
+
 
 export default SearchReview = props => {
 	const navigation = useNavigation();

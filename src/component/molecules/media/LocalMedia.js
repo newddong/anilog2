@@ -108,7 +108,8 @@ const LocalMedia = React.memo(props => {
 	};
 
 	return (
-		<TouchableOpacity onPress={onPressMedia} style={[styles.img_square_186,{marginHorizontal:1*DP,marginVertical:1*DP}]}>
+		// <TouchableOpacity onPress={onPressMedia} style={[styles.img_square_186,{marginHorizontal:1*DP,marginVertical:1*DP}]}>
+		<TouchableOpacity onPress={onPressMedia} style={{width:187*DP,height:187*DP,paddingHorizontal:1*DP,paddingVertical:1*DP,backgroundColor:'#FFF'}}>
 			{/* <Image source={{uri: props.data.img_uri}} style={getStyleOfSelectedItem()} /> */}
 			<Img source={{uri: props.data.image.uri}} style={getStyleOfSelectedItem()} />
 			{isSelect && getImageOfSelectedItem()}

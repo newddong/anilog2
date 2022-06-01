@@ -52,9 +52,11 @@ export async function apiFormController(path, args) {
 	try {
 		let form = new FormData();
 		Object.entries(args[0]).forEach(v => {
+			// console.log('uri처리',v);
 			if (v[0].includes('uri')) {
 				if (typeof v[1] == 'object') {
 					//필드에 여러 값을 받을 경우, typeof는 object임(array도 object가 됨)
+					// console.log('object처리',v)
 					v[1].forEach(file => {
 						form.append(v[0], {
 							name: file,
@@ -65,10 +67,13 @@ export async function apiFormController(path, args) {
 				}
 				if (typeof v[1] == 'string') {
 					//필드에 단일 값을 문자열로 받았을 경우
+					// console.log('문자열 처리',v)
 					if (v[1].includes('http')) {
+						// console.log('http 주소 문자열 처리',v)
 						form.append(v[0], v[1]);
 						//파라메터 값 형식이 인터넷 주소일경우
 					} else {
+						// console.log('파일 문자열 처리',v)
 						form.append(v[0], {
 							name: v[1],
 							type: 'multipart/form-data',
@@ -78,6 +83,7 @@ export async function apiFormController(path, args) {
 					}
 				}
 			} else {
+				// console.log('uri 필드가 아님',v)
 				if (typeof v[1] == 'object') {
 					form.append(v[0], JSON.stringify(v[1]));
 				} else {
@@ -85,6 +91,7 @@ export async function apiFormController(path, args) {
 				}
 			}
 		});
+		console.log('upload form',form);
 		let result = await axios.post(serveruri + path, form, {
 			headers: {
 				'Content-Type': 'multipart/form-data',

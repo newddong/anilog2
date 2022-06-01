@@ -80,7 +80,7 @@ export default function BottomTab({state, descriptors, navigation}) {
 								navigation.navigate({name: 'Login', merge: true});
 							});
 						} else {
-							console.log('tabP');
+							console.log('tabP', route.name);
 
 							if (state.index == 4) {
 								navigation.navigate({name: route.name, merge: true});
@@ -100,6 +100,10 @@ export default function BottomTab({state, descriptors, navigation}) {
 									navigation.navigate({name: 'MainHomeFeedList', params: {pressed: pressed + 1}, merge: true});
 
 									setPressed(0);
+								} else if (route.name == 'PROTECTION') {
+									console.log('PROTECTION', userGlobalObject.protectionTab.t);
+									// if()
+									// navigation.navigate({name: 'ProtectRequestList', params: {pressed: pressed + 1}, merge: true});
 								}
 							}
 						}

@@ -26,6 +26,7 @@ import {updateProtect} from 'Root/config/protect_obj';
 import {ProfileDefaultImg} from 'Root/component/atom/icon';
 import {styles} from 'Root/component/atom/image/imageStyle';
 
+
 //AnimalProtectRequestDetail 호출 경로
 // - ProtectRequestList(보호활동탭) , AnimalFromShelter(게시글보기) , AidRequestManage(게시글보기), AidRequestAnimalList(게시글 보기)
 export default AnimalProtectRequestDetail = ({route}) => {

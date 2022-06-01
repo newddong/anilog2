@@ -287,6 +287,7 @@ export default ReportDetail = props => {
 
 	const onPressReqeustPhoto = () => {
 		console.log('onPressReqeustPhoto');
+		Modal.popPhotoListViewModal(data.feed_medias.map(v => v.media_uri));
 	};
 
 	const header = () => {
@@ -297,14 +298,14 @@ export default ReportDetail = props => {
 					<Swiper showsPagination={false} autoplay={false} loop={false} horizontal={true}>
 						{data.feed_medias != undefined &&
 							data.feed_medias.map((val, idx) => (
-								<View key={idx}>
+								<TouchableOpacity onPress={onPressReqeustPhoto} activeOpacity={0.8} key={idx}>
 									<Image source={{uri: val.media_uri}} style={[styles.img_square_round_694]} />
 									<View style={[style.swiper_index]}>
 										<Text style={[txt.roboto24, {color: 'white'}]}>
 											{idx + 1}/{data.feed_medias.length}
 										</Text>
 									</View>
-								</View>
+								</TouchableOpacity>
 							))}
 					</Swiper>
 				</View>

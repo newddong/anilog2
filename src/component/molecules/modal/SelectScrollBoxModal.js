@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions, TouchableWithoutFeedback, FlatList, Animated, Easing} from 'react-native';
-import {WHITE, APRI10} from 'Root/config/color';
+import {WHITE, APRI10, MAINBLACK, GRAY20, GRAY10, GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
@@ -129,10 +129,10 @@ const SelectScrollBoxModal = props => {
 							취소
 						</Text>
 					) : (
-						<Text style={[txt.noto30b, {color: WHITE}]}>{props.header}</Text>
+						<Text style={[txt.noto30, {color: MAINBLACK}]}>{props.header}</Text>
 					)}
 					<TouchableOpacity onPress={onSelect} style={style.completeText}>
-						<Text style={[txt.noto30b, {color: WHITE}]}>완료</Text>
+						<Text style={[txt.noto30b, {color: MAINBLACK}]}>완료</Text>
 					</TouchableOpacity>
 				</View>
 				<View style={style.listContainer}>
@@ -168,7 +168,7 @@ const SelectScrollBoxModal = props => {
 														key={index}
 														style={[
 															style.listItem,
-															index == (i == 0 ? selectedItem : selectedItem2) && item != padding ? {backgroundColor: APRI10} : null,
+															index == (i == 0 ? selectedItem : selectedItem2) && item != padding ? {backgroundColor: GRAY30} : null,
 															{
 																width: data.length == 1 ? 666 * DP : 324 * DP,
 																height: i == 0 ? 80 * DP : 80 * DP,
@@ -217,7 +217,8 @@ const style = StyleSheet.create({
 		width: 750 * DP,
 		height: 88 * DP,
 		flexDirection: 'row',
-		backgroundColor: APRI10,
+		// backgroundColor: APRI10,
+		backgroundColor: GRAY30,
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		paddingHorizontal: 40 * DP,

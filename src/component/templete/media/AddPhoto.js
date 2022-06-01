@@ -1,9 +1,8 @@
 import React from 'react';
 import {View, StyleSheet, Platform, PermissionsAndroid, Text, TouchableWithoutFeedback, Image, FlatList, NativeModules} from 'react-native';
-import {APRI10} from 'Root/config/color';
+import {APRI10, GRAY10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-// import CameraRoll from '@react-native-community/cameraroll';
 import CameraRoll from 'Root/module/CameraRoll';
 // import { hasAndroidPermission } from './camerapermission';
 // import { requestPermission, reqeustCameraPermission } from 'permission';
@@ -13,34 +12,18 @@ import FastImage from 'react-native-fast-image';
 import Modal from 'Root/component/modal/Modal';
 // import Video from 'react-native-video';
 import { useNavigation } from '@react-navigation/native';
+import Swiper from 'react-native-swiper';
+import Crop from 'Molecules/media/Crop';
 
 export var exportUriList = []; //겔러리 속 사진들 로컬 주소
 export var exportUri = {}; //겔러리 속 사진 로컬 주소
 
 export default AddPhoto = props => {
 	const limit = 5;
+	const requestloading = 300;
 	const navigation = useNavigation();
 	const [isVideo, setVideo] = React.useState(false);
-	const [photolist, setPhotoList] = React.useState([
-		// {
-		// 	node: {
-		// 		location: null,
-		// 		modified: 123456789.066,
-		// 		group_name: 'Pictures',
-		// 		timestamp: 123456789.067,
-		// 		type: 'image/jpeg',
-		// 		image: {
-		// 			fileSize: null,
-		// 			filename: null,
-		// 			playableDuration: null,
-		// 			height: null,
-		// 			width: null,
-		// 			uri: 'http://src.hidoc.co.kr/image/lib/2016/7/21/20160721160807763_0.jpg',
-		// 		},
-		// 		imageID:"0"
-		// 	},
-		// },
-	]);
+	const [photolist, setPhotoList] = React.useState([]);
 	const [selectedPhoto, setSelectedPhoto] = React.useState([]);
 	const isSingle = props.route.name === 'SinglePhotoSelect';
 
@@ -52,7 +35,7 @@ export default AddPhoto = props => {
 	 *@param {number} request - 불러올 미디어의 숫자 (기본값 20)
 	 *@param {string} type - 불러올 미디어의 타잎('Photos'|'All'|'Videos')
 	 */
-	const loadPhotosMilsec = (request = 30, timeStamp = 0, imageID = "123456789", type = 'Photos') => {
+	const loadPhotosMilsec = (request = requestloading, timeStamp = 0, imageID = "123456789", type = 'Photos') => {
 		console.log('아이디',imageID);
 		let param = {
 			first: request,
@@ -77,7 +60,7 @@ export default AddPhoto = props => {
 	const photolistcallback = (r) => {
 		console.log('디바이스 사진 리스트', r);
 				setPhotoList(photolist.concat(r.edges));
-				setSelectedPhoto(selectedPhoto);
+				// setSelectedPhoto(selectedPhoto);
 
 				let photoList = [...r.edges];
 				photoList.map((v, i) => {
@@ -93,10 +76,11 @@ export default AddPhoto = props => {
 
 	/** 스크롤이 바닥에 닿을때 페이징 처리를 위한 함수 */
 	const scrollReachBottom = () => {
+
 		let lastID = photolist.length > 1 ? photolist[photolist.length - 1].node.imageID : "123456789";
 		let timeStamp = photolist.length > 1 ? photolist[photolist.length - 1].node.timestamp : 0;
 		console.log('스크롤이 바닥에 닿았습니다. '+lastID+ '이후의 사진을 로드합니다.');
-		loadPhotosMilsec(30,timeStamp,lastID);
+		loadPhotosMilsec(requestloading,timeStamp,lastID);
 	};
 
 	//네이티브 모듈 테스트
@@ -114,19 +98,6 @@ export default AddPhoto = props => {
 
 
 	};
-
-	/** 이전 페이지에서 이미 선택한 사진이 있을 경우 선택한 것으로 표시 */
-	// React.useEffect(() => {
-	// 	exportUriList.splice(0);
-	// 	if (props.route.params?.selectedImages?.length > 0) {
-	// 		console.log('선택한 이미지가 있음');
-	// 		exportUriList = props.route.params.selectedImages;
-	// 		setSelectedPhoto(props.route.params.selectedImages.map(v => v));
-	// 	} else {
-	// 		console.log('선택한 이미지가 없음');
-	// 		setSelectedPhoto([]);
-	// 	}
-	// }, []);
 
 	/** 퍼미션 처리, 사진을 불러오기 전 갤러리 접근 권한을 유저에게 요청 */
 	React.useEffect(() => {
@@ -159,34 +130,41 @@ export default AddPhoto = props => {
 				console.warn(err);
 			}
 		}
+
 	}, []);
 
-	// React.useEffect(() => {
-	// 	props.navigation.addListener('focus', () => {
-	// 		// loadPhotos();
-	// 		loadPhotosMilsec();
-	// 	});
-	// });
 	React.useEffect(()=>{
+		console.log('사진목록 변경',selectedPhoto);
 		navigation.setParams({selectedPhoto:selectedPhoto});
-	},[selectedPhoto])
+	},[selectedPhoto]);
 
 	React.useEffect(()=>{
-		if(props.route.params.cropImg){
-			setSelectedPhoto([props.route.params.cropImg]);
+		console.log('selectedPhoto',props.route.params);
+		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+			setSelectedPhoto(props.route.params.selectedPhoto);
 		}
-	},[props.route.params.cropImg])
+	},[props.route.params.selectedPhoto])
+
+	// React.useEffect(()=>{
+	// 	if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+	// 		setSelectedPhoto(selectedPhoto.concat(props.route.params.selectedPhoto));
+	// 	}
+	// },[photolist])
+
+
 	const selectPhoto = photo => {
 		console.log('photo select', photo);
 		if(selectedPhoto.length>=limit){
 			Modal.alert("사진은 "+limit+"개 까지 선택가능합니다.");
 			return;
 		}
+		let obj = {};
+		obj.uri = photo;
 		if(isSingle){
-			setSelectedPhoto([photo]);
-			navigation.push('Crop',{cropImage:photo,prev:props.route.name,key:props.route.key});
+			setSelectedPhoto([obj]);
+			// navigation.push('Crop',{cropImage:photo,prev:props.route.name,key:props.route.key});
 		}else{
-			setSelectedPhoto(selectedPhoto.concat(photo));
+			setSelectedPhoto(selectedPhoto.concat(obj));
 		}
 	};
 
@@ -196,18 +174,20 @@ export default AddPhoto = props => {
 			setSelectedPhoto([]);
 		}else{
 			setSelectedPhoto(
-				selectedPhoto.filter(v=>photo!=v)
+				selectedPhoto.filter(v=>photo!=(v.originUri??v.uri))
 			)
 		}
 	};
 
 	const renderList = ({item, index}) => {
-		const isSelected = selectedPhoto.find(v=>item.node.image.uri==v);
-		const selectedindex = selectedPhoto.findIndex(v=>item.node.image.uri==v)+1;
-
+		const isSelected = selectedPhoto.find(v=>item.node.image.uri==(v.originUri??v.uri));
+		const selectedindex = selectedPhoto.findIndex(v=>item.node.image.uri==(v.originUri??v.uri))+1;
+		// console.log('index:'+index+'   isselected:'+isSelected+'     selectedIndex:'+selectedindex);
 		return (
 			<LocalMedia data={item.node} isSingleSelection={isSingle} onSelect={selectPhoto} onCancel={cancelPhoto} index={selectedindex} selected={isSelected}/>
 		);
+		
+		
 	};
 
 	const clickcheck = () => {
@@ -224,13 +204,26 @@ export default AddPhoto = props => {
 		// console.log(photolist);
 	};
 
+
+	const onCrop = (originImg,cropImg) => {
+		if(originImg==cropImg){
+			delete selectedPhoto[selectedPhoto.length-1].cropUri;
+		}else{
+			selectedPhoto[selectedPhoto.length-1].cropUri = cropImg;
+		}
+	}
+
 	return (
 		<View style={lo.wrp_main}>
 			{selectedPhoto[selectedPhoto.length - 1]?.isVideo ? (
 				<View />
 			) : (
 				// <Video style={lo.box_img} source={{uri: selectedPhoto[selectedPhoto.length-1]?.uri}} muted />
-				<Img style={[lo.box_img]} source={{uri: selectedPhoto[selectedPhoto.length - 1]}} />
+				<View>
+					{selectedPhoto.length>0?
+						<Crop width={750*DP} height={750*DP} paddingHorizontal={0*DP} paddingVertical={0*DP} uri={selectedPhoto[selectedPhoto.length-1].uri} onCrop={onCrop}/>:false}
+					
+				</View>
 			)}
 			<View style={lo.box_title}>
 				<TouchableWithoutFeedback onPress={test}>
@@ -248,20 +241,18 @@ export default AddPhoto = props => {
 				)}
 			</View>
 			<FlatList
-				contentContainerStyle={lo.box_photolist}
+				getItemLayout={(data,index)=>{
+					return {length:187*DP,offset:187*DP*index,index};
+				}}
 				data={photolist}
 				renderItem={renderList}
 				extraData={selectedPhoto}
-				// columnWrapperStyle={{backgroundColor:'green',borderColor:'red',borderWidth:3*DP}}
-				// keyExtractor={(item,index) => index+item.node.timestamp+item.node?.image.uri}
-				// keyExtractor={item => item.node.timestamp}
-				keyExtractor={item => item.node.image.uri}
+				keyExtractor={(item,index) => index>=8?item.node.image.uri:('key'+index)}
 				horizontal={false}
 				numColumns={4}
-				onEndReachedThreshold={0.2}
+				onEndReachedThreshold={0.6}
 				onEndReached={scrollReachBottom}
-				// initialNumToRender={20}
-				windowSize={6}
+				windowSize={5}
 			/>
 		</View>
 	);
@@ -288,11 +279,13 @@ const lo = StyleSheet.create({
 		backgroundColor: 'gray',
 	},
 	box_title: {
+		width:750*DP,
 		height: 102 * DP,
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		paddingHorizontal: 48 * DP,
+		backgroundColor:'#fff',
 	},
 	box_photolist: {
 		// flexDirection: 'row',

@@ -1,12 +1,11 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, TouchableOpacity, View, FlatList, Platform} from 'react-native';
+import {Text, TouchableOpacity, View, FlatList, Platform, StyleSheet} from 'react-native';
 import {btn_w276} from 'Atom/btn/btn_style';
 import AniButton from 'Root/component/molecules/button/AniButton';
-import {login_style, temp_style, animalProtectRequestDetail_style} from '../style_templete';
 import RescueImage from 'Root/component/molecules/image/RescueImage';
 import {txt} from 'Root/config/textstyle';
-import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
+import {APRI10, GRAY10, GRAY20, GRAY30, GRAY40, WHITE} from 'Root/config/color';
 import ShelterSmallLabel from 'Root/component/molecules/label/ShelterSmallLabel';
 import DP from 'Root/config/dp';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
@@ -18,27 +17,26 @@ import ProtectAnimalInfoBox from 'Root/component/organism/info/ProtectAnimalInfo
 import {getProtectRequestListByShelterId} from 'Root/api/shelterapi';
 import {getProtectRequestByProtectRequestId} from 'Root/api/protectapi';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {getFavoriteEtcListByUserId, setFavoriteEtc} from 'Root/api/favoriteetc';
+import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
-import {NETWORK_ERROR, PROTECT_REQUEST_DETAIL_LIMIT, UNAVAILABLE_REQUEST_STATUS} from 'Root/i18n/msg';
+import {DEFAULT_PROFILE, NETWORK_ERROR, PROTECT_REQUEST_DETAIL_LIMIT, UNAVAILABLE_REQUEST_STATUS} from 'Root/i18n/msg';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 import {updateProtect} from 'Root/config/protect_obj';
+import {ProfileDefaultImg} from 'Root/component/atom/icon';
+import {styles} from 'Root/component/atom/image/imageStyle';
+
 
 //AnimalProtectRequestDetail 호출 경로
 // - ProtectRequestList(보호활동탭) , AnimalFromShelter(게시글보기) , AidRequestManage(게시글보기), AidRequestAnimalList(게시글 보기)
-
 export default AnimalProtectRequestDetail = ({route}) => {
-	// console.log('AnimalProtectRequestDetail', route.params.id);
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
 	const [writersAnotherRequests, setWritersAnotherRequests] = React.useState('false'); //해당 게시글 작성자의 따른 보호요청게시글 목록
 	const [comments, setComments] = React.useState('false'); //comment list 정보
 	const [offset, setOffset] = React.useState(1);
-	const debug = false;
 	const isShelter = userGlobalObject.userInfo.user_type == 'shelter';
 	const flatlist = React.useRef();
-	debug && console.log('AnimalProtectRequestDetail data:', data);
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
@@ -48,10 +46,10 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		return unsubscribe;
 	}, []);
 
+	// 상태변경시 헤더에서 reset 파라미터를 true 변경 => 게시글 정보 갱신을 위한 api 재접속
 	React.useEffect(() => {
-		if (!route.params.reset) {
-		} else {
-			getProtectRequestObject(); // 상태변경시 헤더에서 reset 파라미터를 true 변경 => 게시글 정보 갱신을 위한 api 재접속
+		if (route.params.reset) {
+			getProtectRequestObject();
 		}
 	}, [route.params]);
 
@@ -138,7 +136,6 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			comments => {
-				// debug && console.log('AnimalProtectRequestDetail / getCommentListByProtectId:', commentdata.msg);
 				comments.msg.map((v, i) => {
 					//1depth를 올려준다.
 					comments.msg[i].user_address = comments.msg[i].comment_writer_id.user_address;
@@ -173,7 +170,6 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				let res = commentArray.filter(e => !e.comment_is_delete || e.children_count != 0);
 				setComments(res);
 				//댓글이 출력이 안되는 현상 발견으로 비동기 처리
-				debug && console.log('commentArray refresh', commentArray);
 			},
 			err => {
 				console.log(`Comment errcallback:${JSON.stringify(err)}`);
@@ -355,53 +351,34 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		return (
 			<View style={{alignItems: 'center'}}>
 				{/* 임시보호 후보자 협의 중 사진 */}
-				<View style={[temp_style.rescueImage]}>
-					<RescueImage
-						onPressReqeustPhoto={onPressReqeustPhoto}
-						status={data.protect_request_status || 'adopt'}
-						img_uri={data.protect_request_photos_uri}
-					/>
+				<View style={[style.rescueImage]}>
+					{data.protect_request_photos_uri ? (
+						<RescueImage
+							onPressReqeustPhoto={onPressReqeustPhoto}
+							status={data.protect_request_status || 'adopt'}
+							img_uri={data.protect_request_photos_uri}
+						/>
+					) : (
+						<ProfileDefaultImg size={{width: 694 * DP, heighy: 694 * DP}} />
+					)}
 				</View>
-				<View style={[temp_style.requestProtect_view]}>
-					<Text style={[txt.noto24, temp_style.requestProtect, {color: GRAY10}]}>보호요청</Text>
+				{/* <View style={[style.requestProtect_view]}>
+					<Text style={[txt.noto24, style.requestProtect, {color: GRAY10}]}>보호요청</Text>
 				</View>
-				{/* RescueContentTitle */}
-				<View style={[temp_style.rescueContentTitle]}>
+				<View style={[style.rescueContentTitle]}>
 					<Text style={[txt.noto28b]}>{data.protect_request_title || ''}</Text>
-				</View>
-				{/* 보호소 라벨 */}
-				<View style={[temp_style.shelterSmallLabel_view_animalProtectRequestDetail]}>
-					<View style={[temp_style.shelterSmallLabel_animalProtectRequestDetail]}>
-						<ShelterSmallLabel data={data.protect_request_writer_id} onClickLabel={onClickShelterLabel} />
-					</View>
-					{/* <View style={[temp_style.button_animalProtectRequestDetail]}>
-						{isMyPost ? (
-							<></>
-						) : data.protect_request_writer_id.is_favorite ? (
-							<TouchableOpacity onPress={() => onPressShelterLabelFavorite(false)} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
-								<FavoriteTag48_Filled />
-								<Text style={[txt.roboto24, {color: APRI10, alignSelf: 'center', textAlign: 'center'}]}>
-									{data ? count_to_K(data.protect_request_writer_id.user_favorite_count) : ''}
-								</Text>
-							</TouchableOpacity>
-						) : (
-							<TouchableOpacity onPress={() => onPressShelterLabelFavorite(true)} style={[animalProtectRequestDetail_style.buttonItemContainer]}>
-								<FavoriteTag48_Border />
-								<Text style={[txt.roboto24, {color: GRAY10, alignSelf: 'center', textAlign: 'center'}]}>
-									{data ? count_to_K(data.protect_request_writer_id.user_favorite_count) : ''}
-								</Text>
-							</TouchableOpacity>
-						)}
-					</View> */}
+				</View> */}
+				<View style={[style.shelterSmallLabel_view_animalProtectRequestDetail]}>
+					{data.protect_request_writer_id ? <ShelterSmallLabel data={data.protect_request_writer_id} onClickLabel={onClickShelterLabel} /> : <></>}
 				</View>
 				<ProtectAnimalInfoBox data={data} />
-
-				<View style={[animalProtectRequestDetail_style.rescueText]}>
-					<Text style={[txt.noto24]}>{data.protect_request_content || ''}</Text>
+				<View style={[style.rescueText]}>
+					<Text style={[txt.noto24, {color: GRAY10}]}>특이사항</Text>
+					<Text style={[txt.noto28]}>{data.protect_request_content || ''}</Text>
 				</View>
 
 				{comments && comments.length > 0 ? (
-					<TouchableOpacity onPress={moveToCommentPage} style={[animalProtectRequestDetail_style.replyCountContainer]}>
+					<TouchableOpacity onPress={moveToCommentPage} style={[style.replyCountContainer]}>
 						<Text style={[txt.noto26, {color: GRAY10}]}> 댓글 {comments.length}개 모두 보기</Text>
 					</TouchableOpacity>
 				) : (
@@ -439,15 +416,15 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 		return (
 			<View style={{alignItems: 'center', paddingBottom: 50 * DP}}>
-				<View style={[animalProtectRequestDetail_style.replyWriteBox]}>
+				<View style={[style.replyWriteBox]}>
 					<ReplyWriteBox onPressReply={moveToCommentPage} onWrite={onPressReply} isProtectRequest={true} />
 				</View>
-				<View style={[temp_style.addMoreRequest_view]}>
-					<Text style={[txt.noto24, temp_style.addMoreRequest, {color: GRAY20}]}>
-						{data.protect_request_writer_id.user_nickname}님의 보호요청 더보기
+				<View style={[style.addMoreRequest_view]}>
+					<Text style={[txt.noto24]}>
+						<Text style={[txt.noto24b]}>{data.protect_request_writer_id.user_nickname}</Text>의 게시글 더보기
 					</Text>
 				</View>
-				<View style={[animalProtectRequestDetail_style.accountList]}>
+				<View style={[style.accountList]}>
 					<FlatList
 						data={writersAnotherRequests}
 						renderItem={renderOtherRequest}
@@ -468,24 +445,31 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		return <Loading isModal={false} />;
 	} else
 		return (
-			<View style={[login_style.wrp_main]}>
+			<View style={[style.wrap]}>
 				<FlatList
 					data={comments && comments.length > 2 ? comments.slice(0, 2) : comments}
-					ref={flatlist}
-					listKey={({item, index}) => index}
-					ListHeaderComponent={header()}
 					renderItem={renderItem}
+					ListHeaderComponent={header()}
 					ListFooterComponent={footer()}
 					ListEmptyComponent={<Text style={[txt.roboto28b, {color: GRAY10, paddingVertical: 40 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>}
+					style={{marginBottom: isShelter || shouldHideProtectAct() ? 0 : 100 * DP}}
+					ref={flatlist}
+					listKey={({item, index}) => index}
 					showsVerticalScrollIndicator={false}
 				/>
 				{isShelter || shouldHideProtectAct() ? (
 					//보호소메뉴에서 자신의 보호요청게시글을 보는 경우 or 작성자 본인인 경우에는 임보/입양 버튼이 출력이 안됨
 					<></>
 				) : (
-					<View style={[animalProtectRequestDetail_style.btnContainer]}>
-						<AniButton onPress={onPressProtectRequest} btnTitle={'임시보호 신청'} btnStyle={'border'} btnLayout={btn_w276} titleFontStyle={30} />
-						<AniButton onPress={onPressAdoptionRequest} btnTitle={'입양 신청'} btnLayout={btn_w276} titleFontStyle={30} />
+					<View style={[style.btnContainer]}>
+						{/* <AniButton onPress={onPressProtectRequest} btnTitle={'임시보호 신청'} btnStyle={'border'} btnLayout={btn_w276} titleFontStyle={30} /> */}
+						{/* <AniButton onPress={onPressAdoptionRequest} btnTitle={'입양 신청'} btnLayout={btn_w276} titleFontStyle={30} /> */}
+						<TouchableOpacity onPress={onPressProtectRequest} activeOpacity={0.8} style={[style.protectBtn]}>
+							<Text style={[txt.noto32]}>임시보호 신청</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={onPressAdoptionRequest} activeOpacity={0.8} style={[style.protectBtn]}>
+							<Text style={[txt.noto32]}>입양 신청</Text>
+						</TouchableOpacity>
 					</View>
 				)}
 			</View>
@@ -493,3 +477,186 @@ export default AnimalProtectRequestDetail = ({route}) => {
 };
 
 AnimalProtectRequestDetail.defaultProps = {};
+
+const style = StyleSheet.create({
+	wrap: {
+		alignItems: 'center',
+		backgroundColor: '#FFF',
+	},
+	container: {
+		width: 750 * DP,
+		alignItems: 'center',
+		paddingBottom: 40 * DP,
+	},
+	requestProtect: {
+		marginTop: 30 * DP,
+		backgroundColor: '#F29797',
+	},
+	rescueSummary: {
+		marginTop: 28 * DP,
+		zIndex: -1,
+	},
+	rescueText: {
+		width: 694 * DP,
+		marginTop: 20 * DP,
+		paddingBottom: 40 * DP,
+		borderBottomWidth: 2 * DP,
+		borderBottomColor: GRAY40,
+	},
+	floatingBtnAapply: {
+		position: 'absolute',
+		bottom: 0 * DP,
+	},
+	rescueSummary_insideContainer: {
+		width: 594 * DP,
+		height: 128 * DP,
+	},
+	rescueSummary_insideItem: {
+		width: 594 * DP,
+		height: 36 * DP,
+		marginBottom: 10 * DP,
+		flexDirection: 'row',
+	},
+	rescueSummary_insideItem_category: {
+		marginRight: 10 * DP,
+		color: GRAY20,
+	},
+	rescueSummary_insideItem_content: {
+		marginRight: 50 * DP,
+	},
+	editComment: {
+		width: 694 * DP,
+		height: 108 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		alignSelf: 'center',
+		position: 'absolute',
+		backgroundColor: WHITE,
+		bottom: 0,
+	},
+	bottomContainer: {
+		width: 750 * DP,
+		height: 100 * DP,
+		backgroundColor: 'white',
+		justifyContent: 'space-between',
+		position: 'absolute',
+		flexDirection: 'row',
+		bottom: 70 * DP,
+		paddingHorizontal: 60 * DP,
+	},
+	buttonItemContainer: {
+		width: 64 * DP,
+		alignItems: 'center',
+		// backgroundColor: 'yellow',
+		marginLeft: 6 * DP,
+	},
+	btnContainer: {
+		width: 750 * DP,
+		height: 164 * DP,
+		backgroundColor: 'white',
+		justifyContent: 'space-between',
+		position: 'absolute',
+		bottom: 0 * DP,
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingHorizontal: 24 * DP,
+		justifyContent: 'space-between',
+		shadowColor: '#000000',
+		shadowOpacity: 0.3,
+		shadowRadius: 4.65,
+		shadowOffset: {
+			width: 2 * DP,
+			height: 2 * DP,
+		},
+		elevation: 4,
+		paddingTop: 20 * DP,
+		paddingBottom: 46 * DP,
+	},
+	shareDropDown: {
+		width: 384 * DP,
+		height: 184 * DP,
+		position: 'absolute',
+		right: 0,
+		top: 80 * DP,
+		flexDirection: 'row',
+		borderRadius: 40 * DP,
+		borderTopEndRadius: 0,
+		zIndex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: WHITE,
+		paddingLeft: 60 * DP,
+		shadowOffset: {
+			height: 5 * DP,
+		},
+		shadowColor: '#000000',
+		shadowOpacity: 0.5,
+		shadowRadius: 4.67,
+		elevation: 3,
+	},
+	socialItem: {
+		width: 92 * DP,
+		height: 116 * DP,
+		marginRight: 40 * DP,
+	},
+	requestProtect: {
+		width: 95 * DP,
+		height: 36 * DP,
+		marginTop: 30 * DP,
+	},
+	replyWriteBox: {
+		width: 694 * DP,
+		paddingVertical: 20 * DP,
+		// backgroundColor: 'lightblue',
+	},
+	addMore_profileInfo: {
+		alignItems: 'flex-end',
+		flexDirection: 'row',
+	},
+	replyContainer: {
+		// width: 654 * DP,
+		// width: 750 * DP,
+	},
+	accountList: {
+		paddingVertical: 20 * DP,
+	},
+	replyCountContainer: {
+		width: 474 * DP,
+		alignItems: 'flex-end',
+		alignSelf: 'flex-end',
+		marginTop: 30 * DP,
+		marginRight: 48 * DP,
+		marginBottom: 20 * DP,
+	},
+	addMoreRequest_view: {
+		width: 694 * DP,
+		marginTop: 40 * DP,
+	},
+	rescueImage: {},
+	requestProtect_view: {
+		width: 694 * DP,
+		height: 67 * DP,
+	},
+	rescueContentTitle: {
+		width: 694 * DP,
+		marginBottom: 30 * DP,
+	},
+	shelterSmallLabel_view_animalProtectRequestDetail: {
+		flexDirection: 'row',
+		marginVertical: 20 * DP,
+		width: 694 * DP,
+		height: 88 * DP,
+		alignItems: 'flex-start',
+		justifyContent: 'space-between',
+	},
+	protectBtn: {
+		width: 320 * DP,
+		height: 98 * DP,
+		borderRadius: 30 * DP,
+		borderColor: GRAY30,
+		borderWidth: 2 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+});

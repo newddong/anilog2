@@ -403,6 +403,15 @@ export default Modal = {
 	 */
 	popNetworkErrorModal: msg => {},
 
+	/**
+	 * 긴급 게시 버튼 출력 모달
+	 * @param {Object} props - props object
+	 * @param {()=>void} props.onReport - 제보 클릭
+	 * @param {()=>void} props.onMissing - 실종 클릭
+	 * @param {Object} props.layout - 액션 버튼 실제 위치 정보
+	 */
+	popUrgentBtnModal: (onReport, onMissing, layout) => {},
+
 	popInfoModal: () => {},
 
 	alert: () => {},

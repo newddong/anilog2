@@ -29,7 +29,7 @@ const style = StyleSheet.create({
 		flexDirection: 'row',
 		backgroundColor: '#FFFFFF',
 		justifyContent: 'flex-start',
-		paddingHorizontal: 48 * DP,
+		paddingHorizontal: 28 * DP,
 	},
 	backButtonContainer: {
 		width: 80 * DP,

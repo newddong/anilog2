@@ -1,8 +1,8 @@
 import React from 'react';
-import {Image, Text, View, StyleSheet} from 'react-native';
+import {Image, Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {Heart30_Border, Heart30_Filled, Meatball50_GRAY20_Vertical, SecureIcon40} from 'Atom/icon';
+import {Heart30_Border, Heart30_Filled, Meatball50_GRAY20_Vertical, Report30, SecureIcon40} from 'Atom/icon';
 import {DEFAULT_PROFILE, REPLY_MEATBALL_MENU, REPLY_MEATBALL_MENU_MY_REPLY} from 'Root/i18n/msg';
 import {styles} from 'Atom/image/imageStyle';
 import UserTimeLabel from 'Molecules/label/UserTimeLabel';
@@ -88,69 +88,55 @@ const ChildComment = props => {
 					false,
 					'',
 				);
-			} else {
-				//작성자가 아닐 시 신고만 출력
-				Modal.popSelectBoxModal(
-					REPLY_MEATBALL_MENU,
-					selectedItem => {
-						switch (selectedItem) {
-							case '신고':
-								// alert('신고');
-								Modal.close();
-								console.log('data', data);
-								if (userGlobalObject.userInfo.isPreviewMode) {
-									setTimeout(() => {
-										Modal.popLoginRequestModal(() => {
-											navigation.navigate('Login');
-										});
-									}, 100);
-								} else {
-									setTimeout(() => {
-										Modal.popOneBtnSelectModal(
-											REPORT_MENU,
-											'이 댓글을 신고 하시겠습니까?',
-											selectedItem => {
-												createReport(
-													{
-														report_target_object_id: data._id,
-														report_target_object_type: 'commentsobjects',
-														report_target_reason: selectedItem,
-														report_is_delete: false,
-													},
-													result => {
-														console.log('신고 완료', result);
-														Modal.close();
-														Modal.popOneBtn('이 댓글은 신고 되었습니다.', '확인', () => Modal.close());
-													},
-													err => {
-														Modal.close();
-														if (err == '이미 신고되었습니다.') {
-															Modal.popOneBtn('이미 신고하셨습니다.', '확인', () => Modal.close());
-														}
-													},
-												);
-											},
-											'신고',
-										);
-									}, 100);
-								}
-								break;
-							default:
-								break;
-						}
-						Modal.close();
-					},
-					() => Modal.close(),
-					false,
-					'',
-				);
 			}
 		}
 	};
 
+	const reportComment = () => {
+		Modal.close();
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			setTimeout(() => {
+				Modal.popLoginRequestModal(() => {
+					navigation.navigate('Login');
+				});
+			}, 100);
+		} else {
+			setTimeout(() => {
+				Modal.popOneBtnSelectModal(
+					REPORT_MENU,
+					'이 댓글을 신고 하시겠습니까?',
+					selectedItem => {
+						createReport(
+							{
+								report_target_object_id: data._id,
+								report_target_object_type: 'commentsobjects',
+								report_target_reason: selectedItem,
+								report_is_delete: false,
+							},
+							result => {
+								console.log('신고 완료', result);
+								Modal.close();
+								Modal.popOneBtn('이 댓글은 신고 되었습니다.', '확인', () => Modal.close());
+							},
+							err => {
+								Modal.close();
+								if (err == '이미 신고되었습니다.') {
+									Modal.popOneBtn('이미 신고하셨습니다.', '확인', () => Modal.close());
+								}
+							},
+						);
+					},
+					'신고',
+				);
+			}, 100);
+		}
+	};
+
+	const isMyComment = userGlobalObject.userInfo._id == data.comment_writer_id._id;
+
 	//비밀댓글일 경우 public 여부 판별
 	const isNotAuthorized = () => {
-		if (!data.comment_is_secure || userGlobalObject.userInfo._id == data.comment_writer_id._id) {
+		if (!data.comment_is_secure || isMyComment) {
 			//비밀댓글이 아니라면 public
 			return false;
 		} else {
@@ -175,7 +161,7 @@ const ChildComment = props => {
 						<UserTimeLabel data={data} empty={true} />
 					)}
 				</View>
-				{data.comment_writer_id ? (
+				{data.comment_writer_id && isMyComment ? (
 					<View style={[childComment.meatBall50_vertical]}>
 						{meatball ? <Meatball50_APRI10_Vertical onPress={onPressMeatball} /> : <Meatball50_GRAY20_Vertical onPress={onPressMeatball} />}
 					</View>
@@ -186,7 +172,7 @@ const ChildComment = props => {
 			{/* 해당 대댓글이 photo_uri를 가지고 있는 경우만 IMage 출력 */}
 			{data.comment_photo_uri != null && !isNotAuthorized() ? (
 				<View style={[childComment.img_square_round_484]}>
-					<Image style={[styles.img_square_round_484]} source={{uri: data ? data.comment_photo_uri : DEFAULT_PROFILE}} />
+					<Image style={[styles.img_square_round_544]} source={{uri: data.comment_photo_uri}} />
 				</View>
 			) : (
 				<></>
@@ -200,11 +186,19 @@ const ChildComment = props => {
 				)}
 			</View>
 			{/* 좋아요 버튼, 좋아요 숫자 , 답글쓰기 컨테이너 */}
-			<View style={[childComment.likeReplyButton]}>
+			<View style={[childComment.likeReplyButton, {}]}>
 				{isNotAuthorized() ? (
 					<></>
 				) : (
 					<>
+						{isMyComment ? (
+							<></>
+						) : (
+							<TouchableOpacity onPress={reportComment} style={[{flexDirection: 'row'}]}>
+								<Report30 />
+								<Text style={[txt.noto22, {color: GRAY10}]}> 신고 · </Text>
+							</TouchableOpacity>
+						)}
 						<View style={[childComment.heart30]}>
 							{likeState ? <Heart30_Filled onPress={onCLickHeart} /> : <Heart30_Border onPress={onCLickHeart} />}
 						</View>
@@ -231,12 +225,12 @@ export default ChildComment;
 
 export const childComment = StyleSheet.create({
 	container: {
-		width: 574 * DP,
+		width: 604 * DP,
 		alignSelf: 'center',
-		// backgroundColor: 'yellow',
+		// backgroundColor: 'red',
 	},
 	profileContainer: {
-		width: 574 * DP,
+		width: 604 * DP,
 		height: 50 * DP,
 		// marginBottom: 10 * DP,
 		justifyContent: 'space-between',
@@ -251,7 +245,7 @@ export const childComment = StyleSheet.create({
 		borderBottomColor: GRAY10,
 	},
 	userTimeLabel: {
-		width: 442 * DP,
+		width: 488 * DP,
 		height: 46 * DP,
 		marginLeft: 10 * DP,
 	},
@@ -265,8 +259,8 @@ export const childComment = StyleSheet.create({
 		marginBottom: 12 * DP,
 	},
 	commentContainer: {
-		width: 484 * DP,
-		marginLeft: 90 * DP,
+		width: 528 * DP,
+		marginLeft: 60 * DP,
 		marginBottom: 4 * DP,
 	},
 	commentText: {},
@@ -275,15 +269,17 @@ export const childComment = StyleSheet.create({
 		height: 34 * DP,
 		flexDirection: 'row',
 		alignSelf: 'flex-end',
+		alignItems: 'center',
+		// backgroundColor: 'yellow',
 	},
 	heart30: {
 		width: 30 * DP,
 		height: 30 * DP,
 	},
 	likeCount: {
-		width: 50 * DP,
+		width: 30 * DP,
 		height: 30 * DP,
-		marginLeft: 12 * DP,
+		marginLeft: 6 * DP,
 	},
 	likeCountText: {
 		color: GRAY10,

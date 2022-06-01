@@ -25,6 +25,7 @@ export const GRAY10 = '#767676';
 export const GRAY20 = '#999999';
 export const GRAY30 = '#DBDBDB';
 export const GRAY40 = '#EDEDED';
+export const GRAY50 = '#FAFAFA';
 export const BLUE10 = '#88B8FF';
 export const BLUE20 = '#007EEC';
 export const RED10 = '#FF3120';

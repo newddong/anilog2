@@ -314,7 +314,7 @@ const style = StyleSheet.create({
 		height: 135 * DP,
 		flexDirection: 'row',
 		backgroundColor: WHITE,
-		paddingHorizontal: 48 * DP,
+		paddingHorizontal: 28 * DP,
 	},
 	buttonContainer: {
 		flexDirection: 'row',

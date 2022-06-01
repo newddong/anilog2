@@ -82,7 +82,7 @@ export default Profile = ({route}) => {
 			{
 				userobject_id: route.params.userobject._id,
 				community_type: 'all',
-				limit: 10000,
+				// limit: 10000,
 				// page: offset,
 			},
 			result => {

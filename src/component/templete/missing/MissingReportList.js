@@ -1,20 +1,9 @@
 import React from 'react';
-import {
-	Text,
-	View,
-	TouchableWithoutFeedback,
-	FlatList,
-	TouchableOpacity,
-	RefreshControl,
-	Pressable,
-	StyleSheet,
-	Animated,
-	ActivityIndicator,
-} from 'react-native';
+import {Text, View, FlatList, TouchableOpacity, RefreshControl, StyleSheet, ActivityIndicator} from 'react-native';
 import {feedWrite, login_style, searchProtectRequest, temp_style} from 'Templete/style_templete';
 import {APRI10, GRAY10, WHITE} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {Check50, EmptyIcon, Rect50_Border, Urgent_Write1, Urgent_Write2} from 'Atom/icon';
+import {Check42, Check50, EmptyIcon, Rect42_Border, Rect50_Border, Urgent_Write1, Urgent_Write2} from 'Atom/icon';
 import {useNavigation} from '@react-navigation/core';
 import {PET_KIND, PET_PROTECT_LOCATION, PROTECT_REQUEST_MAIN_LIMIT} from 'Root/i18n/msg';
 import {favoriteFeed, getMissingReportList} from 'Root/api/feedapi.js';
@@ -24,6 +13,7 @@ import Loading from 'Root/component/molecules/modal/Loading';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import MissingReportItem from 'Root/component/organism/listitem/MissingReportItem';
+import Modal from 'Root/component/modal/Modal';
 
 export default MissingReportList = props => {
 	const navigation = useNavigation();
@@ -40,6 +30,7 @@ export default MissingReportList = props => {
 	const [onlyMissing, setOnlyMissing] = React.useState(false); //실종글만 보기
 	const [onlyReport, setOnlyReport] = React.useState(false); // 제보글만 보기
 	const [showActionButton, setShowActionButton] = React.useState(false); // 긴급게시(하얀버전) 클릭 시 - 실종/제보 버튼 출력 Boolean
+	const urgentBtnRef = React.useRef();
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
@@ -117,7 +108,6 @@ export default MissingReportList = props => {
 	};
 
 	const onClickLabel = (status, id, item) => {
-		// console.log(`\nMissingReportList:onLabelClick() - status=>${status} id=>${id} item=>${JSON.stringify(item)}`);
 		let sexValue = '';
 		switch (status) {
 			case 'missing':
@@ -237,7 +227,8 @@ export default MissingReportList = props => {
 				navigation.navigate('Login');
 			});
 		} else {
-			setShowActionButton(!showActionButton);
+			// setShowActionButton(!showActionButton);
+			Modal.popUrgentBtnModal(moveToReportForm, moveToMissingForm, urgentBtnRef.current);
 		}
 	};
 
@@ -284,8 +275,8 @@ export default MissingReportList = props => {
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
 			<View style={{alignItems: 'center'}}>
-				<View style={[searchProtectRequest.filterView]}>
-					<View style={[searchProtectRequest.inside, {flexDirection: 'row', justifyContent: 'space-between'}]}>
+				<View style={[styles.filterView]}>
+					<View style={[styles.inside, {flexDirection: 'row', justifyContent: 'space-between'}]}>
 						<View style={[temp_style.filterBtn, {}]}>
 							<ArrowDownButton
 								onPress={onSelectLocation}
@@ -295,14 +286,14 @@ export default MissingReportList = props => {
 								btnTheme={'gray'}
 							/>
 						</View>
-						<View style={[searchProtectRequest.kindFilter, {}]}>
-							<View style={[searchProtectRequest.kindFilterItem]}>
-								<Text style={[txt.noto26, {color: GRAY10, marginRight: 10 * DP}]}> 제보</Text>
-								{onlyMissing ? <Check50 onPress={onPressShowMissing} /> : <Rect50_Border onPress={onPressShowMissing} />}
-							</View>
-							<View style={[searchProtectRequest.kindFilterItem]}>
+						<View style={[styles.kindFilter, {}]}>
+							<View style={[styles.kindFilterItem]}>
+								{onlyReport ? <Check42 onPress={onPressShowReport} /> : <Rect42_Border onPress={onPressShowReport} />}
 								<Text style={[txt.noto26, {color: GRAY10, marginRight: 10 * DP}]}> 실종</Text>
-								{onlyReport ? <Check50 onPress={onPressShowReport} /> : <Rect50_Border onPress={onPressShowReport} />}
+							</View>
+							<View style={[styles.kindFilterItem]}>
+								{onlyMissing ? <Check42 onPress={onPressShowMissing} /> : <Rect42_Border onPress={onPressShowMissing} />}
+								<Text style={[txt.noto26, {color: GRAY10, marginRight: 10 * DP}]}> 제보</Text>
 							</View>
 						</View>
 					</View>
@@ -335,32 +326,14 @@ export default MissingReportList = props => {
 			</View>
 
 			<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
-				{showActionButton ? (
-					<View>
-						<TouchableOpacity onPress={moveToMissingForm} activeOpacity={0.8} style={[feedWrite.urgentBtnItemContainer]}>
-							<Text style={[txt.noto32, {color: WHITE}]}>실종</Text>
-						</TouchableOpacity>
-						<TouchableOpacity onPress={moveToReportForm} activeOpacity={0.8} style={[feedWrite.urgentBtnItemContainer]}>
-							<Text style={[txt.noto32, {color: WHITE}]}>제보</Text>
-						</TouchableOpacity>
-					</View>
-				) : (
-					<></>
-				)}
-				<View style={[feedWrite.urgentActionButton]}>
-					{showActionButton ? (
-						<TouchableOpacity activeOpacity={0.8} onPress={onPressShowActionButton}>
-							<Urgent_Write2 />
-						</TouchableOpacity>
-					) : (
-						<TouchableOpacity activeOpacity={0.8} onPress={onPressShowActionButton}>
-							<Urgent_Write1 />
-						</TouchableOpacity>
-					)}
+				<View style={[styles.urgentActionButton, {}]} onLayout={e => (urgentBtnRef.current = e.nativeEvent.layout)}>
+					<TouchableOpacity activeOpacity={0.8} onPress={onPressShowActionButton}>
+						<Urgent_Write1 />
+					</TouchableOpacity>
 				</View>
 			</View>
 			{loading ? (
-				<View style={searchProtectRequest.indicatorCont}>
+				<View style={styles.indicatorCont}>
 					<ActivityIndicator size="large" color={APRI10} />
 				</View>
 			) : (
@@ -371,9 +344,69 @@ export default MissingReportList = props => {
 };
 
 const styles = StyleSheet.create({
-	actionButtonIcon: {
-		fontSize: 20,
-		height: 22,
-		color: 'white',
+	container: {
+		flex: 1,
+	},
+	filterView: {
+		width: 750 * DP,
+		// height: 68 * DP,
+		backgroundColor: '#fff',
+		marginTop: 18 * DP,
+		marginBottom: 30 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	inside: {
+		width: 694 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		// backgroundColor: 'red',
+	},
+	onOffSwitch: {
+		// position: 'absolute',
+		// right: 0,
+	},
+	kindFilter: {
+		// width: 330 * DP,
+		marginTop: 10 * DP,
+		flexDirection: 'row',
+		alignSelf: 'center',
+	},
+	kindFilterItem: {
+		width: 110 * DP,
+		// backgroundColor: 'red',
+		marginLeft: 20 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between',
+	},
+	indicatorCont: {
+		position: 'absolute',
+		left: 0,
+		right: 0,
+		top: 0,
+		bottom: 0,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	urgentActionButton: {
+		width: 110 * DP,
+		height: 110 * DP,
+		alignSelf: 'flex-end',
+		// backgroundColor: 'white',
+		shadowColor: '#000000',
+		shadowOpacity: 0.2,
+		borderRadius: 40 * DP,
+		shadowOffset: {
+			width: 2,
+			height: 2,
+		},
+		shadowRadius: 4.65,
+		// shadowOffset: {
+		// 	width: 2 * DP,
+		// 	height: 1 * DP,
+		// },
+		// elevation: 1,
 	},
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions, TouchableWithoutFeedback, FlatList} from 'react-native';
-import {WHITE, APRI10, BLACK, GRAY20} from 'Root/config/color';
+import {WHITE, APRI10, BLACK, GRAY20, GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
@@ -107,10 +107,10 @@ const SelectMultipleScrollBoxModal = props => {
 							취소
 						</Text>
 					) : (
-						<Text style={[txt.noto30, {color: WHITE}]}>{props.header}</Text>
+						<Text style={[txt.noto30b, {}]}>{props.header}</Text>
 					)}
 					<TouchableOpacity onPress={onSelect}>
-						<Text style={[txt.noto30, {color: WHITE}]}>완료</Text>
+						<Text style={[txt.noto30b, {}]}>완료</Text>
 					</TouchableOpacity>
 				</View>
 				<View style={style.listContainer}>
@@ -128,7 +128,7 @@ const SelectMultipleScrollBoxModal = props => {
 											key={index}
 											style={[
 												style.listItem,
-												index == selectedItem && item != padding ? {backgroundColor: APRI10} : null,
+												index == selectedItem && item != padding ? {backgroundColor: GRAY30} : null,
 												{
 													width: 324 * DP,
 												},
@@ -155,7 +155,7 @@ const SelectMultipleScrollBoxModal = props => {
 											key={index}
 											style={[
 												style.listItem,
-												index == selectedItem2 && item != padding ? {backgroundColor: APRI10} : null,
+												index == selectedItem2 && item != padding ? {backgroundColor: GRAY30} : null,
 												{
 													width: 324 * DP,
 													// zIndex: 3,
@@ -201,7 +201,7 @@ const style = StyleSheet.create({
 		width: 750 * DP,
 		height: 88 * DP,
 		flexDirection: 'row',
-		backgroundColor: APRI10,
+		backgroundColor: GRAY30,
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		paddingHorizontal: 40 * DP,

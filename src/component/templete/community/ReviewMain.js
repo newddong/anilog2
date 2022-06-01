@@ -1,9 +1,8 @@
 import React from 'react';
 import {StyleSheet, View, FlatList, TouchableOpacity, RefreshControl, ActivityIndicator} from 'react-native';
 import {APRI10, BLACK} from 'Root/config/color';
-import {Animal_another_off, Animal_cat_off, Animal_dog_off, EmptyIcon, Filter60Border, Filter60Filled, WriteBoard} from 'Root/component/atom/icon';
+import {Filter60Border, Filter60Filled, WriteBoard} from 'Root/component/atom/icon';
 import ReviewList from 'Root/component/organism/list/ReviewList';
-import {Animal_another, Animal_cat, Animal_dog} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
 import {getCommunityList, updateAndDeleteCommunity} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
@@ -16,6 +15,8 @@ import {NETWORK_ERROR, REPORT_MENU, REVIEW_LIMIT} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import {searchProtectRequest} from 'Templete/style_templete';
+import AnimalButton from 'Root/component/molecules/button/AnimalButton';
+
 
 export default ReviewMain = ({route, navigation}) => {
 	const [data, setData] = React.useState('false');
@@ -479,25 +480,25 @@ export default ReviewMain = ({route, navigation}) => {
 					{filterRef.current ? <Filter60Filled onPress={onPressFilter} /> : <Filter60Border onPress={onPressFilter} />}
 				</View>
 				<View style={[style.animalFilter]}>
-					<View style={[style.shadow]}>
+					<View style={[]}>
 						{!filterData.dog ? (
-							<Animal_dog onPress={() => onPressAnimalFilter('dog')} />
+							<AnimalButton type={'dog'} on={false} onPress={() => onPressAnimalFilter('dog')} />
 						) : (
-							<Animal_dog_off onPress={() => onPressAnimalFilter('dog')} />
+							<AnimalButton type={'dog'} on={true} onPress={() => onPressAnimalFilter('dog')} />
 						)}
 					</View>
-					<View style={[style.shadow]}>
+					<View style={[]}>
 						{!filterData.cat ? (
-							<Animal_cat onPress={() => onPressAnimalFilter('cat')} />
+							<AnimalButton type={'cat'} on={false} onPress={() => onPressAnimalFilter('cat')} />
 						) : (
-							<Animal_cat_off onPress={() => onPressAnimalFilter('cat')} />
+							<AnimalButton type={'cat'} on={true} onPress={() => onPressAnimalFilter('cat')} />
 						)}
 					</View>
-					<View style={[style.shadow]}>
+					<View style={[]}>
 						{!filterData.etc ? (
-							<Animal_another onPress={() => onPressAnimalFilter('etc')} />
+							<AnimalButton type={'another'} on={false} onPress={() => onPressAnimalFilter('etc')} />
 						) : (
-							<Animal_another_off onPress={() => onPressAnimalFilter('etc')} />
+							<AnimalButton type={'another'} on={true} onPress={() => onPressAnimalFilter('etc')} />
 						)}
 					</View>
 				</View>
@@ -565,7 +566,7 @@ const style = StyleSheet.create({
 		backgroundColor: '#fff',
 	},
 	filter: {
-		width: 676 * DP,
+		width: 694 * DP,
 		paddingTop: 15 * DP,
 		paddingBottom: 10 * DP,
 		alignSelf: 'center',
@@ -573,6 +574,7 @@ const style = StyleSheet.create({
 		backgroundColor: '#fff',
 		justifyContent: 'space-between',
 		flexDirection: 'row',
+		// backgroundColor: 'red',
 	},
 	animalFilter: {
 		width: 420 * DP,

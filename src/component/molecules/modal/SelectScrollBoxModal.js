@@ -63,13 +63,6 @@ const SelectScrollBoxModal = props => {
 
 		data[0].length < 5 ? (focused = Math.floor(y / (72 * DP))) : (focused = Math.floor(y / (78 * DP)));
 		if (i == 0) {
-			// if (focused < 1) {
-			// 	setSelectedItem(2);
-			// } else if (focused > data[0].length - 1) {
-			// 	setSelectedItem(data[0].length + 1);
-			// } else {
-			// 	setSelectedItem(focused + 2);
-			// }
 			if (focused < 1) {
 				setSelectedItem(2);
 			} else {
@@ -81,13 +74,6 @@ const SelectScrollBoxModal = props => {
 				}
 			}
 		} else {
-			// if (focused < 1) {
-			// 	setSelectedItem2(2);
-			// } else if (focused > data[1].length - 1) {
-			// 	setSelectedItem2(data[1].length + 1);
-			// } else {
-			// 	setSelectedItem2(focused + 2);
-			// }
 			if (focused < 1) {
 				setSelectedItem2(2);
 			} else {
@@ -152,7 +138,7 @@ const SelectScrollBoxModal = props => {
 													key={index}
 													style={[
 														style.listItem,
-														index == (i == 0 ? selectedItem : selectedItem2) && item != padding ? {backgroundColor: APRI10} : null,
+														index == (i == 0 ? selectedItem : selectedItem2) && item != padding ? {} : null,
 														{
 															width: data.length == 1 ? 666 * DP : 324 * DP,
 															height: i == 0 ? 80 * DP : 80 * DP,
@@ -180,7 +166,6 @@ const SelectScrollBoxModal = props => {
 											);
 									}}
 								/>
-								{/* <View style={[style.box]} /> */}
 							</View>
 						);
 					})}
@@ -244,15 +229,6 @@ const style = StyleSheet.create({
 		// width: 666 * DP,
 		height: 70 * DP,
 		borderRadius: 20 * DP,
-	},
-	box: {
-		position: 'absolute',
-		marginTop: 140 * DP,
-		zIndex: -1,
-		width: 322 * DP,
-		borderRadius: 20 * DP,
-		height: 70 * DP,
-		backgroundColor: APRI10,
 	},
 	completeText: {
 		width: 110 * DP,

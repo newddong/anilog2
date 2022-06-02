@@ -1,6 +1,5 @@
 import React from 'react';
 import {Text, View, KeyboardAvoidingView, StyleSheet} from 'react-native';
-import ImagePicker from 'react-native-image-crop-picker';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654, btn_w694_r30} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
@@ -16,18 +15,16 @@ export default AssignUserProfileImage = props => {
 	const [nickname, setNickname] = React.useState('');
 	const [confirmed, setConfirmed] = React.useState(false);
 
+
+	React.useEffect(()=>{
+		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+			let selected = props.route.params.selectedPhoto[0];
+			setImgSelected(selected.cropUri??selected.uri);
+		}
+	},[props.route.params?.selectedPhoto]);
+
 	const selectPhoto = () => {
-		ImagePicker.openPicker({
-			compressImageQuality: 0.8,
-			cropping: true,
-			cropperCircleOverlay: true,
-		})
-			.then(images => {
-				setImgSelected(images.path);
-				Modal.close();
-			})
-			.catch(err => console.log(err + ''));
-		Modal.close();
+		props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
 	};
 
 	//확인버튼

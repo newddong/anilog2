@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
 		marginBottom: 10 * DP,
 		// paddingVertical: 50 * DP,
 		// paddingHorizontal: 32 * DP,
-		marginRight: 30 * DP,
+		marginLeft: 30 * DP,
 	},
 });
 

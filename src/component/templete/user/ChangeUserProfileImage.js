@@ -9,13 +9,12 @@ import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';
 import {login_style, btn_style, temp_style, changeUserProfileImage_style} from 'Templete/style_templete';
 import {updateUserInformation, nicknameDuplicationCheck} from 'Root/api/userapi';
 import Modal from 'Component/modal/Modal';
-import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default ChangeUserProfileImage = ({route}) => {
 	// console.log('route / Profile', route.params);
 	const [data, setData] = React.useState(route.params.data);
-	const [newNick, setNewNick] = React.useState(route.params.data.user_nickname);
+	const [newNick, setNewNick] = React.useState(route.params.data?.user_nickname);
 	const navigation = useNavigation();
 	const [confirmed, setConfirmed] = React.useState(false);
 	const [duplicated, setDuplicated] = React.useState(false);
@@ -57,19 +56,19 @@ export default ChangeUserProfileImage = ({route}) => {
 		}
 	};
 
+	React.useEffect(()=>{
+		if(route.params.selectedPhoto&&route.params.selectedPhoto.length>0){
+			console.log(route.params);
+			let selected = route.params.selectedPhoto[0];
+			setData({...data, user_profile_uri: (selected.cropUri??selected.uri) || data.user_profile_uri});
+		// 		setConfirmed(true);
+			// setSelectedImg(props.route.params.selectedPhoto);
+		}
+	},[route.params?.selectedPhoto]);
+
+
 	const selectPhoto = () => {
-		ImagePicker.openPicker({
-			compressImageQuality: 0.8,
-			cropping: true,
-			cropperCircleOverlay: true,
-		})
-			.then(images => {
-				setData({...data, user_profile_uri: images.path || data.user_profile_uri});
-				setConfirmed(true);
-				Modal.close();
-			})
-			.catch(err => console.log('err / ImageOpenPicker / ChangeUserProfile', err));
-		Modal.close();
+		navigation.push("SinglePhotoSelect",{prev:{name:route.name,key:route.key}});
 	};
 
 	//중복 처리

@@ -3,7 +3,6 @@ import TwoBtnModal from 'Molecules/modal/TwoBtnModal';
 import OneBtnModal from 'Molecules/modal/OneBtnModal';
 import NoBtnModal from 'Molecules/modal/NoBtnModal';
 import RollingSelect from 'Molecules/select/RollingSelect';
-import SelectModal from 'Molecules/modal/SelectModal';
 import FeedAvartarSelect from 'Molecules/select/FeedAvartarSelect';
 import KeyBoardInputBackGround from 'Molecules/input/KeyboardInputBackGround';
 
@@ -36,12 +35,12 @@ import AdoptionInfoModalWithOneBtn from 'Root/component/molecules/modal/Adoption
 import AnimalToRegisterModal from 'Root/component/molecules/modal/AnimalToRegisterModal';
 import PhotoListViewModal from 'Root/component/molecules/modal/PhotoListViewModal';
 import Loading from 'Root/component/molecules/modal/Loading';
-import LocationCheckModal from 'Root/component/molecules/modal/LocationCheckModal';
 import AvatarSelectFromWriteModal from 'Root/component/molecules/modal/AvatarSelectFromWriteModal';
 import LoginRequestModal from 'Root/component/molecules/modal/LoginRequestModal';
 import ReviewFilterModal from 'Root/component/molecules/modal/ReviewFilterModal';
 import ProtectRequestFilterModal from 'Root/component/molecules/modal/ProtectRequestFilterModal';
 import NetworkErrorModal from 'Root/component/molecules/modal/NetworkErrorModal';
+import UrgentBtnModal from 'Root/component/molecules/modal/UrgentBtnModal';
 
 export function useModal() {
 	const [isPop, setPop] = React.useState(false);
@@ -103,11 +102,6 @@ export function useModal() {
 
 	Modal.rollingSelect = (title, items = [''], onSelect, onCancel = Modal.close) => {
 		popIn(<RollingSelect title={title} items={items} onSelect={onSelect} onCancel={onCancel} />);
-		!isPop && setPop(true);
-	};
-
-	Modal.popSelect = (primaryItems, secondaryItems, onOk, okButtonnMsg) => {
-		popIn(<SelectModal primaryItems={primaryItems} secondaryItems={secondaryItems} onOk={onOk} okButtonnMsg={okButtonnMsg} popUpMsg={'선택 모달'} />);
 		!isPop && setPop(true);
 	};
 
@@ -256,13 +250,8 @@ export function useModal() {
 		!isPop && setPop(true);
 	};
 
-	Modal.popLocationCheckModal = (onPressAddrSearch, onConfirm, searchedLocation) => {
-		popIn(<LocationCheckModal onPressAddrSearch={onPressAddrSearch} onConfirm={onConfirm} searchedLocation={searchedLocation} />);
-		!isPop && setPop(true);
-	};
-
-	Modal.popAvatarSelectFromWriteModal = onSelectPet => {
-		popIn(<AvatarSelectFromWriteModal onSelectPet={onSelectPet} />);
+	Modal.popAvatarSelectFromWriteModal = (onSelectPet, onClose) => {
+		popIn(<AvatarSelectFromWriteModal onSelectPet={onSelectPet} onClose={onClose} />);
 		!isPop && setPop(true);
 	};
 
@@ -278,6 +267,11 @@ export function useModal() {
 
 	Modal.popNetworkErrorModal = msg => {
 		popIn(<NetworkErrorModal msg={msg} />);
+		!isPop && setPop(true);
+	};
+
+	Modal.popUrgentBtnModal = (onReport, onMissing, layout) => {
+		popIn(<UrgentBtnModal onReport={onReport} onMissing={onMissing} layout={layout} />);
 		!isPop && setPop(true);
 	};
 

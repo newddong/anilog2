@@ -3,14 +3,12 @@ import {View, Text, StyleSheet, Platform, Dimensions, Image, TouchableOpacity} f
 import {WHITE, GRAY10, APRI10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {Congratulation, Cross46} from 'Root/component/atom/icon';
+import {Cross46} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
-import ProfileImageLarge194 from '../image/ProfileImageLarge194';
 import Swiper from 'react-native-swiper';
-import {styles} from 'Root/component/atom/image/imageStyle';
 
 /**
- * 임시보호 입양 확정 축하 모달
+ * 사진 전체화면 모드 모달
  *
  * @todo 모달창이 없어지기 위한 조건을 넣어야함.
  *

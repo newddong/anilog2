@@ -1,7 +1,7 @@
 import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {Dimensions, StyleSheet} from 'react-native';
-import {APRI10, BLACK, GRAY10, WHITE} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, GRAY40, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import ArticleMain from 'Root/component/templete/community/ArticleMain';
 import ReviewMain from 'Root/component/templete/community/ReviewMain';
@@ -18,10 +18,17 @@ export default CommunityMain = props => {
 			initialRouteName={initailRoute}
 			screenOptions={{
 				tabBarItemStyle: {height: 70 * DP},
-				tabBarIndicatorStyle: {backgroundColor: 'black', height: 2 * DP},
+				tabBarIndicatorStyle: {backgroundColor: 'black', height: 6 * DP},
 				tabBarLabelStyle: [styles.tabbarLabelStyle],
 				tabBarInactiveTintColor: GRAY10,
 				lazy: true,
+				tabBarStyle: {
+					borderBottomWidth: 2 * DP,
+					borderTopWidth: 2 * DP,
+					borderTopColor: GRAY40,
+					borderBottomColor: GRAY40,
+					elevation: 0,
+				},
 			}}
 			initialLayout={{width: Dimensions.get('window').width}}
 			optimizationsEnabled={true}>

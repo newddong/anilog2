@@ -191,25 +191,25 @@ const InformationModal = props => {
 						</Text>
 					</View>
 					{/* 이메일 */}
-					<View style={[style.category]}>
+					{/* <View style={[style.category]}>
 						<View style={[style.category_title]}>
 							<Text style={[txt.noto24]}>E-mail</Text>
 						</View>
 						<Text onPress={() => alert('이메일 선택')} style={[txt.roboto30, {textDecorationLine: 'underline', color: BLUE20}]}>
 							{data.user_email || ''}
 						</Text>
-					</View>
+					</View> */}
 					{/* 홈페이지 */}
-					<View style={[style.category]}>
+					{/* <View style={[style.category]}>
 						<View style={[style.category_title]}>
 							<Text style={[txt.noto24]}>홈페이지</Text>
 						</View>
 						<Text onPress={() => alert('홈페이지 선택')} style={[txt.roboto30, {textDecorationLine: 'underline', color: BLUE20}]}>
 							{data.shelter_homepage || ''}
 						</Text>
-					</View>
+					</View> */}
 					{/* 설립일 */}
-					<View style={[style.category]}>
+					{/* <View style={[style.category]}>
 						<View style={[style.category_title]}>
 							<Text style={[txt.noto24]}>설립일</Text>
 						</View>
@@ -221,7 +221,7 @@ const InformationModal = props => {
 						</View>
 					) : (
 						<></>
-					)}
+					)} */}
 				</>
 			);
 		} else {

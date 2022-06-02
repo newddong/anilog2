@@ -36,7 +36,11 @@ export default ProtectionStackNavigation = props => {
 
 	return (
 		<ProtectionStack.Navigator initialRouteName="ProtectionTab">
-			<ProtectionStack.Screen name="ProtectionTab" component={ProtectionTopTabNavigation} options={{header: props => <LogoHeader {...props} />}} />
+			<ProtectionStack.Screen
+				name="ProtectionTab"
+				component={ProtectionTopTabNavigation}
+				options={{header: props => <SimpleHeader {...props} />, title: ' '}}
+			/>
 			<ProtectionStack.Screen name="UserProfile" component={Profile} options={{header: props => <MeatBallHeader {...props} />, title: '프로필'}} />
 			<ProtectionStack.Screen
 				name="SocialRelation"

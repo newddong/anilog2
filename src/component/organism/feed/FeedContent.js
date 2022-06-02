@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, Platform} from 'react-native';
+import {Text, View, Platform, StyleSheet} from 'react-native';
 import {organism_style, feedContent_style} from 'Organism/style_organism';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
 import {useNavigation, useRoute} from '@react-navigation/core';
@@ -7,7 +7,7 @@ import {FavoriteTag48_Border, FavoriteTag48_Filled, Meatball50_GRAY20_Horizontal
 import {txt} from 'Root/config/textstyle';
 import {Arrow_Down_GRAY20} from 'Atom/icon';
 import DP from 'Root/config/dp';
-import {GRAY10} from 'Root/config/color';
+import {GRAY10, WHITE} from 'Root/config/color';
 import {
 	FEED_MEATBALL_MENU,
 	FEED_MEATBALL_MENU_FOLLOWING,
@@ -75,13 +75,12 @@ export default FeedContent = props => {
 	const [send, setSend] = React.useState();
 	const feed_writer = props.data.feed_avatar_id ? props.data.feed_avatar_id : props.data.feed_writer_id;
 	React.useEffect(() => {
-		if(feed_avatar_id){
-			setSend(feed_avatar_id)
-		}else{
-			setSend(feed_writer_id)
+		if (feed_avatar_id) {
+			setSend(feed_avatar_id);
+		} else {
+			setSend(feed_writer_id);
 		}
-		
-		
+
 		// if (typeof feed_avatar_id == 'object') {
 		// 	setSend(feed_avatar_id);
 		// } else {
@@ -540,12 +539,9 @@ export default FeedContent = props => {
 
 	return (
 		<View style={[layoutStyle()]} removeClippedSubviews onLayout={props.onLayout}>
-			<View style={[organism_style.feedContent]}>
-				{/* line 1 */}
-				<View style={[organism_style.userLocationLabel_view_feedContent]} onLayout={onLayoutLabel}>
-					{/* UserLocationLabel */}
-					<View style={[organism_style.userLocationLabel_feedContent]}>
-
+			<View style={[style.feedContent]}>
+				<View style={[style.userLocationLabel_view_feedContent]} onLayout={onLayoutLabel}>
+					<View style={[style.userLocationLabel_feedContent]}>
 						{send ? (
 							<UserLocationTimeLabel
 								data={send}
@@ -630,12 +626,12 @@ export default FeedContent = props => {
 					!route.name.includes('HashFeedList') &&
 					!route.name.includes('TagMeFeedList') &&
 					(feed_type == 'report' || feed_type == 'missing') && (
-						<View style={[organism_style.tipOff_feedContent, feedContent_style.tipOff]} onLayout={onLayoutReport}>
+						<View style={[style.missingReportInfo]} onLayout={onLayoutReport}>
 							<MissingReportInfo data={props.data} />
 						</View>
 					)}
-				{(route.name.includes('FeedList') || feed_type == 'report' || feed_type == 'missing' || route.name.includes('FeedCommentList') || show) && (
-					<View style={[organism_style.content_feedContent, feedContent_style.content_Top10]}>
+				{(route.name.includes('FeedList') || feed_type == 'missing' || route.name.includes('FeedCommentList') || show) && (
+					<View style={[organism_style.content_feedContent, feedContent_style.content_Top10, {width: 694 * DP}]}>
 						<HashText style={[txt.noto28]} numberOfLines={numLine} ellipsizeMode={'tail'}>
 							{feed_content}
 						</HashText>
@@ -643,10 +639,10 @@ export default FeedContent = props => {
 				)}
 			</View>
 			{!isMissingReportRoute && isShowBtn && !show && (
-				<View style={[organism_style.time_view_feedContent]}>
+				<View style={[style.time_view_feedContent]}>
 					<TouchableWithoutFeedback onPress={showMore}>
-						<View style={[organism_style.addMore_view_feedContent]}>
-							<View style={[organism_style.addMore_feedContent]}>
+						<View style={[style.addMore_view_feedContent]}>
+							<View style={[style.addMore_feedContent]}>
 								<Text style={[txt.noto22, {color: GRAY10}]}>더보기</Text>
 							</View>
 							<View style={[organism_style.braket]}>
@@ -669,3 +665,53 @@ FeedContent.defaultProps = {
 	},
 	deleteFeed: () => {},
 };
+
+const style = StyleSheet.create({
+	feedContent: {
+		flexDirection: 'column',
+		width: 750 * DP,
+		alignItems: 'center',
+		paddingTop: 20 * DP,
+		backgroundColor: WHITE,
+		paddingBottom: 15 * DP,
+		paddingHorizontal: 48 * DP,
+		overflow: 'hidden',
+	},
+	userLocationLabel_view_feedContent: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+	},
+	userLocationLabel_feedContent: {
+		flexDirection: 'row',
+		width: 694 * DP, //유저아이디 최우측 미트볼 아이콘 추가를 위한 수정
+		justifyContent: 'space-between',
+		alignItems: 'center',
+	},
+	missingReportInfo: {
+		marginTop: 20 * DP,
+	},
+	time_view_feedContent: {
+		flexDirection: 'row',
+		width: '100%',
+		height: 48 * DP,
+		paddingHorizontal: 48 * DP,
+		alignItems: 'center',
+		justifyContent: 'flex-end',
+		backgroundColor: '#fff1',
+		bottom: 0,
+	},
+	addMore_view_feedContent: {
+		flexDirection: 'row',
+		width: 108 * DP,
+		height: 48 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	addMore_feedContent: {
+		width: 70 * DP,
+		height: 36 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+});

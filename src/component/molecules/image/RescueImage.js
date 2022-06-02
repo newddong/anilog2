@@ -6,7 +6,7 @@ import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {ADOPT, DISCUSS, NEAR_RAINBOWBRIDGE, PROTECT, RESCUE} from 'Root/i18n/msg';
 import {styles} from 'Atom/image/imageStyle';
-import {RainbowBridge} from 'Root/component/atom/icon';
+import {Blur, Blur694, RainbowBridge} from 'Root/component/atom/icon';
 
 /**
  * 동물 구조 임시보호 입양 관련 이미지
@@ -27,7 +27,7 @@ const RescueImage = props => {
 				return ADOPT;
 			case 'discuss':
 			case undefined:
-				return DISCUSS;
+				return '임시 보호 후보자 협의 중';
 			case 'rainbowbridge':
 				return '';
 			case 'nearrainbow':
@@ -41,30 +41,46 @@ const RescueImage = props => {
 				return DISCUSS;
 		}
 	};
+
+	const getStatusBg = () => {
+		if (props.status == 'rainbowbridge' || props.status == 'rainbowbridge_euthanasia') {
+			return (
+				<View style={[style.rainbow, styles.img_square_round_694]}>
+					<RainbowBridge />
+				</View>
+			);
+		} else if (props.status == 'complete') {
+			return (
+				<View style={[style.rainbow, styles.img_square_round_694, {justifyContent: 'center', alignItems: 'center'}]}>
+					<Text style={[txt.noto36, {color: WHITE}]}>인도 완료</Text>
+				</View>
+			);
+		} else {
+			return <></>;
+		}
+	};
+
 	return (
-		<View style={[styles.img_rect_654x542, {zIndex: -2}]}>
+		<View style={[styles.img_square_round_694]}>
 			<Swiper showsPagination={false} autoplay={false} loop={false} horizontal={true}>
 				{props.img_uri != undefined &&
 					props.img_uri.map((data, idx) => (
-						<TouchableOpacity activeOpacity={0.8} onPress={() => props.onPressReqeustPhoto()} key={idx}>
-							<Image onP source={{uri: data}} style={styles.img_rect_654x542} />
-							<View style={[style.swiper_index]}>
+						<TouchableOpacity activeOpacity={0.9} onPress={() => props.onPressReqeustPhoto()} key={idx} style={{zIndex: -1}}>
+							<Image onP source={{uri: data}} style={styles.img_square_round_694} />
+							<View style={[style.swiper_index, {zIndex: 2}]}>
 								<Text style={[txt.roboto24, {color: 'white'}]}>
 									{idx + 1}/{props.img_uri.length}
 								</Text>
 							</View>
+							<View style={[style.blur, {zIndex: 1}]}>
+								<Blur694 />
+							</View>
 						</TouchableOpacity>
 					))}
 			</Swiper>
-			{props.status != 'rainbowbridge' ? (
-				<></>
-			) : (
-				<View style={[style.rainbow, styles.img_rect_654x542]}>
-					<RainbowBridge />
-				</View>
-			)}
-			{props.status != 'rainbowbridge' ? (
-				<View style={[style.status_text]}>
+			{getStatusBg()}
+			{props.status != 'rainbowbridge' && props.status != 'rainbowbridge_euthanasia' && props.status != 'complete' ? (
+				<View style={[style.status_text, {zIndex: 2}]}>
 					<Text style={[txt.noto36, {textAlign: 'center', color: 'white'}]}>{getStatusText()}</Text>
 				</View>
 			) : (
@@ -93,19 +109,33 @@ const style = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	status_text: {
-		width: 480 * DP,
+		width: 694 * DP,
 		height: 64 * DP,
-		opacity: 0.8,
+		// opacity: 0.8,
 		borderBottomLeftRadius: 30 * DP,
-		backgroundColor: APRI10,
+		// backgroundColor: APRI10,
 		position: 'absolute',
 		right: 0,
+		bottom: 14 * DP,
 	},
 	rainbow: {
 		position: 'absolute',
 		backgroundColor: BLACK,
 		opacity: 0.8,
 		zIndex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	blur: {
+		position: 'absolute',
+		bottom: 0,
+		left: 0,
+		top: 0,
+		right: 0,
+		opacity: 0.8,
+		borderRadius: 30 * DP,
+		width: 694 * DP,
+		height: 694 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},

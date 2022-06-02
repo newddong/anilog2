@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions, TouchableWithoutFeedback, FlatList} from 'react-native';
-import {WHITE, GRAY10, APRI10, GRAY20, APRI20, GRAY30, BLACK} from 'Root/config/color';
+import {WHITE, GRAY20, APRI20, GRAY30, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
@@ -97,9 +97,9 @@ const SelectDateModal = props => {
 			</TouchableWithoutFeedback>
 			<View style={style.popUpWindow}>
 				<View style={style.header}>
-					<Text style={[txt.noto30, {color: WHITE}]}>{props.header}</Text>
+					<Text style={[txt.noto30b]}>{props.header}</Text>
 					<TouchableOpacity onPress={onSelect}>
-						<Text style={[txt.noto30, {color: WHITE}]}>완료</Text>
+						<Text style={[txt.noto30b]}>완료</Text>
 					</TouchableOpacity>
 				</View>
 				<View style={style.scrollContainer}>
@@ -114,7 +114,7 @@ const SelectDateModal = props => {
 										<View
 											key={index}
 											style={[
-												index == year && item != padding ? {backgroundColor: APRI10} : null,
+												index == year && item != padding ? {backgroundColor: GRAY30} : null,
 												style.listItem,
 												{
 													width: 250 * DP,
@@ -144,7 +144,7 @@ const SelectDateModal = props => {
 							renderItem={({item, index}) => {
 								return (
 									<TouchableWithoutFeedback key={index} onPress={() => setMonth(index)}>
-										<View key={index} style={[style.listItem, index == month && item != '' ? {backgroundColor: APRI10} : null, {width: 188 * DP}]}>
+										<View key={index} style={[style.listItem, index == month && item != '' ? {backgroundColor: GRAY30} : null, {width: 188 * DP}]}>
 											<Text
 												style={[
 													txt.roboto34,
@@ -169,7 +169,7 @@ const SelectDateModal = props => {
 							renderItem={({item, index}) => {
 								return (
 									<TouchableWithoutFeedback key={index} onPress={() => setDay(index)}>
-										<View key={index} style={[style.listItem, index == day && item != '' ? {backgroundColor: APRI10} : null, {width: 188 * DP}]}>
+										<View key={index} style={[style.listItem, index == day && item != '' ? {backgroundColor: GRAY30} : null, {width: 188 * DP}]}>
 											<Text
 												style={[
 													txt.roboto34,
@@ -217,7 +217,7 @@ const style = StyleSheet.create({
 		width: 750 * DP,
 		height: 88 * DP,
 		flexDirection: 'row',
-		backgroundColor: APRI10,
+		backgroundColor: GRAY30,
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		paddingHorizontal: 40 * DP,

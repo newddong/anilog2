@@ -87,7 +87,9 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			}
 			// console.log('route.params:', route.params);
 			Modal.popNoBtn('게시물을 등록중입니다.');
-			let param = {...route.params, hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1))};
+			let param = {...route.params,media_uri:route.params.selectedPhoto.map(
+				(v)=>{return v.cropUri??v.uri;}
+			), hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1))};
 			switch (route.params?.feedType) {
 				case 'Feed':
 					console.log('feed Param', JSON.stringify(param));
@@ -164,16 +166,20 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 
 		userGlobalObject.t.y = 0;
 	};
-
+	const onEdit1 = () => {
+		console.log('parm',route);
+	}
 	const onEdit = () => {
 		Modal.popLoading(true);
 		let changeTextRegex = /([#@])([^#@\s]+)/gm;
 		let param = {
 			...route.params,
 			feedobject_id: route.params._id,
+			media_uri:route.params.selectedPhoto?.map(v=>{return v.cropUri??v.uri}),
 			feed_content: route.params.isEdit ? route.params.feed_content : route.params.feed_content.replace(changeTextRegex, '&$1&$1$1$2%&%&$1&$1'),
 			hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
 		};
+		console.log(param);
 		if (param.feed_type == 'feed') {
 			editFeed(param, complete, handleError);
 		} else if (param.feed_type == 'report') {
@@ -308,7 +314,7 @@ const style = StyleSheet.create({
 		height: 135 * DP,
 		flexDirection: 'row',
 		backgroundColor: WHITE,
-		paddingHorizontal: 48 * DP,
+		paddingHorizontal: 28 * DP,
 	},
 	buttonContainer: {
 		flexDirection: 'row',

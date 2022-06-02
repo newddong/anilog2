@@ -6,83 +6,113 @@ import FastImage from 'react-native-fast-image';
 import { getFavoriteFeedListByUserId } from 'Root/api/feedapi';
 
 export default Crop = prop => {
+	const WIDTH = prop.width||750*DP;
+	const HEIGHT = prop.height||750*DP;
+	const PADDINGVERTICAL = prop.paddingVertical||75*DP;
+	const PADDINGLHORIZONTAL = prop.paddingHorizontal||75*DP;
 	const pan = React.useRef(new Animated.ValueXY({x: 0, y: 0})).current;
 	const scale = React.useRef(new Animated.Value(1)).current;
 	const scalePrev = React.useRef(1);
-	const panStart = React.useRef({x: 0, y: 0}).current;
 	const panPrev = React.useRef({x: 0, y: 0}).current;
-	const imgLayout = React.useRef({width:1,height:1}).current;
+	const imgLayout = React.useRef({width:WIDTH,height:HEIGHT}).current;
 	const initDistance = React.useRef(0);
 	const [cropUri, setCropUri] = React.useState();
 	const [imgUri, setImgUri] = React.useState();
-	const [imgDimension, setImgDimension] = React.useState({width:750*DP,height:750*DP});
+	const [imgDimension, setImgDimension] = React.useState({width:WIDTH,height:HEIGHT});
+	const isPinch = React.useRef(false);
 	
 	const panResponder = React.useRef(
 		PanResponder.create({
 			onMoveShouldSetPanResponder: () => true,
 			onPanResponderGrant: ({nativeEvent}) => {
+				
 				if (nativeEvent.touches.length > 1) {
 					let pos1 = {x: nativeEvent.touches[0].pageX, y: nativeEvent.touches[0].pageY};
 					let pos2 = {x: nativeEvent.touches[1].pageX, y: nativeEvent.touches[1].pageY};
+					isPinch.current = true;
 					initDistance.current = getDistance(pos1, pos2);
 					return;
+				}else{
+					pan.setOffset({x: panPrev.x - nativeEvent.pageX, y: panPrev.y - nativeEvent.pageY});
+
 				}
-				pan.setOffset({x: panPrev.x - nativeEvent.pageX, y: panPrev.y - nativeEvent.pageY});
 			},
 			onPanResponderStart:({nativeEvent})=>{
+				
 				if (nativeEvent.touches.length > 1) {
+					console.log('pinchstart  x:'+nativeEvent.locationX+'  y:'+nativeEvent.locationY);
 					let pos1 = {x: nativeEvent.touches[0].pageX, y: nativeEvent.touches[0].pageY};
 					let pos2 = {x: nativeEvent.touches[1].pageX, y: nativeEvent.touches[1].pageY};
+					isPinch.current = true;
 					initDistance.current = getDistance(pos1, pos2);
+					return;
+				}else{
+					pan.setOffset({x: panPrev.x - nativeEvent.pageX, y: panPrev.y - nativeEvent.pageY});
+
 				}
 			},	
 			onPanResponderMove: ({nativeEvent}) => {
+				
 				if (nativeEvent.touches.length > 1 &&initDistance.current!=0) {
+					console.log('pinchmove[0]  x:'+nativeEvent.touches[0].locationX+'  y:'+nativeEvent.touches[0].locationY);
+					console.log('pinchmove[1]  x:'+nativeEvent.touches[1].locationX+'  y:'+nativeEvent.touches[1].locationY);
+					pan.setValue({x: nativeEvent.touches[0].pageX, y: nativeEvent.touches[0].pageY});
 					let pos1 = {x: nativeEvent.touches[0].pageX, y: nativeEvent.touches[0].pageY};
 					let pos2 = {x: nativeEvent.touches[1].pageX, y: nativeEvent.touches[1].pageY};
 					scale.setValue((scalePrev.current * getDistance(pos1, pos2)) / initDistance.current);
 					return;
+				}else{
+					if(isPinch.current)return;
+					console.log('move  x:'+nativeEvent.locationX+'  y:'+nativeEvent.locationY,nativeEvent);
+					pan.setValue({x: nativeEvent.pageX, y: nativeEvent.pageY});
 				}
-				pan.setValue({x: nativeEvent.pageX, y: nativeEvent.pageY});
 			},
 			onPanResponderRelease: ({nativeEvent}) => {
 				let w = 0;
 				let h = 0;
 				let stickToLeft = () => {
-					Animated.spring(
-						pan,{toValue:{x:75*DP-w-pan.x._offset,y:panPrev.y-pan.y._offset},speed:50,useNativeDriver:false}
-					).start();
-					panPrev.x = 75*DP-w;
+					// Animated.spring(
+					// 	pan,{toValue:{x:PADDINGLHORIZONTAL-w-pan.x._offset,y:panPrev.y-pan.y._offset},speed:50,useNativeDriver:false}
+					// ).start();
+					pan.setValue({x:PADDINGLHORIZONTAL-w-pan.x._offset,y:panPrev.y-pan.y._offset});
+					panPrev.x = PADDINGLHORIZONTAL-w;
+					console.log('stickToLeft');
 				};
 				let stickToRight = () => {
-					Animated.spring(
-						pan,{toValue:{x:675*DP+w-imgLayout.width-pan.x._offset,y:panPrev.y-pan.y._offset},speed:50,useNativeDriver:false}
-					).start();
-					panPrev.x = 675*DP-imgLayout.width+w;
+					// Animated.spring(
+					// 	pan,{toValue:{x:WIDTH-PADDINGLHORIZONTAL+w-imgLayout.width-pan.x._offset,y:panPrev.y-pan.y._offset},speed:50,useNativeDriver:false}
+					// ).start();
+					pan.setValue({x:WIDTH-PADDINGLHORIZONTAL+w-imgLayout.width-pan.x._offset,y:panPrev.y-pan.y._offset});
+					panPrev.x = WIDTH-PADDINGLHORIZONTAL-imgLayout.width+w;
+					console.log('stickToRight');
 				};
 				let stickToTop = () => {
-					Animated.spring(
-						pan,{toValue:{x:panPrev.x-pan.x._offset,y:75*DP-h-pan.y._offset},speed:50,useNativeDriver:false}
-					).start();
-					panPrev.y = 75*DP-h;
+					// Animated.spring(
+					// 	pan,{toValue:{x:panPrev.x-pan.x._offset,y:PADDINGVERTICAL-h-pan.y._offset},speed:50,useNativeDriver:false}
+					// ).start();
+                    pan.setValue({x:panPrev.x-pan.x._offset,y:PADDINGVERTICAL-h-pan.y._offset});
+					panPrev.y = PADDINGVERTICAL-h;
+					console.log('stickToTop');
 				};
 				let stickToBottom = () => {
-					Animated.spring(
-						pan,{toValue:{x:panPrev.x-pan.x._offset,y:675*DP+h-imgLayout.height-pan.y._offset},speed:50,useNativeDriver:false}
-					).start();
-					panPrev.y = 675*DP-imgLayout.height+h;
+					// Animated.spring(
+					// 	pan,{toValue:{x:panPrev.x-pan.x._offset,y:HEIGHT-PADDINGVERTICAL+h-imgLayout.height-pan.y._offset},speed:50,useNativeDriver:false}
+					// ).start();
+                    pan.setValue({x:panPrev.x-pan.x._offset,y:HEIGHT-PADDINGVERTICAL+h-imgLayout.height-pan.y._offset});
+					panPrev.y = HEIGHT-PADDINGVERTICAL-imgLayout.height+h;
+					console.log('stickToBottom');
 				};
 
 
 				console.log(nativeEvent);
 				if (nativeEvent.changedTouches.length > 1 || initDistance.current !=0) {
-					console.log('pinch end');
+					console.log('pinch end',pan);
+					isPinch.current = false;
 					w = imgLayout.width*scale._value;
 					h = imgLayout.height*scale._value;
-
 					if(w>h){
-						if(h<600*DP){
-							scalePrev.current = 600*DP/imgLayout.height;
+						if(h<HEIGHT-2*PADDINGVERTICAL){
+							scalePrev.current = (HEIGHT-2*PADDINGVERTICAL)/imgLayout.height;
 							scale.setValue(scalePrev.current);
 						}
 						else{
@@ -90,8 +120,8 @@ export default Crop = prop => {
 						}
 					}
 					else{
-						if(w<600*DP){
-							scalePrev.current = 600*DP/imgLayout.width;
+						if(w<WIDTH-2*PADDINGLHORIZONTAL){
+							scalePrev.current = (WIDTH-2*PADDINGLHORIZONTAL)/imgLayout.width;
 							scale.setValue(scalePrev.current);
 						}
 						else{
@@ -102,24 +132,25 @@ export default Crop = prop => {
 					w = imgLayout.width * (1-scalePrev.current)/2;
 					h = imgLayout.height * (1-scalePrev.current)/2;
 
-					if(panPrev.x+imgLayout.width<675*DP+w){
+					if(panPrev.x+imgLayout.width<=WIDTH-PADDINGLHORIZONTAL+w){
 						stickToRight();
 					}
 					else{
-						if(panPrev.x>75*DP-w){
+						if(panPrev.x>=PADDINGLHORIZONTAL-w){
 							stickToLeft();
 						}
 					}
-					if(panPrev.y+imgLayout.height<675*DP+h){
+					if(panPrev.y+imgLayout.height<=HEIGHT-PADDINGVERTICAL+h){
 						stickToBottom();
 					}
 					else{
-						if(panPrev.y>75*DP-h){
+						if(panPrev.y>=PADDINGVERTICAL-h){
 							stickToTop();
 						}
 					}
-
-
+					panPrev.x = pan.x._value + pan.x._offset;
+					panPrev.y = pan.y._value + pan.y._offset;
+					
 					initDistance.current =0;
 				}
 				else{
@@ -130,49 +161,52 @@ export default Crop = prop => {
 					w = imgLayout.width * (1-scalePrev.current)/2;
 					h = imgLayout.height * (1-scalePrev.current)/2;
 					
-					if(panPrev.x+imgLayout.width<675*DP+w){
+					if(panPrev.x+imgLayout.width<WIDTH-PADDINGLHORIZONTAL+w){
 						stickToRight();
 					}
 					
-					if(panPrev.x>75*DP-w){
+					if(panPrev.x>PADDINGLHORIZONTAL-w){
 						stickToLeft();
 					}
 					
-					if(panPrev.y+imgLayout.height<675*DP+h){
+					if(panPrev.y+imgLayout.height<HEIGHT-PADDINGVERTICAL+h){
 						stickToBottom();
 					}
-					if(panPrev.y>75*DP-h){
+					if(panPrev.y>PADDINGVERTICAL-h){
 						stickToTop();
 					}
 					
 				}
 			},
+			onPanResponderTerminate:()=>{
+				console.log('terminate');
+			}
 		}),
 	).current;
 
 	React.useEffect(()=>{
 		imgUri&&Image.getSize(imgUri,(w,h)=>{
 			if(w>h){
-				let newWidth = (w/h)*750*DP;
-				let initPositionX = (750*DP - newWidth)/2;
+				let newWidth = (w/h)*WIDTH;
+				let initPositionX = (WIDTH - newWidth)/2;
 				panPrev.x = initPositionX;
 				pan.setValue({x:initPositionX,y:0});
 				imgLayout.width = newWidth;
-				imgLayout.height = 750*DP;
+				imgLayout.height = HEIGHT;
 				setImgDimension({
 					width: newWidth,
-					height: 750*DP
+					height: HEIGHT
 				});
 			}
 			if(h>=w){
-				let newHeight = (h/w)*750*DP;
-				let initPositionY = (750*DP-newHeight)/2;
+				let newHeight = (h/w)*HEIGHT;
+				let initPositionY = (HEIGHT-newHeight)/2;
 				panPrev.y = initPositionY;
 				pan.setValue({x:0,y:initPositionY});
-				imgLayout.width = 750*DP;
+				imgLayout.width = WIDTH;
 				imgLayout.height = newHeight;
 				setImgDimension({
-					width: 750*DP,
+					width: WIDTH,
 					height: newHeight
 				});
 			}
@@ -207,26 +241,24 @@ export default Crop = prop => {
 		Image.getSize(imgUri,(originW,originH)=>{
 			let wRatio = originW/(imgLayout.width*scalePrev.current);
 			let hRatio = originH/(imgLayout.height*scalePrev.current);
-			let desW =Math.round(600*DP*wRatio);
-			let desH = Math.round(600*DP*hRatio);
+			let desW =Math.round((WIDTH-2*PADDINGLHORIZONTAL)*wRatio);
+			let desH = Math.round((HEIGHT-2*PADDINGVERTICAL)*hRatio);
 			
-			let offX = Math.abs(panPrev.x+imgLayout.width * (1-scalePrev.current)/2-75*DP)*wRatio;
-			let offY = Math.abs(panPrev.y+imgLayout.height * (1-scalePrev.current)/2-75*DP)*hRatio;
+			let offX = Math.abs(panPrev.x+imgLayout.width * (1-scalePrev.current)/2-PADDINGLHORIZONTAL)*wRatio;
+			let offY = Math.abs(panPrev.y+imgLayout.height * (1-scalePrev.current)/2-PADDINGVERTICAL)*hRatio;
 			console.log('crop!   offX:'+Math.round(offX)+'   offY:'+Math.round(offY)+'   desW:'+desW+'   desH:'+desH);
 			CameraRoll.cropImage({
 				uri:imgUri,
 				destHeight:desH,
 				destWidth:desW,
-				offsetX:Math.round(offX),
-				offsetY:Math.round(offY),
+				offsetX:Math.floor(offX),
+				offsetY:Math.floor(offY),
 				imgWidth:originW,
 				imgHeight:originH
 			})
 			.then((r)=>{
 				console.log(r);
 				setCropUri(r.uri);
-				// setImgUri(r.uri);
-				// prop.navigation.navigate({name:prop.route.params.prev,key:prop.route.params.key,params:{cropImg:r.uri},merge:true})
 			});
 		})
 
@@ -242,28 +274,36 @@ export default Crop = prop => {
 		console.log('dimension',dim);
 		console.log('setvalue',imgDimension);
     }
+
+	const test5 =() => {
+		CameraRoll.getAlbums({
+			assetType:'Photos',
+			albumType:'SmartAlbum'
+		}).then(r=>console.log(r));
+    }
+
 	return (
 		<View style={{flexDirection: 'column', flex: 1}}>
-			<View style={{width: 750 * DP, flexBasis: 750 * DP, backgroundColor: '#fff'}}>
-            <View style={{position:'absolute',top:75*DP,left:75*DP,width:600*DP, height:600*DP,backgroundColor:'#fff'}} ref={bluerect}/>
-				<Animated.View style={{width: imgDimension.width, height: imgDimension.height,alignItems:'center',backgroundColor:'red',transform: [{translateX: pan.x}, {translateY: pan.y}, {scale: scale}]}} {...panResponder.panHandlers}>
+			<View style={{width: WIDTH, flexBasis: HEIGHT, backgroundColor: '#fff'}}>
+            <View style={{position:'absolute',top:PADDINGVERTICAL,left:PADDINGLHORIZONTAL,width:WIDTH - 2*PADDINGLHORIZONTAL, height:HEIGHT - 2*PADDINGVERTICAL,backgroundColor:'#fff'}} ref={bluerect}/>
+				<Animated.View style={{width: imgDimension.width, height: imgDimension.height,alignItems:'center',backgroundColor:'#fff',transform: [{translateX: pan.x}, {translateY: pan.y}, {scale: scale}]}} {...panResponder.panHandlers}>
 					{imgUri&&<Img
 						style={{ width: imgDimension.width, height: imgDimension.height}}
 						source={{uri: imgUri}}
-						resizeMode={'contain'}
+						resizeMode={'stretch'}
 						ref={image}
 					/>}
 				</Animated.View>
-				<View style={{backgroundColor:'#fff',width:750*DP,height:750*DP}}>
-					<View style={{backgroundColor:'#fff',marginTop:75*DP,width:600*DP,marginLeft:75*DP,height:600*DP
+				<View style={{backgroundColor:'#fff',width:WIDTH,height:WIDTH}}>
+					<View style={{backgroundColor:'#fff',marginTop:PADDINGVERTICAL,width:WIDTH - 2*PADDINGLHORIZONTAL,marginLeft:PADDINGLHORIZONTAL,height:HEIGHT - 2*PADDINGVERTICAL
 				,transform:[{scale:1}]
 				}}>
 					</View>
 				</View>
-                <View style={{position:'absolute',top:75*DP,left:75*DP,width:600*DP, height:4*DP,backgroundColor:'black'}}/>
-                <View style={{position:'absolute',top:75*DP,left:75*DP,width:4*DP, height:600*DP,backgroundColor:'black'}}/>
-                <View style={{position:'absolute',bottom:75*DP,left:75*DP,width:600*DP, height:4*DP,backgroundColor:'black'}}/>
-                <View style={{position:'absolute',top:75*DP,right:75*DP,width:4*DP, height:600*DP,backgroundColor:'black'}}/>
+                <View style={{position:'absolute',top:PADDINGVERTICAL,left:PADDINGLHORIZONTAL,width:WIDTH - 2*PADDINGLHORIZONTAL, height:4*DP,backgroundColor:'black'}}/>
+                <View style={{position:'absolute',top:PADDINGVERTICAL,left:PADDINGLHORIZONTAL,width:4*DP, height:HEIGHT - 2*PADDINGVERTICAL,backgroundColor:'black'}}/>
+                <View style={{position:'absolute',bottom:PADDINGVERTICAL,left:PADDINGLHORIZONTAL,width:WIDTH - 2*PADDINGLHORIZONTAL, height:4*DP,backgroundColor:'black'}}/>
+                <View style={{position:'absolute',top:PADDINGVERTICAL,right:PADDINGLHORIZONTAL,width:4*DP, height:HEIGHT - 2*PADDINGVERTICAL,backgroundColor:'black'}}/>
 			</View>
 			{true?<View style={{backgroundColor: '#fff', width: 750 * DP, flex: 1}}>
 				<View style={{flexDirection: 'row'}}>
@@ -290,7 +330,19 @@ export default Crop = prop => {
 						</View>
 					</TouchableWithoutFeedback>
 				</View>
-				{<Img source={{uri:cropUri||imgUri}} style={{marginLeft:10,marginTop:10,width:180,height:180}} resizeMode={'contain'}/>}
+				<View style={{flexDirection: 'row'}}>
+					<TouchableWithoutFeedback onPress={test5}>
+						<View style={{width: 150, height: 30, marginVertical: 10, marginHorizontal: 10, backgroundColor: 'yellow'}}>
+							<Text>앨범 목록 불러오기</Text>
+						</View>
+					</TouchableWithoutFeedback>
+					<TouchableWithoutFeedback onPress={test4}>
+						<View style={{width: 150, height: 30, marginVertical: 10, backgroundColor: 'yellow'}}>
+							<Text>이동 결과</Text>
+						</View>
+					</TouchableWithoutFeedback>
+				</View>
+				{<Img source={{uri:cropUri||imgUri}} style={{marginLeft:10,marginTop:10,backgroundColor:'red',width:150,height:150}} resizeMode={'contain'}/>}
 			</View>:
 			<View style={{backgroundColor: '#fff', width: 750 * DP, flex: 1,justifyContent:'center',alignItems:'center'}}>
 			<View style={{flexDirection: 'row'}}>

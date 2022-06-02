@@ -2,7 +2,7 @@ import React from 'react';
 import {Text, View, Image, TouchableOpacity} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
+import {APRI10, GRAY10, GRAY20, MAINBLACK} from 'Root/config/color';
 import {Private30, Public30} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import userGlobalObj from 'Root/config/userGlobalObject';
@@ -44,11 +44,11 @@ const ShelterSmallLabel = props => {
 	return (
 		<View style={{flexDirection: 'row', alignItems: 'center'}}>
 			<TouchableOpacity onPress={onClickLabel}>
-				<Image source={{uri: data.user_profile_uri || DEFAULT_PROFILE}} style={styles.img_round_72} />
+				<Image source={{uri: data.user_profile_uri}} style={styles.img_round_72} />
 				<View style={{position: 'absolute', right: 0, bottom: 0}}>{getStatusMark()}</View>
 			</TouchableOpacity>
 			<View style={{marginLeft: 10 * DP, maxWidth: 500 * DP}}>
-				<Text style={[txt.noto24b, {color: isLoginUser ? APRI10 : GRAY10}]} numberOfLines={1} ellipsizeMode="tail">
+				<Text style={[txt.noto24b, {color: isLoginUser ? APRI10 : MAINBLACK}]} numberOfLines={1} ellipsizeMode="tail">
 					{data.user_nickname} / {data.shelter_address.brief}
 				</Text>
 				{data.shelter_foundation_date != null || data.shelter_foundation_date != undefined ? (

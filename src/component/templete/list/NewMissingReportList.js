@@ -12,7 +12,7 @@ const wait = timeout => {
 const NewMissingReportList = props => {
 	const [moved, setMoved] = React.useState(false);
 	const renderItem = ({item, index}) => {
-		return <MissingReportBox index={index} data={item} />;
+		return (<MissingReportBox index={index} data={item} />);
 	};
 	const getItemLayout = useCallback(
 		(data, index) => ({
@@ -36,8 +36,13 @@ const NewMissingReportList = props => {
 				renderItem={renderItem}
 				showsHorizontalScrollIndicator={false}
 				horizontal={true}
-				getItemLayout={getItemLayout}
-				keyExtractor={props.data._id}
+				//getItemLayout={getItemLayout}
+				//keyExtractor={props.data._id}
+				keyExtractor={(item, index) => item._id}
+				getItemLayout={(data,index)=>{
+					return {length: 284*DP, offset: 284*DP*index, index: index};
+				}}
+				windowSize={2}
 			/>
 		</View>
 	);
@@ -46,6 +51,9 @@ const NewMissingReportList = props => {
 
 const styles = StyleSheet.create({
 	container: {
+		width: 750 * DP,
+		// height: 396 * DP,
+		// alignItems: 'center',
 		backgroundColor: WHITE,
 		marginTop: 40 * DP,
 		height: 354 * DP,

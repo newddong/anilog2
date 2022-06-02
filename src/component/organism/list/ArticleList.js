@@ -1,9 +1,11 @@
 import React from 'react';
-import {FlatList, StyleSheet, View, Text} from 'react-native';
+import {FlatList, StyleSheet, View, Text, NativeModules} from 'react-native';
 import {GRAY40} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import ArticleSummary from '../article/ArticleSummary';
 import {Check50, Rect50_Border} from 'Root/component/atom/icon';
+import {getLinesOfString} from 'Root/util/stringutil';
+import {txt} from 'Root/config/textstyle';
 
 /**
  * 자유 게시글 리스트
@@ -18,6 +20,14 @@ const ArticleList = props => {
 
 	const onPressToggle = (index, bool) => {
 		props.onPressCheck(index, bool);
+	};
+
+	const onLayout = (e, v) => {
+		// console.log('v', v);
+		// const text = v.community_title;
+		// console.log('e', e.nativeEvent.layout.height, v.community_title, v.community_title.length);
+		// let lines = getLinesOfString(v.community_title, Platform.OS == 'android' ? 48 : 50);
+		// console.log('lines', lines);
 	};
 
 	const renderItem = (item, index) => {
@@ -59,7 +69,7 @@ const ArticleList = props => {
 				onEndReached={onEndReached} //Flatlist 페이징
 				onEndReachedThreshold={0.6} //페이징을 하는 타이밍
 				// maxToRenderPerBatch={5} // re-render를 막는군요.
-				windowSize={11}
+				windowSize={5}
 				// https://reactnative.dev/docs/optimizing-flatlist-configuration
 			/>
 		</View>

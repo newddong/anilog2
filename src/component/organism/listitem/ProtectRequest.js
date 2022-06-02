@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import moment from 'moment';
 import {txt} from 'Root/config/textstyle';
 import ProtectedThumbnail from 'Molecules/media/ProtectedThumbnail';
@@ -10,6 +10,7 @@ import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/core';
 import DP from 'Root/config/dp';
 import {DEFAULT_ANIMAL_PROFILE} from 'Root/i18n/msg';
+import {APRI10, GRAY10} from 'Root/config/color';
 
 /**
  *
@@ -82,7 +83,7 @@ export default ProtectRequest = React.memo(props => {
 
 	const checkIsMyPost = () => {
 		let result = false;
-		if (data.protect_request_writer_id) {
+		if (data.protect_request_writer_id && data.protect_request_writer_id) {
 			result = data.protect_request_writer_id._id == userGlobalObject.userInfo._id;
 		}
 		return result;
@@ -90,32 +91,28 @@ export default ProtectRequest = React.memo(props => {
 
 	const contents = () => {
 		return (
-			<View style={[animalNeedHelp.detailContainer, {width: props.selectMode ? 320 * DP : 380 * DP}]}>
-				<View style={[animalNeedHelp.detail_lowerMenu, {justifyContent: 'center'}]}>
+			<View style={[style.detailContainer, {width: props.selectMode ? 320 * DP : 380 * DP}]}>
+				<View style={[style.detail_lowerMenu, {justifyContent: 'center'}]}>
 					<View style={{justifyContent: 'space-between'}}>
 						{/* 동물 종류 및 품종 */}
-						<View style={[animalNeedHelp.lowerMenu_kindAndBreed]}>
+						<View style={[style.lowerMenu_kindAndBreed]}>
 							<Text style={[txt.noto34b]}>{data.protect_animal_species || ''}</Text>
-							<Text style={[txt.noto28, animalNeedHelp.breedText]} numberOfLines={1}>
+							<Text style={[txt.noto28, style.breedText]} numberOfLines={1}>
 								{data.protect_animal_species_detail || ''}
 							</Text>
 						</View>
 						{/* 보호요청 관련 Details */}
-						<View style={[animalNeedHelp.lowerMenu_helpDetail]}>
+						<View style={[style.lowerMenu_helpDetail]}>
+							<Text style={[txt.noto28]}>
+								공고일자 :{' '}
+								{moment(data.protect_request_notice_sdt).format('YY.MM.DD') + '~' + moment(data.protect_request_notice_edt).format('YY.MM.DD')}
+							</Text>
 							<Text style={[txt.noto28]}>등&nbsp; 록&nbsp; 일 : {getParsedDate()}</Text>
 							<Text style={[txt.noto28, {maxWidth: props.selectMode ? 320 * DP : 380 * DP}]} numberOfLines={1}>
-								{/* 보호장소 :{' '}
-								{data.protect_request_writer_id.user_nickname
-									? data.protect_request_writer_id.user_nickname
-									: data.protect_animal_id.protect_animal_rescue_location} */}
-								{/* 보호장소 : {data.protect_request_writer_id != null ? data.protect_request_writer_id.shelter_name : data.shelter_name} */}
-								보호장소 : {data.protect_request_writer_id.user_nickname}
+								보호장소 : {data.protect_request_writer_id ? data.protect_request_writer_id.user_nickname : ''}
 							</Text>
 							<Text style={[txt.noto28, {maxWidth: props.selectMode ? 320 * DP : 380 * DP}]} numberOfLines={1}>
-								구조지역 :{' '}
-								{data.protect_animal_id.protect_animal_rescue_location
-									? data.protect_animal_id.protect_animal_rescue_location
-									: '작성되지 않았습니다.'}
+								구조지역 : {data.protect_animal_id ? data.protect_animal_id.protect_animal_rescue_location : '작성되지 않았습니다.'}
 							</Text>
 						</View>
 					</View>
@@ -129,9 +126,9 @@ export default ProtectRequest = React.memo(props => {
 	} else
 		return (
 			<>
-				<View style={[animalNeedHelp.container, {height: 244 * DP}]}>
-					<View style={[animalNeedHelp.container_basicInfo]}>
-						<View style={[animalNeedHelp.protectedThumbnail_container]}>
+				<View style={[style.container, {height: 266 * DP}]}>
+					<View style={[style.container_basicInfo]}>
+						<View style={[style.protectedThumbnail_container]}>
 							<ProtectedThumbnail
 								data={thumbnailData}
 								inActiveOpacity={props.inActiveOpacity}
@@ -141,7 +138,7 @@ export default ProtectRequest = React.memo(props => {
 						<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.6} onPress={() => props.onClickLabel(data.feed_type, data._id)}>
 							<View>{contents()}</View>
 						</TouchableOpacity>
-						<View style={[animalNeedHelp.detail_upper_tag]}>
+						<View style={[style.detail_upper_tag]}>
 							{!props.showFavorite || checkIsMyPost() ? (
 								<></>
 							) : data.is_favorite ? (
@@ -166,3 +163,74 @@ ProtectRequest.defaultProps = {
 	showFavorite: true,
 	selectMode: false,
 };
+
+const style = StyleSheet.create({
+	container: {
+		// width: 654 * DP,
+		// height: 214 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		flexDirection: 'column',
+		item_bracket: '#FF00FF',
+	},
+	protectedThumbnail_container: {
+		width: 226 * DP,
+		height: 226 * DP,
+	},
+	gender: {
+		width: 48 * DP,
+		height: 48 * DP,
+		position: 'absolute',
+		right: 10 * DP,
+		top: 10 * DP,
+	},
+	detailContainer: {
+		width: 380 * DP,
+		height: 214 * DP,
+		marginLeft: 30 * DP,
+		// marginTop: 10 * DP,
+	},
+	detail_upper_petStateContainer: {
+		height: 38 * DP,
+		flexDirection: 'row',
+	},
+	detail_upper_petState: {
+		height: 38 * DP,
+		borderRadius: 12 * DP,
+		borderWidth: 2 * DP,
+		borderColor: GRAY10,
+		paddingHorizontal: 10 * DP,
+		marginRight: 12 * DP,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	detail_upper_tag: {
+		width: 48 * DP,
+	},
+	detail_lowerMenu: {
+		width: 410 * DP,
+		height: 214 * DP,
+		paddingVertical: 4 * DP,
+	},
+	lowerMenu_kindAndBreed: {
+		height: 50 * DP,
+		// justifyContent: 'center',
+		marginBottom: -5 * DP,
+		alignItems: 'center',
+		flexDirection: 'row',
+	},
+	breedText: {
+		alignSelf: 'center',
+		marginLeft: 20 * DP,
+		maxWidth: 250 * DP,
+	},
+	lowerMenu_helpDetail: {
+		// height: 38 * DP,
+		// marginTop: 10 * DP,
+		// backgroundColor: 'yellow',
+	},
+	container_basicInfo: {
+		flexDirection: 'row',
+		// backgroundColor: '#FF00FF',
+	},
+});

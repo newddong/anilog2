@@ -7,7 +7,6 @@ import {feedCommentList, login_style} from 'Templete/style_templete';
 import {createComment, getCommentListByCommunityId, getCommentListByFeedId, getCommentListByProtectId, updateComment} from 'Root/api/commentapi';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Component/modal/Modal';
-import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
 import {GRAY10, GRAY20, GRAY30} from 'Root/config/color';
@@ -230,21 +229,17 @@ const AlarmCommentList = props => {
 		}, 1000);
 	};
 
+	React.useEffect(()=>{
+		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+			let selected = props.route.params.selectedPhoto[0];
+			setEditData({...editData, comment_photo_uri: selected.cropUri??selected.uri});
+		}
+	},[props.route.params?.selectedPhoto]);
+
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
 	const onAddPhoto = () => {
-		// navigation.push('SinglePhotoSelect', props.route.name);
 		console.log('onAddphoto');
-		ImagePicker.openPicker({
-			compressImageQuality: 0.8,
-			cropping: true,
-		})
-			.then(images => {
-				console.log('onAddphoto Imagepicker', images);
-				setEditData({...editData, comment_photo_uri: images.path});
-				Modal.close();
-			})
-			.catch(err => console.log(err + ''));
-		Modal.close();
+		props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
 	};
 
 	const onDeleteImage = () => {

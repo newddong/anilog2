@@ -27,6 +27,7 @@ export default FeedList = ({route, navigation}) => {
 	const [topList, setTopList] = React.useState([]);
 	const flatlist = React.useRef();
 	const requestNum = 99;
+	const [onWrite, setOnWrite] = React.useState(false);
 	//피드썸네일 클릭 리스트일 경우
 
 	React.useEffect(() => {
@@ -338,7 +339,7 @@ export default FeedList = ({route, navigation}) => {
 		} else if (userGlobalObject.userInfo.user_type == 'user') {
 			Modal.popAvatarSelectFromWriteModal(obj => {
 				userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed', feed_avatar_id: obj});
-			});
+			}, Modal.close);
 		} else {
 			userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed'});
 		}
@@ -432,6 +433,7 @@ export default FeedList = ({route, navigation}) => {
 						<View style={{height: 2 * DP, backgroundColor: GRAY30, width: 654 * DP}}></View>
 					</View>
 				)}
+				windowSize={3}
 			/>
 			{userGlobalObject.userInfo && (
 				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}]}>
@@ -450,6 +452,7 @@ export default FeedList = ({route, navigation}) => {
 						]}>
 						<Camera54 onPress={movetoCamera} />
 					</View> */}
+
 					<View
 						style={[
 							{
@@ -570,8 +573,8 @@ export default FeedList = ({route, navigation}) => {
 const styles = StyleSheet.create({
 	container: {
 		// width: 654 * DP,
+		width: 750 * DP,
 		// height: 496 * DP,
-
 		height: 414 * DP,
 		// alignContent: 'center',
 		alignContent: 'center',

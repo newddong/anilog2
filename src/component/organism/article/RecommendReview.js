@@ -7,6 +7,7 @@ import ProfileImageSmall from 'Root/component/molecules/image/ProfileImageSmall'
 import {getTimeLapsed} from 'Root/util/dateutil';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {Comment30, Like30} from 'Root/component/atom/icon';
 /**
  * 추천 게시글
  * @param {object} props - Props Object
@@ -36,7 +37,7 @@ const RecommendReview = props => {
 			return (
 				<TouchableOpacity onPress={() => onPressRecommendReview(data)} activeOpacity={0.7} style={[{}]}>
 					<View style={{flexDirection: 'row'}}>
-						<View>
+						<View style={{height: 158 * DP, justifyContent: 'space-between'}}>
 							<View style={[style.userLabel]}>
 								{data.community_writer_id ? <ProfileImageSmall data={data.community_writer_id} size={46} /> : <ProfileImageSmall size={46} />}
 								{data.community_writer_id ? (
@@ -54,11 +55,17 @@ const RecommendReview = props => {
 									</Text>
 								)}
 							</View>
-							<View style={[style.article_content, {}]}>
-								<Text style={[txt.noto24, {color: GRAY10}]} numberOfLines={2}>
+							<View style={[style.article_content]}>
+								<Text style={[txt.noto24, {color: GRAY10, textAlignVertical: 'center', height: 74 * DP}]} numberOfLines={2}>
 									{data.community_content_without_html}
 								</Text>
-								<Text style={[txt.noto24, {color: GRAY20, marginTop: 16 * DP}]}>{getTimeLapsed(data.community_date)}</Text>
+								<View style={{flexDirection: 'row', width: 360 * DP, alignItems: 'center'}}>
+									<Like30 />
+									<Text style={[txt.roboto24, {color: GRAY20, marginLeft: 6 * DP, marginRight: 10 * DP}]}>{data.community_like_count}</Text>
+									<Comment30 />
+									<Text style={[txt.roboto24, {color: GRAY20, marginLeft: 6 * DP, marginRight: 10 * DP}]}>{data.community_comment_count}</Text>
+									<Text style={[txt.roboto24, {color: GRAY20}]}> · {getTimeLapsed(data.community_date)}</Text>
+								</View>
 							</View>
 						</View>
 						{imageList().length == 0 ? (

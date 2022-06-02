@@ -15,6 +15,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
  *
  * @param {Object} props - props object
  * @param {(petObject:string)=>void} props.onSelectPet - 반려동물 라벨을 클릭했을때 콜백
+ * @param {()=>void} props.onClose - 모달 종료 콜백
  *
  */
 const AvatarSelectFromWriteModal = props => {
@@ -127,14 +128,18 @@ const AvatarSelectFromWriteModal = props => {
 		}
 	};
 
+	const closeModal = () => {
+		props.onClose();
+	};
+
 	if (items == '') {
 		return <ActivityIndicator />;
 	} else
 		return (
-			<TouchableOpacity onPress={() => Modal.close()} activeOpacity={1} style={style.background}>
+			<TouchableOpacity onPress={closeModal} activeOpacity={1} style={style.background}>
 				<TouchableOpacity
 					activeOpacity={1}
-					onPress={() => Modal.close()}
+					onPress={closeModal}
 					// android 180 ios 235 였음
 					// style={[style.popUpWindow, {marginBottom: Platform.OS == 'android' ? 180 * DP : 275 * DP}, {backgroundColor: 'yellow'}]}>
 					style={[style.popUpWindow, {marginBottom: Platform.OS == 'android' ? 145 * DP : 240 * DP}]}>
@@ -175,22 +180,7 @@ const AvatarSelectFromWriteModal = props => {
 							</TouchableOpacity>
 						)}
 					</View>
-
-					<View
-						style={[
-							{
-								// height: 94 * DP,
-								// width: 94 * DP,
-								alignSelf: 'flex-end',
-								justifyContent: 'center',
-								alignItems: 'center',
-								// backgroundColor: '#ff9888',
-								backgroundColor: 'red',
-								borderRadius: 35 * DP,
-								marginBottom: -5 * DP,
-							},
-							// style.shadow,
-						]}>
+					<View style={[style.writeBtn, {bottom: Platform.OS == 'android' ? 20 * DP : -10 * DP}]}>
 						<Write94 />
 					</View>
 				</TouchableOpacity>
@@ -261,6 +251,18 @@ const style = StyleSheet.create({
 		height: 45 * DP,
 		marginVertical: 10 * DP,
 		// backgroundColor: 'red',
+	},
+	writeBtn: {
+		// height: 94 * DP,
+		// width: 94 * DP,
+		alignSelf: 'flex-end',
+		justifyContent: 'center',
+		alignItems: 'center',
+		// backgroundColor: '#ff9888',
+		// backgroundColor: 'red',
+		borderRadius: 35 * DP,
+		marginBottom: -5 * DP,
+		right: -3 * DP,
 	},
 });
 

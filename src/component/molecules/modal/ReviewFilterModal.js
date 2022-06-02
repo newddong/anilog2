@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Platform, Dimensions, ScrollView, FlatList, ActivityIndicator, Animated, TouchableOpacity} from 'react-native';
-import {WHITE, GRAY10, APRI10, GRAY20, BLACK} from 'Root/config/color';
+import {WHITE, GRAY10, APRI10, GRAY20, BLACK, MAINBLACK, GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Component/modal/Modal';
@@ -220,7 +220,12 @@ const ReviewFilterModal = props => {
 	//광역시 도  모달 스크롤
 	const onScroll = event => {
 		let y = event.nativeEvent.contentOffset.y; //스크롤 영역 데이터
-		let focused = Math.floor(y / (68 * DP));
+		let focused = '';
+		if (city.length < 5) {
+			focused = Math.floor(y / (63 * DP));
+		} else {
+			focused = Math.floor(y / (67 * DP));
+		}
 		if (focused < 1) {
 			setSelectedItem(2);
 		} else {
@@ -236,7 +241,13 @@ const ReviewFilterModal = props => {
 	//시군구 모달 스크롤
 	const onScroll_dis = event => {
 		let y = event.nativeEvent.contentOffset.y;
-		let focused = Math.floor(y / (68 * DP));
+		let focused = '';
+		if (district.length < 5) {
+			focused = Math.floor(y / (63 * DP));
+		} else {
+			focused = Math.floor(y / (67 * DP));
+		}
+		// let focused = Math.floor(y / (69 * DP));
 		if (focused < 1) {
 			setSelectedItem_dis(2);
 		} else {
@@ -464,7 +475,7 @@ const ReviewFilterModal = props => {
 						</View>
 					) : (
 						<TouchableOpacity onPress={onPressSave} style={[style.saveText]}>
-							<Text style={[txt.noto36b, {color: APRI10}]}>저장</Text>
+							<Text style={[txt.noto36b, {color: MAINBLACK}]}>저장</Text>
 						</TouchableOpacity>
 					)}
 				</TouchableOpacity>
@@ -492,11 +503,11 @@ const ReviewFilterModal = props => {
 					},
 				]}>
 				<View style={[style.modal_header]}>
-					<Text onPress={() => setSelectCityOpen(false)} style={[txt.noto30, {color: WHITE, paddingVertical: 22 * DP}]}>
+					<Text onPress={() => setSelectCityOpen(false)} style={[txt.noto30b, {paddingVertical: 22 * DP}]}>
 						취소
 					</Text>
 					<TouchableOpacity onPress={onSelect}>
-						<Text style={[txt.noto30, {color: WHITE}]}>완료</Text>
+						<Text style={[txt.noto30b]}>완료</Text>
 					</TouchableOpacity>
 				</View>
 				<View style={[style.list, {}]}>
@@ -510,9 +521,9 @@ const ReviewFilterModal = props => {
 									activeOpacity={1}
 									onPress={() => setSelectedItem(index)}
 									key={index}
-									style={[style.listItem, index == selectedItem && item != '' ? {backgroundColor: APRI10} : null]}>
+									style={[style.listItem, index == selectedItem && item != '' ? {backgroundColor: GRAY30} : null]}>
 									<>
-										<Text style={[txt.roboto34, {color: index == selectedItem && item != '' ? WHITE : GRAY10}]}>{item}</Text>
+										<Text style={[txt.roboto34, {color: index == selectedItem && item != '' ? MAINBLACK : GRAY10}]}>{item}</Text>
 									</>
 								</TouchableOpacity>
 							);
@@ -529,11 +540,11 @@ const ReviewFilterModal = props => {
 					},
 				]}>
 				<View style={[style.modal_header]}>
-					<Text onPress={() => setSelectDistrictOpen(false)} style={[txt.noto30, {color: WHITE, paddingVertical: 22 * DP}]}>
+					<Text onPress={() => setSelectDistrictOpen(false)} style={[txt.noto30b, {paddingVertical: 22 * DP}]}>
 						취소
 					</Text>
 					<TouchableOpacity onPress={onSelect_dis}>
-						<Text style={[txt.noto30, {color: WHITE}]}>완료</Text>
+						<Text style={[txt.noto30b]}>완료</Text>
 					</TouchableOpacity>
 				</View>
 				<View style={[style.list, {}]}>
@@ -547,9 +558,9 @@ const ReviewFilterModal = props => {
 									activeOpacity={1}
 									onPress={() => setSelectedItem_dis(index)}
 									key={index}
-									style={[style.listItem, index == selectedItem_dis && item != '' ? {backgroundColor: APRI10} : null]}>
+									style={[style.listItem, index == selectedItem_dis && item != '' ? {backgroundColor: GRAY30} : null]}>
 									<>
-										<Text style={[txt.roboto34, {color: index == selectedItem_dis && item != '' ? WHITE : GRAY10}]}>{item}</Text>
+										<Text style={[txt.roboto34, {color: index == selectedItem_dis && item != '' ? MAINBLACK : GRAY10}]}>{item}</Text>
 									</>
 								</TouchableOpacity>
 							);
@@ -657,7 +668,7 @@ const style = StyleSheet.create({
 		paddingVertical: 30 * DP,
 		paddingHorizontal: 64 * DP,
 		backgroundColor: 'white',
-		opacity: 0.9,
+		// opacity: 0.9,
 	},
 	btnModalTitle: {
 		alignItems: 'center',
@@ -693,12 +704,13 @@ const style = StyleSheet.create({
 	modal_header: {
 		width: 750 * DP,
 		flexDirection: 'row',
-		backgroundColor: APRI10,
+		backgroundColor: GRAY30,
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		paddingHorizontal: 40 * DP,
 		borderTopRightRadius: 40 * DP,
 		borderTopLeftRadius: 40 * DP,
+		bottom: -2,
 	},
 	list: {
 		width: 750 * DP,

@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
-import {Image, TouchableOpacity, FlatList, TouchableWithoutFeedback, Platform, PermissionsAndroid} from 'react-native';
+import {Image, TouchableOpacity, FlatList, TouchableWithoutFeedback, Platform, PermissionsAndroid, StyleSheet} from 'react-native';
 import {Text, View} from 'react-native';
-import {reportDetail, temp_style, missingAnimalDetail} from 'Templete/style_templete';
+import {reportDetail, temp_style} from 'Templete/style_templete';
 import FeedContent from 'Organism/feed/FeedContent';
 import {useNavigation} from '@react-navigation/core';
 import {favoriteFeed, getFeedDetailById, getMissingReportList} from 'Root/api/feedapi';
@@ -13,10 +13,8 @@ import Modal from 'Root/component/modal/Modal';
 import {PosterSave} from 'Component/atom/icon';
 import {phoneFomatter} from 'Root/util/stringutil';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import {GRAY10} from 'Root/config/color';
+import {GRAY10, GRAY30, GRAY40, WHITE} from 'Root/config/color';
 import Loading from 'Root/component/molecules/modal/Loading';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
 import MissingReportItem from 'Root/component/organism/listitem/MissingReportItem';
@@ -31,8 +29,7 @@ export default MissingAnimalDetail = props => {
 	const viewShotRef = useRef();
 	const flatlist = useRef();
 
-	//api 실제 작업 후 하단에 있는 data로 변경 예정 (현재는 에러 방지 코드)
-
+	//페이지 진입 시 실종게시글 상세 데이터 및 댓글 목록 api 접속
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			fetchFeedData();
@@ -41,6 +38,7 @@ export default MissingAnimalDetail = props => {
 		return unsubscribe;
 	}, []);
 
+	//게시글 상세데이터 api
 	const fetchFeedData = () => {
 		getFeedDetailById(
 			{
@@ -93,10 +91,6 @@ export default MissingAnimalDetail = props => {
 					}
 					setMissingList(temp);
 				}
-				// console.log('dataID', data_id);
-				// const removeMine = res.filter(e => e._id != data_id);
-				// const slice = removeMine.slice(0, 4);
-				// setMissingList(slice);
 			},
 			err => {
 				console.log('getMissingReportList Error', err);
@@ -182,29 +176,6 @@ export default MissingAnimalDetail = props => {
 		);
 	};
 
-	const onPressFavoriteWriter = bool => {
-		console.log('bool', bool);
-		const isMyMissingFeed = data.feed_writer_id._id == userGlobalObject.userInfo._id;
-		if (isMyMissingFeed) {
-			Modal.popOneBtn('본인 계정의 즐겨찾기는 \n 불가능합니다.', '확 인', () => Modal.close());
-		} else {
-			setFavoriteEtc(
-				{
-					collectionName: 'userobjects',
-					target_object_id: data.feed_writer_id._id,
-					is_favorite: bool,
-				},
-				result => {
-					console.log('result / favoriteEtc / missingAnimalDetail : ', result.msg.favoriteEtc);
-					fetchFeedData();
-				},
-				err => {
-					console.log('err / favoriteEtc / missingAnimalDetail : ', err);
-				},
-			);
-		}
-	};
-
 	//실종 게시글 리스트의 아이템 클릭
 	const onClickLabel = (status, id, item) => {
 		// console.log(`\nMissingReportList:onLabelClick() - status=>${status} id=>${id} item=>${JSON.stringify(item)}`);
@@ -274,12 +245,23 @@ export default MissingAnimalDetail = props => {
 	};
 
 	function capture() {
-		console.log('log pressed');
-		try {
-			captureScreenShot();
-		} catch (err) {
-			console.log('Screenshot Error', err);
-		}
+		Modal.popTwoBtn(
+			'전단지를 저장하시겠습니까?',
+			'아니오',
+			'네',
+			() => Modal.close(),
+			() => {
+				Modal.close();
+				setTimeout(() => {
+					try {
+						captureScreenShot();
+					} catch (err) {
+						console.log('Screenshot Error', err);
+					}
+				}, 100);
+			},
+			Modal.close,
+		);
 	}
 
 	async function getPerMission() {
@@ -357,14 +339,11 @@ export default MissingAnimalDetail = props => {
 		navigation.push('FeedCommentList', {feedobject: data, edit: comment}); // 수정하려는 댓글 정보를 포함해서 보냄
 	};
 
-	const whenEmpty = () => {
-		return <></>;
-	};
-
 	const header = () => {
 		return (
 			<View style={{alignItems: 'center'}}>
-				<View>
+				<TouchableOpacity onLongPress={capture} activeOpacity={0.8}>
+					<Text style={[txt.noto26, {color: GRAY10, marginTop: 20 * DP}]}>전단지를 꾹 눌러 저장해주세요.</Text>
 					<ViewShot ref={viewShotRef} options={{format: 'jpg', quality: 1.0}}>
 						<View style={[missingAnimalDetail.poster]}>
 							<View style={missingAnimalDetail.title}>
@@ -376,32 +355,21 @@ export default MissingAnimalDetail = props => {
 							<Text style={missingAnimalDetail.missingText18}>반려동물 커뮤니티 애니로그</Text>
 						</View>
 					</ViewShot>
-					<TouchableWithoutFeedback onPress={capture}>
+					{/* <TouchableWithoutFeedback onPress={capture}>
 						<View style={missingAnimalDetail.floatingBtnMissingReport}>
 							<PosterSave />
 							<Text style={[txt.noto20, {color: 'red'}, {fontWeight: 'bold'}]}>전단지 저장</Text>
 						</View>
-					</TouchableWithoutFeedback>
-				</View>
-
-				<View style={[temp_style.feedContent]}>
+					</TouchableWithoutFeedback> */}
+				</TouchableOpacity>
+				<View style={[style.feedContent]}>
 					<FeedContent data={data} />
 				</View>
-
-				<View style={[reportDetail.basic_separator]}>
-					<View style={[reportDetail.separator]}></View>
+				<View style={[style.basic_separator]}>
+					<View style={[style.separator]}></View>
 				</View>
-
 				{comments && comments.length > 0 ? (
-					<TouchableOpacity
-						onPress={onPressReply}
-						style={[
-							{
-								width: 654 * DP,
-								alignItems: 'flex-end',
-								alignSelf: 'center',
-							},
-						]}>
+					<TouchableOpacity onPress={moveToCommentPage} style={[{width: 694 * DP, alignItems: 'flex-end', alignSelf: 'center'}]}>
 						<Text style={[txt.noto26, {color: GRAY10, marginBottom: 10 * DP}]}> 댓글 {comments.length}개 모두 보기</Text>
 					</TouchableOpacity>
 				) : (
@@ -438,14 +406,8 @@ export default MissingAnimalDetail = props => {
 		return (
 			<View style={{alignItems: 'center'}}>
 				<ReplyWriteBox onPressReply={moveToCommentPage} onWrite={moveToCommentPage} isProtectRequest={true} />
-				<View style={[{paddingVertical: 20 * DP}]}>
-					<Text style={[txt.noto24, {paddingVertical: 20 * DP, width: 684 * DP, alignSelf: 'center'}]}>실종글 더보기</Text>
-					{/* <AnimalNeedHelpList
-						data={missingList}
-						onFavoriteTag={(e, index) => onOff_FavoriteTag(e, index)}
-						onClickLabel={(status, id, item) => onClickLabel(status, id, item)}
-						whenEmpty={whenEmpty()}
-					/> */}
+				<View style={[{paddingVertical: 50 * DP}]}>
+					<Text style={[txt.noto24, {width: 694 * DP, alignSelf: 'center'}]}>실종글 더보기</Text>
 					<FlatList data={missingList} renderItem={renderMissingReport} />
 				</View>
 			</View>
@@ -457,10 +419,10 @@ export default MissingAnimalDetail = props => {
 		return <Loading isModal={false} />;
 	} else
 		return (
-			<View style={[reportDetail.wrp_main]}>
+			<View style={[style.wrp_main]}>
 				<FlatList
 					ref={flatlist}
-					contentContainerStyle={[reportDetail.container]}
+					contentContainerStyle={[style.container]}
 					data={comments.length > 2 ? comments.slice(0, 2) : comments}
 					showsVerticalScrollIndicator={false}
 					ListHeaderComponent={header()}
@@ -494,7 +456,6 @@ const MissingAnimalTitle = props => {
 			break;
 		case '수중생물':
 			animalSpecies = '물고기를';
-
 			break;
 		case '기타':
 			animalSpecies = data.missing_animal_species_detail.toString() + '를';
@@ -504,47 +465,24 @@ const MissingAnimalTitle = props => {
 			break;
 	}
 
-	return <Text style={missingAnimalDetail.titleText}>{animalSpecies} 찾습니다</Text>;
+	return <Text style={[txt.noto26b, {fontSize: 62 * DP, color: WHITE}]}>{animalSpecies} 찾습니다</Text>;
 };
 
 //포스터 동물 정보 View 컴포넌트
 const MissingAnimalText = props => {
 	const data = props.data;
 	if (!data.missing_animal_date) return false;
-	let newText = data.missing_animal_date;
-	let splitedNewText = newText.split('-');
-	let animalSex = '';
-	let newYearText = splitedNewText[0] + '년 ';
-	let newDayText = splitedNewText[1] + '월 ' + '월 ' + splitedNewText[2].toString().substring(0, 2) + '일';
 	let splitAddress = data.missing_animal_lost_location.split('"');
 	let newMissingAddress = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
-
-	if (data.missing_animal_sex == 'male') {
-		animalSex = '/ 남';
-	} else if (data.missing_animal_sex == 'female') {
-		animalSex = '/ 여';
-	} else {
-		animalSex = '';
-	}
 	return (
 		<View style={missingAnimalDetail.textBox}>
-			<Text style={missingAnimalDetail.missingText38}>
-				{data.missing_animal_species} / {data.missing_animal_species_detail} / {data.missing_animal_age}살 {animalSex}
-			</Text>
-			<View style={{flexDirection: 'row', alignItems: 'center'}}>
-				<Text style={missingAnimalDetail.missingBlackText32}>{newYearText}</Text>
-				<Text style={missingAnimalDetail.missingRedText32}>{newDayText} </Text>
-				<Text style={missingAnimalDetail.missingBlackText32}>실종</Text>
-			</View>
-			{/* <Text>{data.missing_animal_date} 실종</Text> */}
 			<View style={{paddingTop: 4}}>
 				<Text style={missingAnimalDetail.missingText26}>{newMissingAddress}</Text>
 			</View>
 			<View style={missingAnimalDetail.oneLine} />
-
-			{/* <Text numberOfLines={1}>___________________________________</Text> */}
-
-			<Text style={missingAnimalDetail.missingText22}>ㆍ{data.missing_animal_features}</Text>
+			<Text style={missingAnimalDetail.missingText22} numberOfLines={5}>
+				ㆍ{data.missing_animal_features}
+			</Text>
 		</View>
 	);
 };
@@ -569,34 +507,221 @@ const MissingAnimalPhone = props => {
 const MissingAnimalPicture = props => {
 	const data = props.data;
 	const feed_medias = data.feed_medias;
+	let newText = data.missing_animal_date;
+	let splitedNewText = newText.split('-');
+	let animalSex = '';
+	let newYearText = splitedNewText[0] + '년 ';
+	let newDayText = splitedNewText[1] + '월 ' + '월 ' + splitedNewText[2].toString().substring(0, 2) + '일';
+	if (data.missing_animal_sex == 'male') {
+		animalSex = '/ 남';
+	} else if (data.missing_animal_sex == 'female') {
+		animalSex = '/ 여';
+	} else {
+		animalSex = '';
+	}
 	if (!feed_medias) return false;
 	if (feed_medias.length < 2) {
 		return (
 			<View style={missingAnimalDetail.picture}>
-				<Image
-					source={{
-						uri: data.feed_medias[0].media_uri,
-					}}
-					style={[missingAnimalDetail.img_squre_284]}
-				/>
+				<Image source={{uri: data.feed_medias[0].media_uri}} style={[missingAnimalDetail.img_squre_284]} />
 			</View>
 		);
 	} else {
 		return (
-			<View style={missingAnimalDetail.picture}>
-				<Image
-					source={{
-						uri: data.feed_medias[0].media_uri,
-					}}
-					style={[missingAnimalDetail.img_squre_284]}
-				/>
-				<Image
-					source={{
-						uri: data.feed_medias[1].media_uri,
-					}}
-					style={[missingAnimalDetail.img_squre_284]}
-				/>
+			<View>
+				<Text style={[missingAnimalDetail.missingText38, {alignSelf: 'center'}]}>
+					{data.missing_animal_species} / {data.missing_animal_species_detail} / {data.missing_animal_age}살 {animalSex}
+				</Text>
+				<View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+					<Text style={missingAnimalDetail.missingBlackText32}>{newYearText}</Text>
+					<Text style={missingAnimalDetail.missingRedText32}>{newDayText} </Text>
+					<Text style={missingAnimalDetail.missingBlackText32}>실종</Text>
+				</View>
+				<View style={missingAnimalDetail.picture}>
+					<Image source={{uri: data.feed_medias[0].media_uri}} style={[missingAnimalDetail.img_squre_284]} />
+					<Image source={{uri: data.feed_medias[1].media_uri}} style={[missingAnimalDetail.img_squre_284]} />
+				</View>
 			</View>
 		);
 	}
 };
+
+const style = StyleSheet.create({
+	wrp_main: {
+		flex: 1,
+		alignItems: 'center',
+		// justifyContent: 'center',
+		backgroundColor: '#FFF',
+	},
+	container: {
+		alignItems: 'center',
+	},
+	feedContent: {
+		width: 694 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	basic_separator: {
+		width: 694 * DP,
+		height: 60 * DP,
+		// backgroundColor: '#fff',
+	},
+	separator: {
+		width: 694 * DP,
+		height: 2 * DP,
+		backgroundColor: GRAY40,
+		marginTop: 30 * DP,
+	},
+});
+
+const missingAnimalDetail = StyleSheet.create({
+	container: {},
+	insideContainer: {
+		width: 750 * DP,
+		alignItems: 'center',
+	},
+	poster: {
+		width: 618 * DP,
+		// height: 872 * DP,
+		marginVertical: 20 * DP,
+		paddingVertical: 10 * DP,
+		backgroundColor: '#FFFFFF',
+		// backgroundColor: 'lightblue',
+		...Platform.select({
+			ios: {
+				borderColor: 'black',
+				shadowColor: '#4F4F4F',
+				shadowOffset: {
+					width: 4,
+					hegiht: 6,
+				},
+				shadowOpacity: 0.25,
+				// shadowRadius: 2.62,
+			},
+			android: {
+				elevation: 4,
+			},
+		}),
+		alignItems: 'center',
+	},
+	feedContent: {
+		marginTop: 40 * DP,
+	},
+	horizontal_separator: {
+		width: '95%',
+		marginVertical: 30 * DP,
+		backgroundColor: GRAY30,
+		height: 2,
+	},
+	title: {
+		width: 578 * DP,
+		height: 112 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: '#FF0000',
+		borderRadius: 10,
+		marginTop: 10 * DP,
+	},
+	titleText: {
+		fontSize: 62 * DP,
+		fontWeight: 'bold',
+		color: 'white',
+	},
+	picture: {
+		marginTop: 10 * DP,
+		width: 578 * DP,
+		height: 284 * DP,
+		// backgroundColor: 'yellow',
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+	},
+	img_squre_284: {
+		width: 284 * DP,
+		height: 284 * DP,
+		backgroundColor: '#B0C7D8',
+	},
+	textBox: {
+		marginTop: 10 * DP,
+		height: 200 * DP, //유동적인 텍스트 크기에 대해서 좌우 간격이 좁아짐에 따라 늘어나는 height에 관한 처리 필요
+		width: 578 * DP,
+		alignItems: 'center',
+	},
+	phoneNumberBox: {
+		width: 578 * DP,
+		height: 106 * DP,
+		backgroundColor: '#FF0000',
+		alignItems: 'center',
+	},
+	missingTextWhite18: {
+		marginTop: 8 * DP,
+		fontSize: 18 * DP,
+		color: 'white',
+	},
+	missingText18: {
+		fontSize: 18 * DP,
+		color: '#191919',
+	},
+	missingText38: {
+		fontSize: 38 * DP,
+		fontWeight: 'bold',
+		color: '#FF0000',
+		marginTop: 10 * DP,
+	},
+	missingBlackText32: {
+		fontSize: 32 * DP,
+		fontWeight: 'bold',
+		color: '#191919',
+	},
+	missingRedText32: {
+		fontSize: 32 * DP,
+		fontWeight: 'bold',
+		color: '#FF0000',
+	},
+	missingText26: {
+		fontSize: 26 * DP,
+		fontWeight: 'bold',
+		color: '#191919',
+	},
+	missingText22: {
+		paddingTop: 10 * DP,
+		fontSize: 22 * DP,
+		color: '#191919',
+	},
+	missingTextYellow50: {
+		fontSize: 50 * DP,
+		color: '#FFEE00',
+		fontWeight: 'bold',
+		fontFamily: 'Roboto',
+	},
+	yellowNumberBox: {
+		height: 62 * DP,
+		width: 452 * DP,
+		marginBottom: 8 * DP,
+		alignItems: 'center',
+	},
+	oneLine: {
+		borderBottomColor: 'black',
+		borderBottomWidth: 2 * DP,
+		width: 578 * DP,
+		marginTop: 10 * DP,
+		color: '#191919',
+	},
+	floatingBtnMissingReport: {
+		width: 118 * DP,
+		height: 110 * DP,
+		borderRadius: 45 * DP,
+		borderColor: '#FF0000',
+		borderWidth: 2,
+		// marginBottom: 20 * DP,
+		// marginRight: 12 * DP,
+		alignItems: 'center',
+		bottom: 20 * DP,
+		right: 12 * DP,
+		justifyContent: 'center',
+		backgroundColor: '#FFFFFF',
+		position: 'absolute',
+		opacity: 0.8,
+	},
+
+	commentList: {},
+});

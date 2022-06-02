@@ -67,11 +67,11 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 	};
 
 	const onFocus = () => {
-		props.onFocus();
+		props.onFocus&&props.onFocus();
 	};
 
 	const onBlur = () => {
-		props.onBlur();
+		props.onBlur&&props.onBlur();
 	};
 
 	const getParent = () => {
@@ -98,7 +98,7 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 		return (
 			<View style={[style.commentBox_protect_request, {}]}>
 				<TouchableOpacity activeOpacity={0.6} onPress={onPressReply} style={[style.commentBox_protect_request_left]}>
-					<Text style={[txt.noto26, style.replyTextInput_protect_request, {}]} ref={inputRef}>
+					<Text style={[txt.noto26, style.replyTextInput_protect_request, {}]}>
 						댓글입력
 					</Text>
 				</TouchableOpacity>

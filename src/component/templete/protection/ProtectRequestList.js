@@ -254,6 +254,10 @@ export default ProtectRequestList = ({route}) => {
 		flatlist.current.scrollToOffset({animated: true, offset: 0});
 	};
 
+	const moveToTop = () => {
+		flatlist.current.scrollToOffset({animated: true, offset: 0});
+	};
+
 	const renderItem = ({item, index}) => {
 		return <ProtectRequestItem item={item} index={index} />;
 	};

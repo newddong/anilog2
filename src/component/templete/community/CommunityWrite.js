@@ -4,10 +4,8 @@ import {APRI10, WHITE, GRAY20, GRAY10, GRAY40, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP, {isNotch} from 'Root/config/dp';
 import {Camera54, Location54_APRI10, Location54_Filled, NextMark_APRI, Save54} from 'Root/component/atom/icon/index';
-import {launchImageLibrary} from 'react-native-image-picker';
 import Modal from 'Component/modal/Modal';
 import {useNavigation} from '@react-navigation/native';
-import ImagePicker from 'react-native-image-crop-picker';
 import {changeLocalPathToS3Path} from 'Root/api/community';
 import {RichEditor} from 'react-native-pell-rich-editor';
 import AnimalButton from 'Root/component/molecules/button/AnimalButton';
@@ -186,44 +184,16 @@ export default CommunityWrite = props => {
 		);
 	};
 
+	React.useEffect(()=>{
+		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+			let selected = props.route.params.selectedPhoto;
+			insertImage(selected.map(v=>{return v.cropUri??v.uri}));
+		}
+	},[props.route.params?.selectedPhoto]);
+
 	//사진 불러오기
 	const onPressPhotoSelect = () => {
-		Modal.popTwoBtn(
-			'사진 선택 모드를 선택하세요',
-			'하나씩선택',
-			'여러개선택',
-			() => {
-				ImagePicker.openPicker({
-					compressImageQuality: 0.8,
-					width: 750,
-					height: 750,
-					cropping: true,
-				})
-					.then(images => {
-						insertImage(images.path);
-						Modal.close();
-					})
-					.catch(err => console.log(err + ''));
-				Modal.close();
-			},
-			() => {
-				launchImageLibrary(
-					{
-						mediaType: 'photo',
-						selectionLimit: 5, //다중선택 모드일 경우 상시 5개면 4개 상태에서 최대 5개를 더해 9개가 가능해짐
-						maxHeight: 750,
-						maxWidth: 750,
-						quality: 0.8,
-					},
-					responseObject => {
-						if (!responseObject.didCancel) {
-							insertImage(responseObject.assets.map(v => v.uri));
-							Modal.close();
-						}
-					},
-				);
-			},
-		);
+		props.navigation.push("MultiPhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
 	};
 
 	const isInterestsEmpty =

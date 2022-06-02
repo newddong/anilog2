@@ -1,6 +1,5 @@
 import React from 'react';
 import {Text, View, TextInput, TouchableOpacity, ScrollView} from 'react-native';
-import {launchImageLibrary} from 'react-native-image-picker';
 import {APRI10, GRAY10, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
@@ -8,7 +7,6 @@ import {Camera54} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import AidRequest from 'Organism/listitem/AidRequest';
 import {assignProtectAnimal_style, login_style, writeAidRequest} from 'Templete/style_templete';
-import ImagePicker from 'react-native-image-crop-picker';
 import Modal from 'Component/modal/Modal';
 
 export default WriteAidRequest = ({route, navigation}) => {
@@ -43,59 +41,23 @@ export default WriteAidRequest = ({route, navigation}) => {
 		navigation.setParams({data: protectRequestData, nav: route.name});
 	}, [protectRequestData]);
 
+	React.useEffect(()=>{
+		if(route.params.selectedPhoto&&route.params.selectedPhoto.length>0){
+			console.log(route.params);
+			let selected = route.params.selectedPhoto;
+			let tempContainer = selected.map(v=>{return v.cropUri??v.uri});
+			setImageList(tempContainer);
+			setProtectRequestData({...protectRequestData, protect_request_photos_uri: tempContainer});
+			setData({...data, protect_request_photos_uri: tempContainer || data.protect_request_photos_uri});
+		}
+	},[route.params?.selectedPhoto]);
+
 	const gotoSelectPicture = () => {
-		// navigation.push('SinglePhotoSelect', route.name);
 		if (imageList.length > 4) {
 			Modal.alert('첨부파일은 5개까지만 가능합니다');
 			return;
 		}
-		Modal.popTwoBtn(
-			'사진 선택 모드를 선택하세요',
-			'하나씩선택',
-			'여러개선택',
-			() => {
-				ImagePicker.openPicker({
-					// multiple: true,
-					compressImageQuality: 0.8,
-					cropping: true,
-				})
-					.then(images => {
-						console.log('images', images);
-						let photoList = [...imageList];
-						photoList.push(images.path);
-						setImageList(imageList.concat(images.path));
-						setProtectRequestData({...protectRequestData, protect_request_photos_uri: photoList});
-						setData({...data, protect_request_photos_uri: photoList || data.protect_request_photos_uri});
-						Modal.close();
-					})
-					.catch(err => console.log(err + ''));
-				Modal.close();
-			},
-			() => {
-				launchImageLibrary(
-					{
-						mediaType: 'photo',
-						selectionLimit: 5 - imageList.length, //다중선택 모드일 경우 상시 5개면 4개 상태에서 최대 5개를 더해 9개가 가능해짐
-						maxHeight: 1500,
-						maxWidth: 1500,
-						quality: 0.8,
-					},
-					responseObject => {
-						// console.log('선택됨', responseObject);
-						if (!responseObject.didCancel) {
-							let tempContainer = [...imageList];
-							responseObject.assets.map(v => tempContainer.push(v.uri));
-							setImageList(tempContainer);
-							setProtectRequestData({...protectRequestData, protect_request_photos_uri: tempContainer});
-							setData({...data, protect_request_photos_uri: tempContainer || data.protect_request_photos_uri});
-							Modal.close();
-						} else {
-							Modal.close();
-						}
-					},
-				);
-			},
-		);
+		navigation.push("MultiPhotoSelect",{prev:{name:route.name,key:route.key,selectedPhoto:imageList.map(v=>({uri:v}))}});
 	};
 
 	//SelectedMedia 아이템의 X마크를 클릭

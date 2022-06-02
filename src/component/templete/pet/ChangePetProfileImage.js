@@ -16,7 +16,6 @@ import AniButton from 'Molecules/button/AniButton';
 import Input24 from 'Molecules/input/Input24';
 import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';
 import {login_style, btn_style, temp_style, changePetProfileImage_style, changeUserProfileImage_style} from 'Templete/style_templete';
-import ImagePicker from 'react-native-image-crop-picker';
 import {nicknameDuplicationCheck, updateUserInformation} from 'Root/api/userapi';
 
 export default ChangePetProfileImage = props => {
@@ -24,19 +23,18 @@ export default ChangePetProfileImage = props => {
 	const [petData, setPetData] = React.useState(props.route.params);
 	const [newNick, setNewNick] = React.useState('');
 	const [confirmed, setConfirmed] = React.useState(false);
+
+	React.useEffect(()=>{
+		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+			let selected = props.route.params.selectedPhoto[0];
+			let uri = selected.cropUri??selected.uri;
+			setPetData({...petData, user_profile_uri: uri || petData.user_profile_uri});
+			setConfirmed(true);
+		}
+	},[props.route.params?.selectedPhoto]);
+
 	const selectPhoto = () => {
-		ImagePicker.openPicker({
-			compressImageQuality: 0.8,
-			cropping: true,
-			cropperCircleOverlay: true,
-		})
-			.then(images => {
-				setPetData({...petData, user_profile_uri: images.path || petData.user_profile_uri});
-				setConfirmed(true);
-				Modal.close();
-			})
-			.catch(err => console.log(err + ''));
-		Modal.close();
+		props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
 	};
 
 	//닉네임 Validation

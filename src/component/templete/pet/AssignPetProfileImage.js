@@ -14,9 +14,7 @@ import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';
 import Stagebar from 'Molecules/info/Stagebar';
 import {stagebar_style} from 'Organism/style_organism copy';
 import {login_style, btn_style, temp_style, progressbar_style, assignPetProfileImage_style} from 'Templete/style_templete';
-import {launchImageLibrary} from 'react-native-image-picker';
 import {checkProtectPet, getAnimalListNotRegisterWithCompanion, nicknameDuplicationCheck} from 'Root/api/userapi';
-import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Input24 from 'Root/component/molecules/input/Input24';
 
@@ -141,20 +139,17 @@ export default AssignPetProfileImage = ({route}) => {
 		setData({...data, pet_status: petStatus, pet_is_temp_protection: !protect});
 	};
 
+	React.useEffect(()=>{
+		if(route.params.selectedPhoto&&route.params.selectedPhoto.length>0){
+			console.log(route.params);
+			let selected = route.params.selectedPhoto[0];
+			setData({...data, user_profile_uri: (selected.cropUri??selected.uri) || data.user_profile_uri});
+		}
+	},[route.params?.selectedPhoto]);
+
 	//프로필이미지 클릭 시 PhotoSelect로 이동
 	const selectPhoto = () => {
-		ImagePicker.openPicker({
-			compressImageQuality: 0.8,
-			cropping: true,
-			cropperCircleOverlay: true,
-		})
-			.then(images => {
-				setData({...data, user_profile_uri: images.path || data.user_profile_uri});
-				// console.log('AssignPetProfileImage', data);
-				Modal.close();
-			})
-			.catch(err => console.log(err + ''));
-		Modal.close();
+		navigation.push("SinglePhotoSelect",{prev:{name:route.name,key:route.key}});
 	};
 
 	const onNicknameChange = text => {

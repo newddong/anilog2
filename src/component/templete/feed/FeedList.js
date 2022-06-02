@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, FlatList, RefreshControl, Platform, NativeModules, Text, TextInput, Dimensions, PixelRatio} from 'react-native';
-import {GRAY10, GRAY20, WHITE} from 'Root/config/color';
+import {GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
 import {Write94, Camera54} from 'Atom/icon';
 import Feed from 'Organism/feed/Feed';
 import {deleteFeed, getMissingReportList, getSuggestFeedList} from 'Root/api/feedapi';
@@ -346,16 +346,11 @@ export default FeedList = ({route, navigation}) => {
 
 	//피드 상단 새로운 실종/제보
 	const MissingReport = () => {
-		if (route.name == 'MainHomeFeedList') {
-			return (
-				<View style={[styles.container]}>
-					<Text style={[txt.noto28b]}>새로운 실종/제보</Text>
-					<NewMissingReportList data={topList} />
-				</View>
-			);
-		} else {
-			<></>;
-		}
+		return (
+			<View style={[styles.container]}>
+				<NewMissingReportList data={topList} />
+			</View>
+		);
 	};
 
 	const renderItem = ({item}) => {
@@ -574,11 +569,18 @@ export default FeedList = ({route, navigation}) => {
 
 const styles = StyleSheet.create({
 	container: {
-		width: 654 * DP,
+		// width: 654 * DP,
 		// height: 496 * DP,
+
+		height: 414 * DP,
+		// alignContent: 'center',
 		alignContent: 'center',
 		alignSelf: 'center',
+
 		marginBottom: 22 * DP,
+		// backgroundColor: 'yellow',
+		borderTopWidth: 2 * DP,
+		borderTopColor: GRAY40,
 	},
 	userContainer: {
 		width: 750 * DP,

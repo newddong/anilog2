@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {FlatList, ScrollView, Text, View, StyleSheet, SafeAreaView, ActivityIndicator, RefreshControl} from 'react-native';
 import {WHITE} from 'Root/config/color';
 import {CommonActions, useNavigationState} from '@react-navigation/native';
@@ -10,9 +10,18 @@ const wait = timeout => {
 };
 
 const NewMissingReportList = props => {
+	const [moved, setMoved] = React.useState(false);
 	const renderItem = ({item, index}) => {
 		return <MissingReportBox index={index} data={item} />;
 	};
+	const getItemLayout = useCallback(
+		(data, index) => ({
+			length: 254 * DP,
+			offset: 254 * DP * index,
+			index,
+		}),
+		[],
+	);
 	// if (loading) {
 	// 	return (
 	// 		<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
@@ -22,7 +31,14 @@ const NewMissingReportList = props => {
 	// } else {
 	return (
 		<View style={[styles.container]}>
-			<FlatList data={props.data} renderItem={renderItem} showsHorizontalScrollIndicator={false} horizontal={true} />
+			<FlatList
+				data={props.data}
+				renderItem={renderItem}
+				showsHorizontalScrollIndicator={false}
+				horizontal={true}
+				getItemLayout={getItemLayout}
+				keyExtractor={props.data._id}
+			/>
 		</View>
 	);
 	// }
@@ -30,11 +46,10 @@ const NewMissingReportList = props => {
 
 const styles = StyleSheet.create({
 	container: {
-		width: 643 * DP,
-		// height: 396 * DP,
-		// alignItems: 'center',
 		backgroundColor: WHITE,
-		marginTop: 20 * DP,
+		marginTop: 40 * DP,
+		height: 354 * DP,
+		marginLeft: 24 * DP,
 	},
 	userContainer: {
 		width: 750 * DP,

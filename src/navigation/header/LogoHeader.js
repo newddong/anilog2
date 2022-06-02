@@ -50,7 +50,7 @@ export default LogoHeader = ({navigation, route, options, back}) => {
 	};
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
-			<View style={style.logoContainer}>{/* <MainLogo />  */}</View>
+			<View style={style.logoContainer}>{/* <MainLogo /> */}</View>
 			<View style={style.buttonContainer}>
 				<Search48_BLACK onPress={clickSearch} />
 				{isNewAlarm ? <AlarmBadgerNotice onPress={clickAlarm} /> : <AlarmBadger48 onPress={clickAlarm} />}

@@ -38,6 +38,7 @@ export default ArticleDetail = props => {
 	const [parentComment, setParentComment] = React.useState(); //대댓글을 쓰는 경우 해당 댓글의 id container
 	const input = React.useRef();
 	const floatInput = React.useRef();
+	const input2 = React.useRef();
 	const addChildCommentFn = React.useRef(() => {});
 	const [editMode, setEditMode] = React.useState(false); //댓글 편집 모드
 	const [editData, setEditData] = React.useState({
@@ -288,13 +289,22 @@ export default ArticleDetail = props => {
 	};
 	const [isReplyFocused, setReplyFocus] = React.useState(false);
 	const onFocus = () => {
-		console.log('onFocus');
-		Platform.OS == 'android' && setReplyFocus(true);
+		input.current.blur();
+		floatInput.current.focus();
+		setReplyFocus(true);
 		scrollToReplyBox();
 	};
-
+	const onFocus3 = () => {
+		setReplyFocus(true);
+		scrollToReplyBox();
+	};
 	const onBlur = () => {
-		Platform.OS == 'android' && setReplyFocus(false);
+		floatInput.current.focus();
+		setReplyFocus(false);
+	};
+	
+	const onBlur3 = () => {
+		setReplyFocus(false);
 	};
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
@@ -597,7 +607,7 @@ export default ArticleDetail = props => {
 		};
 		return (
 			<View style={{alignItems: 'center'}}>
-				{comments.length == 0 ? (
+				{/* {comments.length == 0 ? (
 					<View style={[{marginTop: 20 * DP, marginBottom: 30 * DP}]}>
 						<ReplyWriteBox
 							onAddPhoto={onAddPhoto}
@@ -606,18 +616,18 @@ export default ArticleDetail = props => {
 							onWrite={onWrite}
 							onDeleteImage={onDeleteImage}
 							privateComment={privateComment}
-							ref={input}
+							ref={input2}
 							editData={editData}
 							shadow={false}
 							parentComment={parentComment}
 							onCancelChild={onCancelChild}
-							onFocus={onFocus}
-							onBlur={onBlur}
+							onFocus={onFocus2}
+							onBlur={onBlur2}
 						/>
 					</View>
 				) : (
 					<></>
-				)}
+				)} */}
 				{articleList != 'false' ? (
 					<ArticleList
 						items={articleList}
@@ -690,25 +700,23 @@ export default ArticleDetail = props => {
 					}}
 					removeClippedSubviews={false}
 				/>
-				{(key > 0 || isReplyFocused) && (
-					<View style={{position: 'absolute', bottom: key - 2}}>
-						<ReplyWriteBox
-							onAddPhoto={onAddPhoto}
-							onChangeReplyInput={onChangeReplyInput}
-							onLockBtnClick={onLockBtnClick}
-							onWrite={onWrite}
-							onDeleteImage={onDeleteImage}
-							privateComment={privateComment}
-							ref={floatInput}
-							editData={editData}
-							shadow={true}
-							parentComment={parentComment}
-							onCancelChild={onCancelChild}
-							onFocus={onFocus}
-							onBlur={onBlur}
-						/>
-					</View>
-				)}
+				<View style={{position: 'absolute', bottom: isReplyFocused?(key - 2):(2000)}}>
+					<ReplyWriteBox
+						onAddPhoto={onAddPhoto}
+						onChangeReplyInput={onChangeReplyInput}
+						onLockBtnClick={onLockBtnClick}
+						onWrite={onWrite}
+						onDeleteImage={onDeleteImage}
+						privateComment={privateComment}
+						ref={floatInput}
+						editData={editData}
+						shadow={true}
+						parentComment={parentComment}
+						onCancelChild={onCancelChild}
+						onFocus={onFocus3}
+						onBlur={onBlur3}
+					/>
+				</View>
 			</View>
 		);
 };

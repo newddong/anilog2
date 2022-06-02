@@ -293,13 +293,25 @@ export default ReviewDetail = props => {
 
 	const [isReplyFocused, setReplyFocus] = React.useState(false);
 	const onFocus = () => {
-		console.log('onFocus');
-		Platform.OS == 'android' && setReplyFocus(true);
+		input.current.blur();
+		floatInput.current.focus();
+		setReplyFocus(true);
+		
 		scrollToReplyBox();
 	};
 
 	const onBlur = () => {
-		Platform.OS == 'android' && setReplyFocus(false);
+		floatInput.current.focus();
+		setReplyFocus(false);
+	};
+
+	const onFocus2 = () => {
+		setReplyFocus(true);
+		scrollToReplyBox();
+	};
+
+	const onBlur2 = () => {
+		setReplyFocus(false);
 	};
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
@@ -378,7 +390,7 @@ export default ReviewDetail = props => {
 
 	const scrollToReplyBox = () => {
 		if (Platform.OS == 'android') {
-			input.current?.focus();
+			// input.current?.focus();
 			scrollRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 1, viewOffset: 0});
 			// setTimeout(() => {
 			// 	scrollRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 1, viewOffset: 0});
@@ -688,25 +700,23 @@ export default ReviewDetail = props => {
 					}}
 					scrollToOverflowEnabled={true} // Just put in here
 				/>
-				{(key > 0 || isReplyFocused) && (
-					<View style={{position: 'absolute', bottom: key - 2}}>
-						<ReplyWriteBox
-							onAddPhoto={onAddPhoto}
-							onChangeReplyInput={onChangeReplyInput}
-							onLockBtnClick={onLockBtnClick}
-							onWrite={onWrite}
-							onDeleteImage={onDeleteImage}
-							privateComment={privateComment}
-							ref={floatInput}
-							editData={editData}
-							shadow={true}
-							parentComment={parentComment}
-							onCancelChild={onCancelChild}
-							onFocus={onFocus}
-							onBlur={onBlur}
-						/>
-					</View>
-				)}
+				<View style={{position: 'absolute', bottom: isReplyFocused?(key - 2):2000}}>
+					<ReplyWriteBox
+						onAddPhoto={onAddPhoto}
+						onChangeReplyInput={onChangeReplyInput}
+						onLockBtnClick={onLockBtnClick}
+						onWrite={onWrite}
+						onDeleteImage={onDeleteImage}
+						privateComment={privateComment}
+						ref={floatInput}
+						editData={editData}
+						shadow={true}
+						parentComment={parentComment}
+						onCancelChild={onCancelChild}
+						onFocus={onFocus2}
+						onBlur={onBlur2}
+					/>
+				</View>
 			</View>
 		);
 };

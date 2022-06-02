@@ -22,6 +22,7 @@ export default Crop = prop => {
 	const [imgDimension, setImgDimension] = React.useState({width:WIDTH,height:HEIGHT});
 	const isPinch = React.useRef(false);
     const [isCropped, setIsCrop] = React.useState(false);
+	const [resizeMode, setResizeMode] = React.useState('stretch');
 	
 	const panResponder = React.useRef(
 		PanResponder.create({
@@ -197,7 +198,7 @@ export default Crop = prop => {
     const setInitDimension = (w,h)=>{
         pan.setOffset({x:0,y:0});
         scale.setValue(1);
-        if(w>h){
+        if(w<h){
             let newWidth = (w/h)*WIDTH;
             let initPositionX = (WIDTH - newWidth)/2;
             panPrev.x = initPositionX;
@@ -210,7 +211,7 @@ export default Crop = prop => {
                 height: HEIGHT
             });
         }
-        if(h>=w){
+        if(h<=w){
             let newHeight = (h/w)*HEIGHT;
             let initPositionY = (HEIGHT-newHeight)/2;
             panPrev.y = initPositionY;
@@ -258,6 +259,7 @@ export default Crop = prop => {
                     setImgUri(r.uri);
                     setIsCrop(true);
                     setInitDimension(r.width,r.height);
+					setResizeMode('stretch');
                     prop.onCrop&&prop.onCrop(prop.uri,r.uri);
                 });
             })
@@ -265,6 +267,7 @@ export default Crop = prop => {
         else{
             setImgUri(prop.uri);
             setIsCrop(false);
+			setResizeMode('stretch');
             prop.onCrop&&prop.onCrop(prop.uri,prop.uri);
         }
         
@@ -276,7 +279,7 @@ export default Crop = prop => {
                 {imgUri&&<Img
                     style={{ width: imgDimension.width, height: imgDimension.height}}
                     source={{uri: imgUri}}
-                    resizeMode={'stretch'}
+                    resizeMode={resizeMode}
                 />}
             </Animated.View>
             <View style={{position:'absolute',top:PADDINGVERTICAL,left:PADDINGLHORIZONTAL,width:WIDTH - 2*PADDINGLHORIZONTAL, height:CROPBOXWIDTH,backgroundColor:'black'}}/>

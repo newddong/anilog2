@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
-import {APRI10, GRAY10, GRAY20, GRAY30, WHITE} from 'Root/config/color';
+import {APRI10, GRAY10, GRAY20, GRAY30, MAINBLACK, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {btn_w226} from 'Atom/btn/btn_style';
@@ -56,7 +56,7 @@ const ArrowDownButton = props => {
 			return GRAY30;
 		} //disable일 경우 배경색 GRAY30
 		else if (props.btnStyle == 'filled') {
-			return APRI10;
+			return MAINBLACK;
 		} //FILLED일 경우 배경색 APRI10
 		else {
 			return WHITE;

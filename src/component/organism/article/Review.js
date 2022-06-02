@@ -230,7 +230,7 @@ export default Review = React.memo(props => {
 	};
 
 	return (
-		<View style={[style.container, {height: data.height}]}>
+		<View style={[style.container]}>
 			{/* 리뷰 헤더  */}
 			<View style={{flexDirection: 'row'}}>
 				<View style={[style.header, {}]}>

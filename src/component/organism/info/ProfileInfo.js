@@ -335,7 +335,7 @@ const ProfileInfo = props => {
 					{userGlobalObject.userInfo._id == data._id || isMyPet() ? ( //본인 계정이라면 프로필 수정 버튼
 						<AniButton onPress={onPressEditProfile} btnTitle={'프로필 수정'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} />
 					) : data.is_follow && !userGlobalObject.userInfo.isPreviewMode ? ( // 타인 계정이며 팔로우 중이라면 '팔로우 중' OR '팔로우'
-						<ArrowDownButton btnTitle={'팔로우 중'} btnLayout={btn_w280x68} onPress={onPressFollowingSetting} />
+						<ArrowDownButton btnTitle={'팔로우 중'} btnLayout={btn_w280x68} titleFontStyle={26} onPress={onPressFollowingSetting} />
 					) : (
 						<AniButton onPress={onPressFollow} btnTitle={'팔로우'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} />
 					)}

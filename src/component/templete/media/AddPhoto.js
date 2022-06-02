@@ -56,12 +56,18 @@ export default AddPhoto = props => {
 			assetType: type,
 			include: ['playableDuration'],
 			groupName: album,
+			groupTypes:'album'
 		};
 		if (Platform.OS == 'android') {
 			delete param.fromTime;
 			delete param.toTime;
+			delete param.groupTypes;
 		} else {
 			delete param.toID;
+		}
+		if(album.length==0){
+			delete param.groupName;
+			delete param.groupTypes;
 		}
 		CameraRoll.getPhotos(param)
 			.then(photolistcallback)
@@ -116,16 +122,24 @@ export default AddPhoto = props => {
 			assetType: 'Photos',
 			include: ['playableDuration'],
 			groupName: album,
+			groupTypes:'album'
 		};
 		if (Platform.OS == 'android') {
 			delete param.fromTime;
 			delete param.toTime;
+			delete param.groupTypes;
 		} else {
 			delete param.toID;
 		}
+		if(album.length==0){
+			delete param.groupName;
+			delete param.groupTypes;
+		}
 		CameraRoll.getPhotos(param)
-			.then(r=>{
-				setPhotoList(r.edges);
+			.then(album=>{
+				setPhotoList([...album.edges]);
+				// setPhotoList(album.edges);
+				console.log(album);
 
 			})
 			.catch(err => {
@@ -137,17 +151,22 @@ export default AddPhoto = props => {
 	const albumSelect = () => {
 		Modal.popSelectBoxModal2(
 			albumList,
-			album => {setAlbum(album);Modal.close()},
+			album => {
+				
+				setAlbum(album=='모든사진'?'':album);
+				Modal.close()
+			},
 			e => console.log('close', e),
 			false,
 			'사진첩 선택',
-			Dimensions.get('window').height / 2,
+			500*DP,
 		);
 	};
 
 	/** 퍼미션 처리, 사진을 불러오기 전 갤러리 접근 권한을 유저에게 요청 */
 	React.useEffect(() => {
 		console.log('최초 로드');
+		CameraRoll.getAlbums({albumType: 'All', assetType: 'Photos'}).then(r => setAlbumList(['모든사진'].concat(r.map(v => v.title))));
 		if (Platform.OS === 'ios') {
 			loadPhotosMilsec();
 		} else {
@@ -179,8 +198,8 @@ export default AddPhoto = props => {
 	}, []);
 
 	React.useEffect(() => {
-		CameraRoll.getAlbums({albumType: 'All', assetType: 'Photos'}).then(r => setAlbumList(r.map(v => v.title)));
-	}, []);
+		console.log('tk',photolist)
+	}, [photolist]);
 
 	React.useEffect(() => {
 		console.log('사진목록 변경', selectedPhoto);

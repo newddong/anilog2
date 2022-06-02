@@ -128,18 +128,14 @@ const AvatarSelectFromWriteModal = props => {
 		}
 	};
 
-	const closeModal = () => {
-		props.onClose();
-	};
-
 	if (items == '') {
 		return <ActivityIndicator />;
 	} else
 		return (
-			<TouchableOpacity onPress={closeModal} activeOpacity={1} style={style.background}>
+			<TouchableOpacity onPress={() => Modal.close()} activeOpacity={1} style={style.background}>
 				<TouchableOpacity
 					activeOpacity={1}
-					onPress={closeModal}
+					onPress={() => Modal.close()}
 					// android 180 ios 235 였음
 					// style={[style.popUpWindow, {marginBottom: Platform.OS == 'android' ? 180 * DP : 275 * DP}, {backgroundColor: 'yellow'}]}>
 					style={[style.popUpWindow, {marginBottom: Platform.OS == 'android' ? 145 * DP : 240 * DP}]}>

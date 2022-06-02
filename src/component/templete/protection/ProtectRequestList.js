@@ -52,19 +52,12 @@ export default ProtectRequestList = ({route}) => {
 		});
 		navigation.setOptions({title: ' '});
 		return unsubscribe;
-		userGlobalObject.protectionTab.t = true;
 	}, []);
 
 	React.useEffect(() => {
 		getList(); //필터가 바뀔 때마다 호출되도록 설정
 	}, [filterData]);
 
-	// React.useEffect(() => {
-	// 	if (route.params?.pressed != 0) {
-	// 		moveToTop();
-	// 		// console.log('represseddddd');
-	// 	}
-	// }, [route.params]);
 	//보호요청리스트 목록 받기
 	const getList = isRefresh => {
 		isRefresh ? false : setLoading(true);
@@ -256,6 +249,7 @@ export default ProtectRequestList = ({route}) => {
 			getList();
 		}
 	};
+
 	const moveToTop = () => {
 		flatlist.current.scrollToOffset({animated: true, offset: 0});
 	};

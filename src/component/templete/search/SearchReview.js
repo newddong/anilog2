@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View, ScrollView, FlatList, Image} from 'react-native';
-import {BLACK} from 'Root/config/color';
+import {BLACK, GRAY10} from 'Root/config/color';
 import {Filter60Border, Filter60Filled} from 'Root/component/atom/icon';
 import ReviewList from 'Root/component/organism/list/ReviewList';
 import Modal from 'Root/component/modal/Modal';
@@ -14,7 +14,7 @@ import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import AnimalButton from 'Root/component/molecules/button/AnimalButton';
 import community_obj, {updateReview} from 'Root/config/community_obj';
-
+import {txt} from 'Root/config/textstyle';
 
 export default SearchReview = props => {
 	const navigation = useNavigation();
@@ -348,7 +348,7 @@ export default SearchReview = props => {
 	};
 
 	const whenEmpty = () => {
-		return <ListEmptyInfo text={'검색 결과가 없습니다..'} />;
+		return <ListEmptyInfo paddingVertical={450 * DP} text={'검색 결과가 없습니다..'} />;
 	};
 
 	if (props.loading) {
@@ -356,6 +356,9 @@ export default SearchReview = props => {
 	} else
 		return (
 			<View style={[style.container]}>
+				<View style={{marginTop: 12 * DP, width: 694 * DP}}>
+					<Text style={[txt.noto24, {color: GRAY10}]}>검색 결과 {getData().length}개</Text>
+				</View>
 				<FlatList
 					data={[{}]}
 					listKey={({item, index}) => index}

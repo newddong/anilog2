@@ -2,14 +2,13 @@ import React from 'react';
 import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import {BLACK, GRAY10} from 'Root/config/color';
-import {Check50, EmptyIcon, Rect50_Border, WriteBoard} from 'Atom/icon';
+import {Check50, Rect50_Border} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
 import {useNavigation} from '@react-navigation/core';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {styles} from 'Root/component/atom/image/imageStyle';
-import community_obj from 'Root/config/community_obj';
 import searchContext from 'Root/config/searchContext';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
+import DP from 'Root/config/dp';
 
 export default SearchArticle = props => {
 	// console.log('ArticleMain');
@@ -76,7 +75,7 @@ export default SearchArticle = props => {
 	};
 
 	const whenEmpty = () => {
-		return <ListEmptyInfo text={'검색 결과가 없습니다..'} />;
+		return <ListEmptyInfo paddingVertical={450 * DP} text={'검색 결과가 없습니다..'} />;
 	};
 
 	const header = () => {
@@ -116,6 +115,9 @@ export default SearchArticle = props => {
 	} else
 		return (
 			<View style={[style.container]}>
+				<View style={{marginTop: 12 * DP, width: 694 * DP}}>
+					<Text style={[txt.noto24, {color: GRAY10}]}>검색 결과 {getData().length}개</Text>
+				</View>
 				<FlatList
 					data={[{}]}
 					listKey={({item, index}) => index}
@@ -157,7 +159,7 @@ const style = StyleSheet.create({
 	},
 	filterCont: {
 		width: 750 * DP,
-		paddingVertical: 20 * DP,
+		paddingVertical: 10 * DP,
 		backgroundColor: 'white',
 	},
 	kindFilter: {

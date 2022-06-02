@@ -251,12 +251,16 @@ export default MissingAnimalDetail = props => {
 			'네',
 			() => Modal.close(),
 			() => {
-				try {
-					captureScreenShot();
-				} catch (err) {
-					console.log('Screenshot Error', err);
-				}
+				Modal.close();
+				setTimeout(() => {
+					try {
+						captureScreenShot();
+					} catch (err) {
+						console.log('Screenshot Error', err);
+					}
+				}, 100);
 			},
+			Modal.close,
 		);
 	}
 
@@ -578,7 +582,7 @@ const missingAnimalDetail = StyleSheet.create({
 	},
 	poster: {
 		width: 618 * DP,
-		height: 872 * DP,
+		// height: 872 * DP,
 		marginVertical: 20 * DP,
 		paddingVertical: 10 * DP,
 		backgroundColor: '#FFFFFF',

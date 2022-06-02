@@ -257,7 +257,7 @@ export default MissingReportList = props => {
 		wait(0).then(() => setRefreshing(false));
 	};
 
-	const ITEM_HEIGHT = 244 * DP;
+	const ITEM_HEIGHT = 266 * DP;
 	const [refreshing, setRefreshing] = React.useState(false);
 	const keyExtractor = React.useCallback(item => item._id.toString(), []);
 	const getItemLayout = React.useCallback(

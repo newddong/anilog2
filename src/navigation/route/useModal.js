@@ -262,8 +262,8 @@ export function useModal() {
 		!isPop && setPop(true);
 	};
 
-	Modal.popAvatarSelectFromWriteModal = onSelectPet => {
-		popIn(<AvatarSelectFromWriteModal onSelectPet={onSelectPet} />);
+	Modal.popAvatarSelectFromWriteModal = (onSelectPet, onClose) => {
+		popIn(<AvatarSelectFromWriteModal onSelectPet={onSelectPet} onClose={onClose} />);
 		!isPop && setPop(true);
 	};
 

@@ -16,7 +16,6 @@ import protect_obj from 'Root/config/protect_obj';
 import {useNavigation} from '@react-navigation/core';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
-
 export default ProtectRequestList = ({route}) => {
 	const navigation = useNavigation();
 	const today = moment();
@@ -287,7 +286,7 @@ export default ProtectRequestList = ({route}) => {
 		wait(0).then(() => setRefreshing(false));
 	};
 
-	const ITEM_HEIGHT = 244 * DP;
+	const ITEM_HEIGHT = 266 * DP;
 	const [refreshing, setRefreshing] = React.useState(false);
 	const keyExtractor = React.useCallback(item => item._id.toString(), []);
 	const getItemLayout = React.useCallback(
@@ -368,8 +367,8 @@ const style = StyleSheet.create({
 		width: 750 * DP,
 		// height: 68 * DP,
 		backgroundColor: '#fff',
-		marginTop: 30 * DP,
-		marginBottom: 30 * DP,
+		marginVertical: 20 * DP,
+		// marginBottom: 30 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},

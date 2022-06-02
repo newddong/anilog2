@@ -316,34 +316,37 @@ export default SearchReview = props => {
 
 	const filterComponent = () => {
 		return (
-			<View style={[style.filter]}>
-				<View style={[style.shadow_filter]}>
-					{isFilter ? <Filter60Filled onPress={onPressFilter} /> : <Filter60Border onPress={onPressFilter} />}
+			<>
+				<View style={{marginTop: 12 * DP, width: 694 * DP, alignSelf: 'center'}}>
+					<Text style={[txt.noto24, {color: GRAY10}]}>검색 결과 {getData().length}개</Text>
 				</View>
-				<View style={[style.animalFilter]}>
-					<View style={[]}>
-						{!filterData.dog ? (
-							<AnimalButton type={'dog'} on={false} onPress={() => onPressAnimalFilter('dog')} />
-						) : (
-							<AnimalButton type={'dog'} on={true} onPress={() => onPressAnimalFilter('dog')} />
-						)}
-					</View>
-					<View style={[]}>
-						{!filterData.cat ? (
-							<AnimalButton type={'cat'} on={false} onPress={() => onPressAnimalFilter('cat')} />
-						) : (
-							<AnimalButton type={'cat'} on={true} onPress={() => onPressAnimalFilter('cat')} />
-						)}
-					</View>
-					<View style={[]}>
-						{!filterData.etc ? (
-							<AnimalButton type={'another'} on={false} onPress={() => onPressAnimalFilter('etc')} />
-						) : (
-							<AnimalButton type={'another'} on={true} onPress={() => onPressAnimalFilter('etc')} />
-						)}
+				<View style={[style.filter]}>
+					<View style={[]}>{isFilter ? <Filter60Filled onPress={onPressFilter} /> : <Filter60Border onPress={onPressFilter} />}</View>
+					<View style={[style.animalFilter]}>
+						<View style={[]}>
+							{!filterData.dog ? (
+								<AnimalButton type={'dog'} on={false} onPress={() => onPressAnimalFilter('dog')} />
+							) : (
+								<AnimalButton type={'dog'} on={true} onPress={() => onPressAnimalFilter('dog')} />
+							)}
+						</View>
+						<View style={[]}>
+							{!filterData.cat ? (
+								<AnimalButton type={'cat'} on={false} onPress={() => onPressAnimalFilter('cat')} />
+							) : (
+								<AnimalButton type={'cat'} on={true} onPress={() => onPressAnimalFilter('cat')} />
+							)}
+						</View>
+						<View style={[]}>
+							{!filterData.etc ? (
+								<AnimalButton type={'another'} on={false} onPress={() => onPressAnimalFilter('etc')} />
+							) : (
+								<AnimalButton type={'another'} on={true} onPress={() => onPressAnimalFilter('etc')} />
+							)}
+						</View>
 					</View>
 				</View>
-			</View>
+			</>
 		);
 	};
 
@@ -356,13 +359,11 @@ export default SearchReview = props => {
 	} else
 		return (
 			<View style={[style.container]}>
-				<View style={{marginTop: 12 * DP, width: 694 * DP}}>
-					<Text style={[txt.noto24, {color: GRAY10}]}>검색 결과 {getData().length}개</Text>
-				</View>
 				<FlatList
 					data={[{}]}
 					listKey={({item, index}) => index}
 					showsVerticalScrollIndicator={false}
+					ListHeaderComponent={filterComponent()}
 					renderItem={({item, index}) => {
 						return (
 							<>
@@ -380,8 +381,6 @@ export default SearchReview = props => {
 							</>
 						);
 					}}
-					ListHeaderComponent={filterComponent()}
-					stickyHeaderIndices={[0]}
 				/>
 				{/* <View style={[style.write, style.shadowButton]}>
 					<WriteBoard onPress={onPressWrite} />

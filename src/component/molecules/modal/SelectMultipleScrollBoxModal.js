@@ -167,7 +167,6 @@ const SelectMultipleScrollBoxModal = props => {
 								);
 							}}
 						/>
-						{/* <View style={[style.box]} /> */}
 					</View>
 				</View>
 			</View>
@@ -227,15 +226,6 @@ const style = StyleSheet.create({
 		// width: 666 * DP,
 		height: 70 * DP,
 		borderRadius: 20 * DP,
-	},
-	box: {
-		position: 'absolute',
-		marginTop: 140 * DP,
-		zIndex: -1,
-		width: 322 * DP,
-		borderRadius: 20 * DP,
-		height: 70 * DP,
-		backgroundColor: APRI10,
 	},
 });
 

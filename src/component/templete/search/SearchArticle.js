@@ -80,22 +80,27 @@ export default SearchArticle = props => {
 
 	const header = () => {
 		return (
-			<View style={[style.filterCont]}>
-				<View style={[style.kindFilter]}>
-					<View style={[style.kindFilterItem]}>
-						<Text style={[txt.noto28, {color: GRAY10}]}> 잡담</Text>
-						{onlyTalk ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
-					</View>
-					<View style={[style.kindFilterItem]}>
-						<Text style={[txt.noto28, {color: GRAY10}]}> 질문</Text>
-						{onlyQuestion ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
-					</View>
-					<View style={[style.kindFilterItem]}>
-						<Text style={[txt.noto28, {color: GRAY10}]}> 모임</Text>
-						{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
+			<>
+				<View style={{marginTop: 12 * DP, width: 694 * DP, alignSelf: 'center'}}>
+					<Text style={[txt.noto24, {color: GRAY10}]}>검색 결과 {getData().length}개</Text>
+				</View>
+				<View style={[style.filterCont]}>
+					<View style={[style.kindFilter]}>
+						<View style={[style.kindFilterItem]}>
+							<Text style={[txt.noto28, {color: GRAY10}]}> 잡담</Text>
+							{onlyTalk ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
+						</View>
+						<View style={[style.kindFilterItem]}>
+							<Text style={[txt.noto28, {color: GRAY10}]}> 질문</Text>
+							{onlyQuestion ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
+						</View>
+						<View style={[style.kindFilterItem]}>
+							<Text style={[txt.noto28, {color: GRAY10}]}> 모임</Text>
+							{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
+						</View>
 					</View>
 				</View>
-			</View>
+			</>
 		);
 	};
 
@@ -115,16 +120,13 @@ export default SearchArticle = props => {
 	} else
 		return (
 			<View style={[style.container]}>
-				<View style={{marginTop: 12 * DP, width: 694 * DP}}>
-					<Text style={[txt.noto24, {color: GRAY10}]}>검색 결과 {getData().length}개</Text>
-				</View>
 				<FlatList
 					data={[{}]}
 					listKey={({item, index}) => index}
 					renderItem={renderItem}
 					ListHeaderComponent={header()}
 					showsVerticalScrollIndicator={false}
-					stickyHeaderIndices={[0]}
+					// stickyHeaderIndices={[0]}
 				/>
 			</View>
 		);

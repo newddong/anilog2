@@ -26,7 +26,6 @@ import {updateProtect} from 'Root/config/protect_obj';
 import {ProfileDefaultImg} from 'Root/component/atom/icon';
 import {styles} from 'Root/component/atom/image/imageStyle';
 
-
 //AnimalProtectRequestDetail 호출 경로
 // - ProtectRequestList(보호활동탭) , AnimalFromShelter(게시글보기) , AidRequestManage(게시글보기), AidRequestAnimalList(게시글 보기)
 export default AnimalProtectRequestDetail = ({route}) => {
@@ -87,17 +86,15 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		getProtectRequestListByShelterId(
 			{
 				shelter_userobject_id: id,
-				// protect_request_object_id: '',
 				protect_request_status: 'all', //하단 리스트
-				// limit: 1000,
 				limit: PROTECT_REQUEST_DETAIL_LIMIT,
 				page: offset,
 			},
 			result => {
-				// console.log('result / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', result.msg.length);
+				console.log('result / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', result.msg.length);
 				//현재 보고 있는 보호요청게시글의 작성자(보호소)의 모든 보호요청게시글이 담겨 있는 writersAnotherRequests
 				//그러나 현재 보고 있는 보호요청게시글은 해당 리스트에 출력이 되어서는 안됨 => Filter처리
-				const res = result.msg.filter(e => e._id != route.params.id);
+				const res = result.msg;
 				console.log('res.length', res.length);
 				if (writersAnotherRequests != 'false') {
 					console.log('temp lenth', [...writersAnotherRequests, ...res].length);
@@ -122,7 +119,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
 		//리뷰 메인 페이지에서는 필터가 적용이 되었을 때도 api 접속 불필요
 		if (writersAnotherRequests.length % PROTECT_REQUEST_DETAIL_LIMIT == 0) {
-			getProtectRequestList();
+			getProtectRequestList(data.protect_request_writer_id._id);
 		}
 	};
 

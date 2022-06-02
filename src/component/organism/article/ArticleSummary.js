@@ -192,5 +192,6 @@ const style = StyleSheet.create({
 	summaryText: {
 		textAlignVertical: 'center',
 		width: 470 * DP,
+		// backgroundColor: 'red',
 	},
 });

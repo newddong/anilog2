@@ -22,6 +22,48 @@ import RecommendReview from '../article/RecommendReview';
  * @param {string} props.isSearch - 리뷰 컨텐츠 클릭
  */
 export default ReviewList = props => {
+	const items = props.items;
+	const [data, setData] = React.useState('false');
+
+	React.useEffect(() => {
+		if (items && items.length != 0) {
+			setData(
+				items
+					.map((v, i, a) => {
+						let height = 128 * (1 / DP);
+						let arr = [];
+						const review_category_list = arr.concat(
+							v.community_interests.interests_review,
+							v.community_interests.interests_trip,
+							v.community_interests.interests_etc,
+							v.community_interests.interests_hospital,
+							v.community_interests.interests_interior,
+						);
+						//사진이 없으며 카테고리 선택도 없는 경우
+						if (!v.community_is_attached_file && review_category_list && review_category_list.length == 0) {
+							height = 128 * (1 / DP);
+							//사진은 있지만 카테고리 선택이 없는 경우
+						} else if (v.community_is_attached_file && review_category_list && review_category_list.length == 0) {
+							height = 312 * (1 / DP);
+							//사진과 카테고리 선택 모두 있는 경우
+						} else if (v.community_is_attached_file && review_category_list && review_category_list.length != 0) {
+							height = 334 * (1 / DP);
+						}
+						return {...v, height: (height + 2) * DP}; // ItemSeparator Componenet Height 2 추가
+					})
+					.map((v, i, a) => {
+						let offset = a.slice(0, i).reduce((prev, current) => {
+							return current.height + prev;
+						}, 0);
+						return {
+							...v,
+							offset: offset,
+						};
+					}),
+			);
+		}
+	}, [items]);
+
 	const renderItem = ({item, index}) => {
 		return (
 			<Review
@@ -43,24 +85,32 @@ export default ReviewList = props => {
 		} else return <></>;
 	};
 
-	return (
-		<View style={[style.container]}>
-			<FlatList
-				data={props.items}
-				renderItem={renderItem}
-				showsVerticalScrollIndicator={false}
-				keyExtractor={item => item._id}
-				ListEmptyComponent={props.whenEmpty}
-				ItemSeparatorComponent={() => {
-					return <View style={{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY30, alignSelf: 'center'}} />;
-				}}
-				ListHeaderComponent={recommend}
-				listKey={({item, index}) => index}
-				nestedScrollEnabled
-				onEndReached={() => props.onEndReached()}
-			/>
-		</View>
-	);
+	if (data == 'false') {
+		return <></>;
+	} else
+		return (
+			<View style={[style.container]}>
+				<FlatList
+					data={data}
+					renderItem={renderItem}
+					showsVerticalScrollIndicator={false}
+					keyExtractor={item => item._id}
+					getItemLayout={(data, index) => {
+						if (!data[index]) return {length: 0, offset: 0, index: index};
+						return {length: data[index].height, offset: data[index].offset, index: index};
+					}}
+					ListEmptyComponent={props.whenEmpty}
+					ItemSeparatorComponent={() => {
+						return <View style={{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY30, alignSelf: 'center'}} />;
+					}}
+					ListHeaderComponent={recommend}
+					listKey={({item, index}) => index}
+					nestedScrollEnabled
+					windowSize={5}
+					onEndReached={() => props.onEndReached()}
+				/>
+			</View>
+		);
 };
 
 ReviewList.defaultProps = {

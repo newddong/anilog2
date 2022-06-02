@@ -1,11 +1,8 @@
 import React from 'react';
-import {Text, TextInput, View, Image, ScrollView, Dimensions, SafeAreaView, StyleSheet} from 'react-native';
-
-import {Logo} from 'Asset/image';
-import {AlarmBadger48, MainLogo, Search48, AlarmBadgerNotice} from 'Atom/icon';
+import {View, StyleSheet} from 'react-native';
+import {AlarmBadger48, MainLogo, Search48, AlarmBadgerNotice, Search48_BLACK} from 'Atom/icon';
 import DP from 'Root/config/dp';
-import {WHITE, APRI10} from 'Root/config/color';
-import SvgWrapper, {SvgWrap} from 'Atom/svgwrapper';
+import {WHITE} from 'Root/config/color';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {getAlarmStatus} from 'Root/api/userapi';
@@ -13,9 +10,7 @@ import {getAlarmStatus} from 'Root/api/userapi';
 export default LogoHeader = ({navigation, route, options, back}) => {
 	const isLoginUser = userGlobalObject.userInfo?._id;
 	const [isNewAlarm, setIsNewAlarm] = React.useState();
-	const clickLogo = () => {
-		// alert('Logo!');
-	};
+
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			// The screen is focused
@@ -55,11 +50,9 @@ export default LogoHeader = ({navigation, route, options, back}) => {
 	};
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
-			<View style={style.logoContainer}>
-				<MainLogo />
-			</View>
+			<View style={style.logoContainer}>{/* <MainLogo />  */}</View>
 			<View style={style.buttonContainer}>
-				<Search48 onPress={clickSearch} />
+				<Search48_BLACK onPress={clickSearch} />
 				{isNewAlarm ? <AlarmBadgerNotice onPress={clickAlarm} /> : <AlarmBadger48 onPress={clickAlarm} />}
 			</View>
 		</View>
@@ -73,7 +66,7 @@ const style = StyleSheet.create({
 		height: 105 * DP,
 		flexDirection: 'row',
 		backgroundColor: WHITE,
-		paddingHorizontal: 48 * DP,
+		paddingHorizontal: 28 * DP,
 	},
 	logoContainer: {
 		// marginBottom: 26 * DP,
@@ -84,9 +77,10 @@ const style = StyleSheet.create({
 	buttonContainer: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
-		width: 126 * DP,
+		width: 116 * DP,
 		// marginBottom: 26 * DP,
 		backgroundColor: '#fff',
+		// backgroundColor: 'red',
 	},
 	shadow: {
 		// shadowColor: '#000000',

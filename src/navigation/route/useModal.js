@@ -160,6 +160,11 @@ export function useModal() {
 		!isPop && setPop(true);
 	};
 
+	Modal.popSelectBoxModal2 = (data, onSelect, onClose, headerRoof, headerTitle, height) => {
+		popIn(<SelectBoxModal data={data} onSelect={onSelect} onClose={onClose} headerRoof={headerRoof} headerTitle={headerTitle} scrollEnabled={true} boxHeight={height}/>);
+		!isPop && setPop(true);
+	};
+
 	Modal.popInformationModal = (data, onClose, onPressEdit) => {
 		popIn(<InformationModal data={data} onClose={onClose} onPressEdit={onPressEdit} />);
 		!isPop && setPop(true);

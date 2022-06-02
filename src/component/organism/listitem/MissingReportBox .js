@@ -14,7 +14,7 @@ import {useNavigation} from '@react-navigation/native';
  * @param {void} props.onClickLabel - 알림 라벨 클릭
  */
 const MissingReportBox = props => {
-	console.log('propsopsdo', props);
+	// console.log('propsopsdo', props);
 	const [objCity, setObjCity] = React.useState('');
 	const navigation = useNavigation();
 	React.useEffect(() => {

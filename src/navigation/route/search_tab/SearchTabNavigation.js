@@ -26,15 +26,19 @@ export default SearchTabNavigation = props => {
 	const [commList, setCommList] = React.useState('false');
 	const [loading, setLoading] = React.useState(false);
 
-	const initial = 'ACCOUNT';
+	const initial = props.route.params && props.route.params.tab ? props.route.params.tab : 'ACCOUNT';
 
 	const onClickUser = sendUserobject => {
 		props.navigation.navigate('SearchTabUserProfile', {userobject: sendUserobject});
 	};
+
 	//검색탭 헤더의 인풋값이 바뀔 때마다 계정과 해쉬를 받아오는 api에 접속
 	React.useEffect(() => {
 		console.log('searchContext.searchInfo.searchInput', searchContext.searchInfo.searchInput);
-		fetchData(); // effect Hook에서 async await 구문을 쓰기 위한 처리
+		if (userList == 'false' && hashList == 'false' && commList == 'false') {
+		} else {
+			fetchData(); // effect Hook에서 async await 구문을 쓰기 위한 처리
+		}
 		navigation.addListener('focus', () => {
 			fetchData();
 		});

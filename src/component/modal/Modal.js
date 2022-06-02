@@ -70,18 +70,6 @@ export default Modal = {
 	rollingSelect: (title, items = [''], onSelect, onCancel = Modal.close) => {},
 
 	/**
-	 * 선택 모달창을 띄우는 함수(첫번째 선택에 따라 두번째 선택의 항목이 변하는 부분은 구현되지 않음)
-	 * @param {Array.<string>} primaryItems - 첫번째 항목 배열
-	 * @param {Array.<string>} secondaryItems - 두번째 항목 배열
-	 * @param {(primaryItem:string,secondaryItem:string)=>void} onOk - 선택항목들을 반환하는 매개변수가 2개인 콜백
-	 * @param {string} okButtonnMsg - 확인버튼에 표시할 텍스트
-	 *
-	 * @example
-	 * Modal.popSelect(['개','고양이','기타'],['리트리버','말티즈','푸들','치와와'],(val1,val2)=>alert(val1+':'+val2),'동물선택');
-	 */
-	popSelect: (primaryItems, secondaryItems, onOk, okButtonnMsg) => {},
-
-	/**
 	 * 아바타 동물을 선택하는 모달창
 	 *
 	 * @param {string} okButtonnMsg - 확인 버튼 메시지
@@ -90,7 +78,6 @@ export default Modal = {
 	 *
 	 *
 	 * @example
-	 * Modal.popSelect(['개','고양이','기타'],['리트리버','말티즈','푸들','치와와'],(val1,val2)=>alert(val1+':'+val2),'동물선택');
 	 */
 	popAvatarSelectModal: (onSelectPet, okButtonnMsg, isWriteMode) => {},
 
@@ -98,12 +85,12 @@ export default Modal = {
 	 * 글쓰기 버튼 시 아바타 동물을 선택하는 모달창
 	 *
 	 * @param {(petObject:string)=>void} onSelectPet - 반려동물 라벨을 클릭했을때 콜백
+	 * @param {()=>void} onClose - 반려동물 라벨을 클릭했을때 콜백
 	 *
 	 *
 	 * @example
-	 * Modal.popSelect(['개','고양이','기타'],['리트리버','말티즈','푸들','치와와'],(val1,val2)=>alert(val1+':'+val2),'동물선택');
 	 */
-	popAvatarSelectFromWriteModal: onSelectPet => {},
+	popAvatarSelectFromWriteModal: (onSelectPet, onClose) => {},
 
 	/**
 	 * 반려 동물을 선택하는 모달창
@@ -370,15 +357,6 @@ export default Modal = {
 	 * @example
 	 */
 	popLoading: (isModal, timeout) => {},
-
-	/**
-	 * 주소 현위치 컨펌 모달
-	 * @param {Object} props - props object
-	 * @param {()=>void} props.onPressAddrSearch - 주소 찾기 클릭
-	 * @param {()=>void} props.onConfirm - 확인 버튼 콜백
-	 * @param {()=>void} props.searchedLocation - 현재 주소
-	 */
-	popLocationCheckModal: (onPressAddrSearch, onConfirm, searchedLocation) => {},
 
 	/**
 	 * 로그인 유도 모달

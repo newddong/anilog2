@@ -163,6 +163,8 @@ import blur from './blur';
 import blur694 from './blur694';
 import report from './report';
 import crop72 from './crop72';
+import like30 from './like30';
+import comment30 from './comment30';
 import DP from 'Root/config/dp';
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
 
@@ -230,7 +232,8 @@ export const FavoriteTag46_Filled = makeSvg(favoriteTagFilled, size46, APRI10);
 export const Paw46 = makeSvg(paw46, size46);
 export const Setting46 = makeSvg(setting46, size46);
 export const Heart46_Filled = makeSvg(heart46_filled, size46); //Added 21.10.27
-export const Search48 = makeSvg(search48, size48);
+export const Search48 = makeSvg(search48, size48, GRAY10);
+export const Search48_BLACK = makeSvg(search48, size48, BLACK);
 export const AlarmBadger48 = makeSvg(alarmBadger48, size48);
 export const RadioChecked48 = makeSvg(radioChecked48, size48);
 export const RadioUnchecked48 = makeSvg(radioUnchecked48, size48);
@@ -409,5 +412,6 @@ export const PhoneIcon = makeSvg(phoneIcon, {width: 32 * DP, height: 32 * DP});
 export const Blur = makeSvg(blur, {width: 226 * DP, height: 226 * DP});
 export const Blur694 = makeSvg(blur694, {width: 694 * DP, height: 694 * DP});
 export const Report30 = makeSvg(report, size30);
-export const Crop72 = makeSvg(crop72,{width:72*DP,height:72*DP});
-
+export const Crop72 = makeSvg(crop72, {width: 72 * DP, height: 72 * DP});
+export const Like30 = makeSvg(like30, size30);
+export const Comment30 = makeSvg(comment30, size30);

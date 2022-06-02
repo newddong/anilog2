@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View, ScrollView, FlatList, Image} from 'react-native';
-import {BLACK} from 'Root/config/color';
+import {BLACK, GRAY10} from 'Root/config/color';
 import {Filter60Border, Filter60Filled} from 'Root/component/atom/icon';
 import ReviewList from 'Root/component/organism/list/ReviewList';
 import Modal from 'Root/component/modal/Modal';
@@ -14,7 +14,7 @@ import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import AnimalButton from 'Root/component/molecules/button/AnimalButton';
 import community_obj, {updateReview} from 'Root/config/community_obj';
-
+import {txt} from 'Root/config/textstyle';
 
 export default SearchReview = props => {
 	const navigation = useNavigation();
@@ -316,39 +316,42 @@ export default SearchReview = props => {
 
 	const filterComponent = () => {
 		return (
-			<View style={[style.filter]}>
-				<View style={[style.shadow_filter]}>
-					{isFilter ? <Filter60Filled onPress={onPressFilter} /> : <Filter60Border onPress={onPressFilter} />}
+			<>
+				<View style={{marginTop: 12 * DP, width: 694 * DP, alignSelf: 'center'}}>
+					<Text style={[txt.noto24, {color: GRAY10}]}>검색 결과 {getData().length}개</Text>
 				</View>
-				<View style={[style.animalFilter]}>
-					<View style={[]}>
-						{!filterData.dog ? (
-							<AnimalButton type={'dog'} on={false} onPress={() => onPressAnimalFilter('dog')} />
-						) : (
-							<AnimalButton type={'dog'} on={true} onPress={() => onPressAnimalFilter('dog')} />
-						)}
-					</View>
-					<View style={[]}>
-						{!filterData.cat ? (
-							<AnimalButton type={'cat'} on={false} onPress={() => onPressAnimalFilter('cat')} />
-						) : (
-							<AnimalButton type={'cat'} on={true} onPress={() => onPressAnimalFilter('cat')} />
-						)}
-					</View>
-					<View style={[]}>
-						{!filterData.etc ? (
-							<AnimalButton type={'another'} on={false} onPress={() => onPressAnimalFilter('etc')} />
-						) : (
-							<AnimalButton type={'another'} on={true} onPress={() => onPressAnimalFilter('etc')} />
-						)}
+				<View style={[style.filter]}>
+					<View style={[]}>{isFilter ? <Filter60Filled onPress={onPressFilter} /> : <Filter60Border onPress={onPressFilter} />}</View>
+					<View style={[style.animalFilter]}>
+						<View style={[]}>
+							{!filterData.dog ? (
+								<AnimalButton type={'dog'} on={false} onPress={() => onPressAnimalFilter('dog')} />
+							) : (
+								<AnimalButton type={'dog'} on={true} onPress={() => onPressAnimalFilter('dog')} />
+							)}
+						</View>
+						<View style={[]}>
+							{!filterData.cat ? (
+								<AnimalButton type={'cat'} on={false} onPress={() => onPressAnimalFilter('cat')} />
+							) : (
+								<AnimalButton type={'cat'} on={true} onPress={() => onPressAnimalFilter('cat')} />
+							)}
+						</View>
+						<View style={[]}>
+							{!filterData.etc ? (
+								<AnimalButton type={'another'} on={false} onPress={() => onPressAnimalFilter('etc')} />
+							) : (
+								<AnimalButton type={'another'} on={true} onPress={() => onPressAnimalFilter('etc')} />
+							)}
+						</View>
 					</View>
 				</View>
-			</View>
+			</>
 		);
 	};
 
 	const whenEmpty = () => {
-		return <ListEmptyInfo text={'검색 결과가 없습니다..'} />;
+		return <ListEmptyInfo paddingVertical={450 * DP} text={'검색 결과가 없습니다..'} />;
 	};
 
 	if (props.loading) {
@@ -360,6 +363,7 @@ export default SearchReview = props => {
 					data={[{}]}
 					listKey={({item, index}) => index}
 					showsVerticalScrollIndicator={false}
+					ListHeaderComponent={filterComponent()}
 					renderItem={({item, index}) => {
 						return (
 							<>
@@ -377,8 +381,6 @@ export default SearchReview = props => {
 							</>
 						);
 					}}
-					ListHeaderComponent={filterComponent()}
-					stickyHeaderIndices={[0]}
 				/>
 				{/* <View style={[style.write, style.shadowButton]}>
 					<WriteBoard onPress={onPressWrite} />

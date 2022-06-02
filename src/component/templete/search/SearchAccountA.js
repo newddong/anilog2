@@ -68,7 +68,7 @@ export default SearchAccountA = React.memo((props, ref) => {
 							showButtons={false}
 							onClickFollowBtn={onClickFollowBtn}
 							onClickUnFollowBtn={onClickUnFollowBtn}
-							listEmptyText={'검색 결과가 없습니다.'}
+							listEmptyText={'검색 결과가 없습니다..'}
 						/>
 					</ScrollView>
 				)}

@@ -1,6 +1,6 @@
 import React from 'react';
 import {ScrollView, Text, View} from 'react-native';
-import {getProtectRequestList, getProtectRequestListByShelterId} from 'Root/api/shelterapi';
+import {getProtectRequestList} from 'Root/api/shelterapi';
 import {getPettypes} from 'Root/api/userapi';
 import {GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';

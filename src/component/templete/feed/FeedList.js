@@ -27,6 +27,7 @@ export default FeedList = ({route, navigation}) => {
 	const [topList, setTopList] = React.useState([]);
 	const flatlist = React.useRef();
 	const requestNum = 99;
+	const [onWrite, setOnWrite] = React.useState(false);
 	//피드썸네일 클릭 리스트일 경우
 
 	React.useEffect(() => {
@@ -338,7 +339,7 @@ export default FeedList = ({route, navigation}) => {
 		} else if (userGlobalObject.userInfo.user_type == 'user') {
 			Modal.popAvatarSelectFromWriteModal(obj => {
 				userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed', feed_avatar_id: obj});
-			});
+			}, Modal.close);
 		} else {
 			userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed'});
 		}
@@ -349,7 +350,7 @@ export default FeedList = ({route, navigation}) => {
 		if (route.name == 'MainHomeFeedList') {
 			return (
 				<View style={[styles.container]}>
-					<Text style={[txt.noto28b,{marginLeft:26*DP}]}>새로운 실종/제보</Text>
+					<Text style={[txt.noto28b, {marginLeft: 26 * DP}]}>새로운 실종/제보</Text>
 					<NewMissingReportList data={topList} />
 				</View>
 			);
@@ -456,6 +457,7 @@ export default FeedList = ({route, navigation}) => {
 						]}>
 						<Camera54 onPress={movetoCamera} />
 					</View> */}
+
 					<View
 						style={[
 							{

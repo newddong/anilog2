@@ -24,6 +24,8 @@ export default CommunityEdit = props => {
 		etc: false,
 	});
 
+	console.log('data', data.community_animal_type);
+
 	const [editorLayout, setEditorLayout] = React.useState({
 		//Rich Editor 레이아웃
 		height: 345,
@@ -40,6 +42,15 @@ export default CommunityEdit = props => {
 
 	React.useEffect(() => {
 		props.navigation.setParams({data: data, nav: 'CommunityEdit', isSearch: props.route.params.isSearch});
+		if (data.community_animal_type) {
+			if (data.community_animal_type == 'dog') {
+				setAnimalType({...animalType, dog: true});
+			} else if (data.community_animal_type == 'cat') {
+				setAnimalType({...animalType, cat: true});
+			} else if (data.community_animal_type == 'etc') {
+				setAnimalType({...animalType, etc: true});
+			}
+		}
 	}, [data]);
 
 	React.useEffect(() => {

@@ -17,7 +17,6 @@ import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import {searchProtectRequest} from 'Templete/style_templete';
 import AnimalButton from 'Root/component/molecules/button/AnimalButton';
 
-
 export default ReviewMain = ({route, navigation}) => {
 	const [data, setData] = React.useState('false');
 	const [filterData, setFilterData] = React.useState({
@@ -476,9 +475,7 @@ export default ReviewMain = ({route, navigation}) => {
 	const filterComponent = () => {
 		return (
 			<View style={[style.filter]}>
-				<View style={[style.shadow_filter]}>
-					{filterRef.current ? <Filter60Filled onPress={onPressFilter} /> : <Filter60Border onPress={onPressFilter} />}
-				</View>
+				<View style={[]}>{filterRef.current ? <Filter60Filled onPress={onPressFilter} /> : <Filter60Border onPress={onPressFilter} />}</View>
 				<View style={[style.animalFilter]}>
 					<View style={[]}>
 						{!filterData.dog ? (
@@ -542,7 +539,6 @@ export default ReviewMain = ({route, navigation}) => {
 						);
 					}}
 					ListHeaderComponent={filterComponent()}
-					stickyHeaderIndices={[0]}
 				/>
 				<TouchableOpacity activeOpacity={0.8} onPress={onPressWrite} style={[style.write, style.shadowButton]}>
 					<WriteBoard />
@@ -567,7 +563,7 @@ const style = StyleSheet.create({
 	},
 	filter: {
 		width: 694 * DP,
-		paddingTop: 15 * DP,
+		paddingTop: 20 * DP,
 		paddingBottom: 10 * DP,
 		alignSelf: 'center',
 		alignItems: 'center',

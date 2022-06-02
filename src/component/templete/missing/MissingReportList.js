@@ -257,7 +257,7 @@ export default MissingReportList = props => {
 		wait(0).then(() => setRefreshing(false));
 	};
 
-	const ITEM_HEIGHT = 244 * DP;
+	const ITEM_HEIGHT = 266 * DP;
 	const [refreshing, setRefreshing] = React.useState(false);
 	const keyExtractor = React.useCallback(item => item._id.toString(), []);
 	const getItemLayout = React.useCallback(
@@ -272,39 +272,43 @@ export default MissingReportList = props => {
 		[],
 	);
 
-	return (
-		<View style={[login_style.wrp_main, {flex: 1}]}>
-			<View style={{alignItems: 'center'}}>
-				<View style={[styles.filterView]}>
-					<View style={[styles.inside, {flexDirection: 'row', justifyContent: 'space-between'}]}>
-						<View style={[temp_style.filterBtn, {}]}>
-							<ArrowDownButton
-								onPress={onSelectLocation}
-								btnTitle={filterData.city || '실종/제보 지역'}
-								btnLayout={btn_w306_h68}
-								btnStyle={'border'}
-								btnTheme={'gray'}
-							/>
+	const header = () => {
+		return (
+			<View style={[styles.filterView]}>
+				<View style={[styles.inside, {flexDirection: 'row', justifyContent: 'space-between'}]}>
+					<View style={[temp_style.filterBtn, {}]}>
+						<ArrowDownButton
+							onPress={onSelectLocation}
+							btnTitle={filterData.city || '실종/제보 지역'}
+							btnLayout={btn_w306_h68}
+							btnStyle={'border'}
+							btnTheme={'gray'}
+						/>
+					</View>
+					<View style={[styles.kindFilter, {}]}>
+						<View style={[styles.kindFilterItem]}>
+							{onlyReport ? <Check42 onPress={onPressShowReport} /> : <Rect42_Border onPress={onPressShowReport} />}
+							<Text style={[txt.noto26, {color: GRAY10, marginRight: 10 * DP}]}> 실종</Text>
 						</View>
-						<View style={[styles.kindFilter, {}]}>
-							<View style={[styles.kindFilterItem]}>
-								{onlyReport ? <Check42 onPress={onPressShowReport} /> : <Rect42_Border onPress={onPressShowReport} />}
-								<Text style={[txt.noto26, {color: GRAY10, marginRight: 10 * DP}]}> 실종</Text>
-							</View>
-							<View style={[styles.kindFilterItem]}>
-								{onlyMissing ? <Check42 onPress={onPressShowMissing} /> : <Rect42_Border onPress={onPressShowMissing} />}
-								<Text style={[txt.noto26, {color: GRAY10, marginRight: 10 * DP}]}> 제보</Text>
-							</View>
+						<View style={[styles.kindFilterItem]}>
+							{onlyMissing ? <Check42 onPress={onPressShowMissing} /> : <Rect42_Border onPress={onPressShowMissing} />}
+							<Text style={[txt.noto26, {color: GRAY10, marginRight: 10 * DP}]}> 제보</Text>
 						</View>
 					</View>
 				</View>
+			</View>
+		);
+	};
 
+	return (
+		<View style={[login_style.wrp_main, {flex: 1}]}>
+			<View style={{alignItems: 'center'}}>
 				{data == 'false' ? (
 					<Loading isModal={false} />
 				) : (
 					<FlatList
 						data={getData()}
-						style={{backgroundColor: '#fff'}}
+						contentContainerStyle={{backgroundColor: '#fff', alignItems: 'center'}}
 						renderItem={renderItem}
 						showsVerticalScrollIndicator={false}
 						keyExtractor={keyExtractor}
@@ -312,6 +316,7 @@ export default MissingReportList = props => {
 						refreshing
 						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 						ListEmptyComponent={whenEmpty}
+						ListHeaderComponent={header()}
 						onEndReached={onEndReached} //Flatlist 페이징
 						onEndReachedThreshold={0.6} //페이징을 하는 타이밍
 						// https://reactnative.dev/docs/optimizing-flatlist-configuration
@@ -319,7 +324,7 @@ export default MissingReportList = props => {
 						extraData={refreshing}
 						initialNumToRender={5}
 						// maxToRenderPerBatch={5} // re-render를 막는군요.
-						windowSize={11}
+						windowSize={5}
 						// https://reactnative.dev/docs/optimizing-flatlist-configuration
 					/>
 				)}

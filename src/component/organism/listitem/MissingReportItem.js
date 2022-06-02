@@ -198,9 +198,9 @@ MissingReportItem.defaultProps = {
 
 const style = StyleSheet.create({
 	container: {
-		// width: 654 * DP,
+		// width: 694 * DP,
 		// height: 214 * DP,
-		alignItems: 'center',
+		// alignItems: 'center',
 		justifyContent: 'center',
 		flexDirection: 'column',
 		item_bracket: '#FF00FF',

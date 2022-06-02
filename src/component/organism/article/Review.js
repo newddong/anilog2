@@ -221,6 +221,14 @@ export default Review = React.memo(props => {
 
 	const searchHighlight = data.community_title.split(new RegExp(`(${props.isSearch})`, 'gi'));
 
+	const onLayout = e => {
+		console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+		const d = e.nativeEvent.layout.height * (1 / DP);
+		console.log(' : height', e.nativeEvent.layout.height);
+		console.log('data.height', data.height);
+		console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+	};
+
 	return (
 		<View style={[style.container]}>
 			{/* 리뷰 헤더  */}
@@ -309,6 +317,7 @@ const style = StyleSheet.create({
 		width: 654 * DP,
 		paddingVertical: 24 * DP,
 		alignSelf: 'center',
+		// backgroundColor: 'red',
 	},
 	header: {
 		width: 550 * DP,

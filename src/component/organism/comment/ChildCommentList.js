@@ -1,8 +1,8 @@
 import React from 'react';
-import {View, FlatList} from 'react-native';
-import {organism_style} from 'Organism/style_organism';
+import {View, FlatList, StyleSheet} from 'react-native';
 import ChildComment from 'Organism/comment/ChildComment';
 import {ChildCommentLinker} from 'Atom/icon';
+import {GRAY40, WHITE} from 'Root/config/color';
 
 /**
  * 자식 댓글 리스트
@@ -20,9 +20,11 @@ const ChildCommentList = props => {
 		props.like && props.like(data);
 	};
 
+	console.log('Child editData', props.editData);
+
 	const renderItem = ({item, index}) => {
 		return (
-			<View style={[organism_style.childCommentList]}>
+			<View style={[style.childCommentList, {backgroundColor: props.editData && props.editData._id == item._id ? GRAY40 : WHITE}]}>
 				<ChildCommentLinker />
 				<ChildComment data={item} onEdit={onEdit} like={like} onPressDeleteChild={props.onPressDeleteChild} />
 			</View>
@@ -38,3 +40,10 @@ ChildCommentList.defaultProps = {
 };
 
 export default ChildCommentList;
+
+const style = StyleSheet.create({
+	childCommentList: {
+		width: 614 * DP,
+		flexDirection: 'row',
+	},
+});

@@ -4,15 +4,12 @@ import {APRI10, WHITE, GRAY20, GRAY10, GRAY40, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP, {isNotch} from 'Root/config/dp';
 import {Camera54, Location54_APRI10, Location54_Filled, NextMark_APRI, Save54} from 'Root/component/atom/icon/index';
-import {launchImageLibrary} from 'react-native-image-picker';
 import Modal from 'Component/modal/Modal';
 import {useNavigation} from '@react-navigation/native';
-import ImagePicker from 'react-native-image-crop-picker';
 import {changeLocalPathToS3Path} from 'Root/api/community';
 import {RichEditor} from 'react-native-pell-rich-editor';
-import {Animal_another_off, Animal_cat_off, Animal_dog_off} from 'Root/component/atom/icon';
-import {Animal_another, Animal_cat, Animal_dog} from 'Root/component/atom/icon';
 import {WRITE_FREE_INFO, WRITE_REVIEW_INFO} from 'Root/i18n/msg';
+import AnimalButton from 'Root/component/molecules/button/AnimalButton';
 
 export default CommunityEdit = props => {
 	const navigation = useNavigation();
@@ -26,6 +23,8 @@ export default CommunityEdit = props => {
 		cat: false,
 		etc: false,
 	});
+
+	console.log('data', data.community_animal_type);
 
 	const [editorLayout, setEditorLayout] = React.useState({
 		//Rich Editor 레이아웃
@@ -43,6 +42,15 @@ export default CommunityEdit = props => {
 
 	React.useEffect(() => {
 		props.navigation.setParams({data: data, nav: 'CommunityEdit', isSearch: props.route.params.isSearch});
+		if (data.community_animal_type) {
+			if (data.community_animal_type == 'dog') {
+				setAnimalType({...animalType, dog: true});
+			} else if (data.community_animal_type == 'cat') {
+				setAnimalType({...animalType, cat: true});
+			} else if (data.community_animal_type == 'etc') {
+				setAnimalType({...animalType, etc: true});
+			}
+		}
 	}, [data]);
 
 	React.useEffect(() => {
@@ -179,44 +187,16 @@ export default CommunityEdit = props => {
       true; // note: this is required, or you'll sometimes get silent failures
     `;
 
+	React.useEffect(()=>{
+		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+			let selected = props.route.params.selectedPhoto;
+			insertImage(selected.map(v=>{return v.cropUri??v.uri}));
+		}
+	},[props.route.params?.selectedPhoto]);
+
 	//사진 불러오기
 	const onPressPhotoSelect = () => {
-		Modal.popTwoBtn(
-			'사진 선택 모드를 선택하세요',
-			'하나씩선택',
-			'여러개선택',
-			() => {
-				ImagePicker.openPicker({
-					compressImageQuality: 0.8,
-					width: 750,
-					height: 750,
-					cropping: true,
-				})
-					.then(images => {
-						insertImage(images.path);
-						Modal.close();
-					})
-					.catch(err => console.log(err + ''));
-				Modal.close();
-			},
-			() => {
-				launchImageLibrary(
-					{
-						mediaType: 'photo',
-						selectionLimit: 5, //다중선택 모드일 경우 상시 5개면 4개 상태에서 최대 5개를 더해 9개가 가능해짐
-						maxHeight: 750,
-						maxWidth: 750,
-						quality: 0.8,
-					},
-					responseObject => {
-						if (!responseObject.didCancel) {
-							insertImage(responseObject.assets.map(v => v.uri));
-							Modal.close();
-						}
-					},
-				);
-			},
-		);
+		props.navigation.push("MultiPhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
 	};
 
 	const isInterestsEmpty =
@@ -465,25 +445,25 @@ export default CommunityEdit = props => {
 				{isReview ? (
 					<TouchableOpacity activeOpacity={1} onPress={removeEditor} style={[style.animalFilter_container, {}]}>
 						<View style={[style.animalFilter]}>
-							<View style={[style.shadow]}>
+							<View style={[]}>
 								{!animalType.dog ? (
-									<Animal_dog onPress={() => onPressAnimalFilter('dog')} />
+									<AnimalButton type={'dog'} on={false} onPress={() => onPressAnimalFilter('dog')} />
 								) : (
-									<Animal_dog_off onPress={() => onPressAnimalFilter('dog')} />
+									<AnimalButton type={'dog'} on={true} onPress={() => onPressAnimalFilter('dog')} />
 								)}
 							</View>
-							<View style={[style.shadow]}>
+							<View style={[]}>
 								{!animalType.cat ? (
-									<Animal_cat onPress={() => onPressAnimalFilter('cat')} />
+									<AnimalButton type={'cat'} on={false} onPress={() => onPressAnimalFilter('cat')} />
 								) : (
-									<Animal_cat_off onPress={() => onPressAnimalFilter('cat')} />
+									<AnimalButton type={'cat'} on={true} onPress={() => onPressAnimalFilter('cat')} />
 								)}
 							</View>
-							<View style={[style.shadow]}>
+							<View style={[]}>
 								{!animalType.etc ? (
-									<Animal_another onPress={() => onPressAnimalFilter('etc')} />
+									<AnimalButton type={'another'} on={false} onPress={() => onPressAnimalFilter('etc')} />
 								) : (
-									<Animal_another_off onPress={() => onPressAnimalFilter('etc')} />
+									<AnimalButton type={'another'} on={true} onPress={() => onPressAnimalFilter('etc')} />
 								)}
 							</View>
 						</View>
@@ -622,7 +602,7 @@ const style = StyleSheet.create({
 		paddingHorizontal: 48 * DP,
 	},
 	animalFilter: {
-		width: 396 * DP,
+		width: 446 * DP,
 		marginTop: 20 * DP,
 		flexDirection: 'row',
 		alignSelf: 'flex-end',

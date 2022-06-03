@@ -2,14 +2,13 @@ import React from 'react';
 import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import {BLACK, GRAY10} from 'Root/config/color';
-import {Check50, EmptyIcon, Rect50_Border, WriteBoard} from 'Atom/icon';
+import {Check50, Rect50_Border} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
 import {useNavigation} from '@react-navigation/core';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {styles} from 'Root/component/atom/image/imageStyle';
-import community_obj from 'Root/config/community_obj';
 import searchContext from 'Root/config/searchContext';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
+import DP from 'Root/config/dp';
 
 export default SearchArticle = props => {
 	// console.log('ArticleMain');
@@ -76,27 +75,32 @@ export default SearchArticle = props => {
 	};
 
 	const whenEmpty = () => {
-		return <ListEmptyInfo text={'검색 결과가 없습니다..'} />;
+		return <ListEmptyInfo paddingVertical={450 * DP} text={'검색 결과가 없습니다..'} />;
 	};
 
 	const header = () => {
 		return (
-			<View style={[style.filterCont]}>
-				<View style={[style.kindFilter]}>
-					<View style={[style.kindFilterItem]}>
-						<Text style={[txt.noto28, {color: GRAY10}]}> 잡담</Text>
-						{onlyTalk ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
-					</View>
-					<View style={[style.kindFilterItem]}>
-						<Text style={[txt.noto28, {color: GRAY10}]}> 질문</Text>
-						{onlyQuestion ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
-					</View>
-					<View style={[style.kindFilterItem]}>
-						<Text style={[txt.noto28, {color: GRAY10}]}> 모임</Text>
-						{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
+			<>
+				<View style={{marginTop: 12 * DP, width: 694 * DP, alignSelf: 'center'}}>
+					<Text style={[txt.noto24, {color: GRAY10}]}>검색 결과 {getData().length}개</Text>
+				</View>
+				<View style={[style.filterCont]}>
+					<View style={[style.kindFilter]}>
+						<View style={[style.kindFilterItem]}>
+							<Text style={[txt.noto28, {color: GRAY10}]}> 잡담</Text>
+							{onlyTalk ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
+						</View>
+						<View style={[style.kindFilterItem]}>
+							<Text style={[txt.noto28, {color: GRAY10}]}> 질문</Text>
+							{onlyQuestion ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
+						</View>
+						<View style={[style.kindFilterItem]}>
+							<Text style={[txt.noto28, {color: GRAY10}]}> 모임</Text>
+							{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
+						</View>
 					</View>
 				</View>
-			</View>
+			</>
 		);
 	};
 
@@ -122,7 +126,7 @@ export default SearchArticle = props => {
 					renderItem={renderItem}
 					ListHeaderComponent={header()}
 					showsVerticalScrollIndicator={false}
-					stickyHeaderIndices={[0]}
+					// stickyHeaderIndices={[0]}
 				/>
 			</View>
 		);
@@ -157,7 +161,7 @@ const style = StyleSheet.create({
 	},
 	filterCont: {
 		width: 750 * DP,
-		paddingVertical: 20 * DP,
+		paddingVertical: 10 * DP,
 		backgroundColor: 'white',
 	},
 	kindFilter: {

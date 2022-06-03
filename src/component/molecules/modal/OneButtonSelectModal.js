@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, Dimensions, Platform, FlatList, TouchableOpacity, Animated, TextInput} from 'react-native';
 import AniButton from '../button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
-import {WHITE, GRAY10, APRI10, GRAY20, BLACK} from 'Root/config/color';
+import {WHITE, GRAY10, APRI10, GRAY20, BLACK, GRAY30} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {Arrow_Down_GRAY10, Arrow_Up_GRAY10} from 'Atom/icon';
@@ -168,11 +168,11 @@ const OneButtonSelectModal = props => {
 					},
 				]}>
 				<View style={[style.header]}>
-					<Text onPress={() => setSelectOpen(false)} style={[txt.noto30, {color: WHITE, paddingVertical: 22 * DP}]}>
+					<Text onPress={() => setSelectOpen(false)} style={[txt.noto30b, {paddingVertical: 22 * DP}]}>
 						취소
 					</Text>
 					<TouchableOpacity onPress={onSelect}>
-						<Text style={[txt.noto30, {color: WHITE}]}>완료</Text>
+						<Text style={[txt.noto30b]}>완료</Text>
 					</TouchableOpacity>
 				</View>
 				<View style={[style.list, {}]}>
@@ -187,7 +187,7 @@ const OneButtonSelectModal = props => {
 									activeOpacity={1}
 									onPress={() => setSelectedItem(index)}
 									key={index}
-									style={[style.listItem, index == selectedItem && item != padding ? {backgroundColor: APRI10} : null]}>
+									style={[style.listItem, index == selectedItem && item != padding ? {backgroundColor: GRAY30} : null]}>
 									<>
 										<Text style={[txt.roboto34, {color: getTextColor(index), fontSize: props.fontSize * DP}]}>{item}</Text>
 									</>
@@ -285,7 +285,7 @@ const style = StyleSheet.create({
 	header: {
 		width: 750 * DP,
 		flexDirection: 'row',
-		backgroundColor: APRI10,
+		backgroundColor: GRAY30,
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		paddingHorizontal: 40 * DP,

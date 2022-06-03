@@ -23,14 +23,14 @@ export async function apiController(path, args) {
 		if (path.includes('userLogin')) {
 			try {
 				let cookie = await CookieManager.get(serveruri);
-				console.log('경로 %s에 대한 쿠키정보 ', serveruri, cookie);
+				// console.log('경로 %s에 대한 쿠키정보 ', serveruri, cookie);
 				if (cookie['connect.sid']) {
 					sid = cookie['connect.sid'].value;
-					console.log('메모리에 sid정보 불러옴', sid);
+					// console.log('메모리에 sid정보 불러옴', sid);
 					await AsyncStorage.setItem('sid', sid);
-					console.log('디스크에 sid정보를 씀', sid);
+					// console.log('디스크에 sid정보를 씀', sid);
 				}
-				console.log('유저로그인', cookie);
+				// console.log('유저로그인', cookie);
 			} catch (err) {
 				console.log('로그인 에러', err);
 				args[2](err + ''); //에러 처리 콜백
@@ -52,9 +52,11 @@ export async function apiFormController(path, args) {
 	try {
 		let form = new FormData();
 		Object.entries(args[0]).forEach(v => {
+			// console.log('uri처리',v);
 			if (v[0].includes('uri')) {
 				if (typeof v[1] == 'object') {
 					//필드에 여러 값을 받을 경우, typeof는 object임(array도 object가 됨)
+					// console.log('object처리',v)
 					v[1].forEach(file => {
 						form.append(v[0], {
 							name: file,
@@ -65,10 +67,13 @@ export async function apiFormController(path, args) {
 				}
 				if (typeof v[1] == 'string') {
 					//필드에 단일 값을 문자열로 받았을 경우
+					// console.log('문자열 처리',v)
 					if (v[1].includes('http')) {
+						// console.log('http 주소 문자열 처리',v)
 						form.append(v[0], v[1]);
 						//파라메터 값 형식이 인터넷 주소일경우
 					} else {
+						// console.log('파일 문자열 처리',v)
 						form.append(v[0], {
 							name: v[1],
 							type: 'multipart/form-data',
@@ -78,6 +83,7 @@ export async function apiFormController(path, args) {
 					}
 				}
 			} else {
+				// console.log('uri 필드가 아님',v)
 				if (typeof v[1] == 'object') {
 					form.append(v[0], JSON.stringify(v[1]));
 				} else {
@@ -85,6 +91,7 @@ export async function apiFormController(path, args) {
 				}
 			}
 		});
+		console.log('upload form', form);
 		let result = await axios.post(serveruri + path, form, {
 			headers: {
 				'Content-Type': 'multipart/form-data',

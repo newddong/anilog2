@@ -1,7 +1,7 @@
 import React from 'react';
-import {Image, TouchableOpacity, FlatList, Platform} from 'react-native';
+import {Image, TouchableOpacity, FlatList, Platform, StyleSheet} from 'react-native';
 import {Text, View} from 'react-native';
-import {reportDetail, temp_style} from 'Templete/style_templete';
+import {temp_style} from 'Templete/style_templete';
 import FeedContent from 'Organism/feed/FeedContent';
 import {useNavigation} from '@react-navigation/core';
 import {favoriteFeed, getFeedDetailById, getMissingReportList} from 'Root/api/feedapi';
@@ -11,13 +11,16 @@ import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Loading from 'Root/component/molecules/modal/Loading';
 import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
-import {GRAY10} from 'Root/config/color';
+import {GRAY10, GRAY30} from 'Root/config/color';
 import Modal from 'Root/component/modal/Modal';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import Swiper from 'react-native-swiper';
 import MissingReportItem from 'Root/component/organism/listitem/MissingReportItem';
+import {NETWORK_ERROR} from 'Root/i18n/msg';
+import {styles} from 'Root/component/atom/image/imageStyle';
+import DP from 'Root/config/dp';
 export default ReportDetail = props => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
@@ -45,8 +48,21 @@ export default ReportDetail = props => {
 				navigation.setParams({writer: data.msg.feed_writer_id._id, isMissingOrReport: true, feed_object: data.msg});
 				fetchReportList(result._id);
 			},
-			errcallback => {
-				console.log(`errcallback:${JSON.stringify(errcallback)}`);
+			err => {
+				console.log('err / getFeedDetailById : ', err);
+				if (err.includes('code 500')) {
+					Modal.popOneBtn(NETWORK_ERROR, '확인', () => {
+						navigation.goBack();
+					});
+				} else if (err.includes('Network')) {
+					Modal.popOneBtn(NETWORK_ERROR, '확인', () => {
+						navigation.goBack();
+					});
+				} else {
+					Modal.popOneBtn(NETWORK_ERROR, '확인', () => {
+						navigation.goBack();
+					});
+				}
 			},
 		);
 	};
@@ -269,45 +285,43 @@ export default ReportDetail = props => {
 		navigation.push('FeedCommentList', {feedobject: data, showAllContents: true, showKeyboard: true});
 	};
 
+	const onPressReqeustPhoto = () => {
+		console.log('onPressReqeustPhoto');
+		Modal.popPhotoListViewModal(data.feed_medias.map(v => v.media_uri));
+	};
+
 	const header = () => {
 		return (
 			<View style={{alignItems: 'center'}}>
-				<View style={[temp_style.img_square_750, reportDetail.img_square_750]}>
-					{/* 제보사진 */}
-					{/* <Image
-						source={{
-							uri: data.feed_thumbnail,
-						}}
-						style={[temp_style.img_square_750]}
-					/> */}
+				{/* 제보사진 */}
+				<View style={[styles.img_square_round_694, {marginTop: 20 * DP}]}>
 					<Swiper showsPagination={false} autoplay={false} loop={false} horizontal={true}>
 						{data.feed_medias != undefined &&
 							data.feed_medias.map((val, idx) => (
-								<View key={idx}>
-									<Image source={{uri: val.media_uri}} style={[temp_style.img_square_750]} />
-									<View style={[reportDetail.swiper_index]}>
+								<TouchableOpacity onPress={onPressReqeustPhoto} activeOpacity={0.8} key={idx}>
+									<Image source={{uri: val.media_uri}} style={[styles.img_square_round_694]} />
+									<View style={[style.swiper_index]}>
 										<Text style={[txt.roboto24, {color: 'white'}]}>
 											{idx + 1}/{data.feed_medias.length}
 										</Text>
 									</View>
-								</View>
+								</TouchableOpacity>
 							))}
 					</Swiper>
 				</View>
-				<View style={[temp_style.feedContent]}>
-					{/* DB에서 가져오는 제보 피드글 데이터를 FeedContent에 넘겨준다. */}
+				<View style={[style.feedContent]}>
 					<FeedContent data={data} onPressFavorite={onPressFavoriteWriter} />
 				</View>
 
-				<View style={[reportDetail.basic_separator]}>
-					<View style={[reportDetail.separator]}></View>
+				<View style={[style.basic_separator]}>
+					<View style={[style.separator]}></View>
 				</View>
 				{comments && comments.length > 0 ? (
 					<TouchableOpacity
 						onPress={moveToCommentList}
 						style={[
 							{
-								width: 654 * DP,
+								width: 694 * DP,
 								alignItems: 'flex-end',
 								alignSelf: 'center',
 							},
@@ -350,16 +364,8 @@ export default ReportDetail = props => {
 				<View style={{marginTop: 20 * DP}}>
 					<ReplyWriteBox onPressReply={moveToCommentList} onWrite={onPressReply} isProtectRequest={true} />
 				</View>
-				<View style={[{paddingVertical: 20 * DP}]}>
-					<Text style={[txt.noto24, {paddingVertical: 20 * DP, width: 684 * DP, alignSelf: 'center'}]}>제보글 더보기</Text>
-					{/* <AnimalNeedHelpList
-						data={reportList}
-						onFavoriteTag={(e, index) => onOff_FavoriteTag(e, index)}
-						onClickLabel={(status, id, item) => onClickLabel(status, id, item)}
-						whenEmpty={() => {
-							return <></>;
-						}}
-					/> */}
+				<View style={[{paddingVertical: 50 * DP}]}>
+					<Text style={[txt.noto24, {width: 694 * DP, alignSelf: 'center'}]}>제보글 더보기</Text>
 					<FlatList data={reportList} renderItem={renderMissingReport} />
 				</View>
 			</View>
@@ -371,10 +377,10 @@ export default ReportDetail = props => {
 		return <Loading isModal={false} />;
 	} else
 		return (
-			<View style={[reportDetail.wrp_main]}>
+			<View style={[style.wrp_main]}>
 				<FlatList
 					ref={flatlist}
-					contentContainerStyle={[reportDetail.container]}
+					contentContainerStyle={[style.container]}
 					data={comments.length > 2 ? comments.slice(0, 2) : comments}
 					showsVerticalScrollIndicator={false}
 					ListHeaderComponent={header()}
@@ -385,3 +391,51 @@ export default ReportDetail = props => {
 			</View>
 		);
 };
+
+const style = StyleSheet.create({
+	container: {
+		alignItems: 'center',
+	},
+	img_square_750: {
+		marginTop: 20 * DP,
+		backgroundColor: 'yellow',
+	},
+	commentList: {
+		flex: 1,
+	},
+	basic_separator: {
+		width: 694 * DP,
+		height: 60 * DP,
+	},
+	separator: {
+		width: 694 * DP,
+		height: 2 * DP,
+		backgroundColor: GRAY30,
+		marginTop: 30 * DP,
+	},
+	wrp_main: {
+		flex: 1,
+		alignItems: 'center',
+		backgroundColor: '#FFF',
+	},
+	swiper_index: {
+		position: 'absolute',
+		borderRadius: 24 * DP,
+		width: 76 * DP,
+		height: 50 * DP,
+		backgroundColor: 'black',
+		opacity: 0.6,
+		right: 20 * DP,
+		bottom: 20 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	feedContent: {
+		width: 694 * DP,
+		marginTop: 20 * DP,
+		// height: 260 * DP,
+		backgroundColor: 'red',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+});

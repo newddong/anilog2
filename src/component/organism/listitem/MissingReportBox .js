@@ -14,6 +14,7 @@ import {useNavigation} from '@react-navigation/native';
  * @param {void} props.onClickLabel - 알림 라벨 클릭
  */
 const MissingReportBox = props => {
+	// console.log('propsopsdo', props);
 	const [objCity, setObjCity] = React.useState('');
 	const navigation = useNavigation();
 	React.useEffect(() => {
@@ -54,7 +55,7 @@ const MissingReportBox = props => {
 				{props.data.feed_type == 'missing' ? (
 					<View>
 						<View style={[styles.absolute_missing]}>
-							<Text style={[txt.noto28b, {color: '#FFFFFF'}, {textAlign: 'center'}, {margin: 6 * DP}]}>실종</Text>
+							<Text style={[txt.noto28, {color: '#FFFFFF'}, {textAlign: 'center'}, {margin: 6 * DP}]}>실종</Text>
 						</View>
 						<Image
 							style={[styles.img_210]}
@@ -63,10 +64,12 @@ const MissingReportBox = props => {
 							}}
 						/>
 						<View style={[styles.date_txt]}>
-							<Text style={[txt.noto28b, {textAlign: 'center'}, {color: 'black'}]}>{props.data.missing_animal_date.slice(0, 9)} 실종</Text>
-							<Text style={[txt.noto28b, {textAlign: 'center'}, {color: 'black'}]}>
-								{props.data.missing_animal_species} / {props.data.missing_animal_age}살
+							<Text style={[txt.noto28, {textAlign: 'center'}, {color: 'black'}, {height: 44 * DP}]}>
+								{props.data.missing_animal_date.slice(0, 9)} 실종
 							</Text>
+							{/* <Text style={[txt.noto28b, {textAlign: 'center'}, {color: 'black'}]}>
+								{props.data.missing_animal_species} / {props.data.missing_animal_age}살
+							</Text> */}
 							<Text style={[txt.noto26, {textAlign: 'center'}, {color: GRAY10}]} numberOfLines={1}>
 								{objCity}
 							</Text>
@@ -75,7 +78,7 @@ const MissingReportBox = props => {
 				) : (
 					<View>
 						<View style={[styles.absolute_report]}>
-							<Text style={[txt.noto28b, {color: '#FFFFFF'}, {textAlign: 'center'}, {margin: 6 * DP}]}>제보</Text>
+							<Text style={[txt.noto28, {color: '#FFFFFF'}, {textAlign: 'center'}, {margin: 6 * DP}]}>제보</Text>
 						</View>
 						<Image
 							style={[styles.img_210]}
@@ -84,11 +87,13 @@ const MissingReportBox = props => {
 							}}
 						/>
 						<View style={[styles.date_txt]}>
-							<Text style={[txt.noto28b, {textAlign: 'center'}, {color: 'black'}]} numberOfLines={1}>
-								{props.data.report_witness_location}
+							<Text style={[txt.noto28, {textAlign: 'center'}, {color: 'black'}, {height: 44 * DP}]} numberOfLines={1}>
+								{/* {props.data.report_witness_location} */}
+								{props.data.report_witness_date}
 							</Text>
-							<Text style={[txt.noto26, {textAlign: 'center'}, {color: GRAY10}]} numberOfLines={2}>
-								{props.data.feed_content || '내용 없음'}
+							<Text style={[txt.noto26, {textAlign: 'center'}, {color: GRAY10}]} numberOfLines={1}>
+								{/* {props.data.feed_content || '내용 없음'} */}
+								{props.data.report_witness_location.split(' ', 2) || ''}
 							</Text>
 						</View>
 					</View>
@@ -101,8 +106,9 @@ const MissingReportBox = props => {
 const styles = StyleSheet.create({
 	container: {
 		width: 254 * DP,
-		// height: 396 * DP,
-		backgroundColor: WHITE,
+		height: 352 * DP,
+		// backgroundColor: WHITE,
+		backgroundColor: 'yellow',
 		marginRight: 30 * DP,
 		borderRadius: 30 * DP,
 		shadowColor: BLACK,
@@ -167,13 +173,13 @@ const styles = StyleSheet.create({
 	},
 	content: {
 		width: 254 * DP,
-		height: 396 * DP,
+		height: 352 * DP,
 		borderRadius: 30 * DP,
 		backgroundColor: WHITE,
 		marginBottom: 10 * DP,
 		// paddingVertical: 50 * DP,
 		// paddingHorizontal: 32 * DP,
-		marginRight: 30 * DP,
+		marginLeft: 30 * DP,
 	},
 });
 

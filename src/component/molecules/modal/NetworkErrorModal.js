@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Platform, Dimensions, Animated, TouchableOpacity} from 'react-native';
-import {WHITE, GRAY10, APRI10, GRAY30} from 'Root/config/color';
+import {GRAY30} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';

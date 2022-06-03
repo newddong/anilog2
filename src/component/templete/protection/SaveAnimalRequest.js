@@ -4,7 +4,7 @@ import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import SelectStat from 'Organism/list/SelectStat';
 import {login_style, temp_style} from 'Templete/style_templete';
 import {useNavigation} from '@react-navigation/core';
-import {getProtectRequestList, getProtectRequestListByShelterId} from 'Root/api/shelterapi';
+import {getProtectRequestList} from 'Root/api/shelterapi';
 
 export default SaveAnimalRequest = ({route}) => {
 	const navigation = useNavigation();

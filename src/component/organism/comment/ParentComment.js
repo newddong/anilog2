@@ -1,6 +1,5 @@
 import React from 'react';
-import {View, Image, Text, TouchableOpacity} from 'react-native';
-import {organism_style, parentComment} from 'Organism/style_organism';
+import {View, Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {styles} from 'Atom/image/imageStyle';
 import ChildCommentList from 'Organism/comment/ChildCommentList';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
@@ -10,18 +9,18 @@ import {
 	Heart30_Filled,
 	Meatball50_APRI10_Vertical,
 	Meatball50_GRAY20_Vertical,
-	ProfileDefaultImg,
+	Report30,
 	SecureIcon40,
 } from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
-import {REPLY_MEATBALL_MENU, REPLY_MEATBALL_MENU_MY_REPLY, REPORT_MENU} from 'Root/i18n/msg';
+import {REPLY_MEATBALL_MENU_MY_REPLY, REPORT_MENU} from 'Root/i18n/msg';
 import {GRAY10, GRAY20} from 'Root/config/color';
 import {getChildCommentList} from 'Root/api/commentapi';
 import Modal from 'Component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeComment} from 'Root/api/commentapi';
 import {createReport} from 'Root/api/report';
-import dp from 'Root/config/dp';
+import DP from 'Root/config/dp';
 
 /**
  * 부모 댓글
@@ -157,105 +156,84 @@ export default ParentComment = React.memo((props, ref) => {
 	const onPressMeatball = () => {
 		// console.log('data', data.comment_writer_id);
 		if (data.comment_writer_id) {
-			meatballRef.current.measure((fx, fy, width, height, px, py) => {
-				const isWriter = userGlobalObject.userInfo._id == data.comment_writer_id._id;
-				if (isWriter) {
-					Modal.popSelectBoxModal(
-						REPLY_MEATBALL_MENU_MY_REPLY,
-						selectedItem => {
-							switch (selectedItem) {
-								case '수정':
-									onEdit(props.parentComment);
-									break;
-								case '삭제':
-									onDelete();
-									break;
-								case '상태 변경':
-									alert('상태 변경!');
-									break;
-								case '공유하기':
-									alert('공유하기!');
-									break;
-								default:
-									break;
-							}
-							Modal.close();
-						},
-						() => Modal.close(),
-						false,
-						'',
-					);
-				} else {
-					Modal.popSelectBoxModal(
-						REPLY_MEATBALL_MENU,
-						selectedItem => {
-							switch (selectedItem) {
-								case '신고':
-									Modal.close();
-									if (userGlobalObject.userInfo.isPreviewMode) {
-										setTimeout(() => {
-											Modal.popLoginRequestModal(() => {
-												props.navigation.navigate('Login');
-											});
-										}, 100);
-									} else {
-										setTimeout(() => {
-											Modal.popOneBtnSelectModal(
-												REPORT_MENU,
-												'이 댓글을 신고 하시겠습니까?',
-												selectedItem => {
-													createReport(
-														{
-															report_target_object_id: data._id,
-															report_target_object_type: 'commentsobjects',
-															report_target_reason: selectedItem,
-															report_is_delete: false,
-														},
-														result => {
-															console.log('신고 완료', result);
-															Modal.close();
-															Modal.popOneBtn('이 댓글은 신고 되었습니다.', '확인', () => Modal.close());
-														},
-														err => {
-															Modal.close();
-															if (err == '이미 신고되었습니다.') {
-																Modal.popOneBtn('이미 신고하셨습니다.', '확인', () => Modal.close());
-															}
-														},
-													);
-												},
-												'신고',
-											);
-										}, 100);
-									}
-
-								case '수정':
-									// alert('수정!');
-									// navigation.navigate('FeedEdit',props.data);
-									break;
-								case '삭제':
-									alert('삭제');
-									break;
-								default:
-									break;
-							}
-							Modal.close();
-						},
-						() => Modal.close(),
-						false,
-						'',
-					);
-				}
-			});
+			const isWriter = userGlobalObject.userInfo._id == data.comment_writer_id._id;
+			if (isWriter) {
+				Modal.popSelectBoxModal(
+					REPLY_MEATBALL_MENU_MY_REPLY,
+					selectedItem => {
+						switch (selectedItem) {
+							case '수정':
+								onEdit(props.parentComment);
+								break;
+							case '삭제':
+								onDelete();
+								break;
+							case '상태 변경':
+								alert('상태 변경!');
+								break;
+							case '공유하기':
+								alert('공유하기!');
+								break;
+							default:
+								break;
+						}
+						Modal.close();
+					},
+					() => Modal.close(),
+					false,
+					'',
+				);
+			}
 		}
 	};
+
+	const reportComment = () => {
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			setTimeout(() => {
+				Modal.popLoginRequestModal(() => {
+					props.navigation.navigate('Login');
+				});
+			}, 100);
+		} else {
+			setTimeout(() => {
+				Modal.popOneBtnSelectModal(
+					REPORT_MENU,
+					'이 댓글을 신고 하시겠습니까?',
+					selectedItem => {
+						createReport(
+							{
+								report_target_object_id: data._id,
+								report_target_object_type: 'commentsobjects',
+								report_target_reason: selectedItem,
+								report_is_delete: false,
+							},
+							result => {
+								console.log('신고 완료', result);
+								Modal.close();
+								Modal.popOneBtn('이 댓글은 신고 되었습니다.', '확인', () => Modal.close());
+							},
+							err => {
+								Modal.close();
+								if (err == '이미 신고되었습니다.') {
+									Modal.popOneBtn('이미 신고하셨습니다.', '확인', () => Modal.close());
+								}
+							},
+						);
+					},
+					'신고',
+				);
+			}, 100);
+		}
+	};
+
+	const isMyComment = userGlobalObject.userInfo._id == data.comment_writer_id._id;
 
 	const isNotAuthorized = () => {
 		let result = true;
 		if (!data.comment_is_secure) {
 			//비밀댓글이 아니라면 public
 			result = false;
-		} else if (userGlobalObject.userInfo._id == data.comment_writer_id._id) {
+		} else if (isMyComment) {
 			//비밀댓글이지만 댓글의 작성자라면 public
 			result = false;
 		} else if (userGlobalObject.userInfo._id != data.comment_writer_id._id && userGlobalObject.userInfo._id == data.comment_feed_writer_id) {
@@ -265,32 +243,31 @@ export default ParentComment = React.memo((props, ref) => {
 		return result;
 	};
 
-	const meatballRef = React.useRef();
 	const childrenCount = child.length > 0 ? child.length : props.parentComment.children_count;
 
 	return (
-		<View style={organism_style.parentComment}>
+		<View style={[style.parentComment]}>
 			{/* 유저프로필 라벨 및 Meatball  */}
-			<View style={[organism_style.UserLocationTimeLabel_view_parentComment, {}]}>
-				<View style={[parentComment.userLabelContainer, {}]} collapsable={false} ref={meatballRef}>
+			<View style={[style.profile, {}]}>
+				<View style={[style.userLabelContainer, {}]}>
 					{data.comment_writer_id ? (
 						<UserLocationTimeLabel data={data.comment_writer_id} time={data.comment_update_date} target={props.target} />
 					) : (
 						<UserLocationTimeLabel empty={true} time={data.comment_update_date} />
 					)}
 					{data.comment_is_secure ? (
-						<View style={[parentComment.secureIcon, {justifyContent: 'center'}]}>
+						<View style={[style.secureIcon, {justifyContent: 'center'}]}>
 							<SecureIcon40 />
 						</View>
 					) : (
 						<></>
 					)}
 				</View>
-				{data.comment_is_delete || !data.comment_writer_id ? (
+				{data.comment_is_delete || !data.comment_writer_id || userGlobalObject.userInfo._id != data.comment_writer_id._id ? (
 					<></>
 				) : (
 					<View style={[]}>
-						{meatball ? <Meatball50_APRI10_Vertical onPress={onPressMeatball} /> : <Meatball50_GRAY20_Vertical onPress={onPressMeatball} />}
+						<Meatball50_GRAY20_Vertical onPress={onPressMeatball} />
 					</View>
 				)}
 			</View>
@@ -298,17 +275,17 @@ export default ParentComment = React.memo((props, ref) => {
 			{data.comment_photo_uri == undefined || isNotAuthorized() ? ( //img_square_round_574
 				<></>
 			) : (
-				<View style={[organism_style.img_square_round_574, parentComment.img_square_round]}>
-					<Image style={[styles.img_square_round_574]} source={{uri: data.comment_photo_uri}} />
+				<View style={[style.img_square_round]}>
+					<Image style={[styles.img_square_round_614]} source={{uri: data.comment_photo_uri}} />
 				</View>
 			)}
 			{/* 댓글 내용 */}
 			{data.comment_is_delete ? (
-				<View style={[parentComment.comment_contents]}>
+				<View style={[style.comment_contents]}>
 					<Text style={[txt.noto26, {color: GRAY20}]}>삭제된 댓글 입니다.</Text>
 				</View>
 			) : (
-				<View style={[parentComment.comment_contents]}>
+				<View style={[style.comment_contents]}>
 					{isNotAuthorized() ? (
 						<Text style={[txt.noto26, {}]}> 비밀 댓글 입니다.</Text>
 					) : (
@@ -320,31 +297,44 @@ export default ParentComment = React.memo((props, ref) => {
 			{isNotAuthorized() || data.comment_is_delete ? (
 				<></>
 			) : (
-				<View style={[parentComment.likeReplyButton]}>
+				<View style={[style.likeReplyButton]}>
+					{isMyComment ? (
+						<></>
+					) : (
+						<TouchableOpacity onPress={reportComment} style={[{flexDirection: 'row'}]}>
+							<Report30 />
+							<Text style={[txt.noto22, {color: GRAY10}]}> 신고 · </Text>
+						</TouchableOpacity>
+					)}
 					{/* Data - 좋아요 상태 t/f */}
-					<View style={[parentComment.heart30]}>
-						{likeState ? <Heart30_Filled onPress={onCLickHeart} /> : <Heart30_Border onPress={onCLickHeart} />}
-					</View>
-					<View style={[parentComment.likeCount]}>
+					<View style={[style.heart30]}>{likeState ? <Heart30_Filled onPress={onCLickHeart} /> : <Heart30_Border onPress={onCLickHeart} />}</View>
+					<View style={[style.likeCount]}>
 						{/* Data - 좋아요 숫자 */}
-						<Text style={(txt.roboto24, parentComment.likeCountText)}>{likeCount}</Text>
+						<Text style={(txt.roboto24, style.likeCountText)}>{likeCount}</Text>
 					</View>
-					<TouchableOpacity style={[parentComment.writeComment]} onPress={onPressReplyBtn}>
-						<Text style={[txt.noto22, parentComment.writeCommentText]}>· 답글 쓰기</Text>
+					<TouchableOpacity style={[style.writeComment]} onPress={onPressReplyBtn}>
+						<Text style={[txt.noto22, style.writeCommentText]}>· 답글 쓰기</Text>
 					</TouchableOpacity>
 				</View>
 			)}
 			{/* {data.children_count > 0 && <Text style={[txt.noto24, {color: GRAY10}]}> 답글{data.children_count}개 보기 </Text>} */}
 			{childrenCount > 0 && (
-				<TouchableOpacity onPress={showChildComment} style={[parentComment.showChildComment]}>
+				<TouchableOpacity onPress={showChildComment} style={[style.showChildComment]}>
 					<Text style={[txt.noto22, {color: GRAY10}]}> 답글 {childrenCount}개 보기 </Text>
 					<Arrow_Down_GRAY10 />
 				</TouchableOpacity>
 			)}
 			{/* Data - 대댓글List */}
 			{showChild ? (
-				<View style={[organism_style.childCommentList, parentComment.img_square_round_574]}>
-					<ChildCommentList items={child} showChildComment={showChildComment} onPressDeleteChild={onPressDeleteChild} onEdit={onEdit} like={like} />
+				<View style={[style.childCommentList]}>
+					<ChildCommentList
+						items={child}
+						showChildComment={showChildComment}
+						onPressDeleteChild={onPressDeleteChild}
+						onEdit={onEdit}
+						like={like}
+						editData={props.editData}
+					/>
 				</View>
 			) : (
 				false
@@ -360,3 +350,84 @@ ParentComment.defaultProps = {
 	showChild: () => {},
 	openChild: false,
 };
+
+const style = StyleSheet.create({
+	parentComment: {
+		flexDirection: 'column',
+		width: 694 * DP,
+		marginBottom: 20 * DP,
+		alignItems: 'flex-end',
+		// backgroundColor: 'yellow',
+	},
+	userLocationTimeLabel: {
+		width: 472 * DP,
+		height: 68 * DP,
+	},
+	profile: {
+		flexDirection: 'row',
+		width: 694 * DP,
+		height: 68 * DP,
+		justifyContent: 'space-between',
+	},
+	img_square_round_574: {
+		marginTop: 20 * DP,
+	},
+	likeReplyButton: {
+		width: 614 * DP,
+		height: 34 * DP,
+		marginTop: 5 * DP,
+		paddingHorizontal: 5 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'flex-end',
+		// backgroundColor: 'yellow',
+	},
+	comment_contents: {
+		width: 614 * DP,
+		marginTop: 10 * DP, //UI 3차 적용 - 22.02.19 ksw
+		alignSelf: 'flex-end',
+	},
+	showChildComment: {
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
+	heart30: {
+		width: 30 * DP,
+		height: 30 * DP,
+	},
+	likeCount: {
+		width: 30 * DP,
+		height: 30 * DP,
+		marginLeft: 6 * DP,
+	},
+	likeCountText: {
+		color: GRAY10,
+		textAlignVertical: 'center',
+		textAlign: 'center',
+		lineHeight: 34 * DP,
+	},
+	writeComment: {
+		// width: 130 * DP,
+		height: 34 * DP,
+	},
+	writeCommentText: {
+		color: GRAY20,
+		includeFontPadding: false,
+	},
+	img_square_round: {
+		marginTop: 15 * DP,
+	},
+	userLabelContainer: {
+		// width: 472 * DP,
+		flexDirection: 'row',
+		// justifyContent: 'space-between',
+	},
+	secureIcon: {
+		marginLeft: 10 * DP,
+	},
+	childCommentList: {
+		// width: 614 * DP,
+		marginTop: 20 * DP,
+		flexDirection: 'row',
+	},
+});

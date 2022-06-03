@@ -5,7 +5,6 @@ import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
 import {createComment, deleteComment, getCommentListByProtectId, updateComment} from 'Root/api/commentapi';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Component/modal/Modal';
-import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
 import {GRAY10, GRAY40, WHITE} from 'Root/config/color';
@@ -236,25 +235,22 @@ export default ProtectCommentList = props => {
 		setParentComment();
 	};
 
+
+	React.useEffect(()=>{
+		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+			let selected = props.route.params.selectedPhoto[0];
+			setEditData({...editData, comment_photo_uri: selected.cropUri??selected.uri});
+		}
+	},[props.route.params?.selectedPhoto]);
+
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
 	const onAddPhoto = () => {
-		// navigation.push('SinglePhotoSelect', props.route.name);
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate('Login');
 			});
 		} else {
-			ImagePicker.openPicker({
-				compressImageQuality: 0.8,
-				cropping: true,
-			})
-				.then(images => {
-					console.log('onAddphoto Imagepicker', images);
-					setEditData({...editData, comment_photo_uri: images.path});
-					Modal.close();
-				})
-				.catch(err => console.log(err + ''));
-			Modal.close();
+			props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
 		}
 	};
 
@@ -365,7 +361,7 @@ export default ProtectCommentList = props => {
 		//수정 혹은 답글쓰기 때, 대상 부모 댓글의 배경색을 바꾸는 함수
 		const getBgColor = () => {
 			let result = WHITE;
-			if (editMode && editData.parent == index) {
+			if (editMode && editData.parent == index && editData._id == item._id) {
 				result = GRAY40;
 			} else if (parentComment && parentComment._id == item._id) {
 				result = GRAY40;
@@ -397,7 +393,8 @@ export default ProtectCommentList = props => {
 					<Text style={[txt.noto28, {color: GRAY10}]}>보호요청</Text>
 					<Text style={[txt.noto32b, {}]}>{data.protect_request_title || ''}</Text>
 				</View>
-				<View style={{marginBottom: 20 * DP, alignItems: 'flex-end', width: 654 * DP}}>
+				<View style={{height: 2 * DP, width: 694 * DP, backgroundColor: GRAY40, marginVertical: 30 * DP}}></View>
+				<View style={{alignItems: 'flex-end', width: 694 * DP}}>
 					{comments.length == 0 ? <></> : <Text style={[txt.noto26, {color: GRAY10}]}>댓글 {comments.length}개 </Text>}
 				</View>
 			</View>
@@ -456,16 +453,16 @@ const style = StyleSheet.create({
 		// backgroundColor: 'lightblue',
 	},
 	cotent_container_header: {
-		width: 654 * DP,
+		width: 694 * DP,
 		marginTop: 20 * DP,
 	},
 	content_container_label: {
-		width: 654 * DP,
+		width: 694 * DP,
 		marginTop: 15 * DP,
 		flexDirection: 'row',
 	},
 	cotent_container_info: {
-		width: 654 * DP,
+		width: 694 * DP,
 		marginBottom: 20 * DP,
 	},
 });

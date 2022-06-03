@@ -7,10 +7,9 @@ import {feedCommentList, login_style} from 'Templete/style_templete';
 import {createComment, deleteComment, getCommentListByFeedId, updateComment} from 'Root/api/commentapi';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Component/modal/Modal';
-import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
-import {BLACK, GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
+import {BLACK, GRAY10, GRAY20, GRAY30, GRAY40, WHITE} from 'Root/config/color';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import Loading from 'Root/component/molecules/modal/Loading';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
@@ -90,7 +89,7 @@ export default FeedCommentList = props => {
 	const fetchData = () => {
 		getCommentListByFeedId(
 			{
-				feedobject_id: props.route.params.feedobject._id,
+				feedobject_id: props.route.params?.feedobject?._id,
 				request_number: 1000,
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
@@ -260,21 +259,17 @@ export default FeedCommentList = props => {
 		}, 1000);
 	};
 
+	React.useEffect(()=>{
+		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+			let selected = props.route.params.selectedPhoto[0];
+			setEditData({...editData, comment_photo_uri: selected.cropUri??selected.uri});
+		}
+	},[props.route.params?.selectedPhoto]);
+
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
 	const onAddPhoto = () => {
-		// navigation.push('SinglePhotoSelect', props.route.name);
 		console.log('onAddphoto');
-		ImagePicker.openPicker({
-			compressImageQuality: 0.8,
-			cropping: true,
-		})
-			.then(images => {
-				console.log('onAddphoto Imagepicker', images);
-				setEditData({...editData, comment_photo_uri: images.path});
-				Modal.close();
-			})
-			.catch(err => console.log(err + ''));
-		Modal.close();
+		props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
 	};
 
 	//답글 쓰기 후 댓글 작성자 우측 답글취소 버튼 클릭
@@ -336,10 +331,10 @@ export default FeedCommentList = props => {
 	const scrollToReply = i => {
 		if (Platform.OS == 'ios') {
 			setTimeout(() => {
-				flatlist.current.scrollToIndex({animated: true, index: i, viewPosition: 0});
+				flatlist.current.scrollToIndex({animated: true, index: i != -1 ? i : 0, viewPosition: 0});
 			}, 200);
 		} else {
-			flatlist.current.scrollToIndex({animated: true, index: i, viewPosition: 0});
+			flatlist.current.scrollToIndex({animated: true, index: i != -1 ? i : 0, viewPosition: 0});
 		}
 	};
 
@@ -356,7 +351,8 @@ export default FeedCommentList = props => {
 
 	//미트볼, 수정을 누르면 동작
 	const onEdit = (comment, parent) => {
-		// console.log('수정 데이터', comment.comment_is_secure);
+		// console.log('수정 데이터', comment);
+		// console.log('parent', parent);
 		const findParentIndex = comments.findIndex(e => e._id == parent);
 		setEditMode(true);
 		setParentComment(); // 수정모드로 전환시
@@ -437,7 +433,7 @@ export default FeedCommentList = props => {
 		//수정 혹은 답글쓰기 때, 대상 부모 댓글의 배경색을 바꾸는 함수
 		const getBgColor = () => {
 			let result = WHITE;
-			if (editMode && editData.parent == index) {
+			if (editMode && editData.parent == index && editData._id == item._id) {
 				result = GRAY40;
 			} else if (parentComment && parentComment._id == item._id) {
 				result = GRAY40;
@@ -455,6 +451,7 @@ export default FeedCommentList = props => {
 					onPressDeleteChild={onPressDelete}
 					showChild={() => showChild(index)}
 					openChild={isOpen}
+					editData={editData}
 				/>
 			</View>
 		);

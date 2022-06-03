@@ -9,10 +9,8 @@ import {btn_style, feedWrite, login_style, temp_style, buttonstyle} from 'Temple
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w194} from 'Atom/btn/btn_style';
 import {PUBLIC_SETTING} from 'Root/i18n/msg';
-import {launchImageLibrary} from 'react-native-image-picker';
 import Modal from 'Component/modal/Modal';
 import userGlobalObj from 'Root/config/userGlobalObject';
-import ImagePicker from 'react-native-image-crop-picker';
 import HashInput from 'Molecules/input/HashInput';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import {FlatList} from 'react-native-gesture-handler';
@@ -46,6 +44,7 @@ export default FeedWrite = props => {
 	);
 
 	React.useEffect(() => {
+		console.log('정보 변경',props.route);
 		if (props.route.name != 'FeedEdit') {
 			const param = props.route.params;
 			// console.log('param', param);
@@ -55,7 +54,7 @@ export default FeedWrite = props => {
 				  props.navigation.setParams({
 						...props.route.params,
 						media_uri: selectedImg,
-						feed_medias: selectedImg.map(v => ({media_uri: v, is_video: false, duration: 0, tags: []})),
+						feed_medias: selectedImg.map(v => (v?{media_uri: v.cropUri??v.uri, is_video: false, duration: 0, tags: []}:false)),
 						feed_avatar_id: param.feed_avatar_id._id
 							? param.feed_avatar_id._id
 							: param.feed_avatar_id
@@ -65,17 +64,18 @@ export default FeedWrite = props => {
 				: // - 보호소 계정에서 피드 글쓰기를 누른 경우
 				  props.navigation.setParams({
 						...props.route.params,
-						media_uri: selectedImg,
-						feed_medias: selectedImg.map(v => ({media_uri: v, is_video: false, duration: 0, tags: []})),
+						media_uri: selectedImg.map(v=>v.cropUri??v.uri),
+						feed_medias: selectedImg.map(v => ({media_uri: v.cropUri??v.uri, is_video: false, duration: 0, tags: []})),
 						// feed_avatar_id: props.route.params.feed_avatar_id ? props.route.params.feed_avatar_id?._id : userGlobalObject.userInfo._id,
 				  });
 		} else {
 			props.navigation.setParams({
 				...props.route.params,
-				media_uri: selectedImg.filter(v => !v.includes('http')),
+				media_uri: selectedImg.filter(v => !v.uri.includes('http')),
 				feed_medias: selectedImg.map(img => {
-					let media = props.route.params.feed_medias.find(v => v.media_uri == img);
-					return {media_uri: img, is_video: false, duration: 0, tags: media ? media.tags : []};
+					let uri = img.cropUri??img.uri
+					let media = props.route.params.feed_medias.find(v => v.media_uri == uri);
+					return {media_uri: uri, is_video: false, duration: 0, tags: media ? media.tags : []};
 				}),
 				photoToDelete: photoToDelete,
 			});
@@ -92,8 +92,8 @@ export default FeedWrite = props => {
 			if (props.route.params?.feed_type == 'report') {
 				onPressReportWrite();
 			}
-			setSelectedImg(props.route.params.feed_medias.map(v => v.media_uri));
-			setPreviousPhotoList(props.route.params.feed_medias.map(v => v.media_uri));
+			setSelectedImg(props.route.params.feed_medias.map(v =>({uri:v.media_uri})));
+			setPreviousPhotoList(props.route.params.feed_medias.map(v => ({uri:v.media_uri})));
 			let regEx = new RegExp(`&#&#(.*?)%&%&`, `gm`);
 			let hashes = [];
 			let match = [];
@@ -103,27 +103,6 @@ export default FeedWrite = props => {
 			props.navigation.setParams({...props.route.params, hashtag_keyword: hashes});
 		}
 		if (props.route.params?.feedType == 'Feed') {
-			// 피드 글쓰기 진입시 바로 사진부터 적용하는 방식으로 변경 22.03.28
-			// launchImageLibrary(
-			// 	{
-			// 		mediaType: 'photo',
-			// 		selectionLimit: 5 - selectedImg.length, //다중선택 모드일 경우 상시 5개면 4개 상태에서 최대 5개를 더해 9개가 가능해짐
-			// 		maxHeight: 750,
-			// 		maxWidth: 750,
-			// 		quality: 0.8,
-			// 	},
-			// 	responseObject => {
-			// 		console.log('선택됨', responseObject);
-			// 		if (!responseObject.didCancel) {
-			// 			let tempContainer = [...selectedImg];
-			// 			responseObject.assets.map(v => tempContainer.push(v.uri));
-			// 			setSelectedImg(tempContainer.slice(-5));
-			// 			Modal.close();
-			// 		} else {
-			// 			// props.navigation.goBack(); //사진 추가 취소시 바로 뒤로가기?
-			// 		}
-			// 	},
-			// );
 			//피드 글쓰기 클릭하면 즉시 작성자 아바타 계정을 선택하는 절차가 추가됨에 따라 분기처리가 필요해짐
 			props.route.params.feed_avatar_id
 				? props.navigation.setOptions({title: props.route.params.feed_avatar_id.user_nickname})
@@ -164,8 +143,16 @@ export default FeedWrite = props => {
 
 	React.useEffect(()=>{
 		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
-			
-			setSelectedImg(props.route.params.selectedPhoto);
+			if(props.route.name=='FeedWrite'){
+				setSelectedImg(props.route.params.selectedPhoto);
+			}
+			if(props.route.name=='FeedEdit'){
+				console.log('이미지 추가',selectedImg);
+				setSelectedImg(
+					selectedImg.map(v=>({uri:v.uri})).concat(props.route.params.selectedPhoto)
+				);
+			}
+			// setSelectedImg(props.route.params.selectedPhoto);
 		}
 	},[props.route.params?.selectedPhoto]);
 
@@ -188,63 +175,33 @@ export default FeedWrite = props => {
 			Modal.alert('첨부파일은 5개까지만 가능합니다');
 			return;
 		}
-		let selectPhoto;
-		if (props.route.params.feedType == 'Report') {
-			selectPhoto = '사진 선택 모드를 선택하세요 \n 사진 추가시 2장까지 가능합니다.';
-		} else {
-			selectPhoto = '사진 선택 모드를 선택하세요';
-		}
-		console.log('route11', props.route.params.feedType);
-		Modal.popTwoBtn(
-			selectPhoto,
-			'하나씩선택',
-			'여러개선택',
-			() => {
-				// ImagePicker.openPicker({
-				// 	// multiple: true,
-				// 	compressImageQuality: 0.8,
-				// 	width: 750,
-				// 	height: 750,
-				// 	cropping: true,
-				// })
-				// 	.then(images => {
-				// 		console.log('images', images);
-				// 		setSelectedImg(selectedImg.concat(images.path));
-				// 		Modal.close();
-				// 	})
-				// 	.catch(err => console.log(err + ''));
-				Modal.close();
-				props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
-			},
-			() => {
-				// launchImageLibrary(
-				// 	{
-				// 		mediaType: 'photo',
-				// 		selectionLimit: 5 - selectedImg.length, //다중선택 모드일 경우 상시 5개면 4개 상태에서 최대 5개를 더해 9개가 가능해짐
-				// 		maxHeight: 750,
-				// 		maxWidth: 750,
-				// 		quality: 0.8,
-				// 	},
-				// 	responseObject => {
-				// 		console.log('선택됨', responseObject);
-				// 		if (!responseObject.didCancel) {
-				// 			let tempContainer = [...selectedImg];
-				// 			responseObject.assets.map(v => tempContainer.push(v.uri));
-				// 			setSelectedImg(tempContainer.slice(-5));
-				// 			Modal.close();
-				// 		}
-				// 	},
-				// );
-				Modal.close();
-				props.navigation.push("MultiPhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
-			},
-		);
+		props.navigation.push("MultiPhotoSelect",{prev:{name:props.route.name,key:props.route.key},selectedPhoto:selectedImg});
+		// let selectPhoto;
+		// if (props.route.params.feedType == 'Report') {
+		// 	selectPhoto = '사진 선택 모드를 선택하세요 \n 사진 추가시 2장까지 가능합니다.';
+		// } else {
+		// 	selectPhoto = '사진 선택 모드를 선택하세요';
+		// }
+		// console.log('route11', props.route.params.feedType);
+		// Modal.popTwoBtn(
+		// 	selectPhoto,
+		// 	'하나씩선택',
+		// 	'여러개선택',
+		// 	() => {
+		// 		Modal.close();
+		// 		props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
+		// 	},
+		// 	() => {
+		// 		Modal.close();
+		// 		props.navigation.push("MultiPhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
+		// 	},
+		// );
 	};
 
 	//사진 삭제
 	const deletePhoto = index => {
 		setSelectedImg(selectedImg.filter((v, i) => i != index));
-		const findIndex = previousPhotoList.findIndex(e => e == selectedImg[index]);
+		const findIndex = previousPhotoList.findIndex(e => e.uri == selectedImg[index].uri);
 		console.log('findIndex', findIndex);
 		let temp = [...photoToDelete];
 		temp.push(findIndex);
@@ -433,7 +390,7 @@ export default FeedWrite = props => {
 								// onChangeText={inputMissingTxt}
 								maxLength={150}
 								onFind={onFindTag}
-								selectedImg={selectedImg}
+								selectedImg={selectedImg.map(v=>v?v.cropUri??v.uri:undefined)}
 								onDelete={deletePhoto}
 								value={editText}
 								// value={feedText}

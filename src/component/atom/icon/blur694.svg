@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="694" height="694" viewBox="0 0 694 694">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" y1="0.462" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="1"/>
+    </linearGradient>
+  </defs>
+  <g id="그룹_6700" data-name="그룹 6700" transform="translate(-97 -381)">
+    <rect id="다운로드_64_" data-name="다운로드 (64)" width="694" height="694" rx="30" transform="translate(97 381)" fill="url(#linear-gradient)" style="mix-blend-mode: multiply;isolation: isolate"/>
+  </g>
+</svg>

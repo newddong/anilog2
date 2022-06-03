@@ -217,8 +217,6 @@ export default MyStackNavigation = props => {
 				component={AssignProtectAnimalDate}
 				options={{header: props => <SimpleHeader {...props} />, title: '보호 동물 등록'}}
 			/>
-			<MyStack.Screen name="SinglePhotoSelect" component={PhotoSelect} />
-
 			<MyStack.Screen
 				name="AssignProtectAnimalType"
 				component={AssignPetInfoA}

@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import {Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {APRI10, BLUE20, GRAY10, GRAY30, GRAY40, WHITE} from 'Root/config/color';
+import {APRI10, BLUE20, GRAY10, GRAY30, GRAY40, GRAY50, WHITE} from 'Root/config/color';
 import {Cross46, Lock60_Border, Lock60_Filled, Photo60, Send60} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import SelectedMedia from 'Molecules/media/SelectedMedia';
@@ -67,16 +67,17 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 	};
 
 	const onFocus = () => {
-		props.onFocus();
+		props.onFocus&&props.onFocus();
 	};
 
 	const onBlur = () => {
-		props.onBlur();
-	}
+		props.onBlur&&props.onBlur();
+	};
+
 	const getParent = () => {
 		if (isChildComment) {
 			return (
-				<View style={style.parentComment_box}>
+				<View style={[style.parentComment_box, {}]}>
 					<Text style={[txt.noto26b, {marginLeft: 10 * DP, paddingTop: 5 * DP}]}>
 						{' '}
 						{props.parentComment.comment_writer_id.user_nickname}
@@ -95,9 +96,9 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 
 	if (props.isProtectRequest) {
 		return (
-			<View style={[style.commentBox_protect_request]}>
+			<View style={[style.commentBox_protect_request, {}]}>
 				<TouchableOpacity activeOpacity={0.6} onPress={onPressReply} style={[style.commentBox_protect_request_left]}>
-					<Text style={[txt.noto26, style.replyTextInput_protect_request, {}]} ref={inputRef}>
+					<Text style={[txt.noto26, style.replyTextInput_protect_request, {}]}>
 						댓글입력
 					</Text>
 				</TouchableOpacity>
@@ -157,7 +158,8 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 								onChangeText={onChangeText}
 								onFocus={onFocus}
 								onBlur={onBlur}
-								ref={inputRef}/>
+								ref={inputRef}
+							/>
 						</View>
 						<CommentBoxBottom {...props} onWrite={onWrite} />
 					</View>
@@ -283,34 +285,27 @@ const style = StyleSheet.create({
 		// backgroundColor: 'pink',
 	},
 	replyTextInput_protect_request: {
-		// textAlignVertical: 'center',
-		height: 55 * DP,
 		color: GRAY10,
-		// lineHeight: 22 * DP,
-		// backgroundColor: 'yellow',
 	},
 	commentBox_protect_request_left: {
 		width: 550 * DP,
-		height: 72 * DP,
+		height: 68 * DP,
 		marginRight: 12 * DP,
 		borderRadius: 24 * DP,
-		backgroundColor: GRAY40,
 		justifyContent: 'center',
 		paddingLeft: 25 * DP,
-		paddingTop: 5 * DP,
+		// paddingTop: 5 * DP,
+		backgroundColor: GRAY50,
 	},
 	commentBox: {
 		width: 750 * DP,
-		// height: 186 * DP,
-		// backgroundColor: 'yellow',
 		paddingVertical: 28 * DP,
 		paddingHorizontal: 20 * DP,
 		alignItems: 'center',
+		// backgroundColor: 'yellow',
 	},
 	commentBox_photo: {
 		width: 750 * DP,
-		// height: 318 * DP,
-		// paddingBottom: 12 * DP,
 		paddingTop: 20 * DP,
 		paddingBottom: 20 * DP,
 		paddingHorizontal: 20 * DP,
@@ -321,6 +316,7 @@ const style = StyleSheet.create({
 		height: 68 * DP,
 		flexDirection: 'row',
 		alignItems: 'center',
+		justifyContent: 'space-between',
 	},
 	commentBox_input_photo: {
 		width: 492 * DP,
@@ -330,7 +326,7 @@ const style = StyleSheet.create({
 		paddingHorizontal: 20 * DP,
 		// paddingVertical: 12 * DP,
 		paddingVertical: 20 * DP,
-		backgroundColor: GRAY40,
+		backgroundColor: GRAY50,
 	},
 	commentBox_top_photo: {
 		width: 694 * DP,
@@ -345,7 +341,7 @@ const style = StyleSheet.create({
 		padding: 10 * DP,
 		borderRadius: 24 * DP,
 		marginBottom: 12 * DP,
-		backgroundColor: GRAY40,
+		backgroundColor: GRAY50,
 	},
 	commentBox_bottom: {
 		width: 694 * DP,

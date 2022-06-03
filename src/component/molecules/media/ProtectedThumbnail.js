@@ -3,7 +3,7 @@ import {Text, View, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {GRAY10, RED10, RED20, WHITE, APRI10, YELL20, BLACK} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import {Female48, Male48, Blur} from 'Atom/icon';
+import {Female48, Male48, Blur, RainbowBridge, RainbowBridge_226} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 /**
  * 버튼 컴포넌트트
@@ -99,7 +99,7 @@ const ProtectedThumbnail = props => {
 	};
 
 	const getBottomStatus = () => {
-		if (data.status != 'missing' && data.status != 'report') {
+		if (data.status != 'missing' && data.status != 'report' && data.status != 'rainbowbridge_euthanasia' && data.status != 'rainbowbridge') {
 			return (
 				<View style={[style.bottomCont]}>
 					<Text style={[txt.noto24, {color: WHITE, textAlign: 'center', lineHeight: 32 * DP}]}>{getStatusText()}</Text>
@@ -115,23 +115,40 @@ const ProtectedThumbnail = props => {
 					<Blur />
 				</View>
 			);
+		} else {
+			if (imageLoad) {
+				return <></>;
+			} else {
+				return (
+					<View style={[style.blur, {zIndex: -1}]}>
+						<Blur />
+					</View>
+				);
+			}
 		}
 	};
 
+	const [imageLoad, setImageLoad] = React.useState(false);
+
 	return (
-		<>
-			<View style={styles.img_square_round_214}>
-				<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.4} onPress={onClickLabel}>
-					<Image source={{uri: data.img_uri}} style={[styles.img_square_round_214, borderByStatus(), {zIndex: -3}]} />
-					{/* 펫 성별마크 */}
-					<View style={{position: 'absolute', right: 10 * DP, top: 10 * DP}}>{getGenderMark()}</View>
-					{/* 펫 보호상태 */}
-					{getBottomStatus()}
-					{getStatus()}
-					{getBlur()}
-				</TouchableOpacity>
-			</View>
-		</>
+		<View style={styles.img_square_round_226}>
+			<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.4} onPress={onClickLabel}>
+				<Image source={{uri: data.img_uri}} onLoad={e => setImageLoad(true)} style={[styles.img_square_round_226, borderByStatus(), {zIndex: -3}]} />
+				{/* 펫 성별마크 */}
+				<View style={{position: 'absolute', right: 10 * DP, top: 10 * DP}}>{getGenderMark()}</View>
+				{/* 펫 보호상태 */}
+				{getBottomStatus()}
+				{getStatus()}
+				{getBlur()}
+			</TouchableOpacity>
+			{data.status == 'rainbowbridge' || data.status == 'rainbowbridge_euthanasia' ? (
+				<View style={[style.rainbow, styles.img_square_round_226]}>
+					<RainbowBridge_226 />
+				</View>
+			) : (
+				<></>
+			)}
+		</View>
 	);
 };
 
@@ -160,6 +177,8 @@ const style = StyleSheet.create({
 		opacity: 0.8,
 		borderRadius: 30 * DP,
 		zIndex: 1,
+		width: 226 * DP,
+		height: 226 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
@@ -168,8 +187,16 @@ const style = StyleSheet.create({
 		width: '100%',
 		height: 36 * DP,
 		opacity: 1,
-		bottom: 0,
+		bottom: 4 * DP,
 		borderBottomLeftRadius: 30 * DP,
 		borderBottomRightRadius: 30 * DP,
+	},
+	rainbow: {
+		position: 'absolute',
+		backgroundColor: BLACK,
+		opacity: 0.8,
+		zIndex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
 });

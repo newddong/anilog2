@@ -5,6 +5,7 @@ import {txt} from 'Root/config/textstyle';
 import ControllableAccount from 'Organism/listitem/ControllableAccount';
 import ListEmptyInfo from 'Molecules/info/ListEmptyInfo';
 import {controllableAccountList} from 'Organism/style_organism copy';
+import DP from 'Root/config/dp';
 
 /**
  *
@@ -77,7 +78,7 @@ export default ControllableAccountList = props => {
 							data={props.items}
 							scrollEnabled={false}
 							renderItem={({item, index}) => renderItem(item, index)}
-							ListEmptyComponent={<ListEmptyInfo text={props.listEmptyText} />}
+							ListEmptyComponent={<ListEmptyInfo paddingVertical={540 * DP} text={props.listEmptyText} />}
 						/>
 					</View>
 				</View>

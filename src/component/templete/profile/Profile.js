@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, FlatList, Animated, Easing} from 'react-native';
 import {followUser, getUserProfile, unFollowUser} from 'Root/api/userapi';
-import {COMMUNITY_PROFILE_LIMIT, FREE_LIMIT, NETWORK_ERROR, NORMAL, PET, REVIEW_LIMIT, SHELTER} from 'Root/i18n/msg';
+import {COMMUNITY_PROFILE_LIMIT, FREE_LIMIT, NETWORK_ERROR, NORMAL, PET, PROTECT_REQUEST_DETAIL_LIMIT, REVIEW_LIMIT, SHELTER} from 'Root/i18n/msg';
 import {EmptyIcon, Message94, Write94} from 'Atom/icon';
 import TabSelectFilled_Type2 from 'Molecules/tab/TabSelectFilled_Type2';
 import ProfileInfo from 'Organism/info/ProfileInfo';
@@ -32,6 +32,7 @@ export default Profile = ({route}) => {
 	const [feedList, setFeedList] = React.useState([]);
 	const [commList, setCommList] = React.useState('false');
 	const [protectList, setProtectList] = React.useState('false');
+	const [offset, setOffset] = React.useState(1);
 	const [tabMenuSelected, setTabMenuSelected] = React.useState(0); //프로필 Tab의 선택상태
 	const [showOwnerState, setShowOwnerState] = React.useState(false); // 현재 로드되어 있는 profile의 userType이 Pet인 경우 반려인 계정 리스트의 출력 여부
 	const [showCompanion, setShowCompanion] = React.useState(true); // User계정이 반려동물버튼을 클릭
@@ -82,7 +83,7 @@ export default Profile = ({route}) => {
 			{
 				userobject_id: route.params.userobject._id,
 				community_type: 'all',
-				limit: 10000,
+				// limit: 10000,
 				// page: offset,
 			},
 			result => {
@@ -111,16 +112,35 @@ export default Profile = ({route}) => {
 				protect_request_status: 'all',
 				protect_request_object_id: '',
 				request_number: 5,
+				limit: PROTECT_REQUEST_DETAIL_LIMIT,
+				page: offset,
 			},
 			result => {
-				// console.log('result / getProtectRequestListByShelterId / AnimalFromShelter', result.msg[0]);
-				setProtectList(result.msg);
+				// console.log('result / getProtectRequestListByShelterId / AnimalFromShelter', result.msg.length);
+				const res = result.msg;
+				console.log('getProtectRequestListByShelterId / res.length', res.length);
+				if (protectList != 'false') {
+					console.log('temp lenth', [...protectList, ...res].length);
+					setProtectList([...protectList, ...res]);
+				} else {
+					setProtectList(res);
+				}
+				setOffset(offset + 1);
 			},
 			err => {
 				console.log('err / getProtectRequestListByShelterId / AnimalFromShelter', err);
 				setProtectList([]);
 			},
 		);
+	};
+
+	const onEndReached = () => {
+		console.log('EndReached', protectList.length % PROTECT_REQUEST_DETAIL_LIMIT);
+		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
+		//리뷰 메인 페이지에서는 필터가 적용이 되었을 때도 api 접속 불필요
+		if (protectList.length % PROTECT_REQUEST_DETAIL_LIMIT == 0) {
+			fetchProtectRequest();
+		}
 	};
 
 	React.useEffect(() => {
@@ -518,6 +538,7 @@ export default Profile = ({route}) => {
 								renderItem={renderProtect}
 								ListEmptyComponent={whenFeedThumbnailEmpty('현재 보호중인 동물이 없습니다.')}
 								style={{paddingVertical: 20 * DP}}
+								onEndReached={onEndReached}
 							/>
 						);
 				}

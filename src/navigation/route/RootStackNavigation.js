@@ -336,11 +336,11 @@ export default RootStackNavigation = () => {
 						/>
 						<RootStack.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />}} />
 						<RootStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />}} />
-						<RootStack.Screen
+						{/* <RootStack.Screen
 							name="FeedCommentList"
 							component={FeedCommentList}
 							options={{header: props => <SimpleHeader {...props} />, title: '댓글'}}
-						/>
+						/> */}
 						<RootStack.Screen
 							name="TermsAndPolicy"
 							component={TermsAndPolicy}

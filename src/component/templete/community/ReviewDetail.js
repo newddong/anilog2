@@ -10,7 +10,6 @@ import {getCommunityByObjectId, getCommunityList, updateAndDeleteCommunity} from
 import Loading from 'Root/component/molecules/modal/Loading';
 import {createComment, deleteComment, getCommentListByCommunityId, updateComment} from 'Root/api/commentapi';
 import Modal from 'Component/modal/Modal';
-import ImagePicker from 'react-native-image-crop-picker';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import community_obj, {updateReview} from 'Root/config/community_obj';
@@ -294,13 +293,25 @@ export default ReviewDetail = props => {
 
 	const [isReplyFocused, setReplyFocus] = React.useState(false);
 	const onFocus = () => {
-		console.log('onFocus');
-		Platform.OS == 'android' && setReplyFocus(true);
+		input.current.blur();
+		floatInput.current.focus();
+		setReplyFocus(true);
+		
 		scrollToReplyBox();
 	};
 
 	const onBlur = () => {
-		Platform.OS == 'android' && setReplyFocus(false);
+		floatInput.current.focus();
+		setReplyFocus(false);
+	};
+
+	const onFocus2 = () => {
+		setReplyFocus(true);
+		scrollToReplyBox();
+	};
+
+	const onBlur2 = () => {
+		setReplyFocus(false);
 	};
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
@@ -318,26 +329,22 @@ export default ReviewDetail = props => {
 		}
 	};
 
+	React.useEffect(()=>{
+		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+			let selected = props.route.params.selectedPhoto[0];
+			setEditData({...editData, comment_photo_uri: selected.cropUri??selected.uri});
+		}
+	},[props.route.params?.selectedPhoto]);
+
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
 	const onAddPhoto = () => {
-		// navigation.push('SinglePhotoSelect', props.route.name);
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate('Login');
 			});
 		} else {
 			console.log('onAddphoto');
-			ImagePicker.openPicker({
-				compressImageQuality: 0.8,
-				cropping: true,
-			})
-				.then(images => {
-					console.log('onAddphoto Imagepicker', images);
-					setEditData({...editData, comment_photo_uri: images.path});
-					Modal.close();
-				})
-				.catch(err => console.log(err + ''));
-			Modal.close();
+			props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
 		}
 	};
 
@@ -383,7 +390,7 @@ export default ReviewDetail = props => {
 
 	const scrollToReplyBox = () => {
 		if (Platform.OS == 'android') {
-			input.current?.focus();
+			// input.current?.focus();
 			scrollRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 1, viewOffset: 0});
 			// setTimeout(() => {
 			// 	scrollRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 1, viewOffset: 0});
@@ -693,25 +700,23 @@ export default ReviewDetail = props => {
 					}}
 					scrollToOverflowEnabled={true} // Just put in here
 				/>
-				{(key > 0 || isReplyFocused) && (
-					<View style={{position: 'absolute', bottom: key - 2}}>
-						<ReplyWriteBox
-							onAddPhoto={onAddPhoto}
-							onChangeReplyInput={onChangeReplyInput}
-							onLockBtnClick={onLockBtnClick}
-							onWrite={onWrite}
-							onDeleteImage={onDeleteImage}
-							privateComment={privateComment}
-							ref={floatInput}
-							editData={editData}
-							shadow={true}
-							parentComment={parentComment}
-							onCancelChild={onCancelChild}
-							onFocus={onFocus}
-							onBlur={onBlur}
-						/>
-					</View>
-				)}
+				<View style={{position: 'absolute', bottom: isReplyFocused?(key - 2):2000}}>
+					<ReplyWriteBox
+						onAddPhoto={onAddPhoto}
+						onChangeReplyInput={onChangeReplyInput}
+						onLockBtnClick={onLockBtnClick}
+						onWrite={onWrite}
+						onDeleteImage={onDeleteImage}
+						privateComment={privateComment}
+						ref={floatInput}
+						editData={editData}
+						shadow={true}
+						parentComment={parentComment}
+						onCancelChild={onCancelChild}
+						onFocus={onFocus2}
+						onBlur={onBlur2}
+					/>
+				</View>
 			</View>
 		);
 };

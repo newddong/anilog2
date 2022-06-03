@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {FlatList, View} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 import {login_style, selectstat_view_style, temp_style} from 'Templete/style_templete';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {getFavoriteEtcListByUserId, setFavoriteEtc, setFavoriteEtcCancelList} from 'Root/api/favoriteetc';
@@ -225,8 +225,8 @@ export default FavoriteProtectRequest = ({route}) => {
 
 	const header = () => {
 		return (
-			<View style={[temp_style.selectstat_view, {alignItems: 'center', marginBottom: 20 * DP}]}>
-				<View style={[temp_style.selectstat, selectstat_view_style.selectstat]}>
+			<View style={[style.selectstat_view, {}]}>
+				<View style={[style.selectstat]}>
 					<SelectStat
 						selectMode={selectMode}
 						onSelectMode={checkSelectMode}
@@ -258,3 +258,18 @@ export default FavoriteProtectRequest = ({route}) => {
 			/>
 		);
 };
+
+const style = StyleSheet.create({
+	selectstat_view: {
+		width: 694 * DP,
+		height: 100 * DP,
+		alignItems: 'center',
+		marginBottom: 20 * DP,
+	},
+	selectstat: {
+		flexDirection: 'row',
+		marginTop: 30 * DP,
+		width: 694 * DP,
+		height: 42 * DP,
+	},
+});

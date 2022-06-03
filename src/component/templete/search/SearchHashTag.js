@@ -1,11 +1,10 @@
 import React from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {GRAY20} from 'Root/config/color';
+import {GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {temp_style} from 'Templete/style_templete';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {EmptyIcon} from 'Root/component/atom/icon';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
+import DP from 'Root/config/dp';
 
 export default SearchHashTag = React.memo((props, ref) => {
 	// console.log('searchInput / SearchHashTag : ', props.search.searchInput);
@@ -21,7 +20,7 @@ export default SearchHashTag = React.memo((props, ref) => {
 	};
 
 	const whenEmpty = () => {
-		return <ListEmptyInfo text={'검색 결과가 없습니다..'} />;
+		return <ListEmptyInfo paddingVertical={600 * DP} text={'검색 결과가 없습니다..'} />;
 	};
 
 	if (props.loading) {
@@ -29,6 +28,9 @@ export default SearchHashTag = React.memo((props, ref) => {
 	} else
 		return (
 			<View style={[style.container]}>
+				<View style={{marginTop: 12 * DP, width: 694 * DP}}>
+					<Text style={[txt.noto24, {color: GRAY10}]}>검색 결과 {props.data.length}개</Text>
+				</View>
 				<FlatList
 					data={[{}]}
 					renderItem={({item, index}) => {
@@ -36,7 +38,7 @@ export default SearchHashTag = React.memo((props, ref) => {
 							<>
 								{/* // 검색 내역이 존재할 경우 API를 통해 받아온 내역 출력 */}
 								{props.data.length != 0 ? (
-									<View style={[temp_style.hashTagList]}>
+									<View style={[style.hashTagList]}>
 										<AccountHashList data={props.data} showFollowBtn={false} onClickLabel={onClickHashTag} onClickHash={hashSelect} />
 									</View>
 								) : (
@@ -84,4 +86,8 @@ const style = StyleSheet.create({
 		borderRadius: 20 * DP,
 	},
 	listContainer: {},
+	hashTagList: {
+		width: 750 * DP,
+		marginTop: 10 * DP,
+	},
 });

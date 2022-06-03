@@ -1,6 +1,5 @@
 import React from 'react';
-import {Text, View, FlatList, RefreshControl, ActivityIndicator} from 'react-native';
-import {searchProtectRequest} from 'Templete/style_templete';
+import {Text, View, FlatList, RefreshControl, ActivityIndicator, StyleSheet} from 'react-native';
 import {APRI10, GRAY10} from 'Root/config/color';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import {txt} from 'Root/config/textstyle';
@@ -16,6 +15,7 @@ import {getSearchResultProtectRequest} from 'Root/api/protectapi';
 import protect_obj from 'Root/config/protect_obj';
 import {useNavigation} from '@react-navigation/core';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {Header} from 'react-native/Libraries/NewAppScreen';
 
 export default ProtectRequestList = ({route}) => {
 	const navigation = useNavigation();
@@ -35,9 +35,11 @@ export default ProtectRequestList = ({route}) => {
 		cat: false,
 		etc: false,
 	});
+
 	const [onlyAdoptable, setOnlyAdoptable] = React.useState(false);
 	const filterRef = React.useRef(false);
 	const flatlist = React.useRef();
+
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			// filterRef.current ? false : fetchData(); //포커스마다 새로 fetch를 시도하면 상세글을 갔다가 메인페이지로 돌아와도 기존의 스크롤로 이동을 하지 않음
@@ -45,24 +47,17 @@ export default ProtectRequestList = ({route}) => {
 			console.log('protect_obj.protect.length : ', protect_obj.protect.length);
 			if (protect_obj.protect.length > 0) {
 				// let temp = [...data];
-				console.log('protect_obj. on Focus :: ', protect_obj.protect[0].is_favorite);
 				setData(protect_obj.protect);
 			}
 		});
+		navigation.setOptions({title: ' '});
 		return unsubscribe;
-		userGlobalObject.protectionTab.t = true;
 	}, []);
 
 	React.useEffect(() => {
 		getList(); //필터가 바뀔 때마다 호출되도록 설정
 	}, [filterData]);
 
-	// React.useEffect(() => {
-	// 	if (route.params?.pressed != 0) {
-	// 		moveToTop();
-	// 		// console.log('represseddddd');
-	// 	}
-	// }, [route.params]);
 	//보호요청리스트 목록 받기
 	const getList = isRefresh => {
 		isRefresh ? false : setLoading(true);
@@ -254,6 +249,7 @@ export default ProtectRequestList = ({route}) => {
 			getList();
 		}
 	};
+
 	const moveToTop = () => {
 		flatlist.current.scrollToOffset({animated: true, offset: 0});
 	};
@@ -287,7 +283,7 @@ export default ProtectRequestList = ({route}) => {
 		wait(0).then(() => setRefreshing(false));
 	};
 
-	const ITEM_HEIGHT = 244 * DP;
+	const ITEM_HEIGHT = 266 * DP;
 	const [refreshing, setRefreshing] = React.useState(false);
 	const keyExtractor = React.useCallback(item => item._id.toString(), []);
 	const getItemLayout = React.useCallback(
@@ -306,26 +302,31 @@ export default ProtectRequestList = ({route}) => {
 		refreshing ? getList(true) : false;
 	}, [refreshing]);
 
+	const header = () => {
+		return (
+			<View style={[style.filterView]} key={'header'}>
+				<View style={[style.inside]}>
+					<View style={[style.shadow_filter, filterRef.current ? style.shadow : false]}>
+						{filterRef.current ? <Filter60Filled onPress={onPressFilter} /> : <Filter60Border onPress={onPressFilter} />}
+					</View>
+					<View style={[style.onOffBtnView]}>
+						<View style={[style.onOffBtnMsg]}>
+							<Text style={[txt.noto20, {color: GRAY10}]}>{ONLY_CONTENT_FOR_ADOPTION}</Text>
+						</View>
+						<View style={[style.onOffSwitch]}>
+							<OnOffSwitch onSwtichOn={filterOn} onSwtichOff={filterOff} />
+						</View>
+					</View>
+				</View>
+			</View>
+		);
+	};
+
 	if (data == 'false') {
 		return <Loading isModal={false} />;
 	} else {
 		return (
 			<View style={{flex: 1, backgroundColor: '#fff', alignItems: 'center'}}>
-				<View style={[searchProtectRequest.filterView]} key={'header'}>
-					<View style={[searchProtectRequest.inside]}>
-						<View style={[searchProtectRequest.shadow_filter]}>
-							{filterRef.current ? <Filter60Filled onPress={onPressFilter} /> : <Filter60Border onPress={onPressFilter} />}
-						</View>
-						<View style={[searchProtectRequest.onOffBtnView]}>
-							<View style={[searchProtectRequest.onOffBtnMsg]}>
-								<Text style={[txt.noto20, {color: GRAY10}]}>{ONLY_CONTENT_FOR_ADOPTION}</Text>
-							</View>
-							<View style={[searchProtectRequest.onOffSwitch]}>
-								<OnOffSwitch onSwtichOn={filterOn} onSwtichOff={filterOff} />
-							</View>
-						</View>
-					</View>
-				</View>
 				<FlatList
 					data={getData()}
 					style={{backgroundColor: '#fff'}}
@@ -338,6 +339,7 @@ export default ProtectRequestList = ({route}) => {
 					onEndReachedThreshold={0.6} //페이징을 하는 타이밍
 					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					ListEmptyComponent={whenEmpty}
+					ListHeaderComponent={header()}
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
 					// removeClippedSubviews={true}
 					extraData={refreshing}
@@ -347,7 +349,7 @@ export default ProtectRequestList = ({route}) => {
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
 				/>
 				{loading ? (
-					<View style={searchProtectRequest.indicatorCont}>
+					<View style={style.indicatorCont}>
 						<ActivityIndicator size="large" color={APRI10} />
 					</View>
 				) : (
@@ -359,3 +361,97 @@ export default ProtectRequestList = ({route}) => {
 };
 
 ProtectRequestList.defaultProps = {};
+
+const style = StyleSheet.create({
+	container: {
+		flex: 1,
+	},
+	filterView: {
+		width: 750 * DP,
+		// height: 68 * DP,
+		backgroundColor: '#fff',
+		marginVertical: 20 * DP,
+		// marginBottom: 30 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	inside: {
+		width: 694 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		// backgroundColor: 'red',
+	},
+	onOffBtnView: {
+		// width: 344 * DP,
+		height: 36 * DP,
+		// marginTop: 30 * DP,
+		// marginRight: 30 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+	},
+	onOffBtnMsg: {
+		width: 240 * DP,
+		height: 32 * DP,
+		alignSelf: 'center',
+		// position: 'absolute',
+	},
+	onOffSwitch: {
+		// position: 'absolute',
+		// right: 0,
+	},
+	kindFilter: {
+		// width: 330 * DP,
+		marginTop: 10 * DP,
+		flexDirection: 'row',
+		alignSelf: 'flex-end',
+		// marginRight: 48 * DP,
+		// backgroundColor: 'yellow',
+		// justifyContent: 'space-between',
+	},
+	kindFilterItem: {
+		width: 110 * DP,
+		// backgroundColor: 'red',
+		marginLeft: 20 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between',
+	},
+	animalNeedHelpList: {
+		marginTop: 80 * DP,
+		width: 750 * DP,
+		alignSelf: 'center',
+		// backgroundColor: '#FF00FF',
+	},
+	animalMissingReportList: {
+		marginTop: 30 * DP,
+		width: 750 * DP,
+		alignSelf: 'center',
+		// backgroundColor: '#FF00FF',
+	},
+	shadow_filter: {
+		height: 60 * DP,
+		justifyContent: 'space-between',
+		flexDirection: 'row',
+
+		borderRadius: 20 * DP,
+	},
+	shadow: {
+		shadowOpacity: 0.5,
+		shadowRadius: 1 * DP,
+		elevation: 2,
+		shadowOffset: {
+			height: 2 * DP,
+			width: 2 * DP,
+		},
+	},
+	indicatorCont: {
+		position: 'absolute',
+		left: 0,
+		right: 0,
+		top: 0,
+		bottom: 0,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+});

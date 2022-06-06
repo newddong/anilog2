@@ -29,7 +29,9 @@ export default ArticleMain = ({route}) => {
 
 	//리프레싱 시도(페이지 상단으로 스크롤) => 데이터 최신화 및 페이징 초기화
 	React.useEffect(() => {
-		// refreshing ? fetchData(true) : false;
+		if (offset == 1) {
+			refreshing ? fetchData(1) : false;
+		}
 	}, [refreshing]);
 
 	const fetchData = page => {
@@ -149,33 +151,58 @@ export default ArticleMain = ({route}) => {
 	};
 
 	const onPressPage = page => {
-		console.log('page', page);
-		setLoading(true);
-		getCommunityList(
-			{
-				limit: FREE_LIMIT, //50
-				page: page + 1,
-				community_type: 'free',
-			},
-			result => {
-				console.log('result / getCommunityList / ArticleMain :', result.msg.free.length);
-				const res = result.msg.free;
-				setData(res);
-				setOffset(page + 1);
-				setLoading(false);
-			},
-			err => {
-				console.log('err / getCommunityList / ArticleMain : ', err);
-				if (err.includes('code 500')) {
-					setData([]);
-					setTimeout(() => {
-						Modal.alert(NETWORK_ERROR);
-					}, 500);
-				} else if (err.includes('없습니다')) {
-					setData([]);
-				}
-				setLoading(false);
-			},
+		console.log('same', page + 1 == offset);
+		if (page + 1 == offset) {
+			console.log('현재 페이지');
+		} else {
+			setLoading(true);
+			getCommunityList(
+				{
+					limit: FREE_LIMIT, //50
+					page: page + 1,
+					community_type: 'free',
+				},
+				result => {
+					console.log('result / getCommunityList / ArticleMain :', result.msg.free.length);
+					const res = result.msg.free;
+					setData(res);
+					setOffset(page + 1);
+					setLoading(false);
+				},
+				err => {
+					console.log('err / getCommunityList / ArticleMain : ', err);
+					if (err.includes('code 500')) {
+						setData([]);
+						setTimeout(() => {
+							Modal.alert(NETWORK_ERROR);
+						}, 500);
+					} else if (err.includes('없습니다')) {
+						setData([]);
+					}
+					setLoading(false);
+				},
+			);
+		}
+	};
+
+	const header = () => {
+		return (
+			<View style={{width: 694 * DP, alignSelf: 'center'}}>
+				<View style={[style.kindFilter]}>
+					<View style={[style.kindFilterItem]}>
+						{onlyTalk ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
+						<Text style={[txt.noto28, {marginLeft: 6 * DP}]}> 잡담</Text>
+					</View>
+					<View style={[style.kindFilterItem]}>
+						{onlyQuestion ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
+						<Text style={[txt.noto28, {marginLeft: 6 * DP}]}> 질문</Text>
+					</View>
+					<View style={[style.kindFilterItem]}>
+						{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
+						<Text style={[txt.noto28, {marginLeft: 6 * DP}]}> 모임</Text>
+					</View>
+				</View>
+			</View>
 		);
 	};
 
@@ -220,22 +247,6 @@ export default ArticleMain = ({route}) => {
 					renderItem={({item, index}) => {
 						return (
 							<>
-								<View style={{width: 694 * DP, alignSelf: 'center'}}>
-									<View style={[style.kindFilter]}>
-										<View style={[style.kindFilterItem]}>
-											{onlyTalk ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
-											<Text style={[txt.noto28, {marginLeft: 6 * DP}]}> 잡담</Text>
-										</View>
-										<View style={[style.kindFilterItem]}>
-											{onlyQuestion ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
-											<Text style={[txt.noto28, {marginLeft: 6 * DP}]}> 질문</Text>
-										</View>
-										<View style={[style.kindFilterItem]}>
-											{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
-											<Text style={[txt.noto28, {marginLeft: 6 * DP}]}> 모임</Text>
-										</View>
-									</View>
-								</View>
 								<ArticleList
 									items={getData()}
 									onPressArticle={onPressArticle} //게시글 내용 클릭
@@ -247,6 +258,7 @@ export default ArticleMain = ({route}) => {
 					}}
 					showsVerticalScrollIndicator={false}
 					listKey={({item, index}) => index}
+					ListHeaderComponent={header()}
 					ListFooterComponent={paging()}
 				/>
 

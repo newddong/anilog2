@@ -296,7 +296,7 @@ export default ReviewDetail = props => {
 		input.current.blur();
 		floatInput.current.focus();
 		setReplyFocus(true);
-		
+
 		scrollToReplyBox();
 	};
 
@@ -329,12 +329,12 @@ export default ReviewDetail = props => {
 		}
 	};
 
-	React.useEffect(()=>{
-		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+	React.useEffect(() => {
+		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
 			let selected = props.route.params.selectedPhoto[0];
-			setEditData({...editData, comment_photo_uri: selected.cropUri??selected.uri});
+			setEditData({...editData, comment_photo_uri: selected.cropUri ?? selected.uri});
 		}
-	},[props.route.params?.selectedPhoto]);
+	}, [props.route.params?.selectedPhoto]);
 
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
 	const onAddPhoto = () => {
@@ -344,7 +344,7 @@ export default ReviewDetail = props => {
 			});
 		} else {
 			console.log('onAddphoto');
-			props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
+			props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 		}
 	};
 
@@ -618,10 +618,11 @@ export default ReviewDetail = props => {
 		);
 	};
 
+	const keyboardY = useKeyboardBottom(0 * DP);
+
 	const bottom = () => {
 		return (
 			<View style={{alignItems: 'center'}}>
-				{/* <View style={[{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY40}]} /> */}
 				<View style={[style.reviewList]}>
 					<Text style={[txt.noto24, {}]}>관련 리뷰 게시글</Text>
 					<ReviewBriefList
@@ -631,6 +632,7 @@ export default ReviewDetail = props => {
 						onPressLike={onPressLikeBriefItem}
 					/>
 				</View>
+				<View style={{height: keyboardY}}></View>
 			</View>
 		);
 	};
@@ -700,7 +702,7 @@ export default ReviewDetail = props => {
 					}}
 					scrollToOverflowEnabled={true} // Just put in here
 				/>
-				<View style={{position: 'absolute', bottom: isReplyFocused?(key - 2):2000}}>
+				<View style={{position: 'absolute', bottom: isReplyFocused ? key - 2 : 2000}}>
 					<ReplyWriteBox
 						onAddPhoto={onAddPhoto}
 						onChangeReplyInput={onChangeReplyInput}

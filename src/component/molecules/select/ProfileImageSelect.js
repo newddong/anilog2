@@ -27,7 +27,6 @@ const ProfileImageSelect = props => {
 
 	const randomdefault = () => {
 		const rand = [<ProfileDefaultImg1 />, <ProfileDefaultImg2 />, <ProfileDefaultImg3 />];
-
 		return rand[getRandomInt(0, 3)];
 	};
 
@@ -36,9 +35,7 @@ const ProfileImageSelect = props => {
 			{/* ProfileImage uri가 null일 경우와 아닌 경우의 분기 */}
 			{props.selectedImageUri.length ? <Image style={styles.img_round_294} source={{uri: props.selectedImageUri}} /> : randomdefault()}
 			<View style={[style.shadowBtn]}>
-				<View style={[Platform.OS == 'ios' ? style.shadow : style.shadow_and]}>
-					<AddItem92 />
-				</View>
+				<AddItem92 />
 			</View>
 		</TouchableOpacity>
 	);
@@ -67,9 +64,7 @@ const style = StyleSheet.create({
 		position: 'absolute',
 		right: 0,
 		bottom: 0,
-		backgroundColor: Platform.OS == 'android' ? BLACK : WHITE,
 		opacity: 1,
-		borderRadius: 50 * DP,
 	},
 });
 export default ProfileImageSelect;

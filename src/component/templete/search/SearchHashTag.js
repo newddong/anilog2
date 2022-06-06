@@ -28,15 +28,15 @@ export default SearchHashTag = React.memo((props, ref) => {
 	} else
 		return (
 			<View style={[style.container]}>
-				<View style={{marginTop: 12 * DP, width: 694 * DP}}>
-					<Text style={[txt.noto24, {color: GRAY10}]}>검색 결과 {props.data.length}개</Text>
-				</View>
 				<FlatList
 					data={[{}]}
 					renderItem={({item, index}) => {
 						return (
 							<>
 								{/* // 검색 내역이 존재할 경우 API를 통해 받아온 내역 출력 */}
+								<View style={{marginTop: 12 * DP, width: 694 * DP, alignSelf: 'center'}}>
+									<Text style={[txt.noto24, {color: GRAY10}]}>검색 결과 {props.data.length}개</Text>
+								</View>
 								{props.data.length != 0 ? (
 									<View style={[style.hashTagList]}>
 										<AccountHashList data={props.data} showFollowBtn={false} onClickLabel={onClickHashTag} onClickHash={hashSelect} />

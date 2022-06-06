@@ -1,7 +1,7 @@
 import React from 'react';
-import {FlatList, ScrollView, Text, View} from 'react-native';
+import {FlatList, ScrollView, StyleSheet, Text, View} from 'react-native';
 import UserAccount from 'Organism/listitem/UserAccount';
-import {accountHashList} from 'Organism/style_organism copy';
+import {BGCOLOR} from '../style_organism copy';
 
 /**
  * 친구 즐겨찾기 Hash와 유저오브젝트 리스트 출력 컴포넌트
@@ -19,7 +19,7 @@ export default AccountHashList = props => {
 	// console.log('props Account List', props);
 	const renderItem = ({item, index}) => {
 		return (
-			<View style={[accountHashList.userAccount]}>
+			<View style={[accountHashList.userAccount, {}]}>
 				<UserAccount
 					data={item}
 					checkBoxMode={props.checkBoxMode}
@@ -33,11 +33,17 @@ export default AccountHashList = props => {
 		);
 	};
 
+	const ITEM_HEIGHT = 134 * DP;
+
 	return (
-		<View style={[accountHashList.container, {height: props.routeName && props.routeName != 'FavoriteUser' ? 300 * DP : 1100 * DP}]}>
+		<View style={[accountHashList.container, {}]}>
 			<FlatList
 				data={props.data}
 				keyExtractor={item => item._id}
+				getItemLayout={(data, index) => {
+					if (!data[index]) return {length: 0, offset: 0, index: index};
+					return {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index: index};
+				}}
 				renderItem={renderItem}
 				showsVerticalScrollIndicator={false}
 				ListEmptyComponent={props.whenEmpty}
@@ -58,3 +64,18 @@ AccountHashList.defaultProps = {
 		return <></>;
 	},
 };
+
+const accountHashList = StyleSheet.create({
+	container: {
+		width: 694 * DP,
+		alignItems: 'center',
+		paddingTop: 20 * DP,
+		// backgroundColor: BGCOLOR,
+		alignSelf: 'center',
+	},
+	userAccount: {
+		width: 694 * DP,
+		height: 134 * DP,
+		// marginBottom: 40 * DP,
+	},
+});

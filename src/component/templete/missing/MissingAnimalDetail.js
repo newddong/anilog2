@@ -20,6 +20,7 @@ import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
 import MissingReportItem from 'Root/component/organism/listitem/MissingReportItem';
 import {NETWORK_ERROR} from 'Root/i18n/msg';
 import CameraRoll from 'Root/module/CameraRoll';
+import DP from 'Root/config/dp';
 
 export default MissingAnimalDetail = props => {
 	const navigation = useNavigation();
@@ -74,7 +75,7 @@ export default MissingAnimalDetail = props => {
 			},
 			result => {
 				console.log('getMissingReportList result', result.msg.length);
-				const res = result.msg.filter(e => e.feed_type == 'missing');
+				const res = result.msg;
 				const findIndex = res.findIndex(e => e._id == props.route.params._id);
 				console.log('findIndex', findIndex);
 				let temp = [];
@@ -399,7 +400,6 @@ export default MissingAnimalDetail = props => {
 					data={item}
 					onClickLabel={(status, id) => onClickLabel(status, id, item)}
 					onFavoriteTag={e => onOff_FavoriteTag(e, index)}
-					onPressProtectRequest={() => onPressProtectRequest(item)}
 				/>
 			);
 		};
@@ -407,8 +407,8 @@ export default MissingAnimalDetail = props => {
 			<View style={{alignItems: 'center'}}>
 				<ReplyWriteBox onPressReply={moveToCommentPage} onWrite={moveToCommentPage} isProtectRequest={true} />
 				<View style={[{paddingVertical: 50 * DP}]}>
-					<Text style={[txt.noto24, {width: 694 * DP, alignSelf: 'center'}]}>실종글 더보기</Text>
-					<FlatList data={missingList} renderItem={renderMissingReport} />
+					<Text style={[txt.noto24, {width: 694 * DP, alignSelf: 'center'}]}>실종/제보 더보기</Text>
+					<FlatList data={missingList} renderItem={renderMissingReport} keyExtractor={item => item._id} windowSize={5} />
 				</View>
 			</View>
 		);
@@ -419,7 +419,7 @@ export default MissingAnimalDetail = props => {
 		return <Loading isModal={false} />;
 	} else
 		return (
-			<View style={[style.wrp_main]}>
+			<View style={[style.wrp_main, {}]}>
 				<FlatList
 					ref={flatlist}
 					contentContainerStyle={[style.container]}

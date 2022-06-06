@@ -14,8 +14,7 @@ import moment from 'moment';
 import {getSearchResultProtectRequest} from 'Root/api/protectapi';
 import protect_obj from 'Root/config/protect_obj';
 import {useNavigation} from '@react-navigation/core';
-import userGlobalObject from 'Root/config/userGlobalObject';
-import {Header} from 'react-native/Libraries/NewAppScreen';
+import DP from 'Root/config/dp';
 
 export default ProtectRequestList = ({route}) => {
 	const navigation = useNavigation();
@@ -254,10 +253,6 @@ export default ProtectRequestList = ({route}) => {
 		flatlist.current.scrollToOffset({animated: true, offset: 0});
 	};
 
-	const moveToTop = () => {
-		flatlist.current.scrollToOffset({animated: true, offset: 0});
-	};
-
 	const renderItem = ({item, index}) => {
 		return <ProtectRequestItem item={item} index={index} />;
 	};
@@ -313,9 +308,9 @@ export default ProtectRequestList = ({route}) => {
 					<View style={[style.shadow_filter, filterRef.current ? style.shadow : false]}>
 						{filterRef.current ? <Filter60Filled onPress={onPressFilter} /> : <Filter60Border onPress={onPressFilter} />}
 					</View>
-					<View style={[style.onOffBtnView]}>
+					<View style={[style.onOffBtnView, {alignItems: 'center'}]}>
 						<View style={[style.onOffBtnMsg]}>
-							<Text style={[txt.noto20, {color: GRAY10}]}>{ONLY_CONTENT_FOR_ADOPTION}</Text>
+							<Text style={[txt.noto26, {color: GRAY10, marginBottom: 6 * DP}]}>{ONLY_CONTENT_FOR_ADOPTION} </Text>
 						</View>
 						<View style={[style.onOffSwitch]}>
 							<OnOffSwitch onSwtichOn={filterOn} onSwtichOff={filterOff} />
@@ -387,23 +382,11 @@ const style = StyleSheet.create({
 		// backgroundColor: 'red',
 	},
 	onOffBtnView: {
-		// width: 344 * DP,
-		height: 36 * DP,
-		// marginTop: 30 * DP,
-		// marginRight: 30 * DP,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 	},
-	onOffBtnMsg: {
-		width: 240 * DP,
-		height: 32 * DP,
-		alignSelf: 'center',
-		// position: 'absolute',
-	},
-	onOffSwitch: {
-		// position: 'absolute',
-		// right: 0,
-	},
+	onOffBtnMsg: {},
+	onOffSwitch: {},
 	kindFilter: {
 		// width: 330 * DP,
 		marginTop: 10 * DP,

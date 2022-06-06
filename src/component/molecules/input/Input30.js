@@ -102,6 +102,7 @@ const Input30 = React.forwardRef((props, ref) => {
 						},
 					]}>
 					<TextInput
+						{...props}
 						ref={inputRef}
 						onChangeText={onChange}
 						placeholder={props.placeholder}
@@ -114,6 +115,7 @@ const Input30 = React.forwardRef((props, ref) => {
 						keyboardType={props.keyboardType}
 						maxLength={props.maxLength}
 						style={[
+							props.style,
 							txt.roboto28,
 							{
 								//TextInput과 바깥 View와의 거리 24px, lineHeight는 Text View크기와 일치

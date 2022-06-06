@@ -3,7 +3,7 @@ import {txt} from 'Root/config/textstyle';
 import {Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {Calendar48_Border} from 'Atom/icon';
-import {APRI10, BLACK, GRAY10, GRAY20, GRAY30} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, GRAY20, GRAY30, GRAY50} from 'Root/config/color';
 import Modal from 'Component/modal/Modal';
 import {object} from 'prop-types';
 
@@ -60,7 +60,11 @@ const DatePicker = props => {
 			onPress={openCalendar}
 			style={{
 				width: props.width * DP,
-				height: 82 * DP,
+				height: 104 * DP,
+				borderRadius: 30 * DP,
+				paddingHorizontal: 24 * DP,
+				paddingVertical: 28 * DP,
+				backgroundColor: GRAY50,
 			}}>
 			{props.title != '' && props.title != 'title' && (
 				<View style={{flexDirection: 'row'}}>
@@ -70,18 +74,18 @@ const DatePicker = props => {
 			<View
 				style={{
 					borderBottomColor: selectedDate == '눌러서 지정해주세요!' || selectedDate == '눌러서 지정!' ? GRAY30 : APRI10,
-					borderBottomWidth: 2 * DP,
 					flexDirection: 'row',
 					alignItems: 'center',
+					justifyContent: 'center',
 				}}>
 				<Text
 					style={[
 						txt.roboto32,
 						{
 							lineHeight: 44 * DP,
-							paddingLeft: 14 * DP,
-							paddingVertical: 18 * DP, // Value와 최상위 View와의 paddingVertical 16px
+							// paddingLeft: 14 * DP,
 							color: selectedDate == '눌러서 지정해주세요!' || selectedDate == '눌러서 지정!' ? GRAY10 : BLACK,
+							textAlign: 'center',
 						},
 					]}>
 					{typeof selectedDate === 'object' ? '눌러서 지정해주세요!' : selectedDate}

@@ -71,7 +71,7 @@ export default function BottomTab({state, descriptors, navigation}) {
 					const isFocused = (currentIndex != null ? currentIndex : state.index) == index;
 					// const isFocused = state.index == index;
 					//확인 필   바텀탭 텍스트 색깔 조정
-					const color = isFocused ? BLACK : GRAY20;
+					const color = isFocused ? BLACK : BLACK;
 					const textStyle = isFocused ? txt.noto22b : txt.noto22;
 					const textStyleEng = isFocused ? txt.roboto22b : txt.roboto22;
 					const onPress = () => {

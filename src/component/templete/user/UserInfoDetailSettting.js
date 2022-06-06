@@ -248,7 +248,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 								<Text style={[txt.noto28, {color: GRAY10}]}>성별</Text>
 							</View>
 							<View style={[temp_style.tabSelectFilled_Type1]}>
-								<TabSelectFilled_Type1 items={GENDER_TAB_SELECT} width={500} onSelect={onSelectGender} defaultIndex={getGender()} />
+								<TabSelectFilled_Type1 items={GENDER_TAB_SELECT} width={250} onSelect={onSelectGender} defaultIndex={getGender()} />
 							</View>
 						</View>
 

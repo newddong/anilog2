@@ -122,7 +122,6 @@ export default MissingReportItem = React.memo(props => {
 								</Text>
 								<Text style={[txt.noto28, {}]}>
 									나이:{data.missing_animal_age + '살' || ''} / 성별: {getParsedSex()}
-									{/* {data.missing_animal_sex} */}
 								</Text>
 								<Text style={[txt.noto28, {width: 408 * DP}]} numberOfLines={1}>
 									실종위치: {getParsedAddress() || ''}

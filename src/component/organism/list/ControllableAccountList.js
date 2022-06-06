@@ -45,7 +45,7 @@ export default ControllableAccountList = props => {
 		props.onClickUnFollowBtn(item);
 	};
 
-	const renderItem = (item, index) => {
+	const renderItem = ({item, index}) => {
 		return (
 			<View style={[selectedItem == index ? controllableAccountList.selectedItem : controllableAccountList.no_selectedItem]}>
 				<ControllableAccount
@@ -64,6 +64,8 @@ export default ControllableAccountList = props => {
 		);
 	};
 
+	const ITEM_HEIGHT = 68 + 40 * (1 / DP);
+
 	return (
 		<ScrollView horizontal={false} scrollEnabled={false}>
 			<ScrollView horizontal={true} scrollEnabled={false}>
@@ -77,7 +79,12 @@ export default ControllableAccountList = props => {
 						<FlatList
 							data={props.items}
 							scrollEnabled={false}
-							renderItem={({item, index}) => renderItem(item, index)}
+							renderItem={renderItem}
+							keyExtractor={item => item._id}
+							getItemLayout={(data, index) => {
+								if (!data[index]) return {length: 0, offset: 0, index: index};
+								return {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index: index};
+							}}
 							ListEmptyComponent={<ListEmptyInfo paddingVertical={540 * DP} text={props.listEmptyText} />}
 						/>
 					</View>

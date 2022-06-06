@@ -8,16 +8,16 @@ import {styles} from 'Atom/image/imageStyle';
 import {aidRequest} from '../style_organism copy';
 
 /**
- *
- *@param {{
- * onSelect : void,
- * selected : 'Boolean / true일 경우 메인색의 테두리 형성 or 회색의 얇은 테두리 형성',
- * selectBorderMode : 'Boolean / 테두리 형성 모드 적용 여부 default true',
- * showBadge : 'Boolean / 지원자 신청을 나타내는 뱃지 번호 출력 여부',
- * inActiveOpacity : 'Boolean / 클릭 시 터쳐블 애니메이션 출력 여부 Default = false',
- * }} props
+ * 보호동물 정보 요약 컴포넌트
+ * @param {object} props - Props Object
+ * @param {object} props.data - 데이터
+ * @param {()=>void)} props.onSelect - 리뷰 클릭 이벤트
+ * @param {boolean} props.inActiveOpacity - 클릭 시 터쳐블 애니메이션 출력 여부 Default = false
+ * @param {boolean} props.showBadge - 지원자 신청을 나타내는 뱃지 번호 출력 여부 Default = false
+ * @param {boolean} props.selectBorderMode -  테두리 형성 모드 적용 여부 Default = true
+ * @param {boolean} props.selected -  true : 메인색의 테두리 형성 / false : 회색의 얇은 테두리 형성
  */
-export default AidRequest = props => {
+const AidRequest = props => {
 	const data = props.data;
 	// console.log('AidRequest', data.protect_animal_photo_uri_list);
 	//해당 AidRequest박스 선택 시 부모컴포넌트 OnSelect 실행
@@ -108,3 +108,5 @@ AidRequest.defaultProps = {
 	showBadge: false,
 	inActiveOpacity: false,
 };
+
+export default AidRequest;

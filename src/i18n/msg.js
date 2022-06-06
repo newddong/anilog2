@@ -393,7 +393,7 @@ export const COMPANION_STATUS = ['함께 생활하고 있어요.', '입양이 �
 export const SHARE = '공유';
 
 //안내 메세지
-export const ONLY_CONTENT_FOR_ADOPTION = '입양 가능한 게시글만 보기';
+export const ONLY_CONTENT_FOR_ADOPTION = '입양 가능한 아이들만 보기';
 
 //Input PlaceHolder 관련
 export const INPUT_PHONE_NUM = '휴대전화번호 입력';
@@ -560,10 +560,11 @@ export const WRITE_FREE_INFO = '내용을 작성해 주세요.';
 
 //FlatList LIMIT 모음
 export const PROTECT_REQUEST_MAIN_LIMIT = 50; //보호요청게시글 메인
-export const FREE_LIMIT = 50; //자유게시판 메인
+export const FREE_LIMIT = 30; //자유게시판 메인
 export const REVIEW_LIMIT = 20; //리뷰게시판 메인
 export const REVIEW_BRIEF_LIMIT = 20; //리뷰게시물 요약 컴포넌트
 export const COMMUNITY_PROFILE_LIMIT = 30; //프로필 커뮤니티 탭
+export const THUMNAIL_LIMIT = 30; //썸네일리스트
 export const FEED_LIMIT = 10; //피드 메인
 export const ANIMAL_PROTECT_LIMIT = 10; //Usermenu => 동물보호 현황(임시보호 중인 동물 현황)
 export const ANIMAL_ADOPT_LIMIT = 20; //UserMenu => 신청 내역 => 입양 신청 더보기 클릭

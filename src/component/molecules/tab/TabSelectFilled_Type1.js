@@ -2,7 +2,7 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {Text, TouchableOpacity, FlatList} from 'react-native';
 import DP from 'Root/config/dp';
-import {APRI10, GRAY10, GRAY40, WHITE} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, GRAY40, GRAY50, WHITE} from 'Root/config/color';
 
 /**
  * 커스텀 탭 (메인색깔로 채워진 스타일)
@@ -26,11 +26,12 @@ const TabSelectFilled_Type1 = props => {
 			<TouchableOpacity
 				onPress={() => onSelect(index)}
 				style={{
-					width: (props.width * DP) / props.items.length,
+					width: props.width * DP,
 					height: 82 * DP,
-					backgroundColor: selected == index ? APRI10 : GRAY40,
+					backgroundColor: selected == index ? BLACK : GRAY50,
 					justifyContent: 'center',
-					marginRight: 2 * DP,
+					marginRight: 20 * DP,
+					borderRadius: 30 * DP,
 				}}>
 				<Text
 					style={[
@@ -46,7 +47,7 @@ const TabSelectFilled_Type1 = props => {
 		);
 	};
 
-	return <FlatList data={props.items} renderItem={renderItem} horizontal={true} scrollEnabled={false} showsHorizontalScrollIndicator={false}/>;
+	return <FlatList data={props.items} renderItem={renderItem} horizontal={true} scrollEnabled={false} showsHorizontalScrollIndicator={false} />;
 };
 TabSelectFilled_Type1.defaultProps = {
 	items: [1, 2, 3, 4], //FlatList에 담길 배열 정보

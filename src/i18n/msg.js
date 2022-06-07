@@ -555,8 +555,8 @@ export const UNAVAILABLE_REQUEST_STATUS = [
 export const IS_LEAVE_USER = '탈퇴한 계정입니다.';
 
 //커뮤니티 글쓰기 Placeholder
-export const WRITE_REVIEW_INFO = '서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.';
-export const WRITE_FREE_INFO = '내용을 작성해 주세요.';
+export const WRITE_REVIEW_INFO = '리뷰는 자세할수록 좋아요! 리뷰의 내용을 입력해 주세요.';
+export const WRITE_FREE_INFO = '내용 입력';
 
 //FlatList LIMIT 모음
 export const PROTECT_REQUEST_MAIN_LIMIT = 50; //보호요청게시글 메인

@@ -2,8 +2,7 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View, ScrollView, ActivityIndicator} from 'react-native';
 import DP from 'Root/config/dp';
-import {GRAY10, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
-import CommentList from 'Root/component/organism/comment/CommentList';
+import {GRAY10, GRAY40} from 'Root/config/color';
 import Modal from 'Root/component/modal/Modal';
 import Article from 'Root/component/organism/article/Article';
 import ArticleList from 'Root/component/organism/list/ArticleList';
@@ -15,8 +14,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import community_obj from 'Root/config/community_obj';
 import {FavoriteTag46_Filled, FavoriteTag48_Border, Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
-import {NETWORK_ERROR, REPORT_MENU} from 'Root/i18n/msg';
-import {createReport} from 'Root/api/report';
+import {NETWORK_ERROR} from 'Root/i18n/msg';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
@@ -38,7 +36,6 @@ export default ArticleDetail = props => {
 	const [parentComment, setParentComment] = React.useState(); //대댓글을 쓰는 경우 해당 댓글의 id container
 	const input = React.useRef();
 	const floatInput = React.useRef();
-	const input2 = React.useRef();
 	const addChildCommentFn = React.useRef(() => {});
 	const [editMode, setEditMode] = React.useState(false); //댓글 편집 모드
 	const [editData, setEditData] = React.useState({
@@ -101,6 +98,7 @@ export default ArticleDetail = props => {
 			{
 				limit: 10000,
 				community_type: 'free',
+				community_free_type: 'all',
 			},
 			result => {
 				// console.log('result / getCommunityList / ArticleDetail :', result.msg.free.length);
@@ -316,6 +314,13 @@ export default ArticleDetail = props => {
 
 	const onBlur3 = () => {
 		setReplyFocus(false);
+		if (editMode) {
+			setEditMode(false);
+			setEditData({
+				comment_contents: '',
+				comment_photo_uri: '',
+			});
+		}
 	};
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
@@ -390,6 +395,7 @@ export default ArticleDetail = props => {
 		const findParentIndex = comments.findIndex(e => e._id == parent);
 		setEditData({...comment, parent: findParentIndex});
 		setPrivateComment(comment.comment_is_secure);
+		input.current?.focus();
 		scrollToReplyBox();
 	};
 
@@ -538,7 +544,9 @@ export default ArticleDetail = props => {
 						whenEmpty={noMoreArticle}
 					/>
 				) : (
-					<ActivityIndicator size={'large'} />
+					<View style={{paddingVertical: 100 * DP}}>
+						<ActivityIndicator size={'large'} />
+					</View>
 				)}
 			</View>
 		);

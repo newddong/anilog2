@@ -94,10 +94,6 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 		}
 	};
 
-	React.useEffect(() => {
-		console.log('content', content);
-	}, [content]);
-
 	if (props.isProtectRequest) {
 		return (
 			<View style={[style.commentBox_protect_request, {}]}>

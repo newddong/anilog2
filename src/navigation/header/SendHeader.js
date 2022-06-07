@@ -213,7 +213,7 @@ const style = StyleSheet.create({
 	headerContainer: {
 		alignItems: 'center',
 		justifyContent: 'space-between',
-		height: 135 * DP,
+		height: 98 * DP,
 		flexDirection: 'row',
 		backgroundColor: WHITE,
 		paddingHorizontal: 28 * DP,

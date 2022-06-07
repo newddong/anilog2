@@ -169,6 +169,7 @@ import comment30 from './comment30';
 import blur246 from './blur246';
 import arrow48 from './arrow48';
 import arrow48_gray from './arrow48_gray';
+import location54 from './location54';
 import DP from 'Root/config/dp';
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
 
@@ -290,6 +291,7 @@ export const Eye52_APRI10 = makeSvg(eye52_apri10, size52, APRI10);
 export const Eye52_GRAY20 = makeSvg(eye52_gray20, size52, GRAY20);
 export const Cross52 = makeSvg(cross, size52);
 export const Location54_APRI10 = makeSvg(location54_apri10, size54);
+export const Location54 = makeSvg(location54, size54);
 export const Location54_GRAY30 = makeSvg(location54_gray30, size54);
 export const Location54_Filled = makeSvg(location54Filled, size54);
 export const Camera54 = makeSvg(camera54, size54);

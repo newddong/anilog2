@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import {txt} from 'Root/config/textstyle';
-import {btn_w654} from 'Atom/btn/btn_style';
+import {btn_w654, btn_w694_r30} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';
 import {login_style, btn_style, temp_style, assignShelterProfileImage_style} from 'Templete/style_templete';
@@ -41,35 +41,38 @@ export default AssignShelterProfileImage = props => {
 		);
 	};
 
-	React.useEffect(()=>{
-		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+	React.useEffect(() => {
+		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
 			let selected = props.route.params.selectedPhoto[0];
-			setData({...data, user_profile_uri: selected.cropUri??selected.uri});
+			setData({...data, user_profile_uri: selected.cropUri ?? selected.uri});
 		}
-	},[props.route.params?.selectedPhoto]);
+	}, [props.route.params?.selectedPhoto]);
 
 	const selectPhoto = () => {
-		props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
+		props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 	};
 
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
 			{/* Text Msg */}
-			<View style={[assignShelterProfileImage_style.txt_msg]}>
+			{/* <View style={[assignShelterProfileImage_style.txt_msg]}>
 				<Text style={[txt.noto24, {color: GRAY10}]}>프로필 사진은 나중에도 변경 할 수 있어요.</Text>
+			</View> */}
+			<View style={[{alignItems: 'center'}]}>
+				<Text style={[{textAlign: 'center'}, txt.noto30, {marginTop: 105 * DP}]}>보호소의 대표가 될 이미지를</Text>
+				<Text style={([{textAlign: 'center'}], txt.noto30)}>등록해 주세요</Text>
 			</View>
-
 			{/* (M)ProfileImageSelect */}
 			<View style={[assignShelterProfileImage_style.profileImageSelect]}>
-				<ProfileImageSelect onClick={selectPhoto} selectedImageUri={data.user_profile_uri} />
+				<ProfileImageSelect onClick={selectPhoto} selectedImageUri={data.user_profile_uri} isShelter={true} />
 			</View>
 
 			{/* (A)Btn_w654 */}
 			<View style={[assignShelterProfileImage_style.btn_w654]}>
 				{data.user_profile_uri == '' ? (
-					<AniButton btnTitle={'확인'} titleFontStyle={'32'} disable btnLayout={btn_w654} onPress={assginShelter} />
+					<AniButton btnTitle={'확인'} titleFontStyle={'32'} disable btnLayout={btn_w694_r30} onPress={assginShelter} />
 				) : (
-					<AniButton btnTitle={'확인'} titleFontStyle={'32'} btnStyle={'border'} btnLayout={btn_w654} onPress={assginShelter} />
+					<AniButton btnTitle={'확인'} titleFontStyle={'32'} btnStyle={'border'} btnLayout={btn_w694_r30} onPress={assginShelter} />
 				)}
 			</View>
 		</View>

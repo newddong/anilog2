@@ -12,7 +12,7 @@ const wait = timeout => {
 const NewMissingReportList = props => {
 	const [moved, setMoved] = React.useState(false);
 	const renderItem = ({item, index}) => {
-		return (<MissingReportBox index={index} data={item} />);
+		return <MissingReportBox index={index} data={item} />;
 	};
 	const getItemLayout = useCallback(
 		(data, index) => ({
@@ -39,8 +39,8 @@ const NewMissingReportList = props => {
 				//getItemLayout={getItemLayout}
 				//keyExtractor={props.data._id}
 				keyExtractor={(item, index) => item._id}
-				getItemLayout={(data,index)=>{
-					return {length: 284*DP, offset: 284*DP*index, index: index};
+				getItemLayout={(data, index) => {
+					return {length: 284 * DP, offset: 284 * DP * index, index: index};
 				}}
 				windowSize={2}
 			/>

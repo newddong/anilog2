@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View, KeyboardAvoidingView, StyleSheet} from 'react-native';
 import {txt} from 'Root/config/textstyle';
-import {btn_w654} from 'Atom/btn/btn_style';
+import {btn_w654, btn_w694_r30} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 
 import StageBar from 'Molecules/info/Stagebar';
@@ -55,16 +55,17 @@ export default UserPasswordCheck = props => {
 			<View style={[styles.stageBar, progressbar_style.stageBar]}>
 				<StageBar
 					backgroundBarStyle={stagebar_style.backgroundBar} //배경이 되는 bar의 style, width props으로 너비결정됨
-					insideBarStyle={stagebar_style.insideBar} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
+					insideBarStyle={{width: 160 * DP, height: 20 * DP, backgroundColor: MAINBLACK, borderRadius: 18 * DP}} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
 					textStyle={[txt.roboto24, stagebar_style.text]} //text의 스타일
 					current={3} //현재 단계를 정의
 					maxstage={4} //전체 단계를 정의
-					width={600 * DP} //bar의 너비
+					width={640 * DP} //bar의 너비
 				/>
 			</View>
 			<View style={[{alignItems: 'center'}]}>
-				<Text style={[{textAlign: 'center'}, txt.noto30, {marginTop: 105 * DP}]}>*최소 8자 이상</Text>
-				<Text style={([{textAlign: 'center'}], txt.noto30)}>영문과 숫자가 포함되어야 합니다.</Text>
+				<Text style={[{textAlign: 'center'}, txt.noto30, {marginTop: 105 * DP}]}>*최소 8자 이상,</Text>
+				<Text style={([{textAlign: 'center'}], txt.noto30)}>영문과 숫자, 특수문자(!@#$%^&*)가</Text>
+				<Text style={([{textAlign: 'center'}], txt.noto30)}>포함되어야 합니다.</Text>
 			</View>
 			{/* (O)PasswordChecker */}
 			<View style={[temp_style.passwordChecker, userPasswordCheck.passwordChecker]}>
@@ -80,9 +81,9 @@ export default UserPasswordCheck = props => {
 			{/* (A)Btn_w654 */}
 			<View style={[btn_style.btn_w654, userPasswordCheck.btn_w654]}>
 				{pwdValid ? (
-					<AniButton btnTitle={'확인'} titleFontStyle={'32'} btnStyle={'border'} btnLayout={btn_w654} onPress={goToNextStep} />
+					<AniButton btnTitle={'확인'} titleFontStyle={'32'} btnStyle={'border'} btnLayout={btn_w694_r30} onPress={goToNextStep} />
 				) : (
-					<AniButton btnTitle={'확인'} titleFontStyle={'32'} disable={true} btnLayout={btn_w654} />
+					<AniButton btnTitle={'확인'} titleFontStyle={'32'} disable={true} btnLayout={btn_w694_r30} />
 				)}
 			</View>
 		</KeyboardAvoidingView>

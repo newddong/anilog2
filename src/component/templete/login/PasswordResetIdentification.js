@@ -37,6 +37,7 @@ export default PasswordResetIdentification = props => {
 
 	const onPressConfirm = () => {
 		// const confirmed = true;
+
 		props.navigation.push('PasswordReset', user_data.user_phone_number);
 		// if (confirmed) {
 		// 	props.navigation.push('PasswordReset', '121212');
@@ -103,18 +104,21 @@ export default PasswordResetIdentification = props => {
 				console.log('getUserAccountCount result', result);
 				if (result.msg == 0) {
 					console.log('계정 없음');
-					Modal.popTwoBtn(
-						'해당 전화번호로 가입된 계정이 없습니다',
-						'회원가입 하기',
-						'확인',
-						() => {
-							console.log('login');
-							navigation.navigate('AgreementCheck');
-						},
-						() => {
-							Modal.close();
-						},
-					);
+					// Modal.popTwoBtn(
+					// 	'해당 전화번호로 가입된 계정이 없습니다',
+					// 	'회원가입 하기',
+					// 	'확인',
+					// 	() => {
+					// 		console.log('login');
+					// 		navigation.navigate('AgreementCheck');
+					// 	},
+					// 	() => {
+					// 		Modal.close();
+					// 	},
+					// );
+					Modal.popOneBtn('이 정보로 가입한 계정이 없습니다.', '확인', () => {
+						Modal.close();
+					});
 				} else {
 					verificationRequest();
 				}
@@ -238,9 +242,16 @@ export default PasswordResetIdentification = props => {
 				{phoneVerified ? (
 					<AniButton btnTitle={'다음'} btnLayout={btn_w694_r30} btnStyle={'border'} titleFontStyle={32} onPress={onPressConfirm} />
 				) : verified ? (
-					<AniButton btnTitle={'인증하기'} btnLayout={btn_w694_r30} disable={false} titleFontStyle={32} onPress={notUser} />
+					<AniButton btnTitle={'인증하기'} btnLayout={btn_w694_r30} btnStyle={'border'} disable={false} titleFontStyle={32} onPress={notUser} />
 				) : (
-					<AniButton btnTitle={'인증하기'} btnLayout={btn_w694_r30} disable={true} titleFontStyle={32} onPress={verificationRequest} />
+					<AniButton
+						btnTitle={'인증하기'}
+						btnLayout={btn_w694_r30}
+						btnStyle={'border'}
+						disable={true}
+						titleFontStyle={32}
+						onPress={verificationRequest}
+					/>
 				)}
 			</View>
 		</View>

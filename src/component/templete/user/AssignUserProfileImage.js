@@ -15,16 +15,15 @@ export default AssignUserProfileImage = props => {
 	const [nickname, setNickname] = React.useState('');
 	const [confirmed, setConfirmed] = React.useState(false);
 
-
-	React.useEffect(()=>{
-		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+	React.useEffect(() => {
+		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
 			let selected = props.route.params.selectedPhoto[0];
-			setImgSelected(selected.cropUri??selected.uri);
+			setImgSelected(selected.cropUri ?? selected.uri);
 		}
-	},[props.route.params?.selectedPhoto]);
+	}, [props.route.params?.selectedPhoto]);
 
 	const selectPhoto = () => {
-		props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
+		props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 	};
 
 	//확인버튼
@@ -52,9 +51,9 @@ export default AssignUserProfileImage = props => {
 			successmsg => {
 				Modal.close(); //NoBtn팝업 종료
 				Modal.popTwoBtn(
-					'회원가입이 완료되었습니다. 반려동물을 등록하시겠습니까?',
-					'나중에 등록',
-					'반려동물 등록',
+					`회원가입이 완료되었습니다.\n반려동물을 등록하시겠습니까?`,
+					'나중에',
+					'지금 등록',
 					() => {
 						Modal.close();
 						//네비게이션 초기화, 로그인으로 이동

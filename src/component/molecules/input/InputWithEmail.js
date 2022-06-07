@@ -3,7 +3,7 @@ import {txt} from 'Root/config/textstyle';
 import {Text, View, TouchableOpacity, TextInput, StyleSheet, Keyboard} from 'react-native';
 import DP from 'Root/config/dp';
 import {NextMark} from 'Root/component/atom/icon';
-import {APRI10, BLACK, GRAY10, GRAY20, GRAY30, RED10} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, GRAY20, GRAY30, MAINBLACK, RED10} from 'Root/config/color';
 import {EMAIL_DOMAIN} from 'Root/i18n/msg';
 import Modal from 'Root/component/modal/Modal';
 
@@ -88,7 +88,7 @@ const InputWithEmail = props => {
 		<View style={{}}>
 			{props.title ? (
 				<View style={{flexDirection: 'row'}}>
-					<Text style={[txt.noto24, {color: APRI10}]}>{props.title}</Text>
+					<Text style={[txt.noto28, {color: MAINBLACK}]}>{props.title}</Text>
 					<Text style={[txt.noto24, {color: RED10, marginLeft: 30 * DP}]}>{props.title_star ? '*' : ''}</Text>
 				</View>
 			) : (
@@ -98,8 +98,8 @@ const InputWithEmail = props => {
 				style={{
 					flexDirection: 'row',
 					alignItems: 'center',
-					borderBottomColor: APRI10,
-					borderBottomWidth: 2 * DP,
+					// borderBottomColor: APRI10,
+					// borderBottomWidth: 2 * DP,
 				}}>
 				{/* 이메일 주소 */}
 				<TextInput
@@ -107,8 +107,10 @@ const InputWithEmail = props => {
 						txt.roboto32,
 						{
 							width: props.width * DP,
-							height: 80 * DP,
+							height: 104 * DP,
 							paddingHorizontal: 20 * DP,
+							backgroundColor: '#FAFAFA',
+							borderRadius: 30 * DP,
 						},
 					]}
 					placeholder={props.placeholder}
@@ -122,7 +124,7 @@ const InputWithEmail = props => {
 						height: 80 * DP,
 						justifyContent: 'center',
 					}}>
-					<Text style={[txt.roboto24b, {lineHeight: 36 * DP}]}>@</Text>
+					<Text style={[txt.roboto32, {lineHeight: 36 * DP}, {marginLeft: 12 * DP}]}>@</Text>
 				</View>
 				{/* 이메일 도메인 */}
 				<TouchableOpacity

@@ -560,7 +560,7 @@ export const WRITE_FREE_INFO = '내용을 작성해 주세요.';
 
 //FlatList LIMIT 모음
 export const PROTECT_REQUEST_MAIN_LIMIT = 50; //보호요청게시글 메인
-export const FREE_LIMIT = 30; //자유게시판 메인
+export const FREE_LIMIT = 50; //자유게시판 메인
 export const REVIEW_LIMIT = 20; //리뷰게시판 메인
 export const REVIEW_BRIEF_LIMIT = 20; //리뷰게시물 요약 컴포넌트
 export const COMMUNITY_PROFILE_LIMIT = 30; //프로필 커뮤니티 탭

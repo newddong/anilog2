@@ -2,7 +2,7 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {Dimensions, Image, LogBox, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {APRI10, BLACK} from 'Root/config/color';
+import {APRI10, BLACK, GRAY40} from 'Root/config/color';
 import {FavoriteTag46_Filled, FavoriteTag48_Border, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
 import {styles} from 'Root/component/atom/image/imageStyle';
@@ -164,23 +164,13 @@ const ArticleContent = props => {
 		<View style={[style.container]}>
 			<View style={[style.header]}>
 				<View style={[style.header_title]}>
-					<Text style={[txt.noto32b, {color: APRI10}]}>
-						{getArticleType()}
-						{'  '}
-					</Text>
-					<Text numberOfLines={2} style={[txt.noto32b, {width: 485 * DP, height: 100 * DP}]}>
+					<Text numberOfLines={2} style={[txt.noto32b, {width: 694 * DP, maxHeight: 100 * DP, marginBottom: 20 * DP}]}>
 						{data.community_title}
 					</Text>
 				</View>
-				<View style={[style.header_icon]}>
-					{data.community_is_favorite ? (
-						<FavoriteTag46_Filled onPress={() => onPressFavorite(false)} />
-					) : (
-						<FavoriteTag48_Border onPress={() => onPressFavorite(true)} />
-					)}
-					{data.community_writer_id ? <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} /> : <></>}
-				</View>
 			</View>
+			<View style={[style.separator]}></View>
+
 			{data.community_writer_id ? (
 				<View style={[style.profile]}>
 					<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} time_expression={'full'} />
@@ -255,39 +245,33 @@ export default ArticleContent;
 
 const style = StyleSheet.create({
 	container: {
-		width: 654 * DP,
+		width: 694 * DP,
 		alignSelf: 'center',
 	},
 	header: {
 		flexDirection: 'row',
-		width: 654 * DP,
+		width: 694 * DP,
 		justifyContent: 'space-between',
 	},
 	header_title: {
-		width: 544 * DP,
+		width: 694 * DP,
 		flexDirection: 'row',
 	},
 	header_icon: {
 		justifyContent: 'space-between',
 		flexDirection: 'row',
 	},
+	separator: {
+		width: 694 * DP,
+		height: 2 * DP,
+		backgroundColor: GRAY40,
+	},
 	profile: {
-		marginTop: 12 * DP,
-	},
-	hashText: {
-		width: 634 * DP,
-		marginTop: 10 * DP,
-	},
-	footer: {
-		// flex: 1,
-		width: 150 * DP,
-		alignSelf: 'flex-end',
-		flexDirection: 'row',
-		justifyContent: 'flex-end',
-		alignItems: 'center',
+		marginTop: 18 * DP,
 	},
 	webview: {
 		width: 670 * DP,
+		backgroundColor: 'red',
 		// minHeight: 500 * DP,
 	},
 });

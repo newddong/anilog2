@@ -94,7 +94,7 @@ export default FeedCommentList = props => {
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			comments => {
-				console.log('getCommentListByFeedId', comments.msg.length);
+				// console.log('getCommentListByFeedId', comments.msg.length);
 				let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
 				setComments(res);
 				setIsLoading(false);
@@ -259,22 +259,28 @@ export default FeedCommentList = props => {
 		}, 1000);
 	};
 
-	React.useEffect(()=>{
-		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+	React.useEffect(() => {
+		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
 			let selected = props.route.params.selectedPhoto[0];
-			setEditData({...editData, comment_photo_uri: selected.cropUri??selected.uri});
+			setEditData({...editData, comment_photo_uri: selected.cropUri ?? selected.uri});
 		}
-	},[props.route.params?.selectedPhoto]);
+	}, [props.route.params?.selectedPhoto]);
 
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
 	const onAddPhoto = () => {
 		console.log('onAddphoto');
-		props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
+		props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 	};
 
 	//답글 쓰기 후 댓글 작성자 우측 답글취소 버튼 클릭
 	const onCancelChild = () => {
 		setParentComment();
+		setKeyboardVisible(false);
+		setEditMode(false);
+		setEditData({
+			comment_contents: '',
+			comment_photo_uri: '',
+		});
 	};
 
 	//댓글 사진을 취소할 때(X마크 클릭)
@@ -392,21 +398,41 @@ export default FeedCommentList = props => {
 		}, 100);
 	};
 
+	const [isKeyboardVisible, setKeyboardVisible] = React.useState(false);
+
+	React.useEffect(() => {
+		if (!isKeyboardVisible) {
+			if (editMode) {
+				//키보드가 해제될 때, 수정모드일 때는 모든 데이터를 초기화, 댓글 및 대댓글 작성 상태는 유지
+				setEditData({
+					comment_contents: '',
+					comment_photo_uri: '',
+				});
+				setPrivateComment(false);
+				setEditMode(false);
+			}
+		}
+	}, [isKeyboardVisible]);
+
 	//댓글 수정 => 키보드 해제시 수정모드가 종료되도록 적용
 	React.useEffect(() => {
-		const cancelEditMode = () => {
-			setPrivateComment(false);
-			setEditMode(false);
-			setEditData({
-				comment_contents: '',
-				comment_photo_uri: '',
-			});
-		};
+		let didshow = Keyboard.addListener('keyboardDidShow', e => {
+			setKeyboardVisible(true);
+		});
 		let didhide = Keyboard.addListener('keyboardDidHide', e => {
-			cancelEditMode();
+			setKeyboardVisible(false);
+		});
+		let willshow = Keyboard.addListener('keyboardWillShow', e => {
+			setKeyboardVisible(true);
+		});
+		let willhide = Keyboard.addListener('keyboardWillHide', e => {
+			setKeyboardVisible(false);
 		});
 		return () => {
+			didshow.remove();
 			didhide.remove();
+			willshow.remove();
+			willhide.remove();
 		};
 	}, []);
 
@@ -484,20 +510,21 @@ export default FeedCommentList = props => {
 				ref={flatlist}
 			/>
 			{/* Parent Comment 혹은 Child Comment 에서 답글쓰기를 클릭할 시 화면 최하단에 등장 */}
-			{/* 비로그인 유저일 경우 리플란이 안보이도록 처리 - 상우 */}
 			{userGlobalObject.userInfo._id != '' && (editComment || props.route.name == 'FeedCommentList') ? (
 				<View style={{position: 'absolute', bottom: keyboardY - 2}} onLayout={onReplyBtnLayout}>
 					<ReplyWriteBox
 						onAddPhoto={onAddPhoto}
 						onChangeReplyInput={onChangeReplyInput}
 						onLockBtnClick={onLockBtnClick}
-						onWrite={onWrite}
-						onDeleteImage={onDeleteImage}
-						privateComment={privateComment}
+						onWrite={onWrite} //댓글 버튼 클릭
+						onDeleteImage={onDeleteImage} //사진 삭제 X마크 클릭
+						privateComment={privateComment} //비밀글 여부
 						ref={input}
-						editData={editData}
+						editData={editData} //수정 데이터
 						parentComment={editMode ? '' : parentComment} //댓글 수정모드일 때 부모댓글 정보를 막는다
-						onCancelChild={onCancelChild}
+						onCancelChild={onCancelChild} // 대댓글쓰기 X마크
+						editMode={editMode}
+						viewMode={!isKeyboardVisible}
 					/>
 				</View>
 			) : (

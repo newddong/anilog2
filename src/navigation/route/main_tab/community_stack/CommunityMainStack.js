@@ -25,6 +25,7 @@ import UserNotePage from 'Templete/user/UserNotePage';
 import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
 import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailSettting';
 import SaveButtonHeader from 'Root/navigation/header/SaveButtonHeader';
+import CommunityHeader from 'Root/navigation/header/CommunityHeader';
 
 const CommunityMainStackNavi = createStackNavigator();
 
@@ -50,7 +51,7 @@ export default CommunityMainStack = props => {
 				component={ArticleDetail}
 				options={({route}) => ({
 					headerShown: true,
-					header: props => <SimpleHeader {...props} />,
+					header: props => <CommunityHeader {...props} />,
 					title: ' ',
 				})}
 			/>

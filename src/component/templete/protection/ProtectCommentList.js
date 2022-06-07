@@ -233,15 +233,20 @@ export default ProtectCommentList = props => {
 	//답글 쓰기 후 댓글 작성자 우측 답글취소 버튼 클릭
 	const onCancelChild = () => {
 		setParentComment();
+		setKeyboardVisible(false);
+		setEditMode(false);
+		setEditData({
+			comment_contents: '',
+			comment_photo_uri: '',
+		});
 	};
 
-
-	React.useEffect(()=>{
-		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+	React.useEffect(() => {
+		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
 			let selected = props.route.params.selectedPhoto[0];
-			setEditData({...editData, comment_photo_uri: selected.cropUri??selected.uri});
+			setEditData({...editData, comment_photo_uri: selected.cropUri ?? selected.uri});
 		}
-	},[props.route.params?.selectedPhoto]);
+	}, [props.route.params?.selectedPhoto]);
 
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
 	const onAddPhoto = () => {
@@ -250,7 +255,7 @@ export default ProtectCommentList = props => {
 				navigation.navigate('Login');
 			});
 		} else {
-			props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
+			props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 		}
 	};
 
@@ -335,21 +340,41 @@ export default ProtectCommentList = props => {
 		setReplyHeight(e.nativeEvent.layout.height);
 	};
 
+	const [isKeyboardVisible, setKeyboardVisible] = React.useState(false);
+
+	React.useEffect(() => {
+		if (!isKeyboardVisible) {
+			if (editMode) {
+				//키보드가 해제될 때, 수정모드일 때는 모든 데이터를 초기화, 댓글 및 대댓글 작성 상태는 유지
+				setEditData({
+					comment_contents: '',
+					comment_photo_uri: '',
+				});
+				setPrivateComment(false);
+				setEditMode(false);
+			}
+		}
+	}, [isKeyboardVisible]);
+
 	//댓글 수정 => 키보드 해제시 수정모드가 종료되도록 적용
 	React.useEffect(() => {
-		const cancelEditMode = () => {
-			setPrivateComment(false);
-			setEditMode(false);
-			setEditData({
-				comment_contents: '',
-				comment_photo_uri: '',
-			});
-		};
+		let didshow = Keyboard.addListener('keyboardDidShow', e => {
+			setKeyboardVisible(true);
+		});
 		let didhide = Keyboard.addListener('keyboardDidHide', e => {
-			cancelEditMode();
+			setKeyboardVisible(false);
+		});
+		let willshow = Keyboard.addListener('keyboardWillShow', e => {
+			setKeyboardVisible(true);
+		});
+		let willhide = Keyboard.addListener('keyboardWillHide', e => {
+			setKeyboardVisible(false);
 		});
 		return () => {
+			didshow.remove();
 			didhide.remove();
+			willshow.remove();
+			willhide.remove();
 		};
 	}, []);
 
@@ -438,6 +463,7 @@ export default ProtectCommentList = props => {
 					editData={editData}
 					parentComment={parentComment}
 					onCancelChild={onCancelChild}
+					viewMode={!isKeyboardVisible}
 				/>
 			</View>
 		</View>

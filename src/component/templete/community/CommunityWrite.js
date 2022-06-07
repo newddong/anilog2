@@ -184,16 +184,20 @@ export default CommunityWrite = props => {
 		);
 	};
 
-	React.useEffect(()=>{
-		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+	React.useEffect(() => {
+		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
 			let selected = props.route.params.selectedPhoto;
-			insertImage(selected.map(v=>{return v.cropUri??v.uri}));
+			insertImage(
+				selected.map(v => {
+					return v.cropUri ?? v.uri;
+				}),
+			);
 		}
-	},[props.route.params?.selectedPhoto]);
+	}, [props.route.params?.selectedPhoto]);
 
 	//사진 불러오기
 	const onPressPhotoSelect = () => {
-		props.navigation.push("MultiPhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
+		props.navigation.push('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 	};
 
 	const isInterestsEmpty =

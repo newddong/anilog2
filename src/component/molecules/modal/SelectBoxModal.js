@@ -66,7 +66,7 @@ const SelectBoxModal = props => {
 			<Animated.View style={[style.container, {height: animatedHeight}]}>
 				<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, {paddingVertical: 30 * DP}]}>
 					<View style={[style.insideContainer]}>
-						<FlatList data={data} renderItem={renderItem} scrollEnabled={false} ItemSeparatorComponent={ItemSeparatorComponent} />
+						<FlatList style={{height:props.boxHeight}} data={data} renderItem={renderItem} scrollEnabled={props.scrollEnabled} ItemSeparatorComponent={ItemSeparatorComponent} />
 					</View>
 				</TouchableOpacity>
 				<TouchableOpacity onPress={closeSelectModal} activeOpacity={0.8} style={[style.closeBox]}>
@@ -82,6 +82,7 @@ SelectBoxModal.defaultProps = {
 	onClose: () => {},
 	headerRoof: false,
 	headerTitle: 'HeaderTitle',
+	scrollEnabled: false,
 };
 
 const style = StyleSheet.create({

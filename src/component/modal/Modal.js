@@ -172,6 +172,19 @@ export default Modal = {
 	popSelectBoxModal: (data, onSelect, onClose, headerRoof, headerTitle) => {},
 
 	/**
+	 * 선택 모달창을 띄우는 함수(중앙 일반 셀렉트 모달)
+	 * @param {object} data - 선택항목 리스트
+	 * @param {()=>void} onSelect - 선택항목들을 반환하는 매개변수가 2개인 콜백
+	 * @param {()=>void} onClose - x마크 클릭 콜백 함수
+	 * @param {boolean} headerRoof - 모달 헤더 부분 지붕 존재 유무
+	 * @param {string} headerTitle - 모달 헤더 타이틀 문자열
+	 * @param {number} height - 모달창 높이
+	 *
+	 * @example
+	 */
+	popSelectBoxModal2: (data, onSelect, onClose, headerRoof, headerTitle,height) => {},
+
+	/**
 	 * 유저 오브젝트 정보 요약 출력 모달
 	 * @param {object} data - 유저 오브젝트 정보
 	 * @param {()=>void} onClose - x마크 클릭 콜백 함수

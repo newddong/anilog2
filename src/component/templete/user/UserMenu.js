@@ -79,7 +79,7 @@ export default UserMenu = props => {
 	// 나의 반려동물 버튼 클릭
 	const onPressMyCompanion = () => {
 		// console.log('data my pet', data.user_my_pets);
-		if (data.user_my_pets.length == 0) {
+		if (data.user_my_pets && data.user_my_pets.length == 0) {
 			Modal.popTwoBtn(
 				'아직 등록하신 반려동물이 없습니다. \n 등록하러 가시겠습니까?',
 				'아니오',

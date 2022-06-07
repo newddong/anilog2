@@ -12,6 +12,7 @@ import {getUserProfile} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {EmptyIcon} from 'Root/component/atom/icon';
 import Loading from 'Root/component/molecules/modal/Loading';
+import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 
 //즐겨찾기한 피드목록을 조회
 export default FavoriteFeeds = ({route, navigation}) => {
@@ -28,7 +29,7 @@ export default FavoriteFeeds = ({route, navigation}) => {
 						userobject_id: userGlobalObject.userInfo._id,
 					},
 					result => {
-						console.log('result / getFeedListByUserId / FavoriteFeeds  : ', result.msg);
+						// console.log('result / getFeedListByUserId / FavoriteFeeds  : ', result.msg.length);
 						setData(result.msg);
 					},
 					err => {
@@ -64,8 +65,8 @@ export default FavoriteFeeds = ({route, navigation}) => {
 				userobject_id: userGlobalObject.userInfo._id,
 			},
 			result => {
-				// console.log('result / getFeedListByUserId / FavoriteFeeds  : ', result.msg);
-				setData(result.msg);
+				console.log('result / getFeedListByUserId / FavoriteFeeds  : ', result.msg.length);
+				setData(result.msg.map(v => v.favorite_feed_id));
 			},
 			err => {
 				console.log('err / getFeedListByUserId / FavoriteFeeds : ', err);
@@ -229,7 +230,6 @@ export default FavoriteFeeds = ({route, navigation}) => {
 						});
 					} else if (route.name == 'FavoriteFeeds') {
 						// console.log('feed_id', feed_id);
-						// navigation.push('UserFeedList', {title: titleValue, userobject: result.msg, selected: feed_id});
 						navigation.push('FavoriteFeedList', {title: '즐겨찾기한 게시글', userobject: result.msg, selected: feed_id});
 					}
 					//다른 route가 있을 경우 else if 확장 할 것
@@ -268,12 +268,9 @@ export default FavoriteFeeds = ({route, navigation}) => {
 				{/* 즐겨찾기한 FeedList출력하는 FeedThumbnailList */}
 				<View style={[temp_style.FeedThumbnailList, {flex: 1}]}>
 					{data.length == 0 ? (
-						<View style={{paddingVertical: 100 * DP, alignItems: 'center'}}>
-							<EmptyIcon />
-							<Text style={[txt.roboto28b, {marginTop: 20 * DP}]}>{emptyMsg()}</Text>
-						</View>
+						<ListEmptyInfo text={emptyMsg()} />
 					) : (
-						<FeedThumbnailList items={data} selectMode={selectMode} onClickThumnail={onClickThumnail} height={1200 * DP} />
+						<FeedThumbnailList items={data} selectMode={selectMode} onClickThumnail={onClickThumnail} />
 					)}
 				</View>
 			</View>

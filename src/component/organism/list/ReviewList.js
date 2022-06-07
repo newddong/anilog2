@@ -61,6 +61,8 @@ export default ReviewList = props => {
 						};
 					}),
 			);
+		} else {
+			setData([]);
 		}
 	}, [items]);
 

@@ -140,7 +140,7 @@ export default SearchProtectRequest = ({route, navigation}) => {
 						</View>
 						<View style={[searchProtectRequest.filterView.onOffBtnView]}>
 							<View style={[searchProtectRequest.filterView.onOffBtnMsg]}>
-								<Text style={[txt.noto20, {color: GRAY20}]}>입양 가능한 게시글만 보기</Text>
+								<Text style={[txt.noto26, {color: GRAY20}]}>입양 가능한 아이들만 보기</Text>
 							</View>
 							<View style={[temp_style.onOffSwitch, searchProtectRequest.filterView.onOffSwitch]}>
 								<OnOffSwitch onSwtichOff={onSwtichOff} onSwtichOn={onSwtichOn} />

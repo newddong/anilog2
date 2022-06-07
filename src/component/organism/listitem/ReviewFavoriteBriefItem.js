@@ -6,6 +6,7 @@ import {GRAY10} from 'Root/config/color';
 import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import moment from 'moment';
+import DP from 'Root/config/dp';
 
 /**
  * 후기 요약 컴포넌트 아이템
@@ -108,6 +109,7 @@ const ReviewFavoriteBriefItem = props => {
 				style.container,
 				{
 					width: imageList().length == 0 ? (props.selectMode ? 555 * DP : 654 * DP) : props.selectMode ? 555 * DP : 654 * DP,
+					height: imageList().length != 0 ? 186 * DP : 146 * DP,
 					// backgroundColor: 'red',
 				},
 			]}>
@@ -115,15 +117,16 @@ const ReviewFavoriteBriefItem = props => {
 				<></>
 			) : (
 				<View style={[style.img]}>
-					<Image style={{borderRadius: 0, width: 186 * DP, height: 186 * DP}} source={{uri: image[0]}} />
+					<Image style={{borderRadius: 30 * DP, width: 186 * DP, height: 186 * DP}} source={{uri: image[0]}} />
 				</View>
 			)}
 			<View style={[style.content]}>
 				<Text
 					style={[
-						txt.noto32b,
+						txt.noto30b,
 						{
 							width: imageList().length == 0 ? (props.selectMode ? 555 * DP : 654 * DP) : props.selectMode ? 360 * DP : 456 * DP,
+							height: 90 * DP,
 						},
 					]}
 					numberOfLines={2}
@@ -136,13 +139,13 @@ const ReviewFavoriteBriefItem = props => {
 						style.footer,
 						{
 							width: imageList().length != 0 ? (props.selectMode ? 350 * DP : 445 * DP) : props.selectMode ? 540 * DP : 640 * DP,
-							// backgroundColor: 'yellow',
+							// backgroundColor: 'green',
 						},
 					]}>
 					<View style={[style.community_date]}>
 						<Text style={[txt.roboto26, {color: GRAY10}]}>{getDate()}</Text>
 					</View>
-					<View style={{alignItems: 'flex-end', flexDirection: 'row'}}>
+					<View style={{alignItems: 'flex-end', flexDirection: 'row', bottom: 6 * DP}}>
 						{isLike ? <Like48_Filled onPress={onPressUnlike} /> : <Like48_Border onPress={onPressLike} />}
 						<Text style={[txt.noto26, {color: GRAY10, marginLeft: 12 * DP}]}>{data.community_like_count}</Text>
 					</View>
@@ -177,12 +180,12 @@ const style = StyleSheet.create({
 	locationTime: {
 		// width: 456 * DP,
 		// height: 40 * DP,
-		marginTop: 8 * DP,
+		// marginTop: 8 * DP,
 		flexDirection: 'row',
 	},
 	footer: {
 		// width: 456 * DP,
-		height: 48 * DP,
+		// height: 48 * DP,
 		marginTop: 8 * DP,
 		flexDirection: 'row',
 		// alignItems: 'center',
@@ -212,5 +215,8 @@ const style = StyleSheet.create({
 		paddingHorizontal: 15 * DP,
 		paddingVertical: 2 * DP,
 		// backgroundColor: 'yellow',
+	},
+	community_date: {
+		// backgroundColor: 'red',
 	},
 });

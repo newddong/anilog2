@@ -213,7 +213,7 @@ export const temp_style = StyleSheet.create({
 	},
 
 	stageBar: {
-		width: 640 * DP,
+		width: 694 * DP,
 		height: 32 * DP,
 	},
 	agreementCheckList: {
@@ -667,7 +667,7 @@ export const temp_style = StyleSheet.create({
 	},
 	inputForm_assignPetInfo_line1: {
 		flexDirection: 'row',
-		width: 654 * DP,
+		width: 694 * DP,
 		height: 82 * DP,
 		alignItems: 'center',
 	},
@@ -684,7 +684,7 @@ export const temp_style = StyleSheet.create({
 		alignItems: 'center',
 	},
 	text_assignPetInfo: {
-		width: 118 * DP,
+		width: 132 * DP,
 		height: 46 * DP,
 	},
 	dropdownSelect_assignPetInfo_depth1: {
@@ -1939,6 +1939,8 @@ export const assignPetProfileImage_style = StyleSheet.create({
 
 export const assignPetInfo_style = StyleSheet.create({
 	textMsg: {
+		width: 694 * DP,
+		height: 36 * DP,
 		marginTop: 12 * DP,
 	},
 	inputForm: {
@@ -2690,7 +2692,7 @@ export const setPetInformation = StyleSheet.create({
 		flex: 1,
 	},
 	inputForm: {
-		width: 654 * DP,
+		width: 694 * DP,
 		height: 472 * DP,
 		marginTop: 60 * DP,
 	},

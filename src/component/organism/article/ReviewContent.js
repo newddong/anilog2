@@ -219,7 +219,7 @@ const ReviewContent = props => {
 							injectedJavaScript={runFirst} //Dynamic Height 수치 설정
 							scrollEnabled={false}
 							source={{html: changeHtmlTag()}}
-							style={{width: 690 * DP, height: height == 0 ? 100 * DP : height,opacity:0.99}}
+							style={{width: 690 * DP, height: height == 0 ? 100 * DP : height, opacity: 0.99}}
 						/>
 						// <AutoHeightWebView
 						// 	style={[style.webview]}

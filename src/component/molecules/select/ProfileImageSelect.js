@@ -27,7 +27,6 @@ const ProfileImageSelect = props => {
 
 	const randomdefault = () => {
 		const rand = [<ProfileDefaultImg1 />, <ProfileDefaultImg2 />, <ProfileDefaultImg3 />];
-
 		return rand[getRandomInt(0, 3)];
 	};
 
@@ -74,9 +73,7 @@ const style = StyleSheet.create({
 		position: 'absolute',
 		right: 0,
 		bottom: 0,
-		backgroundColor: Platform.OS == 'android' ? BLACK : WHITE,
 		opacity: 1,
-		borderRadius: 50 * DP,
 	},
 });
 export default ProfileImageSelect;

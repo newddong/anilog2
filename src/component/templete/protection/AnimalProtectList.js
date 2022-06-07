@@ -9,6 +9,7 @@ import {ANIMAL_PROTECT_LIMIT, NETWORK_ERROR} from 'Root/i18n/msg';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import DP from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
+import AnimalInfo from 'Root/component/organism/listitem/AnimalInfo';
 
 //UserMenu => 동물 보호 현황
 export default AnimalProtectList = ({route}) => {

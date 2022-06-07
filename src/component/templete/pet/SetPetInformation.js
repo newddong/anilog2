@@ -143,9 +143,7 @@ export default SetPetInformation = ({route, navigation}) => {
 							<Text style={[txt.noto28]}>성별</Text>
 						</View>
 					</View>
-					<View style={[temp_style.tabSelectFilled_Type1]}>
-						<TabSelectFilled_Type1 items={['남아', '여아', '모름']} defaultIndex={getPetSex()} onSelect={onSexChange} width={520} />
-					</View>
+					<TabSelectFilled_Type1 items={['남아', '여아', '모름']} width={170} defaultIndex={getPetSex()} onSelect={onSexChange} />
 				</View>
 				{/* 생일 */}
 				<View style={[setPetInformation.inputForm_line_layout]}>
@@ -175,7 +173,7 @@ export default SetPetInformation = ({route, navigation}) => {
 									showmsg={false}
 									confirm={true}
 									showTitle={false}
-									width={120}
+									width={500}
 									placeholder={'몸무게 입력'}
 									showCrossMark={false}
 									onChange={onChangeKg}
@@ -185,9 +183,13 @@ export default SetPetInformation = ({route, navigation}) => {
 									maxLength={4}
 									confirm_msg=""
 									defaultValue={data.pet_weight}
+									style={{textAlign: 'center'}}
 								/>
-								<View style={[setPetInformation.kg]}>
+								{/* <View style={[setPetInformation.kg]}>
 									<Text style={[txt.noto28]}> kg </Text>
+								</View> */}
+								<View style={{position: 'absolute', right: 24 * DP, top: 20 * DP}}>
+									<Text style={[txt.noto28, {}]}>kg</Text>
 								</View>
 							</View>
 

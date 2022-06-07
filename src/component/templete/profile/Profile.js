@@ -1,8 +1,8 @@
 import React from 'react';
-import {View, Text, FlatList, Animated, Easing} from 'react-native';
+import {View, Text, FlatList, Animated, Easing, ActivityIndicator} from 'react-native';
 import {followUser, getUserProfile, unFollowUser} from 'Root/api/userapi';
-import {COMMUNITY_PROFILE_LIMIT, FREE_LIMIT, NETWORK_ERROR, NORMAL, PET, PROTECT_REQUEST_DETAIL_LIMIT, REVIEW_LIMIT, SHELTER} from 'Root/i18n/msg';
-import {EmptyIcon, Message94, Write94} from 'Atom/icon';
+import {NETWORK_ERROR, NORMAL, PET, PROTECT_REQUEST_DETAIL_LIMIT, THUMNAIL_LIMIT} from 'Root/i18n/msg';
+import {Message94, Write94} from 'Atom/icon';
 import TabSelectFilled_Type2 from 'Molecules/tab/TabSelectFilled_Type2';
 import ProfileInfo from 'Organism/info/ProfileInfo';
 import FeedThumbnailList from 'Organism/feed/FeedThumbnailList';
@@ -11,9 +11,8 @@ import PetList from 'Organism/list/PetList';
 import {login_style, profile, temp_style, buttonstyle} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import InfoScreen from 'Organism/info/InfoScreen';
 import {txt} from 'Root/config/textstyle';
-import {GRAY10} from 'Root/config/color';
+import {GRAY10, APRI10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {getFeedListByUserId, getUserTaggedFeedList} from 'Root/api/feedapi';
 import {useNavigation} from '@react-navigation/core';
@@ -30,13 +29,16 @@ export default Profile = ({route}) => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState({...route.params?.userobject, feedList: []}); //라벨을 클릭한 유저의 userObject data
 	const [feedList, setFeedList] = React.useState([]);
+	const [feedTotal, setFeedTotal] = React.useState();
 	const [commList, setCommList] = React.useState('false');
 	const [protectList, setProtectList] = React.useState('false');
-	const [offset, setOffset] = React.useState(1);
+	const [offset, setOffset] = React.useState(1); //커뮤니티 페이지
+	const [loading, setLoading] = React.useState(false);
 	const [tabMenuSelected, setTabMenuSelected] = React.useState(0); //프로필 Tab의 선택상태
 	const [showOwnerState, setShowOwnerState] = React.useState(false); // 현재 로드되어 있는 profile의 userType이 Pet인 경우 반려인 계정 리스트의 출력 여부
 	const [showCompanion, setShowCompanion] = React.useState(true); // User계정이 반려동물버튼을 클릭
 	const flatlist = React.useRef();
+	const userId = route.params.userobject._id; //현재 보고있는 프로필 대상의 _id
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
@@ -55,7 +57,7 @@ export default Profile = ({route}) => {
 		if (route.params && route.params.userobject) {
 			getUserProfile(
 				{
-					userobject_id: route.params.userobject._id,
+					userobject_id: userId,
 				},
 				result => {
 					navigation.setOptions({title: result.msg.user_nickname, data: result.msg});
@@ -81,14 +83,12 @@ export default Profile = ({route}) => {
 	const fetchCommunity = () => {
 		getCommunityListByUserId(
 			{
-				userobject_id: route.params.userobject._id,
+				userobject_id: userId,
 				community_type: 'all',
-				// limit: 10000,
-				// page: offset,
 			},
 			result => {
-				console.log('result / getCommunityListuser , free ', result.msg.free.length);
-				console.log('result / getCommunityListuser , review ', result.msg.review.length);
+				// console.log('result / getCommunityListuser , free ', result.msg.free.length);
+				// console.log('result / getCommunityListuser , review ', result.msg.review.length);
 				setCommList(result.msg);
 			},
 			err => {
@@ -106,12 +106,12 @@ export default Profile = ({route}) => {
 	};
 
 	const fetchProtectRequest = () => {
+		setLoading(true);
 		getProtectRequestListByShelterId(
 			{
 				shelter_userobject_id: data._id,
 				protect_request_status: 'all',
 				protect_request_object_id: '',
-				request_number: 5,
 				limit: PROTECT_REQUEST_DETAIL_LIMIT,
 				page: offset,
 			},
@@ -126,44 +126,58 @@ export default Profile = ({route}) => {
 					setProtectList(res);
 				}
 				setOffset(offset + 1);
+				setLoading(false);
 			},
 			err => {
 				console.log('err / getProtectRequestListByShelterId / AnimalFromShelter', err);
 				setProtectList([]);
+				setLoading(false);
 			},
 		);
 	};
 
-	const onEndReached = () => {
-		console.log('EndReached', protectList.length % PROTECT_REQUEST_DETAIL_LIMIT);
-		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
-		//리뷰 메인 페이지에서는 필터가 적용이 되었을 때도 api 접속 불필요
-		if (protectList.length % PROTECT_REQUEST_DETAIL_LIMIT == 0) {
-			fetchProtectRequest();
-		}
-	};
-
-	React.useEffect(() => {
-		switch (tabMenuSelected) {
+	const getFeedList = (i, refresh) => {
+		switch (i) {
 			case 0:
+				setLoading(true);
+				let params = {
+					userobject_id: userId,
+					limit: THUMNAIL_LIMIT,
+					order_value: 'next',
+				};
+				//첫 페이지 호출이 아닌 경우
+				if (!refresh && feedList.length != 0) {
+					params.target_object_id = feedList[feedList.length - 1]._id;
+				}
 				getFeedListByUserId(
-					{userobject_id: route.params.userobject._id},
+					params,
 					result => {
-						// console.log('유저의 피드 리스트', result);
-						setFeedList(result.msg);
+						console.log('result / getFeedListByUserId ', result.msg.length);
+						//처음 api 호출 혹은 리프레쉬(탭변경)인 경우 리턴값을 그대로 set
+						if (refresh || feedList.length == 0) {
+							setFeedList(result.msg);
+						} else {
+							//다음 페이지를 호출한 경우 기존 값에 추가된 result 추가
+							console.log('page 합산', [...feedList, ...result.msg].length);
+							setFeedList([...feedList, ...result.msg]);
+						}
+						setFeedTotal(result.total_count); // 토탈카운트 갱신
+						setLoading(false); //로딩종료
 					},
 					err => {
 						console.log('getFeedListByUserId err ', err);
 						setFeedList([]);
+						setLoading(false);
 					},
 				);
 				break;
 			case 1:
 				getUserTaggedFeedList(
-					{userobject_id: route.params.userobject._id},
+					{userobject_id: userId},
 					result => {
 						// console.log('유저의 태그된 피드 리스트', result);
 						setFeedList(result.msg);
+						setFeedTotal(result.total_count);
 					},
 					err => {
 						console.log('getUserTaggedFeedList err', err);
@@ -171,6 +185,49 @@ export default Profile = ({route}) => {
 					},
 				);
 				break;
+			case 2:
+				break;
+			default:
+				break;
+		}
+	};
+
+	const onEndReached = i => {
+		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
+		//리뷰 메인 페이지에서는 필터가 적용이 되었을 때도 api 접속 불필요
+		if (i == 0) {
+			//피드 탭
+			console.log('feedList.length', feedList.length, feedTotal);
+			if (feedList.length != feedTotal) {
+				getFeedList(0);
+			}
+		} else if (i == 1) {
+			//태그탭 추후 추가
+		} else if (protectList.length % PROTECT_REQUEST_DETAIL_LIMIT == 0) {
+			//보호소프로필인 경우 보호동물탭
+			console.log('EndReached', protectList.length % PROTECT_REQUEST_DETAIL_LIMIT);
+			fetchProtectRequest();
+		}
+	};
+
+	React.useEffect(() => {
+		switch (tabMenuSelected) {
+			case 0:
+				getFeedList(tabMenuSelected, true);
+				break;
+			case 1:
+				getUserTaggedFeedList(
+					{userobject_id: userId},
+					result => {
+						// console.log('유저의 태그된 피드 리스트', result);
+						setFeedList(result.msg);
+						setFeedTotal(result.total_count);
+					},
+					err => {
+						console.log('getUserTaggedFeedList err', err);
+						setFeedList([]);
+					},
+				);
 			default:
 				break;
 		}
@@ -178,7 +235,7 @@ export default Profile = ({route}) => {
 
 	//프로필의 피드탭의 피드 썸네일 클릭
 	const onClick_Thumbnail_FeedTab = (index, item) => {
-		navigation.push('UserFeedList', {userobject: data, selected: item});
+		navigation.push('UserFeedList', {userobject: data, selected: item, index: index});
 		// console.log('data and item', data, item);
 	};
 
@@ -234,10 +291,6 @@ export default Profile = ({route}) => {
 		navigation.push('UserProfile', {userobject: item});
 	};
 
-	const onClickProtectPet = item => {
-		navigation.push('UserProfile', {userobject: item});
-	};
-
 	const onPressSendMsg = (_id, name) => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
@@ -289,13 +342,11 @@ export default Profile = ({route}) => {
 	const animatedHeight = React.useRef(new Animated.Value(0)).current;
 
 	const onShowCompanion = () => {
-		console.log('show');
 		setShowCompanion(true);
 		animationOpen();
 	};
 
 	const onHideCompanion = () => {
-		console.log('hide');
 		Animated.timing(animatedHeight, {
 			duration: 300,
 			toValue: 0,
@@ -363,9 +414,7 @@ export default Profile = ({route}) => {
 
 	const onPressFollow = () => {
 		followUser(
-			{
-				follow_userobject_id: data._id,
-			},
+			{follow_userobject_id: data._id},
 			result => {
 				console.log('result / followUser / Profile :', result.msg);
 				setData('');
@@ -438,7 +487,20 @@ export default Profile = ({route}) => {
 	//프로필의 보호활동 탭의 피드 썸네일 클릭
 	const onClickProtect = (status, id, item) => {
 		console.log('onClickProtect', item);
-		// navigation.push('ProtectAnimalFeedList');
+		let gender = '남';
+		switch (item.protect_animal_sex) {
+			case 'male':
+				gender = '남';
+				break;
+			case 'female':
+				gender = '여';
+				break;
+			case 'male':
+				gender = '성별모름';
+				break;
+		}
+		const title = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + gender;
+		navigation.push('AnimalProtectRequestDetail', {id: item._id, title: title, writer: item.protect_request_writer_id._id});
 	};
 
 	//보호소프로필의 보호요청게시글 즐겨찾기 클릭
@@ -474,7 +536,7 @@ export default Profile = ({route}) => {
 		const renderItem = ({item, index}) => {
 			if (index == 0) {
 				return (
-					<View style={[temp_style.tabSelectFilled_Type2]}>
+					<View style={[temp_style.tabSelectFilled_Type2, {marginBottom: 10 * DP}]}>
 						{getTabSelectList()}
 						{/* {tabMenuSelected == 2 && data.user_type != SHELTER && <ProtectedPetList data={data} onClickLabel={onClickProtectPet} />} */}
 						{/* 보호활동 하는 반려동물들 */}
@@ -488,6 +550,7 @@ export default Profile = ({route}) => {
 							items={item}
 							whenEmpty={whenFeedThumbnailEmpty('피드 게시물이 없습니다.')}
 							onClickThumnail={onClick_Thumbnail_FeedTab}
+							onEndReached={() => onEndReached(tabMenuSelected)}
 						/>
 					);
 				} else if (tabMenuSelected == 1) {
@@ -552,10 +615,10 @@ export default Profile = ({route}) => {
 					renderItem={renderItem}
 					keyExtractor={(item, index) => index + ''}
 					ListHeaderComponent={userProfileInfo()}
-					stickyHeaderIndices={[1]}
 					nestedScrollEnabled
 					showsVerticalScrollIndicator={false}
 					ref={flatlist}
+					// stickyHeaderIndices={[1]}
 				/>
 			</View>
 		);
@@ -614,6 +677,22 @@ export default Profile = ({route}) => {
 					<>
 						<Loading isModal={false} />
 					</>
+				)}
+				{loading ? (
+					<View
+						style={{
+							position: 'absolute',
+							left: 0,
+							right: 0,
+							top: 0,
+							bottom: 0,
+							alignItems: 'center',
+							justifyContent: 'center',
+						}}>
+						<ActivityIndicator size="large" color={APRI10} />
+					</View>
+				) : (
+					<></>
 				)}
 			</View>
 		);

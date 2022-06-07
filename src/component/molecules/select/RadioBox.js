@@ -64,17 +64,23 @@ const RadioBox = props => {
 		props.onSelect(index);
 	};
 
-	const renderItem = ({item, index}) => {
+	const renderItem = (item, index) => {
 		return (
-			<TouchableOpacity onPress={() => onSelect(index)} style={{flexDirection: 'row'}}>
+			<TouchableOpacity onPress={() => onSelect(index)} style={{flexDirection: 'row', paddingRight: 50 * DP}}>
 				<View style={{marginLeft: props.horizontal ? 25 * DP : 0}}>
 					<View style={{}}>{selected[index].state ? <RadioChecked48 /> : <RadioUnchecked48 />}</View>
 				</View>
-				<Text style={[txt.noto28, {color: GRAY20, lineHeight: 46 * DP, marginLeft: 12 * DP, textAlign: 'center'}]}>{item}</Text>
+				<Text style={[txt.noto28, {lineHeight: 46 * DP, marginLeft: 12 * DP, textAlign: 'center'}]}>{item}</Text>
 			</TouchableOpacity>
 		);
 	};
-	return <FlatList data={props.items} renderItem={renderItem} horizontal={props.horizontal} />;
+	return (
+		<View style={{justifyContent: 'space-between', flexDirection: 'row', width: 550 * DP}}>
+			{props.items.map((v, i) => {
+				return renderItem(v, i);
+			})}
+		</View>
+	);
 };
 RadioBox.defaultProps = {
 	items: [1, 2, 3],

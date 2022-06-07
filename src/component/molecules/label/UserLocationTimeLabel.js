@@ -9,7 +9,6 @@ import {styles} from 'Atom/image/imageStyle';
 import {useNavigation} from '@react-navigation/native';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, ProfileDefaultImg} from 'Atom/icon';
-import {CommonActions} from '@react-navigation/native';
 import moment from 'moment';
 import Modal from 'Root/component/modal/Modal';
 

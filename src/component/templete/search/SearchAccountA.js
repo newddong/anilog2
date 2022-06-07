@@ -24,7 +24,6 @@ export default SearchAccountA = React.memo((props, ref) => {
 			},
 			result => {
 				console.log('result / followUser / SearchAccountA : ', result.msg);
-				getList();
 			},
 			err => {
 				console.log('err / followUser / SearchAccountA : ', err);
@@ -40,7 +39,6 @@ export default SearchAccountA = React.memo((props, ref) => {
 			},
 			result => {
 				console.log('result / unFollowUser / SearchAccountA : ', result.msg);
-				getList();
 			},
 			err => {
 				console.log('err / unFollowUser / SearchAccountA : ', err);

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View, FlatList, TouchableOpacity, RefreshControl, StyleSheet, ActivityIndicator} from 'react-native';
 import {feedWrite, login_style, searchProtectRequest, temp_style} from 'Templete/style_templete';
-import {APRI10, GRAY10, WHITE} from 'Root/config/color';
+import {APRI10, GRAY10, GRAY30, WHITE} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {Check42, Check50, EmptyIcon, Rect42_Border, Rect50_Border, Urgent_Write1, Urgent_Write2} from 'Atom/icon';
 import {useNavigation} from '@react-navigation/core';
@@ -288,11 +288,11 @@ export default MissingReportList = props => {
 					<View style={[styles.kindFilter, {}]}>
 						<View style={[styles.kindFilterItem]}>
 							{onlyReport ? <Check42 onPress={onPressShowReport} /> : <Rect42_Border onPress={onPressShowReport} />}
-							<Text style={[txt.noto26, {color: GRAY10, marginRight: 10 * DP}]}> 실종</Text>
+							<Text style={[txt.noto28, {marginRight: 10 * DP}]}>{'  '}실종</Text>
 						</View>
 						<View style={[styles.kindFilterItem]}>
 							{onlyMissing ? <Check42 onPress={onPressShowMissing} /> : <Rect42_Border onPress={onPressShowMissing} />}
-							<Text style={[txt.noto26, {color: GRAY10, marginRight: 10 * DP}]}> 제보</Text>
+							<Text style={[txt.noto28, {marginRight: 10 * DP}]}>{'  '}제보</Text>
 						</View>
 					</View>
 				</View>

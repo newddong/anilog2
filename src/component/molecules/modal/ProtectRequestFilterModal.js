@@ -343,7 +343,12 @@ const ProtectRequestFilterModal = props => {
 					</View>
 
 					<View style={style.buttonContainer}>
-						<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={'완료'} onPress={onConfrim} />
+						<AniButton
+							btnLayout={{width: 226 * DP, height: 70 * DP, borderRadius: 30 * DP}}
+							btnStyle={'border'}
+							btnTitle={'완료'}
+							onPress={onConfrim}
+						/>
 					</View>
 				</TouchableOpacity>
 			)}

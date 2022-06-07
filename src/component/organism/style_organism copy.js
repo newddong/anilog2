@@ -101,7 +101,7 @@ export const controllableAccount = StyleSheet.create({
 	container: {
 		width: 694 * DP,
 		flexDirection: 'row',
-		marginBottom: 40 * DP,
+		paddingBottom: 40 * DP,
 		alignItems: 'center',
 	},
 	userDescriptionLabel: {
@@ -812,7 +812,7 @@ export const aidRequest = StyleSheet.create({
 	},
 	borderColor_APRI10: {
 		borderWidth: 2 * DP,
-		borderColor: APRI10,
+		borderColor: GRAY30,
 	},
 	borderColor_GRAY10: {
 		borderWidth: 1 * DP,

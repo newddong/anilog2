@@ -132,6 +132,13 @@ const ChildComment = props => {
 		}
 	};
 
+	const onDeleteChild = () => {
+		Modal.popTwoBtn('댓글을 삭제하시겠습니까?', '아니오', '네', Modal.close, () => {
+			props.onPressDeleteChild(data._id);
+			Modal.close();
+		});
+	};
+
 	const isMyComment = userGlobalObject.userInfo._id == data.comment_writer_id._id;
 
 	//비밀댓글일 경우 public 여부 판별
@@ -147,27 +154,30 @@ const ChildComment = props => {
 	return (
 		<View style={[childComment.container]}>
 			<View style={[childComment.profileContainer]}>
-				{data.comment_is_secure ? (
-					<View style={[{justifyContent: 'center'}]}>
-						<SecureIcon40 />
-					</View>
-				) : (
-					<></>
-				)}
 				<View style={[childComment.userTimeLabel]}>
-					{!data ? (
-						<UserTimeLabel data={data} onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})} />
+					{data ? (
+						<View style={{flexDirection: 'row'}}>
+							<UserTimeLabel data={data} onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})} />
+							{data.comment_is_secure ? (
+								<View style={[{top: -6 * DP, marginLeft: 6 * DP}]}>
+									<SecureIcon40 />
+								</View>
+							) : (
+								<></>
+							)}
+						</View>
 					) : (
 						<UserTimeLabel data={data} empty={true} />
 					)}
 				</View>
-				{data.comment_writer_id && isMyComment ? (
+
+				{/* {data.comment_writer_id && isMyComment ? (
 					<View style={[childComment.meatBall50_vertical]}>
 						{meatball ? <Meatball50_APRI10_Vertical onPress={onPressMeatball} /> : <Meatball50_GRAY20_Vertical onPress={onPressMeatball} />}
 					</View>
 				) : (
 					<></>
-				)}
+				)} */}
 			</View>
 			{/* 해당 대댓글이 photo_uri를 가지고 있는 경우만 IMage 출력 */}
 			{data.comment_photo_uri != null && !isNotAuthorized() ? (
@@ -192,7 +202,14 @@ const ChildComment = props => {
 				) : (
 					<>
 						{isMyComment ? (
-							<></>
+							<View style={{marginBottom: 6 * DP, flexDirection: 'row'}}>
+								<TouchableOpacity onPress={onDeleteChild}>
+									<Text style={[txt.noto22, {color: GRAY10}]}> 삭제 · </Text>
+								</TouchableOpacity>
+								<TouchableOpacity onPress={() => props.onEdit && props.onEdit(data)}>
+									<Text style={[txt.noto22, {color: GRAY10}]}> 수정 · </Text>
+								</TouchableOpacity>
+							</View>
 						) : (
 							<TouchableOpacity onPress={reportComment} style={[{flexDirection: 'row'}]}>
 								<Report30 />
@@ -248,6 +265,7 @@ export const childComment = StyleSheet.create({
 		width: 488 * DP,
 		height: 46 * DP,
 		marginLeft: 10 * DP,
+		// backgroundColor: 'red',
 	},
 	meatBall50_vertical: {
 		width: 50 * DP,
@@ -266,7 +284,7 @@ export const childComment = StyleSheet.create({
 	commentText: {},
 	likeReplyButton: {
 		// width: 222 * DP,
-		height: 34 * DP,
+		// height: 34 * DP,
 		flexDirection: 'row',
 		alignSelf: 'flex-end',
 		alignItems: 'center',

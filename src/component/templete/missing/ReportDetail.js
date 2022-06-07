@@ -11,14 +11,14 @@ import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Loading from 'Root/component/molecules/modal/Loading';
 import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
-import {GRAY10, GRAY30} from 'Root/config/color';
+import {GRAY10, GRAY30, WHITE} from 'Root/config/color';
 import Modal from 'Root/component/modal/Modal';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import Swiper from 'react-native-swiper';
 import MissingReportItem from 'Root/component/organism/listitem/MissingReportItem';
-import {NETWORK_ERROR} from 'Root/i18n/msg';
+import {NETWORK_ERROR, PROTECT_REQUEST_DETAIL_LIMIT} from 'Root/i18n/msg';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import DP from 'Root/config/dp';
 export default ReportDetail = props => {
@@ -77,7 +77,7 @@ export default ReportDetail = props => {
 			},
 			result => {
 				// console.log('getMissingReportList result', result.msg[0]);
-				const res = result.msg.filter(e => e.feed_type == 'report');
+				const res = result.msg;
 				const findIndex = res.findIndex(e => e._id == props.route.params._id);
 				console.log('findIndex', findIndex);
 				let temp = [];
@@ -290,6 +290,20 @@ export default ReportDetail = props => {
 		Modal.popPhotoListViewModal(data.feed_medias.map(v => v.media_uri));
 	};
 
+	const ITEM_HEIGHT = 266 * DP;
+	const keyExtractor = React.useCallback(item => item._id.toString(), []);
+	const getItemLayout = React.useCallback(
+		(data, index) =>
+			!data[index]
+				? {length: 0, offset: 0, index: index}
+				: {
+						length: ITEM_HEIGHT,
+						offset: ITEM_HEIGHT * index,
+						index,
+				  },
+		[],
+	);
+
 	const header = () => {
 		return (
 			<View style={{alignItems: 'center'}}>
@@ -301,7 +315,7 @@ export default ReportDetail = props => {
 								<TouchableOpacity onPress={onPressReqeustPhoto} activeOpacity={0.8} key={idx}>
 									<Image source={{uri: val.media_uri}} style={[styles.img_square_round_694]} />
 									<View style={[style.swiper_index]}>
-										<Text style={[txt.roboto24, {color: 'white'}]}>
+										<Text style={[txt.roboto24, {color: WHITE}]}>
 											{idx + 1}/{data.feed_medias.length}
 										</Text>
 									</View>
@@ -317,15 +331,7 @@ export default ReportDetail = props => {
 					<View style={[style.separator]}></View>
 				</View>
 				{comments && comments.length > 0 ? (
-					<TouchableOpacity
-						onPress={moveToCommentList}
-						style={[
-							{
-								width: 694 * DP,
-								alignItems: 'flex-end',
-								alignSelf: 'center',
-							},
-						]}>
+					<TouchableOpacity onPress={moveToCommentList} style={[{width: 694 * DP, alignItems: 'flex-end', alignSelf: 'center'}]}>
 						<Text style={[txt.noto26, {color: GRAY10, marginBottom: 20 * DP}]}> 댓글 {comments.length}개 모두 보기</Text>
 					</TouchableOpacity>
 				) : (
@@ -355,7 +361,6 @@ export default ReportDetail = props => {
 					data={item}
 					onClickLabel={(status, id) => onClickLabel(status, id, item)}
 					onFavoriteTag={e => onOff_FavoriteTag(e, index)}
-					onPressProtectRequest={() => onPressProtectRequest(item)}
 				/>
 			);
 		};
@@ -365,8 +370,8 @@ export default ReportDetail = props => {
 					<ReplyWriteBox onPressReply={moveToCommentList} onWrite={onPressReply} isProtectRequest={true} />
 				</View>
 				<View style={[{paddingVertical: 50 * DP}]}>
-					<Text style={[txt.noto24, {width: 694 * DP, alignSelf: 'center'}]}>제보글 더보기</Text>
-					<FlatList data={reportList} renderItem={renderMissingReport} />
+					<Text style={[txt.noto24, {width: 694 * DP, alignSelf: 'center'}]}>실종/제보 더보기</Text>
+					<FlatList data={reportList} renderItem={renderMissingReport} keyExtractor={keyExtractor} getItemLayout={getItemLayout} windowSize={5} />
 				</View>
 			</View>
 		);

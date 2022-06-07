@@ -35,7 +35,7 @@ const TwoBtnModal = props => {
 				<Text style={[txt.noto28, style.msg]}>{props.popUpMsg}</Text>
 				<View style={style.buttonContainer}>
 					<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.noMsg} onPress={pressNo} />
-					<AniButton btnLayout={btn_w226} btnStyle={'filled'} btnTitle={props.yesMsg} onPress={pressYes} />
+					<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.yesMsg} onPress={pressYes} />
 				</View>
 			</TouchableOpacity>
 		</TouchableOpacity>

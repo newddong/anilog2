@@ -46,9 +46,10 @@ const MissingReportInfo = props => {
 	const InfoOneLine = props => {
 		return (
 			<View style={[style.infoOneLineCont]}>
-				<View style={{width: 144 * DP, justifyContent: 'center'}}>
-					<Text style={[txt.noto26b, {justifyContent: 'space-between'}]}>{props.title}:</Text>
+				<View style={{width: 118 * DP, justifyContent: 'center'}}>
+					<Text style={[txt.noto26b, {justifyContent: 'space-between'}]}>{props.title}</Text>
 				</View>
+				<Text style={[txt.noto26b, {}]}>: </Text>
 				<View style={{width: 462 * DP, justifyContent: 'center'}}>
 					<Text style={[txt.noto28]}>{props.content}</Text>
 				</View>
@@ -62,12 +63,12 @@ const MissingReportInfo = props => {
 		let newMissingLocation = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
 		return (
 			<View style={style.container}>
-				<InfoOneLine title="동물  분류  " content={missing_animal_species + ' / ' + missing_animal_species_detail} />
-				<InfoOneLine title="실종  날짜  " content={newMissingDate} />
-				<InfoOneLine title="성별/나이" content={newAnimalSex + ' / ' + missing_animal_age + '살'} />
-				<InfoOneLine title="실종  위치  " content={newMissingLocation} />
+				<InfoOneLine title="동물  분류" content={missing_animal_species + ' / ' + missing_animal_species_detail} />
+				<InfoOneLine title="실종  날짜" content={newMissingDate} />
+				<InfoOneLine title="성별  나이" content={newAnimalSex + ' / ' + missing_animal_age + '살'} />
+				<InfoOneLine title="실종  위치" content={newMissingLocation} />
 				<InfoOneLine title="연   락   처 " content={missing_animal_contact} />
-				<InfoOneLine title="특          징 " content={missing_animal_features} />
+				<InfoOneLine title="특          징" content={missing_animal_features} />
 			</View>
 		);
 	} else if (feed_type == 'report') {

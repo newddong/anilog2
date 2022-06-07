@@ -6,6 +6,8 @@ export const btn_w654 = {width: 654 * DP, height: 104 * DP, borderRadius: 40 * D
 export const btn_w654_h70 = {width: 654 * DP, height: 70 * DP, borderRadius: 40 * DP};
 export const btn_w522 = {width: 522 * DP, height: 92 * DP, borderRadius: 40 * DP};
 export const btn_w522_r30 = {width: 522 * DP, height: 92 * DP, borderRadius: 30 * DP};
+export const btn_w336x82_r30 = {width: 336 * DP, height: 82 * DP, borderRadius: 30 * DP};
+
 export const btn_w306_h68 = {width: 306 * DP, height: 68 * DP, borderRadius: 40 * DP};
 export const btn_w306 = {width: 306 * DP, height: 60 * DP, borderRadius: 30 * DP};
 export const btn_w280 = {width: 280 * DP, height: 60 * DP, borderRadius: 30 * DP};

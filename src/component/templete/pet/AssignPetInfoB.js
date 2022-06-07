@@ -1,19 +1,19 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View} from 'react-native';
-import {APRI10, GRAY10, GRAY20} from 'Root/config/color';
+import {Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {APRI10, BLACK, GRAY10, GRAY20, GRAY50} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import Stagebar from 'Molecules/info/Stagebar';
 import AniButton from 'Molecules/button/AniButton';
-import {login_style, btn_style, temp_style, progressbar_style, assignPetInfo_style} from 'Templete/style_templete';
+import {login_style, btn_style, temp_style, progressbar_style} from 'Templete/style_templete';
 import DatePicker from 'Molecules/select/DatePicker';
 import Modal from 'Component/modal/Modal';
-import Input30 from 'Molecules/input/Input30';
 import {assignPet} from 'Root/api/userapi';
 import {stagebar_style} from 'Organism/style_organism copy';
 import userGlobalObj from 'Root/config/userGlobalObject';
 import Input24 from 'Root/component/molecules/input/Input24';
+import ArrowButton from 'Root/component/molecules/button/ArrowButton';
 
 export default AssignPetInfoB = props => {
 	// console.log('AssignPetInfoB', props.route.params.data);
@@ -139,67 +139,148 @@ export default AssignPetInfoB = props => {
 	};
 
 	return (
-		<View style={[login_style.wrp_main, {flex: 1}]}>
-			{/* (M)StageBar	 */}
+		<TouchableOpacity activeOpacity={1} onPress={Keyboard.dismiss} style={[login_style.wrp_main, {flex: 1}]}>
 			<View style={[temp_style.stageBar, progressbar_style.stageBar]}>
 				<Stagebar
 					backgroundBarStyle={stagebar_style.backgroundBar} //배경이 되는 bar의 style, width props으로 너비결정됨
 					insideBarStyle={stagebar_style.insideBar} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
 					current={3} //현재 단계를 정의
 					maxstage={3} //전체 단계를 정의
-					width={600 * DP} //bar의 너비
+					width={640 * DP} //bar의 너비
 					textStyle={[txt.roboto24, stagebar_style.text]} //text의 스타일
 				/>
 			</View>
-
-			{/* 안내문 */}
-			<View style={[temp_style.textMsg_assignPetInfo, assignPetInfo_style.textMsg]}>
+			<View style={[style.textMsg]}>
 				<Text style={[txt.noto24, {color: GRAY10}]}>반려 동물의 생일과 체중, 중성화 여부를 적어주세요.</Text>
 			</View>
-
-			{/* InputForm */}
-			<View style={[temp_style.assignPetInfoB, assignPetInfo_style.inputForm]}>
-				{/* InputForm 생일 */}
-				<View style={[temp_style.inputForm_assignPetInfo_line1]}>
-					<Text style={[txt.noto28, temp_style.text_assignPetInfo, {color: GRAY10}]}>생일</Text>
-					<View style={[temp_style.datePicker_assignPetInfo_depth1, assignPetInfo_style.datePicker_depth1]}>
-						<DatePicker width={290} onDateChange={onSelectBirthDate} defaultDate={'눌러서 지정!'} future={false} />
+			<View style={[style.inputForm]}>
+				<View style={[style.birthCont]}>
+					<Text style={[txt.noto28, temp_style.text_assignPetInfo]}>생일</Text>
+					<View style={[style.datePicker_depth1]}>
+						<DatePicker width={418} onDateChange={onSelectBirthDate} defaultDate={'눌러서 지정!'} future={false} />
 					</View>
-					{data.pet_birthday != '' ? <Text style={[temp_style.text218_assignPetInfo, assignPetInfo_style.text218]}>{getBirthDate()}</Text> : <></>}
+					{data.pet_birthday != '' ? <Text style={[txt.noto24, style.text218]}>{getBirthDate()}</Text> : <></>}
 				</View>
-				{/* InputForm 체중 */}
-				<View style={[temp_style.inputForm_assignPetInfo_line2, assignPetInfo_style.line2]}>
-					<Text style={[txt.noto28, temp_style.text_assignPetInfo, {color: GRAY10}]}>체중</Text>
-					<View style={[temp_style.inputNoTitle_assignPetInfo, assignPetInfo_style.inputNoTitle]}>
+				<View style={[style.line2]}>
+					<Text style={[txt.noto28, temp_style.text_assignPetInfo]}>몸무게</Text>
+					<View style={[style.inputNoTitle]}>
 						<Input24
 							keyboardType={'number-pad'}
 							ref={weightRef}
 							value={data.pet_weight}
-							width={300}
+							width={550}
 							alert_msg={'두자리 숫자, 소수점 한자리'}
-							showMsg
+							showMsg={false}
 							confirm_msg="올바른 양식입니다."
 							onChange={onChangeKg}
 							validator={weigthValid}
 							placeholder={'몸무게 입력'}
 							showCrossMark={false}
-							maxLength={4}
+							maxlength={4}
+							style={{textAlign: 'center'}}
 						/>
+						<View style={{position: 'absolute', right: 24 * DP, top: 20 * DP}}>
+							<Text style={[txt.noto28, {}]}>kg</Text>
+						</View>
 					</View>
-					<Text style={[temp_style.text68_assignPetInfo, assignPetInfo_style.text68, txt.noto28]}>kg</Text>
-				</View>
-				{/* <Text style={[txt.noto22, {marginLeft: 65, marginTop: 5}]}>* 2자리, 소수점 한자리까지 가능.</Text> */}
-			</View>
-
-			{/* (A)Btn_w654 */}
-			<View style={[temp_style.btn_w226_assignPetInfo, assignPetInfo_style.btn_w226_viewB]}>
-				<View style={[btn_style.btn_w226]}>
-					<AniButton btnTitle={'뒤로'} btnStyle={'border'} onPress={() => navigation.goBack()} />
-				</View>
-				<View style={[btn_style.btn_w226, assignPetInfo_style.btn_w226]}>
-					<AniButton btnTitle={'등록'} onPress={onRegister} disable={btnOn} />
 				</View>
 			</View>
-		</View>
+			<View style={[style.btn_w226_viewB]}>
+				<ArrowButton direction={'back'} onPress={() => navigation.goBack()} />
+				<AniButton btnTitle={'등록'} onPress={onRegister} disable={btnOn} />
+			</View>
+		</TouchableOpacity>
 	);
 };
+
+const style = StyleSheet.create({
+	textMsg: {
+		width: 694 * DP,
+		height: 36 * DP,
+		marginTop: 12 * DP,
+	},
+	inputForm: {
+		width: 694 * DP,
+		height: 224 * DP,
+		marginTop: 70 * DP,
+	},
+	birthCont: {
+		flexDirection: 'row',
+		width: 694 * DP,
+		height: 82 * DP,
+		alignItems: 'center',
+	},
+	dropdownSelect_depth1: {
+		marginLeft: 16 * DP,
+	},
+	dropdownSelect_depth2: {
+		marginLeft: 24 * DP,
+	},
+	line2: {
+		flexDirection: 'row',
+		width: 694 * DP,
+		alignItems: 'center',
+		marginTop: 60 * DP,
+	},
+	tabSelectFilled_Type1: {
+		marginLeft: 16 * DP,
+	},
+	line3: {
+		marginTop: 60 * DP,
+	},
+	btn_w226_viewA: {
+		marginTop: 110 * DP,
+	},
+	btn_w226: {
+		marginLeft: 202 * DP,
+	},
+	datePicker_depth1: {
+		marginLeft: 12 * DP,
+	},
+	text218: {
+		marginTop: 46 * DP,
+		marginLeft: 12 * DP,
+	},
+	inputNoTitle: {
+		marginLeft: 12 * DP,
+	},
+	text68: {
+		marginLeft: 16 * DP,
+	},
+	btn_w226_viewB: {
+		flexDirection: 'row',
+		width: 694 * DP,
+		justifyContent: 'space-between',
+		marginTop: 130 * DP,
+	},
+	petKind: {
+		width: 204 * DP,
+		height: 82 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderBottomWidth: 2 * DP,
+		borderBottomColor: APRI10,
+	},
+	pet_species_detail: {
+		width: 292 * DP,
+		height: 82 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderBottomWidth: 2 * DP,
+		borderBottomColor: APRI10,
+	},
+	petKind_text: {
+		minWidth: 120 * DP,
+		// width: 120 * DP,
+		height: 44 * DP,
+		textAlign: 'center',
+	},
+	pet_species_detail_text: {
+		minWidth: 208 * DP,
+		// width: 208 * DP,
+		height: 44 * DP,
+		textAlign: 'center',
+	},
+});

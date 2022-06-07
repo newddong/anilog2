@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import {
 	CURRENT_PWD_INFO,
 	CURRENT_PWD_TITLE,
@@ -18,6 +18,7 @@ import {
 import PasswordInput from 'Molecules/input/PasswordInput';
 import {passwordChecker_style} from 'Organism/style_organism copy';
 import DP from 'Root/config/dp';
+import {MAINBLACK} from 'Root/config/color';
 /**
  *
  * @param {{
@@ -97,15 +98,15 @@ export default PasswordChecker = props => {
 	//props.isResetPwdMode가 true일 경우 pwdInput이 3개 출현 (현재암호 / 바꿀 암호 / 바꿀 암호 확인)
 	return !props.isResetPwdMode ? (
 		//비밀번호 처음 설정 루트로 온 경우 두가지 input
-		<View style={[passwordChecker_style.container_initMode]}>
-			<View style={[passwordChecker_style.passwordInput_initMode]}>
+		<View style={[styles.container_initMode]}>
+			<View style={[{marginBottom: 20 * DP}]}>
 				<PasswordInput
 					// title={PASSWORD_TITLE}
 					title="비밀번호"
 					// description={PASSWORD_FORM_DESCRIPTION}
 					placeholder={REQ_PASSWORD}
-					// information={PASSWORD_FORM_DESCRIPTION}
-					information={'8~20자 영문, 숫자 특수문자(!@#$%^&*만 허용) 모두 포함'}
+					// information={'8~20자 영문, 숫자 특수문자(!@#$%^&*만 허용) 모두 포함'}
+					information={''}
 					alert_msg={FORM_UNMATCHED_DESC}
 					confirm_msg={FORM_MATCHED_DESC}
 					onChange={onChangePwd}
@@ -113,6 +114,7 @@ export default PasswordChecker = props => {
 					// confirm={props.pwdValid} confirm은 validator의 값 반환여부에 따라 컴포넌트 내부에서 결정
 					onClear={onPressClear}
 					height={104}
+					width={694}
 				/>
 			</View>
 			<View style={[passwordChecker_style.passwordInput_doubleCheck]}>
@@ -127,12 +129,13 @@ export default PasswordChecker = props => {
 					ref={checkerRef}
 					onClear={onPressCheckClear}
 					height={104}
+					width={694}
 				/>
 			</View>
 		</View>
 	) : (
 		//비밀번호 재설정 루트로 온 경우 세가지 PasswordInput
-		<View style={[passwordChecker_style.container_resetMode]}>
+		<View style={[styles.container_resetMode]}>
 			<View style={[passwordChecker_style.passwordInput_resetMode]}>
 				<PasswordInput
 					title={PASSWORD_TITLE}
@@ -146,6 +149,8 @@ export default PasswordChecker = props => {
 					information=""
 					validator={compare_curr_pwd}
 					onClear={() => onPressClear('cur')}
+					height={104}
+					width={694}
 				/>
 			</View>
 			<View style={[passwordChecker_style.passwordInput_resetMode]}>
@@ -161,6 +166,8 @@ export default PasswordChecker = props => {
 					validator={passwordValidator}
 					// confirm={props.pwdValid} confirm은 validator의 값 반환여부에 따라 컴포넌트 내부에서 결정
 					onClear={onPressClear}
+					height={104}
+					width={694}
 				/>
 			</View>
 			<View style={[passwordChecker_style.passwordInput_resetMode]}>
@@ -173,11 +180,25 @@ export default PasswordChecker = props => {
 					ref={checkerRef}
 					onClear={onPressCheckClear}
 					validator={passwordMatcher}
+					height={104}
+					width={694}
 				/>
 			</View>
 		</View>
 	);
 };
+
+const styles = StyleSheet.create({
+	container_resetMode: {
+		width: 694 * DP,
+		height: 634 * DP,
+		// backgroundColor: 'yellow',
+	},
+	container_initMode: {
+		width: 694 * DP,
+		// height: 406 * DP,
+	},
+});
 
 PasswordChecker.defaultProps = {
 	isResetPwdMode: false, // 일반 비밀번호 설정 모드로 호출? or 비밀번호 변경 모드

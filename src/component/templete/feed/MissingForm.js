@@ -445,7 +445,7 @@ export default MissingForm = props => {
 				</View>
 				<View style={[feedWrite.formContentContainer]}>
 					<View style={[temp_style.tabSelectFilled_Type1, feedWrite.tabSelectFilled_Type1]}>
-						<TabSelectFilled_Type1 items={['남아', '여아', '모름']} defaultIndex={getDefaultGender()} onSelect={selectSex} />
+						<TabSelectFilled_Type1 items={['남아', '여아', '모름']} width={170} defaultIndex={getDefaultGender()} onSelect={selectSex} />
 					</View>
 				</View>
 			</View>

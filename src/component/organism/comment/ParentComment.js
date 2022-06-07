@@ -137,7 +137,10 @@ export default ParentComment = React.memo((props, ref) => {
 	};
 
 	const onDelete = () => {
-		props.onPressDelete(data._id);
+		Modal.popTwoBtn('댓글을 삭제하시겠습니까?', '아니오', '네', Modal.close, () => {
+			props.onPressDelete(data._id);
+			Modal.close();
+		});
 	};
 
 	const onPressDeleteChild = id => {
@@ -256,20 +259,20 @@ export default ParentComment = React.memo((props, ref) => {
 						<UserLocationTimeLabel empty={true} time={data.comment_update_date} />
 					)}
 					{data.comment_is_secure ? (
-						<View style={[style.secureIcon, {justifyContent: 'center'}]}>
+						<View style={[style.secureIcon, {justifyContent: 'flex-start', top: -6 * DP}]}>
 							<SecureIcon40 />
 						</View>
 					) : (
 						<></>
 					)}
 				</View>
-				{data.comment_is_delete || !data.comment_writer_id || userGlobalObject.userInfo._id != data.comment_writer_id._id ? (
+				{/* {data.comment_is_delete || !data.comment_writer_id || userGlobalObject.userInfo._id != data.comment_writer_id._id ? (
 					<></>
 				) : (
 					<View style={[]}>
 						<Meatball50_GRAY20_Vertical onPress={onPressMeatball} />
 					</View>
-				)}
+				)} */}
 			</View>
 			{/* 댓글 Dummy 이미지 및 대댓글 목록 */}
 			{data.comment_photo_uri == undefined || isNotAuthorized() ? ( //img_square_round_574
@@ -282,7 +285,7 @@ export default ParentComment = React.memo((props, ref) => {
 			{/* 댓글 내용 */}
 			{data.comment_is_delete ? (
 				<View style={[style.comment_contents]}>
-					<Text style={[txt.noto26, {color: GRAY20}]}>삭제된 댓글 입니다.</Text>
+					<Text style={[txt.noto26]}>삭제된 댓글 입니다.</Text>
 				</View>
 			) : (
 				<View style={[style.comment_contents]}>
@@ -299,9 +302,16 @@ export default ParentComment = React.memo((props, ref) => {
 			) : (
 				<View style={[style.likeReplyButton]}>
 					{isMyComment ? (
-						<></>
+						<View style={{flexDirection: 'row', marginBottom: 6 * DP}}>
+							<TouchableOpacity onPress={onDelete} style={[{flexDirection: 'row'}]}>
+								<Text style={[txt.noto22, {color: GRAY10}]}> 삭제 · </Text>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={() => onEdit(props.parentComment)} style={[{flexDirection: 'row'}]}>
+								<Text style={[txt.noto22, {color: GRAY10}]}> 수정 · </Text>
+							</TouchableOpacity>
+						</View>
 					) : (
-						<TouchableOpacity onPress={reportComment} style={[{flexDirection: 'row'}]}>
+						<TouchableOpacity onPress={reportComment} style={[{flexDirection: 'row', alignItems: 'center'}]}>
 							<Report30 />
 							<Text style={[txt.noto22, {color: GRAY10}]}> 신고 · </Text>
 						</TouchableOpacity>
@@ -427,7 +437,7 @@ const style = StyleSheet.create({
 	},
 	childCommentList: {
 		// width: 614 * DP,
-		marginTop: 20 * DP,
+		// marginTop: 20 * DP,
 		flexDirection: 'row',
 	},
 });

@@ -3,7 +3,7 @@ import {txt} from 'Root/config/textstyle';
 import PropsTypes, {any, bool, func, number, object, oneOf, oneOfType, string} from 'prop-types';
 import {Text, View, TextInput, Platform} from 'react-native';
 import DP from 'Root/config/dp';
-import {APRI10, GRAY10, GRAY20, GRAY30, GRAY40, GREEN, RED10} from 'Root/config/color';
+import {APRI10, GRAY10, GRAY20, GRAY30, GRAY40, GREEN, MAINBLACK, RED10} from 'Root/config/color';
 import {CheckFilled, Cross46, Eye52_APRI10, Eye52_GRAY20} from 'Atom/icon';
 import Modal from 'Component/modal/Modal';
 /**
@@ -86,7 +86,7 @@ const Input24 = React.forwardRef((props, ref) => {
 		if (props.descriptionType == 'info') {
 			return <Text style={[txt.noto22, {color: GRAY10, marginLeft: 20 * DP}]}> *{props.info} </Text>;
 		} else if (props.descriptionType == 'star') {
-			return <Text style={[txt.noto28, {color: RED10, marginLeft: 40 * DP}]}>*</Text>;
+			return <Text style={[txt.noto28, {color: RED10, marginLeft: 5 * DP}]}>*</Text>;
 		} else if (props.descriptionType == 'none') {
 			return <></>;
 		}
@@ -118,9 +118,11 @@ const Input24 = React.forwardRef((props, ref) => {
 			{/* {console.log('props.title=' + props.title + props.width)} */}
 			{/* parent에서 title이 props로 명시되어 있지 않을 경우 'title' string 으로 받음. */}
 			{props.title != '' && props.title != 'title' && (
-				<View style={{flexDirection: 'row'}}>
-					<Text style={[txt.noto24, {color: APRI10}]}> {props.title}</Text>
+				<View style={[{flexDirection: 'row'}]}>
+					{/* 타이틀 사이즈 분기 처리해야되는지 나중에 파악필요  */}
+					<Text style={[txt.noto28, {color: MAINBLACK}]}> {props.title}</Text>
 					{getDescription()}
+					<Text style={[txt.noto24, {color: GRAY10}, {marginLeft: 150 * DP}]}>{props?.moreInfo}</Text>
 				</View>
 			)}
 			{/* 하단테두리 2px이 있기 때문에 inputValue와 82px가 차이가 나도 -2한 80값을 height로 줌 */}
@@ -130,7 +132,6 @@ const Input24 = React.forwardRef((props, ref) => {
 					{
 						backgroundColor: '#FAFAFA',
 						borderRadius: 30 * DP,
-
 						// borderBottomWidth: 2 * DP,
 						// borderBottomColor: setBorderColor(),
 						flexDirection: 'row',
@@ -208,6 +209,8 @@ const Input24Props = {
 	info: string,
 	/** @type {number} 입력창 너비 */
 	width: number,
+	/** @type {number} 입력창 높이 */
+	height: number,
 	/** @type {number} 최대 글자수 */
 	maxlength: number,
 	/** @type {boolean} 하단의 경고/확인 메세지를 표시할지 여부를 결정 */

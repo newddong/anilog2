@@ -95,6 +95,7 @@ export default MainTabNavigation = ({route, navigation}) => {
 				options={{
 					tabBarShowLabel: false,
 					header: props => false,
+					tabBarVisible: false,
 				}}>
 				{props => <SearchMainStack {...props} />}
 			</MainTabNav.Screen>

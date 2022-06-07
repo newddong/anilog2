@@ -110,7 +110,11 @@ export default LoginTemplete = props => {
 				error => {
 					console.log('error', error);
 					Modal.close();
-					Modal.alert(error + '.');
+					if ((error = '유효하지 않은 비밀번호입니다.')) {
+						Modal.alert('비밀번호가 일치하지 않습니다');
+					} else {
+						Modal.alert(error);
+					}
 				},
 			);
 		}
@@ -217,7 +221,7 @@ export default LoginTemplete = props => {
 					</View>
 					<View style={[loginTemplete_style.pwdInput]}>
 						<PasswordInput
-							placeholder={'비밀번호 입력'}
+							placeholder={'비밀번호를 입력해주세요'}
 							width={520}
 							height={104}
 							validator={passwordValidator}

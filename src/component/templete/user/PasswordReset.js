@@ -1,12 +1,13 @@
 import React from 'react';
 import {Text, View} from 'react-native';
-import {btn_w654} from 'Atom/btn/btn_style';
+import {btn_w654, btn_w694_r30} from 'Atom/btn/btn_style';
 import Modal from 'Component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
 import PasswordChecker from 'Organism/form/PasswordChecker';
 import {login_style, btn_style, temp_style, passwordReset_style} from 'Templete/style_templete';
 import {changeUserPassword} from 'Root/api/userapi';
 import {updateUserPassword} from 'Root/api/userapi';
+import {txt} from '../style_address';
 // 각각 뷰에 컴포넌트 삽입시 style의 첫번째 index 삭제할 것. 두번째 index는 상.하 간격 style이라서 이 컴포넌트에만 해당 됨.
 //ex) 변경 전: <View style={[btn_style.btn_w654, findAccount_style.btn_w654]}>   변경 후:  <View style={[findAccount_style.btn_w654]}>
 
@@ -93,10 +94,10 @@ export default PasswordReset = ({route, navigation}) => {
 		console.log('파라미터들', route.params, pwd);
 		//changePassword 가 아닌 reset Password api가있어야된다.
 		updateUserPassword(
-			{userobject_id: route.params, new_password: pwd},
+			{user_phone_number: route.params, new_password: pwd},
 			success => {
 				console.log('success', success);
-				Modal.popNoBtn('비밀번호 설정이 완료되었습니다.');
+				Modal.popNoBtn('비밀번호 재설정이 완료되었습니다.');
 				setTimeout(() => {
 					Modal.close();
 					navigation.navigate('Login');
@@ -113,6 +114,11 @@ export default PasswordReset = ({route, navigation}) => {
 
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
+			<View style={[{alignItems: 'center'}]}>
+				<Text style={[{textAlign: 'center'}, txt.noto30, {marginTop: 105 * DP}]}>*최소 8자 이상,</Text>
+				<Text style={([{textAlign: 'center'}], txt.noto30)}>영문과 숫자, 특수문자(!@#$%^&*)가</Text>
+				<Text style={([{textAlign: 'center'}], txt.noto30)}>포함되어야 합니다.</Text>
+			</View>
 			<View style={[temp_style.passwordChecker, passwordReset_style.passwordChecker]}>
 				<PasswordChecker
 					passwordValidator={pwd => passwordValidator(pwd)}
@@ -127,7 +133,7 @@ export default PasswordReset = ({route, navigation}) => {
 			</View>
 
 			<View style={[btn_style.btn_w654, passwordReset_style.btn_w654]}>
-				<AniButton onPress={changeFinalize} btnTitle={'확인'} btnLayout={btn_w654} titleFontStyle={32} disable={!pwdCheck} />
+				<AniButton onPress={changeFinalize} btnTitle={'확인'} btnLayout={btn_w694_r30} btnStyle={'border'} titleFontStyle={32} disable={!pwdCheck} />
 			</View>
 		</View>
 	);

@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, TouchableOpacity, SafeAreaView, StyleSheet, Platform, Dimensions} from 'react-native';
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
-import {WHITE, GRAY10} from 'Root/config/color';
+import {WHITE, GRAY10, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
@@ -25,7 +25,7 @@ const OneBtnModal = props => {
 	return (
 		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={style.background}>
 			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
-				<Text style={[txt.noto28, style.msg]}>{props.popUpMsg}</Text>
+				<Text style={[txt.noto28, style.msg, {color: MAINBLACK}]}>{props.popUpMsg}</Text>
 				<View style={style.buttonContainer}>
 					<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.okMsg} onPress={pressOk} />
 				</View>

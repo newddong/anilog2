@@ -339,6 +339,20 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		}
 	};
 
+	const ITEM_HEIGHT = 266 * DP;
+	const keyExtractor = React.useCallback(item => item._id.toString(), []);
+	const getItemLayout = React.useCallback(
+		(data, index) =>
+			!data[index]
+				? {length: 0, offset: 0, index: index}
+				: {
+						length: ITEM_HEIGHT,
+						offset: ITEM_HEIGHT * index,
+						index,
+				  },
+		[],
+	);
+
 	//페이지 하단 보호요청 게시글 listEmptyComponent
 	const whenEmpty = () => {
 		return <ListEmptyInfo text={'목록이 없습니다..'} />;
@@ -346,7 +360,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	const header = () => {
 		return (
-			<View style={{alignItems: 'center'}}>
+			<View style={{alignItems: 'center', paddingTop: 20 * DP}}>
 				{/* 임시보호 후보자 협의 중 사진 */}
 				<View style={[style.rescueImage]}>
 					{data.protect_request_photos_uri ? (
@@ -425,6 +439,8 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					<FlatList
 						data={writersAnotherRequests}
 						renderItem={renderOtherRequest}
+						keyExtractor={keyExtractor}
+						getItemLayout={getItemLayout}
 						style={{backgroundColor: '#fff'}}
 						showsVerticalScrollIndicator={false}
 						ListEmptyComponent={whenEmpty}

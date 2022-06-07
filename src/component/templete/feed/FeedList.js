@@ -1,6 +1,18 @@
 import React from 'react';
-import {StyleSheet, View, FlatList, RefreshControl, Platform, NativeModules, Text, TextInput, Dimensions, PixelRatio} from 'react-native';
-import {GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
+import {
+	StyleSheet,
+	View,
+	FlatList,
+	RefreshControl,
+	Platform,
+	NativeModules,
+	Text,
+	TextInput,
+	Dimensions,
+	PixelRatio,
+	ActivityIndicator,
+} from 'react-native';
+import {APRI10, GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
 import {Write94, Camera54} from 'Atom/icon';
 import Feed from 'Organism/feed/Feed';
 import {deleteFeed, getMissingReportList, getSuggestFeedList} from 'Root/api/feedapi';
@@ -17,24 +29,24 @@ import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {useScrollToTop} from '@react-navigation/native';
 import NewMissingReportList from '../list/NewMissingReportList';
 import {getUserInfoById} from 'Root/api/userapi';
-import {NETWORK_ERROR} from 'Root/i18n/msg';
+import {FEED_LIMIT, NETWORK_ERROR} from 'Root/i18n/msg';
 
 export default FeedList = ({route, navigation}) => {
 	const [feedList, setFeedList] = React.useState([]);
+	const [total, setTotal] = React.useState();
 	const [refreshing, setRefreshing] = React.useState(false);
-	const [index, setIndex] = React.useState(0);
-	const [toTop, setToTop] = React.useState(0);
+	const [loading, setLoading] = React.useState(false);
 	const [topList, setTopList] = React.useState([]);
 	const flatlist = React.useRef();
 	const requestNum = 99;
-	const [onWrite, setOnWrite] = React.useState(false);
-	//피드썸네일 클릭 리스트일 경우
 
+	//피드썸네일 클릭 리스트일 경우
 	React.useEffect(() => {
 		if (route.params?.pressed != 0) {
 			moveToTop();
 		}
 	}, [route.params]);
+
 	React.useEffect(() => {
 		// console.log('userobject', route.params?.userobject);
 		switch (route.name) {
@@ -52,6 +64,199 @@ export default FeedList = ({route, navigation}) => {
 		}
 	}, [route.params?.userobject]);
 
+	const setFeed = list => {
+		setFeedList(
+			list
+				.map((v, i, a) => {
+					let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
+					lines = lines > 3 ? 3 : lines;
+					if (v.feed_recent_comment) {
+						return {...v, height: (750 + 200 + 120 + 2 + lines * 54) * DP};
+					} else {
+						return {...v, height: (750 + 72 + 120 + 2 + lines * 54) * DP};
+					}
+				})
+				.map((v, i, a) => {
+					let offset = a.slice(0, i).reduce((prev, current) => {
+						return current.height + prev;
+					}, 0);
+					return {
+						...v,
+						offset: offset,
+					};
+				}),
+		);
+	};
+
+	const onEndReached = () => {
+		console.log('onEndReached', feedList.length, total);
+		if (feedList.length < total) {
+			getList(false, true);
+		} else {
+			console.log('토탈 초과');
+		}
+	};
+
+	const getList = (pre, next) => {
+		switch (route.name) {
+			case 'UserFeedList':
+				try {
+					setLoading(true);
+					let params = {
+						userobject_id: route.params?.userobject._id,
+						login_userobject_id: userGlobalObject.userInfo._id,
+						limit: FEED_LIMIT,
+					};
+					//기본 LIMIT보다 작은 인덱스가 선택됐을 경우 다음 페이지 호출만 요청
+					if (route.params && route.params.index < 10) {
+						if (!pre && next) {
+							console.log('next');
+							params.target_object_id = feedList[feedList.length - 1]._id;
+							params.order_value = 'next';
+						}
+					} else {
+						route.params ? console.log('selected index', route.params.index) : false;
+						//스크롤 최상단 도착 => 타겟은 최상단의 피드id이며 호출은 이전 페이지
+						if (pre && !next) {
+							params.target_object_id = feedList[0]._id;
+							params.order_value = 'pre';
+							//스크롤 최하단 도착 => 타겟은 최하단 피드id이며 호출은 다음 페이지
+						} else if (!pre && next) {
+							params.target_object_id = feedList[feedList.length - 1]._id;
+							params.order_value = 'next';
+						} else {
+							//중간에 인터럽트
+							params.target_object_id = route.params.selected._id;
+							params.order_value = 'interrupt';
+						}
+					}
+					// console.log('최종 param', params);
+					getFeedListByUserId(
+						params,
+						result => {
+							console.log('getFeedListByUserId', result.msg.length);
+							// console.log('totalCount', result.total_count);
+							const res = result.msg;
+							setTotal(result.total_count);
+							let list = [];
+							if (!pre && !next) {
+								console.log('첫 호출');
+								list = res;
+							} else if (pre && !next) {
+								console.log('스크롤 최상단');
+								if (route.params.index < 10) return;
+								list = [...res, ...feedList];
+								//앞 페이지를 받아오는 경우, 합산된 리스트의 0번 인덱스로 저절로 스크롤이 되는 현상 발견
+								//기존에 위로 스크롤 하고 있던 상태를 유지시키기 위한 scrollToIndex 처리
+								setTimeout(() => {
+									if (flatlist.current) {
+										console.log('scrollToItem 최상단');
+										flatlist.current.scrollToIndex({
+											animated: false,
+											index: res.length < 10 ? res.length : 10, // 새로 받아온 앞 페이지 리스트가 10개 이하(최상단 페이지라는 증거)일 때 가장 최신의 글로 인덱스 자동 이동
+										});
+									}
+								}, 0);
+							} else if (!pre && next) {
+								console.log('스크롤 최하단');
+								list = [...feedList, ...res];
+							}
+							console.log('최종 list length', list.length);
+							setFeed(list);
+							setLoading(false);
+						},
+						errormsg => {
+							Modal.popOneBtn(errormsg, '확인', () => Modal.close());
+							setLoading(false);
+						},
+					);
+				} catch (err) {
+					console.log('err', err);
+					setTimeout(() => {
+						Modal.popOneBtn(NETWORK_ERROR, '확인', () => navigation.goBack());
+					}, 100);
+				}
+
+				break;
+			case 'TagMeFeedList':
+				getUserTaggedFeedList(
+					{
+						userobject_id: userGlobalObject.userInfo._id,
+						request_number: requestNum,
+					},
+					({msg}) => {
+						setFeed(msg);
+					},
+					errormsg => {
+						Modal.alert(errormsg);
+					},
+				);
+				break;
+			case 'UserTagFeedList':
+				getUserTaggedFeedList(
+					{
+						userobject_id: route.params?.userobject._id,
+						request_number: requestNum,
+					},
+					({msg}) => {
+						setFeed(msg);
+					},
+					errormsg => {
+						Modal.popOneBtn(errormsg, '확인', () => Modal.close());
+					},
+				);
+				break;
+			case 'HashFeedList':
+				getFeedsByHash(
+					{hashtag_keyword: route.params?.hashtag_keyword},
+					({msg}) => {
+						// setIndex(msg.feeds.findIndex(v => v.hashtag_feed_id._id == route.params?.selected._id));
+						// setFeedList(msg.feeds.map(v => v.hashtag_feed_id));
+						setFeed(msg.feeds.map(v => v.hashtag_feed_id));
+					},
+					error => {
+						Modal.popOneBtn(error, '확인', () => {
+							setTimeout(() => {
+								navigation.goBack(), 300;
+							});
+						});
+					},
+				);
+				break;
+			case 'FavoriteFeedList':
+				getFavoriteFeedListByUserId(
+					{userobject_id: userGlobalObject.userInfo._id},
+					({msg}) => {
+						// setIndex(msg.feeds.findIndex(v => v.hashtag_feed_id._id == route.params?.selected._id));
+						// setFeedList(msg);
+						setFeed(msg.map(v => v.favorite_feed_id));
+					},
+					error => {
+						Modal.popOneBtn(error, '확인', () => {
+							setTimeout(() => {
+								navigation.goBack(), 300;
+							});
+						});
+					},
+				);
+				break;
+			default:
+				getSuggestFeedList(
+					{
+						login_userobject_id: userGlobalObject.userInfo._id,
+					},
+					({msg}) => {
+						// console.log(msg.length);
+						setFeed(msg);
+					},
+					errormsg => {
+						Modal.popOneBtn(errormsg, '확인', () => Modal.close());
+					},
+				);
+				break;
+		}
+	};
+
 	React.useEffect(() => {
 		if (route.name == 'MainHomeFeedList') {
 			getMissingReportList(
@@ -65,252 +270,39 @@ export default FeedList = ({route, navigation}) => {
 				},
 			);
 		}
-		const getList = () => {
-			switch (route.name) {
-				case 'UserFeedList':
-					getFeedListByUserId(
-						{
-							userobject_id: route.params?.userobject._id,
-							request_number: requestNum,
-							login_userobject_id: userGlobalObject.userInfo._id,
-						},
-						({msg}) => {
-							setFeedList(
-								msg
-									.map((v, i, a) => {
-										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
-										lines = lines > 3 ? 3 : lines;
-										if (v.feed_recent_comment) {
-											return {...v, height: (750 + 200 + 120 + 2 + lines * 54) * DP};
-										} else {
-											return {...v, height: (750 + 72 + 120 + 2 + lines * 54) * DP};
-										}
-									})
-									.map((v, i, a) => {
-										let offset = a.slice(0, i).reduce((prev, current) => {
-											return current.height + prev;
-										}, 0);
-										return {
-											...v,
-											offset: offset,
-										};
-									}),
-							);
-						},
-						errormsg => {
-							Modal.popOneBtn(errormsg, '확인', () => Modal.close());
-						},
-					);
 
-					break;
-				case 'TagMeFeedList':
-					getUserTaggedFeedList(
-						{
-							userobject_id: userGlobalObject.userInfo._id,
-							request_number: requestNum,
-						},
-						({msg}) => {
-							console.log(
-								'태그',
-								msg.findIndex(v => v._id == route.params?.selected._id),
-							);
-							setFeedList(
-								msg
-									.map((v, i, a) => {
-										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
-										lines = lines > 3 ? 3 : lines;
-										if (v.feed_recent_comment) {
-											return {...v, height: (750 + 200 + 120 + 2 + lines * 54) * DP};
-										} else {
-											return {...v, height: (750 + 72 + 120 + 2 + lines * 54) * DP};
-										}
-									})
-									.map((v, i, a) => {
-										let offset = a.slice(0, i).reduce((prev, current) => {
-											return current.height + prev;
-										}, 0);
-										return {
-											...v,
-											offset: offset,
-										};
-									}),
-							);
-						},
-						errormsg => {
-							Modal.alert(errormsg);
-						},
-					);
-					break;
-				case 'UserTagFeedList':
-					getUserTaggedFeedList(
-						{
-							userobject_id: route.params?.userobject._id,
-							request_number: requestNum,
-						},
-						({msg}) => {
-							setFeedList(
-								msg
-									.map((v, i, a) => {
-										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
-										lines = lines > 3 ? 3 : lines;
-										if (v.feed_recent_comment) {
-											return {...v, height: (750 + 200 + 120 + 2 + lines * 54) * DP};
-										} else {
-											return {...v, height: (750 + 72 + 120 + 2 + lines * 54) * DP};
-										}
-									})
-									.map((v, i, a) => {
-										let offset = a.slice(0, i).reduce((prev, current) => {
-											return current.height + prev;
-										}, 0);
-										return {
-											...v,
-											offset: offset,
-										};
-									}),
-							);
-						},
-						errormsg => {
-							Modal.popOneBtn(errormsg, '확인', () => Modal.close());
-						},
-					);
-					break;
-				case 'HashFeedList':
-					getFeedsByHash(
-						{hashtag_keyword: route.params?.hashtag_keyword},
-						({msg}) => {
-							// setIndex(msg.feeds.findIndex(v => v.hashtag_feed_id._id == route.params?.selected._id));
-							// setFeedList(msg.feeds.map(v => v.hashtag_feed_id));
-							setFeedList(
-								msg.feeds
-									.map(v => v.hashtag_feed_id)
-									.map((v, i, a) => {
-										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
-										lines = lines > 3 ? 3 : lines;
-										if (v.feed_recent_comment) {
-											return {...v, height: (750 + 200 + 120 + 2 + lines * 54) * DP};
-										} else {
-											return {...v, height: (750 + 72 + 120 + 2 + lines * 54) * DP};
-										}
-									})
-									.map((v, i, a) => {
-										let offset = a.slice(0, i).reduce((prev, current) => {
-											return current.height + prev;
-										}, 0);
-										return {
-											...v,
-											offset: offset,
-										};
-									}),
-							);
-						},
-						error => {
-							Modal.popOneBtn(error, '확인', () => {
-								setTimeout(() => {
-									navigation.goBack(), 300;
-								});
-							});
-						},
-					);
-					break;
-				case 'FavoriteFeedList':
-					getFavoriteFeedListByUserId(
-						{userobject_id: userGlobalObject.userInfo._id},
-						({msg}) => {
-							// setIndex(msg.feeds.findIndex(v => v.hashtag_feed_id._id == route.params?.selected._id));
-							// setFeedList(msg);
-							setFeedList(
-								msg
-									.map((v, i, a) => {
-										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
-										lines = lines > 3 ? 3 : lines;
-										if (v.feed_recent_comment) {
-											return {...v, height: (750 + 200 + 120 + 2 + lines * 54) * DP};
-										} else {
-											return {...v, height: (750 + 72 + 120 + 2 + lines * 54) * DP};
-										}
-									})
-									.map((v, i, a) => {
-										let offset = a.slice(0, i).reduce((prev, current) => {
-											return current.height + prev;
-										}, 0);
-										return {
-											...v,
-											offset: offset,
-										};
-									}),
-							);
-
-							console.log('즐겨찾기 리스트', msg);
-						},
-						error => {
-							Modal.popOneBtn(error, '확인', () => {
-								setTimeout(() => {
-									navigation.goBack(), 300;
-								});
-							});
-						},
-					);
-					break;
-				default:
-					getSuggestFeedList(
-						{
-							login_userobject_id: userGlobalObject.userInfo._id,
-						},
-						({msg}) => {
-							console.log(msg.length);
-							setFeedList(
-								msg
-									.map((v, i, a) => {
-										let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
-										if (v.feed_recent_comment) {
-											return {...v, height: (750 + 200 + 44 + 128 + 2 + (lines > 3 ? 2 * 54 + 48 : lines * 54)) * DP};
-										} else {
-											return {...v, height: (750 + 72 + 44 + 2 + (lines > 3 ? 2 * 54 + 48 : lines * 54)) * DP};
-										}
-									})
-									.map((v, i, a) => {
-										let offset = a.slice(0, i).reduce((prev, current) => {
-											return current.height + prev;
-										}, 0);
-										return {
-											...v,
-											offset: offset,
-										};
-									}),
-							);
-						},
-						errormsg => {
-							Modal.popOneBtn(errormsg, '확인', () => Modal.close());
-						},
-					);
-					break;
-			}
-		};
 		//FeedList 스크린 이동시 피드리스트 갱신
 		const unsubscribe = navigation.addListener('focus', () => {
 			getList();
 		});
 		//Refreshing 요청시 피드리스트 다시 조회
-		refreshing ? getList() : false;
+		if (route.name == 'MainHomeFeedList') {
+			refreshing ? getList() : false;
+		}
 		return unsubscribe;
 	}, [refreshing, route]);
+
 	const [refresh, setRefresh] = React.useState(false);
+	const [scrollComplete, setScrollComplete] = React.useState(false); //feedList가 갱신될 때 다시 스크롤되지 않도록 처리
+
 	React.useEffect(() => {
 		if (feedList.length > 0) {
 			let indx = feedList.findIndex(v => v._id == route.params?.selected?._id);
-			if (route.params?.selected) {
+			if (route.params?.selected && !scrollComplete) {
 				setTimeout(() => {
 					flatlist.current.scrollToItem({
 						animated: false,
 						item: feedList[indx],
 					});
+					setScrollComplete(true); //feedList가 갱신될 때 다시 스크롤되지 않도록 처리
 				}, 0);
 			}
 		}
-		setRefresh(!refresh);
+		if (route.params && route.params.index < 10) return;
+		// setRefresh(!refresh);
 	}, [feedList]);
 
+	//피드 삭제
 	const deleteFeedItem = id => {
 		Modal.close();
 		setTimeout(() => {
@@ -330,8 +322,8 @@ export default FeedList = ({route, navigation}) => {
 		}, 100);
 	};
 
+	// 피드 글쓰기 아이콘 클릭
 	const moveToFeedWrite = () => {
-		// navigation.push('LocationPicker');
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate({name: 'Login', merge: true});
@@ -364,15 +356,19 @@ export default FeedList = ({route, navigation}) => {
 
 	const onRefresh = () => {
 		setRefreshing(true);
-
 		wait(0).then(() => setRefreshing(false));
 	};
 
 	const rememberScroll = e => {
 		if (e.nativeEvent.contentOffset.y > 0) {
 			userGlobalObject.t = e.nativeEvent.contentOffset;
+		} else if (route.name != 'MainHomeFeedList' && e.nativeEvent.contentOffset.y == 0) {
+			console.log('onReached At top');
+			if (route.params && route.params.index < 10) return;
+			getList(true, false);
 		}
 	};
+
 	const moveToTop = () => {
 		flatlist.current.scrollToOffset({animated: true, offset: 0});
 	};
@@ -401,16 +397,7 @@ export default FeedList = ({route, navigation}) => {
 	const [testTx, setTx] = React.useState('한');
 	const [code, setCode] = React.useState(62);
 	return (
-		<View
-			style={
-				(login_style.wrp_main,
-				{
-					flex: 1,
-					backgroundColor: WHITE,
-					// borderTopWidth: 2 * DP,
-					// borderTopColor: GRAY30
-				})
-			}>
+		<View style={[login_style.wrp_main, {flex: 1, backgroundColor: WHITE}]}>
 			<FlatList
 				data={feedList}
 				renderItem={renderItem}
@@ -418,7 +405,7 @@ export default FeedList = ({route, navigation}) => {
 					let key = item._id + item.feed_update_date + item.feed_is_like;
 					return key;
 				}}
-				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+				refreshControl={route.name == 'MainHomeFeedList' ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} /> : <></>}
 				getItemLayout={(data, index) => {
 					if (!data[index]) return {length: 0, offset: 0, index: index};
 					return {length: data[index].height, offset: data[index].offset, index: index};
@@ -434,6 +421,8 @@ export default FeedList = ({route, navigation}) => {
 					</View>
 				)}
 				windowSize={3}
+				onEndReachedThreshold={0.6}
+				onEndReached={onEndReached}
 			/>
 			{userGlobalObject.userInfo && (
 				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}]}>
@@ -565,6 +554,22 @@ export default FeedList = ({route, navigation}) => {
 						<View style={{backgroundColor: 'blue', width: 100, height: 100, bottom: 0, left: 0}} />
 					</TouchableWithoutFeedback>
 				</View>
+			)}
+			{loading ? (
+				<View
+					style={{
+						position: 'absolute',
+						left: 0,
+						right: 0,
+						top: 0,
+						bottom: 0,
+						alignItems: 'center',
+						justifyContent: 'center',
+					}}>
+					<ActivityIndicator size="large" color={APRI10} />
+				</View>
+			) : (
+				<></>
 			)}
 		</View>
 	);

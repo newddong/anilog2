@@ -274,7 +274,7 @@ export default function HashInput(props) {
 			</View>
 
 			{find && (
-				<View style={{width: '100%', flex: 1, padding: 15 * DP, flexDirection: 'row'}}>
+				<View style={{width: '100%', flex: 1, padding: 15 * DP}}>
 					{/* <AccountList items={findList} onSelect={userSelect} makeBorderMode={false} showCrossMark={false} /> */}
 					<AccountHashList data={findList} showFollowBtn={false} onClickLabel={userSelect} onClickHash={hashSelect} />
 				</View>

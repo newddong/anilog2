@@ -130,7 +130,6 @@ const Input24 = React.forwardRef((props, ref) => {
 					{
 						backgroundColor: '#FAFAFA',
 						borderRadius: 30 * DP,
-
 						// borderBottomWidth: 2 * DP,
 						// borderBottomColor: setBorderColor(),
 						flexDirection: 'row',
@@ -208,6 +207,8 @@ const Input24Props = {
 	info: string,
 	/** @type {number} 입력창 너비 */
 	width: number,
+	/** @type {number} 입력창 높이 */
+	height: number,
 	/** @type {number} 최대 글자수 */
 	maxlength: number,
 	/** @type {boolean} 하단의 경고/확인 메세지를 표시할지 여부를 결정 */

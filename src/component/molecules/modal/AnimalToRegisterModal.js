@@ -53,7 +53,7 @@ const AnimalToRegisterModal = props => {
 						{data.map((v, i) => {
 							return (
 								<View key={i} style={[style.aidRequestItem, {opacity: selectedIndex == -1 || i == selectedIndex ? 1 : 0.5}]}>
-									<AidRequest data={v} selectBorderMode={true} onSelect={() => onSelect(i)} showBadge={false} />
+									<AidRequest data={v} selectBorderMode={true} inActiveOpacity={true} onSelect={() => onSelect(i)} showBadge={false} />
 								</View>
 							);
 						})}

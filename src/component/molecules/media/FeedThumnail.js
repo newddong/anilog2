@@ -1,8 +1,8 @@
 import React from 'react';
-import {Text, View, Image, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
+import {Text, View, Image, TouchableOpacity, TouchableWithoutFeedback, StyleSheet} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {Check50, ImageList48, VideoPlay48} from 'Atom/icon';
+import {Blur, Blur246, Check50, ImageList48, VideoPlay48} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import {BLACK, RED10, WHITE} from 'Root/config/color';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
@@ -100,9 +100,29 @@ const FeedThumbnail = React.memo(props => {
 
 				{/* 클릭하거나 전체 선택시 체크 표기 - 모드는 선택하기 모드여야 함. */}
 				{checkDisplay()}
+				<View style={[style.blur, {zIndex: -1}]}>
+					<Blur246 />
+				</View>
 			</View>
 		</TouchableWithoutFeedback>
 	);
 });
 FeedThumbnail.defaultProps = {};
 export default FeedThumbnail;
+
+const style = StyleSheet.create({
+	blur: {
+		position: 'absolute',
+		bottom: 0,
+		left: 0,
+		top: 0,
+		right: 0,
+		opacity: 0.6,
+		// borderRadius: 30 * DP,
+		zIndex: 1,
+		width: 244 * DP,
+		height: 246 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+});

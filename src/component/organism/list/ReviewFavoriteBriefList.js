@@ -23,11 +23,11 @@ const ReviewFavoriteBriefList = props => {
 	};
 
 	const renderItem = (item, index) => {
+		// console.log('ind', item.community_title, item.height, item.offset, item.community_title);
 		return (
-			<View key={index} style={[style.listItem, {}]}>
+			<View key={index} style={[style.listItem]}>
 				{props.selectMode ? (
 					<View style={{justifyContent: 'center', marginRight: 20 * DP}}>
-						{/* <CheckBox state={item.checkBoxState} onCheck={() => props.onCheckBox(index)} /> */}
 						{item.checkBoxState ? (
 							<Check50 onPress={() => onPressToggle(index, false)} />
 						) : (
@@ -55,6 +55,10 @@ const ReviewFavoriteBriefList = props => {
 				showsVerticalScrollIndicator={false}
 				listKey={({item, index}) => index}
 				keyExtractor={item => item._id}
+				getItemLayout={(data, index) => {
+					if (!data[index]) return {length: 0, offset: 0, index: index};
+					return {length: data[index].height, offset: data[index].offset, index: index};
+				}}
 				ListEmptyComponent={props.whenEmpty}
 				onEndReachedThreshold={0.6}
 				onEndReached={() => props.onEndReached()}
@@ -81,7 +85,7 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 	},
 	listItem: {
-		marginBottom: 60 * DP,
+		paddingBottom: 40 * DP,
 		flexDirection: 'row',
 	},
 	showMore: {

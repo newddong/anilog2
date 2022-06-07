@@ -1,19 +1,20 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {APRI10, GRAY10, GRAY30} from 'Root/config/color';
+import {APRI10, GRAY10, GRAY30, GRAY50} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import {ActivityIndicator, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Stagebar from 'Molecules/info/Stagebar';
 import AniButton from 'Molecules/button/AniButton';
-import {login_style, btn_style, temp_style, progressbar_style, assignPetInfo_style} from 'Templete/style_templete';
+import {login_style, btn_style, temp_style, progressbar_style} from 'Templete/style_templete';
 import RadioBox from 'Molecules/select/RadioBox';
 import TabSelectFilled_Type1 from 'Molecules/tab/TabSelectFilled_Type1';
 import {FEMALE, MALE, NO, PET_KIND, UNAWARENESS, YES} from 'Root/i18n/msg';
 import {stagebar_style} from 'Organism/style_organism copy';
 import {getPettypes} from 'Root/api/userapi';
 import Modal from 'Component/modal/Modal';
-import {Arrow_Down_GRAY10} from 'Root/component/atom/icon';
+import {Arrow_Down_BLACK, Arrow_Down_GRAY10} from 'Root/component/atom/icon';
+import ArrowButton from 'Root/component/molecules/button/ArrowButton';
 
 export default AssignPetInfoA = props => {
 	const navigation = useNavigation();
@@ -138,63 +139,152 @@ export default AssignPetInfoA = props => {
 					insideBarStyle={stagebar_style.insideBar} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
 					current={isProtectAnimalRoute ? 3 : 2} //현재 단계를 정의
 					maxstage={isProtectAnimalRoute ? 4 : 3} //전체 단계를 정의
-					width={600 * DP} //bar의 너비
+					width={640 * DP} //bar의 너비
 					textStyle={[txt.roboto24, stagebar_style.text]} //text의 스타일
 				/>
 			</View>
-
-			<View style={[temp_style.textMsg_assignPetInfo, assignPetInfo_style.textMsg]}>
+			<View style={[assignPetInfo_style.textMsg]}>
 				<Text style={[txt.noto24, {color: GRAY10}]}>반려 동물의 종과 성별, 중성화 여부를 알려주세요.</Text>
 			</View>
-
-			{/* InputForm */}
-			<View style={[temp_style.assignPetInfoA, assignPetInfo_style.inputForm]}>
+			<View style={[assignPetInfo_style.inputForm]}>
 				{/* 분류 */}
-				<View style={[temp_style.inputForm_assignPetInfo_line1]}>
-					<Text style={[temp_style.text_assignPetInfo, txt.noto28, {color: GRAY10}]}>분류</Text>
-					<TouchableOpacity
-						onPress={onPressPetSpecies}
-						style={[temp_style.dropdownSelect_assignPetInfo_depth1, assignPetInfo_style.dropdownSelect_depth1, {alignSelf: 'flex-start'}]}>
-						<View style={[assignPetInfo_style.petKind]}>
-							<Text style={[txt.noto28, assignPetInfo_style.petKind_text]}>{data.pet_species}</Text>
-							<Arrow_Down_GRAY10 />
-						</View>
-					</TouchableOpacity>
-					<TouchableOpacity
-						onPress={onPressPetSpeciesDetail}
-						style={[temp_style.dropdownSelect_assignPetInfo_depth2, assignPetInfo_style.dropdownSelect_depth2]}>
-						<View style={[assignPetInfo_style.pet_species_detail]}>
-							<Text style={[txt.noto28, assignPetInfo_style.pet_species_detail_text]}>{data.pet_species_detail}</Text>
-							<Arrow_Down_GRAY10 />
-						</View>
-					</TouchableOpacity>
+				<View style={[assignPetInfo_style.kindCont]}>
+					<Text style={[temp_style.text_assignPetInfo, txt.noto28, {marginTop: 30 * DP}]}>분류</Text>
+					<View>
+						<TouchableOpacity onPress={onPressPetSpecies} style={[assignPetInfo_style.dropdownSelect_depth1, {alignSelf: 'flex-start'}]}>
+							<View style={[assignPetInfo_style.petKind]}>
+								<Text style={[txt.noto28, assignPetInfo_style.petKind_text]}>{data.pet_species}</Text>
+								<Arrow_Down_BLACK />
+							</View>
+						</TouchableOpacity>
+						<TouchableOpacity
+							onPress={onPressPetSpeciesDetail}
+							style={[assignPetInfo_style.dropdownSelect_depth1, {alignSelf: 'flex-start', marginTop: 20 * DP}]}>
+							<View style={[assignPetInfo_style.petKind]}>
+								<Text style={[txt.noto28, assignPetInfo_style.petKind_text]}>{data.pet_species_detail}</Text>
+								<Arrow_Down_BLACK />
+							</View>
+						</TouchableOpacity>
+					</View>
 				</View>
 
 				{/* 성별 */}
-				<View style={[temp_style.inputForm_assignPetInfo_line2, assignPetInfo_style.line2]}>
-					<Text style={[temp_style.text_assignPetInfo, txt.noto28, {color: GRAY10}]}>성별</Text>
-					<View style={[temp_style.tabSelectFilled_Type1, assignPetInfo_style.tabSelectFilled_Type1]}>
-						<TabSelectFilled_Type1 items={[MALE, FEMALE, '모름']} width={500} onSelect={onSelectGender} defaultIndex={getDefaultGender()} />
+				<View style={[assignPetInfo_style.line2]}>
+					<Text style={[temp_style.text_assignPetInfo, txt.noto28]}>성별</Text>
+					<View style={[assignPetInfo_style.tabSelectFilled_Type1]}>
+						<TabSelectFilled_Type1 items={[MALE, FEMALE, '모름']} width={170} onSelect={onSelectGender} defaultIndex={getDefaultGender()} />
 					</View>
 				</View>
 
 				{/* 중성화 */}
-				<View style={[temp_style.inputForm_assignPetInfo_line3, assignPetInfo_style.line3]}>
-					<Text style={[temp_style.text_assignPetInfo, txt.noto28, {color: GRAY10}]}>중성화</Text>
+				<View style={[assignPetInfo_style.line3]}>
+					<Text style={[temp_style.text_assignPetInfo, txt.noto28]}>중성화</Text>
 					<View style={[assignPetInfo_style.tabSelectFilled_Type1]}>
 						<RadioBox items={[YES, NO, UNAWARENESS]} onSelect={onSelectNeutralization} defaultSelect={getDefaultNeutralization()} />
 					</View>
 				</View>
 			</View>
 			{/* 버튼 */}
-			<View style={[temp_style.btn_w226_assignPetInfo, assignPetInfo_style.btn_w226_viewA]}>
-				<View style={[btn_style.btn_w226]}>
-					<AniButton btnTitle={'뒤로'} btnTheme={'shadow'} btnStyle={'border'} onPress={() => navigation.goBack()} />
-				</View>
-				<View style={[btn_style.btn_w226, assignPetInfo_style.btn_w226]}>
-					<AniButton btnTitle={'다음'} btnTheme={'shadow'} onPress={gotoNextStep} />
-				</View>
+			<View style={[assignPetInfo_style.btn_w226_viewA]}>
+				<ArrowButton direction={'back'} onPress={() => navigation.goBack()} />
+				<ArrowButton direction={'forward'} onPress={gotoNextStep} />
 			</View>
 		</View>
 	);
 };
+
+const assignPetInfo_style = StyleSheet.create({
+	textMsg: {
+		width: 694 * DP,
+		height: 36 * DP,
+		marginTop: 12 * DP,
+	},
+	inputForm: {
+		marginTop: 70 * DP,
+	},
+	kindCont: {
+		flexDirection: 'row',
+		width: 694 * DP,
+		// height: 82 * DP,
+		// alignItems: 'center',
+	},
+	dropdownSelect_depth1: {
+		width: 550 * DP,
+		height: 104 * DP,
+		marginLeft: 12 * DP,
+		borderRadius: 30 * DP,
+		justifyContent: 'center',
+		backgroundColor: GRAY50,
+	},
+	petKind: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	petKind_text: {
+		width: 442 * DP,
+		height: 44 * DP,
+		textAlign: 'center',
+	},
+	dropdownSelect_depth2: {
+		marginLeft: 24 * DP,
+	},
+	line2: {
+		flexDirection: 'row',
+		width: 654 * DP,
+		height: 82 * DP,
+		alignItems: 'center',
+		marginTop: 60 * DP,
+	},
+	tabSelectFilled_Type1: {
+		marginLeft: 12 * DP,
+	},
+	line3: {
+		flexDirection: 'row',
+		width: 694 * DP,
+		height: 46 * DP,
+		alignItems: 'center',
+		marginTop: 60 * DP,
+	},
+	btn_w226_viewA: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		width: 694 * DP,
+		marginTop: 110 * DP,
+	},
+	btn_w226: {
+		marginLeft: 202 * DP,
+	},
+	datePicker_depth1: {
+		marginLeft: 16 * DP,
+	},
+	text218: {
+		marginTop: 46 * DP,
+		marginLeft: 12 * DP,
+	},
+	inputNoTitle: {
+		marginLeft: 16 * DP,
+	},
+	text68: {
+		marginLeft: 16 * DP,
+	},
+	btn_w226_viewB: {
+		marginTop: 130 * DP,
+	},
+
+	pet_species_detail: {
+		width: 292 * DP,
+		height: 82 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderBottomWidth: 2 * DP,
+		borderBottomColor: APRI10,
+	},
+	pet_species_detail_text: {
+		minWidth: 208 * DP,
+		// width: 208 * DP,
+		height: 44 * DP,
+		textAlign: 'center',
+	},
+});

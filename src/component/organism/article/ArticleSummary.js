@@ -109,7 +109,7 @@ const ArticleSummary = props => {
 									),
 							  )}
 					</Text>
-					<View style={[{flexDirection: 'row', width: 470 * DP, alignItems: 'center'}]}>
+					<View style={[{flexDirection: 'row', width: 510 * DP, alignItems: 'center'}]}>
 						<Text style={[txt.noto28, {textAlignVertical: 'center', marginRight: 10 * DP, maxWidth: 400 * DP}]} numberOfLines={1}>
 							{props.isSearch == '' || props.isSearch.length < 2
 								? trim_second
@@ -141,8 +141,8 @@ const ArticleSummary = props => {
 	return (
 		<View style={[style.container]}>
 			<View style={[style.inside]}>
-				<Text style={[txt.noto28, {color: GRAY10}]}>{getArticleType()}</Text>
-				<TouchableOpacity onPress={onPressArticle} activeOpacity={props.selectMode ? 1 : 0.6} style={[style.content, {marginLeft: 0 * DP}]}>
+				<Text style={[txt.noto28, {color: GRAY10}]}>{getArticleType()} |</Text>
+				<TouchableOpacity onPress={onPressArticle} activeOpacity={props.selectMode ? 1 : 0.6} style={[style.content]}>
 					{text == '' ? <></> : getText()}
 				</TouchableOpacity>
 				<TouchableOpacity onPress={onPressArticle} activeOpacity={0} style={[style.content, {position: 'absolute', opacity: 0}]}>
@@ -170,12 +170,10 @@ export default ArticleSummary;
 
 const style = StyleSheet.create({
 	container: {
-		width: 654 * DP,
+		width: 694 * DP,
 		paddingVertical: 20 * DP,
 		borderTopColor: GRAY40,
 		borderTopWidth: 2 * DP,
-		// height:82*DP,
-		// backgroundColor: 'yellow',
 		alignSelf: 'center',
 	},
 	inside: {
@@ -184,14 +182,13 @@ const style = StyleSheet.create({
 		// backgroundColor: 'pink',
 	},
 	content: {
-		marginLeft: 20 * DP,
-		width: 470 * DP,
+		width: 510 * DP,
 		maxHeight: 90 * DP,
 		// backgroundColor: 'yellow',
 	},
 	summaryText: {
 		textAlignVertical: 'center',
-		width: 470 * DP,
+		width: 510 * DP,
 		// backgroundColor: 'red',
 	},
 });

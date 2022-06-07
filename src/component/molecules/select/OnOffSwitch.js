@@ -26,7 +26,7 @@ export default OnOffSwitch = props => {
 					{/* {console.log('btnStatus=>' + btnStatus)} */}
 					<View
 						style={{
-							width: 80 * DP,
+							width: 84 * DP,
 							height: 36 * DP,
 							flexDirection: 'row',
 							borderRadius: 18 * DP,
@@ -34,7 +34,7 @@ export default OnOffSwitch = props => {
 							alignItems: 'center',
 							backgroundColor: APRI10,
 						}}>
-						<Text style={[txt.roboto20, {color: WHITE}]}> On </Text>
+						<Text style={[txt.roboto20, {color: WHITE}]}> ON </Text>
 						<View style={{width: 28 * DP, height: 28 * DP, borderRadius: 30, backgroundColor: WHITE}} />
 					</View>
 				</TouchableOpacity>
@@ -56,7 +56,7 @@ export default OnOffSwitch = props => {
 							backgroundColor: GRAY30,
 						}}>
 						<View style={{width: 28 * DP, height: 28 * DP, borderRadius: 30, backgroundColor: WHITE}} />
-						<Text style={[txt.roboto20, {color: WHITE}]}> Off </Text>
+						<Text style={[txt.roboto20, {color: WHITE}]}> OFF </Text>
 					</View>
 				</TouchableOpacity>
 			)}

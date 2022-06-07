@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
-import {APRI10, GRAY10, GRAY20, GRAY30, MAINBLACK, WHITE} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, GRAY20, GRAY30, MAINBLACK, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {btn_w226} from 'Atom/btn/btn_style';
@@ -38,14 +38,14 @@ const ArrowDownButton = props => {
 		if (props.disable || props.btnStyle == 'filled') {
 			return WHITE;
 		} else if (props.btnTheme == 'gray' && props.btnStyle == 'border') {
-			return GRAY20;
-		} else return GRAY20;
+			return BLACK;
+		} else return BLACK;
 	};
 
 	//default는 APRI10, Gray의 경우 GRAY20
 	const border = () => {
 		if (props.btnStyle == 'border' && props.btnTheme == 'gray') {
-			return {borderColor: GRAY10, borderWidth: 2 * DP};
+			return {borderColor: GRAY30, borderWidth: 2 * DP};
 		} else if (props.btnStyle == 'border') {
 			return {borderColor: GRAY30, borderWidth: 4 * DP};
 		}

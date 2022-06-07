@@ -44,6 +44,7 @@ export default ChildCommentList;
 const style = StyleSheet.create({
 	childCommentList: {
 		width: 614 * DP,
+		paddingVertical: 20 * DP,
 		flexDirection: 'row',
 	},
 });

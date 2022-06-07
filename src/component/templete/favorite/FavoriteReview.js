@@ -83,7 +83,27 @@ export default FavoriteReview = ({route}) => {
 								reviewList.push(v.favorite_etc_target_object_id);
 							}
 						});
-						setData(reviewList);
+						setData(
+							reviewList
+								.map((v, i, a) => {
+									let height = 186 * DP;
+									//사진이 없으며 카테고리 선택도 없는 경우
+									if (!v.community_is_attached_file) {
+										height = 146 * DP;
+										//사진은 있지만 카테고리 선택이 없는 경우
+									}
+									return {...v, height: height + 40 * DP}; // ItemSeparator Componenet Height 2 추가
+								})
+								.map((v, i, a) => {
+									let offset = a.slice(0, i).reduce((prev, current) => {
+										return current.height + prev;
+									}, 0);
+									return {
+										...v,
+										offset: offset,
+									};
+								}),
+						);
 					},
 					err => {
 						console.log('err / getFavoriteEtcListByUserId / FavoriteCommunity : ', err);

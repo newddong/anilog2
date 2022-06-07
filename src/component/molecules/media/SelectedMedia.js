@@ -33,7 +33,7 @@ const SelectedMedia = props => {
 						position: 'absolute',
 						right: 0,
 						borderRadius: 50,
-						backgroundColor: 'gray',
+						backgroundColor: 'lightgray',
 						opacity: 0.9,
 						shadowOpacity: 0.1,
 					}}>

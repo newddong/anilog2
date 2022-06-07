@@ -47,8 +47,8 @@ const ShelterSmallLabel = props => {
 				<Image source={{uri: data.user_profile_uri}} style={styles.img_round_72} />
 				<View style={{position: 'absolute', right: 0, bottom: 0}}>{getStatusMark()}</View>
 			</TouchableOpacity>
-			<View style={{marginLeft: 10 * DP, maxWidth: 500 * DP}}>
-				<Text style={[txt.noto24b, {color: isLoginUser ? APRI10 : MAINBLACK}]} numberOfLines={1} ellipsizeMode="tail">
+			<View style={{marginLeft: 30 * DP, maxWidth: 580 * DP}}>
+				<Text style={[txt.noto30b, {color: isLoginUser ? APRI10 : MAINBLACK}]} numberOfLines={1} ellipsizeMode="tail">
 					{data.user_nickname} / {data.shelter_address.brief}
 				</Text>
 				{data.shelter_foundation_date != null || data.shelter_foundation_date != undefined ? (

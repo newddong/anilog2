@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View, TouchableOpacity, StyleSheet} from 'react-native';
 import {txt} from 'Root/config/textstyle';
-import {btn_w522, btn_w654} from 'Atom/btn/btn_style';
+import {btn_w522, btn_w654, btn_w694_r30} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import {login_style, btn_style, temp_style, progressbar_style, assignUserHabitation_style} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
@@ -131,7 +131,7 @@ const AssignUserHabitation = props => {
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
 			{/* (M)StageBar	 */}
-			<View style={[temp_style.stageBar, {marginTop: 20 * DP}]}>
+			<View style={[styles.stageBar, {marginTop: 20 * DP}]}>
 				<StageBar
 					backgroundBarStyle={styles.backgroundBar} //배경이 되는 bar의 style, width props으로 너비결정됨
 					// insideBarStyle={stagebar_style.insideBar} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
@@ -143,8 +143,8 @@ const AssignUserHabitation = props => {
 				/>
 			</View>
 			{/* Text Msg */}
-			<View style={[assignUserHabitation_style.textContainer]}>
-				<Text style={[txt.noto26, assignUserHabitation_style.info_text]}>거주하시는 지역을 대략적으로 알려주세요</Text>
+			<View style={[styles.textContainer]}>
+				<Text style={[txt.noto26, styles.info_text]}>거주하시는 지역을 대략적으로 알려주세요</Text>
 			</View>
 			{/* HabitationForm */}
 			<View style={[assignUserHabitation_style.habitationForm]}>
@@ -167,9 +167,9 @@ const AssignUserHabitation = props => {
 			{/* 버튼 */}
 			<View style={[btn_style.btn_w654, assignUserHabitation_style.btn_w654]}>
 				{adressValid ? (
-					<AniButton btnTitle={'확인'} titleFontStyle={32} btnStyle={'border'} btnTheme={'shadow'} btnLayout={btn_w654} onPress={goToNextStep} />
+					<AniButton btnTitle={'확인'} titleFontStyle={32} btnStyle={'border'} btnTheme={'shadow'} btnLayout={btn_w694_r30} onPress={goToNextStep} />
 				) : (
-					<AniButton btnTitle={'확인'} titleFontStyle={32} disable={true} btnLayout={btn_w654} />
+					<AniButton btnTitle={'확인'} titleFontStyle={32} disable={true} btnLayout={btn_w694_r30} />
 				)}
 			</View>
 		</View>
@@ -205,5 +205,19 @@ const styles = StyleSheet.create({
 		borderWidth: 4 * DP,
 		// borderColor: APRI10,
 		borderColor: MAINBLACK,
+	},
+	stageBar: {
+		width: 694 * DP,
+		height: 32 * DP,
+	},
+	info_text: {
+		width: 694 * DP,
+		height: 40 * DP,
+		marginTop: 12 * DP,
+		color: GRAY10,
+		// alignSelf: 'flex-start',
+	},
+	textContainer: {
+		width: 694 * DP,
 	},
 });

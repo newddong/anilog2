@@ -187,7 +187,6 @@ export default PhoneNumVerification = props => {
 				/>
 			</View>
 			<View style={[{flexDirection: 'row'}, {marginTop: 14 * DP}]}>
-				<Text style={[txt.noto24, {color: GRAY10}]}>입력한 내용이 인증시 자동 입력됩니다.</Text>
 				{props.failed ? (
 					<View style={[{position: 'absolute', right: 5, bottom: 0}]}>
 						<TouchableOpacity onPress={props.requestVerification}>
@@ -195,7 +194,8 @@ export default PhoneNumVerification = props => {
 						</TouchableOpacity>
 					</View>
 				) : (
-					<Text></Text>
+					// <Text></Text>
+					<Text style={[txt.noto24, {color: GRAY10}, {marginLeft: 200 * DP}]}>입력한 내용이 인증시 자동 입력됩니다.</Text>
 				)}
 				{/* {props.phoneVerified ? (
 					<View style={[{position: 'absolute', right: 50, bottom: 0}]}>

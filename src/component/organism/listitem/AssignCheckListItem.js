@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Text, TouchableOpacity, View, StyleSheet} from 'react-native';
 import {APRI10, BLACK, GRAY20, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import CheckBox from 'Molecules/select/CheckBox';
@@ -36,11 +36,11 @@ export default AssignCheckListItem = props => {
 
 	return (
 		<View style={[assignCheckListItem.container]}>
-			<View style={[assignCheckListItem.check50]}>
+			<View style={[styles.check42]}>
 				<CheckBox onCheck={onCheck} state={chekced} />
 			</View>
 			<TouchableOpacity activeOpacity={0.8} onPress={() => onCheck(!chekced)} style={[assignCheckListItem.textContainer]}>
-				<Text style={[txt.noto28, {color: chekced ? APRI10 : BLACK}]}>{props.data.text}</Text>
+				<Text style={[txt.noto28, {color: chekced ? MAINBLACK : MAINBLACK}]}>{props.data.text}</Text>
 			</TouchableOpacity>
 			{props.data.detail ? (
 				<TouchableOpacity onPress={onPressDetail} style={[assignCheckListItem.detailText]}>
@@ -52,6 +52,13 @@ export default AssignCheckListItem = props => {
 		</View>
 	);
 };
+
+const styles = StyleSheet.create({
+	check42: {
+		width: 42 * DP,
+		height: 42 * DP,
+	},
+});
 
 AssignCheckListItem.defaultProps = {
 	isCheck: false,

@@ -1,9 +1,9 @@
 import React from 'react';
-import {Text, View, KeyboardAvoidingView} from 'react-native';
+import {Text, View, KeyboardAvoidingView, StyleSheet} from 'react-native';
 import {login_style, btn_style, temp_style, progressbar_style, assignShelterAddress_style} from 'Templete/style_templete';
-import {APRI10, GRAY10} from 'Root/config/color';
+import {APRI10, GRAY10, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {btn_w654} from 'Atom/btn/btn_style';
+import {btn_w336x82_r30, btn_w654, btn_w694_r30} from 'Atom/btn/btn_style';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import Input24 from 'Molecules/input/Input24';
 import AddressInput from 'Organism/input/AddressInput';
@@ -14,8 +14,12 @@ import {NICKNAME_FORM} from 'Root/i18n/msg';
 export default AssignShelterAddress = props => {
 	const [confirmed, setConfirmed] = React.useState(false); //주소란이 모두 작성되었다며 통과가능
 	const [confirmName, setConfirmName] = React.useState(false); //이름 입력되었다면 통과가능
+	const [privateOrPublic, setPrivateOrPublic] = React.useState(false); //private -> 사설 public 공립
+	const [publicButton, setPublicButton] = React.useState('border'); //버튼 상태 filled
+	const [privateButton, setPrivateButton] = React.useState('border'); //버튼 상태 filled
+
 	const [data, setData] = React.useState({
-		...props.route.params.data,
+		...props.route.params?.data,
 		shelter_name: '',
 		shelter_address: {
 			city: '', //
@@ -40,6 +44,9 @@ export default AssignShelterAddress = props => {
 			});
 		}
 	}, [props.route.params.addr]);
+	React.useEffect(() => {
+		setData({...data, shelter_type: privateOrPublic});
+	}, [privateOrPublic]);
 
 	React.useEffect(() => {
 		if (data.shelter_address.brief.length > 0 && regExp.test(data.shelter_name)) {
@@ -94,46 +101,86 @@ export default AssignShelterAddress = props => {
 		console.log('onvalid', isValid);
 		setConfirmed(isValid);
 	};
+	const onButtonPress = bool => {
+		if (bool == 'private') {
+			setPrivateOrPublic('private');
+			if (privateButton == 'filled') {
+				setPrivateButton('border');
+			} else {
+				setPrivateButton('filled');
+				setPublicButton('border');
+			}
+		} else {
+			setPrivateOrPublic('public');
+			if (publicButton == 'filled') {
+				setPublicButton('border');
+			} else {
+				setPublicButton('filled');
+				setPrivateButton('border');
+			}
+		}
+	};
+
 	return (
 		<KeyboardAvoidingView style={[login_style.wrp_main, {flex: 1}]} behavior={'padding'}>
 			{/* (M)StageBar	 */}
-			<View style={[temp_style.stageBar, progressbar_style.stageBar]}>
+			<View style={[styles.stageBar, {marginTop: 20 * DP}]}>
 				<StageBar
-					backgroundBarStyle={stagebar_style.backgroundBar} //배경이 되는 bar의 style, width props으로 너비결정됨
-					insideBarStyle={stagebar_style.insideBar} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
+					backgroundBarStyle={styles.backgroundBar} //배경이 되는 bar의 style, width props으로 너비결정됨
+					// insideBarStyle={stagebar_style.insideBar} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
 					textStyle={[txt.roboto24, stagebar_style.text]} //text의 스타일
+					insideBarStyle={{width: 160 * DP, height: 20 * DP, backgroundColor: MAINBLACK, borderRadius: 18 * DP}} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
 					current={2} //현재 단계를 정의
 					maxstage={4} //전체 단계를 정의
-					width={600 * DP} //bar의 너비
+					width={640 * DP} //bar의 너비
 				/>
 			</View>
-			<View style={[assignShelterAddress_style.textMsg]}>
+			<View style={[styles.btn_view]}>
+				<AniButton
+					btnTitle={'공립'}
+					// btnTheme={'shadow'}
+
+					btnStyle={publicButton}
+					btnLayout={btn_w336x82_r30}
+					titleFontStyle={32}
+					onPress={() => onButtonPress('public')}
+				/>
+				<AniButton
+					btnTitle={'사립'}
+					btnStyle={privateButton}
+					btnLayout={btn_w336x82_r30}
+					titleFontStyle={32}
+					onPress={() => onButtonPress('private')}
+				/>
+			</View>
+			{/* <View style={[assignShelterAddress_style.textMsg]}>
 				<Text style={[txt.noto24]}>
 					'<Text style={{color: 'red'}}>*</Text>'는 필수 입력해야하는 사항입니다.
 				</Text>
-			</View>
+			</View> */}
 
 			{/* InputForm */}
-			<View style={[temp_style.input24A_assignShelterAddress, assignShelterAddress_style.input24A]}>
+			<View style={[styles.input24A_assignShelterAddress, {marginTop: 50 * DP}]}>
 				<Input24
 					title={'보호소 이름'}
 					placeholder={'보호소 이름을 적어주세요'}
-					descriptionType={'star'}
+					descriptionType={'none'}
 					onChange={onChaneName}
 					value={data.shelter_name}
 					validator={nameValidator}
 					onValid={onValidName}
 					showMsg
-					width={654}
+					width={694}
+					height={104}
 					confirm_msg={''}
 					alert_msg={NICKNAME_FORM}
 				/>
 			</View>
 
-			<View style={[temp_style.addressInput, assignShelterAddress_style.addressInput]}>
+			<View style={[styles.addressInput, assignShelterAddress_style.addressInput]}>
 				<AddressInput
 					title={'보호소 주소'}
-					titleMode={'star'}
+					// titleMode={'star'}
 					titleColor={APRI10}
 					onChangeAddress={onChangeAddress}
 					onChangeDeatilAddress={onChangeDeatilAddress}
@@ -144,13 +191,53 @@ export default AssignShelterAddress = props => {
 			</View>
 
 			{/* (A)Btn_w654 */}
-			<View style={[btn_style.btn_w654, assignShelterAddress_style.btn_w654]}>
+			<View style={[styles.btn_w694, assignShelterAddress_style.btn_w654]}>
 				{confirmed ? (
-					<AniButton btnTitle={'다음'} btnStyle={'border'} btnLayout={btn_w654} titleFontStyle={32} onPress={goToNextStep} />
+					<AniButton btnTitle={'다음'} btnStyle={'border'} btnLayout={btn_w694_r30} titleFontStyle={32} onPress={goToNextStep} />
 				) : (
-					<AniButton btnTitle={'다음'} disable btnLayout={btn_w654} titleFontStyle={32} onPress={goToNextStep} />
+					<AniButton btnTitle={'다음'} disable btnLayout={btn_w694_r30} titleFontStyle={32} onPress={goToNextStep} />
 				)}
 			</View>
 		</KeyboardAvoidingView>
 	);
 };
+const styles = StyleSheet.create({
+	stageBar: {
+		width: 694 * DP,
+		height: 32 * DP,
+	},
+	backgroundBar: {
+		width: 640 * DP,
+		height: 20 * DP,
+		backgroundColor: 'white',
+		borderRadius: 20 * DP,
+		borderWidth: 4 * DP,
+		// borderColor: APRI10,
+		borderColor: MAINBLACK,
+	},
+	btn_view: {
+		width: 694 * DP,
+		marginTop: 50 * DP,
+		height: 82 * DP,
+		flexDirection: 'row',
+		alignContent: 'center',
+		justifyContent: 'space-between',
+	},
+	input24A_assignShelterAddress: {
+		width: 694 * DP,
+		height: 112 * DP,
+	},
+	addressInput: {
+		width: 694 * DP,
+		// height: 238 * DP,
+		// alignItems: 'center',
+		justifyContent: 'center',
+	},
+	btn_w694: {
+		width: 694 * DP,
+		height: 104 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		// backgroundColor: '#DEB5B5',
+	},
+});

@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {Text, View} from 'react-native';
-import {APRI10, GRAY10, RED10} from 'Root/config/color';
+import {Text, View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+import {APRI10, GRAY10, MAINBLACK, RED10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {btn_w108, btn_w176, btn_w226} from 'Atom/btn/btn_style';
@@ -9,6 +9,8 @@ import AniButton from 'Molecules/button/AniButton';
 import Input24 from 'Molecules/input/Input24';
 import {btn_style, temp_style} from 'Templete/style_templete';
 import {addressInput} from 'Organism/style_organism copy';
+import {Search48} from 'Root/component/atom/icon';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 /**
  *
  * @param {object} props
@@ -61,21 +63,22 @@ const AddressInput = props => {
 	};
 
 	return (
-		<View style={[addressInput.container]}>
+		<View style={[styles.container]}>
 			{props.titleMode == 'star' ? (
 				<Text style={[txt.noto24, {color: APRI10}]}>
 					{props.title} <Text style={{color: RED10, fontSize: 24 * DP}}> {'      *'}</Text>
 				</Text>
 			) : (
-				<Text style={[txt.noto28, {color: GRAY10}]}>{props.title} </Text>
+				<Text style={[txt.noto28, {color: MAINBLACK}]}>{props.title} </Text>
 			)}
 
-			<View style={[addressInput.upperContainer]}>
-				<View style={[addressInput.input24A, {flexDirection: 'row'}]}>
+			<View style={[styles.upperContainer]}>
+				<View style={[styles.input24A, {flexDirection: 'row'}]}>
 					<Input24
 						value={props.address}
 						editable={false}
-						width={470}
+						width={622}
+						height={104}
 						placeholder={'주소 찾기를 눌러주세요'}
 						onChange={onChangeAddress}
 						descriptionType={'star'}
@@ -83,18 +86,23 @@ const AddressInput = props => {
 						defaultValue={props.address}
 					/>
 
-					<View style={[addressInput.btn_w226]}>
-						<AniButton btnTitle={'주소 찾기'} btnLayout={btn_w176} btnStyle={'border'} onPress={onPressSearchAddr} />
+					<View style={[{marginTop: 28 * DP}, {marginLeft: 24 * DP}]}>
+						{/* <AniButton btnTitle={'주소 찾기'} btnLayout={btn_w176} btnStyle={'border'} onPress={onPressSearchAddr} /> */}
+
+						<TouchableOpacity onPress={onPressSearchAddr}>
+							<Search48 />
+						</TouchableOpacity>
 					</View>
 				</View>
 			</View>
-			<View style={[temp_style.inputNoTitle, addressInput.inputNoTitle]}>
+			<View style={[styles.inputNoTitle]}>
 				<Input24
-					width={654}
+					width={694}
+					height={104}
 					value={props.detailAddress}
 					defaultValue={props.detailAddress}
 					placeholder={'세부 주소를 입력해 주세요.'}
-					multiline={true}
+					// multiline={true}
 					maxlength={25}
 					onChange={onChangeDetailAddress}
 				/>
@@ -112,4 +120,25 @@ AddressInput.defaultProps = {
 	onPressSearchAddr: e => {},
 };
 
+const styles = StyleSheet.create({
+	input24A: {
+		width: 622 * DP,
+		height: 104 * DP,
+		alignSelf: 'flex-start',
+	},
+	inputNoTitle: {
+		width: 694 * DP,
+		height: 82 * DP,
+		marginTop: 24 * DP,
+	},
+
+	container: {
+		width: 694 * DP,
+		// height: 238 * DP,
+	},
+	upperContainer: {
+		width: 694 * DP,
+		flexDirection: 'row',
+	},
+});
 export default AddressInput;

@@ -1,12 +1,12 @@
 import React from 'react';
 import {View, Image, TouchableOpacity, StyleSheet, Platform} from 'react-native';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
-import {AddItem92} from 'Atom/icon';
+import {AddItem92, CrossNew92, Shelter294} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import {ProfileDefaultImg1, ProfileDefaultImg2, ProfileDefaultImg3} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {BLACK, GRAY10, GRAY20, GRAY30, GRAY40, WHITE} from 'Root/config/color';
-
+import {ProfileDefaultImg4} from 'Atom/icon';
 /**
  * 프로필 이미지 컨테이너
  * @param {object} props - Props Object
@@ -33,9 +33,18 @@ const ProfileImageSelect = props => {
 	return (
 		<TouchableOpacity onPress={onClick} style={styles.img_round_294}>
 			{/* ProfileImage uri가 null일 경우와 아닌 경우의 분기 */}
-			{props.selectedImageUri.length ? <Image style={styles.img_round_294} source={{uri: props.selectedImageUri}} /> : randomdefault()}
+			{props.selectedImageUri.length ? (
+				<Image style={styles.img_round_294} source={{uri: props.selectedImageUri}} />
+			) : props.isShelter ? (
+				<Shelter294 />
+			) : (
+				<ProfileDefaultImg4 />
+			)}
 			<View style={[style.shadowBtn]}>
-				<AddItem92 />
+				<View>
+					{/* <AddItem92 /> */}
+					<CrossNew92 />
+				</View>
 			</View>
 		</TouchableOpacity>
 	);

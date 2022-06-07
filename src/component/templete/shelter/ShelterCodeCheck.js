@@ -28,7 +28,9 @@ export default ShelterCodeCheck = props => {
 				Modal.popOneBtn('코드 체크가 완료되었습니다', '확인', () => {
 					//다음단계로
 					Modal.close();
-					props.navigation.push('ShelterAssignEntrance');
+					// props.navigation.push('ShelterAssignEntrance');
+					// props.navigation.push('AssignShelterAddress');
+					props.navigation.push('AssignShelterAddress', {data: {shelter_type: ''}});
 				});
 			},
 			error => {

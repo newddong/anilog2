@@ -3,7 +3,7 @@ import {Text, View, StyleSheet} from 'react-native';
 import StageBar from 'Molecules/info/Stagebar';
 import {stagebar_style} from 'Organism/style_organism copy';
 import {txt} from 'Root/config/textstyle';
-import {btn_w654, btn_w522} from 'Atom/btn/btn_style';
+import {btn_w654, btn_w522, btn_w336x82_r30} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import {login_style, btn_style, temp_style, shelterAssignEntrance_style, progressbar_style} from 'Templete/style_templete';
 import {MAINBLACK} from 'Root/config/color';
@@ -35,13 +35,9 @@ export default ShelterAssignEntrance = props => {
 			</View>
 
 			{/* (A)Btn_w522 */}
-			<View style={[btn_style.btn_w522, shelterAssignEntrance_style.btn_w522_public]}>
-				<AniButton btnTitle={'공립 보호소'} btnStyle={'border'} btnLayout={btn_w522} titleFontStyle={32} onPress={goToPublicShelter} />
-			</View>
-
-			{/* (A)Btn_w522 */}
-			<View style={[btn_style.btn_w522, shelterAssignEntrance_style.btn_w522_private]}>
-				<AniButton btnTitle={'사설 보호소'} btnStyle={'border'} btnLayout={btn_w522} titleFontStyle={32} onPress={goToPrivateShelter} />
+			<View style={[styles.btn_view]}>
+				<AniButton btnTitle={'공립 보호소'} btnStyle={'border'} btnLayout={btn_w336x82_r30} titleFontStyle={32} onPress={goToPublicShelter} />
+				<AniButton btnTitle={'사설 보호소'} btnStyle={'border'} btnLayout={btn_w336x82_r30} titleFontStyle={32} onPress={goToPrivateShelter} />
 			</View>
 		</View>
 	);
@@ -60,5 +56,13 @@ const styles = StyleSheet.create({
 		borderWidth: 4 * DP,
 		// borderColor: APRI10,
 		borderColor: MAINBLACK,
+	},
+	btn_view: {
+		width: 694 * DP,
+		marginTop: 50 * DP,
+		height: 82 * DP,
+		flexDirection: 'row',
+		alignContent: 'center',
+		justifyContent: 'space-between',
 	},
 });

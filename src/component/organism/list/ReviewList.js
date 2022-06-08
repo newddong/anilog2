@@ -24,7 +24,6 @@ import RecommendReview from '../article/RecommendReview';
 export default ReviewList = props => {
 	const items = props.items;
 	const [data, setData] = React.useState('false');
-	const [loading, setLoading] = React.useState(false);
 
 	React.useEffect(() => {
 		if (items && items.length != 0) {
@@ -53,7 +52,7 @@ export default ReviewList = props => {
 							//사진은 없지만 카테고리가 있는 경우
 							height = 320;
 						}
-						return {...v, height: (height + 2) * DP}; // ItemSeparator Componenet Height 2 추가
+						return {...v, height: height * DP}; // ItemSeparator Componenet Height 2 추가
 					})
 					.map((v, i, a) => {
 						let offset = a.slice(0, i).reduce((prev, current) => {
@@ -65,28 +64,23 @@ export default ReviewList = props => {
 						};
 					}),
 			);
-			setLoading(true);
 		} else {
 			setData([]);
 		}
 	}, [items]);
 
-	const onLayout = (e, item) => {};
-
 	const renderItem = ({item, index}) => {
 		return (
-			<View onLayout={e => onLayout(e, item)}>
-				<Review
-					data={item}
-					isSearch={props.isSearch}
-					onPressReviewContent={() => props.onPressReviewContent(index)}
-					onPressReply={() => props.onPressReply(index)}
-					onPressMeatball={() => props.onPressMeatball(index)}
-					onPressLike={() => props.onPressLike(index)}
-					onPressUnlike={() => props.onPressUnlike(index)}
-					onPressFavorite={bool => props.onPressFavorite(index, bool)}
-				/>
-			</View>
+			<Review
+				data={item}
+				isSearch={props.isSearch}
+				onPressReviewContent={() => props.onPressReviewContent(index)}
+				onPressReply={() => props.onPressReply(index)}
+				onPressMeatball={() => props.onPressMeatball(index)}
+				onPressLike={() => props.onPressLike(index)}
+				onPressUnlike={() => props.onPressUnlike(index)}
+				onPressFavorite={bool => props.onPressFavorite(index, bool)}
+			/>
 		);
 	};
 
@@ -96,7 +90,7 @@ export default ReviewList = props => {
 		} else return <></>;
 	};
 
-	if (data == 'false' && !loading) {
+	if (data == 'false') {
 		return <></>;
 	} else
 		return (
@@ -105,6 +99,7 @@ export default ReviewList = props => {
 					data={data}
 					renderItem={renderItem}
 					showsVerticalScrollIndicator={false}
+					scr
 					keyExtractor={item => item._id}
 					getItemLayout={(data, index) => {
 						if (!data[index]) return {length: 0, offset: 0, index: index};

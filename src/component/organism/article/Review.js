@@ -36,18 +36,19 @@ export default Review = React.memo(props => {
 	const [data, setData] = React.useState(props.data);
 	const [moreCategory, setMoreCategory] = React.useState(false);
 
+	//상위 컴포넌트에서 갱신이 이뤄졌을 시 Review에서도 갱신
 	React.useEffect(() => {
 		setData(props.data);
 	}, [props.data]);
 
+	//카테고리 접기 클릭
 	const onPressCategory = category => {
 		if (category == '접기') {
 			setMoreCategory(false);
-		} else {
-			// alert(category);
 		}
 	};
 
+	//카테고리 출력
 	const getCategory = (v, i) => {
 		let category_sum_list = [];
 		data.community_interests.interests_trip.map(v => category_sum_list.push(v));
@@ -133,32 +134,19 @@ export default Review = React.memo(props => {
 		}
 	};
 
-	const onPressMeatball = () => {
-		props.onPressMeatball();
-	};
-
-	const onPressLike = () => {
+	//좋아요 클릭
+	const onPressLike = bool => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate('Login');
 			});
 		} else {
-			setData({...data, community_is_like: true, community_like_count: ++data.community_like_count});
-			props.onPressLike();
+			setData({...data, community_is_like: bool, community_like_count: bool ? ++data.community_like_count : --data.community_like_count});
+			bool ? props.onPressLike() : props.onPressUnlike();
 		}
 	};
 
-	const onPressUnlike = () => {
-		if (userGlobalObject.userInfo.isPreviewMode) {
-			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
-			});
-		} else {
-			props.onPressUnlike();
-			setData({...data, community_is_like: false, community_like_count: --data.community_like_count});
-		}
-	};
-
+	//즐겨찾기 클릭
 	const onPressFavorite = bool => {
 		// alert('onPressFavorite');
 		if (userGlobalObject.userInfo.isPreviewMode) {
@@ -171,14 +159,17 @@ export default Review = React.memo(props => {
 		}
 	};
 
+	//댓글 아이콘 클릭
 	const onPressReply = () => {
 		props.onPressReply();
 	};
 
+	//리뷰 아이템 클릭
 	const onPressReviewContent = () => {
 		props.onPressReviewContent();
 	};
 
+	//해당 리뷰글에 이미지uri 리스트 반환 함수
 	const imageList = () => {
 		let imageList = [];
 		let getImgTag = data.community_content.match(/<img[\w\W]+?\/?>/g); //img 태그 추출
@@ -191,7 +182,7 @@ export default Review = React.memo(props => {
 		return imageList;
 	};
 
-	const searchHighlight = data.community_title.split(new RegExp(`(${props.isSearch})`, 'gi'));
+	const searchHighlight = data.community_title.split(new RegExp(`(${props.isSearch})`, 'gi')); //제목 안에 검색어와 일치하는 부분을 split 하는 정규식
 
 	return (
 		<View style={[style.container]}>
@@ -219,14 +210,11 @@ export default Review = React.memo(props => {
 							<View activeOpacity={0.8} style={[style.profile, {}]}>
 								<Text
 									style={[
+										style.user_nickname,
 										txt.noto28,
-										{
-											height: 48 * DP,
-											alignSelf: 'flex-start',
-											color: data.community_writer_id && data.community_writer_id._id == userGlobalObject.userInfo._id ? APRI10 : GRAY10,
-										},
+										{color: data.community_writer_id && data.community_writer_id._id == userGlobalObject.userInfo._id ? APRI10 : GRAY10},
 									]}>
-									{data.community_writer_id?.user_nickname}
+									{data.community_writer_id ? data.community_writer_id?.user_nickname : ''}
 								</Text>
 								<Text style={[txt.noto24, {color: GRAY10}]}>{getTimeLapsed(data.community_date)}</Text>
 							</View>
@@ -239,7 +227,6 @@ export default Review = React.memo(props => {
 					) : (
 						<FavoriteTag48_Border onPress={() => onPressFavorite(true)} />
 					)}
-					{/* {data.community_writer_id ? <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} /> : <></>} */}
 				</View>
 			</View>
 			{/* 리뷰 사진 썸네일 */}
@@ -255,7 +242,7 @@ export default Review = React.memo(props => {
 			{/* 좋아요 및 댓글 모두 보기  */}
 			<View style={[style.likeComment, {alignItems: 'center'}]}>
 				<View style={[style.like]}>
-					{data.community_is_like ? <Like48_Filled onPress={onPressUnlike} /> : <Like48_Border onPress={onPressLike} />}
+					{data.community_is_like ? <Like48_Filled onPress={() => onPressLike(false)} /> : <Like48_Border onPress={() => onPressLike(true)} />}
 					<Text style={[txt.noto24, {color: GRAY10, marginLeft: 6 * DP}]}>{data.community_like_count}</Text>
 				</View>
 				<TouchableOpacity onPress={onPressReply} activeOpacity={0.8} style={[style.like, {marginLeft: 20 * DP}]}>
@@ -324,5 +311,9 @@ const style = StyleSheet.create({
 	},
 	comment: {
 		// backgroundColor: 'yellow',
+	},
+	user_nickname: {
+		height: 48 * DP,
+		alignSelf: 'flex-start',
 	},
 });

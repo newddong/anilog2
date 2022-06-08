@@ -96,7 +96,7 @@ export default FeedStackNavigation = props => {
 				name={'ReviewDetail'}
 				component={ReviewDetail}
 				options={({route}) => ({
-					header: props => <SimpleHeader {...props} />,
+					header: props => <CommunityHeader {...props} />,
 					title: ' ',
 				})}
 			/>

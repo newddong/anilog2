@@ -2,7 +2,7 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View, ScrollView, ActivityIndicator} from 'react-native';
 import DP from 'Root/config/dp';
-import {GRAY10, GRAY40} from 'Root/config/color';
+import {GRAY10, GRAY20, GRAY40} from 'Root/config/color';
 import Modal from 'Root/component/modal/Modal';
 import Article from 'Root/component/organism/article/Article';
 import ArticleList from 'Root/component/organism/list/ArticleList';
@@ -517,7 +517,7 @@ export default ArticleDetail = props => {
 					</View>
 					<View style={[style.header_icon, {}]}>
 						{data.community_is_like ? <Like48_Filled onPress={() => onPressLike(false)} /> : <Like48_Border onPress={() => onPressLike(true)} />}
-						<Text style={[txt.noto24, {color: GRAY10, paddingTop: 6 * DP, marginLeft: 15 * DP, height: 48 * DP}]}>{data.community_like_count}</Text>
+						<Text style={[txt.noto24, {color: GRAY10, paddingTop: 6 * DP, marginLeft: 8 * DP, height: 48 * DP}]}>{data.community_like_count}</Text>
 					</View>
 					{comments && comments.length > 0 ? (
 						<View style={[{alignItems: 'flex-end', width: 494 * DP}]}>
@@ -558,7 +558,7 @@ export default ArticleDetail = props => {
 			return (
 				<>
 					{comments.length == 1 ? (
-						<Text style={[txt.roboto28b, {color: GRAY10, paddingVertical: 10 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>
+						<Text style={[txt.roboto26, {color: GRAY20, paddingVertical: 20 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>
 					) : (
 						<></>
 					)}
@@ -655,7 +655,7 @@ const style = StyleSheet.create({
 	},
 	header_icon: {
 		flexDirection: 'row',
-		width: 100 * DP,
+		width: 80 * DP,
 		alignItems: 'center',
 	},
 	profile: {
@@ -689,7 +689,7 @@ const style = StyleSheet.create({
 		width: 694 * DP,
 		paddingVertical: 10 * DP,
 		marginBottom: 10 * DP,
-		marginTop: 26 * DP,
+		marginTop: 20 * DP,
 		flexDirection: 'row',
 		alignItems: 'center',
 		// justifyContent: 'space-between',

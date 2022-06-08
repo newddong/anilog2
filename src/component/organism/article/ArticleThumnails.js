@@ -21,7 +21,7 @@ export default ArticleThumnails = props => {
 		if (photos.length == 3) {
 			return (
 				<View style={[style.photo3_right_photo]}>
-					<Image source={{uri: photos[2]}} style={[{flex: 1, borderBottomRightRadius: 30 * DP}]} resizeMode={'stretch'} />
+					<Image source={{uri: photos[2]}} style={[{flex: 1, borderBottomRightRadius: 30 * DP, backgroundColor: 'white'}]} resizeMode={'stretch'} />
 				</View>
 			);
 		} else {
@@ -89,45 +89,47 @@ const style = StyleSheet.create({
 		paddingVertical: 10 * DP,
 	},
 	photo_1: {
-		width: 654 * DP,
+		width: 694 * DP,
 		height: 334 * DP,
 		borderRadius: 30 * DP,
 	},
 	photo_2_container: {
-		width: 654 * DP,
+		width: 694 * DP,
 		justifyContent: 'space-between',
 		flexDirection: 'row',
 	},
 	photo_2: {
-		width: 324 * DP,
+		width: 344 * DP,
 		height: 334 * DP,
 	},
 	photo_3_container: {
+		width: 694 * DP,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
+		// backgroundColor: 'red',
 	},
 	photo3_first: {
-		width: 370 * DP,
+		width: 378 * DP,
 		height: 334 * DP,
 	},
 	photo3_right: {
-		width: 278 * DP,
+		width: 310 * DP,
 		marginLeft: 5 * DP,
 		alignItems: 'center',
 		justifyContent: 'space-between',
 	},
 	photo3_right_photo: {
-		width: 278 * DP,
+		width: 310 * DP,
 		height: 164 * DP,
 		zIndex: 0,
 	},
 	photo3_right_photo_opacity: {
-		width: 278 * DP,
+		width: 310 * DP,
 		height: 164 * DP,
 		zIndex: 1,
 	},
 	photo3_right_opacity: {
-		width: 278 * DP,
+		width: 310 * DP,
 		height: 164 * DP,
 		backgroundColor: BLACK,
 		opacity: 0.7,

@@ -142,17 +142,7 @@ export default CommunityWrite = props => {
 	//이미지 입력
 	const insertImage = imageList => {
 		console.log('imageList', imageList);
-		const g = [
-			'file:///data/user/0/com.anilog/cache/anilog_temp_c753f140-74dd-482d-8ca0-c36551077e5f.jpg',
-			'file:///data/user/0/com.anilog/cache/anilog_temp_de35af25-a434-4f3d-8446-a6d9506c416a.jpg',
-			'file:///data/user/0/com.anilog/cache/anilog_temp_d338dd31-89eb-4f56-8a0a-d8f1f7d92fd7.jpg',
-		];
-
-		const tt = [
-			'/Users/sangwoo/Library/Developer/CoreSimulator/Devices/A0C87E5D-C592-45C4-9BF1-DC8AB903607D/data/Containers/Data/Application/9195FD74-3D92-4AA3-B82A-2B1B70B95BED/tmp/anilog_temp/C580F64C-3340-457F-8AC0-95A9C90C06D6.jpg',
-			'/Users/sangwoo/Library/Developer/CoreSimulator/Devices/A0C87E5D-C592-45C4-9BF1-DC8AB903607D/data/Containers/Data/Application/9195FD74-3D92-4AA3-B82A-2B1B70B95BED/tmp/anilog_temp/CF27346C-6F66-4E90-A063-9158F7F89DF6.jpg',
-		];
-
+		console.log('editorLayout.width', editorLayout.width);
 		setTimeout(() => {
 			Modal.popLoading(true);
 			setTimeout(() => {
@@ -167,7 +157,7 @@ export default CommunityWrite = props => {
 							richText.current?.insertHTML('<p><br/></p></div>');
 							richText.current?.insertHTML(
 								`<div><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick');" \n
-							  style="height: auto; width: ${editorLayout.width};  border-radius:15px; object-fit:contain;  margin:5px 0px 5px 0px; "/></div>`,
+							  style="height:auto; width:${editorLayout.width};  border-radius:15px; object-fit:contain;  margin:5px 0px 5px 0px; "/></div>`,
 							);
 							if (i == result.msg.length - 1) {
 								setTimeout(() => {
@@ -425,8 +415,8 @@ export default CommunityWrite = props => {
 					<View style={[style.content, {}]}>
 						{data.community_address.normal_address.address_name != '' ? (
 							<View style={[style.location]}>
-								<Location54_Filled />
-								<Text style={[txt.noto26b, {color: APRI10, marginLeft: 10 * DP, width: 550 * DP}]}>
+								<Location54 />
+								<Text style={[txt.noto26b, {color: MAINBLACK, marginLeft: 10 * DP, width: 580 * DP}]}>
 									{data.community_address.road_address.address_name.includes('도로명 주소가 없는 위치입니다') ||
 									data.community_address.road_address.address_name == 'undefined '
 										? data.community_address.normal_address.address_name

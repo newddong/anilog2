@@ -476,29 +476,15 @@ const ReviewFilterModal = props => {
 					<TouchableOpacity onPress={onClose} style={[style.crossMark, {alignItems: isReviewWrite ? 'flex-start' : 'flex-end'}]}>
 						<Cross24_Filled />
 					</TouchableOpacity>
-					{/* {props.category == 'Review' ? (
-						<View style={{width: 320 * DP, flexDirection: 'row', justifyContent: 'space-between'}}>
-							<AniButton
-								btnTitle={'필터 초기화'}
-								onPress={onPressInitialize}
-								btnStyle={'border'}
-								btnLayout={{width: 160 * DP, height: 50 * DP, borderRadius: 30 * DP}}
-							/>
-							<AniButton
-								onPress={onPressSave}
-								btnTitle={'검색'}
-								btnStyle={'filled'}
-								btnLayout={{width: 140 * DP, height: 50 * DP, borderRadius: 30 * DP}}
-							/>
-						</View>
-					) : (
-						<></>
-					)} */}
 				</TouchableOpacity>
 				{getReviewCategory()}
-				<TouchableOpacity onPress={onPressSave} style={[style.saveText]}>
-					<Text style={[txt.noto24, {color: MAINBLACK}]}>완료</Text>
-				</TouchableOpacity>
+				{communityInterests == '' ? (
+					<></>
+				) : (
+					<TouchableOpacity onPress={onPressSave} style={[style.saveText]}>
+						<Text style={[txt.noto24, {color: MAINBLACK}]}>완료</Text>
+					</TouchableOpacity>
+				)}
 			</View>
 			{showBtnModal ? (
 				<View style={[style.btnModalContainer, style.shadow]}>

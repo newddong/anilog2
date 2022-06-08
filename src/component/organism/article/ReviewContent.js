@@ -10,7 +10,7 @@ import {
 	LocationMarker,
 	Meatball50_GRAY20_Horizontal,
 } from 'Root/component/atom/icon';
-import {APRI10, BLACK, GRAY10, WHITE} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, GRAY30, GRAY40, GRAY50, WHITE} from 'Root/config/color';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {useNavigation} from '@react-navigation/core';
@@ -25,6 +25,7 @@ import AutoHeightWebView from 'Root/module/AutoHeightWebview';
  * @param {object} props.data - 데이터
  * @param {(bool:boolean)=>void)} props.onPressFavorite - 즐겨찾기 클릭
  * @param {()=>void)} props.onPressMeatball - 미트볼 클릭
+ * @param {(src:Array)=>void)} props.showImg - 사진 클릭
  * @param {string} props.searchInput - 검색 키워드
  */
 const ReviewContent = props => {
@@ -58,8 +59,8 @@ const ReviewContent = props => {
 					<View key={index} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
 						{sliced.map((v, i) => {
 							return (
-								<View key={i} activeOpacity={0.7} style={[style.category, {backgroundColor: WHITE, borderColor: BLACK}]}>
-									<Text style={[txt.noto24, {color: BLACK}]}>{v}</Text>
+								<View key={i} activeOpacity={0.7} style={[style.category, {backgroundColor: WHITE, borderColor: GRAY30}]}>
+									<Text style={[txt.noto24, {color: GRAY10}]}>{v}</Text>
 								</View>
 							);
 						})}
@@ -73,25 +74,14 @@ const ReviewContent = props => {
 					<View key={index} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
 						{sliced.map((v, i) => {
 							return (
-								<View key={i} activeOpacity={0.7} style={[style.category, {backgroundColor: WHITE, borderColor: BLACK}]}>
-									<Text style={[txt.noto24, {color: BLACK}]}>{v}</Text>
+								<View key={i} activeOpacity={0.7} style={[style.category, {backgroundColor: WHITE, borderColor: GRAY30}]}>
+									<Text style={[txt.noto24, {color: GRAY10}]}>{v}</Text>
 								</View>
 							);
 						})}
 					</View>
 				);
 			});
-	};
-
-	const onPressFavorite = bool => {
-		if (userGlobalObject.userInfo.isPreviewMode) {
-			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
-			});
-		} else {
-			setData({...data, community_is_favorite: bool});
-			props.onPressFavorite(bool);
-		}
 	};
 
 	const x = 126.937125; //초기값 더미
@@ -133,7 +123,12 @@ const ReviewContent = props => {
 
 	const changeHtmlTag = () => {
 		let result = data.community_content; //기존의 html 코드
-		result = data.community_content.replace(/<img /g, '<img onclick="image(this)" '); //img 태그에 onClick 이벤트 장착
+		result = data.community_content.replace(
+			/<img /g,
+			`<img onclick="image(this)"  style="height:auto; width:${
+				Platform.OS == 'android' ? 694 * DP : 694 * DP
+			};  border-radius:15px; object-fit:contain; margin:5px 0px 0px 0px; " `,
+		); //img 태그에 onClick 이벤트 장착
 		return `
 		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
         <script>
@@ -147,8 +142,8 @@ const ReviewContent = props => {
 	};
 
 	const showImg = src => {
-		console.log('ser', src);
-		Modal.popPhotoListViewModal([src]);
+		props.showImg(src);
+		// Modal.popPhotoListViewModal([src]);
 	};
 
 	const getLocation =
@@ -162,17 +157,13 @@ const ReviewContent = props => {
 			{/* 리뷰 헤더  */}
 			<View style={[style.header, {}]}>
 				<View style={[style.header_title]}>
-					<Text style={[txt.noto32b]}>{data.community_title} </Text>
-				</View>
-				<View style={[style.header_icon]}>
-					{data.community_is_favorite ? (
-						<FavoriteTag46_Filled onPress={() => onPressFavorite(false)} />
-					) : (
-						<FavoriteTag48_Border onPress={() => onPressFavorite(true)} />
-					)}
-					{data.community_writer_id ? <Meatball50_GRAY20_Horizontal onPress={() => props.onPressMeatball()} /> : <></>}
+					<Text style={[txt.noto32, {maxWidth: 694 * DP}]} numberOfLines={1}>
+						{data.community_title}{' '}
+					</Text>
 				</View>
 			</View>
+			<View style={{width: 694 * DP, backgroundColor: GRAY40, height: 2 * DP, marginTop: 20 * DP}}></View>
+
 			{data.community_writer_id ? (
 				<View style={[style.profile]}>
 					<UserLocationTimeLabel data={data.community_writer_id} time={data.community_date} />
@@ -183,7 +174,7 @@ const ReviewContent = props => {
 
 			{/* <View style={{width: 654 * DP, marginTop: 20 * DP}}>{getContents()}</View> */}
 			<View>
-				<View style={[{width: 700 * DP, marginTop: 20 * DP}]}>
+				<View style={[{marginTop: 20 * DP}]}>
 					{Platform.OS == 'ios' ? (
 						// <WebView
 						// 	originWhitelist={['*']}
@@ -219,10 +210,10 @@ const ReviewContent = props => {
 							injectedJavaScript={runFirst} //Dynamic Height 수치 설정
 							scrollEnabled={false}
 							source={{html: changeHtmlTag()}}
-							style={{width: 690 * DP, height: height == 0 ? 100 * DP : height, opacity: 0.99}}
+							style={{width: 724 * DP, left: -14 * DP, height: height == 0 ? 100 * DP : height, opacity: 0.99}}
 						/>
 						// <AutoHeightWebView
-						// 	style={[style.webview]}
+						// 	style={[style.webview, {opacity: 0.99}]}
 						// 	customScript={runFirst}
 						// 	scrollEnabled={false}
 						// 	onSizeUpdated={size => console.log('size.height', size.height)}
@@ -239,43 +230,49 @@ const ReviewContent = props => {
 				{data.community_address.region.latitude == '' ? (
 					<></>
 				) : (
-					<>
-						<MapView
-							style={[style.mapContainer]}
-							// provider={PROVIDER_GOOGLE}
-							customMapStyle={mapStyle2}
-							zoomEnabled
-							zoomControlEnabled
-							showsUserLocation={true}
-							toolbarEnabled={false}
-							mapType="standard"
-							region={{
-								longitude: parseFloat(data.community_address.region.longitude),
-								latitude: parseFloat(data.community_address.region.latitude),
-								latitudeDelta: 0.00012, //지도의 초기줌 수치
-								longitudeDelta: 0.00856, //지도의 초기줌 수치
-							}}>
-							{/* 현재 선택된 위도 경도의 마커 */}
-							<MapView.Marker
-								coordinate={{
+					<View style={{height: 694 * DP}}>
+						<View style={[style.mapOutCont]}>
+							<MapView
+								style={[style.mapContainer]}
+								// provider={PROVIDER_GOOGLE}
+								customMapStyle={mapStyle2}
+								zoomEnabled
+								zoomControlEnabled
+								scrollEnabled={false}
+								showsUserLocation={true}
+								toolbarEnabled={false}
+								mapType="standard"
+								region={{
 									longitude: parseFloat(data.community_address.region.longitude),
 									latitude: parseFloat(data.community_address.region.latitude),
-								}}
-								key={`${x}${Date.now()}`} // 현재 마커의 위치가 바뀌어도 타이틀 및 description이 최신화 되지 않던 현상 발견 -> 키 값 부여
-							>
-								<View style={[{alignItems: 'center', marginBottom: 20 * DP}]}>
-									<Text style={[txt.noto22b, style.locationText]}> {getLocation}</Text>
-									<View style={[style.triangle]}></View>
-									<LocationMarker />
-								</View>
-							</MapView.Marker>
-						</MapView>
+									latitudeDelta: 0.00012, //지도의 초기줌 수치
+									longitudeDelta: 0.00856, //지도의 초기줌 수치
+								}}>
+								{/* 현재 선택된 위도 경도의 마커 */}
+								<MapView.Marker
+									coordinate={{
+										longitude: parseFloat(data.community_address.region.longitude),
+										latitude: parseFloat(data.community_address.region.latitude),
+									}}
+									key={`${x}${Date.now()}`} // 현재 마커의 위치가 바뀌어도 타이틀 및 description이 최신화 되지 않던 현상 발견 -> 키 값 부여
+								>
+									<View style={[{alignItems: 'center', marginBottom: 20 * DP}]}>
+										<Text style={[txt.noto22b, style.locationText]}> {getLocation}</Text>
+										<View style={[style.triangle]}></View>
+										<LocationMarker />
+									</View>
+								</MapView.Marker>
+							</MapView>
+						</View>
 						<View style={[style.location]}>
 							<LocationGray />
-							<Text style={[txt.noto26b, {color: GRAY10, marginLeft: 10 * DP}]}>{getLocation}</Text>
+							<Text style={[txt.noto26, {paddingHorizontal: 12 * DP, width: 600 * DP, backgroundColor: 'white'}]} numberOfLines={2}>
+								{getLocation}
+							</Text>
 						</View>
-					</>
+					</View>
 				)}
+
 				<View style={[style.categoryList, {}]}>{getCategory()}</View>
 			</View>
 		</View>
@@ -317,16 +314,17 @@ const mapStyle2 = [
 
 ReviewContent.defaultProps = {
 	onPressFavorite: () => {},
+	showImg: () => {},
 };
 
 export default ReviewContent;
 
 const style = StyleSheet.create({
 	container: {
-		width: 654 * DP,
-		// paddingVertical: 24 * DP,
+		width: 750 * DP,
+		// alignItems: 'center',
+		paddingLeft: 28 * DP,
 		alignSelf: 'center',
-		// backgroundColor: 'yellow',
 	},
 	header: {
 		flexDirection: 'row',
@@ -341,12 +339,11 @@ const style = StyleSheet.create({
 		paddingVertical: 2 * DP,
 	},
 	categoryList: {
-		width: 510 * DP,
+		width: 694 * DP,
 		marginTop: 12 * DP,
-		// flexDirection: 'row',
 	},
 	header_title: {
-		width: 544 * DP,
+		width: 694 * DP,
 	},
 	header_icon: {
 		justifyContent: 'space-between',
@@ -354,28 +351,50 @@ const style = StyleSheet.create({
 	},
 	profile: {
 		alignSelf: 'center',
-		width: 654 * DP,
-		marginTop: 12 * DP,
+		width: 694 * DP,
+		marginTop: 20 * DP,
 	},
 	content: {
-		width: 654 * DP,
+		width: 694 * DP,
 	},
 	footer: {
 		marginTop: 20 * DP,
-		width: 654 * DP,
+		width: 694 * DP,
 	},
 	location: {
-		width: 654 * DP,
+		width: 694 * DP,
+		position: 'absolute',
+		height: 100 * DP,
+		bottom: 0,
+		borderBottomRightRadius: 30 * DP,
+		borderBottomLeftRadius: 30 * DP,
+		paddingHorizontal: 20 * DP,
+		backgroundColor: 'white',
+		borderWidth: 2 * DP,
+		borderColor: GRAY30,
 		flexDirection: 'row',
 		alignItems: 'center',
+		zIndex: 1,
+	},
+	mapOutCont: {
+		height: 594 * DP,
+		zIndex: -1,
+		borderRadius: 30 * DP,
+		borderWidth: 2 * DP,
+		borderColor: GRAY30,
+		overflow: 'hidden',
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderBottomLeftRadius: 0,
+		borderBottomRightRadius: 0,
 	},
 	mapContainer: {
-		width: 654 * DP,
-		height: 654 * DP,
+		flex: 1,
+		height: 594 * DP,
+		width: 690 * DP,
 		borderRadius: 30 * DP,
-		borderColor: GRAY10,
-		borderWidth: 2 * DP,
-		marginVertical: 15 * DP,
+		borderBottomLeftRadius: 0,
+		borderBottomRightRadius: 0,
 	},
 	locationText: {
 		maxWidth: 520 * DP,
@@ -400,7 +419,8 @@ const style = StyleSheet.create({
 		transform: [{rotate: '180deg'}],
 	},
 	webview: {
-		width: 670 * DP,
+		width: 694 * DP,
+		// backgroundColor: 'yellow',
 		// minHeight: 500 * DP,
 	},
 	currentLocationIcon: {

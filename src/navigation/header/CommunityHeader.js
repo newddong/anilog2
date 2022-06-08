@@ -8,48 +8,9 @@ import Modal from 'Root/component/modal/Modal';
 import {createReport} from 'Root/api/report';
 import {REPORT_MENU} from 'Root/i18n/msg';
 import {updateAndDeleteCommunity} from 'Root/api/community';
+import community_obj from 'Root/config/community_obj';
 
 export default CommunityHeader = ({navigation, route, options, back}) => {
-	// console.log('options', JSON.stringify(options.data));
-	const tt = {
-		_id: '62989bf158baa2654b688857',
-		type: 'CommunityObject',
-		community_title: '제목 주중 두줄ㄴㅁㅇㅁ누앰ㄴ앰;나이;ㅣ;ㅁ나이;',
-		community_content:
-			'<div><img src="https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1654168558507_99A4F318-2776-4EAE-9B28-0BF9527C42DF.jpg" id="image" style="height: auto; width: 327.6;  border-radius:15px; object-fit:contain;  margin:5px 0px 5px 0px; "></div><p><br></p>',
-		community_content_without_html: '',
-
-		community_date: '2022-06-02T11:16:01.501Z',
-		community_is_temporary: false,
-		community_is_delete: false,
-		community_is_recomment: false,
-		community_is_attached_file: true,
-		community_type: 'free',
-		community_free_type: 'question',
-		community_interests: {
-			interests_trip: [],
-			interests_hospital: [],
-			interests_interior: [],
-			interests_etc: [],
-			interests_review: [],
-			interests_location: {city: '', district: ''},
-		},
-		community_address: {
-			road_address: {address_name: '', city: '', district: '', _id: '62989bf158baa2654b688859'},
-			normal_address: {address_name: '', city: '', district: '', _id: '62989bf158baa2654b68885a'},
-			region: {latitude: '', longitude: '', _id: '62989bf158baa2654b68885b'},
-			_id: '62989bf158baa2654b688858',
-		},
-		community_like_count: 0,
-		community_favorite_count: 0,
-		community_comment_count: 1,
-		__v: 0,
-		community_recent_comment: {comment_contents: '순ㄱㄴ', comment_id: '629ec248f75c475c7d3e25d9', comment_user_nickname: '몽키6'},
-		community_is_like: false,
-		community_is_favorite: false,
-	};
-
-	// console.log('route', route.params);
 	const data = options.data;
 
 	const onPressReport = () => {
@@ -101,7 +62,7 @@ export default CommunityHeader = ({navigation, route, options, back}) => {
 				select => {
 					switch (select) {
 						case '수정':
-							navigation.push('CommunityEdit', {previous: data, isReview: false, isSearch: props.route.params.searchInput});
+							navigation.push('CommunityEdit', {previous: data, isReview: false, isSearch: route.params.searchInput});
 							break;
 						case '삭제':
 							Modal.close();
@@ -120,6 +81,7 @@ export default CommunityHeader = ({navigation, route, options, back}) => {
 											result => {
 												// console.log('result / updateAndDeleteCommunity / ArticleDetail : ', result.msg);
 												Modal.close();
+												community_obj.review = community_obj.review.filter(e => e._id == data._id);
 												setTimeout(() => {
 													Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
 													setTimeout(() => {
@@ -155,10 +117,12 @@ export default CommunityHeader = ({navigation, route, options, back}) => {
 					<BackArrow32 onPress={navigation.goBack} />
 				</View>
 			</TouchableOpacity>
-			<Text numberOfLines={1} style={[{flex: 1, textAlign: 'center', marginLeft: 30 * DP, marginRight: 80 * DP}, txt.roboto40b]}>
+			<Text numberOfLines={1} style={[{flex: 1, textAlign: 'center', marginLeft: 30 * DP, marginRight: 0 * DP}, txt.roboto40b]}>
 				{options.title ? options.title : route.params.title}
 			</Text>
-			{data && data.community_writer_id._id == userGlobalObject.userInfo._id ? (
+			{!data ? (
+				<></>
+			) : data.community_writer_id._id == userGlobalObject.userInfo._id ? (
 				<Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />
 			) : (
 				<TouchableOpacity onPress={onPressReport} style={{padding: 10 * DP}} activeOpacity={0.8}>

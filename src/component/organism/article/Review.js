@@ -2,8 +2,15 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {StyleSheet, Text, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {FavoriteTag46_Filled, FavoriteTag48_Border, Like48_Border, Like48_Filled, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
-import {APRI10, BLACK, GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
+import {
+	Comment48,
+	FavoriteTag46_Filled,
+	FavoriteTag48_Border,
+	Like48_Border,
+	Like48_Filled,
+	Meatball50_GRAY20_Horizontal,
+} from 'Root/component/atom/icon';
+import {APRI10, BLACK, GRAY10, GRAY20, GRAY30, GRAY40, WHITE} from 'Root/config/color';
 import ArticleThumnails from './ArticleThumnails';
 import {useNavigation} from '@react-navigation/core';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
@@ -61,7 +68,7 @@ export default Review = React.memo(props => {
 		let index = 0;
 		category_sum_list.map((val, ind) => {
 			totalWidth = totalWidth + 20 + val.length * 10;
-			if (totalWidth < 280) {
+			if (totalWidth < 600 * DP) {
 				// console.log('totalWidth', totalWidth);
 				newArr.push({group: index, item: val});
 			} else {
@@ -78,7 +85,7 @@ export default Review = React.memo(props => {
 		});
 		if (category_sum_list.length > 3 && !moreCategory && categoryArr.length > 0) {
 			return (
-				<View style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
+				<View style={{flexDirection: 'row', width: 694 * DP}}>
 					{categoryArr[0].map((v, i) => {
 						// const isLast = v.item == '+' + (category_sum_list.length - 4);
 						let isLast = false;
@@ -93,23 +100,12 @@ export default Review = React.memo(props => {
 							<TouchableOpacity
 								onPress={() => (isLast ? setMoreCategory(true) : onPressCategory(v.item))}
 								key={i}
-								activeOpacity={0.7}
+								activeOpacity={1}
 								style={[
 									style.category,
-									{
-										backgroundColor: WHITE,
-										borderColor: isLast ? GRAY10 : BLACK,
-									},
+									{backgroundColor: WHITE, borderColor: isLast ? GRAY10 : GRAY30, marginVertical: 5 * DP, width: isLast ? 100 * DP : null},
 								]}>
-								<Text
-									style={[
-										txt.noto24,
-										{
-											color: isLast ? GRAY10 : BLACK,
-										},
-									]}>
-									{v.item}
-								</Text>
+								<Text style={[txt.noto24, {color: GRAY10, paddingHorizontal: 10 * DP, textAlign: 'center'}]}>{v.item}</Text>
 							</TouchableOpacity>
 						);
 					})}
@@ -118,30 +114,16 @@ export default Review = React.memo(props => {
 		} else {
 			return categoryArr.map((val, ind) => {
 				return (
-					<View key={ind} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
+					<View key={ind} style={{flexDirection: 'row', width: 694 * DP}}>
 						{val.map((v, i) => {
 							const isLast = v.item == '접기';
 							return (
 								<TouchableOpacity
 									onPress={() => (isLast ? setMoreCategory(!true) : onPressCategory(v.item))}
 									key={i}
-									activeOpacity={0.7}
-									style={[
-										style.category,
-										{
-											backgroundColor: WHITE,
-											borderColor: isLast ? GRAY10 : BLACK,
-										},
-									]}>
-									<Text
-										style={[
-											txt.noto24,
-											{
-												color: isLast ? GRAY10 : BLACK,
-											},
-										]}>
-										{v.item}
-									</Text>
+									activeOpacity={1}
+									style={[style.category, {backgroundColor: isLast ? GRAY10 : WHITE, borderColor: isLast ? GRAY10 : GRAY30, marginVertical: 5 * DP}]}>
+									<Text style={[txt.noto24, {color: isLast ? WHITE : GRAY10, paddingHorizontal: 10 * DP}]}>{v.item}</Text>
 								</TouchableOpacity>
 							);
 						})}
@@ -190,17 +172,7 @@ export default Review = React.memo(props => {
 	};
 
 	const onPressReply = () => {
-		if (data.community_comment_count == 0) {
-			if (userGlobalObject.userInfo.isPreviewMode) {
-				Modal.popLoginRequestModal(() => {
-					navigation.navigate('Login');
-				});
-			} else {
-				props.onPressReply();
-			}
-		} else {
-			props.onPressReply();
-		}
+		props.onPressReply();
 	};
 
 	const onPressReviewContent = () => {
@@ -221,23 +193,14 @@ export default Review = React.memo(props => {
 
 	const searchHighlight = data.community_title.split(new RegExp(`(${props.isSearch})`, 'gi'));
 
-	const onLayout = e => {
-		console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
-		const d = e.nativeEvent.layout.height * (1 / DP);
-		console.log(' : height', e.nativeEvent.layout.height);
-		console.log('data.height', data.height);
-		console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
-	};
-
 	return (
 		<View style={[style.container]}>
 			{/* 리뷰 헤더  */}
-			<View style={{flexDirection: 'row'}}>
+			<View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
 				<View style={[style.header, {}]}>
-					{getCategory()}
 					<TouchableOpacity activeOpacity={0.6} onPress={onPressReviewContent}>
 						<View style={[style.content]}>
-							<Text style={[txt.noto32b]} numberOfLines={1}>
+							<Text style={[txt.noto32]} numberOfLines={1}>
 								{props.isSearch == '' || props.isSearch.length < 2
 									? data.community_title
 									: searchHighlight.map((part, i) =>
@@ -256,14 +219,14 @@ export default Review = React.memo(props => {
 							<View activeOpacity={0.8} style={[style.profile, {}]}>
 								<Text
 									style={[
-										txt.roboto24,
+										txt.noto28,
 										{
-											flex: 1,
+											height: 48 * DP,
 											alignSelf: 'flex-start',
-											color: data.community_writer_id && data.community_writer_id._id == userGlobalObject.userInfo._id ? APRI10 : BLACK,
+											color: data.community_writer_id && data.community_writer_id._id == userGlobalObject.userInfo._id ? APRI10 : GRAY10,
 										},
 									]}>
-									{data.community_writer_id?.user_nickname}{' '}
+									{data.community_writer_id?.user_nickname}
 								</Text>
 								<Text style={[txt.noto24, {color: GRAY10}]}>{getTimeLapsed(data.community_date)}</Text>
 							</View>
@@ -276,7 +239,7 @@ export default Review = React.memo(props => {
 					) : (
 						<FavoriteTag48_Border onPress={() => onPressFavorite(true)} />
 					)}
-					{data.community_writer_id ? <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} /> : <></>}
+					{/* {data.community_writer_id ? <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} /> : <></>} */}
 				</View>
 			</View>
 			{/* 리뷰 사진 썸네일 */}
@@ -287,17 +250,18 @@ export default Review = React.memo(props => {
 					<ArticleThumnails onPressReviewContent={onPressReviewContent} photo_list={imageList()} />
 				</View>
 			)}
+			{/* 카테고리 */}
+			{getCategory()}
 			{/* 좋아요 및 댓글 모두 보기  */}
-			<View style={[style.likeComment]}>
+			<View style={[style.likeComment, {alignItems: 'center'}]}>
 				<View style={[style.like]}>
 					{data.community_is_like ? <Like48_Filled onPress={onPressUnlike} /> : <Like48_Border onPress={onPressLike} />}
-					<Text style={[txt.noto24, {color: GRAY10, marginLeft: 15 * DP}]}>{data.community_like_count}</Text>
+					<Text style={[txt.noto24, {color: GRAY10, marginLeft: 6 * DP}]}>{data.community_like_count}</Text>
 				</View>
-				<View style={[style.comment]}>
-					<Text onPress={onPressReply} style={[txt.noto24, {color: GRAY10}]}>
-						{data.community_comment_count == 0 ? '댓글 쓰기' : `댓글 ${data.community_comment_count}개 모두 보기 `}
-					</Text>
-				</View>
+				<TouchableOpacity onPress={onPressReply} activeOpacity={0.8} style={[style.like, {marginLeft: 20 * DP}]}>
+					<Comment48 />
+					<Text style={[txt.noto24, {color: GRAY10, marginLeft: 6 * DP}]}>{data.community_comment_count}</Text>
+				</TouchableOpacity>
 			</View>
 		</View>
 	);
@@ -314,20 +278,21 @@ Review.defaultProps = {
 
 const style = StyleSheet.create({
 	container: {
-		width: 654 * DP,
-		paddingVertical: 24 * DP,
+		width: 694 * DP,
+		paddingVertical: 30 * DP,
 		alignSelf: 'center',
 		// backgroundColor: 'red',
 	},
 	header: {
-		width: 550 * DP,
+		width: 640 * DP,
+		// backgroundColor: 'red',
 	},
 	category: {
 		header: 38 * DP,
 		borderRadius: 10 * DP,
 		borderWidth: 2 * DP,
 		marginRight: 12 * DP,
-		paddingHorizontal: 15 * DP,
+		paddingHorizontal: 10 * DP,
 		paddingVertical: 2 * DP,
 	},
 	categoryList: {
@@ -336,26 +301,22 @@ const style = StyleSheet.create({
 	},
 	profile: {
 		marginTop: 10 * DP,
+		width: 694 * DP,
+		// backgroundColor: 'red',
 	},
 	icon: {
 		flexDirection: 'row',
 		alignSelf: 'flex-start',
-		marginTop: 10 * DP,
-		// justifyContent: 'space-between',
+		// marginTop: 10 * DP,
 	},
-	content: {
-		// top: -8 * DP,
-		// backgroundColor: 'palegreen',
-	},
+	content: {},
 	thumbnail: {
 		// marginTop: 8 * DP,
 	},
 	likeComment: {
+		width: 694 * DP,
 		marginTop: 20 * DP,
 		flexDirection: 'row',
-		justifyContent: 'space-between',
-		width: 654 * DP,
-		// height: 48 * DP,
 	},
 	like: {
 		flexDirection: 'row',

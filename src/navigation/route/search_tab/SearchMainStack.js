@@ -85,7 +85,7 @@ export default SearchMainStack = props => {
 				component={ReviewDetail}
 				options={({route}) => ({
 					headerShown: true,
-					header: props => <SimpleHeader {...props} />,
+					header: props => <CommunityHeader {...props} />,
 					title: ' ',
 				})}
 			/>

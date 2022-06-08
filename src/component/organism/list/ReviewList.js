@@ -24,6 +24,7 @@ import RecommendReview from '../article/RecommendReview';
 export default ReviewList = props => {
 	const items = props.items;
 	const [data, setData] = React.useState('false');
+	const [loading, setLoading] = React.useState(false);
 
 	React.useEffect(() => {
 		if (items && items.length != 0) {
@@ -41,13 +42,16 @@ export default ReviewList = props => {
 						);
 						//사진이 없으며 카테고리 선택도 없는 경우
 						if (!v.community_is_attached_file && review_category_list && review_category_list.length == 0) {
-							height = 128 * (1 / DP);
+							height = 266;
 							//사진은 있지만 카테고리 선택이 없는 경우
 						} else if (v.community_is_attached_file && review_category_list && review_category_list.length == 0) {
-							height = 312 * (1 / DP);
+							height = 620;
 							//사진과 카테고리 선택 모두 있는 경우
 						} else if (v.community_is_attached_file && review_category_list && review_category_list.length != 0) {
-							height = 334 * (1 / DP);
+							height = 673;
+						} else if (!v.community_is_attached_file && review_category_list && review_category_list.length != 0) {
+							//사진은 없지만 카테고리가 있는 경우
+							height = 320;
 						}
 						return {...v, height: (height + 2) * DP}; // ItemSeparator Componenet Height 2 추가
 					})
@@ -61,23 +65,28 @@ export default ReviewList = props => {
 						};
 					}),
 			);
+			setLoading(true);
 		} else {
 			setData([]);
 		}
 	}, [items]);
 
+	const onLayout = (e, item) => {};
+
 	const renderItem = ({item, index}) => {
 		return (
-			<Review
-				data={item}
-				isSearch={props.isSearch}
-				onPressReviewContent={() => props.onPressReviewContent(index)}
-				onPressReply={() => props.onPressReply(index)}
-				onPressMeatball={() => props.onPressMeatball(index)}
-				onPressLike={() => props.onPressLike(index)}
-				onPressUnlike={() => props.onPressUnlike(index)}
-				onPressFavorite={bool => props.onPressFavorite(index, bool)}
-			/>
+			<View onLayout={e => onLayout(e, item)}>
+				<Review
+					data={item}
+					isSearch={props.isSearch}
+					onPressReviewContent={() => props.onPressReviewContent(index)}
+					onPressReply={() => props.onPressReply(index)}
+					onPressMeatball={() => props.onPressMeatball(index)}
+					onPressLike={() => props.onPressLike(index)}
+					onPressUnlike={() => props.onPressUnlike(index)}
+					onPressFavorite={bool => props.onPressFavorite(index, bool)}
+				/>
+			</View>
 		);
 	};
 
@@ -87,7 +96,7 @@ export default ReviewList = props => {
 		} else return <></>;
 	};
 
-	if (data == 'false') {
+	if (data == 'false' && !loading) {
 		return <></>;
 	} else
 		return (
@@ -103,13 +112,15 @@ export default ReviewList = props => {
 					}}
 					ListEmptyComponent={props.whenEmpty}
 					ItemSeparatorComponent={() => {
-						return <View style={{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY30, alignSelf: 'center'}} />;
+						return <View style={{width: 694 * DP, height: 2 * DP, backgroundColor: GRAY30, alignSelf: 'center'}} />;
 					}}
 					ListHeaderComponent={recommend}
 					listKey={({item, index}) => index}
 					nestedScrollEnabled
 					windowSize={5}
-					onEndReached={() => props.onEndReached()}
+					onEndReached={() => {
+						props.onEndReached();
+					}}
 				/>
 			</View>
 		);

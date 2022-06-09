@@ -31,7 +31,7 @@ export var exportUri = {}; //겔러리 속 사진 로컬 주소
 
 export default AddPhoto = props => {
 	const limit = 5;
-	const requestloading = 300;
+	const requestloading = 40;
 	const navigation = useNavigation();
 	const [isVideo, setVideo] = React.useState(false);
 	const [photolist, setPhotoList] = React.useState([]);
@@ -48,7 +48,7 @@ export default AddPhoto = props => {
 	 *@param {string} type - 불러올 미디어의 타잎('Photos'|'All'|'Videos')
 	 */
 	const loadPhotosMilsec = (request = requestloading, timeStamp = 0, imageID = '123456789', type = 'Photos') => {
-		console.log('아이디', imageID);
+		// console.log('아이디', imageID);
 		let param = {
 			first: request,
 			toTime: timeStamp ? timeStamp * 1000 - 1 : 0,
@@ -168,7 +168,7 @@ export default AddPhoto = props => {
 		console.log('최초 로드');
 		CameraRoll.getAlbums({albumType: 'All', assetType: 'Photos'}).then(r => setAlbumList(['모든사진'].concat(r.map(v => v.title))));
 		if (Platform.OS === 'ios') {
-			loadPhotosMilsec();
+			loadPhotosMilsec(40);
 		} else {
 			try {
 				console.log('안드로이드 OS확인');
@@ -331,7 +331,11 @@ export default AddPhoto = props => {
 				numColumns={4}
 				onEndReachedThreshold={0.6}
 				onEndReached={scrollReachBottom}
-				windowSize={5}
+				windowSize={50}
+				maxToRenderPerBatch={50}
+				updateCellsBatchingPeriod={10}
+				initialNumToRender={144}
+				removeClippedSubviews
 			/>
 		</View>
 	);

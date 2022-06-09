@@ -68,12 +68,12 @@ export default FeedList = ({route, navigation}) => {
 		setFeedList(
 			list
 				.map((v, i, a) => {
-					let lines = getLinesOfString(v.feed_content, Platform.OS == 'android' ? 48 : 50);
-					lines = lines > 3 ? 3 : lines;
+					let lines = getLinesOfString(v.feed_content, 55);
+					lines = lines > 2 ? 2 : lines;
 					if (v.feed_recent_comment) {
-						return {...v, height: (750 + 200 + 120 + 2 + lines * 54) * DP};
+						return {...v, height: (914 + lines * 44+10+ 128)*DP};
 					} else {
-						return {...v, height: (750 + 72 + 120 + 2 + lines * 54) * DP};
+						return {...v, height: (914 + lines * 44+10)*DP};
 					}
 				})
 				.map((v, i, a) => {
@@ -391,6 +391,14 @@ export default FeedList = ({route, navigation}) => {
 		);
 	};
 
+	const getItemLayout = (data, index) => {
+		if (!data[index]) return {length: 0, offset: 0, index: index};
+		return {length: data[index].height, offset: data[index].offset, index: index};
+	}
+	const keyExtractor = (item, index) => {
+		let key = item._id + item.feed_update_date + item.feed_is_like;
+		return key;
+	}
 	const [tl, setTl] = React.useState({});
 	const [cl, setCl] = React.useState({});
 	const [fontSize, setSize] = React.useState(16);
@@ -401,15 +409,9 @@ export default FeedList = ({route, navigation}) => {
 			<FlatList
 				data={feedList}
 				renderItem={renderItem}
-				keyExtractor={(item, index) => {
-					let key = item._id + item.feed_update_date + item.feed_is_like;
-					return key;
-				}}
+				keyExtractor={keyExtractor}
 				refreshControl={route.name == 'MainHomeFeedList' ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} /> : <></>}
-				getItemLayout={(data, index) => {
-					if (!data[index]) return {length: 0, offset: 0, index: index};
-					return {length: data[index].height, offset: data[index].offset, index: index};
-				}}
+				getItemLayout={getItemLayout}
 				ListHeaderComponent={route.name == 'MainHomeFeedList' ? MissingReport : <></>}
 				ref={flatlist}
 				refreshing
@@ -417,7 +419,7 @@ export default FeedList = ({route, navigation}) => {
 				onScroll={rememberScroll}
 				ItemSeparatorComponent={({highlited}) => (
 					<View style={{alignItems: 'center'}}>
-						<View style={{height: 2 * DP, backgroundColor: GRAY30, width: 654 * DP}}></View>
+						<View style={{height: 10 * DP, backgroundColor: GRAY30, width: 750 * DP}}></View>
 					</View>
 				)}
 				windowSize={3}

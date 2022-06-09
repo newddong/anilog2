@@ -110,8 +110,8 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 
 	return (
 		<TouchableWithoutFeedback onPress={makeTag}>
-			<View style={styles.img_square_750x750}>
-				<Image style={styles.img_square_750x750} source={{uri: uri}} />
+			<View style={[style.container,style.adjustCenter]}>
+				<Image style={styles.img_square_round_694} source={{uri: uri}} />
 				{showTags && getTags()}
 				{tags.length > 0 && viewmode && (
 					<TouchableWithoutFeedback onPress={showTag}>
@@ -131,3 +131,13 @@ PhotoTagItem.defaultProps = {
 	index: 0,
 	viewmode: false,
 };
+
+const style = StyleSheet.create({
+	adjustCenter:{
+		alignItems:'center',
+	},
+	container:{
+		width:750*DP,
+		paddingVertical:20*DP,
+	}
+})

@@ -2,7 +2,7 @@ import React from 'react';
 import {Text, View, Image, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {ImageList48, VideoPlay48, VideoPlay_Feed, Tag70} from 'Atom/icon';
+import {ImageList48, VideoPlay48, VideoPlay_Feed, Tag70, Blur694} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import {APRI10, BLACK, GRAY10, RED10, WHITE} from 'Root/config/color';
 import Swiper from 'react-native-swiper';
@@ -103,13 +103,16 @@ export default FeedMedia = props => {
 	};
 
 	const swiperRef = React.useRef();
-
+	const pagenation = (index, total, context) => {
+		if(total<=1)return false;
+		return <View style={[style.pagination,feed_type == 'missing' || feed_type == 'report' ?{top:40*DP}:{bottom:40*DP}]}>
+			<Text style={[txt.roboto24,{color:WHITE}]}>{index+1}/{total}</Text>
+		</View>
+	}
 	return (
-		<View>
-			{/* Select된 상태일 때 불투명도 40% 적용 및 배경색  Black */}
-			<View style={{backgroundColor: BLACK}}>
+		<View style={{height:734*DP}}>
+			<View style={{height:734*DP}}>{/* Swiper Container View */}
 				<Swiper
-					// style={[styles.img_square_750x750]}
 					activeDotColor={APRI10}
 					showsButtons={false}
 					autoplay={false}
@@ -117,97 +120,57 @@ export default FeedMedia = props => {
 					removeClippedSubviews={false}
 					scrollEventThrottle={16}
 					ref={swiperRef}
-					renderPagination={(index, total, context) => {
-						// console.log('context', context);
-						return feed_medias.length == 1 ? (
-							<></>
-						) : (
-							<View
-								style={{
-									bottom: -50 * DP,
-									alignSelf: 'center',
-									alignItems: 'center',
-									justifyContent: 'space-between',
-									width: 28 * feed_medias.length * DP,
-									height: 24 * DP,
-									// backgroundColor: 'green',
-									flexDirection: 'row',
-									position: 'absolute',
-								}}>
-								{feed_medias.map((data, idx) => {
-									return (
-										<View
-											key={idx}
-											style={[
-												{
-													alignSelf: 'center',
-													width: 14 * DP,
-													height: 14 * DP,
-													backgroundColor: index == idx ? APRI10 : GRAY10,
-													borderRadius: 50 * DP,
-												},
-											]}></View>
-									);
-								})}
-							</View>
-						);
-					}}
+					renderPagination={pagenation}
 					horizontal={true}>
 					{feed_medias.map((data, idx) => {
 						return (
-							<PhotoTagItem
-								style={styles.img_square_750x750}
-								uri={data.media_uri}
-								data={props.data}
-								taglist={data.tags}
-								key={idx}
-								viewmode={true}
-								onPressPhoto={onPressPhoto}
-							/>
+							<React.Fragment key={idx}>
+								<PhotoTagItem
+									style={[styles.img_square_round_694]}
+									uri={data.media_uri}
+									data={props.data}
+									taglist={data.tags}
+									key={idx}
+									viewmode={true}
+									onPressPhoto={onPressPhoto}
+								/>
+								{feed_type == 'missing' || feed_type == 'report' ?
+								<View style={{bottom:19*DP,width:750*DP,height:694*DP,position:'absolute',alignItems:'center'}}>
+									<Blur694 />
+								</View>:false}
+							</React.Fragment>
 						);
-						// return <Image source={{uri: data.media_uri}} style={styles.img_square_750x750} key={idx} />;
 					})}
 					{/* {getFeedIcon()} */}
 				</Swiper>
+				
 			</View>
 			{feed_type == 'missing' || feed_type == 'report' ? (
-				<View style={style.emergency_title}>
+				<View style={[style.emergency_title,{backgroundColor:feed_type=='missing'?RED10:'#FFD153'}]}>
 					<Text style={[txt.noto40b, {color: WHITE}]}>{emergency_title}</Text>
 				</View>
 			) : (
 				false
 			)}
 			{feed_type == 'missing' ? (
-				<View style={[style.emergency_background, {paddingVertical: 20 * DP, paddingHorizontal: 24 * DP, height: null}]}>
+				<View style={[style.emergency_background]}>
+					
 					<View style={{flexDirection: 'row'}}>
 						<View style={{flex: 1}}>
-							<Text style={[missing_animal_species_detail.length > 5 ? txt.roboto36b : txt.roboto40b, {color: 'white'}]} numberOfLines={3}>
+							<Text style={[txt.roboto38b, {color: 'white',lineHeight:62*DP}]} numberOfLines={3}>
 								{missing_animal_species + ' / ' + missing_animal_species_detail}
 							</Text>
 						</View>
-						<View style={{flex: 1}}>
+						{/* <View style={{flex: 1}}>
 							<Text style={[txt.roboto40b, {color: 'white'}, {textAlign: 'right'}, {paddingRight: 38 * DP}]}>
 								{phoneFomatter(missing_animal_contact)}
 							</Text>
-						</View>
+						</View> */}
 					</View>
-					<View style={{flex: 1, flexDirection: 'row', paddingTop: 16 * DP}}>
+					<View style={{flex: 1, flexDirection: 'row'}}>
 						<View style={style.missing_date_age_container}>
-							<Text style={[txt.roboto36b, {color: 'white'}]}>{newMissingDate}</Text>
-							<Text style={[txt.roboto36b, {color: 'white'}, {paddingTop: 10 * DP}]}>나이 : {missing_animal_age}살</Text>
-						</View>
-						<View style={style.missing_detail_container}>
-							{newMissingAddress == '' ? (
-								<></>
-							) : (
-								<Text style={[txt.roboto26, {color: 'white'}]} numberOfLines={2}>
-									-{newMissingAddress}
-								</Text>
-							)}
-
-							<Text style={[txt.roboto26, {color: 'white'}]} numberOfLines={2}>
-								- {missing_animal_features}
-							</Text>
+							<Text style={[txt.noto32, {color: 'white'}]}>실종 날짜: {newMissingDate}</Text>
+							<Text style={[txt.noto32, {color: 'white'}]}>실종 장소: {newMissingAddress}</Text>
 						</View>
 					</View>
 				</View>
@@ -215,21 +178,16 @@ export default FeedMedia = props => {
 				false
 			)}
 			{feed_type == 'report' ? (
-				<View style={[style.emergency_background, {paddingHorizontal: 30 * DP, height: null}]}>
-					<View style={[{flexDirection: 'row'}]}>
-						<View style={[style.report_date_container, {marginTop: 32 * DP}]}>
-							<Text style={[txt.roboto34b, {color: 'white'}]}>{newMissingDate}</Text>
-						</View>
-
-						<View style={style.report_location_container}>
-							<Text style={[txt.roboto28b, {color: 'white'}, {textAlign: 'center'}]} numberOfLines={2}>
+				<View style={[style.emergency_background]}>
+					<View style={[{flexDirection: 'column'}]}>
+						<Text style={[txt.roboto38b, {color: 'white',lineHeight:62*DP}]} numberOfLines={1}>
 								{report_witness_location}
-							</Text>
+						</Text>
+						<View style={[style.report_date_container]}>
+							<Text style={[txt.noto32, {color: 'white'}]}>제보 날짜: {newMissingDate}</Text>
 						</View>
-					</View>
-					<View style={{flex: 1, flexDirection: 'row', paddingTop: 16 * DP}}>
 						<View style={style.report_detail_container}>
-							<Text style={[txt.roboto26, {color: 'white'}]} numberOfLines={2}>
+							<Text style={[txt.noto32, {color: 'white',lineHeight:45*DP}]} numberOfLines={2}>
 								{feed_content}
 							</Text>
 						</View>
@@ -238,30 +196,6 @@ export default FeedMedia = props => {
 			) : (
 				false
 			)}
-
-			{/* {isEmergency ? (
-				<View style={[style.emergency_background, {paddingVertical: 20 * DP, paddingHorizontal: 48 * DP, height: null}]}>
-					<View style={style.emergency_info_container}>
-						<View style={{flexDirection: 'row'}}>
-							<Text style={[txt.roboto34b, {color: 'white'}]} numberOfLines={3}>
-								{animal_species + animal_species_detail}
-							</Text>
-						</View>
-						<View style={{marginLeft: 20 * DP, flex: 1}}>
-							<Text style={[txt.roboto34b, {color: 'white'}]} numberOfLines={2}>
-								{emergency_location}
-							</Text>
-						</View>
-					</View>
-					<View style={{flex: 1}}>
-						<Text style={[txt.roboto24, {color: 'white', marginTop: 20 * DP}]} numberOfLines={3} ellipsizeMode="tail">
-							{report_animal_features}
-						</Text>
-					</View>
-				</View>
-			) : (
-				false
-			)} */}
 		</View>
 	);
 };
@@ -281,27 +215,39 @@ FeedMedia.defaultProps = {
 };
 
 const style = StyleSheet.create({
+	pagination:{
+		width:76*DP,
+		height:50*DP,
+		borderRadius:25*DP,
+		backgroundColor:'#0008',
+		justifyContent:'center',
+		alignItems:'center',
+		position:'absolute',
+		right:48*DP
+	},
 	emergency_title: {
 		width: 164 * DP,
 		height: 82 * DP,
 		position: 'absolute',
-		backgroundColor: RED10,
 		paddingBottom: 10 * DP,
 		borderBottomLeftRadius: 20 * DP,
 		borderBottomRightRadius: 20 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
-		right: 10,
-		top: 0,
+		left: 293*DP,
+		top: 20*DP,
 	},
 	emergency_background: {
 		width: 750 * DP,
+		paddingHorizontal:28*DP,
 		// height: 214 * DP,
-		backgroundColor: '#0009',
+		// backgroundColor: '#0009',
 		justifyContent: 'center',
 		position: 'absolute',
-		bottom: 0,
-		zIndex: 0,
+		bottom:0,
+		// zIndex: 0,
+		paddingVertical: 20 * DP,
+		paddingHorizontal: 52 * DP
 	},
 	emergency_info_txt: {
 		color: 'white',
@@ -313,18 +259,20 @@ const style = StyleSheet.create({
 		flexDirection: 'row',
 	},
 	missing_date_age_container: {
-		width: 192 * DP,
-		height: 102 * DP,
+		// width: 192 * DP,
+		height: 126 * DP,
+		paddingBottom: 24*DP,
+		justifyContent:'space-between'
 	},
 	missing_detail_container: {
 		width: 500 * DP,
 		height: 114 * DP,
 		paddingLeft: 10 * DP,
+		paddingRight:52*DP
 	},
 	report_date_container: {
 		height: 48 * DP,
-		width: 198 * DP,
-		flex: 1,
+		marginBottom:4*DP
 	},
 	report_location_container: {
 		height: 80 * DP,
@@ -335,7 +283,6 @@ const style = StyleSheet.create({
 	},
 
 	report_detail_container: {
-		height: 80 * DP,
-		width: 690 * DP,
+		paddingBottom: 24*DP,
 	},
 });

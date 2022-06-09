@@ -12,6 +12,9 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		24DD834A9C1C42FE9FE332C9 /* NotoSansKR-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0A068D045B4047B2B4373AC9 /* NotoSansKR-Bold.otf */; };
+		2A5FA76C284F0F4C0059B4FC /* libSDWebImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A5FA76B284F0F4C0059B4FC /* libSDWebImage.a */; };
+		2A5FA76E284F0F520059B4FC /* libSDWebImageWebPCoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A5FA76D284F0F520059B4FC /* libSDWebImageWebPCoder.a */; };
+		2A5FA770284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A5FA76F284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a */; };
 		2C7A42484CA9CA675C35D61E /* libPods-anilog-anilogTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4615C9F5C3CE11D85E5CD042 /* libPods-anilog-anilogTests.a */; };
 		38C809C2E250425DBE6E3698 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 03A25EDACADC457B8C7B463B /* Roboto-Italic.ttf */; };
 		39266251E14A4E1C9F361D92 /* Roboto-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B7CC3F2370A94A2B8E77E173 /* Roboto-MediumItalic.ttf */; };
@@ -56,6 +59,9 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = anilog/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = anilog/main.m; sourceTree = "<group>"; };
 		260C0AB6EC0CEFE917F43DCA /* Pods-anilog-anilogTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-anilog-anilogTests.debug.xcconfig"; path = "Target Support Files/Pods-anilog-anilogTests/Pods-anilog-anilogTests.debug.xcconfig"; sourceTree = "<group>"; };
+		2A5FA76B284F0F4C0059B4FC /* libSDWebImage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSDWebImage.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A5FA76D284F0F520059B4FC /* libSDWebImageWebPCoder.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSDWebImageWebPCoder.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A5FA76F284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSDWebImagePhotosPlugin.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4615C9F5C3CE11D85E5CD042 /* libPods-anilog-anilogTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-anilog-anilogTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		491A95C9D8B44C93826661F1 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Medium.ttf"; path = "../asset/fonts/Roboto-Medium.ttf"; sourceTree = "<group>"; };
 		589B0AC5A823102178DB5694 /* Pods-anilog-anilogTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-anilog-anilogTests.release.xcconfig"; path = "Target Support Files/Pods-anilog-anilogTests/Pods-anilog-anilogTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -97,6 +103,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA810DDFD3E9B502570DEDE0 /* libPods-anilog.a in Frameworks */,
+				2A5FA770284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a in Frameworks */,
+				2A5FA76C284F0F4C0059B4FC /* libSDWebImage.a in Frameworks */,
+				2A5FA76E284F0F520059B4FC /* libSDWebImageWebPCoder.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,6 +162,9 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2A5FA76F284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a */,
+				2A5FA76D284F0F520059B4FC /* libSDWebImageWebPCoder.a */,
+				2A5FA76B284F0F4C0059B4FC /* libSDWebImage.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				B079AF24774A2B10B60DFF49 /* libPods-anilog.a */,
 				4615C9F5C3CE11D85E5CD042 /* libPods-anilog-anilogTests.a */,

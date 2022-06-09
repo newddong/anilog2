@@ -147,7 +147,7 @@ export default PhoneNumVerification = props => {
 					showTitle={false}
 					width={694}
 					height={104}
-					placeholder={'이름 입력'}
+					placeholder={'이름을 입력해주세요'}
 					onChange={onNameInputChange}
 					onValid={onValidName}
 					validator={nameValidator}
@@ -174,7 +174,7 @@ export default PhoneNumVerification = props => {
 					width={492}
 					items={mobile_carrier}
 					delimiter="|"
-					placeholder={'휴대폰 번호 입력(-제외)'}
+					placeholder={'휴대폰 번호를 입력해주세요(-제외)'}
 					onChange={onPhoneNumberInputChange}
 					onSelectDropDown={onMobileCompanyInputChange}
 					onValid={onValidMobileNum}
@@ -188,7 +188,7 @@ export default PhoneNumVerification = props => {
 			</View>
 			<View style={[{flexDirection: 'row'}, {marginTop: 14 * DP}]}>
 				{props.failed ? (
-					<View style={[{position: 'absolute', right: 5, bottom: 0}]}>
+					<View style={[{position: 'absolute', right: -10, bottom: -15}]}>
 						<TouchableOpacity onPress={props.requestVerification}>
 							<Text style={[txt.noto28b, {color: APRI10}, {textDecorationLine: 'underline'}]}>재인증</Text>
 						</TouchableOpacity>

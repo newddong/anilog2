@@ -1,8 +1,8 @@
 import {useNavigation} from '@react-navigation/core';
 import React, {useRef} from 'react';
-import {Text, View, ScrollView, TouchableOpacity} from 'react-native';
+import {Text, View, ScrollView, TouchableOpacity, StyleSheet} from 'react-native';
 
-import {GRAY10} from 'Root/config/color';
+import {GRAY10, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {
 	ACCOUNT,
@@ -27,8 +27,19 @@ import {
 	OPENSETTING,
 	REQ_PROTECTION_SAVE,
 } from 'Root/i18n/msg';
-import {btn_w280, btn_w280x68} from 'Atom/btn/btn_style';
-import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FavoriteTag48_Filled, Paw46, Paw48_APRI10, Setting46} from 'Atom/icon';
+import {btn_w280, btn_w280x68, btn_w694_r30} from 'Atom/btn/btn_style';
+import {
+	Arrow_Down_GRAY10,
+	Arrow_Up_GRAY20,
+	FavoriteTag48_Border,
+	FavoriteTag48_Filled,
+	Home48Border,
+	Paw46,
+	Paw46_border,
+	Paw48_APRI10,
+	Setting46,
+	Setting46_border,
+} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
 import ProfileImageLarge194 from 'Molecules/image/ProfileImageLarge194';
 import ProfileMenu from 'Organism/menu/ProfileMenu';
@@ -42,7 +53,7 @@ import {useIsFocused} from '@react-navigation/native';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {GRAY40} from 'Root/config/color';
 import DP from 'Root/config/dp';
-
+import ProfileImageMedium148 from 'Root/component/molecules/image/ProfileImageMedium148';
 export default UserMenu = props => {
 	// console.log('UserMenu Props', props);
 	const navigation = useNavigation();
@@ -59,7 +70,7 @@ export default UserMenu = props => {
 			navigation.navigate('Login');
 		}
 	}, []);
-
+	console.log('numberOF lines', numberOfLines);
 	React.useEffect(() => {
 		getUserProfile(
 			{
@@ -167,25 +178,26 @@ export default UserMenu = props => {
 		<ScrollView>
 			<View style={[login_style.wrp_main, userMenu_style.container]}>
 				{/* 유저 프로필 정보 */}
-				<View style={[userMenu_style.userMenu_step1]}>
-					<View style={[temp_style.userInfo, userMenu_style.userInfo]}>
-						<View style={[temp_style.profileImageLarge]}>{data._id != undefined && <ProfileImageLarge194 data={data} />}</View>
+				<View style={[styles.userMenu_step1]}>
+					<View style={[styles.userInfo, {flexDirection: 'row'}, {marginTop: 30 * DP}]}>
+						<View style={[styles.profileImageLarge]}>{data._id != undefined && <ProfileImageMedium148 data={data} />}</View>
 
-						<View style={[{marginLeft: 46 * DP}, {height: 194 * DP}, {justifyContent: 'flex-end'}]}>
-							<TouchableOpacity onPress={onPressMyName} style={[userMenu_style.user_id]}>
-								<Text style={[txt.roboto40b]} numberOfLines={1}>
+						<View style={[{marginLeft: 40 * DP}, {height: 148 * DP}, {justifyContent: 'center'}]}>
+							<TouchableOpacity onPress={onPressMyName} style={[styles.user_id]}>
+								<Text style={[txt.roboto46b, {alignItems: 'center'}, {marginRight: 5 * DP}]} numberOfLines={1}>
 									{data.user_nickname || ''}
 								</Text>
+								<Home48Border />
 							</TouchableOpacity>
 							{/* 업로드 팔로워 팔로잉 */}
-							<View style={[{width: 408 * DP}, {marginTop: 18 * DP}]}>
+							<View style={[{width: 462 * DP}, {marginTop: 20 * DP}]}>
 								<SocialInfoB data={data} />
 							</View>
 						</View>
 					</View>
 
-					<View style={{flexDirection: 'row', width: 654 * DP}}>
-						<View style={[userMenu_style.introduceBox, {alignSelf: 'flex-start'}]}>
+					<View style={{flexDirection: 'row', width: 694 * DP}}>
+						<View style={[styles.introduceBox, {alignSelf: 'flex-start'}]}>
 							{data._id != undefined && (
 								<Text numberOfLines={!showMoreIntro ? 15 : 2} style={[txt.noto26]}>
 									{data.user_introduction || '자기소개가 없습니다.'}
@@ -197,8 +209,8 @@ export default UserMenu = props => {
 							style={[txt.noto24, {position: 'absolute', opacity: 0, backgroundColor: 'red'}]}
 							numberOfLines={null}
 							onTextLayout={({nativeEvent: {lines}}) => {
-								// console.log('lines.length', lines.length);
-								setNumOfLines(lines.length);
+								console.log('lines.length', lines.length);
+								// setNumOfLines(lines.length);
 							}}>
 							{data.user_introduction || ''}
 						</Text>
@@ -225,9 +237,17 @@ export default UserMenu = props => {
 					</View>
 
 					{/* 내 정보 수정 버튼*/}
-					<View style={[userMenu_style.btn_w280_view]}>
-						<View style={[userMenu_style.btn_w280]}>
-							<AniButton btnLayout={btn_w280x68} btnStyle={'border'} btnTheme={'shadow'} btnTitle={MY_INFO_MODIFY} onPress={onPressModifyMyInfo} />
+					<View style={[styles.btn_w694_view]}>
+						<View style={[styles.btn_w694]}>
+							<AniButton
+								btnLayout={btn_w694_r30}
+								btnStyle={'border'}
+								btnTheme={'shadow'}
+								btnTitle={MY_INFO_MODIFY}
+								height={104}
+								titleFontStyle={32}
+								onPress={onPressModifyMyInfo}
+							/>
 						</View>
 
 						{/* 나의 반려동물 버튼 */}
@@ -252,7 +272,7 @@ export default UserMenu = props => {
 									[PROTECTION_REQUEST, COMUNITY],
 								]}
 								onClick={menuClick}
-								titleIcon={<FavoriteTag48_Filled />}
+								titleIcon={<FavoriteTag48_Border />}
 							/>
 						</View>
 					</View>
@@ -266,7 +286,7 @@ export default UserMenu = props => {
 									['커뮤니티 ', NOTE_LIST],
 								]}
 								onClick={menuClick}
-								titleIcon={<Paw46 />}
+								titleIcon={<Paw46_border />}
 							/>
 						</View>
 					</View>
@@ -278,7 +298,7 @@ export default UserMenu = props => {
 								[INFO, INFO_QUESTION],
 							]}
 							onClick={menuClick}
-							titleIcon={<Setting46 />}
+							titleIcon={<Setting46_border />}
 						/>
 					</View>
 				</View>
@@ -286,3 +306,60 @@ export default UserMenu = props => {
 		</ScrollView>
 	);
 };
+
+const styles = StyleSheet.create({
+	userInfo: {
+		width: 694 * DP,
+		// height: 194 * DP,
+		// alignItems: 'center',
+		justifyContent: 'center',
+		// backgroundColor: '#BCC0DC',
+	},
+	userMenu_step1: {
+		width: 750 * DP,
+		// height: 508 * DP,
+		alignItems: 'center',
+		borderBottomColor: GRAY40,
+		borderBottomWidth: 10 * DP,
+		// backgroundColor: '#6F9B85',
+	},
+	profileImageLarge: {
+		width: 148 * DP,
+		height: 148 * DP,
+		// alignItems: 'center',
+		// justifyContent: 'center',
+		// alignItems: 'flex-start',
+		// backgroundColor: '#D1E7F1',
+	},
+	user_id: {
+		// width: 420 * DP,
+		height: 68 * DP,
+		// marginTop: 44 * DP,
+		alignItems: 'center',
+		justifyContent: 'flex-start',
+		flexDirection: 'row',
+		// backgroundColor: 'red',
+	},
+	introduceBox: {
+		marginTop: 30 * DP,
+		flexDirection: 'row',
+		marginLeft: 20 * DP,
+		width: 528 * DP,
+		// backgroundColor: 'red',
+	},
+	btn_w694: {
+		flexDirection: 'row',
+		// marginRight: 50 * DP,
+		width: 694 * DP,
+		height: 104 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		// backgroundColor: '#BF9547',
+	},
+	btn_w694_view: {
+		flexDirection: 'row',
+		marginVertical: 40 * DP,
+		width: 694 * DP,
+		alignItems: 'center',
+	},
+});

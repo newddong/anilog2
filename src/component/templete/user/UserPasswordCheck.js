@@ -68,7 +68,7 @@ export default UserPasswordCheck = props => {
 				<Text style={([{textAlign: 'center'}], txt.noto30)}>포함되어야 합니다.</Text>
 			</View>
 			{/* (O)PasswordChecker */}
-			<View style={[temp_style.passwordChecker, userPasswordCheck.passwordChecker]}>
+			<View style={[styles.passwordChecker, {marginTop: 52 * DP}]}>
 				<PasswordChecker
 					onChangePwd={onChangePwd}
 					passwordValidator={passwordValidator}
@@ -102,5 +102,10 @@ const styles = StyleSheet.create({
 		borderWidth: 4 * DP,
 		// borderColor: APRI10,
 		borderColor: MAINBLACK,
+	},
+	passwordChecker: {
+		width: 694 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
 });

@@ -213,13 +213,6 @@ RCT_EXPORT_METHOD(getAlbums:(NSDictionary *)params
   NSMutableArray * result = [NSMutableArray new];
   NSString *__block fetchedAlbumType = nil;
   
-  //콜백함수 선언
-  //반환형 (^블록명)(파라미터 타입); void (^blockName)(double, double);
-  //- (void)exampleMethodName:(블록 선언이 들어갈 자리인데 생략가능)블록 이름;
-  //- (void)exampleMethodName:(void (^blockName)(void))methodBlockName;
-  //- (void)exampleMethodName:(void (^)(void))methodBlockName;
-  //methodBlockName은 exampleMethodName 함수 안에서 쓸 블록 이름입니다.
-  //exampleMethodName 안에서 methodBlockName()으로 호출도 가능합니다.
   void (^convertAsset)(PHAssetCollection * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) =
   ^(PHAssetCollection * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
     PHFetchOptions *const assetFetchOptions = [RCTConvert PHFetchOptionsFromMediaType:mediaType fromTime:0 toTime:0];
@@ -230,7 +223,7 @@ RCT_EXPORT_METHOD(getAlbums:(NSDictionary *)params
     //리턴형태
     if (assetsFetchResult.count > 0) {
       [result addObject:@{
-        @"title": [obj localizedTitle],
+        @"title": ([obj assetCollectionType] != PHAssetCollectionTypeSmartAlbum) ? [obj localizedTitle] : NSLocalizedStringFromTable([obj localizedTitle], @"smartAlbums", nil),
         @"count": @(assetsFetchResult.count),
         @"type": fetchedAlbumType,
         @"subType": @(obj.assetCollectionSubtype)
@@ -440,7 +433,8 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
         assetCollectionFetchResult = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:subType options:nil];
         [assetCollectionFetchResult enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull assetCollection, NSUInteger collectionIdx, BOOL * _Nonnull stopCollections) {
           PHFetchResult<PHAsset *> *const assetsFetchResult = [PHAsset fetchAssetsInAssetCollection:assetCollection options:assetFetchOptions];
-          currentCollectionName = [assetCollection localizedTitle];
+//          currentCollectionName = [assetCollection localizedTitle];
+          currentCollectionName = NSLocalizedStringFromTable([assetCollection localizedTitle], @"smartAlbums", nil);
           [assetsFetchResult enumerateObjectsUsingBlock:collectAsset];
           
           *stopCollections = stopCollections_;

@@ -6,6 +6,7 @@ import DP from 'Root/config/dp';
 import {Cross46} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
 import Swiper from 'react-native-swiper';
+import Crop from 'Molecules/media/Crop';
 
 /**
  * 사진 전체화면 모드 모달
@@ -23,7 +24,9 @@ const PhotoListViewModal = props => {
 	return (
 		<View style={style.background}>
 			<TouchableOpacity onPress={() => (props.onClose ? props.onClose() : Modal.close())} style={[style.crossMark]}>
+				<View style={{backgroundColor:'yellow',width:120*DP,height:120*DP}}>
 				<Cross46 />
+				</View>
 			</TouchableOpacity>
 			<View style={[style.popUpWindow]}>
 				<Swiper
@@ -33,6 +36,7 @@ const PhotoListViewModal = props => {
 					loop={false}
 					removeClippedSubviews={false}
 					scrollEventThrottle={16}
+					scrollEnabled={true}
 					ref={swiperRef}
 					renderPagination={(index, total, context) => {
 						// console.log('context', context);
@@ -71,8 +75,12 @@ const PhotoListViewModal = props => {
 					horizontal={true}>
 					{props.photoList != undefined &&
 						props.photoList.map((data, idx) => (
+
 							<TouchableOpacity activeOpacity={1} onPress={() => props.onClose()} key={idx}>
-								<Image source={{uri: data}} style={style.photo} resizeMode={'contain'} />
+                {/*<Image source={{uri: data}} style={style.photo} resizeMode={'contain'} />*/}
+								{/* <Image source={{uri: data}} style={style.photo} resizeMode={'stretch'} /> */}
+								<Crop uri={data} width={750*DP} height={1000*DP} isCrop={false} backgroundColor={'black'}/>
+
 								<View style={[style.swiper_index]}>
 									<Text style={[txt.roboto24, {color: 'white'}]}>
 										{idx + 1}/{props.photoList.length}
@@ -110,21 +118,10 @@ const style = StyleSheet.create({
 		backgroundColor: WHITE,
 		justifyContent: 'center',
 		alignItems: 'center',
-		marginBottom: 70 * DP,
-	},
-	shadow: {
-		shadowColor: '#000000',
-		shadowOpacity: 0.27,
-		shadowRadius: 4.65,
-		shadowOffset: {
-			width: 1 * DP,
-			height: 2 * DP,
-		},
-		elevation: 2,
 	},
 	photo: {
 		width: 750 * DP,
-		height: 1100 * DP,
+		// height: 750 * DP,
 		backgroundColor: 'black',
 	},
 });

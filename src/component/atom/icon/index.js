@@ -172,12 +172,19 @@ import crossNew92 from './crossNew92';
 import shelter294 from './shelter294';
 import blur246 from './blur246';
 import arrow48 from './arrow48';
+
 import arrow48_gray from './arrow48_gray';
 import location54 from './location54';
 import comment48 from './comment48';
 import comment30_border from './comment30_border';
+
+import paw46_border from './paw46_border';
+import setting46Border from './setting46Border';
+import circleMeatBall70 from './circleMeatBall70';
+import home48Border from './home48Border';
+
 import DP from 'Root/config/dp';
-import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
+import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK, MAINBLACK} from 'Root/config/color';
 
 const size30 = {width: 30 * DP, height: 30 * DP};
 const size32 = {width: 32 * DP, height: 32 * DP};
@@ -271,7 +278,7 @@ export const Calendar48_Filled = makeSvg(calendar48Filled, size48);
 export const Share48_Filled = makeSvg(share48Filled, size48);
 export const Share48_Border = makeSvg(share48Border, size48);
 export const FavoriteTag48_Filled = makeSvg(favoriteTagFilled, size48, APRI10);
-export const FavoriteTag48_Border = makeSvg(favoriteTag48Border, size48);
+export const FavoriteTag48_Border = makeSvg(favoriteTag48Border, size48, MAINBLACK);
 export const Calendar48_Border = makeSvg(calendar48Border, size48);
 export const Cross48 = makeSvg(cross, size48);
 export const Person48 = makeSvg(person48, size48);
@@ -438,5 +445,12 @@ export const ProfileDefaultImg4 = makeSvg(profiledefault4, {width: 294 * DP, hei
 export const CrossNew92 = makeSvg(crossNew92, size92);
 export const Shelter294 = makeSvg(shelter294, {width: 294 * DP, height: 294 * DP});
 export const Arrow48 = makeSvg(arrow48, size48);
+
 export const Comment48 = makeSvg(comment48, size48);
 export const Arrow48_GRAY = makeSvg(arrow48_gray, size48);
+
+export const Paw46_border = makeSvg(paw46_border, size46, MAINBLACK);
+export const Setting46_border = makeSvg(setting46Border, size46, MAINBLACK);
+export const CircleMeatBall70 = makeSvg(circleMeatBall70, size70);
+export const Home48Border = makeSvg(home48Border, size48, MAINBLACK);
+

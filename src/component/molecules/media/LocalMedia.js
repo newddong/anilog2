@@ -67,7 +67,7 @@ const LocalMedia = React.memo(props => {
 	};
 
 	const getStyleOfSelectedItem = () => {
-		return isSelect ? [styles.img_square_186, {borderWidth: 4 * DP, borderColor: APRI10, opacity: 0.6}] : styles.img_square_186;
+		return isSelect ? [styles.img_square_186, {borderWidth: 4 * DP, borderColor: APRI10, opacity: 0.6,backgroundColor:'#DDDDDD'}] : [styles.img_square_186,{backgroundColor:'#DDDDDD'}];
 	};
 
 	const getImageOfSelectedItem = () => {
@@ -111,7 +111,7 @@ const LocalMedia = React.memo(props => {
 		// <TouchableOpacity onPress={onPressMedia} style={[styles.img_square_186,{marginHorizontal:1*DP,marginVertical:1*DP}]}>
 		<TouchableOpacity onPress={onPressMedia} style={{width:187*DP,height:187*DP,paddingHorizontal:1*DP,paddingVertical:1*DP,backgroundColor:'#FFF'}}>
 			{/* <Image source={{uri: props.data.img_uri}} style={getStyleOfSelectedItem()} /> */}
-			<Img source={{uri: props.data.image.uri}} style={getStyleOfSelectedItem()} />
+			<Img source={{uri: props.data.image.uri,priority:FastImage.priority.high}} style={getStyleOfSelectedItem()} />
 			{isSelect && getImageOfSelectedItem()}
 			{/* {props.data.image.playableDuration != null && (
 				<Text style={[txt.roboto22, {color: WHITE, position: 'absolute', left: 10 * DP, bottom: 6 * DP}]}>{props.data.image.playableDuration}</Text>
@@ -153,12 +153,13 @@ const style = StyleSheet.create({
 //안드로이드에서 FastImage를 사용하도록하는 커스텀 컴포넌트
 const Img =React.forwardRef((props,ref) => {
 	if(Platform.OS=='ios'){
-		return <Image {...props} ref={ref}></Image>
+		return <Image {...props} ref={ref} ></Image>
 
 	}
 	if(Platform.OS=='android'){
 		return <FastImage {...props} ref={ref}></FastImage>
 	}
 })
+
 
 export default LocalMedia;

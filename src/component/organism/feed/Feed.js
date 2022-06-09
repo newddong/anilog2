@@ -2,7 +2,6 @@ import React from 'react';
 import {Text, TouchableOpacity, View, StyleSheet} from 'react-native';
 import FeedContent from './FeedContent';
 import {Comment48_Border, Like48_Border, Like48_Filled} from 'Atom/icon';
-import FeedMedia from 'Molecules/media/FeedMedia';
 import {useNavigation} from '@react-navigation/core';
 import {txt} from 'Root/config/textstyle';
 import {GRAY10, WHITE} from 'Root/config/color';
@@ -109,48 +108,9 @@ export default Feed = React.memo(props => {
 
 	return (
 		<View style={[feed_templete_style.feed]} removeClippedSubviews>
-			<FeedContent data={props.data} deleteFeed={deleteFeed} />
+			<FeedContent data={props.data} deleteFeed={deleteFeed} toggleFeedLike={toggleFeedLike} isLike={isLike} likeCount={likeCount}/>
 			{/* 270DP */}
-			<View style={[feed_templete_style.feedMedia_feed]}>
-				<FeedMedia data={props.data} />
-			</View>
 			<View style={[feed_templete_style.comment_feed_view]}>
-				<View style={[feed_templete_style.likeCommentButtons_view]}>
-					<View style={[feed_templete_style.likeCommentInfo_view_feed]}>
-						<TouchableWithoutFeedback onPress={toggleFeedLike}>
-							<View style={feed_templete_style.likeButtonWrapper}>
-								<View style={[feed_templete_style.like48]}>{isLike ? <Like48_Filled /> : <Like48_Border />}</View>
-								<View style={feed_templete_style.like_count_view_feed}>
-									<View style={[feed_templete_style.like_count_feed, feed_style.like_count]}>
-										<Text style={[txt.roboto24]}>{likeCount}</Text>
-									</View>
-								</View>
-							</View>
-						</TouchableWithoutFeedback>
-						{/* <TouchableOpacity onPress={moveToCommentList}>
-							<View style={{flexDirection: 'row'}}>
-								<View style={organism_style.like48}>
-									<Comment48_Border />
-								</View>
-								<View style={organism_style.comment_count_view_feed}>
-									<View style={[organism_style.comment_count_feed, feed_style.comment_count]}>
-										<Text style={[txt.roboto24]}>{feed_comment_count}</Text>
-									</View>
-								</View>
-							</View>
-						</TouchableOpacity> */}
-					</View>
-
-					{/* 댓글 comment_count개 모두 보기 */}
-					<View style={[feed_templete_style.allCommentCount]}>
-						<TouchableOpacity onPress={moveToCommentList}>
-							<View style={{}}>
-								<Text style={[txt.noto24]}>{feed_comment_count > 0 ? `댓글 ${feed_comment_count}개 모두 보기` : '댓글 쓰기'}</Text>
-							</View>
-						</TouchableOpacity>
-					</View>
-				</View>
-
 				{/* RecentComment */}
 				{feed_recent_comment && (
 					<View style={[feed_templete_style.recentComment_view]}>

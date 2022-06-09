@@ -1,92 +1,109 @@
 import {StyleSheet, Dimensions, PixelRatio} from 'react-native';
 import DP from 'Root/config/dp';
-import {TEXTBASECOLOR, GRAY, GRAY_BRIGHT, GRAY_PLACEHOLDER, MAINCOLOR, SLIGHT_TEXTBASECOLOR, LINK, WHITE, RED, GRAY_TXT_INPUT} from 'Root/config/color';
+import {
+	TEXTBASECOLOR,
+	GRAY,
+	GRAY_BRIGHT,
+	GRAY_PLACEHOLDER,
+	MAINCOLOR,
+	SLIGHT_TEXTBASECOLOR,
+	LINK,
+	WHITE,
+	RED,
+	GRAY_TXT_INPUT,
+} from 'Root/config/color';
 
 export const txt = StyleSheet.create({
 	noto18: {
 		fontFamily: 'NotoSansKR-Regular',
 		fontSize: 18 * DP,
 		color: TEXTBASECOLOR,
-		includeFontPadding:false,
+		includeFontPadding: false,
 	},
 	noto20: {
 		fontFamily: 'NotoSansKR-Regular',
 		fontSize: 20 * DP,
 		color: TEXTBASECOLOR,
-		includeFontPadding:false,
+		includeFontPadding: false,
 	},
 	noto22: {
 		fontFamily: 'NotoSansKR-Regular',
 		fontSize: 22 * DP,
 		color: TEXTBASECOLOR,
-		includeFontPadding:false,
+		includeFontPadding: false,
 	},
 	noto24: {
 		fontFamily: 'NotoSansKR-Regular',
 		fontSize: 24 * DP,
 		color: TEXTBASECOLOR,
-		includeFontPadding:false,
+		includeFontPadding: false,
 	},
 	noto26: {
 		fontFamily: 'NotoSansKR-Regular',
 		fontSize: 26 * DP,
 		color: TEXTBASECOLOR,
-		includeFontPadding:false,
+		includeFontPadding: false,
 	},
 	noto28: {
 		fontFamily: 'NotoSansKR-Regular',
-		fontSize: 28 * DP ,
+		fontSize: 28 * DP,
 		color: TEXTBASECOLOR,
-		includeFontPadding:false,
+		includeFontPadding: false,
 	},
 	noto30: {
 		fontFamily: 'NotoSansKR-Regular',
 		fontSize: 30 * DP,
 		color: TEXTBASECOLOR,
-		includeFontPadding:false,
+		includeFontPadding: false,
 	},
 	noto32: {
 		fontFamily: 'NotoSansKR-Regular',
 		fontSize: 32 * DP,
 		color: TEXTBASECOLOR,
-		includeFontPadding:false,
+		includeFontPadding: false,
 	},
 	noto34: {
 		fontFamily: 'NotoSansKR-Regular',
 		fontSize: 34 * DP,
 		color: TEXTBASECOLOR,
-		includeFontPadding:false,
+		includeFontPadding: false,
 	},
 	noto36: {
 		fontFamily: 'NotoSansKR-Regular',
 		fontSize: 36 * DP,
 		color: TEXTBASECOLOR,
-		includeFontPadding:false,
+		includeFontPadding: false,
 	},
 	noto38: {
 		fontFamily: 'NotoSansKR-Regular',
 		fontSize: 38 * DP,
 		color: TEXTBASECOLOR,
-		includeFontPadding:false,
+		includeFontPadding: false,
 	},
 	noto40: {
 		fontFamily: 'NotoSansKR-Regular',
 		fontSize: 40 * DP,
 		color: TEXTBASECOLOR,
-		includeFontPadding:false,
+		includeFontPadding: false,
+	},
+	noto46: {
+		fontFamily: 'NotoSansKR-Regular',
+		fontSize: 46 * DP,
+		color: TEXTBASECOLOR,
+		includeFontPadding: false,
 	},
 	//noto bold
 	noto20b: {
 		fontFamily: 'NotoSansKR-Bold',
 		fontSize: 20 * DP,
 		color: TEXTBASECOLOR,
-		includeFontPadding:false,
+		includeFontPadding: false,
 	},
 	noto22b: {
 		fontFamily: 'NotoSansKR-Bold',
 		fontSize: 22 * DP,
 		color: TEXTBASECOLOR,
-		includeFontPadding:false,
+		includeFontPadding: false,
 	},
 	noto24b: {
 		fontFamily: 'NotoSansKR-Bold',
@@ -110,37 +127,37 @@ export const txt = StyleSheet.create({
 		fontFamily: 'NotoSansKR-Bold',
 		fontSize: 30 * DP,
 		color: TEXTBASECOLOR,
-		includeFontPadding:false,
+		includeFontPadding: false,
 	},
 	noto32b: {
 		fontFamily: 'NotoSansKR-Bold',
 		fontSize: 32 * DP,
 		color: TEXTBASECOLOR,
-		includeFontPadding:false,
+		includeFontPadding: false,
 	},
 	noto34b: {
 		fontFamily: 'NotoSansKR-Bold',
 		fontSize: 34 * DP,
 		color: TEXTBASECOLOR,
-		includeFontPadding:false,
+		includeFontPadding: false,
 	},
 	noto36b: {
 		fontFamily: 'NotoSansKR-Bold',
 		fontSize: 36 * DP,
 		color: TEXTBASECOLOR,
-		includeFontPadding:false,
+		includeFontPadding: false,
 	},
 	noto38b: {
 		fontFamily: 'NotoSansKR-Bold',
 		fontSize: 38 * DP,
 		color: TEXTBASECOLOR,
-		includeFontPadding:false,
+		includeFontPadding: false,
 	},
 	noto40b: {
 		fontFamily: 'NotoSansKR-Bold',
 		fontSize: 40 * DP,
 		color: TEXTBASECOLOR,
-		includeFontPadding:false,
+		includeFontPadding: false,
 	},
 
 	//roboto
@@ -257,6 +274,11 @@ export const txt = StyleSheet.create({
 	roboto40b: {
 		fontFamily: 'Roboto-Bold',
 		fontSize: 40 * DP,
+		color: TEXTBASECOLOR,
+	},
+	roboto46b: {
+		fontFamily: 'Roboto-Bold',
+		fontSize: 46 * DP,
 		color: TEXTBASECOLOR,
 	},
 	center: {

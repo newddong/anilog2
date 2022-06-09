@@ -47,7 +47,7 @@ const ArticleContent = props => {
 	};
 
 	const showImg = src => {
-		Modal.popPhotoListViewModal([src]);
+		Modal.popPhotoListViewModal([src], () => Modal.close());
 	};
 
 	const getArticleType = () => {

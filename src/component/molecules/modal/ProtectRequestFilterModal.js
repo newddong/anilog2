@@ -276,13 +276,14 @@ const ProtectRequestFilterModal = props => {
 				<></>
 			) : (
 				<TouchableOpacity onPress={onPressMainContainer} activeOpacity={1} style={[style.popUpWindow, style.shadow, {}]}>
-					<View style={{flexDirection: 'row', width: 694 * DP, paddingHorizontal: 44 * DP, justifyContent: 'space-between'}}>
-						<AniButton
+					<View style={{flexDirection: 'row', width: 654 * DP, paddingHorizontal: 34 * DP, justifyContent: 'space-between'}}>
+						{/* <AniButton
 							btnTitle={'필터 초기화'}
 							onPress={onPressInitialize}
 							btnStyle={'border'}
 							btnLayout={{width: 160 * DP, height: 50 * DP, borderRadius: 30 * DP}}
-						/>
+						/> */}
+						<Text style={[txt.noto26b, {color: APRI10}]}>초기화</Text>
 						<TouchableOpacity activeOpacity={0.6} onPress={closeModal} style={[{alignSelf: 'flex-end'}]}>
 							<Cross46 />
 						</TouchableOpacity>

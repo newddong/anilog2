@@ -5,7 +5,7 @@ import {APRI10, BLACK, GRAY10, GRAY20, GRAY40} from 'Root/config/color';
 import {Arrow48, Arrow48_GRAY, Check50, EmptyIcon, Rect50_Border, WriteBoard} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
 import {useNavigation} from '@react-navigation/core';
-import {getCommunityList} from 'Root/api/community';
+import {getCommunityList, getCommunityListFreeByPageNumber} from 'Root/api/community';
 import Modal from 'Root/component/modal/Modal';
 import Loading from 'Root/component/molecules/modal/Loading';
 import userGlobalObject from 'Root/config/userGlobalObject';
@@ -20,7 +20,7 @@ export default ArticleMain = ({route}) => {
 	const [page, setPage] = React.useState(0); //전체 페이지
 	const [refreshing, setRefreshing] = React.useState(false); //리프레싱
 	const [loading, setLoading] = React.useState(false);
-	const [type, setType] = React.useState('all');
+	const [type, setType] = React.useState([]);
 	const [total, setTotal] = React.useState();
 
 	React.useEffect(() => {
@@ -29,7 +29,6 @@ export default ArticleMain = ({route}) => {
 
 	//리프레싱 시도(페이지 상단으로 스크롤) => 데이터 최신화 및 페이징 초기화
 	React.useEffect(() => {
-		console.log('offset', offset);
 		if (offset == 1) {
 			//첫페이지에서만 리프레싱 작동
 			refreshing ? fetchData(1) : false;
@@ -37,25 +36,28 @@ export default ArticleMain = ({route}) => {
 	}, [refreshing]);
 
 	const fetchData = (page, category) => {
-		getCommunityList(
-			{
-				limit: FREE_LIMIT, //50
-				page: page,
-				community_type: 'free',
-				community_free_type: category ? category : type,
-			},
+		let params = {
+			limit: FREE_LIMIT, //50
+			page: page,
+		};
+		//자유글 타입 파라미터 추가 여부, 미선택 상태일 경우 파라미터 자체를 보내선 안됨
+		if (category && category.length > 0) {
+			params.community_free_type = category;
+		}
+		getCommunityListFreeByPageNumber(
+			params,
 			result => {
-				// console.log('result / getCommunityList / ArticleMain :', result.msg.free.length);
+				// console.log('result / getCommunityListFreeByPageNumber / ArticleMain :', result.msg.length);
 				setTotal(result.total_count);
-				const res = result.msg.free;
+				const res = result.msg;
 				setOffset(page);
 				setData(res);
 				setLoading(false);
 			},
 			err => {
-				console.log('err / getCommunityList / ArticleMain : ', err);
+				console.log('err / getCommunityListFreeByPageNumber / ArticleMain : ', err);
 				if (err.includes('code 500')) {
-					setData([]);
+					setData('false');
 					setTimeout(() => {
 						Modal.alert(NETWORK_ERROR);
 					}, 500);
@@ -69,7 +71,7 @@ export default ArticleMain = ({route}) => {
 
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
-		navigation.push('ArticleDetail', {community_object: data[index]});
+		navigation.push('ArticleDetail', {community_object: data[index], type: type});
 	};
 
 	//글쓰기
@@ -80,49 +82,27 @@ export default ArticleMain = ({route}) => {
 			});
 		} else {
 			navigation.navigate('CommunityWrite', {isReview: false});
-			// navigation.push('WriteEditorTest');
 		}
 	};
 
-	const [onlyTalk, setOnlyTalk] = React.useState(false);
-	const [onlyQuestion, setOnlyQuestion] = React.useState(false);
-	const [onlyMeeting, setOnlyMeeting] = React.useState(false);
-
-	React.useEffect(() => {
-		if (!onlyTalk && !onlyQuestion && !onlyMeeting) {
-			fetchData(1, 'all');
-			setPage(0);
-		}
-	}, [onlyTalk, onlyQuestion, onlyMeeting]);
-
-	const onPressFilter = type => {
-		switch (type) {
+	const onPressFilter = category => {
+		let temp = [...type];
+		switch (category) {
 			case '잡담':
-				setOnlyTalk(!onlyTalk);
-				setOnlyQuestion(false);
-				setOnlyMeeting(false);
-				setType('talk');
-				fetchData(1, 'talk');
-				setPage(0);
+				type.includes('talk') ? (temp = temp.filter(e => e != 'talk')) : temp.push('talk');
 				break;
 			case '질문':
-				setOnlyTalk(false);
-				setOnlyQuestion(!onlyQuestion);
-				setOnlyMeeting(false);
-				setType('question');
-				fetchData(1, 'question');
+				type.includes('question') ? (temp = temp.filter(e => e != 'question')) : temp.push('question');
 				break;
 			case '모임':
-				setOnlyTalk(false);
-				setOnlyQuestion(false);
-				setOnlyMeeting(!onlyMeeting);
-				setType('meeting');
-				fetchData(1, 'meeting');
-				setPage(0);
+				type.includes('meeting') ? (temp = temp.filter(e => e != 'meeting')) : temp.push('meeting');
 				break;
 			default:
 				break;
 		}
+		setType(temp);
+		setPage(0);
+		fetchData(1, temp);
 	};
 
 	const wait = timeout => {
@@ -151,15 +131,15 @@ export default ArticleMain = ({route}) => {
 			<View style={{width: 694 * DP, alignSelf: 'center'}}>
 				<View style={[style.kindFilter]}>
 					<View style={[style.kindFilterItem]}>
-						{onlyTalk ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
+						{type.includes('talk') ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
 						<Text style={[txt.noto28, {marginLeft: 6 * DP}]}> 잡담</Text>
 					</View>
 					<View style={[style.kindFilterItem]}>
-						{onlyQuestion ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
+						{type.includes('question') ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
 						<Text style={[txt.noto28, {marginLeft: 6 * DP}]}> 질문</Text>
 					</View>
 					<View style={[style.kindFilterItem]}>
-						{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
+						{type.includes('meeting') ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
 						<Text style={[txt.noto28, {marginLeft: 6 * DP}]}> 모임</Text>
 					</View>
 				</View>
@@ -168,52 +148,54 @@ export default ArticleMain = ({route}) => {
 	};
 
 	const paging = () => {
-		let totalPage = Array(Math.floor(total / FREE_LIMIT) + 1)
-			.fill()
-			.map((_, i) => i + 1);
-		const perPageNum = 5;
-		let slicedPage = [];
-		console.log('page', page);
-		console.log('total', total);
-		console.log('totalPage', totalPage.length);
-		console.log('Math.floor(totalPage.length / perPageNum)', Math.floor(totalPage.length / perPageNum));
-		let isLastPage = page == Math.floor(totalPage.length / perPageNum);
-		if (isLastPage) {
-			for (let i = page * perPageNum + 1; i <= totalPage.length; i++) {
-				slicedPage.push(i);
+		if (data != 'false' || data.length != 0) {
+			let totalPage = Array(Math.floor(total / FREE_LIMIT) + 1)
+				.fill()
+				.map((_, i) => i + 1);
+			const perPageNum = 5;
+			let slicedPage = [];
+			// console.log('page', page);
+			// console.log('total', total);
+			// console.log('totalPage', totalPage.length);
+			// console.log('Math.floor(totalPage.length / perPageNum)', Math.floor(totalPage.length / perPageNum));
+			let isLastPage = page == Math.floor(totalPage.length / perPageNum);
+			if (isLastPage) {
+				for (let i = page * perPageNum + 1; i <= totalPage.length; i++) {
+					slicedPage.push(i);
+				}
+			} else {
+				slicedPage = [page * perPageNum + 1, page * perPageNum + 2, page * perPageNum + 3, page * perPageNum + 4, page * perPageNum + 5];
 			}
-		} else {
-			slicedPage = [page * perPageNum + 1, page * perPageNum + 2, page * perPageNum + 3, page * perPageNum + 4, page * perPageNum + 5];
-		}
-		return (
-			<View style={[style.pagingCont]}>
-				<View style={{transform: [{rotate: '180deg'}], marginTop: 2 * DP}}>
-					{page == 0 ? (
-						<Arrow48_GRAY />
+			return (
+				<View style={[style.pagingCont]}>
+					<View style={{transform: [{rotate: '180deg'}], marginTop: 2 * DP}}>
+						{page == 0 ? (
+							<Arrow48_GRAY />
+						) : (
+							<TouchableOpacity onPress={() => setPage(page - 1)} style={{padding: 14 * DP}}>
+								<Arrow48 />
+							</TouchableOpacity>
+						)}
+					</View>
+					<View style={{width: 500 * DP, flexDirection: 'row'}}>
+						{slicedPage.map((v, i) => {
+							return (
+								<TouchableOpacity activeOpacity={0.8} onPress={() => onPressPage(v)} style={{width: 100 * DP, alignItems: 'center'}} key={i}>
+									<Text style={[txt.noto32, {color: offset == v ? BLACK : GRAY20}]}>{v}</Text>
+								</TouchableOpacity>
+							);
+						})}
+					</View>
+					{isLastPage ? (
+						<></>
 					) : (
-						<TouchableOpacity onPress={() => setPage(page - 1)} style={{padding: 14 * DP}}>
+						<TouchableOpacity onPress={() => setPage(page + 1)} style={{padding: 14 * DP, marginTop: 2 * DP}}>
 							<Arrow48 />
 						</TouchableOpacity>
 					)}
 				</View>
-				<View style={{width: 500 * DP, flexDirection: 'row'}}>
-					{slicedPage.map((v, i) => {
-						return (
-							<TouchableOpacity activeOpacity={0.8} onPress={() => onPressPage(v)} style={{width: 100 * DP, alignItems: 'center'}} key={i}>
-								<Text style={[txt.noto32, {color: offset == v ? BLACK : GRAY20}]}>{v}</Text>
-							</TouchableOpacity>
-						);
-					})}
-				</View>
-				{isLastPage ? (
-					<></>
-				) : (
-					<TouchableOpacity onPress={() => setPage(page + 1)} style={{padding: 14 * DP, marginTop: 2 * DP}}>
-						<Arrow48 />
-					</TouchableOpacity>
-				)}
-			</View>
-		);
+			);
+		}
 	};
 
 	if (data == 'false') {

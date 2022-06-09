@@ -371,7 +371,7 @@ export default MissingAnimalDetail = props => {
 				</View>
 				{comments && comments.length > 0 ? (
 					<TouchableOpacity onPress={moveToCommentPage} style={[{width: 694 * DP, alignItems: 'flex-end', alignSelf: 'center'}]}>
-						<Text style={[txt.noto26, {color: GRAY10, marginBottom: 10 * DP}]}> 댓글 {comments.length}개 모두 보기</Text>
+						<Text style={[txt.noto26, {marginBottom: 10 * DP}]}> 댓글 {comments.length}개 모두 보기</Text>
 					</TouchableOpacity>
 				) : (
 					<></>

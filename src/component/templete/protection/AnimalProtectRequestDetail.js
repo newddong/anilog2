@@ -217,7 +217,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	//사진 썸네일 클릭
 	const onPressReqeustPhoto = () => {
 		console.log('v', data.protect_request_photos_uri);
-		Modal.popPhotoListViewModal(data.protect_request_photos_uri);
+		Modal.popPhotoListViewModal(data.protect_request_photos_uri, () => Modal.close());
 	};
 
 	//임시보호 버튼 클릭

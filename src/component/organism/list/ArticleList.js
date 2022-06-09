@@ -1,6 +1,6 @@
 import React from 'react';
 import {FlatList, StyleSheet, View, Text, NativeModules} from 'react-native';
-import {GRAY40} from 'Root/config/color';
+import {GRAY30, GRAY40, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import ArticleSummary from '../article/ArticleSummary';
 import {Check50, Rect50_Border} from 'Root/component/atom/icon';
@@ -13,6 +13,7 @@ import {txt} from 'Root/config/textstyle';
  * @param {object} props.items - 데이터
  * @param {(data:object)=>void)} props.onPressArticle - 게시글 컨텐츠 클릭(사진 이외 영역)
  * @param {string} props.isSearch - 검색어
+ * @param {string} props.currentDetail - 자유글 상세 페이지에서 현재 자유글 여부
  * @param {()=>void)} props.onEndReached - 최하단 스크롤 콜백
  */
 const ArticleList = props => {
@@ -24,7 +25,17 @@ const ArticleList = props => {
 
 	const renderItem = (item, index) => {
 		return (
-			<View style={[{flexDirection: 'row', borderTopColor: GRAY40, borderTopWidth: index == 0 ? 0 : 2 * DP}]}>
+			<View
+				style={[
+					{
+						flexDirection: 'row',
+						borderTopColor: GRAY40,
+						borderTopWidth: index == 0 ? 0 : 2 * DP,
+						backgroundColor: props.currentDetail == item._id ? GRAY30 : WHITE,
+						width: 750 * DP,
+						paddingHorizontal: 28 * DP,
+					},
+				]}>
 				{props.selectMode ? (
 					<View style={{justifyContent: 'center', marginRight: 20 * DP}}>
 						{/* <CheckBox state={item.checkBoxState} onCheck={() => props.onCheckBox(index)} /> */}

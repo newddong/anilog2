@@ -99,7 +99,10 @@ export default FeedMedia = props => {
 	};
 
 	const onPressPhoto = () => {
-		Modal.popPhotoListViewModal(feed_medias.map(v => v.media_uri));
+		Modal.popPhotoListViewModal(
+			feed_medias.map(v => v.media_uri),
+			() => Modal.close(),
+		);
 	};
 
 	const swiperRef = React.useRef();

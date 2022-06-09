@@ -58,13 +58,6 @@ export default CommunityWrite = props => {
 	const richText = React.useRef('');
 	const scrollRef = React.useRef('');
 	const article_type = ['talk', 'question', 'meeting'];
-	const [editorLayout, setEditorLayout] = React.useState({
-		//Rich Editor 레이아웃
-		height: 345,
-		width: 630 * DP,
-		x: 0,
-		y: 0,
-	});
 
 	React.useEffect(() => {
 		props.navigation.setParams({data: data, nav: 'CommunityWrite'});
@@ -128,11 +121,6 @@ export default CommunityWrite = props => {
 		}
 	};
 
-	//Rich Editor 레이아웃
-	const onLayout = e => {
-		setEditorLayout(e.nativeEvent.layout);
-	};
-
 	// fill	기본값. 주어진 너비와 높이에 딱 맞도록 사이즈를 조절합니다. 이미지의 가로세로 비율은 유지되지 않아요.
 	// contain	가로세로 비율을 유지한 채로 사이즈가 조절되지만, 이미지와 컨테이너 간의 비율이 맞지 않는 경우엔 자리가 남게 됩니다.
 	// cover	가로세로 비율을 유지한 채로 사이즈가 조절되며, 비율이 맞지 않더라도 이미지를 확대해 컨테이너를 완전히 채웁니다.
@@ -142,9 +130,10 @@ export default CommunityWrite = props => {
 	//이미지 입력
 	const insertImage = imageList => {
 		console.log('imageList', imageList);
-		console.log('editorLayout.width', editorLayout.width);
+
 		setTimeout(() => {
 			Modal.popLoading(true);
+
 			setTimeout(() => {
 				data != 'false' ? richText.current?.insertHTML('<p><br/></p></div>') : false; //이미지를 넣을 시 바로 다음줄로 이동하도록 처리
 				// const result = await changePath(imageList);
@@ -156,8 +145,11 @@ export default CommunityWrite = props => {
 						result.msg.map((v, i) => {
 							richText.current?.insertHTML('<p><br/></p></div>');
 							richText.current?.insertHTML(
-								`<div><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick');" \n
-							  style="height:auto; width:${editorLayout.width};  border-radius:15px; object-fit:contain;  margin:5px 0px 5px 0px; "/></div>`,
+								`<div  ">
+								<img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick');" \n
+								  style="height:${286 * DP}px; width:${286 * DP}px; 
+								border-radius:15px; margin:5px 0px 5px 0px; "/>
+								  </div>`,
 							);
 							if (i == result.msg.length - 1) {
 								setTimeout(() => {
@@ -432,7 +424,6 @@ export default CommunityWrite = props => {
 									ref={richText}
 									editorStyle={{contentCSSText: 'font-size:14px;', backgroundColor: '#FAFAFA'}}
 									onChange={onChange}
-									onLayout={onLayout}
 									keyboardDisplayRequiresUserAction={true}
 									style={{width: '100%', opacity: 0.99}}
 									placeholder={isReview ? WRITE_REVIEW_INFO : WRITE_FREE_INFO}

@@ -2,19 +2,19 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View, ScrollView, ActivityIndicator} from 'react-native';
 import DP from 'Root/config/dp';
-import {GRAY10, GRAY20, GRAY40} from 'Root/config/color';
+import {BLACK, GRAY10, GRAY20, GRAY40} from 'Root/config/color';
 import Modal from 'Root/component/modal/Modal';
 import Article from 'Root/component/organism/article/Article';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import {useNavigation} from '@react-navigation/core';
-import {getCommunityByObjectId, getCommunityList, updateAndDeleteCommunity} from 'Root/api/community';
+import {getCommunityByObjectId, getCommunityList, getCommunityListFreeByPageNumber, updateAndDeleteCommunity} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {createComment, deleteComment, getCommentListByCommunityId, updateComment} from 'Root/api/commentapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import community_obj from 'Root/config/community_obj';
-import {FavoriteTag46_Filled, FavoriteTag48_Border, Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
+import {Arrow48, Arrow48_GRAY, FavoriteTag46_Filled, FavoriteTag48_Border, Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
-import {NETWORK_ERROR} from 'Root/i18n/msg';
+import {FREE_LIMIT_DETAIL, NETWORK_ERROR} from 'Root/i18n/msg';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
@@ -30,7 +30,10 @@ export default ArticleDetail = props => {
 	const [data, setData] = React.useState('false');
 	const [searchInput, setSearchInput] = React.useState('');
 	const [comments, setComments] = React.useState('false');
-	const [articleList, setArticleList] = React.useState('false');
+	const [articleList, setArticleList] = React.useState('false'); //하단 리스트 출력
+	const [total, setTotal] = React.useState(); //하단 리스트의 전체 게시글 수
+	const [offset, setOffset] = React.useState(0); //하단 리스트의 현재 페이지
+	const [page, setPage] = React.useState(0); //하단 리스트의 전체 페이지
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
 	const [parentComment, setParentComment] = React.useState(); //대댓글을 쓰는 경우 해당 댓글의 id container
@@ -52,7 +55,7 @@ export default ArticleDetail = props => {
 			getArticleData();
 		});
 		getComment();
-		getArticleList();
+		getArticleList(1);
 		return unsubscribe;
 	}, []);
 
@@ -93,49 +96,41 @@ export default ArticleDetail = props => {
 	};
 
 	//페이지 하단에 출력될 자유게시글 목록 api(페이징 필요)
-	const getArticleList = () => {
-		getCommunityList(
-			{
-				limit: 10000,
-				community_type: 'free',
-				community_free_type: 'all',
-			},
-			result => {
-				// console.log('result / getCommunityList / ArticleDetail :', result.msg.free.length);
-				const free = result.msg.free;
-				const findIndex = result.msg.free.findIndex(e => e._id == props.route.params.community_object._id);
-				let list = [];
-				if (free.length < 11) {
-					//전체글이 11 이하라면 그냥 바로 출력
-					console.log('free.length < 11', free.length < 11);
+	const getArticleList = (page, category) => {
+		try {
+			let params = {
+				limit: FREE_LIMIT_DETAIL, //10
+				page: page,
+				target_object_id: props.route.params.community_object._id, //현재 상세 페이지를 기준으로 그 이후의 글을 가져오기 위한 파라미터
+			};
+			//자유글 타입 파라미터 추가 여부, 미선택 상태일 경우 파라미터 자체를 보내선 안됨
+			if (props.route.params.type && props.route.params.type.length > 0) {
+				params.community_free_type = props.route.params.type;
+			}
+			getCommunityListFreeByPageNumber(
+				params,
+				result => {
+					console.log('result / getCommunityListFreeByPageNumber / ArticleDetail :', result.msg.length);
+					const free = result.msg;
+					setTotal(result.total_count);
 					setArticleList(free);
-				} else if (free.length - findIndex < 11) {
-					//현재 보고 있는 게시글이 전체 인덱스 중 10이하라면?
-					console.log('findIndex < 11');
-					for (let ind = findIndex + 1; ind < free.length - 1; ind++) {
-						//이후 글만 차례로 출력
-						list.push(free[ind]);
+					setOffset(page);
+				},
+				err => {
+					console.log('err / getCommunityListFreeByPageNumber / ArticleDetail : ', err);
+					if (err.includes('code 500')) {
+						setArticleList([]);
+						setTimeout(() => {
+							Modal.alert(NETWORK_ERROR);
+						}, 500);
+					} else if (err.includes('없습니다')) {
+						setArticleList([]);
 					}
-					setArticleList(list);
-				} else {
-					for (let ind = findIndex + 1; ind < findIndex + 11; ind++) {
-						list.push(free[ind]);
-					}
-					setArticleList(list);
-				}
-			},
-			err => {
-				console.log('err / getCommunityList / ArticleDetail : ', err);
-				if (err.includes('code 500')) {
-					setArticleList([]);
-					setTimeout(() => {
-						Modal.alert(NETWORK_ERROR);
-					}, 500);
-				} else if (err.includes('없습니다')) {
-					setArticleList([]);
-				}
-			},
-		);
+				},
+			);
+		} catch (err) {
+			console.log('err', err);
+		}
 	};
 
 	//해당 자유게시글의 댓글을 받아온다
@@ -154,7 +149,7 @@ export default ArticleDetail = props => {
 			},
 			err => {
 				console.log('getCommentListByCommunityId', err);
-				if (err == '검색 결과가 없습니다.') {
+				if (err.includes('검색 결과가 없습니다')) {
 					setComments([{}]);
 				} else if (err.includes('code 500')) {
 					Modal.popNetworkErrorModal('네트워크 오류로 댓글 정보를 \n 받아오는데 실패하였습니다.');
@@ -236,7 +231,7 @@ export default ArticleDetail = props => {
 							},
 							err => {
 								console.log('getCommentListByCommunityId', err);
-								if (err == '검색 결과가 없습니다.') {
+								if (err.includes('검색 결과가 없습니다.')) {
 									setComments([{}]);
 								}
 							},
@@ -338,6 +333,7 @@ export default ArticleDetail = props => {
 		}
 	};
 
+	//사진 선택 완료 후 선택된 사진 useState
 	React.useEffect(() => {
 		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
 			let selected = props.route.params.selectedPhoto[0];
@@ -357,6 +353,7 @@ export default ArticleDetail = props => {
 		}
 	};
 
+	//댓글의 사진 삭제 클릭
 	const onDeleteImage = () => {
 		setEditData({...editData, comment_photo_uri: ''});
 	};
@@ -531,6 +528,63 @@ export default ArticleDetail = props => {
 		);
 	};
 
+	const onPressPage = page => {
+		if (page != offset) {
+			getArticleList(page);
+		}
+	};
+
+	const paging = () => {
+		if (articleList != 'false' && articleList.length != 0 && total != '') {
+			let totalPage = Array(Math.floor(total / FREE_LIMIT_DETAIL) + 1)
+				.fill()
+				.map((_, i) => i + 1);
+			const perPageNum = 5;
+			let slicedPage = [];
+			// console.log('page', page);
+			// console.log('total', total);
+			// console.log('totalPage', totalPage.length);
+			// console.log('Math.floor(totalPage.length / perPageNum)', Math.floor(totalPage.length / perPageNum));
+			let isLastPage = page == Math.floor(totalPage.length / perPageNum);
+			if (isLastPage) {
+				for (let i = page * perPageNum + 1; i <= totalPage.length; i++) {
+					slicedPage.push(i);
+				}
+			} else {
+				slicedPage = [page * perPageNum + 1, page * perPageNum + 2, page * perPageNum + 3, page * perPageNum + 4, page * perPageNum + 5];
+			}
+			return (
+				<View style={[style.pagingCont]}>
+					<View style={{transform: [{rotate: '180deg'}], marginTop: 2 * DP}}>
+						{page == 0 ? (
+							<Arrow48_GRAY />
+						) : (
+							<TouchableOpacity onPress={() => setPage(page - 1)} style={{padding: 14 * DP}}>
+								<Arrow48 />
+							</TouchableOpacity>
+						)}
+					</View>
+					<View style={{width: 500 * DP, flexDirection: 'row'}}>
+						{slicedPage.map((v, i) => {
+							return (
+								<TouchableOpacity activeOpacity={0.8} onPress={() => onPressPage(v)} style={{width: 100 * DP, alignItems: 'center'}} key={i}>
+									<Text style={[txt.noto32, {color: offset == v ? BLACK : GRAY20}]}>{v}</Text>
+								</TouchableOpacity>
+							);
+						})}
+					</View>
+					{isLastPage ? (
+						<></>
+					) : (
+						<TouchableOpacity onPress={() => setPage(page + 1)} style={{padding: 14 * DP, marginTop: 2 * DP}}>
+							<Arrow48 />
+						</TouchableOpacity>
+					)}
+				</View>
+			);
+		}
+	};
+
 	const bottom = () => {
 		const noMoreArticle = () => {
 			return <Text style={[txt.noto28]}>다음 글이 없습니다.</Text>;
@@ -538,11 +592,15 @@ export default ArticleDetail = props => {
 		return (
 			<View style={{alignItems: 'center'}}>
 				{articleList != 'false' ? (
-					<ArticleList
-						items={articleList}
-						onPressArticle={onPressArticle} //게시글 내용 클릭
-						whenEmpty={noMoreArticle}
-					/>
+					<View style={{paddingBottom: 0 * DP}}>
+						<ArticleList
+							items={articleList}
+							onPressArticle={onPressArticle} //게시글 내용 클릭
+							whenEmpty={noMoreArticle}
+							currentDetail={data._id}
+						/>
+						{paging()}
+					</View>
 				) : (
 					<View style={{paddingVertical: 100 * DP}}>
 						<ActivityIndicator size={'large'} />
@@ -693,5 +751,14 @@ const style = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		// justifyContent: 'space-between',
+	},
+	pagingCont: {
+		width: 634 * DP,
+		paddingVertical: 60 * DP,
+		paddingBottom: 180 * DP,
+		flexDirection: 'row',
+		alignSelf: 'center',
+		// justifyContent: 'space-between',
+		alignItems: 'center',
 	},
 });

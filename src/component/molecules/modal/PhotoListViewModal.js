@@ -22,7 +22,7 @@ const PhotoListViewModal = props => {
 
 	return (
 		<View style={style.background}>
-			<TouchableOpacity onPress={() => props.onClose()} style={[style.crossMark]}>
+			<TouchableOpacity onPress={() => (props.onClose ? props.onClose() : Modal.close())} style={[style.crossMark]}>
 				<Cross46 />
 			</TouchableOpacity>
 			<View style={[style.popUpWindow]}>

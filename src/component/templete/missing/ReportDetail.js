@@ -287,7 +287,10 @@ export default ReportDetail = props => {
 
 	const onPressReqeustPhoto = () => {
 		console.log('onPressReqeustPhoto');
-		Modal.popPhotoListViewModal(data.feed_medias.map(v => v.media_uri));
+		Modal.popPhotoListViewModal(
+			data.feed_medias.map(v => v.media_uri),
+			() => Modal.close(),
+		);
 	};
 
 	const ITEM_HEIGHT = 266 * DP;

@@ -377,6 +377,7 @@ const styles = StyleSheet.create({
 		marginTop: 10 * DP,
 		flexDirection: 'row',
 		alignSelf: 'center',
+		marginRight: 10 * DP,
 	},
 	kindFilterItem: {
 		width: 110 * DP,

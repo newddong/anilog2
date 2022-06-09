@@ -21,7 +21,6 @@ import AlarmCommentList from 'Root/component/organism/comment/AlarmCommentList';
 import SetPetInformation from 'Root/component/templete/pet/SetPetInformation';
 import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
 
-import SearchMap from 'Root/component/templete/search/SearchMap';
 import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 
@@ -30,6 +29,7 @@ import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailS
 import MissingAnimalDetail from 'Templete/missing/MissingAnimalDetail';
 import ReportDetail from 'Templete/missing/ReportDetail';
 import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballHeader';
+import CommunityHeader from 'Root/navigation/header/CommunityHeader';
 const FeedStack = createStackNavigator();
 
 export default FeedStackNavigation = props => {
@@ -88,7 +88,7 @@ export default FeedStackNavigation = props => {
 				component={ArticleDetail}
 				options={({route}) => ({
 					headerShown: true,
-					header: props => <SimpleHeader {...props} />,
+					header: props => <CommunityHeader {...props} />,
 					title: ' ',
 				})}
 			/>
@@ -96,7 +96,7 @@ export default FeedStackNavigation = props => {
 				name={'ReviewDetail'}
 				component={ReviewDetail}
 				options={({route}) => ({
-					header: props => <SimpleHeader {...props} />,
+					header: props => <CommunityHeader {...props} />,
 					title: ' ',
 				})}
 			/>

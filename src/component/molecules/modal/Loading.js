@@ -92,7 +92,9 @@ Loading.defaultProps = {
 	isModal: true,
 	smallBox: false,
 	height: 700 * DP,
-	timeout: () => {},
+	timeout: () => {
+		Modal.close();
+	},
 };
 
 const style = StyleSheet.create({

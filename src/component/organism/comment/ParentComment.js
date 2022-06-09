@@ -423,6 +423,8 @@ const style = StyleSheet.create({
 	writeCommentText: {
 		color: GRAY20,
 		includeFontPadding: false,
+		// backgroundColor: 'yellow',
+		marginTop: 2 * DP,
 	},
 	img_square_round: {
 		marginTop: 15 * DP,

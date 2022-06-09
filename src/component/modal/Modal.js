@@ -182,7 +182,7 @@ export default Modal = {
 	 *
 	 * @example
 	 */
-	popSelectBoxModal2: (data, onSelect, onClose, headerRoof, headerTitle,height) => {},
+	popSelectBoxModal2: (data, onSelect, onClose, headerRoof, headerTitle, height) => {},
 
 	/**
 	 * 유저 오브젝트 정보 요약 출력 모달
@@ -358,9 +358,10 @@ export default Modal = {
 	/**
 	 * 사진을 확장된 View에서 보는 모달
 	 * @param {string} props.photoList - 사진 목록
+	 * @param {()=>void)} props.onClose - 모달 종료 콜백
 	 * @example
 	 */
-	popPhotoListViewModal: photoList => {},
+	popPhotoListViewModal: (photoList, onClose) => {},
 
 	/**
 	 * 로딩 중 출력 모달

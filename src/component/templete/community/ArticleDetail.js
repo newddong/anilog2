@@ -2,8 +2,7 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View, ScrollView, ActivityIndicator} from 'react-native';
 import DP from 'Root/config/dp';
-import {GRAY10, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
-import CommentList from 'Root/component/organism/comment/CommentList';
+import {GRAY10, GRAY20, GRAY40} from 'Root/config/color';
 import Modal from 'Root/component/modal/Modal';
 import Article from 'Root/component/organism/article/Article';
 import ArticleList from 'Root/component/organism/list/ArticleList';
@@ -13,10 +12,9 @@ import Loading from 'Root/component/molecules/modal/Loading';
 import {createComment, deleteComment, getCommentListByCommunityId, updateComment} from 'Root/api/commentapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import community_obj from 'Root/config/community_obj';
-import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
+import {FavoriteTag46_Filled, FavoriteTag48_Border, Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
-import {NETWORK_ERROR, REPORT_MENU} from 'Root/i18n/msg';
-import {createReport} from 'Root/api/report';
+import {NETWORK_ERROR} from 'Root/i18n/msg';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
@@ -38,7 +36,6 @@ export default ArticleDetail = props => {
 	const [parentComment, setParentComment] = React.useState(); //대댓글을 쓰는 경우 해당 댓글의 id container
 	const input = React.useRef();
 	const floatInput = React.useRef();
-	const input2 = React.useRef();
 	const addChildCommentFn = React.useRef(() => {});
 	const [editMode, setEditMode] = React.useState(false); //댓글 편집 모드
 	const [editData, setEditData] = React.useState({
@@ -56,7 +53,6 @@ export default ArticleDetail = props => {
 		});
 		getComment();
 		getArticleList();
-		navigation.setOptions({title: '자유 게시글'});
 		return unsubscribe;
 	}, []);
 
@@ -76,6 +72,18 @@ export default ArticleDetail = props => {
 			result => {
 				console.log('ArticleDetail / getCommunityByObjectId / Result', result.status);
 				setData(result.msg);
+				switch (result.msg.community_free_type) {
+					case 'talk':
+						navigation.setOptions({title: '잡담', data: result.msg});
+						break;
+					case 'question':
+						navigation.setOptions({title: '질문', data: result.msg});
+						break;
+					case 'meeting':
+						navigation.setOptions({title: '모임', data: result.msg});
+						break;
+					default:
+				}
 			},
 			err => {
 				console.log('err / getCommunityByObjectId / ArticleDetail ', err);
@@ -90,6 +98,7 @@ export default ArticleDetail = props => {
 			{
 				limit: 10000,
 				community_type: 'free',
+				community_free_type: 'all',
 			},
 			result => {
 				// console.log('result / getCommunityList / ArticleDetail :', result.msg.free.length);
@@ -302,9 +311,16 @@ export default ArticleDetail = props => {
 		floatInput.current.focus();
 		setReplyFocus(false);
 	};
-	
+
 	const onBlur3 = () => {
 		setReplyFocus(false);
+		if (editMode) {
+			setEditMode(false);
+			setEditData({
+				comment_contents: '',
+				comment_photo_uri: '',
+			});
+		}
 	};
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
@@ -322,12 +338,12 @@ export default ArticleDetail = props => {
 		}
 	};
 
-	React.useEffect(()=>{
-		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+	React.useEffect(() => {
+		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
 			let selected = props.route.params.selectedPhoto[0];
-			setEditData({...editData, comment_photo_uri: selected.cropUri??selected.uri});
+			setEditData({...editData, comment_photo_uri: selected.cropUri ?? selected.uri});
 		}
-	},[props.route.params?.selectedPhoto]);
+	}, [props.route.params?.selectedPhoto]);
 
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
 	const onAddPhoto = () => {
@@ -337,7 +353,7 @@ export default ArticleDetail = props => {
 			});
 		} else {
 			console.log('onAddphoto');
-			props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
+			props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 		}
 	};
 
@@ -379,6 +395,7 @@ export default ArticleDetail = props => {
 		const findParentIndex = comments.findIndex(e => e._id == parent);
 		setEditData({...comment, parent: findParentIndex});
 		setPrivateComment(comment.comment_is_secure);
+		input.current?.focus();
 		scrollToReplyBox();
 	};
 
@@ -405,102 +422,6 @@ export default ArticleDetail = props => {
 		setParentComment();
 	};
 
-	//제목 우측 미트볼 클릭
-	const onPressMeatball = () => {
-		console.log(' data.community_writer_id', data.community_writer_id);
-		if (data.community_writer_id) {
-			const isMyArticle = userGlobalObject.userInfo._id == data.community_writer_id._id;
-			Modal.popSelectBoxModal(
-				isMyArticle ? ['수정', '삭제'] : ['신고'],
-				select => {
-					switch (select) {
-						case '수정':
-							navigation.push('CommunityEdit', {previous: data, isReview: false, isSearch: props.route.params.searchInput});
-							break;
-						case '삭제':
-							Modal.close();
-							setTimeout(() => {
-								Modal.popTwoBtn(
-									'정말로 이 게시글을 \n 삭제하시겠습니까?',
-									'아니오',
-									'네',
-									() => Modal.close(),
-									() => {
-										updateAndDeleteCommunity(
-											{
-												community_object_id: data._id,
-												community_is_delete: true,
-											},
-											result => {
-												// console.log('result / updateAndDeleteCommunity / ArticleDetail : ', result.msg);
-												Modal.close();
-												setTimeout(() => {
-													Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
-													setTimeout(() => {
-														Modal.close();
-														navigation.goBack();
-													}, 600);
-												}, 200);
-											},
-											err => {
-												console.log('err / updateAndDeleteCommunity / ArticleDetail : ', err);
-												Modal.alert(err);
-											},
-										);
-									},
-								);
-							}, 200);
-							break;
-						case '신고':
-							Modal.close();
-							if (userGlobalObject.userInfo.isPreviewMode) {
-								setTimeout(() => {
-									Modal.popLoginRequestModal(() => {
-										navigation.navigate('Login');
-									});
-								}, 100);
-							} else {
-								setTimeout(() => {
-									Modal.popOneBtnSelectModal(
-										REPORT_MENU,
-										'이 게시물을 신고 하시겠습니까?',
-										selectedItem => {
-											createReport(
-												{
-													report_target_object_id: data._id,
-													report_target_object_type: 'communityobjects',
-													report_target_reason: selectedItem,
-													report_is_delete: false,
-												},
-												result => {
-													console.log('신고 완료', result);
-													Modal.close();
-													Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
-												},
-												err => {
-													Modal.close();
-													if (err == '이미 신고되었습니다.') {
-														Modal.popOneBtn('이미 신고하셨습니다.', '확인', () => Modal.close());
-													}
-												},
-											);
-										},
-										'신고',
-									);
-								}, 200);
-							}
-							break;
-						default:
-							break;
-					}
-				},
-				() => Modal.close(),
-				false,
-				false,
-			);
-		}
-	};
-
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
 		console.log('searchInput', searchInput);
@@ -522,7 +443,7 @@ export default ArticleDetail = props => {
 			},
 			result => {
 				console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
-				// setData({...data, })
+				getArticleData();
 			},
 			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
 		);
@@ -581,22 +502,31 @@ export default ArticleDetail = props => {
 	const header = () => {
 		return (
 			<View style={{alignItems: 'center'}}>
-				<Article data={data} onPressMeatball={onPressMeatball} onPressFavorite={onPressFavorite} route={props.route.name} searchInput={searchInput} />
-				<View style={[{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY40}]} />
+				<Article data={data} route={props.route.name} searchInput={searchInput} />
+				<View style={[{width: 694 * DP, height: 2 * DP, backgroundColor: GRAY40}]} />
 				<View style={[style.like, {}]}>
-					<View style={{flexDirection: 'row', width: 100 * DP, alignItems: 'center'}}>
+					<View style={[style.header_icon, {}]}>
+						{data.community_is_favorite ? (
+							<FavoriteTag46_Filled onPress={() => onPressFavorite(false)} />
+						) : (
+							<FavoriteTag48_Border onPress={() => onPressFavorite(true)} />
+						)}
+						<Text style={[txt.noto24, {color: GRAY10, paddingTop: 6 * DP, marginLeft: 2 * DP, height: 48 * DP}]}>
+							{data.community_favorite_count}
+						</Text>
+					</View>
+					<View style={[style.header_icon, {}]}>
 						{data.community_is_like ? <Like48_Filled onPress={() => onPressLike(false)} /> : <Like48_Border onPress={() => onPressLike(true)} />}
-						<Text style={[txt.noto24, {color: GRAY10, marginLeft: 15 * DP}]}>{data.community_like_count}</Text>
+						<Text style={[txt.noto24, {color: GRAY10, paddingTop: 6 * DP, marginLeft: 8 * DP, height: 48 * DP}]}>{data.community_like_count}</Text>
 					</View>
 					{comments && comments.length > 0 ? (
-						<View style={[{alignItems: 'flex-end'}]}>
-							<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length - 1}개</Text>
+						<View style={[{alignItems: 'flex-end', width: 494 * DP}]}>
+							<Text style={[txt.noto26]}> 댓글 {comments.length - 1}개</Text>
 						</View>
 					) : (
 						<></>
 					)}
 				</View>
-				{/* <View style={[style.separator]} /> */}
 			</View>
 		);
 	};
@@ -607,27 +537,6 @@ export default ArticleDetail = props => {
 		};
 		return (
 			<View style={{alignItems: 'center'}}>
-				{/* {comments.length == 0 ? (
-					<View style={[{marginTop: 20 * DP, marginBottom: 30 * DP}]}>
-						<ReplyWriteBox
-							onAddPhoto={onAddPhoto}
-							onChangeReplyInput={onChangeReplyInput}
-							onLockBtnClick={onLockBtnClick}
-							onWrite={onWrite}
-							onDeleteImage={onDeleteImage}
-							privateComment={privateComment}
-							ref={input2}
-							editData={editData}
-							shadow={false}
-							parentComment={parentComment}
-							onCancelChild={onCancelChild}
-							onFocus={onFocus2}
-							onBlur={onBlur2}
-						/>
-					</View>
-				) : (
-					<></>
-				)} */}
 				{articleList != 'false' ? (
 					<ArticleList
 						items={articleList}
@@ -635,32 +544,44 @@ export default ArticleDetail = props => {
 						whenEmpty={noMoreArticle}
 					/>
 				) : (
-					<ActivityIndicator size={'large'} />
+					<View style={{paddingVertical: 100 * DP}}>
+						<ActivityIndicator size={'large'} />
+					</View>
 				)}
 			</View>
 		);
 	};
 
 	const renderItem = ({item, index}) => {
+		console.log('comments.length ', comments.length);
 		if (index == comments.length - 1) {
 			return (
-				<View style={[{marginTop: 0 * DP, marginBottom: 30 * DP, opacity: key > 0 || isReplyFocused ? 0 : 1}]}>
-					<ReplyWriteBox
-						onAddPhoto={onAddPhoto}
-						onChangeReplyInput={onChangeReplyInput}
-						onLockBtnClick={onLockBtnClick}
-						onWrite={onWrite}
-						onDeleteImage={onDeleteImage}
-						privateComment={privateComment}
-						ref={input}
-						editData={editData}
-						shadow={false}
-						parentComment={parentComment}
-						onCancelChild={onCancelChild}
-						onFocus={onFocus}
-						onBlur={onBlur}
-					/>
-				</View>
+				<>
+					{comments.length == 1 ? (
+						<Text style={[txt.roboto26, {color: GRAY20, paddingVertical: 20 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>
+					) : (
+						<></>
+					)}
+					<View style={[{marginTop: 0 * DP, marginBottom: 10 * DP, opacity: key > 0 || isReplyFocused ? 0 : 1}]}>
+						<ReplyWriteBox
+							onAddPhoto={onAddPhoto}
+							onChangeReplyInput={onChangeReplyInput}
+							onLockBtnClick={onLockBtnClick}
+							onWrite={onWrite}
+							onDeleteImage={onDeleteImage}
+							privateComment={privateComment}
+							ref={input}
+							editData={editData}
+							shadow={false}
+							parentComment={parentComment}
+							onCancelChild={onCancelChild}
+							onFocus={onFocus}
+							onBlur={onBlur}
+							viewMode={true}
+						/>
+						<View style={[style.separator]} />
+					</View>
+				</>
 			);
 		} else
 			return (
@@ -690,7 +611,6 @@ export default ArticleDetail = props => {
 					ListFooterComponent={bottom()}
 					showsVerticalScrollIndicator={false}
 					renderItem={renderItem}
-					ListEmptyComponent={<Text style={[txt.roboto28b, {color: GRAY10, paddingVertical: 40 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>}
 					onScrollToIndexFailed={err => {
 						setTimeout(() => {
 							if (comments.length !== 0 && flatListRef !== null) {
@@ -700,7 +620,7 @@ export default ArticleDetail = props => {
 					}}
 					removeClippedSubviews={false}
 				/>
-				<View style={{position: 'absolute', bottom: isReplyFocused?(key - 2):(2000)}}>
+				<View style={{position: 'absolute', bottom: isReplyFocused ? key - 2 : 2000}}>
 					<ReplyWriteBox
 						onAddPhoto={onAddPhoto}
 						onChangeReplyInput={onChangeReplyInput}
@@ -730,18 +650,13 @@ const style = StyleSheet.create({
 		alignSelf: 'center',
 		alignItems: 'center',
 	},
-	header: {
-		flexDirection: 'row',
-		width: 654 * DP,
-		height: 50 * DP,
-		justifyContent: 'space-between',
-	},
 	header_title: {
 		width: 544 * DP,
 	},
 	header_icon: {
-		justifyContent: 'space-between',
 		flexDirection: 'row',
+		width: 80 * DP,
+		alignItems: 'center',
 	},
 	profile: {
 		alignSelf: 'flex-start',
@@ -750,13 +665,6 @@ const style = StyleSheet.create({
 	hashText: {
 		width: 634 * DP,
 		marginTop: 10 * DP,
-	},
-	replyCountContainer: {
-		width: 654 * DP,
-		alignItems: 'flex-end',
-		alignSelf: 'center',
-		marginTop: 30 * DP,
-		marginBottom: 20 * DP,
 	},
 	commentContainer: {
 		paddingBottom: 10 * DP,
@@ -773,17 +681,17 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 	},
 	separator: {
-		width: 654 * DP,
-		height: 2 * DP,
+		width: 750 * DP,
+		height: 10 * DP,
 		backgroundColor: GRAY40,
 	},
 	like: {
-		width: 654 * DP,
+		width: 694 * DP,
 		paddingVertical: 10 * DP,
 		marginBottom: 10 * DP,
-		marginTop: 10 * DP,
+		marginTop: 20 * DP,
 		flexDirection: 'row',
 		alignItems: 'center',
-		justifyContent: 'space-between',
+		// justifyContent: 'space-between',
 	},
 });

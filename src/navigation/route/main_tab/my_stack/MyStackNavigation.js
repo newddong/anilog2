@@ -82,6 +82,7 @@ import AlarmCommentList from 'Organism/comment/AlarmCommentList';
 import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
 import ArticleDetail from 'Root/component/templete/community/ArticleDetail';
 import ReviewDetail from 'Root/component/templete/community/ReviewDetail';
+import CommunityHeader from 'Root/navigation/header/CommunityHeader';
 const MyStack = createStackNavigator();
 export default MyStackNavigation = props => {
 	return (
@@ -397,7 +398,7 @@ export default MyStackNavigation = props => {
 				component={ArticleDetail}
 				options={({route}) => ({
 					headerShown: true,
-					header: props => <SimpleHeader {...props} />,
+					header: props => <CommunityHeader {...props} />,
 					title: ' ',
 				})}
 			/>
@@ -406,7 +407,7 @@ export default MyStackNavigation = props => {
 				component={ReviewDetail}
 				options={({route}) => ({
 					headerShown: true,
-					header: props => <SimpleHeader {...props} />,
+					header: props => <CommunityHeader {...props} />,
 					title: ' ',
 				})}
 			/>

@@ -45,11 +45,12 @@ export default ReviewMain = ({route, navigation}) => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			// filterRef.current ? false : fetchData(); //포커스마다 새로 fetch를 시도하면 상세글을 갔다가 메인페이지로 돌아와도 기존의 스크롤로 이동을 하지 않음
 			// console.log('리뷰 게시글 전역변수 길이 :  ', community_obj.review.length);
-			console.log('community_obj.review.length : ', community_obj.review.length);
+			// console.log('community_obj.review.length : ', community_obj.review.length);
 			if (community_obj.review.length > 0) {
 				// let temp = [...data];
 				setData(community_obj.review);
 			}
+			// fetchData();
 		});
 		fetchData();
 		return unsubscribe;
@@ -395,7 +396,8 @@ export default ReviewMain = ({route, navigation}) => {
 
 	//댓글 모두 보기 클릭
 	const onPressReply = index => {
-		navigation.push('CommunityCommentList', {community_object: getData()[index]});
+		// navigation.push('CommunityCommentList', {community_object: getData()[index]});
+		navigation.push('ReviewDetail', {community_object: getData()[index], comment: true});
 	};
 
 	//리뷰 썸네일 클릭
@@ -524,7 +526,7 @@ export default ReviewMain = ({route, navigation}) => {
 							<>
 								<ReviewList
 									items={getData()}
-									recommend={filterRef.current ? [] : recommend}
+									// recommend={filterRef.current ? [] : recommend}
 									whenEmpty={whenEmpty}
 									onPressReviewContent={onPressReviewContent}
 									onPressReply={onPressReply}

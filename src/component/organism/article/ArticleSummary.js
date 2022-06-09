@@ -172,8 +172,6 @@ const style = StyleSheet.create({
 	container: {
 		width: 694 * DP,
 		paddingVertical: 20 * DP,
-		borderTopColor: GRAY40,
-		borderTopWidth: 2 * DP,
 		alignSelf: 'center',
 	},
 	inside: {

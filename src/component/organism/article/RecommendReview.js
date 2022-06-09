@@ -80,7 +80,7 @@ const RecommendReview = props => {
 	};
 
 	return (
-		<View style={[style.container]}>
+		<View style={[style.container]} onLayout={e => console.log('e', e.nativeEvent.layout.height)}>
 			<View style={[style.header]}>
 				<Text style={[txt.noto36b]}>추천 게시글 </Text>
 			</View>

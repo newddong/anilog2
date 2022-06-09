@@ -47,7 +47,7 @@ const ArrowDownButton = props => {
 		if (props.btnStyle == 'border' && props.btnTheme == 'gray') {
 			return {borderColor: GRAY30, borderWidth: 2 * DP};
 		} else if (props.btnStyle == 'border') {
-			return {borderColor: GRAY30, borderWidth: 4 * DP};
+			return {borderColor: GRAY30, borderWidth: 2 * DP};
 		}
 	};
 

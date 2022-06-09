@@ -41,15 +41,18 @@ export default ReviewList = props => {
 						);
 						//사진이 없으며 카테고리 선택도 없는 경우
 						if (!v.community_is_attached_file && review_category_list && review_category_list.length == 0) {
-							height = 128 * (1 / DP);
+							height = 266;
 							//사진은 있지만 카테고리 선택이 없는 경우
 						} else if (v.community_is_attached_file && review_category_list && review_category_list.length == 0) {
-							height = 312 * (1 / DP);
+							height = 620;
 							//사진과 카테고리 선택 모두 있는 경우
 						} else if (v.community_is_attached_file && review_category_list && review_category_list.length != 0) {
-							height = 334 * (1 / DP);
+							height = 673;
+						} else if (!v.community_is_attached_file && review_category_list && review_category_list.length != 0) {
+							//사진은 없지만 카테고리가 있는 경우
+							height = 320;
 						}
-						return {...v, height: (height + 2) * DP}; // ItemSeparator Componenet Height 2 추가
+						return {...v, height: height * DP}; // ItemSeparator Componenet Height 2 추가
 					})
 					.map((v, i, a) => {
 						let offset = a.slice(0, i).reduce((prev, current) => {
@@ -96,6 +99,7 @@ export default ReviewList = props => {
 					data={data}
 					renderItem={renderItem}
 					showsVerticalScrollIndicator={false}
+					scr
 					keyExtractor={item => item._id}
 					getItemLayout={(data, index) => {
 						if (!data[index]) return {length: 0, offset: 0, index: index};
@@ -103,13 +107,15 @@ export default ReviewList = props => {
 					}}
 					ListEmptyComponent={props.whenEmpty}
 					ItemSeparatorComponent={() => {
-						return <View style={{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY30, alignSelf: 'center'}} />;
+						return <View style={{width: 694 * DP, height: 2 * DP, backgroundColor: GRAY30, alignSelf: 'center'}} />;
 					}}
 					ListHeaderComponent={recommend}
 					listKey={({item, index}) => index}
 					nestedScrollEnabled
 					windowSize={5}
-					onEndReached={() => props.onEndReached()}
+					onEndReached={() => {
+						props.onEndReached();
+					}}
 				/>
 			</View>
 		);

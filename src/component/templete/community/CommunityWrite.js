@@ -1,14 +1,15 @@
 import React from 'react';
 import {ScrollView, Text, TouchableOpacity, View, TextInput, Platform, StatusBar, Keyboard, StyleSheet, Image} from 'react-native';
-import {APRI10, WHITE, GRAY20, GRAY10, GRAY40, BLACK} from 'Root/config/color';
+import {APRI10, WHITE, GRAY20, GRAY10, GRAY40, BLACK, MAINBLACK, GRAY50} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP, {isNotch} from 'Root/config/dp';
-import {Camera54, Location54_APRI10, Location54_Filled, NextMark_APRI, Save54} from 'Root/component/atom/icon/index';
+import {Camera54, Location54, Location54_APRI10, Location54_Filled, NextMark, NextMark_APRI, Save54} from 'Root/component/atom/icon/index';
 import Modal from 'Component/modal/Modal';
 import {useNavigation} from '@react-navigation/native';
 import {changeLocalPathToS3Path} from 'Root/api/community';
 import {RichEditor} from 'react-native-pell-rich-editor';
 import AnimalButton from 'Root/component/molecules/button/AnimalButton';
+import {WRITE_FREE_INFO, WRITE_REVIEW_INFO} from 'Root/i18n/msg';
 
 export default CommunityWrite = props => {
 	const navigation = useNavigation();
@@ -140,7 +141,8 @@ export default CommunityWrite = props => {
 
 	//이미지 입력
 	const insertImage = imageList => {
-		// console.log('imageList', imageList);
+		console.log('imageList', imageList);
+		console.log('editorLayout.width', editorLayout.width);
 		setTimeout(() => {
 			Modal.popLoading(true);
 			setTimeout(() => {
@@ -155,7 +157,7 @@ export default CommunityWrite = props => {
 							richText.current?.insertHTML('<p><br/></p></div>');
 							richText.current?.insertHTML(
 								`<div><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick');" \n
-							  style="height: auto; width: ${editorLayout.width};  border-radius:15px; object-fit:contain;  margin:5px 0px 5px 0px; "/></div>`,
+							  style="height:auto; width:${editorLayout.width};  border-radius:15px; object-fit:contain;  margin:5px 0px 5px 0px; "/></div>`,
 							);
 							if (i == result.msg.length - 1) {
 								setTimeout(() => {
@@ -184,16 +186,20 @@ export default CommunityWrite = props => {
 		);
 	};
 
-	React.useEffect(()=>{
-		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+	React.useEffect(() => {
+		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
 			let selected = props.route.params.selectedPhoto;
-			insertImage(selected.map(v=>{return v.cropUri??v.uri}));
+			insertImage(
+				selected.map(v => {
+					return v.cropUri ?? v.uri;
+				}),
+			);
 		}
-	},[props.route.params?.selectedPhoto]);
+	}, [props.route.params?.selectedPhoto]);
 
 	//사진 불러오기
 	const onPressPhotoSelect = () => {
-		props.navigation.push("MultiPhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
+		props.navigation.push('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 	};
 
 	const isInterestsEmpty =
@@ -316,7 +322,7 @@ export default CommunityWrite = props => {
 				key={type}
 				onPress={() => onPressType(type)}
 				activeOpacity={0.6}
-				style={[style.category_item_free, {backgroundColor: data.community_free_type == type ? APRI10 : GRAY40}]}>
+				style={[style.category_item_free, {backgroundColor: data.community_free_type == type ? MAINBLACK : GRAY40}]}>
 				<Text style={[txt.noto28, {color: data.community_free_type == type ? WHITE : GRAY10}]}>{text}</Text>
 			</TouchableOpacity>
 		);
@@ -326,9 +332,9 @@ export default CommunityWrite = props => {
 		return (
 			<>
 				<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
-					<View style={[style.buttonItem]}>
+					<View style={[style.buttonItem_review]}>
 						<Camera54 />
-						<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>사진추가</Text>
+						{/* <Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>사진추가</Text> */}
 					</View>
 				</TouchableOpacity>
 				{/* <TouchableOpacity activeOpacity={0.6} onPress={onPressAddVideo}>
@@ -337,10 +343,11 @@ export default CommunityWrite = props => {
 								<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>영상 추가</Text>
 							</View>
 						</TouchableOpacity> */}
+				<View style={{height: 38 * DP, width: 2 * DP, backgroundColor: GRAY10, alignSelf: 'center', marginHorizontal: 30 * DP}}></View>
 				<TouchableOpacity activeOpacity={0.6} onPress={moveToLocationPicker}>
-					<View style={[style.buttonItem, {}]}>
-						<Location54_APRI10 />
-						<Text style={[txt.noto24, {color: APRI10, alignSelf: 'center', marginLeft: 10 * DP}]}>위치추가</Text>
+					<View style={[style.buttonItem_review, {}]}>
+						<Location54 />
+						{/* <Text style={[txt.noto24, {color: APRI10, alignSelf: 'center', marginLeft: 10 * DP}]}>위치추가</Text> */}
 					</View>
 				</TouchableOpacity>
 			</>
@@ -352,7 +359,7 @@ export default CommunityWrite = props => {
 			<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
 				<View style={[style.buttonItem]}>
 					<Camera54 />
-					<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>사진추가</Text>
+					<Text style={[txt.noto28b, {marginLeft: 10 * DP}]}>사진추가</Text>
 				</View>
 			</TouchableOpacity>
 		);
@@ -370,7 +377,6 @@ export default CommunityWrite = props => {
 	};
 
 	const moveToLocationPicker = () => {
-		// props.navigation.push('SearchMap', {data: data, isReview: isReview});
 		props.navigation.push('CommunityLocationPicker', {data: data, isReview: isReview});
 	};
 
@@ -378,13 +384,6 @@ export default CommunityWrite = props => {
 		<View style={[style.container, {}]}>
 			<ScrollView contentContainerStyle={[style.insideScrollView, {}]} ref={scrollRef} showsVerticalScrollIndicator={false}>
 				{/* //제목 및 카테고리 선택 */}
-				<TextInput
-					onChangeText={onChangeTitle}
-					maxLength={30}
-					style={[txt.noto30, style.title_text]}
-					placeholder={'제목 입력...'}
-					placeholderTextColor={GRAY20}
-				/>
 				{isReview ? (
 					<>
 						<TouchableOpacity activeOpacity={0.6} onPress={onPressFilter} style={[style.category]}>
@@ -392,7 +391,7 @@ export default CommunityWrite = props => {
 								{isInterestsEmpty ? '카테고리 선택' : getReviewCategory(data.community_interests)}
 							</Text>
 							<View style={[style.nextMark]}>
-								<NextMark_APRI />
+								<NextMark />
 							</View>
 						</TouchableOpacity>
 					</>
@@ -403,14 +402,21 @@ export default CommunityWrite = props => {
 						})}
 					</View>
 				)}
+				<TextInput
+					onChangeText={onChangeTitle}
+					maxLength={30}
+					style={[txt.noto28, style.title_text]}
+					placeholder={'제목 입력'}
+					placeholderTextColor={GRAY20}
+				/>
 				{/* 텍스트 입력 박스 */}
 				<View style={{flexDirection: 'row'}}>
 					<TouchableOpacity onPress={removeEditor} activeOpacity={1} style={{width: 48 * DP}}></TouchableOpacity>
 					<View style={[style.content, {}]}>
 						{data.community_address.normal_address.address_name != '' ? (
 							<View style={[style.location]}>
-								<Location54_Filled />
-								<Text style={[txt.noto26b, {color: APRI10, marginLeft: 10 * DP, width: 550 * DP}]}>
+								<Location54 />
+								<Text style={[txt.noto26b, {color: MAINBLACK, marginLeft: 10 * DP, width: 580 * DP}]}>
 									{data.community_address.road_address.address_name.includes('도로명 주소가 없는 위치입니다') ||
 									data.community_address.road_address.address_name == 'undefined '
 										? data.community_address.normal_address.address_name
@@ -424,14 +430,12 @@ export default CommunityWrite = props => {
 							<ScrollView>
 								<RichEditor
 									ref={richText}
-									editorStyle={{contentCSSText: 'font-size:13px;'}}
+									editorStyle={{contentCSSText: 'font-size:14px;', backgroundColor: '#FAFAFA'}}
 									onChange={onChange}
 									onLayout={onLayout}
 									keyboardDisplayRequiresUserAction={true}
 									style={{width: '100%', opacity: 0.99}}
-									placeholder={
-										isReview ? '서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.' : '내용을 작성해 주세요.'
-									}
+									placeholder={isReview ? WRITE_REVIEW_INFO : WRITE_FREE_INFO}
 									onCursorPosition={onCursorPosition}
 									onPaste={onPaste}
 									pasteAsPlainText={true}
@@ -442,13 +446,11 @@ export default CommunityWrite = props => {
 								<RichEditor
 									ref={richText}
 									keyboardDisplayRequiresUserAction={true}
-									editorStyle={{contentCSSText: 'font-size:13px;'}}
+									editorStyle={{contentCSSText: 'font-size:14px;', backgroundColor: '#FAFAFA'}}
 									onChange={onChange}
 									style={{width: '100%', opacity: 0.99}}
 									contentMode={'mobile'}
-									placeholder={
-										isReview ? '서비스, 가성비, 위생, 특이사항, 위치등의 내용을 적어주세요! 후기는 자세할수록 좋아요.' : '내용을 작성해 주세요.'
-									}
+									placeholder={isReview ? WRITE_REVIEW_INFO : WRITE_FREE_INFO}
 									onCursorPosition={onCursorPosition}
 									onPaste={onPaste}
 									pasteAsPlainText={true}
@@ -462,26 +464,29 @@ export default CommunityWrite = props => {
 				{isReview ? (
 					<View style={[style.animalFilter_container]}>
 						<View style={[style.animalFilter]}>
-							<View style={[]}>
-								{!animalType.dog ? (
-									<AnimalButton type={'dog'} on={false} onPress={() => onPressAnimalFilter('dog')} />
-								) : (
-									<AnimalButton type={'dog'} on={true} onPress={() => onPressAnimalFilter('dog')} />
-								)}
-							</View>
-							<View style={[]}>
-								{!animalType.cat ? (
-									<AnimalButton type={'cat'} on={false} onPress={() => onPressAnimalFilter('cat')} />
-								) : (
-									<AnimalButton type={'cat'} on={true} onPress={() => onPressAnimalFilter('cat')} />
-								)}
-							</View>
-							<View style={[]}>
-								{!animalType.etc ? (
-									<AnimalButton type={'another'} on={false} onPress={() => onPressAnimalFilter('etc')} />
-								) : (
-									<AnimalButton type={'another'} on={true} onPress={() => onPressAnimalFilter('etc')} />
-								)}
+							<View style={[style.buttonContainer_review, {opacity: showBtn == true ? 0 : 1, zIndex: 1}]}>{getReviewButtonContainer()}</View>
+							<View style={{flexDirection: 'row', width: 399 * DP, justifyContent: 'space-between'}}>
+								<View style={[]}>
+									{!animalType.dog ? (
+										<AnimalButton type={'dog'} on={false} onPress={() => onPressAnimalFilter('dog')} />
+									) : (
+										<AnimalButton type={'dog'} on={true} onPress={() => onPressAnimalFilter('dog')} />
+									)}
+								</View>
+								<View style={[]}>
+									{!animalType.cat ? (
+										<AnimalButton type={'cat'} on={false} onPress={() => onPressAnimalFilter('cat')} />
+									) : (
+										<AnimalButton type={'cat'} on={true} onPress={() => onPressAnimalFilter('cat')} />
+									)}
+								</View>
+								<View style={[]}>
+									{!animalType.etc ? (
+										<AnimalButton type={'another'} on={false} onPress={() => onPressAnimalFilter('etc')} />
+									) : (
+										<AnimalButton type={'another'} on={true} onPress={() => onPressAnimalFilter('etc')} />
+									)}
+								</View>
 							</View>
 						</View>
 					</View>
@@ -489,18 +494,19 @@ export default CommunityWrite = props => {
 					<></>
 				)}
 				{isReview ? (
-					<View style={[style.buttonContainer, {opacity: showBtn == true ? 0 : 1, zIndex: 1}]}>{getReviewButtonContainer()}</View>
+					<></>
 				) : (
-					<View style={[style.buttonContainer, {justifyContent: 'flex-end', opacity: showBtn == true ? 0 : 1}]}>{getArticleButtonContainer()}</View>
+					<View style={[style.buttonContainer, {justifyContent: 'flex-start', opacity: showBtn == true ? 0 : 1}]}>{getArticleButtonContainer()}</View>
 				)}
+				<View style={{height: 100}} />
 			</ScrollView>
 			{isReview ? (
 				//키보드 영역 올라올 시 출력되야 하는 버튼 컨테이너 - 스타일 별도의 처리가 필요하여 분리 처리하였음
 				<View
 					style={[
-						style.buttonContainer_keyboard,
+						style.buttonContainer_keyboard_review,
 						{
-							justifyContent: 'space-between',
+							// justifyContent: 'space-between',
 							bottom: Platform.OS == 'android' ? 0 : KeyboardY,
 							opacity: showBtn == false ? 0 : 1,
 							zIndex: showBtn ? 3 : -1,
@@ -522,6 +528,8 @@ export default CommunityWrite = props => {
 const style = StyleSheet.create({
 	container: {
 		flex: 1,
+		borderTopWidth: 2 * DP,
+		borderTopColor: GRAY40,
 		alignItems: 'center',
 		backgroundColor: '#fff',
 	},
@@ -532,19 +540,22 @@ const style = StyleSheet.create({
 		paddingBottom: 20 * DP,
 	},
 	title_text: {
-		width: 654 * DP,
-		height: 82 * DP,
-		paddingLeft: 24 * DP,
-		borderBottomColor: APRI10,
-		borderBottomWidth: 2 * DP,
+		width: 694 * DP,
+		height: 104 * DP,
+		paddingLeft: 30 * DP,
+		borderRadius: 30 * DP,
+		backgroundColor: GRAY50,
+		marginBottom: 30 * DP,
+		// borderBottomColor: APRI10,
+		// borderBottomWidth: 2 * DP,
 	},
 	category: {
-		width: 654 * DP,
-		height: 82 * DP,
+		width: 694 * DP,
+		height: 104 * DP,
 		paddingLeft: 24 * DP,
 		marginTop: 30 * DP,
-		borderBottomColor: APRI10,
-		borderBottomWidth: 2 * DP,
+		backgroundColor: GRAY50,
+		borderRadius: 30 * DP,
 		paddingVertical: 18 * DP,
 		marginBottom: 30 * DP,
 		alignItems: 'center',
@@ -552,14 +563,15 @@ const style = StyleSheet.create({
 	},
 	category_free: {
 		marginVertical: 30 * DP,
-		width: 654 * DP,
+		width: 694 * DP,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		// backgroundColor: 'yellow',
 	},
 	category_item_free: {
-		width: 210 * DP,
+		width: 222 * DP,
 		height: 82 * DP,
+		borderRadius: 30 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 		backgroundColor: APRI10,
@@ -568,42 +580,64 @@ const style = StyleSheet.create({
 		color: GRAY10,
 	},
 	categoryText: {
-		color: APRI10,
-		width: 500 * DP,
+		width: 530 * DP,
 	},
 	nextMark: {
 		marginLeft: (654 - 558) * DP,
 	},
 	content: {
-		width: 654 * DP,
+		width: 694 * DP,
 		minHeight: 500 * DP,
-		borderRadius: 24 * DP,
-		borderWidth: 2 * DP,
-		borderColor: APRI10,
+		borderRadius: 30 * DP,
+		backgroundColor: GRAY50,
+		// borderWidth: 2 * DP,
+		// borderColor: APRI10,
 		padding: 17 * DP,
 		paddingVertical: 20 * DP,
 	},
 	buttonContainer: {
-		// backgroundColor: 'yellow',
-		paddingVertical: 30 * DP,
+		paddingVertical: 40 * DP,
+		paddingHorizontal: 24 * DP,
 		flexDirection: 'row',
-		alignSelf: 'flex-end',
-		marginRight: 48 * DP,
-		width: 442 * DP,
+		width: 694 * DP,
+		// backgroundColor: 'yellow',
+		justifyContent: 'space-between',
+	},
+	buttonContainer_review: {
+		// paddingVertical: 40 * DP,
+		paddingHorizontal: 24 * DP,
+		flexDirection: 'row',
+		// width: 694 * DP,
+		// backgroundColor: 'yellow',
 		justifyContent: 'space-between',
 	},
 	buttonContainer_keyboard: {
-		backgroundColor: 'yellow',
+		width: 694 * DP,
+		backgroundColor: 'white',
 		paddingVertical: 15 * DP,
 		flexDirection: 'row',
 		alignSelf: 'center',
-		width: 654 * DP,
+		justifyContent: 'flex-start',
+		position: 'absolute',
+	},
+	buttonContainer_keyboard_review: {
+		width: 694 * DP,
 		backgroundColor: 'white',
-		justifyContent: 'flex-end',
+		paddingVertical: 15 * DP,
+		flexDirection: 'row',
+		alignSelf: 'center',
+		// justifyContent: 'flex-start',
 		position: 'absolute',
 	},
 	buttonItem: {
 		width: 160 * DP,
+		height: 54 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	buttonItem_review: {
+		width: 54 * DP,
 		height: 54 * DP,
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -620,14 +654,15 @@ const style = StyleSheet.create({
 		paddingVertical: 15 * DP,
 	},
 	animalFilter_container: {
-		width: 654 * DP,
+		width: 694 * DP,
 	},
 	animalFilter: {
-		width: 446 * DP,
-		marginTop: 20 * DP,
+		width: 694 * DP,
+		marginTop: 30 * DP,
 		flexDirection: 'row',
-		alignSelf: 'flex-end',
+		// alignSelf: 'flex-end',
 		justifyContent: 'space-between',
+		// backgroundColor: 'yellow',
 	},
 	shadow: {
 		shadowColor: BLACK,

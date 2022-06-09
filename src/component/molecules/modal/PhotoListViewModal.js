@@ -14,6 +14,7 @@ import Swiper from 'react-native-swiper';
  *
  * @param {Object} props - props object
  * @param {string} props.photoList - 팝업 메시지
+ * @param {()=>void} props.onClose - 종료
  *
  */
 const PhotoListViewModal = props => {
@@ -21,7 +22,7 @@ const PhotoListViewModal = props => {
 
 	return (
 		<View style={style.background}>
-			<TouchableOpacity onPress={() => Modal.close()} style={[style.crossMark]}>
+			<TouchableOpacity onPress={() => props.onClose()} style={[style.crossMark]}>
 				<Cross46 />
 			</TouchableOpacity>
 			<View style={[style.popUpWindow]}>
@@ -70,14 +71,14 @@ const PhotoListViewModal = props => {
 					horizontal={true}>
 					{props.photoList != undefined &&
 						props.photoList.map((data, idx) => (
-							<View key={idx}>
+							<TouchableOpacity activeOpacity={1} onPress={() => props.onClose()} key={idx}>
 								<Image source={{uri: data}} style={style.photo} resizeMode={'contain'} />
 								<View style={[style.swiper_index]}>
 									<Text style={[txt.roboto24, {color: 'white'}]}>
 										{idx + 1}/{props.photoList.length}
 									</Text>
 								</View>
-							</View>
+							</TouchableOpacity>
 						))}
 				</Swiper>
 			</View>
@@ -87,6 +88,7 @@ const PhotoListViewModal = props => {
 
 PhotoListViewModal.defaultProps = {
 	popUpMsg: 'popUp',
+	onClose: () => Modal.close(),
 };
 
 const style = StyleSheet.create({

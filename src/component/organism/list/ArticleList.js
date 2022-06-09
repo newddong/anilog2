@@ -22,17 +22,9 @@ const ArticleList = props => {
 		props.onPressCheck(index, bool);
 	};
 
-	const onLayout = (e, v) => {
-		// console.log('v', v);
-		// const text = v.community_title;
-		// console.log('e', e.nativeEvent.layout.height, v.community_title, v.community_title.length);
-		// let lines = getLinesOfString(v.community_title, Platform.OS == 'android' ? 48 : 50);
-		// console.log('lines', lines);
-	};
-
 	const renderItem = (item, index) => {
 		return (
-			<View style={[{flexDirection: 'row'}]}>
+			<View style={[{flexDirection: 'row', borderTopColor: GRAY40, borderTopWidth: index == 0 ? 0 : 2 * DP}]}>
 				{props.selectMode ? (
 					<View style={{justifyContent: 'center', marginRight: 20 * DP}}>
 						{/* <CheckBox state={item.checkBoxState} onCheck={() => props.onCheckBox(index)} /> */}

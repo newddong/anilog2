@@ -175,6 +175,7 @@ import arrow48 from './arrow48';
 import arrow48_gray from './arrow48_gray';
 import location54 from './location54';
 import comment48 from './comment48';
+import comment30_border from './comment30_border';
 import DP from 'Root/config/dp';
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
 
@@ -251,6 +252,8 @@ export const Public48 = makeSvg(public48, size48);
 export const Private48 = makeSvg(private48, size48);
 export const Like48_Border = makeSvg(like48Border, size48);
 export const Like48_Filled = makeSvg(like48Filled, size48);
+export const Like30_Border = makeSvg(like48Border, size30);
+export const Like30_Filled = makeSvg(like48Filled, size30);
 export const Comment48_Border = makeSvg(comment48Border, size48);
 export const Heart48_Filled = makeSvg(heartFilled, size48, APRI10);
 export const Heart48_Border = makeSvg(heart48_border, size48); //Added 21.10.27
@@ -430,6 +433,7 @@ export const Report48 = makeSvg(report48, size48);
 export const Crop72 = makeSvg(crop72, {width: 72 * DP, height: 72 * DP});
 export const Like30 = makeSvg(like30, size30);
 export const Comment30 = makeSvg(comment30, size30);
+export const Comment30_Border = makeSvg(comment30_border, size30);
 export const ProfileDefaultImg4 = makeSvg(profiledefault4, {width: 294 * DP, height: 294 * DP});
 export const CrossNew92 = makeSvg(crossNew92, size92);
 export const Shelter294 = makeSvg(shelter294, {width: 294 * DP, height: 294 * DP});

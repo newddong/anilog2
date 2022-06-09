@@ -24,11 +24,13 @@ import RecommendReview from '../article/RecommendReview';
 export default ReviewList = props => {
 	const items = props.items;
 	const [data, setData] = React.useState('false');
+	const [recommend, setRecommend] = React.useState([]);
 
 	React.useEffect(() => {
 		if (items && items.length != 0) {
+			let list = items;
 			setData(
-				items
+				list
 					.map((v, i, a) => {
 						let height = 128 * (1 / DP);
 						let arr = [];
@@ -64,6 +66,7 @@ export default ReviewList = props => {
 						};
 					}),
 			);
+			setRecommend(items);
 		} else {
 			setData([]);
 		}
@@ -71,23 +74,24 @@ export default ReviewList = props => {
 
 	const renderItem = ({item, index}) => {
 		return (
-			<Review
-				data={item}
-				isSearch={props.isSearch}
-				onPressReviewContent={() => props.onPressReviewContent(index)}
-				onPressReply={() => props.onPressReply(index)}
-				onPressMeatball={() => props.onPressMeatball(index)}
-				onPressLike={() => props.onPressLike(index)}
-				onPressUnlike={() => props.onPressUnlike(index)}
-				onPressFavorite={bool => props.onPressFavorite(index, bool)}
-			/>
+			<>
+				{index == 3 ? recommendReview() : <></>}
+				<Review
+					data={item}
+					isSearch={props.isSearch}
+					onPressReviewContent={() => props.onPressReviewContent(index)}
+					onPressReply={() => props.onPressReply(index)}
+					onPressMeatball={() => props.onPressMeatball(index)}
+					onPressLike={() => props.onPressLike(index)}
+					onPressUnlike={() => props.onPressUnlike(index)}
+					onPressFavorite={bool => props.onPressFavorite(index, bool)}
+				/>
+			</>
 		);
 	};
 
-	const recommend = () => {
-		if (props.recommend && props.recommend.length != 0) {
-			return <RecommendReview data={props.recommend} onPressRecommendReview={data => props.onPressRecommendReview(data)} />;
-		} else return <></>;
+	const recommendReview = () => {
+		return <RecommendReview data={recommend} onPressRecommendReview={data => props.onPressRecommendReview(data)} />;
 	};
 
 	if (data == 'false') {
@@ -99,8 +103,7 @@ export default ReviewList = props => {
 					data={data}
 					renderItem={renderItem}
 					showsVerticalScrollIndicator={false}
-					scr
-					keyExtractor={item => item._id}
+					// keyExtractor={item => item._id}
 					getItemLayout={(data, index) => {
 						if (!data[index]) return {length: 0, offset: 0, index: index};
 						return {length: data[index].height, offset: data[index].offset, index: index};
@@ -109,7 +112,7 @@ export default ReviewList = props => {
 					ItemSeparatorComponent={() => {
 						return <View style={{width: 694 * DP, height: 2 * DP, backgroundColor: GRAY30, alignSelf: 'center'}} />;
 					}}
-					ListHeaderComponent={recommend}
+					// ListHeaderComponent={recommend}
 					listKey={({item, index}) => index}
 					nestedScrollEnabled
 					windowSize={5}

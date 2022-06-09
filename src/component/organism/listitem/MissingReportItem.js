@@ -10,6 +10,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/core';
 import DP from 'Root/config/dp';
+import HashText from 'Root/component/molecules/info/HashText';
 
 /**
  *
@@ -151,7 +152,10 @@ export default MissingReportItem = React.memo(props => {
 									제보 위치: {data.report_witness_location || ''}
 								</Text>
 								<Text style={[txt.noto28, {width: 408 * DP}]} numberOfLines={3}>
-									제보 내용: {data.feed_content || '내용 없음'}
+									제보 내용:&nbsp;
+									<HashText style={[txt.noto28, {}]} numberOfLines={1} ellipsizeMode={'tail'}>
+										{data.feed_content || '내용 없음'}
+									</HashText>
 								</Text>
 							</View>
 						</>

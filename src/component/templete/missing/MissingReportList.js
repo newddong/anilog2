@@ -38,7 +38,6 @@ export default MissingReportList = props => {
 			getList();
 		});
 		return unsubscribe;
-		userGlobalObject.protectionTab.t = false;
 	}, []);
 
 	const getList = () => {
@@ -99,7 +98,7 @@ export default MissingReportList = props => {
 				is_favorite: value,
 			},
 			result => {
-				console.log('result / FavoriteFeed / MissingReportList : ', result.msg.targetFeed.missing_animal_features);
+				console.log('result / FavoriteFeed / MissingReportList : ', result.msg.targetFeed);
 			},
 			err => {
 				console.log('err / FavoriteFeed / MissingReportList : ', err);
@@ -148,26 +147,6 @@ export default MissingReportList = props => {
 		);
 	};
 
-	//동물종류 필터
-	const onSelectKind = async kind => {
-		const fetchPetKindData = await PET_KIND();
-		let petKind = fetchPetKindData.map((v, i) => v.pet_species);
-		petKind.splice(0, 0, '동물종류');
-		Modal.popSelectScrollBoxModal(
-			[petKind],
-			'동물 종류 선택',
-			selected => {
-				selected == '동물종류'
-					? setFilterData({...filterData, missing_animal_species: ''})
-					: setFilterData({...filterData, missing_animal_species: selected});
-				Modal.close();
-			},
-			() => {
-				Modal.close();
-			},
-		);
-	};
-
 	const onPressShowMissing = () => {
 		setOnlyMissing(!onlyMissing);
 		setOnlyReport(false);
@@ -194,26 +173,6 @@ export default MissingReportList = props => {
 		} else if (onlyReport) {
 			filtered = filtered.filter(v => v.feed_type != 'report');
 		}
-		// if (filterData.city != '') {
-		// 	let temp = [];
-		// 	filtered.map((v, i) => {
-		// 		if (v.report_witness_location) {
-		// 			let split = v.report_witness_location.split(' ');
-		// 			if (split[0].includes(filterData.city)) {
-		// 				temp.push(v);
-		// 			}
-		// 		} else {
-		// 			let address = v.missing_animal_lost_location;
-		// 			let splitAddress = address.split('"');
-		// 			let newMissingLocation = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
-		// 			let split = newMissingLocation.split(' ');
-		// 			if (split[0].includes(filterData.city)) {
-		// 				temp.push(v);
-		// 			}
-		// 		}
-		// 	});
-		// 	filtered = temp;
-		// }
 		return filtered;
 	};
 
@@ -249,6 +208,8 @@ export default MissingReportList = props => {
 		}
 	}
 
+	const [refreshing, setRefreshing] = React.useState(false);
+
 	const wait = timeout => {
 		return new Promise(resolve => setTimeout(resolve, timeout));
 	};
@@ -257,8 +218,9 @@ export default MissingReportList = props => {
 		wait(0).then(() => setRefreshing(false));
 	};
 
+	React.useEffect(() => {}, [refreshing]);
+
 	const ITEM_HEIGHT = 266 * DP;
-	const [refreshing, setRefreshing] = React.useState(false);
 	const keyExtractor = React.useCallback(item => item._id.toString(), []);
 	const getItemLayout = React.useCallback(
 		(data, index) =>

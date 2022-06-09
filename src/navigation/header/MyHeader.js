@@ -13,16 +13,19 @@ export default MyHeader = ({navigation, route, options, back}) => {
 	// console.log('route', route.params);
 	const [items, setItems] = React.useState('');
 	const [selectedItem, setSelectedItem] = React.useState(1000);
+	const [userData, setUserData] = React.useState('');
 	React.useEffect(() => {
 		getUserInfoById(
 			{userobject_id: userGlobalObj.userInfo._id},
 			user => {
+				console.log('User', user);
 				let avatarList = user.msg?.user_my_pets;
 				// if (props?.isWriteMode) {
 				// 	const filter = avatarList.filter(e => e.pet_status != 'adopt'); //입양 동물은 글을 못씀
 				// 	filter.push(userGlobalObj.userInfo);
 				// 	setItems(filter);
 				// } else {
+				setUserData({...user.msg, pet_status: 'user'});
 				setItems(avatarList);
 				// }
 			},
@@ -36,6 +39,7 @@ export default MyHeader = ({navigation, route, options, back}) => {
 		// 	scrollViewRef.current?.flashScrollIndicators();
 		// }, 500);
 	}, []);
+
 	const MeatBall = () => {
 		return (
 			<TouchableOpacity style={[{height: 110 * DP}, {alignContent: 'center'}, {justifyContent: 'center'}]}>
@@ -43,12 +47,32 @@ export default MyHeader = ({navigation, route, options, back}) => {
 			</TouchableOpacity>
 		);
 	};
+	const UserProfile = () => {
+		return (
+			<View style={[{height: 110 * DP}, {alignContent: 'center'}, {justifyContent: 'center'}, {marginRight: 26 * DP}]}>
+				<PetLabel70
+					data={userData}
+					onLabelClick={() => {
+						onClicLabel(userData);
+					}}
+				/>
+			</View>
+		);
+	};
+	const onClicLabel = data => {
+		navigation.push('UserProfile', {userobject: data});
+	};
 
 	const renderItem = (item, index) => {
 		console.log('items', item);
 		return (
 			<View key={index} style={[style.listItem, {backgroundColor: index == selectedItem ? APRI10 : WHITE}]}>
-				<PetLabel70 data={item} onLabelClick={() => onClickLabel(index)} />
+				<PetLabel70
+					data={item}
+					onLabelClick={() => {
+						onClicLabel(item);
+					}}
+				/>
 			</View>
 		);
 	};
@@ -65,12 +89,13 @@ export default MyHeader = ({navigation, route, options, back}) => {
 				<FlatList
 					// ref={scrollViewRef}
 					horizontal={true}
-					data={items.slice(0, 3)}
+					data={items.slice(0, 2)}
 					renderItem={({item, index}) => renderItem(item, index)}
 					persistentScrollbar={true}
 					scrollEnabled={false}
 					showsHorizontalScrollIndicator={false}
 					scrollToOverflowEnabled={false}
+					ListHeaderComponent={UserProfile}
 					ListFooterComponent={MeatBall}
 				/>
 			</View>

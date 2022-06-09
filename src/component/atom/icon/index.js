@@ -175,6 +175,7 @@ import arrow48 from './arrow48';
 import paw46_border from './paw46_border';
 import setting46Border from './setting46Border';
 import circleMeatBall70 from './circleMeatBall70';
+import home48Border from './home48Border';
 import DP from 'Root/config/dp';
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK, MAINBLACK} from 'Root/config/color';
 
@@ -437,3 +438,4 @@ export const Arrow48 = makeSvg(arrow48, size48);
 export const Paw46_border = makeSvg(paw46_border, size46, MAINBLACK);
 export const Setting46_border = makeSvg(setting46Border, size46, MAINBLACK);
 export const CircleMeatBall70 = makeSvg(circleMeatBall70, size70);
+export const Home48Border = makeSvg(home48Border, size48, MAINBLACK);

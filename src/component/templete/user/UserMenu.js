@@ -33,6 +33,7 @@ import {
 	Arrow_Up_GRAY20,
 	FavoriteTag48_Border,
 	FavoriteTag48_Filled,
+	Home48Border,
 	Paw46,
 	Paw46_border,
 	Paw48_APRI10,
@@ -69,7 +70,7 @@ export default UserMenu = props => {
 			navigation.navigate('Login');
 		}
 	}, []);
-
+	console.log('numberOF lines', numberOfLines);
 	React.useEffect(() => {
 		getUserProfile(
 			{
@@ -183,9 +184,10 @@ export default UserMenu = props => {
 
 						<View style={[{marginLeft: 40 * DP}, {height: 148 * DP}, {justifyContent: 'center'}]}>
 							<TouchableOpacity onPress={onPressMyName} style={[styles.user_id]}>
-								<Text style={[txt.roboto46b, {alignItems: 'center'}]} numberOfLines={1}>
+								<Text style={[txt.roboto46b, {alignItems: 'center'}, {marginRight: 5 * DP}]} numberOfLines={1}>
 									{data.user_nickname || ''}
 								</Text>
+								<Home48Border />
 							</TouchableOpacity>
 							{/* 업로드 팔로워 팔로잉 */}
 							<View style={[{width: 462 * DP}, {marginTop: 20 * DP}]}>
@@ -207,8 +209,8 @@ export default UserMenu = props => {
 							style={[txt.noto24, {position: 'absolute', opacity: 0, backgroundColor: 'red'}]}
 							numberOfLines={null}
 							onTextLayout={({nativeEvent: {lines}}) => {
-								// console.log('lines.length', lines.length);
-								setNumOfLines(lines.length);
+								console.log('lines.length', lines.length);
+								// setNumOfLines(lines.length);
 							}}>
 							{data.user_introduction || ''}
 						</Text>
@@ -333,7 +335,9 @@ const styles = StyleSheet.create({
 		// width: 420 * DP,
 		height: 68 * DP,
 		// marginTop: 44 * DP,
-		justifyContent: 'center',
+		alignItems: 'center',
+		justifyContent: 'flex-start',
+		flexDirection: 'row',
 		// backgroundColor: 'red',
 	},
 	introduceBox: {

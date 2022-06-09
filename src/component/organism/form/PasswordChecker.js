@@ -87,7 +87,9 @@ export default PasswordChecker = props => {
 		let isMatch = passwordValue.current == pwdcheck;
 		props.passwordChecker(pwdcheck);
 		props.onConfirmAndChecked && props.onConfirmAndChecked(isValid && isMatch);
-		return isMatch && props?.firstValid;
+		// return isMatch && props?.firstValid;
+		//TODO! 위의 비밀번호가 invalid하면 밑의것도 unmatched로 처리
+		return isMatch;
 		// } else {
 		// 	let isValid = props.passwordValidator(passwordValue.current);
 		// 	let isMatch = passwordValue.current == pwdcheck;

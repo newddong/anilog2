@@ -55,7 +55,8 @@ export default function Certification({route}) {
 						callback={response => {
 							console.log('reponse', response);
 							(response.imp_success || response.success) &&
-								navigation.navigate(route.params.navigationName, {response: response, user_data: route.params?.user_data});
+								// navigation.navigate(route.params.navigationName, {response: response, user_data: route.params?.user_data});
+								navigation.replace(route.params.navigationName, {response: response, user_data: route.params?.user_data});
 							// navigation.reset({routes: [{name: route.params.navigationName}]});
 						}}
 					/>

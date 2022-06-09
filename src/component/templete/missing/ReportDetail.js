@@ -406,7 +406,7 @@ const style = StyleSheet.create({
 	},
 	img_square_750: {
 		marginTop: 20 * DP,
-		backgroundColor: 'yellow',
+		// backgroundColor: 'yellow',
 	},
 	commentList: {
 		flex: 1,
@@ -442,7 +442,7 @@ const style = StyleSheet.create({
 		width: 694 * DP,
 		marginTop: 20 * DP,
 		// height: 260 * DP,
-		backgroundColor: 'red',
+		// backgroundColor: 'red',
 		alignItems: 'center',
 		justifyContent: 'center',
 	},

@@ -422,7 +422,10 @@ export default FeedList = ({route, navigation}) => {
 						<View style={{height: 10 * DP, backgroundColor: GRAY30, width: 750 * DP}}></View>
 					</View>
 				)}
-				windowSize={3}
+				windowSize={15}
+				maxToRenderPerBatch={20}
+				updateCellsBatchingPeriod={30}
+				initialNumToRender={15}
 				onEndReachedThreshold={0.6}
 				onEndReached={onEndReached}
 			/>

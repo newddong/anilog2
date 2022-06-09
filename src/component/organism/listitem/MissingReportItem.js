@@ -153,7 +153,7 @@ export default MissingReportItem = React.memo(props => {
 								</Text>
 								<Text style={[txt.noto28, {width: 408 * DP}]} numberOfLines={3}>
 									제보 내용:&nbsp;
-									<HashText style={[txt.noto28, {}]} numberOfLines={1} ellipsizeMode={'tail'}>
+									<HashText style={[txt.noto28, {}]} byteOfLine={55}>
 										{data.feed_content || '내용 없음'}
 									</HashText>
 								</Text>

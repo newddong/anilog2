@@ -115,7 +115,7 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 				{showTags && getTags()}
 				{tags.length > 0 && viewmode && (
 					<TouchableWithoutFeedback onPress={showTag}>
-						<View style={{bottom: 20 * DP, left: 20 * DP, position: 'absolute'}}>
+						<View style={{bottom: 50 * DP, left: 60 * DP, position: 'absolute'}}>
 							<Tag70 />
 						</View>
 					</TouchableWithoutFeedback>

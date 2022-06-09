@@ -94,7 +94,6 @@ const ArrowDownButton = props => {
 							color: btnTxtColor(),
 							textAlign: 'center',
 							width: (props.btnLayout.width + 30) * DP,
-							// backgroundColor: 'purple',
 						},
 					]}
 					numberOfLines={1}>

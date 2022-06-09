@@ -54,7 +54,7 @@ const MissingReportInfo = props => {
 				{/* <View style={{width: 462 * DP, justifyContent: 'center'}}>
 					<Text style={[txt.noto28]}>{props.content}</Text>
 				</View> */}
-				<HashText style={[txt.noto28, {}]} numberOfLines={1} ellipsizeMode={'tail'}>
+				<HashText style={[txt.noto28, {}]} byteOfLine={55}>
 					{props.content || '내용 없음'}
 				</HashText>
 			</View>

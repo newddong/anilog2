@@ -31,7 +31,7 @@ export var exportUri = {}; //겔러리 속 사진 로컬 주소
 
 export default AddPhoto = props => {
 	const limit = 5;
-	const requestloading = 40;
+	const requestloading = Platform.OS=='android'?200:50;
 	const navigation = useNavigation();
 	const [isVideo, setVideo] = React.useState(false);
 	const [photolist, setPhotoList] = React.useState([]);
@@ -329,9 +329,9 @@ export default AddPhoto = props => {
 				numColumns={4}
 				onEndReachedThreshold={0.6}
 				onEndReached={scrollReachBottom}
-				windowSize={50}
+				windowSize={20}
 				maxToRenderPerBatch={50}
-				updateCellsBatchingPeriod={10}
+				updateCellsBatchingPeriod={50}
 				initialNumToRender={144}
 				removeClippedSubviews
 			/>

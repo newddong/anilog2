@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View, Image, ScrollView, Dimensions, SafeAreaView, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 
-import {BackArrow32} from 'Atom/icon';
+import {BackArrow32, CircleMeatBall70} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {getUserInfoById} from 'Root/api/userapi';
@@ -36,6 +36,13 @@ export default MyHeader = ({navigation, route, options, back}) => {
 		// 	scrollViewRef.current?.flashScrollIndicators();
 		// }, 500);
 	}, []);
+	const MeatBall = () => {
+		return (
+			<TouchableOpacity style={[{height: 110 * DP}, {alignContent: 'center'}, {justifyContent: 'center'}]}>
+				<CircleMeatBall70 />
+			</TouchableOpacity>
+		);
+	};
 
 	const renderItem = (item, index) => {
 		console.log('items', item);
@@ -58,11 +65,14 @@ export default MyHeader = ({navigation, route, options, back}) => {
 				<FlatList
 					// ref={scrollViewRef}
 					horizontal={true}
-					data={items}
+					data={items.slice(0, 3)}
 					renderItem={({item, index}) => renderItem(item, index)}
 					persistentScrollbar={true}
+					scrollEnabled={false}
 					showsHorizontalScrollIndicator={false}
-					scrollToOverflowEnabled={false}></FlatList>
+					scrollToOverflowEnabled={false}
+					ListFooterComponent={MeatBall}
+				/>
 			</View>
 		</View>
 	);
@@ -73,17 +83,16 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 		height: 110 * DP,
 		flexDirection: 'row',
-		// backgroundColor: '#FFFFFF',
+		backgroundColor: '#FFFFFF',
 		justifyContent: 'flex-start',
 		paddingHorizontal: 28 * DP,
-		backgroundColor: 'yellow',
 	},
 	backButtonContainer: {
 		width: 80 * DP,
 		height: 80 * DP,
 		justifyContent: 'center',
 		padding: 10 * DP,
-		backgroundColor: 'red',
+		// backgroundColor: 'red',
 	},
 	shadow: {
 		// shadowColor: '#000000',
@@ -96,12 +105,13 @@ const style = StyleSheet.create({
 		// elevation: 4,
 	},
 	petList: {
-		width: 642 * DP,
+		width: 614 * DP,
 		height: 110 * DP,
 		// flex: 1,
-		backgroundColor: 'blue',
+		// backgroundColor: 'blue',
 		alignItems: 'flex-end',
 		marginRight: 28 * DP,
+		// flexDirection:'row',
 	},
 	listItem: {
 		width: 70 * DP,
@@ -109,5 +119,6 @@ const style = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		alignSelf: 'center',
+		marginRight: 26 * DP,
 	},
 });

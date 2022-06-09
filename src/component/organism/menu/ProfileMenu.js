@@ -36,7 +36,7 @@ export default ProfileMenu = props => {
 							</View>
 						</View>
 						<View style={[profileMenu.vertical_separator]} />
-						<View style={[profileMenu.item]}>
+						<View style={[styles.item]}>
 							<TouchableOpacity onPress={() => menuClick(item[1])}>
 								<View style={[styles.item_text]}>
 									<Text style={[txt.noto26, {color: GRAY10}]}>{item[1]}</Text>
@@ -91,10 +91,10 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 2 * DP,
 		borderBottomColor: GRAY30,
 		alignItems: 'center',
-		paddingLeft: 24 * DP,
+		paddingLeft: 28 * DP,
 	},
 	item: {
-		width: 322 * DP,
+		width: 330 * DP,
 		height: 48 * DP,
 		// marginLeft: 16 * DP,
 		flexDirection: 'row',

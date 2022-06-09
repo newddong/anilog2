@@ -26,6 +26,7 @@
 		A72774053C0A480B90682CC4 /* Roboto-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9C12F8D39E3F46AA9ADA1233 /* Roboto-LightItalic.ttf */; };
 		B3C88654360E43C29548F8C8 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F3F8D1B05DA044339A2953BF /* Roboto-Regular.ttf */; };
 		BA0CE0382852094F00E45F0D /* smartAlbums.strings in Resources */ = {isa = PBXBuildFile; fileRef = BA0CE0362852094F00E45F0D /* smartAlbums.strings */; };
+		BA0CE03E2852210100E45F0D /* smartAlbums.strings in Resources */ = {isa = PBXBuildFile; fileRef = BA0CE0402852210100E45F0D /* smartAlbums.strings */; };
 		BA879FE528141CB00052E1E1 /* RNCPermissionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = BA879FDF28141CB00052E1E1 /* RNCPermissionHandler.m */; };
 		BA879FE628141CB00052E1E1 /* RNCAssetsLibraryRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = BA879FE328141CB00052E1E1 /* RNCAssetsLibraryRequestHandler.m */; };
 		BA879FE728141CB00052E1E1 /* RNCCameraRollManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BA879FE428141CB00052E1E1 /* RNCCameraRollManager.m */; };
@@ -69,6 +70,7 @@
 		B079AF24774A2B10B60DFF49 /* libPods-anilog.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-anilog.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7CC3F2370A94A2B8E77E173 /* Roboto-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-MediumItalic.ttf"; path = "../asset/fonts/Roboto-MediumItalic.ttf"; sourceTree = "<group>"; };
 		BA0CE0372852094F00E45F0D /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = smartAlbums.strings; sourceTree = "<group>"; };
+		BA0CE03F2852210100E45F0D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/smartAlbums.strings; sourceTree = "<group>"; };
 		BA879FDF28141CB00052E1E1 /* RNCPermissionHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNCPermissionHandler.m; path = anilog/RNCPermissionHandler.m; sourceTree = "<group>"; };
 		BA879FE028141CB00052E1E1 /* RNCAssetsLibraryRequestHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNCAssetsLibraryRequestHandler.h; path = anilog/RNCAssetsLibraryRequestHandler.h; sourceTree = "<group>"; };
 		BA879FE128141CB00052E1E1 /* RNCPermissionHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNCPermissionHandler.h; path = anilog/RNCPermissionHandler.h; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 		13B07FAE1A68108700A75B9A /* anilog */ = {
 			isa = PBXGroup;
 			children = (
+				BA0CE03B2852200D00E45F0D /* en.lproj */,
 				BA0CE0352852091A00E45F0D /* ko.lproj */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -201,6 +204,14 @@
 				BA0CE0362852094F00E45F0D /* smartAlbums.strings */,
 			);
 			path = ko.lproj;
+			sourceTree = "<group>";
+		};
+		BA0CE03B2852200D00E45F0D /* en.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				BA0CE0402852210100E45F0D /* smartAlbums.strings */,
+			);
+			name = en.lproj;
 			sourceTree = "<group>";
 		};
 		F162AB91FBE442F3891D9F68 /* Resources */ = {
@@ -333,6 +344,7 @@
 				BA0CE0382852094F00E45F0D /* smartAlbums.strings in Resources */,
 				61382C99BF2A4E959B782CC5 /* Roboto-Medium.ttf in Resources */,
 				39266251E14A4E1C9F361D92 /* Roboto-MediumItalic.ttf in Resources */,
+				BA0CE03E2852210100E45F0D /* smartAlbums.strings in Resources */,
 				B3C88654360E43C29548F8C8 /* Roboto-Regular.ttf in Resources */,
 				E6C58BF1C3784743B899A910 /* Roboto-Thin.ttf in Resources */,
 				5A12A690994F4E089B3007C2 /* Roboto-ThinItalic.ttf in Resources */,
@@ -354,7 +366,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\nexport NODE_BINARY=/opt/homebrew/bin/node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+			shellScript = "set -e\n\nexport NODE_BINARY=/Users/mabel/.nvm/versions/node/v16.13.2/bin/node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		1363ED4656547214606772C7 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -525,6 +537,14 @@
 			isa = PBXVariantGroup;
 			children = (
 				BA0CE0372852094F00E45F0D /* ko */,
+			);
+			name = smartAlbums.strings;
+			sourceTree = "<group>";
+		};
+		BA0CE0402852210100E45F0D /* smartAlbums.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BA0CE03F2852210100E45F0D /* en */,
 			);
 			name = smartAlbums.strings;
 			sourceTree = "<group>";

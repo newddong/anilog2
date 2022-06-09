@@ -18,6 +18,7 @@ export default PasswordReset = ({route, navigation}) => {
 	const [pwdValid, setPwdValid] = React.useState(false); // 비밀번호 양식 체크 (8자이상~~)
 	const [pwdCheck, setPwdCheck] = React.useState(false); // 비밀번호 더블 체크 통과 여부
 	const [presentPwdValid, setPresentPwdValid] = React.useState(true); // 현재 비밀번호 입력값이 실제 DB와 일치하는지 여부
+	const [firstPwdValid, setFirstPwdValid] = React.useState(false);
 	const [valid, setValid] = React.useState(false);
 	console.log('PassworRest', route);
 	// navigation.addListener('beforeRemove', e => {
@@ -151,6 +152,7 @@ export default PasswordReset = ({route, navigation}) => {
 					onPressClear={kind => onPressClear(kind)}
 					onChangePwd={pwd => onChangePwd(pwd)}
 					presentPwdValid={presentPwdValid}
+					firstValid={firstPwdValid}
 				/>
 			</View>
 

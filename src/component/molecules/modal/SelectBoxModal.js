@@ -58,15 +58,21 @@ const SelectBoxModal = props => {
 	};
 
 	const ItemSeparatorComponent = () => {
-		return <View style={{alignSelf: 'center', width: 470 * DP, height: 2 * DP, backgroundColor: GRAY30}}></View>;
+		return <View style={{alignSelf: 'center', width: 630 * DP, height: 2 * DP, backgroundColor: GRAY30}}></View>;
 	};
 
 	return (
 		<TouchableOpacity activeOpacity={1} onPress={closeSelectModal} style={[style.background]}>
-			<Animated.View style={[style.container, {height: animatedHeight}]}>
-				<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, {paddingVertical: 30 * DP}]}>
+			<Animated.View style={[style.container, {height: animatedHeight, marginBottom: Platform.OS == 'android' ? 20 * DP : 30 * DP}]}>
+				<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, {paddingVertical: 20 * DP}]}>
 					<View style={[style.insideContainer]}>
-						<FlatList style={{height:props.boxHeight}} data={data} renderItem={renderItem} scrollEnabled={props.scrollEnabled} ItemSeparatorComponent={ItemSeparatorComponent} />
+						<FlatList
+							style={{height: props.boxHeight}}
+							data={data}
+							renderItem={renderItem}
+							scrollEnabled={props.scrollEnabled}
+							ItemSeparatorComponent={ItemSeparatorComponent}
+						/>
 					</View>
 				</TouchableOpacity>
 				<TouchableOpacity onPress={closeSelectModal} activeOpacity={0.8} style={[style.closeBox]}>
@@ -92,7 +98,7 @@ const style = StyleSheet.create({
 		width: Platform.OS == 'ios' ? Dimensions.get('window').width : '100%',
 		justifyContent: 'flex-end',
 		alignItems: 'center',
-		paddingBottom: 30 * DP,
+		paddingBottom: 0 * DP,
 	},
 	container: {
 		// backgroundColor: 'yellow',
@@ -110,19 +116,20 @@ const style = StyleSheet.create({
 		marginBottom: 20 * DP,
 	},
 	insideContainer: {
-		width: 658 * DP,
+		width: 694 * DP,
 		// height: 88 * DP,
 		// backgroundColor: 'red',
 		// paddingTop: 24 * DP,
 	},
 	listItem: {
-		width: 658 * DP,
+		width: 694 * DP,
 		height: 88 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
+		// backgroundColor: 'yellow',
 	},
 	closeBox: {
-		width: 658 * DP,
+		width: 694 * DP,
 		height: 128 * DP,
 		borderRadius: 30 * DP,
 		alignItems: 'center',

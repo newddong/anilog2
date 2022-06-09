@@ -60,25 +60,18 @@ import SuggestAssign from 'Root/component/templete/login/SuggestAssign';
 import PasswordResetIdentification from 'Root/component/templete/login/PasswordResetIdentification';
 import PasswordReset from 'Root/component/templete/user/PasswordReset';
 import AddressSearchPage from 'Root/component/templete/search/AddressSearchPage';
-import GeoLocationAPI from 'Root/component/templete/search/GeoLocationSearch';
 import GeoLocationSearch from 'Root/component/templete/search/GeoLocationSearch';
 
 import {useModal} from './useModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {userLogin} from 'Root/api/userapi';
 import userGlobalObj from 'Root/config/userGlobalObject';
-import CommunityWrite from 'Root/component/templete/community/CommunityWrite';
 import SearchMap from 'Root/component/templete/search/SearchMap';
 import Profile from 'Templete/profile/Profile';
 import UserNotePage from 'Templete/user/UserNotePage';
 import FeedList from 'Templete/feed/FeedList';
-import Feed from 'Organism/feed/Feed';
-import FeedCommentList from 'Templete/feed/FeedCommentList';
-import ArticleDetail from 'Templete/community/ArticleDetail';
-import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
 import TermsAndPolicy from 'Root/component/templete/user/TermsAndPolicy';
 import Certification from 'Root/component/templete/login/Certification';
-import AskQuestion from 'Root/component/templete/user/AskQuestion';
 import ShelterAsk from 'Root/component/templete/shelter/ShelterAsk';
 import ReportDetail from 'Root/component/templete/missing/ReportDetail';
 import MissingAnimalDetail from 'Root/component/templete/missing/MissingAnimalDetail';
@@ -332,7 +325,6 @@ export default RootStackNavigation = () => {
 						<RootStack.Screen name="UserList" options={{header: props => <InputAndSearchHeader {...props} />, title: '계정'}}>
 							{props => <AccountPicker {...props} /*prevNav={props.prevNav} input={searchInput} onClickUser={onClickUser}*/ />}
 						</RootStack.Screen>
-						{/* <RootStack.Screen name="SearchMap" component={SearchMap} options={{header: props => <SimpleHeader {...props} />, title: '주소 설정'}} /> */}
 						<RootStack.Screen
 							name="Profile"
 							component={Profile}
@@ -363,34 +355,6 @@ export default RootStackNavigation = () => {
 							component={AddressSearchPage}
 							options={{header: props => <SimpleHeader {...props} />, title: '주소 설정'}}
 						/>
-						{/* <RootStack.Screen
-							name="ShelterVolunteerForm"
-							component={ApplicationFormVolunteer}
-							options={{header: props => <SimpleHeader {...props} />, title: '봉사활동 신청서'}}
-						/>
-						<RootStack.Screen
-							name="ApplyAdoptionDetails"
-							component={ApplyDetails}
-							options={{header: props => <SimpleHeader {...props} />, title: '입양 신청 내역'}}
-						/> */}
-						{/* <RootStack.Screen
-							name={'ArticleDetail'}
-							component={ArticleDetail}
-							options={({route}) => ({
-								headerShown: true,
-								header: props => <SimpleHeader {...props} />,
-								title: ' ',
-							})}
-						/>
-						<RootStack.Screen
-							name={'ReviewDetail'}
-							component={ReviewDetail}
-							options={({route}) => ({
-								header: props => <SimpleHeader {...props} />,
-								title: ' ',
-							})}
-						/> */}
-
 						<RootStack.Screen
 							name="Certification"
 							component={Certification}
@@ -412,18 +376,7 @@ export default RootStackNavigation = () => {
 							options={{header: props => <SimpleWithMeatballHeader {...props} />, title: '제보글'}}
 						/>
 					</RootStack.Navigator>
-
-					{/* <RootStack.Screen
-						name={'CommunityCommentList'}
-						component={CommunityCommentList}
-						options={({route}) => ({
-							// headerShown: false,
-							header: props => <SimpleHeader {...props} />,
-							title: ' ',
-						})}
-					/> */}
 				</NavigationContainer>
-
 				{isPop && <View style={popup.popupBackground}>{popupComponent}</View>}
 				{/* <View style={{backgroundColor:'red',width:80,height:80}}></View> */}
 			</SafeAreaView>

@@ -25,14 +25,14 @@ const SelectedMedia = props => {
 					right: 6 * DP,
 					top: 6 * DP,
 					backgroundColor: 'white',
-					borderRadius: 50,
+					borderRadius: 30 * DP,
 					opacity: 0.8,
 				}}>
 				<View
 					style={{
 						position: 'absolute',
 						right: 0,
-						borderRadius: 50,
+						borderRadius: 30 * DP,
 						backgroundColor: 'lightgray',
 						opacity: 0.9,
 						shadowOpacity: 0.1,

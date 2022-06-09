@@ -24,9 +24,12 @@ const ReviewBriefList = props => {
 
 	const renderItem = (item, index) => {
 		return (
-			<View key={index} style={[style.listItem]}>
-				<ReviewBriefItem data={item} onPressReview={() => props.onPressReview(index)} onPressLike={bool => props.onPressLike(bool, index)} />
-			</View>
+			<ReviewBriefItem
+				key={index}
+				data={item}
+				onPressReview={() => props.onPressReview(index)}
+				onPressLike={bool => props.onPressLike(bool, index)}
+			/>
 		);
 	};
 	return (
@@ -60,11 +63,8 @@ const style = StyleSheet.create({
 		paddingVertical: 30 * DP,
 		alignItems: 'center',
 	},
-	listItem: {
-		marginBottom: 40 * DP,
-	},
 	showMore: {
-		width: 654 * DP,
+		width: 694 * DP,
 		height: 48 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',

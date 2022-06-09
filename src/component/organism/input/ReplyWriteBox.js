@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import {Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {APRI10, BLUE20, GRAY10, GRAY30, GRAY40, GRAY50, WHITE} from 'Root/config/color';
+import {APRI10, BLUE20, GRAY10, GRAY20, GRAY30, GRAY40, GRAY50, WHITE} from 'Root/config/color';
 import {Cross46, Lock60_Border, Lock60_Filled, Photo60, Send60} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import SelectedMedia from 'Molecules/media/SelectedMedia';
@@ -35,6 +35,7 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 
 	React.useEffect(() => {
 		if (props.editData) {
+			// console.log('editData', props.editData.comment_contents);
 			setContent(props.editData.comment_contents);
 			setPhoto(props.editData.comment_photo_uri);
 		}
@@ -83,7 +84,6 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 						{props.parentComment.comment_writer_id.user_nickname}
 						<Text style={[txt.noto26]}>님에게 </Text>
 					</Text>
-					{/* <Text style={[txt.noto22, {color: BLUE20, paddingTop: 10 * DP}]}>{'  '}취소</Text> */}
 					<TouchableOpacity activeOpacity={0.6} onPress={onCancelChild} style={style.crossMark}>
 						<Cross46 />
 					</TouchableOpacity>
@@ -109,6 +109,7 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 				<View style={[style.commentBox_top, {width: 550 * DP}, , {marginRight: 24 * DP}]}>
 					<TextInput
 						defaultValue={content == '' ? null : content}
+						value={content == '' ? null : content}
 						style={[style.replyTextInput]}
 						multiline={true}
 						placeholder={'메세지 입력..'}
@@ -123,8 +124,34 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 	} else {
 		return (
 			<View style={[style.editComment, props.shadow ? style.shadow : style.shadow_off]}>
-				{/* 사진 추가를 통해서 받아온 사진이 한 개 이상인 경우 */}
-				{photo && photo.length > 0 ? (
+				{/* 키보드가 해제 모드 / 댓글 수정 모드 X / 대댓글 모드 X / 사진 X 일 경우에만 출력되는 댓글 스타일 */}
+				{props.viewMode && !isChildComment && !props.editMode && photo == '' && photo.length == 0 ? (
+					<>
+						<View style={[style.commentBox_viewMode, {backgroundColor: isChildComment ? GRAY40 : WHITE}]}>
+							<View style={[style.iconCont_viewMode]}>
+								<Photo60 onPress={props.onAddPhoto} />
+								<View style={{marginLeft: 10 * DP}}>
+									{props.privateComment ? <Lock60_Filled onPress={props.onLockBtnClick} /> : <Lock60_Border onPress={props.onLockBtnClick} />}
+								</View>
+							</View>
+							<View style={[style.commentBox_viewMode_input]}>
+								<TextInput
+									defaultValue={content == '' ? null : content}
+									style={[style.replyTextInput, {width: 394 * DP}]}
+									multiline={true}
+									placeholder={'댓글입력'}
+									onChangeText={onChangeText}
+									onFocus={onFocus}
+									onBlur={onBlur}
+									ref={inputRef}
+								/>
+							</View>
+							<View style={[style.commentBtn_viewMode, {marginLeft: 24 * DP}]}>
+								<AniButton onPress={props.onWrite} btnLayout={btn_w120} btnStyle={'border'} btnTitle={'댓글'} titleFontStyle={24} />
+							</View>
+						</View>
+					</>
+				) : photo && photo.length > 0 ? (
 					<View style={[style.commentBox_photo]}>
 						{getParent()}
 						<View style={[style.commentBox_top_photo, {flexDirection: 'row'}]}>
@@ -186,7 +213,6 @@ const CommentBoxBottom = props => {
 			<View style={[style.commentBox_bottom_right]}>
 				<AniButton onPress={props.onWrite} btnLayout={btn_w120} btnStyle={'border'} btnTitle={getBtnTitle()} titleFontStyle={24} />
 			</View>
-			{/* <Send60 onPress={onWrite} /> */}
 		</View>
 	);
 };
@@ -200,6 +226,8 @@ const ReplyWriteBoxProps = {
 	isProtectRequest: bool,
 	/** @type {boolean} 비밀글 */
 	privateComment: bool,
+	/** @type {boolean} 키보드 출력 여부 */
+	viewMode: bool,
 	/** @type {()=>void} 답글쓰기 눌렀을 때 동작하는 콜백 */
 	onPressReply: func,
 	/** @type {()=>void} 댓글 버튼 눌렀을 때 동작하는 콜백 */
@@ -232,6 +260,7 @@ ReplyWriteBox.defaultProps = {
 	privateComment: false, // 비밀 댓글 상태 여부
 	isMessage: false,
 	shadow: true,
+	viewMode: false,
 	photo: [],
 	parentComment: '',
 	onCancelChild: () => {},
@@ -372,6 +401,29 @@ const style = StyleSheet.create({
 		alignSelf: 'center',
 		alignItems: 'center',
 		justifyContent: 'center',
+	},
+	iconCont_viewMode: {
+		width: 118 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		// backgroundColor: 'red',
+	},
+	commentBox_viewMode: {
+		width: 750 * DP,
+		flexDirection: 'row',
+		paddingVertical: 20 * DP,
+		paddingHorizontal: 14 * DP,
+		justifyContent: 'center',
+		backgroundColor: WHITE,
+	},
+	commentBox_viewMode_input: {
+		padding: 10 * DP,
+		borderRadius: 24 * DP,
+		marginBottom: 12 * DP,
+		marginLeft: 26 * DP,
+		backgroundColor: GRAY50,
+		width: 428 * DP,
+		// height: 68 * DP,
 	},
 });
 

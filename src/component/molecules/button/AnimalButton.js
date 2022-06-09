@@ -59,7 +59,7 @@ const style = StyleSheet.create({
 	container: {
 		height: 60 * DP,
 		flexDirection: 'row',
-		paddingHorizontal: 20 * DP,
+		paddingHorizontal: 12 * DP,
 		paddingVertical: 12 * DP,
 		borderRadius: 22 * DP,
 		alignItems: 'center',

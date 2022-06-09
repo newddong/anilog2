@@ -56,7 +56,7 @@ export default AddPhoto = props => {
 			assetType: type,
 			include: ['playableDuration'],
 			groupName: album,
-			groupTypes:'album'
+			groupTypes: 'album',
 		};
 		if (Platform.OS == 'android') {
 			delete param.fromTime;
@@ -65,7 +65,7 @@ export default AddPhoto = props => {
 		} else {
 			delete param.toID;
 		}
-		if(album.length==0){
+		if (album.length == 0) {
 			delete param.groupName;
 			delete param.groupTypes;
 		}
@@ -113,8 +113,8 @@ export default AddPhoto = props => {
 		console.log(selectedPhoto);
 	};
 
-	React.useEffect(()=>{
-		console.log('앨범변경   '+album)
+	React.useEffect(() => {
+		console.log('앨범변경   ' + album);
 		let param = {
 			first: requestloading,
 			toTime: 0,
@@ -122,7 +122,7 @@ export default AddPhoto = props => {
 			assetType: 'Photos',
 			include: ['playableDuration'],
 			groupName: album,
-			groupTypes:'album'
+			groupTypes: 'album',
 		};
 		if (Platform.OS == 'android') {
 			delete param.fromTime;
@@ -131,35 +131,32 @@ export default AddPhoto = props => {
 		} else {
 			delete param.toID;
 		}
-		if(album.length==0){
+		if (album.length == 0) {
 			delete param.groupName;
 			delete param.groupTypes;
 		}
 		CameraRoll.getPhotos(param)
-			.then(album=>{
+			.then(album => {
 				setPhotoList([...album.edges]);
 				// setPhotoList(album.edges);
 				console.log(album);
-
 			})
 			.catch(err => {
 				console.log('cameraroll error===>' + err);
 			});
-		
-	},[album])
+	}, [album]);
 
 	const albumSelect = () => {
 		Modal.popSelectBoxModal2(
 			albumList,
 			album => {
-				
-				setAlbum(album=='모든사진'?'':album);
-				Modal.close()
+				setAlbum(album == '모든사진' ? '' : album);
+				Modal.close();
 			},
 			e => console.log('close', e),
 			false,
 			'사진첩 선택',
-			500*DP,
+			500 * DP,
 		);
 	};
 
@@ -198,7 +195,7 @@ export default AddPhoto = props => {
 	}, []);
 
 	React.useEffect(() => {
-		console.log('tk',photolist)
+		// console.log('tk',photolist)
 	}, [photolist]);
 
 	React.useEffect(() => {
@@ -220,7 +217,7 @@ export default AddPhoto = props => {
 	// },[photolist])
 
 	const selectPhoto = photo => {
-		console.log('photo select', photo);
+		// console.log('photo select', photo);
 		if (selectedPhoto.length >= limit) {
 			Modal.alert('사진은 ' + limit + '개 까지 선택가능합니다.');
 			return;
@@ -307,8 +304,9 @@ export default AddPhoto = props => {
 				<TouchableWithoutFeedback onPress={albumSelect}>
 					<View style={{flexDirection: 'row', alignItems: 'center'}}>
 						<Text style={txt.noto36}>{album.length > 0 ? album : '모든사진'}</Text>
-						<View style={{paddingTop:10*DP}}>
-						<Bracket48 /></View>
+						<View style={{paddingTop: 10 * DP}}>
+							<Bracket48 />
+						</View>
 					</View>
 				</TouchableWithoutFeedback>
 				{isSingle && false && (

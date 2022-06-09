@@ -15,6 +15,7 @@ import Crop from 'Molecules/media/Crop';
  *
  * @param {Object} props - props object
  * @param {string} props.photoList - 팝업 메시지
+ * @param {()=>void} props.onClose - 종료
  *
  */
 const PhotoListViewModal = props => {
@@ -22,7 +23,7 @@ const PhotoListViewModal = props => {
 
 	return (
 		<View style={style.background}>
-			<TouchableOpacity onPress={() => Modal.close()} style={[style.crossMark]}>
+			<TouchableOpacity onPress={() => (props.onClose ? props.onClose() : Modal.close())} style={[style.crossMark]}>
 				<View style={{backgroundColor:'yellow',width:120*DP,height:120*DP}}>
 				<Cross46 />
 				</View>
@@ -74,15 +75,18 @@ const PhotoListViewModal = props => {
 					horizontal={true}>
 					{props.photoList != undefined &&
 						props.photoList.map((data, idx) => (
-							<View key={idx}>
+
+							<TouchableOpacity activeOpacity={1} onPress={() => props.onClose()} key={idx}>
+                {/*<Image source={{uri: data}} style={style.photo} resizeMode={'contain'} />*/}
 								{/* <Image source={{uri: data}} style={style.photo} resizeMode={'stretch'} /> */}
 								<Crop uri={data} width={750*DP} height={1000*DP} isCrop={false} backgroundColor={'black'}/>
+
 								<View style={[style.swiper_index]}>
 									<Text style={[txt.roboto24, {color: 'white'}]}>
 										{idx + 1}/{props.photoList.length}
 									</Text>
 								</View>
-							</View>
+							</TouchableOpacity>
 						))}
 				</Swiper>
 			</View>
@@ -92,6 +96,7 @@ const PhotoListViewModal = props => {
 
 PhotoListViewModal.defaultProps = {
 	popUpMsg: 'popUp',
+	onClose: () => Modal.close(),
 };
 
 const style = StyleSheet.create({

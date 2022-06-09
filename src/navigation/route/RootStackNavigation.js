@@ -282,13 +282,17 @@ export default RootStackNavigation = () => {
 
 						{/* 카메라 관련 기능은 네이티브 모듈이 안정화 혹은 자체 개발이 될때까지 추가 보류 */}
 						{/* <RootStack.Screen name="SinglePhotoSelect" component={PhotoSelect} /> */}
-						<RootStack.Screen name="SinglePhotoSelect" component={AddPhoto} options={{header: props => <PhotoSelectHeader {...props} />, title: ''}}/>
+						<RootStack.Screen
+							name="SinglePhotoSelect"
+							component={AddPhoto}
+							options={{header: props => <PhotoSelectHeader {...props} />, title: ''}}
+						/>
 						{/* <RootStack.Screen name="MultiPhotoSelect" component={PhotoSelect} /> */}
-						<RootStack.Screen name="MultiPhotoSelect" component={AddPhoto} options={{header: props => <PhotoSelectHeader {...props} />, title: ''}}/>
+						<RootStack.Screen name="MultiPhotoSelect" component={AddPhoto} options={{header: props => <PhotoSelectHeader {...props} />, title: ''}} />
 						{/* 카메라 컴포넌트 임시 추가 */}
 						<RootStack.Screen name="FeedListForHashTag" component={FeedListForHashTag} options={{header: props => <SimpleHeader {...props} />}} />
 						{/* 이미지 크롭 화면 */}
-						<RootStack.Screen name="Crop" component={Crop} options={{header: props => <SimpleHeader {...props} />, title: '사진 자르기'}}/>
+						<RootStack.Screen name="Crop" component={Crop} options={{header: props => <SimpleHeader {...props} />, title: '사진 자르기'}} />
 						<RootStack.Screen
 							name="AssignPetProfileImage"
 							component={AssignPetProfileImage}

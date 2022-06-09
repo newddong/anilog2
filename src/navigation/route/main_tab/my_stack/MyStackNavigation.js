@@ -82,6 +82,7 @@ import AlarmCommentList from 'Organism/comment/AlarmCommentList';
 import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
 import ArticleDetail from 'Root/component/templete/community/ArticleDetail';
 import ReviewDetail from 'Root/component/templete/community/ReviewDetail';
+import MyHeader from 'Root/navigation/header/MyHeader';
 const MyStack = createStackNavigator();
 export default MyStackNavigation = props => {
 	return (
@@ -108,7 +109,7 @@ export default MyStackNavigation = props => {
 				options={{header: props => <SimpleHeader {...props} />, title: '#반려동물'}}
 			/>
 			<MyStack.Screen name="SocialRelation" component={SocialRelationTopTabNavigation} options={{header: props => <SimpleHeader {...props} />}} />
-			<MyStack.Screen name="UserMenu" component={UserMenu} options={{header: props => <SimpleHeader {...props} />, title: 'MY'}} />
+			<MyStack.Screen name="UserMenu" component={UserMenu} options={{header: props => <MyHeader {...props} />, title: 'MY'}} />
 			<MyStack.Screen name="UserInfoSetting" component={UserInfoSetting} options={{header: props => <SimpleHeader {...props} />, title: ''}} />
 			<MyStack.Screen
 				name="ChangeUserProfileImage"

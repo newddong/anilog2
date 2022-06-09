@@ -155,7 +155,8 @@ export default PasswordResetIdentification = props => {
 				phone: user_data.user_phone_number,
 			},
 		};
-		navigation.navigate('Certification', {data: data, navigationName: 'PasswordResetIdentification'});
+		// navigation.navigate('Certification', {data: data, navigationName: 'PasswordResetIdentification'});
+		navigation.navigate('Certification', {data: data, navigationName: 'PasswordReset', user_data: user_data.user_phone_number});
 	};
 
 	const reVerificationRequest = () => {

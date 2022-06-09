@@ -4,6 +4,7 @@ import {txt} from 'Root/config/textstyle';
 import {BLACK, GRAY10, GRAY40, WHITE} from 'Root/config/color';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
+import moment from 'moment';
 /**
  * 알람 리스트 출력 컴포넌트
  * @param {object} props - Props Object
@@ -17,6 +18,7 @@ const MissingReportBox = props => {
 	// console.log('propsopsdo', props);
 	const [objCity, setObjCity] = React.useState('');
 	const navigation = useNavigation();
+	console.log(moment(props.data?.missing_animal_date).format('YY.MM.DD'));
 	React.useEffect(() => {
 		try {
 			let objCitys = JSON.parse(`${props.data?.missing_animal_lost_location}`);
@@ -65,7 +67,7 @@ const MissingReportBox = props => {
 						/>
 						<View style={[styles.date_txt]}>
 							<Text style={[txt.noto28, {textAlign: 'center'}, {color: 'black'}, {height: 44 * DP}]}>
-								{props.data.missing_animal_date.slice(0, 9)} 실종
+								{moment(props.data?.missing_animal_date).format('YY.MM.DD')}
 							</Text>
 							{/* <Text style={[txt.noto28b, {textAlign: 'center'}, {color: 'black'}]}>
 								{props.data.missing_animal_species} / {props.data.missing_animal_age}살
@@ -89,7 +91,7 @@ const MissingReportBox = props => {
 						<View style={[styles.date_txt]}>
 							<Text style={[txt.noto28, {textAlign: 'center'}, {color: 'black'}, {height: 44 * DP}]} numberOfLines={1}>
 								{/* {props.data.report_witness_location} */}
-								{props.data.report_witness_date}
+								{moment(props.data.report_witness_date).format('YY.MM.DD')}
 							</Text>
 							<Text style={[txt.noto26, {textAlign: 'center'}, {color: GRAY10}]} numberOfLines={1}>
 								{/* {props.data.feed_content || '내용 없음'} */}

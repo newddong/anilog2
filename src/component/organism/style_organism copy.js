@@ -364,6 +364,7 @@ export const socialInfoB = StyleSheet.create({
 		height: 46 * DP,
 		width: 82 * DP,
 		textAlign: 'center',
+		// alignContent: 'flex-start',
 		// backgroundColor: 'purple',
 	},
 });
@@ -388,11 +389,11 @@ export const profileMenu = StyleSheet.create({
 	title: {
 		width: 200 * DP,
 		height: 42 * DP,
-		marginLeft: 12 * DP,
+		paddingLeft: 12 * DP,
 	},
 	bottomeContainer: {},
 	itemContainer: {
-		paddingHorizontal: 32 * DP,
+		paddingHorizontal: 28 * DP,
 	},
 	item_step1: {
 		flexDirection: 'row',
@@ -402,9 +403,10 @@ export const profileMenu = StyleSheet.create({
 	item: {
 		width: 310 * DP,
 		height: 48 * DP,
-		marginLeft: 16 * DP,
+		// marginLeft: 16 * DP,
 		flexDirection: 'row',
 		alignSelf: 'center',
+		// backgroundColor: 'red',
 	},
 	item_text: {
 		width: 270 * DP,
@@ -425,7 +427,7 @@ export const profileMenu = StyleSheet.create({
 	horizon_separator: {
 		width: 362 * DP,
 		height: 2 * DP,
-		marginLeft: 5 * DP,
+		marginLeft: 6 * DP,
 		marginRight: 7 * DP,
 		backgroundColor: GRAY40,
 	},
@@ -434,6 +436,8 @@ export const profileMenu = StyleSheet.create({
 		height: 64 * DP,
 		marginTop: 6 * DP,
 		marginHorizontal: 16 * DP,
+		// marginLeft: 12 * DP,
+		// marginRight: 16 * DP,
 		backgroundColor: GRAY40,
 	},
 });

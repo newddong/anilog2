@@ -347,7 +347,7 @@ export let temp_inputLongText = '';
 
 //버튼
 export const COMPLETE_MODIFY = '수정 완료';
-export const MY_INFO_MODIFY = '내 정보 수정'; // usermenu
+export const MY_INFO_MODIFY = '프로필 수정'; // usermenu
 export const MY_COMPANION = '나의 반려동물'; //userMenu
 export const MODIFY_PROFILE = '프로필 변경';
 
@@ -418,7 +418,7 @@ export const FORM_UNMATCHED_DESC = '비밀번호 작성 양식에 맞지 않습�
 export const FORM_MATCHED_DESC = '비밀번호 작성 양식과 일치합니다!';
 export const NEW_PWD_CHECK_TITLE = '새로운 비밀번호 확인';
 export const NEW_PWD_PLACEHOLDER = '새로운 비밀번호 확인';
-export const PWD_CHECK_INFO = '비밀번호를 다시 한 번 적어주세요.';
+export const PWD_CHECK_INFO = '비밀번호를 다시 입력해주세요.';
 
 //Nickname 설정 관련
 export const NICKNAME_FORM = '2~20자 이내의 영문,한글,숫자,_의 입력만 가능합니다';
@@ -428,7 +428,7 @@ export const PREVIOUS_NICK_TITLE = '기존 닉네임';
 
 export const NEW_NICK_TITLE = '새 닉네임';
 export const UNAVAILABLE_NICK = '사용 불가한 닉네임입니다.';
-export const AVAILABLE_NICK = '사용 가능한 닉네임입니다!';
+export const AVAILABLE_NICK = '사용 가능한 닉네임입니다';
 
 //연락처 설정 관련
 export const PHONE_FORM = '전화번호는 - 을 제외하고 9~11자로 작성해주세요';

@@ -2,9 +2,10 @@ import React from 'react';
 import {View, NativeBaseProvider, Text} from 'native-base';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import IMP from 'iamport-react-native';
-import {useNavigation} from '@react-navigation/native';
+import {StackActions, useNavigation} from '@react-navigation/native';
 import {getSMSimpcode} from 'Root/api/userapi';
 import {ActivityIndicator} from 'react-native';
+import {actions} from 'react-native-pell-rich-editor';
 export default function Certification({route}) {
 	const params = route?.params.data.params;
 	const tierCode = route?.data?.data.tierCode;
@@ -53,7 +54,9 @@ export default function Certification({route}) {
 						loading={<Loading />}
 						callback={response => {
 							console.log('reponse', response);
-							(response.imp_success||response.success)&&navigation.navigate(route.params.navigationName, {response: response});
+							(response.imp_success || response.success) &&
+								navigation.navigate(route.params.navigationName, {response: response, user_data: route.params?.user_data});
+							// navigation.reset({routes: [{name: route.params.navigationName}]});
 						}}
 					/>
 				</SafeAreaView>

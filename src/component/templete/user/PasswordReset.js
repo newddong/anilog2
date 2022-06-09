@@ -1,5 +1,5 @@
-import React from 'react';
-import {Text, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {Text, View, BackHandler, Alert} from 'react-native';
 import {btn_w654, btn_w694_r30} from 'Atom/btn/btn_style';
 import Modal from 'Component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
@@ -20,14 +20,17 @@ export default PasswordReset = ({route, navigation}) => {
 	const [presentPwdValid, setPresentPwdValid] = React.useState(true); // 현재 비밀번호 입력값이 실제 DB와 일치하는지 여부
 	const [valid, setValid] = React.useState(false);
 	console.log('PassworRest', route);
-
+	// navigation.addListener('beforeRemove', e => {
+	// 	e.preventDefault();
+	// 	handleBackButtonClick;
+	// });
 	React.useEffect(() => {
 		console.log('pwd', pwd);
 		console.log('prevpwd', prevpwd);
 		console.log('ddd', pwd && pwdCheck);
 		setValid(pwd && pwdCheck);
 	}, [pwd, prevpwd]);
-
+	console.log('route.parmars', route.params);
 	//현재 비밀번호, 새로운 비밀번호의 양식, 새로운 비밀번호 확인 모두 통과 시 확인 버튼이 활성화
 	React.useEffect(() => {
 		console.log('pwd', pwd);
@@ -37,6 +40,25 @@ export default PasswordReset = ({route, navigation}) => {
 		presentPwdValid && pwdCheck && pwdValid ? setConfirmed(true) : setConfirmed(false);
 	}, [presentPwdValid, pwdCheck, pwdValid]);
 
+	// function handleBackButtonClick() {
+	// 	Modal.popTwoBtn(
+	// 		'인증한 내용이 취소됩니다. 로그인 화면으로 돌아가시겠습니까?',
+	// 		'예',
+	// 		'아니오',
+	// 		() => {
+	// 			navigation.navigate('Login');
+	// 		},
+	// 		() => {
+	// 			Modal.close();
+	// 		},
+	// 	);
+	// }
+	// useEffect(() => {
+	// 	BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
+	// 	return () => {
+	// 		BackHandler.removeEventListener('hardwareBackPress', handleBackButtonClick);
+	// 	};
+	// });
 	//암호 양식
 	const passwordValidator = pwd => {
 		// 8~20자 사이의 영문 대소문자, 숫자, 특수문자(!@#$%^&*만 허용)를 포함
@@ -94,7 +116,7 @@ export default PasswordReset = ({route, navigation}) => {
 		console.log('파라미터들', route.params, pwd);
 		//changePassword 가 아닌 reset Password api가있어야된다.
 		updateUserPassword(
-			{user_phone_number: route.params, new_password: pwd},
+			{user_phone_number: route.params.user_data, new_password: pwd},
 			success => {
 				console.log('success', success);
 				Modal.popNoBtn('비밀번호 재설정이 완료되었습니다.');

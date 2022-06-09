@@ -44,6 +44,7 @@ export default ArticleMain = ({route}) => {
 		if (category && category.length > 0) {
 			params.community_free_type = category;
 		}
+		console.log('params.community_free_type ', params.community_free_type);
 		getCommunityListFreeByPageNumber(
 			params,
 			result => {
@@ -122,7 +123,7 @@ export default ArticleMain = ({route}) => {
 	const onPressPage = page => {
 		if (page != offset) {
 			setLoading(true);
-			fetchData(page);
+			fetchData(page, type);
 		}
 	};
 
@@ -154,11 +155,17 @@ export default ArticleMain = ({route}) => {
 				.map((_, i) => i + 1);
 			const perPageNum = 5;
 			let slicedPage = [];
-			// console.log('page', page);
-			// console.log('total', total);
-			// console.log('totalPage', totalPage.length);
-			// console.log('Math.floor(totalPage.length / perPageNum)', Math.floor(totalPage.length / perPageNum));
+			if (total % FREE_LIMIT === 0) {
+				totalPage.length--;
+			}
+			console.log('page', page);
+			console.log('total', total);
+			console.log('totalPage', totalPage.length);
+			console.log('Math.floor(totalPage.length / perPageNum)', Math.floor(totalPage.length / perPageNum));
 			let isLastPage = page == Math.floor(totalPage.length / perPageNum);
+			isLastPage = (page + 1) * FREE_LIMIT * perPageNum >= total;
+			console.log('isLastPage', isLastPage);
+			console.log('(page + 1) * FREE_LIMIT * perPageNum', (page + 1) * FREE_LIMIT * perPageNum);
 			if (isLastPage) {
 				for (let i = page * perPageNum + 1; i <= totalPage.length; i++) {
 					slicedPage.push(i);

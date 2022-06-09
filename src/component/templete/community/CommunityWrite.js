@@ -1,15 +1,26 @@
 import React from 'react';
 import {ScrollView, Text, TouchableOpacity, View, TextInput, Platform, StatusBar, Keyboard, StyleSheet, Image} from 'react-native';
-import {APRI10, WHITE, GRAY20, GRAY10, GRAY40, BLACK, MAINBLACK, GRAY50} from 'Root/config/color';
+import {APRI10, WHITE, GRAY20, GRAY10, GRAY40, BLACK, MAINBLACK, GRAY50, GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP, {isNotch} from 'Root/config/dp';
-import {Camera54, Location54, Location54_APRI10, Location54_Filled, NextMark, NextMark_APRI, Save54} from 'Root/component/atom/icon/index';
+import {
+	Camera54,
+	Location54,
+	Location54_APRI10,
+	Location54_Filled,
+	LocationGray,
+	LocationMarker,
+	NextMark,
+	NextMark_APRI,
+	Save54,
+} from 'Root/component/atom/icon/index';
 import Modal from 'Component/modal/Modal';
 import {useNavigation} from '@react-navigation/native';
 import {changeLocalPathToS3Path} from 'Root/api/community';
 import {RichEditor} from 'react-native-pell-rich-editor';
 import AnimalButton from 'Root/component/molecules/button/AnimalButton';
 import {WRITE_FREE_INFO, WRITE_REVIEW_INFO} from 'Root/i18n/msg';
+import MapView from 'react-native-maps';
 
 export default CommunityWrite = props => {
 	const navigation = useNavigation();
@@ -147,7 +158,7 @@ export default CommunityWrite = props => {
 							richText.current?.insertHTML(
 								`<div  ">
 								<img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick');" \n
-								  style="height:${286 * DP}px; width:${286 * DP}px; 
+								  style="height:auto; width:${694 * DP}px; 
 								border-radius:15px; margin:5px 0px 5px 0px; "/>
 								  </div>`,
 							);
@@ -320,32 +331,26 @@ export default CommunityWrite = props => {
 		);
 	};
 
+	//리뷰글쓰기 버튼 아이콘 컨테이너
 	const getReviewButtonContainer = () => {
 		return (
 			<>
 				<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
 					<View style={[style.buttonItem_review]}>
 						<Camera54 />
-						{/* <Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>사진추가</Text> */}
 					</View>
 				</TouchableOpacity>
-				{/* <TouchableOpacity activeOpacity={0.6} onPress={onPressAddVideo}>
-							<View style={[style.buttonItem]}>
-								<Camera54 />
-								<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>영상 추가</Text>
-							</View>
-						</TouchableOpacity> */}
 				<View style={{height: 38 * DP, width: 2 * DP, backgroundColor: GRAY10, alignSelf: 'center', marginHorizontal: 30 * DP}}></View>
 				<TouchableOpacity activeOpacity={0.6} onPress={moveToLocationPicker}>
 					<View style={[style.buttonItem_review, {}]}>
 						<Location54 />
-						{/* <Text style={[txt.noto24, {color: APRI10, alignSelf: 'center', marginLeft: 10 * DP}]}>위치추가</Text> */}
 					</View>
 				</TouchableOpacity>
 			</>
 		);
 	};
 
+	//자유글쓰기 버튼 아이콘 컨테이너
 	const getArticleButtonContainer = () => {
 		return (
 			<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
@@ -357,6 +362,7 @@ export default CommunityWrite = props => {
 		);
 	};
 
+	//붙여넣기 콜백 함수
 	const onPaste = paste => {
 		console.log('paste', paste);
 		if (paste == '') {
@@ -364,12 +370,63 @@ export default CommunityWrite = props => {
 		}
 	};
 
+	//키보드 종료 기능
 	const removeEditor = () => {
 		richText.current.dismissKeyboard();
 	};
 
 	const moveToLocationPicker = () => {
 		props.navigation.push('CommunityLocationPicker', {data: data, isReview: isReview});
+	};
+
+	const getMap = () => {
+		const getLocation =
+			data.community_address.road_address.address_name.includes('도로명 주소가 없는 위치입니다. ') ||
+			data.community_address.road_address.address_name == 'undefined '
+				? data.community_address.normal_address.address_name
+				: data.community_address.road_address.address_name;
+		return (
+			<View style={{height: 694 * DP, marginTop: 30 * DP}}>
+				<View style={[style.mapOutCont]}>
+					<MapView
+						style={[style.mapContainer]}
+						// provider={PROVIDER_GOOGLE}
+						customMapStyle={mapStyle2}
+						zoomEnabled
+						zoomControlEnabled
+						scrollEnabled={false}
+						toolbarEnabled={false}
+						mapType="standard"
+						region={{
+							longitude: parseFloat(data.community_address.region.longitude),
+							latitude: parseFloat(data.community_address.region.latitude),
+							latitudeDelta: 0.00012, //지도의 초기줌 수치
+							longitudeDelta: 0.00856, //지도의 초기줌 수치
+						}}>
+						{/* 현재 선택된 위도 경도의 마커 */}
+						<MapView.Marker
+							coordinate={{
+								longitude: parseFloat(data.community_address.region.longitude),
+								latitude: parseFloat(data.community_address.region.latitude),
+							}}
+							key={`${Date.now()}`} // 현재 마커의 위치가 바뀌어도 타이틀 및 description이 최신화 되지 않던 현상 발견 -> 키 값 부여
+						>
+							<View style={[{alignItems: 'center', marginBottom: 20 * DP}]}>
+								<Text style={[txt.noto22b, style.locationText]}> {getLocation}</Text>
+								<View style={[style.triangle]}></View>
+								<LocationMarker />
+							</View>
+						</MapView.Marker>
+					</MapView>
+				</View>
+				<View style={[style.location, {}]}>
+					<LocationGray />
+					<Text style={[txt.noto26, {paddingHorizontal: 12 * DP, width: 600 * DP, backgroundColor: WHITE}]} numberOfLines={2}>
+						{getLocation}
+					</Text>
+				</View>
+			</View>
+		);
 	};
 
 	return (
@@ -405,19 +462,6 @@ export default CommunityWrite = props => {
 				<View style={{flexDirection: 'row'}}>
 					<TouchableOpacity onPress={removeEditor} activeOpacity={1} style={{width: 48 * DP}}></TouchableOpacity>
 					<View style={[style.content, {}]}>
-						{data.community_address.normal_address.address_name != '' ? (
-							<View style={[style.location]}>
-								<Location54 />
-								<Text style={[txt.noto26b, {color: MAINBLACK, marginLeft: 10 * DP, width: 580 * DP}]}>
-									{data.community_address.road_address.address_name.includes('도로명 주소가 없는 위치입니다') ||
-									data.community_address.road_address.address_name == 'undefined '
-										? data.community_address.normal_address.address_name
-										: data.community_address.road_address.address_name}
-								</Text>
-							</View>
-						) : (
-							<></>
-						)}
 						{Platform.OS == 'android' ? (
 							<ScrollView>
 								<RichEditor
@@ -451,6 +495,7 @@ export default CommunityWrite = props => {
 					</View>
 					<TouchableOpacity activeOpacity={1} onPress={removeEditor} style={{width: 48 * DP}}></TouchableOpacity>
 				</View>
+				{data.community_address.normal_address.address_name != '' ? getMap() : <></>}
 				{/* 하단 버튼 컴포넌트  */}
 				{isReview ? (
 					<View style={[style.animalFilter_container]}>
@@ -484,6 +529,7 @@ export default CommunityWrite = props => {
 				) : (
 					<></>
 				)}
+
 				{isReview ? (
 					<></>
 				) : (
@@ -497,7 +543,6 @@ export default CommunityWrite = props => {
 					style={[
 						style.buttonContainer_keyboard_review,
 						{
-							// justifyContent: 'space-between',
 							bottom: Platform.OS == 'android' ? 0 : KeyboardY,
 							opacity: showBtn == false ? 0 : 1,
 							zIndex: showBtn ? 3 : -1,
@@ -640,9 +685,19 @@ const style = StyleSheet.create({
 		minHeight: 150 * DP,
 	},
 	location: {
+		width: 694 * DP,
+		position: 'absolute',
+		height: 100 * DP,
+		bottom: 0,
+		borderBottomRightRadius: 30 * DP,
+		borderBottomLeftRadius: 30 * DP,
+		paddingHorizontal: 20 * DP,
+		backgroundColor: 'white',
+		borderWidth: 2 * DP,
+		borderColor: GRAY30,
 		flexDirection: 'row',
 		alignItems: 'center',
-		paddingVertical: 15 * DP,
+		zIndex: 1,
 	},
 	animalFilter_container: {
 		width: 694 * DP,
@@ -678,4 +733,88 @@ const style = StyleSheet.create({
 		},
 		borderRadius: 20 * DP,
 	},
+	mapOutCont: {
+		height: 594 * DP,
+		zIndex: -1,
+		borderRadius: 30 * DP,
+		borderWidth: 2 * DP,
+		borderColor: GRAY30,
+		overflow: 'hidden',
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderBottomLeftRadius: 0,
+		borderBottomRightRadius: 0,
+	},
+	mapContainer: {
+		flex: 1,
+		height: 594 * DP,
+		width: 690 * DP,
+		borderRadius: 30 * DP,
+		borderBottomLeftRadius: 0,
+		borderBottomRightRadius: 0,
+	},
+	locationText: {
+		maxWidth: 520 * DP,
+		// height: 60 * DP,
+		borderRadius: 20 * DP,
+		padding: 10 * DP,
+		borderWidth: 2 * DP,
+		textAlign: 'center',
+		backgroundColor: 'white',
+	},
+	triangle: {
+		width: 0,
+		height: 0,
+		backgroundColor: 'transparent',
+		borderStyle: 'solid',
+		borderLeftWidth: 15 * DP,
+		borderRightWidth: 15 * DP,
+		borderBottomWidth: 15 * DP,
+		borderLeftColor: 'transparent',
+		borderRightColor: 'transparent',
+		borderBottomColor: 'black',
+		transform: [{rotate: '180deg'}],
+	},
+	webview: {
+		width: 694 * DP,
+		// backgroundColor: 'yellow',
+		// minHeight: 500 * DP,
+	},
+	currentLocationIcon: {
+		position: 'absolute',
+		right: 50 * DP,
+		bottom: 100 * DP,
+		width: 60 * DP,
+		height: 60 * DP,
+		// backgroundColor: 'red',
+		zIndex: 1,
+	},
 });
+
+const mapStyle2 = [
+	{
+		featureType: 'poi.business',
+		stylers: [
+			{
+				visibility: 'on',
+			},
+		],
+	},
+	{
+		featureType: 'road',
+		elementType: 'labels.icon',
+		stylers: [
+			{
+				visibility: 'on',
+			},
+		],
+	},
+	{
+		featureType: 'transit',
+		stylers: [
+			{
+				visibility: 'on',
+			},
+		],
+	},
+];

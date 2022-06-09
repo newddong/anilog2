@@ -239,7 +239,7 @@ const ReviewContent = props => {
 								zoomEnabled
 								zoomControlEnabled
 								scrollEnabled={false}
-								showsUserLocation={true}
+								// showsUserLocation={true}
 								toolbarEnabled={false}
 								mapType="standard"
 								region={{

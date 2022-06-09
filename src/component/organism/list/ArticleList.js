@@ -32,8 +32,7 @@ const ArticleList = props => {
 						borderTopColor: GRAY40,
 						borderTopWidth: index == 0 ? 0 : 2 * DP,
 						backgroundColor: props.currentDetail == item._id ? GRAY30 : WHITE,
-						width: 750 * DP,
-						paddingHorizontal: 28 * DP,
+						width: 694 * DP,
 					},
 				]}>
 				{props.selectMode ? (

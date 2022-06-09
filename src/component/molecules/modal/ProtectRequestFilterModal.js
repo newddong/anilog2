@@ -283,7 +283,9 @@ const ProtectRequestFilterModal = props => {
 							btnStyle={'border'}
 							btnLayout={{width: 160 * DP, height: 50 * DP, borderRadius: 30 * DP}}
 						/> */}
-						<Text style={[txt.noto26b, {color: APRI10}]}>초기화</Text>
+						<TouchableOpacity onPress={onPressInitialize} activeOpacity={0.8}>
+							<Text style={[txt.noto26b, {color: APRI10}]}>초기화</Text>
+						</TouchableOpacity>
 						<TouchableOpacity activeOpacity={0.6} onPress={closeModal} style={[{alignSelf: 'flex-end'}]}>
 							<Cross46 />
 						</TouchableOpacity>

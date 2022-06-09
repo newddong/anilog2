@@ -98,6 +98,7 @@ export default ArticleDetail = props => {
 	//페이지 하단에 출력될 자유게시글 목록 api(페이징 필요)
 	const getArticleList = (page, category) => {
 		try {
+			console.log('page', page);
 			let params = {
 				limit: FREE_LIMIT_DETAIL, //10
 				page: page,
@@ -422,7 +423,11 @@ export default ArticleDetail = props => {
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
 		console.log('searchInput', searchInput);
-		navigation.push('ArticleDetail', {community_object: articleList[index], searchInput: searchInput});
+		navigation.push('ArticleDetail', {
+			community_object: articleList[index],
+			searchInput: searchInput,
+			type: props.route.params.type ? props.route.params.type : '',
+		});
 	};
 
 	//댓글 모두보기 클릭
@@ -539,13 +544,21 @@ export default ArticleDetail = props => {
 			let totalPage = Array(Math.floor(total / FREE_LIMIT_DETAIL) + 1)
 				.fill()
 				.map((_, i) => i + 1);
+			if (total % FREE_LIMIT_DETAIL === 0) {
+				totalPage.length--;
+			}
 			const perPageNum = 5;
 			let slicedPage = [];
-			// console.log('page', page);
-			// console.log('total', total);
-			// console.log('totalPage', totalPage.length);
-			// console.log('Math.floor(totalPage.length / perPageNum)', Math.floor(totalPage.length / perPageNum));
+			console.log('page', page);
+			console.log('total', total);
+
+			console.log('totalPage', totalPage.length);
+			console.log('Math.floor(totalPage.length / perPageNum)', Math.floor(totalPage.length / perPageNum));
+			console.log('total % FREE_LIMIT_DETAIL === 0', total % FREE_LIMIT_DETAIL === 0);
 			let isLastPage = page == Math.floor(totalPage.length / perPageNum);
+			isLastPage = (page + 1) * FREE_LIMIT_DETAIL * perPageNum >= total;
+			console.log('(page + 1) * FREE_LIMIT_DETAIL * perPageNum', (page + 1) * FREE_LIMIT_DETAIL * perPageNum);
+			console.log('isLast ? ', isLastPage);
 			if (isLastPage) {
 				for (let i = page * perPageNum + 1; i <= totalPage.length; i++) {
 					slicedPage.push(i);
@@ -596,7 +609,6 @@ export default ArticleDetail = props => {
 						<ArticleList
 							items={articleList}
 							onPressArticle={onPressArticle} //게시글 내용 클릭
-							whenEmpty={noMoreArticle}
 							currentDetail={data._id}
 						/>
 						{paging()}

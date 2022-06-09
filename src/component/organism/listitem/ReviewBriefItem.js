@@ -162,7 +162,7 @@ const ReviewBriefItem = props => {
 						)}
 						<Text style={[txt.noto26, {color: GRAY10}]}> {count_to_K(data.community_like_count)} </Text>
 					</View>
-					<View style={[style.like, {marginLeft: 20 * DP}]}>
+					<View style={[style.like, {marginLeft: 30 * DP}]}>
 						<Comment48 />
 						<Text style={[txt.noto26, {color: GRAY10}]}> {count_to_K(data.community_comment_count)} </Text>
 					</View>

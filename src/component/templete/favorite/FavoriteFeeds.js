@@ -17,6 +17,7 @@ export default FavoriteFeeds = ({route, navigation}) => {
 	const [selectMode, setSelectMode] = React.useState(false);
 	const [data, setData] = React.useState('false');
 	const [total, setTotal] = React.useState();
+	const [init, setInit] = React.useState(true);
 	const [selectCNT, setSelectCNT] = React.useState(0);
 	const [loading, setLoading] = React.useState(false);
 
@@ -28,13 +29,13 @@ export default FavoriteFeeds = ({route, navigation}) => {
 		setLoading(true);
 		let params = {
 			userobject_id: userGlobalObject.userInfo._id,
-			limit: 10000,
-			order_value: 'next',
+			limit: THUMNAIL_LIMIT,
 		};
-		console.log('re', refresh);
-		if (refresh) {
-			params.target_object_id = data[0]._id;
-		} else if (data != 'false') {
+		if (!init) {
+			params.order_value = 'next';
+		}
+		setInit(false);
+		if (data != 'false') {
 			if (data.length - 1 != 0) {
 				params.target_object_id = data[data.length - 1]._id;
 			}

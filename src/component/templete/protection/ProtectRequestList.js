@@ -334,6 +334,7 @@ export default ProtectRequestList = ({route}) => {
 					onEndReachedThreshold={0.6} //페이징을 하는 타이밍
 					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					ListEmptyComponent={whenEmpty}
+					decelerationRate={0.7}
 					ListHeaderComponent={header()}
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
 					// removeClippedSubviews={true}

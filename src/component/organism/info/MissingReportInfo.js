@@ -1,5 +1,6 @@
 import React from 'react';
 import {Text, View, Platform, StyleSheet} from 'react-native';
+import HashText from 'Root/component/molecules/info/HashText';
 import {APRI10, GRAY50} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
@@ -50,9 +51,12 @@ const MissingReportInfo = props => {
 					<Text style={[txt.noto26b, {justifyContent: 'space-between'}]}>{props.title}</Text>
 				</View>
 				<Text style={[txt.noto26b, {}]}>: </Text>
-				<View style={{width: 462 * DP, justifyContent: 'center'}}>
+				{/* <View style={{width: 462 * DP, justifyContent: 'center'}}>
 					<Text style={[txt.noto28]}>{props.content}</Text>
-				</View>
+				</View> */}
+				<HashText style={[txt.noto28, {}]} byteOfLine={55}>
+					{props.content || '내용 없음'}
+				</HashText>
 			</View>
 		);
 	};

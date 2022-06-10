@@ -105,7 +105,7 @@ const PasswordInput = React.forwardRef((props, ref) => {
 					{input.length > 0 && (
 						<View style={{position: 'absolute', right: 50 * DP, flexDirection: 'row'}}>
 							<View style={{marginRight: 10 * DP}}>
-								{pwdSecureState ? <Eye52_GRAY20 onPress={onShowPassword} /> : <Eye52_APRI10 onPress={onShowPassword} />}
+								{pwdSecureState ? <Eye52_GRAY20 onPress={onShowPassword} /> : <Eye52_GRAY20 onPress={onShowPassword} />}
 							</View>
 						</View>
 					)}

@@ -82,11 +82,21 @@ export default PasswordChecker = props => {
 	};
 
 	const passwordMatcher = pwdcheck => {
+		// if (props?.firstValid) {
 		let isValid = props.passwordValidator(passwordValue.current);
 		let isMatch = passwordValue.current == pwdcheck;
 		props.passwordChecker(pwdcheck);
 		props.onConfirmAndChecked && props.onConfirmAndChecked(isValid && isMatch);
-		return isMatch && props?.firstValid;
+		// return isMatch && props?.firstValid;
+		//TODO! 위의 비밀번호가 invalid하면 밑의것도 unmatched로 처리
+		return isMatch;
+		// } else {
+		// 	let isValid = props.passwordValidator(passwordValue.current);
+		// 	let isMatch = passwordValue.current == pwdcheck;
+		// 	props.passwordChecker(pwdcheck);
+		// 	props.onConfirmAndChecked && props.onConfirmAndChecked(isValid && isMatch);
+		// 	return isMatch;
+		// }
 	};
 
 	// 비밀번호 변경 루트 => 현재 암호 확인
@@ -143,8 +153,8 @@ export default PasswordChecker = props => {
 					onChange={props.checkPresentPwd}
 					confirm={props.presentPwdValid}
 					alert_msg={PASSWORD_UNMATCHED}
-					confirm_msg={''}
-					// confirm_msg={PASSWORD_CHECK_MATCHED}
+					// confirm_msg={''}
+					confirm_msg={PASSWORD_CHECK_MATCHED}
 					// information={CURRENT_PWD_INFO}
 					information=""
 					validator={compare_curr_pwd}

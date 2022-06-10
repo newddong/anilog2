@@ -287,7 +287,10 @@ export default ReportDetail = props => {
 
 	const onPressReqeustPhoto = () => {
 		console.log('onPressReqeustPhoto');
-		Modal.popPhotoListViewModal(data.feed_medias.map(v => v.media_uri));
+		Modal.popPhotoListViewModal(
+			data.feed_medias.map(v => v.media_uri),
+			() => Modal.close(),
+		);
 	};
 
 	const ITEM_HEIGHT = 266 * DP;
@@ -403,7 +406,7 @@ const style = StyleSheet.create({
 	},
 	img_square_750: {
 		marginTop: 20 * DP,
-		backgroundColor: 'yellow',
+		// backgroundColor: 'yellow',
 	},
 	commentList: {
 		flex: 1,
@@ -439,7 +442,7 @@ const style = StyleSheet.create({
 		width: 694 * DP,
 		marginTop: 20 * DP,
 		// height: 260 * DP,
-		backgroundColor: 'red',
+		// backgroundColor: 'red',
 		alignItems: 'center',
 		justifyContent: 'center',
 	},

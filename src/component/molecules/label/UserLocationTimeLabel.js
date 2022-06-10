@@ -85,15 +85,15 @@ const UserLocationTimeLabel = props => {
 	};
 
 	return (
-		<TouchableOpacity onPress={onClickLabel} style={{paddingBottom: 8 * DP}}>
+		<TouchableOpacity onPress={onClickLabel}>
 			<View style={{flexDirection: 'row', alignItems: 'center'}}>
 				<>
 					{props.data.user_profile_uri != undefined ? (
-						<Image source={{uri: props.data.user_profile_uri}} style={props.isLarge ? styles.img_round_70 : styles.img_round_60} />
+						<Image source={{uri: props.data.user_profile_uri}} style={props.isLarge ? styles.img_round_64 : styles.img_round_60} />
 					) : (
-						<ProfileDefaultImg size={props.isLarge ? styles.img_round_70 : styles.img_round_60} />
+						<ProfileDefaultImg size={props.isLarge ? styles.img_round_64 : styles.img_round_60} />
 					)}
-					<View style={{position: 'absolute', top: 0}}>
+					<View style={{position: 'absolute', top: 8*DP}}>
 						{/* 팻의 상태 여부에 따른 분기 - protected, adopted, normal  */}
 						{getStatusMark()}
 					</View>
@@ -101,7 +101,7 @@ const UserLocationTimeLabel = props => {
 
 				<View style={{marginLeft: 20 * DP}}>
 					<View style={{flexDirection: 'row'}}>
-						<Text style={[props.isLarge ? txt.roboto32b : txt.roboto24, {color: isLoginUser ? APRI10 : BLACK, maxWidth: 500 * DP}]} numberOfLines={1}>
+						<Text style={[props.isLarge ? txt.noto30b : txt.roboto24, {color: isLoginUser ? APRI10 : BLACK, maxWidth: 500 * DP,lineHeight:48*DP}]} numberOfLines={1}>
 							{props.data.user_nickname || '탈퇴한 계정입니다.'}
 						</Text>
 						{isMyPet ? (
@@ -127,7 +127,7 @@ const UserLocationTimeLabel = props => {
 							<></>
 						)}
 					</View>
-					<Text style={[props.isLarge ? txt.noto26 : txt.noto24, {lineHeight: 36 * DP, color: GRAY20, maxWidth: 470 * DP}]} numberOfLines={1}>
+					<Text style={[props.isLarge ? txt.noto26 : txt.noto24, {lineHeight: 40 * DP, color: GRAY20, maxWidth: 470 * DP}]} numberOfLines={1}>
 						{/* {address?.city} {address?.district} · {props.data.feed_type == undefined ? getCommentedTime() : props.data.comment_date} */}
 						{getTime()} {props.location == undefined ? '' : getLocation()}
 					</Text>

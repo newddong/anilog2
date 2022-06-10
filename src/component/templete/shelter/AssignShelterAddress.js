@@ -15,7 +15,7 @@ export default AssignShelterAddress = props => {
 	const [confirmed, setConfirmed] = React.useState(false); //주소란이 모두 작성되었다며 통과가능
 	const [confirmName, setConfirmName] = React.useState(false); //이름 입력되었다면 통과가능
 	const [privateOrPublic, setPrivateOrPublic] = React.useState(false); //private -> 사설 public 공립
-	const [publicButton, setPublicButton] = React.useState('border'); //버튼 상태 filled
+	const [publicButton, setPublicButton] = React.useState('filled'); //버튼 상태 filled
 	const [privateButton, setPrivateButton] = React.useState('border'); //버튼 상태 filled
 
 	const [data, setData] = React.useState({

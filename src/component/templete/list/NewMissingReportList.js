@@ -32,6 +32,7 @@ const NewMissingReportList = props => {
 	return (
 		<View style={[styles.container]}>
 			<FlatList
+				contentContainerStyle={{paddingLeft: 28 * DP}}
 				data={props.data}
 				renderItem={renderItem}
 				showsHorizontalScrollIndicator={false}
@@ -40,7 +41,7 @@ const NewMissingReportList = props => {
 				//keyExtractor={props.data._id}
 				keyExtractor={(item, index) => item._id}
 				getItemLayout={(data, index) => {
-					return {length: 284 * DP, offset: 284 * DP * index, index: index};
+					return {length: 176 * DP, offset: 176 * DP * index, index: index};
 				}}
 				windowSize={2}
 			/>
@@ -55,14 +56,16 @@ const styles = StyleSheet.create({
 		// height: 396 * DP,
 		// alignItems: 'center',
 		backgroundColor: WHITE,
-		marginTop: 40 * DP,
-		height: 354 * DP,
-		marginLeft: 24 * DP,
+		marginTop: 28 * DP,
+		height: 248 * DP,
+		// paddingLeft: 28 * DP,
+		// backgroundColor: 'yellow',
+		// marginLeft: 28 * DP,
 	},
 	userContainer: {
 		width: 750 * DP,
 		// height: 94 * DP,
-		marginBottom: 40 * DP,
+		marginBottom: 30 * DP,
 	},
 });
 

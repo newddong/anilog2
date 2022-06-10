@@ -21,10 +21,10 @@ import UserNotePage from 'Templete/user/UserNotePage';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
 import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
-import SearchMainStack from '../../search_tab/SearchMainStack';
 import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailSettting';
 import SaveButtonHeader from 'Root/navigation/header/SaveButtonHeader';
 import ChangeUserProfileImage from 'Root/component/templete/user/ChangeUserProfileImage';
+import CommunityHeader from 'Root/navigation/header/CommunityHeader';
 
 const ProtectionStack = createStackNavigator();
 
@@ -110,7 +110,7 @@ export default ProtectionStackNavigation = props => {
 				component={ArticleDetail}
 				options={({route}) => ({
 					headerShown: true,
-					header: props => <SimpleHeader {...props} />,
+					header: props => <CommunityHeader {...props} />,
 					title: ' ',
 				})}
 			/>
@@ -118,7 +118,7 @@ export default ProtectionStackNavigation = props => {
 				name={'ReviewDetail'}
 				component={ReviewDetail}
 				options={({route}) => ({
-					header: props => <SimpleHeader {...props} />,
+					header: props => <CommunityHeader {...props} />,
 					title: ' ',
 				})}
 			/>

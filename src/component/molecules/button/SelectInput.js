@@ -32,7 +32,6 @@ const SelectInput = props => {
 					width: props.width * DP,
 					borderBottomColor: props.noBorder ? WHITE : APRI10,
 					// borderBottomColor: isDefault ? GRAY30 : APRI10,
-					// backgroundColor: 'yellow',
 				},
 			]}>
 			<Text
@@ -44,7 +43,6 @@ const SelectInput = props => {
 						color: isDefault ? GRAY10 : BLACK,
 						width: (props.width - 70) * DP,
 						textAlign: 'center',
-						// backgroundColor: 'red',
 					},
 				]}>
 				{props.value}

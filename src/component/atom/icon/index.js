@@ -163,18 +163,28 @@ import phoneIcon from './phoneIcon';
 import blur from './blur';
 import blur694 from './blur694';
 import report from './report';
+import report48 from './report48';
 import crop72 from './crop72';
 import like30 from './like30';
 import comment30 from './comment30';
 
 import crossNew92 from './crossNew92';
 import shelter294 from './shelter294';
-
 import blur246 from './blur246';
 import arrow48 from './arrow48';
 
+import arrow48_gray from './arrow48_gray';
+import location54 from './location54';
+import comment48 from './comment48';
+import comment30_border from './comment30_border';
+
+import paw46_border from './paw46_border';
+import setting46Border from './setting46Border';
+import circleMeatBall70 from './circleMeatBall70';
+import home48Border from './home48Border';
+
 import DP from 'Root/config/dp';
-import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK} from 'Root/config/color';
+import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK, MAINBLACK} from 'Root/config/color';
 
 const size30 = {width: 30 * DP, height: 30 * DP};
 const size32 = {width: 32 * DP, height: 32 * DP};
@@ -249,6 +259,8 @@ export const Public48 = makeSvg(public48, size48);
 export const Private48 = makeSvg(private48, size48);
 export const Like48_Border = makeSvg(like48Border, size48);
 export const Like48_Filled = makeSvg(like48Filled, size48);
+export const Like30_Border = makeSvg(like48Border, size30);
+export const Like30_Filled = makeSvg(like48Filled, size30);
 export const Comment48_Border = makeSvg(comment48Border, size48);
 export const Heart48_Filled = makeSvg(heartFilled, size48, APRI10);
 export const Heart48_Border = makeSvg(heart48_border, size48); //Added 21.10.27
@@ -266,7 +278,7 @@ export const Calendar48_Filled = makeSvg(calendar48Filled, size48);
 export const Share48_Filled = makeSvg(share48Filled, size48);
 export const Share48_Border = makeSvg(share48Border, size48);
 export const FavoriteTag48_Filled = makeSvg(favoriteTagFilled, size48, APRI10);
-export const FavoriteTag48_Border = makeSvg(favoriteTag48Border, size48);
+export const FavoriteTag48_Border = makeSvg(favoriteTag48Border, size48, MAINBLACK);
 export const Calendar48_Border = makeSvg(calendar48Border, size48);
 export const Cross48 = makeSvg(cross, size48);
 export const Person48 = makeSvg(person48, size48);
@@ -294,6 +306,7 @@ export const Eye52_APRI10 = makeSvg(eye52_apri10, size52, APRI10);
 export const Eye52_GRAY20 = makeSvg(eye52_gray20, size52, GRAY20);
 export const Cross52 = makeSvg(cross, size52);
 export const Location54_APRI10 = makeSvg(location54_apri10, size54);
+export const Location54 = makeSvg(location54, size54);
 export const Location54_GRAY30 = makeSvg(location54_gray30, size54);
 export const Location54_Filled = makeSvg(location54Filled, size54);
 export const Camera54 = makeSvg(camera54, size54);
@@ -394,7 +407,7 @@ export const NewMeatBall60Filled = makeSvg(newmeatball60Filled, size60);
 export const Filter60Border = makeSvg(filter60Border, size60);
 export const Filter60Filled = makeSvg(filter60Filled, size60);
 export const SecureIcon40 = makeSvg(secureIcon40, size40);
-export const LocationGray = makeSvg(locationGray, {width: 31 * DP, height: 37 * DP});
+export const LocationGray = makeSvg(locationGray, {width: 40 * DP, height: 40 * DP});
 export const Animal_another = makeSvg(animal_another, {width: 42 * DP, height: 30 * DP});
 export const Animal_another_off = makeSvg(animal_another_off, {width: 42 * DP, height: 30 * DP});
 export const Animal_cat = makeSvg(animal_cat, {width: 42 * DP, height: 30 * DP});
@@ -423,13 +436,21 @@ export const Blur = makeSvg(blur, {width: 226 * DP, height: 226 * DP});
 export const Blur694 = makeSvg(blur694, {width: 694 * DP, height: 694 * DP});
 export const Blur246 = makeSvg(blur246, {width: 251 * DP, height: 251 * DP});
 export const Report30 = makeSvg(report, size30);
+export const Report48 = makeSvg(report48, size48);
 export const Crop72 = makeSvg(crop72, {width: 72 * DP, height: 72 * DP});
 export const Like30 = makeSvg(like30, size30);
 export const Comment30 = makeSvg(comment30, size30);
-
+export const Comment30_Border = makeSvg(comment30_border, size30);
 export const ProfileDefaultImg4 = makeSvg(profiledefault4, {width: 294 * DP, height: 294 * DP});
 export const CrossNew92 = makeSvg(crossNew92, size92);
 export const Shelter294 = makeSvg(shelter294, {width: 294 * DP, height: 294 * DP});
-
 export const Arrow48 = makeSvg(arrow48, size48);
+
+export const Comment48 = makeSvg(comment48, size48);
+export const Arrow48_GRAY = makeSvg(arrow48_gray, size48);
+
+export const Paw46_border = makeSvg(paw46_border, size46, MAINBLACK);
+export const Setting46_border = makeSvg(setting46Border, size46, MAINBLACK);
+export const CircleMeatBall70 = makeSvg(circleMeatBall70, size70);
+export const Home48Border = makeSvg(home48Border, size48, MAINBLACK);
 

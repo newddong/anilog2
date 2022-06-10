@@ -317,12 +317,12 @@ export default ParentComment = React.memo((props, ref) => {
 						</TouchableOpacity>
 					)}
 					{/* Data - 좋아요 상태 t/f */}
-					<View style={[style.heart30]}>{likeState ? <Heart30_Filled onPress={onCLickHeart} /> : <Heart30_Border onPress={onCLickHeart} />}</View>
-					<View style={[style.likeCount]}>
+					<View style={[style.heart30, {}]}>{likeState ? <Heart30_Filled onPress={onCLickHeart} /> : <Heart30_Border onPress={onCLickHeart} />}</View>
+					<View style={[style.likeCount, {marginBottom: 6 * DP}]}>
 						{/* Data - 좋아요 숫자 */}
 						<Text style={(txt.roboto24, style.likeCountText)}>{likeCount}</Text>
 					</View>
-					<TouchableOpacity style={[style.writeComment]} onPress={onPressReplyBtn}>
+					<TouchableOpacity style={[style.writeComment, {marginBottom: 6 * DP}]} onPress={onPressReplyBtn}>
 						<Text style={[txt.noto22, style.writeCommentText]}>· 답글 쓰기</Text>
 					</TouchableOpacity>
 				</View>
@@ -384,13 +384,11 @@ const style = StyleSheet.create({
 	},
 	likeReplyButton: {
 		width: 614 * DP,
-		height: 34 * DP,
 		marginTop: 5 * DP,
 		paddingHorizontal: 5 * DP,
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'flex-end',
-		// backgroundColor: 'yellow',
 	},
 	comment_contents: {
 		width: 614 * DP,
@@ -421,8 +419,10 @@ const style = StyleSheet.create({
 		height: 34 * DP,
 	},
 	writeCommentText: {
-		color: GRAY20,
+		color: GRAY10,
 		includeFontPadding: false,
+		// backgroundColor: 'yellow',
+		marginTop: 2 * DP,
 	},
 	img_square_round: {
 		marginTop: 15 * DP,

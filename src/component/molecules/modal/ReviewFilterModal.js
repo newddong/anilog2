@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Platform, Dimensions, ScrollView, FlatList, ActivityIndicator, Animated, TouchableOpacity} from 'react-native';
-import {WHITE, GRAY10, APRI10, GRAY20, BLACK, MAINBLACK, GRAY30} from 'Root/config/color';
+import {WHITE, GRAY10, APRI10, GRAY20, BLACK, MAINBLACK, GRAY30, GRAY50, GRAY40} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Component/modal/Modal';
@@ -35,10 +35,11 @@ const ReviewFilterModal = props => {
 	const [selectedDistrict, setSelectedDistrict] = React.useState(props.data.interests_location?.district); // 시군구 선택 아이템
 	const [selectCityOpen, setSelectCityOpen] = React.useState(false);
 	const [selectDistrictOpen, setSelectDistrictOpen] = React.useState(false);
+	const isReviewWrite = props.category == 'ReviewWrite';
 
 	React.useEffect(() => {
 		//커뮤니티 후기 글쓰기에서 호출한 관심태그 모달
-		if (props.category == 'ReviewWrite' || props.category == 'Review') {
+		if (isReviewWrite || props.category == 'Review') {
 			getCommonCodeDynamicQuery(
 				{
 					common_code_c_name: 'communityobjects',
@@ -110,7 +111,7 @@ const ReviewFilterModal = props => {
 
 	//저장
 	const onPressSave = () => {
-		if (props.category == 'ReviewWrite') {
+		if (isReviewWrite) {
 			props.setState({
 				userInterestReview: userInterestReview,
 			});
@@ -425,15 +426,20 @@ const ReviewFilterModal = props => {
 			return (
 				<ScrollView style={{flex: 1}} onResponderMove={onPressBackground} ref={scrollRef}>
 					<View style={[style.review_container]}>
-						{props.category == 'ReviewWrite' ? (
+						{isReviewWrite ? (
 							<></>
 						) : (
 							<TouchableOpacity activeOpacity={1} onPress={onPressBackground} style={[style.review_location]}>
-								<ArrowDownButton onPress={onOpenCity} btnStyle={'border'} btnLayout={btn_w242} btnTitle={selectedCity || '도, 광역시'} />
+								<ArrowDownButton
+									onPress={onOpenCity}
+									btnStyle={'border'}
+									btnLayout={{width: 290 * DP, height: 68 * DP, borderRadius: 30 * DP}}
+									btnTitle={selectedCity || '도, 광역시'}
+								/>
 								<ArrowDownButton
 									onPress={onOpenDistrict}
 									btnStyle={'border'}
-									btnLayout={btn_w280}
+									btnLayout={{width: 290 * DP, height: 68 * DP, borderRadius: 30 * DP}}
 									titleFontStyle={22}
 									btnTitle={selectedDistrict || '시군구'}
 								/>
@@ -454,32 +460,31 @@ const ReviewFilterModal = props => {
 	return (
 		<View style={style.background}>
 			<View style={[style.popUpWindow, {}]}>
-				<TouchableOpacity onPress={onPressBackground} activeOpacity={1} style={[style.header]}>
-					<TouchableOpacity onPress={onClose} style={[style.crossMark]}>
-						<Cross24_Filled />
-					</TouchableOpacity>
-					{props.category == 'Review' ? (
-						<View style={{width: 320 * DP, flexDirection: 'row', justifyContent: 'space-between'}}>
+				<TouchableOpacity onPress={onPressBackground} activeOpacity={1} style={[isReviewWrite ? style.header_write : style.header]}>
+					{isReviewWrite ? (
+						<></>
+					) : (
+						<View style={{marginTop: 10 * DP}}>
 							<AniButton
 								btnTitle={'필터 초기화'}
 								onPress={onPressInitialize}
 								btnStyle={'border'}
 								btnLayout={{width: 160 * DP, height: 50 * DP, borderRadius: 30 * DP}}
 							/>
-							<AniButton
-								onPress={onPressSave}
-								btnTitle={'검색'}
-								btnStyle={'filled'}
-								btnLayout={{width: 140 * DP, height: 50 * DP, borderRadius: 30 * DP}}
-							/>
 						</View>
-					) : (
-						<TouchableOpacity onPress={onPressSave} style={[style.saveText]}>
-							<Text style={[txt.noto36b, {color: MAINBLACK}]}>저장</Text>
-						</TouchableOpacity>
 					)}
+					<TouchableOpacity onPress={onClose} style={[style.crossMark, {alignItems: isReviewWrite ? 'flex-start' : 'flex-end'}]}>
+						<Cross24_Filled />
+					</TouchableOpacity>
 				</TouchableOpacity>
 				{getReviewCategory()}
+				{communityInterests == '' ? (
+					<></>
+				) : (
+					<TouchableOpacity onPress={onPressSave} style={[style.saveText]}>
+						<Text style={[txt.noto24, {color: MAINBLACK}]}>완료</Text>
+					</TouchableOpacity>
+				)}
 			</View>
 			{showBtnModal ? (
 				<View style={[style.btnModalContainer, style.shadow]}>
@@ -495,13 +500,7 @@ const ReviewFilterModal = props => {
 				<></>
 			)}
 			{/* 하단 스크롤뷰 영역 - 광역시 도 */}
-			<Animated.View
-				style={[
-					style.downScrollSelectContainer,
-					{
-						height: cityInterpolatedHeight,
-					},
-				]}>
+			<Animated.View style={[style.downScrollSelectContainer, {height: cityInterpolatedHeight}]}>
 				<View style={[style.modal_header]}>
 					<Text onPress={() => setSelectCityOpen(false)} style={[txt.noto30b, {paddingVertical: 22 * DP}]}>
 						취소
@@ -588,10 +587,10 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 	},
 	popUpWindow: {
-		width: 582 * DP,
-		height: 1176 * DP,
-		paddingTop: 30 * DP,
-		borderRadius: 50 * DP,
+		width: 694 * DP,
+		height: 1210 * DP,
+		paddingTop: 20 * DP,
+		borderRadius: 30 * DP,
 		backgroundColor: WHITE,
 	},
 	shadow: {
@@ -605,24 +604,43 @@ const style = StyleSheet.create({
 		elevation: 2,
 	},
 	header: {
-		width: 502 * DP,
-		height: 56 * DP,
-		marginBottom: 20 * DP,
+		width: 606 * DP,
+		paddingBottom: 20 * DP,
+		// marginRight: 20 * DP,
+		// marginBottom: 20 * DP,
 		flexDirection: 'row',
 		alignSelf: 'center',
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		// backgroundColor: 'yellow',
 	},
+	header_write: {
+		width: 52 * DP,
+		height: 52 * DP,
+		marginRight: 20 * DP,
+		// marginBottom: 20 * DP,
+		flexDirection: 'row',
+		alignSelf: 'flex-end',
+		alignItems: 'flex-end',
+		justifyContent: 'space-between',
+		// backgroundColor: 'yellow',
+	},
 	crossMark: {
-		width: 90 * DP,
-		height: 90 * DP,
+		width: 104 * DP,
+		height: 52 * DP,
 		justifyContent: 'center',
 	},
 	saveText: {
-		// width: 66 * DP,
-
-		height: 56 * DP,
+		width: 226 * DP,
+		height: 70 * DP,
+		borderWidth: 2 * DP,
+		borderColor: GRAY40,
+		borderRadius: 30 * DP,
+		marginTop: 10 * DP,
+		marginBottom: 40 * DP,
+		alignSelf: 'center',
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
 	content: {
 		// width: 582 * DP,
@@ -642,22 +660,22 @@ const style = StyleSheet.create({
 		justifyContent: 'center',
 		height: 68 * DP,
 		paddingHorizontal: 12 * DP,
-		minWidth: 126 * DP,
-		borderRadius: 25 * DP,
+		minWidth: 114 * DP,
+		borderRadius: 30 * DP,
 		borderWidth: 2 * DP,
 		borderColor: GRAY20,
-		marginLeft: 20 * DP,
+		marginLeft: 10 * DP,
 		marginTop: 20 * DP,
 	},
 	contentText_userInterest: {
 		alignItems: 'center',
 		justifyContent: 'center',
 		paddingHorizontal: 12 * DP,
-		backgroundColor: APRI10,
+		backgroundColor: MAINBLACK,
 		height: 68 * DP,
-		borderRadius: 25 * DP,
-		minWidth: 126 * DP,
-		marginLeft: 20 * DP,
+		borderRadius: 30 * DP,
+		minWidth: 114 * DP,
+		marginLeft: 10 * DP,
 		marginTop: 20 * DP,
 	},
 	btnModalContainer: {
@@ -685,10 +703,12 @@ const style = StyleSheet.create({
 	},
 	review_location: {
 		flexDirection: 'row',
-		width: 530 * DP,
+		width: 654 * DP,
 		paddingVertical: 30 * DP,
+		paddingHorizontal: 20 * DP,
 		alignSelf: 'center',
 		justifyContent: 'space-between',
+		// backgroundColor: 'yellow',
 	},
 	review_category_item: {
 		flexDirection: 'row',

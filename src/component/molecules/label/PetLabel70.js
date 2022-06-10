@@ -14,7 +14,7 @@ import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, ProfileDefaultImg} from 'Atom/i
  */
 const PetLabel70 = props => {
 	const getStatusMark = () => {
-		console.log('props', props);
+		// console.log('props', props);
 		switch (props.data.pet_status) {
 			case 'protect':
 				return <Paw30_YELL20 />;

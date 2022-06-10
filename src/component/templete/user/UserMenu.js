@@ -70,7 +70,7 @@ export default UserMenu = props => {
 			navigation.navigate('Login');
 		}
 	}, []);
-	console.log('numberOF lines', numberOfLines);
+	// console.log('numberOF lines', numberOfLines);
 	React.useEffect(() => {
 		getUserProfile(
 			{

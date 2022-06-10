@@ -34,14 +34,15 @@ export default ProtectRequest = React.memo(props => {
 	const [data, setData] = React.useState(props.data);
 	const {
 		_id,
-		feed_type,
 		protect_request_status,
 		protect_request_photos_uri,
 		protect_animal_sex,
-		is_favorite,
 		notice_day,
+		is_favorite,
 		protect_request_date,
-		protect_request_writer_id, // {user_nickname,_id }
+		protect_request_notice_sdt,
+		protect_request_notice_edt,
+		protect_request_writer_id, // {user_nickname, _id }
 		protect_animal_species,
 		protect_animal_species_detail,
 		protect_animal_id, //protect_animal_rescue_location
@@ -79,14 +80,6 @@ export default ProtectRequest = React.memo(props => {
 			return date;
 		}
 		return date;
-	};
-
-	const checkIsMyPost = () => {
-		let result = false;
-		if (data.protect_request_writer_id && data.protect_request_writer_id) {
-			result = data.protect_request_writer_id._id == userGlobalObject.userInfo._id;
-		}
-		return result;
 	};
 
 	const contents = () => {
@@ -135,13 +128,11 @@ export default ProtectRequest = React.memo(props => {
 								onLabelClick={(status, id) => props.onClickLabel(status, id)}
 							/>
 						</View>
-						<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.6} onPress={() => props.onClickLabel(data.feed_type, data._id)}>
+						<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.6} onPress={() => props.onClickLabel()}>
 							<View>{contents()}</View>
 						</TouchableOpacity>
 						<View style={[style.detail_upper_tag]}>
-							{!props.showFavorite || checkIsMyPost() ? (
-								<></>
-							) : data.is_favorite ? (
+							{data.is_favorite ? (
 								<FavoriteTag48_Filled onPress={() => onPressFavoriteTag(false)} />
 							) : (
 								<FavoriteTag48_Border onPress={() => onPressFavoriteTag(true)} />
@@ -206,6 +197,7 @@ const style = StyleSheet.create({
 	},
 	detail_upper_tag: {
 		width: 48 * DP,
+		height: 48 * DP,
 	},
 	detail_lowerMenu: {
 		width: 410 * DP,

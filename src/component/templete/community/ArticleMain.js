@@ -184,7 +184,7 @@ export default ArticleMain = ({route}) => {
 							</TouchableOpacity>
 						)}
 					</View>
-					<View style={{width: 500 * DP, flexDirection: 'row'}}>
+					<View style={{width: 500 * DP, flexDirection: 'row', justifyContent: 'center'}}>
 						{slicedPage.map((v, i) => {
 							return (
 								<TouchableOpacity activeOpacity={0.8} onPress={() => onPressPage(v)} style={{width: 100 * DP, alignItems: 'center'}} key={i}>
@@ -194,7 +194,7 @@ export default ArticleMain = ({route}) => {
 						})}
 					</View>
 					{isLastPage ? (
-						<></>
+						<Arrow48_GRAY />
 					) : (
 						<TouchableOpacity onPress={() => setPage(page + 1)} style={{padding: 14 * DP, marginTop: 2 * DP}}>
 							<Arrow48 />

@@ -458,7 +458,7 @@ export default LocationPicker = ({route}) => {
 					<InputWithSearchIcon
 						onClear={onClear}
 						placeholder={'검색어를 입력하세요.'}
-						width={654}
+						width={694}
 						onChange={onChangeSearchText}
 						onClear={onClear}
 						value={keyword}

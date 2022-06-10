@@ -18,7 +18,7 @@ export default MyHeader = ({navigation, route, options, back}) => {
 		getUserInfoById(
 			{userobject_id: userGlobalObj.userInfo._id},
 			user => {
-				console.log('User', user);
+				// console.log('User', user);
 				let avatarList = user.msg?.user_my_pets;
 				// if (props?.isWriteMode) {
 				// 	const filter = avatarList.filter(e => e.pet_status != 'adopt'); //입양 동물은 글을 못씀
@@ -64,7 +64,7 @@ export default MyHeader = ({navigation, route, options, back}) => {
 	};
 
 	const renderItem = (item, index) => {
-		console.log('items', item);
+		// console.log('items', item);
 		return (
 			<View key={index} style={[style.listItem, {backgroundColor: index == selectedItem ? APRI10 : WHITE}]}>
 				<PetLabel70

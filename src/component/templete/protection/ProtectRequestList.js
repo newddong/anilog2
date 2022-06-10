@@ -118,13 +118,9 @@ export default ProtectRequestList = ({route}) => {
 					list = res;
 				} else {
 					// 페이징 호출 분기
-					let temp = [...data];
-					res.map((v, i) => {
-						temp.push(v);
-					});
-					console.log('temp lenth', temp.length);
-					list = temp;
+					list = [...data, ...res];
 				}
+				console.log('보호요청 총 length', list.length);
 				setData(list);
 				protect_obj.protect = list;
 				setOffset(offset + 1); //데이터를 추가한 뒤 페이지 ++
@@ -178,7 +174,7 @@ export default ProtectRequestList = ({route}) => {
 	};
 
 	//보호요청게시글 클릭
-	const onClickLabel = (status, id, item) => {
+	const onClickLabel = item => {
 		let sexValue = '';
 		switch (item.protect_animal_sex) {
 			case 'male':
@@ -217,7 +213,7 @@ export default ProtectRequestList = ({route}) => {
 				console.log('result / favoriteEtc / ProtectRequestList : ', result.msg.favoriteEtc);
 				let prevData = [...getData()]; //
 				prevData[index].is_favorite = bool;
-				setData(prevData);
+				// setData(prevData); //useState로 View를 다시 그리면 UI Thread가 멈추는 현상 발견 임시 주석 처리
 			},
 			err => {
 				console.log('err / favoriteEtc / PRotectRequestList : ', err);
@@ -263,7 +259,7 @@ export default ProtectRequestList = ({route}) => {
 				<>
 					<ProtectRequest
 						data={getData()[this.props.index]}
-						onClickLabel={(status, id) => onClickLabel(status, id, this.props.item)}
+						onClickLabel={(status, id) => onClickLabel(this.props.item)}
 						onFavoriteTag={e => onOff_FavoriteTag(e, this.props.index)}
 						onPressProtectRequest={() => onPressProtectRequest(this.props.item)}
 					/>

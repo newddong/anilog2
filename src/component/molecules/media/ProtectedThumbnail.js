@@ -194,7 +194,7 @@ const style = StyleSheet.create({
 	rainbow: {
 		position: 'absolute',
 		backgroundColor: BLACK,
-		opacity: 0.8,
+		opacity: 0.6,
 		zIndex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',

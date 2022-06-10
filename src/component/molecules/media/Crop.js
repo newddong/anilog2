@@ -248,7 +248,8 @@ const Crop = prop => {
 				initPositionY = 0;
 			}
 		}
-
+		imgLayout.width = newImgWidth;
+		imgLayout.height = newImgHeight;
 		panPrev.x = initPositionX;
 		panPrev.y = initPositionY;
 		pan.setValue(panPrev);
@@ -307,7 +308,7 @@ const Crop = prop => {
     }
 
 	return (
-        <View style={{width: WIDTH, height: HEIGHT, backgroundColor: '#fff'}}>
+        <View style={{width: WIDTH, height: HEIGHT, backgroundColor: 'black'}}>
             <Animated.View style={{width: imgDimension.width, height: imgDimension.height,alignItems:'center',backgroundColor:prop.backgroundColor,transform: [{translateX: pan.x}, {translateY: pan.y}, {scale: scale}]}} {...panResponder.panHandlers}>
                 {imgUri&&<Img
                     style={{ width: imgDimension.width, height: imgDimension.height}}

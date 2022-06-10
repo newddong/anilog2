@@ -1,9 +1,9 @@
 import React from 'react';
-import {Text, View, Platform, StyleSheet} from 'react-native';
+import {Text, View, Platform, StyleSheet, TouchableOpacity} from 'react-native';
 import {organism_style, feedContent_style} from 'Organism/style_organism';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
 import {useNavigation, useRoute} from '@react-navigation/core';
-import {FavoriteTag48_Border, FavoriteTag48_Filled, Meatball50_GRAY20_Horizontal, Share48_Filled} from 'Atom/icon';
+import {FavoriteTag48_Border, FavoriteTag48_Filled, Meatball50_GRAY20_Horizontal, Share48_Filled, Comment48_Border, Like48_Border, Like48_Filled, Blur694} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
 import {Arrow_Down_GRAY20} from 'Atom/icon';
 import DP from 'Root/config/dp';
@@ -29,7 +29,9 @@ import {deleteFeed, favoriteFeed, getFavoriteFeedListByUserId} from 'Root/api/fe
 import userGlobalObject from 'Root/config/userGlobalObject';
 import MissingReportInfo from 'Organism/info/MissingReportInfo';
 import {createReport} from 'Root/api/report';
-import {getStringLength, getLinesOfString, count_to_K} from 'Root/util/stringutil';
+import {getStringLength, getLinesOfString, count_to_K, getByteSubtring, getByteCharAt, findByteIndex, findByteLastIndex, findNearSpace, splitStr,extractTags} from 'Root/util/stringutil';
+import FeedMedia from 'Molecules/media/FeedMedia';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default FeedContent = props => {
 	const {
@@ -68,9 +70,6 @@ export default FeedContent = props => {
 	const navigation = useNavigation();
 	const route = useRoute();
 	const [btnStatus, setBtnStatus] = React.useState(false); //더보기 Arrow방향 false면 아래
-	const [textLayout, setTextLayout] = React.useState({height: 0 * DP, width: 0}); // 초기의 Layout
-	const [reportLayout, setReportLayout] = React.useState({height: 0, width: 0});
-	const [labelLayout, setlabelLayout] = React.useState({height: 0, width: 0});
 	const [show, setShow] = React.useState(false);
 	const [send, setSend] = React.useState();
 	const feed_writer = props.data.feed_avatar_id ? props.data.feed_avatar_id : props.data.feed_writer_id;
@@ -89,30 +88,6 @@ export default FeedContent = props => {
 		// }
 	}, [props.data]);
 
-	//FeedText가 담긴 View 의 onLayout
-	const onLayoutText = event => {
-		const {width, height} = event.nativeEvent.layout;
-		setTextLayout({width, height});
-	};
-
-	//제보게시물
-	const onLayoutReport = event => {
-		const {width, height} = event.nativeEvent.layout;
-		setReportLayout({width, height});
-	};
-
-	const onLayoutLabel = event => {
-		const {width, height} = event.nativeEvent.layout;
-		setlabelLayout({width, height});
-	};
-
-	React.useEffect(() => {
-		if (textLayout.height + reportLayout.height + labelLayout.height + 116 * DP > 265 * DP) {
-			setBtnStatus(true);
-		} else {
-			setBtnStatus(false);
-		}
-	}, [textLayout]);
 
 	//피드 미트볼 메뉴 - 신고 클릭
 	const onPressReport = context => {
@@ -504,7 +479,6 @@ export default FeedContent = props => {
 	const isCommentList = route.name == 'FeedCommentList';
 	const isMissingReportType = feed_content == 'missing' || feed_content == 'report';
 
-	const [isShowBtn, setIsShowBtn] = React.useState(true);
 	const [numLine, setNumLine] = React.useState(isMissingReportRoute ? 0 : 2);
 
 	const showMore = () => {
@@ -521,6 +495,7 @@ export default FeedContent = props => {
 			props.onPressFavorite(bool);
 		}
 	};
+	const lines = getLinesOfString(feed_content, 55);
 
 	const layoutStyle = () => {
 		if (isMissingReportRoute || show) {
@@ -530,17 +505,38 @@ export default FeedContent = props => {
 		} else if (route.name == 'AlarmCommentList') {
 			return {};
 		} else {
-			let lines = getLinesOfString(feed_content, Platform.OS == 'android' ? 48 : 50);
 			return {
-				height: 120 * DP + (lines > 3 ? 3 : lines) * 54 * DP,
+				height: 914 * DP + (lines > 2 ? 2 : lines) * 44 * DP,
 			};
 		}
 	};
 
+	const moveToCommentList = async () => {
+		console.log('move to comment')
+		if (userGlobalObject.userInfo.isPreviewMode && feed_comment_count == 0) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('Login');
+			});
+		} else {
+			AsyncStorage.getItem('sid', (err, res) => {
+				console.log('res', res);
+				if (res == null && feed_comment_count == 0) {
+					Modal.popNoBtn('로그인이 필요합니다.');
+					setTimeout(() => {
+						Modal.close();
+					}, 1500);
+				} else {
+					navigation.push('FeedCommentList', {feedobject: props.data});
+					// console.log('move to FeedCommnetList', props.data);
+				}
+			});
+		}
+	};
+
 	return (
-		<View style={[layoutStyle()]} removeClippedSubviews onLayout={props.onLayout}>
+		<View style={[layoutStyle()]}>
 			<View style={[style.feedContent]}>
-				<View style={[style.userLocationLabel_view_feedContent]} onLayout={onLayoutLabel}>
+				<View style={[style.userLocationLabel_view_feedContent]}>
 					<View style={[style.userLocationLabel_feedContent]}>
 						{send ? (
 							<UserLocationTimeLabel
@@ -553,7 +549,6 @@ export default FeedContent = props => {
 						) : (
 							<UserLocationTimeLabel empty={true} time={feed_date} isLarge location={feed_location} />
 						)}
-
 						<View style={{flexDirection: 'row', alignItems: 'center'}}>
 							{!isMissingReportRoute ? (
 								<View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -577,42 +572,14 @@ export default FeedContent = props => {
 									</View>
 
 									{props.data.feed_writer_id ? (
-										<View style={[organism_style.meatball, feedContent_style.meatball]}>
+										<View style={[organism_style.meatball]}>
 											<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
 										</View>
 									) : (
 										<></>
 									)}
 								</View>
-							) : //실종 및 제보게시글의 유저 라벨 우측에 출력되는 즐겨찾기아이콘, 내 게시글일 경우 미출력
-							props.data.feed_writer_id._id == userGlobalObject.userInfo._id ? (
-								<></>
-							) : (
-								<View style={[organism_style.button_view_feedContent]}>
-									{/* <View style={[organism_style.favoriteTag_view_feedContent, {}]}>
-										<View style={[organism_style.favoriteTag_feedContent]}>
-											{props.data.feed_writer_id.is_favorite ? (
-												<FavoriteTag48_Filled onPress={() => onPressFavoriteWriter(false)} />
-											) : (
-												<FavoriteTag48_Border onPress={() => onPressFavoriteWriter(true)} />
-											)}
-										</View>
-										<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
-											<Text style={[txt.roboto24, {color: GRAY10}]}>{count_to_K(props.data.feed_writer_id.user_favorite_count)}</Text>
-										</View>
-									</View> */}
-									{/* <Meatball50_GRAY20_Horizontal onPress={onClickMeatball} /> */}
-
-									{/* <View style={[organism_style.share48_view_feedContent]}>
-										<View style={[organism_style.share48_feedContent]}>
-											<Share48_Filled />
-										</View>
-										<View style={[organism_style.share_feedContent, feedContent_style.share]}>
-											<Text style={[txt.noto24, {color: GRAY10}]}>{SHARE}</Text>
-										</View>
-									</View> */}
-								</View>
-							)}
+							) : false}
 						</View>
 					</View>
 
@@ -626,32 +593,57 @@ export default FeedContent = props => {
 					!route.name.includes('HashFeedList') &&
 					!route.name.includes('TagMeFeedList') &&
 					(feed_type == 'report' || feed_type == 'missing') && (
-						<View style={[style.missingReportInfo]} onLayout={onLayoutReport}>
+						<View style={[style.missingReportInfo]}>
 							<MissingReportInfo data={props.data} />
 						</View>
 					)}
-				{(route.name.includes('FeedList') || feed_type == 'missing' || route.name.includes('FeedCommentList') || show) && (
-					<View style={[organism_style.content_feedContent, feedContent_style.content_Top10, {width: 694 * DP}]}>
-						<HashText style={[txt.noto28]} numberOfLines={numLine} ellipsizeMode={'tail'}>
+				<View style={[style.feedMedia_feed]}>
+					<FeedMedia data={props.data} />
+				</View>
+
+				<View style={[feed_templete_style.likeCommentButtons_view]}>
+					<View style={[feed_templete_style.likeCommentInfo_view_feed]}>
+						<TouchableWithoutFeedback onPress={props.toggleFeedLike}>
+							<View style={feed_templete_style.likeButtonWrapper}>
+								<View style={[feed_templete_style.like48]}>{props.isLike ? <Like48_Filled /> : <Like48_Border />}</View>
+								<View style={[feed_templete_style.like_count_feed]}>
+									<Text style={[txt.roboto24,{color:GRAY10}]}>{props.likeCount}</Text>
+								</View>
+							</View>
+						</TouchableWithoutFeedback>
+						<TouchableWithoutFeedback onPress={moveToCommentList}>
+							<View style={feed_templete_style.commentButtonWrapper}>
+								<View style={organism_style.like48}>
+									<Comment48_Border />
+								</View>
+								<View style={[organism_style.comment_count_feed]}>
+									<Text style={[txt.roboto24,{color:GRAY10,marginLeft:-15*DP}]}>{feed_comment_count}</Text>
+								</View>
+							</View>
+						</TouchableWithoutFeedback>
+					</View>
+					<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
+						<View style={[organism_style.favoriteTag_feedContent]}>
+							{props.data.feed_writer_id.is_favorite ? (
+								<FavoriteTag48_Filled onPress={() => onPressFavoriteWriter(false)} />
+							) : (
+								<FavoriteTag48_Border onPress={() => onPressFavoriteWriter(true)} />
+							)}
+						</View>
+						{false&&<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
+							<Text style={[txt.roboto24, {color: GRAY10}]}>{count_to_K(props.data.feed_writer_id.user_favorite_count)}</Text>
+						</View>}
+					</View>
+				</View>
+
+				{(route.name.includes('FeedList') || feed_type == 'missing' || route.name.includes('FeedCommentList')) && (
+					<View style={[organism_style.content_feedContent, /*feedContent_style.content_Top10,*/ {width: 750 * DP,paddingHorizontal:28*DP}]}>
+						<HashText style={[txt.noto28]} byteOfLine={55} onMoreView={()=>{setShow(true)}}>
 							{feed_content}
 						</HashText>
 					</View>
 				)}
 			</View>
-			{!isMissingReportRoute && isShowBtn && !show && (
-				<View style={[style.time_view_feedContent]}>
-					<TouchableWithoutFeedback onPress={showMore}>
-						<View style={[style.addMore_view_feedContent]}>
-							<View style={[style.addMore_feedContent]}>
-								<Text style={[txt.noto22, {color: GRAY10}]}>더보기</Text>
-							</View>
-							<View style={[organism_style.braket]}>
-								<Arrow_Down_GRAY20 />
-							</View>
-						</View>
-					</TouchableWithoutFeedback>
-				</View>
-			)}
 		</View>
 	);
 };
@@ -670,11 +662,12 @@ const style = StyleSheet.create({
 	feedContent: {
 		flexDirection: 'column',
 		width: 750 * DP,
+		// height:1200*DP,
 		alignItems: 'center',
-		paddingTop: 20 * DP,
-		backgroundColor: WHITE,
+		paddingTop: 40 * DP,
+		// backgroundColor: WHITE,
 		paddingBottom: 15 * DP,
-		paddingHorizontal: 48 * DP,
+		paddingHorizontal: 28 * DP,
 		overflow: 'hidden',
 	},
 	userLocationLabel_view_feedContent: {
@@ -686,7 +679,7 @@ const style = StyleSheet.create({
 		flexDirection: 'row',
 		width: 694 * DP, //유저아이디 최우측 미트볼 아이콘 추가를 위한 수정
 		justifyContent: 'space-between',
-		alignItems: 'center',
+		alignItems: 'flex-start',
 	},
 	missingReportInfo: {
 		marginTop: 20 * DP,
@@ -695,11 +688,14 @@ const style = StyleSheet.create({
 		flexDirection: 'row',
 		width: '100%',
 		height: 48 * DP,
-		paddingHorizontal: 48 * DP,
+		marginTop:-48*DP,
+		paddingHorizontal: 28 * DP,
 		alignItems: 'center',
 		justifyContent: 'flex-end',
 		backgroundColor: '#fff1',
+		// backgroundColor:'red',
 		bottom: 0,
+		// position:'absolute'
 	},
 	addMore_view_feedContent: {
 		flexDirection: 'row',
@@ -713,5 +709,139 @@ const style = StyleSheet.create({
 		height: 36 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
+	},
+	feedMedia_feed: {
+		width: 750 * DP,
+		// height: 750 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+});
+
+const feed_templete_style = StyleSheet.create({
+	feed: {
+		alignItems: 'center',
+		width: 750 * DP,
+	},
+	feedMedia_feed: {
+		width: 750 * DP,
+		height: 750 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	comment_feed_view: {
+		width: 750 * DP,
+		// height: 200 * DP,
+		alignItems: 'center',
+	},
+	likeButtonWrapper: {
+		flexDirection: 'row',
+		height: 120*DP,
+		width:104*DP,
+		//터치 영역 확보
+		alignItems: 'center',
+		
+	},
+	likeCommentButtons_view: {
+		flexDirection: 'row',
+		width: 750 * DP,
+		paddingHorizontal:28*DP,
+		height: 52 * DP,
+		alignItems: 'center',
+		justifyContent: 'space-between',
+	},
+	likeCommentInfo_view_feed: {
+		flexDirection: 'row',
+		// width: 256 * DP,
+		height: 72 * DP,
+		alignItems: 'center',
+		// justifyContent: 'center',
+	},
+	recentComment_view: {
+		flexDirection: 'row',
+		width: 654 * DP,
+		height: 128 * DP,
+		justifyContent: 'space-between',
+		paddingVertical: 24 * DP,
+	},
+	like48: {
+		width: 48 * DP,
+		height: 48 * DP,
+		// alignItems: 'center',
+		// justifyContent: 'center',
+	},
+	like_count_view_feed: {
+		width: 56 * DP,
+		// alignItems: 'center',
+		justifyContent: 'center',
+	},
+	like_count_feed: {
+		width: 56 * DP,
+		height: 30 * DP,
+		// alignItems: 'center',
+		// justifyContent: 'center',
+	},
+	comment_count_view_feed: {
+		width: 56 * DP,
+		height: 30 * DP,
+		// alignItems: 'center',
+		// justifyContent: 'center',
+	},
+	commentButtonWrapper:{
+		flexDirection:'row',
+		width:104*DP,
+		height:120*DP,
+		alignItems:'center'
+	},
+	comment_count_feed: {
+		width: 56 * DP,
+		height: 30 * DP,
+		// backgroundColor: '#F8DDDD',
+	},
+	writerID_feed_view: {
+		// width: 116 * DP,
+		// height: 76 * DP,
+		height: 114 * DP,
+		// backgroundColor: '#FF00FF',
+	},
+	writerID_feed: {
+		// width: 96 * DP,
+		height: 36 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		// backgroundColor: '#AAE8B6',
+	},
+	commentText_view: {
+		width: 538 * DP,
+		height: 76 * DP,
+		marginLeft: 20 * DP,
+		// backgroundColor: '#AAE8B6',
+	},
+	allCommentCount: {
+		width: 360 * DP,
+		height: 44 * DP,
+		alignItems: 'flex-end',
+		// backgroundColor: '#F8DDDD',
+		// backgroundColor:'purple'
+	},
+});
+
+const feed_style = StyleSheet.create({
+	like_count: {
+		marginLeft: 12 * DP,
+		marginTop: 9 * DP,
+	},
+	recentComment_view: {
+		marginVertical: 24 * DP,
+	},
+	likeCommentButtons_view: {
+		marginTop: 24 * DP,
+	},
+	comment_count: {
+		marginLeft: 12 * DP,
+	},
+	recent_comment_user: {
+		height: 38 * DP, //특정 디바이스에서 Feed Recent Comment User Nickname 텍스트가 잘리던 현상 수정
+		// backgroundColor: 'red',
 	},
 });

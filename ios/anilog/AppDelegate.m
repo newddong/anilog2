@@ -13,6 +13,10 @@
 #import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
 // #import <GoogleMaps/GoogleMaps.h> //22.04.02 구글 맵스 활용을 위한 추가
 
+@import SDWebImage;
+#import <SDWebImagePhotosPlugin/SDWebImagePhotosPlugin.h>
+#import <SDWebImagePhotosPlugin/SDImagePhotosLoader.h>
+
 static void InitializeFlipper(UIApplication *application) {
   FlipperClient *client = [FlipperClient sharedClient];
   SKDescriptorMapper *layoutDescriptorMapper = [[SKDescriptorMapper alloc] initWithDefaults];
@@ -32,7 +36,7 @@ static void InitializeFlipper(UIApplication *application) {
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
 #endif
-
+  
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"anilog"
@@ -49,6 +53,11 @@ static void InitializeFlipper(UIApplication *application) {
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  
+//  [SDImageLoadersManager.sharedManager addLoader:SDImagePhotosLoader.sharedLoader];
+//  SDImagePhotosLoader.sharedLoader.imageRequestOptions.sd_targetSize = CGSizeMake(120, 120);
+//  SDWebImageManager.defaultImageLoader = SDImageLoadersManager.sharedManager;
+
   return YES;
 }
 

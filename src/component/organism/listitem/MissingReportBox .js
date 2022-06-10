@@ -1,9 +1,10 @@
 import React from 'react';
 import {FlatList, ScrollView, Text, View, StyleSheet, SafeAreaView, Image, Platform} from 'react-native';
 import {txt} from 'Root/config/textstyle';
-import {BLACK, GRAY10, GRAY40, WHITE} from 'Root/config/color';
+import {BLACK, GRAY10, GRAY40, MAINBLACK, WHITE} from 'Root/config/color';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
+import moment from 'moment';
 /**
  * 알람 리스트 출력 컴포넌트
  * @param {object} props - Props Object
@@ -17,10 +18,11 @@ const MissingReportBox = props => {
 	// console.log('propsopsdo', props);
 	const [objCity, setObjCity] = React.useState('');
 	const navigation = useNavigation();
+	// console.log(moment(props.data?.missing_animal_date).format('YY.MM.DD'));
 	React.useEffect(() => {
 		try {
 			let objCitys = JSON.parse(`${props.data?.missing_animal_lost_location}`);
-			setObjCity(`${objCitys.city} ${objCitys.district}`);
+			setObjCity(`${objCitys.district}`);
 		} catch (err) {
 			// console.log('err', err);
 		}
@@ -50,27 +52,27 @@ const MissingReportBox = props => {
 		}
 	};
 	return (
-		<View style={[styles.content, styles.shadow]}>
+		<View style={[styles.content]}>
 			<TouchableOpacity onPress={onLabelClick}>
 				{props.data.feed_type == 'missing' ? (
 					<View>
 						<View style={[styles.absolute_missing]}>
-							<Text style={[txt.noto28, {color: '#FFFFFF'}, {textAlign: 'center'}, {margin: 6 * DP}]}>실종</Text>
+							<Text style={[txt.noto20, {color: '#FFFFFF'}, {textAlign: 'center'}, {margin: 6 * DP}]}>실종</Text>
 						</View>
 						<Image
-							style={[styles.img_210]}
+							style={[styles.img_156]}
 							source={{
 								uri: props.data.feed_thumbnail,
 							}}
 						/>
 						<View style={[styles.date_txt]}>
-							<Text style={[txt.noto28, {textAlign: 'center'}, {color: 'black'}, {height: 44 * DP}]}>
-								{props.data.missing_animal_date.slice(0, 9)} 실종
+							<Text style={[txt.roboto26, {textAlign: 'center'}, {color: MAINBLACK}, {height: 32 * DP}]}>
+								{moment(props.data?.missing_animal_date).format('YY.MM.DD')}
 							</Text>
 							{/* <Text style={[txt.noto28b, {textAlign: 'center'}, {color: 'black'}]}>
 								{props.data.missing_animal_species} / {props.data.missing_animal_age}살
 							</Text> */}
-							<Text style={[txt.noto26, {textAlign: 'center'}, {color: GRAY10}]} numberOfLines={1}>
+							<Text style={[txt.noto26, {textAlign: 'center'}, {color: MAINBLACK}]} numberOfLines={1}>
 								{objCity}
 							</Text>
 						</View>
@@ -78,22 +80,22 @@ const MissingReportBox = props => {
 				) : (
 					<View>
 						<View style={[styles.absolute_report]}>
-							<Text style={[txt.noto28, {color: '#FFFFFF'}, {textAlign: 'center'}, {margin: 6 * DP}]}>제보</Text>
+							<Text style={[txt.noto20, {color: MAINBLACK}, {textAlign: 'center'}, {margin: 6 * DP}]}>제보</Text>
 						</View>
 						<Image
-							style={[styles.img_210]}
+							style={[styles.img_156]}
 							source={{
 								uri: props.data.feed_thumbnail,
 							}}
 						/>
 						<View style={[styles.date_txt]}>
-							<Text style={[txt.noto28, {textAlign: 'center'}, {color: 'black'}, {height: 44 * DP}]} numberOfLines={1}>
+							<Text style={[txt.roboto26, {textAlign: 'center'}, {color: MAINBLACK}, {height: 32 * DP}]} numberOfLines={1}>
 								{/* {props.data.report_witness_location} */}
-								{props.data.report_witness_date}
+								{moment(props.data.report_witness_date).format('YY.MM.DD')}
 							</Text>
-							<Text style={[txt.noto26, {textAlign: 'center'}, {color: GRAY10}]} numberOfLines={1}>
+							<Text style={[txt.noto26, {textAlign: 'center'}, {color: MAINBLACK}]} numberOfLines={1}>
 								{/* {props.data.feed_content || '내용 없음'} */}
-								{props.data.report_witness_location.split(' ', 2) || ''}
+								{props.data.report_witness_location.split(' ', 2)[1] || ''}
 							</Text>
 						</View>
 					</View>
@@ -105,51 +107,45 @@ const MissingReportBox = props => {
 
 const styles = StyleSheet.create({
 	container: {
-		width: 254 * DP,
-		height: 352 * DP,
+		width: 156 * DP,
+		height: 248 * DP,
 		// backgroundColor: WHITE,
-		backgroundColor: 'yellow',
+		// backgroundColor: 'yellow',
 		marginRight: 30 * DP,
-		borderRadius: 30 * DP,
-		shadowColor: BLACK,
-		shadowOpacity: 0.4,
-		shadowRadius: 4,
-		shadowOffset: {
-			height: 2,
-			width: 2 * DP,
-		},
-		elevation: 3,
+		// borderRadius: 30 * DP,
 	},
 
-	img_210: {
-		marginTop: 24 * DP,
-		width: 210 * DP,
-		height: 210 * DP,
+	img_156: {
+		// marginTop: 24 * DP,
+		width: 156 * DP,
+		height: 156 * DP,
 		borderRadius: 30 * DP,
 		alignSelf: 'center',
 		marginHorizontal: 22 * DP,
 	},
 	absolute_missing: {
 		position: 'absolute',
-		width: 96 * DP,
-		height: 56 * DP,
+		width: 73 * DP,
+		height: 43 * DP,
 		backgroundColor: 'red',
-		alignSelf: 'center',
+		alignSelf: 'flex-start',
 		zIndex: 1,
 		elevation: 1,
+		borderTopLeftRadius: 30 * DP,
 		borderBottomEndRadius: 15 * DP,
 		borderBottomStartRadius: 15 * DP,
 		// right: 79 * DP,
 		// left: 79 * DP,
 	},
 	absolute_report: {
-		alignSelf: 'center',
+		alignSelf: 'flex-start',
 		position: 'absolute',
-		width: 96 * DP,
-		height: 56 * DP,
+		width: 73 * DP,
+		height: 43 * DP,
 		backgroundColor: '#FFD153',
 		zIndex: 1,
 		elevation: 1,
+		borderTopLeftRadius: 30 * DP,
 		borderBottomEndRadius: 15 * DP,
 		borderBottomStartRadius: 15 * DP,
 	},
@@ -157,10 +153,10 @@ const styles = StyleSheet.create({
 		width: 210 * DP,
 		// height: 44 * DP,
 		alignSelf: 'center',
-		marginTop: 10 * DP,
+		marginTop: 20 * DP,
 	},
 	shadow: {
-		width: 254 * DP,
+		width: 156 * DP,
 		// height: 396 * DP,
 		shadowColor: GRAY10,
 		shadowOpacity: 0.4,
@@ -172,14 +168,16 @@ const styles = StyleSheet.create({
 		elevation: 3,
 	},
 	content: {
-		width: 254 * DP,
-		height: 352 * DP,
-		borderRadius: 30 * DP,
+		width: 156 * DP,
+		height: 248 * DP,
+		// borderRadius: 30 * DP,
 		backgroundColor: WHITE,
-		marginBottom: 10 * DP,
+		// marginBottom: 10 * DP,
 		// paddingVertical: 50 * DP,
 		// paddingHorizontal: 32 * DP,
-		marginLeft: 30 * DP,
+		// marginLeft: 30 * DP,
+		marginRight: 20 * DP,
+		// marginLeft: 28 * DP,
 	},
 });
 

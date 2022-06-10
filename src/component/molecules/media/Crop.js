@@ -1,11 +1,11 @@
 import React from 'react';
-import {Animated, PanResponder, View, Text,Platform, Button, ScrollView, Image, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+import {Animated, PanResponder, View, Text,Platform, Button, ScrollView, Image, StyleSheet, TouchableWithoutFeedback,PixelRatio} from 'react-native';
 import CameraRoll from 'Root/module/CameraRoll';
 import DP from 'Root/config/dp';
 import FastImage from 'react-native-fast-image';
 import { Crop72 } from 'Root/component/atom/icon';
 
-export default Crop = prop => {
+const Crop = prop => {
 	const WIDTH = prop.width||750*DP;
 	const HEIGHT = prop.height||750*DP;
 	const PADDINGVERTICAL = prop.paddingVertical||0;
@@ -34,6 +34,7 @@ export default Crop = prop => {
 					let pos2 = {x: nativeEvent.touches[1].pageX, y: nativeEvent.touches[1].pageY};
 					isPinch.current = true;
 					initDistance.current = getDistance(pos1, pos2);
+					pan.setOffset({x: panPrev.x -(nativeEvent.touches[0].pageX+nativeEvent.touches[1].pageX)/2, y: panPrev.y - (nativeEvent.touches[0].pageY+nativeEvent.touches[1].pageY)/2});
 					return;
 				}else{
 					pan.setOffset({x: panPrev.x - nativeEvent.pageX, y: panPrev.y - nativeEvent.pageY});
@@ -43,11 +44,11 @@ export default Crop = prop => {
 			onPanResponderStart:({nativeEvent})=>{
 				
 				if (nativeEvent.touches.length > 1) {
-					// console.log('pinchstart  x:'+nativeEvent.locationX+'  y:'+nativeEvent.locationY);
 					let pos1 = {x: nativeEvent.touches[0].pageX, y: nativeEvent.touches[0].pageY};
 					let pos2 = {x: nativeEvent.touches[1].pageX, y: nativeEvent.touches[1].pageY};
 					isPinch.current = true;
 					initDistance.current = getDistance(pos1, pos2);
+					pan.setOffset({x: panPrev.x -(nativeEvent.touches[0].pageX+nativeEvent.touches[1].pageX)/2, y: panPrev.y - (nativeEvent.touches[0].pageY+nativeEvent.touches[1].pageY)/2});
 					return;
 				}else{
 					pan.setOffset({x: panPrev.x - nativeEvent.pageX, y: panPrev.y - nativeEvent.pageY});
@@ -55,20 +56,41 @@ export default Crop = prop => {
 				}
 			},	
 			onPanResponderMove: ({nativeEvent}) => {
-               
+				console.log(nativeEvent);
 				if (nativeEvent.touches.length > 1 &&initDistance.current!=0) {
-					// console.log('pinchmove[0]  x:'+nativeEvent.touches[0].locationX+'  y:'+nativeEvent.touches[0].locationY);
-					// console.log('pinchmove[1]  x:'+nativeEvent.touches[1].locationX+'  y:'+nativeEvent.touches[1].locationY);
-					pan.setValue({x: nativeEvent.touches[0].pageX, y: nativeEvent.touches[0].pageY});
+					pan.setValue({x: (nativeEvent.touches[0].pageX+nativeEvent.touches[1].pageX)/2, y: (nativeEvent.touches[0].pageY+nativeEvent.touches[1].pageY)/2});
 					let pos1 = {x: nativeEvent.touches[0].pageX, y: nativeEvent.touches[0].pageY};
 					let pos2 = {x: nativeEvent.touches[1].pageX, y: nativeEvent.touches[1].pageY};
 					scale.setValue((scalePrev.current * getDistance(pos1, pos2)) / initDistance.current);
 					return;
 				}else{
 					if(isPinch.current)return;
-                    let w = imgLayout.width * (1-scalePrev.current)/2;
-                    let h = imgLayout.height * (1-scalePrev.current)/2;
-					// console.log('move  x:'+nativeEvent.locationX+'  y:'+nativeEvent.locationY,nativeEvent);
+					let w = imgLayout.width*(1-scale._value)/2;
+					let h = imgLayout.height*(1-scale._value)/2;
+					
+					if(pan.x._value+pan.x._offset+imgLayout.width>WIDTH-PADDINGLHORIZONTAL+w){
+						// pan.setValue({x: PADDINGLHORIZONTAL-w-pan.x._offset, y: nativeEvent.pageY});
+						// pan.setValue({x: WIDTH-PADDINGLHORIZONTAL+w-imgLayout.width-pan.x._offset, y: nativeEvent.pageY});
+						
+						// return;
+					}
+					
+						if(panPrev.x<PADDINGLHORIZONTAL-w){
+							// pan.setValue({x: WIDTH-PADDINGLHORIZONTAL+w-imgLayout.width-pan.x._offset, y: nativeEvent.pageY});
+							// pan.setValue({x: PADDINGLHORIZONTAL-w-pan.x._offset, y: nativeEvent.pageY});
+							// return;
+						}
+					
+					// if(panPrev.y+imgLayout.height<=HEIGHT-PADDINGVERTICAL+h){
+					// 	return;
+					// }
+					// else{
+					// 	if(panPrev.y>=PADDINGVERTICAL-h){
+					// 		return;
+					// 	}
+					// }
+                    // let w = imgLayout.width * (1-scalePrev.current)/2;
+                    // let h = imgLayout.height * (1-scalePrev.current)/2;
 					pan.setValue({x: nativeEvent.pageX, y: nativeEvent.pageY});
 				}
 			},
@@ -76,33 +98,21 @@ export default Crop = prop => {
 				let w = 0;
 				let h = 0;
 				let stickToLeft = () => {
-					// Animated.spring(
-					// 	pan,{toValue:{x:PADDINGLHORIZONTAL-w-pan.x._offset,y:panPrev.y-pan.y._offset},speed:50,useNativeDriver:false}
-					// ).start();
 					pan.setValue({x:PADDINGLHORIZONTAL-w-pan.x._offset,y:panPrev.y-pan.y._offset});
 					panPrev.x = PADDINGLHORIZONTAL-w;
 					console.log('stickToLeft');
 				};
 				let stickToRight = () => {
-					// Animated.spring(
-					// 	pan,{toValue:{x:WIDTH-PADDINGLHORIZONTAL+w-imgLayout.width-pan.x._offset,y:panPrev.y-pan.y._offset},speed:50,useNativeDriver:false}
-					// ).start();
 					pan.setValue({x:WIDTH-PADDINGLHORIZONTAL+w-imgLayout.width-pan.x._offset,y:panPrev.y-pan.y._offset});
 					panPrev.x = WIDTH-PADDINGLHORIZONTAL-imgLayout.width+w;
 					console.log('stickToRight');
 				};
 				let stickToTop = () => {
-					// Animated.spring(
-					// 	pan,{toValue:{x:panPrev.x-pan.x._offset,y:PADDINGVERTICAL-h-pan.y._offset},speed:50,useNativeDriver:false}
-					// ).start();
                     pan.setValue({x:panPrev.x-pan.x._offset,y:PADDINGVERTICAL-h-pan.y._offset});
 					panPrev.y = PADDINGVERTICAL-h;
 					console.log('stickToTop');
 				};
 				let stickToBottom = () => {
-					// Animated.spring(
-					// 	pan,{toValue:{x:panPrev.x-pan.x._offset,y:HEIGHT-PADDINGVERTICAL+h-imgLayout.height-pan.y._offset},speed:50,useNativeDriver:false}
-					// ).start();
                     pan.setValue({x:panPrev.x-pan.x._offset,y:HEIGHT-PADDINGVERTICAL+h-imgLayout.height-pan.y._offset});
 					panPrev.y = HEIGHT-PADDINGVERTICAL-imgLayout.height+h;
 					console.log('stickToBottom');
@@ -198,31 +208,54 @@ export default Crop = prop => {
     const setInitDimension = (w,h)=>{
         pan.setOffset({x:0,y:0});
         scale.setValue(1);
-        if(w<h){
-            let newWidth = (w/h)*WIDTH;
-            let initPositionX = (WIDTH - newWidth)/2;
-            panPrev.x = initPositionX;
-            
-            pan.setValue({x:initPositionX,y:0});
-            imgLayout.width = newWidth;
-            imgLayout.height = HEIGHT;
-            setImgDimension({
-                width: newWidth,
-                height: HEIGHT
-            });
-        }
-        if(h<=w){
-            let newHeight = (h/w)*HEIGHT;
-            let initPositionY = (HEIGHT-newHeight)/2;
-            panPrev.y = initPositionY;
-            pan.setValue({x:0,y:initPositionY});
-            imgLayout.width = WIDTH;
-            imgLayout.height = newHeight;
-            setImgDimension({
-                width: WIDTH,
-                height: newHeight
-            });
-        }
+		let newImgWidth = 0;
+		let newImgHeight = 0;
+		let initPositionX = 0;
+		let initPositionY = 0;
+
+		if(w>h){
+			newImgWidth = WIDTH;
+			newImgHeight = WIDTH*h/w;
+			initPositionY = (HEIGHT - newImgHeight)/2;
+			if(newImgHeight>=HEIGHT){
+				newImgHeight=HEIGHT;
+				newImgWidth=HEIGHT*w/h;
+				initPositionX = (WIDTH - newImgWidth)/2;
+				initPositionY = 0;
+			}
+		}
+
+		if(h>w){
+			newImgWidth = HEIGHT*w/h;
+			newImgHeight = HEIGHT;
+			initPositionX = (WIDTH - newImgWidth)/2;
+			if(newImgWidth>=WIDTH){
+				newImgHeight=WIDTH*h/w;
+				newImgWidth=WIDTH;
+				initPositionY = (HEIGHT - newImgHeight)/2;
+				initPositionX = 0;
+			}
+		}
+
+		if(h==w){
+			newImgWidth = WIDTH;
+			newImgHeight = WIDTH;
+			initPositionY = (HEIGHT - newImgHeight)/2;
+			if(newImgHeight>=HEIGHT){
+				newImgHeight=HEIGHT;
+				newImgWidth=HEIGHT;
+				initPositionX = (WIDTH - newImgWidth)/2;
+				initPositionY = 0;
+			}
+		}
+
+		panPrev.x = initPositionX;
+		panPrev.y = initPositionY;
+		pan.setValue(panPrev);
+		setImgDimension({
+			width: newImgWidth,
+			height: newImgHeight
+		});
         scalePrev.current = 1;
     }
 
@@ -275,7 +308,7 @@ export default Crop = prop => {
 
 	return (
         <View style={{width: WIDTH, height: HEIGHT, backgroundColor: '#fff'}}>
-            <Animated.View style={{width: imgDimension.width, height: imgDimension.height,alignItems:'center',backgroundColor:'#fff',transform: [{translateX: pan.x}, {translateY: pan.y}, {scale: scale}]}} {...panResponder.panHandlers}>
+            <Animated.View style={{width: imgDimension.width, height: imgDimension.height,alignItems:'center',backgroundColor:prop.backgroundColor,transform: [{translateX: pan.x}, {translateY: pan.y}, {scale: scale}]}} {...panResponder.panHandlers}>
                 {imgUri&&<Img
                     style={{ width: imgDimension.width, height: imgDimension.height}}
                     source={{uri: imgUri}}
@@ -286,14 +319,20 @@ export default Crop = prop => {
             <View style={{position:'absolute',top:PADDINGVERTICAL,left:PADDINGLHORIZONTAL,width:CROPBOXWIDTH, height:HEIGHT - 2*PADDINGVERTICAL,backgroundColor:'black'}}/>
             <View style={{position:'absolute',bottom:PADDINGVERTICAL,left:PADDINGLHORIZONTAL,width:WIDTH - 2*PADDINGLHORIZONTAL, height:CROPBOXWIDTH,backgroundColor:'black'}}/>
             <View style={{position:'absolute',top:PADDINGVERTICAL,right:PADDINGLHORIZONTAL,width:CROPBOXWIDTH, height:HEIGHT - 2*PADDINGVERTICAL,backgroundColor:'black'}}/>
-            <TouchableWithoutFeedback onPress={crop}>
-                <View style={{position:'absolute',bottom:30*DP,right:30*DP,width:100*DP,height:100*DP,justifyContent:'flex-end',alignItems:'flex-end'}}>
+            {prop.isCrop&&<TouchableWithoutFeedback onPress={crop}>
+                <View style={{position:'absolute',bottom:30*DP,right:30*DP,width:150*DP,height:150*DP,justifyContent:'flex-end',alignItems:'flex-end'}}>
                     <Crop72 />
                 </View>
-            </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback>}
         </View>
 	);
 };
+
+Crop.defaultProps={
+	isCrop:true,
+	backgroundColor:'#fff'
+}
+
 
 function getDistance(pos1, pos2) {
 	let dx = pos1.x - pos2.x;
@@ -312,3 +351,5 @@ const Img =React.forwardRef((props,ref) => {
 		return <FastImage {...props} ref={ref}></FastImage>
 	}
 })
+
+export default Crop;

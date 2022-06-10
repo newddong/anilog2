@@ -31,7 +31,7 @@ export var exportUri = {}; //겔러리 속 사진 로컬 주소
 
 export default AddPhoto = props => {
 	const limit = 5;
-	const requestloading = 300;
+	const requestloading = Platform.OS=='android'?200:50;
 	const navigation = useNavigation();
 	const [isVideo, setVideo] = React.useState(false);
 	const [photolist, setPhotoList] = React.useState([]);
@@ -48,7 +48,7 @@ export default AddPhoto = props => {
 	 *@param {string} type - 불러올 미디어의 타잎('Photos'|'All'|'Videos')
 	 */
 	const loadPhotosMilsec = (request = requestloading, timeStamp = 0, imageID = '123456789', type = 'Photos') => {
-		console.log('아이디', imageID);
+		// console.log('아이디', imageID);
 		let param = {
 			first: request,
 			toTime: timeStamp ? timeStamp * 1000 - 1 : 0,
@@ -56,7 +56,7 @@ export default AddPhoto = props => {
 			assetType: type,
 			include: ['playableDuration'],
 			groupName: album,
-			groupTypes:'album'
+			groupTypes: 'album',
 		};
 		if (Platform.OS == 'android') {
 			delete param.fromTime;
@@ -65,7 +65,7 @@ export default AddPhoto = props => {
 		} else {
 			delete param.toID;
 		}
-		if(album.length==0){
+		if (album.length == 0) {
 			delete param.groupName;
 			delete param.groupTypes;
 		}
@@ -113,8 +113,8 @@ export default AddPhoto = props => {
 		console.log(selectedPhoto);
 	};
 
-	React.useEffect(()=>{
-		console.log('앨범변경   '+album)
+	React.useEffect(() => {
+		console.log('앨범변경   ' + album);
 		let param = {
 			first: requestloading,
 			toTime: 0,
@@ -122,7 +122,7 @@ export default AddPhoto = props => {
 			assetType: 'Photos',
 			include: ['playableDuration'],
 			groupName: album,
-			groupTypes:'album'
+			groupTypes: 'album',
 		};
 		if (Platform.OS == 'android') {
 			delete param.fromTime;
@@ -131,35 +131,32 @@ export default AddPhoto = props => {
 		} else {
 			delete param.toID;
 		}
-		if(album.length==0){
+		if (album.length == 0) {
 			delete param.groupName;
 			delete param.groupTypes;
 		}
 		CameraRoll.getPhotos(param)
-			.then(album=>{
+			.then(album => {
 				setPhotoList([...album.edges]);
 				// setPhotoList(album.edges);
 				console.log(album);
-
 			})
 			.catch(err => {
 				console.log('cameraroll error===>' + err);
 			});
-		
-	},[album])
+	}, [album]);
 
 	const albumSelect = () => {
 		Modal.popSelectBoxModal2(
 			albumList,
 			album => {
-				
-				setAlbum(album=='모든사진'?'':album);
-				Modal.close()
+				setAlbum(album == '모든사진' ? '' : album);
+				Modal.close();
 			},
 			e => console.log('close', e),
 			false,
 			'사진첩 선택',
-			500*DP,
+			500 * DP,
 		);
 	};
 
@@ -168,7 +165,7 @@ export default AddPhoto = props => {
 		console.log('최초 로드');
 		CameraRoll.getAlbums({albumType: 'All', assetType: 'Photos'}).then(r => setAlbumList(['모든사진'].concat(r.map(v => v.title))));
 		if (Platform.OS === 'ios') {
-			loadPhotosMilsec();
+			loadPhotosMilsec(40);
 		} else {
 			try {
 				console.log('안드로이드 OS확인');
@@ -198,7 +195,7 @@ export default AddPhoto = props => {
 	}, []);
 
 	React.useEffect(() => {
-		console.log('tk',photolist)
+		// console.log('tk',photolist)
 	}, [photolist]);
 
 	React.useEffect(() => {
@@ -220,7 +217,7 @@ export default AddPhoto = props => {
 	// },[photolist])
 
 	const selectPhoto = photo => {
-		console.log('photo select', photo);
+		// console.log('photo select', photo);
 		if (selectedPhoto.length >= limit) {
 			Modal.alert('사진은 ' + limit + '개 까지 선택가능합니다.');
 			return;
@@ -307,8 +304,9 @@ export default AddPhoto = props => {
 				<TouchableWithoutFeedback onPress={albumSelect}>
 					<View style={{flexDirection: 'row', alignItems: 'center'}}>
 						<Text style={txt.noto36}>{album.length > 0 ? album : '모든사진'}</Text>
-						<View style={{paddingTop:10*DP}}>
-						<Bracket48 /></View>
+						<View style={{paddingTop: 10 * DP}}>
+							<Bracket48 />
+						</View>
 					</View>
 				</TouchableWithoutFeedback>
 				{isSingle && false && (
@@ -331,7 +329,11 @@ export default AddPhoto = props => {
 				numColumns={4}
 				onEndReachedThreshold={0.6}
 				onEndReached={scrollReachBottom}
-				windowSize={5}
+				windowSize={20}
+				maxToRenderPerBatch={50}
+				updateCellsBatchingPeriod={50}
+				initialNumToRender={144}
+				removeClippedSubviews
 			/>
 		</View>
 	);

@@ -26,6 +26,7 @@ import AddressSearchPage from 'Root/component/templete/search/AddressSearchPage'
 import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailSettting';
 import SaveButtonHeader from 'Root/navigation/header/SaveButtonHeader';
 import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
+import CommunityHeader from 'Root/navigation/header/CommunityHeader';
 
 const SearchStackNav = createStackNavigator();
 
@@ -75,7 +76,7 @@ export default SearchMainStack = props => {
 				component={ArticleDetail}
 				options={({route}) => ({
 					headerShown: true,
-					header: props => <SimpleHeader {...props} />,
+					header: props => <CommunityHeader {...props} />,
 					title: ' ',
 				})}
 			/>
@@ -84,7 +85,7 @@ export default SearchMainStack = props => {
 				component={ReviewDetail}
 				options={({route}) => ({
 					headerShown: true,
-					header: props => <SimpleHeader {...props} />,
+					header: props => <CommunityHeader {...props} />,
 					title: ' ',
 				})}
 			/>

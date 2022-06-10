@@ -81,22 +81,24 @@ export default SearchArticle = props => {
 	const header = () => {
 		return (
 			<>
-				<View style={{marginTop: 12 * DP, width: 694 * DP, alignSelf: 'center'}}>
-					<Text style={[txt.noto24, {color: GRAY10}]}>검색 결과 {getData().length}개</Text>
-				</View>
 				<View style={[style.filterCont]}>
-					<View style={[style.kindFilter]}>
-						<View style={[style.kindFilterItem]}>
-							<Text style={[txt.noto28, {color: GRAY10}]}> 잡담</Text>
-							{onlyTalk ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
+					<View style={{flexDirection: 'row', width: 694 * DP, alignSelf: 'center', height: 62 * DP}}>
+						<View style={{alignSelf: 'flex-end', width: 300 * DP, justifyContent: 'flex-end'}}>
+							<Text style={[txt.noto24, {color: GRAY10}]}>검색 결과 {getData().length}개</Text>
 						</View>
-						<View style={[style.kindFilterItem]}>
-							<Text style={[txt.noto28, {color: GRAY10}]}> 질문</Text>
-							{onlyQuestion ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
-						</View>
-						<View style={[style.kindFilterItem]}>
-							<Text style={[txt.noto28, {color: GRAY10}]}> 모임</Text>
-							{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
+						<View style={[style.kindFilter]}>
+							<View style={[style.kindFilterItem]}>
+								<Text style={[txt.noto28, {color: GRAY10}]}> 잡담</Text>
+								{onlyTalk ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
+							</View>
+							<View style={[style.kindFilterItem]}>
+								<Text style={[txt.noto28, {color: GRAY10}]}> 질문</Text>
+								{onlyQuestion ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
+							</View>
+							<View style={[style.kindFilterItem]}>
+								<Text style={[txt.noto28, {color: GRAY10}]}> 모임</Text>
+								{onlyMeeting ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
+							</View>
 						</View>
 					</View>
 				</View>
@@ -161,7 +163,8 @@ const style = StyleSheet.create({
 	},
 	filterCont: {
 		width: 750 * DP,
-		paddingVertical: 10 * DP,
+		paddingTop: 20 * DP,
+		paddingBottom: 10 * DP,
 		backgroundColor: 'white',
 	},
 	kindFilter: {

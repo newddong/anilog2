@@ -59,8 +59,9 @@ const AssignUserHabitation = props => {
 		console.log('data.user_address:', data.user_address);
 		if (
 			data.user_address.city != '' &&
-			data.user_address.district != '군, 구를 선택해주세요.' &&
-			data.user_address.neighbor != '동, 읍을 선택해주세요.'
+			data.user_address.district != '군, 구를 선택해주세요.'
+			//  &&
+			// data.user_address.neighbor != '동, 읍을 선택해주세요.'
 		) {
 			setAdressValid(true);
 		} else {
@@ -147,25 +148,25 @@ const AssignUserHabitation = props => {
 				<Text style={[txt.noto26, styles.info_text]}>거주하시는 지역을 대략적으로 알려주세요</Text>
 			</View>
 			{/* HabitationForm */}
-			<View style={[assignUserHabitation_style.habitationForm]}>
+			<View style={[styles.habitationForm]}>
 				<Text style={[txt.noto28, {height: 44 * DP}]}>시도</Text>
 				<TouchableOpacity onPress={onPressCity} style={[styles.addressContainer]}>
 					<Text style={[txt.noto28, styles.addressText]}>{data.user_address.city ? data.user_address.city : '도, 광역시를 선택해주세요.'}</Text>
 					<Arrow_Down_GRAY10 />
 				</TouchableOpacity>
-				<Text style={[txt.noto28]}>시군구</Text>
+				<Text style={[txt.noto28, {marginTop: 40 * DP}]}>시군구</Text>
 				<TouchableOpacity onPress={onPressDistrict} style={[styles.addressContainer]}>
 					<Text style={[txt.noto28, styles.addressText]}>{data.user_address.district}</Text>
 					<Arrow_Down_GRAY10 />
 				</TouchableOpacity>
-				<Text style={[txt.noto28]}>읍면동</Text>
-				<TouchableOpacity onPress={onPressNeighbor} style={[styles.addressContainer]}>
+				{/* <Text style={[txt.noto28]}>읍면동</Text> */}
+				{/* <TouchableOpacity onPress={onPressNeighbor} style={[styles.addressContainer]}>
 					<Text style={[txt.noto28, styles.addressText]}>{data.user_address.neighbor}</Text>
 					<Arrow_Down_GRAY10 />
-				</TouchableOpacity>
+				</TouchableOpacity> */}
 			</View>
 			{/* 버튼 */}
-			<View style={[btn_style.btn_w654, assignUserHabitation_style.btn_w654]}>
+			<View style={[btn_style.btn_w654, {marginTop: 120 * DP}]}>
 				{adressValid ? (
 					<AniButton btnTitle={'확인'} titleFontStyle={32} btnStyle={'border'} btnTheme={'shadow'} btnLayout={btn_w694_r30} onPress={goToNextStep} />
 				) : (
@@ -185,12 +186,12 @@ const styles = StyleSheet.create({
 		// borderBottomColor: APRI10,
 		// borderBottomWidth: 2 * DP,
 		borderRadius: 30 * DP,
-
+		marginTop: 10 * DP,
 		// paddingVertical: 12 * DP,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-		paddingLeft: 24 * DP,
+		paddingLeft: 28 * DP,
 		backgroundColor: '#FAFAFA',
 	},
 	addressText: {
@@ -219,5 +220,14 @@ const styles = StyleSheet.create({
 	},
 	textContainer: {
 		width: 694 * DP,
+	},
+	habitationForm: {
+		width: 694 * DP,
+		// height: 366 * DP,
+		// height: 554 * DP,
+		marginTop: 80 * DP,
+		justifyContent: 'space-between',
+		// alignItems: 'center',
+		// backgroundColor: 'yellow',
 	},
 });

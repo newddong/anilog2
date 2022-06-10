@@ -109,7 +109,6 @@ export default LocationPicker = ({route}) => {
 			setChangedLongitude(init_longitude);
 		} else {
 			if (map.current) {
-				console.log('map', map.current);
 				map.current.animateToRegion(
 					{
 						latitude: init_latitude,
@@ -606,8 +605,9 @@ const style = StyleSheet.create({
 		width: 654 * DP,
 	},
 	mapContainer: {
-		width: 750 * DP,
-		height: 750 * DP,
+		width: 694 * DP,
+		height: 694 * DP,
+		borderRadius: 30 * DP,
 		borderColor: GRAY10,
 		borderWidth: 2 * DP,
 		marginVertical: 15 * DP,

@@ -161,7 +161,17 @@ export function useModal() {
 	};
 
 	Modal.popSelectBoxModal2 = (data, onSelect, onClose, headerRoof, headerTitle, height) => {
-		popIn(<SelectBoxModal data={data} onSelect={onSelect} onClose={onClose} headerRoof={headerRoof} headerTitle={headerTitle} scrollEnabled={true} boxHeight={height}/>);
+		popIn(
+			<SelectBoxModal
+				data={data}
+				onSelect={onSelect}
+				onClose={onClose}
+				headerRoof={headerRoof}
+				headerTitle={headerTitle}
+				scrollEnabled={true}
+				boxHeight={height}
+			/>,
+		);
 		!isPop && setPop(true);
 	};
 
@@ -245,8 +255,8 @@ export function useModal() {
 		!isPop && setPop(true);
 	};
 
-	Modal.popPhotoListViewModal = photoList => {
-		popIn(<PhotoListViewModal photoList={photoList} />);
+	Modal.popPhotoListViewModal = (photoList, onClose) => {
+		popIn(<PhotoListViewModal photoList={photoList} onClose={onClose} />);
 		!isPop && setPop(true);
 	};
 

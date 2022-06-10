@@ -1,5 +1,5 @@
-import React from 'react';
-import {Text, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {Text, View, BackHandler, Alert} from 'react-native';
 import {btn_w654, btn_w694_r30} from 'Atom/btn/btn_style';
 import Modal from 'Component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
@@ -8,6 +8,7 @@ import {login_style, btn_style, temp_style, passwordReset_style} from 'Templete/
 import {changeUserPassword} from 'Root/api/userapi';
 import {updateUserPassword} from 'Root/api/userapi';
 import {txt} from '../style_address';
+import {MAINBLACK} from 'Root/config/color';
 // 각각 뷰에 컴포넌트 삽입시 style의 첫번째 index 삭제할 것. 두번째 index는 상.하 간격 style이라서 이 컴포넌트에만 해당 됨.
 //ex) 변경 전: <View style={[btn_style.btn_w654, findAccount_style.btn_w654]}>   변경 후:  <View style={[findAccount_style.btn_w654]}>
 
@@ -18,16 +19,20 @@ export default PasswordReset = ({route, navigation}) => {
 	const [pwdValid, setPwdValid] = React.useState(false); // 비밀번호 양식 체크 (8자이상~~)
 	const [pwdCheck, setPwdCheck] = React.useState(false); // 비밀번호 더블 체크 통과 여부
 	const [presentPwdValid, setPresentPwdValid] = React.useState(true); // 현재 비밀번호 입력값이 실제 DB와 일치하는지 여부
+	const [firstPwdValid, setFirstPwdValid] = React.useState(false);
 	const [valid, setValid] = React.useState(false);
 	console.log('PassworRest', route);
-
+	// navigation.addListener('beforeRemove', e => {
+	// 	e.preventDefault();
+	// 	handleBackButtonClick;
+	// });
 	React.useEffect(() => {
 		console.log('pwd', pwd);
 		console.log('prevpwd', prevpwd);
 		console.log('ddd', pwd && pwdCheck);
 		setValid(pwd && pwdCheck);
 	}, [pwd, prevpwd]);
-
+	console.log('route.parmars', route.params);
 	//현재 비밀번호, 새로운 비밀번호의 양식, 새로운 비밀번호 확인 모두 통과 시 확인 버튼이 활성화
 	React.useEffect(() => {
 		console.log('pwd', pwd);
@@ -37,6 +42,25 @@ export default PasswordReset = ({route, navigation}) => {
 		presentPwdValid && pwdCheck && pwdValid ? setConfirmed(true) : setConfirmed(false);
 	}, [presentPwdValid, pwdCheck, pwdValid]);
 
+	// function handleBackButtonClick() {
+	// 	Modal.popTwoBtn(
+	// 		'인증한 내용이 취소됩니다. 로그인 화면으로 돌아가시겠습니까?',
+	// 		'예',
+	// 		'아니오',
+	// 		() => {
+	// 			navigation.navigate('Login');
+	// 		},
+	// 		() => {
+	// 			Modal.close();
+	// 		},
+	// 	);
+	// }
+	// useEffect(() => {
+	// 	BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
+	// 	return () => {
+	// 		BackHandler.removeEventListener('hardwareBackPress', handleBackButtonClick);
+	// 	};
+	// });
 	//암호 양식
 	const passwordValidator = pwd => {
 		// 8~20자 사이의 영문 대소문자, 숫자, 특수문자(!@#$%^&*만 허용)를 포함
@@ -94,7 +118,7 @@ export default PasswordReset = ({route, navigation}) => {
 		console.log('파라미터들', route.params, pwd);
 		//changePassword 가 아닌 reset Password api가있어야된다.
 		updateUserPassword(
-			{user_phone_number: route.params, new_password: pwd},
+			{user_phone_number: route.params.user_data, new_password: pwd},
 			success => {
 				console.log('success', success);
 				Modal.popNoBtn('비밀번호 재설정이 완료되었습니다.');
@@ -115,9 +139,9 @@ export default PasswordReset = ({route, navigation}) => {
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
 			<View style={[{alignItems: 'center'}]}>
-				<Text style={[{textAlign: 'center'}, txt.noto30, {marginTop: 105 * DP}]}>*최소 8자 이상,</Text>
-				<Text style={([{textAlign: 'center'}], txt.noto30)}>영문과 숫자, 특수문자(!@#$%^&*)가</Text>
-				<Text style={([{textAlign: 'center'}], txt.noto30)}>포함되어야 합니다.</Text>
+				<Text style={[{textAlign: 'center'}, txt.noto30, {marginTop: 105 * DP}, {color: MAINBLACK}]}>*최소 8자 이상,</Text>
+				<Text style={[{textAlign: 'center'}, txt.noto30, {color: MAINBLACK}]}>영문과 숫자, 특수문자(!@#$%^&*)가</Text>
+				<Text style={[{textAlign: 'center'}, txt.noto30, {color: MAINBLACK}]}>포함되어야 합니다.</Text>
 			</View>
 			<View style={[temp_style.passwordChecker, passwordReset_style.passwordChecker]}>
 				<PasswordChecker
@@ -129,6 +153,7 @@ export default PasswordReset = ({route, navigation}) => {
 					onPressClear={kind => onPressClear(kind)}
 					onChangePwd={pwd => onChangePwd(pwd)}
 					presentPwdValid={presentPwdValid}
+					firstValid={firstPwdValid}
 				/>
 			</View>
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Text, View, StyleSheet} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {socialInfoB} from 'Organism/style_organism copy';
 import {useNavigation} from '@react-navigation/native';
@@ -26,28 +26,28 @@ export default SocialInfoB = props => {
 	};
 
 	return (
-		<View style={[socialInfoB.container]}>
-			<View style={[socialInfoB.socialInfo]}>
+		<View style={[styles.container]}>
+			<View style={[styles.socialInfo]}>
 				<TouchableWithoutFeedback onPress={onPressUpload}>
-					<Text style={[txt.roboto40b, socialInfoB.number]}>{count_to_K(props.data.user_upload_count)}</Text>
+					<Text style={[txt.roboto34b]}>{count_to_K(props.data.user_upload_count)}</Text>
 				</TouchableWithoutFeedback>
 				<Text style={[txt.noto28, socialInfoB.title]}>업로드</Text>
 			</View>
-			<View style={[socialInfoB.socialInfo]}>
+			<View style={[styles.socialInfo]}>
 				<TouchableWithoutFeedback onPress={moveToSocialRelation}>
-					<Text style={[txt.roboto40b, socialInfoB.number]}>{count_to_K(props.data.user_follower_count)}</Text>
+					<Text style={[txt.roboto34b]}>{count_to_K(props.data.user_follower_count)}</Text>
 				</TouchableWithoutFeedback>
 				<Text style={[txt.noto28, socialInfoB.title]}>팔로워</Text>
 			</View>
-			<View style={[socialInfoB.socialInfo]}>
+			<View style={[styles.socialInfo]}>
 				<TouchableWithoutFeedback onPress={moveToSocialRelation}>
-					<Text style={[txt.roboto40b, socialInfoB.number]}>{count_to_K(props.data.user_follow_count)}</Text>
+					<Text style={[txt.roboto34b]}>{count_to_K(props.data.user_follow_count)}</Text>
 				</TouchableWithoutFeedback>
 				<Text style={[txt.noto28, socialInfoB.title]}>팔로잉</Text>
 			</View>
 			{props.donationMode ? (
-				<View style={[socialInfoB.socialInfo]}>
-					<Text style={[txt.roboto40b, socialInfoB.number]}>3</Text>
+				<View style={[styles.socialInfo]}>
+					<Text style={[txt.roboto34b]}>3</Text>
 					<Text style={[txt.noto28, socialInfoB.title]}>후원</Text>
 				</View>
 			) : null}
@@ -58,3 +58,31 @@ export default SocialInfoB = props => {
 SocialInfoB.defaultProps = {
 	donationMode: false,
 };
+
+const styles = StyleSheet.create({
+	container: {
+		// width: 500 * DP,
+		width: 462 * DP,
+		height: 46 * DP,
+		flexDirection: 'row',
+		alignItems: 'stretch',
+		// alignItems: 'flex-start',
+		// backgroundColor: 'red',
+	},
+	socialInfo: {
+		width: 154 * DP,
+		height: 46 * DP,
+		flexDirection: 'row',
+		// marginRight: 60 * DP,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	number: {
+		marginLeft: -13.5 * DP,
+		alignSelf: 'center',
+		width: 130 * DP,
+		height: 50 * DP,
+		textAlign: 'center',
+		// backgroundColor: 'yellow',
+	},
+});

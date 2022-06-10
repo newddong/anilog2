@@ -16,11 +16,26 @@ export async function changeLocalPathToS3Path(params, callback, errcallback) {
  * @param {number} params.page
  * @param {number} params.limit
  * @param {string} params.community_type - 커뮤니티 타입 (전체글|'all'|'free'|'review')
+ * @param {string} params.community_free_type - 커뮤니티 타입 (|'all'|'talk'|'question'|'meeting')
  * @param {function} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
 export async function getCommunityList(params, callback, errcallback) {
 	apiController('/community/getCommunityList', arguments);
+}
+
+/**
+ * 커뮤니티 페이지 번호 클릭 형식 페이징 불러옴(필터 적용)
+ * @param {object} params
+ * @param {number} params.page
+ * @param {number} params.limit
+ * @param {string} params.target_object_id - 타겟 object_id (상세 페이지에 들어간 상태가 아니면 필드 보내지 말 것!)
+ * @param {string} params.community_free_type - 커뮤니티 타입 (|'all'|'talk'|'question'|'meeting')
+ * @param {function} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getCommunityListFreeByPageNumber(params, callback, errcallback) {
+	apiController('/community/getCommunityListFreeByPageNumber', arguments);
 }
 
 /**

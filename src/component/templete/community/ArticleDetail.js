@@ -2,21 +2,19 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View, ScrollView, ActivityIndicator} from 'react-native';
 import DP from 'Root/config/dp';
-import {GRAY10, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
-import CommentList from 'Root/component/organism/comment/CommentList';
+import {BLACK, GRAY10, GRAY20, GRAY40} from 'Root/config/color';
 import Modal from 'Root/component/modal/Modal';
 import Article from 'Root/component/organism/article/Article';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import {useNavigation} from '@react-navigation/core';
-import {getCommunityByObjectId, getCommunityList, updateAndDeleteCommunity} from 'Root/api/community';
+import {getCommunityByObjectId, getCommunityList, getCommunityListFreeByPageNumber, updateAndDeleteCommunity} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {createComment, deleteComment, getCommentListByCommunityId, updateComment} from 'Root/api/commentapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import community_obj from 'Root/config/community_obj';
-import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
+import {Arrow48, Arrow48_GRAY, FavoriteTag46_Filled, FavoriteTag48_Border, Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
-import {NETWORK_ERROR, REPORT_MENU} from 'Root/i18n/msg';
-import {createReport} from 'Root/api/report';
+import {FREE_LIMIT_DETAIL, NETWORK_ERROR} from 'Root/i18n/msg';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
@@ -32,13 +30,15 @@ export default ArticleDetail = props => {
 	const [data, setData] = React.useState('false');
 	const [searchInput, setSearchInput] = React.useState('');
 	const [comments, setComments] = React.useState('false');
-	const [articleList, setArticleList] = React.useState('false');
+	const [articleList, setArticleList] = React.useState('false'); //하단 리스트 출력
+	const [total, setTotal] = React.useState(); //하단 리스트의 전체 게시글 수
+	const [offset, setOffset] = React.useState(0); //하단 리스트의 현재 페이지
+	const [page, setPage] = React.useState(0); //하단 리스트의 전체 페이지
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
 	const [parentComment, setParentComment] = React.useState(); //대댓글을 쓰는 경우 해당 댓글의 id container
 	const input = React.useRef();
 	const floatInput = React.useRef();
-	const input2 = React.useRef();
 	const addChildCommentFn = React.useRef(() => {});
 	const [editMode, setEditMode] = React.useState(false); //댓글 편집 모드
 	const [editData, setEditData] = React.useState({
@@ -55,8 +55,7 @@ export default ArticleDetail = props => {
 			getArticleData();
 		});
 		getComment();
-		getArticleList();
-		navigation.setOptions({title: '자유 게시글'});
+		getArticleList(1);
 		return unsubscribe;
 	}, []);
 
@@ -76,6 +75,18 @@ export default ArticleDetail = props => {
 			result => {
 				console.log('ArticleDetail / getCommunityByObjectId / Result', result.status);
 				setData(result.msg);
+				switch (result.msg.community_free_type) {
+					case 'talk':
+						navigation.setOptions({title: '잡담', data: result.msg});
+						break;
+					case 'question':
+						navigation.setOptions({title: '질문', data: result.msg});
+						break;
+					case 'meeting':
+						navigation.setOptions({title: '모임', data: result.msg});
+						break;
+					default:
+				}
 			},
 			err => {
 				console.log('err / getCommunityByObjectId / ArticleDetail ', err);
@@ -85,48 +96,42 @@ export default ArticleDetail = props => {
 	};
 
 	//페이지 하단에 출력될 자유게시글 목록 api(페이징 필요)
-	const getArticleList = () => {
-		getCommunityList(
-			{
-				limit: 10000,
-				community_type: 'free',
-			},
-			result => {
-				// console.log('result / getCommunityList / ArticleDetail :', result.msg.free.length);
-				const free = result.msg.free;
-				const findIndex = result.msg.free.findIndex(e => e._id == props.route.params.community_object._id);
-				let list = [];
-				if (free.length < 11) {
-					//전체글이 11 이하라면 그냥 바로 출력
-					console.log('free.length < 11', free.length < 11);
+	const getArticleList = (page, category) => {
+		try {
+			console.log('page', page);
+			let params = {
+				limit: FREE_LIMIT_DETAIL, //10
+				page: page,
+				target_object_id: props.route.params.community_object._id, //현재 상세 페이지를 기준으로 그 이후의 글을 가져오기 위한 파라미터
+			};
+			//자유글 타입 파라미터 추가 여부, 미선택 상태일 경우 파라미터 자체를 보내선 안됨
+			if (props.route.params.type && props.route.params.type.length > 0) {
+				params.community_free_type = props.route.params.type;
+			}
+			getCommunityListFreeByPageNumber(
+				params,
+				result => {
+					console.log('result / getCommunityListFreeByPageNumber / ArticleDetail :', result.msg.length);
+					const free = result.msg;
+					setTotal(result.total_count);
 					setArticleList(free);
-				} else if (free.length - findIndex < 11) {
-					//현재 보고 있는 게시글이 전체 인덱스 중 10이하라면?
-					console.log('findIndex < 11');
-					for (let ind = findIndex + 1; ind < free.length - 1; ind++) {
-						//이후 글만 차례로 출력
-						list.push(free[ind]);
+					setOffset(page);
+				},
+				err => {
+					console.log('err / getCommunityListFreeByPageNumber / ArticleDetail : ', err);
+					if (err.includes('code 500')) {
+						setArticleList([]);
+						setTimeout(() => {
+							Modal.alert(NETWORK_ERROR);
+						}, 500);
+					} else if (err.includes('없습니다')) {
+						setArticleList([]);
 					}
-					setArticleList(list);
-				} else {
-					for (let ind = findIndex + 1; ind < findIndex + 11; ind++) {
-						list.push(free[ind]);
-					}
-					setArticleList(list);
-				}
-			},
-			err => {
-				console.log('err / getCommunityList / ArticleDetail : ', err);
-				if (err.includes('code 500')) {
-					setArticleList([]);
-					setTimeout(() => {
-						Modal.alert(NETWORK_ERROR);
-					}, 500);
-				} else if (err.includes('없습니다')) {
-					setArticleList([]);
-				}
-			},
-		);
+				},
+			);
+		} catch (err) {
+			console.log('err', err);
+		}
 	};
 
 	//해당 자유게시글의 댓글을 받아온다
@@ -145,7 +150,7 @@ export default ArticleDetail = props => {
 			},
 			err => {
 				console.log('getCommentListByCommunityId', err);
-				if (err == '검색 결과가 없습니다.') {
+				if (err.includes('검색 결과가 없습니다')) {
 					setComments([{}]);
 				} else if (err.includes('code 500')) {
 					Modal.popNetworkErrorModal('네트워크 오류로 댓글 정보를 \n 받아오는데 실패하였습니다.');
@@ -227,7 +232,7 @@ export default ArticleDetail = props => {
 							},
 							err => {
 								console.log('getCommentListByCommunityId', err);
-								if (err == '검색 결과가 없습니다.') {
+								if (err.includes('검색 결과가 없습니다.')) {
 									setComments([{}]);
 								}
 							},
@@ -302,9 +307,16 @@ export default ArticleDetail = props => {
 		floatInput.current.focus();
 		setReplyFocus(false);
 	};
-	
+
 	const onBlur3 = () => {
 		setReplyFocus(false);
+		if (editMode) {
+			setEditMode(false);
+			setEditData({
+				comment_contents: '',
+				comment_photo_uri: '',
+			});
+		}
 	};
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
@@ -322,12 +334,13 @@ export default ArticleDetail = props => {
 		}
 	};
 
-	React.useEffect(()=>{
-		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+	//사진 선택 완료 후 선택된 사진 useState
+	React.useEffect(() => {
+		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
 			let selected = props.route.params.selectedPhoto[0];
-			setEditData({...editData, comment_photo_uri: selected.cropUri??selected.uri});
+			setEditData({...editData, comment_photo_uri: selected.cropUri ?? selected.uri});
 		}
-	},[props.route.params?.selectedPhoto]);
+	}, [props.route.params?.selectedPhoto]);
 
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
 	const onAddPhoto = () => {
@@ -337,10 +350,11 @@ export default ArticleDetail = props => {
 			});
 		} else {
 			console.log('onAddphoto');
-			props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
+			props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 		}
 	};
 
+	//댓글의 사진 삭제 클릭
 	const onDeleteImage = () => {
 		setEditData({...editData, comment_photo_uri: ''});
 	};
@@ -379,6 +393,7 @@ export default ArticleDetail = props => {
 		const findParentIndex = comments.findIndex(e => e._id == parent);
 		setEditData({...comment, parent: findParentIndex});
 		setPrivateComment(comment.comment_is_secure);
+		input.current?.focus();
 		scrollToReplyBox();
 	};
 
@@ -405,106 +420,14 @@ export default ArticleDetail = props => {
 		setParentComment();
 	};
 
-	//제목 우측 미트볼 클릭
-	const onPressMeatball = () => {
-		console.log(' data.community_writer_id', data.community_writer_id);
-		if (data.community_writer_id) {
-			const isMyArticle = userGlobalObject.userInfo._id == data.community_writer_id._id;
-			Modal.popSelectBoxModal(
-				isMyArticle ? ['수정', '삭제'] : ['신고'],
-				select => {
-					switch (select) {
-						case '수정':
-							navigation.push('CommunityEdit', {previous: data, isReview: false, isSearch: props.route.params.searchInput});
-							break;
-						case '삭제':
-							Modal.close();
-							setTimeout(() => {
-								Modal.popTwoBtn(
-									'정말로 이 게시글을 \n 삭제하시겠습니까?',
-									'아니오',
-									'네',
-									() => Modal.close(),
-									() => {
-										updateAndDeleteCommunity(
-											{
-												community_object_id: data._id,
-												community_is_delete: true,
-											},
-											result => {
-												// console.log('result / updateAndDeleteCommunity / ArticleDetail : ', result.msg);
-												Modal.close();
-												setTimeout(() => {
-													Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
-													setTimeout(() => {
-														Modal.close();
-														navigation.goBack();
-													}, 600);
-												}, 200);
-											},
-											err => {
-												console.log('err / updateAndDeleteCommunity / ArticleDetail : ', err);
-												Modal.alert(err);
-											},
-										);
-									},
-								);
-							}, 200);
-							break;
-						case '신고':
-							Modal.close();
-							if (userGlobalObject.userInfo.isPreviewMode) {
-								setTimeout(() => {
-									Modal.popLoginRequestModal(() => {
-										navigation.navigate('Login');
-									});
-								}, 100);
-							} else {
-								setTimeout(() => {
-									Modal.popOneBtnSelectModal(
-										REPORT_MENU,
-										'이 게시물을 신고 하시겠습니까?',
-										selectedItem => {
-											createReport(
-												{
-													report_target_object_id: data._id,
-													report_target_object_type: 'communityobjects',
-													report_target_reason: selectedItem,
-													report_is_delete: false,
-												},
-												result => {
-													console.log('신고 완료', result);
-													Modal.close();
-													Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
-												},
-												err => {
-													Modal.close();
-													if (err == '이미 신고되었습니다.') {
-														Modal.popOneBtn('이미 신고하셨습니다.', '확인', () => Modal.close());
-													}
-												},
-											);
-										},
-										'신고',
-									);
-								}, 200);
-							}
-							break;
-						default:
-							break;
-					}
-				},
-				() => Modal.close(),
-				false,
-				false,
-			);
-		}
-	};
-
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
 		console.log('searchInput', searchInput);
-		navigation.push('ArticleDetail', {community_object: articleList[index], searchInput: searchInput});
+		navigation.push('ArticleDetail', {
+			community_object: articleList[index],
+			searchInput: searchInput,
+			type: props.route.params.type ? props.route.params.type : '',
+		});
 	};
 
 	//댓글 모두보기 클릭
@@ -522,7 +445,7 @@ export default ArticleDetail = props => {
 			},
 			result => {
 				console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
-				// setData({...data, })
+				getArticleData();
 			},
 			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
 		);
@@ -581,24 +504,98 @@ export default ArticleDetail = props => {
 	const header = () => {
 		return (
 			<View style={{alignItems: 'center'}}>
-				<Article data={data} onPressMeatball={onPressMeatball} onPressFavorite={onPressFavorite} route={props.route.name} searchInput={searchInput} />
-				<View style={[{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY40}]} />
+				<Article data={data} route={props.route.name} searchInput={searchInput} />
+				<View style={[{width: 694 * DP, height: 2 * DP, backgroundColor: GRAY40}]} />
 				<View style={[style.like, {}]}>
-					<View style={{flexDirection: 'row', width: 100 * DP, alignItems: 'center'}}>
+					<View style={[style.header_icon, {}]}>
+						{data.community_is_favorite ? (
+							<FavoriteTag46_Filled onPress={() => onPressFavorite(false)} />
+						) : (
+							<FavoriteTag48_Border onPress={() => onPressFavorite(true)} />
+						)}
+						<Text style={[txt.noto24, {color: GRAY10, paddingTop: 6 * DP, marginLeft: 2 * DP, height: 48 * DP}]}>
+							{data.community_favorite_count}
+						</Text>
+					</View>
+					<View style={[style.header_icon, {}]}>
 						{data.community_is_like ? <Like48_Filled onPress={() => onPressLike(false)} /> : <Like48_Border onPress={() => onPressLike(true)} />}
-						<Text style={[txt.noto24, {color: GRAY10, marginLeft: 15 * DP}]}>{data.community_like_count}</Text>
+						<Text style={[txt.noto24, {color: GRAY10, paddingTop: 6 * DP, marginLeft: 8 * DP, height: 48 * DP}]}>{data.community_like_count}</Text>
 					</View>
 					{comments && comments.length > 0 ? (
-						<View style={[{alignItems: 'flex-end'}]}>
-							<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length - 1}개</Text>
+						<View style={[{alignItems: 'flex-end', width: 494 * DP}]}>
+							<Text style={[txt.noto26]}> 댓글 {comments.length - 1}개</Text>
 						</View>
 					) : (
 						<></>
 					)}
 				</View>
-				{/* <View style={[style.separator]} /> */}
 			</View>
 		);
+	};
+
+	const onPressPage = page => {
+		if (page != offset) {
+			getArticleList(page);
+		}
+	};
+
+	const paging = () => {
+		if (articleList != 'false' && articleList.length != 0 && total != '') {
+			let totalPage = Array(Math.floor(total / FREE_LIMIT_DETAIL) + 1)
+				.fill()
+				.map((_, i) => i + 1);
+			if (total % FREE_LIMIT_DETAIL === 0) {
+				totalPage.length--;
+			}
+			const perPageNum = 5;
+			let slicedPage = [];
+			console.log('page', page);
+			console.log('total', total);
+
+			console.log('totalPage', totalPage.length);
+			console.log('Math.floor(totalPage.length / perPageNum)', Math.floor(totalPage.length / perPageNum));
+			console.log('total % FREE_LIMIT_DETAIL === 0', total % FREE_LIMIT_DETAIL === 0);
+			let isLastPage = page == Math.floor(totalPage.length / perPageNum);
+			isLastPage = (page + 1) * FREE_LIMIT_DETAIL * perPageNum >= total;
+			console.log('(page + 1) * FREE_LIMIT_DETAIL * perPageNum', (page + 1) * FREE_LIMIT_DETAIL * perPageNum);
+			console.log('isLast ? ', isLastPage);
+			if (isLastPage) {
+				for (let i = page * perPageNum + 1; i <= totalPage.length; i++) {
+					slicedPage.push(i);
+				}
+			} else {
+				slicedPage = [page * perPageNum + 1, page * perPageNum + 2, page * perPageNum + 3, page * perPageNum + 4, page * perPageNum + 5];
+			}
+			return (
+				<View style={[style.pagingCont]}>
+					<View style={{transform: [{rotate: '180deg'}], marginTop: 2 * DP}}>
+						{page == 0 ? (
+							<Arrow48_GRAY />
+						) : (
+							<TouchableOpacity onPress={() => setPage(page - 1)} style={{padding: 14 * DP}}>
+								<Arrow48 />
+							</TouchableOpacity>
+						)}
+					</View>
+					<View style={{width: 500 * DP, flexDirection: 'row'}}>
+						{slicedPage.map((v, i) => {
+							return (
+								<TouchableOpacity activeOpacity={0.8} onPress={() => onPressPage(v)} style={{width: 100 * DP, alignItems: 'center'}} key={i}>
+									<Text style={[txt.noto32, {color: offset == v ? BLACK : GRAY20}]}>{v}</Text>
+								</TouchableOpacity>
+							);
+						})}
+					</View>
+					{isLastPage ? (
+						<></>
+					) : (
+						<TouchableOpacity onPress={() => setPage(page + 1)} style={{padding: 14 * DP, marginTop: 2 * DP}}>
+							<Arrow48 />
+						</TouchableOpacity>
+					)}
+				</View>
+			);
+		}
 	};
 
 	const bottom = () => {
@@ -607,8 +604,35 @@ export default ArticleDetail = props => {
 		};
 		return (
 			<View style={{alignItems: 'center'}}>
-				{/* {comments.length == 0 ? (
-					<View style={[{marginTop: 20 * DP, marginBottom: 30 * DP}]}>
+				{articleList != 'false' ? (
+					<View style={{paddingBottom: 0 * DP}}>
+						<ArticleList
+							items={articleList}
+							onPressArticle={onPressArticle} //게시글 내용 클릭
+							currentDetail={data._id}
+						/>
+						{paging()}
+					</View>
+				) : (
+					<View style={{paddingVertical: 100 * DP}}>
+						<ActivityIndicator size={'large'} />
+					</View>
+				)}
+			</View>
+		);
+	};
+
+	const renderItem = ({item, index}) => {
+		console.log('comments.length ', comments.length);
+		if (index == comments.length - 1) {
+			return (
+				<>
+					{comments.length == 1 ? (
+						<Text style={[txt.roboto26, {color: GRAY20, paddingVertical: 20 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>
+					) : (
+						<></>
+					)}
+					<View style={[{marginTop: 0 * DP, marginBottom: 10 * DP, opacity: key > 0 || isReplyFocused ? 0 : 1}]}>
 						<ReplyWriteBox
 							onAddPhoto={onAddPhoto}
 							onChangeReplyInput={onChangeReplyInput}
@@ -616,51 +640,18 @@ export default ArticleDetail = props => {
 							onWrite={onWrite}
 							onDeleteImage={onDeleteImage}
 							privateComment={privateComment}
-							ref={input2}
+							ref={input}
 							editData={editData}
 							shadow={false}
 							parentComment={parentComment}
 							onCancelChild={onCancelChild}
-							onFocus={onFocus2}
-							onBlur={onBlur2}
+							onFocus={onFocus}
+							onBlur={onBlur}
+							viewMode={true}
 						/>
+						<View style={[style.separator]} />
 					</View>
-				) : (
-					<></>
-				)} */}
-				{articleList != 'false' ? (
-					<ArticleList
-						items={articleList}
-						onPressArticle={onPressArticle} //게시글 내용 클릭
-						whenEmpty={noMoreArticle}
-					/>
-				) : (
-					<ActivityIndicator size={'large'} />
-				)}
-			</View>
-		);
-	};
-
-	const renderItem = ({item, index}) => {
-		if (index == comments.length - 1) {
-			return (
-				<View style={[{marginTop: 0 * DP, marginBottom: 30 * DP, opacity: key > 0 || isReplyFocused ? 0 : 1}]}>
-					<ReplyWriteBox
-						onAddPhoto={onAddPhoto}
-						onChangeReplyInput={onChangeReplyInput}
-						onLockBtnClick={onLockBtnClick}
-						onWrite={onWrite}
-						onDeleteImage={onDeleteImage}
-						privateComment={privateComment}
-						ref={input}
-						editData={editData}
-						shadow={false}
-						parentComment={parentComment}
-						onCancelChild={onCancelChild}
-						onFocus={onFocus}
-						onBlur={onBlur}
-					/>
-				</View>
+				</>
 			);
 		} else
 			return (
@@ -690,7 +681,6 @@ export default ArticleDetail = props => {
 					ListFooterComponent={bottom()}
 					showsVerticalScrollIndicator={false}
 					renderItem={renderItem}
-					ListEmptyComponent={<Text style={[txt.roboto28b, {color: GRAY10, paddingVertical: 40 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>}
 					onScrollToIndexFailed={err => {
 						setTimeout(() => {
 							if (comments.length !== 0 && flatListRef !== null) {
@@ -700,7 +690,7 @@ export default ArticleDetail = props => {
 					}}
 					removeClippedSubviews={false}
 				/>
-				<View style={{position: 'absolute', bottom: isReplyFocused?(key - 2):(2000)}}>
+				<View style={{position: 'absolute', bottom: isReplyFocused ? key - 2 : 2000}}>
 					<ReplyWriteBox
 						onAddPhoto={onAddPhoto}
 						onChangeReplyInput={onChangeReplyInput}
@@ -730,18 +720,13 @@ const style = StyleSheet.create({
 		alignSelf: 'center',
 		alignItems: 'center',
 	},
-	header: {
-		flexDirection: 'row',
-		width: 654 * DP,
-		height: 50 * DP,
-		justifyContent: 'space-between',
-	},
 	header_title: {
 		width: 544 * DP,
 	},
 	header_icon: {
-		justifyContent: 'space-between',
 		flexDirection: 'row',
+		width: 80 * DP,
+		alignItems: 'center',
 	},
 	profile: {
 		alignSelf: 'flex-start',
@@ -750,13 +735,6 @@ const style = StyleSheet.create({
 	hashText: {
 		width: 634 * DP,
 		marginTop: 10 * DP,
-	},
-	replyCountContainer: {
-		width: 654 * DP,
-		alignItems: 'flex-end',
-		alignSelf: 'center',
-		marginTop: 30 * DP,
-		marginBottom: 20 * DP,
 	},
 	commentContainer: {
 		paddingBottom: 10 * DP,
@@ -773,17 +751,26 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 	},
 	separator: {
-		width: 654 * DP,
-		height: 2 * DP,
+		width: 750 * DP,
+		height: 10 * DP,
 		backgroundColor: GRAY40,
 	},
 	like: {
-		width: 654 * DP,
+		width: 694 * DP,
 		paddingVertical: 10 * DP,
 		marginBottom: 10 * DP,
-		marginTop: 10 * DP,
+		marginTop: 20 * DP,
 		flexDirection: 'row',
 		alignItems: 'center',
-		justifyContent: 'space-between',
+		// justifyContent: 'space-between',
+	},
+	pagingCont: {
+		width: 634 * DP,
+		paddingVertical: 60 * DP,
+		paddingBottom: 180 * DP,
+		flexDirection: 'row',
+		alignSelf: 'center',
+		// justifyContent: 'space-between',
+		alignItems: 'center',
 	},
 });

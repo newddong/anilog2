@@ -28,7 +28,11 @@ export default function HashText(props) {
 	const [hide, setHide] = React.useState(text.length > 2);
 	const onShow = () => {
 		setHide(false);
-		props.onMoreView&&props.onMoreView();
+		props.onMoreView&&props.onMoreView(false);
+	}
+	const onHide = () =>{
+		setHide(true);
+		props.onMoreView&&props.onMoreView(true);
 	}
 
 	const makeView = (input, taginfo,hide, onShow) => {
@@ -42,8 +46,17 @@ export default function HashText(props) {
 				</View>
 			</TouchableOpacity>
 		);
-	
+		const hideView = () => (
+			<TouchableOpacity
+				onPress={onHide}>
+				<View style={{width:694*DP,paddingHorizontal:28*DP,flexDirection: 'row', paddingTop: 20 * DP, height:50 * DP,justifyContent:'flex-end',alignItems: 'center'}}>
+					<Text style={[txt.noto24, {lineHeight: 30 * DP}]}>접기</Text>
+					<View style={{transform:[{rotate:'180deg'}]}}><Arrow_Down_GRAY20 /></View>
+				</View>
+			</TouchableOpacity>
+		);
 		return input.map((v, i) => {
+			if(!v)return <Text></Text>;
 			if (hide) {
 				if (i > 1) return false;
 				if (i == 1) {
@@ -66,14 +79,16 @@ export default function HashText(props) {
 				return (
 					<React.Fragment key={i}>
 						<Text>{makeTagView(v, taginfo)}</Text>
-						{i != input.length - 1 && <Text>{'\n'}</Text>}
+						{<Text>{'\n'}</Text>}
+						{input.length>2&&i==input.length-1&&hideView()}
 					</React.Fragment>
 				);
 			} else {
 				return (
 					<React.Fragment key={i}>
 						<Text>{v}</Text>
-						{i != input.length - 1 && <Text>{'\n'}</Text>}
+						{<Text>{'\n'}</Text>}
+						{input.length>2&&i==input.length-1&&hideView()}
 					</React.Fragment>
 				);
 			}

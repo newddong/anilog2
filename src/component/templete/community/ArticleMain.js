@@ -158,14 +158,14 @@ export default ArticleMain = ({route}) => {
 			if (total % FREE_LIMIT === 0) {
 				totalPage.length--;
 			}
-			console.log('page', page);
-			console.log('total', total);
-			console.log('totalPage', totalPage.length);
-			console.log('Math.floor(totalPage.length / perPageNum)', Math.floor(totalPage.length / perPageNum));
+			// console.log('page', page);
+			// console.log('total', total);
+			// console.log('totalPage', totalPage.length);
+			// console.log('Math.floor(totalPage.length / perPageNum)', Math.floor(totalPage.length / perPageNum));
 			let isLastPage = page == Math.floor(totalPage.length / perPageNum);
 			isLastPage = (page + 1) * FREE_LIMIT * perPageNum >= total;
-			console.log('isLastPage', isLastPage);
-			console.log('(page + 1) * FREE_LIMIT * perPageNum', (page + 1) * FREE_LIMIT * perPageNum);
+			// console.log('isLastPage', isLastPage);
+			// console.log('(page + 1) * FREE_LIMIT * perPageNum', (page + 1) * FREE_LIMIT * perPageNum);
 			if (isLastPage) {
 				for (let i = page * perPageNum + 1; i <= totalPage.length; i++) {
 					slicedPage.push(i);
@@ -196,7 +196,12 @@ export default ArticleMain = ({route}) => {
 					{isLastPage ? (
 						<Arrow48_GRAY />
 					) : (
-						<TouchableOpacity onPress={() => setPage(page + 1)} style={{padding: 14 * DP, marginTop: 2 * DP}}>
+						<TouchableOpacity
+							onPress={() => {
+								setPage(page + 1);
+								onPressPage((page + 1) * perPageNum + 1);
+							}}
+							style={{padding: 14 * DP, marginTop: 2 * DP}}>
 							<Arrow48 />
 						</TouchableOpacity>
 					)}

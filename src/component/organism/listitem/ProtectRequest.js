@@ -115,34 +115,31 @@ export default ProtectRequest = React.memo(props => {
 		);
 	};
 
-	if (!data) {
-		return <></>;
-	} else
-		return (
-			<>
-				<View style={[style.container, {height: 266 * DP}]}>
-					<View style={[style.container_basicInfo]}>
-						<View style={[style.protectedThumbnail_container]}>
-							<ProtectedThumbnail
-								data={thumbnailData}
-								inActiveOpacity={props.inActiveOpacity}
-								onLabelClick={(status, id) => props.onClickLabel(status, id)}
-							/>
-						</View>
-						<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.6} onPress={() => props.onClickLabel()}>
-							<View>{contents()}</View>
-						</TouchableOpacity>
-						<View style={[style.detail_upper_tag]}>
-							{data.is_favorite ? (
-								<FavoriteTag48_Filled onPress={() => onPressFavoriteTag(false)} />
-							) : (
-								<FavoriteTag48_Border onPress={() => onPressFavoriteTag(true)} />
-							)}
-						</View>
+	return (
+		<>
+			<View style={[style.container, {height: 266 * DP}]}>
+				<View style={[style.container_basicInfo]}>
+					<View style={[style.protectedThumbnail_container]}>
+						<ProtectedThumbnail
+							data={thumbnailData}
+							inActiveOpacity={props.inActiveOpacity}
+							onLabelClick={(status, id) => props.onClickLabel(status, id)}
+						/>
+					</View>
+					<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.6} onPress={() => props.onClickLabel()}>
+						<View>{contents()}</View>
+					</TouchableOpacity>
+					<View style={[style.detail_upper_tag]}>
+						{data.is_favorite ? (
+							<FavoriteTag48_Filled onPress={() => onPressFavoriteTag(false)} />
+						) : (
+							<FavoriteTag48_Border onPress={() => onPressFavoriteTag(true)} />
+						)}
 					</View>
 				</View>
-			</>
-		);
+			</View>
+		</>
+	);
 });
 
 ProtectRequest.defaultProps = {

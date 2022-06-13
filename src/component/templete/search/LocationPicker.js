@@ -538,6 +538,7 @@ export default LocationPicker = ({route}) => {
 												longitudeDelta: changedLongitudeDelta, //지도의 초기줌 수치
 											}}>
 											<MapView.Marker
+												tracksViewChanges={false}
 												coordinate={{
 													latitude: changedLatitude != '' ? changedLatitude : init_latitude,
 													longitude: changedLongitude != '' ? changedLongitude : init_longitude,

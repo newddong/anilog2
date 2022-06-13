@@ -247,23 +247,25 @@ export default ProtectRequestList = ({route}) => {
 		// }
 	};
 
-	const closePaging = React.useRef(true);
+	const [closePaging, setClosePaging] = React.useState(true);
 
 	const onScroll = e => {
 		let y = e.nativeEvent.contentOffset.y;
-		console.log('offset', offset, 'e', y);
 		const To = PROTECT_REQUEST_MAIN_LIMIT * (offset - 1) - 20;
-		console.log('to', To * ITEM_HEIGHT);
+		// console.log('offset', offset, 'e', y);
+		// console.log('to', To * ITEM_HEIGHT);
 		if (y > ITEM_HEIGHT * To && closePaging) {
+			console.log('offset * PROTECT_REQUEST_MAIN_LIMIT', offset * PROTECT_REQUEST_MAIN_LIMIT);
+			console.log('getData().length', getData().length);
 			if (getData().length % PROTECT_REQUEST_MAIN_LIMIT == 0) {
 				getList();
-				closePaging.current = false;
+				setClosePaging(false);
 			}
 		}
 	};
 
 	React.useEffect(() => {
-		closePaging.current = true;
+		setClosePaging(true);
 	}, [offset]);
 
 	const moveToTop = () => {
@@ -271,7 +273,16 @@ export default ProtectRequestList = ({route}) => {
 	};
 
 	const renderItem = ({item, index}) => {
-		return <ProtectRequestItem key={index} item={item} index={index} />;
+		// return <ProtectRequestItem key={index} item={item} index={index} />;
+		return (
+			<ProtectRequest
+				data={item}
+				index={index}
+				onClickLabel={(status, id) => onClickLabel(item)}
+				onFavoriteTag={e => onOff_FavoriteTag(e, index)}
+				onPressProtectRequest={() => onPressProtectRequest(item)}
+			/>
+		);
 	};
 
 	class ProtectRequestItem extends React.PureComponent {
@@ -352,28 +363,31 @@ export default ProtectRequestList = ({route}) => {
 					keyExtractor={keyExtractor}
 					getItemLayout={getItemLayout}
 					refreshing
-					// onEndReached={onEndReached} //Flatlist 페이징
-					onScroll={onScroll}
+					onMomentumScrollEnd={onScroll}
 					// onEndReachedThreshold={0.5} //페이징을 하는 타이밍
+					// onEndReached={onEndReached} //Flatlist 페이징
 					// onScroll={e => console.log('e', e.nativeEvent.contentOffset)}
 					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					ListEmptyComponent={whenEmpty}
 					decelerationRate={0.85}
 					ListHeaderComponent={header()}
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
-					extraData={refreshing}
-					// maxToRenderPerBatch={5} // re-render를 막는군요.
-					windowSize={5}
+					extraData={closePaging}
+					initialNumToRender={10}
+					// maxToRenderPerBatch={20} // re-render를 막는군요.
+					// updateCellsBatchingPeriod={200}
+					// windowSize={5}
 					ref={flatlist}
-					ListFooterComponent={() => {
-						return loading ? (
-							<View style={style.indicatorCont}>
-								<ActivityIndicator size="large" color={APRI10} />
-							</View>
-						) : (
-							<></>
-						);
-					}}
+					ListFooterComponent={loading && <ActivityIndicator size={'large'} />}
+					// ListFooterComponent={() => {
+					// 	return loading ? (
+					// 		<View style={style.indicatorCont}>
+					// 			<ActivityIndicator size="large" color={APRI10} />
+					// 		</View>
+					// 	) : (
+					// 		<></>
+					// 	);
+					// }}
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
 				/>
 			</View>

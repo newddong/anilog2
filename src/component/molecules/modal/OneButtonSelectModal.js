@@ -148,10 +148,10 @@ const OneButtonSelectModal = props => {
 			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
 				<Text style={[txt.noto28, style.msg]}>{props.msg}</Text>
 				<TouchableOpacity onPress={onOpen} style={style.dropdownContainer} activeOpacity={1}>
-					<View style={style.selectedItem}>
+					<View style={[style.selectedItem, {justifyContent: 'center', flexDirection: 'row'}]}>
 						<Text style={[txt.noto28, {fontSize: props.fontSize * DP - 5}]}>{data[selectedItem - 2]}</Text>
+						<View style={style.dropdownIcon}>{!selectOpen ? <Arrow_Down_GRAY10 onPress={onOpen} /> : <Arrow_Up_GRAY10 onPress={onOpen} />}</View>
 					</View>
-					<View style={style.dropdownIcon}>{!selectOpen ? <Arrow_Down_GRAY10 onPress={onOpen} /> : <Arrow_Up_GRAY10 onPress={onOpen} />}</View>
 				</TouchableOpacity>
 				{getDirectInput()}
 				<View style={style.buttonContainer}>
@@ -266,6 +266,8 @@ const style = StyleSheet.create({
 	dropdownIcon: {
 		width: 48 * DP,
 		height: 48 * DP,
+		position: 'absolute',
+		right: 10 * DP,
 	},
 	directInputStyle: {
 		backgroundColor: '#ffffff',

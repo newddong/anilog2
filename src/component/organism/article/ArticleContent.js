@@ -145,7 +145,12 @@ const ArticleContent = props => {
 
 	const changeHtmlTag = () => {
 		let result = data.community_content;
-		result = data.community_content.replace(/<img /g, '<img onclick="image(this)" ');
+		result = data.community_content.replace(
+			/<img /g,
+			`<img onclick="image(this)"  style="height:auto; width:${
+				Platform.OS == 'android' ? 694 * DP : 694 * DP
+			};  border-radius:15px; object-fit:contain; margin:5px 0px 0px 0px; " `,
+		);
 		// console.log('data Content', data.community_content);
 		// console.log('result', result);
 		return `
@@ -193,7 +198,7 @@ const ArticleContent = props => {
 					// 	style={[style.webview, {height: height}]}
 					// />
 					<AutoHeightWebView
-						style={{width: 670 * DP, marginTop: 30 * DP}}
+						style={{width: 694 * DP, marginTop: 30 * DP}}
 						customScript={runFirst}
 						scrollEnabled={false}
 						// onSizeUpdated={size => console.log('size.height', size.height)}
@@ -213,7 +218,8 @@ const ArticleContent = props => {
 						injectedJavaScript={runFirst} //Dynamic Height 수치 설정
 						source={{html: changeHtmlTag()}}
 						style={{
-							width: 670 * DP,
+							width: 724 * DP,
+							left: -14 * DP,
 							height: height == 0 ? 100 * DP : height,
 							opacity: 0.99,
 						}}

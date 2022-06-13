@@ -55,14 +55,14 @@ export default CommunityHeader = ({navigation, route, options, back}) => {
 
 	//제목 우측 미트볼 클릭
 	const onPressMeatball = () => {
-		// console.log(' data.community_writer_id', data.community_writer_id);
+		console.log(' data.community_writer_id', data.community_type);
 		if (data.community_writer_id) {
 			Modal.popSelectBoxModal(
 				['수정', '삭제'],
 				select => {
 					switch (select) {
 						case '수정':
-							navigation.push('CommunityEdit', {previous: data, isReview: false, isSearch: route.params.searchInput});
+							navigation.push('CommunityEdit', {previous: data, isReview: data.community_type == 'review', isSearch: route.params.searchInput});
 							break;
 						case '삭제':
 							Modal.close();

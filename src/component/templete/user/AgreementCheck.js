@@ -78,7 +78,7 @@ export default AgreementCheck = props => {
 
 	const permissionCheck = () => {
 		if (
-			user_agreement.is_donation_info &&
+			// user_agreement.is_donation_info &&
 			user_agreement.is_location_service_info &&
 			user_agreement.is_over_fourteen &&
 			user_agreement.is_personal_info &&

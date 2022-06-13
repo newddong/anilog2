@@ -9,6 +9,7 @@ import searchContext from 'Root/config/searchContext';
 export default InputAndSearchHeader = props => {
 	const routeName = props.route.name != undefined ? props.route.name : '';
 	const [searchInput, setSearchInput] = React.useState('');
+	const inputRef = React.useRef();
 	// console.log('props', props.route.params.searchInput);
 
 	const confirm = () => {
@@ -28,18 +29,34 @@ export default InputAndSearchHeader = props => {
 		return () => clearTimeout(timeOutId);
 	}, [searchInput]);
 
+	React.useEffect(() => {
+		props.navigation.setParams({
+			reSearch,
+		});
+	}, []);
+
+	const reSearch = () => {
+		inputRef.current.focus();
+		setSearchInput('');
+	};
+
 	const onChangeSearchText = text => {
 		setSearchInput(text);
 		//고객센터 문의하기에서 호출된 경우 searchInputForHelp 전역변수를 활용
-		if (props.isHelpTab) {
+		if (props.isLocation) {
+			searchContext.searchInfo.searchInputForLocation = text;
+		} else if (props.isHelpTab) {
 			searchContext.searchInfo.searchInputForHelp = text;
 		} else {
 			//검색탭에서 호출된 경우 searchInput 전역변수를 활용
 			searchContext.searchInfo.searchInput = text;
 		}
 	};
+
 	const onClear = () => {
-		if (props.isHelpTab) {
+		if (props.isLocation) {
+			searchContext.searchInfo.searchInputForLocation = '';
+		} else if (props.isHelpTab) {
 			searchContext.searchInfo.searchInputForHelp = '';
 		} else {
 			searchContext.searchInfo.searchInput = '';
@@ -65,9 +82,10 @@ export default InputAndSearchHeader = props => {
 			</TouchableOpacity>
 			<View style={{marginBottom: 20 * DP, flex: 1, justifyContent: 'center', paddingTop: 20 * DP}}>
 				<InputWithSearchIcon
-					placeholder={'검색어를 입력하세요.'}
+					placeholder={props.isLocation ? '위치 찾기' : '검색어를 입력하세요.'}
 					value={searchInput}
 					width={630}
+					ref={inputRef}
 					onChange={onChangeSearchText}
 					onSearch={confirm}
 					onClear={onClear}

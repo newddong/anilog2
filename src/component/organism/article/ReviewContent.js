@@ -250,6 +250,7 @@ const ReviewContent = props => {
 								}}>
 								{/* 현재 선택된 위도 경도의 마커 */}
 								<MapView.Marker
+									tracksViewChanges={false}
 									coordinate={{
 										longitude: parseFloat(data.community_address.region.longitude),
 										latitude: parseFloat(data.community_address.region.latitude),

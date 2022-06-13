@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {APRI10, BLACK, GRAY10, GRAY20, GRAY50} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, GRAY20, GRAY30, GRAY40, GRAY50} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import Stagebar from 'Molecules/info/Stagebar';
@@ -94,20 +94,23 @@ export default AssignPetInfoB = props => {
 				setTimeout(() => {
 					Modal.close();
 					console.log('반려 추가 등록 전 userGlobal', userGlobalObj.userInfo.hasOwnProperty('_id'));
-					if (!userGlobalObj.userInfo.hasOwnProperty('_id')) {
-						//회원가입 루트일 경우 바로 로그인 템플릿으로 이동
-						props.navigation.navigate(data.previousRouteName);
-					} else {
-						// 일반유저가 MY탭에서 반려동물을 추가할 경우 계속 추가 등록이 가능하도록 네비게이션 초기화 처리
-						Modal.popTwoBtn(
-							'추가로 등록할 반려동물이 있나요?',
-							'아니오',
-							'추가 등록',
-							() => {
-								props.navigation.navigate(data.previousRouteName);
-							},
-							() => {
-								//reset 설정 시 기존의 state값들은 초기화됨
+
+					// 일반유저가 MY탭에서 반려동물을 추가할 경우 계속 추가 등록이 가능하도록 네비게이션 초기화 처리
+					Modal.popTwoBtn(
+						'추가로 등록할 반려동물이 있나요?',
+						'아니오',
+						'추가 등록',
+						() => {
+							props.navigation.navigate(data.previousRouteName);
+						},
+						() => {
+							//reset 설정 시 기존의 state값들은 초기화됨
+							if (data.previousRouteName == 'Login') {
+								props.navigation.reset({
+									index: 1,
+									routes: [{name: 'Login'}, {name: 'AssignPetProfileImage', params: {userobject_id: data.userobject_id, previousRouteName: 'Login'}}],
+								});
+							} else {
 								props.navigation.reset({
 									index: 2,
 									routes: [
@@ -116,12 +119,12 @@ export default AssignPetInfoB = props => {
 										{name: 'AssignPetProfileImage', params: {previousRouteName: 'UserInfoSetting'}},
 									],
 								});
-							},
-							() => {
-								props.navigation.navigate(data.previousRouteName);
-							},
-						);
-					}
+							}
+						},
+						() => {
+							props.navigation.navigate(data.previousRouteName);
+						},
+					);
 				}, 500);
 			},
 			error => {
@@ -151,7 +154,7 @@ export default AssignPetInfoB = props => {
 				/>
 			</View>
 			<View style={[style.textMsg]}>
-				<Text style={[txt.noto24, {color: GRAY10}]}>반려 동물의 생일과 체중, 중성화 여부를 적어주세요.</Text>
+				<Text style={[txt.noto24, {color: GRAY10}]}>반려 동물의 생일과 체중을 적어주세요.</Text>
 			</View>
 			<View style={[style.inputForm]}>
 				<View style={[style.birthCont]}>
@@ -169,6 +172,7 @@ export default AssignPetInfoB = props => {
 							ref={weightRef}
 							value={data.pet_weight}
 							width={550}
+							height={104}
 							alert_msg={'두자리 숫자, 소수점 한자리'}
 							showMsg={false}
 							confirm_msg="올바른 양식입니다."
@@ -187,7 +191,21 @@ export default AssignPetInfoB = props => {
 			</View>
 			<View style={[style.btn_w226_viewB]}>
 				<ArrowButton direction={'back'} onPress={() => navigation.goBack()} />
-				<AniButton btnTitle={'등록'} onPress={onRegister} disable={btnOn} />
+				{/* <AniButton btnTitle={'등록'} onPress={onRegister} disable={btnOn} /> */}
+				<TouchableOpacity
+					activeOpacity={0.7}
+					onPress={onRegister}
+					style={{
+						width: 162 * DP,
+						height: 70 * DP,
+						borderRadius: 30 * DP,
+						borderWidth: 2 * DP,
+						borderColor: GRAY30,
+						justifyContent: 'center',
+						alignItems: 'center',
+					}}>
+					<Text style={[txt.noto24]}>완료</Text>
+				</TouchableOpacity>
 			</View>
 		</TouchableOpacity>
 	);
@@ -207,7 +225,7 @@ const style = StyleSheet.create({
 	birthCont: {
 		flexDirection: 'row',
 		width: 694 * DP,
-		height: 82 * DP,
+		height: 104 * DP,
 		alignItems: 'center',
 	},
 	dropdownSelect_depth1: {
@@ -219,6 +237,7 @@ const style = StyleSheet.create({
 	line2: {
 		flexDirection: 'row',
 		width: 694 * DP,
+		height: 104 * DP,
 		alignItems: 'center',
 		marginTop: 60 * DP,
 	},

@@ -16,7 +16,19 @@ import {Cross24_Filled, Cross48, Search48} from 'Atom/icon';
  * @param {()=>void} props.onBlur - 인풋 포커스 해제 콜백
  * @param {boolean} props.showCrossMark - X마크 출력 여부
  */
-const InputWithSearchIcon = props => {
+const InputWithSearchIcon = React.forwardRef((props, ref) => {
+	// console.log('props', props);
+	React.useImperativeHandle(ref, () => ({
+		focus: () => {
+			inputRef.current.focus();
+		},
+		blur: () => {
+			inputRef.current.blur();
+		},
+		clear: () => {
+			inputRef.current.clear();
+		},
+	}));
 	const [input, setInput] = React.useState('');
 	const inputRef = React.useRef();
 	//인풋 값 변경 콜백
@@ -67,6 +79,7 @@ const InputWithSearchIcon = props => {
 					onSubmitEditing={onSearch}
 					onChangeText={text => onChange(text)}
 					placeholder={props.placeholder}
+					placeholderTextColor={'#999999'}
 					ref={inputRef}
 					value={props.value}
 					onFocus={focus}
@@ -91,7 +104,7 @@ const InputWithSearchIcon = props => {
 			</View>
 		</View>
 	);
-};
+});
 InputWithSearchIcon.defaultProps = {
 	value: '',
 	placeholder: 'placeholder',

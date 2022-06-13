@@ -45,7 +45,6 @@ export default Profile = ({route}) => {
 			fetchData();
 			if (data.user_type == 'user') {
 				fetchCommunity();
-				console.log('user focus profile');
 			} else if (data.user_type == 'shelter') {
 				fetchProtectRequest();
 			}
@@ -137,18 +136,18 @@ export default Profile = ({route}) => {
 	};
 
 	const getFeedList = (i, refresh) => {
+		setLoading(true);
+		let params = {
+			userobject_id: userId,
+			limit: THUMNAIL_LIMIT,
+			order_value: 'next',
+		};
+		//첫 페이지 호출이 아닌 경우
+		if (!refresh && feedList.length != 0) {
+			params.target_object_id = feedList[feedList.length - 1]._id;
+		}
 		switch (i) {
 			case 0:
-				setLoading(true);
-				let params = {
-					userobject_id: userId,
-					limit: THUMNAIL_LIMIT,
-					order_value: 'next',
-				};
-				//첫 페이지 호출이 아닌 경우
-				if (!refresh && feedList.length != 0) {
-					params.target_object_id = feedList[feedList.length - 1]._id;
-				}
 				getFeedListByUserId(
 					params,
 					result => {
@@ -173,19 +172,28 @@ export default Profile = ({route}) => {
 				break;
 			case 1:
 				getUserTaggedFeedList(
-					{userobject_id: userId},
+					params,
 					result => {
-						// console.log('유저의 태그된 피드 리스트', result);
-						setFeedList(result.msg);
-						setFeedTotal(result.total_count);
+						console.log('result / getUserTaggedFeedList : ', result.msg.length);
+						if (refresh || feedList.length == 0) {
+							setFeedList(result.msg);
+						} else {
+							//다음 페이지를 호출한 경우 기존 값에 추가된 result 추가
+							console.log('page 합산', [...feedList, ...result.msg].length);
+							setFeedList([...feedList, ...result.msg]);
+						}
+						setFeedTotal(result.total_count); // 토탈카운트 갱신
+						setLoading(false); //로딩종료
 					},
 					err => {
 						console.log('getUserTaggedFeedList err', err);
+						setLoading(false); //로딩종료
+						if (err.includes('code 500')) {
+							Modal.popNetworkErrorModal('정보를 불러오는데에 실패하였습니다.\n 잠시후 다시 이용해주세요. ');
+						}
 						setFeedList([]);
 					},
 				);
-				break;
-			case 2:
 				break;
 			default:
 				break;
@@ -195,14 +203,11 @@ export default Profile = ({route}) => {
 	const onEndReached = i => {
 		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
 		//리뷰 메인 페이지에서는 필터가 적용이 되었을 때도 api 접속 불필요
-		if (i == 0) {
-			//피드 탭
+		if (i == 0 || i == 1) {
 			console.log('feedList.length', feedList.length, feedTotal);
 			if (feedList.length != feedTotal) {
-				getFeedList(0);
+				getFeedList(i);
 			}
-		} else if (i == 1) {
-			//태그탭 추후 추가
 		} else if (protectList.length % PROTECT_REQUEST_DETAIL_LIMIT == 0) {
 			//보호소프로필인 경우 보호동물탭
 			console.log('EndReached', protectList.length % PROTECT_REQUEST_DETAIL_LIMIT);
@@ -210,26 +215,10 @@ export default Profile = ({route}) => {
 		}
 	};
 
+	//프로필 하단 탭 선택 콜백
 	React.useEffect(() => {
-		switch (tabMenuSelected) {
-			case 0:
-				getFeedList(tabMenuSelected, true);
-				break;
-			case 1:
-				getUserTaggedFeedList(
-					{userobject_id: userId},
-					result => {
-						// console.log('유저의 태그된 피드 리스트', result);
-						setFeedList(result.msg);
-						setFeedTotal(result.total_count);
-					},
-					err => {
-						console.log('getUserTaggedFeedList err', err);
-						setFeedList([]);
-					},
-				);
-			default:
-				break;
+		if (tabMenuSelected == 0 || tabMenuSelected == 1) {
+			getFeedList(tabMenuSelected, true);
 		}
 	}, [tabMenuSelected]);
 
@@ -241,7 +230,7 @@ export default Profile = ({route}) => {
 
 	//프로필의 태그탭의 피드 썸네일 클릭
 	const onClick_Thumbnail_TagTab = (index, item) => {
-		navigation.push('UserTagFeedList', {userobject: data, selected: item});
+		navigation.push('UserTagFeedList', {userobject: data, selected: item, index: index});
 	};
 
 	//보호소프로필의 봉사활동 클릭
@@ -377,6 +366,7 @@ export default Profile = ({route}) => {
 		}).start();
 	};
 
+	//업로드 클릭
 	const onClickUpload = () => {
 		// console.log('onClickUpload');
 		flatlist.current.scrollToIndex({animated: true, index: 1, viewPosition: 0});
@@ -559,6 +549,7 @@ export default Profile = ({route}) => {
 							items={item}
 							whenEmpty={whenFeedThumbnailEmpty('태그된 게시물이 없습니다.')}
 							onClickThumnail={onClick_Thumbnail_TagTab}
+							onEndReached={() => onEndReached(tabMenuSelected)}
 						/>
 					);
 				} else {

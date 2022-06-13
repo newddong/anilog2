@@ -127,6 +127,8 @@ export async function getFeedDetailById(params, callback, errcallback) {
  * 추천 피드 리스트를 불러온다(홈)
  * @param {number} params.page
  * @param {number} params.limit
+ * @param {string} params.target_object_id
+ * @param {'pre'|'interrupt'|'next'} params.order_value - 찾아야할 데이터
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
@@ -181,6 +183,9 @@ export async function favoriteFeed(params, callback, errcallback) {
  * 특정 유저의 피드 즐겨찾기 목록을 조회한다.
  * @param {object} params
  * @param {string} params.userobject_id - 즐겨찾기를 조회할 유저의 몽고디비 아이디
+ * @param {'pre'|'interrupt'|'next'} params.order_value - 찾아야할 데이터
+ * @param {number} params.limit - 페이징 개수
+ * @param {string} params.target_object_id - 타겟 object_id
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
@@ -191,7 +196,10 @@ export async function getFavoriteFeedListByUserId(params, callback, errcallback)
 /**
  * 특정 유저가 태그된 피드의 리스트를 불러온다.
  * @param {object} params
- * @param {string} params.userobject_id - 즐겨찾기를 조회할 유저의 몽고디비 아이디
+ * @param {'pre'|'interrupt'|'next'} params.order_value - 찾아야할 데이터
+ * @param {number} params.limit - 페이징 개수
+ * @param {string} params.userobject_id - 피드 리스트를 불로오고자 하는 유저의 몽고디비 아이디
+ * @param {string} params.target_object_id - 타겟 object_id
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */

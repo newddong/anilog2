@@ -71,9 +71,9 @@ export default FeedList = ({route, navigation}) => {
 					let lines = getLinesOfString(v.feed_content, 55);
 					lines = lines > 2 ? 2 : lines;
 					if (v.feed_recent_comment) {
-						return {...v, height: (914 + lines * 44+10+ 128)*DP};
+						return {...v, height: (914 + lines * 44 + 10 + 128) * DP};
 					} else {
-						return {...v, height: (914 + lines * 44+10)*DP};
+						return {...v, height: (914 + lines * 44 + 10) * DP};
 					}
 				})
 				.map((v, i, a) => {
@@ -88,6 +88,7 @@ export default FeedList = ({route, navigation}) => {
 		);
 	};
 
+	//스크롤 최하단 도착 콜백 (다음페이지 호출)
 	const onEndReached = () => {
 		console.log('onEndReached', feedList.length, total);
 		if (feedList.length < total) {
@@ -97,6 +98,7 @@ export default FeedList = ({route, navigation}) => {
 		}
 	};
 
+	//피드리스트 호출
 	const getList = (pre, next) => {
 		switch (route.name) {
 			case 'UserFeedList':
@@ -130,7 +132,7 @@ export default FeedList = ({route, navigation}) => {
 							params.order_value = 'interrupt';
 						}
 					}
-					// console.log('최종 param', params);
+					console.log('최종 param', params);
 					getFeedListByUserId(
 						params,
 						result => {
@@ -176,33 +178,166 @@ export default FeedList = ({route, navigation}) => {
 						Modal.popOneBtn(NETWORK_ERROR, '확인', () => navigation.goBack());
 					}, 100);
 				}
-
-				break;
-			case 'TagMeFeedList':
-				getUserTaggedFeedList(
-					{
-						userobject_id: userGlobalObject.userInfo._id,
-						request_number: requestNum,
-					},
-					({msg}) => {
-						setFeed(msg);
-					},
-					errormsg => {
-						Modal.alert(errormsg);
-					},
-				);
 				break;
 			case 'UserTagFeedList':
+				// console.log('route.params?.userobject._id,', route.params?.userobject._id);
+				setLoading(true);
+				params = {
+					userobject_id: route.params?.userobject._id,
+					login_userobject_id: userGlobalObject.userInfo._id,
+					limit: FEED_LIMIT,
+				};
+				//기본 LIMIT보다 작은 인덱스가 선택됐을 경우 다음 페이지 호출만 요청
+				if (route.params && route.params.index < 10) {
+					console.log('route.params && route.params.index < 10', route.params && route.params.index < 10);
+					if (!pre && next) {
+						console.log('next');
+						params.target_object_id = feedList[feedList.length - 1]._id;
+						params.order_value = 'next';
+					}
+				} else {
+					route.params ? console.log('selected index', route.params.index) : false;
+					//스크롤 최상단 도착 => 타겟은 최상단의 피드id이며 호출은 이전 페이지
+					if (pre && !next) {
+						params.target_object_id = feedList[0]._id;
+						params.order_value = 'pre';
+						//스크롤 최하단 도착 => 타겟은 최하단 피드id이며 호출은 다음 페이지
+					} else if (!pre && next) {
+						params.target_object_id = feedList[feedList.length - 1]._id;
+						params.order_value = 'next';
+					} else {
+						//중간에 인터럽트
+						params.target_object_id = route.params.selected._id;
+						params.order_value = 'interrupt';
+					}
+				}
+				console.log('최종 param', params);
 				getUserTaggedFeedList(
-					{
-						userobject_id: route.params?.userobject._id,
-						request_number: requestNum,
-					},
-					({msg}) => {
-						setFeed(msg);
+					params,
+					result => {
+						console.log('result / getUserTaggedFeedList', result.msg.length);
+						const res = result.msg;
+						setTotal(result.total_count);
+						let list = [];
+						if (!pre && !next) {
+							console.log('첫 호출');
+							list = res;
+						} else if (pre && !next) {
+							console.log('스크롤 최상단');
+							if (route.params.index < 10) return;
+							//현재 중복된 값이 오고 있는 것을 발견 임시로 클라이언트에서 필터처리
+							let temp = res;
+							temp.map((v, i) => {
+								feedList.map((v2, i2) => {
+									if (v._id == v2._id) {
+										temp.splice(i, 1);
+									}
+								});
+							});
+							list = [...temp, ...feedList];
+							//앞 페이지를 받아오는 경우, 합산된 리스트의 0번 인덱스로 저절로 스크롤이 되는 현상 발견
+							//기존에 위로 스크롤 하고 있던 상태를 유지시키기 위한 scrollToIndex 처리
+							setTimeout(() => {
+								if (flatlist.current) {
+									console.log('scrollToItem 최상단');
+									flatlist.current.scrollToIndex({
+										animated: false,
+										index: res.length < 10 ? res.length : 10, // 새로 받아온 앞 페이지 리스트가 10개 이하(최상단 페이지라는 증거)일 때 가장 최신의 글로 인덱스 자동 이동
+									});
+								}
+							}, 0);
+						} else if (!pre && next) {
+							console.log('스크롤 최하단');
+							list = [...feedList, ...res];
+						}
+						console.log('최종 list length', list.length);
+						setFeed(list);
+						setLoading(false);
 					},
 					errormsg => {
 						Modal.popOneBtn(errormsg, '확인', () => Modal.close());
+						setLoading(false);
+					},
+				);
+				break;
+			case 'TagMeFeedList':
+				// console.log('route.params?.userobject._id,', route.params?.userobject._id);
+				setLoading(true);
+				params = {
+					userobject_id: route.params?.userobject._id,
+					login_userobject_id: userGlobalObject.userInfo._id,
+					limit: FEED_LIMIT,
+				};
+				//기본 LIMIT보다 작은 인덱스가 선택됐을 경우 다음 페이지 호출만 요청
+				if (route.params && route.params.index < 10) {
+					console.log('route.params && route.params.index < 10', route.params && route.params.index < 10);
+					if (!pre && next) {
+						console.log('next');
+						params.target_object_id = feedList[feedList.length - 1]._id;
+						params.order_value = 'next';
+					}
+				} else {
+					route.params ? console.log('selected index', route.params.index) : false;
+					//스크롤 최상단 도착 => 타겟은 최상단의 피드id이며 호출은 이전 페이지
+					if (pre && !next) {
+						params.target_object_id = feedList[0]._id;
+						params.order_value = 'pre';
+						//스크롤 최하단 도착 => 타겟은 최하단 피드id이며 호출은 다음 페이지
+					} else if (!pre && next) {
+						params.target_object_id = feedList[feedList.length - 1]._id;
+						params.order_value = 'next';
+					} else {
+						//중간에 인터럽트
+						params.target_object_id = route.params.selected._id;
+						params.order_value = 'interrupt';
+					}
+				}
+				console.log('최종 param', params);
+				getUserTaggedFeedList(
+					params,
+					result => {
+						console.log('result / getUserTaggedFeedList', result.msg.length);
+						const res = result.msg;
+						setTotal(result.total_count);
+						let list = [];
+						if (!pre && !next) {
+							console.log('첫 호출');
+							list = res;
+						} else if (pre && !next) {
+							console.log('스크롤 최상단');
+							if (route.params.index < 10) return;
+							//현재 중복된 값이 오고 있는 것을 발견 임시로 클라이언트에서 필터처리
+							let temp = res;
+							temp.map((v, i) => {
+								feedList.map((v2, i2) => {
+									if (v._id == v2._id) {
+										temp.splice(i, 1);
+									}
+								});
+							});
+							list = [...temp, ...feedList];
+							//앞 페이지를 받아오는 경우, 합산된 리스트의 0번 인덱스로 저절로 스크롤이 되는 현상 발견
+							//기존에 위로 스크롤 하고 있던 상태를 유지시키기 위한 scrollToIndex 처리
+							setTimeout(() => {
+								if (flatlist.current) {
+									console.log('scrollToItem 최상단');
+									flatlist.current.scrollToIndex({
+										animated: false,
+										index: res.length < 10 ? res.length : 10, // 새로 받아온 앞 페이지 리스트가 10개 이하(최상단 페이지라는 증거)일 때 가장 최신의 글로 인덱스 자동 이동
+									});
+								}
+							}, 0);
+						} else if (!pre && next) {
+							console.log('스크롤 최하단');
+							list = [...feedList, ...res];
+						}
+						console.log('최종 list length', list.length);
+						setFeed(list);
+						setLoading(false);
+					},
+					errormsg => {
+						Modal.popOneBtn(errormsg, '확인', () => Modal.close());
+						setLoading(false);
 					},
 				);
 				break;
@@ -241,13 +376,24 @@ export default FeedList = ({route, navigation}) => {
 				);
 				break;
 			default:
+				let params = {
+					login_userobject_id: userGlobalObject.userInfo._id,
+					limit: FEED_LIMIT,
+					order_value: 'next',
+				};
+				if (feedList.length > 0) {
+					params.target_object_id = feedList[feedList.length - 1]._id;
+				}
+				console.log('params', params);
 				getSuggestFeedList(
-					{
-						login_userobject_id: userGlobalObject.userInfo._id,
-					},
-					({msg}) => {
-						// console.log(msg.length);
-						setFeed(msg);
+					params,
+					result => {
+						setTotal(result.total_count);
+						if (params.target_object_id) {
+							setFeed([...feedList, ...result.msg]);
+						} else {
+							setFeed(result.msg);
+						}
 					},
 					errormsg => {
 						Modal.popOneBtn(errormsg, '확인', () => Modal.close());
@@ -394,11 +540,11 @@ export default FeedList = ({route, navigation}) => {
 	const getItemLayout = (data, index) => {
 		if (!data[index]) return {length: 0, offset: 0, index: index};
 		return {length: data[index].height, offset: data[index].offset, index: index};
-	}
+	};
 	const keyExtractor = (item, index) => {
 		let key = item._id + item.feed_update_date + item.feed_is_like;
 		return key;
-	}
+	};
 	const [tl, setTl] = React.useState({});
 	const [cl, setCl] = React.useState({});
 	const [fontSize, setSize] = React.useState(16);

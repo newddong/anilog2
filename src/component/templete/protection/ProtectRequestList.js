@@ -3,7 +3,7 @@ import {Text, View, FlatList, RefreshControl, ActivityIndicator, StyleSheet} fro
 import {APRI10, GRAY10} from 'Root/config/color';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import {txt} from 'Root/config/textstyle';
-import {NETWORK_ERROR, ONLY_CONTENT_FOR_ADOPTION, PROTECT_REQUEST_MAIN_LIMIT} from 'Root/i18n/msg';
+import {DEFAULT_ANIMAL_PROFILE, NETWORK_ERROR, ONLY_CONTENT_FOR_ADOPTION, PROTECT_REQUEST_MAIN_LIMIT} from 'Root/i18n/msg';
 import Modal from 'Root/component/modal/Modal';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import Loading from 'Root/component/molecules/modal/Loading';
@@ -15,6 +15,7 @@ import {getSearchResultProtectRequest} from 'Root/api/protectapi';
 import protect_obj from 'Root/config/protect_obj';
 import {useNavigation} from '@react-navigation/core';
 import DP from 'Root/config/dp';
+import ProtectedThumbnail from 'Root/component/molecules/media/ProtectedThumbnail';
 
 export default ProtectRequestList = ({route}) => {
 	const navigation = useNavigation();
@@ -120,11 +121,11 @@ export default ProtectRequestList = ({route}) => {
 					// 페이징 호출 분기
 					list = [...data, ...res];
 				}
-				console.log('보호요청 총 length', list.length);
+				console.log('getSearchResultProtectRequest length', list.length);
 				setData(list);
 				protect_obj.protect = list;
-				setOffset(offset + 1); //데이터를 추가한 뒤 페이지 ++
 				Modal.close();
+				setOffset(offset + 1); //데이터를 추가한 뒤 페이지 ++
 				setLoading(false); //로딩 Indicator 종료
 			},
 			err => {
@@ -249,10 +250,11 @@ export default ProtectRequestList = ({route}) => {
 	const closePaging = React.useRef(true);
 
 	const onScroll = e => {
-		console.log('offset', offset, 'e', e.nativeEvent.contentOffset.y);
 		let y = e.nativeEvent.contentOffset.y;
-		console.log('목적 Offset ', ITEM_HEIGHT * 40 * (offset - 1));
-		if (y > ITEM_HEIGHT * 40 * (offset - 1) && closePaging) {
+		console.log('offset', offset, 'e', y);
+		const To = PROTECT_REQUEST_MAIN_LIMIT * (offset - 1) - 20;
+		console.log('to', To * ITEM_HEIGHT);
+		if (y > ITEM_HEIGHT * To && closePaging) {
 			if (getData().length % PROTECT_REQUEST_MAIN_LIMIT == 0) {
 				getList();
 				closePaging.current = false;
@@ -359,10 +361,9 @@ export default ProtectRequestList = ({route}) => {
 					decelerationRate={0.85}
 					ListHeaderComponent={header()}
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
-					// removeClippedSubviews={true}
 					extraData={refreshing}
 					// maxToRenderPerBatch={5} // re-render를 막는군요.
-					windowSize={11}
+					windowSize={5}
 					ref={flatlist}
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
 				/>

@@ -186,7 +186,7 @@ export function getByteSubtring(str, start, end) {
 			}
 
 			let startCharCode = str.charCodeAt(startIdx);
-			console.log(str.charAt(startIdx), startCharCode);
+			// console.log(str.charAt(startIdx), startCharCode);
 
 			//시작 문자가 상위 서로게이트일 경우는 오류가 나지 않음
 			if (startCharCode >= 0xdc00 && startCharCode <= 0xdfff) {

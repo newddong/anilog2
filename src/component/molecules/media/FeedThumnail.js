@@ -6,6 +6,7 @@ import {Blur, Blur246, Check50, ImageList48, VideoPlay48} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import {BLACK, RED10, WHITE} from 'Root/config/color';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
+import FastImage from 'react-native-fast-image';
 
 /**
  * 피드썸네일
@@ -63,11 +64,11 @@ const FeedThumbnail = React.memo(props => {
 		if ((props.selectMode && selected) || (props.selectMode && props.data.checkBoxState)) {
 			return (
 				<View style={[{opacity: 0.4, backgroundColor: BLACK}]}>
-					<Image source={{uri: props.data.feed_thumbnail}} style={styles.img_square_246} />
+					{/* <Image source={{uri: props.data.feed_thumbnail}} style={styles.img_square_246} /> */}
 				</View>
 			);
 		} else if (!props.data.checkBoxState || !selected) {
-			return <Image source={{uri: props.data.feed_thumbnail}} style={styles.img_square_246} />;
+			return <FastImage source={{uri: props.data.feed_thumbnail}} style={styles.img_square_246} />;
 		}
 	};
 	return (

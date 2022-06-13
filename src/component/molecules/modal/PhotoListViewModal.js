@@ -24,7 +24,7 @@ const PhotoListViewModal = props => {
 	return (
 		<View style={style.background}>
 			<TouchableOpacity onPress={() => (props.onClose ? props.onClose() : Modal.close())} style={[style.crossMark]}>
-				<View style={{backgroundColor:'yellow',width:120*DP,height:120*DP}}>
+				<View style={{/*backgroundColor:'yellow',*/width:120*DP,height:120*DP}}>
 				<Cross46 />
 				</View>
 			</TouchableOpacity>
@@ -100,6 +100,9 @@ PhotoListViewModal.defaultProps = {
 };
 
 const style = StyleSheet.create({
+	swiper_index:{
+		backgroundColor:'black'
+	},	
 	background: {
 		backgroundColor: 'black',
 		height: Platform.OS == 'ios' ? Dimensions.get('window').height : '100%',
@@ -115,7 +118,8 @@ const style = StyleSheet.create({
 	popUpWindow: {
 		width: 750 * DP,
 		height: 1100 * DP,
-		backgroundColor: WHITE,
+		// backgroundColor: WHITE,
+		backgroundColor:'black',
 		justifyContent: 'center',
 		alignItems: 'center',
 	},

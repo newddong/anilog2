@@ -48,6 +48,7 @@ import female48 from './female48';
 import videoPlay48 from './videoPlay48';
 import imageList48 from './imageList48';
 import cancel48 from './cancel48';
+import cancel36 from './cancel36';
 import bracket48 from './bracket48';
 import starBorder from './starBorder';
 import starFilled from './starFilled';
@@ -193,6 +194,7 @@ import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK, MAINBLACK} from 'Root/con
 
 const size30 = {width: 30 * DP, height: 30 * DP};
 const size32 = {width: 32 * DP, height: 32 * DP};
+const size36 = {width: 36 * DP, height: 36 * DP};
 const size38 = {width: 38 * DP, height: 38 * DP};
 const size40 = {width: 40 * DP, height: 40 * DP};
 const size42 = {width: 42 * DP, height: 42 * DP};
@@ -303,6 +305,7 @@ export const Female48 = makeSvg(female48, size48);
 export const VideoPlay48 = makeSvg(videoPlay48, size48);
 export const ImageList48 = makeSvg(imageList48, size48);
 export const Cancel48 = makeSvg(cancel48, size48);
+export const Cancel36 = makeSvg(cancel36, size36);
 export const Bracket48 = makeSvg(bracket48, size48);
 export const Star50_Border = makeSvg(starBorder, size50);
 export const Star50_Filled = makeSvg(starFilled, size50);

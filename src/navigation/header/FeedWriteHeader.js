@@ -2,7 +2,7 @@ import React from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
 import {BackArrow32, Bracket48, Send60_Big} from 'Atom/icon';
 import DP from 'Root/config/dp';
-import {WHITE, APRI10} from 'Root/config/color';
+import {WHITE, APRI10, GRAY10, GRAY40} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 import {RED} from 'Root/config/color';
@@ -287,7 +287,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 	};
 
 	return (
-		<View style={[style.headerContainer, style.shadow]}>
+		<View style={[style.headerContainer, style.shadow,{borderBottomColor:GRAY40,borderBottomWidth:2*DP}]}>
 			<TouchableOpacity onPress={navigation.goBack}>
 				<View style={style.backButtonContainer}>
 					<BackArrow32 onPress={navigation.goBack} />
@@ -316,7 +316,7 @@ const style = StyleSheet.create({
 	headerContainer: {
 		alignItems: 'center',
 		justifyContent: 'space-between',
-		height: 135 * DP,
+		height: 98 * DP,
 		flexDirection: 'row',
 		backgroundColor: WHITE,
 		paddingHorizontal: 28 * DP,

@@ -20,6 +20,7 @@ import RadioBox from 'Root/component/molecules/select/RadioBox';
 import RadioBoxItem from 'Molecules/select/RadioBoxItem';
 import RadioBoxGroup from 'Molecules/select/RadioBoxGroup';
 import CheckBox from 'Root/component/molecules/select/CheckBox';
+import CheckBoxItem from 'Root/component/molecules/select/CheckBoxItem';
 
 export default FeedWrite = props => {
 	const [showPetAccountList, setShowPetAccountList] = React.useState(false); //PetAccount 계정
@@ -199,15 +200,8 @@ export default FeedWrite = props => {
 		props.navigation.setParams({...props.route.params, ...report});
 	};
 
-	const onSetDiary = () => {
-		let diary = false;
-		if (isDiary) {
-			setDiary(false);
-			diary = false;
-		} else {
-			setDiary(true);
-			diary = true;
-		}
+	const onSetDiary = (diary) => {
+		setDiary(diary);
 		props.navigation.setParams({...props.route.params, feed_is_protect_diary: diary});
 	};
 
@@ -318,25 +312,6 @@ export default FeedWrite = props => {
 						</View>
 					</TouchableWithoutFeedback>
 				</View>
-				{!showReportForm && !showLostAnimalForm && (
-					<View style={[feedWrite.btn_w194_container]}>
-						<View style={[btn_style.btn_w194, feedWrite.btn_w194]}>
-							<AniButton
-								btnTitle={'임보일기'}
-								btnStyle={isDiary ? 'filled' : 'border'}
-								titleFontStyle={24}
-								btnLayout={btn_w194}
-								onPress={onSetDiary}
-							/>
-						</View>
-						{/* 기능 개발되면 다시 열릴 공개 설정 버튼 */}
-						{/* <TouchableOpacity onPress={onPressPublicSetting} style={[feedWrite.public_setting_btn]}> */}
-						{/* <ActionButton btnTitle={'전체 공개'} onOpen={() => alert('dd')} btnStyle={'border'} titleFontStyle={24} btnLayout={btn_w194} /> */}
-						{/* <Text style={[txt.noto24, {color: APRI10}]}>{publicSetting}</Text> */}
-						{/* <Arrow_Down_APRI10 /> */}
-						{/* </TouchableOpacity> */}
-					</View>
-				)}
 				{/* {selectedImg.length > 0 && (
 					<View style={[temp_style.selectedMediaList, feedWrite.selectedMediaList]}>
 						<SelectedMediaList items={selectedImg} onDelete={deletePhoto} />
@@ -356,7 +331,7 @@ export default FeedWrite = props => {
 	};
 
 	return (
-		<View style={{flex: 1, backgroundColor: '#FFF'}}>
+		<View style={{flex: 1, backgroundColor: '#FFF',paddingTop:30*DP}}>
 			{/* <TouchableWithoutFeedback onPress={test}>
 				<View style={{backgroundColor: 'red', width: 50, height: 50}}></View>
 			</TouchableWithoutFeedback> */}
@@ -364,20 +339,20 @@ export default FeedWrite = props => {
 				renderItem={({item, index}) => {
 					return (
 						<View contentContainerStyle={[login_style.wrp_main]} ref={container}>
-							<View style={{flexDirection:'row',backgroundColor:'yellow'}}>
-								<CheckBox txtSize={28} value='임보일기'></CheckBox>
-								
-								<RadioBoxGroup style={{width:474*DP,flexDirection:'row',justifyContent:'space-between'}} onSelect={(item,index)=>console.log(item,index)}>
-									<RadioBoxItem>전체공개</RadioBoxItem>
-									<RadioBoxItem>비공개</RadioBoxItem>
-									<RadioBoxItem style={{backgroundColor:'blue'}}>팔로워공개</RadioBoxItem>
+							<View style={{flexDirection:'row',alignItems:'center',paddingHorizontal:28*DP,justifyContent:'space-between'}}>
+								<CheckBoxItem style={{width:148*DP}} textStyle={[txt.noto26,{lineHeight:38*DP}]} onCheck={onSetDiary}>임보일기</CheckBoxItem>
+								<View style={{height:38*DP,width:2*DP,backgroundColor:GRAY10}}></View>
+								<RadioBoxGroup style={{flexDirection:'row',justifyContent:'space-between',width:484*DP}} onSelect={(item,index)=>console.log(item,index)}>
+									<RadioBoxItem textStyle={[txt.noto26,{lineHeight:38*DP}]}>전체공개</RadioBoxItem>
+									<RadioBoxItem textStyle={[txt.noto26,{lineHeight:38*DP}]}>비공개</RadioBoxItem>
+									<RadioBoxItem textStyle={[txt.noto26,{lineHeight:38*DP}]}>팔로워공개</RadioBoxItem>
 								</RadioBoxGroup>
 								{/* <View style={{width:474*DP,backgroundColor:'red'}}>
 									<RadioBoxItem items={['전체공개','비공개','팔로워공개']} width={160*DP}/>
 								</View> */}
 							</View>
 							<HashInput
-								containerStyle={[temp_style.feedTextEdit, {minHeight: showLostAnimalForm || showReportForm ? 214 * DP : 316 * DP}]}
+								containerStyle={[temp_style.feedTextEdit]}
 								textAlignVertical={'top'}
 								multiline={true}
 								placeholder="게시물을 작성하세요 (150자)"
@@ -525,11 +500,10 @@ export const temp_style = StyleSheet.create({
 	feedTextEdit: {
 		width: 694 * DP,
 		minHeight: 376 * DP,
-		marginTop: 40 * DP,
+		marginTop: 30 * DP,
 		backgroundColor: '#FAFAFA',
 		alignSelf: 'center',
-		// borderWidth: 2 * DP,
-		// borderColor: APRI10,
+		justifyContent:'space-between',
 		borderRadius: 24 * DP,
 		padding: 24 * DP,
 	},

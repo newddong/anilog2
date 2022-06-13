@@ -12,6 +12,13 @@ import {txt} from 'Root/config/textstyle';
 import {Location54_Filled} from 'Root/component/atom/icon';
 import DP from 'Root/config/dp';
 
+
+/**
+ * 피드 인풋, 해쉬태그, 유저링크 입력가능
+ *
+ * @param {object} props - Props Object
+ * @param {import('native-base').StyledProps|Array<import('native-base').StyledProps>} props.containerStyle - 컨테이너 스타일
+ */
 export default function HashInput(props) {
 	const [value, setValue] = React.useState(props.value ? props.value : '');
 	const [find, setFind] = React.useState(false);
@@ -292,8 +299,9 @@ HashInput.defaultProp = {
 
 const style = StyleSheet.create({
 	mediaListContainer: {
-		width: 600 * DP,
+		// width: 600 * DP,
 		// height: 190 * DP,
 		marginTop: 20 * DP,
+		
 	},
 });

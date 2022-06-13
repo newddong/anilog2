@@ -514,7 +514,7 @@ export default FeedContent = props => {
 				navigation.navigate('Login');
 			});
 		} else {
-			props.onPressFavorite&&props.onPressFavorite(bool);
+			props.onPressFavorite && props.onPressFavorite(bool);
 		}
 	};
 	const lines = getLinesOfString(feed_content, 55);
@@ -646,20 +646,34 @@ export default FeedContent = props => {
 							</View>
 						</TouchableWithoutFeedback>
 					</View>
-					<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
-						<View style={[organism_style.favoriteTag_feedContent]}>
-							{(props.data.feed_writer_id.is_favorite || isFavorite) ? (
-								<FavoriteTag48_Filled onPress={() => onFavorite(false)} />
-							) : (
-								<FavoriteTag48_Border onPress={() => onFavorite(true)}/>
+					{props.data.feed_writer_id ? (
+						<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
+							<View style={[organism_style.favoriteTag_feedContent]}>
+								{props.data.feed_writer_id.is_favorite ? (
+									<FavoriteTag48_Filled onPress={() => onPressFavoriteWriter(false)} />
+								) : (
+									<FavoriteTag48_Border onPress={() => onPressFavoriteWriter(true)} />
+								)}
+							</View>
+							{false && (
+								<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
+									<Text style={[txt.roboto24, {color: GRAY10}]}>{count_to_K(props.data.feed_writer_id.user_favorite_count)}</Text>
+								</View>
 							)}
 						</View>
-					</View>
+					) : (
+						<></>
+					)}
 				</View>
 
 				{(route.name.includes('FeedList') || feed_type == 'missing' || route.name.includes('FeedCommentList')) && (
-					<View style={[organism_style.content_feedContent, /*feedContent_style.content_Top10,*/ {width: 750 * DP,paddingHorizontal:28*DP}]}>
-						<HashText style={[txt.noto28]} byteOfLine={53} onMoreView={()=>{setShow(true)}}>
+					<View style={[organism_style.content_feedContent, /*feedContent_style.content_Top10,*/ {width: 750 * DP, paddingHorizontal: 28 * DP}]}>
+						<HashText
+							style={[txt.noto28]}
+							byteOfLine={55}
+							onMoreView={() => {
+								setShow(true);
+							}}>
 							{feed_content}
 						</HashText>
 					</View>

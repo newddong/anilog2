@@ -59,8 +59,10 @@ export default FavoriteFeeds = ({route, navigation}) => {
 		let res = result.msg;
 		if (route.name == 'FavoriteFeeds') {
 			res = result.msg.map(v => v.favorite_feed_id);
+		} else if (route.name == 'TagMeFeeds') {
+			res = result.msg.map(v => v.usertag_feed_id);
 		}
-		console.log('result / FavoriteFeeds  : ', result.msg.length);
+		// console.log('result', result);
 		if (data != 'false') {
 			setData([...data, ...res]);
 		} else {
@@ -239,7 +241,7 @@ export default FavoriteFeeds = ({route, navigation}) => {
 						navigation.push('TagMeFeedList', {
 							title: userGlobalObject.userInfo.user_nickname + '님을 태그한 글',
 							userobject: result.msg,
-							selected: feed_id,
+							selected: feed_id, //target_object_id
 							index: index,
 						});
 					} else if (route.name == 'FavoriteFeeds') {

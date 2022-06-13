@@ -703,7 +703,7 @@ export const temp_style = StyleSheet.create({
 		backgroundColor: '#B0C7D8',
 	},
 	feedTextEdit: {
-		width: 654 * DP,
+		width: 694 * DP,
 		// minHeight: 376 * DP,
 		marginTop: 40 * DP,
 		backgroundColor: 'white',

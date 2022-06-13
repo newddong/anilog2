@@ -108,19 +108,20 @@ export default Feed = React.memo(props => {
 
 	return (
 		<View style={[feed_templete_style.feed]} removeClippedSubviews>
-			<FeedContent data={props.data} deleteFeed={deleteFeed} toggleFeedLike={toggleFeedLike} isLike={isLike} likeCount={likeCount}/>
+			<FeedContent data={props.data} deleteFeed={deleteFeed} toggleFeedLike={toggleFeedLike} isLike={isLike} likeCount={likeCount} />
 			{/* 270DP */}
 			<View style={[feed_templete_style.comment_feed_view]}>
 				{/* RecentComment */}
 				{feed_recent_comment && (
 					<View style={[feed_templete_style.recentComment_view]}>
+						<View style={{width: 16 * DP, height: 3 * DP, backgroundColor: '#767676', position: 'absolute', top: 30 * DP, left: -20 * DP}} />
 						<View style={[feed_templete_style.writerID_feed_view]}>
 							<View style={[feed_templete_style.writerID_feed, {flex: 1}, {alignItems: 'flex-start'}]}>
-								<Text style={[txt.roboto24, feed_style.recent_comment_user, {color: GRAY10}]}>{feed_recent_comment?.comment_user_nickname}</Text>
+								<Text style={[txt.roboto24, feed_style.recent_comment_user]}>{feed_recent_comment?.comment_user_nickname}</Text>
 							</View>
 							<View style={(feed_templete_style.commentText_view, {flex: 3})}>
-								<Text style={[txt.noto24]} numberOfLines={2} ellipsizeMode="tail">
-									{feed_recent_comment?.comment_contents}
+								<Text style={[txt.noto26, {color: GRAY10}]} numberOfLines={2} ellipsizeMode="tail">
+									{feed_recent_comment?.comment_contents}첫댓글의 중요성
 								</Text>
 							</View>
 						</View>

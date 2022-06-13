@@ -3,7 +3,16 @@ import {Text, View, Platform, StyleSheet, TouchableOpacity} from 'react-native';
 import {organism_style, feedContent_style} from 'Organism/style_organism';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
 import {useNavigation, useRoute} from '@react-navigation/core';
-import {FavoriteTag48_Border, FavoriteTag48_Filled, Meatball50_GRAY20_Horizontal, Share48_Filled, Comment48_Border, Like48_Border, Like48_Filled, Blur694} from 'Atom/icon';
+import {
+	FavoriteTag48_Border,
+	FavoriteTag48_Filled,
+	Meatball50_GRAY20_Horizontal,
+	Share48_Filled,
+	Comment48_Border,
+	Like48_Border,
+	Like48_Filled,
+	Blur694,
+} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
 import {Arrow_Down_GRAY20} from 'Atom/icon';
 import DP from 'Root/config/dp';
@@ -29,9 +38,21 @@ import {deleteFeed, favoriteFeed, getFavoriteFeedListByUserId} from 'Root/api/fe
 import userGlobalObject from 'Root/config/userGlobalObject';
 import MissingReportInfo from 'Organism/info/MissingReportInfo';
 import {createReport} from 'Root/api/report';
-import {getStringLength, getLinesOfString, count_to_K, getByteSubtring, getByteCharAt, findByteIndex, findByteLastIndex, findNearSpace, splitStr,extractTags} from 'Root/util/stringutil';
+import {
+	getStringLength,
+	getLinesOfString,
+	count_to_K,
+	getByteSubtring,
+	getByteCharAt,
+	findByteIndex,
+	findByteLastIndex,
+	findNearSpace,
+	splitStr,
+	extractTags,
+} from 'Root/util/stringutil';
 import FeedMedia from 'Molecules/media/FeedMedia';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {object} from 'prop-types';
 
 export default FeedContent = props => {
 	const {
@@ -72,22 +93,22 @@ export default FeedContent = props => {
 	const [btnStatus, setBtnStatus] = React.useState(false); //더보기 Arrow방향 false면 아래
 	const [show, setShow] = React.useState(false);
 	const [send, setSend] = React.useState();
+	const [isFavorite, setIsFavorite] = React.useState(props.data.feed_writer_id.is_favorite);
 	const feed_writer = props.data.feed_avatar_id ? props.data.feed_avatar_id : props.data.feed_writer_id;
 	React.useEffect(() => {
-		if (feed_avatar_id) {
+		if (typeof feed_avatar_id === object) {
 			setSend(feed_avatar_id);
 		} else {
 			setSend(feed_writer_id);
 		}
 
 		// if (typeof feed_avatar_id == 'object') {
-		// 	setSend(feed_avatar_id);
+		//  setSend(feed_avatar_id);
 		// } else {
-		// 	setSend(props.data.feed_writer_id);
-		// 	// console.log('props.data.feed_writer_id', props.data.feed_writer_id.is_favorite);
+		//  setSend(props.data.feed_writer_id);
+		//  // console.log('props.data.feed_writer_id', props.data.feed_writer_id.is_favorite);
 		// }
 	}, [props.data]);
-
 
 	//피드 미트볼 메뉴 - 신고 클릭
 	const onPressReport = context => {
@@ -282,6 +303,7 @@ export default FeedContent = props => {
 							// console.log('result / followUser / FeedContent', result.msg);
 							Modal.close();
 							Modal.popNoBtn('즐겨찾기 ' + (isFavorite ? '추가' : '삭제') + '가 완료되었습니다.');
+							setIsFavorite(true);
 							setTimeout(() => {
 								Modal.close();
 							}, 200);
@@ -492,7 +514,7 @@ export default FeedContent = props => {
 				navigation.navigate('Login');
 			});
 		} else {
-			props.onPressFavorite(bool);
+			props.onPressFavorite&&props.onPressFavorite(bool);
 		}
 	};
 	const lines = getLinesOfString(feed_content, 55);
@@ -506,13 +528,13 @@ export default FeedContent = props => {
 			return {};
 		} else {
 			return {
-				height: 914 * DP + (lines > 2 ? 2 : lines) * 44 * DP,
+				height: 914 * DP + (lines > 2 ? 2 : lines) * 48 * DP,
 			};
 		}
 	};
 
 	const moveToCommentList = async () => {
-		console.log('move to comment')
+		console.log('move to comment');
 		if (userGlobalObject.userInfo.isPreviewMode && feed_comment_count == 0) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate('Login');
@@ -579,7 +601,9 @@ export default FeedContent = props => {
 										<></>
 									)}
 								</View>
-							) : false}
+							) : (
+								false
+							)}
 						</View>
 					</View>
 
@@ -607,7 +631,7 @@ export default FeedContent = props => {
 							<View style={feed_templete_style.likeButtonWrapper}>
 								<View style={[feed_templete_style.like48]}>{props.isLike ? <Like48_Filled /> : <Like48_Border />}</View>
 								<View style={[feed_templete_style.like_count_feed]}>
-									<Text style={[txt.roboto24,{color:GRAY10}]}>{props.likeCount}</Text>
+									<Text style={[txt.roboto24, {color: GRAY10}]}>{props.likeCount}</Text>
 								</View>
 							</View>
 						</TouchableWithoutFeedback>
@@ -617,28 +641,25 @@ export default FeedContent = props => {
 									<Comment48_Border />
 								</View>
 								<View style={[organism_style.comment_count_feed]}>
-									<Text style={[txt.roboto24,{color:GRAY10,marginLeft:-15*DP}]}>{feed_comment_count}</Text>
+									<Text style={[txt.roboto24, {color: GRAY10, marginLeft: -15 * DP}]}>{feed_comment_count}</Text>
 								</View>
 							</View>
 						</TouchableWithoutFeedback>
 					</View>
 					<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
 						<View style={[organism_style.favoriteTag_feedContent]}>
-							{props.data.feed_writer_id.is_favorite ? (
-								<FavoriteTag48_Filled onPress={() => onPressFavoriteWriter(false)} />
+							{(props.data.feed_writer_id.is_favorite || isFavorite) ? (
+								<FavoriteTag48_Filled onPress={() => onFavorite(false)} />
 							) : (
-								<FavoriteTag48_Border onPress={() => onPressFavoriteWriter(true)} />
+								<FavoriteTag48_Border onPress={() => onFavorite(true)}/>
 							)}
 						</View>
-						{false&&<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
-							<Text style={[txt.roboto24, {color: GRAY10}]}>{count_to_K(props.data.feed_writer_id.user_favorite_count)}</Text>
-						</View>}
 					</View>
 				</View>
 
 				{(route.name.includes('FeedList') || feed_type == 'missing' || route.name.includes('FeedCommentList')) && (
 					<View style={[organism_style.content_feedContent, /*feedContent_style.content_Top10,*/ {width: 750 * DP,paddingHorizontal:28*DP}]}>
-						<HashText style={[txt.noto28]} byteOfLine={55} onMoreView={()=>{setShow(true)}}>
+						<HashText style={[txt.noto28]} byteOfLine={53} onMoreView={()=>{setShow(true)}}>
 							{feed_content}
 						</HashText>
 					</View>
@@ -688,7 +709,7 @@ const style = StyleSheet.create({
 		flexDirection: 'row',
 		width: '100%',
 		height: 48 * DP,
-		marginTop:-48*DP,
+		marginTop: -48 * DP,
 		paddingHorizontal: 28 * DP,
 		alignItems: 'center',
 		justifyContent: 'flex-end',
@@ -736,16 +757,15 @@ const feed_templete_style = StyleSheet.create({
 	},
 	likeButtonWrapper: {
 		flexDirection: 'row',
-		height: 120*DP,
-		width:104*DP,
+		height: 120 * DP,
+		width: 104 * DP,
 		//터치 영역 확보
 		alignItems: 'center',
-		
 	},
 	likeCommentButtons_view: {
 		flexDirection: 'row',
 		width: 750 * DP,
-		paddingHorizontal:28*DP,
+		paddingHorizontal: 28 * DP,
 		height: 52 * DP,
 		alignItems: 'center',
 		justifyContent: 'space-between',
@@ -787,11 +807,11 @@ const feed_templete_style = StyleSheet.create({
 		// alignItems: 'center',
 		// justifyContent: 'center',
 	},
-	commentButtonWrapper:{
-		flexDirection:'row',
-		width:104*DP,
-		height:120*DP,
-		alignItems:'center'
+	commentButtonWrapper: {
+		flexDirection: 'row',
+		width: 104 * DP,
+		height: 120 * DP,
+		alignItems: 'center',
 	},
 	comment_count_feed: {
 		width: 56 * DP,

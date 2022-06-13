@@ -6,7 +6,7 @@ import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {AVAILABLE_NICK, PET_NICKNAME_FORM} from 'Root/i18n/msg';
 import {btn_w654, btn_w694_r30} from 'Atom/btn/btn_style';
-import {Check50, Rect50_Border} from 'Atom/icon';
+import {Check42, Check50, Rect42_Border, Rect50_Border} from 'Atom/icon';
 import Modal from 'Component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
 import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';
@@ -229,13 +229,13 @@ export default AssignPetProfileImage = ({route}) => {
 							onValid={onNicknameValid}
 							ref={nicknameInput}
 							showMsg
-							maxLength={25}
+							maxlength={20}
 							height={104}
 						/>
 					</View>
 					<View style={[assignPetProfileImage_style.checkBox]}>
-						<TouchableOpacity onPress={onPressCheckBox}>{protect ? <Check50 /> : <Rect50_Border />}</TouchableOpacity>
-						<Text style={[txt.noto28, {textAlignVertical: 'center'}]}> 해당 동물은 임시보호 중인 동물입니다.</Text>
+						<TouchableOpacity onPress={onPressCheckBox}>{protect ? <Check42 /> : <Rect42_Border />}</TouchableOpacity>
+						<Text style={[txt.noto28, {textAlignVertical: 'center', marginLeft: 12 * DP}]}> 해당 동물은 임시보호 중인 동물입니다.</Text>
 					</View>
 				</View>
 				<View style={[assignPetProfileImage_style.btn_w654]}>

@@ -17,7 +17,9 @@ import setting46 from './setting46';
 import heart46_filled from './heart46_filled';
 import search48 from './search48';
 import alarmBadger48 from './alarmBadger48';
+import radioChecked38 from './radioChecked38';
 import radioChecked48 from './radioChecked48';
+import radioUnchecked38 from './radioUnchecked38';
 import radioUnchecked48 from './radioUnchecked48';
 import public48 from './public48';
 import private48 from './private48';
@@ -219,11 +221,17 @@ const defaultProfileImg = {width: 294 * DP, height: 294 * DP};
 const profileDefaultImg_194 = {width: 194 * DP, height: 194 * DP};
 
 const makeSvg = (component, style, color) => {
-	return props =>
+	if(!color){
+		return props =>
 		props.onPress
+			? React.createElement(TouchableOpacity, {...props}, React.createElement(component, {...props,...style}))
+			: React.createElement(component, {...props,...style});
+	}
+	return props =>{
+		return props.onPress
 			? React.createElement(TouchableOpacity, {...props}, React.createElement(component, {...style, fill: color}))
 			: React.createElement(component, {...style, fill: color});
-	//return props => React.createElement(component, {...style, ...props, fill: color});
+		}
 };
 
 export const UpdateImg = makeSvg(updateImg, size206);
@@ -257,7 +265,9 @@ export const Heart46_Filled = makeSvg(heart46_filled, size46); //Added 21.10.27
 export const Search48 = makeSvg(search48, size48, GRAY10);
 export const Search48_BLACK = makeSvg(search48, size48, BLACK);
 export const AlarmBadger48 = makeSvg(alarmBadger48, size48);
+export const RadioChecked38 = makeSvg(radioChecked48, size48);
 export const RadioChecked48 = makeSvg(radioChecked48, size48);
+export const RadioUnchecked38 = makeSvg(radioUnchecked48, size48,GRAY30);
 export const RadioUnchecked48 = makeSvg(radioUnchecked48, size48);
 export const Public48 = makeSvg(public48, size48);
 export const Private48 = makeSvg(private48, size48);
@@ -282,7 +292,7 @@ export const Calendar48_Filled = makeSvg(calendar48Filled, size48);
 export const Share48_Filled = makeSvg(share48Filled, size48);
 export const Share48_Border = makeSvg(share48Border, size48);
 export const FavoriteTag48_Filled = makeSvg(favoriteTagFilled, size48, APRI10);
-export const FavoriteTag48_Border = makeSvg(favoriteTag48Border, size48, MAINBLACK);
+export const FavoriteTag48_Border = makeSvg(favoriteTag48Border, size48, GRAY10);
 export const Calendar48_Border = makeSvg(calendar48Border, size48);
 export const Cross48 = makeSvg(cross, size48);
 export const Person48 = makeSvg(person48, size48);

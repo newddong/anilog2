@@ -365,15 +365,17 @@ export default ProtectRequestList = ({route}) => {
 					// maxToRenderPerBatch={5} // re-render를 막는군요.
 					windowSize={5}
 					ref={flatlist}
+					ListFooterComponent={() => {
+						return loading ? (
+							<View style={style.indicatorCont}>
+								<ActivityIndicator size="large" color={APRI10} />
+							</View>
+						) : (
+							<></>
+						);
+					}}
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
 				/>
-				{/* {loading ? (
-					<View style={style.indicatorCont}>
-						<ActivityIndicator size="large" color={APRI10} />
-					</View>
-				) : (
-					<></>
-				)} */}
 			</View>
 		);
 	}
@@ -452,13 +454,5 @@ const style = StyleSheet.create({
 			width: 2 * DP,
 		},
 	},
-	indicatorCont: {
-		position: 'absolute',
-		left: 0,
-		right: 0,
-		top: 0,
-		bottom: 0,
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
+	indicatorCont: {},
 });

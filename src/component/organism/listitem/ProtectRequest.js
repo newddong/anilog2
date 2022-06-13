@@ -93,6 +93,7 @@ export default ProtectRequest = React.memo(props => {
 							<Text style={[txt.noto28, style.breedText]} numberOfLines={1}>
 								{data.protect_animal_species_detail || ''}
 							</Text>
+							<Text style={{color: 'red'}}> {props.index}</Text>
 						</View>
 						{/* 보호요청 관련 Details */}
 						<View style={[style.lowerMenu_helpDetail]}>

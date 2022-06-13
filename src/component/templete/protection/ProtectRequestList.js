@@ -236,21 +236,40 @@ export default ProtectRequestList = ({route}) => {
 	};
 
 	//리스트 페이징 작업
-	const onEndReached = () => {
+	const onEndReached = ({distanceFromEnd}) => {
+		console.log('distanceFromEnd', distanceFromEnd);
 		console.log('EndReached', getData().length % PROTECT_REQUEST_MAIN_LIMIT);
 		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
 
-		if (getData().length % PROTECT_REQUEST_MAIN_LIMIT == 0) {
-			getList();
+		// if (getData().length % PROTECT_REQUEST_MAIN_LIMIT == 0) {
+		// 	getList();
+		// }
+	};
+
+	const closePaging = React.useRef(true);
+
+	const onScroll = e => {
+		console.log('offset', offset, 'e', e.nativeEvent.contentOffset.y);
+		let y = e.nativeEvent.contentOffset.y;
+		console.log('목적 Offset ', ITEM_HEIGHT * 40 * (offset - 1));
+		if (y > ITEM_HEIGHT * 40 * (offset - 1) && closePaging) {
+			if (getData().length % PROTECT_REQUEST_MAIN_LIMIT == 0) {
+				getList();
+				closePaging.current = false;
+			}
 		}
 	};
+
+	React.useEffect(() => {
+		closePaging.current = true;
+	}, [offset]);
 
 	const moveToTop = () => {
 		flatlist.current.scrollToOffset({animated: true, offset: 0});
 	};
 
 	const renderItem = ({item, index}) => {
-		return <ProtectRequestItem item={item} index={index} />;
+		return <ProtectRequestItem key={index} item={item} index={index} />;
 	};
 
 	class ProtectRequestItem extends React.PureComponent {
@@ -259,6 +278,7 @@ export default ProtectRequestList = ({route}) => {
 				<>
 					<ProtectRequest
 						data={getData()[this.props.index]}
+						index={this.props.index}
 						onClickLabel={(status, id) => onClickLabel(this.props.item)}
 						onFavoriteTag={e => onOff_FavoriteTag(e, this.props.index)}
 						onPressProtectRequest={() => onPressProtectRequest(this.props.item)}
@@ -330,11 +350,13 @@ export default ProtectRequestList = ({route}) => {
 					keyExtractor={keyExtractor}
 					getItemLayout={getItemLayout}
 					refreshing
-					onEndReached={onEndReached} //Flatlist 페이징
-					onEndReachedThreshold={0.6} //페이징을 하는 타이밍
+					// onEndReached={onEndReached} //Flatlist 페이징
+					onScroll={onScroll}
+					// onEndReachedThreshold={0.5} //페이징을 하는 타이밍
+					// onScroll={e => console.log('e', e.nativeEvent.contentOffset)}
 					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					ListEmptyComponent={whenEmpty}
-					decelerationRate={0.7}
+					decelerationRate={0.85}
 					ListHeaderComponent={header()}
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
 					// removeClippedSubviews={true}
@@ -344,13 +366,13 @@ export default ProtectRequestList = ({route}) => {
 					ref={flatlist}
 					// https://reactnative.dev/docs/optimizing-flatlist-configuration
 				/>
-				{loading ? (
+				{/* {loading ? (
 					<View style={style.indicatorCont}>
 						<ActivityIndicator size="large" color={APRI10} />
 					</View>
 				) : (
 					<></>
-				)}
+				)} */}
 			</View>
 		);
 	}

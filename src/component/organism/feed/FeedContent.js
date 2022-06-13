@@ -675,7 +675,7 @@ export default FeedContent = props => {
 					<View style={[organism_style.content_feedContent, /*feedContent_style.content_Top10,*/ {width: 750 * DP, paddingHorizontal: 28 * DP}]}>
 						<HashText
 							style={[txt.noto28]}
-							byteOfLine={55}
+							byteOfLine={53}
 							onMoreView={() => {
 								setShow(true);
 							}}>

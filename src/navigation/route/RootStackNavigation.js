@@ -76,7 +76,6 @@ import ShelterAsk from 'Root/component/templete/shelter/ShelterAsk';
 import ReportDetail from 'Root/component/templete/missing/ReportDetail';
 import MissingAnimalDetail from 'Root/component/templete/missing/MissingAnimalDetail';
 import SimpleWithMeatballHeader from '../header/SimpleWithMeatballHeader';
-import LocationSearch from 'Root/component/templete/search/LocationSearch';
 
 const RootStack = createStackNavigator();
 
@@ -268,7 +267,6 @@ export default RootStackNavigation = () => {
 							component={LocationPicker}
 							options={{header: props => <InputAndSearchHeader {...props} isLocation />}}
 						/>
-						<RootStack.Screen name="LocationSearch" component={LocationSearch} options={{header: props => <InputAndSearchHeader {...props} />}} />
 						<RootStack.Screen
 							name="CommunityLocationPicker"
 							component={LocationPicker}

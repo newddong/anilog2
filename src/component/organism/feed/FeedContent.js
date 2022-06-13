@@ -52,6 +52,7 @@ import {
 } from 'Root/util/stringutil';
 import FeedMedia from 'Molecules/media/FeedMedia';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {object} from 'prop-types';
 
 export default FeedContent = props => {
 	const {

@@ -506,7 +506,7 @@ RCT_EXPORT_METHOD(compressImage:(NSDictionary * _Nonnull)params
   CGFloat const quality = [params objectForKey:@"quality"] ? [RCTConvert CGFloat:[params objectForKey:@"quality"]]:1;
   CGFloat const maxHeight = [params objectForKey:@"maxHeight"] ? [RCTConvert CGFloat:[params objectForKey:@"maxHeight"]]:0;
   CGFloat const maxWidth = [params objectForKey:@"maxWidth"] ? [RCTConvert CGFloat:[params objectForKey:@"maxWidth"]]:0;
-  NSString *const mimeType = [params objectForKey:@"mimeType"] ? [RCTConvert NSString:[params objectForKey:@"mimeType"]]:@"jpg";
+  NSString *const mimeType = [params objectForKey:@"mimeType"] ? [RCTConvert NSString:[params objectForKey:@"mimeType"]]:@"image/jpeg";
   
   //이후 reject 여부 체크에서 errCode length로 판별하므로 빈 스트링 넣어줌
   __block NSString* errCode = @"";
@@ -588,13 +588,13 @@ RCT_EXPORT_METHOD(compressImage:(NSDictionary * _Nonnull)params
         //압축된 데이터
         //220510 compress시 저장 타입 jpg로 통일
         NSData *imageData = UIImageJPEGRepresentation(img, quality);
-//        if([mimeType.lowercaseString isEqualToString:@"jpg"]){
+//        if([mimeType.lowercaseString containsString:@"jpeg"]){
 //          imageData = UIImageJPEGRepresentation(img, quality);
-//        } else if([mimeType.lowercaseString isEqualToString:@"png"]){
+//        } else if([mimeType.lowercaseString containsString:@"png"]){
 //          imageData = UIImagePNGRepresentation(img);
 //        }
         
-        NSString* savedPath = [self createTempImage:imageData mimeType:@"jpg"];
+        NSString* savedPath = [self createTempImage:imageData mimeType:@"image/jpg"];
         if(savedPath == nil){
           errCode = @"Image save error";
           errMsg = @"Fail to save image";
@@ -791,6 +791,51 @@ RCT_EXPORT_METHOD(cropImage:(NSDictionary* _Nonnull) params
     @"height":@(destHeight),
   };
   resolve(cropResult);
+}
+
+//#MARK: @RCT getVideoAttributes
+//ph://{local identifier} 형태만 지원
+//카메라롤에서 에셋을 선택하여 받은 uri를 가지고 해당 uri로 얻어온 video asset의 길이와 Img.ly에 필요한 url 형태를 결과값으로 리턴
+/**
+  ph://{local identifier} 형식의 uri에서 비디오의 길이와 url를 리턴하는 함수
+   - Returns:  NSArray 형태의 [uri: NSString, duration: NSNumber(float)].
+ */
+RCT_EXPORT_METHOD(getVideoAttributes: (NSString* ) uri
+                  resolver:(RCTPromiseResolveBlock) resolve
+                  rejecter:(RCTPromiseRejectBlock) reject){
+  if(uri == nil || uri.length == 0) {
+    reject(@"Nil error", @"Uri is an empty string", nil);
+    return;
+  } else if (![uri hasPrefix:@"ph://"]) {
+    reject(@"Uri format error", @"Uri format doesn't fit with photoKit ('ph://')", nil);
+    return;
+  }
+  
+  NSMutableArray * result = [NSMutableArray new];
+  
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
+    PHFetchResult<PHAsset *> *assets = [PHAsset fetchAssetsWithLocalIdentifiers:@[[uri substringFromIndex:@"ph://".length]] options:nil];
+    
+    if(assets == nil || assets.count == 0) {
+      reject(@"PHAsset fetch result is nil", @"Check fetch result", nil);
+      return;
+    } else if(assets.firstObject == nil) {
+      reject(@"Asset is nil", @"Check video", nil);
+      return;
+    }
+    
+    [[PHImageManager defaultManager] requestAVAssetForVideo: assets.firstObject
+                                                    options: nil
+                                              resultHandler: ^(AVAsset *avAsset, AVAudioMix *audioMix, NSDictionary *info) {
+        NSURL *url = (NSURL *)[[(AVURLAsset *)avAsset URL] fileReferenceURL];
+      [result addObject:@{
+        @"uri": [url absoluteString],
+        @"duration": [NSNumber numberWithFloat:(float)assets.firstObject.duration],
+      }];
+      
+      resolve(result);
+    }];
+  });
 }
 
 

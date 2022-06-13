@@ -409,5 +409,16 @@ export default Modal = {
 	alert: () => {},
 
 	closeKeboard: () => {},
+
+	/**
+	 * 스크롤뷰 형태의 모달창을 띄운다(하단 스크롤뷰 셀렉트 모달, MY에서 펫 프로필 편집 모달 )
+	 * @param {object} data - 선택항목 리스트 , 최대 두 개의 길이의 오브젝트 배열 타입
+	 * @param {string} header - 선택항목 제목 / 빈 값일 시 '취소' 출력
+	 * @param {(data,data)=>void} onSelect - 완료 버튼 클릭 콜백 / 선택항목들을 반환하는 매개변수가 2개인 콜백
+	 * @param {()=>void} onClose - 헤더 타이틀이 빈 값일 경우 '취소'가 타이틀로 출력되며, 해당 '취소' 버튼 클릭 시 수행되는 콜백 함수
+	 *
+	 * @example
+	 */
+	popPetProfileEditSelectModal: (data, header, onSelect, onClose) => {},
 };
 // items, selectMsg, exitMsg, onSelect, onExit

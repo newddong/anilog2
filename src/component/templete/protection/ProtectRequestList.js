@@ -16,6 +16,7 @@ import protect_obj from 'Root/config/protect_obj';
 import {useNavigation} from '@react-navigation/core';
 import DP from 'Root/config/dp';
 import ProtectedThumbnail from 'Root/component/molecules/media/ProtectedThumbnail';
+import {ScrollView} from 'native-base';
 
 export default ProtectRequestList = ({route}) => {
 	const navigation = useNavigation();
@@ -253,10 +254,10 @@ export default ProtectRequestList = ({route}) => {
 		let y = e.nativeEvent.contentOffset.y;
 		const To = PROTECT_REQUEST_MAIN_LIMIT * (offset - 1) - 20;
 		// console.log('offset', offset, 'e', y);
-		// console.log('to', To * ITEM_HEIGHT);
+		console.log('to', To * ITEM_HEIGHT);
 		if (y > ITEM_HEIGHT * To && closePaging) {
-			console.log('offset * PROTECT_REQUEST_MAIN_LIMIT', offset * PROTECT_REQUEST_MAIN_LIMIT);
-			console.log('getData().length', getData().length);
+			// console.log('offset * PROTECT_REQUEST_MAIN_LIMIT', offset * PROTECT_REQUEST_MAIN_LIMIT);
+			// console.log('getData().length', getData().length);
 			if (getData().length % PROTECT_REQUEST_MAIN_LIMIT == 0) {
 				getList();
 				setClosePaging(false);
@@ -288,15 +289,13 @@ export default ProtectRequestList = ({route}) => {
 	class ProtectRequestItem extends React.PureComponent {
 		render() {
 			return (
-				<>
-					<ProtectRequest
-						data={getData()[this.props.index]}
-						index={this.props.index}
-						onClickLabel={(status, id) => onClickLabel(this.props.item)}
-						onFavoriteTag={e => onOff_FavoriteTag(e, this.props.index)}
-						onPressProtectRequest={() => onPressProtectRequest(this.props.item)}
-					/>
-				</>
+				<ProtectRequest
+					data={getData()[this.props.index]}
+					index={this.props.index}
+					onClickLabel={(status, id) => onClickLabel(this.props.item)}
+					onFavoriteTag={e => onOff_FavoriteTag(e, this.props.index)}
+					onPressProtectRequest={() => onPressProtectRequest(this.props.item)}
+				/>
 			);
 		}
 	}
@@ -359,6 +358,8 @@ export default ProtectRequestList = ({route}) => {
 					data={getData()}
 					style={{backgroundColor: '#fff'}}
 					renderItem={renderItem}
+					ListHeaderComponent={header()}
+					ListFooterComponent={loading && <ActivityIndicator size={'large'} />}
 					showsVerticalScrollIndicator={false}
 					keyExtractor={keyExtractor}
 					getItemLayout={getItemLayout}
@@ -370,25 +371,9 @@ export default ProtectRequestList = ({route}) => {
 					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					ListEmptyComponent={whenEmpty}
 					decelerationRate={0.85}
-					ListHeaderComponent={header()}
-					// https://reactnative.dev/docs/optimizing-flatlist-configuration
-					extraData={closePaging}
-					initialNumToRender={10}
-					// maxToRenderPerBatch={20} // re-render를 막는군요.
-					// updateCellsBatchingPeriod={200}
-					// windowSize={5}
+					extraData={refreshing}
+					windowSize={30}
 					ref={flatlist}
-					ListFooterComponent={loading && <ActivityIndicator size={'large'} />}
-					// ListFooterComponent={() => {
-					// 	return loading ? (
-					// 		<View style={style.indicatorCont}>
-					// 			<ActivityIndicator size="large" color={APRI10} />
-					// 		</View>
-					// 	) : (
-					// 		<></>
-					// 	);
-					// }}
-					// https://reactnative.dev/docs/optimizing-flatlist-configuration
 				/>
 			</View>
 		);

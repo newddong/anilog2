@@ -76,6 +76,7 @@ import ShelterAsk from 'Root/component/templete/shelter/ShelterAsk';
 import ReportDetail from 'Root/component/templete/missing/ReportDetail';
 import MissingAnimalDetail from 'Root/component/templete/missing/MissingAnimalDetail';
 import SimpleWithMeatballHeader from '../header/SimpleWithMeatballHeader';
+import LocationSearch from 'Root/component/templete/search/LocationSearch';
 
 const RootStack = createStackNavigator();
 
@@ -265,12 +266,13 @@ export default RootStackNavigation = () => {
 						<RootStack.Screen
 							name="FeedLocationPicker"
 							component={LocationPicker}
-							options={{header: props => <SimpleHeader {...props} />, title: '위치'}}
+							options={{header: props => <InputAndSearchHeader {...props} isLocation />}}
 						/>
+						<RootStack.Screen name="LocationSearch" component={LocationSearch} options={{header: props => <InputAndSearchHeader {...props} />}} />
 						<RootStack.Screen
 							name="CommunityLocationPicker"
 							component={LocationPicker}
-							options={{header: props => <SimpleHeader {...props} />, title: '위치'}}
+							options={{header: props => <InputAndSearchHeader {...props} isLocation />}}
 						/>
 
 						{/* 카메라 관련 기능은 네이티브 모듈이 안정화 혹은 자체 개발이 될때까지 추가 보류 */}

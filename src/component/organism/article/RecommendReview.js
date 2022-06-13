@@ -187,7 +187,7 @@ const RecommendReview = props => {
 			if (item.community_content_without_html == '') {
 				height = height - 58 * DP;
 			}
-			console.log('item height', item.community_title, height, category_sum_list.length > 0, item.community_content_without_html == '');
+			// console.log('item height', item.community_title, height, category_sum_list.length > 0, item.community_content_without_html == '');
 			return height;
 		};
 		return (

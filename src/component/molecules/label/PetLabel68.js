@@ -12,9 +12,9 @@ import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, ProfileDefaultImg} from 'Atom/i
  * @param {object} props.data -  UserObject(Pet)과 주인계정의 닉네임
  * @param {(object)=>void} props.onClickLabel - 라벨을 클릭했을 때 동작하는 콜백, 선택된 오브젝트 반환(UserObject -pet )
  */
-const PetLabel70 = props => {
+const PetLabel68 = props => {
 	const getStatusMark = () => {
-		// console.log('props', props);
+		console.log('props', props);
 		switch (props.data.pet_status) {
 			case 'protect':
 				return <Paw30_YELL20 />;
@@ -33,13 +33,13 @@ const PetLabel70 = props => {
 
 	return (
 		<TouchableOpacity onPress={onClickLabel}>
-			<View style={{flexDirection: 'row', alignItems: 'center'}}>
+			<View style={[{flexDirection: 'row', alignItems: 'center'}, {width: 78 * DP}]}>
 				{props.data.user_profile_uri ? (
-					<Image source={{uri: props.data.user_profile_uri}} style={styles.img_round_70} />
+					<Image source={{uri: props.data.user_profile_uri}} style={styles.img_round_68} />
 				) : (
-					<ProfileDefaultImg size={styles.img_round_70} />
+					<ProfileDefaultImg size={styles.img_round_68} />
 				)}
-				<View style={{position: 'absolute', top: 0}}>
+				<View style={{position: 'absolute', top: 20, right: 25}}>
 					{/* 팻의 상태 여부에 따른 분기 - protected, adopted, normal  */}
 					{getStatusMark()}
 				</View>
@@ -48,8 +48,8 @@ const PetLabel70 = props => {
 	);
 };
 
-PetLabel70.defaultProps = {
+PetLabel68.defaultProps = {
 	onClickLabel: e => console.log(e),
 	onLabelClick: e => console.log(e),
 };
-export default PetLabel70;
+export default PetLabel68;

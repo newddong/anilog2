@@ -12,21 +12,22 @@ import {
 	Platform,
 	Keyboard,
 } from 'react-native';
-import {GRAY10, GRAY40, APRI10, GRAY20} from 'Root/config/color';
+import {GRAY10, GRAY40, APRI10, GRAY20, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {DEFAULT_PROFILE, MODIFY_PROFILE} from 'Root/i18n/msg';
 import {btn_w114, btn_w194, btn_w242} from 'Atom/btn/btn_style';
-import {Arrow_Down_GRAY20, NextMark} from 'Atom/icon';
+import {Arrow_Down_GRAY20, Edit46, NextMark} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
 import ProfileImageLarge194 from 'Molecules/image/ProfileImageLarge194';
 import MyPetList from 'Organism/list/MyPetList';
-import {login_style, btn_style, temp_style, userInfoSetting_style} from 'Templete/style_templete';
+import {login_style, btn_style, temp_style, userInfoSetting_style, userInfoDetailSettting_style} from 'Templete/style_templete';
 import userGlobalObject from 'Root/config/userGlobalObject';
 // import {getUserProfile} from 'Root/api/usermenuapi';
 import {getUserInfoById, getUserProfile, updateUserIntroduction} from 'Root/api/userapi';
 import DP from 'Root/config/dp';
 import Loading from 'Root/component/molecules/modal/Loading';
-
+import ProfileImageMedium140 from 'Root/component/molecules/image/ProfileImageMedium140';
+import ProfileImageMedium148 from 'Root/component/molecules/image/ProfileImageMedium148';
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 export default UserInfoSetting = ({route}) => {
 	// console.log('userInfoSetting', route);
@@ -35,8 +36,9 @@ export default UserInfoSetting = ({route}) => {
 	const [modifyMode, setModifyMode] = React.useState(false);
 	const [numberOfLines, setNumOfLines] = React.useState();
 	const [showMore, setShowMore] = React.useState();
+	const [nickNameEdit, setNickNameEdit] = React.useState(false);
 	const modifyRef = React.useRef();
-
+	const userData = userGlobalObject.userInfo;
 	const fetchData = () => {
 		getUserInfoById(
 			{
@@ -52,7 +54,7 @@ export default UserInfoSetting = ({route}) => {
 			},
 		);
 	};
-
+	console.log('data', data);
 	React.useEffect(() => {
 		navigation.addListener('focus', () => fetchData());
 		navigation.addListener('blur', () => setModifyMode(false)); //소개글 수정모드 종료
@@ -138,21 +140,27 @@ export default UserInfoSetting = ({route}) => {
 				<ScrollView>
 					{/* step1 */}
 					<View style={[temp_style.userInfoSetting_step1]}>
-						<View style={[temp_style.profileImageLarge, userInfoSetting_style.profileImageLarge]}>
-							{data._id != undefined && <ProfileImageLarge194 data={data} />}
-						</View>
-						<View style={[btn_style.btn_w242, userInfoSetting_style.btn_w242]}>
-							<AniButton btnTitle={MODIFY_PROFILE} btnStyle={'border'} btnLayout={btn_w194} onPress={onPressModofyProfile} />
+						<View style={[styles.profileImageLarge]}>{data._id != undefined && <ProfileImageMedium148 data={data} />}</View>
+						<View style={[styles.textBox]}>
+							<TouchableOpacity style={[{alignItems: 'center'}]} onPress={onPressModofyProfile}>
+								<Text style={[txt.noto30, {color: APRI10}]}>프로필 사진 바꾸기</Text>
+							</TouchableOpacity>
+							{/* <AniButton btnTitle={MODIFY_PROFILE} btnStyle={'border'} btnLayout={btn_w194} onPress={onPressModofyProfile} /> */}
 						</View>
 					</View>
 					{/* step2 - MyInfo */}
+					<View style={[styles.first]}>
+						<Text style={[txt.noto30b, {width: 162 * DP}]}>닉네임</Text>
+						<Text style={[txt.noto28, {width: 462 * DP}]}>{data.user_nickname || ''}</Text>
+						<TouchableOpacity style={[{alignItems: 'flex-end'}, {marginLeft: 12 * DP}]}>
+							<Edit46 />
+						</TouchableOpacity>
+					</View>
 					<View style={[temp_style.userInfoSetting_step2]}>
-						{/* 계정정보 */}
-						<View style={[temp_style.accountInfo]}>
+						{/* <View style={[temp_style.accountInfo]}>
 							<View style={[temp_style.title, userInfoSetting_style.title]}>
 								<Text style={[txt.noto30b, {color: GRAY10}]}>계정 정보</Text>
 							</View>
-							{/* 이메일, 비밀번호 변경하기*/}
 							<View style={[temp_style.accountInfo_depth2]}>
 								<View style={[temp_style.user_email_userInfoSetting, userInfoSetting_style.user_email]}>
 									<Text style={[txt.roboto26, {maxWidth: 440 * DP}]} numberOfLines={1}>
@@ -166,10 +174,10 @@ export default UserInfoSetting = ({route}) => {
 								</View>
 							</View>
 						</View>
-						<View style={[temp_style.vertical_border]}></View>
+						<View style={[temp_style.vertical_border]}></View> */}
 
 						{/* 상세정보 */}
-						<View style={[temp_style.detailInfo]}>
+						{/* <View style={[temp_style.detailInfo]}>
 							<View style={[temp_style.title, userInfoSetting_style.title_detail]}>
 								<TouchableOpacity onPress={onPressDetail}>
 									<Text style={[txt.noto30b, {color: GRAY10}]}>상세 정보</Text>
@@ -179,33 +187,35 @@ export default UserInfoSetting = ({route}) => {
 								<NextMark onPress={onPressDetail} />
 							</View>
 						</View>
-						<View style={[temp_style.vertical_border]}></View>
+						<View style={[temp_style.vertical_border]}></View> */}
 
-						{/* 소개 */}
+						{/* /* 소개 */}
 						<View style={[temp_style.introduceInfo]}>
 							<View style={[temp_style.introduceInfo_depth1]}>
 								<View style={[userInfoSetting_style.title_detail]}>
-									<Text style={[txt.noto30b, {color: GRAY10}]}>
-										소개 <Text style={[txt.noto22b, {color: GRAY20}]}> (최대 500자, 15줄)</Text>
+									<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>
+										소개
+										{/* <Text style={[txt.noto22b, {color: GRAY20}]}> (최대 500자, 15줄)</Text> */}
 									</Text>
 								</View>
-								<View style={[btn_style.btn_w114, userInfoSetting_style.btn_w114]}>
+								<View style={[{alignItems: 'center'}, {marginLeft: 472 * DP}]}>
 									{modifyMode ? (
 										<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
 											<TouchableOpacity onPress={modify_finalize}>
-												<Text style={[txt.noto26, {color: GRAY10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>완료</Text>
+												<Text style={[txt.noto26, {color: GRAY10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>저장</Text>
 											</TouchableOpacity>
 										</View>
 									) : (
 										<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
 											<TouchableOpacity onPress={modify_userIntro}>
-												<Text style={[txt.noto26, {color: APRI10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>수정</Text>
+												{/* <Text style={[txt.noto26, {color: APRI10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>수정</Text> */}
+												<Edit46 />
 											</TouchableOpacity>
 										</View>
 									)}
 								</View>
 							</View>
-							<View style={[temp_style.userText_userInfoSetting, userInfoSetting_style.userText]}>
+							<View style={[{width: 750 * DP}, {paddingHorizontal: 24 * DP}]}>
 								{/* 소개란의 수정버튼을 누를 시 TextInput으로 변경 */}
 								{modifyMode ? (
 									<View style={[userInfoSetting_style.user_introModifyContainer]}>
@@ -251,9 +261,23 @@ export default UserInfoSetting = ({route}) => {
 						</View>
 					</View>
 					<View style={[temp_style.vertical_border, {marginTop: 30 * DP}]}></View>
+					<View style={[styles.first]}>
+						<Text style={[txt.noto30b, {width: 162 * DP}]}>핸드폰 번호</Text>
+						<Text style={[txt.noto28, {width: 462 * DP}]}>{userData.user_phone_number || ''}</Text>
+						{/* <TouchableOpacity style={[{alignItems: 'flex-end'}, {marginLeft: 12 * DP}]}>
+							<Edit46 />
+						</TouchableOpacity> */}
+					</View>
+					<View style={[styles.first]}>
+						<Text style={[txt.noto30b, {width: 162 * DP}]}>나의 지역</Text>
+						<Text style={[txt.noto28, {width: 462 * DP}]}>{data.user_address.district || ''}</Text>
+						<TouchableOpacity style={[{alignItems: 'flex-end'}, {marginLeft: 12 * DP}]}>
+							<Edit46 />
+						</TouchableOpacity>
+					</View>
 
 					{/* step3 - MyPetList */}
-					<View style={[temp_style.myPetList]}>
+					{/* <View style={[temp_style.myPetList]}>
 						<View style={[temp_style.myPetList_title]}>
 							<View style={[temp_style.title_userInfoSetting, userInfoSetting_style.title_detail]}>
 								<Text style={[txt.noto30b, {color: GRAY10}]}>나의 반려동물</Text>
@@ -262,7 +286,7 @@ export default UserInfoSetting = ({route}) => {
 						<View style={[temp_style.myPetList_myPetList]}>
 							<MyPetList items={data?.user_my_pets} onLabelClick={onClickCompanionLabel} addPet={onPressAddPet} />
 						</View>
-					</View>
+					</View> */}
 				</ScrollView>
 			</KeyboardAvoidingView>
 		);
@@ -271,7 +295,40 @@ export default UserInfoSetting = ({route}) => {
 
 const styles = StyleSheet.create({
 	changeInfo: {
-		width: 90 * DP,
-		height: 64 * DP,
+		// width: 90 * DP,
+		height: 46 * DP,
+		// backgroundColor: 'red',
+	},
+	profileImageLarge: {
+		width: 148 * DP,
+		height: 148 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		marginTop: 34 * DP,
+		// backgroundColor: '#D1E7F1',
+	},
+	textBox: {
+		width: 330 * DP,
+		height: 46 * DP,
+		marginTop: 10 * DP,
+		alignContent: 'center',
+		alignSelf: 'center',
+	},
+	first: {
+		width: 750 * DP,
+		height: 105 * DP,
+		paddingHorizontal: 28 * DP,
+		flexDirection: 'row',
+		// justifyContent: 'center',
+		alignItems: 'center',
+		borderBottomColor: GRAY40,
+		borderBottomWidth: 2 * DP,
+		// backgroundColor: 'red',
+	},
+	second: {
+		width: 750 * DP,
+		alignItems: 'center',
+		borderBottomColor: GRAY40,
+		borderBottomWidth: 2 * DP,
 	},
 });

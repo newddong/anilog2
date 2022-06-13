@@ -592,6 +592,7 @@ const style = StyleSheet.create({
 		paddingTop: 20 * DP,
 		borderRadius: 30 * DP,
 		backgroundColor: WHITE,
+		opacity: 0.9,
 	},
 	shadow: {
 		shadowColor: '#000000',

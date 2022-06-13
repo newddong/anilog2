@@ -184,6 +184,9 @@ import paw46_border from './paw46_border';
 import setting46Border from './setting46Border';
 import circleMeatBall70 from './circleMeatBall70';
 import home48Border from './home48Border';
+import addItem68 from './addItem68';
+import check64Filled from './check64Filled';
+import edit46 from './edit46';
 
 import DP from 'Root/config/dp';
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK, MAINBLACK} from 'Root/config/color';
@@ -203,6 +206,7 @@ const size58 = {width: 58 * DP, height: 58 * DP};
 const size60 = {width: 60 * DP, height: 60 * DP};
 const size62 = {width: 62 * DP, height: 64 * DP};
 const size64 = {width: 64 * DP, height: 64 * DP};
+const size68 = {width: 68 * DP, height: 68 * DP};
 const size70 = {width: 70 * DP, height: 70 * DP};
 const size72 = {width: 72 * DP, height: 72 * DP};
 const size76 = {width: 72 * DP, height: 72 * DP};
@@ -463,4 +467,6 @@ export const Paw46_border = makeSvg(paw46_border, size46, MAINBLACK);
 export const Setting46_border = makeSvg(setting46Border, size46, MAINBLACK);
 export const CircleMeatBall70 = makeSvg(circleMeatBall70, size70);
 export const Home48Border = makeSvg(home48Border, size48, MAINBLACK);
-
+export const AddItem68 = makeSvg(addItem68, size68, APRI10);
+export const Check64Filled = makeSvg(check64Filled, size64, APRI10);
+export const Edit46 = makeSvg(edit46, size46, APRI10);

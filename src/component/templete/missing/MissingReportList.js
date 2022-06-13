@@ -192,7 +192,7 @@ export default MissingReportList = props => {
 	};
 
 	const renderItem = ({item, index}) => {
-		return <MissingReport item={item} index={index} />;
+		return <MissingReport key={index} item={item} index={index} />;
 	};
 
 	class MissingReport extends React.PureComponent {

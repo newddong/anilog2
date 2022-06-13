@@ -8,6 +8,7 @@ import {getUserInfoById} from 'Root/api/userapi';
 import {APRI10, WHITE} from 'Root/config/color';
 import PetLabel from 'Root/component/molecules/label/PetLabel';
 import PetLabel70 from 'Root/component/molecules/label/PetLabel70';
+import {item} from 'Root/component/templete/style_address';
 export default MyHeader = ({navigation, route, options, back}) => {
 	// console.log('options', options);
 	// console.log('route', route.params);
@@ -18,7 +19,7 @@ export default MyHeader = ({navigation, route, options, back}) => {
 		getUserInfoById(
 			{userobject_id: userGlobalObj.userInfo._id},
 			user => {
-				console.log('User', user);
+				// console.log('User', user);
 				let avatarList = user.msg?.user_my_pets;
 				// if (props?.isWriteMode) {
 				// 	const filter = avatarList.filter(e => e.pet_status != 'adopt'); //입양 동물은 글을 못씀
@@ -27,6 +28,7 @@ export default MyHeader = ({navigation, route, options, back}) => {
 				// } else {
 				setUserData({...user.msg, pet_status: 'user'});
 				setItems(avatarList);
+				console.log('avatarList', avatarList);
 				// }
 			},
 			err => {
@@ -42,7 +44,7 @@ export default MyHeader = ({navigation, route, options, back}) => {
 
 	const MeatBall = () => {
 		return (
-			<TouchableOpacity style={[{height: 110 * DP}, {alignContent: 'center'}, {justifyContent: 'center'}]}>
+			<TouchableOpacity style={[{height: 110 * DP}, {alignContent: 'center'}, {justifyContent: 'center'}]} onPress={onClickMeatBall}>
 				<CircleMeatBall70 />
 			</TouchableOpacity>
 		);
@@ -62,9 +64,35 @@ export default MyHeader = ({navigation, route, options, back}) => {
 	const onClicLabel = data => {
 		navigation.push('UserProfile', {userobject: data});
 	};
+	const onClickMeatBall = () => {
+		Modal.popPetProfileEditSelectModal(
+			{items: items, user_data: userData},
+			'나의 계정',
+			selected => {
+				console.log('seeokge', selected);
+				if (selected.user_type) {
+					if (selected?.user_type == 'pet') {
+						navigation.push('PetInfoSetting', {pet_id: selected._id});
+					} else if (selected?.user_type === 'user') {
+						console.log('User');
+						// navigation.push('UserProfile', {userobject: selected});
+						navigation.push('UserInfoSetting', {token: selected._id}); //userObject
+					}
+
+					Modal.close();
+				} else {
+					navigation.push('AssignPetProfileImage', {userobject_id: userData._id, previousRouteName: route.name});
+					Modal.close();
+				}
+			},
+			() => {
+				Modal.close();
+			},
+		);
+	};
 
 	const renderItem = (item, index) => {
-		console.log('items', item);
+		// console.log('items', item);
 		return (
 			<View key={index} style={[style.listItem, {backgroundColor: index == selectedItem ? APRI10 : WHITE}]}>
 				<PetLabel70

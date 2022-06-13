@@ -41,6 +41,7 @@ import ReviewFilterModal from 'Root/component/molecules/modal/ReviewFilterModal'
 import ProtectRequestFilterModal from 'Root/component/molecules/modal/ProtectRequestFilterModal';
 import NetworkErrorModal from 'Root/component/molecules/modal/NetworkErrorModal';
 import UrgentBtnModal from 'Root/component/molecules/modal/UrgentBtnModal';
+import PetProfileEditSelectModal from 'Root/component/molecules/modal/PetProfileEditSelectModal';
 
 export function useModal() {
 	const [isPop, setPop] = React.useState(false);
@@ -142,6 +143,10 @@ export function useModal() {
 
 	Modal.popSelectScrollBoxModal = (data, header, onSelect, onClose) => {
 		popIn(<SelectScrollBoxModal data={data} header={header} onSelect={onSelect} onClose={onClose} />);
+		!isPop && setPop(true);
+	};
+	Modal.popPetProfileEditSelectModal = (data, header, onSelect, onClose, props) => {
+		popIn(<PetProfileEditSelectModal data={data} header={header} onSelect={onSelect} onClose={onClose} />);
 		!isPop && setPop(true);
 	};
 

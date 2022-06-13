@@ -56,7 +56,6 @@ export default function HashText(props) {
 			</TouchableOpacity>
 		);
 		return input.map((v, i) => {
-			if(!v)return <Text></Text>;
 			if (hide) {
 				if (i > 1) return false;
 				if (i == 1) {
@@ -118,7 +117,7 @@ export default function HashText(props) {
 							user_type: '',
 						},
 						result => {
-							allowTab && navigation.push('UserProfile', {userobject: {_id: result.msg[0]._id}});
+							navigation.push('UserProfile', {userobject: {_id: result.msg[0]._id}});
 						},
 						error => {
 							Modal.alert('존재하지 않는 유저입니다.');
@@ -170,5 +169,4 @@ export default function HashText(props) {
 }
 
 HashText.defaultProps = {
-	allowTab: true,
 };

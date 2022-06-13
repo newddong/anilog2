@@ -72,6 +72,7 @@ export default FeedContent = props => {
 	const [btnStatus, setBtnStatus] = React.useState(false); //더보기 Arrow방향 false면 아래
 	const [show, setShow] = React.useState(false);
 	const [send, setSend] = React.useState();
+	const [isFavorite, setIsFavorite] = React.useState(props.data.feed_writer_id.is_favorite);
 	const feed_writer = props.data.feed_avatar_id ? props.data.feed_avatar_id : props.data.feed_writer_id;
 	React.useEffect(() => {
 		if (feed_avatar_id) {
@@ -282,6 +283,7 @@ export default FeedContent = props => {
 							// console.log('result / followUser / FeedContent', result.msg);
 							Modal.close();
 							Modal.popNoBtn('즐겨찾기 ' + (isFavorite ? '추가' : '삭제') + '가 완료되었습니다.');
+							setIsFavorite(true);
 							setTimeout(() => {
 								Modal.close();
 							}, 200);
@@ -492,7 +494,7 @@ export default FeedContent = props => {
 				navigation.navigate('Login');
 			});
 		} else {
-			props.onPressFavorite(bool);
+			props.onPressFavorite&&props.onPressFavorite(bool);
 		}
 	};
 	const lines = getLinesOfString(feed_content, 55);
@@ -506,7 +508,7 @@ export default FeedContent = props => {
 			return {};
 		} else {
 			return {
-				height: 914 * DP + (lines > 2 ? 2 : lines) * 44 * DP,
+				height: 914 * DP + (lines > 2 ? 2 : lines) * 48 * DP,
 			};
 		}
 	};
@@ -624,10 +626,10 @@ export default FeedContent = props => {
 					</View>
 					<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
 						<View style={[organism_style.favoriteTag_feedContent]}>
-							{props.data.feed_writer_id.is_favorite ? (
-								<FavoriteTag48_Filled onPress={() => onPressFavoriteWriter(false)} />
+							{(props.data.feed_writer_id.is_favorite || isFavorite) ? (
+								<FavoriteTag48_Filled onPress={() => onFavorite(false)} />
 							) : (
-								<FavoriteTag48_Border onPress={() => onPressFavoriteWriter(true)} />
+								<FavoriteTag48_Border onPress={() => onFavorite(true)}/>
 							)}
 						</View>
 						{false&&<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
@@ -638,7 +640,7 @@ export default FeedContent = props => {
 
 				{(route.name.includes('FeedList') || feed_type == 'missing' || route.name.includes('FeedCommentList')) && (
 					<View style={[organism_style.content_feedContent, /*feedContent_style.content_Top10,*/ {width: 750 * DP,paddingHorizontal:28*DP}]}>
-						<HashText style={[txt.noto28]} byteOfLine={55} onMoreView={()=>{setShow(true)}}>
+						<HashText style={[txt.noto28]} byteOfLine={53} onMoreView={()=>{setShow(true)}}>
 							{feed_content}
 						</HashText>
 					</View>

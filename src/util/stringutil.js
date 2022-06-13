@@ -95,7 +95,6 @@ export function phoneFomatter(num) {
 			formatNum = num.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
 		}
 	}
-	// console.log(formatNum, 'formatNum');
 	return formatNum;
 }
 
@@ -160,7 +159,6 @@ export function getFeedText(str,byte){
 		ar.push(splitStr(s,byte));
 	}
 	ar = ar.flat().map(v=>v?.trim());
-	// console.log('피드',str,ar)
 	return ar;
 }
 
@@ -179,7 +177,6 @@ export function getByteSubtring(str, start, end){
 	let endIndx = 0;
 	for(let i=0;i<=str.length;i++){
 		let tmp = getStringLength(str.substring(0,i));
-		// console.log('start '+start+'  for '+i+' length '+tmp)
 		if(tmp>=start){
 			if(tmp>=start+1){
 				startIdx = i-1;
@@ -188,11 +185,9 @@ export function getByteSubtring(str, start, end){
 			}
 
 			let startCharCode = str.charCodeAt(startIdx);
-			console.log(str.charAt(startIdx),startCharCode);
 			
 			//시작 문자가 상위 서로게이트일 경우는 오류가 나지 않음
 			if(startCharCode>=0xDC00&&startCharCode<=0xDFFF){
-				console.log('하위 서로게이트', str.charAt(endIndx));
 				startIdx -=1;
 			}//시작 문자가 하위 서로게이트일 경우는 나오지 않음
 
@@ -203,8 +198,6 @@ export function getByteSubtring(str, start, end){
 	}
 	for(let i=0;i<=str.length;i++){
 		let tmp = getStringLength(str.substring(0,i));
-		// console.log('start '+start+'  for '+i+' length '+tmp)
-		// console.log(tmp,str.substring(0,i));
 		if(tmp>=end){
 			if(tmp>=end+1){
 				endIndx = i-1;
@@ -213,9 +206,7 @@ export function getByteSubtring(str, start, end){
 				endIndx = i;
 			}
 			let endCharCode = str.charCodeAt(endIndx-1);
-			console.log(str.charAt(endIndx-1),endCharCode-1);
 			if(endCharCode>=0xD800&&endCharCode<=0xDBFF){
-				console.log('상위 서로게이트', str.charAt(endIndx));
 				endIndx -=1;
 			}//끝 문자가 상위 서로게이트일 경우
 			//끝 문자가 하위 서로게이트일 경우는 오류가 나오지 않음
@@ -279,13 +270,10 @@ export function findNearSpace(str,index){
  * @returns 
  */
 export function splitStr(str,byte,arr=[]){
-	console.log('진입',str.length,str,getStringLength(str));
 	if(!str||str.length<1){
-		console.log('끝2')
 		return []
 	};
 	if(getStringLength(str)<=byte){
-		console.log('진입4');
 		arr.push(str);
 		return;
 	}
@@ -299,16 +287,13 @@ export function splitStr(str,byte,arr=[]){
 		splitStr(subStr,byte,arr);
 
 		// arr.push(str);
-		console.log('끝',str,arr);
 		return arr;
 	}//단어 길이가 byte보다 긴 경우
 
 	if(subSpace==0){
-		console.log('진입2'+'  pre:'+preSpace+'  sub:'+subSpace,arr);
 		arr.push(preStr);	
 		splitStr(subStr,byte,arr);
 	}else if(subSpace>0){
-		console.log('진입3'+'  pre:'+preSpace+'  sub:'+subSpace,arr);
 		let tmp = getByteSubtring(str,preSpace,getStringLength(str));
 		arr.push(getByteSubtring(str,0,preSpace));
 		splitStr(tmp,byte,arr);
@@ -326,7 +311,6 @@ export function extractTags(str){
 	let match;
 	let obj = {};
 	while ((match = regex.exec(str)) !== null) {
-		// console.log(match);
 		obj[match[2]] = match[3];
 	}
 	return obj;

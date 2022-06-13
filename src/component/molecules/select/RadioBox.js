@@ -75,7 +75,7 @@ const RadioBox = props => {
 		);
 	};
 	return (
-		<View style={{justifyContent: 'space-between', flexDirection: 'row', width: 550 * DP}}>
+		<View style={{justifyContent: 'space-between', flexDirection: 'row', width: props.width}}>
 			{props.items.map((v, i) => {
 				return renderItem(v, i);
 			})}
@@ -88,6 +88,7 @@ RadioBox.defaultProps = {
 	horizontal: true,
 	onSelect: e => console.log(e),
 	// defaultSelect: 1,
+	width:550*DP,
 };
 
 export default RadioBox;

@@ -68,12 +68,12 @@ export default FeedList = ({route, navigation}) => {
 		setFeedList(
 			list
 				.map((v, i, a) => {
-					let lines = getLinesOfString(v.feed_content, 55);
+					let lines = getLinesOfString(v.feed_content, 53);
 					lines = lines > 2 ? 2 : lines;
 					if (v.feed_recent_comment) {
-						return {...v, height: (914 + lines * 44+10+ 128)*DP};
+						return {...v, height: (914 + lines * 48+10+ 128)*DP};
 					} else {
-						return {...v, height: (914 + lines * 44+10)*DP};
+						return {...v, height: (914 + lines * 48+10)*DP};
 					}
 				})
 				.map((v, i, a) => {
@@ -330,6 +330,7 @@ export default FeedList = ({route, navigation}) => {
 			});
 		} else if (userGlobalObject.userInfo.user_type == 'user') {
 			Modal.popAvatarSelectFromWriteModal(obj => {
+				delete obj.user_avatar; //무한 참조 경고 해결
 				userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed', feed_avatar_id: obj});
 			}, Modal.close);
 		} else {
@@ -371,24 +372,6 @@ export default FeedList = ({route, navigation}) => {
 
 	const moveToTop = () => {
 		flatlist.current.scrollToOffset({animated: true, offset: 0});
-	};
-
-	const movetoCamera = () => {
-		// NativeModules.CalendarModule.createCalendarEvent('네이티브 테스트','스터디카페')
-		Modal.popTwoBtn(
-			'카메라롤 모드(임시)',
-			'단일선택',
-			'다중선택',
-			() => {
-				Modal.close();
-				navigation.push('SinglePhotoSelect', {prev: {name: route.name, key: route.key}});
-				// navigation.push('Crop');
-			},
-			() => {
-				Modal.close();
-				navigation.push('MultiPhotoSelect', {prev: {name: route.name, key: route.key}});
-			},
-		);
 	};
 
 	const getItemLayout = (data, index) => {

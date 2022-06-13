@@ -4,7 +4,8 @@ import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } fr
 import CameraRoll from './src/module/CameraRoll.js';
 import PermissionIos from './src/module/PermissionIos';
 import { PERMISSION_IOS_STATUS, PERMISSION_IOS_TYPES } from './src/module/PermissionIosStatics';
-
+// import {VESDK, Configuration, Tool, ForceTrimMode, CanvasAction, VideoCodec} from 'react-native-videoeditorsdk';
+import VideoEditor from 'Root/module/VideoEditor.js';
 
 const styles = StyleSheet.create({
   container: {
@@ -23,6 +24,8 @@ const styles = StyleSheet.create({
   },
 });
 
+// VESDK.unlockWithLicense(require('vesdk_license.ios.json'));
+// VESDK.unlockWithLicense(require('vesdk_license.android.json'));
 
 export default class App extends Component {
   constructor() {
@@ -30,6 +33,8 @@ export default class App extends Component {
     this.state = {
       image: null,
       images: null,
+      duration: 0,
+      uri: null
     };
   }
 
@@ -75,24 +80,24 @@ export default class App extends Component {
     }
 
     CameraRoll.compressImage({imageFiles: [this.state.image.uri],
-		 maxHeight: 160, 
-		 maxWidth: 240, 
-		 quality:0.5,
+     maxHeight: 160, 
+     maxWidth: 240, 
+     quality:0.5,
      mimeType:"png" })
     .then(r => {
       console.log(r);
-	  if (r== null || r.assets == null || r. assets.length == 0){
-		  console.log("assets are nil or length 0");
-	  } else {
-		this.setState({
-			image: {
-			  uri: r.assets[0].uri,
-			  width: r.assets[0].width,
-			  height: r.assets[0].height,
-			},
-			images: null,
-		  });
-	  }
+    if (r== null || r.assets == null || r. assets.length == 0){
+      console.log("assets are nil or length 0");
+    } else {
+    this.setState({
+      image: {
+        uri: r.assets[0].uri,
+        width: r.assets[0].width,
+        height: r.assets[0].height,
+      },
+      images: null,
+      });
+    }
     })
     .catch(err => {
       console.log(err);
@@ -105,8 +110,8 @@ export default class App extends Component {
     CameraRoll.getPhotos({
       first: maxLoadImage,
       toTime: 0,
-      assetType: 'Photos',
-      include: ['imageSize', 'filename', 'filesize'],
+      assetType: 'All',
+      include: ['imageSize', 'filename', 'filesize', 'playableDuration'],
       groupTypes: 'All',
     })
       .then(r => {
@@ -161,6 +166,32 @@ export default class App extends Component {
       });
   }
 
+  getVideoAttributes(uri = this.state.image.uri){
+    CameraRoll.getVideoAttributes(uri)
+    .then(r => {
+      this.setState({
+        image: null,
+        images: null,
+        duration: r[0].duration,
+        uri: r[0].uri
+      });
+    })
+    .catch(e => {
+      alert(e);
+    })
+  }
+
+  openVideoEditor(duration = 5, bitRate = 30, filename = 'temp'){
+    VideoEditor.unlockLicense();
+    VideoEditor.openVideoEditor(this.state.uri, this.state.duration, duration, bitRate, filename)
+    .then(r => {
+      console.log(r);
+    })
+    .catch(e => {
+      console.log(e);
+    })
+  }
+
   scaledHeight(oldW, oldH, newW) {
     return (oldH / oldW) * newW;
   }
@@ -187,15 +218,15 @@ export default class App extends Component {
         </ScrollView>
 
         <TouchableOpacity
-          onPress={() => this.checkPermission(false)}
+          onPress={() => this.getImage(35, 30)}
           style={styles.button}>
-          <Text style={styles.text}>Ask permission / Check Permission</Text>
+          <Text style={styles.text}>getImage</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => this.getImage(15, 14)}
+          onPress={() => this.getVideoAttributes(this.state.image.uri)}
           style={styles.button}>
-          <Text style={styles.text}>getImage</Text>
+          <Text style={styles.text}>getVideoAttributes</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -209,30 +240,12 @@ export default class App extends Component {
 
         <TouchableOpacity
           onPress={() => {
-            CameraRoll.saveImage(this.state.image.uri)
-            .catch(err => {
-              console.log(err);
-            });
+            this.openVideoEditor(15, 30, 'edit');
           }}
           style={styles.button}>
-          <Text style={styles.text}>save selected Image</Text>
+          <Text style={styles.text}>openEditor</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => {
-            this.compress();
-          }}
-          style={styles.button}>
-          <Text style={styles.text}>compress selected Image</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => {
-            this.cropImage();
-          }}
-          style={styles.button}>
-          <Text style={styles.text}>crop selected Image</Text>
-        </TouchableOpacity>
+    
 
         <TouchableOpacity
           onPress={() => this.cleanupImages()}

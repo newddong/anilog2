@@ -28,7 +28,7 @@ export default MyHeader = ({navigation, route, options, back}) => {
 				// } else {
 				setUserData({...user.msg, pet_status: 'user'});
 				setItems(avatarList);
-				console.log('avatarList', avatarList);
+				// console.log('avatarList', avatarList);
 				// }
 			},
 			err => {

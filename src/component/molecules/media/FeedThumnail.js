@@ -64,7 +64,7 @@ const FeedThumbnail = React.memo(props => {
 		if ((props.selectMode && selected) || (props.selectMode && props.data.checkBoxState)) {
 			return (
 				<View style={[{opacity: 0.4, backgroundColor: BLACK}]}>
-					{/* <Image source={{uri: props.data.feed_thumbnail}} style={styles.img_square_246} /> */}
+					<Image source={{uri: props.data.feed_thumbnail}} style={styles.img_square_246} />
 				</View>
 			);
 		} else if (!props.data.checkBoxState || !selected) {

@@ -370,7 +370,7 @@ export default ProtectRequestList = ({route}) => {
 					// onScroll={e => console.log('e', e.nativeEvent.contentOffset)}
 					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					ListEmptyComponent={whenEmpty}
-					decelerationRate={0.85}
+					decelerationRate={0.5}
 					extraData={refreshing}
 					windowSize={30}
 					ref={flatlist}

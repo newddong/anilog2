@@ -251,13 +251,13 @@ export default UserMenu = props => {
 						</View>
 
 						{/* 나의 반려동물 버튼 */}
-						<View style={[userMenu_style.btn_w280]}>
+						{/* <View style={[userMenu_style.btn_w280]}>
 							{data.user_my_pets?.length == 0 ? (
 								<AniButton btnLayout={btn_w280x68} disable btnTitle={MY_COMPANION} />
 							) : (
 								<AniButton btnLayout={btn_w280x68} btnStyle={'border'} btnTheme={'shadow'} btnTitle={MY_COMPANION} onPress={onPressMyCompanion} />
 							)}
-						</View>
+						</View> */}
 					</View>
 				</View>
 

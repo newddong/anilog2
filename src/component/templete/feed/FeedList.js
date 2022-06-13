@@ -296,8 +296,8 @@ export default FeedList = ({route, navigation}) => {
 				getUserTaggedFeedList(
 					params,
 					result => {
-						console.log('result / getUserTaggedFeedList', result.msg.length);
-						const res = result.msg;
+						// console.log('result / getUserTaggedFeedList', result.msg);
+						const res = result.msg.map((v, i) => v.usertag_feed_id);
 						setTotal(result.total_count);
 						let list = [];
 						if (!pre && !next) {
@@ -434,6 +434,7 @@ export default FeedList = ({route, navigation}) => {
 	React.useEffect(() => {
 		if (feedList.length > 0) {
 			let indx = feedList.findIndex(v => v._id == route.params?.selected?._id);
+			console.log('inde', indx);
 			if (route.params?.selected && !scrollComplete) {
 				setTimeout(() => {
 					flatlist.current.scrollToItem({

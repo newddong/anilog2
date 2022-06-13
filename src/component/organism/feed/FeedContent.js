@@ -52,7 +52,6 @@ import {
 } from 'Root/util/stringutil';
 import FeedMedia from 'Molecules/media/FeedMedia';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {object} from 'prop-types';
 
 export default FeedContent = props => {
 	const {
@@ -95,12 +94,18 @@ export default FeedContent = props => {
 	const [send, setSend] = React.useState();
 	const feed_writer = props.data.feed_avatar_id ? props.data.feed_avatar_id : props.data.feed_writer_id;
 	React.useEffect(() => {
-		//피드 아바타(반려동물)가 비어있을 경우 feed_writer_id로 send 대체
 		if (typeof feed_avatar_id === object) {
 			setSend(feed_avatar_id);
 		} else {
 			setSend(feed_writer_id);
 		}
+
+		// if (typeof feed_avatar_id == 'object') {
+		//  setSend(feed_avatar_id);
+		// } else {
+		//  setSend(props.data.feed_writer_id);
+		//  // console.log('props.data.feed_writer_id', props.data.feed_writer_id.is_favorite);
+		// }
 	}, [props.data]);
 
 	//피드 미트볼 메뉴 - 신고 클릭
@@ -507,19 +512,6 @@ export default FeedContent = props => {
 			});
 		} else {
 			props.onPressFavorite(bool);
-			favoriteFeed(
-				{
-					feedobject_id: props.data._id,
-					userobject_id: userGlobalObject.userInfo._id,
-					is_favorite: bool,
-				},
-				result => {
-					console.log('result / FavoriteFeed / FeedContent : ', result.msg.targetFeed);
-				},
-				err => {
-					console.log('err / FavoriteFeed / FeedContent : ', err);
-				},
-			);
 		}
 	};
 	const lines = getLinesOfString(feed_content, 55);
@@ -675,7 +667,7 @@ export default FeedContent = props => {
 					<View style={[organism_style.content_feedContent, /*feedContent_style.content_Top10,*/ {width: 750 * DP, paddingHorizontal: 28 * DP}]}>
 						<HashText
 							style={[txt.noto28]}
-							byteOfLine={53}
+							byteOfLine={55}
 							onMoreView={() => {
 								setShow(true);
 							}}>
@@ -696,7 +688,6 @@ FeedContent.defaultProps = {
 		content: 'comment 내용을 넣어야 합니다.',
 	},
 	deleteFeed: () => {},
-	onPressFavorite: () => {},
 };
 
 const style = StyleSheet.create({

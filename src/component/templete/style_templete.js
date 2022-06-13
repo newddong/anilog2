@@ -411,8 +411,10 @@ export const temp_style = StyleSheet.create({
 	},
 	userInfoSetting_step1: {
 		width: 750 * DP,
-		height: 364 * DP,
+		height: 300 * DP,
 		alignItems: 'center',
+		borderBottomColor: GRAY40,
+		borderBottomWidth: 2 * DP,
 		// backgroundColor: '#94ACA0',
 	},
 	userInfoSetting_step2: {
@@ -597,7 +599,7 @@ export const temp_style = StyleSheet.create({
 	introduceInfo_depth1: {
 		flexDirection: 'row',
 		width: 750 * DP,
-		height: 116 * DP,
+		height: 96 * DP,
 		// backgroundColor: '#B3EBB5',
 	},
 	userText_userInfoSetting: {
@@ -1880,8 +1882,9 @@ export const userInfoSetting_style = StyleSheet.create({
 		marginTop: 56 * DP,
 	},
 	title_detail: {
-		marginLeft: 48 * DP,
-		marginTop: 40 * DP,
+		marginLeft: 28 * DP,
+		// marginTop: 40 * DP,
+		justifyContent: 'center',
 	},
 	userText: {
 		marginLeft: 48 * DP,

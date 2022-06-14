@@ -188,6 +188,7 @@ import home48Border from './home48Border';
 import addItem68 from './addItem68';
 import check64Filled from './check64Filled';
 import edit46 from './edit46';
+import addItem68Black from './addItem68Black';
 
 import DP from 'Root/config/dp';
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK, MAINBLACK} from 'Root/config/color';
@@ -223,17 +224,17 @@ const defaultProfileImg = {width: 294 * DP, height: 294 * DP};
 const profileDefaultImg_194 = {width: 194 * DP, height: 194 * DP};
 
 const makeSvg = (component, style, color) => {
-	if(!color){
+	if (!color) {
 		return props =>
-		props.onPress
-			? React.createElement(TouchableOpacity, {...props}, React.createElement(component, {...props,...style}))
-			: React.createElement(component, {...props,...style});
+			props.onPress
+				? React.createElement(TouchableOpacity, {...props}, React.createElement(component, {...props, ...style}))
+				: React.createElement(component, {...props, ...style});
 	}
-	return props =>{
+	return props => {
 		return props.onPress
 			? React.createElement(TouchableOpacity, {...props}, React.createElement(component, {...style, fill: color}))
 			: React.createElement(component, {...style, fill: color});
-		}
+	};
 };
 
 export const UpdateImg = makeSvg(updateImg, size206);
@@ -269,7 +270,7 @@ export const Search48_BLACK = makeSvg(search48, size48, BLACK);
 export const AlarmBadger48 = makeSvg(alarmBadger48, size48);
 export const RadioChecked38 = makeSvg(radioChecked48, size48);
 export const RadioChecked48 = makeSvg(radioChecked48, size48);
-export const RadioUnchecked38 = makeSvg(radioUnchecked48, size48,GRAY30);
+export const RadioUnchecked38 = makeSvg(radioUnchecked48, size48, GRAY30);
 export const RadioUnchecked48 = makeSvg(radioUnchecked48, size48);
 export const Public48 = makeSvg(public48, size48);
 export const Private48 = makeSvg(private48, size48);
@@ -471,5 +472,6 @@ export const Setting46_border = makeSvg(setting46Border, size46, MAINBLACK);
 export const CircleMeatBall70 = makeSvg(circleMeatBall70, size70);
 export const Home48Border = makeSvg(home48Border, size48, MAINBLACK);
 export const AddItem68 = makeSvg(addItem68, size68, APRI10);
+export const AddItem68Black = makeSvg(addItem68Black, size68, MAINBLACK);
 export const Check64Filled = makeSvg(check64Filled, size64, APRI10);
 export const Edit46 = makeSvg(edit46, size46, APRI10);

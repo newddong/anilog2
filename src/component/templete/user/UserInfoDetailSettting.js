@@ -11,6 +11,7 @@ import Input24 from 'Molecules/input/Input24';
 import {getAddressList} from 'Root/api/address';
 import SelectInput from 'Root/component/molecules/button/SelectInput';
 import {getInterestsList} from 'Root/api/interestsapi';
+import DP from 'Root/config/dp';
 export default UserInfoDetailSettting = ({route, navigation}) => {
 	const debug = false;
 	const [data, setData] = React.useState(route.params); //기존 유저의 데이터가 담겨있음
@@ -262,26 +263,24 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 							<SelectInput onPressInput={onSelectNeighbor} width={654} defaultText={'동/읍을 선택'} value={data.user_address.neighbor} />
 						</View>
 						{/* 관심지역 및 활동 */}
-						<View style={[userInfoDetailSettting_style.tagListContainer]}>
-							<View style={[userInfoDetailSettting_style.interestTagList]}>
-								<InterestTagList
-									onPressAddBtn={onPressAddInterestLocation}
-									title={INTEREST_REGION}
-									// items={data.user_interests.location || []}
-									items={locationInterest || []}
-									onDelete={onDeleteInterestRegion}
-									extra={refresh}
-								/>
-							</View>
-							<View style={[userInfoDetailSettting_style.interestTagList]}>
-								<InterestTagList
-									onPressAddBtn={onPressAddInterestActivation}
-									title={INTEREST_ACT}
-									items={contentInterest || []}
-									onDelete={onDeleteInterestAct}
-									extra={refresh}
-								/>
-							</View>
+						<View style={[userInfoDetailSettting_style.interestTagList]}>
+							<InterestTagList
+								onPressAddBtn={onPressAddInterestLocation}
+								title={INTEREST_REGION}
+								// items={data.user_interests.location || []}
+								items={locationInterest || []}
+								onDelete={onDeleteInterestRegion}
+								extra={refresh}
+							/>
+						</View>
+						<View style={[userInfoDetailSettting_style.interestTagList]}>
+							<InterestTagList
+								onPressAddBtn={onPressAddInterestActivation}
+								title={INTEREST_ACT}
+								items={contentInterest || []}
+								onDelete={onDeleteInterestAct}
+								extra={refresh}
+							/>
 						</View>
 					</View>
 				</ScrollView>

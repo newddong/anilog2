@@ -1,14 +1,15 @@
 import React from 'react';
-import {FlatList, Text, View, ScrollView} from 'react-native';
-import {GRAY10, GRAY20} from 'Root/config/color';
+import {FlatList, Text, View, ScrollView, StyleSheet} from 'react-native';
+import {BLACK, GRAY10, GRAY20, GRAY40, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w190} from 'Root/component/atom/btn/btn_style';
-import {Cross46} from 'Root/component/atom/icon';
+import {AddItem68Black, Cross46} from 'Root/component/atom/icon';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import {useNavigation} from '@react-navigation/core';
 import {INTEREST_ACT, INTEREST_REGION} from 'Root/i18n/msg';
 import Modal from 'Root/component/modal/Modal';
 import {interestTagList} from 'Organism/style_organism copy';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 /**
  *
  *@param {{
@@ -32,28 +33,30 @@ export default InterestTagList = props => {
 
 	const renderItem = (item, index) => {
 		return (
-			<View style={[interestTagList.tagContainer]}>
-				<Text style={[txt.noto28, {color: GRAY20, textAlign: 'center'}]}>{item}</Text>
-				<View style={[interestTagList.cross52]}>
+			<View style={[styles.tagContainer]}>
+				<Text style={[txt.noto28, {color: MAINBLACK, textAlign: 'center'}]}>{item}</Text>
+				{/* <View style={[interestTagList.cross52]}>
 					<Cross46 onPress={() => onDelete(index)} />
-				</View>
+				</View> */}
 			</View>
 		);
 	};
 	const numColums = Math.ceil(props.items / 2);
 	return (
-		<View style={[interestTagList.container]}>
-			<View style={[interestTagList.titleContainer]}>
-				<View style={[interestTagList.title]}>
-					<Text style={[txt.noto28, {color: GRAY10}]}>{props.title}</Text>
-				</View>
-				<View style={[interestTagList.btn_w226]}>
-					<AniButton onPress={onPressAddBtn} btnTitle={'추가하기'} btnLayout={btn_w190} btnTheme={'shadow'} btnStyle={'border'} />
-				</View>
+		<View style={[styles.container]}>
+			<View style={[styles.titleContainer]}>
+				<Text style={[{width: 162 * DP}, {height: 46 * DP}, txt.noto30b, {color: MAINBLACK}]}>{props.title}</Text>
 			</View>
-			<View style={[interestTagList.interestingTagList]}>
+			<View style={[styles.interestingTagList]}>
+				{/* <AniButton onPress={onPressAddBtn} btnTitle={'추가하기'} btnLayout={btn_w190} btnTheme={'shadow'} btnStyle={'border'} /> */}
+				<View>
+					<TouchableOpacity onPress={onPressAddBtn}>
+						<AddItem68Black />
+					</TouchableOpacity>
+				</View>
+
 				<FlatList
-					style={[{display: 'flex', flexWrap: 'wrap'}]}
+					style={[{display: 'flex', flexWrap: 'wrap', marginLeft: 30 * DP}]}
 					data={props.items}
 					renderItem={({item, index}) => renderItem(item, index)}
 					horizontal={true}
@@ -71,3 +74,45 @@ InterestTagList.defaultProps = {
 	onDelete: e => console.log(e),
 	onPressAddBtn: e => console.log(e),
 };
+
+const styles = StyleSheet.create({
+	container: {
+		width: 750 * DP,
+		height: 194 * DP,
+		paddingHorizontal: 28 * DP,
+		borderBottomColor: GRAY40,
+		borderBottomWidth: 2 * DP,
+	},
+	title: {
+		width: 226 * DP,
+		height: 48 * DP,
+		alignSelf: 'center',
+		// backgroundColor: 'yellow',
+	},
+	titleContainer: {
+		width: 162 * DP,
+		height: 46 * DP,
+		marginTop: 30 * DP,
+		flexDirection: 'row',
+	},
+	interestingTagList: {
+		height: 102 * DP,
+		width: 750 * DP,
+		// marginLeft: 44 * DP,
+		// paddingHorizontal: 28 * DP,
+		marginTop: 20 * DP,
+		flexDirection: 'row',
+	},
+	tagContainer: {
+		height: 68 * DP,
+		paddingHorizontal: 20 * DP,
+		borderRadius: 30 * DP,
+		borderWidth: 2 * DP,
+		borderColor: '#767676',
+		marginRight: 15 * DP,
+		justifyContent: 'center',
+		flexDirection: 'row',
+		alignItems: 'center',
+		// backgroundColor: BLACK,
+	},
+});

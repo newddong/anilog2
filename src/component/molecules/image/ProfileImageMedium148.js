@@ -1,8 +1,11 @@
 import React from 'react';
-import {View, Image} from 'react-native';
+import {View, Image, Text} from 'react-native';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
-import {Paw48_Mixed, Paw48_YELL20, Paw48_APRI10, Private48, Public48} from 'Atom/icon';
+import {Private48, Public48, Paw62_APRI10, Paw62_YELL20, Paw62_Mixed, ProfileDefaultImg} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
+import DP from 'Root/config/dp';
+import {BLACK, WHITE} from 'Root/config/color';
+import {txt} from 'Root/config/textstyle';
 
 /**
  * 프로필이미지 140
@@ -13,23 +16,12 @@ const ProfileImageMedium148 = props => {
 	// 유저의 프로필 이미지를 표시,  유저의 종류(일반유저, 반려동물, 보호소)와 상태(임시보호중,입양,공립,사립)에 따라 아이콘을 표시
 	const petStatus = () => {
 		switch (props.data.pet_status) {
-			case 'normal':
-				return <Paw48_APRI10 />;
-			case 'protected':
-				return <Paw48_YELL20 />;
-			case 'adopted':
-				return <Paw48_Mixed />;
-			default:
-				return <></>;
-		}
-	};
-
-	const shelter_type = () => {
-		switch (props.data.shelter_type) {
-			case 'public':
-				return <Public48 />;
-			case 'private':
-				return <Private48 />;
+			case 'companion':
+				return <Paw62_APRI10 />;
+			case 'protect':
+				return <Paw62_YELL20 />;
+			case 'adopt':
+				return <Paw62_Mixed />;
 			default:
 				return <></>;
 		}
@@ -38,9 +30,24 @@ const ProfileImageMedium148 = props => {
 	const userType = () => {
 		switch (props.data.user_type) {
 			case 'pet':
-				return <View style={{position: 'absolute'}}>{petStatus()}</View>;
+				return <View style={{position: 'absolute', left: 0, bottom: 0}}>{petStatus()}</View>;
 			case 'shelter':
-				return <View style={{position: 'absolute'}}>{shelter_type()}</View>;
+				return (
+					<View
+						style={{
+							position: 'absolute',
+							bottom: 0,
+							width: 62 * DP,
+							height: 62 * DP,
+							borderRadius: 20 * DP,
+							backgroundColor: BLACK,
+							justifyContent: 'center',
+						}}>
+						<Text style={[txt.noto26b, {color: WHITE, textAlignVertical: 'center', textAlign: 'center'}]}>
+							{props.data.shelter_type == 'private' ? '사' : '공'}
+						</Text>
+					</View>
+				);
 			default:
 				return <></>;
 		}
@@ -48,7 +55,11 @@ const ProfileImageMedium148 = props => {
 
 	return (
 		<View style={styles.img_round_148}>
-			<Image source={{uri: props.data.user_profile_uri || DEFAULT_PROFILE}} style={styles.img_round_148} />
+			{props.data.user_profile_uri ? (
+				<Image source={{uri: props.data.user_profile_uri || DEFAULT_PROFILE}} style={styles.img_round_148} />
+			) : (
+				<ProfileDefaultImg size={styles.img_round_148} />
+			)}
 			{userType()}
 		</View>
 	);

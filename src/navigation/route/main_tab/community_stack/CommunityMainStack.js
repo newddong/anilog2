@@ -26,6 +26,10 @@ import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
 import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailSettting';
 import SaveButtonHeader from 'Root/navigation/header/SaveButtonHeader';
 import CommunityHeader from 'Root/navigation/header/CommunityHeader';
+import ChangePetProfileImage from 'Root/component/templete/pet/ChangePetProfileImage';
+import ProfileHeader from '../../../header/ProfileHeader';
+import SocialRelationTopTabNavigation from '../protection_stack/socialRelation_tab/SocialRelationTopTabNavigation';
+import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 
 const CommunityMainStackNavi = createStackNavigator();
 
@@ -60,7 +64,7 @@ export default CommunityMainStack = props => {
 				component={Profile}
 				options={({route}) => ({
 					headerShown: true,
-					header: props => <SimpleHeader {...props} />,
+					header: props => <ProfileHeader {...props} />,
 					title: ' ',
 				})}
 			/>
@@ -119,7 +123,7 @@ export default CommunityMainStack = props => {
 				name={'SocialRelation'}
 				component={SocialRelationTopTabNavigation}
 				options={({route}) => ({
-					header: props => <SimpleHeader {...props} />,
+					header: props => <InputAndSearchHeader {...props} isSocial />,
 					title: '프로필',
 				})}
 			/>
@@ -130,6 +134,11 @@ export default CommunityMainStack = props => {
 					header: props => <SimpleHeader {...props} />,
 					title: '프로필 수정',
 				})}
+			/>
+			<CommunityMainStackNavi.Screen
+				name="ChangePetProfileImage"
+				component={ChangePetProfileImage}
+				options={{header: props => <SimpleHeader {...props} />, title: '프로필 변경'}}
 			/>
 			<CommunityMainStackNavi.Screen
 				name={'UserFeedList'}

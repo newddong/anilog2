@@ -106,7 +106,7 @@ export const count_to_K = cnt => {
 	if (cnt > 1000000) {
 		let count = (cnt / 1000000).toFixed(0) + 'm';
 		return count;
-	} else if (cnt > 1000) {
+	} else if (cnt >= 1000) {
 		let count = (cnt / 1000).toFixed(0) + 'k';
 		return count;
 	} else {

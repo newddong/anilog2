@@ -379,17 +379,20 @@ export default FeedList = ({route, navigation}) => {
 				let params = {
 					login_userobject_id: userGlobalObject.userInfo._id,
 					limit: FEED_LIMIT,
-					order_value: 'next',
+					order_value: pre ? 'pre' : 'next',
 				};
 				if (feedList.length > 0) {
-					params.target_object_id = feedList[feedList.length - 1]._id;
+					params.target_object_id = pre ? feedList[0]._id : feedList[feedList.length - 1]._id;
 				}
 				console.log('params', params);
 				getSuggestFeedList(
 					params,
 					result => {
+						console.log('result / ', result.msg.length);
 						setTotal(result.total_count);
-						if (params.target_object_id) {
+						if (pre) {
+							setFeed([...result.msg, ...feedList]);
+						} else if (params.target_object_id) {
 							setFeed([...feedList, ...result.msg]);
 						} else {
 							setFeed(result.msg);
@@ -423,7 +426,7 @@ export default FeedList = ({route, navigation}) => {
 		});
 		//Refreshing 요청시 피드리스트 다시 조회
 		if (route.name == 'MainHomeFeedList') {
-			refreshing ? getList() : false;
+			refreshing ? getList(true, false) : false;
 		}
 		return unsubscribe;
 	}, [refreshing, route]);
@@ -434,7 +437,6 @@ export default FeedList = ({route, navigation}) => {
 	React.useEffect(() => {
 		if (feedList.length > 0) {
 			let indx = feedList.findIndex(v => v._id == route.params?.selected?._id);
-			console.log('inde', indx);
 			if (route.params?.selected && !scrollComplete) {
 				setTimeout(() => {
 					flatlist.current.scrollToItem({

@@ -3,11 +3,9 @@ import {View, Text, FlatList, Animated, Easing, ActivityIndicator} from 'react-n
 import {followUser, getUserProfile, unFollowUser} from 'Root/api/userapi';
 import {NETWORK_ERROR, NORMAL, PET, PROTECT_REQUEST_DETAIL_LIMIT, THUMNAIL_LIMIT} from 'Root/i18n/msg';
 import {Message94, Write94} from 'Atom/icon';
-import TabSelectFilled_Type2 from 'Molecules/tab/TabSelectFilled_Type2';
+import ProfileTabSelect from 'Root/component/molecules/tab/ProfileTabSelect';
 import ProfileInfo from 'Organism/info/ProfileInfo';
 import FeedThumbnailList from 'Organism/feed/FeedThumbnailList';
-import OwnerList from 'Organism/list/OwnerList';
-import PetList from 'Organism/list/PetList';
 import {login_style, profile, temp_style, buttonstyle} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
@@ -41,6 +39,7 @@ export default Profile = ({route}) => {
 	const userId = route.params.userobject._id; //현재 보고있는 프로필 대상의 _id
 
 	React.useEffect(() => {
+		//페이지 포커스 시 프로필 데이터 및 하단 탭 데이터 갱신
 		const unsubscribe = navigation.addListener('focus', () => {
 			fetchData();
 			if (data.user_type == 'user') {
@@ -52,16 +51,15 @@ export default Profile = ({route}) => {
 		return unsubscribe;
 	}, []);
 
+	//유저프로필 데이터 수신
 	const fetchData = () => {
 		if (route.params && route.params.userobject) {
 			getUserProfile(
-				{
-					userobject_id: userId,
-				},
+				{userobject_id: userId},
 				result => {
 					navigation.setOptions({title: result.msg.user_nickname, data: result.msg});
 					setData(result.msg);
-					// console.log('getUserProfile is_Favorite ', result.msg);
+					console.log('getUserProfile is_Favorite ', result.msg.is_follow);
 				},
 				err => {
 					Modal.popOneBtn(err, '확인', () => {
@@ -104,6 +102,7 @@ export default Profile = ({route}) => {
 		);
 	};
 
+	//보호소 프로필일 경우 하단의 보호동물 탭
 	const fetchProtectRequest = () => {
 		setLoading(true);
 		getProtectRequestListByShelterId(
@@ -135,19 +134,21 @@ export default Profile = ({route}) => {
 		);
 	};
 
+	//하단의 피드, 태그 탭 썸네일 데이터 수신
 	const getFeedList = (i, refresh) => {
 		setLoading(true);
 		let params = {
 			userobject_id: userId,
 			limit: THUMNAIL_LIMIT,
-			order_value: 'next',
 		};
 		//첫 페이지 호출이 아닌 경우
 		if (!refresh && feedList.length != 0) {
 			params.target_object_id = feedList[feedList.length - 1]._id;
+			params.order_value = 'next';
 		}
 		switch (i) {
 			case 0:
+				console.log('params', params);
 				getFeedListByUserId(
 					params,
 					result => {
@@ -174,13 +175,13 @@ export default Profile = ({route}) => {
 				getUserTaggedFeedList(
 					params,
 					result => {
-						console.log('result / getUserTaggedFeedList : ', result.msg.length);
+						// console.log('result / getUserTaggedFeedList : ', result.msg[1]);
 						if (refresh || feedList.length == 0) {
-							setFeedList(result.msg);
+							setFeedList(result.msg.map(v => v.usertag_feed_id));
 						} else {
 							//다음 페이지를 호출한 경우 기존 값에 추가된 result 추가
 							console.log('page 합산', [...feedList, ...result.msg].length);
-							setFeedList([...feedList, ...result.msg]);
+							setFeedList([...feedList, ...result.msg.map(v => v.usertag_feed_id)]);
 						}
 						setFeedTotal(result.total_count); // 토탈카운트 갱신
 						setLoading(false); //로딩종료
@@ -320,89 +321,24 @@ export default Profile = ({route}) => {
 		// navigation.navigate('MY', {screen: 'AidRequestAnimalList', params: data._id});
 	};
 
-	const petListEmptyComponent = () => {
-		return (
-			<View style={[profile.listEmpty, {}]}>
-				<Text style={[txt.noto28, {color: GRAY10}]}>아직 등록된 반려동물이 없네요.</Text>
-			</View>
-		);
-	};
-
-	const animatedHeight = React.useRef(new Animated.Value(0)).current;
-
-	const onShowCompanion = () => {
-		setShowCompanion(true);
-		animationOpen();
-	};
-
-	const onHideCompanion = () => {
-		Animated.timing(animatedHeight, {
-			duration: 300,
-			toValue: 0,
-			// easing: Easing.linear,
-			useNativeDriver: false,
-		}).start(() => setShowCompanion(false));
-	};
-
-	const onShowOwnerBtnClick = () => {
-		setShowOwnerState(true);
-		animationOpen();
-	};
-	const onHideOwnerBtnClick = () => {
-		Animated.timing(animatedHeight, {
-			duration: 300,
-			toValue: 0,
-			// easing: Easing.linear,
-			useNativeDriver: false,
-		}).start(() => setShowOwnerState(false));
-	};
-
-	const animationOpen = () => {
-		Animated.timing(animatedHeight, {
-			duration: 400,
-			toValue: 212 * DP,
-			// easing: Easing.linear,
-			useNativeDriver: false,
-		}).start();
-	};
-
 	//업로드 클릭
 	const onClickUpload = () => {
 		// console.log('onClickUpload');
 		flatlist.current.scrollToIndex({animated: true, index: 1, viewPosition: 0});
 	};
 
-	//userType이 PET이며 Tab의 반려인계정이 Open으로 설정이 되어 있는 경우
-	const showPetOrOwnerList = () => {
-		if (data.user_type == PET && showOwnerState) {
-			// 반려인 계정
-			return (
-				<Animated.View style={[profile.petList, {height: animatedHeight}]}>
-					<OwnerList items={data.pet_family} onClickLabel={onClickOwnerLabel} />
-				</Animated.View>
-			);
-			//반려동물
-		} else if (data.user_type == NORMAL && showCompanion) {
-			return (
-				<Animated.View
-					style={[
-						profile.petList,
-						{
-							height: animatedHeight,
-						},
-					]}>
-					<PetList items={data.user_my_pets} onClickLabel={onClickMyCompanion} ListEmptyComponent={petListEmptyComponent} />
-				</Animated.View>
-			);
+	//프로필 수정 버튼 클릭(본인 계정일 경우만 가능)
+	const onPressEditProfile = () => {
+		if (data.user_type == 'user') {
+			navigation.push('ChangeUserProfileImage', {data: data, routeInfo: route});
+		} else {
+			// navigation.push('ChangeUserProfileImage', {data: data, routeInfo: route});
+			navigation.push('ChangePetProfileImage', data);
 		}
 	};
 
-	//프로필 수정 버튼 클릭(본인 계정일 경우만 가능)
-	const onPressEditProfile = () => {
-		navigation.push('ChangeUserProfileImage', {data: data, routeInfo: route});
-	};
-
 	const onPressFollow = () => {
+		console.log('data._id', data._id);
 		followUser(
 			{follow_userobject_id: data._id},
 			result => {
@@ -426,9 +362,7 @@ export default Profile = ({route}) => {
 				() => Modal.close(),
 				() => {
 					unFollowUser(
-						{
-							follow_userobject_id: data._id,
-						},
+						{follow_userobject_id: data._id},
 						result => {
 							console.log('result / unFollowUser / Profile :', result.msg);
 							setData('');
@@ -450,16 +384,12 @@ export default Profile = ({route}) => {
 		} else
 			return (
 				<>
-					<View style={[profile.profileInfo]}>
+					<View style={[profile.profileInfo, {}]}>
 						<ProfileInfo
 							data={data}
 							showMyPet={e => alert(e)}
 							volunteerBtnClick={() => navigation.push('ApplyVolunteer')}
 							adoptionBtnClick={() => navigation.push('ApplyAnimalAdoptionA')}
-							onShowOwnerBtnClick={onShowOwnerBtnClick}
-							onHideOwnerBtnClick={onHideOwnerBtnClick}
-							onShowCompanion={onShowCompanion}
-							onHideCompanion={onHideCompanion}
 							onPressVolunteer={onClick_Volunteer_ShelterProfile}
 							onPressAddPetBtn={onPressAddPetBtn}
 							onPressAddArticleBtn={onPressAddArticleBtn}
@@ -467,9 +397,10 @@ export default Profile = ({route}) => {
 							onPressUnFollow={onPressUnFollow}
 							onPressFollow={onPressFollow}
 							onClickUpload={onClickUpload}
+							onClickMyCompanion={onClickMyCompanion}
+							onClickOwnerLabel={onClickOwnerLabel}
 						/>
 					</View>
-					{showPetOrOwnerList()}
 				</>
 			);
 	};
@@ -509,10 +440,22 @@ export default Profile = ({route}) => {
 		);
 	};
 
+	// 유저타입에 따라 다른 탭 아이템 출력
+	const getTabSelectList = () => {
+		if (data.user_type == 'user') {
+			return <ProfileTabSelect items={['피드', '태그', '커뮤니티']} onSelect={onSelectTabMenu} />;
+		}
+		return data.user_type == PET ? (
+			<ProfileTabSelect items={['피드', '태그']} onSelect={onSelectTabMenu} />
+		) : (
+			<ProfileTabSelect items={['피드', '태그', '보호동물']} onSelect={onSelectTabMenu} />
+		);
+	};
+
 	//TabSelect 하단 출력 리스트 컴포넌트
 	const showTabContent = () => {
 		const whenFeedThumbnailEmpty = text => {
-			return <ListEmptyInfo text={text} />;
+			return <ListEmptyInfo paddingVertical={100 * DP} text={text} />;
 		};
 		const renderProtect = ({item, index}) => {
 			return (
@@ -523,15 +466,10 @@ export default Profile = ({route}) => {
 				/>
 			);
 		};
+
 		const renderItem = ({item, index}) => {
 			if (index == 0) {
-				return (
-					<View style={[temp_style.tabSelectFilled_Type2, {marginBottom: 10 * DP}]}>
-						{getTabSelectList()}
-						{/* {tabMenuSelected == 2 && data.user_type != SHELTER && <ProtectedPetList data={data} onClickLabel={onClickProtectPet} />} */}
-						{/* 보호활동 하는 반려동물들 */}
-					</View>
-				);
+				return <View style={[temp_style.tabSelectFilled_Type2, {marginBottom: 10 * DP}]}>{getTabSelectList()}</View>;
 			}
 			if (data.user_type == 'user') {
 				if (tabMenuSelected == 0) {
@@ -591,7 +529,7 @@ export default Profile = ({route}) => {
 								data={protectList}
 								renderItem={renderProtect}
 								ListEmptyComponent={whenFeedThumbnailEmpty('현재 보호중인 동물이 없습니다.')}
-								style={{paddingVertical: 20 * DP}}
+								style={{paddingVertical: protectList && protectList.length == 0 ? 0 : 20 * DP}}
 								onEndReached={onEndReached}
 							/>
 						);
@@ -609,23 +547,11 @@ export default Profile = ({route}) => {
 					nestedScrollEnabled
 					showsVerticalScrollIndicator={false}
 					ref={flatlist}
-					// stickyHeaderIndices={[1]}
 				/>
 			</View>
 		);
 	};
 
-	// 유저타입에 따라 다른 탭 아이템 출력
-	const getTabSelectList = () => {
-		if (data.user_type == 'user') {
-			return <TabSelectFilled_Type2 items={['피드', '태그', '커뮤니티']} onSelect={onSelectTabMenu} />;
-		}
-		return data.user_type == PET ? (
-			<TabSelectFilled_Type2 items={['피드', '태그']} onSelect={onSelectTabMenu} />
-		) : (
-			<TabSelectFilled_Type2 items={['피드', '태그', '보호동물']} onSelect={onSelectTabMenu} />
-		);
-	};
 	if (data.user_type == 'pet') {
 		return (
 			<View style={[login_style.wrp_main, profile.container]}>
@@ -637,9 +563,7 @@ export default Profile = ({route}) => {
 						</View>
 					</>
 				) : (
-					<>
-						<Loading isModal={false} />
-					</>
+					<Loading isModal={false} />
 				)}
 			</View>
 		);

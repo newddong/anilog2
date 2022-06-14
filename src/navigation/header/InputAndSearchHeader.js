@@ -47,6 +47,8 @@ export default InputAndSearchHeader = props => {
 			searchContext.searchInfo.searchInputForLocation = text;
 		} else if (props.isHelpTab) {
 			searchContext.searchInfo.searchInputForHelp = text;
+		} else if (props.isSocial) {
+			searchContext.searchInfo.searchInputForSocial = text;
 		} else {
 			//검색탭에서 호출된 경우 searchInput 전역변수를 활용
 			searchContext.searchInfo.searchInput = text;
@@ -58,6 +60,8 @@ export default InputAndSearchHeader = props => {
 			searchContext.searchInfo.searchInputForLocation = '';
 		} else if (props.isHelpTab) {
 			searchContext.searchInfo.searchInputForHelp = '';
+		} else if (props.isSocial) {
+			searchContext.searchInfo.searchInputForSocial = '';
 		} else {
 			searchContext.searchInfo.searchInput = '';
 		}

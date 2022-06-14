@@ -76,6 +76,7 @@ import ShelterAsk from 'Root/component/templete/shelter/ShelterAsk';
 import ReportDetail from 'Root/component/templete/missing/ReportDetail';
 import MissingAnimalDetail from 'Root/component/templete/missing/MissingAnimalDetail';
 import SimpleWithMeatballHeader from '../header/SimpleWithMeatballHeader';
+import ProfileHeader from '../header/ProfileHeader';
 
 const RootStack = createStackNavigator();
 
@@ -325,11 +326,7 @@ export default RootStackNavigation = () => {
 						<RootStack.Screen name="UserList" options={{header: props => <InputAndSearchHeader {...props} />, title: '계정'}}>
 							{props => <AccountPicker {...props} /*prevNav={props.prevNav} input={searchInput} onClickUser={onClickUser}*/ />}
 						</RootStack.Screen>
-						<RootStack.Screen
-							name="Profile"
-							component={Profile}
-							options={{header: props => <MeatBallHeader {...props} menu={['신고하기', '신고']} />, title: '프로필'}}
-						/>
+						<RootStack.Screen name="Profile" component={Profile} options={{header: props => <ProfileHeader {...props} />, title: '프로필'}} />
 						<RootStack.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />}} />
 						<RootStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />}} />
 						{/* <RootStack.Screen

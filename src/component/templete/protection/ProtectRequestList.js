@@ -3,7 +3,7 @@ import {Text, View, FlatList, RefreshControl, ActivityIndicator, StyleSheet} fro
 import {APRI10, GRAY10} from 'Root/config/color';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import {txt} from 'Root/config/textstyle';
-import {NETWORK_ERROR, ONLY_CONTENT_FOR_ADOPTION, PROTECT_REQUEST_MAIN_LIMIT} from 'Root/i18n/msg';
+import {DEFAULT_ANIMAL_PROFILE, NETWORK_ERROR, ONLY_CONTENT_FOR_ADOPTION, PROTECT_REQUEST_MAIN_LIMIT} from 'Root/i18n/msg';
 import Modal from 'Root/component/modal/Modal';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import Loading from 'Root/component/molecules/modal/Loading';
@@ -15,6 +15,8 @@ import {getSearchResultProtectRequest} from 'Root/api/protectapi';
 import protect_obj from 'Root/config/protect_obj';
 import {useNavigation} from '@react-navigation/core';
 import DP from 'Root/config/dp';
+import ProtectedThumbnail from 'Root/component/molecules/media/ProtectedThumbnail';
+import {ScrollView} from 'native-base';
 
 export default ProtectRequestList = ({route}) => {
 	const navigation = useNavigation();
@@ -118,17 +120,13 @@ export default ProtectRequestList = ({route}) => {
 					list = res;
 				} else {
 					// 페이징 호출 분기
-					let temp = [...data];
-					res.map((v, i) => {
-						temp.push(v);
-					});
-					console.log('temp lenth', temp.length);
-					list = temp;
+					list = [...data, ...res];
 				}
+				console.log('getSearchResultProtectRequest length', list.length);
 				setData(list);
 				protect_obj.protect = list;
-				setOffset(offset + 1); //데이터를 추가한 뒤 페이지 ++
 				Modal.close();
+				setOffset(offset + 1); //데이터를 추가한 뒤 페이지 ++
 				setLoading(false); //로딩 Indicator 종료
 			},
 			err => {
@@ -178,7 +176,7 @@ export default ProtectRequestList = ({route}) => {
 	};
 
 	//보호요청게시글 클릭
-	const onClickLabel = (status, id, item) => {
+	const onClickLabel = item => {
 		let sexValue = '';
 		switch (item.protect_animal_sex) {
 			case 'male':
@@ -217,7 +215,7 @@ export default ProtectRequestList = ({route}) => {
 				console.log('result / favoriteEtc / ProtectRequestList : ', result.msg.favoriteEtc);
 				let prevData = [...getData()]; //
 				prevData[index].is_favorite = bool;
-				setData(prevData);
+				// setData(prevData); //useState로 View를 다시 그리면 UI Thread가 멈추는 현상 발견 임시 주석 처리
 			},
 			err => {
 				console.log('err / favoriteEtc / PRotectRequestList : ', err);
@@ -240,34 +238,64 @@ export default ProtectRequestList = ({route}) => {
 	};
 
 	//리스트 페이징 작업
-	const onEndReached = () => {
+	const onEndReached = ({distanceFromEnd}) => {
+		console.log('distanceFromEnd', distanceFromEnd);
 		console.log('EndReached', getData().length % PROTECT_REQUEST_MAIN_LIMIT);
 		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
 
-		if (getData().length % PROTECT_REQUEST_MAIN_LIMIT == 0) {
-			getList();
+		// if (getData().length % PROTECT_REQUEST_MAIN_LIMIT == 0) {
+		// 	getList();
+		// }
+	};
+
+	const [closePaging, setClosePaging] = React.useState(true);
+
+	const onScroll = e => {
+		let y = e.nativeEvent.contentOffset.y;
+		const To = PROTECT_REQUEST_MAIN_LIMIT * (offset - 1) - 20;
+		// console.log('offset', offset, 'e', y);
+		console.log('to', To * ITEM_HEIGHT);
+		if (y > ITEM_HEIGHT * To && closePaging) {
+			// console.log('offset * PROTECT_REQUEST_MAIN_LIMIT', offset * PROTECT_REQUEST_MAIN_LIMIT);
+			// console.log('getData().length', getData().length);
+			if (getData().length % PROTECT_REQUEST_MAIN_LIMIT == 0) {
+				getList();
+				setClosePaging(false);
+			}
 		}
 	};
+
+	React.useEffect(() => {
+		setClosePaging(true);
+	}, [offset]);
 
 	const moveToTop = () => {
 		flatlist.current.scrollToOffset({animated: true, offset: 0});
 	};
 
 	const renderItem = ({item, index}) => {
-		return <ProtectRequestItem item={item} index={index} />;
+		// return <ProtectRequestItem key={index} item={item} index={index} />;
+		return (
+			<ProtectRequest
+				data={item}
+				index={index}
+				onClickLabel={(status, id) => onClickLabel(item)}
+				onFavoriteTag={e => onOff_FavoriteTag(e, index)}
+				onPressProtectRequest={() => onPressProtectRequest(item)}
+			/>
+		);
 	};
 
 	class ProtectRequestItem extends React.PureComponent {
 		render() {
 			return (
-				<>
-					<ProtectRequest
-						data={getData()[this.props.index]}
-						onClickLabel={(status, id) => onClickLabel(status, id, this.props.item)}
-						onFavoriteTag={e => onOff_FavoriteTag(e, this.props.index)}
-						onPressProtectRequest={() => onPressProtectRequest(this.props.item)}
-					/>
-				</>
+				<ProtectRequest
+					data={getData()[this.props.index]}
+					index={this.props.index}
+					onClickLabel={(status, id) => onClickLabel(this.props.item)}
+					onFavoriteTag={e => onOff_FavoriteTag(e, this.props.index)}
+					onPressProtectRequest={() => onPressProtectRequest(this.props.item)}
+				/>
 			);
 		}
 	}
@@ -330,30 +358,23 @@ export default ProtectRequestList = ({route}) => {
 					data={getData()}
 					style={{backgroundColor: '#fff'}}
 					renderItem={renderItem}
+					ListHeaderComponent={header()}
+					ListFooterComponent={loading && <ActivityIndicator size={'large'} />}
 					showsVerticalScrollIndicator={false}
 					keyExtractor={keyExtractor}
 					getItemLayout={getItemLayout}
 					refreshing
-					onEndReached={onEndReached} //Flatlist 페이징
-					onEndReachedThreshold={0.6} //페이징을 하는 타이밍
+					onMomentumScrollEnd={onScroll}
+					// onEndReachedThreshold={0.5} //페이징을 하는 타이밍
+					// onEndReached={onEndReached} //Flatlist 페이징
+					// onScroll={e => console.log('e', e.nativeEvent.contentOffset)}
 					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					ListEmptyComponent={whenEmpty}
-					ListHeaderComponent={header()}
-					// https://reactnative.dev/docs/optimizing-flatlist-configuration
-					// removeClippedSubviews={true}
+					decelerationRate={0.85}
 					extraData={refreshing}
-					// maxToRenderPerBatch={5} // re-render를 막는군요.
-					windowSize={11}
+					windowSize={30}
 					ref={flatlist}
-					// https://reactnative.dev/docs/optimizing-flatlist-configuration
 				/>
-				{loading ? (
-					<View style={style.indicatorCont}>
-						<ActivityIndicator size="large" color={APRI10} />
-					</View>
-				) : (
-					<></>
-				)}
 			</View>
 		);
 	}
@@ -432,13 +453,5 @@ const style = StyleSheet.create({
 			width: 2 * DP,
 		},
 	},
-	indicatorCont: {
-		position: 'absolute',
-		left: 0,
-		right: 0,
-		top: 0,
-		bottom: 0,
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
+	indicatorCont: {},
 });

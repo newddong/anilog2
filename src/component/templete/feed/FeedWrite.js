@@ -1,11 +1,10 @@
 import React from 'react';
-import {Text, TouchableOpacity, View, TouchableWithoutFeedback} from 'react-native';
-import {APRI10, WHITE, GRAY20, GRAY10, GRAY30} from 'Root/config/color';
+import {Text, TouchableOpacity, View, TouchableWithoutFeedback, StyleSheet} from 'react-native';
+import {APRI10, WHITE, GRAY20, GRAY10, GRAY30, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Paw54_Border} from 'Root/component/atom/icon/index';
+import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Paw54_Border,Location54} from 'Root/component/atom/icon/index';
 import {Urgent_Write1, Urgent_Write2} from 'Atom/icon';
-import {btn_style, feedWrite, login_style, temp_style, buttonstyle} from 'Templete/style_templete';
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w194} from 'Atom/btn/btn_style';
 import {PUBLIC_SETTING} from 'Root/i18n/msg';
@@ -17,6 +16,11 @@ import {FlatList} from 'react-native-gesture-handler';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import MissingForm from 'Templete/feed/MissingForm';
 import ReportForm from 'Templete/feed/ReportForm';
+import RadioBox from 'Root/component/molecules/select/RadioBox';
+import RadioBoxItem from 'Molecules/select/RadioBoxItem';
+import RadioBoxGroup from 'Molecules/select/RadioBoxGroup';
+import CheckBox from 'Root/component/molecules/select/CheckBox';
+import CheckBoxItem from 'Root/component/molecules/select/CheckBoxItem';
 
 export default FeedWrite = props => {
 	const [showPetAccountList, setShowPetAccountList] = React.useState(false); //PetAccount 계정
@@ -47,7 +51,7 @@ export default FeedWrite = props => {
 		console.log('정보 변경',props.route);
 		if (props.route.name != 'FeedEdit') {
 			const param = props.route.params;
-			// console.log('param', param);
+			console.log('param', param);
 			// console.log('param.feed_avatar_id', param.feed_avatar_id);
 			param.feed_avatar_id //피드 글쓰기 클릭시 즉시 작성자 아바타 계정을 선택하는 절차가 추가됨에 따라 분기처리가 필요해짐
 				? // - 유저 계정에서 피드글쓰기를 누른 경우
@@ -176,26 +180,6 @@ export default FeedWrite = props => {
 			return;
 		}
 		props.navigation.push("MultiPhotoSelect",{prev:{name:props.route.name,key:props.route.key},selectedPhoto:selectedImg});
-		// let selectPhoto;
-		// if (props.route.params.feedType == 'Report') {
-		// 	selectPhoto = '사진 선택 모드를 선택하세요 \n 사진 추가시 2장까지 가능합니다.';
-		// } else {
-		// 	selectPhoto = '사진 선택 모드를 선택하세요';
-		// }
-		// console.log('route11', props.route.params.feedType);
-		// Modal.popTwoBtn(
-		// 	selectPhoto,
-		// 	'하나씩선택',
-		// 	'여러개선택',
-		// 	() => {
-		// 		Modal.close();
-		// 		props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
-		// 	},
-		// 	() => {
-		// 		Modal.close();
-		// 		props.navigation.push("MultiPhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
-		// 	},
-		// );
 	};
 
 	//사진 삭제
@@ -216,15 +200,8 @@ export default FeedWrite = props => {
 		props.navigation.setParams({...props.route.params, ...report});
 	};
 
-	const onSetDiary = () => {
-		let diary = false;
-		if (isDiary) {
-			setDiary(false);
-			diary = false;
-		} else {
-			setDiary(true);
-			diary = true;
-		}
+	const onSetDiary = (diary) => {
+		setDiary(diary);
 		props.navigation.setParams({...props.route.params, feed_is_protect_diary: diary});
 	};
 
@@ -300,16 +277,16 @@ export default FeedWrite = props => {
 				<View style={[feedWrite.buttonContainer]}>
 					<TouchableWithoutFeedback onPress={moveToMultiPhotoSelect}>
 						<View style={[feedWrite.btnItemContainer, {marginBottom: 5 * DP}]}>
-							<Camera54 />
-							<Text style={[txt.noto24, {color: APRI10, marginLeft: 10 * DP}]}>사진추가</Text>
+							<Camera54/>
+							<Text style={[txt.noto28b, {color: BLACK, marginLeft: 12 * DP}]}>사진추가</Text>
 						</View>
 					</TouchableWithoutFeedback>
 					<TouchableWithoutFeedback onPress={!showReportForm && !showLostAnimalForm ? moveToLocationPicker : () => {}}>
 						<View style={[feedWrite.btnItemContainer]}>
 							{!showReportForm && !showLostAnimalForm ? (
 								<>
-									<Location54_APRI10 />
-									<Text style={[txt.noto24, {color: APRI10, alignSelf: 'center', marginLeft: 10 * DP}]}>위치추가</Text>
+									<Location54 fill='black'/>
+									<Text style={[txt.noto28b, {color: BLACK, alignSelf: 'center', marginLeft: 10 * DP}]}>위치추가</Text>
 								</>
 							) : (
 								<>
@@ -323,8 +300,8 @@ export default FeedWrite = props => {
 						<View style={[feedWrite.btnItemContainer]}>
 							{!showReportForm && !showLostAnimalForm ? (
 								<>
-									<Paw54_Border />
-									<Text style={[txt.noto24, {color: APRI10, alignSelf: 'center', marginLeft: 10 * DP}]}>태그하기</Text>
+									<Paw54_Border fill='black'/>
+									<Text style={[txt.noto28b, {color: BLACK, alignSelf: 'center', marginLeft: 10 * DP}]}>태그하기</Text>
 								</>
 							) : (
 								<View style={[{width: 200 * DP}]}>
@@ -335,25 +312,6 @@ export default FeedWrite = props => {
 						</View>
 					</TouchableWithoutFeedback>
 				</View>
-				{!showReportForm && !showLostAnimalForm && (
-					<View style={[feedWrite.btn_w194_container]}>
-						<View style={[btn_style.btn_w194, feedWrite.btn_w194]}>
-							<AniButton
-								btnTitle={'임보일기'}
-								btnStyle={isDiary ? 'filled' : 'border'}
-								titleFontStyle={24}
-								btnLayout={btn_w194}
-								onPress={onSetDiary}
-							/>
-						</View>
-						{/* 기능 개발되면 다시 열릴 공개 설정 버튼 */}
-						{/* <TouchableOpacity onPress={onPressPublicSetting} style={[feedWrite.public_setting_btn]}> */}
-						{/* <ActionButton btnTitle={'전체 공개'} onOpen={() => alert('dd')} btnStyle={'border'} titleFontStyle={24} btnLayout={btn_w194} /> */}
-						{/* <Text style={[txt.noto24, {color: APRI10}]}>{publicSetting}</Text> */}
-						{/* <Arrow_Down_APRI10 /> */}
-						{/* </TouchableOpacity> */}
-					</View>
-				)}
 				{/* {selectedImg.length > 0 && (
 					<View style={[temp_style.selectedMediaList, feedWrite.selectedMediaList]}>
 						<SelectedMediaList items={selectedImg} onDelete={deletePhoto} />
@@ -373,16 +331,28 @@ export default FeedWrite = props => {
 	};
 
 	return (
-		<View style={{flex: 1, backgroundColor: '#FFF'}}>
+		<View style={{flex: 1, backgroundColor: '#FFF',paddingTop:30*DP}}>
 			{/* <TouchableWithoutFeedback onPress={test}>
 				<View style={{backgroundColor: 'red', width: 50, height: 50}}></View>
 			</TouchableWithoutFeedback> */}
 			<FlatList
 				renderItem={({item, index}) => {
 					return (
-						<View contentContainerStyle={[login_style.wrp_main, {backgroundColor: '#000'}]} ref={container}>
+						<View contentContainerStyle={[login_style.wrp_main]} ref={container}>
+							<View style={{flexDirection:'row',alignItems:'center',paddingHorizontal:28*DP,justifyContent:'space-between'}}>
+								<CheckBoxItem style={{width:148*DP}} textStyle={[txt.noto26,{lineHeight:38*DP}]} onCheck={onSetDiary}>임보일기</CheckBoxItem>
+								<View style={{height:38*DP,width:2*DP,backgroundColor:GRAY10}}></View>
+								<RadioBoxGroup style={{flexDirection:'row',justifyContent:'space-between',width:484*DP}} onSelect={(item,index)=>console.log(item,index)}>
+									<RadioBoxItem textStyle={[txt.noto26,{lineHeight:38*DP}]}>전체공개</RadioBoxItem>
+									<RadioBoxItem textStyle={[txt.noto26,{lineHeight:38*DP}]}>비공개</RadioBoxItem>
+									<RadioBoxItem textStyle={[txt.noto26,{lineHeight:38*DP}]}>팔로워공개</RadioBoxItem>
+								</RadioBoxGroup>
+								{/* <View style={{width:474*DP,backgroundColor:'red'}}>
+									<RadioBoxItem items={['전체공개','비공개','팔로워공개']} width={160*DP}/>
+								</View> */}
+							</View>
 							<HashInput
-								containerStyle={[temp_style.feedTextEdit, {minHeight: showLostAnimalForm || showReportForm ? 214 * DP : 316 * DP}]}
+								containerStyle={[temp_style.feedTextEdit]}
 								textAlignVertical={'top'}
 								multiline={true}
 								placeholder="게시물을 작성하세요 (150자)"
@@ -436,3 +406,118 @@ export default FeedWrite = props => {
 		</View>
 	);
 };
+
+export const feedWrite = StyleSheet.create({
+	buttonContainer: {
+		flexDirection: 'row',
+		paddingHorizontal: 28 * DP,
+		height: 54 * DP,
+		marginTop: 40 * DP,
+		alignItems: 'center',
+		justifyContent: 'space-between',
+	},
+	btnItemContainer: {
+		width:182*DP,
+		height:54*DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	btn_w194_container: {
+		paddingHorizontal: 48 * DP,
+		marginTop: 40 * DP,
+		flexDirection: 'row',
+	},
+	btn_w194: {
+		marginRight: 266 * DP,
+	},
+	urgentBtnContainer: {
+		width: 158 * DP,
+		// width: 110 * DP,
+		height: 332 * DP,
+		// height: 110 * DP,
+		position: 'absolute',
+		right: 30 * DP,
+		bottom: 40 * DP,
+		justifyContent: 'flex-end',
+	},
+	urgentActionButton: {
+		width: 110 * DP,
+		height: 110 * DP,
+		alignSelf: 'flex-end',
+		// backgroundColor: 'white',
+		shadowColor: '#000000',
+		shadowOpacity: 0.2,
+		borderRadius: 40 * DP,
+		shadowOffset: {
+			width: 2,
+			height: 2,
+		},
+		shadowRadius: 4.65,
+		// shadowOffset: {
+		// 	width: 2 * DP,
+		// 	height: 1 * DP,
+		// },
+		// elevation: 1,
+	},
+	urgentBtnItemContainer: {
+		width: 158 * DP,
+		height: 90 * DP,
+		borderRadius: 40 * DP,
+		marginBottom: 30 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: 'red',
+	},
+});
+
+
+export const btn_style = StyleSheet.create({
+	btn_w194: {
+		width: 194 * DP,
+		height: 60 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+});
+
+export const login_style = StyleSheet.create({
+	wrp_main: {
+		// flex: 1,
+		alignItems: 'center',
+		// justifyContent: 'center',
+		backgroundColor: '#FFF',
+	},
+});
+
+export const temp_style = StyleSheet.create({
+	floatingBtn: {
+		flexDirection: 'column',
+
+		width: 110 * DP,
+		height: 110 * DP,
+	},
+	feedTextEdit: {
+		width: 694 * DP,
+		minHeight: 376 * DP,
+		marginTop: 30 * DP,
+		backgroundColor: '#FAFAFA',
+		alignSelf: 'center',
+		justifyContent:'space-between',
+		borderRadius: 24 * DP,
+		padding: 24 * DP,
+	},
+});
+
+export const buttonstyle = StyleSheet.create({
+	shadow: {
+		shadowColor: '#000000',
+		shadowOpacity: 0.27,
+		shadowRadius: 4.65,
+		shadowOffset: {
+			width: 1,
+			height: 2,
+		},
+		elevation: 4,
+	},
+});

@@ -93,7 +93,7 @@ const UserLocationTimeLabel = props => {
 					) : (
 						<ProfileDefaultImg size={props.isLarge ? styles.img_round_64 : styles.img_round_60} />
 					)}
-					<View style={{position: 'absolute', top: 8*DP}}>
+					<View style={{position: 'absolute', top: 8 * DP}}>
 						{/* 팻의 상태 여부에 따른 분기 - protected, adopted, normal  */}
 						{getStatusMark()}
 					</View>
@@ -101,7 +101,9 @@ const UserLocationTimeLabel = props => {
 
 				<View style={{marginLeft: 20 * DP}}>
 					<View style={{flexDirection: 'row'}}>
-						<Text style={[props.isLarge ? txt.noto30b : txt.roboto24, {color: isLoginUser ? APRI10 : BLACK, maxWidth: 500 * DP,lineHeight:48*DP}]} numberOfLines={1}>
+						<Text
+							style={[props.isLarge ? txt.noto30b : txt.roboto24, {color: isLoginUser ? APRI10 : BLACK, maxWidth: 500 * DP, lineHeight: 48 * DP}]}
+							numberOfLines={1}>
 							{props.data.user_nickname || '탈퇴한 계정입니다.'}
 						</Text>
 						{isMyPet ? (

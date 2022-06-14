@@ -5,6 +5,7 @@ import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {Female48, Male48, Blur, RainbowBridge, RainbowBridge_226} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
+import FastImage from 'react-native-fast-image';
 /**
  * 버튼 컴포넌트트
  * @param {object} props - Props Object
@@ -133,7 +134,13 @@ const ProtectedThumbnail = props => {
 	return (
 		<View style={styles.img_square_round_226}>
 			<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.4} onPress={onClickLabel}>
-				<Image source={{uri: data.img_uri}} onLoad={e => setImageLoad(true)} style={[styles.img_square_round_226, borderByStatus(), {zIndex: -3}]} />
+				<FastImage
+					style={[styles.img_square_round_226, borderByStatus(), {zIndex: -3}]}
+					source={{uri: data.img_uri}}
+					onLoadEnd={() => setImageLoad(true)}
+				/>
+
+				{/* <Image source={{uri: data.img_uri}} onLoad={e => setImageLoad(true)} style={[styles.img_square_round_226, borderByStatus(), {zIndex: -3}]} /> */}
 				{/* 펫 성별마크 */}
 				<View style={{position: 'absolute', right: 10 * DP, top: 10 * DP}}>{getGenderMark()}</View>
 				{/* 펫 보호상태 */}
@@ -194,7 +201,7 @@ const style = StyleSheet.create({
 	rainbow: {
 		position: 'absolute',
 		backgroundColor: BLACK,
-		opacity: 0.8,
+		opacity: 0.6,
 		zIndex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',

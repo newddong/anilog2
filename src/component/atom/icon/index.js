@@ -17,7 +17,9 @@ import setting46 from './setting46';
 import heart46_filled from './heart46_filled';
 import search48 from './search48';
 import alarmBadger48 from './alarmBadger48';
+import radioChecked38 from './radioChecked38';
 import radioChecked48 from './radioChecked48';
+import radioUnchecked38 from './radioUnchecked38';
 import radioUnchecked48 from './radioUnchecked48';
 import public48 from './public48';
 import private48 from './private48';
@@ -46,6 +48,7 @@ import female48 from './female48';
 import videoPlay48 from './videoPlay48';
 import imageList48 from './imageList48';
 import cancel48 from './cancel48';
+import cancel36 from './cancel36';
 import bracket48 from './bracket48';
 import starBorder from './starBorder';
 import starFilled from './starFilled';
@@ -191,6 +194,7 @@ import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK, MAINBLACK} from 'Root/con
 
 const size30 = {width: 30 * DP, height: 30 * DP};
 const size32 = {width: 32 * DP, height: 32 * DP};
+const size36 = {width: 36 * DP, height: 36 * DP};
 const size38 = {width: 38 * DP, height: 38 * DP};
 const size40 = {width: 40 * DP, height: 40 * DP};
 const size42 = {width: 42 * DP, height: 42 * DP};
@@ -219,11 +223,17 @@ const defaultProfileImg = {width: 294 * DP, height: 294 * DP};
 const profileDefaultImg_194 = {width: 194 * DP, height: 194 * DP};
 
 const makeSvg = (component, style, color) => {
-	return props =>
+	if(!color){
+		return props =>
 		props.onPress
+			? React.createElement(TouchableOpacity, {...props}, React.createElement(component, {...props,...style}))
+			: React.createElement(component, {...props,...style});
+	}
+	return props =>{
+		return props.onPress
 			? React.createElement(TouchableOpacity, {...props}, React.createElement(component, {...style, fill: color}))
 			: React.createElement(component, {...style, fill: color});
-	//return props => React.createElement(component, {...style, ...props, fill: color});
+		}
 };
 
 export const UpdateImg = makeSvg(updateImg, size206);
@@ -257,7 +267,9 @@ export const Heart46_Filled = makeSvg(heart46_filled, size46); //Added 21.10.27
 export const Search48 = makeSvg(search48, size48, GRAY10);
 export const Search48_BLACK = makeSvg(search48, size48, BLACK);
 export const AlarmBadger48 = makeSvg(alarmBadger48, size48);
+export const RadioChecked38 = makeSvg(radioChecked48, size48);
 export const RadioChecked48 = makeSvg(radioChecked48, size48);
+export const RadioUnchecked38 = makeSvg(radioUnchecked48, size48,GRAY30);
 export const RadioUnchecked48 = makeSvg(radioUnchecked48, size48);
 export const Public48 = makeSvg(public48, size48);
 export const Private48 = makeSvg(private48, size48);
@@ -282,7 +294,7 @@ export const Calendar48_Filled = makeSvg(calendar48Filled, size48);
 export const Share48_Filled = makeSvg(share48Filled, size48);
 export const Share48_Border = makeSvg(share48Border, size48);
 export const FavoriteTag48_Filled = makeSvg(favoriteTagFilled, size48, APRI10);
-export const FavoriteTag48_Border = makeSvg(favoriteTag48Border, size48, MAINBLACK);
+export const FavoriteTag48_Border = makeSvg(favoriteTag48Border, size48, GRAY10);
 export const Calendar48_Border = makeSvg(calendar48Border, size48);
 export const Cross48 = makeSvg(cross, size48);
 export const Person48 = makeSvg(person48, size48);
@@ -293,6 +305,7 @@ export const Female48 = makeSvg(female48, size48);
 export const VideoPlay48 = makeSvg(videoPlay48, size48);
 export const ImageList48 = makeSvg(imageList48, size48);
 export const Cancel48 = makeSvg(cancel48, size48);
+export const Cancel36 = makeSvg(cancel36, size36);
 export const Bracket48 = makeSvg(bracket48, size48);
 export const Star50_Border = makeSvg(starBorder, size50);
 export const Star50_Filled = makeSvg(starFilled, size50);

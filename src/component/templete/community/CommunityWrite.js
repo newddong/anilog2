@@ -466,7 +466,7 @@ export default CommunityWrite = props => {
 							<ScrollView>
 								<RichEditor
 									ref={richText}
-									editorStyle={{contentCSSText: 'font-size:14px;', backgroundColor: '#FAFAFA'}}
+									editorStyle={{contentCSSText: `font-size:${28 * DP}px;`, backgroundColor: '#FAFAFA'}}
 									onChange={onChange}
 									keyboardDisplayRequiresUserAction={true}
 									style={{width: '100%', opacity: 0.99}}
@@ -481,7 +481,7 @@ export default CommunityWrite = props => {
 								<RichEditor
 									ref={richText}
 									keyboardDisplayRequiresUserAction={true}
-									editorStyle={{contentCSSText: 'font-size:14px;', backgroundColor: '#FAFAFA'}}
+									editorStyle={{contentCSSText: `font-size:${28 * DP}px;`, backgroundColor: '#FAFAFA'}}
 									onChange={onChange}
 									style={{width: '100%', opacity: 0.99}}
 									contentMode={'mobile'}

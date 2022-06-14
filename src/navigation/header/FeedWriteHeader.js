@@ -2,7 +2,7 @@ import React from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
 import {BackArrow32, Bracket48, Send60_Big} from 'Atom/icon';
 import DP from 'Root/config/dp';
-import {WHITE, APRI10} from 'Root/config/color';
+import {WHITE, APRI10, GRAY10, GRAY40} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 import {RED} from 'Root/config/color';
@@ -44,7 +44,6 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 				}
 			} else {
 				if (route.name == 'FeedEdit') {
-					console.log('dd', param.routeName);
 					if (param.routeName == 'FeedCommentList') {
 						getFeedDetailById(
 							{feedobject_id: param._id},
@@ -87,9 +86,13 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			}
 			// console.log('route.params:', route.params);
 			Modal.popNoBtn('게시물을 등록중입니다.');
-			let param = {...route.params,media_uri:route.params.selectedPhoto.map(
-				(v)=>{return v.cropUri??v.uri;}
-			), hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1))};
+			let param = {
+				...route.params,
+				media_uri: route.params.selectedPhoto.map(v => {
+					return v.cropUri ?? v.uri;
+				}),
+				hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
+			};
 			switch (route.params?.feedType) {
 				case 'Feed':
 					console.log('feed Param', JSON.stringify(param));
@@ -167,15 +170,17 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 		userGlobalObject.t.y = 0;
 	};
 	const onEdit1 = () => {
-		console.log('parm',route);
-	}
+		console.log('parm', route);
+	};
 	const onEdit = () => {
 		Modal.popLoading(true);
 		let changeTextRegex = /([#@])([^#@\s]+)/gm;
 		let param = {
 			...route.params,
 			feedobject_id: route.params._id,
-			media_uri:route.params.selectedPhoto?.map(v=>{return v.cropUri??v.uri}),
+			media_uri: route.params.selectedPhoto?.map(v => {
+				return v.cropUri ?? v.uri;
+			}),
 			feed_content: route.params.isEdit ? route.params.feed_content : route.params.feed_content.replace(changeTextRegex, '&$1&$1$1$2%&%&$1&$1'),
 			hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
 		};
@@ -282,7 +287,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 	};
 
 	return (
-		<View style={[style.headerContainer, style.shadow]}>
+		<View style={[style.headerContainer, style.shadow,{borderBottomColor:GRAY40,borderBottomWidth:2*DP}]}>
 			<TouchableOpacity onPress={navigation.goBack}>
 				<View style={style.backButtonContainer}>
 					<BackArrow32 onPress={navigation.goBack} />
@@ -311,7 +316,7 @@ const style = StyleSheet.create({
 	headerContainer: {
 		alignItems: 'center',
 		justifyContent: 'space-between',
-		height: 135 * DP,
+		height: 98 * DP,
 		flexDirection: 'row',
 		backgroundColor: WHITE,
 		paddingHorizontal: 28 * DP,

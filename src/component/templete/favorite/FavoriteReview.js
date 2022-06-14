@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import SelectStat from 'Organism/list/SelectStat';
 import {login_style, temp_style, selectstat_view_style} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
@@ -274,7 +274,7 @@ export default FavoriteReview = ({route}) => {
 				{route.name == 'MyReview' ? (
 					<></>
 				) : (
-					<View style={[temp_style.selectstat_view]}>
+					<View style={[style.selectstat_view]}>
 						<View style={[temp_style.selectstat, selectstat_view_style.selectstat]}>
 							<SelectStat
 								selectMode={selectMode}
@@ -302,3 +302,10 @@ export default FavoriteReview = ({route}) => {
 			</View>
 		);
 };
+
+const style = StyleSheet.create({
+	selectstat_view: {
+		width: 694 * DP,
+		height: 100 * DP,
+	},
+});

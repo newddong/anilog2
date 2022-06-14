@@ -142,29 +142,31 @@ export default MeatBallHeader = props => {
 
 	const shouldShowMeatball = () => {
 		let result = true;
-		if (props.options.data.user_type == 'user') {
+		if (props.options.data && props.options.data.user_type == 'user') {
 			result = false;
-		} else if (props.options.data.user_type == 'pet' && props.options.data.pet_family && props.options.data.pet_family.length == 0) {
+		} else if (
+			props.options.data &&
+			props.options.data.user_type == 'pet' &&
+			props.options.data.pet_family &&
+			props.options.data.pet_family.length == 0
+		) {
 			result = false;
 		}
 		return result;
 	};
-	if (props.options.data == undefined) {
-		return <></>;
-	} else
-		return (
-			<View style={[style.headerContainer, style.shadow]}>
-				<TouchableOpacity style={style.backButtonContainer} onPress={props.navigation.goBack}>
-					<BackArrow32 onPress={props.navigation.goBack} />
-				</TouchableOpacity>
-				<View style={{justifyContent: 'center', alignItems: 'center'}}>
-					<Text style={[txt.roboto40b, {width: 550 * DP, textAlign: 'center'}]} numberOfLines={1}>
-						{props.options?.title ? props.options.title : props.route.params.title}
-					</Text>
-				</View>
-				{shouldShowMeatball() ? <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} /> : <></>}
+	return (
+		<View style={[style.headerContainer, style.shadow]}>
+			<TouchableOpacity style={style.backButtonContainer} onPress={props.navigation.goBack}>
+				<BackArrow32 onPress={props.navigation.goBack} />
+			</TouchableOpacity>
+			<View style={{justifyContent: 'center', alignItems: 'center'}}>
+				<Text style={[txt.roboto40b, {width: 550 * DP, textAlign: 'center'}]} numberOfLines={1}>
+					{props.options?.title ? props.options.title : props.route.params.title}
+				</Text>
 			</View>
-		);
+			{shouldShowMeatball() ? <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} /> : <></>}
+		</View>
+	);
 };
 
 MeatBallHeader.defaultProps = {

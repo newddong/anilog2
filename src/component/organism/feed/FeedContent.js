@@ -93,7 +93,7 @@ export default FeedContent = props => {
 	const [btnStatus, setBtnStatus] = React.useState(false); //더보기 Arrow방향 false면 아래
 	const [show, setShow] = React.useState(false);
 	const [send, setSend] = React.useState();
-	const [isFavorite, setIsFavorite] = React.useState(props.data.feed_writer_id.is_favorite);
+	const [isFavorite, setIsFavorite] = React.useState(props.data.feed_writer_id?.is_favorite);
 	const feed_writer = props.data.feed_avatar_id ? props.data.feed_avatar_id : props.data.feed_writer_id;
 	React.useEffect(() => {
 		if (typeof feed_avatar_id === object) {
@@ -614,25 +614,15 @@ export default FeedContent = props => {
 							</View>
 						</TouchableWithoutFeedback>
 					</View>
-					{props.data.feed_writer_id ? (
-						<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
-							<View style={[organism_style.favoriteTag_feedContent]}>
-								{props.data.feed_writer_id.is_favorite ? (
-									<FavoriteTag48_Filled onPress={() => onPressFavoriteWriter(false)} />
-								) : (
-									<FavoriteTag48_Border onPress={() => onPressFavoriteWriter(true)} />
-								)}
-							</View>
-							{false && (
-								<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
-									<Text style={[txt.roboto24, {color: GRAY10}]}>{count_to_K(props.data.feed_writer_id.user_favorite_count)}</Text>
-								</View>
+					<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
+						<View style={[organism_style.favoriteTag_feedContent]}>
+							{(props.data.feed_writer_id?.is_favorite || isFavorite) ? (
+								<FavoriteTag48_Filled onPress={() => onFavorite(false)} />
+							) : (
+								<FavoriteTag48_Border onPress={() => onFavorite(true)}/>
 							)}
 						</View>
-					) : (
-						<></>
-					)}
-				</View>
+				  </View>
 
 				{(route.name.includes('FeedList') || feed_type == 'missing' || route.name.includes('FeedCommentList')) && (
 					<View style={[organism_style.content_feedContent, /*feedContent_style.content_Top10,*/ {width: 750 * DP, paddingHorizontal: 28 * DP}]}>

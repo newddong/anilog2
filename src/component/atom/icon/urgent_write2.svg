@@ -1,4 +1,4 @@
-<svg id="urgent_write2" xmlns="http://www.w3.org/2000/svg" width="110" height="110" viewBox="0 0 110 110">
+<!-- <svg id="urgent_write2" xmlns="http://www.w3.org/2000/svg" width="110" height="110" viewBox="0 0 110 110">
   <path id="패스_1188" data-name="패스 1188" d="M41.4,0H68.6A41.4,41.4,0,0,1,110,41.4V68.6A41.4,41.4,0,0,1,68.6,110H41.4A41.4,41.4,0,0,1,0,68.6V41.4A41.4,41.4,0,0,1,41.4,0Z" fill="#ff3120"/>
   <g id="그룹_3594" data-name="그룹 3594" transform="translate(26 10)">
     <g id="그룹_3593" data-name="그룹 3593">
@@ -22,4 +22,26 @@
     </g>
   </g>
   <text id="긴급_게시" data-name="긴급 게시" transform="translate(14 68)" fill="#fff" font-size="20" font-family="NotoSansKR-Bold, Noto Sans KR" font-weight="700" letter-spacing="-0.025em"><tspan x="2.93" y="23">긴급 게시</tspan></text>
+</svg> -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="98" height="86" viewBox="0 0 98 86">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="사각형_1693" data-name="사각형 1693" width="34.418" height="34.413" fill="#fff"/>
+    </clipPath>
+  </defs>
+  <g id="그룹_7013" data-name="그룹 7013" transform="translate(-618 -1332)">
+    <rect id="사각형_1692" data-name="사각형 1692" width="98" height="86" rx="30" transform="translate(618 1332)" fill="#ff3120"/>
+    <g id="그룹_7012" data-name="그룹 7012" transform="translate(649.791 1341.587)">
+      <g id="그룹_7011" data-name="그룹 7011" transform="translate(0 0)" clip-path="url(#clip-path)">
+        <path id="패스_1916" data-name="패스 1916" d="M30.37,31.685H29.323l.049-.188a2.833,2.833,0,0,0,.09-.678V20.687A7.974,7.974,0,0,0,21.5,12.78H17.913a7.974,7.974,0,0,0-7.961,7.908V30.821a2.857,2.857,0,0,0,.091.676l.048.187H9.056A2.5,2.5,0,0,0,6.54,34.17v2.889a2.51,2.51,0,0,0,2.505,2.485H30.369a2.509,2.509,0,0,0,2.5-2.486V34.169a2.508,2.508,0,0,0-2.5-2.484m-18.376-1.01V20.687A5.943,5.943,0,0,1,17.95,14.8h3.544a5.939,5.939,0,0,1,5.929,5.889V30.821a.869.869,0,0,1-.867.864h-13.7a.867.867,0,0,1-.865-.858v-.151Zm18.838,6.388a.476.476,0,0,1-.473.469H9.052a.472.472,0,0,1-.47-.469V34.172a.474.474,0,0,1,.472-.47h21.3a.473.473,0,0,1,.473.469Z" transform="translate(-2.625 -5.13)" fill="#fff"/>
+        <path id="패스_1917" data-name="패스 1917" d="M26.03,31.738c2.059,0,3.735-1.378,3.735-3.072V26.773c0-1.694-1.676-3.072-3.735-3.072S22.3,25.079,22.3,26.773v1.893c0,1.694,1.675,3.072,3.735,3.072m-.985-6.113a1.746,1.746,0,0,1,2.7,1.119l0,1.935,0,.013a1.746,1.746,0,0,1-3.432,0l0-1.921a1.739,1.739,0,0,1,.734-1.147" transform="translate(-8.95 -9.514)" fill="#fff"/>
+        <path id="패스_1918" data-name="패스 1918" d="M27.858,5.6h.023a1.007,1.007,0,0,0,.985-.986V1.008a1.008,1.008,0,0,0-2.017,0V4.622a1.009,1.009,0,0,0,1.009.983" transform="translate(-10.778 0)" fill="#fff"/>
+        <path id="패스_1919" data-name="패스 1919" d="M10.958,10.264a1.009,1.009,0,0,0,1.427-1.426L9.83,6.283A1.009,1.009,0,0,0,8.4,7.709Z" transform="translate(-3.255 -2.404)" fill="#fff"/>
+        <path id="패스_1920" data-name="패스 1920" d="M4.621,23.938H1.007a1.009,1.009,0,0,0,0,2.017H4.621a1.009,1.009,0,0,0,0-2.017" transform="translate(0 -9.61)" fill="#fff"/>
+        <path id="패스_1921" data-name="패스 1921" d="M43.471,10.264l2.555-2.555a1.01,1.01,0,0,0,0-1.426h0a1.009,1.009,0,0,0-1.426,0L42.045,8.838a1.008,1.008,0,0,0,1.426,1.426" transform="translate(-16.76 -2.404)" fill="#fff"/>
+        <path id="패스_1922" data-name="패스 1922" d="M49.1,23.938a1.009,1.009,0,0,0,0,2.017h3.616a1.009,1.009,0,0,0,0-2.017H49.1Z" transform="translate(-19.306 -9.61)" fill="#fff"/>
+      </g>
+    </g>
+    <text id="긴급게시" transform="translate(626 1376)" fill="#fff" font-size="20" font-family="NotoSansKR-Regular, Noto Sans CJK KR" letter-spacing="-0.025em"><tspan x="4.95" y="23">긴급게시</tspan></text>
+  </g>
 </svg>

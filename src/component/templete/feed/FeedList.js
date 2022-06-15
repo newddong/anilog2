@@ -216,7 +216,7 @@ export default FeedList = ({route, navigation}) => {
 					params,
 					result => {
 						console.log('result / getUserTaggedFeedList', result.msg.length);
-						const res = result.msg;
+						const res = result.msg.map((v, i) => v.usertag_feed_id);
 						setTotal(result.total_count);
 						let list = [];
 						if (!pre && !next) {

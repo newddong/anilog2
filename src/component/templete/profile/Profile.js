@@ -33,8 +33,6 @@ export default Profile = ({route}) => {
 	const [offset, setOffset] = React.useState(1); //커뮤니티 페이지
 	const [loading, setLoading] = React.useState(false);
 	const [tabMenuSelected, setTabMenuSelected] = React.useState(0); //프로필 Tab의 선택상태
-	const [showOwnerState, setShowOwnerState] = React.useState(false); // 현재 로드되어 있는 profile의 userType이 Pet인 경우 반려인 계정 리스트의 출력 여부
-	const [showCompanion, setShowCompanion] = React.useState(true); // User계정이 반려동물버튼을 클릭
 	const flatlist = React.useRef();
 	const userId = route.params.userobject._id; //현재 보고있는 프로필 대상의 _id
 
@@ -226,7 +224,6 @@ export default Profile = ({route}) => {
 	//프로필의 피드탭의 피드 썸네일 클릭
 	const onClick_Thumbnail_FeedTab = (index, item) => {
 		navigation.push('UserFeedList', {userobject: data, selected: item, index: index});
-		// console.log('data and item', data, item);
 	};
 
 	//프로필의 태그탭의 피드 썸네일 클릭
@@ -281,6 +278,7 @@ export default Profile = ({route}) => {
 		navigation.push('UserProfile', {userobject: item});
 	};
 
+	//쪽지 전송
 	const onPressSendMsg = (_id, name) => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {

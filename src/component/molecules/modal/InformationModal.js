@@ -164,56 +164,6 @@ const InformationModal = props => {
 			);
 		} else if (data.user_type == 'shelter') {
 			//보호소 계정의 정보
-			console.log('data', data);
-			const tttr = {
-				__v: 0,
-				_id: '628cccea3927793fb05acbae',
-				feedList: [],
-				is_favorite: false,
-				is_follow: false,
-				pet_family: [],
-				shelter_address: {
-					brief: '경상 창원시 의창구 창이대로 71 (명서동, 창원시농업기술센터) 축산과',
-					city: '경상남도',
-					detail: '창원유기동물보호소',
-				},
-				shelter_delegate_contact_number: '0552255701',
-				shelter_foundation_date: null,
-				shelter_homepage: '',
-				shelter_name: '창원유기동물보호소',
-				shelter_type: 'public',
-				type: 'UserObject',
-				user_agreement: {
-					is_donation_info: false,
-					is_location_service_info: false,
-					is_marketting_info: false,
-					is_over_fourteen: false,
-					is_personal_info: false,
-					is_service: false,
-				},
-				user_alarm: false,
-				user_contacted: false,
-				user_denied: false,
-				user_email: '',
-				user_favorite_count: 0,
-				user_follow_count: 0,
-				user_follower_count: 0,
-				user_interests: {interests_activity: [], interests_beauty: [], interests_food: [], interests_health: [], interests_location: []},
-				user_introduction: '창원유기동물보호소	0552255701',
-				user_is_public_data: true,
-				user_is_verified_email: false,
-				user_is_verified_phone_number: false,
-				user_my_pets: [],
-				user_name: '창원유기동물보호소',
-				user_nickname: '창원유기동물보호소',
-				user_phone_number: '0552255701',
-				user_profile_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1652351934385_6346cd21-25e7-4fa3-be06-ec7ddd85c880.jpg',
-				user_register_date: '2022-05-24T12:17:46.708Z',
-				user_type: 'shelter',
-				user_update_date: '2022-05-24T12:17:46.708Z',
-				user_upload_count: 0,
-			};
-			console.log('data.shelter_foundation_date', data.shelter_foundation_date);
 			return (
 				<View style={[{marginTop: 48 * DP}]}>
 					<View style={[style.category, {marginTop: 60 * DP, marginBottom: 0 * DP}]}>

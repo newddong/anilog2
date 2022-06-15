@@ -207,7 +207,7 @@ export default ReviewMain = ({route, navigation}) => {
 												},
 											);
 										},
-										'신고',
+										'신고하기',
 									);
 								}, 200);
 							}

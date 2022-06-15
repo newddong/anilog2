@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Platform, Dimensions, ScrollView, FlatList, ActivityIndicator, Animated} from 'react-native';
+import {View, Text, StyleSheet, Platform, Dimensions, ScrollView, FlatList, ActivityIndicator, Animated, TouchableOpacity} from 'react-native';
 import {WHITE, GRAY10, APRI10, GRAY20, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
@@ -11,7 +11,7 @@ import {getInterestsList} from 'Root/api/interestsapi';
 import ArrowDownButton from '../button/ArrowDownButton';
 import {btn_w242, btn_w280, btn_w280x68} from 'Root/component/atom/btn/btn_style';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+// import {TouchableOpacity} from 'react-native-gesture-handler';
 import Loading from './Loading';
 /**
  * 관심사 추가 및 수정 모달

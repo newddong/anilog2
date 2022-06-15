@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, TouchableOpacity, SafeAreaView, StyleSheet, Platform, Dimensions} from 'react-native';
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
-import {WHITE, GRAY10, MAINBLACK} from 'Root/config/color';
+import {WHITE, GRAY10, MAINBLACK, OPACITY90} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
@@ -26,8 +26,8 @@ const OneBtnModal = props => {
 		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={style.background}>
 			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
 				<Text style={[txt.noto28, style.msg, {color: MAINBLACK}]}>{props.popUpMsg}</Text>
-				<View style={style.buttonContainer}>
-					<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.okMsg} onPress={pressOk} />
+				<View style={[style.buttonContainer]}>
+					<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.okMsg} titleFontStyle={26} onPress={pressOk} />
 				</View>
 			</TouchableOpacity>
 		</TouchableOpacity>
@@ -52,7 +52,7 @@ const style = StyleSheet.create({
 	},
 	popUpWindow: {
 		width: 614 * DP,
-		backgroundColor: WHITE,
+		backgroundColor: OPACITY90,
 		paddingTop: 60 * DP,
 		paddingBottom: 52 * DP,
 		paddingHorizontal: 64 * DP,

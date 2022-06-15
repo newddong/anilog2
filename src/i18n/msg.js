@@ -129,6 +129,7 @@ export const RABIES = '광견병';
 export const DISCLOSE = '공개';
 export const ASSIGN_PET = '반려동물 추가';
 export const OPENSETTING = '공개 설정';
+export const APPSETTING = '앱 설정';
 //SearchTopTabRoute
 export const FEED = '피드';
 export const HEALTH_VIDEO = '건강영상';

@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, Dimensions, Platform, FlatList, TouchableOpacity, Animated, TextInput} from 'react-native';
 import AniButton from '../button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
-import {WHITE, GRAY10, APRI10, GRAY20, BLACK, GRAY30} from 'Root/config/color';
+import {WHITE, GRAY10, APRI10, GRAY20, BLACK, GRAY30, MAINBLACK, OPACITY90} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {Arrow_Down_GRAY10, Arrow_Up_GRAY10} from 'Atom/icon';
@@ -31,7 +31,7 @@ const OneButtonSelectModal = props => {
 		newArr.push(padding);
 		return newArr;
 	};
-
+	console.log('modal props', props);
 	const [selectedItem, setSelectedItem] = React.useState(2);
 	const [confirmedSelect, setConfirmedSelect] = React.useState(data[2]);
 	const [selectOpen, setSelectOpen] = React.useState(false);
@@ -79,7 +79,7 @@ const OneButtonSelectModal = props => {
 		} else if (abs == 1) {
 			return GRAY10;
 		} else {
-			return BLACK;
+			return MAINBLACK;
 		}
 	};
 	const animatedHeight = React.useRef(new Animated.Value(0)).current;
@@ -155,7 +155,7 @@ const OneButtonSelectModal = props => {
 				</TouchableOpacity>
 				{getDirectInput()}
 				<View style={style.buttonContainer}>
-					<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.yesMsg} onPress={pressYes} />
+					<AniButton btnLayout={btn_w226} btnStyle={'border'} titleFontStyle={26} btnTitle={props.yesMsg} onPress={pressYes} />
 				</View>
 			</TouchableOpacity>
 			{/* 하단 스크롤뷰 영역 */}
@@ -216,12 +216,13 @@ const style = StyleSheet.create({
 		width: Platform.OS == 'ios' ? Dimensions.get('window').width : '100%',
 		// justifyContent: 'center',
 		// top: 200 * DP,
-		paddingTop: 300 * DP,
+		paddingTop: 552 * DP,
 		alignItems: 'center',
 	},
 	popUpWindow: {
 		width: 654 * DP,
-		backgroundColor: '#e4e4e4',
+		// backgroundColor: '#e4e4e4',
+		backgroundColor: OPACITY90,
 		// backfaceVisibility: 'yellow',
 		// backgroundColor: 'yellow',
 		paddingTop: 60 * DP,
@@ -231,7 +232,7 @@ const style = StyleSheet.create({
 	},
 	msg: {
 		marginBottom: 30 * DP,
-		color: GRAY10,
+		color: MAINBLACK,
 		textAlign: 'center',
 	},
 	buttonContainer: {
@@ -250,7 +251,7 @@ const style = StyleSheet.create({
 	},
 	dropdownContainer: {
 		width: 562 * DP,
-		height: 88 * DP,
+		height: 104 * DP,
 		borderRadius: 20 * DP,
 		marginBottom: 30 * DP,
 		backgroundColor: WHITE,
@@ -288,6 +289,7 @@ const style = StyleSheet.create({
 		width: 750 * DP,
 		flexDirection: 'row',
 		backgroundColor: GRAY30,
+		opacity: 0.9,
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		paddingHorizontal: 40 * DP,
@@ -298,7 +300,7 @@ const style = StyleSheet.create({
 		width: 750 * DP,
 		flex: 1,
 		alignItems: 'center',
-		backgroundColor: 'white',
+		backgroundColor: OPACITY90,
 	},
 	listItem: {
 		alignItems: 'center',

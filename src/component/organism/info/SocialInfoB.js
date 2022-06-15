@@ -1,9 +1,9 @@
 import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {socialInfoB} from 'Organism/style_organism copy';
 import {useNavigation} from '@react-navigation/native';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+// import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 export default SocialInfoB = props => {
 	const navigation = useNavigation();
 
@@ -11,6 +11,7 @@ export default SocialInfoB = props => {
 		navigation.push('SocialRelation', {userobject: props.data});
 	};
 	const onPressUpload = () => {
+		console.log('fjeji');
 		navigation.push('UserProfile', {userobject: props.data});
 	};
 	const count_to_K = cnt => {

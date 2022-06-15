@@ -1,14 +1,14 @@
 import React from 'react';
 import {View, Text, StyleSheet, Dimensions, Platform, FlatList, TouchableOpacity, ActivityIndicator, Image, ScrollView} from 'react-native';
 import {WHITE, GRAY10, APRI10} from 'Root/config/color';
-import DP, {isNotch} from 'Root/config/dp';
+import DP from 'Root/config/dp';
 import Modal from 'Component/modal/Modal';
 import {getUserInfoById} from 'Root/api/userapi';
 import userGlobalObj from 'Root/config/userGlobalObject';
 import {txt} from 'Root/config/textstyle';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, ProfileDefaultImg, Triangle, Write94} from 'Atom/icon';
-import userGlobalObject from 'Root/config/userGlobalObject';
+import FastImage from 'react-native-fast-image';
 
 /**
  * 글쓰기 선택 후 아바타 동물을 선택하는 모달창
@@ -21,7 +21,9 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 const AvatarSelectFromWriteModal = props => {
 	const [items, setItems] = React.useState('');
 	const scrollViewRef = React.useRef();
-	const [scrollIndex, setScrollIndex] = React.useState(0);
+	const [scrollIndex, setScrollIndex] = React.useState(0); //현재 스크롤 페이지
+
+	//첫 클릭 시 사용자의 반려동물 리스트를 받아서 user_avatar 전역변수에 저장
 	React.useEffect(() => {
 		if (userGlobalObj.userInfo.user_avatar == undefined) {
 			console.log('전역변수 없음');
@@ -40,11 +42,13 @@ const AvatarSelectFromWriteModal = props => {
 				},
 			);
 		} else {
+			//전역변수가 있는 경우 api 접속 없이 리스트 채움
 			console.log('전역변수 있음');
 			setItems(userGlobalObj.userInfo.user_avatar);
 		}
 	}, []);
 
+	//반려동물 타입 아이콘
 	const getStatusMark = status => {
 		switch (status) {
 			case 'companion':
@@ -64,6 +68,7 @@ const AvatarSelectFromWriteModal = props => {
 				props.onSelectPet && props.onSelectPet(items[index]);
 			}
 		};
+		//반려동물 프로필
 		if (item.user_type == 'pet') {
 			return (
 				<View key={index} style={[style.listItem, {}]}>
@@ -76,7 +81,7 @@ const AvatarSelectFromWriteModal = props => {
 						{item.user_profile_uri == undefined ? (
 							<ProfileDefaultImg size={styles.img_round_94} />
 						) : (
-							<Image source={{uri: item.user_profile_uri}} style={[styles.img_round_94]} />
+							<FastImage source={{uri: item.user_profile_uri}} style={[styles.img_round_94]} />
 						)}
 						<View style={{position: 'absolute', top: 0}}>
 							{/* 팻의 상태 여부에 따른 분기 - protected, adopted, normal  */}
@@ -86,6 +91,7 @@ const AvatarSelectFromWriteModal = props => {
 				</View>
 			);
 		} else {
+			//사용자 프로필
 			return (
 				<View key={index} style={[style.listItem]}>
 					<TouchableOpacity onPress={onClickLabel} style={[style.avatarName]}>
@@ -97,7 +103,7 @@ const AvatarSelectFromWriteModal = props => {
 						{item.user_profile_uri == undefined ? (
 							<ProfileDefaultImg size={styles.img_round_94} />
 						) : (
-							<Image source={{uri: item.user_profile_uri}} style={[styles.img_round_94]} />
+							<FastImage source={{uri: item.user_profile_uri}} style={[styles.img_round_94]} />
 						)}
 					</TouchableOpacity>
 				</View>

@@ -8,6 +8,7 @@ import {getTimeLapsed} from 'Root/util/dateutil';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Comment30, Comment30_Border, Like30, Like30_Border, Like30_Filled, Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
+import FastImage from 'react-native-fast-image';
 /**
  * 추천 게시글
  * @param {object} props - Props Object
@@ -70,9 +71,9 @@ const RecommendReview = props => {
 							</View>
 						</View>
 						{imageList().length == 0 ? (
-							<Image style={[{width: 158 * DP, height: 158 * DP, borderRadius: 30 * DP}]} source={require('Atom/icon/document2.png')} />
+							<FastImage style={[{width: 158 * DP, height: 158 * DP, borderRadius: 30 * DP}]} source={require('Atom/icon/document2.png')} />
 						) : (
-							<Image style={[{width: 158 * DP, height: 158 * DP, borderRadius: 30 * DP}]} source={{uri: imageList()[0]}} />
+							<FastImage style={[{width: 158 * DP, height: 158 * DP, borderRadius: 30 * DP}]} source={{uri: imageList()[0]}} />
 						)}
 					</View>
 				</TouchableOpacity>
@@ -160,7 +161,8 @@ const RecommendReview = props => {
 							+ {imageList.length - 4}
 						</Text>
 					);
-				} else return <Image key={i} source={{uri: v}} style={[{width: 108 * DP, height: 108 * DP, borderRadius: 30 * DP, marginRight: 10 * DP}]} />;
+				} else
+					return <FastImage key={i} source={{uri: v}} style={[{width: 108 * DP, height: 108 * DP, borderRadius: 30 * DP, marginRight: 10 * DP}]} />;
 			});
 		};
 		if (imageList && imageList.length == 0) {

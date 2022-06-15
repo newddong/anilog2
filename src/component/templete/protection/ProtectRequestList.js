@@ -260,7 +260,7 @@ export default ProtectRequestList = ({route}) => {
 		let y = e.nativeEvent.contentOffset.y;
 		const To = PROTECT_REQUEST_MAIN_LIMIT * (offset - 1) - 20;
 		// console.log('offset', offset, 'e', y);
-		console.log('to', To * ITEM_HEIGHT);
+		// console.log('to', To * ITEM_HEIGHT);
 		if (y > ITEM_HEIGHT * To && closePaging) {
 			// console.log('offset * PROTECT_REQUEST_MAIN_LIMIT', offset * PROTECT_REQUEST_MAIN_LIMIT);
 			// console.log('getData().length', getData().length);

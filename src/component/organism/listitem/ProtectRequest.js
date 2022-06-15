@@ -31,6 +31,7 @@ import {APRI10, GRAY10} from 'Root/config/color';
 export default ProtectRequest = React.memo(props => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.data);
+	// console.log('data', data);
 	const {
 		_id,
 		protect_request_status,
@@ -50,7 +51,11 @@ export default ProtectRequest = React.memo(props => {
 	const thumbnailData = {
 		status: data.protect_request_status,
 		_id: data._id,
-		img_uri: data.protect_request_photo_thumbnail && data.protect_request_photo_thumbnail,
+		img_uri: data.protect_request_photo_thumbnail
+			? data.protect_request_photo_thumbnail
+			: data.protect_request_photos_uri && data.protect_request_photos_uri[0]
+			? data.protect_request_photos_uri[0]
+			: DEFAULT_ANIMAL_PROFILE,
 		gender: data.protect_animal_sex,
 		notice_day: data.notice_day,
 	};

@@ -2,12 +2,12 @@ import React from 'react';
 import {View, Image, Text, TouchableOpacity} from 'react-native';
 import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import {Paw62_APRI10, Paw62_Mixed, Paw62_YELL20, ProfileDefaultImg} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
+import FastImage from 'react-native-fast-image';
 
 /**
- * 버튼 컴포넌트트
+ * 펫 프로필 라벨 (동물보호 현황 페이지 AnimalProtectList)
  * @param {object} props - Props Object
  * @param {object} props.data - PetImageLabel 데이터 오브젝트
  */
@@ -30,16 +30,10 @@ const PetImageLabel = props => {
 	return (
 		<TouchableOpacity onPress={onPressLabel} style={{width: 180 * DP, height: 180 * DP}}>
 			{props.data.user_profile_uri != undefined ? (
-				<Image
-					source={{
-						uri: props.data.user_profile_uri,
-					}}
-					style={styles.img_round_180}
-				/>
+				<FastImage source={{uri: props.data.user_profile_uri}} style={styles.img_round_180} />
 			) : (
-				<ProfileDefaultImg size={{width: 180 * DP, height: 180 * DP}} />
+				<ProfileDefaultImg size={styles.img_round_180} />
 			)}
-
 			<View style={{position: 'absolute'}}>{petStatus()}</View>
 			{props.showNickname ? <Text style={[txt.noto28, {color: GRAY10, textAlign: 'center'}]}>{props.data.user_nickname}</Text> : <></>}
 		</TouchableOpacity>

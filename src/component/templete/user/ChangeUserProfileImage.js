@@ -56,19 +56,18 @@ export default ChangeUserProfileImage = ({route}) => {
 		}
 	};
 
-	React.useEffect(()=>{
-		if(route.params.selectedPhoto&&route.params.selectedPhoto.length>0){
+	React.useEffect(() => {
+		if (route.params.selectedPhoto && route.params.selectedPhoto.length > 0) {
 			console.log(route.params);
 			let selected = route.params.selectedPhoto[0];
-			setData({...data, user_profile_uri: (selected.cropUri??selected.uri) || data.user_profile_uri});
-		// 		setConfirmed(true);
+			setData({...data, user_profile_uri: (selected.cropUri ?? selected.uri) || data.user_profile_uri});
+			// 		setConfirmed(true);
 			// setSelectedImg(props.route.params.selectedPhoto);
 		}
-	},[route.params?.selectedPhoto]);
-
+	}, [route.params?.selectedPhoto]);
 
 	const selectPhoto = () => {
-		navigation.push("SinglePhotoSelect",{prev:{name:route.name,key:route.key}});
+		navigation.push('SinglePhotoSelect', {prev: {name: route.name, key: route.key}});
 	};
 
 	//중복 처리

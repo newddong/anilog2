@@ -1,33 +1,16 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {
-	Text,
-	View,
-	ScrollView,
-	TouchableOpacity,
-	TextInput,
-	ActivityIndicator,
-	StyleSheet,
-	KeyboardAvoidingView,
-	Platform,
-	Keyboard,
-} from 'react-native';
+import {Text, View, ScrollView, TouchableOpacity, TextInput, StyleSheet, KeyboardAvoidingView, Platform} from 'react-native';
 import {GRAY10, GRAY40, APRI10, GRAY20, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {DEFAULT_PROFILE, MODIFY_PROFILE} from 'Root/i18n/msg';
-import {btn_w114, btn_w194, btn_w242} from 'Atom/btn/btn_style';
 import {Arrow_Down_GRAY20, Edit46, NextMark} from 'Atom/icon';
-import AniButton from 'Molecules/button/AniButton';
-import ProfileImageLarge194 from 'Molecules/image/ProfileImageLarge194';
-import MyPetList from 'Organism/list/MyPetList';
-import {login_style, btn_style, temp_style, userInfoSetting_style, userInfoDetailSettting_style} from 'Templete/style_templete';
+import {login_style, temp_style, userInfoSetting_style} from 'Templete/style_templete';
 import userGlobalObject from 'Root/config/userGlobalObject';
-// import {getUserProfile} from 'Root/api/usermenuapi';
-import {getUserInfoById, getUserProfile, updateUserIntroduction} from 'Root/api/userapi';
+import {getUserInfoById, updateUserIntroduction} from 'Root/api/userapi';
 import DP from 'Root/config/dp';
 import Loading from 'Root/component/molecules/modal/Loading';
-import ProfileImageMedium140 from 'Root/component/molecules/image/ProfileImageMedium140';
 import ProfileImageMedium148 from 'Root/component/molecules/image/ProfileImageMedium148';
+
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 export default UserInfoSetting = ({route}) => {
 	// console.log('userInfoSetting', route);

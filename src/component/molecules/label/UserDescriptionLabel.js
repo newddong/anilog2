@@ -6,6 +6,7 @@ import DP from 'Root/config/dp';
 import {styles} from 'Atom/image/imageStyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {Private48, Public48, Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, ProfileDefaultImg} from 'Atom/icon';
+import FastImage from 'react-native-fast-image';
 
 /**
  * 유저의 프로필 사진, 닉네임, 소개글, 팔로우 상태를 출력하는 라벨
@@ -50,14 +51,14 @@ const UserDescriptionLabel = props => {
 	const getLabel = () => {
 		if (data.user_type == 'user') {
 			return data.user_profile_uri != undefined ? (
-				<Image source={{uri: data.user_profile_uri}} style={[styles.img_round_94]} />
+				<FastImage source={{uri: data.user_profile_uri}} style={[styles.img_round_94]} />
 			) : (
 				<ProfileDefaultImg size={styles.img_round_94} />
 			);
 		} else if (data.user_type == 'pet') {
 			return data.user_profile_uri != undefined ? (
 				<>
-					<Image source={{uri: data.user_profile_uri}} style={[styles.img_round_94]} />
+					<FastImage source={{uri: data.user_profile_uri}} style={[styles.img_round_94]} />
 					<View style={{position: 'absolute', top: 0}}>{getStatusMark()}</View>
 				</>
 			) : (
@@ -72,7 +73,7 @@ const UserDescriptionLabel = props => {
 		} else if (data.user_type == 'shelter') {
 			return data.user_profile_uri != undefined ? (
 				<View style={[styles.img_round_94]}>
-					<Image source={{uri: data.user_profile_uri}} style={[styles.img_round_94]}></Image>
+					<FastImage source={{uri: data.user_profile_uri}} style={[styles.img_round_94]} />
 					<View style={{position: 'absolute', right: 0, bottom: 0}}>{getShelterStatusMark()}</View>
 				</View>
 			) : (

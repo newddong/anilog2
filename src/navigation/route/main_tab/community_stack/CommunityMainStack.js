@@ -14,7 +14,6 @@ import LogoHeader from 'Root/navigation/header/LogoHeader';
 import ReviewDetail from 'Root/component/templete/community/ReviewDetail';
 import SearchMap from 'Root/component/templete/search/SearchMap';
 import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
-import WriteEditorTest from 'Root/component/templete/community/WriteEditorTest';
 import {getFocusedRouteNameFromRoute, useNavigation} from '@react-navigation/core';
 import CommunityEdit from 'Root/component/templete/community/CommunityEdit';
 import ChangeUserProfileImage from 'Templete/user/ChangeUserProfileImage';
@@ -73,11 +72,7 @@ export default CommunityMainStack = props => {
 				component={AddressSearchPage}
 				options={{header: props => <SimpleHeader {...props} />, title: '주소 설정'}}
 			/>
-			<CommunityMainStackNavi.Screen
-				name="WriteEditorTest"
-				component={WriteEditorTest}
-				options={{header: props => <SimpleHeader {...props} />, title: 'WriteEditorTest'}}
-			/>
+
 			<CommunityMainStackNavi.Screen
 				name={'ReviewDetail'}
 				component={ReviewDetail}

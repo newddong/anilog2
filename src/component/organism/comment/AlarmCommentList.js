@@ -229,17 +229,17 @@ const AlarmCommentList = props => {
 		}, 1000);
 	};
 
-	React.useEffect(()=>{
-		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+	React.useEffect(() => {
+		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
 			let selected = props.route.params.selectedPhoto[0];
-			setEditData({...editData, comment_photo_uri: selected.cropUri??selected.uri});
+			setEditData({...editData, comment_photo_uri: selected.cropUri ?? selected.uri});
 		}
-	},[props.route.params?.selectedPhoto]);
+	}, [props.route.params?.selectedPhoto]);
 
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
 	const onAddPhoto = () => {
 		console.log('onAddphoto');
-		props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
+		props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 	};
 
 	const onDeleteImage = () => {
@@ -257,7 +257,7 @@ const AlarmCommentList = props => {
 	const onReplyBtnClick = (parentCommentId, addChildComment) => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			console.log('onReplyBtnClick : ', parentCommentId);

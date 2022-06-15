@@ -315,7 +315,7 @@ export default FeedCommentList = props => {
 		// console.log('onReplyBtnClick : ', parentCommentId);
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			setParentComment(parentCommentId);
@@ -444,6 +444,7 @@ export default FeedCommentList = props => {
 					deleteFeed={deleteFeedItem}
 					showAllContents={props.route.params.showAllContents}
 					routeName={props.route.name}
+					showMedia={false}
 				/>
 				<View style={[{width: 654 * DP, height: 2 * DP, marginTop: 10 * DP, backgroundColor: GRAY40, alignSelf: 'center'}]} />
 				<View style={[{width: 654 * DP, alignSelf: 'center', marginTop: 20 * DP}]}>

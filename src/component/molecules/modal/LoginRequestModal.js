@@ -7,7 +7,6 @@ import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
 import {NextMark} from 'Root/component/atom/icon';
-import {useNavigation} from '@react-navigation/core';
 
 /**
  * 한개 버튼을 띄우는 모달
@@ -30,15 +29,7 @@ const LoginRequestModal = props => {
 				<View style={style.buttonContainer}>
 					<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={'로그인'} onPress={pressOk} />
 				</View>
-				<TouchableOpacity
-					onPress={() => Modal.close()}
-					style={{
-						flexDirection: 'row',
-						alignItems: 'center',
-						alignSelf: 'center',
-						padding: 20 * DP,
-						height: 130 * DP,
-					}}>
+				<TouchableOpacity onPress={() => Modal.close()} style={style.footer}>
 					<Text style={[txt.noto24, {color: GRAY10}]}> 로그인 없이 볼게요.{'   '}</Text>
 					<NextMark />
 				</TouchableOpacity>
@@ -65,16 +56,23 @@ const style = StyleSheet.create({
 	},
 	popUpWindow: {
 		width: 614 * DP,
+		height: 304 * DP,
 		backgroundColor: WHITE,
-		paddingTop: 60 * DP,
+		paddingTop: 40 * DP,
 		// paddingBottom: 52 * DP,
 		paddingHorizontal: 64 * DP,
 		borderRadius: 40 * DP,
 	},
 	msg: {
 		marginBottom: 30 * DP,
-		color: GRAY10,
 		textAlign: 'center',
+	},
+	footer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		alignSelf: 'center',
+		padding: 20 * DP,
+		height: 130 * DP,
 	},
 	buttonContainer: {
 		flexDirection: 'row',

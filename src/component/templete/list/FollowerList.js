@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, ScrollView, View} from 'react-native';
+import {ActivityIndicator, FlatList, ScrollView, View} from 'react-native';
 import ControllableAccountList from 'Organism/list/ControllableAccountList';
 import {followerList} from 'Templete/style_templete';
 import {unFollowUser, followUser} from 'Root/api/userapi';
@@ -8,6 +8,8 @@ import {useNavigation} from '@react-navigation/core';
 import Loading from 'Root/component/molecules/modal/Loading';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
+import {styles} from 'Root/component/atom/image/imageStyle';
+import {APRI10} from 'Root/config/color';
 
 /**
  * 팔로워 팔로우 목록
@@ -79,19 +81,13 @@ export default FollowerList = props => {
 		navigation.push('UserProfile', {userobject: item});
 	};
 
-	const onChangeSearchInput = text => {
-		// setSearchInput(text);
-		setLoading(true);
-		setInput(text);
-		props.onChangeSearchInput(text);
-	};
-
-	const onSearch = () => {
-		console.log('');
-	};
-
 	if (props.loading) {
-		return <Loading isModal={false} />;
+		// return <Loading isModal={false} />;
+		return (
+			<View style={styles.loadingContainer}>
+				<ActivityIndicator size={'large'} color={APRI10} />
+			</View>
+		);
 	} else
 		return (
 			<View style={[followerList.container]}>

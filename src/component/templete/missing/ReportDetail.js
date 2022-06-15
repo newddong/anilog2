@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, TouchableOpacity, FlatList, Platform, StyleSheet} from 'react-native';
+import {Image, TouchableOpacity, FlatList, Platform, StyleSheet, BackHandler} from 'react-native';
 import {Text, View} from 'react-native';
 import {temp_style} from 'Templete/style_templete';
 import FeedContent from 'Organism/feed/FeedContent';
@@ -10,7 +10,6 @@ import moment from 'moment';
 import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Loading from 'Root/component/molecules/modal/Loading';
-import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
 import {GRAY10, GRAY30, WHITE} from 'Root/config/color';
 import Modal from 'Root/component/modal/Modal';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
@@ -18,7 +17,7 @@ import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import Swiper from 'react-native-swiper';
 import MissingReportItem from 'Root/component/organism/listitem/MissingReportItem';
-import {NETWORK_ERROR, PROTECT_REQUEST_DETAIL_LIMIT} from 'Root/i18n/msg';
+import {NETWORK_ERROR} from 'Root/i18n/msg';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import DP from 'Root/config/dp';
 import FastImage from 'react-native-fast-image';
@@ -34,6 +33,7 @@ export default ReportDetail = props => {
 			fetchFeedDetail();
 			getCommnetList();
 		});
+		navigation.setOptions({title: '제보'});
 		return unsubscribe;
 	}, []);
 
@@ -286,8 +286,25 @@ export default ReportDetail = props => {
 		navigation.push('FeedCommentList', {feedobject: data, showAllContents: true, showKeyboard: true});
 	};
 
+	const [showImgMode, setShowImgMode] = React.useState(false);
+	const backAction = () => {
+		console.log('back', showImgMode);
+		if (showImgMode) {
+			Modal.close();
+			setShowImgMode(false);
+			return true;
+		} else {
+			return false;
+		}
+	};
+
+	React.useEffect(() => {
+		BackHandler.addEventListener('hardwareBackPress', backAction);
+		return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
+	}, [showImgMode]);
+
 	const onPressReqeustPhoto = () => {
-		console.log('onPressReqeustPhoto');
+		setShowImgMode(true);
 		Modal.popPhotoListViewModal(
 			data.feed_medias.map(v => v.media_uri),
 			() => Modal.close(),
@@ -328,7 +345,7 @@ export default ReportDetail = props => {
 					</Swiper>
 				</View>
 				<View style={[style.feedContent]}>
-					<FeedContent data={data} onPressFavorite={onPressFavoriteWriter} />
+					<FeedContent data={data} onPressFavorite={onPressFavoriteWriter} showMedia={false} />
 				</View>
 
 				<View style={[style.basic_separator]}>

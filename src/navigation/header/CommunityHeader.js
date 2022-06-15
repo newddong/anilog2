@@ -18,7 +18,7 @@ export default CommunityHeader = ({navigation, route, options, back}) => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			setTimeout(() => {
 				Modal.popLoginRequestModal(() => {
-					navigation.navigate('Login');
+					navigation.navigate('LoginRequired');
 				});
 			}, 100);
 		} else {

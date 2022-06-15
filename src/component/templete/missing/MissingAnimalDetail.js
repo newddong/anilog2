@@ -365,7 +365,7 @@ export default MissingAnimalDetail = props => {
 					</TouchableWithoutFeedback> */}
 				</TouchableOpacity>
 				<View style={[style.feedContent]}>
-					<FeedContent data={data} />
+					<FeedContent data={data} showMedia={false} />
 				</View>
 				<View style={[style.basic_separator]}>
 					<View style={[style.separator]}></View>

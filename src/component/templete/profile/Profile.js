@@ -22,11 +22,12 @@ import {getProtectRequestListByShelterId} from 'Root/api/shelterapi';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import {updateProtect} from 'Root/config/protect_obj';
+import {styles} from 'Root/component/atom/image/imageStyle';
 
 export default Profile = ({route}) => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState({...route.params?.userobject, feedList: []}); //라벨을 클릭한 유저의 userObject data
-	const [feedList, setFeedList] = React.useState([]);
+	const [feedList, setFeedList] = React.useState('false');
 	const [feedTotal, setFeedTotal] = React.useState();
 	const [commList, setCommList] = React.useState('false');
 	const [protectList, setProtectList] = React.useState('false');
@@ -376,33 +377,6 @@ export default Profile = ({route}) => {
 		}, 200);
 	};
 
-	const userProfileInfo = () => {
-		if (data.is_follow == undefined) {
-			return <Loading isModal={false} />;
-		} else
-			return (
-				<>
-					<View style={[profile.profileInfo, {}]}>
-						<ProfileInfo
-							data={data}
-							showMyPet={e => alert(e)}
-							volunteerBtnClick={() => navigation.push('ApplyVolunteer')}
-							adoptionBtnClick={() => navigation.push('ApplyAnimalAdoptionA')}
-							onPressVolunteer={onClick_Volunteer_ShelterProfile}
-							onPressAddPetBtn={onPressAddPetBtn}
-							onPressAddArticleBtn={onPressAddArticleBtn}
-							onPressEditProfile={onPressEditProfile}
-							onPressUnFollow={onPressUnFollow}
-							onPressFollow={onPressFollow}
-							onClickUpload={onClickUpload}
-							onClickMyCompanion={onClickMyCompanion}
-							onClickOwnerLabel={onClickOwnerLabel}
-						/>
-					</View>
-				</>
-			);
-	};
-
 	//프로필의 보호활동 탭의 피드 썸네일 클릭
 	const onClickProtect = (status, id, item) => {
 		console.log('onClickProtect', item);
@@ -447,6 +421,31 @@ export default Profile = ({route}) => {
 			<ProfileTabSelect items={['피드', '태그']} onSelect={onSelectTabMenu} />
 		) : (
 			<ProfileTabSelect items={['피드', '태그', '보호동물']} onSelect={onSelectTabMenu} />
+		);
+	};
+
+	//프로필 상단 유저 정보
+	const userProfileInfo = () => {
+		return (
+			<>
+				<View style={[profile.profileInfo, {}]}>
+					<ProfileInfo
+						data={data}
+						showMyPet={e => alert(e)}
+						volunteerBtnClick={() => navigation.push('ApplyVolunteer')}
+						adoptionBtnClick={() => navigation.push('ApplyAnimalAdoptionA')}
+						onPressVolunteer={onClick_Volunteer_ShelterProfile}
+						onPressAddPetBtn={onPressAddPetBtn}
+						onPressAddArticleBtn={onPressAddArticleBtn}
+						onPressEditProfile={onPressEditProfile}
+						onPressUnFollow={onPressUnFollow}
+						onPressFollow={onPressFollow}
+						onClickUpload={onClickUpload}
+						onClickMyCompanion={onClickMyCompanion}
+						onClickOwnerLabel={onClickOwnerLabel}
+					/>
+				</View>
+			</>
 		);
 	};
 
@@ -520,7 +519,11 @@ export default Profile = ({route}) => {
 					);
 				} else {
 					if (protectList == 'false') {
-						return <Loading isModal={false} />;
+						return (
+							<View style={[styles.loadingContainer, {}]}>
+								<ActivityIndicator size="large" color={APRI10} />
+							</View>
+						);
 					} else
 						return (
 							<FlatList
@@ -534,22 +537,29 @@ export default Profile = ({route}) => {
 				}
 			}
 		};
-
-		return (
-			<View style={[profile.feedListContainer]}>
-				<FlatList
-					data={[{}, feedList]}
-					renderItem={renderItem}
-					keyExtractor={(item, index) => index + ''}
-					ListHeaderComponent={userProfileInfo()}
-					nestedScrollEnabled
-					showsVerticalScrollIndicator={false}
-					ref={flatlist}
-				/>
-			</View>
-		);
+		if (feedList == 'false' || data.is_follow == undefined) {
+			return (
+				<View style={[styles.loadingContainer, {}]}>
+					<ActivityIndicator size="large" color={APRI10} />
+				</View>
+			);
+		} else
+			return (
+				<View style={[profile.feedListContainer]}>
+					<FlatList
+						data={[{}, feedList]}
+						renderItem={renderItem}
+						keyExtractor={(item, index) => index + ''}
+						ListHeaderComponent={userProfileInfo()}
+						nestedScrollEnabled
+						showsVerticalScrollIndicator={false}
+						ref={flatlist}
+					/>
+				</View>
+			);
 	};
 
+	//프로필 대상이 반려동물 계정
 	if (data.user_type == 'pet') {
 		return (
 			<View style={[login_style.wrp_main, profile.container]}>
@@ -566,6 +576,7 @@ export default Profile = ({route}) => {
 			</View>
 		);
 	} else {
+		//프로필 대상이 사용자 계정
 		return (
 			<View style={[login_style.wrp_main, profile.container]}>
 				{data != '' ? (
@@ -592,16 +603,7 @@ export default Profile = ({route}) => {
 					</>
 				)}
 				{loading ? (
-					<View
-						style={{
-							position: 'absolute',
-							left: 0,
-							right: 0,
-							top: 0,
-							bottom: 0,
-							alignItems: 'center',
-							justifyContent: 'center',
-						}}>
+					<View style={styles.loadingContainer}>
 						<ActivityIndicator size="large" color={APRI10} />
 					</View>
 				) : (

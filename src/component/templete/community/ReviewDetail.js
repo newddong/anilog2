@@ -489,21 +489,27 @@ export default ReviewDetail = props => {
 
 	//하단 리뷰 리스트 좋아요 클릭
 	const onPressLikeBriefItem = (bool, index) => {
-		likeEtc(
-			{
-				collectionName: 'communityobjects',
-				post_object_id: reviewList[index]._id,
-				is_like: bool,
-			},
-			result => {
-				console.log('result / likeEtc / ReviewDetail : ', result.msg.likeEtc);
-				fetchCommunityList();
-				updateReview(true, reviewList[index]._id, bool); // 리뷰 메인 페이지 데이터 전역변수 최신화
-			},
-			err => {
-				console.log(' err / likeEtc / ReviewDetail :', err);
-			},
-		);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('LoginRequired');
+			});
+		} else {
+			likeEtc(
+				{
+					collectionName: 'communityobjects',
+					post_object_id: reviewList[index]._id,
+					is_like: bool,
+				},
+				result => {
+					console.log('result / likeEtc / ReviewDetail : ', result.msg.likeEtc);
+					fetchCommunityList();
+					updateReview(true, reviewList[index]._id, bool); // 리뷰 메인 페이지 데이터 전역변수 최신화
+				},
+				err => {
+					console.log(' err / likeEtc / ReviewDetail :', err);
+				},
+			);
+		}
 	};
 
 	//다른 후기 게시글 클릭

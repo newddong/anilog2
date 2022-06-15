@@ -47,7 +47,7 @@ export default MissingReportItem = React.memo(props => {
 	const onPressFavoriteTag = bool => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			props.onFavoriteTag(bool);

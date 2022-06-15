@@ -137,6 +137,7 @@ export default RootStackNavigation = () => {
 						{/* <RootStack.Screen name="MainTab" component={MainTabNavigation} options={{header: props => <LogoutView {...props} />}} /> */}
 						<RootStack.Screen name="MainTab" component={MainTabNavigation} options={{headerShown: false}} />
 						<RootStack.Screen name="Login" component={LoginTemplete} options={{headerShown: false}} />
+						<RootStack.Screen name="LoginRequired" component={LoginTemplete} options={{header: props => <SimpleHeader {...props} />, title: ' '}} />
 
 						<RootStack.Screen
 							name="AgreementCheck"

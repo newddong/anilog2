@@ -3,34 +3,13 @@ import {Text, View, Platform, StyleSheet, TouchableOpacity, Dimensions} from 're
 import {organism_style, feedContent_style} from 'Organism/style_organism';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
 import {useNavigation, useRoute} from '@react-navigation/core';
-import {
-	FavoriteTag48_Border,
-	FavoriteTag48_Filled,
-	Meatball50_GRAY20_Horizontal,
-	Share48_Filled,
-	Comment48_Border,
-	Like48_Border,
-	Like48_Filled,
-	Blur694,
-} from 'Atom/icon';
+import {FavoriteTag48_Border, FavoriteTag48_Filled, Meatball50_GRAY20_Horizontal, Comment48_Border, Like48_Border, Like48_Filled} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
-import {Arrow_Down_GRAY20} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {GRAY10, WHITE} from 'Root/config/color';
-import {
-	FEED_MEATBALL_MENU,
-	FEED_MEATBALL_MENU_FOLLOWING,
-	FEED_MEATBALL_MENU_FOLLOWING_UNFAVORITE,
-	FEED_MEATBALL_MENU_MY_FEED,
-	FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS,
-	FEED_MEATBALL_MENU_UNFOLLOWING,
-	FEED_MEATBALL_MENU_UNFOLLOWING_UNFAVORITE,
-	REPORT_MENU,
-	SHARE,
-} from 'Root/i18n/msg';
+import {FEED_MEATBALL_MENU_MY_FEED, REPORT_MENU, SHARE} from 'Root/i18n/msg';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {MAINCOLOR} from 'Root/config/color';
-import {getTimeLapsed, parsingDate} from 'Root/util/dateutil';
 import HashText from 'Molecules/info/HashText';
 import Modal from 'Root/component/modal/Modal';
 import {createMemoBox, followUser, getAnimalListNotRegisterWithCompanion, getFollows, unFollowUser} from 'Root/api/userapi';
@@ -444,7 +423,7 @@ export default FeedContent = props => {
 		// console.log('props.data ', props.data);
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			getFavoriteFeedListByUserId(
@@ -479,7 +458,7 @@ export default FeedContent = props => {
 	const onPressFavoriteWriter = bool => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			props.onPressFavorite && props.onPressFavorite(bool);
@@ -502,24 +481,41 @@ export default FeedContent = props => {
 	};
 
 	const moveToCommentList = async () => {
-		console.log('move to comment');
-		if (userGlobalObject.userInfo.isPreviewMode && feed_comment_count == 0) {
-			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
-			});
-		} else {
-			AsyncStorage.getItem('sid', (err, res) => {
-				console.log('res', res);
-				if (res == null && feed_comment_count == 0) {
-					Modal.popNoBtn('로그인이 필요합니다.');
-					setTimeout(() => {
-						Modal.close();
-					}, 1500);
-				} else {
-					navigation.push('FeedCommentList', {feedobject: props.data});
-					// console.log('move to FeedCommnetList', props.data);
+		if (route.name != 'FeedCommentList') {
+			console.log('userGlobalObject.userInfo.isPreviewMode', userGlobalObject.userInfo.isPreviewMode);
+			console.log('feed_comment_count', feed_comment_count);
+			if (userGlobalObject.userInfo.isPreviewMode && feed_comment_count == 0) {
+				Modal.popLoginRequestModal(() => {
+					navigation.navigate('LoginRequired');
+				});
+			} else {
+				navigation.push('FeedCommentList', {feedobject: props.data});
+				// console.log('move to FeedCommnetList', props.data);
+			}
+		}
+	};
+
+	const onPressPhoto = () => {
+		console.log('props', route.name);
+		if (feed_type == 'report' || feed_type == 'missing') {
+			if (feed_type == 'report') {
+				navigation.navigate('ReportDetail', {_id: _id});
+			} else {
+				let sexValue = '';
+				switch (missing_animal_sex) {
+					case 'male':
+						sexValue = '남';
+						break;
+					case 'female':
+						sexValue = '여';
+						break;
+					case 'unknown':
+						sexValue = '성별모름';
+						break;
 				}
-			});
+				const titleValue = missing_animal_species + '/' + missing_animal_species_detail + '/' + sexValue;
+				navigation.navigate('MissingAnimalDetail', {title: titleValue, _id: _id});
+			}
 		}
 	};
 
@@ -589,51 +585,55 @@ export default FeedContent = props => {
 							<MissingReportInfo data={props.data} />
 						</View>
 					)}
-				<View style={[style.feedMedia_feed]}>
-					<FeedMedia data={props.data} />
-				</View>
-
-				<View style={[feed_templete_style.likeCommentButtons_view]}>
-					<View style={[feed_templete_style.likeCommentInfo_view_feed]}>
-						<TouchableWithoutFeedback onPress={props.toggleFeedLike}>
-							<View style={feed_templete_style.likeButtonWrapper}>
-								<View style={[feed_templete_style.like48]}>{props.isLike ? <Like48_Filled /> : <Like48_Border />}</View>
-								<View style={[feed_templete_style.like_count_feed]}>
-									<Text style={[txt.roboto24, {color: GRAY10}]}>{props.likeCount}</Text>
-								</View>
+				{props.showMedia ? (
+					<>
+						<View style={[style.feedMedia_feed]}>
+							<FeedMedia data={props.data} onPressPhoto={onPressPhoto} />
+						</View>
+						<View style={[feed_templete_style.likeCommentButtons_view]}>
+							<View style={[feed_templete_style.likeCommentInfo_view_feed]}>
+								<TouchableWithoutFeedback onPress={props.toggleFeedLike}>
+									<View style={feed_templete_style.likeButtonWrapper}>
+										<View style={[feed_templete_style.like48]}>{props.isLike ? <Like48_Filled /> : <Like48_Border />}</View>
+										<View style={[feed_templete_style.like_count_feed]}>
+											<Text style={[txt.roboto24, {color: GRAY10}]}>{props.likeCount}</Text>
+										</View>
+									</View>
+								</TouchableWithoutFeedback>
+								<TouchableWithoutFeedback onPress={moveToCommentList}>
+									<View style={feed_templete_style.commentButtonWrapper}>
+										<View style={organism_style.like48}>
+											<Comment48_Border />
+										</View>
+										<View style={[organism_style.comment_count_feed]}>
+											<Text style={[txt.roboto24, {color: GRAY10, marginLeft: -15 * DP}]}>{feed_comment_count}</Text>
+										</View>
+									</View>
+								</TouchableWithoutFeedback>
 							</View>
-						</TouchableWithoutFeedback>
-						<TouchableWithoutFeedback onPress={moveToCommentList}>
-							<View style={feed_templete_style.commentButtonWrapper}>
-								<View style={organism_style.like48}>
-									<Comment48_Border />
+							{props.data.feed_writer_id ? (
+								<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
+									<View style={[organism_style.favoriteTag_feedContent]}>
+										{props.data.feed_writer_id.is_favorite ? (
+											<FavoriteTag48_Filled onPress={() => onPressFavoriteWriter(false)} />
+										) : (
+											<FavoriteTag48_Border onPress={() => onPressFavoriteWriter(true)} />
+										)}
+									</View>
+									{false && (
+										<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
+											<Text style={[txt.roboto24, {color: GRAY10}]}>{count_to_K(props.data.feed_writer_id.user_favorite_count)}</Text>
+										</View>
+									)}
 								</View>
-								<View style={[organism_style.comment_count_feed]}>
-									<Text style={[txt.roboto24, {color: GRAY10, marginLeft: -15 * DP}]}>{feed_comment_count}</Text>
-								</View>
-							</View>
-						</TouchableWithoutFeedback>
-					</View>
-					{props.data.feed_writer_id ? (
-						<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
-							<View style={[organism_style.favoriteTag_feedContent]}>
-								{props.data.feed_writer_id.is_favorite ? (
-									<FavoriteTag48_Filled onPress={() => onPressFavoriteWriter(false)} />
-								) : (
-									<FavoriteTag48_Border onPress={() => onPressFavoriteWriter(true)} />
-								)}
-							</View>
-							{false && (
-								<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
-									<Text style={[txt.roboto24, {color: GRAY10}]}>{count_to_K(props.data.feed_writer_id.user_favorite_count)}</Text>
-								</View>
+							) : (
+								<></>
 							)}
 						</View>
-					) : (
-						<></>
-					)}
-				</View>
-
+					</>
+				) : (
+					<></>
+				)}
 				{(route.name.includes('FeedList') || feed_type == 'missing' || route.name.includes('FeedCommentList')) && (
 					<View style={[organism_style.content_feedContent, /*feedContent_style.content_Top10,*/ {width: 750 * DP, paddingHorizontal: 28 * DP}]}>
 						<HashText
@@ -659,6 +659,7 @@ FeedContent.defaultProps = {
 		content: 'comment 내용을 넣어야 합니다.',
 	},
 	deleteFeed: () => {},
+	showMedia: true,
 };
 
 const style = StyleSheet.create({

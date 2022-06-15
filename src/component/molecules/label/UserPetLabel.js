@@ -4,6 +4,7 @@ import {txt} from 'Root/config/textstyle';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import DP from 'Root/config/dp';
 import {styles} from 'Atom/image/imageStyle';
+import FastImage from 'react-native-fast-image';
 
 /**
  * 유저가 기르는 반려동물의 프로필 사진, 닉네임, 유저의 닉네임을 출력하는 라벨
@@ -21,7 +22,7 @@ const UserPetLabel = props => {
 	return (
 		<View style={{flexDirection: 'row', alignItems: 'center'}}>
 			<TouchableOpacity onPress={onClickLabel}>
-				<Image source={{uri: data.user_profile_uri || DEFAULT_PROFILE}} style={styles.img_round_76} />
+				<FastImage source={{uri: data.user_profile_uri || DEFAULT_PROFILE}} style={styles.img_round_76} />
 			</TouchableOpacity>
 			<View style={{marginLeft: 20 * DP}}>
 				<Text style={[txt.roboto28b]} numberOfLines={1} ellipsizeMode="tail">

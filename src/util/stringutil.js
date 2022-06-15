@@ -106,7 +106,7 @@ export const count_to_K = cnt => {
 	if (cnt > 1000000) {
 		let count = (cnt / 1000000).toFixed(0) + 'm';
 		return count;
-	} else if (cnt > 1000) {
+	} else if (cnt >= 1000) {
 		let count = (cnt / 1000).toFixed(0) + 'k';
 		return count;
 	} else {
@@ -158,7 +158,7 @@ export function getFeedText(str, byte) {
 
 		ar.push(splitStr(s, byte));
 	}
-	ar = ar.flat().map(v=>v?.trim());
+	ar = ar.flat().map(v => v?.trim());
 	return ar;
 }
 
@@ -173,38 +173,37 @@ export function getByteSubtring(str, start, end) {
 
 	let startIdx = 0;
 	let endIndx = 0;
-	for(let i=0;i<=str.length;i++){
-		let tmp = getStringLength(str.substring(0,i));
-		if(tmp>=start){
-			if(tmp>=start+1){
-				startIdx = i-1;
-			}else{
+	for (let i = 0; i <= str.length; i++) {
+		let tmp = getStringLength(str.substring(0, i));
+		if (tmp >= start) {
+			if (tmp >= start + 1) {
+				startIdx = i - 1;
+			} else {
 				startIdx = i;
 			}
 
 			let startCharCode = str.charCodeAt(startIdx);
-			
+
 			//시작 문자가 상위 서로게이트일 경우는 오류가 나지 않음
-			if(startCharCode>=0xDC00&&startCharCode<=0xDFFF){
-				startIdx -=1;
-			}//시작 문자가 하위 서로게이트일 경우는 나오지 않음
+			if (startCharCode >= 0xdc00 && startCharCode <= 0xdfff) {
+				startIdx -= 1;
+			} //시작 문자가 하위 서로게이트일 경우는 나오지 않음
 
 			break;
 		}
 	}
-	for(let i=0;i<=str.length;i++){
-		let tmp = getStringLength(str.substring(0,i));
-		if(tmp>=end){
-			if(tmp>=end+1){
-				endIndx = i-1;
-				
-			}else{
+	for (let i = 0; i <= str.length; i++) {
+		let tmp = getStringLength(str.substring(0, i));
+		if (tmp >= end) {
+			if (tmp >= end + 1) {
+				endIndx = i - 1;
+			} else {
 				endIndx = i;
 			}
-			let endCharCode = str.charCodeAt(endIndx-1);
-			if(endCharCode>=0xD800&&endCharCode<=0xDBFF){
-				endIndx -=1;
-			}//끝 문자가 상위 서로게이트일 경우
+			let endCharCode = str.charCodeAt(endIndx - 1);
+			if (endCharCode >= 0xd800 && endCharCode <= 0xdbff) {
+				endIndx -= 1;
+			} //끝 문자가 상위 서로게이트일 경우
 			//끝 문자가 하위 서로게이트일 경우는 오류가 나오지 않음
 
 			break;
@@ -262,11 +261,11 @@ export function findNearSpace(str, index) {
  * @param {array} arr - 결과를 담을 배열(배열을 주지 않아도 빈 배열이 기본으로 주어짐)
  * @returns
  */
-export function splitStr(str,byte,arr=[]){
-	if(!str||str.length<1){
-		return []
-	};
-	if(getStringLength(str)<=byte){
+export function splitStr(str, byte, arr = []) {
+	if (!str || str.length < 1) {
+		return [];
+	}
+	if (getStringLength(str) <= byte) {
 		arr.push(str);
 		return;
 	}
@@ -283,13 +282,13 @@ export function splitStr(str,byte,arr=[]){
 		return arr;
 	} //단어 길이가 byte보다 긴 경우
 
-	if(subSpace==0){
-		arr.push(preStr);	
-		splitStr(subStr,byte,arr);
-	}else if(subSpace>0){
-		let tmp = getByteSubtring(str,preSpace,getStringLength(str));
-		arr.push(getByteSubtring(str,0,preSpace));
-		splitStr(tmp,byte,arr);
+	if (subSpace == 0) {
+		arr.push(preStr);
+		splitStr(subStr, byte, arr);
+	} else if (subSpace > 0) {
+		let tmp = getByteSubtring(str, preSpace, getStringLength(str));
+		arr.push(getByteSubtring(str, 0, preSpace));
+		splitStr(tmp, byte, arr);
 	}
 
 	return arr;

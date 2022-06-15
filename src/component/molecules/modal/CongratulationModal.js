@@ -28,7 +28,6 @@ const CongratulationModal = props => {
 						<Congratulation />
 					</View>
 					<View style={[style.profileImg]}>
-						{/* <Image  /> */}
 						<ProfileImageLarge194 data={{user_profile_uri: props.user_profile_uri}} />
 					</View>
 					<Congratulation />

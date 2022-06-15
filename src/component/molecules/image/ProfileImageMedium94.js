@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Image} from 'react-native';
-import {DEFAULT_PROFILE, PET_STATUS_ADOPT, PET_STATUS_COMPANION, PET_STATUS_PROTECT, PRIVATE, PUBLIC} from 'Root/i18n/msg';
-import {Paw48_Mixed, Paw48_YELL20, Paw48_APRI10, Private48, Public48, ProfileDefaultImg} from 'Atom/icon';
+import {PET_STATUS_ADOPT, PET_STATUS_COMPANION, PET_STATUS_PROTECT, PRIVATE, PUBLIC} from 'Root/i18n/msg';
+import {Private48, Public48, ProfileDefaultImg, Paw30_APRI10, Paw30_YELL20, Paw30_Mixed} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import dp from 'Root/config/dp';
 import FastImage from 'react-native-fast-image';
@@ -11,17 +11,17 @@ import FastImage from 'react-native-fast-image';
  * @param {object} props - Props Object
  * @param {object} props.data - 데이터 오브젝트 (UserObject - pet , shelter_type)
  */
-const ProfileImageMedium120 = props => {
+const ProfileImageMedium94 = props => {
 	// 유저의 프로필 이미지를 표시,  유저의 종류(일반유저, 반려동물, 보호소)와 상태(임시보호중,입양,공립,사립)에 따라 아이콘을 표시
 
 	const petStatus = () => {
 		switch (props.data.pet_status) {
 			case PET_STATUS_COMPANION:
-				return <Paw48_APRI10 />;
+				return <Paw30_APRI10 />;
 			case PET_STATUS_PROTECT:
-				return <Paw48_YELL20 />;
+				return <Paw30_YELL20 />;
 			case PET_STATUS_ADOPT:
-				return <Paw48_Mixed />;
+				return <Paw30_Mixed />;
 			default:
 				return <></>;
 		}
@@ -41,7 +41,7 @@ const ProfileImageMedium120 = props => {
 	const userType = () => {
 		switch (props.data.user_type) {
 			case 'pet':
-				return <View style={{position: 'absolute'}}>{petStatus()}</View>;
+				return <View style={{position: 'absolute', bottom: 0, left: 0}}>{petStatus()}</View>;
 			case 'shelter':
 				return <View style={{position: 'absolute'}}>{shelter_type()}</View>;
 			default:
@@ -50,17 +50,17 @@ const ProfileImageMedium120 = props => {
 	};
 
 	return (
-		<View style={styles.img_round_120}>
+		<View style={styles.img_round_94}>
 			{props.data.user_profile_uri != undefined ? (
-				<FastImage source={{uri: props.data.user_profile_uri}} style={styles.img_round_120} />
+				<FastImage source={{uri: props.data.user_profile_uri}} style={styles.img_round_94} />
 			) : (
-				<ProfileDefaultImg size={styles.img_round_120} />
+				<ProfileDefaultImg size={styles.img_round_94} />
 			)}
 			{userType()}
 		</View>
 	);
 };
 
-ProfileImageMedium120.defaultProps = {};
+ProfileImageMedium94.defaultProps = {};
 
-export default ProfileImageMedium120;
+export default ProfileImageMedium94;

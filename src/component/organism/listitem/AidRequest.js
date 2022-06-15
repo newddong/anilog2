@@ -6,6 +6,7 @@ import {DEFAULT_ANIMAL_PROFILE} from 'Root/i18n/msg';
 import {AddItem64, Female48, Male48} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import {aidRequest} from '../style_organism copy';
+import FastImage from 'react-native-fast-image';
 
 /**
  * 보호동물 정보 요약 컴포넌트
@@ -35,7 +36,7 @@ const AidRequest = props => {
 				{/* 보호동물 프로필 이미지 및 성별 */}
 				<View style={[aidRequest.img_irregular_174]}>
 					<View style={[aidRequest.gender]}>{data.protect_animal_sex == 'male' ? <Male48 /> : <Female48 />}</View>
-					<Image
+					<FastImage
 						style={[props.selected ? aidRequest.img_irregular_174_border : styles.img_irregular_174]}
 						source={{
 							uri: data.protect_animal_photo_uri_list[0] != undefined ? data.protect_animal_photo_uri_list[0] : DEFAULT_ANIMAL_PROFILE,

@@ -2,23 +2,14 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {StyleSheet, Text, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {
-	Comment48,
-	FavoriteTag46_Filled,
-	FavoriteTag48_Border,
-	Like48_Border,
-	Like48_Filled,
-	Meatball50_GRAY20_Horizontal,
-} from 'Root/component/atom/icon';
+import {Comment48, FavoriteTag46_Filled, FavoriteTag48_Border, Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {APRI10, BLACK, GRAY10, GRAY20, GRAY30, GRAY40, WHITE} from 'Root/config/color';
-import ArticleThumnails from './ArticleThumnails';
 import {useNavigation} from '@react-navigation/core';
-import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import community_obj from 'Root/config/community_obj';
+import ReviewThumbnail from './ReviewThumbnail';
 /**
  * 후기 아이템
  * @param {object} props - Props Object
@@ -234,7 +225,7 @@ export default Review = React.memo(props => {
 				<></>
 			) : (
 				<View style={[style.thumbnail, {}]}>
-					<ArticleThumnails onPressReviewContent={onPressReviewContent} photo_list={imageList()} />
+					<ReviewThumbnail onPressReviewContent={onPressReviewContent} photo_list={imageList()} />
 				</View>
 			)}
 			{/* 카테고리 */}

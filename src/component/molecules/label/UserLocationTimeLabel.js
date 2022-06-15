@@ -11,6 +11,7 @@ import {getTimeLapsed} from 'Root/util/dateutil';
 import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, ProfileDefaultImg} from 'Atom/icon';
 import moment from 'moment';
 import Modal from 'Root/component/modal/Modal';
+import FastImage from 'react-native-fast-image';
 
 /**
  * 유저의 프로필 사진, 닉네임, 댓글 작성 날짜 출력하는 라벨
@@ -89,7 +90,7 @@ const UserLocationTimeLabel = props => {
 			<View style={{flexDirection: 'row', alignItems: 'center'}}>
 				<>
 					{props.data.user_profile_uri != undefined ? (
-						<Image source={{uri: props.data.user_profile_uri}} style={props.isLarge ? styles.img_round_64 : styles.img_round_60} />
+						<FastImage source={{uri: props.data.user_profile_uri}} style={props.isLarge ? styles.img_round_64 : styles.img_round_60} />
 					) : (
 						<ProfileDefaultImg size={props.isLarge ? styles.img_round_64 : styles.img_round_60} />
 					)}
@@ -99,10 +100,10 @@ const UserLocationTimeLabel = props => {
 					</View>
 				</>
 
-				<View style={{marginLeft: 20 * DP}}>
+				<View style={{marginLeft: 20 * DP, height: 72 * DP}}>
 					<View style={{flexDirection: 'row'}}>
 						<Text
-							style={[props.isLarge ? txt.noto30b : txt.roboto24, {color: isLoginUser ? APRI10 : BLACK, maxWidth: 500 * DP, lineHeight: 48 * DP}]}
+							style={[props.isLarge ? txt.noto30b : txt.roboto24, {color: isLoginUser ? APRI10 : BLACK, maxWidth: 500 * DP, lineHeight: 40 * DP}]}
 							numberOfLines={1}>
 							{props.data.user_nickname || '탈퇴한 계정입니다.'}
 						</Text>

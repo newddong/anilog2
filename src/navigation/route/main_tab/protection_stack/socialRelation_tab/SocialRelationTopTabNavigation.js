@@ -4,10 +4,11 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import FollowerList from 'Templete/list/FollowerList';
 import RecommendedAccountList from 'Templete/list/RecommendedAccountList';
 import DP from 'Root/config/dp';
-import {APRI10, GRAY10, WHITE} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, WHITE} from 'Root/config/color';
 import {count_to_K} from 'Root/util/stringutil';
 import {getFollowers, getFollows, getUserProfile} from 'Root/api/userapi';
 import {useNavigation} from '@react-navigation/core';
+import searchContext from 'Root/config/searchContext';
 
 const SocialRelationTab = createMaterialTopTabNavigator();
 
@@ -21,6 +22,14 @@ export default SocialRelationTopTabNavigation = props => {
 	const [loading, setLoading] = React.useState(true);
 	const initial = props.route.params.initial != undefined ? props.route.params.initial : 'FollowerList';
 	// console.log('type', data.user_type);
+
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('blur', () => {
+			searchContext.searchInfo.searchInputForSocial = '';
+		});
+		return unsubscribe;
+	}, []);
+
 	//헤더 타이틀 설정 작업 및 유저 오브젝트 할당
 	React.useEffect(() => {
 		navigation.setOptions({title: props.route.params.userobject.user_nickname});
@@ -66,9 +75,7 @@ export default SocialRelationTopTabNavigation = props => {
 		return new Promise(async function (resolve, reject) {
 			try {
 				getUserProfile(
-					{
-						userobject_id: props.route.params.userobject._id,
-					},
+					{userobject_id: props.route.params.userobject._id},
 					result => {
 						resolve(result.msg);
 						// console.log('is_follow', result.msg.is_follow);
@@ -90,7 +97,8 @@ export default SocialRelationTopTabNavigation = props => {
 			getFollows(
 				{
 					userobject_id: props.route.params.userobject._id,
-					user_nickname: followInput,
+					// user_nickname: followInput,
+					user_nickname: searchContext.searchInfo.searchInputForSocial,
 				},
 				result => {
 					// console.log('result / getFollows / ', result.msg.length);
@@ -116,6 +124,7 @@ export default SocialRelationTopTabNavigation = props => {
 				{
 					userobject_id: props.route.params.userobject._id,
 					user_nickname: followerInput,
+					user_nickname: searchContext.searchInfo.searchInputForSocial,
 				},
 				result => {
 					// console.log('result / getFollowers / ', result.msg[0]);
@@ -148,10 +157,10 @@ export default SocialRelationTopTabNavigation = props => {
 			initialRouteName={initial}
 			screenOptions={{
 				tabBarItemStyle: {height: 70 * DP},
-				tabBarIndicatorStyle: {backgroundColor: APRI10, height: 2 * DP},
+				tabBarIndicatorStyle: {backgroundColor: BLACK, height: 6 * DP},
 				tabBarLabelStyle: [styles.tabbarLabelStyle],
 				tabBarInactiveTintColor: GRAY10,
-				tabBarActiveTintColor: APRI10,
+				tabBarActiveTintColor: BLACK,
 			}}
 			initialLayout={{width: Dimensions.get('window').width}}
 			optimizationsEnabled={true}>
@@ -159,9 +168,7 @@ export default SocialRelationTopTabNavigation = props => {
 			<SocialRelationTab.Screen
 				name="FollowerList"
 				initialParams={{userobject: data}}
-				options={{
-					tabBarLabel: count_to_K(followers.length) + ' ' + '팔로워',
-				}}>
+				options={{tabBarLabel: count_to_K(followers.length) + ' ' + '팔로워'}}>
 				{props => (
 					<FollowerList {...props} followers={followers} resetProfileInfo={fetchData} onChangeSearchInput={onChangeFollower} loading={loading} />
 				)}
@@ -170,23 +177,21 @@ export default SocialRelationTopTabNavigation = props => {
 				<SocialRelationTab.Screen
 					name="FollowingList"
 					initialParams={{userobject: data}}
-					options={{
-						tabBarLabel: count_to_K(follows.length) + ' ' + '팔로잉',
-					}}>
+					options={{tabBarLabel: count_to_K(follows.length) + ' ' + '팔로잉'}}>
 					{props => <FollowerList {...props} follows={follows} resetProfileInfo={fetchData} onChangeSearchInput={onChangeFollow} loading={loading} />}
 				</SocialRelationTab.Screen>
 			) : (
 				<></>
 			)}
 
-			<SocialRelationTab.Screen
+			{/* <SocialRelationTab.Screen
 				name="RecommendedAccountList"
 				options={{
 					tabBarLabel: '추천',
 				}}
 				component={RecommendedAccountList}
 				initialParams={{userobject: data}}
-			/>
+			/> */}
 		</SocialRelationTab.Navigator>
 	);
 };
@@ -218,7 +223,7 @@ const styles = StyleSheet.create({
 
 	tabbarLabelStyle: {
 		fontFamily: 'NotoSansKR-Bold',
-		fontSize: 24 * DP,
+		fontSize: 28 * DP,
 		marginTop: -20 * DP,
 	},
 	tabBarIndicatorStyle: {

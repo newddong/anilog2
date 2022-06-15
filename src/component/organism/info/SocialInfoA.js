@@ -1,9 +1,9 @@
 import React from 'react';
-import {Text, View, TouchableWithoutFeedback, ViewPropTypes} from 'react-native';
+import {Text, View, TouchableWithoutFeedback, StyleSheet} from 'react-native';
 import {txt} from 'Root/config/textstyle';
-import {socialInfoA} from 'Organism/style_organism copy';
 import {useNavigation} from '@react-navigation/core';
 import {count_to_K} from 'Root/util/stringutil';
+import DP from 'Root/config/dp';
 /**
  * 유저 팔로워 팔로잉 업로드 숫자 출력 컴포넌트
  * @param {object} props - Props Object
@@ -13,10 +13,6 @@ import {count_to_K} from 'Root/util/stringutil';
 const SocialInfoA = props => {
 	// console.log('SocialInfo', props);
 	const navigation = useNavigation();
-
-	const moveToSocialRelation = () => {
-		navigation.push('SocialRelation', {userobject: props.data});
-	};
 
 	const onClickUpload = () => {
 		props.onClickUpload();
@@ -31,26 +27,26 @@ const SocialInfoA = props => {
 	};
 
 	return (
-		<View style={[socialInfoA.container]}>
+		<View style={[style.container]}>
 			<TouchableWithoutFeedback onPress={onClickUpload}>
-				<View style={[socialInfoA.socialInfo]}>
-					<Text style={[txt.roboto30b, socialInfoA.number]}>{count_to_K(props.data.user_upload_count)}</Text>
-					<Text style={[txt.noto24, socialInfoA.title]}>업로드</Text>
+				<View style={[style.socialInfo]}>
+					<Text style={[txt.roboto34b]}>{count_to_K(props.data.user_upload_count)}</Text>
+					<Text style={[txt.noto28, {marginBottom: 2 * DP}]}> 업로드</Text>
 				</View>
 			</TouchableWithoutFeedback>
 			<TouchableWithoutFeedback onPress={onClickFollower}>
-				<View style={[socialInfoA.socialInfo]}>
-					<Text style={[txt.roboto30b, socialInfoA.number]}>{count_to_K(props.data.user_follower_count)}</Text>
-					<Text style={[txt.noto24, socialInfoA.title]}>팔로워</Text>
+				<View style={[style.socialInfo]}>
+					<Text style={[txt.roboto30b]}>{count_to_K(props.data.user_follower_count)}</Text>
+					<Text style={[txt.noto28, {marginBottom: 2 * DP}]}> 팔로워</Text>
 				</View>
 			</TouchableWithoutFeedback>
 			{props.data.user_type == 'pet' ? (
 				<></>
 			) : (
 				<TouchableWithoutFeedback onPress={onClickFollow}>
-					<View style={[socialInfoA.socialInfo]}>
-						<Text style={[txt.roboto30b, socialInfoA.number]}>{count_to_K(props.data.user_follow_count)}</Text>
-						<Text style={[txt.noto24, socialInfoA.title]}>팔로잉</Text>
+					<View style={[style.socialInfo]}>
+						<Text style={[txt.roboto30b]}>{count_to_K(props.data.user_follow_count)}</Text>
+						<Text style={[txt.noto28, {marginBottom: 2 * DP}]}> 팔로잉</Text>
 					</View>
 				</TouchableWithoutFeedback>
 			)}
@@ -63,3 +59,18 @@ SocialInfoA.defaultProps = {
 };
 
 export default SocialInfoA;
+
+const style = StyleSheet.create({
+	container: {
+		width: 474 * DP,
+		height: 68 * DP,
+		flexDirection: 'row',
+	},
+	socialInfo: {
+		height: 68 * DP,
+		marginRight: 30 * DP,
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+});

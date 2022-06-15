@@ -1,11 +1,7 @@
 import React from 'react';
-import {txt} from 'Root/config/textstyle';
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import DP from 'Root/config/dp';
 import ArticleContent from './ArticleContent';
-import ArticleThumnails from './ArticleThumnails';
-import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
-import {GRAY10} from 'Root/config/color';
 /**
  * 게시글
  * @param {object} props - Props Object

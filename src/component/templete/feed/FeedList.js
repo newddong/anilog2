@@ -71,9 +71,9 @@ export default FeedList = ({route, navigation}) => {
 					let lines = getLinesOfString(v.feed_content, 53);
 					lines = lines > 2 ? 2 : lines;
 					if (v.feed_recent_comment) {
-						return {...v, height: (914 + lines * 48+10+ 128)*DP};
+						return {...v, height: (914 + lines * 48 + 10 + 128) * DP};
 					} else {
-						return {...v, height: (914 + lines * 48+10)*DP};
+						return {...v, height: (914 + lines * 48 + 10) * DP};
 					}
 				})
 				.map((v, i, a) => {
@@ -216,7 +216,7 @@ export default FeedList = ({route, navigation}) => {
 					params,
 					result => {
 						console.log('result / getUserTaggedFeedList', result.msg.length);
-						const res = result.msg;
+						const res = result.msg.map((v, i) => v.usertag_feed_id);
 						setTotal(result.total_count);
 						let list = [];
 						if (!pre && !next) {
@@ -296,8 +296,8 @@ export default FeedList = ({route, navigation}) => {
 				getUserTaggedFeedList(
 					params,
 					result => {
-						console.log('result / getUserTaggedFeedList', result.msg.length);
-						const res = result.msg;
+						// console.log('result / getUserTaggedFeedList', result.msg);
+						const res = result.msg.map((v, i) => v.usertag_feed_id);
 						setTotal(result.total_count);
 						let list = [];
 						if (!pre && !next) {
@@ -379,17 +379,20 @@ export default FeedList = ({route, navigation}) => {
 				let params = {
 					login_userobject_id: userGlobalObject.userInfo._id,
 					limit: FEED_LIMIT,
-					order_value: 'next',
+					order_value: pre ? 'pre' : 'next',
 				};
 				if (feedList.length > 0) {
-					params.target_object_id = feedList[feedList.length - 1]._id;
+					params.target_object_id = pre ? feedList[0]._id : feedList[feedList.length - 1]._id;
 				}
 				console.log('params', params);
 				getSuggestFeedList(
 					params,
 					result => {
+						console.log('result / ', result.msg.length);
 						setTotal(result.total_count);
-						if (params.target_object_id) {
+						if (pre) {
+							setFeed([...result.msg, ...feedList]);
+						} else if (params.target_object_id) {
 							setFeed([...feedList, ...result.msg]);
 						} else {
 							setFeed(result.msg);
@@ -423,7 +426,7 @@ export default FeedList = ({route, navigation}) => {
 		});
 		//Refreshing 요청시 피드리스트 다시 조회
 		if (route.name == 'MainHomeFeedList') {
-			refreshing ? getList() : false;
+			refreshing ? getList(true, false) : false;
 		}
 		return unsubscribe;
 	}, [refreshing, route]);

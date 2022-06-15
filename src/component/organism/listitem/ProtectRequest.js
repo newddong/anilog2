@@ -29,9 +29,9 @@ import {APRI10, GRAY10} from 'Root/config/color';
  * }} props
  */
 export default ProtectRequest = React.memo(props => {
-	// console.log('AnimalNeedHelp', props.data.protect_request_status);
 	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.data);
+	// console.log('data', data);
 	const {
 		_id,
 		protect_request_status,
@@ -51,7 +51,11 @@ export default ProtectRequest = React.memo(props => {
 	const thumbnailData = {
 		status: data.protect_request_status,
 		_id: data._id,
-		img_uri: data.protect_request_photos_uri && data.protect_request_photos_uri[0] ? data.protect_request_photos_uri[0] : DEFAULT_ANIMAL_PROFILE,
+		img_uri: data.protect_request_photo_thumbnail
+			? data.protect_request_photo_thumbnail
+			: data.protect_request_photos_uri && data.protect_request_photos_uri[0]
+			? data.protect_request_photos_uri[0]
+			: DEFAULT_ANIMAL_PROFILE,
 		gender: data.protect_animal_sex,
 		notice_day: data.notice_day,
 	};
@@ -93,7 +97,7 @@ export default ProtectRequest = React.memo(props => {
 							<Text style={[txt.noto28, style.breedText]} numberOfLines={1}>
 								{data.protect_animal_species_detail || ''}
 							</Text>
-							<Text style={{color: 'red'}}> {props.index}</Text>
+							{/* <Text style={{color: 'red'}}> {props.index}</Text> */}
 						</View>
 						{/* 보호요청 관련 Details */}
 						<View style={[style.lowerMenu_helpDetail]}>

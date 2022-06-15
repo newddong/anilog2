@@ -4,7 +4,6 @@ import {WHITE, MAINBLACK, GRAY30, GRAY10, APRI10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
-import PetLabel70 from '../label/PetLabel70';
 import PetLabel68 from '../label/PetLabel68';
 import {AddItem68, Check64Filled} from 'Root/component/atom/icon';
 import {useNavigation} from '@react-navigation/core';

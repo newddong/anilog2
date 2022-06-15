@@ -1,24 +1,21 @@
 import React from 'react';
-import {Text, View, TouchableOpacity, ScrollView, Linking} from 'react-native';
-import {BLUE20, GRAY10} from 'Root/config/color';
+import {Text, View, TouchableOpacity, ScrollView, Linking, StyleSheet, FlatList} from 'react-native';
+import {BLUE20, GRAY10, WHITE} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {btn_w280, btn_w280x68} from 'Atom/btn/btn_style';
-import {Bracket48, FloatAddArticle_128x68, FloatAddPet_126x92, FloatAddPet_128x68} from 'Atom/icon';
+import {btn_w176, btn_w280x68} from 'Atom/btn/btn_style';
+import {Bracket48, FloatAddArticle_128x68, FloatAddPet_128x68} from 'Atom/icon';
 import ActionButton from 'Molecules/button/ActionButton';
 import AniButton from 'Molecules/button/AniButton';
-import ProfileImageLarge160 from 'Molecules/image/ProfileImageLarge160';
 import SocialInfoA from 'Organism/info/SocialInfoA';
-import {FOLLOWER_MENU, FOLLOWER_PET_MENU, NORMAL, PET, SHELTER} from 'Root/i18n/msg';
-import ProfileDropdown from 'Molecules/dropdown/ProfileDropdown';
-import {organism_style, profileInfo_style} from 'Organism/style_organism';
+import {NORMAL, PET} from 'Root/i18n/msg';
 import Modal from 'Root/component/modal/Modal';
-import {followUser, unFollowUser} from 'Root/api/userapi';
+import {unFollowUser} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import SelectInput from 'Root/component/molecules/button/SelectInput';
 import ArrowDownButton from 'Root/component/molecules/button/ArrowDownButton';
-import {FloatAddArticle_126x92} from 'Atom/icon';
-import {useNavigation} from '@react-navigation/core';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
+import ProfileImageMedium148 from 'Root/component/molecules/image/ProfileImageMedium148';
+import DP from 'Root/config/dp';
+import UserListHorizon from '../list/UserListHorizon';
 
 /**
  * 프로필 템플릿 상단의 유저 정보
@@ -36,10 +33,11 @@ import {setFavoriteEtc} from 'Root/api/favoriteetc';
  * @param {()=>void} props.onPressUnFollow - 팔로우 중 버튼 클릭 =>  팔로우취소 버튼 클릭
  * @param {()=>void} props.onPressFollow - 팔로우 버튼 클릭
  * @param {()=>void} props.onClickUpload - 프로필 상단 업로드 클릭
+ * @param {()=>void} props.onClickMyCompanion - 펫 프로필 클릭
+ * @param {()=>void} props.onClickOwnerLabel - 반려인 프로필 클릭
  */
 const ProfileInfo = props => {
 	const [data, setData] = React.useState(props.data);
-	// console.log('')
 	const [showMore, setShowMore] = React.useState(false); // 프로필 Description 우측 더보기 클릭 State
 	const [ownerListState, setOwnerListState] = React.useState(false); // userType이 Pet일 경우 반려인계정 출력 여부 T/F
 	const [companionListState, setCompanionListState] = React.useState(true); // userType이 User일 경우 반렫동물 리스트 출력 여부 T/F
@@ -133,7 +131,7 @@ const ProfileInfo = props => {
 			if (!userGlobalObject.userInfo.isPreviewMode && userGlobalObject.userInfo._id == data._id) {
 				//보호소 프로필이며 자기 계정인 경우
 				return (
-					<View style={[profileInfo_style.shelterButtonContainer]}>
+					<View style={[style.shelterButtonContainer]}>
 						<FloatAddPet_128x68 onPress={onPressAddPetBtn} />
 						<FloatAddArticle_128x68 onPress={onPressAddArticleBtn} />
 					</View>
@@ -145,13 +143,14 @@ const ProfileInfo = props => {
 	};
 
 	//현재 프로필의 유저를 팔로우한다.
-	const onPressFollow = () => {
+	const onPressFollow = bool => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate('Login');
 			});
 		} else {
 			props.onPressFollow();
+			// setData({...data, is_follow: !data.is_follow});
 		}
 	};
 
@@ -264,11 +263,11 @@ const ProfileInfo = props => {
 	};
 
 	const getShelterInfo = () => {
-		if (data.user_type == 'shelter' && data.shelter_address != undefined) {
+		if (data.shelter_address != undefined) {
 			return (
-				<View style={[profileInfo_style.shelter_info_container]}>
-					<Text style={[txt.noto28, {color: GRAY10}]}>{data.shelter_address.brief}</Text>
-					<Text onPress={onPressShelterContact} style={[txt.noto28, {color: BLUE20, textDecorationLine: 'underline'}]}>
+				<View style={[style.shelter_info_container]}>
+					<Text style={[txt.noto26, {}]}>{data.shelter_address.brief}</Text>
+					<Text onPress={onPressShelterContact} numberOfLines={2} style={[txt.noto26, {color: BLUE20, textDecorationLine: 'underline'}]}>
 						{autoHyphen(data.shelter_delegate_contact_number)}
 					</Text>
 				</View>
@@ -276,6 +275,16 @@ const ProfileInfo = props => {
 		} else {
 			return <></>;
 		}
+	};
+
+	//유저타입 - 유저 => 반려동물 리스트에서 항목 클릭
+	const onClickMyCompanion = item => {
+		props.onClickMyCompanion(item);
+	};
+
+	//유저타입 - 유저 => 반려동물 리스트에서 항목 클릭
+	const onClickOwnerLabel = item => {
+		props.onClickOwnerLabel(item);
 	};
 
 	//대상 계정이 반려동물 계정이며 나의 펫인지 여부
@@ -287,34 +296,70 @@ const ProfileInfo = props => {
 		return result;
 	};
 
-	return (
-		<View style={organism_style.profileInfo_main}>
-			{/* 프로필 INFO */}
-			<View style={[organism_style.profileImageLarge_view_profileInfo]}>
-				<View style={[organism_style.profileImageLarge_profileInfo, profileInfo_style.profileImageLarge]}>
-					<ProfileImageLarge160 data={props.data} />
+	const getShelterButton = () => {
+		if (data.user_type == 'shelter' && !userGlobalObject.userInfo.isPreviewMode && userGlobalObject.userInfo._id == data._id) {
+			return (
+				<View style={[style.shelterButtonContainer]}>
+					<FloatAddPet_128x68 onPress={onPressAddPetBtn} />
+					<FloatAddArticle_128x68 onPress={onPressAddArticleBtn} />
 				</View>
-				<View style={[organism_style.socialInfo_profileInfo, profileInfo_style.socialInfo]}>
-					<SocialInfoA data={data} onClickUpload={onClickUpload} />
-				</View>
-			</View>
+			);
+		}
+	};
 
+	const isUserProfile = data.user_type == 'user';
+
+	const header = () => {
+		if (data.user_type == 'pet') {
+			return (
+				<View style={[style.petProfile]}>
+					<View style={{marginRight: 40 * DP}}>
+						<ProfileImageMedium148 data={props.data} />
+					</View>
+					<UserListHorizon items={data.pet_family} onClickLabel={onClickOwnerLabel} />
+				</View>
+			);
+		} else if (data.user_type == 'user') {
+			return (
+				<View style={[style.profile]}>
+					<View style={{marginRight: 40 * DP}}>
+						<ProfileImageMedium148 data={props.data} />
+					</View>
+					<UserListHorizon items={data.user_my_pets} onClickLabel={onClickMyCompanion} />
+				</View>
+			);
+		} else {
+			return (
+				<View style={[style.shelterProfile, {alignItems: 'center'}]}>
+					<View style={{marginRight: 40 * DP}}>
+						<ProfileImageMedium148 data={props.data} />
+					</View>
+					{getShelterInfo()}
+				</View>
+			);
+		}
+	};
+
+	return (
+		<View style={[style.profileInfo_main]}>
+			{/* 프로필 INFO */}
+			{header()}
 			{/* user_introduction 높이정보를 얻기 위한 더미 ScrollView / 투명도 설정으로 화면에는 출력이 되지 않음 */}
 			<ScrollView onLayout={onLayout} style={{position: 'absolute', opacity: 0}}>
-				<Text ellipsizeMode={'tail'} numberOfLines={showMore ? null : 2} style={[txt.noto24, profileInfo_style.content_expanded]}>
+				<Text ellipsizeMode={'tail'} numberOfLines={showMore ? null : 2} style={[txt.noto26, style.intro_expanded]}>
 					{data.user_introduction}
 				</Text>
 			</ScrollView>
-
-			<View style={[organism_style.content_view_profileInfo, profileInfo_style.content_view]}>
+			{/* 유저 소개글  */}
+			<View style={[!isUserProfile ? style.userIntroCont_pet : style.userIntroCont]}>
 				<Text
 					ellipsizeMode={'tail'}
 					numberOfLines={showMore ? null : 2}
-					style={[txt.noto24, showMore ? profileInfo_style.content_expanded : profileInfo_style.content]}>
+					style={[txt.noto26, {width: !isUserProfile ? 534 * DP : 568 * DP, height: showMore ? null : 80 * DP}]}>
 					{data.user_introduction != '' ? data.user_introduction : '유저 인트로 소개글입니다. 현재는 비어있습니다.'}
 				</Text>
 				{into_height > 50 * DP ? (
-					<TouchableOpacity onPress={onPressShowMore} style={[organism_style.addMore_profileInfo, profileInfo_style.addMore]}>
+					<TouchableOpacity onPress={onPressShowMore} style={[style.addMore_profileInfo]}>
 						<View style={{flexDirection: 'row'}}>
 							<Text style={[txt.noto24, {color: GRAY10, top: 2}]}>{showMore ? '접기' : '더보기'} </Text>
 							<View style={[showMore ? {transform: [{rotate: '180deg'}]} : null]}>
@@ -326,22 +371,22 @@ const ProfileInfo = props => {
 					<></>
 				)}
 			</View>
-			{/* 보호소 계정 프로필의 주소 및 연락처 정보 */}
-			{getShelterInfo()}
-
-			{/* 프로필 관련 버튼 */}
-			<View style={[organism_style.btn_w280_view_profileInfo, profileInfo_style.btn_w280_view]}>
-				<View style={[organism_style.btn_w280_profileInfo]}>
-					{userGlobalObject.userInfo._id == data._id || isMyPet() ? ( //본인 계정이라면 프로필 수정 버튼
-						<AniButton onPress={onPressEditProfile} btnTitle={'프로필 수정'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} />
-					) : data.is_follow && !userGlobalObject.userInfo.isPreviewMode ? ( // 타인 계정이며 팔로우 중이라면 '팔로우 중' OR '팔로우'
-						<ArrowDownButton btnTitle={'팔로우 중'} btnLayout={btn_w280x68} titleFontStyle={26} onPress={onPressFollowingSetting} />
-					) : (
-						<AniButton onPress={onPressFollow} btnTitle={'팔로우'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w280x68} />
-					)}
+			<View style={[style.footer, {flexDirection: 'row'}]}>
+				<View>
+					<SocialInfoA data={data} onClickUpload={onClickUpload} />
+					{getShelterButton()}
 				</View>
-				<View style={[]}>{getButton()}</View>
+				{userGlobalObject.userInfo._id == data._id || isMyPet() ? (
+					<View style={{justifyContent: 'flex-end'}}>
+						<AniButton onPress={onPressEditProfile} btnTitle={'프로필 수정'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w176} />
+					</View>
+				) : data.is_follow ? (
+					<ArrowDownButton onPress={onPressFollowingSetting} btnTitle={'팔로우 중'} btnStyle={'filled'} titleFontStyle={24} btnLayout={btn_w176} />
+				) : (
+					<AniButton onPress={() => onPressFollow(true)} btnTitle={'팔로우'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w176} />
+				)}
 			</View>
+			{/* 보호소 계정 프로필의 주소 및 연락처 정보 */}
 		</View>
 	);
 };
@@ -358,5 +403,83 @@ ProfileInfo.defaultProps = {
 	onPressFollow: () => {},
 	onPressUnFollow: () => {},
 	onClickUpload: () => {},
+	onClickMyCompanion: () => {},
+	onClickOwnerLabel: () => {},
 };
 export default ProfileInfo;
+
+const style = StyleSheet.create({
+	profileInfo_main: {
+		width: 750 * DP,
+		alignSelf: 'center',
+		alignItems: 'center',
+		backgroundColor: WHITE,
+		// height: 416 * DP,
+	},
+	profile: {
+		flexDirection: 'row',
+		width: 722 * DP,
+		height: 148 * DP,
+		marginTop: 10 * DP,
+		marginLeft: 28 * DP,
+		// backgroundColor: 'red',
+	},
+	petProfile: {
+		flexDirection: 'row',
+		width: 654 * DP,
+		height: 148 * DP,
+		marginTop: 10 * DP,
+		// backgroundColor: 'red',
+	},
+	shelterProfile: {
+		flexDirection: 'row',
+		width: 654 * DP,
+		height: 148 * DP,
+		marginTop: 10 * DP,
+	},
+	footer: {
+		width: 694 * DP,
+		// height: 68 * DP,
+		marginTop: 20 * DP,
+		marginBottom: 30 * DP,
+		justifyContent: 'space-between',
+	},
+	userIntroCont: {
+		flexDirection: 'row',
+		width: 694 * DP,
+		marginTop: 20 * DP,
+		// backgroundColor: 'red',
+	},
+	userIntroCont_pet: {
+		flexDirection: 'row',
+		width: 654 * DP,
+		marginTop: 20 * DP,
+	},
+	addMore_profileInfo: {
+		alignItems: 'flex-end',
+		flexDirection: 'row',
+		marginLeft: 4 * DP,
+	},
+	intro: {
+		width: 568 * DP,
+		height: 80 * DP,
+	},
+	intro_expanded: {
+		width: 568 * DP,
+	},
+
+	buttonContainer: {
+		width: 292 * DP,
+		height: 68 * DP,
+	},
+	shelter_info_container: {
+		width: 466 * DP,
+		height: 76 * DP,
+		// backgroundColor: 'red',
+	},
+	shelterButtonContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		width: 270 * DP,
+	},
+});

@@ -1,9 +1,8 @@
 import React from 'react';
-
 import {View, Image, Text} from 'react-native';
-import {DEFAULT_ANIMAL_PROFILE, DEFAULT_PROFILE} from 'Root/i18n/msg';
-import {Paw48_Mixed, Paw48_YELL20, Paw48_APRI10, Private62, Public62, ProfileDefaultImg3_194, ProfileDefaultImg} from 'Atom/icon';
+import {Paw48_Mixed, Paw48_YELL20, Paw48_APRI10, Private62, Public62, ProfileDefaultImg} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
+import FastImage from 'react-native-fast-image';
 
 /**
  * 프로필 이미지 160
@@ -15,7 +14,7 @@ const ProfileImageLarge160 = props => {
 		? props.data
 		: {
 				user_type: 'user',
-				pet_status: 'normal',
+				pet_status: 'companion',
 				shelter_type: 'private',
 		  };
 	// console.log('PrifleImageLabel / Props Data ' + JSON.stringify(profile_data.user_profile_uri));
@@ -59,7 +58,7 @@ const ProfileImageLarge160 = props => {
 		<View style={styles.img_round_160}>
 			{profile_data.user_profile_uri ? (
 				<>
-					<Image source={{uri: profile_data.user_profile_uri}} style={styles.img_round_160} />
+					<FastImage source={{uri: profile_data.user_profile_uri}} style={styles.img_round_160} />
 					{userType()}
 				</>
 			) : (

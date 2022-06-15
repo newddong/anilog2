@@ -175,8 +175,8 @@ export async function getSearchResultProtectRequest(params, callback, errcallbac
 /**
  * 보호요청 필터 검색
  * @param {object} params
-//  * @param {number} params.page
-//  * @param {number} params.limit
+ * @param {number} params.page
+ * @param {number} params.limit
  * @param {string} params.protect_request_notice_sdt - 검색 시작일 ex) 20220521
  * @param {string} params.protect_request_notice_edt - 검색 종료일 ex) 20220524
  * @param {string} params.city - 보호소 지역(시,도) ('모든지역' 일경우 필드 보내지 말 것, 그외 지역은 해당 시,도 - 카카오 주소체계로 입력 )
@@ -188,4 +188,24 @@ export async function getSearchResultProtectRequest(params, callback, errcallbac
  */
 export async function getSearchResultProtectRequestWithoutLimit(params, callback, errcallback) {
 	apiController('/protect/getSearchResultProtectRequestWithoutLimit', arguments);
+}
+
+/**
+ * 보호요청 필터 검색
+ * @param {object} params
+ * @param {number} params.page
+ * @param {number} params.limit
+ * @param {string} params.protect_request_notice_sdt - 검색 시작일 ex) 20220521
+ * @param {string} params.protect_request_notice_edt - 검색 종료일 ex) 20220524
+ * @param {string} params.city - 보호소 지역(시,도) ('모든지역' 일경우 필드 보내지 말 것, 그외 지역은 해당 시,도 - 카카오 주소체계로 입력 )
+ * @param {string} params.target_protect_desertion_no - 마지막 게시물 protect_desertion_no
+ * @param {string} params.target_protect_request_date - 마지막 게시물 protect_request_date ex) 20220613
+ * @param {Array.<String>} params.shelter_object_id_list - 보호소 userobject_id ('모든 보호소' 일경우 필드 보내지 말 것, 그외 보호소는 userobject_id)
+ * @param {Array.<String>} params.protect_animal_species - Array 보호소 동물 종류 ('개' | '고양이' | '그 외') - 선택하지 않았을 경우 해당 필드 보내지 말것.
+ * @param {boolean} params.protect_request_status - 입양 가능한 게시글만 보기 (true|rescue만 보이기, false 또는 선택안함|모두 보이기)
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function getSearchResultProtectRequestImprovingV1(params, callback, errcallback) {
+	apiController('/protect/getSearchResultProtectRequestImprovingV1', arguments);
 }

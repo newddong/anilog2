@@ -1,10 +1,9 @@
 import React from 'react';
 import {Text, View, Image, TouchableOpacity} from 'react-native';
 import {styles} from 'Root/component/atom/image/imageStyle';
-import {GRAY10} from 'Root/config/color';
-import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, ProfileDefaultImg} from 'Atom/icon';
+import FastImage from 'react-native-fast-image';
 
 /**
  * 버튼 컴포넌트트
@@ -35,7 +34,7 @@ const PetLabel68 = props => {
 		<TouchableOpacity onPress={onClickLabel}>
 			<View style={[{flexDirection: 'row', alignItems: 'center'}, {width: 78 * DP}]}>
 				{props.data.user_profile_uri ? (
-					<Image source={{uri: props.data.user_profile_uri}} style={styles.img_round_68} />
+					<FastImage source={{uri: props.data.user_profile_uri}} style={styles.img_round_68} />
 				) : (
 					<ProfileDefaultImg size={styles.img_round_68} />
 				)}

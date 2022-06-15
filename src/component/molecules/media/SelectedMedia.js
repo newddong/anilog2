@@ -1,7 +1,8 @@
 import React from 'react';
 import {View, Image} from 'react-native';
 import DP from 'Root/config/dp';
-import {Cancel48, Cancel62} from 'Atom/icon';
+import {DEFAULT_PROFILE} from 'Root/i18n/msg';
+import {Cancel48, Cancel62, Cancel36} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import FastImage from 'react-native-fast-image';
 
@@ -31,19 +32,18 @@ const SelectedMedia = props => {
 					top: 6 * DP,
 					backgroundColor: 'white',
 					borderRadius: 30 * DP,
-					opacity: 0.8,
 				}}>
 				<View
 					style={{
 						position: 'absolute',
-						right: 0,
+						top: 10 * DP,
+						right: 10 * DP,
 						borderRadius: 30 * DP,
 						backgroundColor: 'lightgray',
-						opacity: 0.9,
 						shadowOpacity: 0.1,
 					}}>
 					{/* 190 크기의 selectMedia를 호출한 경우 Cancel 마크 크기는 더 작게 */}
-					{props.layout == styles.img_square_round_190 ? <Cancel48 onPress={onDelete} /> : <Cancel62 onPress={onDelete} />}
+					{props.layout == styles.img_square_round_190 ? <Cancel36 onPress={onDelete} /> : <Cancel62 onPress={onDelete} />}
 				</View>
 			</View>
 		</View>

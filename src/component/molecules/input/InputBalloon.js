@@ -3,7 +3,7 @@ import {txt} from 'Root/config/textstyle';
 import {Text, View, TextInput} from 'react-native';
 import PropsTypes, {any, bool, func, number, object, oneOf, oneOfType, string} from 'prop-types';
 import DP from 'Root/config/dp';
-import {APRI10, GRAY10, GRAY30, RED10} from 'Root/config/color';
+import {APRI10, GRAY10, GRAY30, GRAY50, RED10} from 'Root/config/color';
 
 /**
  * 인풋 벌룬
@@ -50,7 +50,7 @@ const InputBalloon = React.forwardRef((props, ref) => {
 	};
 
 	return (
-		<View style={{width: 654 * DP}}>
+		<View style={{width: 694 * DP,marginTop:12*DP}}>
 			{props.title == '' ? (
 				<></>
 			) : (
@@ -63,18 +63,17 @@ const InputBalloon = React.forwardRef((props, ref) => {
 			<View
 				style={{
 					color: RED10,
-					width: 654 * DP,
+					width: 694 * DP,
 					height: 264 * DP,
-					marginTop: 12 * DP,
 					borderRadius: 30 * DP,
-					borderWidth: 2 * DP,
-					borderColor: text.length == 0 ? GRAY30 : APRI10,
-					padding: 24 * DP,
+					paddingHorizontal:24*DP,
+					backgroundColor: GRAY50,
+					paddingTop: 24 * DP,
 					alignItems: 'center',
-					justifyContent: 'center',
+					// justifyContent: 'center',
 				}}>
 				<TextInput
-					style={[txt.noto28, {width: 606 * DP, height: 182 * DP, textAlignVertical: 'top'}]}
+					style={[txt.noto28, {textAlignVertical: 'top'}]}
 					onChangeText={text => onChange(text)}
 					placeholder={props.placeholder}
 					multiline={true}
@@ -84,7 +83,7 @@ const InputBalloon = React.forwardRef((props, ref) => {
 					onPressIn={props.onPressIn}
 					value={props.defaultValue}
 				/>
-				<Text style={[txt.roboto24, {color: GRAY10, alignSelf: 'flex-end'}]}> {text.length} /200</Text>
+				{props.showLimit&&<Text style={[txt.roboto24, {color: GRAY10, alignSelf: 'flex-end'}]}> {text.length} /200</Text>}
 			</View>
 		</View>
 	);
@@ -96,6 +95,7 @@ InputBalloon.defaultProps = {
 	maxLength: 300,
 	onChange: e => console.log(e),
 	defaultValue: '',
+	showLimit: true,
 };
 const InputBalloonProps = {
 	/** @type {string} 인풋 타이틀 */

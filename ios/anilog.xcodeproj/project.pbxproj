@@ -61,9 +61,9 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = anilog/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = anilog/main.m; sourceTree = "<group>"; };
 		260C0AB6EC0CEFE917F43DCA /* Pods-anilog-anilogTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-anilog-anilogTests.debug.xcconfig"; path = "Target Support Files/Pods-anilog-anilogTests/Pods-anilog-anilogTests.debug.xcconfig"; sourceTree = "<group>"; };
-		2A5FA76B284F0F4C0059B4FC /* libSDWebImage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSDWebImage.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		2A5FA76D284F0F520059B4FC /* libSDWebImageWebPCoder.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSDWebImageWebPCoder.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		2A5FA76F284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSDWebImagePhotosPlugin.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A5FA76B284F0F4C0059B4FC /* libSDWebImage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; name = libSDWebImage.a; path = SDWebImage/libSDWebImage.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A5FA76D284F0F520059B4FC /* libSDWebImageWebPCoder.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; name = libSDWebImageWebPCoder.a; path = SDWebImageWebPCoder/libSDWebImageWebPCoder.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A5FA76F284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; name = libSDWebImagePhotosPlugin.a; path = SDWebImagePhotosPlugin/libSDWebImagePhotosPlugin.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4615C9F5C3CE11D85E5CD042 /* libPods-anilog-anilogTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-anilog-anilogTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		491A95C9D8B44C93826661F1 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Medium.ttf"; path = "../asset/fonts/Roboto-Medium.ttf"; sourceTree = "<group>"; };
 		589B0AC5A823102178DB5694 /* Pods-anilog-anilogTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-anilog-anilogTests.release.xcconfig"; path = "Target Support Files/Pods-anilog-anilogTests/Pods-anilog-anilogTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -628,7 +628,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 78TFDWAL65;
+				DEVELOPMENT_TEAM = SAMGB85RDD;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = anilog/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -640,7 +640,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = anilogProject;
+				PRODUCT_BUNDLE_IDENTIFIER = anilogAppProject;
 				PRODUCT_NAME = anilog;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "anilog-Bridging-Header.h";
@@ -659,7 +659,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 78TFDWAL65;
+				DEVELOPMENT_TEAM = SAMGB85RDD;
 				INFOPLIST_FILE = anilog/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -670,7 +670,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = anilogProject;
+				PRODUCT_BUNDLE_IDENTIFIER = anilogAppProject;
 				PRODUCT_NAME = anilog;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "anilog-Bridging-Header.h";

@@ -110,9 +110,12 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 
 	return (
 		<TouchableWithoutFeedback onPress={makeTag}>
-			<View style={[style.container,style.adjustCenter]}>
-				{uri.includes('http')?<FastImage style={styles.img_square_round_694} source={{uri: uri}} />:
-				<Image style={styles.img_square_round_694} source={{uri: uri}} />}
+			<View style={[style.container, style.adjustCenter]}>
+				{uri.includes('http') ? (
+					<FastImage style={styles.img_square_round_694} source={{uri: uri}} />
+				) : (
+					<FastImage style={styles.img_square_round_694} source={{uri: uri}} />
+				)}
 				{showTags && getTags()}
 				{tags.length > 0 && viewmode && (
 					<TouchableWithoutFeedback onPress={showTag}>
@@ -134,11 +137,11 @@ PhotoTagItem.defaultProps = {
 };
 
 const style = StyleSheet.create({
-	adjustCenter:{
-		alignItems:'center',
+	adjustCenter: {
+		alignItems: 'center',
 	},
-	container:{
-		width:750*DP,
-		paddingVertical:20*DP,
-	}
-})
+	container: {
+		width: 750 * DP,
+		paddingVertical: 20 * DP,
+	},
+});

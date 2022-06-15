@@ -7,6 +7,7 @@ import {txt} from 'Root/config/textstyle';
 import {ADOPT, DISCUSS, NEAR_RAINBOWBRIDGE, PROTECT, RESCUE} from 'Root/i18n/msg';
 import {styles} from 'Atom/image/imageStyle';
 import {Blur, Blur694, RainbowBridge} from 'Root/component/atom/icon';
+import FastImage from 'react-native-fast-image';
 
 /**
  * 동물 구조 임시보호 입양 관련 이미지
@@ -66,7 +67,7 @@ const RescueImage = props => {
 				{props.img_uri != undefined &&
 					props.img_uri.map((data, idx) => (
 						<TouchableOpacity activeOpacity={0.9} onPress={() => props.onPressReqeustPhoto()} key={idx} style={{zIndex: -1}}>
-							<Image onP source={{uri: data}} style={styles.img_square_round_694} />
+							<FastImage source={{uri: data}} style={styles.img_square_round_694} />
 							<View style={[style.swiper_index, {zIndex: 2}]}>
 								<Text style={[txt.roboto24, {color: 'white'}]}>
 									{idx + 1}/{props.img_uri.length}

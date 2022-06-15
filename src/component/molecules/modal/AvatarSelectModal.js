@@ -10,8 +10,7 @@ import userGlobalObj from 'Root/config/userGlobalObject';
 import {txt} from 'Root/config/textstyle';
 import PetLabel from '../label/PetLabel';
 import {styles} from 'Root/component/atom/image/imageStyle';
-import {buttonstyle} from 'Root/component/templete/style_templete';
-import {Write94} from 'Root/component/atom/icon';
+import FastImage from 'react-native-fast-image';
 
 /**
  * 아바타 동물을 선택하는 모달창
@@ -62,7 +61,7 @@ const AvatarSelectModal = props => {
 							justifyContent: 'center',
 						},
 					]}>
-					<Image style={styles.img_round_94} source={{uri: item.user_profile_uri}} />
+					<FastImage style={styles.img_round_94} source={{uri: item.user_profile_uri}} />
 					<Text
 						style={[
 							txt.roboto28b,
@@ -122,21 +121,6 @@ const AvatarSelectModal = props => {
 					{/* {checkApi.current ? ( */}
 					{items.length > 0 ? (
 						<View style={[style.avatarList, {}]}>
-							{/* <Text> {nativeEvent}</Text> */}
-							{/* <View
-								style={[
-									{
-										height: 94 * DP,
-										width: 94 * DP,
-										justifyContent: 'center',
-										alignItems: 'center',
-										backgroundColor: '#ff9888',
-										borderRadius: 35 * DP,
-										marginBottom: 20 * DP,
-									},
-									buttonstyle.shadow,
-								]}>
-							</View> */}
 							{platform === 'android' ? (
 								<FlatList data={items} renderItem={({item, index}) => renderItem(item, index)} persistentScrollbar={true}></FlatList>
 							) : (

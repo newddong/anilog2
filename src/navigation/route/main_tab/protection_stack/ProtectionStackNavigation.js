@@ -25,6 +25,9 @@ import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailS
 import SaveButtonHeader from 'Root/navigation/header/SaveButtonHeader';
 import ChangeUserProfileImage from 'Root/component/templete/user/ChangeUserProfileImage';
 import CommunityHeader from 'Root/navigation/header/CommunityHeader';
+import ChangePetProfileImage from 'Root/component/templete/pet/ChangePetProfileImage';
+import ProfileHeader from 'Root/navigation/header/ProfileHeader';
+import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 
 const ProtectionStack = createStackNavigator();
 
@@ -41,11 +44,11 @@ export default ProtectionStackNavigation = props => {
 				component={ProtectionTopTabNavigation}
 				options={{header: props => <SimpleHeader {...props} />, title: ' '}}
 			/>
-			<ProtectionStack.Screen name="UserProfile" component={Profile} options={{header: props => <MeatBallHeader {...props} />, title: '프로필'}} />
+			<ProtectionStack.Screen name="UserProfile" component={Profile} options={{header: props => <ProfileHeader {...props} />, title: '프로필'}} />
 			<ProtectionStack.Screen
 				name="SocialRelation"
 				component={SocialRelationTopTabNavigation}
-				options={{header: props => <SimpleHeader {...props} />, title: '프로필'}}
+				options={{header: props => <InputAndSearchHeader {...props} isSocial />}}
 			/>
 			<ProtectionStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />}} />
 			<ProtectionStack.Screen name="HashFeedList" component={FeedList} />
@@ -90,7 +93,7 @@ export default ProtectionStackNavigation = props => {
 			<ProtectionStack.Screen
 				name="ProtectionTabUserProfile"
 				component={Profile}
-				options={{header: props => <MeatBallHeader {...props} />, title: '프로필'}}
+				options={{header: props => <InfoHeader {...props} />, title: '프로필'}}
 			/>
 			<ProtectionStack.Screen
 				name={'CommunityCommentList'}
@@ -139,6 +142,11 @@ export default ProtectionStackNavigation = props => {
 					header: props => <SimpleHeader {...props} />,
 					title: '프로필 수정',
 				})}
+			/>
+			<ProtectionStack.Screen
+				name="ChangePetProfileImage"
+				component={ChangePetProfileImage}
+				options={{header: props => <SimpleHeader {...props} />, title: '프로필 변경'}}
 			/>
 		</ProtectionStack.Navigator>
 	);

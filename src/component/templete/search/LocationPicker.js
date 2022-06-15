@@ -478,15 +478,12 @@ export default LocationPicker = ({route}) => {
 	// } else
 	return (
 		<View style={[style.container]}>
-			<View style={[{marginBottom: 26 * DP}]}></View>
 			{places.length != 0 ? (
 				<View style={[style.listContainer]}>
 					<FlatList data={places} renderItem={renderItem} showsVerticalScrollIndicator={false} />
 				</View>
 			) : (
-				<ScrollView
-					onScroll={e => console.log('e', e.nativeEvent.layoutMeasurement)}
-					contentContainerStyle={[{alignItems: 'center', bottom: Platform.OS == 'android' ? keyboardY : searchFocus ? 0 : keyboardY}]}>
+				<ScrollView contentContainerStyle={[{alignItems: 'center', bottom: Platform.OS == 'android' ? keyboardY : searchFocus ? 0 : keyboardY}]}>
 					<View style={{zIndex: -1, backgroundColor: '#fff'}}>
 						{/* <TouchableOpacity activeOpacity={0.6} onPress={initializeRegion} style={[style.currentLocationIcon]}>
 							<CurrentLocation />
@@ -500,6 +497,7 @@ export default LocationPicker = ({route}) => {
 											style={[style.mapContainer]}
 											onPress={Keyboard.dismiss}
 											mapType={'standard'}
+											scrollEnabled={false}
 											zoomEnabled
 											zoomControlEnabled
 											onRegionChangeComplete={(region, gesture) => {
@@ -521,13 +519,13 @@ export default LocationPicker = ({route}) => {
 													latitude: changedLatitude != '' ? changedLatitude : init_latitude,
 													longitude: changedLongitude != '' ? changedLongitude : init_longitude,
 												}}
-												icon={require('Atom/icon/marker.png')} // https://lifesaver.codes/answer/custom-markers-cause-extreme-lag-and-slow-down-on-android-2658
+												icon={require('Atom/icon/marker.png')}
 												key={`${changedLongitude}${Date.now()}`}>
 												{locationObj != '' ? (
 													<View style={[{alignItems: 'center', marginBottom: 20 * DP}]}>
-														<Text style={[txt.noto22b, style.locationText]}>{locationObj.address.address_name}</Text>
-														<View style={[style.triangle]}></View>
-														<LocationMarker />
+														{/* <Text style={[txt.noto22b, style.locationText]}>{locationObj.address.address_name}</Text>
+														<View style={[style.triangle]}></View> */}
+														{/* <LocationMarker /> */}
 													</View>
 												) : (
 													<></>
@@ -541,6 +539,7 @@ export default LocationPicker = ({route}) => {
 												ref={map}
 												// provider={PROVIDER_GOOGLE} // remove if not using Google Maps
 												style={[style.mapContainer]}
+												scrollEnabled={false}
 												onRegionChangeComplete={(region, gesture) => {
 													//클릭을 안했음에도 지속적으로 위도 경도가 바뀌는 현상 발생 -> 오로지 터치 시에만 반응하도록 적용
 													goToLocation(region); //탐색된 위도 경도를 바꿈
@@ -558,11 +557,12 @@ export default LocationPicker = ({route}) => {
 														latitude: changedLatitude != '' ? changedLatitude : init_latitude,
 														longitude: changedLongitude != '' ? changedLongitude : init_longitude,
 													}}
+													// icon={require('Atom/icon/marker.png')}
 													key={`${changedLongitude}${Date.now()}`}>
 													{locationObj != '' ? (
 														<View style={[{alignItems: 'center', marginBottom: 20 * DP}]}>
-															<Text style={[txt.noto22b, style.locationText]}>{locationObj.address.address_name}</Text>
-															<View style={[style.triangle]}></View>
+															{/* <Text style={[txt.noto22b, style.locationText]}>{locationObj.address.address_name}</Text> */}
+															{/* <View style={[style.triangle]}></View> */}
 															<LocationMarker />
 														</View>
 													) : (

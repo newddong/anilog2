@@ -334,7 +334,7 @@ export default CommunityEdit = props => {
 				<View style={{height: 38 * DP, width: 2 * DP, backgroundColor: GRAY10, alignSelf: 'center', marginHorizontal: 30 * DP}}></View>
 				<TouchableOpacity activeOpacity={0.6} onPress={moveToLocationPicker}>
 					<View style={[style.buttonItem_review, {}]}>
-						<Location54 />
+						<Location54 fill={'black'} />
 					</View>
 				</TouchableOpacity>
 			</>

@@ -12,12 +12,10 @@ import {
 	Paw30_YELL20,
 	Private48,
 	ProfileDefaultImg,
-	ProfileDefaultImg1_194,
-	ProfileDefaultImg2_194,
-	ProfileDefaultImg3_194,
 	Public48,
 } from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
+import FastImage from 'react-native-fast-image';
 
 /**
  * 프로필이미지 소형(size 가변 - 94 76 70 60 46)
@@ -88,12 +86,7 @@ const ProfileImageSmall = props => {
 			{props.data.user_type == 'hash' ? (
 				getHash()
 			) : props.data.user_profile_uri != undefined ? (
-				<Image
-					source={{
-						uri: props.data.user_profile_uri,
-					}}
-					style={getSize()}
-				/>
+				<FastImage source={{uri: props.data.user_profile_uri}} style={getSize()} />
 			) : (
 				<ProfileDefaultImg size={getSize()} />
 			)}

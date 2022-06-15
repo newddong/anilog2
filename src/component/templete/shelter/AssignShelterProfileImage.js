@@ -20,7 +20,7 @@ export default AssignShelterProfileImage = props => {
 		console.log('data', data);
 
 		assignShelter(
-			{...data, user_profile_uri: data.user_profile_uri ? data.user_profile_uri : 'http://'},
+			{...data, user_profile_uri: data.user_profile_uri ? data.user_profile_uri : 'http://', user_nickname: data.shelter_name},
 			successmsg => {
 				console.log('보호소가입 ID : ', successmsg.shelter_delegate_contact_number);
 				console.log('보호소가입 PWD : ', successmsg.user_password);

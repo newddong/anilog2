@@ -7,5 +7,6 @@ export default searchInfo = {
 		searchInput: '',
 		searchInputForHelp: '',
 		searchInputForLocation: '',
+		searchInputForSocial: '',
 	},
 };

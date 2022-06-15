@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, Image} from 'react-native';
-import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import {
 	Paw48_Mixed,
 	Paw48_YELL20,
@@ -12,6 +11,7 @@ import {
 	ProfileDefaultImg3_194,
 } from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
+import FastImage from 'react-native-fast-image';
 
 /**
  * 프로필이미지 194
@@ -22,11 +22,11 @@ const ProfileImageLarge194 = props => {
 	// 유저의 프로필 이미지를 표시,  유저의 종류(일반유저, 반려동물, 보호소)와 상태(임시보호중,입양,공립,사립)에 따라 아이콘을 표시
 	const petStatus = () => {
 		switch (props.data.pet_status) {
-			case 'normal':
+			case 'companion':
 				return <Paw48_APRI10 />;
-			case 'protected':
+			case 'protect':
 				return <Paw48_YELL20 />;
-			case 'adopted':
+			case 'adopt':
 				return <Paw48_Mixed />;
 			default:
 				return <></>;
@@ -61,7 +61,6 @@ const ProfileImageLarge194 = props => {
 
 	const randomdefault = () => {
 		const rand = [<ProfileDefaultImg1_194 />, <ProfileDefaultImg2_194 />, <ProfileDefaultImg3_194 />];
-
 		return rand[getRandomInt(0, 3)];
 	};
 
@@ -69,7 +68,7 @@ const ProfileImageLarge194 = props => {
 		<View style={styles.img_round_194}>
 			{props.data.user_profile_uri != undefined ? (
 				<>
-					<Image source={{uri: props.data.user_profile_uri}} style={styles.img_round_194} />
+					<FastImage source={{uri: props.data.user_profile_uri}} style={styles.img_round_194} />
 					{userType()}
 				</>
 			) : (

@@ -9,6 +9,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {count_to_K} from 'Root/util/stringutil';
 import DP from 'Root/config/dp';
+import FastImage from 'react-native-fast-image';
 
 /**
  * 후기 요약 컴포넌트 아이템
@@ -119,7 +120,7 @@ const ReviewBriefItem = props => {
 				<></>
 			) : (
 				<View style={[styles.img_square_round_186, {marginRight: 16 * DP}]}>
-					<Image style={[styles.img_square_round_186]} source={{uri: image[0]}} />
+					<FastImage style={[styles.img_square_round_186]} source={{uri: image[0]}} />
 				</View>
 			)}
 			<View style={[style.content, {width: image.length == 0 ? 654 * DP : 450 * DP}]}>

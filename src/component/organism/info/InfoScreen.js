@@ -36,3 +36,5 @@ export default InfoScreen = props => {
 		</View>
 	);
 };
+
+InfoScreen.defaultProps = {};

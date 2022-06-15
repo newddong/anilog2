@@ -139,7 +139,6 @@ const ProtectedThumbnail = props => {
 					source={{uri: data.img_uri}}
 					onLoadEnd={() => setImageLoad(true)}
 				/>
-
 				{/* <Image source={{uri: data.img_uri}} onLoad={e => setImageLoad(true)} style={[styles.img_square_round_226, borderByStatus(), {zIndex: -3}]} /> */}
 				{/* 펫 성별마크 */}
 				<View style={{position: 'absolute', right: 10 * DP, top: 10 * DP}}>{getGenderMark()}</View>
@@ -149,9 +148,9 @@ const ProtectedThumbnail = props => {
 				{getBlur()}
 			</TouchableOpacity>
 			{data.status == 'rainbowbridge' || data.status == 'rainbowbridge_euthanasia' ? (
-				<View style={[style.rainbow, styles.img_square_round_226]}>
+				<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.4} onPress={onClickLabel} style={[style.rainbow, styles.img_square_round_226]}>
 					<RainbowBridge_226 />
-				</View>
+				</TouchableOpacity>
 			) : (
 				<></>
 			)}

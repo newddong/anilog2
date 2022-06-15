@@ -112,7 +112,11 @@ export default MyStackNavigation = props => {
 				component={FeedListForHashTag}
 				options={{header: props => <SimpleHeader {...props} />, title: '#반려동물'}}
 			/>
-			<MyStack.Screen name="SocialRelation" component={SocialRelationTopTabNavigation} options={{header: props => <SimpleHeader {...props} />}} />
+			<MyStack.Screen
+				name="SocialRelation"
+				component={SocialRelationTopTabNavigation}
+				options={{header: props => <InputAndSearchHeader {...props} isSocial />}}
+			/>
 			<MyStack.Screen name="UserMenu" component={UserMenu} options={{header: props => <MyHeader {...props} />, title: 'MY'}} />
 			<MyStack.Screen name="UserInfoSetting" component={UserInfoSetting} options={{header: props => <SimpleHeader {...props} />, title: ''}} />
 			<MyStack.Screen

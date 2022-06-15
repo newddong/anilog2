@@ -21,6 +21,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeComment} from 'Root/api/commentapi';
 import {createReport} from 'Root/api/report';
 import DP from 'Root/config/dp';
+import FastImage from 'react-native-fast-image';
 
 /**
  * 부모 댓글
@@ -279,7 +280,7 @@ export default ParentComment = React.memo((props, ref) => {
 				<></>
 			) : (
 				<View style={[style.img_square_round]}>
-					<Image style={[styles.img_square_round_614]} source={{uri: data.comment_photo_uri}} />
+					<FastImage style={[styles.img_square_round_614]} source={{uri: data.comment_photo_uri}} />
 				</View>
 			)}
 			{/* 댓글 내용 */}

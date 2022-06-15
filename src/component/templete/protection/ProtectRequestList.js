@@ -11,7 +11,7 @@ import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 import {Filter60Border, Filter60Filled} from 'Root/component/atom/icon';
 import moment from 'moment';
-import {getSearchResultProtectRequest} from 'Root/api/protectapi';
+import {getSearchResultProtectRequest, getSearchResultProtectRequestImprovingV1} from 'Root/api/protectapi';
 import protect_obj from 'Root/config/protect_obj';
 import {useNavigation} from '@react-navigation/core';
 import DP from 'Root/config/dp';
@@ -98,12 +98,18 @@ export default ProtectRequestList = ({route}) => {
 		//api 접속
 		console.log('offset', offset);
 		console.log('data Lenth', data.length);
-		getSearchResultProtectRequest(
-			{
-				...filter,
-				page: isRefresh ? 1 : offset,
-				limit: PROTECT_REQUEST_MAIN_LIMIT,
-			},
+		let params = {
+			...filter,
+			page: isRefresh ? 1 : offset,
+			limit: PROTECT_REQUEST_MAIN_LIMIT,
+		};
+		if (data != 'false') {
+			params.target_protect_desertion_no = data[data.length - 1].protect_desertion_no;
+			params.target_protect_request_date = moment(data[data.length - 1].protect_request_date).format('YYYYMMDD');
+		}
+		console.log('params', params);
+		getSearchResultProtectRequestImprovingV1(
+			params,
 			result => {
 				// console.log('result 첫값 :', result.msg[0].protect_animal_id.protect_animal_rescue_location);
 				console.log('result length  ', result.msg.length);
@@ -254,7 +260,7 @@ export default ProtectRequestList = ({route}) => {
 		let y = e.nativeEvent.contentOffset.y;
 		const To = PROTECT_REQUEST_MAIN_LIMIT * (offset - 1) - 20;
 		// console.log('offset', offset, 'e', y);
-		console.log('to', To * ITEM_HEIGHT);
+		// console.log('to', To * ITEM_HEIGHT);
 		if (y > ITEM_HEIGHT * To && closePaging) {
 			// console.log('offset * PROTECT_REQUEST_MAIN_LIMIT', offset * PROTECT_REQUEST_MAIN_LIMIT);
 			// console.log('getData().length', getData().length);
@@ -370,7 +376,7 @@ export default ProtectRequestList = ({route}) => {
 					// onScroll={e => console.log('e', e.nativeEvent.contentOffset)}
 					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					ListEmptyComponent={whenEmpty}
-					decelerationRate={0.85}
+					decelerationRate={0.5}
 					extraData={refreshing}
 					windowSize={30}
 					ref={flatlist}

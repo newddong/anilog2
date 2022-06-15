@@ -188,6 +188,13 @@ import home48Border from './home48Border';
 import addItem68 from './addItem68';
 import check64Filled from './check64Filled';
 import edit46 from './edit46';
+import infoIcon50 from './infoIcon50';
+import feedIcon from './feedIcon';
+import tagIcon from './tagIcon';
+import communityIcon from './communityIcon';
+import protectRequest from './protectRequest';
+import addItem68Black from './addItem68Black';
+import location40border from './location40border';
 
 import DP from 'Root/config/dp';
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK, MAINBLACK} from 'Root/config/color';
@@ -223,17 +230,17 @@ const defaultProfileImg = {width: 294 * DP, height: 294 * DP};
 const profileDefaultImg_194 = {width: 194 * DP, height: 194 * DP};
 
 const makeSvg = (component, style, color) => {
-	if(!color){
+	if (!color) {
 		return props =>
-		props.onPress
-			? React.createElement(TouchableOpacity, {...props}, React.createElement(component, {...props,...style}))
-			: React.createElement(component, {...props,...style});
+			props.onPress
+				? React.createElement(TouchableOpacity, {...props}, React.createElement(component, {...props, ...style}))
+				: React.createElement(component, {...props, ...style});
 	}
-	return props =>{
+	return props => {
 		return props.onPress
 			? React.createElement(TouchableOpacity, {...props}, React.createElement(component, {...style, fill: color}))
 			: React.createElement(component, {...style, fill: color});
-		}
+	};
 };
 
 export const UpdateImg = makeSvg(updateImg, size206);
@@ -269,7 +276,7 @@ export const Search48_BLACK = makeSvg(search48, size48, BLACK);
 export const AlarmBadger48 = makeSvg(alarmBadger48, size48);
 export const RadioChecked38 = makeSvg(radioChecked48, size48);
 export const RadioChecked48 = makeSvg(radioChecked48, size48);
-export const RadioUnchecked38 = makeSvg(radioUnchecked48, size48,GRAY30);
+export const RadioUnchecked38 = makeSvg(radioUnchecked48, size48, GRAY30);
 export const RadioUnchecked48 = makeSvg(radioUnchecked48, size48);
 export const Public48 = makeSvg(public48, size48);
 export const Private48 = makeSvg(private48, size48);
@@ -358,9 +365,9 @@ export const FlashOn72 = makeSvg(flashOn72, size72);
 export const AddItem92 = makeSvg(addItem92, size92);
 export const Write94 = makeSvg(write94, size94);
 export const FloatAddPet_126x92 = makeSvg(floatAddPet_126x92, size126x92);
-export const FloatAddPet_128x68 = makeSvg(floatAddPet_128x68, size128x68);
+export const FloatAddPet_128x68 = makeSvg(floatAddPet_128x68, {width: 120 * DP, height: 68 * DP});
 export const FloatAddArticle_126x92 = makeSvg(floatAddArticle126x92, size126x92);
-export const FloatAddArticle_128x68 = makeSvg(floatAddArticle128x68, size128x68);
+export const FloatAddArticle_128x68 = makeSvg(floatAddArticle128x68, {width: 120 * DP, height: 68 * DP});
 export const FeedTabBorder = makeSvg(feedTabBorder, {width: 66 * DP, height: 48 * DP});
 export const AnimalSavingTabBorder = makeSvg(animalSavingTabBorder, {width: 54 * DP, height: 46 * DP}, GRAY20);
 export const CommunityTabBorder = makeSvg(communityTabBorder, {width: 54 * DP, height: 48 * DP}, GRAY20);
@@ -383,8 +390,8 @@ export const Tag_Edit = makeSvg(tagEdit, {width: 170 * DP, height: 52 * DP});
 export const X_Mark = makeSvg(xMark, size48);
 export const Add_Pet = makeSvg(addPet180, {width: 180 * DP, height: 180 * DP});
 export const Add_Volunteer = makeSvg(addPet180, {width: 94 * DP, height: 94 * DP});
-export const Urgent_Write1 = makeSvg(urgent_write1, size110);
-export const Urgent_Write2 = makeSvg(urgent_write2, {width: 100 * DP, height: 100 * DP});
+export const Urgent_Write1 = makeSvg(urgent_write1, {width: 98 * DP, height: 86 * DP});
+export const Urgent_Write2 = makeSvg(urgent_write2, {width: 98 * DP, height: 86 * DP});
 export const Leaflet = makeSvg(leaflet, {width: 118 * DP, height: 110 * DP});
 export const Arrow_Down_White = makeSvg(arrow_down, size48, 'white');
 export const Arrow_Down_APRI10 = makeSvg(arrow_down, size48, APRI10);
@@ -471,5 +478,17 @@ export const Setting46_border = makeSvg(setting46Border, size46, MAINBLACK);
 export const CircleMeatBall70 = makeSvg(circleMeatBall70, size70);
 export const Home48Border = makeSvg(home48Border, size48, MAINBLACK);
 export const AddItem68 = makeSvg(addItem68, size68, APRI10);
+export const AddItem68Black = makeSvg(addItem68Black, size68, MAINBLACK);
 export const Check64Filled = makeSvg(check64Filled, size64, APRI10);
 export const Edit46 = makeSvg(edit46, size46, APRI10);
+export const InfoIcon50 = makeSvg(infoIcon50, size50);
+export const FeedIcon = makeSvg(feedIcon, size54, MAINBLACK);
+export const FeedIcon_GRAY = makeSvg(feedIcon, size54, GRAY20);
+export const TagIcon = makeSvg(tagIcon, size54, MAINBLACK);
+export const TagIcon_GRAY = makeSvg(tagIcon, size54, GRAY20);
+export const CommunityIcon = makeSvg(communityIcon, size54, MAINBLACK);
+export const CommunityIcon_GRAY = makeSvg(communityIcon, size54, GRAY20);
+export const ProtectRequestIcon = makeSvg(protectRequest, size54, MAINBLACK);
+export const ProtectRequestIcon_GRAY = makeSvg(protectRequest, size54, GRAY20);
+export const Location40Border = makeSvg(location40border,size40,'#1A1311');
+

@@ -19,6 +19,7 @@ import {
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {useNavigationState} from '@react-navigation/native';
 import {merge} from 'qs/lib/utils';
+import FastImage from 'react-native-fast-image';
 
 export default function BottomTab({state, descriptors, navigation}) {
 	// console.log('바텀탭 유저 글로벌',userGlobalObject);
@@ -122,7 +123,7 @@ export default function BottomTab({state, descriptors, navigation}) {
 								userGlobalObject.userInfo.user_profile_uri == undefined ? (
 									<ProfileDefaultImg size={{height: 54 * DP, width: 54 * DP, borderRadius: 27 * DP, marginBottom: -10 * DP}} />
 								) : (
-									<Image
+									<FastImage
 										style={[
 											{height: 54 * DP, width: 54 * DP, borderRadius: 27 * DP, marginBottom: -10 * DP},
 											isFocused ? {borderWidth: 4 * DP, borderColor: BLACK} : {},

@@ -44,11 +44,10 @@ export default ArticleMain = ({route}) => {
 		if (category && category.length > 0) {
 			params.community_free_type = category;
 		}
-		console.log('params.community_free_type ', params.community_free_type);
 		getCommunityListFreeByPageNumber(
 			params,
 			result => {
-				// console.log('result / getCommunityListFreeByPageNumber / ArticleMain :', result.msg.length);
+				console.log('result / getCommunityListFreeByPageNumber / ArticleMain :', result.msg.length);
 				setTotal(result.total_count);
 				const res = result.msg;
 				setOffset(page);

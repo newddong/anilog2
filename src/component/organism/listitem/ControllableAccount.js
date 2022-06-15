@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {btn_w108} from 'Atom/btn/btn_style';
 import {Cross46} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
@@ -49,15 +49,15 @@ export default ControllableAccount = props => {
 	};
 
 	return (
-		<View style={[controllableAccount.container]}>
+		<View style={[style.container]}>
 			{showCheckBox ? (
-				<View style={[controllableAccount.check50]}>
+				<View style={[style.check50]}>
 					<CheckBox />
 				</View>
 			) : (
 				false
 			)}
-			<View style={[showCheckBox || showCrossMark ? controllableAccount.userDescriptionLabel_checked : controllableAccount.userDescriptionLabel]}>
+			<View style={[showCheckBox || showCrossMark ? style.userDescriptionLabel_checked : style.userDescriptionLabel]}>
 				<UserDescriptionLabel
 					data={props.data}
 					onClickLabel={onClickLabel}
@@ -66,8 +66,8 @@ export default ControllableAccount = props => {
 				/>
 			</View>
 			{props.showButtons && !isMyAccount ? (
-				<View style={[controllableAccount.rightContainer]}>
-					<View style={[controllableAccount.btn_w108_controllableAccount]}>
+				<View style={[style.rightContainer]}>
+					<View style={[style.btn_w108_controllableAccount]}>
 						{props.data.follow ? (
 							<AniButton btnTitle={'팔로잉'} btnLayout={btn_w108} btnStyle={'border'} onPress={onClickUnFollowBtn} />
 						) : (
@@ -75,7 +75,7 @@ export default ControllableAccount = props => {
 						)}
 					</View>
 					{showCrossMark ? (
-						<View style={[organism_style.cross46, controllableAccount.cross46]}>
+						<View style={[style.cross46]}>
 							<Cross46 onPress={onPressCrossMark} />
 						</View>
 					) : (
@@ -98,3 +98,38 @@ ControllableAccount.defaultProps = {
 	showButtons: false,
 	showFollowStatusText: false,
 };
+
+const style = StyleSheet.create({
+	container: {
+		width: 694 * DP,
+		flexDirection: 'row',
+		paddingBottom: 40 * DP,
+		alignItems: 'center',
+	},
+	userDescriptionLabel: {
+		width: 480 * DP,
+		justifyContent: 'center',
+		alignItems: 'flex-start',
+	},
+	userDescriptionLabel_checked: {
+		width: 400 * DP,
+		justifyContent: 'center',
+		alignItems: 'flex-start',
+	},
+	rightContainer: {
+		// height: 94 * DP,
+		position: 'absolute',
+		right: 0,
+		flexDirection: 'row',
+	},
+	btn_w108_controllableAccount: {
+		height: 94 * DP,
+		marginLeft: 10 * DP,
+	},
+	cross46: {
+		marginLeft: 10 * DP,
+	},
+	check50: {
+		alignSelf: 'center',
+	},
+});

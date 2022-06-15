@@ -7,6 +7,7 @@ import DP from 'Root/config/dp';
 import {Female48, Male48} from '../../atom/icon';
 import {styles} from '../../atom/image/imageStyle';
 import Modal from '../../modal/Modal';
+import FastImage from 'react-native-fast-image';
 
 /**
  * 한개 버튼을 띄우는 모달
@@ -89,7 +90,7 @@ const ProtectedPetDetailModal = props => {
 											left: getOverLap(data.protect_animal_photo_uri_list.length) * DP * i,
 										},
 									]}>
-									<Image source={{uri: v}} style={[styles.img_square_round_178, style.imageItem]} />
+									<FastImage source={{uri: v}} style={[styles.img_square_round_178, style.imageItem]} />
 								</View>
 							);
 						})}

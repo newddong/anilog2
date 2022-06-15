@@ -13,6 +13,7 @@ import {REPORT_MENU} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
 import Modal from 'Root/component/modal/Modal';
 import DP from 'Root/config/dp';
+import FastImage from 'react-native-fast-image';
 /**
  * 자식 댓글
  * @param {object} props - Props Object
@@ -182,7 +183,7 @@ const ChildComment = props => {
 			{/* 해당 대댓글이 photo_uri를 가지고 있는 경우만 IMage 출력 */}
 			{data.comment_photo_uri != null && !isNotAuthorized() ? (
 				<View style={[childComment.img_square_round_484]}>
-					<Image style={[styles.img_square_round_544]} source={{uri: data.comment_photo_uri}} />
+					<FastImage style={[styles.img_square_round_544]} source={{uri: data.comment_photo_uri}} />
 				</View>
 			) : (
 				<></>

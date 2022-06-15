@@ -1,14 +1,11 @@
 import React from 'react';
-import {Text, View, Image, ScrollView, Dimensions, SafeAreaView, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
-
+import {Text, View, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import {BackArrow32, CircleMeatBall70} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {getUserInfoById} from 'Root/api/userapi';
 import {APRI10, WHITE} from 'Root/config/color';
-import PetLabel from 'Root/component/molecules/label/PetLabel';
 import PetLabel70 from 'Root/component/molecules/label/PetLabel70';
-import {item} from 'Root/component/templete/style_address';
 export default MyHeader = ({navigation, route, options, back}) => {
 	// console.log('options', options);
 	// console.log('route', route.params);
@@ -28,7 +25,7 @@ export default MyHeader = ({navigation, route, options, back}) => {
 				// } else {
 				setUserData({...user.msg, pet_status: 'user'});
 				setItems(avatarList);
-				console.log('avatarList', avatarList);
+				// console.log('avatarList', avatarList);
 				// }
 			},
 			err => {

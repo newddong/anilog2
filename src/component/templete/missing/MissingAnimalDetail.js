@@ -21,6 +21,7 @@ import MissingReportItem from 'Root/component/organism/listitem/MissingReportIte
 import {NETWORK_ERROR} from 'Root/i18n/msg';
 import CameraRoll from 'Root/module/CameraRoll';
 import DP from 'Root/config/dp';
+import FastImage from 'react-native-fast-image';
 
 export default MissingAnimalDetail = props => {
 	const navigation = useNavigation();
@@ -523,7 +524,7 @@ const MissingAnimalPicture = props => {
 	if (feed_medias.length < 2) {
 		return (
 			<View style={missingAnimalDetail.picture}>
-				<Image source={{uri: data.feed_medias[0].media_uri}} style={[missingAnimalDetail.img_squre_284]} />
+				<FastImage source={{uri: data.feed_medias[0].media_uri}} style={[missingAnimalDetail.img_squre_284]} />
 			</View>
 		);
 	} else {
@@ -538,8 +539,8 @@ const MissingAnimalPicture = props => {
 					<Text style={missingAnimalDetail.missingBlackText32}>실종</Text>
 				</View>
 				<View style={missingAnimalDetail.picture}>
-					<Image source={{uri: data.feed_medias[0].media_uri}} style={[missingAnimalDetail.img_squre_284]} />
-					<Image source={{uri: data.feed_medias[1].media_uri}} style={[missingAnimalDetail.img_squre_284]} />
+					<FastImage source={{uri: data.feed_medias[0].media_uri}} style={[missingAnimalDetail.img_squre_284]} />
+					<FastImage source={{uri: data.feed_medias[1].media_uri}} style={[missingAnimalDetail.img_squre_284]} />
 				</View>
 			</View>
 		);

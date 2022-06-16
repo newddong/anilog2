@@ -353,7 +353,7 @@ export const temp_style = StyleSheet.create({
 		// backgroundColor: '#E0A8A8',
 	},
 	tabSelectFilled_Type1: {
-		width: 520 * DP,
+		width: 550 * DP,
 		height: 82 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
@@ -4375,7 +4375,7 @@ export const feedWrite = StyleSheet.create({
 	},
 	buttonContainer: {
 		flexDirection: 'row',
-		paddingHorizontal: 48 * DP,
+		// paddingHorizontal: 48 * DP,
 		height: 54 * DP,
 		marginTop: 30 * DP,
 		alignItems: 'center',

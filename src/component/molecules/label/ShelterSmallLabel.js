@@ -3,11 +3,12 @@ import {Text, View, Image, TouchableOpacity} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {APRI10, GRAY10, GRAY20, MAINBLACK} from 'Root/config/color';
-import {Private30, Public30} from 'Atom/icon';
+import {Private30, ProfileDefaultImg, Public30} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import userGlobalObj from 'Root/config/userGlobalObject';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import moment from 'moment';
+import FastImage from 'react-native-fast-image';
 
 /**
  * 보호소 Object 정보 박스
@@ -44,7 +45,11 @@ const ShelterSmallLabel = props => {
 	return (
 		<View style={{flexDirection: 'row', alignItems: 'center'}}>
 			<TouchableOpacity onPress={onClickLabel}>
-				<Image source={{uri: data.user_profile_uri}} style={styles.img_round_72} />
+				{data.user_profile_uri ? (
+					<FastImage source={{uri: data.user_profile_uri}} style={styles.img_round_72} />
+				) : (
+					<ProfileDefaultImg size={styles.img_round_72} />
+				)}
 				<View style={{position: 'absolute', right: 0, bottom: 0}}>{getStatusMark()}</View>
 			</TouchableOpacity>
 			<View style={{marginLeft: 30 * DP, maxWidth: 580 * DP}}>

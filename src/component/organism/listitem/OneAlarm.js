@@ -9,6 +9,7 @@ import {GRAY10, APRI10, BLACK, APRI20, WHITE} from 'Root/config/color';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import {ProfileDefaultImg} from 'Root/component/atom/icon';
 import {useNavigation} from '@react-navigation/core';
+import FastImage from 'react-native-fast-image';
 /**
  * 알람 객체
  * @param {object} props - Props Object
@@ -58,7 +59,7 @@ const OneAlarm = props => {
 					{data.notice_user_related_id ? (
 						<View style={[styles.userAlarmContainer]}>
 							{data.notice_user_related_id.user_profile_uri ? (
-								<Image source={{uri: data.notice_user_related_id.user_profile_uri}} style={[styles.img_round_94]} />
+								<FastImage source={{uri: data.notice_user_related_id.user_profile_uri}} style={[styles.img_round_94]} />
 							) : (
 								<></>
 							)}

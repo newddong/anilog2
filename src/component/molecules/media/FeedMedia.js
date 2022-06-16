@@ -107,14 +107,19 @@ export default FeedMedia = props => {
 
 	const swiperRef = React.useRef();
 	const pagenation = (index, total, context) => {
-		if(total<=1)return false;
-		return <View style={[style.pagination,feed_type == 'missing' || feed_type == 'report' ?{top:40*DP}:{bottom:40*DP}]}>
-			<Text style={[txt.roboto24,{color:WHITE}]}>{index+1}/{total}</Text>
-		</View>
-	}
+		if (total <= 1) return false;
+		return (
+			<View style={[style.pagination, feed_type == 'missing' || feed_type == 'report' ? {top: 40 * DP} : {bottom: 40 * DP}]}>
+				<Text style={[txt.roboto24, {color: WHITE}]}>
+					{index + 1}/{total}
+				</Text>
+			</View>
+		);
+	};
 	return (
-		<View style={{height:734*DP}}>
-			<View style={{height:734*DP}}>{/* Swiper Container View */}
+		<View style={{height: 734 * DP}}>
+			<View style={{height: 734 * DP}}>
+				{/* Swiper Container View */}
 				<Swiper
 					activeDotColor={APRI10}
 					showsButtons={false}
@@ -137,19 +142,21 @@ export default FeedMedia = props => {
 									viewmode={true}
 									onPressPhoto={onPressPhoto}
 								/>
-								{feed_type == 'missing' || feed_type == 'report' ?
-								<View style={{bottom:19*DP,width:750*DP,height:694*DP,position:'absolute',alignItems:'center'}}>
-									<Blur694 />
-								</View>:false}
+								{feed_type == 'missing' || feed_type == 'report' ? (
+									<View style={{bottom: 19 * DP, width: 750 * DP, height: 694 * DP, position: 'absolute', alignItems: 'center'}}>
+										<Blur694 />
+									</View>
+								) : (
+									false
+								)}
 							</React.Fragment>
 						);
 					})}
 					{/* {getFeedIcon()} */}
 				</Swiper>
-				
 			</View>
 			{feed_type == 'missing' || feed_type == 'report' ? (
-				<View style={[style.emergency_title,{backgroundColor:feed_type=='missing'?RED10:'#FFD153'}]}>
+				<View style={[style.emergency_title, {backgroundColor: feed_type == 'missing' ? RED10 : '#FFD153'}]}>
 					<Text style={[txt.noto40b, {color: WHITE}]}>{emergency_title}</Text>
 				</View>
 			) : (
@@ -157,10 +164,9 @@ export default FeedMedia = props => {
 			)}
 			{feed_type == 'missing' ? (
 				<View style={[style.emergency_background]}>
-					
 					<View style={{flexDirection: 'row'}}>
 						<View style={{flex: 1}}>
-							<Text style={[txt.roboto38b, {color: 'white',lineHeight:62*DP}]} numberOfLines={3}>
+							<Text style={[txt.roboto38b, {color: 'white', lineHeight: 62 * DP}]} numberOfLines={3}>
 								{missing_animal_species + ' / ' + missing_animal_species_detail}
 							</Text>
 						</View>
@@ -183,14 +189,14 @@ export default FeedMedia = props => {
 			{feed_type == 'report' ? (
 				<View style={[style.emergency_background]}>
 					<View style={[{flexDirection: 'column'}]}>
-						<Text style={[txt.roboto38b, {color: 'white',lineHeight:62*DP}]} numberOfLines={1}>
-								{report_witness_location}
+						<Text style={[txt.roboto38b, {color: 'white', lineHeight: 62 * DP}]} numberOfLines={1}>
+							{report_witness_location}
 						</Text>
 						<View style={[style.report_date_container]}>
 							<Text style={[txt.noto32, {color: 'white'}]}>제보 날짜: {newMissingDate}</Text>
 						</View>
 						<View style={style.report_detail_container}>
-							<Text style={[txt.noto32, {color: 'white',lineHeight:45*DP}]} numberOfLines={2}>
+							<Text style={[txt.noto32, {color: 'white', lineHeight: 45 * DP}]} numberOfLines={2}>
 								{feed_content}
 							</Text>
 						</View>
@@ -218,15 +224,15 @@ FeedMedia.defaultProps = {
 };
 
 const style = StyleSheet.create({
-	pagination:{
-		width:76*DP,
-		height:50*DP,
-		borderRadius:25*DP,
-		backgroundColor:'#0008',
-		justifyContent:'center',
-		alignItems:'center',
-		position:'absolute',
-		right:48*DP
+	pagination: {
+		width: 76 * DP,
+		height: 50 * DP,
+		borderRadius: 25 * DP,
+		backgroundColor: '#0008',
+		justifyContent: 'center',
+		alignItems: 'center',
+		position: 'absolute',
+		right: 48 * DP,
 	},
 	emergency_title: {
 		width: 164 * DP,
@@ -237,20 +243,20 @@ const style = StyleSheet.create({
 		borderBottomRightRadius: 20 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
-		left: 293*DP,
-		top: 20*DP,
+		left: 293 * DP,
+		top: 20 * DP,
 	},
 	emergency_background: {
 		width: 750 * DP,
-		paddingHorizontal:28*DP,
+		paddingHorizontal: 28 * DP,
 		// height: 214 * DP,
 		// backgroundColor: '#0009',
 		justifyContent: 'center',
 		position: 'absolute',
-		bottom:0,
+		bottom: 0,
 		// zIndex: 0,
 		paddingVertical: 20 * DP,
-		paddingHorizontal: 52 * DP
+		paddingHorizontal: 52 * DP,
 	},
 	emergency_info_txt: {
 		color: 'white',
@@ -264,18 +270,18 @@ const style = StyleSheet.create({
 	missing_date_age_container: {
 		// width: 192 * DP,
 		height: 126 * DP,
-		paddingBottom: 24*DP,
-		justifyContent:'space-between'
+		paddingBottom: 24 * DP,
+		justifyContent: 'space-between',
 	},
 	missing_detail_container: {
 		width: 500 * DP,
 		height: 114 * DP,
 		paddingLeft: 10 * DP,
-		paddingRight:52*DP
+		paddingRight: 52 * DP,
 	},
 	report_date_container: {
 		height: 48 * DP,
-		marginBottom:4*DP
+		marginBottom: 4 * DP,
 	},
 	report_location_container: {
 		height: 80 * DP,
@@ -286,6 +292,6 @@ const style = StyleSheet.create({
 	},
 
 	report_detail_container: {
-		paddingBottom: 24*DP,
+		paddingBottom: 24 * DP,
 	},
 });

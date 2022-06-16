@@ -43,15 +43,13 @@ export default FollowerList = props => {
 			});
 		} else {
 			followUser(
-				{
-					follow_userobject_id: item._id,
-				},
+				{follow_userobject_id: item._id},
 				result => {
 					console.log('result / followUser / FollwerList :', result.msg);
 					props.resetProfileInfo();
 				},
 				err => {
-					console.log('err / followUser  : ', err);
+					console.log('err / followUser / FollwerList : ', err);
 				},
 			);
 		}
@@ -65,9 +63,7 @@ export default FollowerList = props => {
 			});
 		} else {
 			unFollowUser(
-				{
-					follow_userobject_id: item._id,
-				},
+				{follow_userobject_id: item._id},
 				result => {
 					// console.log('result / onClickUnFollowBtn / FollwerList : ', result.msg);
 					props.resetProfileInfo();
@@ -100,9 +96,9 @@ export default FollowerList = props => {
 		return (
 			<View style={[followerList.container]}>
 				<ScrollView style={[{flex: 0}]}>
-					<View style={[followerList.inputWitchSearch, {alignSelf: 'center'}]}>
+					{/* <View style={[followerList.inputWitchSearch, {alignSelf: 'center'}]}>
 						<InputWithSearchIcon value={input} onChange={onChangeSearchInput} onSearch={onSearch} placeholder={'검색어를 입력해주세요.'} />
-					</View>
+					</View> */}
 					{loading ? (
 						<Loading isModal={false} />
 					) : (
@@ -112,7 +108,6 @@ export default FollowerList = props => {
 									items={follower}
 									showButtons={true}
 									onClickAccount={onClickAccount}
-									title={!isFollowing ? '팔로우' : '팔로잉'}
 									onClickFollowBtn={onClickFollowBtn}
 									onClickUnFollowBtn={onClickUnFollowBtn}
 									showFollowStatusText={false}
@@ -123,7 +118,6 @@ export default FollowerList = props => {
 									items={follow}
 									showButtons={true}
 									onClickAccount={onClickAccount}
-									title={!isFollowing ? '팔로우' : '팔로잉'}
 									onClickUnFollowBtn={onClickUnFollowBtn}
 									onClickFollowBtn={onClickFollowBtn}
 									showFollowStatusText={false}

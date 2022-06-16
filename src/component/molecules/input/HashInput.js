@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableWithoutFeedback, Platform, StyleSheet, TextInput} from 'react-native';
 import AccountHashList from 'Organism/list/AccountHashList';
-import {APRI10, GRAY20} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, GRAY20} from 'Root/config/color';
 import {findTagAt, isTag, getTagName, findStartIndexOfTag, findEndIndexOfTag} from 'Root/util/stringutil';
 import {getUserListByNickname} from 'Root/api/userapi';
 import {getHashKeywords} from 'Root/api/hashapi';
@@ -9,17 +9,17 @@ import Modal from 'Component/modal/Modal';
 import SelectedMedia from '../media/SelectedMedia';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import {txt} from 'Root/config/textstyle';
-import {Location54_Filled} from 'Root/component/atom/icon';
+import {Location54_Filled, Location40Border} from 'Root/component/atom/icon';
 import DP from 'Root/config/dp';
+import { func, object, string } from 'prop-types';
 
 
 /**
  * 피드 인풋, 해쉬태그, 유저링크 입력가능
+ * @type {React.ForwardRefRenderFunction<?,HashInputProps>}
  *
- * @param {object} props - Props Object
- * @param {import('native-base').StyledProps|Array<import('native-base').StyledProps>} props.containerStyle - 컨테이너 스타일
  */
-export default function HashInput(props) {
+ const HashInput= React.forwardRef((props, ref)=>{
 	const [value, setValue] = React.useState(props.value ? props.value : '');
 	const [find, setFind] = React.useState(false);
 	const [cursor, setCursor] = React.useState();
@@ -248,32 +248,35 @@ export default function HashInput(props) {
 
 	return (
 		<>
-			<View style={[props.containerStyle, {}]}>
-				{location == undefined ? (
-					<></>
-				) : (
-					<View style={{flexDirection: 'row', alignItems: 'center', maxWidth: 550 * DP}}>
-						<Location54_Filled />
-						<Text style={[txt.noto26b, {color: APRI10, marginLeft: 10 * DP}]} numberOfLines={2}>
-							{getLocation()}
-						</Text>
-					</View>
-				)}
-				<TextInput
-					{...props} //props override
-					style={[{marginBottom: props.selectedImg.length > 0 ? 10 * DP : 0}, txt.noto28]}
-					textAlignVertical={'top'}
-					multiline={true}
-					value={value}
-					onChangeText={onChangeText}
-					onFocus={onFocus}
-					placeholder={props.placeholder}
-					placeholderTextColor={GRAY20}
-					selection={cursor}
-					ref={inputRef}
-					maxLength={props.maxLength}
-					onSelectionChange={onSelectionChange}></TextInput>
-				{props.selectedImg.length > 0 && (
+			<View style={[props.containerStyle, {}]} ref={ref}>
+				<View>
+					{location == undefined ? (
+						false
+					) : (
+						<View style={{flexDirection: 'row', alignItems: 'center', height:40*DP,maxWidth: 550 * DP}}>
+							<Location40Border />
+							<Text style={[txt.noto26, {color: BLACK,lineHeight:30*DP}]} numberOfLines={1}>
+								{getLocation()}
+							</Text>
+						</View>
+					)}
+					<TextInput
+						{...props} //props override
+						style={[{marginBottom: props.selectedImg.length > 0 ? 10 * DP : 0}, txt.noto28]}
+						textAlignVertical={'top'}
+						multiline={true}
+						value={value}
+						onChangeText={onChangeText}
+						onFocus={onFocus}
+						placeholder={props.placeholder}
+						placeholderTextColor={GRAY10}
+						selection={cursor}
+						ref={inputRef}
+						maxLength={props.maxLength}
+						onPressIn={props.onPressIn}
+						onSelectionChange={onSelectionChange}></TextInput>
+				</View>
+				{props.showImages&&props.selectedImg.length > 0 && (
 					<View style={[style.mediaListContainer]}>
 						<SelectedMediaList items={props.selectedImg} onDelete={deletePhoto} />
 					</View>
@@ -288,7 +291,19 @@ export default function HashInput(props) {
 			)}
 		</>
 	);
+});
+
+const HashInputProps = {
+	/** @type {import('native-base').StyledProps|Array<import('native-base').StyledProps>}  컨테이너 스타일 */
+	containerStyle:object,
+	/** @type {string} 플레이스홀더 */
+	placeholder:string,
+	/** @type {(text:string, hashKewords:array<String>)=>void} 입력 변경 콜백 */
+	onChangeText:func,
+	/** @type {(isFind:boolean)=>void} 입력할때 '#','@'로 시작하는 태그를 입력하였을때 콜백 */
+	onFind:func
 }
+
 
 HashInput.defaultProp = {
 	containerStyle: {},
@@ -305,3 +320,5 @@ const style = StyleSheet.create({
 		
 	},
 });
+
+export default HashInput;

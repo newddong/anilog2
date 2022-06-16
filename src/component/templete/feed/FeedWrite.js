@@ -4,6 +4,7 @@ import {APRI10, WHITE, GRAY20, GRAY10, GRAY30, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Paw54_Border,Location54} from 'Root/component/atom/icon/index';
+import {styles} from 'Atom/image/imageStyle';
 import {Urgent_Write1, Urgent_Write2} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w194} from 'Atom/btn/btn_style';
@@ -233,6 +234,7 @@ export default FeedWrite = props => {
 					container={container}
 					scrollref={scrollref}
 					currentScrollOffset={scrolloffset.current}
+					feedInput={feedInput}
 				/>
 			);
 		} // 긴급 게시 버튼 중 '실종' 클릭한 경우
@@ -245,6 +247,8 @@ export default FeedWrite = props => {
 					container={container}
 					scrollref={scrollref}
 					currentScrollOffset={scrolloffset.current}
+					feedInput={feedInput}
+					selectedImages={selectedImages}
 				/>
 			) : (
 				false
@@ -272,8 +276,6 @@ export default FeedWrite = props => {
 
 	const setWriteModeState = () => {
 		return (
-			<>
-				{/* 사진추가 / 위치추가 / 태그하기 */}
 				<View style={[feedWrite.buttonContainer]}>
 					<TouchableWithoutFeedback onPress={moveToMultiPhotoSelect}>
 						<View style={[feedWrite.btnItemContainer, {marginBottom: 5 * DP}]}>
@@ -312,23 +314,68 @@ export default FeedWrite = props => {
 						</View>
 					</TouchableWithoutFeedback>
 				</View>
-				{/* {selectedImg.length > 0 && (
-					<View style={[temp_style.selectedMediaList, feedWrite.selectedMediaList]}>
-						<SelectedMediaList items={selectedImg} onDelete={deletePhoto} />
-					</View>
-				)} */}
-				{/* 긴급 게시 관련 버튼 클릭 시 출력되는 View */}
-				{setUrgBtnsClickedView()}
-			</>
+			
 		);
 	};
 	const test = () => {
 		console.log(props.route);
 	};
 
+	const selectedImages = () => {
+		if(selectedImg.length>0){
+			return (<View style={[{marginTop:40*DP}]}>
+						<SelectedMediaList layout={styles.img_square_round_336} items={selectedImg.map(v=>v?v.cropUri??v.uri:undefined)} onDelete={deletePhoto} />
+					</View>)}
+	}
+
 	const getCurrentScrollOffset = e => {
 		scrolloffset.current = e.nativeEvent.contentOffset.y;
 	};
+
+	const feedInput = () => {
+		return <HashInput
+			containerStyle={[temp_style.feedTextEdit]}
+			textAlignVertical={'top'}
+			multiline={true}
+			placeholder={showLostAnimalForm?"하고 싶은 말을 추가로 적어주세요":showReportForm?"내용 입력(최대 150자)":"게시물을 작성하세요 (150자)"}
+			onChangeText={inputFeedTxt}
+			// onChangeText={inputMissingTxt}
+			maxLength={150}
+			onFind={onFindTag}
+			selectedImg={selectedImg.map(v=>v?v.cropUri??v.uri:undefined)}
+			onDelete={deletePhoto}
+			value={editText}
+			showImages={!showReportForm && !showLostAnimalForm}
+			// value={feedText}
+			location={!showReportForm && !showLostAnimalForm ? param.feed_location : undefined}
+		/>
+	}
+
+
+	const render = ({item, index}) => {
+		return (
+			<View style={[login_style.wrp_main]} ref={container}>
+				{!(showLostAnimalForm||showReportForm)&&<View style={{width:'100%'}}>
+					<View style={{flexDirection:'row',alignItems:'center',paddingHorizontal:28*DP,justifyContent:'space-between',marginBottom:20*DP}}>
+						<CheckBoxItem style={{width:148*DP}} textStyle={[txt.noto26,{lineHeight:38*DP}]} onCheck={onSetDiary}>임보일기</CheckBoxItem>
+						<View style={{height:38*DP,width:2*DP,backgroundColor:GRAY10}}></View>
+						<RadioBoxGroup style={{flexDirection:'row',justifyContent:'space-between',width:484*DP}} onSelect={(item,index)=>console.log(item,index)}>
+							<RadioBoxItem textStyle={[txt.noto26,{lineHeight:38*DP}]}>전체공개</RadioBoxItem>
+							<RadioBoxItem textStyle={[txt.noto26,{lineHeight:38*DP}]}>비공개</RadioBoxItem>
+							<RadioBoxItem textStyle={[txt.noto26,{lineHeight:38*DP}]}>팔로워공개</RadioBoxItem>
+						</RadioBoxGroup>
+						{/* <View style={{width:474*DP,backgroundColor:'red'}}>
+							<RadioBoxItem items={['전체공개','비공개','팔로워공개']} width={160*DP}/>
+						</View> */}
+					</View>
+					{feedInput()}
+					{!isSearchTag && setWriteModeState()}
+				</View>}
+				{/* 긴급 게시 관련 버튼 클릭 시 출력되는 View */}
+				{setUrgBtnsClickedView()}
+			</View>
+		);
+	}
 
 	return (
 		<View style={{flex: 1, backgroundColor: '#FFF',paddingTop:30*DP}}>
@@ -336,56 +383,25 @@ export default FeedWrite = props => {
 				<View style={{backgroundColor: 'red', width: 50, height: 50}}></View>
 			</TouchableWithoutFeedback> */}
 			<FlatList
-				renderItem={({item, index}) => {
-					return (
-						<View contentContainerStyle={[login_style.wrp_main]} ref={container}>
-							<View style={{flexDirection:'row',alignItems:'center',paddingHorizontal:28*DP,justifyContent:'space-between'}}>
-								<CheckBoxItem style={{width:148*DP}} textStyle={[txt.noto26,{lineHeight:38*DP}]} onCheck={onSetDiary}>임보일기</CheckBoxItem>
-								<View style={{height:38*DP,width:2*DP,backgroundColor:GRAY10}}></View>
-								<RadioBoxGroup style={{flexDirection:'row',justifyContent:'space-between',width:484*DP}} onSelect={(item,index)=>console.log(item,index)}>
-									<RadioBoxItem textStyle={[txt.noto26,{lineHeight:38*DP}]}>전체공개</RadioBoxItem>
-									<RadioBoxItem textStyle={[txt.noto26,{lineHeight:38*DP}]}>비공개</RadioBoxItem>
-									<RadioBoxItem textStyle={[txt.noto26,{lineHeight:38*DP}]}>팔로워공개</RadioBoxItem>
-								</RadioBoxGroup>
-								{/* <View style={{width:474*DP,backgroundColor:'red'}}>
-									<RadioBoxItem items={['전체공개','비공개','팔로워공개']} width={160*DP}/>
-								</View> */}
-							</View>
-							<HashInput
-								containerStyle={[temp_style.feedTextEdit]}
-								textAlignVertical={'top'}
-								multiline={true}
-								placeholder="게시물을 작성하세요 (150자)"
-								onChangeText={inputFeedTxt}
-								// onChangeText={inputMissingTxt}
-								maxLength={150}
-								onFind={onFindTag}
-								selectedImg={selectedImg.map(v=>v?v.cropUri??v.uri:undefined)}
-								onDelete={deletePhoto}
-								value={editText}
-								// value={feedText}
-								location={!showReportForm && !showLostAnimalForm ? param.feed_location : undefined}
-							/>
-							{!isSearchTag && setWriteModeState()}
-						</View>
-					);
-				}}
+				renderItem={render}
 				data={[{}]}
 				keyboardShouldPersistTaps={'handled'}
 				ref={scrollref}
-				onScroll={getCurrentScrollOffset}></FlatList>
+				onScroll={getCurrentScrollOffset}
+			/>
+			{/* 긴급게시 플로팅 버튼 */}
 			{showUrgentBtns && !isSearchTag ? (
 				<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
 					{showActionButton ? (
-						<View>
+						<View style={{width:120*DP}}>
 							<TouchableWithoutFeedback onPress={onPressMissingWrite}>
-								<View style={[feedWrite.urgentBtnItemContainer, buttonstyle.shadow]}>
-									<Text style={[txt.noto32, {color: WHITE}]}>실종</Text>
+								<View style={[feedWrite.urgentBtnItemContainer]}>
+									<Text style={[txt.noto26, {color: WHITE}]}>실종</Text>
 								</View>
 							</TouchableWithoutFeedback>
 							<TouchableWithoutFeedback onPress={onPressReportWrite}>
-								<View style={[feedWrite.urgentBtnItemContainer, buttonstyle.shadow]}>
-									<Text style={[txt.noto32, {color: WHITE}]}>제보</Text>
+								<View style={[feedWrite.urgentBtnItemContainer,{backgroundColor:'#FFD153'}]}>
+									<Text style={[txt.noto26, {color: '#000'}]}>제보</Text>
 								</View>
 							</TouchableWithoutFeedback>
 						</View>
@@ -432,7 +448,7 @@ export const feedWrite = StyleSheet.create({
 		marginRight: 266 * DP,
 	},
 	urgentBtnContainer: {
-		width: 158 * DP,
+		width: 120 * DP,
 		// width: 110 * DP,
 		height: 332 * DP,
 		// height: 110 * DP,
@@ -442,12 +458,11 @@ export const feedWrite = StyleSheet.create({
 		justifyContent: 'flex-end',
 	},
 	urgentActionButton: {
-		width: 110 * DP,
-		height: 110 * DP,
+		width: 98 * DP,
+		height: 86 * DP,
 		alignSelf: 'flex-end',
-		// backgroundColor: 'white',
-		shadowColor: '#000000',
-		shadowOpacity: 0.2,
+		// shadowColor: '#000000',
+		// shadowOpacity: 0.2,
 		borderRadius: 40 * DP,
 		shadowOffset: {
 			width: 2,
@@ -461,10 +476,10 @@ export const feedWrite = StyleSheet.create({
 		// elevation: 1,
 	},
 	urgentBtnItemContainer: {
-		width: 158 * DP,
-		height: 90 * DP,
+		width: 120 * DP,
+		height: 68 * DP,
 		borderRadius: 40 * DP,
-		marginBottom: 30 * DP,
+		marginBottom: 20 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 		backgroundColor: 'red',
@@ -500,7 +515,7 @@ export const temp_style = StyleSheet.create({
 	feedTextEdit: {
 		width: 694 * DP,
 		minHeight: 376 * DP,
-		marginTop: 30 * DP,
+		marginTop: 12 * DP,
 		backgroundColor: '#FAFAFA',
 		alignSelf: 'center',
 		justifyContent:'space-between',

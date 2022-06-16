@@ -7,7 +7,7 @@ import ProfileImageMedium140 from 'Molecules/image/ProfileImageMedium140';
 import {shelterLabel} from 'Organism/style_organism copy';
 
 export default ShelterVerticalLabel = props => {
-	console.log('props', props.data);
+	// console.log('props', props.data);
 	const data = props.data;
 	return (
 		<View style={[shelterLabel.container]}>

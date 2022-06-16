@@ -27,6 +27,8 @@ import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailS
 import SaveButtonHeader from 'Root/navigation/header/SaveButtonHeader';
 import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
 import CommunityHeader from 'Root/navigation/header/CommunityHeader';
+import ChangePetProfileImage from 'Root/component/templete/pet/ChangePetProfileImage';
+import ProfileHeader from 'Root/navigation/header/ProfileHeader';
 
 const SearchStackNav = createStackNavigator();
 
@@ -41,11 +43,7 @@ export default SearchMainStack = props => {
 				}}>
 				{props => <SearchTabNavigation {...props} />}
 			</SearchStackNav.Screen>
-			<SearchStackNav.Screen
-				name="UserProfile"
-				component={Profile}
-				options={{header: props => <MeatBallHeader {...props} />, title: '피드 게시글'}}
-			/>
+			<SearchStackNav.Screen name="UserProfile" component={Profile} options={{header: props => <ProfileHeader {...props} />, title: '피드 게시글'}} />
 			<SearchStackNav.Screen
 				name="UserFeedList"
 				component={FeedList}
@@ -57,9 +55,14 @@ export default SearchMainStack = props => {
 				options={{header: props => <SimpleHeader {...props} />, title: '프로필 변경'}}
 			/>
 			<SearchStackNav.Screen
+				name="ChangePetProfileImage"
+				component={ChangePetProfileImage}
+				options={{header: props => <SimpleHeader {...props} />, title: '프로필 변경'}}
+			/>
+			<SearchStackNav.Screen
 				name="SocialRelation"
 				component={SocialRelationTopTabNavigation}
-				options={{header: props => <SimpleHeader {...props} />, title: '프로필'}}
+				options={{header: props => <InputAndSearchHeader {...props} isSocial />}}
 			/>
 			<SearchStackNav.Screen
 				name="FeedCommentList"

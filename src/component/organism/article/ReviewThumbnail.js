@@ -1,5 +1,6 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {BLACK, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
@@ -9,7 +10,7 @@ import {txt} from 'Root/config/textstyle';
  * @param {Object} props.photo_list - 사진 리스트
  * @param {void} props.onPressReviewContent - 사진 클릭
  */
-export default ArticleThumnails = props => {
+export default ReviewThumbnail = props => {
 	// console.log('props.photo_list', props.photo_list);
 	const photos = props.photo_list;
 
@@ -21,13 +22,17 @@ export default ArticleThumnails = props => {
 		if (photos.length == 3) {
 			return (
 				<View style={[style.photo3_right_photo]}>
-					<Image source={{uri: photos[2]}} style={[{flex: 1, borderBottomRightRadius: 30 * DP, backgroundColor: 'white'}]} resizeMode={'stretch'} />
+					<FastImage
+						source={{uri: photos[2]}}
+						style={[{flex: 1, borderBottomRightRadius: 30 * DP, backgroundColor: 'white'}]}
+						resizeMode={'stretch'}
+					/>
 				</View>
 			);
 		} else {
 			return (
 				<View style={[style.photo3_right_photo]}>
-					<Image source={{uri: photos[2]}} style={[style.photo3_right_photo, {borderBottomRightRadius: 30 * DP}]} resizeMode={'stretch'} />
+					<FastImage source={{uri: photos[2]}} style={[style.photo3_right_photo, {borderBottomRightRadius: 30 * DP}]} resizeMode={'stretch'} />
 					<View style={[style.photo3_right_opacity, {borderBottomRightRadius: 30 * DP}]}>
 						<Text style={[txt.roboto32b, style.text]}>+ {photos.length - 3}</Text>
 					</View>
@@ -38,16 +43,16 @@ export default ArticleThumnails = props => {
 
 	const content = () => {
 		if (photos.length == 1) {
-			return <Image source={{uri: photos[0]}} style={[style.photo_1]} />;
+			return <FastImage source={{uri: photos[0]}} style={[style.photo_1]} />;
 		} else if (photos.length == 2) {
 			return (
 				<View style={[style.photo_2_container]}>
-					<Image
+					<FastImage
 						source={{uri: photos[0]}}
 						style={[style.photo_2, {borderTopLeftRadius: 30 * DP, borderBottomLeftRadius: 30 * DP}]}
 						resizeMode={'stretch'}
 					/>
-					<Image
+					<FastImage
 						source={{uri: photos[1]}}
 						style={[style.photo_2, {borderTopRightRadius: 30 * DP, borderBottomRightRadius: 30 * DP}]}
 						resizeMode={'stretch'}
@@ -57,13 +62,13 @@ export default ArticleThumnails = props => {
 		} else if (photos.length >= 3) {
 			return (
 				<View style={[style.photo_3_container]}>
-					<Image
+					<FastImage
 						source={{uri: photos[0]}}
 						style={[style.photo3_first, {borderTopLeftRadius: 30 * DP, borderBottomLeftRadius: 30 * DP}]}
 						resizeMode={'stretch'}
 					/>
 					<View style={[style.photo3_right]}>
-						<Image source={{uri: photos[1]}} style={[style.photo3_right_photo, {borderTopRightRadius: 30 * DP}]} resizeMode={'stretch'} />
+						<FastImage source={{uri: photos[1]}} style={[style.photo3_right_photo, {borderTopRightRadius: 30 * DP}]} resizeMode={'stretch'} />
 						{getThirdPhoto()}
 					</View>
 				</View>
@@ -78,7 +83,7 @@ export default ArticleThumnails = props => {
 	);
 };
 
-ArticleThumnails.defaultProps = {
+ReviewThumbnail.defaultProps = {
 	photo_list: [],
 	onPressReviewContent: () => {},
 };

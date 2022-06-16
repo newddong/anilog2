@@ -1,17 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {
-	Text,
-	View,
-	ScrollView,
-	TouchableOpacity,
-	TextInput,
-	ActivityIndicator,
-	StyleSheet,
-	KeyboardAvoidingView,
-	Platform,
-	Keyboard,
-} from 'react-native';
+import {Text, View, ScrollView, TouchableOpacity, TextInput, StyleSheet, KeyboardAvoidingView, Platform} from 'react-native';
 import {GRAY10, GRAY40, APRI10, GRAY20, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {
@@ -28,22 +17,19 @@ import {
 } from 'Root/i18n/msg';
 import {btn_w114, btn_w194, btn_w242} from 'Atom/btn/btn_style';
 import {Arrow_Down_GRAY20, Edit46, NextMark} from 'Atom/icon';
-import AniButton from 'Molecules/button/AniButton';
-import ProfileImageLarge194 from 'Molecules/image/ProfileImageLarge194';
-import MyPetList from 'Organism/list/MyPetList';
-import {login_style, btn_style, temp_style, userInfoSetting_style, userInfoDetailSettting_style} from 'Templete/style_templete';
+import {login_style, temp_style, userInfoSetting_style} from 'Templete/style_templete';
 import userGlobalObject from 'Root/config/userGlobalObject';
 // import {getUserProfile} from 'Root/api/usermenuapi';
 import {getUserInfoById, getUserProfile, updateUserDetailInformation, updateUserIntroduction} from 'Root/api/userapi';
 import DP from 'Root/config/dp';
 import Loading from 'Root/component/molecules/modal/Loading';
-import ProfileImageMedium140 from 'Root/component/molecules/image/ProfileImageMedium140';
 import ProfileImageMedium148 from 'Root/component/molecules/image/ProfileImageMedium148';
 import {getInterestsList} from 'Root/api/interestsapi';
 import Input24 from 'Molecules/input/Input24';
 import {updateUserInformation, nicknameDuplicationCheck} from 'Root/api/userapi';
 import SelectInput from 'Root/component/molecules/button/SelectInput';
 import {getAddressList} from 'Root/api/address';
+
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 export default UserInfoSetting = ({route}) => {
 	const navigation = useNavigation();
@@ -75,7 +61,7 @@ export default UserInfoSetting = ({route}) => {
 			userObject => {
 				// console.log('userObject', userObject);
 				setData(userObject.msg);
-				console.log('userObject.msg', userObject.msg);
+				// console.log('userObject.msg', userObject.msg);
 				setUserDataLoaded(true);
 				navigation.setOptions({title: userGlobalObject.userInfo.user_nickname});
 			},
@@ -84,6 +70,7 @@ export default UserInfoSetting = ({route}) => {
 			},
 		);
 	};
+
 	// React.useEffect(() => {
 	// 	getAddressList(
 	// 		{},
@@ -121,7 +108,9 @@ export default UserInfoSetting = ({route}) => {
 			setContentInterest(temp);
 			setLocationInterest(data.user_interests.interests_location);
 			// setLoaded(true);
+
 			getAddresses();
+
 		}
 	}, [userDataLoaded]);
 	React.useEffect(() => {
@@ -168,6 +157,7 @@ export default UserInfoSetting = ({route}) => {
 	// const onPressChangePwd = () => {
 	// 	navigation.push('ChangePassword', data.user_password);
 	// };
+
 	//지역 모달에 사용될 지역정보 얻어오기
 	const getAddresses = () => {
 		getAddressList(
@@ -185,6 +175,7 @@ export default UserInfoSetting = ({route}) => {
 			err => Modal.alert(err),
 		);
 	};
+
 
 	//User_intro 수정 버튼 클릭
 	const modify_userIntro = () => {
@@ -248,6 +239,71 @@ export default UserInfoSetting = ({route}) => {
 		} else {
 			setData({...data, user_introduction: text});
 		}
+	};
+	const modifyNickNameButton = () => {
+		if (nickNameEdit) {
+			console.log('닉네임 저장되어야함');
+			updateUserInformation(
+				{
+					userobject_id: data._id,
+					user_nickname: newNick == '' ? data.user_nickname : newNick,
+				},
+				success => {
+					// Modal.close();
+					if (data.user_type == 'user') {
+						setNewNick(newNick);
+						userGlobalObject.userInfo.user_nickname = newNick;
+						userGlobalObject.userInfo.user_profile_uri = data.user_profile_uri;
+					}
+					// navigation.navigate({
+					// 	name: route.params.routeInfo.name,
+					// 	key: route.params.routeInfo.key,
+					// 	params: {changedPhoto: data.user_profile_uri},
+					// 	merge: true,
+					// });
+				},
+				// console.log('userObject', userObject);
+				err => {
+					Modal.close();
+					console.log('err', err);
+				},
+			);
+		}
+		setNickNameEdit(!nickNameEdit);
+	};
+
+	const nickName_validator = text => {
+		setNewNick(text);
+	};
+	//중복 처리
+	const checkDuplicateNickname = nick => {
+		nicknameDuplicationCheck(
+			{user_nickname: nick},
+			isDuplicated => {
+				setDuplicated(isDuplicated.msg);
+			},
+
+			err => {
+				console.log('duplicated check', err);
+			},
+		);
+	};
+	const validateNewNick = nick => {
+		let regExp = /^[가-힣a-zA-Z0-9_]{2,20}$/;
+		setValidated(regExp.test(nick));
+		if (userGlobalObject.userInfo.user_type == 'user') {
+			console.log('닉네임중복인가? ', checkDuplicateNickname(nick));
+			return regExp.test(nick) && !checkDuplicateNickname(nick);
+		} else {
+			return regExp.test(nick);
+		}
+	};
+	const onValidName = isValid => {
+		setConfirmed(isValid);
+	};
+	//새 닉네임 지우기 마크 클릭
+	const onClearNickname = () => {
+		setConfirmed(false);
 	};
 
 	const nickName_validator = text => {
@@ -575,7 +631,6 @@ export default UserInfoSetting = ({route}) => {
 							</TouchableOpacity>
 						</View>
 					)}
-
 					<View style={[userInfoDetailSettting_style.interestTagList]}>
 						<InterestTagList
 							onPressAddBtn={onPressAddInterestLocation}

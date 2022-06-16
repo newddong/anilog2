@@ -15,6 +15,8 @@ import {getPettypes} from 'Root/api/userapi';
 import Modal from 'Component/modal/Modal';
 import {Arrow_Down_BLACK, Arrow_Down_GRAY10} from 'Root/component/atom/icon';
 import ArrowButton from 'Root/component/molecules/button/ArrowButton';
+import RadioBoxGroup from 'Root/component/molecules/select/RadioBoxGroup';
+import RadioBoxItem from 'Root/component/molecules/select/RadioBoxItem';
 
 export default AssignPetInfoA = props => {
 	const navigation = useNavigation();
@@ -180,7 +182,12 @@ export default AssignPetInfoA = props => {
 				<View style={[assignPetInfo_style.line3]}>
 					<Text style={[temp_style.text_assignPetInfo, txt.noto28]}>중성화</Text>
 					<View style={[assignPetInfo_style.tabSelectFilled_Type1]}>
-						<RadioBox items={[YES, NO, UNAWARENESS]} onSelect={onSelectNeutralization} defaultSelect={getDefaultNeutralization()} />
+						{/* <RadioBox items={[YES, NO, UNAWARENESS]} onSelect={onSelectNeutralization} defaultSelect={getDefaultNeutralization()} /> */}
+						<RadioBoxGroup style={{width: 400 * DP, flexDirection: 'row'}} onSelect={(item, index) => console.log(item, index)}>
+							<RadioBoxItem style={{width: 170 * DP}}>{YES}</RadioBoxItem>
+							<RadioBoxItem style={{width: 170 * DP}}>{NO}</RadioBoxItem>
+							<RadioBoxItem style={{width: 170 * DP}}>{UNAWARENESS}</RadioBoxItem>
+						</RadioBoxGroup>
 					</View>
 				</View>
 			</View>

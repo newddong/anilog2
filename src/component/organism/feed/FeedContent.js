@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, Platform, StyleSheet, TouchableOpacity} from 'react-native';
+import {Text, View, Platform, StyleSheet, TouchableOpacity, Dimensions} from 'react-native';
 import {organism_style, feedContent_style} from 'Organism/style_organism';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
 import {useNavigation, useRoute} from '@react-navigation/core';
@@ -202,7 +202,6 @@ export default FeedContent = props => {
 				() => {
 					followUser(
 						{
-							// follow_userobject_id: props.data.feed_avatar_id ? props.data.feed_avatar_id._id : props.data.feed_writer_id._id,
 							follow_userobject_id: feed_writer._id,
 						},
 						result => {
@@ -312,11 +311,43 @@ export default FeedContent = props => {
 		}, 100);
 	};
 
+	const meatBallSelectAction = (selected, context) => {
+		switch (selected) {
+			case '수정':
+				onPressEdit();
+				break;
+			case '삭제':
+				onPressDelete();
+				break;
+			case '팔로우 취소':
+				onPressCancelFollow();
+				break;
+			case '팔로우':
+				onPressFollow();
+				break;
+			case '신고':
+				onPressReport(context);
+				break;
+			case '쪽지 보내기':
+				onPressSendMsg(context._id);
+				break;
+			case '즐겨찾기':
+				onFavorite(true);
+				break;
+			case '즐겨찾기 취소':
+				onFavorite(false);
+				break;
+			case '공유하기':
+				onPressShare();
+				break;
+
+			default:
+				break;
+		}
+		Modal.close();
+	};
+
 	const meatballActions = context => {
-		//피드 미트볼 메뉴 팝업 분기에 대한 기획의도가 불분명한 상태이므로
-		//출력되는 메뉴에 대한 분기처리는 차후 처리 (현재는 더미로 적용)
-		// console.log('context / FeedContent', context);
-		// console.log('props.data', props.data);
 		let isFavorite = context.favorite_feeds.some(feed => feed._id == _id);
 		console.log('즐겨찾기됨?', isFavorite);
 		let isMyFeed = userGlobalObject.userInfo._id == props.data.feed_writer_id._id;
@@ -327,14 +358,7 @@ export default FeedContent = props => {
 				Modal.popSelectBoxModal(
 					FEED_MEATBALL_MENU_MY_FEED,
 					selectedItem => {
-						if (selectedItem == '공유하기') {
-							onPressShare();
-						} else if (selectedItem == '수정') {
-							onPressEdit();
-						} else if (selectedItem == '삭제') {
-							onPressDelete();
-						}
-						Modal.close();
+						meatBallSelectAction(selectedItem, context);
 					},
 					() => Modal.close(),
 					false,
@@ -350,61 +374,18 @@ export default FeedContent = props => {
 						result.msg.map((v, i) => {
 							follow_id_list.push(v.follower_id._id);
 						});
-						// let isFollowers = follow_id_list.includes(props.data.feed_avatar_id ? props.data.feed_avatar_id._id : props.data.feed_writer_id._id); //해당 피드 게시글 작성자가 내 팔로워 목록에 있는지 여부
+						console.log('follow_id_list', follow_id_list);
 						let isFollowers = follow_id_list.includes(feed_writer._id); //해당 피드 게시글 작성자가 내 팔로워 목록에 있는지 여부
 						//현재 팔로우 상태 중인 유저의 피드글의 미트볼 헤더 클릭
-						if (isFollowers) {
-							//내가 팔로우하고 있는 유저의 피드게시글
-							Modal.popSelectBoxModal(
-								!isFavorite ? FEED_MEATBALL_MENU_FOLLOWING : FEED_MEATBALL_MENU_FOLLOWING_UNFAVORITE,
-								selectedItem => {
-									Modal.close();
-									if (selectedItem == '신고') {
-										onPressReport(context);
-									} else if (selectedItem == '공유하기') {
-										onPressShare();
-									} else if (selectedItem == '팔로우 취소') {
-										onPressCancelFollow();
-									} else if (selectedItem == '쪽지 보내기') {
-										onPressSendMsg(context._id);
-									} else if (selectedItem == '즐겨찾기') {
-										onFavorite(true);
-									} else if (selectedItem == '즐겨찾기 취소') {
-										onFavorite(false);
-									}
-								},
-								() => Modal.close(),
-								false,
-								'',
-							);
-						} else {
-							//현재 팔로우 상태 중이지 않은 유저의 피드글의 미트볼 헤더 클릭
-							Modal.popSelectBoxModal(
-								!isFavorite ? FEED_MEATBALL_MENU_UNFOLLOWING : FEED_MEATBALL_MENU_UNFOLLOWING_UNFAVORITE,
-								selectedItem => {
-									// alert(selectedItem);
-									if (selectedItem == '신고') {
-										onPressReport(context);
-									} else if (selectedItem == '팔로우') {
-										onPressFollow();
-									} else if (selectedItem == '공유하기') {
-										onPressShare();
-									} else if (selectedItem == '팔로우 취소') {
-										onPressCancelFollow();
-									} else if (selectedItem == '쪽지 보내기') {
-										onPressSendMsg(context._id);
-									} else if (selectedItem == '즐겨찾기') {
-										onFavorite(true);
-									} else if (selectedItem == '즐겨찾기 취소') {
-										onFavorite(false);
-									}
-									Modal.close();
-								},
-								() => Modal.close(),
-								false,
-								'',
-							);
-						}
+						Modal.popSelectBoxModal(
+							['쪽지 보내기', isFollowers ? '팔로우 취소' : '팔로우', '신고'],
+							selectedItem => {
+								meatBallSelectAction(selectedItem, context);
+							},
+							() => Modal.close(),
+							false,
+							'',
+						);
 					},
 					err => {
 						console.log('err / getFollows : FeedContent /', err);
@@ -418,18 +399,7 @@ export default FeedContent = props => {
 				Modal.popSelectBoxModal(
 					['수정', '삭제'],
 					selectedItem => {
-						console.log(selectedItem);
-						if (selectedItem == '상태변경') {
-							// onPressReport();
-						} else if (selectedItem == '공유하기') {
-							onPressShare();
-						} else if (selectedItem == '수정') {
-							onPressEdit();
-							navigation.navigate('FeedEdit', props.data);
-						} else if (selectedItem == '삭제') {
-							onPressDelete();
-						}
-						Modal.close();
+						meatBallSelectAction(selectedItem, context);
 					},
 					() => Modal.close(),
 					false,
@@ -437,31 +407,31 @@ export default FeedContent = props => {
 				);
 			} else if (!isMyFeed) {
 				// 긴급피드 올린 작성자가 아닐 경우
-				Modal.popSelectBoxModal(
-					// FEED_MEATBALL_MENU,
-					!isFavorite ? FEED_MEATBALL_MENU_UNFOLLOWING : FEED_MEATBALL_MENU_UNFOLLOWING_UNFAVORITE,
-					selectedItem => {
-						if (selectedItem == '신고') {
-							onPressReport(context);
-						} else if (selectedItem == '팔로우') {
-							onPressFollow();
-						} else if (selectedItem == '공유하기') {
-							onPressShare();
-						} else if (selectedItem == '팔로우 취소') {
-							onPressCancelFollow();
-						} else if (selectedItem == '쪽지 보내기') {
-							onPressSendMsg(context._id);
-						} else if (selectedItem == '즐겨찾기') {
-							onFavorite(true);
-						} else if (selectedItem == '즐겨찾기 취소') {
-							onFavorite(false);
-						}
-						Modal.close();
-						Modal.close();
+				getFollows(
+					{userobject_id: userGlobalObject.userInfo._id},
+					result => {
+						console.log('getFollows / FeedContent : ', result.msg);
+						let follow_id_list = [];
+						result.msg.map((v, i) => {
+							follow_id_list.push(v.follower_id._id);
+						});
+						console.log('follow_id_list', follow_id_list);
+						// let isFollowers = follow_id_list.includes(props.data.feed_avatar_id ? props.data.feed_avatar_id._id : props.data.feed_writer_id._id); //해당 피드 게시글 작성자가 내 팔로워 목록에 있는지 여부
+						let isFollowers = follow_id_list.includes(feed_writer._id); //해당 피드 게시글 작성자가 내 팔로워 목록에 있는지 여부
+						Modal.popSelectBoxModal(
+							// FEED_MEATBALL_MENU,
+							['쪽지 보내기', isFollowers ? '팔로우 취소' : '팔로우', '신고'],
+							selectedItem => {
+								meatBallSelectAction(selectedItem, context);
+							},
+							() => Modal.close(),
+							false,
+							'',
+						);
 					},
-					() => Modal.close(),
-					false,
-					'',
+					err => {
+						console.log('Error / getFollows / FeedContent : ', err);
+					},
 				);
 			}
 		}
@@ -512,7 +482,7 @@ export default FeedContent = props => {
 			props.onPressFavorite && props.onPressFavorite(bool);
 		}
 	};
-	const lines = getLinesOfString(feed_content, 55);
+	const lines = getLinesOfString(feed_content, 52);
 
 	const layoutStyle = () => {
 		if (isMissingReportRoute || show) {
@@ -649,14 +619,13 @@ export default FeedContent = props => {
 								<FavoriteTag48_Border onPress={() => onFavorite(true)} />
 							)}
 						</View>
-					</View>
+				  </View>
 				</View>
-
 				{(route.name.includes('FeedList') || feed_type == 'missing' || route.name.includes('FeedCommentList')) && (
 					<View style={[organism_style.content_feedContent, /*feedContent_style.content_Top10,*/ {width: 750 * DP, paddingHorizontal: 28 * DP}]}>
 						<HashText
 							style={[txt.noto28]}
-							byteOfLine={53}
+							byteOfLine={52}
 							onMoreView={() => {
 								setShow(true);
 							}}>

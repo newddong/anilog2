@@ -11,6 +11,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/core';
 import AutoHeightWebView from 'Root/module/AutoHeightWebview';
+import FastImage from 'react-native-fast-image';
 /**
  * 게시글 컨텐츠
  * @param {object} props - Props Object
@@ -102,7 +103,7 @@ const ArticleContent = props => {
 			} else {
 				return (
 					<TouchableOpacity key={i} activeOpacity={0.8} onPress={() => onPressImage(v.image)}>
-						<Image style={[styles.img_square_round_654, {marginVertical: 10 * DP}]} source={{uri: v.image}} resizeMode={'stretch'} />
+						<FastImage style={[styles.img_square_round_654, {marginVertical: 10 * DP}]} source={{uri: v.image}} resizeMode={'stretch'} />
 					</TouchableOpacity>
 				);
 			}

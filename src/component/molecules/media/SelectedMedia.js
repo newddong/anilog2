@@ -1,9 +1,10 @@
 import React from 'react';
-import {View, Image, TouchableOpacity} from 'react-native';
+import {View, Image} from 'react-native';
 import DP from 'Root/config/dp';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import {Cancel48, Cancel62, Cancel36} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
+import FastImage from 'react-native-fast-image';
 
 /**
  * 갤러리에서 불러온 사진 박스
@@ -18,7 +19,7 @@ const SelectedMedia = props => {
 	};
 	return (
 		<View style={props.layout}>
-			<Image source={{uri: props.media_uri || DEFAULT_PROFILE}} style={props.layout} />
+			<Image source={{uri: props.media_uri}} style={props.layout} />
 			<View
 				style={{
 					position: 'absolute',
@@ -37,7 +38,7 @@ const SelectedMedia = props => {
 						shadowOpacity: 0.1,
 					}}>
 					{/* 190 크기의 selectMedia를 호출한 경우 Cancel 마크 크기는 더 작게 */}
-					{props.layout == styles.img_square_round_190 ? <Cancel36 onPress={onDelete} /> : <Cancel62 onPress={onDelete} />}
+					{(props.layout == styles.img_square_round_190||props.layout == styles.img_square_round_336) ? <Cancel36 onPress={onDelete} /> : <Cancel62 onPress={onDelete} />}
 				</View>
 			</View>
 		</View>

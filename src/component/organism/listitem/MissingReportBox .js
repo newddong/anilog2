@@ -5,6 +5,7 @@ import {BLACK, GRAY10, GRAY40, MAINBLACK, WHITE} from 'Root/config/color';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
+import FastImage from 'react-native-fast-image';
 /**
  * 알람 리스트 출력 컴포넌트
  * @param {object} props - Props Object
@@ -59,7 +60,7 @@ const MissingReportBox = props => {
 						<View style={[styles.absolute_missing]}>
 							<Text style={[txt.noto20, {color: '#FFFFFF'}, {textAlign: 'center'}, {margin: 6 * DP}]}>실종</Text>
 						</View>
-						<Image
+						<FastImage
 							style={[styles.img_156]}
 							source={{
 								uri: props.data.feed_thumbnail,
@@ -82,7 +83,7 @@ const MissingReportBox = props => {
 						<View style={[styles.absolute_report]}>
 							<Text style={[txt.noto20, {color: MAINBLACK}, {textAlign: 'center'}, {margin: 6 * DP}]}>제보</Text>
 						</View>
-						<Image
+						<FastImage
 							style={[styles.img_156]}
 							source={{
 								uri: props.data.feed_thumbnail,

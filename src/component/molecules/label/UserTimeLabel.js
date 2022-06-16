@@ -8,6 +8,7 @@ import {styles} from 'Atom/image/imageStyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import {ProfileDefaultImg} from 'Root/component/atom/icon';
+import FastImage from 'react-native-fast-image';
 
 /**
  *  반려동물의 프로필 사진, 유저의 닉네임, 시간 정보를 출력하는 라벨
@@ -42,7 +43,7 @@ const UserTimeLabel = props => {
 			<TouchableOpacity onPress={onClickLabel}>
 				{data ? (
 					data.user_profile_uri ? (
-						<Image source={{uri: data.user_profile_uri}} style={styles.img_round_46} />
+						<FastImage source={{uri: data.user_profile_uri}} style={styles.img_round_46} />
 					) : (
 						<ProfileDefaultImg size={styles.img_round_46} />
 					)

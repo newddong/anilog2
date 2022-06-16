@@ -30,6 +30,9 @@ import MissingAnimalDetail from 'Templete/missing/MissingAnimalDetail';
 import ReportDetail from 'Templete/missing/ReportDetail';
 import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballHeader';
 import CommunityHeader from 'Root/navigation/header/CommunityHeader';
+import ChangePetProfileImage from 'Root/component/templete/pet/ChangePetProfileImage';
+import ProfileHeader from 'Root/navigation/header/ProfileHeader';
+import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 const FeedStack = createStackNavigator();
 
 export default FeedStackNavigation = props => {
@@ -40,11 +43,11 @@ export default FeedStackNavigation = props => {
 	return (
 		<FeedStack.Navigator initialRouteName="MainHomeFeedList">
 			<FeedStack.Screen name="MainHomeFeedList" component={FeedList} options={{header: props => <LogoHeader {...props} />}} />
-			<FeedStack.Screen name="UserProfile" component={Profile} options={{header: props => <MeatBallHeader {...props} />, title: '프로필'}} />
+			<FeedStack.Screen name="UserProfile" component={Profile} options={{header: props => <ProfileHeader {...props} />, title: '프로필'}} />
 			<FeedStack.Screen
 				name="SocialRelation"
 				component={SocialRelationTopTabNavigation}
-				options={{header: props => <SimpleHeader {...props} />, title: '프로필'}}
+				options={{header: props => <InputAndSearchHeader {...props} isSocial />}}
 			/>
 			<FeedStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: '프로필'}} />
 			<FeedStack.Screen name="HashFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: '프로필'}} />
@@ -65,6 +68,11 @@ export default FeedStackNavigation = props => {
 			<FeedStack.Screen
 				name="ChangeUserProfileImage"
 				component={ChangeUserProfileImage}
+				options={{header: props => <SimpleHeader {...props} />, title: '프로필 변경'}}
+			/>
+			<FeedStack.Screen
+				name="ChangePetProfileImage"
+				component={ChangePetProfileImage}
 				options={{header: props => <SimpleHeader {...props} />, title: '프로필 변경'}}
 			/>
 

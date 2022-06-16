@@ -7,6 +7,7 @@ import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import moment from 'moment';
 import DP from 'Root/config/dp';
+import FastImage from 'react-native-fast-image';
 
 /**
  * 후기 요약 컴포넌트 아이템
@@ -117,7 +118,7 @@ const ReviewFavoriteBriefItem = props => {
 				<></>
 			) : (
 				<View style={[style.img]}>
-					<Image style={{borderRadius: 30 * DP, width: 186 * DP, height: 186 * DP}} source={{uri: image[0]}} />
+					<FastImage style={{borderRadius: 30 * DP, width: 186 * DP, height: 186 * DP}} source={{uri: image[0]}} />
 				</View>
 			)}
 			<View style={[style.content]}>

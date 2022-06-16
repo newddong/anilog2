@@ -21,6 +21,7 @@ import MissingReportItem from 'Root/component/organism/listitem/MissingReportIte
 import {NETWORK_ERROR, PROTECT_REQUEST_DETAIL_LIMIT} from 'Root/i18n/msg';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import DP from 'Root/config/dp';
+import FastImage from 'react-native-fast-image';
 export default ReportDetail = props => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
@@ -316,7 +317,7 @@ export default ReportDetail = props => {
 						{data.feed_medias != undefined &&
 							data.feed_medias.map((val, idx) => (
 								<TouchableOpacity onPress={onPressReqeustPhoto} activeOpacity={0.8} key={idx}>
-									<Image source={{uri: val.media_uri}} style={[styles.img_square_round_694]} />
+									<FastImage source={{uri: val.media_uri}} style={[styles.img_square_round_694]} />
 									<View style={[style.swiper_index]}>
 										<Text style={[txt.roboto24, {color: WHITE}]}>
 											{idx + 1}/{data.feed_medias.length}

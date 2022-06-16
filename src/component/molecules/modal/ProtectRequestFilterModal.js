@@ -886,6 +886,7 @@ const ShelterSelectBox = props => {
 
 	const render = ({item, index}) => {
 		const checked = item.state;
+		console.log('item.user_nickname', item.user_nickname);
 		return (
 			<>
 				<TouchableOpacity activeOpacity={0.6} onPress={() => onSelect(index)} style={[style.shelterItemCont]}>
@@ -918,7 +919,7 @@ const ShelterSelectBox = props => {
 			</TouchableOpacity>
 			<TouchableOpacity activeOpacity={1} style={[{flex: 1, alignItems: 'center', backgroundColor: 'white'}]}>
 				<FlatList
-					data={data}
+					data={data.filter(e => e.user_nickname != undefined)}
 					showsVerticalScrollIndicator={false}
 					renderItem={render}
 					ListEmptyComponent={<ListEmptyInfo text={'해당 지역에 위치한 보호소가 없습니다.'} />}

@@ -142,7 +142,7 @@ export default FeedContent = props => {
 						},
 					);
 				},
-				'신고',
+				'신고하기',
 			);
 		}, 100);
 	};
@@ -163,35 +163,29 @@ export default FeedContent = props => {
 	const onPressCancelFollow = () => {
 		Modal.close();
 		setTimeout(() => {
-			Modal.popTwoBtn(
-				feed_writer.user_nickname + '님을 팔로우 취소하시겠습니까?',
-				'아니오',
-				'팔로우 취소',
-				() => {
-					Modal.close();
-				},
-				() => {
-					unFollowUser(
-						{
-							follow_userobject_id: feed_writer._id,
-						},
-						result => {
-							// console.log('result / unFollowUser / FeedContent', result.msg);
-							Modal.close();
+			Modal.popOneBtn('이 계정을 팔로우 취소하시겠습니까?', '팔로우 취소', () => {
+				unFollowUser(
+					{
+						// follow_userobject_id: props.data.feed_avatar_id ? props.data.feed_avatar_id._id : props.data.feed_writer_id._id,
+						follow_userobject_id: feed_writer._id,
+					},
+					result => {
+						// console.log('result / unFollowUser / FeedContent', result.msg);
+						Modal.close();
+						// Modal.popNoBtn(props.data.feed_writer_id.user_nickname + '님을 \n 팔로우 취소하였습니다.');
+						setTimeout(() => {
+							Modal.popNoBtn(feed_writer.user_nickname + '님을 \n 팔로우 취소하였습니다.');
 							setTimeout(() => {
-								Modal.popNoBtn(feed_writer.user_nickname + '님을 \n 팔로우 취소하였습니다.');
-								setTimeout(() => {
-									Modal.close();
-								}, 2000);
-							}, 100);
-						},
-						err => {
-							console.log('err / unFollowUser / FeedContent', err);
-							Modal.close();
-						},
-					);
-				},
-			);
+								Modal.close();
+							}, 2000);
+						}, 100);
+					},
+					err => {
+						console.log('err / unFollowUser / FeedContent', err);
+						Modal.close();
+					},
+				);
+			});
 		}, 100);
 	};
 
@@ -268,15 +262,18 @@ export default FeedContent = props => {
 		// console.log('삭제');
 		console.log('props.data before Delete', props.data._id);
 		setTimeout(() => {
-			Modal.popTwoBtn(
-				'정말로 이 게시글을 \n 삭제하시겠습니까?',
-				'아니오',
-				'예',
-				() => Modal.close(),
-				() => {
-					props.deleteFeed(props.data._id);
-				},
-			);
+			// Modal.popTwoBtn(
+			// 	'정말로 이 게시글을 \n 삭제하시겠습니까?',
+			// 	'아니오',
+			// 	'예',
+			// 	() => Modal.close(),
+			// 	() => {
+			// 		props.deleteFeed(props.data._id);
+			// 	},
+			// );
+			Modal.popOneBtn('이 게시글을 삭제하시겠습니까?', '삭제', () => {
+				props.deleteFeed(props.data._id);
+			});
 		}, 200);
 	};
 
@@ -616,10 +613,10 @@ export default FeedContent = props => {
 					</View>
 					<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
 						<View style={[organism_style.favoriteTag_feedContent]}>
-							{(props.data.feed_writer_id?.is_favorite || isFavorite) ? (
+							{props.data.feed_writer_id?.is_favorite || isFavorite ? (
 								<FavoriteTag48_Filled onPress={() => onFavorite(false)} />
 							) : (
-								<FavoriteTag48_Border onPress={() => onFavorite(true)}/>
+								<FavoriteTag48_Border onPress={() => onFavorite(true)} />
 							)}
 						</View>
 				  </View>

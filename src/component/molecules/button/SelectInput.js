@@ -15,6 +15,7 @@ import {txt} from 'Root/config/textstyle';
  * @param {number} props.fontSize - 인풋 너비
  * @param {()=>void} props.onPressInput - 버튼을 눌렸을때 동작하는 콜백, 제목 반환환
  * @param {boolean} props.noBorder - 하단 테두리
+ * @param {height} props.height
  */
 const SelectInput = props => {
 	const onPressInput = () => {
@@ -31,6 +32,7 @@ const SelectInput = props => {
 				{
 					width: props.width * DP,
 					borderBottomColor: props.noBorder ? WHITE : APRI10,
+					height: props.height * DP,
 					// borderBottomColor: isDefault ? GRAY30 : APRI10,
 				},
 			]}>
@@ -56,7 +58,7 @@ const SelectInput = props => {
 
 const styles = StyleSheet.create({
 	container: {
-		height: 82 * DP,
+		// height: 82 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 		borderBottomColor: APRI10,
@@ -67,6 +69,7 @@ const styles = StyleSheet.create({
 
 SelectInput.defaultProps = {
 	width: 202,
+	height: 82,
 	textColor: 'black',
 	value: 'Default',
 	onPressInput: () => {},

@@ -264,7 +264,7 @@ const CommunityList = React.memo(props => {
 									selectedItem => {
 										alert(selectedItem);
 									},
-									'신고',
+									'신고하기',
 								);
 							}, 200);
 						}

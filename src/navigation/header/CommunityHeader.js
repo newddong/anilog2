@@ -47,7 +47,7 @@ export default CommunityHeader = ({navigation, route, options, back}) => {
 							},
 						);
 					},
-					'신고',
+					'신고하기',
 				);
 			}, 200);
 		}

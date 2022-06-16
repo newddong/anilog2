@@ -108,7 +108,7 @@ export default ProtectRequest = React.memo(props => {
 							</Text>
 							<Text style={[txt.noto28]}>등&nbsp; 록&nbsp; 일 : {getParsedDate()}</Text>
 							<Text style={[txt.noto28, {maxWidth: props.selectMode ? 320 * DP : 380 * DP}]} numberOfLines={1}>
-								보호장소 :{' '}
+								보호장소 :
 								{data.protect_request_writer_id.length
 									? data.protect_request_writer_id[0].user_nickname
 									: data.protect_request_writer_id.user_nickname}

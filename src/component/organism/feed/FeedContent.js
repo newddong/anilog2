@@ -485,7 +485,7 @@ export default FeedContent = props => {
 			props.onPressFavorite && props.onPressFavorite(bool);
 		}
 	};
-	const lines = getLinesOfString(feed_content, 55);
+	const lines = getLinesOfString(feed_content, 52);
 
 	const layoutStyle = () => {
 		if (isMissingReportRoute || show) {
@@ -623,12 +623,12 @@ export default FeedContent = props => {
 							)}
 						</View>
 				  </View>
-
+				</View>
 				{(route.name.includes('FeedList') || feed_type == 'missing' || route.name.includes('FeedCommentList')) && (
 					<View style={[organism_style.content_feedContent, /*feedContent_style.content_Top10,*/ {width: 750 * DP, paddingHorizontal: 28 * DP}]}>
 						<HashText
 							style={[txt.noto28]}
-							byteOfLine={55}
+							byteOfLine={52}
 							onMoreView={() => {
 								setShow(true);
 							}}>

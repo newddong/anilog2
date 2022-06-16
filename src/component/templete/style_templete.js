@@ -4375,7 +4375,7 @@ export const feedWrite = StyleSheet.create({
 	},
 	buttonContainer: {
 		flexDirection: 'row',
-		paddingHorizontal: 48 * DP,
+		// paddingHorizontal: 48 * DP,
 		height: 54 * DP,
 		marginTop: 30 * DP,
 		alignItems: 'center',

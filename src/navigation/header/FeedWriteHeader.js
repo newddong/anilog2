@@ -5,7 +5,7 @@ import DP from 'Root/config/dp';
 import {WHITE, APRI10, GRAY10, GRAY40} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
-import {RED} from 'Root/config/color';
+import {RED10} from 'Root/config/color';
 import {createFeed, createMissing, createReport, editFeed, editMissingReport, getFeedDetailById} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 
@@ -107,8 +107,8 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 						let check = /^[0-9]+$/;
 						if (data.missing_animal_lost_location.city == '광역시, 도' || data.missing_animal_lost_location.district == '구를 선택') {
 							Modal.alert('실종위치는 반드시 \n선택해주셔야합니다!');
-						} else if (!check.test(data.missing_animal_age)) {
-							Modal.alert('실종동물의 나이는 \n숫자만 입력가능합니다!');
+						/*} else if (!check.test(data.missing_animal_age)) {
+							Modal.alert('실종동물의 나이는 \n숫자만 입력가능합니다!');*/
 						} else if (data.missing_animal_date == '눌러서 지정해주세요!') {
 							Modal.alert('실종 날짜를 선택해주세요.');
 						} else if (
@@ -235,8 +235,8 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			let check = /^[0-9]+$/;
 			if (data.missing_animal_lost_location.city == '광역시, 도' || data.missing_animal_lost_location.district == '구를 선택') {
 				Modal.alert('실종위치는 반드시 \n선택해주셔야합니다!');
-			} else if (!check.test(data.missing_animal_age)) {
-				Modal.alert('실종동물의 나이는 \n숫자만 입력가능합니다!');
+			/*} else if (!check.test(data.missing_animal_age)) {
+				Modal.alert('실종동물의 나이는 \n숫자만 입력가능합니다!');*/
 			} else if (
 				data.missing_animal_species &&
 				data.missing_animal_species_detail &&
@@ -276,8 +276,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 		}
 	};
 
-	const titleStyle = [{textAlign: 'center'}, txt.noto40b, route.params?.feedType != 'Feed' ? {color: RED} : {color: '#000'}];
-
+	const titleStyle = [{textAlign: 'center'}, txt.noto40b, route.params?.feedType != 'Feed' ? {color: RED10} : {color: '#000'}];
 	const avartarSelect = () => {
 		Modal.popAvatarSelectModal(petObject => {
 			console.log('petObject / onOk', petObject);

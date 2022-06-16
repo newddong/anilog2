@@ -172,8 +172,11 @@ export default MissingForm = props => {
 	};
 
 	const inputAge = age => {
-		console.log('나이',age)
-		setData({...data, missing_animal_age: age});
+		let ag = Date.now()-new Date(age);
+		let day = Math.floor(ag/1000/60/60/24);
+		let yr = day/365;
+		console.log(yr+'년'+day+'일')
+		setData({...data, missing_animal_age: yr});
 	};
 	const inputLocation = location => {
 		setData({...data, missing_animal_lost_location: location});
@@ -426,6 +429,26 @@ export default MissingForm = props => {
 
 	const feedInput = props.feedInput();
 	
+	const animalAge = () => {
+		let yr = data.missing_animal_age;
+		let month = Math.floor((yr - Math.floor(yr))*12);
+		if(yr>=1){
+			
+			return Math.floor(yr)+'살'+(month>0?' '+month+'개월':'');
+		}else{
+			return month+'개월';
+		}
+		
+	}
+
+	const animalBirth = () => {
+		let yr = data.missing_animal_age;
+		let day = Math.floor(yr*365);
+		let now = new Date();
+		let birth = new Date(now.setDate(now.getDate()-day));
+		return birth.toLocaleString().substring(0,11).replace('-','.').replace('-','.')
+	}	
+
 
 	return (
 		<View style={[feedWrite.inputForm]} showsVerticalScrollIndicator={false}>
@@ -454,7 +477,7 @@ export default MissingForm = props => {
 			{/* DatePicker */}
 			<View style={[feedWrite.kindCont,{marginTop:60*DP,alignItems:'center'}]}>
 				<Text style={[txt.noto28]}>실종 날짜</Text>
-				<DatePicker width={550} onDateChange={onDateChange} defaultDate={'눌러서 지정!'} future={false} />
+				<DatePicker width={550} onDateChange={onDateChange} defaultDate={data.missing_animal_date.length>0?data.missing_animal_date.substring(0,10).replace('-','.').replace('-','.'):'눌러서 지정'} future={false} />
 			</View>
 			{/* tabSelectFilled_Type1 */}
 			<View style={[feedWrite.kindCont,{marginTop:60*DP,alignItems:'center'}]}>
@@ -469,8 +492,8 @@ export default MissingForm = props => {
 			<View style={[feedWrite.kindCont,{marginTop:60*DP,alignItems:'center'}]}>
 				<Text style={[txt.noto26]}>동물 나이</Text>
 				<View style={{flexDirection:'row', alignItems:'flex-end',width:550*DP}}>
-					<DatePicker width={418} onDateChange={inputAge} defaultDate={'눌러서 지정!'} future={false} />
-					<Text style={[txt.noto26,{marginLeft:12*DP}]}>1살 1개월</Text>
+					<DatePicker width={418} onDateChange={inputAge} defaultDate={data.missing_animal_age>0?animalBirth():'눌러서 지정!'} future={false} />
+					<Text style={[txt.noto26,{marginLeft:12*DP}]}>{animalAge()}</Text>
 				</View>
 				{/* <Input24
 					// title={'동물 나이'}
@@ -566,6 +589,7 @@ export default MissingForm = props => {
 				<Text style={[txt.noto26]}>추가 내용</Text>
 				{React.cloneElement(feedInput,{onPressIn:onPressIn(inputBalloonRef3),ref:inputBalloonRef3})}
 			</View>
+			{props.selectedImages()}
 			<View style={[feedWrite.buttonContainer]}>
 					<TouchableWithoutFeedback onPress={moveToMultiPhotoSelect}>
 						<View style={[feedWrite.btnItemContainer, {marginBottom: 5 * DP}]}>

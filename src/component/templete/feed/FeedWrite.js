@@ -4,6 +4,7 @@ import {APRI10, WHITE, GRAY20, GRAY10, GRAY30, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Paw54_Border,Location54} from 'Root/component/atom/icon/index';
+import {styles} from 'Atom/image/imageStyle';
 import {Urgent_Write1, Urgent_Write2} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w194} from 'Atom/btn/btn_style';
@@ -233,6 +234,7 @@ export default FeedWrite = props => {
 					container={container}
 					scrollref={scrollref}
 					currentScrollOffset={scrolloffset.current}
+					feedInput={feedInput}
 				/>
 			);
 		} // 긴급 게시 버튼 중 '실종' 클릭한 경우
@@ -246,6 +248,7 @@ export default FeedWrite = props => {
 					scrollref={scrollref}
 					currentScrollOffset={scrolloffset.current}
 					feedInput={feedInput}
+					selectedImages={selectedImages}
 				/>
 			) : (
 				false
@@ -273,8 +276,6 @@ export default FeedWrite = props => {
 
 	const setWriteModeState = () => {
 		return (
-			<>
-				{/* 사진추가 / 위치추가 / 태그하기 */}
 				<View style={[feedWrite.buttonContainer]}>
 					<TouchableWithoutFeedback onPress={moveToMultiPhotoSelect}>
 						<View style={[feedWrite.btnItemContainer, {marginBottom: 5 * DP}]}>
@@ -313,17 +314,19 @@ export default FeedWrite = props => {
 						</View>
 					</TouchableWithoutFeedback>
 				</View>
-				{selectedImg.length > 0 && (
-					<View style={[temp_style.selectedMediaList, feedWrite.selectedMediaList]}>
-						<SelectedMediaList items={selectedImg.map(v=>v?v.cropUri??v.uri:undefined)} onDelete={deletePhoto} />
-					</View>
-				)}
-			</>
+			
 		);
 	};
 	const test = () => {
 		console.log(props.route);
 	};
+
+	const selectedImages = () => {
+		if(selectedImg.length>0){
+			return (<View style={[{marginTop:40*DP}]}>
+						<SelectedMediaList layout={styles.img_square_round_336} items={selectedImg.map(v=>v?v.cropUri??v.uri:undefined)} onDelete={deletePhoto} />
+					</View>)}
+	}
 
 	const getCurrentScrollOffset = e => {
 		scrolloffset.current = e.nativeEvent.contentOffset.y;
@@ -334,7 +337,7 @@ export default FeedWrite = props => {
 			containerStyle={[temp_style.feedTextEdit]}
 			textAlignVertical={'top'}
 			multiline={true}
-			placeholder={showReportForm || showLostAnimalForm?"하고 싶은 말을 추가로 적어주세요":"게시물을 작성하세요 (150자)"}
+			placeholder={showLostAnimalForm?"하고 싶은 말을 추가로 적어주세요":showReportForm?"내용 입력(최대 150자)":"게시물을 작성하세요 (150자)"}
 			onChangeText={inputFeedTxt}
 			// onChangeText={inputMissingTxt}
 			maxLength={150}
@@ -351,8 +354,8 @@ export default FeedWrite = props => {
 
 	const render = ({item, index}) => {
 		return (
-			<View contentContainerStyle={[login_style.wrp_main]} ref={container}>
-				{!(showLostAnimalForm||showReportForm)&&<>
+			<View style={[login_style.wrp_main]} ref={container}>
+				{!(showLostAnimalForm||showReportForm)&&<View style={{width:'100%'}}>
 					<View style={{flexDirection:'row',alignItems:'center',paddingHorizontal:28*DP,justifyContent:'space-between',marginBottom:20*DP}}>
 						<CheckBoxItem style={{width:148*DP}} textStyle={[txt.noto26,{lineHeight:38*DP}]} onCheck={onSetDiary}>임보일기</CheckBoxItem>
 						<View style={{height:38*DP,width:2*DP,backgroundColor:GRAY10}}></View>
@@ -367,7 +370,7 @@ export default FeedWrite = props => {
 					</View>
 					{feedInput()}
 					{!isSearchTag && setWriteModeState()}
-				</>}
+				</View>}
 				{/* 긴급 게시 관련 버튼 클릭 시 출력되는 View */}
 				{setUrgBtnsClickedView()}
 			</View>

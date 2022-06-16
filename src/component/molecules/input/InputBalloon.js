@@ -69,7 +69,7 @@ const InputBalloon = React.forwardRef((props, ref) => {
 					paddingHorizontal:24*DP,
 					backgroundColor: GRAY50,
 					paddingTop: 24 * DP,
-					alignItems: 'center',
+					// alignItems: 'center',
 					// justifyContent: 'center',
 				}}>
 				<TextInput

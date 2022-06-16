@@ -18,6 +18,7 @@ import {NextMark, NextMark48} from 'Root/component/atom/icon';
 import DP from 'Root/config/dp';
 import {useNavigation} from '@react-navigation/core';
 import {CommonActions} from '@react-navigation/routers';
+import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default LoginTemplete = props => {
 	const navigation = useNavigation();
@@ -111,7 +112,8 @@ export default LoginTemplete = props => {
 					);
 					if (navigation.getState().index != 0) {
 						//로그인 유도 페이지에서 로그인이 된 경우 이전 페이지로 이동!
-						navigation.goBack();
+						// console.log('navigation.getState()', navigation.getState());
+						navigation.navigate({key: navigation.getState().routes[0].key});
 					} else {
 						navigation.reset({routes: [{name: 'MainTab', params: userObject.msg.user_type}]});
 					}

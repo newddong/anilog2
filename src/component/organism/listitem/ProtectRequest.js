@@ -11,6 +11,7 @@ import {useNavigation} from '@react-navigation/core';
 import DP from 'Root/config/dp';
 import {DEFAULT_ANIMAL_PROFILE} from 'Root/i18n/msg';
 import {APRI10, GRAY10} from 'Root/config/color';
+import {array} from 'prop-types';
 
 /**
  *
@@ -107,7 +108,10 @@ export default ProtectRequest = React.memo(props => {
 							</Text>
 							<Text style={[txt.noto28]}>등&nbsp; 록&nbsp; 일 : {getParsedDate()}</Text>
 							<Text style={[txt.noto28, {maxWidth: props.selectMode ? 320 * DP : 380 * DP}]} numberOfLines={1}>
-								보호장소 : {data.protect_request_writer_id ? data.protect_request_writer_id.user_nickname : ''}
+								보호장소 :{' '}
+								{data.protect_request_writer_id.length
+									? data.protect_request_writer_id[0].user_nickname
+									: data.protect_request_writer_id.user_nickname}
 							</Text>
 							<Text style={[txt.noto28, {maxWidth: props.selectMode ? 320 * DP : 380 * DP}]} numberOfLines={1}>
 								구조지역 : {data.protect_animal_id ? data.protect_animal_id.protect_animal_rescue_location : '작성되지 않았습니다.'}

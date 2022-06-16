@@ -1,6 +1,6 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {Dimensions, Image, LogBox, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {BackHandler, Dimensions, Image, LogBox, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {APRI10, BLACK, GRAY40} from 'Root/config/color';
 import {FavoriteTag46_Filled, FavoriteTag48_Border, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
@@ -39,15 +39,32 @@ const ArticleContent = props => {
 	const onPressFavorite = bool => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			setData({...data, community_is_favorite: bool});
 			props.onPressFavorite(bool);
 		}
 	};
+	const [showImgMode, setShowImgMode] = React.useState(false);
+	const backAction = () => {
+		console.log('back', showImgMode);
+		if (showImgMode) {
+			Modal.close();
+			setShowImgMode(false);
+			return true;
+		} else {
+			return false;
+		}
+	};
+
+	React.useEffect(() => {
+		BackHandler.addEventListener('hardwareBackPress', backAction);
+		return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
+	}, [showImgMode]);
 
 	const showImg = src => {
+		setShowImgMode(true);
 		Modal.popPhotoListViewModal([src], () => Modal.close());
 	};
 

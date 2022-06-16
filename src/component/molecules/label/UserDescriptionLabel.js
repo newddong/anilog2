@@ -95,7 +95,7 @@ const UserDescriptionLabel = props => {
 				<View style={{marginLeft: 30 * DP}}>
 					<View style={{flexDirection: 'row'}}>
 						<Text
-							style={(txt.roboto28b, {maxWidth: 400 * DP, color: userGlobalObject.userInfo._id == data._id ? APRI10 : BLACK})}
+							style={[txt.roboto28b, {maxWidth: 400 * DP, color: userGlobalObject.userInfo._id == data._id ? APRI10 : BLACK}]}
 							numberOfLines={1}
 							ellipsizeMode="tail">
 							{data.user_nickname || ''}
@@ -113,7 +113,7 @@ const UserDescriptionLabel = props => {
 					{data.user_introduction ? (
 						<Text
 							style={[
-								txt.noto24,
+								txt.noto26,
 								{
 									lineHeight: 44 * DP,
 									color: GRAY10,

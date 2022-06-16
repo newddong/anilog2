@@ -51,12 +51,16 @@ const MissingReportInfo = props => {
 					<Text style={[txt.noto26b, {justifyContent: 'space-between'}]}>{props.title}</Text>
 				</View>
 				<Text style={[txt.noto26b, {}]}>: </Text>
-				{/* <View style={{width: 462 * DP, justifyContent: 'center'}}>
-					<Text style={[txt.noto28]}>{props.content}</Text>
-				</View> */}
-				<HashText style={[txt.noto28, {}]} byteOfLine={55}>
-					{props.content || '내용 없음'}
-				</HashText>
+
+				{props.isHash ? (
+					<HashText style={[txt.noto28, {width: 482 * DP}]} byteOfLine={55}>
+						{props.content || '내용 없음'}
+					</HashText>
+				) : (
+					<View style={{width: 482 * DP, justifyContent: 'center'}}>
+						<Text style={[txt.noto28]}>{props.content}</Text>
+					</View>
+				)}
 			</View>
 		);
 	};
@@ -84,7 +88,7 @@ const MissingReportInfo = props => {
 			<View style={style.container}>
 				<InfoOneLine title="제보 날짜  " content={newReportDate} />
 				<InfoOneLine title="제보 장소  " content={report_witness_location} />
-				<InfoOneLine title="제보 내용  " content={feed_content} />
+				<InfoOneLine title="제보 내용  " content={feed_content} isHash />
 			</View>
 		);
 	}

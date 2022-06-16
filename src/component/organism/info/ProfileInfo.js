@@ -42,7 +42,6 @@ const ProfileInfo = props => {
 	const [ownerListState, setOwnerListState] = React.useState(false); // userType이 Pet일 경우 반려인계정 출력 여부 T/F
 	const [companionListState, setCompanionListState] = React.useState(true); // userType이 User일 경우 반렫동물 리스트 출력 여부 T/F
 	const [into_height, setIntro_height] = React.useState(0); //user_introduction 의 길이 => 길이에 따른 '더보기' 버튼 출력 여부 결정
-
 	React.useEffect(() => {
 		if (data.user_type == 'user') {
 			showCompanion();
@@ -146,7 +145,7 @@ const ProfileInfo = props => {
 	const onPressFollow = bool => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			props.onPressFollow();
@@ -309,6 +308,30 @@ const ProfileInfo = props => {
 
 	const isUserProfile = data.user_type == 'user';
 
+	// 팔로워 팔로잉 정보 우측의 버튼 출력
+	const getProfileButton = () => {
+		//비로그인 모드일 시 미출력
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			return <></>;
+		} else if (userGlobalObject.userInfo._id == data._id || isMyPet()) {
+			//내 아이디 혹은 나의 반려동물의 프로필일 경우 '프로필 수정'버튼 출력
+			return (
+				<View style={{justifyContent: 'flex-end'}}>
+					<AniButton onPress={onPressEditProfile} btnTitle={'프로필 수정'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w176} />
+				</View>
+			);
+		} else {
+			//타 사용자 계정일 경우 팔로우 상태에 따른 버튼 분기 처리
+			if (data.is_follow) {
+				return (
+					<ArrowDownButton onPress={onPressFollowingSetting} btnTitle={'팔로우 중'} btnStyle={'filled'} titleFontStyle={24} btnLayout={btn_w176} />
+				);
+			} else {
+				return <AniButton onPress={() => onPressFollow(true)} btnTitle={'팔로우'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w176} />;
+			}
+		}
+	};
+
 	const header = () => {
 		if (data.user_type == 'pet') {
 			return (
@@ -376,15 +399,7 @@ const ProfileInfo = props => {
 					<SocialInfoA data={data} onClickUpload={onClickUpload} />
 					{getShelterButton()}
 				</View>
-				{userGlobalObject.userInfo._id == data._id || isMyPet() ? (
-					<View style={{justifyContent: 'flex-end'}}>
-						<AniButton onPress={onPressEditProfile} btnTitle={'프로필 수정'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w176} />
-					</View>
-				) : data.is_follow ? (
-					<ArrowDownButton onPress={onPressFollowingSetting} btnTitle={'팔로우 중'} btnStyle={'filled'} titleFontStyle={24} btnLayout={btn_w176} />
-				) : (
-					<AniButton onPress={() => onPressFollow(true)} btnTitle={'팔로우'} btnStyle={'border'} titleFontStyle={26} btnLayout={btn_w176} />
-				)}
+				{getProfileButton()}
 			</View>
 			{/* 보호소 계정 프로필의 주소 및 연락처 정보 */}
 		</View>

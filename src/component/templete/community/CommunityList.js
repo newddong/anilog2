@@ -157,7 +157,7 @@ const CommunityList = React.memo(props => {
 		// console.log('index', index, bool);
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			likeEtc(
@@ -177,7 +177,8 @@ const CommunityList = React.memo(props => {
 
 	//후기 게시글의 댓글쓰기 혹은 댓글 모두 보기 클릭 클릭
 	const onPressReply = index => {
-		navigation.push('CommunityCommentList', {community_object: review[index]});
+		// navigation.push('CommunityCommentList', {community_object: review[index]});
+		navigation.push('ReviewDetail', {community_object: review[index], comment: true});
 	};
 
 	//후게 게시글 컨텐츠 클릭
@@ -199,83 +200,6 @@ const CommunityList = React.memo(props => {
 				updateReview(false, review[index]._id, bool);
 			},
 			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
-		);
-	};
-
-	//리뷰 미트볼 클릭
-	const onPressMeatball = index => {
-		console.log('index', index);
-		const isMyArticle = userGlobalObject.userInfo._id == review[index].community_writer_id._id;
-		Modal.popSelectBoxModal(
-			isMyArticle ? ['수정', '삭제'] : ['신고'],
-			select => {
-				switch (select) {
-					case '수정':
-						// navigation.push('CommunityEdit', {previous: reviewList[index], isReview: true});
-						navigation.navigate('COMMUNITY', {screen: 'CommunityEdit', params: {previous: review[index], isReview: true}});
-						break;
-					case '삭제':
-						Modal.close();
-						setTimeout(() => {
-							Modal.popTwoBtn(
-								'정말로 이 게시글을 \n 삭제하시겠습니까?',
-								'아니오',
-								'네',
-								() => Modal.close(),
-								() => {
-									updateAndDeleteCommunity(
-										{
-											community_object_id: review[index]._id,
-											community_is_delete: true,
-										},
-										result => {
-											// console.log('result / updateAndDeleteCommunity / ArticleDetail : ', result.msg);
-											Modal.close();
-											setTimeout(() => {
-												Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
-												setTimeout(() => {
-													Modal.close();
-													props.initializeCommList();
-												}, 600);
-											}, 200);
-										},
-										err => {
-											console.log('err / updateAndDeleteCommunity / ArticleDetail : ', err);
-											Modal.alert(err);
-										},
-									);
-								},
-							);
-						}, 200);
-						break;
-					case '신고':
-						Modal.close();
-						if (userGlobalObject.userInfo.isPreviewMode) {
-							setTimeout(() => {
-								Modal.popLoginRequestModal(() => {
-									navigation.navigate('Login');
-								});
-							}, 100);
-						} else {
-							setTimeout(() => {
-								Modal.popOneBtnSelectModal(
-									REPORT_MENU,
-									'이 게시물을 신고 하시겠습니까?',
-									selectedItem => {
-										alert(selectedItem);
-									},
-									'신고하기',
-								);
-							}, 200);
-						}
-						break;
-					default:
-						break;
-				}
-			},
-			() => Modal.close(),
-			false,
-			false,
 		);
 	};
 
@@ -339,7 +263,6 @@ const CommunityList = React.memo(props => {
 											whenEmpty={whenEmpty}
 											onPressReviewContent={onPressReviewContent}
 											onPressReply={onPressReply}
-											onPressMeatball={onPressMeatball}
 											onPressFavorite={onPressFavorite}
 											onPressLike={i => onPressLike(i, true)}
 											onPressUnlike={i => onPressLike(i, false)}

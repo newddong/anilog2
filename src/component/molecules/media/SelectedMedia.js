@@ -17,9 +17,14 @@ const SelectedMedia = props => {
 	const onDelete = () => {
 		props.onDelete();
 	};
+
 	return (
 		<View style={props.layout}>
-			<Image source={{uri: props.media_uri}} style={props.layout} />
+			{props.media_uri.includes('http:') ? (
+				<FastImage source={{uri: props.media_uri}} style={props.layout} />
+			) : (
+				<Image source={{uri: props.media_uri}} style={props.layout} />
+			)}
 			<View
 				style={{
 					position: 'absolute',
@@ -31,8 +36,8 @@ const SelectedMedia = props => {
 				<View
 					style={{
 						position: 'absolute',
-						top:10*DP,
-						right: 10*DP,
+						top: 10 * DP,
+						right: 10 * DP,
 						borderRadius: 30 * DP,
 						backgroundColor: 'lightgray',
 						shadowOpacity: 0.1,

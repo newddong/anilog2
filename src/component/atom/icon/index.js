@@ -188,7 +188,6 @@ import home48Border from './home48Border';
 import addItem68 from './addItem68';
 import check64Filled from './check64Filled';
 import edit46 from './edit46';
-
 import infoIcon50 from './infoIcon50';
 import feedIcon from './feedIcon';
 import tagIcon from './tagIcon';

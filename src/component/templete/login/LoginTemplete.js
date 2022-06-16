@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableOpacity, StyleSheet} from 'react-native';
 import {GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w522, btn_w522_r30} from 'Atom/btn/btn_style';
@@ -7,7 +7,7 @@ import AniButton from 'Root/component/molecules/button/AniButton';
 import CheckBox from 'Root/component/molecules/select/CheckBox';
 import Input24 from 'Root/component/molecules/input/Input24';
 import PasswordInput from 'Root/component/molecules/input/PasswordInput';
-import {login_style, btn_style, loginTemplete_style} from '../style_templete';
+import {login_style, btn_style} from '../style_templete';
 import Modal from 'Component/modal/Modal';
 import {userLogin} from 'Root/api/userapi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,8 +15,11 @@ import userGlobalObj from 'Root/config/userGlobalObject';
 import {createSettingPublic, getSettingPublic} from 'Root/api/settingpublic';
 import {createNotice, getNotice} from 'Root/api/notice';
 import {NextMark, NextMark48} from 'Root/component/atom/icon';
+import DP from 'Root/config/dp';
+import {useNavigation} from '@react-navigation/core';
 
 export default LoginTemplete = props => {
+	const navigation = useNavigation();
 	const [userSetting, setUserSetting] = React.useState();
 
 	React.useEffect(() => {
@@ -105,7 +108,13 @@ export default LoginTemplete = props => {
 							console.log('getNotice err', err);
 						},
 					);
-					props.navigation.reset({routes: [{name: 'MainTab', params: userObject.msg.user_type}]});
+					if (navigation.getState().index != 0) {
+						//로그인 유도 페이지에서 로그인이 된 경우 이전 페이지로 이동!
+						// console.log('navigation.getState()', navigation.getState());
+						navigation.navigate({key: navigation.getState().routes[0].key});
+					} else {
+						navigation.reset({routes: [{name: 'MainTab', params: userObject.msg.user_type}]});
+					}
 				},
 				error => {
 					console.log('error', error);
@@ -121,19 +130,16 @@ export default LoginTemplete = props => {
 	};
 
 	const moveToAssign = () => {
-		props.navigation.push('AgreementCheck');
+		navigation.push('AgreementCheck');
 	};
 
 	//보호소 코드 체크
 	const moveToShelterCodeCheck = () => {
-		props.navigation.push('ShelterCodeCheck');
+		navigation.push('ShelterCodeCheck');
 	};
 
-	const findMyId = () => {
-		props.navigation.push('FindAccount');
-	};
 	const changePassword = () => {
-		props.navigation.push('PasswordResetIdentification');
+		navigation.push('PasswordResetIdentification');
 	};
 
 	//자동로그인 박스 클릭
@@ -172,17 +178,10 @@ export default LoginTemplete = props => {
 		console.log('Id Validator ' + text);
 	};
 
-	const [t, setT] = React.useState(false);
-	const test = () => {
-		// Modal.popSelectScrollBoxModal([mobile_carrier], '도, 광역시를 지정해주세요.', e => console.log('e', e));
-		console.log(userSetting);
-	};
-
 	const moveToMainTab = () => {
 		userGlobalObj.userInfo.isPreviewMode = true;
 		AsyncStorage.removeItem('userSetting');
-
-		props.navigation.reset({routes: [{name: 'MainTab'}]});
+		navigation.reset({routes: [{name: 'MainTab'}]});
 	};
 
 	if (!userSetting) {
@@ -197,14 +196,20 @@ export default LoginTemplete = props => {
 			{/* confirm without login */}
 			<View style={[loginTemplete_style.innerContainer]}>
 				<View style={loginTemplete_style.without_login}>
-					<TouchableOpacity onPress={moveToMainTab}>
-						<View style={[loginTemplete_style.without_login_text]}>
-							<Text style={[txt.noto24, {color: GRAY10}]}>로그인 없이 둘러보기</Text>
-							<View style={[loginTemplete_style.nextBtnView]}>
-								<NextMark />
+					{props.route.name == 'Login' ? (
+						<TouchableOpacity onPress={moveToMainTab}>
+							<View style={[loginTemplete_style.without_login_text]}>
+								<Text style={[txt.noto24, {color: GRAY10}]}>로그인 없이 둘러보기</Text>
+								<View style={[loginTemplete_style.nextBtnView]}>
+									<NextMark />
+								</View>
 							</View>
+						</TouchableOpacity>
+					) : (
+						<View style={[loginTemplete_style.login_required_text, {marginTop: 40 * DP}]}>
+							<Text style={[txt.noto24, {color: GRAY10}]}>로그인이 필요한 페이지입니다.</Text>
 						</View>
-					</TouchableOpacity>
+					)}
 				</View>
 
 				{/* LoginForm */}
@@ -245,27 +250,12 @@ export default LoginTemplete = props => {
 
 				{/* Btn_w522 */}
 				<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_login]}>
-					<AniButton
-						btnLayout={btn_w522_r30}
-						btnTitle={'로그인'}
-						// btnTheme={'shadow'}
-						btnStyle={'filled'}
-						titleFontStyle={32}
-						onPress={tryToLogin}
-						//
-					/>
+					<AniButton btnLayout={btn_w522_r30} btnTitle={'로그인'} titleFontStyle={32} onPress={tryToLogin} />
 				</View>
 
 				{/* Btn_w522 */}
 				<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_assign]}>
-					<AniButton
-						btnLayout={btn_w522_r30}
-						btnTitle={'회원 가입'}
-						btnStyle={'border'}
-						// btnTheme={'gray'}
-						titleFontStyle={32}
-						onPress={moveToAssign}
-					/>
+					<AniButton btnLayout={btn_w522_r30} btnTitle={'회원 가입'} btnStyle={'border'} titleFontStyle={32} onPress={moveToAssign} />
 				</View>
 
 				{/* basic info */}
@@ -293,3 +283,80 @@ export default LoginTemplete = props => {
 		</View>
 	);
 };
+
+const loginTemplete_style = StyleSheet.create({
+	passwordChecker: {
+		width: 654 * DP,
+		height: 406 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: '#A07A7A',
+	},
+	innerContainer: {
+		// marginTop: 30,
+		alignItems: 'center',
+	},
+	without_login: {
+		width: 694 * DP,
+		height: 216 * DP,
+		marginTop: 30 * DP,
+	},
+	without_login_text: {
+		width: 278 * DP,
+		height: 50 * DP,
+		alignSelf: 'flex-end',
+		alignItems: 'center',
+		justifyContent: 'center',
+		flexDirection: 'row',
+	},
+	login_required_text: {
+		alignSelf: 'center',
+	},
+	nextBtnView: {
+		marginLeft: 20 * DP,
+	},
+	loginForm: {
+		width: 522 * DP,
+		height: 346 * DP,
+	},
+	idInput: {
+		marginBottom: 20 * DP,
+	},
+	pwdInput: {},
+	checkBox_loginFormContainer: {
+		width: 450 * DP,
+		height: 42 * DP,
+		justifyContent: 'center',
+		alignItems: 'center',
+		alignSelf: 'center',
+		// backgroundColor: 'yellow',
+	},
+	checkBox_loginForm: {
+		width: 450 * DP,
+		height: 42 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+	},
+	checkBoxContainer: {
+		marginTop: 10 * DP,
+		// marginHorizontal: 20 * DP,
+	},
+	btn_w522_login: {
+		marginTop: 92 * DP,
+	},
+	btn_w522_assign: {
+		marginTop: 30 * DP,
+	},
+	basic_info: {
+		marginTop: 50 * DP,
+	},
+	social_info: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		marginVertical: 38 * DP,
+	},
+	socialLogin_icon: {
+		width: 80 * DP,
+		height: 80 * DP,
+	},
+});

@@ -20,67 +20,6 @@ const RecommendReview = props => {
 		props.onPressRecommendReview(data);
 	};
 
-	const first = props.data ? props.data[0] : '';
-	const second = props.data ? props.data[1] : '';
-
-	const recommendReview = data => {
-		if (data) {
-			const imageList = () => {
-				let imageList = [];
-				let getImgTag = data.community_content.match(/<img[\w\W]+?\/?>/g); //img 태그 추출
-				if (getImgTag) {
-					getImgTag.map((v, i) => {
-						let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i); //img 태그가 있는 경우 src 추출
-						imageList.push(src[1]);
-					});
-				}
-				return imageList;
-			};
-			return (
-				<TouchableOpacity onPress={() => onPressRecommendReview(data)} activeOpacity={0.7} style={[{}]}>
-					<View style={{flexDirection: 'row'}}>
-						<View style={{height: 158 * DP, justifyContent: 'space-between'}}>
-							<View style={[style.userLabel]}>
-								{data.community_writer_id ? <ProfileImageSmall data={data.community_writer_id} size={46} /> : <ProfileImageSmall size={46} />}
-								{data.community_writer_id ? (
-									<Text
-										style={[
-											txt.noto24,
-											{marginLeft: 24 * DP, width: 350 * DP, color: data.community_writer_id._id == userGlobalObject.userInfo._id ? APRI10 : BLACK},
-										]}
-										numberOfLines={1}>
-										{data.community_writer_id.user_nickname}
-									</Text>
-								) : (
-									<Text style={[txt.noto24, {marginLeft: 24 * DP, width: 350 * DP}]} numberOfLines={1}>
-										이미 탈퇴한 계정입니다.
-									</Text>
-								)}
-							</View>
-							<View style={[style.article_content]}>
-								<Text style={[txt.noto24, {color: GRAY10, textAlignVertical: 'center', height: 74 * DP}]} numberOfLines={2}>
-									{data.community_content_without_html}
-								</Text>
-								<View style={{flexDirection: 'row', width: 360 * DP, alignItems: 'center'}}>
-									<Like30 />
-									<Text style={[txt.roboto24, {color: GRAY20, marginLeft: 6 * DP, marginRight: 10 * DP}]}>{data.community_like_count}</Text>
-									<Comment30 />
-									<Text style={[txt.roboto24, {color: GRAY20, marginLeft: 6 * DP, marginRight: 10 * DP}]}>{data.community_comment_count}</Text>
-									<Text style={[txt.roboto24, {color: GRAY20}]}> · {getTimeLapsed(data.community_date)}</Text>
-								</View>
-							</View>
-						</View>
-						{imageList().length == 0 ? (
-							<FastImage style={[{width: 158 * DP, height: 158 * DP, borderRadius: 30 * DP}]} source={require('Atom/icon/document2.png')} />
-						) : (
-							<FastImage style={[{width: 158 * DP, height: 158 * DP, borderRadius: 30 * DP}]} source={{uri: imageList()[0]}} />
-						)}
-					</View>
-				</TouchableOpacity>
-			);
-		} else return <></>;
-	};
-
 	const getCategory = (v, i) => {
 		let category_sum_list = [];
 		v.community_interests.interests_trip.map(v => category_sum_list.push(v));
@@ -145,12 +84,14 @@ const RecommendReview = props => {
 	const getImageList = v => {
 		let imageList = [];
 		let getImgTag = v.community_content.match(/<img[\w\W]+?\/?>/g); //img 태그 추출
+		//이미지가 있는 추천글이라면 이미지 리스트 배열 변수 채우기
 		if (getImgTag) {
 			getImgTag.map((v, i) => {
 				let src = v.match(/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i); //img 태그가 있는 경우 src 추출
 				imageList.push(src[1]);
 			});
 		}
+		//사진 리스트 출력
 		const getImage = () => {
 			return imageList.map((v, i) => {
 				if (imageList && imageList.length > 4 && i > 4) {
@@ -165,53 +106,66 @@ const RecommendReview = props => {
 					return <FastImage key={i} source={{uri: v}} style={[{width: 108 * DP, height: 108 * DP, borderRadius: 30 * DP, marginRight: 10 * DP}]} />;
 			});
 		};
+
 		if (imageList && imageList.length == 0) {
+			// 사진없다면 미출력
 			return <></>;
-		} else return <View style={[style.image, {flexDirection: 'row', marginTop: 20 * DP}]}>{getImage()}</View>;
+		} else return <View style={[{flexDirection: 'row', marginTop: 20 * DP}]}>{getImage()}</View>;
 	};
 
 	const renderItem = ({item, index}) => {
 		//사진포함 여부, 카테고리 포함여부, 글 내용 포함 여부에 따른 높이
-		const getHeight = () => {
-			let height = 200 * DP;
-			let category_sum_list = [];
-			item.community_interests.interests_trip.map(v => category_sum_list.push(v));
-			item.community_interests.interests_etc.map(v => category_sum_list.push(v));
-			item.community_interests.interests_hospital.map(v => category_sum_list.push(v));
-			item.community_interests.interests_review.map(v => category_sum_list.push(v));
-			item.community_interests.interests_interior.map(v => category_sum_list.push(v));
+		let category_sum_list = [];
+		item.community_interests.interests_trip.map(v => category_sum_list.push(v));
+		item.community_interests.interests_etc.map(v => category_sum_list.push(v));
+		item.community_interests.interests_hospital.map(v => category_sum_list.push(v));
+		item.community_interests.interests_review.map(v => category_sum_list.push(v));
+		item.community_interests.interests_interior.map(v => category_sum_list.push(v));
+		const getLines = () => {
+			let lines = 6;
 			if (item.community_is_attached_file) {
-				height = height + 148 * DP;
+				lines = lines - 2;
 			}
 			if (category_sum_list.length > 0) {
-				height = height + 58 * DP;
+				lines = lines - 2;
 			}
 			if (item.community_content_without_html == '') {
-				height = height - 58 * DP;
+				lines = 0;
 			}
-			// console.log('item height', item.community_title, height, category_sum_list.length > 0, item.community_content_without_html == '');
-			return height;
+			return lines;
 		};
 		return (
 			<>
-				<TouchableOpacity
-					onPress={() => onPressRecommendReview(item)}
-					activeOpacity={0.7}
-					style={[style.itemCont, style.shadow, {height: getHeight()}]}>
+				<TouchableOpacity onPress={() => onPressRecommendReview(item)} activeOpacity={0.7} style={[style.itemCont, style.shadow]}>
+					{/* 카테고리  */}
 					{getCategory(item)}
+					{/* 리뷰 제목 */}
 					<Text style={[txt.noto32, {width: 584 * DP}]} numberOfLines={1}>
 						{item.community_title}
 					</Text>
+					{/* 리뷰 글내용 */}
 					{item.community_content_without_html ? (
-						<Text style={[txt.noto24, {color: GRAY10, width: 584 * DP, maxHeight: 74 * DP}]} numberOfLines={2}>
+						<Text
+							style={[
+								txt.noto24,
+								{
+									color: GRAY10,
+									width: 584 * DP,
+									minHeight: 74 * DP,
+									marginTop: category_sum_list.length > 0 && item.community_is_attached_file ? 0 : 20 * DP,
+								},
+							]}
+							numberOfLines={getLines()}>
 							{item.community_content_without_html.trim()}
 						</Text>
 					) : (
 						<></>
 					)}
+					{/* 사진 리스트 */}
 					{getImageList(item)}
-					<View style={[style.iconCont, {height: 40 * DP, marginTop: 30 * DP}]}>
-						<View style={[style.like, {flexDirection: 'row', alignItems: 'center'}]}>
+					{/* 하단 아이콘  */}
+					<View style={[style.iconCont]}>
+						<View style={{flexDirection: 'row', alignItems: 'center'}}>
 							{item.community_is_like ? <Like30_Filled /> : <Like30_Border />}
 							<Text style={[txt.roboto24, {color: GRAY10, marginLeft: 6 * DP, marginRight: 16 * DP}]}>{item.community_like_count} </Text>
 							<Comment30_Border />
@@ -226,7 +180,7 @@ const RecommendReview = props => {
 	};
 
 	return (
-		<View style={[style.container]} onLayout={e => console.log('e', e.nativeEvent.layout.height)}>
+		<View style={[style.container]}>
 			<View style={[style.header]}>
 				<Text style={[txt.noto36b]}>추천 게시글 </Text>
 			</View>
@@ -270,23 +224,15 @@ const style = StyleSheet.create({
 	},
 	itemCont: {
 		width: 634 * DP,
-		// height: 434 * DP,
+		height: 434 * DP,
 		borderRadius: 30 * DP,
 		paddingHorizontal: 24 * DP,
 		paddingVertical: 30 * DP,
 		marginVertical: 10 * DP,
 		marginLeft: 10 * DP,
 		marginRight: 20 * DP,
-		justifyContent: 'space-between',
+		// justifyContent: 'space-between',
 		backgroundColor: 'white',
-	},
-	content: {
-		width: 654 * DP,
-		// height: 606 * DP,
-		borderRadius: 46 * DP,
-		backgroundColor: WHITE,
-		paddingVertical: 50 * DP,
-		paddingHorizontal: 32 * DP,
 	},
 	item: {
 		// backgroundColor: 'green',
@@ -324,5 +270,13 @@ const style = StyleSheet.create({
 	categoryList: {
 		width: 510 * DP,
 		minHeight: 65 * DP,
+	},
+	iconCont: {
+		width: 586 * DP,
+		height: 40 * DP,
+		marginTop: 30 * DP,
+		position: 'absolute',
+		bottom: 40 * DP,
+		marginHorizontal: 24 * DP,
 	},
 });

@@ -341,7 +341,7 @@ export default ReviewDetail = props => {
 	const onLockBtnClick = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			setPrivateComment(!privateComment);
@@ -363,7 +363,7 @@ export default ReviewDetail = props => {
 	const onAddPhoto = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			console.log('onAddphoto');
@@ -384,7 +384,7 @@ export default ReviewDetail = props => {
 	const onReplyBtnClick = (parentCommentId, addChildComment) => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			input.current?.focus();
@@ -444,7 +444,7 @@ export default ReviewDetail = props => {
 	const onPressFavorite = bool => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			setFavoriteEtc(
@@ -468,7 +468,7 @@ export default ReviewDetail = props => {
 		console.log('bool', bool);
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			likeEtc(
@@ -489,21 +489,27 @@ export default ReviewDetail = props => {
 
 	//하단 리뷰 리스트 좋아요 클릭
 	const onPressLikeBriefItem = (bool, index) => {
-		likeEtc(
-			{
-				collectionName: 'communityobjects',
-				post_object_id: reviewList[index]._id,
-				is_like: bool,
-			},
-			result => {
-				console.log('result / likeEtc / ReviewDetail : ', result.msg.likeEtc);
-				fetchCommunityList();
-				updateReview(true, reviewList[index]._id, bool); // 리뷰 메인 페이지 데이터 전역변수 최신화
-			},
-			err => {
-				console.log(' err / likeEtc / ReviewDetail :', err);
-			},
-		);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('LoginRequired');
+			});
+		} else {
+			likeEtc(
+				{
+					collectionName: 'communityobjects',
+					post_object_id: reviewList[index]._id,
+					is_like: bool,
+				},
+				result => {
+					console.log('result / likeEtc / ReviewDetail : ', result.msg.likeEtc);
+					fetchCommunityList();
+					updateReview(true, reviewList[index]._id, bool); // 리뷰 메인 페이지 데이터 전역변수 최신화
+				},
+				err => {
+					console.log(' err / likeEtc / ReviewDetail :', err);
+				},
+			);
+		}
 	};
 
 	//다른 후기 게시글 클릭

@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, TouchableOpacity, View, FlatList, Platform, StyleSheet} from 'react-native';
+import {Text, TouchableOpacity, View, FlatList, Platform, StyleSheet, BackHandler} from 'react-native';
 import {btn_w276} from 'Atom/btn/btn_style';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import RescueImage from 'Root/component/molecules/image/RescueImage';
@@ -214,41 +214,47 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		);
 	};
 
+	const [showImgMode, setShowImgMode] = React.useState(false);
+	const backAction = () => {
+		console.log('back', showImgMode);
+		if (showImgMode) {
+			Modal.close();
+			setShowImgMode(false);
+			return true;
+		} else {
+			return false;
+		}
+	};
+
+	React.useEffect(() => {
+		BackHandler.addEventListener('hardwareBackPress', backAction);
+		return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
+	}, [showImgMode]);
+
 	//사진 썸네일 클릭
 	const onPressReqeustPhoto = () => {
 		console.log('v', data.protect_request_photos_uri);
+		setShowImgMode(true);
 		Modal.popPhotoListViewModal(data.protect_request_photos_uri, () => Modal.close());
 	};
 
 	//임시보호 버튼 클릭
 	const onPressProtectRequest = () => {
-		if (userGlobalObject.userInfo.isPreviewMode) {
-			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
-			});
+		console.log('data.protect_request_writer_id.user_contacted', data.protect_request_writer_id.user_contacted);
+		if (!data.protect_request_writer_id.user_contacted) {
+			Modal.alert('정식 애니로그 등록된 \n 보호소가 아닙니다!');
 		} else {
-			console.log('data.protect_request_writer_id.user_contacted', data.protect_request_writer_id.user_contacted);
-			if (!data.protect_request_writer_id.user_contacted) {
-				Modal.alert('정식 애니로그 등록된 \n 보호소가 아닙니다!');
-			} else {
-				navigation.push('ApplyProtectActivityA', {protect_request_pet_data: data});
-			}
+			navigation.push('ApplyProtectActivityA', {protect_request_pet_data: data});
 		}
 	};
 
 	//입양하기 버튼 클릭
 	const onPressAdoptionRequest = () => {
-		if (userGlobalObject.userInfo.isPreviewMode) {
-			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
-			});
+		console.log('data.protect_request_writer_id.user_contacted', data.protect_request_writer_id.user_contacted);
+		if (!data.protect_request_writer_id.user_contacted) {
+			Modal.alert('정식 애니로그 등록된 \n 보호소가 아닙니다!');
 		} else {
-			console.log('data.protect_request_writer_id.user_contacted', data.protect_request_writer_id.user_contacted);
-			if (!data.protect_request_writer_id.user_contacted) {
-				Modal.alert('정식 애니로그 등록된 \n 보호소가 아닙니다!');
-			} else {
-				navigation.push('ApplyAnimalAdoptionA', {protect_request_pet_data: data});
-			}
+			navigation.push('ApplyAnimalAdoptionA', {protect_request_pet_data: data});
 		}
 	};
 
@@ -272,7 +278,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const onPressReply = comment => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			const findParentIndex = comments.findIndex(e => e._id == comment._id); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
@@ -284,9 +290,9 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	//댓글 모두보기 클릭
 	const moveToCommentPage = () => {
-		if (userGlobalObject.userInfo.isPreviewMode) {
+		if (userGlobalObject.userInfo.isPreviewMode && comments.length == 0) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			navigation.push('ProtectCommentList', {protectObject: data, showKeyboard: true});
@@ -332,11 +338,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	};
 
 	const shouldHideProtectAct = () => {
-		if (UNAVAILABLE_REQUEST_STATUS.includes(data.protect_request_status)) {
-			return true;
-		} else {
-			return false;
-		}
+		return UNAVAILABLE_REQUEST_STATUS.includes(data.protect_request_status);
 	};
 
 	const ITEM_HEIGHT = 266 * DP;
@@ -452,7 +454,8 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		);
 	};
 
-	const isLoaded = data == 'false' || writersAnotherRequests == 'false' || comments == 'false';
+	const isLoaded = data == 'false' || writersAnotherRequests == 'false' || comments == 'false'; // 데이터 수신 여부
+	const shouldShowBottomButton = isShelter || shouldHideProtectAct() || userGlobalObject.userInfo.isPreviewMode; //하단의 임시보호 신청, 입양 신청 버튼 출력할지 여부
 
 	if (isLoaded) {
 		return <Loading isModal={false} />;
@@ -465,12 +468,12 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					ListHeaderComponent={header()}
 					ListFooterComponent={footer()}
 					ListEmptyComponent={<Text style={[txt.roboto28b, {color: GRAY10, paddingVertical: 40 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>}
-					style={{marginBottom: isShelter || shouldHideProtectAct() ? 0 : 100 * DP}}
+					style={{marginBottom: shouldShowBottomButton ? 0 : 100 * DP}}
 					ref={flatlist}
 					listKey={({item, index}) => index}
 					showsVerticalScrollIndicator={false}
 				/>
-				{isShelter || shouldHideProtectAct() ? (
+				{shouldShowBottomButton ? (
 					//보호소메뉴에서 자신의 보호요청게시글을 보는 경우 or 작성자 본인인 경우에는 임보/입양 버튼이 출력이 안됨
 					<></>
 				) : (
@@ -635,11 +638,10 @@ const style = StyleSheet.create({
 		paddingVertical: 20 * DP,
 	},
 	replyCountContainer: {
-		width: 474 * DP,
+		width: 694 * DP,
 		alignItems: 'flex-end',
 		alignSelf: 'flex-end',
 		marginTop: 30 * DP,
-		marginRight: 48 * DP,
 		marginBottom: 20 * DP,
 	},
 	addMoreRequest_view: {

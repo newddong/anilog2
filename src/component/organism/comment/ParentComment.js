@@ -3,15 +3,7 @@ import {View, Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {styles} from 'Atom/image/imageStyle';
 import ChildCommentList from 'Organism/comment/ChildCommentList';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
-import {
-	Arrow_Down_GRAY10,
-	Heart30_Border,
-	Heart30_Filled,
-	Meatball50_APRI10_Vertical,
-	Meatball50_GRAY20_Vertical,
-	Report30,
-	SecureIcon40,
-} from 'Atom/icon';
+import {Arrow_Down_GRAY10, Heart30_Border, Heart30_Filled, Report30, SecureIcon40} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
 import {REPLY_MEATBALL_MENU_MY_REPLY, REPORT_MENU} from 'Root/i18n/msg';
 import {GRAY10, GRAY20} from 'Root/config/color';
@@ -22,6 +14,7 @@ import {likeComment} from 'Root/api/commentapi';
 import {createReport} from 'Root/api/report';
 import DP from 'Root/config/dp';
 import FastImage from 'react-native-fast-image';
+import {useNavigation} from '@react-navigation/core';
 
 /**
  * 부모 댓글
@@ -38,6 +31,7 @@ import FastImage from 'react-native-fast-image';
 export default ParentComment = React.memo((props, ref) => {
 	// console.log('ParentComment : ', props.parentComment.comment_writer_id.user_nickname, props.parentComment.comment_is_secure);
 	// console.log('parentComment props', props.parentComment.comment_contents, props.parentComment.children_count);
+	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.parentComment);
 	const [child, setChild] = React.useState([]);
 	const [likeCount, setLikeCount] = React.useState(0);
@@ -91,7 +85,7 @@ export default ParentComment = React.memo((props, ref) => {
 	const onCLickHeart = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			setLikeState(!likeState);
@@ -195,7 +189,7 @@ export default ParentComment = React.memo((props, ref) => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			setTimeout(() => {
 				Modal.popLoginRequestModal(() => {
-					props.navigation.navigate('Login');
+					navigation.navigate('LoginRequired');
 				});
 			}, 100);
 		} else {
@@ -280,7 +274,11 @@ export default ParentComment = React.memo((props, ref) => {
 				<></>
 			) : (
 				<View style={[style.img_square_round]}>
-					<FastImage style={[styles.img_square_round_614]} source={{uri: data.comment_photo_uri}} />
+					{data.comment_photo_uri.includes('http') ? (
+						<FastImage style={[styles.img_square_round_614]} source={{uri: data.comment_photo_uri}} />
+					) : (
+						<Image style={[styles.img_square_round_614]} source={{uri: data.comment_photo_uri}} />
+					)}
 				</View>
 			)}
 			{/* 댓글 내용 */}

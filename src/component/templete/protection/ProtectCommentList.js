@@ -97,7 +97,7 @@ export default ProtectCommentList = props => {
 	const onWrite = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			if (editData.comment_contents.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
@@ -219,7 +219,7 @@ export default ProtectCommentList = props => {
 	const onLockBtnClick = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			setPrivateComment(!privateComment);
@@ -252,7 +252,7 @@ export default ProtectCommentList = props => {
 	const onAddPhoto = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
@@ -313,7 +313,7 @@ export default ProtectCommentList = props => {
 	const onReplyBtnClick = (parentCommentId, addChildComment) => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			// console.log('parentCommentId', parentCommentId);

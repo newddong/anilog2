@@ -553,7 +553,7 @@ export const temp_style = StyleSheet.create({
 		flexDirection: 'column',
 
 		width: 110 * DP,
-		height: 220 * DP,
+		height: 110 * DP,
 	},
 	editComment: {},
 	aidRequest: {

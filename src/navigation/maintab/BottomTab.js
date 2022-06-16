@@ -3,7 +3,6 @@ import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import DP from 'Root/config/dp';
 import SvgWrapper, {SvgWrap} from 'Atom/svgwrapper';
 import {txt} from 'Root/config/textstyle';
-import {tab, layout} from './style_BottomTab';
 import {APRI10, BLACK, GRAY20} from 'Root/config/color';
 import {
 	FeedTabFilled,
@@ -17,8 +16,6 @@ import {
 	ProfileDefaultImg,
 } from 'Atom/icon';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import {useNavigationState} from '@react-navigation/native';
-import {merge} from 'qs/lib/utils';
 import FastImage from 'react-native-fast-image';
 
 export default function BottomTab({state, descriptors, navigation}) {
@@ -74,7 +71,7 @@ export default function BottomTab({state, descriptors, navigation}) {
 					//확인 필   바텀탭 텍스트 색깔 조정
 					const color = isFocused ? BLACK : BLACK;
 					const textStyle = isFocused ? txt.noto22b : txt.noto22;
-					const textStyleEng = isFocused ? txt.roboto22b : txt.roboto22;
+					const textStyleEng = isFocused ? txt.roboto26b : txt.roboto26;
 					const onPress = () => {
 						if (index == 3 && userGlobalObject.userInfo.isPreviewMode) {
 							Modal.popLoginRequestModal(() => {
@@ -204,3 +201,31 @@ const Shadow = () => (
 			}}></View>
 	</>
 );
+
+const tab = StyleSheet.create({
+	wrap_main: {
+		flexDirection: 'row',
+		justifyContent: 'space-evenly',
+		backgroundColor: '#fff',
+		height: 100 * DP,
+	},
+	hitboxLayout: {
+		width: 186 * DP,
+		// height: 162 * DP,
+		// width: 150 * DP,
+		height: 100 * DP,
+		alignItems: 'center',
+	},
+	tab_feed: {
+		paddingTop: 14 * DP,
+	},
+	tab_animal_saving: {
+		paddingTop: 16 * DP,
+	},
+	tab_community: {
+		paddingTop: 14 * DP,
+	},
+	tab_my: {
+		paddingTop: 14 * DP,
+	},
+});

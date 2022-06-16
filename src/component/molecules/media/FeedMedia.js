@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, Image, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
+import {Text, View, Image, TouchableOpacity, StyleSheet, ScrollView, BackHandler} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {ImageList48, VideoPlay48, VideoPlay_Feed, Tag70, Blur694} from 'Atom/icon';
@@ -10,6 +10,8 @@ import {number} from 'prop-types';
 import {phoneFomatter} from 'Root/util/stringutil';
 import PhotoTagItem from 'Organism/feed/PhotoTagItem';
 import Modal from 'Root/component/modal/Modal';
+import {useNavigation} from '@react-navigation/core';
+import HashText from '../info/HashText';
 
 /**
  *
@@ -51,6 +53,7 @@ export default FeedMedia = props => {
 		feed_writer_id,
 		feed_avatar_id,
 	} = props.data;
+	const navigation = useNavigation();
 
 	const emergency_title = feed_type == 'report' ? '제보' : feed_type == 'missing' ? '실종' : '';
 	const isEmergency = feed_type == 'report' || feed_type == 'missing';
@@ -58,6 +61,8 @@ export default FeedMedia = props => {
 	const species_detail = missing_animal_species_detail || report_animal_species_detail;
 	const animal_species_detail = species_detail?.includes('un') || !species_detail ? '' : ' / ' + species_detail;
 	const emergency_location = missing_animal_lost_location || report_witness_location;
+	const contentParsing = feed_content.replace(/(&[#|@]){2}(.*?)%&%.*?(&[#|@]){2}/g, '$2');
+
 	let newMissingDate = '';
 	let splitAddress = '';
 	let newMissingAddress = '';
@@ -98,11 +103,33 @@ export default FeedMedia = props => {
 		} else return false;
 	};
 
+	const [showImgMode, setShowImgMode] = React.useState(false);
+	const backAction = () => {
+		console.log('back', showImgMode);
+		if (showImgMode) {
+			Modal.close();
+			setShowImgMode(false);
+			return true;
+		} else {
+			return false;
+		}
+	};
+
+	React.useEffect(() => {
+		BackHandler.addEventListener('hardwareBackPress', backAction);
+		return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
+	}, [showImgMode]);
+
 	const onPressPhoto = () => {
+		setShowImgMode(true);
 		Modal.popPhotoListViewModal(
 			feed_medias.map(v => v.media_uri),
 			() => Modal.close(),
 		);
+	};
+
+	const onPressImg = () => {
+		props.onPressPhoto();
 	};
 
 	const swiperRef = React.useRef();
@@ -143,9 +170,12 @@ export default FeedMedia = props => {
 									onPressPhoto={onPressPhoto}
 								/>
 								{feed_type == 'missing' || feed_type == 'report' ? (
-									<View style={{bottom: 19 * DP, width: 750 * DP, height: 694 * DP, position: 'absolute', alignItems: 'center'}}>
+									<TouchableOpacity
+										activeOpacity={0.8}
+										onPress={onPressImg}
+										style={{bottom: 19 * DP, width: 750 * DP, height: 694 * DP, position: 'absolute', alignItems: 'center'}}>
 										<Blur694 />
-									</View>
+									</TouchableOpacity>
 								) : (
 									false
 								)}
@@ -197,7 +227,7 @@ export default FeedMedia = props => {
 						</View>
 						<View style={style.report_detail_container}>
 							<Text style={[txt.noto32, {color: 'white', lineHeight: 45 * DP}]} numberOfLines={2}>
-								{feed_content}
+								{contentParsing}
 							</Text>
 						</View>
 					</View>
@@ -210,7 +240,6 @@ export default FeedMedia = props => {
 };
 
 FeedMedia.defaultProps = {
-	//
 	data: {
 		feed_id: null,
 		isVideo: false,
@@ -218,8 +247,8 @@ FeedMedia.defaultProps = {
 		alert_title: 'alert_msg',
 		emergency: false,
 	},
-
 	onSelect: e => console.log(e),
+	onPressPhoto: () => {},
 	img_uri: 'https://consecutionjiujitsu.com/wp-content/uploads/2017/04/default-image.jpg',
 };
 

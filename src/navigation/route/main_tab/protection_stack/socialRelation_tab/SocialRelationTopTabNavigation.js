@@ -4,7 +4,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import FollowerList from 'Templete/list/FollowerList';
 import RecommendedAccountList from 'Templete/list/RecommendedAccountList';
 import DP from 'Root/config/dp';
-import {APRI10, BLACK, GRAY10, WHITE} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, GRAY40, WHITE} from 'Root/config/color';
 import {count_to_K} from 'Root/util/stringutil';
 import {getFollowers, getFollows, getUserProfile} from 'Root/api/userapi';
 import {useNavigation} from '@react-navigation/core';
@@ -20,7 +20,8 @@ export default SocialRelationTopTabNavigation = props => {
 	const [followerInput, setFollowerInput] = React.useState(''); // 팔로워 검색
 	const [followInput, setFollowInput] = React.useState(''); // 팔로우 검색
 	const [loading, setLoading] = React.useState(true);
-	const initial = props.route.params.initial != undefined ? props.route.params.initial : 'FollowerList';
+	const params = props.route.params;
+	const initial = params.initial != undefined ? params.initial : 'FollowerList';
 	// console.log('type', data.user_type);
 
 	React.useEffect(() => {
@@ -32,9 +33,9 @@ export default SocialRelationTopTabNavigation = props => {
 
 	//헤더 타이틀 설정 작업 및 유저 오브젝트 할당
 	React.useEffect(() => {
-		navigation.setOptions({title: props.route.params.userobject.user_nickname});
+		navigation.setOptions({title: params.userobject.user_nickname});
 		fetchData();
-	}, [props.route.params]);
+	}, [params]);
 
 	React.useEffect(() => {
 		//입력마다 api 접속하는 것이 아닌 타이핑 이후 500ms 주어 타이핑이 종료되었을 때 검색을 실시하도록 timeOut 설정
@@ -75,7 +76,7 @@ export default SocialRelationTopTabNavigation = props => {
 		return new Promise(async function (resolve, reject) {
 			try {
 				getUserProfile(
-					{userobject_id: props.route.params.userobject._id},
+					{userobject_id: params.userobject._id},
 					result => {
 						resolve(result.msg);
 						// console.log('is_follow', result.msg.is_follow);
@@ -96,7 +97,7 @@ export default SocialRelationTopTabNavigation = props => {
 		return new Promise(async function (resolve, reject) {
 			getFollows(
 				{
-					userobject_id: props.route.params.userobject._id,
+					userobject_id: params.userobject._id,
 					// user_nickname: followInput,
 					user_nickname: searchContext.searchInfo.searchInputForSocial,
 				},
@@ -122,7 +123,7 @@ export default SocialRelationTopTabNavigation = props => {
 		return new Promise(async function (resolve, reject) {
 			getFollowers(
 				{
-					userobject_id: props.route.params.userobject._id,
+					userobject_id: params.userobject._id,
 					user_nickname: followerInput,
 					user_nickname: searchContext.searchInfo.searchInputForSocial,
 				},
@@ -156,11 +157,18 @@ export default SocialRelationTopTabNavigation = props => {
 		<SocialRelationTab.Navigator
 			initialRouteName={initial}
 			screenOptions={{
-				tabBarItemStyle: {height: 70 * DP},
-				tabBarIndicatorStyle: {backgroundColor: BLACK, height: 6 * DP},
+				tabBarItemStyle: {height: 78 * DP},
+				tabBarIndicatorStyle: {backgroundColor: params.userobject.user_type == 'pet' ? WHITE : BLACK, height: 6 * DP},
 				tabBarLabelStyle: [styles.tabbarLabelStyle],
 				tabBarInactiveTintColor: GRAY10,
 				tabBarActiveTintColor: BLACK,
+				tabBarStyle: {
+					borderBottomWidth: 2 * DP,
+					borderTopColor: GRAY40,
+					borderBottomColor: GRAY40,
+					elevation: 0,
+					height: params.userobject.user_type == 'pet' ? 0 : 78 * DP,
+				},
 			}}
 			initialLayout={{width: Dimensions.get('window').width}}
 			optimizationsEnabled={true}>
@@ -173,7 +181,7 @@ export default SocialRelationTopTabNavigation = props => {
 					<FollowerList {...props} followers={followers} resetProfileInfo={fetchData} onChangeSearchInput={onChangeFollower} loading={loading} />
 				)}
 			</SocialRelationTab.Screen>
-			{props.route.params.userobject.user_type != 'pet' ? (
+			{params.userobject.user_type != 'pet' ? (
 				<SocialRelationTab.Screen
 					name="FollowingList"
 					initialParams={{userobject: data}}

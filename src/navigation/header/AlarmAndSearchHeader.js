@@ -16,7 +16,7 @@ export default AlarmAndSearchHeader = ({navigation, route, options, back}) => {
 	const clickAlarm = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			navigation.navigate('AlarmList', {isNewAlarm: isNewAlarm});

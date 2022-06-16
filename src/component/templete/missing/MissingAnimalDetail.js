@@ -308,7 +308,7 @@ export default MissingAnimalDetail = props => {
 	const onPressReply = comment => {
 		if (userGlobalObject.userInfo.isPreviewMode && comments.length == 0) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			const findParentIndex = comments.findIndex(e => e._id == comment._id); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
@@ -406,7 +406,7 @@ export default MissingAnimalDetail = props => {
 		};
 		return (
 			<View style={{alignItems: 'center'}}>
-				<ReplyWriteBox onPressReply={moveToCommentPage} onWrite={moveToCommentPage} isProtectRequest={true} />
+				<ReplyWriteBox onPressReply={onPressReply} onWrite={moveToCommentPage} isProtectRequest={true} />
 				<View style={[{paddingVertical: 50 * DP}]}>
 					<Text style={[txt.noto24, {width: 694 * DP, alignSelf: 'center'}]}>실종/제보 더보기</Text>
 					<FlatList data={missingList} renderItem={renderMissingReport} keyExtractor={item => item._id} windowSize={5} />

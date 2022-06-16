@@ -244,7 +244,7 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 	const onPressFavorite = bool => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			if (!isProtect) {

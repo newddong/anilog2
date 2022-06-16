@@ -3,7 +3,7 @@ import {Text, View, FlatList, TouchableOpacity, RefreshControl, StyleSheet, Acti
 import {feedWrite, login_style, searchProtectRequest, temp_style} from 'Templete/style_templete';
 import {APRI10, GRAY10, GRAY30, WHITE} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {Check42, Check50, EmptyIcon, Rect42_Border, Rect50_Border, Urgent_Write1, Urgent_Write2} from 'Atom/icon';
+import {Check42, Check50, EmptyIcon, Rect42_Border, Rect50_Border, Urgent_Write1, Urgent_Write2, Urgent_Write3} from 'Atom/icon';
 import {useNavigation} from '@react-navigation/core';
 import {PET_KIND, PET_PROTECT_LOCATION, PROTECT_REQUEST_MAIN_LIMIT} from 'Root/i18n/msg';
 import {favoriteFeed, getMissingReportList} from 'Root/api/feedapi.js';
@@ -183,7 +183,7 @@ export default MissingReportList = props => {
 	const onPressShowActionButton = bool => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			// setShowActionButton(!showActionButton);
@@ -367,10 +367,10 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.2,
 		borderRadius: 40 * DP,
 		shadowOffset: {
-			width: 2,
-			height: 2,
+			width: 1,
+			height: 1,
 		},
-		shadowRadius: 4.65,
+		shadowRadius: 4.65 * DP,
 		// shadowOffset: {
 		// 	width: 2 * DP,
 		// 	height: 1 * DP,

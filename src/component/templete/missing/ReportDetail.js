@@ -238,7 +238,7 @@ export default ReportDetail = props => {
 	const onPressReply = comment => {
 		if (userGlobalObject.userInfo.isPreviewMode && comments.length == 0) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			const findParentIndex = comments.findIndex(e => e._id == comment._id); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
@@ -246,6 +246,11 @@ export default ReportDetail = props => {
 			comment_obj.comment_index = findParentIndex;
 			navigation.push('FeedCommentList', {feedobject: data, showAllContents: true, reply: comment_obj});
 		}
+	};
+
+	//댓글 더보기 클릭
+	const moveToCommentList = () => {
+		navigation.push('FeedCommentList', {feedobject: data, showAllContents: true, showKeyboard: true});
 	};
 
 	//댓글 대댓글 삭제
@@ -279,11 +284,6 @@ export default ReportDetail = props => {
 		comment_obj.isChild = isChild;
 		comment_obj.comment_index = findParentIndex;
 		navigation.push('FeedCommentList', {feedobject: data, edit: comment}); // 수정하려는 댓글 정보를 포함해서 보냄
-	};
-
-	//댓글 더보기 클릭
-	const moveToCommentList = () => {
-		navigation.push('FeedCommentList', {feedobject: data, showAllContents: true, showKeyboard: true});
 	};
 
 	const [showImgMode, setShowImgMode] = React.useState(false);
@@ -388,7 +388,7 @@ export default ReportDetail = props => {
 		return (
 			<View style={{alignItems: 'center'}}>
 				<View style={{marginTop: 20 * DP}}>
-					<ReplyWriteBox onPressReply={moveToCommentList} onWrite={onPressReply} isProtectRequest={true} />
+					<ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} isProtectRequest={true} />
 				</View>
 				<View style={[{paddingVertical: 50 * DP}]}>
 					<Text style={[txt.noto24, {width: 694 * DP, alignSelf: 'center'}]}>실종/제보 더보기</Text>

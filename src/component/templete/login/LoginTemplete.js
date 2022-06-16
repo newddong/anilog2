@@ -16,8 +16,11 @@ import {createSettingPublic, getSettingPublic} from 'Root/api/settingpublic';
 import {createNotice, getNotice} from 'Root/api/notice';
 import {NextMark, NextMark48} from 'Root/component/atom/icon';
 import DP from 'Root/config/dp';
+import {useNavigation} from '@react-navigation/core';
+import {CommonActions} from '@react-navigation/routers';
 
 export default LoginTemplete = props => {
+	const navigation = useNavigation();
 	const [userSetting, setUserSetting] = React.useState();
 
 	React.useEffect(() => {
@@ -106,7 +109,12 @@ export default LoginTemplete = props => {
 							console.log('getNotice err', err);
 						},
 					);
-					props.navigation.reset({routes: [{name: 'MainTab', params: userObject.msg.user_type}]});
+					if (navigation.getState().index != 0) {
+						//로그인 유도 페이지에서 로그인이 된 경우 이전 페이지로 이동!
+						navigation.goBack();
+					} else {
+						navigation.reset({routes: [{name: 'MainTab', params: userObject.msg.user_type}]});
+					}
 				},
 				error => {
 					console.log('error', error);
@@ -122,19 +130,16 @@ export default LoginTemplete = props => {
 	};
 
 	const moveToAssign = () => {
-		props.navigation.push('AgreementCheck');
+		navigation.push('AgreementCheck');
 	};
 
 	//보호소 코드 체크
 	const moveToShelterCodeCheck = () => {
-		props.navigation.push('ShelterCodeCheck');
+		navigation.push('ShelterCodeCheck');
 	};
 
-	const findMyId = () => {
-		props.navigation.push('FindAccount');
-	};
 	const changePassword = () => {
-		props.navigation.push('PasswordResetIdentification');
+		navigation.push('PasswordResetIdentification');
 	};
 
 	//자동로그인 박스 클릭
@@ -173,17 +178,10 @@ export default LoginTemplete = props => {
 		console.log('Id Validator ' + text);
 	};
 
-	const [t, setT] = React.useState(false);
-	const test = () => {
-		// Modal.popSelectScrollBoxModal([mobile_carrier], '도, 광역시를 지정해주세요.', e => console.log('e', e));
-		console.log(userSetting);
-	};
-
 	const moveToMainTab = () => {
 		userGlobalObj.userInfo.isPreviewMode = true;
 		AsyncStorage.removeItem('userSetting');
-
-		props.navigation.reset({routes: [{name: 'MainTab'}]});
+		navigation.reset({routes: [{name: 'MainTab'}]});
 	};
 
 	if (!userSetting) {
@@ -252,27 +250,12 @@ export default LoginTemplete = props => {
 
 				{/* Btn_w522 */}
 				<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_login]}>
-					<AniButton
-						btnLayout={btn_w522_r30}
-						btnTitle={'로그인'}
-						// btnTheme={'shadow'}
-						btnStyle={'filled'}
-						titleFontStyle={32}
-						onPress={tryToLogin}
-						//
-					/>
+					<AniButton btnLayout={btn_w522_r30} btnTitle={'로그인'} titleFontStyle={32} onPress={tryToLogin} />
 				</View>
 
 				{/* Btn_w522 */}
 				<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_assign]}>
-					<AniButton
-						btnLayout={btn_w522_r30}
-						btnTitle={'회원 가입'}
-						btnStyle={'border'}
-						// btnTheme={'gray'}
-						titleFontStyle={32}
-						onPress={moveToAssign}
-					/>
+					<AniButton btnLayout={btn_w522_r30} btnTitle={'회원 가입'} btnStyle={'border'} titleFontStyle={32} onPress={moveToAssign} />
 				</View>
 
 				{/* basic info */}

@@ -341,7 +341,7 @@ export default ReviewDetail = props => {
 	const onLockBtnClick = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			setPrivateComment(!privateComment);
@@ -363,7 +363,7 @@ export default ReviewDetail = props => {
 	const onAddPhoto = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			console.log('onAddphoto');
@@ -384,7 +384,7 @@ export default ReviewDetail = props => {
 	const onReplyBtnClick = (parentCommentId, addChildComment) => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			input.current?.focus();
@@ -444,7 +444,7 @@ export default ReviewDetail = props => {
 	const onPressFavorite = bool => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			setFavoriteEtc(
@@ -468,7 +468,7 @@ export default ReviewDetail = props => {
 		console.log('bool', bool);
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			likeEtc(

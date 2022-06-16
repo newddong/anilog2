@@ -251,7 +251,7 @@ export default Profile = ({route}) => {
 	const moveToFeedWrite = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else if (userGlobalObject.userInfo.user_type == 'user') {
 			Modal.popAvatarSelectFromWriteModal(obj => {
@@ -283,7 +283,7 @@ export default Profile = ({route}) => {
 	const onPressSendMsg = (_id, name) => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			setTimeout(() => {
@@ -588,9 +588,9 @@ export default Profile = ({route}) => {
 							</View>
 						) : (
 							<View style={[temp_style.floatingTwoBtn, profile.floatingBtn, {alignItems: 'center', justifyContent: 'center'}]}>
-								<View style={[buttonstyle.writeButton, buttonstyle.shadow]}>
+								{/* <View style={[buttonstyle.writeButton, buttonstyle.shadow]}>
 									<Message94 onPress={() => onPressSendMsg(data._id, data.user_nickname)} />
-								</View>
+								</View> */}
 								<View style={[buttonstyle.writeButton, buttonstyle.shadow]}>
 									<Write94 onPress={moveToFeedWrite} />
 								</View>

@@ -323,7 +323,7 @@ export default ArticleDetail = props => {
 	const onLockBtnClick = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			setPrivateComment(!privateComment);
@@ -346,7 +346,7 @@ export default ArticleDetail = props => {
 	const onAddPhoto = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			console.log('onAddphoto');
@@ -368,7 +368,7 @@ export default ArticleDetail = props => {
 	const onReplyBtnClick = (parentCommentId, addChildComment) => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			// console.log('대댓글 쓰기 버튼 클릭 : ', parentCommentId.comment_writer_id.user_nickname);
@@ -437,18 +437,24 @@ export default ArticleDetail = props => {
 
 	//즐겨찾기 클릭
 	const onPressFavorite = bool => {
-		setFavoriteEtc(
-			{
-				collectionName: 'communityobjects',
-				target_object_id: data._id,
-				is_favorite: bool,
-			},
-			result => {
-				console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
-				getArticleData();
-			},
-			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
-		);
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('LoginRequired');
+			});
+		} else {
+			setFavoriteEtc(
+				{
+					collectionName: 'communityobjects',
+					target_object_id: data._id,
+					is_favorite: bool,
+				},
+				result => {
+					console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
+					getArticleData();
+				},
+				err => console.log('err / favoriteEtc / ArticleDetail : ', err),
+			);
+		}
 	};
 
 	//댓글 대댓글 삭제
@@ -475,7 +481,7 @@ export default ArticleDetail = props => {
 		console.log('bool', bool);
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			likeEtc(

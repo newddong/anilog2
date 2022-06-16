@@ -22,11 +22,10 @@ import {APRI10} from 'Root/config/color';
  */
 export default FollowerList = props => {
 	const navigation = useNavigation();
-	const isFollowing = props.route.name != 'FollowingList';
-	const [input, setInput] = React.useState('');
 	const [loading, setLoading] = React.useState(false);
 	const [follower, setFollower] = React.useState([]);
 	const [follow, setFollow] = React.useState([]);
+	const isPreView = userGlobalObject.userInfo.isPreviewMode;
 
 	React.useEffect(() => {
 		setFollower(props.followers);
@@ -39,9 +38,9 @@ export default FollowerList = props => {
 	}, [props.follows]);
 
 	const onClickFollowBtn = item => {
-		if (userGlobalObject.userInfo.isPreviewMode) {
+		if (isPreView) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			followUser(
@@ -59,9 +58,9 @@ export default FollowerList = props => {
 
 	const onClickUnFollowBtn = item => {
 		// console.log('onClickUnFollowBtn', item);
-		if (userGlobalObject.userInfo.isPreviewMode) {
+		if (isPreView) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			unFollowUser(
@@ -102,7 +101,7 @@ export default FollowerList = props => {
 							{props.route.name != 'FollowingList' ? (
 								<ControllableAccountList
 									items={follower}
-									showButtons={true}
+									showButtons={isPreView ? false : true}
 									onClickAccount={onClickAccount}
 									onClickFollowBtn={onClickFollowBtn}
 									onClickUnFollowBtn={onClickUnFollowBtn}
@@ -112,7 +111,7 @@ export default FollowerList = props => {
 							) : (
 								<ControllableAccountList
 									items={follow}
-									showButtons={true}
+									showButtons={isPreView ? false : true}
 									onClickAccount={onClickAccount}
 									onClickUnFollowBtn={onClickUnFollowBtn}
 									onClickFollowBtn={onClickFollowBtn}

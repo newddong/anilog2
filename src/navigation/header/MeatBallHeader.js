@@ -51,7 +51,7 @@ export default MeatBallHeader = props => {
 			setTimeout(() => {
 				if (userGlobalObject.userInfo.isPreviewMode) {
 					Modal.popLoginRequestModal(() => {
-						props.navigation.navigate('Login');
+						props.navigation.navigate('LoginRequired');
 					});
 				} else {
 					Modal.popOneBtnSelectModal(

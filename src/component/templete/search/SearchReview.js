@@ -232,7 +232,8 @@ export default SearchReview = props => {
 
 	//댓글 모두 보기 클릭
 	const onPressReply = index => {
-		navigation.push('CommunityCommentList', {community_object: getData()[index]});
+		// navigation.push('CommunityCommentList', {community_object: getData()[index]});
+		navigation.push('ReviewDetail', {community_object: getData()[index], comment: true});
 	};
 
 	//리뷰 썸네일 클릭
@@ -267,7 +268,7 @@ export default SearchReview = props => {
 		console.log('index', index, bool);
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			likeEtc(

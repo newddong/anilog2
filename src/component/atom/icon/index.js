@@ -490,5 +490,4 @@ export const CommunityIcon = makeSvg(communityIcon, size54, MAINBLACK);
 export const CommunityIcon_GRAY = makeSvg(communityIcon, size54, GRAY20);
 export const ProtectRequestIcon = makeSvg(protectRequest, size54, MAINBLACK);
 export const ProtectRequestIcon_GRAY = makeSvg(protectRequest, size54, GRAY20);
-export const Location40Border = makeSvg(location40border,size40,'#1A1311');
-
+export const Location40Border = makeSvg(location40border, size40, '#1A1311');

@@ -55,8 +55,6 @@ import Modal from 'Component/modal/Modal';
 import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 import RequestLogin from 'Templete/login/RequestLogin';
 import AddVolunteers from 'Root/component/templete/volunteer/AddVolunteers';
-import FindAccount from 'Root/component/templete/user/FindAccount';
-import SuggestAssign from 'Root/component/templete/login/SuggestAssign';
 import PasswordResetIdentification from 'Root/component/templete/login/PasswordResetIdentification';
 import PasswordReset from 'Root/component/templete/user/PasswordReset';
 import AddressSearchPage from 'Root/component/templete/search/AddressSearchPage';
@@ -195,16 +193,6 @@ export default RootStackNavigation = () => {
 							name="AssignShelterProfileImage"
 							component={AssignShelterProfileImage}
 							options={{header: props => <SimpleHeader {...props} />, title: '보호소 등록'}}
-						/>
-						<RootStack.Screen
-							name="FindAccount"
-							component={FindAccount}
-							options={{header: props => <SimpleHeader {...props} />, title: '내 계정 찾기'}}
-						/>
-						<RootStack.Screen
-							name="SuggestAssign"
-							component={SuggestAssign}
-							options={{header: props => <SimpleHeader {...props} />, title: '내 계정 찾기'}}
 						/>
 						<RootStack.Screen
 							name="PasswordResetIdentification"

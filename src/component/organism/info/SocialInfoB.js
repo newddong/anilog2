@@ -3,7 +3,6 @@ import {Text, View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {socialInfoB} from 'Organism/style_organism copy';
 import {useNavigation} from '@react-navigation/native';
-// import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 export default SocialInfoB = props => {
 	const navigation = useNavigation();
 

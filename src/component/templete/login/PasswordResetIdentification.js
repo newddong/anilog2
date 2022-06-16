@@ -194,7 +194,7 @@ export default PasswordResetIdentification = props => {
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
 			{/* <View style={[styles.container, {flex: 1}]}> */}
-			<View style={[styles.infoMessageBox, {marginBottom: 80 * DP}]}>
+			<View style={[styles.infoMessageBox, {marginBottom: 136 * DP}]}>
 				<Text style={[txt.noto30, {color: MAINBLACK, textAlign: 'center'}]}>회원가입시 등록한 정보로 {'\n'} 비밀번호를 재설정 할 수 있습니다.</Text>
 			</View>
 			{/* <View style={[styles.nameInputBox]}>

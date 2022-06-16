@@ -113,6 +113,7 @@ export default AssignShelterInformation = props => {
 			<View style={[styles.textMsg]}>
 				<Text style={[txt.noto24]}>
 					'<Text style={{color: 'red'}}>*</Text>'는 필수 입력해야하는 사항입니다.
+					{/* '<Text style={{color: 'red'}}>*</Text>'는 필수 입력해야하는 사항입니다. */}
 				</Text>
 			</View>
 			{/* InputForm */}

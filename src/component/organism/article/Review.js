@@ -1,6 +1,6 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import DP from 'Root/config/dp';
 import {Comment48, FavoriteTag46_Filled, FavoriteTag48_Border, Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {APRI10, BLACK, GRAY10, GRAY20, GRAY30, GRAY40, WHITE} from 'Root/config/color';
@@ -8,7 +8,6 @@ import {useNavigation} from '@react-navigation/core';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {getTimeLapsed} from 'Root/util/dateutil';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import ReviewThumbnail from './ReviewThumbnail';
 /**
  * 후기 아이템

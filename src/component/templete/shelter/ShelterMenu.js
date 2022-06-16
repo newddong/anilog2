@@ -1,6 +1,5 @@
 import React from 'react';
 import {Text, View, ScrollView, TouchableOpacity} from 'react-native';
-// import {TouchableOpacity} from 'react-native-gesture-handler';
 import {login_style, shelterMenu, temp_txt, temp_style, btn_style, userMenu_style} from 'Templete/style_templete';
 import {useNavigation} from '@react-navigation/core';
 import ProfileImageLarge160 from 'Molecules/image/ProfileImageLarge160';

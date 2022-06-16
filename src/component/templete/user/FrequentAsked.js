@@ -1,12 +1,11 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet} from 'react-native';
+import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet, FlatList} from 'react-native';
 import {GRAY10, GRAY40, APRI10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import moment from 'moment';
 import DP from 'Root/config/dp';
 import {getAllAnnouncement} from 'Root/api/announcement';
-import {FlatList} from 'react-native-gesture-handler';
 import {MainLogo} from 'Root/component/atom/icon';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import {getAppliesRecord} from 'Root/api/protectapi';

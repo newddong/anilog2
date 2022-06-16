@@ -196,7 +196,7 @@ import protectRequest from './protectRequest';
 import addItem68Black from './addItem68Black';
 import location40border from './location40border';
 import location48border from './location48border';
-
+import verticalBar from './verticalBar';
 
 import DP from 'Root/config/dp';
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK, MAINBLACK} from 'Root/config/color';
@@ -495,3 +495,4 @@ export const ProtectRequestIcon_GRAY = makeSvg(protectRequest, size54, GRAY20);
 export const Location40Border = makeSvg(location40border,size40,'#1A1311');
 export const Location48Border = makeSvg(location48border,size48,'#1A1311');
 
+export const VerticalBar = makeSvg(verticalBar, {width: 2 * DP, height: 32 * DP}, '#767676');

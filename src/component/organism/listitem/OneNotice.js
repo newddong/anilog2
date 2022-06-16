@@ -6,7 +6,6 @@ import {txt} from 'Root/config/textstyle';
 import moment from 'moment';
 import DP from 'Root/config/dp';
 import {getAllAnnouncement} from 'Root/api/announcement';
-import {FlatList} from 'react-native-gesture-handler';
 /**
  * touch하면 회색 text나오는
  *

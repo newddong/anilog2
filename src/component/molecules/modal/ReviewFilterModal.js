@@ -10,7 +10,6 @@ import {getAddressList} from 'Root/api/address';
 import ArrowDownButton from '../button/ArrowDownButton';
 import {btn_w242, btn_w280} from 'Root/component/atom/btn/btn_style';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 /**
  * 리뷰 필터 추가 및 수정 모달
  * @param {'Review'|'ReviewWrite'} category -  리뷰/리뷰글쓰기

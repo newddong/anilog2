@@ -14,9 +14,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import userGlobalObj from 'Root/config/userGlobalObject';
 import {createSettingPublic, getSettingPublic} from 'Root/api/settingpublic';
 import {createNotice, getNotice} from 'Root/api/notice';
-import {NextMark, NextMark48} from 'Root/component/atom/icon';
 import DP from 'Root/config/dp';
 import {useNavigation} from '@react-navigation/core';
+import {NextMark, NextMark48, VerticalBar} from 'Root/component/atom/icon';
 
 export default LoginTemplete = props => {
 	const navigation = useNavigation();
@@ -261,22 +261,15 @@ export default LoginTemplete = props => {
 				{/* basic info */}
 				<View style={[login_style.basic_info2, loginTemplete_style.basic_info]}>
 					<TouchableOpacity onPress={moveToShelterCodeCheck}>
-						<Text style={[txt.noto24, {color: GRAY10}, {marginRight: 15 * DP}]}>보호소 등록</Text>
+						<Text style={[txt.noto24, {color: GRAY10}, {marginRight: 60 * DP}, {width: 134 * DP}, {height: 40 * DP}]}>보호소 등록</Text>
 					</TouchableOpacity>
 					{/* <Text style={{color: GRAY20}}> | </Text>
 					<TouchableOpacity onPress={findMyId}>
 						<Text style={[txt.noto24, {color: GRAY20}]}> 내 계정 찾기 </Text>
 					</TouchableOpacity> */}
-					<Text style={{color: GRAY10}}>|</Text>
+					<VerticalBar />
 					<TouchableOpacity onPress={changePassword}>
-						<Text
-							style={[
-								txt.noto24,
-								{color: GRAY10},
-								//  {marginLeft: 60 * DP}
-							]}>
-							비밀번호 재설정
-						</Text>
+						<Text style={[txt.noto24, {color: GRAY10}, {marginLeft: 60 * DP}, {width: 170 * DP}, {height: 40 * DP}]}>비밀번호 재설정</Text>
 					</TouchableOpacity>
 				</View>
 			</View>

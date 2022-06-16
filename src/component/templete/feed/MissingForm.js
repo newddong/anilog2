@@ -172,7 +172,9 @@ export default MissingForm = props => {
 	};
 
 	const inputAge = age => {
+		console.log('날자선택'+age)
 		let ag = Date.now()-new Date(age);
+		console.log('ag'+ag);
 		let day = Math.floor(ag/1000/60/60/24);
 		let yr = day/365;
 		console.log(yr+'년'+day+'일')
@@ -431,7 +433,10 @@ export default MissingForm = props => {
 	
 	const animalAge = () => {
 		let yr = data.missing_animal_age;
+		console.log('year'+yr);
 		let month = Math.floor((yr - Math.floor(yr))*12);
+		console.log('month'+month);
+		console.log('date'+(yr - Math.floor(yr))*12);
 		if(yr>=1){
 			
 			return Math.floor(yr)+'살'+(month>0?' '+month+'개월':'');
@@ -446,7 +451,8 @@ export default MissingForm = props => {
 		let day = Math.floor(yr*365);
 		let now = new Date();
 		let birth = new Date(now.setDate(now.getDate()-day));
-		return birth.toLocaleString().substring(0,11).replace('-','.').replace('-','.')
+		console.log(birth.toISOString());
+		return birth.toISOString().substring(0,10).replace('-','.').replace('-','.')
 	}	
 
 

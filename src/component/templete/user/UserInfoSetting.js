@@ -240,54 +240,7 @@ export default UserInfoSetting = ({route}) => {
 			setData({...data, user_introduction: text});
 		}
 	};
-	const modifyNickNameButton = () => {
-		if (nickNameEdit) {
-			console.log('닉네임 저장되어야함');
-			updateUserInformation(
-				{
-					userobject_id: data._id,
-					user_nickname: newNick == '' ? data.user_nickname : newNick,
-				},
-				success => {
-					// Modal.close();
-					if (data.user_type == 'user') {
-						setNewNick(newNick);
-						userGlobalObject.userInfo.user_nickname = newNick;
-						userGlobalObject.userInfo.user_profile_uri = data.user_profile_uri;
-					}
-					// navigation.navigate({
-					// 	name: route.params.routeInfo.name,
-					// 	key: route.params.routeInfo.key,
-					// 	params: {changedPhoto: data.user_profile_uri},
-					// 	merge: true,
-					// });
-				},
-				// console.log('userObject', userObject);
-				err => {
-					Modal.close();
-					console.log('err', err);
-				},
-			);
-		}
-		setNickNameEdit(!nickNameEdit);
-	};
-
-	const nickName_validator = text => {
-		setNewNick(text);
-	};
-	//중복 처리
-	const checkDuplicateNickname = nick => {
-		nicknameDuplicationCheck(
-			{user_nickname: nick},
-			isDuplicated => {
-				setDuplicated(isDuplicated.msg);
-			},
-
-			err => {
-				console.log('duplicated check', err);
-			},
-		);
-	};
+	
 	const validateNewNick = nick => {
 		let regExp = /^[가-힣a-zA-Z0-9_]{2,20}$/;
 		setValidated(regExp.test(nick));
@@ -321,23 +274,6 @@ export default UserInfoSetting = ({route}) => {
 				console.log('duplicated check', err);
 			},
 		);
-	};
-	const validateNewNick = nick => {
-		let regExp = /^[가-힣a-zA-Z0-9_]{2,20}$/;
-		setValidated(regExp.test(nick));
-		if (userGlobalObject.userInfo.user_type == 'user') {
-			console.log('닉네임중복인가? ', checkDuplicateNickname(nick));
-			return regExp.test(nick) && !checkDuplicateNickname(nick);
-		} else {
-			return regExp.test(nick);
-		}
-	};
-	const onValidName = isValid => {
-		setConfirmed(isValid);
-	};
-	//새 닉네임 지우기 마크 클릭
-	const onClearNickname = () => {
-		setConfirmed(false);
 	};
 
 	const [city, setCity] = React.useState([userData.user_address.city]);

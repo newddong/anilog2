@@ -1,13 +1,12 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import DP from 'Root/config/dp';
 import {APRI10, BLACK, GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
 import {Photo44} from 'Root/component/atom/icon';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import moment from 'moment';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 /**
  * 게시글 컨텐츠
  * @param {object} props - Props Object

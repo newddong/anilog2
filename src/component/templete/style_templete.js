@@ -114,11 +114,8 @@ export const login_style = StyleSheet.create({
 	},
 	basic_info2: {
 		flexDirection: 'row',
-		// width: 426 * DP,
 		width: 426 * DP,
 		height: 40 * DP,
-		// justifyContent: 'center',
-		justifyContent: 'space-between',
 		alignItems: 'center',
 	},
 	social_info: {

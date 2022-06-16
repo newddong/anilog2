@@ -11,7 +11,6 @@ import {getInterestsList} from 'Root/api/interestsapi';
 import ArrowDownButton from '../button/ArrowDownButton';
 import {btn_w242, btn_w280, btn_w280x68} from 'Root/component/atom/btn/btn_style';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
-// import {TouchableOpacity} from 'react-native-gesture-handler';
 import Loading from './Loading';
 /**
  * 관심사 추가 및 수정 모달

@@ -1,11 +1,10 @@
 import React, {useState, useRef} from 'react';
-import {Text, TextInput, View, StyleSheet} from 'react-native';
+import {Text, TextInput, View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 
 import {SearchIcon} from 'Asset/image';
 import Backbutton from './icon_back.svg';
 import DP from 'Root/config/dp';
 import SvgWrapper from 'Atom/svgwrapper';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 //deprecated
 export default StackHeader = ({navigation, route, options, back}) => {
 	return (

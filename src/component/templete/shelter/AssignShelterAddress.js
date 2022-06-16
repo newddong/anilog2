@@ -29,7 +29,7 @@ export default AssignShelterAddress = props => {
 			detail: '', //세부주소
 		},
 	});
-	let regExp = /^[가-힣a-zA-Z0-9_]{2,20}$/;
+	let regExp = /^[가-힣a-zA-Z0-9_\s]{2,20}$/;
 
 	React.useEffect(() => {
 		if (props.route.params.addr) {

@@ -1,6 +1,6 @@
 import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
-import {APRI10, GRAY10, GREEN} from 'Root/config/color';
+import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
+import {APRI10, GRAY10, GREEN, WHITE} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {mobile_carrier} from 'Root/i18n/msg';
 import {btn_w226} from 'Atom/btn/btn_style';
@@ -11,7 +11,6 @@ import InputTimeLimit from 'Molecules/input/InputTimeLimit';
 import InputWithSelect from 'Molecules/input/InputWithSelect';
 import {btn_style, temp_style} from 'Templete/style_templete';
 import {phoneNumVerification} from 'Organism/style_organism copy';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import DP from 'Root/config/dp';
 import {style} from 'Root/component/templete/protection/EditAidRequest';
 import Input24 from 'Root/component/molecules/input/Input24';
@@ -126,23 +125,8 @@ export default PhoneNumVerification = props => {
 	// }, [props.verifyTimeLimit]);
 
 	return (
-		<View style={[phoneNumVerification.container]}>
+		<View style={[styles.container]}>
 			<View style={[styles.input30]}>
-				{/* <Input30
-					showTitle={false}
-					width={654 * DP}
-					placeholder={'이름 입력'}
-					onChange={onNameInputChange}
-					onValid={onValidName}
-					validator={nameValidator}
-					value={userName}
-					confirm={nameValidator}
-					// confirm
-					showmsg
-					alert_msg={'이름은 2자 이상으로 설정해주세요 '}
-					confirm_msg={'양식에 맞는 이름입니다.'}
-					maxLength={15}
-				/> */}
 				<Input24
 					showTitle={false}
 					width={694}
@@ -174,7 +158,7 @@ export default PhoneNumVerification = props => {
 					width={492}
 					items={mobile_carrier}
 					delimiter="|"
-					placeholder={'휴대폰 번호를 입력해주세요(-제외)'}
+					placeholder={"핸드폰 번호를 입력해주세요 ('-'제외)"}
 					onChange={onPhoneNumberInputChange}
 					onSelectDropDown={onMobileCompanyInputChange}
 					onValid={onValidMobileNum}
@@ -195,7 +179,7 @@ export default PhoneNumVerification = props => {
 					</View>
 				) : (
 					// <Text></Text>
-					<Text style={[txt.noto24, {color: GRAY10}, {marginLeft: 200 * DP}]}>입력한 내용이 인증시 자동 입력됩니다.</Text>
+					<Text style={[txt.noto24, {color: GRAY10}, {marginLeft: 200 * DP}]}>입력한 내용이 인증창이 뜰 시 자동 입력됩니다.</Text>
 				)}
 				{/* {props.phoneVerified ? (
 					<View style={[{position: 'absolute', right: 50, bottom: 0}]}>
@@ -212,30 +196,6 @@ export default PhoneNumVerification = props => {
 				<Text style={[txt.noto26, phoneNumVerification.phoneNumValidPassedText]}>휴대전화번호 양식에 맞춰주세요.</Text>
 				<Text style={[txt.noto26, phoneNumVerification.phoneNumValidPassedText]}>휴대전화번호 양식에 맞춰주세요.</Text>
 			)} */}
-
-			<View style={[phoneNumVerification.inputTimeLimitContainer]}>
-				{/* <View style={[phoneNumVerification.inputTimeLimit]}>
-					<InputTimeLimit
-						width={400}
-						timelimit={timeLimit}
-						onEndTimer={onEndTimer}
-						onChange={onVerificationNumberChange}
-						placeholder={'인증번호 입력'}
-						timeout_msg={'인증 가능한 시간이 초과되었습니다.'}
-						// alert_msg={'인증번호가 일치하지 않습니다.'}
-						alert_msg={'3글자 이상 문자 입력 후 인증 요청을 눌러주세요.'}
-						validator={verifyNumValidator}
-						onValid={onValidVerifyNum}
-					/>
-				</View> */}
-				{/* <View style={[btn_style.btn_w226, phoneNumVerification.btn_w226]}>
-					{timeOut ? (
-						<AniButton btnTitle={'인증 재요청'} btnStyle={'border'} onPress={requestReVerification} />
-					) : (
-						<AniButton btnTitle={'인증 요청'} onPress={requestVerification} />
-					)}
-				</View> */}
-			</View>
 		</View>
 	);
 };
@@ -263,9 +223,13 @@ const styles = StyleSheet.create({
 	input30: {
 		width: 694 * DP,
 		height: 104 * DP,
-		marginBottom: 60 * DP,
-		// paddingBottom: 60 * DP,
+		marginBottom: 20 * DP,
 
 		// backgroundColor: '#DEB5B5',
+	},
+	container: {
+		width: 694 * DP,
+		// height: 402 * DP, //UX 변경으로 인한 주석처리 (22.02.03 - 상우)
+		backgroundColor: WHITE,
 	},
 });

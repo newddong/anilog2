@@ -9,6 +9,7 @@ import {login_style, btn_style, temp_style, assignUserProfileImage_style} from '
 import Modal from 'Component/modal/Modal';
 import {assignUser, nicknameDuplicationCheck} from 'Root/api/userapi';
 import {AVAILABLE_NICK, NICKNAME_FORM} from 'Root/i18n/msg';
+import Input24 from 'Root/component/molecules/input/Input24';
 
 export default AssignUserProfileImage = props => {
 	const [imgSelected, setImgSelected] = React.useState();
@@ -136,13 +137,17 @@ export default AssignUserProfileImage = props => {
 			<View style={[temp_style.profileImageSelect, assignUserProfileImage_style.profileImageSelect]}>
 				<ProfileImageSelect onClick={selectPhoto} selectedImageUri={imgSelected} />
 			</View>
+			<View style={[{width: 528 * DP}, {height: 94 * DP}, {marginTop: 90 * DP}]}>
+				<Text style={[txt.noto30, {textAlign: 'center'}]}>*띄어쓰기 없이 2자 이상 15자 이내의 한글, 영문, 숫자, '_' 의 입력만 가능합니다.</Text>
+			</View>
 
 			{/* (M)Input30 */}
-			<View style={[styles.input30_assignUserProfileImage, {marginTop: 42 * DP}]}>
-				<Input30
+			<View style={[styles.input30_assignUserProfileImage, {marginTop: 90 * DP}]}>
+				<Input24
 					value={nickname}
 					showTitle={false}
 					width={694}
+					height={104}
 					confirm_msg={AVAILABLE_NICK}
 					// alert_msg={NICKNAME_FORM}
 					alert_msg={''}
@@ -153,12 +158,9 @@ export default AssignUserProfileImage = props => {
 					confirm={nickName_validator}
 					maxLength={20}
 					showmsg
-					height={104}
 				/>
 			</View>
-			<Text style={[{width: 694 * DP}, {textAlign: 'left'}, txt.noto24]}>
-				*띄어쓰기 없이 2자 이상 15자 이내의 한글, 영문, 숫자, '_' 의 입력만 가능합니다.
-			</Text>
+
 			{/* (A)Btn_w654 */}
 			<View style={[styles.btn_w654]}>
 				{confirmed ? (

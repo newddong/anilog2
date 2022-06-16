@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, Platform, StyleSheet, TouchableOpacity, Dimensions} from 'react-native';
+import {Text, View, Platform, StyleSheet, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
 import {organism_style, feedContent_style} from 'Organism/style_organism';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
 import {useNavigation, useRoute} from '@react-navigation/core';
@@ -7,8 +7,17 @@ import {FavoriteTag48_Border, FavoriteTag48_Filled, Meatball50_GRAY20_Horizontal
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {GRAY10, WHITE} from 'Root/config/color';
-import {FEED_MEATBALL_MENU_MY_FEED, REPORT_MENU, SHARE} from 'Root/i18n/msg';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import {
+	FEED_MEATBALL_MENU,
+	FEED_MEATBALL_MENU_FOLLOWING,
+	FEED_MEATBALL_MENU_FOLLOWING_UNFAVORITE,
+	FEED_MEATBALL_MENU_MY_FEED,
+	FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS,
+	FEED_MEATBALL_MENU_UNFOLLOWING,
+	FEED_MEATBALL_MENU_UNFOLLOWING_UNFAVORITE,
+	REPORT_MENU,
+	SHARE,
+} from 'Root/i18n/msg';
 import {MAINCOLOR} from 'Root/config/color';
 import HashText from 'Molecules/info/HashText';
 import Modal from 'Root/component/modal/Modal';

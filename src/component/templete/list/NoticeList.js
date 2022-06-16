@@ -1,12 +1,11 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet} from 'react-native';
+import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet, FlatList} from 'react-native';
 import {GRAY10, GRAY40, APRI10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import moment from 'moment';
 import DP from 'Root/config/dp';
 import {getAllAnnouncement} from 'Root/api/announcement';
-import {FlatList} from 'react-native-gesture-handler';
 import OneNotice from 'Root/component/organism/listitem/OneNotice';
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 const NoticeList = ({route}) => {

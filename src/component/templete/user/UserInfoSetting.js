@@ -29,7 +29,6 @@ import Input24 from 'Molecules/input/Input24';
 import {updateUserInformation, nicknameDuplicationCheck} from 'Root/api/userapi';
 import SelectInput from 'Root/component/molecules/button/SelectInput';
 import {getAddressList} from 'Root/api/address';
-
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 export default UserInfoSetting = ({route}) => {
 	const navigation = useNavigation();
@@ -70,7 +69,6 @@ export default UserInfoSetting = ({route}) => {
 			},
 		);
 	};
-
 	// React.useEffect(() => {
 	// 	getAddressList(
 	// 		{},
@@ -108,9 +106,7 @@ export default UserInfoSetting = ({route}) => {
 			setContentInterest(temp);
 			setLocationInterest(data.user_interests.interests_location);
 			// setLoaded(true);
-
 			getAddresses();
-
 		}
 	}, [userDataLoaded]);
 	React.useEffect(() => {
@@ -157,7 +153,6 @@ export default UserInfoSetting = ({route}) => {
 	// const onPressChangePwd = () => {
 	// 	navigation.push('ChangePassword', data.user_password);
 	// };
-
 	//지역 모달에 사용될 지역정보 얻어오기
 	const getAddresses = () => {
 		getAddressList(

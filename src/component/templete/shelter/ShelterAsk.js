@@ -1,12 +1,22 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet, Keyboard} from 'react-native';
+import {
+	Text,
+	View,
+	ScrollView,
+	TouchableOpacity,
+	TextInput,
+	ActivityIndicator,
+	StyleSheet,
+	Keyboard,
+	FlatList,
+	TouchableWithoutFeedback,
+} from 'react-native';
 import {GRAY10, GRAY40, APRI10, GRAY20, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import moment from 'moment';
 import DP from 'Root/config/dp';
 import {getAllAnnouncement} from 'Root/api/announcement';
-import {FlatList, TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import Modal from 'Component/modal/Modal';
 import SelectInput from 'Component/molecules/button/SelectInput';
 import InputLongText from 'Component/molecules/input/InputLongText';

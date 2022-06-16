@@ -1,11 +1,10 @@
 import React, {useState, useRef, useEffect} from 'react';
-import {Text, TextInput, View, StyleSheet} from 'react-native';
+import {Text, TextInput, View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 
 import {SearchIcon} from 'Asset/image';
 import Backbutton from 'Screens/header/icon_back.svg';
 import DP from 'Root/config/dp';
 import SvgWrapper from 'Atom/svgwrapper';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import FormTxtInput from 'Screens/common/formtxtinput';
 // import { CommonActions } from '@react-navigation/native';
 // import { useNavigationState } from '@react-navigation/native';

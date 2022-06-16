@@ -14,7 +14,8 @@
 // export const RED = '#FF3120';
 // export const GREEN = '#13BE00';
 // export const APRI10 = '#FF9888';
-export const TEXTBASECOLOR = '#191919';
+// export const TEXTBASECOLOR = '#191919';
+export const TEXTBASECOLOR = '#000000';
 export const MAINBLACK = '#000000';
 export const APRI10 = '#FF9888';
 
@@ -40,3 +41,4 @@ export const LIGHT_SALMON = '#FFA07A';
 export const LIGNT_CYAN = '#E0FFFF';
 export const GAINSBORO = '#DCDCDC';
 export const BISQUE = '#FFE4C4';
+export const OPACITY90 = 'rgba(255,255,255,0.9)';

@@ -4,7 +4,7 @@ import {APRI10, BLACK} from 'Root/config/color';
 import {Filter60Border, Filter60Filled, WriteBoard} from 'Root/component/atom/icon';
 import ReviewList from 'Root/component/organism/list/ReviewList';
 import Modal from 'Root/component/modal/Modal';
-import {getCommunityList, updateAndDeleteCommunity} from 'Root/api/community';
+import {getCommunityList} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
@@ -12,7 +12,6 @@ import {likeEtc} from 'Root/api/likeetc';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import community_obj from 'Root/config/community_obj';
 import {NETWORK_ERROR, REPORT_MENU, REVIEW_LIMIT} from 'Root/i18n/msg';
-import {createReport} from 'Root/api/report';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import {searchProtectRequest} from 'Templete/style_templete';
 import AnimalButton from 'Root/component/molecules/button/AnimalButton';
@@ -125,102 +124,6 @@ export default ReviewMain = ({route, navigation}) => {
 		const isCategoryNotSelected = selectedCategoryFilter.length == 0;
 		const none_interests_location = previousFilter.interests_location.city == '';
 		return isCategoryNotSelected && none_interests_location;
-	};
-
-	//미트볼 클릭
-	const onPressMeatball = index => {
-		if (getData()[index].community_writer_id) {
-			const isMyArticle = userGlobalObject.userInfo._id == getData()[index].community_writer_id._id;
-			Modal.popSelectBoxModal(
-				isMyArticle ? ['수정', '삭제'] : ['신고'],
-				select => {
-					console.log('select', select);
-					switch (select) {
-						case '수정':
-							navigation.push('CommunityEdit', {previous: getData()[index], isReview: true});
-							break;
-						case '삭제':
-							Modal.close();
-							setTimeout(() => {
-								Modal.popTwoBtn(
-									'정말로 이 게시글을 \n 삭제하시겠습니까?',
-									'아니오',
-									'네',
-									() => Modal.close(),
-									() => {
-										updateAndDeleteCommunity(
-											{
-												community_object_id: getData()[index]._id,
-												community_is_delete: true,
-											},
-											result => {
-												// console.log('result / updateAndDeleteCommunity / ArticleDetail : ', result.msg);
-												Modal.close();
-												setTimeout(() => {
-													Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
-													setTimeout(() => {
-														Modal.close();
-														// fetchData();
-													}, 600);
-												}, 200);
-											},
-											err => {
-												console.log('err / updateAndDeleteCommunity / ArticleDetail : ', err);
-												Modal.alert(err);
-											},
-										);
-									},
-								);
-							}, 200);
-							break;
-						case '신고':
-							Modal.close();
-							if (userGlobalObject.userInfo.isPreviewMode) {
-								setTimeout(() => {
-									Modal.popLoginRequestModal(() => {
-										navigation.navigate('Login');
-									});
-								}, 100);
-							} else {
-								setTimeout(() => {
-									Modal.popOneBtnSelectModal(
-										REPORT_MENU,
-										'이 게시물을 신고 하시겠습니까?',
-										selectedItem => {
-											createReport(
-												{
-													report_target_object_id: getData()[index]._id,
-													report_target_object_type: 'communityobjects',
-													report_target_reason: selectedItem,
-													report_is_delete: false,
-												},
-												result => {
-													console.log('신고 완료', result);
-													Modal.close();
-													Modal.popOneBtn('신고 완료되었습니다.', '확인', () => Modal.close());
-												},
-												err => {
-													Modal.close();
-													if (err == '이미 신고되었습니다.') {
-														Modal.popOneBtn('이미 신고하셨습니다.', '확인', () => Modal.close());
-													}
-												},
-											);
-										},
-										'신고',
-									);
-								}, 200);
-							}
-							break;
-						default:
-							break;
-					}
-				},
-				() => Modal.close(),
-				false,
-				false,
-			);
-		}
 	};
 
 	//개 고양이 그외 버튼 필터 클릭
@@ -413,7 +316,7 @@ export default ReviewMain = ({route, navigation}) => {
 	const onPressWrite = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			navigation.navigate('CommunityWrite', {isReview: true});
@@ -530,7 +433,6 @@ export default ReviewMain = ({route, navigation}) => {
 									whenEmpty={whenEmpty}
 									onPressReviewContent={onPressReviewContent}
 									onPressReply={onPressReply}
-									onPressMeatball={onPressMeatball}
 									onPressLike={index => onPressLike(index, true)}
 									onPressUnlike={index => onPressLike(index, false)}
 									onPressFavorite={onPressFavorite}

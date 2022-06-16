@@ -1,8 +1,8 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, SafeAreaView, StyleSheet, Platform, Dimensions, TextInput, Keyboard, StatusBar} from 'react-native';
 import AniButton from 'Molecules/button/AniButton';
-import {btn_w226} from 'Atom/btn/btn_style';
-import {WHITE, GRAY10, APRI10, GRAY20, GRAY40} from 'Root/config/color';
+import {btn_w136, btn_w226} from 'Atom/btn/btn_style';
+import {WHITE, GRAY10, APRI10, GRAY20, GRAY40, OPACITY90} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP, {isNotch} from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
@@ -77,12 +77,12 @@ const MessageModal = props => {
 					받는이 : {props.receiver}
 				</Text>
 				<View style={[style.inputLongText]}>
-					<TextInput onChangeText={onChangeMsg} style={[txt.noto24, style.textInput]} placeholder={'내용입력...'} maxLength={400} multiline={true} />
+					<TextInput onChangeText={onChangeMsg} style={[txt.noto28, style.textInput]} placeholder={'내용입력...'} maxLength={400} multiline={true} />
 					<Text style={[txt.noto24, {color: GRAY20, alignSelf: 'flex-end'}]}>{msg.length} / 400 </Text>
 				</View>
 				<View style={style.buttonContainer}>
-					<AniButton btnStyle={'border'} btnTitle={'취소'} onPress={pressNo} />
-					<AniButton btnTitle={'보내기'} onPress={onSend} />
+					<AniButton btnLayout={btn_w136} titleFontStyle={24} btnStyle={'border'} btnTitle={'취소'} onPress={pressNo} />
+					<AniButton btnLayout={btn_w136} titleFontStyle={24} btnStyle={'border'} btnTitle={'보내기'} onPress={onSend} />
 				</View>
 			</TouchableOpacity>
 		</TouchableOpacity>
@@ -110,12 +110,13 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 	},
 	popUpWindow: {
-		width: 654 * DP,
-		height: 590 * DP,
-		backgroundColor: GRAY40,
-		paddingTop: 50 * DP,
+		width: 694 * DP,
+		height: 578 * DP,
+		// backgroundColor: GRAY40,
+		backgroundColor: OPACITY90,
+		paddingTop: 40 * DP,
 		paddingBottom: 40 * DP,
-		paddingHorizontal: 26 * DP,
+		paddingHorizontal: 30 * DP,
 		borderRadius: 50 * DP,
 	},
 	receiver: {
@@ -127,12 +128,13 @@ const style = StyleSheet.create({
 		height: 328 * DP,
 		marginTop: 24 * DP,
 		borderRadius: 30 * DP,
-		borderColor: APRI10,
-		borderWidth: 2 * DP,
+		// borderColor: APRI10,
+		// borderWidth: 2 * DP,
 		padding: 24 * DP,
 		backgroundColor: WHITE,
 		alignItems: 'center',
 		justifyContent: 'center',
+		alignSelf: 'center',
 	},
 	textInput: {
 		width: 558 * DP,
@@ -146,6 +148,7 @@ const style = StyleSheet.create({
 		marginTop: 32 * DP,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
+		paddingHorizontal: 16 * DP,
 	},
 	shadow: {
 		shadowColor: '#000000',

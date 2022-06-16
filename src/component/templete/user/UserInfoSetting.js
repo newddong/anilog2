@@ -19,23 +19,26 @@ import {btn_w114, btn_w194, btn_w242} from 'Atom/btn/btn_style';
 import {Arrow_Down_GRAY20, Edit46, NextMark} from 'Atom/icon';
 import {login_style, temp_style, userInfoSetting_style} from 'Templete/style_templete';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import {getUserInfoById, updateUserIntroduction} from 'Root/api/userapi';
+// import {getUserProfile} from 'Root/api/usermenuapi';
+import {getUserInfoById, getUserProfile, updateUserDetailInformation, updateUserIntroduction} from 'Root/api/userapi';
 import DP from 'Root/config/dp';
 import Loading from 'Root/component/molecules/modal/Loading';
 import ProfileImageMedium148 from 'Root/component/molecules/image/ProfileImageMedium148';
 import {getInterestsList} from 'Root/api/interestsapi';
 import Input24 from 'Molecules/input/Input24';
 import {updateUserInformation, nicknameDuplicationCheck} from 'Root/api/userapi';
+import SelectInput from 'Root/component/molecules/button/SelectInput';
+import {getAddressList} from 'Root/api/address';
 
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 export default UserInfoSetting = ({route}) => {
-	// console.log('userInfoSetting', route);
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false'); // 로그인 유저의 UserObject
 	const [modifyMode, setModifyMode] = React.useState(false);
 	const [numberOfLines, setNumOfLines] = React.useState();
 	const [showMore, setShowMore] = React.useState();
 	const [nickNameEdit, setNickNameEdit] = React.useState(false);
+	const [locationEdit, setLocationEdit] = React.useState(false);
 	const [userDataLoaded, setUserDataLoaded] = React.useState(false);
 	const modifyRef = React.useRef();
 	const userData = userGlobalObject.userInfo;
@@ -67,6 +70,23 @@ export default UserInfoSetting = ({route}) => {
 			},
 		);
 	};
+
+	// React.useEffect(() => {
+	// 	getAddressList(
+	// 		{},
+	// 		cities => {
+	// 			setCity(cities.msg), handleError;
+	// 		},
+	// 		err => Modal.alert(err),
+	// 	);
+	// 	getAddressList(
+	// 		{city: data.user_address?.city},
+	// 		districts => {
+	// 			setDistrict(districts.msg), handleError;
+	// 		},
+	// 		err => Modal.alert(err),
+	// 	);
+	// }, []);
 	let temp = [];
 	React.useEffect(() => {
 		if (userDataLoaded) {
@@ -88,6 +108,9 @@ export default UserInfoSetting = ({route}) => {
 			setContentInterest(temp);
 			setLocationInterest(data.user_interests.interests_location);
 			// setLoaded(true);
+
+			getAddresses();
+
 		}
 	}, [userDataLoaded]);
 	React.useEffect(() => {
@@ -134,6 +157,25 @@ export default UserInfoSetting = ({route}) => {
 	// const onPressChangePwd = () => {
 	// 	navigation.push('ChangePassword', data.user_password);
 	// };
+
+	//지역 모달에 사용될 지역정보 얻어오기
+	const getAddresses = () => {
+		getAddressList(
+			{},
+			cities => {
+				setCity(cities.msg), handleError;
+			},
+			err => Modal.alert(err),
+		);
+		getAddressList(
+			{city: data.user_address?.city},
+			districts => {
+				setDistrict(districts.msg), handleError;
+			},
+			err => Modal.alert(err),
+		);
+	};
+
 
 	//User_intro 수정 버튼 클릭
 	const modify_userIntro = () => {
@@ -198,54 +240,7 @@ export default UserInfoSetting = ({route}) => {
 			setData({...data, user_introduction: text});
 		}
 	};
-	const modifyNickNameButton = () => {
-		if (nickNameEdit) {
-			console.log('닉네임 저장되어야함');
-			updateUserInformation(
-				{
-					userobject_id: data._id,
-					user_nickname: newNick == '' ? data.user_nickname : newNick,
-				},
-				success => {
-					// Modal.close();
-					if (data.user_type == 'user') {
-						setNewNick(newNick);
-						userGlobalObject.userInfo.user_nickname = newNick;
-						userGlobalObject.userInfo.user_profile_uri = data.user_profile_uri;
-					}
-					// navigation.navigate({
-					// 	name: route.params.routeInfo.name,
-					// 	key: route.params.routeInfo.key,
-					// 	params: {changedPhoto: data.user_profile_uri},
-					// 	merge: true,
-					// });
-				},
-				// console.log('userObject', userObject);
-				err => {
-					Modal.close();
-					console.log('err', err);
-				},
-			);
-		}
-		setNickNameEdit(!nickNameEdit);
-	};
-
-	const nickName_validator = text => {
-		setNewNick(text);
-	};
-	//중복 처리
-	const checkDuplicateNickname = nick => {
-		nicknameDuplicationCheck(
-			{user_nickname: nick},
-			isDuplicated => {
-				setDuplicated(isDuplicated.msg);
-			},
-
-			err => {
-				console.log('duplicated check', err);
-			},
-		);
-	};
+	
 	const validateNewNick = nick => {
 		let regExp = /^[가-힣a-zA-Z0-9_]{2,20}$/;
 		setValidated(regExp.test(nick));
@@ -264,6 +259,111 @@ export default UserInfoSetting = ({route}) => {
 		setConfirmed(false);
 	};
 
+	const nickName_validator = text => {
+		setNewNick(text);
+	};
+	//중복 처리
+	const checkDuplicateNickname = nick => {
+		nicknameDuplicationCheck(
+			{user_nickname: nick},
+			isDuplicated => {
+				setDuplicated(isDuplicated.msg);
+			},
+
+			err => {
+				console.log('duplicated check', err);
+			},
+		);
+	};
+
+	const [city, setCity] = React.useState([userData.user_address.city]);
+	const [district, setDistrict] = React.useState([userData.user_address.district]);
+	const onSelectCity = (v, i) => {
+		Modal.popSelectScrollBoxModal(
+			[city],
+			'광역시,도 선택',
+			selected => {
+				// setData({...data, user_address: {...data.user_address, city: selected}});
+				getAddressList(
+					{city: selected},
+					districts => {
+						setDistrict(districts.msg);
+						// console.log()
+						setData({...data, user_address: {...data.user_address, city: selected, district: districts.msg[0]}});
+						Modal.close();
+					},
+					handleError,
+				);
+			},
+			() => Modal.close(),
+		);
+	};
+	const onSelectDistrict = () => {
+		Modal.popSelectScrollBoxModal(
+			[district],
+			'시,군,구를 선택',
+			selected => {
+				getAddressList(
+					{city: data.user_address.city, district: selected},
+					// neighbor => {
+					// 	setDistrict(neighbor.msg);
+					// 	setData({...data, user_address: {...data.user_address, city: data.user_address.city, district: selected}});
+					// 	Modal.close();
+					// },
+					district => {
+						setDistrict(district.msg);
+						setData({...data, user_address: {...data.user_address, city: data.user_address.city, district: selected}});
+						Modal.close();
+					},
+					handleError,
+				);
+			},
+			() => Modal.close(),
+		);
+	};
+	//닉네임 수정 버튼 함수
+	const modifyNickNameButton = () => {
+		if (nickNameEdit) {
+			console.log('닉네임 수정되어야함');
+			updateUserInformation(
+				{
+					userobject_id: data._id,
+					user_nickname: newNick == '' ? data.user_nickname : newNick,
+				},
+				success => {
+					if (data.user_type == 'user') {
+						setNewNick(newNick);
+						userGlobalObject.userInfo.user_nickname = newNick;
+						userGlobalObject.userInfo.user_profile_uri = data.user_profile_uri;
+					}
+				},
+				err => {
+					Modal.close();
+					console.log('err', err);
+				},
+			);
+		}
+		setNickNameEdit(!nickNameEdit);
+	};
+
+	//나의 지역 수정 함수
+	const modifyLocation = () => {
+		if (locationEdit) {
+			console.log('나의 지역이 수정되어야함', data.user_address);
+			updateUserDetailInformation({
+				userobject_id: data._id,
+				user_address: {city: data.user_address.city, district: data.user_address.district},
+			}),
+				success => {
+					console.log('나의 지역 변경 잘됨');
+				};
+		}
+		setLocationEdit(!locationEdit);
+	};
+
+	const handleError = error => {
+		Modal.popOneBtn(error, '확인', () => Modal.close());
+	};
 	if (data == 'false') {
 		return <Loading isModal={false} />;
 	} else {
@@ -290,7 +390,7 @@ export default UserInfoSetting = ({route}) => {
 								<Text style={[txt.noto30b, {width: 162 * DP}]}>닉네임</Text>
 								<Text style={[txt.noto28, {width: 462 * DP}]}></Text>
 								<TouchableOpacity style={[{alignItems: 'flex-end'}, {marginLeft: 12 * DP}]} onPress={modifyNickNameButton}>
-									<Text>저장</Text>
+									<Text style={[txt.noto26b, {color: APRI10}]}>저장</Text>
 								</TouchableOpacity>
 							</View>
 							<View style={[styles.nickNameInput]}>
@@ -355,8 +455,8 @@ export default UserInfoSetting = ({route}) => {
 							<View style={[temp_style.bracket48, userInfoSetting_style.bracket48]}>
 								<NextMark onPress={onPressDetail} />
 							</View>
-						</View>
-						<View style={[temp_style.vertical_border]}></View> */}
+						</View> */}
+						<View style={[temp_style.vertical_border]}></View>
 
 						{/* /* 소개 */}
 						<View style={[temp_style.introduceInfo]}>
@@ -371,7 +471,7 @@ export default UserInfoSetting = ({route}) => {
 									{modifyMode ? (
 										<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
 											<TouchableOpacity onPress={modify_finalize}>
-												<Text style={[txt.noto26, {color: GRAY10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>저장</Text>
+												<Text style={[txt.noto26b, {color: APRI10}]}>저장</Text>
 											</TouchableOpacity>
 										</View>
 									) : (
@@ -437,13 +537,36 @@ export default UserInfoSetting = ({route}) => {
 							<Edit46 />
 						</TouchableOpacity> */}
 					</View>
-					<View style={[styles.first]}>
-						<Text style={[txt.noto30b, {width: 162 * DP}]}>나의 지역</Text>
-						<Text style={[txt.noto28, {width: 462 * DP}]}>{data.user_address.district || ''}</Text>
-						<TouchableOpacity style={[{alignItems: 'flex-end'}, {marginLeft: 12 * DP}]}>
-							<Edit46 />
-						</TouchableOpacity>
-					</View>
+					{locationEdit ? (
+						<View>
+							<View style={[styles.editLocation]}>
+								<Text style={[txt.noto30b, {width: 162 * DP}]}>나의 지역</Text>
+								<Text style={[txt.noto28, {width: 462 * DP}]}>{data.user_address.district || ''}</Text>
+								<TouchableOpacity onPress={modifyLocation} style={[{alignItems: 'flex-end'}, {marginLeft: 12 * DP}]}>
+									<Text style={[txt.noto26b, {color: APRI10}]}>저장</Text>
+								</TouchableOpacity>
+							</View>
+							<View style={[styles.addressSelect]}>
+								<SelectInput onPressInput={onSelectCity} width={284} height={108} value={data.user_address.city} noBorder={true} fontSize={28} />
+								<SelectInput
+									onPressInput={onSelectDistrict}
+									width={284}
+									height={108}
+									value={data.user_address.district}
+									noBorder={true}
+									fontSize={28}
+								/>
+							</View>
+						</View>
+					) : (
+						<View style={[styles.first]}>
+							<Text style={[txt.noto30b, {width: 162 * DP}]}>나의 지역</Text>
+							<Text style={[txt.noto28, {width: 462 * DP}]}>{data.user_address.district || ''}</Text>
+							<TouchableOpacity onPress={modifyLocation} style={[{alignItems: 'flex-end'}, {marginLeft: 12 * DP}]}>
+								<Edit46 />
+							</TouchableOpacity>
+						</View>
+					)}
 					<View style={[userInfoDetailSettting_style.interestTagList]}>
 						<InterestTagList
 							onPressAddBtn={onPressAddInterestLocation}
@@ -526,5 +649,22 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 2 * DP,
 		// marginBottom: 30 * DP,
 		paddingBottom: 30 * DP,
+	},
+	editLocation: {
+		width: 750 * DP,
+		// height: 105 * DP,
+		minHeight: 105 * DP,
+		paddingHorizontal: 28 * DP,
+		flexDirection: 'row',
+		// justifyContent: 'center',
+		alignItems: 'center',
+		// backgroundColor: 'red',
+	},
+	addressSelect: {
+		flexDirection: 'row',
+		width: 750 * DP,
+		paddingHorizontal: 28 * DP,
+		borderBottomColor: GRAY40,
+		borderBottomWidth: 2 * DP,
 	},
 });

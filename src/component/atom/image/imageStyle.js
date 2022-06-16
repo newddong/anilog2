@@ -49,6 +49,11 @@ export const styles = StyleSheet.create({
 		height: 410 * DP,
 		borderRadius: 30 * DP,
 	},
+	img_square_round_336: {
+		width: 336 * DP,
+		height: 336 * DP,
+		borderRadius: 30 * DP,
+	},
 	img_square_round_286: {
 		width: 286 * DP,
 		height: 286 * DP,
@@ -209,5 +214,14 @@ export const styles = StyleSheet.create({
 		width: 46 * DP,
 		height: 46 * DP,
 		borderRadius: 500,
+	},
+	loadingContainer: {
+		position: 'absolute',
+		left: 0,
+		right: 0,
+		top: 0,
+		bottom: 0,
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
 });

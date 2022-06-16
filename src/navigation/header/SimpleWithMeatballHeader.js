@@ -162,27 +162,42 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 	const onPressDelete = () => {
 		Modal.close();
 		setTimeout(() => {
-			Modal.popTwoBtn(
-				'이 게시글을 삭제하시겠습니까?',
-				'아니오',
-				'삭제',
-				() => Modal.close(),
-				() => {
-					deleteProtectRequest(
-						{
-							protect_request_object_id: route.params.id,
-						},
-						result => {
-							console.log('result / deleteProtectRequest / SimpleWithMeatBallHeader  : ', result.msg.protect_request_is_delete);
-							navigation.goBack(); //뒤로 가기
-						},
-						err => {
-							console.log('err /deleteProtectRequest / SimpleWithMeatBallHeader  :  ', err);
-						},
-					);
-					Modal.close();
-				},
-			);
+			// Modal.popTwoBtn(
+			// 	'이 게시글을 삭제하시겠습니까?',
+			// 	'아니오',
+			// 	'삭제',
+			// 	() => Modal.close(),
+			// 	() => {
+			// 		deleteProtectRequest(
+			// 			{
+			// 				protect_request_object_id: route.params.id,
+			// 			},
+			// 			result => {
+			// 				console.log('result / deleteProtectRequest / SimpleWithMeatBallHeader  : ', result.msg.protect_request_is_delete);
+			// 				navigation.goBack(); //뒤로 가기
+			// 			},
+			// 			err => {
+			// 				console.log('err /deleteProtectRequest / SimpleWithMeatBallHeader  :  ', err);
+			// 			},
+			// 		);
+			// 		Modal.close();
+			// 	},
+			// );
+			Modal.popOneBtn('이 게시글을 삭제하시겠습니까?', '삭제', () => {
+				deleteProtectRequest(
+					{
+						protect_request_object_id: route.params.id,
+					},
+					result => {
+						console.log('result / deleteProtectRequest / SimpleWithMeatBallHeader  : ', result.msg.protect_request_is_delete);
+						navigation.goBack(); //뒤로 가기
+					},
+					err => {
+						console.log('err /deleteProtectRequest / SimpleWithMeatBallHeader  :  ', err);
+					},
+				);
+				Modal.close();
+			});
 		}, 400);
 	};
 
@@ -244,7 +259,7 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 	const onPressFavorite = bool => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			if (!isProtect) {

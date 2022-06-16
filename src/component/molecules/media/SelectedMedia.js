@@ -1,7 +1,6 @@
 import React from 'react';
 import {View, Image} from 'react-native';
 import DP from 'Root/config/dp';
-import {Cancel48, Cancel62} from 'Atom/icon';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import {Cancel48, Cancel62, Cancel36} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
@@ -18,9 +17,14 @@ const SelectedMedia = props => {
 	const onDelete = () => {
 		props.onDelete();
 	};
+
 	return (
 		<View style={props.layout}>
-			<FastImage source={{uri: props.media_uri}} style={props.layout} />
+			{props.media_uri.includes('http:') ? (
+				<FastImage source={{uri: props.media_uri}} style={props.layout} />
+			) : (
+				<Image source={{uri: props.media_uri}} style={props.layout} />
+			)}
 			<View
 				style={{
 					position: 'absolute',
@@ -32,14 +36,14 @@ const SelectedMedia = props => {
 				<View
 					style={{
 						position: 'absolute',
-						top:10*DP,
-						right: 10*DP,
+						top: 10 * DP,
+						right: 10 * DP,
 						borderRadius: 30 * DP,
 						backgroundColor: 'lightgray',
 						shadowOpacity: 0.1,
 					}}>
 					{/* 190 크기의 selectMedia를 호출한 경우 Cancel 마크 크기는 더 작게 */}
-					{props.layout == styles.img_square_round_190 ? <Cancel36 onPress={onDelete} /> : <Cancel62 onPress={onDelete} />}
+					{(props.layout == styles.img_square_round_190||props.layout == styles.img_square_round_336) ? <Cancel36 onPress={onDelete} /> : <Cancel62 onPress={onDelete} />}
 				</View>
 			</View>
 		</View>

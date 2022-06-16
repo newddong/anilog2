@@ -37,7 +37,7 @@ const ChildComment = props => {
 	const onCLickHeart = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			setLikeState(!likeState);
@@ -98,7 +98,7 @@ const ChildComment = props => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			setTimeout(() => {
 				Modal.popLoginRequestModal(() => {
-					navigation.navigate('Login');
+					navigation.navigate('LoginRequired');
 				});
 			}, 100);
 		} else {
@@ -183,7 +183,11 @@ const ChildComment = props => {
 			{/* 해당 대댓글이 photo_uri를 가지고 있는 경우만 IMage 출력 */}
 			{data.comment_photo_uri != null && !isNotAuthorized() ? (
 				<View style={[childComment.img_square_round_484]}>
-					<FastImage style={[styles.img_square_round_544]} source={{uri: data.comment_photo_uri}} />
+					{data.comment_photo_uri.includes('http') ? (
+						<FastImage style={[styles.img_square_round_544]} source={{uri: data.comment_photo_uri}} />
+					) : (
+						<Image style={[styles.img_square_round_544]} source={{uri: data.comment_photo_uri}} />
+					)}
 				</View>
 			) : (
 				<></>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, Text, View, ScrollView, StyleSheet} from 'react-native';
+import {FlatList, Text, View, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
 import {BLACK, GRAY10, GRAY20, GRAY40, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w190} from 'Root/component/atom/btn/btn_style';
@@ -9,7 +9,6 @@ import {useNavigation} from '@react-navigation/core';
 import {INTEREST_ACT, INTEREST_REGION} from 'Root/i18n/msg';
 import Modal from 'Root/component/modal/Modal';
 import {interestTagList} from 'Organism/style_organism copy';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 /**
  *
  *@param {{

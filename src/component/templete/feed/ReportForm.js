@@ -1,6 +1,6 @@
 import React from 'react';
-import {Text, View, TextInput, Platform, Keyboard, AppState, NativeModules} from 'react-native';
-import {APRI10, WHITE, GRAY20, GRAY10, GRAY30} from 'Root/config/color';
+import {Text, View, TextInput, Platform, Keyboard, AppState, NativeModules, StyleSheet, TouchableWithoutFeedback, TouchableOpacity} from 'react-native';
+import {APRI10, WHITE, GRAY20, GRAY10, GRAY30, GRAY50, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {btn_style, feedWrite, temp_style, buttonstyle} from 'Templete/style_templete';
@@ -14,6 +14,9 @@ import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
 import {openSettings} from 'react-native-permissions';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {Arrow_Down_APRI10, Camera54, Location48Border,Paw54_Border,Location54, Arrow_Down_BLACK, Search48_BLACK} from 'Root/component/atom/icon/index';
+import Input24 from 'Molecules/input/Input24';
 
 //제보 컴포넌트
 export default ReportForm = props => {
@@ -24,6 +27,8 @@ export default ReportForm = props => {
 		},
 	]);
 
+	const route = useRoute();
+	const navigation = useNavigation();
 	const [city, setCity] = React.useState(['광역시, 도']); //광역시도 API자료 컨테이너
 	const [district, setDistrict] = React.useState(['시군 선택']); //시군 API자료 컨테이너
 	const [isDistrictChanged, setIsDistrictChanged] = React.useState(false); // 시군 선택되었는지 여부
@@ -57,7 +62,7 @@ export default ReportForm = props => {
 			};
 			setData({
 				...data,
-				report_witness_date: '',
+				report_witness_date: prevData.report_witness_date,
 				report_witness_location: prevData.report_witness_location,
 				report_location: {
 					// 필드명 조정 필요 (상우)
@@ -333,54 +338,69 @@ export default ReportForm = props => {
 		}
 	};
 
+	
+	const feedInput = props.feedInput();
+	const feedInputRef = React.useRef();
+	//사진 추가
+	const moveToMultiPhotoSelect = () => {
+		// if (selectedImg.length > 4) {
+		// 	Modal.alert('첨부파일은 5개까지만 가능합니다');
+		// 	return;
+		// }
+		navigation.push("MultiPhotoSelect",{prev:{name:route.name,key:route.key}});
+	};
+	console.log(data)
 	return (
 		<View style={[feedWrite.reportForm_container]} showsVerticalScrollIndicator={false}>
-			<View style={[feedWrite.reportForm]}>
-				<View style={[feedWrite.reportForm_form]}>
-					<View style={[feedWrite.lostAnimalForm_Form]}>
-						<View style={[feedWrite.formTitle]}>
-							<Text style={[txt.noto24, {color: APRI10}]}>분류</Text>
+			<View style={[reportStyle.reportForm]}>
+				{React.cloneElement(feedInput,{onPressIn:onPressIn(feedInputRef),ref:feedInputRef,showImages:true})}
+				<View style={[feedWrite.buttonContainer]}>
+					<TouchableWithoutFeedback onPress={moveToMultiPhotoSelect}>
+						<View style={[feedWrite.btnItemContainer, {marginBottom: 5 * DP}]}>
+							<Camera54/>
+							<Text style={[txt.noto28b, {color: BLACK, marginLeft: 12 * DP}]}>사진추가</Text>
 						</View>
-						<View style={[feedWrite.formContentContainer]}>
-							<View style={[temp_style.dropdownSelect, feedWrite.dropdownSelect]}>
-								<SelectInput onPressInput={onSelectSpecies} width={292} defaultText={'동물종류'} value={data.report_animal_species} />
-							</View>
-							<View style={[temp_style.dropdownSelect, feedWrite.dropdownSelect]}>
-								{/* <SelectInput onPressInput={onSelectSpeciesDetail} width={292} value={data.report_animal_species_detail} /> */}
-							</View>
-						</View>
+					</TouchableWithoutFeedback>
+				</View>
+				<View style={[reportStyle.reportForm_form]}>
+					<View style={reportStyle.report_date}>
+						<Text style={[txt.noto26]}>제보 날짜</Text>
+						<DatePicker width={550} onDateChange={onDateChange} defaultDate={data.report_witness_date.length>0?data.report_witness_date.substring(0,10).replace('-','.').replace('-','.'):'눌러서 지정'} future={false} />
 					</View>
-					<View style={[feedWrite.formTitle]}>
-						<Text style={[txt.noto24, {color: APRI10}]}>제보 날짜</Text>
-					</View>
-					<View style={[temp_style.datePicker_assignShelterInformation, feedWrite.datePicker]}>
-						<DatePicker width={654} onDateChange={onDateChange} defaultDate={data.report_witness_date || ''} />
-					</View>
-					<View style={[feedWrite.report_location]}>
+					<View style={[reportStyle.report_location]}>
 						<View style={{flexDirection: 'row'}}>
-							<Text style={[txt.noto24, {color: APRI10}]}>제보 장소</Text>
-							<View style={{marginLeft: 20 * DP}}>
-								<AniButton
-									onPress={onPressCurrentLocation}
-									btnStyle={'border'}
-									btnTitle={'현위치'}
-									btnLayout={{height: 50 * DP, borderRadius: 30 * DP, width: 100 * DP}}
-								/>
-							</View>
+							<Text style={txt.noto26}>제보 위치</Text>
 						</View>
-
-						<View style={[{flexDirection: 'row', justifyContent: 'space-between'}]}>
-							<SelectInput onPressInput={onPressCity} width={292} defaultText={'광역시, 도'} value={data.report_location.city} />
-							<SelectInput onPressInput={onPressDistrict} width={292} defaultText={'시군 선택'} value={data.report_location.district} />
+						<View style={[{flexDirection: 'row',alignItems:'center' ,justifyContent: 'space-between', marginTop: 10 * DP, marginBottom: 20*DP}]}>
+							<TouchableOpacity
+								onPress={onPressCity}
+								style={[reportStyle.dropdownSelect_depth1, {width:268*DP}]}>
+								<View style={[reportStyle.missing_location_container]}>
+									<Text style={[txt.noto28, reportStyle.missing_location]}>{data.report_location.city}</Text>
+									<Arrow_Down_BLACK />
+								</View>
+							</TouchableOpacity>
+							<TouchableOpacity
+								onPress={onPressDistrict}
+								style={[reportStyle.dropdownSelect_depth1, {width:268*DP}]}>
+								<View style={[reportStyle.missing_location_container]}>
+									<Text style={[txt.noto28, reportStyle.missing_location]}>{data.report_location.district}</Text>
+									<Arrow_Down_BLACK />
+								</View>
+							</TouchableOpacity>
+							<Location48Border  onPress={onPressCurrentLocation}/>
+							<Search48_BLACK />
 						</View>
-						<TextInput
-							onChangeText={onChangeMissingLocationDetail}
-							value={data.report_location.detail}
-							style={[txt.noto28, feedWrite.missing_location_detail_input, {borderBottomColor: data.report_location.detail == '' ? GRAY30 : APRI10}]}
-							placeholder={'제보하려는 장소의 위치를 설명해주세요.'}
+						<Input24
+							placeholder="제보하려는 장소의 위치를 설명해주세요."
 							placeholderTextColor={GRAY10}
+							width={694}
+							height={104}
+							descriptionType={'none'}
+							onChange={onChangeMissingLocationDetail}
+							maxlength={50}
+							value={data.report_location.detail}
 							onPressIn={onPressIn(inputLocationRef)}
-							maxLength={50}
 							ref={inputLocationRef}
 						/>
 					</View>
@@ -390,3 +410,35 @@ export default ReportForm = props => {
 		</View>
 	);
 };
+
+const reportStyle = StyleSheet.create({
+	reportForm: {
+		paddingHorizontal: 48 * DP,
+	},
+	reportForm_form:{
+		marginBottom: 40* DP,
+	},
+	report_date:{
+		flexDirection:'row', alignItems:'center',justifyContent:'space-between',marginTop:60*DP
+	},
+	report_location:{
+		marginTop: 60*DP,
+	},
+	dropdownSelect_depth1: {
+		width: 550 * DP,
+		height: 104 * DP,
+		// marginLeft: 12 * DP,
+		borderRadius: 30 * DP,
+		justifyContent: 'center',
+		backgroundColor: GRAY50,
+	},
+	missing_location_container:{
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-around',
+	},
+	missing_location: {
+		height: 44 * DP,
+		textAlign: 'center',
+	},
+})

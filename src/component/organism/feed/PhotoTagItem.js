@@ -36,28 +36,7 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 		clickedPost.current = {x: e.nativeEvent.locationX, y: e.nativeEvent.locationY};
 		console.log(clickedPost.current);
 		if (viewmode) {
-			if (data.feed_type == 'report' || data.feed_type == 'missing') {
-				if (data.feed_type == 'report') {
-					nav.navigate('ReportDetail', {_id: data._id});
-				} else {
-					let sexValue = '';
-					switch (data.missing_animal_sex) {
-						case 'male':
-							sexValue = '남';
-							break;
-						case 'female':
-							sexValue = '여';
-							break;
-						case 'unknown':
-							sexValue = '성별모름';
-							break;
-					}
-					const titleValue = data.missing_animal_species + '/' + data.missing_animal_species_detail + '/' + sexValue;
-					nav.navigate('MissingAnimalDetail', {title: titleValue, _id: data._id});
-				}
-			} else {
-				onPressPhoto();
-			}
+			onPressPhoto();
 		} else {
 			!viewmode && nav.navigate({name: 'UserList'});
 		}
@@ -114,7 +93,7 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 				{uri.includes('http') ? (
 					<FastImage style={styles.img_square_round_694} source={{uri: uri}} />
 				) : (
-					<FastImage style={styles.img_square_round_694} source={{uri: uri}} />
+					<Image style={styles.img_square_round_694} source={{uri: uri}} />
 				)}
 				{showTags && getTags()}
 				{tags.length > 0 && viewmode && (

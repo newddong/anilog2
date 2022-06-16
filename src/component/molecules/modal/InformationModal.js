@@ -98,14 +98,14 @@ const InformationModal = props => {
 								</Text>
 							</View>
 							<View style={[style.category]}>
-								<View style={[style.category_title, {marginTop: 50 * DP}]}>
-									<Text style={[txt.noto26]}>성별</Text>
+								<View style={[style.category_title, {marginTop: 30 * DP}]}>
+									<Text style={[txt.noto26, {color: GRAY10}]}>성별</Text>
 								</View>
 								<View style={[style.category_content]}>{data.pet_sex == 'male' ? <Male48 /> : <Female48 />}</View>
 							</View>
 							<View style={[style.category, {marginTop: 50 * DP}]}>
 								<View style={[style.category_title]}>
-									<Text style={[txt.noto26]}>생일</Text>
+									<Text style={[txt.noto26, {color: GRAY10}]}>생일</Text>
 								</View>
 								<View style={[style.category_content]}>
 									<Text style={[txt.roboto28, {}]}>{getBirthDate()}</Text>

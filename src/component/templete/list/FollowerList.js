@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, ScrollView, View} from 'react-native';
+import {ActivityIndicator, FlatList, ScrollView, View} from 'react-native';
 import ControllableAccountList from 'Organism/list/ControllableAccountList';
 import {followerList} from 'Templete/style_templete';
 import {unFollowUser, followUser} from 'Root/api/userapi';
@@ -8,6 +8,8 @@ import {useNavigation} from '@react-navigation/core';
 import Loading from 'Root/component/molecules/modal/Loading';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
+import {styles} from 'Root/component/atom/image/imageStyle';
+import {APRI10} from 'Root/config/color';
 
 /**
  * 팔로워 팔로우 목록
@@ -20,11 +22,10 @@ import Modal from 'Root/component/modal/Modal';
  */
 export default FollowerList = props => {
 	const navigation = useNavigation();
-	const isFollowing = props.route.name != 'FollowingList';
-	const [input, setInput] = React.useState('');
 	const [loading, setLoading] = React.useState(false);
 	const [follower, setFollower] = React.useState([]);
 	const [follow, setFollow] = React.useState([]);
+	const isPreView = userGlobalObject.userInfo.isPreviewMode;
 
 	React.useEffect(() => {
 		setFollower(props.followers);
@@ -37,9 +38,9 @@ export default FollowerList = props => {
 	}, [props.follows]);
 
 	const onClickFollowBtn = item => {
-		if (userGlobalObject.userInfo.isPreviewMode) {
+		if (isPreView) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			followUser(
@@ -57,9 +58,9 @@ export default FollowerList = props => {
 
 	const onClickUnFollowBtn = item => {
 		// console.log('onClickUnFollowBtn', item);
-		if (userGlobalObject.userInfo.isPreviewMode) {
+		if (isPreView) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			unFollowUser(
@@ -79,19 +80,13 @@ export default FollowerList = props => {
 		navigation.push('UserProfile', {userobject: item});
 	};
 
-	const onChangeSearchInput = text => {
-		// setSearchInput(text);
-		setLoading(true);
-		setInput(text);
-		props.onChangeSearchInput(text);
-	};
-
-	const onSearch = () => {
-		console.log('');
-	};
-
 	if (props.loading) {
-		return <Loading isModal={false} />;
+		// return <Loading isModal={false} />;
+		return (
+			<View style={styles.loadingContainer}>
+				<ActivityIndicator size={'large'} color={APRI10} />
+			</View>
+		);
 	} else
 		return (
 			<View style={[followerList.container]}>
@@ -106,7 +101,7 @@ export default FollowerList = props => {
 							{props.route.name != 'FollowingList' ? (
 								<ControllableAccountList
 									items={follower}
-									showButtons={true}
+									showButtons={isPreView ? false : true}
 									onClickAccount={onClickAccount}
 									onClickFollowBtn={onClickFollowBtn}
 									onClickUnFollowBtn={onClickUnFollowBtn}
@@ -116,7 +111,7 @@ export default FollowerList = props => {
 							) : (
 								<ControllableAccountList
 									items={follow}
-									showButtons={true}
+									showButtons={isPreView ? false : true}
 									onClickAccount={onClickAccount}
 									onClickUnFollowBtn={onClickUnFollowBtn}
 									onClickFollowBtn={onClickFollowBtn}

@@ -26,6 +26,10 @@ const DatePicker = props => {
 	const [showCalendar, setShowCalendar] = React.useState(false);
 	const [selectedDate, setSelectedDate] = React.useState(props.defaultDate ? props.defaultDate : '눌러서 지정해주세요!');
 
+	React.useEffect(()=>{
+		setSelectedDate(props.defaultDate);
+	},[props.defaultDate])
+
 	const onDateChange = date => {
 		setSelectedDate(date);
 		Modal.close();
@@ -80,9 +84,9 @@ const DatePicker = props => {
 				}}>
 				<Text
 					style={[
-						txt.roboto32,
+						txt.roboto28,
 						{
-							lineHeight: 44 * DP,
+							lineHeight: 60 * DP,
 							// paddingLeft: 14 * DP,
 							color: selectedDate == '눌러서 지정해주세요!' || selectedDate == '눌러서 지정!' ? GRAY10 : BLACK,
 							textAlign: 'center',

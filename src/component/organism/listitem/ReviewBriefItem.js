@@ -20,7 +20,6 @@ import FastImage from 'react-native-fast-image';
  */
 const ReviewBriefItem = props => {
 	const [data, setData] = React.useState(props.data);
-
 	const imageList = () => {
 		let imageList = [];
 		let getImgTag = data.community_content.match(/<img[\w\W]+?\/?>/g); //img 태그 추출
@@ -34,7 +33,7 @@ const ReviewBriefItem = props => {
 	};
 
 	const image = imageList();
-
+	``;
 	React.useEffect(() => {
 		setData(props.data);
 	}, [props.data]);
@@ -44,14 +43,8 @@ const ReviewBriefItem = props => {
 	};
 
 	const onPressLike = bool => {
-		if (userGlobalObject.userInfo.isPreviewMode) {
-			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
-			});
-		} else {
-			props.onPressLike(bool);
-			setData({...data, community_is_like: bool});
-		}
+		props.onPressLike(bool);
+		// setData({...data, community_is_like: bool});
 	};
 
 	const getCategory = (v, i) => {

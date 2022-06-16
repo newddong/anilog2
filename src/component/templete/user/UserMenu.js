@@ -26,6 +26,7 @@ import {
 	LOGOUT,
 	OPENSETTING,
 	REQ_PROTECTION_SAVE,
+	APPSETTING,
 } from 'Root/i18n/msg';
 import {btn_w280, btn_w280x68, btn_w694_r30} from 'Atom/btn/btn_style';
 import {
@@ -164,6 +165,9 @@ export default UserMenu = props => {
 			case ACCOUNT: //계정
 				navigation.push('SettingAccount');
 				break;
+			case APPSETTING:
+				navigation.push('SettingAlarm');
+				break;
 			case INFO: //알림
 				navigation.push('SettingAlarm');
 				break;
@@ -293,10 +297,7 @@ export default UserMenu = props => {
 					<View>
 						<ProfileMenu
 							menuTitle={SETTING}
-							menuItems={[
-								[OPENSETTING, ACCOUNT],
-								[INFO, INFO_QUESTION],
-							]}
+							menuItems={[[APPSETTING, ACCOUNT], [INFO_QUESTION]]}
 							onClick={menuClick}
 							titleIcon={<Setting46_border />}
 						/>

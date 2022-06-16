@@ -54,7 +54,7 @@ export default Feed = React.memo(props => {
 	const moveToCommentList = async () => {
 		if (userGlobalObject.userInfo.isPreviewMode && feed_comment_count == 0) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			AsyncStorage.getItem('sid', (err, res) => {
@@ -75,7 +75,7 @@ export default Feed = React.memo(props => {
 	const toggleFeedLike = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			if (isLike) {

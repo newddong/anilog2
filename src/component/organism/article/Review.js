@@ -129,7 +129,7 @@ export default Review = React.memo(props => {
 	const onPressLike = bool => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			setData({...data, community_is_like: bool, community_like_count: bool ? ++data.community_like_count : --data.community_like_count});
@@ -142,7 +142,7 @@ export default Review = React.memo(props => {
 		// alert('onPressFavorite');
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate('Login');
+				navigation.navigate('LoginRequired');
 			});
 		} else {
 			bool ? setData({...data, community_is_favorite: bool}) : setData({...data, community_is_favorite: bool});

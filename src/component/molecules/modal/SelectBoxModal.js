@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions, FlatList, Animated, Easing} from 'react-native';
-import {WHITE, APRI10, GRAY30} from 'Root/config/color';
+import {WHITE, APRI10, GRAY30, OPACITY90, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
@@ -52,7 +52,10 @@ const SelectBoxModal = props => {
 	const renderItem = ({item, index}) => {
 		return (
 			<TouchableOpacity onPress={() => onSelect(item)} style={[style.listItem]}>
-				<Text style={[txt.noto30, {textAlignVertical: 'center', maxWidth: 400 * DP, fontWeight: item == '삭제' ? 'bold' : 'normal'}]}>{item}</Text>
+				<Text
+					style={[txt.noto30, {textAlignVertical: 'center', maxWidth: 400 * DP, fontWeight: item == '삭제' ? 'bold' : 'normal', color: MAINBLACK}]}>
+					{item}
+				</Text>
 			</TouchableOpacity>
 		);
 	};
@@ -76,7 +79,7 @@ const SelectBoxModal = props => {
 					</View>
 				</TouchableOpacity>
 				<TouchableOpacity onPress={closeSelectModal} activeOpacity={0.8} style={[style.closeBox]}>
-					<Text style={[txt.noto30]}>취소</Text>
+					<Text style={[txt.noto30, {color: MAINBLACK}]}>취소</Text>
 				</TouchableOpacity>
 			</Animated.View>
 		</TouchableOpacity>
@@ -111,7 +114,8 @@ const style = StyleSheet.create({
 		// paddingVertical: 40 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: WHITE,
+		// backgroundColor: WHITE,
+		backgroundColor: OPACITY90,
 		borderRadius: 30 * DP,
 		marginBottom: 20 * DP,
 	},
@@ -134,7 +138,7 @@ const style = StyleSheet.create({
 		borderRadius: 30 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
-		backgroundColor: 'white',
+		backgroundColor: OPACITY90,
 	},
 });
 

@@ -17,8 +17,6 @@ import {createNotice, getNotice} from 'Root/api/notice';
 import {NextMark, NextMark48} from 'Root/component/atom/icon';
 import DP from 'Root/config/dp';
 import {useNavigation} from '@react-navigation/core';
-import {CommonActions} from '@react-navigation/routers';
-import userGlobalObject from 'Root/config/userGlobalObject';
 
 export default LoginTemplete = props => {
 	const navigation = useNavigation();

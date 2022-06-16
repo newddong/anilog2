@@ -628,7 +628,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SAMGB85RDD;
+				DEVELOPMENT_TEAM = 7G8696BDJM;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = anilog/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -640,7 +640,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = anilogAppProject;
+				PRODUCT_BUNDLE_IDENTIFIER = anilogAppProjectV02;
 				PRODUCT_NAME = anilog;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "anilog-Bridging-Header.h";
@@ -659,7 +659,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SAMGB85RDD;
+				DEVELOPMENT_TEAM = 7G8696BDJM;
 				INFOPLIST_FILE = anilog/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -670,7 +670,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = anilogAppProject;
+				PRODUCT_BUNDLE_IDENTIFIER = anilogAppProjectV02;
 				PRODUCT_NAME = anilog;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "anilog-Bridging-Header.h";

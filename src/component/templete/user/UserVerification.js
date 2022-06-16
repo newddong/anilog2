@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, ScrollView, StyleSheet} from 'react-native';
+import {Text, View, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654, btn_w694_r30} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
@@ -11,8 +11,7 @@ import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import {getSMStoken, getUserAccountCount} from 'Root/api/userapi';
 import Modal from 'Root/component/modal/Modal';
-import {GRAY10, MAINBLACK} from 'Root/config/color';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import {GRAY10, MAINBLACK, WHITE} from 'Root/config/color';
 // DropDown 컴포넌트 해결될 시 props처리와 data처리 추가해야함
 // 이메일부분 삭제 컨펌 나면 삭제 실시 예정
 
@@ -267,7 +266,7 @@ export default UserVerification = props => {
 					)}
 				</View> */}
 
-				<View style={[btn_style.btn_w694, {marginTop: 100 * DP}]}>
+				<View style={[btn_style.btn_w694, {marginTop: 120 * DP}]}>
 					{phoneVerified ? (
 						<AniButton btnTitle={'다음'} btnLayout={btn_w694_r30} btnStyle={'border'} titleFontStyle={32} onPress={goToNextStep} />
 					) : verified ? (
@@ -286,9 +285,10 @@ export default UserVerification = props => {
 				{/* 개발용 다음 버튼 */}
 				{/* <View style={[btn_style.btn_w694, userAssign.btn_w654, {backgroundColor: 'yellow'}, {marginTop: 430 * DP}]}> */}
 				{/* <AniButton btnTitle={'다음'} btnLayout={btn_w694_r30} btnStyle={'border'} titleFontStyle={32} onPress={goToNextStep} /> */}
-				<TouchableWithoutFeedback
-					style={[btn_style.btn_w694, userAssign.btn_w654, {marginTop: 430 * DP}]}
-					onPress={easterFunc}></TouchableWithoutFeedback>
+				<TouchableOpacity style={[btn_style.btn_w694, userAssign.btn_w654, {marginTop: 430 * DP}]} onPress={easterFunc}>
+					<Text style={[btn_style.btn_w694, userAssign.btn_w654, {marginTop: 430 * DP}]}></Text>
+				</TouchableOpacity>
+
 				{/* </View> */}
 			</ScrollView>
 		</View>

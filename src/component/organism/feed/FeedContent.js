@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, Platform, StyleSheet, TouchableOpacity} from 'react-native';
+import {Text, View, Platform, StyleSheet, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
 import {organism_style, feedContent_style} from 'Organism/style_organism';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
 import {useNavigation, useRoute} from '@react-navigation/core';
@@ -28,7 +28,6 @@ import {
 	REPORT_MENU,
 	SHARE,
 } from 'Root/i18n/msg';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {MAINCOLOR} from 'Root/config/color';
 import {getTimeLapsed, parsingDate} from 'Root/util/dateutil';
 import HashText from 'Molecules/info/HashText';

@@ -1,6 +1,6 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import DP from 'Root/config/dp';
 import {
 	Comment48,
@@ -17,7 +17,6 @@ import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTi
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {getTimeLapsed} from 'Root/util/dateutil';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import community_obj from 'Root/config/community_obj';
 /**
  * 후기 아이템

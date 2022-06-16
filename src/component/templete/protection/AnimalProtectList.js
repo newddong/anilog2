@@ -1,12 +1,11 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {getUserProtectAnimalList} from 'Root/api/protectapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Loading from 'Root/component/molecules/modal/Loading';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import {ANIMAL_PROTECT_LIMIT, NETWORK_ERROR} from 'Root/i18n/msg';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import DP from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
 import AnimalInfo from 'Root/component/organism/listitem/AnimalInfo';

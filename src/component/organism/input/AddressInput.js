@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {Text, View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+import {Text, View, StyleSheet, TouchableWithoutFeedback, TouchableOpacity} from 'react-native';
 import {APRI10, GRAY10, MAINBLACK, RED10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
@@ -10,7 +10,6 @@ import Input24 from 'Molecules/input/Input24';
 import {btn_style, temp_style} from 'Templete/style_templete';
 import {addressInput} from 'Organism/style_organism copy';
 import {Search48} from 'Root/component/atom/icon';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 /**
  *
  * @param {object} props

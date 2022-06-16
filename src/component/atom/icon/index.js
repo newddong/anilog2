@@ -189,6 +189,7 @@ import addItem68 from './addItem68';
 import check64Filled from './check64Filled';
 import edit46 from './edit46';
 import addItem68Black from './addItem68Black';
+import verticalBar from './verticalBar';
 
 import DP from 'Root/config/dp';
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK, MAINBLACK} from 'Root/config/color';
@@ -475,3 +476,4 @@ export const AddItem68 = makeSvg(addItem68, size68, APRI10);
 export const AddItem68Black = makeSvg(addItem68Black, size68, MAINBLACK);
 export const Check64Filled = makeSvg(check64Filled, size64, APRI10);
 export const Edit46 = makeSvg(edit46, size46, APRI10);
+export const VerticalBar = makeSvg(verticalBar, {width: 2 * DP, height: 32 * DP}, '#767676');

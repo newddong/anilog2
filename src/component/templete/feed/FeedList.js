@@ -11,6 +11,7 @@ import {
 	Dimensions,
 	PixelRatio,
 	ActivityIndicator,
+	TouchableWithoutFeedback,
 } from 'react-native';
 import {APRI10, GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
 import {Write94, Camera54} from 'Atom/icon';
@@ -25,7 +26,6 @@ import {login_style, buttonstyle} from 'Templete/style_templete';
 import {getStringLength, getLinesOfString} from 'Root/util/stringutil';
 import {GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {useScrollToTop} from '@react-navigation/native';
 import NewMissingReportList from '../list/NewMissingReportList';
 import {getUserInfoById} from 'Root/api/userapi';
@@ -71,9 +71,9 @@ export default FeedList = ({route, navigation}) => {
 					let lines = getLinesOfString(v.feed_content, 53);
 					lines = lines > 2 ? 2 : lines;
 					if (v.feed_recent_comment) {
-						return {...v, height: (914 + lines * 48+10+ 128)*DP};
+						return {...v, height: (914 + lines * 48 + 10 + 128) * DP};
 					} else {
-						return {...v, height: (914 + lines * 48+10)*DP};
+						return {...v, height: (914 + lines * 48 + 10) * DP};
 					}
 				})
 				.map((v, i, a) => {

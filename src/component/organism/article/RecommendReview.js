@@ -1,12 +1,11 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import DP from 'Root/config/dp';
 import {APRI10, BLACK, GRAY10, GRAY20, GRAY30, WHITE} from 'Root/config/color';
 import ProfileImageSmall from 'Root/component/molecules/image/ProfileImageSmall';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Comment30, Comment30_Border, Like30, Like30_Border, Like30_Filled, Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 /**
  * 추천 게시글

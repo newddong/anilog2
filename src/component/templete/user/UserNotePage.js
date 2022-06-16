@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TouchableOpacity, Text, StyleSheet, Image, ActivityIndicator} from 'react-native';
+import {View, TouchableOpacity, Text, StyleSheet, Image, ActivityIndicator, ScrollView} from 'react-native';
 import AniButton from 'Molecules/button/AniButton';
 import CheckBox from 'Molecules/select/CheckBox';
 import {userAccount} from 'Organism/style_organism copy';
@@ -8,7 +8,6 @@ import DP from 'Root/config/dp';
 import {GRAY10, APRI10, BLACK, WHITE} from 'Root/config/color';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import {textstyles} from '../style_templete';
-import {ScrollView} from 'react-native-gesture-handler';
 import NoteMessageList from 'Component/organism/list/NoteMessageList';
 import {getMemoBoxWithReceiveID} from 'Root/api/userapi';
 import {useNavigation} from '@react-navigation/native';

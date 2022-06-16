@@ -1,8 +1,7 @@
 import React from 'react';
-import {Text, View, ActivityIndicator, StyleSheet} from 'react-native';
+import {Text, View, ActivityIndicator, StyleSheet, FlatList} from 'react-native';
 import {GRAY40, APRI10, GRAY20} from 'Root/config/color';
 import DP from 'Root/config/dp';
-import {FlatList} from 'react-native-gesture-handler';
 import {getHelpByCategoryDynamicQuery} from 'Root/api/helpbycategory';
 import OneNotice from 'Organism/listitem/OneNotice';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';

@@ -1,8 +1,7 @@
 import React from 'react';
-import {FlatList, ScrollView, Text, View, StyleSheet, SafeAreaView, Image, Platform} from 'react-native';
+import {FlatList, ScrollView, Text, View, StyleSheet, SafeAreaView, Image, Platform, TouchableOpacity} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {BLACK, GRAY10, GRAY40, MAINBLACK, WHITE} from 'Root/config/color';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 /**

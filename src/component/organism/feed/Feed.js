@@ -7,7 +7,6 @@ import {txt} from 'Root/config/textstyle';
 import {GRAY10, WHITE} from 'Root/config/color';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from 'Component/modal/Modal';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {likeFeed} from 'Root/api/feedapi';
 import userGlobalObj from 'Root/config/userGlobalObject';
 import userGlobalObject from 'Root/config/userGlobalObject';

@@ -1,9 +1,9 @@
 import React from 'react';
-import {Text, TouchableOpacity, View, TouchableWithoutFeedback, StyleSheet} from 'react-native';
+import {Text, TouchableOpacity, View, TouchableWithoutFeedback, StyleSheet, FlatList} from 'react-native';
 import {APRI10, WHITE, GRAY20, GRAY10, GRAY30, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Paw54_Border,Location54} from 'Root/component/atom/icon/index';
+import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Paw54_Border, Location54} from 'Root/component/atom/icon/index';
 import {Urgent_Write1, Urgent_Write2} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
 import {btn_w194} from 'Atom/btn/btn_style';
@@ -12,7 +12,6 @@ import Modal from 'Component/modal/Modal';
 import userGlobalObj from 'Root/config/userGlobalObject';
 import HashInput from 'Molecules/input/HashInput';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
-import {FlatList} from 'react-native-gesture-handler';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import MissingForm from 'Templete/feed/MissingForm';
 import ReportForm from 'Templete/feed/ReportForm';
@@ -48,7 +47,7 @@ export default FeedWrite = props => {
 	);
 
 	React.useEffect(() => {
-		console.log('정보 변경',props.route);
+		console.log('정보 변경', props.route);
 		if (props.route.name != 'FeedEdit') {
 			const param = props.route.params;
 			console.log('param', param);
@@ -58,7 +57,7 @@ export default FeedWrite = props => {
 				  props.navigation.setParams({
 						...props.route.params,
 						media_uri: selectedImg,
-						feed_medias: selectedImg.map(v => (v?{media_uri: v.cropUri??v.uri, is_video: false, duration: 0, tags: []}:false)),
+						feed_medias: selectedImg.map(v => (v ? {media_uri: v.cropUri ?? v.uri, is_video: false, duration: 0, tags: []} : false)),
 						feed_avatar_id: param.feed_avatar_id._id
 							? param.feed_avatar_id._id
 							: param.feed_avatar_id
@@ -68,8 +67,8 @@ export default FeedWrite = props => {
 				: // - 보호소 계정에서 피드 글쓰기를 누른 경우
 				  props.navigation.setParams({
 						...props.route.params,
-						media_uri: selectedImg.map(v=>v.cropUri??v.uri),
-						feed_medias: selectedImg.map(v => ({media_uri: v.cropUri??v.uri, is_video: false, duration: 0, tags: []})),
+						media_uri: selectedImg.map(v => v.cropUri ?? v.uri),
+						feed_medias: selectedImg.map(v => ({media_uri: v.cropUri ?? v.uri, is_video: false, duration: 0, tags: []})),
 						// feed_avatar_id: props.route.params.feed_avatar_id ? props.route.params.feed_avatar_id?._id : userGlobalObject.userInfo._id,
 				  });
 		} else {
@@ -77,7 +76,7 @@ export default FeedWrite = props => {
 				...props.route.params,
 				media_uri: selectedImg.filter(v => !v.uri.includes('http')),
 				feed_medias: selectedImg.map(img => {
-					let uri = img.cropUri??img.uri
+					let uri = img.cropUri ?? img.uri;
 					let media = props.route.params.feed_medias.find(v => v.media_uri == uri);
 					return {media_uri: uri, is_video: false, duration: 0, tags: media ? media.tags : []};
 				}),
@@ -96,8 +95,8 @@ export default FeedWrite = props => {
 			if (props.route.params?.feed_type == 'report') {
 				onPressReportWrite();
 			}
-			setSelectedImg(props.route.params.feed_medias.map(v =>({uri:v.media_uri})));
-			setPreviousPhotoList(props.route.params.feed_medias.map(v => ({uri:v.media_uri})));
+			setSelectedImg(props.route.params.feed_medias.map(v => ({uri: v.media_uri})));
+			setPreviousPhotoList(props.route.params.feed_medias.map(v => ({uri: v.media_uri})));
 			let regEx = new RegExp(`&#&#(.*?)%&%&`, `gm`);
 			let hashes = [];
 			let match = [];
@@ -142,23 +141,20 @@ export default FeedWrite = props => {
 			const location = param.feed_location;
 			console.log('address', location);
 		}
-
 	}, [props.route.params?.feed_location]);
 
-	React.useEffect(()=>{
-		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
-			if(props.route.name=='FeedWrite'){
+	React.useEffect(() => {
+		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
+			if (props.route.name == 'FeedWrite') {
 				setSelectedImg(props.route.params.selectedPhoto);
 			}
-			if(props.route.name=='FeedEdit'){
-				console.log('이미지 추가',selectedImg);
-				setSelectedImg(
-					selectedImg.map(v=>({uri:v.uri})).concat(props.route.params.selectedPhoto)
-				);
+			if (props.route.name == 'FeedEdit') {
+				console.log('이미지 추가', selectedImg);
+				setSelectedImg(selectedImg.map(v => ({uri: v.uri})).concat(props.route.params.selectedPhoto));
 			}
 			// setSelectedImg(props.route.params.selectedPhoto);
 		}
-	},[props.route.params?.selectedPhoto]);
+	}, [props.route.params?.selectedPhoto]);
 
 	const onPressMissingWrite = () => {
 		setShowLostAnimalForm(true);
@@ -179,7 +175,7 @@ export default FeedWrite = props => {
 			Modal.alert('첨부파일은 5개까지만 가능합니다');
 			return;
 		}
-		props.navigation.push("MultiPhotoSelect",{prev:{name:props.route.name,key:props.route.key},selectedPhoto:selectedImg});
+		props.navigation.push('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}, selectedPhoto: selectedImg});
 	};
 
 	//사진 삭제
@@ -200,7 +196,7 @@ export default FeedWrite = props => {
 		props.navigation.setParams({...props.route.params, ...report});
 	};
 
-	const onSetDiary = (diary) => {
+	const onSetDiary = diary => {
 		setDiary(diary);
 		props.navigation.setParams({...props.route.params, feed_is_protect_diary: diary});
 	};
@@ -277,7 +273,7 @@ export default FeedWrite = props => {
 				<View style={[feedWrite.buttonContainer]}>
 					<TouchableWithoutFeedback onPress={moveToMultiPhotoSelect}>
 						<View style={[feedWrite.btnItemContainer, {marginBottom: 5 * DP}]}>
-							<Camera54/>
+							<Camera54 />
 							<Text style={[txt.noto28b, {color: BLACK, marginLeft: 12 * DP}]}>사진추가</Text>
 						</View>
 					</TouchableWithoutFeedback>
@@ -285,7 +281,7 @@ export default FeedWrite = props => {
 						<View style={[feedWrite.btnItemContainer]}>
 							{!showReportForm && !showLostAnimalForm ? (
 								<>
-									<Location54 fill='black'/>
+									<Location54 fill="black" />
 									<Text style={[txt.noto28b, {color: BLACK, alignSelf: 'center', marginLeft: 10 * DP}]}>위치추가</Text>
 								</>
 							) : (
@@ -300,7 +296,7 @@ export default FeedWrite = props => {
 						<View style={[feedWrite.btnItemContainer]}>
 							{!showReportForm && !showLostAnimalForm ? (
 								<>
-									<Paw54_Border fill='black'/>
+									<Paw54_Border fill="black" />
 									<Text style={[txt.noto28b, {color: BLACK, alignSelf: 'center', marginLeft: 10 * DP}]}>태그하기</Text>
 								</>
 							) : (
@@ -331,7 +327,7 @@ export default FeedWrite = props => {
 	};
 
 	return (
-		<View style={{flex: 1, backgroundColor: '#FFF',paddingTop:30*DP}}>
+		<View style={{flex: 1, backgroundColor: '#FFF', paddingTop: 30 * DP}}>
 			{/* <TouchableWithoutFeedback onPress={test}>
 				<View style={{backgroundColor: 'red', width: 50, height: 50}}></View>
 			</TouchableWithoutFeedback> */}
@@ -339,13 +335,17 @@ export default FeedWrite = props => {
 				renderItem={({item, index}) => {
 					return (
 						<View contentContainerStyle={[login_style.wrp_main]} ref={container}>
-							<View style={{flexDirection:'row',alignItems:'center',paddingHorizontal:28*DP,justifyContent:'space-between'}}>
-								<CheckBoxItem style={{width:148*DP}} textStyle={[txt.noto26,{lineHeight:38*DP}]} onCheck={onSetDiary}>임보일기</CheckBoxItem>
-								<View style={{height:38*DP,width:2*DP,backgroundColor:GRAY10}}></View>
-								<RadioBoxGroup style={{flexDirection:'row',justifyContent:'space-between',width:484*DP}} onSelect={(item,index)=>console.log(item,index)}>
-									<RadioBoxItem textStyle={[txt.noto26,{lineHeight:38*DP}]}>전체공개</RadioBoxItem>
-									<RadioBoxItem textStyle={[txt.noto26,{lineHeight:38*DP}]}>비공개</RadioBoxItem>
-									<RadioBoxItem textStyle={[txt.noto26,{lineHeight:38*DP}]}>팔로워공개</RadioBoxItem>
+							<View style={{flexDirection: 'row', alignItems: 'center', paddingHorizontal: 28 * DP, justifyContent: 'space-between'}}>
+								<CheckBoxItem style={{width: 148 * DP}} textStyle={[txt.noto26, {lineHeight: 38 * DP}]} onCheck={onSetDiary}>
+									임보일기
+								</CheckBoxItem>
+								<View style={{height: 38 * DP, width: 2 * DP, backgroundColor: GRAY10}}></View>
+								<RadioBoxGroup
+									style={{flexDirection: 'row', justifyContent: 'space-between', width: 484 * DP}}
+									onSelect={(item, index) => console.log(item, index)}>
+									<RadioBoxItem textStyle={[txt.noto26, {lineHeight: 38 * DP}]}>전체공개</RadioBoxItem>
+									<RadioBoxItem textStyle={[txt.noto26, {lineHeight: 38 * DP}]}>비공개</RadioBoxItem>
+									<RadioBoxItem textStyle={[txt.noto26, {lineHeight: 38 * DP}]}>팔로워공개</RadioBoxItem>
 								</RadioBoxGroup>
 								{/* <View style={{width:474*DP,backgroundColor:'red'}}>
 									<RadioBoxItem items={['전체공개','비공개','팔로워공개']} width={160*DP}/>
@@ -360,7 +360,7 @@ export default FeedWrite = props => {
 								// onChangeText={inputMissingTxt}
 								maxLength={150}
 								onFind={onFindTag}
-								selectedImg={selectedImg.map(v=>v?v.cropUri??v.uri:undefined)}
+								selectedImg={selectedImg.map(v => (v ? v.cropUri ?? v.uri : undefined))}
 								onDelete={deletePhoto}
 								value={editText}
 								// value={feedText}
@@ -417,8 +417,8 @@ export const feedWrite = StyleSheet.create({
 		justifyContent: 'space-between',
 	},
 	btnItemContainer: {
-		width:182*DP,
-		height:54*DP,
+		width: 182 * DP,
+		height: 54 * DP,
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
@@ -471,7 +471,6 @@ export const feedWrite = StyleSheet.create({
 	},
 });
 
-
 export const btn_style = StyleSheet.create({
 	btn_w194: {
 		width: 194 * DP,
@@ -503,7 +502,7 @@ export const temp_style = StyleSheet.create({
 		marginTop: 30 * DP,
 		backgroundColor: '#FAFAFA',
 		alignSelf: 'center',
-		justifyContent:'space-between',
+		justifyContent: 'space-between',
 		borderRadius: 24 * DP,
 		padding: 24 * DP,
 	},

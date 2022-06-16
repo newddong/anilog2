@@ -1,11 +1,10 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet} from 'react-native';
+import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet, FlatList} from 'react-native';
 import {GRAY10, GRAY40, APRI10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import moment from 'moment';
 import DP from 'Root/config/dp';
-import {FlatList} from 'react-native-gesture-handler';
 import OneNotice from 'Component/organism/listitem/OneNotice';
 import {getQandInfo, createQandA} from 'Root/api/qanda';
 import userGlobalObj from 'Root/config/userGlobalObject';

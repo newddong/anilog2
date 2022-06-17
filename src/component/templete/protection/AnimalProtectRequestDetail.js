@@ -20,7 +20,7 @@ import Loading from 'Root/component/molecules/modal/Loading';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
-import {DEFAULT_PROFILE, NETWORK_ERROR, PROTECT_REQUEST_DETAIL_LIMIT, UNAVAILABLE_REQUEST_STATUS} from 'Root/i18n/msg';
+import {DEFAULT_PROFILE, NETWORK_ERROR, NOT_REGISTERED_SHELTER, PROTECT_REQUEST_DETAIL_LIMIT, UNAVAILABLE_REQUEST_STATUS} from 'Root/i18n/msg';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 import {updateProtect} from 'Root/config/protect_obj';
 import {ProfileDefaultImg} from 'Root/component/atom/icon';
@@ -242,7 +242,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const onPressProtectRequest = () => {
 		console.log('data.protect_request_writer_id.user_contacted', data.protect_request_writer_id.user_contacted);
 		if (!data.protect_request_writer_id.user_contacted) {
-			Modal.popOneBtn('정식 애니로그 등록된 \n 보호소가 아닙니다!', '확인', Modal.close);
+			Modal.popOneBtn(NOT_REGISTERED_SHELTER, '확인', Modal.close);
 		} else {
 			navigation.push('ApplyProtectActivityA', {protect_request_pet_data: data});
 		}
@@ -252,7 +252,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const onPressAdoptionRequest = () => {
 		console.log('data.protect_request_writer_id.user_contacted', data.protect_request_writer_id.user_contacted);
 		if (!data.protect_request_writer_id.user_contacted) {
-			Modal.popOneBtn('정식 애니로그 등록된 \n 보호소가 아닙니다!', '확인', Modal.close);
+			Modal.popOneBtn(NOT_REGISTERED_SHELTER, '확인', Modal.close);
 		} else {
 			navigation.push('ApplyAnimalAdoptionA', {protect_request_pet_data: data});
 		}

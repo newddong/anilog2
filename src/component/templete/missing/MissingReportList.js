@@ -292,7 +292,7 @@ export default MissingReportList = props => {
 				)}
 			</View>
 
-			<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
+			<View style={[feedWrite.urgentBtnContainer]}>
 				<View style={[styles.urgentActionButton, {}]} onLayout={e => (urgentBtnRef.current = e.nativeEvent.layout)}>
 					<TouchableOpacity activeOpacity={0.8} onPress={onPressShowActionButton}>
 						<Urgent_Write1 />
@@ -359,8 +359,8 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	urgentActionButton: {
-		width: 110 * DP,
-		height: 110 * DP,
+		width: 98 * DP,
+		height: 86 * DP,
 		alignSelf: 'flex-end',
 		// backgroundColor: 'white',
 		shadowColor: '#000000',

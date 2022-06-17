@@ -234,14 +234,14 @@ const InformationModal = props => {
 							</Text>
 						</View> */}
 						{/* 관심사 */}
-						<View style={[style.category_step2]}>
+						<View style={[style.category_step2, {paddingBottom: 20 * DP}]}>
 							<View style={[style.category_title]}>
-								<Text style={[txt.noto24]}>관심사</Text>
+								<Text style={[txt.noto26, {color: GRAY10}]}>관심사</Text>
 							</View>
 							<View style={[style.category_step2_content]}>
 								{/* 더미 텍스트컴포넌트 - 조정되기 이전의 numberOfLine 판별용 */}
 								<Text
-									style={[txt.noto30, {color: GRAY10, position: 'absolute', opacity: 0}]}
+									style={[txt.noto28, {position: 'absolute', opacity: 0}]}
 									onTextLayout={({nativeEvent: {lines}}) => {
 										setNumberOfLines(lines.length);
 									}}>
@@ -250,14 +250,20 @@ const InformationModal = props => {
 									})}
 								</Text>
 								{/* 더미 텍스트 컴포넌트 종료 */}
-								<View style={{flexDirection: 'row', width: 502 * DP, marginBottom: 20 * DP}}>
-									<Text style={[txt.noto30, {color: GRAY10}]} numberOfLines={showMore ? numberOfLines : 2}>
-										{user_interest_list.map((v, i) => {
-											return v + (i != user_interest_list.length - 1 ? ', ' : '');
-										})}
-									</Text>
+								<View style={{flexDirection: 'row', width: 620 * DP, marginBottom: 20 * DP, marginTop: 10 * DP}}>
+									{user_interest_list && user_interest_list.length == 0 ? (
+										<Text style={[txt.noto28, {width: 620 * DP, marginTop: 10 * DP}]}>
+											아직 {data.user_nickname}님의 관심사 설정이 되지 않았습니다.
+										</Text>
+									) : (
+										<Text style={[txt.noto28]} numberOfLines={showMore ? numberOfLines : null}>
+											{user_interest_list.map((v, i) => {
+												return v + (i != user_interest_list.length - 1 ? ', ' : '');
+											})}
+										</Text>
+									)}
 								</View>
-								{numberOfLines > 2 ? (
+								{/* {numberOfLines > 2 ? (
 									//관심사 항목이 2줄을 넘은 경우 '펼치기 / 접기' 를 출력
 									showMore ? (
 										<TouchableOpacity onPress={() => setShowMore(!showMore)}>
@@ -276,7 +282,7 @@ const InformationModal = props => {
 									)
 								) : (
 									<></>
-								)}
+								)} */}
 							</View>
 						</View>
 					</View>

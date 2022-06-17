@@ -117,28 +117,14 @@ const ProtectedThumbnail = props => {
 				</View>
 			);
 		} else {
-			if (imageLoad) {
-				return <></>;
-			} else {
-				return (
-					<View style={[style.blur, {zIndex: -1}]}>
-						<Blur />
-					</View>
-				);
-			}
+			return <></>;
 		}
 	};
-
-	const [imageLoad, setImageLoad] = React.useState(false);
 
 	return (
 		<View style={styles.img_square_round_226}>
 			<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.4} onPress={onClickLabel}>
-				<FastImage
-					style={[styles.img_square_round_226, borderByStatus(), {zIndex: -3}]}
-					source={{uri: data.img_uri}}
-					onLoadEnd={() => setImageLoad(true)}
-				/>
+				<FastImage style={[styles.img_square_round_226, borderByStatus(), {zIndex: -3}]} source={{uri: data.img_uri}} />
 				{/* <Image source={{uri: data.img_uri}} onLoad={e => setImageLoad(true)} style={[styles.img_square_round_226, borderByStatus(), {zIndex: -3}]} /> */}
 				{/* 펫 성별마크 */}
 				<View style={{position: 'absolute', right: 10 * DP, top: 10 * DP}}>{getGenderMark()}</View>

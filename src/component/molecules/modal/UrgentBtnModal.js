@@ -39,7 +39,7 @@ const UrgentBtnModal = ({onReport, onMissing, layout}) => {
 			<TouchableOpacity
 				activeOpacity={1}
 				onPress={() => Modal.close()}
-				style={[style.popUpWindow, {bottom: Platform.OS == 'android' ? layout.y - 80 * DP : layout.y - 16 * DP}]}>
+				style={[style.popUpWindow, {bottom: Platform.OS == 'android' ? layout.y - 104 * DP : layout.y - 40 * DP}]}>
 				<View style={[{marginTop: 0 * DP}]}>
 					<TouchableOpacity onPress={moveToMissingForm} activeOpacity={0.6} style={[style.urgentBtnItemContainer]}>
 						<Text style={[txt.noto32, {color: WHITE}]}>실종</Text>
@@ -102,8 +102,8 @@ const style = StyleSheet.create({
 		backgroundColor: 'red',
 	},
 	urgentActionButton: {
-		width: 110 * DP,
-		height: 110 * DP,
+		width: 98 * DP,
+		height: 86 * DP,
 		alignSelf: 'flex-end',
 		// backgroundColor: 'white',
 		shadowColor: '#000000',

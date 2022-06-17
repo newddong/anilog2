@@ -1,18 +1,17 @@
 import React from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import TabSelectFilled_Type1 from 'Molecules/tab/TabSelectFilled_Type1';
-import {login_style, btn_style, temp_style, userInfoDetailSettting_style} from '../style_templete';
+import {login_style, btn_style, temp_style} from '../style_templete';
 import InterestTagList from 'Organism/list/InterestTagList';
 import {GENDER_TAB_SELECT, INPUT_PHONE_NUM, INTEREST_ACT, INTEREST_REGION} from 'Root/i18n/msg';
 import Modal from 'Component/modal/Modal';
-import Input24 from 'Molecules/input/Input24';
 import {getAddressList} from 'Root/api/address';
 import SelectInput from 'Root/component/molecules/button/SelectInput';
 import {getInterestsList} from 'Root/api/interestsapi';
 import DP from 'Root/config/dp';
-export default UserInfoDetailSettting = ({route, navigation}) => {
+export default UserInfoDetailSetting = ({route, navigation}) => {
 	const debug = false;
 	const [data, setData] = React.useState(route.params); //기존 유저의 데이터가 담겨있음
 	const [loaded, setLoaded] = React.useState(false);
@@ -242,10 +241,10 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
 				<ScrollView contentContainerStyle={{flex: 1}}>
-					<View style={[temp_style.inputForm_userInfoDetailSettting, userInfoDetailSettting_style.inputForm]}>
+					<View style={[temp_style.inputForm_userInfoDetailSettting, userInfoDetailSetting_style.inputForm]}>
 						{/* 성별 */}
-						<View style={[userInfoDetailSettting_style.inputForm_detail]}>
-							<View style={[temp_style.text_userInfoDetailSettting, userInfoDetailSettting_style.text]}>
+						<View style={[userInfoDetailSetting_style.inputForm_detail]}>
+							<View style={[temp_style.text_userInfoDetailSettting, userInfoDetailSetting_style.text]}>
 								<Text style={[txt.noto28, {color: GRAY10}]}>성별</Text>
 							</View>
 							<View style={[temp_style.tabSelectFilled_Type1]}>
@@ -256,14 +255,14 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 						{/* 나의 지역 */}
 						<View style={[temp_style.addressInput]}>
 							<Text style={[txt.noto28, {color: GRAY10}]}>나의 지역</Text>
-							<View style={[userInfoDetailSettting_style.adressSelect]}>
+							<View style={[userInfoDetailSetting_style.adressSelect]}>
 								<SelectInput onPressInput={onSelectCity} width={320} value={data.user_address.city} />
 								<SelectInput onPressInput={onSelectDistrict} width={320} value={data.user_address.district} />
 							</View>
 							<SelectInput onPressInput={onSelectNeighbor} width={654} defaultText={'동/읍을 선택'} value={data.user_address.neighbor} />
 						</View>
 						{/* 관심지역 및 활동 */}
-						<View style={[userInfoDetailSettting_style.interestTagList]}>
+						<View style={[userInfoDetailSetting_style.interestTagList]}>
 							<InterestTagList
 								onPressAddBtn={onPressAddInterestLocation}
 								title={INTEREST_REGION}
@@ -273,7 +272,7 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 								extra={refresh}
 							/>
 						</View>
-						<View style={[userInfoDetailSettting_style.interestTagList]}>
+						<View style={[userInfoDetailSetting_style.interestTagList]}>
 							<InterestTagList
 								onPressAddBtn={onPressAddInterestActivation}
 								title={INTEREST_ACT}
@@ -290,3 +289,41 @@ export default UserInfoDetailSettting = ({route, navigation}) => {
 		return <View></View>;
 	}
 };
+
+const userInfoDetailSetting_style = StyleSheet.create({
+	inputForm: {
+		marginTop: 60 * DP,
+	},
+	inputForm_detail: {
+		flexDirection: 'row',
+		marginBottom: 40 * DP,
+	},
+	text: {
+		marginTop: 18 * DP,
+		marginRight: 16 * DP,
+	},
+	inputWithSelect: {
+		flexDirection: 'row',
+		marginBottom: 52 * DP,
+	},
+	phone_num_input: {
+		width: 520 * DP,
+		bottom: 0 * DP,
+		height: 80 * DP,
+	},
+	tagListContainer: {
+		width: 654 * DP,
+		marginTop: 50 * DP,
+	},
+	interestTagList: {
+		width: 654 * DP,
+	},
+	adressSelect: {
+		flexDirection: 'row',
+		width: 654 * DP,
+		alignItems: 'center',
+		marginBottom: 20 * DP,
+		justifyContent: 'space-between',
+		backgroundColor: '#FFF',
+	},
+});

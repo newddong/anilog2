@@ -1,5 +1,6 @@
 export default protect_obj = {
 	protect: [],
+	isAdoptMsgShowed: false,
 };
 
 export const updateProtect = (id, bool) => {

@@ -12,11 +12,11 @@ import AniButton from 'Molecules/button/AniButton';
 import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';
 import Stagebar from 'Molecules/info/Stagebar';
 import {stagebar_style} from 'Organism/style_organism copy';
-import {login_style, btn_style, temp_style, progressbar_style} from 'Templete/style_templete';
+import {temp_style, progressbar_style} from 'Templete/style_templete';
 import {getAnimalListNotRegisterWithCompanion, nicknameDuplicationCheck} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Input24 from 'Root/component/molecules/input/Input24';
-import {useKeyboardBottom} from 'Root/component/molecules/input/usekeyboardbottom';
+import protect_obj from 'Root/config/protect_obj';
 
 export default AssignPetProfileImage = ({route}) => {
 	const navigation = useNavigation();
@@ -41,8 +41,10 @@ export default AssignPetProfileImage = ({route}) => {
 				result => {
 					console.log('result / getAnimalListNotRegisterWithCompanion / AssignPetProfileImage : ', result.msg.length);
 					if (result.msg != undefined) {
-						if (result.msg.length == 1) {
+						console.log('protect_obj.isAdoptMsgShowed', protect_obj.isAdoptMsgShowed);
+						if (result.msg.length == 1 && !protect_obj.isAdoptMsgShowed) {
 							//한마리의 입양 임보 대기 동물이 있을 경우
+							protect_obj.isAdoptMsgShowed = true;
 							Modal.popAnimalToRegisterModal(
 								result.msg,
 								'새로 입양하시는 동물이 있습니다. \n 해당 동물을 등록하시겠습니까?',
@@ -172,6 +174,7 @@ export default AssignPetProfileImage = ({route}) => {
 					console.log('data', data);
 					navigation.push('AssignPetInfoA', {data: data, isAdoptRegist: isAdoptRegist});
 				}
+				protect_obj.isAdoptMsgShowed = false;
 			},
 			error => {
 				Modal.popOneBtn(error, '확인', () => Modal.close());
@@ -179,7 +182,6 @@ export default AssignPetProfileImage = ({route}) => {
 		);
 	};
 
-	const keyboardY = useKeyboardBottom(0 * DP);
 	const [key, setKey] = React.useState(false);
 
 	React.useEffect(() => {
@@ -211,9 +213,13 @@ export default AssignPetProfileImage = ({route}) => {
 					/>
 				</View>
 				<View style={[assignPetProfileImage_style.textMsg]}>
-					<Text style={[txt.noto24, {color: GRAY10}]}>{`반려동물 프로필의 대표 이미지가 될 사진과 이름을 알려주세요.\n`}</Text>
+					<Text
+						style={[
+							txt.noto24,
+							{color: GRAY10},
+						]}>{`반려동물 프로필의 대표 이미지가 될 사진과 이름을 알려주세요.\n반려동물의 이름은 수정이 불가합니다.`}</Text>
 				</View>
-				<View style={[temp_style.profileImageSelect, assignPetProfileImage_style.profileImageSelect]}>
+				<View style={[assignPetProfileImage_style.profileImageSelect]}>
 					<ProfileImageSelect onClick={selectPhoto} selectedImageUri={data.user_profile_uri} />
 				</View>
 				<View style={[assignPetProfileImage_style.inputForm]}>
@@ -257,6 +263,10 @@ const assignPetProfileImage_style = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	profileImageSelect: {
+		width: 294 * DP,
+		height: 294 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
 		marginTop: 50 * DP,
 	},
 	inputForm: {

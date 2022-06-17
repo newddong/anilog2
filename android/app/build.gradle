@@ -161,6 +161,17 @@ android {
                     abiFilters nativeArchitectures.split(',')
                 }
             }
+            resValue "string", "CodePushDeploymentKey", '""'
+        }
+        releaseStaging {
+            signingConfig signingConfigs.debug
+            if (nativeArchitectures) {
+                ndk {
+                    abiFilters nativeArchitectures.split(',')
+                }
+            }
+            resValue "string", "CodePushDeploymentKey", '"ET_pxmGkZaNcjuI-gLIaAW8QcA4bj0rOBEVBv"'
+            matchingFallbacks = ['release']
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
@@ -168,6 +179,7 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            resValue "string", "CodePushDeploymentKey", '"vaG-A7kC_D3_trSOjr1hqLxkxGNG6bvBfr2h5"'
         }
     }
 
@@ -227,3 +239,5 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+//apply from: "../../node_modules/react-native/react.gradle"
+apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"

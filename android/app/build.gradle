@@ -1,4 +1,13 @@
 apply plugin: "com.android.application"
+apply plugin: "ly.img.android.sdk"
+apply plugin: "kotlin-android"
+
+// # 22.06.13 imgly 활용을 위한 추가 (CHN)
+imglyConfig {
+    modules {
+        include 'ui:video-trim'
+    }
+}
 
 import com.android.build.OutputFile
 

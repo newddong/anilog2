@@ -5,7 +5,7 @@ import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import {REPORT_MENU} from 'Root/i18n/msg';
+import {APPLY_VOLUNTEER, NOT_REGISTERED_SHELTER, REPORT_MENU, SHELTER_INFO} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
 import {createMemoBox} from 'Root/api/userapi';
 
@@ -24,51 +24,33 @@ export default ProfileHeader = props => {
 		console.log('select Item', select);
 		if (select == '쪽지 보내기') {
 			Modal.close();
+
 			setTimeout(() => {
-				Modal.popMessageModal(
-					data.user_nickname,
-					msg => {
-						createMemoBox(
-							{memobox_receive_id: data._id, memobox_contents: msg},
-							result => {
-								console.log('message sent success', result);
-								Modal.popOneBtn('쪽지가 성공적으로 전송되었습니다.', '확인', () => Modal.close());
-							},
-							err => {
-								console.log('message sent err', err);
-							},
-						);
-						console.log('msg', msg);
-						Modal.close();
-					},
-					() => alert('나가기'),
-				);
+				if (data.user_type == 'shelter' && !data.user_contacted) {
+					Modal.alert(NOT_REGISTERED_SHELTER);
+				} else
+					Modal.popMessageModal(
+						data.user_nickname,
+						msg => {
+							createMemoBox(
+								{memobox_receive_id: data._id, memobox_contents: msg},
+								result => {
+									console.log('message sent success', result);
+									Modal.popOneBtn('쪽지가 성공적으로 전송되었습니다.', '확인', () => Modal.close());
+								},
+								err => {
+									console.log('message sent err', err);
+								},
+							);
+							console.log('msg', msg);
+							Modal.close();
+						},
+						() => alert('나가기'),
+					);
 			}, 100);
 		} else if (select.includes('님의 관심사')) {
 			Modal.close();
-			setTimeout(() => {
-				Modal.popInformationModal(
-					data,
-					() => onClose(),
-					type => {
-						console.log('type', type);
-						switch (type) {
-							case 'user':
-								props.navigation.push('UserInfoDetailSetting', props.options.data);
-								break;
-							case 'shelter':
-								props.navigation.push('EditShelterInfo', {data: props.options.data});
-								break;
-							case 'pet':
-								props.navigation.push('SetPetInformation', props.options.data);
-								break;
-
-							default:
-								break;
-						}
-					},
-				);
-			}, 100);
+			showInfoModal();
 		} else if (select == '신고') {
 			Modal.close();
 			setTimeout(() => {
@@ -113,7 +95,50 @@ export default ProfileHeader = props => {
 					() => alert('메시지'),
 				);
 			}, 100);
+		} else if (select == SHELTER_INFO) {
+			Modal.close();
+			showInfoModal();
+		} else if (select == APPLY_VOLUNTEER) {
+			Modal.close();
+			setTimeout(() => {
+				const userType = userGlobalObject.userInfo.user_type;
+				if (userType == 'shelter') {
+					Modal.popOneBtn('보호소 계정은 봉사활동을 \n 신청하실 수 없습니다.', '확인', () => Modal.close());
+				} else {
+					if (!data.user_contacted) {
+						Modal.popOneBtn(NOT_REGISTERED_SHELTER, '확인', Modal.close);
+					} else {
+						props.navigation.push('ApplyVolunteer', {token: data._id});
+					}
+				}
+			}, 100);
 		}
+	};
+
+	const showInfoModal = () => {
+		setTimeout(() => {
+			Modal.popInformationModal(
+				data,
+				() => onClose(),
+				type => {
+					console.log('type', type);
+					switch (type) {
+						case 'user':
+							props.navigation.push('UserInfoDetailSetting', data);
+							break;
+						case 'shelter':
+							props.navigation.push('EditShelterInfo', {data: data});
+							break;
+						case 'pet':
+							props.navigation.push('SetPetInformation', data);
+							break;
+
+						default:
+							break;
+					}
+				},
+			);
+		}, 100);
 	};
 
 	const onPressInfo = () => {
@@ -127,29 +152,7 @@ export default ProfileHeader = props => {
 			const isPetOwner = family_id_list.includes(userInfo._id); // 보고 있는 반려동물 프로필이 로그인한 계정의 반려동물인지 여부
 			Modal.close();
 			console.log('data', data.user_interests);
-			setTimeout(() => {
-				Modal.popInformationModal(
-					data,
-					() => onClose(),
-					type => {
-						console.log('type', type);
-						switch (type) {
-							case 'user':
-								props.navigation.push('UserInfoDetailSetting', data);
-								break;
-							case 'shelter':
-								props.navigation.push('EditShelterInfo', {data: data});
-								break;
-							case 'pet':
-								props.navigation.push('SetPetInformation', data);
-								break;
-
-							default:
-								break;
-						}
-					},
-				);
-			}, 100);
+			showInfoModal();
 		}
 		// else if (data && data.user_type == 'shelter' && data._id != userInfo._id) {
 		// 	//보호소 프로필이며 자신의 계정이 아닐경우
@@ -161,7 +164,11 @@ export default ProfileHeader = props => {
 	};
 
 	const onPressMeatball = () => {
-		Modal.popSelectBoxModal(['쪽지 보내기', data.user_nickname + '님의 관심사'], select => onSelect(select), onClose, false, false);
+		if (data.user_type == 'user') {
+			Modal.popSelectBoxModal(['쪽지 보내기', data.user_nickname + '님의 관심사'], onSelect, onClose, false, false);
+		} else {
+			Modal.popSelectBoxModal(['쪽지 보내기', APPLY_VOLUNTEER, SHELTER_INFO], onSelect, onClose, false, false);
+		}
 	};
 
 	const onClose = () => {
@@ -174,10 +181,11 @@ export default ProfileHeader = props => {
 		if (data && data.user_type == 'user' && isMyProfile) {
 			return <></>;
 		} else if (data && data.user_type == 'user') {
-			// return <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />;
-			return <></>;
+			return <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />;
+		} else if (data && data.user_type == 'shelter') {
+			return <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />;
 		} else {
-			return <InfoIcon50 onPress={onPressInfo} />;
+			return data && <InfoIcon50 onPress={onPressInfo} />;
 		}
 	};
 

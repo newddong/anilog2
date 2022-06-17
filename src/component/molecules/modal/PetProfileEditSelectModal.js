@@ -33,9 +33,16 @@ const PetProfileEditSelectModal = props => {
 	}, []);
 
 	const animateSelectModal = () => {
+		let aniLength;
+		console.log('length', data.length);
+		if (data.length > 4) {
+			aniLength = 842 * DP;
+		} else {
+			aniLength = (398 + data.length * 144) * DP;
+		}
 		Animated.timing(animatedHeight, {
 			duration: 400,
-			toValue: 872 * DP,
+			toValue: aniLength,
 			// easing: Easing.linear,
 			useNativeDriver: false,
 		}).start();
@@ -167,7 +174,7 @@ const PetProfileEditSelectModal = props => {
 	return (
 		<View style={style.background}>
 			<TouchableWithoutFeedback onPress={closeSelectModal}>
-				<View style={{width: 750 * DP, height: 1200 * DP}} />
+				<View style={{width: 750 * DP, height: 842 * DP}} />
 			</TouchableWithoutFeedback>
 			<Animated.View
 				style={[
@@ -208,7 +215,7 @@ const style = StyleSheet.create({
 	},
 	popUpWindow: {
 		width: 750 * DP,
-		height: 872 * DP,
+		// height: 842 * DP,
 		// backgroundColor: '#FFFFFF',
 		backgroundColor: OPACITY90,
 		borderTopLeftRadius: 40 * DP,
@@ -234,12 +241,11 @@ const style = StyleSheet.create({
 		width: 750 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
-		// backgroundColor: WHITE,
 		backgroundColor: OPACITY90,
 	},
 	list: {
 		// width: 750 * DP,
-		height: 592 * DP,
+		// height: 592 * DP,
 		// paddingHorizontal: 20 * DP,
 		alignItems: 'center',
 	},
@@ -276,7 +282,9 @@ const style = StyleSheet.create({
 		width: 750 * DP,
 		// width: 750 * DP,
 		paddingHorizontal: 20 * DP,
-		height: 148 * DP,
+		paddingTop: 30 * DP,
+		paddingBottom: 70 * DP,
+		// height: 148 * DP,
 		flexDirection: 'row',
 		backgroundColor: OPACITY90,
 	},

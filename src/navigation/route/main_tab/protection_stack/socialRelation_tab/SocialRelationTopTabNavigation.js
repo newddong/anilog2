@@ -167,7 +167,7 @@ export default SocialRelationTopTabNavigation = props => {
 					borderTopColor: GRAY40,
 					borderBottomColor: GRAY40,
 					elevation: 0,
-					height: params.userobject.user_type == 'pet' ? 0 : 78 * DP,
+					// height: params.userobject.user_type == 'pet' ? 0 : 78 * DP,
 				},
 			}}
 			initialLayout={{width: Dimensions.get('window').width}}

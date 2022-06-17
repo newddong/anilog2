@@ -45,12 +45,18 @@ const MissingReportInfo = props => {
 
 	//MissingReportInfo 하나의 정보 컴포넌트
 	const InfoOneLine = props => {
+		const arr = props.title.split('');
 		return (
 			<View style={[style.infoOneLineCont]}>
-				<View style={{width: 118 * DP, justifyContent: 'center'}}>
-					<Text style={[txt.noto26b, {justifyContent: 'space-between'}]}>{props.title}</Text>
+				<View style={{width: 118 * DP, justifyContent: 'space-between', flexDirection: 'row'}}>
+					{arr.map((v, i) => {
+						return <Text style={[txt.noto26b, {justifyContent: 'space-between', textAlign: 'justify'}]}>{v}</Text>;
+					})}
+					{/* <Text style={[txt.noto26b, {justifyContent: 'space-between', textAlign: 'justify'}]} numberOfLines={1}>
+						{props.title}
+					</Text> */}
 				</View>
-				<Text style={[txt.noto26b, {}]}>: </Text>
+				<Text style={[txt.noto26b]}> : </Text>
 
 				{props.isHash ? (
 					<HashText style={[txt.noto28, {width: 482 * DP}]} byteOfLine={55}>
@@ -71,12 +77,12 @@ const MissingReportInfo = props => {
 		let newMissingLocation = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
 		return (
 			<View style={style.container}>
-				<InfoOneLine title="동물  분류" content={missing_animal_species + ' / ' + missing_animal_species_detail} />
-				<InfoOneLine title="실종  날짜" content={newMissingDate} />
-				<InfoOneLine title="성별  나이" content={newAnimalSex + ' / ' + missing_animal_age + '살'} />
-				<InfoOneLine title="실종  위치" content={newMissingLocation} />
-				<InfoOneLine title="연   락   처 " content={missing_animal_contact} />
-				<InfoOneLine title="특          징" content={missing_animal_features} />
+				<InfoOneLine title="동물 분류" content={missing_animal_species + ' / ' + missing_animal_species_detail} />
+				<InfoOneLine title="실종 날짜" content={newMissingDate} />
+				<InfoOneLine title="성별/나이" content={newAnimalSex + ' / ' + missing_animal_age + '살'} />
+				<InfoOneLine title="실종 위치" content={newMissingLocation} />
+				<InfoOneLine title="연락처" content={missing_animal_contact} />
+				<InfoOneLine title="특징" content={missing_animal_features} />
 			</View>
 		);
 	} else if (feed_type == 'report') {
@@ -86,9 +92,9 @@ const MissingReportInfo = props => {
 		const newReportDate = newReportDateText[0] + '.' + newReportDateText[1] + '.' + newReportDateText[2].toString().substring(0, 2);
 		return (
 			<View style={style.container}>
-				<InfoOneLine title="제보 날짜  " content={newReportDate} />
-				<InfoOneLine title="제보 장소  " content={report_witness_location} />
-				<InfoOneLine title="제보 내용  " content={feed_content} isHash />
+				<InfoOneLine title="제보 날짜" content={newReportDate} />
+				<InfoOneLine title="제보 장소" content={report_witness_location} />
+				<InfoOneLine title="제보 내용" content={feed_content} isHash />
 			</View>
 		);
 	}

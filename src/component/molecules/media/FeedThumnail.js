@@ -101,9 +101,9 @@ const FeedThumbnail = React.memo(props => {
 
 				{/* 클릭하거나 전체 선택시 체크 표기 - 모드는 선택하기 모드여야 함. */}
 				{checkDisplay()}
-				<View style={[style.blur, {zIndex: -1}]}>
+				{/* <View style={[style.blur, {zIndex: -1}]}>
 					<Blur246 />
-				</View>
+				</View> */}
 			</View>
 		</TouchableWithoutFeedback>
 	);

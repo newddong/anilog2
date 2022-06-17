@@ -267,6 +267,7 @@ export default FeedContent = props => {
 
 	//피드 미트볼 - 즐겨찾기 설정
 	const onFavorite = isFavorite => {
+		console.log(props.data, '22');
 		Modal.close();
 		setTimeout(() => {
 			Modal.popTwoBtn(
@@ -620,10 +621,15 @@ export default FeedContent = props => {
 							{props.data.feed_writer_id ? (
 								<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
 									<View style={[organism_style.favoriteTag_feedContent]}>
-										{props.data.feed_writer_id.is_favorite ? (
-											<FavoriteTag48_Filled onPress={() => onPressFavoriteWriter(false)} />
+										{/* {props.data.feed_writer_id.is_favorite ? ( */}
+										{props.data.feed_favorite_count == 0 ? (
+											<TouchableOpacity onPress={() => onFavorite(false)}>
+												<FavoriteTag48_Filled />
+											</TouchableOpacity>
 										) : (
-											<FavoriteTag48_Border onPress={() => onPressFavoriteWriter(true)} />
+											<TouchableOpacity onPress={() => onFavorite(true)}>
+												<FavoriteTag48_Border />
+											</TouchableOpacity>
 										)}
 									</View>
 									{false && (

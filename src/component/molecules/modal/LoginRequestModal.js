@@ -23,11 +23,11 @@ const LoginRequestModal = props => {
 	};
 
 	return (
-		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={style.background}>
-			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
+		<TouchableOpacity activeOpacity={0.9} onPress={() => Modal.close()} style={style.background}>
+			<TouchableOpacity activeOpacity={0.9} style={[style.popUpWindow, style.shadow]}>
 				<Text style={[txt.noto28, style.msg]}>로그인이 필요한 활동입니다.</Text>
 				<View style={style.buttonContainer}>
-					<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={'로그인'} onPress={pressOk} />
+					<AniButton onPress={pressOk} activeOpacity={0.6} btnLayout={btn_w226} btnStyle={'border'} btnTitle={'로그인'} />
 				</View>
 				<TouchableOpacity onPress={() => Modal.close()} style={style.footer}>
 					<Text style={[txt.noto24, {color: GRAY10}]}> 로그인 없이 볼게요.{'   '}</Text>
@@ -58,6 +58,7 @@ const style = StyleSheet.create({
 		width: 614 * DP,
 		height: 304 * DP,
 		backgroundColor: WHITE,
+		opacity: 0.9,
 		paddingTop: 40 * DP,
 		// paddingBottom: 52 * DP,
 		paddingHorizontal: 64 * DP,

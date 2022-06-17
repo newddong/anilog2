@@ -214,7 +214,7 @@ export const temp_style = StyleSheet.create({
 		height: 32 * DP,
 	},
 	agreementCheckList: {
-		width: 654 * DP,
+		width: 694 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
@@ -1172,7 +1172,7 @@ export const agreementCheck_style = StyleSheet.create({
 		marginBottom: 50 * DP,
 	},
 	horizontalSepartor: {
-		width: 654 * DP,
+		width: 694 * DP,
 		height: 2 * DP,
 		marginVertical: 20 * DP,
 		backgroundColor: GRAY30,

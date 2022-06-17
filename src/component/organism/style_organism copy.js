@@ -670,7 +670,7 @@ export const companionFormList = StyleSheet.create({
 
 export const assignCheckListItem = StyleSheet.create({
 	container: {
-		width: 654 * DP,
+		width: 694 * DP,
 		// height: 50 * DP,
 		alignItems: 'center',
 		flexDirection: 'row',
@@ -955,7 +955,7 @@ export const selectedMediaList = StyleSheet.create({
 		// width: 190 * DP,
 		// height: 190 * DP,
 		// marginRight: 30 * DP,
-		marginLeft:22*DP,
+		marginLeft: 22 * DP,
 		backgroundColor: 'white',
 	},
 });

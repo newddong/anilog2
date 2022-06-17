@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+   AppCenter-Config.plist
+   anilog
+
+   Created by lky on 2022/06/17.
+   Copyright (c) 2022 ___ORGANIZATIONNAME___. All rights reserved.
+-->
+<plist version="1.0">
+   <dict>
+    <key>AppSecret</key>
+    <string>f1d3a473-83f0-4c6d-8c38-86987e66fa1a</string>
+   </dict>
+</plist>

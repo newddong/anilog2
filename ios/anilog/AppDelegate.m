@@ -4,6 +4,17 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
+// #import <GoogleMaps/GoogleMaps.h> //22.04.02 구글 맵스 활용을 위한 추가
+#import <CodePush/CodePush.h>
+#import <AppCenterReactNative.h>
+#import <AppCenterReactNativeAnalytics.h>
+#import <AppCenterReactNativeCrashes.h>
+
+@import SDWebImage;
+#import <SDWebImagePhotosPlugin/SDWebImagePhotosPlugin.h>
+#import <SDWebImagePhotosPlugin/SDImagePhotosLoader.h>
+
+
 #ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
 #import <FlipperKitLayoutPlugin/FlipperKitLayoutPlugin.h>
@@ -11,11 +22,7 @@
 #import <FlipperKitNetworkPlugin/FlipperKitNetworkPlugin.h>
 #import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
 #import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
-// #import <GoogleMaps/GoogleMaps.h> //22.04.02 구글 맵스 활용을 위한 추가
 
-@import SDWebImage;
-#import <SDWebImagePhotosPlugin/SDWebImagePhotosPlugin.h>
-#import <SDWebImagePhotosPlugin/SDImagePhotosLoader.h>
 
 static void InitializeFlipper(UIApplication *application) {
   FlipperClient *client = [FlipperClient sharedClient];
@@ -54,6 +61,9 @@ static void InitializeFlipper(UIApplication *application) {
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   
+  [AppCenterReactNative register];
+  [AppCenterReactNativeAnalytics registerWithInitiallyEnabled:true];
+  [AppCenterReactNativeCrashes registerWithAutomaticProcessing];
 //  [SDImageLoadersManager.sharedManager addLoader:SDImagePhotosLoader.sharedLoader];
 //  SDImagePhotosLoader.sharedLoader.imageRequestOptions.sd_targetSize = CGSizeMake(120, 120);
 //  SDWebImageManager.defaultImageLoader = SDImageLoadersManager.sharedManager;
@@ -66,7 +76,8 @@ static void InitializeFlipper(UIApplication *application) {
 #if DEBUG
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
 #else
-  return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+//  return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+  return [CodePush bundleURL];
 #endif
 }
 

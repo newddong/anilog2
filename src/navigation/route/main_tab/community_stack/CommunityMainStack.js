@@ -22,7 +22,7 @@ import AlarmList from 'Templete/list/AlarmList';
 import AlarmCommentList from 'Organism/comment/AlarmCommentList';
 import UserNotePage from 'Templete/user/UserNotePage';
 import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
-import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailSettting';
+import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailSetting';
 import SaveButtonHeader from 'Root/navigation/header/SaveButtonHeader';
 import CommunityHeader from 'Root/navigation/header/CommunityHeader';
 import ChangePetProfileImage from 'Root/component/templete/pet/ChangePetProfileImage';

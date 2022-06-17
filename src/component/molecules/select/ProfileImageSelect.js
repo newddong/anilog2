@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {styles} from 'Atom/image/imageStyle';
-import {CrossNew92, Shelter294, ProfileDefaultImg} from 'Atom/icon';
+import {CrossNew92, Shelter294, ProfileDefaultImg, ProfileDefaultImg4} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {BLACK, GRAY10, WHITE} from 'Root/config/color';
 import FastImage from 'react-native-fast-image';
@@ -21,9 +21,15 @@ const ProfileImageSelect = props => {
 		<TouchableOpacity onPress={onClick} style={styles.img_round_294}>
 			{/* ProfileImage uri가 null일 경우와 아닌 경우의 분기 */}
 			{props.selectedImageUri ? (
-				<FastImage style={styles.img_round_294} source={{uri: props.selectedImageUri}} />
+				props.selectedImageUri.includes('http') ? (
+					<FastImage style={styles.img_round_294} source={{uri: props.selectedImageUri}} />
+				) : (
+					<Image style={styles.img_round_294} source={{uri: props.selectedImageUri}} />
+				)
 			) : props.isShelter ? (
 				<Shelter294 />
+			) : props.user == 'user' ? (
+				<ProfileDefaultImg4 />
 			) : (
 				<ProfileDefaultImg size={styles.img_round_294} />
 			)}

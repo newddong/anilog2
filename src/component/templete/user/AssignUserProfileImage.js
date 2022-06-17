@@ -135,7 +135,7 @@ export default AssignUserProfileImage = props => {
 
 			{/* (M)ProfileImageSelect */}
 			<View style={[temp_style.profileImageSelect, assignUserProfileImage_style.profileImageSelect]}>
-				<ProfileImageSelect onClick={selectPhoto} selectedImageUri={imgSelected} />
+				<ProfileImageSelect onClick={selectPhoto} selectedImageUri={imgSelected} user={'user'} />
 			</View>
 			<View style={[{width: 528 * DP}, {height: 94 * DP}, {marginTop: 90 * DP}]}>
 				<Text style={[txt.noto30, {textAlign: 'center'}]}>*띄어쓰기 없이 2자 이상 15자 이내의 한글, 영문, 숫자, '_' 의 입력만 가능합니다.</Text>

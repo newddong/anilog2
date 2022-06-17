@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions, TouchableWithoutFeedback, FlatList, Animated, Easing} from 'react-native';
-import {WHITE, MAINBLACK, GRAY30, GRAY10, APRI10} from 'Root/config/color';
+import {WHITE, MAINBLACK, GRAY30, GRAY10, APRI10, OPACITY90} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
@@ -111,7 +111,7 @@ const PetProfileEditSelectModal = props => {
 	const AddPetFooter = () => {
 		return (
 			<View style={[style.listContainer3]}>
-				<View style={[style.footer, {marginLeft: 10 * DP}]}>
+				<View style={[style.footer, {paddingLeft: 30 * DP}]}>
 					<AddItem68 />
 					<View style={[{alignItems: 'center'}, {marginLeft: 30 * DP}]}>
 						<Text style={[{width: 510 * DP}, {height: 46 * DP}, txt.noto30, {color: APRI10}]}>새로운 동물 계정 만들기</Text>
@@ -184,7 +184,7 @@ const PetProfileEditSelectModal = props => {
 						<FlatList data={data} renderItem={renderItem} ListHeaderComponent={userHeader} />
 					</View>
 				</View>
-				<TouchableOpacity onPress={() => onSelect({props: 'hi'})}>
+				<TouchableOpacity sty={[style.footer]} onPress={() => onSelect({props: 'hi'})}>
 					<AddPetFooter />
 				</TouchableOpacity>
 			</Animated.View>
@@ -209,16 +209,20 @@ const style = StyleSheet.create({
 	popUpWindow: {
 		width: 750 * DP,
 		height: 872 * DP,
-		backgroundColor: '#FFFFFF',
-		borderRadius: 40 * DP,
+		// backgroundColor: '#FFFFFF',
+		backgroundColor: OPACITY90,
+		borderTopLeftRadius: 40 * DP,
+		borderTopRightRadius: 40 * DP,
+		// borderRadius: 40 * DP,
 		alignItems: 'center',
-		opacity: 0.8,
+		// opacity: 0.8,
 	},
 	header: {
 		width: 750 * DP,
 		height: 108 * DP,
 		flexDirection: 'row',
-		backgroundColor: WHITE,
+		// backgroundColor: WHITE,
+		backgroundColor: OPACITY90,
 		alignItems: 'center',
 		justifyContent: 'center',
 		paddingHorizontal: 40 * DP,
@@ -230,7 +234,8 @@ const style = StyleSheet.create({
 		width: 750 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
-		backgroundColor: WHITE,
+		// backgroundColor: WHITE,
+		backgroundColor: OPACITY90,
 	},
 	list: {
 		// width: 750 * DP,
@@ -268,12 +273,12 @@ const style = StyleSheet.create({
 	footer: {
 		alignItems: 'center',
 		justifyContent: 'flex-start',
-		width: 694 * DP,
+		width: 750 * DP,
 		// width: 750 * DP,
 		paddingHorizontal: 20 * DP,
 		height: 148 * DP,
 		flexDirection: 'row',
-		// backgroundColor: 'yellow',
+		backgroundColor: OPACITY90,
 	},
 });
 

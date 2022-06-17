@@ -12,7 +12,7 @@ import SearchReview from 'Root/component/templete/search/SearchReview';
 import {getSearchCommunityList} from 'Root/api/community';
 import SearchArticle from 'Root/component/templete/search/SearchArticle';
 import {useNavigation} from '@react-navigation/core';
-import {NETWORK_ERROR} from 'Root/i18n/msg';
+import {NETWORK_ERROR, REVIEW_LIMIT} from 'Root/i18n/msg';
 import Modal from 'Root/component/modal/Modal';
 
 const SearchTabNav = createMaterialTopTabNavigator();
@@ -35,14 +35,18 @@ export default SearchTabNavigation = props => {
 	//검색탭 헤더의 인풋값이 바뀔 때마다 계정과 해쉬를 받아오는 api에 접속
 	React.useEffect(() => {
 		console.log('searchContext.searchInfo.searchInput', searchContext.searchInfo.searchInput);
-		if (userList == 'false' && hashList == 'false' && commList == 'false') {
-		} else {
-			fetchData(); // effect Hook에서 async await 구문을 쓰기 위한 처리
-		}
-		navigation.addListener('focus', () => {
-			fetchData();
+		fetchData();
+		const unsubscribe = navigation.addListener('focus', () => {
+			// fetchData();
+			updateReview();
 		});
+		return unsubscribe;
 	}, [searchContext.searchInfo.searchInput]);
+
+	const updateReview = async () => {
+		const comm = await getCommunityList(); //커뮤니티 검색
+		setCommList(comm);
+	};
 
 	async function fetchData() {
 		setLoading(true);
@@ -127,6 +131,8 @@ export default SearchTabNavigation = props => {
 				getSearchCommunityList(
 					{
 						searchKeyword: searchContext.searchInfo.searchInput,
+						page: 1,
+						limit: REVIEW_LIMIT,
 					},
 					result => {
 						// console.log('searchContext.searchInfo.searchInput', searchContext.searchInfo.searchInput);

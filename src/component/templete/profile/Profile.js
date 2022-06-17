@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, FlatList, Animated, Easing, ActivityIndicator} from 'react-native';
 import {followUser, getUserProfile, unFollowUser} from 'Root/api/userapi';
-import {NETWORK_ERROR, NORMAL, PET, PROTECT_REQUEST_DETAIL_LIMIT, THUMNAIL_LIMIT} from 'Root/i18n/msg';
+import {NETWORK_ERROR, NORMAL, NOT_REGISTERED_SHELTER, PET, PROTECT_REQUEST_DETAIL_LIMIT, THUMNAIL_LIMIT} from 'Root/i18n/msg';
 import {Message94, Write94} from 'Atom/icon';
 import ProfileTabSelect from 'Root/component/molecules/tab/ProfileTabSelect';
 import ProfileInfo from 'Organism/info/ProfileInfo';
@@ -240,7 +240,7 @@ export default Profile = ({route}) => {
 		} else {
 			console.log('data', data);
 			if (!data.user_contacted) {
-				Modal.alert('정식 애니로그 등록된 \n 보호소가 아닙니다!');
+				Modal.alert(NOT_REGISTERED_SHELTER);
 			} else {
 				navigation.push('ApplyVolunteer', {token: data._id});
 			}

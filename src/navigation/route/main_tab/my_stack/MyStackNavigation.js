@@ -5,7 +5,7 @@ import FeedList from 'Templete/feed/FeedList';
 import FeedListForHashTag from 'Templete/feed/FeedListForHashTag';
 import FeedCommentList from 'Templete/feed/FeedCommentList';
 
-import UserInfoDetailSettting from 'Templete/user/UserInfoDetailSettting';
+import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailSetting';
 import UserMenu from 'Templete/user/UserMenu';
 import UserInfoSetting from 'Templete/user/UserInfoSetting';
 import ChangeUserProfileImage from 'Templete/user/ChangeUserProfileImage';

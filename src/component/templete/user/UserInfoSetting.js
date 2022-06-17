@@ -17,7 +17,7 @@ import {
 } from 'Root/i18n/msg';
 import {btn_w114, btn_w194, btn_w242} from 'Atom/btn/btn_style';
 import {Arrow_Down_GRAY20, Edit46, NextMark} from 'Atom/icon';
-import {login_style, temp_style, userInfoSetting_style} from 'Templete/style_templete';
+import {login_style, temp_style, userInfoDetailSettting_style, userInfoSetting_style} from 'Templete/style_templete';
 import userGlobalObject from 'Root/config/userGlobalObject';
 // import {getUserProfile} from 'Root/api/usermenuapi';
 import {getUserInfoById, getUserProfile, updateUserDetailInformation, updateUserIntroduction} from 'Root/api/userapi';
@@ -171,7 +171,6 @@ export default UserInfoSetting = ({route}) => {
 		);
 	};
 
-
 	//User_intro 수정 버튼 클릭
 	const modify_userIntro = () => {
 		setModifyMode(!modifyMode);
@@ -235,7 +234,7 @@ export default UserInfoSetting = ({route}) => {
 			setData({...data, user_introduction: text});
 		}
 	};
-	
+
 	const validateNewNick = nick => {
 		let regExp = /^[가-힣a-zA-Z0-9_]{2,20}$/;
 		setValidated(regExp.test(nick));

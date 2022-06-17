@@ -25,7 +25,7 @@ import CommunityCommentList from 'Root/component/templete/community/CommunityCom
 import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 
 import ProtectCommentList from 'Root/component/templete/protection/ProtectCommentList';
-import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailSettting';
+import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailSetting';
 import MissingAnimalDetail from 'Templete/missing/MissingAnimalDetail';
 import ReportDetail from 'Templete/missing/ReportDetail';
 import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballHeader';

@@ -110,8 +110,10 @@ const LocalMedia = React.memo(props => {
 	return (
 		// <TouchableOpacity onPress={onPressMedia} style={[styles.img_square_186,{marginHorizontal:1*DP,marginVertical:1*DP}]}>
 		<TouchableOpacity onPress={onPressMedia} style={{width:187*DP,height:187*DP,paddingHorizontal:1*DP,paddingVertical:1*DP,backgroundColor:'#FFF'}}>
-			{/* <Image source={{uri: props.data.img_uri}} style={getStyleOfSelectedItem()} /> */}
-			<Img source={{uri: props.data.image.uri,priority:FastImage.priority.high}} style={getStyleOfSelectedItem()} />
+			{/* <Image source={{uri: props.data.image.uri}} style={getStyleOfSelectedItem()} /> */}
+			{/* <Image source={{uri:props.data.image.uri,width:187*DP,height:187*DP}} style={getStyleOfSelectedItem()} /> */}
+			{/* <Img source={{uri: props.data.image.uri,priority:FastImage.priority.high}} style={getStyleOfSelectedItem()} /> */}
+			<Img source={{uri:props.data.image.uri,width:187*DP,height:187*DP,priority:FastImage.priority.high}} style={getStyleOfSelectedItem()} />
 			{isSelect && getImageOfSelectedItem()}
 			{/* {props.data.image.playableDuration != null && (
 				<Text style={[txt.roboto22, {color: WHITE, position: 'absolute', left: 10 * DP, bottom: 6 * DP}]}>{props.data.image.playableDuration}</Text>

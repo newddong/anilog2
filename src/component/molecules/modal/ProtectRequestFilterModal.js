@@ -84,7 +84,7 @@ const ProtectRequestFilterModal = props => {
 	const animate = (type, value) => {
 		// console.log('animateCalendar', type, 'value : ', value);
 		Animated.timing(type, {
-			duration: 500,
+			duration: 200,
 			toValue: value,
 			easing: Easing.linear,
 			useNativeDriver: false,
@@ -886,10 +886,9 @@ const ShelterSelectBox = props => {
 
 	const render = ({item, index}) => {
 		const checked = item.state;
-		console.log('item.user_nickname', item.user_nickname);
 		return (
 			<>
-				<TouchableOpacity activeOpacity={0.6} onPress={() => onSelect(index)} style={[style.shelterItemCont]}>
+				<TouchableOpacity onPress={() => onSelect(index)} style={[style.shelterItemCont]} activeOpacity={0.6}>
 					<View style={[style.shelterInfo]}>
 						<Text style={[txt.noto30]}>{item.user_nickname || ''}</Text>
 						<Text style={[txt.roboto26, {color: GRAY10, maxWidth: 654 * DP}]} numberOfLines={1}>
@@ -914,7 +913,7 @@ const ShelterSelectBox = props => {
 			<TouchableOpacity activeOpacity={1} style={[style.shelterSelectHeader, style.shadow]}>
 				<Text style={[txt.noto30, {paddingVertical: 22 * DP}]}>보호소 선택</Text>
 				<TouchableOpacity onPress={onConfirm}>
-					<Text style={[txt.noto30b]}>완료</Text>
+					<Text style={[txt.noto30b, {marginRight: 10 * DP}]}>완료</Text>
 				</TouchableOpacity>
 			</TouchableOpacity>
 			<TouchableOpacity activeOpacity={1} style={[{flex: 1, alignItems: 'center', backgroundColor: 'white'}]}>

@@ -177,7 +177,7 @@ export default AssignShelterAddress = props => {
 				/>
 			</View>
 
-			<View style={[styles.addressInput, assignShelterAddress_style.addressInput]}>
+			<View style={[styles.addressInput, {marginTop: 40 * DP}]}>
 				<AddressInput
 					title={'보호소 주소'}
 					// titleMode={'star'}
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
 	},
 	input24A_assignShelterAddress: {
 		width: 694 * DP,
-		height: 112 * DP,
+		// height: 112 * DP,
 	},
 	addressInput: {
 		width: 694 * DP,

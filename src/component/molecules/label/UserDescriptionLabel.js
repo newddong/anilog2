@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View, Image, TouchableOpacity} from 'react-native';
-import {APRI10, BLACK, GRAY10} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, WHITE} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {styles} from 'Atom/image/imageStyle';
@@ -37,14 +37,28 @@ const UserDescriptionLabel = props => {
 	};
 
 	const getShelterStatusMark = () => {
-		switch (props.data.shelter_type) {
-			case 'public':
-				return <Public48 />;
-			case 'private':
-				return <Private48 />;
-			default:
-				return <></>;
-		}
+		// switch (props.data.shelter_type) {
+		// 	case 'public':
+		// 		return <Public48 />;
+		// 	case 'private':
+		// 		return <Private48 />;
+		// 	default:
+		// 		return <></>;
+		// }
+		return (
+			<View
+				style={{
+					width: 40 * DP,
+					height: 40 * DP,
+					borderRadius: 12 * DP,
+					backgroundColor: BLACK,
+					justifyContent: 'center',
+				}}>
+				<Text style={[txt.noto22b, {color: WHITE, textAlignVertical: 'center', textAlign: 'center'}]}>
+					{data.shelter_type == 'private' ? '사' : '공'}
+				</Text>
+			</View>
+		);
 	};
 
 	//이미지 프로필 라벨
@@ -85,10 +99,7 @@ const UserDescriptionLabel = props => {
 		}
 	};
 
-	// console.log('data.showStatus', data.showStatus);
-
 	return (
-		// <View style={{flexDirection: 'row', alignItems: 'center', width: props.width != null ? props.width : null}}>
 		<TouchableOpacity onPress={onClickLabel}>
 			<View style={{flexDirection: 'row', alignItems: 'center'}}>
 				{getLabel()}

@@ -453,6 +453,7 @@ export const CONFIRM_DELETE_FAVORITE_FEED = '선택한 피드를 즐겨찾기에
 export const CONFIRM_DELETE_MY_FEED = '선택한 목록을 내 피드글에서 해제하시겠습니까?';
 export const PROTECT_ACT_PROTECT_CONFIRM = '임시보호는 확정을 눌러도 이 게시물의 \n 상태가 "입양가능"으로 유지됩니다.';
 export const PROTECT_ACT_ADOPT_CONFIRM = '입양확정을 하게 되면 이 게시물의 상태가 "완료"로 변경됩니다.';
+export const NOT_REGISTERED_SHELTER = '정식 애니로그 등록된 \n 보호소가 아닙니다!';
 
 //보호동물 및 보호 요청게시글 상태에 대한 텍스트
 export const RESCUE = '입양가능';
@@ -479,6 +480,10 @@ export const FEED_MEATBALL_MENU_MY_FEED = ['수정', '삭제'];
 export const FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS = ['상태변경', '수정', '삭제'];
 export const FEED_MEATBALL_MENU = ['신고'];
 
+//프로필 미트볼 메뉴
+export const SHELTER_INFO = '보호소 정보';
+export const APPLY_VOLUNTEER = '봉사활동 신청';
+
 //신고 목록
 export const REPORT_MENU = [
 	'부적절한 홍보 게시글',
@@ -496,7 +501,6 @@ export const REPLY_MEATBALL_MENU = ['신고'];
 export const WEIGHT_INPUT_FORM_INFO = '두자리 숫자, 소수점 한자리';
 
 //알림  설정
-
 export const FOLLWER_NEW_POST_ALRAM = '팔로워 새 게시글 알림';
 export const FAVORITE_PROTECT_STATUS_CHANGE_ALRAM = '즐겨찾은 보호요청 상태 변경 알림';
 export const PET_VACCIN_DATE_ALRAM = '반려동물의 접종 예정일 알림';

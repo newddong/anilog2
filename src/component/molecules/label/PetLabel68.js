@@ -13,7 +13,7 @@ import FastImage from 'react-native-fast-image';
  */
 const PetLabel68 = props => {
 	const getStatusMark = () => {
-		console.log('props', props);
+		// console.log('props', props);
 		switch (props.data.pet_status) {
 			case 'protect':
 				return <Paw30_YELL20 />;

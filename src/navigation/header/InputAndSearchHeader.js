@@ -30,9 +30,11 @@ export default InputAndSearchHeader = props => {
 	}, [searchInput]);
 
 	React.useEffect(() => {
-		props.navigation.setParams({
-			reSearch,
-		});
+		if (props.isLocation) {
+			props.navigation.setParams({
+				reSearch,
+			});
+		}
 	}, []);
 
 	const reSearch = () => {

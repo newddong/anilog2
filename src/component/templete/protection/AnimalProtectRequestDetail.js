@@ -242,7 +242,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const onPressProtectRequest = () => {
 		console.log('data.protect_request_writer_id.user_contacted', data.protect_request_writer_id.user_contacted);
 		if (!data.protect_request_writer_id.user_contacted) {
-			Modal.alert('정식 애니로그 등록된 \n 보호소가 아닙니다!');
+			Modal.popOneBtn('정식 애니로그 등록된 \n 보호소가 아닙니다!', '확인', Modal.close);
 		} else {
 			navigation.push('ApplyProtectActivityA', {protect_request_pet_data: data});
 		}
@@ -252,7 +252,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const onPressAdoptionRequest = () => {
 		console.log('data.protect_request_writer_id.user_contacted', data.protect_request_writer_id.user_contacted);
 		if (!data.protect_request_writer_id.user_contacted) {
-			Modal.alert('정식 애니로그 등록된 \n 보호소가 아닙니다!');
+			Modal.popOneBtn('정식 애니로그 등록된 \n 보호소가 아닙니다!', '확인', Modal.close);
 		} else {
 			navigation.push('ApplyAnimalAdoptionA', {protect_request_pet_data: data});
 		}

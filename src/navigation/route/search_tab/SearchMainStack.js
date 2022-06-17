@@ -23,7 +23,7 @@ import CommunityEdit from 'Root/component/templete/community/CommunityEdit';
 import SendHeader from 'Root/navigation/header/SendHeader';
 import SearchMap from 'Root/component/templete/search/SearchMap';
 import AddressSearchPage from 'Root/component/templete/search/AddressSearchPage';
-import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailSettting';
+import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailSetting';
 import SaveButtonHeader from 'Root/navigation/header/SaveButtonHeader';
 import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
 import CommunityHeader from 'Root/navigation/header/CommunityHeader';

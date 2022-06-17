@@ -21,7 +21,7 @@ import UserNotePage from 'Templete/user/UserNotePage';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
 import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
-import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailSettting';
+import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailSetting';
 import SaveButtonHeader from 'Root/navigation/header/SaveButtonHeader';
 import ChangeUserProfileImage from 'Root/component/templete/user/ChangeUserProfileImage';
 import CommunityHeader from 'Root/navigation/header/CommunityHeader';

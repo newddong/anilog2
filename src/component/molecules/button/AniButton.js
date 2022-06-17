@@ -13,6 +13,7 @@ import {btn_w226} from 'Atom/btn/btn_style';
  * @param {object} props.btnLayout - 버튼의 레이아웃 스타일(Atoms의 btn_wXXX) / Default : btn_w226
  * @param {boolean} props.disable - 버튼 활성화 여부
  * @param {number} props.titleFontStyle - 제목 글꼴 크기, 기본값 24
+ * @param {number} props.activeOpacity - 버튼 클릭 투명도 수치
  * @param {(title:string)=>void} props.onPress - 버튼을 눌렸을때 동작하는 콜백, 제목 반환환
  */
 const AniButton = props => {
@@ -93,7 +94,7 @@ const AniButton = props => {
 	return props.disable ? (
 		<TouchableWithoutFeedback onPress={onPress}>{insideView()}</TouchableWithoutFeedback>
 	) : (
-		<TouchableHighlight underlayColor={'white'} activeOpacity={0.8} onPress={onPress}>
+		<TouchableHighlight style={{borderRadius: 30 * DP}} underlayColor={'white'} activeOpacity={props.activeOpacity} onPress={onPress}>
 			{insideView()}
 		</TouchableHighlight>
 	);
@@ -107,6 +108,7 @@ AniButton.defaultProps = {
 	titleFontStyle: 24, // titleFontStyle - title의 폰트 크기
 	btnLayout: btn_w226, // btnLayout - 버튼의 레이아웃(width, height, borderRadius를 결정)
 	onPress: e => console.log(e), // 버튼을 탭했을때 발생하는 콜백
+	activeOpacity: 0.9,
 };
 
 export default AniButton;

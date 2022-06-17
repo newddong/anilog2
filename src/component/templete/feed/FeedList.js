@@ -475,7 +475,7 @@ export default FeedList = ({route, navigation}) => {
 	const moveToFeedWrite = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
-				navigation.navigate({name: 'Login', merge: true});
+				navigation.navigate({name: 'LoginRequired', merge: true});
 			});
 		} else if (userGlobalObject.userInfo.user_type == 'user') {
 			Modal.popAvatarSelectFromWriteModal(obj => {

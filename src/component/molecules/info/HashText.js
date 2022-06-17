@@ -40,7 +40,7 @@ export default function HashText(props) {
 		const moreView = () => (
 			<TouchableOpacity
 				onPress={onShow}>
-				<View style={{flexDirection: 'row', paddingTop: 2 * DP, height: 30 * DP, alignItems: 'center'}}>
+				<View style={{flexDirection: 'row', paddingTop: 4 * DP, height: 30 * DP, alignItems: 'center'}}>
 					<Text style={[txt.noto24, {lineHeight: 30 * DP}]}>더보기</Text>
 					<Arrow_Down_GRAY20 />
 				</View>
@@ -61,16 +61,22 @@ export default function HashText(props) {
 				if (i == 1) {
 					if (v.includes('#') || v.includes('@'))
 						return (
-							<Text key={'hide'}>
-								{makeTagView(getByteSubtring(v, 35), taginfo)}...
+							<View style={{flexDirection:'row',width:694*DP,justifyContent:'space-between'}} key={'hide'}>
+								<Text>
+									{makeTagView(getByteSubtring(v, 35), taginfo)}...
+									
+								</Text>
 								{moreView()}
-							</Text>
+							</View>
 						);
 					return (
-						<Text key={v}>
-							{getByteSubtring(v, 35)}...
+						<View style={{flexDirection:'row',width:694*DP,justifyContent:'space-between'}} key={v}>
+							<Text>
+								{getByteSubtring(v, 35)}...
+								
+							</Text>
 							{moreView()}
-						</Text>
+						</View>
 					);
 				}
 			}

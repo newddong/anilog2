@@ -124,7 +124,7 @@ export default SocialRelationTopTabNavigation = props => {
 			getFollowers(
 				{
 					userobject_id: params.userobject._id,
-					user_nickname: followerInput,
+					// user_nickname: followerInput,
 					user_nickname: searchContext.searchInfo.searchInputForSocial,
 				},
 				result => {

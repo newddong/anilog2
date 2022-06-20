@@ -1,5 +1,5 @@
 import { Platform } from 'react-native';
-import {VESDK, Configuration, ForceTrimMode, CanvasAction, VideoCodec} from 'react-native-videoeditorsdk';
+import {VESDK, Configuration, ForceTrimMode, CanvasAction, VideoCodec, ExistingTheme} from 'react-native-videoeditorsdk';
 
 class VideoEditor {
     //사용하기 전에 반드시 라이선스를 초기화해주어야 한다
@@ -17,7 +17,7 @@ class VideoEditor {
         // isLicenseUnlocked = true;
     } 
 
-    static openVideoEditor(videoUrl: String, videoDuration: number, trimmedDuration = 15, bitRate = 30, filename = 'temp'): Promise<VideoEditorResult | null>{
+    static openVideoEditor(videoUrl, videoDuration, trimmedDuration = 15, bitRate = 30, filename = 'temp'){
         if(videoDuration <= trimmedDuration) {    
             console.log("자르고자 하는 길이보다 비디오의 길이가 짧음");
             return null;
@@ -25,20 +25,22 @@ class VideoEditor {
 
         let configuration = {
             mainCanvasActions: [CanvasAction.SOUND_ON_OFF],
-            tools: [],
+            // tools: [Tool.TRIM],
+            enableZoom:false,
             trim: {
-                minimumDuration: trimmedDuration,
-                maximumDuration: trimmedDuration,
+                minimumDuration: 0,
+                maximumDuration: 15,
                 forceMode: ForceTrimMode.SILENT,
             },
             export: {
-            video: {
-                codec: VideoCodec.H264,
-                bitRate: bitRate,
+                video: {
+                    codec: VideoCodec.H264,
+                    bitRate: bitRate,
+                },
+                //cameraroll과 동일한 폴더명. 폴더 내 파일을 지우려면 카메라롤의 clean 함수를 쓰면 된다.
+                filename: 'anilog_temp/' + filename,
             },
-            //cameraroll과 동일한 폴더명. 폴더 내 파일을 지우려면 카메라롤의 clean 함수를 쓰면 된다.
-            filename: 'anilog_temp/' + filename,
-            }
+            theme:ExistingTheme.LIGHT
         };
         
         return VESDK.openEditor(videoUrl, configuration);

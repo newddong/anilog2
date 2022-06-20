@@ -117,7 +117,10 @@ export default class App extends Component {
 
         <TouchableOpacity
           onPress={() => {
-		      	VideoEditor.openVideoEditor(this.state.uri, this.state.duration, 3500, 0.5, 15, 'name_delete_test');
+            VideoEditor.openVideoEditor({
+              uri: this.state.uri, 
+              duration: this.state.duration, 
+              saveName: 'name_delete_test'});
           }}
           style={styles.button}>
           <Text style={styles.text}>openEditor</Text>

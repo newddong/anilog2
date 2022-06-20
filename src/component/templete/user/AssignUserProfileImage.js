@@ -94,7 +94,7 @@ export default AssignUserProfileImage = props => {
 		} else return false;
 	};
 	const onNicknameChange = text => {
-		console.log('닉네임', text);
+		console.log('닉네임', text, confirmed);
 		setNickname(text);
 	};
 
@@ -137,8 +137,9 @@ export default AssignUserProfileImage = props => {
 			<View style={[temp_style.profileImageSelect, assignUserProfileImage_style.profileImageSelect]}>
 				<ProfileImageSelect onClick={selectPhoto} selectedImageUri={imgSelected} user={'user'} />
 			</View>
-			<View style={[{width: 528 * DP}, {height: 94 * DP}, {marginTop: 90 * DP}]}>
-				<Text style={[txt.noto30, {textAlign: 'center'}]}>*띄어쓰기 없이 2자 이상 15자 이내의 한글, 영문, 숫자, '_' 의 입력만 가능합니다.</Text>
+			<View style={[{height: 94 * DP}, {marginTop: 90 * DP}]}>
+				<Text style={[txt.noto30, {textAlign: 'center'}]}>*띄어쓰기 없이 2자 이상 15자 이내의 한글,</Text>
+				<Text style={[txt.noto30, {textAlign: 'center'}]}>영문, 숫자, '_' 의 입력만 가능합니다.</Text>
 			</View>
 
 			{/* (M)Input30 */}
@@ -155,14 +156,15 @@ export default AssignUserProfileImage = props => {
 					validator={nickName_validator}
 					onChange={onNicknameChange}
 					onValid={onNicknameValid}
-					confirm={nickName_validator}
+					// confirm={nickName_validator}
+					confirm={confirmed}
 					maxLength={20}
-					showmsg
+					showMsg={true}
 				/>
 			</View>
 
 			{/* (A)Btn_w654 */}
-			<View style={[styles.btn_w654]}>
+			<View style={[styles.btn_w694]}>
 				{confirmed ? (
 					<AniButton btnTitle={'확인'} titleFontStyle={32} btnStyle={'border'} btnLayout={btn_w694_r30} onPress={pressConfirm} />
 				) : (
@@ -173,8 +175,8 @@ export default AssignUserProfileImage = props => {
 	);
 };
 const styles = StyleSheet.create({
-	btn_w654: {
-		width: 654 * DP,
+	btn_w694: {
+		width: 694 * DP,
 		height: 104 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',

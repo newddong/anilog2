@@ -73,9 +73,15 @@ const MessageModal = props => {
 						bottom: Platform.OS == 'ios' ? KeyboardY : null,
 					},
 				]}>
-				<Text style={[txt.noto28, style.receiver]} numberOfLines={1}>
-					받는이 : {props.receiver}
-				</Text>
+				<View style={[{flexDirection: 'row'}]}>
+					<Text style={[txt.noto28, style.receiver]} numberOfLines={1}>
+						받는이 :
+					</Text>
+					<Text style={[txt.noto28, style.receiver, {marginLeft: 14 * DP}]} numberOfLines={1}>
+						{props.receiver}
+					</Text>
+				</View>
+
 				<View style={[style.inputLongText]}>
 					<TextInput onChangeText={onChangeMsg} style={[txt.noto28, style.textInput]} placeholder={'내용입력...'} maxLength={400} multiline={true} />
 					<Text style={[txt.noto24, {color: GRAY20, alignSelf: 'flex-end'}]}>{msg.length} / 400 </Text>
@@ -122,6 +128,7 @@ const style = StyleSheet.create({
 	receiver: {
 		// marginBottom: 30 * DP,
 		// textAlign: 'center',
+		height: 46 * DP,
 	},
 	inputLongText: {
 		width: 602 * DP,

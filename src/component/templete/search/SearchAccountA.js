@@ -67,9 +67,7 @@ export default SearchAccountA = React.memo((props, ref) => {
 		return (
 			<View style={[searchAccountA.container]}>
 				{props.data == 'false' ? (
-					<View style={[{alignItems: 'flex-start', width: 694 * DP, marginTop: 20 * DP}]}>
-						<Text style={[txt.noto24]}>최근 본 계정</Text>
-					</View>
+					<></>
 				) : (
 					// <ScrollView contentContainerStyle={{alignItems: 'center'}}>
 					// 	<ControllableAccountList

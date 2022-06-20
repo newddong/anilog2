@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Dimensions, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
@@ -9,6 +9,12 @@ import {getCommunityListByUserId} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {getFavoriteEtcListByUserId} from 'Root/api/favoriteetc';
 import {NETWORK_ERROR} from 'Root/i18n/msg';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {APRI10, GRAY10, GRAY40} from 'Root/config/color';
+import FavoriteArticle from './FavoriteArticle';
+import FavoriteReview from './FavoriteReview';
+
+const CommunityTopTabNav = createMaterialTopTabNavigator();
 
 //즐겨찾기한 커뮤니티 조회
 export default FavoriteCommunity = ({route}) => {
@@ -100,35 +106,63 @@ export default FavoriteCommunity = ({route}) => {
 		isFavorite ? navigation.push('FavoriteReview', review) : navigation.push('MyReview', review);
 	};
 
-	if (review == 'false' && article == 'false') {
-		return <Loading isModal={false} />;
-	} else
-		return (
-			<View style={[style.container]}>
-				<View style={[style.inside]}>
-					<TouchableOpacity onPress={onPressArticle} style={[style.type]}>
-						<View style={[style.title]}>
-							<ArticleIcon />
-							<Text style={[txt.noto30b]}>{'    '}자유 게시글</Text>
-							<Text style={[txt.noto28]}> · {article.length}개</Text>
-						</View>
-						<View style={[style.nextBtn]}>
-							<NextMark />
-						</View>
-					</TouchableOpacity>
-					<TouchableOpacity onPress={onPressReview} style={[style.type]}>
-						<View style={[style.title]}>
-							<ReviewIcon />
-							<Text style={[txt.noto30b]}>{'    '}리뷰</Text>
-							<Text style={[txt.noto28]}> · {review.length}개</Text>
-						</View>
-						<View style={[style.nextBtn]}>
-							<NextMark />
-						</View>
-					</TouchableOpacity>
-				</View>
-			</View>
-		);
+	return (
+		// <View style={[style.container]}>
+		// 	<View style={[style.inside]}>
+		// 		<TouchableOpacity onPress={onPressArticle} style={[style.type]}>
+		// 			<View style={[style.title]}>
+		// 				<ArticleIcon />
+		// 				<Text style={[txt.noto30b]}>{'    '}자유 게시글</Text>
+		// 				<Text style={[txt.noto28]}> · {article.length}개</Text>
+		// 			</View>
+		// 			<View style={[style.nextBtn]}>
+		// 				<NextMark />
+		// 			</View>
+		// 		</TouchableOpacity>
+		// 		<TouchableOpacity onPress={onPressReview} style={[style.type]}>
+		// 			<View style={[style.title]}>
+		// 				<ReviewIcon />
+		// 				<Text style={[txt.noto30b]}>{'    '}리뷰</Text>
+		// 				<Text style={[txt.noto28]}> · {review.length}개</Text>
+		// 			</View>
+		// 			<View style={[style.nextBtn]}>
+		// 				<NextMark />
+		// 			</View>
+		// 		</TouchableOpacity>
+		// 	</View>
+		// </View>
+		<CommunityTopTabNav.Navigator
+			screenOptions={{
+				tabBarItemStyle: {height: 70 * DP},
+				tabBarIndicatorStyle: {backgroundColor: 'black', height: 6 * DP},
+				tabBarLabelStyle: [style.tabbarLabelStyle],
+				tabBarInactiveTintColor: GRAY10,
+				lazy: true,
+				tabBarStyle: {
+					borderBottomWidth: 2 * DP,
+					// borderTopWidth: 2 * DP,
+					borderBottomColor: GRAY40,
+					elevation: 0,
+				},
+			}}
+			initialLayout={{width: Dimensions.get('window').width}}
+			optimizationsEnabled={true}>
+			<CommunityTopTabNav.Screen
+				name={'ArticleMain'}
+				options={{
+					tabBarLabel: '자유 게시판',
+				}}>
+				{props => <FavoriteArticle {...props} isFavorite={isFavorite} article={article} />}
+			</CommunityTopTabNav.Screen>
+			<CommunityTopTabNav.Screen
+				name={'ReviewMain'}
+				options={{
+					tabBarLabel: '리뷰',
+				}}>
+				{props => <FavoriteReview {...props} isFavorite={isFavorite} review={review} />}
+			</CommunityTopTabNav.Screen>
+		</CommunityTopTabNav.Navigator>
+	);
 };
 
 const style = StyleSheet.create({
@@ -162,5 +196,16 @@ const style = StyleSheet.create({
 		height: 55 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
+	},
+	tabbarLabelStyle: {
+		fontFamily: 'NotoSansKR-Bold',
+		fontSize: 28 * DP,
+		marginTop: -20 * DP,
+	},
+	tabBarIndicatorStyle: {
+		backgroundColor: APRI10,
+		height: 70 * DP,
+		borderTopRightRadius: 40 * DP,
+		borderTopLeftRadius: 40 * DP,
 	},
 });

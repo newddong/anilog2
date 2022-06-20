@@ -35,7 +35,7 @@ const PetProfileEditSelectModal = props => {
 	const animateSelectModal = () => {
 		let aniLength;
 		console.log('length', data.length);
-		if (data.length > 4) {
+		if (data.length > 3) {
 			aniLength = 842 * DP;
 		} else {
 			aniLength = (398 + data.length * 144) * DP;
@@ -174,7 +174,7 @@ const PetProfileEditSelectModal = props => {
 	return (
 		<View style={style.background}>
 			<TouchableWithoutFeedback onPress={closeSelectModal}>
-				<View style={{width: 750 * DP, height: 842 * DP}} />
+				<View style={[{width: 750 * DP, height: 1004 * DP}]} />
 			</TouchableWithoutFeedback>
 			<Animated.View
 				style={[
@@ -207,7 +207,8 @@ PetProfileEditSelectModal.defaultProps = {
 
 const style = StyleSheet.create({
 	background: {
-		backgroundColor: '#0009',
+		// backgroundColor: '#0009',
+		backgroundColor: 'rgba(0,0,0,0.5)',
 		height: Platform.OS == 'ios' ? Dimensions.get('window').height : '100%',
 		width: Platform.OS == 'ios' ? Dimensions.get('window').width : '100%',
 		justifyContent: 'flex-end',
@@ -242,6 +243,7 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		backgroundColor: OPACITY90,
+		// height: 592 * DP,
 	},
 	list: {
 		// width: 750 * DP,

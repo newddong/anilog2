@@ -30,7 +30,7 @@ const LoginRequestModal = props => {
 					<AniButton onPress={pressOk} activeOpacity={0.6} btnLayout={btn_w226} btnStyle={'border'} btnTitle={'로그인'} />
 				</View>
 				<TouchableOpacity onPress={() => Modal.close()} style={style.footer}>
-					<Text style={[txt.noto24, {color: GRAY10}]}> 로그인 없이 볼게요.{'   '}</Text>
+					<Text style={[txt.noto24, {color: GRAY10, marginRight: 20 * DP}]}> 로그인 없이 볼게요{'   '}</Text>
 					<NextMark />
 				</TouchableOpacity>
 			</TouchableOpacity>

@@ -50,7 +50,11 @@ const MissingReportInfo = props => {
 			<View style={[style.infoOneLineCont]}>
 				<View style={{width: 118 * DP, justifyContent: 'space-between', flexDirection: 'row'}}>
 					{arr.map((v, i) => {
-						return <Text style={[txt.noto26b, {justifyContent: 'space-between', textAlign: 'justify'}]}>{v}</Text>;
+						return (
+							<Text key={i} style={[txt.noto26b, {justifyContent: 'space-between', textAlign: 'justify'}]}>
+								{v}
+							</Text>
+						);
 					})}
 					{/* <Text style={[txt.noto26b, {justifyContent: 'space-between', textAlign: 'justify'}]} numberOfLines={1}>
 						{props.title}

@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Text, View, TouchableOpacity, StyleSheet} from 'react-native';
 import {txt} from 'Root/config/textstyle';
-import {temp_style} from 'Templete/style_templete';
-import {selectStat} from 'Organism/style_organism copy';
-import {APRI10, GRAY30} from 'Root/config/color';
+import {BLACK, GRAY30} from 'Root/config/color';
+import DP from 'Root/config/dp';
 /**
  *
  * @param {{
@@ -13,6 +12,7 @@ import {APRI10, GRAY30} from 'Root/config/color';
  *  onSelectAllClick: void,
  *	onDeleteSelectedItem: void,
  *	selectMode: boolean,
+ *	showBottomLine: boolean,
  * }} props
  */
 export default SelectStat = props => {
@@ -50,29 +50,29 @@ export default SelectStat = props => {
 	};
 
 	return (
-		<View style={[style.container]}>
+		<View style={[style.container, {borderBottomWidth: props.showBottomLine ? 2 * DP : 0}]}>
 			{/* 취소, 전체선택, 선택삭제 */}
 			<View style={[style.selectstat]}>
 				{selectMode ? (
-					<TouchableOpacity style={[temp_style.textBtn]} onPress={selectCancel}>
-						<Text style={[txt.noto26, {alignSelf: 'flex-start'}]}>취소</Text>
+					<TouchableOpacity style={[style.textBtn]} onPress={selectCancel}>
+						<Text style={[txt.noto26, {alignSelf: 'flex-start'}]}>완료</Text>
 						<Text>{props.headerText}</Text>
 					</TouchableOpacity>
 				) : null}
 				{selectMode ? (
 					<View style={[style.rightContainer]}>
-						<TouchableOpacity onPress={selectAll} style={[temp_style.textBtn]}>
-							<Text style={[txt.noto26]}>{selectCNT.current % 2 == 1 ? '전체 취소' : '전체 선택'}</Text>
+						<TouchableOpacity onPress={selectAll} style={[style.textBtn]}>
+							<Text style={[txt.noto26]}>{selectCNT.current % 2 == 1 ? '전체 취소  ' : '전체 선택  '}</Text>
 						</TouchableOpacity>
 						<View style={[style.vertical_stick]} />
-						<TouchableOpacity onPress={deleteSelectedItem} style={[temp_style.textBtn]}>
-							<Text style={[txt.noto26]}>선택 삭제</Text>
+						<TouchableOpacity onPress={deleteSelectedItem} style={[style.textBtn]}>
+							<Text style={[txt.noto26]}>{'   '}선택 삭제 </Text>
 						</TouchableOpacity>
 					</View>
 				) : (
 					<View style={[style.rightContainer]}>
-						<TouchableOpacity style={[temp_style.textBtn]} onPress={select}>
-							<Text style={[txt.noto26]}>선택하기</Text>
+						<TouchableOpacity onPress={select}>
+							<Text style={[txt.noto26]}>선택하기 </Text>
 						</TouchableOpacity>
 					</View>
 				)}
@@ -91,17 +91,19 @@ SelectStat.defaultProps = {
 	onSelectAllClick: e => console.log(e), // 전체 선택 클릭
 	onDeleteSelectedItem: e => console.log(e), // 선택 삭제 클릭
 	selectMode: false,
+	showBottomLine: true,
 };
 // media_uri: 'https://consecutionjiujitsu.com/wp-content/uploads/2017/04/default-image.jpg',
 
 const style = StyleSheet.create({
 	container: {
-		width: 694 * DP,
-		height: 94 * DP,
+		width: 750 * DP,
+		height: 72 * DP,
 		alignSelf: 'center',
 		alignItems: 'center',
 		borderBottomColor: GRAY30,
 		borderBottomWidth: 2 * DP,
+		paddingHorizontal: 28 * DP,
 		flexDirection: 'row',
 	},
 	selectstat_view: {
@@ -125,9 +127,9 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 	},
 	vertical_stick: {
-		width: 2,
+		width: 2 * DP,
 		height: 34 * DP,
 		alignSelf: 'center',
-		backgroundColor: APRI10,
+		backgroundColor: BLACK,
 	},
 });

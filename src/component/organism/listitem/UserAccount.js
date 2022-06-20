@@ -1,11 +1,10 @@
 import React from 'react';
-import {View, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {btn_w108} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import CheckBox from 'Molecules/select/CheckBox';
 import HashLabel from 'Molecules/label/HashLabel';
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
-import {userAccount} from 'Organism/style_organism copy';
 
 /**
  * 친구 즐겨찾기 Hash와 유저오브젝트 리스트 출력 컴포넌트
@@ -45,7 +44,7 @@ export default UserAccount = props => {
 			{console.log(`props.data.checkBoxState=>${props.data.checkBoxState}`)} */}
 			{/* CheckBox */}
 			{props.checkBoxMode ? (
-				<View style={[userAccount.checkBox]}>
+				<View style={[userAccount.checkBox, {}]}>
 					<CheckBox
 						state={props.data.checkBoxState}
 						onCheck={() => props.onCheckBox(props.data.type == 'HashTagObject' ? props.data.keyword : props.data.user_nickname)}
@@ -79,3 +78,30 @@ UserAccount.defaultProps = {
 	checkBoxState: false,
 	showFollowBtn: false,
 };
+
+const userAccount = StyleSheet.create({
+	container: {
+		width: 694 * DP,
+		height: 94 * DP,
+		flexDirection: 'row',
+		alignSelf: 'center',
+	},
+	checkBox: {
+		// width: 50 * DP,
+		alignSelf: 'center',
+		justifyContent: 'center',
+	},
+	userProfileContainer: {
+		width: 640 * DP,
+		height: 94 * DP,
+		marginLeft: 8 * DP,
+	},
+	followingBtnContainer: {
+		justifyContent: 'center',
+		marginLeft: 20 * DP,
+	},
+	followingBtnContainer_noneCheckBox: {
+		justifyContent: 'center',
+		marginLeft: 100 * DP,
+	},
+});

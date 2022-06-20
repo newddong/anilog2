@@ -29,21 +29,21 @@ export default SocialInfoB = props => {
 		<View style={[styles.container]}>
 			<View style={[styles.socialInfo]}>
 				<TouchableWithoutFeedback onPress={onPressUpload}>
-					<Text style={[txt.roboto34b]}>{count_to_K(props.data.user_upload_count)}</Text>
+					<Text style={[txt.roboto34b, styles.number]}>{count_to_K(props.data.user_upload_count)}</Text>
 				</TouchableWithoutFeedback>
-				<Text style={[txt.noto28, socialInfoB.title]}>업로드</Text>
+				<Text style={[txt.noto28, styles.title]}>업로드</Text>
 			</View>
 			<View style={[styles.socialInfo]}>
 				<TouchableWithoutFeedback onPress={moveToSocialRelation}>
-					<Text style={[txt.roboto34b]}>{count_to_K(props.data.user_follower_count)}</Text>
+					<Text style={[txt.roboto34b, styles.number]}>{count_to_K(props.data.user_follower_count)}</Text>
 				</TouchableWithoutFeedback>
-				<Text style={[txt.noto28, socialInfoB.title]}>팔로워</Text>
+				<Text style={[txt.noto28, styles.title]}>팔로워</Text>
 			</View>
 			<View style={[styles.socialInfo]}>
 				<TouchableWithoutFeedback onPress={moveToSocialRelation}>
-					<Text style={[txt.roboto34b]}>{count_to_K(props.data.user_follow_count)}</Text>
+					<Text style={[txt.roboto34b, styles.number]}>{count_to_K(props.data.user_follow_count)}</Text>
 				</TouchableWithoutFeedback>
-				<Text style={[txt.noto28, socialInfoB.title]}>팔로잉</Text>
+				<Text style={[txt.noto28, styles.title]}>팔로잉</Text>
 			</View>
 			{props.donationMode ? (
 				<View style={[styles.socialInfo]}>
@@ -80,9 +80,20 @@ const styles = StyleSheet.create({
 	number: {
 		marginLeft: -13.5 * DP,
 		alignSelf: 'center',
-		width: 130 * DP,
-		height: 50 * DP,
+		// width: 130 * DP,
+		height: 46 * DP,
 		textAlign: 'center',
 		// backgroundColor: 'yellow',
+		alignItems: 'center',
+	},
+	title: {
+		alignSelf: 'stretch',
+		height: 46 * DP,
+		width: 82 * DP,
+		textAlign: 'center',
+		justifyContent: 'center',
+		alignItems: 'center',
+		// alignContent: 'flex-start',
+		// backgroundColor: 'purple',
 	},
 });

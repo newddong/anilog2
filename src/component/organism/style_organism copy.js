@@ -364,6 +364,8 @@ export const socialInfoB = StyleSheet.create({
 		height: 46 * DP,
 		width: 82 * DP,
 		textAlign: 'center',
+		justifyContent: 'center',
+		alignItems: 'center',
 		// alignContent: 'flex-start',
 		// backgroundColor: 'purple',
 	},

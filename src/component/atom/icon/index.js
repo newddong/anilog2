@@ -196,7 +196,16 @@ import protectRequest from './protectRequest';
 import addItem68Black from './addItem68Black';
 import location40border from './location40border';
 import location48border from './location48border';
+import arrow48_gray10 from './arrow48_gray10';
 import verticalBar from './verticalBar';
+
+import eyeBlack52 from './eye52_black';
+
+import phone48_black from './phone48_black';
+import paw36_black from './paw36_black';
+import check36_black from './check36_black';
+import profileDefault294 from './profileDefault294';
+
 
 import DP from 'Root/config/dp';
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK, MAINBLACK} from 'Root/config/color';
@@ -256,6 +265,7 @@ export const ProfileDefaultImg1_70 = makeSvg(profiledefault1, size70, '');
 export const ProfileDefaultImg = props => {
 	return React.createElement(View, {...props}, React.createElement(profiledefault1, {...props.size, fill: props.color}));
 };
+export const ProfileDefaultImg_294 = makeSvg(profileDefault294, {width: 294 * DP, height: 294 * DP});
 
 export const Heart30_Filled = makeSvg(heartFilled, size30, APRI10);
 export const Heart30_Border = makeSvg(heartBorder, size30, APRI10);
@@ -308,7 +318,7 @@ export const Calendar48_Border = makeSvg(calendar48Border, size48);
 export const Cross48 = makeSvg(cross, size48);
 export const Person48 = makeSvg(person48, size48);
 export const Phone48 = makeSvg(phone48, size48);
-export const TextBalloon48 = makeSvg(textBalloon48, size48);
+export const TextBalloon48 = makeSvg(textBalloon48, size36, MAINBLACK);
 export const Male48 = makeSvg(male48, size48);
 export const Female48 = makeSvg(female48, size48);
 export const VideoPlay48 = makeSvg(videoPlay48, size48);
@@ -474,6 +484,7 @@ export const Arrow48 = makeSvg(arrow48, size48);
 
 export const Comment48 = makeSvg(comment48, size48);
 export const Arrow48_GRAY = makeSvg(arrow48_gray, size48);
+export const Arrow48_GRAY10 = makeSvg(arrow48_gray, size48);
 
 export const Paw46_border = makeSvg(paw46_border, size46, MAINBLACK);
 export const Setting46_border = makeSvg(setting46Border, size46, MAINBLACK);
@@ -492,7 +503,16 @@ export const CommunityIcon = makeSvg(communityIcon, size54, MAINBLACK);
 export const CommunityIcon_GRAY = makeSvg(communityIcon, size54, GRAY20);
 export const ProtectRequestIcon = makeSvg(protectRequest, size54, MAINBLACK);
 export const ProtectRequestIcon_GRAY = makeSvg(protectRequest, size54, GRAY20);
-export const Location40Border = makeSvg(location40border,size40,'#1A1311');
-export const Location48Border = makeSvg(location48border,size48,'#1A1311');
+export const Location40Border = makeSvg(location40border, size40, '#1A1311');
+export const Location48Border = makeSvg(location48border, size48, '#1A1311');
 
+
+
+export const Eye52_Black = makeSvg(eyeBlack52, size52, MAINBLACK);
+
+export const Arrow48_gray10 = makeSvg(arrow48_gray10, size48);
+export const Phone48_BLACK = makeSvg(phone48_black, size48);
 export const VerticalBar = makeSvg(verticalBar, {width: 2 * DP, height: 32 * DP}, '#767676');
+export const Paw36_black = makeSvg(paw36_black, size36, MAINBLACK);
+export const Check36_black = makeSvg(check36_black, size36, MAINBLACK);
+

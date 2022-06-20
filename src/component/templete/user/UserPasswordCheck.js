@@ -64,7 +64,7 @@ export default UserPasswordCheck = props => {
 			</View>
 			<View style={[{alignItems: 'center'}]}>
 				<Text style={[{textAlign: 'center'}, txt.noto30, {marginTop: 105 * DP}]}>*최소 8자 이상,</Text>
-				<Text style={([{textAlign: 'center'}], txt.noto30)}>영문과 숫자, 특수문자(!@#$%^&*)가</Text>
+				<Text style={([{textAlign: 'center'}], txt.noto30)}>영문과 숫자, 특수문자 ( ! @ # $ % ^ & * )가 </Text>
 				<Text style={([{textAlign: 'center'}], txt.noto30)}>포함되어야 합니다.</Text>
 			</View>
 			{/* (O)PasswordChecker */}
@@ -79,11 +79,11 @@ export default UserPasswordCheck = props => {
 			</View>
 
 			{/* (A)Btn_w654 */}
-			<View style={[btn_style.btn_w654, userPasswordCheck.btn_w654]}>
+			<View style={[btn_style.btn_w694, userPasswordCheck.btn_w654]}>
 				{pwdValid ? (
-					<AniButton btnTitle={'확인'} titleFontStyle={'32'} btnStyle={'border'} btnLayout={btn_w694_r30} onPress={goToNextStep} />
+					<AniButton btnTitle={'확인'} titleFontStyle={'32'} width={694} btnStyle={'border'} btnLayout={btn_w694_r30} onPress={goToNextStep} />
 				) : (
-					<AniButton btnTitle={'확인'} titleFontStyle={'32'} disable={true} btnLayout={btn_w694_r30} />
+					<AniButton btnTitle={'확인'} titleFontStyle={'32'} width={694} disable={true} btnLayout={btn_w694_r30} />
 				)}
 			</View>
 		</KeyboardAvoidingView>

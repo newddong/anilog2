@@ -215,7 +215,7 @@ const CommunityList = React.memo(props => {
 	const header = () => {
 		return (
 			<View style={[style.filter]}>
-				<View style={[style.filter_community_type]}>
+				<View style={[style.filter_community_type, {alignItems: 'center'}]}>
 					<TouchableOpacity
 						onPress={() => setType('free')}
 						style={[{paddingHorizontal: 10 * DP, paddingVertical: 10 * DP, justifyContent: 'center'}]}

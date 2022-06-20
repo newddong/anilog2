@@ -24,9 +24,6 @@ const styles = StyleSheet.create({
   },
 });
 
-// VESDK.unlockWithLicense(require('vesdk_license.ios.json'));
-// VESDK.unlockWithLicense(require('vesdk_license.android.json'));
-
 export default class App extends Component {
   constructor() {
     super();
@@ -38,8 +35,6 @@ export default class App extends Component {
     };
   }
 
-  //이런 식으로 쪼개서 퍼미션을 체크해도 되고
-  //PermissionIos.updatePermission(); 을 그대로 불러서 써도 된다
   checkPermission(isCustomized = false){
     if(isCustomized) {
       PermissionIos.checkPermission()
@@ -104,8 +99,6 @@ export default class App extends Component {
     })
   }
 
-  //cameraroll에서 이미지 불러오는 건 공식페이지 샘플과 동일, 다만 smart album이 추가되어 있음.
-  //관련하여 안내 작성 예정
   getImage(maxLoadImage = 3, whichIndexImage = 0){
     CameraRoll.getPhotos({
       first: maxLoadImage,
@@ -183,7 +176,7 @@ export default class App extends Component {
 
   openVideoEditor(duration = 5, bitRate = 30, filename = 'temp'){
     VideoEditor.unlockLicense();
-    VideoEditor.openVideoEditor(this.state.uri, this.state.duration, duration, bitRate, filename)
+    VideoEditor.openVideoEditor({uri: this.state.uri, duration: this.state.duration, saveName: filename})
     .then(r => {
       console.log(r);
     })

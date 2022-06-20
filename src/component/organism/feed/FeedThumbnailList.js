@@ -20,7 +20,7 @@ export default FeedThumbnailList = props => {
 		return <FeedThumnail data={item} onSelect={() => props.onClickThumnail(index, item)} selectMode={props.selectMode} />;
 	};
 	return (
-		<View style={[{marginBottom: 0}, {minHeight: props?.height}, {marginTop: -10 * DP}]}>
+		<View style={[{marginBottom: 0}, {minHeight: props?.height}, {marginTop: 0 * DP}]}>
 			<FlatList
 				data={props.items}
 				renderItem={renderItem}

@@ -14,9 +14,10 @@ import {getCommunityListByUserId} from 'Root/api/community';
 import {EmptyIcon} from 'Root/component/atom/icon';
 import {txt} from 'Root/config/textstyle';
 import {NETWORK_ERROR, REVIEW_BRIEF_LIMIT, REVIEW_LIMIT} from 'Root/i18n/msg';
+import {GRAY40} from 'Root/config/color';
 
 //즐겨찾기한 피드목록을 조회
-export default FavoriteReview = ({route}) => {
+export default FavoriteReview = ({route, isFavorite}) => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
 	const [selectMode, setSelectMode] = React.useState(false);
@@ -32,7 +33,7 @@ export default FavoriteReview = ({route}) => {
 	}, []);
 
 	const fetchData = () => {
-		route.name == 'MyReview'
+		!isFavorite
 			? getCommunityListByUserId(
 					{
 						limit: REVIEW_BRIEF_LIMIT,
@@ -41,18 +42,41 @@ export default FavoriteReview = ({route}) => {
 						community_type: 'review',
 					},
 					result => {
-						console.log('result.msg.review', result.msg.review.length);
+						// console.log('result.msg.review', result.msg.review.length);
 						const res = result.msg.review.filter(
 							e => e.community_writer_id != null && e.community_writer_id.user_nickname == userGlobalObject.userInfo.user_nickname,
 						);
+						let reviewList = [];
 						console.log('result / getCommunityListByUserId / FavoriteCommunity', res.length);
 						if (data != 'false') {
 							console.log('temp lenth', [...data, ...res].length);
-							setData([...data, ...res]);
+							// setData([...data, ...res]);
+							reviewList = [...data, ...res];
 						} else {
-							setData(res);
+							reviewList = res;
 						}
 						setOffset(offset + 1);
+						setData(
+							reviewList
+								.map((v, i, a) => {
+									let height = 186 * DP;
+									//사진이 없으며 카테고리 선택도 없는 경우
+									if (!v.community_is_attached_file) {
+										height = 186 * DP;
+										//사진은 있지만 카테고리 선택이 없는 경우
+									}
+									return {...v, height: height + 40 * DP}; // ItemSeparator Componenet Height 2 추가
+								})
+								.map((v, i, a) => {
+									let offset = a.slice(0, i).reduce((prev, current) => {
+										return current.height + prev;
+									}, 0);
+									return {
+										...v,
+										offset: offset,
+									};
+								}),
+						);
 					},
 					err => {
 						console.log('err / getCommunityListByUserId / FavoriteCommunity : ', err);
@@ -89,7 +113,7 @@ export default FavoriteReview = ({route}) => {
 									let height = 186 * DP;
 									//사진이 없으며 카테고리 선택도 없는 경우
 									if (!v.community_is_attached_file) {
-										height = 146 * DP;
+										height = 186 * DP;
 										//사진은 있지만 카테고리 선택이 없는 경우
 									}
 									return {...v, height: height + 40 * DP}; // ItemSeparator Componenet Height 2 추가
@@ -169,7 +193,9 @@ export default FavoriteReview = ({route}) => {
 			};
 
 			// Modal.popTwoBtn(deleteMsg(), '취소', '해제', () => Modal.close(), doDelete);
-			Modal.popOneBtn('선택한 목록을 삭제하시겠습니까?', '해제', doDelete);
+			isFavorite
+				? Modal.popOneBtn('선택한 리뷰를 즐겨찾기에서 \n 해제하시겠습니까?', '해제', doDelete)
+				: Modal.popOneBtn('선택한 목록을 삭제하시겠습니까?', '해제', doDelete);
 		}
 	};
 
@@ -259,9 +285,7 @@ export default FavoriteReview = ({route}) => {
 		return (
 			<View style={{paddingVertical: 150 * DP, alignItems: 'center'}}>
 				<EmptyIcon />
-				<Text style={[txt.noto28, {marginTop: 10 * DP}]}>
-					{route.name == 'MyReview' ? '작성한 리뷰글이 없습니다..' : '즐겨찾기한 리뷰가 없습니다..'}{' '}
-				</Text>
+				<Text style={[txt.noto28, {marginTop: 10 * DP}]}>{!isFavorite ? '작성한 리뷰글이 없습니다..' : '즐겨찾기한 리뷰가 없습니다..'} </Text>
 			</View>
 		);
 	};
@@ -271,23 +295,19 @@ export default FavoriteReview = ({route}) => {
 	} else
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
-				{route.name == 'MyReview' ? (
+				<View style={style.separator} />
+				{!isFavorite ? (
 					<></>
 				) : (
-					<View style={[style.selectstat_view]}>
-						<View style={[temp_style.selectstat, selectstat_view_style.selectstat]}>
-							<SelectStat
-								selectMode={selectMode}
-								onSelectMode={checkSelectMode}
-								onCancelSelectMode={cancelSelectMode}
-								onSelectAllClick={selectAll}
-								onDeleteSelectedItem={deleteSelectedItem}
-							/>
-						</View>
-					</View>
+					<SelectStat
+						selectMode={selectMode}
+						onSelectMode={checkSelectMode}
+						onCancelSelectMode={cancelSelectMode}
+						onSelectAllClick={selectAll}
+						onDeleteSelectedItem={deleteSelectedItem}
+					/>
 				)}
-
-				<View style={[temp_style.FeedThumbnailList, {flex: 1}]}>
+				<View style={[{flex: 1}]}>
 					<ReviewFavoriteBriefList
 						items={data}
 						selectMode={selectMode}
@@ -307,5 +327,11 @@ const style = StyleSheet.create({
 	selectstat_view: {
 		width: 694 * DP,
 		height: 100 * DP,
+	},
+	separator: {
+		height: 10 * DP,
+		width: 750 * DP,
+		backgroundColor: GRAY40,
+		marginBottom: 10 * DP,
 	},
 });

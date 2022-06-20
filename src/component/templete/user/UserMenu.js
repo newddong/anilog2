@@ -1,7 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React, {useRef} from 'react';
 import {Text, View, ScrollView, TouchableOpacity, StyleSheet} from 'react-native';
-
 import {GRAY10, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {
@@ -9,13 +8,11 @@ import {
 	ANIMAL_PROTECTION_STATE,
 	APPLICATION_HISTORY,
 	COMUNITY,
-	DEFAULT_PROFILE,
 	FAVORITES,
 	FRIENDS,
 	INFO,
 	INFO_QUESTION,
 	MY_ACTIVITY_IN_SHELTER,
-	MY_COMPANION,
 	MY_CONTENTS,
 	MY_INFO_MODIFY,
 	NOTE_LIST,
@@ -23,43 +20,29 @@ import {
 	PROTECTION_REQUEST,
 	SETTING,
 	TAGED_CONTENTS_FOR_ME,
-	LOGOUT,
 	OPENSETTING,
-	REQ_PROTECTION_SAVE,
 	APPSETTING,
 } from 'Root/i18n/msg';
-import {btn_w280, btn_w280x68, btn_w694_r30} from 'Atom/btn/btn_style';
-import {
-	Arrow_Down_GRAY10,
-	Arrow_Up_GRAY20,
-	FavoriteTag48_Border,
-	FavoriteTag48_Filled,
-	Home48Border,
-	Paw46,
-	Paw46_border,
-	Paw48_APRI10,
-	Setting46,
-	Setting46_border,
-} from 'Atom/icon';
+import {btn_w694_r30} from 'Atom/btn/btn_style';
+import {Arrow_Down_GRAY10, Arrow_Up_GRAY20, FavoriteTag48_Border, Home48Border, Paw46_border, Setting46_border} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
-import ProfileImageLarge194 from 'Molecules/image/ProfileImageLarge194';
 import ProfileMenu from 'Organism/menu/ProfileMenu';
 import SocialInfoB from 'Organism/info/SocialInfoB';
 import {login_style, shelterMenu, temp_style, userMenu_style} from 'Templete/style_templete';
 // import {getUserProfile} from 'Root/api/usermenuapi';
 import {getUserProfile} from 'Root/api/userapi';
 import Modal from 'Component/modal/Modal';
-import {userLogout} from 'Root/api/userapi';
 import {useIsFocused} from '@react-navigation/native';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {GRAY40} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import ProfileImageMedium148 from 'Root/component/molecules/image/ProfileImageMedium148';
+import Loading from 'Root/component/molecules/modal/Loading';
 export default UserMenu = props => {
 	// console.log('UserMenu Props', props);
 	const navigation = useNavigation();
 	const ifFoucsed = useIsFocused();
-	const [data, setData] = React.useState({}); //우선 userObject 0번 추가
+	const [data, setData] = React.useState('false'); //우선 userObject 0번 추가
 	const [showMoreIntro, setShowMoreIntro] = React.useState(false);
 	const [numberOfLines, setNumOfLines] = React.useState();
 
@@ -136,7 +119,6 @@ export default UserMenu = props => {
 			case COMUNITY: //즐겨찾기한 커뮤니티
 				navigation.push('FavoriteCommunity');
 				break;
-
 			case PROTECTION_REQUEST: //보호요청(저장)
 				navigation.push('FavoriteProtectRequest');
 				break;
@@ -158,7 +140,6 @@ export default UserMenu = props => {
 			case INFO_QUESTION: //정보 문의
 				navigation.push('SettingInformAsk');
 				break;
-
 			case '커뮤니티 ': //나의 활동 커뮤니티
 				navigation.push('MyCommunity');
 				break;
@@ -178,134 +159,137 @@ export default UserMenu = props => {
 		// navigation.push('me')
 	};
 
-	return (
-		<ScrollView>
-			<View style={[login_style.wrp_main, userMenu_style.container]}>
-				{/* 유저 프로필 정보 */}
-				<View style={[styles.userMenu_step1]}>
-					<View style={[styles.userInfo, {flexDirection: 'row'}, {marginTop: 30 * DP}]}>
-						<View style={[styles.profileImageLarge]}>{data._id != undefined && <ProfileImageMedium148 data={data} />}</View>
+	if (data == 'false') {
+		return <Loading isModal={false} />;
+	} else
+		return (
+			<ScrollView>
+				<View style={[login_style.wrp_main, userMenu_style.container]}>
+					{/* 유저 프로필 정보 */}
+					<View style={[styles.userMenu_step1]}>
+						<View style={[styles.userInfo, {flexDirection: 'row'}, {marginTop: 30 * DP}]}>
+							<View style={[styles.profileImageLarge]}>{data._id != undefined && <ProfileImageMedium148 data={data} />}</View>
 
-						<View style={[{marginLeft: 40 * DP}, {height: 148 * DP}, {justifyContent: 'center'}]}>
-							<TouchableOpacity onPress={onPressMyName} style={[styles.user_id]}>
-								<Text style={[txt.roboto46b, {alignItems: 'center'}, {marginRight: 5 * DP}]} numberOfLines={1}>
-									{data.user_nickname || ''}
-								</Text>
-								<Home48Border />
-							</TouchableOpacity>
-							{/* 업로드 팔로워 팔로잉 */}
-							<View style={[{width: 462 * DP}, {marginTop: 20 * DP}]}>
-								<SocialInfoB data={data} />
+							<View style={[{marginLeft: 40 * DP}, {height: 148 * DP}, {justifyContent: 'center'}]}>
+								<TouchableOpacity onPress={onPressMyName} style={[styles.user_id]}>
+									<Text style={[txt.roboto46b, {alignItems: 'center'}, {marginRight: 5 * DP}]} numberOfLines={1}>
+										{data.user_nickname || ''}
+									</Text>
+									<Home48Border />
+								</TouchableOpacity>
+								{/* 업로드 팔로워 팔로잉 */}
+								<View style={[{width: 462 * DP}, {marginTop: 20 * DP}]}>
+									<SocialInfoB data={data} />
+								</View>
 							</View>
 						</View>
-					</View>
 
-					<View style={{flexDirection: 'row', width: 694 * DP}}>
-						<View style={[styles.introduceBox, {alignSelf: 'flex-start'}]}>
-							{data._id != undefined && (
-								<Text numberOfLines={!showMoreIntro ? 15 : 2} style={[txt.noto26]}>
-									{data.user_introduction || '자기소개가 없습니다.'}
-								</Text>
+						<View style={{flexDirection: 'row', width: 694 * DP}}>
+							<View style={[styles.introduceBox, {alignSelf: 'flex-start'}]}>
+								{data._id != undefined && (
+									<Text numberOfLines={!showMoreIntro ? 15 : 2} style={[txt.noto26]}>
+										{data.user_introduction || '자기소개가 없습니다.'}
+									</Text>
+								)}
+							</View>
+							{/* 더미 텍스트 삭제금지 */}
+							<Text
+								style={[txt.noto24, {position: 'absolute', opacity: 0, backgroundColor: 'red'}]}
+								numberOfLines={null}
+								onTextLayout={({nativeEvent: {lines}}) => {
+									console.log('lines.length', lines.length);
+									// setNumOfLines(lines.length);
+								}}>
+								{data.user_introduction || ''}
+							</Text>
+							{/* 유저 소개란 - 2줄 이상일 경우 더보기/접기 컴포넌트 출력 */}
+							{numberOfLines > 2 ? (
+								!showMoreIntro ? (
+									<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {flex: 1}]}>
+										<View style={[userMenu_style.showMoreContainer, {}]}>
+											<Text style={[txt.noto24, {color: GRAY10}]}>접기</Text>
+											<Arrow_Up_GRAY20 />
+										</View>
+									</TouchableOpacity>
+								) : data._id != undefined ? (
+									<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {flex: 1}]}>
+										<View style={[userMenu_style.showMoreContainer]}>
+											<Text style={[txt.noto24, {color: GRAY10}]}>더보기</Text>
+											<Arrow_Down_GRAY10 />
+										</View>
+									</TouchableOpacity>
+								) : null
+							) : (
+								<></>
 							)}
 						</View>
-						{/* 더미 텍스트 삭제금지 */}
-						<Text
-							style={[txt.noto24, {position: 'absolute', opacity: 0, backgroundColor: 'red'}]}
-							numberOfLines={null}
-							onTextLayout={({nativeEvent: {lines}}) => {
-								console.log('lines.length', lines.length);
-								// setNumOfLines(lines.length);
-							}}>
-							{data.user_introduction || ''}
-						</Text>
-						{/* 유저 소개란 - 2줄 이상일 경우 더보기/접기 컴포넌트 출력 */}
-						{numberOfLines > 2 ? (
-							!showMoreIntro ? (
-								<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {flex: 1}]}>
-									<View style={[userMenu_style.showMoreContainer, {}]}>
-										<Text style={[txt.noto24, {color: GRAY10}]}>접기</Text>
-										<Arrow_Up_GRAY20 />
-									</View>
-								</TouchableOpacity>
-							) : data._id != undefined ? (
-								<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {flex: 1}]}>
-									<View style={[userMenu_style.showMoreContainer]}>
-										<Text style={[txt.noto24, {color: GRAY10}]}>더보기</Text>
-										<Arrow_Down_GRAY10 />
-									</View>
-								</TouchableOpacity>
-							) : null
-						) : (
-							<></>
-						)}
-					</View>
 
-					{/* 내 정보 수정 버튼*/}
-					<View style={[styles.btn_w694_view]}>
-						<View style={[styles.btn_w694]}>
-							<AniButton
-								btnLayout={btn_w694_r30}
-								btnStyle={'border'}
-								btnTheme={'shadow'}
-								btnTitle={MY_INFO_MODIFY}
-								height={104}
-								titleFontStyle={32}
-								onPress={onPressModifyMyInfo}
-							/>
-						</View>
+						{/* 내 정보 수정 버튼*/}
+						<View style={[styles.btn_w694_view]}>
+							<View style={[styles.btn_w694]}>
+								<AniButton
+									btnLayout={btn_w694_r30}
+									btnStyle={'border'}
+									btnTheme={'shadow'}
+									btnTitle={MY_INFO_MODIFY}
+									height={104}
+									titleFontStyle={32}
+									onPress={onPressModifyMyInfo}
+								/>
+							</View>
 
-						{/* 나의 반려동물 버튼 */}
-						{/* <View style={[userMenu_style.btn_w280]}>
+							{/* 나의 반려동물 버튼 */}
+							{/* <View style={[userMenu_style.btn_w280]}>
 							{data.user_my_pets?.length == 0 ? (
 								<AniButton btnLayout={btn_w280x68} disable btnTitle={MY_COMPANION} />
 							) : (
 								<AniButton btnLayout={btn_w280x68} btnStyle={'border'} btnTheme={'shadow'} btnTitle={MY_COMPANION} onPress={onPressMyCompanion} />
 							)}
 						</View> */}
+						</View>
 					</View>
-				</View>
 
-				{/* 하단 메뉴 */}
-				<View style={[temp_style.userMenu_step2, userMenu_style.horizontalLine]}>
-					<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
+					{/* 하단 메뉴 */}
+					<View style={[temp_style.userMenu_step2, userMenu_style.horizontalLine]}>
+						<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
+							<View>
+								<ProfileMenu
+									menuTitle={FAVORITES}
+									menuItems={[
+										[FRIENDS, PEED_CONTENTS],
+										[PROTECTION_REQUEST, COMUNITY],
+									]}
+									onClick={menuClick}
+									titleIcon={<FavoriteTag48_Border />}
+								/>
+							</View>
+						</View>
+						<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
+							<View>
+								<ProfileMenu
+									menuTitle={MY_ACTIVITY_IN_SHELTER}
+									menuItems={[
+										[MY_CONTENTS, TAGED_CONTENTS_FOR_ME],
+										[APPLICATION_HISTORY, ANIMAL_PROTECTION_STATE],
+										['커뮤니티 ', NOTE_LIST],
+									]}
+									onClick={menuClick}
+									titleIcon={<Paw46_border />}
+								/>
+							</View>
+						</View>
 						<View>
 							<ProfileMenu
-								menuTitle={FAVORITES}
-								menuItems={[
-									[FRIENDS, PEED_CONTENTS],
-									[PROTECTION_REQUEST, COMUNITY],
-								]}
+								menuTitle={SETTING}
+								menuItems={[[APPSETTING, ACCOUNT], [INFO_QUESTION]]}
 								onClick={menuClick}
-								titleIcon={<FavoriteTag48_Border />}
+								titleIcon={<Setting46_border />}
 							/>
 						</View>
-					</View>
-					<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
-						<View>
-							<ProfileMenu
-								menuTitle={MY_ACTIVITY_IN_SHELTER}
-								menuItems={[
-									[MY_CONTENTS, TAGED_CONTENTS_FOR_ME],
-									[APPLICATION_HISTORY, ANIMAL_PROTECTION_STATE],
-									['커뮤니티 ', NOTE_LIST],
-								]}
-								onClick={menuClick}
-								titleIcon={<Paw46_border />}
-							/>
-						</View>
-					</View>
-					<View>
-						<ProfileMenu
-							menuTitle={SETTING}
-							menuItems={[[APPSETTING, ACCOUNT], [INFO_QUESTION]]}
-							onClick={menuClick}
-							titleIcon={<Setting46_border />}
-						/>
 					</View>
 				</View>
-			</View>
-		</ScrollView>
-	);
+			</ScrollView>
+		);
 };
 
 const styles = StyleSheet.create({

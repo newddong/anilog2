@@ -14,9 +14,10 @@ import SelectStat from 'Root/component/organism/list/SelectStat';
 import {selectstat_view_style, temp_style} from '../style_templete';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import {FREE_LIMIT, NETWORK_ERROR} from 'Root/i18n/msg';
+import {GRAY10, GRAY40} from 'Root/config/color';
 
 //즐겨찾기한 커뮤니티 조회
-export default FavoriteArticle = ({route}) => {
+export default FavoriteArticle = ({route, isFavorite}) => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
 
@@ -33,7 +34,7 @@ export default FavoriteArticle = ({route}) => {
 	}, []);
 
 	const fetchData = () => {
-		route.name == 'MyArticle'
+		!isFavorite
 			? getCommunityListByUserId(
 					{
 						limit: FREE_LIMIT,
@@ -209,7 +210,7 @@ export default FavoriteArticle = ({route}) => {
 	};
 
 	const whenEmpty = () => {
-		return <ListEmptyInfo text={route.name == 'MyArticle' ? '작성한 자유게시글이 없습니다..' : '즐겨찾기한 자유게시글이 없습니다..'} />;
+		return <ListEmptyInfo text={!isFavorite ? '작성한 자유게시글이 없습니다..' : '즐겨찾기한 자유게시글이 없습니다..'} />;
 	};
 
 	if (data == 'false') {
@@ -217,20 +218,17 @@ export default FavoriteArticle = ({route}) => {
 	} else
 		return (
 			<View style={[style.container]}>
-				{route.name == 'MyArticle' ? (
+				<View style={style.separator} />
+				{!isFavorite ? (
 					<></>
 				) : (
-					<View style={[temp_style.selectstat_view]}>
-						<View style={[temp_style.selectstat, selectstat_view_style.selectstat]}>
-							<SelectStat
-								selectMode={selectMode}
-								onSelectMode={checkSelectMode}
-								onCancelSelectMode={cancelSelectMode}
-								onSelectAllClick={selectAll}
-								onDeleteSelectedItem={deleteSelectedItem}
-							/>
-						</View>
-					</View>
+					<SelectStat
+						selectMode={selectMode}
+						onSelectMode={checkSelectMode}
+						onCancelSelectMode={cancelSelectMode}
+						onSelectAllClick={selectAll}
+						onDeleteSelectedItem={deleteSelectedItem}
+					/>
 				)}
 				<View style={[{marginTop: 5 * DP, flex: 1}]}>
 					<ArticleList
@@ -257,5 +255,11 @@ const style = StyleSheet.create({
 		marginTop: 10 * DP,
 		marginBottom: 30 * DP,
 		alignItems: 'flex-end',
+	},
+	separator: {
+		height: 10 * DP,
+		width: 750 * DP,
+		backgroundColor: GRAY40,
+		marginBottom: 10 * DP,
 	},
 });

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {styles} from 'Atom/image/imageStyle';
-import {CrossNew92, Shelter294, ProfileDefaultImg, ProfileDefaultImg4} from 'Atom/icon';
+import {CrossNew92, Shelter294, ProfileDefaultImg, ProfileDefaultImg4, ProfileDefaultImg_294} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {BLACK, GRAY10, WHITE} from 'Root/config/color';
 import FastImage from 'react-native-fast-image';
@@ -31,7 +31,7 @@ const ProfileImageSelect = props => {
 			) : props.user == 'user' ? (
 				<ProfileDefaultImg4 />
 			) : (
-				<ProfileDefaultImg size={styles.img_round_294} />
+				<ProfileDefaultImg_294 />
 			)}
 			<View style={[style.shadowBtn]}>
 				<CrossNew92 />

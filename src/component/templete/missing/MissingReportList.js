@@ -248,14 +248,14 @@ export default MissingReportList = props => {
 						/>
 					</View>
 					<View style={[styles.kindFilter, {}]}>
-						<View style={[styles.kindFilterItem]}>
-							{onlyReport ? <Check42 onPress={onPressShowReport} /> : <Rect42_Border onPress={onPressShowReport} />}
+						<TouchableOpacity activeOpacity={0.8} onPress={onPressShowReport} style={[styles.kindFilterItem]}>
+							{onlyReport ? <Check42 /> : <Rect42_Border />}
 							<Text style={[txt.noto28, {marginRight: 10 * DP}]}>{'  '}실종</Text>
-						</View>
-						<View style={[styles.kindFilterItem]}>
-							{onlyMissing ? <Check42 onPress={onPressShowMissing} /> : <Rect42_Border onPress={onPressShowMissing} />}
+						</TouchableOpacity>
+						<TouchableOpacity activeOpacity={0.8} onPress={onPressShowMissing} style={[styles.kindFilterItem]}>
+							{onlyMissing ? <Check42 /> : <Rect42_Border />}
 							<Text style={[txt.noto28, {marginRight: 10 * DP}]}>{'  '}제보</Text>
-						</View>
+						</TouchableOpacity>
 					</View>
 				</View>
 			</View>

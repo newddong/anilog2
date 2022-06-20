@@ -20,7 +20,9 @@ const SocialInfoA = props => {
 
 	const onClickFollower = () => {
 		console.log('props', props.data.user_type);
-		navigation.push('SocialRelation', {userobject: props.data, initial: 'FollwerList'});
+		if (props.data.user_type == 'pet') {
+			navigation.push('PetFollowerList', {userobject: props.data, title: props.data.user_follower_count});
+		} else navigation.push('SocialRelation', {userobject: props.data, initial: 'FollwerList'});
 	};
 
 	const onClickFollow = () => {

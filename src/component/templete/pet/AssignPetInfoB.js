@@ -183,7 +183,7 @@ export default AssignPetInfoB = props => {
 							maxlength={4}
 							style={{textAlign: 'center'}}
 						/>
-						<View style={{position: 'absolute', right: 24 * DP, top: 20 * DP}}>
+						<View style={{position: 'absolute', height: 104 * DP, right: 24 * DP, justifyContent: 'center'}}>
 							<Text style={[txt.noto28, {}]}>kg</Text>
 						</View>
 					</View>

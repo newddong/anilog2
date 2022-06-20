@@ -1,21 +1,31 @@
 import React, {useRef, useState} from 'react';
-import {AppState, FlatList, Keyboard, NativeModules, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {
+	ActivityIndicator,
+	AppState,
+	FlatList,
+	Keyboard,
+	NativeModules,
+	Platform,
+	ScrollView,
+	StyleSheet,
+	Text,
+	TextInput,
+	TouchableOpacity,
+	View,
+} from 'react-native';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import InputWithSearchIcon from 'Molecules/input/InputWithSearchIcon';
-import {locationPicker} from 'Templete/style_templete';
 import {BLACK, GRAY10, GRAY20, GRAY30} from 'Root/config/color';
 import {useNavigation} from '@react-navigation/core';
 import axios from 'axios';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
-import {CurrentLocation, LocationGray, LocationMarker, Search48_BLACK} from 'Root/component/atom/icon';
+import {LocationMarker, Search48_BLACK} from 'Root/component/atom/icon';
 import Geolocation from '@react-native-community/geolocation';
 import {openSettings, PERMISSIONS, request} from 'react-native-permissions';
 import {useKeyboardBottom} from 'Root/component/molecules/input/usekeyboardbottom';
 import X2JS from 'x2js';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import {btn_w654, btn_w694_r30} from 'Root/component/atom/btn/btn_style';
-import Loading from 'Root/component/molecules/modal/Loading';
 import Modal from 'Root/component/modal/Modal';
 
 export default LocationPicker = ({route}) => {
@@ -49,6 +59,7 @@ export default LocationPicker = ({route}) => {
 	const keyboardY = useKeyboardBottom(0 * DP);
 	const [searchFocus, setSearchFocus] = React.useState(false); //주소검색 인풋의 포커스 상태 여부
 	const [delay, setDelay] = useState(true);
+	const [loading, setLoading] = React.useState(false);
 
 	const map = React.useRef();
 
@@ -293,6 +304,7 @@ export default LocationPicker = ({route}) => {
 	//위도 경도를 토대로 주소 받아오
 	const searchPlaceByKeyword = async keyword => {
 		try {
+			setLoading(true);
 			let res = await axios
 				.get(`https://dapi.kakao.com/v2/local/search/keyword.json?query={}'.${keyword}`, {
 					headers: {
@@ -304,10 +316,12 @@ export default LocationPicker = ({route}) => {
 					let result = res.data.documents;
 					// console.log('result', result);
 					setPlaces(result);
+					setLoading(false);
 				});
 		} catch (error) {
 			console.log('error callInitialAddress', error.code, error.message);
 			Modal.close();
+			setLoading(false);
 		}
 	};
 
@@ -615,6 +629,20 @@ export default LocationPicker = ({route}) => {
 						<></>
 					)}
 				</ScrollView>
+			)}
+			{loading && (
+				<View
+					style={{
+						position: 'absolute',
+						left: 0,
+						right: 0,
+						top: 0,
+						bottom: 0,
+						alignItems: 'center',
+						justifyContent: 'center',
+					}}>
+					<ActivityIndicator size={'large'} color={'black'} />
+				</View>
 			)}
 		</View>
 	);

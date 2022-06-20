@@ -69,6 +69,7 @@ const ProtectRequestFilterModal = props => {
 							_id: v._id,
 							shelter_address: v.shelter_address,
 							shelter_delegate_contact_number: v.shelter_delegate_contact_number,
+							state: false,
 						}),
 				);
 				setShelterData(shelter_list);
@@ -865,14 +866,15 @@ const ScrollSelectBox = props => {
 };
 
 const ShelterSelectBox = props => {
-	const [data, setData] = React.useState(props.data);
+	const [data, setData] = React.useState(props.data.filter(e => e.user_nickname != undefined));
 
 	React.useEffect(() => {
-		setData(props.data);
+		setData(props.data.filter(e => e.user_nickname != undefined));
 	}, [props.data]);
 
 	//체크박스 선택
 	const onSelect = i => {
+		console.log('i', i);
 		let temp = [...data];
 		temp[i].state = !temp[i].state;
 		setData(temp);
@@ -886,6 +888,7 @@ const ShelterSelectBox = props => {
 
 	const render = ({item, index}) => {
 		const checked = item.state;
+		item.state ? console.log('item', item.state, index) : false;
 		return (
 			<>
 				<TouchableOpacity onPress={() => onSelect(index)} style={[style.shelterItemCont]} activeOpacity={0.6}>
@@ -918,7 +921,7 @@ const ShelterSelectBox = props => {
 			</TouchableOpacity>
 			<TouchableOpacity activeOpacity={1} style={[{flex: 1, alignItems: 'center', backgroundColor: 'white'}]}>
 				<FlatList
-					data={data.filter(e => e.user_nickname != undefined)}
+					data={data}
 					showsVerticalScrollIndicator={false}
 					renderItem={render}
 					ListEmptyComponent={<ListEmptyInfo text={'해당 지역에 위치한 보호소가 없습니다.'} />}

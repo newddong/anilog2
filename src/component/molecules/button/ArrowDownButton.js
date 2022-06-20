@@ -78,29 +78,35 @@ const ArrowDownButton = props => {
 
 	const insideView = () => {
 		return (
-			<View
-				style={[
-					props.btnLayout,
-					btnTheme(),
-					border(),
-					{backgroundColor: btnStyle(), justifyContent: 'center', alignItems: 'center', flexDirection: 'row'},
-					{paddingHorizontal: 20 * DP},
-				]}>
-				<Text
+			<View style={[props.btnLayout, btnTheme(), border(), {backgroundColor: btnStyle(), justifyContent: 'center'}, {}]}>
+				<View
 					style={[
-						txt.noto24,
 						{
-							fontSize: props.titleFontStyle * DP,
-							color: btnTxtColor(),
-							textAlign: 'center',
-							width: (props.btnLayout.width + 30) * DP,
-							right: -10 * DP,
+							width: props.btnLayout.width,
+							alignItems: 'center',
+							flexDirection: 'row',
+							// backgroundColor: 'red',
+							justifyContent: 'space-between',
+							alignSelf: 'center',
+							paddingHorizontal: 20 * DP,
 						},
-					]}
-					numberOfLines={1}>
-					{props.btnTitle}
-				</Text>
-				<View style={[]}>{getArrow()}</View>
+					]}>
+					<Text
+						style={[
+							txt.noto24,
+							{
+								width: props.btnLayout.width - 80 * DP,
+								fontSize: props.titleFontStyle * DP,
+								color: btnTxtColor(),
+								textAlign: 'center',
+								// backgroundColor: 'palegreen',
+							},
+						]}
+						numberOfLines={1}>
+						{props.btnTitle}
+					</Text>
+					{getArrow()}
+				</View>
 			</View>
 		);
 	};

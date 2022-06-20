@@ -118,11 +118,12 @@ const Input24 = React.forwardRef((props, ref) => {
 			{/* {console.log('props.title=' + props.title + props.width)} */}
 			{/* parent에서 title이 props로 명시되어 있지 않을 경우 'title' string 으로 받음. */}
 			{props.title != '' && props.title != 'title' && (
-				<View style={[{flexDirection: 'row'}]}>
+				<View style={[{flexDirection: 'row'}, {width: props?.width * DP}]}>
 					{/* 타이틀 사이즈 분기 처리해야되는지 나중에 파악필요  */}
 					<Text style={[txt.noto28, {color: MAINBLACK}]}> {props.title}</Text>
 					{getDescription()}
-					<Text style={[txt.noto24, {color: GRAY10}, {marginLeft: 150 * DP}]}>{props?.moreInfo}</Text>
+
+					<Text style={[txt.noto24, {color: GRAY10}, {textAlign: 'right'}, {marginLeft: 150 * DP}]}>{props?.moreInfo}</Text>
 				</View>
 			)}
 			{/* 하단테두리 2px이 있기 때문에 inputValue와 82px가 차이가 나도 -2한 80값을 height로 줌 */}

@@ -58,7 +58,7 @@ export default CheckShelterPassword = props => {
 			</View>
 			<View style={[{alignItems: 'center'}]}>
 				<Text style={[{textAlign: 'center'}, txt.noto30, {marginTop: 105 * DP}]}>*최소 8자 이상,</Text>
-				<Text style={([{textAlign: 'center'}], txt.noto30)}>영문과 숫자, 특수문자(!@#$%^&*)가</Text>
+				<Text style={([{textAlign: 'center'}], txt.noto30)}>영문과 숫자, 특수문자 ( ! @ # $ % ^ & * )가 </Text>
 				<Text style={([{textAlign: 'center'}], txt.noto30)}>포함되어야 합니다.</Text>
 			</View>
 			{/* (O)PasswordChecker */}
@@ -66,7 +66,7 @@ export default CheckShelterPassword = props => {
 				<PasswordChecker onChangePwd={onChangePwd} passwordValidator={passwordValidator} onConfirmAndChecked={onConfirmAndChecked} />
 			</View>
 
-			<View style={[btn_style.btn_w654, checkShelterPassword_style.btn_w654]}>
+			<View style={[btn_style.btn_w694, checkShelterPassword_style.btn_w654]}>
 				{pwdValid ? (
 					<AniButton btnTitle={'확인'} btnStyle={'border'} btnLayout={btn_w694_r30} titleFontStyle={32} onPress={goToNextStep} />
 				) : (

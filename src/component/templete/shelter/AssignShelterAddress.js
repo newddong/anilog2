@@ -16,7 +16,7 @@ export default AssignShelterAddress = props => {
 	const [confirmName, setConfirmName] = React.useState(false); //이름 입력되었다면 통과가능
 	const [privateOrPublic, setPrivateOrPublic] = React.useState(false); //private -> 사설 public 공립
 	const [publicButton, setPublicButton] = React.useState('filled'); //버튼 상태 filled
-	const [privateButton, setPrivateButton] = React.useState('border'); //버튼 상태 filled
+	const [privateButton, setPrivateButton] = React.useState('gray'); //버튼 상태 filled
 
 	const [data, setData] = React.useState({
 		...props.route.params?.data,
@@ -105,18 +105,18 @@ export default AssignShelterAddress = props => {
 		if (bool == 'private') {
 			setPrivateOrPublic('private');
 			if (privateButton == 'filled') {
-				setPrivateButton('border');
+				setPrivateButton('gray');
 			} else {
 				setPrivateButton('filled');
-				setPublicButton('border');
+				setPublicButton('gray');
 			}
 		} else {
 			setPrivateOrPublic('public');
 			if (publicButton == 'filled') {
-				setPublicButton('border');
+				setPublicButton('gray');
 			} else {
 				setPublicButton('filled');
-				setPrivateButton('border');
+				setPrivateButton('gray');
 			}
 		}
 	};
@@ -142,14 +142,17 @@ export default AssignShelterAddress = props => {
 
 					btnStyle={publicButton}
 					btnLayout={btn_w336x82_r30}
-					titleFontStyle={32}
+					titleFontStyle={28}
+					// disable={publicButton == 'filled'}
+					unTouchable={publicButton == 'filled'}
 					onPress={() => onButtonPress('public')}
 				/>
 				<AniButton
 					btnTitle={'사립'}
 					btnStyle={privateButton}
 					btnLayout={btn_w336x82_r30}
-					titleFontStyle={32}
+					titleFontStyle={28}
+					unTouchable={privateButton == 'filled'}
 					onPress={() => onButtonPress('private')}
 				/>
 			</View>

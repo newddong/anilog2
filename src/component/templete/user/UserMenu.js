@@ -272,8 +272,8 @@ export default UserMenu = props => {
 							<ProfileMenu
 								menuTitle={FAVORITES}
 								menuItems={[
-									[FRIENDS, PEED_CONTENTS],
-									[PROTECTION_REQUEST, COMUNITY],
+									[FRIENDS, PROTECTION_REQUEST],
+									[PEED_CONTENTS, COMUNITY],
 								]}
 								onClick={menuClick}
 								titleIcon={<FavoriteTag48_Border />}

@@ -4,7 +4,7 @@ import {Text, View, TouchableOpacity, TextInput} from 'react-native';
 import PropsTypes, {any, bool, func, number, object, oneOf, oneOfType, string} from 'prop-types';
 import DP from 'Root/config/dp';
 import {APRI10, GRAY20, GRAY30, GREEN, MAINBLACK, RED10} from 'Root/config/color';
-import {Cross52, Eye52_APRI10, Eye52_GRAY20} from 'Atom/icon';
+import {Cross52, Eye52_APRI10, Eye52_Black, Eye52_GRAY20} from 'Atom/icon';
 import {BackgroundColor} from 'chalk';
 import Input24 from 'Molecules/input/Input24';
 
@@ -104,8 +104,8 @@ const PasswordInput = React.forwardRef((props, ref) => {
 					{/* /* X버튼은 TextInput과 28px 차이, 최하단 View테두리와는 14px 차이, 텍스트 길이가 1 이상일 경우에만 보여짐(입력값이 없을때 보여질 필요 없음) */}
 					{input.length > 0 && (
 						<View style={{position: 'absolute', right: 50 * DP, flexDirection: 'row'}}>
-							<View style={{marginRight: 10 * DP}}>
-								{pwdSecureState ? <Eye52_GRAY20 onPress={onShowPassword} /> : <Eye52_GRAY20 onPress={onShowPassword} />}
+							<View style={{marginRight: 20 * DP}}>
+								{pwdSecureState ? <Eye52_GRAY20 onPress={onShowPassword} /> : <Eye52_Black onPress={onShowPassword} />}
 							</View>
 						</View>
 					)}

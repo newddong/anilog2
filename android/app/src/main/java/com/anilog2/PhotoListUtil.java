@@ -339,10 +339,16 @@ public class PhotoListUtil {
 
         static int getDuration(Uri uri, Context context) {
             MediaMetadataRetriever m = new MediaMetadataRetriever();
-            m.setDataSource(context, uri);
-            int duration = Math.round(Float.parseFloat(m.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION))) / 1000;
-            m.release();
-            return duration;
+            try {
+                m.setDataSource(context, uri);
+                int duration = Math.round(Float.parseFloat(m.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION))) / 1000;
+                return duration;
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw e;
+            } finally {
+                m.release();
+            }
         }
 
         static boolean shouldResizeImage(int origWidth, int origHeight, Options options) {

@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
+// import 'react-native-gesture-handler';
 import CameraRoll from './src/module/CameraRoll.js';
-import PermissionIos from './src/module/PermissionIos';
-import { PERMISSION_IOS_STATUS, PERMISSION_IOS_TYPES } from './src/module/PermissionIosStatics';
-// import VideoEditor from 'Root/module/VideoEditor.js';
-import {VESDK, Tool, Configuration, ForceTrimMode, CanvasAction, VideoCodec} from 'react-native-videoeditorsdk';
+// import {VESDK, Tool, Configuration, ForceTrimMode, CanvasAction, VideoCodec} from 'react-native-videoeditorsdk';
+import VideoEditor from 'Root/module/VideoEditor.js';
 
 const styles = StyleSheet.create({
   container: {
@@ -24,8 +22,7 @@ const styles = StyleSheet.create({
   },
 });
 
-// VESDK.unlockWithLicense(require('vesdk_license.ios.json'));
-VESDK.unlockWithLicense(require('vesdk_license.android.json'));
+VideoEditor.unlockLicense();
 
 export default class App extends Component {
   constructor() {
@@ -33,8 +30,8 @@ export default class App extends Component {
     this.state = {
       image: null,
       images: null,
-      duration: 0,
-      uri: null
+      duration: 0,  //비디오 테스트용
+      uri: null   //비디오 테스트용
     };
   }
 
@@ -43,6 +40,7 @@ export default class App extends Component {
       first: maxLoadImage,
       assetType: 'All',
       include: ['imageSize', 'filename', 'filesize', 'playableDuration'],
+      groupName: '앨범_1',  //chn 테스트용
 	  toID: '123456789',
     })
       .then(r => {
@@ -64,58 +62,20 @@ export default class App extends Component {
       });
   }
 
-  cleanupImages() {
-    CameraRoll.clean()
-      .then(() => {
-        console.log('removed tmp images from tmp directory');
-      })
-      .catch((e) => {
-        alert(e);
-      });
-  }
-
   getVideoAttributes(uri = this.state.image.uri){
     CameraRoll.getVideoAttributes(uri)
     .then(r => {
       this.setState({
         image: null,
         images: null,
-        duration: r[0].duration,
-        uri: r[0].uri
+        duration: r.duration,
+        uri: uri
       });
+      console.log(r);
     })
     .catch(e => {
       alert(e);
     })
-  }
-
-  openVideoEditorAndroid(duration = 2, bitRate = 30, filename = 'temp'){
-	let configuration = {
-		mainCanvasActions: [CanvasAction.SOUND_ON_OFF],
-		// tools: [],
-		trim: {
-			minimumDuration: duration,
-			maximumDuration: duration,
-			forceMode: ForceTrimMode.ForceTrimMode,
-		},
-		export: {
-		video: {
-			codec: VideoCodec.H264,
-			// quality: 0.5,
-			bitRate: bitRate,
-		},
-		//cameraroll과 동일한 폴더명. 폴더 내 파일을 지우려면 카메라롤의 clean 함수를 쓰면 된다.
-		// filename: 'anilog_temp/' + filename,
-		}
-	};
-	
-	VESDK.openEditor('file:///storage/emulated/0/Gallery/앨범_1/20220615_181540.mp4', configuration)
-	.then(r => {
-		console.log(r);
-	})
-	.catch(e => {
-		console.log(e);
-	})
   }
 
   scaledHeight(oldW, oldH, newW) {
@@ -144,40 +104,23 @@ export default class App extends Component {
         </ScrollView>
 
         <TouchableOpacity
-          onPress={() => this.getImage(34, 18)}
+          onPress={() => this.getImage(4, 1)}
           style={styles.button}>
           <Text style={styles.text}>getImage</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => this.getVideoAttributes(this.state.image.uri)}
+        onPress={() => this.getVideoAttributes(this.state.image.uri)}
           style={styles.button}>
           <Text style={styles.text}>getVideoAttributes</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => {
-            console.log("image uri::::");
-            console.log(this.state.image.uri);
-          }}
-          style={styles.button}>
-          <Text style={styles.text}>console log uri</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => {
-            // this.openVideoEditor(15, 30, 'edit');
-			this.openVideoEditorAndroid(2, 30, 'temp');
+		      	VideoEditor.openVideoEditor(this.state.uri, this.state.duration, 3500, 0.5, 15, 'name_delete_test');
           }}
           style={styles.button}>
           <Text style={styles.text}>openEditor</Text>
-        </TouchableOpacity>
-    
-
-        <TouchableOpacity
-          onPress={() => this.cleanupImages()}
-          style={styles.button}>
-          <Text style={styles.text}>clean temp images</Text>
         </TouchableOpacity>
       </View>
     );

@@ -626,57 +626,17 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
 
 
     @ReactMethod
-    public void videoDurationTest(final String uri, final Promise promise){
-        //ContentResolver는 GetMediaTask 쪽 참조해야 함
-//    try {
-//        Integer result = getVideoDuration(ContentResolver, uri);
-//        promise.resolve(result);
-//    } catch() { //에러처리 어떻게?
-//        promise.reject(e);
-//        }
-    }
-
-    private static Integer getVideoDuration(
-                ContentResolver resolver,
-                Uri photoUri) {
-            @Nullable Integer playableDuration = null;
-            @Nullable AssetFileDescriptor photoDescriptor = null;
+    public void getVideoAttributes(final String uri, final Promise promise){
+        WritableMap map = Arguments.createMap();
+        if(uri == null || uri.isEmpty()) {
+            promise.reject(ERROR_UNABLE_TO_LOAD, "Asset uri is null or empty.");
+        } else {
             try {
-                photoDescriptor = resolver.openAssetFileDescriptor(photoUri, "r");
-            } catch (FileNotFoundException e) {
-                playableDuration = -1;
-                FLog.e(ReactConstants.TAG, "Could not open asset file " + photoUri.toString(), e);
+                map.putInt("duration",  PhotoListUtil.getDuration(Uri.parse(uri), reactContext));
+                promise.resolve(map);
+            } catch (Exception e) {
+                promise.reject(errOthers, e.getMessage());
             }
-
-            if (photoDescriptor != null) {
-                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                try {
-                    retriever.setDataSource(photoDescriptor.getFileDescriptor());
-                } catch (RuntimeException e) {
-                    // Do nothing. We can't handle this, and this is usually a system problem
-                }
-                try {
-                    int timeInMillisec = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
-                    playableDuration = timeInMillisec / 1000;
-                } catch (NumberFormatException e) {
-                    playableDuration = -1;
-                    FLog.e(
-                            ReactConstants.TAG,
-                            "Number format exception occurred while trying to fetch video metadata for "
-                                    + photoUri.toString(),
-                            e);
-                }
-                retriever.release();
-            }
-
-            if (photoDescriptor != null) {
-                try {
-                    photoDescriptor.close();
-                } catch (IOException e) {
-                    // Do nothing. We can't handle this, and this is usually a system problem
-                }
-            }
-
-            return playableDuration;
+        }
     }
 }

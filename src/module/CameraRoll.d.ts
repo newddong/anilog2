@@ -214,8 +214,8 @@ export type CropParams = {
 }
 
 export type VideoAttributes = {
-  uri: string,  //카메라롤의 ph://{local identifier} 외의 형태
-  duration: number, //float
+  uri?: string,  //카메라롤의 ph://{local identifier} 외의 형태 (iOS만 적용. android는 별도 uri 필요 없음)
+  duration: number,
 }
  
  /**

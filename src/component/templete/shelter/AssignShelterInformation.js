@@ -112,7 +112,7 @@ export default AssignShelterInformation = props => {
 			</View>
 			<View style={[styles.textMsg]}>
 				<Text style={[txt.noto24]}>
-					'<Text style={{color: 'red'}}>*</Text>'는 필수 입력해야하는 사항입니다.
+					<Text style={{color: 'red'}}>*</Text>는 필수 입력해야하는 사항입니다.
 					{/* '<Text style={{color: 'red'}}>*</Text>'는 필수 입력해야하는 사항입니다. */}
 				</Text>
 			</View>
@@ -201,7 +201,7 @@ export default AssignShelterInformation = props => {
 			</View>
 
 			{/* (A)Btn_w654 */}
-			<View style={[btn_style.btn_w654, assignShelterInformation_style.btn_w654]}>
+			<View style={[btn_style.btn_w694, assignShelterInformation_style.btn_w654]}>
 				{!phoneConfirmed ? (
 					<AniButton btnTitle={'확인'} btnLayout={btn_w694_r30} disable titleFontStyle={32} onPress={goToNextStep} />
 				) : (

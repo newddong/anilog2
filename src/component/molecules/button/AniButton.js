@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View, TouchableOpacity, TouchableWithoutFeedback, TouchableHighlight} from 'react-native';
-import {APRI10, GRAY10, GRAY20, GRAY30, MAINBLACK, WHITE} from 'Root/config/color';
+import {APRI10, GRAY10, GRAY20, GRAY30, GRAY40, MAINBLACK, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {btn_w226} from 'Atom/btn/btn_style';
@@ -41,6 +41,8 @@ const AniButton = props => {
 			return WHITE;
 		} else if (props.btnTheme == 'gray' && props.btnStyle == 'border') {
 			return GRAY20;
+		} else if (props.btnStyle == 'gray') {
+			return GRAY10;
 		} else return MAINBLACK;
 		// APRI10;
 	};
@@ -64,13 +66,16 @@ const AniButton = props => {
 		else if (props.btnStyle == 'filled') {
 			// return APRI10;
 			return MAINBLACK;
-		} //FILLED일 경우 배경색 APRI10
-		else {
+		}
+		//FILLED일 경우 배경색 APRI10
+		else if (props.btnStyle == 'gray') {
+			return GRAY40;
+		} else {
 			return WHITE;
 		} //이외의 경우 WHITE
 	};
 	const onPress = () => {
-		props.disable ? false : props.onPress(props.btnTitle);
+		props.disable || props.unTouchable ? false : props.onPress(props.btnTitle);
 	};
 
 	const insideView = () => {

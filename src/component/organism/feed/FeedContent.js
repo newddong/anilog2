@@ -81,7 +81,7 @@ export default FeedContent = props => {
 	const [btnStatus, setBtnStatus] = React.useState(false); //더보기 Arrow방향 false면 아래
 	const [show, setShow] = React.useState(false);
 	const [send, setSend] = React.useState();
-	const [isFavorite, setIsFavorite] = React.useState(props.data.feed_writer_id?.is_favorite);
+	const [isFavorite, setIsFavorite] = React.useState(props.data.is_favorite);
 	const feed_writer = props.data.feed_avatar_id ? props.data.feed_avatar_id : props.data.feed_writer_id;
 	React.useEffect(() => {
 		if (typeof feed_avatar_id === object) {
@@ -97,7 +97,7 @@ export default FeedContent = props => {
 		//  // console.log('props.data.feed_writer_id', props.data.feed_writer_id.is_favorite);
 		// }
 	}, [props.data]);
-
+	console.log('data', props.data);
 	//피드 미트볼 메뉴 - 신고 클릭
 	const onPressReport = context => {
 		console.log('신고 context', context, props.data._id);
@@ -267,7 +267,7 @@ export default FeedContent = props => {
 
 	//피드 미트볼 - 즐겨찾기 설정
 	const onFavorite = isFavorite => {
-		console.log(props.data, '22');
+		// console.log(props.data, '22');
 		Modal.close();
 		setTimeout(() => {
 			Modal.popTwoBtn(
@@ -286,7 +286,7 @@ export default FeedContent = props => {
 							// console.log('result / followUser / FeedContent', result.msg);
 							Modal.close();
 							Modal.popNoBtn('즐겨찾기 ' + (isFavorite ? '추가' : '삭제') + '가 완료되었습니다.');
-							setIsFavorite(true);
+							setIsFavorite(isFavorite);
 							setTimeout(() => {
 								Modal.close();
 							}, 200);
@@ -622,7 +622,7 @@ export default FeedContent = props => {
 								<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
 									<View style={[organism_style.favoriteTag_feedContent]}>
 										{/* {props.data.feed_writer_id.is_favorite ? ( */}
-										{props.data.feed_favorite_count == 0 ? (
+										{isFavorite ? (
 											<TouchableOpacity onPress={() => onFavorite(false)}>
 												<FavoriteTag48_Filled />
 											</TouchableOpacity>

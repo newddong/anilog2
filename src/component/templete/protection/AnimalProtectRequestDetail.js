@@ -434,7 +434,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				</View>
 				<View style={[style.addMoreRequest_view]}>
 					<Text style={[txt.noto24]}>
-						<Text style={[txt.noto24b]}>{data.protect_request_writer_id.user_nickname}</Text>의 게시글 더보기
+						<Text style={[txt.noto24]}>{data.protect_request_writer_id.user_nickname}</Text>의 게시글 더보기
 					</Text>
 				</View>
 				<View style={[style.accountList]}>

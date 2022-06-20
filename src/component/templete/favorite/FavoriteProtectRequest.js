@@ -10,7 +10,7 @@ import DP from 'Root/config/dp';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import SelectStat from 'Root/component/organism/list/SelectStat';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
-import {Check50, Rect50_Border} from 'Root/component/atom/icon';
+import {Check42, Check50, Rect42_Border, Rect50_Border} from 'Root/component/atom/icon';
 import {updateProtect} from 'Root/config/protect_obj';
 
 export default FavoriteProtectRequest = ({route}) => {
@@ -91,7 +91,7 @@ export default FavoriteProtectRequest = ({route}) => {
 			};
 
 			// Modal.popTwoBtn(deleteMsg(), '취소', '해제', () => Modal.close(), doDelete);
-			Modal.popOneBtn('선택한 목록을 삭제하시겠습니까?', '해제', doDelete);
+			Modal.popOneBtn('선택한 게시글을 \n 즐겨찾기에서 해제 하시겠습니까?', '해제', doDelete);
 		}
 	};
 
@@ -199,15 +199,14 @@ export default FavoriteProtectRequest = ({route}) => {
 	};
 
 	const render = ({item, index}) => {
-		console.log('item checkbox', item.checkBoxState);
 		return (
 			<View style={{flexDirection: 'row', alignItems: 'center'}}>
 				{selectMode ? (
-					<View style={{marginRight: 10 * DP}}>
+					<View style={{marginRight: 20 * DP}}>
 						{item.checkBoxState ? (
-							<Check50 onPress={() => onPressCheck(index, false)} />
+							<Check42 onPress={() => onPressCheck(index, false)} />
 						) : (
-							<Rect50_Border onPress={() => onPressCheck(index, true)} />
+							<Rect42_Border onPress={() => onPressCheck(index, true)} />
 						)}
 					</View>
 				) : (
@@ -226,18 +225,18 @@ export default FavoriteProtectRequest = ({route}) => {
 	const header = () => {
 		return (
 			<View style={[style.selectstat_view, {}]}>
-				<View style={[style.selectstat]}>
-					<SelectStat
-						selectMode={selectMode}
-						onSelectMode={checkSelectMode}
-						onCancelSelectMode={cancelSelectMode}
-						onSelectAllClick={selectAll}
-						onDeleteSelectedItem={deleteSelectedItem}
-					/>
-				</View>
+				<SelectStat
+					selectMode={selectMode}
+					onSelectMode={checkSelectMode}
+					onCancelSelectMode={cancelSelectMode}
+					onSelectAllClick={selectAll}
+					onDeleteSelectedItem={deleteSelectedItem}
+				/>
 			</View>
 		);
 	};
+
+	const ITEM_HEIGHT = 266 * DP;
 
 	const whenEmpty = () => {
 		return <ListEmptyInfo text={'즐겨찾기한 보호요청글이 없습니다.'} />;
@@ -252,6 +251,11 @@ export default FavoriteProtectRequest = ({route}) => {
 				style={{backgroundColor: '#fff'}}
 				contentContainerStyle={{alignItems: 'center'}}
 				renderItem={render}
+				keyExtractor={item => item._id}
+				getItemLayout={(data, index) => {
+					if (!data[index]) return {length: 0, offset: 0, index: index};
+					return {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index: index};
+				}}
 				showsVerticalScrollIndicator={false}
 				ListHeaderComponent={header}
 				ListEmptyComponent={whenEmpty}

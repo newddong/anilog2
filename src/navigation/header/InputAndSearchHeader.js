@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity, Text, TextInput} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Text, TextInput, LogBox} from 'react-native';
 import {BackArrow32} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {WHITE, APRI10} from 'Root/config/color';
@@ -7,14 +7,16 @@ import InputWithSearchIcon from 'Molecules/input/InputWithSearchIcon';
 import searchContext from 'Root/config/searchContext';
 
 export default InputAndSearchHeader = props => {
+	LogBox.ignoreLogs(['Non-serializable values were found in the navigation state']);
 	const routeName = props.route.name != undefined ? props.route.name : '';
 	const [searchInput, setSearchInput] = React.useState('');
 	const inputRef = React.useRef();
-	// console.log('props', props.route.params.searchInput);
+	// console.log('props', props);
 
-	const confirm = () => {
+	const confirm = text => {
 		//헤더에서 작성한 인풋입력값을 템플릿에 전달
 		routeName != 'UserList' && props.navigation.setParams({...props.route.params, searchInput: searchInput});
+		searchContext.searchInfo.reSearch = !searchContext.searchInfo.reSearch;
 	};
 
 	React.useEffect(() => {
@@ -32,8 +34,9 @@ export default InputAndSearchHeader = props => {
 	React.useEffect(() => {
 		if (props.isLocation) {
 			props.navigation.setParams({
-				reSearch,
+				reSearch: () => reSearch(),
 			});
+			inputRef.current.focus();
 		}
 	}, []);
 

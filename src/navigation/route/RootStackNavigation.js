@@ -75,6 +75,8 @@ import ReportDetail from 'Root/component/templete/missing/ReportDetail';
 import MissingAnimalDetail from 'Root/component/templete/missing/MissingAnimalDetail';
 import SimpleWithMeatballHeader from '../header/SimpleWithMeatballHeader';
 import ProfileHeader from '../header/ProfileHeader';
+import FollowerList from 'Root/component/templete/list/FollowerList';
+import PetFollowerList from 'Root/component/templete/list/PetFollowerList';
 
 const RootStack = createStackNavigator();
 
@@ -360,6 +362,11 @@ export default RootStackNavigation = () => {
 							name="ReportDetail"
 							component={ReportDetail}
 							options={{header: props => <SimpleWithMeatballHeader {...props} />, title: '제보글'}}
+						/>
+						<RootStack.Screen
+							name="PetFollowerList"
+							component={PetFollowerList}
+							options={{header: props => <SimpleHeader {...props} />, title: ' '}}
 						/>
 					</RootStack.Navigator>
 				</NavigationContainer>

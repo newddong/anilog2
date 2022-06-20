@@ -101,31 +101,33 @@ export default MyHeader = ({navigation, route, options, back}) => {
 			</View>
 		);
 	};
+	if (items == '') {
+		return <></>;
+	} else
+		return (
+			<View style={[style.headerContainer, style.shadow]}>
+				<TouchableOpacity onPress={navigation.goBack}>
+					<View style={style.backButtonContainer}>
+						<BackArrow32 onPress={navigation.goBack} />
+					</View>
+				</TouchableOpacity>
 
-	return (
-		<View style={[style.headerContainer, style.shadow]}>
-			<TouchableOpacity onPress={navigation.goBack}>
-				<View style={style.backButtonContainer}>
-					<BackArrow32 onPress={navigation.goBack} />
+				<View style={[style.petList]}>
+					<FlatList
+						// ref={scrollViewRef}
+						horizontal={true}
+						data={items.slice(0, 2)}
+						renderItem={({item, index}) => renderItem(item, index)}
+						persistentScrollbar={true}
+						scrollEnabled={false}
+						showsHorizontalScrollIndicator={false}
+						scrollToOverflowEnabled={false}
+						ListHeaderComponent={UserProfile}
+						ListFooterComponent={MeatBall}
+					/>
 				</View>
-			</TouchableOpacity>
-
-			<View style={[style.petList]}>
-				<FlatList
-					// ref={scrollViewRef}
-					horizontal={true}
-					data={items.slice(0, 2)}
-					renderItem={({item, index}) => renderItem(item, index)}
-					persistentScrollbar={true}
-					scrollEnabled={false}
-					showsHorizontalScrollIndicator={false}
-					scrollToOverflowEnabled={false}
-					ListHeaderComponent={UserProfile}
-					ListFooterComponent={MeatBall}
-				/>
 			</View>
-		</View>
-	);
+		);
 };
 
 const style = StyleSheet.create({

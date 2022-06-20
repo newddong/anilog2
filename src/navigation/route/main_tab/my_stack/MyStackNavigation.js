@@ -177,7 +177,7 @@ export default MyStackNavigation = props => {
 				component={AssignPetInfoB}
 				options={{header: props => <SimpleHeader {...props} />, title: '반려동물 등록'}}
 			/>
-			<MyStack.Screen name="FavoriteUser" component={FavoriteUser} options={{header: props => <SimpleHeader {...props} />, title: '친구 즐겨찾기'}} />
+			<MyStack.Screen name="FavoriteUser" component={FavoriteUser} options={{header: props => <SimpleHeader {...props} />, title: '즐겨찾은 친구'}} />
 			<MyStack.Screen
 				name="UserSaveAnimalRequest"
 				component={SaveAnimalRequest}
@@ -191,7 +191,7 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen
 				name="FavoriteFeeds"
 				component={FavoriteFeeds}
-				options={{header: props => <SimpleHeader {...props} />, title: '피드 즐겨찾기'}}
+				options={{header: props => <SimpleHeader {...props} />, title: '즐겨찾은 피드'}}
 			/>
 			<MyStack.Screen
 				name="FavoriteFeedList"
@@ -386,7 +386,7 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen
 				name="FavoriteProtectRequest"
 				component={FavoriteProtectRequest}
-				options={{header: props => <SimpleHeader {...props} />, title: '보호요청 즐겨찾기'}}
+				options={{header: props => <SimpleHeader {...props} />, title: '즐겨찾은 동물 보호 게시글'}}
 			/>
 			<MyStack.Screen name="MyArticle" component={FavoriteArticle} options={{header: props => <SimpleHeader {...props} />, title: '나의 자유글'}} />
 			<MyStack.Screen name="MyReview" component={FavoriteReview} options={{header: props => <SimpleHeader {...props} />, title: '나의 리뷰'}} />

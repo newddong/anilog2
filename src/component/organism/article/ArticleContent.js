@@ -81,52 +81,6 @@ const ArticleContent = props => {
 		}
 	};
 
-	const getContents = () => {
-		let contents = data.contents;
-		// console.log('contents', contents);
-		return contents.map((v, i) => {
-			if (v && v.image == null) {
-				const r1 = v.replace(/&nbsp;/g, '');
-				const r2 = r1.replace(/<br>/g, '');
-				if (props.searchInput == undefined) {
-					return (
-						<Text key={i} style={[txt.noto28]}>
-							{r2}
-						</Text>
-					);
-				} else if (props.searchInput.length > 1) {
-					console.log(props.searchInput);
-					let split = r2.split(new RegExp(`(${props.searchInput})`, 'gi'));
-					// console.log('split', split);
-					return (
-						<Text key={i} style={[txt.noto28]}>
-							{split.map((part, ind) =>
-								part.toLowerCase() === props.searchInput.toLowerCase() ? (
-									// <View style={{backgroundColor: 'red'}}>{part}</View>
-									<Text key={ind} style={[txt.noto28b, {color: APRI10, marginRight: 10 * DP}]}>
-										{part + ''}
-									</Text>
-								) : (
-									<Text key={ind} style={[txt.noto28, {marginRight: 10 * DP}]}>
-										{part + ''}
-									</Text>
-								),
-							)}
-						</Text>
-					);
-				}
-			} else if (v == undefined) {
-				return <></>;
-			} else {
-				return (
-					<TouchableOpacity key={i} activeOpacity={0.8} onPress={() => onPressImage(v.image)}>
-						<FastImage style={[styles.img_square_round_654, {marginVertical: 10 * DP}]} source={{uri: v.image}} resizeMode={'stretch'} />
-					</TouchableOpacity>
-				);
-			}
-		});
-	};
-
 	const onWebViewMessage = async event => {
 		if (Platform.OS == 'android') {
 			setTimeout(() => {
@@ -142,7 +96,7 @@ const ArticleContent = props => {
 			}, 150);
 		} else {
 			// console.log('event IOS : ', JSON.stringify(event._dispatchInstances._debugOwner.memoizedProps));
-			// console.log('event.nativeEvent.data', event.nativeEvent.data);
+			console.log('event.nativeEvent.data', event.nativeEvent.data);
 			if (event.nativeEvent.data.includes('amazonaws.com')) {
 				// console.log('event.nativeEvent.data', event.nativeEvent.data);
 				showImg(event.nativeEvent.data);
@@ -154,6 +108,7 @@ const ArticleContent = props => {
 			}
 		}
 	};
+
 	const runFirst = `
 	window.ReactNativeWebView.postMessage(document.body.scrollHeight);
     true; 
@@ -162,6 +117,7 @@ const ArticleContent = props => {
 	const webviewRef = React.useRef();
 
 	const changeHtmlTag = () => {
+		// console.log('community_content', data.community_content);
 		let result = data.community_content;
 		result = data.community_content.replace(
 			/<img /g,
@@ -170,7 +126,7 @@ const ArticleContent = props => {
 			};  border-radius:15px; object-fit:contain; margin:5px 0px 0px 0px; " `,
 		);
 		// console.log('data Content', data.community_content);
-		// console.log('result', result);
+		console.log('result', result);
 		return `
 		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
         <script>
@@ -240,6 +196,7 @@ const ArticleContent = props => {
 							left: -14 * DP,
 							height: height == 0 ? 100 * DP : height,
 							opacity: 0.99,
+							// backgroundColor: 'yellow',
 						}}
 					/>
 					// <AutoHeightWebView

@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, Text, View} from 'react-native';
+import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 import FeedThumbnailList from 'Organism/feed/FeedThumbnailList';
 import SelectStat from 'Organism/list/SelectStat';
 import {login_style, temp_style, selectstat_view_style} from 'Templete/style_templete';
@@ -11,6 +11,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import Loading from 'Root/component/molecules/modal/Loading';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import {APRI10} from 'Root/config/color';
+import DP from 'Root/config/dp';
 
 //즐겨찾기한 피드목록을 조회
 export default FavoriteFeeds = ({route, navigation}) => {
@@ -157,7 +158,6 @@ export default FavoriteFeeds = ({route, navigation}) => {
 								{feed_object_id: element._id},
 								result => {
 									console.log('deleteFeed Success', result);
-
 									let difference = data.filter(x => !copy.includes(x));
 									setData(difference);
 								},
@@ -171,9 +171,11 @@ export default FavoriteFeeds = ({route, navigation}) => {
 					case 'FavoriteFeeds':
 						doDeltedFavorite(copy);
 						break;
+					case 'TagMeFeeds':
+						console.log('Tagme Delete');
+						break;
 				}
 
-				// setData(copy);
 				Modal.close();
 			};
 			const deleteMsg = () => {
@@ -271,22 +273,25 @@ export default FavoriteFeeds = ({route, navigation}) => {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
 				{route.name == 'TagMeFeeds' ? (
-					<></>
+					<SelectStat
+						onSelectMode={checkSelectMode}
+						onCancelSelectMode={cancelSelectMode}
+						onSelectAllClick={selectAll}
+						onDeleteSelectedItem={deleteSelectedItem}
+						showBottomLine={false}
+					/>
 				) : (
-					<View style={[temp_style.selectstat_view, , {marginTop: -20 * DP}]}>
-						<View style={[temp_style.selectstat, selectstat_view_style.selectstat]}>
-							<SelectStat
-								onSelectMode={checkSelectMode}
-								onCancelSelectMode={cancelSelectMode}
-								onSelectAllClick={selectAll}
-								onDeleteSelectedItem={deleteSelectedItem}
-							/>
-						</View>
-					</View>
+					<SelectStat
+						onSelectMode={checkSelectMode}
+						onCancelSelectMode={cancelSelectMode}
+						onSelectAllClick={selectAll}
+						onDeleteSelectedItem={deleteSelectedItem}
+						showBottomLine={false}
+					/>
 				)}
 
 				{/* 즐겨찾기한 FeedList출력하는 FeedThumbnailList */}
-				<View style={[temp_style.FeedThumbnailList, {flex: 1}]}>
+				<View style={[{flex: 1}]}>
 					{data.length == 0 ? (
 						<ListEmptyInfo text={emptyMsg()} />
 					) : (
@@ -312,3 +317,9 @@ export default FavoriteFeeds = ({route, navigation}) => {
 			</View>
 		);
 };
+
+const style = StyleSheet.create({
+	feedThumbnailList: {
+		// width: 750 * DP,
+	},
+});

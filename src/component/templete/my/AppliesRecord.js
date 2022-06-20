@@ -1,17 +1,16 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {getAppliesRecord} from 'Root/api/protectapi';
 import {txt} from 'Root/config/textstyle';
-import {EmptyIcon, NextMark} from 'Atom/icon';
-import ShelterList from 'Organism/list/ShelterList';
-import {appliesRecord, login_style} from 'Templete/style_templete';
-import AnimalNeedHelp from 'Root/component/organism/listitem/AnimalNeedHelp';
+import {Arrow48_GRAY, Arrow48_gray10, Arrow48_GRAY10, NextMark} from 'Atom/icon';
+import {login_style} from 'Templete/style_templete';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Loading from 'Root/component/molecules/modal/Loading';
-import dp from 'Root/config/dp';
+import DP from 'Root/config/dp';
 import {GRAY10, GRAY20} from 'Root/config/color';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
+import VolunteerItemList from 'Root/component/organism/list/VolunteerItemList';
 
 export default AppliesRecord = ({route}) => {
 	//첫번째 값만 신청내역에 보여주기 위함. AnimalNeedHelpList가 배열 데이터를 다루기 때문에 반드시 객체가 배열이어야 함.
@@ -76,7 +75,8 @@ export default AppliesRecord = ({route}) => {
 				}
 				//봉사활동
 				if (result.msg.volunteer != undefined) {
-					let volunteerList = result.msg.volunteer.length > 5 ? result.msg.volunteer.slice(0, 4) : result.msg.volunteer;
+					let volunteerList = result.msg.volunteer;
+					// console.log('volunteerList', volunteerList.length);
 					volunteerList.map((v, i) => {
 						v.shelter_address = v.volunteer_target_shelter.shelter_address;
 						v.shelter_name = v.volunteer_target_shelter.shelter_name;
@@ -135,6 +135,7 @@ export default AppliesRecord = ({route}) => {
 
 	//API 접속 이전 상태인 false가 단 하나라도 없으면 이미 로딩완료
 	const isLoaded = adopt_application_list == 'false' || protect_application_list == 'false' || volunteer_list == 'false';
+	// console.log('adopt_application_list.length', adopt_application_list.length);
 
 	if (isLoaded) {
 		return <Loading isModal={false} />;
@@ -142,62 +143,60 @@ export default AppliesRecord = ({route}) => {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
 				<ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
-					<View style={[appliesRecord.record]}>
-						<View style={[appliesRecord.animalNeedHelp.headerContainer]}>
-							<Text style={[appliesRecord.animalNeedHelp.headerContainer.title]}>입양 신청 </Text>
+					<View style={[style.record]}>
+						<View style={[style.headerContainer]}>
+							<Text style={[style.title]}>입양 신청 </Text>
 							{adopt_application_list != undefined && adopt_application_list.length > 0 ? (
-								<TouchableOpacity onPress={showMoreAdoption} style={[appliesRecord.showMoreBox]}>
-									<Text style={[txt.noto24, {color: 'gray'}]}>더보기 </Text>
-									<NextMark />
+								<TouchableOpacity onPress={showMoreAdoption} style={[style.showMoreBox]}>
+									<Text style={[txt.noto24, {color: 'gray'}]}>더보기</Text>
+									<Arrow48_gray10 />
 								</TouchableOpacity>
 							) : (
 								<></>
 							)}
 						</View>
 						{adopt_application_list != undefined && adopt_application_list.length > 0 ? (
-							<ProtectRequest data={adopt_application_list[0]} onClickLabel={onClickAdoptApplication} showFavorite={false} />
+							<View style={{marginTop: -16 * DP, width: 694 * DP}}>
+								<ProtectRequest data={adopt_application_list[0]} onClickLabel={onClickAdoptApplication} showFavorite={false} />
+							</View>
 						) : (
-							<>
-								<Text style={[txt.roboto32b, {color: GRAY10}, appliesRecord.whenEmpty]}>신청하신 입양건이 없습니다.</Text>
-							</>
+							<Text style={[txt.noto24, {color: GRAY10}, style.whenEmpty]}>입양 신청건이 없습니다.</Text>
 						)}
 					</View>
-					<View style={[appliesRecord.record]}>
-						<View style={[appliesRecord.animalNeedHelp.headerContainer]}>
-							<Text style={[appliesRecord.animalNeedHelp.headerContainer.title]}>임시보호 신청 </Text>
+					<View style={[style.record]}>
+						<View style={[style.headerContainer]}>
+							<Text style={[style.title]}>임시보호 신청 </Text>
 							{protect_application_list != undefined && protect_application_list.length > 0 ? (
-								<TouchableOpacity onPress={showMoreProtection} style={[appliesRecord.showMoreBox]}>
+								<TouchableOpacity onPress={showMoreProtection} style={[style.showMoreBox]}>
 									<Text style={[txt.noto24, {color: 'gray'}]}>더보기 </Text>
-									<NextMark />
+									<Arrow48_gray10 />
 								</TouchableOpacity>
 							) : (
 								<></>
 							)}
 						</View>
 						{protect_application_list != undefined && protect_application_list.length > 0 ? (
-							<ProtectRequest data={protect_application_list[0]} onClickLabel={onClickProtectApplication} showFavorite={false} />
+							<View style={{marginTop: -16 * DP, width: 694 * DP}}>
+								<ProtectRequest data={protect_application_list[0]} onClickLabel={onClickProtectApplication} showFavorite={false} />
+							</View>
 						) : (
-							<>
-								<Text style={[txt.roboto32b, {color: GRAY10}, appliesRecord.whenEmpty]}>신청하신 임시보호건이 없습니다.</Text>
-							</>
+							<Text style={[txt.noto24, {color: GRAY10}, style.whenEmpty]}>임시보호 신청건이 없습니다..</Text>
 						)}
 					</View>
-					<View style={[appliesRecord.shelterList_container]}>
-						<View style={[appliesRecord.animalNeedHelp.headerContainer]}>
-							<Text style={[appliesRecord.animalNeedHelp.headerContainer.title]}>봉사활동 신청 </Text>
+					<View style={[style.shelterList_container]}>
+						<View style={[style.headerContainer]}>
+							<Text style={[style.title]}>봉사활동 신청 </Text>
 							{volunteer_list != undefined && volunteer_list.length > 0 && (
-								<TouchableOpacity onPress={showMoreVolunteer} style={[appliesRecord.showMoreBox]}>
-									<Text style={[txt.noto24]}>더보기 </Text>
-									<NextMark />
+								<TouchableOpacity onPress={showMoreVolunteer} style={[style.showMoreBox]}>
+									<Text style={[txt.noto24, {color: GRAY10}]}>{volunteer_list.length - 1}건 더보기 </Text>
+									<Arrow48_gray10 />
 								</TouchableOpacity>
 							)}
 						</View>
 						{volunteer_list != undefined && volunteer_list.length > 0 ? (
-							<ShelterList items={volunteer_list} onShelterLabelClick={onClickShelterLabel} />
+							<VolunteerItemList items={volunteer_list.slice(0, 1)} onShelterLabelClick={onClickShelterLabel} showStatus={false} />
 						) : (
-							<>
-								<Text style={[txt.roboto32b, {color: GRAY10}, appliesRecord.whenEmpty]}>신청하신 봉사활동건이 없습니다.</Text>
-							</>
+							<Text style={[txt.noto24, {color: GRAY10}, style.whenEmpty]}>봉사활동 신청건이 없습니다.</Text>
 						)}
 					</View>
 				</ScrollView>
@@ -205,3 +204,53 @@ export default AppliesRecord = ({route}) => {
 		);
 	}
 };
+
+const style = StyleSheet.create({
+	container: {
+		flex: 1,
+	},
+	record: {
+		width: 750 * DP,
+		marginTop: 20 * DP,
+		alignItems: 'center',
+		alignSelf: 'center',
+		// backgroundColor: 'palegreen',
+	},
+	itemContainer: {
+		width: 654 * DP,
+		height: 276 * DP,
+		marginBottom: 30 * DP,
+	},
+	headerContainer: {
+		width: 694 * DP,
+		height: 48 * DP,
+		// marginBottom: 20 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		// backgroundColor: 'red',
+	},
+	title: {
+		height: 48 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+		// color: GRAY20,
+		color: '#191919',
+	},
+	showMoreBox: {
+		// height: 50 * DP,
+		position: 'absolute',
+		alignItems: 'center',
+		flexDirection: 'row',
+		right: 0,
+	},
+	shelterList_container: {
+		marginTop: 48 * DP,
+		alignItems: 'center',
+		// height: 312 * DP,
+		// marginVertical: 30 * DP,
+		// paddingVertical: 30 * DP,
+	},
+	whenEmpty: {
+		paddingVertical: 80 * DP,
+	},
+});

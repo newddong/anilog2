@@ -26,9 +26,7 @@ const RecommendReview = props => {
 		v.community_interests.interests_hospital.map(v => category_sum_list.push(v));
 		v.community_interests.interests_review.map(v => category_sum_list.push(v));
 		v.community_interests.interests_interior.map(v => category_sum_list.push(v));
-		if (category_sum_list.length > 3) {
-			category_sum_list.push('접기');
-		}
+
 		// category_sum_list.push('테스트');
 		const page = Math.floor(category_sum_list.length / 4) + 1;
 		let arr = [];
@@ -39,7 +37,7 @@ const RecommendReview = props => {
 		let index = 0;
 		category_sum_list.map((val, ind) => {
 			totalWidth = totalWidth + 20 + val.length * 10;
-			if (totalWidth < 560 * DP) {
+			if (totalWidth < 500 * DP) {
 				// console.log('totalWidth', totalWidth);
 				newArr.push({group: index, item: val});
 			} else {
@@ -59,9 +57,9 @@ const RecommendReview = props => {
 				<View style={{flexDirection: 'row', width: 584 * DP, marginBottom: category_sum_list.length > 0 ? 10 * DP : 0}}>
 					{categoryArr[0].map((v, i) => {
 						let isLast = false;
-						if (i == categoryArr[0].length - 1) {
+						if (categoryArr.length != 1 && i == categoryArr[0].length - 1) {
 							isLast = true;
-							v.item = '+' + (category_sum_list.length - categoryArr[0].length);
+							v.item = '+' + (category_sum_list.length - categoryArr[0].length + 1);
 						}
 						if (v.item == '+' + 0) {
 							return <View key={i}></View>;

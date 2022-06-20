@@ -34,14 +34,16 @@ export default SearchTabNavigation = props => {
 
 	//검색탭 헤더의 인풋값이 바뀔 때마다 계정과 해쉬를 받아오는 api에 접속
 	React.useEffect(() => {
-		console.log('searchContext.searchInfo.searchInput', searchContext.searchInfo.searchInput);
-		fetchData();
+		console.log('searchContext.searchInfo.reSearch', searchContext.searchInfo.reSearch);
+		setTimeout(() => {
+			fetchData();
+		}, 100);
 		const unsubscribe = navigation.addListener('focus', () => {
 			// fetchData();
 			updateReview();
 		});
 		return unsubscribe;
-	}, [searchContext.searchInfo.searchInput]);
+	}, [searchContext.searchInfo.searchInput, searchContext.searchInfo.reSearch]);
 
 	const updateReview = async () => {
 		const comm = await getCommunityList(); //커뮤니티 검색
@@ -72,7 +74,7 @@ export default SearchTabNavigation = props => {
 			try {
 				getUserListByNickname(
 					{
-						user_nickname: searchContext.searchInfo.searchInput,
+						user_nickname: searchContext.searchInfo.searchInput.trimEnd(),
 						request_number: '',
 						userobject_id: '',
 						user_type: '',
@@ -104,7 +106,7 @@ export default SearchTabNavigation = props => {
 			try {
 				getHashKeywords(
 					{
-						hashtag_keyword: searchContext.searchInfo.searchInput,
+						hashtag_keyword: searchContext.searchInfo.searchInput.trimEnd(),
 					},
 					result => {
 						// console.log('hash editing', result.msg.length);
@@ -130,7 +132,7 @@ export default SearchTabNavigation = props => {
 			try {
 				getSearchCommunityList(
 					{
-						searchKeyword: searchContext.searchInfo.searchInput,
+						searchKeyword: searchContext.searchInfo.searchInput.trimEnd(),
 						page: 1,
 						limit: REVIEW_LIMIT,
 					},

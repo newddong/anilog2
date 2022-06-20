@@ -199,6 +199,8 @@ export default AssignPetProfileImage = ({route}) => {
 		});
 	}, []);
 
+	console.log('data.user_profile_uri', data.user_profile_uri);
+
 	return (
 		<View style={{alignItems: 'center', flex: 1, backgroundColor: '#fff'}}>
 			<ScrollView contentContainerStyle={[{alignItems: 'center', bottom: key ? 100 * DP : 0}]} showsVerticalScrollIndicator={false}>
@@ -213,11 +215,8 @@ export default AssignPetProfileImage = ({route}) => {
 					/>
 				</View>
 				<View style={[assignPetProfileImage_style.textMsg]}>
-					<Text
-						style={[
-							txt.noto24,
-							{color: GRAY10},
-						]}>{`반려동물 프로필의 대표 이미지가 될 사진과 이름을 알려주세요.\n반려동물의 이름은 수정이 불가합니다.`}</Text>
+					<Text style={[txt.noto24, {color: GRAY10}]}>{`반려동물 프로필의 대표 이미지가 될 사진과 이름을 알려주세요. `}</Text>
+					<Text style={[txt.noto24, {color: 'red'}]}>{`반려동물의 이름은 수정이 불가합니다. `}</Text>
 				</View>
 				<View style={[assignPetProfileImage_style.profileImageSelect]}>
 					<ProfileImageSelect onClick={selectPhoto} selectedImageUri={data.user_profile_uri} />

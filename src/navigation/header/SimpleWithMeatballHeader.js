@@ -15,7 +15,6 @@ import {GRAY30, WHITE} from 'Root/config/color';
 
 //보호 요청게시글 및 제보, 실종글 작성자일 경우 미트볼 아이콘 출력이 되는 헤더
 export default SimpleWithMeatballHeader = ({navigation, route, options, back}) => {
-	const isWriter = userGlobalObject.userInfo._id == route.params.writer; //작성자인지 여부 판단
 	const isProtect = route.params?.isMissingOrReport;
 	// console.log('simple Animal', route.params);
 	const [favoriteTag, setFavoriteTag] = React.useState(false);
@@ -303,15 +302,27 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 	};
 
 	const getMenuIcon = () => {
-		// console.log('isWriter', isWriter);
-		// console.log('isProtect', isProtect);
-		if (isWriter) {
-			return <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />;
-		} else {
-			if (favoriteTag) {
-				return <FavoriteTag48_Filled onPress={() => onPressFavorite(false)} />;
+		if (route.params.feed_object && route.params.isMissingOrReport) {
+			const isWriter = route.params.feed_object && userGlobalObject.userInfo._id == route.params.feed_object.feed_writer_id._id; //작성자인지 여부 판단
+			if (isWriter) {
+				return <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />;
 			} else {
-				return <FavoriteTag48_Border onPress={() => onPressFavorite(true)} />;
+				if (favoriteTag) {
+					return <FavoriteTag48_Filled onPress={() => onPressFavorite(false)} />;
+				} else {
+					return <FavoriteTag48_Border onPress={() => onPressFavorite(true)} />;
+				}
+			}
+		} else {
+			const isWriter = route.params.request_object && userGlobalObject.userInfo._id == route.params.request_object.protect_request_writer_id._id; //작성자인지 여부 판단
+			if (isWriter) {
+				return <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />;
+			} else {
+				if (favoriteTag) {
+					return <FavoriteTag48_Filled onPress={() => onPressFavorite(false)} />;
+				} else {
+					return <FavoriteTag48_Border onPress={() => onPressFavorite(true)} />;
+				}
 			}
 		}
 	};

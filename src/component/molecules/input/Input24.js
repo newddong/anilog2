@@ -158,12 +158,13 @@ const Input24 = React.forwardRef((props, ref) => {
 						txt.noto28,
 						props.style,
 						{
-							width: props.width ? props.width - 46 * DP : null,
+							width: props.width ? (props.width - 46) * DP : null,
 							paddingLeft: 24 * DP,
 							height: '100%', //ios에서 안드로이드와 동작 일치시키기 위함
 							// height: props.height,
 							lineHeight: 44 * DP,
 							// minWidth: 300 * DP,
+							// backgroundColor: 'red',
 						},
 					]}
 					onPressIn={props.onPressIn}

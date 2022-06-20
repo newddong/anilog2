@@ -1,12 +1,10 @@
 import React from 'react';
-import {View, Text, ScrollView, Linking, TouchableOpacity} from 'react-native';
-import {GRAY10, APRI10, BLUE20} from 'Root/config/color';
+import {View, Text, ScrollView, Linking, TouchableOpacity, StyleSheet} from 'react-native';
+import {GRAY10, APRI10, BLUE20, GRAY40, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {House48, Phone48, Paw48_APRI10, Check48, TextBalloon48, Person48} from 'Atom/icon';
+import {House48, Phone48, Paw48_APRI10, Check48, TextBalloon48, Person48, Phone48_BLACK, Paw36_black, Check36_black} from 'Atom/icon';
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
 import {animalProtectList} from 'Templete/style_templete';
-import AnimalNeedHelp from 'Organism/listitem/AnimalNeedHelp';
-import {animalProtectDetail} from 'Organism/style_organism copy';
 import {hyphened} from 'Root/util/dateutil';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import AniButton from 'Root/component/molecules/button/AniButton';
@@ -75,9 +73,9 @@ export default AnimalProtectDetail = props => {
 		<ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
 			<View style={[animalProtectDetail.container]}>
 				<View style={[animalProtectDetail.animalNeedHelp_container]}>
-					{/* <AnimalNeedHelp data={data} inActiveOpacity={true} showFavorite={false} /> */}
 					<ProtectRequest data={data} inActiveOpacity={true} showFavorite={false} />
 				</View>
+				<View style={[animalProtectDetail.separator]} />
 				<View style={[animalProtectDetail.details_container]}>
 					{/* 보호장소 */}
 					{
@@ -100,9 +98,9 @@ export default AnimalProtectDetail = props => {
 					}
 
 					<View style={[animalProtectDetail.detail]}>
-						<View style={[animalProtectList.menuHeader]}>
+						<View style={[animalProtectDetail.menuHeader]}>
 							<House48 />
-							<Text style={[txt.noto26b, {color: GRAY10}]}>{'   '}보호장소</Text>
+							<Text style={[txt.noto30b, {}]}>{'   '}보호장소</Text>
 						</View>
 						<View style={[animalProtectDetail.detail_content]}>
 							<Text style={[txt.noto28]}>
@@ -113,68 +111,60 @@ export default AnimalProtectDetail = props => {
 					</View>
 					{/* 연락처 */}
 					<View style={[animalProtectDetail.detail]}>
-						<View style={[animalProtectList.menuHeader]}>
-							<Phone48 />
-							<Text style={[txt.noto26b, {color: GRAY10}]}>{'   '}연락처</Text>
+						<View style={[animalProtectDetail.menuHeader]}>
+							<Phone48_BLACK />
+							<Text style={[txt.noto30b]}>{'   '}연락처</Text>
 						</View>
 						<TouchableOpacity onPress={onPressPhoneNum} style={[animalProtectDetail.detail_content]}>
-							<Text style={[txt.noto28, {color: BLUE20, textDecorationLine: 'underline'}]}>{hyphened(data.protect_act_phone_number) || ''}</Text>
+							<Text style={[txt.roboto28, {color: BLUE20, textDecorationLine: 'underline'}]}>{hyphened(data.protect_act_phone_number) || ''}</Text>
 						</TouchableOpacity>
 					</View>
 					{/* 반려 동물 생활 */}
 					<View style={[animalProtectDetail.detail]}>
-						<View style={[animalProtectList.menuHeader]}>
-							<Paw48_APRI10 />
-							<Text style={[txt.noto26b, {color: GRAY10}]}>{'   '}반려 동물 생활</Text>
+						<View style={[animalProtectDetail.menuHeader]}>
+							<Paw36_black />
+							<Text style={[txt.noto30b]}>{'   '}반려 동물 생활</Text>
 						</View>
 						{data.protect_act_companion_history.map((v, i) => {
-							// console.log('v', i, v.companion_pet_current_status);
+							console.log('v', i, v);
 							return (
 								<View style={[animalProtectDetail.detail_content]} key={i}>
 									<Text style={[txt.noto28]}>
 										{i + 1}. {v.companion_pet_species} / 나이 : {v.companion_pet_age} / 반려생활 : {v.companion_pet_period}
 									</Text>
-									<Text style={[txt.noto28, {color: APRI10, paddingLeft: 10}]}>{getStatusText(v.companion_pet_current_status)}</Text>
+									<Text style={[txt.noto28, {color: GRAY10, paddingLeft: 30 * DP}]}>{getStatusText(v.companion_pet_current_status)}</Text>
 								</View>
 							);
 						})}
 					</View>
 					{/* 체크 포인트  */}
 					<View style={[animalProtectDetail.detail]}>
-						<View style={[animalProtectList.menuHeader]}>
-							<Check48 />
-							<Text style={[txt.noto26, {color: GRAY10}]}>{'   '}체크 포인트</Text>
+						<View style={[animalProtectDetail.menuHeader]}>
+							<Check36_black />
+							<Text style={[txt.noto30b]}>{'   '}체크 포인트</Text>
 						</View>
 						<View style={[animalProtectDetail.detail_content]}>
-							<Text style={[txt.noto28, {color: data.protect_act_checklist.is_adult ? APRI10 : GRAY10}]}>- 성인 확인</Text>
-							<Text style={[txt.noto28, {color: data.protect_act_checklist.is_near_veterinary ? APRI10 : GRAY10}]}>- 주거지 근처 동물병원 확인</Text>
-							<Text style={[txt.noto28, {color: data.protect_act_checklist.is_agreed_housemate ? APRI10 : GRAY10}]}>- 동거인 동의 확인</Text>
-							<Text style={[txt.noto28, {color: data.protect_act_checklist.is_experience_defecate ? APRI10 : GRAY10}]}>- 배변 훈련 지식 확인</Text>
-							<Text style={[txt.noto28, {color: data.protect_act_checklist.is_knowledge_sanitation ? APRI10 : GRAY10}]}>
+							<Text style={[txt.noto28, {color: data.protect_act_checklist.is_adult ? APRI10 : MAINBLACK}]}>- 성인 확인</Text>
+							<Text style={[txt.noto28, {color: data.protect_act_checklist.is_near_veterinary ? APRI10 : MAINBLACK}]}>
+								- 주거지 근처 동물병원 확인
+							</Text>
+							<Text style={[txt.noto28, {color: data.protect_act_checklist.is_agreed_housemate ? APRI10 : MAINBLACK}]}>- 동거인 동의 확인</Text>
+							<Text style={[txt.noto28, {color: data.protect_act_checklist.is_experience_defecate ? APRI10 : MAINBLACK}]}>- 배변 훈련 지식 확인</Text>
+							<Text style={[txt.noto28, {color: data.protect_act_checklist.is_knowledge_sanitation ? APRI10 : MAINBLACK}]}>
 								- 반려동물 청결 지식 확인
 							</Text>
 						</View>
 					</View>
 					{/* 신청 동기  */}
 					<View style={[animalProtectDetail.detail]}>
-						<View style={[animalProtectList.menuHeader]}>
+						<View style={[animalProtectDetail.menuHeader]}>
 							<TextBalloon48 />
-							<Text style={[txt.noto26b, {color: GRAY10}]}>{'   '}신청 동기</Text>
+							<Text style={[txt.noto30b]}>{'   '}신청 동기</Text>
 						</View>
 						<View style={[animalProtectDetail.detail_content]}>
 							<Text style={[txt.noto28]}>{data.protect_act_motivation || ''}</Text>
 						</View>
 					</View>
-					{/* 진행 과정 */}
-					{/* {data?.protect_act_type == 'protect' ? (
-						<View style={[{marginTop: 70 * DP}]}>
-							<AniButton btnTitle={`${userText}가 ${statusText}`} btnLayout={btn_w654_h70} btnStyle={'border'} />
-						</View>
-					) : (
-						<View style={[{marginTop: 70 * DP}]}>
-							<AniButton btnTitle={`${userText}에게 ${statusText}`} btnLayout={btn_w654_h70} btnStyle={'border'} />
-						</View>
-					)} */}
 					<StatusButton />
 				</View>
 			</View>
@@ -183,3 +173,49 @@ export default AnimalProtectDetail = props => {
 };
 
 AnimalProtectDetail.defaultProps = {};
+
+const animalProtectDetail = StyleSheet.create({
+	container: {
+		alignSelf: 'center',
+		marginBottom: 50 * DP,
+		alignItems: 'center',
+	},
+	animalNeedHelp_container: {
+		marginBottom: 20 * DP,
+		// backgroundColor: 'yellow',
+	},
+	separator: {
+		width: 750 * DP,
+		height: 10 * DP,
+		backgroundColor: GRAY40,
+	},
+	details_container: {
+		width: 694 * DP,
+	},
+	detail: {
+		width: 694 * DP,
+		marginTop: 40 * DP,
+	},
+	detail_icon48: {
+		width: 48 * DP,
+		height: 48 * DP,
+	},
+	detail_title: {
+		width: 590 * DP,
+		height: 40 * DP,
+		marginLeft: 16 * DP,
+		alignSelf: 'center',
+	},
+	detail_content: {
+		width: 620 * DP,
+		marginTop: 6 * DP,
+		marginLeft: 64 * DP,
+		minHeight: 50 * DP,
+	},
+	menuHeader: {
+		width: 694 * DP,
+		height: 48 * DP,
+		alignItems: 'center',
+		flexDirection: 'row',
+	},
+});

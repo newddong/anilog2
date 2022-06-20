@@ -141,7 +141,15 @@ const ArticleSummary = props => {
 		<View style={[style.container]}>
 			<View style={[style.inside]}>
 				<Text style={[txt.noto28, {color: GRAY10}]}>{getArticleType()} |</Text>
-				<TouchableOpacity onPress={onPressArticle} activeOpacity={props.selectMode ? 1 : 0.6} style={[style.content]}>
+				<TouchableOpacity
+					onPress={onPressArticle}
+					activeOpacity={props.selectMode ? 1 : 0.6}
+					style={[
+						style.content,
+						{
+							width: props.selectMode ? 500 * DP : 560 * DP,
+						},
+					]}>
 					{text == '' ? <></> : getText()}
 				</TouchableOpacity>
 				<TouchableOpacity onPress={onPressArticle} activeOpacity={0} style={[style.content, {position: 'absolute', opacity: 0}]}>
@@ -151,7 +159,7 @@ const ArticleSummary = props => {
 						{/* <Text style={[txt.roboto28, {opacity: 0}]}>{data.community_comment_count != 0 ? data.community_comment_count : ''}</Text> */}
 					</Text>
 				</TouchableOpacity>
-				<View style={[{alignItems: 'flex-end', justifyContent: 'flex-start'}]}>
+				<View style={[{justifyContent: 'flex-start'}]}>
 					<Text style={[txt.noto24, {color: GRAY10}]}>{getUpdateTime()}</Text>
 				</View>
 			</View>
@@ -174,18 +182,19 @@ const style = StyleSheet.create({
 		alignSelf: 'center',
 	},
 	inside: {
+		// width: 694 * DP,
 		flexDirection: 'row',
-		justifyContent: 'space-between',
+		// justifyContent: 'space-between',
 		// backgroundColor: 'pink',
 	},
 	content: {
-		width: 510 * DP,
 		maxHeight: 90 * DP,
+		marginLeft: 10 * DP,
 		// backgroundColor: 'yellow',
 	},
 	summaryText: {
 		textAlignVertical: 'center',
-		width: 510 * DP,
+		// width: 510 * DP,
 		// backgroundColor: 'red',
 	},
 });

@@ -3,7 +3,7 @@ import {FlatList, StyleSheet, View, Text, NativeModules} from 'react-native';
 import {GRAY30, GRAY40, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import ArticleSummary from '../article/ArticleSummary';
-import {Check50, Rect50_Border} from 'Root/component/atom/icon';
+import {Check42, Check50, Rect42_Border, Rect50_Border} from 'Root/component/atom/icon';
 import {getLinesOfString} from 'Root/util/stringutil';
 import {txt} from 'Root/config/textstyle';
 
@@ -39,9 +39,9 @@ const ArticleList = props => {
 					<View style={{justifyContent: 'center', marginRight: 20 * DP}}>
 						{/* <CheckBox state={item.checkBoxState} onCheck={() => props.onCheckBox(index)} /> */}
 						{item.checkBoxState ? (
-							<Check50 onPress={() => onPressToggle(index, false)} />
+							<Check42 onPress={() => onPressToggle(index, false)} />
 						) : (
-							<Rect50_Border onPress={() => onPressToggle(index, true)} />
+							<Rect42_Border onPress={() => onPressToggle(index, true)} />
 						)}
 					</View>
 				) : (

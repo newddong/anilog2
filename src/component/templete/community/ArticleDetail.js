@@ -19,6 +19,7 @@ import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
 import {useKeyboardBottom} from 'Root/component/molecules/input/usekeyboardbottom';
+import {count_to_K} from 'Root/util/stringutil';
 /**
  * 자유게시글 상세 내용
  * @param {object} props - Props Object
@@ -90,7 +91,11 @@ export default ArticleDetail = props => {
 			},
 			err => {
 				console.log('err / getCommunityByObjectId / ArticleDetail ', err);
-				setData('false');
+				if (err.includes('code 500')) {
+					Modal.popOneBtn(NETWORK_ERROR, '확인', navigation.goBack);
+				} else {
+					setData('false');
+				}
 			},
 		);
 	};
@@ -520,15 +525,17 @@ export default ArticleDetail = props => {
 							<FavoriteTag48_Border onPress={() => onPressFavorite(true)} />
 						)}
 						<Text style={[txt.noto24, {color: GRAY10, paddingTop: 6 * DP, marginLeft: 2 * DP, height: 48 * DP}]}>
-							{data.community_favorite_count}
+							{count_to_K(data.community_favorite_count)}
 						</Text>
 					</View>
-					<View style={[style.header_icon, {}]}>
+					<View style={[style.header_icon, {marginLeft: 20 * DP}]}>
 						{data.community_is_like ? <Like48_Filled onPress={() => onPressLike(false)} /> : <Like48_Border onPress={() => onPressLike(true)} />}
-						<Text style={[txt.noto24, {color: GRAY10, paddingTop: 6 * DP, marginLeft: 8 * DP, height: 48 * DP}]}>{data.community_like_count}</Text>
+						<Text style={[txt.noto24, {color: GRAY10, paddingTop: 6 * DP, marginLeft: 8 * DP, height: 48 * DP}]}>
+							{count_to_K(data.community_like_count)}
+						</Text>
 					</View>
 					{comments && comments.length > 0 ? (
-						<View style={[{alignItems: 'flex-end', width: 494 * DP}]}>
+						<View style={[{position: 'absolute', right: 0}]}>
 							<Text style={[txt.noto26]}> 댓글 {comments.length - 1}개</Text>
 						</View>
 					) : (
@@ -731,7 +738,7 @@ const style = StyleSheet.create({
 	},
 	header_icon: {
 		flexDirection: 'row',
-		width: 80 * DP,
+		width: 104 * DP,
 		alignItems: 'center',
 	},
 	profile: {

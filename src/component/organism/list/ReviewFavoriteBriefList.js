@@ -1,7 +1,7 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {Check50, EmptyIcon, Rect50_Border} from 'Root/component/atom/icon';
+import {Check42, Check50, EmptyIcon, Rect42_Border, Rect50_Border} from 'Root/component/atom/icon';
 import ReviewFavoriteBriefItem from '../listitem/ReviewFavoriteBriefItem';
 import DP from 'Root/config/dp';
 
@@ -25,13 +25,13 @@ const ReviewFavoriteBriefList = props => {
 	const renderItem = (item, index) => {
 		// console.log('ind', item.community_title, item.height, item.offset, item.community_title);
 		return (
-			<View key={index} style={[style.listItem]}>
+			<View key={index} style={[style.listItem, {}]}>
 				{props.selectMode ? (
 					<View style={{justifyContent: 'center', marginRight: 20 * DP}}>
 						{item.checkBoxState ? (
-							<Check50 onPress={() => onPressToggle(index, false)} />
+							<Check42 onPress={() => onPressToggle(index, false)} />
 						) : (
-							<Rect50_Border onPress={() => onPressToggle(index, true)} />
+							<Rect42_Border onPress={() => onPressToggle(index, true)} />
 						)}
 					</View>
 				) : (
@@ -80,16 +80,17 @@ export default ReviewFavoriteBriefList;
 
 const style = StyleSheet.create({
 	container: {
-		paddingHorizontal: 48 * DP,
+		paddingHorizontal: 28 * DP,
 		paddingVertical: 30 * DP,
 		alignItems: 'center',
 	},
 	listItem: {
+		width: 694 * DP,
 		paddingBottom: 40 * DP,
 		flexDirection: 'row',
 	},
 	showMore: {
-		width: 654 * DP,
+		width: 694 * DP,
 		height: 48 * DP,
 		justifyContent: 'center',
 		alignItems: 'center',

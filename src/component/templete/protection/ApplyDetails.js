@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, ScrollView, Image, TouchableOpacity} from 'react-native';
+import {Text, View, ScrollView, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {createProtectActivity} from 'Root/api/protectapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {CONFIRM_ADOPT_REQUEST, CONFIRM_PROTECT_REQUEST} from 'Root/i18n/msg';
@@ -19,9 +19,9 @@ export default ApplyDetails = ({route, navigation}) => {
 	React.useEffect(() => {
 		isProtect ? navigation.setOptions({title: '임시보호 신청'}) : navigation.setOptions({title: '입양 신청'});
 		if (data.protect_act_type == 'protect') {
-			navigation.setOptions({title: '임시보호 신청 내역'});
+			navigation.setOptions({title: '임시보호 신청서'});
 		} else {
-			navigation.setOptions({title: '입양 신청 내역'});
+			navigation.setOptions({title: '입양 신청서'});
 		}
 	}, []);
 
@@ -70,12 +70,10 @@ export default ApplyDetails = ({route, navigation}) => {
 	};
 
 	return (
-		<View style={[login_style.wrp_main, applyDetails.container]}>
+		<View style={[style.container]}>
 			<ScrollView showsVerticalScrollIndicator={false}>
-				<View style={[temp_style.animalProtectDetails, applyDetails.animalProtectDetails]}>
-					<AnimalProtectDetail data={data} />
-				</View>
-				<View style={[applyDetails.btnContainer]}>
+				<AnimalProtectDetail data={data} />
+				<View style={[style.btnContainer]}>
 					{/* 입양 임보 신청건에 한해서만 버튼출력 */}
 					{route.name == 'ApplyAdoptionDetails' || route.name == 'ApplyTempProtectDetails' ? (
 						<></>
@@ -90,3 +88,22 @@ export default ApplyDetails = ({route, navigation}) => {
 		</View>
 	);
 };
+
+const style = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: '#fff',
+	},
+	btn_w226: {
+		marginRight: 202 * DP,
+	},
+	btnContainer: {
+		width: 654 * DP,
+		height: 70 * DP,
+		marginTop: 40 * DP,
+		marginBottom: 30 * DP,
+		alignSelf: 'center',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+	},
+});

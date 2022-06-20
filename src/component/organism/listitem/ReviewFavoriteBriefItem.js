@@ -2,8 +2,8 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {styles} from 'Root/component/atom/image/imageStyle';
-import {GRAY10} from 'Root/config/color';
-import {Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
+import {GRAY10, GRAY30} from 'Root/config/color';
+import {Comment48, Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import moment from 'moment';
 import DP from 'Root/config/dp';
@@ -37,8 +37,6 @@ const ReviewFavoriteBriefItem = props => {
 		setIsLike(data.community_is_like);
 	}, []);
 
-	// console.log('data.community_is_like', data.community_is_like, data.community_title);
-
 	const image = imageList();
 
 	const onPressReview = () => {
@@ -58,19 +56,30 @@ const ReviewFavoriteBriefItem = props => {
 	};
 
 	const getDate = () => {
-		return moment(data.community_date).format('YYYY.MM.DD');
+		if (data.community_address.normal_address.city == '') {
+			return getTimeLapsed(data.community_date);
+		} else
+			return (
+				data.community_address.normal_address.city +
+				' ' +
+				data.community_address.normal_address.district +
+				'에서 · ' +
+				// moment(data.community_date).format('YYYY.MM.DD')
+				getTimeLapsed(data.community_date)
+			);
 	};
+
+	let category_sum_list = [];
+	data.community_interests.interests_trip.map(v => category_sum_list.push(v));
+	data.community_interests.interests_etc.map(v => category_sum_list.push(v));
+	data.community_interests.interests_hospital.map(v => category_sum_list.push(v));
+	data.community_interests.interests_review.map(v => category_sum_list.push(v));
+	data.community_interests.interests_interior.map(v => category_sum_list.push(v));
 
 	const getCategory = () => {
 		if (!data.community_interests.hasOwnProperty('interests_trip')) {
 			return <></>;
 		} else {
-			let category_sum_list = [];
-			data.community_interests.interests_trip.map(v => category_sum_list.push(v));
-			data.community_interests.interests_etc.map(v => category_sum_list.push(v));
-			data.community_interests.interests_hospital.map(v => category_sum_list.push(v));
-			data.community_interests.interests_review.map(v => category_sum_list.push(v));
-			data.community_interests.interests_interior.map(v => category_sum_list.push(v));
 			let filter = [];
 			if (props.selectMode) {
 				filter = category_sum_list.length > 2 ? category_sum_list.slice(0, 3) : category_sum_list;
@@ -82,19 +91,19 @@ const ReviewFavoriteBriefItem = props => {
 					if (i != filter.length - 1) {
 						return (
 							<View key={i} style={[style.category]}>
-								<Text style={[txt.noto26]}>{v}</Text>
+								<Text style={[txt.noto24, {color: GRAY10}]}>{v}</Text>
 							</View>
 						);
 					} else
 						return (
-							<Text key={i} style={[txt.noto24]}>
+							<Text key={i} style={[style.categoryPlus, txt.noto24, {color: GRAY10}]}>
 								+ {category_sum_list.length - (props.selectMode ? 2 : 2)}
 							</Text>
 						);
 				} else {
 					return (
 						<View key={i} style={[style.category]}>
-							<Text style={[txt.noto26]}>{v}</Text>
+							<Text style={[txt.noto24, {color: GRAY10}]}>{v}</Text>
 						</View>
 					);
 				}
@@ -103,17 +112,7 @@ const ReviewFavoriteBriefItem = props => {
 	};
 
 	return (
-		<TouchableOpacity
-			onPress={onPressReview}
-			activeOpacity={props.selectMode ? 1 : 0.6}
-			style={[
-				style.container,
-				{
-					width: imageList().length == 0 ? (props.selectMode ? 555 * DP : 654 * DP) : props.selectMode ? 555 * DP : 654 * DP,
-					height: imageList().length != 0 ? 186 * DP : 146 * DP,
-					// backgroundColor: 'red',
-				},
-			]}>
+		<TouchableOpacity onPress={onPressReview} activeOpacity={props.selectMode ? 1 : 0.6} style={[style.container, {}]}>
 			{image.length == 0 ? (
 				<></>
 			) : (
@@ -121,34 +120,32 @@ const ReviewFavoriteBriefItem = props => {
 					<FastImage style={{borderRadius: 30 * DP, width: 186 * DP, height: 186 * DP}} source={{uri: image[0]}} />
 				</View>
 			)}
-			<View style={[style.content]}>
+			<View
+				style={[
+					style.content,
+					{
+						marginLeft: imageList().length != 0 ? 20 * DP : 0,
+					},
+				]}>
 				<Text
 					style={[
-						txt.noto30b,
+						txt.noto28b,
 						{
-							width: imageList().length == 0 ? (props.selectMode ? 555 * DP : 654 * DP) : props.selectMode ? 360 * DP : 456 * DP,
-							height: 90 * DP,
+							width: imageList().length == 0 ? (props.selectMode ? 632 * DP : 694 * DP) : props.selectMode ? 422 * DP : 494 * DP,
 						},
 					]}
-					numberOfLines={2}
+					numberOfLines={category_sum_list && category_sum_list.length == 0 ? 2 : 1}
 					ellipsizeMode={'tail'}>
 					{data.community_title}
 				</Text>
+				<Text style={[txt.noto26, {color: GRAY10}]}>{getDate()}</Text>
 				<View style={[style.locationTime, {}]}>{getCategory()}</View>
-				<View
-					style={[
-						style.footer,
-						{
-							width: imageList().length != 0 ? (props.selectMode ? 350 * DP : 445 * DP) : props.selectMode ? 540 * DP : 640 * DP,
-							// backgroundColor: 'green',
-						},
-					]}>
-					<View style={[style.community_date]}>
-						<Text style={[txt.roboto26, {color: GRAY10}]}>{getDate()}</Text>
-					</View>
-					<View style={{alignItems: 'flex-end', flexDirection: 'row', bottom: 6 * DP}}>
+				<View style={[style.footer]}>
+					<View style={{flexDirection: 'row', alignItems: 'center'}}>
 						{isLike ? <Like48_Filled onPress={onPressUnlike} /> : <Like48_Border onPress={onPressLike} />}
-						<Text style={[txt.noto26, {color: GRAY10, marginLeft: 12 * DP}]}>{data.community_like_count}</Text>
+						<Text style={[txt.noto26, {color: GRAY10, marginLeft: 6 * DP, marginRight: 20 * DP}]}>{data.community_like_count}</Text>
+						<Comment48 />
+						<Text style={[txt.noto26, {color: GRAY10, marginLeft: 6 * DP}]}>{data.community_comment_count}</Text>
 					</View>
 				</View>
 			</View>
@@ -168,30 +165,23 @@ export default ReviewFavoriteBriefItem;
 const style = StyleSheet.create({
 	container: {
 		flexDirection: 'row',
-		// backgroundColor: 'yellow',
+		height: 186 * DP,
 	},
 	img: {
 		// flex: 1,
 	},
 	content: {
-		justifyContent: 'space-between',
-		marginLeft: 15 * DP,
+		// justifyContent: 'space-between',
 	},
 	title: {},
 	locationTime: {
-		// width: 456 * DP,
-		// height: 40 * DP,
-		// marginTop: 8 * DP,
+		marginTop: 4 * DP,
 		flexDirection: 'row',
+		// height: 56 * DP,
 	},
 	footer: {
-		// width: 456 * DP,
-		// height: 48 * DP,
-		marginTop: 8 * DP,
-		flexDirection: 'row',
-		// alignItems: 'center',
-		alignItems: 'flex-end',
-		justifyContent: 'space-between',
+		position: 'absolute',
+		bottom: 0,
 	},
 	nick: {
 		width: 340 * DP,
@@ -209,13 +199,19 @@ const style = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	category: {
-		// height: 38 * DP,
 		borderRadius: 10 * DP,
 		borderWidth: 2 * DP,
+		borderColor: GRAY30,
 		marginRight: 12 * DP,
 		paddingHorizontal: 15 * DP,
 		paddingVertical: 2 * DP,
-		// backgroundColor: 'yellow',
+	},
+	categoryPlus: {
+		borderWidth: 2 * DP,
+		borderColor: GRAY10,
+		borderRadius: 10 * DP,
+		paddingHorizontal: 20 * DP,
+		paddingVertical: 2 * DP,
 	},
 	community_date: {
 		// backgroundColor: 'red',

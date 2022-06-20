@@ -3621,11 +3621,12 @@ export const applyCompanionC = StyleSheet.create({
 		marginTop: 12 * DP,
 	},
 	btnContainer: {
-		width: 654 * DP,
+		width: 694 * DP,
 		height: 70 * DP,
 		marginTop: 110 * DP,
 		marginBottom: 50 * DP,
 		flexDirection: 'row',
+		justifyContent: 'space-between',
 	},
 	btn_w176: {
 		marginRight: 63 * DP,
@@ -4221,7 +4222,7 @@ export const manageVolunteer = StyleSheet.create({
 	},
 	previous_volunteerList: {
 		width: 750 * DP,
-		height: 522 * DP,
+		// height: 522 * DP,
 	},
 	previous_volunteerList_expanded: {
 		width: 750 * DP,

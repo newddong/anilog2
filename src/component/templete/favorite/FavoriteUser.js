@@ -94,7 +94,7 @@ export default FavoriteUser = props => {
 				setData(copy);
 				Modal.close();
 			};
-			Modal.popOneBtn('선택한 목록을 삭제하시겠습니까?', '해제', doDelete);
+			Modal.popOneBtn('선택한 계정을 \n 즐겨찾기에서 해제 하시겠습니까?', '해제', doDelete);
 		}
 	};
 
@@ -153,16 +153,12 @@ export default FavoriteUser = props => {
 	} else
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
-				<View style={[temp_style.selectstat_view]}>
-					<View style={[temp_style.selectstat, selectstat_view_style.selectstat]}>
-						<SelectStat
-							onSelectMode={e => showCheckBox(e)}
-							onCancelSelectMode={e => hideCheckBox(e)}
-							onSelectAllClick={selectAll}
-							onDeleteSelectedItem={deleteSelectedItem}
-						/>
-					</View>
-				</View>
+				<SelectStat
+					onSelectMode={e => showCheckBox(e)}
+					onCancelSelectMode={e => hideCheckBox(e)}
+					onSelectAllClick={selectAll}
+					onDeleteSelectedItem={deleteSelectedItem}
+				/>
 				<View style={[style.accountHashList]}>
 					<AccountHashList
 						data={data}
@@ -180,10 +176,12 @@ export default FavoriteUser = props => {
 
 const style = StyleSheet.create({
 	accountHashList: {
-		// width: 654 * DP,
-		marginTop: 30 * DP,
+		marginTop: 20 * DP,
 		paddingBottom: 100 * DP, // ScrollView로 주지 않아 아래가 잘리는 현상 처리
 		alignItems: 'center',
 		justifyContent: 'center',
+	},
+	selectstat_view: {
+		width: 694 * DP,
 	},
 });

@@ -124,19 +124,19 @@ export default ProtectRequest = React.memo(props => {
 	};
 
 	return (
-		<>
-			<View style={[style.container, {height: 266 * DP}]}>
-				<View style={[style.container_basicInfo]}>
-					<View style={[style.protectedThumbnail_container]}>
-						<ProtectedThumbnail
-							data={thumbnailData}
-							inActiveOpacity={props.inActiveOpacity}
-							onLabelClick={(status, id) => props.onClickLabel(status, id)}
-						/>
-					</View>
-					<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.6} onPress={() => props.onClickLabel()}>
-						<View>{contents()}</View>
-					</TouchableOpacity>
+		<View style={[style.container, {height: 266 * DP}]}>
+			<View style={[style.container_basicInfo]}>
+				<View style={[style.protectedThumbnail_container]}>
+					<ProtectedThumbnail
+						data={thumbnailData}
+						inActiveOpacity={props.inActiveOpacity}
+						onLabelClick={(status, id) => props.onClickLabel(status, id)}
+					/>
+				</View>
+				<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.6} onPress={() => props.onClickLabel()}>
+					<View>{contents()}</View>
+				</TouchableOpacity>
+				{props.showFavorite ? (
 					<View style={[style.detail_upper_tag]}>
 						{data.is_favorite ? (
 							<FavoriteTag48_Filled onPress={() => onPressFavoriteTag(false)} />
@@ -144,9 +144,11 @@ export default ProtectRequest = React.memo(props => {
 							<FavoriteTag48_Border onPress={() => onPressFavoriteTag(true)} />
 						)}
 					</View>
-				</View>
+				) : (
+					<View style={[style.detail_upper_tag]}></View>
+				)}
 			</View>
-		</>
+		</View>
 	);
 });
 
@@ -163,7 +165,7 @@ ProtectRequest.defaultProps = {
 
 const style = StyleSheet.create({
 	container: {
-		// width: 654 * DP,
+		// width: 694 * DP,
 		// height: 214 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',

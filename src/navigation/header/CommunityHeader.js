@@ -55,7 +55,6 @@ export default CommunityHeader = ({navigation, route, options, back}) => {
 
 	//제목 우측 미트볼 클릭
 	const onPressMeatball = () => {
-		console.log(' data.community_writer_id', data.community_type);
 		if (data.community_writer_id) {
 			Modal.popSelectBoxModal(
 				['수정', '삭제'],
@@ -86,7 +85,15 @@ export default CommunityHeader = ({navigation, route, options, back}) => {
 													Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
 													setTimeout(() => {
 														Modal.close();
-														navigation.goBack();
+														data.community_type == 'review'
+															? navigation.reset({
+																	index: 0,
+																	routes: [{name: 'CommunityMain', params: {isReview: true}}],
+															  })
+															: navigation.reset({
+																	index: 0,
+																	routes: [{name: 'CommunityMain', params: {isReview: false}}],
+															  });
 													}, 600);
 												}, 200);
 											},

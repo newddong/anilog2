@@ -130,7 +130,7 @@ export default ManageVolunteer = ({route}) => {
 				<ScrollView contentContainerStyle={manageVolunteer.container}>
 					{/* 활동 예정 중인 신청 */}
 					<View style={[manageVolunteer.title]}>
-						<Text style={[txt.noto24]}>{isShelterUser ? '최근 신청서' : '활동 예정중인 신청'} </Text>
+						<Text style={[txt.noto26]}>{isShelterUser ? '최근 신청서' : '활동 예정중인 신청'} </Text>
 					</View>
 					<View style={[manageVolunteer.volunteerList]}>
 						<VolunteerItemList
@@ -147,11 +147,11 @@ export default ManageVolunteer = ({route}) => {
 
 					{/* 지난 신청 */}
 					<View style={[manageVolunteer.title]}>
-						<Text style={[txt.noto24]}>{isShelterUser ? '지난 신청서' : '지난 신청'}</Text>
+						<Text style={[txt.noto26]}>{isShelterUser ? '지난 신청서' : '지난 신청내역'}</Text>
 					</View>
 					<View style={[showMoreHistory ? manageVolunteer.previous_volunteerList_expanded : manageVolunteer.previous_volunteerList]}>
 						<VolunteerItemList
-							items={doneList}
+							items={showMoreHistory ? doneList : doneList.slice(0, 3)}
 							type={'done'}
 							isShelterUser={isShelterUser}
 							onClickLabel={onClickLabel}

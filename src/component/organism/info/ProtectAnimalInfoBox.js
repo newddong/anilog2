@@ -43,32 +43,38 @@ const ProtectAnimalInfoBox = props => {
 					<></>
 				)}
 				<View style={[styles.rescueSummary_insideItem]}>
-					<Text style={[txt.noto24, styles.rescueSummary_insideItem_category]}>분류</Text>
-					<Text style={[txt.noto28, styles.rescueSummary_insideItem_content]}>
-						{data.protect_animal_id ? data.protect_animal_id.protect_animal_species : ''}
-					</Text>
-					<Text style={[txt.noto24, styles.rescueSummary_insideItem_category]}>품종</Text>
-					<Text style={[txt.noto28, styles.rescueSummary_insideItem_content]}>
-						{data.protect_animal_id ? data.protect_animal_id.protect_animal_species_detail : ''}
-					</Text>
-					<Text style={[txt.noto24, animalProtectRequestDetail_style.rescueSummary_insideItem_category]}>성별</Text>
+					<View style={{flexDirection: 'row', alignItems: 'center', width: 490 * DP}}>
+						<Text style={[txt.noto24, styles.rescueSummary_insideItem_category]}>분류</Text>
+						<Text style={[txt.noto28, styles.rescueSummary_insideItem_content]}>
+							{data.protect_animal_id ? data.protect_animal_id.protect_animal_species : ''}
+						</Text>
+						<Text style={[txt.noto24, styles.rescueSummary_insideItem_category]}>품종</Text>
+						<Text style={[txt.noto28, styles.rescueSummary_insideItem_content, {}]}>
+							{data.protect_animal_id ? data.protect_animal_id.protect_animal_species_detail : ''}
+						</Text>
+					</View>
+					<Text style={[txt.noto24, animalProtectRequestDetail_style.rescueSummary_insideItem_category, {}]}>성별</Text>
 					<Text style={[txt.noto28, styles.rescueSummary_insideItem_content]}>
 						{data.protect_animal_id ? (data.protect_animal_id.protect_animal_sex == 'male' ? '수컷' : '암컷') : ''}
 					</Text>
 				</View>
-				<View style={[styles.rescueSummary_insideItem]}>
-					<Text style={[txt.noto24, styles.rescueSummary_insideItem_category]}>예상연령</Text>
-					<Text style={[txt.noto28, styles.rescueSummary_insideItem_content]}>
-						{data.protect_animal_id ? data.protect_animal_id.protect_animal_estimate_age : ''}
-					</Text>
-					<Text style={[txt.noto24, styles.rescueSummary_insideItem_category]}>체중</Text>
-					<Text style={[txt.noto28, styles.rescueSummary_insideItem_content]}>
-						{data.protect_animal_id ? data.protect_animal_id.protect_animal_weight : ''} kg
-					</Text>
-					<Text style={[txt.noto24, styles.rescueSummary_insideItem_category]}>중성화</Text>
-					<Text style={[txt.noto28, styles.rescueSummary_insideItem_content]}>
-						{data.protect_animal_id ? (data.protect_animal_id.protect_animal_neutralization == 'yes' ? 'O' : 'X') : ''}
-					</Text>
+				<View style={[styles.rescueSummary_insideItem, {justifyContent: 'space-between'}]}>
+					<View style={{flexDirection: 'row', alignItems: 'center', width: 490 * DP}}>
+						<Text style={[txt.noto24, styles.rescueSummary_insideItem_category]}>예상연령</Text>
+						<Text style={[txt.noto28, styles.rescueSummary_insideItem_content]}>
+							{data.protect_animal_id ? data.protect_animal_id.protect_animal_estimate_age : ''}
+						</Text>
+						<Text style={[txt.noto24, styles.rescueSummary_insideItem_category]}>체중</Text>
+						<Text style={[txt.noto28, styles.rescueSummary_insideItem_content]}>
+							{data.protect_animal_id ? data.protect_animal_id.protect_animal_weight : ''} kg
+						</Text>
+					</View>
+					<View style={{flexDirection: 'row', alignItems: 'center'}}>
+						<Text style={[txt.noto24, styles.rescueSummary_insideItem_category, {}]}>중성화</Text>
+						<Text style={[txt.noto28, styles.rescueSummary_insideItem_content]}>
+							{data.protect_animal_id ? (data.protect_animal_id.protect_animal_neutralization == 'yes' ? 'O' : 'X') : ''}
+						</Text>
+					</View>
 				</View>
 				<View style={[styles.rescueSummary_insideItem]}>
 					<Text style={[txt.noto24, styles.rescueSummary_insideItem_category]}>발견장소</Text>

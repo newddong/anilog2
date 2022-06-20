@@ -22,7 +22,6 @@ export default ApplyCompanionB = props => {
 		...props.route.params,
 		protect_act_companion_history: [],
 	});
-	console.log('data', data);
 	const isProtect = props.route.name == 'ApplyProtectActivityB';
 	const [isTempDataAdded, setIsTempDataAdded] = React.useState(false);
 	const [companionList, setCompanionList] = React.useState([]);
@@ -114,18 +113,19 @@ export default ApplyCompanionB = props => {
 	};
 
 	//itemIndex번째 반려동물의 '반려생활 상태' 선택 콜백, value에는 선택한 item의 String , selectedIndex에는 선택한 Item의 Index가 담겨있음
-	const onSelectStatus = (value, selectedIndex, itemIndex) => {
+	const onSelectStatus = (value, itemIndex) => {
 		console.log('va', value);
 		let copy = [...companionList];
 		let status = () => {
-			if (selectedIndex == 0) {
+			if (value == COMPANION_STATUS[0]) {
 				return 'living';
-			} else if (selectedIndex == 1) {
+			} else if (value == COMPANION_STATUS[1]) {
 				return 'adopted';
-			} else if (selectedIndex == 2) {
+			} else if (value == COMPANION_STATUS[2]) {
 				return 'died';
 			}
 		};
+
 		copy[itemIndex] = {
 			...copy[itemIndex],
 			companion_pet_current_status: status(),
@@ -142,7 +142,7 @@ export default ApplyCompanionB = props => {
 
 	//다음버튼 클릭
 	const goToNextStep = () => {
-		console.log('data', data.protect_act_companion_history);
+		console.log('protect_act_companion_history', data.protect_act_companion_history);
 		const isSelectedCompanionKind = !data.protect_act_companion_history.some(e => e.companion_pet_species == '동물종류');
 		// console.log('isSelectedCompanionKind', isSelectedCompanionKind);
 		if (isSelectedCompanionKind) {
@@ -197,10 +197,10 @@ export default ApplyCompanionB = props => {
 						<View style={[btn_style.btn_w176, applyCompanionC.btn_w176]}>
 							<AniButton btnStyle={'border'} btnLayout={btn_w176} btnTitle={'뒤로'} onPress={() => navigation.goBack()} />
 						</View>
-						<View style={[btn_style.btn_w176, applyCompanionC.btn_w176]}>
+						{/* <View style={[btn_style.btn_w176, applyCompanionC.btn_w176]}>
 							<AniButton btnStyle={'border'} btnLayout={btn_w176} btnTitle={'임시저장'} onPress={tempSave} />
-						</View>
-						<View style={[btn_style.btn_w176, applyCompanionC.btn_w176]}>
+						</View> */}
+						<View style={[btn_style.btn_w176]}>
 							<AniButton btnLayout={btn_w176} btnTitle={'다음'} onPress={goToNextStep} />
 						</View>
 					</View>

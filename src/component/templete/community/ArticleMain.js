@@ -2,10 +2,10 @@ import React from 'react';
 import {ActivityIndicator, FlatList, Image, RefreshControl, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import {APRI10, BLACK, GRAY10, GRAY20, GRAY40} from 'Root/config/color';
-import {Arrow48, Arrow48_GRAY, Check50, EmptyIcon, Rect50_Border, WriteBoard} from 'Atom/icon';
+import {Arrow48, Arrow48_GRAY, Check42, Check50, EmptyIcon, Rect42_Border, Rect50_Border, WriteBoard} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
 import {useNavigation} from '@react-navigation/core';
-import {getCommunityList, getCommunityListFreeByPageNumber} from 'Root/api/community';
+import {getCommunityListFreeByPageNumber} from 'Root/api/community';
 import Modal from 'Root/component/modal/Modal';
 import Loading from 'Root/component/molecules/modal/Loading';
 import userGlobalObject from 'Root/config/userGlobalObject';
@@ -24,7 +24,7 @@ export default ArticleMain = ({route}) => {
 	const [total, setTotal] = React.useState();
 
 	React.useEffect(() => {
-		fetchData(1);
+		fetchData(1); // 1페이지 호출
 	}, []);
 
 	//리프레싱 시도(페이지 상단으로 스크롤) => 데이터 최신화 및 페이징 초기화
@@ -35,6 +35,7 @@ export default ArticleMain = ({route}) => {
 		}
 	}, [refreshing]);
 
+	//페이지 호출 함수
 	const fetchData = (page, category) => {
 		let params = {
 			limit: FREE_LIMIT, //50
@@ -85,6 +86,7 @@ export default ArticleMain = ({route}) => {
 		}
 	};
 
+	//잡담, 질문, 모임 필터 클릭 콜백 함수
 	const onPressFilter = category => {
 		let temp = [...type];
 		switch (category) {
@@ -130,18 +132,18 @@ export default ArticleMain = ({route}) => {
 		return (
 			<View style={{width: 694 * DP, alignSelf: 'center'}}>
 				<View style={[style.kindFilter]}>
-					<View style={[style.kindFilterItem]}>
-						{type.includes('talk') ? <Check50 onPress={() => onPressFilter('잡담')} /> : <Rect50_Border onPress={() => onPressFilter('잡담')} />}
+					<TouchableOpacity activeOpacity={0.8} onPress={() => onPressFilter('잡담')} style={[style.kindFilterItem]}>
+						{type.includes('talk') ? <Check42 /> : <Rect42_Border />}
 						<Text style={[txt.noto28, {marginLeft: 6 * DP}]}> 잡담</Text>
-					</View>
-					<View style={[style.kindFilterItem]}>
-						{type.includes('question') ? <Check50 onPress={() => onPressFilter('질문')} /> : <Rect50_Border onPress={() => onPressFilter('질문')} />}
+					</TouchableOpacity>
+					<TouchableOpacity activeOpacity={0.8} onPress={() => onPressFilter('질문')} style={[style.kindFilterItem]}>
+						{type.includes('question') ? <Check42 /> : <Rect42_Border />}
 						<Text style={[txt.noto28, {marginLeft: 6 * DP}]}> 질문</Text>
-					</View>
-					<View style={[style.kindFilterItem]}>
-						{type.includes('meeting') ? <Check50 onPress={() => onPressFilter('모임')} /> : <Rect50_Border onPress={() => onPressFilter('모임')} />}
+					</TouchableOpacity>
+					<TouchableOpacity activeOpacity={0.8} onPress={() => onPressFilter('모임')} style={[style.kindFilterItem]}>
+						{type.includes('meeting') ? <Check42 /> : <Rect42_Border />}
 						<Text style={[txt.noto28, {marginLeft: 6 * DP}]}> 모임</Text>
-					</View>
+					</TouchableOpacity>
 				</View>
 			</View>
 		);

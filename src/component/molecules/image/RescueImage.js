@@ -53,7 +53,7 @@ const RescueImage = props => {
 		} else if (props.status == 'complete') {
 			return (
 				<View style={[style.rainbow, styles.img_square_round_694, {justifyContent: 'center', alignItems: 'center'}]}>
-					<Text style={[txt.noto36, {color: WHITE}]}>인도 완료</Text>
+					<Text style={[txt.noto36, {color: WHITE}]}>입양 완료</Text>
 				</View>
 			);
 		} else {

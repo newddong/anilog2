@@ -3,17 +3,7 @@ import {ScrollView, Text, TouchableOpacity, View, TextInput, Platform, StatusBar
 import {APRI10, WHITE, GRAY20, GRAY10, GRAY40, BLACK, MAINBLACK, GRAY50, GRAY30} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP, {isNotch} from 'Root/config/dp';
-import {
-	Camera54,
-	Location54,
-	Location54_APRI10,
-	Location54_Filled,
-	LocationGray,
-	LocationMarker,
-	NextMark,
-	NextMark_APRI,
-	Save54,
-} from 'Root/component/atom/icon/index';
+import {Camera54, Location54, LocationGray, LocationMarker, NextMark} from 'Root/component/atom/icon/index';
 import Modal from 'Component/modal/Modal';
 import {useNavigation} from '@react-navigation/native';
 import {changeLocalPathToS3Path} from 'Root/api/community';
@@ -59,7 +49,7 @@ export default CommunityEdit = props => {
 
 	React.useEffect(() => {
 		const param = props.route.params;
-		if (param?.data && data.community_address.region.latitude != param?.data.community_address.region.latitude) {
+		if (param?.data && data.community_address && data.community_address.region.latitude != param?.data.community_address.region.latitude) {
 			console.log('Address ss ', param.data);
 			//다른 주소 검색 결과값 적용
 			setData(param.data);
@@ -196,6 +186,7 @@ export default CommunityEdit = props => {
 	};
 
 	const isInterestsEmpty =
+		data.community_interests &&
 		data.community_interests.interests_etc.length == 0 &&
 		data.community_interests.interests_hospital.length == 0 &&
 		data.community_interests.interests_interior == 0 &&
@@ -496,7 +487,7 @@ export default CommunityEdit = props => {
 					</View>
 					<TouchableOpacity activeOpacity={1} onPress={removeEditor} style={{width: 48 * DP}}></TouchableOpacity>
 				</View>
-				{data.community_address.normal_address.address_name != '' ? getMap() : <></>}
+				{data.community_address && data.community_address.normal_address.address_name != '' ? getMap() : <></>}
 				{/* 하단 버튼 컴포넌트  */}
 				{isReview ? (
 					<View style={[style.animalFilter_container]}>

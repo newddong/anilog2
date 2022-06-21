@@ -17,13 +17,13 @@ import FastImage from 'react-native-fast-image';
  * @param {()=>void)} props.onPressReqeustPhoto - 보호 게시글 이미지 클릭시
  */
 const RescueImage = props => {
-	// console.log('props / RescueImage', props.status);
+	console.log('props / RescueImage', props.status);
 	const getStatusText = () => {
 		switch (props.status) {
 			case 'rescue':
 				return RESCUE;
-			case 'found':
-				return '주인 찾음';
+			case 'found': //
+				return '';
 			case 'complete':
 				return ADOPT;
 			case 'discuss':
@@ -48,6 +48,7 @@ const RescueImage = props => {
 			return (
 				<View style={[style.rainbow, styles.img_square_round_694]}>
 					<RainbowBridge />
+					<Text style={[txt.noto36, {color: WHITE, marginTop: 20 * DP}]}>자연사</Text>
 				</View>
 			);
 		} else if (props.status == 'complete') {
@@ -56,8 +57,12 @@ const RescueImage = props => {
 					<Text style={[txt.noto36, {color: WHITE}]}>입양 완료</Text>
 				</View>
 			);
-		} else {
-			return <></>;
+		} else if (props.status == 'found') {
+			return (
+				<View style={[style.rainbow, styles.img_square_round_694, {justifyContent: 'center', alignItems: 'center'}]}>
+					<Text style={[txt.noto36, {color: WHITE}]}>주인 찾음</Text>
+				</View>
+			);
 		}
 	};
 

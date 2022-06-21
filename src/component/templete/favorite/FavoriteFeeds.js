@@ -5,7 +5,14 @@ import SelectStat from 'Organism/list/SelectStat';
 import {login_style, temp_style, selectstat_view_style} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
 import {CONFIRM_DELETE_FAVORITE_FEED, CONFIRM_DELETE_MY_FEED, CONFIRM_DELETE_TAG_ME_FEED, NETWORK_ERROR, THUMNAIL_LIMIT} from 'Root/i18n/msg';
-import {getFeedListByUserId, getFavoriteFeedListByUserId, getUserTaggedFeedList, favoriteFeed, deleteFeed} from 'Root/api/feedapi';
+import {
+	getFeedListByUserId,
+	getFavoriteFeedListByUserId,
+	getUserTaggedFeedList,
+	favoriteFeed,
+	deleteFeed,
+	updateUserTagDisplay,
+} from 'Root/api/feedapi';
 import {getUserProfile} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Loading from 'Root/component/molecules/modal/Loading';
@@ -17,6 +24,7 @@ import DP from 'Root/config/dp';
 export default FavoriteFeeds = ({route, navigation}) => {
 	const [selectMode, setSelectMode] = React.useState(false);
 	const [data, setData] = React.useState('false');
+	const [tagObject, setTagObject] = React.useState();
 	const [total, setTotal] = React.useState();
 	const [init, setInit] = React.useState(true);
 	const [selectCNT, setSelectCNT] = React.useState(0);
@@ -61,7 +69,9 @@ export default FavoriteFeeds = ({route, navigation}) => {
 		if (route.name == 'FavoriteFeeds') {
 			res = result.msg.map(v => v.favorite_feed_id);
 		} else if (route.name == 'TagMeFeeds') {
+			// console.log('result', result.msg[0]);
 			res = result.msg.map(v => v.usertag_feed_id);
+			setTagObject(result.msg.map(v => v._id));
 		}
 		// console.log('result', result);
 		if (data != 'false') {
@@ -147,10 +157,8 @@ export default FavoriteFeeds = ({route, navigation}) => {
 		} else {
 			console.log('삭제시작');
 			const doDelete = () => {
-				console.log('route name', route.name);
 				let copy = [...data];
 				copy = copy.filter(element => element.checkBoxState == true); //CheckBoxState가 true인 경우엔 걸러진다
-				console.log('copy', copy);
 				switch (route.name) {
 					case 'UserFeeds':
 						for (const element of copy) {
@@ -172,7 +180,32 @@ export default FavoriteFeeds = ({route, navigation}) => {
 						doDeltedFavorite(copy);
 						break;
 					case 'TagMeFeeds':
-						console.log('Tagme Delete');
+						console.log('copy', copy.length);
+						let deleteTemp = [];
+						data.map((v, i) => {
+							if (v.checkBoxState) {
+								deleteTemp.push(i);
+							}
+						});
+						console.log('deleteTemp', deleteTemp);
+						for (const element of deleteTemp) {
+							// console.log('element._id', element);
+							updateUserTagDisplay(
+								{
+									feed_user_tag_object_id: tagObject[element],
+									is_display: false,
+								},
+								result => {
+									console.log('result / updateUserTagDisplay ', result.msg);
+									let difference = data.filter(x => !copy.includes(x));
+									setData(difference);
+								},
+								err => {
+									console.log('err / updateUserTagDisplay ', err);
+								},
+							);
+						}
+
 						break;
 				}
 

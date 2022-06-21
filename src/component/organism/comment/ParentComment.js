@@ -15,6 +15,7 @@ import {createReport} from 'Root/api/report';
 import DP from 'Root/config/dp';
 import FastImage from 'react-native-fast-image';
 import {useNavigation} from '@react-navigation/core';
+import {count_to_K} from 'Root/util/stringutil';
 
 /**
  * 부모 댓글
@@ -299,37 +300,37 @@ export default ParentComment = React.memo((props, ref) => {
 			{isNotAuthorized() || data.comment_is_delete ? (
 				<></>
 			) : (
-				<View style={[style.likeReplyButton]}>
+				<View style={[style.likeReplyButton, {backgroundColor: 'white'}]}>
 					{isMyComment ? (
-						<View style={{flexDirection: 'row', marginBottom: 6 * DP}}>
-							<TouchableOpacity onPress={onDelete} style={[{flexDirection: 'row'}]}>
-								<Text style={[txt.noto22, {color: GRAY10}]}> 삭제 · </Text>
+						<View style={{flexDirection: 'row'}}>
+							<TouchableOpacity onPress={onDelete} style={[{}]}>
+								<Text style={[txt.noto24, {color: GRAY10}]}> 삭제 · </Text>
 							</TouchableOpacity>
-							<TouchableOpacity onPress={() => onEdit(props.parentComment)} style={[{flexDirection: 'row'}]}>
-								<Text style={[txt.noto22, {color: GRAY10}]}> 수정 · </Text>
+							<TouchableOpacity onPress={() => onEdit(props.parentComment)} style={[{}]}>
+								<Text style={[txt.noto24, {color: GRAY10}]}> 수정 · </Text>
 							</TouchableOpacity>
 						</View>
 					) : (
 						<TouchableOpacity onPress={reportComment} style={[{flexDirection: 'row', alignItems: 'center'}]}>
 							<Report30 />
-							<Text style={[txt.noto22, {color: GRAY10}]}> 신고 · </Text>
+							<Text style={[txt.noto24, {color: GRAY10}]}> 신고 · </Text>
 						</TouchableOpacity>
 					)}
 					{/* Data - 좋아요 상태 t/f */}
 					<View style={[style.heart30, {}]}>{likeState ? <Heart30_Filled onPress={onCLickHeart} /> : <Heart30_Border onPress={onCLickHeart} />}</View>
-					<View style={[style.likeCount, {marginBottom: 6 * DP}]}>
+					<View style={[style.likeCount, {}]}>
 						{/* Data - 좋아요 숫자 */}
-						<Text style={(txt.roboto24, style.likeCountText)}>{likeCount}</Text>
+						<Text style={(txt.roboto24, style.likeCountText)}>{count_to_K(likeCount)} </Text>
 					</View>
-					<TouchableOpacity style={[style.writeComment, {marginBottom: 6 * DP}]} onPress={onPressReplyBtn}>
-						<Text style={[txt.noto22, style.writeCommentText]}>· 답글 쓰기</Text>
+					<TouchableOpacity style={[style.writeComment, {}]} onPress={onPressReplyBtn}>
+						<Text style={[txt.noto24, style.writeCommentText]}>· 답글 쓰기</Text>
 					</TouchableOpacity>
 				</View>
 			)}
 			{/* {data.children_count > 0 && <Text style={[txt.noto24, {color: GRAY10}]}> 답글{data.children_count}개 보기 </Text>} */}
 			{childrenCount > 0 && (
 				<TouchableOpacity onPress={showChildComment} style={[style.showChildComment]}>
-					<Text style={[txt.noto22, {color: GRAY10}]}> 답글 {childrenCount}개 보기 </Text>
+					<Text style={[txt.noto24, {color: GRAY10}]}> 답글 {childrenCount}개 보기 </Text>
 					<Arrow_Down_GRAY10 />
 				</TouchableOpacity>
 			)}
@@ -383,6 +384,7 @@ const style = StyleSheet.create({
 	},
 	likeReplyButton: {
 		width: 614 * DP,
+		height: 34 * DP,
 		marginTop: 5 * DP,
 		paddingHorizontal: 5 * DP,
 		flexDirection: 'row',
@@ -403,7 +405,7 @@ const style = StyleSheet.create({
 		height: 30 * DP,
 	},
 	likeCount: {
-		width: 30 * DP,
+		// width: 30 * DP,
 		height: 30 * DP,
 		marginLeft: 6 * DP,
 	},
@@ -416,6 +418,7 @@ const style = StyleSheet.create({
 	writeComment: {
 		// width: 130 * DP,
 		height: 34 * DP,
+		marginLeft: 10 * DP,
 	},
 	writeCommentText: {
 		color: GRAY10,

@@ -98,7 +98,19 @@ RCT_EXPORT_METHOD(present:(nonnull NSURLRequest *)request
   // TODO: Handle React Native URLs from camera roll.
   [VESDK setLocalizationDictionary:@{
     @"ko": @{
-      @"pesdk_trim_title_name":@"자르기"
+      @"pesdk_trim_title_name":@"동영상 자르기",
+      @"pesdk_editor_title_name":@"동영상 편집",
+      @"pesdk_editor_title_discardChangesAlert":@"변경사항을 취소하시겠습니까?",
+      @"pesdk_editor_text_discardChangesAlert":@"편집한 내용이 사라집니다.",
+      @"pesdk_editor_button_discardChanges":@"확인",
+      @"pesdk_camera_accessibility_cancelButtonLabel":@"취소",
+      @"pesdk_common_button_cancel":@"취소",
+      @"pesdk_trim_label_maximumDurationLimitReached":@"최대 길이입니다",
+      @"pesdk_trim_label_minimumDurationLimitReached":@"최소 길이입니다",
+      @"pesdk_trim_button_videoTooShortConfirmation":@"확인",
+      @"pesdk_trim_label_minimumDurationLimitNotReachableVideoTooShort":@"설정한 길이가 짧습니다",
+      @"pesdk_editor_title_exportingVideoSpinner":@"동영상을 추출중입니다"
+      
     }
   }];
   if (request.URL.isFileURL) {
@@ -119,11 +131,23 @@ RCT_EXPORT_METHOD(presentComposition:(nonnull RN_IMGLY_URLRequestArray *)request
                   reject:(RCTPromiseRejectBlock)reject)
 {
     NSMutableArray<AVAsset *> *assets = [NSMutableArray new];
-    [VESDK setLocalizationDictionary:@{
-      @"ko": @{
-        @"pesdk_trim_title_name":@"자르기"
-      }
-    }];
+  [VESDK setLocalizationDictionary:@{
+    @"ko": @{
+      @"pesdk_trim_title_name":@"동영상 자르기",
+      @"pesdk_editor_title_name":@"동영상 편집",
+      @"pesdk_editor_title_discardChangesAlert":@"변경사항을 취소하시겠습니까?",
+      @"pesdk_editor_text_discardChangesAlert":@"편집한 내용이 사라집니다.",
+      @"pesdk_editor_button_discardChanges":@"확인",
+      @"pesdk_camera_accessibility_cancelButtonLabel":@"취소",
+      @"pesdk_common_button_cancel":@"취소",
+      @"pesdk_trim_label_maximumDurationLimitReached":@"최대 길이입니다",
+      @"pesdk_trim_label_minimumDurationLimitReached":@"최소 길이입니다",
+      @"pesdk_trim_button_videoTooShortConfirmation":@"확인",
+      @"pesdk_trim_label_minimumDurationLimitNotReachableVideoTooShort":@"설정한 길이가 짧습니다",
+      @"pesdk_editor_title_exportingVideoSpinner":@"동영상을 추출중입니다"
+      
+    }
+  }];
     if (requests.count > 0) {
         for (NSURLRequest *request in requests) {
             if (request.URL.isFileURL) {

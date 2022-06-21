@@ -158,7 +158,7 @@ export default PhoneNumVerification = props => {
 					width={492}
 					items={mobile_carrier}
 					delimiter="|"
-					placeholder={"핸드폰 번호를 입력해주세요 ('-'제외)"}
+					placeholder={'핸드폰 번호를 입력해주세요 (-제외)'}
 					onChange={onPhoneNumberInputChange}
 					onSelectDropDown={onMobileCompanyInputChange}
 					onValid={onValidMobileNum}

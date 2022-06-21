@@ -248,46 +248,47 @@ export default UserMenu = props => {
 						</View> */}
 						</View>
 					</View>
-				
 
-				{/* 하단 메뉴 */}
-				<View style={[temp_style.userMenu_step2, userMenu_style.horizontalLine]}>
-					<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
+					{/* 하단 메뉴 */}
+					<View style={[temp_style.userMenu_step2, userMenu_style.horizontalLine]}>
+						<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
+							<View>
+								<ProfileMenu
+									menuTitle={FAVORITES}
+									menuItems={[
+										[FRIENDS, PROTECTION_REQUEST],
+										[PEED_CONTENTS, COMUNITY],
+									]}
+									onClick={menuClick}
+									titleIcon={<FavoriteTag48_Border />}
+								/>
+							</View>
+						</View>
+						<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
+							<View>
+								<ProfileMenu
+									menuTitle={MY_ACTIVITY_IN_SHELTER}
+									menuItems={[
+										[MY_CONTENTS, TAGED_CONTENTS_FOR_ME],
+										[APPLICATION_HISTORY, ANIMAL_PROTECTION_STATE],
+										['커뮤니티 ', NOTE_LIST],
+									]}
+									onClick={menuClick}
+									titleIcon={<Paw46_border />}
+								/>
+							</View>
+						</View>
 						<View>
-							<ProfileMenu
-								menuTitle={FAVORITES}
-								menuItems={[
-									[FRIENDS, PROTECTION_REQUEST],
-									[PEED_CONTENTS, COMUNITY],
-								]}
-								onClick={menuClick}
-								titleIcon={<FavoriteTag48_Border />}
-							/>
+							<View>
+								<ProfileMenu
+									menuTitle={SETTING}
+									menuItems={[[APPSETTING, ACCOUNT], [INFO_QUESTION]]}
+									onClick={menuClick}
+									titleIcon={<Setting46_border />}
+								/>
+							</View>
 						</View>
 					</View>
-					<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
-						<View>
-							<ProfileMenu
-								menuTitle={MY_ACTIVITY_IN_SHELTER}
-								menuItems={[
-									[MY_CONTENTS, TAGED_CONTENTS_FOR_ME],
-									[APPLICATION_HISTORY, ANIMAL_PROTECTION_STATE],
-									['커뮤니티 ', NOTE_LIST],
-								]}
-								onClick={menuClick}
-								titleIcon={<Paw46_border />}
-							/>
-						</View>
-						<View>
-							<ProfileMenu
-								menuTitle={SETTING}
-								menuItems={[[APPSETTING, ACCOUNT], [INFO_QUESTION]]}
-								onClick={menuClick}
-								titleIcon={<Setting46_border />}
-							/>
-						</View>
-					</View>
-				</View>
 				</View>
 			</ScrollView>
 		);

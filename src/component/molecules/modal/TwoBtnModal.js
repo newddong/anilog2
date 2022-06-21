@@ -75,7 +75,7 @@ const style = StyleSheet.create({
 	},
 	msg: {
 		marginBottom: 30 * DP,
-		color: GRAY10,
+		// color: GRAY10,
 		textAlign: 'center',
 	},
 	buttonContainer: {

@@ -246,3 +246,15 @@ export async function editMissingReport(params, callback, errcallback) {
 export async function deleteFeed(params, callback, errcallback) {
 	apiController('/feed/deleteFeed', arguments);
 }
+
+/**
+ * 태그된 피드 디스플레이 설정/취소
+ * @param {object} params
+ * @param {string} params.feed_user_tag_object_id - 태그된 게시물의 feed_user_tag_object_id (feed의 _id가 아님!)
+ * @param {boolean} params.is_display - 태그된 피드 디스플레이 설정 true, 않보이도록 설정 false (default 값은 true임)
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function updateUserTagDisplay(params, callback, errcallback) {
+	apiController('/feed/updateUserTagDisplay', arguments);
+}

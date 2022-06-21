@@ -12,6 +12,8 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		24DD834A9C1C42FE9FE332C9 /* NotoSansKR-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0A068D045B4047B2B4373AC9 /* NotoSansKR-Bold.otf */; };
+		2A31945F28615C46008D24D4 /* RNVideoEditorSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A31945B28615C46008D24D4 /* RNVideoEditorSDK.m */; };
+		2A31946028615C46008D24D4 /* RNImglyKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A31945E28615C46008D24D4 /* RNImglyKit.m */; };
 		2A5FA76C284F0F4C0059B4FC /* libSDWebImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A5FA76B284F0F4C0059B4FC /* libSDWebImage.a */; };
 		2A5FA76E284F0F520059B4FC /* libSDWebImageWebPCoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A5FA76D284F0F520059B4FC /* libSDWebImageWebPCoder.a */; };
 		2A5FA770284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A5FA76F284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a */; };
@@ -61,6 +63,12 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = anilog/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = anilog/main.m; sourceTree = "<group>"; };
 		260C0AB6EC0CEFE917F43DCA /* Pods-anilog-anilogTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-anilog-anilogTests.debug.xcconfig"; path = "Target Support Files/Pods-anilog-anilogTests/Pods-anilog-anilogTests.debug.xcconfig"; sourceTree = "<group>"; };
+		2A31945928615C46008D24D4 /* RNImglyKitSubclass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNImglyKitSubclass.h; path = anilog/RNImglyKitSubclass.h; sourceTree = "<group>"; };
+		2A31945A28615C46008D24D4 /* RNVideoEditorSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNVideoEditorSDK.h; path = anilog/RNVideoEditorSDK.h; sourceTree = "<group>"; };
+		2A31945B28615C46008D24D4 /* RNVideoEditorSDK.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNVideoEditorSDK.m; path = anilog/RNVideoEditorSDK.m; sourceTree = "<group>"; };
+		2A31945C28615C46008D24D4 /* RNImgly.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNImgly.h; path = anilog/RNImgly.h; sourceTree = "<group>"; };
+		2A31945D28615C46008D24D4 /* RNImglyKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNImglyKit.h; path = anilog/RNImglyKit.h; sourceTree = "<group>"; };
+		2A31945E28615C46008D24D4 /* RNImglyKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNImglyKit.m; path = anilog/RNImglyKit.m; sourceTree = "<group>"; };
 		2A5FA76B284F0F4C0059B4FC /* libSDWebImage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; name = libSDWebImage.a; path = SDWebImage/libSDWebImage.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A5FA76D284F0F520059B4FC /* libSDWebImageWebPCoder.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; name = libSDWebImageWebPCoder.a; path = SDWebImageWebPCoder/libSDWebImageWebPCoder.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A5FA76F284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; name = libSDWebImagePhotosPlugin.a; path = SDWebImagePhotosPlugin/libSDWebImagePhotosPlugin.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -136,6 +144,12 @@
 		13B07FAE1A68108700A75B9A /* anilog */ = {
 			isa = PBXGroup;
 			children = (
+				2A31945C28615C46008D24D4 /* RNImgly.h */,
+				2A31945D28615C46008D24D4 /* RNImglyKit.h */,
+				2A31945E28615C46008D24D4 /* RNImglyKit.m */,
+				2A31945928615C46008D24D4 /* RNImglyKitSubclass.h */,
+				2A31945A28615C46008D24D4 /* RNVideoEditorSDK.h */,
+				2A31945B28615C46008D24D4 /* RNVideoEditorSDK.m */,
 				BA0CE03B2852200D00E45F0D /* en.lproj */,
 				BA0CE0352852091A00E45F0D /* ko.lproj */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -531,6 +545,8 @@
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				BA879FE628141CB00052E1E1 /* RNCAssetsLibraryRequestHandler.m in Sources */,
 				BA879FE528141CB00052E1E1 /* RNCPermissionHandler.m in Sources */,
+				2A31945F28615C46008D24D4 /* RNVideoEditorSDK.m in Sources */,
+				2A31946028615C46008D24D4 /* RNImglyKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

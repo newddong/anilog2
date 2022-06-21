@@ -19,6 +19,7 @@ import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import com.microsoft.codepush.react.CodePush;
+import com.brentvatne.react.ReactVideoPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -39,6 +40,7 @@ public class MainApplication extends Application implements ReactApplication {
             packages.add(new PhotoListPackage());
             packages.add(new TextMeasurePackage());
             packages.add(new OpenExternalURLPackage());
+            packages.add(new ReactVideoPackage());
           return packages;
         }
 

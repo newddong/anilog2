@@ -137,6 +137,10 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     splits {
         abi {
             reset()
@@ -241,3 +245,51 @@ task copyDownloadableDepsToLibs(type: Copy) {
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
 //apply from: "../../node_modules/react-native/react.gradle"
 apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
+
+//apply plugin: 'com.android.library'
+// Apply the IMGLYPlugin
+apply plugin: 'ly.img.android.sdk'
+// Apply Kotlin Plugin
+apply plugin: 'kotlin-android'
+
+// Configure the img.ly plugin
+imglyConfig {
+
+    vesdk {
+        enabled true
+    }
+
+    // Define the modules you are need
+    modules {
+        // Add all the UI modules you are need
+        include 'ui:video-trim'
+        // Add the serializer if you need
+        include 'backend:serializer'
+
+    }
+}
+
+def MIN_LY_IMG_ANDROID_SDK_PLUGIN_VERSION = "10.1.1"
+
+
+task checkVersion {
+    if (imglyConfig.convertToVersionNumber(imglyConfig.getVersion()) < imglyConfig.convertToVersionNumber(MIN_LY_IMG_ANDROID_SDK_PLUGIN_VERSION)) {
+        String WRONG_VERSION = "" +
+                "┌───────────────────────────────────────────────────────────────────────┐\n"+
+                "│ VideoEditor SDK update required!                                      │\n"+
+                "│ Please update the plugin version in your 'android/build.gradle' file. │\n"+
+                "│ Minimum required dependency: 'ly.img.android.sdk:plugin:${MIN_LY_IMG_ANDROID_SDK_PLUGIN_VERSION}'        │\n"+
+                "│ Your are currently using:    'ly.img.android.sdk:plugin:${imglyConfig.getVersion()}'        │\n"+
+                "└───────────────────────────────────────────────────────────────────────┘\n"
+
+        throw new GradleScriptException(WRONG_VERSION, new IllegalArgumentException(WRONG_VERSION))
+    }
+}
+
+
+preBuild.dependsOn checkVersion
+
+
+dependencies {
+    compileOnly "ly.img.android.sdk:serializer:$imglyConfig.version"
+}

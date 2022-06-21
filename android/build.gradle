@@ -2,11 +2,11 @@
 
 buildscript {
     ext {
-        buildToolsVersion = "31.0.0"
-//        buildToolsVersion = "30.0.2"
+//        buildToolsVersion = "31.0.0"
+        buildToolsVersion = "30.0.2"
         minSdkVersion = 21
-        compileSdkVersion = 31
-//        compileSdkVersion = 30
+//        compileSdkVersion = 31
+        compileSdkVersion = 30
         targetSdkVersion = 30
         ndkVersion = "21.4.7075529"
         playServicesVersion = "17.0.0" // # 22.03.15 구글 맵스 활용을 위한 추가 (KSW)
@@ -47,7 +47,7 @@ allprojects {
         }
         google()
         maven { url 'https://www.jitpack.io' }
-        maven{url  'https://artifactory.img.ly/artifactory/imgly'}
+        maven {url  'https://artifactory.img.ly/artifactory/imgly'}
 
         jcenter()
     }

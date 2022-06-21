@@ -72,27 +72,30 @@ const AddressInput = props => {
 			)}
 
 			<View style={[styles.upperContainer]}>
-				<View style={[styles.input24A, {flexDirection: 'row'}]}>
-					<Input24
-						value={props.address}
-						editable={false}
-						width={622}
-						height={104}
-						placeholder={'주소 찾기를 눌러주세요'}
-						onChange={onChangeAddress}
-						descriptionType={'star'}
-						showCrossMark={false}
-						defaultValue={props.address}
-					/>
+				<TouchableOpacity onPress={onPressSearchAddr}>
+					<View style={[styles.input24A, {flexDirection: 'row'}]}>
+						<Input24
+							value={props.address}
+							editable={false}
+							width={622}
+							height={104}
+							placeholder={'주소 찾기를 눌러주세요'}
+							onChange={onChangeAddress}
+							descriptionType={'star'}
+							showCrossMark={false}
+							defaultValue={props.address}
+							pointerEvents={'none'}
+						/>
 
-					<View style={[{marginTop: 28 * DP}, {marginLeft: 24 * DP}]}>
-						{/* <AniButton btnTitle={'주소 찾기'} btnLayout={btn_w176} btnStyle={'border'} onPress={onPressSearchAddr} /> */}
+						<View style={[{marginTop: 28 * DP}, {marginLeft: 24 * DP}]}>
+							{/* <AniButton btnTitle={'주소 찾기'} btnLayout={btn_w176} btnStyle={'border'} onPress={onPressSearchAddr} /> */}
 
-						<TouchableOpacity onPress={onPressSearchAddr}>
+							{/* <TouchableOpacity onPress={onPressSearchAddr}> */}
 							<Search48 />
-						</TouchableOpacity>
+							{/* </TouchableOpacity> */}
+						</View>
 					</View>
-				</View>
+				</TouchableOpacity>
 			</View>
 			<View style={[styles.inputNoTitle]}>
 				<Input24

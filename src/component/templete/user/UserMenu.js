@@ -251,20 +251,20 @@ export default UserMenu = props => {
 
 					{/* 하단 메뉴 */}
 					<View style={[temp_style.userMenu_step2, userMenu_style.horizontalLine]}>
-						<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
-							<View>
-								<ProfileMenu
-									menuTitle={FAVORITES}
-									menuItems={[
-										[FRIENDS, PROTECTION_REQUEST],
-										[PEED_CONTENTS, COMUNITY],
-									]}
-									onClick={menuClick}
-									titleIcon={<FavoriteTag48_Border />}
-								/>
-							</View>
-						</View>
-						<View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}>
+						{/* <View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}> */}
+						{/* <View> */}
+						<ProfileMenu
+							menuTitle={FAVORITES}
+							menuItems={[
+								[FRIENDS, PROTECTION_REQUEST],
+								[PEED_CONTENTS, COMUNITY],
+							]}
+							onClick={menuClick}
+							titleIcon={<FavoriteTag48_Border />}
+						/>
+						{/* </View> */}
+						{/* </View> */}
+						<View>
 							<View>
 								<ProfileMenu
 									menuTitle={MY_ACTIVITY_IN_SHELTER}

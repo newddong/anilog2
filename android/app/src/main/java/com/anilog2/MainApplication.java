@@ -9,6 +9,7 @@ import com.anilog2.MyAppPackage;
 import com.anilog2.PhotoListPackage;
 import com.anilog2.TextMeasurePackage;
 import com.anilog2.OpenExternalURLPackage;
+import com.anilog2.RNVideoEditorSDKPackage;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import fr.greweb.reactnativeviewshot.RNViewShotPackage;
@@ -41,6 +42,7 @@ public class MainApplication extends Application implements ReactApplication {
             packages.add(new TextMeasurePackage());
             packages.add(new OpenExternalURLPackage());
             packages.add(new ReactVideoPackage());
+            packages.add(new RNVideoEditorSDKPackage());
           return packages;
         }
 

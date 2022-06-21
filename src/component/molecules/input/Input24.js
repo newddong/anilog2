@@ -91,6 +91,17 @@ const Input24 = React.forwardRef((props, ref) => {
 			return <></>;
 		}
 	};
+	const getMoreInfo = () => {
+		if (props.moreInfo) {
+			return (
+				// <View }>
+				<Text style={[txt.noto24, {color: GRAY10}, {textAlign: 'right'}]}>{props?.moreInfo}</Text>
+				// </View>
+			);
+		} else {
+			return <></>;
+		}
+	};
 
 	const getMsg = () => {
 		if (props.showMsg) {
@@ -118,12 +129,15 @@ const Input24 = React.forwardRef((props, ref) => {
 			{/* {console.log('props.title=' + props.title + props.width)} */}
 			{/* parent에서 title이 props로 명시되어 있지 않을 경우 'title' string 으로 받음. */}
 			{props.title != '' && props.title != 'title' && (
-				<View style={[{flexDirection: 'row'}, {width: props?.width * DP}]}>
+				<View style={[{flexDirection: 'row'}, {width: props?.width * DP}, {justifyContent: 'space-between'}]}>
+					{/* <View style={[{width: props?.width * DP}, {backgroundColor: 'yellow'}, {height: 38 * DP}]}> */}
 					{/* 타이틀 사이즈 분기 처리해야되는지 나중에 파악필요  */}
-					<Text style={[txt.noto28, {color: MAINBLACK}]}> {props.title}</Text>
-					{getDescription()}
-
-					<Text style={[txt.noto24, {color: GRAY10}, {textAlign: 'right'}, {marginLeft: 150 * DP}]}>{props?.moreInfo}</Text>
+					<View style={[{flexDirection: 'row'}]}>
+						<Text style={[txt.noto28, {color: MAINBLACK}]}> {props.title}</Text>
+						{getDescription()}
+					</View>
+					{getMoreInfo()}
+					{/* </View> */}
 				</View>
 			)}
 			{/* 하단테두리 2px이 있기 때문에 inputValue와 82px가 차이가 나도 -2한 80값을 height로 줌 */}
@@ -155,6 +169,7 @@ const Input24 = React.forwardRef((props, ref) => {
 					numberOfLines={props.numberOfLines}
 					multiline={props.multiline}
 					autoCapitalize={'none'}
+					pointerEvents={props.pointerEvents || null}
 					style={[
 						txt.noto28,
 						props.style,

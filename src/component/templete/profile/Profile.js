@@ -238,7 +238,7 @@ export default Profile = ({route}) => {
 		if (userType == 'shelter') {
 			Modal.popOneBtn('보호소 계정은 봉사활동을 \n 신청하실 수 없습니다.', '확인', () => Modal.close());
 		} else {
-			console.log('data', data);
+			// console.log('data', data);
 			if (!data.user_contacted) {
 				Modal.alert(NOT_REGISTERED_SHELTER);
 			} else {

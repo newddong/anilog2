@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {APRI10, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {Cross46, Star50_Border, Star50_Filled} from 'Atom/icon';
@@ -57,17 +57,13 @@ export default AccountList = props => {
 
 	const renderItem = (item, index) => {
 		return (
-			<TouchableOpacity
-				style={[organism_style.accountListItem, {borderColor: selectedIndex == index && props.makeBorderMode ? APRI10 : WHITE}]}
-				onPress={() => makeBorder(item, index)}>
-				<View style={[organism_style.userDescriptionLabelContainer]}>
-					<UserDescriptionLabel
-						data={item}
-						width={310}
-						onClickLabel={item => onclickLabel(item, index)}
-						showFollowStatusText={props.showFollowStatusText}
-					/>
-				</View>
+			<TouchableOpacity style={[style.accountListItem, {}]} onPress={() => makeBorder(item, index)}>
+				<UserDescriptionLabel
+					data={item}
+					width={310}
+					onClickLabel={item => onclickLabel(item, index)}
+					showFollowStatusText={props.showFollowStatusText}
+				/>
 				{props.showCrossMark ? (
 					<View style={{position: 'absolute', right: 15 * DP}}>
 						<Cross46 onPress={() => props.onDelete(index, item)} />
@@ -75,30 +71,26 @@ export default AccountList = props => {
 				) : (
 					<></>
 				)}
-				{props.showStarMark ? (
+				{/* {props.showStarMark ? (
 					<View style={{position: 'absolute', right: 15 * DP}}>
 						{isFollowing[index] ? <Star50_Filled onPress={() => onPressFavorite(index)} /> : <Star50_Border onPress={() => onPressFavorite(index)} />}
 					</View>
 				) : (
 					<></>
-				)}
+				)} */}
 			</TouchableOpacity>
 		);
 	};
 	return (
-		<ScrollView horizontal={false} contentContainerStyle={{flex: 0}} showsVerticalScrollIndicator={false}>
-			<ScrollView horizontal={true} contentContainerStyle={{flex: 1}} scrollEnabled={false}>
-				<View style={organism_style.accountList}>
-					<FlatList
-						data={props.items}
-						renderItem={({item, index}) => renderItem(item, index)}
-						scrollEnabled={false}
-						showsVerticalScrollIndicator={false}
-						ListEmptyComponent={props.listEmptyComponent}
-					/>
-				</View>
-			</ScrollView>
-		</ScrollView>
+		<View style={style.accountList}>
+			<FlatList
+				data={props.items}
+				renderItem={({item, index}) => renderItem(item, index)}
+				scrollEnabled={false}
+				showsVerticalScrollIndicator={false}
+				ListEmptyComponent={props.listEmptyComponent}
+			/>
+		</View>
 	);
 };
 AccountList.defaultProps = {
@@ -115,3 +107,19 @@ AccountList.defaultProps = {
 		return <></>;
 	},
 };
+
+const style = StyleSheet.create({
+	accountList: {
+		width: 750 * DP,
+		// marginBottom: 80 * DP,
+	},
+	accountListItem: {
+		width: 694 * DP,
+		height: 120 * DP,
+		marginBottom: 20 * DP,
+		justifyContent: 'center',
+		borderColor: WHITE,
+		borderWidth: 5 * DP,
+		borderRadius: 30 * DP,
+	},
+});

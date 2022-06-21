@@ -3,8 +3,10 @@ import {View, Image} from 'react-native';
 import {PET_STATUS_ADOPT, PET_STATUS_COMPANION, PET_STATUS_PROTECT, PRIVATE, PUBLIC} from 'Root/i18n/msg';
 import {Private48, Public48, ProfileDefaultImg, Paw30_APRI10, Paw30_YELL20, Paw30_Mixed} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
-import dp from 'Root/config/dp';
+import DP from 'Root/config/dp';
 import FastImage from 'react-native-fast-image';
+import {BLACK, WHITE} from 'Root/config/color';
+import {txt} from 'Root/config/textstyle';
 
 /**
  * 프로필이미지 120
@@ -28,14 +30,28 @@ const ProfileImageMedium94 = props => {
 	};
 
 	const shelter_type = () => {
-		switch (props.data.shelter_type) {
-			case PUBLIC:
-				return <Public48 />;
-			case PRIVATE:
-				return <Private48 />;
-			default:
-				return <></>;
-		}
+		// switch (props.data.shelter_type) {
+		// 	case PUBLIC:
+		// 		return <Public48 />;
+		// 	case PRIVATE:
+		// 		return <Private48 />;
+		// 	default:
+		// 		return <></>;
+		// }
+		return (
+			<View
+				style={{
+					width: 62 * DP,
+					height: 62 * DP,
+					borderRadius: 20 * DP,
+					backgroundColor: BLACK,
+					justifyContent: 'center',
+				}}>
+				<Text style={[txt.noto26b, {color: WHITE, textAlignVertical: 'center', textAlign: 'center'}]}>
+					{props.data.shelter_type == 'private' ? '사' : '공'}
+				</Text>
+			</View>
+		);
 	};
 
 	const userType = () => {

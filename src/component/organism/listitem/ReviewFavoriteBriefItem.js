@@ -82,9 +82,9 @@ const ReviewFavoriteBriefItem = props => {
 		} else {
 			let filter = [];
 			if (props.selectMode) {
-				filter = category_sum_list.length > 2 ? category_sum_list.slice(0, 3) : category_sum_list;
+				filter = category_sum_list.length > 2 ? category_sum_list.slice(0, 2) : category_sum_list;
 			} else {
-				filter = category_sum_list.length > 2 ? category_sum_list.slice(0, 4) : category_sum_list;
+				filter = category_sum_list.length > 2 ? category_sum_list.slice(0, 3) : category_sum_list;
 			}
 			return filter.map((v, i) => {
 				if (category_sum_list.length > 2) {
@@ -97,7 +97,7 @@ const ReviewFavoriteBriefItem = props => {
 					} else
 						return (
 							<Text key={i} style={[style.categoryPlus, txt.noto24, {color: GRAY10}]}>
-								+ {category_sum_list.length - (props.selectMode ? 2 : 2)}
+								+ {category_sum_list.length - (props.selectMode ? 1 : 2)}
 							</Text>
 						);
 				} else {
@@ -120,13 +120,7 @@ const ReviewFavoriteBriefItem = props => {
 					<FastImage style={{borderRadius: 30 * DP, width: 186 * DP, height: 186 * DP}} source={{uri: image[0]}} />
 				</View>
 			)}
-			<View
-				style={[
-					style.content,
-					{
-						marginLeft: imageList().length != 0 ? 20 * DP : 0,
-					},
-				]}>
+			<View style={[style.content, {marginLeft: imageList().length != 0 ? 20 * DP : 0}]}>
 				<Text
 					style={[
 						txt.noto28b,

@@ -232,7 +232,7 @@ export default ArticleDetail = props => {
 								Modal.close();
 								setTimeout(() => {
 									console.log('whichComment', whichComment);
-									flatListRef.current.scrollToIndex({animated: true, index: whichComment == '' ? editData.parent : whichComment, viewPosition: 0.5});
+									flatListRef.current.scrollToIndex({animated: true, index: whichComment == '' ? editData.parent : whichComment, viewPosition: 0});
 								}, 500);
 							},
 							err => {
@@ -275,9 +275,10 @@ export default ArticleDetail = props => {
 								setEditMode(false); // console.log('comments', comments);
 								Modal.close();
 								setTimeout(() => {
+									console.log('whichParent', whichParent);
 									whichParent == ''
 										? flatListRef.current.scrollToIndex({animated: true, index: 0, viewPosition: 0.5})
-										: flatListRef.current.scrollToIndex({animated: true, index: whichParent, viewPosition: 1});
+										: flatListRef.current.scrollToIndex({animated: true, index: whichParent, viewPosition: 0});
 								}, 500);
 								input.current.blur();
 							},

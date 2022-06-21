@@ -34,6 +34,7 @@ export default SelectAccount = ({route, navigation}) => {
 			err => {
 				console.log('err / getUserListByUserNickname / SelectAccount  ', err);
 				Modal.close();
+				setData([]);
 			},
 		);
 	}, [searchInput]);
@@ -74,8 +75,10 @@ export default SelectAccount = ({route, navigation}) => {
 		setSearchInput(text);
 	};
 
-	const header = () => {
-		return <InputWithSearchIcon value={searchInput} onChange={onChange} width={694} placeholder={'닉네임을 검색해주세요.'} />;
+	const inputRef = React.useRef();
+
+	const onClear = () => {
+		setSearchInput('');
 	};
 
 	const render = ({item, index}) => {
@@ -92,7 +95,8 @@ export default SelectAccount = ({route, navigation}) => {
 
 	return (
 		<View style={[login_style.wrp_main, selectAccount.container]}>
-			<FlatList data={[{}]} renderItem={render} ListHeaderComponent={header} showsVerticalScrollIndicator={false} />
+			<InputWithSearchIcon value={searchInput} onChange={onChange} width={694} onClear={onClear} placeholder={'닉네임을 검색해주세요.'} />
+			<FlatList data={[{}]} renderItem={render} showsVerticalScrollIndicator={false} />
 		</View>
 	);
 };

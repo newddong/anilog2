@@ -33,7 +33,6 @@ const ReviewBriefItem = props => {
 	};
 
 	const image = imageList();
-	``;
 	React.useEffect(() => {
 		setData(props.data);
 	}, [props.data]);
@@ -54,9 +53,7 @@ const ReviewBriefItem = props => {
 		data.community_interests.interests_hospital.map(v => category_sum_list.push(v));
 		data.community_interests.interests_review.map(v => category_sum_list.push(v));
 		data.community_interests.interests_interior.map(v => category_sum_list.push(v));
-		if (category_sum_list.length > 3) {
-			category_sum_list.push('접기');
-		}
+
 		// category_sum_list.push('테스트');
 		const page = Math.floor(category_sum_list.length / 4) + 1;
 		let arr = [];
@@ -67,7 +64,7 @@ const ReviewBriefItem = props => {
 		let index = 0;
 		category_sum_list.map((val, ind) => {
 			totalWidth = totalWidth + 20 + val.length * 10;
-			if (totalWidth < (image.length == 0 ? 600 * DP : 400 * DP)) {
+			if (totalWidth < (image.length == 0 ? 520 * DP : 400 * DP)) {
 				// console.log('totalWidth', totalWidth);
 				newArr.push({group: index, item: val});
 			} else {
@@ -82,14 +79,14 @@ const ReviewBriefItem = props => {
 		categoryArr.map((val, ind) => {
 			categoryArr[ind] = newArr.filter(e => e.group === ind);
 		});
-		if (category_sum_list.length > 3 && categoryArr.length > 0) {
+		if (categoryArr.length > 0) {
 			return (
 				<View style={{flexDirection: 'row', width: 694 * DP}}>
 					{categoryArr[0].map((v, i) => {
 						let isLast = false;
-						if (i == categoryArr[0].length - 1) {
+						if (i == categoryArr[0].length - 1 && categoryArr.length > 1) {
 							isLast = true;
-							v.item = '+' + (category_sum_list.length - categoryArr[0].length);
+							v.item = '+' + (category_sum_list.length - categoryArr[0].length + 1);
 						}
 						if (v.item == '+' + 0) {
 							return <View key={i}></View>;
@@ -116,13 +113,11 @@ const ReviewBriefItem = props => {
 					<FastImage style={[styles.img_square_round_186]} source={{uri: image[0]}} />
 				</View>
 			)}
-			<View style={[style.content, {width: image.length == 0 ? 654 * DP : 450 * DP}]}>
-				<View style={[style.title, {width: image.length == 0 ? 654 * DP : null}]}>
-					<View style={{flexDirection: 'row'}}>
-						<Text style={[txt.noto32b, {}]} numberOfLines={1} ellipsizeMode={'tail'}>
-							{data.community_title}
-						</Text>
-					</View>
+			<View style={[style.content, {width: image.length == 0 ? 694 * DP : 478 * DP}]}>
+				<View style={[style.title, {maxWidth: image.length == 0 ? 694 * DP : 478 * DP}]}>
+					<Text style={[txt.noto32b, {}]} numberOfLines={1}>
+						{data.community_title}
+					</Text>
 				</View>
 				<View style={[style.locationTime]}>
 					<Text style={[txt.noto26, {color: GRAY10}]}>

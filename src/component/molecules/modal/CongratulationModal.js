@@ -6,6 +6,7 @@ import DP from 'Root/config/dp';
 import {Congratulation} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
 import ProfileImageLarge194 from '../image/ProfileImageLarge194';
+import ProfileImageMedium148 from '../image/ProfileImageMedium148';
 
 /**
  * 임시보호 입양 확정 축하 모달
@@ -21,14 +22,14 @@ const CongratulationModal = props => {
 	return (
 		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={style.background}>
 			<TouchableOpacity style={[style.popUpWindow, style.shadow]}>
-				<Text style={[txt.noto28, style.msg]}>임시보호가 아닌 반려동물로서의 새로운</Text>
-				<Text style={[txt.noto28, style.msg]}>삶을 살게 된 {props.pet_nickname}(을)를 응원합니다!</Text>
+				<Text style={[txt.noto28, style.msg]}>반려동물로서의 새로운 삶을 살게 된</Text>
+				<Text style={[txt.noto28, style.msg]}>{props.pet_nickname}(을)를 응원합니다!</Text>
 				<View style={style.bottom}>
 					<View style={[{transform: [{rotate: '90deg'}]}]}>
 						<Congratulation />
 					</View>
 					<View style={[style.profileImg]}>
-						<ProfileImageLarge194 data={{user_profile_uri: props.user_profile_uri}} />
+						<ProfileImageMedium148 data={{user_profile_uri: props.user_profile_uri}} />
 					</View>
 					<Congratulation />
 				</View>
@@ -51,19 +52,19 @@ const style = StyleSheet.create({
 	},
 	popUpWindow: {
 		width: 614 * DP,
-		height: 368 * DP,
+		height: 344 * DP,
 		backgroundColor: WHITE,
 		justifyContent: 'center',
 		alignItems: 'center',
 		borderRadius: 40 * DP,
 		padding: 24 * DP,
+		opacity: 0.9,
 	},
 	msg: {
 		// marginBottom: 30 * DP,
 		// marginTop: 30 * DP,
 		// maxWidth: 466 * DP, // 상우 추가
 		textAlignVertical: 'center',
-		color: GRAY10,
 		textAlign: 'center',
 	},
 	buttonContainer: {

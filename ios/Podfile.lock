@@ -328,6 +328,11 @@ PODS:
     - React-Core
   - react-native-safe-area-context (3.3.2):
     - React-Core
+  - react-native-video (5.2.0):
+    - React-Core
+    - react-native-video/Video (= 5.2.0)
+  - react-native-video/Video (5.2.0):
+    - React-Core
   - react-native-view-shot (3.1.2):
     - React
   - react-native-webview (11.17.2):
@@ -495,6 +500,7 @@ DEPENDENCIES:
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-video (from `../node_modules/react-native-video`)
   - react-native-view-shot (from `../node_modules/react-native-view-shot`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -614,6 +620,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-pager-view"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-video:
+    :path: "../node_modules/react-native-video"
   react-native-view-shot:
     :path: "../node_modules/react-native-view-shot"
   react-native-webview:
@@ -712,6 +720,7 @@ SPEC CHECKSUMS:
   react-native-maps: d752b0dd0e1951d815b1336332835aab6b4a836f
   react-native-pager-view: b90963d848e777def6714ab7fd40d02fa797e930
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
+  react-native-video: a4c2635d0802f983594b7057e1bce8f442f0ad28
   react-native-view-shot: 4475fde003fe8a210053d1f98fb9e06c1d834e1c
   react-native-webview: 380c1a03ec94b7ed764dac8db1e7c9952d08c93a
   React-perflogger: 3c9bb7372493e49036f07a82c44c8cf65cbe88db

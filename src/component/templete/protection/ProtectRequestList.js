@@ -103,12 +103,12 @@ export default ProtectRequestList = ({route}) => {
 			page: isRefresh ? 1 : offset,
 			limit: PROTECT_REQUEST_MAIN_LIMIT,
 		};
-		if (data != 'false') {
-			params.target_protect_desertion_no = data[data.length - 1].protect_desertion_no;
-			params.target_protect_request_date = moment(data[data.length - 1].protect_request_date).format('YYYYMMDD');
-		}
+		// if (data != 'false') {
+		// 	params.target_protect_desertion_no = data[data.length - 1].protect_desertion_no;
+		// 	params.target_protect_request_date = moment(data[data.length - 1].protect_request_date).format('YYYYMMDD');
+		// }
 		console.log('params', params);
-		getSearchResultProtectRequestImprovingV1(
+		getSearchResultProtectRequest(
 			params,
 			result => {
 				// console.log('result 첫값 :', result.msg[0].protect_animal_id.protect_animal_rescue_location);

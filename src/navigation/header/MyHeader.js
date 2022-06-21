@@ -69,7 +69,7 @@ export default MyHeader = ({navigation, route, options, back}) => {
 			{items: items, user_data: userData},
 			'나의 계정',
 			selected => {
-				console.log('seeokge', selected);
+				// console.log('seeokge', selected);
 				if (selected.user_type) {
 					if (selected?.user_type == 'pet') {
 						navigation.push('PetInfoSetting', {pet_id: selected._id});

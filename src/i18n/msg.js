@@ -201,6 +201,7 @@ export const CALENDAR_DAY = () => {
 	let day30 = ['', ''];
 	let day31 = ['', ''];
 	let day29 = ['', ''];
+	let day28 = ['', ''];
 	for (let i = 1; i < 32; i++) {
 		day31.push(i);
 	}
@@ -210,13 +211,18 @@ export const CALENDAR_DAY = () => {
 	for (let i = 1; i < 30; i++) {
 		day29.push(i);
 	}
+	for (let i = 1; i < 29; i++) {
+		day28.push(i);
+	}
 	day31.push(paddingObject);
 	day31.push(paddingObject);
 	day30.push(paddingObject);
 	day30.push(paddingObject);
 	day29.push(paddingObject);
 	day29.push(paddingObject);
-	const days = {day31: day31, day30: day30, day29: day29};
+	day28.push(paddingObject);
+	day28.push(paddingObject);
+	const days = {day31: day31, day30: day30, day29: day29, day28: day28};
 	return days;
 };
 

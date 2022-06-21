@@ -65,7 +65,7 @@ export default CommunityWrite = props => {
 	}, [data]);
 
 	React.useEffect(() => {
-		isReview ? navigation.setOptions({title: '리뷰'}) : navigation.setOptions({title: '자유 게시글'});
+		isReview ? navigation.setOptions({title: '리뷰 글쓰기'}) : navigation.setOptions({title: '자유게시글 쓰기'});
 	}, []);
 
 	React.useEffect(() => {

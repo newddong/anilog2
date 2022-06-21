@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import {ActivityIndicator, FlatList, ScrollView, StyleSheet, Text, View} from 'react-native';
 import InputWithSearchIcon from 'Root/component/molecules/input/InputWithSearchIcon';
 import AccountList from 'Root/component/organism/list/AccountList';
 import {temp_style, addFamilyAccount_style} from 'Templete/style_templete';
@@ -23,8 +23,7 @@ export default AddFamilyAccount = ({route, navigation}) => {
 			search();
 		} else if (searchInput == '') {
 			//빈값일 경우 로딩 종료 및 리스트 초기화
-			setSearched_accountList([]);
-			setLoad(false);
+			search();
 		}
 	}, [searchInput]);
 
@@ -122,19 +121,38 @@ export default AddFamilyAccount = ({route, navigation}) => {
 		);
 	};
 
-	return (
-		<View style={[addFamilyAccount_style.container]}>
-			<View style={[temp_style.inputWithSearchIcon, addFamilyAccount_style.inputWithSearchIcon]}>
-				<InputWithSearchIcon onSearch={search} value={searchInput} onChange={onChangeKeyword} width={654} placeholder={'가족 계정을 검색해주세요.'} />
+	const render = ({item, index}) => {
+		return searched_accountList.length > 0 ? (
+			<View style={[style.accountList, {backgroundColor: 'white'}]}>
+				<AccountList items={searched_accountList} showCrossMark={false} listEmptyComponent={listEmptyComponent} onClickLabel={onAccountClick} />
 			</View>
+		) : (
+			<></>
+		);
+	};
 
-			<ScrollView style={[addFamilyAccount_style.accountList]}>
-				{load ? (
-					<Loading isModal={false} />
-				) : (
-					<AccountList items={searched_accountList} showCrossMark={false} listEmptyComponent={listEmptyComponent} onClickLabel={onAccountClick} />
-				)}
-			</ScrollView>
+	return (
+		<View style={[style.container]}>
+			<InputWithSearchIcon onSearch={search} value={searchInput} onChange={onChangeKeyword} width={694} placeholder={'가족 계정을 검색해주세요.'} />
+			<FlatList data={[{}]} renderItem={render} showsVerticalScrollIndicator={false} />
+			{load && (
+				<View style={{justifyContent: 'center', alignItems: 'center'}}>
+					<ActivityIndicator size={'large'} color={'black'} />
+				</View>
+			)}
 		</View>
 	);
 };
+
+const style = StyleSheet.create({
+	container: {
+		alignItems: 'center',
+		flex: 1,
+		backgroundColor: '#fff',
+	},
+	accountList: {
+		marginTop: 40 * DP,
+		paddingBottom: 80 * DP,
+		width: 694 * DP,
+	},
+});

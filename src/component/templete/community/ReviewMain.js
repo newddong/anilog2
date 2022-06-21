@@ -6,7 +6,6 @@ import ReviewList from 'Root/component/organism/list/ReviewList';
 import Modal from 'Root/component/modal/Modal';
 import {getCommunityList} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {txt} from 'Root/config/textstyle';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeEtc} from 'Root/api/likeetc';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
@@ -19,9 +18,7 @@ import AnimalButton from 'Root/component/molecules/button/AnimalButton';
 export default ReviewMain = ({route, navigation}) => {
 	const [data, setData] = React.useState('false');
 	const [filterData, setFilterData] = React.useState({
-		dog: false,
-		cat: false,
-		etc: false,
+		community_animal_type: [],
 		box: {
 			userInterestReview: {
 				interests_etc: [],
@@ -35,6 +32,7 @@ export default ReviewMain = ({route, navigation}) => {
 	});
 	const [recommend, setRecommend] = React.useState([]);
 	const [offset, setOffset] = React.useState(1);
+	const [total, setTotal] = React.useState();
 	const [refreshing, setRefreshing] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
 
@@ -42,18 +40,16 @@ export default ReviewMain = ({route, navigation}) => {
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
-			// filterRef.current ? false : fetchData(); //포커스마다 새로 fetch를 시도하면 상세글을 갔다가 메인페이지로 돌아와도 기존의 스크롤로 이동을 하지 않음
-			// console.log('리뷰 게시글 전역변수 길이 :  ', community_obj.review.length);
-			// console.log('community_obj.review.length : ', community_obj.review.length);
 			if (community_obj.review.length > 0) {
-				// let temp = [...data];
 				setData(community_obj.review);
 			}
-			// fetchData();
 		});
-		fetchData();
 		return unsubscribe;
 	}, []);
+
+	React.useEffect(() => {
+		fetchData();
+	}, [filterData]);
 
 	//리프레시 시도 시, 데이터 및 페이징 초기화
 	React.useEffect(() => {
@@ -62,15 +58,43 @@ export default ReviewMain = ({route, navigation}) => {
 
 	const fetchData = isRefresh => {
 		isRefresh ? false : setLoading(true); //refresh시도로 인한 api 접속은 loading indicator 미출력
+		let params = {
+			limit: REVIEW_LIMIT,
+			page: offset,
+		};
+		const userInterestObj = filterData.box.userInterestReview;
+		let arr = [];
+		const selectedCategoryFilter = arr.concat(
+			userInterestObj.interests_review,
+			userInterestObj.interests_trip,
+			userInterestObj.interests_etc,
+			userInterestObj.interests_hospital,
+			userInterestObj.interests_interior,
+		);
+		const hasLocationFilter = userInterestObj.interests_location.city != '';
+		// console.log('selectedCategoryFilter', selectedCategoryFilter.length);
+		// console.log('hasLocationFilter', hasLocationFilter);
+		if (selectedCategoryFilter.length > 0) {
+			userInterestObj.interests_trip.length > 0 ? (params.interests_trip = userInterestObj.interests_trip) : false;
+			userInterestObj.interests_review.length > 0 ? (params.interests_review = userInterestObj.interests_review) : false;
+			userInterestObj.interests_etc.length > 0 ? (params.interests_etc = userInterestObj.interests_etc) : false;
+			userInterestObj.interests_hospital.length > 0 ? (params.interests_hospital = userInterestObj.interests_hospital) : false;
+			userInterestObj.interests_interior.length > 0 ? (params.interests_interior = userInterestObj.interests_interior) : false;
+		}
+		if (hasLocationFilter) {
+			params.interests_city = userInterestObj.interests_location.city;
+			params.interests_district = userInterestObj.interests_location.district;
+		}
+		if (filterData.community_animal_type.length > 0) {
+			params.community_animal_type = filterData.community_animal_type;
+		}
+		console.log('api 접속전 파라미터 : ', params);
 		getCommunityList(
-			{
-				limit: REVIEW_LIMIT,
-				page: offset,
-				community_type: 'review',
-			},
+			params,
 			result => {
-				console.log('result / getCommunityList / ReviewMain :', result.msg.review.length);
-				const res = result.msg.review;
+				console.log('result / getCommunityList / ReviewMain :', result.msg.length);
+				setTotal(result.total_count);
+				const res = result.msg;
 				let recommendList = [];
 				res.map((v, i) => {
 					if (v.community_is_recomment) {
@@ -79,21 +103,20 @@ export default ReviewMain = ({route, navigation}) => {
 				});
 				let list = [];
 				if (isRefresh) {
+					//리프레싱 호출일 경우 해당 페이지만 갱신
 					list = res;
 				} else if (data != 'false') {
-					console.log('temp lenth', [...data, ...res].length);
+					//1페이지 이후 호출일 경우 더하기
+					// console.log('temp lenth', [...data, ...res].length);
 					list = [...data, ...res];
 				} else {
 					list = res;
 				}
-				setRecommend(recommendList);
-				setData(list);
-				community_obj.review = list;
-				setOffset(offset + 1);
-				if (!hasNoFilter()) {
-					doFilter(community_obj.reviewFilter, result.msg.review);
-				}
-				setLoading(false);
+				setRecommend(recommendList); //추천 게시글 목록
+				setData(list); //리뷰글 set
+				community_obj.review = list; //전역 변수에 현재 리스트 갱신
+				setOffset(offset + 1); //현재 페이지 +1
+				setLoading(false); //로딩 종료
 			},
 			err => {
 				console.log('err / getCommunityList / ArticleMain : ', err);
@@ -127,20 +150,12 @@ export default ReviewMain = ({route, navigation}) => {
 	};
 
 	//개 고양이 그외 버튼 필터 클릭
-	const onPressAnimalFilter = filter => {
-		switch (filter) {
-			case 'dog':
-				setFilterData({...filterData, dog: !filterData.dog});
-				break;
-			case 'cat':
-				setFilterData({...filterData, cat: !filterData.cat});
-				break;
-			case 'etc':
-				setFilterData({...filterData, etc: !filterData.etc});
-				break;
-			default:
-				break;
-		}
+	const onPressAnimalFilter = (kind, bool) => {
+		let temp = [...filterData.community_animal_type];
+		temp.includes(kind) ? (temp = temp.filter(e => e != kind)) : temp.push(kind);
+		setData('false');
+		setOffset(1);
+		setFilterData({...filterData, community_animal_type: temp});
 	};
 
 	//필터 적용(community_obj reviewFilter 존재 시 호출)
@@ -155,14 +170,14 @@ export default ReviewMain = ({route, navigation}) => {
 				}
 			}
 		}
-		console.log('필터가 존재하므로 호출!');
+		// console.log('필터가 존재하므로 호출!');
 		console.log('dofilter arg', arg);
 		setFilterData({...filterData, box: arg});
 		const userInterestObj = arg.userInterestReview;
 		let filtered = [];
 		if (review == undefined) {
 			//기존의 필터가 존재하지 않은 경우
-			filtered = getData();
+			filtered = data;
 		} else {
 			//기존 필터가 존재하는 경우 필터할 데이터를 보내줌
 			filtered = review;
@@ -186,7 +201,7 @@ export default ReviewMain = ({route, navigation}) => {
 		if (arg.userInterestReview.interests_location.city) {
 			//도시 선택 필터가 존재할 경우 locationFilter에 필터링한 결과를 입력
 			filtered.map((v, i) => {
-				console.log(i, v.community_interests.interests_location);
+				// console.log(i, v.community_interests.interests_location);
 				if (v.community_interests.interests_location.city) {
 					let apiCity = arg.userInterestReview.interests_location.city;
 					let dbCity = v.community_interests.interests_location.city;
@@ -252,10 +267,10 @@ export default ReviewMain = ({route, navigation}) => {
 
 	//리스트 페이징 작업
 	const onEndReached = () => {
-		console.log('EndReached', getData().length % REVIEW_LIMIT);
+		console.log('EndReached', data.length, total);
 		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
 		//리뷰 메인 페이지에서는 필터가 적용이 되었을 때도 api 접속 불필요
-		if (getData().length % REVIEW_LIMIT == 0) {
+		if (data.length < total) {
 			fetchData();
 		}
 	};
@@ -275,8 +290,24 @@ export default ReviewMain = ({route, navigation}) => {
 			arg => {
 				// console.log('arg', arg);
 				const userInterestObj = arg.userInterestReview;
-				community_obj.reviewFilter = arg;
-				doFilter(arg);
+				let arr = [];
+				const selectedCategoryFilter = arr.concat(
+					userInterestObj.interests_review,
+					userInterestObj.interests_trip,
+					userInterestObj.interests_etc,
+					userInterestObj.interests_hospital,
+					userInterestObj.interests_interior,
+				);
+				const isCategoryNotSelected = selectedCategoryFilter.length == 0;
+				setData('false'); //현재 리스트를 초기상태로 되돌림
+				if (!arg.userInterestReview.interests_location.city && isCategoryNotSelected) {
+					filterRef.current = false;
+				} else {
+					community_obj.reviewFilter = arg;
+					filterRef.current = true;
+				}
+				setOffset(1);
+				setFilterData({...filterData, box: arg});
 			},
 		);
 	};
@@ -299,13 +330,12 @@ export default ReviewMain = ({route, navigation}) => {
 
 	//댓글 모두 보기 클릭
 	const onPressReply = index => {
-		// navigation.push('CommunityCommentList', {community_object: getData()[index]});
-		navigation.push('ReviewDetail', {community_object: getData()[index], comment: true});
+		navigation.push('ReviewDetail', {community_object: data[index], comment: true});
 	};
 
 	//리뷰 썸네일 클릭
 	const onPressReviewContent = index => {
-		navigation.push('ReviewDetail', {community_object: getData()[index]});
+		navigation.push('ReviewDetail', {community_object: data[index]});
 	};
 
 	const onPressRecommendReview = data => {
@@ -325,11 +355,11 @@ export default ReviewMain = ({route, navigation}) => {
 
 	//즐겨찾기 클릭
 	const onPressFavorite = (index, bool) => {
-		console.log('data[index]._id,', getData()[index]._id);
+		console.log('data[index]._id,', data[index]._id);
 		setFavoriteEtc(
 			{
 				collectionName: 'communityobjects',
-				target_object_id: getData()[index]._id,
+				target_object_id: data[index]._id,
 				is_favorite: bool,
 			},
 			result => {
@@ -349,60 +379,26 @@ export default ReviewMain = ({route, navigation}) => {
 		wait(0).then(() => setRefreshing(false));
 	};
 
-	//리스트에 출력될 리스트 목록 필터
-	const getData = () => {
-		let filtered = [];
-		// console.log('data', data[0]);
-		if (filterData.dog) {
-			const getDogType = data.filter(e => e.community_animal_type == 'dog');
-			getDogType.map((v, i) => {
-				filtered.push(v);
-			});
-		}
-		if (filterData.cat) {
-			const getCatType = data.filter(e => e.community_animal_type == 'cat');
-			getCatType.map((v, i) => {
-				filtered.push(v);
-			});
-		}
-		if (filterData.etc) {
-			const getEtcType = data.filter(e => e.community_animal_type == 'etc');
-			getEtcType.map((v, i) => {
-				filtered.push(v);
-			});
-		}
-		if (!filterData.dog && !filterData.cat && !filterData.etc) {
-			filtered = data;
-		}
-		return filtered;
-	};
-
 	const filterComponent = () => {
 		return (
 			<View style={[style.filter]}>
 				<View style={[]}>{filterRef.current ? <Filter60Filled onPress={onPressFilter} /> : <Filter60Border onPress={onPressFilter} />}</View>
 				<View style={[style.animalFilter]}>
-					<View style={[]}>
-						{!filterData.dog ? (
-							<AnimalButton type={'dog'} on={false} onPress={() => onPressAnimalFilter('dog')} />
-						) : (
-							<AnimalButton type={'dog'} on={true} onPress={() => onPressAnimalFilter('dog')} />
-						)}
-					</View>
-					<View style={[]}>
-						{!filterData.cat ? (
-							<AnimalButton type={'cat'} on={false} onPress={() => onPressAnimalFilter('cat')} />
-						) : (
-							<AnimalButton type={'cat'} on={true} onPress={() => onPressAnimalFilter('cat')} />
-						)}
-					</View>
-					<View style={[]}>
-						{!filterData.etc ? (
-							<AnimalButton type={'another'} on={false} onPress={() => onPressAnimalFilter('etc')} />
-						) : (
-							<AnimalButton type={'another'} on={true} onPress={() => onPressAnimalFilter('etc')} />
-						)}
-					</View>
+					{!filterData.community_animal_type.includes('dog') ? (
+						<AnimalButton type={'dog'} on={false} onPress={() => onPressAnimalFilter('dog')} />
+					) : (
+						<AnimalButton type={'dog'} on={true} onPress={() => onPressAnimalFilter('dog')} />
+					)}
+					{!filterData.community_animal_type.includes('cat') ? (
+						<AnimalButton type={'cat'} on={false} onPress={() => onPressAnimalFilter('cat')} />
+					) : (
+						<AnimalButton type={'cat'} on={true} onPress={() => onPressAnimalFilter('cat')} />
+					)}
+					{!filterData.community_animal_type.includes('etc') ? (
+						<AnimalButton type={'another'} on={false} onPress={() => onPressAnimalFilter('etc')} />
+					) : (
+						<AnimalButton type={'another'} on={true} onPress={() => onPressAnimalFilter('etc')} />
+					)}
 				</View>
 			</View>
 		);
@@ -413,7 +409,11 @@ export default ReviewMain = ({route, navigation}) => {
 	};
 
 	if (data == 'false') {
-		return <Loading isModal={false} />;
+		return (
+			<View style={{flex: 1, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center'}}>
+				<ActivityIndicator size={'large'} color={'black'} />
+			</View>
+		);
 	} else
 		return (
 			<View style={[style.container]}>
@@ -428,7 +428,7 @@ export default ReviewMain = ({route, navigation}) => {
 						return (
 							<>
 								<ReviewList
-									items={getData()}
+									items={data}
 									// recommend={filterRef.current ? [] : recommend}
 									whenEmpty={whenEmpty}
 									onPressReviewContent={onPressReviewContent}

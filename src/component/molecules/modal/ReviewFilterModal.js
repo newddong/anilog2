@@ -77,6 +77,27 @@ const ReviewFilterModal = props => {
 		}
 	}, []);
 
+	//현재 선택된 광역시, 도가 있다면 자동으로 시,군,구를 채움
+	React.useEffect(() => {
+		if (props.data.interests_location?.city) {
+			getAddressList(
+				{city: props.data.interests_location?.city},
+				result => {
+					const padding = '';
+					let arr = [padding, padding];
+					let districts = arr.concat(result.msg);
+					districts.push(padding);
+					districts.push(padding);
+					setDistrict(districts);
+					setSelectedDistrict(props.data.interests_location?.district);
+				},
+				err => {
+					console.log('err', err);
+				},
+			);
+		}
+	}, [props.data]);
+
 	const citySelectHeight = React.useRef(new Animated.Value(0)).current;
 	const districtSelectHeight = React.useRef(new Animated.Value(0)).current;
 
@@ -150,8 +171,6 @@ const ReviewFilterModal = props => {
 			props.onClose();
 			Modal.close();
 		} else {
-			const prev = props.data;
-			let equals = true;
 			let arr = [];
 			const review_category_list = arr.concat(
 				userInterestReview.interests_review,
@@ -634,7 +653,8 @@ const style = StyleSheet.create({
 		width: 226 * DP,
 		height: 70 * DP,
 		borderWidth: 2 * DP,
-		borderColor: GRAY40,
+		borderColor: GRAY30,
+		backgroundColor: 'white',
 		borderRadius: 30 * DP,
 		marginTop: 10 * DP,
 		marginBottom: 40 * DP,
@@ -663,7 +683,8 @@ const style = StyleSheet.create({
 		minWidth: 114 * DP,
 		borderRadius: 30 * DP,
 		borderWidth: 2 * DP,
-		borderColor: GRAY20,
+		borderColor: GRAY30,
+		backgroundColor: WHITE,
 		marginLeft: 10 * DP,
 		marginTop: 20 * DP,
 	},

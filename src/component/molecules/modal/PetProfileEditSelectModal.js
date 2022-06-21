@@ -223,13 +223,13 @@ const style = StyleSheet.create({
 	popUpWindow: {
 		width: 750 * DP,
 		// height: 842 * DP,
-		// backgroundColor: '#FFFFFF',
 		backgroundColor: OPACITY90,
+		// backgroundColor: 'rgba(255,255,255,0.9)',
 		borderTopLeftRadius: 40 * DP,
 		borderTopRightRadius: 40 * DP,
 		// borderRadius: 40 * DP,
 		alignItems: 'center',
-		// opacity: 0.8,
+		opacity: 0.9,
 	},
 	header: {
 		width: 750 * DP,
@@ -242,6 +242,7 @@ const style = StyleSheet.create({
 		paddingHorizontal: 40 * DP,
 		borderTopRightRadius: 40 * DP,
 		borderTopLeftRadius: 40 * DP,
+		opacity: 0.9,
 	},
 	listContainer: {
 		flexDirection: 'row',
@@ -249,6 +250,7 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		backgroundColor: OPACITY90,
+		opacity: 0.9,
 		// height: a,
 	},
 	list: {
@@ -295,6 +297,7 @@ const style = StyleSheet.create({
 		// height: 148 * DP,
 		flexDirection: 'row',
 		backgroundColor: OPACITY90,
+		opacity: 0.9,
 	},
 });
 

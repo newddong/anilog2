@@ -97,7 +97,7 @@ export default FeedContent = props => {
 		//  // console.log('props.data.feed_writer_id', props.data.feed_writer_id.is_favorite);
 		// }
 	}, [props.data]);
-	console.log('data', props.data);
+	// console.log('data', props.data);
 	//피드 미트볼 메뉴 - 신고 클릭
 	const onPressReport = context => {
 		console.log('신고 context', context, props.data._id);

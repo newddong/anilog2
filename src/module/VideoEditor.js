@@ -29,8 +29,8 @@ class VideoEditor {
             mainCanvasActions: [CanvasAction.SOUND_ON_OFF],
             tools: [Tool.TRIM],
             trim: {
-                minimumDuration: !option.minTrimmedDuration ? option.minTrimmedDuration : 0.5,
-                maximumDuration: !option.maxTrimmedDuration ? option.maxTrimmedDuration : 15,
+                minimumDuration: !option.minTrimmedDuration ? 0.5 : option.minTrimmedDuration,
+                maximumDuration: !option.maxTrimmedDuration ? 15 : option.maxTrimmedDuration,
                 forceMode: ForceTrimMode.SILENT,
             },
             export: {

@@ -70,6 +70,7 @@ const struct RN_IMGLY_Constants RN_IMGLY = {
 
     PESDKAssetCatalog *assetCatalog = PESDKAssetCatalog.defaultItems;
     PESDKConfiguration *configuration = [[PESDKConfiguration alloc] initWithBuilder:^(PESDKConfigurationBuilder * _Nonnull builder) {
+      
       builder.assetCatalog = assetCatalog;
       [builder configureFromDictionary:dictionary error:&error];
     }];

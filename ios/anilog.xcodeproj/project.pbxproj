@@ -14,6 +14,7 @@
 		24DD834A9C1C42FE9FE332C9 /* NotoSansKR-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0A068D045B4047B2B4373AC9 /* NotoSansKR-Bold.otf */; };
 		2A31945F28615C46008D24D4 /* RNVideoEditorSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A31945B28615C46008D24D4 /* RNVideoEditorSDK.m */; };
 		2A31946028615C46008D24D4 /* RNImglyKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A31945E28615C46008D24D4 /* RNImglyKit.m */; };
+		2A3194682861905A008D24D4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2A3194662861905A008D24D4 /* Localizable.strings */; };
 		2A5FA76C284F0F4C0059B4FC /* libSDWebImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A5FA76B284F0F4C0059B4FC /* libSDWebImage.a */; };
 		2A5FA76E284F0F520059B4FC /* libSDWebImageWebPCoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A5FA76D284F0F520059B4FC /* libSDWebImageWebPCoder.a */; };
 		2A5FA770284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A5FA76F284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a */; };
@@ -69,6 +70,7 @@
 		2A31945C28615C46008D24D4 /* RNImgly.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNImgly.h; path = anilog/RNImgly.h; sourceTree = "<group>"; };
 		2A31945D28615C46008D24D4 /* RNImglyKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNImglyKit.h; path = anilog/RNImglyKit.h; sourceTree = "<group>"; };
 		2A31945E28615C46008D24D4 /* RNImglyKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNImglyKit.m; path = anilog/RNImglyKit.m; sourceTree = "<group>"; };
+		2A3194672861905A008D24D4 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = Localizable.strings; sourceTree = "<group>"; };
 		2A5FA76B284F0F4C0059B4FC /* libSDWebImage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; name = libSDWebImage.a; path = SDWebImage/libSDWebImage.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A5FA76D284F0F520059B4FC /* libSDWebImageWebPCoder.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; name = libSDWebImageWebPCoder.a; path = SDWebImageWebPCoder/libSDWebImageWebPCoder.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A5FA76F284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; name = libSDWebImagePhotosPlugin.a; path = SDWebImagePhotosPlugin/libSDWebImagePhotosPlugin.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -228,6 +230,7 @@
 			isa = PBXGroup;
 			children = (
 				BA0CE0362852094F00E45F0D /* smartAlbums.strings */,
+				2A3194662861905A008D24D4 /* Localizable.strings */,
 			);
 			path = ko.lproj;
 			sourceTree = "<group>";
@@ -372,6 +375,7 @@
 				39266251E14A4E1C9F361D92 /* Roboto-MediumItalic.ttf in Resources */,
 				BA0CE03E2852210100E45F0D /* smartAlbums.strings in Resources */,
 				B3C88654360E43C29548F8C8 /* Roboto-Regular.ttf in Resources */,
+				2A3194682861905A008D24D4 /* Localizable.strings in Resources */,
 				E6C58BF1C3784743B899A910 /* Roboto-Thin.ttf in Resources */,
 				5A12A690994F4E089B3007C2 /* Roboto-ThinItalic.ttf in Resources */,
 			);
@@ -561,6 +565,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		2A3194662861905A008D24D4 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2A3194672861905A008D24D4 /* ko */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		BA0CE0362852094F00E45F0D /* smartAlbums.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

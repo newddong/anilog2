@@ -1334,10 +1334,10 @@ export enum BrushAction {
 
 /** A predefined theme preset to define the user interface appearance. */
 export enum ExistingTheme {
-  /** A user interface style with dark appearance. */
-  DARK = "dark",
   /** A user interface style with light appearance. */
   LIGHT = "light",
+  /** A user interface style with dark appearance. */
+  DARK = "dark",
   /** A theme that switches dynamically between the light and the
    * dark theme based on the active system user interface style. */
   DYNAMIC = "dynamic",

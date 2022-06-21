@@ -96,6 +96,11 @@ RCT_EXPORT_METHOD(present:(nonnull NSURLRequest *)request
                   reject:(RCTPromiseRejectBlock)reject)
 {
   // TODO: Handle React Native URLs from camera roll.
+  [VESDK setLocalizationDictionary:@{
+    @"ko": @{
+      @"pesdk_trim_title_name":@"자르기"
+    }
+  }];
   if (request.URL.isFileURL) {
     if (![[NSFileManager defaultManager] fileExistsAtPath:request.URL.path]) {
       reject(RN_IMGLY.kErrorUnableToLoad, @"File does not exist", nil);
@@ -114,7 +119,11 @@ RCT_EXPORT_METHOD(presentComposition:(nonnull RN_IMGLY_URLRequestArray *)request
                   reject:(RCTPromiseRejectBlock)reject)
 {
     NSMutableArray<AVAsset *> *assets = [NSMutableArray new];
-
+    [VESDK setLocalizationDictionary:@{
+      @"ko": @{
+        @"pesdk_trim_title_name":@"자르기"
+      }
+    }];
     if (requests.count > 0) {
         for (NSURLRequest *request in requests) {
             if (request.URL.isFileURL) {

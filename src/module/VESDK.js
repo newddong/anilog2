@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { NativeModules, Image, Platform } from 'react-native';
-import { Configuration } from './configuration';
+import { Configuration } from './VESDKconfiguration';
 
 const { RNVideoEditorSDK } = NativeModules;
 
@@ -213,4 +213,4 @@ class VideoEditorModal extends Component {
 }
 
 export { VESDK, VideoEditorModal };
-export * from './configuration';
+export * from './VESDKconfiguration';

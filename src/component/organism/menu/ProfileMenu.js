@@ -70,6 +70,7 @@ export default ProfileMenu = props => {
 					</ScrollView>
 				</ScrollView>
 			</View>
+			<View style={[{height: 10 * DP}, {backgroundColor: GRAY40}, {marginTop: -3 * DP}]}></View>
 		</View>
 	);
 };

@@ -1,8 +1,8 @@
 import React from 'react';
-import {Platform, ScrollView, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {APRI10, GRAY10, GRAY20, GRAY40} from 'Root/config/color';
+import {Platform, ScrollView, Text, TextInput, TouchableOpacity, View, StyleSheet} from 'react-native';
+import {APRI10, GRAY10, GRAY20, GRAY40, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {AddItem92, Arrow_Down_GRAY10, Arrow_Up_GRAY10, Cross52, NextMark} from 'Atom/icon';
+import {AddItem92, Arrow_Down_GRAY10, Arrow_Up_GRAY10, Cross52, Home48Border, NextMark} from 'Atom/icon';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import PetImageLabel from 'Molecules/label/PetImageLabel';
 import {login_style, petInfoSetting, temp_style} from 'Templete/style_templete';
@@ -15,13 +15,14 @@ import {familyAccountList_style} from 'Root/component/organism/style_organism co
 import DP from 'Root/config/dp';
 import {PET_KIND} from 'Root/i18n/msg';
 import Loading from 'Root/component/molecules/modal/Loading';
+import PetLabel148 from 'Root/component/molecules/label/PetLabel148';
 
 //이 화면에 들어오면서 특정 _id를 API 연동으로 데이터를 가져 옴.
 //이전 화면에서 모든 데이터를 가진 상태에서 들어오는 것이 아님.
 //변수들은 모두 db 변수로 스네이크 형식으로 추후에 변경 필요.
 
 export default PetInfoSetting = ({route, navigation}) => {
-	// console.log('PetInfoSetting / route.params', route.params.pet_id);
+	console.log('PetInfoSetting / route.params', route.params);
 	const [petData, setPetData] = React.useState('false'); // 현재 반려동물 프로필 데이터
 	const [familyAccountList, setFamilyAccountList] = React.useState([]); //가족 계정 목록 데이터
 	const [isChiefUser, setIsChiefUser] = React.useState(false);
@@ -51,7 +52,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 		getUserInfoById(
 			{userobject_id: route.params.pet_id},
 			result => {
-				// console.log('result / GetUserInfoById / PetInfoSetting', result.msg);
+				console.log('result / GetUserInfoById / PetInfoSetting', result.msg);
 				setFamilyAccountList(result.msg.pet_family);
 				navigation.setOptions({title: result.msg.user_nickname});
 				userGlobalObject.userInfo.user_nickname == result.msg.pet_family[0].user_nickname ? setIsChiefUser(true) : setIsChiefUser(false);
@@ -236,15 +237,29 @@ export default PetInfoSetting = ({route, navigation}) => {
 			<View style={[login_style.wrp_main, petInfoSetting.container]}>
 				<ScrollView contentContainerStyle={{alignItems: 'center'}} ref={scrollRef}>
 					{/* 프로필 컨테이너 */}
-					<View style={[petInfoSetting.profileContainer]}>
+					<View style={[styles.profileContainer]}>
 						<View style={[petInfoSetting.profileInside]}>
-							<TouchableOpacity onPress={changeProfile} activeOpacity={0.8} style={[petInfoSetting.petImageLabel, {}]}>
-								<PetImageLabel data={petData} showNickname={false} onPressLabel={changeProfile} />
-								<View style={[Platform.OS == 'ios' ? petInfoSetting.profileEditMark : petInfoSetting.profileEditMark_and]}>
-									<AddItem92 />
+							{/* <TouchableOpacity onPress={changeProfile} activeOpacity={0.8} style={[petInfoSetting.petImageLabel, {}]}> */}
+							<PetLabel148 data={petData} showNickname={false} />
+							{/* <PetImageLabel data={petData} showNickname={false} onPressLabel={changeProfile} /> */}
+							{/* <View style={[Platform.OS == 'ios' ? petInfoSetting.profileEditMark : petInfoSetting.profileEditMark_and]}> */}
+							{/* <AddItem92 /> */}
+							{/* </View> */}
+							{/* </TouchableOpacity> */}
+
+							<View style={[{marginLeft: 40 * DP}, {height: 148 * DP}, {justifyContent: 'center'}]}>
+								<TouchableOpacity onPress={onClickUserInfo} style={[styles.user_id]}>
+									<Text style={[txt.roboto46b, {alignItems: 'center'}, {marginRight: 5 * DP}]} numberOfLines={1}>
+										{petData.user_nickname || ''}
+									</Text>
+									<Home48Border />
+								</TouchableOpacity>
+								{/* 업로드 팔로워 팔로잉 */}
+								<View style={[{width: 462 * DP}, {marginTop: 20 * DP}]}>
+									<SocialInfoB data={petData} />
 								</View>
-							</TouchableOpacity>
-							<View style={[petInfoSetting.petInfoContainer, {}]}>
+							</View>
+							{/* <View style={[petInfoSetting.petInfoContainer, {}]}>
 								<View style={[petInfoSetting.petInfo_topside]}>
 									<View style={[petInfoSetting.petInfo_topside_item]}>
 										<TouchableOpacity onPress={onClickUserInfo} activeOpacity={1} style={[petInfoSetting.petInfo_topside_upload]}>
@@ -264,11 +279,11 @@ export default PetInfoSetting = ({route, navigation}) => {
 										<Text style={[txt.noto24b, {color: APRI10, textDecorationLine: 'underline', textAlign: 'right'}]}>프로필홈으로</Text>
 									</TouchableOpacity>
 								</View>
-							</View>
+							</View> */}
 						</View>
-						<View style={{marginTop: 10 * DP, width: 654 * DP}}>
+						<View style={{marginTop: 30 * DP, width: 694 * DP}}>
 							<View style={[petInfoSetting.user_introBox, !showMore ? {height: null} : null]}>
-								<Text numberOfLines={showMore ? 2 : 10} style={[txt.noto26, {color: GRAY10}]}>
+								<Text numberOfLines={showMore ? 2 : 10} style={[txt.noto26, {color: MAINBLACK}]}>
 									{petData.user_introduction || '반려동물 소개가 없습니다.'}
 								</Text>
 							</View>
@@ -278,7 +293,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 										setIntroOriginLine(lines.length);
 										// console.log('lines.length', lines.length);
 									}}
-									style={[txt.noto26, {color: GRAY10}]}>
+									style={[txt.noto26, {color: MAINBLACK}]}>
 									{petData.user_introduction || '반려동물 소개가 없습니다.'}
 								</Text>
 							</View>
@@ -301,6 +316,10 @@ export default PetInfoSetting = ({route, navigation}) => {
 							)}
 						</View>
 					</View>
+					<View style={[{height: 106 * DP}, {width: 750 * DP}, {borderBottomColor: GRAY40}, {borderBottomWidth: 2 * DP}, {alignItems: 'center'}]}>
+						<Text style={[txt.noto30, styles.changeProfile]}>반려동물 프로필 사진 바꾸기</Text>
+					</View>
+
 					{/* 계정정보 */}
 					<View style={[petInfoSetting.petAccountInfo.container]}>
 						<View style={[petInfoSetting.petAccountInfo.insideContainer]}>
@@ -487,3 +506,34 @@ export default PetInfoSetting = ({route, navigation}) => {
 };
 
 PetInfoSetting.defaultProps = {};
+
+const styles = StyleSheet.create({
+	profileContainer: {
+		width: 750 * DP,
+		// height: 344 * DP,
+		minHeight: 292 * DP,
+		borderBottomColor: GRAY40,
+		borderBottomWidth: 10 * DP,
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingVertical: 30 * DP,
+		// paddingHorizontal: 28 * DP,
+		// paddingHorizontal: 28 * DP,
+		// backgroundColor: 'yellow',
+	},
+	user_id: {
+		// width: 420 * DP,
+		height: 68 * DP,
+		// marginTop: 44 * DP,
+		alignItems: 'center',
+		justifyContent: 'flex-start',
+		flexDirection: 'row',
+		// backgroundColor: 'red',
+	},
+	changeProfile: {
+		color: APRI10,
+		marginTop: 30 * DP,
+		borderBottomWidth: 2 * DP,
+		borderBottomColor: GRAY10,
+	},
+});

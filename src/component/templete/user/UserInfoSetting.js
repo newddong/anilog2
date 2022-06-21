@@ -407,6 +407,7 @@ export default UserInfoSetting = ({route}) => {
 									onClear={onClearNickname}
 									maxlength={20}
 								/>
+								<Text>*띄어쓰기 없이 2자 이상 15자 이내의 한글, 영문, 숫자, '_' 의 입력만 가능합니다.</Text>
 							</View>
 						</View>
 					) : (

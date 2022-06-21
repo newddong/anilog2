@@ -54,6 +54,8 @@ const AniButton = props => {
 		} else if (props.btnStyle == 'border') {
 			return {borderColor: GRAY30, borderWidth: 2 * DP};
 			// {borderColor: APRI10, borderWidth: 2 * DP};
+		} else if (props.btnStyle == 'gray') {
+			return null;
 		} else {
 			return {borderColor: GRAY30, borderWidth: 2 * DP};
 		}

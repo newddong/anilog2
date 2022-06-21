@@ -18,6 +18,7 @@ import {useNavigation} from '@react-navigation/core';
  * @param {height} props.height - 취소 버튼 콜백
  *
  */
+
 const PetProfileEditSelectModal = props => {
 	const data = props.data.items;
 	// console.log('props modal', props);
@@ -25,8 +26,10 @@ const PetProfileEditSelectModal = props => {
 	const [selectedItem2, setSelectedItem2] = React.useState(2);
 	const refContainerLeft = React.useRef('');
 	const refContainerRight = React.useRef('');
+	const [listHeight, setListHeight] = React.useState(0);
 	const padding = '';
 	const animatedHeight = React.useRef(new Animated.Value(0)).current;
+
 	// console.log('props!!!', props);
 	React.useEffect(() => {
 		animateSelectModal();
@@ -34,11 +37,14 @@ const PetProfileEditSelectModal = props => {
 
 	const animateSelectModal = () => {
 		let aniLength;
+
 		console.log('length', data.length);
 		if (data.length > 3) {
 			aniLength = 842 * DP;
+			setListHeight(592);
 		} else {
 			aniLength = (398 + data.length * 144) * DP;
+			setListHeight(144 * (data.length + 1));
 		}
 		Animated.timing(animatedHeight, {
 			duration: 400,
@@ -186,7 +192,7 @@ const PetProfileEditSelectModal = props => {
 				<View style={style.header}>
 					{props.header == '' ? <></> : <Text style={[txt.noto30b, {color: MAINBLACK}, {marginTop: 30 * DP}]}>{props.header}</Text>}
 				</View>
-				<View style={style.listContainer}>
+				<View style={[style.listContainer, {height: listHeight * DP}]}>
 					<View style={[style.list]}>
 						<FlatList data={data} renderItem={renderItem} ListHeaderComponent={userHeader} />
 					</View>
@@ -243,7 +249,7 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		backgroundColor: OPACITY90,
-		// height: 592 * DP,
+		// height: a,
 	},
 	list: {
 		// width: 750 * DP,

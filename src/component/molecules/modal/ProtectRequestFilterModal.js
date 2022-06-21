@@ -5,7 +5,7 @@ import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10, APRI10, GRAY20, BLACK, MIDNIGHT_BLUE, GRAY40, GRAY30, RED10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import {Check50, PhoneIcon, Rect50_Border, ArrowMarkForCalendar, Cross46, Hyhpen} from 'Atom/icon';
+import {Check50, PhoneIcon, Rect50_Border, ArrowMarkForCalendar, Cross46, Hyhpen, Check42, Rect42_Border} from 'Atom/icon';
 import {day, PROTECT_LOCATION} from 'Root/i18n/msg';
 import YearDropDown from 'Molecules/dropdown/YearDropDown';
 import Modal from 'Root/component/modal/Modal';
@@ -865,7 +865,7 @@ const ScrollSelectBox = props => {
 	);
 };
 
-const ShelterSelectBox = props => {
+const ShelterSelectBox = React.memo(props => {
 	const [data, setData] = React.useState(props.data.filter(e => e.user_nickname != undefined));
 
 	React.useEffect(() => {
@@ -886,12 +886,26 @@ const ShelterSelectBox = props => {
 		props.onConfirm(list);
 	};
 
+	const ITEM_HEIGHT = 142 * DP;
+	const keyExtractor = React.useCallback(item => item._id.toString(), []);
+	const getItemLayout = React.useCallback(
+		(data, index) =>
+			!data[index]
+				? {length: 0, offset: 0, index: index}
+				: {
+						length: ITEM_HEIGHT,
+						offset: ITEM_HEIGHT * index + 2 * DP,
+						index,
+				  },
+		[],
+	);
+
 	const render = ({item, index}) => {
+		// console.log('ind', index, item);
 		const checked = item.state;
-		item.state ? console.log('item', item.state, index) : false;
 		return (
 			<>
-				<TouchableOpacity onPress={() => onSelect(index)} style={[style.shelterItemCont]} activeOpacity={0.6}>
+				<TouchableOpacity onPress={() => onSelect(index)} style={[style.shelterItemCont, {}]} activeOpacity={0.6}>
 					<View style={[style.shelterInfo]}>
 						<Text style={[txt.noto30]}>{item.user_nickname || ''}</Text>
 						<Text style={[txt.roboto26, {color: GRAY10, maxWidth: 654 * DP}]} numberOfLines={1}>
@@ -904,7 +918,7 @@ const ShelterSelectBox = props => {
 							</Text>
 						</View>
 					</View>
-					<View>{checked ? <Check50 onPress={() => onSelect(index)} /> : <Rect50_Border onPress={() => onSelect(index)} />}</View>
+					<View>{checked ? <Check42 onPress={() => onSelect(index)} /> : <Rect42_Border onPress={() => onSelect(index)} />}</View>
 				</TouchableOpacity>
 				{index == data.length - 1 ? <View style={[{width: 750 * DP, height: 100 * DP}]} /> : <></>}
 			</>
@@ -924,6 +938,9 @@ const ShelterSelectBox = props => {
 					data={data}
 					showsVerticalScrollIndicator={false}
 					renderItem={render}
+					keyExtractor={keyExtractor}
+					getItemLayout={getItemLayout}
+					windowSize={5}
 					ListEmptyComponent={<ListEmptyInfo text={'해당 지역에 위치한 보호소가 없습니다.'} />}
 					ItemSeparatorComponent={() => {
 						return <View style={{width: 654 * DP, height: 2 * DP, backgroundColor: GRAY30, alignSelf: 'center'}} />;
@@ -932,7 +949,7 @@ const ShelterSelectBox = props => {
 			</TouchableOpacity>
 		</>
 	);
-};
+});
 
 ProtectRequestFilterModal.defaultProps = {
 	yesMsg: 'ok',

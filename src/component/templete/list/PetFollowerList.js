@@ -140,7 +140,7 @@ export default PetFollowerList = props => {
 		);
 };
 
-FollowerList.defaultProps = {
+PetFollowerList.defaultProps = {
 	resetProfileInfo: () => {},
 	onChangeSearchInput: () => {},
 };

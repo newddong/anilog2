@@ -302,10 +302,10 @@ const InformationModal = props => {
 		<TouchableOpacity activeOpacity={0.9} onPress={() => Modal.close()} style={style.background}>
 			<TouchableOpacity activeOpacity={0.9} style={[style.popUpWindow]}>
 				<View style={[style.header]}>
-					<Text style={[txt.noto26, {width: 610 * DP, textAlignVertical: 'center'}]}>
-						{data.user_type == 'shelter' ? '보호소 정보' : data.user_nickname}{' '}
-					</Text>
-					<Cross24_Filled onPress={() => props.onClose()} />
+					<Text style={[txt.noto26, {textAlignVertical: 'center'}]}>{data.user_type == 'shelter' ? '보호소 정보' : data.user_nickname} </Text>
+					<TouchableOpacity onPress={() => props.onClose()} style={{padding: 30 * DP, position: 'absolute', right: 12 * DP}}>
+						<Cross24_Filled />
+					</TouchableOpacity>
 				</View>
 				{getContents()}
 			</TouchableOpacity>
@@ -339,13 +339,14 @@ const style = StyleSheet.create({
 	header: {
 		width: 694 * DP,
 		height: 88 * DP,
+		paddingHorizontal: 42 * DP,
 		position: 'absolute',
 		flexDirection: 'row',
 		top: 0,
 		borderTopLeftRadius: 30 * DP,
 		borderTopRightRadius: 30 * DP,
 		alignItems: 'center',
-		justifyContent: 'center',
+		// justifyContent: 'center',
 		backgroundColor: GRAY30,
 	},
 	petInfoContainer: {

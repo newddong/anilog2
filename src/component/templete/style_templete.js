@@ -2789,7 +2789,7 @@ export const petInfoSetting = StyleSheet.create({
 		backgroundColor: 'gray',
 		borderRadius: 50 * DP,
 		opacity: 0.8,
-		shadowOpacity: 0.5,
+		// shadowOpacity: 0.5,
 		elevation: 5,
 	},
 	profileEditMark_and: {

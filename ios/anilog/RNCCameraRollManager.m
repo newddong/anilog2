@@ -506,7 +506,7 @@ RCT_EXPORT_METHOD(compressImage:(NSDictionary * _Nonnull)params
   CGFloat const quality = [params objectForKey:@"quality"] ? [RCTConvert CGFloat:[params objectForKey:@"quality"]]:1;
   CGFloat const maxHeight = [params objectForKey:@"maxHeight"] ? [RCTConvert CGFloat:[params objectForKey:@"maxHeight"]]:0;
   CGFloat const maxWidth = [params objectForKey:@"maxWidth"] ? [RCTConvert CGFloat:[params objectForKey:@"maxWidth"]]:0;
-  NSString *const mimeType = [params objectForKey:@"mimeType"] ? [RCTConvert NSString:[params objectForKey:@"mimeType"]]:@"jpg";
+  NSString *const mimeType = [params objectForKey:@"mimeType"] ? [RCTConvert NSString:[params objectForKey:@"mimeType"]]:@"image/jpeg";
   
   //이후 reject 여부 체크에서 errCode length로 판별하므로 빈 스트링 넣어줌
   __block NSString* errCode = @"";
@@ -588,13 +588,13 @@ RCT_EXPORT_METHOD(compressImage:(NSDictionary * _Nonnull)params
         //압축된 데이터
         //220510 compress시 저장 타입 jpg로 통일
         NSData *imageData = UIImageJPEGRepresentation(img, quality);
-//        if([mimeType.lowercaseString isEqualToString:@"jpg"]){
+//        if([mimeType.lowercaseString containsString:@"jpeg"]){
 //          imageData = UIImageJPEGRepresentation(img, quality);
-//        } else if([mimeType.lowercaseString isEqualToString:@"png"]){
+//        } else if([mimeType.lowercaseString containsString:@"png"]){
 //          imageData = UIImagePNGRepresentation(img);
 //        }
         
-        NSString* savedPath = [self createTempImage:imageData mimeType:@"jpg"];
+        NSString* savedPath = [self createTempImage:imageData mimeType:@"image/jpg"];
         if(savedPath == nil){
           errCode = @"Image save error";
           errMsg = @"Fail to save image";

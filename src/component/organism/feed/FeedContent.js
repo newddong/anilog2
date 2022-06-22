@@ -84,20 +84,13 @@ export default FeedContent = props => {
 	const [isFavorite, setIsFavorite] = React.useState(props.data.is_favorite);
 	const feed_writer = props.data.feed_avatar_id ? props.data.feed_avatar_id : props.data.feed_writer_id;
 	React.useEffect(() => {
-		if (typeof feed_avatar_id === object) {
+		if (feed_avatar_id && feed_avatar_id.user_type === 'pet') {
 			setSend(feed_avatar_id);
 		} else {
 			setSend(feed_writer_id);
 		}
-
-		// if (typeof feed_avatar_id == 'object') {
-		//  setSend(feed_avatar_id);
-		// } else {
-		//  setSend(props.data.feed_writer_id);
-		//  // console.log('props.data.feed_writer_id', props.data.feed_writer_id.is_favorite);
-		// }
 	}, [props.data]);
-	console.log('data', props.data);
+	// console.log('data', props.data);
 	//피드 미트볼 메뉴 - 신고 클릭
 	const onPressReport = context => {
 		console.log('신고 context', context, props.data._id);
@@ -647,7 +640,15 @@ export default FeedContent = props => {
 					<></>
 				)}
 				{(route.name.includes('FeedList') || feed_type == 'missing' || route.name.includes('FeedCommentList')) && (
-					<View style={[organism_style.content_feedContent, /*feedContent_style.content_Top10,*/ {width: 750 * DP, paddingHorizontal: 28 * DP}]}>
+					<View
+						style={[
+							organism_style.content_feedContent,
+							/*feedContent_style.content_Top10,*/ {
+								width: 750 * DP,
+								paddingHorizontal: 28 * DP,
+								marginTop: route.name.includes('FeedCommentList') ? 10 * DP : 0,
+							},
+						]}>
 						<HashText
 							style={[txt.noto28]}
 							byteOfLine={52}

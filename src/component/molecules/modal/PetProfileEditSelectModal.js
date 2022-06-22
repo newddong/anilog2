@@ -29,7 +29,7 @@ const PetProfileEditSelectModal = props => {
 	const padding = '';
 	const animatedHeight = React.useRef(new Animated.Value(0)).current;
 
-	console.log('props!!!', props);
+	// console.log('props!!!', props);
 	React.useEffect(() => {
 		animateSelectModal();
 	}, []);

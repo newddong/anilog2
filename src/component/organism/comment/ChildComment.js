@@ -14,6 +14,7 @@ import {createReport} from 'Root/api/report';
 import Modal from 'Root/component/modal/Modal';
 import DP from 'Root/config/dp';
 import FastImage from 'react-native-fast-image';
+import {count_to_K} from 'Root/util/stringutil';
 /**
  * 자식 댓글
  * @param {object} props - Props Object
@@ -207,25 +208,23 @@ const ChildComment = props => {
 				) : (
 					<>
 						{isMyComment ? (
-							<View style={{marginBottom: 6 * DP, flexDirection: 'row'}}>
+							<View style={{flexDirection: 'row'}}>
 								<TouchableOpacity onPress={onDeleteChild}>
-									<Text style={[txt.noto22, {color: GRAY10}]}> 삭제 · </Text>
+									<Text style={[txt.noto24, {color: GRAY10}]}> 삭제 · </Text>
 								</TouchableOpacity>
 								<TouchableOpacity onPress={() => props.onEdit && props.onEdit(data)}>
-									<Text style={[txt.noto22, {color: GRAY10}]}> 수정 · </Text>
+									<Text style={[txt.noto24, {color: GRAY10}]}> 수정 · </Text>
 								</TouchableOpacity>
 							</View>
 						) : (
 							<TouchableOpacity onPress={reportComment} style={[{flexDirection: 'row'}]}>
 								<Report30 />
-								<Text style={[txt.noto22, {color: GRAY10}]}> 신고 · </Text>
+								<Text style={[txt.noto24, {color: GRAY10}]}> 신고 · </Text>
 							</TouchableOpacity>
 						)}
-						<View style={[childComment.heart30]}>
-							{likeState ? <Heart30_Filled onPress={onCLickHeart} /> : <Heart30_Border onPress={onCLickHeart} />}
-						</View>
+						{likeState ? <Heart30_Filled onPress={onCLickHeart} /> : <Heart30_Border onPress={onCLickHeart} />}
 						<View style={[childComment.likeCount]}>
-							<Text style={(txt.roboto24, childComment.likeCountText)}>{likeCount}</Text>
+							<Text style={(txt.roboto24, childComment.likeCountText)}>{count_to_K(likeCount)}</Text>
 						</View>
 					</>
 				)}
@@ -293,14 +292,13 @@ export const childComment = StyleSheet.create({
 		flexDirection: 'row',
 		alignSelf: 'flex-end',
 		alignItems: 'center',
-		// backgroundColor: 'yellow',
 	},
 	heart30: {
 		width: 30 * DP,
 		height: 30 * DP,
 	},
 	likeCount: {
-		width: 30 * DP,
+		// width: 30 * DP,
 		height: 30 * DP,
 		marginLeft: 6 * DP,
 	},
@@ -308,7 +306,7 @@ export const childComment = StyleSheet.create({
 		color: GRAY10,
 		textAlignVertical: 'center',
 		textAlign: 'center',
-		lineHeight: 30 * DP,
+		lineHeight: 34 * DP,
 	},
 	writeComment: {
 		width: 130 * DP,

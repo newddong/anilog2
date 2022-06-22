@@ -3,7 +3,6 @@ import {Text, View, TextInput, Platform, NativeModules, AppState, StyleSheet, To
 import {APRI10, WHITE, GRAY20, GRAY10, GRAY30, GRAY40, GRAY50, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import AniButton from 'Molecules/button/AniButton';
 import {PHONE_FORM} from 'Root/i18n/msg';
 import DatePicker from 'Molecules/select/DatePicker';
 import TabSelectFilled_Type1 from 'Molecules/tab/TabSelectFilled_Type1';
@@ -13,13 +12,13 @@ import Modal from 'Component/modal/Modal';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {getPettypes} from 'Root/api/userapi';
 import {getAddressList} from 'Root/api/address';
-import SelectInput from 'Molecules/button/SelectInput';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
 import {openSettings} from 'react-native-permissions';
 import HashInput from 'Molecules/input/HashInput';
 import {Arrow_Down_BLACK, Arrow_Down_GRAY10, Search48_BLACK, Camera54} from 'Root/component/atom/icon';
+import moment from 'moment';
 
 //실종 컴포넌트
 export default MissingForm = props => {
@@ -172,20 +171,24 @@ export default MissingForm = props => {
 	};
 
 	const inputAge = age => {
-		console.log('날자선택'+age)
-		let ag = Date.now()-new Date(age);
-		console.log('ag'+ag);
-		let day = Math.floor(ag/1000/60/60/24);
-		let yr = day/365;
-		console.log(yr+'년'+day+'일')
+		// console.log('age', age);
+		const split = age.split('.');
+		const toDate = new Date(split[0], split[1] - 1, split[2]);
+		let ag = new Date().getTime() - new Date(toDate).getTime();
+		let day = Math.floor(ag / 1000 / 60 / 60 / 24);
+		let yr = day / 365;
+		// console.log(yr + '년' + day + '일');
 		setData({...data, missing_animal_age: yr});
 	};
+
 	const inputLocation = location => {
 		setData({...data, missing_animal_lost_location: location});
 	};
+
 	const inputContact = contact => {
 		setData({...data, missing_animal_contact: contact});
 	};
+
 	const inputFeature = feature => {
 		setData({...data, missing_animal_features: feature});
 	};
@@ -390,7 +393,7 @@ export default MissingForm = props => {
 		);
 		previousOffset.current = props.currentScrollOffset;
 		// props.scrollref.current.scrollToOffset({offset: currentPosition.current});
-		inputFocused.current && props.scrollref.current.scrollToOffset({offset: currentPosition.current + 20*DP});
+		inputFocused.current && props.scrollref.current.scrollToOffset({offset: currentPosition.current + 20 * DP});
 		currentPosition.current = previousOffset.current;
 		inputFocused.current = false;
 	}, [keyboardArea]);
@@ -426,42 +429,57 @@ export default MissingForm = props => {
 		// 	Modal.alert('첨부파일은 5개까지만 가능합니다');
 		// 	return;
 		// }
-		navigation.push("MultiPhotoSelect",{prev:{name:route.name,key:route.key}});
+		navigation.push('MultiPhotoSelect', {prev: {name: route.name, key: route.key}});
 	};
 
 	const feedInput = props.feedInput();
-	
+
 	const animalAge = () => {
 		let yr = data.missing_animal_age;
-		console.log('year'+yr);
-		let month = Math.floor((yr - Math.floor(yr))*12);
-		console.log('month'+month);
-		console.log('date'+(yr - Math.floor(yr))*12);
-		if(yr>=1){
-			
-			return Math.floor(yr)+'살'+(month>0?' '+month+'개월':'');
-		}else{
-			return month+'개월';
+		let month = Math.floor((yr - Math.floor(yr)) * 12);
+		// console.log('month' + month);
+		// console.log('date' + (yr - Math.floor(yr)) * 12);
+		if (yr >= 1) {
+			return Math.floor(yr) + '살' + (month > 0 ? ' ' + month + '개월' : '');
+		} else {
+			return month + '개월';
 		}
-		
-	}
+		// console.log('data.missing_animal_age', data.missing_animal_age);
+		// if (data.missing_animal_age == '') {
+		// 	return;
+		// } else {
+		// 	const today = new Date().getTime();
+		// 	let split = data.missing_animal_age.split('.');
+		// 	const selectDate = new Date(split[0], split[1] - 1, split[2]);
+		// 	const duration = (today - selectDate.getTime()) / 1000;
+		// 	// console.log(duration / 86400); //하루단위
+		// 	const birthDate = () => {
+		// 		let year = parseInt(duration / 86400 / 365) + '년 ';
+		// 		let month = parseInt(((duration / 86400) % 365) / 30) + '개월';
+		// 		if (parseInt(duration / 86400 / 365) == 0) {
+		// 			year = '';
+		// 		}
+		// 		return year + month;
+		// 	};
+		// 	return birthDate();
+		// }
+	};
 
 	const animalBirth = () => {
 		let yr = data.missing_animal_age;
-		let day = Math.floor(yr*365);
+		let day = Math.floor(yr * 365);
 		let now = new Date();
-		let birth = new Date(now.setDate(now.getDate()-day));
+		let birth = new Date(now.setDate(now.getDate() - day));
 		console.log(birth.toISOString());
-		return birth.toISOString().substring(0,10).replace('-','.').replace('-','.')
-	}	
-
+		return birth.toISOString().substring(0, 10).replace('-', '.').replace('-', '.');
+	};
 
 	return (
-		<View style={[feedWrite.inputForm]} showsVerticalScrollIndicator={false}>
+		<View style={[feedWrite.inputForm, {}]} showsVerticalScrollIndicator={false}>
 			{/* DropDownSelect */}
 			<View style={[feedWrite.kindCont]}>
-				<View style={{width:'100%'}}>
-					<View style={{alignItems:'center',flexDirection:'row',justifyContent:'space-between'}}>
+				<View style={{width: '100%'}}>
+					<View style={{alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between'}}>
 						<Text style={[txt.noto28]}>분류</Text>
 						<TouchableOpacity onPress={onSelectSpecies} style={[feedWrite.dropdownSelect_depth1, {alignSelf: 'flex-start'}]}>
 							<View style={[feedWrite.petKind]}>
@@ -470,9 +488,7 @@ export default MissingForm = props => {
 							</View>
 						</TouchableOpacity>
 					</View>
-					<TouchableOpacity
-						onPress={onSelectSpeciesDetail}
-						style={[feedWrite.dropdownSelect_depth1, {alignSelf: 'flex-end', marginTop: 20 * DP}]}>
+					<TouchableOpacity onPress={onSelectSpeciesDetail} style={[feedWrite.dropdownSelect_depth1, {alignSelf: 'flex-end', marginTop: 20 * DP}]}>
 						<View style={[feedWrite.petKind]}>
 							<Text style={[txt.noto28, feedWrite.petKind_text]}>{data.missing_animal_species_detail}</Text>
 							<Arrow_Down_BLACK />
@@ -481,12 +497,19 @@ export default MissingForm = props => {
 				</View>
 			</View>
 			{/* DatePicker */}
-			<View style={[feedWrite.kindCont,{marginTop:60*DP,alignItems:'center'}]}>
+			<View style={[feedWrite.kindCont, {marginTop: 60 * DP, alignItems: 'center'}]}>
 				<Text style={[txt.noto28]}>실종 날짜</Text>
-				<DatePicker width={550} onDateChange={onDateChange} defaultDate={data.missing_animal_date.length>0?data.missing_animal_date.substring(0,10).replace('-','.').replace('-','.'):'눌러서 지정'} future={false} />
+				<DatePicker
+					width={550}
+					onDateChange={onDateChange}
+					defaultDate={
+						data.missing_animal_date.length > 0 ? data.missing_animal_date.substring(0, 10).replace('-', '.').replace('-', '.') : '눌러서 지정'
+					}
+					future={false}
+				/>
 			</View>
 			{/* tabSelectFilled_Type1 */}
-			<View style={[feedWrite.kindCont,{marginTop:60*DP,alignItems:'center'}]}>
+			<View style={[feedWrite.kindCont, {marginTop: 60 * DP, alignItems: 'center'}]}>
 				<Text style={[txt.noto26]}>동물 성별</Text>
 				<View style={[feedWrite.formContentContainer]}>
 					<View style={[temp_style.tabSelectFilled_Type1, feedWrite.tabSelectFilled_Type1]}>
@@ -495,11 +518,18 @@ export default MissingForm = props => {
 				</View>
 			</View>
 			{/* Input24 */}
-			<View style={[feedWrite.kindCont,{marginTop:60*DP,alignItems:'center'}]}>
+			<View style={[feedWrite.kindCont, {marginTop: 60 * DP, alignItems: 'center'}]}>
 				<Text style={[txt.noto26]}>동물 나이</Text>
-				<View style={{flexDirection:'row', alignItems:'flex-end',width:550*DP}}>
-					<DatePicker width={418} onDateChange={inputAge} defaultDate={data.missing_animal_age>0?animalBirth():'눌러서 지정!'} future={false} />
-					<Text style={[txt.noto26,{marginLeft:12*DP}]}>{animalAge()}</Text>
+				<View style={{flexDirection: 'row', alignItems: 'flex-end', width: 550 * DP}}>
+					{/* <DatePicker
+						width={418}
+						onDateChange={inputAge}
+						defaultDate={data.missing_animal_age != '' ? data.missing_animal_age : '눌러서 지정!'}
+						future={false}
+						previous={data.missing_animal_age}
+					/> */}
+					<DatePicker width={418} onDateChange={inputAge} defaultDate={data.missing_animal_age > 0 ? animalBirth() : '눌러서 지정!'} future={false} />
+					<Text style={[txt.noto26, {marginLeft: 12 * DP}]}>{animalAge()}</Text>
 				</View>
 				{/* <Input24
 					// title={'동물 나이'}
@@ -527,18 +557,14 @@ export default MissingForm = props => {
 						/>
 					</View> */}
 				</View>
-				<View style={[{flexDirection: 'row',alignItems:'center' ,justifyContent: 'space-between', marginTop: 10 * DP, marginBottom: 20*DP}]}>
-					<TouchableOpacity
-						onPress={onPressCity}
-						style={[feedWrite.dropdownSelect_depth1, {width:302*DP}]}>
+				<View style={[{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10 * DP, marginBottom: 20 * DP}]}>
+					<TouchableOpacity onPress={onPressCity} style={[feedWrite.dropdownSelect_depth1, {width: 302 * DP}]}>
 						<View style={[feedWrite.missing_location_container]}>
 							<Text style={[txt.noto28, feedWrite.missing_location]}>{data.missing_animal_lost_location.city}</Text>
 							<Arrow_Down_BLACK />
 						</View>
 					</TouchableOpacity>
-					<TouchableOpacity
-						onPress={onPressDistrict}
-						style={[feedWrite.dropdownSelect_depth1, {width:302*DP}]}>
+					<TouchableOpacity onPress={onPressDistrict} style={[feedWrite.dropdownSelect_depth1, {width: 302 * DP}]}>
 						<View style={[feedWrite.missing_location_container]}>
 							<Text style={[txt.noto28, feedWrite.missing_location]}>{data.missing_animal_lost_location.district}</Text>
 							<Arrow_Down_BLACK />
@@ -547,7 +573,7 @@ export default MissingForm = props => {
 					<Search48_BLACK />
 				</View>
 				<Input24
-					placeholder="반려동물이 실종된 구체적인 장소를 설명해주세요."
+					placeholder="반려동물이 실종된 구체적인 장소를 설명해 주세요."
 					placeholderTextColor={GRAY10}
 					width={694}
 					height={104}
@@ -559,10 +585,10 @@ export default MissingForm = props => {
 					ref={inputLocationRef}
 				/>
 			</View>
-			<View style={[feedWrite.kindCont,{marginTop:60*DP,alignItems:'center'}]}>
+			<View style={[feedWrite.kindCont, {marginTop: 60 * DP, alignItems: 'center'}]}>
 				<Text style={[txt.noto26]}>연락처</Text>
 				<Input24
-					placeholder="제보 받을 연락처를 입력하세요"
+					placeholder="제보 받을 연락처를 적어주세요"
 					width={550}
 					height={104}
 					onChange={inputContact}
@@ -593,22 +619,21 @@ export default MissingForm = props => {
 			</View>
 			<View style={[feedWrite.inputBalloon]}>
 				<Text style={[txt.noto26]}>추가 내용</Text>
-				{React.cloneElement(feedInput,{onPressIn:onPressIn(inputBalloonRef3),ref:inputBalloonRef3})}
+				{React.cloneElement(feedInput, {onPressIn: onPressIn(inputBalloonRef3), ref: inputBalloonRef3})}
 			</View>
 			{props.selectedImages()}
 			<View style={[feedWrite.buttonContainer]}>
-					<TouchableWithoutFeedback onPress={moveToMultiPhotoSelect}>
-						<View style={[feedWrite.btnItemContainer, {marginBottom: 5 * DP}]}>
-							<Camera54/>
-							<Text style={[txt.noto28b, {color: BLACK, marginLeft: 12 * DP}]}>사진추가</Text>
-						</View>
-					</TouchableWithoutFeedback>
-					
+				<TouchableWithoutFeedback onPress={moveToMultiPhotoSelect}>
+					<View style={[feedWrite.btnItemContainer, {marginBottom: 5 * DP}]}>
+						<Camera54 />
+						<Text style={[txt.noto28b, {color: BLACK, marginLeft: 12 * DP}]}>사진추가</Text>
+					</View>
+				</TouchableWithoutFeedback>
 			</View>
-			<View style={{paddingHorizontal:28*DP}}>
-				<Text style={[txt.noto22,{color:GRAY20}]}>*실종 동물의 특징이 잘 보이는 사진을 골라주세요</Text>
+			<View style={{paddingHorizontal: 28 * DP}}>
+				<Text style={[txt.noto22, {color: GRAY20}]}>*실종 동물의 특징이 잘 보이는 사진을 골라주세요</Text>
 			</View>
-			<View style={{height: keyboardArea+100*DP, width: '100%', backgroundColor: '#FFF'}}></View>
+			<View style={{height: keyboardArea + 100 * DP, width: '100%', backgroundColor: '#FFF'}}></View>
 		</View>
 	);
 };
@@ -623,8 +648,8 @@ const feedWrite = StyleSheet.create({
 		justifyContent: 'space-between',
 	},
 	btnItemContainer: {
-		width:182*DP,
-		height:54*DP,
+		width: 182 * DP,
+		height: 54 * DP,
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
@@ -634,8 +659,8 @@ const feedWrite = StyleSheet.create({
 	},
 	kindCont: {
 		flexDirection: 'row',
-		justifyContent:'space-between',
-		paddingHorizontal:28*DP,
+		justifyContent: 'space-between',
+		paddingHorizontal: 28 * DP,
 		// height: 82 * DP,
 		// alignItems: 'center',
 	},
@@ -657,28 +682,26 @@ const feedWrite = StyleSheet.create({
 		height: 44 * DP,
 		textAlign: 'center',
 	},
-	missing_location_input:{
-		paddingHorizontal: 28*DP,
-		marginTop: 60*DP
+	missing_location_input: {
+		paddingHorizontal: 28 * DP,
+		marginTop: 60 * DP,
 	},
 	missing_location: {
 		height: 44 * DP,
 		textAlign: 'center',
 	},
-	missing_location_container:{
+	missing_location_container: {
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-around',
 	},
-	missing_location_detail_input:{
-
-	},
+	missing_location_detail_input: {},
 	tabSelectFilled_Type1: {
 		marginLeft: 12 * DP,
 	},
 	inputBalloon: {
-		paddingHorizontal: 28*DP,
-		marginTop: 60*DP
+		paddingHorizontal: 28 * DP,
+		marginTop: 60 * DP,
 	},
 });
 

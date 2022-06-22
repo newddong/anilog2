@@ -3,6 +3,8 @@ import {View, Image, Text} from 'react-native';
 import {Paw48_Mixed, Paw48_YELL20, Paw48_APRI10, Private62, Public62, ProfileDefaultImg} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import FastImage from 'react-native-fast-image';
+import {BLACK, WHITE} from 'Root/config/color';
+import {txt} from 'Root/config/textstyle';
 
 /**
  * 프로필 이미지 160
@@ -34,14 +36,28 @@ const ProfileImageLarge160 = props => {
 	};
 
 	const shelter_type = () => {
-		switch (profile_data.shelter_type) {
-			case 'public':
-				return <Public62 />;
-			case 'private':
-				return <Private62 />;
-			default:
-				return <></>;
-		}
+		// switch (profile_data.shelter_type) {
+		// 	case 'public':
+		// 		return <Public62 />;
+		// 	case 'private':
+		// 		return <Private62 />;
+		// 	default:
+		// 		return <></>;
+		// }
+		return (
+			<View
+				style={{
+					width: 62 * DP,
+					height: 62 * DP,
+					borderRadius: 20 * DP,
+					backgroundColor: BLACK,
+					justifyContent: 'center',
+				}}>
+				<Text style={[txt.noto26b, {color: WHITE, textAlignVertical: 'center', textAlign: 'center'}]}>
+					{profile_data.shelter_type == 'private' ? '사' : '공'}
+				</Text>
+			</View>
+		);
 	};
 
 	const userType = () => {

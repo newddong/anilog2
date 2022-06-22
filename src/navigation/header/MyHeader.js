@@ -12,7 +12,15 @@ export default MyHeader = ({navigation, route, options, back}) => {
 	const [items, setItems] = React.useState('');
 	const [selectedItem, setSelectedItem] = React.useState(1000);
 	const [userData, setUserData] = React.useState('');
+
 	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			fetchData();
+		});
+		return unsubscribe;
+	}, []);
+
+	const fetchData = () => {
 		getUserInfoById(
 			{userobject_id: userGlobalObj.userInfo._id},
 			user => {
@@ -28,12 +36,7 @@ export default MyHeader = ({navigation, route, options, back}) => {
 				Modal.popOneBtn(err, '확인', () => Modal.close());
 			},
 		);
-		// checkApi.current = true;
-		//스크롤 Indicator 출력
-		// setTimeout(() => {
-		// 	scrollViewRef.current?.flashScrollIndicators();
-		// }, 500);
-	}, []);
+	};
 
 	const MeatBall = () => {
 		return (
@@ -62,7 +65,7 @@ export default MyHeader = ({navigation, route, options, back}) => {
 			{items: items, user_data: userData, pet_data: route.params?.pet_id || ''},
 			'나의 계정',
 			selected => {
-				console.log('seeokge', selected);
+				// console.log('seeokge', selected);
 				if (selected.user_type) {
 					if (selected?.user_type == 'pet') {
 						navigation.push('PetInfoSetting', {pet_id: selected._id});

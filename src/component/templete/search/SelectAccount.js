@@ -1,11 +1,11 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import AccountList from 'Organism/list/AccountList';
-import {login_style, selectAccount} from 'Templete/style_templete';
-import {assignPet, getUserListByNickname, setPetStatus} from 'Root/api/userapi';
+import {login_style} from 'Templete/style_templete';
+import {getUserListByNickname, setPetStatus} from 'Root/api/userapi';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
-import dp from 'Root/config/dp';
+import DP from 'Root/config/dp';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import InputWithSearchIcon from 'Root/component/molecules/input/InputWithSearchIcon';
 
@@ -34,46 +34,40 @@ export default SelectAccount = ({route, navigation}) => {
 			err => {
 				console.log('err / getUserListByUserNickname / SelectAccount  ', err);
 				Modal.close();
+				setData([]);
 			},
 		);
-		// }
 	}, [searchInput]);
 
 	const onSelect = (item, index) => {
 		console.log('props route params', route.userobject_id);
-		Modal.popTwoBtn(
-			`${item.user_nickname}님이 \n 입양예정자가 맞습니까?`,
-			'취소',
-			'예',
-			() => Modal.close(),
-			() => {
-				//예
-				Modal.close();
-				setPetStatus(
-					{
-						userobject_id: route.params.userobject_id._id,
-						pet_status: 'adopt',
-						pet_adopter: item._id,
-					},
-					result => {
-						console.log('result / setPetStatus / SelectAccount  : ', result.msg.pet_adopter);
+		Modal.popTwoBtn(`${item.user_nickname}님이 \n 입양예정자가 맞습니까?`, '취소', '예', Modal.close, () => {
+			//예
+			Modal.close();
+			setPetStatus(
+				{
+					userobject_id: route.params.userobject_id._id,
+					pet_status: 'adopt',
+					pet_adopter: item._id,
+				},
+				result => {
+					console.log('result / setPetStatus / SelectAccount  : ', result.msg.pet_adopter);
+					setTimeout(() => {
+						Modal.popCongratulationModal(route.params.userobject_id.user_nickname, route.params.userobject_id.user_profile_uri);
 						setTimeout(() => {
-							Modal.popCongratulationModal(route.params.userobject_id.user_nickname, route.params.userobject_id.user_profile_uri);
-							setTimeout(() => {
-								navigation.navigate({
-									name: 'PetInfoSetting',
-									params: {},
-									merge: true,
-								});
-							}, 1500);
-						}, 300);
-					},
-					err => {
-						console.log('err / setPetStatus / SelectAccount  : ', err);
-					},
-				);
-			},
-		);
+							navigation.navigate({
+								name: 'PetInfoSetting',
+								params: {},
+								merge: true,
+							});
+						}, 1500);
+					}, 300);
+				},
+				err => {
+					console.log('err / setPetStatus / SelectAccount  : ', err);
+				},
+			);
+		});
 	};
 
 	const onChange = text => {
@@ -81,18 +75,40 @@ export default SelectAccount = ({route, navigation}) => {
 		setSearchInput(text);
 	};
 
+	const inputRef = React.useRef();
+
+	const onClear = () => {
+		setSearchInput('');
+	};
+
+	const render = ({item, index}) => {
+		return data.length > 0 ? (
+			<View style={[selectAccount.accountList, {backgroundColor: 'white'}]}>
+				<AccountList items={data} onSelect={onSelect} showCrossMark={false} labelWidth={500} />
+			</View>
+		) : (
+			<View>
+				<Text style={[txt.roboto32b, {paddingVertical: 30 * DP}]}>검색 결과가 없습니다.</Text>
+			</View>
+		);
+	};
+
 	return (
 		<View style={[login_style.wrp_main, selectAccount.container]}>
-			<InputWithSearchIcon value={searchInput} onChange={onChange} width={654} placeholder={'닉네임을 검색해주세요.'} />
-			{data.length > 0 ? (
-				<View style={[selectAccount.accountList]}>
-					<AccountList items={data} onSelect={onSelect} showCrossMark={false} />
-				</View>
-			) : (
-				<View>
-					<Text style={[txt.roboto32b, {paddingVertical: 30 * dp}]}>검색 결과가 없습니다.</Text>
-				</View>
-			)}
+			<InputWithSearchIcon value={searchInput} onChange={onChange} width={694} onClear={onClear} placeholder={'닉네임을 검색해주세요.'} />
+			<FlatList data={[{}]} renderItem={render} showsVerticalScrollIndicator={false} />
 		</View>
 	);
 };
+
+const selectAccount = StyleSheet.create({
+	container: {
+		alignItems: 'center',
+		flex: 1,
+	},
+	accountList: {
+		marginTop: 40 * DP,
+		paddingBottom: 80 * DP,
+		width: 694 * DP,
+	},
+});

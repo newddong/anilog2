@@ -59,7 +59,7 @@ export default Review = React.memo(props => {
 		let index = 0;
 		category_sum_list.map((val, ind) => {
 			totalWidth = totalWidth + 20 + val.length * 10;
-			if (totalWidth < 600 * DP) {
+			if (totalWidth < 520 * DP) {
 				// console.log('totalWidth', totalWidth);
 				newArr.push({group: index, item: val});
 			} else {

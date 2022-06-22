@@ -15,8 +15,14 @@ export async function changeLocalPathToS3Path(params, callback, errcallback) {
  * @param {object} params
  * @param {number} params.page
  * @param {number} params.limit
- * @param {string} params.community_type - 커뮤니티 타입 (전체글|'all'|'free'|'review')
- * @param {string} params.community_free_type - 커뮤니티 타입 (|'all'|'talk'|'question'|'meeting')
+ * @param {Array} params.community_animal_type
+ * @param {string} params.interests_city
+ * @param {string} params.interests_district
+ * @param {string} params.interests_trip
+ * @param {string} params.interests_hospital
+ * @param {string} params.interests_interior
+ * @param {string} params.interests_etc
+ * @param {string} params.interests_review
  * @param {function} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */

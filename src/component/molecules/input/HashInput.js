@@ -11,15 +11,14 @@ import {styles} from 'Root/component/atom/image/imageStyle';
 import {txt} from 'Root/config/textstyle';
 import {Location54_Filled, Location40Border} from 'Root/component/atom/icon';
 import DP from 'Root/config/dp';
-import { func, object, string } from 'prop-types';
-
+import {func, object, string} from 'prop-types';
 
 /**
  * 피드 인풋, 해쉬태그, 유저링크 입력가능
  * @type {React.ForwardRefRenderFunction<?,HashInputProps>}
  *
  */
- const HashInput= React.forwardRef((props, ref)=>{
+const HashInput = React.forwardRef((props, ref) => {
 	const [value, setValue] = React.useState(props.value ? props.value : '');
 	const [find, setFind] = React.useState(false);
 	const [cursor, setCursor] = React.useState();
@@ -85,7 +84,10 @@ import { func, object, string } from 'prop-types';
 					},
 					error => {
 						// Modal.alert(error)
-						console.log(error);
+						console.log('getUserListByNickname / HashInput', error);
+						if (error.includes('없습니다.')) {
+							setFindList([]);
+						}
 					},
 				);
 			}
@@ -253,9 +255,9 @@ import { func, object, string } from 'prop-types';
 					{location == undefined ? (
 						false
 					) : (
-						<View style={{flexDirection: 'row', alignItems: 'center', height:40*DP,maxWidth: 550 * DP}}>
+						<View style={{flexDirection: 'row', alignItems: 'center', height: 40 * DP, maxWidth: 550 * DP}}>
 							<Location40Border />
-							<Text style={[txt.noto26, {color: BLACK,lineHeight:30*DP}]} numberOfLines={1}>
+							<Text style={[txt.noto26, {color: BLACK, lineHeight: 30 * DP}]} numberOfLines={1}>
 								{getLocation()}
 							</Text>
 						</View>
@@ -276,7 +278,7 @@ import { func, object, string } from 'prop-types';
 						onPressIn={props.onPressIn}
 						onSelectionChange={onSelectionChange}></TextInput>
 				</View>
-				{props.showImages&&props.selectedImg.length > 0 && (
+				{props.showImages && props.selectedImg.length > 0 && (
 					<View style={[style.mediaListContainer]}>
 						<SelectedMediaList items={props.selectedImg} onDelete={deletePhoto} />
 					</View>
@@ -295,15 +297,14 @@ import { func, object, string } from 'prop-types';
 
 const HashInputProps = {
 	/** @type {import('native-base').StyledProps|Array<import('native-base').StyledProps>}  컨테이너 스타일 */
-	containerStyle:object,
+	containerStyle: object,
 	/** @type {string} 플레이스홀더 */
-	placeholder:string,
+	placeholder: string,
 	/** @type {(text:string, hashKewords:array<String>)=>void} 입력 변경 콜백 */
-	onChangeText:func,
+	onChangeText: func,
 	/** @type {(isFind:boolean)=>void} 입력할때 '#','@'로 시작하는 태그를 입력하였을때 콜백 */
-	onFind:func
-}
-
+	onFind: func,
+};
 
 HashInput.defaultProp = {
 	containerStyle: {},
@@ -317,7 +318,6 @@ const style = StyleSheet.create({
 		// width: 600 * DP,
 		// height: 190 * DP,
 		marginTop: 20 * DP,
-		
 	},
 });
 

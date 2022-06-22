@@ -65,7 +65,7 @@ export default CommunityWrite = props => {
 	}, [data]);
 
 	React.useEffect(() => {
-		isReview ? navigation.setOptions({title: '리뷰'}) : navigation.setOptions({title: '자유 게시글'});
+		isReview ? navigation.setOptions({title: '리뷰 글쓰기'}) : navigation.setOptions({title: '자유게시글 쓰기'});
 	}, []);
 
 	React.useEffect(() => {
@@ -146,15 +146,12 @@ export default CommunityWrite = props => {
 						result.msg.map((v, i) => {
 							richText.current?.insertHTML('<p><br/></p></div>');
 							richText.current?.insertHTML(
-								`<div  ">
-								<img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick');" \n
-								  style="height:auto; width:${694 * DP}px; 
-								border-radius:15px; margin:5px 0px 5px 0px; "/>
-								  </div>`,
+								`<div><img src="${v.location}" id="image" onclick="_.sendEvent('ImgClick');" \n
+								  style="height:auto; width:${694 * DP}px; border-radius:15px; margin:5px 0px 5px 0px; "/></div>`,
 							);
 							if (i == result.msg.length - 1) {
 								setTimeout(() => {
-									richText.current?.insertHTML('<p><br/></p></div>');
+									richText.current?.insertHTML('<p id="toDelete"><br/></p>');
 									Modal.close();
 								}, 1000);
 							}

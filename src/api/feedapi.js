@@ -25,6 +25,7 @@ import {apiController, apiFormController} from './apiController';
  * @param {boolean} params.feed_is_protect_diary - 피드가 임보일기인지 정함 T/F
  * @param {Array.<string>} params.media_uri - 피드 첨부파일 uri리스트
  * @param {Array.<FeedMedias>} params.feed_medias - 첨부 객체정보 리스트
+ * @param {'public'|'private'|'follow'} params.feed_public_type - 글 공개 여부
  * @param {({}:object)=>void} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */
@@ -245,4 +246,16 @@ export async function editMissingReport(params, callback, errcallback) {
  */
 export async function deleteFeed(params, callback, errcallback) {
 	apiController('/feed/deleteFeed', arguments);
+}
+
+/**
+ * 태그된 피드 디스플레이 설정/취소
+ * @param {object} params
+ * @param {string} params.feed_user_tag_object_id - 태그된 게시물의 feed_user_tag_object_id (feed의 _id가 아님!)
+ * @param {boolean} params.is_display - 태그된 피드 디스플레이 설정 true, 않보이도록 설정 false (default 값은 true임)
+ * @param {({}:object)=>void} callback - API응답처리 콜백
+ * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
+ */
+export async function updateUserTagDisplay(params, callback, errcallback) {
+	apiController('/feed/updateUserTagDisplay', arguments);
 }

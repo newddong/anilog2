@@ -59,6 +59,7 @@ const ReviewFavoriteBriefList = props => {
 					if (!data[index]) return {length: 0, offset: 0, index: index};
 					return {length: data[index].height, offset: data[index].offset, index: index};
 				}}
+				ListHeaderComponent={<View style={{height: 30 * DP}} />}
 				ListEmptyComponent={props.whenEmpty}
 				onEndReachedThreshold={0.6}
 				onEndReached={() => props.onEndReached()}
@@ -81,7 +82,7 @@ export default ReviewFavoriteBriefList;
 const style = StyleSheet.create({
 	container: {
 		paddingHorizontal: 28 * DP,
-		paddingVertical: 30 * DP,
+		// paddingVertical: 30 * DP,
 		alignItems: 'center',
 	},
 	listItem: {

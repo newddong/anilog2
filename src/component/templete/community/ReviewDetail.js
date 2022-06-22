@@ -112,7 +112,7 @@ export default ReviewDetail = props => {
 				community_type: 'review',
 			},
 			result => {
-				const res = result.msg.review;
+				const res = result.msg;
 				const findIndex = res.findIndex(e => e._id == props.route.params.community_object._id);
 				let list = [];
 				const number_to_list = 4;
@@ -264,7 +264,7 @@ export default ReviewDetail = props => {
 							setTimeout(() => {
 								whichParent == ''
 									? scrollRef.current.scrollToIndex({animated: true, index: 0})
-									: scrollRef.current.scrollToIndex({animated: true, index: whichParent - 1});
+									: scrollRef.current.scrollToIndex({animated: true, index: whichParent - 1, viewPosition: 0});
 							}, 500);
 							Modal.close();
 						},

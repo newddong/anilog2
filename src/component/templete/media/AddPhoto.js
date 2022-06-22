@@ -31,7 +31,7 @@ export var exportUri = {}; //겔러리 속 사진 로컬 주소
 
 export default AddPhoto = props => {
 	const limit = 5;
-	const requestloading = Platform.OS=='android'?200:50;
+	const requestloading = Platform.OS == 'android' ? 200 : 50;
 	const navigation = useNavigation();
 	const [isVideo, setVideo] = React.useState(false);
 	const [photolist, setPhotoList] = React.useState([]);
@@ -219,7 +219,7 @@ export default AddPhoto = props => {
 	const selectPhoto = photo => {
 		// console.log('photo select', photo);
 		if (selectedPhoto.length >= limit) {
-			Modal.alert('사진은 ' + limit + '개 까지 선택가능합니다.');
+			Modal.alert('최대 ' + limit + '장까지만 올릴 수 있습니다.');
 			return;
 		}
 		let obj = {};

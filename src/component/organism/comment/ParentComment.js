@@ -3,7 +3,7 @@ import {View, Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {styles} from 'Atom/image/imageStyle';
 import ChildCommentList from 'Organism/comment/ChildCommentList';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
-import {Arrow_Down_GRAY10, Heart30_Border, Heart30_Filled, Report30, SecureIcon40} from 'Atom/icon';
+import {Arrow_Down_GRAY10, Arrow_Up_GRAY10, Heart30_Border, Heart30_Filled, Report30, SecureIcon40} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
 import {REPLY_MEATBALL_MENU_MY_REPLY, REPORT_MENU} from 'Root/i18n/msg';
 import {GRAY10, GRAY20} from 'Root/config/color';
@@ -15,6 +15,7 @@ import {createReport} from 'Root/api/report';
 import DP from 'Root/config/dp';
 import FastImage from 'react-native-fast-image';
 import {useNavigation} from '@react-navigation/core';
+import {count_to_K} from 'Root/util/stringutil';
 
 /**
  * 부모 댓글
@@ -42,6 +43,13 @@ export default ParentComment = React.memo((props, ref) => {
 		setData(props.parentComment);
 		setLikeState(props.parentComment.comment_is_like);
 		setLikeCount(props.parentComment.comment_like_count);
+		if (props.parentComment.showChild) {
+			// console.log('props.parentComment.showChild', props.parentComment.showChild);
+			setTimeout(() => {
+				// showChildComment();
+				setShowChild(true);
+			}, 300);
+		}
 	}, [props.parentComment]);
 
 	React.useEffect(() => {
@@ -139,7 +147,7 @@ export default ParentComment = React.memo((props, ref) => {
 	};
 
 	const onPressDeleteChild = id => {
-		props.onPressDeleteChild(id);
+		props.onPressDeleteChild(id, props.parentComment);
 		setTimeout(() => {
 			showChildComment();
 		}, 200);
@@ -299,38 +307,40 @@ export default ParentComment = React.memo((props, ref) => {
 			{isNotAuthorized() || data.comment_is_delete ? (
 				<></>
 			) : (
-				<View style={[style.likeReplyButton]}>
+				<View style={[style.likeReplyButton, {}]}>
 					{isMyComment ? (
-						<View style={{flexDirection: 'row', marginBottom: 6 * DP}}>
-							<TouchableOpacity onPress={onDelete} style={[{flexDirection: 'row'}]}>
-								<Text style={[txt.noto22, {color: GRAY10}]}> 삭제 · </Text>
+						<View style={{flexDirection: 'row'}}>
+							<TouchableOpacity onPress={onDelete} style={[{}]}>
+								<Text style={[txt.noto24, {color: GRAY10}]}> 삭제 · </Text>
 							</TouchableOpacity>
-							<TouchableOpacity onPress={() => onEdit(props.parentComment)} style={[{flexDirection: 'row'}]}>
-								<Text style={[txt.noto22, {color: GRAY10}]}> 수정 · </Text>
+							<TouchableOpacity onPress={() => onEdit(props.parentComment)} style={[{}]}>
+								<Text style={[txt.noto24, {color: GRAY10}]}> 수정 · </Text>
 							</TouchableOpacity>
 						</View>
 					) : (
 						<TouchableOpacity onPress={reportComment} style={[{flexDirection: 'row', alignItems: 'center'}]}>
 							<Report30 />
-							<Text style={[txt.noto22, {color: GRAY10}]}> 신고 · </Text>
+							<Text style={[txt.noto24, {color: GRAY10}]}> 신고 · </Text>
 						</TouchableOpacity>
 					)}
 					{/* Data - 좋아요 상태 t/f */}
-					<View style={[style.heart30, {}]}>{likeState ? <Heart30_Filled onPress={onCLickHeart} /> : <Heart30_Border onPress={onCLickHeart} />}</View>
-					<View style={[style.likeCount, {marginBottom: 6 * DP}]}>
-						{/* Data - 좋아요 숫자 */}
-						<Text style={(txt.roboto24, style.likeCountText)}>{likeCount}</Text>
-					</View>
-					<TouchableOpacity style={[style.writeComment, {marginBottom: 6 * DP}]} onPress={onPressReplyBtn}>
-						<Text style={[txt.noto22, style.writeCommentText]}>· 답글 쓰기</Text>
+					<TouchableOpacity onPress={onCLickHeart} style={[style.heart30, {flexDirection: 'row'}]}>
+						{likeState ? <Heart30_Filled /> : <Heart30_Border />}
+						<View style={[style.likeCount, {minWidth: 30 * DP}]}>
+							<Text style={(txt.roboto24, style.likeCountText)}>{count_to_K(likeCount)} </Text>
+						</View>
+					</TouchableOpacity>
+
+					<TouchableOpacity style={[style.writeComment, {}]} onPress={onPressReplyBtn}>
+						<Text style={[txt.noto24, style.writeCommentText]}>· 답글 쓰기</Text>
 					</TouchableOpacity>
 				</View>
 			)}
 			{/* {data.children_count > 0 && <Text style={[txt.noto24, {color: GRAY10}]}> 답글{data.children_count}개 보기 </Text>} */}
 			{childrenCount > 0 && (
 				<TouchableOpacity onPress={showChildComment} style={[style.showChildComment]}>
-					<Text style={[txt.noto22, {color: GRAY10}]}> 답글 {childrenCount}개 보기 </Text>
-					<Arrow_Down_GRAY10 />
+					<Text style={[txt.noto24, {color: GRAY10}]}> {!showChild ? '답글' + childrenCount + '개 보기' : '접기'} </Text>
+					{!showChild ? <Arrow_Down_GRAY10 /> : <Arrow_Up_GRAY10 />}
 				</TouchableOpacity>
 			)}
 			{/* Data - 대댓글List */}
@@ -358,6 +368,7 @@ ParentComment.defaultProps = {
 	onPressDeleteChild: () => {},
 	showChild: () => {},
 	openChild: false,
+	toShowChildObj: undefined,
 };
 
 const style = StyleSheet.create({
@@ -383,6 +394,7 @@ const style = StyleSheet.create({
 	},
 	likeReplyButton: {
 		width: 614 * DP,
+		height: 34 * DP,
 		marginTop: 5 * DP,
 		paddingHorizontal: 5 * DP,
 		flexDirection: 'row',
@@ -399,11 +411,11 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 	},
 	heart30: {
-		width: 30 * DP,
+		// width: 30 * DP,
 		height: 30 * DP,
 	},
 	likeCount: {
-		width: 30 * DP,
+		// width: 30 * DP,
 		height: 30 * DP,
 		marginLeft: 6 * DP,
 	},
@@ -416,6 +428,7 @@ const style = StyleSheet.create({
 	writeComment: {
 		// width: 130 * DP,
 		height: 34 * DP,
+		marginLeft: 10 * DP,
 	},
 	writeCommentText: {
 		color: GRAY10,

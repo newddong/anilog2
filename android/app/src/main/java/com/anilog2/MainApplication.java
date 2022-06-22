@@ -1,4 +1,4 @@
-package com.anilog;
+package com.anilog2;
 
 import android.app.Application;
 import android.content.Context;
@@ -9,6 +9,7 @@ import com.anilog2.MyAppPackage;
 import com.anilog2.PhotoListPackage;
 import com.anilog2.TextMeasurePackage;
 import com.anilog2.OpenExternalURLPackage;
+import com.anilog2.RNVideoEditorSDKPackage;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import fr.greweb.reactnativeviewshot.RNViewShotPackage;
@@ -19,6 +20,7 @@ import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import com.microsoft.codepush.react.CodePush;
+import com.brentvatne.react.ReactVideoPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -39,6 +41,8 @@ public class MainApplication extends Application implements ReactApplication {
             packages.add(new PhotoListPackage());
             packages.add(new TextMeasurePackage());
             packages.add(new OpenExternalURLPackage());
+            packages.add(new ReactVideoPackage());
+            packages.add(new RNVideoEditorSDKPackage());
           return packages;
         }
 

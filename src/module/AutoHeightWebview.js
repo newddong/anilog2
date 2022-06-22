@@ -1,6 +1,6 @@
 import React, {useState, useEffect, forwardRef} from 'react';
 
-import {StyleSheet, Platform, ViewPropTypes} from 'react-native';
+import {StyleSheet, Platform} from 'react-native';
 
 import PropTypes from 'prop-types';
 
@@ -86,7 +86,7 @@ AutoHeightWebView.propTypes = {
 			rel: PropTypes.string,
 		}),
 	),
-	style: ViewPropTypes.style,
+	// style: ViewPropTypes.style,
 	customScript: PropTypes.string,
 	customStyle: PropTypes.string,
 	viewportContent: PropTypes.string,

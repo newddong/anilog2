@@ -307,7 +307,6 @@ const Media = props => {
 			});
 	}
 
-
 	return (
 		<View >
 			<Video style={props.style} source={{uri: props.uri}} muted={mute} paused={paused} ref={videoRef}

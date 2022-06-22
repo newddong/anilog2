@@ -1,4 +1,4 @@
-package com.anilog;
+package com.anilog2;
 
 import android.app.Application;
 import android.content.Context;

@@ -182,6 +182,7 @@ android {
 
         versionCode 1
         versionName "1.0"
+        resValue 'string', "CODE_PUSH_APK_BUILD_TIME", String.format("\"%d\"", System.currentTimeMillis())
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -211,7 +212,7 @@ android {
                     abiFilters nativeArchitectures.split(',')
                 }
             }
-            resValue "string", "CodePushDeploymentKey", '""'
+            resValue "string", "CodePushDeploymentKey", '"j3yagKgA-0LzcaRx3wrfj8X2ai7A8Gl6uut2_"'
         }
         releaseStaging {
             signingConfig signingConfigs.debug
@@ -252,6 +253,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+
+
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation 'com.facebook.fresco:animated-gif:2.5.0' // 22.03.22 상우 추가 gif출력

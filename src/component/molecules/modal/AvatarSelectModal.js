@@ -1,16 +1,15 @@
 import React from 'react';
-import {View, Text, StyleSheet, Dimensions, Platform, FlatList, TouchableOpacity, ActivityIndicator, Image} from 'react-native';
-import AniButton from '../button/AniButton';
-import {btn_w226} from 'Atom/btn/btn_style';
-import {WHITE, GRAY10, APRI10} from 'Root/config/color';
+import {View, Text, StyleSheet, Dimensions, Platform, FlatList, TouchableOpacity, ActivityIndicator, Image, Animated, Easing} from 'react-native';
+import {WHITE, GRAY10, APRI10, GRAY20, GRAY30} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import Modal from 'Component/modal/Modal';
 import {getUserInfoById} from 'Root/api/userapi';
 import userGlobalObj from 'Root/config/userGlobalObject';
 import {txt} from 'Root/config/textstyle';
-import PetLabel from '../label/PetLabel';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import FastImage from 'react-native-fast-image';
+import moment from 'moment';
+import {Check64, ProfileDefaultImg} from 'Root/component/atom/icon';
 
 /**
  * 아바타 동물을 선택하는 모달창
@@ -23,8 +22,29 @@ import FastImage from 'react-native-fast-image';
  */
 const AvatarSelectModal = props => {
 	const [items, setItems] = React.useState('');
-	const [selectedItem, setSelectedItem] = React.useState(1000);
+	const [selectedItem, setSelectedItem] = React.useState(0);
 	const checkApi = React.useRef(false);
+
+	React.useEffect(() => {
+		getUserInfoById(
+			{userobject_id: userGlobalObj.userInfo._id},
+			user => {
+				let avatarList = user.msg?.user_my_pets;
+				if (props.isWriteMode) {
+					const filter = avatarList.filter(e => e.pet_status != 'adopt'); //입양 동물은 글을 못씀
+					filter.unshift(userGlobalObj.userInfo);
+					setItems(filter);
+				} else {
+					setItems(avatarList);
+				}
+			},
+			err => {
+				Modal.popOneBtn(err, '확인', () => Modal.close());
+			},
+		);
+		checkApi.current = true;
+		animateSelectModal();
+	}, []);
 
 	const pressOk = () => {
 		props.onOk();
@@ -40,117 +60,96 @@ const AvatarSelectModal = props => {
 		}
 	};
 
-	const renderItem = (item, index) => {
-		if (item.user_type == 'pet') {
-			return (
-				<View key={index} style={[style.listItem, {backgroundColor: index == selectedItem ? APRI10 : WHITE}]}>
-					<PetLabel data={item} onLabelClick={() => onClickLabel(index)} />
-				</View>
-			);
-		} else {
-			return (
-				<TouchableOpacity
-					key={index}
-					onPress={() => onClickLabel(index)}
-					style={[
-						style.listItem,
-						{
-							backgroundColor: index == selectedItem ? APRI10 : WHITE,
-							flexDirection: 'row',
-							alignItems: 'center',
-							justifyContent: 'center',
-						},
-					]}>
-					<FastImage style={styles.img_round_94} source={{uri: item.user_profile_uri}} />
-					<Text
-						style={[
-							txt.roboto28b,
-							{
-								textAlign: 'left',
-								paddingLeft: 30 * DP,
-								width: 170 * DP,
-							},
-						]}
-						numberOfLines={1}
-						ellipsizeMode="tail">
-						{item.user_nickname || ''}
-					</Text>
-				</TouchableOpacity>
-			);
-		}
-	};
-	const platform = Platform.OS;
-
-	React.useEffect(() => {
-		getUserInfoById(
-			{userobject_id: userGlobalObj.userInfo._id},
-			user => {
-				let avatarList = user.msg?.user_my_pets;
-				if (props.isWriteMode) {
-					const filter = avatarList.filter(e => e.pet_status != 'adopt'); //입양 동물은 글을 못씀
-					filter.push(userGlobalObj.userInfo);
-					setItems(filter);
-				} else {
-					setItems(avatarList);
-				}
-			},
-			err => {
-				Modal.popOneBtn(err, '확인', () => Modal.close());
-			},
-		);
-		checkApi.current = true;
-		//스크롤 Indicator 출력
-		setTimeout(() => {
-			scrollViewRef.current?.flashScrollIndicators();
-		}, 500);
-	}, []);
-
-	const moveToFeedWrite = () => {
-		console.log('moveToFeedWrite');
-	};
-
 	const scrollViewRef = React.useRef();
+	const animatedHeight = React.useRef(new Animated.Value(0)).current;
+
+	const animateSelectModal = () => {
+		Animated.timing(animatedHeight, {
+			duration: 300,
+			toValue: 750 * DP,
+			easing: Easing.linear,
+			useNativeDriver: false,
+		}).start();
+	};
+
+	const closeSelectModal = () => {
+		Animated.timing(animatedHeight, {
+			duration: 200,
+			toValue: 0,
+			easing: Easing.linear,
+			useNativeDriver: false,
+		}).start(() => {
+			props.onSelectPet && props.onSelectPet(items[selectedItem]);
+			Modal.close();
+		});
+	};
+
+	const renderItem = ({item, index}) => {
+		// console.log('item', item);
+		const age = 2022 - parseFloat(moment(item.pet_birthday).format('yyyy'));
+		return (
+			<>
+				<TouchableOpacity key={index} onPress={() => onClickLabel(index)} style={[style.listItem, {}]}>
+					{item.user_profile_uri ? (
+						<FastImage style={styles.img_round_68} source={{uri: item.user_profile_uri}} />
+					) : (
+						<ProfileDefaultImg size={styles.img_round_68} />
+					)}
+					<View style={{}}>
+						<Text style={[txt.noto30b, style.user_nickname, {}]} numberOfLines={1}>
+							{item.user_nickname || ''}
+						</Text>
+						{item.user_type == 'pet' ? (
+							<Text style={[txt.noto28, style.user_nickname, {color: GRAY10}]} numberOfLines={1}>
+								{item.pet_species || ''} / {item.pet_species_detail || ''}
+								{item.pet_birthday ? ' / ' + age + '살' : ''}
+							</Text>
+						) : (
+							<></>
+						)}
+					</View>
+					{index == selectedItem ? <Check64 /> : <></>}
+				</TouchableOpacity>
+				{index == items.length - 1 ? <View style={{height: 100 * DP}} /> : <></>}
+			</>
+		);
+	};
 
 	if (items == '') {
-		return <ActivityIndicator />;
+		return (
+			<View style={{position: 'absolute', right: 0, bottom: 0, left: 0, top: 0, justifyContent: 'center', alignItems: 'center'}}>
+				<ActivityIndicator />
+			</View>
+		);
 	} else
 		return (
-			<TouchableOpacity onPress={() => Modal.close()} activeOpacity={1} style={style.background}>
-				<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
-					{/* {console.log('items.length:', items.length)} */}
-					{/* {checkApi.current ? ( */}
+			<TouchableOpacity onPress={closeSelectModal} activeOpacity={1} style={style.background}>
+				<Animated.View
+					activeOpacity={1}
+					style={[
+						style.popUpWindow,
+						style.shadow,
+						{
+							height: animatedHeight,
+						},
+					]}>
+					<Text style={[txt.noto30b]}>글 쓸 계정 선택</Text>
 					{items.length > 0 ? (
-						<View style={[style.avatarList, {}]}>
-							{platform === 'android' ? (
-								<FlatList data={items} renderItem={({item, index}) => renderItem(item, index)} persistentScrollbar={true}></FlatList>
-							) : (
-								<View style={{flexDirection: 'row'}}>
-									<FlatList
-										ref={scrollViewRef}
-										data={items}
-										renderItem={({item, index}) => renderItem(item, index)}
-										persistentScrollbar={true}
-										showsHorizontalScrollIndicator={false}
-										scrollToOverflowEnabled={false}></FlatList>
-								</View>
-							)}
-						</View>
+						<FlatList
+							ref={scrollViewRef}
+							data={items}
+							renderItem={renderItem}
+							showsVerticalScrollIndicator={false}
+							ItemSeparatorComponent={() => {
+								return <View style={{width: 750 * DP, height: 2 * DP, backgroundColor: GRAY30}} />;
+							}}
+						/>
 					) : (
 						<Text style={[{textAlign: 'center', marginBottom: 30 * DP}, txt.noto28b]}>{'등록된 반려동물이 없습니다.\n 반려동물을 등록해주세요'}</Text>
 					)}
 					{/* // ) : null} */}
-					{props.isWriteMode ? (
-						<>
-							<View style={style.buttonContainer}>
-								<AniButton btnLayout={btn_w226} btnStyle={'border'} btnTitle={props.okButtonnMsg} onPress={pressOk} />
-							</View>
-
-							{(checkApi.current = false)}
-						</>
-					) : (
-						<></>
-					)}
-				</TouchableOpacity>
+					{props.isWriteMode ? <>{(checkApi.current = false)}</> : <></>}
+				</Animated.View>
 			</TouchableOpacity>
 		);
 };
@@ -174,12 +173,16 @@ const style = StyleSheet.create({
 		position: 'absolute',
 	},
 	popUpWindow: {
-		width: 330 * DP,
+		width: 750 * DP,
+		height: 732 * DP,
+		alignItems: 'center',
+		position: 'absolute',
+		bottom: 0,
 		backgroundColor: WHITE,
-		paddingTop: 60 * DP,
-		paddingBottom: 52 * DP,
-		paddingHorizontal: 20 * DP,
+		paddingTop: 30 * DP,
 		borderRadius: 40 * DP,
+		borderBottomEndRadius: 0,
+		borderBottomStartRadius: 0,
 	},
 	msg: {
 		marginBottom: 30 * DP,
@@ -201,18 +204,23 @@ const style = StyleSheet.create({
 		},
 		elevation: 2,
 	},
+	user_nickname: {
+		width: 510 * DP,
+		marginLeft: 30 * DP,
+		// backgroundColor: 'red',
+	},
 	avatarList: {
 		maxHeight: 124 * 5 * DP,
 		// backgroundColor: 'red',
 	},
 	listItem: {
-		width: 294 * DP,
-		height: 124 * DP,
-		paddingVertical: 10 * DP,
-		borderRadius: 30 * DP,
-		paddingHorizontal: 20 * DP,
-		// alignItems: 'center',
-		justifyContent: 'space-between',
+		width: 694 * DP,
+		height: 148 * DP,
+		paddingLeft: 10 * DP,
+		flexDirection: 'row',
+		alignItems: 'center',
+		alignSelf: 'center',
+		// backgroundColor: 'palegreen',
 	},
 });
 

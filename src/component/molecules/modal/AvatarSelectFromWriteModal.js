@@ -150,7 +150,7 @@ const AvatarSelectFromWriteModal = props => {
 					// style={[style.popUpWindow, {marginBottom: Platform.OS == 'android' ? 180 * DP : 275 * DP}, {backgroundColor: 'yellow'}]}>
 					style={[style.popUpWindow, {marginBottom: Platform.OS == 'android' ? 145 * DP : 240 * DP}]}>
 					{scrollUp()}
-					<View style={[style.avatarList]}>
+					<View style={[style.avatarList, {}]}>
 						<FlatList
 							data={items}
 							renderItem={({item, index}) => renderItem(item, index)}
@@ -168,7 +168,7 @@ const AvatarSelectFromWriteModal = props => {
 						/>
 					</View>
 
-					<View style={[style.triangle]}>
+					<View style={[style.triangle, {marginBottom: Platform.OS == 'android' ? 40 * DP : 20 * DP}]}>
 						{scrollIndex == 0 ? (
 							<></>
 						) : (

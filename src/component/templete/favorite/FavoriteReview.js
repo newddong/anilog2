@@ -188,7 +188,7 @@ export default FavoriteReview = ({route, isFavorite}) => {
 				copy = copy.filter(element => element.checkBoxState == true); //CheckBoxState가 true인 경우엔 걸러진다
 				console.log('copy length', copy.length);
 				doDeleteFavorite(copy);
-				setData(copy);
+				// setData(copy);
 				Modal.close();
 			};
 

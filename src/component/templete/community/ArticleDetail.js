@@ -1,6 +1,6 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View, ScrollView, ActivityIndicator} from 'react-native';
+import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View, ScrollView, ActivityIndicator, Keyboard} from 'react-native';
 import DP from 'Root/config/dp';
 import {BLACK, GRAY10, GRAY20, GRAY40} from 'Root/config/color';
 import Modal from 'Root/component/modal/Modal';
@@ -140,7 +140,7 @@ export default ArticleDetail = props => {
 	};
 
 	//해당 자유게시글의 댓글을 받아온다
-	const getComment = () => {
+	const getComment = parent => {
 		getCommentListByCommunityId(
 			{
 				community_object_id: props.route.params.community_object._id,
@@ -151,6 +151,13 @@ export default ArticleDetail = props => {
 				let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
 				let dummyForBox = res[res.length - 1];
 				res.push(dummyForBox);
+				if (parent) {
+					const findIndex = res.findIndex(e => e._id == parent._id);
+					console.log('find', findIndex);
+					res.map((v, i) => {
+						res[i].showChild = i == findIndex ? true : false;
+					});
+				}
 				setComments(res);
 			},
 			err => {
@@ -166,6 +173,7 @@ export default ArticleDetail = props => {
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
 	const onWrite = () => {
+		Keyboard.dismiss();
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate('LoginRequired');
@@ -464,19 +472,19 @@ export default ArticleDetail = props => {
 	};
 
 	//댓글 대댓글 삭제
-	const onPressDelete = id => {
+	const onPressDelete = (id, parent) => {
 		Modal.popLoading(true);
 		deleteComment(
 			{
 				commentobject_id: id,
 			},
 			result => {
-				console.log('result / delectComment / ProtectCommentList : ', result.msg.comment_is_delete);
-				getComment();
+				// console.log('result / delectComment / ArticleDetail : ', result.msg);
+				getComment(parent);
 				Modal.close();
 			},
 			err => {
-				console.log(' err / deleteComment / ProtectCommentList : ', err);
+				console.log(' err / deleteComment / ArticleDetail : ', err);
 				Modal.close();
 			},
 		);
@@ -497,12 +505,12 @@ export default ArticleDetail = props => {
 					is_like: bool,
 				},
 				result => {
-					console.log('result/ onPressLike / ReviewMain : ', result.msg.targetPost);
+					console.log('result/ onPressLike / ArticleDetail : ', result.msg.targetPost);
 					setData({...data, community_is_like: bool, community_like_count: bool ? ++data.community_like_count : --data.community_like_count});
 					// setData({...data, community_like_count: bool ? data.community_like_count++ : data.community_like_count--});
 				},
 				err => {
-					console.log('err / onPressLike / ReviewMain : ', err);
+					console.log('err / onPressLike / ArticleDetail : ', err);
 					setData({...data, community_is_like: bool, community_like_count: bool ? ++data.community_like_count : --data.community_like_count});
 				},
 			);
@@ -563,16 +571,13 @@ export default ArticleDetail = props => {
 			}
 			const perPageNum = 5;
 			let slicedPage = [];
-			console.log('page', page);
-			console.log('total', total);
-
-			console.log('totalPage', totalPage.length);
-			console.log('Math.floor(totalPage.length / perPageNum)', Math.floor(totalPage.length / perPageNum));
-			console.log('total % FREE_LIMIT_DETAIL === 0', total % FREE_LIMIT_DETAIL === 0);
+			// console.log('totalPage', totalPage.length);
+			// console.log('Math.floor(totalPage.length / perPageNum)', Math.floor(totalPage.length / perPageNum));
+			// console.log('total % FREE_LIMIT_DETAIL === 0', total % FREE_LIMIT_DETAIL === 0);
 			let isLastPage = page == Math.floor(totalPage.length / perPageNum);
 			isLastPage = (page + 1) * FREE_LIMIT_DETAIL * perPageNum >= total;
-			console.log('(page + 1) * FREE_LIMIT_DETAIL * perPageNum', (page + 1) * FREE_LIMIT_DETAIL * perPageNum);
-			console.log('isLast ? ', isLastPage);
+			// console.log('(page + 1) * FREE_LIMIT_DETAIL * perPageNum', (page + 1) * FREE_LIMIT_DETAIL * perPageNum);
+			// console.log('isLast ? ', isLastPage);
 			if (isLastPage) {
 				for (let i = page * perPageNum + 1; i <= totalPage.length; i++) {
 					slicedPage.push(i);
@@ -637,7 +642,7 @@ export default ArticleDetail = props => {
 	};
 
 	const renderItem = ({item, index}) => {
-		console.log('comments.length ', comments.length);
+		// console.log('comments.length ', comments.length);
 		if (index == comments.length - 1) {
 			return (
 				<>
@@ -690,6 +695,7 @@ export default ArticleDetail = props => {
 				<FlatList
 					data={comments}
 					ref={flatListRef}
+					extraData={comments}
 					listKey={({item, index}) => index}
 					ListHeaderComponent={header()}
 					ListFooterComponent={bottom()}

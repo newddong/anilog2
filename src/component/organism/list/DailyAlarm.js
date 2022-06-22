@@ -1,8 +1,5 @@
 import React from 'react';
 import {FlatList, ScrollView, Text, View, StyleSheet, SafeAreaView} from 'react-native';
-import UserAccount from 'Organism/listitem/UserAccount';
-import {accountHashList} from 'Organism/style_organism copy';
-import UserNote from '../listitem/UserNote';
 import OneAlarm from '../listitem/OneAlarm';
 import {txt} from 'Root/config/textstyle';
 import {GRAY40} from 'Root/config/color';

@@ -51,12 +51,12 @@ const UserTimeLabel = props => {
 					<ProfileDefaultImg size={styles.img_round_46} />
 				)}
 			</TouchableOpacity>
-			<View style={{marginLeft: 20 * DP, flexDirection: 'row', paddingBottom: 10 * DP}}>
+			<View style={{marginLeft: 20 * DP, flexDirection: 'row', paddingBottom: 10 * DP, alignItems: 'center'}}>
 				<Text style={[txt.roboto24, {maxWidth: 320 * DP, color: isLoginUser ? APRI10 : GRAY10}]} numberOfLines={1}>
 					{data ? data.user_nickname : IS_LEAVE_USER}
 				</Text>
-				<Text style={[txt.noto24, {lineHeight: 30 * DP, color: GRAY20, paddingLeft: 16 * DP}]} numberOfLines={1}>
-					·{getCommentedTime()}
+				<Text style={[txt.noto24, {color: GRAY20, paddingLeft: 16 * DP}]} numberOfLines={1}>
+					· {getCommentedTime()}
 				</Text>
 			</View>
 		</View>

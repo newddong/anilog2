@@ -20,11 +20,9 @@ const ChildCommentList = props => {
 		props.like && props.like(data);
 	};
 
-	console.log('Child editData', props.editData);
-
 	const renderItem = ({item, index}) => {
 		return (
-			<View style={[style.childCommentList, {backgroundColor: props.editData && props.editData._id == item._id ? GRAY40 : WHITE}]}>
+			<View style={[style.childCommentList, {backgroundColor: props.editData && props.editData._id == item._id ? GRAY40 : null}]}>
 				<ChildCommentLinker />
 				<ChildComment data={item} onEdit={onEdit} like={like} onPressDeleteChild={props.onPressDeleteChild} />
 			</View>
@@ -43,7 +41,7 @@ export default ChildCommentList;
 
 const style = StyleSheet.create({
 	childCommentList: {
-		width: 614 * DP,
+		// width: 750 * DP,
 		paddingVertical: 20 * DP,
 		flexDirection: 'row',
 	},

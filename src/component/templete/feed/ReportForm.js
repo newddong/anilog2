@@ -1,21 +1,19 @@
 import React from 'react';
-import {Text, View, TextInput, Platform, Keyboard, AppState, NativeModules, StyleSheet, TouchableWithoutFeedback, TouchableOpacity} from 'react-native';
-import {APRI10, WHITE, GRAY20, GRAY10, GRAY30, GRAY50, BLACK} from 'Root/config/color';
+import {Text, View, Platform, Keyboard, AppState, NativeModules, StyleSheet, TouchableWithoutFeedback, TouchableOpacity} from 'react-native';
+import {GRAY10, GRAY30, GRAY50, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {btn_style, feedWrite, temp_style, buttonstyle} from 'Templete/style_templete';
-import AniButton from 'Molecules/button/AniButton';
+import {feedWrite} from 'Templete/style_templete';
 import DatePicker from 'Molecules/select/DatePicker';
 import Modal from 'Component/modal/Modal';
 import {getPettypes} from 'Root/api/userapi';
 import {getAddressList} from 'Root/api/address';
-import SelectInput from 'Molecules/button/SelectInput';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
 import {openSettings} from 'react-native-permissions';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {Arrow_Down_APRI10, Camera54, Location48Border,Paw54_Border,Location54, Arrow_Down_BLACK, Search48_BLACK} from 'Root/component/atom/icon/index';
+import {Camera54, Location48Border, Paw54_Border, Location54, Arrow_Down_BLACK, Search48_BLACK} from 'Root/component/atom/icon/index';
 import Input24 from 'Molecules/input/Input24';
 
 //제보 컴포넌트
@@ -338,7 +336,6 @@ export default ReportForm = props => {
 		}
 	};
 
-	
 	const feedInput = props.feedInput();
 	const feedInputRef = React.useRef();
 	//사진 추가
@@ -347,17 +344,17 @@ export default ReportForm = props => {
 		// 	Modal.alert('첨부파일은 5개까지만 가능합니다');
 		// 	return;
 		// }
-		navigation.push("MultiPhotoSelect",{prev:{name:route.name,key:route.key}});
+		navigation.push('MultiPhotoSelect', {prev: {name: route.name, key: route.key}});
 	};
-	console.log(data)
+	console.log(data);
 	return (
 		<View style={[feedWrite.reportForm_container]} showsVerticalScrollIndicator={false}>
 			<View style={[reportStyle.reportForm]}>
-				{React.cloneElement(feedInput,{onPressIn:onPressIn(feedInputRef),ref:feedInputRef,showImages:true})}
+				{React.cloneElement(feedInput, {onPressIn: onPressIn(feedInputRef), ref: feedInputRef, showImages: true})}
 				<View style={[feedWrite.buttonContainer]}>
 					<TouchableWithoutFeedback onPress={moveToMultiPhotoSelect}>
 						<View style={[feedWrite.btnItemContainer, {marginBottom: 5 * DP}]}>
-							<Camera54/>
+							<Camera54 />
 							<Text style={[txt.noto28b, {color: BLACK, marginLeft: 12 * DP}]}>사진추가</Text>
 						</View>
 					</TouchableWithoutFeedback>
@@ -365,30 +362,33 @@ export default ReportForm = props => {
 				<View style={[reportStyle.reportForm_form]}>
 					<View style={reportStyle.report_date}>
 						<Text style={[txt.noto26]}>제보 날짜</Text>
-						<DatePicker width={550} onDateChange={onDateChange} defaultDate={data.report_witness_date.length>0?data.report_witness_date.substring(0,10).replace('-','.').replace('-','.'):'눌러서 지정'} future={false} />
+						<DatePicker
+							width={550}
+							onDateChange={onDateChange}
+							defaultDate={
+								data.report_witness_date.length > 0 ? data.report_witness_date.substring(0, 10).replace('-', '.').replace('-', '.') : '눌러서 지정'
+							}
+							future={false}
+						/>
 					</View>
 					<View style={[reportStyle.report_location]}>
 						<View style={{flexDirection: 'row'}}>
 							<Text style={txt.noto26}>제보 위치</Text>
 						</View>
-						<View style={[{flexDirection: 'row',alignItems:'center' ,justifyContent: 'space-between', marginTop: 10 * DP, marginBottom: 20*DP}]}>
-							<TouchableOpacity
-								onPress={onPressCity}
-								style={[reportStyle.dropdownSelect_depth1, {width:268*DP}]}>
+						<View style={[{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10 * DP, marginBottom: 20 * DP}]}>
+							<TouchableOpacity onPress={onPressCity} style={[reportStyle.dropdownSelect_depth1, {width: 268 * DP}]}>
 								<View style={[reportStyle.missing_location_container]}>
 									<Text style={[txt.noto28, reportStyle.missing_location]}>{data.report_location.city}</Text>
 									<Arrow_Down_BLACK />
 								</View>
 							</TouchableOpacity>
-							<TouchableOpacity
-								onPress={onPressDistrict}
-								style={[reportStyle.dropdownSelect_depth1, {width:268*DP}]}>
+							<TouchableOpacity onPress={onPressDistrict} style={[reportStyle.dropdownSelect_depth1, {width: 268 * DP}]}>
 								<View style={[reportStyle.missing_location_container]}>
 									<Text style={[txt.noto28, reportStyle.missing_location]}>{data.report_location.district}</Text>
 									<Arrow_Down_BLACK />
 								</View>
 							</TouchableOpacity>
-							<Location48Border  onPress={onPressCurrentLocation}/>
+							<Location48Border onPress={onPressCurrentLocation} />
 							<Search48_BLACK />
 						</View>
 						<Input24
@@ -415,14 +415,17 @@ const reportStyle = StyleSheet.create({
 	reportForm: {
 		paddingHorizontal: 48 * DP,
 	},
-	reportForm_form:{
-		marginBottom: 40* DP,
+	reportForm_form: {
+		marginBottom: 40 * DP,
 	},
-	report_date:{
-		flexDirection:'row', alignItems:'center',justifyContent:'space-between',marginTop:60*DP
+	report_date: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		marginTop: 60 * DP,
 	},
-	report_location:{
-		marginTop: 60*DP,
+	report_location: {
+		marginTop: 60 * DP,
 	},
 	dropdownSelect_depth1: {
 		width: 550 * DP,
@@ -432,7 +435,7 @@ const reportStyle = StyleSheet.create({
 		justifyContent: 'center',
 		backgroundColor: GRAY50,
 	},
-	missing_location_container:{
+	missing_location_container: {
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-around',
@@ -441,4 +444,4 @@ const reportStyle = StyleSheet.create({
 		height: 44 * DP,
 		textAlign: 'center',
 	},
-})
+});

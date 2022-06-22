@@ -1,5 +1,5 @@
 import { Platform } from 'react-native';
-import {VESDK, Tool, ForceTrimMode, CanvasAction, VideoCodec} from 'react-native-videoeditorsdk';   //module 위치따라 조정
+import {VESDK, Tool, ForceTrimMode, CanvasAction, VideoCodec} from './VESDK';
 
 export type VideoEditorOption = {
     uri: string,  //카메라롤의 ph://{local identifier} 외의 형태 (iOS만 적용. android는 별도 uri 필요 없음)

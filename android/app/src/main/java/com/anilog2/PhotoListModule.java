@@ -627,7 +627,7 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
 
     @ReactMethod
     public void getVideoAttributes(final String uri, final Promise promise){
-        WritableMap map = Arguments.createMap();
+        WritableMap map = new WritableNativeMap();
         if(uri == null || uri.isEmpty()) {
             promise.reject(ERROR_UNABLE_TO_LOAD, "Asset uri is null or empty.");
         } else {

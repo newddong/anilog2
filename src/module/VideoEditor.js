@@ -38,7 +38,7 @@ class VideoEditor {
                     bitRate: bitRate,
                 },
                 //cameraroll과 동일한 폴더명. 폴더 내 파일을 지우려면 카메라롤의 clean 함수를 쓰면 된다.
-                filename: 'anilog_temp/' + filename,
+                // filename: 'anilog_temp/' + filename,
             },
             
         };

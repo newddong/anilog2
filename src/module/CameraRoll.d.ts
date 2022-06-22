@@ -212,6 +212,11 @@ export type CropParams = {
    */
   isCircular?: boolean,//deefault false
 }
+
+export type VideoAttributes = {
+  uri?: string,  //카메라롤의 ph://{local identifier} 외의 형태 (iOS만 적용. android는 별도 uri 필요 없음)
+  duration: number,
+}
  
  /**
   * `CameraRoll` provides access to the local camera roll or photo library.
@@ -242,6 +247,10 @@ export type CropParams = {
 
   static saveImage(uri: string): Promise<void>{
     return RNCCameraRoll.saveImage(uri);
+  }
+
+  static getVideoAttributes(uri: string): Promise<VideoAttributes>{
+    return RNCCameraRoll.getVideoAttributes(uri);
   }
    
    static getAlbums(

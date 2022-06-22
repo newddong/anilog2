@@ -161,6 +161,20 @@ export default class App extends Component {
       });
   }
 
+  getVideoAttributes(uri = this.state.image.uri){
+    CameraRoll.getVideoAttributes(uri)
+    .then(r => {
+      this.setState({
+        image: null,
+        images: null,
+        duration: r[0].duration,
+        uri: r[0].uri
+      });
+    })
+    .catch(e => {
+      alert(e);
+    })
+  }
   scaledHeight(oldW, oldH, newW) {
     return (oldH / oldW) * newW;
   }
@@ -187,15 +201,15 @@ export default class App extends Component {
         </ScrollView>
 
         <TouchableOpacity
-          onPress={() => this.checkPermission(false)}
+          onPress={() => this.getImage(35, 30)}
           style={styles.button}>
-          <Text style={styles.text}>Ask permission / Check Permission</Text>
+          <Text style={styles.text}>getImage</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => this.getImage(15, 14)}
+          onPress={() => this.getVideoAttributes(this.state.image.uri)}
           style={styles.button}>
-          <Text style={styles.text}>getImage</Text>
+          <Text style={styles.text}>getVideoAttributes</Text>
         </TouchableOpacity>
 
         <TouchableOpacity

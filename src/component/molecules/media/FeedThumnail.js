@@ -4,7 +4,7 @@ import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {Blur, Blur246, Check42, Check50, ImageList48, VideoPlay48} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
-import {BLACK, MAINBLACK, OPACITY90, RED10, WHITE} from 'Root/config/color';
+import {APRI10, BLACK, MAINBLACK, OPACITY90, RED10, WHITE} from 'Root/config/color';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import FastImage from 'react-native-fast-image';
 
@@ -63,9 +63,9 @@ const FeedThumbnail = React.memo(props => {
 	const checkSelect = () => {
 		if ((props.selectMode && selected) || (props.selectMode && props.data.checkBoxState)) {
 			return (
-				<View style={[]}>
-					<FastImage source={{uri: props.data.feed_thumbnail}} style={styles.img_square_246} />
-					<View style={[styles.img_square_246, {position: 'absolute', backgroundColor: 'rgba(0,0,0,0.4)'}]}></View>
+				<View style={[{borderColor: APRI10, borderWidth: 2 * DP}]}>
+					<FastImage source={{uri: props.data.feed_thumbnail}} style={{width: 242 * DP, height: 242 * DP}} />
+					<View style={[{width: 242 * DP, height: 242 * DP, position: 'absolute', backgroundColor: 'rgba(0,0,0,0.4)'}]}></View>
 				</View>
 			);
 		} else if (!props.data.checkBoxState || !selected) {

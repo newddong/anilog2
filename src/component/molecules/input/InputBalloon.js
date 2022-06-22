@@ -50,7 +50,7 @@ const InputBalloon = React.forwardRef((props, ref) => {
 	};
 
 	return (
-		<View style={{width: 694 * DP,marginTop:12*DP}}>
+		<View style={{width: 694 * DP, marginTop: 12 * DP}}>
 			{props.title == '' ? (
 				<></>
 			) : (
@@ -66,14 +66,14 @@ const InputBalloon = React.forwardRef((props, ref) => {
 					width: 694 * DP,
 					height: 264 * DP,
 					borderRadius: 30 * DP,
-					paddingHorizontal:24*DP,
+					paddingHorizontal: 24 * DP,
 					backgroundColor: GRAY50,
 					paddingTop: 24 * DP,
 					// alignItems: 'center',
 					// justifyContent: 'center',
 				}}>
 				<TextInput
-					style={[txt.noto28, {textAlignVertical: 'top'}]}
+					style={[txt.noto28, {textAlignVertical: 'top', flex: 1}]}
 					onChangeText={text => onChange(text)}
 					placeholder={props.placeholder}
 					multiline={true}
@@ -83,7 +83,7 @@ const InputBalloon = React.forwardRef((props, ref) => {
 					onPressIn={props.onPressIn}
 					value={props.defaultValue}
 				/>
-				{props.showLimit&&<Text style={[txt.roboto24, {color: GRAY10, alignSelf: 'flex-end'}]}> {text.length} /200</Text>}
+				{props.showLimit && <Text style={[txt.roboto24, {color: GRAY10, alignSelf: 'flex-end'}]}> {text.length} /200</Text>}
 			</View>
 		</View>
 	);

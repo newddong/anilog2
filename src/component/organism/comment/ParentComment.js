@@ -3,7 +3,7 @@ import {View, Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {styles} from 'Atom/image/imageStyle';
 import ChildCommentList from 'Organism/comment/ChildCommentList';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
-import {Arrow_Down_GRAY10, Heart30_Border, Heart30_Filled, Report30, SecureIcon40} from 'Atom/icon';
+import {Arrow_Down_GRAY10, Arrow_Up_GRAY10, Heart30_Border, Heart30_Filled, Report30, SecureIcon40} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
 import {REPLY_MEATBALL_MENU_MY_REPLY, REPORT_MENU} from 'Root/i18n/msg';
 import {GRAY10, GRAY20} from 'Root/config/color';
@@ -43,6 +43,13 @@ export default ParentComment = React.memo((props, ref) => {
 		setData(props.parentComment);
 		setLikeState(props.parentComment.comment_is_like);
 		setLikeCount(props.parentComment.comment_like_count);
+		if (props.parentComment.showChild) {
+			// console.log('props.parentComment.showChild', props.parentComment.showChild);
+			setTimeout(() => {
+				// showChildComment();
+				setShowChild(true);
+			}, 300);
+		}
 	}, [props.parentComment]);
 
 	React.useEffect(() => {
@@ -140,7 +147,7 @@ export default ParentComment = React.memo((props, ref) => {
 	};
 
 	const onPressDeleteChild = id => {
-		props.onPressDeleteChild(id);
+		props.onPressDeleteChild(id, props.parentComment);
 		setTimeout(() => {
 			showChildComment();
 		}, 200);
@@ -300,7 +307,7 @@ export default ParentComment = React.memo((props, ref) => {
 			{isNotAuthorized() || data.comment_is_delete ? (
 				<></>
 			) : (
-				<View style={[style.likeReplyButton, {backgroundColor: 'white'}]}>
+				<View style={[style.likeReplyButton, {}]}>
 					{isMyComment ? (
 						<View style={{flexDirection: 'row'}}>
 							<TouchableOpacity onPress={onDelete} style={[{}]}>
@@ -317,11 +324,13 @@ export default ParentComment = React.memo((props, ref) => {
 						</TouchableOpacity>
 					)}
 					{/* Data - 좋아요 상태 t/f */}
-					<View style={[style.heart30, {}]}>{likeState ? <Heart30_Filled onPress={onCLickHeart} /> : <Heart30_Border onPress={onCLickHeart} />}</View>
-					<View style={[style.likeCount, {}]}>
-						{/* Data - 좋아요 숫자 */}
-						<Text style={(txt.roboto24, style.likeCountText)}>{count_to_K(likeCount)} </Text>
-					</View>
+					<TouchableOpacity onPress={onCLickHeart} style={[style.heart30, {flexDirection: 'row'}]}>
+						{likeState ? <Heart30_Filled /> : <Heart30_Border />}
+						<View style={[style.likeCount, {minWidth: 30 * DP}]}>
+							<Text style={(txt.roboto24, style.likeCountText)}>{count_to_K(likeCount)} </Text>
+						</View>
+					</TouchableOpacity>
+
 					<TouchableOpacity style={[style.writeComment, {}]} onPress={onPressReplyBtn}>
 						<Text style={[txt.noto24, style.writeCommentText]}>· 답글 쓰기</Text>
 					</TouchableOpacity>
@@ -330,8 +339,8 @@ export default ParentComment = React.memo((props, ref) => {
 			{/* {data.children_count > 0 && <Text style={[txt.noto24, {color: GRAY10}]}> 답글{data.children_count}개 보기 </Text>} */}
 			{childrenCount > 0 && (
 				<TouchableOpacity onPress={showChildComment} style={[style.showChildComment]}>
-					<Text style={[txt.noto24, {color: GRAY10}]}> 답글 {childrenCount}개 보기 </Text>
-					<Arrow_Down_GRAY10 />
+					<Text style={[txt.noto24, {color: GRAY10}]}> {!showChild ? '답글' + childrenCount + '개 보기' : '접기'} </Text>
+					{!showChild ? <Arrow_Down_GRAY10 /> : <Arrow_Up_GRAY10 />}
 				</TouchableOpacity>
 			)}
 			{/* Data - 대댓글List */}
@@ -359,6 +368,7 @@ ParentComment.defaultProps = {
 	onPressDeleteChild: () => {},
 	showChild: () => {},
 	openChild: false,
+	toShowChildObj: undefined,
 };
 
 const style = StyleSheet.create({
@@ -401,7 +411,7 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 	},
 	heart30: {
-		width: 30 * DP,
+		// width: 30 * DP,
 		height: 30 * DP,
 	},
 	likeCount: {

@@ -106,7 +106,7 @@ const Input24 = React.forwardRef((props, ref) => {
 	const getMsg = () => {
 		if (props.showMsg) {
 			// if (input.length == 0) {
-			console.log('showmasg', props.showMsg);
+			// console.log('showmasg', props.showMsg);
 			if (props.value == undefined || props.value.length == 0) {
 				// return <Text style={(txt.noto22, {color: RED10, lineHeight: 36 * DP})}></Text>;
 				return false;

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.anilog">
+  package="com.anilog2">
   <queries>
     <package android:name="com.google.android.apps.maps" />
   </queries>

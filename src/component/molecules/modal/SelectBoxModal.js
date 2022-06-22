@@ -60,6 +60,8 @@ const SelectBoxModal = props => {
 		);
 	};
 
+	console.log('props.boxHeight', props.boxHeight);
+
 	const ItemSeparatorComponent = () => {
 		return <View style={{alignSelf: 'center', width: 630 * DP, height: 2 * DP, backgroundColor: GRAY30}}></View>;
 	};
@@ -70,10 +72,11 @@ const SelectBoxModal = props => {
 				<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, {paddingVertical: 20 * DP}]}>
 					<View style={[style.insideContainer]}>
 						<FlatList
-							style={{height: props.boxHeight}}
+							style={{maxHeight: 6 * 88 * DP}}
 							data={data}
 							renderItem={renderItem}
 							scrollEnabled={props.scrollEnabled}
+							persistentScrollbar={true}
 							ItemSeparatorComponent={ItemSeparatorComponent}
 						/>
 					</View>

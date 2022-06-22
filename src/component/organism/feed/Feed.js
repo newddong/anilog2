@@ -120,7 +120,7 @@ export default Feed = React.memo(props => {
 							</View>
 							<View style={(feed_templete_style.commentText_view, {flex: 3})}>
 								<Text style={[txt.noto26, {color: GRAY10}]} numberOfLines={2} ellipsizeMode="tail">
-									{feed_recent_comment?.comment_contents}첫댓글의 중요성
+									{feed_recent_comment?.comment_contents}
 								</Text>
 							</View>
 						</View>

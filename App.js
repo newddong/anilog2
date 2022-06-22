@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import RootStackNavigation from 'Navigation/route/RootStackNavigation';
-import codePush from 'react-native-code-push';
+// import codePush from 'react-native-code-push';
 
 // import SplashScreen from 'rreact-native-splash-screen';
 
@@ -33,3 +33,4 @@ const App = () => {
 };
 
 export default codePush(codePushOptions)(App)
+// export default App

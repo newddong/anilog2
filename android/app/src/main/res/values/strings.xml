@@ -2,5 +2,58 @@
     <string name="app_name">anilog</string>
     <string name="appCenterCrashes_whenToSendCrashes" moduleConfig="true" translatable="false">DO_NOT_ASK_JAVASCRIPT</string>
     <string name="appCenterAnalytics_whenToEnableAnalytics" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
-    <!-- <string moduleConfig="true" name="CodePushDeploymentKey">ET_pxmGkZaNcjuI-gLIaAW8QcA4bj0rOBEVBv</string> -->
+<!--    <string moduleConfig="true" name="CodePushDeploymentKey">ET_pxmGkZaNcjuI-gLIaAW8QcA4bj0rOBEVBv</string>-->
+    <string name="vesdk_video_trim_title_name">동영상 자르기</string>
+    <string name="vesdk_trim_current_time">%1$02d:%2$02d</string>
+    <string name="vesdk_trim_add_clip_button">클립을 추가해주세요</string>
+
+
+    <string name="vesdk_trim_duration">%1$02d:%2$02d</string>
+    <string name="vesdk_trim_slider_duration">%1$02d:%2$02d.%3$01d</string>
+    <string name="vesdk_audio_trim_duration">%1$02d:%2$02d</string>
+    <string name="vesdk_trim_too_short">너무 짧습니다</string>
+    <string name="vesdk_trim_min_reached">최소 길이입니다</string>
+    <string name="vesdk_trim_max_reached">최대 길이입니다</string>
+    <string name="pesdk_editor_title_name">동영상 편집</string>
+    <string name="pesdk_editor_title_mainMenu"/>
+
+    <string name="pesdk_editor_title_closeEditorAlert">편집을 끝내시겠습니까?</string>
+    <string name="pesdk_editor_text_closeImageEditorAlert">이미지 편집을 취소하겠습니까? 저장되지 않습니다.</string>
+    <string name="pesdk_editor_text_closeVideoEditorAlert">동영상 편집을 취소합니까? 저장되지 않습니다.</string>
+    <string name="pesdk_editor_button_closeEditorAlertConfirmation">네</string>
+    <string name="pesdk_editor_button_closeEditorAlertCancelation">아니오</string>
+
+    <string name="pesdk_editor_title_somethingWentWrongAlert">문제가 발생했습니다.</string>
+    <string name="pesdk_editor_text_somethingWentWrongAlert">미디어를 로드할수 없습니다.</string>
+
+    <string name="pesdk_editor_title_videoTooShortAlert">동영상이 너무 짧습니다.</string>
+    <string name="pesdk_editor_text_videoTooShortAlert">최소 %s초 길이의 동영상을 선택하세요</string>
+
+    <string name="pesdk_editor_title_compositionTooShort">동영상이 너무 짧습니다</string>
+    <string name="pesdk_editor_text_compositionTooShort">최소 %s초 길이로 편집하세요</string>
+    <string name="pesdk_editor_compositionToShort_ok">획인</string>
+    <string name="pesdk_editor_compositionToShort_cancel">취소</string>
+
+    <string name="pesdk_editor_button_somethingWentWrongCloseEditor">닫음</string>
+
+    <string name="pesdk_editor_cancel">취소</string>
+    <string name="pesdk_editor_accept">확인</string>
+    <string name="pesdk_editor_save">저장</string>
+
+    <string name="pesdk_editor_write_permission_denied">저장소 권한이 없어 동영상을 저장할 수 없습니다.</string>
+    <string name="pesdk_editor_goto_settings_message">저장소 권한이 없어 동영상을 저장할 수 없습니다. 앱 설정에서 저장소 권한을 설정해주세요</string>
+    <string name="pesdk_editor_goto_settings_title">저장소 권한이 필요합니다.</string>
+    <string name="pesdk_editor_goto_settings_cancel">취소</string>
+    <string name="pesdk_editor_goto_settings_ok">확인</string>
+
+    <string name="pesdk_editor_text_exportProgressUnknown">저장중입니다…</string>
+    <string name="pesdk_editor_text_exportProgress" formatted="false">저장중 %s.</string>
+
+    <string name="pesdk_editor_text_loadProgressUnknown">불러오는 중입니다…</string>
+    <string name="pesdk_editor_text_loadProgress" formatted="false">불러오는 중 %s.</string>
+
+    <string name="pesdk_common_button_flipH">Flip H</string>
+    <string name="pesdk_common_button_flipV">Flip V</string>
+    <string name="pesdk_common_button_undo">이전으로</string>
+    <string name="pesdk_common_button_redo">되돌리기</string>
 </resources>

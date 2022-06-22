@@ -21,7 +21,6 @@ import {useNavigation} from '@react-navigation/core';
 
 const PetProfileEditSelectModal = props => {
 	const data = props.data.items;
-	// console.log('props modal', props);
 	const [selectedItem, setSelectedItem] = React.useState(2);
 	const [selectedItem2, setSelectedItem2] = React.useState(2);
 	const refContainerLeft = React.useRef('');
@@ -30,7 +29,7 @@ const PetProfileEditSelectModal = props => {
 	const padding = '';
 	const animatedHeight = React.useRef(new Animated.Value(0)).current;
 
-	// console.log('props!!!', props);
+	console.log('props!!!', props);
 	React.useEffect(() => {
 		animateSelectModal();
 	}, []);
@@ -115,7 +114,7 @@ const PetProfileEditSelectModal = props => {
 							<Text style={[{width: 510 * DP}, {height: 46 * DP}, txt.noto30b]}>{props.data.user_data.user_nickname}</Text>
 							<Text style={[{width: 510 * DP}, {height: 42 * DP}, txt.noto28, {color: GRAY10}]}>{props.data.user_data.user_phone_number}</Text>
 						</View>
-						<Check64Filled />
+						{props.data.pet_data ? <></> : <Check64Filled />}
 					</View>
 				</View>
 			</TouchableOpacity>
@@ -140,7 +139,7 @@ const PetProfileEditSelectModal = props => {
 	};
 
 	const renderItem = ({item, index}) => {
-		// console.log('item', item);
+		console.log('item', item);
 		return (
 			<TouchableOpacity onPress={() => onSelect(item)}>
 				<View style={[style.listContainer2]}>
@@ -157,6 +156,7 @@ const PetProfileEditSelectModal = props => {
 								{item.pet_species} / {item.pet_species_detail}
 							</Text>
 						</View>
+						{props.data.pet_data == item._id ? <Check64Filled /> : <></>}
 					</View>
 				</View>
 			</TouchableOpacity>

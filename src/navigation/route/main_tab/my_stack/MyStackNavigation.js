@@ -135,7 +135,7 @@ export default MyStackNavigation = props => {
 				component={UserInfoDetailSettting}
 				options={{header: props => <SaveButtonHeader {...props} />, title: '프로필 상세 정보'}}
 			/>
-			<MyStack.Screen name="PetInfoSetting" component={PetInfoSetting} options={{header: props => <SimpleHeader {...props} />, title: ''}} />
+			<MyStack.Screen name="PetInfoSetting" component={PetInfoSetting} options={{header: props => <MyHeader {...props} />, title: ''}} />
 			<MyStack.Screen
 				name="ChangePetProfileImage"
 				component={ChangePetProfileImage}

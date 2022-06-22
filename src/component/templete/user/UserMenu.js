@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/core';
-import React, {useRef} from 'react';
+import React, {useCallback, useRef} from 'react';
 import {Text, View, ScrollView, TouchableOpacity, StyleSheet} from 'react-native';
 import {GRAY10, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
@@ -45,7 +45,7 @@ export default UserMenu = props => {
 	const [data, setData] = React.useState('false'); //우선 userObject 0번 추가
 	const [showMoreIntro, setShowMoreIntro] = React.useState(false);
 	const [numberOfLines, setNumOfLines] = React.useState();
-
+	const [showInfo, setShowInfo] = React.useState(false);
 	//토큰에 로그인한 유저의 _id를 저장
 	React.useEffect(() => {
 		//자동로그인 이외의 기능에는 AsyncStorage를 사용해서 토큰을 불러오지 않음
@@ -158,6 +158,11 @@ export default UserMenu = props => {
 		}
 		// navigation.push('me')
 	};
+	const onTextLayout = useCallback(e => {
+		console.log('aaaaaa', e.nativeEvent.lines.length > 1);
+		// setShowInfo(e.nativeEvent.lines.length > 1);
+		// setNumOfLines(e.nativeEvent.lines.length);
+	}, []);
 
 	if (data == 'false') {
 		return <Loading isModal={false} />;
@@ -187,7 +192,8 @@ export default UserMenu = props => {
 						<View style={{flexDirection: 'row', width: 694 * DP}}>
 							<View style={[styles.introduceBox, {alignSelf: 'flex-start'}]}>
 								{data._id != undefined && (
-									<Text numberOfLines={!showMoreIntro ? 15 : 2} style={[txt.noto26]}>
+									<Text numberOfLines={!showMoreIntro ? 15 : 2} style={[txt.noto26]} onTextLayout={onTextLayout}>
+										{/* // <Text numberOfLines={showInfo ? 15 : 1} style={[txt.noto26]} onTextLayout={onTextLayout}> */}
 										{data.user_introduction || '자기소개가 없습니다.'}
 									</Text>
 								)}

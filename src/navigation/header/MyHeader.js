@@ -8,7 +8,7 @@ import {APRI10, WHITE} from 'Root/config/color';
 import PetLabel70 from 'Root/component/molecules/label/PetLabel70';
 export default MyHeader = ({navigation, route, options, back}) => {
 	// console.log('options', options);
-	// console.log('route', route.params);
+	console.log('routeaaaa', route.params);
 	const [items, setItems] = React.useState('');
 	const [selectedItem, setSelectedItem] = React.useState(1000);
 	const [userData, setUserData] = React.useState('');
@@ -18,11 +18,7 @@ export default MyHeader = ({navigation, route, options, back}) => {
 			user => {
 				// console.log('User', user);
 				let avatarList = user.msg?.user_my_pets;
-				// if (props?.isWriteMode) {
-				// 	const filter = avatarList.filter(e => e.pet_status != 'adopt'); //입양 동물은 글을 못씀
-				// 	filter.push(userGlobalObj.userInfo);
-				// 	setItems(filter);
-				// } else {
+
 				setUserData({...user.msg, pet_status: 'user'});
 				setItems(avatarList);
 				// console.log('avatarList', avatarList);
@@ -63,7 +59,7 @@ export default MyHeader = ({navigation, route, options, back}) => {
 	};
 	const onClickMeatBall = () => {
 		Modal.popPetProfileEditSelectModal(
-			{items: items, user_data: userData},
+			{items: items, user_data: userData, pet_data: route.params?.pet_id || ''},
 			'나의 계정',
 			selected => {
 				console.log('seeokge', selected);

@@ -83,11 +83,12 @@ export default SettingInformAsk = ({route}) => {
 					</View>
 				</View>
 				<View style={styles.versionContainer}>
-					<View style={[{width: 358 * DP}]}>
+					<View style={[{width: 180 * DP}]}>
 						<Text style={[txt.noto32b]}>버전 정보</Text>
 					</View>
-					<View style={[{width: 256 * DP}]}>
-						<Text style={[txt.noto32b, {textAlign: 'right'}]}>0.0.1 ver</Text>
+					<View style={[{flex: 1}]}>
+						<Text style={[txt.noto32b, {textAlign: 'right'}]}>0.0.1 ver(staging, 6-22 17:57)</Text>
+						{/* <Text style={[txt.noto32b, {textAlign: 'right'}]}>0.0.1 ver(release)</Text> */}
 					</View>
 				</View>
 				<View style={styles.serviceContainer}>
@@ -130,9 +131,9 @@ const styles = StyleSheet.create({
 	versionContainer: {
 		height: 128 * DP,
 		width: 750 * DP,
-		paddingLeft: 48 * DP,
+		paddingHorizontal: 48 * DP,
 		flexDirection: 'row',
-		alignContent: 'center',
+		// alignContent: 'center',
 		alignItems: 'center',
 		borderBottomColor: GRAY40,
 		borderBottomWidth: 2 * DP,

@@ -82,8 +82,8 @@
       buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Release"
-      customArchiveName = "anilogRelease"
+      buildConfiguration = "Staging"
+      customArchiveName = "anilog"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

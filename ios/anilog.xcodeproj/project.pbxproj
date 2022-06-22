@@ -12,6 +12,8 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		24DD834A9C1C42FE9FE332C9 /* NotoSansKR-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0A068D045B4047B2B4373AC9 /* NotoSansKR-Bold.otf */; };
+		2A31945F28615C46008D24D4 /* RNVideoEditorSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A31945B28615C46008D24D4 /* RNVideoEditorSDK.m */; };
+		2A31946028615C46008D24D4 /* RNImglyKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A31945E28615C46008D24D4 /* RNImglyKit.m */; };
 		2A5FA76C284F0F4C0059B4FC /* libSDWebImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A5FA76B284F0F4C0059B4FC /* libSDWebImage.a */; };
 		2A5FA76E284F0F520059B4FC /* libSDWebImageWebPCoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A5FA76D284F0F520059B4FC /* libSDWebImageWebPCoder.a */; };
 		2A5FA770284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A5FA76F284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a */; };
@@ -61,6 +63,12 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = anilog/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = anilog/main.m; sourceTree = "<group>"; };
 		260C0AB6EC0CEFE917F43DCA /* Pods-anilog-anilogTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-anilog-anilogTests.debug.xcconfig"; path = "Target Support Files/Pods-anilog-anilogTests/Pods-anilog-anilogTests.debug.xcconfig"; sourceTree = "<group>"; };
+		2A31945928615C46008D24D4 /* RNImglyKitSubclass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNImglyKitSubclass.h; path = anilog/RNImglyKitSubclass.h; sourceTree = "<group>"; };
+		2A31945A28615C46008D24D4 /* RNVideoEditorSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNVideoEditorSDK.h; path = anilog/RNVideoEditorSDK.h; sourceTree = "<group>"; };
+		2A31945B28615C46008D24D4 /* RNVideoEditorSDK.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNVideoEditorSDK.m; path = anilog/RNVideoEditorSDK.m; sourceTree = "<group>"; };
+		2A31945C28615C46008D24D4 /* RNImgly.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNImgly.h; path = anilog/RNImgly.h; sourceTree = "<group>"; };
+		2A31945D28615C46008D24D4 /* RNImglyKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNImglyKit.h; path = anilog/RNImglyKit.h; sourceTree = "<group>"; };
+		2A31945E28615C46008D24D4 /* RNImglyKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNImglyKit.m; path = anilog/RNImglyKit.m; sourceTree = "<group>"; };
 		2A5FA76B284F0F4C0059B4FC /* libSDWebImage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; name = libSDWebImage.a; path = SDWebImage/libSDWebImage.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A5FA76D284F0F520059B4FC /* libSDWebImageWebPCoder.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; name = libSDWebImageWebPCoder.a; path = SDWebImageWebPCoder/libSDWebImageWebPCoder.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A5FA76F284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; name = libSDWebImagePhotosPlugin.a; path = SDWebImagePhotosPlugin/libSDWebImagePhotosPlugin.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -136,6 +144,12 @@
 		13B07FAE1A68108700A75B9A /* anilog */ = {
 			isa = PBXGroup;
 			children = (
+				2A31945C28615C46008D24D4 /* RNImgly.h */,
+				2A31945D28615C46008D24D4 /* RNImglyKit.h */,
+				2A31945E28615C46008D24D4 /* RNImglyKit.m */,
+				2A31945928615C46008D24D4 /* RNImglyKitSubclass.h */,
+				2A31945A28615C46008D24D4 /* RNVideoEditorSDK.h */,
+				2A31945B28615C46008D24D4 /* RNVideoEditorSDK.m */,
 				BA0CE03B2852200D00E45F0D /* en.lproj */,
 				BA0CE0352852091A00E45F0D /* ko.lproj */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -531,6 +545,8 @@
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				BA879FE628141CB00052E1E1 /* RNCAssetsLibraryRequestHandler.m in Sources */,
 				BA879FE528141CB00052E1E1 /* RNCPermissionHandler.m in Sources */,
+				2A31945F28615C46008D24D4 /* RNVideoEditorSDK.m in Sources */,
+				2A31946028615C46008D24D4 /* RNImglyKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -628,7 +644,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7G8696BDJM;
+				DEVELOPMENT_TEAM = SAMGB85RDD;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = anilog/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -659,7 +675,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7G8696BDJM;
+				DEVELOPMENT_TEAM = SAMGB85RDD;
 				INFOPLIST_FILE = anilog/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -678,6 +694,121 @@
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
+		};
+		2A3F418E2862D82B00121824 /* Staging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODEPUSH_KEY = elLqRptqBJGAs_Hlf7JGIK44NNSjzvAyPGKzm;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SDKROOT)/usr/lib/swift\"",
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
+					"\"$(inherited)\"",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MULTI_DEPLOYMENT_CONFIG = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Staging;
+		};
+		2A3F418F2862D82B00121824 /* Staging */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E31176A5D1C6961F817358D8 /* Pods-anilog.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SAMGB85RDD;
+				INFOPLIST_FILE = anilog/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = anilogAppProject;
+				PRODUCT_NAME = anilog;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "anilog-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Staging;
+		};
+		2A3F41902862D82B00121824 /* Staging */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 589B0AC5A823102178DB5694 /* Pods-anilog-anilogTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = SAMGB85RDD;
+				INFOPLIST_FILE = anilogTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-lc++",
+					"$(inherited)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/anilog.app/anilog";
+			};
+			name = Staging;
 		};
 		83CBBA201A601CBA00E9B192 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -708,6 +839,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODEPUSH_KEY = "ocPwcZeaC37_HRv838bu-q8nawhbUimCbGDeO";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -739,6 +871,7 @@
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
+				MULTI_DEPLOYMENT_CONFIG = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
@@ -773,6 +906,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODEPUSH_KEY = q3OUMO2q_4v6mM1wqKOoMm04Zj8A5OIG15nym;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -797,6 +931,8 @@
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				MULTI_DEPLOYMENT_CONFIG = "";
+				"MULTI_DEPLOYMENT_CONFIG[arch=*]" = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -810,6 +946,7 @@
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
 				00E356F71AD99517003FC87E /* Release */,
+				2A3F41902862D82B00121824 /* Staging */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -819,6 +956,7 @@
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
 				13B07F951A680F5B00A75B9A /* Release */,
+				2A3F418F2862D82B00121824 /* Staging */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -828,6 +966,7 @@
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
 				83CBBA211A601CBA00E9B192 /* Release */,
+				2A3F418E2862D82B00121824 /* Staging */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -2,7 +2,7 @@ import React from 'react';
 import {Text, View, Image, TouchableOpacity} from 'react-native';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import DP from 'Root/config/dp';
-import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, ProfileDefaultImg} from 'Atom/icon';
+import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, Paw62_APRI10, Paw62_Mixed, Paw62_YELL20, ProfileDefaultImg} from 'Atom/icon';
 import FastImage from 'react-native-fast-image';
 
 /**
@@ -16,13 +16,14 @@ const PetLabel148 = props => {
 		// console.log('props', props);
 		switch (props.data.pet_status) {
 			case 'protect':
-				return <Paw30_YELL20 />;
+				return <Paw62_YELL20 />;
 			case 'adopt':
-				return <Paw30_Mixed />;
+				return <Paw62_Mixed />;
 			case 'user':
 				return;
 			default:
-				return <Paw30_APRI10 />;
+				// return <Paw30_APRI10 />;
+				return <Paw62_APRI10 />;
 		}
 	};
 
@@ -38,7 +39,7 @@ const PetLabel148 = props => {
 				) : (
 					<ProfileDefaultImg size={styles.img_round_68} />
 				)}
-				<View style={{position: 'absolute', top: 20, right: 25}}>
+				<View style={{position: 'absolute', top: 45, right: 15}}>
 					{/* 팻의 상태 여부에 따른 분기 - protected, adopted, normal  */}
 					{getStatusMark()}
 				</View>

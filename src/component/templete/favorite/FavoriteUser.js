@@ -91,7 +91,7 @@ export default FavoriteUser = props => {
 				copy = copy.filter(element => element.checkBoxState == true); //CheckBoxState가 true인 경우엔 걸러진다
 				console.log('copy length', copy.length);
 				doDeleteFavorite(copy);
-				setData(copy);
+				// setData(copy);
 				Modal.close();
 			};
 			Modal.popOneBtn('선택한 계정을 \n 즐겨찾기에서 해제 하시겠습니까?', '해제', doDelete);

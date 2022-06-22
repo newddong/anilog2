@@ -4,7 +4,7 @@ import UserAccount from 'Organism/listitem/UserAccount';
 import {accountHashList} from 'Organism/style_organism copy';
 import UserNote from '../../organism/listitem/UserNote';
 import DailyAlarm from '../../organism/list/DailyAlarm';
-import {WHITE} from 'Root/config/color';
+import {GRAY10, GRAY20, GRAY30, GRAY40, WHITE} from 'Root/config/color';
 import {getNoticeUserList} from 'Root/api/noticeuser';
 import _ from 'lodash';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,6 +19,7 @@ import {getApplyDetailById, getProtectRequestByProtectRequestId} from 'Root/api/
 import {getAppliesRecord} from 'Root/api/protectapi';
 import {getCommunityByObjectId} from 'Root/api/community';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import {txt} from 'Root/config/textstyle';
 
 const wait = timeout => {
 	return new Promise(resolve => setTimeout(resolve, timeout));
@@ -36,6 +37,7 @@ const AlarmList = props => {
 	let count = 0;
 	const [refreshing, setRefreshing] = React.useState(false);
 	const navState = useNavigationState(state => state);
+
 	const onRefresh = React.useCallback(() => {
 		setRefreshing(true);
 
@@ -257,12 +259,16 @@ const AlarmList = props => {
 						<Text style={[{textAlign: 'center'}]}>소식이 없습니다.</Text>
 					</View>
 				) : (
-					<FlatList
-						data={data}
-						renderItem={renderItem}
-						showsVerticalScrollIndicator={false}
-						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-					/>
+					<View style={[styles.listContainer]}>
+						<Text style={[txt.noto26, styles.textConinter]}>100개 이상의 알람은 자동 삭제됩니다.</Text>
+						<FlatList
+							data={data}
+							renderItem={renderItem}
+							showsVerticalScrollIndicator={false}
+							refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+							style={[{marginTop: 16 * DP}]}
+						/>
+					</View>
 				)}
 			</View>
 		);
@@ -272,7 +278,7 @@ const AlarmList = props => {
 const styles = StyleSheet.create({
 	container: {
 		width: 750 * DP,
-		minHeight: 1322 * DP,
+		// minHeight: 1322 * DP,
 		// alignItems: 'center',
 		backgroundColor: WHITE,
 	},
@@ -280,6 +286,17 @@ const styles = StyleSheet.create({
 		width: 750 * DP,
 		// height: 94 * DP,
 		marginBottom: 40 * DP,
+	},
+	listContainer: {
+		height: 1270 * DP,
+		// backgroundColor: 'yellow',
+	},
+	textConinter: {
+		height: 40 * DP,
+		marginTop: 20 * DP,
+		color: GRAY10,
+		width: 694 * DP,
+		paddingHorizontal: 28 * DP,
 	},
 });
 

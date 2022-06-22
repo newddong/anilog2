@@ -16,6 +16,7 @@ import {organism_style} from 'Organism/style_organism copy';
  * onClickLabel : 'void / 계정 라벨 클릭 - ',
  * showCrossMark : 'boolean / X마크 출력 여부 , default = true',
  * showStarMark : 'boolean / 별 마크(즐겨찾기 여부) 출력 여부 / default = false'
+ * labelWidth : 'number / 유저의 자기소개글 영역 너비'
  * listEmptyComponent : 'component / 리스트 없을 시 '
  * showFollowStatusText : 'boolean / 닉네임 우측 팔로우 중 텍스트 출력 여부'
  * }} props
@@ -60,7 +61,7 @@ export default AccountList = props => {
 			<TouchableOpacity style={[style.accountListItem, {}]} onPress={() => makeBorder(item, index)}>
 				<UserDescriptionLabel
 					data={item}
-					width={310}
+					width={props.labelWidth}
 					onClickLabel={item => onclickLabel(item, index)}
 					showFollowStatusText={props.showFollowStatusText}
 				/>
@@ -103,6 +104,7 @@ AccountList.defaultProps = {
 	showCrossMark: true,
 	showStarMark: false,
 	showFollowStatusText: true,
+	labelWidth: 310,
 	listEmptyComponent: () => {
 		return <></>;
 	},

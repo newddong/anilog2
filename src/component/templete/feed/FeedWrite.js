@@ -3,7 +3,7 @@ import {Text, TouchableOpacity, View, TouchableWithoutFeedback, StyleSheet, Flat
 import {APRI10, WHITE, GRAY20, GRAY10, GRAY30, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Paw54_Border,Location54} from 'Root/component/atom/icon/index';
+import {Arrow_Down_APRI10, Camera54, Location54_APRI10, Paw54_Border, Location54} from 'Root/component/atom/icon/index';
 import {styles} from 'Atom/image/imageStyle';
 import {Urgent_Write1, Urgent_Write2} from 'Atom/icon';
 import AniButton from 'Molecules/button/AniButton';
@@ -48,10 +48,10 @@ export default FeedWrite = props => {
 	);
 
 	React.useEffect(() => {
-		console.log('정보 변경', props.route);
+		// console.log('정보 변경', props.route);
 		if (props.route.name != 'FeedEdit') {
 			const param = props.route.params;
-			console.log('param', param);
+			// console.log('param', param);
 			// console.log('param.feed_avatar_id', param.feed_avatar_id);
 			param.feed_avatar_id //피드 글쓰기 클릭시 즉시 작성자 아바타 계정을 선택하는 절차가 추가됨에 따라 분기처리가 필요해짐
 				? // - 유저 계정에서 피드글쓰기를 누른 경우
@@ -211,7 +211,12 @@ export default FeedWrite = props => {
 
 	//태그 추가
 	const moveToFeedMediaTagEdit = () => {
-		props.navigation.push('FeedMediaTagEdit');
+		console.log('seletect', selectedImg.length);
+		if (selectedImg && selectedImg.length > 0) {
+			props.navigation.push('FeedMediaTagEdit');
+		} else {
+			Modal.alert('사진을 먼저 추가해주세요!');
+		}
 	};
 	const inputFeedTxt = (feedInput, hashtag_keyword) => {
 		props.navigation.setParams({...props.route.params, feed_content: feedText, hashtag_keyword: hashtag_keyword, isEdit: true});
@@ -270,47 +275,64 @@ export default FeedWrite = props => {
 		// scrollref.current.scrollToEnd()
 	};
 
+	const onSelectPublic = (item, index) => {
+		let status = 'public';
+		switch (index) {
+			case 0:
+				status = 'public';
+				break;
+			case 1:
+				status = 'private';
+				break;
+			case 2:
+				status = 'follow';
+				break;
+			default:
+				break;
+		}
+		props.navigation.setParams({...props.route.params, feed_public_type: status});
+	};
+
 	const setWriteModeState = () => {
 		return (
-				<View style={[feedWrite.buttonContainer]}>
-					<TouchableWithoutFeedback onPress={moveToMultiPhotoSelect}>
-						<View style={[feedWrite.btnItemContainer, {marginBottom: 5 * DP}]}>
-							<Camera54 />
-							<Text style={[txt.noto28b, {color: BLACK, marginLeft: 12 * DP}]}>사진추가</Text>
-						</View>
-					</TouchableWithoutFeedback>
-					<TouchableWithoutFeedback onPress={!showReportForm && !showLostAnimalForm ? moveToLocationPicker : () => {}}>
-						<View style={[feedWrite.btnItemContainer]}>
-							{!showReportForm && !showLostAnimalForm ? (
-								<>
-									<Location54 fill="black" />
-									<Text style={[txt.noto28b, {color: BLACK, alignSelf: 'center', marginLeft: 10 * DP}]}>위치추가</Text>
-								</>
-							) : (
-								<>
-									{/* <Location54_GRAY30 />
+			<View style={[feedWrite.buttonContainer]}>
+				<TouchableWithoutFeedback onPress={moveToMultiPhotoSelect}>
+					<View style={[feedWrite.btnItemContainer, {marginBottom: 5 * DP}]}>
+						<Camera54 />
+						<Text style={[txt.noto28b, {color: BLACK, marginLeft: 12 * DP}]}>사진추가</Text>
+					</View>
+				</TouchableWithoutFeedback>
+				<TouchableWithoutFeedback onPress={!showReportForm && !showLostAnimalForm ? moveToLocationPicker : () => {}}>
+					<View style={[feedWrite.btnItemContainer]}>
+						{!showReportForm && !showLostAnimalForm ? (
+							<>
+								<Location54 fill="black" />
+								<Text style={[txt.noto28b, {color: BLACK, alignSelf: 'center', marginLeft: 10 * DP}]}>위치추가</Text>
+							</>
+						) : (
+							<>
+								{/* <Location54_GRAY30 />
 									<Text style={[txt.noto24, {color: GRAY30, alignSelf: 'center', marginLeft: 10 * DP}]}>위치추가</Text> */}
-								</>
-							)}
-						</View>
-					</TouchableWithoutFeedback>
-					<TouchableWithoutFeedback onPress={!showReportForm && !showLostAnimalForm ? moveToFeedMediaTagEdit : () => {}}>
-						<View style={[feedWrite.btnItemContainer]}>
-							{!showReportForm && !showLostAnimalForm ? (
-								<>
-									<Paw54_Border fill="black" />
-									<Text style={[txt.noto28b, {color: BLACK, alignSelf: 'center', marginLeft: 10 * DP}]}>태그하기</Text>
-								</>
-							) : (
-								<View style={[{width: 200 * DP}]}>
-									{/* <Paw54_Gray />
+							</>
+						)}
+					</View>
+				</TouchableWithoutFeedback>
+				<TouchableWithoutFeedback onPress={!showReportForm && !showLostAnimalForm ? moveToFeedMediaTagEdit : () => {}}>
+					<View style={[feedWrite.btnItemContainer]}>
+						{!showReportForm && !showLostAnimalForm ? (
+							<>
+								<Paw54_Border fill="black" />
+								<Text style={[txt.noto28b, {color: BLACK, alignSelf: 'center', marginLeft: 10 * DP}]}>태그하기</Text>
+							</>
+						) : (
+							<View style={[{width: 200 * DP}]}>
+								{/* <Paw54_Gray />
 									<Text style={[txt.noto24, {color: GRAY30, alignSelf: 'center', marginLeft: 10 * DP}]}>태그하기</Text> */}
-								</View>
-							)}
-						</View>
-					</TouchableWithoutFeedback>
-				</View>
-			
+							</View>
+						)}
+					</View>
+				</TouchableWithoutFeedback>
+			</View>
 		);
 	};
 	const test = () => {
@@ -318,85 +340,98 @@ export default FeedWrite = props => {
 	};
 
 	const selectedImages = () => {
-		if(selectedImg.length>0){
-			return (<View style={[{marginTop:40*DP}]}>
-						<SelectedMediaList layout={styles.img_square_round_336} items={selectedImg.map(v=>v?v.cropUri??v.uri:undefined)} onDelete={deletePhoto} />
-					</View>)}
-	}
+		if (selectedImg.length > 0) {
+			return (
+				<View style={[{marginTop: 40 * DP}]}>
+					<SelectedMediaList
+						layout={styles.img_square_round_336}
+						items={selectedImg.map(v => (v ? v.cropUri ?? v.uri : undefined))}
+						onDelete={deletePhoto}
+					/>
+				</View>
+			);
+		}
+	};
 
 	const getCurrentScrollOffset = e => {
 		scrolloffset.current = e.nativeEvent.contentOffset.y;
 	};
 
 	const feedInput = () => {
-		return <HashInput
-			containerStyle={[temp_style.feedTextEdit]}
-			textAlignVertical={'top'}
-			multiline={true}
-			placeholder={showLostAnimalForm?"하고 싶은 말을 추가로 적어주세요":showReportForm?"내용 입력(최대 150자)":"게시물을 작성하세요 (150자)"}
-			onChangeText={inputFeedTxt}
-			// onChangeText={inputMissingTxt}
-			maxLength={150}
-			onFind={onFindTag}
-			selectedImg={selectedImg.map(v=>v?v.cropUri??v.uri:undefined)}
-			onDelete={deletePhoto}
-			value={editText}
-			showImages={!showReportForm && !showLostAnimalForm}
-			// value={feedText}
-			location={!showReportForm && !showLostAnimalForm ? param.feed_location : undefined}
-		/>
-	}
-
+		return (
+			<HashInput
+				containerStyle={[temp_style.feedTextEdit]}
+				textAlignVertical={'top'}
+				multiline={true}
+				placeholder={showLostAnimalForm ? '하고 싶은 말을 추가로 적어주세요' : showReportForm ? '내용 입력' : '내용 입력'}
+				onChangeText={inputFeedTxt}
+				// onChangeText={inputMissingTxt}
+				maxLength={150}
+				onFind={onFindTag}
+				selectedImg={selectedImg.map(v => (v ? v.cropUri ?? v.uri : undefined))}
+				onDelete={deletePhoto}
+				value={editText}
+				showImages={!showReportForm && !showLostAnimalForm}
+				// value={feedText}
+				location={!showReportForm && !showLostAnimalForm ? param.feed_location : undefined}
+			/>
+		);
+	};
 
 	const render = ({item, index}) => {
 		return (
 			<View style={[login_style.wrp_main]} ref={container}>
-				{!(showLostAnimalForm||showReportForm)&&<View style={{width:'100%'}}>
-					<View style={{flexDirection:'row',alignItems:'center',paddingHorizontal:28*DP,justifyContent:'space-between',marginBottom:20*DP}}>
-						<CheckBoxItem style={{width:148*DP}} textStyle={[txt.noto26,{lineHeight:38*DP}]} onCheck={onSetDiary}>임보일기</CheckBoxItem>
-						<View style={{height:38*DP,width:2*DP,backgroundColor:GRAY10}}></View>
-						<RadioBoxGroup style={{flexDirection:'row',justifyContent:'space-between',width:484*DP}} onSelect={(item,index)=>console.log(item,index)}>
-							<RadioBoxItem textStyle={[txt.noto26,{lineHeight:38*DP}]}>전체공개</RadioBoxItem>
-							<RadioBoxItem textStyle={[txt.noto26,{lineHeight:38*DP}]}>비공개</RadioBoxItem>
-							<RadioBoxItem textStyle={[txt.noto26,{lineHeight:38*DP}]}>팔로워공개</RadioBoxItem>
-						</RadioBoxGroup>
-						{/* <View style={{width:474*DP,backgroundColor:'red'}}>
+				{!(showLostAnimalForm || showReportForm) && (
+					<View style={{width: '100%'}}>
+						<View
+							style={{
+								flexDirection: 'row',
+								alignItems: 'center',
+								paddingHorizontal: 28 * DP,
+								justifyContent: 'space-between',
+								marginBottom: 20 * DP,
+							}}>
+							<CheckBoxItem style={{width: 148 * DP}} textStyle={[txt.noto26, {lineHeight: 38 * DP}]} onCheck={onSetDiary}>
+								임보일기
+							</CheckBoxItem>
+							<View style={{height: 38 * DP, width: 2 * DP, backgroundColor: GRAY10}}></View>
+							<RadioBoxGroup style={{flexDirection: 'row', justifyContent: 'space-between', width: 484 * DP}} onSelect={onSelectPublic}>
+								<RadioBoxItem textStyle={[txt.noto26, {lineHeight: 38 * DP}]}>전체공개</RadioBoxItem>
+								<RadioBoxItem textStyle={[txt.noto26, {lineHeight: 38 * DP}]}>비공개</RadioBoxItem>
+								<RadioBoxItem textStyle={[txt.noto26, {lineHeight: 38 * DP}]}>팔로워공개</RadioBoxItem>
+							</RadioBoxGroup>
+							{/* <View style={{width:474*DP,backgroundColor:'red'}}>
 							<RadioBoxItem items={['전체공개','비공개','팔로워공개']} width={160*DP}/>
 						</View> */}
+						</View>
+						{feedInput()}
+						{!isSearchTag && setWriteModeState()}
 					</View>
-					{feedInput()}
-					{!isSearchTag && setWriteModeState()}
-				</View>}
+				)}
 				{/* 긴급 게시 관련 버튼 클릭 시 출력되는 View */}
 				{setUrgBtnsClickedView()}
 			</View>
 		);
-	}
+	};
 
 	return (
-		<View style={{flex: 1, backgroundColor: '#FFF', paddingTop: 30 * DP}}>
+		<View style={{flex: 1, backgroundColor: '#FFF', paddingTop: !(showLostAnimalForm || showReportForm) ? 30 * DP : 0 * DP}}>
 			{/* <TouchableWithoutFeedback onPress={test}>
 				<View style={{backgroundColor: 'red', width: 50, height: 50}}></View>
 			</TouchableWithoutFeedback> */}
-			<FlatList
-				renderItem={render}
-				data={[{}]}
-				keyboardShouldPersistTaps={'handled'}
-				ref={scrollref}
-				onScroll={getCurrentScrollOffset}
-			/>
+			<FlatList renderItem={render} data={[{}]} keyboardShouldPersistTaps={'handled'} ref={scrollref} onScroll={getCurrentScrollOffset} />
 			{/* 긴급게시 플로팅 버튼 */}
 			{showUrgentBtns && !isSearchTag ? (
 				<View style={[temp_style.floatingBtn, feedWrite.urgentBtnContainer]}>
 					{showActionButton ? (
-						<View style={{width:120*DP}}>
+						<View style={{width: 120 * DP}}>
 							<TouchableWithoutFeedback onPress={onPressMissingWrite}>
 								<View style={[feedWrite.urgentBtnItemContainer]}>
 									<Text style={[txt.noto26, {color: WHITE}]}>실종</Text>
 								</View>
 							</TouchableWithoutFeedback>
 							<TouchableWithoutFeedback onPress={onPressReportWrite}>
-								<View style={[feedWrite.urgentBtnItemContainer,{backgroundColor:'#FFD153'}]}>
+								<View style={[feedWrite.urgentBtnItemContainer, {backgroundColor: '#FFD153'}]}>
 									<Text style={[txt.noto26, {color: '#000'}]}>제보</Text>
 								</View>
 							</TouchableWithoutFeedback>

@@ -22,7 +22,7 @@ export default UserAccount = props => {
 
 	const getLabel = () => {
 		if (props.data.type === 'UserObject') {
-			return <UserDescriptionLabel data={props.data} onClickLabel={e => props.onLabelClick(e)} />;
+			return <UserDescriptionLabel data={props.data} onClickLabel={e => props.onLabelClick(e)} width={500} />;
 		} else if (props.data.type === 'HashTagObject') {
 			return (
 				<TouchableOpacity onPress={() => props.onHashClick()}>

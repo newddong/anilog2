@@ -1,4 +1,4 @@
-package com.anilog;
+package com.anilog2;
 
 import com.facebook.react.ReactActivity;
 

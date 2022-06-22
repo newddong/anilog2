@@ -143,7 +143,7 @@ export default FavoriteArticle = ({route, isFavorite}) => {
 				copy = copy.filter(element => element.checkBoxState == true); //CheckBoxState가 true인 경우엔 걸러진다
 				console.log('copy length', copy.length);
 				doDeleteFavorite(copy);
-				setData(copy);
+				// setData(copy);
 				Modal.close();
 			};
 
@@ -260,6 +260,6 @@ const style = StyleSheet.create({
 		height: 10 * DP,
 		width: 750 * DP,
 		backgroundColor: GRAY40,
-		marginBottom: 10 * DP,
+		marginBottom: 20 * DP,
 	},
 });

@@ -1,8 +1,5 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {FlatList, ScrollView, Text, View, StyleSheet, SafeAreaView} from 'react-native';
-import UserAccount from 'Organism/listitem/UserAccount';
-import {accountHashList} from 'Organism/style_organism copy';
-import UserNote from '../listitem/UserNote';
 import OneAlarm from '../listitem/OneAlarm';
 import {txt} from 'Root/config/textstyle';
 import {GRAY40} from 'Root/config/color';
@@ -18,6 +15,7 @@ import {GRAY40} from 'Root/config/color';
  */
 const stringList = ['오늘', '어제', '이번 주'];
 const DailyAlarm = props => {
+	const ITEM_HEIGHT = 134 * DP;
 	// console.log('Daily Alarm props', props.data, props.index);
 	// console.log('newNote', props.index == 0 && props.newNote);
 	const renderItem = ({item, index}) => {
@@ -28,18 +26,27 @@ const DailyAlarm = props => {
 			// </View>
 		);
 	};
+	const getItemLayout = useCallback(
+		(data, index) => ({
+			length: ITEM_HEIGHT,
+			offset: ITEM_HEIGHT * index,
+			index,
+		}),
+		[],
+	);
 	if (props.data.length == 0) {
 		return <></>;
 	} else {
 		return (
 			<View style={[styles.container]}>
-				<Text style={[txt.noto30, {marginLeft: 48 * DP}, {marginBottom: 20 * DP}]}>{stringList[props.index]}</Text>
+				<Text style={[txt.noto26b, {marginLeft: 28 * DP}, {marginBottom: 20 * DP}]}>{stringList[props.index]}</Text>
 				<FlatList
 					style={[styles.listContainer]}
 					data={props.data}
 					keyExtractor={item => item._id}
 					renderItem={renderItem}
 					showsVerticalScrollIndicator={false}
+					getItemLayout={getItemLayout}
 				/>
 			</View>
 		);
@@ -48,7 +55,7 @@ const DailyAlarm = props => {
 
 const styles = StyleSheet.create({
 	container: {
-		marginTop: 40 * DP,
+		// marginTop: 16 * DP,
 		width: 750 * DP,
 		borderBottomColor: GRAY40,
 		borderBottomWidth: 2 * DP,
@@ -59,6 +66,7 @@ const styles = StyleSheet.create({
 	userContainer: {
 		width: 750 * DP,
 		// height: 94 * DP,
+		// height: 134 * DP,
 		marginBottom: 40 * DP,
 	},
 	listContainer: {

@@ -317,40 +317,11 @@ export default PetInfoSetting = ({route, navigation}) => {
 						</View>
 					</View>
 					<View style={[{height: 106 * DP}, {width: 750 * DP}, {borderBottomColor: GRAY40}, {borderBottomWidth: 2 * DP}, {alignItems: 'center'}]}>
-						<Text style={[txt.noto30, styles.changeProfile]}>반려동물 프로필 사진 바꾸기</Text>
-					</View>
-
-					{/* 계정정보 */}
-					<View style={[petInfoSetting.petAccountInfo.container]}>
-						<View style={[petInfoSetting.petAccountInfo.insideContainer]}>
-							<View style={[petInfoSetting.petAccountInfo.accountInfo_header]}>
-								<Text style={[txt.noto30b, {color: GRAY10}]}>계정 정보</Text>
-							</View>
-							<View style={[petInfoSetting.petAccountInfo.information]}>
-								<Text style={[txt.noto24, petInfoSetting.petAccountInfo.infoTitle]}>종</Text>
-								<Text style={[txt.noto24, petInfoSetting.petAccountInfo.infoContent]}>{petData.pet_species}</Text>
-								<TouchableOpacity onPress={changePetInfo} style={{position: 'absolute', right: 0}}>
-									<Text style={[txt.noto24, petInfoSetting.petAccountInfo.infoContent]}>변경하기</Text>
-								</TouchableOpacity>
-							</View>
-							<View style={[petInfoSetting.petAccountInfo.information]}>
-								<Text style={[txt.noto24, petInfoSetting.petAccountInfo.infoTitle]}>품종</Text>
-								<Text style={[txt.noto24, petInfoSetting.petAccountInfo.infoContent]}>{petData.pet_species_detail || ''}</Text>
-							</View>
-						</View>
-					</View>
-					{/* 상세정보 */}
-					<View style={[petInfoSetting.petProfileMenu.container]}>
-						<View style={[petInfoSetting.petProfileMenu.insideContainer]}>
-							<View style={[petInfoSetting.petProfileMenu.menuTitle]}>
-								<TouchableOpacity onPress={goToSetPetInfo}>
-									<Text style={[txt.noto30b, {color: GRAY10}]}>상세 정보</Text>
-								</TouchableOpacity>
-							</View>
-							<TouchableOpacity onPress={goToSetPetInfo} style={[petInfoSetting.petProfileMenu.bracket50]}>
-								<NextMark />
-							</TouchableOpacity>
-						</View>
+						<TouchableOpacity
+						// onPress={changeProfile}
+						>
+							<Text style={[txt.noto30, styles.changeProfile]}>반려동물 프로필 사진 바꾸기</Text>
+						</TouchableOpacity>
 					</View>
 					{/* 소개 */}
 					<View style={[petInfoSetting.petProfileMenu.container]}>
@@ -385,12 +356,45 @@ export default PetInfoSetting = ({route, navigation}) => {
 									ref={modifyRef}
 								/>
 							) : (
-								<Text style={[txt.noto26, {color: GRAY10}]} numberOfLines={15}>
-									{petData.user_introduction || '반려동물 소개가 없습니다.'}
+								<Text style={[txt.noto26, {color: MAINBLACK}]} numberOfLines={15}>
+									{petData.user_introduction || '자기소개가 없습니다.'}
 								</Text>
 							)}
 						</View>
 					</View>
+					{/* 계정정보 */}
+					<View style={[petInfoSetting.petAccountInfo.container]}>
+						<View style={[petInfoSetting.petAccountInfo.insideContainer]}>
+							<View style={[petInfoSetting.petAccountInfo.accountInfo_header]}>
+								<Text style={[txt.noto30b, {color: GRAY10}]}>계정 정보</Text>
+							</View>
+							<View style={[petInfoSetting.petAccountInfo.information]}>
+								<Text style={[txt.noto24, petInfoSetting.petAccountInfo.infoTitle]}>종</Text>
+								<Text style={[txt.noto24, petInfoSetting.petAccountInfo.infoContent]}>{petData.pet_species}</Text>
+								<TouchableOpacity onPress={changePetInfo} style={{position: 'absolute', right: 0}}>
+									<Text style={[txt.noto24, petInfoSetting.petAccountInfo.infoContent]}>변경하기</Text>
+								</TouchableOpacity>
+							</View>
+							<View style={[petInfoSetting.petAccountInfo.information]}>
+								<Text style={[txt.noto24, petInfoSetting.petAccountInfo.infoTitle]}>품종</Text>
+								<Text style={[txt.noto24, petInfoSetting.petAccountInfo.infoContent]}>{petData.pet_species_detail || ''}</Text>
+							</View>
+						</View>
+					</View>
+					{/* 상세정보 */}
+					<View style={[petInfoSetting.petProfileMenu.container]}>
+						<View style={[petInfoSetting.petProfileMenu.insideContainer]}>
+							<View style={[petInfoSetting.petProfileMenu.menuTitle]}>
+								<TouchableOpacity onPress={goToSetPetInfo}>
+									<Text style={[txt.noto30b, {color: GRAY10}]}>상세 정보</Text>
+								</TouchableOpacity>
+							</View>
+							<TouchableOpacity onPress={goToSetPetInfo} style={[petInfoSetting.petProfileMenu.bracket50]}>
+								<NextMark />
+							</TouchableOpacity>
+						</View>
+					</View>
+
 					{/* 접종내역 */}
 					{/* <View style={[petInfoSetting.petProfileMenu.container]}>
 						<View style={[petInfoSetting.petProfileMenu.insideContainer]}>

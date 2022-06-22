@@ -84,7 +84,7 @@ export default SelectAccount = ({route, navigation}) => {
 	const render = ({item, index}) => {
 		return data.length > 0 ? (
 			<View style={[selectAccount.accountList, {backgroundColor: 'white'}]}>
-				<AccountList items={data} onSelect={onSelect} showCrossMark={false} />
+				<AccountList items={data} onSelect={onSelect} showCrossMark={false} labelWidth={500} />
 			</View>
 		) : (
 			<View>

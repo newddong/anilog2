@@ -5,7 +5,7 @@ import CheckBox from 'Molecules/select/CheckBox';
 import {userAccount} from 'Organism/style_organism copy';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {GRAY10, APRI10, BLACK, APRI20, WHITE} from 'Root/config/color';
+import {GRAY10, APRI10, BLACK, APRI20, WHITE, MAINBLACK} from 'Root/config/color';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import {ProfileDefaultImg} from 'Root/component/atom/icon';
 import {useNavigation} from '@react-navigation/core';
@@ -38,17 +38,6 @@ const OneAlarm = props => {
 		}, 2000);
 		// clearTimeout(timer);
 	}, []);
-	// const onLabelClick = data => {
-	// 	console.log(data.notice_user_collection, data);
-	// 	switch (data.notice_user_collection) {
-	// 		case 'comment':
-	// 			break;
-	// 		case 'follow':
-	// 			navigation.navigate('UserProfile', {userobject: data.notice_user_related_id});
-	// 			// navigation.push('UserProfile', {userobject: data.notice_user_related_id});
-	// 			break;
-	// 	}
-	// };
 
 	if (!data) {
 		return <></>;
@@ -63,7 +52,7 @@ const OneAlarm = props => {
 							) : (
 								<></>
 							)}
-							<Text style={[styles.messageContainer, txt.noto26]}>{data.notice_user_contents_kor}</Text>
+							<Text style={[styles.messageContainer, txt.noto26, {color: MAINBLACK}]}>{data.notice_user_contents_kor}</Text>
 							<View style={[{justifyContent: 'flex-end'}]}>
 								<View style={styles.timeBeforeContainer}>
 									<Text style={[txt.noto24, {color: GRAY10}]}>{data.notice_user_date && getTimeLapsed(data.notice_user_date)}</Text>
@@ -86,10 +75,12 @@ const OneAlarm = props => {
 };
 const styles = StyleSheet.create({
 	container: {
-		width: 690 * DP,
+		// width: 690 * DP,
+		width: 714 * DP,
 		minHeight: 134 * DP,
 		justifyContent: 'center',
-		marginLeft: 30 * DP,
+		// marginLeft: 30 * DP,
+		marginHorizontal: 18 * DP,
 		borderRadius: 30 * DP,
 		// flexGrow: 0, flex: 1
 	},

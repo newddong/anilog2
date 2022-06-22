@@ -1,8 +1,19 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View, ScrollView, ActivityIndicator, Keyboard} from 'react-native';
+import {
+	FlatList,
+	Platform,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+	ScrollView,
+	ActivityIndicator,
+	Keyboard,
+	KeyboardAvoidingView,
+} from 'react-native';
 import DP from 'Root/config/dp';
-import {BLACK, GRAY10, GRAY20, GRAY40} from 'Root/config/color';
+import {BLACK, GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
 import Modal from 'Root/component/modal/Modal';
 import Article from 'Root/component/organism/article/Article';
 import ArticleList from 'Root/component/organism/list/ArticleList';
@@ -28,9 +39,9 @@ import {count_to_K} from 'Root/util/stringutil';
 export default ArticleDetail = props => {
 	const key = useKeyboardBottom(0);
 	const navigation = useNavigation();
-	const [data, setData] = React.useState('false');
-	const [searchInput, setSearchInput] = React.useState('');
-	const [comments, setComments] = React.useState('false');
+	const [data, setData] = React.useState('false'); //자유상세글 데이터 object
+	const [searchInput, setSearchInput] = React.useState(''); //검색탭의 검색키워드 String
+	const [comments, setComments] = React.useState('false'); //댓글
 	const [articleList, setArticleList] = React.useState('false'); //하단 리스트 출력
 	const [total, setTotal] = React.useState(); //하단 리스트의 전체 게시글 수
 	const [offset, setOffset] = React.useState(0); //하단 리스트의 현재 페이지
@@ -60,9 +71,9 @@ export default ArticleDetail = props => {
 		return unsubscribe;
 	}, []);
 
+	//검색탭에서 검색어가 있을 경우 searchInput state에 저장
 	React.useEffect(() => {
 		if (props.route.params.searchInput != '') {
-			console.log('props.route.params.searchInput', props.route.params.searchInput);
 			setSearchInput(props.route.params.searchInput);
 		}
 	}, [props.route.params]);
@@ -103,7 +114,7 @@ export default ArticleDetail = props => {
 	//페이지 하단에 출력될 자유게시글 목록 api(페이징 필요)
 	const getArticleList = (page, category) => {
 		try {
-			console.log('page', page);
+			// console.log('page', page);
 			let params = {
 				limit: FREE_LIMIT_DETAIL, //10
 				page: page,
@@ -116,7 +127,7 @@ export default ArticleDetail = props => {
 			getCommunityListFreeByPageNumber(
 				params,
 				result => {
-					console.log('result / getCommunityListFreeByPageNumber / ArticleDetail :', result.msg.length);
+					// console.log('result / getCommunityListFreeByPageNumber / ArticleDetail :', result.msg.length);
 					const free = result.msg;
 					setTotal(result.total_count);
 					setArticleList(free);
@@ -150,14 +161,18 @@ export default ArticleDetail = props => {
 				// console.log('comments', comments);
 				let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
 				let dummyForBox = res[res.length - 1];
-				res.push(dummyForBox);
 				if (parent) {
 					const findIndex = res.findIndex(e => e._id == parent._id);
 					console.log('find', findIndex);
 					res.map((v, i) => {
-						res[i].showChild = i == findIndex ? true : false;
+						res[i].isDeleted = i == findIndex ? true : false;
+					});
+				} else {
+					res.map((v, i) => {
+						res[i].isDeleted = false;
 					});
 				}
+				res.push(dummyForBox);
 				setComments(res);
 			},
 			err => {
@@ -186,7 +201,6 @@ export default ArticleDetail = props => {
 				comment_is_secure: privateComment, //공개여부 테스트때 반영
 				community_object_id: data._id,
 			};
-
 			if (editData.comment_photo_uri && editData.comment_photo_uri.length > 0) {
 				param.comment_photo_uri = editData.comment_photo_uri;
 			} else {
@@ -202,14 +216,9 @@ export default ArticleDetail = props => {
 				param = {...param, community_object_id: data._id};
 			}
 
+			//댓글 수정을 확정
 			if (editMode) {
-				// console.log('editData', editData.parent);
-				let whichComment = '';
-				comments.map((v, i) => {
-					if (v._id == editData._id) {
-						whichComment = i;
-					}
-				});
+				let whichComment = comments.findIndex(v => v._id == editData._id) == -1 ? '' : comments.findIndex(v => v._id == editData._id); //부모댓글
 				updateComment(
 					{
 						...param,
@@ -232,15 +241,27 @@ export default ArticleDetail = props => {
 								!parentComment && setComments([]); //댓글목록 초기화
 								let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
 								let dummyForBox = res[res.length - 1];
+								if (editData.parent != undefined && editData.children_count == 0) {
+									res.map((v, i) => {
+										res[i].isEdited = i == editData.parent ? true : false;
+									});
+								} else {
+									res.map((v, i) => {
+										res[i].isEdited = false;
+									});
+								}
 								res.push(dummyForBox);
 								setComments(res);
 								parentComment && addChildCommentFn.current();
 								setPrivateComment(false);
-								setEditMode(false); // console.log('comments', comments);
+								setEditMode(false);
 								Modal.close();
 								setTimeout(() => {
-									console.log('whichComment', whichComment);
-									flatListRef.current.scrollToIndex({animated: true, index: whichComment == '' ? editData.parent : whichComment, viewPosition: 0});
+									flatListRef.current.scrollToIndex({
+										animated: true,
+										index: whichComment == '' ? editData.parent : whichComment ? whichComment : 0,
+										viewPosition: 0,
+									});
 								}, 500);
 							},
 							err => {
@@ -283,7 +304,6 @@ export default ArticleDetail = props => {
 								setEditMode(false); // console.log('comments', comments);
 								Modal.close();
 								setTimeout(() => {
-									console.log('whichParent', whichParent);
 									whichParent == ''
 										? flatListRef.current.scrollToIndex({animated: true, index: 0, viewPosition: 0.5})
 										: flatListRef.current.scrollToIndex({animated: true, index: whichParent, viewPosition: 0});
@@ -306,16 +326,17 @@ export default ArticleDetail = props => {
 			}
 		}
 	};
+
 	const [isReplyFocused, setReplyFocus] = React.useState(false);
+
 	const onFocus = () => {
 		input.current.blur();
 		floatInput.current.focus();
 		setReplyFocus(true);
-		scrollToReplyBox();
 	};
+
 	const onFocus3 = () => {
 		setReplyFocus(true);
-		scrollToReplyBox();
 	};
 	const onBlur = () => {
 		floatInput.current.focus();
@@ -395,30 +416,50 @@ export default ArticleDetail = props => {
 				comment_photo_uri: '',
 			});
 			addChildCommentFn.current = addChildComment;
-			scrollToReplyBox();
+			const findIndex = comments.findIndex(e => e._id == parentCommentId._id);
+			let offset = parentCommentId.comment_photo_uri ? 320 * DP : 0;
+			scrollTo(findIndex, offset);
 		}
 	};
 
-	//미트볼, 수정을 누르면 동작
-	const onEdit = (comment, parent) => {
+	//수정을 누르면 동작
+	const onEdit = (comment, parent, child) => {
 		// console.log('수정 데이터', comment);
 		setEditMode(true);
 		setParentComment(); // 수정모드로 전환시 기존의 답글쓰기 데이터 출력 취소
-		const findParentIndex = comments.findIndex(e => e._id == parent);
+		const findParentIndex = comments.findIndex(e => e._id == parent); //부모댓글의 인덱스
+		let viewOffset = 0; //자식댓글이 존재할 경우 내려갈 offSet 수치
+		console.log('childIndex', child);
+		if (child.findIndex != undefined && child.findIndex != -1) {
+			viewOffset = 332 * child.hasPhoto + 110 * (child.findIndex + 1) * DP;
+		}
 		setEditData({...comment, parent: findParentIndex});
 		setPrivateComment(comment.comment_is_secure);
 		input.current?.focus();
-		scrollToReplyBox();
+		scrollTo(findParentIndex, viewOffset);
+	};
+
+	//댓글 인덱스로 스크롤 함수
+	const scrollTo = (i, offset) => {
+		console.log('scrollTo 호출 부모인덱스 : ', i, '자식 offset', offset);
+		setTimeout(
+			() => {
+				flatListRef.current.scrollToIndex({
+					animated: true,
+					index: i != -1 ? i : 0,
+					viewPosition: 0,
+					viewOffset: offset ? -offset : 0,
+				});
+			},
+			Platform.OS == 'android' ? 300 : 0,
+		);
 	};
 
 	//수정이나 답글쓰기 눌렀을 때 스크롤 함수
 	const scrollToReplyBox = () => {
 		if (Platform.OS == 'android') {
-			// input.current?.focus();
+			// console.log('comments.length - 1', comments.length - 1);
 			flatListRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 1, viewOffset: 0});
-			// setTimeout(() => {
-			// 	flatListRef.current.scrollToIndex({animated: true, index: comments.length - 1, viewPosition: 1, viewOffset: 0});
-			// }, 200);
 		} else {
 			flatListRef.current.scrollToIndex({animated: false, index: comments.length - 1, viewPosition: 0.5, viewOffset: 0});
 		}
@@ -442,11 +483,6 @@ export default ArticleDetail = props => {
 			searchInput: searchInput,
 			type: props.route.params.type ? props.route.params.type : '',
 		});
-	};
-
-	//댓글 모두보기 클릭
-	const onPressReply = () => {
-		navigation.push('CommunityCommentList', {community_object: data});
 	};
 
 	//즐겨찾기 클릭
@@ -555,6 +591,7 @@ export default ArticleDetail = props => {
 		);
 	};
 
+	//하단의 페이징 클릭 이동
 	const onPressPage = page => {
 		if (page != offset) {
 			getArticleList(page);
@@ -643,13 +680,21 @@ export default ArticleDetail = props => {
 
 	const renderItem = ({item, index}) => {
 		// console.log('comments.length ', comments.length);
+		//수정 혹은 답글쓰기 때, 대상 부모 댓글의 배경색을 바꾸는 함수
+		const getBgColor = () => {
+			let result = WHITE;
+			if (editMode && editData.parent == index && editData._id == item._id) {
+				result = GRAY40;
+			} else if (parentComment && parentComment._id == item._id) {
+				result = GRAY40;
+			}
+			return result;
+		};
 		if (index == comments.length - 1) {
 			return (
 				<>
-					{comments.length == 1 ? (
+					{comments.length == 1 && (
 						<Text style={[txt.roboto26, {color: GRAY20, paddingVertical: 20 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>
-					) : (
-						<></>
 					)}
 					<View style={[{marginTop: 0 * DP, marginBottom: 10 * DP, opacity: key > 0 || isReplyFocused ? 0 : 1}]}>
 						<ReplyWriteBox
@@ -674,7 +719,7 @@ export default ArticleDetail = props => {
 			);
 		} else
 			return (
-				<View style={[style.commentContainer]} key={item._id} onLayout={onLayoutCommentList}>
+				<View style={[style.commentContainer, {}]} key={item._id} onLayout={onLayoutCommentList}>
 					<ParentComment
 						parentComment={item}
 						onPressReplyBtn={onReplyBtnClick} // 부모 댓글의 답글쓰기 클릭 이벤트
@@ -682,7 +727,19 @@ export default ArticleDetail = props => {
 						onPressDelete={onPressDelete}
 						onPressDeleteChild={onPressDelete}
 						showChild={() => showChild(index)}
+						editData={editData}
 					/>
+					{(editMode && editData.parent == index && editData._id == item._id) ||
+						(parentComment && parentComment._id == item._id && (
+							<View
+								style={{
+									position: 'absolute',
+									backgroundColor: getBgColor(),
+									width: '100%',
+									height: item.comment_photo_uri ? 820 * DP : 220 * DP,
+									zIndex: -1,
+								}}></View>
+						))}
 				</View>
 			);
 	};

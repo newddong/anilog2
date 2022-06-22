@@ -293,9 +293,10 @@ const ReviewFilterModal = props => {
 				let districts = arr.concat(result.msg);
 				districts.push(padding);
 				districts.push(padding);
-				setDistrict(districts);
-				setSelectedDistrict(result.msg[0]);
-				setSelectedItem_dis(2);
+				//시,군,구가 자동으로 바뀌지 않도록 주석처리
+				// setDistrict(districts);
+				// setSelectedDistrict(result.msg[0]);
+				// setSelectedItem_dis(2);
 			},
 			err => {
 				console.log('err', err);

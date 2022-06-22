@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableWithoutFeedback, Platform, StyleSheet, TextInput} from 'react-native';
+import {View, Text, TouchableWithoutFeedback, Platform, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
 import AccountHashList from 'Organism/list/AccountHashList';
 import {APRI10, BLACK, GRAY10, GRAY20} from 'Root/config/color';
 import {findTagAt, isTag, getTagName, findStartIndexOfTag, findEndIndexOfTag} from 'Root/util/stringutil';
@@ -248,14 +248,18 @@ const HashInput = React.forwardRef((props, ref) => {
 		return result;
 	};
 
+	const giveFocus = () => {
+		inputRef.current.focus();
+	};
+
 	return (
 		<>
-			<View style={[props.containerStyle, {}]} ref={ref}>
-				<View>
+			<TouchableOpacity activeOpacity={1} onPress={giveFocus} style={[props.containerStyle, {}]} ref={ref}>
+				<View style={{}}>
 					{location == undefined ? (
 						false
 					) : (
-						<View style={{flexDirection: 'row', alignItems: 'center', height: 40 * DP, maxWidth: 550 * DP}}>
+						<View style={{flexDirection: 'row', alignItems: 'center', height: 40 * DP, width: '95%'}}>
 							<Location40Border />
 							<Text style={[txt.noto26, {color: BLACK, lineHeight: 30 * DP}]} numberOfLines={1}>
 								{getLocation()}
@@ -264,7 +268,14 @@ const HashInput = React.forwardRef((props, ref) => {
 					)}
 					<TextInput
 						{...props} //props override
-						style={[{marginBottom: props.selectedImg.length > 0 ? 10 * DP : 0}, txt.noto28]}
+						style={[
+							{marginBottom: props.selectedImg.length > 0 ? 10 * DP : 0},
+							txt.noto28,
+							{
+								// minHeight: props.showImages && props.selectedImg.length > 0 ? 170 * DP : props.containerStyle[0].minHeight - 48 * DP,
+								// backgroundColor: 'palegreen',
+							},
+						]}
 						textAlignVertical={'top'}
 						multiline={true}
 						value={value}
@@ -283,10 +294,10 @@ const HashInput = React.forwardRef((props, ref) => {
 						<SelectedMediaList items={props.selectedImg} onDelete={deletePhoto} />
 					</View>
 				)}
-			</View>
+			</TouchableOpacity>
 
 			{find && (
-				<View style={{width: '100%', flex: 1, padding: 15 * DP}}>
+				<View style={{width: 694 * DP, flex: 1, padding: 15 * DP}}>
 					{/* <AccountList items={findList} onSelect={userSelect} makeBorderMode={false} showCrossMark={false} /> */}
 					<AccountHashList data={findList} showFollowBtn={false} onClickLabel={userSelect} onClickHash={hashSelect} />
 				</View>

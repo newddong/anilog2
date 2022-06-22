@@ -126,7 +126,7 @@ const ArticleContent = props => {
 			};  border-radius:15px; object-fit:contain; margin:5px 0px 0px 0px; " `,
 		);
 		// console.log('data Content', data.community_content);
-		console.log('result', result);
+		// console.log('result', result);
 		return `
 		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
         <script>

@@ -4,7 +4,7 @@ import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } fr
 import CameraRoll from './src/module/CameraRoll.js';
 import PermissionIos from './src/module/PermissionIos';
 import { PERMISSION_IOS_STATUS, PERMISSION_IOS_TYPES } from './src/module/PermissionIosStatics';
-
+import VideoEditor from 'Root/module/VideoEditor.js';
 
 const styles = StyleSheet.create({
   container: {
@@ -23,18 +23,17 @@ const styles = StyleSheet.create({
   },
 });
 
-
 export default class App extends Component {
   constructor() {
     super();
     this.state = {
       image: null,
       images: null,
+      duration: 0,
+      uri: null
     };
   }
 
-  //이런 식으로 쪼개서 퍼미션을 체크해도 되고
-  //PermissionIos.updatePermission(); 을 그대로 불러서 써도 된다
   checkPermission(isCustomized = false){
     if(isCustomized) {
       PermissionIos.checkPermission()
@@ -75,38 +74,36 @@ export default class App extends Component {
     }
 
     CameraRoll.compressImage({imageFiles: [this.state.image.uri],
-		 maxHeight: 160, 
-		 maxWidth: 240, 
-		 quality:0.5,
+     maxHeight: 160, 
+     maxWidth: 240, 
+     quality:0.5,
      mimeType:"png" })
     .then(r => {
       console.log(r);
-	  if (r== null || r.assets == null || r. assets.length == 0){
-		  console.log("assets are nil or length 0");
-	  } else {
-		this.setState({
-			image: {
-			  uri: r.assets[0].uri,
-			  width: r.assets[0].width,
-			  height: r.assets[0].height,
-			},
-			images: null,
-		  });
-	  }
+    if (r== null || r.assets == null || r. assets.length == 0){
+      console.log("assets are nil or length 0");
+    } else {
+    this.setState({
+      image: {
+        uri: r.assets[0].uri,
+        width: r.assets[0].width,
+        height: r.assets[0].height,
+      },
+      images: null,
+      });
+    }
     })
     .catch(err => {
       console.log(err);
     })
   }
 
-  //cameraroll에서 이미지 불러오는 건 공식페이지 샘플과 동일, 다만 smart album이 추가되어 있음.
-  //관련하여 안내 작성 예정
   getImage(maxLoadImage = 3, whichIndexImage = 0){
     CameraRoll.getPhotos({
       first: maxLoadImage,
       toTime: 0,
-      assetType: 'Photos',
-      include: ['imageSize', 'filename', 'filesize'],
+      assetType: 'All',
+      include: ['imageSize', 'filename', 'filesize', 'playableDuration'],
       groupTypes: 'All',
     })
       .then(r => {
@@ -175,6 +172,18 @@ export default class App extends Component {
       alert(e);
     })
   }
+
+  openVideoEditor(duration = 5, bitRate = 30, filename = 'temp'){
+    VideoEditor.unlockLicense();
+    VideoEditor.openVideoEditor({uri: this.state.uri, duration: this.state.duration, saveName: filename})
+    .then(r => {
+      console.log(r);
+    })
+    .catch(e => {
+      console.log(e);
+    })
+  }
+
   scaledHeight(oldW, oldH, newW) {
     return (oldH / oldW) * newW;
   }
@@ -223,30 +232,12 @@ export default class App extends Component {
 
         <TouchableOpacity
           onPress={() => {
-            CameraRoll.saveImage(this.state.image.uri)
-            .catch(err => {
-              console.log(err);
-            });
+            this.openVideoEditor(15, 30, 'edit');
           }}
           style={styles.button}>
-          <Text style={styles.text}>save selected Image</Text>
+          <Text style={styles.text}>openEditor</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => {
-            this.compress();
-          }}
-          style={styles.button}>
-          <Text style={styles.text}>compress selected Image</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => {
-            this.cropImage();
-          }}
-          style={styles.button}>
-          <Text style={styles.text}>crop selected Image</Text>
-        </TouchableOpacity>
+    
 
         <TouchableOpacity
           onPress={() => this.cleanupImages()}

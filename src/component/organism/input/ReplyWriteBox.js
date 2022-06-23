@@ -90,7 +90,7 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 				</View>
 			);
 		} else {
-			return <></>;
+			return <View style={{height: 20 * DP}}></View>;
 		}
 	};
 
@@ -326,7 +326,8 @@ const style = StyleSheet.create({
 	},
 	commentBox: {
 		width: 750 * DP,
-		paddingVertical: 28 * DP,
+		// paddingVertical: 28 * DP,
+		paddingBottom: 10 * DP,
 		paddingHorizontal: 20 * DP,
 		alignItems: 'center',
 		// backgroundColor: 'yellow',

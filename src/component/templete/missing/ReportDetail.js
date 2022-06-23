@@ -286,25 +286,7 @@ export default ReportDetail = props => {
 		navigation.push('FeedCommentList', {feedobject: data, edit: comment}); // 수정하려는 댓글 정보를 포함해서 보냄
 	};
 
-	const [showImgMode, setShowImgMode] = React.useState(false);
-	const backAction = () => {
-		console.log('back', showImgMode);
-		if (showImgMode) {
-			Modal.close();
-			setShowImgMode(false);
-			return true;
-		} else {
-			return false;
-		}
-	};
-
-	React.useEffect(() => {
-		BackHandler.addEventListener('hardwareBackPress', backAction);
-		return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
-	}, [showImgMode]);
-
 	const onPressReqeustPhoto = () => {
-		setShowImgMode(true);
 		Modal.popPhotoListViewModal(
 			data.feed_medias.map(v => v.media_uri),
 			() => Modal.close(),

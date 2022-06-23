@@ -1,17 +1,13 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {BackHandler, Dimensions, Image, LogBox, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {LogBox, Platform, StyleSheet, Text, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {APRI10, BLACK, GRAY40} from 'Root/config/color';
-import {FavoriteTag46_Filled, FavoriteTag48_Border, Meatball50_GRAY20_Horizontal} from 'Root/component/atom/icon';
+import {GRAY40} from 'Root/config/color';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
-import {styles} from 'Root/component/atom/image/imageStyle';
 import WebView from 'react-native-webview';
-import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/core';
 import AutoHeightWebView from 'Root/module/AutoHeightWebview';
-import FastImage from 'react-native-fast-image';
 /**
  * 게시글 컨텐츠
  * @param {object} props - Props Object
@@ -32,53 +28,8 @@ const ArticleContent = props => {
 		setData(props.data);
 	}, [props.data]);
 
-	const onPressMeatball = () => {
-		props.onPressMeatball();
-	};
-
-	const onPressFavorite = bool => {
-		if (userGlobalObject.userInfo.isPreviewMode) {
-			Modal.popLoginRequestModal(() => {
-				navigation.navigate('LoginRequired');
-			});
-		} else {
-			setData({...data, community_is_favorite: bool});
-			props.onPressFavorite(bool);
-		}
-	};
-	const [showImgMode, setShowImgMode] = React.useState(false);
-	const backAction = () => {
-		console.log('back', showImgMode);
-		if (showImgMode) {
-			Modal.close();
-			setShowImgMode(false);
-			return true;
-		} else {
-			return false;
-		}
-	};
-
-	React.useEffect(() => {
-		BackHandler.addEventListener('hardwareBackPress', backAction);
-		return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
-	}, [showImgMode]);
-
 	const showImg = src => {
-		setShowImgMode(true);
 		Modal.popPhotoListViewModal([src], () => Modal.close());
-	};
-
-	const getArticleType = () => {
-		switch (data.community_free_type) {
-			case 'talk':
-				return '잡담';
-			case 'question':
-				return '질문';
-			case 'meeting':
-				return '모임';
-			default:
-				break;
-		}
 	};
 
 	const onWebViewMessage = async event => {

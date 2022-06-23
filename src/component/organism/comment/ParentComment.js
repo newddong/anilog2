@@ -154,7 +154,7 @@ export default ParentComment = React.memo((props, ref) => {
 				}
 			}
 		}
-		props.onEdit && props.onEdit(data, parent._id, {findIndex: findIndex, hasPhoto: hasPhoto.length});
+		props.onEdit && props.onEdit(data, parent, {findIndex: findIndex, hasPhoto: hasPhoto.length});
 	};
 
 	const onDelete = () => {
@@ -169,6 +169,10 @@ export default ParentComment = React.memo((props, ref) => {
 		setTimeout(() => {
 			showChildComment();
 		}, 200);
+	};
+
+	const onPressReplyPhoto = src => {
+		Modal.popPhotoListViewModal([src], Modal.close);
 	};
 
 	//좋아요 클릭
@@ -257,13 +261,13 @@ export default ParentComment = React.memo((props, ref) => {
 			{data.comment_photo_uri == undefined || isNotAuthorized() ? (
 				<></>
 			) : (
-				<View style={[style.img_square_round]}>
+				<TouchableOpacity onPress={() => onPressReplyPhoto(data.comment_photo_uri)} activeOpacity={0.8} style={[style.img_square_round]}>
 					{data.comment_photo_uri.includes('http') ? (
 						<FastImage style={[styles.img_square_round_614]} source={{uri: data.comment_photo_uri}} />
 					) : (
 						<Image style={[styles.img_square_round_614]} source={{uri: data.comment_photo_uri}} />
 					)}
-				</View>
+				</TouchableOpacity>
 			)}
 			{/* 댓글 내용 */}
 			{data.comment_is_delete ? (
@@ -321,7 +325,7 @@ export default ParentComment = React.memo((props, ref) => {
 			)}
 			{/* Data - 대댓글List */}
 			{showChild ? (
-				<View style={[style.childCommentList]}>
+				<View style={[style.childCommentList, {}]}>
 					<ChildCommentList
 						items={child}
 						showChildComment={showChildComment}
@@ -351,7 +355,7 @@ const style = StyleSheet.create({
 	parentComment: {
 		flexDirection: 'column',
 		width: 694 * DP,
-		marginBottom: 20 * DP,
+		// marginBottom: 20 * DP,
 		alignItems: 'flex-end',
 		// backgroundColor: 'yellow',
 	},
@@ -427,5 +431,9 @@ const style = StyleSheet.create({
 		// width: 614 * DP,
 		// marginTop: 20 * DP,
 		flexDirection: 'row',
+		width: 750 * DP,
+		justifyContent: 'flex-end',
+		backgroundColor: 'white',
+		alignItems: 'flex-end',
 	},
 });

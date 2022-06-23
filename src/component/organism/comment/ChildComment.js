@@ -3,7 +3,7 @@ import {Image, Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {Heart30_Border, Heart30_Filled, Meatball50_GRAY20_Vertical, Report30, SecureIcon40} from 'Atom/icon';
-import {DEFAULT_PROFILE, REPLY_MEATBALL_MENU, REPLY_MEATBALL_MENU_MY_REPLY} from 'Root/i18n/msg';
+import {REPLY_MEATBALL_MENU_MY_REPLY} from 'Root/i18n/msg';
 import {styles} from 'Atom/image/imageStyle';
 import UserTimeLabel from 'Molecules/label/UserTimeLabel';
 import {useNavigation} from '@react-navigation/native';
@@ -92,6 +92,10 @@ const ChildComment = props => {
 				);
 			}
 		}
+	};
+
+	const onPressReplyPhoto = src => {
+		Modal.popPhotoListViewModal([src], Modal.close);
 	};
 
 	const reportComment = () => {
@@ -183,13 +187,13 @@ const ChildComment = props => {
 			</View>
 			{/* 해당 대댓글이 photo_uri를 가지고 있는 경우만 IMage 출력 */}
 			{data.comment_photo_uri != null && !isNotAuthorized() ? (
-				<View style={[childComment.img_square_round_484]}>
+				<TouchableOpacity onPress={() => onPressReplyPhoto(data.comment_photo_uri)} activeOpacity={0.8} style={[childComment.img_square_round_484]}>
 					{data.comment_photo_uri.includes('http') ? (
 						<FastImage style={[styles.img_square_round_544]} source={{uri: data.comment_photo_uri}} />
 					) : (
 						<Image style={[styles.img_square_round_544]} source={{uri: data.comment_photo_uri}} />
 					)}
-				</View>
+				</TouchableOpacity>
 			) : (
 				<></>
 			)}

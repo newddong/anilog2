@@ -127,7 +127,54 @@ export default UserInfoSetting = ({route}) => {
 	React.useEffect(() => {
 		modifyMode ? modifyRef.current.focus() : null;
 	}, [modifyMode]);
+	//변경된 locationObject와 contentInterest를 저장형식에 맞게 파싱
+	React.useEffect(() => {
+		if (interestLoaded) {
+			for (let props of contentInterest) {
+				const getKey = Object.entries(interestList[0]).map(content => {
+					// console.log('hihihi', content[1], props);
 
+					if (content[1].includes(props)) {
+						// console.log('hohohoho', props, content[0]);
+						// setContentSendObject((contentSendObejct[content[0]] = props));
+						if (temp[content[0]]) {
+							temp[content[0]].push(props);
+						} else {
+							temp[content[0]] = [props];
+						}
+
+						console.log('temp', temp);
+					}
+				});
+			}
+			let locationObject = {interests_location: locationInterest};
+			Object.assign(locationObject, temp);
+			setData(prevState => ({
+				...prevState,
+				user_interests: locationObject,
+			}));
+		}
+		console.log('setData', data.user_interests);
+	}, [refresh, locationInterest, contentInterest]);
+	React.useEffect(() => {
+		updateUserDetailInformation(
+			{
+				user_interests: data.user_interests,
+			},
+
+			result => {
+				console.log('result / updateUserDetailInformation / SaveButtonHeader   : ', result.msg);
+				// setTimeout(() => {
+				// Modal.close();
+				// navigation.goBack();
+				// }, 200);
+			},
+			err => {
+				console.log('err / updateUserDetailInformation / SaveButtonHeader    :  ', err);
+				Modal.close();
+			},
+		);
+	}, [data.user_interests]);
 	//상세 정보 클릭
 	const onPressDetail = () => {
 		navigation.push('UserInfoDetailSetting', data);

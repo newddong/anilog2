@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Platform, Dimensions, ScrollView, FlatList, ActivityIndicator, Animated, TouchableOpacity} from 'react-native';
-import {WHITE, GRAY10, APRI10, GRAY20, BLACK} from 'Root/config/color';
+import {WHITE, GRAY10, APRI10, GRAY20, BLACK, GRAY30, GRAY40, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Component/modal/Modal';
@@ -9,9 +9,10 @@ import {Cross24_Filled} from 'Root/component/atom/icon';
 import {getAddressList} from 'Root/api/address';
 import {getInterestsList} from 'Root/api/interestsapi';
 import ArrowDownButton from '../button/ArrowDownButton';
-import {btn_w242, btn_w280, btn_w280x68} from 'Root/component/atom/btn/btn_style';
+import {btn_w226, btn_w242, btn_w280, btn_w280x68} from 'Root/component/atom/btn/btn_style';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
 import Loading from './Loading';
+import {updateUserDetailInformation} from 'Root/api/userapi';
 /**
  * 관심사 추가 및 수정 모달
  * @param {'Activity'|'Location'|'Review'} category -  관심활동 / 관심지역 / 커뮤니티후기 분기
@@ -22,9 +23,10 @@ import Loading from './Loading';
  *
  */
 const InterestTagModal = props => {
-	// console.log('InterestTagModa', props.data);
+	console.log('InterestTagModa', props);
 	//유저 오브젝트의 user_interests 의 더미데이터
 	// user_interests는 크게 location 및 activity로 구성
+
 	const [userInterestContent, setUserInterestContent] = React.useState([]);
 	const [userInterestLocation, setUserInterestLocation] = React.useState(props.data);
 	const [userInterestReview, setUserInterestReview] = React.useState(props.data);
@@ -37,7 +39,7 @@ const InterestTagModal = props => {
 	const [communityInterests, setCommunityInterests] = React.useState('');
 	const [showBtnModal, setShowBtnModal] = React.useState(false); //모달창 대체 View 출력 여부
 	const [addressList, setAddressList] = React.useState([]);
-
+	const [categoryText, setCategoryText] = React.useState('');
 	React.useEffect(() => {
 		//커뮤니티 후기 글쓰기에서 호출한 관심태그 모달
 		if (props.category == 'ReviewWrite' || props.category == 'Review') {
@@ -125,6 +127,7 @@ const InterestTagModal = props => {
 				userInterestReview: userInterestReview,
 			});
 		}
+
 		setIsSaved(true);
 		Modal.close();
 	};
@@ -357,84 +360,131 @@ const InterestTagModal = props => {
 			return <Loading isModal={false} smallBox={true} />;
 		} else
 			return (
-				<ScrollView ref={scrollRef}>
-					{activityLists.map((v, i) => {
-						return (
-							<View key={i} style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
-								<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>{v.category}</Text>
-								<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+				<View>
+					<ScrollView ref={scrollRef}>
+						{activityLists.map((v, i) => {
+							return (
+								<View key={i} style={[{marginBottom: 30 * DP, paddingHorizontal: 44 * DP}]}>
+									<Text style={[txt.noto26, {color: GRAY10, alignSelf: 'flex-start'}]}>{v.category}</Text>
+									<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+										{v.content.length
+											? v.content.map((d, i) => {
+													// if (i % 2 == 0) {
+													// 	return null;
+													// }
+													// if (i > 4) {
+													// 	return null;
+													// }
+													return (
+														<TouchableOpacity
+															onPress={() => onPressInterestActivationTag(d)}
+															key={i}
+															style={[userInterestContent.includes(d) ? style.InterestText_userInterest : style.InterestContentText]}>
+															<Text style={[txt.noto28, {color: userInterestContent.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
+														</TouchableOpacity>
+													);
+											  })
+											: null}
+									</View>
+									{/* <View style={[{flexDirection: 'row', flexWrap: 'wrap'}]}>
 									{v.content.length
 										? v.content.map((d, i) => {
-												if (i % 2 == 0) {
+												// if (i % 2 != 0) {
+												// return null;
+												// }
+												if (i <= 4) {
 													return null;
 												}
 												return (
 													<TouchableOpacity
-														onPress={() => onPressInterestActivationTag(d)}
 														key={i}
-														style={[userInterestContent.includes(d) ? style.contentText_userInterest : style.contentText]}>
-														<Text style={[txt.noto28, {color: userInterestContent.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
+														onPress={() => onPressInterestActivationTag(d)}
+														style={[userInterestContent.includes(d) ? style.InterestText_userInterest : style.InterestContentText]}>
+														<Text
+															style={[
+																txt.noto28,
+																{color: userInterestContent.includes(d) ? WHITE : GRAY10, textAlign: 'center'},
+																{padding: 12 * DP},
+															]}>
+															{d}
+														</Text>
 													</TouchableOpacity>
 												);
 										  })
 										: null}
+								</View> */}
 								</View>
-								<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-									{v.content.length
-										? v.content.map((d, i) => {
-												if (i % 2 != 0) {
-													return null;
-												}
-												return (
-													<TouchableOpacity
-														key={i}
-														onPress={() => onPressInterestActivationTag(d)}
-														style={[userInterestContent.includes(d) ? style.contentText_userInterest : style.contentText]}>
-														<Text style={[txt.noto28, {color: userInterestContent.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
-													</TouchableOpacity>
-												);
-										  })
-										: null}
-								</View>
-							</View>
-						);
-					})}
-				</ScrollView>
+							);
+						})}
+					</ScrollView>
+					<View style={[{alignItems: 'center'}, {marginBottom: 40}]}>
+						<AniButton
+							btnLayout={btn_w226}
+							width={226}
+							btnStyle={'border'}
+							btnTheme={'shadow'}
+							btnTitle={'저장'}
+							height={70}
+							titleFontStyle={24}
+							onPress={onPressSave}
+						/>
+					</View>
+				</View>
 			);
 	};
 
 	const getLocationList = () => {
 		const renderItem = (v, index) => {
 			return (
-				<View style={{alignSelf: 'center', width: 270 * DP, alignItems: 'center'}}>
+				<View style={[{alignSelf: 'center', width: 276 * DP}]}>
 					{userInterestLocation.includes(v) ? (
-						<TouchableOpacity
-							onPress={() => onPressInterestLocationTag(v)}
-							style={[style.contentText_userInterest, {width: 226 * DP, marginBottom: 40 * DP, paddingHorizontal: 20 * DP}]}>
-							<Text style={[txt.noto28b, {color: WHITE, textAlign: 'center'}]}>{v}</Text>
+						<TouchableOpacity onPress={() => onPressInterestLocationTag(v)} style={[style.contentText_userInterest]}>
+							<Text style={[txt.noto28, {color: WHITE, textAlign: 'center'}]}>{v}</Text>
 						</TouchableOpacity>
 					) : (
-						<TouchableOpacity
-							onPress={() => onPressInterestLocationTag(v)}
-							style={[style.contentText, {width: 226 * DP, marginBottom: 40 * DP, paddingHorizontal: 20 * DP}]}>
-							<Text style={[txt.noto28, {color: GRAY10, textAlign: 'center'}]}>{v}</Text>
+						<TouchableOpacity onPress={() => onPressInterestLocationTag(v)} style={[style.contentText]}>
+							<Text style={[txt.noto28, {color: MAINBLACK, textAlign: 'center'}]}>{v}</Text>
 						</TouchableOpacity>
 					)}
 				</View>
 			);
 		};
-		return <FlatList data={addressList} ref={scrollRef} renderItem={({item, index}) => renderItem(item, index)} numColumns={2} />;
+		return (
+			<View>
+				<FlatList
+					style={[{width: 694 * DP}, {paddingLeft: 96 * DP}, {marginBottom: 60 * DP}]}
+					data={addressList}
+					ref={scrollRef}
+					renderItem={({item, index}) => renderItem(item, index)}
+					numColumns={2}
+				/>
+				{/* <TouchableOpacity onPress={onPressSave} style={[style.saveText]}>
+					<Text style={[txt.noto36b, {color: APRI10}]}>저장</Text>
+				</TouchableOpacity> */}
+				<View style={[{alignItems: 'center'}, {marginBottom: 40}]}>
+					<AniButton
+						btnLayout={btn_w226}
+						width={226}
+						btnStyle={'border'}
+						btnTheme={'shadow'}
+						btnTitle={'저장'}
+						height={70}
+						titleFontStyle={24}
+						onPress={onPressSave}
+					/>
+				</View>
+			</View>
+		);
 	};
 
 	return (
 		<View style={style.background}>
 			<TouchableOpacity activeOpacity={1} onPress={onPressBackground} style={[style.popUpWindow, {}]}>
 				<View style={[style.header]}>
+					<Text style={[txt.noto30, {color: MAINBLACK}]}>{props.category == 'Location' ? '관심지역 선택' : '관심활동 선택'}</Text>
+
 					<TouchableOpacity onPress={onClose} style={[style.crossMark]}>
 						<Cross24_Filled />
-					</TouchableOpacity>
-					<TouchableOpacity onPress={onPressSave} style={[style.saveText]}>
-						<Text style={[txt.noto36b, {color: APRI10}]}>저장</Text>
 					</TouchableOpacity>
 				</View>
 				{getList()}
@@ -472,10 +522,10 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 	},
 	popUpWindow: {
-		width: 582 * DP,
-		height: 1176 * DP,
-		paddingTop: 30 * DP,
-		borderRadius: 50 * DP,
+		width: 694 * DP,
+		// height: 1176 * DP,
+		// paddingTop: 30 * DP,
+		borderRadius: 30 * DP,
 		backgroundColor: WHITE,
 	},
 	shadow: {
@@ -489,19 +539,23 @@ const style = StyleSheet.create({
 		elevation: 2,
 	},
 	header: {
-		width: 502 * DP,
-		height: 56 * DP,
+		width: 694 * DP,
+		height: 88 * DP,
 		marginBottom: 20 * DP,
 		flexDirection: 'row',
 		alignSelf: 'center',
 		alignItems: 'center',
+		paddingHorizontal: 42 * DP,
 		justifyContent: 'space-between',
-		// backgroundColor: 'yellow',
+		backgroundColor: '#DEDEDE',
+		borderTopLeftRadius: 30 * DP,
+		borderTopRightRadius: 30 * DP,
 	},
 	crossMark: {
-		width: 90 * DP,
-		height: 90 * DP,
+		width: 52 * DP,
+		height: 52 * DP,
 		justifyContent: 'center',
+		alignItems: 'flex-end',
 	},
 	saveText: {
 		// width: 66 * DP,
@@ -526,23 +580,52 @@ const style = StyleSheet.create({
 		justifyContent: 'center',
 		height: 68 * DP,
 		paddingHorizontal: 12 * DP,
-		minWidth: 126 * DP,
-		borderRadius: 25 * DP,
+		width: 226 * DP,
+		// backgroundColor: 'red',
+		borderRadius: 30 * DP,
 		borderWidth: 2 * DP,
 		borderColor: GRAY20,
-		marginLeft: 20 * DP,
-		marginTop: 20 * DP,
+		// marginLeft: 20 * DP,
+		marginTop: 30 * DP,
 	},
 	contentText_userInterest: {
 		alignItems: 'center',
 		justifyContent: 'center',
-		paddingHorizontal: 12 * DP,
-		backgroundColor: APRI10,
+		// paddingHorizontal: 12 * DP,
+		backgroundColor: MAINBLACK,
 		height: 68 * DP,
-		borderRadius: 25 * DP,
-		minWidth: 126 * DP,
-		marginLeft: 20 * DP,
+		width: 226 * DP,
+		borderRadius: 30 * DP,
+		borderColor: GRAY20,
+		marginTop: 30 * DP,
+	},
+	InterestText_userInterest: {
+		alignItems: 'center',
+		justifyContent: 'center',
+		paddingHorizontal: 12 * DP,
+		backgroundColor: MAINBLACK,
+		height: 68 * DP,
+		minWidth: 114 * DP,
+		borderRadius: 30 * DP,
+		borderColor: GRAY20,
 		marginTop: 20 * DP,
+		borderWidth: 2 * DP,
+		marginRight: 12 * DP,
+	},
+	InterestContentText: {
+		alignItems: 'center',
+		justifyContent: 'center',
+		height: 68 * DP,
+		paddingHorizontal: 12 * DP,
+		// width: 226 * DP,
+		minWidth: 114 * DP,
+		// backgroundColor: 'red',
+		borderRadius: 30 * DP,
+		borderWidth: 2 * DP,
+		borderColor: GRAY20,
+		// marginLeft: 20 * DP,
+		marginTop: 20 * DP,
+		marginRight: 12 * DP,
 	},
 	btnModalContainer: {
 		position: 'absolute',

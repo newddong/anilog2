@@ -277,7 +277,7 @@ export default ProtectCommentList = props => {
 	//미트볼, 수정을 누르면 동작
 	const onEdit = (comment, parent) => {
 		// console.log('수정 데이터', comment.comment_is_secure);
-		const findParentIndex = comments.findIndex(e => e._id == parent);
+		const findParentIndex = comments.findIndex(e => e._id == parent._id);
 		setEditMode(true);
 		setPrivateComment(comment.comment_is_secure);
 		setParentComment(); // 수정모드로 전환시
@@ -285,6 +285,7 @@ export default ProtectCommentList = props => {
 		setTimeout(() => {
 			input.current.focus();
 		}, 200);
+		console.log('findParentIndex', findParentIndex);
 		scrollToReply(findParentIndex);
 	};
 
@@ -394,7 +395,7 @@ export default ProtectCommentList = props => {
 			return result;
 		};
 		return (
-			<View style={[feedCommentList.commentContainer, {backgroundColor: getBgColor(), alignItems: 'center', width: 750 * DP}]} key={item._id}>
+			<View style={[style.commentContainer, {backgroundColor: getBgColor(), alignItems: 'center', width: 750 * DP}]} key={item._id}>
 				<ParentComment
 					parentComment={item}
 					onPressReplyBtn={onReplyBtnClick} // 부모 댓글의 답글쓰기 클릭 이벤트
@@ -475,7 +476,7 @@ const style = StyleSheet.create({
 		width: 750 * DP,
 		alignSelf: 'center',
 		alignItems: 'center',
-		marginBottom: 20 * DP,
+		marginBottom: 10 * DP,
 		// backgroundColor: 'lightblue',
 	},
 	cotent_container_header: {
@@ -490,5 +491,11 @@ const style = StyleSheet.create({
 	cotent_container_info: {
 		width: 694 * DP,
 		marginBottom: 20 * DP,
+	},
+	commentContainer: {
+		paddingBottom: 10 * DP,
+		paddingTop: 20 * DP,
+		alignItems: 'center',
+		// backgroundColor: 'yellow',
 	},
 });

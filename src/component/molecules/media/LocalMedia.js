@@ -154,6 +154,7 @@ const style = StyleSheet.create({
 
 //안드로이드에서 FastImage를 사용하도록하는 커스텀 컴포넌트
 const Img =React.forwardRef((props,ref) => {
+	return <FastImage {...props} ref={ref}></FastImage>
 	if(Platform.OS=='ios'){
 		return <Image {...props} ref={ref} ></Image>
 

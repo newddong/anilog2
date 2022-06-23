@@ -64,9 +64,9 @@ static void InitializeFlipper(UIApplication *application) {
   [AppCenterReactNative register];
   [AppCenterReactNativeAnalytics registerWithInitiallyEnabled:true];
   [AppCenterReactNativeCrashes registerWithAutomaticProcessing];
-//  [SDImageLoadersManager.sharedManager addLoader:SDImagePhotosLoader.sharedLoader];
-//  SDImagePhotosLoader.sharedLoader.imageRequestOptions.sd_targetSize = CGSizeMake(120, 120);
-//  SDWebImageManager.defaultImageLoader = SDImageLoadersManager.sharedManager;
+  [SDImageLoadersManager.sharedManager addLoader:SDImagePhotosLoader.sharedLoader];
+  SDImagePhotosLoader.sharedLoader.imageRequestOptions.sd_targetSize = CGSizeMake(720, 720);
+  SDWebImageManager.defaultImageLoader = SDImageLoadersManager.sharedManager;
 
   return YES;
 }

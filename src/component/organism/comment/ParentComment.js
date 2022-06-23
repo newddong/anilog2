@@ -33,27 +33,34 @@ export default ParentComment = React.memo((props, ref) => {
 	// console.log('ParentComment : ', props.parentComment.comment_writer_id.user_nickname, props.parentComment.comment_is_secure);
 	// console.log('parentComment props', props.parentComment.comment_contents, props.parentComment.children_count);
 	const navigation = useNavigation();
-	const [data, setData] = React.useState(props.parentComment);
+	const parent = props.parentComment;
+	const [data, setData] = React.useState(parent);
 	const [child, setChild] = React.useState([]);
 	const [likeCount, setLikeCount] = React.useState(0);
 	const [likeState, setLikeState] = React.useState(false); //해당 댓글의 좋아요 상태 - 로그인 유저가 좋아요를 누른 기록이 있다면 filled , or border
 	const [showChild, setShowChild] = React.useState(false); //해당 댓글의 답글들 출력 여부 Boolean
-	const [meatball, setMeatball] = React.useState(false); // 해당 댓글의 미트볼 헤더 클릭 여부
+
 	React.useEffect(() => {
-		setData(props.parentComment);
-		setLikeState(props.parentComment.comment_is_like);
-		setLikeCount(props.parentComment.comment_like_count);
-		if (props.parentComment.showChild) {
-			// console.log('props.parentComment.showChild', props.parentComment.showChild);
+		setData(parent);
+		setLikeState(parent.comment_is_like);
+		setLikeCount(parent.comment_like_count);
+		//
+		if (parent && parent.isDeleted && parent.children_count > 0) {
+			console.log('parent.showChild', parent.isDeleted, parent.comment_contents);
 			setTimeout(() => {
-				// showChildComment();
 				setShowChild(true);
+			}, 300);
+		}
+		if (parent && parent.isEdited && parent.children_count > 0) {
+			console.log('parent.isEdited', parent.isEdited, parent.comment_contents);
+			setTimeout(() => {
+				addChildComment();
 			}, 300);
 		}
 	}, [props.parentComment]);
 
 	React.useEffect(() => {
-		if (props.parentComment._id == props.parent) {
+		if (parent._id == props.parent) {
 			showChildComment();
 		}
 		if (props.openChild) {
@@ -66,7 +73,7 @@ export default ParentComment = React.memo((props, ref) => {
 	const addChildComment = newChildComment => {
 		getChildCommentList(
 			{
-				commentobject_id: props.parentComment._id,
+				commentobject_id: parent._id,
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			result => {
@@ -82,9 +89,9 @@ export default ParentComment = React.memo((props, ref) => {
 
 	//답글쓰기 클릭
 	const onPressReplyBtn = () => {
-		// console.log('대댓글 추가 부모댓글 닉네임 : ', props.parentComment.comment_writer_id.user_nickname);
-		if (props.parentComment.comment_writer_id) {
-			props.onPressReplyBtn(props.parentComment, addChildComment);
+		// console.log('대댓글 추가 부모댓글 닉네임 : ', parent.comment_writer_id.user_nickname);
+		if (parent.comment_writer_id) {
+			props.onPressReplyBtn(parent, addChildComment);
 		} else {
 			Modal.popNetworkErrorModal('이미 탈퇴한 계정의 댓글입니다.');
 		}
@@ -99,7 +106,7 @@ export default ParentComment = React.memo((props, ref) => {
 			setLikeState(!likeState);
 			likeComment(
 				{
-					commentobject_id: props.parentComment._id,
+					commentobject_id: parent._id,
 					userobject_id: userGlobalObject.userInfo._id,
 					is_like: !likeState,
 				},
@@ -110,7 +117,7 @@ export default ParentComment = React.memo((props, ref) => {
 					console.log(error);
 				},
 			);
-			props.like && props.like(props.parentComment);
+			props.like && props.like(parent);
 		}
 	};
 
@@ -118,7 +125,7 @@ export default ParentComment = React.memo((props, ref) => {
 	const showChildComment = () => {
 		getChildCommentList(
 			{
-				commentobject_id: props.parentComment._id,
+				commentobject_id: parent._id,
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			result => {
@@ -135,8 +142,19 @@ export default ParentComment = React.memo((props, ref) => {
 
 	//미트볼 -> 수정 클릭
 	const onEdit = data => {
-		// console.log('props.parentComment', props.parentComment);
-		props.onEdit && props.onEdit(data, props.parentComment._id);
+		// console.log('parent', parent);
+		// console.log('data', data);
+		const findIndex = child.findIndex(e => e._id == data._id);
+		let hasPhoto = [];
+		if (findIndex != -1) {
+			for (let i = 0; i < findIndex; i++) {
+				console.log('i', i, child[i].comment_photo_uri);
+				if (child[i].comment_photo_uri) {
+					hasPhoto.push(true);
+				}
+			}
+		}
+		props.onEdit && props.onEdit(data, parent, {findIndex: findIndex, hasPhoto: hasPhoto.length});
 	};
 
 	const onDelete = () => {
@@ -147,50 +165,19 @@ export default ParentComment = React.memo((props, ref) => {
 	};
 
 	const onPressDeleteChild = id => {
-		props.onPressDeleteChild(id, props.parentComment);
+		props.onPressDeleteChild(id, parent);
 		setTimeout(() => {
 			showChildComment();
 		}, 200);
 	};
 
+	const onPressReplyPhoto = src => {
+		Modal.popPhotoListViewModal([src], Modal.close);
+	};
+
 	//좋아요 클릭
 	const like = data => {
 		props.like && props.like(data);
-	};
-
-	//미트볼 클릭
-	const onPressMeatball = () => {
-		// console.log('data', data.comment_writer_id);
-		if (data.comment_writer_id) {
-			const isWriter = userGlobalObject.userInfo._id == data.comment_writer_id._id;
-			if (isWriter) {
-				Modal.popSelectBoxModal(
-					REPLY_MEATBALL_MENU_MY_REPLY,
-					selectedItem => {
-						switch (selectedItem) {
-							case '수정':
-								onEdit(props.parentComment);
-								break;
-							case '삭제':
-								onDelete();
-								break;
-							case '상태 변경':
-								alert('상태 변경!');
-								break;
-							case '공유하기':
-								alert('공유하기!');
-								break;
-							default:
-								break;
-						}
-						Modal.close();
-					},
-					() => Modal.close(),
-					false,
-					'',
-				);
-			}
-		}
 	};
 
 	const reportComment = () => {
@@ -249,7 +236,7 @@ export default ParentComment = React.memo((props, ref) => {
 		return result;
 	};
 
-	const childrenCount = child.length > 0 ? child.length : props.parentComment.children_count;
+	const childrenCount = child.length > 0 ? child.length : parent.children_count;
 
 	return (
 		<View style={[style.parentComment]}>
@@ -269,25 +256,18 @@ export default ParentComment = React.memo((props, ref) => {
 						<></>
 					)}
 				</View>
-				{/* {data.comment_is_delete || !data.comment_writer_id || userGlobalObject.userInfo._id != data.comment_writer_id._id ? (
-					<></>
-				) : (
-					<View style={[]}>
-						<Meatball50_GRAY20_Vertical onPress={onPressMeatball} />
-					</View>
-				)} */}
 			</View>
 			{/* 댓글 Dummy 이미지 및 대댓글 목록 */}
-			{data.comment_photo_uri == undefined || isNotAuthorized() ? ( //img_square_round_574
+			{data.comment_photo_uri == undefined || isNotAuthorized() ? (
 				<></>
 			) : (
-				<View style={[style.img_square_round]}>
+				<TouchableOpacity onPress={() => onPressReplyPhoto(data.comment_photo_uri)} activeOpacity={0.8} style={[style.img_square_round]}>
 					{data.comment_photo_uri.includes('http') ? (
 						<FastImage style={[styles.img_square_round_614]} source={{uri: data.comment_photo_uri}} />
 					) : (
 						<Image style={[styles.img_square_round_614]} source={{uri: data.comment_photo_uri}} />
 					)}
-				</View>
+				</TouchableOpacity>
 			)}
 			{/* 댓글 내용 */}
 			{data.comment_is_delete ? (
@@ -313,7 +293,7 @@ export default ParentComment = React.memo((props, ref) => {
 							<TouchableOpacity onPress={onDelete} style={[{}]}>
 								<Text style={[txt.noto24, {color: GRAY10}]}> 삭제 · </Text>
 							</TouchableOpacity>
-							<TouchableOpacity onPress={() => onEdit(props.parentComment)} style={[{}]}>
+							<TouchableOpacity onPress={() => onEdit(parent)} style={[{}]}>
 								<Text style={[txt.noto24, {color: GRAY10}]}> 수정 · </Text>
 							</TouchableOpacity>
 						</View>
@@ -345,7 +325,7 @@ export default ParentComment = React.memo((props, ref) => {
 			)}
 			{/* Data - 대댓글List */}
 			{showChild ? (
-				<View style={[style.childCommentList]}>
+				<View style={[style.childCommentList, {}]}>
 					<ChildCommentList
 						items={child}
 						showChildComment={showChildComment}
@@ -375,7 +355,7 @@ const style = StyleSheet.create({
 	parentComment: {
 		flexDirection: 'column',
 		width: 694 * DP,
-		marginBottom: 20 * DP,
+		// marginBottom: 20 * DP,
 		alignItems: 'flex-end',
 		// backgroundColor: 'yellow',
 	},
@@ -451,5 +431,9 @@ const style = StyleSheet.create({
 		// width: 614 * DP,
 		// marginTop: 20 * DP,
 		flexDirection: 'row',
+		width: 750 * DP,
+		justifyContent: 'flex-end',
+		backgroundColor: 'white',
+		alignItems: 'flex-end',
 	},
 });

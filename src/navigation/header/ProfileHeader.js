@@ -28,7 +28,11 @@ export default ProfileHeader = props => {
 			setTimeout(() => {
 				if (data.user_type == 'shelter' && !data.user_contacted) {
 					Modal.alert(NOT_REGISTERED_SHELTER);
-				} else
+				} else if (userGlobalObject.userInfo.isPreviewMode) {
+					Modal.popLoginRequestModal(() => {
+						navigation.navigate('LoginRequired');
+					});
+				} else {
 					Modal.popMessageModal(
 						data.user_nickname,
 						msg => {
@@ -47,6 +51,7 @@ export default ProfileHeader = props => {
 						},
 						() => alert('나가기'),
 					);
+				}
 			}, 100);
 		} else if (select.includes('님의 관심사')) {
 			Modal.close();

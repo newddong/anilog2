@@ -368,7 +368,7 @@ export const MANAGEMENT_OF_VOLUNTEER = '봉사활동 신청관리';
 export const FAVORITES = '즐겨찾기';
 export const FRIENDS = '친구';
 export const PEED_CONTENTS = '피드 게시글';
-export const REQ_PROTECTION_SAVE = '보호요청(저장)';
+export const REQ_PROTECTION_SAVE = '동물보호';
 export const COMUNITY = '커뮤니티';
 
 export const MY_ACTIVITY_IN_SHELTER = '나의 활동';
@@ -386,7 +386,7 @@ export const INFO_QUESTION = '정보/문의';
 //User Menu 버튼
 export const INFO = '알림';
 export const ANIMAL_PROTECTION_STATE = '동물 보호 현황';
-export const PROTECTION_REQUEST = '보호 요청(저장)';
+export const PROTECTION_REQUEST = '동물보호';
 
 export const PLEASE_UPLOAD_PIC = '해당 동물의 특징이 잘 보이는 이미지를 올려주세요.';
 export const PLEASE_GIVE_ME_DATE_AND_PLACE = '해당 동물이 구조된 날짜와 장소를 알려 주세요.';

@@ -854,11 +854,13 @@ static void checkPhotoLibraryConfig()
                      mimeType:(NSString* _Nullable )mimeType{
   NSString *tmpDirFullPath = [self getTmpDirectory];
   NSString *filePath = [tmpDirFullPath stringByAppendingString:[[NSUUID UUID] UUIDString]];
-  NSString* type = (mimeType != NULL || mimeType.length != 0) ? mimeType:@"jpg";
-  filePath = [filePath stringByAppendingString:[NSString stringWithFormat:@".%@", type]];
+  
+//  NSString* type = (mimeType != NULL || mimeType.length != 0) ? mimeType:@"jpg";
+  filePath = [filePath stringByAppendingString:@".jpg"];
   
   BOOL status = [data writeToFile:filePath atomically:YES];
   if (!status) {
+    
     return nil;
   }
   

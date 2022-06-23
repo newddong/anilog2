@@ -27,8 +27,8 @@ export default ReportForm = props => {
 
 	const route = useRoute();
 	const navigation = useNavigation();
-	const [city, setCity] = React.useState(['광역시, 도']); //광역시도 API자료 컨테이너
-	const [district, setDistrict] = React.useState(['시군 선택']); //시군 API자료 컨테이너
+	const [city, setCity] = React.useState(['시, 도']); //광역시도 API자료 컨테이너
+	const [district, setDistrict] = React.useState(['시,군,구']); //시군 API자료 컨테이너
 	const [isDistrictChanged, setIsDistrictChanged] = React.useState(false); // 시군 선택되었는지 여부
 	const [neighbor, setNeighbor] = React.useState(['동읍면']); //동읍면 API 자료 컨테이너
 	const [isSpeciesChanged, setIsSpeciesChanged] = React.useState(false);
@@ -377,7 +377,7 @@ export default ReportForm = props => {
 						</View>
 						<View style={[{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10 * DP, marginBottom: 20 * DP}]}>
 							<TouchableOpacity onPress={onPressCity} style={[reportStyle.dropdownSelect_depth1, {width: 268 * DP}]}>
-								<View style={[reportStyle.missing_location_container]}>
+								<View style={[reportStyle.missing_location_container, {}]}>
 									<Text style={[txt.noto28, reportStyle.missing_location]}>{data.report_location.city}</Text>
 									<Arrow_Down_BLACK />
 								</View>
@@ -433,15 +433,19 @@ const reportStyle = StyleSheet.create({
 		// marginLeft: 12 * DP,
 		borderRadius: 30 * DP,
 		justifyContent: 'center',
+		alignItems: 'center',
 		backgroundColor: GRAY50,
 	},
 	missing_location_container: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		justifyContent: 'space-around',
+		// justifyContent: 'center',
+		// justifyContent: 'space-around',
 	},
 	missing_location: {
 		height: 44 * DP,
+		// backgroundColor: 'red',
+		minWidth: 160 * DP,
 		textAlign: 'center',
 	},
 });

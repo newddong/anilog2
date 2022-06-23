@@ -2,7 +2,6 @@ import React from 'react';
 import {View, TouchableOpacity, Text, StyleSheet, Image} from 'react-native';
 import AniButton from 'Molecules/button/AniButton';
 import CheckBox from 'Molecules/select/CheckBox';
-import {userAccount} from 'Organism/style_organism copy';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {GRAY10, APRI10, BLACK, APRI20, WHITE, MAINBLACK} from 'Root/config/color';
@@ -128,7 +127,7 @@ const styles = StyleSheet.create({
 	},
 });
 
-UserAccount.defaultProps = {
+OneAlarm.defaultProps = {
 	// onLabelClick: e => console.log(e),
 	onClickFollow: e => console.log(e),
 	onCheckBox: e => console.log(e),

@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import ControllableAccountList from 'Organism/list/ControllableAccountList';
 import {followUser, unFollowUser} from 'Root/api/userapi';
 import Modal from 'Root/component/modal/Modal';
@@ -48,14 +48,16 @@ export default SearchAccountA = React.memo((props, ref) => {
 
 	const renderItem = ({item, index}) => {
 		return (
-			<ControllableAccount
-				data={item}
-				showCrossMark={false}
-				showButtons={false}
-				onClickLabel={() => onClickAccount(item, index)}
-				// onClickFollowBtn={() => onClickFollowBtn(item)}
-				// onClickUnFollowBtn={() => onClickUnFollowBtn(item)}
-			/>
+			<TouchableOpacity onPress={() => onClickAccount(item, index)} activeOpacity={0.8}>
+				<ControllableAccount
+					data={item}
+					showCrossMark={false}
+					showButtons={false}
+					onClickLabel={() => onClickAccount(item, index)}
+					// onClickFollowBtn={() => onClickFollowBtn(item)}
+					// onClickUnFollowBtn={() => onClickUnFollowBtn(item)}
+				/>
+			</TouchableOpacity>
 		);
 	};
 

@@ -36,17 +36,19 @@ export default AssignProtectAnimalImage = props => {
 		navigation.push('AssignProtectAnimalDate', data);
 	};
 
-	React.useEffect(()=>{
-		if(props.route.params?.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+	React.useEffect(() => {
+		if (props.route.params?.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
 			let selected = props.route.params.selectedPhoto;
-			let photoList = selected.map(v=>{return v.cropUri??v.uri});
+			let photoList = selected.map(v => {
+				return v.cropUri ?? v.uri;
+			});
 			setImageList(photoList);
 			setData({...data, protect_animal_photo_uri_list: photoList || data.protect_animal_photo_uri_list});
 		}
-	},[props.route.params?.selectedPhoto]);
+	}, [props.route.params?.selectedPhoto]);
 
 	const gotoSelectPicture = () => {
-		props.navigation.push("MultiPhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
+		props.navigation.push('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 	};
 
 	return (

@@ -379,10 +379,10 @@ export default FeedList = ({route, navigation}) => {
 				let params = {
 					login_userobject_id: userGlobalObject.userInfo._id,
 					limit: FEED_LIMIT,
-					order_value: pre ? 'pre' : 'next',
 				};
 				if (feedList.length > 0) {
 					params.target_object_id = pre ? feedList[0]._id : feedList[feedList.length - 1]._id;
+					params.order_value = pre ? 'pre' : 'next';
 				}
 				console.log('params', params);
 				getSuggestFeedList(

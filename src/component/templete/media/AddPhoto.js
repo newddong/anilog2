@@ -139,7 +139,7 @@ export default AddPhoto = props => {
 			.then(album => {
 				setPhotoList([...album.edges]);
 				// setPhotoList(album.edges);
-				console.log(album);
+				// console.log(album);
 			})
 			.catch(err => {
 				console.log('cameraroll error===>' + err);
@@ -204,7 +204,7 @@ export default AddPhoto = props => {
 	}, [selectedPhoto]);
 
 	React.useEffect(() => {
-		console.log('selectedPhoto', props.route.params);
+		// console.log('selectedPhoto', props.route.params);
 		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
 			setSelectedPhoto(props.route.params.selectedPhoto);
 		}

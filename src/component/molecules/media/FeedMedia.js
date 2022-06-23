@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, Image, TouchableOpacity, StyleSheet, ScrollView, BackHandler} from 'react-native';
+import {Text, View, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {ImageList48, VideoPlay48, VideoPlay_Feed, Tag70, Blur694} from 'Atom/icon';
@@ -103,25 +103,7 @@ export default FeedMedia = props => {
 		} else return false;
 	};
 
-	const [showImgMode, setShowImgMode] = React.useState(false);
-	const backAction = () => {
-		console.log('back', showImgMode);
-		if (showImgMode) {
-			Modal.close();
-			setShowImgMode(false);
-			return true;
-		} else {
-			return false;
-		}
-	};
-
-	React.useEffect(() => {
-		BackHandler.addEventListener('hardwareBackPress', backAction);
-		return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
-	}, [showImgMode]);
-
 	const onPressPhoto = () => {
-		setShowImgMode(true);
 		Modal.popPhotoListViewModal(
 			feed_medias.map(v => v.media_uri),
 			() => Modal.close(),

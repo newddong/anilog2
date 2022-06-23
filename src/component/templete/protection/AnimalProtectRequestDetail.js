@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, TouchableOpacity, View, FlatList, Platform, StyleSheet, BackHandler} from 'react-native';
+import {Text, TouchableOpacity, View, FlatList, Platform, StyleSheet} from 'react-native';
 import {btn_w276} from 'Atom/btn/btn_style';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import RescueImage from 'Root/component/molecules/image/RescueImage';
@@ -214,27 +214,8 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		);
 	};
 
-	const [showImgMode, setShowImgMode] = React.useState(false);
-	const backAction = () => {
-		console.log('back', showImgMode);
-		if (showImgMode) {
-			Modal.close();
-			setShowImgMode(false);
-			return true;
-		} else {
-			return false;
-		}
-	};
-
-	React.useEffect(() => {
-		BackHandler.addEventListener('hardwareBackPress', backAction);
-		return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
-	}, [showImgMode]);
-
 	//사진 썸네일 클릭
 	const onPressReqeustPhoto = () => {
-		console.log('v', data.protect_request_photos_uri);
-		setShowImgMode(true);
 		Modal.popPhotoListViewModal(data.protect_request_photos_uri, () => Modal.close());
 	};
 

@@ -30,7 +30,7 @@ export default UserInfoDetailSetting = ({route, navigation}) => {
 	React.useEffect(() => {
 		navigation.setParams({data: route.params, route_name: route.name});
 		getInterestsList({}, interests => {
-			setInterestList(interests.msg);
+			setInterestList();
 			setInterestLoaded(true);
 		});
 		if (data.user_interests) {

@@ -328,7 +328,8 @@ export default PetInfoSetting = ({route, navigation}) => {
 						<View style={[petInfoSetting.petProfileMenu.insideContainer]}>
 							<View style={[petInfoSetting.petProfileMenu.menuTitle]}>
 								<Text style={[txt.noto30b, {color: GRAY10}]}>
-									소개 <Text style={[txt.noto22b, {color: GRAY20}]}> (최대 500자, 15줄)</Text>{' '}
+									소개
+									{/* <Text style={[txt.noto22b, {color: GRAY20}]}> (최대 500자, 15줄)</Text>{' '} */}
 								</Text>
 							</View>
 							<View style={[petInfoSetting.petProfileMenu.bracket50]}>
@@ -358,6 +359,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 							) : (
 								<Text style={[txt.noto26, {color: MAINBLACK}]} numberOfLines={15}>
 									{petData.user_introduction || '자기소개가 없습니다.'}
+									{/* {petData.user_introduction || '자기소개가 없습니다.'} */}
 								</Text>
 							)}
 						</View>

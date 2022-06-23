@@ -119,16 +119,17 @@ export default UserInfoSetting = ({route}) => {
 	//프로필 변경을 통한 사진변경이 발생했을 경우 params로 해당 포토 uri를 받아오고 data에 적용
 	React.useEffect(() => {
 		if (route.params != undefined && route.params.selectedPhoto != undefined) {
-			route.params.selectedPhoto ? setData({...data, user_profile_uri: route.params.selectedPhoto[0].uri}) : null;
+			// route.params.selectedPhoto ? setData({...data, user_profile_uri: route.params.selectedPhoto[0].uri}) : null;
 			updateUserInformation(
 				{
 					userobject_id: userGlobalObject.userInfo._id,
-					user_profile_uri: route.params.selectedPhoto[0].uri,
+					user_profile_uri: route.params.selectedPhoto[0].cropUri??route.params.selectedPhoto[0].uri,
 					user_nickname: userGlobalObject.userInfo.user_nickname,
 				},
 				r => {
 					console.log('사진변경결과', r.msg);
 					setData({...r.msg});
+					userGlobalObject.userInfo.user_profile_uri = r.msg.user_profile_uri;
 				},
 				e => console.log('err', e),
 			);

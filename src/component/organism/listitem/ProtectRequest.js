@@ -61,9 +61,9 @@ export default ProtectRequest = React.memo(props => {
 		notice_day: data.notice_day,
 	};
 
-	React.useEffect(() => {
-		setData(props.data);
-	}, [props.data]);
+	// React.useEffect(() => {
+	// 	setData(props.data);
+	// }, [props.data]);
 
 	//우상단 즐겨찾기 깃발 아이콘 클릭 콜백
 	const onPressFavoriteTag = bool => {
@@ -89,52 +89,49 @@ export default ProtectRequest = React.memo(props => {
 
 	const contents = () => {
 		return (
-			<View style={[style.detailContainer, {width: props.selectMode ? 320 * DP : 380 * DP}]}>
-				<View style={[style.detail_lowerMenu, {justifyContent: 'center'}]}>
-					<View style={{justifyContent: 'space-between'}}>
-						{/* 동물 종류 및 품종 */}
-						<View style={[style.lowerMenu_kindAndBreed]}>
-							<Text style={[txt.noto34b]}>{data.protect_animal_species || ''}</Text>
-							<Text style={[txt.noto28, style.breedText]} numberOfLines={1}>
-								{data.protect_animal_species_detail || ''}
-							</Text>
-							{/* <Text style={{color: 'red'}}> {props.index}</Text> */}
-						</View>
-						{/* 보호요청 관련 Details */}
-						<View style={[style.lowerMenu_helpDetail]}>
-							<Text style={[txt.noto28]}>
-								공고일자 :{' '}
-								{moment(data.protect_request_notice_sdt).format('YY.MM.DD') + '~' + moment(data.protect_request_notice_edt).format('YY.MM.DD')}
-							</Text>
-							<Text style={[txt.noto28]}>등&nbsp; 록&nbsp; 일 : {getParsedDate()}</Text>
-							<Text style={[txt.noto28, {maxWidth: props.selectMode ? 320 * DP : 380 * DP}]} numberOfLines={1}>
-								보호장소 :
-								{data.protect_request_writer_id.length
-									? data.protect_request_writer_id[0].user_nickname
-									: data.protect_request_writer_id.user_nickname}
-							</Text>
-							<Text style={[txt.noto28, {maxWidth: props.selectMode ? 320 * DP : 380 * DP}]} numberOfLines={1}>
-								구조지역 : {data.protect_animal_id ? data.protect_animal_id.protect_animal_rescue_location : '작성되지 않았습니다.'}
-							</Text>
-						</View>
-					</View>
+			<View style={[style.detail_lowerMenu, {width: props.selectMode ? 320 * DP : 380 * DP,justifyContent: 'space-between',marginLeft:30*DP}]}>
+				{/* 동물 종류 및 품종 */}
+				<View style={[style.lowerMenu_kindAndBreed]}>
+					<Text style={[txt.noto34b]}>{data.protect_animal_species || ''}</Text>
+					<Text style={[txt.noto28, style.breedText]} numberOfLines={1}>
+						{data.protect_animal_species_detail || ''}
+					</Text>
+					{/* <Text style={{color: 'red'}}> {props.index}</Text> */}
+				</View>
+				{/* 보호요청 관련 Details */}
+				<View style={[style.lowerMenu_helpDetail]}>
+					<Text style={[txt.noto28]}>
+						공고일자 :{' '}
+						{moment(data.protect_request_notice_sdt).format('YY.MM.DD') + '~' + moment(data.protect_request_notice_edt).format('YY.MM.DD')}
+					</Text>
+					<Text style={[txt.noto28]}>등&nbsp; 록&nbsp; 일 : {getParsedDate()}</Text>
+					<Text style={[txt.noto28, {maxWidth: props.selectMode ? 320 * DP : 380 * DP}]} numberOfLines={1}>
+						보호장소 :
+						{data.protect_request_writer_id.length
+							? data.protect_request_writer_id[0].user_nickname
+							: data.protect_request_writer_id.user_nickname}
+					</Text>
+					<Text style={[txt.noto28, {maxWidth: props.selectMode ? 320 * DP : 380 * DP}]} numberOfLines={1}>
+						구조지역 : {data.protect_animal_id ? data.protect_animal_id.protect_animal_rescue_location : '작성되지 않았습니다.'}
+					</Text>
 				</View>
 			</View>
 		);
 	};
 
 	return (
-		<View style={[style.container, {height: 266 * DP}]}>
-			<View style={[style.container_basicInfo]}>
-				<View style={[style.protectedThumbnail_container]}>
+		// <View style={[style.container, {height: 266 * DP}]}>
+			<View style={[style.container_basicInfo,{height:266*DP}]}>
+				{/* <View style={[style.protectedThumbnail_container]}> */}
 					<ProtectedThumbnail
 						data={thumbnailData}
 						inActiveOpacity={props.inActiveOpacity}
 						onLabelClick={(status, id) => props.onClickLabel(status, id)}
 					/>
-				</View>
+				{/* </View> */}
 				<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.6} onPress={() => props.onClickLabel()}>
-					<View>{contents()}</View>
+					{/* <View>{contents()}</View> */}
+					{contents()}
 				</TouchableOpacity>
 				{props.showFavorite ? (
 					<View style={[style.detail_upper_tag]}>
@@ -148,7 +145,7 @@ export default ProtectRequest = React.memo(props => {
 					<View style={[style.detail_upper_tag]}></View>
 				)}
 			</View>
-		</View>
+		// </View>
 	);
 });
 
@@ -170,7 +167,13 @@ const style = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		flexDirection: 'column',
+		
+	},
+	container_basicInfo: {
+		flexDirection: 'row',
+		justifyContent: 'center',
 		item_bracket: '#FF00FF',
+		// backgroundColor: '#FF00FF',
 	},
 	protectedThumbnail_container: {
 		width: 226 * DP,
@@ -228,9 +231,5 @@ const style = StyleSheet.create({
 		// height: 38 * DP,
 		// marginTop: 10 * DP,
 		// backgroundColor: 'yellow',
-	},
-	container_basicInfo: {
-		flexDirection: 'row',
-		// backgroundColor: '#FF00FF',
 	},
 });

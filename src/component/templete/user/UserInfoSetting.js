@@ -114,14 +114,28 @@ export default UserInfoSetting = ({route}) => {
 		navigation.addListener('blur', () => setModifyMode(false)); //소개글 수정모드 종료
 		fetchData();
 		//스크린 포커스, 프로필 변경이 있을 시 getUSerInfoById에 접속
-	}, [route.params?.changedPhoto]);
+	}, [route.params?.selectedPhoto]);
 
 	//프로필 변경을 통한 사진변경이 발생했을 경우 params로 해당 포토 uri를 받아오고 data에 적용
 	React.useEffect(() => {
-		if (route.params != undefined) {
-			route.params.changedPhoto ? setData({...data, user_profile_uri: route.params.changedPhoto}) : null;
+		if (route.params != undefined && route.params.selectedPhoto != undefined) {
+			route.params.selectedPhoto ? setData({...data, user_profile_uri: route.params.selectedPhoto[0].uri}) : null;
+			updateUserInformation(
+				{
+					userobject_id: userGlobalObject.userInfo._id,
+					user_profile_uri: route.params.selectedPhoto[0].uri,
+					user_nickname: userGlobalObject.userInfo.user_nickname,
+				},
+				r => {
+					console.log('사진변경결과', r.msg);
+					setData({...r.msg});
+				},
+				e => console.log('err', e),
+			);
+			console.log('사진 변경ehl', route.params.selectedPhoto[0].uri, userGlobalObject);
 		}
-	}, [route.params?.changedPhoto]);
+		console.log('사진 변경', route.params);
+	}, [route.params?.selectedPhoto]);
 
 	//소개란 수정모드
 	React.useEffect(() => {
@@ -163,7 +177,7 @@ export default UserInfoSetting = ({route}) => {
 			},
 
 			result => {
-				console.log('result / updateUserDetailInformation / SaveButtonHeader   : ', result.msg);
+				// console.log('result / updateUserDetailInformation / SaveButtonHeader   : ', result.msg);
 				// setTimeout(() => {
 				// Modal.close();
 				// navigation.goBack();

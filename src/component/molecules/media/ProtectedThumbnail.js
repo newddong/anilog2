@@ -124,7 +124,7 @@ const ProtectedThumbnail = props => {
 	return (
 		<View style={styles.img_square_round_226}>
 			<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.4} onPress={onClickLabel}>
-				<FastImage style={[styles.img_square_round_226, borderByStatus(), {zIndex: -3}]} source={{uri: data.img_uri}} />
+				<FastImage source={{uri: data.img_uri,width:226*DP,height:226*DP}} style={[styles.img_square_round_226, borderByStatus(), {zIndex: -3}]}  />
 				{/* <Image source={{uri: data.img_uri}} onLoad={e => setImageLoad(true)} style={[styles.img_square_round_226, borderByStatus(), {zIndex: -3}]} /> */}
 				{/* 펫 성별마크 */}
 				<View style={{position: 'absolute', right: 10 * DP, top: 10 * DP}}>{getGenderMark()}</View>
@@ -148,7 +148,7 @@ ProtectedThumbnail.defaultProps = {
 	onLabelClick: e => console.log(e),
 	inActiveOpacity: false,
 };
-export default ProtectedThumbnail;
+export default React.memo(ProtectedThumbnail);
 
 const style = StyleSheet.create({
 	upperStatus: {

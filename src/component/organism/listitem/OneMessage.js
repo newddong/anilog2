@@ -1,6 +1,5 @@
 import React from 'react';
 import {FlatList, ScrollView, Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import UserAccount from 'Organism/listitem/UserAccount';
 import {accountHashList} from 'Organism/style_organism copy';
 import UserNote from './UserNote';
 import DP from 'Root/config/dp';

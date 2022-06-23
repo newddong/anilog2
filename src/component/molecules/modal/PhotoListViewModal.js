@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Platform, Dimensions, Image, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, Platform, Dimensions, Image, TouchableOpacity, BackHandler} from 'react-native';
 import {WHITE, GRAY10, APRI10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
@@ -20,6 +20,23 @@ import Crop from 'Molecules/media/Crop';
  */
 const PhotoListViewModal = props => {
 	const swiperRef = React.useRef();
+
+	const [showImgMode, setShowImgMode] = React.useState(true);
+	const backAction = () => {
+		console.log('backAction', showImgMode);
+		if (showImgMode) {
+			Modal.close();
+			setShowImgMode(false);
+			return true;
+		} else {
+			return false;
+		}
+	};
+
+	React.useEffect(() => {
+		BackHandler.addEventListener('hardwareBackPress', backAction);
+		return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
+	}, [showImgMode]);
 
 	return (
 		<View style={style.background}>

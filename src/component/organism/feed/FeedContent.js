@@ -206,25 +206,32 @@ export default FeedContent = props => {
 	//피드 미트볼 메뉴 - 쪽지 보내기
 	const onPressSendMsg = _id => {
 		Modal.close();
+
 		setTimeout(() => {
-			Modal.popMessageModal(
-				_id.user_nickname,
-				msg => {
-					createMemoBox(
-						{memobox_receive_id: _id._id, memobox_contents: msg},
-						result => {
-							console.log('message sent success', result);
-							Modal.popOneBtn('쪽지 전송하였습니다.', '확인', () => Modal.close());
-						},
-						err => {
-							console.log('message sent err', err);
-						},
-					);
-					console.log('msg', msg);
-					Modal.close();
-				},
-				() => alert('나가기'),
-			);
+			if (userGlobalObject.userInfo.isPreviewMode) {
+				Modal.popLoginRequestModal(() => {
+					navigation.navigate('LoginRequired');
+				});
+			} else {
+				Modal.popMessageModal(
+					_id.user_nickname,
+					msg => {
+						createMemoBox(
+							{memobox_receive_id: _id._id, memobox_contents: msg},
+							result => {
+								console.log('message sent success', result);
+								Modal.popOneBtn('쪽지 전송하였습니다.', '확인', () => Modal.close());
+							},
+							err => {
+								console.log('message sent err', err);
+							},
+						);
+						console.log('msg', msg);
+						Modal.close();
+					},
+					() => alert('나가기'),
+				);
+			}
 		}, 100);
 	};
 

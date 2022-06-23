@@ -83,7 +83,7 @@
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Staging"
-      customArchiveName = "anilog"
+      customArchiveName = "anilogStaging"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

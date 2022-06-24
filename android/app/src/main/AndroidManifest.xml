@@ -20,8 +20,10 @@
       >
       <!-- # 22.03.15 구글 맵스 활용을 위한 추가 (KSW)   -->
       <meta-data 
-      android:name="com.google.android.geo.API_KEY" 
-      android:value="AIzaSyDyvDgG9NxbztMap_zUotBrNFI5JY6oRv4"/> 
+      android:name="com.google.android.maps.v2.API_KEY"
+      android:value="AIzaSyCeCTKNd_hAPj1WcxKxqfBfEUGpyXSVidE"/> 
+      <!-- /# 22.06.24 android 지도가 Blank로 출력되던 현상 발생으로 인한 API 키 변경 (문의 : 권상우 ) -->
+      <!-- android:value="AIzaSyDyvDgG9NxbztMap_zUotBrNFI5JY6oRv4"/> 이전 API KEY  --> 
       <!-- 구글 android API Key == AIzaSyDyvDgG9NxbztMap_zUotBrNFI5JY6oRv4 / 문의 : 권상우 -->
       <uses-library android:name="org.apache.http.legacy" android:required="false"/>
       <!-- # 22.03.15 구글 맵스 활용을 위한 추가 (KSW) 종료 -->

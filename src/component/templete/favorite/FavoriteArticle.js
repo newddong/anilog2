@@ -105,7 +105,14 @@ export default FavoriteArticle = ({route, isFavorite}) => {
 
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
-		selectMode ? false : navigation.push('ArticleDetail', {community_object: data[index], reset: true});
+		console.log('index', index, selectMode);
+		if (selectMode) {
+			let copy = [...data];
+			copy[index].checkBoxState = !copy[index].checkBoxState;
+			setData(copy);
+		} else {
+			navigation.push('ArticleDetail', {community_object: data[index], reset: true});
+		}
 	};
 
 	//Check Box On
@@ -119,6 +126,14 @@ export default FavoriteArticle = ({route, isFavorite}) => {
 		copy.map((v, i) => {
 			v.checkBoxState = false;
 		});
+		setData(copy);
+	};
+
+	//즐겨찾기 선택모드에서 체크박스 클릭
+	const onPressCheck = (i, bool) => {
+		console.log('i', i, bool);
+		let copy = [...data];
+		copy[i].checkBoxState = bool;
 		setData(copy);
 	};
 
@@ -198,14 +213,6 @@ export default FavoriteArticle = ({route, isFavorite}) => {
 				});
 			}
 		}
-		setData(copy);
-	};
-
-	//즐겨찾기 선택모드에서 체크박스 클릭
-	const onPressCheck = (i, bool) => {
-		console.log('i', i, bool);
-		let copy = [...data];
-		copy[i].checkBoxState = bool;
 		setData(copy);
 	};
 

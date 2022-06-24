@@ -12,53 +12,57 @@ export default PhotoSelectHeader = ({navigation, route, options, back}) => {
 	const navState = navigation.getState();
 	const prevRoute = route.params.prev?.name;
 	const prevKey = route.params.prev?.key;
-	const selectedPhoto = route.params.selectedPhoto||[];
+	const selectedPhoto = route.params.selectedPhoto || [];
 
-	React.useEffect(()=>{
-		console.log('헤더',route.params);
-	},[route.params])
+	React.useEffect(() => {
+		// console.log('헤더',route.params);
+	}, [route.params]);
 
 	const confirm = () => {
-		console.log(route.params,selectedPhoto);
-		if(prevRoute&&selectedPhoto.length>1){
-			let localFiles = selectedPhoto.filter(v=>!v.uri.includes('http'));
-			let remoteFiles = selectedPhoto.filter(v=>v.uri.includes('http'));
+		console.log(route.params, selectedPhoto);
+		if (prevRoute && selectedPhoto.length > 1) {
+			let localFiles = selectedPhoto.filter(v => !v.uri.includes('http'));
+			let remoteFiles = selectedPhoto.filter(v => v.uri.includes('http'));
 			CameraRoll.compressImage({
-				imageFiles:localFiles.map(v=>v.uri),quality:0.7,maxWidth:1024, maxHeight:1024
-			}).then(compressedImg=>{
-				console.log(compressedImg);
-				prevRoute&&prevKey&&navigation.navigate({name:prevRoute,key:prevKey,
-				params:{selectedPhoto: 
-					localFiles.map(
-						(v,i)=>{
-							v.originUri=v.uri;
-							v.uri=compressedImg.assets[i].uri;
-							return v;
-						}
-					)
-				},merge:true});
-			}
-			).catch(e=>console.log('camerarollerr',e))
-		}else{
-			prevRoute&&prevKey&&navigation.navigate({name:prevRoute,key:prevKey,
-			params:{selectedPhoto: selectedPhoto},merge:true});
+				imageFiles: localFiles.map(v => v.uri),
+				quality: 0.7,
+				maxWidth: 1024,
+				maxHeight: 1024,
+			})
+				.then(compressedImg => {
+					console.log(compressedImg);
+					prevRoute &&
+						prevKey &&
+						navigation.navigate({
+							name: prevRoute,
+							key: prevKey,
+							params: {
+								selectedPhoto: localFiles.map((v, i) => {
+									v.originUri = v.uri;
+									v.uri = compressedImg.assets[i].uri;
+									return v;
+								}),
+							},
+							merge: true,
+						});
+				})
+				.catch(e => console.log('camerarollerr', e));
+		} else {
+			prevRoute && prevKey && navigation.navigate({name: prevRoute, key: prevKey, params: {selectedPhoto: selectedPhoto}, merge: true});
 		}
 		// alert('Confirm');
 	};
 
 	const test = () => {
-		const Native = Platform.OS=='ios'?NativeModules.RNCCameraRoll:NativeModules.PhotoListModule;		
+		const Native = Platform.OS == 'ios' ? NativeModules.RNCCameraRoll : NativeModules.PhotoListModule;
 
-
-		Native.compressImage({imageFiles:selectedPhoto,quality:0.5,maxWidth:750*DP, maxHeight:750*DP})
-			.then(r=>console.log(r))
+		Native.compressImage({imageFiles: selectedPhoto, quality: 0.5, maxWidth: 750 * DP, maxHeight: 750 * DP})
+			.then(r => console.log(r))
 			.catch(err => {
-			// console.log('cameraroll error===>' + err);
+				// console.log('cameraroll error===>' + err);
 			});
 		// navigation.push('Crop',{cropImage:selectedPhoto})
 		console.log(selectedPhoto);
-
-
 	};
 
 	const warnGoback = () => {
@@ -78,7 +82,7 @@ export default PhotoSelectHeader = ({navigation, route, options, back}) => {
 		// } else {
 		// 	navigation.goBack();
 		// }
-        navigation.goBack();
+		navigation.goBack();
 	};
 	return (
 		<View style={[style.headerContainer, style.shadow]}>

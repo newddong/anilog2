@@ -24,7 +24,7 @@ export default CheckBox = props => {
 	};
 
 	React.useEffect(() => {
-		console.log('props.state===>', props.state);
+		// console.log('props.state===>', props.state);
 		setChecked(props.state);
 		props.onCheck(props.state);
 	}, [props.state]);

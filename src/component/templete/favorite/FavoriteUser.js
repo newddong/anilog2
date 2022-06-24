@@ -117,11 +117,14 @@ export default FavoriteUser = props => {
 
 	//CheckBox 클릭 시
 	const onCheckBox = (item, index) => {
+		console.log('index', index);
 		let copy = [...data];
 		copy[index].checkBoxState = !copy[index].checkBoxState;
+		setData(copy);
 	};
 
 	const onClickLabel = (user, index) => {
+		console.log('onClickLabel', index);
 		let copy = [...data];
 		if (checkBoxMode) {
 			copy[index].checkBoxState = !copy[index].checkBoxState;

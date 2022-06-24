@@ -62,11 +62,11 @@ export default SelectStat = props => {
 				{selectMode ? (
 					<View style={[style.rightContainer]}>
 						<TouchableOpacity onPress={selectAll} style={[style.textBtn]}>
-							<Text style={[txt.noto26]}>{selectCNT.current % 2 == 1 ? '전체 취소  ' : '전체 선택  '}</Text>
+							<Text style={[txt.noto26]}>{selectCNT.current % 2 == 1 ? '전체 취소' : '전체 선택'}</Text>
 						</TouchableOpacity>
 						<View style={[style.vertical_stick]} />
 						<TouchableOpacity onPress={deleteSelectedItem} style={[style.textBtn]}>
-							<Text style={[txt.noto26]}>{'   '}선택 삭제 </Text>
+							<Text style={[txt.noto26]}>선택 삭제 </Text>
 						</TouchableOpacity>
 					</View>
 				) : (
@@ -122,13 +122,15 @@ const style = StyleSheet.create({
 		height: 42 * DP,
 	},
 	textBtn: {
-		width: 120 * DP,
+		// width: 120 * DP,
 		height: 42 * DP,
 		alignItems: 'center',
+		// backgroundColor: 'red',
 	},
 	vertical_stick: {
 		width: 2 * DP,
 		height: 34 * DP,
+		marginHorizontal: 20 * DP,
 		alignSelf: 'center',
 		backgroundColor: BLACK,
 	},

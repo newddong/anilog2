@@ -40,7 +40,7 @@ const ReviewFavoriteBriefItem = props => {
 	const image = imageList();
 
 	const onPressReview = () => {
-		props.selectMode ? false : props.onPressReview();
+		props.onPressReview();
 	};
 
 	const onPressLike = () => {

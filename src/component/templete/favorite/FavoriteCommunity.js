@@ -99,38 +99,7 @@ export default FavoriteCommunity = ({route}) => {
 		return unsubscribe;
 	}, []);
 
-	const onPressArticle = () => {
-		isFavorite ? navigation.push('FavoriteArticle', article) : navigation.push('MyArticle', article);
-	};
-	const onPressReview = () => {
-		isFavorite ? navigation.push('FavoriteReview', review) : navigation.push('MyReview', review);
-	};
-
 	return (
-		// <View style={[style.container]}>
-		// 	<View style={[style.inside]}>
-		// 		<TouchableOpacity onPress={onPressArticle} style={[style.type]}>
-		// 			<View style={[style.title]}>
-		// 				<ArticleIcon />
-		// 				<Text style={[txt.noto30b]}>{'    '}자유 게시글</Text>
-		// 				<Text style={[txt.noto28]}> · {article.length}개</Text>
-		// 			</View>
-		// 			<View style={[style.nextBtn]}>
-		// 				<NextMark />
-		// 			</View>
-		// 		</TouchableOpacity>
-		// 		<TouchableOpacity onPress={onPressReview} style={[style.type]}>
-		// 			<View style={[style.title]}>
-		// 				<ReviewIcon />
-		// 				<Text style={[txt.noto30b]}>{'    '}리뷰</Text>
-		// 				<Text style={[txt.noto28]}> · {review.length}개</Text>
-		// 			</View>
-		// 			<View style={[style.nextBtn]}>
-		// 				<NextMark />
-		// 			</View>
-		// 		</TouchableOpacity>
-		// 	</View>
-		// </View>
 		<CommunityTopTabNav.Navigator
 			screenOptions={{
 				tabBarItemStyle: {height: 70 * DP},
@@ -147,18 +116,10 @@ export default FavoriteCommunity = ({route}) => {
 			}}
 			initialLayout={{width: Dimensions.get('window').width}}
 			optimizationsEnabled={true}>
-			<CommunityTopTabNav.Screen
-				name={'ArticleMain'}
-				options={{
-					tabBarLabel: '자유 게시판',
-				}}>
+			<CommunityTopTabNav.Screen name={'ArticleMain'} options={{tabBarLabel: '자유 게시판'}}>
 				{props => <FavoriteArticle {...props} isFavorite={isFavorite} article={article} />}
 			</CommunityTopTabNav.Screen>
-			<CommunityTopTabNav.Screen
-				name={'ReviewMain'}
-				options={{
-					tabBarLabel: '리뷰',
-				}}>
+			<CommunityTopTabNav.Screen name={'ReviewMain'} options={{tabBarLabel: '리뷰'}}>
 				{props => <FavoriteReview {...props} isFavorite={isFavorite} review={review} />}
 			</CommunityTopTabNav.Screen>
 		</CommunityTopTabNav.Navigator>

@@ -26,11 +26,11 @@ export default AppliesRecord = ({route}) => {
 				userobject_id: userGlobalObject.userInfo._id,
 			},
 			result => {
-				// console.log('result / getAppliesRecord / AppliesRecord : ', JSON.stringify(result.msg.adopt.is_favorite));
+				// console.log('result / getAppliesRecord / AppliesRecord : ', JSON.stringify(result.msg));
 				//입양
-				if (result.msg.adopt != undefined) {
+				if (result.msg.adopt && result.msg.adopt.protect_act_request_article_id) {
 					let adopt = result.msg.adopt;
-					let adopt_animal_info = adopt.protect_act_request_article_id._id;
+					let adopt_animal_info = adopt && adopt.protect_act_request_article_id._id;
 					delete adopt_animal_info._id;
 					adopt = Object.assign(adopt, adopt_animal_info);
 					adopt.protect_request_photos_uri = adopt.protect_act_request_article_id.protect_request_photos_uri;
@@ -52,7 +52,7 @@ export default AppliesRecord = ({route}) => {
 					setAdopt_application_list([]);
 				}
 				//임보
-				if (result.msg.protect != undefined) {
+				if (result.msg.protect && result.msg.protect.protect_act_request_article_id) {
 					let protect = result.msg.protect;
 					let protect_animal_info = protect.protect_act_request_article_id.protect_animal_id;
 					delete protect_animal_info._id;

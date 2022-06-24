@@ -154,7 +154,7 @@ const ReviewFilterModal = props => {
 		if (props.category == 'Review') {
 			let arr = [];
 			const review_category_list = arr.concat(
-				userInterestReview.interests_review,
+				// userInterestReview.interests_review,
 				userInterestReview.interests_trip,
 				userInterestReview.interests_etc,
 				userInterestReview.interests_hospital,
@@ -173,7 +173,7 @@ const ReviewFilterModal = props => {
 		} else {
 			let arr = [];
 			const review_category_list = arr.concat(
-				userInterestReview.interests_review,
+				// userInterestReview.interests_review,
 				userInterestReview.interests_trip,
 				userInterestReview.interests_etc,
 				userInterestReview.interests_hospital,
@@ -216,7 +216,7 @@ const ReviewFilterModal = props => {
 			interests_hospital: [],
 			interests_interior: [],
 			interests_location: {city: '', district: ''},
-			interests_review: [],
+			// interests_review: [],
 			interests_trip: [],
 		};
 		setUserInterestReview(init);
@@ -345,14 +345,14 @@ const ReviewFilterModal = props => {
 				setUserInterestReview({...userInterestReview, interests_hospital: copy});
 				break;
 			case 3:
-				copy = [...userInterestReview.interests_review];
-				copy.includes(tag)
-					? copy.splice(
-							copy.findIndex(e => e == tag),
-							1,
-					  )
-					: copy.push(tag);
-				setUserInterestReview({...userInterestReview, interests_review: copy});
+				// copy = [...userInterestReview.interests_review];
+				// copy.includes(tag)
+				// 	? copy.splice(
+				// 			copy.findIndex(e => e == tag),
+				// 			1,
+				// 	  )
+				// 	: copy.push(tag);
+				// setUserInterestReview({...userInterestReview, interests_review: copy});
 				break;
 			case 4:
 				copy = [...userInterestReview.interests_etc];
@@ -383,7 +383,7 @@ const ReviewFilterModal = props => {
 					result = userInterestReview.interests_hospital.includes(v);
 					break;
 				case 3:
-					result = userInterestReview.interests_review.includes(v);
+					// result = userInterestReview.interests_review.includes(v);
 					break;
 				case 4:
 					result = userInterestReview.interests_etc.includes(v);
@@ -468,7 +468,7 @@ const ReviewFilterModal = props => {
 							{getCommuntyInterestList(communityInterests.interests_trip, 0)}
 							{getCommuntyInterestList(communityInterests.interests_interior, 1)}
 							{getCommuntyInterestList(communityInterests.interests_hospital, 2)}
-							{getCommuntyInterestList(communityInterests.interests_review, 3)}
+							{/* {getCommuntyInterestList(communityInterests.interests_review, 3)} */}
 							{getCommuntyInterestList(communityInterests.interests_etc, 4)}
 						</TouchableOpacity>
 					</View>

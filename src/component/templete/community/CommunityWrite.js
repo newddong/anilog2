@@ -11,6 +11,7 @@ import {RichEditor} from 'react-native-pell-rich-editor';
 import AnimalButton from 'Root/component/molecules/button/AnimalButton';
 import {WRITE_FREE_INFO, WRITE_REVIEW_INFO} from 'Root/i18n/msg';
 import MapView from 'react-native-maps';
+import {KeyBoardEvent} from 'Root/component/molecules/input/usekeyboardbottom';
 
 export default CommunityWrite = props => {
 	const navigation = useNavigation();
@@ -241,30 +242,16 @@ export default CommunityWrite = props => {
 		}
 	})();
 
-	React.useEffect(() => {
-		let willshow = Keyboard.addListener('keyboardWillShow', e => {
+	KeyBoardEvent(
+		e => {
 			setKeyboardY(e.endCoordinates.height + KeyboardBorderLine);
 			Platform.OS == 'android' ? setShowBtn(true) : setShowBtn(true);
-		});
-		let didshow = Keyboard.addListener('keyboardDidShow', e => {
-			setKeyboardY(e.endCoordinates.height + KeyboardBorderLine);
-			Platform.OS == 'android' ? setShowBtn(true) : setShowBtn(true);
-		});
-		let didhide = Keyboard.addListener('keyboardDidHide', e => {
+		},
+		e => {
 			setKeyboardY(0);
 			Platform.OS == 'android' ? setShowBtn(false) : setShowBtn(false);
-		});
-		let willhide = Keyboard.addListener('keyboardWillHide', e => {
-			setKeyboardY(0);
-			Platform.OS == 'android' ? setShowBtn(false) : setShowBtn(false);
-		});
-		return () => {
-			willshow.remove();
-			willhide.remove();
-			didshow.remove();
-			didhide.remove();
-		};
-	});
+		},
+	);
 
 	//선택한 카테고리 목록 Stringify 함수
 	const getReviewCategory = list => {

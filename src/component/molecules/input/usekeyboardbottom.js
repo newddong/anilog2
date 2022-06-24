@@ -43,3 +43,26 @@ export function useKeyboardBottom(tabheight) {
 
 	return KeyboardY;
 }
+
+export function KeyBoardEvent(show, hide) {
+	React.useEffect(() => {
+		let didshow = Keyboard.addListener('keyboardDidShow', e => {
+			Platform.OS == 'android' ? show(e) : false;
+		});
+		let willshow = Keyboard.addListener('keyboardWillShow', e => {
+			Platform.OS == 'ios' ? show(e) : false;
+		});
+		let didhide = Keyboard.addListener('keyboardDidHide', e => {
+			Platform.OS == 'android' ? hide(e) : false;
+		});
+		let willhide = Keyboard.addListener('keyboardDidHide', e => {
+			Platform.OS == 'ios' ? hide(e) : false;
+		});
+		return () => {
+			didshow.remove();
+			didhide.remove();
+			willshow.remove();
+			willhide.remove();
+		};
+	});
+}

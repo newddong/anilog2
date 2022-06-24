@@ -5,14 +5,8 @@ import FeedStackNavigation from './feed_stack/FeedStackNavigation';
 import ProtectionStackNavigation from './protection_stack/ProtectionStackNavigation';
 import BottomTab from 'Navigation/maintab/BottomTab';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
-import SearchTabNavigation from '../search_tab/SearchTabNavigation';
-import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
-import LogoHeader from 'Root/navigation/header/LogoHeader';
-import CommunityMain from './community_stack/CommunityMain';
 import CommunityMainStack from './community_stack/CommunityMainStack';
 import SearchMainStack from '../search_tab/SearchMainStack';
-import {Platform} from 'react-native';
-import userGlobalObject from 'Root/config/userGlobalObject';
 const MainTabNav = createBottomTabNavigator();
 
 export default MainTabNavigation = ({route, navigation}) => {
@@ -23,6 +17,7 @@ export default MainTabNavigation = ({route, navigation}) => {
 	const getTabBarVisibility = route => {
 		switch (current) {
 			case 'CommunityWrite':
+			case 'CommunityEdit':
 			case 'ShelterInfoSetting':
 			case 'UserInfoSetting':
 			case 'FeedCommentList':

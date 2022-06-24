@@ -55,7 +55,7 @@ export default SearchReview = props => {
 	}, [props.data.review]);
 
 	const onPressMeatball = index => {
-		const isMyArticle = userGlobalObject.userInfo._id == getData()[index].community_writer_id._id;
+		const isMyArticle = getData()[index].community_writer_id && userGlobalObject.userInfo._id == getData()[index].community_writer_id._id;
 		Modal.popSelectBoxModal(
 			isMyArticle ? ['수정', '삭제'] : ['신고'],
 			select => {

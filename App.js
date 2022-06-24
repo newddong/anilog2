@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import RootStackNavigation from 'Navigation/route/RootStackNavigation';
 import codePush from 'react-native-code-push';
+import appConfig,{DEV,RELEASE,STAGING} from 'Root/config/appConfig';
 
 // import SplashScreen from 'rreact-native-splash-screen';
 
@@ -14,6 +15,24 @@ const codePushOptions = {
 	installMode: codePush.InstallMode.IMMEDIATE
 	// 업데이트를 어떻게 설치할 것인지 (IMMEDIATE는 강제설치를 의미)
 }
+
+const consoleOld = console;
+console.log(consoleOld);
+console = {};
+Object.keys(consoleOld).forEach(key=>{
+	if(key=='log'){
+		if(appConfig.mode==DEV){
+			console[key] = function(message){
+				consoleOld[key](message)
+			}	
+		}else{
+			console[key] = function(){}
+		}
+	}else{
+		console[key]=consoleOld[key]
+	}
+})
+
 
 const App = () => {
 	// useEffect(() => {

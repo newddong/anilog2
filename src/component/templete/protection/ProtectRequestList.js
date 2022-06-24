@@ -235,13 +235,13 @@ export default ProtectRequestList = ({route}) => {
 	};
 
 	//필터가 적용된 상태의 데이터
-	const getData = () => {
+	const getData = React.useCallback(() => {
 		let filtered = [...data];
 		if (onlyAdoptable) {
 			filtered = filtered.filter(v => v.protect_request_status == 'rescue');
 		}
 		return filtered;
-	};
+	},[data]);
 
 	//리스트 페이징 작업
 	const onEndReached = ({distanceFromEnd}) => {
@@ -257,18 +257,18 @@ export default ProtectRequestList = ({route}) => {
 	const [closePaging, setClosePaging] = React.useState(true);
 
 	const onScroll = e => {
-		let y = e.nativeEvent.contentOffset.y;
+		// let y = e.nativeEvent.contentOffset.y;
 		const To = PROTECT_REQUEST_MAIN_LIMIT * (offset - 1) - 20;
 		// console.log('offset', offset, 'e', y);
 		// console.log('to', To * ITEM_HEIGHT);
-		if (y > ITEM_HEIGHT * To && closePaging) {
+		// if (y > ITEM_HEIGHT * To && closePaging) {
 			// console.log('offset * PROTECT_REQUEST_MAIN_LIMIT', offset * PROTECT_REQUEST_MAIN_LIMIT);
 			// console.log('getData().length', getData().length);
 			if (getData().length % PROTECT_REQUEST_MAIN_LIMIT == 0) {
 				getList();
-				setClosePaging(false);
+				// setClosePaging(false);
 			}
-		}
+		// }
 	};
 
 	React.useEffect(() => {
@@ -279,7 +279,7 @@ export default ProtectRequestList = ({route}) => {
 		flatlist.current.scrollToOffset({animated: true, offset: 0});
 	};
 
-	const renderItem = ({item, index}) => {
+	const renderItem = React.useCallback(({item, index}) => {
 		// return <ProtectRequestItem key={index} item={item} index={index} />;
 		return (
 			<ProtectRequest
@@ -290,7 +290,7 @@ export default ProtectRequestList = ({route}) => {
 				onPressProtectRequest={() => onPressProtectRequest(item)}
 			/>
 		);
-	};
+	},[]);
 
 	class ProtectRequestItem extends React.PureComponent {
 		render() {
@@ -316,9 +316,9 @@ export default ProtectRequestList = ({route}) => {
 		wait(0).then(() => setRefreshing(false));
 	};
 
-	const ITEM_HEIGHT = 266 * DP;
+	const ITEM_HEIGHT = 265 * DP;
 	const [refreshing, setRefreshing] = React.useState(false);
-	const keyExtractor = React.useCallback(item => item._id.toString(), []);
+	const keyExtractor = React.useCallback((item,index)=>item._id+":"+index, []);
 	const getItemLayout = React.useCallback(
 		(data, index) =>
 			!data[index]
@@ -370,15 +370,19 @@ export default ProtectRequestList = ({route}) => {
 					keyExtractor={keyExtractor}
 					getItemLayout={getItemLayout}
 					refreshing
-					onMomentumScrollEnd={onScroll}
-					// onEndReachedThreshold={0.5} //페이징을 하는 타이밍
+					// onMomentumScrollEnd={onScroll}
+					onEndReachedThreshold={0.5} //페이징을 하는 타이밍
+					onEndReached={onScroll} //Flatlist 페이징
 					// onEndReached={onEndReached} //Flatlist 페이징
 					// onScroll={e => console.log('e', e.nativeEvent.contentOffset)}
 					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					ListEmptyComponent={whenEmpty}
-					// decelerationRate={0.5}
+					// decelerationRate={1}
 					extraData={refreshing}
-					windowSize={30}
+					windowSize={50}
+					maxToRenderPerBatch={20}
+					updateCellsBatchingPeriod={0}
+					initialNumToRender={15}
 					ref={flatlist}
 				/>
 			</View>

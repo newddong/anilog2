@@ -41,55 +41,61 @@ const InterestTagModal = props => {
 	const [addressList, setAddressList] = React.useState([]);
 	const [categoryText, setCategoryText] = React.useState('');
 	React.useEffect(() => {
-		//커뮤니티 후기 글쓰기에서 호출한 관심태그 모달
-		if (props.category == 'ReviewWrite' || props.category == 'Review') {
-			getCommonCodeDynamicQuery(
-				{
-					common_code_c_name: 'communityobjects',
-					common_code_language: 'kor',
-					common_code_out_type: 'interests',
-				},
-				result => {
-					// console.log('common code result', result.msg);
-					setCommunityInterests(result.msg);
-				},
-				err => {
-					console.log('common code err', err);
-				},
-			);
-		} else {
-			let tempUserInterestContentList = [];
-			let tempUserInterestLocationList = [];
-			//유저 관심사 목록 DB에서 받아오기
-			getInterestsList({}, interests => {
-				var acitivityList = [];
-				const nameList = {interests_beauty: '미용', interests_activity: '놀이', interests_food: '사료&간식', interests_health: '건강'};
-				const interestObj = interests.msg[0];
-				const getinterest = Object.entries(interestObj).map((category, idx) => {
-					if (idx == 2) {
-						setAddressList(category[1]);
-					}
-					if (idx >= 3) {
-						acitivityList.push({category: nameList[category[0]], content: category[1]});
-					}
-				});
-				setActivityLists(acitivityList);
-			});
-			//현재 유저의 관심사 리스트를 목록들에 적용
-			const saveUserInterest = Object.entries(props.data).map(interest => {
-				console.log('object', interest);
-				if (props.isActivation) {
-					tempUserInterestContentList.push(interest[1]);
-				} else {
-					tempUserInterestLocationList.push(interest[1]);
+		getCommonCodeDynamicQuery(
+			{
+				common_code_c_name: 'communityobjects',
+				common_code_language: 'kor',
+				common_code_out_type: 'interests',
+			},
+			result => {
+				console.log('common code result', result);
+				let temp = [];
+				for (const key in result.msg) {
+					// console.log('key', key, result.msg[key]);
+					temp.push(result.msg[key]);
+					console.log('temp, temp', temp);
 				}
+				setActivityLists(temp);
+			},
+			err => {
+				console.log('common code err', err);
+			},
+		);
 
-				console.log('아오..', tempUserInterestLocationList, tempUserInterestContentList);
-				setUserInterestContent(tempUserInterestContentList);
-				// setUserInterestLocation(tempUserInterestLocationList);
-				setUserInterestLocation(tempUserInterestContentList);
+		let tempUserInterestContentList = [];
+		let tempUserInterestLocationList = [];
+		//유저 관심사 목록 DB에서 받아오기
+		getInterestsList({}, interests => {
+			console.log('tellll', interests.msg);
+			var acitivityList = [];
+			const nameList = {interests_beauty: '미용', interests_activity: '놀이', interests_food: '사료&간식', interests_health: '건강'};
+			const interestObj = interests.msg[0];
+			const getinterest = Object.entries(interestObj).map((category, idx) => {
+				if (idx == 2) {
+					setAddressList(category[1]);
+				}
+				if (idx >= 3) {
+					acitivityList.push({category: nameList[category[0]], content: category[1]});
+				}
 			});
-		}
+			// setActivityLists(acitivityList);
+
+			console.log('acitivityList', acitivityList);
+		});
+		//현재 유저의 관심사 리스트를 목록들에 적용
+		const saveUserInterest = Object.entries(props.data).map(interest => {
+			console.log('object', interest);
+			if (props.isActivation) {
+				tempUserInterestContentList.push(interest[1]);
+			} else {
+				tempUserInterestLocationList.push(interest[1]);
+			}
+
+			console.log('아오..', tempUserInterestLocationList, tempUserInterestContentList);
+			setUserInterestContent(tempUserInterestContentList);
+			// setUserInterestLocation(tempUserInterestLocationList);
+			setUserInterestLocation(tempUserInterestContentList);
+		});
 	}, []);
 
 	//관심활동 태그를 클릭
@@ -365,10 +371,13 @@ const InterestTagModal = props => {
 						{activityLists.map((v, i) => {
 							return (
 								<View key={i} style={[{marginBottom: 30 * DP, paddingHorizontal: 44 * DP}]}>
-									<Text style={[txt.noto26, {color: GRAY10, alignSelf: 'flex-start'}]}>{v.category}</Text>
+									{/* <Text style={[txt.noto26, {color: GRAY10, alignSelf: 'flex-start'}]}>{v.category}</Text> */}
+									<Text style={[txt.noto26, {color: GRAY10, alignSelf: 'flex-start'}]}>{v.topic}</Text>
 									<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-										{v.content.length
-											? v.content.map((d, i) => {
+										{/* {v.content.length */}
+										{v.definition.length
+											? // ? v.content.map((d, i) => {
+											  v.definition.map((d, i) => {
 													// if (i % 2 == 0) {
 													// 	return null;
 													// }

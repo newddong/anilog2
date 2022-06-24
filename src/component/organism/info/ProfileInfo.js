@@ -16,6 +16,7 @@ import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ProfileImageMedium148 from 'Root/component/molecules/image/ProfileImageMedium148';
 import DP from 'Root/config/dp';
 import UserListHorizon from '../list/UserListHorizon';
+import HashText from 'Molecules/info/HashText';
 
 /**
  * 프로필 템플릿 상단의 유저 정보
@@ -374,25 +375,13 @@ const ProfileInfo = props => {
 				</Text>
 			</ScrollView>
 			{/* 유저 소개글  */}
-			<View style={[!isUserProfile ? style.userIntroCont_pet : style.userIntroCont]}>
-				<Text
-					ellipsizeMode={'tail'}
-					numberOfLines={showMore ? null : 2}
-					style={[txt.noto26, {width: !isUserProfile ? 534 * DP : 568 * DP, height: showMore ? null : 80 * DP}]}>
+			<View style={[style.userIntroCont]}>
+				<HashText
+					style={[txt.noto26]}
+					byteOfLine={60}
+					>
 					{data.user_introduction != '' ? data.user_introduction : '유저 인트로 소개글입니다. 현재는 비어있습니다.'}
-				</Text>
-				{into_height > 50 * DP ? (
-					<TouchableOpacity onPress={onPressShowMore} style={[style.addMore_profileInfo]}>
-						<View style={{flexDirection: 'row'}}>
-							<Text style={[txt.noto24, {color: GRAY10, top: 2}]}>{showMore ? '접기' : '더보기'} </Text>
-							<View style={[showMore ? {transform: [{rotate: '180deg'}]} : null]}>
-								<Bracket48 />
-							</View>
-						</View>
-					</TouchableOpacity>
-				) : (
-					<></>
-				)}
+				</HashText>
 			</View>
 			<View style={[style.footer, {flexDirection: 'row'}]}>
 				<View>
@@ -441,14 +430,14 @@ const style = StyleSheet.create({
 	},
 	petProfile: {
 		flexDirection: 'row',
-		width: 654 * DP,
+		width: 694 * DP,
 		height: 148 * DP,
 		marginTop: 10 * DP,
 		// backgroundColor: 'red',
 	},
 	shelterProfile: {
 		flexDirection: 'row',
-		width: 654 * DP,
+		width: 694 * DP,
 		height: 148 * DP,
 		marginTop: 10 * DP,
 	},

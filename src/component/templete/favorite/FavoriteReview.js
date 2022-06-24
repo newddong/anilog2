@@ -156,7 +156,7 @@ export default FavoriteReview = ({route, isFavorite}) => {
 	//Check Box On
 	const checkSelectMode = state => {
 		console.log('state', state);
-		setSelectMode(state);
+		setSelectMode(!selectMode);
 		//전체 선택을 처음 누를 경우 무조건 체크 박스가 모두 선택되도록 하기 위해 setSelectCNT값을 0으로 초기화.
 		setSelectCNT(0);
 		//취소를 누르고 다시 선택하기를 누를 경우 선택되어 있는 체크박스가 없게 하기 위해 false로 초기화.
@@ -236,8 +236,6 @@ export default FavoriteReview = ({route, isFavorite}) => {
 			const len = data.length;
 			const ratio = filtered.length / len;
 			// console.log('filtered', filtered);
-			console.log('len', data.length);
-			console.log('ratio', ratio);
 			if (ratio < 0.5) {
 				copy.map((v, i) => {
 					copy[i].checkBoxState = true;
@@ -253,7 +251,12 @@ export default FavoriteReview = ({route, isFavorite}) => {
 
 	//선택모드가 아닌 상태에서 리뷰를 클릭
 	const onPressReview = index => {
-		navigation.push('ReviewDetail', {community_object: data[index]});
+		console.log('index', index, selectMode);
+		if (selectMode) {
+			let copy = [...data];
+			copy[index].checkBoxState = !copy[index].checkBoxState;
+			setData(copy);
+		} else navigation.push('ReviewDetail', {community_object: data[index]});
 	};
 
 	//리뷰 좋아요 클릭

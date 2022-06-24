@@ -210,6 +210,7 @@ export default ArticleDetail = props => {
 				//댓글 수정을 확정
 				if (editMode) {
 					let whichComment = comments.findIndex(v => v._id == editData._id) == -1 ? '' : comments.findIndex(v => v._id == editData._id); //부모댓글
+					console.log('par', param, editData._id, editData.comment_contents);
 					updateComment(
 						{
 							...param,
@@ -297,19 +298,21 @@ export default ArticleDetail = props => {
 									parentComment && addChildCommentFn.current();
 									setPrivateComment(false);
 									setEditMode(false); // console.log('comments', comments);
-									Modal.close();
 									setTimeout(() => {
-										whichParent == ''
-											? flatListRef.current.scrollToIndex({animated: true, index: 0, viewPosition: 0.5})
-											: flatListRef.current.scrollToIndex({animated: true, index: whichParent, viewPosition: 0});
+										flatListRef.current.scrollToIndex({
+											animated: true,
+											index: whichParent != '' ? whichParent : 0,
+											viewPosition: whichParent != '' ? 0.5 : 0,
+										});
 									}, 500);
-									// input.current.blur();
+									Modal.close();
 								},
 								err => {
 									console.log('getCommentListByCommunityId', err);
-									if (err == '검색 결과가 없습니다.') {
+									if (err.includes('없습니다')) {
 										setComments([{}]);
 									}
+									Modal.close();
 								},
 							);
 						},
@@ -327,27 +330,76 @@ export default ArticleDetail = props => {
 
 	const [isReplyFocused, setReplyFocus] = React.useState(false);
 
+	//템플릿 중간에 있는 댓글입력창이 우선 포커싱
 	const onFocus = () => {
-		// input.current.blur();
-		floatInput.current.focus();
+		// input.current.blur(); //바로 포커싱 해제
+		floatInput.current.focus(); //이후 키보드와 일체화된 댓글입력창 Focus처리
 		// setReplyFocus(true);
 	};
 
+	//키보드와 일체화된 댓글입력창의 포커스
 	const onFocus3 = () => {
-		setReplyFocus(true);
+		setReplyFocus(true); //미들 댓글입력창의 투명화와 컴포넌트 bottom 2000 처리
 	};
+
+	//템플릿 중간에 있는 댓글입력창의 포커싱해제 콜백
 	const onBlur = () => {
-		floatInput.current.focus();
+		// floatInput.current.focus();
 		// setReplyFocus(false);
 	};
 
+	//키보드와 일체화된 댓글입력창의 포커싱해제 콜백
 	const onBlur3 = () => {
-		setReplyFocus(false);
-		setEditData({
-			comment_contents: '',
-			comment_photo_uri: '',
-		});
-		setParentComment();
+		setReplyFocus(false); //미들 댓글입력창의 투명화 해제와 컴포넌트 bottom 0 처리
+		setEditMode(false); //키보드가 사라지면 수정모드도 해제
+		setEditData({comment_contents: '', comment_photo_uri: ''}); //수정데이터 제거
+		setParentComment(); //선택된 부모댓글 데이터가 있다면 제거
+	};
+
+	//사진 선택 완료 후 선택된 사진 useState
+	React.useEffect(() => {
+		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
+			let selected = props.route.params.selectedPhoto[0];
+			const checkEdit = comment_obj.editData._id != ''; //전역변수에 저장된 수정데이터가 있을 경우 수정데이터(editData)에 선택한 사진을 저장
+			if (checkEdit) {
+				setEditMode(true);
+				setEditData({...comment_obj.editData, comment_photo_uri: selected.cropUri ?? selected.uri});
+			} else {
+				setEditData({...editData, comment_photo_uri: selected.cropUri ?? selected.uri});
+			}
+			//전역변수에 저장된 부모댓글 데이터가 있을 경우 부모댓글 다시 지정
+			if (comment_obj.parentComment && comment_obj.parentComment._id != '') {
+				setParentComment(comment_obj.parentComment);
+			}
+			//수정 데이터 전역변수 초기화
+			comment_obj.editData = {comment_contents: '', comment_photo_uri: '', _id: ''};
+			//부모 댓글 데이터 전역변수 초기화
+			comment_obj.parentComment = {comment_contents: '', comment_photo_uri: '', _id: ''};
+			setTimeout(() => {
+				floatInput.current?.focus();
+			}, 200);
+		}
+	}, [props.route.params?.selectedPhoto]);
+
+	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
+	const onAddPhoto = () => {
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('LoginRequired');
+			});
+		} else {
+			editMode ? (comment_obj.editData = editData) : false;
+			parentComment ? (comment_obj.parentComment = parentComment) : false;
+			props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
+		}
+	};
+
+	//댓글의 사진 삭제 클릭
+	const onDeleteImage = () => {
+		setEditData({...editData, comment_photo_uri: ''});
+		setTimeout(() => {
+			floatInput.current?.focus();
+		}, 200);
 	};
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
@@ -365,53 +417,6 @@ export default ArticleDetail = props => {
 		}
 	};
 
-	//사진 선택 완료 후 선택된 사진 useState
-	React.useEffect(() => {
-		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
-			let selected = props.route.params.selectedPhoto[0];
-			const checkEdit = comment_obj.editData._id != ''; //전역변수에 저장된 수정데이터가 있을 경우 수정데이터(editData)에 선택한 사진을 저장
-			setEditData({...(checkEdit ? comment_obj.editData : editData), comment_photo_uri: selected.cropUri ?? selected.uri});
-			//전역변수에 저장된 부모댓글 데이터가 있을 경우 부모댓글 다시 지정
-			if (comment_obj.parentComment && comment_obj.parentComment._id != '') {
-				setParentComment(comment_obj.parentComment);
-			}
-			//수정 데이터 전역변수 초기화
-			comment_obj.editData = {
-				comment_contents: '',
-				comment_photo_uri: '',
-				_id: '',
-			};
-			//부모 댓글 데이터 전역변수 초기화
-			comment_obj.parentComment = {
-				comment_contents: '',
-				comment_photo_uri: '',
-				_id: '',
-			};
-			setTimeout(() => {
-				input.current?.focus();
-			}, 200);
-		}
-	}, [props.route.params?.selectedPhoto]);
-
-	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
-	const onAddPhoto = () => {
-		if (userGlobalObject.userInfo.isPreviewMode) {
-			Modal.popLoginRequestModal(() => {
-				navigation.navigate('LoginRequired');
-			});
-		} else {
-			// console.log('onAddphoto');
-			editData && editData._id != '' ? (comment_obj.editData = editData) : false;
-			parentComment ? (comment_obj.parentComment = parentComment) : false;
-			props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
-		}
-	};
-
-	//댓글의 사진 삭제 클릭
-	const onDeleteImage = () => {
-		setEditData({...editData, comment_photo_uri: ''});
-	};
-
 	// 답글 쓰기 -> Input value 변경 콜백함수
 	const onChangeReplyInput = text => {
 		setEditData({...editData, comment_contents: text});
@@ -427,16 +432,16 @@ export default ArticleDetail = props => {
 			// console.log('대댓글 쓰기 버튼 클릭 : ', parentCommentId.comment_writer_id.user_nickname);
 			setParentComment(parentCommentId);
 			editComment || setEditComment(true);
-			setEditMode(false);
-			setEditData({
-				comment_contents: '',
-				comment_photo_uri: '',
-			});
+			setEditMode(false); //수정모드 해제
+			setEditData({comment_contents: '', comment_photo_uri: ''}); //수정데이터 비우기
 			addChildCommentFn.current = addChildComment;
-			const findIndex = comments.findIndex(e => e._id == parentCommentId._id);
-			let offset = parentCommentId.comment_photo_uri ? 320 * DP : 0;
+			const findIndex = comments.findIndex(e => e._id == parentCommentId._id); //대상 부모댓글의 인덱스
+			let offset = 0;
+			if (parentCommentId.comment_photo_uri) {
+				offset = Platform.OS == 'android' ? 266 * DP : 314 * DP; //부모댓글이 사진을 포함한다면 scrollOffset 조정
+			}
 			setTimeout(() => {
-				input.current?.focus();
+				floatInput.current?.focus();
 			}, 200);
 			scrollTo(findIndex, offset);
 		}
@@ -445,25 +450,27 @@ export default ArticleDetail = props => {
 	//수정을 누르면 동작
 	const onEdit = (comment, parent, child) => {
 		// console.log('수정 데이터', comment);
-		setEditMode(true);
-		setParentComment(); // 수정모드로 전환시 기존의 답글쓰기 데이터 출력 취소
+		setEditMode(true); //수정모드 시작
+		setParentComment(); // 답글쓰기 모드는 해제
 		const findParentIndex = comments.findIndex(e => e._id == parent._id); //부모댓글의 인덱스
 		let viewOffset = 0; //자식댓글이 존재할 경우 내려갈 offSet 수치
 		console.log('childIndex', child);
 		if (child.findIndex != undefined && child.findIndex != -1) {
-			viewOffset = 160 * (child.findIndex + 1) * DP;
-			viewOffset = viewOffset + 540 * child.hasPhoto * DP;
-			comment.comment_photo_uri ? (viewOffset = viewOffset + 360 * DP) : false;
+			//대댓글의 수정 분기
+			viewOffset = 160 * (child.findIndex + 1) * DP; //수정할 대상 대댓글의 인덱스만큼 scrollOffset 조정
+			viewOffset = viewOffset + 540 * child.hasPhoto * DP; //수정할 대상 대댓글 이전에 사진을 포함한 대댓글이 있을 경우 사진 개수 및 크기만큼 scrollOffSet 조정
+			comment.comment_photo_uri ? (viewOffset = viewOffset + 360 * DP) : false; //수정할 대상 대댓글이 사진을 포함한 경우 사진 크기만큼 scrollOffSet 조정
 		}
 		if (parent.comment_photo_uri) {
-			Platform.OS == 'android' ? (viewOffset = viewOffset + 400 * DP) : (viewOffset = viewOffset + 440 * DP);
+			//대상 대댓글의 부모댓글이 사진을 포함한 경우 사진 크기만큼 scrollOffset 조정
+			Platform.OS == 'android' ? (viewOffset = viewOffset + 340 * DP) : (viewOffset = viewOffset + 406 * DP);
 		}
-		setEditData({...comment, parent: findParentIndex});
-		setPrivateComment(comment.comment_is_secure);
+		setEditData({...comment, parent: findParentIndex}); //수정 데이터 입력 및 부모댓글의 인덱스 전달
+		setPrivateComment(comment.comment_is_secure); //댓글입력창의 비밀댓글 모드 갱신
+		scrollTo(findParentIndex, viewOffset); //스크롤 시작
 		setTimeout(() => {
-			input.current?.focus();
-		}, 500);
-		scrollTo(findParentIndex, viewOffset);
+			floatInput.current?.focus(); //키보드와 일체화된 댓글 입력창 포커싱 시작
+		}, 200);
 	};
 
 	//댓글 인덱스로 스크롤 함수
@@ -672,11 +679,10 @@ export default ArticleDetail = props => {
 	};
 
 	const bottom = () => {
-		const noMoreArticle = () => {
-			return <Text style={[txt.noto28]}>다음 글이 없습니다.</Text>;
-		};
 		return (
 			<View style={{alignItems: 'center'}}>
+				<View style={[style.separator]} />
+
 				{articleList != 'false' ? (
 					<View style={{paddingBottom: 0 * DP}}>
 						<ArticleList
@@ -712,7 +718,10 @@ export default ArticleDetail = props => {
 					{comments.length == 1 && (
 						<Text style={[txt.roboto26, {color: GRAY20, paddingVertical: 20 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>
 					)}
-					<View style={[{marginBottom: 10 * DP, opacity: key > 0 || isReplyFocused ? 0 : 1}]}>
+					<View
+						style={[
+							{marginBottom: isReplyFocused ? 20 * DP : 10 * DP, opacity: key > 0 || isReplyFocused ? 0 : 1, maxHeight: isReplyFocused ? 0 : null},
+						]}>
 						<ReplyWriteBox
 							onAddPhoto={onAddPhoto}
 							onChangeReplyInput={onChangeReplyInput}
@@ -729,7 +738,6 @@ export default ArticleDetail = props => {
 							onBlur={onBlur}
 							viewMode={true}
 						/>
-						<View style={[style.separator]} />
 					</View>
 				</>
 			);
@@ -770,7 +778,7 @@ export default ArticleDetail = props => {
 							}
 						}, 200);
 					}}
-					removeClippedSubviews={false}
+					// removeClippedSubviews={false}
 				/>
 				<View style={{position: 'absolute', bottom: isReplyFocused ? key - 2 : 2000}}>
 					<ReplyWriteBox
@@ -835,6 +843,7 @@ const style = StyleSheet.create({
 	separator: {
 		width: 750 * DP,
 		height: 10 * DP,
+		marginBottom: 20 * DP,
 		backgroundColor: GRAY40,
 	},
 	like: {

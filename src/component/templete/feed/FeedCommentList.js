@@ -9,7 +9,7 @@ import {txt} from 'Root/config/textstyle';
 import Modal from 'Component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
-import {BLACK, GRAY10, GRAY20, GRAY30, GRAY40, WHITE} from 'Root/config/color';
+import {BLACK, GRAY10, GRAY40, WHITE} from 'Root/config/color';
 import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import Loading from 'Root/component/molecules/modal/Loading';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
@@ -118,6 +118,7 @@ export default FeedCommentList = props => {
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
 	const onWrite = () => {
+		input.current.blur(); //댓글 쓰기 누른 직후 포커싱 바로 해제
 		if (userGlobalObject.userInfo.isPreviewMode) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate('LoginRequired');
@@ -140,8 +141,6 @@ export default FeedCommentList = props => {
 
 			if (props.route.name == 'FeedCommentList') {
 				param = {...param, feedobject_id: props.route.params.feedobject._id};
-			} else if (props.route.name == '동물보호요청') {
-				param = {...param, protect_request_object_id: props.route.params.feedobject._id};
 			}
 
 			if (parentComment) {
@@ -164,40 +163,37 @@ export default FeedCommentList = props => {
 							comment_contents: '',
 							comment_photo_uri: '',
 						});
-						if (props.route.name == 'FeedCommentList') {
-							getCommentListByFeedId(
-								{
-									feedobject_id: props.route.params.feedobject._id,
-									request_number: 1000,
-								},
-								comments => {
-									// console.log('comments', comments);
-									!parentComment && setComments([]); //댓글목록 초기화
-									let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
-									setComments(res);
-									parentComment && addChildCommentFn.current();
-									setPrivateComment(false);
-									setEditMode(false);
-									input.current.blur();
-									Modal.close();
-									setTimeout(() => {
-										flatlist.current.scrollToIndex({animated: true, index: whichComment == -1 ? editData.parent : whichComment, viewPosition: 0.5});
-									}, 500);
-									setTimeout(() => {
-										if (whichComment == -1) {
-											let copy = [...childOpenList];
-											copy.push(editData.parent);
-											console.log('copy', copy);
-											setChildOpenList(copy);
-										}
-									}, 200);
-								},
-								err => {
-									console.log(err);
-									Modal.close();
-								},
-							);
-						}
+						getCommentListByFeedId(
+							{
+								feedobject_id: props.route.params.feedobject._id,
+								request_number: 1000,
+							},
+							comments => {
+								// console.log('comments', comments);
+								!parentComment && setComments([]); //댓글목록 초기화
+								let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+								setComments(res);
+								parentComment && addChildCommentFn.current();
+								setPrivateComment(false);
+								setEditMode(false);
+								Modal.close();
+								setTimeout(() => {
+									flatlist.current.scrollToIndex({animated: true, index: whichComment == -1 ? editData.parent : whichComment, viewPosition: 0.5});
+								}, 500);
+								setTimeout(() => {
+									if (whichComment == -1) {
+										let copy = [...childOpenList];
+										copy.push(editData.parent);
+										console.log('copy', copy);
+										setChildOpenList(copy);
+									}
+								}, 200);
+							},
+							err => {
+								console.log(err);
+								Modal.close();
+							},
+						);
 					},
 					err => Modal.alert('updateComment' + err),
 				);
@@ -263,6 +259,9 @@ export default FeedCommentList = props => {
 		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
 			let selected = props.route.params.selectedPhoto[0];
 			setEditData({...editData, comment_photo_uri: selected.cropUri ?? selected.uri});
+			setTimeout(() => {
+				input.current?.focus();
+			}, 200);
 		}
 	}, [props.route.params?.selectedPhoto]);
 

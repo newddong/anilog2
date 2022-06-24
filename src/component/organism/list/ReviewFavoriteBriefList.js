@@ -25,7 +25,7 @@ const ReviewFavoriteBriefList = props => {
 	const renderItem = (item, index) => {
 		// console.log('ind', item.community_title, item.height, item.offset, item.community_title);
 		return (
-			<View key={index} style={[style.listItem, {}]}>
+			<View key={index} style={[style.listItem]}>
 				{props.selectMode ? (
 					<View style={{justifyContent: 'center', marginRight: 20 * DP}}>
 						{item.checkBoxState ? (

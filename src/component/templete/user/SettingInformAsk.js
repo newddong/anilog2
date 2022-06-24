@@ -4,6 +4,7 @@ import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, 
 import {GRAY10, GRAY40, APRI10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {getTermsOfService} from 'Root/api/termsofservice';
+import appConfig from 'Root/config/appConfig';
 
 import DP from 'Root/config/dp';
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
@@ -87,9 +88,7 @@ export default SettingInformAsk = ({route}) => {
 						<Text style={[txt.noto32b]}>버전 정보</Text>
 					</View>
 					<View style={[{flex: 1}]}>
-						{/* <Text style={[txt.noto32b, {textAlign: 'right'}]}>0.0.1 ver(staging, 6-23 13:56)</Text> */}
-						{/* <Text style={[txt.noto32b, {textAlign: 'right'}]}>0.0.1 ver(debug, 6-23 11:51)</Text> */}
-						<Text style={[txt.noto32b, {textAlign: 'right'}]}>0.0.1 ver(release, 6-23 21:40)</Text>
+						<Text style={[txt.noto32b, {textAlign: 'right'}]}>{appConfig.version}</Text>
 					</View>
 				</View>
 				<View style={styles.serviceContainer}>

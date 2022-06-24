@@ -316,7 +316,7 @@ export default ProtectRequestList = ({route}) => {
 		wait(0).then(() => setRefreshing(false));
 	};
 
-	const ITEM_HEIGHT = 265 * DP;
+	const ITEM_HEIGHT = 266 * DP;
 	const [refreshing, setRefreshing] = React.useState(false);
 	const keyExtractor = React.useCallback((item,index)=>item._id+":"+index, []);
 	const getItemLayout = React.useCallback(

@@ -62,7 +62,7 @@ export default function HashText(props) {
 					if (v.includes('#') || v.includes('@'))
 						return (
 							<View style={{flexDirection:'row',width:694*DP,justifyContent:'space-between'}} key={'hide'}>
-								<Text>
+								<Text {...props}>
 									{makeTagView(getByteSubtring(v, 35), taginfo)}...
 									
 								</Text>
@@ -71,7 +71,7 @@ export default function HashText(props) {
 						);
 					return (
 						<View style={{flexDirection:'row',width:694*DP,justifyContent:'space-between'}} key={v}>
-							<Text>
+							<Text {...props}>
 								{getByteSubtring(v, 35)}...
 								
 							</Text>

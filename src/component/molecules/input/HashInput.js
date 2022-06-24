@@ -248,14 +248,11 @@ const HashInput = React.forwardRef((props, ref) => {
 		return result;
 	};
 
-	const giveFocus = () => {
-		inputRef.current.focus();
-	};
 
 	return (
 		<>
-			<TouchableOpacity activeOpacity={1} onPress={giveFocus} style={[props.containerStyle, {}]} ref={ref}>
-				<View style={{}}>
+			<View style={[props.containerStyle, {}]} ref={ref}>
+				<View style={{flexDirection:'column',flex:1}}>
 					{location == undefined ? (
 						false
 					) : (
@@ -269,7 +266,7 @@ const HashInput = React.forwardRef((props, ref) => {
 					<TextInput
 						{...props} //props override
 						style={[
-							{marginBottom: props.selectedImg.length > 0 ? 10 * DP : 0},
+							{flex:1,marginBottom: props.selectedImg.length > 0 ? 10 * DP : 0},
 							txt.noto28,
 							{
 								// minHeight: props.showImages && props.selectedImg.length > 0 ? 170 * DP : props.containerStyle[0].minHeight - 48 * DP,
@@ -294,7 +291,7 @@ const HashInput = React.forwardRef((props, ref) => {
 						<SelectedMediaList items={props.selectedImg} onDelete={deletePhoto} />
 					</View>
 				)}
-			</TouchableOpacity>
+			</View>
 
 			{find && (
 				<View style={{width: 694 * DP, flex: 1, padding: 15 * DP}}>

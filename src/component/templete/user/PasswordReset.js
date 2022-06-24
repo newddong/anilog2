@@ -140,7 +140,7 @@ export default PasswordReset = ({route, navigation}) => {
 		<View style={[login_style.wrp_main, {flex: 1}]}>
 			<View style={[{alignItems: 'center'}]}>
 				<Text style={[{textAlign: 'center'}, txt.noto30, {marginTop: 105 * DP}, {color: MAINBLACK}]}>*최소 8자 이상,</Text>
-				<Text style={[{textAlign: 'center'}, txt.noto30, {color: MAINBLACK}]}>영문과 숫자, 특수문자(!@#$%^&*)가</Text>
+				<Text style={[{textAlign: 'center'}, txt.noto30, {color: MAINBLACK}]}>영문과 숫자, 특수문자 ( ! @ # $ % ^ & * )가 </Text>
 				<Text style={[{textAlign: 'center'}, txt.noto30, {color: MAINBLACK}]}>포함되어야 합니다.</Text>
 			</View>
 			<View style={[temp_style.passwordChecker, passwordReset_style.passwordChecker]}>

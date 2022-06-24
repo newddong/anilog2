@@ -87,8 +87,9 @@ export default SettingInformAsk = ({route}) => {
 						<Text style={[txt.noto32b]}>버전 정보</Text>
 					</View>
 					<View style={[{flex: 1}]}>
-						<Text style={[txt.noto32b, {textAlign: 'right'}]}>0.0.1 ver(staging, 6-22 17:57)</Text>
-						{/* <Text style={[txt.noto32b, {textAlign: 'right'}]}>0.0.1 ver(release)</Text> */}
+						{/* <Text style={[txt.noto32b, {textAlign: 'right'}]}>0.0.1 ver(staging, 6-23 13:56)</Text> */}
+						{/* <Text style={[txt.noto32b, {textAlign: 'right'}]}>0.0.1 ver(debug, 6-23 11:51)</Text> */}
+						<Text style={[txt.noto32b, {textAlign: 'right'}]}>0.0.1 ver(release, 6-23 21:40)</Text>
 					</View>
 				</View>
 				<View style={styles.serviceContainer}>

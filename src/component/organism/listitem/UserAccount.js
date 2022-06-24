@@ -5,6 +5,7 @@ import AniButton from 'Molecules/button/AniButton';
 import CheckBox from 'Molecules/select/CheckBox';
 import HashLabel from 'Molecules/label/HashLabel';
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
+import {Check42, Rect42_Border} from 'Root/component/atom/icon';
 
 /**
  * 친구 즐겨찾기 Hash와 유저오브젝트 리스트 출력 컴포넌트
@@ -32,6 +33,10 @@ export default UserAccount = props => {
 		}
 	};
 
+	const onPressToggle = value => {
+		props.onCheckBox(value);
+	};
+
 	//팔로우 버튼 클릭
 	const onClickFollow = () => {
 		setFollowState(!followState);
@@ -45,10 +50,15 @@ export default UserAccount = props => {
 			{/* CheckBox */}
 			{props.checkBoxMode ? (
 				<View style={[userAccount.checkBox, {}]}>
-					<CheckBox
+					{/* <CheckBox
 						state={props.data.checkBoxState}
 						onCheck={() => props.onCheckBox(props.data.type == 'HashTagObject' ? props.data.keyword : props.data.user_nickname)}
-					/>
+					/> */}
+					{props.data.checkBoxState ? (
+						<Check42 onPress={() => onPressToggle(props.data.type == 'HashTagObject' ? props.data.keyword : props.data.user_nickname)} />
+					) : (
+						<Rect42_Border onPress={() => onPressToggle(props.data.type == 'HashTagObject' ? props.data.keyword : props.data.user_nickname)} />
+					)}
 				</View>
 			) : (
 				false

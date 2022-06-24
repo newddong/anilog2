@@ -17,8 +17,6 @@ import {txt} from 'Root/config/textstyle';
  * @param {()=>void)} props.onEndReached - 최하단 스크롤 콜백
  */
 const ArticleList = props => {
-	const [refresh, setRefresh] = React.useState(true);
-
 	const onPressToggle = (index, bool) => {
 		props.onPressCheck(index, bool);
 	};
@@ -66,7 +64,6 @@ const ArticleList = props => {
 				showsVerticalScrollIndicator={false}
 				ListEmptyComponent={props.whenEmpty}
 				// https://reactnative.dev/docs/optimizing-flatlist-configuration
-				extraData={refresh}
 				initialNumToRender={15}
 				onEndReached={onEndReached} //Flatlist 페이징
 				onEndReachedThreshold={0.6} //페이징을 하는 타이밍

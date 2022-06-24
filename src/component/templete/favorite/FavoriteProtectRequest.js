@@ -176,9 +176,11 @@ export default FavoriteProtectRequest = ({route}) => {
 	};
 
 	//보호요청글 클릭
-	const onClickLabel = item => {
-		console.log('item', item);
+	const onClickLabel = (item, index) => {
 		if (selectMode) {
+			let copy = [...data];
+			copy[index].checkBoxState = !copy[index].checkBoxState;
+			setData(copy);
 			return false;
 		} else {
 			let gender = '남';
@@ -214,9 +216,10 @@ export default FavoriteProtectRequest = ({route}) => {
 				)}
 				<ProtectRequest
 					data={item}
-					onClickLabel={() => onClickLabel(item)}
+					onClickLabel={() => onClickLabel(item, index)}
 					onFavoriteTag={bool => onFavoriteTag(bool, index)}
 					selectMode={selectMode}
+					showFavorite={false}
 				/>
 			</View>
 		);

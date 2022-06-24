@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import RootStackNavigation from 'Navigation/route/RootStackNavigation';
 import codePush from 'react-native-code-push';
-import appConfig,{DEV,RELEASE,STAGING} from 'Root/config/appConfig';
+import appConfig, {DEV, RELEASE, STAGING} from 'Root/config/appConfig';
 
 // import SplashScreen from 'rreact-native-splash-screen';
 
@@ -12,27 +12,28 @@ const codePushOptions = {
 	// ON_APP_START은 앱이 실행되는(켜지는) 순간을 의미
 	updateDialog: false,
 	// 업데이트를 할지 안할지 여부에 대한 노출 (잠수함 패치의 경우 false)
-	installMode: codePush.InstallMode.IMMEDIATE
+	installMode: codePush.InstallMode.IMMEDIATE,
 	// 업데이트를 어떻게 설치할 것인지 (IMMEDIATE는 강제설치를 의미)
-}
+};
 
 const consoleOld = console;
-console.log(consoleOld);
-console = {};
-Object.keys(consoleOld).forEach(key=>{
-	if(key=='log'){
-		if(appConfig.mode==DEV){
-			console[key] = function(message){
-				consoleOld[key](message)
-			}	
-		}else{
-			console[key] = function(){}
+(() => {
+	if(appConfig.mode == DEV)return;
+	console = {};
+	Object.keys(consoleOld).forEach(key => {
+		if (key == 'log') {
+			if (appConfig.mode == DEV) {
+				console[key] = function (message) {
+					consoleOld[key](message);
+				};
+			} else {
+				console[key] = function () {};
+			}
+		} else {
+			console[key] = consoleOld[key];
 		}
-	}else{
-		console[key]=consoleOld[key]
-	}
-})
-
+	});
+})();
 
 const App = () => {
 	// useEffect(() => {
@@ -51,5 +52,5 @@ const App = () => {
 	);
 };
 
-export default codePush(codePushOptions)(App)
+export default codePush(codePushOptions)(App);
 // export default App

@@ -54,6 +54,7 @@ export default SearchAccountA = React.memo((props, ref) => {
 					showCrossMark={false}
 					showButtons={false}
 					onClickLabel={() => onClickAccount(item, index)}
+					showFollowStatusText={true}
 					// onClickFollowBtn={() => onClickFollowBtn(item)}
 					// onClickUnFollowBtn={() => onClickUnFollowBtn(item)}
 				/>

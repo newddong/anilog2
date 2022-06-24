@@ -342,7 +342,7 @@ export default FeedWrite = props => {
 	const selectedImages = () => {
 		if (selectedImg.length > 0) {
 			return (
-				<View style={[{marginTop: 40 * DP}]}>
+				<View style={[{marginTop: 40 * DP, backgroundColor:'red'}]}>
 					<SelectedMediaList
 						layout={styles.img_square_round_336}
 						items={selectedImg.map(v => (v ? v.cropUri ?? v.uri : undefined))}

@@ -29,6 +29,7 @@ import Input24 from 'Molecules/input/Input24';
 import {updateUserInformation, nicknameDuplicationCheck} from 'Root/api/userapi';
 import SelectInput from 'Root/component/molecules/button/SelectInput';
 import {getAddressList} from 'Root/api/address';
+import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 export default UserInfoSetting = ({route}) => {
 	const navigation = useNavigation();
@@ -51,7 +52,7 @@ export default UserInfoSetting = ({route}) => {
 	const [interestList, setInterestList] = React.useState();
 	const [interestLoaded, setInterestLoaded] = React.useState(false);
 	const [refresh, setRefresh] = React.useState(false);
-
+	console.log('datadata', data);
 	const fetchData = () => {
 		getUserInfoById(
 			{
@@ -92,6 +93,28 @@ export default UserInfoSetting = ({route}) => {
 				setInterestList(interests.msg);
 				setInterestLoaded(true);
 			});
+			// getCommonCodeDynamicQuery(
+			// 	{
+			// 		common_code_c_name: 'communityobjects',
+			// 		common_code_language: 'kor',
+			// 		common_code_out_type: 'interests',
+			// 	},
+			// 	result => {
+			// 		let temp = [];
+			// 		console.log('common code result', result);
+			// 		for (const key in result.msg) {
+			// 			let temp2 = {};
+			// 			temp2[key] = result.msg[key].definition;
+			// 			temp.push(temp2);
+			// 		}
+			// 		console.log('temptemptmep', temp);
+			// 		// setInterestList(result.msg);
+			// 		// setInterestLoaded(true);
+			// 	},
+			// 	err => {
+			// 		console.log('common code err', err);
+			// 	},
+			// );
 			if (data.user_interests) {
 				const getContentInteres = Object.entries(data.user_interests).map(content => {
 					// console.log('ohhh', content);
@@ -123,7 +146,7 @@ export default UserInfoSetting = ({route}) => {
 			updateUserInformation(
 				{
 					userobject_id: userGlobalObject.userInfo._id,
-					user_profile_uri: route.params.selectedPhoto[0].cropUri??route.params.selectedPhoto[0].uri,
+					user_profile_uri: route.params.selectedPhoto[0].cropUri ?? route.params.selectedPhoto[0].uri,
 					user_nickname: userGlobalObject.userInfo.user_nickname,
 				},
 				r => {
@@ -146,9 +169,11 @@ export default UserInfoSetting = ({route}) => {
 	React.useEffect(() => {
 		if (interestLoaded) {
 			for (let props of contentInterest) {
+				console.log('props props interestList', props, interestList);
+
 				const getKey = Object.entries(interestList[0]).map(content => {
 					// console.log('hihihi', content[1], props);
-
+					console.log('interestListList', interestList);
 					if (content[1].includes(props)) {
 						// console.log('hohohoho', props, content[0]);
 						// setContentSendObject((contentSendObejct[content[0]] = props));
@@ -261,7 +286,7 @@ export default UserInfoSetting = ({route}) => {
 		);
 	};
 	const onPressAddInterestActivation = () => {
-		console.log(contentInterest);
+		console.log('contentInterest', contentInterest);
 		Modal.popInterestTagModal(
 			'Activity',
 			contentInterest || [],
@@ -604,12 +629,21 @@ export default UserInfoSetting = ({route}) => {
 								</TouchableOpacity>
 							</View>
 							<View style={[styles.addressSelect]}>
-								<SelectInput onPressInput={onSelectCity} width={284} height={108} value={data.user_address.city} noBorder={true} fontSize={28} />
+								<SelectInput
+									onPressInput={onSelectCity}
+									width={284}
+									height={108}
+									// value={data.user_address.city || ''}
+									value={'시,도'}
+									noBorder={true}
+									fontSize={28}
+								/>
 								<SelectInput
 									onPressInput={onSelectDistrict}
 									width={284}
 									height={108}
-									value={data.user_address.district}
+									// value={data.user_address.district}
+									value={'시,군,구'}
 									noBorder={true}
 									fontSize={28}
 								/>

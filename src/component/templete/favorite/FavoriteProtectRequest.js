@@ -91,7 +91,7 @@ export default FavoriteProtectRequest = ({route}) => {
 			};
 
 			// Modal.popTwoBtn(deleteMsg(), '취소', '해제', () => Modal.close(), doDelete);
-			Modal.popOneBtn('선택한 게시글을 \n 즐겨찾기에서 해제 하시겠습니까?', '해제', doDelete);
+			Modal.popOneBtn('선택한 게시글을 \n 즐겨찾기에서 삭제 하시겠습니까?', '삭제', doDelete);
 		}
 	};
 

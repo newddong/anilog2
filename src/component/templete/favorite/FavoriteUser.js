@@ -94,7 +94,7 @@ export default FavoriteUser = props => {
 				// setData(copy);
 				Modal.close();
 			};
-			Modal.popOneBtn('선택한 계정을 \n 즐겨찾기에서 해제 하시겠습니까?', '해제', doDelete);
+			Modal.popOneBtn('선택한 계정을 \n 즐겨찾기에서 삭제 하시겠습니까?', '삭제', doDelete);
 		}
 	};
 

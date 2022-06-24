@@ -956,8 +956,7 @@ export const selectedMediaList = StyleSheet.create({
 	itemContainer: {
 		// width: 190 * DP,
 		// height: 190 * DP,
-		// marginRight: 30 * DP,
-		marginLeft: 0 * DP,
+		marginRight: 30 * DP,
 		backgroundColor: 'white',
 	},
 });

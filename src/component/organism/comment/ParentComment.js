@@ -44,9 +44,8 @@ export default ParentComment = React.memo((props, ref) => {
 		setData(parent);
 		setLikeState(parent.comment_is_like);
 		setLikeCount(parent.comment_like_count);
-		//
 		if (parent && parent.isDeleted && parent.children_count > 0) {
-			console.log('parent.showChild', parent.isDeleted, parent.comment_contents);
+			console.log('다시 대댓글 리스트를 출력해야함 : ', parent.isDeleted, parent.comment_contents);
 			setTimeout(() => {
 				setShowChild(true);
 			}, 300);
@@ -219,7 +218,7 @@ export default ParentComment = React.memo((props, ref) => {
 		}
 	};
 
-	const isMyComment = userGlobalObject.userInfo._id == data.comment_writer_id._id;
+	const isMyComment = data.comment_writer_id && userGlobalObject.userInfo._id == data.comment_writer_id._id;
 
 	const isNotAuthorized = () => {
 		let result = true;
@@ -229,7 +228,11 @@ export default ParentComment = React.memo((props, ref) => {
 		} else if (isMyComment) {
 			//비밀댓글이지만 댓글의 작성자라면 public
 			result = false;
-		} else if (userGlobalObject.userInfo._id != data.comment_writer_id._id && userGlobalObject.userInfo._id == data.comment_feed_writer_id) {
+		} else if (
+			data.comment_writer_id &&
+			userGlobalObject.userInfo._id != data.comment_writer_id._id &&
+			userGlobalObject.userInfo._id == data.comment_feed_writer_id
+		) {
 			//댓글의 작성자는 아니지만 해당 피드의 작성자라면 public (차후 기획이 바뀐다면 피드 작성자도 볼 수 없다)
 			result = false;
 		}

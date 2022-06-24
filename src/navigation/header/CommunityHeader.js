@@ -129,7 +129,7 @@ export default CommunityHeader = ({navigation, route, options, back}) => {
 			</Text>
 			{!data ? (
 				<></>
-			) : data.community_writer_id._id == userGlobalObject.userInfo._id ? (
+			) : data.community_writer_id && data.community_writer_id._id == userGlobalObject.userInfo._id ? (
 				<Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />
 			) : (
 				<TouchableOpacity onPress={onPressReport} style={{padding: 10 * DP}} activeOpacity={0.8}>

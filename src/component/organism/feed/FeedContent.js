@@ -662,7 +662,7 @@ export default FeedContent = props => {
 							onMoreView={() => {
 								setShow(true);
 							}}>
-							{feed_content}
+							{feed_content || ''}
 						</HashText>
 					</View>
 				)}

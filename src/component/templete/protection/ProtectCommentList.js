@@ -9,7 +9,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
 import {GRAY10, GRAY40, WHITE} from 'Root/config/color';
 import ShelterSmallLabel from 'Root/component/molecules/label/ShelterSmallLabel';
-import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
+import {KeyBoardEvent, useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import {useNavigation} from '@react-navigation/core';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import Loading from 'Root/component/molecules/modal/Loading';
@@ -358,26 +358,14 @@ export default ProtectCommentList = props => {
 	}, [isKeyboardVisible]);
 
 	//댓글 수정 => 키보드 해제시 수정모드가 종료되도록 적용
-	React.useEffect(() => {
-		let didshow = Keyboard.addListener('keyboardDidShow', e => {
+	KeyBoardEvent(
+		() => {
 			setKeyboardVisible(true);
-		});
-		let didhide = Keyboard.addListener('keyboardDidHide', e => {
+		},
+		() => {
 			setKeyboardVisible(false);
-		});
-		let willshow = Keyboard.addListener('keyboardWillShow', e => {
-			setKeyboardVisible(true);
-		});
-		let willhide = Keyboard.addListener('keyboardWillHide', e => {
-			setKeyboardVisible(false);
-		});
-		return () => {
-			didshow.remove();
-			didhide.remove();
-			willshow.remove();
-			willhide.remove();
-		};
-	}, []);
+		},
+	);
 
 	const render = ({item, index}) => {
 		const isOpen = childOpenList.includes(index);

@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, FlatList, Keyboard, Platform, ActivityIndicator, Animated} from 'react-native';
+import {Text, View, FlatList, Keyboard, Platform, ActivityIndicator, Animated, StyleSheet} from 'react-native';
 import FeedContent from 'Organism/feed/FeedContent';
 import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
 import {feedCommentList, login_style} from 'Templete/style_templete';
@@ -10,15 +10,14 @@ import Modal from 'Component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
 import {BLACK, GRAY10, GRAY40, WHITE} from 'Root/config/color';
-import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
+import {KeyBoardEvent, useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import Loading from 'Root/component/molecules/modal/Loading';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import {deleteFeed} from 'Root/api/feedapi';
 import {NETWORK_ERROR} from 'Root/i18n/msg';
+import comment_obj from 'Root/config/comment_obj';
 
 export default FeedCommentList = props => {
-	// console.log('props.showAllContents', props.route.params.showAllContents);
-	// console.log(props.route.name, '코멘트 리스트 네임');
 	const navigation = useNavigation();
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
@@ -36,6 +35,7 @@ export default FeedCommentList = props => {
 	});
 	const [isLoading, setIsLoading] = React.useState(true);
 	const [childOpenList, setChildOpenList] = React.useState([]);
+	const params = props.route.params;
 
 	React.useEffect(() => {
 		if (props.route.name == 'FeedCommentList') {
@@ -43,7 +43,7 @@ export default FeedCommentList = props => {
 		} else {
 			getCommentListByFeedId(
 				{
-					feedobject_id: props.route.params.feedobject._id,
+					feedobject_id: params.feedobject._id,
 					request_number: 1000,
 					login_userobject_id: userGlobalObject.userInfo._id,
 				},
@@ -56,55 +56,66 @@ export default FeedCommentList = props => {
 				},
 			);
 		}
-		props.route.params.showKeyboard
+		params.showKeyboard
 			? setTimeout(() => {
 					input.current.focus();
 			  }, 200)
 			: false;
 
-		if (props.route.params.edit != undefined) {
-			// 실종,제보에서 댓글 수정 클릭시 수정데이터 덮어씌우고 스크롤 수행
+		// 실종,제보에서 댓글 수정 클릭시 수정데이터 덮어씌우고 스크롤 수행
+		if (params.edit != undefined) {
+			// console.log('params.edit', params.edit);
 			setEditMode(true);
-			setEditData({...props.route.params.edit});
-			if (props.route.params.edit.isChild) {
+			setEditData({...params.edit});
+			if (params.edit.isChild) {
 				let copy = [...childOpenList];
-				copy.push(props.route.params.edit.comment_index);
-				console.log('copy', copy);
+				copy.push(params.edit.comment_index);
+				console.log('edit copy', copy);
 				setChildOpenList(copy);
 			}
-			setTimeout(() => {
-				input.current.focus();
-			}, 200);
-		} else if (props.route.params.reply != undefined) {
-			console.log('props.route.params.reply', props.route.params.reply.comment_index);
+		} else if (params.reply != undefined) {
 			let copy = [...childOpenList];
-			copy.push(props.route.params.reply.comment_index);
+			copy.push(params.reply.comment_index);
 			setChildOpenList(copy);
-			setTimeout(() => {
-				input.current.focus();
-			}, 200);
 		}
 	}, []);
 
-	const fetchData = () => {
+	//댓글 리스트 api 접속
+	const fetchData = parent => {
 		getCommentListByFeedId(
 			{
-				feedobject_id: props.route.params?.feedobject?._id,
+				feedobject_id: params?.feedobject?._id,
 				request_number: 1000,
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			comments => {
 				// console.log('getCommentListByFeedId', comments.msg.length);
 				let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+				if (parent) {
+					const findIndex = res.findIndex(e => e._id == parent._id); //댓글 삭제 후
+					res.map((v, i) => {
+						res[i].isDeleted = i == findIndex ? true : false;
+					});
+				} else {
+					res.map((v, i) => {
+						res[i].isDeleted = false;
+					});
+				}
 				setComments(res);
 				setIsLoading(false);
-				if (props.route.params.edit != undefined) {
-					scrollToReply(props.route.params.edit.comment_index || 0);
-				} else if (props.route.params.reply != undefined) {
-					setParentComment(props.route.params.reply);
-					scrollToReply(props.route.params.reply.comment_index || 0);
+				if (params.edit != undefined) {
+					// console.log('params.edit.viewOffset', params.edit.viewOffset);
+					scrollToReply(params.edit.comment_index || 0, params.edit.viewOffset);
+					setTimeout(() => {
+						input.current.focus();
+					}, 200);
+				} else if (params.reply != undefined) {
+					setParentComment(params.reply);
+					scrollToReply(params.reply.comment_index || 0);
+					setTimeout(() => {
+						input.current.focus();
+					}, 200);
 				}
-				// console.log('getCommentListByFeedId / result', comments);
 			},
 			err => {
 				console.log('getCommentListByFeedId', err);
@@ -138,10 +149,7 @@ export default FeedCommentList = props => {
 				param.comment_photo_remove = true;
 			}
 			param.comment_photo_uri = editData.comment_photo_uri == '' ? 'https:// ' : editData.comment_photo_uri;
-
-			if (props.route.name == 'FeedCommentList') {
-				param = {...param, feedobject_id: props.route.params.feedobject._id};
-			}
+			param.feedobject_id = params.feedobject._id;
 
 			if (parentComment) {
 				param = {...param, commentobject_id: parentComment._id};
@@ -150,6 +158,7 @@ export default FeedCommentList = props => {
 			if (editMode) {
 				let whichComment = comments.findIndex(e => e._id == editData._id);
 				delete param.comment_is_secure;
+				console.log('editMode', param);
 				updateComment(
 					{
 						...param,
@@ -159,35 +168,31 @@ export default FeedCommentList = props => {
 					result => {
 						// console.log(result);
 						setParentComment();
-						setEditData({
-							comment_contents: '',
-							comment_photo_uri: '',
-						});
+						setEditData({comment_contents: '', comment_photo_uri: ''});
 						getCommentListByFeedId(
 							{
-								feedobject_id: props.route.params.feedobject._id,
+								feedobject_id: params.feedobject._id,
 								request_number: 1000,
 							},
 							comments => {
 								// console.log('comments', comments);
 								!parentComment && setComments([]); //댓글목록 초기화
 								let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+								if (editData.parent != undefined && editData.children_count == 0) {
+									res.map((v, i) => {
+										res[i].isEdited = i == editData.parent ? true : false;
+									});
+								} else {
+									res.map((v, i) => {
+										res[i].isEdited = false;
+									});
+								}
 								setComments(res);
-								parentComment && addChildCommentFn.current();
 								setPrivateComment(false);
 								setEditMode(false);
+								scrollToReply(whichComment == -1 ? editData.parent : whichComment);
+								parentComment && addChildCommentFn.current();
 								Modal.close();
-								setTimeout(() => {
-									flatlist.current.scrollToIndex({animated: true, index: whichComment == -1 ? editData.parent : whichComment, viewPosition: 0.5});
-								}, 500);
-								setTimeout(() => {
-									if (whichComment == -1) {
-										let copy = [...childOpenList];
-										copy.push(editData.parent);
-										console.log('copy', copy);
-										setChildOpenList(copy);
-									}
-								}, 200);
 							},
 							err => {
 								console.log(err);
@@ -202,42 +207,38 @@ export default FeedCommentList = props => {
 				if (parentComment) {
 					whichParent = comments.findIndex(e => e._id == param.commentobject_id);
 				}
+				console.log('create', param);
 				createComment(
 					param,
 					result => {
 						setParentComment();
-						setEditData({
-							comment_contents: '',
-							comment_photo_uri: '',
-						});
-						if (props.route.name == 'FeedCommentList') {
-							getCommentListByFeedId(
-								{
-									feedobject_id: props.route.params.feedobject._id,
-									request_number: 1000,
-								},
-								comments => {
-									!parentComment && setComments([]); //댓글목록 초기화
-									let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
-									setComments(res);
-									parentComment && addChildCommentFn.current();
-									setPrivateComment(false);
-									setEditMode(false);
-									// console.log('comments', comments);
-									input.current.blur();
-									Modal.close();
-									setTimeout(() => {
-										whichParent == '' || whichParent == -1
-											? flatlist.current.scrollToIndex({animated: true, index: 0, viewPosition: 0.5})
-											: flatlist.current.scrollToIndex({animated: true, index: whichParent, viewPosition: 1});
-									}, 500);
-								},
-								err => {
-									console.log(err);
-									Modal.close();
-								},
-							);
-						}
+						setEditData({comment_contents: '', comment_photo_uri: ''});
+						getCommentListByFeedId(
+							{
+								feedobject_id: params.feedobject._id,
+								request_number: 1000,
+							},
+							comments => {
+								!parentComment && setComments([]); //댓글목록 초기화
+								let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+								setComments(res);
+								setPrivateComment(false);
+								setEditMode(false);
+								setTimeout(() => {
+									flatlist.current?.scrollToIndex({
+										animated: true,
+										index: whichParent != '' ? whichParent : 0,
+										viewPosition: whichParent != '' ? 0.5 : 0,
+									});
+								}, 500);
+								parentComment && addChildCommentFn.current();
+								Modal.close();
+							},
+							err => {
+								console.log(err);
+								Modal.close();
+							},
+						);
 					},
 					err => Modal.alert('createComment' + err),
 				);
@@ -256,19 +257,40 @@ export default FeedCommentList = props => {
 	};
 
 	React.useEffect(() => {
-		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
-			let selected = props.route.params.selectedPhoto[0];
-			setEditData({...editData, comment_photo_uri: selected.cropUri ?? selected.uri});
+		if (params.selectedPhoto && params.selectedPhoto.length > 0) {
+			let selected = params.selectedPhoto[0];
+			const checkEdit = comment_obj.editData._id != ''; //전역변수에 저장된 수정데이터가 있을 경우 수정데이터(editData)에 선택한 사진을 저장
+			if (checkEdit) {
+				setEditMode(true);
+				setEditData({...comment_obj.editData, comment_photo_uri: selected.cropUri ?? selected.uri});
+			} else {
+				setEditData({...editData, comment_photo_uri: selected.cropUri ?? selected.uri});
+			}
+			//전역변수에 저장된 부모댓글 데이터가 있을 경우 부모댓글 다시 지정
+			if (comment_obj.parentComment && comment_obj.parentComment._id != '') {
+				setParentComment(comment_obj.parentComment);
+			}
+			//수정 데이터 전역변수 초기화
+			comment_obj.editData = {comment_contents: '', comment_photo_uri: '', _id: ''};
+			//부모 댓글 데이터 전역변수 초기화
+			comment_obj.parentComment = {comment_contents: '', comment_photo_uri: '', _id: ''};
 			setTimeout(() => {
 				input.current?.focus();
 			}, 200);
 		}
-	}, [props.route.params?.selectedPhoto]);
+	}, [params?.selectedPhoto]);
 
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
 	const onAddPhoto = () => {
-		console.log('onAddphoto');
-		props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('LoginRequired');
+			});
+		} else {
+			editMode ? (comment_obj.editData = editData) : false;
+			parentComment ? (comment_obj.parentComment = parentComment) : false;
+			props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
+		}
 	};
 
 	//답글 쓰기 후 댓글 작성자 우측 답글취소 버튼 클릭
@@ -276,30 +298,29 @@ export default FeedCommentList = props => {
 		setParentComment();
 		setKeyboardVisible(false);
 		setEditMode(false);
-		setEditData({
-			comment_contents: '',
-			comment_photo_uri: '',
-		});
+		setEditData({comment_contents: '', comment_photo_uri: ''});
 	};
 
+	const keyBoardHideByDeleteImage = React.useRef(false);
 	//댓글 사진을 취소할 때(X마크 클릭)
 	const onDeleteImage = () => {
-		console.log('onDelete Img');
+		keyBoardHideByDeleteImage.current = true;
 		setEditData({...editData, comment_photo_uri: ''});
+		setTimeout(() => {
+			input.current?.focus();
+		}, 500);
 	};
 
 	//댓글 미트볼 -> 삭제클릭
-	const onPressDelete = id => {
+	const onPressDelete = (id, parent) => {
 		deleteComment(
-			{
-				commentobject_id: id,
-			},
+			{commentobject_id: id},
 			result => {
-				console.log('result / delectComment / ProtectCommentList : ', result.msg.comment_is_delete);
-				fetchData();
+				console.log('result / delectComment / FeedCommentList : ', result.msg.comment_is_delete);
+				fetchData(parent);
 			},
 			err => {
-				console.log(' err / deleteComment / ProtectCommentList : ', err);
+				console.log(' err / deleteComment / FeedCommentList : ', err);
 			},
 		);
 	};
@@ -318,55 +339,75 @@ export default FeedCommentList = props => {
 			});
 		} else {
 			setParentComment(parentCommentId);
-			const findParentIndex = comments.findIndex(e => e._id == parentCommentId._id);
-			input.current.focus();
-			// console.log('findParentIndex', findParentIndex);
-			scrollToReply(findParentIndex);
-			setEditMode(false);
-			setEditData({
-				comment_contents: '',
-				comment_photo_uri: '',
-			});
 			editComment || setEditComment(true);
+			setEditMode(false); //수정모드 해제
+			setEditData({comment_contents: '', comment_photo_uri: ''}); //수정 데이터 배우기
+			const findParentIndex = comments.findIndex(e => e._id == parentCommentId._id); //대상 부모댓글의 인덱스
+			let offset = 0;
+			if (parentCommentId.comment_photo_uri) {
+				offset = Platform.OS == 'android' ? 266 * DP : 314 * DP; //부모댓글이 사진을 포함한다면 scrollOffset 조정
+			}
+			setTimeout(() => {
+				input.current?.focus();
+			}, 200);
+			scrollToReply(findParentIndex, offset);
 			addChildCommentFn.current = addChildComment;
 		}
 	};
 
-	//특정 댓글로 스크롤 이동 함수
-	const scrollToReply = i => {
-		if (Platform.OS == 'ios') {
-			setTimeout(() => {
-				flatlist.current.scrollToIndex({animated: true, index: i != -1 ? i : 0, viewPosition: 0});
-			}, 200);
-		} else {
-			flatlist.current.scrollToIndex({animated: true, index: i != -1 ? i : 0, viewPosition: 0});
+	//미트볼, 수정을 누르면 동작
+	const onEdit = (comment, parent, child) => {
+		// console.log('수정 데이터', comment);
+		setEditMode(true); //수정모드 시작
+		setParentComment(); // 답글쓰기 모드는 해제
+		const findParentIndex = comments.findIndex(e => e._id == parent._id); //부모댓글의 인덱스
+		let viewOffset = 0; //자식댓글이 존재할 경우 내려갈 offSet 수치
+		console.log('childIndex', child);
+		if (child.findIndex != undefined && child.findIndex != -1) {
+			//대댓글의 수정 분기
+			viewOffset = 160 * (child.findIndex + 1) * DP; //수정할 대상 대댓글의 인덱스만큼 scrollOffset 조정
+			viewOffset = viewOffset + 540 * child.hasPhoto * DP; //수정할 대상 대댓글 이전에 사진을 포함한 대댓글이 있을 경우 사진 개수 및 크기만큼 scrollOffSet 조정
+			comment.comment_photo_uri ? (viewOffset = viewOffset + 360 * DP) : false; //수정할 대상 대댓글이 사진을 포함한 경우 사진 크기만큼 scrollOffSet 조정
 		}
+		if (parent.comment_photo_uri) {
+			//대상 대댓글의 부모댓글이 사진을 포함한 경우 사진 크기만큼 scrollOffset 조정
+			Platform.OS == 'android' ? (viewOffset = viewOffset + 340 * DP) : (viewOffset = viewOffset + 406 * DP);
+		}
+		setEditData({...comment, parent: findParentIndex}); //수정 데이터 입력 및 부모댓글의 인덱스 전달
+		setPrivateComment(comment.comment_is_secure); //댓글입력창의 비밀댓글 모드 갱신
+		scrollToReply(findParentIndex, viewOffset); //스크롤 시작
+		setTimeout(() => {
+			input.current?.focus(); //키보드와 일체화된 댓글 입력창 포커싱 시작
+		}, 200);
+	};
+
+	//댓글 인덱스로 스크롤 함수
+	const scrollToReply = (i, offset) => {
+		console.log('scrollTo 호출 부모인덱스 : ', i, '자식 offset', offset);
+		setTimeout(
+			() => {
+				flatlist.current.scrollToIndex({
+					animated: true,
+					index: i != -1 ? i : 0,
+					viewPosition: 0,
+					viewOffset: offset ? -offset : 0,
+				});
+			},
+			Platform.OS == 'android' ? 300 : 0,
+		);
 	};
 
 	//답글 더보기 클릭
 	const showChild = index => {
-		scrollToReply(index);
+		if (!params.edit) {
+			scrollToReply(index);
+		}
 	};
 
 	const [heightReply, setReplyHeight] = React.useState(0);
 
 	const onReplyBtnLayout = e => {
 		setReplyHeight(e.nativeEvent.layout.height);
-	};
-
-	//미트볼, 수정을 누르면 동작
-	const onEdit = (comment, parent) => {
-		// console.log('수정 데이터', comment);
-		// console.log('parent', parent);
-		const findParentIndex = comments.findIndex(e => e._id == parent);
-		setEditMode(true);
-		setParentComment(); // 수정모드로 전환시
-		setPrivateComment(comment.comment_is_secure);
-		setEditData({...comment, parent: findParentIndex});
-		setTimeout(() => {
-			input.current.focus();
-		}, 200);
-		scrollToReply(findParentIndex);
 	};
 
 	//미트볼의 삭제버튼을 클릭
@@ -401,47 +442,34 @@ export default FeedCommentList = props => {
 
 	React.useEffect(() => {
 		if (!isKeyboardVisible) {
-			if (editMode) {
+			if (editMode && !keyBoardHideByDeleteImage.current) {
 				//키보드가 해제될 때, 수정모드일 때는 모든 데이터를 초기화, 댓글 및 대댓글 작성 상태는 유지
-				setEditData({
-					comment_contents: '',
-					comment_photo_uri: '',
-				});
+				setEditData({comment_contents: '', comment_photo_uri: ''});
 				setPrivateComment(false);
 				setEditMode(false);
+				keyBoardHideByDeleteImage.current = false;
 			}
 		}
 	}, [isKeyboardVisible]);
 
 	//댓글 수정 => 키보드 해제시 수정모드가 종료되도록 적용
-	React.useEffect(() => {
-		let didshow = Keyboard.addListener('keyboardDidShow', e => {
+	KeyBoardEvent(
+		() => {
 			setKeyboardVisible(true);
-		});
-		let didhide = Keyboard.addListener('keyboardDidHide', e => {
+		},
+		() => {
 			setKeyboardVisible(false);
-		});
-		let willshow = Keyboard.addListener('keyboardWillShow', e => {
-			setKeyboardVisible(true);
-		});
-		let willhide = Keyboard.addListener('keyboardWillHide', e => {
-			setKeyboardVisible(false);
-		});
-		return () => {
-			didshow.remove();
-			didhide.remove();
-			willshow.remove();
-			willhide.remove();
-		};
-	}, []);
+		},
+	);
 
 	const header = () => {
+		// console.log('feed_content', params.feedobject.feed_content);
 		return (
 			<>
 				<FeedContent
-					data={props.route.params.feedobject}
+					data={params.feedobject}
 					deleteFeed={deleteFeedItem}
-					showAllContents={props.route.params.showAllContents}
+					showAllContents={params.showAllContents}
 					routeName={props.route.name}
 					showMedia={false}
 				/>
@@ -468,7 +496,7 @@ export default FeedCommentList = props => {
 		};
 
 		return (
-			<View style={[feedCommentList.commentContainer, {backgroundColor: getBgColor()}]} key={item._id}>
+			<View style={[style.commentContainer, {backgroundColor: getBgColor()}]} key={item._id}>
 				<ParentComment
 					parentComment={item}
 					onPressReplyBtn={onReplyBtnClick} // 부모 댓글의 답글쓰기 클릭 이벤트
@@ -484,13 +512,13 @@ export default FeedCommentList = props => {
 	};
 
 	return (
-		<View style={[login_style.wrp_main, feedCommentList.container]}>
+		<View style={[login_style.wrp_main, style.container]}>
 			<FlatList
 				data={comments}
 				extraData={refresh}
 				renderItem={renderItem}
 				listKey={({item, index}) => index}
-				removeClippedSubviews={false}
+				// removeClippedSubviews={false}
 				ListHeaderComponent={header()}
 				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
 				ListEmptyComponent={
@@ -533,3 +561,18 @@ export default FeedCommentList = props => {
 		</View>
 	);
 };
+
+const style = StyleSheet.create({
+	container: {
+		alignItems: 'center',
+		flex: 1,
+		// backgroundColor: '#ACC4D6',
+	},
+	commentContainer: {
+		// paddingBottom: 10 * DP,
+		marginTop: 10 * DP,
+		paddingTop: 10 * DP,
+		alignItems: 'center',
+		// backgroundColor: 'yellow',
+	},
+});

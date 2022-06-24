@@ -194,8 +194,8 @@ export default FavoriteReview = ({route, isFavorite}) => {
 
 			// Modal.popTwoBtn(deleteMsg(), '취소', '해제', () => Modal.close(), doDelete);
 			isFavorite
-				? Modal.popOneBtn('선택한 리뷰를 즐겨찾기에서 \n 해제하시겠습니까?', '해제', doDelete)
-				: Modal.popOneBtn('선택한 목록을 삭제하시겠습니까?', '해제', doDelete);
+				? Modal.popOneBtn('선택한 리뷰를 즐겨찾기에서 \n 삭제하시겠습니까?', '삭제', doDelete)
+				: Modal.popOneBtn('선택한 목록을 삭제하시겠습니까?', '삭제', doDelete);
 		}
 	};
 

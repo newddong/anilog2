@@ -66,17 +66,12 @@ export default FeedCommentList = props => {
 		if (params.edit != undefined) {
 			// console.log('params.edit', params.edit);
 			setEditMode(true);
-			setEditData({...params.edit});
+			setEditData({...params.edit, parent: params.edit.comment_index});
 			if (params.edit.isChild) {
 				let copy = [...childOpenList];
 				copy.push(params.edit.comment_index);
-				console.log('edit copy', copy);
 				setChildOpenList(copy);
 			}
-		} else if (params.reply != undefined) {
-			let copy = [...childOpenList];
-			copy.push(params.reply.comment_index);
-			setChildOpenList(copy);
 		}
 	}, []);
 
@@ -103,15 +98,9 @@ export default FeedCommentList = props => {
 				}
 				setComments(res);
 				setIsLoading(false);
-				if (params.edit != undefined) {
-					// console.log('params.edit.viewOffset', params.edit.viewOffset);
+				if (params.edit) {
+					// console.log('params.edit', params.edit);
 					scrollToReply(params.edit.comment_index || 0, params.edit.viewOffset);
-					setTimeout(() => {
-						input.current.focus();
-					}, 200);
-				} else if (params.reply != undefined) {
-					setParentComment(params.reply);
-					scrollToReply(params.reply.comment_index || 0);
 					setTimeout(() => {
 						input.current.focus();
 					}, 200);
@@ -150,11 +139,6 @@ export default FeedCommentList = props => {
 			}
 			param.comment_photo_uri = editData.comment_photo_uri == '' ? 'https:// ' : editData.comment_photo_uri;
 			param.feedobject_id = params.feedobject._id;
-
-			//			if (props.route.name == 'FeedCommentList') {
-			//				param = {...param, feedobject_id: props.route.params.feedobject._id};
-			//			}
-
 			if (parentComment) {
 				param = {...param, commentobject_id: parentComment._id};
 			}
@@ -195,7 +179,7 @@ export default FeedCommentList = props => {
 								setComments(res);
 								setPrivateComment(false);
 								setEditMode(false);
-								scrollToReply(whichComment == -1 ? editData.parent : whichComment);
+								scrollToReply(whichComment == -1 ? editData.parent || 0 : whichComment);
 								parentComment && addChildCommentFn.current();
 								Modal.close();
 							},
@@ -378,6 +362,7 @@ export default FeedCommentList = props => {
 			//대상 대댓글의 부모댓글이 사진을 포함한 경우 사진 크기만큼 scrollOffset 조정
 			Platform.OS == 'android' ? (viewOffset = viewOffset + 340 * DP) : (viewOffset = viewOffset + 406 * DP);
 		}
+		console.log('onEdit', findParentIndex);
 		setEditData({...comment, parent: findParentIndex}); //수정 데이터 입력 및 부모댓글의 인덱스 전달
 		setPrivateComment(comment.comment_is_secure); //댓글입력창의 비밀댓글 모드 갱신
 		scrollToReply(findParentIndex, viewOffset); //스크롤 시작
@@ -488,10 +473,12 @@ export default FeedCommentList = props => {
 
 	const renderItem = ({item, index}) => {
 		const isOpen = childOpenList.includes(index);
+		const replyFromDetail = params.reply && index == comments.findIndex(e => e._id == params.reply._id);
 
 		//수정 혹은 답글쓰기 때, 대상 부모 댓글의 배경색을 바꾸는 함수
 		const getBgColor = () => {
 			let result = WHITE;
+			// console.log('editData._id', editData._id);
 			if (editMode && editData.parent == index && editData._id == item._id) {
 				result = GRAY40;
 			} else if (parentComment && parentComment._id == item._id) {
@@ -508,9 +495,10 @@ export default FeedCommentList = props => {
 					onEdit={onEdit}
 					onPressDelete={onPressDelete}
 					onPressDeleteChild={onPressDelete}
-					showChild={() => showChild(index)}
-					openChild={isOpen}
-					editData={editData}
+					showChild={() => showChild(index)} //답글보기 열기
+					openChild={isOpen} //답글보기 열기 여부
+					editData={editData} //현재 수정 데이터
+					replyFromDetail={replyFromDetail} //실종,제보 상세의 댓글리스트에서 답글쓰기가 눌렸을 경우
 				/>
 			</View>
 		);

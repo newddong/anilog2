@@ -28,6 +28,7 @@ import {count_to_K} from 'Root/util/stringutil';
  * @param {(data:object)=>void} props.showChild - 답글 ~~개보기 클릭
  * @param {boolean} props.openChild - 자식 댓글 보이기 여부
  * @param {Object} props.parentComment - 부모 댓글이 있는 경우 부모댓글의 오브젝트
+ * @param {Object} props.replyFromDetail - 상세 페이지에서 답글쓰기를 눌렀을 경우 그 오브젝트
  */
 export default ParentComment = React.memo((props, ref) => {
 	// console.log('ParentComment : ', props.parentComment.comment_writer_id.user_nickname, props.parentComment.comment_is_secure);
@@ -59,12 +60,11 @@ export default ParentComment = React.memo((props, ref) => {
 	}, [props.parentComment]);
 
 	React.useEffect(() => {
-		if (parent._id == props.parent) {
-			showChildComment();
+		if (parent._id == props.parent || props.openChild) {
+			showChildComment(); //답글보기 열기
 		}
-		if (props.openChild) {
-			//자식댓글을 여는 props
-			showChildComment();
+		if (props.replyFromDetail) {
+			onPressReplyBtn();
 		}
 	}, []);
 

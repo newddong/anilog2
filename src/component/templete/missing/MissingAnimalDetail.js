@@ -347,6 +347,7 @@ export default MissingAnimalDetail = props => {
 		comment_obj.isChild = isChild;
 		comment_obj.comment_index = findParentIndex;
 		comment_obj.viewOffset = viewOffset;
+
 		navigation.push('FeedCommentList', {feedobject: data, edit: comment}); // 수정하려는 댓글 정보를 포함해서 보냄
 	};
 

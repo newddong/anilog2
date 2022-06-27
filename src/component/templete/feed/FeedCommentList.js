@@ -345,6 +345,7 @@ export default FeedCommentList = props => {
 			//대상 대댓글의 부모댓글이 사진을 포함한 경우 사진 크기만큼 scrollOffset 조정
 			Platform.OS == 'android' ? (viewOffset = viewOffset + 340 * DP) : (viewOffset = viewOffset + 406 * DP);
 		}
+		console.log('onEdit', findParentIndex);
 		setEditData({...comment, parent: findParentIndex}); //수정 데이터 입력 및 부모댓글의 인덱스 전달
 		setPrivateComment(comment.comment_is_secure); //댓글입력창의 비밀댓글 모드 갱신
 		scrollToReply(findParentIndex, viewOffset, 'onEdit'); //스크롤 시작

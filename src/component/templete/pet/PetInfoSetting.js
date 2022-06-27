@@ -17,6 +17,7 @@ import {PET_KIND} from 'Root/i18n/msg';
 import Loading from 'Root/component/molecules/modal/Loading';
 import PetLabel148 from 'Root/component/molecules/label/PetLabel148';
 import SelectInput from 'Root/component/molecules/button/SelectInput';
+import KeyBoardInputBackGround from 'Root/component/molecules/input/KeyboardInputBackGround';
 
 //이 화면에 들어오면서 특정 _id를 API 연동으로 데이터를 가져 옴.
 //이전 화면에서 모든 데이터를 가진 상태에서 들어오는 것이 아님.
@@ -35,7 +36,11 @@ export default PetInfoSetting = ({route, navigation}) => {
 	const scrollRef = React.useRef();
 	const [userIntro_temp, setUserIntro_temp] = React.useState('');
 	const modifyRef = React.useRef('');
-
+	const [large, setLarge] = React.useState([]);
+	const [sub, setSub] = React.useState([]);
+	const [speices, setSpeices] = React.useState('');
+	const [speicesIndex, setSpeicesIndex] = React.useState(0);
+	const [kind, setKind] = React.useState('');
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			setFamily();
@@ -60,6 +65,8 @@ export default PetInfoSetting = ({route, navigation}) => {
 				navigation.setOptions({title: result.msg.user_nickname});
 				userGlobalObject.userInfo.user_nickname == result.msg.pet_family[0].user_nickname ? setIsChiefUser(true) : setIsChiefUser(false);
 				setPetData(result.msg);
+				setSpeices(result.msg.pet_species);
+				setKind(result.msg.pet_species_detail);
 			},
 			err => {
 				console.log('err / GetUserInfoById / PetInfosetting', err);
@@ -214,9 +221,91 @@ export default PetInfoSetting = ({route, navigation}) => {
 		);
 	};
 	const editKindInfo = () => {
+		if (kindEditMode) {
+			console.log('kind, species', kind, speices);
+			updatePetDetailInformation(
+				{
+					userobject_id: petData._id,
+					pet_species: speices,
+					pet_species_detail: kind,
+				},
+				result => {
+					// console.log('updatePetDetailInformation / PetInfoSetting Result : ', result.msg);
+					setPetData({...petData, pet_species: result.msg.pet_species, pet_species_detail: result.msg.pet_species_detail});
+					Modal.close();
+					setTimeout(() => {
+						Modal.popNoBtn('반려동물의 정보가 성공적으로 \n 변경되었습니다.');
+						setTimeout(() => {
+							Modal.close();
+						}, 1000);
+					}, 100);
+				},
+				err => {
+					console.log('updatePetDetailInformation / PetinfoSetting err : ', err);
+					Modal.close();
+				},
+			);
+		}
 		setKindEditMode(!kindEditMode);
 	};
+	const onSelectSpecies = async (v, i) => {
+		Modal.popLoading(true);
+		const petKind = await PET_KIND();
+		Modal.close();
+		console.log('petKind', petKind);
+		let category = {
+			large: [],
+			sub: [],
+		};
 
+		petKind.map((v, i) => {
+			category.large.push(v.pet_species);
+			category.sub.push(v.pet_species_detail);
+		});
+		console.log('categoy', category.large, category.sub);
+		setSub(category.sub);
+		// debug && console.log('city:', city[i]);
+		Modal.popSelectScrollBoxModal(
+			// [city],
+			[category.large],
+			'종 선택',
+			selected => {
+				// setData({...data, user_address: {...data.user_address, city: selected}});
+				// getAddressList(
+				// 	{city: selected},
+				// 	districts => {
+				// 		setDistrict(districts.msg);
+				// 		// console.log()
+				// 		debug && console.log('districts:', districts);
+				// 		setData({...data, user_address: {...data.user_address, city: selected, district: districts.msg[0], neighbor: '동/읍을 선택'}});
+				// 		Modal.close();
+				// 	},
+				// 	handleError,
+				// );
+
+				setSpeices(selected);
+				console.log('종 고름', category.large.indexOf(selected));
+				setSpeicesIndex(category.large.indexOf(selected));
+				Modal.close();
+			},
+			// () => Modal.close(),
+			// Modal.close(),
+			// () => console.log('완료 눌림'),
+		);
+	};
+	const onSelectKind = (v, i) => {
+		Modal.popSelectScrollBoxModal(
+			[sub[speicesIndex]],
+			'품종 선택',
+			selected => {
+				// setData({...data, user_address: {...data.user_address, city: selected}});
+				setKind(selected);
+				console.log('selected');
+				Modal.close();
+			},
+			() => Modal.close(),
+		);
+	};
 	//업로드 및 팔로우 클릭
 	const onClickUserInfo = () => {
 		navigation.push('UserProfile', {userobject: petData});
@@ -415,10 +504,22 @@ export default PetInfoSetting = ({route, navigation}) => {
 							{kindEditMode ? (
 								<View style={[{}]}>
 									<View style={[{marginBottom: 20 * DP}]}>
-										<SelectInput width={694} height={104} />
+										<SelectInput
+											width={694}
+											height={104}
+											// value={petData.pet_species}
+											value={speices}
+											onPressInput={onSelectSpecies}
+										/>
 									</View>
 									<View>
-										<SelectInput width={694} height={104} />
+										<SelectInput
+											width={694}
+											height={104}
+											// value={petData.pet_species_detail || ''}
+											value={kind}
+											onPressInput={onSelectKind}
+										/>
 									</View>
 								</View>
 							) : (
@@ -446,7 +547,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 						</View>
 					</View> */}
 					{/* 상세정보 */}
-					<View style={[petInfoSetting.petProfileMenu.container]}>
+					{/* <View style={[petInfoSetting.petProfileMenu.container]}>
 						<View style={[petInfoSetting.petProfileMenu.insideContainer]}>
 							<View style={[petInfoSetting.petProfileMenu.menuTitle]}>
 								<TouchableOpacity onPress={goToSetPetInfo}>
@@ -457,7 +558,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 								<NextMark />
 							</TouchableOpacity>
 						</View>
-					</View>
+					</View> */}
 
 					{/* 접종내역 */}
 					{/* <View style={[petInfoSetting.petProfileMenu.container]}>

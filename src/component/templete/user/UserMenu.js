@@ -177,7 +177,7 @@ export default UserMenu = props => {
 
 							<View style={[{marginLeft: 40 * DP}, {height: 148 * DP}, {justifyContent: 'center'}]}>
 								<TouchableOpacity onPress={onPressMyName} style={[styles.user_id]}>
-									<Text style={[txt.roboto46b, {alignItems: 'center'}, {marginRight: 5 * DP}]} numberOfLines={1}>
+									<Text style={[txt.roboto46b, {alignItems: 'center'}, {marginRight: 5 * DP}, {maxWidth: 470 * DP}]} numberOfLines={1}>
 										{data.user_nickname || ''}
 									</Text>
 									<Home48Border />

@@ -455,7 +455,7 @@ export const CONFIRM_ADOPT_REQUEST = '위 내용으로 입양 신청을 하시�
 export const CONFIRM_FINALIZED =
 	'신청이 완료 되었습니다. \n 보호소마다 심사의 기간과 기준이 다르며, 상황에 따라 연락이 가지 않을 수도 있음을 알려드립니다.';
 export const CONFIRM_DELETE_TAG_ME_FEED = '해당 게시글을 나의 "태그된 피드"에서 삭제하시겠습니까? 게시물을 올린 계정에서는 삭제되지 않습니다.';
-export const CONFIRM_DELETE_FAVORITE_FEED = '선택한 피드를 즐겨찾기에서\n 해제하시겠습니까?';
+export const CONFIRM_DELETE_FAVORITE_FEED = '선택한 피드를 즐겨찾기에서\n 삭제하시겠습니까?';
 export const CONFIRM_DELETE_MY_FEED = '선택한 피드 게시글을 \n 삭제하시겠습니까?';
 export const PROTECT_ACT_PROTECT_CONFIRM = '임시보호는 확정을 눌러도 이 게시물의 \n 상태가 "입양가능"으로 유지됩니다.';
 export const PROTECT_ACT_ADOPT_CONFIRM = '입양확정을 하게 되면 이 게시물의 상태가 "완료"로 변경됩니다.';

@@ -493,7 +493,9 @@ const InterestTagModal = props => {
 					<Text style={[txt.noto30, {color: MAINBLACK}]}>{props.category == 'Location' ? '관심지역 선택' : '관심활동 선택'}</Text>
 
 					<TouchableOpacity onPress={onClose} style={[style.crossMark]}>
-						<Cross24_Filled />
+						<View style={[{paddingRight: 42 * DP}]}>
+							<Cross24_Filled />
+						</View>
 					</TouchableOpacity>
 				</View>
 				{getList()}
@@ -554,15 +556,16 @@ const style = StyleSheet.create({
 		flexDirection: 'row',
 		alignSelf: 'center',
 		alignItems: 'center',
-		paddingHorizontal: 42 * DP,
+		// paddingHorizontal: 42 * DP,
+		paddingLeft: 42 * DP,
 		justifyContent: 'space-between',
 		backgroundColor: '#DEDEDE',
 		borderTopLeftRadius: 30 * DP,
 		borderTopRightRadius: 30 * DP,
 	},
 	crossMark: {
-		width: 52 * DP,
-		height: 52 * DP,
+		width: 90 * DP,
+		height: 80 * DP,
 		justifyContent: 'center',
 		alignItems: 'flex-end',
 	},

@@ -42,7 +42,7 @@ export default UserInfoSetting = ({route}) => {
 	const [userDataLoaded, setUserDataLoaded] = React.useState(false);
 	const modifyRef = React.useRef();
 	const userData = userGlobalObject.userInfo;
-	const [newNick, setNewNick] = React.useState(data?.user_nickname);
+	const [newNick, setNewNick] = React.useState(data.user_nickname);
 	const [validateted, setValidated] = React.useState(false);
 	const [confirmed, setConfirmed] = React.useState(false);
 	const [duplicated, setDuplicated] = React.useState(false);
@@ -52,7 +52,6 @@ export default UserInfoSetting = ({route}) => {
 	const [interestList, setInterestList] = React.useState();
 	const [interestLoaded, setInterestLoaded] = React.useState(false);
 	const [refresh, setRefresh] = React.useState(false);
-	console.log('datadata', data);
 	const fetchData = () => {
 		getUserInfoById(
 			{
@@ -108,8 +107,8 @@ export default UserInfoSetting = ({route}) => {
 			// 			temp.push(temp2);
 			// 		}
 			// 		console.log('temptemptmep', temp);
-			// 		// setInterestList(result.msg);
-			// 		// setInterestLoaded(true);
+			// 		setInterestList(result.msg);
+			// 		setInterestLoaded(true);
 			// 	},
 			// 	err => {
 			// 		console.log('common code err', err);
@@ -117,15 +116,16 @@ export default UserInfoSetting = ({route}) => {
 			// );
 			if (data.user_interests) {
 				const getContentInteres = Object.entries(data.user_interests).map(content => {
-					// console.log('ohhh', content);
+					console.log('ohhh', content);
 					if (content[0] != 'interests_location' && content[0] != '_id') {
 						Object.entries(content[1]).map(contents => {
-							// console.log('contents', contents[1]);
+							console.log('contents', contents);
 							temp.push(contents[1]);
 						});
 					}
 				});
 			}
+			console.log('for 문 끝남', temp);
 			setContentInterest(temp);
 			setLocationInterest(data.user_interests.interests_location);
 			// setLoaded(true);
@@ -168,11 +168,16 @@ export default UserInfoSetting = ({route}) => {
 	//변경된 locationObject와 contentInterest를 저장형식에 맞게 파싱
 	React.useEffect(() => {
 		if (interestLoaded) {
+			// console.log('바뀐 contentInterst 목록', contentInterest);
+			let tempList = [];
+			for (const key in interestList) {
+				console.log('keys', key);
+			}
 			for (let props of contentInterest) {
-				console.log('props props interestList', props, interestList);
-
+				console.log('props props interestList', props, contentInterest, interestList);
+				///TODO props로 넘어온 list의 값을 interestList에서 찾아서 interest_etc :[어쩌고] 이런식으러 만들어서 넘겨줘야함.
 				const getKey = Object.entries(interestList[0]).map(content => {
-					// console.log('hihihi', content[1], props);
+					console.log('hihihi', content, props);
 					console.log('interestListList', interestList);
 					if (content[1].includes(props)) {
 						// console.log('hohohoho', props, content[0]);
@@ -323,13 +328,15 @@ export default UserInfoSetting = ({route}) => {
 	};
 
 	const validateNewNick = nick => {
-		let regExp = /^[가-힣a-zA-Z0-9_]{2,20}$/;
+		let regExp = /^[가-힣a-zA-Z0-9_]{2,12}$/;
+		let emojExp = /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g;
+
 		setValidated(regExp.test(nick));
 		if (userGlobalObject.userInfo.user_type == 'user') {
 			console.log('닉네임중복인가? ', checkDuplicateNickname(nick));
-			return regExp.test(nick) && !checkDuplicateNickname(nick);
+			return regExp.test(nick) && !checkDuplicateNickname(nick) && !emojExp.test(nick);
 		} else {
-			return regExp.test(nick);
+			return regExp.test(nick) && !emojExp.test(nick);
 		}
 	};
 	const onValidName = isValid => {
@@ -425,6 +432,8 @@ export default UserInfoSetting = ({route}) => {
 			);
 		}
 		setNickNameEdit(!nickNameEdit);
+		data.user_nickname = newNick;
+		navigation.setOptions({title: newNick});
 	};
 
 	//나의 지역 수정 함수

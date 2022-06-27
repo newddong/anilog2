@@ -109,7 +109,7 @@ export default MissingAnimalDetail = props => {
 			{
 				feedobject_id: props.route.params._id,
 				// commentobject_id: '61c2c0de7be07611b0094ffd',
-				request_number: 10,
+				request_number: 9999,
 				login_userobject_id: userGlobalObject.userInfo._id,
 			},
 			commentdata => {
@@ -311,10 +311,7 @@ export default MissingAnimalDetail = props => {
 				navigation.navigate('LoginRequired');
 			});
 		} else {
-			const findParentIndex = comments.findIndex(e => e._id == comment._id); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
-			let comment_obj = comment;
-			comment_obj.comment_index = findParentIndex;
-			navigation.push('FeedCommentList', {feedobject: data, showAllContents: true, reply: comment_obj});
+			navigation.push('FeedCommentList', {feedobject: data, showAllContents: true, reply: comment});
 		}
 	};
 
@@ -352,6 +349,7 @@ export default MissingAnimalDetail = props => {
 		comment_obj.isChild = isChild;
 		comment_obj.comment_index = findParentIndex;
 		comment_obj.viewOffset = viewOffset;
+
 		navigation.push('FeedCommentList', {feedobject: data, edit: comment}); // 수정하려는 댓글 정보를 포함해서 보냄
 	};
 

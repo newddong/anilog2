@@ -77,6 +77,7 @@ import SimpleWithMeatballHeader from '../header/SimpleWithMeatballHeader';
 import ProfileHeader from '../header/ProfileHeader';
 import FollowerList from 'Root/component/templete/list/FollowerList';
 import PetFollowerList from 'Root/component/templete/list/PetFollowerList';
+import FeedCommentList from 'Root/component/templete/feed/FeedCommentList';
 
 const RootStack = createStackNavigator();
 
@@ -320,11 +321,6 @@ export default RootStackNavigation = () => {
 						<RootStack.Screen name="Profile" component={Profile} options={{header: props => <ProfileHeader {...props} />, title: '프로필'}} />
 						<RootStack.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />}} />
 						<RootStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />}} />
-						{/* <RootStack.Screen
-							name="FeedCommentList"
-							component={FeedCommentList}
-							options={{header: props => <SimpleHeader {...props} />, title: '댓글'}}
-						/> */}
 						<RootStack.Screen
 							name="TermsAndPolicy"
 							component={TermsAndPolicy}
@@ -362,6 +358,11 @@ export default RootStackNavigation = () => {
 							name="ReportDetail"
 							component={ReportDetail}
 							options={{header: props => <SimpleWithMeatballHeader {...props} />, title: '제보글'}}
+						/>
+						<RootStack.Screen
+							name="FeedCommentList"
+							component={FeedCommentList}
+							options={{header: props => <SimpleHeader {...props} />, title: '댓글'}}
 						/>
 						<RootStack.Screen
 							name="PetFollowerList"

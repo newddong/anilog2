@@ -28,7 +28,6 @@ const MissingReportBox = props => {
 		}
 	}, []);
 	const onLabelClick = () => {
-		console.log('new MissingData', props.data);
 		let sexValue = '';
 		switch (props.data.feed_type) {
 			case 'missing':

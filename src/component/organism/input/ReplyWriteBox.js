@@ -140,6 +140,7 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 									style={[style.replyTextInput, {width: 394 * DP}]}
 									multiline={true}
 									placeholder={'댓글입력'}
+									maxLength={80}
 									onChangeText={onChangeText}
 									onFocus={onFocus}
 									onBlur={onBlur}
@@ -160,6 +161,7 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 									defaultValue={content == '' ? null : content}
 									style={[style.replyTextInput_photo]}
 									multiline={true}
+									maxLength={80}
 									placeholder={'댓글입력..'}
 									onFocus={onFocus}
 									onChangeText={onChangeText}
@@ -180,6 +182,7 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 								style={[style.replyTextInput]}
 								multiline={true}
 								placeholder={'댓글입력..'}
+								maxLength={80}
 								onChangeText={onChangeText}
 								onFocus={onFocus}
 								onBlur={onBlur}

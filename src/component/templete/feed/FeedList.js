@@ -399,7 +399,7 @@ export default FeedList = ({route, navigation}) => {
 						}
 					},
 					errormsg => {
-						Modal.popOneBtn(errormsg, '확인', () => Modal.close());
+						Modal.popOneBtn(NETWORK_ERROR, '확인', () => Modal.close());
 					},
 				);
 				break;

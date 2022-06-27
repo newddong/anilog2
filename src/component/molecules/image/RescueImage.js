@@ -17,7 +17,6 @@ import FastImage from 'react-native-fast-image';
  * @param {()=>void)} props.onPressReqeustPhoto - 보호 게시글 이미지 클릭시
  */
 const RescueImage = props => {
-	console.log('props / RescueImage', props.status);
 	const getStatusText = () => {
 		switch (props.status) {
 			case 'rescue':

@@ -151,11 +151,9 @@ export default FeedCommentList = props => {
 			param.comment_photo_uri = editData.comment_photo_uri == '' ? 'https:// ' : editData.comment_photo_uri;
 			param.feedobject_id = params.feedobject._id;
 
-
-//			if (props.route.name == 'FeedCommentList') {
-//				param = {...param, feedobject_id: props.route.params.feedobject._id};
-//			}
-
+			//			if (props.route.name == 'FeedCommentList') {
+			//				param = {...param, feedobject_id: props.route.params.feedobject._id};
+			//			}
 
 			if (parentComment) {
 				param = {...param, commentobject_id: parentComment._id};
@@ -264,7 +262,6 @@ export default FeedCommentList = props => {
 	};
 
 	React.useEffect(() => {
-
 		if (params.selectedPhoto && params.selectedPhoto.length > 0) {
 			let selected = params.selectedPhoto[0];
 			const checkEdit = comment_obj.editData._id != ''; //전역변수에 저장된 수정데이터가 있을 경우 수정데이터(editData)에 선택한 사진을 저장

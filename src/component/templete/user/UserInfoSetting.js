@@ -115,6 +115,7 @@ export default UserInfoSetting = ({route}) => {
 					console.log('common code err', err);
 				},
 			);
+
 			if (data.user_interests) {
 				const getContentInteres = Object.entries(data.user_interests).map(content => {
 					console.log('ohhh', content);
@@ -170,6 +171,7 @@ export default UserInfoSetting = ({route}) => {
 	React.useEffect(() => {
 		if (interestLoaded) {
 			// console.log('바뀐 contentInterst 목록', contentInterest);
+
 			let tempObject = {};
 			for (const key in interestList) {
 				console.log('keys', key);

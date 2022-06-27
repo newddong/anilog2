@@ -1,8 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {Text, TouchableOpacity, View, FlatList, Platform, StyleSheet} from 'react-native';
-import {btn_w276} from 'Atom/btn/btn_style';
-import AniButton from 'Root/component/molecules/button/AniButton';
 import RescueImage from 'Root/component/molecules/image/RescueImage';
 import {txt} from 'Root/config/textstyle';
 import {APRI10, GRAY10, GRAY20, GRAY30, GRAY40, WHITE} from 'Root/config/color';
@@ -24,7 +22,6 @@ import {DEFAULT_PROFILE, NETWORK_ERROR, NOT_REGISTERED_SHELTER, PROTECT_REQUEST_
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 import {updateProtect} from 'Root/config/protect_obj';
 import {ProfileDefaultImg} from 'Root/component/atom/icon';
-import {styles} from 'Root/component/atom/image/imageStyle';
 
 //AnimalProtectRequestDetail 호출 경로
 // - ProtectRequestList(보호활동탭) , AnimalFromShelter(게시글보기) , AidRequestManage(게시글보기), AidRequestAnimalList(게시글 보기)
@@ -95,7 +92,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				//현재 보고 있는 보호요청게시글의 작성자(보호소)의 모든 보호요청게시글이 담겨 있는 writersAnotherRequests
 				//그러나 현재 보고 있는 보호요청게시글은 해당 리스트에 출력이 되어서는 안됨 => Filter처리
 				const res = result.msg;
-				console.log('res.length', res.length);
+				// console.log('res.length', res.length);
 				if (writersAnotherRequests != 'false') {
 					console.log('temp lenth', [...writersAnotherRequests, ...res].length);
 					setWritersAnotherRequests([...writersAnotherRequests, ...res]);
@@ -262,10 +259,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				navigation.navigate('LoginRequired');
 			});
 		} else {
-			const findParentIndex = comments.findIndex(e => e._id == comment._id); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
-			let comment_obj = comment;
-			comment_obj.comment_index = findParentIndex;
-			navigation.push('ProtectCommentList', {protectObject: data, showKeyboard: true, reply: comment_obj});
+			navigation.push('ProtectCommentList', {protectObject: data, showKeyboard: true, reply: comment});
 		}
 	};
 
@@ -303,18 +297,29 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	//답글 더보기 클릭
 	const showChild = index => {
 		// scrollToReply(index);
-		flatlist.current.scrollToIndex({animated: true, index: index, viewPosition: 0.5});
+		flatlist.current.scrollToIndex({animated: true, index: index, viewPosition: 0});
 	};
 
 	//댓글 수정 클릭
-	const onEdit = (comment, parent) => {
-		// console.log('comment', comment);
+	const onEdit = (comment, parent, child) => {
 		let comment_obj = comment; //수정할 댓글의 오브젝트 정보
-		const findParentIndex = comments.findIndex(e => e._id == parent); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
+		const findParentIndex = comments.findIndex(e => e._id == parent._id); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
 		const isChild = comments.findIndex(e => e._id == comment._id) == -1; // 수정하려는 댓글이 자식댓글인지 여부
+		let viewOffset = 0; //자식댓글이 존재할 경우 내려갈 offSet 수치
+		console.log('childIndex', child);
+		if (child.findIndex != undefined && child.findIndex != -1) {
+			//대댓글의 수정 분기
+			viewOffset = 160 * (child.findIndex + 1) * DP; //수정할 대상 대댓글의 인덱스만큼 scrollOffset 조정
+			viewOffset = viewOffset + 540 * child.hasPhoto * DP; //수정할 대상 대댓글 이전에 사진을 포함한 대댓글이 있을 경우 사진 개수 및 크기만큼 scrollOffSet 조정
+			comment.comment_photo_uri ? (viewOffset = viewOffset + 360 * DP) : false; //수정할 대상 대댓글이 사진을 포함한 경우 사진 크기만큼 scrollOffSet 조정
+		}
+		if (parent.comment_photo_uri) {
+			//대상 대댓글의 부모댓글이 사진을 포함한 경우 사진 크기만큼 scrollOffset 조정
+			Platform.OS == 'android' ? (viewOffset = viewOffset + 340 * DP) : (viewOffset = viewOffset + 406 * DP);
+		}
 		comment_obj.isChild = isChild;
 		comment_obj.comment_index = findParentIndex;
-		console.log('findParentIndex', findParentIndex);
+		comment_obj.viewOffset = viewOffset;
 		navigation.push('ProtectCommentList', {protectObject: data, edit: comment});
 	};
 

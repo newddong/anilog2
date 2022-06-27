@@ -8,7 +8,7 @@ import {APRI10, WHITE} from 'Root/config/color';
 import PetLabel70 from 'Root/component/molecules/label/PetLabel70';
 export default MyHeader = ({navigation, route, options, back}) => {
 	// console.log('options', options);
-	console.log('myheader param', route.params);
+	// console.log('myheader param', route.params);
 	const [items, setItems] = React.useState('');
 	const [selectedItem, setSelectedItem] = React.useState(1000);
 	const [userData, setUserData] = React.useState('');

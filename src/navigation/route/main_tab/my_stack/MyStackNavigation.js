@@ -188,6 +188,8 @@ export default MyStackNavigation = props => {
 				component={SaveAnimalRequest}
 				options={{header: props => <SimpleHeader {...props} />, title: '보호요청 저장'}}
 			/>
+			<MyStack.Screen name="FeedCommentList" component={FeedCommentList} options={{header: props => <SimpleHeader {...props} />, title: '댓글'}} />
+
 			<MyStack.Screen
 				name="FavoriteFeeds"
 				component={FavoriteFeeds}

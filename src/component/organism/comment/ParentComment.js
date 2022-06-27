@@ -40,6 +40,7 @@ export default ParentComment = React.memo((props, ref) => {
 	const [likeCount, setLikeCount] = React.useState(0);
 	const [likeState, setLikeState] = React.useState(false); //해당 댓글의 좋아요 상태 - 로그인 유저가 좋아요를 누른 기록이 있다면 filled , or border
 	const [showChild, setShowChild] = React.useState(false); //해당 댓글의 답글들 출력 여부 Boolean
+	const [isEditScrolled, setIsEditScrolled] = React.useState(false);
 
 	React.useEffect(() => {
 		setData(parent);
@@ -51,8 +52,9 @@ export default ParentComment = React.memo((props, ref) => {
 				setShowChild(true);
 			}, 300);
 		}
-		if (parent && parent.isEdited && parent.children_count > 0) {
+		if (parent && parent.isEdited && parent.children_count > 0 && !isEditScrolled) {
 			console.log('parent.isEdited', parent.isEdited, parent.comment_contents);
+			setIsEditScrolled(true);
 			setTimeout(() => {
 				addChildComment();
 			}, 300);

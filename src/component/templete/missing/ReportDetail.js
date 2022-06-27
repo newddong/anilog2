@@ -241,10 +241,7 @@ export default ReportDetail = props => {
 				navigation.navigate('LoginRequired');
 			});
 		} else {
-			const findParentIndex = comments.findIndex(e => e._id == comment._id); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
-			let comment_obj = comment;
-			comment_obj.comment_index = findParentIndex;
-			navigation.push('FeedCommentList', {feedobject: data, showAllContents: true, reply: comment_obj});
+			navigation.push('FeedCommentList', {feedobject: data, showAllContents: true, reply: comment});
 		}
 	};
 
@@ -255,11 +252,8 @@ export default ReportDetail = props => {
 
 	//댓글 대댓글 삭제
 	const onPressDelete = id => {
-		console.log('id', id);
 		deleteComment(
-			{
-				commentobject_id: id,
-			},
+			{commentobject_id: id},
 			result => {
 				console.log('result / delectComment / ReportDetail : ', result.msg.comment_is_delete);
 				getCommnetList();
@@ -277,12 +271,27 @@ export default ReportDetail = props => {
 	};
 
 	//댓글 수정 클릭
-	const onEdit = (comment, parent) => {
+	const onEdit = (comment, parent, child) => {
+		// console.log('comment', comment);
+		// navigation.push('FeedCommentList', {feedobject: data, edit: comment});
 		let comment_obj = comment; //수정할 댓글의 오브젝트 정보
-		const findParentIndex = comments.findIndex(e => e._id == parent); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
+		const findParentIndex = comments.findIndex(e => e._id == parent._id); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
 		const isChild = comments.findIndex(e => e._id == comment._id) == -1; // 수정하려는 댓글이 자식댓글인지 여부
+		let viewOffset = 0; //자식댓글이 존재할 경우 내려갈 offSet 수치
+		console.log('childIndex', child);
+		if (child.findIndex != undefined && child.findIndex != -1) {
+			//대댓글의 수정 분기
+			viewOffset = 160 * (child.findIndex + 1) * DP; //수정할 대상 대댓글의 인덱스만큼 scrollOffset 조정
+			viewOffset = viewOffset + 540 * child.hasPhoto * DP; //수정할 대상 대댓글 이전에 사진을 포함한 대댓글이 있을 경우 사진 개수 및 크기만큼 scrollOffSet 조정
+			comment.comment_photo_uri ? (viewOffset = viewOffset + 360 * DP) : false; //수정할 대상 대댓글이 사진을 포함한 경우 사진 크기만큼 scrollOffSet 조정
+		}
+		if (parent.comment_photo_uri) {
+			//대상 대댓글의 부모댓글이 사진을 포함한 경우 사진 크기만큼 scrollOffset 조정
+			Platform.OS == 'android' ? (viewOffset = viewOffset + 340 * DP) : (viewOffset = viewOffset + 406 * DP);
+		}
 		comment_obj.isChild = isChild;
 		comment_obj.comment_index = findParentIndex;
+		comment_obj.viewOffset = viewOffset;
 		navigation.push('FeedCommentList', {feedobject: data, edit: comment}); // 수정하려는 댓글 정보를 포함해서 보냄
 	};
 
@@ -370,7 +379,7 @@ export default ReportDetail = props => {
 		return (
 			<View style={{alignItems: 'center'}}>
 				<View style={{marginTop: 20 * DP}}>
-					<ReplyWriteBox onPressReply={onPressReply} onWrite={onPressReply} isProtectRequest={true} />
+					<ReplyWriteBox onPressReply={moveToCommentList} onWrite={moveToCommentList} isProtectRequest={true} />
 				</View>
 				<View style={[{paddingVertical: 50 * DP}]}>
 					<Text style={[txt.noto24, {width: 694 * DP, alignSelf: 'center'}]}>실종/제보 더보기</Text>

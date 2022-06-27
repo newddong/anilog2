@@ -30,6 +30,7 @@ import {updateUserInformation, nicknameDuplicationCheck} from 'Root/api/userapi'
 import SelectInput from 'Root/component/molecules/button/SelectInput';
 import {getAddressList} from 'Root/api/address';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
+import {lo} from '../style_address';
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 export default UserInfoSetting = ({route}) => {
 	const navigation = useNavigation();
@@ -60,7 +61,7 @@ export default UserInfoSetting = ({route}) => {
 			userObject => {
 				// console.log('userObject', userObject);
 				setData(userObject.msg);
-				// console.log('userObject.msg', userObject.msg);
+				console.log('userObject.msg', userObject.msg);
 				setUserDataLoaded(true);
 				navigation.setOptions({title: userGlobalObject.userInfo.user_nickname});
 			},
@@ -88,32 +89,33 @@ export default UserInfoSetting = ({route}) => {
 	let temp = [];
 	React.useEffect(() => {
 		if (userDataLoaded) {
-			getInterestsList({}, interests => {
-				setInterestList(interests.msg);
-				setInterestLoaded(true);
-			});
-			// getCommonCodeDynamicQuery(
-			// 	{
-			// 		common_code_c_name: 'communityobjects',
-			// 		common_code_language: 'kor',
-			// 		common_code_out_type: 'interests',
-			// 	},
-			// 	result => {
-			// 		let temp = [];
-			// 		console.log('common code result', result);
-			// 		for (const key in result.msg) {
-			// 			let temp2 = {};
-			// 			temp2[key] = result.msg[key].definition;
-			// 			temp.push(temp2);
-			// 		}
-			// 		console.log('temptemptmep', temp);
-			// 		setInterestList(result.msg);
-			// 		setInterestLoaded(true);
-			// 	},
-			// 	err => {
-			// 		console.log('common code err', err);
-			// 	},
-			// );
+			// getInterestsList({}, interests => {
+			// 	setInterestList(interests.msg);
+			// 	setInterestLoaded(true);
+			// });
+			getCommonCodeDynamicQuery(
+				{
+					common_code_c_name: 'communityobjects',
+					common_code_language: 'kor',
+					common_code_out_type: 'interests',
+				},
+				result => {
+					let temp = [];
+					console.log('common code result', result);
+					for (const key in result.msg) {
+						let temp2 = {};
+						temp2[key] = result.msg[key].definition;
+						temp.push(temp2);
+					}
+					console.log('temptemptmep', temp);
+					setInterestList(result.msg);
+					setInterestLoaded(true);
+				},
+				err => {
+					console.log('common code err', err);
+				},
+			);
+
 			if (data.user_interests) {
 				const getContentInteres = Object.entries(data.user_interests).map(content => {
 					console.log('ohhh', content);
@@ -169,17 +171,21 @@ export default UserInfoSetting = ({route}) => {
 	React.useEffect(() => {
 		if (interestLoaded) {
 			// console.log('바뀐 contentInterst 목록', contentInterest);
-			let tempList = [];
+
+			let tempObject = {};
 			for (const key in interestList) {
 				console.log('keys', key);
+				tempObject[key] = interestList[key].definition;
 			}
+			console.log('tempObject', tempObject);
 			for (let props of contentInterest) {
 				console.log('props props interestList', props, contentInterest, interestList);
 				///TODO props로 넘어온 list의 값을 interestList에서 찾아서 interest_etc :[어쩌고] 이런식으러 만들어서 넘겨줘야함.
-				const getKey = Object.entries(interestList[0]).map(content => {
+				// const getKey = Object.entries(interestList[0]).map(content => {
+				const getKey = Object.entries(interestList).map(content => {
 					console.log('hihihi', content, props);
 					console.log('interestListList', interestList);
-					if (content[1].includes(props)) {
+					if (content[1].definition.includes(props)) {
 						// console.log('hohohoho', props, content[0]);
 						// setContentSendObject((contentSendObejct[content[0]] = props));
 						if (temp[content[0]]) {
@@ -194,32 +200,53 @@ export default UserInfoSetting = ({route}) => {
 			}
 			let locationObject = {interests_location: locationInterest};
 			Object.assign(locationObject, temp);
+			console.log('locationObejct에 assign', locationObject, data.user_address);
 			setData(prevState => ({
 				...prevState,
 				user_interests: locationObject,
 			}));
-		}
-		console.log('setData', data.user_interests);
-	}, [refresh, locationInterest, contentInterest]);
-	React.useEffect(() => {
-		updateUserDetailInformation(
-			{
-				user_interests: data.user_interests,
-			},
+			updateUserDetailInformation(
+				{
+					user_interests: locationObject,
 
-			result => {
-				// console.log('result / updateUserDetailInformation / SaveButtonHeader   : ', result.msg);
-				// setTimeout(() => {
-				// Modal.close();
-				// navigation.goBack();
-				// }, 200);
-			},
-			err => {
-				console.log('err / updateUserDetailInformation / SaveButtonHeader    :  ', err);
-				Modal.close();
-			},
-		);
-	}, [data.user_interests]);
+					// user_address: data.user_address,
+				},
+
+				result => {
+					console.log('result / updateUserDetailInformation / SaveButtonHeader   : ', result);
+					// setTimeout(() => {
+					// Modal.close();
+					// navigation.goBack();
+					// }, 200);
+				},
+				err => {
+					console.log('err / updateUserDetailInformation / SaveButtonHeader    :  ', err);
+					Modal.close();
+				},
+			);
+		}
+		// console.log('setData', data.user_interests);
+	}, [refresh, locationInterest, contentInterest]);
+	// React.useEffect(() => {
+	// 	console.log('data.user_interest 바뀜 -> 변경', data.user_interests);
+	// 	updateUserDetailInformation(
+	// 		{
+	// 			user_interests: data.user_interests,
+	// 		},
+
+	// 		result => {
+	// 			console.log('result / updateUserDetailInformation / SaveButtonHeader   : ', result);
+	// 			// setTimeout(() => {
+	// 			// Modal.close();
+	// 			// navigation.goBack();
+	// 			// }, 200);
+	// 		},
+	// 		err => {
+	// 			console.log('err / updateUserDetailInformation / SaveButtonHeader    :  ', err);
+	// 			Modal.close();
+	// 		},
+	// 	);
+	// }, [data.user_interests]);
 	//상세 정보 클릭
 	const onPressDetail = () => {
 		navigation.push('UserInfoDetailSetting', data);
@@ -632,36 +659,44 @@ export default UserInfoSetting = ({route}) => {
 						<View>
 							<View style={[styles.editLocation]}>
 								<Text style={[txt.noto30b, {width: 162 * DP}]}>나의 지역</Text>
-								<Text style={[txt.noto28, {width: 462 * DP}]}>{data.user_address.district || ''}</Text>
-								<TouchableOpacity onPress={modifyLocation} style={[{alignItems: 'flex-end'}, {marginLeft: 12 * DP}]}>
+								{/* <Text style={[txt.noto28, {width: 462 * DP}]}>
+									{data.user_address.city} {data.user_address.district || ''}
+								</Text> */}
+								<TouchableOpacity onPress={modifyLocation} style={[{alignItems: 'flex-end'}, {marginLeft: 474 * DP}]}>
 									<Text style={[txt.noto26b, {color: APRI10}]}>저장</Text>
 								</TouchableOpacity>
 							</View>
 							<View style={[styles.addressSelect]}>
-								<SelectInput
-									onPressInput={onSelectCity}
-									width={284}
-									height={108}
-									// value={data.user_address.city || ''}
-									value={'시,도'}
-									noBorder={true}
-									fontSize={28}
-								/>
-								<SelectInput
-									onPressInput={onSelectDistrict}
-									width={284}
-									height={108}
-									// value={data.user_address.district}
-									value={'시,군,구'}
-									noBorder={true}
-									fontSize={28}
-								/>
+								<View style={[{marginRight: 20 * DP}]}>
+									<SelectInput
+										onPressInput={onSelectCity}
+										width={284}
+										height={108}
+										value={data.user_address.city || ''}
+										// value={'시,도'}
+										noBorder={true}
+										fontSize={28}
+									/>
+								</View>
+								<View>
+									<SelectInput
+										onPressInput={onSelectDistrict}
+										width={284}
+										height={108}
+										value={data.user_address.district}
+										// value={'시,군,구'}
+										noBorder={true}
+										fontSize={28}
+									/>
+								</View>
 							</View>
 						</View>
 					) : (
 						<View style={[styles.first]}>
 							<Text style={[txt.noto30b, {width: 162 * DP}]}>나의 지역</Text>
-							<Text style={[txt.noto28, {width: 462 * DP}]}>{data.user_address.district || ''}</Text>
+							<Text style={[txt.noto28, {width: 462 * DP}]}>
+								{data.user_address.city} {data.user_address.district || ''}
+							</Text>
 							<TouchableOpacity onPress={modifyLocation} style={[{alignItems: 'flex-end'}, {marginLeft: 12 * DP}]}>
 								<Edit46 />
 							</TouchableOpacity>
@@ -763,8 +798,10 @@ const styles = StyleSheet.create({
 	addressSelect: {
 		flexDirection: 'row',
 		width: 750 * DP,
+		// backgroundColor: 'yellow',
 		paddingHorizontal: 28 * DP,
 		borderBottomColor: GRAY40,
 		borderBottomWidth: 2 * DP,
+		paddingBottom: 20 * DP,
 	},
 });

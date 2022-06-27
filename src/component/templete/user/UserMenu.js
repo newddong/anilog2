@@ -159,7 +159,7 @@ export default UserMenu = props => {
 		// navigation.push('me')
 	};
 	const onTextLayout = useCallback(e => {
-		console.log('aaaaaa', e.nativeEvent.lines.length > 1);
+		// console.log('aaaaaa', e.nativeEvent.lines.length > 1);
 		// setShowInfo(e.nativeEvent.lines.length > 1);
 		// setNumOfLines(e.nativeEvent.lines.length);
 	}, []);

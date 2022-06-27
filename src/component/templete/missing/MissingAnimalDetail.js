@@ -278,7 +278,6 @@ export default MissingAnimalDetail = props => {
 
 	//댓글 대댓글 삭제
 	const onPressDelete = id => {
-		console.log('id', id);
 		deleteComment(
 			{
 				commentobject_id: id,
@@ -333,7 +332,6 @@ export default MissingAnimalDetail = props => {
 		let comment_obj = comment; //수정할 댓글의 오브젝트 정보
 		const findParentIndex = comments.findIndex(e => e._id == parent._id); // 수정 댓글의 parentComment id , 대댓글일 경우에도 parentComment id
 		const isChild = comments.findIndex(e => e._id == comment._id) == -1; // 수정하려는 댓글이 자식댓글인지 여부
-
 		let viewOffset = 0; //자식댓글이 존재할 경우 내려갈 offSet 수치
 		console.log('childIndex', child);
 		if (child.findIndex != undefined && child.findIndex != -1) {
@@ -349,7 +347,6 @@ export default MissingAnimalDetail = props => {
 		comment_obj.isChild = isChild;
 		comment_obj.comment_index = findParentIndex;
 		comment_obj.viewOffset = viewOffset;
-
 		navigation.push('FeedCommentList', {feedobject: data, edit: comment}); // 수정하려는 댓글 정보를 포함해서 보냄
 	};
 
@@ -369,12 +366,6 @@ export default MissingAnimalDetail = props => {
 							<Text style={missingAnimalDetail.missingText18}>반려동물 커뮤니티 애니로그</Text>
 						</View>
 					</ViewShot>
-					{/* <TouchableWithoutFeedback onPress={capture}>
-						<View style={missingAnimalDetail.floatingBtnMissingReport}>
-							<PosterSave />
-							<Text style={[txt.noto20, {color: 'red'}, {fontWeight: 'bold'}]}>전단지 저장</Text>
-						</View>
-					</TouchableWithoutFeedback> */}
 				</TouchableOpacity>
 				<View style={[style.feedContent]}>
 					<FeedContent data={data} showMedia={false} />

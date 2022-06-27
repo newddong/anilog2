@@ -1,17 +1,13 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
-import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import ArticleList from 'Root/component/organism/list/ArticleList';
-import community_obj from 'Root/config/community_obj';
 import {getFavoriteEtcListByUserId, setFavoriteEtcCancelList} from 'Root/api/favoriteetc';
 import Loading from 'Root/component/molecules/modal/Loading';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import {EmptyIcon} from 'Root/component/atom/icon';
 import {getCommunityListByUserId} from 'Root/api/community';
 import SelectStat from 'Root/component/organism/list/SelectStat';
-import {selectstat_view_style, temp_style} from '../style_templete';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import {FREE_LIMIT, NETWORK_ERROR} from 'Root/i18n/msg';
 import {GRAY10, GRAY40} from 'Root/config/color';

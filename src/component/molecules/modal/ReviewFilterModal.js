@@ -46,8 +46,17 @@ const ReviewFilterModal = props => {
 					common_code_out_type: 'interests',
 				},
 				result => {
-					// console.log('common code result', result.msg);
-					setCommunityInterests(result.msg);
+					console.log('common code result', result.msg);
+					const err = {
+						interests_etc: {definition: ['청결용품', '반려용품', '미용', '의류', '생활 팁', '기타'], topic: '기타'},
+						interests_group1: {definition: ['숙소', '관광지', '놀이터', '까페', '산책로'], topic: '여행·숙박·까페·산책'},
+						interests_group2: {
+							definition: ['병원', '사료', '간식', '훈련', '건강 보조제', '치료', '다이어트', '노즈워크/장난감'],
+							topic: '건강·놀이·음식',
+						},
+						interests_group3: {definition: ['집/방석', '가구', '놀이가구'], topic: '펫 인테리어'},
+					};
+					// setCommunityInterests(result.msg);
 				},
 				err => {
 					console.log('common code err', err);

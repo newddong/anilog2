@@ -47,6 +47,7 @@ const ReviewBriefItem = props => {
 	};
 
 	const getCategory = (v, i) => {
+		console.log('data.community_interests', data.community_interests);
 		let category_sum_list = [];
 		data.community_interests.interests_trip.map(v => category_sum_list.push(v));
 		data.community_interests.interests_etc.map(v => category_sum_list.push(v));

@@ -2,10 +2,10 @@ import React from 'react';
 import {Platform, ScrollView, Text, TextInput, TouchableOpacity, View, StyleSheet} from 'react-native';
 import {APRI10, GRAY10, GRAY20, GRAY40, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {AddItem92, Arrow_Down_GRAY10, Arrow_Up_GRAY10, Cross52, Home48Border, NextMark} from 'Atom/icon';
+import {AddItem92, Arrow_Down_GRAY10, Arrow_Up_GRAY10, Cross52, Edit46, Home48Border, NextMark} from 'Atom/icon';
 import OnOffSwitch from 'Molecules/select/OnOffSwitch';
 import PetImageLabel from 'Molecules/label/PetImageLabel';
-import {login_style, petInfoSetting, temp_style} from 'Templete/style_templete';
+import {login_style, petInfoSetting, temp_style, userInfoSetting_style} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
 import {getUserInfoById, removeUserFromFamily, updatePetDetailInformation} from 'Root/api/userapi';
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
@@ -16,6 +16,7 @@ import DP from 'Root/config/dp';
 import {PET_KIND} from 'Root/i18n/msg';
 import Loading from 'Root/component/molecules/modal/Loading';
 import PetLabel148 from 'Root/component/molecules/label/PetLabel148';
+import SelectInput from 'Root/component/molecules/button/SelectInput';
 
 //이 화면에 들어오면서 특정 _id를 API 연동으로 데이터를 가져 옴.
 //이전 화면에서 모든 데이터를 가진 상태에서 들어오는 것이 아님.
@@ -28,6 +29,8 @@ export default PetInfoSetting = ({route, navigation}) => {
 	const [isChiefUser, setIsChiefUser] = React.useState(false);
 	const [showMore, setShowmore] = React.useState(true); // 소개 더보기 클릭 여부
 	const [editMode, setEditMode] = React.useState(false); // 소개 수정 클릭 여부
+	const [kindEditMode, setKindEditMode] = React.useState(false); // 소개 수정 클릭 여부
+
 	const [introOriginLine, setIntroOriginLine] = React.useState(0);
 	const scrollRef = React.useRef();
 	const [userIntro_temp, setUserIntro_temp] = React.useState('');
@@ -210,6 +213,9 @@ export default PetInfoSetting = ({route, navigation}) => {
 			},
 		);
 	};
+	const editKindInfo = () => {
+		setKindEditMode(!kindEditMode);
+	};
 
 	//업로드 및 팔로우 클릭
 	const onClickUserInfo = () => {
@@ -324,27 +330,32 @@ export default PetInfoSetting = ({route, navigation}) => {
 						</TouchableOpacity>
 					</View>
 					{/* 소개 */}
-					<View style={[petInfoSetting.petProfileMenu.container]}>
-						<View style={[petInfoSetting.petProfileMenu.insideContainer]}>
-							<View style={[petInfoSetting.petProfileMenu.menuTitle]}>
-								<Text style={[txt.noto30b, {color: GRAY10}]}>
+					<View style={[styles.container]}>
+						<View style={[temp_style.introduceInfo_depth1]}>
+							<View style={[userInfoSetting_style.title_detail]}>
+								<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>
 									소개
-									{/* <Text style={[txt.noto22b, {color: GRAY20}]}> (최대 500자, 15줄)</Text>{' '} */}
+									{/* <Text style={[txt.noto22b, {color: GRAY20}]}> (최대 500자, 15줄)</Text> */}
 								</Text>
 							</View>
-							<View style={[petInfoSetting.petProfileMenu.bracket50]}>
+							<View style={[{alignItems: 'center'}, {marginLeft: 472 * DP}]}>
 								{editMode ? (
-									<Text onPress={editPetInfo} style={[txt.noto26b, {color: GRAY10, textDecorationLine: 'underline'}]}>
-										완료
-									</Text>
+									<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
+										<TouchableOpacity onPress={editPetInfo}>
+											<Text style={[txt.noto26b, {color: APRI10}]}>저장</Text>
+										</TouchableOpacity>
+									</View>
 								) : (
-									<Text onPress={onPressModifyIntro} style={[txt.noto26b, {color: APRI10, textDecorationLine: 'underline'}]}>
-										수정
-									</Text>
+									<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
+										<TouchableOpacity onPress={onPressModifyIntro}>
+											{/* <Text style={[txt.noto26, {color: APRI10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>수정</Text> */}
+											<Edit46 />
+										</TouchableOpacity>
+									</View>
 								)}
 							</View>
 						</View>
-						<View style={[petInfoSetting.petIntroduction]}>
+						<View style={[styles.petIntroduction]}>
 							{editMode ? (
 								<TextInput
 									defaultValue={petData.user_introduction || ''}
@@ -365,7 +376,58 @@ export default PetInfoSetting = ({route, navigation}) => {
 						</View>
 					</View>
 					{/* 계정정보 */}
-					<View style={[petInfoSetting.petAccountInfo.container]}>
+					<View style={[styles.container]}>
+						<View style={[temp_style.introduceInfo_depth1]}>
+							<View style={[userInfoSetting_style.title_detail]}>
+								<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>
+									종 / 품종
+									{/* <Text style={[txt.noto22b, {color: GRAY20}]}> (최대 500자, 15줄)</Text> */}
+								</Text>
+							</View>
+
+							{kindEditMode ? (
+								<View style={[{alignItems: 'center'}, {marginLeft: 472 * DP}]}>
+									<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
+										<TouchableOpacity onPress={editKindInfo}>
+											<Text style={[txt.noto26b, {color: APRI10}]}>저장</Text>
+										</TouchableOpacity>
+									</View>
+								</View>
+							) : (
+								<View style={[{flexDirection: 'row'}]}>
+									<View style={[{width: 462 * DP}, {height: 96 * DP}, {justifyContent: 'center'}]}>
+										<Text style={[txt.noto28, {color: MAINBLACK}]}>
+											{petData.pet_species} / {petData.pet_species_detail || ''}
+										</Text>
+									</View>
+									<View style={[{alignItems: 'center'}, {marginLeft: 12 * DP}]}>
+										<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
+											<TouchableOpacity onPress={editKindInfo}>
+												{/* <Text style={[txt.noto26, {color: APRI10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>수정</Text> */}
+												<Edit46 />
+											</TouchableOpacity>
+										</View>
+									</View>
+								</View>
+							)}
+						</View>
+						<View style={[styles.petIntroduction]}>
+							{kindEditMode ? (
+								<View style={[{}]}>
+									<View style={[{marginBottom: 20 * DP}]}>
+										<SelectInput width={694} height={104} />
+									</View>
+									<View>
+										<SelectInput width={694} height={104} />
+									</View>
+								</View>
+							) : (
+								<></>
+							)}
+						</View>
+					</View>
+
+					{/* <View style={[petInfoSetting.petAccountInfo.container]}>
 						<View style={[petInfoSetting.petAccountInfo.insideContainer]}>
 							<View style={[petInfoSetting.petAccountInfo.accountInfo_header]}>
 								<Text style={[txt.noto30b, {color: GRAY10}]}>계정 정보</Text>
@@ -382,7 +444,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 								<Text style={[txt.noto24, petInfoSetting.petAccountInfo.infoContent]}>{petData.pet_species_detail || ''}</Text>
 							</View>
 						</View>
-					</View>
+					</View> */}
 					{/* 상세정보 */}
 					<View style={[petInfoSetting.petProfileMenu.container]}>
 						<View style={[petInfoSetting.petProfileMenu.insideContainer]}>
@@ -541,5 +603,34 @@ const styles = StyleSheet.create({
 		marginTop: 30 * DP,
 		borderBottomWidth: 2 * DP,
 		borderBottomColor: GRAY10,
+	},
+	menuTitle: {
+		width: 162 * DP,
+		height: 46 * DP,
+		alignSelf: 'center',
+		// backgroundColor: 'yellow',
+	},
+	oneBlock: {
+		width: 750 * DP,
+		paddingHorizontal: 28 * DP,
+		paddingVertical: 30 * DP,
+	},
+	petIntroduction: {
+		width: 694 * DP,
+		// marginTop: 20 * DP,
+		alignItems: 'flex-start',
+		marginBottom: 30 * DP,
+		// backgroundColor: 'yellow',
+	},
+	container: {
+		width: 750 * DP,
+		// height: 130 * DP,
+		// marginTop: 2 * DP,
+		// paddingVertical: 40 * DP,
+		borderBottomColor: GRAY40,
+		borderBottomWidth: 2 * DP,
+		justifyContent: 'center',
+		alignItems: 'center',
+		// backgroundColor: 'yellow',
 	},
 });

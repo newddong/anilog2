@@ -61,8 +61,10 @@ const styles = StyleSheet.create({
 		// height: 82 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
-		borderBottomColor: APRI10,
-		borderBottomWidth: 2 * DP,
+		backgroundColor: '#FAFAFA',
+		borderRadius: 30 * DP,
+		// borderBottomColor: APRI10,
+		// borderBottomWidth: 2 * DP,
 		flexDirection: 'row',
 	},
 });

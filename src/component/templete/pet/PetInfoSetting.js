@@ -31,7 +31,6 @@ export default PetInfoSetting = ({route, navigation}) => {
 	const [showMore, setShowmore] = React.useState(true); // 소개 더보기 클릭 여부
 	const [editMode, setEditMode] = React.useState(false); // 소개 수정 클릭 여부
 	const [kindEditMode, setKindEditMode] = React.useState(false); // 소개 수정 클릭 여부
-
 	const [introOriginLine, setIntroOriginLine] = React.useState(0);
 	const scrollRef = React.useRef();
 	const [userIntro_temp, setUserIntro_temp] = React.useState('');
@@ -41,6 +40,8 @@ export default PetInfoSetting = ({route, navigation}) => {
 	const [speices, setSpeices] = React.useState('');
 	const [speicesIndex, setSpeicesIndex] = React.useState(0);
 	const [kind, setKind] = React.useState('');
+	const [birthEditMode, setBirthEditMode] = React.useState(false);
+	const [weightEditMode, setWeightEditMode] = React.useState(false);
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			setFamily();
@@ -65,6 +66,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 				navigation.setOptions({title: result.msg.user_nickname});
 				userGlobalObject.userInfo.user_nickname == result.msg.pet_family[0].user_nickname ? setIsChiefUser(true) : setIsChiefUser(false);
 				setPetData(result.msg);
+				// console.log('result . pet data', result.msg);
 				setSpeices(result.msg.pet_species);
 				setKind(result.msg.pet_species_detail);
 			},
@@ -513,31 +515,6 @@ export default PetInfoSetting = ({route, navigation}) => {
 								</View>
 							</View>
 						)}
-
-						{/* {kindEditMode ? (
-								<View style={[{alignItems: 'center'}, {marginLeft: 472 * DP}]}>
-									<View style={[styles.changeInfo, userInfoSetting_style.changePassword, {backgroundColor: 'red'}]}>
-										<TouchableOpacity onPress={editKindInfo}>
-											<Text style={[txt.noto26b, {color: APRI10}]}>저장</Text>
-										</TouchableOpacity>
-									</View>
-								</View>
-							) : (
-								<View style={[{flexDirection: 'row'}]}>
-									<View style={[{width: 462 * DP}, {height: 96 * DP}, {justifyContent: 'center'}]}>
-										<Text style={[txt.noto28, {color: MAINBLACK}]}>
-											{petData.pet_species} / {petData.pet_species_detail || ''}
-										</Text>
-									</View>
-									<View style={[{alignItems: 'center'}, {marginLeft: 12 * DP}]}>
-										<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
-											<TouchableOpacity onPress={editKindInfo}>
-												<Edit46 />
-											</TouchableOpacity>
-										</View>
-									</View>
-								</View>
-							)} */}
 					</View>
 
 					{/* <View style={[petInfoSetting.petAccountInfo.container]}>
@@ -585,6 +562,101 @@ export default PetInfoSetting = ({route, navigation}) => {
 							</TouchableOpacity>
 						</View>
 					</View> */}
+					<View style={[styles.container]}>
+						{kindEditMode ? (
+							<View style={[styles.container]}>
+								<View style={[{width: 750 * DP}, {height: 96 * DP}, {flexDirection: 'row'}]}>
+									<View style={[userInfoSetting_style.title_detail]}>
+										<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>생일</Text>
+									</View>
+									<View style={[{flexDirection: 'row'}]}>
+										<View style={[{alignItems: 'center'}, {marginLeft: 474 * DP}]}>
+											<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
+												<TouchableOpacity onPress={editKindInfo}>
+													<Text style={[txt.noto26b, {color: APRI10}]}>저장</Text>
+												</TouchableOpacity>
+											</View>
+										</View>
+									</View>
+								</View>
+								<View style={[{}]}>
+									<View style={[{marginBottom: 20 * DP}]}>
+										<SelectInput width={694} height={104} value={speices} onPressInput={onSelectSpecies} />
+									</View>
+									<View style={[{marginBottom: 30 * DP}]}>
+										<SelectInput width={694} height={104} value={kind} onPressInput={onSelectKind} />
+									</View>
+								</View>
+							</View>
+						) : (
+							<View style={[{width: 750 * DP}, {flexDirection: 'row'}]}>
+								<View style={[userInfoSetting_style.title_detail]}>
+									<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>생일</Text>
+								</View>
+								<View style={[{flexDirection: 'row'}]}>
+									<View style={[{width: 462 * DP}, {height: 96 * DP}, {justifyContent: 'center'}]}>
+										<Text style={[txt.noto28, {color: MAINBLACK}]}>{/* {petData.pet_species} / {petData.pet_species_detail || ''} */}</Text>
+									</View>
+									<View style={[{alignItems: 'center'}, {marginLeft: 12 * DP}]}>
+										<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
+											<TouchableOpacity onPress={editKindInfo}>
+												{/* <Text style={[txt.noto26, {color: APRI10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>수정</Text> */}
+												<Edit46 />
+											</TouchableOpacity>
+										</View>
+									</View>
+								</View>
+							</View>
+						)}
+					</View>
+					<View style={[styles.container]}>
+						{kindEditMode ? (
+							<View style={[styles.container]}>
+								<View style={[{width: 750 * DP}, {height: 96 * DP}, {flexDirection: 'row'}]}>
+									<View style={[userInfoSetting_style.title_detail]}>
+										<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>체중</Text>
+									</View>
+									<View style={[{flexDirection: 'row'}]}>
+										<View style={[{alignItems: 'center'}, {marginLeft: 474 * DP}]}>
+											<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
+												<TouchableOpacity onPress={editKindInfo}>
+													<Text style={[txt.noto26b, {color: APRI10}]}>저장</Text>
+												</TouchableOpacity>
+											</View>
+										</View>
+									</View>
+								</View>
+								<View style={[{}]}>
+									<View style={[{marginBottom: 20 * DP}]}>
+										<SelectInput width={694} height={104} value={speices} onPressInput={onSelectSpecies} />
+									</View>
+									<View style={[{marginBottom: 30 * DP}]}>
+										<SelectInput width={694} height={104} value={kind} onPressInput={onSelectKind} />
+									</View>
+								</View>
+							</View>
+						) : (
+							<View style={[{width: 750 * DP}, {flexDirection: 'row'}]}>
+								<View style={[userInfoSetting_style.title_detail]}>
+									<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>체중</Text>
+								</View>
+								<View style={[{flexDirection: 'row'}]}>
+									<View style={[{width: 462 * DP}, {height: 96 * DP}, {justifyContent: 'center'}]}>
+										<Text style={[txt.noto28, {color: MAINBLACK}]}>{/* {petData.pet_species} / {petData.pet_species_detail || ''} */}</Text>
+									</View>
+									<View style={[{alignItems: 'center'}, {marginLeft: 12 * DP}]}>
+										<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
+											<TouchableOpacity onPress={editKindInfo}>
+												{/* <Text style={[txt.noto26, {color: APRI10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>수정</Text> */}
+												<Edit46 />
+											</TouchableOpacity>
+										</View>
+									</View>
+								</View>
+							</View>
+						)}
+					</View>
+
 					{/* 가족 계정 추가 */}
 					{/* 반려 동물 상태가 companion인 경우에만 보이도록 추후 변경 예정 */}
 					{/* {data.pet_status == 'companion' && ( */}

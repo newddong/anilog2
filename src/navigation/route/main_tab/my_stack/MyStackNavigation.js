@@ -115,7 +115,7 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen
 				name="SocialRelation"
 				component={SocialRelationTopTabNavigation}
-				options={{header: props => <InputAndSearchHeader {...props} isSocial />}}
+				options={{header: props => <InputAndSearchHeader {...props} type={'social'} />}}
 			/>
 			<MyStack.Screen name="UserMenu" component={UserMenu} options={{header: props => <MyHeader {...props} />, title: 'MY'}} />
 			<MyStack.Screen name="UserInfoSetting" component={UserInfoSetting} options={{header: props => <SimpleHeader {...props} />, title: ''}} />
@@ -358,7 +358,7 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen
 				name="CategoryHelpTab"
 				component={CategoryHelpTopTabNavigation}
-				options={{header: props => <InputAndSearchHeader {...props} isHelpTab />}}
+				options={{header: props => <InputAndSearchHeader {...props} type={'help'} />}}
 			/>
 			<MyStack.Screen
 				name="FrequentAsked"

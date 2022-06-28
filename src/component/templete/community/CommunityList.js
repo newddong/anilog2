@@ -266,6 +266,7 @@ const CommunityList = React.memo(props => {
 											onPressFavorite={onPressFavorite}
 											onPressLike={i => onPressLike(i, true)}
 											onPressUnlike={i => onPressLike(i, false)}
+											showRecommend={false}
 											onEndReached={() => {
 												console.log('type at REviewList', type);
 												type == 'free' ? false : onEndReached('review');

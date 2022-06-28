@@ -46,17 +46,14 @@ const ReviewFilterModal = props => {
 					common_code_out_type: 'interests',
 				},
 				result => {
-					console.log('common code result', result.msg);
-					const err = {
-						interests_etc: {definition: ['청결용품', '반려용품', '미용', '의류', '생활 팁', '기타'], topic: '기타'},
-						interests_group1: {definition: ['숙소', '관광지', '놀이터', '까페', '산책로'], topic: '여행·숙박·까페·산책'},
-						interests_group2: {
-							definition: ['병원', '사료', '간식', '훈련', '건강 보조제', '치료', '다이어트', '노즈워크/장난감'],
-							topic: '건강·놀이·음식',
-						},
-						interests_group3: {definition: ['집/방석', '가구', '놀이가구'], topic: '펫 인테리어'},
-					};
-					// setCommunityInterests(result.msg);
+					// console.log('common code result', result.msg);
+					// const res = {
+					// 	interests_etc: result.msg.interests_etc,
+					// 	interests_trip: result.msg.interests_group1,
+					// 	interests_hospital: result.msg.interests_group2,
+					// 	interests_interior: result.msg.interests_group3,
+					// };
+					setCommunityInterests(result.msg);
 				},
 				err => {
 					console.log('common code err', err);
@@ -140,6 +137,7 @@ const ReviewFilterModal = props => {
 
 	//저장
 	const onPressSave = () => {
+		console.log('userInterestReview', userInterestReview);
 		if (isReviewWrite) {
 			props.setState({
 				userInterestReview: userInterestReview,
@@ -162,13 +160,22 @@ const ReviewFilterModal = props => {
 	const onClose = () => {
 		if (props.category == 'Review') {
 			let arr = [];
-			const review_category_list = arr.concat(
+			let review_category_list = [];
+
+			review_category_list = arr.concat(
 				// userInterestReview.interests_review,
-				userInterestReview.interests_trip,
+				userInterestReview.interests_group1,
 				userInterestReview.interests_etc,
-				userInterestReview.interests_hospital,
-				userInterestReview.interests_interior,
+				userInterestReview.interests_group2,
+				userInterestReview.interests_group3,
 			);
+			// review_category_list = arr.concat(
+			// 	// userInterestReview.interests_review,
+			// 	userInterestReview.interests_trip,
+			// 	userInterestReview.interests_etc,
+			// 	userInterestReview.interests_hospital,
+			// 	userInterestReview.interests_interior,
+			// );
 			if (review_category_list.length == 0 && userInterestReview.interests_location.city == '') {
 				props.setState({
 					userInterestReview: userInterestReview,
@@ -181,13 +188,21 @@ const ReviewFilterModal = props => {
 			Modal.close();
 		} else {
 			let arr = [];
-			const review_category_list = arr.concat(
+			let review_category_list = [];
+			review_category_list = arr.concat(
 				// userInterestReview.interests_review,
-				userInterestReview.interests_trip,
+				userInterestReview.interests_group1,
+				userInterestReview.interests_group2,
+				userInterestReview.interests_group3,
 				userInterestReview.interests_etc,
-				userInterestReview.interests_hospital,
-				userInterestReview.interests_interior,
 			);
+			// review_category_list = arr.concat(
+			// 	// userInterestReview.interests_review,
+			// 	userInterestReview.interests_trip,
+			// 	userInterestReview.interests_etc,
+			// 	userInterestReview.interests_hospital,
+			// 	userInterestReview.interests_interior,
+			// );
 			if (review_category_list.length == 0) {
 				props.onClose();
 				Modal.close();
@@ -222,11 +237,14 @@ const ReviewFilterModal = props => {
 		setSelectDistrictOpen(false);
 		const init = {
 			interests_etc: [],
-			interests_hospital: [],
-			interests_interior: [],
+			interests_group1: [],
+			interests_group2: [],
+			interests_group3: [],
 			interests_location: {city: '', district: ''},
+			// interests_hospital: [],
+			// interests_interior: [],
+			// interests_trip: [],
 			// interests_review: [],
-			interests_trip: [],
 		};
 		setUserInterestReview(init);
 		setSelectedCity('');
@@ -303,7 +321,7 @@ const ReviewFilterModal = props => {
 				districts.push(padding);
 				districts.push(padding);
 				//시,군,구가 자동으로 바뀌지 않도록 주석처리
-				// setDistrict(districts);
+				setDistrict(districts);
 				// setSelectedDistrict(result.msg[0]);
 				// setSelectedItem_dis(2);
 			},
@@ -322,36 +340,44 @@ const ReviewFilterModal = props => {
 	//관심 리뷰 태그를 클릭
 	const onPressInterestReviewTag = (category, tag) => {
 		let copy = [];
+		let newer = userInterestReview.hasOwnProperty('interests_group1');
+		console.log('newer', newer);
 		switch (category) {
 			case 0:
-				copy = [...userInterestReview.interests_trip];
+				newer ? (copy = [...userInterestReview.interests_group1]) : (copy = [...userInterestReview.interests_trip]);
 				copy.includes(tag)
 					? copy.splice(
 							copy.findIndex(e => e == tag),
 							1,
 					  )
 					: copy.push(tag);
-				setUserInterestReview({...userInterestReview, interests_trip: copy});
+				newer
+					? setUserInterestReview({...userInterestReview, interests_group1: copy})
+					: setUserInterestReview({...userInterestReview, interests_trip: copy});
 				break;
 			case 1:
-				copy = [...userInterestReview.interests_interior];
+				newer ? (copy = [...userInterestReview.interests_group2]) : (copy = [...userInterestReview.interests_interior]);
 				copy.includes(tag)
 					? copy.splice(
 							copy.findIndex(e => e == tag),
 							1,
 					  )
 					: copy.push(tag);
-				setUserInterestReview({...userInterestReview, interests_interior: copy});
+				newer
+					? setUserInterestReview({...userInterestReview, interests_group2: copy})
+					: setUserInterestReview({...userInterestReview, interests_interior: copy});
 				break;
 			case 2:
-				copy = [...userInterestReview.interests_hospital];
+				newer ? (copy = [...userInterestReview.interests_group3]) : (copy = [...userInterestReview.interests_hospital]);
 				copy.includes(tag)
 					? copy.splice(
 							copy.findIndex(e => e == tag),
 							1,
 					  )
 					: copy.push(tag);
-				setUserInterestReview({...userInterestReview, interests_hospital: copy});
+				newer
+					? setUserInterestReview({...userInterestReview, interests_group3: copy})
+					: setUserInterestReview({...userInterestReview, interests_hospital: copy});
 				break;
 			case 3:
 				// copy = [...userInterestReview.interests_review];
@@ -364,14 +390,16 @@ const ReviewFilterModal = props => {
 				// setUserInterestReview({...userInterestReview, interests_review: copy});
 				break;
 			case 4:
-				copy = [...userInterestReview.interests_etc];
+				newer ? (copy = [...userInterestReview.interests_etc]) : (copy = [...userInterestReview.interests_etc]);
 				copy.includes(tag)
 					? copy.splice(
 							copy.findIndex(e => e == tag),
 							1,
 					  )
 					: copy.push(tag);
-				setUserInterestReview({...userInterestReview, interests_etc: copy});
+				newer
+					? setUserInterestReview({...userInterestReview, interests_etc: copy})
+					: setUserInterestReview({...userInterestReview, interests_etc: copy});
 				break;
 			default:
 				break;
@@ -381,28 +409,50 @@ const ReviewFilterModal = props => {
 	const getCommuntyInterestList = (type, typeText) => {
 		const hasDefinition = v => {
 			let result = true;
-			switch (typeText) {
-				case 0:
-					result = userInterestReview.interests_trip.includes(v);
-					break;
-				case 1:
-					result = userInterestReview.interests_interior.includes(v);
-					break;
-				case 2:
-					result = userInterestReview.interests_hospital.includes(v);
-					break;
-				case 3:
-					// result = userInterestReview.interests_review.includes(v);
-					break;
-				case 4:
-					result = userInterestReview.interests_etc.includes(v);
-					break;
-				default:
-					break;
+			if (userInterestReview.hasOwnProperty('interests_group1')) {
+				switch (typeText) {
+					case 0:
+						result = userInterestReview.interests_group1.includes(v);
+						break;
+					case 1:
+						result = userInterestReview.interests_group2.includes(v);
+						break;
+					case 2:
+						result = userInterestReview.interests_group3.includes(v);
+						break;
+					case 3:
+						// result = userInterestReview.interests_review.includes(v);
+						break;
+					case 4:
+						result = userInterestReview.interests_etc.includes(v);
+						break;
+					default:
+						break;
+				}
+			} else {
+				switch (typeText) {
+					case 0:
+						result = userInterestReview.interests_trip.includes(v);
+						break;
+					case 1:
+						result = userInterestReview.interests_interior.includes(v);
+						break;
+					case 2:
+						result = userInterestReview.interests_hospital.includes(v);
+						break;
+					case 3:
+						// result = userInterestReview.interests_review.includes(v);
+						break;
+					case 4:
+						result = userInterestReview.interests_etc.includes(v);
+						break;
+					default:
+						break;
+				}
 			}
+
 			return result;
 		};
-
 		return (
 			<View style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
 				<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>{type.topic} </Text>
@@ -440,6 +490,29 @@ const ReviewFilterModal = props => {
 		);
 	};
 
+	const getCategory = () => {
+		if (communityInterests.hasOwnProperty('interests_group1')) {
+			return (
+				<>
+					{getCommuntyInterestList(communityInterests.interests_group1, 0)}
+					{getCommuntyInterestList(communityInterests.interests_group2, 1)}
+					{getCommuntyInterestList(communityInterests.interests_group3, 2)}
+					{getCommuntyInterestList(communityInterests.interests_etc, 4)}
+				</>
+			);
+		} else {
+			return (
+				<>
+					{getCommuntyInterestList(communityInterests.interests_trip, 0)}
+					{getCommuntyInterestList(communityInterests.interests_interior, 1)}
+					{getCommuntyInterestList(communityInterests.interests_hospital, 2)}
+					{getCommuntyInterestList(communityInterests.interests_review, 3)}
+					{getCommuntyInterestList(communityInterests.interests_etc, 4)}
+				</>
+			);
+		}
+	};
+
 	const scrollRef = React.useRef();
 
 	//커뮤니티 카테고리 분기
@@ -474,11 +547,7 @@ const ReviewFilterModal = props => {
 							</TouchableOpacity>
 						)}
 						<TouchableOpacity activeOpacity={1} onPress={onPressBackground}>
-							{getCommuntyInterestList(communityInterests.interests_trip, 0)}
-							{getCommuntyInterestList(communityInterests.interests_interior, 1)}
-							{getCommuntyInterestList(communityInterests.interests_hospital, 2)}
-							{/* {getCommuntyInterestList(communityInterests.interests_review, 3)} */}
-							{getCommuntyInterestList(communityInterests.interests_etc, 4)}
+							{getCategory()}
 						</TouchableOpacity>
 					</View>
 				</ScrollView>

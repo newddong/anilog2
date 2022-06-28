@@ -5,7 +5,6 @@ import {Filter60Border, Filter60Filled, WriteBoard} from 'Root/component/atom/ic
 import ReviewList from 'Root/component/organism/list/ReviewList';
 import Modal from 'Root/component/modal/Modal';
 import {getCommunityList} from 'Root/api/community';
-import Loading from 'Root/component/molecules/modal/Loading';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeEtc} from 'Root/api/likeetc';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
@@ -22,10 +21,14 @@ export default ReviewMain = ({route, navigation}) => {
 		box: {
 			userInterestReview: {
 				interests_etc: [],
-				interests_hospital: [],
-				interests_interior: [],
-				interests_review: [],
-				interests_trip: [],
+				// interests_hospital: [],
+				// interests_interior: [],
+				// interests_review: [],
+				// interests_trip: [],
+				interests_group1: [],
+				interests_group2: [],
+				interests_group3: [],
+				interests_etc: [],
 				interests_location: {city: '', district: ''},
 			},
 		},
@@ -63,24 +66,35 @@ export default ReviewMain = ({route, navigation}) => {
 			page: offset,
 		};
 		const userInterestObj = filterData.box.userInterestReview;
+		console.log('userInterestObj', userInterestObj);
 		let arr = [];
 		const selectedCategoryFilter = arr.concat(
-			userInterestObj.interests_review,
-			userInterestObj.interests_trip,
+			userInterestObj.interests_group1,
+			userInterestObj.interests_group2,
 			userInterestObj.interests_etc,
-			userInterestObj.interests_hospital,
-			userInterestObj.interests_interior,
+			userInterestObj.interests_group3,
 		);
+		// const selectedCategoryFilter = arr.concat(
+		// 	userInterestObj.interests_review,
+		// 	userInterestObj.interests_trip,
+		// 	userInterestObj.interests_etc,
+		// 	userInterestObj.interests_hospital,
+		// 	userInterestObj.interests_interior,
+		// );
 		const hasLocationFilter = userInterestObj.interests_location.city != '';
-		// console.log('selectedCategoryFilter', selectedCategoryFilter.length);
-		// console.log('hasLocationFilter', hasLocationFilter);
 		if (selectedCategoryFilter.length > 0) {
-			userInterestObj.interests_trip.length > 0 ? (params.interests_trip = userInterestObj.interests_trip) : false;
-			userInterestObj.interests_review.length > 0 ? (params.interests_review = userInterestObj.interests_review) : false;
+			userInterestObj.interests_group1.length > 0 ? (params.interests_group1 = userInterestObj.interests_group1) : false;
+			userInterestObj.interests_group2.length > 0 ? (params.interests_group2 = userInterestObj.interests_group2) : false;
 			userInterestObj.interests_etc.length > 0 ? (params.interests_etc = userInterestObj.interests_etc) : false;
-			userInterestObj.interests_hospital.length > 0 ? (params.interests_hospital = userInterestObj.interests_hospital) : false;
-			userInterestObj.interests_interior.length > 0 ? (params.interests_interior = userInterestObj.interests_interior) : false;
+			userInterestObj.interests_group3.length > 0 ? (params.interests_group3 = userInterestObj.interests_group3) : false;
 		}
+		// if (selectedCategoryFilter.length > 0) {
+		// 	userInterestObj.interests_trip.length > 0 ? (params.interests_trip = userInterestObj.interests_trip) : false;
+		// 	userInterestObj.interests_review.length > 0 ? (params.interests_review = userInterestObj.interests_review) : false;
+		// 	userInterestObj.interests_etc.length > 0 ? (params.interests_etc = userInterestObj.interests_etc) : false;
+		// 	userInterestObj.interests_hospital.length > 0 ? (params.interests_hospital = userInterestObj.interests_hospital) : false;
+		// 	userInterestObj.interests_interior.length > 0 ? (params.interests_interior = userInterestObj.interests_interior) : false;
+		// }
 		if (hasLocationFilter) {
 			params.interests_city = userInterestObj.interests_location.city;
 			params.interests_district = userInterestObj.interests_location.district;
@@ -158,113 +172,6 @@ export default ReviewMain = ({route, navigation}) => {
 		setFilterData({...filterData, community_animal_type: temp});
 	};
 
-	//필터 적용(community_obj reviewFilter 존재 시 호출)
-	const doFilter = (arg, review) => {
-		//두 배열 간 비교 함수
-		function compareArray(a, b) {
-			for (let i = 0; i < a.length; i++) {
-				for (let j = 0; j < b.length; j++) {
-					if (a[i] == b[j]) {
-						return true;
-					}
-				}
-			}
-		}
-		// console.log('필터가 존재하므로 호출!');
-		console.log('dofilter arg', arg);
-		setFilterData({...filterData, box: arg});
-		const userInterestObj = arg.userInterestReview;
-		let filtered = [];
-		if (review == undefined) {
-			//기존의 필터가 존재하지 않은 경우
-			filtered = data;
-		} else {
-			//기존 필터가 존재하는 경우 필터할 데이터를 보내줌
-			filtered = review;
-		}
-		let arr = [];
-		const selectedCategoryFilter = arr.concat(
-			userInterestObj.interests_review,
-			userInterestObj.interests_trip,
-			userInterestObj.interests_etc,
-			userInterestObj.interests_hospital,
-			userInterestObj.interests_interior,
-		);
-		// console.log()
-		const isCategoryNotSelected = selectedCategoryFilter.length == 0;
-		if (!arg.userInterestReview.interests_location.city && isCategoryNotSelected) {
-			filterRef.current = false;
-		} else {
-			filterRef.current = true;
-		}
-		let locationFilter = [];
-		if (arg.userInterestReview.interests_location.city) {
-			//도시 선택 필터가 존재할 경우 locationFilter에 필터링한 결과를 입력
-			filtered.map((v, i) => {
-				// console.log(i, v.community_interests.interests_location);
-				if (v.community_interests.interests_location.city) {
-					let apiCity = arg.userInterestReview.interests_location.city;
-					let dbCity = v.community_interests.interests_location.city;
-					let apiDistrict = arg.userInterestReview.interests_location.district;
-					let dbDistrcit = v.community_interests.interests_location.district;
-					const cityMatched = apiCity.includes(dbCity);
-					const districtMatched = apiDistrict.includes(dbDistrcit);
-					if (cityMatched && districtMatched) {
-						locationFilter.push(v);
-					}
-				}
-			});
-			//도시 선택 필터가 존재, locationFilter로 카테고리 필터링 시작
-			if (!isCategoryNotSelected) {
-				console.log('도시선택 필터가 존재 , 카테고리도 존재');
-				let category_filtered_list = [];
-				locationFilter.map((v, i) => {
-					let arr = [];
-					const review_category_list = arr.concat(
-						v.community_interests.interests_review,
-						v.community_interests.interests_trip,
-						v.community_interests.interests_etc,
-						v.community_interests.interests_hospital,
-						v.community_interests.interests_interior,
-					);
-					const checkMatchedCategory = compareArray(selectedCategoryFilter, review_category_list);
-					checkMatchedCategory ? category_filtered_list.push(v) : false;
-				});
-				setData(category_filtered_list);
-			} else {
-				console.log('도시선택 필터가 존재 하지만 카테고리는 선택이 없음', locationFilter.length);
-				setData(locationFilter);
-			}
-		} else {
-			//도시 선택 필터가 존재하지 않는경우 tempData가 아닌 filtered로 카테고리 필터링 시작
-			if (!isCategoryNotSelected) {
-				console.log('도시 선택 필터는 없지만 카테고리는 선택한 상태');
-				let category_filtered_list = [];
-				console.log('filtered.length', filtered.length);
-				filtered.map((v, i) => {
-					let arr = [];
-					const review_category_list = arr.concat(
-						v.community_interests.interests_review,
-						v.community_interests.interests_trip,
-						v.community_interests.interests_etc,
-						v.community_interests.interests_hospital,
-						v.community_interests.interests_interior,
-					);
-					const checkMatchedCategory = compareArray(selectedCategoryFilter, review_category_list);
-					checkMatchedCategory ? category_filtered_list.push(v) : false;
-				});
-				console.log('도시 선택 필터는 없지만 카테고리는 선택한 상태', category_filtered_list.length);
-				setData(category_filtered_list);
-			} else {
-				console.log('도시선택 필터와 카테고리는 선택이 없으므로 전체 리스트와 동일');
-				filterRef.current = false;
-				// console.log(filtered);
-				setOffset(1);
-				fetchData();
-			}
-		}
-	};
-
 	//리스트 페이징 작업
 	const onEndReached = () => {
 		console.log('EndReached', data.length, total);
@@ -288,16 +195,24 @@ export default ReviewMain = ({route, navigation}) => {
 				Modal.close();
 			},
 			arg => {
-				// console.log('arg', arg);
+				console.log('arg', arg);
 				const userInterestObj = arg.userInterestReview;
 				let arr = [];
-				const selectedCategoryFilter = arr.concat(
-					userInterestObj.interests_review,
-					userInterestObj.interests_trip,
+				let selectedCategoryFilter = [];
+				selectedCategoryFilter = arr.concat(
+					userInterestObj.interests_group1,
+					userInterestObj.interests_group2,
+					userInterestObj.interests_group3,
 					userInterestObj.interests_etc,
-					userInterestObj.interests_hospital,
-					userInterestObj.interests_interior,
 				);
+				// selectedCategoryFilter = arr.concat(
+				// 	userInterestObj.interests_review,
+				// 	userInterestObj.interests_trip,
+				// 	userInterestObj.interests_etc,
+				// 	userInterestObj.interests_hospital,
+				// 	userInterestObj.interests_interior,
+				// );
+
 				const isCategoryNotSelected = selectedCategoryFilter.length == 0;
 				setData('false'); //현재 리스트를 초기상태로 되돌림
 				if (!arg.userInterestReview.interests_location.city && isCategoryNotSelected) {

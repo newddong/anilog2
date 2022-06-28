@@ -20,6 +20,7 @@ export default FavoriteArticle = ({route, isFavorite}) => {
 	const [selectMode, setSelectMode] = React.useState(false);
 	const [selectCNT, setSelectCNT] = React.useState(0);
 	const [offset, setOffset] = React.useState(1);
+	const [total, setTotal] = React.useState(0);
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
@@ -42,7 +43,7 @@ export default FavoriteArticle = ({route, isFavorite}) => {
 						const res = result.msg.free.filter(
 							e => e.community_writer_id != null && e.community_writer_id.user_nickname == userGlobalObject.userInfo.user_nickname,
 						);
-						console.log('result / getCommunityListByUserId / FavoriteArticle', res.length);
+						// console.log('result / getCommunityListByUserId / FavoriteArticle', res.length);
 						if (data != 'false') {
 							console.log('temp lenth', [...data, ...res].length);
 							setData([...data, ...res]);
@@ -67,13 +68,16 @@ export default FavoriteArticle = ({route, isFavorite}) => {
 			  )
 			: getFavoriteEtcListByUserId(
 					{
+						page: offset,
+						limit: FREE_LIMIT,
 						userobject_id: userGlobalObject.userInfo._id,
 						collectionName: 'communityobjects',
 					},
 					result => {
-						// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg[0]);
+						setTotal(result.total_count);
+						// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg);
 						let articleList = [];
-						result.msg.map(v => {
+						result.msg.map((v, i) => {
 							if (v.favorite_etc_target_object_id.community_type == 'free') {
 								v.favorite_etc_target_object_id.community_is_like = v.is_like;
 								v.favorite_etc_target_object_id.community_is_favorite = v.is_favorite;
@@ -91,10 +95,10 @@ export default FavoriteArticle = ({route, isFavorite}) => {
 
 	//리스트 페이징 작업
 	const onEndReached = () => {
-		console.log('EndReached', data.length % FREE_LIMIT);
+		console.log('EndReached', data.length, total);
 		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
 		//리뷰 메인 페이지에서는 필터가 적용이 되었을 때도 api 접속 불필요
-		if (data.length % FREE_LIMIT == 0) {
+		if (data.length < total) {
 			fetchData();
 		}
 	};

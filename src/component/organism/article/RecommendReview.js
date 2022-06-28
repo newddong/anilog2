@@ -21,12 +21,19 @@ const RecommendReview = props => {
 
 	const getCategory = (v, i) => {
 		let category_sum_list = [];
-		v.community_interests.interests_trip.map(v => category_sum_list.push(v));
-		v.community_interests.interests_etc.map(v => category_sum_list.push(v));
-		v.community_interests.interests_hospital.map(v => category_sum_list.push(v));
-		v.community_interests.interests_review.map(v => category_sum_list.push(v));
-		v.community_interests.interests_interior.map(v => category_sum_list.push(v));
-
+		if (v.community_interests.hasOwnProperty('interests_group1')) {
+			v.community_interests.interests_group1.map(v => category_sum_list.push(v));
+			v.community_interests.interests_etc.map(v => category_sum_list.push(v));
+			v.community_interests.interests_group2.map(v => category_sum_list.push(v));
+			v.community_interests.interests_group3.map(v => category_sum_list.push(v));
+			// item.community_interests.interests_interior.map(v => category_sum_list.push(v));
+		} else {
+			v.community_interests.interests_trip.map(v => category_sum_list.push(v));
+			v.community_interests.interests_etc.map(v => category_sum_list.push(v));
+			v.community_interests.interests_hospital.map(v => category_sum_list.push(v));
+			v.community_interests.interests_review.map(v => category_sum_list.push(v));
+			v.community_interests.interests_interior.map(v => category_sum_list.push(v));
+		}
 		// category_sum_list.push('테스트');
 		const page = Math.floor(category_sum_list.length / 4) + 1;
 		let arr = [];
@@ -113,11 +120,20 @@ const RecommendReview = props => {
 	const renderItem = ({item, index}) => {
 		//사진포함 여부, 카테고리 포함여부, 글 내용 포함 여부에 따른 높이
 		let category_sum_list = [];
-		item.community_interests.interests_trip.map(v => category_sum_list.push(v));
-		item.community_interests.interests_etc.map(v => category_sum_list.push(v));
-		item.community_interests.interests_hospital.map(v => category_sum_list.push(v));
-		item.community_interests.interests_review.map(v => category_sum_list.push(v));
-		item.community_interests.interests_interior.map(v => category_sum_list.push(v));
+		if (item.community_interests.hasOwnProperty('interests_group1')) {
+			item.community_interests.interests_group1.map(v => category_sum_list.push(v));
+			item.community_interests.interests_etc.map(v => category_sum_list.push(v));
+			item.community_interests.interests_group2.map(v => category_sum_list.push(v));
+			item.community_interests.interests_group3.map(v => category_sum_list.push(v));
+			// item.community_interests.interests_interior.map(v => category_sum_list.push(v));
+		} else {
+			item.community_interests.interests_trip.map(v => category_sum_list.push(v));
+			item.community_interests.interests_etc.map(v => category_sum_list.push(v));
+			item.community_interests.interests_hospital.map(v => category_sum_list.push(v));
+			item.community_interests.interests_review.map(v => category_sum_list.push(v));
+			item.community_interests.interests_interior.map(v => category_sum_list.push(v));
+		}
+
 		const getLines = () => {
 			let lines = 6;
 			if (item.community_is_attached_file) {

@@ -9,21 +9,15 @@ import AnimalProtectRequestDetail from 'Templete/protection/AnimalProtectRequest
 
 import LogoHeader from 'Navigation/header/LogoHeader';
 import MeatBallHeader from 'Navigation/header/MeatBallHeader';
-import AlarmAndSearchHeader from 'Navigation/header/AlarmAndSearchHeader';
-import BookmarkHeader from 'Navigation/header/BookmarkHeader';
 import SocialRelationTopTabNavigation from '../protection_stack/socialRelation_tab/SocialRelationTopTabNavigation';
 import SimpleHeader from 'Navigation/header/SimpleHeader';
 import ChangeUserProfileImage from 'Root/component/templete/user/ChangeUserProfileImage';
-
 import AlarmList from 'Root/component/templete/list/AlarmList';
 import AlarmCommentList from 'Root/component/organism/comment/AlarmCommentList';
-
 import SetPetInformation from 'Root/component/templete/pet/SetPetInformation';
 import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
-
 import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
-
 import ProtectCommentList from 'Root/component/templete/protection/ProtectCommentList';
 import UserInfoDetailSettting from 'Root/component/templete/user/UserInfoDetailSetting';
 import MissingAnimalDetail from 'Templete/missing/MissingAnimalDetail';
@@ -47,7 +41,7 @@ export default FeedStackNavigation = props => {
 			<FeedStack.Screen
 				name="SocialRelation"
 				component={SocialRelationTopTabNavigation}
-				options={{header: props => <InputAndSearchHeader {...props} isSocial />}}
+				options={{header: props => <InputAndSearchHeader {...props} type={'social'} />}}
 			/>
 			<FeedStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: '프로필'}} />
 			<FeedStack.Screen name="HashFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: '프로필'}} />
@@ -75,7 +69,6 @@ export default FeedStackNavigation = props => {
 				component={ChangePetProfileImage}
 				options={{header: props => <SimpleHeader {...props} />, title: '프로필 변경'}}
 			/>
-
 			<FeedStack.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
 			<FeedStack.Screen
 				name="AlarmCommentList"

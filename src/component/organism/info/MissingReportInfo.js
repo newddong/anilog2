@@ -43,6 +43,18 @@ const MissingReportInfo = props => {
 			break;
 	}
 
+	const getAge = date => {
+		let yr = date;
+		let month = Math.floor((yr - Math.floor(yr)) * 12);
+		let missingAnimalAge = '';
+		if (yr >= 1) {
+			missingAnimalAge = Math.floor(yr) + '살' + (month > 0 ? ' ' + month + '개월' : '');
+		} else {
+			missingAnimalAge = month + '개월';
+		}
+		return missingAnimalAge;
+	};
+
 	//MissingReportInfo 하나의 정보 컴포넌트
 	const InfoOneLine = props => {
 		const arr = props.title.split('');
@@ -83,7 +95,7 @@ const MissingReportInfo = props => {
 			<View style={style.container}>
 				<InfoOneLine title="동물 분류" content={missing_animal_species + ' / ' + missing_animal_species_detail} />
 				<InfoOneLine title="실종 날짜" content={newMissingDate} />
-				<InfoOneLine title="성별/나이" content={newAnimalSex + ' / ' + missing_animal_age + '살'} />
+				<InfoOneLine title="성별/나이" content={newAnimalSex + ' / ' + getAge(missing_animal_age)} />
 				<InfoOneLine title="실종 위치" content={newMissingLocation} />
 				<InfoOneLine title="연락처" content={missing_animal_contact} />
 				<InfoOneLine title="특징" content={missing_animal_features} />

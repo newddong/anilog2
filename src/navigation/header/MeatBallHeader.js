@@ -187,7 +187,8 @@ const style = StyleSheet.create({
 		width: 80 * DP,
 		height: 80 * DP,
 		justifyContent: 'center',
-		padding: 10 * DP,
+		// padding: 10 * DP,
+		// backgroundColor: 'yellow',
 	},
 	shadow: {
 		// shadowColor: '#000000',

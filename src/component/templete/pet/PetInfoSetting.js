@@ -466,23 +466,36 @@ export default PetInfoSetting = ({route, navigation}) => {
 					</View>
 					{/* 계정정보 */}
 					<View style={[styles.container]}>
-						<View style={[temp_style.introduceInfo_depth1]}>
-							<View style={[userInfoSetting_style.title_detail]}>
-								<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>
-									종 / 품종
-									{/* <Text style={[txt.noto22b, {color: GRAY20}]}> (최대 500자, 15줄)</Text> */}
-								</Text>
-							</View>
-
-							{kindEditMode ? (
-								<View style={[{alignItems: 'center'}, {marginLeft: 472 * DP}]}>
-									<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
-										<TouchableOpacity onPress={editKindInfo}>
-											<Text style={[txt.noto26b, {color: APRI10}]}>저장</Text>
-										</TouchableOpacity>
+						{kindEditMode ? (
+							<View style={[styles.container]}>
+								<View style={[{width: 750 * DP}, {height: 96 * DP}, {flexDirection: 'row'}]}>
+									<View style={[userInfoSetting_style.title_detail]}>
+										<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>종 / 품종</Text>
+									</View>
+									<View style={[{flexDirection: 'row'}]}>
+										<View style={[{alignItems: 'center'}, {marginLeft: 474 * DP}]}>
+											<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
+												<TouchableOpacity onPress={editKindInfo}>
+													<Text style={[txt.noto26b, {color: APRI10}]}>저장</Text>
+												</TouchableOpacity>
+											</View>
+										</View>
 									</View>
 								</View>
-							) : (
+								<View style={[{}]}>
+									<View style={[{marginBottom: 20 * DP}]}>
+										<SelectInput width={694} height={104} value={speices} onPressInput={onSelectSpecies} />
+									</View>
+									<View style={[{marginBottom: 30 * DP}]}>
+										<SelectInput width={694} height={104} value={kind} onPressInput={onSelectKind} />
+									</View>
+								</View>
+							</View>
+						) : (
+							<View style={[{width: 750 * DP}, {flexDirection: 'row'}]}>
+								<View style={[userInfoSetting_style.title_detail]}>
+									<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>종 / 품종</Text>
+								</View>
 								<View style={[{flexDirection: 'row'}]}>
 									<View style={[{width: 462 * DP}, {height: 96 * DP}, {justifyContent: 'center'}]}>
 										<Text style={[txt.noto28, {color: MAINBLACK}]}>
@@ -498,34 +511,33 @@ export default PetInfoSetting = ({route, navigation}) => {
 										</View>
 									</View>
 								</View>
-							)}
-						</View>
-						<View style={[styles.petIntroduction]}>
-							{kindEditMode ? (
-								<View style={[{}]}>
-									<View style={[{marginBottom: 20 * DP}]}>
-										<SelectInput
-											width={694}
-											height={104}
-											// value={petData.pet_species}
-											value={speices}
-											onPressInput={onSelectSpecies}
-										/>
-									</View>
-									<View>
-										<SelectInput
-											width={694}
-											height={104}
-											// value={petData.pet_species_detail || ''}
-											value={kind}
-											onPressInput={onSelectKind}
-										/>
+							</View>
+						)}
+
+						{/* {kindEditMode ? (
+								<View style={[{alignItems: 'center'}, {marginLeft: 472 * DP}]}>
+									<View style={[styles.changeInfo, userInfoSetting_style.changePassword, {backgroundColor: 'red'}]}>
+										<TouchableOpacity onPress={editKindInfo}>
+											<Text style={[txt.noto26b, {color: APRI10}]}>저장</Text>
+										</TouchableOpacity>
 									</View>
 								</View>
 							) : (
-								<></>
-							)}
-						</View>
+								<View style={[{flexDirection: 'row'}]}>
+									<View style={[{width: 462 * DP}, {height: 96 * DP}, {justifyContent: 'center'}]}>
+										<Text style={[txt.noto28, {color: MAINBLACK}]}>
+											{petData.pet_species} / {petData.pet_species_detail || ''}
+										</Text>
+									</View>
+									<View style={[{alignItems: 'center'}, {marginLeft: 12 * DP}]}>
+										<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
+											<TouchableOpacity onPress={editKindInfo}>
+												<Edit46 />
+											</TouchableOpacity>
+										</View>
+									</View>
+								</View>
+							)} */}
 					</View>
 
 					{/* <View style={[petInfoSetting.petAccountInfo.container]}>
@@ -730,7 +742,7 @@ const styles = StyleSheet.create({
 		// paddingVertical: 40 * DP,
 		borderBottomColor: GRAY40,
 		borderBottomWidth: 2 * DP,
-		justifyContent: 'center',
+		// justifyContent: 'center',
 		alignItems: 'center',
 		// backgroundColor: 'yellow',
 	},

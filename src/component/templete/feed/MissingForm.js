@@ -425,10 +425,6 @@ export default MissingForm = props => {
 
 	//사진 추가
 	const moveToMultiPhotoSelect = () => {
-		// if (selectedImg.length > 4) {
-		// 	Modal.alert('첨부파일은 5개까지만 가능합니다');
-		// 	return;
-		// }
 		navigation.push('MultiPhotoSelect', {prev: {name: route.name, key: route.key}});
 	};
 
@@ -444,25 +440,6 @@ export default MissingForm = props => {
 		} else {
 			return month + '개월';
 		}
-		// console.log('data.missing_animal_age', data.missing_animal_age);
-		// if (data.missing_animal_age == '') {
-		// 	return;
-		// } else {
-		// 	const today = new Date().getTime();
-		// 	let split = data.missing_animal_age.split('.');
-		// 	const selectDate = new Date(split[0], split[1] - 1, split[2]);
-		// 	const duration = (today - selectDate.getTime()) / 1000;
-		// 	// console.log(duration / 86400); //하루단위
-		// 	const birthDate = () => {
-		// 		let year = parseInt(duration / 86400 / 365) + '년 ';
-		// 		let month = parseInt(((duration / 86400) % 365) / 30) + '개월';
-		// 		if (parseInt(duration / 86400 / 365) == 0) {
-		// 			year = '';
-		// 		}
-		// 		return year + month;
-		// 	};
-		// 	return birthDate();
-		// }
 	};
 
 	const animalBirth = () => {

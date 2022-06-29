@@ -70,12 +70,19 @@ const ReviewFavoriteBriefItem = props => {
 	};
 
 	let category_sum_list = [];
-	data.community_interests.interests_trip.map(v => category_sum_list.push(v));
-	data.community_interests.interests_etc.map(v => category_sum_list.push(v));
-	data.community_interests.interests_hospital.map(v => category_sum_list.push(v));
-	data.community_interests.interests_review.map(v => category_sum_list.push(v));
-	data.community_interests.interests_interior.map(v => category_sum_list.push(v));
-
+	if (data.community_interests.hasOwnProperty('interests_group1')) {
+		data.community_interests.interests_group1.map(v => category_sum_list.push(v));
+		data.community_interests.interests_etc.map(v => category_sum_list.push(v));
+		data.community_interests.interests_group2.map(v => category_sum_list.push(v));
+		data.community_interests.interests_group3.map(v => category_sum_list.push(v));
+		// item.community_interests.interests_interior.map(v => category_sum_list.push(v));
+	} else {
+		data.community_interests.interests_trip.map(v => category_sum_list.push(v));
+		data.community_interests.interests_etc.map(v => category_sum_list.push(v));
+		data.community_interests.interests_hospital.map(v => category_sum_list.push(v));
+		data.community_interests.interests_review.map(v => category_sum_list.push(v));
+		data.community_interests.interests_interior.map(v => category_sum_list.push(v));
+	}
 	const getCategory = () => {
 		if (!data.community_interests.hasOwnProperty('interests_trip')) {
 			return <></>;

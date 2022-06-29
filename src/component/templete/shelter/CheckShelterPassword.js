@@ -51,7 +51,7 @@ export default CheckShelterPassword = props => {
 					// insideBarStyle={stagebar_style.insideBar} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
 					textStyle={[txt.roboto24, stagebar_style.text]} //text의 스타일
 					insideBarStyle={{width: 160 * DP, height: 20 * DP, backgroundColor: MAINBLACK, borderRadius: 18 * DP}} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
-					current={3} //현재 단계를 정의
+					current={4} //현재 단계를 정의
 					maxstage={4} //전체 단계를 정의
 					width={640 * DP} //bar의 너비
 				/>

@@ -11,6 +11,7 @@ export default InputAndSearchHeader = props => {
 	const routeName = props.route.name != undefined ? props.route.name : '';
 	const [searchInput, setSearchInput] = React.useState('');
 	const inputRef = React.useRef();
+	const type = props.type;
 	// console.log('props', props);
 
 	const confirm = text => {
@@ -32,7 +33,7 @@ export default InputAndSearchHeader = props => {
 	}, [searchInput]);
 
 	React.useEffect(() => {
-		if (props.isLocation) {
+		if (type == 'location') {
 			props.navigation.setParams({
 				reSearch: () => reSearch(),
 			});
@@ -47,30 +48,37 @@ export default InputAndSearchHeader = props => {
 
 	const onChangeSearchText = text => {
 		setSearchInput(text);
-		//고객센터 문의하기에서 호출된 경우 searchInputForHelp 전역변수를 활용
-		if (props.isLocation) {
-			searchContext.searchInfo.searchInputForLocation = text;
-		} else if (props.isHelpTab) {
-			searchContext.searchInfo.searchInputForHelp = text;
-		} else if (props.isSocial) {
-			searchContext.searchInfo.searchInputForSocial = text;
-		} else {
-			//검색탭에서 호출된 경우 searchInput 전역변수를 활용
-			searchContext.searchInfo.searchInput = text;
+		switch (type) {
+			case 'location':
+				searchContext.searchInfo.searchInputForLocation = text;
+				break;
+			case 'help':
+				searchContext.searchInfo.searchInputForHelp = text;
+				break;
+			case 'social':
+				searchContext.searchInfo.searchInputForSocial = text;
+				break;
+			default:
+				searchContext.searchInfo.searchInput = text;
+				break;
 		}
 	};
 
 	const onClear = () => {
-		if (props.isLocation) {
-			searchContext.searchInfo.searchInputForLocation = '';
-		} else if (props.isHelpTab) {
-			searchContext.searchInfo.searchInputForHelp = '';
-		} else if (props.isSocial) {
-			searchContext.searchInfo.searchInputForSocial = '';
-		} else {
-			searchContext.searchInfo.searchInput = '';
+		switch (type) {
+			case 'location':
+				searchContext.searchInfo.searchInputForLocation = '';
+				break;
+			case 'help':
+				searchContext.searchInfo.searchInputForHelp = '';
+				break;
+			case 'social':
+				searchContext.searchInfo.searchInputForSocial = '';
+				break;
+			default:
+				searchContext.searchInfo.searchInput = '';
+				break;
 		}
-		searchContext.searchInfo.searchInput = '';
 		setSearchInput('');
 	};
 
@@ -84,6 +92,19 @@ export default InputAndSearchHeader = props => {
 		}
 	};
 
+	const getPlaceHolderText = () => {
+		switch (type) {
+			case 'location':
+				return '위치를 검색해주세요.';
+			case 'help':
+				return '문의할 내용을 입력해주세요.';
+			case 'social':
+				return '계정을 검색해주세요.';
+			default:
+				return '검색어를 입력해주세요.';
+		}
+	};
+
 	return (
 		<View style={[style.headerContainer, style.shadow, {}]}>
 			<TouchableOpacity style={[style.backButtonContainer, {}]} onPress={onPressGoBack}>
@@ -91,7 +112,7 @@ export default InputAndSearchHeader = props => {
 			</TouchableOpacity>
 			<View style={{marginBottom: 20 * DP, flex: 1, justifyContent: 'center', paddingTop: 20 * DP}}>
 				<InputWithSearchIcon
-					placeholder={props.isLocation ? '위치 찾기' : '검색어를 입력하세요.'}
+					placeholder={getPlaceHolderText()}
 					value={searchInput}
 					width={630}
 					ref={inputRef}

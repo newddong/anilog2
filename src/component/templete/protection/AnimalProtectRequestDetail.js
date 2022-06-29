@@ -220,7 +220,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const onPressProtectRequest = () => {
 		console.log('data.protect_request_writer_id.user_contacted', data.protect_request_writer_id.user_contacted);
 		if (!data.protect_request_writer_id.user_contacted) {
-			Modal.popOneBtn(NOT_REGISTERED_SHELTER, '확인', Modal.close);
+			// Modal.popOneBtn(NOT_REGISTERED_SHELTER, '확인', Modal.close);
 		} else {
 			navigation.push('ApplyProtectActivityA', {protect_request_pet_data: data});
 		}
@@ -467,10 +467,10 @@ export default AnimalProtectRequestDetail = ({route}) => {
 						{/* <AniButton onPress={onPressProtectRequest} btnTitle={'임시보호 신청'} btnStyle={'border'} btnLayout={btn_w276} titleFontStyle={30} /> */}
 						{/* <AniButton onPress={onPressAdoptionRequest} btnTitle={'입양 신청'} btnLayout={btn_w276} titleFontStyle={30} /> */}
 						<TouchableOpacity onPress={onPressProtectRequest} activeOpacity={0.8} style={[style.protectBtn]}>
-							<Text style={[txt.noto32]}>임시보호 신청</Text>
+							<Text style={[txt.noto32]}>임시보호 문의</Text>
 						</TouchableOpacity>
 						<TouchableOpacity onPress={onPressAdoptionRequest} activeOpacity={0.8} style={[style.protectBtn]}>
-							<Text style={[txt.noto32]}>입양 신청</Text>
+							<Text style={[txt.noto32]}>입양 문의</Text>
 						</TouchableOpacity>
 					</View>
 				)}

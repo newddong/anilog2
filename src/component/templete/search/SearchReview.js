@@ -374,6 +374,7 @@ export default SearchReview = props => {
 									onPressReviewContent={onPressReviewContent}
 									onPressReply={onPressReply}
 									onPressMeatball={onPressMeatball}
+									showRecommend={false}
 									onPressLike={index => onPressLike(index, true)}
 									onPressUnlike={index => onPressLike(index, false)}
 									onPressFavorite={onPressFavorite}

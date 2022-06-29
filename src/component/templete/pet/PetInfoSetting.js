@@ -17,6 +17,9 @@ import {PET_KIND} from 'Root/i18n/msg';
 import Loading from 'Root/component/molecules/modal/Loading';
 import PetLabel148 from 'Root/component/molecules/label/PetLabel148';
 import SelectInput from 'Root/component/molecules/button/SelectInput';
+import KeyBoardInputBackGround from 'Root/component/molecules/input/KeyboardInputBackGround';
+import TabSelectFilled_Type1 from 'Root/component/molecules/tab/TabSelectFilled_Type1';
+import RadioBox from 'Root/component/molecules/select/RadioBox';
 
 //이 화면에 들어오면서 특정 _id를 API 연동으로 데이터를 가져 옴.
 //이전 화면에서 모든 데이터를 가진 상태에서 들어오는 것이 아님.
@@ -30,12 +33,21 @@ export default PetInfoSetting = ({route, navigation}) => {
 	const [showMore, setShowmore] = React.useState(true); // 소개 더보기 클릭 여부
 	const [editMode, setEditMode] = React.useState(false); // 소개 수정 클릭 여부
 	const [kindEditMode, setKindEditMode] = React.useState(false); // 소개 수정 클릭 여부
-
+	const [birthEditMode, setBirthEditMode] = React.useState(false);
+	const [weightEditMode, setWeightEditMode] = React.useState(false);
+	const [sexEditMode, setSexEditMode] = React.useState(false);
 	const [introOriginLine, setIntroOriginLine] = React.useState(0);
 	const scrollRef = React.useRef();
 	const [userIntro_temp, setUserIntro_temp] = React.useState('');
 	const modifyRef = React.useRef('');
-
+	const [large, setLarge] = React.useState([]);
+	const [sub, setSub] = React.useState([]);
+	const [speices, setSpeices] = React.useState('');
+	const [speicesIndex, setSpeicesIndex] = React.useState(0);
+	const [kind, setKind] = React.useState('');
+	const [petSex, setPetSex] = React.useState('');
+	const [selectedBirthDate, setSelectedBirthDate] = React.useState('');
+	const [btnOn, setBtnOn] = React.useState(true);
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			setFamily();
@@ -51,6 +63,10 @@ export default PetInfoSetting = ({route, navigation}) => {
 		editMode ? modifyRef.current.focus() : null;
 	}, [editMode]);
 
+	React.useEffect(() => {
+		console.log('펫 데이터 바뀜', petData.pet_sex);
+	}, [petData]);
+
 	const setFamily = () => {
 		getUserInfoById(
 			{userobject_id: route.params.pet_id},
@@ -60,6 +76,9 @@ export default PetInfoSetting = ({route, navigation}) => {
 				navigation.setOptions({title: result.msg.user_nickname});
 				userGlobalObject.userInfo.user_nickname == result.msg.pet_family[0].user_nickname ? setIsChiefUser(true) : setIsChiefUser(false);
 				setPetData(result.msg);
+				// console.log('result . pet data', result.msg);
+				setSpeices(result.msg.pet_species);
+				setKind(result.msg.pet_species_detail);
 			},
 			err => {
 				console.log('err / GetUserInfoById / PetInfosetting', err);
@@ -214,9 +233,125 @@ export default PetInfoSetting = ({route, navigation}) => {
 		);
 	};
 	const editKindInfo = () => {
+		if (kindEditMode) {
+			console.log('kind, species', kind, speices);
+			updatePetDetailInformation(
+				{
+					userobject_id: petData._id,
+					pet_species: speices,
+					pet_species_detail: kind,
+				},
+				result => {
+					// console.log('updatePetDetailInformation / PetInfoSetting Result : ', result.msg);
+					setPetData({...petData, pet_species: result.msg.pet_species, pet_species_detail: result.msg.pet_species_detail});
+					Modal.close();
+					setTimeout(() => {
+						Modal.popNoBtn('반려동물의 정보가 성공적으로 \n 변경되었습니다.');
+						setTimeout(() => {
+							Modal.close();
+						}, 1000);
+					}, 100);
+				},
+				err => {
+					console.log('updatePetDetailInformation / PetinfoSetting err : ', err);
+					Modal.close();
+				},
+			);
+		}
 		setKindEditMode(!kindEditMode);
 	};
+	const editSexInfo = () => {
+		if (sexEditMode) {
+			console.log('kind, species', kind, speices);
+			updatePetDetailInformation(
+				{
+					userobject_id: petData._id,
+					pet_sex: petData.pet_sex,
+				},
+				result => {
+					console.log('성별 변경 성공', result.msg);
+					setPetData({...petData, pet_species: result.msg.pet_species, pet_species_detail: result.msg.pet_species_detail});
+					Modal.close();
+					setTimeout(() => {
+						Modal.popNoBtn('반려동물의 정보가 성공적으로 \n 변경되었습니다.');
+						setTimeout(() => {
+							Modal.close();
+						}, 1000);
+					}, 100);
+				},
+				err => {
+					console.log('updatePetDetailInformation / PetinfoSetting err : ', err);
+					Modal.close();
+				},
+			);
+		}
+		setSexEditMode(!sexEditMode);
+	};
+	const editBirthInfo = () => {
+		setBirthEditMode(!birthEditMode);
+	};
+	const editWeightInfo = () => {
+		setWeightEditMode(!weightEditMode);
+	};
 
+	const onSelectSpecies = async (v, i) => {
+		Modal.popLoading(true);
+		const petKind = await PET_KIND();
+		Modal.close();
+		console.log('petKind', petKind);
+		let category = {
+			large: [],
+			sub: [],
+		};
+
+		petKind.map((v, i) => {
+			category.large.push(v.pet_species);
+			category.sub.push(v.pet_species_detail);
+		});
+		console.log('categoy', category.large, category.sub);
+		setSub(category.sub);
+		// debug && console.log('city:', city[i]);
+		Modal.popSelectScrollBoxModal(
+			// [city],
+			[category.large],
+			'종 선택',
+			selected => {
+				// setData({...data, user_address: {...data.user_address, city: selected}});
+				// getAddressList(
+				// 	{city: selected},
+				// 	districts => {
+				// 		setDistrict(districts.msg);
+				// 		// console.log()
+				// 		debug && console.log('districts:', districts);
+				// 		setData({...data, user_address: {...data.user_address, city: selected, district: districts.msg[0], neighbor: '동/읍을 선택'}});
+				// 		Modal.close();
+				// 	},
+				// 	handleError,
+				// );
+
+				setSpeices(selected);
+				console.log('종 고름', category.large.indexOf(selected));
+				setSpeicesIndex(category.large.indexOf(selected));
+				Modal.close();
+			},
+			// () => Modal.close(),
+			// Modal.close(),
+			// () => console.log('완료 눌림'),
+		);
+	};
+	const onSelectKind = (v, i) => {
+		Modal.popSelectScrollBoxModal(
+			[sub[speicesIndex]],
+			'품종 선택',
+			selected => {
+				// setData({...data, user_address: {...data.user_address, city: selected}});
+				setKind(selected);
+				console.log('selected');
+				Modal.close();
+			},
+			() => Modal.close(),
+		);
+	};
 	//업로드 및 팔로우 클릭
 	const onClickUserInfo = () => {
 		navigation.push('UserProfile', {userobject: petData});
@@ -234,6 +369,129 @@ export default PetInfoSetting = ({route, navigation}) => {
 
 	const deleteAccount = () => {
 		console.log('deleteAccount');
+	};
+
+	// ----상세 정보 수정 코드 SetPetInformation 에서 가지고옴 ---
+	//생일 TypeParsing / 차후 정리 예정
+	const parseBirth = () => {
+		if (data.pet_birthday && data.pet_birthday.length < 15) {
+			return data.pet_birthday;
+		} else if (data.pet_birthday == undefined) {
+			return '생일을 지정해주세요';
+		} else {
+			let date = moment(data.pet_birthday).format('YYYY.MM.DD');
+			date = date.toString();
+			console.log('data', date);
+			return date;
+		}
+	};
+
+	//생녈월일 계산 함수
+	const getBirthDate = () => {
+		if (selectedBirthDate) {
+			const today = new Date().getTime();
+			let split = selectedBirthDate.split('.');
+			const selectDate = new Date(split[0], split[1] - 1, split[2]);
+			const duration = (today - selectDate.getTime()) / 1000;
+			// console.log(duration / 86400); //하루단위
+			const birthDate = () => {
+				let year = parseInt(duration / 86400 / 365) + '년 ';
+				let month = parseInt(((duration / 86400) % 365) / 30) + '개월';
+				if (parseInt(duration / 86400 / 365) == 0) {
+					year = '';
+				}
+				return year + month;
+			};
+			return <Text style={[txt.noto22]}>{birthDate()}</Text>;
+		} else {
+			<Text style={[txt.noto22]}></Text>;
+		}
+	};
+
+	//생일이 지정되었을 때
+	const onSelectBirthDate = date => {
+		setSelectedBirthDate(date);
+		setPetData({...data, pet_birthday: date});
+	};
+
+	//체중 Input Value 바뀌었을 때
+	const onChangeKg = kg => {
+		setPetData({...data, pet_weight: kg});
+	};
+
+	//체중
+	const weigthValid = e => {
+		var regExp = /^[0-9]{1,2}(\.[0-9]{0,1})?$/;
+		// var regExp = /^[\D]{1,20}$/;
+		setBtnOn(!regExp.test(e));
+		return regExp.test(e);
+	};
+
+	//성별 변경 발생
+	const onSexChange = e => {
+		console.log('성별 바뀐', e);
+		switch (e) {
+			//male
+			case 0:
+				// setPetData({...petData, pet_sex: 'male'});
+				setPetSex('male');
+			//female
+			case 1:
+				// setPetData({...petData, pet_sex: 'female'});
+				setPetSex('female');
+			//unknown
+			case 2:
+				// setPetData({...petData, pet_sex: 'unknown'});
+				setPetSex('unknown');
+		}
+		console.log('petSex', petSex);
+	};
+
+	const getPetSex = () => {
+		// console.log('pet_sex', petData.pet_sex);
+
+		switch (petData.pet_sex) {
+			//male
+			case 'male':
+				return 0;
+			//female
+			case 'female':
+				return 1;
+			//unknown
+			case 'unknown':
+				return 2;
+		}
+	};
+
+	//중성화 선택
+	const onSelectNeutralization = index => {
+		let neutralization = '';
+		if (index == 0) {
+			neutralization = 'yes';
+		} else if (index == 1) {
+			neutralization = 'no';
+		} else if (index == 2) {
+			neutralization = 'unknown';
+		}
+		setPetData({...petData, pet_neutralization: neutralization});
+	};
+
+	const getNeutralizationDefault = () => {
+		let index = 0;
+		switch (petData.pet_neutralization) {
+			case 'yes':
+				index = 0;
+				break;
+			case 'no':
+				index = 1;
+				break;
+			case 'unknown':
+				index = 2;
+				break;
+			default:
+				break;
+		}
+		return index;
 	};
 
 	if (petData == 'false') {
@@ -377,23 +635,36 @@ export default PetInfoSetting = ({route, navigation}) => {
 					</View>
 					{/* 계정정보 */}
 					<View style={[styles.container]}>
-						<View style={[temp_style.introduceInfo_depth1]}>
-							<View style={[userInfoSetting_style.title_detail]}>
-								<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>
-									종 / 품종
-									{/* <Text style={[txt.noto22b, {color: GRAY20}]}> (최대 500자, 15줄)</Text> */}
-								</Text>
-							</View>
-
-							{kindEditMode ? (
-								<View style={[{alignItems: 'center'}, {marginLeft: 472 * DP}]}>
-									<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
-										<TouchableOpacity onPress={editKindInfo}>
-											<Text style={[txt.noto26b, {color: APRI10}]}>저장</Text>
-										</TouchableOpacity>
+						{kindEditMode ? (
+							<View style={[styles.container]}>
+								<View style={[{width: 750 * DP}, {height: 96 * DP}, {flexDirection: 'row'}]}>
+									<View style={[userInfoSetting_style.title_detail]}>
+										<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>종 / 품종</Text>
+									</View>
+									<View style={[{flexDirection: 'row'}]}>
+										<View style={[{alignItems: 'center'}, {marginLeft: 474 * DP}]}>
+											<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
+												<TouchableOpacity onPress={editKindInfo}>
+													<Text style={[txt.noto26b, {color: APRI10}]}>저장</Text>
+												</TouchableOpacity>
+											</View>
+										</View>
 									</View>
 								</View>
-							) : (
+								<View style={[{}]}>
+									<View style={[{marginBottom: 20 * DP}]}>
+										<SelectInput width={694} height={104} value={speices} onPressInput={onSelectSpecies} />
+									</View>
+									<View style={[{marginBottom: 30 * DP}]}>
+										<SelectInput width={694} height={104} value={kind} onPressInput={onSelectKind} />
+									</View>
+								</View>
+							</View>
+						) : (
+							<View style={[{width: 750 * DP}, {flexDirection: 'row'}]}>
+								<View style={[userInfoSetting_style.title_detail]}>
+									<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>종 / 품종</Text>
+								</View>
 								<View style={[{flexDirection: 'row'}]}>
 									<View style={[{width: 462 * DP}, {height: 96 * DP}, {justifyContent: 'center'}]}>
 										<Text style={[txt.noto28, {color: MAINBLACK}]}>
@@ -409,22 +680,8 @@ export default PetInfoSetting = ({route, navigation}) => {
 										</View>
 									</View>
 								</View>
-							)}
-						</View>
-						<View style={[styles.petIntroduction]}>
-							{kindEditMode ? (
-								<View style={[{}]}>
-									<View style={[{marginBottom: 20 * DP}]}>
-										<SelectInput width={694} height={104} />
-									</View>
-									<View>
-										<SelectInput width={694} height={104} />
-									</View>
-								</View>
-							) : (
-								<></>
-							)}
-						</View>
+							</View>
+						)}
 					</View>
 
 					{/* <View style={[petInfoSetting.petAccountInfo.container]}>
@@ -472,6 +729,145 @@ export default PetInfoSetting = ({route, navigation}) => {
 							</TouchableOpacity>
 						</View>
 					</View> */}
+					{/* 성별 설정 */}
+					<View style={[styles.container]}>
+						{sexEditMode ? (
+							<View style={[styles.container]}>
+								<View style={[{width: 750 * DP}, {height: 96 * DP}, {flexDirection: 'row'}]}>
+									<View style={[userInfoSetting_style.title_detail]}>
+										<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>성별</Text>
+									</View>
+									<View style={[{flexDirection: 'row'}]}>
+										<View style={[{alignItems: 'center'}, {marginLeft: 474 * DP}]}>
+											<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
+												<TouchableOpacity onPress={editSexInfo}>
+													<Text style={[txt.noto26b, {color: APRI10}]}>저장</Text>
+												</TouchableOpacity>
+											</View>
+										</View>
+									</View>
+								</View>
+								<View style={[{marginTop: 20 * DP}, {height: 82 * DP}]}>
+									<TabSelectFilled_Type1 items={['남아', '여아', '모름']} width={222} defaultIndex={getPetSex()} onSelect={onSexChange} />
+								</View>
+								<View style={[{marginTop: 30 * DP}, {height: 46 * DP}, {marginBottom: 30 * DP}, {flexDirection: 'row'}]}>
+									<Text style={[txt.noto30b]}>중성화</Text>
+									<View style={[{marginLeft: 80 * DP}]}>
+										<RadioBox items={['예', '아니오', '모름']} onSelect={onSelectNeutralization} defaultSelect={getNeutralizationDefault()} />
+									</View>
+								</View>
+							</View>
+						) : (
+							<View style={[{width: 750 * DP}, {flexDirection: 'row'}]}>
+								<View style={[userInfoSetting_style.title_detail]}>
+									<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>성별</Text>
+								</View>
+								<View style={[{flexDirection: 'row'}]}>
+									<View style={[{width: 462 * DP}, {height: 96 * DP}, {justifyContent: 'center'}]}>
+										<Text style={[txt.noto28, {color: MAINBLACK}]}>{/* {petData.pet_species} / {petData.pet_species_detail || ''} */}</Text>
+									</View>
+									<View style={[{alignItems: 'center'}, {marginLeft: 12 * DP}]}>
+										<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
+											<TouchableOpacity onPress={editSexInfo}>
+												{/* <Text style={[txt.noto26, {color: APRI10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>수정</Text> */}
+												<Edit46 />
+											</TouchableOpacity>
+										</View>
+									</View>
+								</View>
+							</View>
+						)}
+					</View>
+					{/* 생일 설정 */}
+					<View style={[styles.container]}>
+						{birthEditMode ? (
+							<View style={[styles.container]}>
+								<View style={[{width: 750 * DP}, {height: 96 * DP}, {flexDirection: 'row'}]}>
+									<View style={[userInfoSetting_style.title_detail]}>
+										<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>생일</Text>
+									</View>
+									<View style={[{flexDirection: 'row'}]}>
+										<View style={[{alignItems: 'center'}, {marginLeft: 474 * DP}]}>
+											<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
+												<TouchableOpacity onPress={editBirthInfo}>
+													<Text style={[txt.noto26b, {color: APRI10}]}>저장</Text>
+												</TouchableOpacity>
+											</View>
+										</View>
+									</View>
+								</View>
+								{/* <View style={[{}]}>
+									<View style={[{marginBottom: 20 * DP}]}>
+										<SelectInput width={694} height={104} value={speices} onPressInput={onSelectSpecies} />
+									</View>
+									<View style={[{marginBottom: 30 * DP}]}>
+										<SelectInput width={694} height={104} value={kind} onPressInput={onSelectKind} />
+									</View>
+								</View> */}
+							</View>
+						) : (
+							<View style={[{width: 750 * DP}, {flexDirection: 'row'}]}>
+								<View style={[userInfoSetting_style.title_detail]}>
+									<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>생일</Text>
+								</View>
+								<View style={[{flexDirection: 'row'}]}>
+									<View style={[{width: 462 * DP}, {height: 96 * DP}, {justifyContent: 'center'}]}>
+										<Text style={[txt.noto28, {color: MAINBLACK}]}>{/* {petData.pet_species} / {petData.pet_species_detail || ''} */}</Text>
+									</View>
+									<View style={[{alignItems: 'center'}, {marginLeft: 12 * DP}]}>
+										<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
+											<TouchableOpacity onPress={editBirthInfo}>
+												{/* <Text style={[txt.noto26, {color: APRI10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>수정</Text> */}
+												<Edit46 />
+											</TouchableOpacity>
+										</View>
+									</View>
+								</View>
+							</View>
+						)}
+					</View>
+					{/* 채중 설정 */}
+					<View style={[styles.container]}>
+						{weightEditMode ? (
+							<View style={[styles.container]}>
+								<View style={[{width: 750 * DP}, {height: 96 * DP}, {flexDirection: 'row'}]}>
+									<View style={[userInfoSetting_style.title_detail]}>
+										<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>체중</Text>
+									</View>
+									<View style={[{flexDirection: 'row'}]}>
+										<View style={[{alignItems: 'center'}, {marginLeft: 474 * DP}]}>
+											<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
+												<TouchableOpacity onPress={editWeightInfo}>
+													<Text style={[txt.noto26b, {color: APRI10}]}>저장</Text>
+												</TouchableOpacity>
+											</View>
+										</View>
+									</View>
+								</View>
+								<View style={[{}]}></View>
+							</View>
+						) : (
+							<View style={[{width: 750 * DP}, {flexDirection: 'row'}]}>
+								<View style={[userInfoSetting_style.title_detail]}>
+									<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>체중</Text>
+								</View>
+								<View style={[{flexDirection: 'row'}]}>
+									<View style={[{width: 462 * DP}, {height: 96 * DP}, {justifyContent: 'center'}]}>
+										<Text style={[txt.noto28, {color: MAINBLACK}]}>{/* {petData.pet_species} / {petData.pet_species_detail || ''} */}</Text>
+									</View>
+									<View style={[{alignItems: 'center'}, {marginLeft: 12 * DP}]}>
+										<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
+											<TouchableOpacity onPress={editWeightInfo}>
+												{/* <Text style={[txt.noto26, {color: APRI10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>수정</Text> */}
+												<Edit46 />
+											</TouchableOpacity>
+										</View>
+									</View>
+								</View>
+							</View>
+						)}
+					</View>
+
 					{/* 가족 계정 추가 */}
 					{/* 반려 동물 상태가 companion인 경우에만 보이도록 추후 변경 예정 */}
 					{/* {data.pet_status == 'companion' && ( */}
@@ -629,7 +1025,7 @@ const styles = StyleSheet.create({
 		// paddingVertical: 40 * DP,
 		borderBottomColor: GRAY40,
 		borderBottomWidth: 2 * DP,
-		justifyContent: 'center',
+		// justifyContent: 'center',
 		alignItems: 'center',
 		// backgroundColor: 'yellow',
 	},

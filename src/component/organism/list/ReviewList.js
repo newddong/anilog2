@@ -20,6 +20,7 @@ import RecommendReview from '../article/RecommendReview';
  * @param {()=>void} props.onPressMeatball - 미트볼 클릭
  * @param {()=>void} props.onEndReached - 스크롤 최하단 콜백
  * @param {string} props.isSearch - 리뷰 컨텐츠 클릭
+ * @param {boolean} props.showRecommend - 리뷰 컨텐츠 클릭
  */
 export default ReviewList = props => {
 	const items = props.items;
@@ -75,7 +76,7 @@ export default ReviewList = props => {
 	const renderItem = ({item, index}) => {
 		return (
 			<>
-				{index == 3 ? recommendReview() : <></>}
+				{index == 3 && props.showRecommend ? recommendReview() : <></>}
 				<Review
 					data={item}
 					isSearch={props.isSearch}
@@ -128,6 +129,7 @@ ReviewList.defaultProps = {
 	whenEmpty: () => {
 		return <></>;
 	},
+	showRecommend: true,
 	onPressReply: () => {},
 	onPressReviewContent: () => {},
 	onPressLike: () => {},

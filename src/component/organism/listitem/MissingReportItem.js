@@ -71,6 +71,18 @@ export default MissingReportItem = React.memo(props => {
 		return date;
 	};
 
+	const getAge = date => {
+		let yr = date;
+		let month = Math.floor((yr - Math.floor(yr)) * 12);
+		let missingAnimalAge = '';
+		if (yr >= 1) {
+			missingAnimalAge = Math.floor(yr) + '살' + (month > 0 ? ' ' + month + '개월' : '');
+		} else {
+			missingAnimalAge = month + '개월';
+		}
+		return missingAnimalAge;
+	};
+
 	const getParsedSex = () => {
 		let sexData = data.missing_animal_sex;
 		switch (sexData) {
@@ -122,7 +134,7 @@ export default MissingReportItem = React.memo(props => {
 									실종일: {getParsedDate()}
 								</Text>
 								<Text style={[txt.noto28, {}]}>
-									나이:{data.missing_animal_age + '살' || ''} / 성별: {getParsedSex()}
+									나이: {getAge(data.missing_animal_age)} / 성별: {getParsedSex()}
 								</Text>
 								<Text style={[txt.noto28, {width: 408 * DP}]} numberOfLines={1}>
 									실종위치: {getParsedAddress() || ''}

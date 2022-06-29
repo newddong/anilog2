@@ -13,7 +13,7 @@ import {Arrow_Down_GRAY10, Arrow_Up_GRAY10} from 'Root/component/atom/icon';
  * @param {index:number} props.onPressLike - 리뷰 아이템 좋아요 클릭
  */
 const ReviewBriefList = props => {
-	const [showMore, setShowMore] = React.useState(false);
+	const [showMore, setShowMore] = React.useState(true);
 	const scrollRef = React.useRef('');
 
 	const items = showMore ? props.items : props.items.slice(0, 2);
@@ -39,14 +39,14 @@ const ReviewBriefList = props => {
 					return renderItem(v, i);
 				})}
 			</ScrollView>
-			{props.items && props.items.length > 2 ? ( //아이템이 두 개 이상일 경우 더보기 출력
+			{/* {props.items && props.items.length > 2 ? ( //아이템이 두 개 이상일 경우 더보기 출력
 				<TouchableOpacity onPress={onPressShowMore} style={[style.showMore]}>
 					<Text style={[txt.noto24, {color: GRAY10}]}>더보기</Text>
 					{!showMore ? <Arrow_Down_GRAY10 /> : <Arrow_Up_GRAY10 />}
 				</TouchableOpacity>
 			) : (
 				<></>
-			)}
+			)} */}
 		</View>
 	);
 };

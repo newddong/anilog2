@@ -11,7 +11,7 @@ import ShelterSmallLabel from 'Root/component/molecules/label/ShelterSmallLabel'
 import {KeyBoardEvent, useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import {useNavigation} from '@react-navigation/core';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
-import Loading from 'Root/component/molecules/modal/Loading';
+import {NETWORK_ERROR, REGISTERING_COMMENT} from 'Root/i18n/msg';
 
 export default ProtectCommentList = props => {
 	// console.log('props.showAllContents', props.route.params.showAllContents);
@@ -75,6 +75,7 @@ export default ProtectCommentList = props => {
 						res[i].isDeleted = false;
 					});
 				}
+
 				setComments(res);
 				setIsLoading(false);
 				if (params.edit && editFromDetailRef) {
@@ -102,7 +103,7 @@ export default ProtectCommentList = props => {
 			});
 		} else {
 			if (editData.comment_contents.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
-			Modal.popLoading(true);
+			Modal.popNoBtn(REGISTERING_COMMENT);
 
 			let param = {
 				comment_contents: editData.comment_contents, //내용
@@ -152,6 +153,9 @@ export default ProtectCommentList = props => {
 									});
 								}
 								setComments(res);
+								res.map((v, i) => {
+									console.log('i', i, v.comment_is_like);
+								});
 								setPrivateComment(false);
 								setEditMode(false);
 								// console.log('editData.parent', editData.parent, 'whichComment', whichComment);
@@ -202,10 +206,22 @@ export default ProtectCommentList = props => {
 								parentComment && addChildCommentFn.current();
 								Modal.close();
 							},
-							err => console.log(err),
+							err => {
+								Modal.close();
+								setTimeout(() => {
+									Modal.alert(NETWORK_ERROR);
+								}, 200);
+								console.log('getCommentListByProtectId err ', err);
+							},
 						);
 					},
-					err => console.log(err),
+					err => {
+						Modal.close();
+						setTimeout(() => {
+							Modal.alert(NETWORK_ERROR);
+						}, 200);
+						console.log('createComment err ', err);
+					},
 				);
 			}
 		}

@@ -29,6 +29,8 @@ import ChangePetProfileImage from 'Root/component/templete/pet/ChangePetProfileI
 import ProfileHeader from '../../../header/ProfileHeader';
 import SocialRelationTopTabNavigation from '../protection_stack/socialRelation_tab/SocialRelationTopTabNavigation';
 import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
+import AddPhoto from 'Root/component/templete/media/AddPhoto';
+import PhotoSelectHeader from 'Root/navigation/header/PhotoSelectHeader';
 
 const CommunityMainStackNavi = createStackNavigator();
 
@@ -176,6 +178,12 @@ export default CommunityMainStack = props => {
 				component={FeedCommentList}
 				options={{header: props => <SimpleHeader {...props} />, title: '댓글'}}
 			/>
+			<CommunityMainStackNavi.Screen
+				name="SinglePhotoSelect"
+				component={AddPhoto}
+				options={{header: props => <PhotoSelectHeader {...props} />, title: ''}}
+			/>
+
 			<CommunityMainStackNavi.Screen
 				name="EditShelterInfo"
 				component={EditShelterInfo}

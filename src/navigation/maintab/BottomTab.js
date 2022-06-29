@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Image, Keyboard, Animated, Easing, Platform} from 'react-native';
 import DP from 'Root/config/dp';
 import SvgWrapper, {SvgWrap} from 'Atom/svgwrapper';
 import {txt} from 'Root/config/textstyle';
@@ -17,9 +17,10 @@ import {
 } from 'Atom/icon';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import FastImage from 'react-native-fast-image';
-import {KeyBoardEvent} from 'Root/component/molecules/input/usekeyboardbottom';
+import {KeyBoardEvent, keyShow} from 'Root/component/molecules/input/usekeyboardbottom';
+import comment_obj from 'Root/config/comment_obj';
 
-export default function BottomTab({state, descriptors, navigation}) {
+export default function BottomTab({state, descriptors, navigation, focus}) {
 	// console.log('바텀탭 유저 글로벌',userGlobalObject);
 	const focusedOptions = descriptors[state.routes[state.index].key].options;
 	const icons = [<FeedTabBorder />, <AnimalSavingTabBorder />, <CommunityTabBorder />, <MyTabBorder />];
@@ -31,6 +32,7 @@ export default function BottomTab({state, descriptors, navigation}) {
 	if (focusedOptions.tabBarVisible === false) {
 		return null;
 	}
+
 	//SearchTab이 MainTab으로 편입되면서 불가피하게 제작
 	//서치탭이 포커스(돋보기 클릭)되지만 탭의 선택상태는 이전의 Tab상태로 유지를 해야함
 	//더 좋은 방법이 있을 시 개선 [상우]
@@ -57,24 +59,83 @@ export default function BottomTab({state, descriptors, navigation}) {
 
 	const nestedState = state.routes[state.index].state;
 	const nestedRouteName = nestedState ? nestedState.routes[nestedState.index].name : 'none';
-
 	const [isKeyboardVisible, setKeyboardVisible] = React.useState(false);
-
-	//댓글 수정 => 키보드 해제시 수정모드가 종료되도록 적용
+	const animatedHeight = React.useRef(new Animated.Value(100 * DP)).current;
+	const translation = React.useRef(new Animated.Value(0 * DP)).current;
+	// 댓글 수정 => 키보드 해제시 수정모드가 종료되도록 적용
 	KeyBoardEvent(
 		() => {
-			setKeyboardVisible(true);
+			Animated.timing(translation, {
+				duration: Platform.OS == 'ios' ? 400 : 200,
+				toValue: 100 * DP,
+				delay: Platform.OS == 'ios' ? 200 : 0,
+				easing: Easing.linear,
+				useNativeDriver: true,
+			}).start(({finished}) => {
+				if (finished) {
+					Platform.OS == 'ios' ? false : setKeyboardVisible(true);
+				}
+			});
+			Platform.OS == 'ios' ? setKeyboardVisible(true) : false;
 		},
 		() => {
+			Animated.timing(translation, {
+				duration: 200,
+				toValue: 0 * DP,
+				easing: Easing.linear,
+				useNativeDriver: true,
+			}).start(() => {});
 			setKeyboardVisible(false);
+
+			// Animated.timing(animatedHeight, {
+			// 	duration: 0,
+			// 	toValue: 100 * DP,
+			// 	// easing: Easing.exp,
+			// 	useNativeDriver: false,
+			// }).start(() => {
+			// 	setKeyboardVisible(false);
+			// });
 		},
 	);
 
-	if (nestedRouteName.includes('CommentList') && isKeyboardVisible) return false;
+	if (nestedRouteName == 'CommunityWrite' || nestedRouteName == 'CommunityEdit') return false;
 	return (
 		<>
-			<Shadow />
-			<View style={tab.wrap_main}>
+			{isKeyboardVisible ? (
+				<></>
+			) : (
+				<>
+					<View
+						style={{
+							position: 'absolute',
+							width: '100%',
+							height: 106 * DP,
+							backgroundColor: isKeyboardVisible ? 'white' : '#767676',
+							bottom: 0,
+							opacity: 0.03,
+						}}></View>
+					<View
+						style={{
+							position: 'absolute',
+							width: '100%',
+							height: 103 * DP,
+							backgroundColor: isKeyboardVisible ? 'white' : '#767676',
+							bottom: 0,
+							opacity: 0.1,
+						}}></View>
+				</>
+			)}
+
+			<Animated.View
+				style={[
+					tab.wrap_main,
+					{
+						// opacity: isKeyboardVisible ? 0 : 1,
+						// height: isCommentListPage ? animatedHeight : 100 * DP,
+						transform: [{translateY: translation}],
+						height: isKeyboardVisible ? 0 : 100 * DP,
+					},
+				]}>
 				{state.routes.map((route, index) => {
 					const {options} = descriptors[route.key];
 					const label = options.tabBarLabel !== undefined ? options.tabBarLabel : options.title !== undefined ? options.title : route.name;
@@ -178,7 +239,7 @@ export default function BottomTab({state, descriptors, navigation}) {
 						</TouchableOpacity>
 					);
 				})}
-			</View>
+			</Animated.View>
 		</>
 	);
 }

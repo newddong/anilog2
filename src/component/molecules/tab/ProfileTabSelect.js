@@ -23,6 +23,11 @@ import {
  */
 const ProfileTabSelect = props => {
 	const [selected, setSelected] = React.useState(0);
+
+	React.useEffect(() => {
+		setSelected(props.defaultIndex);
+	}, [props.defaultIndex]);
+
 	const onSelect = (item, index) => {
 		setSelected(index); //새로만들어진 배열로 state 변경
 		props.onSelect(item, index);
@@ -78,5 +83,6 @@ const ProfileTabSelect = props => {
 ProfileTabSelect.defaultProps = {
 	items: [1, 2, 3], //FlatList에 담길 배열 정보
 	onSelect: e => console.log(e), //Tab Press 이벤트
+	defaultIndex: 0,
 };
 export default ProfileTabSelect;

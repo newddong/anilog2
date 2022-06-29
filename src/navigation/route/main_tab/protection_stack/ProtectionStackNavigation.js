@@ -28,6 +28,8 @@ import CommunityHeader from 'Root/navigation/header/CommunityHeader';
 import ChangePetProfileImage from 'Root/component/templete/pet/ChangePetProfileImage';
 import ProfileHeader from 'Root/navigation/header/ProfileHeader';
 import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
+import AddPhoto from 'Root/component/templete/media/AddPhoto';
+import PhotoSelectHeader from 'Root/navigation/header/PhotoSelectHeader';
 
 const ProtectionStack = createStackNavigator();
 
@@ -53,7 +55,7 @@ export default ProtectionStackNavigation = props => {
 			<ProtectionStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />}} />
 			<ProtectionStack.Screen name="HashFeedList" component={FeedList} />
 			<ProtectionStack.Screen name="ProtectAnimalFeedList" component={FeedList} />
-			<ProtectionStack.Screen name="UserTagFeedList" component={FeedList} />
+			<ProtectionStack.Screen name="UserTagFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: '프로필'}} />
 			<ProtectionStack.Screen
 				name="AnimalProtectRequestDetail"
 				component={AnimalProtectRequestDetail}
@@ -73,6 +75,11 @@ export default ProtectionStackNavigation = props => {
 				name="FeedCommentList"
 				component={FeedCommentList}
 				options={{header: props => <SimpleHeader {...props} />, title: '댓글'}}
+			/>
+			<ProtectionStack.Screen
+				name="SinglePhotoSelect"
+				component={AddPhoto}
+				options={{header: props => <PhotoSelectHeader {...props} />, title: ''}}
 			/>
 			<ProtectionStack.Screen
 				name="ProtectCommentList"

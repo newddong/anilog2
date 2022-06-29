@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, View, Dimensions, Text, StyleSheet} from 'react-native';
+import {SafeAreaView, View, Dimensions, Text, StyleSheet, LogBox} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
@@ -85,6 +85,7 @@ export default RootStackNavigation = () => {
 	const [isPop, popupComponent] = useModal();
 	const [isLoading, setLoading] = React.useState(true);
 	const [initialRouteName, setInitialRouteName] = React.useState('Login');
+	LogBox.ignoreLogs(['ViewPropTypes will be removed', 'ColorPropType will be removed', 'EdgeInsetsPropType', 'PointPropType']);
 
 	React.useEffect(() => {
 		AsyncStorage.getItem('userSetting', (err, userSetting) => {

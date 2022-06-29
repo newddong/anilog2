@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, TouchableOpacity, View, FlatList, Platform, StyleSheet} from 'react-native';
+import {Text, TouchableOpacity, View, FlatList, Platform, StyleSheet, Linking} from 'react-native';
 import RescueImage from 'Root/component/molecules/image/RescueImage';
 import {txt} from 'Root/config/textstyle';
 import {APRI10, GRAY10, GRAY20, GRAY30, GRAY40, WHITE} from 'Root/config/color';
@@ -185,7 +185,8 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		} else {
 			// console.log('AnimalProtectRequestDetail', item);
 			const animal_sex_toString = item.protect_animal_id.protect_animal_sex == 'female' ? '여' : '남';
-			const title = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + animal_sex_toString;
+			const title =
+				item.protect_animal_species + '/' + item.protect_animal_species_detail ? item.protect_animal_species_detail + '/' : '' + animal_sex_toString;
 			navigation.push('AnimalProtectRequestDetail', {id: item._id, title: title, writer: item.protect_request_writer_id._id});
 		}
 	};
@@ -218,9 +219,11 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	//임시보호 버튼 클릭
 	const onPressProtectRequest = () => {
-		console.log('data.protect_request_writer_id.user_contacted', data.protect_request_writer_id.user_contacted);
 		if (!data.protect_request_writer_id.user_contacted) {
 			// Modal.popOneBtn(NOT_REGISTERED_SHELTER, '확인', Modal.close);
+			Modal.popTwoBtn(`${data.protect_request_writer_id.user_nickname}님의 \n 전화로 연결하시겠습니까?`, '아니오', '확 인', Modal.close, () => {
+				Linking.openURL(`tel:${data.protect_request_writer_id.shelter_delegate_contact_number}`);
+			});
 		} else {
 			navigation.push('ApplyProtectActivityA', {protect_request_pet_data: data});
 		}
@@ -228,9 +231,11 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	//입양하기 버튼 클릭
 	const onPressAdoptionRequest = () => {
-		console.log('data.protect_request_writer_id.user_contacted', data.protect_request_writer_id.user_contacted);
 		if (!data.protect_request_writer_id.user_contacted) {
-			Modal.popOneBtn(NOT_REGISTERED_SHELTER, '확인', Modal.close);
+			// Modal.popOneBtn(NOT_REGISTERED_SHELTER, '확인', Modal.close);
+			Modal.popTwoBtn(`${data.protect_request_writer_id.user_nickname}님의 \n 전화로 연결하시겠습니까?`, '아니오', '확 인', Modal.close, () => {
+				Linking.openURL(`tel:${data.protect_request_writer_id.shelter_delegate_contact_number}`);
+			});
 		} else {
 			navigation.push('ApplyAnimalAdoptionA', {protect_request_pet_data: data});
 		}
@@ -554,7 +559,7 @@ const style = StyleSheet.create({
 	},
 	btnContainer: {
 		width: 750 * DP,
-		height: 164 * DP,
+		height: 138 * DP,
 		backgroundColor: 'white',
 		justifyContent: 'space-between',
 		position: 'absolute',
@@ -573,7 +578,7 @@ const style = StyleSheet.create({
 		},
 		elevation: 4,
 		paddingTop: 20 * DP,
-		paddingBottom: 46 * DP,
+		paddingBottom: 20 * DP,
 	},
 	shareDropDown: {
 		width: 384 * DP,

@@ -4,7 +4,6 @@ import {
 	View,
 	FlatList,
 	RefreshControl,
-	Platform,
 	NativeModules,
 	Text,
 	TextInput,
@@ -100,6 +99,7 @@ export default FeedList = ({route, navigation}) => {
 
 	//피드리스트 호출
 	const getList = (pre, next) => {
+		console.log('FeedList , route.name', route.name);
 		switch (route.name) {
 			case 'UserFeedList':
 				try {
@@ -189,7 +189,7 @@ export default FeedList = ({route, navigation}) => {
 				};
 				//기본 LIMIT보다 작은 인덱스가 선택됐을 경우 다음 페이지 호출만 요청
 				if (route.params && route.params.index < 10) {
-					console.log('route.params && route.params.index < 10', route.params && route.params.index < 10);
+					// console.log('route.params && route.params.index < 10', route.params && route.params.index < 10);
 					if (!pre && next) {
 						console.log('next');
 						params.target_object_id = feedList[feedList.length - 1]._id;
@@ -211,7 +211,7 @@ export default FeedList = ({route, navigation}) => {
 						params.order_value = 'interrupt';
 					}
 				}
-				console.log('최종 param', params);
+				console.log('UserTagFeedList, 최종 param', params);
 				getUserTaggedFeedList(
 					params,
 					result => {
@@ -292,7 +292,7 @@ export default FeedList = ({route, navigation}) => {
 						params.order_value = 'interrupt';
 					}
 				}
-				console.log('getUserTaggedFeedList 최종 param', params);
+				console.log('TagMeFeedList 최종 param', params);
 				getUserTaggedFeedList(
 					params,
 					result => {
@@ -439,7 +439,7 @@ export default FeedList = ({route, navigation}) => {
 			let indx = feedList.findIndex(v => v._id == route.params?.selected?._id);
 			if (route.params?.selected && !scrollComplete) {
 				setTimeout(() => {
-					flatlist.current.scrollToItem({
+					flatlist.current?.scrollToItem({
 						animated: false,
 						item: feedList[indx],
 					});

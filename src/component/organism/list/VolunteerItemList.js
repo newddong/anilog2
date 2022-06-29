@@ -46,6 +46,7 @@ export default VolunteerItemList = props => {
 
 VolunteerItemList.defaultProps = {
 	onClickItem: e => console.log(e),
+	onClickLabel: () => {},
 	isShelterUser: false,
 	showStatus: true,
 };

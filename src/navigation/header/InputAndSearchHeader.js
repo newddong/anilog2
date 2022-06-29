@@ -37,7 +37,7 @@ export default InputAndSearchHeader = props => {
 			props.navigation.setParams({
 				reSearch: () => reSearch(),
 			});
-			inputRef.current.focus();
+			// inputRef.current.focus();
 		}
 	}, []);
 

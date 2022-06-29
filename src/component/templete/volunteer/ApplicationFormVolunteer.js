@@ -1,19 +1,19 @@
 import React from 'react';
-import {ActivityIndicator, ScrollView, Text, TouchableOpacity, View, Linking} from 'react-native';
-import {APRI10, BLUE20, GRAY10} from 'Root/config/color';
+import {ActivityIndicator, ScrollView, Text, TouchableOpacity, View, Linking, StyleSheet} from 'react-native';
+import {APRI10, BLUE20, GRAY10, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {Calendar48_Filled, Person48, Phone48} from 'Atom/icon';
+import {Calendar48_Border, Calendar48_Filled, Person48, Phone48, Phone48_BLACK} from 'Atom/icon';
 import Modal from 'Root/component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
 import ShelterInfo from 'Organism/info/ShelterInfo';
-import AccountList from 'Organism/list/AccountList';
-import {login_style, applicationFormVolunteer, btn_style} from 'Templete/style_templete';
+import {login_style} from 'Templete/style_templete';
 import moment from 'moment';
 import {setVolunteerActivityAcceptByMember, setVolunteerActivityStatus} from 'Root/api/volunteerapi';
 import {hyphened} from 'Root/util/dateutil';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {btn_w654} from 'Root/component/atom/btn/btn_style';
 import UserDescriptionLabel from 'Root/component/molecules/label/UserDescriptionLabel';
+import DP from 'Root/config/dp';
 
 //ApplicationFormVolunteer (봉사활동 신청서 폼) 호출 네비게이트
 // ==> ManageVolunteer에서 더보기 클릭, 혹은 AppliesRecord(신청내역)에서 보호소 라벨 클릭 <==
@@ -22,7 +22,6 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 
 	const data = route.params; // 봉사활동 Object
 	const isShelterOwner = route.name == 'ShelterVolunteerForm'; // 보호소 계정의 봉사활동 신청관리 루트로 들어왔는지 여부
-	console.log('datadata', data);
 	React.useEffect(() => {
 		if (route.name == 'UserVolunteerForm') {
 			// console.log('BeforeSplice', data);
@@ -256,7 +255,7 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 			if (data.volunteer_status == 'accept') {
 				return (
 					<View style={[applicationFormVolunteer.notAcceptText]}>
-						<Text style={[txt.roboto28, {color: APRI10}]}>이미 신청 승락하신 봉사활동입니다.</Text>
+						<Text style={[txt.roboto28, {color: MAINBLACK}]}>이미 신청 승락하신 봉사활동입니다.</Text>
 					</View>
 				);
 			} else if (data.volunteer_status == 'notaccept') {
@@ -264,15 +263,15 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 				const notAcceptTitle = '(사유 - ' + data.volunteer_reason_of_notaccept + ')';
 				return (
 					<View style={[applicationFormVolunteer.notAcceptText]}>
-						<Text style={[txt.roboto32, {color: APRI10}]}>다음의 사유로 신청거절 하셨습니다.</Text>
-						<Text style={[txt.roboto24, {color: APRI10}]}>{notAcceptTitle}</Text>
+						<Text style={[txt.roboto32, {color: MAINBLACK}]}>다음의 사유로 신청거절 하셨습니다.</Text>
+						<Text style={[txt.roboto24, {color: MAINBLACK}]}>{notAcceptTitle}</Text>
 					</View>
 				);
 			} else if (data.volunteer_status == 'cancel') {
 				//봉사활동신청자가 취소한 경우
 				return (
 					<View style={[applicationFormVolunteer.notAcceptText]}>
-						<Text style={[txt.roboto28, {color: APRI10}]}>봉사활동 신청자가 해당 건을 취소하였습니다.</Text>
+						<Text style={[txt.roboto28, {color: MAINBLACK}]}>봉사활동 신청자가 해당 건을 취소하였습니다.</Text>
 					</View>
 				);
 			} else if (data.volunteer_status == 'waiting') {
@@ -320,7 +319,7 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 			}
 			return (
 				<View style={[applicationFormVolunteer.notAcceptText]}>
-					<Text style={[txt.roboto28, {color: APRI10}]}>{title}</Text>
+					<Text style={[txt.roboto28, {color: MAINBLACK}]}>{title}</Text>
 				</View>
 			);
 		} else {
@@ -330,8 +329,8 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 				const notAcceptTitle = '(사유 - ' + data.volunteer_reason_of_notaccept + ')';
 				return (
 					<View style={[applicationFormVolunteer.notAcceptText]}>
-						<Text style={[txt.roboto32, {color: APRI10}]}>활동 거절</Text>
-						<Text style={[txt.roboto24, {color: APRI10}]}>{notAcceptTitle}</Text>
+						<Text style={[txt.roboto32, {color: MAINBLACK}]}>활동 거절</Text>
+						<Text style={[txt.roboto24, {color: MAINBLACK}]}>{notAcceptTitle}</Text>
 					</View>
 				);
 			} else if (data.volunteer_status == 'cancel') {
@@ -342,7 +341,7 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 					: (canceledText = '봉사활동 신청자가 해당 건을 취소하였습니다.'); //참여자
 				return (
 					<View style={[applicationFormVolunteer.notAcceptText]}>
-						<Text style={[txt.roboto28, {color: APRI10}]}>{canceledText}</Text>
+						<Text style={[txt.roboto28, {color: MAINBLACK}]}>{canceledText}</Text>
 					</View>
 				);
 			} else if (data.volunteer_status == 'waiting' || data.volunteer_status == 'accept') {
@@ -353,7 +352,7 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 					if (data.volunteer_status == 'accept') {
 						return (
 							<View style={[applicationFormVolunteer.notAcceptText]}>
-								<Text style={[txt.roboto28, {color: APRI10}]}>신청 승락 상태입니다.</Text>
+								<Text style={[txt.roboto28, {color: MAINBLACK}]}>신청 승락 상태입니다.</Text>
 							</View>
 						);
 					} else {
@@ -391,10 +390,10 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 				<View style={[applicationFormVolunteer.viewForm]}>
 					<View style={[applicationFormVolunteer.viewForm_step1]}>
 						<View style={[applicationFormVolunteer.icon48]}>
-							<Calendar48_Filled />
+							<Calendar48_Border />
 						</View>
 						<View style={[applicationFormVolunteer.title]}>
-							<Text style={[txt.noto24b, {color: GRAY10}]}>봉사활동 희망 날짜</Text>
+							<Text style={[txt.noto24b, {color: MAINBLACK}]}>봉사활동 희망 날짜</Text>
 						</View>
 					</View>
 					<View style={{}}>
@@ -442,7 +441,7 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 				<View style={[applicationFormVolunteer.participants_contact]}>
 					<View style={[applicationFormVolunteer.viewForm_step1]}>
 						<View style={[applicationFormVolunteer.icon48]}>
-							<Phone48 />
+							<Phone48_BLACK />
 						</View>
 						<View style={[applicationFormVolunteer.title]}>
 							<Text style={[txt.noto24b, {color: GRAY10}]}>봉사 활동자 연락처</Text>
@@ -469,3 +468,133 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 		</View>
 	);
 };
+
+const applicationFormVolunteer = StyleSheet.create({
+	container: {
+		// flex: 1,
+		width: 750 * DP,
+		alignItems: 'center',
+	},
+	shelterInfo: {
+		width: 702 * DP,
+		height: 246 * DP,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: 'white',
+		marginTop: 30 * DP,
+	},
+	viewForm: {
+		width: 654 * DP,
+		marginTop: 40 * DP,
+	},
+	viewForm_step1: {
+		width: 654 * DP,
+		height: 52 * DP,
+		flexDirection: 'row',
+	},
+	icon48: {
+		width: 48 * DP,
+		height: 48 * DP,
+	},
+	title: {
+		width: 590 * DP,
+		height: 42 * DP,
+		marginLeft: 16 * DP,
+		marginTop: 4 * DP,
+		marginBottom: 10 * DP,
+		flexDirection: 'row',
+	},
+	viewForm_step2: {
+		// width: 540 * DP,
+		marginTop: 10 * DP,
+		marginLeft: 40 * DP,
+		paddingLeft: 20 * DP,
+		flexDirection: 'row',
+	},
+	volunteer_date_input: {
+		height: 82 * DP,
+		// marginRight: 20 * DP,
+		borderBottomColor: APRI10,
+		borderBottomWidth: 2 * DP,
+		justifyContent: 'center',
+	},
+	wish_date_separator: {
+		width: 540 * DP,
+		height: 82 * DP,
+		marginLeft: 48 * DP,
+		alignItems: 'center',
+		flexDirection: 'row',
+		borderBottomWidth: 4 * DP,
+		borderBottomColor: MAINBLACK,
+	},
+	volunteer_date: {},
+	participants: {
+		width: 654 * DP,
+		marginTop: 40 * DP,
+	},
+	participants_step1: {
+		width: 654 * DP,
+		height: 52 * DP,
+		flexDirection: 'row',
+	},
+	participants_step2: {
+		width: 450 * DP,
+		marginTop: 20 * DP,
+	},
+	addParticipantBtn: {
+		width: 654 * DP,
+		paddingLeft: 25 * DP,
+		flexDirection: 'row',
+	},
+	addParticipantTxt: {
+		color: MAINBLACK,
+		alignSelf: 'center',
+		justifyContent: 'center',
+		marginLeft: 30 * DP,
+	},
+	participants_contact: {
+		width: 654 * DP,
+		height: 42 * DP,
+		marginTop: 40 * DP,
+	},
+	participants_contact_text: {
+		width: 590 * DP,
+		height: 42 * DP,
+		marginTop: 10 * DP,
+		paddingLeft: 66 * DP,
+	},
+	buttonContainer: {
+		width: 654 * DP,
+		marginTop: 110 * DP,
+		marginBottom: 66 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+	},
+	btnContainer: {
+		width: 654 * DP,
+		marginTop: 60 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+	},
+	notAcceptText: {
+		borderRadius: 30 * DP,
+		borderWidth: 2 * DP,
+		borderColor: MAINBLACK,
+		// padding: 30 * DP,
+		paddingHorizontal: 20 * DP,
+		width: 654 * DP,
+		paddingVertical: 15 * DP,
+		alignItems: 'center',
+	},
+	accompanyItem: {
+		width: 630 * DP,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		marginBottom: 20 * DP,
+	},
+	accompanyItemLabel: {
+		// backgroundColor: 'red',
+		width: 440 * DP,
+	},
+});

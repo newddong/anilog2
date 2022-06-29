@@ -25,6 +25,8 @@ import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
 import Crop from 'Molecules/media/Crop';
+import PermissionIos from 'Root/module/PermissionIos';
+import {PERMISSION_IOS_STATUS} from 'Root/module/PermissionIosStatics';
 
 export var exportUriList = []; //겔러리 속 사진들 로컬 주소
 export var exportUri = {}; //겔러리 속 사진 로컬 주소
@@ -165,7 +167,30 @@ export default AddPhoto = props => {
 		console.log('최초 로드');
 		CameraRoll.getAlbums({albumType: 'All', assetType: 'Photos'}).then(r => setAlbumList(['모든사진'].concat(r.map(v => v.title))));
 		if (Platform.OS === 'ios') {
-			loadPhotosMilsec(40);
+			PermissionIos.checkPermission()
+			.then(status => {
+				console.log("사진접근권한 확인:", status);
+				if(status == PERMISSION_IOS_STATUS.NotDetermined){
+					PermissionIos.requestPermission()
+					.then(statusAfterRequest => {
+						console.log("권한 요청 후: ", statusAfterRequest);
+						if(statusAfterRequest == PERMISSION_IOS_STATUS.Authorized){
+							loadPhotosMilsec(40);
+						} else {
+							//!!이미 권한 요청했는데 허가하지 않았으므로 사진추가 창을 닫아야 합니다. 이쪽에 사진추가 창 닫는 거 추가해주세요!
+						}
+					})
+				} else if(status != PERMISSION_IOS_STATUS.Authorized){
+					PermissionIos.popupAlert(PermissionIos.getDefaultAlertParams());
+					//!!설정에서 사용자가 변경했는지 다시 체크하기보다는 사진추가를 다시 누르게 하는 게 맞지 않을까 싶습니다. 이쪽에 사진추가 창 닫는 거 추가해주세요!
+					//설정을 바꾸고 앱에 들어오면 자동으로 앱이 리로드되며 로그인 창으로 돌아가지만, 설정을 바꾸지 않으면 글쓰기 창에 남아있어야 합니다.
+				} else {
+					loadPhotosMilsec(40);
+				}
+			})
+			.catch(err => {
+				console.warn(err);
+			});
 		} else {
 			try {
 				console.log('안드로이드 OS확인');

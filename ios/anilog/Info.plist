@@ -43,7 +43,7 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>YOUR TEXT</string>
+	<string>서비스 동작을 위해 카메라 접근 권한이 필요합니다.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>서비스 동작을 위해 위치 정보가 필요합니다</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -51,9 +51,9 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>서비스 동작을 위해 위치 정보가 필요합니다</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>YOUR TEXT</string>
+	<string>서비스 동작을 위해 사진 접근 권한이 필요합니다.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>YOUR TEXT</string>
+	<string>서비스 동작을 위해 사진 접근 권한이 필요합니다.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>NotoSansKR-Bold.otf</string>
@@ -89,6 +89,5 @@
 	<false/>
 	<key>CodePushDeploymentKey</key>
 	<string>$(CODEPUSH_KEY)</string>
-
 </dict>
 </plist>

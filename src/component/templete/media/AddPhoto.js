@@ -6,6 +6,7 @@ import {
 	PermissionsAndroid,
 	Text,
 	TouchableWithoutFeedback,
+	TouchableOpacity,
 	Image,
 	FlatList,
 	NativeModules,
@@ -41,6 +42,7 @@ export default AddPhoto = props => {
 	const flatlist = React.useRef();
 	const lastIndex = React.useRef(0);
 	const viewCount = 100;
+	const [index,setIndex] = React.useState(0);
 	/**
 	 * timeStamp, imageID를 이용하여 디바이스의 갤러리에 있는 미디어를 불러옴
 	 *
@@ -246,14 +248,16 @@ export default AddPhoto = props => {
 	React.useEffect(() => {
 		console.log('사진목록 변경', selectedPhoto);
 		navigation.setParams({selectedPhoto: selectedPhoto});
-		let index = selectedPhoto.length>0&&photolist.findIndex(v=>v.node.image.uri==selectedPhoto[selectedPhoto.length-1].uri)/4;
-		index>0&&selectedPhoto.length>0&&flatlist.current.scrollToIndex({index:Math.floor(index)});
+		// selectedPhoto.length>0?setIndex(selectedPhoto.length-1):setIndex(0);
+	// 	let index = selectedPhoto.length>0&&photolist.findIndex(v=>v.node.image.uri==selectedPhoto[selectedPhoto.length-1].uri)/4;
+	// 	index>0&&selectedPhoto.length>0&&flatlist.current.scrollToIndex({index:Math.floor(index)});
 	}, [selectedPhoto]);
 
 	React.useEffect(() => {
 		
 		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
 			setSelectedPhoto(props.route.params.selectedPhoto);
+			setIndex(props.route.params.selectedPhoto.length-1);
 		}
 	}, [props.route.params.selectedPhoto]);
 	const selectPhoto = photo => {
@@ -273,6 +277,7 @@ export default AddPhoto = props => {
 			
 			setSelectedPhoto(selectedPhoto.concat(obj));
 		}
+		setIndex(selectedPhoto.length);
 
 	}
 
@@ -283,6 +288,7 @@ export default AddPhoto = props => {
 		} else {
 			setSelectedPhoto(selectedPhoto.filter(v => photo != (v.originUri ?? v.uri)));
 		}
+		setIndex(selectedPhoto.length-2);
 	}
 
 	const renderList = ({item, index}) => {
@@ -334,6 +340,30 @@ export default AddPhoto = props => {
 		}
 	};
 
+	const next = () => {
+		let idx = 0;
+		if(selectedPhoto.length<1)return;
+		if(index+1>selectedPhoto.length-1){
+			idx = photolist.findIndex(v=>v.node.image.uri==(selectedPhoto[0].originUri??selectedPhoto[0].uri))/4;
+			setIndex(0);
+		}else{
+			idx = photolist.findIndex(v=>v.node.image.uri==(selectedPhoto[index+1].originUri??selectedPhoto[index+1].uri))/4;
+			setIndex(index+1);
+		}
+		flatlist.current.scrollToIndex({index:Math.floor(idx)});
+	}
+	const prev = () => {
+		let idx = selectedPhoto.length-1;
+		if(index-1<0){
+			idx = photolist.findIndex(v=>v.node.image.uri==(selectedPhoto[selectedPhoto.length-1].originUri??selectedPhoto[selectedPhoto.length-1].uri))/4;
+			setIndex(selectedPhoto.length-1);
+			
+		}else{
+			idx = photolist.findIndex(v=>v.node.image.uri==(selectedPhoto[index-1].originUri??selectedPhoto[index-1].uri))/4;
+			setIndex(index-1);
+		}
+		flatlist.current.scrollToIndex({index:Math.floor(idx)});
+	}
 	return (
 		<View style={lo.wrp_main}>
 			{selectedPhoto[selectedPhoto.length - 1]?.isVideo ? (
@@ -341,13 +371,13 @@ export default AddPhoto = props => {
 			) : (
 				// <Video style={lo.box_img} source={{uri: selectedPhoto[selectedPhoto.length-1]?.uri}} muted />
 				<View>
-					{selectedPhoto.length > 0 ? (
+					{selectedPhoto[index]&&selectedPhoto.length > 0 ? (
 						<Crop
 							width={750 * DP}
 							height={750 * DP}
 							paddingHorizontal={0 * DP}
 							paddingVertical={0 * DP}
-							uri={selectedPhoto[selectedPhoto.length - 1].uri}
+							uri={(selectedPhoto[index].cropUri??selectedPhoto[index].uri)}
 							onCrop={onCrop}
 						/>
 					) : (
@@ -371,13 +401,25 @@ export default AddPhoto = props => {
 						</View>
 					</TouchableWithoutFeedback>
 				)}
-				{(
+				{/* {(
 					<TouchableWithoutFeedback onPress={clickcheck}>
 						<View style={[btn.confirm_button, btn.shadow]}>
 							<Text style={[txt.noto28b, txt.white]}>동영상</Text>
 						</View>
 					</TouchableWithoutFeedback>
-				)}
+				)} */}
+				
+					<TouchableOpacity onPress={prev}>
+						<View style={[btn.confirm_button, btn.shadow]}>
+							<Text style={[txt.noto28b, txt.white]}>이전</Text>
+						</View>
+					</TouchableOpacity>
+					<TouchableOpacity onPress={next}>
+						<View style={[btn.confirm_button, btn.shadow]}>
+							<Text style={[txt.noto28b, txt.white]}>다음</Text>
+						</View>
+					</TouchableOpacity>
+				
 			</View>
 			<FlatList
 				getItemLayout={getItemLayout}

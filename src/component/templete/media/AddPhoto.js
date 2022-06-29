@@ -25,20 +25,25 @@ import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
 import Crop from 'Molecules/media/Crop';
+import appConfig from 'Root/config/appConfig';
 
 export var exportUriList = []; //겔러리 속 사진들 로컬 주소
 export var exportUri = {}; //겔러리 속 사진 로컬 주소
 
 export default AddPhoto = props => {
 	const limit = 5;
-	const requestloading = Platform.OS == 'android' ? 200 : 50;
+	const requestloading = Platform.OS == 'android' ? 100000 : 50;
 	const navigation = useNavigation();
 	const [isVideo, setVideo] = React.useState(false);
-	const [photolist, setPhotoList] = React.useState([]);
+	// const [photolist, setPhotoList] = React.useState(props.route.params.localfiles.slice(0,100));
+	const [photolist, setPhotoList] = React.useState(appConfig.medias);
 	const [selectedPhoto, setSelectedPhoto] = React.useState([]);
 	const isSingle = props.route.name === 'SinglePhotoSelect';
 	const [albumList, setAlbumList] = React.useState([]);
 	const [album, setAlbum] = React.useState('');
+	const flatlist = React.useRef();
+	const lastIndex = React.useRef(0);
+	const viewCount = 100;
 	/**
 	 * timeStamp, imageID를 이용하여 디바이스의 갤러리에 있는 미디어를 불러옴
 	 *
@@ -47,7 +52,7 @@ export default AddPhoto = props => {
 	 *@param {number} request - 불러올 미디어의 숫자 (기본값 20)
 	 *@param {string} type - 불러올 미디어의 타잎('Photos'|'All'|'Videos')
 	 */
-	const loadPhotosMilsec = (request = requestloading, timeStamp = 0, imageID = '123456789', type = 'Photos') => {
+	const loadPhotosMilsec = (request = requestloading, timeStamp = 0, imageID = '123456789', type = 'All') => {
 		// console.log('아이디', imageID);
 		let param = {
 			first: request,
@@ -69,36 +74,57 @@ export default AddPhoto = props => {
 			delete param.groupName;
 			delete param.groupTypes;
 		}
-		CameraRoll.getPhotos(param)
-			.then(photolistcallback)
-			.catch(err => {
-				// console.log('cameraroll error===>' + err);
-			});
+		delete param.include;
+		let start = new Date();
+		// console.time('loadphoto')
+		// CameraRoll.getPhotos(param)
+		// 	.then((r)=>{
+		// 		setPhotoList(r.edges);
+		// 		console.log(new Date()-start);
+		// 	})
+		// 	.catch(err => {
+		// 		// console.log('cameraroll error===>' + err);
+		// 	});
 	};
 
-	const photolistcallback = r => {
-		// console.log('디바이스 사진 리스트', r);
-		setPhotoList(photolist.concat(r.edges));
-		// setSelectedPhoto(selectedPhoto);
 
-		// let photoList = [...r.edges];
-		// photoList.map((v, i) => {
-		// 	photoList[i] = {
-		// 		img_uri: v.node.image.uri,
-		// 		state: false,
-		// 	};
-		// });
-		// photoList.splice(0, 0, true); //목록 첫 인덱스는 Default Camera Icon (사진직접찍기 기능)
-		// setPhotos(photoList);
+
+	const mediaList = React.useRef([]);
+	const photolistcallback = r => {
+		setPhotoList(r.edges);
+		mediaList.current = r.edges;
+		// console.log('로드 완료',r.edges , mediaList);
+		// console.timeEnd('loadphoto')
 	};
 
 	/** 스크롤이 바닥에 닿을때 페이징 처리를 위한 함수 */
 	const scrollReachBottom = () => {
-		let lastID = photolist.length > 1 ? photolist[photolist.length - 1].node.imageID : '123456789';
-		let timeStamp = photolist.length > 1 ? photolist[photolist.length - 1].node.timestamp : 0;
-		console.log('스크롤이 바닥에 닿았습니다. ' + lastID + '이후의 사진을 로드합니다.');
-		loadPhotosMilsec(requestloading, timeStamp, lastID);
+		// FastImage.clearMemoryCache();
+		// let last = photolist.length;
+		// let blank = Array.from({length:last},v=>false)
+		// setPhotoList(photolist.concat(props.route.params.localfiles.slice(last,last+300)))
 	};
+
+	const onMomentumscrollbegin = () => {
+		// console.log('begin')
+		FastImage.clearMemoryCache().then(()=>console.log('clear'));
+	}
+	const onScroll =e => {
+		// console.log(e.nativeEvent)
+		// FastImage.clearMemoryCache();
+		// if(Math.abs(e.nativeEvent.velocity.y)>10){
+		// 	console.log('clear')
+		// 	FastImage.clearMemoryCache();
+		// }
+	}
+
+	const onViewableItemsChanged = React.useCallback((a,b) => {
+		// console.log('view',a)
+		// if(a.changed.length>30){
+		// 	console.log('clear')
+		// 	FastImage.clearMemoryCache();
+		// }
+	},[]);
 
 	//네이티브 모듈 테스트
 	const test = () => {
@@ -135,15 +161,16 @@ export default AddPhoto = props => {
 			delete param.groupName;
 			delete param.groupTypes;
 		}
+		/*
 		CameraRoll.getPhotos(param)
 			.then(album => {
-				setPhotoList([...album.edges]);
+				// setPhotoList([...album.edges]);
 				// setPhotoList(album.edges);
 				// console.log(album);
 			})
 			.catch(err => {
 				console.log('cameraroll error===>' + err);
-			});
+			});*/
 	}, [album]);
 
 	const albumSelect = () => {
@@ -163,7 +190,7 @@ export default AddPhoto = props => {
 	/** 퍼미션 처리, 사진을 불러오기 전 갤러리 접근 권한을 유저에게 요청 */
 	React.useEffect(() => {
 		console.log('최초 로드');
-		CameraRoll.getAlbums({albumType: 'All', assetType: 'Photos'}).then(r => setAlbumList(['모든사진'].concat(r.map(v => v.title))));
+		CameraRoll.getAlbums({albumType: 'All', assetType: 'All'}).then(r => setAlbumList(['모든사진'].concat(r.map(v => v.title))));
 		if (Platform.OS === 'ios') {
 			loadPhotosMilsec(40);
 		} else {
@@ -195,31 +222,24 @@ export default AddPhoto = props => {
 	}, []);
 
 	React.useEffect(() => {
-		// console.log('tk',photolist)
-	}, [photolist]);
-
-	React.useEffect(() => {
 		console.log('사진목록 변경', selectedPhoto);
 		navigation.setParams({selectedPhoto: selectedPhoto});
+		selectedPhoto.length>0&&flatlist.current.scrollToIndex({index:Math.floor(photolist.findIndex(v=>v.node.image.uri==selectedPhoto[selectedPhoto.length-1].uri)/4)});
 	}, [selectedPhoto]);
 
 	React.useEffect(() => {
-		// console.log('selectedPhoto', props.route.params);
+		
 		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
+			console.log('ddd',selectedPhoto)
 			setSelectedPhoto(props.route.params.selectedPhoto);
 		}
 	}, [props.route.params.selectedPhoto]);
-
-	// React.useEffect(()=>{
-	// 	if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
-	// 		setSelectedPhoto(selectedPhoto.concat(props.route.params.selectedPhoto));
-	// 	}
-	// },[photolist])
-
-	const selectPhoto = photo => {
-		// console.log('photo select', photo);
+	const selectPhoto = React.useCallback(photo => {
+		// console.log(photolist.findIndex(v=>v.node.image.uri==photo));
+		console.log(photo);
+		
 		if (selectedPhoto.length >= limit) {
-			Modal.alert('최대 ' + limit + '장까지만 올릴 수 있습니다.');
+			Modal.alert('사진은 최대 ' + limit + '장까지만 업로드 가능합니다.');
 			return;
 		}
 		let obj = {};
@@ -228,9 +248,12 @@ export default AddPhoto = props => {
 			setSelectedPhoto([obj]);
 			// navigation.push('Crop',{cropImage:photo,prev:props.route.name,key:props.route.key});
 		} else {
+			console.log('ddd2',selectedPhoto)
+			
 			setSelectedPhoto(selectedPhoto.concat(obj));
 		}
-	};
+
+	},[selectedPhoto])
 
 	const cancelPhoto = photo => {
 		console.log('cancel select', photo);
@@ -239,12 +262,13 @@ export default AddPhoto = props => {
 		} else {
 			setSelectedPhoto(selectedPhoto.filter(v => photo != (v.originUri ?? v.uri)));
 		}
-	};
+	}
 
-	const renderList = ({item, index}) => {
+	const renderList = React.useCallback(({item, index}) => {
 		const isSelected = selectedPhoto.find(v => item.node.image.uri == (v.originUri ?? v.uri));
-		const selectedindex = selectedPhoto.findIndex(v => item.node.image.uri == (v.originUri ?? v.uri)) + 1;
+		const selectedindex = isSelected&&(selectedPhoto.findIndex(v => item.node.image.uri == (v.originUri ?? v.uri)) + 1);
 		// console.log('index:'+index+'   isselected:'+isSelected+'     selectedIndex:'+selectedindex);
+		if(!true)return <View style={{width:186*DP,height:186*DP,backgroundColor:'red',marginHorizontal:1*DP,marginVertical:1*DP}}/>;
 		return (
 			<LocalMedia
 				data={item.node}
@@ -255,7 +279,7 @@ export default AddPhoto = props => {
 				selected={isSelected}
 			/>
 		);
-	};
+	},[photolist,selectedPhoto]);
 
 	const clickcheck = () => {
 		// console.log(props.route.params);
@@ -271,6 +295,14 @@ export default AddPhoto = props => {
 		// console.log(photolist);
 	};
 
+	const loadVideo = () => {
+
+	}
+
+	const keyExtractor = React.useCallback((item, index) =>item? index >= 8 ? item.node.image.uri : 'key' + index:'null'+index,[photolist])
+	const getItemLayout = React.useCallback((data, index) => {
+		return {length: 187 * DP, offset: 187 * DP * index, index};
+	},[photolist])
 	const onCrop = (originImg, cropImg) => {
 		if (originImg == cropImg) {
 			delete selectedPhoto[selectedPhoto.length - 1].cropUri;
@@ -316,38 +348,39 @@ export default AddPhoto = props => {
 						</View>
 					</TouchableWithoutFeedback>
 				)}
+				{(
+					<TouchableWithoutFeedback onPress={clickcheck}>
+						<View style={[btn.confirm_button, btn.shadow]}>
+							<Text style={[txt.noto28b, txt.white]}>동영상</Text>
+						</View>
+					</TouchableWithoutFeedback>
+				)}
 			</View>
 			<FlatList
-				getItemLayout={(data, index) => {
-					return {length: 187 * DP, offset: 187 * DP * index, index};
-				}}
+				getItemLayout={getItemLayout}
 				data={photolist}
 				renderItem={renderList}
 				extraData={selectedPhoto}
-				keyExtractor={(item, index) => (index >= 8 ? item.node.image.uri : 'key' + index)}
+				keyExtractor={keyExtractor}
 				horizontal={false}
 				numColumns={4}
 				onEndReachedThreshold={0.6}
 				onEndReached={scrollReachBottom}
-				windowSize={20}
-				maxToRenderPerBatch={50}
-				updateCellsBatchingPeriod={50}
-				initialNumToRender={144}
+				onMomentumScrollBegin={onMomentumscrollbegin}
+				windowSize={2}
+				maxToRenderPerBatch={100}
+				updateCellsBatchingPeriod={1}
+				initialNumToRender={100}
 				removeClippedSubviews
+				decelerationRate={0.8}
+				ref={flatlist}
+				viewabilityConfig={{minimumViewTime:0,viewAreaCoveragePercentThreshold:0}}
+				onViewableItemsChanged={onViewableItemsChanged}
+				onScroll={onScroll}
 			/>
 		</View>
 	);
 };
-
-//안드로이드에서 FastImage를 사용하도록하는 커스텀 컴포넌트
-const Img = React.forwardRef((props, ref) => {
-	if (Platform.OS == 'ios') {
-		return <Image {...props} ref={ref}></Image>;
-	}
-	if (Platform.OS == 'android') {
-		return <FastImage {...props} ref={ref}></FastImage>;
-	}
-});
 
 const lo = StyleSheet.create({
 	wrp_main: {

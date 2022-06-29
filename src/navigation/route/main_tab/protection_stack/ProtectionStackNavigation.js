@@ -28,6 +28,7 @@ import CommunityHeader from 'Root/navigation/header/CommunityHeader';
 import ChangePetProfileImage from 'Root/component/templete/pet/ChangePetProfileImage';
 import ProfileHeader from 'Root/navigation/header/ProfileHeader';
 import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
+import LogoHeader from 'Root/navigation/header/LogoHeader';
 
 const ProtectionStack = createStackNavigator();
 
@@ -42,7 +43,8 @@ export default ProtectionStackNavigation = props => {
 			<ProtectionStack.Screen
 				name="ProtectionTab"
 				component={ProtectionTopTabNavigation}
-				options={{header: props => <SimpleHeader {...props} />, title: ' '}}
+				// options={{header: props => <SimpleHeader {...props} />, title: ' '}}
+				options={{header: props => <LogoHeader {...props} />, title: ' '}}
 			/>
 			<ProtectionStack.Screen name="UserProfile" component={Profile} options={{header: props => <ProfileHeader {...props} />, title: '프로필'}} />
 			<ProtectionStack.Screen

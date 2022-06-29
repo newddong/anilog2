@@ -62,7 +62,7 @@ export default SearchMainStack = props => {
 			<SearchStackNav.Screen
 				name="SocialRelation"
 				component={SocialRelationTopTabNavigation}
-				options={{header: props => <InputAndSearchHeader {...props} isSocial />}}
+				options={{header: props => <InputAndSearchHeader {...props} type={'social'} />}}
 			/>
 			<SearchStackNav.Screen
 				name="FeedCommentList"

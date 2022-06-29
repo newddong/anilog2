@@ -26,11 +26,14 @@ export default CommunityWrite = props => {
 		community_avatar_id: '',
 		community_is_temporary: false,
 		community_interests: {
-			interests_trip: [],
-			interests_hospital: [],
-			interests_interior: [],
+			// interests_trip: [],
+			// interests_hospital: [],
+			// interests_interior: [],
+			// interests_review: [],
+			interests_group1: [],
+			interests_group2: [],
+			interests_group3: [],
 			interests_etc: [],
-			interests_review: [],
 			interests_location: {city: '', district: ''},
 		},
 		community_address: {
@@ -193,12 +196,24 @@ export default CommunityWrite = props => {
 		props.navigation.push('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 	};
 
-	const isInterestsEmpty =
-		data.community_interests.interests_etc.length == 0 &&
-		data.community_interests.interests_hospital.length == 0 &&
-		data.community_interests.interests_interior == 0 &&
-		data.community_interests.interests_review == 0 &&
-		data.community_interests.interests_trip == 0;
+	const isInterestsEmpty = () => {
+		if (data.community_interests.hasOwnProperty('interests_group1')) {
+			return (
+				data.community_interests.interests_etc.length == 0 &&
+				data.community_interests.interests_group1.length == 0 &&
+				data.community_interests.interests_group2 == 0 &&
+				data.community_interests.interests_group3 == 0
+			);
+		} else
+			return (
+				data.community_interests.interests_etc.length == 0 &&
+				data.community_interests.interests_trip.length == 0 &&
+				data.community_interests.interests_hospital == 0 &&
+				data.community_interests.interests_review == 0
+			);
+	};
+
+	// data.community_interests.interests_trip == 0;
 
 	const onPressFilter = () => {
 		// console.log('data.community_interests', data.community_interests);
@@ -210,7 +225,7 @@ export default CommunityWrite = props => {
 			() => Modal.close(),
 			() => Modal.close(),
 			arg => {
-				// console.log('arg', arg);
+				console.log('arg', arg);
 				setData({...data, community_interests: arg.userInterestReview});
 				Modal.close();
 			},
@@ -256,21 +271,32 @@ export default CommunityWrite = props => {
 	//선택한 카테고리 목록 Stringify 함수
 	const getReviewCategory = list => {
 		let category_text = '';
-		list.interests_trip.map((v, i) => {
-			category_text = category_text + v + ' / ';
-		});
-		list.interests_review.map((v, i) => {
-			category_text = category_text + v + ' / ';
-		});
-		list.interests_interior.map((v, i) => {
-			category_text = category_text + v + ' / ';
-		});
-		list.interests_hospital.map((v, i) => {
-			category_text = category_text + v + ' / ';
-		});
-		list.interests_etc.map((v, i) => {
-			category_text = category_text + v + ' / ';
-		});
+		// console.log('list', list);
+		const er = {
+			interests_etc: ['의류', '미용'],
+			interests_group1: ['산책로'],
+			interests_group2: ['치료'],
+			interests_group3: ['놀이가구'],
+			interests_location: {city: '', district: ''},
+		};
+		const getText = array => {
+			array.map((v, i) => {
+				category_text = category_text + v + ' / ';
+			});
+		};
+		if (list.hasOwnProperty('interests_group1')) {
+			getText(list.interests_etc);
+			getText(list.interests_group1);
+			getText(list.interests_group2);
+			getText(list.interests_group3);
+		} else {
+			getText(list.interests_trip);
+			getText(list.interests_review);
+			getText(list.interests_interior);
+			getText(list.interests_hospital);
+			getText(list.interests_etc);
+		}
+
 		return category_text;
 	};
 
@@ -411,7 +437,7 @@ export default CommunityWrite = props => {
 					<>
 						<TouchableOpacity activeOpacity={0.6} onPress={onPressFilter} style={[style.category]}>
 							<Text style={[txt.noto28, style.categoryText]} ellipsizeMode={'tail'} numberOfLines={1}>
-								{isInterestsEmpty ? '카테고리 선택' : getReviewCategory(data.community_interests)}
+								{isInterestsEmpty() ? '카테고리 선택' : getReviewCategory(data.community_interests)}
 							</Text>
 							<View style={[style.nextMark]}>
 								<NextMark />

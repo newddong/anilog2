@@ -2,22 +2,12 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {
-	CurrentLocation,
-	FavoriteTag46_Filled,
-	FavoriteTag48_Border,
-	LocationGray,
-	LocationMarker,
-	Meatball50_GRAY20_Horizontal,
-} from 'Root/component/atom/icon';
+import {LocationGray, LocationMarker} from 'Root/component/atom/icon';
 import {APRI10, BLACK, GRAY10, GRAY30, GRAY40, GRAY50, WHITE} from 'Root/config/color';
 import UserLocationTimeLabel from 'Root/component/molecules/label/UserLocationTimeLabel';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {useNavigation} from '@react-navigation/core';
 import WebView from 'react-native-webview';
-import Modal from 'Root/component/modal/Modal';
-import userGlobalObject from 'Root/config/userGlobalObject';
-import {serveruri} from 'Root/config/server';
 import AutoHeightWebView from 'Root/module/AutoHeightWebview';
 /**
  * 후기 세부 페이지
@@ -32,14 +22,6 @@ const ReviewContent = props => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.data);
 	const [height, setHeight] = React.useState(0); // 게시글 내용의 Dynamic Height 수치
-	let arr = [];
-	const interests = arr.concat(
-		data.community_interests.interests_etc,
-		data.community_interests.interests_hospital,
-		data.community_interests.interests_interior,
-		data.community_interests.interests_review,
-		data.community_interests.interests_trip,
-	);
 
 	React.useEffect(() => {
 		setData(props.data);
@@ -47,6 +29,26 @@ const ReviewContent = props => {
 
 	const getCategory = (v, i) => {
 		// category_sum_list.push('테스트');
+		let temp = [];
+		let interests = [];
+		if (data.community_interests.hasOwnProperty('interests_group1')) {
+			interests = temp.concat(
+				// data.community_interests.interests_etc,
+				data.community_interests.interests_group1,
+				data.community_interests.interests_group1,
+				data.community_interests.interests_group1,
+				data.community_interests.interests_etc,
+			);
+		} else {
+			interests = temp.concat(
+				// data.community_interests.interests_etc,
+				data.community_interests.interests_hospital,
+				data.community_interests.interests_interior,
+				data.community_interests.interests_review,
+				data.community_interests.interests_trip,
+			);
+		}
+
 		const page = Math.floor(interests.length / 4) + 1;
 		let arr = [];
 		arr.length = page;

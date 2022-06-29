@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, View, Dimensions, Text, StyleSheet} from 'react-native';
+import {SafeAreaView, View, Dimensions, Text, StyleSheet, InteractionManager, Platform,Image} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
@@ -79,12 +79,58 @@ import FollowerList from 'Root/component/templete/list/FollowerList';
 import PetFollowerList from 'Root/component/templete/list/PetFollowerList';
 import FeedCommentList from 'Root/component/templete/feed/FeedCommentList';
 
+import CameraRoll from 'Root/module/CameraRoll';
+import appconfig from 'Root/config/appConfig';
+import FastImage from 'react-native-fast-image';
+import appConfig from 'Root/config/appConfig';
+
 const RootStack = createStackNavigator();
 
 export default RootStackNavigation = () => {
 	const [isPop, popupComponent] = useModal();
 	const [isLoading, setLoading] = React.useState(true);
 	const [initialRouteName, setInitialRouteName] = React.useState('Login');
+
+	React.useEffect(()=>{
+		let medias = appConfig.medias;
+		let lastID = medias.length>0?medias[medias.length-1].node.imageID:'123456789';
+		let timeStamp = medias.length>0?medias[medias.length-1].node.image.timeStamp*1000-1:0;
+		let param = {
+			first: 10000,
+			assetType: 'All',
+			groupTypes: 'album',
+			toID: lastID,
+			toTime: timeStamp
+		};
+		if (Platform.OS == 'android') {
+			delete param.fromTime;
+			delete param.toTime;
+			delete param.groupTypes;
+		} else {
+			delete param.toID;
+		}
+
+		console.log(param);
+		let start = new Date();
+		CameraRoll.getPhotos(param)
+			.then((r)=>{
+				// console.log('백그라운드 이미지 로더',r.edges);
+				// console.log('이미 로드된 이미지들',appConfig.medias)
+				if(Platform.OS=='android'&&medias.length>0&&(medias[medias.length-1].node.imageID==r.edges[r.edges.length-1].node.imageID))return;
+				if(Platform.OS=='ios'&&medias.length>0&&(medias[medias.length-1].node.timeStamp==r.edges[r.edges.length-1].node.timeStamp))return;
+				appConfig.medias = medias.concat(r.edges)
+				FastImage.preload(medias.map(v=>{
+					Image.prefetch(v.node.image.uri)
+					return {uri:v.node.image.uri}
+
+			}))
+
+				// console.log('로드된 이미지들',appConfig.medias)
+				console.log(new Date()-start);
+			})
+			.catch(err => {
+			});
+	},[])
 
 	React.useEffect(() => {
 		AsyncStorage.getItem('userSetting', (err, userSetting) => {
@@ -258,12 +304,12 @@ export default RootStackNavigation = () => {
 						<RootStack.Screen
 							name="FeedLocationPicker"
 							component={LocationPicker}
-							options={{header: props => <InputAndSearchHeader {...props} isLocation />}}
+							options={{header: props => <InputAndSearchHeader {...props} type={'location'} />}}
 						/>
 						<RootStack.Screen
 							name="CommunityLocationPicker"
 							component={LocationPicker}
-							options={{header: props => <InputAndSearchHeader {...props} isLocation />}}
+							options={{header: props => <InputAndSearchHeader {...props} type={'location'} />}}
 						/>
 
 						{/* 카메라 관련 기능은 네이티브 모듈이 안정화 혹은 자체 개발이 될때까지 추가 보류 */}
@@ -359,6 +405,11 @@ export default RootStackNavigation = () => {
 							component={ReportDetail}
 							options={{header: props => <SimpleWithMeatballHeader {...props} />, title: '제보글'}}
 						/>
+						{/* <RootStack.Screen
+							name="FeedCommentList"
+							component={FeedCommentList}
+							options={{header: props => <SimpleHeader {...props} />, title: '댓글'}}
+						/> */}
 						<RootStack.Screen
 							name="FeedCommentList"
 							component={FeedCommentList}

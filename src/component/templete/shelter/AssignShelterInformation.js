@@ -8,7 +8,7 @@ import Input24 from 'Molecules/input/Input24';
 import {login_style, btn_style, temp_style, progressbar_style, assignShelterInformation_style} from 'Templete/style_templete';
 import InputWithSelect from 'Molecules/input/InputWithSelect';
 import InputWithEmail from 'Molecules/input/InputWithEmail';
-import {stagebar_style} from 'Organism/style_organism copy';
+import {phoneNumVerification, stagebar_style} from 'Organism/style_organism copy';
 import {Calendar48_Border} from 'Atom/icon';
 import Modal from 'Root/component/modal/Modal';
 import StageBar from 'Molecules/info/Stagebar';
@@ -27,7 +27,7 @@ export default AssignShelterInformation = props => {
 	});
 
 	const [phoneConfirmed, setPhoneConfirmed] = React.useState(false);
-	const [emailConfirmed, setEmailConfirmed] = React.useState(false);
+	const [emailConfirmed, setEmailConfirmed] = React.useState(true);
 
 	//확인버튼 클릭
 	const goToNextStep = () => {
@@ -38,6 +38,7 @@ export default AssignShelterInformation = props => {
 	React.useEffect(() => {
 		console.log('이메일 정규식 체크', emailConfirmed);
 		console.log('휴대전화 정규식 체크', phoneConfirmed);
+		console.log('둘이 ||', !emailConfirmed || !phoneConfirmed);
 	}, [phoneConfirmed, emailConfirmed]);
 
 	//홈페이지
@@ -53,15 +54,26 @@ export default AssignShelterInformation = props => {
 
 	//이메일
 	const onChangeEmail = email => {
-		// var regEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
-		// setEmailConfirmed(regEmail.test(email));
-		setData({...data, user_email: email});
+		if (email == '') {
+			setEmailConfirmed(true);
+		} else {
+			var regEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+			setEmailConfirmed(regEmail.test(email));
+			console.log('email checlk', email, regEmail.test(email));
+			setData({...data, user_email: email});
+		}
+
+		// console.log('email changed', email);
 	};
 
 	React.useEffect(() => {
-		var regEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
-		setEmailConfirmed(regEmail.test(data.user_email));
-	}, [data]);
+		console.log('Email, Phone', emailConfirmed, phoneConfirmed);
+	}, [emailConfirmed, phoneConfirmed]);
+
+	// React.useEffect(() => {
+	// 	var regEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+	// 	setEmailConfirmed(regEmail.test(data.user_email));
+	// }, [data]);
 
 	const onClearHomepage = () => {
 		setData({...data, shelter_homepage: ''});
@@ -202,10 +214,10 @@ export default AssignShelterInformation = props => {
 
 			{/* (A)Btn_w654 */}
 			<View style={[btn_style.btn_w694, assignShelterInformation_style.btn_w654]}>
-				{!phoneConfirmed ? (
-					<AniButton btnTitle={'확인'} btnLayout={btn_w694_r30} disable titleFontStyle={32} onPress={goToNextStep} />
-				) : (
+				{phoneConfirmed && emailConfirmed ? (
 					<AniButton btnTitle={'확인'} btnLayout={btn_w694_r30} btnStyle={'border'} titleFontStyle={32} onPress={goToNextStep} />
+				) : (
+					<AniButton btnTitle={'확인'} btnLayout={btn_w694_r30} disable titleFontStyle={32} onPress={goToNextStep} />
 				)}
 			</View>
 		</View>

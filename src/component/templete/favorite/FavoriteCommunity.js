@@ -20,83 +20,9 @@ const CommunityTopTabNav = createMaterialTopTabNavigator();
 export default FavoriteCommunity = ({route}) => {
 	const navigation = useNavigation();
 	const isFavorite = route.name == 'FavoriteCommunity';
-	const [review, setReview] = React.useState('false');
-	const [article, setArticle] = React.useState('false');
-	// console.log('route.name', route.name);
 
 	React.useEffect(() => {
 		isFavorite ? navigation.setOptions({title: '커뮤니티 즐겨찾기'}) : navigation.setOptions({title: '나의 커뮤니티'});
-		const unsubscribe = navigation.addListener('focus', () => {
-			!isFavorite
-				? getCommunityListByUserId(
-						{
-							limit: 1000,
-							page: 1,
-							userobject_id: userGlobalObject.userInfo._id,
-							community_type: 'all',
-						},
-						result => {
-							// console.log('result / getCommunityListByUserId / free', result.msg.free.length);
-							// console.log('result / getCommunityListByUserId / review', result.msg.review.length);
-							const free = result.msg.free.filter(
-								e => e.community_writer_id != null && e.community_writer_id.user_nickname == userGlobalObject.userInfo.user_nickname,
-							);
-							const review = result.msg.review.filter(
-								e => e.community_writer_id != null && e.community_writer_id.user_nickname == userGlobalObject.userInfo.user_nickname,
-							);
-							console.log('free', free.length);
-							console.log('review', review.length);
-							setReview(review);
-							setArticle(free);
-						},
-						err => {
-							console.log('err / getCommunityListByUserId / FavoriteCommunity : ', err);
-							if (err.includes('code 500')) {
-								setReview([]);
-								setArticle([]);
-								setTimeout(() => {
-									Modal.alert(NETWORK_ERROR);
-								}, 500);
-							} else if (err.includes('없습니다')) {
-								setReview([]);
-								setArticle([]);
-							}
-						},
-				  )
-				: getFavoriteEtcListByUserId(
-						{
-							userobject_id: userGlobalObject.userInfo._id,
-							collectionName: 'communityobjects',
-						},
-						result => {
-							console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg.length);
-							let reviewCont = [];
-							let articleCont = [];
-							result.msg.map((v, i) => {
-								v.favorite_etc_target_object_id.community_is_favorite = true;
-								if (v.favorite_etc_target_object_id.community_type == 'review') {
-									reviewCont.push(v.favorite_etc_target_object_id);
-								} else articleCont.push(v.favorite_etc_target_object_id);
-							});
-							setReview(reviewCont);
-							setArticle(articleCont);
-						},
-						err => {
-							console.log('err / getFavoriteEtcListByUserId / FavoriteCommunity : ', err);
-							if (err.includes('code 500')) {
-								setReview([]);
-								setArticle([]);
-								setTimeout(() => {
-									Modal.alert(NETWORK_ERROR);
-								}, 500);
-							} else if (err.includes('없습니다')) {
-								setReview([]);
-								setArticle([]);
-							}
-						},
-				  );
-		});
-		return unsubscribe;
 	}, []);
 
 	return (
@@ -117,10 +43,10 @@ export default FavoriteCommunity = ({route}) => {
 			initialLayout={{width: Dimensions.get('window').width}}
 			optimizationsEnabled={true}>
 			<CommunityTopTabNav.Screen name={'ArticleMain'} options={{tabBarLabel: '자유 게시판'}}>
-				{props => <FavoriteArticle {...props} isFavorite={isFavorite} article={article} />}
+				{props => <FavoriteArticle {...props} isFavorite={isFavorite} />}
 			</CommunityTopTabNav.Screen>
 			<CommunityTopTabNav.Screen name={'ReviewMain'} options={{tabBarLabel: '리뷰'}}>
-				{props => <FavoriteReview {...props} isFavorite={isFavorite} review={review} />}
+				{props => <FavoriteReview {...props} isFavorite={isFavorite} />}
 			</CommunityTopTabNav.Screen>
 		</CommunityTopTabNav.Navigator>
 	);

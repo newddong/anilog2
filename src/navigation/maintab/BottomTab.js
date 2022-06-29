@@ -17,6 +17,7 @@ import {
 } from 'Atom/icon';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import FastImage from 'react-native-fast-image';
+import {KeyBoardEvent} from 'Root/component/molecules/input/usekeyboardbottom';
 
 export default function BottomTab({state, descriptors, navigation}) {
 	// console.log('바텀탭 유저 글로벌',userGlobalObject);
@@ -57,7 +58,19 @@ export default function BottomTab({state, descriptors, navigation}) {
 	const nestedState = state.routes[state.index].state;
 	const nestedRouteName = nestedState ? nestedState.routes[nestedState.index].name : 'none';
 
-	if (nestedRouteName.includes('CommentList')) return false;
+	const [isKeyboardVisible, setKeyboardVisible] = React.useState(false);
+
+	//댓글 수정 => 키보드 해제시 수정모드가 종료되도록 적용
+	KeyBoardEvent(
+		() => {
+			setKeyboardVisible(true);
+		},
+		() => {
+			setKeyboardVisible(false);
+		},
+	);
+
+	if (nestedRouteName.includes('CommentList') && isKeyboardVisible) return false;
 	return (
 		<>
 			<Shadow />

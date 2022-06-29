@@ -292,7 +292,7 @@ export default FeedList = ({route, navigation}) => {
 						params.order_value = 'interrupt';
 					}
 				}
-				console.log('최종 param', params);
+				console.log('getUserTaggedFeedList 최종 param', params);
 				getUserTaggedFeedList(
 					params,
 					result => {

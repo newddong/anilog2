@@ -118,7 +118,7 @@ export default CommunityMainStack = props => {
 				name={'SocialRelation'}
 				component={SocialRelationTopTabNavigation}
 				options={({route}) => ({
-					header: props => <InputAndSearchHeader {...props} isSocial />,
+					header: props => <InputAndSearchHeader {...props} type={'social'} />,
 					title: '프로필',
 				})}
 			/>

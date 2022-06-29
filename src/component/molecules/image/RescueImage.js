@@ -37,6 +37,8 @@ const RescueImage = props => {
 				return ADOPT;
 			case 'protect':
 				return PROTECT;
+			case 'donation':
+				return '기증';
 			default:
 				return DISCUSS;
 		}

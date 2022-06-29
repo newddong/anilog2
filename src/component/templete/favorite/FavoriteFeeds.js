@@ -324,7 +324,7 @@ export default FavoriteFeeds = ({route, navigation}) => {
 				)}
 
 				{/* 즐겨찾기한 FeedList출력하는 FeedThumbnailList */}
-				<View style={[{flex: 1}]}>
+				<View style={[{flex: 1, width: 750 * DP}]}>
 					{data.length == 0 ? (
 						<ListEmptyInfo text={emptyMsg()} />
 					) : (

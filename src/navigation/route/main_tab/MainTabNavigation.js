@@ -20,16 +20,15 @@ export default MainTabNavigation = ({route, navigation}) => {
 			case 'CommunityEdit':
 			case 'ShelterInfoSetting':
 			case 'UserInfoSetting':
-			case 'FeedCommentList':
 			case 'AddressSearchWeb':
-			case 'AnimalProtectRequestDetail':
-			case 'MissingAnimalDetail':
-			case 'ReportDetail':
-			case 'ArticleDetail':
-			case 'ReviewDetail':
+				// case 'FeedCommentList':
+				// case 'AnimalProtectRequestDetail':
+				// case 'MissingAnimalDetail':
+				// case 'ReportDetail':
+				// case 'ArticleDetail':
+				// case 'ReviewDetail':
 				// case 'Search':
 				return false;
-				break;
 			default:
 				break;
 		}
@@ -38,6 +37,7 @@ export default MainTabNavigation = ({route, navigation}) => {
 
 	//커뮤니티 텝에서 보내주는 route.name
 	const sendRoute = route_name => {
+		console.log('route_name', route_name);
 		setCurrent(route_name);
 	};
 
@@ -51,7 +51,7 @@ export default MainTabNavigation = ({route, navigation}) => {
 					tabBarHideOnKeyboard: true,
 					header: props => false,
 				})}>
-				{props => <FeedStackNavigation {...props} sendRoute={sendRoute} rePressed={route.params?.pressed} />}
+				{props => <FeedStackNavigation {...props} sendRoute={sendRoute} />}
 			</MainTabNav.Screen>
 			<MainTabNav.Screen
 				name="PROTECTION"

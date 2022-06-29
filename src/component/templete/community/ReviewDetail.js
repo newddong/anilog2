@@ -99,7 +99,7 @@ export default ReviewDetail = props => {
 				const res = result.msg;
 				const findIndex = res.findIndex(e => e._id == props.route.params.community_object._id);
 				let list = [];
-				const number_to_list = 4;
+				const number_to_list = 6;
 				if (res.length < number_to_list) {
 					//전체글이 11 이하라면 그냥 바로 출력
 					console.log('review.length < number_to_list', res.length < number_to_list);
@@ -350,7 +350,7 @@ export default ReviewDetail = props => {
 		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
 			let selected = props.route.params.selectedPhoto[0];
 			const checkEdit = comment_obj.editData._id != ''; //전역변수에 저장된 수정데이터가 있을 경우 수정데이터(editData)에 선택한 사진을 저장
-			console.log('checkEdit', checkEdit);
+			console.log('checkEdit', comment_obj.editData);
 			if (checkEdit) {
 				setEditMode(true); //수정모드 부활
 				setEditData({...comment_obj.editData, comment_photo_uri: selected.cropUri ?? selected.uri}); //수정데이터 부활
@@ -380,7 +380,7 @@ export default ReviewDetail = props => {
 				navigation.navigate('LoginRequired');
 			});
 		} else {
-			editMode ? (comment_obj.editData = editData) : false;
+			editData.comment_contents || editMode ? (comment_obj.editData = editData) : false;
 			parentComment ? (comment_obj.parentComment = parentComment) : false;
 			props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 		}
@@ -632,7 +632,7 @@ export default ReviewDetail = props => {
 			return (
 				<View style={{alignItems: 'center'}}>
 					<View style={[style.reviewList]}>
-						<Text style={[txt.noto24, {}]}>관련 리뷰 더보기</Text>
+						<Text style={[txt.noto24, {}]}>리뷰 더보기</Text>
 						<ReviewBriefList
 							items={reviewList}
 							showMore={() => setShowMore(true)}

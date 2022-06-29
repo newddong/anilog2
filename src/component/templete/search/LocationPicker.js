@@ -11,6 +11,7 @@ import {
 	Text,
 	TextInput,
 	TouchableOpacity,
+	TouchableWithoutFeedback,
 	View,
 } from 'react-native';
 import DP from 'Root/config/dp';
@@ -27,6 +28,7 @@ import X2JS from 'x2js';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import {btn_w654, btn_w694_r30} from 'Root/component/atom/btn/btn_style';
 import Modal from 'Root/component/modal/Modal';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 export default LocationPicker = ({route}) => {
 	const [keyword, setKeyword] = useState(''); // 검색 키워드
@@ -60,7 +62,7 @@ export default LocationPicker = ({route}) => {
 	const [searchFocus, setSearchFocus] = React.useState(false); //주소검색 인풋의 포커스 상태 여부
 	const [delay, setDelay] = useState(true);
 	const [loading, setLoading] = React.useState(false);
-
+	const detailRef = React.useRef();
 	const map = React.useRef();
 
 	// 템플릿 호출 시 바로 현재 모바일 위치를 기반으로 위치 정보 수령
@@ -124,27 +126,27 @@ export default LocationPicker = ({route}) => {
 
 	//현재 위치로 돌아감
 	const initializeRegion = () => {
-		// geoLocation();
-		// if (Platform.OS == 'android') {
-		// 	setChangedLatitude(init_latitude);
-		// 	setChangedLongitude(init_longitude);
-		// } else {
-		// 	if (map.current) {
-		// 		map.current.animateToRegion(
-		// 			{
-		// 				latitude: init_latitude,
-		// 				longitude: init_longitude,
-		// 				latitudeDelta: 0.0002,
-		// 				longitudeDelta: 0.0023,
-		// 			},
-		// 			400,
-		// 		);
-		// 		setTimeout(() => {
-		// 			setChangedLatitude(init_latitude);
-		// 			setChangedLongitude(init_longitude);
-		// 		}, 500);
-		// 	}
-		// }
+		geoLocation();
+		if (Platform.OS == 'android') {
+			setChangedLatitude(init_latitude);
+			setChangedLongitude(init_longitude);
+		} else {
+			if (map.current) {
+				map.current.animateToRegion(
+					{
+						latitude: init_latitude,
+						longitude: init_longitude,
+						latitudeDelta: 0.0002,
+						longitudeDelta: 0.0023,
+					},
+					400,
+				);
+				setTimeout(() => {
+					setChangedLatitude(init_latitude);
+					setChangedLongitude(init_longitude);
+				}, 500);
+			}
+		}
 	};
 
 	//주소 불러오기 api 호출
@@ -152,11 +154,11 @@ export default LocationPicker = ({route}) => {
 		if (permission == true) {
 			if (changedLatitude == '' || changedLongitude == '') {
 				//위도 경도 없는 상태(첫진입)
-				Modal.popLoading(true);
+				// Modal.popLoading(true);
 				callInitialAddress(changedLongitude, changedLatitude);
 				// Modal.close();
 			} else if (changedLatitude != '' && changedLongitude != '') {
-				Modal.popLoading(true);
+				// Modal.popLoading(true);
 				callInitialAddress(changedLongitude, changedLatitude);
 				// Modal.close();
 			}
@@ -372,6 +374,16 @@ export default LocationPicker = ({route}) => {
 		}, 500);
 	};
 
+	const [isDetailFocus, setIsDetailFocus] = React.useState(false);
+	//세부주소 키보드 포커스
+	const onFocusDetail = () => {
+		setIsDetailFocus(true);
+	};
+
+	const onBlurDetail = () => {
+		setIsDetailFocus(false);
+	};
+
 	//돋보기 아이콘 클릭 (모두 초가화하고 다시 검색)
 	const reSearch = () => {
 		route.params.reSearch(); //포커스이벤트 및 검색어 제거
@@ -487,165 +499,162 @@ export default LocationPicker = ({route}) => {
 		);
 	};
 
-	// if (changedLongitude == '' && changedLatitude == '') {
-	// 	return <Loading isModal={false} />;
-	// } else
-	return (
-		<View style={[style.container]}>
-			{places.length != 0 ? (
-				<View style={[style.listContainer]}>
-					<FlatList data={places} renderItem={renderItem} showsVerticalScrollIndicator={false} />
-				</View>
-			) : (
-				<ScrollView contentContainerStyle={[{alignItems: 'center', bottom: Platform.OS == 'android' ? keyboardY : searchFocus ? 0 : keyboardY}]}>
-					<View style={{zIndex: -1, backgroundColor: '#fff'}}>
-						{/* <TouchableOpacity activeOpacity={0.6} onPress={initializeRegion} style={[style.currentLocationIcon]}>
+	if (changedLongitude == '' && changedLatitude == '') {
+		return <Loading isModal={false} />;
+	} else
+		return (
+			<View style={[style.container]}>
+				{places.length != 0 ? (
+					<View style={[style.listContainer]}>
+						<FlatList data={places} renderItem={renderItem} showsVerticalScrollIndicator={false} />
+					</View>
+				) : (
+					<ScrollView
+						showsVerticalScrollIndicator={false}
+						contentContainerStyle={[{alignItems: 'center', bottom: Platform.OS == 'android' ? keyboardY : isDetailFocus ? keyboardY - 100 * DP : 0}]}>
+						<View style={{zIndex: -1, backgroundColor: '#fff'}}>
+							{/* <TouchableOpacity activeOpacity={0.6} onPress={initializeRegion} style={[style.currentLocationIcon]}>
 							<CurrentLocation />
 						</TouchableOpacity> */}
-						<View style={{height: 694 * DP}}>
-							<View style={[style.mapOutCont]}>
-								{changedLongitude != '' && changedLatitude != '' ? (
-									Platform.OS == 'android' ? (
-										<MapView
-											ref={map}
-											style={[style.mapContainer]}
-											onPress={Keyboard.dismiss}
-											mapType={'standard'}
-											scrollEnabled={false}
-											zoomEnabled
-											zoomControlEnabled
-											onRegionChangeComplete={(region, gesture) => {
-												if (gesture.isGesture) {
-													//클릭을 안했음에도 지속적으로 위도 경도가 바뀌는 현상 발생 -> 오로지 터치 시에만 반응하도록 적용
-													goToLocation(region); //탐색된 위도 경도를 바꿈
-												}
-											}}
-											region={{
-												latitude: changedLatitude != '' ? changedLatitude : init_latitude,
-												longitude: changedLongitude != '' ? changedLongitude : init_longitude,
-												latitudeDelta: changedLatitudeDelta, //지도의 초기줌 수치
-												longitudeDelta: changedLongitudeDelta, //지도의 초기줌 수치
-											}}>
-											{/* 현재 선택된 위도 경도의 마커 */}
-											<MapView.Marker
-												tracksViewChanges={false}
-												coordinate={{
-													latitude: changedLatitude != '' ? changedLatitude : init_latitude,
-													longitude: changedLongitude != '' ? changedLongitude : init_longitude,
-												}}
-												icon={require('Atom/icon/marker.png')}
-												key={`${changedLongitude}${Date.now()}`}>
-												{locationObj != '' ? (
-													<View style={[{alignItems: 'center', marginBottom: 20 * DP}]}>
-														{/* <Text style={[txt.noto22b, style.locationText]}>{locationObj.address.address_name}</Text>
-														<View style={[style.triangle]}></View> */}
-														{/* <LocationMarker /> */}
-													</View>
-												) : (
-													<></>
-												)}
-											</MapView.Marker>
-										</MapView>
-									) : (
-										//ios
-										<>
+							<View style={{height: 694 * DP}}>
+								<View style={[style.mapOutCont]}>
+									{changedLongitude != '' && changedLatitude != '' ? (
+										Platform.OS == 'android' ? (
 											<MapView
 												ref={map}
-												// provider={PROVIDER_GOOGLE} // remove if not using Google Maps
 												style={[style.mapContainer]}
-												scrollEnabled={false}
-												onRegionChangeComplete={(region, gesture) => {
-													//클릭을 안했음에도 지속적으로 위도 경도가 바뀌는 현상 발생 -> 오로지 터치 시에만 반응하도록 적용
-													goToLocation(region); //탐색된 위도 경도를 바꿈
-												}}
 												onPress={Keyboard.dismiss}
+												mapType={'standard'}
+												scrollEnabled={false}
+												zoomEnabled
+												zoomControlEnabled
+												onRegionChangeComplete={(region, gesture) => {
+													if (gesture.isGesture) {
+														//클릭을 안했음에도 지속적으로 위도 경도가 바뀌는 현상 발생 -> 오로지 터치 시에만 반응하도록 적용
+														goToLocation(region); //탐색된 위도 경도를 바꿈
+													}
+												}}
 												region={{
 													latitude: changedLatitude != '' ? changedLatitude : init_latitude,
 													longitude: changedLongitude != '' ? changedLongitude : init_longitude,
 													latitudeDelta: changedLatitudeDelta, //지도의 초기줌 수치
 													longitudeDelta: changedLongitudeDelta, //지도의 초기줌 수치
 												}}>
+												{/* 현재 선택된 위도 경도의 마커 */}
 												<MapView.Marker
 													tracksViewChanges={false}
 													coordinate={{
 														latitude: changedLatitude != '' ? changedLatitude : init_latitude,
 														longitude: changedLongitude != '' ? changedLongitude : init_longitude,
 													}}
-													// icon={require('Atom/icon/marker.png')}
+													icon={require('Atom/icon/marker.png')}
 													key={`${changedLongitude}${Date.now()}`}>
 													{locationObj != '' ? (
 														<View style={[{alignItems: 'center', marginBottom: 20 * DP}]}>
-															{/* <Text style={[txt.noto22b, style.locationText]}>{locationObj.address.address_name}</Text> */}
-															{/* <View style={[style.triangle]}></View> */}
-															<LocationMarker />
+															{/* <Text style={[txt.noto22b, style.locationText]}>{locationObj.address.address_name}</Text>
+														<View style={[style.triangle]}></View> */}
+															{/* <LocationMarker /> */}
 														</View>
 													) : (
 														<></>
 													)}
 												</MapView.Marker>
 											</MapView>
-										</>
-									)
-								) : (
-									<></>
-								)}
-							</View>
-						</View>
-					</View>
-					{locationObj != '' ? (
-						<View style={{zIndex: selected.id == '' ? -1 : 1, width: 694 * DP}}>
-							<View style={{flexDirection: 'row', marginTop: 20 * DP}}>
-								<View style={[style.currentLocation, {}]}>
-									<View>
-										<Text style={[txt.noto32b]}>
-											{/* {locationObj.road_address != null ? locationObj.road_address.address_name : '도로명 주소가 없는 좌표입니다. '} */}
-											{selected.place_name}
-										</Text>
-										<Text style={[txt.noto28, {color: GRAY10}]}>
-											{locationObj.road_address == null || locationObj.road_address.address_name == '도로명 주소가 없는 위치입니다.'
-												? locationObj.address.address_name
-												: locationObj.road_address.address_name}
-										</Text>
-									</View>
+										) : (
+											//ios
+											<>
+												<MapView
+													ref={map}
+													// provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+													style={[style.mapContainer]}
+													scrollEnabled={false}
+													onRegionChangeComplete={(region, gesture) => {
+														//클릭을 안했음에도 지속적으로 위도 경도가 바뀌는 현상 발생 -> 오로지 터치 시에만 반응하도록 적용
+														goToLocation(region); //탐색된 위도 경도를 바꿈
+													}}
+													onPress={Keyboard.dismiss}
+													region={{
+														latitude: changedLatitude != '' ? changedLatitude : init_latitude,
+														longitude: changedLongitude != '' ? changedLongitude : init_longitude,
+														latitudeDelta: changedLatitudeDelta, //지도의 초기줌 수치
+														longitudeDelta: changedLongitudeDelta, //지도의 초기줌 수치
+													}}>
+													<MapView.Marker
+														tracksViewChanges={false}
+														coordinate={{
+															latitude: changedLatitude != '' ? changedLatitude : init_latitude,
+															longitude: changedLongitude != '' ? changedLongitude : init_longitude,
+														}}
+														// icon={require('Atom/icon/marker.png')}
+														key={`${changedLongitude}${Date.now()}`}>
+														{locationObj != '' ? (
+															<View style={[{alignItems: 'center', marginBottom: 20 * DP}]}>
+																{/* <Text style={[txt.noto22b, style.locationText]}>{locationObj.address.address_name}</Text> */}
+																{/* <View style={[style.triangle]}></View> */}
+																<LocationMarker />
+															</View>
+														) : (
+															<></>
+														)}
+													</MapView.Marker>
+												</MapView>
+											</>
+										)
+									) : (
+										<></>
+									)}
 								</View>
-								<Search48_BLACK onPress={reSearch} />
-							</View>
-							<View style={[style.locationDetail]}>
-								<TextInput
-									onChangeText={onChangeDetailAddr}
-									style={[txt.noto26, style.detailInput]}
-									placeholder={'세부 위치를 적어주세요.'}
-									placeholderTextColor={GRAY20}
-									maxLength={25}
-									value={detailAddr}
-								/>
-								<Text style={[txt.noto22, {color: GRAY20}]}>{detailAddr.length + '/' + 25} </Text>
-							</View>
-							<View style={[style.btnContainer]}>
-								<AniButton onPress={confirm} btnTitle={'확인'} btnLayout={btn_w694_r30} btnStyle={'border'} titleFontStyle={32} />
 							</View>
 						</View>
-					) : (
-						<></>
-					)}
-				</ScrollView>
-			)}
-			{loading && (
-				<View
-					style={{
-						position: 'absolute',
-						left: 0,
-						right: 0,
-						top: 0,
-						bottom: 0,
-						alignItems: 'center',
-						justifyContent: 'center',
-					}}>
-					<ActivityIndicator size={'large'} color={'black'} />
-				</View>
-			)}
-		</View>
-	);
+						{locationObj != '' ? (
+							<View style={{zIndex: selected.id == '' ? -1 : 1, width: 694 * DP}}>
+								<View style={{flexDirection: 'row', marginTop: 20 * DP}}>
+									<View style={[style.currentLocation, {}]}>
+										<View>
+											<Text style={[txt.noto32b]}>
+												{/* {locationObj.road_address != null ? locationObj.road_address.address_name : '도로명 주소가 없는 좌표입니다. '} */}
+												{selected.place_name}
+											</Text>
+											<Text style={[txt.noto28, {color: GRAY10}]}>
+												{locationObj.road_address == null || locationObj.road_address.address_name == '도로명 주소가 없는 위치입니다.'
+													? locationObj.address.address_name
+													: locationObj.road_address.address_name}
+											</Text>
+										</View>
+									</View>
+									<Search48_BLACK onPress={reSearch} />
+								</View>
+								<View style={[style.locationDetail]}>
+									<TextInput
+										onChangeText={onChangeDetailAddr}
+										style={[txt.noto26, style.detailInput]}
+										placeholder={'세부 위치를 적어주세요.'}
+										placeholderTextColor={GRAY20}
+										maxLength={25}
+										value={detailAddr}
+										ref={detailRef}
+										onFocus={onFocusDetail}
+										onBlur={onBlurDetail}
+									/>
+									<Text style={[txt.noto22, {color: GRAY20}]}>{detailAddr.length + '/' + 25} </Text>
+								</View>
+								<View style={[style.btnContainer]}>
+									<AniButton onPress={confirm} btnTitle={'확인'} btnLayout={btn_w694_r30} btnStyle={'border'} titleFontStyle={32} />
+								</View>
+							</View>
+						) : (
+							<></>
+						)}
+					</ScrollView>
+				)}
+				{loading && (
+					<View style={style.background}>
+						<ActivityIndicator size={'large'} color={'black'} />
+					</View>
+				)}
+				{keyboardY > 0 && <TouchableOpacity activeOpacity={1} onPress={Keyboard.dismiss} style={[style.background, {flex: 1}]}></TouchableOpacity>}
+			</View>
+		);
 };
 
 const style = StyleSheet.create({
@@ -772,6 +781,15 @@ const style = StyleSheet.create({
 	// 	// backgroundColor: 'red',
 	// 	zIndex: 1,
 	// },
+	background: {
+		position: 'absolute',
+		left: 0,
+		right: 0,
+		top: 0,
+		bottom: 0,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
 });
 
 const mapStyle2 = [

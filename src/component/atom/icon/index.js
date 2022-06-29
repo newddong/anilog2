@@ -206,7 +206,7 @@ import paw36_black from './paw36_black';
 import check36_black from './check36_black';
 import profileDefault294 from './profileDefault294';
 import check64 from './check64';
-
+import newMainLogo from './newMainLogo';
 import DP from 'Root/config/dp';
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK, MAINBLACK} from 'Root/config/color';
 
@@ -514,3 +514,4 @@ export const VerticalBar = makeSvg(verticalBar, {width: 2 * DP, height: 32 * DP}
 export const Paw36_black = makeSvg(paw36_black, size36, MAINBLACK);
 export const Check36_black = makeSvg(check36_black, size36, MAINBLACK);
 export const Check64 = makeSvg(check64, size64);
+export const NewMainLogo = makeSvg(newMainLogo, {width: 136 * DP, height: 64 * DP});

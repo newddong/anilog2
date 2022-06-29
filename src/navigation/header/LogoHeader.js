@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import {AlarmBadger48, MainLogo, Search48, AlarmBadgerNotice, Search48_BLACK} from 'Atom/icon';
+import {AlarmBadger48, MainLogo, Search48, AlarmBadgerNotice, Search48_BLACK, NewMainLogo} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {WHITE} from 'Root/config/color';
 import userGlobalObject from 'Root/config/userGlobalObject';
@@ -50,7 +50,9 @@ export default LogoHeader = ({navigation, route, options, back}) => {
 	};
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
-			<View style={style.logoContainer}>{/* <MainLogo /> */}</View>
+			<View style={style.logoContainer}>
+				<NewMainLogo />
+			</View>
 			<View style={style.buttonContainer}>
 				<Search48_BLACK onPress={clickSearch} />
 				{isNewAlarm ? <AlarmBadgerNotice onPress={clickAlarm} /> : <AlarmBadger48 onPress={clickAlarm} />}

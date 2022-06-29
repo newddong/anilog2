@@ -1,6 +1,6 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Keyboard, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {Calendar48_Border} from 'Atom/icon';
 import {APRI10, BLACK, GRAY10, GRAY20, GRAY30, GRAY50} from 'Root/config/color';
@@ -26,9 +26,9 @@ const DatePicker = props => {
 	const [showCalendar, setShowCalendar] = React.useState(false);
 	const [selectedDate, setSelectedDate] = React.useState(props.defaultDate ? props.defaultDate : '눌러서 지정해주세요!');
 
-	React.useEffect(()=>{
+	React.useEffect(() => {
 		setSelectedDate(props.defaultDate);
-	},[props.defaultDate])
+	}, [props.defaultDate]);
 
 	const onDateChange = date => {
 		setSelectedDate(date);
@@ -42,6 +42,7 @@ const DatePicker = props => {
 	};
 
 	const openCalendar = () => {
+		Keyboard.dismiss();
 		if (props.canOpenCalendar()) {
 			props.multiple
 				? Modal.popCalendar(

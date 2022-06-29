@@ -258,12 +258,12 @@ export default RootStackNavigation = () => {
 						<RootStack.Screen
 							name="FeedLocationPicker"
 							component={LocationPicker}
-							options={{header: props => <InputAndSearchHeader {...props} isLocation />}}
+							options={{header: props => <InputAndSearchHeader {...props} type={'location'} />}}
 						/>
 						<RootStack.Screen
 							name="CommunityLocationPicker"
 							component={LocationPicker}
-							options={{header: props => <InputAndSearchHeader {...props} isLocation />}}
+							options={{header: props => <InputAndSearchHeader {...props} type={'location'} />}}
 						/>
 
 						{/* 카메라 관련 기능은 네이티브 모듈이 안정화 혹은 자체 개발이 될때까지 추가 보류 */}
@@ -359,6 +359,11 @@ export default RootStackNavigation = () => {
 							component={ReportDetail}
 							options={{header: props => <SimpleWithMeatballHeader {...props} />, title: '제보글'}}
 						/>
+						{/* <RootStack.Screen
+							name="FeedCommentList"
+							component={FeedCommentList}
+							options={{header: props => <SimpleHeader {...props} />, title: '댓글'}}
+						/> */}
 						<RootStack.Screen
 							name="FeedCommentList"
 							component={FeedCommentList}

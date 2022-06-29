@@ -427,7 +427,9 @@ export default FeedCommentList = props => {
 	//댓글 수정 => 키보드 해제시 수정모드가 종료되도록 적용
 	KeyBoardEvent(
 		() => {
-			setKeyboardVisible(true);
+			setTimeout(() => {
+				setKeyboardVisible(true);
+			}, 200);
 		},
 		() => {
 			setKeyboardVisible(false);

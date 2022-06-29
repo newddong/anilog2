@@ -47,13 +47,21 @@ const ReviewBriefItem = props => {
 	};
 
 	const getCategory = (v, i) => {
+		// console.log('data.community_interests', data.community_interests);
 		let category_sum_list = [];
-		data.community_interests.interests_trip.map(v => category_sum_list.push(v));
-		data.community_interests.interests_etc.map(v => category_sum_list.push(v));
-		data.community_interests.interests_hospital.map(v => category_sum_list.push(v));
-		data.community_interests.interests_review.map(v => category_sum_list.push(v));
-		data.community_interests.interests_interior.map(v => category_sum_list.push(v));
-
+		if (data.community_interests.hasOwnProperty('interests_group1')) {
+			data.community_interests.interests_group1.map(v => category_sum_list.push(v));
+			data.community_interests.interests_etc.map(v => category_sum_list.push(v));
+			data.community_interests.interests_group2.map(v => category_sum_list.push(v));
+			data.community_interests.interests_group3.map(v => category_sum_list.push(v));
+			// item.community_interests.interests_interior.map(v => category_sum_list.push(v));
+		} else {
+			data.community_interests.interests_trip.map(v => category_sum_list.push(v));
+			data.community_interests.interests_etc.map(v => category_sum_list.push(v));
+			data.community_interests.interests_hospital.map(v => category_sum_list.push(v));
+			data.community_interests.interests_review.map(v => category_sum_list.push(v));
+			data.community_interests.interests_interior.map(v => category_sum_list.push(v));
+		}
 		// category_sum_list.push('테스트');
 		const page = Math.floor(category_sum_list.length / 4) + 1;
 		let arr = [];
@@ -64,7 +72,7 @@ const ReviewBriefItem = props => {
 		let index = 0;
 		category_sum_list.map((val, ind) => {
 			totalWidth = totalWidth + 20 + val.length * 10;
-			if (totalWidth < (image.length == 0 ? 520 * DP : 400 * DP)) {
+			if (totalWidth < (image.length == 0 ? 520 * DP : 320 * DP)) {
 				// console.log('totalWidth', totalWidth);
 				newArr.push({group: index, item: val});
 			} else {

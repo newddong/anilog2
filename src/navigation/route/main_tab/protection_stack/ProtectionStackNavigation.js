@@ -50,7 +50,7 @@ export default ProtectionStackNavigation = props => {
 			<ProtectionStack.Screen
 				name="SocialRelation"
 				component={SocialRelationTopTabNavigation}
-				options={{header: props => <InputAndSearchHeader {...props} isSocial />}}
+				options={{header: props => <InputAndSearchHeader {...props} type={'social'} />}}
 			/>
 			<ProtectionStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />}} />
 			<ProtectionStack.Screen name="HashFeedList" component={FeedList} />

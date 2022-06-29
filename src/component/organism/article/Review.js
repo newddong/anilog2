@@ -40,17 +40,26 @@ export default Review = React.memo(props => {
 
 	//카테고리 출력
 	const getCategory = (v, i) => {
+		// console.log('data', data.community_interests);
 		let category_sum_list = [];
-		data.community_interests.interests_trip.map(v => category_sum_list.push(v));
-		data.community_interests.interests_etc.map(v => category_sum_list.push(v));
-		data.community_interests.interests_hospital.map(v => category_sum_list.push(v));
-		data.community_interests.interests_review.map(v => category_sum_list.push(v));
-		data.community_interests.interests_interior.map(v => category_sum_list.push(v));
+		if (data.community_interests.hasOwnProperty('interests_group1')) {
+			data.community_interests.interests_group1 && data.community_interests.interests_group1.map(v => category_sum_list.push(v));
+			data.community_interests.interests_etc && data.community_interests.interests_etc.map(v => category_sum_list.push(v));
+			data.community_interests.interests_group2 && data.community_interests.interests_group2.map(v => category_sum_list.push(v));
+			data.community_interests.interests_group3 && data.community_interests.interests_group3.map(v => category_sum_list.push(v));
+		} else {
+			data.community_interests.interests_trip && data.community_interests.interests_trip.map(v => category_sum_list.push(v));
+			data.community_interests.interests_etc && data.community_interests.interests_etc.map(v => category_sum_list.push(v));
+			data.community_interests.interests_hospital && data.community_interests.interests_hospital.map(v => category_sum_list.push(v));
+			data.community_interests.interests_review && data.community_interests.interests_review.map(v => category_sum_list.push(v));
+			data.community_interests.interests_interior && data.community_interests.interests_interior.map(v => category_sum_list.push(v));
+		}
+
 		if (category_sum_list.length > 3) {
 			category_sum_list.push('접기');
 		}
 		// category_sum_list.push('테스트');
-		const page = Math.floor(category_sum_list.length / 4) + 1;
+		const page = Math.floor(category_sum_list.length / 2) + 1;
 		let arr = [];
 		arr.length = page;
 		arr.fill([], 0, page);
@@ -58,15 +67,32 @@ export default Review = React.memo(props => {
 		let totalWidth = 0;
 		let index = 0;
 		category_sum_list.map((val, ind) => {
-			totalWidth = totalWidth + 20 + val.length * 10;
-			if (totalWidth < 520 * DP) {
+			const split = val.split('');
+			split.map((syl, i) => {
+				let add = 0;
+				switch (syl) {
+					case '/':
+						add = 20;
+						break;
+					case ' ':
+						add = 10;
+						break;
+					default:
+						add = 20;
+						break;
+				}
+				totalWidth = totalWidth + add * DP;
+			});
+			if (totalWidth > 600 * DP) {
 				// console.log('totalWidth', totalWidth);
-				newArr.push({group: index, item: val});
-			} else {
 				newArr.push({group: index + 1, item: val});
 				totalWidth = 0;
 				++index;
+			} else {
+				// console.log('totalWidth', totalWidth, val);
+				newArr.push({group: index, item: val});
 			}
+			totalWidth = totalWidth + 70 * DP;
 		});
 		let categoryArr = [];
 		categoryArr.length = index + 1;
@@ -112,6 +138,7 @@ export default Review = React.memo(props => {
 								<TouchableOpacity
 									onPress={() => (isLast ? setMoreCategory(!true) : onPressCategory(v.item))}
 									key={i}
+									// onLayout={e => console.log('e', v.item, (e.nativeEvent.layout.width * 1) / DP)}
 									activeOpacity={1}
 									style={[style.category, {backgroundColor: isLast ? GRAY10 : WHITE, borderColor: isLast ? GRAY10 : GRAY30, marginVertical: 5 * DP}]}>
 									<Text style={[txt.noto24, {color: isLast ? WHITE : GRAY10, paddingHorizontal: 10 * DP}]}>{v.item}</Text>

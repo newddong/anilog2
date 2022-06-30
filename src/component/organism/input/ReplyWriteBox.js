@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import {Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {APRI10, BLUE20, GRAY10, GRAY20, GRAY30, GRAY40, GRAY50, WHITE} from 'Root/config/color';
+import {APRI10, BLUE20, GRAY10, GRAY20, GRAY30, GRAY40, GRAY50, MAINBLACK, WHITE} from 'Root/config/color';
 import {Cross46, Lock60_Border, Lock60_Filled, Photo60, Send60} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import SelectedMedia from 'Molecules/media/SelectedMedia';
@@ -119,6 +119,7 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 						style={[style.replyTextInput]}
 						multiline={true}
 						placeholder={'메세지 입력..'}
+						placeholderTextColor="#000000"
 						onChangeText={onChangeText}
 						onBlur={onBlur}
 						ref={inputRef}
@@ -146,6 +147,7 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 									style={[style.replyTextInput, {width: 394 * DP}]}
 									multiline={true}
 									placeholder={'댓글입력'}
+									placeholderTextColor="#767676"
 									maxLength={80}
 									onChangeText={onChangeText}
 									onFocus={onFocus}
@@ -173,6 +175,7 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 									onChangeText={onChangeText}
 									onBlur={onBlur}
 									ref={inputRef}
+									placeholderTextColor="#767676"
 								/>
 							</View>
 							<SelectedMedia media_uri={photo} layout={styles.img_square_round_190} onDelete={onDeleteImage} />
@@ -188,6 +191,7 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 								style={[style.replyTextInput]}
 								multiline={true}
 								placeholder={'댓글입력..'}
+								placeholderTextColor="#767676"
 								maxLength={80}
 								onChangeText={onChangeText}
 								onFocus={onFocus}
@@ -310,6 +314,7 @@ const style = StyleSheet.create({
 		fontSize: 28 * DP,
 		paddingVertical: 0 * DP,
 		includeFontPadding: false,
+		color: MAINBLACK,
 		// backgroundColor: 'yellow',
 	},
 	replyTextInput_photo: {
@@ -318,6 +323,7 @@ const style = StyleSheet.create({
 		paddingVertical: 0,
 		paddingHorizontal: 10 * DP,
 		includeFontPadding: false,
+		// color: MAINBLACK,
 		// backgroundColor: 'pink',
 	},
 	replyTextInput_protect_request: {

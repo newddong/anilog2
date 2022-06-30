@@ -170,6 +170,7 @@ export default ShelterInfoSetting = ({route}) => {
 										defaultValue={data.user_introduction || ''}
 										value={intro_modified}
 										placeholder={'보호소 소개를 입력해주세요. (최대 500자, 15줄)'}
+										placeholderTextColor="#767676"
 										multiline={true}
 										maxLength={500}
 										ref={modifyRef}

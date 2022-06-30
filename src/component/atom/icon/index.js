@@ -206,7 +206,8 @@ import paw36_black from './paw36_black';
 import check36_black from './check36_black';
 import profileDefault294 from './profileDefault294';
 import check64 from './check64';
-
+import newMainLogo from './newMainLogo';
+import iconL from './iconL';
 import DP from 'Root/config/dp';
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK, MAINBLACK} from 'Root/config/color';
 
@@ -283,7 +284,7 @@ export const FavoriteTag46_Filled = makeSvg(favoriteTagFilled, size46, APRI10);
 export const Paw46 = makeSvg(paw46, size46);
 export const Setting46 = makeSvg(setting46, size46);
 export const Heart46_Filled = makeSvg(heart46_filled, size46); //Added 21.10.27
-export const Search48 = makeSvg(search48, size48, GRAY10);
+export const Search48 = makeSvg(search48, size48, MAINBLACK);
 export const Search48_BLACK = makeSvg(search48, size48, BLACK);
 export const AlarmBadger48 = makeSvg(alarmBadger48, size48);
 export const RadioChecked38 = makeSvg(radioChecked48, size48);
@@ -514,3 +515,5 @@ export const VerticalBar = makeSvg(verticalBar, {width: 2 * DP, height: 32 * DP}
 export const Paw36_black = makeSvg(paw36_black, size36, MAINBLACK);
 export const Check36_black = makeSvg(check36_black, size36, MAINBLACK);
 export const Check64 = makeSvg(check64, size64);
+export const NewMainLogo = makeSvg(newMainLogo, {width: 136 * DP, height: 64 * DP});
+export const IconL = makeSvg(iconL, {width: 14 * DP, height: 14 * DP});

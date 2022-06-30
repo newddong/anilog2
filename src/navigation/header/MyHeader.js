@@ -58,7 +58,20 @@ export default MyHeader = ({navigation, route, options, back}) => {
 		);
 	};
 	const onClicLabel = data => {
-		navigation.push('UserProfile', {userobject: data});
+		// navigation.push('UserProfile', {userobject: data});
+		if (data.user_type) {
+			if (data?.user_type == 'pet') {
+				navigation.push('PetInfoSetting', {pet_id: data._id});
+			} else if (data?.user_type === 'user') {
+				console.log('User');
+				navigation.push('UserInfoSetting', {token: data._id}); //userObject
+			}
+
+			Modal.close();
+		} else {
+			navigation.push('AssignPetProfileImage', {userobject_id: userData._id, previousRouteName: route.name});
+			Modal.close();
+		}
 	};
 	const onClickMeatBall = () => {
 		Modal.popPetProfileEditSelectModal(

@@ -71,7 +71,7 @@ class PermissionIos {
     static getDefaultAlertParams():AlertParams{
         return {
             title: "",
-            msg: "갤러리에 접근하려면 '갤러리' 접근 권한을 허용해야 합니다.",
+            msg: "사진에 접근하려면 '사진/비디오' 접근 권한을 허용해야 합니다.",
             okFunc: PermissionIos.openSetting,
             cancelFunc: null,
             okBtnLabel: "설정",

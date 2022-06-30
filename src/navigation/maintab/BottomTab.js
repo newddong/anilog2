@@ -98,6 +98,7 @@ export default function BottomTab({state, descriptors, navigation, focus}) {
 		},
 	);
 
+
 	if (nestedRouteName == 'CommunityWrite' || nestedRouteName == 'CommunityEdit') return false;
 	return (
 		<>

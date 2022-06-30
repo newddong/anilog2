@@ -30,6 +30,8 @@ import ProfileHeader from 'Root/navigation/header/ProfileHeader';
 import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 import AddPhoto from 'Root/component/templete/media/AddPhoto';
 import PhotoSelectHeader from 'Root/navigation/header/PhotoSelectHeader';
+import LogoHeader from 'Root/navigation/header/LogoHeader';
+
 
 const ProtectionStack = createStackNavigator();
 
@@ -44,7 +46,8 @@ export default ProtectionStackNavigation = props => {
 			<ProtectionStack.Screen
 				name="ProtectionTab"
 				component={ProtectionTopTabNavigation}
-				options={{header: props => <SimpleHeader {...props} />, title: ' '}}
+				// options={{header: props => <SimpleHeader {...props} />, title: ' '}}
+				options={{header: props => <LogoHeader {...props} />, title: ' '}}
 			/>
 			<ProtectionStack.Screen name="UserProfile" component={Profile} options={{header: props => <ProfileHeader {...props} />, title: '프로필'}} />
 			<ProtectionStack.Screen

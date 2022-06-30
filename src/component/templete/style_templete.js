@@ -601,7 +601,7 @@ export const temp_style = StyleSheet.create({
 	},
 	userText_userInfoSetting: {
 		width: 650 * DP,
-		// height: 82 * DP,
+		height: 82 * DP,
 		// backgroundColor: '#AFD5FB',
 	},
 	myPetList: {

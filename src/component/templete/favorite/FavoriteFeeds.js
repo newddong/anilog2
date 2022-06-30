@@ -265,7 +265,7 @@ export default FavoriteFeeds = ({route, navigation}) => {
 			//선택모드 true값과 false값이 반대로 주는 이유 확인 후 case 문으로 변경 필요
 			getUserProfile(
 				{
-					userobject_id: passing_id,
+					userobject_id: passing_id._id,
 				},
 				result => {
 					// console.log('result / getUserProfile / FavoriteFeeds   :', result.msg.feedList[0]);
@@ -275,7 +275,8 @@ export default FavoriteFeeds = ({route, navigation}) => {
 						// console.log('tageme');
 						navigation.push('TagMeFeedList', {
 							title: userGlobalObject.userInfo.user_nickname + '님을 태그한 글',
-							userobject: result.msg,
+							// userobject: result.msg,
+							userobject: userGlobalObject.userInfo,
 							selected: feed_id, //target_object_id
 							index: index,
 						});
@@ -290,6 +291,7 @@ export default FavoriteFeeds = ({route, navigation}) => {
 				},
 				err => {
 					Modal.alert('err / getUserProfile / FavoriteFeeds ' + err);
+					console.log('err getUserProfile / FavoriteFeeds ', err);
 				},
 			);
 		} else if (selectMode) {

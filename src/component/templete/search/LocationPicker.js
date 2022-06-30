@@ -84,11 +84,10 @@ export default LocationPicker = ({route}) => {
 	}, []);
 
 	React.useEffect(() => {
-		if (route.params.searchInput != '') {
-			console.log('searchInput', route.params.searchInput);
+		if (permission && route.params.searchInput != '') {
 			onChangeSearchText(route.params.searchInput);
 		} else {
-			onChangeSearchText('');
+			// onChangeSearchText('');
 		}
 	}, [route.params]);
 
@@ -102,11 +101,11 @@ export default LocationPicker = ({route}) => {
 					android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
 				}),
 			).then(res => {
-				console.log('res', res);
+				console.log('requestPermission result', res);
 				if (res == 'granted') {
 					//허용
 					setPermission(true);
-					// geoLocation();
+					geoLocation();
 					initializeRegion();
 				} else if (res == 'denied') {
 					//거절
@@ -116,7 +115,9 @@ export default LocationPicker = ({route}) => {
 					getToSetting();
 				} else if (res == 'blocked') {
 					// anilog앱만 '안함' 상태
-					getToSetting('blocked');
+					setTimeout(() => {
+						getToSetting('blocked');
+					}, 1000);
 				}
 			});
 		} catch (error) {
@@ -151,23 +152,22 @@ export default LocationPicker = ({route}) => {
 
 	//주소 불러오기 api 호출
 	React.useEffect(() => {
-		if (permission == true) {
+		if (permission) {
+			console.log('permisiion true');
 			if (changedLatitude == '' || changedLongitude == '') {
 				//위도 경도 없는 상태(첫진입)
 				// Modal.popLoading(true);
 				callInitialAddress(changedLongitude, changedLatitude);
-				// Modal.close();
 			} else if (changedLatitude != '' && changedLongitude != '') {
 				// Modal.popLoading(true);
 				callInitialAddress(changedLongitude, changedLatitude);
-				// Modal.close();
 			}
 		}
 	}, [changedLatitude]);
 
 	//위도 경도 받아오기
 	const geoLocation = () => {
-		Modal.popLoading(true);
+		// Modal.popLoading(true);
 		Geolocation.getCurrentPosition(
 			position => {
 				setLatitude(position.coords.latitude);
@@ -177,7 +177,7 @@ export default LocationPicker = ({route}) => {
 				callInitialAddress(position.coords.longitude, position.coords.latitude);
 			},
 			error => {
-				console.log('error get GEOLOCation', error.code, error.message);
+				console.log('geoLocation () error', error.code, error.message);
 				//User denied access
 				if (error.code == 1) {
 					getToSetting();
@@ -201,11 +201,11 @@ export default LocationPicker = ({route}) => {
 	async function getRoadAddr(addr) {
 		return new Promise(async function (resolve, reject) {
 			try {
-				// 관련 api 사이트 주소 : https://www.juso.go.kr/addrlink/devAddrLinkRequestSubmit.do
+				// 관련 api 사이트 주소 : https://www.juso.go.kr/addrlink/devAddrLinkRequestSubmit.do 문의 : 권상우
+				// 관련 api 신청 주소 : https://www.juso.go.kr/addrlink/openApi/apiReqst.do 문의 : 권상우
+				const key = 'devU01TX0FVVEgyMDIyMDYyOTE1NTI1OTExMjc0ODI'; // 키정보 : 개발용도 ( 사용기간 : 2022-06-29 ~ 2022-09-27 ) / 문의 : 권상우
 				let res = await axios
-					.get(
-						`https://www.juso.go.kr/addrlink/addrLinkApi.do?currentPage=1&countPerPage=10&keyword=${addr}&confmKey=devU01TX0FVVEgyMDIyMDMyMjIxNTUyMzExMjM3NDQ=&firstSort=road`,
-					)
+					.get(`https://www.juso.go.kr/addrlink/addrLinkApi.do?currentPage=1&countPerPage=10&keyword=${addr}&confmKey=${key}=&firstSort=road`)
 					.then(responseText => {
 						var x2js = new X2JS(); //XML 형식의 데이터를 JSON으로 파싱
 						var json = x2js.xml2js(responseText.data);
@@ -314,7 +314,7 @@ export default LocationPicker = ({route}) => {
 					},
 				})
 				.then(async res => {
-					console.log('res', JSON.stringify(res.data.documents[0]));
+					console.log('searchPlaceByKeyword res', JSON.stringify(res.data.documents[0]));
 					let result = res.data.documents;
 					// console.log('result', result);
 					setPlaces(result);
@@ -328,7 +328,6 @@ export default LocationPicker = ({route}) => {
 	};
 
 	const onChangeSearchText = keyword => {
-		console.log('keyword', keyword);
 		if (keyword == '') {
 			setPlaces([]);
 		}
@@ -786,7 +785,7 @@ const style = StyleSheet.create({
 		left: 0,
 		right: 0,
 		top: 0,
-		bottom: 0,
+		bottom: 50,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},

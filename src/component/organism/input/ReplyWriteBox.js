@@ -10,6 +10,8 @@ import DP from 'Root/config/dp';
 import {btn_w120} from 'Root/component/atom/btn/btn_style';
 import {txt} from 'Root/config/textstyle';
 import PropsTypes, {any, array, bool, func, number, object, oneOf, oneOfType, string} from 'prop-types';
+import {keyShow} from 'Root/component/molecules/input/usekeyboardbottom';
+import comment_obj from 'Root/config/comment_obj';
 
 /**
  * 댓글 작성 박스
@@ -68,12 +70,16 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 	};
 
 	const onFocus = () => {
+		setViewMode(false);
 		props.onFocus && props.onFocus();
 	};
 
 	const onBlur = () => {
+		setViewMode(true);
 		props.onBlur && props.onBlur();
 	};
+
+	const [viewMode, setViewMode] = React.useState(false);
 
 	const getParent = () => {
 		if (isChildComment) {
@@ -125,7 +131,7 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 		return (
 			<View style={[style.editComment, props.shadow ? style.shadow : style.shadow_off]}>
 				{/* 키보드가 해제 모드 / 댓글 수정 모드 X / 대댓글 모드 X / 사진 X 일 경우에만 출력되는 댓글 스타일 */}
-				{props.viewMode && !isChildComment && !props.editMode && photo == '' && photo.length == 0 ? (
+				{viewMode && !isChildComment && !props.editMode && photo == '' && photo.length == 0 ? (
 					<>
 						<View style={[style.commentBox_viewMode, {backgroundColor: isChildComment ? GRAY40 : WHITE}]}>
 							<View style={[style.iconCont_viewMode]}>
@@ -202,7 +208,7 @@ const CommentBoxBottom = props => {
 		let result = '댓글';
 		if (props.parentComment) {
 			result = '답글';
-		} else if (props.editData._id) {
+		} else if (props.editData && props.editData._id) {
 			result = '수정';
 		}
 		return result;

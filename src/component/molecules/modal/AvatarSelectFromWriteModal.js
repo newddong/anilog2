@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Dimensions, Platform, FlatList, TouchableOpacity, ActivityIndicator, Image, ScrollView} from 'react-native';
-import {WHITE, GRAY10, APRI10} from 'Root/config/color';
+import {WHITE, GRAY10, APRI10, GRAY50} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import Modal from 'Component/modal/Modal';
 import {getUserInfoById} from 'Root/api/userapi';
@@ -9,6 +9,7 @@ import {txt} from 'Root/config/textstyle';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, ProfileDefaultImg, Triangle, Write94} from 'Atom/icon';
 import FastImage from 'react-native-fast-image';
+import {NETWORK_ERROR} from 'Root/i18n/msg';
 
 /**
  * 글쓰기 선택 후 아바타 동물을 선택하는 모달창
@@ -38,7 +39,7 @@ const AvatarSelectFromWriteModal = props => {
 					userGlobalObj.userInfo.user_avatar = reverse;
 				},
 				err => {
-					Modal.popOneBtn(err, '확인', () => Modal.close());
+					Modal.popOneBtn(NETWORK_ERROR, '확인', () => Modal.close());
 				},
 			);
 		} else {
@@ -139,7 +140,11 @@ const AvatarSelectFromWriteModal = props => {
 	};
 
 	if (items == '') {
-		return <ActivityIndicator />;
+		return (
+			<View style={[style.back]}>
+				<ActivityIndicator />
+			</View>
+		);
 	} else
 		return (
 			<TouchableOpacity onPress={closeModal} activeOpacity={1} style={style.background}>
@@ -204,6 +209,18 @@ AvatarSelectFromWriteModal.defaultProps = {
 };
 
 const style = StyleSheet.create({
+	back: {
+		flex: 1,
+		position: 'absolute',
+		backgroundColor: GRAY50,
+		opacity: 0.3,
+		left: 0,
+		right: 0,
+		top: 0,
+		bottom: 0,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
 	background: {
 		backgroundColor: '#0009',
 		height: Platform.OS == 'ios' ? Dimensions.get('window').height : '100%',

@@ -15,8 +15,6 @@ import {getSearchResultProtectRequest, getSearchResultProtectRequestImprovingV1}
 import protect_obj from 'Root/config/protect_obj';
 import {useNavigation} from '@react-navigation/core';
 import DP from 'Root/config/dp';
-import ProtectedThumbnail from 'Root/component/molecules/media/ProtectedThumbnail';
-import {ScrollView} from 'native-base';
 
 export default ProtectRequestList = ({route}) => {
 	const navigation = useNavigation();
@@ -45,13 +43,12 @@ export default ProtectRequestList = ({route}) => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			// filterRef.current ? false : fetchData(); //포커스마다 새로 fetch를 시도하면 상세글을 갔다가 메인페이지로 돌아와도 기존의 스크롤로 이동을 하지 않음
 			// console.log('리뷰 게시글 전역변수 길이 :  ', community_obj.review.length);
-			console.log('protect_obj.protect.length : ', protect_obj.protect.length);
 			if (protect_obj.protect.length > 0) {
+				console.log('protect_obj.protect.length : ', protect_obj.protect.length);
 				// let temp = [...data];
 				setData(protect_obj.protect);
 			}
 		});
-		navigation.setOptions({title: ' '});
 		return unsubscribe;
 	}, []);
 
@@ -96,8 +93,8 @@ export default ProtectRequestList = ({route}) => {
 		filter.protect_request_notice_sdt = sdt;
 		filter.protect_request_notice_edt = edt;
 		//api 접속
-		console.log('offset', offset);
-		console.log('data Lenth', data.length);
+		// console.log('offset', offset);
+		// console.log('data Lenth', data.length);
 		let params = {
 			...filter,
 			page: isRefresh ? 1 : offset,
@@ -107,7 +104,7 @@ export default ProtectRequestList = ({route}) => {
 		// 	params.target_protect_desertion_no = data[data.length - 1].protect_desertion_no;
 		// 	params.target_protect_request_date = moment(data[data.length - 1].protect_request_date).format('YYYYMMDD');
 		// }
-		console.log('params', params);
+		// console.log('params', params);
 		getSearchResultProtectRequest(
 			params,
 			result => {
@@ -195,7 +192,8 @@ export default ProtectRequestList = ({route}) => {
 				sexValue = '성별모름';
 				break;
 		}
-		const titleValue = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + sexValue;
+		let slash = item.protect_animal_species_detail ? '/' : '';
+		const titleValue = item.protect_animal_species + slash + item.protect_animal_species_detail + sexValue;
 		navigation.navigate('AnimalProtectRequestDetail', {id: item._id, title: titleValue, writer: item.protect_request_writer_id._id});
 	};
 
@@ -211,22 +209,31 @@ export default ProtectRequestList = ({route}) => {
 
 	//즐겨찾기 onOff
 	const onOff_FavoriteTag = (bool, index) => {
-		setFavoriteEtc(
-			{
-				collectionName: 'protectrequestobjects',
-				target_object_id: getData()[index]._id,
-				is_favorite: bool,
-			},
-			result => {
-				console.log('result / favoriteEtc / ProtectRequestList : ', result.msg.favoriteEtc);
-				let prevData = [...getData()]; //
-				prevData[index].is_favorite = bool;
-				// setData(prevData); //useState로 View를 다시 그리면 UI Thread가 멈추는 현상 발견 임시 주석 처리
-			},
-			err => {
-				console.log('err / favoriteEtc / PRotectRequestList : ', err);
-			},
-		);
+		try {
+			if (getData()[index]._id) {
+				setFavoriteEtc(
+					{
+						collectionName: 'protectrequestobjects',
+						target_object_id: getData()[index]._id,
+						is_favorite: bool,
+					},
+					result => {
+						console.log('result / favoriteEtc / ProtectRequestList : ', result.msg.favoriteEtc);
+						let prevData = [...getData()]; //
+						prevData[index].is_favorite = bool;
+						// setData(prevData); //useState로 View를 다시 그리면 UI Thread가 멈추는 현상 발견 임시 주석 처리
+					},
+					err => {
+						console.log('err / favoriteEtc / PRotectRequestList : ', err);
+					},
+				);
+			} else {
+				console.log('onOff_FavoriteTag error', data);
+			}
+		} catch (err) {
+			console.log('onOff_FavoriteTag', err);
+			Modal.popNetworkErrorModal(NETWORK_ERROR);
+		}
 	};
 
 	//검색결과가 없을 경우
@@ -241,7 +248,7 @@ export default ProtectRequestList = ({route}) => {
 			filtered = filtered.filter(v => v.protect_request_status == 'rescue');
 		}
 		return filtered;
-	},[data]);
+	}, [data]);
 
 	//리스트 페이징 작업
 	const onEndReached = ({distanceFromEnd}) => {
@@ -262,12 +269,12 @@ export default ProtectRequestList = ({route}) => {
 		// console.log('offset', offset, 'e', y);
 		// console.log('to', To * ITEM_HEIGHT);
 		// if (y > ITEM_HEIGHT * To && closePaging) {
-			// console.log('offset * PROTECT_REQUEST_MAIN_LIMIT', offset * PROTECT_REQUEST_MAIN_LIMIT);
-			// console.log('getData().length', getData().length);
-			if (getData().length % PROTECT_REQUEST_MAIN_LIMIT == 0) {
-				getList();
-				// setClosePaging(false);
-			}
+		// console.log('offset * PROTECT_REQUEST_MAIN_LIMIT', offset * PROTECT_REQUEST_MAIN_LIMIT);
+		// console.log('getData().length', getData().length);
+		if (getData().length % PROTECT_REQUEST_MAIN_LIMIT == 0) {
+			getList();
+			// setClosePaging(false);
+		}
 		// }
 	};
 
@@ -279,7 +286,7 @@ export default ProtectRequestList = ({route}) => {
 		flatlist.current.scrollToOffset({animated: true, offset: 0});
 	};
 
-	const renderItem = React.useCallback(({item, index}) => {
+	const renderItem = ({item, index}) => {
 		// return <ProtectRequestItem key={index} item={item} index={index} />;
 		return (
 			<ProtectRequest
@@ -290,21 +297,7 @@ export default ProtectRequestList = ({route}) => {
 				onPressProtectRequest={() => onPressProtectRequest(item)}
 			/>
 		);
-	},[]);
-
-	class ProtectRequestItem extends React.PureComponent {
-		render() {
-			return (
-				<ProtectRequest
-					data={getData()[this.props.index]}
-					index={this.props.index}
-					onClickLabel={(status, id) => onClickLabel(this.props.item)}
-					onFavoriteTag={e => onOff_FavoriteTag(e, this.props.index)}
-					onPressProtectRequest={() => onPressProtectRequest(this.props.item)}
-				/>
-			);
-		}
-	}
+	};
 
 	const wait = timeout => {
 		return new Promise(resolve => setTimeout(resolve, timeout));
@@ -318,7 +311,7 @@ export default ProtectRequestList = ({route}) => {
 
 	const ITEM_HEIGHT = 266 * DP;
 	const [refreshing, setRefreshing] = React.useState(false);
-	const keyExtractor = React.useCallback((item,index)=>item._id+":"+index, []);
+	const keyExtractor = React.useCallback((item, index) => item._id + ':' + index, []);
 	const getItemLayout = React.useCallback(
 		(data, index) =>
 			!data[index]

@@ -2,7 +2,7 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {Text, View, TouchableOpacity, Linking, StyleSheet} from 'react-native';
 import DP from 'Root/config/dp';
-import {APRI10, BLUE20, GRAY10} from 'Root/config/color';
+import {APRI10, BLUE20, GRAY10, MAINBLACK} from 'Root/config/color';
 import ProfileImageSmall from 'Molecules/image/ProfileImageSmall';
 import {hyphened} from 'Root/util/dateutil';
 
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
 		height: 246 * DP,
 		borderRadius: 30 * DP,
 		borderWidth: 2 * DP,
-		borderColor: APRI10,
+		borderColor: MAINBLACK,
 		padding: 24 * DP,
 	},
 	profile_container: {

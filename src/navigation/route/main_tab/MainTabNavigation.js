@@ -16,18 +16,8 @@ export default MainTabNavigation = ({route, navigation}) => {
 
 	const getTabBarVisibility = route => {
 		switch (current) {
-			case 'CommunityWrite':
-			case 'CommunityEdit':
 			case 'ShelterInfoSetting':
-			case 'UserInfoSetting':
 			case 'AddressSearchWeb':
-				// case 'FeedCommentList':
-				// case 'AnimalProtectRequestDetail':
-				// case 'MissingAnimalDetail':
-				// case 'ReportDetail':
-				// case 'ArticleDetail':
-				// case 'ReviewDetail':
-				// case 'Search':
 				return false;
 			default:
 				break;
@@ -87,11 +77,12 @@ export default MainTabNavigation = ({route, navigation}) => {
 			</MainTabNav.Screen>
 			<MainTabNav.Screen
 				name="Search"
-				options={{
-					tabBarShowLabel: false,
+				options={({route}) => ({
+					tabBarVisible: getTabBarVisibility(route),
+					tabBarLabel: 'MY',
+					tabBarHideOnKeyboard: true,
 					header: props => false,
-					tabBarVisible: false,
-				}}>
+				})}>
 				{props => <SearchMainStack {...props} />}
 			</MainTabNav.Screen>
 		</MainTabNav.Navigator>

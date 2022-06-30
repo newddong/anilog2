@@ -1,21 +1,11 @@
 import React from 'react';
-import {View, Image} from 'react-native';
-import {DEFAULT_ANIMAL_PROFILE, DEFAULT_PROFILE} from 'Root/i18n/msg';
-import {
-	HashLabel46,
-	HashLabel60,
-	HashLabel70,
-	HashLabel76,
-	HashLabel94,
-	Paw30_APRI10,
-	Paw30_Mixed,
-	Paw30_YELL20,
-	Private48,
-	ProfileDefaultImg,
-	Public48,
-} from 'Atom/icon';
+import {View, Image, Text} from 'react-native';
+import {HashLabel46, HashLabel60, HashLabel70, HashLabel76, HashLabel94, Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, ProfileDefaultImg} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import FastImage from 'react-native-fast-image';
+import {BLACK, WHITE} from 'Root/config/color';
+import {txt} from 'Root/config/textstyle';
+import DP from 'Root/config/dp';
 
 /**
  * 프로필이미지 소형(size 가변 - 94 76 70 60 46)
@@ -44,7 +34,24 @@ const ProfileImageSmall = props => {
 			case 'pet':
 				return <View style={{position: 'absolute'}}>{petStatus()}</View>;
 			case 'shelter':
-				return <View style={{position: 'absolute', right: 0, bottom: 0}}>{props.data.shelter_type == 'public' ? <Public48 /> : <Private48 />}</View>;
+				// return <View style={{position: 'absolute', right: 0, bottom: 0}}>{props.data.shelter_type == 'public' ? <Public48 /> : <Private48 />}</View>;
+				return (
+					<View
+						style={{
+							width: 42 * DP,
+							height: 42 * DP,
+							borderRadius: 10 * DP,
+							backgroundColor: BLACK,
+							justifyContent: 'center',
+							position: 'absolute',
+							right: 0,
+							bottom: 0,
+						}}>
+						<Text style={[txt.noto26b, {color: WHITE, textAlignVertical: 'center', textAlign: 'center'}]}>
+							{props.data.shelter_type == 'private' ? '사' : '공'}
+						</Text>
+					</View>
+				);
 			default:
 				return <></>;
 		}

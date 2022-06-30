@@ -613,6 +613,7 @@ export default UserInfoSetting = ({route}) => {
 											multiline={true}
 											value={data.user_introduction}
 											placeholder={'소개를 입력해주세요. (최대 500자, 15줄)'}
+											placeholderTextColor="#767676"
 											maxLength={500}
 											ref={modifyRef}
 										/>

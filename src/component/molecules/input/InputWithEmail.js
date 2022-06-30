@@ -114,6 +114,7 @@ const InputWithEmail = props => {
 						},
 					]}
 					placeholder={props.placeholder}
+					placeholderTextColor="#767676"
 					autoCapitalize={'none'}
 					defaultValue={props.defaultValue ? props.defaultValue.split('@')[0] : ''}
 					onChangeText={onChange}

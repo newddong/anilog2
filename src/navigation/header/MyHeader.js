@@ -7,18 +7,17 @@ import {getUserInfoById} from 'Root/api/userapi';
 import {APRI10, WHITE} from 'Root/config/color';
 import PetLabel70 from 'Root/component/molecules/label/PetLabel70';
 export default MyHeader = ({navigation, route, options, back}) => {
-	// console.log('myheader param', route.params);
+	// console.log('myheader param', route.params);ㅌ
 	const [items, setItems] = React.useState('');
 	const [selectedItem, setSelectedItem] = React.useState(1000);
 	const [userData, setUserData] = React.useState('');
 	// const [isUser, setIsUser] = React.useState(route.params.userobject._id == userGlobalObj.userInfo._id);
 
-	console.log('items, items', items);
 	React.useEffect(() => {
 		// if (route.params.userobject._id == userGlobalObj.userInfo._id) {
 		// 	console.log('로그인된 유저의 설정');
 		// }
-		// console.log('route route', route);
+		console.log('navigation', route);
 		const unsubscribe = navigation.addListener('focus', () => {
 			fetchData();
 		});

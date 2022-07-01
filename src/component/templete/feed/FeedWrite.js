@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, TouchableOpacity, View, TouchableWithoutFeedback, StyleSheet, FlatList} from 'react-native';
+import {Text, TouchableOpacity, View, TouchableWithoutFeedback, StyleSheet, FlatList, InteractionManager} from 'react-native';
 import {APRI10, WHITE, GRAY20, GRAY10, GRAY30, BLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
@@ -21,6 +21,7 @@ import RadioBoxItem from 'Molecules/select/RadioBoxItem';
 import RadioBoxGroup from 'Molecules/select/RadioBoxGroup';
 import CheckBox from 'Root/component/molecules/select/CheckBox';
 import CheckBoxItem from 'Root/component/molecules/select/CheckBoxItem';
+
 
 export default FeedWrite = props => {
 	const [showPetAccountList, setShowPetAccountList] = React.useState(false); //PetAccount 계정
@@ -46,7 +47,7 @@ export default FeedWrite = props => {
 	const [editText, setEditText] = React.useState(
 		props.route.params.feed_content ? props.route.params.feed_content.replace(/(&@|&#){2}(.*?)%&%.*?(&@|&#){2}/gm, '$2') : '',
 	);
-
+	
 	React.useEffect(() => {
 		// console.log('정보 변경', props.route);
 		if (props.route.name != 'FeedEdit') {
@@ -176,7 +177,7 @@ export default FeedWrite = props => {
 			Modal.alert('첨부파일은 5개까지만 가능합니다');
 			return;
 		}
-		props.navigation.push('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}, selectedPhoto: selectedImg});
+		props.navigation.push('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}, selectedPhoto: selectedImg,types:'All'});
 	};
 
 	//사진 삭제

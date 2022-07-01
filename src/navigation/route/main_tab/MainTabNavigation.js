@@ -27,6 +27,7 @@ export default MainTabNavigation = ({route, navigation}) => {
 
 	//커뮤니티 텝에서 보내주는 route.name
 	const sendRoute = route_name => {
+		console.log('route_name', route_name);
 		setCurrent(route_name);
 	};
 

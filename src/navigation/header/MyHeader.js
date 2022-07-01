@@ -7,13 +7,17 @@ import {getUserInfoById} from 'Root/api/userapi';
 import {APRI10, WHITE} from 'Root/config/color';
 import PetLabel70 from 'Root/component/molecules/label/PetLabel70';
 export default MyHeader = ({navigation, route, options, back}) => {
-	// console.log('options', options);
-	// console.log('myheader param', route.params);
+	// console.log('myheader param', route.params);ㅌ
 	const [items, setItems] = React.useState('');
 	const [selectedItem, setSelectedItem] = React.useState(1000);
 	const [userData, setUserData] = React.useState('');
+	// const [isUser, setIsUser] = React.useState(route.params.userobject._id == userGlobalObj.userInfo._id);
 
 	React.useEffect(() => {
+		// if (route.params.userobject._id == userGlobalObj.userInfo._id) {
+		// 	console.log('로그인된 유저의 설정');
+		// }
+		console.log('navigation', route);
 		const unsubscribe = navigation.addListener('focus', () => {
 			fetchData();
 		});
@@ -64,7 +68,8 @@ export default MyHeader = ({navigation, route, options, back}) => {
 				navigation.push('PetInfoSetting', {pet_id: data._id});
 			} else if (data?.user_type === 'user') {
 				console.log('User');
-				navigation.push('UserInfoSetting', {token: data._id}); //userObject
+				// navigation.push('UserInfoSetting', {token: data._id}); //userObject
+				navigation.push('UserMenu', {userobject: data});
 			}
 
 			Modal.close();

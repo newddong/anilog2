@@ -491,9 +491,9 @@ export default FeedList = ({route, navigation}) => {
 	//피드 상단 새로운 실종/제보
 	const MissingReport = () => {
 		return (
-			<View style={[styles.container]}>
-				<NewMissingReportList data={topList} />
-			</View>
+			// <View style={[styles.container]}>
+			<NewMissingReportList data={topList} />
+			// {/* </View> */}
 		);
 	};
 
@@ -538,7 +538,7 @@ export default FeedList = ({route, navigation}) => {
 	const [testTx, setTx] = React.useState('한');
 	const [code, setCode] = React.useState(62);
 	return (
-		<View style={[login_style.wrp_main, {flex: 1, backgroundColor: WHITE}]}>
+		<View style={[login_style.wrp_main, {flex: 1, backgroundColor: WHITE}, {borderTopWidth: 2 * DP}, {borderTopColor: GRAY30}]}>
 			<FlatList
 				data={feedList}
 				renderItem={renderItem}
@@ -551,7 +551,7 @@ export default FeedList = ({route, navigation}) => {
 				extraData={refresh}
 				onScroll={rememberScroll}
 				ItemSeparatorComponent={({highlited}) => (
-					<View style={{alignItems: 'center'}}>
+					<View style={[{alignItems: 'center'}]}>
 						<View style={{height: 10 * DP, backgroundColor: GRAY30, width: 750 * DP}}></View>
 					</View>
 				)}
@@ -725,8 +725,8 @@ const styles = StyleSheet.create({
 
 		marginBottom: 30 * DP,
 		// backgroundColor: 'yellow',
-		borderTopWidth: 2 * DP,
-		borderTopColor: GRAY40,
+		// borderTopWidth: 2 * DP,
+		// borderTopColor: GRAY40,
 	},
 	userContainer: {
 		width: 750 * DP,

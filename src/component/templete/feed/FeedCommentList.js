@@ -260,7 +260,7 @@ export default FeedCommentList = props => {
 		} else {
 			editMode ? (comment_obj.editData = editData) : false;
 			parentComment ? (comment_obj.parentComment = parentComment) : false;
-			props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}, merge: true});
+			navigation.navigate('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}, merge: true});
 		}
 	};
 
@@ -391,7 +391,7 @@ export default FeedCommentList = props => {
 				result => {
 					// console.log('result / DeleteFeed / FeedContent : ', result.msg);
 					Modal.close();
-					if (props.navigation.getState().routes[0].name == 'ProtectionTab') {
+					if (navigation.getState().routes[0].name == 'ProtectionTab') {
 						navigation.navigate('ProtectionTab');
 					} else {
 						console.log(props.navigation.getState().routes);
@@ -425,15 +425,17 @@ export default FeedCommentList = props => {
 
 	//댓글 수정 => 키보드 해제시 수정모드가 종료되도록 적용
 	KeyBoardEvent(
-		() => {
-			setTimeout(() => {
-				setKeyboardVisible(true);
-			}, 200);
-		},
+		() => {},
 		() => {
 			setKeyboardVisible(false);
 		},
 	);
+
+	const onFocus = () => {
+		setTimeout(() => {
+			setKeyboardVisible(true);
+		}, 500);
+	};
 
 	const header = () => {
 		return (
@@ -529,6 +531,7 @@ export default FeedCommentList = props => {
 						onCancelChild={onCancelChild} // 대댓글쓰기 X마크
 						editMode={editMode}
 						viewMode={!isKeyboardVisible}
+						onFocus={onFocus}
 					/>
 				</View>
 			) : (

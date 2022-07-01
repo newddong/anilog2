@@ -39,7 +39,11 @@ const AvatarSelectFromWriteModal = props => {
 					userGlobalObj.userInfo.user_avatar = reverse;
 				},
 				err => {
-					Modal.popOneBtn(NETWORK_ERROR, '확인', () => Modal.close());
+					console.log('err , getUserInfoByID', err);
+					Modal.close();
+					setTimeout(() => {
+						Modal.popOneBtn(NETWORK_ERROR, '확인', () => Modal.close());
+					}, 200);
 				},
 			);
 		} else {
@@ -142,7 +146,7 @@ const AvatarSelectFromWriteModal = props => {
 	if (items == '') {
 		return (
 			<View style={[style.back]}>
-				<ActivityIndicator />
+				<ActivityIndicator size={'large'} color={'black'} />
 			</View>
 		);
 	} else
@@ -206,6 +210,9 @@ AvatarSelectFromWriteModal.defaultProps = {
 	},
 	onSelectPet: e => {},
 	isWriteMode: true,
+	onClose: () => {
+		Modal.close();
+	},
 };
 
 const style = StyleSheet.create({
@@ -213,7 +220,7 @@ const style = StyleSheet.create({
 		flex: 1,
 		position: 'absolute',
 		backgroundColor: GRAY50,
-		opacity: 0.3,
+		opacity: 0.6,
 		left: 0,
 		right: 0,
 		top: 0,

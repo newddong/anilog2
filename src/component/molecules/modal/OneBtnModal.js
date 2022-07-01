@@ -14,6 +14,7 @@ import Modal from 'Root/component/modal/Modal';
  * @param {string} props.popUpMsg - 팝업 메시지
  * @param {string} props.okMsg - 확인 버튼 메시지
  * @param {()=>void} props.onOk - 확인 버튼 콜백
+ * @param {()=>void} props.onClose - 컴포넌트 바깥쪽 클릭
  *
  */
 const OneBtnModal = props => {
@@ -21,9 +22,12 @@ const OneBtnModal = props => {
 		props.onOk();
 		// Modal.close();
 	};
+	const pressOutSide = () => {
+		props.onClose();
+	};
 
 	return (
-		<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={style.background}>
+		<TouchableOpacity activeOpacity={1} onPress={pressOutSide} style={style.background}>
 			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
 				<Text style={[txt.noto28, style.msg, {color: MAINBLACK}]}>{props.popUpMsg}</Text>
 				<View style={[style.buttonContainer]}>
@@ -39,6 +43,9 @@ OneBtnModal.defaultProps = {
 	okMsg: 'ok',
 	onOk: () => {
 		alert('OK');
+	},
+	onClose: () => {
+		Modal.close();
 	},
 };
 

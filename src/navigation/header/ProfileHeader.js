@@ -8,6 +8,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import {APPLY_VOLUNTEER, NOT_REGISTERED_SHELTER, REPORT_MENU, SHELTER_INFO} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
 import {createMemoBox} from 'Root/api/userapi';
+import {useNavigation} from '@react-navigation/core';
 
 /**
  * 유저가 기르는 반려동물의 프로필 사진, 닉네임, 유저의 닉네임을 출력하는 라벨
@@ -18,6 +19,7 @@ import {createMemoBox} from 'Root/api/userapi';
 export default ProfileHeader = props => {
 	const userInfo = userGlobalObject.userInfo;
 	const data = props.options.data;
+	const navigation = useNavigation();
 	// console.log('props.options', data);
 
 	const onSelect = select => {
@@ -194,10 +196,19 @@ export default ProfileHeader = props => {
 		}
 	};
 
+	const [backPressed, setBackPressed] = React.useState(false);
+
+	const onPressBackButton = () => {
+		setBackPressed(true);
+		if (!backPressed) {
+			navigation.goBack();
+		}
+	};
+
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
-			<TouchableOpacity style={style.backButtonContainer} onPress={props.navigation.goBack}>
-				<BackArrow32 onPress={props.navigation.goBack} />
+			<TouchableOpacity style={style.backButtonContainer} onPress={onPressBackButton}>
+				<BackArrow32 />
 			</TouchableOpacity>
 			<View style={{justifyContent: 'center', alignItems: 'center'}}>
 				<Text style={[txt.roboto40b, {width: 550 * DP, textAlign: 'center'}]} numberOfLines={1}>

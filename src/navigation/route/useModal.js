@@ -83,13 +83,13 @@ export function useModal() {
 		!isPop && setPop(true);
 	};
 
-	Modal.popNoBtn = msg => {
-		popIn(<NoBtnModal popUpMsg={msg} />);
+	Modal.popNoBtn = (msg, timeout) => {
+		popIn(<NoBtnModal popUpMsg={msg} timeout={timeout} />);
 		!isPop && setPop(true);
 	};
 
-	Modal.popOneBtn = (msg, okMsg, onOk) => {
-		popIn(<OneBtnModal popUpMsg={msg} onOk={onOk} okMsg={okMsg} />);
+	Modal.popOneBtn = (msg, okMsg, onOk, onClose) => {
+		popIn(<OneBtnModal popUpMsg={msg} onOk={onOk} okMsg={okMsg} onClose={onClose} />);
 		!isPop && setPop(true);
 	};
 

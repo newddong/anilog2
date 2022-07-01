@@ -109,10 +109,14 @@ export default LocationPicker = ({route}) => {
 					initializeRegion();
 				} else if (res == 'denied') {
 					//거절
-					getToSetting();
+					setTimeout(() => {
+						getToSetting('blocked');
+					}, 1000);
 				} else if (res == 'unavailable') {
 					//gps자체가 꺼짐 상태
-					getToSetting();
+					setTimeout(() => {
+						getToSetting('blocked');
+					}, 1000);
 				} else if (res == 'blocked') {
 					// anilog앱만 '안함' 상태
 					setTimeout(() => {
@@ -390,10 +394,10 @@ export default LocationPicker = ({route}) => {
 		setDetailAddr('');
 		setPlaces([]);
 		setSelected('');
-		setLogitude('');
-		setLatitude('');
-		setChangedLatitude('');
-		setChangedLongitude('');
+		// setLogitude('');
+		// setLatitude('');
+		// setChangedLatitude('');
+		// setChangedLongitude('');
 	};
 
 	//검색된 장소 클릭

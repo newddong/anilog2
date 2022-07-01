@@ -135,10 +135,8 @@ export default CommunityWrite = props => {
 	//이미지 입력
 	const insertImage = imageList => {
 		console.log('imageList', imageList);
-
 		setTimeout(() => {
 			Modal.popLoading(true);
-
 			setTimeout(() => {
 				data != 'false' ? richText.current?.insertHTML('<p><br/></p></div>') : false; //이미지를 넣을 시 바로 다음줄로 이동하도록 처리
 				// const result = await changePath(imageList);
@@ -192,28 +190,33 @@ export default CommunityWrite = props => {
 	}, [props.route.params?.selectedPhoto]);
 
 	//사진 불러오기
-	const onPressPhotoSelect = () => {
-		props.navigation.push('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
+	const onPressPhotoSelect = key => {
+		if (key) {
+			//키보드가 올라와있으며 가려진 버튼일 경우 사진추가 이벤트로 연결X
+			!showBtn ? navigation.navigate('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}}) : false;
+		} else {
+			navigation.navigate('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
+		}
 	};
 
 	const isInterestsEmpty = () => {
-		if (data.community_interests.hasOwnProperty('interests_group1')) {
-			return (
-				data.community_interests.interests_etc.length == 0 &&
-				data.community_interests.interests_group1.length == 0 &&
-				data.community_interests.interests_group2 == 0 &&
-				data.community_interests.interests_group3 == 0
-			);
-		} else
-			return (
-				data.community_interests.interests_etc.length == 0 &&
-				data.community_interests.interests_trip.length == 0 &&
-				data.community_interests.interests_hospital == 0 &&
-				data.community_interests.interests_review == 0
-			);
+		if (isReview) {
+			if (data.community_interests.hasOwnProperty('interests_group1')) {
+				return (
+					data.community_interests.interests_etc.length == 0 &&
+					data.community_interests.interests_group1.length == 0 &&
+					data.community_interests.interests_group2 == 0 &&
+					data.community_interests.interests_group3 == 0
+				);
+			} else
+				return (
+					data.community_interests.interests_etc.length == 0 &&
+					data.community_interests.interests_trip.length == 0 &&
+					data.community_interests.interests_hospital == 0 &&
+					data.community_interests.interests_review == 0
+				);
+		} else return false;
 	};
-
-	// data.community_interests.interests_trip == 0;
 
 	const onPressFilter = () => {
 		// console.log('data.community_interests', data.community_interests);
@@ -260,25 +263,24 @@ export default CommunityWrite = props => {
 	KeyBoardEvent(
 		e => {
 			setKeyboardY(e.endCoordinates.height + KeyboardBorderLine);
-			Platform.OS == 'android' ? setShowBtn(true) : setShowBtn(true);
+			// Platform.OS == 'android' ? setShowBtn(true) : setShowBtn(true);
 		},
 		e => {
 			setKeyboardY(0);
-			Platform.OS == 'android' ? setShowBtn(false) : setShowBtn(false);
 		},
 	);
+
+	const onFocus = () => {
+		setShowBtn(true);
+	};
+
+	const onBlur = () => {
+		setShowBtn(false);
+	};
 
 	//선택한 카테고리 목록 Stringify 함수
 	const getReviewCategory = list => {
 		let category_text = '';
-		// console.log('list', list);
-		const er = {
-			interests_etc: ['의류', '미용'],
-			interests_group1: ['산책로'],
-			interests_group2: ['치료'],
-			interests_group3: ['놀이가구'],
-			interests_location: {city: '', district: ''},
-		};
 		const getText = array => {
 			array.map((v, i) => {
 				category_text = category_text + v + ' / ';
@@ -332,16 +334,16 @@ export default CommunityWrite = props => {
 	};
 
 	//리뷰글쓰기 버튼 아이콘 컨테이너
-	const getReviewButtonContainer = () => {
+	const getReviewButtonContainer = key => {
 		return (
 			<>
-				<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
+				<TouchableOpacity activeOpacity={0.6} onPress={() => onPressPhotoSelect(key)}>
 					<View style={[style.buttonItem_review]}>
 						<Camera54 />
 					</View>
 				</TouchableOpacity>
 				<View style={{height: 38 * DP, width: 2 * DP, backgroundColor: GRAY10, alignSelf: 'center', marginHorizontal: 30 * DP}}></View>
-				<TouchableOpacity activeOpacity={0.6} onPress={moveToLocationPicker}>
+				<TouchableOpacity activeOpacity={0.6} onPress={() => moveToLocationPicker(key)}>
 					<View style={[style.buttonItem_review, {}]}>
 						<Location54 fill={'black'} />
 					</View>
@@ -351,10 +353,10 @@ export default CommunityWrite = props => {
 	};
 
 	//자유글쓰기 버튼 아이콘 컨테이너
-	const getArticleButtonContainer = () => {
+	const getArticleButtonContainer = key => {
 		return (
-			<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
-				<View style={[style.buttonItem]}>
+			<TouchableOpacity activeOpacity={0.6} onPress={() => onPressPhotoSelect(key)}>
+				<View style={[style.buttonItem, {}]}>
 					<Camera54 />
 					<Text style={[txt.noto28b, {marginLeft: 10 * DP}]}>사진추가</Text>
 				</View>
@@ -375,8 +377,13 @@ export default CommunityWrite = props => {
 		richText.current.dismissKeyboard();
 	};
 
-	const moveToLocationPicker = () => {
-		props.navigation.push('CommunityLocationPicker', {data: data, isReview: isReview});
+	const moveToLocationPicker = key => {
+		if (key) {
+			//키보드가 올라와있으며 가려진 버튼일 경우 사진추가 이벤트로 연결X
+			!showBtn ? navigation.navigate('CommunityLocationPicker', {data: data, isReview: isReview}) : false;
+		} else {
+			navigation.navigate('CommunityLocationPicker', {data: data, isReview: isReview});
+		}
 	};
 
 	const getMap = () => {
@@ -455,7 +462,7 @@ export default CommunityWrite = props => {
 					onChangeText={onChangeTitle}
 					maxLength={30}
 					style={[txt.noto28, style.title_text]}
-					placeholder={'제목 입력'}
+					placeholder={'제목 입력(최대 30자)'}
 					placeholderTextColor={GRAY20}
 				/>
 				{/* 텍스트 입력 박스 */}
@@ -463,34 +470,38 @@ export default CommunityWrite = props => {
 					<TouchableOpacity onPress={removeEditor} activeOpacity={1} style={{width: 48 * DP}}></TouchableOpacity>
 					<View style={[style.content, {}]}>
 						{Platform.OS == 'android' ? (
-							<ScrollView>
+							<ScrollView onTouchEnd={() => richText.current?.focusContentEditor()} style={{}}>
 								<RichEditor
 									ref={richText}
 									editorStyle={{contentCSSText: `font-size:${28 * DP}px;`, backgroundColor: '#FAFAFA'}}
 									onChange={onChange}
 									keyboardDisplayRequiresUserAction={true}
-									style={{width: '100%', opacity: 0.99}}
+									style={{width: '100%', opacity: 0.99, flex: 1, minHeight: 500 * DP}}
 									placeholder={isReview ? WRITE_REVIEW_INFO : WRITE_FREE_INFO}
 									onCursorPosition={onCursorPosition}
 									onPaste={onPaste}
 									pasteAsPlainText={true}
+									onFocus={onFocus}
+									onBlur={onBlur}
 								/>
 							</ScrollView>
 						) : (
-							<View style={{flexDirection: 'row'}}>
+							<ScrollView onTouchEnd={() => richText.current?.focusContentEditor()} style={{}}>
 								<RichEditor
 									ref={richText}
-									keyboardDisplayRequiresUserAction={true}
 									editorStyle={{contentCSSText: `font-size:${28 * DP}px;`, backgroundColor: '#FAFAFA'}}
 									onChange={onChange}
-									style={{width: '100%', opacity: 0.99}}
+									keyboardDisplayRequiresUserAction={true}
+									style={{width: '100%', opacity: 0.99, flex: 1, minHeight: 500 * DP}}
 									contentMode={'mobile'}
 									placeholder={isReview ? WRITE_REVIEW_INFO : WRITE_FREE_INFO}
 									onCursorPosition={onCursorPosition}
 									onPaste={onPaste}
 									pasteAsPlainText={true}
+									onFocus={onFocus}
+									onBlur={onBlur}
 								/>
-							</View>
+							</ScrollView>
 						)}
 					</View>
 					<TouchableOpacity activeOpacity={1} onPress={removeEditor} style={{width: 48 * DP}}></TouchableOpacity>
@@ -500,8 +511,8 @@ export default CommunityWrite = props => {
 				{isReview ? (
 					<View style={[style.animalFilter_container]}>
 						<View style={[style.animalFilter]}>
-							<View style={[style.buttonContainer_review, {opacity: showBtn == true ? 0 : 1, zIndex: 1}]}>{getReviewButtonContainer()}</View>
-							<View style={{flexDirection: 'row', width: 399 * DP, justifyContent: 'space-between'}}>
+							<View style={[style.buttonContainer_review, {opacity: showBtn == true ? 0 : 1, zIndex: 1}]}>{getReviewButtonContainer(true)}</View>
+							<View style={{flexDirection: 'row', width: 398 * DP, justifyContent: 'space-between'}}>
 								<View style={[]}>
 									{!animalType.dog ? (
 										<AnimalButton type={'dog'} on={false} onPress={() => onPressAnimalFilter('dog')} />
@@ -530,11 +541,7 @@ export default CommunityWrite = props => {
 					<></>
 				)}
 
-				{isReview ? (
-					<></>
-				) : (
-					<View style={[style.buttonContainer, {justifyContent: 'flex-start', opacity: showBtn == true ? 0 : 1}]}>{getArticleButtonContainer()}</View>
-				)}
+				{isReview ? <></> : <View style={[style.buttonContainer, {opacity: showBtn == true ? 0 : 1}]}>{getArticleButtonContainer(true)}</View>}
 				<View style={{height: 100}} />
 			</ScrollView>
 			{isReview ? (
@@ -548,11 +555,11 @@ export default CommunityWrite = props => {
 							zIndex: showBtn ? 3 : -1,
 						},
 					]}>
-					{getReviewButtonContainer()}
+					{getReviewButtonContainer(false)}
 				</View>
 			) : (
-				<View style={[style.buttonContainer_keyboard, {bottom: Platform.OS == 'android' ? 0 : KeyboardY, opacity: showBtn == false ? 0 : 1}]}>
-					{getArticleButtonContainer()}
+				<View style={[style.buttonContainer_keyboard, {bottom: Platform.OS == 'android' ? 0 : KeyboardY, opacity: showBtn ? 1 : 0}]}>
+					{getArticleButtonContainer(false)}
 				</View>
 			)}
 			{/* ios에서 키보드가 가려지는 현상 방지를 위한 keyBoard패딩 컴포넌트 */}
@@ -578,7 +585,7 @@ const style = StyleSheet.create({
 	title_text: {
 		width: 694 * DP,
 		height: 104 * DP,
-		paddingLeft: 30 * DP,
+		paddingHorizontal: 30 * DP,
 		borderRadius: 30 * DP,
 		backgroundColor: GRAY50,
 		marginBottom: 30 * DP,
@@ -632,12 +639,11 @@ const style = StyleSheet.create({
 		paddingVertical: 20 * DP,
 	},
 	buttonContainer: {
-		paddingVertical: 40 * DP,
+		paddingVertical: 18 * DP,
 		paddingHorizontal: 24 * DP,
 		flexDirection: 'row',
 		width: 694 * DP,
-		// backgroundColor: 'yellow',
-		justifyContent: 'space-between',
+		justifyContent: 'flex-start',
 	},
 	buttonContainer_review: {
 		// paddingVertical: 40 * DP,

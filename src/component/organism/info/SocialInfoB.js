@@ -1,17 +1,15 @@
 import React from 'react';
-import {Text, View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+import {Text, View, StyleSheet, TouchableWithoutFeedback, TouchableOpacity} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {socialInfoB} from 'Organism/style_organism copy';
 import {useNavigation} from '@react-navigation/native';
 export default SocialInfoB = props => {
 	const navigation = useNavigation();
-
 	const moveToSocialRelation = () => {
-		navigation.push('SocialRelation', {userobject: props.data});
+		navigation.navigate('SocialRelation', {userobject: props.data});
 	};
 	const onPressUpload = () => {
-		console.log('fjeji');
-		navigation.push('UserProfile', {userobject: props.data});
+		navigation.navigate('UserProfile', {userobject: props.data});
 	};
 	const count_to_K = cnt => {
 		if (cnt > 1000000) {
@@ -27,24 +25,18 @@ export default SocialInfoB = props => {
 
 	return (
 		<View style={[styles.container]}>
-			<View style={[styles.socialInfo]}>
-				<TouchableWithoutFeedback onPress={onPressUpload}>
-					<Text style={[txt.roboto34b, styles.number]}>{count_to_K(props.data.user_upload_count)}</Text>
-				</TouchableWithoutFeedback>
+			<TouchableOpacity activeOpacity={0.6} onPress={onPressUpload} style={[styles.socialInfo]}>
+				<Text style={[txt.roboto34b, styles.number]}>{count_to_K(props.data.user_upload_count)}</Text>
 				<Text style={[txt.noto28, styles.title]}>업로드</Text>
-			</View>
-			<View style={[styles.socialInfo]}>
-				<TouchableWithoutFeedback onPress={moveToSocialRelation}>
-					<Text style={[txt.roboto34b, styles.number]}>{count_to_K(props.data.user_follower_count)}</Text>
-				</TouchableWithoutFeedback>
+			</TouchableOpacity>
+			<TouchableOpacity activeOpacity={0.6} onPress={moveToSocialRelation} style={[styles.socialInfo]}>
+				<Text style={[txt.roboto34b, styles.number]}>{count_to_K(props.data.user_follower_count)}</Text>
 				<Text style={[txt.noto28, styles.title]}>팔로워</Text>
-			</View>
-			<View style={[styles.socialInfo]}>
-				<TouchableWithoutFeedback onPress={moveToSocialRelation}>
-					<Text style={[txt.roboto34b, styles.number]}>{count_to_K(props.data.user_follow_count)}</Text>
-				</TouchableWithoutFeedback>
+			</TouchableOpacity>
+			<TouchableOpacity activeOpacity={0.6} onPress={moveToSocialRelation} style={[styles.socialInfo]}>
+				<Text style={[txt.roboto34b, styles.number]}>{count_to_K(props.data.user_follow_count)}</Text>
 				<Text style={[txt.noto28, styles.title]}>팔로잉</Text>
-			</View>
+			</TouchableOpacity>
 			{props.donationMode ? (
 				<View style={[styles.socialInfo]}>
 					<Text style={[txt.roboto34b]}>3</Text>

@@ -52,6 +52,7 @@ export default ReviewDetail = props => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			getReviewData();
+			setPressed(false);
 		});
 		// getReviewData();
 		getComment();
@@ -403,7 +404,7 @@ export default ReviewDetail = props => {
 			editData.comment_contents ? (comment_obj.editData.comment_contents = editData.comment_contents) : false;
 			editMode ? (comment_obj.editData = {...editData, isEditMode: true}) : false;
 			parentComment ? (comment_obj.parentComment = parentComment) : false;
-			props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
+			navigation.navigate('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 		}
 	};
 
@@ -589,9 +590,23 @@ export default ReviewDetail = props => {
 		}
 	};
 
+	const [pressed, setPressed] = React.useState(false);
+
 	//다른 후기 게시글 클릭
 	const onPressReviewBrief = index => {
-		navigation.push('ReviewDetail', {community_object: reviewList[index], searchInput: searchInput});
+		setPressed(true);
+		if (!pressed) {
+			console.log('ha', `ReviewDetail-${reviewList[index]._id + new Date().getTime()}`);
+			navigation.navigate({
+				key: `ReviewDetail-${reviewList[index]._id + new Date().getTime()}`,
+				name: 'ReviewDetail',
+				params: {
+					community_object: reviewList[index],
+					searchInput: searchInput,
+				},
+			});
+		}
+		// navigation.push('ReviewDetail', {community_object: reviewList[index], searchInput: searchInput});
 	};
 
 	//답글 쓰기 후 댓글 작성자 우측 답글취소 버튼 클릭

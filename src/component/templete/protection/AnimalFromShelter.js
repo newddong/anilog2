@@ -1,15 +1,11 @@
 import React from 'react';
-import {ActivityIndicator, FlatList, ScrollView, Text, View} from 'react-native';
+import {FlatList, ScrollView, Text, View} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {login_style, animalFromShelter_style} from 'Templete/style_templete';
-import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {getProtectRequestListByShelterId} from 'Root/api/shelterapi';
-import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {EmptyIcon} from 'Root/component/atom/icon';
-import DP from 'Root/config/dp';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 
@@ -43,25 +39,24 @@ export default AnimalFromShelter = ({route}) => {
 		Modal.popAnimalInfoModal(
 			protectAnimalObject,
 			() => {
-				let gender = '남';
+				let gender = '';
 				switch (protectAnimalObject.protect_animal_sex) {
 					case 'male':
-						gender = '남';
+						gender = '/남';
 						break;
 					case 'female':
-						gender = '여';
+						gender = '/여';
 						break;
-					case 'male':
-						gender = '성별모름';
+					default:
+						gender = '';
 						break;
 				}
-				const title = protectAnimalObject.protect_animal_species + '/' + protectAnimalObject.protect_animal_species_detail + '/' + gender;
+				const title = protectAnimalObject.protect_animal_species + '/' + protectAnimalObject.protect_animal_species_detail + gender;
 				navigation.push('AnimalProtectRequestDetail', {
 					id: protectAnimalObject._id,
 					title: title,
 					writer: protectAnimalObject.protect_request_writer_id._id,
 				});
-				// navigation.push('ProtectRequestManage', {id: protectAnimalObject._id})
 			},
 			() => navigation.push('AdoptorInformation', protectAnimalObject.protect_animal_id._id),
 		);

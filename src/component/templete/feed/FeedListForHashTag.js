@@ -15,7 +15,7 @@ export default FeedListForHashTag = props => {
 	const [feeds, setFeeds] = React.useState([]);
 	const navigation = useNavigation();
 	const moveToHashFeedList = (index, item) => {
-		navigation.push('HashFeedList', {selected: item, hashtag_keyword: hashInfo.hashtag_keyword, index: index});
+		navigation.navigate('HashFeedList', {selected: item, hashtag_keyword: hashInfo.hashtag_keyword, index: index});
 	};
 
 	const [showRecent, setShowRecent] = React.useState(true);

@@ -12,6 +12,7 @@ import Modal from 'Root/component/modal/Modal';
  *
  * @param {Object} props - props object
  * @param {string} props.popUpMsg - 팝업 메시지
+ * @param {string} props.timeout - 타임아웃 콜백
  *
  */
 const NoBtnModal = props => {
@@ -21,7 +22,9 @@ const NoBtnModal = props => {
 			Modal.close();
 			setTimeout(() => {
 				Modal.popOneBtn('오류가 발생하였습니다. \n 잠시후 다시 이용해주세요. ', '확인', () => {
-					props.timeout();
+					if (props.timeout) {
+						props.timeout();
+					} else Modal.close();
 				});
 			}, 200);
 		}, 10000);

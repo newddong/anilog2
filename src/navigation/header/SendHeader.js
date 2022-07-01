@@ -194,12 +194,19 @@ export default SendHeader = ({route, navigation, options}) => {
 
 	const titleStyle = [{textAlign: 'center'}, txt.noto40b, route.params?.type ? {color: RED} : {}];
 
+	const [backPressed, setBackPressed] = React.useState(false);
+
+	const onPressBackButton = () => {
+		setBackPressed(true);
+		if (!backPressed) {
+			navigation.goBack();
+		}
+	};
+
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
-			<TouchableOpacity onPress={navigation.goBack}>
-				<View style={style.backButtonContainer}>
-					<BackArrow32 onPress={navigation.goBack} />
-				</View>
+			<TouchableOpacity style={style.backButtonContainer} onPress={onPressBackButton}>
+				<BackArrow32 />
 			</TouchableOpacity>
 
 			<View style={style.titleContainer}>

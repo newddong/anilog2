@@ -117,12 +117,19 @@ export default CommunityHeader = ({navigation, route, options, back}) => {
 		}
 	};
 
+	const [backPressed, setBackPressed] = React.useState(false);
+
+	const onPressBackButton = () => {
+		setBackPressed(true);
+		if (!backPressed) {
+			navigation.goBack();
+		}
+	};
+
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
-			<TouchableOpacity onPress={navigation.goBack}>
-				<View style={style.backButtonContainer}>
-					<BackArrow32 onPress={navigation.goBack} />
-				</View>
+			<TouchableOpacity style={style.backButtonContainer} onPress={onPressBackButton}>
+				<BackArrow32 />
 			</TouchableOpacity>
 			<Text numberOfLines={1} style={[{flex: 1, textAlign: 'center', marginLeft: 30 * DP, marginRight: 0 * DP}, txt.roboto40b]}>
 				{options.title ? options.title : route.params.title}

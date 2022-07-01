@@ -153,9 +153,6 @@ export default ProtectCommentList = props => {
 									});
 								}
 								setComments(res);
-								res.map((v, i) => {
-									console.log('i', i, v.comment_is_like);
-								});
 								setPrivateComment(false);
 								setEditMode(false);
 								// console.log('editData.parent', editData.parent, 'whichComment', whichComment);

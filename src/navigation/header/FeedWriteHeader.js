@@ -323,7 +323,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			)}
 			{sent ? (
 				<View style={{}}>
-					<ActivityIndicator size="large" color={'black'} />
+					<ActivityIndicator size="small" color={'black'} />
 				</View>
 			) : (
 				<TouchableOpacity activeOpacity={0.6} onPress={route.name == 'FeedEdit' ? onEdit : onCreate}>

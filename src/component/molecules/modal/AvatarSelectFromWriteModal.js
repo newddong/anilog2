@@ -210,6 +210,9 @@ AvatarSelectFromWriteModal.defaultProps = {
 	},
 	onSelectPet: e => {},
 	isWriteMode: true,
+	onClose: () => {
+		Modal.close();
+	},
 };
 
 const style = StyleSheet.create({

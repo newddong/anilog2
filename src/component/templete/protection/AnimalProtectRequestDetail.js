@@ -60,7 +60,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				let res = result.msg;
 				setData(res);
 				navigation.setParams({...route.params, request_object: result.msg, isMissingOrReport: false, reset: false});
-				getProtectRequestList(result.msg.protect_request_writer_id._id); //API에서 받아온 보호요청게시글의 작성자 _id를 토대로, 작성자의 다른 보호요청게시글을 받아옴
+				getProtectRequestList(result.msg); //API에서 받아온 보호요청게시글의 작성자 _id를 토대로, 작성자의 다른 보호요청게시글을 받아옴
 			},
 			err => {
 				// getProtectRequestListByShelterId
@@ -79,10 +79,10 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	};
 
 	//보호소의 다른 보호 요청게시글 불러오기
-	const getProtectRequestList = id => {
+	const getProtectRequestList = request => {
 		getProtectRequestListByShelterId(
 			{
-				shelter_userobject_id: id,
+				shelter_userobject_id: request.protect_request_writer_id._id,
 				protect_request_status: 'all', //하단 리스트
 				limit: PROTECT_REQUEST_DETAIL_LIMIT,
 				page: offset,
@@ -95,9 +95,11 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				// console.log('res.length', res.length);
 				if (writersAnotherRequests != 'false') {
 					console.log('temp lenth', [...writersAnotherRequests, ...res].length);
-					setWritersAnotherRequests([...writersAnotherRequests, ...res]);
+					const removeThis = [...writersAnotherRequests, ...res].filter(e => e._id != request._id);
+					setWritersAnotherRequests(removeThis);
 				} else {
-					setWritersAnotherRequests(res);
+					const removeThis = res.filter(e => e._id != request._id);
+					setWritersAnotherRequests(removeThis);
 				}
 				setOffset(offset + 1);
 			},

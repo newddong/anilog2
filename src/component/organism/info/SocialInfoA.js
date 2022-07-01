@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, TouchableWithoutFeedback, StyleSheet} from 'react-native';
+import {Text, View, TouchableWithoutFeedback, StyleSheet, TouchableOpacity} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {useNavigation} from '@react-navigation/core';
 import {count_to_K} from 'Root/util/stringutil';
@@ -19,39 +19,38 @@ const SocialInfoA = props => {
 	};
 
 	const onClickFollower = () => {
-		console.log('props', props.data.user_type);
 		if (props.data.user_type == 'pet') {
-			navigation.push('PetFollowerList', {userobject: props.data, title: props.data.user_follower_count});
-		} else navigation.push('SocialRelation', {userobject: props.data, initial: 'FollwerList'});
+			navigation.navigate('PetFollowerList', {userobject: props.data, title: props.data.user_follower_count});
+		} else navigation.navigate('SocialRelation', {userobject: props.data, initial: 'FollwerList'});
 	};
 
 	const onClickFollow = () => {
-		navigation.push('SocialRelation', {userobject: props.data, initial: 'FollowingList'});
+		navigation.navigate('SocialRelation', {userobject: props.data, initial: 'FollowingList'});
 	};
 
 	return (
 		<View style={[style.container]}>
-			<TouchableWithoutFeedback onPress={onClickUpload}>
+			<TouchableOpacity activeOpacity={0.6} onPress={onClickUpload}>
 				<View style={[style.socialInfo]}>
 					<Text style={[txt.roboto34b]}>{count_to_K(props.data.user_upload_count)}</Text>
 					<Text style={[txt.noto28, {marginBottom: 2 * DP}]}> 업로드</Text>
 				</View>
-			</TouchableWithoutFeedback>
-			<TouchableWithoutFeedback onPress={onClickFollower}>
+			</TouchableOpacity>
+			<TouchableOpacity activeOpacity={0.6} onPress={onClickFollower}>
 				<View style={[style.socialInfo]}>
 					<Text style={[txt.roboto30b]}>{count_to_K(props.data.user_follower_count)}</Text>
 					<Text style={[txt.noto28, {marginBottom: 2 * DP}]}> 팔로워</Text>
 				</View>
-			</TouchableWithoutFeedback>
+			</TouchableOpacity>
 			{props.data.user_type == 'pet' ? (
 				<></>
 			) : (
-				<TouchableWithoutFeedback onPress={onClickFollow}>
+				<TouchableOpacity activeOpacity={0.6} onPress={onClickFollow}>
 					<View style={[style.socialInfo]}>
 						<Text style={[txt.roboto30b]}>{count_to_K(props.data.user_follow_count)}</Text>
 						<Text style={[txt.noto28, {marginBottom: 2 * DP}]}> 팔로잉</Text>
 					</View>
-				</TouchableWithoutFeedback>
+				</TouchableOpacity>
 			)}
 		</View>
 	);

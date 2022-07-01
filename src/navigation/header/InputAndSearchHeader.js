@@ -5,9 +5,11 @@ import DP from 'Root/config/dp';
 import {WHITE, APRI10} from 'Root/config/color';
 import InputWithSearchIcon from 'Molecules/input/InputWithSearchIcon';
 import searchContext from 'Root/config/searchContext';
+import {useNavigation} from '@react-navigation/core';
 
 export default InputAndSearchHeader = props => {
 	LogBox.ignoreLogs(['Non-serializable values were found in the navigation state']);
+	const navigation = useNavigation();
 	const routeName = props.route.name != undefined ? props.route.name : '';
 	const [searchInput, setSearchInput] = React.useState('');
 	const inputRef = React.useRef();
@@ -16,7 +18,7 @@ export default InputAndSearchHeader = props => {
 
 	const confirm = text => {
 		//헤더에서 작성한 인풋입력값을 템플릿에 전달
-		routeName != 'UserList' && props.navigation.setParams({...props.route.params, searchInput: searchInput});
+		routeName != 'UserList' && navigation.setParams({...props.route.params, searchInput: searchInput});
 		searchContext.searchInfo.reSearch = !searchContext.searchInfo.reSearch;
 	};
 
@@ -24,9 +26,9 @@ export default InputAndSearchHeader = props => {
 		//500의 타임아웃은 타이핑의 시간에 텀을 주기 위함. 타임아웃이 없을 경우 각 초성 입력마다 검색을 실시함.
 		const timeOutId = setTimeout(() => {
 			//헤더에서 작성한 인풋입력값을 템플릿에 전달
-			props.navigation.setParams({...props.route.params, searchInput: searchInput});
+			navigation.setParams({...props.route.params, searchInput: searchInput});
 			if (searchInput != '') {
-				props.navigation.setParams({...props.route.params, searchInput: searchInput});
+				navigation.setParams({...props.route.params, searchInput: searchInput});
 			}
 		}, 500);
 		return () => clearTimeout(timeOutId);
@@ -34,7 +36,7 @@ export default InputAndSearchHeader = props => {
 
 	React.useEffect(() => {
 		if (type == 'location') {
-			props.navigation.setParams({
+			navigation.setParams({
 				reSearch: () => reSearch(),
 			});
 			// inputRef.current.focus();
@@ -82,13 +84,17 @@ export default InputAndSearchHeader = props => {
 		setSearchInput('');
 	};
 
+	const [backPressed, setBackPressed] = React.useState(false);
+
 	//뒤로 가기 클릭 시 탭이 initialRoute인 Feed로 가던 현상 수정
 	const onPressGoBack = () => {
-		if (!props.route.params.prevNav) {
-			console.log('none preveNav');
-			props.navigation.goBack();
-		} else {
-			props.navigation.navigate(props.route.params.prevNav);
+		setBackPressed(true);
+		if (!backPressed) {
+			if (!props.route.params.prevNav) {
+				navigation.goBack();
+			} else {
+				navigation.navigate(props.route.params.prevNav);
+			}
 		}
 	};
 

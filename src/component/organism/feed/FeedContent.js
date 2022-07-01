@@ -496,7 +496,7 @@ export default FeedContent = props => {
 					navigation.navigate('LoginRequired');
 				});
 			} else {
-				navigation.push('FeedCommentList', {feedobject: props.data});
+				navigation.navigate('FeedCommentList', {feedobject: props.data});
 				// console.log('move to FeedCommnetList', props.data);
 			}
 		}
@@ -534,7 +534,7 @@ export default FeedContent = props => {
 						{send ? (
 							<UserLocationTimeLabel
 								data={send}
-								onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})}
+								onLabelClick={userobject => navigation.navigate('UserProfile', {userobject: userobject})}
 								location={feed_location}
 								time={feed_date}
 								isLarge
@@ -565,7 +565,7 @@ export default FeedContent = props => {
 									</View>
 
 									{props.data.feed_writer_id ? (
-										<View style={[organism_style.meatball]}>
+										<View style={[{width: 100 * DP, height: 50 * DP, alignItems: 'flex-end', justifyContent: 'center'}]}>
 											<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
 										</View>
 									) : (

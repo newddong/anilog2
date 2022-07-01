@@ -256,7 +256,7 @@ export default FavoriteReview = ({route, isFavorite}) => {
 			let copy = [...data];
 			copy[index].checkBoxState = !copy[index].checkBoxState;
 			setData(copy);
-		} else navigation.push('ReviewDetail', {community_object: data[index]});
+		} else navigation.navigate('ReviewDetail', {community_object: data[index]});
 	};
 
 	//리뷰 좋아요 클릭

@@ -193,9 +193,9 @@ export default CommunityWrite = props => {
 	const onPressPhotoSelect = key => {
 		if (key) {
 			//키보드가 올라와있으며 가려진 버튼일 경우 사진추가 이벤트로 연결X
-			!showBtn ? props.navigation.push('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}}) : false;
+			!showBtn ? navigation.navigate('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}}) : false;
 		} else {
-			props.navigation.push('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
+			navigation.navigate('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 		}
 	};
 
@@ -380,9 +380,9 @@ export default CommunityWrite = props => {
 	const moveToLocationPicker = key => {
 		if (key) {
 			//키보드가 올라와있으며 가려진 버튼일 경우 사진추가 이벤트로 연결X
-			!showBtn ? props.navigation.push('CommunityLocationPicker', {data: data, isReview: isReview}) : false;
+			!showBtn ? navigation.navigate('CommunityLocationPicker', {data: data, isReview: isReview}) : false;
 		} else {
-			props.navigation.push('CommunityLocationPicker', {data: data, isReview: isReview});
+			navigation.navigate('CommunityLocationPicker', {data: data, isReview: isReview});
 		}
 	};
 

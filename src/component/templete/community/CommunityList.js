@@ -149,7 +149,7 @@ const CommunityList = React.memo(props => {
 
 	//자유 게시글 아이템 클릭
 	const onPressArticle = index => {
-		navigation.push('ArticleDetail', {community_object: free[index]});
+		navigation.navigate('ArticleDetail', {community_object: free[index]});
 	};
 
 	//리뷰 좋아요 클릭
@@ -178,12 +178,12 @@ const CommunityList = React.memo(props => {
 	//후기 게시글의 댓글쓰기 혹은 댓글 모두 보기 클릭 클릭
 	const onPressReply = index => {
 		// navigation.push('CommunityCommentList', {community_object: review[index]});
-		navigation.push('ReviewDetail', {community_object: review[index], comment: true});
+		navigation.navigate('ReviewDetail', {community_object: review[index], comment: true});
 	};
 
 	//후게 게시글 컨텐츠 클릭
 	const onPressReviewContent = index => {
-		navigation.push('ReviewDetail', {community_object: review[index]});
+		navigation.navigate('ReviewDetail', {community_object: review[index]});
 	};
 
 	//리뷰 즐겨찾기 아이콘 클릭

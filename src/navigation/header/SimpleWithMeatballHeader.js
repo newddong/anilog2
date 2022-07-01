@@ -327,11 +327,20 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 		}
 	};
 
+	const [backPressed, setBackPressed] = React.useState(false);
+
+	const onPressBackButton = () => {
+		setBackPressed(true);
+		if (!backPressed) {
+			navigation.goBack();
+		}
+	};
+
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
-			<TouchableOpacity onPress={navigation.goBack}>
+			<TouchableOpacity onPress={onPressBackButton}>
 				<View style={style.backButtonContainer}>
-					<BackArrow32 onPress={navigation.goBack} />
+					<BackArrow32 onPress={onPressBackButton} />
 				</View>
 			</TouchableOpacity>
 			<Text style={[{flex: 1, textAlign: 'center', marginRight: 25 * DP}, txt.roboto40b]} numberOfLines={1}>

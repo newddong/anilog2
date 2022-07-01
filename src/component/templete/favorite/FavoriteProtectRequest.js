@@ -189,7 +189,7 @@ export default FavoriteProtectRequest = ({route}) => {
 			} else {
 				title = item.protect_animal_species + '/' + item.protect_animal_species_detail;
 			}
-			navigation.push('AnimalProtectRequestDetail', {id: item._id, title: title, writer: item.protect_request_writer_id._id});
+			navigation.navigate('AnimalProtectRequestDetail', {id: item._id, title: title, writer: item.protect_request_writer_id._id});
 		}
 	};
 

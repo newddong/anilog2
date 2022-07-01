@@ -65,6 +65,8 @@ export default PhotoSelectHeader = ({navigation, route, options, back}) => {
 		console.log(selectedPhoto);
 	};
 
+	const [backPressed, setBackPressed] = React.useState(false);
+
 	const warnGoback = () => {
 		// if (count > 0) {
 		// 	Modal.popTwoBtn(
@@ -82,14 +84,16 @@ export default PhotoSelectHeader = ({navigation, route, options, back}) => {
 		// } else {
 		// 	navigation.goBack();
 		// }
-		navigation.goBack();
+		setBackPressed(true);
+		if (!backPressed) {
+			navigation.goBack();
+		}
 	};
+
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
-			<TouchableOpacity onPress={warnGoback}>
-				<View style={style.backButtonContainer}>
-					<BackArrow32 />
-				</View>
+			<TouchableOpacity style={style.backButtonContainer} onPress={warnGoback}>
+				<BackArrow32 />
 			</TouchableOpacity>
 			<TouchableOpacity onPress={confirm}>
 				<View style={style.buttonContainer}>

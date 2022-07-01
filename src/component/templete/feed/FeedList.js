@@ -29,8 +29,10 @@ import {useScrollToTop} from '@react-navigation/native';
 import NewMissingReportList from '../list/NewMissingReportList';
 import {getUserInfoById} from 'Root/api/userapi';
 import {FEED_LIMIT, NETWORK_ERROR} from 'Root/i18n/msg';
+import {useNavigation} from '@react-navigation/core';
 
-export default FeedList = ({route, navigation}) => {
+export default FeedList = ({route}) => {
+	const navigation = useNavigation();
 	const [feedList, setFeedList] = React.useState([]);
 	const [total, setTotal] = React.useState();
 	const [refreshing, setRefreshing] = React.useState(false);
@@ -486,10 +488,10 @@ export default FeedList = ({route, navigation}) => {
 		} else if (userGlobalObject.userInfo.user_type == 'user') {
 			Modal.popAvatarSelectFromWriteModal(obj => {
 				delete obj.user_avatar; //무한 참조 경고 해결
-				userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed', feed_avatar_id: obj});
+				userGlobalObject.userInfo && navigation.navigate('FeedWrite', {feedType: 'Feed', feed_avatar_id: obj});
 			}, Modal.close);
 		} else {
-			userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed'});
+			userGlobalObject.userInfo && navigation.navigate('FeedWrite', {feedType: 'Feed'});
 		}
 	};
 

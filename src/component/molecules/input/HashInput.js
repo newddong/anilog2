@@ -248,11 +248,10 @@ const HashInput = React.forwardRef((props, ref) => {
 		return result;
 	};
 
-
 	return (
 		<>
 			<View style={[props.containerStyle, {}]} ref={ref}>
-				<View style={{flexDirection:'column',flex:1}}>
+				<View style={{flexDirection: 'column', flex: 1}}>
 					{location == undefined ? (
 						false
 					) : (
@@ -266,7 +265,7 @@ const HashInput = React.forwardRef((props, ref) => {
 					<TextInput
 						{...props} //props override
 						style={[
-							{flex:1,marginBottom: props.selectedImg.length > 0 ? 10 * DP : 0},
+							{flex: 1, marginBottom: props.selectedImg.length > 0 ? 10 * DP : 0},
 							txt.noto28,
 							{
 								// minHeight: props.showImages && props.selectedImg.length > 0 ? 170 * DP : props.containerStyle[0].minHeight - 48 * DP,
@@ -294,7 +293,7 @@ const HashInput = React.forwardRef((props, ref) => {
 			</View>
 
 			{find && (
-				<View style={{width: 694 * DP, flex: 1, padding: 15 * DP}}>
+				<View style={{width: 694 * DP, flex: 1, padding: 15 * DP, alignSelf: 'center'}}>
 					{/* <AccountList items={findList} onSelect={userSelect} makeBorderMode={false} showCrossMark={false} /> */}
 					<AccountHashList data={findList} showFollowBtn={false} onClickLabel={userSelect} onClickHash={hashSelect} />
 				</View>

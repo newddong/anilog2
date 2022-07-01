@@ -97,8 +97,8 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 				});
 				return;
 			}
-			// console.log('route.params:', route.params);
 			Modal.popNoBtn('게시물을 등록중입니다.', () => {
+				Modal.close();
 				setSent(false);
 			});
 			let param = {

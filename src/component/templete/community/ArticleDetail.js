@@ -55,6 +55,7 @@ export default ArticleDetail = props => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			//다른 탭(ex - My 탭의 즐겨찾기한 커뮤니티 목록에서 들어온 경우)에서의 호출
 			getArticleData();
+			setPressed(false);
 		});
 		getComment();
 		getArticleList(1);
@@ -92,7 +93,7 @@ export default ArticleDetail = props => {
 			},
 			err => {
 				console.log('err / getCommunityByObjectId / ArticleDetail ', err);
-				if (err.includes('code 500')) {
+				if (err.includes('code 500') || err.includes('code 502')) {
 					Modal.popOneBtn(NETWORK_ERROR, '확인', navigation.goBack);
 				} else {
 					setData('false');
@@ -403,7 +404,7 @@ export default ArticleDetail = props => {
 			editData.comment_contents ? (comment_obj.editData.comment_contents = editData.comment_contents) : false;
 			editMode ? (comment_obj.editData = {...editData, isEditMode: true}) : false;
 			parentComment ? (comment_obj.parentComment = parentComment) : false;
-			props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
+			navigation.navigate('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 		}
 	};
 
@@ -512,14 +513,22 @@ export default ArticleDetail = props => {
 		setParentComment();
 	};
 
+	const [pressed, setPressed] = React.useState(false);
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
-		console.log('searchInput', searchInput);
-		navigation.push('ArticleDetail', {
-			community_object: articleList[index],
-			searchInput: searchInput,
-			type: props.route.params.type ? props.route.params.type : '',
-		});
+		setPressed(true);
+		if (!pressed) {
+			console.log(`ArticleDetail-${articleList[index]._id + new Date().getTime()}`);
+			navigation.navigate({
+				key: `ArticleDetail-${articleList[index]._id + new Date().getTime()}`,
+				name: 'ArticleDetail',
+				params: {
+					community_object: articleList[index],
+					searchInput: searchInput,
+					type: props.route.params.type ? props.route.params.type : '',
+				},
+			});
+		}
 	};
 
 	//즐겨찾기 클릭

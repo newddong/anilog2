@@ -32,7 +32,7 @@ export default CommunityEdit = props => {
 	const article_type = ['talk', 'question', 'meeting'];
 
 	React.useEffect(() => {
-		props.navigation.setParams({data: data, nav: 'CommunityEdit', isSearch: props.route.params.isSearch});
+		navigation.setParams({data: data, nav: 'CommunityEdit', isSearch: props.route.params.isSearch});
 		if (data.community_animal_type) {
 			if (data.community_animal_type == 'dog') {
 				setAnimalType({...animalType, dog: true});
@@ -184,9 +184,9 @@ export default CommunityEdit = props => {
 	const onPressPhotoSelect = isKeyBoardShowed => {
 		if (isKeyBoardShowed) {
 			//키보드가 올라와있으며 가려진 버튼일 경우 사진추가 이벤트로 연결X
-			!showBtn ? props.navigation.push('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}}) : false;
+			!showBtn ? navigation.navigate('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}}) : false;
 		} else {
-			props.navigation.push('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
+			navigation.navigate('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 		}
 	};
 
@@ -362,7 +362,7 @@ export default CommunityEdit = props => {
 	};
 
 	const moveToLocationPicker = () => {
-		props.navigation.push('CommunityLocationPicker', {data: data, isReview: isReview, isEdit: true});
+		navigation.navigate('CommunityLocationPicker', {data: data, isReview: isReview, isEdit: true});
 	};
 
 	const getMap = () => {

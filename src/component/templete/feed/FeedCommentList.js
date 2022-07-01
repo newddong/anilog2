@@ -260,7 +260,7 @@ export default FeedCommentList = props => {
 		} else {
 			editMode ? (comment_obj.editData = editData) : false;
 			parentComment ? (comment_obj.parentComment = parentComment) : false;
-			props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}, merge: true});
+			navigation.navigate('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}, merge: true});
 		}
 	};
 
@@ -391,7 +391,7 @@ export default FeedCommentList = props => {
 				result => {
 					// console.log('result / DeleteFeed / FeedContent : ', result.msg);
 					Modal.close();
-					if (props.navigation.getState().routes[0].name == 'ProtectionTab') {
+					if (navigation.getState().routes[0].name == 'ProtectionTab') {
 						navigation.navigate('ProtectionTab');
 					} else {
 						console.log(props.navigation.getState().routes);

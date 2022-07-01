@@ -56,7 +56,7 @@ export default AddPhoto = props => {
 			assetType: type,
 			include: ['playableDuration'],
 			groupName: album,
-			groupTypes: 'album',
+			groupTypes: 'all',
 		};
 		if (Platform.OS == 'android') {
 			delete param.fromTime;

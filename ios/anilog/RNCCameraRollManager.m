@@ -25,7 +25,6 @@
 
 RCT_ENUM_CONVERTER(PHAssetCollectionSubtype, (@{
   @"album": @(PHAssetCollectionSubtypeAny),
-  @"all": @(PHAssetCollectionSubtypeSmartAlbumUserLibrary),
   @"event": @(PHAssetCollectionSubtypeAlbumSyncedEvent),
   @"faces": @(PHAssetCollectionSubtypeAlbumSyncedFaces),
   @"library": @(PHAssetCollectionSubtypeSmartAlbumUserLibrary),
@@ -33,9 +32,38 @@ RCT_ENUM_CONVERTER(PHAssetCollectionSubtype, (@{
   @"photostream": @(PHAssetCollectionSubtypeAlbumMyPhotoStream),
   @"saved-photos": @(PHAssetCollectionSubtypeAny), // incorrect, but legacy correspondence in PHAssetCollectionSubtype
   @"savedphotos": @(PHAssetCollectionSubtypeAny), // This was ALAssetsGroupSavedPhotos, seems to have no direct correspondence in PHAssetCollectionSubtype
+  //smartalbum value 2xx
+  @"all": @(PHAssetCollectionSubtypeSmartAlbumUserLibrary),
+  @"smartalbum": @(PHAssetCollectionSubtypeSmartAlbumGeneric),
+  @"panorama": @(PHAssetCollectionSubtypeSmartAlbumPanoramas),
+  @"파노라마": @(PHAssetCollectionSubtypeSmartAlbumPanoramas),
+  @"videos": @(PHAssetCollectionSubtypeSmartAlbumVideos),
+  @"비디오": @(PHAssetCollectionSubtypeSmartAlbumVideos),
+  @"favorites": @(PHAssetCollectionSubtypeSmartAlbumFavorites),
+  @"즐겨찾는 항목": @(PHAssetCollectionSubtypeSmartAlbumFavorites),
+  @"time-lapse": @(PHAssetCollectionSubtypeSmartAlbumTimelapses),
+  @"타임랩스": @(PHAssetCollectionSubtypeSmartAlbumTimelapses),
+  @"hidden": @(PHAssetCollectionSubtypeSmartAlbumAllHidden ),
+  @"가려진 항목": @(PHAssetCollectionSubtypeSmartAlbumAllHidden ),
+  @"recents": @(PHAssetCollectionSubtypeSmartAlbumRecentlyAdded),
+  @"최근 항목": @(PHAssetCollectionSubtypeSmartAlbumRecentlyAdded),
+  @"bursts": @(PHAssetCollectionSubtypeSmartAlbumBursts),
+  @"버스트": @(PHAssetCollectionSubtypeSmartAlbumBursts),
+  @"slo-mo": @(PHAssetCollectionSubtypeSmartAlbumSlomoVideos),
+  @"슬로 모션": @(PHAssetCollectionSubtypeSmartAlbumSlomoVideos),
+  @"selfies": @(PHAssetCollectionSubtypeSmartAlbumSelfPortraits),
+  @"셀카": @(PHAssetCollectionSubtypeSmartAlbumSelfPortraits),
+  @"screenshots": @(PHAssetCollectionSubtypeSmartAlbumScreenshots),
+  @"스크린샷": @(PHAssetCollectionSubtypeSmartAlbumScreenshots),
+  @"depth effect": @(PHAssetCollectionSubtypeSmartAlbumDepthEffect),
+  @"인물 사진": @(PHAssetCollectionSubtypeSmartAlbumDepthEffect), //카메라로 "인물 사진" 촬영 후 서브타입 확인 시 depth effect로 출력됨
+  @"live photos": @(PHAssetCollectionSubtypeSmartAlbumLivePhotos),
+  @"라이브 포토": @(PHAssetCollectionSubtypeSmartAlbumLivePhotos),
+  @"animated": @(PHAssetCollectionSubtypeSmartAlbumAnimated),
+  @"움직이는 항목": @(PHAssetCollectionSubtypeSmartAlbumAnimated),
+  @"long exposure": @(PHAssetCollectionSubtypeSmartAlbumLongExposures),
+  @"raw": @(PHAssetCollectionSubtypeSmartAlbumRAW),// API_AVAILABLE(macos(12), ios(15), tvos(15))
 }), PHAssetCollectionSubtypeAny, integerValue)
-
-
 @end
 
 //#MARK: PHFetchOptions
@@ -291,7 +319,7 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
   NSString *const groupName = [RCTConvert NSString:params[@"groupName"]];
   NSString *const groupTypes = [[RCTConvert NSString:params[@"groupTypes"]] lowercaseString];
   NSString *const mediaType = [RCTConvert NSString:params[@"assetType"]];
-  NSUInteger const subType = [RCTConvert NSInteger:params[@"subType"]];
+//  NSUInteger const subType = [RCTConvert NSInteger:params[@"subType"]];
   NSUInteger const fromTime = [RCTConvert NSInteger:params[@"fromTime"]];
   NSUInteger const toTime = [RCTConvert NSInteger:params[@"toTime"]];
   NSArray<NSString *> *const mimeTypes = [RCTConvert NSStringArray:params[@"mimeTypes"]];
@@ -430,7 +458,9 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
     } else {
       PHFetchResult<PHAssetCollection *> * assetCollectionFetchResult;
       if ([groupTypes isEqualToString:@"smartalbum"]) {
-        assetCollectionFetchResult = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:subType options:nil];
+        PHAssetCollectionSubtype const collectionSubtype = [RCTConvert PHAssetCollectionSubtype:groupName];
+        assetCollectionFetchResult = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:collectionSubtype options:nil];
+        
         [assetCollectionFetchResult enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull assetCollection, NSUInteger collectionIdx, BOOL * _Nonnull stopCollections) {
           PHFetchResult<PHAsset *> *const assetsFetchResult = [PHAsset fetchAssetsInAssetCollection:assetCollection options:assetFetchOptions];
 //          currentCollectionName = [assetCollection localizedTitle];

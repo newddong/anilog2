@@ -18,20 +18,39 @@ import {
 import userGlobalObject from 'Root/config/userGlobalObject';
 import FastImage from 'react-native-fast-image';
 import {KeyBoardEvent, keyShow} from 'Root/component/molecules/input/usekeyboardbottom';
-import comment_obj from 'Root/config/comment_obj';
+import {useFocusEffect} from '@react-navigation/core';
 
-export default function BottomTab({state, descriptors, navigation, focus}) {
+export default function BottomTab({state, descriptors, navigation}) {
 	// console.log('바텀탭 유저 글로벌',userGlobalObject);
 	const focusedOptions = descriptors[state.routes[state.index].key].options;
 	const icons = [<FeedTabBorder />, <AnimalSavingTabBorder />, <CommunityTabBorder />, <MyTabBorder />];
 	const iconsFocused = [<FeedTabFilled />, <AnimalSavingTabFilled />, <CommunityTabFilled />, <MyTabFilled />];
 	const iconlayout = [tab.tab_feed, tab.tab_animal_saving, tab.tab_community, tab.tab_my];
 	const ref = React.useRef();
+	const [profile, setProfile] = React.useState(userGlobalObject.userInfo.user_profile_uri);
 	const [pressed, setPressed] = React.useState(0);
 	let currentIndex = null;
 	if (focusedOptions.tabBarVisible === false) {
 		return null;
 	}
+
+	const nestedState = state.routes[state.index].state;
+	const nestedRouteName = nestedState ? nestedState.routes[nestedState.index].name : 'none';
+
+	//비로그인 둘러보기 => 로그인 유도 페이지에서 로그인 => 로그인 성공 => MainTab의 바텀프로필을 다시 갱신시키기 위한 useFocusEffect 추가
+	useFocusEffect(
+		React.useCallback(() => {
+			setProfile(userGlobalObject.userInfo.user_profile_uri);
+		}, []),
+	);
+
+	//프로필 수정 이후 BottomTab의 프로필 갱신시키기 위한 추가
+	React.useEffect(() => {
+		setTimeout(() => {
+			//프로필 변경 api 접속 이후 적용되도록 타임아웃
+			setProfile(userGlobalObject.userInfo.user_profile_uri);
+		}, 0);
+	}, [nestedRouteName]);
 
 	//SearchTab이 MainTab으로 편입되면서 불가피하게 제작
 	//서치탭이 포커스(돋보기 클릭)되지만 탭의 선택상태는 이전의 Tab상태로 유지를 해야함
@@ -57,48 +76,23 @@ export default function BottomTab({state, descriptors, navigation, focus}) {
 		}
 	}
 
-	const nestedState = state.routes[state.index].state;
-	const nestedRouteName = nestedState ? nestedState.routes[nestedState.index].name : 'none';
 	const [isKeyboardVisible, setKeyboardVisible] = React.useState(false);
-	const animatedHeight = React.useRef(new Animated.Value(100 * DP)).current;
-	const translation = React.useRef(new Animated.Value(0 * DP)).current;
 	// 댓글 수정 => 키보드 해제시 수정모드가 종료되도록 적용
 	KeyBoardEvent(
 		() => {
-			Animated.timing(translation, {
-				duration: Platform.OS == 'ios' ? 400 : 200,
-				toValue: 100 * DP,
-				delay: Platform.OS == 'ios' ? 200 : 0,
-				easing: Easing.linear,
-				useNativeDriver: true,
-			}).start(({finished}) => {
-				if (finished) {
-					Platform.OS == 'ios' ? false : setKeyboardVisible(true);
-				}
-			});
-			Platform.OS == 'ios' ? setKeyboardVisible(true) : false;
+			setTimeout(
+				() => {
+					setKeyboardVisible(true);
+				},
+				Platform.OS == 'android' ? 150 : 0,
+			);
 		},
 		() => {
-			Animated.timing(translation, {
-				duration: 200,
-				toValue: 0 * DP,
-				easing: Easing.linear,
-				useNativeDriver: true,
-			}).start(() => {});
 			setKeyboardVisible(false);
-
-			// Animated.timing(animatedHeight, {
-			// 	duration: 0,
-			// 	toValue: 100 * DP,
-			// 	// easing: Easing.exp,
-			// 	useNativeDriver: false,
-			// }).start(() => {
-			// 	setKeyboardVisible(false);
-			// });
 		},
 	);
 
-	if (nestedRouteName == 'CommunityWrite' || nestedRouteName == 'CommunityEdit') return false;
+	if (nestedRouteName == 'CommunityWrite' || nestedRouteName == 'CommunityEdit' || nestedRouteName == 'SinglePhotoSelect') return false;
 	return (
 		<>
 			{isKeyboardVisible ? (
@@ -126,16 +120,7 @@ export default function BottomTab({state, descriptors, navigation, focus}) {
 				</>
 			)}
 
-			<Animated.View
-				style={[
-					tab.wrap_main,
-					{
-						// opacity: isKeyboardVisible ? 0 : 1,
-						// height: isCommentListPage ? animatedHeight : 100 * DP,
-						transform: [{translateY: translation}],
-						height: isKeyboardVisible ? 0 : 100 * DP,
-					},
-				]}>
+			<Animated.View style={[tab.wrap_main, {height: isKeyboardVisible ? 0 : 100 * DP}]}>
 				{state.routes.map((route, index) => {
 					const {options} = descriptors[route.key];
 					const label = options.tabBarLabel !== undefined ? options.tabBarLabel : options.title !== undefined ? options.title : route.name;
@@ -199,7 +184,7 @@ export default function BottomTab({state, descriptors, navigation, focus}) {
 											{height: 54 * DP, width: 54 * DP, borderRadius: 27 * DP, marginBottom: -10 * DP},
 											isFocused ? {borderWidth: 4 * DP, borderColor: BLACK} : {},
 										]}
-										source={{uri: userGlobalObject.userInfo.user_profile_uri}}
+										source={{uri: profile}}
 									/>
 								)
 							) : isFocused ? (

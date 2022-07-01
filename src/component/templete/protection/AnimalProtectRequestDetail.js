@@ -177,17 +177,23 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	//보호요청 더보기의 Thumnail클릭
 	const onClick_ProtectedThumbLabel = (status, user_id, item) => {
-		if (route.name == 'ProtectRequestManage') {
-			// console.log('ProtectRequestManage');
-			const animal_sex_toString = item.protect_animal_id.protect_animal_sex == 'female' ? '여' : '남';
-			const title = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + animal_sex_toString;
-			navigation.push('ProtectRequestManage', {id: item._id, title: title});
-		} else {
-			// console.log('AnimalProtectRequestDetail', item);
-			const animal_sex_toString = item.protect_animal_id.protect_animal_sex == 'female' ? '여' : '남';
-			const title =
-				item.protect_animal_species + '/' + item.protect_animal_species_detail ? item.protect_animal_species_detail + '/' : '' + animal_sex_toString;
-			navigation.push('AnimalProtectRequestDetail', {id: item._id, title: title, writer: item.protect_request_writer_id._id});
+		try {
+			if (route.name == 'ProtectRequestManage') {
+				// console.log('ProtectRequestManage');
+				const animal_sex_toString = item.protect_animal_id.protect_animal_sex == 'female' ? '여' : '남';
+				const title = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + animal_sex_toString;
+				navigation.push('ProtectRequestManage', {id: item._id, title: title});
+			} else {
+				let title = item.protect_animal_species;
+				if (!item.protect_animal_species_detail) {
+					title = item.protect_animal_species;
+				} else {
+					title = item.protect_animal_species + '/' + item.protect_animal_species_detail;
+				}
+				navigation.push('AnimalProtectRequestDetail', {id: item._id, title: title, writer: item.protect_request_writer_id._id});
+			}
+		} catch (err) {
+			console.log('onClick_ProtectedThumbLabel', err);
 		}
 	};
 

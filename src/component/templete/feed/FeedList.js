@@ -47,12 +47,14 @@ export default FeedList = ({route, navigation}) => {
 	}, [route.params]);
 
 	React.useEffect(() => {
-		// console.log('userobject', route.params?.userobject);
 		switch (route.name) {
 			case 'UserFeedList':
 				navigation.setOptions({title: route.params?.userobject.user_nickname + '님의 게시글'});
 				break;
 			case 'UserTagFeedList':
+				navigation.setOptions({title: route.params?.userobject.user_nickname + '님이 태그된 게시글'});
+				break;
+			case 'TageMeFeedList':
 				navigation.setOptions({title: route.params?.userobject.user_nickname + '님이 태그된 게시글'});
 				break;
 			case 'HashFeedList':
@@ -99,7 +101,7 @@ export default FeedList = ({route, navigation}) => {
 
 	//피드리스트 호출
 	const getList = (pre, next) => {
-		console.log('FeedList , route.name', route.name);
+		// console.log('FeedList , route.name', route.name);
 		switch (route.name) {
 			case 'UserFeedList':
 				try {
@@ -380,11 +382,12 @@ export default FeedList = ({route, navigation}) => {
 					login_userobject_id: userGlobalObject.userInfo._id,
 					limit: FEED_LIMIT,
 				};
+				console.log('feedList.length', feedList.length);
 				if (feedList.length > 0) {
 					params.target_object_id = pre ? feedList[0]._id : feedList[feedList.length - 1]._id;
 					params.order_value = pre ? 'pre' : 'next';
 				}
-				console.log('params', params);
+				console.log('getSuggestFeedList params', params);
 				getSuggestFeedList(
 					params,
 					result => {
@@ -422,7 +425,9 @@ export default FeedList = ({route, navigation}) => {
 
 		//FeedList 스크린 이동시 피드리스트 갱신
 		const unsubscribe = navigation.addListener('focus', () => {
-			getList();
+			if (route.params && route.params.refreshing) {
+				getList(true, false);
+			} else getList();
 		});
 		//Refreshing 요청시 피드리스트 다시 조회
 		if (route.name == 'MainHomeFeedList') {

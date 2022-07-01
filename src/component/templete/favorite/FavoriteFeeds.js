@@ -273,7 +273,7 @@ export default FavoriteFeeds = ({route, navigation}) => {
 						navigation.push('UserFeedList', {title: titleValue, userobject: result.msg, selected: feed_id});
 					} else if (route.name == 'TagMeFeeds') {
 						// console.log('tageme');
-						navigation.push('TagMeFeedList', {
+						navigation.navigate('TagMeFeedList', {
 							title: userGlobalObject.userInfo.user_nickname + '님을 태그한 글',
 							// userobject: result.msg,
 							userobject: userGlobalObject.userInfo,

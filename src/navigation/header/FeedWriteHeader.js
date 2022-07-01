@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator} from 'react-native';
 import {BackArrow32, Bracket48, Send60_Big} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {WHITE, APRI10, GRAY10, GRAY40} from 'Root/config/color';
@@ -65,8 +65,16 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 					}
 				} else {
 					// console.log('result', result);
-					// navigation.goBack();
-					navigation.navigate({key: navigation.getState().routes[0], name: 'MainTab'});
+					if (navigation.getState().routes[0]) {
+						// navigation.navigate({key: navigation.getState().routes[0].key, name: 'MainTab'});
+						navigation.navigate('MainTab', {
+							screen: 'FEED',
+							params: {
+								screen: 'MainHomeFeedList',
+								params: {refreshing: true},
+							},
+						});
+					} else navigation.goBack();
 				}
 			}
 		}, 200);
@@ -83,14 +91,16 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 		if (!sent) {
 			setSent(true);
 			if (route.params.feed_medias[0] == undefined) {
+				setSent(false);
 				Modal.popOneBtn('이미지 등록은 필수 사항입니다.', '확인', () => {
 					Modal.close();
-					setSent(false);
 				});
 				return;
 			}
 			// console.log('route.params:', route.params);
-			Modal.popNoBtn('게시물을 등록중입니다.');
+			Modal.popNoBtn('게시물을 등록중입니다.', () => {
+				setSent(false);
+			});
 			let param = {
 				...route.params,
 				media_uri: route.params.selectedPhoto.map(v => {
@@ -101,7 +111,6 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			switch (route.params?.feedType) {
 				case 'Feed':
 					console.log('feed Param', JSON.stringify(param));
-					Modal.close();
 					createFeed(param, complete, handleError);
 					break;
 				case 'Missing':
@@ -177,9 +186,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 
 		userGlobalObject.t.y = 0;
 	};
-	const onEdit1 = () => {
-		console.log('parm', route);
-	};
+
 	const onEdit = () => {
 		Modal.popLoading(true);
 		let changeTextRegex = /([#@])([^#@\s]+)/gm;
@@ -314,7 +321,15 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 					<Text style={[titleStyle, {maxWidth: 450 * DP}]}>{options.title}</Text>
 				</View>
 			)}
-			<Send60_Big onPress={route.name == 'FeedEdit' ? onEdit : onCreate} />
+			{sent ? (
+				<View style={{}}>
+					<ActivityIndicator size="large" color={'black'} />
+				</View>
+			) : (
+				<TouchableOpacity activeOpacity={0.6} onPress={route.name == 'FeedEdit' ? onEdit : onCreate}>
+					<Send60_Big />
+				</TouchableOpacity>
+			)}
 		</View>
 	);
 };

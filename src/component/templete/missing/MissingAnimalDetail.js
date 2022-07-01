@@ -476,6 +476,7 @@ const MissingAnimalTitle = props => {
 //포스터 동물 정보 View 컴포넌트
 const MissingAnimalText = props => {
 	const data = props.data;
+	console.log('data missing_animal_date', data.missing_animal_date);
 	if (!data.missing_animal_date) return false;
 	let splitAddress = data.missing_animal_lost_location.split('"');
 	let newMissingAddress = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
@@ -490,6 +491,18 @@ const MissingAnimalText = props => {
 			</Text>
 		</View>
 	);
+};
+
+const getAge = date => {
+	let yr = date;
+	let month = Math.floor((yr - Math.floor(yr)) * 12);
+	let missingAnimalAge = '';
+	if (yr >= 1) {
+		missingAnimalAge = Math.floor(yr) + '살' + (month > 0 ? ' ' + month + '개월' : '');
+	} else {
+		missingAnimalAge = month + '개월';
+	}
+	return missingAnimalAge;
 };
 
 // 포스터 전화번호 View 컴포넌트
@@ -516,7 +529,7 @@ const MissingAnimalPicture = props => {
 	let splitedNewText = newText.split('-');
 	let animalSex = '';
 	let newYearText = splitedNewText[0] + '년 ';
-	let newDayText = splitedNewText[1] + '월 ' + '월 ' + splitedNewText[2].toString().substring(0, 2) + '일';
+	let newDayText = splitedNewText[1] + '월 ' + splitedNewText[2].toString().substring(0, 2) + '일';
 	if (data.missing_animal_sex == 'male') {
 		animalSex = '/ 남';
 	} else if (data.missing_animal_sex == 'female') {
@@ -525,27 +538,27 @@ const MissingAnimalPicture = props => {
 		animalSex = '';
 	}
 	if (!feed_medias) return false;
-	if (feed_medias.length < 2) {
-		return (
-			<View style={missingAnimalDetail.picture}>
-				<FastImage source={{uri: data.feed_medias[0].media_uri}} style={[missingAnimalDetail.img_squre_284]} />
-			</View>
-		);
-	} else {
+	else {
 		return (
 			<View>
 				<Text style={[missingAnimalDetail.missingText38, {alignSelf: 'center'}]}>
-					{data.missing_animal_species} / {data.missing_animal_species_detail} / {data.missing_animal_age}살 {animalSex}
+					{data.missing_animal_species} / {data.missing_animal_species_detail} / {getAge(data.missing_animal_age)} {animalSex}
 				</Text>
 				<View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
 					<Text style={missingAnimalDetail.missingBlackText32}>{newYearText}</Text>
 					<Text style={missingAnimalDetail.missingRedText32}>{newDayText} </Text>
 					<Text style={missingAnimalDetail.missingBlackText32}>실종</Text>
 				</View>
-				<View style={missingAnimalDetail.picture}>
-					<FastImage source={{uri: data.feed_medias[0].media_uri}} style={[missingAnimalDetail.img_squre_284]} />
-					<FastImage source={{uri: data.feed_medias[1].media_uri}} style={[missingAnimalDetail.img_squre_284]} />
-				</View>
+				{feed_medias.length > 1 ? (
+					<View style={missingAnimalDetail.picture}>
+						<FastImage source={{uri: data.feed_medias[0].media_uri}} style={[missingAnimalDetail.img_squre_284]} />
+						<FastImage source={{uri: data.feed_medias[1].media_uri}} style={[missingAnimalDetail.img_squre_284]} />
+					</View>
+				) : (
+					<View style={missingAnimalDetail.picture}>
+						<FastImage source={{uri: data.feed_medias[0].media_uri}} style={[missingAnimalDetail.img_squre_284]} />
+					</View>
+				)}
 			</View>
 		);
 	}

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, TouchableOpacity, StyleSheet} from 'react-native';
+import {Text, View, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
 import {GRAY10, GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w522, btn_w522_r30} from 'Atom/btn/btn_style';
@@ -173,10 +173,6 @@ export default LoginTemplete = props => {
 		// console.log('Validator' + text);
 		return true;
 	};
-	//Id Text Input Validator
-	const idValidator = text => {
-		console.log('Id Validator ' + text);
-	};
 
 	const moveToMainTab = () => {
 		userGlobalObj.userInfo.isPreviewMode = true;
@@ -193,8 +189,8 @@ export default LoginTemplete = props => {
 	}
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
-			{/* confirm without login */}
-			<View style={[loginTemplete_style.innerContainer]}>
+			<ScrollView scrollEnabled={false} contentContainerStyle={[loginTemplete_style.innerContainer]}>
+				{/* 비로그인 둘러보기 */}
 				<View style={loginTemplete_style.without_login}>
 					{props.route.name == 'Login' ? (
 						<TouchableOpacity onPress={moveToMainTab}>
@@ -211,7 +207,6 @@ export default LoginTemplete = props => {
 						</View>
 					)}
 				</View>
-
 				{/* LoginForm */}
 				<View style={[loginTemplete_style.loginForm]}>
 					<View style={[loginTemplete_style.idInput]}>
@@ -248,31 +243,25 @@ export default LoginTemplete = props => {
 					</View>
 				</View>
 
-				{/* Btn_w522 */}
+				{/* 로그인버튼 */}
 				<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_login]}>
 					<AniButton btnLayout={btn_w522_r30} btnTitle={'로그인'} titleFontStyle={32} onPress={tryToLogin} />
 				</View>
-
-				{/* Btn_w522 */}
+				{/* 회원가입 버튼 */}
 				<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_assign]}>
 					<AniButton btnLayout={btn_w522_r30} btnTitle={'회원 가입'} btnStyle={'border'} titleFontStyle={32} onPress={moveToAssign} />
 				</View>
-
-				{/* basic info */}
+				{/* 보호소 등록 / 비밀번호재설정 */}
 				<View style={[login_style.basic_info2, loginTemplete_style.basic_info]}>
 					<TouchableOpacity onPress={moveToShelterCodeCheck}>
 						<Text style={[txt.noto24, {color: GRAY10}, {marginRight: 60 * DP}, {width: 134 * DP}, {height: 40 * DP}]}>보호소 등록</Text>
 					</TouchableOpacity>
-					{/* <Text style={{color: GRAY20}}> | </Text>
-					<TouchableOpacity onPress={findMyId}>
-						<Text style={[txt.noto24, {color: GRAY20}]}> 내 계정 찾기 </Text>
-					</TouchableOpacity> */}
 					<VerticalBar />
 					<TouchableOpacity onPress={changePassword}>
 						<Text style={[txt.noto24, {color: GRAY10}, {marginLeft: 60 * DP}, {width: 170 * DP}, {height: 40 * DP}]}>비밀번호 재설정</Text>
 					</TouchableOpacity>
 				</View>
-			</View>
+			</ScrollView>
 		</View>
 	);
 };

@@ -1,15 +1,11 @@
 import React from 'react';
-import {ActivityIndicator, FlatList, ScrollView, Text, View} from 'react-native';
+import {FlatList, ScrollView, Text, View} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {login_style, animalFromShelter_style} from 'Templete/style_templete';
-import AnimalNeedHelpList from 'Organism/list/AnimalNeedHelpList';
 import {getProtectRequestListByShelterId} from 'Root/api/shelterapi';
-import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {EmptyIcon} from 'Root/component/atom/icon';
-import DP from 'Root/config/dp';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 
@@ -43,25 +39,66 @@ export default AnimalFromShelter = ({route}) => {
 		Modal.popAnimalInfoModal(
 			protectAnimalObject,
 			() => {
-				let gender = '남';
+				let gender = '';
+				console.log('protectAnimalObject.protect_animal_sex', protectAnimalObject);
+				const err = {
+					__v: 0,
+					_id: '628c6dbbf5726aaaa72f4537',
+					is_favorite: false,
+					protect_animal_id: {
+						__v: 0,
+						_id: '626bc6705c3a6c8f3777eeec',
+						protect_act_applicants: [],
+						protect_animal_belonged_shelter_id: '6256bf50d6ffa0fefe0387c9',
+						protect_animal_estimate_age: '1개월',
+						protect_animal_neutralization: 'no',
+						protect_animal_photo_uri_list: [
+							'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1651230320758_rn_image_picker_lib_temp_2cec9b02-da25-4ab9-ac7c-2450ff3676ae.jpg',
+						],
+						protect_animal_protect_request_id: '628c6dbbf5726aaaa72f4537',
+						protect_animal_protector_discussion_id: [],
+						protect_animal_rescue_date: '2022-04-05T00:00:00.000Z',
+						protect_animal_rescue_location: '둘준',
+						protect_animal_sex: 'unknown',
+						protect_animal_species: '개',
+						protect_animal_species_detail: '믹스견',
+						protect_animal_status: 'rescue',
+						protect_animal_weight: '1',
+					},
+					protect_animal_species: '개',
+					protect_animal_species_detail: '믹스견',
+					protect_recent_comment: {},
+					protect_request_comment_count: 0,
+					protect_request_content: 'Dz',
+					protect_request_date: '2022-05-24T05:31:39.015Z',
+					protect_request_favorite_count: 0,
+					protect_request_hit: 0,
+					protect_request_is_delete: false,
+					protect_request_photos_uri: [
+						'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1651230320758_rn_image_picker_lib_temp_2cec9b02-da25-4ab9-ac7c-2450ff3676ae.jpg',
+					],
+					protect_request_status: 'complete',
+					protect_request_title: 'dz',
+					protect_request_update_date: '2022-05-24T05:31:39.016Z',
+				};
+
 				switch (protectAnimalObject.protect_animal_sex) {
 					case 'male':
-						gender = '남';
+						gender = '/남';
 						break;
 					case 'female':
-						gender = '여';
+						gender = '/여';
 						break;
-					case 'male':
-						gender = '성별모름';
+					default:
+						gender = '';
 						break;
 				}
-				const title = protectAnimalObject.protect_animal_species + '/' + protectAnimalObject.protect_animal_species_detail + '/' + gender;
+				const title = protectAnimalObject.protect_animal_species + '/' + protectAnimalObject.protect_animal_species_detail + gender;
 				navigation.push('AnimalProtectRequestDetail', {
 					id: protectAnimalObject._id,
 					title: title,
 					writer: protectAnimalObject.protect_request_writer_id._id,
 				});
-				// navigation.push('ProtectRequestManage', {id: protectAnimalObject._id})
 			},
 			() => navigation.push('AdoptorInformation', protectAnimalObject.protect_animal_id._id),
 		);

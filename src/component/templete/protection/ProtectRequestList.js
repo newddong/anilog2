@@ -180,20 +180,8 @@ export default ProtectRequestList = ({route}) => {
 
 	//보호요청게시글 클릭
 	const onClickLabel = item => {
-		let sexValue = '';
-		switch (item.protect_animal_sex) {
-			case 'male':
-				sexValue = '남';
-				break;
-			case 'female':
-				sexValue = '여';
-				break;
-			case 'male':
-				sexValue = '성별모름';
-				break;
-		}
 		let slash = item.protect_animal_species_detail ? '/' : '';
-		const titleValue = item.protect_animal_species + slash + item.protect_animal_species_detail + sexValue;
+		const titleValue = item.protect_animal_species + slash + item.protect_animal_species_detail;
 		navigation.navigate('AnimalProtectRequestDetail', {id: item._id, title: titleValue, writer: item.protect_request_writer_id._id});
 	};
 
@@ -287,7 +275,7 @@ export default ProtectRequestList = ({route}) => {
 	};
 
 	const renderItem = ({item, index}) => {
-		// return <ProtectRequestItem key={index} item={item} index={index} />;
+		// return <ProtectRequestItem key={indewe x} item={item} index={index} />;
 		return (
 			<ProtectRequest
 				data={item}

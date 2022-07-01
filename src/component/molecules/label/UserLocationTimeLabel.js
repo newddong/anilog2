@@ -45,7 +45,7 @@ const UserLocationTimeLabel = props => {
 		if (props.empty) {
 			Modal.alert(IS_LEAVE_USER);
 		} else {
-			navigation.push('UserProfile', {userobject: props.data});
+			navigation.navigate('UserProfile', {userobject: props.data});
 		}
 	};
 

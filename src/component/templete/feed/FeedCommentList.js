@@ -425,15 +425,17 @@ export default FeedCommentList = props => {
 
 	//댓글 수정 => 키보드 해제시 수정모드가 종료되도록 적용
 	KeyBoardEvent(
-		() => {
-			setTimeout(() => {
-				setKeyboardVisible(true);
-			}, 200);
-		},
+		() => {},
 		() => {
 			setKeyboardVisible(false);
 		},
 	);
+
+	const onFocus = () => {
+		setTimeout(() => {
+			setKeyboardVisible(true);
+		}, 500);
+	};
 
 	const header = () => {
 		return (
@@ -529,6 +531,7 @@ export default FeedCommentList = props => {
 						onCancelChild={onCancelChild} // 대댓글쓰기 X마크
 						editMode={editMode}
 						viewMode={!isKeyboardVisible}
+						onFocus={onFocus}
 					/>
 				</View>
 			) : (

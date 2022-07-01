@@ -95,7 +95,7 @@ export default InputAndSearchHeader = props => {
 	const getPlaceHolderText = () => {
 		switch (type) {
 			case 'location':
-				return '위치를 검색해주세요.';
+				return '찾을 위치를 검색해주세요.';
 			case 'help':
 				return '문의할 내용을 입력해주세요.';
 			case 'social':

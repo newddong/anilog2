@@ -20,7 +20,6 @@ import AssignPetProfileImage from 'Templete/pet/AssignPetProfileImage';
 import AssignPetInfoA from 'Templete/pet/AssignPetInfoA';
 import AssignPetInfoB from 'Templete/pet/AssignPetInfoB';
 import FavoriteUser from 'Root/component/templete/favorite/FavoriteUser';
-import SaveAnimalRequest from 'Templete/protection/SaveAnimalRequest';
 import FavoriteFeeds from 'Templete/favorite/FavoriteFeeds';
 import AppliesRecord from 'Templete/my/AppliesRecord';
 import ApplyAdoptionList from 'Root/component/templete/protection/ApplyAdoptionList';
@@ -180,16 +179,6 @@ export default MyStackNavigation = props => {
 				options={{header: props => <SimpleHeader {...props} />, title: '반려동물 등록'}}
 			/>
 			<MyStack.Screen name="FavoriteUser" component={FavoriteUser} options={{header: props => <SimpleHeader {...props} />, title: '즐겨찾은 친구'}} />
-			<MyStack.Screen
-				name="UserSaveAnimalRequest"
-				component={SaveAnimalRequest}
-				options={{header: props => <SimpleHeader {...props} />, title: '보호요청 저장'}}
-			/>
-			<MyStack.Screen
-				name="ShelterSaveAnimalRequest"
-				component={SaveAnimalRequest}
-				options={{header: props => <SimpleHeader {...props} />, title: '보호요청 저장'}}
-			/>
 			<MyStack.Screen name="FeedCommentList" component={FeedCommentList} options={{header: props => <SimpleHeader {...props} />, title: '댓글'}} />
 			<MyStack.Screen name="SinglePhotoSelect" component={AddPhoto} options={{header: props => <PhotoSelectHeader {...props} />, title: ''}} />
 			<MyStack.Screen

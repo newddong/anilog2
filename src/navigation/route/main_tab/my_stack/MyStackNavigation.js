@@ -89,6 +89,7 @@ import AddPhoto from 'Root/component/templete/media/AddPhoto';
 import PhotoSelectHeader from 'Root/navigation/header/PhotoSelectHeader';
 import ProfileHeader from 'Root/navigation/header/ProfileHeader';
 
+
 const MyStack = createStackNavigator();
 export default MyStackNavigation = props => {
 	return (

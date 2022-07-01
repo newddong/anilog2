@@ -69,7 +69,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 	React.useEffect(() => {
 		console.log('펫 데이터 바뀜', petData);
 	}, [petData]);
-
+	console.log('petdata', petData.pet_status);
 	const setFamily = () => {
 		getUserInfoById(
 			{userobject_id: route.params.pet_id},
@@ -248,12 +248,12 @@ export default PetInfoSetting = ({route, navigation}) => {
 					// console.log('updatePetDetailInformation / PetInfoSetting Result : ', result.msg);
 					setPetData({...petData, pet_species: result.msg.pet_species, pet_species_detail: result.msg.pet_species_detail});
 					Modal.close();
-					setTimeout(() => {
-						Modal.popNoBtn('반려동물의 정보가 성공적으로 \n 변경되었습니다.');
-						setTimeout(() => {
-							Modal.close();
-						}, 1000);
-					}, 100);
+					// setTimeout(() => {
+					// 	Modal.popNoBtn('반려동물의 정보가 성공적으로 \n 변경되었습니다.');
+					// 	setTimeout(() => {
+					// 		Modal.close();
+					// 	}, 1000);
+					// }, 100);
 				},
 				err => {
 					console.log('updatePetDetailInformation / PetinfoSetting err : ', err);
@@ -276,12 +276,12 @@ export default PetInfoSetting = ({route, navigation}) => {
 					console.log('성별 변경 성공', result.msg);
 					setPetData({...petData, pet_species: result.msg.pet_species, pet_species_detail: result.msg.pet_species_detail});
 					Modal.close();
-					setTimeout(() => {
-						Modal.popNoBtn('반려동물의 정보가 성공적으로 \n 변경되었습니다.');
-						setTimeout(() => {
-							Modal.close();
-						}, 1000);
-					}, 100);
+					// setTimeout(() => {
+					// 	Modal.popNoBtn('반려동물의 정보가 성공적으로 \n 변경되었습니다.');
+					// 	setTimeout(() => {
+					// 		Modal.close();
+					// 	}, 1000);
+					// }, 100);
 				},
 				err => {
 					console.log('updatePetDetailInformation / PetinfoSetting err : ', err);
@@ -942,83 +942,89 @@ export default PetInfoSetting = ({route, navigation}) => {
 
 					{/* 가족 계정 추가 */}
 					{/* 반려 동물 상태가 companion인 경우에만 보이도록 추후 변경 예정 */}
-					{/* {data.pet_status == 'companion' && ( */}
-					<View style={[petInfoSetting.familyAccountSetting.container]}>
-						<View style={[{width: 750 * DP}, {paddingHorizontal: 28 * DP}]}>
-							<View style={[styles.menuView]}>
-								<View style={[{width: 182 * DP}, {height: 46 * DP}, {justifyContent: 'center'}]}>
-									<TouchableOpacity onPress={goToAddFamilyAccount}>
-										<Text style={[txt.noto30b, {color: MAINBLACK}]}>가족 계정 추가</Text>
+					{petData.pet_status == 'companion' && (
+						<View style={[petInfoSetting.familyAccountSetting.container]}>
+							<View style={[{width: 750 * DP}, {paddingHorizontal: 28 * DP}]}>
+								<View style={[styles.menuView]}>
+									<View style={[{width: 182 * DP}, {height: 46 * DP}, {justifyContent: 'center'}]}>
+										<TouchableOpacity onPress={goToAddFamilyAccount}>
+											<Text style={[txt.noto30b, {color: MAINBLACK}]}>가족 계정 추가</Text>
+										</TouchableOpacity>
+									</View>
+									<TouchableOpacity onPress={goToAddFamilyAccount} style={[styles.bracket50, {alignContent: 'flex-end'}]}>
+										<NextMark />
 									</TouchableOpacity>
 								</View>
-								<TouchableOpacity onPress={goToAddFamilyAccount} style={[styles.bracket50, {alignContent: 'flex-end'}]}>
-									<NextMark />
-								</TouchableOpacity>
-							</View>
-							<View style={[styles.infoMessage]}>
-								<Text style={[txt.noto24, {color: GRAY10}]}>
-									가족 계정으로 초대된 계정은 이 동물 게시글을 함께 관리합니다.{'\n'}최대 3인까지만 초대 가능합니다.
-								</Text>
-							</View>
-							{/* 가족계정 리스트 */}
-							<View style={[styles.familyContainer]}>
-								{/* <FamilyAccountList items={familyAccountList} onDeleteAccount={onDeleteFamilyAccount} /> */}
-								{familyAccountList.map((v, i) => {
-									return (
-										<View style={[styles.itemContainer]} key={i}>
-											{/* <View style={[familyAccountList_style.profileImageSmall]}>
+								<View style={[styles.infoMessage]}>
+									<Text style={[txt.noto24, {color: GRAY10}]}>
+										가족 계정으로 초대된 계정은 이 동물 게시글을 함께 관리합니다.{'\n'}최대 3인까지만 초대 가능합니다.
+									</Text>
+								</View>
+								{/* 가족계정 리스트 */}
+								<View style={[styles.familyContainer]}>
+									{/* <FamilyAccountList items={familyAccountList} onDeleteAccount={onDeleteFamilyAccount} /> */}
+									{familyAccountList.map((v, i) => {
+										return (
+											<View style={[styles.itemContainer]} key={i}>
+												{/* <View style={[familyAccountList_style.profileImageSmall]}>
 											<ProfileImageSmall data={v} />
 										</View>
 										<View style={[familyAccountList_style.userIDContainer]}>
 											<Text style={[txt.roboto28b]}>{v.user_nickname}</Text>
 										</View> */}
-											<UserDescriptionLabel data={v} onClickLabel={onClickFamilyLabel} width={400} />
-											{v.user_nickname == userGlobalObject.userInfo.user_nickname || !isChiefUser ? (
-												<></>
-											) : (
-												<View style={{position: 'absolute', right: 5 * DP}}>
-													<Cross52 onPress={() => onDeleteFamilyAccount(i)} style={[familyAccountList_style.cross52]} />
-												</View>
-											)}
-										</View>
-									);
-								})}
-							</View>
-						</View>
-					</View>
-					{/* )} */}
-					{/* 계정 공개 여부 변경 */}
-					{/* <View style={[petInfoSetting.exposureSetting.container]}>
-						<View style={[petInfoSetting.exposureSetting.insideContainer]}>
-							<View style={[petInfoSetting.exposureSetting.menuView]}>
-								<View style={[petInfoSetting.petProfileMenu.menuTitle]}>
-									<Text style={[txt.noto30b, {color: GRAY10}]}>계정 공개 여부 변경</Text>
-								</View>
-							</View>
-							<View style={[petInfoSetting.exposureSetting.privateSettingView]}>
-								<View style={[petInfoSetting.exposureSetting.privateSettingMsg]}>
-									<Text style={[txt.noto28, {color: GRAY10}]}>이 동물의 계정을 비공개로 전환합니다</Text>
-								</View>
-								<View style={[petInfoSetting.exposureSetting.privateSettingBtn]}>
-									<OnOffSwitch onSwtichOff={onSwtichOff} onSwtichOn={onSwtichOn} />
+												<UserDescriptionLabel data={v} onClickLabel={onClickFamilyLabel} width={400} />
+												{v.user_nickname == userGlobalObject.userInfo.user_nickname || !isChiefUser ? (
+													<></>
+												) : (
+													<View style={{position: 'absolute', right: 60 * DP}}>
+														<Cross52 onPress={() => onDeleteFamilyAccount(i)} style={[familyAccountList_style.cross52]} />
+													</View>
+												)}
+											</View>
+										);
+									})}
 								</View>
 							</View>
 						</View>
-					</View> */}
+					)}
+					{/* 계정 공개 여부 변경 api 개발 필요 TODO */}
+					{/* {petData.pet_status == 'adopt' && (
+						<View style={[{width: 750 * DP}, {flexDirection: 'row'}, {height: 108 * DP}]}>
+							<View style={[userInfoSetting_style.title_detail, {width: 602 * DP}]}>
+								<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 634 * DP}]}>계정 공개 여부 변경</Text>
+								<Text style={[txt.noto26, {color: GRAY10}]}>이 동물의 계정을 비공개로 전환합니다</Text>
+							</View>
+							<View style={[{justifyContent: 'center'}]}>
+								<OnOffSwitch onSwtichOff={onSwtichOff} onSwtichOn={onSwtichOn} />
+							</View>
+						</View>
+					)} */}
 					{/* 반려동물 입양 상태 변경 */}
 					{petData.pet_status == 'protect' && ( //오로지 임보일때만 출력
-						<View style={[petInfoSetting.changeAdoptionStatus.container]}>
-							<View style={[petInfoSetting.familyAccountSetting.insideContainer]}>
-								<View style={[petInfoSetting.familyAccountSetting.menuView]}>
-									<View style={[petInfoSetting.petProfileMenu.menuTitle]}>
-										<TouchableOpacity onPress={goToAnimalAdoption}>
-											<Text style={[txt.noto30b, {color: GRAY10}]}>보호동물 입양 상태 변경</Text>
-										</TouchableOpacity>
-									</View>
-									<TouchableOpacity onPress={goToAnimalAdoption} style={[petInfoSetting.changeAdoptionStatus.bracket50]}>
-										<NextMark />
-									</TouchableOpacity>
-								</View>
+						// <View style={[petInfoSetting.changeAdoptionStatus.container]}>
+						// 	<View style={[petInfoSetting.familyAccountSetting.insideContainer]}>
+						// 		<View style={[petInfoSetting.familyAccountSetting.menuView]}>
+						// 			<View style={[petInfoSetting.petProfileMenu.menuTitle]}>
+						// 				<TouchableOpacity onPress={goToAnimalAdoption}>
+						// 					<Text style={[txt.noto30b, {color: MAINBLACK}]}>보호동물 입양 상태 변경</Text>
+						// 				</TouchableOpacity>
+						// 			</View>
+						// 			<TouchableOpacity onPress={goToAnimalAdoption} style={[petInfoSetting.changeAdoptionStatus.bracket50]}>
+						// 				<NextMark />
+						// 			</TouchableOpacity>
+						// 		</View>
+						// 	</View>
+						// </View>
+						<View style={[{width: 750 * DP}, {flexDirection: 'row'}, {height: 108 * DP}]}>
+							<View style={[userInfoSetting_style.title_detail]}>
+								<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 634 * DP}]}>보호동물 입양 상태 변경</Text>
+							</View>
+							<View style={[{alignItems: 'center'}, {justifyContent: 'center'}]}>
+								<TouchableOpacity
+									onPress={goToAnimalAdoption}
+									style={[{justifyContent: 'center'}, {marginLeft: 12 * DP}, {width: 48 * DP}, {height: 48 * DP}, {alignContent: 'center'}]}>
+									<NextMark />
+								</TouchableOpacity>
 							</View>
 						</View>
 					)}
@@ -1062,8 +1068,8 @@ const styles = StyleSheet.create({
 	changeProfile: {
 		color: APRI10,
 		marginTop: 30 * DP,
-		borderBottomWidth: 2 * DP,
-		borderBottomColor: GRAY10,
+		// borderBottomWidth: 2 * DP,
+		// borderBottomColor: GRAY10,
 	},
 	menuTitle: {
 		width: 162 * DP,

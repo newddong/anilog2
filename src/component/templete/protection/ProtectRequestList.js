@@ -275,7 +275,6 @@ export default ProtectRequestList = ({route}) => {
 	};
 
 	const renderItem = ({item, index}) => {
-		// return <ProtectRequestItem key={indewe x} item={item} index={index} />;
 		return (
 			<ProtectRequest
 				data={item}

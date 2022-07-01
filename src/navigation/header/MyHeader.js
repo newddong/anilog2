@@ -14,8 +14,13 @@ export default MyHeader = ({route, options, back}) => {
 	const [items, setItems] = React.useState('');
 	const [selectedItem, setSelectedItem] = React.useState(1000);
 	const [userData, setUserData] = React.useState('');
+	// const [isUser, setIsUser] = React.useState(route.params.userobject._id == userGlobalObj.userInfo._id);
 
 	React.useEffect(() => {
+		// if (route.params.userobject._id == userGlobalObj.userInfo._id) {
+		// 	console.log('로그인된 유저의 설정');
+		// }
+		console.log('navigation', route);
 		const unsubscribe = navigation.addListener('focus', () => {
 			fetchData();
 		});
@@ -66,7 +71,8 @@ export default MyHeader = ({route, options, back}) => {
 				navigation.push('PetInfoSetting', {pet_id: data._id});
 			} else if (data?.user_type === 'user') {
 				console.log('User');
-				navigation.push('UserInfoSetting', {token: data._id}); //userObject
+				// navigation.push('UserInfoSetting', {token: data._id}); //userObject
+				navigation.push('UserMenu', {userobject: data});
 			}
 
 			Modal.close();

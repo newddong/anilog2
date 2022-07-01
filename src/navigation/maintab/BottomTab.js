@@ -19,8 +19,10 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import FastImage from 'react-native-fast-image';
 import {KeyBoardEvent, keyShow} from 'Root/component/molecules/input/usekeyboardbottom';
 import {useFocusEffect} from '@react-navigation/core';
+import comment_obj from 'Root/config/comment_obj';
 
-export default function BottomTab({state, descriptors, navigation}) {
+
+export default function BottomTab({state, descriptors, navigation, focus}) {
 	// console.log('바텀탭 유저 글로벌',userGlobalObject);
 	const focusedOptions = descriptors[state.routes[state.index].key].options;
 	const icons = [<FeedTabBorder />, <AnimalSavingTabBorder />, <CommunityTabBorder />, <MyTabBorder />];
@@ -88,7 +90,22 @@ export default function BottomTab({state, descriptors, navigation}) {
 			);
 		},
 		() => {
+			Animated.timing(translation, {
+				duration: 200,
+				toValue: 0 * DP,
+				easing: Easing.linear,
+				useNativeDriver: true,
+			}).start(() => {});
 			setKeyboardVisible(false);
+
+			// Animated.timing(animatedHeight, {
+			// 	duration: 0,
+			// 	toValue: 100 * DP,
+			// 	// easing: Easing.exp,
+			// 	useNativeDriver: false,
+			// }).start(() => {
+			// 	setKeyboardVisible(false);
+			// });
 		},
 	);
 
@@ -119,6 +136,7 @@ export default function BottomTab({state, descriptors, navigation}) {
 						}}></View>
 				</>
 			)}
+
 
 			<Animated.View style={[tab.wrap_main, {height: isKeyboardVisible ? 0 : 100 * DP}]}>
 				{state.routes.map((route, index) => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, TextInput, View, Image, ScrollView, Dimensions, SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
+import {Text, TextInput, View, Image, ScrollView, Dimensions, SafeAreaView, StyleSheet, TouchableOpacity, Platform} from 'react-native';
 
 import {AlarmBadger48, Search48, BackArrow32} from 'Atom/icon';
 import DP from 'Root/config/dp';
@@ -24,7 +24,9 @@ export default PhotoSelectHeader = ({navigation, route, options, back}) => {
 			let localFiles = selectedPhoto.filter(v => !v.uri.includes('http'));
 			let remoteFiles = selectedPhoto.filter(v => v.uri.includes('http'));
 			CameraRoll.compressImage({
-				imageFiles: localFiles.map(v => v.uri),
+				imageFiles: localFiles.map(v =>{
+					return v.uri;
+				}),
 				quality: 0.7,
 				maxWidth: 1024,
 				maxHeight: 1024,

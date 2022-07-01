@@ -17,6 +17,8 @@ import {createNotice, getNotice} from 'Root/api/notice';
 import DP from 'Root/config/dp';
 import {useNavigation} from '@react-navigation/core';
 import {NextMark, NextMark48, VerticalBar} from 'Root/component/atom/icon';
+import {serveruri} from 'Root/config/server';
+import appConfig, {DEV, RELEASE, STAGING} from 'Root/config/appConfig';
 
 export default LoginTemplete = props => {
 	const navigation = useNavigation();
@@ -189,7 +191,6 @@ export default LoginTemplete = props => {
 	}
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
-			<ScrollView scrollEnabled={false} contentContainerStyle={[loginTemplete_style.innerContainer]}>
 				{/* 비로그인 둘러보기 */}
 				<View style={loginTemplete_style.without_login}>
 					{props.route.name == 'Login' ? (
@@ -261,7 +262,35 @@ export default LoginTemplete = props => {
 						<Text style={[txt.noto24, {color: GRAY10}, {marginLeft: 60 * DP}, {width: 170 * DP}, {height: 40 * DP}]}>비밀번호 재설정</Text>
 					</TouchableOpacity>
 				</View>
-			</ScrollView>
+
+				{appConfig.mode != RELEASE && (
+					<View>
+						<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_login]}>
+							<AniButton
+								btnLayout={btn_w522_r30}
+								btnTitle={'개발서버로'}
+								btnStyle={'border'}
+								titleFontStyle={32}
+								onPress={() => {
+									serveruri.uri = 'https://api.zoodoongi.net';
+									tryToLogin();
+								}}
+							/>
+						</View>
+						<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_assign]}>
+							<AniButton
+								btnLayout={btn_w522_r30}
+								btnTitle={'배포서버로'}
+								btnStyle={'border'}
+								titleFontStyle={32}
+								onPress={() => {
+									serveruri.uri = 'https://api.pinefriend.net';
+									tryToLogin();
+								}}
+							/>
+						</View>
+					</View>
+				)}
 		</View>
 	);
 };
@@ -311,7 +340,6 @@ const loginTemplete_style = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		alignSelf: 'center',
-		// backgroundColor: 'yellow',
 	},
 	checkBox_loginForm: {
 		width: 450 * DP,

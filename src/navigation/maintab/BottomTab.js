@@ -90,15 +90,6 @@ export default function BottomTab({state, descriptors, navigation, focus}) {
 		},
 		() => {
 			setKeyboardVisible(false);
-
-			// Animated.timing(animatedHeight, {
-			// 	duration: 0,
-			// 	toValue: 100 * DP,
-			// 	// easing: Easing.exp,
-			// 	useNativeDriver: false,
-			// }).start(() => {
-			// 	setKeyboardVisible(false);
-			// });
 		},
 	);
 

@@ -344,7 +344,7 @@ export default ReportForm = props => {
 		// 	Modal.alert('첨부파일은 5개까지만 가능합니다');
 		// 	return;
 		// }
-		navigation.push('MultiPhotoSelect', {prev: {name: route.name, key: route.key}});
+		navigation.navigate('MultiPhotoSelect', {prev: {name: route.name, key: route.key}});
 	};
 	console.log(data);
 	return (

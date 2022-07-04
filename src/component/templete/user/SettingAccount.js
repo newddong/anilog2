@@ -63,13 +63,13 @@ export default SettingAccount = ({route}) => {
 						</TouchableOpacity>
 					</View>
 				</View>
-				<View style={styles.exitContainer}>
+				{/* <View style={styles.exitContainer}>
 					<View style={{width: 550 * DP}}>
 						<TouchableOpacity onPress={onPressDeleteAccount}>
 							<Text style={[txt.noto32b, {color: GRAY10}, {marginTop: 40 * DP}]}>계정 탈퇴</Text>
 						</TouchableOpacity>
 					</View>
-				</View>
+				</View> */}
 			</View>
 		</ScrollView>
 	);

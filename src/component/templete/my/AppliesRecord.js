@@ -102,35 +102,35 @@ export default AppliesRecord = ({route}) => {
 
 	//입양 신청 - 더보기 클릭
 	const showMoreAdoption = () => {
-		navigation.push('ApplyAdoptionList');
+		navigation.navigate('ApplyAdoptionList');
 	};
 
 	//임시보호 신청 - 더보기 클릭
 	const showMoreProtection = () => {
-		navigation.push('ApplyTempProtectList');
+		navigation.navigate('ApplyTempProtectList');
 	};
 
 	//봉사활동 신청 - 더보기 클릭
 	const showMoreVolunteer = () => {
-		navigation.push('ManageUserVolunteer'); // 활동 예정중인 신청, 지난 신청 등 나의 신청 목록을 보내줘야 알 수 있는 부분
+		navigation.navigate('ManageUserVolunteer'); // 활동 예정중인 신청, 지난 신청 등 나의 신청 목록을 보내줘야 알 수 있는 부분
 	};
 
 	//봉사활동 신청 하단 라벨 클릭
 	const onClickShelterLabel = shelterInfo => {
 		let volunteerData = shelterInfo;
 		volunteerData.route = route.name;
-		navigation.push('UserVolunteerForm', volunteerData); //봉사 활동 신청 관련
+		navigation.navigate('UserVolunteerForm', volunteerData); //봉사 활동 신청 관련
 	};
 
 	//입양 신청 라벨 클릭
 	const onClickAdoptApplication = (status, id, data) => {
 		console.log('data ', data);
-		navigation.push('ApplyAdoptionDetails', adopt_application_list[0]);
+		navigation.navigate('ApplyAdoptionDetails', adopt_application_list[0]);
 	};
 
 	//임시보호 신청 라벨 클릭
 	const onClickProtectApplication = (status, id, data) => {
-		navigation.push('ApplyTempProtectDetails', protect_application_list[0]);
+		navigation.navigate('ApplyTempProtectDetails', protect_application_list[0]);
 	};
 
 	//API 접속 이전 상태인 false가 단 하나라도 없으면 이미 로딩완료

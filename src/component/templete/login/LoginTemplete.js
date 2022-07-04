@@ -132,16 +132,16 @@ export default LoginTemplete = props => {
 	};
 
 	const moveToAssign = () => {
-		navigation.push('AgreementCheck');
+		navigation.navigate('AgreementCheck');
 	};
 
 	//보호소 코드 체크
 	const moveToShelterCodeCheck = () => {
-		navigation.push('ShelterCodeCheck');
+		navigation.navigate('ShelterCodeCheck');
 	};
 
 	const changePassword = () => {
-		navigation.push('PasswordResetIdentification');
+		navigation.navigate('PasswordResetIdentification');
 	};
 
 	//자동로그인 박스 클릭
@@ -191,106 +191,106 @@ export default LoginTemplete = props => {
 	}
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
-				{/* 비로그인 둘러보기 */}
-				<View style={loginTemplete_style.without_login}>
-					{props.route.name == 'Login' ? (
-						<TouchableOpacity onPress={moveToMainTab}>
-							<View style={[loginTemplete_style.without_login_text]}>
-								<Text style={[txt.noto24, {color: GRAY10}]}>로그인 없이 둘러보기</Text>
-								<View style={[loginTemplete_style.nextBtnView]}>
-									<NextMark />
-								</View>
-							</View>
-						</TouchableOpacity>
-					) : (
-						<View style={[loginTemplete_style.login_required_text, {marginTop: 40 * DP}]}>
-							<Text style={[txt.noto24, {color: GRAY10}]}>로그인이 필요한 페이지입니다.</Text>
-						</View>
-					)}
-				</View>
-				{/* LoginForm */}
-				<View style={[loginTemplete_style.loginForm]}>
-					<View style={[loginTemplete_style.idInput]}>
-						<Input24
-							placeholder={'전화번호를 입력해주세요.'}
-							keyboardType={'number-pad'}
-							width={522}
-							height={104}
-							onChange={onChangeId}
-							value={userSetting.id}
-						/>
-					</View>
-					<View style={[loginTemplete_style.pwdInput]}>
-						<PasswordInput
-							placeholder={'비밀번호를 입력해주세요'}
-							width={520}
-							height={104}
-							validator={passwordValidator}
-							onChange={onChangePassword}
-							information={''}
-							alert_msg={''}
-							confirm_msg={''}
-						/>
-					</View>
-					<View style={[loginTemplete_style.checkBox_loginFormContainer]}>
-						<View style={[loginTemplete_style.checkBox_loginForm]}>
-							<View style={[loginTemplete_style.checkBoxContainer]}>
-								<CheckBox value={'자동 로그인'} onCheck={onCheckAutoLogin} state={userSetting.isAutoLogin} txtSize={28} color={'black'} />
-							</View>
-							<View style={[loginTemplete_style.checkBoxContainer]}>
-								<CheckBox value={'아이디저장'} onCheck={onCheckSaveId} state={userSetting.isSaveId} txtSize={28} color={'black'} />
+			{/* 비로그인 둘러보기 */}
+			<View style={loginTemplete_style.without_login}>
+				{props.route.name == 'Login' ? (
+					<TouchableOpacity onPress={moveToMainTab}>
+						<View style={[loginTemplete_style.without_login_text]}>
+							<Text style={[txt.noto24, {color: GRAY10}]}>로그인 없이 둘러보기</Text>
+							<View style={[loginTemplete_style.nextBtnView]}>
+								<NextMark />
 							</View>
 						</View>
-					</View>
-				</View>
-
-				{/* 로그인버튼 */}
-				<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_login]}>
-					<AniButton btnLayout={btn_w522_r30} btnTitle={'로그인'} titleFontStyle={32} onPress={tryToLogin} />
-				</View>
-				{/* 회원가입 버튼 */}
-				<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_assign]}>
-					<AniButton btnLayout={btn_w522_r30} btnTitle={'회원 가입'} btnStyle={'border'} titleFontStyle={32} onPress={moveToAssign} />
-				</View>
-				{/* 보호소 등록 / 비밀번호재설정 */}
-				<View style={[login_style.basic_info2, loginTemplete_style.basic_info]}>
-					<TouchableOpacity onPress={moveToShelterCodeCheck}>
-						<Text style={[txt.noto24, {color: GRAY10}, {marginRight: 60 * DP}, {width: 134 * DP}, {height: 40 * DP}]}>보호소 등록</Text>
 					</TouchableOpacity>
-					<VerticalBar />
-					<TouchableOpacity onPress={changePassword}>
-						<Text style={[txt.noto24, {color: GRAY10}, {marginLeft: 60 * DP}, {width: 170 * DP}, {height: 40 * DP}]}>비밀번호 재설정</Text>
-					</TouchableOpacity>
-				</View>
-
-				{appConfig.mode != RELEASE && (
-					<View>
-						<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_login]}>
-							<AniButton
-								btnLayout={btn_w522_r30}
-								btnTitle={'개발서버로'}
-								btnStyle={'border'}
-								titleFontStyle={32}
-								onPress={() => {
-									serveruri.uri = 'https://api.zoodoongi.net';
-									tryToLogin();
-								}}
-							/>
-						</View>
-						<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_assign]}>
-							<AniButton
-								btnLayout={btn_w522_r30}
-								btnTitle={'배포서버로'}
-								btnStyle={'border'}
-								titleFontStyle={32}
-								onPress={() => {
-									serveruri.uri = 'https://api.pinefriend.net';
-									tryToLogin();
-								}}
-							/>
-						</View>
+				) : (
+					<View style={[loginTemplete_style.login_required_text, {marginTop: 40 * DP}]}>
+						<Text style={[txt.noto24, {color: GRAY10}]}>로그인이 필요한 페이지입니다.</Text>
 					</View>
 				)}
+			</View>
+			{/* LoginForm */}
+			<View style={[loginTemplete_style.loginForm]}>
+				<View style={[loginTemplete_style.idInput]}>
+					<Input24
+						placeholder={'전화번호를 입력해주세요.'}
+						keyboardType={'number-pad'}
+						width={522}
+						height={104}
+						onChange={onChangeId}
+						value={userSetting.id}
+					/>
+				</View>
+				<View style={[loginTemplete_style.pwdInput]}>
+					<PasswordInput
+						placeholder={'비밀번호를 입력해주세요'}
+						width={520}
+						height={104}
+						validator={passwordValidator}
+						onChange={onChangePassword}
+						information={''}
+						alert_msg={''}
+						confirm_msg={''}
+					/>
+				</View>
+				<View style={[loginTemplete_style.checkBox_loginFormContainer]}>
+					<View style={[loginTemplete_style.checkBox_loginForm]}>
+						<View style={[loginTemplete_style.checkBoxContainer]}>
+							<CheckBox value={'자동 로그인'} onCheck={onCheckAutoLogin} state={userSetting.isAutoLogin} txtSize={28} color={'black'} />
+						</View>
+						<View style={[loginTemplete_style.checkBoxContainer]}>
+							<CheckBox value={'아이디저장'} onCheck={onCheckSaveId} state={userSetting.isSaveId} txtSize={28} color={'black'} />
+						</View>
+					</View>
+				</View>
+			</View>
+
+			{/* 로그인버튼 */}
+			<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_login]}>
+				<AniButton btnLayout={btn_w522_r30} btnTitle={'로그인'} titleFontStyle={32} onPress={tryToLogin} />
+			</View>
+			{/* 회원가입 버튼 */}
+			<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_assign]}>
+				<AniButton btnLayout={btn_w522_r30} btnTitle={'회원 가입'} btnStyle={'border'} titleFontStyle={32} onPress={moveToAssign} />
+			</View>
+			{/* 보호소 등록 / 비밀번호재설정 */}
+			<View style={[login_style.basic_info2, loginTemplete_style.basic_info]}>
+				<TouchableOpacity onPress={moveToShelterCodeCheck}>
+					<Text style={[txt.noto24, {color: GRAY10}, {marginRight: 60 * DP}, {width: 134 * DP}, {height: 40 * DP}]}>보호소 등록</Text>
+				</TouchableOpacity>
+				<VerticalBar />
+				<TouchableOpacity onPress={changePassword}>
+					<Text style={[txt.noto24, {color: GRAY10}, {marginLeft: 60 * DP}, {width: 170 * DP}, {height: 40 * DP}]}>비밀번호 재설정</Text>
+				</TouchableOpacity>
+			</View>
+
+			{appConfig.mode != RELEASE && (
+				<View>
+					<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_login]}>
+						<AniButton
+							btnLayout={btn_w522_r30}
+							btnTitle={'개발서버로'}
+							btnStyle={'border'}
+							titleFontStyle={32}
+							onPress={() => {
+								serveruri.uri = 'https://api.zoodoongi.net';
+								tryToLogin();
+							}}
+						/>
+					</View>
+					<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_assign]}>
+						<AniButton
+							btnLayout={btn_w522_r30}
+							btnTitle={'배포서버로'}
+							btnStyle={'border'}
+							titleFontStyle={32}
+							onPress={() => {
+								serveruri.uri = 'https://api.pinefriend.net';
+								tryToLogin();
+							}}
+						/>
+					</View>
+				</View>
+			)}
 		</View>
 	);
 };

@@ -23,12 +23,18 @@ export default PetFollowerList = props => {
 	const [loading, setLoading] = React.useState(false);
 	const [follower, setFollower] = React.useState('false');
 	const [followerInput, setFollowerInput] = React.useState('');
+	const [pressed, setPressed] = React.useState(false);
+
 	const isPreView = userGlobalObject.userInfo.isPreviewMode;
 	const params = props.route.params;
 
 	React.useEffect(() => {
 		// getFollower();
+		const subscribe = navigation.addListener('focus', () => {
+			setPressed(false);
+		});
 		navigation.setOptions({title: params.title + ' 팔로워'});
+		return subscribe;
 	}, []);
 
 	React.useEffect(() => {
@@ -104,7 +110,10 @@ export default PetFollowerList = props => {
 	};
 
 	const onClickAccount = item => {
-		navigation.push('UserProfile', {userobject: item});
+		setPressed(true);
+		if (!pressed) {
+			navigation.navigate({key: new Date().getTime(), name: 'UserProfile', params: {userobject: item}});
+		}
 	};
 
 	if (follower == 'false') {

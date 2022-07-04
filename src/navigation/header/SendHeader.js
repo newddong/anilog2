@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import {BackArrow32, Bracket48, Send60_Big} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {WHITE, APRI10} from 'Root/config/color';
@@ -12,6 +12,7 @@ import {createCommunity, updateAndDeleteCommunity} from 'Root/api/community';
 export default SendHeader = ({route, navigation, options}) => {
 	// console.log('props SendHeader', route.params);
 	const onSend = () => {
+		Keyboard.dismiss();
 		if (route.params.data) {
 			const data = route.params.data;
 			// console.log('data at SendHeader', JSON.stringify(data));

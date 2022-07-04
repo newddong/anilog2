@@ -14,6 +14,7 @@ import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import {useNavigation} from '@react-navigation/core';
 import {deleteComment} from 'Root/api/commentapi';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const AlarmCommentList = props => {
 	// console.log('AlarmCommentList props', props.route.params);
@@ -345,18 +346,21 @@ const AlarmCommentList = props => {
 	// const components = [header(), commentBox()];
 	return (
 		<View style={[login_style.wrp_main, feedCommentList.container]}>
-			<Header />
+			{/* <ScrollView> */}
+			{/* <Header /> */}
 
 			<FlatList
 				data={comments}
 				renderItem={renderItem}
 				listKey={({item, index}) => index}
-				// ListHeaderComponent={Header}
+				ListHeaderComponent={Header}
 				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
 				// ListFooterComponent={Bottom}
 				ref={flatListRef}
 				showsVerticalScrollIndicator={false}
+				style={[{marginBottom: 10 * DP}]}
 			/>
+
 			<View style={{position: 'absolute', bottom: keyboardY}} onLayout={onReplyBtnLayout}>
 				<ReplyWriteBox
 					onAddPhoto={onAddPhoto}
@@ -369,6 +373,7 @@ const AlarmCommentList = props => {
 					editData={editData}
 				/>
 			</View>
+			{/* </ScrollView> */}
 		</View>
 	);
 };

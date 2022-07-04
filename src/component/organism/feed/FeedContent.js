@@ -90,7 +90,7 @@ export default FeedContent = props => {
 			setSend(feed_writer_id);
 		}
 	}, [props.data]);
-	// console.log('data', props.data);
+	// console.log('feed content data', props.data);
 	//피드 미트볼 메뉴 - 신고 클릭
 	const onPressReport = context => {
 		console.log('신고 context', context, props.data._id);
@@ -538,9 +538,10 @@ export default FeedContent = props => {
 								location={feed_location}
 								time={feed_date}
 								isLarge
+								publicType={props.data.feed_public_type}
 							/>
 						) : (
-							<UserLocationTimeLabel empty={true} time={feed_date} isLarge location={feed_location} />
+							<UserLocationTimeLabel empty={true} time={feed_date} isLarge location={feed_location} publicType={props.data.feed_public_type} />
 						)}
 						<View style={{flexDirection: 'row', alignItems: 'center'}}>
 							{!isMissingReportRoute ? (

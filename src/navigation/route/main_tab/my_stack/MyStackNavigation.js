@@ -88,7 +88,7 @@ import MyHeader from 'Root/navigation/header/MyHeader';
 import AddPhoto from 'Root/component/templete/media/AddPhoto';
 import PhotoSelectHeader from 'Root/navigation/header/PhotoSelectHeader';
 import ProfileHeader from 'Root/navigation/header/ProfileHeader';
-
+import OpenSourceDetail from 'Templete/user/OpenSourceDetail';
 
 const MyStack = createStackNavigator();
 export default MyStackNavigation = props => {
@@ -409,6 +409,11 @@ export default MyStackNavigation = props => {
 					header: props => <CommunityHeader {...props} />,
 					title: ' ',
 				})}
+			/>
+			<MyStack.Screen
+				name="OpenSourceDetail"
+				component={OpenSourceDetail}
+				options={{header: props => <SimpleHeader {...props} />, title: '오픈소스 라이선스'}}
 			/>
 		</MyStack.Navigator>
 	);

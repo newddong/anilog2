@@ -26,7 +26,7 @@ const NoticeList = ({route}) => {
 	}, []);
 
 	const renderItem = ({item, index}) => {
-		console.log('item', item);
+		// console.log('item', item);
 		const date = moment(item.announcement_date).format('YYYY.MM.DD');
 		return <OneNotice uptitle={date} downtitle={item.announcement_title} contents={item.announcement_contents} />;
 	};

@@ -208,6 +208,7 @@ import profileDefault294 from './profileDefault294';
 import check64 from './check64';
 import newMainLogo from './newMainLogo';
 import iconL from './iconL';
+import phone54 from './phone54';
 import DP from 'Root/config/dp';
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK, MAINBLACK} from 'Root/config/color';
 
@@ -517,3 +518,4 @@ export const Check36_black = makeSvg(check36_black, size36, MAINBLACK);
 export const Check64 = makeSvg(check64, size64);
 export const NewMainLogo = makeSvg(newMainLogo, {width: 136 * DP, height: 64 * DP});
 export const IconL = makeSvg(iconL, {width: 14 * DP, height: 14 * DP});
+export const Phone54 = makeSvg(phone54, {width: 54 * DP, height: 54 * DP});

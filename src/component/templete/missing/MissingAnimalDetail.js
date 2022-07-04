@@ -1,7 +1,6 @@
 import React, {useRef} from 'react';
 import {Image, TouchableOpacity, FlatList, TouchableWithoutFeedback, Platform, PermissionsAndroid, StyleSheet} from 'react-native';
 import {Text, View} from 'react-native';
-import {reportDetail, temp_style} from 'Templete/style_templete';
 import FeedContent from 'Organism/feed/FeedContent';
 import {useNavigation} from '@react-navigation/core';
 import {favoriteFeed, getFeedDetailById, getMissingReportList} from 'Root/api/feedapi';
@@ -10,12 +9,10 @@ import moment from 'moment';
 import {txt} from 'Root/config/textstyle';
 import ViewShot from 'react-native-view-shot';
 import Modal from 'Root/component/modal/Modal';
-import {PosterSave} from 'Component/atom/icon';
 import {phoneFomatter} from 'Root/util/stringutil';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {GRAY10, GRAY30, GRAY40, WHITE} from 'Root/config/color';
 import Loading from 'Root/component/molecules/modal/Loading';
-import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
 import MissingReportItem from 'Root/component/organism/listitem/MissingReportItem';
 import {NETWORK_ERROR} from 'Root/i18n/msg';
@@ -28,6 +25,7 @@ export default MissingAnimalDetail = props => {
 	const [data, setData] = React.useState('false');
 	const [comments, setComments] = React.useState(); //더보기 클릭 State
 	const [missingList, setMissingList] = React.useState('false');
+	const [pressed, setPressed] = React.useState(false);
 	const viewShotRef = useRef();
 	const flatlist = useRef();
 
@@ -36,6 +34,7 @@ export default MissingAnimalDetail = props => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			fetchFeedData();
 			getCommnetList();
+			setPressed(false);
 		});
 		return unsubscribe;
 	}, []);
@@ -181,26 +180,29 @@ export default MissingAnimalDetail = props => {
 	//실종 게시글 리스트의 아이템 클릭
 	const onClickLabel = (status, id, item) => {
 		// console.log(`\nMissingReportList:onLabelClick() - status=>${status} id=>${id} item=>${JSON.stringify(item)}`);
-		let sexValue = '';
-		switch (status) {
-			case 'missing':
-				switch (item.missing_animal_sex) {
-					case 'male':
-						sexValue = '남';
-						break;
-					case 'female':
-						sexValue = '여';
-						break;
-					case 'male':
-						sexValue = '성별모름';
-						break;
-				}
-				const titleValue = item.missing_animal_species + '/' + item.missing_animal_species_detail + '/' + sexValue;
-				navigation.push('MissingAnimalDetail', {title: titleValue, _id: id});
-				break;
-			case 'report':
-				navigation.push('ReportDetail', {_id: id});
-				break;
+		setPressed(true);
+		if (!pressed) {
+			let sexValue = '';
+			switch (status) {
+				case 'missing':
+					switch (item.missing_animal_sex) {
+						case 'male':
+							sexValue = '남';
+							break;
+						case 'female':
+							sexValue = '여';
+							break;
+						case 'male':
+							sexValue = '성별모름';
+							break;
+					}
+					const titleValue = item.missing_animal_species + '/' + item.missing_animal_species_detail + '/' + sexValue;
+					navigation.navigate({key: item._id + new Date().getTime(), name: 'MissingAnimalDetail', params: {title: titleValue, _id: id}});
+					break;
+				case 'report':
+					navigation.navigate({key: item._id + new Date().getTime(), name: 'ReportDetail', params: {_id: id}});
+					break;
+			}
 		}
 	};
 
@@ -310,18 +312,17 @@ export default MissingAnimalDetail = props => {
 				navigation.navigate('LoginRequired');
 			});
 		} else {
-			navigation.push('FeedCommentList', {feedobject: data, showAllContents: true, reply: comment});
+			navigation.navigate('FeedCommentList', {feedobject: data, showAllContents: true, reply: comment});
 		}
 	};
 
 	//댓글 모두보기 클릭
 	const moveToCommentPage = () => {
-		navigation.push('FeedCommentList', {feedobject: data, showAllContents: true, showKeyboard: true});
+		navigation.navigate('FeedCommentList', {feedobject: data, showAllContents: true, showKeyboard: true});
 	};
 
 	//답글 더보기 클릭
 	const showChild = index => {
-		console.log('showChild', index);
 		scrollToReply(index);
 	};
 
@@ -348,7 +349,7 @@ export default MissingAnimalDetail = props => {
 		comment_obj.comment_index = findParentIndex;
 		comment_obj.viewOffset = viewOffset;
 
-		navigation.push('FeedCommentList', {feedobject: data, edit: comment}); // 수정하려는 댓글 정보를 포함해서 보냄
+		navigation.navigate('FeedCommentList', {feedobject: data, edit: comment}); // 수정하려는 댓글 정보를 포함해서 보냄
 	};
 
 	const header = () => {
@@ -409,7 +410,7 @@ export default MissingAnimalDetail = props => {
 			);
 		};
 		return (
-			<View style={{alignItems: 'center'}}>
+			<View style={{alignItems: 'center', paddingTop: 10 * DP}}>
 				<ReplyWriteBox onPressReply={moveToCommentPage} onWrite={moveToCommentPage} isProtectRequest={true} />
 				<View style={[{paddingVertical: 50 * DP}]}>
 					<Text style={[txt.noto24, {width: 694 * DP, alignSelf: 'center'}]}>실종/제보 더보기</Text>
@@ -476,7 +477,6 @@ const MissingAnimalTitle = props => {
 //포스터 동물 정보 View 컴포넌트
 const MissingAnimalText = props => {
 	const data = props.data;
-	console.log('data missing_animal_date', data.missing_animal_date);
 	if (!data.missing_animal_date) return false;
 	let splitAddress = data.missing_animal_lost_location.split('"');
 	let newMissingAddress = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];

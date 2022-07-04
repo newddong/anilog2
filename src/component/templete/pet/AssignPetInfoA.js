@@ -129,8 +129,8 @@ export default AssignPetInfoA = props => {
 	const gotoNextStep = () => {
 		// console.log('data, ', data.pet_species_detail);
 		props.route.name == 'AssignProtectAnimalType'
-			? props.navigation.push('AssignProtectAnimalAge', data)
-			: props.navigation.push('AssignPetInfoB', {data: data, isAdoptRegist: isAdoptRegist});
+			? props.navigation.navigate('AssignProtectAnimalAge', data)
+			: props.navigation.navigate('AssignPetInfoB', {data: data, isAdoptRegist: isAdoptRegist});
 	};
 
 	return (

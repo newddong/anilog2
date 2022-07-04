@@ -101,7 +101,7 @@ export default PhoneNumVerification = props => {
 	};
 
 	React.useEffect(() => {
-		console.log('plzz valid', validName, validMobile.current, validPhone);
+		// console.log('plzz valid', validName, validMobile.current, validPhone);
 		if (validName && validPhone) {
 			props.onValid(true);
 		}
@@ -109,7 +109,7 @@ export default PhoneNumVerification = props => {
 
 	React.useEffect(() => {
 		let isValid = validVerifyNum.current && validMobile.current && props.asyncConfirm.isConfirm && validName;
-		console.log('isValid', isValid);
+		// console.log('isValid', isValid);
 		if (!isValid) {
 			// !validVerifyNum.current ? console.log('validVerifyNum.current') : null;
 			!validMobile.current ? console.log('validMobile.current') : null;
@@ -137,15 +137,11 @@ export default PhoneNumVerification = props => {
 					validator={nameValidator}
 					value={userName}
 					confirm={nameValidator}
-					// confirm
-
-					// showMsg={true}
 					alert_msg={'이름은 2자 이상으로 설정해주세요 '}
 					confirm_msg={'양식에 맞는 이름입니다.'}
 					maxLength={15}
 				/>
 			</View>
-			{/* <View style={[temp_style.input30, phoneNumVerification.input30]}> */}
 			<View
 				style={[
 					styles.inputWithSelect,

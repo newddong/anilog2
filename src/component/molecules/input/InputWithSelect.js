@@ -71,6 +71,8 @@ const InputWithSelect = props => {
 				style={{
 					flexDirection: 'row',
 					alignItems: 'center',
+					justifyContent: 'space-between',
+					width: 694 * DP,
 				}}>
 				{/* <NormalDropDown menu={props.items} width={200} defaultIndex={props.defaultIndex ? props.defaultIndex : 0} onSelect={onSelectDropDown} /> */}
 				<SelectInput onPressInput={onSelectDropDown} noBorder={true} value={dropdownVal} width={200} />
@@ -88,7 +90,7 @@ const InputWithSelect = props => {
 						validator={validator}
 						maxlength={props.maxlength}
 						onValid={onValid}
-						width={props.width || 450}
+						width={props.width - 20 * DP || 450}
 						height={104}
 						verified={props.verified}
 					/>
@@ -120,7 +122,7 @@ InputWithSelect.defaultProps = {
 
 const styles = StyleSheet.create({
 	container: {
-		maxWidth: 654 * DP,
+		maxWidth: 694 * DP,
 	},
 });
 

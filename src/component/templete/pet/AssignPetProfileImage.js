@@ -151,7 +151,7 @@ export default AssignPetProfileImage = ({route}) => {
 
 	//프로필이미지 클릭 시 PhotoSelect로 이동
 	const selectPhoto = () => {
-		navigation.push('SinglePhotoSelect', {prev: {name: route.name, key: route.key}});
+		navigation.navigate('SinglePhotoSelect', {prev: {name: route.name, key: route.key}});
 	};
 
 	const onNicknameChange = text => {
@@ -172,7 +172,7 @@ export default AssignPetProfileImage = ({route}) => {
 					Modal.popOneBtn('이미 사용자가 있는 닉네임입니다.', '확인', () => Modal.close());
 				} else {
 					console.log('data', data);
-					navigation.push('AssignPetInfoA', {data: data, isAdoptRegist: isAdoptRegist});
+					navigation.navigate('AssignPetInfoA', {data: data, isAdoptRegist: isAdoptRegist});
 				}
 				protect_obj.isAdoptMsgShowed = false;
 			},

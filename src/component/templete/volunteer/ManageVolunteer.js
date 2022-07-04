@@ -105,11 +105,11 @@ export default ManageVolunteer = ({route}) => {
 
 	// 봉사활동 아이템 클릭 => 봉사활동 신청서 필요 데이터 : 보호소 정보 / 해당 봉사활동 데이터
 	const goToAssignVolunteer = shelterData => {
-		isShelterUser ? navigation.push('ShelterVolunteerForm', shelterData) : navigation.push('UserVolunteerForm', shelterData);
+		isShelterUser ? navigation.navigate('ShelterVolunteerForm', shelterData) : navigation.navigate('UserVolunteerForm', shelterData);
 	};
 
 	const onClickLabel = shelterData => {
-		isShelterUser ? navigation.push('ShelterVolunteerForm', shelterData) : navigation.push('UserVolunteerForm', shelterData);
+		isShelterUser ? navigation.navigate('ShelterVolunteerForm', shelterData) : navigation.navigate('UserVolunteerForm', shelterData);
 	};
 
 	const whenEmpty = () => {

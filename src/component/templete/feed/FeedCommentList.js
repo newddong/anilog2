@@ -438,21 +438,23 @@ export default FeedCommentList = props => {
 	};
 
 	const header = () => {
-		return (
-			<>
-				<FeedContent
-					data={params.feedobject}
-					deleteFeed={deleteFeedItem}
-					showAllContents={params.showAllContents}
-					routeName={props.route.name}
-					showMedia={false}
-				/>
-				<View style={[{width: 694 * DP, height: 2 * DP, marginTop: 10 * DP, backgroundColor: GRAY40, alignSelf: 'center'}]} />
-				<View style={[{width: 694 * DP, alignSelf: 'center', marginTop: 20 * DP}]}>
-					{comments.length == 0 ? <></> : <Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>}
-				</View>
-			</>
-		);
+		if (params && params.feedobject) {
+			return (
+				<>
+					<FeedContent
+						data={params.feedobject}
+						deleteFeed={deleteFeedItem}
+						showAllContents={params.showAllContents}
+						routeName={props.route.name}
+						showMedia={false}
+					/>
+					<View style={[{width: 694 * DP, height: 2 * DP, marginTop: 10 * DP, backgroundColor: GRAY40, alignSelf: 'center'}]} />
+					<View style={[{width: 694 * DP, alignSelf: 'center', marginTop: 20 * DP}]}>
+						{comments.length == 0 ? <></> : <Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>}
+					</View>
+				</>
+			);
+		}
 	};
 
 	const renderItem = ({item, index}) => {

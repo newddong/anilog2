@@ -425,7 +425,7 @@ export default MissingForm = props => {
 
 	//사진 추가
 	const moveToMultiPhotoSelect = () => {
-		navigation.push('MultiPhotoSelect', {prev: {name: route.name, key: route.key}});
+		navigation.navigate('MultiPhotoSelect', {prev: {name: route.name, key: route.key}});
 	};
 
 	const feedInput = props.feedInput();

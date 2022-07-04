@@ -3,8 +3,6 @@ import {Platform, ScrollView, Text, TextInput, TouchableOpacity, View, StyleShee
 import {APRI10, GRAY10, GRAY20, GRAY40, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {AddItem92, Arrow_Down_GRAY10, Arrow_Up_GRAY10, Cross52, Edit46, Home48Border, IconL, NextMark} from 'Atom/icon';
-import OnOffSwitch from 'Molecules/select/OnOffSwitch';
-import PetImageLabel from 'Molecules/label/PetImageLabel';
 import {login_style, petInfoSetting, setPetInformation, temp_style, userInfoSetting_style} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
 import {getUserInfoById, removeUserFromFamily, updatePetDetailInformation} from 'Root/api/userapi';
@@ -17,19 +15,17 @@ import {PET_KIND, WEIGHT_INPUT_FORM_INFO} from 'Root/i18n/msg';
 import Loading from 'Root/component/molecules/modal/Loading';
 import PetLabel148 from 'Root/component/molecules/label/PetLabel148';
 import SelectInput from 'Root/component/molecules/button/SelectInput';
-import KeyBoardInputBackGround from 'Root/component/molecules/input/KeyboardInputBackGround';
 import TabSelectFilled_Type1 from 'Root/component/molecules/tab/TabSelectFilled_Type1';
 import RadioBox from 'Root/component/molecules/select/RadioBox';
 import DatePicker from 'Root/component/molecules/select/DatePicker';
 import moment from 'moment';
 import Input30 from 'Root/component/molecules/input/Input30';
+import {useNavigation} from '@react-navigation/core';
 
-//이 화면에 들어오면서 특정 _id를 API 연동으로 데이터를 가져 옴.
-//이전 화면에서 모든 데이터를 가진 상태에서 들어오는 것이 아님.
-//변수들은 모두 db 변수로 스네이크 형식으로 추후에 변경 필요.
-
-export default PetInfoSetting = ({route, navigation}) => {
-	console.log('PetInfoSetting / route.params', route.params);
+//반려동물 상세 페이지
+export default PetInfoSetting = ({route}) => {
+	// console.log('PetInfoSetting / route.params', route.params);
+	const navigation = useNavigation();
 	const [petData, setPetData] = React.useState('false'); // 현재 반려동물 프로필 데이터
 	const [familyAccountList, setFamilyAccountList] = React.useState([]); //가족 계정 목록 데이터
 	const [isChiefUser, setIsChiefUser] = React.useState(false);
@@ -66,17 +62,13 @@ export default PetInfoSetting = ({route, navigation}) => {
 		editMode ? modifyRef.current.focus() : null;
 	}, [editMode]);
 
-	React.useEffect(() => {
-		console.log('펫 데이터 바뀜', petData);
-	}, [petData]);
-	console.log('petdata', petData.pet_status);
 	const setFamily = () => {
 		getUserInfoById(
 			{userobject_id: route.params.pet_id},
 			result => {
-				console.log('result / GetUserInfoById / PetInfoSetting', result.msg);
+				// console.log('result / GetUserInfoById / PetInfoSetting', result.msg);
 				setFamilyAccountList(result.msg.pet_family);
-				navigation.setOptions({title: result.msg.user_nickname});
+				navigation.setOptions({title: result.msg.user_nickname, pet_id: result.msg._id});
 				userGlobalObject.userInfo.user_nickname == result.msg.pet_family[0].user_nickname ? setIsChiefUser(true) : setIsChiefUser(false);
 				setPetData(result.msg);
 				// console.log('result . pet data', result.msg);
@@ -142,17 +134,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 
 	//프로필 변경 버튼
 	const changeProfile = () => {
-		navigation.push('ChangePetProfileImage', petData);
-	};
-
-	//상세정보
-	const goToSetPetInfo = () => {
-		navigation.push('SetPetInformation', petData);
-	};
-
-	//접종 내역 버튼
-	const goToVaccinationRecord = () => {
-		navigation.push('VaccinationRecord', {userobject_id: petData._id});
+		navigation.navigate('ChangePetProfileImage', petData);
 	};
 
 	//가족계정 추가 버튼
@@ -162,7 +144,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 		} else if (familyAccountList.length == 3) {
 			Modal.popOneBtn('가족계정은 최대 3인까지 등록가능합니다!', '확 인', () => Modal.close());
 		} else {
-			navigation.push('AddFamilyAccount', {route_name: route.name, pet_id: petData._id});
+			navigation.navigate('AddFamilyAccount', {route_name: route.name, pet_id: petData._id});
 		}
 	};
 
@@ -188,7 +170,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 
 	//가족 계정의 프로필 라벨 클릭
 	const onClickFamilyLabel = data => {
-		navigation.push('UserProfile', {userobject: data});
+		navigation.navigate('UserProfile', {userobject: data});
 	};
 
 	//계정 공개 여부 변경 Switch On
@@ -199,7 +181,7 @@ export default PetInfoSetting = ({route, navigation}) => {
 
 	//반려동물 입양 상태 변경
 	const goToAnimalAdoption = () => {
-		navigation.push('AnimalAdoption', petData);
+		navigation.navigate('AnimalAdoption', petData);
 	};
 
 	const showMoreIntro = () => {
@@ -356,10 +338,12 @@ export default PetInfoSetting = ({route, navigation}) => {
 			() => Modal.close(),
 		);
 	};
+
 	//업로드 및 팔로우 클릭
 	const onClickUserInfo = () => {
-		navigation.push('UserProfile', {userobject: petData});
+		navigation.navigate('UserProfile', {userobject: petData});
 	};
+
 	// 소개란 반려동물 소개란 수정
 	const modifyIntroText = text => {
 		const breaks = text.split(/\r\n|\r|\n/).length;
@@ -385,7 +369,6 @@ export default PetInfoSetting = ({route, navigation}) => {
 		} else {
 			let date = moment(petData.pet_birthday).format('YYYY.MM.DD');
 			date = date.toString();
-			console.log('data', date);
 			return date;
 		}
 	};

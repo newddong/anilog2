@@ -80,12 +80,12 @@ export default MissingReportList = props => {
 
 	//제보 게시글 쓰기 클릭
 	const moveToReportForm = () => {
-		navigation.push('FeedWrite', {feedType: 'Report', tab: 'Protection'});
+		navigation.navigate('FeedWrite', {feedType: 'Report', tab: 'Protection'});
 	};
 
 	//실종 게시글 쓰기 클릭
 	const moveToMissingForm = () => {
-		navigation.push('FeedWrite', {feedType: 'Missing', tab: 'Protection'});
+		navigation.navigate('FeedWrite', {feedType: 'Missing', tab: 'Protection'});
 	};
 
 	//실종제보 게시글의 좋아요 태그 클릭
@@ -122,10 +122,10 @@ export default MissingReportList = props => {
 						break;
 				}
 				const titleValue = item.missing_animal_species + '/' + item.missing_animal_species_detail + '/' + sexValue;
-				navigation.push('MissingAnimalDetail', {title: titleValue, _id: id});
+				navigation.navigate('MissingAnimalDetail', {title: titleValue, _id: id});
 				break;
 			case 'report':
-				navigation.push('ReportDetail', {_id: id});
+				navigation.navigate('ReportDetail', {_id: id});
 				break;
 		}
 	};

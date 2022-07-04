@@ -26,12 +26,15 @@ export default ReportDetail = props => {
 	const [data, setData] = React.useState('false');
 	const [comments, setComments] = React.useState('false'); //더보기 클릭 State
 	const [reportList, setReportList] = React.useState('false');
+	const [pressed, setPressed] = React.useState(false);
+
 	const flatlist = React.useRef();
 	// 제보 데이터 불러오기 (아직 API 미작업 )
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			fetchFeedDetail();
 			getCommnetList();
+			setPressed(false);
 		});
 		navigation.setOptions({title: '제보'});
 		return unsubscribe;
@@ -177,27 +180,31 @@ export default ReportDetail = props => {
 
 	//실종 게시글 리스트의 아이템 클릭
 	const onClickLabel = (status, id, item) => {
-		// console.log(`\nMissingReportList:onLabelClick() - status=>${status} id=>${id} item=>${JSON.stringify(item)}`);
-		let sexValue = '';
-		switch (status) {
-			case 'missing':
-				switch (item.missing_animal_sex) {
-					case 'male':
-						sexValue = '남';
-						break;
-					case 'female':
-						sexValue = '여';
-						break;
-					case 'male':
-						sexValue = '성별모름';
-						break;
-				}
-				const titleValue = item.missing_animal_species + '/' + item.missing_animal_species_detail + '/' + sexValue;
-				navigation.push('MissingAnimalDetail', {title: titleValue, _id: id});
-				break;
-			case 'report':
-				navigation.push('ReportDetail', {_id: id});
-				break;
+		setPressed(true);
+		if (!pressed) {
+			let sexValue = '';
+			switch (status) {
+				case 'missing':
+					switch (item.missing_animal_sex) {
+						case 'male':
+							sexValue = '남';
+							break;
+						case 'female':
+							sexValue = '여';
+							break;
+						case 'male':
+							sexValue = '성별모름';
+							break;
+					}
+					const titleValue = item.missing_animal_species + '/' + item.missing_animal_species_detail + '/' + sexValue;
+					// navigation.push('MissingAnimalDetail', {title: titleValue, _id: id});
+					navigation.navigate({key: item._id + new Date().getTime(), name: 'MissingAnimalDetail', params: {title: titleValue, _id: id}});
+
+					break;
+				case 'report':
+					navigation.navigate({key: item._id + new Date().getTime(), name: 'ReportDetail', params: {_id: id}});
+					break;
+			}
 		}
 	};
 
@@ -241,13 +248,13 @@ export default ReportDetail = props => {
 				navigation.navigate('LoginRequired');
 			});
 		} else {
-			navigation.push('FeedCommentList', {feedobject: data, showAllContents: true, reply: comment});
+			navigation.navigate('FeedCommentList', {feedobject: data, showAllContents: true, reply: comment});
 		}
 	};
 
 	//댓글 더보기 클릭
 	const moveToCommentList = () => {
-		navigation.push('FeedCommentList', {feedobject: data, showAllContents: true, showKeyboard: true});
+		navigation.navigate('FeedCommentList', {feedobject: data, showAllContents: true, showKeyboard: true});
 	};
 
 	//댓글 대댓글 삭제
@@ -292,7 +299,7 @@ export default ReportDetail = props => {
 		comment_obj.isChild = isChild;
 		comment_obj.comment_index = findParentIndex;
 		comment_obj.viewOffset = viewOffset;
-		navigation.push('FeedCommentList', {feedobject: data, edit: comment}); // 수정하려는 댓글 정보를 포함해서 보냄
+		navigation.navigate('FeedCommentList', {feedobject: data, edit: comment}); // 수정하려는 댓글 정보를 포함해서 보냄
 	};
 
 	const onPressReqeustPhoto = () => {

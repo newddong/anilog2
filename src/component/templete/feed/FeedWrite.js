@@ -36,8 +36,7 @@ export default FeedWrite = props => {
 	const [previousPhotoList, setPreviousPhotoList] = React.useState([]);
 	const [photoToDelete, setPhotoToDelete] = React.useState([]); // 삭제된 사진 인덱스 리스트
 	const [isSearchTag, setSearchTag] = React.useState(false);
-	const [publicSetting, setPublicSetting] = React.useState('전체 공개'); //공개 여부
-
+	const [publicSetting, setPublicSetting] = React.useState('전체공개'); //공개 여부
 	const keyboardArea = useKeyboardBottom(0 * DP);
 	const scrollref = React.useRef();
 	const scrolloffset = React.useRef(0);
@@ -89,7 +88,8 @@ export default FeedWrite = props => {
 
 	React.useEffect(() => {
 		if (props.route.name == 'FeedEdit') {
-			// console.log('feedEdit 진입', props.route.params);
+			console.log('feedEdit 진입', props.route.params);
+
 			if (props.route.params?.feed_type == 'missing') {
 				onPressMissingWrite();
 			}
@@ -276,7 +276,9 @@ export default FeedWrite = props => {
 	};
 
 	const onSelectPublic = (item, index) => {
-		let status = 'public';
+		console.log('라디오 박스', item, index);
+		// let status = 'public';
+		let status = 'private';
 		switch (index) {
 			case 0:
 				status = 'public';
@@ -395,14 +397,17 @@ export default FeedWrite = props => {
 								임보일기
 							</CheckBoxItem>
 							<View style={{height: 38 * DP, width: 2 * DP, backgroundColor: GRAY10}}></View>
-							<RadioBoxGroup style={{flexDirection: 'row', justifyContent: 'space-between', width: 484 * DP}} onSelect={onSelectPublic}>
+							<RadioBoxGroup
+								defaultSelect={props.route.params?.feed_public_type == 'public' ? 0 : props.route.params.feed_public_type == 'private' ? 1 : 2}
+								style={{flexDirection: 'row', justifyContent: 'space-between', width: 484 * DP}}
+								onSelect={onSelectPublic}>
 								<RadioBoxItem textStyle={[txt.noto26, {lineHeight: 38 * DP}]}>전체공개</RadioBoxItem>
 								<RadioBoxItem textStyle={[txt.noto26, {lineHeight: 38 * DP}]}>비공개</RadioBoxItem>
 								<RadioBoxItem textStyle={[txt.noto26, {lineHeight: 38 * DP}]}>팔로워공개</RadioBoxItem>
 							</RadioBoxGroup>
-							{/* <View style={{width:474*DP,backgroundColor:'red'}}>
-							<RadioBoxItem items={['전체공개','비공개','팔로워공개']} width={160*DP}/>
-						</View> */}
+							{/* <View style={{width: 474 * DP, backgroundColor: 'red'}}>
+								<RadioBoxItem items={['전체공개', '비공개', '팔로워공개']} width={160 * DP} />
+							</View> */}
 						</View>
 						{feedInput()}
 						{!isSearchTag && setWriteModeState()}

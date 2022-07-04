@@ -99,7 +99,6 @@ export default MyHeader = ({route, options, back}) => {
 							} else if (selected?.user_type === 'user') {
 								navigation.navigate('UserInfoSetting', {token: selected._id}); //userObject
 							}
-
 							Modal.close();
 						} else {
 							navigation.push('AssignPetProfileImage', {userobject_id: userData._id, previousRouteName: route.name});

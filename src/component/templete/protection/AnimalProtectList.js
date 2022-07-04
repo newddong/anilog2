@@ -64,13 +64,13 @@ export default AnimalProtectList = ({route}) => {
 	};
 
 	const onPressLabel = (item, index) => {
-		navigation.push('UserProfile', {userobject: item});
+		navigation.navigate({key: item._id, name: 'UserProfile', params: {userobject: item}});
 	};
 
 	const renderItem = ({item, index}) => {
 		return (
 			<TouchableOpacity onPress={() => onPressLabel(item, index)} style={[style.itemContainer]}>
-				<AnimalInfo data={item} />
+				<AnimalInfo data={item} onPressLabel={() => onPressLabel(item, index)} />
 			</TouchableOpacity>
 		);
 	};

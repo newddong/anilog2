@@ -10,9 +10,11 @@ import {AddItem64, EmptyIcon} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Loading from 'Root/component/molecules/modal/Loading';
+import {useNavigation} from '@react-navigation/core';
 
 //ShelterMenu => 보호중인 동물 [Nav명 - ShelterProtectAnimalList]
-export default AidRequestManage = ({route, navigation}) => {
+export default AidRequestManage = ({route}) => {
+	const navigation = useNavigation();
 	// console.log('AidRequestManage');
 	const [hasPostAnimalList, setHasPostAnimalList] = React.useState('false');
 	const [noPostAnimalList, setNoPostAnimalList] = React.useState('false');
@@ -39,7 +41,7 @@ export default AidRequestManage = ({route, navigation}) => {
 	}, []);
 
 	const addProtectAnimal = () => {
-		navigation.push('AssignProtectAnimalImage');
+		navigation.navigate('AssignProtectAnimalImage');
 	};
 
 	const moveToProtectRequest = data => {
@@ -71,14 +73,14 @@ export default AidRequestManage = ({route, navigation}) => {
 			'게시글 보기',
 			() => moveToProtectRequest(hasPostAnimalList[index]),
 			() => {
-				navigation.push('WriteAidRequest', {data: hasPostAnimalList[index], isRePost: true});
+				navigation.navigate('WriteAidRequest', {data: hasPostAnimalList[index], isRePost: true});
 			},
 		);
 	};
 
 	const onSelectNoPostList = index => {
 		Modal.popAdoptionInfoModalWithOneBtn(noPostAnimalList[index], '보호요청 글쓰기', () =>
-			navigation.push('WriteAidRequest', {data: noPostAnimalList[index]}),
+			navigation.navigate('WriteAidRequest', {data: noPostAnimalList[index]}),
 		);
 	};
 

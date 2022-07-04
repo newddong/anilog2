@@ -90,7 +90,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				page: offset,
 			},
 			result => {
-				console.log('result / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', result.msg.length);
+				console.log('result / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', result.total_count);
 				//현재 보고 있는 보호요청게시글의 작성자(보호소)의 모든 보호요청게시글이 담겨 있는 writersAnotherRequests
 				//그러나 현재 보고 있는 보호요청게시글은 해당 리스트에 출력이 되어서는 안됨 => Filter처리
 				const res = result.msg;
@@ -116,11 +116,11 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	//리스트 페이징 작업
 	const onEndReached = () => {
-		console.log('EndReached', writersAnotherRequests.length % PROTECT_REQUEST_DETAIL_LIMIT);
+		console.log('EndReached', writersAnotherRequests.length % (PROTECT_REQUEST_DETAIL_LIMIT - 1));
 		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
 		//리뷰 메인 페이지에서는 필터가 적용이 되었을 때도 api 접속 불필요
-		if (writersAnotherRequests.length % PROTECT_REQUEST_DETAIL_LIMIT == 0) {
-			getProtectRequestList(data.protect_request_writer_id._id);
+		if (writersAnotherRequests.length % (PROTECT_REQUEST_DETAIL_LIMIT - 1) == 0) {
+			getProtectRequestList(data);
 		}
 	};
 
@@ -259,7 +259,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	//보호소 프로필 클릭
 	const onClickShelterLabel = data => {
-		navigation.navigate('UserProfile', {userobject: data});
+		navigation.navigate({key: data._id, name: 'UserProfile', params: {userobject: data}});
 	};
 
 	//특정 댓글로 스크롤 이동 함수

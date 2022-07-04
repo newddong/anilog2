@@ -111,7 +111,8 @@ export default FavoriteArticle = ({route, isFavorite}) => {
 			copy[index].checkBoxState = !copy[index].checkBoxState;
 			setData(copy);
 		} else {
-			navigation.navigate('ArticleDetail', {community_object: data[index], reset: true});
+			// navigation.navigate('ArticleDetail', {community_object: data[index], reset: true});
+			navigation.navigate({key: data[index]._id, name: 'ArticleDetail', params: {reset: true, community_object: data[index]}});
 		}
 	};
 

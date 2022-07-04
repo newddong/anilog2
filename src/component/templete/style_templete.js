@@ -238,7 +238,7 @@ export const temp_style = StyleSheet.create({
 		paddingTop: 10,
 	},
 	phoneNumVerification: {
-		width: 659 * DP,
+		width: 694 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
@@ -3084,7 +3084,7 @@ export const feedListForHashTag = StyleSheet.create({
 		borderRadius: 40 * DP,
 		paddingLeft: 40 * DP,
 		marginBottom: 10 * DP,
-		borderColor: APRI10,
+		// borderColor: APRI10,
 		justifyContent: 'center',
 	},
 	postCategory: {

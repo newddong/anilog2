@@ -10,12 +10,14 @@ import DP from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Loading from 'Root/component/molecules/modal/Loading';
+import {useNavigation} from '@react-navigation/core';
 
 //ShelterMenu => 보호요청 게시글 작성하기 버튼 클릭
 //연관 테이블 : ShelterProtectAnimalObject
-export default AidRequestAnimalList = ({route, navigation}) => {
+export default AidRequestAnimalList = ({route}) => {
 	const [hasPostAnimalList, setHasPostAnimalList] = React.useState('false');
 	const [noPostAnimalList, setNoPostAnimalList] = React.useState('false');
+	const navigation = useNavigation();
 
 	React.useEffect(() => {
 		// 토큰을 토대로 해당 보호소의 보호동물 목록을 서버로부터 가져옴.
@@ -68,19 +70,19 @@ export default AidRequestAnimalList = ({route, navigation}) => {
 			'다시 게시하기',
 			'게시글 보기',
 			() => moveToProtectRequest(hasPostAnimalList[index]),
-			() => navigation.push('WriteAidRequest', {data: hasPostAnimalList[index]}),
+			() => navigation.navigate('WriteAidRequest', {data: hasPostAnimalList[index]}),
 		);
 	};
 
 	const onSelectNoPostList = index => {
 		console.log('onSelectNoPostList / index', index);
 		Modal.popAdoptionInfoModalWithOneBtn(noPostAnimalList[index], '보호요청 글쓰기', () =>
-			navigation.push('WriteAidRequest', {data: noPostAnimalList[index]}),
+			navigation.navigate('WriteAidRequest', {data: noPostAnimalList[index]}),
 		);
 	};
 
 	const onPressAddProtectAnimal = () => {
-		navigation.push('AssignProtectAnimalImage');
+		navigation.navigate('AssignProtectAnimalImage');
 	};
 
 	const whenEmpty = () => {

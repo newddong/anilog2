@@ -74,7 +74,7 @@ const AssignUserHabitation = props => {
 	};
 
 	const goToNextStep = () => {
-		props.navigation.push('AssignUserProfileImage', data);
+		props.navigation.navigate('AssignUserProfileImage', data);
 	};
 
 	const onPressCity = () => {

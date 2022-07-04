@@ -3,7 +3,6 @@ import {Text, View, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import {BackArrow32, CircleMeatBall70} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {getUserInfoById} from 'Root/api/userapi';
-import {APRI10, WHITE} from 'Root/config/color';
 import PetLabel70 from 'Root/component/molecules/label/PetLabel70';
 import {useNavigation} from '@react-navigation/core';
 export default MyHeader = ({route, options, back}) => {
@@ -61,12 +60,18 @@ export default MyHeader = ({route, options, back}) => {
 		if (!pressed) {
 			if (data.user_type) {
 				if (data?.user_type == 'pet') {
-					console.log('pet_id', options);
-					navigation.navigate({key: new Date().getTime(), name: 'PetInfoSetting', params: {pet_id: data._id}});
+					console.log('pet_id', options.pet_id);
+					if (options.pet_id != data._id) {
+						navigation.navigate({key: new Date().getTime(), name: 'PetInfoSetting', params: {pet_id: data._id}});
+					} else {
+						setPressed(false);
+					}
 				} else if (data?.user_type === 'user') {
 					if (route.name == 'PetInfoSetting') {
 						//현재 보고 있는 화면이 UserMenu일 경우에는 따로 navigate 실행 X
 						navigation.navigate('UserMenu', {userobject: data});
+					} else {
+						setPressed(false);
 					}
 				}
 				Modal.close();
@@ -86,13 +91,14 @@ export default MyHeader = ({route, options, back}) => {
 					selected => {
 						if (selected.user_type) {
 							if (selected?.user_type == 'pet') {
-								console.log('route', route.name);
-								// navigation.navigate('PetInfoSetting', {pet_id: selected._id});
-								navigation.navigate({key: new Date().getTime(), name: 'PetInfoSetting', params: {pet_id: selected._id}});
+								if (options.pet_id != selected._id) {
+									navigation.navigate({key: new Date().getTime(), name: 'PetInfoSetting', params: {pet_id: selected._id}});
+								} else {
+									setPressed(false);
+								}
 							} else if (selected?.user_type === 'user') {
 								navigation.navigate('UserInfoSetting', {token: selected._id}); //userObject
 							}
-
 							Modal.close();
 						} else {
 							navigation.push('AssignPetProfileImage', {userobject_id: userData._id, previousRouteName: route.name});
@@ -104,6 +110,7 @@ export default MyHeader = ({route, options, back}) => {
 					},
 				);
 			} catch (err) {
+				setPressed(false);
 				console.log('err ', err);
 			}
 		}

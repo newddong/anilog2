@@ -52,13 +52,13 @@ export default AnimalFromShelter = ({route}) => {
 						break;
 				}
 				const title = protectAnimalObject.protect_animal_species + '/' + protectAnimalObject.protect_animal_species_detail + gender;
-				navigation.push('AnimalProtectRequestDetail', {
+				navigation.navigate('AnimalProtectRequestDetail', {
 					id: protectAnimalObject._id,
 					title: title,
 					writer: protectAnimalObject.protect_request_writer_id._id,
 				});
 			},
-			() => navigation.push('AdoptorInformation', protectAnimalObject.protect_animal_id._id),
+			() => navigation.navigate('AdoptorInformation', protectAnimalObject.protect_animal_id._id),
 		);
 	};
 

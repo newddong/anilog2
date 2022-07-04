@@ -4,11 +4,13 @@ import {getAdoptInfo} from 'Root/api/shelterapi';
 import AnimalProtectDetail from 'Organism/info/AnimalProtectDetail';
 import {login_style, btn_style, temp_style, baseInfo_style} from 'Templete/style_templete';
 import Modal from 'Root/component/modal/Modal';
+import {useNavigation} from '@react-navigation/core';
 
 // ShelterMenu - 나의 보호소 출신동물 - 입양처 보기
 // 연관 테이블 - PRotectionActivityApplicantObject , ProtectRequestObject, ShelterProtectAnimalObject
-export default AdoptorInformation = ({route, navigation}) => {
+export default AdoptorInformation = ({route}) => {
 	// console.log('AdoptorInformation request', route.params);
+	const navigation = useNavigation();
 	const [data, setData] = React.useState('');
 
 	React.useEffect(() => {
@@ -32,7 +34,7 @@ export default AdoptorInformation = ({route, navigation}) => {
 	}, []);
 
 	const onClickAdoptor = data => {
-		navigation.push('UserProfile', {userobject: data});
+		navigation.navigate({key: data._id, name: 'UserProfile', params: {userobject: data}});
 	};
 
 	if (data == '') {

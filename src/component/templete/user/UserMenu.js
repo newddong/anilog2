@@ -99,7 +99,7 @@ export default UserMenu = props => {
 	};
 
 	const onPressMyName = () => {
-		navigation.navigate('UserProfile', {userobject: data});
+		navigation.navigate({key: data._id, name: 'UserProfile', params: {userobject: data}});
 	};
 
 	// 내 정보 수정 클릭

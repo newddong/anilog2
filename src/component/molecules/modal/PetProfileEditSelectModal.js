@@ -146,9 +146,9 @@ const PetProfileEditSelectModal = props => {
 					<View style={[style.listItem, {marginLeft: 10 * DP}]}>
 						<PetLabel68
 							data={item}
-							// onLabelClick={() => {
-							// onClicLabel(item);
-							// }}
+							onLabelClick={() => {
+								onSelect(item);
+							}}
 						/>
 						<View style={[{alignItems: 'center'}, {marginLeft: 30 * DP}]}>
 							<Text style={[{width: 510 * DP}, {height: 46 * DP}, txt.noto30b]}>{item.user_nickname}</Text>

@@ -78,11 +78,17 @@ export default FeedContent = props => {
 	} = props.data;
 	const navigation = useNavigation();
 	const route = useRoute();
-	const [btnStatus, setBtnStatus] = React.useState(false); //더보기 Arrow방향 false면 아래
+	const [pressed, setPressed] = React.useState(false); //더보기 Arrow방향 false면 아래
 	const [show, setShow] = React.useState(false);
 	const [send, setSend] = React.useState();
 	const [isFavorite, setIsFavorite] = React.useState(props.data.is_favorite);
 	const feed_writer = props.data.feed_avatar_id ? props.data.feed_avatar_id : props.data.feed_writer_id;
+
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => setPressed(false));
+		return unsubscribe;
+	}, []);
+
 	React.useEffect(() => {
 		if (feed_avatar_id && feed_avatar_id.user_type === 'pet') {
 			setSend(feed_avatar_id);
@@ -90,7 +96,7 @@ export default FeedContent = props => {
 			setSend(feed_writer_id);
 		}
 	}, [props.data]);
-	// console.log('feed content data', props.data);
+
 	//피드 미트볼 메뉴 - 신고 클릭
 	const onPressReport = context => {
 		console.log('신고 context', context, props.data._id);
@@ -526,20 +532,21 @@ export default FeedContent = props => {
 		}
 	};
 
+	const onPressLabel = user => {
+		setPressed(true);
+		if (!pressed) {
+			console.log('user', user);
+			navigation.navigate({key: user._id, name: 'UserProfile', params: {userobject: user}});
+		}
+	};
+
 	return (
 		<View style={[layoutStyle()]}>
 			<View style={[style.feedContent]}>
 				<View style={[style.userLocationLabel_view_feedContent]}>
 					<View style={[style.userLocationLabel_feedContent]}>
 						{send ? (
-							<UserLocationTimeLabel
-								data={send}
-								onLabelClick={userobject => navigation.navigate('UserProfile', {userobject: userobject})}
-								location={feed_location}
-								time={feed_date}
-								isLarge
-								publicType={props.data.feed_public_type}
-							/>
+							<UserLocationTimeLabel data={send} onClickLabel={onPressLabel} location={feed_location} time={feed_date} isLarge publicType={props.data.feed_public_type}/>
 						) : (
 							<UserLocationTimeLabel empty={true} time={feed_date} isLarge location={feed_location} publicType={props.data.feed_public_type} />
 						)}

@@ -33,7 +33,7 @@ export default SearchArticle = props => {
 
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
-		navigation.push('ArticleDetail', {community_object: getData()[index], searchInput: searchInput});
+		navigation.navigate({key: getData()[index]._id, name: 'ArticleDetail', params: {community_object: getData()[index], searchInput: searchInput}});
 	};
 
 	const [onlyTalk, setOnlyTalk] = React.useState(false);

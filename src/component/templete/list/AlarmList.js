@@ -211,7 +211,8 @@ const AlarmList = props => {
 						if (result.msg.community_type == 'free') {
 							navigation.push('ArticleDetail', {community_object: result.msg});
 						} else {
-							navigation.push('ReviewDetail', {community_object: result.msg});
+							// navigation.push('ReviewDetail', {community_object: result.msg});
+							navigation.navigate({key: result.msg._id, name: 'ReviewDetail', params: {community_object: result.msg}});
 						}
 					},
 					err => {

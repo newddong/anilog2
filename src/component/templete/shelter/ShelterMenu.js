@@ -80,17 +80,17 @@ export default ShelterMenu = ({route}) => {
 
 	//보호소 정보 수정
 	const moveToShelterInfoSetting = () => {
-		navigation.push('ShelterInfoSetting', data._id);
+		navigation.navigate('ShelterInfoSetting', data._id);
 	};
 
 	//동물 추가
 	const moveToAssignProtectAnimalImage = () => {
-		navigation.push('AssignProtectAnimalImage');
+		navigation.navigate('AssignProtectAnimalImage');
 	};
 
 	//게시물 추가
 	const moveToAidRequestAnimalList = () => {
-		navigation.push('AidRequestAnimalList', data._id);
+		navigation.navigate('AidRequestAnimalList', data._id);
 	};
 
 	//로그아웃 기능
@@ -127,67 +127,67 @@ export default ShelterMenu = ({route}) => {
 				break;
 			//나의 보호소 출신 동물
 			case FROM_MY_SHELTER:
-				navigation.push('AnimalFromShelter');
+				navigation.navigate('AnimalFromShelter');
 				break;
 			//봉사활동 신청 관리
 			case MANAGEMENT_OF_VOLUNTEER:
-				navigation.push('ManageShelterVolunteer', data._id);
+				navigation.navigate('ManageShelterVolunteer', data._id);
 				break;
 			//---------------즐겨찾기
 			//친구
 			case FRIENDS:
-				navigation.push('FavoriteUser');
+				navigation.navigate('FavoriteUser');
 				break;
 			//피드 게시글
 			case PEED_CONTENTS:
 				// Modal.popInfoModal();
-				navigation.push('FavoriteFeeds', {token: data._id});
+				navigation.navigate('FavoriteFeeds', {token: data._id});
 				break;
 			//보호요청(저장)
 			case REQ_PROTECTION_SAVE:
-				navigation.push('FavoriteProtectRequest');
+				navigation.navigate('FavoriteProtectRequest');
 				break;
 			//커뮤니티
 			case COMUNITY:
-				navigation.push('FavoriteCommunity');
+				navigation.navigate('FavoriteCommunity');
 				break;
 			//-------------나의 활동
 			//내 게시물
 			case MY_CONTENTS:
-				navigation.push('UserFeeds', {token: data._id});
+				navigation.navigate('UserFeeds', {token: data._id});
 				break;
 			// 나를 태그한 글
 			case TAGED_CONTENTS_FOR_ME:
-				navigation.push('TagMeFeeds', {token: data._id});
+				navigation.navigate('TagMeFeeds', {token: data._id});
 				break;
 			//신청내역
 			case APPLICATION_HISTORY:
-				navigation.push('AppliesRecord', data._id);
+				navigation.navigate('AppliesRecord', data._id);
 				break;
 			// 보호 요청 올린 게시글
 			case UPLOADED_POST_FOR_REQ_PROTECTION:
-				navigation.push('ShelterProtectRequests');
+				navigation.navigate('ShelterProtectRequests');
 				break;
 			//커뮤니티
 			case '커뮤니티 ':
-				navigation.push('MyCommunity');
+				navigation.navigate('MyCommunity');
 				break;
 			// 신청내역
 			case NOTE_LIST:
-				navigation.push('ReceivedMessage', {token: data});
+				navigation.navigate('ReceivedMessage', {token: data});
 				break;
 			//-------------- 설정
 			//정보/문의
 			case INFO_QUESTION:
-				navigation.push('SettingInformAsk');
+				navigation.navigate('SettingInformAsk');
 				break;
 			// 계정
 			case ACCOUNT:
-				navigation.push('SettingAccount');
+				navigation.navigate('SettingAccount');
 				break;
 			//알림
 			case INFO:
-				navigation.push('SettingAlarm');
+				navigation.navigate('SettingAlarm');
 				break;
 		}
 	};

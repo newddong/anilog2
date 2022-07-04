@@ -66,7 +66,7 @@ export default AgreementCheck = props => {
 	}, []);
 
 	const goToNextStep = () => {
-		props.navigation.push('UserVerification', {user_agreement: user_agreement});
+		props.navigation.navigate('UserVerification', {user_agreement: user_agreement});
 	};
 
 	const onPressAceeptAllBtn = state => {
@@ -116,16 +116,16 @@ export default AgreementCheck = props => {
 	};
 
 	const onPressDetail = index => {
-		console.log(index);
+		console.log(index, term[3]);
 		switch (index) {
 			case 1:
-				props.navigation.push('TermsAndPolicy', {name: 'service', term: term[2]});
+				props.navigation.navigate('TermsAndPolicy', {name: 'service', term: term[2]});
 				break;
 			case 2:
-				props.navigation.push('TermsAndPolicy', {name: 'privacy', term: term[1]});
+				props.navigation.navigate('TermsAndPolicy', {name: 'privacy', term: term[1]});
 				break;
 			case 3:
-				props.navigation.push('TermsAndPolicy', {name: 'location', term: term[0]});
+				props.navigation.navigate('TermsAndPolicy', {name: 'location', term: term[0]});
 				break;
 
 			default:

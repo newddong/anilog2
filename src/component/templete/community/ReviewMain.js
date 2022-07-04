@@ -247,16 +247,19 @@ export default ReviewMain = ({route}) => {
 
 	//댓글 모두 보기 클릭
 	const onPressReply = index => {
-		navigation.navigate('ReviewDetail', {community_object: data[index], comment: true});
+		// navigation.navigate('ReviewDetail', {community_object: data[index], comment: true});
+		navigation.navigate({key: data[index]._id, name: 'ReviewDetail', params: {community_object: data[index], comment: true}});
 	};
 
 	//리뷰 썸네일 클릭
 	const onPressReviewContent = index => {
-		navigation.navigate('ReviewDetail', {community_object: data[index]});
+		// navigation.navigate('ReviewDetail', {community_object: data[index]});
+		navigation.navigate({key: data[index]._id, name: 'ReviewDetail', params: {community_object: data[index]}});
 	};
 
 	const onPressRecommendReview = data => {
-		navigation.navigate('ReviewDetail', {community_object: data});
+		// navigation.navigate('ReviewDetail', {community_object: data});
+		navigation.navigate({key: data._id, name: 'ReviewDetail', params: {community_object: data}});
 	};
 
 	//글쓰기 아이콘 클릭

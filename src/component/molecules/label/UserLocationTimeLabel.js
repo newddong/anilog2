@@ -8,7 +8,7 @@ import DP from 'Root/config/dp';
 import {styles} from 'Atom/image/imageStyle';
 import {useNavigation} from '@react-navigation/native';
 import {getTimeLapsed} from 'Root/util/dateutil';
-import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, ProfileDefaultImg} from 'Atom/icon';
+import {FollwerOnly, Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, PrivateOnly, ProfileDefaultImg} from 'Atom/icon';
 import moment from 'moment';
 import Modal from 'Root/component/modal/Modal';
 import FastImage from 'react-native-fast-image';
@@ -23,6 +23,7 @@ import FastImage from 'react-native-fast-image';
  */
 const UserLocationTimeLabel = props => {
 	// console.log('UserLocationTimeLabel props', JSON.stringify(props));
+	console.log('UserLocationTimeLabel props', props);
 	const navigation = useNavigation();
 	const isLoginUser = userGlobalObject.userInfo._id == props.data._id;
 	const isMyPet =
@@ -40,12 +41,25 @@ const UserLocationTimeLabel = props => {
 				return <></>;
 		}
 	};
+	const publicIcon = () => {
+		if (props.publicType == 'private') {
+			return <PrivateOnly />;
+		} else if (props.publicType == 'follow') {
+			return <FollwerOnly />;
+		} else {
+			return <></>;
+		}
+	};
 
 	const onClickLabel = e => {
 		if (props.empty) {
 			Modal.alert(IS_LEAVE_USER);
 		} else {
-			navigation.navigate('UserProfile', {userobject: props.data});
+			if (props.onClickLabel) {
+				props.onClickLabel(props.data);
+			} else {
+				navigation.navigate({key: props.data._id, name: 'UserProfile', params: {userobject: props.data}});
+			}
 		}
 	};
 
@@ -87,7 +101,7 @@ const UserLocationTimeLabel = props => {
 
 	return (
 		<TouchableOpacity onPress={onClickLabel}>
-			<View style={{flexDirection: 'row', alignItems: 'center'}}>
+			<View style={[{flexDirection: 'row', alignItems: 'center'}]}>
 				<>
 					{props.data.user_profile_uri != undefined ? (
 						<FastImage source={{uri: props.data.user_profile_uri}} style={props.isLarge ? styles.img_round_64 : styles.img_round_60} />
@@ -129,6 +143,14 @@ const UserLocationTimeLabel = props => {
 						) : (
 							<></>
 						)}
+						<View
+							style={[
+								{
+									justifyContent: 'center',
+								},
+							]}>
+							{publicIcon()}
+						</View>
 					</View>
 					<Text style={[props.isLarge ? txt.noto26 : txt.noto24, {lineHeight: 40 * DP, color: GRAY20, maxWidth: 470 * DP}]} numberOfLines={1}>
 						{/* {address?.city} {address?.district} · {props.data.feed_type == undefined ? getCommentedTime() : props.data.comment_date} */}
@@ -141,7 +163,6 @@ const UserLocationTimeLabel = props => {
 };
 
 UserLocationTimeLabel.defaultProps = {
-	onClickLabel: e => console.log(e),
 	data: {
 		user_address: {
 			city: '',

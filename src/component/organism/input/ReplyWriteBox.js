@@ -111,7 +111,7 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 		);
 	} else if (props.isMessage) {
 		return (
-			<View style={[style.commentBox, {flexDirection: 'row'}]}>
+			<View style={[style.commentBox, {flexDirection: 'row', paddingTop: 20 * DP}]}>
 				<View style={[style.commentBox_top, {width: 550 * DP}, , {marginRight: 24 * DP}]}>
 					<TextInput
 						defaultValue={content == '' ? null : content}

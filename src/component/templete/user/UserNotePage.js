@@ -1,13 +1,7 @@
 import React from 'react';
-import {View, TouchableOpacity, Text, StyleSheet, Image, ActivityIndicator, ScrollView} from 'react-native';
-import AniButton from 'Molecules/button/AniButton';
-import CheckBox from 'Molecules/select/CheckBox';
-import {userAccount} from 'Organism/style_organism copy';
-import {txt} from 'Root/config/textstyle';
+import {View, StyleSheet, Image, ActivityIndicator, ScrollView} from 'react-native';
 import DP from 'Root/config/dp';
-import {GRAY10, APRI10, BLACK, WHITE} from 'Root/config/color';
-import {getTimeLapsed} from 'Root/util/dateutil';
-import {textstyles} from '../style_templete';
+import {WHITE} from 'Root/config/color';
 import NoteMessageList from 'Component/organism/list/NoteMessageList';
 import {getMemoBoxWithReceiveID} from 'Root/api/userapi';
 import {useNavigation} from '@react-navigation/native';
@@ -36,6 +30,7 @@ const UserNotePage = ({route}) => {
 	React.useLayoutEffect(() => {
 		navigation.setOptions({tabBarVisible: false});
 	}, []);
+
 	React.useEffect(() => {
 		getMemoBoxWithReceiveID(
 			{user_object_id: route.params._id},
@@ -49,10 +44,13 @@ const UserNotePage = ({route}) => {
 			},
 		);
 	}, [sent]);
+
 	const [heightReply, setReplyHeight] = React.useState(0);
+
 	const onReplyBtnLayout = e => {
 		setReplyHeight(e.nativeEvent.layout.height);
 	};
+
 	const onWrite = () => {
 		if (content.trim() == '') return Modal.popOneBtn('채팅을 입력하세요.', '확인', () => Modal.close());
 		createMemoBox(
@@ -66,6 +64,7 @@ const UserNotePage = ({route}) => {
 			},
 		);
 	};
+
 	const onChangeReplyInput = text => {
 		setContent(text);
 	};
@@ -96,8 +95,9 @@ const styles = StyleSheet.create({
 		backgroundColor: WHITE,
 	},
 	messageContainer: {
-		marginTop: 30 * DP,
-		height: 1150 * DP,
+		paddingVertical: 30 * DP,
+		paddingBottom: 100 * DP,
+		// height: 1150 * DP,
 		// backgroundColor: 'yellow',
 	},
 });

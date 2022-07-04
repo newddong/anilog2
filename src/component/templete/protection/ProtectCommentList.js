@@ -229,7 +229,7 @@ export default ProtectCommentList = props => {
 
 	//페이지 상단 보호소 프로필 클릭
 	const onClickShelterLabel = () => {
-		navigation.push('UserProfile', {userobject: data.protect_request_writer_id});
+		navigation.navigate({key: data.protect_request_writer_id._id, name: 'UserProfile', params: {userobject: data.protect_request_writer_id}});
 	};
 
 	// 답글 쓰기 -> 자물쇠버튼 클릭 콜백함수
@@ -288,7 +288,7 @@ export default ProtectCommentList = props => {
 		} else {
 			editMode ? (comment_obj.editData = editData) : false;
 			parentComment ? (comment_obj.parentComment = parentComment) : false;
-			props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
+			props.navigation.navigate('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 		}
 	};
 

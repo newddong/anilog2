@@ -14,7 +14,7 @@ export default SearchAccountA = React.memo((props, ref) => {
 
 	//계정 클릭 콜백
 	const onClickAccount = (item, index) => {
-		props.navigation.navigate('UserProfile', {userobject: item});
+		props.navigation.navigate({key: item._id, name: 'UserProfile', params: {userobject: item}});
 	};
 
 	const onClickFollowBtn = userObject => {

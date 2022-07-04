@@ -11,7 +11,6 @@ import AssignUserHabitation from 'Templete/user/AssignUserHabitation';
 import AssignUserProfileImage from 'Templete/user/AssignUserProfileImage';
 
 import ShelterCodeCheck from 'Templete/shelter/ShelterCodeCheck';
-import ShelterAssignEntrance from 'Templete/shelter/ShelterAssignEntrance';
 import AssignShelterAddress from 'Templete/shelter/AssignShelterAddress';
 import AssignShelterInformation from 'Templete/shelter/AssignShelterInformation';
 import CheckShelterPassword from 'Templete/shelter/CheckShelterPassword';
@@ -119,7 +118,6 @@ export default RootStackNavigation = () => {
 	// 			if(Platform.OS=='ios'&&medias.length>0&&(medias[medias.length-1].node.timeStamp==r.edges[r.edges.length-1].node.timeStamp))return;
 	// 			appConfig.medias = medias.concat(r.edges)
 
-
 	// 			console.log(new Date()-start);
 	// 		})
 	// 		.catch(err => {
@@ -212,11 +210,7 @@ export default RootStackNavigation = () => {
 							component={ShelterCodeCheck}
 							options={{header: props => <SimpleHeader {...props} />, title: '보호소 등록'}}
 						/>
-						<RootStack.Screen
-							name="ShelterAssignEntrance"
-							component={ShelterAssignEntrance}
-							options={{header: props => <SimpleHeader {...props} />, title: '보호소 등록'}}
-						/>
+
 						<RootStack.Screen
 							name="AssignShelterAddress"
 							component={AssignShelterAddress}

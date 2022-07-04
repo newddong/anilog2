@@ -1,12 +1,12 @@
 import React from 'react';
-import {Text, View, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import {Text, View, Image, TouchableOpacity, TouchableWithoutFeedback, StyleSheet, Platform} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {styles} from 'Atom/image/imageStyle';
 import {APRI10, WHITE} from 'Root/config/color';
 import {Paw94x90} from 'Atom/icon';
 import FastImage from 'react-native-fast-image';
-
+import Video from 'react-native-video';
 /**
  * 디바이스의 미디어 썸네일을 표시, 선택할때 사용하는 최소단위 컴포넌트
  *
@@ -30,19 +30,17 @@ import FastImage from 'react-native-fast-image';
  * @type {React.FunctionComponent<LocalMediaProps>}
  *
  */
-const LocalMedia = React.memo(props => {
+const LocalMedia = props => {
 	// console.log(props.index)
 	// console.log('props.data', props.data);
 
 	const [isSelect, setSelected] = React.useState(false);
 
-	React.useEffect(() => {
-		props.data.state ? setSelected(true) : setSelected(false);
-	}, [props.data.state]);
 
-	React.useEffect(()=>{
+	React.useEffect(() => {
+		console.log('isSlee',props.selected,isSelect)
 		setSelected(props.selected);
-	},[props.selected])
+	}, [props.selected]);
 
 	const onPressMedia = e => {
 		if (isSelect) {
@@ -54,23 +52,12 @@ const LocalMedia = React.memo(props => {
 		}
 	};
 
-	const onSelect = e => {
-		// console.log("PropsDisable", props.disable)
+	const getStyleOfSelectedItem = React.useCallback(() => {
+		
+		return isSelect ? {borderWidth: 4 * DP, borderColor: APRI10, opacity: 0.6, backgroundColor: '#DDDDDD'} : {backgroundColor: '#DDDDDD'};
+	}, [isSelect]);
 
-		if (props.disable) {
-			!isSelect ? alert('5초과') : setSelected(!isSelect);
-			props.onSelect(props.data.image.uri, !isSelect);
-		} else if (!props.disable) {
-			setSelected(!isSelect);
-			props.onSelect(props.data.image.uri, !isSelect);
-		}
-	};
-
-	const getStyleOfSelectedItem = () => {
-		return isSelect ? [styles.img_square_186, {borderWidth: 4 * DP, borderColor: APRI10, opacity: 0.6,backgroundColor:'#DDDDDD'}] : [styles.img_square_186,{backgroundColor:'#DDDDDD'}];
-	};
-
-	const getImageOfSelectedItem = () => {
+	const getImageOfSelectedItem = React.useCallback(() => {
 		if (props.isSingleSelection) {
 			return (
 				<View style={style.paw94}>
@@ -105,15 +92,45 @@ const LocalMedia = React.memo(props => {
 				</View>
 			);
 		}
-	};
-
+	}, [props.index]);
+	// console.log('image',props.data.image)
+	// if(props.data.type.includes('video')){
+	// 	return (<Video style={getStyleOfSelectedItem()} source={{uri: props.data.image.uri}} muted paused/>);
+	// }
+	// return (
+	// 		<FastImage source={{uri:props.data.image.uri,cache:FastImage.cacheControl.cacheOnly}} style={getStyleOfSelectedItem()}/>
+	// );
 	return (
-		// <TouchableOpacity onPress={onPressMedia} style={[styles.img_square_186,{marginHorizontal:1*DP,marginVertical:1*DP}]}>
-		<TouchableOpacity onPress={onPressMedia} style={{width:187*DP,height:187*DP,paddingHorizontal:1*DP,paddingVertical:1*DP,backgroundColor:'#FFF'}}>
-			{/* <Image source={{uri: props.data.image.uri}} style={getStyleOfSelectedItem()} /> */}
-			{/* <Image source={{uri:props.data.image.uri,width:187*DP,height:187*DP}} style={getStyleOfSelectedItem()} /> */}
-			{/* <Img source={{uri: props.data.image.uri,priority:FastImage.priority.high}} style={getStyleOfSelectedItem()} /> */}
-			<Img source={{uri:props.data.image.uri,width:187*DP,height:187*DP,priority:FastImage.priority.high}} style={getStyleOfSelectedItem()} />
+		<TouchableOpacity
+			onPress={onPressMedia}
+			style={{width: 187 * DP, height: 187 * DP, paddingHorizontal: 1 * DP, paddingVertical: 1 * DP, backgroundColor: '#FFF'}}>
+
+			 {/* <Image
+			renderToHardwareTextureAndroid
+			progressiveRenderingEnabled
+			source={{uri: props.data.image.uri, width: 100 * DP, height: 100 * DP}}
+			style={[{width: 186 * DP, height: 186 * DP}, getStyleOfSelectedItem()]}
+			onLoad={e=>console.log(e.nativeEvent)}
+			/> */}
+			{props.data.type.includes('video')&&Platform.OS=='ios'?<Image
+			renderToHardwareTextureAndroid
+			progressiveRenderingEnabled
+			source={{uri: props.data.image.uri, width: 100 * DP, height: 100 * DP}}
+			style={[{width: 186 * DP, height: 186 * DP}, getStyleOfSelectedItem()]}
+			/>:
+			<FastImage
+				renderToHardwareTextureAndroid
+				progressiveRenderingEnabled
+				source={{uri: props.data.image.uri, priority: props.data.type.includes('video')?FastImage.priority.normal:FastImage.priority.high}}
+				style={[{width: 186 * DP, height: 186 * DP}, getStyleOfSelectedItem()]}
+			/>}
+			{/* <Image
+				renderToHardwareTextureAndroid
+				progressiveRenderingEnabled
+				source={{uri: props.data.image.uri, width: 10 * DP, height: 10 * DP}}
+				style={[{width: 186 * DP, height: 186 * DP}, getStyleOfSelectedItem()]}
+				onLoad={e=>console.log(e.nativeEvent)}
+			/> */}
 			{isSelect && getImageOfSelectedItem()}
 			{/* {props.data.image.playableDuration != null && (
 				<Text style={[txt.roboto22, {color: WHITE, position: 'absolute', left: 10 * DP, bottom: 6 * DP}]}>{props.data.image.playableDuration}</Text>
@@ -121,7 +138,7 @@ const LocalMedia = React.memo(props => {
 		</TouchableOpacity>
 	);
 	// isVideo = true 분기
-});
+};
 
 LocalMedia.defaultProps = {
 	data: {
@@ -151,18 +168,4 @@ const style = StyleSheet.create({
 	},
 });
 
-
-//안드로이드에서 FastImage를 사용하도록하는 커스텀 컴포넌트
-const Img =React.forwardRef((props,ref) => {
-	return <FastImage {...props} ref={ref}></FastImage>
-	if(Platform.OS=='ios'){
-		return <Image {...props} ref={ref} ></Image>
-
-	}
-	if(Platform.OS=='android'){
-		return <FastImage {...props} ref={ref}></FastImage>
-	}
-})
-
-
-export default LocalMedia;
+export default React.memo(LocalMedia);

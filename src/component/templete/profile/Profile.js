@@ -33,9 +33,9 @@ export default Profile = ({route}) => {
 	const [protectList, setProtectList] = React.useState('false');
 	const [offset, setOffset] = React.useState(1); //커뮤니티 페이지
 	const [loading, setLoading] = React.useState(false);
-	const [tabMenuSelected, setTabMenuSelected] = React.useState(0); //프로필 Tab의 선택상태
 	const flatlist = React.useRef();
 	const userId = route.params.userobject._id; //현재 보고있는 프로필 대상의 _id
+	const [tabMenuSelected, setTabMenuSelected] = React.useState(0); //프로필 Tab의 선택상태
 
 	React.useEffect(() => {
 		//페이지 포커스 시 프로필 데이터 및 하단 탭 데이터 갱신
@@ -121,6 +121,7 @@ export default Profile = ({route}) => {
 					setProtectList([...protectList, ...res]);
 				} else {
 					setProtectList(res);
+					setTabMenuSelected(2);
 				}
 				setOffset(offset + 1);
 				setLoading(false);
@@ -379,20 +380,12 @@ export default Profile = ({route}) => {
 
 	//프로필의 보호활동 탭의 피드 썸네일 클릭
 	const onClickProtect = (status, id, item) => {
-		console.log('onClickProtect', item);
-		let gender = '남';
-		switch (item.protect_animal_sex) {
-			case 'male':
-				gender = '남';
-				break;
-			case 'female':
-				gender = '여';
-				break;
-			case 'male':
-				gender = '성별모름';
-				break;
+		let title = item.protect_animal_species;
+		if (!item.protect_animal_species_detail) {
+			title = item.protect_animal_species;
+		} else {
+			title = item.protect_animal_species + '/' + item.protect_animal_species_detail;
 		}
-		const title = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + gender;
 		navigation.push('AnimalProtectRequestDetail', {id: item._id, title: title, writer: item.protect_request_writer_id._id});
 	};
 
@@ -420,7 +413,7 @@ export default Profile = ({route}) => {
 		return data.user_type == PET ? (
 			<ProfileTabSelect items={['피드', '태그']} onSelect={onSelectTabMenu} />
 		) : (
-			<ProfileTabSelect items={['피드', '태그', '보호동물']} onSelect={onSelectTabMenu} />
+			<ProfileTabSelect items={['피드', '태그', '보호동물']} onSelect={onSelectTabMenu} defaultIndex={2} />
 		);
 	};
 

@@ -46,16 +46,16 @@ export default AidRequestManage = ({route, navigation}) => {
 		let sexValue = '';
 		switch (data.protect_animal_sex) {
 			case 'male':
-				sexValue = '남';
+				sexValue = '/남';
 				break;
 			case 'female':
-				sexValue = '여';
+				sexValue = '/여';
 				break;
-			case 'male':
-				sexValue = '성별모름';
+			default:
+				sexValue = '';
 				break;
 		}
-		const titleValue = data.protect_animal_species + '/' + data.protect_animal_species_detail + '/' + sexValue;
+		const titleValue = data.protect_animal_species + '/' + data.protect_animal_species_detail + sexValue;
 		navigation.navigate('AnimalProtectRequestDetail', {
 			id: data.protect_animal_protect_request_id,
 			title: titleValue,

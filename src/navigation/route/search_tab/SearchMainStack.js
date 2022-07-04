@@ -29,6 +29,8 @@ import EditShelterInfo from 'Root/component/templete/shelter/EditShelterInfo';
 import CommunityHeader from 'Root/navigation/header/CommunityHeader';
 import ChangePetProfileImage from 'Root/component/templete/pet/ChangePetProfileImage';
 import ProfileHeader from 'Root/navigation/header/ProfileHeader';
+import AddPhoto from 'Root/component/templete/media/AddPhoto';
+import PhotoSelectHeader from 'Root/navigation/header/PhotoSelectHeader';
 
 const SearchStackNav = createStackNavigator();
 
@@ -50,6 +52,14 @@ export default SearchMainStack = props => {
 				options={{header: props => <MeatBallHeader {...props} />, title: '피드 게시글'}}
 			/>
 			<SearchStackNav.Screen
+				name={'UserTagFeedList'}
+				component={FeedList}
+				options={({route}) => ({
+					header: props => <SimpleHeader {...props} />,
+					title: '프로필',
+				})}
+			/>
+			<SearchStackNav.Screen
 				name="ChangeUserProfileImage"
 				component={ChangeUserProfileImage}
 				options={{header: props => <SimpleHeader {...props} />, title: '프로필 변경'}}
@@ -69,6 +79,7 @@ export default SearchMainStack = props => {
 				component={FeedCommentList}
 				options={{header: props => <SimpleHeader {...props} />, title: '댓글'}}
 			/>
+			<SearchStackNav.Screen name="SinglePhotoSelect" component={AddPhoto} options={{header: props => <PhotoSelectHeader {...props} />, title: ''}} />
 			<SearchStackNav.Screen
 				name="FeedListForHashTag"
 				component={FeedListForHashTag}

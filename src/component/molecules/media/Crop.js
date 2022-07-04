@@ -310,11 +310,11 @@ const Crop = prop => {
 	return (
         <View style={{width: WIDTH, height: HEIGHT, backgroundColor: 'black'}}>
             <Animated.View style={{width: imgDimension.width, height: imgDimension.height,alignItems:'center',backgroundColor:prop.backgroundColor,transform: [{translateX: pan.x}, {translateY: pan.y}, {scale: scale}]}} {...panResponder.panHandlers}>
-                {imgUri&&<Img
+                <Image
                     style={{ width: imgDimension.width, height: imgDimension.height}}
                     source={{uri: imgUri}}
                     resizeMode={resizeMode}
-                />}
+                />
             </Animated.View>
             <View style={{position:'absolute',top:PADDINGVERTICAL,left:PADDINGLHORIZONTAL,width:WIDTH - 2*PADDINGLHORIZONTAL, height:CROPBOXWIDTH,backgroundColor:'black'}}/>
             <View style={{position:'absolute',top:PADDINGVERTICAL,left:PADDINGLHORIZONTAL,width:CROPBOXWIDTH, height:HEIGHT - 2*PADDINGVERTICAL,backgroundColor:'black'}}/>
@@ -342,15 +342,5 @@ function getDistance(pos1, pos2) {
 	return Math.sqrt(square);
 }
 
-//안드로이드에서 FastImage를 사용하도록하는 커스텀 컴포넌트
-const Img =React.forwardRef((props,ref) => {
-	if(Platform.OS=='ios'){
-		return <Image {...props} ref={ref}></Image>
-
-	}
-	if(Platform.OS=='android'){
-		return <FastImage {...props} ref={ref}></FastImage>
-	}
-})
 
 export default Crop;

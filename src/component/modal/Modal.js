@@ -26,16 +26,18 @@ export default Modal = {
 	/**
 	 * 버튼없는 모달창을 띄우는 함수
 	 * @param {string} msg - 팝업창 메세지
+	 * @param {()=>void)} timeout - 타임아웃 콜백
 	 */
-	popNoBtn: msg => {},
+	popNoBtn: (msg, timeout) => {},
 
 	/**
 	 * 버튼이 한개인 모달창을 띄우는 함수
 	 * @param {string} msg - 팝업창 메세지
 	 * @param {string} okMsg - 확인 버튼 메시지
 	 * @param {()=>void} onOk - 확인 버튼의 콜백함수
+	 * @param {()=>void} onClose - 컴포넌트 바깥쪽 클릭
 	 */
-	popOneBtn: (msg, okMsg, onOk) => {},
+	popOneBtn: (msg, okMsg, onOk, onClose) => {},
 
 	/**
 	 * 컴포넌트를 모달로 띄우는 함수

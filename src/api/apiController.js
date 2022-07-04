@@ -19,10 +19,10 @@ export async function apiController(path, args) {
 	}
 
 	try {
-		let result = await axios.post(serveruri + path, args[0]);
+		let result = await axios.post(serveruri.uri + path, args[0]);
 		if (path.includes('userLogin')) {
 			try {
-				let cookie = await CookieManager.get(serveruri);
+				let cookie = await CookieManager.get(serveruri.uri);
 				// console.log('경로 %s에 대한 쿠키정보 ', serveruri, cookie);
 				if (cookie['connect.sid']) {
 					sid = cookie['connect.sid'].value;
@@ -92,7 +92,7 @@ export async function apiFormController(path, args) {
 			}
 		});
 		console.log('upload form', form);
-		let result = await axios.post(serveruri + path, form, {
+		let result = await axios.post(serveruri.uri + path, form, {
 			headers: {
 				'Content-Type': 'multipart/form-data',
 			},
@@ -126,7 +126,7 @@ async function process(path, result, args) {
 				args[2](err + ''); //에러 처리 콜백
 			}
 		}
-		let result = await axios.post(serveruri + path, args[0]); //한번 더 요청
+		let result = await axios.post(serveruri.uri + path, args[0]); //한번 더 요청
 		if (result.data.status == 200) {
 			args[1](result.data);
 		} else {

@@ -183,20 +183,13 @@ export default FavoriteProtectRequest = ({route}) => {
 			setData(copy);
 			return false;
 		} else {
-			let gender = '남';
-			switch (item.protect_animal_sex) {
-				case 'male':
-					gender = '남';
-					break;
-				case 'female':
-					gender = '여';
-					break;
-				case 'male':
-					gender = '성별모름';
-					break;
+			let title = item.protect_animal_species;
+			if (!item.protect_animal_species_detail) {
+				title = item.protect_animal_species;
+			} else {
+				title = item.protect_animal_species + '/' + item.protect_animal_species_detail;
 			}
-			const title = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + gender;
-			navigation.push('AnimalProtectRequestDetail', {id: item._id, title: title, writer: item.protect_request_writer_id._id});
+			navigation.navigate('AnimalProtectRequestDetail', {id: item._id, title: title, writer: item.protect_request_writer_id._id});
 		}
 	};
 

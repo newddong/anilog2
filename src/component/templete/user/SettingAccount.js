@@ -7,6 +7,7 @@ import {userLogout} from 'Root/api/userapi';
 import DP from 'Root/config/dp';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
+import searchContext from 'Root/config/searchContext';
 export default SettingAccount = ({route}) => {
 	const navigation = useNavigation();
 	const logout = () => {
@@ -21,6 +22,14 @@ export default SettingAccount = ({route}) => {
 					e => {
 						console.log('e', e);
 						userGlobalObject.userInfo = {};
+						searchContext.searchInfo = {
+							routeName: '',
+							searchInput: '',
+							searchInputForHelp: '',
+							searchInputForLocation: '',
+							searchInputForSocial: '',
+							reSearch: true,
+						};
 						navigation.reset({routes: [{name: 'Login'}]});
 					},
 					err => {
@@ -54,13 +63,13 @@ export default SettingAccount = ({route}) => {
 						</TouchableOpacity>
 					</View>
 				</View>
-				<View style={styles.exitContainer}>
+				{/* <View style={styles.exitContainer}>
 					<View style={{width: 550 * DP}}>
 						<TouchableOpacity onPress={onPressDeleteAccount}>
 							<Text style={[txt.noto32b, {color: GRAY10}, {marginTop: 40 * DP}]}>계정 탈퇴</Text>
 						</TouchableOpacity>
 					</View>
-				</View>
+				</View> */}
 			</View>
 		</ScrollView>
 	);

@@ -67,7 +67,7 @@ const ArticleSummary = props => {
 		// console.log('text[0].text', text[0].text, 'ddd');
 		if (text.length == 1) {
 			return (
-				<Text style={[txt.noto28, style.summaryText]}>
+				<Text style={[txt.noto28, style.summaryText, {}]} numberOfLines={2}>
 					{props.isSearch == '' || props.isSearch.length < 2
 						? trim_first
 						: first.map((part, i) =>
@@ -92,7 +92,7 @@ const ArticleSummary = props => {
 			second = trim_second.split(new RegExp(`(${props.isSearch})`, 'gi'));
 			return (
 				<>
-					<Text style={[txt.noto28, style.summaryText]}>
+					<Text style={[txt.noto28, style.summaryText, {}]}>
 						{props.isSearch == '' || props.isSearch.length < 2
 							? trim_first
 							: first.map((part, i) =>
@@ -109,7 +109,9 @@ const ArticleSummary = props => {
 							  )}
 					</Text>
 					<View style={[{flexDirection: 'row', width: 510 * DP, alignItems: 'center'}]}>
-						<Text style={[txt.noto28, {textAlignVertical: 'center', marginRight: 10 * DP, maxWidth: 400 * DP}]} numberOfLines={1}>
+						<Text
+							style={[txt.noto28, {backgroundColor: 'red', textAlignVertical: 'center', marginRight: 10 * DP, maxWidth: 400 * DP}]}
+							numberOfLines={1}>
 							{props.isSearch == '' || props.isSearch.length < 2
 								? trim_second
 								: second.map((part, i) =>

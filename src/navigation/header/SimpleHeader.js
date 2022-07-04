@@ -1,6 +1,5 @@
 import React from 'react';
-import {Text, View, Image, ScrollView, Dimensions, SafeAreaView, StyleSheet, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
-
+import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import {BackArrow32} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
@@ -8,11 +7,21 @@ import {txt} from 'Root/config/textstyle';
 export default SimpleHeader = ({navigation, route, options, back}) => {
 	// console.log('options', options);
 	// console.log('route', route.params);
+	const [backPressed, setBackPressed] = React.useState(false);
+
+	const onPressBackButton = () => {
+		setBackPressed(true);
+		if (!backPressed) {
+			Keyboard.dismiss();
+			navigation.goBack();
+		}
+	};
+
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
-			<TouchableOpacity onPress={navigation.goBack}>
+			<TouchableOpacity onPress={onPressBackButton}>
 				<View style={style.backButtonContainer}>
-					<BackArrow32 onPress={navigation.goBack} />
+					<BackArrow32 />
 				</View>
 			</TouchableOpacity>
 			<Text numberOfLines={1} style={[{flex: 1, textAlign: 'center', marginLeft: 30 * DP, marginRight: 80 * DP}, txt.roboto40b]}>

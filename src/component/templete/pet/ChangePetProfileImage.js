@@ -10,13 +10,14 @@ import {
 	NICKNAME_FORM,
 	PET_NICKNAME_FORM,
 } from 'Root/i18n/msg';
-import {btn_w654} from 'Atom/btn/btn_style';
+import {btn_w654, btn_w694_r30} from 'Atom/btn/btn_style';
 import Modal from 'Component/modal/Modal';
 import AniButton from 'Molecules/button/AniButton';
 import Input24 from 'Molecules/input/Input24';
 import ProfileImageSelect from 'Molecules/select/ProfileImageSelect';
 import {login_style, btn_style, temp_style, changePetProfileImage_style, changeUserProfileImage_style} from 'Templete/style_templete';
 import {nicknameDuplicationCheck, updateUserInformation} from 'Root/api/userapi';
+import DP from 'Root/config/dp';
 
 export default ChangePetProfileImage = props => {
 	const navigation = useNavigation();
@@ -24,17 +25,17 @@ export default ChangePetProfileImage = props => {
 	const [newNick, setNewNick] = React.useState('');
 	const [confirmed, setConfirmed] = React.useState(false);
 
-	React.useEffect(()=>{
-		if(props.route.params.selectedPhoto&&props.route.params.selectedPhoto.length>0){
+	React.useEffect(() => {
+		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
 			let selected = props.route.params.selectedPhoto[0];
-			let uri = selected.cropUri??selected.uri;
+			let uri = selected.cropUri ?? selected.uri;
 			setPetData({...petData, user_profile_uri: uri || petData.user_profile_uri});
 			setConfirmed(true);
 		}
-	},[props.route.params?.selectedPhoto]);
+	}, [props.route.params?.selectedPhoto]);
 
 	const selectPhoto = () => {
-		props.navigation.push("SinglePhotoSelect",{prev:{name:props.route.name,key:props.route.key}});
+		navigation.navigate('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 	};
 
 	//닉네임 Validation
@@ -88,19 +89,21 @@ export default ChangePetProfileImage = props => {
 
 			<View style={[changePetProfileImage_style.input30]}>
 				{/* 기존 닉네임 */}
-				<View style={[temp_style.input24_changeUserProfileImage, changeUserProfileImage_style.input24]}>
+				<View style={[{height: 130 * DP}, {width: 694 * DP}, changeUserProfileImage_style.input24]}>
 					<Input24
-						title={PREVIOUS_NICK_TITLE}
+						// title={PREVIOUS_NICK_TITLE}
+						title={'닉네임'}
 						value={petData.user_nickname || ''}
 						defaultValue={props.route.params.user_nickname}
-						width={654}
+						width={694}
+						height={104}
 						descriptionType={'none'}
 						editable={false}
 						placeholder=""
 						showCrossMark={false}
 					/>
 				</View>
-				<View style={[temp_style.input24_changeUserProfileImage]}>
+				{/* <View style={[{height: 130 * DP}, {width: 694 * DP}]}>
 					<Input24
 						onChange={nickName_validator}
 						validator={validateNewNick}
@@ -113,10 +116,11 @@ export default ChangePetProfileImage = props => {
 						showMsg={true}
 						alert_msg={PET_NICKNAME_FORM}
 						confirm_msg={''}
-						width={654}
+						width={694}
+						height={104}
 						onClear={onClearNickname}
 					/>
-				</View>
+				</View> */}
 			</View>
 
 			<View style={[changePetProfileImage_style.btn_w654]}>
@@ -127,10 +131,10 @@ export default ChangePetProfileImage = props => {
 						btnStyle={'border'}
 						btnTitle={'확인'}
 						titleFontStyle={32}
-						btnLayout={btn_w654}
+						btnLayout={btn_w694_r30}
 					/>
 				) : (
-					<AniButton onPress={onPressConfirm} disable btnTitle={'확인'} titleFontStyle={32} btnLayout={btn_w654} />
+					<AniButton onPress={onPressConfirm} disable btnTitle={'확인'} titleFontStyle={32} btnLayout={btn_w694_r30} />
 				)}
 			</View>
 		</KeyboardAvoidingView>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, View, Dimensions, Text, StyleSheet, InteractionManager, Platform,Image} from 'react-native';
+import {SafeAreaView, View, Dimensions, Text, StyleSheet, LogBox} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
@@ -90,47 +90,41 @@ export default RootStackNavigation = () => {
 	const [isPop, popupComponent] = useModal();
 	const [isLoading, setLoading] = React.useState(true);
 	const [initialRouteName, setInitialRouteName] = React.useState('Login');
+	LogBox.ignoreLogs(['ViewPropTypes will be removed', 'ColorPropType will be removed', 'EdgeInsetsPropType', 'PointPropType']);
 
-	React.useEffect(()=>{
-		let medias = appConfig.medias;
-		let lastID = medias.length>0?medias[medias.length-1].node.imageID:'123456789';
-		let timeStamp = medias.length>0?medias[medias.length-1].node.image.timeStamp*1000-1:0;
-		let param = {
-			first: 10000,
-			assetType: 'All',
-			groupTypes: 'album',
-			toID: lastID,
-			toTime: timeStamp
-		};
-		if (Platform.OS == 'android') {
-			delete param.fromTime;
-			delete param.toTime;
-			delete param.groupTypes;
-		} else {
-			delete param.toID;
-		}
+	// React.useEffect(()=>{
+	// 	let medias = appConfig.medias;
+	// 	let lastID = medias.length>0?medias[medias.length-1].node.imageID:'123456789';
+	// 	let timeStamp = medias.length>0?medias[medias.length-1].node.image.timeStamp*1000-1:0;
+	// 	let param = {
+	// 		first: 10000,
+	// 		assetType: 'All',
+	// 		groupTypes: 'album',
+	// 		toID: lastID,
+	// 		toTime: timeStamp
+	// 	};
+	// 	if (Platform.OS == 'android') {
+	// 		delete param.fromTime;
+	// 		delete param.toTime;
+	// 		delete param.groupTypes;
+	// 	} else {
+	// 		delete param.toID;
+	// 	}
 
-		console.log(param);
-		let start = new Date();
-		CameraRoll.getPhotos(param)
-			.then((r)=>{
-				// console.log('백그라운드 이미지 로더',r.edges);
-				// console.log('이미 로드된 이미지들',appConfig.medias)
-				if(Platform.OS=='android'&&medias.length>0&&(medias[medias.length-1].node.imageID==r.edges[r.edges.length-1].node.imageID))return;
-				if(Platform.OS=='ios'&&medias.length>0&&(medias[medias.length-1].node.timeStamp==r.edges[r.edges.length-1].node.timeStamp))return;
-				appConfig.medias = medias.concat(r.edges)
-				FastImage.preload(medias.map(v=>{
-					Image.prefetch(v.node.image.uri)
-					return {uri:v.node.image.uri}
+	// 	console.log(param);
+	// 	let start = new Date();
+	// 	CameraRoll.getPhotos(param)
+	// 		.then((r)=>{
+	// 			if(Platform.OS=='android'&&medias.length>0&&(medias[medias.length-1].node.imageID==r.edges[r.edges.length-1].node.imageID))return;
+	// 			if(Platform.OS=='ios'&&medias.length>0&&(medias[medias.length-1].node.timeStamp==r.edges[r.edges.length-1].node.timeStamp))return;
+	// 			appConfig.medias = medias.concat(r.edges)
 
-			}))
 
-				// console.log('로드된 이미지들',appConfig.medias)
-				console.log(new Date()-start);
-			})
-			.catch(err => {
-			});
-	},[])
+	// 			console.log(new Date()-start);
+	// 		})
+	// 		.catch(err => {
+	// 		});
+	// },[])
 
 	React.useEffect(() => {
 		AsyncStorage.getItem('userSetting', (err, userSetting) => {

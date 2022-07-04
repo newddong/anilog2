@@ -61,7 +61,7 @@ export default UserInfoSetting = ({route}) => {
 			userObject => {
 				// console.log('userObject', userObject);
 				setData(userObject.msg);
-				console.log('userObject.msg', userObject.msg);
+				// console.log('userObject.msg', userObject.msg);
 				setUserDataLoaded(true);
 				navigation.setOptions({title: userGlobalObject.userInfo.user_nickname});
 			},
@@ -145,6 +145,11 @@ export default UserInfoSetting = ({route}) => {
 	React.useEffect(() => {
 		if (route.params != undefined && route.params.selectedPhoto != undefined) {
 			// route.params.selectedPhoto ? setData({...data, user_profile_uri: route.params.selectedPhoto[0].uri}) : null;
+			try {
+				userGlobalObject.userInfo.user_profile_uri = route.params.selectedPhoto[0].cropUri ?? route.params.selectedPhoto[0].uri;
+			} catch (err) {
+				console.log('err', err);
+			}
 			updateUserInformation(
 				{
 					userobject_id: userGlobalObject.userInfo._id,
@@ -152,15 +157,15 @@ export default UserInfoSetting = ({route}) => {
 					user_nickname: userGlobalObject.userInfo.user_nickname,
 				},
 				r => {
-					console.log('사진변경결과', r.msg);
+					// console.log('사진변경결과', r.msg);
 					setData({...r.msg});
 					userGlobalObject.userInfo.user_profile_uri = r.msg.user_profile_uri;
 				},
 				e => console.log('err', e),
 			);
-			console.log('사진 변경ehl', route.params.selectedPhoto[0].uri, userGlobalObject);
+			// console.log('사진 변경ehl', route.params.selectedPhoto[0].uri, userGlobalObject);
 		}
-		console.log('사진 변경', route.params);
+		// console.log('사진 변경', route.params);
 	}, [route.params?.selectedPhoto]);
 
 	//소개란 수정모드
@@ -613,6 +618,7 @@ export default UserInfoSetting = ({route}) => {
 											multiline={true}
 											value={data.user_introduction}
 											placeholder={'소개를 입력해주세요. (최대 500자, 15줄)'}
+											placeholderTextColor="#767676"
 											maxLength={500}
 											ref={modifyRef}
 										/>

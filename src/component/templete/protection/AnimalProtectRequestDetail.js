@@ -1,9 +1,9 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, TouchableOpacity, View, FlatList, Platform, StyleSheet} from 'react-native';
+import {Text, TouchableOpacity, View, FlatList, Platform, StyleSheet, Linking} from 'react-native';
 import RescueImage from 'Root/component/molecules/image/RescueImage';
 import {txt} from 'Root/config/textstyle';
-import {APRI10, GRAY10, GRAY20, GRAY30, GRAY40, WHITE} from 'Root/config/color';
+import {APRI10, GRAY10, GRAY20, GRAY30, GRAY40, MAINBLACK, WHITE} from 'Root/config/color';
 import ShelterSmallLabel from 'Root/component/molecules/label/ShelterSmallLabel';
 import DP from 'Root/config/dp';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
@@ -21,7 +21,7 @@ import ParentComment from 'Root/component/organism/comment/ParentComment';
 import {DEFAULT_PROFILE, NETWORK_ERROR, NOT_REGISTERED_SHELTER, PROTECT_REQUEST_DETAIL_LIMIT, UNAVAILABLE_REQUEST_STATUS} from 'Root/i18n/msg';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 import {updateProtect} from 'Root/config/protect_obj';
-import {ProfileDefaultImg} from 'Root/component/atom/icon';
+import {Phone54, PhoneIcon, ProfileDefaultImg} from 'Root/component/atom/icon';
 
 //AnimalProtectRequestDetail 호출 경로
 // - ProtectRequestList(보호활동탭) , AnimalFromShelter(게시글보기) , AidRequestManage(게시글보기), AidRequestAnimalList(게시글 보기)
@@ -31,6 +31,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const [writersAnotherRequests, setWritersAnotherRequests] = React.useState('false'); //해당 게시글 작성자의 따른 보호요청게시글 목록
 	const [comments, setComments] = React.useState('false'); //comment list 정보
 	const [offset, setOffset] = React.useState(1);
+	const [pressed, setPressed] = React.useState(false);
 	const isShelter = userGlobalObject.userInfo.user_type == 'shelter';
 	const flatlist = React.useRef();
 
@@ -38,6 +39,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			getProtectRequestObject();
 			getCommnetList(); //댓글리스트 가져오기
+			setPressed(false);
 		});
 		return unsubscribe;
 	}, []);
@@ -60,7 +62,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				let res = result.msg;
 				setData(res);
 				navigation.setParams({...route.params, request_object: result.msg, isMissingOrReport: false, reset: false});
-				getProtectRequestList(result.msg.protect_request_writer_id._id); //API에서 받아온 보호요청게시글의 작성자 _id를 토대로, 작성자의 다른 보호요청게시글을 받아옴
+				getProtectRequestList(result.msg); //API에서 받아온 보호요청게시글의 작성자 _id를 토대로, 작성자의 다른 보호요청게시글을 받아옴
 			},
 			err => {
 				// getProtectRequestListByShelterId
@@ -79,10 +81,10 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	};
 
 	//보호소의 다른 보호 요청게시글 불러오기
-	const getProtectRequestList = id => {
+	const getProtectRequestList = request => {
 		getProtectRequestListByShelterId(
 			{
-				shelter_userobject_id: id,
+				shelter_userobject_id: request.protect_request_writer_id._id,
 				protect_request_status: 'all', //하단 리스트
 				limit: PROTECT_REQUEST_DETAIL_LIMIT,
 				page: offset,
@@ -95,9 +97,11 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				// console.log('res.length', res.length);
 				if (writersAnotherRequests != 'false') {
 					console.log('temp lenth', [...writersAnotherRequests, ...res].length);
-					setWritersAnotherRequests([...writersAnotherRequests, ...res]);
+					const removeThis = [...writersAnotherRequests, ...res].filter(e => e._id != request._id);
+					setWritersAnotherRequests(removeThis);
 				} else {
-					setWritersAnotherRequests(res);
+					const removeThis = res.filter(e => e._id != request._id);
+					setWritersAnotherRequests(removeThis);
 				}
 				setOffset(offset + 1);
 			},
@@ -177,16 +181,30 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	//보호요청 더보기의 Thumnail클릭
 	const onClick_ProtectedThumbLabel = (status, user_id, item) => {
-		if (route.name == 'ProtectRequestManage') {
-			// console.log('ProtectRequestManage');
-			const animal_sex_toString = item.protect_animal_id.protect_animal_sex == 'female' ? '여' : '남';
-			const title = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + animal_sex_toString;
-			navigation.push('ProtectRequestManage', {id: item._id, title: title});
-		} else {
-			// console.log('AnimalProtectRequestDetail', item);
-			const animal_sex_toString = item.protect_animal_id.protect_animal_sex == 'female' ? '여' : '남';
-			const title = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + animal_sex_toString;
-			navigation.push('AnimalProtectRequestDetail', {id: item._id, title: title, writer: item.protect_request_writer_id._id});
+		try {
+			setPressed(true);
+			if (!pressed) {
+				if (route.name == 'ProtectRequestManage') {
+					// console.log('ProtectRequestManage');
+					const animal_sex_toString = item.protect_animal_id.protect_animal_sex == 'female' ? '여' : '남';
+					const title = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + animal_sex_toString;
+					navigation.navigate('ProtectRequestManage', {id: item._id, title: title});
+				} else {
+					let title = item.protect_animal_species;
+					if (!item.protect_animal_species_detail) {
+						title = item.protect_animal_species;
+					} else {
+						title = item.protect_animal_species + '/' + item.protect_animal_species_detail;
+					}
+					navigation.navigate({
+						key: item._id + new Date().getTime(),
+						name: 'AnimalProtectRequestDetail',
+						params: {id: item._id, title: title, writer: item.protect_request_writer_id._id},
+					});
+				}
+			}
+		} catch (err) {
+			console.log('onClick_ProtectedThumbLabel', err);
 		}
 	};
 
@@ -218,27 +236,30 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	//임시보호 버튼 클릭
 	const onPressProtectRequest = () => {
-		console.log('data.protect_request_writer_id.user_contacted', data.protect_request_writer_id.user_contacted);
 		if (!data.protect_request_writer_id.user_contacted) {
-			// Modal.popOneBtn(NOT_REGISTERED_SHELTER, '확인', Modal.close);
 		} else {
-			navigation.push('ApplyProtectActivityA', {protect_request_pet_data: data});
+			navigation.navigate('ApplyProtectActivityA', {protect_request_pet_data: data});
 		}
 	};
 
 	//입양하기 버튼 클릭
 	const onPressAdoptionRequest = () => {
-		console.log('data.protect_request_writer_id.user_contacted', data.protect_request_writer_id.user_contacted);
 		if (!data.protect_request_writer_id.user_contacted) {
-			Modal.popOneBtn(NOT_REGISTERED_SHELTER, '확인', Modal.close);
 		} else {
-			navigation.push('ApplyAnimalAdoptionA', {protect_request_pet_data: data});
+			navigation.navigate('ApplyAnimalAdoptionA', {protect_request_pet_data: data});
 		}
+	};
+
+	//전화연결
+	const connectPhoneCall = () => {
+		Modal.popTwoBtn(`${data.protect_request_writer_id.user_nickname}님의 \n 전화로 연결하시겠습니까?`, '아니오', '확 인', Modal.close, () => {
+			Linking.openURL(`tel:${data.protect_request_writer_id.shelter_delegate_contact_number}`);
+		});
 	};
 
 	//보호소 프로필 클릭
 	const onClickShelterLabel = data => {
-		navigation.push('UserProfile', {userobject: data});
+		navigation.navigate('UserProfile', {userobject: data});
 	};
 
 	//특정 댓글로 스크롤 이동 함수
@@ -259,7 +280,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				navigation.navigate('LoginRequired');
 			});
 		} else {
-			navigation.push('ProtectCommentList', {protectObject: data, showKeyboard: true, reply: comment});
+			navigation.navigate('ProtectCommentList', {protectObject: data, showKeyboard: true, reply: comment});
 		}
 	};
 
@@ -270,7 +291,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				navigation.navigate('LoginRequired');
 			});
 		} else {
-			navigation.push('ProtectCommentList', {protectObject: data, showKeyboard: true});
+			navigation.navigate('ProtectCommentList', {protectObject: data, showKeyboard: true});
 		}
 	};
 
@@ -320,7 +341,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		comment_obj.isChild = isChild;
 		comment_obj.comment_index = findParentIndex;
 		comment_obj.viewOffset = viewOffset;
-		navigation.push('ProtectCommentList', {protectObject: data, edit: comment});
+		navigation.navigate('ProtectCommentList', {protectObject: data, edit: comment});
 	};
 
 	const shouldHideProtectAct = () => {
@@ -467,10 +488,13 @@ export default AnimalProtectRequestDetail = ({route}) => {
 						{/* <AniButton onPress={onPressProtectRequest} btnTitle={'임시보호 신청'} btnStyle={'border'} btnLayout={btn_w276} titleFontStyle={30} /> */}
 						{/* <AniButton onPress={onPressAdoptionRequest} btnTitle={'입양 신청'} btnLayout={btn_w276} titleFontStyle={30} /> */}
 						<TouchableOpacity onPress={onPressProtectRequest} activeOpacity={0.8} style={[style.protectBtn]}>
-							<Text style={[txt.noto32]}>임시보호 문의</Text>
+							<Text style={[txt.noto32, {color: data.protect_request_writer_id.user_contacted ? MAINBLACK : GRAY30}]}>임시보호 문의</Text>
 						</TouchableOpacity>
 						<TouchableOpacity onPress={onPressAdoptionRequest} activeOpacity={0.8} style={[style.protectBtn]}>
-							<Text style={[txt.noto32]}>입양 문의</Text>
+							<Text style={[txt.noto32, {color: data.protect_request_writer_id.user_contacted ? MAINBLACK : GRAY30}]}>입양 문의</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={connectPhoneCall} activeOpacity={0.8} style={[style.phoneBtn]}>
+							<Phone54 />
 						</TouchableOpacity>
 					</View>
 				)}
@@ -554,7 +578,7 @@ const style = StyleSheet.create({
 	},
 	btnContainer: {
 		width: 750 * DP,
-		height: 164 * DP,
+		height: 138 * DP,
 		backgroundColor: 'white',
 		justifyContent: 'space-between',
 		position: 'absolute',
@@ -573,7 +597,7 @@ const style = StyleSheet.create({
 		},
 		elevation: 4,
 		paddingTop: 20 * DP,
-		paddingBottom: 46 * DP,
+		paddingBottom: 20 * DP,
 	},
 	shareDropDown: {
 		width: 384 * DP,
@@ -652,7 +676,16 @@ const style = StyleSheet.create({
 		justifyContent: 'space-between',
 	},
 	protectBtn: {
-		width: 320 * DP,
+		width: 280 * DP,
+		height: 98 * DP,
+		borderRadius: 30 * DP,
+		borderColor: GRAY30,
+		borderWidth: 2 * DP,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	phoneBtn: {
+		width: 98 * DP,
 		height: 98 * DP,
 		borderRadius: 30 * DP,
 		borderColor: GRAY30,

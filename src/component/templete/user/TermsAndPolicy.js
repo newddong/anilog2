@@ -1,10 +1,12 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet} from 'react-native';
+import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet, FlatList} from 'react-native';
 import {GRAY10, GRAY40, APRI10, GRAY20} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-
+import {OpenSourceLicense} from 'Root/config/OpenSourceLicense';
+import {Bracket} from 'Asset/image';
+import {NextMark} from 'Root/component/atom/icon';
 const TermsAndPolicy = ({route}) => {
 	const navigation = useNavigation();
 	console.log('route', route);
@@ -36,11 +38,37 @@ const TermsAndPolicy = ({route}) => {
 		}
 	}, []);
 
+	const OpenSource = () => {
+		return (
+			<View>
+				<FlatList data={OpenSourceLicense} renderItem={renderItem} />
+			</View>
+		);
+	};
+
+	const onPressOpenLicense = item => {
+		navigation.push('OpenSourceDetail', {item: item});
+	};
+	const renderItem = ({item}) => {
+		// console.log('item', item);
+		return (
+			<TouchableOpacity onPress={() => onPressOpenLicense(item)}>
+				<View style={[styles.renderItemStyle]}>
+					<Text style={[txt.noto28]}>{item.libraryName}</Text>
+					<NextMark />
+				</View>
+			</TouchableOpacity>
+		);
+	};
 	return (
 		<View style={styles.container}>
-			<ScrollView style={styles.termsContainer} showsVerticalScrollIndicator={false}>
-				<Text style={[txt.noto28]}>{data.terms_of_service_contents.replace(/\\n/g, `\n`)}</Text>
-			</ScrollView>
+			{route.params.name != 'opensource' ? (
+				<ScrollView style={styles.termsContainer} showsVerticalScrollIndicator={false}>
+					<Text style={[txt.noto28]}>{data?.terms_of_service_contents.replace(/\\n/g, `\n`)}</Text>
+				</ScrollView>
+			) : (
+				<OpenSource />
+			)}
 		</View>
 	);
 };
@@ -64,6 +92,16 @@ const styles = StyleSheet.create({
 	termsContainer: {
 		marginVertical: 30 * DP,
 		marginHorizontal: 48 * DP,
+	},
+	renderItemStyle: {
+		height: 108 * DP,
+		paddingHorizontal: 28 * DP,
+		borderBottomWidth: 2 * DP,
+		// justifyContent: 'center',
+		alignItems: 'center',
+		borderColor: GRAY20,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
 	},
 });
 export default TermsAndPolicy;

@@ -13,8 +13,10 @@ import {NETWORK_ERROR, REPORT_MENU, REVIEW_LIMIT} from 'Root/i18n/msg';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import {searchProtectRequest} from 'Templete/style_templete';
 import AnimalButton from 'Root/component/molecules/button/AnimalButton';
+import {useNavigation} from '@react-navigation/core';
 
-export default ReviewMain = ({route, navigation}) => {
+export default ReviewMain = ({route}) => {
+	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
 	const [filterData, setFilterData] = React.useState({
 		community_animal_type: [],
@@ -245,16 +247,16 @@ export default ReviewMain = ({route, navigation}) => {
 
 	//댓글 모두 보기 클릭
 	const onPressReply = index => {
-		navigation.push('ReviewDetail', {community_object: data[index], comment: true});
+		navigation.navigate('ReviewDetail', {community_object: data[index], comment: true});
 	};
 
 	//리뷰 썸네일 클릭
 	const onPressReviewContent = index => {
-		navigation.push('ReviewDetail', {community_object: data[index]});
+		navigation.navigate('ReviewDetail', {community_object: data[index]});
 	};
 
 	const onPressRecommendReview = data => {
-		navigation.push('ReviewDetail', {community_object: data});
+		navigation.navigate('ReviewDetail', {community_object: data});
 	};
 
 	//글쓰기 아이콘 클릭

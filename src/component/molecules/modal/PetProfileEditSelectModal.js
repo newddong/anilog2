@@ -139,7 +139,7 @@ const PetProfileEditSelectModal = props => {
 	};
 
 	const renderItem = ({item, index}) => {
-		console.log('item', item);
+		// console.log('item', item);
 		return (
 			<TouchableOpacity onPress={() => onSelect(item)}>
 				<View style={[style.listContainer2]}>

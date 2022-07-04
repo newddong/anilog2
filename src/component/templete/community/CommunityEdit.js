@@ -32,7 +32,7 @@ export default CommunityEdit = props => {
 	const article_type = ['talk', 'question', 'meeting'];
 
 	React.useEffect(() => {
-		props.navigation.setParams({data: data, nav: 'CommunityEdit', isSearch: props.route.params.isSearch});
+		navigation.setParams({data: data, nav: 'CommunityEdit', isSearch: props.route.params.isSearch});
 		if (data.community_animal_type) {
 			if (data.community_animal_type == 'dog') {
 				setAnimalType({...animalType, dog: true});
@@ -107,7 +107,6 @@ export default CommunityEdit = props => {
 	};
 
 	const onHeightChange = e => {
-		console.log('onHeightChange', e);
 		setTimeout(() => {
 			if (!updateHeight) {
 				richText.current?.insertHTML('<br/>');
@@ -182,17 +181,33 @@ export default CommunityEdit = props => {
 	}, [props.route.params?.selectedPhoto]);
 
 	//사진 불러오기
-	const onPressPhotoSelect = () => {
-		props.navigation.push('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
+	const onPressPhotoSelect = isKeyBoardShowed => {
+		if (isKeyBoardShowed) {
+			//키보드가 올라와있으며 가려진 버튼일 경우 사진추가 이벤트로 연결X
+			!showBtn ? navigation.navigate('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}}) : false;
+		} else {
+			navigation.navigate('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
+		}
 	};
 
-	const isInterestsEmpty =
-		data.community_interests &&
-		data.community_interests.interests_etc.length == 0 &&
-		data.community_interests.interests_hospital.length == 0 &&
-		data.community_interests.interests_interior == 0 &&
-		data.community_interests.interests_review == 0 &&
-		data.community_interests.interests_trip == 0;
+	const isInterestsEmpty = () => {
+		if (isReview) {
+			if (data.community_interests.hasOwnProperty('interests_group1')) {
+				return (
+					data.community_interests.interests_etc.length == 0 &&
+					data.community_interests.interests_group1.length == 0 &&
+					data.community_interests.interests_group2 == 0 &&
+					data.community_interests.interests_group3 == 0
+				);
+			} else
+				return (
+					data.community_interests.interests_etc.length == 0 &&
+					data.community_interests.interests_trip.length == 0 &&
+					data.community_interests.interests_hospital == 0 &&
+					data.community_interests.interests_review == 0
+				);
+		} else return false;
+	};
 
 	const onPressFilter = () => {
 		// console.log('data.community_interests', data.community_interests);
@@ -239,32 +254,43 @@ export default CommunityEdit = props => {
 	KeyBoardEvent(
 		e => {
 			setKeyboardY(e.endCoordinates.height + KeyboardBorderLine);
-			Platform.OS == 'android' ? setShowBtn(true) : setShowBtn(true);
+			// Platform.OS == 'android' ? setShowBtn(true) : setShowBtn(true);
 		},
 		e => {
 			setKeyboardY(0);
-			Platform.OS == 'android' ? setShowBtn(false) : setShowBtn(false);
 		},
 	);
 
+	const onFocus = () => {
+		setShowBtn(true);
+	};
+
+	const onBlur = () => {
+		setShowBtn(false);
+	};
+
 	//선택한 카테고리 목록 Stringify 함수
 	const getReviewCategory = list => {
+		console.log('list', list);
 		let category_text = '';
-		list.interests_trip.map((v, i) => {
-			category_text = category_text + v + ' / ';
-		});
-		list.interests_review.map((v, i) => {
-			category_text = category_text + v + ' / ';
-		});
-		list.interests_interior.map((v, i) => {
-			category_text = category_text + v + ' / ';
-		});
-		list.interests_hospital.map((v, i) => {
-			category_text = category_text + v + ' / ';
-		});
-		list.interests_etc.map((v, i) => {
-			category_text = category_text + v + ' / ';
-		});
+		const getText = array => {
+			array.map((v, i) => {
+				category_text = category_text + v + ' / ';
+			});
+		};
+		if (list.hasOwnProperty('interests_group1')) {
+			getText(list.interests_etc);
+			getText(list.interests_group1);
+			getText(list.interests_group2);
+			getText(list.interests_group3);
+		} else {
+			getText(list.interests_trip);
+			getText(list.interests_review);
+			getText(list.interests_interior);
+			getText(list.interests_hospital);
+			getText(list.interests_etc);
+		}
+
 		return category_text;
 	};
 
@@ -319,9 +345,9 @@ export default CommunityEdit = props => {
 	};
 
 	//자유글쓰기 버튼 아이콘 컨테이너
-	const getArticleButtonContainer = () => {
+	const getArticleButtonContainer = key => {
 		return (
-			<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
+			<TouchableOpacity activeOpacity={0.6} onPress={() => onPressPhotoSelect(key)}>
 				<View style={[style.buttonItem]}>
 					<Camera54 />
 					<Text style={[txt.noto28b, {marginLeft: 10 * DP}]}>사진추가</Text>
@@ -336,7 +362,7 @@ export default CommunityEdit = props => {
 	};
 
 	const moveToLocationPicker = () => {
-		props.navigation.push('CommunityLocationPicker', {data: data, isReview: isReview, isEdit: true});
+		navigation.navigate('CommunityLocationPicker', {data: data, isReview: isReview, isEdit: true});
 	};
 
 	const getMap = () => {
@@ -399,7 +425,7 @@ export default CommunityEdit = props => {
 					<>
 						<TouchableOpacity activeOpacity={0.6} onPress={onPressFilter} style={[style.category]}>
 							<Text style={[txt.noto28, style.categoryText]} ellipsizeMode={'tail'} numberOfLines={1}>
-								{isInterestsEmpty ? '카테고리 선택' : getReviewCategory(data.community_interests)}
+								{isInterestsEmpty() ? '카테고리 선택' : getReviewCategory(data.community_interests)}
 							</Text>
 							<View style={[style.nextMark]}>
 								<NextMark />
@@ -427,7 +453,7 @@ export default CommunityEdit = props => {
 					<TouchableOpacity onPress={removeEditor} activeOpacity={1} style={{width: 48 * DP}}></TouchableOpacity>
 					<View style={[style.content, {}]}>
 						{Platform.OS == 'android' ? (
-							<ScrollView>
+							<ScrollView onTouchEnd={() => richText.current?.focusContentEditor()} style={{}}>
 								<RichEditor
 									ref={richText}
 									initialContentHTML={data.community_content}
@@ -443,11 +469,13 @@ export default CommunityEdit = props => {
 									onMessage={onMessage}
 									injectedJavaScriptBeforeContentLoaded={runFirst}
 									onPaste={onPaste}
+									onFocus={onFocus}
+									onBlur={onBlur}
 								/>
 							</ScrollView>
 						) : (
 							<>
-								<View style={{flexDirection: 'row'}}>
+								<ScrollView onTouchEnd={() => richText.current?.focusContentEditor()} style={{}}>
 									<RichEditor
 										ref={richText}
 										initialContentHTML={data.community_content}
@@ -466,8 +494,10 @@ export default CommunityEdit = props => {
 										injectedJavaScript={runFirst}
 										pasteAsPlainText={true}
 										onPaste={onPaste}
+										onFocus={onFocus}
+										onBlur={onBlur}
 									/>
-								</View>
+								</ScrollView>
 							</>
 						)}
 					</View>
@@ -511,7 +541,9 @@ export default CommunityEdit = props => {
 				{isReview ? (
 					<></>
 				) : (
-					<View style={[style.buttonContainer, {justifyContent: 'flex-start', opacity: showBtn == true ? 0 : 1}]}>{getArticleButtonContainer()}</View>
+					<View style={[style.buttonContainer, {justifyContent: 'flex-start', opacity: showBtn == true ? 0 : 1}]}>
+						{getArticleButtonContainer(true)}
+					</View>
 				)}
 				<View style={{height: 100}} />
 			</ScrollView>
@@ -530,7 +562,7 @@ export default CommunityEdit = props => {
 				</View>
 			) : (
 				<View style={[style.buttonContainer_keyboard, {bottom: Platform.OS == 'android' ? 0 : KeyboardY, opacity: showBtn == false ? 0 : 1}]}>
-					{getArticleButtonContainer()}
+					{getArticleButtonContainer(false)}
 				</View>
 			)}
 			{/* ios에서 키보드가 가려지는 현상 방지를 위한 keyBoard패딩 컴포넌트 */}

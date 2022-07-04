@@ -102,35 +102,35 @@ export default AppliesRecord = ({route}) => {
 
 	//입양 신청 - 더보기 클릭
 	const showMoreAdoption = () => {
-		navigation.push('ApplyAdoptionList');
+		navigation.navigate('ApplyAdoptionList');
 	};
 
 	//임시보호 신청 - 더보기 클릭
 	const showMoreProtection = () => {
-		navigation.push('ApplyTempProtectList');
+		navigation.navigate('ApplyTempProtectList');
 	};
 
 	//봉사활동 신청 - 더보기 클릭
 	const showMoreVolunteer = () => {
-		navigation.push('ManageUserVolunteer'); // 활동 예정중인 신청, 지난 신청 등 나의 신청 목록을 보내줘야 알 수 있는 부분
+		navigation.navigate('ManageUserVolunteer'); // 활동 예정중인 신청, 지난 신청 등 나의 신청 목록을 보내줘야 알 수 있는 부분
 	};
 
 	//봉사활동 신청 하단 라벨 클릭
 	const onClickShelterLabel = shelterInfo => {
 		let volunteerData = shelterInfo;
 		volunteerData.route = route.name;
-		navigation.push('UserVolunteerForm', volunteerData); //봉사 활동 신청 관련
+		navigation.navigate('UserVolunteerForm', volunteerData); //봉사 활동 신청 관련
 	};
 
 	//입양 신청 라벨 클릭
 	const onClickAdoptApplication = (status, id, data) => {
 		console.log('data ', data);
-		navigation.push('ApplyAdoptionDetails', adopt_application_list[0]);
+		navigation.navigate('ApplyAdoptionDetails', adopt_application_list[0]);
 	};
 
 	//임시보호 신청 라벨 클릭
 	const onClickProtectApplication = (status, id, data) => {
-		navigation.push('ApplyTempProtectDetails', protect_application_list[0]);
+		navigation.navigate('ApplyTempProtectDetails', protect_application_list[0]);
 	};
 
 	//API 접속 이전 상태인 false가 단 하나라도 없으면 이미 로딩완료
@@ -184,7 +184,7 @@ export default AppliesRecord = ({route}) => {
 						)}
 					</View>
 					<View style={[style.shelterList_container]}>
-						<View style={[style.headerContainer]}>
+						<View style={[style.headerContainer, {}]}>
 							<Text style={[style.title]}>봉사활동 신청 </Text>
 							{volunteer_list != undefined && volunteer_list.length > 0 && (
 								<TouchableOpacity onPress={showMoreVolunteer} style={[style.showMoreBox]}>
@@ -194,7 +194,13 @@ export default AppliesRecord = ({route}) => {
 							)}
 						</View>
 						{volunteer_list != undefined && volunteer_list.length > 0 ? (
-							<VolunteerItemList items={volunteer_list.slice(0, 1)} onShelterLabelClick={onClickShelterLabel} showStatus={false} />
+							<VolunteerItemList
+								items={volunteer_list.slice(0, 1)}
+								onClickLabel={onClickShelterLabel}
+								onClickItem={onClickShelterLabel}
+								onShelterLabelClick={onClickShelterLabel}
+								showStatus={false}
+							/>
 						) : (
 							<Text style={[txt.noto24, {color: GRAY10}, style.whenEmpty]}>봉사활동 신청건이 없습니다.</Text>
 						)}
@@ -224,7 +230,7 @@ const style = StyleSheet.create({
 	headerContainer: {
 		width: 694 * DP,
 		height: 48 * DP,
-		// marginBottom: 20 * DP,
+		marginBottom: 20 * DP,
 		flexDirection: 'row',
 		alignItems: 'center',
 		// backgroundColor: 'red',

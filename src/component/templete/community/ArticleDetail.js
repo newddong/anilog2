@@ -14,7 +14,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import community_obj from 'Root/config/community_obj';
 import {Arrow48, Arrow48_GRAY, FavoriteTag46_Filled, FavoriteTag48_Border, Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
-import {FREE_LIMIT_DETAIL, NETWORK_ERROR} from 'Root/i18n/msg';
+import {FREE_LIMIT_DETAIL, NETWORK_ERROR, REGISTERING_COMMENT} from 'Root/i18n/msg';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
@@ -55,6 +55,7 @@ export default ArticleDetail = props => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			//다른 탭(ex - My 탭의 즐겨찾기한 커뮤니티 목록에서 들어온 경우)에서의 호출
 			getArticleData();
+			setPressed(false);
 		});
 		getComment();
 		getArticleList(1);
@@ -92,7 +93,7 @@ export default ArticleDetail = props => {
 			},
 			err => {
 				console.log('err / getCommunityByObjectId / ArticleDetail ', err);
-				if (err.includes('code 500')) {
+				if (err.includes('code 500') || err.includes('code 502')) {
 					Modal.popOneBtn(NETWORK_ERROR, '확인', navigation.goBack);
 				} else {
 					setData('false');
@@ -142,38 +143,42 @@ export default ArticleDetail = props => {
 
 	//해당 자유게시글의 댓글을 받아온다
 	const getComment = parent => {
-		getCommentListByCommunityId(
-			{
-				community_object_id: props.route.params.community_object._id,
-				request_number: 1000,
-			},
-			comments => {
-				// console.log('comments', comments);
-				let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
-				let dummyForBox = res[res.length - 1];
-				if (parent) {
-					const findIndex = res.findIndex(e => e._id == parent._id);
-					console.log('find', findIndex);
-					res.map((v, i) => {
-						res[i].isDeleted = i == findIndex ? true : false;
-					});
-				} else {
-					res.map((v, i) => {
-						res[i].isDeleted = false;
-					});
-				}
-				res.push(dummyForBox);
-				setComments(res);
-			},
-			err => {
-				console.log('getCommentListByCommunityId', err);
-				if (err.includes('검색 결과가 없습니다')) {
-					setComments([{}]);
-				} else if (err.includes('code 500')) {
-					Modal.popNetworkErrorModal('네트워크 오류로 댓글 정보를 \n 받아오는데 실패하였습니다.');
-				}
-			},
-		);
+		try {
+			getCommentListByCommunityId(
+				{
+					community_object_id: props.route.params.community_object._id,
+					request_number: 1000,
+				},
+				comments => {
+					// console.log('comments', comments);
+					let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+					let dummyForBox = res[res.length - 1];
+					if (parent) {
+						const findIndex = res.findIndex(e => e._id == parent._id);
+						console.log('find', findIndex);
+						res.map((v, i) => {
+							res[i].isDeleted = i == findIndex ? true : false;
+						});
+					} else {
+						res.map((v, i) => {
+							res[i].isDeleted = false;
+						});
+					}
+					res.push(dummyForBox);
+					setComments(res);
+				},
+				err => {
+					console.log('getCommentListByCommunityId', err);
+					if (err.includes('검색 결과가 없습니다')) {
+						setComments([{}]);
+					} else if (err.includes('code 500')) {
+						Modal.popNetworkErrorModal('네트워크 오류로 댓글 정보를 \n 받아오는데 실패하였습니다.');
+					}
+				},
+			);
+		} catch (err) {
+			console.log('err,getCommentListByCommunityId ', err);
+		}
 	};
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
@@ -185,8 +190,8 @@ export default ArticleDetail = props => {
 			});
 		} else {
 			if (editData.comment_contents.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
-			// Modal.popLoading(true);
 			try {
+				Modal.popNoBtn(REGISTERING_COMMENT);
 				let param = {
 					comment_contents: editData.comment_contents, //내용
 					comment_is_secure: privateComment, //공개여부 테스트때 반영
@@ -210,7 +215,7 @@ export default ArticleDetail = props => {
 				//댓글 수정을 확정
 				if (editMode) {
 					let whichComment = comments.findIndex(v => v._id == editData._id) == -1 ? '' : comments.findIndex(v => v._id == editData._id); //부모댓글
-					console.log('par', param, editData._id, editData.comment_contents);
+					console.log('editMode params', param, editData._id, editData.comment_contents);
 					updateComment(
 						{
 							...param,
@@ -259,13 +264,17 @@ export default ArticleDetail = props => {
 								err => {
 									console.log('getCommentListByCommunityId', err);
 									if (err.includes('검색 결과가 없습니다.')) {
+										Modal.close();
 										setComments([{}]);
 									}
 								},
 							);
 						},
 						err => {
-							Modal.alert(err);
+							Modal.close();
+							setTimeout(() => {
+								Modal.alert(NETWORK_ERROR);
+							}, 200);
 							console.log('err', err);
 						},
 					);
@@ -274,7 +283,7 @@ export default ArticleDetail = props => {
 					if (parentComment) {
 						whichParent = comments.findIndex(e => e._id == param.commentobject_id);
 					}
-					console.log('param', param);
+					console.log('create mode params', param);
 					createComment(
 						param,
 						result => {
@@ -317,13 +326,17 @@ export default ArticleDetail = props => {
 							);
 						},
 						err => {
-							console.log('err', err);
 							Modal.close();
+							setTimeout(() => {
+								Modal.alert(NETWORK_ERROR);
+							}, 200);
+							console.log('createComment error ', err);
 						},
 					);
 				}
 			} catch (err) {
 				console.log('err', err);
+				Modal.close();
 			}
 		}
 	};
@@ -360,9 +373,9 @@ export default ArticleDetail = props => {
 	React.useEffect(() => {
 		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
 			let selected = props.route.params.selectedPhoto[0];
-			const checkEdit = comment_obj.editData._id != ''; //전역변수에 저장된 수정데이터가 있을 경우 수정데이터(editData)에 선택한 사진을 저장
+			const checkEdit = comment_obj.editData._id != '' || comment_obj.editData.comment_contents != ''; //전역변수에 저장된 수정데이터가 있을 경우 수정데이터(editData)에 선택한 사진을 저장
 			if (checkEdit) {
-				setEditMode(true);
+				comment_obj.editData.isEditMode ? setEditMode(true) : false; //수정데이터인 경우 수정모드로 다시 전환
 				setEditData({...comment_obj.editData, comment_photo_uri: selected.cropUri ?? selected.uri});
 			} else {
 				setEditData({...editData, comment_photo_uri: selected.cropUri ?? selected.uri});
@@ -388,9 +401,10 @@ export default ArticleDetail = props => {
 				navigation.navigate('LoginRequired');
 			});
 		} else {
-			editMode ? (comment_obj.editData = editData) : false;
+			editData.comment_contents ? (comment_obj.editData.comment_contents = editData.comment_contents) : false;
+			editMode ? (comment_obj.editData = {...editData, isEditMode: true}) : false;
 			parentComment ? (comment_obj.parentComment = parentComment) : false;
-			props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
+			navigation.navigate('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 		}
 	};
 
@@ -499,14 +513,22 @@ export default ArticleDetail = props => {
 		setParentComment();
 	};
 
+	const [pressed, setPressed] = React.useState(false);
 	// 게시글 내용 클릭
 	const onPressArticle = index => {
-		console.log('searchInput', searchInput);
-		navigation.push('ArticleDetail', {
-			community_object: articleList[index],
-			searchInput: searchInput,
-			type: props.route.params.type ? props.route.params.type : '',
-		});
+		setPressed(true);
+		if (!pressed) {
+			console.log(`ArticleDetail-${articleList[index]._id + new Date().getTime()}`);
+			navigation.navigate({
+				key: `ArticleDetail-${articleList[index]._id + new Date().getTime()}`,
+				name: 'ArticleDetail',
+				params: {
+					community_object: articleList[index],
+					searchInput: searchInput,
+					type: props.route.params.type ? props.route.params.type : '',
+				},
+			});
+		}
 	};
 
 	//즐겨찾기 클릭

@@ -27,6 +27,8 @@ import CommunityHeader from 'Root/navigation/header/CommunityHeader';
 import ChangePetProfileImage from 'Root/component/templete/pet/ChangePetProfileImage';
 import ProfileHeader from 'Root/navigation/header/ProfileHeader';
 import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
+import AddPhoto from 'Root/component/templete/media/AddPhoto';
+import PhotoSelectHeader from 'Root/navigation/header/PhotoSelectHeader';
 const FeedStack = createStackNavigator();
 
 export default FeedStackNavigation = props => {
@@ -133,6 +135,7 @@ export default FeedStackNavigation = props => {
 				options={{header: props => <SimpleWithMeatballHeader {...props} />}}
 			/>
 			<FeedStack.Screen name="ReportDetail" component={ReportDetail} options={{header: props => <SimpleWithMeatballHeader {...props} />}} />
+			<FeedStack.Screen name="SinglePhotoSelect" component={AddPhoto} options={{header: props => <PhotoSelectHeader {...props} />, title: ''}} />
 		</FeedStack.Navigator>
 	);
 };

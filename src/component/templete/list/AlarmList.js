@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, ScrollView, Text, View, StyleSheet, SafeAreaView, ActivityIndicator, RefreshControl} from 'react-native';
+import {FlatList, Platform, ScrollView, Text, View, StyleSheet, SafeAreaView, ActivityIndicator, RefreshControl} from 'react-native';
 import {accountHashList} from 'Organism/style_organism copy';
 import UserNote from '../../organism/listitem/UserNote';
 import DailyAlarm from '../../organism/list/DailyAlarm';
@@ -265,7 +265,7 @@ const AlarmList = props => {
 							renderItem={renderItem}
 							showsVerticalScrollIndicator={false}
 							refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-							style={[{marginTop: 16 * DP}]}
+							style={[{marginTop: 16 * DP}, {paddingBottom: 20 * DP}]}
 						/>
 					</View>
 				)}
@@ -278,6 +278,7 @@ const styles = StyleSheet.create({
 	container: {
 		width: 750 * DP,
 		// minHeight: 1322 * DP,
+		// height: 1400 * DP,
 		// alignItems: 'center',
 		backgroundColor: WHITE,
 	},
@@ -287,7 +288,9 @@ const styles = StyleSheet.create({
 		marginBottom: 40 * DP,
 	},
 	listContainer: {
-		height: 1270 * DP,
+		// height: 1270 * DP,
+		height: 1345 * DP,
+		height: Platform.OS === 'ios' ? 1265 * DP : 1345 * DP,
 		// backgroundColor: 'yellow',
 	},
 	textConinter: {

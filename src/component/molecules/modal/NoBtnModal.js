@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, Platform, Dimensions} from 'react-native';
 import {WHITE, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
+import Modal from 'Root/component/modal/Modal';
 
 /**
  * 버튼이 없는 모달
@@ -11,9 +12,29 @@ import DP from 'Root/config/dp';
  *
  * @param {Object} props - props object
  * @param {string} props.popUpMsg - 팝업 메시지
+ * @param {string} props.timeout - 타임아웃 콜백
  *
  */
 const NoBtnModal = props => {
+	const timerRef = React.useRef(null);
+	React.useEffect(() => {
+		timerRef.current = setTimeout(() => {
+			Modal.close();
+			setTimeout(() => {
+				Modal.popOneBtn('오류가 발생하였습니다. \n 잠시후 다시 이용해주세요. ', '확인', () => {
+					if (props.timeout) {
+						props.timeout();
+					} else Modal.close();
+				});
+			}, 200);
+		}, 10000);
+		return () => {
+			if (timerRef.current) {
+				// console.log('timerRef.current', timerRef.current);
+				clearTimeout(timerRef.current);
+			}
+		};
+	}, []);
 	return (
 		<View style={style.background}>
 			<View style={[style.popUpWindow, style.shadow]}>
@@ -25,6 +46,9 @@ const NoBtnModal = props => {
 
 NoBtnModal.defaultProps = {
 	popUpMsg: 'popUp',
+	timeout: () => {
+		Modal.close();
+	},
 };
 
 const style = StyleSheet.create({

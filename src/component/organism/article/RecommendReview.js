@@ -44,7 +44,7 @@ const RecommendReview = props => {
 		let index = 0;
 		category_sum_list.map((val, ind) => {
 			totalWidth = totalWidth + 20 + val.length * 10;
-			if (totalWidth < 500 * DP) {
+			if (totalWidth < 400 * DP) {
 				// console.log('totalWidth', totalWidth);
 				newArr.push({group: index, item: val});
 			} else {

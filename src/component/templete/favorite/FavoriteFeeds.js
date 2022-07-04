@@ -19,9 +19,11 @@ import Loading from 'Root/component/molecules/modal/Loading';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import {APRI10} from 'Root/config/color';
 import DP from 'Root/config/dp';
+import {useNavigation} from '@react-navigation/core';
 
 //즐겨찾기한 피드목록을 조회
-export default FavoriteFeeds = ({route, navigation}) => {
+export default FavoriteFeeds = ({route}) => {
+	const navigation = useNavigation();
 	const [selectMode, setSelectMode] = React.useState(false);
 	const [data, setData] = React.useState('false');
 	const [tagObject, setTagObject] = React.useState();
@@ -265,23 +267,24 @@ export default FavoriteFeeds = ({route, navigation}) => {
 			//선택모드 true값과 false값이 반대로 주는 이유 확인 후 case 문으로 변경 필요
 			getUserProfile(
 				{
-					userobject_id: passing_id,
+					userobject_id: passing_id._id,
 				},
 				result => {
 					// console.log('result / getUserProfile / FavoriteFeeds   :', result.msg.feedList[0]);
 					if (route.name == 'UserFeeds') {
-						navigation.push('UserFeedList', {title: titleValue, userobject: result.msg, selected: feed_id});
+						navigation.navigate('UserFeedList', {title: titleValue, userobject: result.msg, selected: feed_id});
 					} else if (route.name == 'TagMeFeeds') {
 						// console.log('tageme');
-						navigation.push('TagMeFeedList', {
+						navigation.navigate('TagMeFeedList', {
 							title: userGlobalObject.userInfo.user_nickname + '님을 태그한 글',
-							userobject: result.msg,
+							// userobject: result.msg,
+							userobject: userGlobalObject.userInfo,
 							selected: feed_id, //target_object_id
 							index: index,
 						});
 					} else if (route.name == 'FavoriteFeeds') {
 						// console.log('feed_id', feed_id);
-						navigation.push('FavoriteFeedList', {title: '즐겨찾기한 게시글', userobject: result.msg, selected: feed_id});
+						navigation.navigate('FavoriteFeedList', {title: '즐겨찾기한 게시글', userobject: result.msg, selected: feed_id});
 					}
 					//다른 route가 있을 경우 else if 확장 할 것
 					else {
@@ -290,6 +293,7 @@ export default FavoriteFeeds = ({route, navigation}) => {
 				},
 				err => {
 					Modal.alert('err / getUserProfile / FavoriteFeeds ' + err);
+					console.log('err getUserProfile / FavoriteFeeds ', err);
 				},
 			);
 		} else if (selectMode) {

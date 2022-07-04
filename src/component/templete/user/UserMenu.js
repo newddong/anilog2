@@ -81,7 +81,7 @@ export default UserMenu = props => {
 				'네',
 				() => Modal.close(),
 				() => {
-					navigation.push('AssignPetProfileImage', {userobject_id: data._id, previousRouteName: 'UserInfoSetting'});
+					navigation.navigate('AssignPetProfileImage', {userobject_id: data._id, previousRouteName: 'UserInfoSetting'});
 					Modal.close();
 				},
 			);
@@ -89,7 +89,7 @@ export default UserMenu = props => {
 			Modal.popAvatarSelectModal(
 				selectedPet => {
 					// console.log('selected', selectedPet);
-					navigation.push('PetInfoSetting', {pet_id: selectedPet._id}); //data에 있는 userObject를 토대로 해당 유저의 반려동물을 검색해서 보내야함
+					navigation.navigate('PetInfoSetting', {pet_id: selectedPet._id}); //data에 있는 userObject를 토대로 해당 유저의 반려동물을 검색해서 보내야함
 					Modal.close();
 				},
 				'확인',
@@ -99,70 +99,64 @@ export default UserMenu = props => {
 	};
 
 	const onPressMyName = () => {
-		navigation.push('UserProfile', {userobject: data});
+		navigation.navigate('UserProfile', {userobject: data});
 	};
 
 	// 내 정보 수정 클릭
 	const onPressModifyMyInfo = () => {
-		navigation.push('UserInfoSetting', {token: data._id}); //userObject
+		navigation.navigate('UserInfoSetting', {token: data._id}); //userObject
 	};
 
 	//하단 메뉴 클릭
 	const menuClick = menuItem => {
 		switch (menuItem) {
 			case FRIENDS: //친구 즐겨찾기
-				navigation.push('FavoriteUser'); // FollowObject
+				navigation.navigate('FavoriteUser'); // FollowObject
 				break;
 			case PEED_CONTENTS: //피드게시글
-				navigation.push('FavoriteFeeds', {token: data}); // FavoriteFeedObject
+				navigation.navigate('FavoriteFeeds', {token: data}); // FavoriteFeedObject
 				break;
 			case COMUNITY: //즐겨찾기한 커뮤니티
-				navigation.push('FavoriteCommunity');
+				navigation.navigate('FavoriteCommunity');
 				break;
 			case PROTECTION_REQUEST: //보호요청(저장)
-				navigation.push('FavoriteProtectRequest');
+				navigation.navigate('FavoriteProtectRequest');
 				break;
 			case '내 게시글': //내 게시글
-				navigation.push('UserFeeds');
+				navigation.navigate('UserFeeds');
 				break;
 			case TAGED_CONTENTS_FOR_ME: //나를 태그한 글
-				navigation.push('TagMeFeeds', {token: data});
+				navigation.navigate('TagMeFeeds', {token: data});
 				break;
 			case APPLICATION_HISTORY: //신청 내역
-				navigation.push('AppliesRecord', data._id); // ShelterProtectAnimalObject
+				navigation.navigate('AppliesRecord', data._id); // ShelterProtectAnimalObject
 				break;
 			case ANIMAL_PROTECTION_STATE: // 동물 보호 현황
-				navigation.push('AnimalProtectList', data._id); //ProtectAnimalObject
+				navigation.navigate('AnimalProtectList', data._id); //ProtectAnimalObject
 				break;
 			case NOTE_LIST: // 쪽지함
-				navigation.push('ReceivedMessage', {token: data});
+				navigation.navigate({key: 'ReceivedMessage', name: 'ReceivedMessage', params: {token: data}});
 				break;
 			case INFO_QUESTION: //정보 문의
-				navigation.push('SettingInformAsk');
+				navigation.navigate('SettingInformAsk');
 				break;
 			case '커뮤니티 ': //나의 활동 커뮤니티
-				navigation.push('MyCommunity');
+				navigation.navigate('MyCommunity');
 				break;
 			case ACCOUNT: //계정
-				navigation.push('SettingAccount');
+				navigation.navigate('SettingAccount');
 				break;
 			case APPSETTING:
-				navigation.push('SettingAlarm');
+				navigation.navigate('SettingAlarm');
 				break;
 			case INFO: //알림
-				navigation.push('SettingAlarm');
+				navigation.navigate('SettingAlarm');
 				break;
 			case OPENSETTING: //공개설정
-				navigation.push('SettingOpen');
+				navigation.navigate('SettingOpen');
 				break;
 		}
-		// navigation.push('me')
 	};
-	const onTextLayout = useCallback(e => {
-		// console.log('aaaaaa', e.nativeEvent.lines.length > 1);
-		// setShowInfo(e.nativeEvent.lines.length > 1);
-		// setNumOfLines(e.nativeEvent.lines.length);
-	}, []);
 
 	if (data == 'false') {
 		return <Loading isModal={false} />;
@@ -192,7 +186,7 @@ export default UserMenu = props => {
 						<View style={{flexDirection: 'row', width: 694 * DP}}>
 							<View style={[styles.introduceBox, {alignSelf: 'flex-start'}]}>
 								{data._id != undefined && (
-									<Text numberOfLines={!showMoreIntro ? 15 : 2} style={[txt.noto26]} onTextLayout={onTextLayout}>
+									<Text numberOfLines={!showMoreIntro ? 15 : 2} style={[txt.noto26]}>
 										{/* // <Text numberOfLines={showInfo ? 15 : 1} style={[txt.noto26]} onTextLayout={onTextLayout}> */}
 										{data.user_introduction || '자기소개가 없습니다.'}
 									</Text>

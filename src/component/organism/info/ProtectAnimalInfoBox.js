@@ -18,6 +18,24 @@ const ProtectAnimalInfoBox = props => {
 		let str = moment(date).format('YY.MM.DD');
 		return str;
 	};
+	const getGender = () => {
+		data.protect_animal_id ? (data.protect_animal_id.protect_animal_sex == 'male' ? '수컷' : '암컷') : '';
+		let gender = '모름';
+		if (data.protect_animal_id) {
+			switch (data.protect_animal_id.protect_animal_sex) {
+				case 'male':
+					gender = '수컷';
+					break;
+				case 'female':
+					gender = '암컷';
+					break;
+				default:
+					gender = '모름';
+					break;
+			}
+		}
+		return gender;
+	};
 
 	return (
 		<View style={[styles.rescueSummary]}>
@@ -54,9 +72,7 @@ const ProtectAnimalInfoBox = props => {
 						</Text>
 					</View>
 					<Text style={[txt.noto24, animalProtectRequestDetail_style.rescueSummary_insideItem_category, {}]}>성별</Text>
-					<Text style={[txt.noto28, styles.rescueSummary_insideItem_content]}>
-						{data.protect_animal_id ? (data.protect_animal_id.protect_animal_sex == 'male' ? '수컷' : '암컷') : ''}
-					</Text>
+					<Text style={[txt.noto28, styles.rescueSummary_insideItem_content]}>{getGender()}</Text>
 				</View>
 				<View style={[styles.rescueSummary_insideItem, {justifyContent: 'space-between'}]}>
 					<View style={{flexDirection: 'row', alignItems: 'center', width: 490 * DP}}>

@@ -49,27 +49,6 @@ export default Feed = React.memo(props => {
 	} = props.data;
 	const [isLike, setLike] = React.useState(false);
 	const [likeCount, setLikeCount] = React.useState(0);
-	// console.log('feed content', props.data);
-	const moveToCommentList = async () => {
-		if (userGlobalObject.userInfo.isPreviewMode && feed_comment_count == 0) {
-			Modal.popLoginRequestModal(() => {
-				navigation.navigate('LoginRequired');
-			});
-		} else {
-			AsyncStorage.getItem('sid', (err, res) => {
-				console.log('res', res);
-				if (res == null && feed_comment_count == 0) {
-					Modal.popNoBtn('로그인이 필요합니다.');
-					setTimeout(() => {
-						Modal.close();
-					}, 1500);
-				} else {
-					navigation.push('FeedCommentList', {feedobject: props.data});
-					// console.log('move to FeedCommnetList', props.data);
-				}
-			});
-		}
-	};
 
 	const toggleFeedLike = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
@@ -77,11 +56,7 @@ export default Feed = React.memo(props => {
 				navigation.navigate('LoginRequired');
 			});
 		} else {
-			if (isLike) {
-				setLike(false);
-			} else {
-				setLike(true);
-			}
+			setLike(!isLike);
 			likeFeed(
 				{
 					feedobject_id: props.data._id,

@@ -37,7 +37,7 @@ const PetLabel148 = props => {
 				{props.data.user_profile_uri ? (
 					<FastImage source={{uri: props.data.user_profile_uri}} style={styles.img_round_148} />
 				) : (
-					<ProfileDefaultImg size={styles.img_round_68} />
+					<ProfileDefaultImg size={styles.img_round_148} />
 				)}
 				<View style={{position: 'absolute', top: 45, right: 15}}>
 					{/* 팻의 상태 여부에 따른 분기 - protected, adopted, normal  */}

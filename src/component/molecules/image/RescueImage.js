@@ -67,6 +67,30 @@ const RescueImage = props => {
 		}
 	};
 
+	const getBlur = () => {
+		let show = false;
+		switch (props.status) {
+			case 'found':
+			case 'complete':
+			case 'rainbowbridge':
+			case 'rainbowbridge_euthanasia':
+				show = false;
+				break;
+			default:
+				show = true;
+				break;
+		}
+		if (show) {
+			return (
+				<View style={[style.blur, {zIndex: 1}]}>
+					<Blur694 />
+				</View>
+			);
+		} else {
+			return <></>;
+		}
+	};
+
 	return (
 		<View style={[styles.img_square_round_694]}>
 			<Swiper showsPagination={false} autoplay={false} loop={false} horizontal={true}>
@@ -79,9 +103,7 @@ const RescueImage = props => {
 									{idx + 1}/{props.img_uri.length}
 								</Text>
 							</View>
-							<View style={[style.blur, {zIndex: 1}]}>
-								<Blur694 />
-							</View>
+							{getBlur()}
 						</TouchableOpacity>
 					))}
 			</Swiper>

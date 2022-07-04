@@ -1,12 +1,13 @@
 import moment from 'moment';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {GRAY10, GRAY20, MAINBLACK, WHITE} from 'Root/config/color';
+import {Text, View} from 'react-native';
+import {GRAY20} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import ShelterLabel from 'Molecules/label/ShelterLabel';
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
+import {volunteerItem} from 'Organism/style_organism copy';
+import {getUserInfoById} from 'Root/api/userapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import FastImage from 'react-native-fast-image';
 
 /**
  * 보호소 Object 정보 박스
@@ -86,48 +87,20 @@ export default VolunteerItem = props => {
 	};
 
 	return (
-		<View style={[style.container]}>
-			{/* <View style={[style.labelContainer]}>
+		<View style={[volunteerItem.container]}>
+			<View style={[volunteerItem.labelContainer]}>
+				{/* user_type이 shelter일 경우 ShelterLabel. 아닐 경우 UserDescriptionLabel */}
 				{!props.isShelterUser ? (
 					<ShelterLabel data={data} onClickLabel={() => props.onClickLabel()} />
 				) : (
 					<UserDescriptionLabel width={388} data={data.volunteer_accompany[0].member} onClickLabel={() => props.onClickLabel()} />
 				)}
-			</View> */}
-			<TouchableOpacity activeOpacity={0.8} onPress={() => props.onShelterLabelClick(data)} style={[shelterList.shelterLabel]}>
-				<View style={[shelterList.leftContainer]}>
-					<View style={[{width: 158 * DP, height: 148 * DP}]}>
-						<FastImage source={{uri: data.user_profile_uri}} style={shelterList.shelterImage} />
-						<View style={[shelterList.shelterType]}>
-							<Text style={[txt.noto22b, {color: WHITE, textAlignVertical: 'center', textAlign: 'center'}]}>
-								{data.shelter_type == 'private' ? '사' : '공'}
-							</Text>
-						</View>
-					</View>
+			</View>
+			{props.nvName != 'ProtectApplicant' && (
+				<View style={[volunteerItem.expected_activityDate]}>
+					<Text style={[txt.roboto22, {color: GRAY20}]}>{parsing_wish_date()}</Text>
+					<Text style={[txt.roboto24, {color: GRAY20, marginTop: 5}]}>{props.type == 'done' ? getStatusText_done() : getStatusText_notDone()}</Text>
 				</View>
-				<View style={[shelterList.rightContainer, {}]}>
-					<Text style={[txt.roboto24, {color: GRAY10}]}>2022.05.01</Text>
-					<Text style={[txt.noto30, {maxWidth: 380 * DP}]} numberOfLines={1}>
-						{data.user_nickname}
-					</Text>
-					<View style={{flexDirection: 'row'}}>
-						{data.volunteer_wish_date.map((v, i) => {
-							return (
-								<Text key={i} style={[txt.noto26]}>
-									{i != 0 ? '/' : ''} {moment(v).format('YY.MM.DD')}
-								</Text>
-							);
-						})}
-					</View>
-				</View>
-			</TouchableOpacity>
-			{props.nvName != 'ProtectApplicant' && props.showStatus ? (
-				<View style={[style.expected_activityDate]}>
-					{/* <Text style={[txt.roboto22, {color: GRAY20}]}>{parsing_wish_date()}</Text> */}
-					<Text style={[txt.noto24, {color: GRAY20, marginTop: 5}]}>{props.type == 'done' ? getStatusText_done() : getStatusText_notDone()}</Text>
-				</View>
-			) : (
-				<></>
 			)}
 		</View>
 	);
@@ -135,56 +108,4 @@ export default VolunteerItem = props => {
 
 VolunteerItem.defaultProps = {
 	onClickLabel: e => console.log(e),
-	showStatus: true,
 };
-
-const style = StyleSheet.create({
-	container: {
-		width: 654 * DP,
-		// height: 94 * DP,
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-	},
-	labelContainer: {
-		width: 510 * DP,
-		// backgroundColor: 'palegreen',
-	},
-	expected_activityDate: {
-		// width: 112 * DP,
-		// backgroundColor: 'yellow',
-		height: 70 * DP,
-		alignItems: 'flex-end',
-		alignSelf: 'center',
-	},
-});
-
-const shelterList = StyleSheet.create({
-	container: {
-		width: 694 * DP,
-		height: 160 * DP,
-	},
-	shelterLabel: {
-		marginRight: 22 * DP,
-		flexDirection: 'row',
-	},
-	leftContainer: {
-		marginRight: 30 * DP,
-	},
-	shelterImage: {
-		width: 148 * DP,
-		height: 148 * DP,
-		borderRadius: 100,
-		alignSelf: 'flex-end',
-	},
-	shelterType: {
-		width: 62 * DP,
-		height: 62 * DP,
-		borderRadius: 12 * DP,
-		backgroundColor: MAINBLACK,
-		justifyContent: 'center',
-		position: 'absolute',
-		bottom: 0,
-		left: 0,
-	},
-	rightContainer: {},
-});

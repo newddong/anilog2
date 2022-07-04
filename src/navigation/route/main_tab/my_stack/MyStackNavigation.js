@@ -20,7 +20,6 @@ import AssignPetProfileImage from 'Templete/pet/AssignPetProfileImage';
 import AssignPetInfoA from 'Templete/pet/AssignPetInfoA';
 import AssignPetInfoB from 'Templete/pet/AssignPetInfoB';
 import FavoriteUser from 'Root/component/templete/favorite/FavoriteUser';
-import SaveAnimalRequest from 'Templete/protection/SaveAnimalRequest';
 import FavoriteFeeds from 'Templete/favorite/FavoriteFeeds';
 import AppliesRecord from 'Templete/my/AppliesRecord';
 import ApplyAdoptionList from 'Root/component/templete/protection/ApplyAdoptionList';
@@ -86,22 +85,22 @@ import ReviewDetail from 'Root/component/templete/community/ReviewDetail';
 import CommunityHeader from 'Root/navigation/header/CommunityHeader';
 
 import MyHeader from 'Root/navigation/header/MyHeader';
+import AddPhoto from 'Root/component/templete/media/AddPhoto';
+import PhotoSelectHeader from 'Root/navigation/header/PhotoSelectHeader';
+import ProfileHeader from 'Root/navigation/header/ProfileHeader';
+
 
 const MyStack = createStackNavigator();
 export default MyStackNavigation = props => {
 	return (
 		<MyStack.Navigator initialRouteName={userGlobalObject.userInfo.user_type == 'shelter' ? 'ShelterMenu' : 'UserMenu'}>
 			{/* // <MyStack.Navigator initialRouteName={'ShelterMenu'}> */}
-			<MyStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <MeatBallHeader {...props} />, title: '피드 게시글'}} />
+			<MyStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: '피드 게시글'}} />
 			<MyStack.Screen name="UserFeeds" component={FavoriteFeeds} options={{header: props => <SimpleHeader {...props} />, title: '내 게시글'}} />
 			<MyStack.Screen name="HashFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: '#반려동물'}} />
 			<MyStack.Screen name="ProtectAnimalFeedList" component={FeedList} />
-			<MyStack.Screen name="UserTagFeedList" component={FeedList} />
-			<MyStack.Screen
-				name="UserProfile"
-				component={Profile}
-				options={{header: props => <MeatBallHeader {...props} menu={['신고하기', '신고']} />, title: '프로필'}}
-			/>
+			<MyStack.Screen name="UserTagFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: '프로필'}} />
+			<MyStack.Screen name="UserProfile" component={Profile} options={{header: props => <ProfileHeader {...props} />, title: '프로필'}} />
 			<MyStack.Screen
 				name="AnimalProtectRequestDetail"
 				component={AnimalProtectRequestDetail}
@@ -178,18 +177,8 @@ export default MyStackNavigation = props => {
 				options={{header: props => <SimpleHeader {...props} />, title: '반려동물 등록'}}
 			/>
 			<MyStack.Screen name="FavoriteUser" component={FavoriteUser} options={{header: props => <SimpleHeader {...props} />, title: '즐겨찾은 친구'}} />
-			<MyStack.Screen
-				name="UserSaveAnimalRequest"
-				component={SaveAnimalRequest}
-				options={{header: props => <SimpleHeader {...props} />, title: '보호요청 저장'}}
-			/>
-			<MyStack.Screen
-				name="ShelterSaveAnimalRequest"
-				component={SaveAnimalRequest}
-				options={{header: props => <SimpleHeader {...props} />, title: '보호요청 저장'}}
-			/>
 			<MyStack.Screen name="FeedCommentList" component={FeedCommentList} options={{header: props => <SimpleHeader {...props} />, title: '댓글'}} />
-
+			<MyStack.Screen name="SinglePhotoSelect" component={AddPhoto} options={{header: props => <PhotoSelectHeader {...props} />, title: ''}} />
 			<MyStack.Screen
 				name="FavoriteFeeds"
 				component={FavoriteFeeds}

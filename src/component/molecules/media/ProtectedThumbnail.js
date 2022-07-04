@@ -52,40 +52,38 @@ const ProtectedThumbnail = props => {
 	};
 
 	const getStatusText = () => {
-		if (data.notice_day < 0) {
-			return '공고중 D' + data.notice_day;
-		} else {
-			switch (data.status) {
-				case 'rescue':
-				case 'wait':
-				case 'protect':
-					return '입양 가능';
-				case 'emergency':
-					return '안락사 임박';
-				case 'found':
-					return '주인 찾음';
-				case 'missing':
-					return '실종';
-				case 'rainbowbridge_euthanasia':
-				case 'rainbowbridge':
-					return '무지개다리';
-				case 'report':
-					return '제보';
-				case 'discuss':
-				case undefined:
-					return '협의 중';
-				case 'donation':
-					return '기증';
-				case 'complete':
-				case 'accept':
-				case 'done':
-					return '입양 완료';
-			}
+		switch (data.status) {
+			case 'rescue':
+				if (data.notice_day < 0) {
+					return '공고중 D' + data.notice_day;
+				} else return '입양가능';
+			case 'wait':
+			case 'protect':
+				return '입양 가능';
+			case 'emergency':
+				return '안락사 임박';
+			case 'found':
+				return '주인 찾음';
+			case 'missing':
+				return '실종';
+			case 'rainbowbridge_euthanasia':
+			case 'rainbowbridge':
+				return '무지개다리';
+			case 'report':
+				return '제보';
+			case 'discuss':
+			case undefined:
+				return '협의 중';
+			case 'donation':
+				return '기증';
+			case 'complete':
+			case 'accept':
+			case 'done':
+				return '입양 완료';
 		}
 	};
 
 	const onClickLabel = () => {
-		// console.log(`--onClickLabel-- data=>${JSON.stringify(data)}`);
 		props.onLabelClick(data.status, data._id);
 	};
 
@@ -110,7 +108,7 @@ const ProtectedThumbnail = props => {
 	};
 
 	const getBlur = () => {
-		if (data.status != 'missing' && data.status != 'report') {
+		if (data.status != 'missing' && data.status != 'report' && data.status != 'rainbowbridge_euthanasia' && data.status != 'rainbowbridge') {
 			return (
 				<View style={[style.blur, {zIndex: -1}]}>
 					<Blur />
@@ -124,7 +122,10 @@ const ProtectedThumbnail = props => {
 	return (
 		<View style={styles.img_square_round_226}>
 			<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.4} onPress={onClickLabel}>
-				<FastImage source={{uri: data.img_uri,width:226*DP,height:226*DP}} style={[styles.img_square_round_226, borderByStatus(), {zIndex: -3}]}  />
+				<FastImage
+					source={{uri: data.img_uri, width: 226 * DP, height: 226 * DP}}
+					style={[styles.img_square_round_226, borderByStatus(), {zIndex: -3}]}
+				/>
 				{/* <Image source={{uri: data.img_uri}} onLoad={e => setImageLoad(true)} style={[styles.img_square_round_226, borderByStatus(), {zIndex: -3}]} /> */}
 				{/* 펫 성별마크 */}
 				<View style={{position: 'absolute', right: 10 * DP, top: 10 * DP}}>{getGenderMark()}</View>

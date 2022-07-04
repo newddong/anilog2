@@ -32,20 +32,26 @@ export default FeedMediaTagEdit = props => {
 	const feedData = navState.routes[navState.index - 1].params;
 
 	const [data, setData] = React.useState(feedData);
-	
+	const [scroll, setScroll] = React.useState(true);
 	// React.useEffect(()=>{
 
-
+	const onTagMove = isMove => {
+		setScroll(!isMove);
+	}
 
 	// 	setData(feedData);
 	// },[])
 
-	const onMakeTag = (tag, uri) => {
-		console.log(uri,'   make   ',tag);
+	const onMakeTag = (newtag, uri) => {
+		console.log(uri,'   make   ',newtag);
 		data.feed_medias?.forEach((v, i, a) => {
-			let newtag = {position_x: tag.pos.x, position_y: tag.pos.y, tag_user_id: tag.user._id, user:tag.user, pos: tag.pos};
-			if (v.media_uri === uri) {
-				a[i].tags ? a[i].tags.push(newtag) : (a[i].tags = [newtag]);
+			if (v.media_uri == uri) {
+				a[i].tags ? a[i].tags : (a[i].tags = [newtag]);
+				if(a[i].tags&&a[i].tags.length>0){
+					a[i].tags = a[i].tags.filter(v => v.user._id != newtag.user._id).concat(newtag)
+				}else{
+					a[i].tags = [newtag];
+				}
 			}
 		});
 	};
@@ -65,7 +71,7 @@ export default FeedMediaTagEdit = props => {
 	const renderItems = () => {
 		if (!data||data.length<1) return false;
 		return data.feed_medias?.map((v, i) => (
-			<PhotoTagItem style={lo.box_img} uri={v.media_uri} data={v.media_uri} taglist={v.tags} key={i} onMakeTag={onMakeTag} onDeleteTag={onDeleteTag} viewmode={false} />
+			<PhotoTagItem style={lo.box_img} uri={v.media_uri} data={v.media_uri} taglist={v.tags} key={i} onMakeTag={onMakeTag} onDeleteTag={onDeleteTag} viewmode={false} onTagMove={onTagMove}/>
 		));
 	};
 
@@ -83,6 +89,7 @@ export default FeedMediaTagEdit = props => {
 			<View style={lo.box_img_tag}>
 				<Swiper
 					activeDotColor={APRI10}
+					scrollEnabled={scroll}
 					showsButtons={false}
 					autoplay={false}
 					loop={false}
@@ -149,7 +156,7 @@ const lo = StyleSheet.create({
 	},
 	box_img_tag: {
 		height: 750 * DP,
-		backgroundColor: 'gray',
+		backgroundColor: '#FFF',
 	},
 	box_img: {
 		height: 750 * DP,

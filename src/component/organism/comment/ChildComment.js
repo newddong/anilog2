@@ -163,7 +163,7 @@ const ChildComment = props => {
 				<View style={[childComment.userTimeLabel]}>
 					{data ? (
 						<View style={{flexDirection: 'row'}}>
-							<UserTimeLabel data={data} onLabelClick={userobject => navigation.push('UserProfile', {userobject: userobject})} />
+							<UserTimeLabel data={data} onLabelClick={userobject => navigation.navigate('UserProfile', {userobject: userobject})} />
 							{data.comment_is_secure ? (
 								<View style={[{top: -6 * DP, marginLeft: 6 * DP}]}>
 									<SecureIcon40 />

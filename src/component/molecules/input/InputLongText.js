@@ -64,6 +64,7 @@ const InputLongText = props => {
 					]}
 					onChangeText={onChange}
 					placeholder={props.placeholder}
+					placeholderTextColor="#767676"
 					multiline={true}
 					ref={inputRef}
 					defaultValue={props.value}

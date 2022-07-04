@@ -184,7 +184,7 @@ export default AppliesRecord = ({route}) => {
 						)}
 					</View>
 					<View style={[style.shelterList_container]}>
-						<View style={[style.headerContainer]}>
+						<View style={[style.headerContainer, {}]}>
 							<Text style={[style.title]}>봉사활동 신청 </Text>
 							{volunteer_list != undefined && volunteer_list.length > 0 && (
 								<TouchableOpacity onPress={showMoreVolunteer} style={[style.showMoreBox]}>
@@ -194,7 +194,13 @@ export default AppliesRecord = ({route}) => {
 							)}
 						</View>
 						{volunteer_list != undefined && volunteer_list.length > 0 ? (
-							<VolunteerItemList items={volunteer_list.slice(0, 1)} onShelterLabelClick={onClickShelterLabel} showStatus={false} />
+							<VolunteerItemList
+								items={volunteer_list.slice(0, 1)}
+								onClickLabel={onClickShelterLabel}
+								onClickItem={onClickShelterLabel}
+								onShelterLabelClick={onClickShelterLabel}
+								showStatus={false}
+							/>
 						) : (
 							<Text style={[txt.noto24, {color: GRAY10}, style.whenEmpty]}>봉사활동 신청건이 없습니다.</Text>
 						)}
@@ -224,7 +230,7 @@ const style = StyleSheet.create({
 	headerContainer: {
 		width: 694 * DP,
 		height: 48 * DP,
-		// marginBottom: 20 * DP,
+		marginBottom: 20 * DP,
 		flexDirection: 'row',
 		alignItems: 'center',
 		// backgroundColor: 'red',

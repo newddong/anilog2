@@ -28,18 +28,17 @@ export default function HashText(props) {
 	const [hide, setHide] = React.useState(text.length > 2);
 	const onShow = () => {
 		setHide(false);
-		props.onMoreView&&props.onMoreView(false);
-	}
-	const onHide = () =>{
+		props.onMoreView && props.onMoreView(false);
+	};
+	const onHide = () => {
 		setHide(true);
-		props.onMoreView&&props.onMoreView(true);
-	}
+		props.onMoreView && props.onMoreView(true);
+	};
 
-	const makeView = (input, taginfo,hide, onShow) => {
+	const makeView = (input, taginfo, hide, onShow) => {
 		// hide =false
 		const moreView = () => (
-			<TouchableOpacity
-				onPress={onShow}>
+			<TouchableOpacity onPress={onShow}>
 				<View style={{flexDirection: 'row', paddingTop: 4 * DP, height: 30 * DP, alignItems: 'center'}}>
 					<Text style={[txt.noto24, {lineHeight: 30 * DP}]}>더보기</Text>
 					<Arrow_Down_GRAY20 />
@@ -47,11 +46,21 @@ export default function HashText(props) {
 			</TouchableOpacity>
 		);
 		const hideView = () => (
-			<TouchableOpacity
-				onPress={onHide}>
-				<View style={{width:694*DP,paddingHorizontal:28*DP,flexDirection: 'row', paddingTop: 20 * DP, height:50 * DP,justifyContent:'flex-end',alignItems: 'center'}}>
+			<TouchableOpacity onPress={onHide}>
+				<View
+					style={{
+						width: 694 * DP,
+						paddingHorizontal: 28 * DP,
+						flexDirection: 'row',
+						paddingTop: 20 * DP,
+						height: 50 * DP,
+						justifyContent: 'flex-end',
+						alignItems: 'center',
+					}}>
 					<Text style={[txt.noto24, {lineHeight: 30 * DP}]}>접기</Text>
-					<View style={{transform:[{rotate:'180deg'}]}}><Arrow_Down_GRAY20 /></View>
+					<View style={{transform: [{rotate: '180deg'}]}}>
+						<Arrow_Down_GRAY20 />
+					</View>
 				</View>
 			</TouchableOpacity>
 		);
@@ -61,20 +70,14 @@ export default function HashText(props) {
 				if (i == 1) {
 					if (v.includes('#') || v.includes('@'))
 						return (
-							<View style={{flexDirection:'row',width:694*DP,justifyContent:'space-between'}} key={'hide'}>
-								<Text {...props}>
-									{makeTagView(getByteSubtring(v, 35), taginfo)}...
-									
-								</Text>
+							<View style={{flexDirection: 'row', width: 694 * DP, justifyContent: 'space-between'}} key={'hide'}>
+								<Text {...props}>{makeTagView(getByteSubtring(v, 35), taginfo)}...</Text>
 								{moreView()}
 							</View>
 						);
 					return (
-						<View style={{flexDirection:'row',width:694*DP,justifyContent:'space-between'}} key={v}>
-							<Text {...props}>
-								{getByteSubtring(v, 35)}...
-								
-							</Text>
+						<View style={{flexDirection: 'row', width: 694 * DP, justifyContent: 'space-between'}} key={v}>
+							<Text {...props}>{getByteSubtring(v, 35)}...</Text>
 							{moreView()}
 						</View>
 					);
@@ -85,7 +88,7 @@ export default function HashText(props) {
 					<React.Fragment key={i}>
 						<Text>{makeTagView(v, taginfo)}</Text>
 						{<Text>{'\n'}</Text>}
-						{input.length>2&&i==input.length-1&&hideView()}
+						{input.length > 2 && i == input.length - 1 && hideView()}
 					</React.Fragment>
 				);
 			} else {
@@ -93,28 +96,26 @@ export default function HashText(props) {
 					<React.Fragment key={i}>
 						<Text>{v}</Text>
 						{<Text>{'\n'}</Text>}
-						{input.length>2&&i==input.length-1&&hideView()}
+						{input.length > 2 && i == input.length - 1 && hideView()}
 					</React.Fragment>
 				);
 			}
 		});
 	};
-	
+
 	const navigation = useNavigation();
 
 	const makeTagView = (str, taginfo) => {
 		let regex = /(.*?)([#@].*?)( |$)/g;
 		let regex2 = / ([^#@]*?)$/g;
-	
-		
-	
+
 		const pressfn = tag => {
 			if (tag.charAt(0) == '#') {
-				navigation.push('FeedListForHashTag', {hashtag_keyword: tag.substring(1)});
+				navigation.navigate('FeedListForHashTag', {hashtag_keyword: tag.substring(1)});
 			}
 			if (tag.charAt(0) == '@') {
 				if (taginfo[tag]) {
-					navigation.push('UserProfile', {userobject: {_id: taginfo[tag]}});
+					navigation.navigate('UserProfile', {userobject: {_id: taginfo[tag]}});
 				} else {
 					getUserListByNickname(
 						{
@@ -123,7 +124,7 @@ export default function HashText(props) {
 							user_type: '',
 						},
 						result => {
-							navigation.push('UserProfile', {userobject: {_id: result.msg[0]._id}});
+							navigation.navigate('UserProfile', {userobject: {_id: result.msg[0]._id}});
 						},
 						error => {
 							Modal.alert('존재하지 않는 유저입니다.');
@@ -132,7 +133,7 @@ export default function HashText(props) {
 				}
 			}
 		};
-	
+
 		let match;
 		let txt = [];
 		let idx = 0;
@@ -165,14 +166,8 @@ export default function HashText(props) {
 	if (!props.children || props.children == 0) {
 		return <></>;
 	} else {
-		return (
-			<Text {...props}>
-				{makeView(text, taginfo.current, hide, onShow)}
-			</Text>
-		);
+		return <Text {...props}>{makeView(text, taginfo.current, hide, onShow)}</Text>;
 	}
-	
 }
 
-HashText.defaultProps = {
-};
+HashText.defaultProps = {};

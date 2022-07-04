@@ -42,10 +42,25 @@ import ProtectRequestFilterModal from 'Root/component/molecules/modal/ProtectReq
 import NetworkErrorModal from 'Root/component/molecules/modal/NetworkErrorModal';
 import UrgentBtnModal from 'Root/component/molecules/modal/UrgentBtnModal';
 import PetProfileEditSelectModal from 'Root/component/molecules/modal/PetProfileEditSelectModal';
+import {BackHandler} from 'react-native';
 
 export function useModal() {
 	const [isPop, setPop] = React.useState(false);
 	const [popupComponent, setPopupComponent] = React.useState([]);
+
+	const backAction = () => {
+		if (isPop) {
+			Modal.close();
+			return true;
+		} else {
+			return false;
+		}
+	};
+
+	React.useEffect(() => {
+		BackHandler.addEventListener('hardwareBackPress', backAction);
+		return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
+	}, [isPop]);
 
 	/**
 	 * 컴포넌트를 모달 스택에 넣음
@@ -68,13 +83,13 @@ export function useModal() {
 		!isPop && setPop(true);
 	};
 
-	Modal.popNoBtn = msg => {
-		popIn(<NoBtnModal popUpMsg={msg} />);
+	Modal.popNoBtn = (msg, timeout) => {
+		popIn(<NoBtnModal popUpMsg={msg} timeout={timeout} />);
 		!isPop && setPop(true);
 	};
 
-	Modal.popOneBtn = (msg, okMsg, onOk) => {
-		popIn(<OneBtnModal popUpMsg={msg} onOk={onOk} okMsg={okMsg} />);
+	Modal.popOneBtn = (msg, okMsg, onOk, onClose) => {
+		popIn(<OneBtnModal popUpMsg={msg} onOk={onOk} okMsg={okMsg} onClose={onClose} />);
 		!isPop && setPop(true);
 	};
 

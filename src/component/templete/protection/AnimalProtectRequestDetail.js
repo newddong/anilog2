@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, TouchableOpacity, View, FlatList, Platform, StyleSheet} from 'react-native';
+import {Text, TouchableOpacity, View, FlatList, Platform, StyleSheet, Linking} from 'react-native';
 import RescueImage from 'Root/component/molecules/image/RescueImage';
 import {txt} from 'Root/config/textstyle';
 import {APRI10, GRAY10, GRAY20, GRAY30, GRAY40, WHITE} from 'Root/config/color';
@@ -60,7 +60,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				let res = result.msg;
 				setData(res);
 				navigation.setParams({...route.params, request_object: result.msg, isMissingOrReport: false, reset: false});
-				getProtectRequestList(result.msg.protect_request_writer_id._id); //API에서 받아온 보호요청게시글의 작성자 _id를 토대로, 작성자의 다른 보호요청게시글을 받아옴
+				getProtectRequestList(result.msg); //API에서 받아온 보호요청게시글의 작성자 _id를 토대로, 작성자의 다른 보호요청게시글을 받아옴
 			},
 			err => {
 				// getProtectRequestListByShelterId
@@ -79,10 +79,10 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	};
 
 	//보호소의 다른 보호 요청게시글 불러오기
-	const getProtectRequestList = id => {
+	const getProtectRequestList = request => {
 		getProtectRequestListByShelterId(
 			{
-				shelter_userobject_id: id,
+				shelter_userobject_id: request.protect_request_writer_id._id,
 				protect_request_status: 'all', //하단 리스트
 				limit: PROTECT_REQUEST_DETAIL_LIMIT,
 				page: offset,
@@ -95,9 +95,11 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				// console.log('res.length', res.length);
 				if (writersAnotherRequests != 'false') {
 					console.log('temp lenth', [...writersAnotherRequests, ...res].length);
-					setWritersAnotherRequests([...writersAnotherRequests, ...res]);
+					const removeThis = [...writersAnotherRequests, ...res].filter(e => e._id != request._id);
+					setWritersAnotherRequests(removeThis);
 				} else {
-					setWritersAnotherRequests(res);
+					const removeThis = res.filter(e => e._id != request._id);
+					setWritersAnotherRequests(removeThis);
 				}
 				setOffset(offset + 1);
 			},
@@ -177,16 +179,23 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	//보호요청 더보기의 Thumnail클릭
 	const onClick_ProtectedThumbLabel = (status, user_id, item) => {
-		if (route.name == 'ProtectRequestManage') {
-			// console.log('ProtectRequestManage');
-			const animal_sex_toString = item.protect_animal_id.protect_animal_sex == 'female' ? '여' : '남';
-			const title = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + animal_sex_toString;
-			navigation.push('ProtectRequestManage', {id: item._id, title: title});
-		} else {
-			// console.log('AnimalProtectRequestDetail', item);
-			const animal_sex_toString = item.protect_animal_id.protect_animal_sex == 'female' ? '여' : '남';
-			const title = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + animal_sex_toString;
-			navigation.push('AnimalProtectRequestDetail', {id: item._id, title: title, writer: item.protect_request_writer_id._id});
+		try {
+			if (route.name == 'ProtectRequestManage') {
+				// console.log('ProtectRequestManage');
+				const animal_sex_toString = item.protect_animal_id.protect_animal_sex == 'female' ? '여' : '남';
+				const title = item.protect_animal_species + '/' + item.protect_animal_species_detail + '/' + animal_sex_toString;
+				navigation.push('ProtectRequestManage', {id: item._id, title: title});
+			} else {
+				let title = item.protect_animal_species;
+				if (!item.protect_animal_species_detail) {
+					title = item.protect_animal_species;
+				} else {
+					title = item.protect_animal_species + '/' + item.protect_animal_species_detail;
+				}
+				navigation.push('AnimalProtectRequestDetail', {id: item._id, title: title, writer: item.protect_request_writer_id._id});
+			}
+		} catch (err) {
+			console.log('onClick_ProtectedThumbLabel', err);
 		}
 	};
 
@@ -218,9 +227,11 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	//임시보호 버튼 클릭
 	const onPressProtectRequest = () => {
-		console.log('data.protect_request_writer_id.user_contacted', data.protect_request_writer_id.user_contacted);
 		if (!data.protect_request_writer_id.user_contacted) {
 			// Modal.popOneBtn(NOT_REGISTERED_SHELTER, '확인', Modal.close);
+			Modal.popTwoBtn(`${data.protect_request_writer_id.user_nickname}님의 \n 전화로 연결하시겠습니까?`, '아니오', '확 인', Modal.close, () => {
+				Linking.openURL(`tel:${data.protect_request_writer_id.shelter_delegate_contact_number}`);
+			});
 		} else {
 			navigation.push('ApplyProtectActivityA', {protect_request_pet_data: data});
 		}
@@ -228,9 +239,11 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	//입양하기 버튼 클릭
 	const onPressAdoptionRequest = () => {
-		console.log('data.protect_request_writer_id.user_contacted', data.protect_request_writer_id.user_contacted);
 		if (!data.protect_request_writer_id.user_contacted) {
-			Modal.popOneBtn(NOT_REGISTERED_SHELTER, '확인', Modal.close);
+			// Modal.popOneBtn(NOT_REGISTERED_SHELTER, '확인', Modal.close);
+			Modal.popTwoBtn(`${data.protect_request_writer_id.user_nickname}님의 \n 전화로 연결하시겠습니까?`, '아니오', '확 인', Modal.close, () => {
+				Linking.openURL(`tel:${data.protect_request_writer_id.shelter_delegate_contact_number}`);
+			});
 		} else {
 			navigation.push('ApplyAnimalAdoptionA', {protect_request_pet_data: data});
 		}
@@ -554,7 +567,7 @@ const style = StyleSheet.create({
 	},
 	btnContainer: {
 		width: 750 * DP,
-		height: 164 * DP,
+		height: 138 * DP,
 		backgroundColor: 'white',
 		justifyContent: 'space-between',
 		position: 'absolute',
@@ -573,7 +586,7 @@ const style = StyleSheet.create({
 		},
 		elevation: 4,
 		paddingTop: 20 * DP,
-		paddingBottom: 46 * DP,
+		paddingBottom: 20 * DP,
 	},
 	shareDropDown: {
 		width: 384 * DP,

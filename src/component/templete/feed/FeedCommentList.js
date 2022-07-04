@@ -14,7 +14,7 @@ import {KeyBoardEvent, useKeyboardBottom} from 'Molecules/input/usekeyboardbotto
 import Loading from 'Root/component/molecules/modal/Loading';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import {deleteFeed} from 'Root/api/feedapi';
-import {NETWORK_ERROR} from 'Root/i18n/msg';
+import {NETWORK_ERROR, REGISTERING_COMMENT} from 'Root/i18n/msg';
 import comment_obj from 'Root/config/comment_obj';
 
 export default FeedCommentList = props => {
@@ -108,8 +108,7 @@ export default FeedCommentList = props => {
 			});
 		} else {
 			if (editData.comment_contents.trim() == '') return Modal.popOneBtn('댓글을 입력하세요.', '확인', () => Modal.close());
-			Modal.popLoading(true);
-
+			Modal.popNoBtn(REGISTERING_COMMENT);
 			let param = {
 				comment_contents: editData.comment_contents, //내용
 				comment_is_secure: privateComment, //공개여부 테스트때 반영
@@ -261,7 +260,7 @@ export default FeedCommentList = props => {
 		} else {
 			editMode ? (comment_obj.editData = editData) : false;
 			parentComment ? (comment_obj.parentComment = parentComment) : false;
-			props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
+			navigation.navigate('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}, merge: true});
 		}
 	};
 
@@ -392,7 +391,7 @@ export default FeedCommentList = props => {
 				result => {
 					// console.log('result / DeleteFeed / FeedContent : ', result.msg);
 					Modal.close();
-					if (props.navigation.getState().routes[0].name == 'ProtectionTab') {
+					if (navigation.getState().routes[0].name == 'ProtectionTab') {
 						navigation.navigate('ProtectionTab');
 					} else {
 						console.log(props.navigation.getState().routes);
@@ -426,18 +425,19 @@ export default FeedCommentList = props => {
 
 	//댓글 수정 => 키보드 해제시 수정모드가 종료되도록 적용
 	KeyBoardEvent(
-		() => {
-			setTimeout(() => {
-				setKeyboardVisible(true);
-			}, 200);
-		},
+		() => {},
 		() => {
 			setKeyboardVisible(false);
 		},
 	);
 
+	const onFocus = () => {
+		setTimeout(() => {
+			setKeyboardVisible(true);
+		}, 500);
+	};
+
 	const header = () => {
-		// console.log('feed_content', params.feedobject.feed_content);
 		return (
 			<>
 				<FeedContent
@@ -531,6 +531,7 @@ export default FeedCommentList = props => {
 						onCancelChild={onCancelChild} // 대댓글쓰기 X마크
 						editMode={editMode}
 						viewMode={!isKeyboardVisible}
+						onFocus={onFocus}
 					/>
 				</View>
 			) : (

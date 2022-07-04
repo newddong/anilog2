@@ -58,7 +58,7 @@ export default AssignShelterAddress = props => {
 
 	//다음
 	const goToNextStep = () => {
-		props.navigation.push('AssignShelterInformation', {data: data});
+		props.navigation.navigate('AssignShelterInformation', {data: data});
 	};
 
 	//주소
@@ -74,7 +74,7 @@ export default AssignShelterAddress = props => {
 	//주소찾기 클릭
 	const goToAddressSearch = () => {
 		console.log('onPressSearchAddr');
-		props.navigation.push('AddressSearchPage', {prevRoute: props.route.name});
+		props.navigation.navigate('AddressSearchPage', {prevRoute: props.route.name});
 	};
 
 	//보호소 이름

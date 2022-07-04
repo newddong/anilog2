@@ -71,7 +71,7 @@ export default ShelterProtectRequests = ({route, navigation}) => {
 	//보호 게시글 목록의 라벨 클릭 콜백
 	const onClickLabel = (status, user_id, item) => {
 		console.log('item', item._id);
-		navigation.push('ProtectRequestManage', {id: item._id});
+		navigation.navigate('ProtectRequestManage', {id: item._id});
 	};
 
 	//보호게시글 목록의 즐겨찾기 태그

@@ -157,13 +157,17 @@ const ChildComment = props => {
 		}
 	};
 
+	const onLabelClick = userObject => {
+		navigation.navigate({key: userObject._id, name: 'UserProfile', params: {userobject: userObject}});
+	};
+
 	return (
 		<View style={[childComment.container]}>
 			<View style={[childComment.profileContainer]}>
 				<View style={[childComment.userTimeLabel]}>
 					{data ? (
 						<View style={{flexDirection: 'row'}}>
-							<UserTimeLabel data={data} onLabelClick={userobject => navigation.navigate('UserProfile', {userobject: userobject})} />
+							<UserTimeLabel data={data} onLabelClick={onLabelClick} />
 							{data.comment_is_secure ? (
 								<View style={[{top: -6 * DP, marginLeft: 6 * DP}]}>
 									<SecureIcon40 />

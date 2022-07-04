@@ -35,7 +35,7 @@ const HashLabel = props => {
 				style={[
 					styles.img_round_90,
 					{
-						borderColor: APRI10,
+						// borderColor: APRI10,
 						borderWidth: 4 * DP,
 						alignItems: 'center',
 						justifyContent: 'center',

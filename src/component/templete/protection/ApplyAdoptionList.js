@@ -14,7 +14,7 @@ export default ApplyAdoptionList = props => {
 
 	const onLabelClick = item => {
 		// console.log('itme data', item);
-		navigation.push('ApplyAdoptionDetails', item);
+		navigation.navigate('ApplyAdoptionDetails', item);
 	};
 
 	// 입양신청 및 임시보호 신청 리스트 데이터 불러오기

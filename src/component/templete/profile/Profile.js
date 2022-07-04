@@ -9,7 +9,6 @@ import FeedThumbnailList from 'Organism/feed/FeedThumbnailList';
 import {login_style, profile, temp_style, buttonstyle} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import {txt} from 'Root/config/textstyle';
 import {GRAY10, APRI10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {getFeedListByUserId, getUserTaggedFeedList} from 'Root/api/feedapi';
@@ -33,6 +32,7 @@ export default Profile = ({route}) => {
 	const [protectList, setProtectList] = React.useState('false');
 	const [offset, setOffset] = React.useState(1); //커뮤니티 페이지
 	const [loading, setLoading] = React.useState(false);
+	const [pressed, setPressed] = React.useState(false);
 	const flatlist = React.useRef();
 	const userId = route.params.userobject._id; //현재 보고있는 프로필 대상의 _id
 	const [tabMenuSelected, setTabMenuSelected] = React.useState(0); //프로필 Tab의 선택상태
@@ -41,6 +41,7 @@ export default Profile = ({route}) => {
 		//페이지 포커스 시 프로필 데이터 및 하단 탭 데이터 갱신
 		const unsubscribe = navigation.addListener('focus', () => {
 			fetchData();
+			setPressed(false);
 			if (data.user_type == 'user') {
 				fetchCommunity();
 			} else if (data.user_type == 'shelter') {
@@ -225,12 +226,12 @@ export default Profile = ({route}) => {
 
 	//프로필의 피드탭의 피드 썸네일 클릭
 	const onClick_Thumbnail_FeedTab = (index, item) => {
-		navigation.push('UserFeedList', {userobject: data, selected: item, index: index});
+		navigation.navigate('UserFeedList', {userobject: data, selected: item, index: index});
 	};
 
 	//프로필의 태그탭의 피드 썸네일 클릭
 	const onClick_Thumbnail_TagTab = (index, item) => {
-		navigation.push('UserTagFeedList', {userobject: data, selected: item, index: index});
+		navigation.navigate('UserTagFeedList', {userobject: data, selected: item, index: index});
 	};
 
 	//보호소프로필의 봉사활동 클릭
@@ -243,7 +244,7 @@ export default Profile = ({route}) => {
 			if (!data.user_contacted) {
 				Modal.alert(NOT_REGISTERED_SHELTER);
 			} else {
-				navigation.push('ApplyVolunteer', {token: data._id});
+				navigation.navigate('ApplyVolunteer', {token: data._id});
 			}
 		}
 	};
@@ -256,12 +257,11 @@ export default Profile = ({route}) => {
 			});
 		} else if (userGlobalObject.userInfo.user_type == 'user') {
 			Modal.popAvatarSelectFromWriteModal(obj => {
-				userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed', feed_avatar_id: obj});
+				userGlobalObject.userInfo && navigation.navigate('FeedWrite', {feedType: 'Feed', feed_avatar_id: obj});
 			});
 		} else {
-			userGlobalObject.userInfo && navigation.push('FeedWrite', {feedType: 'Feed'});
+			userGlobalObject.userInfo && navigation.navigate('FeedWrite', {feedType: 'Feed'});
 		}
-		// navigation.push('FeedWrite', {feedType: 'Feed'});
 	};
 
 	//액션버튼 하단 탭 메뉴 클릭 콜백함수
@@ -271,13 +271,18 @@ export default Profile = ({route}) => {
 
 	//유저타입 - 펫 => 반려인 계정에서 가족계정의 이미지 라벨을 클릭
 	const onClickOwnerLabel = item => {
-		navigation.push('UserProfile', {userobject: item});
+		setPressed(true);
+		if (!pressed) {
+			navigation.navigate({key: item._id + new Date().getTime(), name: 'UserProfile', params: {userobject: item}});
+		}
 	};
 
 	//유저타입 - 유저 => 반려동물 리스트에서 항목 클릭
 	const onClickMyCompanion = item => {
-		console.log('route.name', route.name);
-		navigation.push('UserProfile', {userobject: item});
+		setPressed(true);
+		if (!pressed) {
+			navigation.navigate({key: item._id + new Date().getTime(), name: 'UserProfile', params: {userobject: item}});
+		}
 	};
 
 	//쪽지 전송
@@ -330,10 +335,9 @@ export default Profile = ({route}) => {
 	//프로필 수정 버튼 클릭(본인 계정일 경우만 가능)
 	const onPressEditProfile = () => {
 		if (data.user_type == 'user') {
-			navigation.push('ChangeUserProfileImage', {data: data, routeInfo: route});
+			navigation.navigate('ChangeUserProfileImage', {data: data, routeInfo: route});
 		} else {
-			// navigation.push('ChangeUserProfileImage', {data: data, routeInfo: route});
-			navigation.push('ChangePetProfileImage', data);
+			navigation.navigate('ChangePetProfileImage', data);
 		}
 	};
 
@@ -380,13 +384,20 @@ export default Profile = ({route}) => {
 
 	//프로필의 보호활동 탭의 피드 썸네일 클릭
 	const onClickProtect = (status, id, item) => {
-		let title = item.protect_animal_species;
-		if (!item.protect_animal_species_detail) {
-			title = item.protect_animal_species;
-		} else {
-			title = item.protect_animal_species + '/' + item.protect_animal_species_detail;
+		setPressed(true);
+		if (!pressed) {
+			let title = item.protect_animal_species;
+			if (!item.protect_animal_species_detail) {
+				title = item.protect_animal_species;
+			} else {
+				title = item.protect_animal_species + '/' + item.protect_animal_species_detail;
+			}
+			navigation.navigate({
+				key: item._id + new Date().getTime(),
+				name: 'AnimalProtectRequestDetail',
+				params: {id: item._id, title: title, writer: item.protect_request_writer_id._id},
+			});
 		}
-		navigation.push('AnimalProtectRequestDetail', {id: item._id, title: title, writer: item.protect_request_writer_id._id});
 	};
 
 	//보호소프로필의 보호요청게시글 즐겨찾기 클릭
@@ -425,8 +436,8 @@ export default Profile = ({route}) => {
 					<ProfileInfo
 						data={data}
 						showMyPet={e => alert(e)}
-						volunteerBtnClick={() => navigation.push('ApplyVolunteer')}
-						adoptionBtnClick={() => navigation.push('ApplyAnimalAdoptionA')}
+						volunteerBtnClick={() => navigation.navigate('ApplyVolunteer')}
+						adoptionBtnClick={() => navigation.navigate('ApplyAnimalAdoptionA')}
 						onPressVolunteer={onClick_Volunteer_ShelterProfile}
 						onPressAddPetBtn={onPressAddPetBtn}
 						onPressAddArticleBtn={onPressAddArticleBtn}

@@ -45,7 +45,11 @@ const UserLocationTimeLabel = props => {
 		if (props.empty) {
 			Modal.alert(IS_LEAVE_USER);
 		} else {
-			navigation.navigate('UserProfile', {userobject: props.data});
+			if (props.onClickLabel) {
+				props.onClickLabel(props.data);
+			} else {
+				navigation.navigate({key: props.data._id, name: 'UserProfile', params: {userobject: props.data}});
+			}
 		}
 	};
 
@@ -141,7 +145,6 @@ const UserLocationTimeLabel = props => {
 };
 
 UserLocationTimeLabel.defaultProps = {
-	onClickLabel: e => console.log(e),
 	data: {
 		user_address: {
 			city: '',

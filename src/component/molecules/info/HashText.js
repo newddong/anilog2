@@ -111,7 +111,7 @@ export default function HashText(props) {
 
 		const pressfn = tag => {
 			if (tag.charAt(0) == '#') {
-				navigation.navigate('FeedListForHashTag', {hashtag_keyword: tag.substring(1)});
+				navigation.navigate({key: tag.substring(1), name: 'FeedListForHashTag', params: {hashtag_keyword: tag.substring(1)}});
 			}
 			if (tag.charAt(0) == '@') {
 				if (taginfo[tag]) {

@@ -1,7 +1,7 @@
 import React from 'react';
-import {FlatList, ScrollView, Text, View, StyleSheet} from 'react-native';
-import {accountHashList} from 'Organism/style_organism copy';
+import {FlatList, ScrollView, Text, View, StyleSheet, ActivityIndicator} from 'react-native';
 import OneMessage from 'Organism/listitem/OneMessage';
+import {styles} from 'Root/component/atom/image/imageStyle';
 
 /**
  * 쪽지 리스트 출력 컴포넌트
@@ -13,48 +13,43 @@ import OneMessage from 'Organism/listitem/OneMessage';
  * @param {boolean} props.showFollowBtn - 선택 삭제 모드 여부 (default= false)
  */
 const NoteMessageList = props => {
-	// console.log('NoteMessageList props', props.data);
 	const flatlistRef = React.useRef();
 
 	React.useEffect(() => {
 		setTimeout(
 			() =>
-				flatlistRef.current.scrollToIndex({
+				flatlistRef.current?.scrollToIndex({
 					animated: true,
 					index: props.data.length - 1,
+					viewPosition: 0,
 				}),
-			500,
+			1000,
 		);
-		// flatlistRef.current?.scrollToIndex({index: props.data.length - 1, animated: true});
 	}, []);
+
 	const renderItem = ({item, index}) => {
 		// console.log('item', item);
 		//쪽지부분 정책 결정 필요
 		return (
-			<View style={[styles.messageItemContainer]}>
+			<View style={[style.messageItemContainer]}>
 				<OneMessage data={item} />
-				{/* <UserNote
-					data={item}
-					checkBoxMode={props.checkBoxMode}
-					onLabelClick={item => props.onClickLabel(item)}
-					onCheckBox={e => props.onCheckBox(e, index)}
-				/> */}
 			</View>
 		);
 	};
 
 	return (
-		<View style={styles.container}>
+		<View style={style.container}>
 			{/* <Text>쪽지 내용 리스트 나오는 화면</Text> */}
 			<FlatList data={props.data} keyExtractor={item => item._id} renderItem={renderItem} showsVerticalScrollIndicator={false} ref={flatlistRef} />
 		</View>
 	);
 };
 
-const styles = StyleSheet.create({
+const style = StyleSheet.create({
 	container: {
-		width: 750 * DP,
-		height: 1230 * DP,
+		// width: 750 * DP,
+		flex: 1,
+		// height: 1230 * DP,
 	},
 	messageItemContainer: {
 		width: 750 * DP,

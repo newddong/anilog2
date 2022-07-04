@@ -311,10 +311,10 @@ export default SearchMap = ({route}) => {
 	const goToAddressSearch = () => {
 		if (route.name == 'FeedSearchMap') {
 			//피드 위치추가 경로
-			navigation.push('FeedAddressSearchWeb', {prevRoute: route.name});
+			navigation.navigate('FeedAddressSearchWeb', {prevRoute: route.name});
 		} else {
 			// 커뮤니티 위치추가 경로
-			navigation.push('AddressSearchWeb', {prevRoute: route.name});
+			navigation.navigate('AddressSearchWeb', {prevRoute: route.name});
 		}
 	};
 

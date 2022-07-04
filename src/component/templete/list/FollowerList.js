@@ -1,9 +1,8 @@
 import React from 'react';
-import {ActivityIndicator, FlatList, ScrollView, View} from 'react-native';
+import {ActivityIndicator, ScrollView, View} from 'react-native';
 import ControllableAccountList from 'Organism/list/ControllableAccountList';
 import {followerList} from 'Templete/style_templete';
 import {unFollowUser, followUser} from 'Root/api/userapi';
-import InputWithSearchIcon from 'Root/component/molecules/input/InputWithSearchIcon';
 import {useNavigation} from '@react-navigation/core';
 import Loading from 'Root/component/molecules/modal/Loading';
 import userGlobalObject from 'Root/config/userGlobalObject';
@@ -25,7 +24,15 @@ export default FollowerList = props => {
 	const [loading, setLoading] = React.useState(false);
 	const [follower, setFollower] = React.useState([]);
 	const [follow, setFollow] = React.useState([]);
+	const [pressed, setPressed] = React.useState(false);
 	const isPreView = userGlobalObject.userInfo.isPreviewMode;
+
+	React.useEffect(() => {
+		const subscribe = navigation.addListener('focus', () => {
+			setPressed(false);
+		});
+		return subscribe;
+	}, []);
 
 	React.useEffect(() => {
 		setFollower(props.followers);
@@ -77,11 +84,13 @@ export default FollowerList = props => {
 	};
 
 	const onClickAccount = item => {
-		navigation.push('UserProfile', {userobject: item});
+		setPressed(true);
+		if (!pressed) {
+			navigation.navigate({key: new Date().getTime(), name: 'UserProfile', params: {userobject: item}});
+		}
 	};
 
 	if (props.loading) {
-		// return <Loading isModal={false} />;
 		return (
 			<View style={styles.loadingContainer}>
 				<ActivityIndicator size={'large'} color={APRI10} />
@@ -91,9 +100,6 @@ export default FollowerList = props => {
 		return (
 			<View style={[followerList.container]}>
 				<ScrollView style={[{flex: 0}]}>
-					{/* <View style={[followerList.inputWitchSearch, {alignSelf: 'center'}]}>
-						<InputWithSearchIcon value={input} onChange={onChangeSearchInput} onSearch={onSearch} placeholder={'검색어를 입력해주세요.'} />
-					</View> */}
 					{loading ? (
 						<Loading isModal={false} />
 					) : (
@@ -122,10 +128,6 @@ export default FollowerList = props => {
 						</View>
 					)}
 				</ScrollView>
-				{/* <View style={[followerList.floatingBtn]}>
-				<Write94 onPress={onWrite} />
-			</View> */}
-				{/* <Loading isModal={false} /> */}
 			</View>
 		);
 };

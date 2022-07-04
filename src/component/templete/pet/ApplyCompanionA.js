@@ -1,22 +1,23 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View} from 'react-native';
-import {APRI10, GRAY10} from 'Root/config/color';
+import {StyleSheet, Text, View} from 'react-native';
+import {APRI10, GRAY10, WHITE} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {btn_w226, btn_w654} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
 import Input24 from 'Molecules/input/Input24';
 import Stagebar from 'Molecules/info/Stagebar';
 import AddressInput from 'Organism/input/AddressInput';
-import {applyCompanionA, btn_style, login_style, temp_style} from 'Templete/style_templete';
+import {btn_style, login_style, temp_style} from 'Templete/style_templete';
 import {stagebar_style} from 'Root/component/organism/style_organism copy';
 import {PHONE_FORM} from 'Root/i18n/msg';
+import DP from 'Root/config/dp';
 
 // 참조 DB테이블 :
 // ProtectionActivityApplicantObject - [ ApplyCompanion A,B,C,D,E 에 걸쳐 Write 해나갈 Data]
 // UserObject - 해당 임시보호 및 입양 요청글을 올린 보호소의 정보
 // ShelterProtectAnimalObject - 유저가 클릭한 동물의 정보가 들어있는 테이블 [ 입양 및 임시보호 Data Write가 완료된 뒤 ApplyDetail에서 보여질 대상 동물 관련 Data]
-
+// 임시보호 및 입양 신청 절차 1단계
 export default ApplyCompanionA = ({route}) => {
 	const navigation = useNavigation();
 	const isProtect = route.name == 'ApplyProtectActivityA'; //임시보호 신청여부 , false일 경우 자동으로 입양모드 전환
@@ -52,7 +53,7 @@ export default ApplyCompanionA = ({route}) => {
 
 	//주소찾기 버튼 클릭
 	const goToAddressSearch = () => {
-		navigation.push('AddressSearchPage', {prevRoute: route.name});
+		navigation.navigate('AddressSearchPage', {prevRoute: route.name});
 	};
 
 	//연락처 Value 콜백
@@ -112,7 +113,7 @@ export default ApplyCompanionA = ({route}) => {
 					insideBarStyle={stagebar_style.insideBar} //내부 bar의 style, width는 background bar의 길이에서 현재 단계에 따라 변화됨
 					current={1} //현재 단계를 정의
 					maxstage={4} //전체 단계를 정의
-					width={600 * DP} //bar의 너비
+					width={640 * DP} //bar의 너비
 					textStyle={[txt.roboto24, stagebar_style.text]} //text의 스타일
 				/>
 			</View>
@@ -165,3 +166,27 @@ export default ApplyCompanionA = ({route}) => {
 		</View>
 	);
 };
+
+const applyCompanionA = StyleSheet.create({
+	container: {
+		flex: 1,
+	},
+	stageBar: {
+		marginTop: 20 * DP,
+	},
+	textMsg: {
+		backgroundColor: WHITE,
+		marginTop: 12 * DP,
+	},
+	inputForm: {
+		marginTop: 60 * DP,
+	},
+	btn_w654: {
+		marginTop: 70 * DP,
+	},
+	addressInput: {},
+	input24A: {
+		marginTop: 80 * DP,
+		height: 132 * DP,
+	},
+});

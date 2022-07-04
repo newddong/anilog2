@@ -176,7 +176,7 @@ export default FeedWrite = props => {
 			Modal.alert('첨부파일은 5개까지만 가능합니다');
 			return;
 		}
-		props.navigation.push('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}, selectedPhoto: selectedImg, types: 'All'});
+		props.navigation.navigate('MultiPhotoSelect', {prev: {name: props.route.name, key: props.route.key}, selectedPhoto: selectedImg, types: 'All'});
 	};
 
 	//사진 삭제
@@ -206,14 +206,14 @@ export default FeedWrite = props => {
 	const moveToLocationPicker = () => {
 		console.log('route name', props.route.name);
 		// props.navigation.push('FeedSearchMap', {routeName: props.route.name});
-		props.navigation.push('FeedLocationPicker', {routeName: props.route.name});
+		props.navigation.navigate('FeedLocationPicker', {routeName: props.route.name});
 	};
 
 	//태그 추가
 	const moveToFeedMediaTagEdit = () => {
 		console.log('seletect', selectedImg.length);
 		if (selectedImg && selectedImg.length > 0) {
-			props.navigation.push('FeedMediaTagEdit');
+			props.navigation.navigate('FeedMediaTagEdit');
 		} else {
 			Modal.alert('사진을 먼저 추가해주세요!');
 		}
@@ -344,7 +344,7 @@ export default FeedWrite = props => {
 	const selectedImages = () => {
 		if (selectedImg.length > 0) {
 			return (
-				<View style={[{marginTop: 40 * DP}]}>
+				<View style={[{marginTop: 40 * DP, marginLeft: 28 * DP}]}>
 					<SelectedMediaList
 						layout={styles.img_square_round_336}
 						items={selectedImg.map(v => (v ? v.cropUri ?? v.uri : undefined))}

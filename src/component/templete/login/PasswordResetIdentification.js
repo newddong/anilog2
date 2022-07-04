@@ -1,19 +1,15 @@
 import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
-import {GRAY10, GRAY20, MAINBLACK} from 'Root/config/color';
+import {Text, View, StyleSheet, ScrollView} from 'react-native';
+import {MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {btn_w654, btn_w694_r30} from 'Atom/btn/btn_style';
+import {btn_w694_r30} from 'Atom/btn/btn_style';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import Modal from 'Component/modal/Modal';
 import DP from 'Root/config/dp';
-import Input30 from 'Root/component/molecules/input/Input30';
-import InputWithSelect from 'Root/component/molecules/input/InputWithSelect';
-import {mobile_carrier} from 'Root/i18n/msg';
 import PhoneNumVerification from 'Root/component/organism/form/PhoneNumVerification';
 import {useNavigation} from '@react-navigation/native';
-import {btn_style, login_style, temp_style, userAssign} from '../style_templete';
+import {btn_style, login_style} from '../style_templete';
 import {userLogin} from 'Root/api/userapi';
-import {updateUserPassword} from 'Root/api/userapi';
 import {getUserAccountCount} from 'Root/api/userapi';
 export default PasswordResetIdentification = props => {
 	const [name, setName] = React.useState('');
@@ -37,8 +33,7 @@ export default PasswordResetIdentification = props => {
 
 	const onPressConfirm = () => {
 		// const confirmed = true;
-
-		props.navigation.push('PasswordReset', user_data.user_phone_number);
+		props.navigation.navigate('PasswordReset', user_data.user_phone_number);
 		// if (confirmed) {
 		// 	props.navigation.push('PasswordReset', '121212');
 		// } else {
@@ -48,7 +43,7 @@ export default PasswordResetIdentification = props => {
 
 	/////
 	React.useEffect(() => {
-		console.log('props changed', props);
+		// console.log('props changed', props);
 		if (props.route.params?.response) {
 			const response = props.route.params.response;
 			if (response.success == 'true') {
@@ -192,7 +187,7 @@ export default PasswordResetIdentification = props => {
 	};
 
 	return (
-		<View style={[login_style.wrp_main, {flex: 1}]}>
+		<ScrollView contentContainerStyle={[login_style.wrp_main, {flex: 1}]}>
 			{/* <View style={[styles.container, {flex: 1}]}> */}
 			<View style={[styles.infoMessageBox, {marginBottom: 136 * DP}]}>
 				<Text style={[txt.noto30, {color: MAINBLACK, textAlign: 'center'}]}>회원가입시 등록한 정보로 {'\n'} 비밀번호를 재설정 할 수 있습니다.</Text>
@@ -255,7 +250,7 @@ export default PasswordResetIdentification = props => {
 					/>
 				)}
 			</View>
-		</View>
+		</ScrollView>
 	);
 };
 

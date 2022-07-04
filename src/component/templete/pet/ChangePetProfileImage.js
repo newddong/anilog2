@@ -35,7 +35,7 @@ export default ChangePetProfileImage = props => {
 	}, [props.route.params?.selectedPhoto]);
 
 	const selectPhoto = () => {
-		props.navigation.push('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
+		navigation.navigate('SinglePhotoSelect', {prev: {name: props.route.name, key: props.route.key}});
 	};
 
 	//닉네임 Validation

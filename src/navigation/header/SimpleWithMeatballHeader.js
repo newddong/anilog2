@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity, Keyboard} from 'react-native';
 import {BackArrow32, FavoriteTag48_Border, FavoriteTag48_Filled, Meatball50_GRAY20_Horizontal} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
@@ -340,7 +340,7 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 		<View style={[style.headerContainer, style.shadow]}>
 			<TouchableOpacity onPress={onPressBackButton}>
 				<View style={style.backButtonContainer}>
-					<BackArrow32 onPress={onPressBackButton} />
+					<BackArrow32 />
 				</View>
 			</TouchableOpacity>
 			<Text style={[{flex: 1, textAlign: 'center', marginRight: 25 * DP}, txt.roboto40b]} numberOfLines={1}>

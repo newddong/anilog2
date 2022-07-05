@@ -69,7 +69,7 @@ export default FavoriteFeeds = ({route}) => {
 	const complete = result => {
 		let res = result.msg;
 		if (route.name == 'FavoriteFeeds') {
-			res = result.msg.map(v => v.favorite_feed_id);
+			res = res.filter(x => x.favorite_feed_id.feed_is_delete != true).map(data => data.favorite_feed_id);
 		} else if (route.name == 'TagMeFeeds') {
 			// console.log('result', result.msg[0]);
 			res = result.msg.map(v => v.usertag_feed_id);

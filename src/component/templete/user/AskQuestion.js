@@ -30,6 +30,8 @@ import Formtxtinput from 'Root/component/molecules/input/formtxtinput';
 import HashText from 'Root/component/molecules/info/HashText';
 import Input30 from 'Root/component/molecules/input/Input30';
 import {assignCheckListItem} from 'Root/component/organism/style_organism copy';
+import {KeyboardAvoidingView} from 'native-base';
+
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 
 const AskQuestion = ({route}) => {
@@ -69,7 +71,7 @@ const AskQuestion = ({route}) => {
 	// }, [category, contents, userAgreement, title]);
 	const onSelectCategory = (v, i) => {
 		// debug && console.log('city:', city[i]);
-		Keyboard.dismiss();
+		// () => Keyboard.dismiss();
 		Modal.popSelectScrollBoxModal(
 			[categoryList],
 			'카테고리 선택',
@@ -146,19 +148,21 @@ const AskQuestion = ({route}) => {
 				<View style={styles.selectContainer}>
 					<SelectInput onPressInput={onSelectCategory} width={654} height={82} fontSize={28} value={category} />
 				</View>
+				{/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
 				<View style={[{marginTop: 40 * DP}]}>
 					<TextInput style={styles.input} value={title} placeholder="제목을 입력해 주세요." onChangeText={onChangeTitle} />
 				</View>
-				<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-					<View style={[{marginTop: 50 * DP}]}>
-						<InputLongText
-							placeholder="문제 발생일시와 문의 내용을 보내주시면 문의 확인에 도움이 됩니다!"
-							maxlength={500}
-							onChange={onChangeText}
-							value={contents}
-						/>
-					</View>
-				</TouchableWithoutFeedback>
+				{/* </TouchableWithoutFeedback> */}
+				{/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
+				<View style={[{marginTop: 50 * DP}]}>
+					<InputLongText
+						placeholder="문제 발생일시와 문의 내용을 보내주시면 문의 확인에 도움이 됩니다!"
+						maxlength={500}
+						onChange={onChangeText}
+						value={contents}
+					/>
+				</View>
+				{/* </TouchableWithoutFeedback> */}
 				<View style={[{marginTop: 10 * DP}]}>
 					{/* <AssignCheckList items={userAssign_agreementCheckList} onCheck={onPressAcceptItem} onPressDetail={onPressDetail} /> */}
 					{/* <AssignCheckListItem items={userAssign_agreementCheckList} /> */}

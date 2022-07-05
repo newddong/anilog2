@@ -63,6 +63,7 @@ const UserNotePage = ({route}) => {
 				'message Sent err', err;
 			},
 		);
+		setContent('');
 	};
 
 	const onChangeReplyInput = text => {

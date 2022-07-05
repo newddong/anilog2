@@ -15,7 +15,7 @@ export default AccountPicker = props => {
 
 	React.useEffect(() => {
 		let nickname = navState.routes[navState.index].params?.searchInput;
-		console.log('닉네임', nickname);
+		console.log('닉네임', nickname, navState);
 		if (!nickname) {
 			setSearchedList([]);
 			console.log('useEffect 종료');

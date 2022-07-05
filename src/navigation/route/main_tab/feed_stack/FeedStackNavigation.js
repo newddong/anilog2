@@ -135,9 +135,6 @@ export default FeedStackNavigation = props => {
 			/>
 			<FeedStack.Screen name="ReportDetail" component={ReportDetail} options={{header: props => <SimpleWithMeatballHeader {...props} />}} />
 			<FeedStack.Screen name="SinglePhotoSelect" component={AddPhoto} options={{header: props => <PhotoSelectHeader {...props} />, title: ''}} />
-			<FeedStack.Screen name="MultiPhotoSelect" component={AddPhoto} options={{header: props => <PhotoSelectHeader {...props} />, title: ''}} />
-			<FeedStack.Screen name="FeedEdit" component={FeedWrite} options={{header: props => <FeedWriteHeader {...props} />, title: '게시물 수정'}} />
-			<FeedStack.Screen name="FeedWrite" component={FeedWrite} options={{header: props => <FeedWriteHeader {...props} />, title: '게시물 작성'}} />
 		</FeedStack.Navigator>
 	);
 };

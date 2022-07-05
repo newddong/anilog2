@@ -25,7 +25,7 @@ import {styles} from 'Atom/image/imageStyle';
 import {Tag70} from 'Atom/icon';
 import Modal from 'Root/component/modal/Modal';
 
-export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, viewmode, feedType, onPressPhoto,onTagMove}) => {
+export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, viewmode, feedType, onPressPhoto, onTagMoveStart, onEndTagMove}) => {
 	const [tags, setTags] = React.useState(taglist ? taglist : []);
 	const [showTags, setShowTags] = React.useState(!viewmode);
 	const nav = useNavigation();
@@ -43,8 +43,9 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 	};
 
 	const deleteTag = user => {
+		console.log('deletetag',user);
+		setTags(tags.filter(v=>v.user._id!=user._id));
 		onDeleteTag && onDeleteTag(user, uri);
-		setTags(tags.filter(v => v.user._id !== user._id));
 	};
 
 	React.useEffect(() => {
@@ -67,11 +68,23 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 		setShowTags(!showTags);
 	};
 
-	const endTagmove = e => {
-		// tags.forEach((v, i, a) => {
-		// 	if (v.user._id === e.user._id) a.splice(i, 1, e);
-		// });
-		onTagMove(false)
+	const endTagmove = endTag => {
+		console.log('tag move end',endTag,tags);
+		let tagInfo = {
+			pos: {x:endTag.x,y:endTag.y},
+			position_x: endTag.x,
+			position_y: endTag.y,
+			tag_user_id: endTag.user._id,
+			user: endTag.user,
+		}
+		setTags(tags.map(tag=>{
+			if(tag.user._id==endTag.user._id){
+				return tagInfo;
+			}else{
+				return tag;
+			}
+		}))
+		onEndTagMove(tagInfo,uri);
 	};
 	const [backgroundLayout, setBackgroundLayout] = React.useState({width: 750 * DP, height: 750 * DP});
 
@@ -80,13 +93,13 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 		return tags.map((v, i) => (
 			<Tag
 				pos={v.pos}
-				key={(v.user._id+v.pos.x)}
+				key={(v.user._id+v.pos.x+v.pos.y)}
 				user={v.user}
 				onDelete={deleteTag}
-				onEnd={endTagmove}
+				onEndTagMove={endTagmove}
 				viewmode={viewmode}
 				backgroundLayout={backgroundLayout}
-				onTagMove={onTagMove}
+				onTagMoveStart={onTagMoveStart} //태그가 움직이는중(Swipe가 작동하지 않도록 함)
 			/>
 		));
 	};

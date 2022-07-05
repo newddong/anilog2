@@ -44,6 +44,8 @@ const NewMissingReportList = props => {
 					return {length: 176 * DP, offset: 176 * DP * index, index: index};
 				}}
 				windowSize={2}
+				// windowSize={5}
+				decelerationRate={0.1}
 			/>
 		</View>
 	);

@@ -31,6 +31,7 @@ import HashText from 'Root/component/molecules/info/HashText';
 import Input30 from 'Root/component/molecules/input/Input30';
 import {assignCheckListItem} from 'Root/component/organism/style_organism copy';
 import {KeyboardAvoidingView} from 'native-base';
+
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 
 const AskQuestion = ({route}) => {

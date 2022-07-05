@@ -12,7 +12,7 @@ import {
 	FlatList,
 	TouchableWithoutFeedback,
 } from 'react-native';
-import {GRAY10, GRAY40, APRI10, GRAY20, BLACK} from 'Root/config/color';
+import {GRAY10, GRAY40, APRI10, GRAY20, BLACK, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import moment from 'moment';
 import DP from 'Root/config/dp';
@@ -29,6 +29,7 @@ import InputBalloon from 'Root/component/molecules/input/Input30';
 import Formtxtinput from 'Root/component/molecules/input/formtxtinput';
 import HashText from 'Root/component/molecules/info/HashText';
 import Input30 from 'Root/component/molecules/input/Input30';
+import {assignCheckListItem} from 'Root/component/organism/style_organism copy';
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 
 const AskQuestion = ({route}) => {
@@ -36,7 +37,7 @@ const AskQuestion = ({route}) => {
 	const [loading, setLoading] = React.useState(true);
 	const [category, setCategory] = React.useState('카테고리 선택');
 	const [contents, setContents] = React.useState();
-	const [userAgreement, setUserAgreement] = React.useState(true);
+	const [userAgreement, setUserAgreement] = React.useState();
 	const [commomCode, setCommonCode] = React.useState();
 	const [categoryList, setCategoryList] = React.useState([]);
 	const [title, setTitle] = React.useState();
@@ -63,9 +64,9 @@ const AskQuestion = ({route}) => {
 			},
 		);
 	}, []);
-	React.useEffect(() => {
-		console.log('categoy, contents, userAggree title', category, contents, userAgreement, title);
-	}, [category, contents, userAgreement, title]);
+	// React.useEffect(() => {
+	// 	console.log('categoy, contents, userAggree title', category, contents, userAgreement, title);
+	// }, [category, contents, userAgreement, title]);
 	const onSelectCategory = (v, i) => {
 		// debug && console.log('city:', city[i]);
 		Keyboard.dismiss();
@@ -90,8 +91,8 @@ const AskQuestion = ({route}) => {
 		setTitle(text);
 	};
 
-	const onPressAcceptItem = () => {
-		setUserAgreement(!userAgreement);
+	const onPressAcceptItem = (item, index, isCheck) => {
+		setUserAgreement(isCheck);
 	};
 	const onPressDetail = index => {
 		console.log(index + 'index 항목 더보기 클릭');
@@ -99,6 +100,7 @@ const AskQuestion = ({route}) => {
 	};
 
 	const onPressAsk = () => {
+		console.log('어쩌고저쩌고', userAgreement, category, contents, title);
 		if (userAgreement && category != '카테고리 선택' && contents && title) {
 			console.log('전송준비 완료');
 			console.log('qetoiqoeti', commomCode, category);
@@ -116,7 +118,8 @@ const AskQuestion = ({route}) => {
 				},
 				result => {
 					console.log('Sucess', result);
-					Modal.popOneBtn('문의완료 되었습니다.', '확인', () => Modal.close());
+					Modal.popOneBtn('문의완료 되었습니다.', '확인', () => navigation.goBack());
+					// navigation.goBack();
 				},
 				err => {
 					console.log('err', err);
@@ -125,6 +128,10 @@ const AskQuestion = ({route}) => {
 		} else {
 			Modal.popOneBtn('입력을 확인해주세요', '확인', () => Modal.close());
 		}
+	};
+	const onCheck = isCheck => {
+		setUserAgreement(isCheck);
+		// props.onCheck(isCheck);
 	};
 
 	if (loading) {
@@ -153,7 +160,19 @@ const AskQuestion = ({route}) => {
 					</View>
 				</TouchableWithoutFeedback>
 				<View style={[{marginTop: 10 * DP}]}>
-					<AssignCheckList items={userAssign_agreementCheckList} onCheck={onPressAcceptItem} onPressDetail={onPressDetail} />
+					{/* <AssignCheckList items={userAssign_agreementCheckList} onCheck={onPressAcceptItem} onPressDetail={onPressDetail} /> */}
+					{/* <AssignCheckListItem items={userAssign_agreementCheckList} /> */}
+					<View style={[assignCheckListItem.container]}>
+						<View style={[styles.check42]}>
+							<CheckBox onCheck={onCheck} state={userAgreement} />
+						</View>
+						<TouchableOpacity activeOpacity={0.8} onPress={() => onCheck(!userAgreement)} style={[assignCheckListItem.textContainer]}>
+							<Text style={[txt.noto28, {color: userAgreement ? MAINBLACK : MAINBLACK}]}>{userAssign_agreementCheckList[0].text}</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={onPressDetail} style={[assignCheckListItem.detailText]}>
+							<Text style={[txt.roboto28b, {color: MAINBLACK, textDecorationLine: 'underline'}]}>보기</Text>
+						</TouchableOpacity>
+					</View>
 				</View>
 				<View style={[{marginTop: 80 * DP}]}>
 					<AniButton btnTitle={'문의접수'} titleFontStyle={32} btnStyle={'border'} btnLayout={btn_w654} onPress={onPressAsk} />

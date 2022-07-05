@@ -29,6 +29,7 @@ import InputBalloon from 'Root/component/molecules/input/Input30';
 import Formtxtinput from 'Root/component/molecules/input/formtxtinput';
 import HashText from 'Root/component/molecules/info/HashText';
 import Input30 from 'Root/component/molecules/input/Input30';
+import {Check42, Check50, Rect42_Border} from 'Root/component/atom/icon';
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 
 const AskQuestion = ({route}) => {
@@ -47,13 +48,11 @@ const AskQuestion = ({route}) => {
 		let temp = [];
 		getCommonCodeDynamicQuery(
 			{common_code_c_name: 'helpbycategoryobjects', common_code_language: 'kor', common_code_out_type: 'list'},
-
 			result => {
 				// console.log('common code result', result.msg);
 				for (i in result.msg) {
 					temp.push(result.msg[i].common_code_msg_kor);
 				}
-
 				setCategoryList(temp.slice(2));
 				setLoading(false);
 				setCommonCode(result.msg.slice(2));
@@ -93,6 +92,11 @@ const AskQuestion = ({route}) => {
 	const onPressAcceptItem = () => {
 		setUserAgreement(!userAgreement);
 	};
+
+	React.useEffect(() => {
+		console.log('user', userAgreement);
+	}, [userAgreement]);
+
 	const onPressDetail = index => {
 		console.log(index + 'index 항목 더보기 클릭');
 		Modal.popOneBtn('적용 예정입니다.', '확인', () => Modal.close());
@@ -100,8 +104,6 @@ const AskQuestion = ({route}) => {
 
 	const onPressAsk = () => {
 		if (userAgreement && category != '카테고리 선택' && contents && title) {
-			console.log('전송준비 완료');
-			console.log('qetoiqoeti', commomCode, category);
 			for (let i in commomCode) {
 				if (commomCode[i].common_code_msg_kor == category) {
 					// console.log('같은거 ', commomCode[i]._id);
@@ -123,7 +125,17 @@ const AskQuestion = ({route}) => {
 				},
 			);
 		} else {
-			Modal.popOneBtn('입력을 확인해주세요', '확인', () => Modal.close());
+			Modal.close();
+			if (!userAgreement) {
+				Modal.alert('개인정보 수집 이용약관에 동의해주세요.');
+			} else if (category == '카테고리 선택') {
+				Modal.alert('문의 카테고리를 선택해주세요.');
+			} else if (!contents && contents.length == 0) {
+				Modal.alert('문의 내용을 적어주세요.');
+			} else if (!title) {
+				Modal.alert('제목을 입력해주세요.');
+			}
+			// Modal.popOneBtn('입력을 확인해주세요', '확인', () => Modal.close());
 		}
 	};
 
@@ -135,7 +147,7 @@ const AskQuestion = ({route}) => {
 		);
 	} else {
 		return (
-			<View style={styles.container}>
+			<ScrollView contentContainerStyle={styles.container}>
 				<View style={styles.selectContainer}>
 					<SelectInput onPressInput={onSelectCategory} width={654} height={82} fontSize={28} value={category} />
 				</View>
@@ -147,18 +159,23 @@ const AskQuestion = ({route}) => {
 						<InputLongText
 							placeholder="문제 발생일시와 문의 내용을 보내주시면 문의 확인에 도움이 됩니다!"
 							maxlength={500}
+							width={694}
 							onChange={onChangeText}
 							value={contents}
 						/>
 					</View>
 				</TouchableWithoutFeedback>
-				<View style={[{marginTop: 10 * DP}]}>
-					<AssignCheckList items={userAssign_agreementCheckList} onCheck={onPressAcceptItem} onPressDetail={onPressDetail} />
+				<View style={[{marginTop: 20 * DP, width: 694 * DP}]}>
+					{/* <AssignCheckList items={userAssign_agreementCheckList} onCheck={onPressAcceptItem} onPressDetail={onPressDetail} /> */}
+					<TouchableOpacity onPress={onPressAcceptItem} style={{flexDirection: 'row'}}>
+						{userAgreement ? <Check42 /> : <Rect42_Border />}
+						<Text style={[txt.noto28, {marginLeft: 20 * DP}]}>개인정보 수집 이용약관 동의 (필수) </Text>
+					</TouchableOpacity>
 				</View>
 				<View style={[{marginTop: 80 * DP}]}>
 					<AniButton btnTitle={'문의접수'} titleFontStyle={32} btnStyle={'border'} btnLayout={btn_w654} onPress={onPressAsk} />
 				</View>
-			</View>
+			</ScrollView>
 		);
 	}
 };

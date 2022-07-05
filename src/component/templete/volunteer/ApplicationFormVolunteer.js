@@ -142,7 +142,7 @@ export default ApplicationFormVolunteer = ({route, navigation}) => {
 
 	//참여 인원 라벨 클릭
 	const onClickLabel = data => {
-		navigation.push('UserProfile', {userobject: data});
+		navigation.navigate({key: data._id, name: 'UserProfile', params: {userobject: data}});
 	};
 
 	const parsing_wish_date = v => {

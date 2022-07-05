@@ -2,7 +2,7 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {Text, View, TextInput} from 'react-native';
 import DP from 'Root/config/dp';
-import {APRI10, GRAY10, GRAY30} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, GRAY30} from 'Root/config/color';
 
 /**
  * 대용량 인풋 컴포넌트
@@ -10,6 +10,7 @@ import {APRI10, GRAY10, GRAY30} from 'Root/config/color';
  * @param {string} props.placeholder - 인풋 PlaceHolder
  * @param {string} props.value - 인풋 값
  * @param {number} props.maxlength - 최대 글자 수 제한
+ * @param {number} props.width - 박스 너비
  * @param {(input:string)=>void} props.onChange - 인풋 값 변경 콜백
  */
 const InputLongText = props => {
@@ -41,25 +42,22 @@ const InputLongText = props => {
 		<View style={{flexDirection: 'row'}}>
 			<View
 				style={{
-					width: 654 * DP,
+					width: props.width * DP,
 					height: 380 * DP,
 					borderWidth: 2 * DP,
 					borderRadius: 30 * DP,
-					borderColor: content.length > 0 ? APRI10 : GRAY30,
+					borderColor: content.length > 0 ? BLACK : GRAY30,
 					alignItems: 'center',
 					justifyContent: 'center',
 					paddingHorizontal: 24 * DP,
-
-					// backgroundColor: 'yellow',
 				}}>
 				<TextInput
 					style={[
 						txt.noto24,
 						{
-							width: 606 * DP,
+							width: (props.width - 48) * DP,
 							height: 298 * DP,
 							textAlignVertical: 'top',
-							// backgroundColor: 'red',
 						},
 					]}
 					onChangeText={onChange}
@@ -84,5 +82,6 @@ InputLongText.defaultProps = {
 	value: null,
 	maxlength: 500,
 	onChange: e => console.log(e),
+	width: 654,
 };
 export default InputLongText;

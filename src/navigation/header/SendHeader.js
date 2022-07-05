@@ -19,7 +19,7 @@ export default SendHeader = ({route, navigation, options}) => {
 			switch (route.params.nav) {
 				case 'AidRequestAnimalList': {
 					//보호요청 글쓰기 템플릿
-					navigation.push('WriteAidRequest', {data: data});
+					navigation.navigate('WriteAidRequest', {data: data});
 					break;
 				}
 				case 'WriteAidRequest': {

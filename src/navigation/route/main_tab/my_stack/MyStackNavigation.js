@@ -45,7 +45,6 @@ import AnimalProtectRequestDetail from 'Templete/protection/AnimalProtectRequest
 import SelectAccount from 'Templete/search/SelectAccount';
 import ConfirmInputHeader from 'Navigation/header/ConfirmInputHeader';
 import SaveButtonHeader from 'Navigation/header/SaveButtonHeader';
-import MeatBallHeader from 'Root/navigation/header/MeatBallHeader';
 import SocialRelationTopTabNavigation from '../protection_stack/socialRelation_tab/SocialRelationTopTabNavigation';
 import SendHeader from 'Root/navigation/header/SendHeader';
 import SimpleHeader from 'Root/navigation/header/SimpleHeader';
@@ -89,6 +88,8 @@ import AddPhoto from 'Root/component/templete/media/AddPhoto';
 import PhotoSelectHeader from 'Root/navigation/header/PhotoSelectHeader';
 import ProfileHeader from 'Root/navigation/header/ProfileHeader';
 import OpenSourceDetail from 'Templete/user/OpenSourceDetail';
+import FeedWrite from 'Root/component/templete/feed/FeedWrite';
+import FeedWriteHeader from 'Root/navigation/header/FeedWriteHeader';
 
 const MyStack = createStackNavigator();
 export default MyStackNavigation = props => {

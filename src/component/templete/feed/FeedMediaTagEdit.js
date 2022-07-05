@@ -22,42 +22,54 @@ import FastImage from 'react-native-fast-image';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Tag from 'Root/component/molecules/tag/Tag';
 import Swiper from 'react-native-swiper';
-import {styles} from 'Atom/image/imageStyle'
+import {styles} from 'Atom/image/imageStyle';
 import PhotoTagItem from 'Organism/feed/PhotoTagItem';
 
 export default FeedMediaTagEdit = props => {
 	const navState = useNavigationState(state => state);
-	console.log('네비게이션', navState);
-
-	const feedData = navState.routes[navState.index - 1].params;
-
-	const [data, setData] = React.useState(feedData);
+	const feedEditIndex = navState.routes.findIndex(v => v.name == 'FeedEdit'||v.name == 'FeedWrite');
+	const route = navState.routes[feedEditIndex];
+	const feedData = route?route.params:[];
+	const [tagScreens, setTagScreens] = React.useState(feedData.feed_medias ?? []);
 	const [scroll, setScroll] = React.useState(true);
-	// React.useEffect(()=>{
+	console.log('feedData', feedData, navState);
 
-	const onTagMove = isMove => {
-		setScroll(!isMove);
-	}
-
-	// 	setData(feedData);
-	// },[])
+	const onEndTagMove = (tag, uri) => {
+		console.log('onTagmoveEnd', tag);
+		setScroll(true); //태그가 움직이기 시작하면 Swipe가 되지 않도록 설정
+		feedData.feed_medias?.forEach((v, i, a) => {
+			if (v.media_uri == uri) {
+				a[i].tags = a[i].tags.map(item => {
+					if (item.user._id == tag.user._id) {
+						return tag;
+					} else {
+						return item;
+					}
+				});
+			}
+		});
+	};
+	const onTagMoveStart = isMove => {
+		console.log('onTagMoveStart');
+		setScroll(false); //태그의 움직임이 멈추면 Swipe가 가능하도록 설정
+	};
 
 	const onMakeTag = (newtag, uri) => {
-		console.log(uri,'   make   ',newtag);
-		data.feed_medias?.forEach((v, i, a) => {
+		console.log(uri, '   make   ', newtag);
+		feedData.feed_medias?.forEach((v, i, a) => {
 			if (v.media_uri == uri) {
 				a[i].tags ? a[i].tags : (a[i].tags = [newtag]);
-				if(a[i].tags&&a[i].tags.length>0){
-					a[i].tags = a[i].tags.filter(v => v.user._id != newtag.user._id).concat(newtag)
-				}else{
+				if (a[i].tags && a[i].tags.length > 0) {
+					a[i].tags = a[i].tags.filter(v => v.user._id != newtag.user._id).concat(newtag);
+				} else {
 					a[i].tags = [newtag];
 				}
 			}
 		});
 	};
 	const onDeleteTag = (user, uri) => {
-		console.log(uri,'   del   ',user);
-		data.feed_medias?.forEach((v, i, a) => {
+		console.log(uri, '   del   ', user);
+		feedData.feed_medias?.forEach((v, i, a) => {
 			if (v.media_uri === uri) {
 				v.tags.forEach((v, i, a) => {
 					if (v.user._id === user._id) {
@@ -69,20 +81,21 @@ export default FeedMediaTagEdit = props => {
 	};
 
 	const renderItems = () => {
-		if (!data||data.length<1) return false;
-		return data.feed_medias?.map((v, i) => (
-			<PhotoTagItem style={lo.box_img} uri={v.media_uri} data={v.media_uri} taglist={v.tags} key={i} onMakeTag={onMakeTag} onDeleteTag={onDeleteTag} viewmode={false} onTagMove={onTagMove}/>
+		if (tagScreens.length < 1) return false;
+		return tagScreens.map((v, i) => (
+			<PhotoTagItem
+				style={lo.box_img}
+				uri={v.media_uri}
+				taglist={v.tags}
+				key={v.tags.reduce((a,c)=>a+c.pos.x,0)}
+				onMakeTag={onMakeTag}
+				onDeleteTag={onDeleteTag}
+				viewmode={false}
+				onEndTagMove={onEndTagMove}
+				onTagMoveStart={onTagMoveStart}
+			/>
 		));
 	};
-
-	const showTags = () => {
-		console.log('show Tags ',data)
-		console.log('Feed',feedData)
-	}
-	const test = () => {
-		// console.log(navState);
-		console.log(data);
-	}
 
 	return (
 		<View style={lo.wrp_main}>
@@ -98,9 +111,7 @@ export default FeedMediaTagEdit = props => {
 					activeDot={false}
 					dot={false}
 					renderPagination={(index, total, context) => {
-						// console.log('context', context);
-						if (!data) return <></>;
-						return data.feed_medias?.length == 0 ? (
+						return tagScreens.length == 0 ? (
 							<></>
 						) : (
 							<View
@@ -109,13 +120,13 @@ export default FeedMediaTagEdit = props => {
 									alignSelf: 'center',
 									alignItems: 'center',
 									justifyContent: 'space-between',
-									width: 28 * (data.feed_medias?data.feed_medias.length:0) * DP,
+									width: 28 * (feedData.feed_medias ? feedData.feed_medias.length : 0) * DP,
 									height: 24 * DP,
 									// backgroundColor: 'green',
 									flexDirection: 'row',
 									position: 'absolute',
 								}}>
-								{data.feed_medias?data.feed_medias.map((data, idx) => {
+								{tagScreens.map((data, idx) => {
 									return (
 										<View
 											key={idx}
@@ -129,7 +140,7 @@ export default FeedMediaTagEdit = props => {
 												},
 											]}></View>
 									);
-								}):<></>}
+								})}
 							</View>
 						);
 					}}

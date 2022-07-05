@@ -418,9 +418,9 @@ export default FeedList = ({route}) => {
 				getFavoriteFeedListByUserId(
 					{userobject_id: userGlobalObject.userInfo._id},
 					({msg}) => {
-						// setIndex(msg.feeds.findIndex(v => v.hashtag_feed_id._id == route.params?.selected._id));
-						// setFeedList(msg);
-						setFeed(msg.map(v => v.favorite_feed_id));
+						let temp = msg.filter(x => x.favorite_feed_id.feed_is_delete != true).map(data => data.favorite_feed_id);
+						console.log('temp temp', temp, msg);
+						setFeed(temp);
 					},
 					error => {
 						Modal.popOneBtn(error, '확인', () => {
@@ -429,6 +429,7 @@ export default FeedList = ({route}) => {
 							});
 						});
 					},
+					// console.log("");
 				);
 				break;
 			default:

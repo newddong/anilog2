@@ -6,11 +6,11 @@ import {txt} from 'Root/config/textstyle';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {Cancel48} from 'Atom/icon';
 
-const Tag = ({pos, user, content, onDelete, onEnd, viewmode, backgroundLayout, onTagMove}) => {
-	console.log('tags', pos, user);
+const Tag = ({pos, user, onDelete, onEndTagMove, viewmode, backgroundLayout, onTagMoveStart}) => {
 	const [position, setPosition] = React.useState({x: pos?.x, y: pos?.y});
+	const [dimension, setDimension] = React.useState({width: 0, height: 0});
 	const tagnav = useNavigation();
-
+	const [isDelete, setDelete] = React.useState(false);
 	const WIDTH = 750 * DP;
 	const HEIGHT = 750 * DP;
 	const WIDTHRATIO = backgroundLayout.width / WIDTH;
@@ -20,77 +20,51 @@ const Tag = ({pos, user, content, onDelete, onEnd, viewmode, backgroundLayout, o
 		PanResponder.create({
 			onMoveShouldSetPanResponder: () => true,
 			onPanResponderGrant: ({nativeEvent}) => {
-				console.log('moveg',nativeEvent,pan);
-				pan.setOffset({x:-nativeEvent.pageX, y: -nativeEvent.pageY});
+				// console.log('moveg',nativeEvent,pan);
+				pan.setOffset({x: -nativeEvent.pageX, y: -nativeEvent.pageY});
 			},
 			onPanResponderStart: ({nativeEvent}) => {
-				console.log('moves',nativeEvent,pan);
-				pan.setOffset({x:-nativeEvent.pageX, y: -nativeEvent.pageY});
-				onTagMove(true);
+				// console.log('moves',nativeEvent,pan);
+				pan.setOffset({x: -nativeEvent.pageX, y: -nativeEvent.pageY});
+				onTagMoveStart();
 			},
 			onPanResponderMove: ({nativeEvent}) => {
-				console.log('move',nativeEvent,pan);
-				pan.setValue({x:nativeEvent.pageX, y: nativeEvent.pageY});
+				// console.log('move',nativeEvent,pan);
+				pan.setValue({x: nativeEvent.pageX, y: nativeEvent.pageY});
 			},
 			onPanResponderRelease: ({nativeEvent}) => {
-				console.log('mover',nativeEvent,pan);
-				// pan.setValue({x:nativeEvent.pageX, y: nativeEvent.pageY});
-				let traverseX = pan.x._value+pan.x._offset;
-				let traverseY = pan.y._value+pan.y._offset;
-				// setPosition({x:position.x+traverseX,y:position.y+traverseY})
-				// pan.setOffset({x:0,y:0})
-				// pan.setValue({x:0,y:0})
-				// pan.extractOffset();
-				pan.setValue({x:nativeEvent.pageX, y: nativeEvent.pageY});
-				setPosition({x:position.x+pan.x._value,y:position.y+pan.y._value})
-				onEnd()
+				// console.log('mover',nativeEvent,pan);
+				let traverseX = pan.x._value + pan.x._offset;
+				let traverseY = pan.y._value + pan.y._offset;
+				pan.setValue({x: nativeEvent.pageX, y: nativeEvent.pageY});
+				onEndTagMove({user: user, x: position.x + traverseX, y: position.y + traverseY});
 			},
 			onPanResponderTerminate: ({nativeEvent}) => {
-				console.log('movet',nativeEvent,pan)
+				// console.log('movet',nativeEvent,pan)
 			},
 		}),
 	).current;
-	React.useEffect(()=>{
-		pan.setValue({x:0,y:0})
-	},[position])
+
 	const onLayout = e => {
-		let layout = e.nativeEvent.layout;
-		let x = 0;
-		let y = 0;
-		let left = true;
-		let top = true;
-		if (pos.x + layout.width > WIDTH) {
-			console.log('true');
-			x = pos.x - layout.width;
-			left = false;
-		} else {
-			x = pos.x;
-			left = true;
-		}
-		if (pos.y + layout.height > HEIGHT) {
-			console.log('true');
-			y = pos.y - layout.height;
-			top = false;
-		} else {
-			y = pos.y;
-			top = true;
-		}
+		console.log('onlayout', e.nativeEvent.layout, pos, user.user_nickname);
+		setDimension(e.nativeEvent.layout);
 	};
 
 	const deleteTag = () => {
+		// setDelete(true);
 		onDelete(user);
 	};
 
 	const moveToTaggedProfile = () => {
 		tagnav.push('UserProfile', {userobject: user});
 	};
-
+	if (isDelete) return false;
 	if (viewmode) {
 		return (
-			<TouchableOpacity style={{position:'absolute',backgroundColor:'red',top:HEIGTHRATIO * position.y,left:HEIGTHRATIO * position.x}} onPress={moveToTaggedProfile}>
-				<View
-					style={[tag.background, {paddingRight: 30 * DP}]}
-					onLayout={onLayout}>
+			<TouchableOpacity
+				style={{position: 'absolute', backgroundColor: 'red', top: HEIGTHRATIO * position.y, left: HEIGTHRATIO * position.x}}
+				onPress={moveToTaggedProfile}>
+				<View style={[tag.background, {paddingRight: 30 * DP}]} onLayout={onLayout}>
 					<Text style={[txt.roboto28, txt.white]}>{user.user_nickname}</Text>
 				</View>
 			</TouchableOpacity>
@@ -99,13 +73,29 @@ const Tag = ({pos, user, content, onDelete, onEnd, viewmode, backgroundLayout, o
 		return (
 			<Animated.View
 				{...panResponder.panHandlers}
-				style={[tag.background, {top: HEIGTHRATIO * position.y, left: WIDTHRATIO * position.x,transform:[{translateX:pan.x},{translateY:pan.y}]}]}
-				 onStartShouldSetResponder={()=>true}>
-				{/* <View style={tag.background} >  */}
+				style={[
+					tag.background,
+					{
+						backgroundColor: null,
+						height: 100 * DP,
+						top: HEIGTHRATIO * position.y,
+						left: WIDTHRATIO * position.x,
+						transform: [{translateX: pan.x}, {translateY: pan.y}],
+					},
+				]}
+				onStartShouldSetResponder={() => true}>
+				<Text style={[txt.roboto28, {opacity: 0, paddingHorizontal: 50 * DP}]}>{user.user_nickname}</Text>
+				<View style={[tag.background]} onLayout={onLayout}>
 					<Text style={[txt.roboto28, txt.white]}>{user.user_nickname}</Text>
-					<View style={{marginLeft: 10 * DP}}><Cancel48 onPress={deleteTag} /></View>
-				{/* </View> */}
-				
+					<View
+						style={{width: 58 * DP, height: 100 * DP, justifyContent: 'center', alignItems: 'flex-end'}}
+						onStartShouldSetResponder={() => true}
+						onResponderGrant={() => {
+							deleteTag();
+						}}>
+						<Cancel48 />
+					</View>
+				</View>
 			</Animated.View>
 		);
 	}

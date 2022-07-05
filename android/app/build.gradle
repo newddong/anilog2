@@ -233,7 +233,10 @@ android {
             resValue "string", "CodePushDeploymentKey", '"vaG-A7kC_D3_trSOjr1hqLxkxGNG6bvBfr2h5"'
         }
     }
-
+    dexOptions {
+        jumboMode true
+        javaMaxHeapSize "4g"
+    }
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
         variant.outputs.each { output ->

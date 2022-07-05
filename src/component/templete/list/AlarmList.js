@@ -255,8 +255,8 @@ const AlarmList = props => {
 		return (
 			<View style={[styles.container]}>
 				{isEmpty ? (
-					<View>
-						<Text style={[{textAlign: 'center'}]}>소식이 없습니다.</Text>
+					<View style={[styles.listContainer]}>
+						<Text style={[{textAlign: 'center'}, {marginTop: 20 * DP}]}>소식이 없습니다.</Text>
 					</View>
 				) : (
 					<View style={[styles.listContainer]}>

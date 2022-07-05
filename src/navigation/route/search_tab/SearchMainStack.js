@@ -1,21 +1,14 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import {APRI10} from 'Root/config/color';
-import DP from 'Root/config/dp';
 import {createStackNavigator} from '@react-navigation/stack';
 import SimpleHeader from 'Root/navigation/header/SimpleHeader';
 import Profile from 'Root/component/templete/profile/Profile';
-import LogoHeader from 'Root/navigation/header/LogoHeader';
 import SearchTabNavigation from './SearchTabNavigation';
 import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 import FeedList from 'Root/component/templete/feed/FeedList';
-import MeatBallHeader from 'Root/navigation/header/MeatBallHeader';
 import ChangeUserProfileImage from 'Root/component/templete/user/ChangeUserProfileImage';
 import SocialRelationTopTabNavigation from '../main_tab/protection_stack/socialRelation_tab/SocialRelationTopTabNavigation';
 import FeedCommentList from 'Root/component/templete/feed/FeedCommentList';
-import AlarmAndSearchHeader from 'Root/navigation/header/AlarmAndSearchHeader';
 import FeedListForHashTag from 'Root/component/templete/feed/FeedListForHashTag';
-import BookmarkHeader from 'Root/navigation/header/BookmarkHeader';
 import ArticleDetail from 'Root/component/templete/community/ArticleDetail';
 import ReviewDetail from 'Root/component/templete/community/ReviewDetail';
 import CommunityCommentList from 'Root/component/templete/community/CommunityCommentList';
@@ -49,7 +42,7 @@ export default SearchMainStack = props => {
 			<SearchStackNav.Screen
 				name="UserFeedList"
 				component={FeedList}
-				options={{header: props => <MeatBallHeader {...props} />, title: '피드 게시글'}}
+				options={{header: props => <SimpleHeader {...props} />, title: '피드 게시글'}}
 			/>
 			<SearchStackNav.Screen
 				name={'UserTagFeedList'}

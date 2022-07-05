@@ -140,7 +140,7 @@ export default ApplyVolunteer = ({route, navigation}) => {
 		if (data.volunteer_accompany_number - data.volunteer_accompany.length <= 0) {
 			Modal.popOneBtn('참여인원보다 많은 봉사자를\n 추가하실 수 없습니다.', '확 인', () => Modal.close());
 		} else {
-			navigation.push('AddVolunteers');
+			navigation.navigate('AddVolunteers');
 		}
 	};
 

@@ -27,7 +27,9 @@ export default Profile = ({route}) => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState({...route.params?.userobject, feedList: []}); //라벨을 클릭한 유저의 userObject data
 	const [feedList, setFeedList] = React.useState('false');
+	const [tagFeedList, setTagFeedList] = React.useState('false');
 	const [feedTotal, setFeedTotal] = React.useState();
+	const [tagFeedTotal, setTagFeedTotal] = React.useState();
 	const [commList, setCommList] = React.useState('false');
 	const [protectList, setProtectList] = React.useState('false');
 	const [offset, setOffset] = React.useState(1); //커뮤니티 페이지
@@ -84,8 +86,6 @@ export default Profile = ({route}) => {
 				community_type: 'all',
 			},
 			result => {
-				// console.log('result / getCommunityListuser , free ', result.msg.free.length);
-				// console.log('result / getCommunityListuser , review ', result.msg.review.length);
 				setCommList(result.msg);
 			},
 			err => {
@@ -136,7 +136,7 @@ export default Profile = ({route}) => {
 	};
 
 	//하단의 피드, 태그 탭 썸네일 데이터 수신
-	const getFeedList = (i, refresh) => {
+	const getFeedList = (i, refresh, end) => {
 		setLoading(true);
 		let params = {
 			userobject_id: userId,
@@ -150,52 +150,66 @@ export default Profile = ({route}) => {
 		switch (i) {
 			case 0:
 				console.log('params', params);
-				getFeedListByUserId(
-					params,
-					result => {
-						console.log('result / getFeedListByUserId ', result.msg.length);
-						//처음 api 호출 혹은 리프레쉬(탭변경)인 경우 리턴값을 그대로 set
-						if (refresh || feedList.length == 0) {
-							setFeedList(result.msg);
-						} else {
-							//다음 페이지를 호출한 경우 기존 값에 추가된 result 추가
-							console.log('page 합산', [...feedList, ...result.msg].length);
-							setFeedList([...feedList, ...result.msg]);
-						}
-						setFeedTotal(result.total_count); // 토탈카운트 갱신
-						setLoading(false); //로딩종료
-					},
-					err => {
-						console.log('getFeedListByUserId err ', err);
-						setFeedList([]);
-						setLoading(false);
-					},
-				);
+				if (feedList != 'false' && feedList.length > 0 && !end) {
+					setLoading(false); //로딩종료
+				} else {
+					getFeedListByUserId(
+						params,
+						result => {
+							console.log('result / getFeedListByUserId ', result.msg.length);
+							//처음 api 호출 혹은 리프레쉬(탭변경)인 경우 리턴값을 그대로 set
+							if (refresh || feedList.length == 0) {
+								setFeedList(result.msg);
+							} else {
+								//다음 페이지를 호출한 경우 기존 값에 추가된 result 추가
+								console.log('page 합산', [...feedList, ...result.msg].length);
+								setFeedList([...feedList, ...result.msg]);
+							}
+							setFeedTotal(result.total_count); // 토탈카운트 갱신
+							setLoading(false); //로딩종료
+						},
+						err => {
+							console.log('getFeedListByUserId err ', err);
+							setFeedList([]);
+							setLoading(false);
+						},
+					);
+				}
 				break;
 			case 1:
-				getUserTaggedFeedList(
-					params,
-					result => {
-						// console.log('result / getUserTaggedFeedList : ', result.msg[1]);
-						if (refresh || feedList.length == 0) {
-							setFeedList(result.msg.map(v => v.usertag_feed_id));
-						} else {
-							//다음 페이지를 호출한 경우 기존 값에 추가된 result 추가
-							console.log('page 합산', [...feedList, ...result.msg].length);
-							setFeedList([...feedList, ...result.msg.map(v => v.usertag_feed_id)]);
-						}
-						setFeedTotal(result.total_count); // 토탈카운트 갱신
-						setLoading(false); //로딩종료
-					},
-					err => {
-						console.log('getUserTaggedFeedList err', err);
-						setLoading(false); //로딩종료
-						if (err.includes('code 500')) {
-							Modal.popNetworkErrorModal('정보를 불러오는데에 실패하였습니다.\n 잠시후 다시 이용해주세요. ');
-						}
-						setFeedList([]);
-					},
-				);
+				console.log('tag', tagFeedList.length);
+				console.log('end', end);
+				if (tagFeedList != 'false' && tagFeedList.length > 0 && !end) {
+					// setFeedList(tagFeedList);
+					setLoading(false); //로딩종료
+				} else {
+					getUserTaggedFeedList(
+						params,
+						result => {
+							console.log('result / getUserTaggedFeedList / total_count : ', result.total_count);
+							if (refresh || tagFeedList.length == 0) {
+								// setFeedList(result.msg.map(v => v.usertag_feed_id));
+								setTagFeedList(result.msg.map(v => v.usertag_feed_id));
+							} else {
+								//다음 페이지를 호출한 경우 기존 값에 추가된 result 추가
+								console.log('page 합산', [...tagFeedList, ...result.msg].length);
+								// setFeedList([...feedList, ...result.msg.map(v => v.usertag_feed_id)]);
+								setTagFeedList([...tagFeedList, ...result.msg.map(v => v.usertag_feed_id)]);
+							}
+							setTagFeedTotal(result.total_count); // 토탈카운트 갱신
+							setLoading(false); //로딩종료
+						},
+						err => {
+							console.log('getUserTaggedFeedList err', err);
+							setLoading(false); //로딩종료
+							if (err.includes('code 500')) {
+								Modal.popNetworkErrorModal('정보를 불러오는데에 실패하였습니다.\n 잠시후 다시 이용해주세요. ');
+							}
+							// setFeedList([]);
+							setTagFeedList([]);
+						},
+					);
+				}
 				break;
 			default:
 				break;
@@ -206,9 +220,16 @@ export default Profile = ({route}) => {
 		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
 		//리뷰 메인 페이지에서는 필터가 적용이 되었을 때도 api 접속 불필요
 		if (i == 0 || i == 1) {
-			console.log('feedList.length', feedList.length, feedTotal);
-			if (feedList.length != feedTotal) {
-				getFeedList(i);
+			if (i == 1) {
+				console.log('tagFeedList.length', tagFeedList.length, tagFeedTotal);
+				if (tagFeedList.length != tagFeedTotal) {
+					getFeedList(i, false, true);
+				}
+			} else {
+				console.log('feedList.length', feedList.length, feedTotal);
+				if (feedList.length != feedTotal) {
+					getFeedList(i, false, true);
+				}
 			}
 		} else if (protectList.length % PROTECT_REQUEST_DETAIL_LIMIT == 0) {
 			//보호소프로필인 경우 보호동물탭
@@ -282,36 +303,6 @@ export default Profile = ({route}) => {
 		setPressed(true);
 		if (!pressed) {
 			navigation.navigate({key: item._id + new Date().getTime(), name: 'UserProfile', params: {userobject: item}});
-		}
-	};
-
-	//쪽지 전송
-	const onPressSendMsg = (_id, name) => {
-		if (userGlobalObject.userInfo.isPreviewMode) {
-			Modal.popLoginRequestModal(() => {
-				navigation.navigate('LoginRequired');
-			});
-		} else {
-			setTimeout(() => {
-				Modal.popMessageModal(
-					name,
-					msg => {
-						createMemoBox(
-							{memobox_receive_id: _id, memobox_contents: msg},
-							result => {
-								console.log('message sent success', result);
-								Modal.popOneBtn('쪽지 전송하였습니다.', '확인', () => Modal.close());
-							},
-							err => {
-								console.log('message sent err', err);
-							},
-						);
-						console.log('msg', msg);
-						Modal.close();
-					},
-					() => alert('나가기'),
-				);
-			}, 100);
 		}
 	};
 
@@ -542,16 +533,12 @@ export default Profile = ({route}) => {
 			}
 		};
 		if (feedList == 'false' || data.is_follow == undefined) {
-			return (
-				<View style={[styles.loadingContainer, {}]}>
-					<ActivityIndicator size="large" color={APRI10} />
-				</View>
-			);
+			return <View style={[styles.loadingContainer, {}]}>{/* <ActivityIndicator size="large" color={APRI10} /> */}</View>;
 		} else
 			return (
 				<View style={[profile.feedListContainer]}>
 					<FlatList
-						data={[{}, feedList]}
+						data={[{}, tabMenuSelected == 0 ? feedList : tagFeedList]}
 						renderItem={renderItem}
 						keyExtractor={(item, index) => index + ''}
 						ListHeaderComponent={userProfileInfo()}
@@ -607,7 +594,11 @@ export default Profile = ({route}) => {
 					</>
 				)}
 				{loading ? (
-					<View style={styles.loadingContainer}>
+					<View
+						style={[
+							// styles.loadingContainer,
+							{paddingVertical: 20 * DP},
+						]}>
 						<ActivityIndicator size="large" color={APRI10} />
 					</View>
 				) : (

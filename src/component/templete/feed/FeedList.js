@@ -12,7 +12,7 @@ import {
 	ActivityIndicator,
 	TouchableWithoutFeedback,
 } from 'react-native';
-import {APRI10, GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
+import {APRI10, WHITE} from 'Root/config/color';
 import {Write94, Camera54} from 'Atom/icon';
 import Feed from 'Organism/feed/Feed';
 import {deleteFeed, getMissingReportList, getSuggestFeedList} from 'Root/api/feedapi';
@@ -24,12 +24,10 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import {login_style, buttonstyle} from 'Templete/style_templete';
 import {getStringLength, getLinesOfString} from 'Root/util/stringutil';
 import {GRAY30} from 'Root/config/color';
-import {txt} from 'Root/config/textstyle';
-import {useScrollToTop} from '@react-navigation/native';
 import NewMissingReportList from '../list/NewMissingReportList';
-import {getUserInfoById} from 'Root/api/userapi';
 import {FEED_LIMIT, NETWORK_ERROR} from 'Root/i18n/msg';
 import {useNavigation} from '@react-navigation/core';
+import feed_obj from 'Root/config/feed_obj';
 
 export default FeedList = ({route}) => {
 	const navigation = useNavigation();
@@ -39,7 +37,6 @@ export default FeedList = ({route}) => {
 	const [loading, setLoading] = React.useState(false);
 	const [topList, setTopList] = React.useState([]);
 	const flatlist = React.useRef();
-	const requestNum = 99;
 
 	//피드썸네일 클릭 리스트일 경우
 	React.useEffect(() => {
@@ -67,37 +64,92 @@ export default FeedList = ({route}) => {
 		}
 	}, [route.params?.userobject]);
 
+	React.useEffect(() => {
+		//페이지 상단 실종,제보 리스트 받아오기
+		if (route.name == 'MainHomeFeedList') {
+			getMissingReportList(
+				{request_number: 10},
+				result => {
+					// console.log('result', result.msg[0]);
+					setTopList(result.msg);
+				},
+				err => {
+					console.log('getMissingReportList err', err);
+				},
+			);
+		}
+		getList(); //첫 리스트 받아오기
+		const unsubscribe = navigation.addListener('focus', () => {
+			if (feed_obj.shouldUpdate) {
+				//피드 수정후 갱신
+				try {
+					const findindex = feed_obj.list.findIndex(e => e._id == feed_obj.edit_obj._id);
+					let copy = [...feed_obj.list];
+					copy[findindex] = feed_obj.edit_obj;
+					setFeedList(copy);
+					feed_obj.shouldUpdate = false;
+					feed_obj.edit_obj = {};
+					feed_obj.list = [];
+				} catch (err) {
+					console.log('err', err);
+				}
+			}
+		});
+
+		return unsubscribe;
+	}, [route]);
+
+	React.useEffect(() => {
+		feed_obj.list = feedList;
+	}, [feedList]);
+
+	React.useEffect(() => {
+		//Refreshing 요청시 피드리스트 다시 조회
+		// if (route.name == 'MainHomeFeedList' && refreshing) {
+		// 	console.log('getList from refreshing');
+		// }
+		getList(false, false);
+	}, [refreshing]);
+
 	const setFeed = list => {
-		setFeedList(
-			list
-				.map((v, i, a) => {
-					let lines = getLinesOfString(v.feed_content, 53);
-					lines = lines > 2 ? 2 : lines;
-					if (v.feed_recent_comment) {
-						return {...v, height: (914 + lines * 48 + 10 + 128) * DP};
-					} else {
-						return {...v, height: (914 + lines * 48 + 10) * DP};
-					}
-				})
-				.map((v, i, a) => {
-					let offset = a.slice(0, i).reduce((prev, current) => {
-						return current.height + prev;
-					}, 0);
-					return {
-						...v,
-						offset: offset,
-					};
-				}),
-		);
+		try {
+			let temp = [];
+			temp = list.filter(e => e != null);
+			setFeedList(
+				temp
+					.map((v, i, a) => {
+						let lines = getLinesOfString(v.feed_content, 53);
+						lines = lines > 2 ? 2 : lines;
+						if (v.feed_recent_comment) {
+							return {...v, height: (914 + lines * 48 + 10 + 128) * DP};
+						} else {
+							return {...v, height: (914 + lines * 48 + 10) * DP};
+						}
+					})
+					.map((v, i, a) => {
+						let offset = a.slice(0, i).reduce((prev, current) => {
+							return current.height + prev;
+						}, 0);
+						return {
+							...v,
+							offset: offset,
+						};
+					}),
+			);
+		} catch (err) {
+			console.log('err, setFeed', err);
+		}
 	};
 
 	//스크롤 최하단 도착 콜백 (다음페이지 호출)
-	const onEndReached = () => {
-		console.log('onEndReached', feedList.length, total);
-		if (feedList.length < total) {
-			getList(false, true);
-		} else {
-			console.log('토탈 초과');
+	const onEndReached = ({distanceFromEnd}) => {
+		if (distanceFromEnd >= 0) {
+			console.log('onEndReached', feedList.length, total);
+			if (feedList.length < total) {
+				getList(false, true);
+			} else {
+				console.log('토탈 초과');
+			}
 		}
 	};
 
@@ -386,7 +438,7 @@ export default FeedList = ({route}) => {
 					limit: FEED_LIMIT,
 				};
 				console.log('feedList.length', feedList.length);
-				if (feedList.length > 0) {
+				if (feedList.length > 0 && (pre || next)) {
 					params.target_object_id = pre ? feedList[0]._id : feedList[feedList.length - 1]._id;
 					params.order_value = pre ? 'pre' : 'next';
 				}
@@ -411,33 +463,6 @@ export default FeedList = ({route}) => {
 				break;
 		}
 	};
-
-	React.useEffect(() => {
-		if (route.name == 'MainHomeFeedList') {
-			getMissingReportList(
-				{request_number: 10},
-				result => {
-					// console.log('result', result.msg[0]);
-					setTopList(result.msg);
-				},
-				err => {
-					console.log('getMissingReportList err', err);
-				},
-			);
-		}
-
-		//FeedList 스크린 이동시 피드리스트 갱신
-		const unsubscribe = navigation.addListener('focus', () => {
-			if (route.params && route.params.refreshing) {
-				getList(true, false);
-			} else getList();
-		});
-		//Refreshing 요청시 피드리스트 다시 조회
-		if (route.name == 'MainHomeFeedList') {
-			refreshing ? getList(true, false) : false;
-		}
-		return unsubscribe;
-	}, [refreshing, route]);
 
 	const [refresh, setRefresh] = React.useState(false);
 	const [scrollComplete, setScrollComplete] = React.useState(false); //feedList가 갱신될 때 다시 스크롤되지 않도록 처리
@@ -468,7 +493,8 @@ export default FeedList = ({route}) => {
 				{feed_object_id: id},
 				result => {
 					console.log('result / DeleteFeed / FeedContent : ', result.msg);
-					onRefresh();
+					setFeedList(feedList.filter(e => e._id != result.msg._id));
+					// onRefresh();
 					Modal.close();
 				},
 				err => {
@@ -497,11 +523,7 @@ export default FeedList = ({route}) => {
 
 	//피드 상단 새로운 실종/제보
 	const MissingReport = () => {
-		return (
-			// <View style={[styles.container]}>
-			<NewMissingReportList data={topList} />
-			// {/* </View> */}
-		);
+		return <NewMissingReportList data={topList} />;
 	};
 
 	const renderItem = ({item}) => {

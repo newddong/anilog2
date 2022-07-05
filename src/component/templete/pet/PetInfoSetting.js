@@ -341,7 +341,7 @@ export default PetInfoSetting = ({route}) => {
 
 	//업로드 및 팔로우 클릭
 	const onClickUserInfo = () => {
-		navigation.navigate({key: data._id, name: 'UserProfile', params: {userobject: petData}});
+		navigation.navigate({key: petData._id, name: 'UserProfile', params: {userobject: petData}});
 	};
 
 	// 소개란 반려동물 소개란 수정

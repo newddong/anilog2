@@ -19,7 +19,9 @@ const RadioBoxGroup = props => {
 
 	const onSelect = (item, index) => {
 		setIndex(index);
+		props.onSelect(item, index);
 	};
+
 	const style = Array.isArray(props.style) ? [...props.style] : {...props.style};
 
 	return (

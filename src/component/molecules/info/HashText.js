@@ -115,7 +115,8 @@ export default function HashText(props) {
 			}
 			if (tag.charAt(0) == '@') {
 				if (taginfo[tag]) {
-					navigation.navigate('UserProfile', {userobject: {_id: taginfo[tag]}});
+					navigation.navigate({key: taginfo[tag], name: 'UserProfile', params: {userobject: {_id: taginfo[tag]}}});
+					// navigation.push('UserProfile', {userobject: {_id: taginfo[tag]}});
 				} else {
 					getUserListByNickname(
 						{
@@ -124,7 +125,8 @@ export default function HashText(props) {
 							user_type: '',
 						},
 						result => {
-							navigation.navigate('UserProfile', {userobject: {_id: result.msg[0]._id}});
+							// navigation.navigate('UserProfile', {userobject: {_id: result.msg[0]._id}});
+							navigation.navigate({key: result.msg[0]._id, name: 'UserProfile', params: {userobject: {_id: result.msg[0]._id}}});
 						},
 						error => {
 							Modal.alert('존재하지 않는 유저입니다.');

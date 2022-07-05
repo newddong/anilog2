@@ -12,9 +12,8 @@ import {TwoPaw} from 'Root/component/atom/icon';
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 const AskedQuestion = ({route}) => {
 	const navigation = useNavigation();
-	const [data, setData] = React.useState();
+	const [data, setData] = React.useState('');
 	const [loading, setLoading] = React.useState(true);
-	const [answerText, setAnswerText] = React.useState();
 	React.useEffect(() => {
 		getQandInfo(
 			{qanda_user_id: userGlobalObj.userInfo._id},
@@ -30,11 +29,11 @@ const AskedQuestion = ({route}) => {
 	}, []);
 
 	const renderItem = ({item, index}) => {
-		console.log('item', item);
+		// console.log('item', item);
 		if (item.qanda_status == 'waiting') {
-			var answered = false;
+			let answered = false;
 		} else {
-			var answered = true;
+			let answered = true;
 		}
 		const date = moment(item.announcement_date).format('YYYY.MM.DD');
 		return (
@@ -49,6 +48,15 @@ const AskedQuestion = ({route}) => {
 		);
 	};
 
+	const listEmpty = () => {
+		return (
+			<View style={[{flex: 1}, {justifyContent: 'center'}, {alignItems: 'center'}]}>
+				<TwoPaw />
+				<Text style={[txt.noto28]}>문의 내역이 없습니다.</Text>
+			</View>
+		);
+	};
+
 	if (loading) {
 		return (
 			<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
@@ -58,14 +66,13 @@ const AskedQuestion = ({route}) => {
 	} else {
 		return (
 			<View style={styles.container}>
-				{data ? (
-					<FlatList data={data} keyExtractor={item => item._id} renderItem={renderItem} showsVerticalScrollIndicator={false} />
-				) : (
-					<View style={[{flex: 1}, {justifyContent: 'center'}, {alignItems: 'center'}]}>
-						<TwoPaw />
-						<Text style={[txt.noto28]}>문의 내역이 없습니다.</Text>
-					</View>
-				)}
+				<FlatList
+					data={data}
+					keyExtractor={item => item._id}
+					renderItem={renderItem}
+					// ListEmptyComponent={listEmpty}
+					showsVerticalScrollIndicator={false}
+				/>
 			</View>
 		);
 	}

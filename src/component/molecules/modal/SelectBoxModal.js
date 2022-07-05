@@ -53,7 +53,15 @@ const SelectBoxModal = props => {
 		return (
 			<TouchableOpacity onPress={() => onSelect(item)} style={[style.listItem]}>
 				<Text
-					style={[txt.noto30, {textAlignVertical: 'center', maxWidth: 400 * DP, fontWeight: item == '삭제' ? 'bold' : 'normal', color: MAINBLACK}]}>
+					style={[
+						txt.noto30,
+						{
+							textAlignVertical: 'center',
+							maxWidth: 600 * DP,
+							fontWeight: item == '삭제' ? 'bold' : 'normal',
+							color: MAINBLACK,
+						},
+					]}>
 					{item}
 				</Text>
 			</TouchableOpacity>

@@ -130,12 +130,13 @@ export default FavoriteUser = props => {
 			copy[index].checkBoxState = !copy[index].checkBoxState;
 			setData(copy);
 		} else {
-			navigation.navigate('UserProfile', {userobject: user});
+			navigation.navigate({key: user._id, name: 'UserProfile', params: {userobject: user}});
 		}
 	};
 
 	const onClickHash = data => {
-		navigation.navigate('FeedListForHashTag', data);
+		// navigation.navigate('FeedListForHashTag', data);
+		navigation.navigate({key: data._id, name: 'FeedListForHashTag', params: data});
 	};
 
 	const whenEmpty = () => {

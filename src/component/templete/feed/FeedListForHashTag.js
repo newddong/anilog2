@@ -15,18 +15,8 @@ export default FeedListForHashTag = props => {
 	const [feeds, setFeeds] = React.useState([]);
 	const navigation = useNavigation();
 	const moveToHashFeedList = (index, item) => {
-		navigation.navigate('HashFeedList', {selected: item, hashtag_keyword: hashInfo.hashtag_keyword, index: index});
-	};
-
-	const [showRecent, setShowRecent] = React.useState(true);
-
-	//최근 게시글 버튼 클릭
-	const showRecentFeed = () => {
-		setShowRecent(true);
-	};
-	//추천 게시글 버튼 클릭
-	const showRecommendedFeed = () => {
-		setShowRecent(false);
+		console.log('item', item._id);
+		navigation.navigate({key: item._id, name: 'HashFeedList', params: {selected: item, hashtag_keyword: hashInfo.hashtag_keyword, index: index}});
 	};
 
 	React.useEffect(() => {
@@ -60,22 +50,7 @@ export default FeedListForHashTag = props => {
 				<View style={[feedListForHashTag.hashLabel]}>
 					<HashLabel keyword={hashInfo.hashtag_keyword} keywordBold={hashInfo.keywordBold} count={hashInfo.hashtag_feed_count} />
 				</View>
-				{/* 최근 게시글 / 추천 게시글 */}
-				{/* <View style={[feedListForHashTag.postCategory]}>
-					<View style={[feedListForHashTag.categoryText]}>
-						<Text onPress={showRecentFeed} style={[txt.noto24, {color: showRecent ? APRI10 : 'black'}]}>
-							피드
-						</Text>
-					</View>
-					<Text style={{}}> | </Text>
-					<View style={[feedListForHashTag.categoryText]}>
-						<Text onPress={showRecommendedFeed} style={[txt.noto24, {color: !showRecent ? APRI10 : 'black'}]}>
-							커뮤니티
-						</Text>
-					</View>
-				</View> */}
 			</View>
-			{/* FeedThumbnailList */}
 			<ScrollView horizontal={false} contentContainerStyle={{flex: 1}} showsVerticalScrollIndicator={false}>
 				<ScrollView horizontal={true} scrollEnabled={false}>
 					<View style={[feedListForHashTag.feedThumbnailList]}>

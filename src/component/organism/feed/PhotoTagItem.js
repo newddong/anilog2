@@ -25,12 +25,13 @@ import {styles} from 'Atom/image/imageStyle';
 import {Tag70} from 'Atom/icon';
 import Modal from 'Root/component/modal/Modal';
 
-export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, viewmode, feedType, onPressPhoto,onTagMove}) => {
+export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, viewmode, feedType, onPressPhoto, onTagMoveStart, onEndTagMove}) => {
 	const [tags, setTags] = React.useState(taglist ? taglist : []);
 	const [showTags, setShowTags] = React.useState(!viewmode);
 	const nav = useNavigation();
 	const route = useRoute();
 	const clickedPost = React.useRef({x: -1, y: -1});
+	const tagBackground = React.useRef();
 
 	const makeTag = e => {
 		clickedPost.current = {x: e.nativeEvent.locationX, y: e.nativeEvent.locationY};
@@ -43,8 +44,9 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 	};
 
 	const deleteTag = user => {
+		console.log('deletetag', user);
+		setTags(tags.filter(v => v.user._id != user._id));
 		onDeleteTag && onDeleteTag(user, uri);
-		setTags(tags.filter(v => v.user._id !== user._id));
 	};
 
 	React.useEffect(() => {
@@ -54,8 +56,8 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 		console.log('계정 선택함', route);
 		if (route.params.taggedAccount) {
 			let newTag = {pos: {x: clickedPost.current.x, y: clickedPost.current.y}, user: route.params.taggedAccount};
-			console.log('taggedAccount',route.params.taggedAccount)
-			console.log('newTag',newTag,tags);
+			console.log('taggedAccount', route.params.taggedAccount);
+			console.log('newTag', newTag, tags);
 			setTags(tags.filter(v => v.user._id != route.params.taggedAccount._id).concat(newTag));
 			clickedPost.current = {x: -1, y: -1};
 			onMakeTag && onMakeTag(newTag, uri);
@@ -67,43 +69,65 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 		setShowTags(!showTags);
 	};
 
-	const endTagmove = e => {
-		// tags.forEach((v, i, a) => {
-		// 	if (v.user._id === e.user._id) a.splice(i, 1, e);
-		// });
-		onTagMove(false)
+	const endTagmove = endTag => {
+		// console.log('tag move end',endTag,tags);
+		let tagInfo = {
+			pos: {x: endTag.x, y: endTag.y},
+			position_x: endTag.x,
+			position_y: endTag.y,
+			tag_user_id: endTag.user._id,
+			user: endTag.user,
+		};
+		setTags(
+			tags.map(tag => {
+				if (tag.user._id == endTag.user._id) {
+					return tagInfo;
+				} else {
+					return tag;
+				}
+			}),
+		);
+		onEndTagMove(tagInfo, uri);
 	};
 	const [backgroundLayout, setBackgroundLayout] = React.useState({width: 750 * DP, height: 750 * DP});
 
 	const getTags = () => {
-		if (tags.length < 1) return <></>;
+		if (tags.length < 1) return false;
 		return tags.map((v, i) => (
 			<Tag
 				pos={v.pos}
-				key={(v.user._id+v.pos.x)}
+				key={v.user._id + v.pos.x + v.pos.y}
 				user={v.user}
 				onDelete={deleteTag}
-				onEnd={endTagmove}
+				onEndTagMove={endTagmove}
 				viewmode={viewmode}
 				backgroundLayout={backgroundLayout}
-				onTagMove={onTagMove}
+				onTagMoveStart={onTagMoveStart} //태그가 움직이는중(Swipe가 작동하지 않도록 함)
 			/>
 		));
 	};
+	const measureBackground = e => {
+		console.log('PhotoTag onLayout', e.nativeEvent.layout);
+		tagBackground.current.measure((x, y, width, height, pageX, pageY) => console.log('measure', x, y, width, height, pageX, pageY));
+	};
 
+	const render = () => (
+		<View style={[style.container, style.adjustCenter]}>
+			<FastImage style={styles.img_square_round_694} source={{uri: uri}} ref={tagBackground} onLayout={measureBackground} />
+			{showTags && getTags()}
+			{tags.length > 0 && viewmode && (
+				<TouchableWithoutFeedback onPress={showTag}>
+					<View style={{bottom: 50 * DP, left: 60 * DP, position: 'absolute'}}>
+						<Tag70 />
+					</View>
+				</TouchableWithoutFeedback>
+			)}
+		</View>
+	);
+	
 	return (
 		<TouchableWithoutFeedback onPress={makeTag}>
-			<View style={[style.container, style.adjustCenter]}>
-				<FastImage style={styles.img_square_round_694} source={{uri: uri}} />
-				{showTags && getTags()}
-				{tags.length > 0 && viewmode && (
-					<TouchableWithoutFeedback onPress={showTag}>
-						<View style={{bottom: 50 * DP, left: 60 * DP, position: 'absolute'}}>
-							<Tag70 />
-						</View>
-					</TouchableWithoutFeedback>
-				)}
-			</View>
+			{render()}
 		</TouchableWithoutFeedback>
 	);
 };
@@ -122,6 +146,6 @@ const style = StyleSheet.create({
 	container: {
 		width: 750 * DP,
 		paddingVertical: 20 * DP,
-		backgroundColor:'#FFF'
+		backgroundColor: '#FFF',
 	},
 });

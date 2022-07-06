@@ -70,7 +70,7 @@ export default ReceivedMessage = ({route}) => {
 	};
 	const onClickLabel = data => {
 		console.log('onCLick data', data);
-		navigation.push('UserNotePage', {title: data.opponent_user_nickname, _id: data.opponent});
+		navigation.navigate('UserNotePage', {title: data.opponent_user_nickname, _id: data.opponent});
 	};
 
 	// 선택하기 => 전체 선택 클릭
@@ -193,7 +193,7 @@ export default ReceivedMessage = ({route}) => {
 						whenEmpty={whenEmpty}
 					/>
 				</View>
-{/*<FlatList
+				{/*<FlatList
 					data={[{}]}
 					showsVerticalScrollIndicator={false}
 					ListHeaderComponent={

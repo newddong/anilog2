@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Keyboard} from 'react-native';
 import {BackArrow32, Bracket48, Send60_Big} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {WHITE, APRI10, GRAY10, GRAY40} from 'Root/config/color';
@@ -8,6 +8,7 @@ import Modal from 'Root/component/modal/Modal';
 import {RED10} from 'Root/config/color';
 import {createFeed, createMissing, createReport, editFeed, editMissingReport, getFeedDetailById} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import feed_obj from 'Root/config/feed_obj';
 
 export default FeedWriteHeader = ({route, navigation, options}) => {
 	const userInfo = userGlobalObject;
@@ -61,6 +62,10 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 							},
 						);
 					} else {
+						// console.log('route.params', route.params);
+
+						feed_obj.edit_obj = route.params; //피드수정 => 수정한 리스트 아이템만 setData하기 위한 오브젝트
+						feed_obj.shouldUpdate = true;
 						navigation.goBack();
 					}
 				} else {
@@ -88,6 +93,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 
 	const onCreate = () => {
 		console.log('sent?', sent);
+		Keyboard.dismiss();
 		if (!sent) {
 			setSent(true);
 			if (route.params.feed_medias[0] == undefined) {
@@ -189,6 +195,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 
 	const onEdit = () => {
 		Modal.popLoading(true);
+		Keyboard.dismiss();
 		let changeTextRegex = /([#@])([^#@\s]+)/gm;
 		let param = {
 			...route.params,
@@ -199,7 +206,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			feed_content: route.params.isEdit ? route.params.feed_content : route.params.feed_content.replace(changeTextRegex, '&$1&$1$1$2%&%&$1&$1'),
 			hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
 		};
-		console.log(param);
+		// console.log('onEdit / FeedWrtieHeader', param);
 		if (param.feed_type == 'feed') {
 			editFeed(param, complete, handleError);
 		} else if (param.feed_type == 'report') {

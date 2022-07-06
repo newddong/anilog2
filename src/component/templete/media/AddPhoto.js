@@ -88,7 +88,6 @@ export default AddPhoto = props => {
 	};
 	const photolistcallback = r => {
 		// setPhotoList(r.edges);
-		console.log(r.edges)
 		setPhotoList(photolist.concat(r.edges));
 	};
 
@@ -246,11 +245,7 @@ export default AddPhoto = props => {
 	}, []);
 
 	React.useEffect(() => {
-		console.log('사진목록 변경', selectedPhoto);
 		navigation.setParams({selectedPhoto: selectedPhoto});
-		// selectedPhoto.length>0?setIndex(selectedPhoto.length-1):setIndex(0);
-	// 	let index = selectedPhoto.length>0&&photolist.findIndex(v=>v.node.image.uri==selectedPhoto[selectedPhoto.length-1].uri)/4;
-	// 	index>0&&selectedPhoto.length>0&&flatlist.current.scrollToIndex({index:Math.floor(index)});
 	}, [selectedPhoto]);
 
 	React.useEffect(() => {
@@ -261,8 +256,6 @@ export default AddPhoto = props => {
 		}
 	}, [props.route.params.selectedPhoto]);
 	const selectPhoto = photo => {
-		// console.log(photolist.findIndex(v=>v.node.image.uri==photo));
-		
 		if (selectedPhoto.length >= limit) {
 			Modal.alert('사진은 최대 ' + limit + '장까지만 업로드 가능합니다.');
 			return;
@@ -273,7 +266,6 @@ export default AddPhoto = props => {
 			setSelectedPhoto([obj]);
 			// navigation.push('Crop',{cropImage:photo,prev:props.route.name,key:props.route.key});
 		} else {
-			console.log('ddd2',selectedPhoto)
 			
 			setSelectedPhoto(selectedPhoto.concat(obj));
 		}
@@ -292,11 +284,8 @@ export default AddPhoto = props => {
 	}
 
 	const renderList = ({item, index}) => {
-		// console.log('item',item,selectedPhoto)
 		const isSelected = selectedPhoto.some(v => item.node.image.uri == (v.originUri ?? v.uri));
 		const selectedindex = isSelected&&(selectedPhoto.findIndex(v => item.node.image.uri == (v.originUri ?? v.uri)) + 1);
-		// console.log('index:'+index+'   isselected:'+isSelected+'     selectedIndex:'+selectedindex);
-		// console.log('item',index,isSelected)
 		
 		return (
 			<LocalMedia

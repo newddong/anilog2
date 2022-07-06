@@ -116,7 +116,7 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 
 	//보호요청 게시글 미트볼 메뉴 - 수정 클릭
 	const onPressEdit = () => {
-		navigation.push('EditAidRequest', {data: route.params.id});
+		navigation.navigate('EditAidRequest', {data: route.params.id});
 	};
 
 	//제보 실종 미트볼 메뉴 - 수정 클릭

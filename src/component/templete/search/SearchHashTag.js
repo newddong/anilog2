@@ -5,18 +5,18 @@ import {txt} from 'Root/config/textstyle';
 import Loading from 'Root/component/molecules/modal/Loading';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import DP from 'Root/config/dp';
+import {useNavigation} from '@react-navigation/core';
 
 export default SearchHashTag = React.memo((props, ref) => {
-	// console.log('searchInput / SearchHashTag : ', props.search.searchInput);
-
-	const [findList, setFindList] = React.useState([]);
+	const navigation = useNavigation();
 
 	const onClickHashTag = e => {
 		console.log('onClickHashTag', e);
 	};
 
 	const hashSelect = e => {
-		props.navigation.push('FeedListForHashTag', e);
+		// props.navigation.navigate('FeedListForHashTag', e);
+		navigation.navigate({key: e.hashtag_keyword, name: 'FeedListForHashTag', params: e});
 	};
 
 	const whenEmpty = () => {

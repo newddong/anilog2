@@ -78,7 +78,7 @@ export default SettingAccount = ({route}) => {
 const styles = StyleSheet.create({
 	container: {
 		width: 750 * DP,
-		height: 456 * DP,
+		// height: 456 * DP,
 		marginTop: 10 * DP,
 		backgroundColor: '#FFFFFF',
 	},

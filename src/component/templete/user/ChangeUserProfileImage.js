@@ -67,7 +67,7 @@ export default ChangeUserProfileImage = ({route}) => {
 	}, [route.params?.selectedPhoto]);
 
 	const selectPhoto = () => {
-		navigation.push('SinglePhotoSelect', {prev: {name: route.name, key: route.key}});
+		navigation.navigate('SinglePhotoSelect', {prev: {name: route.name, key: route.key}});
 	};
 
 	//중복 처리

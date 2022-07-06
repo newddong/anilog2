@@ -170,7 +170,7 @@ export default PetInfoSetting = ({route}) => {
 
 	//가족 계정의 프로필 라벨 클릭
 	const onClickFamilyLabel = data => {
-		navigation.navigate('UserProfile', {userobject: data});
+		navigation.navigate({key: data._id, name: 'UserProfile', params: {userobject: data}});
 	};
 
 	//계정 공개 여부 변경 Switch On
@@ -341,7 +341,7 @@ export default PetInfoSetting = ({route}) => {
 
 	//업로드 및 팔로우 클릭
 	const onClickUserInfo = () => {
-		navigation.navigate('UserProfile', {userobject: petData});
+		navigation.navigate({key: petData._id, name: 'UserProfile', params: {userobject: petData}});
 	};
 
 	// 소개란 반려동물 소개란 수정

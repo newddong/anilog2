@@ -4,7 +4,6 @@ import {BLACK, GRAY10} from 'Root/config/color';
 import {Filter60Border, Filter60Filled} from 'Root/component/atom/icon';
 import ReviewList from 'Root/component/organism/list/ReviewList';
 import Modal from 'Root/component/modal/Modal';
-import {updateAndDeleteCommunity} from 'Root/api/community';
 import Loading from 'Root/component/molecules/modal/Loading';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeEtc} from 'Root/api/likeetc';
@@ -54,60 +53,6 @@ export default SearchReview = props => {
 		}
 	}, [props.data.review]);
 
-	const onPressMeatball = index => {
-		const isMyArticle = getData()[index].community_writer_id && userGlobalObject.userInfo._id == getData()[index].community_writer_id._id;
-		Modal.popSelectBoxModal(
-			isMyArticle ? ['수정', '삭제'] : ['신고'],
-			select => {
-				switch (select) {
-					case '수정':
-						navigation.push('CommunityEdit', {previous: getData()[index], isReview: true, isSearch: searchInput});
-						break;
-					case '삭제':
-						Modal.close();
-						setTimeout(() => {
-							Modal.popTwoBtn(
-								'정말로 이 게시글을 \n 삭제하시겠습니까?',
-								'아니오',
-								'네',
-								() => Modal.close(),
-								() => {
-									updateAndDeleteCommunity(
-										{
-											community_object_id: getData()[index]._id,
-											community_is_delete: true,
-										},
-										result => {
-											// console.log('result / updateAndDeleteCommunity / ArticleDetail : ', result.msg);
-											Modal.close();
-											setTimeout(() => {
-												Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
-												setTimeout(() => {
-													Modal.close();
-												}, 600);
-											}, 200);
-										},
-										err => {
-											console.log('err / updateAndDeleteCommunity / ArticleDetail : ', err);
-											Modal.alert(err);
-										},
-									);
-								},
-							);
-						}, 200);
-						break;
-					case '신고':
-						break;
-					default:
-						break;
-				}
-			},
-			() => Modal.close(),
-			false,
-			false,
-		);
-	};
-
 	const onPressAnimalFilter = filter => {
 		switch (filter) {
 			case 'dog':
@@ -124,11 +69,6 @@ export default SearchReview = props => {
 		}
 	};
 
-	const onPressFilterOff = () => {
-		setIsFilter(false);
-		setData(props.data.review);
-	};
-
 	const onPressFilter = () => {
 		setIsFilter(true);
 		Modal.popReviewFilterModal(
@@ -140,6 +80,7 @@ export default SearchReview = props => {
 				Modal.close();
 			},
 			arg => {
+				// console.log('arg', arg);
 				let filtered = getData();
 				const userInterestObj = arg.userInterestReview;
 				setFilterData({...filterData, box: arg});
@@ -233,17 +174,13 @@ export default SearchReview = props => {
 	//댓글 모두 보기 클릭
 	const onPressReply = index => {
 		// navigation.push('CommunityCommentList', {community_object: getData()[index]});
-		navigation.push('ReviewDetail', {community_object: getData()[index], comment: true});
+		navigation.navigate({key: getData()[index]._id, name: 'ReviewDetail', params: {community_object: getData()[index], comment: true}});
 	};
 
 	//리뷰 썸네일 클릭
 	const onPressReviewContent = index => {
-		navigation.push('ReviewDetail', {community_object: getData()[index], searchInput: searchInput});
-	};
-
-	//글쓰기 아이콘 클릭
-	const onPressWrite = () => {
-		navigation.navigate('CommunityWrite', {isReview: true});
+		// navigation.navigate('ReviewDetail', {community_object: getData()[index], searchInput: searchInput});
+		navigation.navigate({key: getData()[index]._id, name: 'ReviewDetail', params: {community_object: getData()[index], searchInput: searchInput}});
 	};
 
 	//리뷰 즐겨찾기 클릭
@@ -373,7 +310,6 @@ export default SearchReview = props => {
 									whenEmpty={whenEmpty}
 									onPressReviewContent={onPressReviewContent}
 									onPressReply={onPressReply}
-									onPressMeatball={onPressMeatball}
 									showRecommend={false}
 									onPressLike={index => onPressLike(index, true)}
 									onPressUnlike={index => onPressLike(index, false)}

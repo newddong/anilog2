@@ -1,10 +1,9 @@
 import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {Text, View, ScrollView, TouchableOpacity, FlatList, ActivityIndicator, StyleSheet} from 'react-native';
+import {Text, View, ScrollView, TouchableOpacity, FlatList, ActivityIndicator, StyleSheet, Dimensions} from 'react-native';
 import ActivationList from 'Templete/list/ActivationList';
 import TopTabNavigation_Border from 'Organism/menu/TopTabNavigation_Border';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
-
 import {APRI10, GRAY10, GRAY40, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {getHelpByCategoryDynamicQuery, getSearchHelpByCategoryList} from 'Root/api/helpbycategory';
@@ -111,11 +110,7 @@ const CategoryHelpTopTabNavigation = ({route, navigation}) => {
 					initialRouteName="CategoryHelp"
 					tabBar={({state, descriptors, navigation, position}) => {
 						const onSelectTab = pressedTab => {
-							navigation.navigate(
-								'CategoryHelp',
-
-								{category: categoryList[pressedTab]},
-							);
+							navigation.navigate('CategoryHelp', {category: categoryList[pressedTab]});
 						};
 						return (
 							<View style={[{backgroundColor: WHITE}]}>
@@ -131,12 +126,6 @@ const CategoryHelpTopTabNavigation = ({route, navigation}) => {
 							</View>
 						);
 					}}>
-					{/* <CategoryTab /> */}
-					{/* 
-					<CategoryHelpTab.Screen
-						name="CategoryHelp"
-						component={CategoryHelp}
-						options={{header: props => <InputAndSearchHeader {...props} searchText={'aa'} />}}>{props=><CategoryHelp {...props}} search={"aaa"}/></CategoryHelpTab.Screen> */}
 					<CategoryHelpTab.Screen name="CategoryHelp">{props => <CategoryHelp {...props} search="aaa" />}</CategoryHelpTab.Screen>
 				</CategoryHelpTab.Navigator>
 			);

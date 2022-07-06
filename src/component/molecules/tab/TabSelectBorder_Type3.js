@@ -2,7 +2,7 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {Text, TouchableOpacity, FlatList, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {APRI10, GRAY20, GRAY30} from 'Root/config/color';
+import {APRI10, BLACK, GRAY20, GRAY30} from 'Root/config/color';
 
 /**
  * 커스텀 탭 (색깔이 채워지지 않은 스타일)
@@ -32,7 +32,7 @@ const TabSelectBorder_Type3 = props => {
 					width: (720 * DP) / props.items.length,
 					height: 60 * DP,
 					borderBottomWidth: 2 * DP,
-					borderBottomColor: index == selected ? APRI10 : GRAY30,
+					borderBottomColor: index == selected ? BLACK : GRAY30,
 					marginHorizontal: 0.5 * DP, //서로 다른 Border Color가 겹치는 현상방지
 					justifyContent: 'center',
 				}}>
@@ -41,7 +41,7 @@ const TabSelectBorder_Type3 = props => {
 					style={[
 						index == selected ? txt.noto24b : txt.noto24,
 						{
-							color: index == selected ? APRI10 : GRAY20,
+							color: index == selected ? BLACK : GRAY20,
 							textAlign: 'center',
 							lineHeight: 42 * DP,
 						},

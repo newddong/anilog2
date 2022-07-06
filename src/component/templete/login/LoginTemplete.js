@@ -191,6 +191,7 @@ export default LoginTemplete = props => {
 	}
 	return (
 		<View style={[login_style.wrp_main, {flex: 1}]}>
+			<ScrollView scrollEnabled={false} contentContainerStyle={[loginTemplete_style.innerContainer]}>
 			{/* 비로그인 둘러보기 */}
 			<View style={loginTemplete_style.without_login}>
 				{props.route.name == 'Login' ? (
@@ -289,8 +290,21 @@ export default LoginTemplete = props => {
 							}}
 						/>
 					</View>
+					<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_assign]}>
+						<AniButton
+							btnLayout={btn_w522_r30}
+							btnTitle={'로컬로'}
+							btnStyle={'border'}
+							titleFontStyle={32}
+							onPress={() => {
+								serveruri.uri = appConfig.localUri;
+								tryToLogin();
+							}}
+						/>
+					</View>
 				</View>
 			)}
+			</ScrollView>
 		</View>
 	);
 };

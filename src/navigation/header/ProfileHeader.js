@@ -41,7 +41,6 @@ export default ProfileHeader = props => {
 							createMemoBox(
 								{memobox_receive_id: data._id, memobox_contents: msg},
 								result => {
-									console.log('message sent success', result);
 									Modal.popOneBtn('쪽지가 성공적으로 전송되었습니다.', '확인', () => Modal.close());
 								},
 								err => {
@@ -115,7 +114,7 @@ export default ProfileHeader = props => {
 					if (!data.user_contacted) {
 						Modal.popOneBtn(NOT_REGISTERED_SHELTER, '확인', Modal.close);
 					} else {
-						props.navigation.push('ApplyVolunteer', {token: data._id});
+						navigation.navigate('ApplyVolunteer', {token: data._id});
 					}
 				}
 			}, 100);
@@ -131,15 +130,14 @@ export default ProfileHeader = props => {
 					console.log('type', type);
 					switch (type) {
 						case 'user':
-							props.navigation.push('UserInfoDetailSetting', data);
+							navigation.push('UserInfoDetailSetting', data);
 							break;
 						case 'shelter':
-							props.navigation.push('EditShelterInfo', {data: data});
+							navigation.push('EditShelterInfo', {data: data});
 							break;
 						case 'pet':
-							props.navigation.push('SetPetInformation', data);
+							navigation.navigate({key: new Date().getTime(), name: 'PetInfoSetting', params: {pet_id: data._id}});
 							break;
-
 						default:
 							break;
 					}

@@ -3,19 +3,7 @@ import React from 'react';
 import {Text, View, ScrollView, TouchableOpacity, TextInput, StyleSheet, KeyboardAvoidingView, Platform} from 'react-native';
 import {GRAY10, GRAY40, APRI10, GRAY20, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import {
-	AVAILABLE_NICK,
-	INTEREST_ACT,
-	INTEREST_REGION,
-	DEFAULT_PROFILE,
-	NEW_NICK_REQUEST,
-	NEW_NICK_TITLE,
-	NICKNAME_FORM,
-	PREVIOUS_NICK_TITLE,
-	UNAVAILABLE_NICK,
-	MODIFY_PROFILE,
-} from 'Root/i18n/msg';
-import {btn_w114, btn_w194, btn_w242} from 'Atom/btn/btn_style';
+import {AVAILABLE_NICK, INTEREST_ACT, INTEREST_REGION, NEW_NICK_REQUEST, NICKNAME_FORM, UNAVAILABLE_NICK} from 'Root/i18n/msg';
 import {Arrow_Down_GRAY20, Edit46, NextMark} from 'Atom/icon';
 import {login_style, temp_style, userInfoDetailSettting_style, userInfoSetting_style} from 'Templete/style_templete';
 import userGlobalObject from 'Root/config/userGlobalObject';
@@ -24,13 +12,11 @@ import {getUserInfoById, getUserProfile, updateUserDetailInformation, updateUser
 import DP from 'Root/config/dp';
 import Loading from 'Root/component/molecules/modal/Loading';
 import ProfileImageMedium148 from 'Root/component/molecules/image/ProfileImageMedium148';
-import {getInterestsList} from 'Root/api/interestsapi';
 import Input24 from 'Molecules/input/Input24';
 import {updateUserInformation, nicknameDuplicationCheck} from 'Root/api/userapi';
 import SelectInput from 'Root/component/molecules/button/SelectInput';
 import {getAddressList} from 'Root/api/address';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
-import {lo} from '../style_address';
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 export default UserInfoSetting = ({route}) => {
 	const navigation = useNavigation();
@@ -47,21 +33,19 @@ export default UserInfoSetting = ({route}) => {
 	const [validateted, setValidated] = React.useState(false);
 	const [confirmed, setConfirmed] = React.useState(false);
 	const [duplicated, setDuplicated] = React.useState(false);
-	//관심목록
 	const [locationInterest, setLocationInterest] = React.useState([]);
 	const [contentInterest, setContentInterest] = React.useState([]);
 	const [interestList, setInterestList] = React.useState();
 	const [interestLoaded, setInterestLoaded] = React.useState(false);
 	const [refresh, setRefresh] = React.useState(false);
+
 	const fetchData = () => {
 		getUserInfoById(
 			{
 				userobject_id: userGlobalObject.userInfo._id,
 			},
 			userObject => {
-				// console.log('userObject', userObject);
 				setData(userObject.msg);
-				// console.log('userObject.msg', userObject.msg);
 				setUserDataLoaded(true);
 				navigation.setOptions({title: userGlobalObject.userInfo.user_nickname});
 			},
@@ -70,29 +54,9 @@ export default UserInfoSetting = ({route}) => {
 			},
 		);
 	};
-	// React.useEffect(() => {
-	// 	getAddressList(
-	// 		{},
-	// 		cities => {
-	// 			setCity(cities.msg), handleError;
-	// 		},
-	// 		err => Modal.alert(err),
-	// 	);
-	// 	getAddressList(
-	// 		{city: data.user_address?.city},
-	// 		districts => {
-	// 			setDistrict(districts.msg), handleError;
-	// 		},
-	// 		err => Modal.alert(err),
-	// 	);
-	// }, []);
 	let temp = [];
 	React.useEffect(() => {
 		if (userDataLoaded) {
-			// getInterestsList({}, interests => {
-			// 	setInterestList(interests.msg);
-			// 	setInterestLoaded(true);
-			// });
 			getCommonCodeDynamicQuery(
 				{
 					common_code_c_name: 'communityobjects',
@@ -101,13 +65,13 @@ export default UserInfoSetting = ({route}) => {
 				},
 				result => {
 					let temp = [];
-					console.log('common code result', result);
+					// console.log('common code result', result);
 					for (const key in result.msg) {
 						let temp2 = {};
 						temp2[key] = result.msg[key].definition;
 						temp.push(temp2);
 					}
-					console.log('temptemptmep', temp);
+					// console.log('temptemptmep', temp);
 					setInterestList(result.msg);
 					setInterestLoaded(true);
 				},
@@ -118,7 +82,7 @@ export default UserInfoSetting = ({route}) => {
 
 			if (data.user_interests) {
 				const getContentInteres = Object.entries(data.user_interests).map(content => {
-					console.log('ohhh', content);
+					// console.log('ohhh', content);
 					if (content[0] != 'interests_location' && content[0] != '_id') {
 						Object.entries(content[1]).map(contents => {
 							console.log('contents', contents);
@@ -128,8 +92,9 @@ export default UserInfoSetting = ({route}) => {
 				});
 			}
 			console.log('for 문 끝남', temp);
+			// console.log('data.user_interests', data.user_interests);
 			setContentInterest(temp);
-			setLocationInterest(data.user_interests.interests_location);
+			data.user_interests && setLocationInterest(data.user_interests.interests_location);
 			// setLoaded(true);
 			getAddresses();
 		}
@@ -188,8 +153,8 @@ export default UserInfoSetting = ({route}) => {
 				///TODO props로 넘어온 list의 값을 interestList에서 찾아서 interest_etc :[어쩌고] 이런식으러 만들어서 넘겨줘야함.
 				// const getKey = Object.entries(interestList[0]).map(content => {
 				const getKey = Object.entries(interestList).map(content => {
-					console.log('hihihi', content, props);
-					console.log('interestListList', interestList);
+					// console.log('hihihi', content, props);
+					// console.log('interestListList', interestList);
 					if (content[1].definition.includes(props)) {
 						// console.log('hohohoho', props, content[0]);
 						// setContentSendObject((contentSendObejct[content[0]] = props));
@@ -205,20 +170,15 @@ export default UserInfoSetting = ({route}) => {
 			}
 			let locationObject = {interests_location: locationInterest};
 			Object.assign(locationObject, temp);
-			console.log('locationObejct에 assign', locationObject, data.user_address);
+			// console.log('locationObejct에 assign', locationObject, data.user_address);
 			setData(prevState => ({
 				...prevState,
 				user_interests: locationObject,
 			}));
 			updateUserDetailInformation(
-				{
-					user_interests: locationObject,
-
-					// user_address: data.user_address,
-				},
-
+				{user_interests: locationObject},
 				result => {
-					console.log('result / updateUserDetailInformation / SaveButtonHeader   : ', result);
+					// console.log('result / updateUserDetailInformation / SaveButtonHeader   : ', result);
 					// setTimeout(() => {
 					// Modal.close();
 					// navigation.goBack();
@@ -253,30 +213,12 @@ export default UserInfoSetting = ({route}) => {
 	// 	);
 	// }, [data.user_interests]);
 	//상세 정보 클릭
-	const onPressDetail = () => {
-		navigation.push('UserInfoDetailSetting', data);
-	};
 
 	//프로필 변경 클릭
 	const onPressModofyProfile = () => {
-		// navigation.push('ChangeUserProfileImage', {data: data, routeInfo: route});
-		navigation.push('SinglePhotoSelect', {prev: {name: route.name, key: route.key}});
+		navigation.navigate('SinglePhotoSelect', {prev: {name: route.name, key: route.key}});
 	};
 
-	// 나의 반려동물 -> 반려동물 등록
-	const onPressAddPet = () => {
-		navigation.push('AssignPetProfileImage', {userobject_id: data._id, previousRouteName: route.name});
-	};
-
-	//나의 반려동물 => 반려클릭
-	// const onClickCompanionLabel = myPetData => {
-	// 	navigation.push('PetInfoSetting', {pet_id: myPetData._id});
-	// };
-
-	//비밀번호 변경하기 클릭
-	// const onPressChangePwd = () => {
-	// 	navigation.push('ChangePassword', data.user_password);
-	// };
 	//지역 모달에 사용될 지역정보 얻어오기
 	const getAddresses = () => {
 		getAddressList(
@@ -323,7 +265,7 @@ export default UserInfoSetting = ({route}) => {
 		);
 	};
 	const onPressAddInterestActivation = () => {
-		console.log('contentInterest', contentInterest);
+		// console.log('contentInterest', contentInterest);
 		Modal.popInterestTagModal(
 			'Activity',
 			contentInterest || [],

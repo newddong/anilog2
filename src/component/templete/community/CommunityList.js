@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, FlatList, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, FlatList, TouchableOpacity, ActivityIndicator} from 'react-native';
 import {APRI10, BLACK, GRAY10} from 'Root/config/color';
 import ReviewList from 'Root/component/organism/list/ReviewList';
 import Loading from 'Root/component/molecules/modal/Loading';
@@ -14,6 +14,7 @@ import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import {EmptyIcon} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
 import {FREE_LIMIT, REPORT_MENU, REVIEW_LIMIT} from 'Root/i18n/msg';
+import {styles} from 'Root/component/atom/image/imageStyle';
 
 /**
  *  프로필탭 커뮤니티 글 출력용 컴포넌트
@@ -149,7 +150,7 @@ const CommunityList = React.memo(props => {
 
 	//자유 게시글 아이템 클릭
 	const onPressArticle = index => {
-		navigation.navigate('ArticleDetail', {community_object: free[index]});
+		navigation.navigate({key: free[index]._id, name: 'ArticleDetail', params: {community_object: free[index]}});
 	};
 
 	//리뷰 좋아요 클릭
@@ -178,12 +179,14 @@ const CommunityList = React.memo(props => {
 	//후기 게시글의 댓글쓰기 혹은 댓글 모두 보기 클릭 클릭
 	const onPressReply = index => {
 		// navigation.push('CommunityCommentList', {community_object: review[index]});
-		navigation.navigate('ReviewDetail', {community_object: review[index], comment: true});
+		// navigation.navigate('ReviewDetail', {community_object: review[index], comment: true});
+		navigation.navigate({key: review[index]._id, name: 'ReviewDetail', params: {community_object: review[index], comment: true}});
 	};
 
 	//후게 게시글 컨텐츠 클릭
 	const onPressReviewContent = index => {
-		navigation.navigate('ReviewDetail', {community_object: review[index]});
+		// navigation.navigate('ReviewDetail', {community_object: review[index]});
+		navigation.navigate({key: review[index]._id, name: 'ReviewDetail', params: {community_object: review[index]}});
 	};
 
 	//리뷰 즐겨찾기 아이콘 클릭

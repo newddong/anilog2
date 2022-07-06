@@ -4,7 +4,12 @@ export const STAGING = 333;
 
 const appConfig = {
     mode:DEV,
-    version: '0.0.1 ver(staging, 6-24 13:54)'
-    // version: '0.0.1 ver(release, 6-23 13:56)'
+    version: '0.0.1 ver(staging, 7-4 19:01)',
+    // version: '0.0.1 ver(debug, 6-24 13:54)'
+    // version: '0.0.1 ver(release, 7-1 19:50)',
+    medias:[],
+    lastMedia:undefined,
+    // localUri: 'http://localhost:3000'
+    localUri: 'http://10.0.2.2:3000'
 }
 export default appConfig;

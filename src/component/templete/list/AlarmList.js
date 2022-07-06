@@ -211,7 +211,8 @@ const AlarmList = props => {
 						if (result.msg.community_type == 'free') {
 							navigation.push('ArticleDetail', {community_object: result.msg});
 						} else {
-							navigation.push('ReviewDetail', {community_object: result.msg});
+							// navigation.push('ReviewDetail', {community_object: result.msg});
+							navigation.navigate({key: result.msg._id, name: 'ReviewDetail', params: {community_object: result.msg}});
 						}
 					},
 					err => {
@@ -254,8 +255,8 @@ const AlarmList = props => {
 		return (
 			<View style={[styles.container]}>
 				{isEmpty ? (
-					<View>
-						<Text style={[{textAlign: 'center'}]}>소식이 없습니다.</Text>
+					<View style={[styles.listContainer]}>
+						<Text style={[{textAlign: 'center'}, {marginTop: 20 * DP}]}>소식이 없습니다.</Text>
 					</View>
 				) : (
 					<View style={[styles.listContainer]}>

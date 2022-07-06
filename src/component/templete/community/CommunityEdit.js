@@ -243,6 +243,7 @@ export default CommunityEdit = props => {
 
 	const [KeyboardY, setKeyboardY] = React.useState(0);
 	const [showBtn, setShowBtn] = React.useState(false);
+	const [key, setKey] = React.useState(false);
 
 	const KeyboardBorderLine = (() => {
 		if (Platform.OS === 'ios') {
@@ -251,13 +252,15 @@ export default CommunityEdit = props => {
 			return isNotch ? StatusBar.currentHeight : 0;
 		}
 	})();
+
 	KeyBoardEvent(
 		e => {
 			setKeyboardY(e.endCoordinates.height + KeyboardBorderLine);
-			// Platform.OS == 'android' ? setShowBtn(true) : setShowBtn(true);
+			Platform.OS == 'ios' ? setShowBtn(true) : false;
 		},
 		e => {
 			setKeyboardY(0);
+			Platform.OS == 'ios' ? setShowBtn(false) : false;
 		},
 	);
 
@@ -347,7 +350,7 @@ export default CommunityEdit = props => {
 	//자유글쓰기 버튼 아이콘 컨테이너
 	const getArticleButtonContainer = key => {
 		return (
-			<TouchableOpacity activeOpacity={0.6} onPress={() => onPressPhotoSelect(key)}>
+			<TouchableOpacity style={{width: 750 * DP}} activeOpacity={0.6} onPress={() => onPressPhotoSelect(key)}>
 				<View style={[style.buttonItem]}>
 					<Camera54 />
 					<Text style={[txt.noto28b, {marginLeft: 10 * DP}]}>사진추가</Text>
@@ -419,7 +422,7 @@ export default CommunityEdit = props => {
 
 	return (
 		<View style={[style.container, {}]}>
-			<ScrollView contentContainerStyle={[style.insideScrollView, {}]} ref={scrollRef} showsVerticalScrollIndicator={false}>
+			<ScrollView contentContainerStyle={[style.insideScrollView]} ref={scrollRef} showsVerticalScrollIndicator={false}>
 				{/* //제목 및 카테고리 선택 */}
 				{isReview ? (
 					<>
@@ -479,12 +482,10 @@ export default CommunityEdit = props => {
 									<RichEditor
 										ref={richText}
 										initialContentHTML={data.community_content}
-										showSoftInputOnFocus={false}
-										keyboardDisplayRequiresUserAction={true}
+										// showSoftInputOnFocus={false}
+										// keyboardDisplayRequiresUserAction={true}
 										editorStyle={{contentCSSText: `font-size:${28 * DP}px;`, backgroundColor: '#FAFAFA'}}
 										onChange={onChange}
-										onFocus={() => setShowBtn(true)}
-										onBlur={() => setShowBtn(false)}
 										style={{width: '100%', opacity: 0.99}}
 										contentMode={'mobile'}
 										placeholder={isReview ? WRITE_REVIEW_INFO : WRITE_FREE_INFO}
@@ -494,8 +495,8 @@ export default CommunityEdit = props => {
 										injectedJavaScript={runFirst}
 										pasteAsPlainText={true}
 										onPaste={onPaste}
-										onFocus={onFocus}
-										onBlur={onBlur}
+										// onFocus={onFocus}
+										// onBlur={onBlur}
 									/>
 								</ScrollView>
 							</>
@@ -503,6 +504,7 @@ export default CommunityEdit = props => {
 					</View>
 					<TouchableOpacity activeOpacity={1} onPress={removeEditor} style={{width: 48 * DP}}></TouchableOpacity>
 				</View>
+				{/* <TouchableOpacity activeOpacity={1} onPress={removeEditor} style={{height: 200 * DP, width: 750 * DP}} /> */}
 				{data.community_address && data.community_address.normal_address.address_name != '' ? getMap() : <></>}
 				{/* 하단 버튼 컴포넌트  */}
 				{isReview ? (
@@ -545,7 +547,7 @@ export default CommunityEdit = props => {
 						{getArticleButtonContainer(true)}
 					</View>
 				)}
-				<View style={{height: 100}} />
+				{showBtn ? <View style={{height: 200 * DP, width: 750 * DP, backgroundColor: 'white'}} /> : <></>}
 			</ScrollView>
 			{isReview ? (
 				//키보드 영역 올라올 시 출력되야 하는 버튼 컨테이너 - 스타일 별도의 처리가 필요하여 분리 처리하였음

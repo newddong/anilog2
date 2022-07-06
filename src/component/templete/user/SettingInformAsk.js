@@ -15,7 +15,7 @@ export default SettingInformAsk = ({route}) => {
 		getTermsOfService(
 			{},
 			result => {
-				console.log('getTermsOfService', result.msg);
+				// console.log('getTermsOfService', result.msg);
 				setTerm(result.msg);
 			},
 			err => {
@@ -24,28 +24,37 @@ export default SettingInformAsk = ({route}) => {
 		);
 	}, []);
 
+	//공지사항
 	const onPressNotice = () => {
-		navigation.push('NoticeList'); // FollowObjec
-	};
-	const onPressServiceCenter = () => {
-		navigation.push('ServiceCenter');
+		navigation.navigate('NoticeList'); // FollowObjec
 	};
 
+	//고객센터
+	const onPressServiceCenter = () => {
+		navigation.navigate('ServiceCenter');
+	};
+
+	//서비스 이용약관 클릭
 	const onPressServiceTerms = () => {
-		// Modal.popInfoModal();
-		navigation.push('TermsAndPolicy', {name: 'service', term: term[2]});
+		navigation.navigate('TermsAndPolicy', {name: 'service', term: term[2]});
 	};
+
+	//위치 정보 이용 약관 클릭
 	const onPressLocationTerms = () => {
-		navigation.push('TermsAndPolicy', {name: 'location', term: term[0]});
+		navigation.navigate('TermsAndPolicy', {name: 'location', term: term[0]});
 	};
+
+	//개인정보 처리방침 클릭
 	const onPressPrivacyTerms = () => {
-		navigation.push('TermsAndPolicy', {name: 'privacy', term: term[1]});
+		navigation.navigate('TermsAndPolicy', {name: 'privacy', term: term[1]});
 	};
+
+	//오픈 소스 라이선스 정보 클릭
 	const onPressOpenSource = () => {
 		if (term[4]) {
-			navigation.push('TermsAndPolicy', {name: 'privacy', term: term[4]});
+			navigation.navigate('TermsAndPolicy', {name: 'privacy', term: term[4]});
 		} else {
-			navigation.push('TermsAndPolicy', {name: 'opensource', term: {terms_of_service_contents: '추후 추가되야됨'}});
+			navigation.navigate('TermsAndPolicy', {name: 'opensource', term: {terms_of_service_contents: '추후 추가되야됨'}});
 		}
 	};
 

@@ -583,6 +583,7 @@ const style = StyleSheet.create({
 		borderRadius: 30 * DP,
 		backgroundColor: GRAY50,
 		marginBottom: 30 * DP,
+		color: MAINBLACK,
 		// borderBottomColor: APRI10,
 		// borderBottomWidth: 2 * DP,
 	},

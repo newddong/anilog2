@@ -344,6 +344,7 @@ const AlarmCommentList = props => {
 	};
 
 	// const components = [header(), commentBox()];
+	//merge 필요
 	return (
 		<View style={[login_style.wrp_main, feedCommentList.container]}>
 			{/* <ScrollView> */}

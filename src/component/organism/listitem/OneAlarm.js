@@ -6,7 +6,7 @@ import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {GRAY10, APRI10, BLACK, APRI20, WHITE, MAINBLACK} from 'Root/config/color';
 import {getTimeLapsed} from 'Root/util/dateutil';
-import {ProfileDefaultImg} from 'Root/component/atom/icon';
+import {ProfileDefaultImg, ProfileDefaultImg4, ProfileDefaultImg4_94} from 'Root/component/atom/icon';
 import {useNavigation} from '@react-navigation/core';
 import FastImage from 'react-native-fast-image';
 /**
@@ -49,7 +49,8 @@ const OneAlarm = props => {
 							{data.notice_user_related_id.user_profile_uri ? (
 								<FastImage source={{uri: data.notice_user_related_id.user_profile_uri}} style={[styles.img_round_94]} />
 							) : (
-								<></>
+								// <></>
+								<ProfileDefaultImg4_94 />
 							)}
 							<Text style={[styles.messageContainer, txt.noto26, {color: MAINBLACK}]}>{data.notice_user_contents_kor}</Text>
 							<View style={[{justifyContent: 'flex-end'}]}>

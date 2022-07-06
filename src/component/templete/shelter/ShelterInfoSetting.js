@@ -6,7 +6,7 @@ import {btn_w114, btn_w194, btn_w242} from 'Atom/btn/btn_style';
 import ProfileImageLarge160 from 'Molecules/image/ProfileImageLarge160';
 import {txt} from 'Root/config/textstyle';
 import AniButton from 'Molecules/button/AniButton';
-import {GRAY10, APRI10, GRAY40} from 'Root/config/color';
+import {GRAY10, APRI10, GRAY40, MAINBLACK} from 'Root/config/color';
 import {getUserInfoById, updateUserIntroduction} from 'Root/api/userapi';
 import {TextInput} from 'react-native';
 import moment from 'moment';

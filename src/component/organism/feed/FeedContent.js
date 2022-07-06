@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, Platform, StyleSheet, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
+import {Text, View, Platform, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Alert} from 'react-native';
 import {organism_style, feedContent_style} from 'Organism/style_organism';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
 import {useNavigation, useRoute} from '@react-navigation/core';
@@ -222,18 +222,26 @@ export default FeedContent = props => {
 				Modal.popMessageModal(
 					_id.user_nickname,
 					msg => {
-						createMemoBox(
-							{memobox_receive_id: _id._id, memobox_contents: msg},
-							result => {
-								console.log('message sent success', result);
-								Modal.popOneBtn('쪽지 전송하였습니다.', '확인', () => Modal.close());
-							},
-							err => {
-								console.log('message sent err', err);
-							},
-						);
-						console.log('msg', msg);
-						Modal.close();
+						// if (msg.trim() == '') {
+						// return Modal.popOneBtn('채팅을 입력하세요.', '확인', () => Modal.close());
+
+						if (msg.length == 0) {
+							console.log('메세지 입력없음');
+							Alert.alert('내용을 입력해주세요');
+						} else {
+							createMemoBox(
+								{memobox_receive_id: _id._id, memobox_contents: msg},
+								result => {
+									console.log('message sent success', result);
+									Modal.popOneBtn('쪽지 전송하였습니다.', '확인', () => Modal.close());
+								},
+								err => {
+									console.log('message sent err', err);
+								},
+							);
+							console.log('msg', msg);
+							Modal.close();
+						}
 					},
 					() => alert('나가기'),
 				);

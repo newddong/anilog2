@@ -162,7 +162,7 @@ const AskQuestion = ({route}) => {
 				</View>
 				{/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
 				<View style={[{marginTop: 40 * DP}]}>
-					<TextInput style={styles.input} value={title} placeholder="제목을 입력해 주세요." onChangeText={onChangeTitle} />
+					<TextInput style={styles.input} value={title} placeholder="제목을 입력해 주세요." onChangeText={onChangeTitle} color={MAINBLACK} />
 				</View>
 				{/* </TouchableWithoutFeedback> */}
 				{/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
@@ -216,6 +216,7 @@ const styles = StyleSheet.create({
 		fontSize: 32 * DP,
 		borderBottomColor: BLACK,
 		borderBottomWidth: 2 * DP,
+		color: MAINBLACK,
 	},
 });
 

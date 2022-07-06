@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import {BLACK, GRAY10, GRAY20, GRAY30} from 'Root/config/color';
+import {BLACK, GRAY10, GRAY20, GRAY30, MAINBLACK} from 'Root/config/color';
 import {useNavigation} from '@react-navigation/core';
 import axios from 'axios';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
@@ -736,6 +736,7 @@ const style = StyleSheet.create({
 	detailInput: {
 		paddingHorizontal: 24 * DP,
 		flex: 1,
+		color: MAINBLACK,
 	},
 	placeListContainer: {
 		backgroundColor: 'white',

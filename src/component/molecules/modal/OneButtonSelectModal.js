@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Dimensions, Platform, FlatList, TouchableOpacity, Animated, TextInput} from 'react-native';
+import {View, Text, StyleSheet, Dimensions, Platform, FlatList, TouchableOpacity, Animated, TextInput, Keyboard} from 'react-native';
 import AniButton from '../button/AniButton';
 import {btn_w226} from 'Atom/btn/btn_style';
 import {WHITE, GRAY10, APRI10, GRAY20, BLACK, GRAY30, MAINBLACK, OPACITY90} from 'Root/config/color';
@@ -7,6 +7,7 @@ import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {Arrow_Down_GRAY10, Arrow_Up_GRAY10} from 'Atom/icon';
 import Modal from 'Root/component/modal/Modal';
+import {KeyBoardEvent} from '../input/usekeyboardbottom';
 
 /**
  * 버튼 한 개의 셀렉트 모달창
@@ -31,11 +32,12 @@ const OneButtonSelectModal = props => {
 		newArr.push(padding);
 		return newArr;
 	};
-	console.log('modal props', props);
+	// console.log('modal props', props);
 	const [selectedItem, setSelectedItem] = React.useState(2);
 	const [confirmedSelect, setConfirmedSelect] = React.useState(data[2]);
 	const [selectOpen, setSelectOpen] = React.useState(false);
 	const [directInput, setDirectInput] = React.useState('');
+	const [key, setKey] = React.useState(false);
 
 	React.useEffect(() => {
 		if (selectOpen) {
@@ -116,6 +118,13 @@ const OneButtonSelectModal = props => {
 		setConfirmedSelect(data[selectedItem - 2]);
 	};
 
+	const onFocus = () => {
+		setKey(true);
+	};
+	const onBlur = () => {
+		setKey(false);
+	};
+
 	//직접 입력 선택했을 경우 상단 모달에 TextInput 출력
 	const getDirectInput = () => {
 		// console.log('confirmedSelect', confirmedSelect);
@@ -126,6 +135,8 @@ const OneButtonSelectModal = props => {
 					style={[txt.noto28, style.directInputStyle]}
 					multiline={true}
 					textAlignVertical={'top'}
+					onFocus={onFocus}
+					onBlur={onBlur}
 					placeholder={'가능한 상세히 적어주세요!'}
 				/>
 			);
@@ -137,6 +148,8 @@ const OneButtonSelectModal = props => {
 	const onPressOutSide = () => {
 		if (selectOpen) {
 			setSelectOpen(!selectOpen);
+		} else if (key) {
+			Keyboard.dismiss();
 		} else {
 			Modal.close();
 		}
@@ -145,7 +158,7 @@ const OneButtonSelectModal = props => {
 	return (
 		<TouchableOpacity activeOpacity={1} onPress={onPressOutSide} style={style.background}>
 			{/* 상단 선택영역  */}
-			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow]}>
+			<TouchableOpacity activeOpacity={1} style={[style.popUpWindow, style.shadow, {bottom: key ? 260 * DP : 0}]}>
 				<Text style={[txt.noto28, style.msg]}>{props.msg}</Text>
 				<TouchableOpacity onPress={onOpen} style={style.dropdownContainer} activeOpacity={1}>
 					<View style={[style.selectedItem, {justifyContent: 'center', flexDirection: 'row'}]}>

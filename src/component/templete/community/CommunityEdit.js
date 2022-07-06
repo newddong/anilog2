@@ -271,7 +271,6 @@ export default CommunityEdit = props => {
 
 	//선택한 카테고리 목록 Stringify 함수
 	const getReviewCategory = list => {
-		console.log('list', list);
 		let category_text = '';
 		const getText = array => {
 			array.map((v, i) => {

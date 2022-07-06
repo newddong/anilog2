@@ -567,6 +567,7 @@ const ReviewFilterModal = props => {
 								onPress={onPressInitialize}
 								btnStyle={'border'}
 								btnLayout={{width: 160 * DP, height: 50 * DP, borderRadius: 30 * DP}}
+								activeOpacity={0.2}
 							/>
 						</View>
 					)}

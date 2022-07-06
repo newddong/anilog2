@@ -145,7 +145,7 @@ export default FeedMedia = props => {
 								<PhotoTagItem
 									style={[styles.img_square_round_694]}
 									uri={data.media_uri}
-									data={props.data}
+									data={data}
 									taglist={data.tags}
 									key={idx}
 									viewmode={true}

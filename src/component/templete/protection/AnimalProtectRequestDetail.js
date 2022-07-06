@@ -97,11 +97,11 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				// console.log('res.length', res.length);
 				if (writersAnotherRequests != 'false') {
 					console.log('temp lenth', [...writersAnotherRequests, ...res].length);
-					const removeThis = [...writersAnotherRequests, ...res].filter(e => e._id != request._id);
-					setWritersAnotherRequests(removeThis);
+					// const removeThis = [...writersAnotherRequests, ...res].filter(e => e._id != request._id);
+					setWritersAnotherRequests([...writersAnotherRequests, ...res]);
 				} else {
-					const removeThis = res.filter(e => e._id != request._id);
-					setWritersAnotherRequests(removeThis);
+					// const removeThis = res.filter(e => e._id != request._id);
+					setWritersAnotherRequests(res);
 				}
 				setOffset(offset + 1);
 			},
@@ -119,7 +119,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 		console.log('EndReached', writersAnotherRequests.length % (PROTECT_REQUEST_DETAIL_LIMIT - 1));
 		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
 		//리뷰 메인 페이지에서는 필터가 적용이 되었을 때도 api 접속 불필요
-		if (writersAnotherRequests.length % (PROTECT_REQUEST_DETAIL_LIMIT - 1) == 0) {
+		if (writersAnotherRequests.length % PROTECT_REQUEST_DETAIL_LIMIT == 0) {
 			getProtectRequestList(data);
 		}
 	};
@@ -260,17 +260,6 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	//보호소 프로필 클릭
 	const onClickShelterLabel = data => {
 		navigation.navigate({key: data._id, name: 'UserProfile', params: {userobject: data}});
-	};
-
-	//특정 댓글로 스크롤 이동 함수
-	const scrollToReply = i => {
-		if (Platform.OS == 'ios') {
-			setTimeout(() => {
-				flatlist.current.scrollToIndex({animated: true, index: i, viewPosition: 0});
-			}, 200);
-		} else {
-			flatlist.current.scrollToIndex({animated: true, index: i, viewPosition: 0});
-		}
 	};
 
 	//댓글 클릭
@@ -433,6 +422,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				/>
 			);
 		};
+		const removeThis = writersAnotherRequests.filter(e => e._id != data._id);
 
 		return (
 			<View style={{alignItems: 'center', paddingBottom: 50 * DP}}>
@@ -446,7 +436,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				</View>
 				<View style={[style.accountList]}>
 					<FlatList
-						data={writersAnotherRequests}
+						data={removeThis}
 						renderItem={renderOtherRequest}
 						keyExtractor={keyExtractor}
 						getItemLayout={getItemLayout}
@@ -487,13 +477,13 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					<View style={[style.btnContainer]}>
 						{/* <AniButton onPress={onPressProtectRequest} btnTitle={'임시보호 신청'} btnStyle={'border'} btnLayout={btn_w276} titleFontStyle={30} /> */}
 						{/* <AniButton onPress={onPressAdoptionRequest} btnTitle={'입양 신청'} btnLayout={btn_w276} titleFontStyle={30} /> */}
-						<TouchableOpacity onPress={onPressProtectRequest} activeOpacity={0.8} style={[style.protectBtn]}>
+						<TouchableOpacity onPress={onPressProtectRequest} style={[style.protectBtn]}>
 							<Text style={[txt.noto32, {color: data.protect_request_writer_id.user_contacted ? MAINBLACK : GRAY30}]}>임시보호 문의</Text>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={onPressAdoptionRequest} activeOpacity={0.8} style={[style.protectBtn]}>
+						<TouchableOpacity onPress={onPressAdoptionRequest} style={[style.protectBtn]}>
 							<Text style={[txt.noto32, {color: data.protect_request_writer_id.user_contacted ? MAINBLACK : GRAY30}]}>입양 문의</Text>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={connectPhoneCall} activeOpacity={0.8} style={[style.phoneBtn]}>
+						<TouchableOpacity onPress={connectPhoneCall} style={[style.phoneBtn]}>
 							<Phone54 />
 						</TouchableOpacity>
 					</View>

@@ -33,7 +33,6 @@ import {Check42, Check50, Rect42_Border} from 'Root/component/atom/icon';
 import {assignCheckListItem} from 'Root/component/organism/style_organism copy';
 import {KeyboardAvoidingView} from 'native-base';
 
-
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 
 const AskQuestion = ({route}) => {
@@ -163,7 +162,7 @@ const AskQuestion = ({route}) => {
 				</View>
 				{/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
 				<View style={[{marginTop: 40 * DP}]}>
-					<TextInput style={styles.input} value={title} placeholder="제목을 입력해 주세요." onChangeText={onChangeTitle} />
+					<TextInput style={styles.input} value={title} placeholder="제목을 입력해 주세요." onChangeText={onChangeTitle} color={MAINBLACK} />
 				</View>
 				{/* </TouchableWithoutFeedback> */}
 				{/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
@@ -183,7 +182,7 @@ const AskQuestion = ({route}) => {
 						<View style={[styles.check42]}>
 							<CheckBox onCheck={onCheck} state={userAgreement} />
 						</View>
-						<TouchableOpacity activeOpacity={0.8} onPress={() => onCheck(!userAgreement)} style={[assignCheckListItem.textContainer]}>
+						<TouchableOpacity onPress={() => onCheck(!userAgreement)} style={[assignCheckListItem.textContainer]}>
 							<Text style={[txt.noto28, {color: userAgreement ? MAINBLACK : MAINBLACK}]}>{userAssign_agreementCheckList[0].text}</Text>
 						</TouchableOpacity>
 						<TouchableOpacity onPress={onPressDetail} style={[assignCheckListItem.detailText]}>
@@ -217,6 +216,7 @@ const styles = StyleSheet.create({
 		fontSize: 32 * DP,
 		borderBottomColor: BLACK,
 		borderBottomWidth: 2 * DP,
+		color: MAINBLACK,
 	},
 });
 

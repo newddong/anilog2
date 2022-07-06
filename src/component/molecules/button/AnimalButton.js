@@ -40,7 +40,7 @@ const AnimalButton = ({type, on, onPress}) => {
 	};
 	return (
 		<TouchableOpacity
-			activeOpacity={0.8}
+			activeOpacity={0.2}
 			onPress={onPress}
 			style={[style.container, {backgroundColor: on ? MAINBLACK : WHITE, borderColor: !on ? GRAY30 : WHITE, borderWidth: 2 * DP}]}>
 			{getIcon()}

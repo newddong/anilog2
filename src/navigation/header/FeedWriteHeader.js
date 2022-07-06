@@ -112,8 +112,19 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 				media_uri: route.params.selectedPhoto.map(v => {
 					return v.cropUri ?? v.uri;
 				}),
+				feed_medias: route.params.feed_medias.map(f=>{
+					route.params.selectedPhoto.some(v=>{
+						if((v.cropUri??v.uri)==f.media_uri){
+							f.is_video = v.isVideo;
+						}
+					});
+					
+					return f;
+					}
+				),
 				hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
 			};
+			console.log('param',param);
 			switch (route.params?.feedType) {
 				case 'Feed':
 					console.log('feed Param', JSON.stringify(param));
@@ -203,6 +214,15 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			media_uri: route.params.selectedPhoto?.map(v => {
 				return v.cropUri ?? v.uri;
 			}),
+			feed_medias: route.params.feed_medias.map(f=>{
+				route.params.selectedPhoto.some(v=>{
+					if((v.cropUri??v.uri)==f.media_uri){
+						f.is_video = v.isVideo;
+					}
+				});
+				return f;
+				}
+			),
 			feed_content: route.params.isEdit ? route.params.feed_content : route.params.feed_content.replace(changeTextRegex, '&$1&$1$1$2%&%&$1&$1'),
 			hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
 		};
@@ -300,6 +320,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 
 	const titleStyle = [{textAlign: 'center'}, txt.noto40b, route.params?.feedType != 'Feed' ? {color: RED10} : {color: '#000'}];
 	const avartarSelect = () => {
+		Keyboard.dismiss();
 		Modal.popAvatarSelectModal(petObject => {
 			console.log('petObject / onOk', petObject);
 			petObject && navigation.setOptions({title: petObject.user_nickname});

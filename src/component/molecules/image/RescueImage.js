@@ -96,7 +96,7 @@ const RescueImage = props => {
 			<Swiper showsPagination={false} autoplay={false} loop={false} horizontal={true}>
 				{props.img_uri != undefined &&
 					props.img_uri.map((data, idx) => (
-						<TouchableOpacity activeOpacity={0.9} onPress={() => props.onPressReqeustPhoto()} key={idx} style={{zIndex: -1}}>
+						<TouchableOpacity activeOpacity={0.4} onPress={() => props.onPressReqeustPhoto()} key={idx} style={{zIndex: -1}}>
 							<FastImage source={{uri: data}} style={styles.img_square_round_694} />
 							<View style={[style.swiper_index, {zIndex: 2}]}>
 								<Text style={[txt.roboto24, {color: 'white'}]}>

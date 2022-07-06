@@ -8,6 +8,7 @@ import {GRAY40, WHITE} from 'Root/config/color';
  * 자식 댓글 리스트
  * @param {object} props - Props Object
  * @param {Object} props.items - 대댓글 리스트
+ * @param {Object} props.parent - 부모 댓글 오브젝트
  * @param {(id:string)=>void} props.onPressDeleteChild - 대댓글 삭제
  * @param {(data:object)=>void} props.onEdit - 대댓글 수정
  */
@@ -24,7 +25,7 @@ const ChildCommentList = props => {
 		return (
 			<View style={[style.childCommentList, {backgroundColor: props.editData && props.editData._id == item._id ? GRAY40 : 'white'}]}>
 				<ChildCommentLinker />
-				<ChildComment data={item} onEdit={onEdit} like={like} onPressDeleteChild={props.onPressDeleteChild} />
+				<ChildComment data={item} parent={props.parent} onEdit={onEdit} like={like} onPressDeleteChild={props.onPressDeleteChild} />
 			</View>
 		);
 	};

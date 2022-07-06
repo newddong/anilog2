@@ -24,6 +24,7 @@ import Swiper from 'react-native-swiper';
 import {styles} from 'Atom/image/imageStyle';
 import {Tag70} from 'Atom/icon';
 import Modal from 'Root/component/modal/Modal';
+import Video from 'react-native-video';
 
 export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, viewmode, feedType, onPressPhoto, onTagMoveStart, onEndTagMove}) => {
 	const [tags, setTags] = React.useState(taglist ? taglist : []);
@@ -65,7 +66,6 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 	}, [route.params]);
 
 	const showTag = () => {
-		console.log(tags);
 		setShowTags(!showTags);
 	};
 
@@ -106,14 +106,14 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 			/>
 		));
 	};
-	const measureBackground = e => {
-		console.log('PhotoTag onLayout', e.nativeEvent.layout);
-		tagBackground.current.measure((x, y, width, height, pageX, pageY) => console.log('measure', x, y, width, height, pageX, pageY));
-	};
 
 	const render = () => (
 		<View style={[style.container, style.adjustCenter]}>
-			<FastImage style={styles.img_square_round_694} source={{uri: uri}} ref={tagBackground} onLayout={measureBackground} />
+			{data.is_video ? (
+				<Video style={styles.img_square_round_694} source={{uri: uri}} muted resizeMode="contain" />
+			) : (
+				<FastImage style={styles.img_square_round_694} source={{uri: uri}} ref={tagBackground} />
+			)}
 			{showTags && getTags()}
 			{tags.length > 0 && viewmode && (
 				<TouchableWithoutFeedback onPress={showTag}>
@@ -124,12 +124,8 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 			)}
 		</View>
 	);
-	
-	return (
-		<TouchableWithoutFeedback onPress={makeTag}>
-			{render()}
-		</TouchableWithoutFeedback>
-	);
+	console.log('phototagitem', data);
+	return <TouchableWithoutFeedback onPress={makeTag}>{render()}</TouchableWithoutFeedback>;
 };
 
 PhotoTagItem.defaultProps = {

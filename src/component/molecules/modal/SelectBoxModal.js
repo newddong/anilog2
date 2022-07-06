@@ -89,7 +89,7 @@ const SelectBoxModal = props => {
 						/>
 					</View>
 				</TouchableOpacity>
-				<TouchableOpacity onPress={closeSelectModal} activeOpacity={0.8} style={[style.closeBox]}>
+				<TouchableOpacity onPress={closeSelectModal} activeOpacity={0.6} style={[style.closeBox]}>
 					<Text style={[txt.noto30, {color: MAINBLACK}]}>취소</Text>
 				</TouchableOpacity>
 			</Animated.View>

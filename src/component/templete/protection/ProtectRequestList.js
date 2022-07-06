@@ -46,6 +46,10 @@ export default ProtectRequestList = ({route}) => {
 			if (protect_obj.protect.length > 0) {
 				console.log('protect_obj.protect.length : ', protect_obj.protect.length);
 				// let temp = [...data];
+				// protect_obj.protect.map((v, i) => {
+				// 	console.log('protect_animal_rescue_location', i, v.protect_animal_id.protect_animal_rescue_location);
+				// 	console.log('i', i, v.is_favorite);
+				// });
 				setData(protect_obj.protect);
 			}
 		});
@@ -236,7 +240,7 @@ export default ProtectRequestList = ({route}) => {
 			filtered = filtered.filter(v => v.protect_request_status == 'rescue');
 		}
 		return filtered;
-	}, [data]);
+	});
 
 	//리스트 페이징 작업
 	const onEndReached = ({distanceFromEnd}) => {

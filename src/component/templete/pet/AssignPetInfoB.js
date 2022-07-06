@@ -193,7 +193,6 @@ export default AssignPetInfoB = props => {
 				<ArrowButton direction={'back'} onPress={() => navigation.goBack()} />
 				{/* <AniButton btnTitle={'등록'} onPress={onRegister} disable={btnOn} /> */}
 				<TouchableOpacity
-					activeOpacity={0.7}
 					onPress={onRegister}
 					style={{
 						width: 162 * DP,

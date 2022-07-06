@@ -115,7 +115,7 @@ AniButton.defaultProps = {
 	titleFontStyle: 24, // titleFontStyle - title의 폰트 크기
 	btnLayout: btn_w226, // btnLayout - 버튼의 레이아웃(width, height, borderRadius를 결정)
 	onPress: e => console.log(e), // 버튼을 탭했을때 발생하는 콜백
-	activeOpacity: 0.9,
+	activeOpacity: 0.2,
 };
 
 export default AniButton;

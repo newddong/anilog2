@@ -55,7 +55,7 @@ const AlarmCommentList = props => {
 				let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
 				setComments(res);
 				setCommentsLoaded(true);
-				console.log('comments', comments);
+				// console.log('comments', comments);
 			},
 			err => console.log('getCommentListByFeedId', err),
 		);
@@ -309,11 +309,11 @@ const AlarmCommentList = props => {
 	const onLayoutCommentList = e => {
 		commentListHeight.current = e.nativeEvent.layout.height;
 	};
+
 	const Header = () => {
 		return (
 			<View>
 				<FeedContent data={props.route.params.feedobject} showAllContents={true} />
-
 				<View style={[style.replyCountContainer, {alignSelf: 'center', alignItems: 'flex-start'}]}>
 					<Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>
 				</View>
@@ -344,6 +344,7 @@ const AlarmCommentList = props => {
 	};
 
 	// const components = [header(), commentBox()];
+	//merge 필요
 	return (
 		<View style={[login_style.wrp_main, feedCommentList.container]}>
 			{/* <ScrollView> */}
@@ -352,8 +353,9 @@ const AlarmCommentList = props => {
 			<FlatList
 				data={comments}
 				renderItem={renderItem}
+				keyExtractor={item => item._id}
 				listKey={({item, index}) => index}
-				ListHeaderComponent={Header}
+				ListHeaderComponent={Header()}
 				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
 				// ListFooterComponent={Bottom}
 				ref={flatListRef}

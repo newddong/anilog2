@@ -23,14 +23,9 @@ export default ReviewMain = ({route}) => {
 		box: {
 			userInterestReview: {
 				interests_etc: [],
-				// interests_hospital: [],
-				// interests_interior: [],
-				// interests_review: [],
-				// interests_trip: [],
 				interests_group1: [],
 				interests_group2: [],
 				interests_group3: [],
-				interests_etc: [],
 				interests_location: {city: '', district: ''},
 			},
 		},
@@ -128,6 +123,7 @@ export default ReviewMain = ({route}) => {
 				} else {
 					list = res;
 				}
+				console.log('recommendList', recommendList);
 				setRecommend(recommendList); //추천 게시글 목록
 				setData(list); //리뷰글 set
 				community_obj.review = list; //전역 변수에 현재 리스트 갱신
@@ -328,28 +324,28 @@ export default ReviewMain = ({route}) => {
 		return <ListEmptyInfo text={'리뷰글이 없습니다.'} />;
 	};
 
-	if (data == 'false') {
-		return (
-			<View style={{flex: 1, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center'}}>
-				<ActivityIndicator size={'large'} color={'black'} />
-			</View>
-		);
-	} else
-		return (
-			<View style={[style.container]}>
-				<FlatList
-					data={[{}]}
-					listKey={({item, index}) => index}
-					showsVerticalScrollIndicator={false}
-					refreshing
-					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-					extraData={refreshing}
-					renderItem={({item, index}) => {
+	return (
+		<View style={[style.container]}>
+			<FlatList
+				data={[{}]}
+				listKey={({item, index}) => index}
+				showsVerticalScrollIndicator={false}
+				refreshing
+				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+				extraData={refreshing}
+				renderItem={({item, index}) => {
+					if (data == 'false') {
+						return (
+							<View style={{flex: 1, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center'}}>
+								{/* <ActivityIndicator size={'large'} color={'black'} /> */}
+							</View>
+						);
+					} else
 						return (
 							<>
 								<ReviewList
 									items={data}
-									// recommend={filterRef.current ? [] : recommend}
+									recommend={recommend}
 									whenEmpty={whenEmpty}
 									onPressReviewContent={onPressReviewContent}
 									onPressReply={onPressReply}
@@ -361,21 +357,21 @@ export default ReviewMain = ({route}) => {
 								/>
 							</>
 						);
-					}}
-					ListHeaderComponent={filterComponent()}
-				/>
-				<TouchableOpacity activeOpacity={0.8} onPress={onPressWrite} style={[style.write, style.shadowButton]}>
-					<WriteBoard />
-				</TouchableOpacity>
-				{loading ? (
-					<View style={searchProtectRequest.indicatorCont}>
-						<ActivityIndicator size="large" color={APRI10} />
-					</View>
-				) : (
-					<></>
-				)}
-			</View>
-		);
+				}}
+				ListHeaderComponent={filterComponent()}
+			/>
+			<TouchableOpacity onPress={onPressWrite} style={[style.write, style.shadowButton]}>
+				<WriteBoard />
+			</TouchableOpacity>
+			{loading ? (
+				<View style={searchProtectRequest.indicatorCont}>
+					<ActivityIndicator size="large" color={APRI10} />
+				</View>
+			) : (
+				<></>
+			)}
+		</View>
+	);
 };
 ReviewMain.defaultProps = {};
 

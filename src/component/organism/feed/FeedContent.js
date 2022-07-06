@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, Platform, StyleSheet, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
+import {Text, View, Platform, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Alert} from 'react-native';
 import {organism_style, feedContent_style} from 'Organism/style_organism';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
 import {useNavigation, useRoute} from '@react-navigation/core';
@@ -80,7 +80,7 @@ export default FeedContent = props => {
 	const route = useRoute();
 	const [pressed, setPressed] = React.useState(false); //더보기 Arrow방향 false면 아래
 	const [show, setShow] = React.useState(false);
-	const [send, setSend] = React.useState();
+	const [send, setSend] = React.useState('false');
 	const [isFavorite, setIsFavorite] = React.useState(props.data.is_favorite);
 	const feed_writer = props.data.feed_avatar_id ? props.data.feed_avatar_id : props.data.feed_writer_id;
 
@@ -222,18 +222,26 @@ export default FeedContent = props => {
 				Modal.popMessageModal(
 					_id.user_nickname,
 					msg => {
-						createMemoBox(
-							{memobox_receive_id: _id._id, memobox_contents: msg},
-							result => {
-								console.log('message sent success', result);
-								Modal.popOneBtn('쪽지 전송하였습니다.', '확인', () => Modal.close());
-							},
-							err => {
-								console.log('message sent err', err);
-							},
-						);
-						console.log('msg', msg);
-						Modal.close();
+						// if (msg.trim() == '') {
+						// return Modal.popOneBtn('채팅을 입력하세요.', '확인', () => Modal.close());
+
+						if (msg.length == 0) {
+							console.log('메세지 입력없음');
+							Alert.alert('내용을 입력해주세요');
+						} else {
+							createMemoBox(
+								{memobox_receive_id: _id._id, memobox_contents: msg},
+								result => {
+									console.log('message sent success', result);
+									Modal.popOneBtn('쪽지 전송하였습니다.', '확인', () => Modal.close());
+								},
+								err => {
+									console.log('message sent err', err);
+								},
+							);
+							console.log('msg', msg);
+							Modal.close();
+						}
 					},
 					() => alert('나가기'),
 				);
@@ -545,11 +553,23 @@ export default FeedContent = props => {
 			<View style={[style.feedContent]}>
 				<View style={[style.userLocationLabel_view_feedContent]}>
 					<View style={[style.userLocationLabel_feedContent]}>
-						{send ? (
-							<UserLocationTimeLabel data={send} onClickLabel={onPressLabel} location={feed_location} time={feed_date} isLarge publicType={props.data.feed_public_type}/>
+						{send != 'false' ? (
+							send ? (
+								<UserLocationTimeLabel
+									data={send}
+									onClickLabel={onPressLabel}
+									location={feed_location}
+									time={feed_date}
+									isLarge
+									publicType={props.data.feed_public_type}
+								/>
+							) : (
+								<UserLocationTimeLabel empty={true} time={feed_date} isLarge location={feed_location} publicType={props.data.feed_public_type} />
+							)
 						) : (
-							<UserLocationTimeLabel empty={true} time={feed_date} isLarge location={feed_location} publicType={props.data.feed_public_type} />
+							<></>
 						)}
+
 						<View style={{flexDirection: 'row', alignItems: 'center'}}>
 							{!isMissingReportRoute ? (
 								<View style={{flexDirection: 'row', alignItems: 'center'}}>

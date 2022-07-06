@@ -51,8 +51,9 @@ const MissingReportBox = props => {
 		}
 	};
 	return (
-		<View style={[styles.content]}>
-			<TouchableOpacity onPress={onLabelClick}>
+		<TouchableOpacity style={[styles.containerWarper]} onPress={onLabelClick}>
+			<View style={[styles.content]}>
+				{/* <TouchableOpacity onPress={onLabelClick}> */}
 				{props.data.feed_type == 'missing' ? (
 					<View>
 						<View style={[styles.absolute_missing]}>
@@ -99,8 +100,9 @@ const MissingReportBox = props => {
 						</View>
 					</View>
 				)}
-			</TouchableOpacity>
-		</View>
+				{/* </TouchableOpacity> */}
+			</View>
+		</TouchableOpacity>
 	);
 };
 
@@ -109,6 +111,7 @@ const styles = StyleSheet.create({
 		width: 156 * DP,
 		height: 248 * DP,
 		// backgroundColor: WHITE,
+		// backgroundColor: 'red',
 		// backgroundColor: 'yellow',
 		marginRight: 30 * DP,
 		// borderRadius: 30 * DP,
@@ -170,13 +173,14 @@ const styles = StyleSheet.create({
 		width: 156 * DP,
 		height: 248 * DP,
 		// borderRadius: 30 * DP,
-		backgroundColor: WHITE,
-		// marginBottom: 10 * DP,
-		// paddingVertical: 50 * DP,
-		// paddingHorizontal: 32 * DP,
-		// marginLeft: 30 * DP,
-		marginRight: 20 * DP,
+		// backgroundColor: WHITE,
+		// backgroundColor: 'red',
+		// marginRight: 20 * DP,
 		// marginLeft: 28 * DP,
+	},
+	containerWarper: {
+		width: 176 * DP,
+		height: 248 * DP,
 	},
 });
 

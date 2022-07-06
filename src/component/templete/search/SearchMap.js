@@ -6,7 +6,7 @@ import {txt} from 'Root/config/textstyle';
 import DP, {isNotch} from 'Root/config/dp';
 import MapView, {Callout, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {CurrentLocation, LocationMarker} from 'Root/component/atom/icon';
-import {APRI10, BLACK, GRAY10, GRAY20, GRAY30} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, GRAY20, GRAY30, MAINBLACK} from 'Root/config/color';
 import AniButton from 'Root/component/molecules/button/AniButton';
 import {btn_w194, btn_w654} from 'Root/component/atom/btn/btn_style';
 import X2JS from 'x2js';
@@ -395,7 +395,7 @@ export default SearchMap = ({route}) => {
 						<View style={[{paddingVertical: 10 * DP, width: 654 * DP, alignSelf: 'center'}]}>
 							<AniButton onPress={goToAddressSearch} btnTitle={'주소 검색'} btnLayout={btn_w194} btnStyle={'border'} titleFontStyle={24} />
 						</View>
-						<TouchableOpacity activeOpacity={0.6} onPress={initializeRegion} style={[style.currentLocationIcon]}>
+						<TouchableOpacity onPress={initializeRegion} style={[style.currentLocationIcon]}>
 							<CurrentLocation />
 						</TouchableOpacity>
 						{Platform.OS == 'android' ? (
@@ -585,6 +585,7 @@ const style = StyleSheet.create({
 	detailInput: {
 		paddingHorizontal: 24 * DP,
 		flex: 1,
+		color: MAINBLACK,
 	},
 	btnContainer: {
 		paddingVertical: 30 * DP,

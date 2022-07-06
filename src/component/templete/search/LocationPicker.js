@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import {BLACK, GRAY10, GRAY20, GRAY30} from 'Root/config/color';
+import {BLACK, GRAY10, GRAY20, GRAY30, MAINBLACK} from 'Root/config/color';
 import {useNavigation} from '@react-navigation/core';
 import axios from 'axios';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
@@ -491,7 +491,7 @@ export default LocationPicker = ({route}) => {
 	const renderItem = ({item, index}) => {
 		return (
 			<View style={{paddingBottom: 26 * DP, paddingTop: index == 0 ? 26 * DP : 0 * DP}}>
-				<TouchableOpacity onPress={() => onSelectPlace(item)} activeOpacity={0.6} style={{maxWidth: 460 * DP}}>
+				<TouchableOpacity onPress={() => onSelectPlace(item)} activeOpacity={0.4} style={{maxWidth: 460 * DP}}>
 					<Text style={[txt.roboto28, {}]}>{item.place_name}</Text>
 					<Text style={[txt.roboto26, {color: GRAY20}]}>
 						{item.road_address_name ? item.road_address_name : item.address_name}
@@ -736,6 +736,7 @@ const style = StyleSheet.create({
 	detailInput: {
 		paddingHorizontal: 24 * DP,
 		flex: 1,
+		color: MAINBLACK,
 	},
 	placeListContainer: {
 		backgroundColor: 'white',

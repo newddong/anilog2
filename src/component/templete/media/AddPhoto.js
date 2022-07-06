@@ -22,13 +22,14 @@ import LocalMedia from 'Molecules/media/LocalMedia';
 import {Bracket48} from 'Atom/icon';
 import FastImage from 'react-native-fast-image';
 import Modal from 'Root/component/modal/Modal';
-// import Video from 'react-native-video';
+import Video from 'react-native-video';
 import {useNavigation} from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
 import Crop from 'Molecules/media/Crop';
 import appConfig from 'Root/config/appConfig';
 import PermissionIos from 'Root/module/PermissionIos';
 import {PERMISSION_IOS_STATUS} from 'Root/module/PermissionIosStatics';
+import VideoEditor from 'Root/module/VideoEditor.js';
 
 export default AddPhoto = props => {
 	const limit = 5;
@@ -42,7 +43,7 @@ export default AddPhoto = props => {
 	const flatlist = React.useRef();
 	const lastIndex = React.useRef(0);
 	const viewCount = 100;
-	const [index,setIndex] = React.useState(0);
+	const [index, setIndex] = React.useState(0);
 	/**
 	 * timeStamp, imageID를 이용하여 디바이스의 갤러리에 있는 미디어를 불러옴
 	 *
@@ -51,8 +52,7 @@ export default AddPhoto = props => {
 	 *@param {number} request - 불러올 미디어의 숫자 (기본값 20)
 	 *@param {string} type - 불러올 미디어의 타잎('Photos'|'All'|'Videos')
 	 */
-	const loadPhotosMilsec = (request = requestloading, timeStamp = 0, imageID = '123456789', type = props.route.params.types??'Photos') => {
-		// console.log('아이디', imageID);
+	const loadPhotosMilsec = (request = requestloading, timeStamp = 0, imageID = '123456789', type = props.route.params.types ?? 'Photos') => {
 		let param = {
 			first: request,
 			toTime: timeStamp ? timeStamp * 1000 - 1 : 0,
@@ -74,13 +74,12 @@ export default AddPhoto = props => {
 			delete param.groupName;
 			delete param.groupTypes;
 		}
-		
+
 		let start = new Date();
-		// console.time('loadphoto')
 		CameraRoll.getPhotos(param)
-			.then((r)=>{
-				photolistcallback(r)
-				console.log('미디어 파일 로드 시간(ms)',new Date()-start);
+			.then(r => {
+				photolistcallback(r);
+				console.log('미디어 파일 로드 시간(ms)', new Date() - start);
 			})
 			.catch(err => {
 				// console.log('cameraroll error===>' + err);
@@ -97,32 +96,31 @@ export default AddPhoto = props => {
 		let last = photolist.length;
 		// let blank = Array.from({length:last},v=>false)
 		// setPhotoList(photolist.concat(props.route.params.localfiles.slice(last,last+300)))
-		let timeStamp = Platform.OS=='ios'?photolist[last-1].node.timestamp:0;
-		let imageID = Platform.OS=='android'?photolist[last-1].node.imageID:'123456789';
-		loadPhotosMilsec(requestloading,timeStamp,imageID);
-		
+		let timeStamp = Platform.OS == 'ios' ? photolist[last - 1].node.timestamp : 0;
+		let imageID = Platform.OS == 'android' ? photolist[last - 1].node.imageID : '123456789';
+		loadPhotosMilsec(requestloading, timeStamp, imageID);
 	};
 
 	const onMomentumscrollbegin = () => {
 		// console.log('begin')
-		FastImage.clearMemoryCache().then(()=>console.log('clear'));
-	}
-	const onScroll =e => {
+		FastImage.clearMemoryCache().then(() => console.log('clear'));
+	};
+	const onScroll = e => {
 		// console.log(e.nativeEvent)
 		// FastImage.clearMemoryCache();
 		// if(Math.abs(e.nativeEvent.velocity.y)>10){
 		// 	console.log('clear')
 		// 	FastImage.clearMemoryCache();
 		// }
-	}
+	};
 
-	const onViewableItemsChanged = React.useCallback((a,b) => {
+	const onViewableItemsChanged = React.useCallback((a, b) => {
 		// console.log('view',a)
 		// if(a.changed.length>30){
 		// 	console.log('clear')
 		// 	FastImage.clearMemoryCache();
 		// }
-	},[]);
+	}, []);
 
 	//네이티브 모듈 테스트
 	const test = () => {
@@ -159,12 +157,10 @@ export default AddPhoto = props => {
 			delete param.groupName;
 			delete param.groupTypes;
 		}
-		
+
 		CameraRoll.getPhotos(param)
 			.then(album => {
-				// setPhotoList([...album.edges]);
 				setPhotoList(album.edges);
-				// console.log(album);
 			})
 			.catch(err => {
 				console.log('cameraroll error===>' + err);
@@ -188,40 +184,39 @@ export default AddPhoto = props => {
 	/** 퍼미션 처리, 사진을 불러오기 전 갤러리 접근 권한을 유저에게 요청 */
 	React.useEffect(() => {
 		console.log('최초 로드');
-		FastImage.preload(photolist.map(v=>({uri:v.node.image.uri})))
+		FastImage.preload(photolist.map(v => ({uri: v.node.image.uri})));
 		CameraRoll.getAlbums({albumType: 'All', assetType: 'All'}).then(r => setAlbumList(['모든사진'].concat(r.map(v => v.title))));
 		if (Platform.OS === 'ios') {
 			PermissionIos.checkPermission()
-			.then(status => {
-				console.log("사진접근권한 확인:", status);
-				if(status == PERMISSION_IOS_STATUS.NotDetermined){
-					PermissionIos.requestPermission()
-					.then(statusAfterRequest => {
-						console.log("권한 요청 후: ", statusAfterRequest);
-						if(statusAfterRequest == PERMISSION_IOS_STATUS.Authorized){
-							loadPhotosMilsec();
-						} else {
-							//!!이미 권한 요청했는데 허가하지 않았으므로 사진추가 창을 닫아야 합니다. 이쪽에 사진추가 창 닫는 거 추가해주세요!
-						}
-					})
-				} else if(status != PERMISSION_IOS_STATUS.Authorized){
-					PermissionIos.popupAlert(PermissionIos.getDefaultAlertParams());
-					//!!설정에서 사용자가 변경했는지 다시 체크하기보다는 사진추가를 다시 누르게 하는 게 맞지 않을까 싶습니다. 이쪽에 사진추가 창 닫는 거 추가해주세요!
-					//설정을 바꾸고 앱에 들어오면 자동으로 앱이 리로드되며 로그인 창으로 돌아가지만, 설정을 바꾸지 않으면 글쓰기 창에 남아있어야 합니다.
-				} else {
-					loadPhotosMilsec();
-				}
-			})
-			.catch(err => {
-				console.warn(err);
-			});
+				.then(status => {
+					console.log('사진접근권한 확인:', status);
+					if (status == PERMISSION_IOS_STATUS.NotDetermined) {
+						PermissionIos.requestPermission().then(statusAfterRequest => {
+							console.log('권한 요청 후: ', statusAfterRequest);
+							if (statusAfterRequest == PERMISSION_IOS_STATUS.Authorized) {
+								loadPhotosMilsec();
+							} else {
+								//!!이미 권한 요청했는데 허가하지 않았으므로 사진추가 창을 닫아야 합니다. 이쪽에 사진추가 창 닫는 거 추가해주세요!
+							}
+						});
+					} else if (status != PERMISSION_IOS_STATUS.Authorized) {
+						PermissionIos.popupAlert(PermissionIos.getDefaultAlertParams());
+						//!!설정에서 사용자가 변경했는지 다시 체크하기보다는 사진추가를 다시 누르게 하는 게 맞지 않을까 싶습니다. 이쪽에 사진추가 창 닫는 거 추가해주세요!
+						//설정을 바꾸고 앱에 들어오면 자동으로 앱이 리로드되며 로그인 창으로 돌아가지만, 설정을 바꾸지 않으면 글쓰기 창에 남아있어야 합니다.
+					} else {
+						loadPhotosMilsec();
+					}
+				})
+				.catch(err => {
+					console.warn(err);
+				});
 		} else {
 			try {
 				console.log('안드로이드 OS확인');
 				/** 외부 저장소 접근권한 */
 				const isAllowExternalStorage = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
-
 				PermissionsAndroid.check(isAllowExternalStorage).then(isPermit => {
+					console.log('Write 권한 퍼미션', isPermit);
 					if (isPermit) {
 						console.log('사진접근권한 허용확인');
 						loadPhotosMilsec();
@@ -241,37 +236,40 @@ export default AddPhoto = props => {
 				console.warn(err);
 			}
 		}
-
 	}, []);
 
 	React.useEffect(() => {
 		navigation.setParams({selectedPhoto: selectedPhoto});
+		console.log('선택사진 목록',selectedPhoto)
+		// selectedPhoto.length>0?setIndex(selectedPhoto.length-1):setIndex(0);
+		// 	let index = selectedPhoto.length>0&&photolist.findIndex(v=>v.node.image.uri==selectedPhoto[selectedPhoto.length-1].uri)/4;
+		// 	index>0&&selectedPhoto.length>0&&flatlist.current.scrollToIndex({index:Math.floor(index)});
 	}, [selectedPhoto]);
 
 	React.useEffect(() => {
-		
 		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
 			setSelectedPhoto(props.route.params.selectedPhoto);
-			setIndex(props.route.params.selectedPhoto.length-1);
+			setIndex(props.route.params.selectedPhoto.length - 1);
 		}
 	}, [props.route.params.selectedPhoto]);
-	const selectPhoto = photo => {
+	const selectPhoto = (photo,duration) => {
+		console.log(duration);
 		if (selectedPhoto.length >= limit) {
 			Modal.alert('사진은 최대 ' + limit + '장까지만 업로드 가능합니다.');
 			return;
 		}
 		let obj = {};
-		obj.uri = photo;
+		obj.uri = photo.image.uri;
+		obj.isVideo = photo.type.includes('video');
+		obj.duration = duration;
 		if (isSingle) {
 			setSelectedPhoto([obj]);
 			// navigation.push('Crop',{cropImage:photo,prev:props.route.name,key:props.route.key});
 		} else {
-			
 			setSelectedPhoto(selectedPhoto.concat(obj));
 		}
 		setIndex(selectedPhoto.length);
-
-	}
+	};
 
 	const cancelPhoto = photo => {
 		console.log('cancel select', photo);
@@ -280,13 +278,14 @@ export default AddPhoto = props => {
 		} else {
 			setSelectedPhoto(selectedPhoto.filter(v => photo != (v.originUri ?? v.uri)));
 		}
-		setIndex(selectedPhoto.length-2);
-	}
+		setIndex(selectedPhoto.length - 2);
+	};
 
 	const renderList = ({item, index}) => {
 		const isSelected = selectedPhoto.some(v => item.node.image.uri == (v.originUri ?? v.uri));
-		const selectedindex = isSelected&&(selectedPhoto.findIndex(v => item.node.image.uri == (v.originUri ?? v.uri)) + 1);
-		
+		const selectedindex = isSelected && selectedPhoto.findIndex(v => item.node.image.uri == (v.originUri ?? v.uri)) + 1;
+		// console.log('index:'+index+'   isselected:'+isSelected+'     selectedIndex:'+selectedindex);
+		// console.log('item',index,isSelected)
 		return (
 			<LocalMedia
 				data={item.node}
@@ -297,7 +296,7 @@ export default AddPhoto = props => {
 				selected={isSelected}
 			/>
 		);
-	}
+	};
 
 	const clickcheck = () => {
 		// console.log(props.route.params);
@@ -313,14 +312,14 @@ export default AddPhoto = props => {
 		// console.log(photolist);
 	};
 
-	const loadVideo = () => {
 
-	}
-
-	const keyExtractor = React.useCallback((item, index) =>item?item.node.image.uri:'null'+index,[photolist])
-	const getItemLayout = React.useCallback((data, index) => {
-		return {length: 187 * DP, offset: 187 * DP * index, index};
-	},[photolist])
+	const keyExtractor = React.useCallback((item, index) => (item ? item.node.image.uri : 'null' + index), [photolist]);
+	const getItemLayout = React.useCallback(
+		(data, index) => {
+			return {length: 187 * DP, offset: 187 * DP * index, index};
+		},
+		[photolist],
+	);
 	const onCrop = (originImg, cropImg) => {
 		if (originImg == cropImg) {
 			delete selectedPhoto[selectedPhoto.length - 1].cropUri;
@@ -331,49 +330,69 @@ export default AddPhoto = props => {
 
 	const next = () => {
 		let idx = 0;
-		if(selectedPhoto.length<1)return;
-		if(index+1>selectedPhoto.length-1){
-			idx = photolist.findIndex(v=>v.node.image.uri==(selectedPhoto[0].originUri??selectedPhoto[0].uri))/4;
+		if (selectedPhoto.length < 1) return;
+		if (index + 1 > selectedPhoto.length - 1) {
+			idx = photolist.findIndex(v => v.node.image.uri == (selectedPhoto[0].originUri ?? selectedPhoto[0].uri)) / 4;
 			setIndex(0);
-		}else{
-			idx = photolist.findIndex(v=>v.node.image.uri==(selectedPhoto[index+1].originUri??selectedPhoto[index+1].uri))/4;
-			setIndex(index+1);
+		} else {
+			idx = photolist.findIndex(v => v.node.image.uri == (selectedPhoto[index + 1].originUri ?? selectedPhoto[index + 1].uri)) / 4;
+			setIndex(index + 1);
 		}
-		flatlist.current.scrollToIndex({index:Math.floor(idx)});
-	}
+		if(idx<0)return;
+		flatlist.current.scrollToIndex({index: Math.floor(idx)});
+	};
 	const prev = () => {
-		let idx = selectedPhoto.length-1;
-		if(index-1<0){
-			idx = photolist.findIndex(v=>v.node.image.uri==(selectedPhoto[selectedPhoto.length-1].originUri??selectedPhoto[selectedPhoto.length-1].uri))/4;
-			setIndex(selectedPhoto.length-1);
-			
-		}else{
-			idx = photolist.findIndex(v=>v.node.image.uri==(selectedPhoto[index-1].originUri??selectedPhoto[index-1].uri))/4;
-			setIndex(index-1);
+		if (selectedPhoto.length < 1) return;
+		let idx = selectedPhoto.length - 1;
+		if (index - 1 < 0) {
+			idx =
+				photolist.findIndex(
+					v => v.node.image.uri == (selectedPhoto[selectedPhoto.length - 1].originUri ?? selectedPhoto[selectedPhoto.length - 1].uri),
+				) / 4;
+			setIndex(selectedPhoto.length - 1);
+		} else {
+			idx = photolist.findIndex(v => v.node.image.uri == (selectedPhoto[index - 1].originUri ?? selectedPhoto[index - 1].uri)) / 4;
+			setIndex(index - 1);
 		}
-		flatlist.current.scrollToIndex({index:Math.floor(idx)});
+		if(idx<0)return;
+		flatlist.current.scrollToIndex({index: Math.floor(idx)});
+	};
+
+	const videoEdit = () => {
+		console.log(selectedPhoto[index])
+		let media = selectedPhoto[index];
+		VideoEditor.unlockLicense();
+		VideoEditor.openVideoEditor(media.uri, media.duration, 15, 30, 'aniMov')
+			.then(r => {
+				console.log(r);
+				media.videoUri = r.video;
+				setSelectedPhoto([...selectedPhoto]);
+			})
+			.catch(e => {
+				console.log(e);
+			});
 	}
+
 	return (
 		<View style={lo.wrp_main}>
-			{selectedPhoto[selectedPhoto.length - 1]?.isVideo ? (
-				<View />
-			) : (
-				// <Video style={lo.box_img} source={{uri: selectedPhoto[selectedPhoto.length-1]?.uri}} muted />
-				<View>
-					{selectedPhoto[index]&&selectedPhoto.length > 0 ? (
-						<Crop
-							width={750 * DP}
-							height={750 * DP}
-							paddingHorizontal={0 * DP}
-							paddingVertical={0 * DP}
-							uri={(selectedPhoto[index].cropUri??selectedPhoto[index].uri)}
-							onCrop={onCrop}
-						/>
-					) : (
-						false
-					)}
+			{selectedPhoto[index]?(selectedPhoto[index].isVideo ? (<View>
+				<Video style={{width:750*DP, height:750*DP,backgroundColor:'#000'}} source={{uri: selectedPhoto[index]?.videoUri??selectedPhoto[index]?.uri}} muted resizeMode='contain' />
+					<View style={{position:'absolute',width:100*DP,height:100*DP,backgroundColor:'red',bottom:0, right:0}} 
+					onStartShouldSetResponder={() => true}
+					onResponderGrant={() => {
+							videoEdit();
+						}}></View>
 				</View>
-			)}
+			) : (
+				<Crop
+					width={750 * DP}
+					height={750 * DP}
+					paddingHorizontal={0 * DP}
+					paddingVertical={0 * DP}
+					uri={selectedPhoto[index].cropUri ?? selectedPhoto[index].uri}
+					onCrop={onCrop}
+				/>
+			)):false}
 			<View style={lo.box_title}>
 				<TouchableWithoutFeedback onPress={albumSelect}>
 					<View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -397,18 +416,17 @@ export default AddPhoto = props => {
 						</View>
 					</TouchableWithoutFeedback>
 				)} */}
-				
-					<TouchableOpacity onPress={prev}>
-						<View style={[btn.confirm_button, btn.shadow]}>
-							<Text style={[txt.noto28b, txt.white]}>이전</Text>
-						</View>
-					</TouchableOpacity>
-					<TouchableOpacity onPress={next}>
-						<View style={[btn.confirm_button, btn.shadow]}>
-							<Text style={[txt.noto28b, txt.white]}>다음</Text>
-						</View>
-					</TouchableOpacity>
-				
+
+				<TouchableOpacity onPress={prev}>
+					<View style={[btn.confirm_button, btn.shadow]}>
+						<Text style={[txt.noto28b, txt.white]}>이전</Text>
+					</View>
+				</TouchableOpacity>
+				<TouchableOpacity onPress={next}>
+					<View style={[btn.confirm_button, btn.shadow]}>
+						<Text style={[txt.noto28b, txt.white]}>다음</Text>
+					</View>
+				</TouchableOpacity>
 			</View>
 			<FlatList
 				getItemLayout={getItemLayout}
@@ -421,14 +439,14 @@ export default AddPhoto = props => {
 				onEndReachedThreshold={0.6}
 				onEndReached={scrollReachBottom}
 				onMomentumScrollBegin={onMomentumscrollbegin}
-				windowSize={Platform.OS=='ios'?3:1.5}
+				windowSize={Platform.OS == 'ios' ? 3 : 1.5}
 				maxToRenderPerBatch={30}
 				updateCellsBatchingPeriod={0}
 				initialNumToRender={30}
 				removeClippedSubviews
 				decelerationRate={0.7}
 				ref={flatlist}
-				viewabilityConfig={{minimumViewTime:0,viewAreaCoveragePercentThreshold:0}}
+				viewabilityConfig={{minimumViewTime: 0, viewAreaCoveragePercentThreshold: 0}}
 				onViewableItemsChanged={onViewableItemsChanged}
 				onScroll={onScroll}
 			/>

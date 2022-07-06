@@ -27,7 +27,7 @@ const LoginRequestModal = props => {
 			<TouchableOpacity activeOpacity={0.9} style={[style.popUpWindow, style.shadow]}>
 				<Text style={[txt.noto28, style.msg]}>로그인이 필요한 활동입니다.</Text>
 				<View style={style.buttonContainer}>
-					<AniButton onPress={pressOk} activeOpacity={0.6} btnLayout={btn_w226} btnStyle={'border'} btnTitle={'로그인'} />
+					<AniButton onPress={pressOk} activeOpacity={0.4} btnLayout={btn_w226} btnStyle={'border'} btnTitle={'로그인'} />
 				</View>
 				<TouchableOpacity onPress={() => Modal.close()} style={style.footer}>
 					<Text style={[txt.noto24, {color: GRAY10, marginRight: 20 * DP}]}> 로그인 없이 볼게요{'   '}</Text>

@@ -18,7 +18,8 @@ import {count_to_K} from 'Root/util/stringutil';
 /**
  * 자식 댓글
  * @param {object} props - Props Object
- * @param {Object} props.data - 부모 comment data object
+ * @param {Object} props.data -  comment data object
+ * @param {Object} props.parent - 부모 comment data object
  * @param {(id:string)=>void} props.onPressDeleteChild - 대댓글 삭제
  * @param {(data:object)=>void} props.onEdit - 대댓글 수정
  */
@@ -149,7 +150,10 @@ const ChildComment = props => {
 
 	//비밀댓글일 경우 public 여부 판별
 	const isNotAuthorized = () => {
-		if (!data.comment_is_secure || isMyComment) {
+		if (props.parent && props.parent.comment_writer_id._id == userGlobalObject.userInfo._id) {
+			//부모댓글의 작성자는 볼 수 있음
+			return false;
+		} else if (!data.comment_is_secure || isMyComment) {
 			//비밀댓글이 아니라면 public
 			return false;
 		} else {
@@ -191,7 +195,7 @@ const ChildComment = props => {
 			</View>
 			{/* 해당 대댓글이 photo_uri를 가지고 있는 경우만 IMage 출력 */}
 			{data.comment_photo_uri != null && !isNotAuthorized() ? (
-				<TouchableOpacity onPress={() => onPressReplyPhoto(data.comment_photo_uri)} activeOpacity={0.8} style={[childComment.img_square_round_484]}>
+				<TouchableOpacity onPress={() => onPressReplyPhoto(data.comment_photo_uri)} activeOpacity={0.4} style={[childComment.img_square_round_484]}>
 					{data.comment_photo_uri.includes('http') ? (
 						<FastImage style={[styles.img_square_round_544]} source={{uri: data.comment_photo_uri}} />
 					) : (

@@ -124,7 +124,6 @@ const AvatarSelectFromWriteModal = props => {
 		} else {
 			return (
 				<TouchableOpacity
-					activeOpacity={1}
 					onPress={() => {
 						setScrollIndex(scrollIndex + 1);
 						scrollViewRef.current.scrollToIndex({
@@ -189,8 +188,7 @@ const AvatarSelectFromWriteModal = props => {
 										index: 4 * (scrollIndex - 1),
 									});
 								}}
-								style={[style.triangle]}
-								activeOpacity={1}>
+								style={[style.triangle]}>
 								<Triangle />
 							</TouchableOpacity>
 						)}

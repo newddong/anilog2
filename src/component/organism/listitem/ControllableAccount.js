@@ -69,9 +69,9 @@ export default ControllableAccount = props => {
 				<View style={[style.rightContainer]}>
 					<View style={[style.btn_w108_controllableAccount]}>
 						{props.data.follow ? (
-							<AniButton btnTitle={'팔로잉'} btnLayout={btn_w108} btnStyle={'border'} onPress={onClickUnFollowBtn} />
+							<AniButton btnTitle={'팔로잉'} activeOpacity={0.2} btnLayout={btn_w108} btnStyle={'border'} onPress={onClickUnFollowBtn} />
 						) : (
-							<AniButton btnTitle={'팔로우'} btnLayout={btn_w108} onPress={onClickFollowBtn} />
+							<AniButton btnTitle={'팔로우'} activeOpacity={0.2} btnLayout={btn_w108} onPress={onClickFollowBtn} />
 						)}
 					</View>
 					{showCrossMark ? (

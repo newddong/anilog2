@@ -22,8 +22,6 @@ import FastImage from 'react-native-fast-image';
  * @param {string} props.time_expression - 시간 표현 방식 ('date')
  */
 const UserLocationTimeLabel = props => {
-	// console.log('UserLocationTimeLabel props', JSON.stringify(props));
-	// console.log('UserLocationTimeLabel props', props);
 	const navigation = useNavigation();
 	const isLoginUser = userGlobalObject.userInfo._id == props.data._id;
 	const isMyPet =

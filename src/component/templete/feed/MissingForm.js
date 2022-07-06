@@ -563,7 +563,7 @@ export default MissingForm = props => {
 				/>
 			</View>
 			<View style={[feedWrite.kindCont, {marginTop: 60 * DP, alignItems: 'center'}]}>
-				<Text style={[txt.noto26]}>연락처</Text>
+				<Text style={[txt.noto26, {alignSelf: 'flex-start', paddingVertical: 28 * DP}]}>연락처</Text>
 				<Input24
 					placeholder="제보 받을 연락처를 적어주세요"
 					width={550}

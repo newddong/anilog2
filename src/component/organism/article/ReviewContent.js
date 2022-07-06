@@ -35,8 +35,8 @@ const ReviewContent = props => {
 			interests = temp.concat(
 				// data.community_interests.interests_etc,
 				data.community_interests.interests_group1,
-				data.community_interests.interests_group1,
-				data.community_interests.interests_group1,
+				data.community_interests.interests_group2,
+				data.community_interests.interests_group3,
 				data.community_interests.interests_etc,
 			);
 		} else {

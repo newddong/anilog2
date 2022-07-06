@@ -300,6 +300,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 
 	const titleStyle = [{textAlign: 'center'}, txt.noto40b, route.params?.feedType != 'Feed' ? {color: RED10} : {color: '#000'}];
 	const avartarSelect = () => {
+		Keyboard.dismiss();
 		Modal.popAvatarSelectModal(petObject => {
 			console.log('petObject / onOk', petObject);
 			petObject && navigation.setOptions({title: petObject.user_nickname});

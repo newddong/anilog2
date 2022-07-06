@@ -333,6 +333,7 @@ export default ParentComment = React.memo((props, ref) => {
 				<View style={[style.childCommentList, {}]}>
 					<ChildCommentList
 						items={child}
+						parent={parent}
 						showChildComment={showChildComment}
 						onPressDeleteChild={onPressDeleteChild}
 						onEdit={onEdit}

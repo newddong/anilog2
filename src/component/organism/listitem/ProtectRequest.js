@@ -32,7 +32,6 @@ import {array} from 'prop-types';
 export default ProtectRequest = React.memo(props => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.data);
-	// console.log('data', data.protect_request_status);
 	const {
 		_id,
 		protect_request_status,
@@ -61,9 +60,9 @@ export default ProtectRequest = React.memo(props => {
 		notice_day: data.notice_day,
 	};
 
-	// React.useEffect(() => {
-	// 	setData(props.data);
-	// }, [props.data]);
+	React.useEffect(() => {
+		setData(props.data);
+	}, [props.data]);
 
 	//우상단 즐겨찾기 깃발 아이콘 클릭 콜백
 	const onPressFavoriteTag = bool => {

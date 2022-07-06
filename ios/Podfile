@@ -3,6 +3,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 rn_maps_path = '../node_modules/react-native-maps' # 22.03.15 구글 맵스 활용을 위한 추가 (KSW)
 
 platform :ios, '11.0'
+use_frameworks! : linkage => :static
 
 target 'anilog' do
 
@@ -27,6 +28,7 @@ target 'anilog' do
   pod 'SDWebImagePhotosPlugin'
   
   pod 'VideoEditorSDK'
+  pod 'react-native-video/VideoCaching', : path => '../node_modules/react-native-video/react-native-video.podspec'
   target 'anilogTests' do
     inherit! :complete
     # Pods for testing

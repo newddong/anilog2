@@ -212,6 +212,8 @@ import follwerOnly38 from './follwerOnly38';
 import privateOnly38 from './privateOnly38';
 import phone54 from './phone54';
 import profileDefaultImg5 from './profileDefaultImg5';
+
+import videograd186 from './videograd186';
 import DP from 'Root/config/dp';
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK, MAINBLACK} from 'Root/config/color';
 
@@ -526,3 +528,4 @@ export const FollwerOnly = makeSvg(follwerOnly38, size38, '#999999');
 export const PrivateOnly = makeSvg(privateOnly38, size38, '#999999');
 export const Phone54 = makeSvg(phone54, {width: 54 * DP, height: 54 * DP});
 export const ProfileDefaultImg5 = makeSvg(profileDefaultImg5, {width: 294 * DP, height: 294 * DP});
+export const VideoGrad186 = makeSvg(videograd186, {width:186*DP, height:186*DP});

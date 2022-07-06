@@ -22,13 +22,14 @@ import LocalMedia from 'Molecules/media/LocalMedia';
 import {Bracket48} from 'Atom/icon';
 import FastImage from 'react-native-fast-image';
 import Modal from 'Root/component/modal/Modal';
-// import Video from 'react-native-video';
+import Video from 'react-native-video';
 import {useNavigation} from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
 import Crop from 'Molecules/media/Crop';
 import appConfig from 'Root/config/appConfig';
 import PermissionIos from 'Root/module/PermissionIos';
 import {PERMISSION_IOS_STATUS} from 'Root/module/PermissionIosStatics';
+import VideoEditor from 'Root/module/VideoEditor.js';
 
 export default AddPhoto = props => {
 	const limit = 5;
@@ -52,7 +53,6 @@ export default AddPhoto = props => {
 	 *@param {string} type - 불러올 미디어의 타잎('Photos'|'All'|'Videos')
 	 */
 	const loadPhotosMilsec = (request = requestloading, timeStamp = 0, imageID = '123456789', type = props.route.params.types ?? 'Photos') => {
-		// console.log('아이디', imageID);
 		let param = {
 			first: request,
 			toTime: timeStamp ? timeStamp * 1000 - 1 : 0,
@@ -76,7 +76,6 @@ export default AddPhoto = props => {
 		}
 
 		let start = new Date();
-		// console.time('loadphoto')
 		CameraRoll.getPhotos(param)
 			.then(r => {
 				photolistcallback(r);
@@ -161,9 +160,7 @@ export default AddPhoto = props => {
 
 		CameraRoll.getPhotos(param)
 			.then(album => {
-				// setPhotoList([...album.edges]);
 				setPhotoList(album.edges);
-				// console.log(album);
 			})
 			.catch(err => {
 				console.log('cameraroll error===>' + err);
@@ -243,6 +240,7 @@ export default AddPhoto = props => {
 
 	React.useEffect(() => {
 		navigation.setParams({selectedPhoto: selectedPhoto});
+		console.log('선택사진 목록',selectedPhoto)
 		// selectedPhoto.length>0?setIndex(selectedPhoto.length-1):setIndex(0);
 		// 	let index = selectedPhoto.length>0&&photolist.findIndex(v=>v.node.image.uri==selectedPhoto[selectedPhoto.length-1].uri)/4;
 		// 	index>0&&selectedPhoto.length>0&&flatlist.current.scrollToIndex({index:Math.floor(index)});
@@ -254,18 +252,20 @@ export default AddPhoto = props => {
 			setIndex(props.route.params.selectedPhoto.length - 1);
 		}
 	}, [props.route.params.selectedPhoto]);
-	const selectPhoto = photo => {
+	const selectPhoto = (photo,duration) => {
+		console.log(duration);
 		if (selectedPhoto.length >= limit) {
 			Modal.alert('사진은 최대 ' + limit + '장까지만 업로드 가능합니다.');
 			return;
 		}
 		let obj = {};
-		obj.uri = photo;
+		obj.uri = photo.image.uri;
+		obj.isVideo = photo.type.includes('video');
+		obj.duration = duration;
 		if (isSingle) {
 			setSelectedPhoto([obj]);
 			// navigation.push('Crop',{cropImage:photo,prev:props.route.name,key:props.route.key});
 		} else {
-			console.log('ddd2', selectedPhoto);
 			setSelectedPhoto(selectedPhoto.concat(obj));
 		}
 		setIndex(selectedPhoto.length);
@@ -312,7 +312,6 @@ export default AddPhoto = props => {
 		// console.log(photolist);
 	};
 
-	const loadVideo = () => {};
 
 	const keyExtractor = React.useCallback((item, index) => (item ? item.node.image.uri : 'null' + index), [photolist]);
 	const getItemLayout = React.useCallback(
@@ -339,9 +338,11 @@ export default AddPhoto = props => {
 			idx = photolist.findIndex(v => v.node.image.uri == (selectedPhoto[index + 1].originUri ?? selectedPhoto[index + 1].uri)) / 4;
 			setIndex(index + 1);
 		}
+		if(idx<0)return;
 		flatlist.current.scrollToIndex({index: Math.floor(idx)});
 	};
 	const prev = () => {
+		if (selectedPhoto.length < 1) return;
 		let idx = selectedPhoto.length - 1;
 		if (index - 1 < 0) {
 			idx =
@@ -353,29 +354,45 @@ export default AddPhoto = props => {
 			idx = photolist.findIndex(v => v.node.image.uri == (selectedPhoto[index - 1].originUri ?? selectedPhoto[index - 1].uri)) / 4;
 			setIndex(index - 1);
 		}
+		if(idx<0)return;
 		flatlist.current.scrollToIndex({index: Math.floor(idx)});
 	};
+
+	const videoEdit = () => {
+		console.log(selectedPhoto[index])
+		let media = selectedPhoto[index];
+		VideoEditor.unlockLicense();
+		VideoEditor.openVideoEditor(media.uri, media.duration, 15, 30, 'aniMov')
+			.then(r => {
+				console.log(r);
+				media.videoUri = r.video;
+				setSelectedPhoto([...selectedPhoto]);
+			})
+			.catch(e => {
+				console.log(e);
+			});
+	}
+
 	return (
 		<View style={lo.wrp_main}>
-			{selectedPhoto[selectedPhoto.length - 1]?.isVideo ? (
-				<View />
-			) : (
-				// <Video style={lo.box_img} source={{uri: selectedPhoto[selectedPhoto.length-1]?.uri}} muted />
-				<View>
-					{selectedPhoto[index] && selectedPhoto.length > 0 ? (
-						<Crop
-							width={750 * DP}
-							height={750 * DP}
-							paddingHorizontal={0 * DP}
-							paddingVertical={0 * DP}
-							uri={selectedPhoto[index].cropUri ?? selectedPhoto[index].uri}
-							onCrop={onCrop}
-						/>
-					) : (
-						false
-					)}
+			{selectedPhoto[index]?(selectedPhoto[index].isVideo ? (<View>
+				<Video style={{width:750*DP, height:750*DP,backgroundColor:'#000'}} source={{uri: selectedPhoto[index]?.videoUri??selectedPhoto[index]?.uri}} muted resizeMode='contain' />
+					<View style={{position:'absolute',width:100*DP,height:100*DP,backgroundColor:'red',bottom:0, right:0}} 
+					onStartShouldSetResponder={() => true}
+					onResponderGrant={() => {
+							videoEdit();
+						}}></View>
 				</View>
-			)}
+			) : (
+				<Crop
+					width={750 * DP}
+					height={750 * DP}
+					paddingHorizontal={0 * DP}
+					paddingVertical={0 * DP}
+					uri={selectedPhoto[index].cropUri ?? selectedPhoto[index].uri}
+					onCrop={onCrop}
+				/>
+			)):false}
 			<View style={lo.box_title}>
 				<TouchableWithoutFeedback onPress={albumSelect}>
 					<View style={{flexDirection: 'row', alignItems: 'center'}}>

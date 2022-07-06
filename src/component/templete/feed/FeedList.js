@@ -451,7 +451,6 @@ export default FeedList = ({route}) => {
 					login_userobject_id: userGlobalObject.userInfo._id,
 					limit: FEED_LIMIT,
 				};
-				console.log('feedList.length', feedList.length);
 				if (feedList.length > 0 && (pre || next)) {
 					params.target_object_id = pre ? feedList[0]._id : feedList[feedList.length - 1]._id;
 					params.order_value = pre ? 'pre' : 'next';
@@ -460,7 +459,6 @@ export default FeedList = ({route}) => {
 				getSuggestFeedList(
 					params,
 					result => {
-						console.log('result / ', result.msg.length);
 						setTotal(result.total_count);
 						if (pre) {
 							setFeed([...result.msg, ...feedList]);

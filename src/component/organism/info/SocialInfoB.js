@@ -25,15 +25,15 @@ export default SocialInfoB = props => {
 
 	return (
 		<View style={[styles.container]}>
-			<TouchableOpacity activeOpacity={0.6} onPress={onPressUpload} style={[styles.socialInfo]}>
+			<TouchableOpacity onPress={onPressUpload} style={[styles.socialInfo]}>
 				<Text style={[txt.roboto34b, styles.number]}>{count_to_K(props.data.user_upload_count)}</Text>
 				<Text style={[txt.noto28, styles.title]}>업로드</Text>
 			</TouchableOpacity>
-			<TouchableOpacity activeOpacity={0.6} onPress={moveToSocialRelation} style={[styles.socialInfo]}>
+			<TouchableOpacity onPress={moveToSocialRelation} style={[styles.socialInfo]}>
 				<Text style={[txt.roboto34b, styles.number]}>{count_to_K(props.data.user_follower_count)}</Text>
 				<Text style={[txt.noto28, styles.title]}>팔로워</Text>
 			</TouchableOpacity>
-			<TouchableOpacity activeOpacity={0.6} onPress={moveToSocialRelation} style={[styles.socialInfo]}>
+			<TouchableOpacity onPress={moveToSocialRelation} style={[styles.socialInfo]}>
 				<Text style={[txt.roboto34b, styles.number]}>{count_to_K(props.data.user_follow_count)}</Text>
 				<Text style={[txt.noto28, styles.title]}>팔로잉</Text>
 			</TouchableOpacity>

@@ -195,7 +195,7 @@ const ChildComment = props => {
 			</View>
 			{/* 해당 대댓글이 photo_uri를 가지고 있는 경우만 IMage 출력 */}
 			{data.comment_photo_uri != null && !isNotAuthorized() ? (
-				<TouchableOpacity onPress={() => onPressReplyPhoto(data.comment_photo_uri)} activeOpacity={0.8} style={[childComment.img_square_round_484]}>
+				<TouchableOpacity onPress={() => onPressReplyPhoto(data.comment_photo_uri)} activeOpacity={0.4} style={[childComment.img_square_round_484]}>
 					{data.comment_photo_uri.includes('http') ? (
 						<FastImage style={[styles.img_square_round_544]} source={{uri: data.comment_photo_uri}} />
 					) : (

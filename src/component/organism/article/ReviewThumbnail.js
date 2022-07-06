@@ -77,7 +77,7 @@ export default ReviewThumbnail = props => {
 	};
 
 	return (
-		<TouchableOpacity onPress={onPressReviewContent} activeOpacity={0.6} style={[style.container]}>
+		<TouchableOpacity onPress={onPressReviewContent} activeOpacity={0.4} style={[style.container]}>
 			{content()}
 		</TouchableOpacity>
 	);

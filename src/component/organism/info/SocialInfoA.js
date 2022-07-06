@@ -30,13 +30,13 @@ const SocialInfoA = props => {
 
 	return (
 		<View style={[style.container]}>
-			<TouchableOpacity activeOpacity={0.6} onPress={onClickUpload}>
+			<TouchableOpacity onPress={onClickUpload}>
 				<View style={[style.socialInfo]}>
 					<Text style={[txt.roboto34b]}>{count_to_K(props.data.user_upload_count)}</Text>
 					<Text style={[txt.noto28, {marginBottom: 2 * DP}]}> 업로드</Text>
 				</View>
 			</TouchableOpacity>
-			<TouchableOpacity activeOpacity={0.6} onPress={onClickFollower}>
+			<TouchableOpacity onPress={onClickFollower}>
 				<View style={[style.socialInfo]}>
 					<Text style={[txt.roboto30b]}>{count_to_K(props.data.user_follower_count)}</Text>
 					<Text style={[txt.noto28, {marginBottom: 2 * DP}]}> 팔로워</Text>
@@ -45,7 +45,7 @@ const SocialInfoA = props => {
 			{props.data.user_type == 'pet' ? (
 				<></>
 			) : (
-				<TouchableOpacity activeOpacity={0.6} onPress={onClickFollow}>
+				<TouchableOpacity onPress={onClickFollow}>
 					<View style={[style.socialInfo]}>
 						<Text style={[txt.roboto30b]}>{count_to_K(props.data.user_follow_count)}</Text>
 						<Text style={[txt.noto28, {marginBottom: 2 * DP}]}> 팔로잉</Text>

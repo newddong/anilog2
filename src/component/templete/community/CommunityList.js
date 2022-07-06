@@ -221,14 +221,12 @@ const CommunityList = React.memo(props => {
 				<View style={[style.filter_community_type, {alignItems: 'center'}]}>
 					<TouchableOpacity
 						onPress={() => setType('free')}
-						style={[{paddingHorizontal: 10 * DP, paddingVertical: 10 * DP, justifyContent: 'center'}]}
-						activeOpacity={0.6}>
+						style={[{paddingHorizontal: 10 * DP, paddingVertical: 10 * DP, justifyContent: 'center'}]}>
 						<Text style={[txt.noto24, {color: type == 'free' ? APRI10 : GRAY10}]}>자유글</Text>
 					</TouchableOpacity>
 					<Text style={[txt.noto24, {color: GRAY10}]}>{'    |    '}</Text>
 					<TouchableOpacity
 						onPress={() => setType('review')}
-						activeOpacity={0.6}
 						style={[{paddingHorizontal: 20 * DP, paddingVertical: 10 * DP, justifyContent: 'center'}]}>
 						<Text style={[txt.noto24, {color: type == 'review' ? APRI10 : GRAY10}]}>리뷰</Text>
 					</TouchableOpacity>

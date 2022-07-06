@@ -461,7 +461,6 @@ export default FeedCommentList = props => {
 		const isOpen = childOpenList.includes(index);
 		const replyFromDetail = replyFromDetailRef.current && params.reply && index == comments.findIndex(e => e._id == params.reply._id);
 		if (replyFromDetail) replyFromDetailRef.current = false; //첫 마운트 이후에는 음영처리 취소
-
 		//수정 혹은 답글쓰기 때, 대상 부모 댓글의 배경색을 바꾸는 함수
 		const getBgColor = () => {
 			let result = WHITE;
@@ -477,6 +476,7 @@ export default FeedCommentList = props => {
 		return (
 			<View style={[style.commentContainer, {backgroundColor: getBgColor()}]} key={item._id}>
 				<ParentComment
+					writer={params.feedobject?.feed_writer_id}
 					parentComment={item}
 					onPressReplyBtn={onReplyBtnClick} // 부모 댓글의 답글쓰기 클릭 이벤트
 					onEdit={onEdit}

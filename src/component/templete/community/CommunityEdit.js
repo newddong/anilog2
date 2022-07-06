@@ -320,7 +320,6 @@ export default CommunityEdit = props => {
 			<TouchableOpacity
 				key={type}
 				onPress={() => onPressType(type)}
-				activeOpacity={0.6}
 				style={[style.category_item_free, {backgroundColor: data.community_free_type == type ? MAINBLACK : GRAY40}]}>
 				<Text style={[txt.noto28, {color: data.community_free_type == type ? WHITE : GRAY10}]}>{text}</Text>
 			</TouchableOpacity>
@@ -331,16 +330,12 @@ export default CommunityEdit = props => {
 	const getReviewButtonContainer = () => {
 		return (
 			<>
-				<TouchableOpacity activeOpacity={0.6} onPress={onPressPhotoSelect}>
-					<View style={[style.buttonItem_review]}>
-						<Camera54 />
-					</View>
+				<TouchableOpacity onPress={onPressPhotoSelect} style={[style.buttonItem_review]}>
+					<Camera54 />
 				</TouchableOpacity>
 				<View style={{height: 38 * DP, width: 2 * DP, backgroundColor: GRAY10, alignSelf: 'center', marginHorizontal: 30 * DP}}></View>
-				<TouchableOpacity activeOpacity={0.6} onPress={moveToLocationPicker}>
-					<View style={[style.buttonItem_review, {}]}>
-						<Location54 fill={'black'} />
-					</View>
+				<TouchableOpacity onPress={moveToLocationPicker} style={[style.buttonItem_review, {}]}>
+					<Location54 fill={'black'} />
 				</TouchableOpacity>
 			</>
 		);
@@ -349,7 +344,7 @@ export default CommunityEdit = props => {
 	//자유글쓰기 버튼 아이콘 컨테이너
 	const getArticleButtonContainer = key => {
 		return (
-			<TouchableOpacity style={{width: 750 * DP}} activeOpacity={0.6} onPress={() => onPressPhotoSelect(key)}>
+			<TouchableOpacity style={{width: 750 * DP}} onPress={() => onPressPhotoSelect(key)}>
 				<View style={[style.buttonItem]}>
 					<Camera54 />
 					<Text style={[txt.noto28b, {marginLeft: 10 * DP}]}>사진추가</Text>
@@ -425,7 +420,7 @@ export default CommunityEdit = props => {
 				{/* //제목 및 카테고리 선택 */}
 				{isReview ? (
 					<>
-						<TouchableOpacity activeOpacity={0.6} onPress={onPressFilter} style={[style.category]}>
+						<TouchableOpacity onPress={onPressFilter} style={[style.category]}>
 							<Text style={[txt.noto28, style.categoryText]} ellipsizeMode={'tail'} numberOfLines={1}>
 								{isInterestsEmpty() ? '카테고리 선택' : getReviewCategory(data.community_interests)}
 							</Text>
@@ -459,6 +454,7 @@ export default CommunityEdit = props => {
 								<RichEditor
 									ref={richText}
 									initialContentHTML={data.community_content}
+									textZoom={100}
 									editorStyle={{contentCSSText: `font-size:${28 * DP}px;`, backgroundColor: '#FAFAFA'}}
 									onChange={onChange}
 									// onLayout={onLayout}

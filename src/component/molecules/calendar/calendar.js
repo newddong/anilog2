@@ -241,7 +241,7 @@ const Calendar = props => {
 								</View>
 							</View>
 						</TouchableOpacity>
-						<TouchableOpacity activeOpacity={1} style={styles.currentMonthContainer}>
+						<TouchableOpacity style={styles.currentMonthContainer}>
 							<Text style={[txt.roboto32b, {}]}>{today.format('MM')}</Text>
 						</TouchableOpacity>
 						<TouchableOpacity style={styles.changeMonthBtn} onPress={nextMonth}>

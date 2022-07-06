@@ -39,7 +39,7 @@ export default AssignCheckListItem = props => {
 			<View style={[styles.check42]}>
 				<CheckBox onCheck={onCheck} state={chekced} />
 			</View>
-			<TouchableOpacity activeOpacity={0.8} onPress={() => onCheck(!chekced)} style={[assignCheckListItem.textContainer]}>
+			<TouchableOpacity onPress={() => onCheck(!chekced)} style={[assignCheckListItem.textContainer]}>
 				<Text style={[txt.noto28, {color: chekced ? MAINBLACK : MAINBLACK}]}>{props.data.text}</Text>
 			</TouchableOpacity>
 			{props.data.detail ? (

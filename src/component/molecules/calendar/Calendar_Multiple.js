@@ -112,7 +112,7 @@ const Calendar_Multiple = props => {
 						} else {
 							//미래의 날짜들
 							return (
-								<TouchableOpacity onPress={onPressPrevious} activeOpacity={1} key={index} style={styles.days_this_month}>
+								<TouchableOpacity onPress={onPressPrevious} activeOpacity={0.4} key={index} style={styles.days_this_month}>
 									<Text style={[txt.roboto28, {color: GRAY20}]}>{days.format('D')}</Text>
 								</TouchableOpacity>
 							);

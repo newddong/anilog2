@@ -133,15 +133,15 @@ export default ArticleMain = ({route}) => {
 		return (
 			<View style={{width: 694 * DP, alignSelf: 'center'}}>
 				<View style={[style.kindFilter]}>
-					<TouchableOpacity activeOpacity={0.8} onPress={() => onPressFilter('잡담')} style={[style.kindFilterItem]}>
+					<TouchableOpacity onPress={() => onPressFilter('잡담')} style={[style.kindFilterItem]}>
 						{type.includes('talk') ? <Check42 /> : <Rect42_Border />}
 						<Text style={[txt.noto28, {marginLeft: 6 * DP}]}> 잡담</Text>
 					</TouchableOpacity>
-					<TouchableOpacity activeOpacity={0.8} onPress={() => onPressFilter('질문')} style={[style.kindFilterItem]}>
+					<TouchableOpacity onPress={() => onPressFilter('질문')} style={[style.kindFilterItem]}>
 						{type.includes('question') ? <Check42 /> : <Rect42_Border />}
 						<Text style={[txt.noto28, {marginLeft: 6 * DP}]}> 질문</Text>
 					</TouchableOpacity>
-					<TouchableOpacity activeOpacity={0.8} onPress={() => onPressFilter('모임')} style={[style.kindFilterItem]}>
+					<TouchableOpacity onPress={() => onPressFilter('모임')} style={[style.kindFilterItem]}>
 						{type.includes('meeting') ? <Check42 /> : <Rect42_Border />}
 						<Text style={[txt.noto28, {marginLeft: 6 * DP}]}> 모임</Text>
 					</TouchableOpacity>
@@ -189,7 +189,7 @@ export default ArticleMain = ({route}) => {
 					<View style={{width: 500 * DP, flexDirection: 'row', justifyContent: 'center'}}>
 						{slicedPage.map((v, i) => {
 							return (
-								<TouchableOpacity activeOpacity={0.8} onPress={() => onPressPage(v)} style={{width: 100 * DP, alignItems: 'center'}} key={i}>
+								<TouchableOpacity onPress={() => onPressPage(v)} style={{width: 100 * DP, alignItems: 'center'}} key={i}>
 									<Text style={[txt.noto32, {color: offset == v ? BLACK : GRAY20}]}>{v}</Text>
 								</TouchableOpacity>
 							);
@@ -240,7 +240,7 @@ export default ArticleMain = ({route}) => {
 					ListFooterComponent={paging()}
 				/>
 
-				<TouchableOpacity onPress={onPressWrite} activeOpacity={0.8} style={[style.write, style.shadow]}>
+				<TouchableOpacity onPress={onPressWrite} style={[style.write, style.shadow]}>
 					<WriteBoard />
 				</TouchableOpacity>
 				{loading ? (

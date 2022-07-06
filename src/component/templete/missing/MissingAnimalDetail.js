@@ -355,7 +355,7 @@ export default MissingAnimalDetail = props => {
 	const header = () => {
 		return (
 			<View style={{alignItems: 'center'}}>
-				<TouchableOpacity onLongPress={capture} activeOpacity={0.8}>
+				<TouchableOpacity onLongPress={capture} activeOpacity={0.4}>
 					<Text style={[txt.noto26, {color: GRAY10, marginTop: 20 * DP}]}>전단지를 꾹 눌러 저장해주세요.</Text>
 					<ViewShot ref={viewShotRef} options={{format: 'jpg', quality: 1.0}}>
 						<View style={[missingAnimalDetail.poster]}>

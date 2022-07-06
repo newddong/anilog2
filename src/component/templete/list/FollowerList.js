@@ -26,6 +26,7 @@ export default FollowerList = props => {
 	const [follow, setFollow] = React.useState([]);
 	const [pressed, setPressed] = React.useState(false);
 	const isPreView = userGlobalObject.userInfo.isPreviewMode;
+	const isFollowing = props.route.name != 'FollowingList';
 
 	React.useEffect(() => {
 		const subscribe = navigation.addListener('focus', () => {
@@ -44,42 +45,49 @@ export default FollowerList = props => {
 		setLoading(false);
 	}, [props.follows]);
 
-	const onClickFollowBtn = item => {
+	const onClickFollowBtn = (item, index, bool) => {
 		if (isPreView) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate('LoginRequired');
 			});
 		} else {
-			followUser(
-				{follow_userobject_id: item._id},
-				result => {
-					console.log('result / followUser / FollwerList :', result.msg);
-					props.resetProfileInfo();
-				},
-				err => {
-					console.log('err / followUser / FollwerList : ', err);
-				},
-			);
-		}
-	};
+			if (!isFollowing) {
+				let temp = [...follow];
+				temp[index].follow = !temp[index].follow;
+				setFollow(temp);
+			} else {
+				let temp = [...follower];
+				temp[index].follow = !temp[index].follow;
+				setFollower(temp);
+			}
 
-	const onClickUnFollowBtn = item => {
-		// console.log('onClickUnFollowBtn', item);
-		if (isPreView) {
-			Modal.popLoginRequestModal(() => {
-				navigation.navigate('LoginRequired');
-			});
-		} else {
-			unFollowUser(
-				{follow_userobject_id: item._id},
-				result => {
-					// console.log('result / onClickUnFollowBtn / FollwerList : ', result.msg);
-					props.resetProfileInfo();
-				},
-				err => {
-					console.log('err / onClickUnFollowBtn / FollwerList', err);
-				},
-			);
+			if (bool) {
+				followUser(
+					{follow_userobject_id: item._id},
+					result => {
+						console.log('result / followUser / FollwerList :', result.msg);
+						if (isFollowing) {
+							props.resetProfileInfo();
+						}
+					},
+					err => {
+						console.log('err / followUser / FollwerList : ', err);
+					},
+				);
+			} else {
+				unFollowUser(
+					{follow_userobject_id: item._id},
+					result => {
+						// console.log('result / onClickUnFollowBtn / FollwerList : ', result.msg);
+						if (isFollowing) {
+							props.resetProfileInfo();
+						}
+					},
+					err => {
+						console.log('err / onClickUnFollowBtn / FollwerList', err);
+					},
+				);
+			}
 		}
 	};
 
@@ -109,8 +117,8 @@ export default FollowerList = props => {
 									items={follower}
 									showButtons={isPreView ? false : true}
 									onClickAccount={onClickAccount}
-									onClickFollowBtn={onClickFollowBtn}
-									onClickUnFollowBtn={onClickUnFollowBtn}
+									onClickFollowBtn={(item, index) => onClickFollowBtn(item, index, true)}
+									onClickUnFollowBtn={(item, index) => onClickFollowBtn(item, index, false)}
 									showFollowStatusText={false}
 									width={400}
 								/>
@@ -119,8 +127,8 @@ export default FollowerList = props => {
 									items={follow}
 									showButtons={isPreView ? false : true}
 									onClickAccount={onClickAccount}
-									onClickUnFollowBtn={onClickUnFollowBtn}
-									onClickFollowBtn={onClickFollowBtn}
+									onClickFollowBtn={(item, index) => onClickFollowBtn(item, index, true)}
+									onClickUnFollowBtn={(item, index) => onClickFollowBtn(item, index, false)}
 									showFollowStatusText={false}
 									width={400}
 								/>

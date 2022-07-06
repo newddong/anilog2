@@ -491,7 +491,7 @@ export default LocationPicker = ({route}) => {
 	const renderItem = ({item, index}) => {
 		return (
 			<View style={{paddingBottom: 26 * DP, paddingTop: index == 0 ? 26 * DP : 0 * DP}}>
-				<TouchableOpacity onPress={() => onSelectPlace(item)} activeOpacity={0.6} style={{maxWidth: 460 * DP}}>
+				<TouchableOpacity onPress={() => onSelectPlace(item)} activeOpacity={0.4} style={{maxWidth: 460 * DP}}>
 					<Text style={[txt.roboto28, {}]}>{item.place_name}</Text>
 					<Text style={[txt.roboto26, {color: GRAY20}]}>
 						{item.road_address_name ? item.road_address_name : item.address_name}

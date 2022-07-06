@@ -395,7 +395,7 @@ export default SearchMap = ({route}) => {
 						<View style={[{paddingVertical: 10 * DP, width: 654 * DP, alignSelf: 'center'}]}>
 							<AniButton onPress={goToAddressSearch} btnTitle={'주소 검색'} btnLayout={btn_w194} btnStyle={'border'} titleFontStyle={24} />
 						</View>
-						<TouchableOpacity activeOpacity={0.6} onPress={initializeRegion} style={[style.currentLocationIcon]}>
+						<TouchableOpacity onPress={initializeRegion} style={[style.currentLocationIcon]}>
 							<CurrentLocation />
 						</TouchableOpacity>
 						{Platform.OS == 'android' ? (

@@ -61,7 +61,7 @@ const ReviewContent = props => {
 					<View key={index} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
 						{sliced.map((v, i) => {
 							return (
-								<View key={i} activeOpacity={0.7} style={[style.category, {backgroundColor: WHITE, borderColor: GRAY30}]}>
+								<View key={i} style={[style.category, {backgroundColor: WHITE, borderColor: GRAY30}]}>
 									<Text style={[txt.noto24, {color: GRAY10}]}>{v}</Text>
 								</View>
 							);
@@ -76,7 +76,7 @@ const ReviewContent = props => {
 					<View key={index} style={{backgroundColor: 'white', flexDirection: 'row', marginVertical: 5 * DP}}>
 						{sliced.map((v, i) => {
 							return (
-								<View key={i} activeOpacity={0.7} style={[style.category, {backgroundColor: WHITE, borderColor: GRAY30}]}>
+								<View key={i} style={[style.category, {backgroundColor: WHITE, borderColor: GRAY30}]}>
 									<Text style={[txt.noto24, {color: GRAY10}]}>{v}</Text>
 								</View>
 							);
@@ -209,6 +209,7 @@ const ReviewContent = props => {
 							originWhitelist={['*']}
 							onMessage={onWebViewMessage}
 							ref={webviewRef}
+							textZoom={100}
 							injectedJavaScript={runFirst} //Dynamic Height 수치 설정
 							scrollEnabled={false}
 							source={{html: changeHtmlTag()}}

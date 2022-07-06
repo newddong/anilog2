@@ -142,6 +142,7 @@ const ArticleContent = props => {
 						onMessage={onWebViewMessage}
 						injectedJavaScript={runFirst} //Dynamic Height 수치 설정
 						source={{html: changeHtmlTag()}}
+						textZoom={100}
 						style={{
 							width: 724 * DP,
 							left: -14 * DP,

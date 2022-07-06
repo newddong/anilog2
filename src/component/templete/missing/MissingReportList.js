@@ -248,11 +248,11 @@ export default MissingReportList = props => {
 						/>
 					</View>
 					<View style={[styles.kindFilter, {}]}>
-						<TouchableOpacity activeOpacity={0.8} onPress={onPressShowReport} style={[styles.kindFilterItem]}>
+						<TouchableOpacity onPress={onPressShowReport} style={[styles.kindFilterItem]}>
 							{onlyReport ? <Check42 /> : <Rect42_Border />}
 							<Text style={[txt.noto28, {marginRight: 10 * DP}]}>{'  '}실종</Text>
 						</TouchableOpacity>
-						<TouchableOpacity activeOpacity={0.8} onPress={onPressShowMissing} style={[styles.kindFilterItem]}>
+						<TouchableOpacity onPress={onPressShowMissing} style={[styles.kindFilterItem]}>
 							{onlyMissing ? <Check42 /> : <Rect42_Border />}
 							<Text style={[txt.noto28, {marginRight: 10 * DP}]}>{'  '}제보</Text>
 						</TouchableOpacity>
@@ -294,7 +294,7 @@ export default MissingReportList = props => {
 
 			<View style={[feedWrite.urgentBtnContainer]}>
 				<View style={[styles.urgentActionButton, {}]} onLayout={e => (urgentBtnRef.current = e.nativeEvent.layout)}>
-					<TouchableOpacity activeOpacity={0.8} onPress={onPressShowActionButton}>
+					<TouchableOpacity onPress={onPressShowActionButton}>
 						<Urgent_Write1 />
 					</TouchableOpacity>
 				</View>

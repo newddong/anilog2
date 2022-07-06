@@ -1,6 +1,5 @@
 import React from 'react';
 import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import ControllableAccountList from 'Organism/list/ControllableAccountList';
 import {followUser, unFollowUser} from 'Root/api/userapi';
 import Modal from 'Root/component/modal/Modal';
 import {txt} from 'Root/config/textstyle';
@@ -48,7 +47,7 @@ export default SearchAccountA = React.memo((props, ref) => {
 
 	const renderItem = ({item, index}) => {
 		return (
-			<TouchableOpacity onPress={() => onClickAccount(item, index)} activeOpacity={0.8}>
+			<TouchableOpacity onPress={() => onClickAccount(item, index)} activeOpacity={0.4}>
 				<ControllableAccount
 					data={item}
 					showCrossMark={false}

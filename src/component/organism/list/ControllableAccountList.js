@@ -37,12 +37,12 @@ export default ControllableAccountList = props => {
 	};
 
 	//팔로우 OR 팔로잉버튼 클릭
-	const onClickFollowBtn = item => {
-		props.onClickFollowBtn(item);
+	const onClickFollowBtn = (item, index) => {
+		props.onClickFollowBtn(item, index);
 	};
 
-	const onClickUnFollowBtn = item => {
-		props.onClickUnFollowBtn(item);
+	const onClickUnFollowBtn = (item, index) => {
+		props.onClickUnFollowBtn(item, index);
 	};
 
 	const renderItem = ({item, index}) => {
@@ -55,8 +55,8 @@ export default ControllableAccountList = props => {
 					showButtons={props.showButtons}
 					onClickLabel={() => onSelectItem(item, index)}
 					onPressCrossMark={() => onPressCrossMark(index)}
-					onClickFollowBtn={() => onClickFollowBtn(item)}
-					onClickUnFollowBtn={() => onClickUnFollowBtn(item)}
+					onClickFollowBtn={() => onClickFollowBtn(item, index)}
+					onClickUnFollowBtn={() => onClickUnFollowBtn(item, index)}
 					showFollowStatusText={props.showFollowStatusText}
 					width={props.width}
 				/>

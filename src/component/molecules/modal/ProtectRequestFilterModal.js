@@ -284,7 +284,7 @@ const ProtectRequestFilterModal = props => {
 							btnStyle={'border'}
 							btnLayout={{width: 160 * DP, height: 50 * DP, borderRadius: 30 * DP}}
 						/> */}
-						<TouchableOpacity onPress={onPressInitialize} activeOpacity={0.8}>
+						<TouchableOpacity onPress={onPressInitialize}>
 							<Text style={[txt.noto26b, {color: APRI10}]}>초기화</Text>
 						</TouchableOpacity>
 						<TouchableOpacity activeOpacity={0.6} onPress={closeModal} style={[{alignSelf: 'flex-end'}]}>
@@ -294,29 +294,29 @@ const ProtectRequestFilterModal = props => {
 					{/* 기간필터 */}
 					<View style={[style.durationCont]}>
 						<Text style={[txt.noto28]}>기간</Text>
-						<TouchableOpacity onPress={() => onPressDuration('from')} activeOpacity={0.6} style={[style.durationItem]}>
+						<TouchableOpacity onPress={() => onPressDuration('from')} activeOpacity={0.4} style={[style.durationItem]}>
 							<Text style={[txt.noto28, {color: data.from == '시작일' ? GRAY20 : BLACK}]}>{data.from == '시작일' ? '시작일' : data.from}</Text>
 						</TouchableOpacity>
 						<View style={[style.hyphen]}>
 							<Hyhpen />
 						</View>
-						<TouchableOpacity activeOpacity={0.8} onPress={() => onPressDuration('to')} style={[style.durationItem, {marginLeft: 0 * DP}]}>
+						<TouchableOpacity activeOpacity={0.4} onPress={() => onPressDuration('to')} style={[style.durationItem, {marginLeft: 0 * DP}]}>
 							<Text style={[txt.noto28, {color: data.to == '종료일' ? GRAY20 : BLACK}]}> {data.to == '종료일' ? '종료일' : data.to}</Text>
 						</TouchableOpacity>
 					</View>
 					{/* 지역 필터 */}
-					<TouchableOpacity onPress={onPressRegion} activeOpacity={0.8} style={[style.dropdownContainer, {}]}>
+					<TouchableOpacity onPress={onPressRegion} activeOpacity={0.4} style={[style.dropdownContainer, {}]}>
 						<Text style={[txt.noto26]}>{data.city == '' ? '모든 지역' : data.city}</Text>
 						<View style={[style.arrowMark]}>
 							<ArrowMarkForCalendar />
 						</View>
 					</TouchableOpacity>
 					{/* 보호소 필터 */}
-					<TouchableOpacity onPress={onPressShelter} activeOpacity={0.8} style={[style.dropdownContainer]}>
+					<TouchableOpacity onPress={onPressShelter} activeOpacity={0.4} style={[style.dropdownContainer]}>
 						<Text style={[txt.noto26, {maxWidth: 320 * DP}]} numberOfLines={1}>
 							{data.shelter_list.length == 0 ? '모든 보호소' : data.shleter_label}
 						</Text>
-						<View activeOpacity={0.8} style={style.arrowMark}>
+						<View activeOpacity={0.4} style={style.arrowMark}>
 							<ArrowMarkForCalendar />
 						</View>
 					</TouchableOpacity>
@@ -350,6 +350,7 @@ const ProtectRequestFilterModal = props => {
 						<AniButton
 							btnLayout={{width: 226 * DP, height: 70 * DP, borderRadius: 30 * DP}}
 							btnStyle={'border'}
+							activeOpacity={0.2}
 							btnTitle={'완료'}
 							onPress={onConfrim}
 						/>
@@ -905,7 +906,7 @@ const ShelterSelectBox = React.memo(props => {
 		const checked = item.state;
 		return (
 			<>
-				<TouchableOpacity onPress={() => onSelect(index)} style={[style.shelterItemCont, {}]} activeOpacity={0.6}>
+				<TouchableOpacity onPress={() => onSelect(index)} style={[style.shelterItemCont, {}]} activeOpacity={0.4}>
 					<View style={[style.shelterInfo]}>
 						<Text style={[txt.noto30]}>{item.user_nickname || ''}</Text>
 						<Text style={[txt.roboto26, {color: GRAY10, maxWidth: 654 * DP}]} numberOfLines={1}>

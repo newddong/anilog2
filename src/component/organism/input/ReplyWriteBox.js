@@ -90,7 +90,7 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 						{props.parentComment.comment_writer_id.user_nickname}
 						<Text style={[txt.noto26]}>님에게 </Text>
 					</Text>
-					<TouchableOpacity activeOpacity={0.6} onPress={onCancelChild} style={style.crossMark}>
+					<TouchableOpacity activeOpacity={0.2} onPress={onCancelChild} style={style.crossMark}>
 						<Cross46 />
 					</TouchableOpacity>
 				</View>
@@ -103,7 +103,7 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 	if (props.isProtectRequest) {
 		return (
 			<View style={[style.commentBox_protect_request, {}]}>
-				<TouchableOpacity activeOpacity={0.6} onPress={onPressReply} style={[style.commentBox_protect_request_left]}>
+				<TouchableOpacity onPress={onPressReply} style={[style.commentBox_protect_request_left]}>
 					<Text style={[txt.noto28, style.replyTextInput_protect_request, {}]}>댓글입력</Text>
 				</TouchableOpacity>
 				<AniButton onPress={onPressReply} btnLayout={btn_w120} btnStyle={'border'} btnTitle={'댓글'} titleFontStyle={24} />

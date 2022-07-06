@@ -127,6 +127,7 @@ export default ChangePetProfileImage = props => {
 				{confirmed ? (
 					<AniButton
 						onPress={onPressConfirm}
+						activeOpacity={0.2}
 						// disable={confirmed ? false : true}
 						btnStyle={'border'}
 						btnTitle={'확인'}
@@ -134,7 +135,7 @@ export default ChangePetProfileImage = props => {
 						btnLayout={btn_w694_r30}
 					/>
 				) : (
-					<AniButton onPress={onPressConfirm} disable btnTitle={'확인'} titleFontStyle={32} btnLayout={btn_w694_r30} />
+					<AniButton onPress={onPressConfirm} activeOpacity={0.2} disable btnTitle={'확인'} titleFontStyle={32} btnLayout={btn_w694_r30} />
 				)}
 			</View>
 		</KeyboardAvoidingView>

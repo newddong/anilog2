@@ -477,13 +477,13 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					<View style={[style.btnContainer]}>
 						{/* <AniButton onPress={onPressProtectRequest} btnTitle={'임시보호 신청'} btnStyle={'border'} btnLayout={btn_w276} titleFontStyle={30} /> */}
 						{/* <AniButton onPress={onPressAdoptionRequest} btnTitle={'입양 신청'} btnLayout={btn_w276} titleFontStyle={30} /> */}
-						<TouchableOpacity onPress={onPressProtectRequest} activeOpacity={0.8} style={[style.protectBtn]}>
+						<TouchableOpacity onPress={onPressProtectRequest} style={[style.protectBtn]}>
 							<Text style={[txt.noto32, {color: data.protect_request_writer_id.user_contacted ? MAINBLACK : GRAY30}]}>임시보호 문의</Text>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={onPressAdoptionRequest} activeOpacity={0.8} style={[style.protectBtn]}>
+						<TouchableOpacity onPress={onPressAdoptionRequest} style={[style.protectBtn]}>
 							<Text style={[txt.noto32, {color: data.protect_request_writer_id.user_contacted ? MAINBLACK : GRAY30}]}>입양 문의</Text>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={connectPhoneCall} activeOpacity={0.8} style={[style.phoneBtn]}>
+						<TouchableOpacity onPress={connectPhoneCall} style={[style.phoneBtn]}>
 							<Phone54 />
 						</TouchableOpacity>
 					</View>

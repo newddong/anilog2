@@ -182,7 +182,7 @@ const AskQuestion = ({route}) => {
 						<View style={[styles.check42]}>
 							<CheckBox onCheck={onCheck} state={userAgreement} />
 						</View>
-						<TouchableOpacity activeOpacity={0.8} onPress={() => onCheck(!userAgreement)} style={[assignCheckListItem.textContainer]}>
+						<TouchableOpacity onPress={() => onCheck(!userAgreement)} style={[assignCheckListItem.textContainer]}>
 							<Text style={[txt.noto28, {color: userAgreement ? MAINBLACK : MAINBLACK}]}>{userAssign_agreementCheckList[0].text}</Text>
 						</TouchableOpacity>
 						<TouchableOpacity onPress={onPressDetail} style={[assignCheckListItem.detailText]}>

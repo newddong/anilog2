@@ -1,6 +1,6 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {ActivityIndicator, FlatList, Keyboard, Platform, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, FlatList, Keyboard, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {GRAY10, GRAY20, GRAY30, GRAY40, WHITE} from 'Root/config/color';
 import ReviewBriefList from 'Root/component/organism/list/ReviewBriefList';
@@ -20,6 +20,7 @@ import {FavoriteTag46_Filled, FavoriteTag48_Border, Like48_Border, Like48_Filled
 import ReplyWriteBox from 'Root/component/organism/input/ReplyWriteBox';
 import {useKeyboardBottom} from 'Root/component/molecules/input/usekeyboardbottom';
 import comment_obj from 'Root/config/comment_obj';
+import {count_to_K} from 'Root/util/stringutil';
 
 /**
  * 후기 상세 내용
@@ -632,20 +633,20 @@ export default ReviewDetail = props => {
 				<ReviewContent data={data} searchInput={searchInput} showImg={showImg} />
 				<View style={[style.separator]} />
 				<View style={[style.like]}>
-					<View style={[{flexDirection: 'row', width: 80 * DP, alignItems: 'center'}]}>
-						{data.community_is_favorite ? (
-							<FavoriteTag46_Filled onPress={() => onPressFavorite(false)} />
-						) : (
-							<FavoriteTag48_Border onPress={() => onPressFavorite(true)} />
-						)}
+					<TouchableOpacity
+						onPress={() => onPressFavorite(data.community_is_favorite ? false : true)}
+						style={[{flexDirection: 'row', minWidth: 80 * DP, alignItems: 'center'}]}>
+						{data.community_is_favorite ? <FavoriteTag46_Filled /> : <FavoriteTag48_Border />}
 						<Text style={[txt.noto24, {color: GRAY10, paddingTop: 6 * DP, marginLeft: 2 * DP, height: 48 * DP}]}>
-							{data.community_favorite_count}
+							{count_to_K(data.community_favorite_count)}
 						</Text>
-					</View>
-					<View style={{flexDirection: 'row', width: 100 * DP, alignItems: 'center'}}>
-						{data.community_is_like ? <Like48_Filled onPress={() => onPressLike(false)} /> : <Like48_Border onPress={() => onPressLike(true)} />}
-						<Text style={[txt.noto24, {color: GRAY10, marginLeft: 10 * DP}]}>{data.community_like_count}</Text>
-					</View>
+					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={() => onPressLike(data.community_is_like ? false : true)}
+						style={{flexDirection: 'row', minWidth: 100 * DP, alignItems: 'center'}}>
+						{data.community_is_like ? <Like48_Filled /> : <Like48_Border />}
+						<Text style={[txt.noto24, {color: GRAY10, marginLeft: 10 * DP}]}>{count_to_K(data.community_like_count)}</Text>
+					</TouchableOpacity>
 					<View style={[style.commentList]}>
 						{comments && comments.length > 0 ? <Text style={[txt.noto26, {textAlign: 'right'}]}> 댓글 {comments.length - 1}개</Text> : <></>}
 					</View>
@@ -722,6 +723,7 @@ export default ReviewDetail = props => {
 			return (
 				<View style={[style.commentContainer, {backgroundColor: getBgColor()}]} key={item._id}>
 					<ParentComment
+						writer={data.community_writer_id}
 						parentComment={item}
 						onPressReplyBtn={onReplyBtnClick} // 부모 댓글의 답글쓰기 클릭 이벤트
 						onEdit={onEdit}

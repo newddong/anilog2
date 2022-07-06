@@ -66,42 +66,38 @@ export default PetFollowerList = props => {
 		);
 	};
 
-	const onClickFollowBtn = item => {
+	const onClickFollowBtn = (item, index, bool) => {
 		if (isPreView) {
 			Modal.popLoginRequestModal(() => {
 				navigation.navigate('LoginRequired');
 			});
 		} else {
-			followUser(
-				{follow_userobject_id: item._id},
-				result => {
-					console.log('result / followUser / FollwerList :', result.msg);
-					props.resetProfileInfo();
-				},
-				err => {
-					console.log('err / followUser / FollwerList : ', err);
-				},
-			);
-		}
-	};
-
-	const onClickUnFollowBtn = item => {
-		// console.log('onClickUnFollowBtn', item);
-		if (isPreView) {
-			Modal.popLoginRequestModal(() => {
-				navigation.navigate('LoginRequired');
-			});
-		} else {
-			unFollowUser(
-				{follow_userobject_id: item._id},
-				result => {
-					// console.log('result / onClickUnFollowBtn / FollwerList : ', result.msg);
-					props.resetProfileInfo();
-				},
-				err => {
-					console.log('err / onClickUnFollowBtn / FollwerList', err);
-				},
-			);
+			let temp = [...follower];
+			temp[index].follow = !temp[index].follow;
+			setFollower(temp);
+			if (bool) {
+				followUser(
+					{follow_userobject_id: item._id},
+					result => {
+						console.log('result / followUser / PetFollwerList :', result.msg);
+						props.resetProfileInfo();
+					},
+					err => {
+						console.log('err / followUser / PetFollwerList : ', err);
+					},
+				);
+			} else {
+				unFollowUser(
+					{follow_userobject_id: item._id},
+					result => {
+						console.log('result / onClickUnFollowBtn / PetFollwerList : ', result.msg);
+						props.resetProfileInfo();
+					},
+					err => {
+						console.log('err / onClickUnFollowBtn / PetFollwerList', err);
+					},
+				);
+			}
 		}
 	};
 
@@ -137,8 +133,8 @@ export default PetFollowerList = props => {
 								items={follower}
 								showButtons={true}
 								onClickAccount={onClickAccount}
-								onClickFollowBtn={onClickFollowBtn}
-								onClickUnFollowBtn={onClickUnFollowBtn}
+								onClickFollowBtn={(item, index) => onClickFollowBtn(item, index, true)}
+								onClickUnFollowBtn={(item, index) => onClickFollowBtn(item, index, false)}
 								showFollowStatusText={false}
 								width={400}
 							/>

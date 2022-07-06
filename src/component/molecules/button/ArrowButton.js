@@ -1,9 +1,8 @@
 import React from 'react';
-import {Text, View, TouchableOpacity, TouchableWithoutFeedback, TouchableHighlight, StyleSheet} from 'react-native';
-import {APRI10, GRAY10, GRAY20, GRAY30, MAINBLACK, WHITE} from 'Root/config/color';
+import {Text, View, TouchableOpacity, StyleSheet} from 'react-native';
+import {GRAY30} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import {btn_w226} from 'Atom/btn/btn_style';
 import {Arrow48} from 'Root/component/atom/icon';
 /**
  * 버튼 컴포넌트트
@@ -20,7 +19,7 @@ const ArrowButton = ({direction, onPress}) => {
 	};
 
 	return (
-		<TouchableOpacity activeOpacity={0.8} onPress={onPress} style={[style.container]}>
+		<TouchableOpacity activeOpacity={0.2} onPress={onPress} style={[style.container]}>
 			{direction == 'back' ? (
 				<>
 					<View

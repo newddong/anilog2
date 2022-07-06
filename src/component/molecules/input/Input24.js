@@ -172,7 +172,7 @@ const Input24 = React.forwardRef((props, ref) => {
 					pointerEvents={props.pointerEvents || null}
 					style={[
 						txt.noto28,
-						props.style,
+						props.style || {color: MAINBLACK},
 						{
 							width: props.width ? (props.width - 46) * DP : null,
 							paddingLeft: 24 * DP,

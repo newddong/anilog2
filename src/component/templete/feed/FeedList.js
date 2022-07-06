@@ -25,7 +25,7 @@ import {login_style, buttonstyle} from 'Templete/style_templete';
 import {getStringLength, getLinesOfString} from 'Root/util/stringutil';
 import {GRAY30} from 'Root/config/color';
 import NewMissingReportList from '../list/NewMissingReportList';
-import {FEED_LIMIT, NETWORK_ERROR} from 'Root/i18n/msg';
+import {FEED_LIMIT, NETWORK_ERROR, PROTECT_REQUEST_MAIN_LIMIT} from 'Root/i18n/msg';
 import {useNavigation} from '@react-navigation/core';
 import feed_obj from 'Root/config/feed_obj';
 
@@ -35,7 +35,8 @@ export default FeedList = ({route}) => {
 	const [total, setTotal] = React.useState();
 	const [refreshing, setRefreshing] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
-	const [topList, setTopList] = React.useState([]);
+	// const [topList, setTopList] = React.useState([]);
+	// const [offset, setOffset] = React.useState(1);
 	const flatlist = React.useRef();
 
 	//피드썸네일 클릭 리스트일 경우
@@ -67,16 +68,29 @@ export default FeedList = ({route}) => {
 	React.useEffect(() => {
 		//페이지 상단 실종,제보 리스트 받아오기
 		if (route.name == 'MainHomeFeedList') {
-			getMissingReportList(
-				{request_number: 10},
-				result => {
-					// console.log('result', result.msg[0]);
-					setTopList(result.msg);
-				},
-				err => {
-					console.log('getMissingReportList err', err);
-				},
-			);
+			// getMissingReportList(
+			// 	{...topList, limit: PROTECT_REQUEST_MAIN_LIMIT, page: offset},
+			// 	// {request_number: 1000},
+			// 	result => {
+			// 		const res = result.msg;
+			// 		console.log('result', result.msg[0]);
+			// 		// pList(result.msg);
+			// 		if (topList != 'false') {
+			// 			let temp = [...topList];
+			// 			res.map((v, i) => {
+			// 				temp.push(v);
+			// 			});
+			// 			console.log('temp lenth', temp.length);
+			// 			setTopList(temp);
+			// 		} else {
+			// 			setTopList(res);
+			// 		}
+			// 		setOffset(offset + 1);
+			// 	},
+			// 	err => {
+			// 		console.log('getMissingReportList err', err);
+			// 	},
+			// );
 		}
 		getList(); //첫 리스트 받아오기
 		const unsubscribe = navigation.addListener('focus', () => {
@@ -523,7 +537,15 @@ export default FeedList = ({route}) => {
 
 	//피드 상단 새로운 실종/제보
 	const MissingReport = () => {
-		return <NewMissingReportList data={topList} />;
+		return (
+			<NewMissingReportList
+				doubleTab={route.params?.pressed != 0}
+				// if (route.params?.pressed != 0) {
+				// moveToTop();
+				// }
+				// data={topList}
+			/>
+		);
 	};
 
 	const renderItem = ({item}) => {

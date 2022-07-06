@@ -188,7 +188,7 @@ export default MyHeader = ({route, options, back}) => {
 			</View>
 		);
 };
-
+////merge 필요
 const style = StyleSheet.create({
 	headerContainer: {
 		alignItems: 'center',

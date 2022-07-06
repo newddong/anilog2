@@ -16,6 +16,7 @@ import {
 	GRAY40,
 	GRAY30,
 	APRI20,
+	MAINBLACK,
 } from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {Platform} from 'react-native';
@@ -1899,7 +1900,8 @@ export const userInfoSetting_style = StyleSheet.create({
 		// maxHeight: 200 * DP,
 		paddingHorizontal: 24 * DP,
 		paddingVertical: 24 * DP,
-		color: GRAY10,
+		// color: GRAY10,
+		color: MAINBLACK,
 		borderRadius: 24 * DP,
 		// shadowOpacity: 0.27,
 		// shadowRadius: 4.65,
@@ -3005,6 +3007,7 @@ export const petInfoSetting = StyleSheet.create({
 		borderRadius: 30 * DP,
 		paddingVertical: 20 * DP,
 		paddingHorizontal: 20 * DP,
+		color: MAINBLACK,
 	},
 });
 
@@ -4285,6 +4288,7 @@ export const writeAidRequest = StyleSheet.create({
 		paddingHorizontal: 15 * DP,
 		marginTop: 10 * DP,
 		borderBottomWidth: 2 * DP,
+		color: MAINBLACK,
 		// lineHeight: 40 * DP,
 		// backgroundColor: 'yellow',
 		height: 100 * DP,
@@ -4292,6 +4296,7 @@ export const writeAidRequest = StyleSheet.create({
 	contentInput: {
 		width: 606 * DP,
 		height: 300 * DP,
+		color: MAINBLACK,
 		// backgroundColor: 'yellow',
 	},
 	feedTextEdit: {

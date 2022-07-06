@@ -539,7 +539,11 @@ export default FeedList = ({route}) => {
 	const MissingReport = () => {
 		return (
 			<NewMissingReportList
-			// data={topList}
+				doubleTab={route.params?.pressed != 0}
+				// if (route.params?.pressed != 0) {
+				// moveToTop();
+				// }
+				// data={topList}
 			/>
 		);
 	};

@@ -482,6 +482,7 @@ export const Like30 = makeSvg(like30, size30);
 export const Comment30 = makeSvg(comment30, size30);
 export const Comment30_Border = makeSvg(comment30_border, size30);
 export const ProfileDefaultImg4 = makeSvg(profiledefault4, {width: 294 * DP, height: 294 * DP});
+export const ProfileDefaultImg4_94 = makeSvg(profiledefault4, {width: 94 * DP, height: 94 * DP});
 export const CrossNew92 = makeSvg(crossNew92, size92);
 export const Shelter294 = makeSvg(shelter294, {width: 294 * DP, height: 294 * DP});
 export const Arrow48 = makeSvg(arrow48, size48);

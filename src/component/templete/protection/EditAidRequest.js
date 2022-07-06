@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View, TextInput, TouchableOpacity, ScrollView, ActivityIndicator, StyleSheet} from 'react-native';
-import {APRI10, GRAY20} from 'Root/config/color';
+import {APRI10, GRAY20, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import {Camera54} from 'Atom/icon';
@@ -54,25 +54,25 @@ export default EditAidRequest = ({route, navigation}) => {
 		navigation.setParams({data: protectRequestData, nav: route.name});
 	}, [protectRequestData]);
 
-
-	React.useEffect(()=>{
-		if(route.params.selectedPhoto&&route.params.selectedPhoto.length>0){
+	React.useEffect(() => {
+		if (route.params.selectedPhoto && route.params.selectedPhoto.length > 0) {
 			console.log(route.params);
 			let selected = route.params.selectedPhoto;
-			let tempContainer = selected.map(v=>{return v.cropUri??v.uri});
+			let tempContainer = selected.map(v => {
+				return v.cropUri ?? v.uri;
+			});
 			setImageList(tempContainer);
 			setProtectRequestData({...protectRequestData, protect_request_photos_uri: tempContainer});
 			setData({...data, protect_request_photos_uri: tempContainer || data.protect_request_photos_uri});
 		}
-	},[route.params?.selectedPhoto]);
-
+	}, [route.params?.selectedPhoto]);
 
 	const gotoSelectPicture = () => {
 		if (imageList.length > 4) {
 			Modal.alert('첨부파일은 5개까지만 가능합니다');
 			return;
 		}
-		navigation.push("MultiPhotoSelect",{prev:{name:route.name,key:route.key,selectedPhoto:imageList.map(v=>({uri:v}))}});
+		navigation.push('MultiPhotoSelect', {prev: {name: route.name, key: route.key, selectedPhoto: imageList.map(v => ({uri: v}))}});
 	};
 
 	//SelectedMedia 아이템의 X마크를 클릭
@@ -174,10 +174,12 @@ export const style = StyleSheet.create({
 		marginTop: 10 * DP,
 		borderBottomWidth: 2 * DP,
 		height: 100 * DP,
+		color: MAINBLACK,
 	},
 	contentInput: {
 		width: 606 * DP,
 		height: 300 * DP,
+		color: MAINBLACK,
 	},
 	feedTextEdit: {
 		marginTop: 40 * DP,

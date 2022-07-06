@@ -12,7 +12,7 @@ import {
 	FlatList,
 	TouchableWithoutFeedback,
 } from 'react-native';
-import {GRAY10, GRAY40, APRI10, GRAY20, BLACK} from 'Root/config/color';
+import {GRAY10, GRAY40, APRI10, GRAY20, BLACK, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import moment from 'moment';
 import DP from 'Root/config/dp';
@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
 		fontSize: 32 * DP,
 		borderBottomColor: BLACK,
 		borderBottomWidth: 2 * DP,
+		color: MAINBLACK,
 	},
 });
 

@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
-import {FlatList, ScrollView, Text, View, StyleSheet, SafeAreaView, ActivityIndicator, RefreshControl} from 'react-native';
-import {WHITE} from 'Root/config/color';
+import {FlatList, ScrollView, Text, View, StyleSheet, SafeAreaView, ActivityIndicator, RefreshControl, Platform} from 'react-native';
+import {APRI10, GRAY10, WHITE} from 'Root/config/color';
 import {CommonActions, useNavigationState} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 import MissingReportBox from 'Root/component/organism/listitem/MissingReportBox ';
@@ -16,27 +16,37 @@ const NewMissingReportList = props => {
 
 	const [topList, setTopList] = React.useState([]);
 	const [offset, setOffset] = React.useState(1);
-	const [loading, setLoading] = React.useState(true);
+	const [loading, setLoading] = React.useState(false);
+	const scrollSpeed = Platform.OS === 'ios' ? 0.4 : 0.55;
 	const navigation = useNavigation();
-	console.log('props.data data', props.data);
-	console.log('props.data data', props.data);
 	const renderItem = ({item, index}) => {
 		return <MissingReportBox index={index} data={item} />;
 	};
 	React.useEffect(() => {
-		getList();
+		// getList();
 		const unsubscribe = navigation.addListener('focus', () => {
 			// setShowActionButton(false);
-			// getList();
+			console.log('foucsued');
+			getList();
 		});
-
+		getList('first');
 		return unsubscribe;
 	}, []);
-	const getList = () => {
-		setLoading(true);
+
+	// React.useEffect(() => {
+	// 	console.log('두번 눌림', props.doubleTab);
+	// 	if (props.doubleTab) {
+	// 		getList();
+	// 	}
+	// }, [props.doubleTab]);
+	const getList = isFirst => {
+		if (isFirst != 'first') {
+			setLoading(true);
+		}
+
 		// console.log('filterData', filterData);
 		getMissingReportList(
-			{...topList, limit: PROTECT_REQUEST_MAIN_LIMIT, page: offset},
+			{...topList, limit: PROTECT_REQUEST_MAIN_LIMIT, page: offset, main_type: true},
 			result => {
 				console.log('getMissingReportList length', result.msg.length);
 				const res = result.msg;
@@ -80,44 +90,37 @@ const NewMissingReportList = props => {
 		// console.log('EndReached', getData().length % PROTECT_REQUEST_MAIN_LIMIT);
 		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
 		if (topList.length % PROTECT_REQUEST_MAIN_LIMIT == 0) {
-			getList();
+			getList('notfirst');
 		}
 	};
-	// if (loading) {
-	// 	return (
-	// 		<View style={{alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white'}}>
-	// 			<ActivityIndicator size={'large'}></ActivityIndicator>
-	// 		</View>
-	// 	);
-	// } else {
 
 	return (
-		<View>
-			{topList.length == 0 ? (
-				// <View></View>
-				<></>
-			) : (
-				<View style={[styles.container]}>
-					<FlatList
-						contentContainerStyle={{paddingLeft: 28 * DP}}
-						data={topList}
-						renderItem={renderItem}
-						showsHorizontalScrollIndicator={false}
-						horizontal={true}
-						onEndReached={onEndReached} //Flatlist 페이징
-						onEndReachedThreshold={0.6} //페이징을 하는 타이밍
-						// initialNumToRender={20}
-						//getItemLayout={getItemLayout}
-						//keyExtractor={props.data._id}
-						keyExtractor={(item, index) => item._id}
-						getItemLayout={(data, index) => {
-							return {length: 176 * DP, offset: 176 * DP * index, index: index};
-						}}
-						windowSize={2}
-						// windowSize={5}
-						decelerationRate={0.1}
-					/>
+		<View style={[styles.container]}>
+			<FlatList
+				contentContainerStyle={{paddingLeft: 28 * DP}}
+				data={topList}
+				renderItem={renderItem}
+				showsHorizontalScrollIndicator={false}
+				horizontal={true}
+				onEndReached={onEndReached} //Flatlist 페이징
+				onEndReachedThreshold={0.7} //페이징을 하는 타이밍
+				// initialNumToRender={20}
+				//getItemLayout={getItemLayout}
+				//keyExtractor={props.data._id}
+				keyExtractor={(item, index) => item._id}
+				getItemLayout={(data, index) => {
+					return {length: 176 * DP, offset: 176 * DP * index, index: index};
+				}}
+				windowSize={2}
+				// windowSize={5}
+				decelerationRate={scrollSpeed}
+			/>
+			{loading ? (
+				<View style={[{alignItems: 'center'}, {alignSelf: 'center'}]}>
+					<ActivityIndicator size="large" color={GRAY10} />
 				</View>
+			) : (
+				<></>
 			)}
 		</View>
 	);
@@ -132,6 +135,7 @@ const styles = StyleSheet.create({
 		backgroundColor: WHITE,
 		marginTop: 28 * DP,
 		height: 248 * DP,
+		flexDirection: 'row',
 		// paddingLeft: 28 * DP,
 		// backgroundColor: 'yellow',
 		// marginLeft: 28 * DP,

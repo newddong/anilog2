@@ -323,7 +323,7 @@ const style = StyleSheet.create({
 		paddingVertical: 0,
 		paddingHorizontal: 10 * DP,
 		includeFontPadding: false,
-		// color: MAINBLACK,
+		color: MAINBLACK,
 		// backgroundColor: 'pink',
 	},
 	replyTextInput_protect_request: {

@@ -22,7 +22,6 @@ import FastImage from 'react-native-fast-image';
  * @param {string} props.time_expression - 시간 표현 방식 ('date')
  */
 const UserLocationTimeLabel = props => {
-	// console.log('UserLocationTimeLabel props', props);
 	const navigation = useNavigation();
 	const isLoginUser = userGlobalObject.userInfo._id == props.data._id;
 	const isMyPet =
@@ -120,28 +119,7 @@ const UserLocationTimeLabel = props => {
 							numberOfLines={1}>
 							{props.data.user_nickname || '탈퇴한 계정입니다.'}
 						</Text>
-						{isMyPet ? (
-							<Text
-								style={[
-									txt.noto22b,
-									{
-										color: APRI10,
-										marginLeft: 10 * DP,
-										borderWidth: 2 * DP,
-										borderColor: APRI10,
-										borderRadius: 10 * DP,
-										padding: 2 * DP,
-										paddingHorizontal: 10 * DP,
-										alignSelf: 'center',
-										justifyContent: 'center',
-										alignItems: 'center',
-									},
-								]}>
-								반려동물
-							</Text>
-						) : (
-							<></>
-						)}
+
 						<View
 							style={[
 								{

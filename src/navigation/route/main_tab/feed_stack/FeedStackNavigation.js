@@ -1,14 +1,11 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-
 import FeedList from 'Templete/feed/FeedList';
 import Profile from 'Templete/profile/Profile';
 import FeedListForHashTag from 'Templete/feed/FeedListForHashTag';
 import FeedCommentList from 'Templete/feed/FeedCommentList';
 import AnimalProtectRequestDetail from 'Templete/protection/AnimalProtectRequestDetail';
-
 import LogoHeader from 'Navigation/header/LogoHeader';
-import MeatBallHeader from 'Navigation/header/MeatBallHeader';
 import SocialRelationTopTabNavigation from '../protection_stack/socialRelation_tab/SocialRelationTopTabNavigation';
 import SimpleHeader from 'Navigation/header/SimpleHeader';
 import ChangeUserProfileImage from 'Root/component/templete/user/ChangeUserProfileImage';
@@ -29,6 +26,8 @@ import ProfileHeader from 'Root/navigation/header/ProfileHeader';
 import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 import AddPhoto from 'Root/component/templete/media/AddPhoto';
 import PhotoSelectHeader from 'Root/navigation/header/PhotoSelectHeader';
+import FeedWrite from 'Root/component/templete/feed/FeedWrite';
+import FeedWriteHeader from 'Root/navigation/header/FeedWriteHeader';
 const FeedStack = createStackNavigator();
 
 export default FeedStackNavigation = props => {
@@ -60,7 +59,7 @@ export default FeedStackNavigation = props => {
 				component={FeedListForHashTag}
 				options={{header: props => <SimpleHeader {...props} />, title: '#해시태그'}}
 			/>
-			<FeedStack.Screen name="FeedUserProfile" component={Profile} options={{header: props => <MeatBallHeader {...props} />, title: '프로필'}} />
+			<FeedStack.Screen name="FeedUserProfile" component={Profile} options={{header: props => <ProfileHeader {...props} />, title: '프로필'}} />
 			<FeedStack.Screen
 				name="ChangeUserProfileImage"
 				component={ChangeUserProfileImage}

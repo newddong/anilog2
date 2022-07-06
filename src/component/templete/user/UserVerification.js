@@ -36,10 +36,12 @@ export default UserVerification = props => {
 	const [phoneVerified, setPhoneVerified] = React.useState(false); //핸드폰 번호 인증 완료
 	const [easter, setEaster] = React.useState(0);
 	const navigation = useNavigation();
+
 	const goToNextStep = () => {
 		console.log(user_data);
-		props.navigation.push('UserPasswordCheck', user_data);
+		props.navigation.navigate('UserPasswordCheck', user_data);
 	};
+
 	React.useEffect(() => {
 		if (props.route.params.response) {
 			console.log('props changed', props);

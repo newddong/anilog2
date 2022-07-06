@@ -3,21 +3,16 @@ import {Text, View, KeyboardAvoidingView, StyleSheet} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import {btn_w654, btn_w694_r30} from 'Atom/btn/btn_style';
 import AniButton from 'Molecules/button/AniButton';
-
 import StageBar from 'Molecules/info/Stagebar';
-
 import PasswordChecker from 'Organism/form/PasswordChecker';
 import {stagebar_style} from 'Organism/style_organism copy';
 import {login_style, btn_style, temp_style, progressbar_style, userPasswordCheck} from 'Templete/style_templete';
 import {MAINBLACK} from 'Root/config/color';
 
-// 각각 뷰에 컴포넌트 삽입시 style의 첫번째 index 삭제할 것. 두번째 index는 상.하 간격 style이라서 이 컴포넌트에만 해당 됨.
-//ex) 변경 전: <View style={[btn_style.btn_w654, findAccount_style.btn_w654]}>   변경 후:  <View style={[findAccount_style.btn_w654]}>
-
 export default UserPasswordCheck = props => {
 	const [pwdValid, setPwdValid] = React.useState(false); // 비밀번호 양식 체크 (8자이상~~)
 	const [firstPwdValid, setFirstPwdValid] = React.useState(false);
-	console.log('UserPasswordCheck', props);
+	// console.log('UserPasswordCheck', props);
 	const user_data = React.useRef({
 		...props.route.params,
 		user_password: '',
@@ -26,7 +21,7 @@ export default UserPasswordCheck = props => {
 	// 확인 버튼 클릭
 	const goToNextStep = () => {
 		// setData({ ...data, user_password: pwd });
-		props.navigation.push('AssignUserHabitation', user_data);
+		props.navigation.navigate('AssignUserHabitation', user_data);
 	};
 
 	const onChangePwd = pwd => {

@@ -21,10 +21,6 @@ import {useNavigation} from '@react-navigation/core';
 
 const PetProfileEditSelectModal = props => {
 	const data = props.data.items;
-	const [selectedItem, setSelectedItem] = React.useState(2);
-	const [selectedItem2, setSelectedItem2] = React.useState(2);
-	const refContainerLeft = React.useRef('');
-	const refContainerRight = React.useRef('');
 	const [listHeight, setListHeight] = React.useState(0);
 	const padding = '';
 	const animatedHeight = React.useRef(new Animated.Value(0)).current;
@@ -60,7 +56,8 @@ const PetProfileEditSelectModal = props => {
 			easing: Easing.linear,
 			useNativeDriver: false,
 		}).start(() => {
-			Modal.close();
+			// Modal.close();
+			props.onClose();
 		});
 	};
 
@@ -137,6 +134,8 @@ const PetProfileEditSelectModal = props => {
 		console.log('item selected', item);
 		// navigation.push('PetInfoSetting', {pet_id: item._id});
 	};
+
+	console.log('props.data.pet_data', props.data.pet_data);
 
 	const renderItem = ({item, index}) => {
 		// console.log('item', item);

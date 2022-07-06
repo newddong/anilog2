@@ -38,7 +38,6 @@ const LocalMedia = props => {
 
 
 	React.useEffect(() => {
-		console.log('isSlee',props.selected,isSelect)
 		setSelected(props.selected);
 	}, [props.selected]);
 

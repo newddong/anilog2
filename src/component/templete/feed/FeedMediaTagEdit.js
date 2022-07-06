@@ -32,52 +32,63 @@ export default FeedMediaTagEdit = props => {
 	const feedData = route?route.params:[];
 	const [tagScreens, setTagScreens] = React.useState(feedData.feed_medias ?? []);
 	const [scroll, setScroll] = React.useState(true);
-	console.log('feedData', feedData, navState);
+	// console.log('feedData', feedData, navState);
 
 	const onEndTagMove = (tag, uri) => {
-		console.log('onTagmoveEnd', tag);
+		// console.log('onTagmoveEnd', tag);
 		setScroll(true); //태그가 움직이기 시작하면 Swipe가 되지 않도록 설정
-		feedData.feed_medias?.forEach((v, i, a) => {
+		setTagScreens(tagScreens.map((v,i)=>{
 			if (v.media_uri == uri) {
-				a[i].tags = a[i].tags.map(item => {
+				v.tags = v.tags.map(item => {
 					if (item.user._id == tag.user._id) {
 						return tag;
 					} else {
 						return item;
 					}
-				});
+				})
 			}
-		});
+			return v;
+		}))
+
+
+
 	};
 	const onTagMoveStart = isMove => {
-		console.log('onTagMoveStart');
 		setScroll(false); //태그의 움직임이 멈추면 Swipe가 가능하도록 설정
 	};
 
 	const onMakeTag = (newtag, uri) => {
 		console.log(uri, '   make   ', newtag);
-		feedData.feed_medias?.forEach((v, i, a) => {
-			if (v.media_uri == uri) {
-				a[i].tags ? a[i].tags : (a[i].tags = [newtag]);
-				if (a[i].tags && a[i].tags.length > 0) {
-					a[i].tags = a[i].tags.filter(v => v.user._id != newtag.user._id).concat(newtag);
-				} else {
-					a[i].tags = [newtag];
+		setTagScreens(tagScreens.map((v,i)=>{
+			if(v.media_uri == uri){
+				v.tags ? v.tags : (v.tags = [newtag]);
+				if(v.tags && v.tags.length>0){
+					v.tags = v.tags.filter(v => v.user._id != newtag.user._id).concat(newtag);
+				}else{
+					v.tags = [newtag];
 				}
 			}
-		});
+			return v;
+		}))
 	};
 	const onDeleteTag = (user, uri) => {
 		console.log(uri, '   del   ', user);
-		feedData.feed_medias?.forEach((v, i, a) => {
-			if (v.media_uri === uri) {
-				v.tags.forEach((v, i, a) => {
-					if (v.user._id === user._id) {
-						a.splice(i, 1);
-					}
-				});
+		setTagScreens(tagScreens.map((v,i)=>{
+			if(v.media_uri == uri){
+				v.tags = v.tags.filter(v=>v.user._id!=user._id);
 			}
-		});
+			return v;
+		}))
+
+		// feedData.feed_medias?.forEach((v, i, a) => {
+		// 	if (v.media_uri === uri) {
+		// 		v.tags.forEach((v, i, a) => {
+		// 			if (v.user._id === user._id) {
+		// 				a.splice(i, 1);
+		// 			}
+		// 		});
+		// 	}
+		// });
 	};
 
 	const renderItems = () => {
@@ -87,7 +98,7 @@ export default FeedMediaTagEdit = props => {
 				style={lo.box_img}
 				uri={v.media_uri}
 				taglist={v.tags}
-				key={v.tags.reduce((a,c)=>a+c.pos.x,0)}
+				key={v.tags.reduce((a,c)=>a+c.pos.x+c.pos.y,0)}
 				onMakeTag={onMakeTag}
 				onDeleteTag={onDeleteTag}
 				viewmode={false}

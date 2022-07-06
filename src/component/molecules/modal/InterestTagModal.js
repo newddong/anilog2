@@ -1,18 +1,15 @@
 import React from 'react';
-import {View, Text, StyleSheet, Platform, Dimensions, ScrollView, FlatList, ActivityIndicator, Animated, TouchableOpacity} from 'react-native';
-import {WHITE, GRAY10, APRI10, GRAY20, BLACK, GRAY30, GRAY40, MAINBLACK} from 'Root/config/color';
+import {View, Text, StyleSheet, Platform, Dimensions, ScrollView, FlatList, ActivityIndicator, TouchableOpacity} from 'react-native';
+import {WHITE, GRAY10, APRI10, GRAY20, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Component/modal/Modal';
 import AniButton from '../button/AniButton';
 import {Cross24_Filled} from 'Root/component/atom/icon';
-import {getAddressList} from 'Root/api/address';
 import {getInterestsList} from 'Root/api/interestsapi';
-import ArrowDownButton from '../button/ArrowDownButton';
-import {btn_w226, btn_w242, btn_w280, btn_w280x68} from 'Root/component/atom/btn/btn_style';
+import {btn_w226} from 'Root/component/atom/btn/btn_style';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
-import Loading from './Loading';
-import {updateUserDetailInformation} from 'Root/api/userapi';
+import {styles} from 'Root/component/atom/image/imageStyle';
 /**
  * 관심사 추가 및 수정 모달
  * @param {'Activity'|'Location'|'Review'} category -  관심활동 / 관심지역 / 커뮤니티후기 분기
@@ -23,23 +20,14 @@ import {updateUserDetailInformation} from 'Root/api/userapi';
  *
  */
 const InterestTagModal = props => {
-	console.log('InterestTagModa', props);
-	//유저 오브젝트의 user_interests 의 더미데이터
-	// user_interests는 크게 location 및 activity로 구성
-
 	const [userInterestContent, setUserInterestContent] = React.useState([]);
 	const [userInterestLocation, setUserInterestLocation] = React.useState(props.data);
-	const [userInterestReview, setUserInterestReview] = React.useState(props.data);
-
 	const [isSaved, setIsSaved] = React.useState(false); // '저장하지 않고 나가시겠습니까?' 메시지 출력 여부 판별
-
 	const [activityLists, setActivityLists] = React.useState([]);
-
-	//커뮤니티 카테고리 선택 관련 state
-	const [communityInterests, setCommunityInterests] = React.useState('');
 	const [showBtnModal, setShowBtnModal] = React.useState(false); //모달창 대체 View 출력 여부
 	const [addressList, setAddressList] = React.useState([]);
-	const [categoryText, setCategoryText] = React.useState('');
+	const [loading, setLoading] = React.useState(true);
+
 	React.useEffect(() => {
 		getCommonCodeDynamicQuery(
 			{
@@ -48,12 +36,11 @@ const InterestTagModal = props => {
 				common_code_out_type: 'interests',
 			},
 			result => {
-				console.log('common code result', result);
+				// console.log('common code result', result);
 				let temp = [];
 				for (const key in result.msg) {
 					// console.log('key', key, result.msg[key]);
 					temp.push(result.msg[key]);
-					console.log('temp, temp', temp);
 				}
 				setActivityLists(temp);
 			},
@@ -66,8 +53,9 @@ const InterestTagModal = props => {
 		let tempUserInterestLocationList = [];
 		//유저 관심사 목록 DB에서 받아오기
 		getInterestsList({}, interests => {
-			console.log('tellll', interests.msg);
-			var acitivityList = [];
+			// console.log('interests', interests.msg);
+
+			let acitivityList = [];
 			const nameList = {interests_beauty: '미용', interests_activity: '놀이', interests_food: '사료&간식', interests_health: '건강'};
 			const interestObj = interests.msg[0];
 			const getinterest = Object.entries(interestObj).map((category, idx) => {
@@ -78,22 +66,18 @@ const InterestTagModal = props => {
 					acitivityList.push({category: nameList[category[0]], content: category[1]});
 				}
 			});
-			// setActivityLists(acitivityList);
-
-			console.log('acitivityList', acitivityList);
+			setLoading(false);
 		});
 		//현재 유저의 관심사 리스트를 목록들에 적용
 		const saveUserInterest = Object.entries(props.data).map(interest => {
-			console.log('object', interest);
+			// console.log('object', interest);
 			if (props.isActivation) {
 				tempUserInterestContentList.push(interest[1]);
 			} else {
 				tempUserInterestLocationList.push(interest[1]);
 			}
-
-			console.log('아오..', tempUserInterestLocationList, tempUserInterestContentList);
+			// console.log('아오..', tempUserInterestLocationList, tempUserInterestContentList);
 			setUserInterestContent(tempUserInterestContentList);
-			// setUserInterestLocation(tempUserInterestLocationList);
 			setUserInterestLocation(tempUserInterestContentList);
 		});
 	}, []);
@@ -128,22 +112,14 @@ const InterestTagModal = props => {
 			props.setState(userInterestContent);
 		} else if (props.category == 'Location') {
 			props.setState(userInterestLocation);
-		} else if (props.category == 'ReviewWrite') {
-			props.setState({
-				userInterestReview: userInterestReview,
-			});
 		}
-
 		setIsSaved(true);
 		Modal.close();
 	};
 
 	//모달 종료
 	const onClose = () => {
-		if (props.category == 'Review') {
-			props.onClose();
-			Modal.close();
-		} else if (isSaved) {
+		if (isSaved) {
 			props.onClose();
 			Modal.close();
 		} else {
@@ -173,21 +149,6 @@ const InterestTagModal = props => {
 				} else {
 					setShowBtnModal(true);
 				}
-			} else {
-				let arr = [];
-				const review_category_list = arr.concat(
-					userInterestReview.interests_review,
-					userInterestReview.interests_trip,
-					userInterestReview.interests_etc,
-					userInterestReview.interests_hospital,
-					userInterestReview.interests_interior,
-				);
-				if (review_category_list.length == 0) {
-					props.onClose();
-					Modal.close();
-				} else {
-					setShowBtnModal(true);
-				}
 			}
 		}
 	};
@@ -204,198 +165,53 @@ const InterestTagModal = props => {
 	};
 
 	const onPressBackground = () => {
-		console.log('ddd');
 		if (showBtnModal) {
 			setShowBtnModal(false);
 		}
 	};
 
 	const getList = () => {
-		if (props.category == 'Review' || props.category == 'ReviewWrite') {
-			return getReviewCategory();
-		} else if (props.category == 'Activity') {
+		if (props.category == 'Activity') {
 			return getActivityList();
 		} else if (props.category == 'Location') {
 			return getLocationList();
 		}
 	};
 
-	//관심 리뷰 태그를 클릭
-	const onPressInterestReviewTag = (category, tag) => {
-		let copy = [];
-		switch (category) {
-			case 0:
-				copy = [...userInterestReview.interests_trip];
-				copy.includes(tag)
-					? copy.splice(
-							copy.findIndex(e => e == tag),
-							1,
-					  )
-					: copy.push(tag);
-				setUserInterestReview({...userInterestReview, interests_trip: copy});
-				break;
-			case 1:
-				copy = [...userInterestReview.interests_interior];
-				copy.includes(tag)
-					? copy.splice(
-							copy.findIndex(e => e == tag),
-							1,
-					  )
-					: copy.push(tag);
-				setUserInterestReview({...userInterestReview, interests_interior: copy});
-				break;
-			case 2:
-				copy = [...userInterestReview.interests_hospital];
-				copy.includes(tag)
-					? copy.splice(
-							copy.findIndex(e => e == tag),
-							1,
-					  )
-					: copy.push(tag);
-				setUserInterestReview({...userInterestReview, interests_hospital: copy});
-				break;
-			case 3:
-				copy = [...userInterestReview.interests_review];
-				copy.includes(tag)
-					? copy.splice(
-							copy.findIndex(e => e == tag),
-							1,
-					  )
-					: copy.push(tag);
-				setUserInterestReview({...userInterestReview, interests_review: copy});
-				break;
-			case 4:
-				copy = [...userInterestReview.interests_etc];
-				copy.includes(tag)
-					? copy.splice(
-							copy.findIndex(e => e == tag),
-							1,
-					  )
-					: copy.push(tag);
-				setUserInterestReview({...userInterestReview, interests_etc: copy});
-				break;
-			default:
-				break;
-		}
-	};
-
-	const getCommuntyInterestList = (type, typeText) => {
-		const hasDefinition = v => {
-			let result = true;
-			switch (typeText) {
-				case 0:
-					result = userInterestReview.interests_trip.includes(v);
-					break;
-				case 1:
-					result = userInterestReview.interests_interior.includes(v);
-					break;
-				case 2:
-					result = userInterestReview.interests_hospital.includes(v);
-					break;
-				case 3:
-					result = userInterestReview.interests_review.includes(v);
-					break;
-				case 4:
-					result = userInterestReview.interests_etc.includes(v);
-					break;
-				default:
-					break;
-			}
-			return result;
-		};
-
-		return (
-			<View style={{marginBottom: 40 * DP, paddingHorizontal: 20 * DP}}>
-				<Text style={[txt.noto24, {color: GRAY10, alignSelf: 'flex-start', paddingLeft: 20 * DP}]}>{type.topic} </Text>
-				<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-					{type.definition.map((v, i) => {
-						if (i % 2 == 0) {
-							return null;
-						}
-						return (
-							<TouchableOpacity
-								onPress={() => onPressInterestReviewTag(typeText, v)}
-								key={i}
-								style={[hasDefinition(v) ? style.contentText_userInterest : style.contentText]}>
-								<Text style={[txt.noto28, {color: hasDefinition(v) ? WHITE : GRAY10, textAlign: 'center'}]}>{v}</Text>
-							</TouchableOpacity>
-						);
-					})}
-				</View>
-				<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-					{type.definition.map((v, i) => {
-						if (i % 2 != 0) {
-							return null;
-						}
-						return (
-							<TouchableOpacity
-								onPress={() => onPressInterestReviewTag(typeText, v)}
-								key={i}
-								style={[hasDefinition(v) ? style.contentText_userInterest : style.contentText]}>
-								<Text style={[txt.noto28, {color: hasDefinition(v) ? WHITE : GRAY10, textAlign: 'center'}]}>{v}</Text>
-							</TouchableOpacity>
-						);
-					})}
-				</View>
-			</View>
-		);
-	};
-
 	const scrollRef = React.useRef();
 
-	//커뮤니티 카테고리 분기
-	const getReviewCategory = () => {
-		if (communityInterests == '') {
-			return <ActivityIndicator />;
-		} else
-			return (
-				<ScrollView style={{flex: 1}} ref={scrollRef}>
-					<View style={[style.review_container]}>
-						{getCommuntyInterestList(communityInterests.interests_trip, 0)}
-						{getCommuntyInterestList(communityInterests.interests_interior, 1)}
-						{getCommuntyInterestList(communityInterests.interests_hospital, 2)}
-						{getCommuntyInterestList(communityInterests.interests_review, 3)}
-						{getCommuntyInterestList(communityInterests.interests_etc, 4)}
-					</View>
-				</ScrollView>
-			);
-	};
-
 	const getActivityList = () => {
-		if (activityLists.length == 0) {
-			return <Loading isModal={false} smallBox={true} />;
-		} else
-			return (
-				<View>
-					<ScrollView ref={scrollRef}>
-						{activityLists.map((v, i) => {
-							return (
-								<View key={i} style={[{marginBottom: 30 * DP, paddingHorizontal: 44 * DP}]}>
-									{/* <Text style={[txt.noto26, {color: GRAY10, alignSelf: 'flex-start'}]}>{v.category}</Text> */}
-									<Text style={[txt.noto26, {color: GRAY10, alignSelf: 'flex-start'}]}>{v.topic}</Text>
-									<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-										{/* {v.content.length */}
-										{v.definition.length
-											? // ? v.content.map((d, i) => {
-											  v.definition.map((d, i) => {
-													// if (i % 2 == 0) {
-													// 	return null;
-													// }
-													// if (i > 4) {
-													// 	return null;
-													// }
-													return (
-														<TouchableOpacity
-															onPress={() => onPressInterestActivationTag(d)}
-															key={i}
-															style={[userInterestContent.includes(d) ? style.InterestText_userInterest : style.InterestContentText]}>
-															<Text style={[txt.noto28, {color: userInterestContent.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
-														</TouchableOpacity>
-													);
-											  })
-											: null}
-									</View>
-									{/* <View style={[{flexDirection: 'row', flexWrap: 'wrap'}]}>
+		return (
+			<View>
+				<ScrollView ref={scrollRef}>
+					{activityLists.map((v, i) => {
+						return (
+							<View key={i} style={[{marginBottom: 30 * DP, paddingHorizontal: 44 * DP}]}>
+								{/* <Text style={[txt.noto26, {color: GRAY10, alignSelf: 'flex-start'}]}>{v.category}</Text> */}
+								<Text style={[txt.noto26, {color: GRAY10, alignSelf: 'flex-start'}]}>{v.topic}</Text>
+								<View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+									{/* {v.content.length */}
+									{v.definition.length
+										? // ? v.content.map((d, i) => {
+										  v.definition.map((d, i) => {
+												// if (i % 2 == 0) {
+												// 	return null;
+												// }
+												// if (i > 4) {
+												// 	return null;
+												// }
+												return (
+													<TouchableOpacity
+														onPress={() => onPressInterestActivationTag(d)}
+														key={i}
+														style={[userInterestContent.includes(d) ? style.InterestText_userInterest : style.InterestContentText]}>
+														<Text style={[txt.noto28, {color: userInterestContent.includes(d) ? WHITE : GRAY10, textAlign: 'center'}]}>{d}</Text>
+													</TouchableOpacity>
+												);
+										  })
+										: null}
+								</View>
+								{/* <View style={[{flexDirection: 'row', flexWrap: 'wrap'}]}>
 									{v.content.length
 										? v.content.map((d, i) => {
 												// if (i % 2 != 0) {
@@ -422,24 +238,24 @@ const InterestTagModal = props => {
 										  })
 										: null}
 								</View> */}
-								</View>
-							);
-						})}
-					</ScrollView>
-					<View style={[{alignItems: 'center'}, {marginBottom: 40}]}>
-						<AniButton
-							btnLayout={btn_w226}
-							width={226}
-							btnStyle={'border'}
-							btnTheme={'shadow'}
-							btnTitle={'저장'}
-							height={70}
-							titleFontStyle={24}
-							onPress={onPressSave}
-						/>
-					</View>
+							</View>
+						);
+					})}
+				</ScrollView>
+				<View style={[{alignItems: 'center'}, {marginBottom: 40}]}>
+					<AniButton
+						btnLayout={btn_w226}
+						width={226}
+						btnStyle={'border'}
+						btnTheme={'shadow'}
+						btnTitle={'저장'}
+						height={70}
+						titleFontStyle={24}
+						onPress={onPressSave}
+					/>
 				</View>
-			);
+			</View>
+		);
 	};
 
 	const getLocationList = () => {
@@ -486,35 +302,39 @@ const InterestTagModal = props => {
 		);
 	};
 
-	return (
-		<View style={style.background}>
-			<TouchableOpacity activeOpacity={1} onPress={onPressBackground} style={[style.popUpWindow, {}]}>
-				<View style={[style.header]}>
-					<Text style={[txt.noto30, {color: MAINBLACK}]}>{props.category == 'Location' ? '관심지역 선택' : '관심활동 선택'}</Text>
-
-					<TouchableOpacity onPress={onClose} style={[style.crossMark]}>
-						<View style={[{paddingRight: 42 * DP}]}>
+	if (loading) {
+		return (
+			<View style={styles.loadingContainer}>
+				<ActivityIndicator />
+			</View>
+		);
+	} else
+		return (
+			<View style={style.background}>
+				<TouchableOpacity activeOpacity={1} onPress={onPressBackground} style={[style.popUpWindow, {}]}>
+					<View style={[style.header]}>
+						<Text style={[txt.noto30, {color: MAINBLACK}]}>{props.category == 'Location' ? '관심지역 선택' : '관심활동 선택'}</Text>
+						<TouchableOpacity onPress={onClose} style={[style.crossMark]}>
 							<Cross24_Filled />
+						</TouchableOpacity>
+					</View>
+					{getList()}
+				</TouchableOpacity>
+				{showBtnModal ? (
+					<View style={[style.btnModalContainer, style.shadow]}>
+						<View style={[style.btnModalTitle]}>
+							<Text style={[txt.noto28, {color: GRAY10}]}>저장하지않고 나가시겠습니까?</Text>
 						</View>
-					</TouchableOpacity>
-				</View>
-				{getList()}
-			</TouchableOpacity>
-			{showBtnModal ? (
-				<View style={[style.btnModalContainer, style.shadow]}>
-					<View style={[style.btnModalTitle]}>
-						<Text style={[txt.noto28, {color: GRAY10}]}>저장하지않고 나가시겠습니까?</Text>
+						<View style={[style.btnModalBtnContainer]}>
+							<AniButton onPress={onPressExitAfterSave} btnStyle={'border'} btnTitle={'저장후 나감'} />
+							<AniButton onPress={onPressExitWithoutSave} btnStyle={'border'} btnTitle={'나가기'} />
+						</View>
 					</View>
-					<View style={[style.btnModalBtnContainer]}>
-						<AniButton onPress={onPressExitAfterSave} btnStyle={'border'} btnTitle={'저장후 나감'} />
-						<AniButton onPress={onPressExitWithoutSave} btnStyle={'border'} btnTitle={'나가기'} />
-					</View>
-				</View>
-			) : (
-				<></>
-			)}
-		</View>
-	);
+				) : (
+					<></>
+				)}
+			</View>
+		);
 };
 
 InterestTagModal.defaultProps = {
@@ -566,6 +386,7 @@ const style = StyleSheet.create({
 	crossMark: {
 		width: 90 * DP,
 		height: 80 * DP,
+		paddingRight: 42 * DP,
 		justifyContent: 'center',
 		alignItems: 'flex-end',
 	},
@@ -659,49 +480,12 @@ const style = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 	},
-	review_container: {
-		paddingHorizontal: 5 * DP,
-	},
-	review_location: {
-		flexDirection: 'row',
-		width: 530 * DP,
-		paddingVertical: 30 * DP,
-		alignSelf: 'center',
-		justifyContent: 'space-between',
-	},
-	review_category_item: {
-		flexDirection: 'row',
-		flexWrap: 'wrap',
-	},
-	downScrollSelectContainer: {
-		position: 'absolute',
-		bottom: 0,
-		width: 750 * DP,
-		// height: 476 * DP,
-		justifyContent: 'flex-end',
-	},
-	modal_header: {
-		width: 750 * DP,
-		flexDirection: 'row',
-		backgroundColor: APRI10,
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		paddingHorizontal: 40 * DP,
-		borderTopRightRadius: 40 * DP,
-		borderTopLeftRadius: 40 * DP,
-	},
+
 	list: {
 		width: 750 * DP,
 		flex: 1,
 		alignItems: 'center',
 		backgroundColor: 'white',
-	},
-	listItem: {
-		alignItems: 'center',
-		justifyContent: 'center',
-		width: 666 * DP,
-		height: 70 * DP,
-		borderRadius: 30 * DP,
 	},
 });
 

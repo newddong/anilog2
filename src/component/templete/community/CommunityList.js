@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, FlatList, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, FlatList, TouchableOpacity, ActivityIndicator} from 'react-native';
 import {APRI10, BLACK, GRAY10} from 'Root/config/color';
 import ReviewList from 'Root/component/organism/list/ReviewList';
 import Loading from 'Root/component/molecules/modal/Loading';
@@ -14,6 +14,7 @@ import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import {EmptyIcon} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
 import {FREE_LIMIT, REPORT_MENU, REVIEW_LIMIT} from 'Root/i18n/msg';
+import {styles} from 'Root/component/atom/image/imageStyle';
 
 /**
  *  프로필탭 커뮤니티 글 출력용 컴포넌트

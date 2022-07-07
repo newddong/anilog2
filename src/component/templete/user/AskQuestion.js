@@ -22,7 +22,7 @@ import SelectInput from 'Component/molecules/button/SelectInput';
 import InputLongText from 'Component/molecules/input/InputLongText';
 import AssignCheckListItem from 'Organism/listitem/AssignCheckListItem';
 import AniButton from 'Component/molecules/button/AniButton';
-import {btn_w654} from 'Component/atom/btn/btn_style';
+import {btn_w654, btn_w694_r30} from 'Component/atom/btn/btn_style';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
 import {createQandA} from 'Root/api/qanda';
 import InputBalloon from 'Root/component/molecules/input/Input30';
@@ -158,7 +158,7 @@ const AskQuestion = ({route}) => {
 		return (
 			<ScrollView contentContainerStyle={styles.container}>
 				<View style={styles.selectContainer}>
-					<SelectInput onPressInput={onSelectCategory} width={654} height={82} fontSize={28} value={category} />
+					<SelectInput onPressInput={onSelectCategory} width={694} height={82} fontSize={28} value={category} />
 				</View>
 				{/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
 				<View style={[{marginTop: 40 * DP}]}>
@@ -172,6 +172,7 @@ const AskQuestion = ({route}) => {
 						maxlength={500}
 						onChange={onChangeText}
 						value={contents}
+						width={694}
 					/>
 				</View>
 				{/* </TouchableWithoutFeedback> */}
@@ -191,7 +192,7 @@ const AskQuestion = ({route}) => {
 					</View>
 				</View>
 				<View style={[{marginTop: 80 * DP}]}>
-					<AniButton btnTitle={'문의접수'} titleFontStyle={32} btnStyle={'border'} btnLayout={btn_w654} onPress={onPressAsk} />
+					<AniButton btnTitle={'문의접수'} titleFontStyle={32} btnStyle={'border'} btnLayout={btn_w694_r30} onPress={onPressAsk} />
 				</View>
 			</ScrollView>
 		);
@@ -206,12 +207,12 @@ const styles = StyleSheet.create({
 		backgroundColor: '#FFFFFF',
 	},
 	selectContainer: {
-		width: 654 * DP,
+		width: 694 * DP,
 		height: 82 * DP,
 		marginTop: 30 * DP,
 	},
 	input: {
-		width: 654 * DP,
+		width: 694 * DP,
 		height: 86 * DP,
 		fontSize: 32 * DP,
 		borderBottomColor: BLACK,

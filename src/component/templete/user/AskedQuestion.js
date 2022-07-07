@@ -29,16 +29,18 @@ const AskedQuestion = ({route}) => {
 	}, []);
 
 	const renderItem = ({item, index}) => {
-		// console.log('item', item);
+		console.log('item', item);
+		let answered = false;
 		if (item.qanda_status == 'waiting') {
-			let answered = false;
+			answered = false;
 		} else {
-			let answered = true;
+			answered = true;
 		}
 		const date = moment(item.announcement_date).format('YYYY.MM.DD');
 		return (
 			<OneNotice
-				uptitle={`${date} / ${item.qanda_common_code_id?.common_code_msg_kor}`}
+				// uptitle={`${date} / ${item.qanda_common_code_id?.common_code_msg_kor}`}
+				uptitle={`${date}`}
 				downtitle={item.qanda_question_title}
 				contents={item.qanda_question_contents}
 				status={true}
@@ -48,7 +50,7 @@ const AskedQuestion = ({route}) => {
 		);
 	};
 
-	const listEmpty = () => {
+	const ListEmpty = () => {
 		return (
 			<View style={[{flex: 1}, {justifyContent: 'center'}, {alignItems: 'center'}]}>
 				<TwoPaw />
@@ -64,17 +66,21 @@ const AskedQuestion = ({route}) => {
 			</View>
 		);
 	} else {
-		return (
-			<View style={styles.container}>
-				<FlatList
-					data={data}
-					keyExtractor={item => item._id}
-					renderItem={renderItem}
-					// ListEmptyComponent={listEmpty}
-					showsVerticalScrollIndicator={false}
-				/>
-			</View>
-		);
+		if (data.length == 0) {
+			return <ListEmpty />;
+		} else {
+			return (
+				<View style={styles.container}>
+					<FlatList
+						data={data}
+						keyExtractor={item => item._id}
+						renderItem={renderItem}
+						// ListEmptyComponent={listEmpty}
+						showsVerticalScrollIndicator={false}
+					/>
+				</View>
+			);
+		}
 	}
 };
 

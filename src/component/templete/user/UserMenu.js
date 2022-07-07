@@ -285,6 +285,7 @@ export default UserMenu = props => {
 									menuItems={[[APPSETTING, ACCOUNT], [INFO_QUESTION]]}
 									onClick={menuClick}
 									titleIcon={<Setting46_border />}
+									noBottom={true}
 								/>
 							</View>
 						</View>

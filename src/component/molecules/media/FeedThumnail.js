@@ -73,7 +73,7 @@ const FeedThumbnail = React.memo(props => {
 		}
 	};
 	return (
-		<TouchableWithoutFeedback onPress={onSelect}>
+		<TouchableOpacity onPress={onSelect}>
 			{/* Select된 상태일 때 불투명도 40% 적용 및 배경색  Black */}
 			{/* 그림인지 영상인지 표기(무조건 표기) */}
 			<View style={{margin: 2.5 * DP}}>
@@ -106,7 +106,7 @@ const FeedThumbnail = React.memo(props => {
 					<Blur246 />
 				</View> */}
 			</View>
-		</TouchableWithoutFeedback>
+		</TouchableOpacity>
 	);
 });
 FeedThumbnail.defaultProps = {};

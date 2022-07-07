@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, FlatList, Keyboard, Platform, ActivityIndicator, Animated, StyleSheet} from 'react-native';
+import {Text, View, FlatList, Keyboard, Platform, ActivityIndicator, Animated, StyleSheet, RefreshControl} from 'react-native';
 import FeedContent from 'Organism/feed/FeedContent';
 import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
 import {login_style} from 'Templete/style_templete';
@@ -16,6 +16,7 @@ import ParentComment from 'Root/component/organism/comment/ParentComment';
 import {deleteFeed} from 'Root/api/feedapi';
 import {NETWORK_ERROR, REGISTERING_COMMENT} from 'Root/i18n/msg';
 import comment_obj from 'Root/config/comment_obj';
+import feed_obj from 'Root/config/feed_obj';
 
 export default FeedCommentList = props => {
 	const navigation = useNavigation();
@@ -29,6 +30,7 @@ export default FeedCommentList = props => {
 	const [editData, setEditData] = React.useState({comment_contents: '', comment_photo_uri: ''});
 	const [isLoading, setIsLoading] = React.useState(true);
 	const [childOpenList, setChildOpenList] = React.useState([]);
+	const [refreshing, setRefreshing] = React.useState(false); //위로 스크롤 시도 => 리프레싱
 	const replyFromDetailRef = React.useRef(true); //실종,제보 상세글에서 답글쓰기를 누르고 왔을 경우 대상 댓글 스타일 적용 여부
 	const editFromDetailRef = React.useRef(true); //실종,제보 상세글에서 수정을 누르고 왔을 경우 대상 댓글 스타일 적용 여부
 	const addChildCommentFn = React.useRef(() => {});
@@ -71,7 +73,7 @@ export default FeedCommentList = props => {
 				if (parent) {
 					const findIndex = res.findIndex(e => e._id == parent._id); //댓글 삭제 후
 					res.map((v, i) => {
-						res[i].isDeleted = i == findIndex ? true : false;
+						res[i].isDeleted = i == findIndex ? true : false; // 대댓글이 삭제된 부모댓글은 자식댓글들을 다시 출력 (isDeleted == true => 대댓글열기 )
 					});
 				} else {
 					res.map((v, i) => {
@@ -79,8 +81,10 @@ export default FeedCommentList = props => {
 					});
 				}
 				setComments(res);
+				updateGlobal(res);
 				setIsLoading(false);
 				if (params.edit && editFromDetailRef) {
+					//실종,제보 상세페이지에서 댓글 수정을 눌렀을 경우 해당 댓글로 스크롤 시도
 					console.log('params.edit', params.edit.comment_contents);
 					scrollToReply(params.edit.comment_index || 0, params.edit.viewOffset, 'fetchData');
 					editFromDetailRef.current = false;
@@ -97,6 +101,30 @@ export default FeedCommentList = props => {
 				}
 			},
 		);
+	};
+
+	const updateGlobal = res => {
+		console.log('updateGlobal');
+		let recent = res[0]; //가장 최근 댓글
+		let comment_count = res.length; //부모 댓글 총개수
+		res.map((v, i) => {
+			comment_count = comment_count + v.children_count; //자식 댓글있으면 부모 댓글 개수에 추가시킴
+		});
+		let temp = feed_obj.list; //현재 저장된 리스트
+		// console.log('comment_count', comment_count);
+		// console.log('params', params.feedobject.feed_comment_count, 'res length', res.length);
+		// console.log('fdd', feed_obj.list.length);
+		const findIndex = temp.findIndex(e => e._id == params.feedobject._id); //현재 보고 있는 피드게시글이 저장된 리스트에서 몇 번째인지
+		// console.log('find', findIndex);
+		temp[findIndex].feed_comment_count = comment_count; //해당 피드게시글의 댓글 개수 갱신
+		temp[findIndex].feed_recent_comment = {
+			//해당 피드게시글의 최근 댓글 갱신
+			comment_contents: recent.comment_contents,
+			comment_id: recent._id,
+			comment_user_nickname: recent.comment_writer_id.user_nickname,
+		};
+		feed_obj.list = [...temp]; //갱신
+		feed_obj.shouldUpdateByComment = true; //수정모드 true
 	};
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
@@ -158,6 +186,7 @@ export default FeedCommentList = props => {
 									});
 								}
 								setComments(res);
+								updateGlobal(res);
 								setPrivateComment(false);
 								setEditMode(false);
 								// console.log('editData.parent', editData.parent, 'whichComment', whichComment);
@@ -193,6 +222,7 @@ export default FeedCommentList = props => {
 								!parentComment && setComments([]); //댓글목록 초기화
 								let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
 								setComments(res);
+								updateGlobal(res);
 								setPrivateComment(false);
 								setEditMode(false);
 								setTimeout(() => {
@@ -457,6 +487,19 @@ export default FeedCommentList = props => {
 		}
 	};
 
+	const wait = timeout => {
+		return new Promise(resolve => setTimeout(resolve, timeout));
+	};
+
+	const onRefresh = () => {
+		setRefreshing(true);
+		wait(0).then(() => setRefreshing(false));
+	};
+
+	React.useEffect(() => {
+		refreshing ? fetchData() : false;
+	}, [refreshing]);
+
 	const renderItem = ({item, index}) => {
 		const isOpen = childOpenList.includes(index);
 		const replyFromDetail = replyFromDetailRef.current && params.reply && index == comments.findIndex(e => e._id == params.reply._id);
@@ -495,10 +538,11 @@ export default FeedCommentList = props => {
 		<View style={[login_style.wrp_main, style.container]}>
 			<FlatList
 				data={comments}
-				extraData={refresh}
 				renderItem={renderItem}
 				listKey={({item, index}) => index}
 				// removeClippedSubviews={false}
+				extraData={refresh}
+				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 				ListHeaderComponent={header()}
 				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
 				ListEmptyComponent={

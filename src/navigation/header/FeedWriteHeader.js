@@ -65,7 +65,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 						// console.log('route.params', route.params);
 
 						feed_obj.edit_obj = route.params; //피드수정 => 수정한 리스트 아이템만 setData하기 위한 오브젝트
-						feed_obj.shouldUpdate = true;
+						feed_obj.shouldUpdateByEdit = true;
 						navigation.goBack();
 					}
 				} else {
@@ -112,19 +112,18 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 				media_uri: route.params.selectedPhoto.map(v => {
 					return v.cropUri ?? v.uri;
 				}),
-				feed_medias: route.params.feed_medias.map(f=>{
-					route.params.selectedPhoto.some(v=>{
-						if((v.cropUri??v.uri)==f.media_uri){
+				feed_medias: route.params.feed_medias.map(f => {
+					route.params.selectedPhoto.some(v => {
+						if ((v.cropUri ?? v.uri) == f.media_uri) {
 							f.is_video = v.isVideo;
 						}
 					});
-					
+
 					return f;
-					}
-				),
+				}),
 				hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
 			};
-			console.log('param',param);
+			console.log('param', param);
 			switch (route.params?.feedType) {
 				case 'Feed':
 					console.log('feed Param', JSON.stringify(param));
@@ -214,15 +213,14 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			media_uri: route.params.selectedPhoto?.map(v => {
 				return v.cropUri ?? v.uri;
 			}),
-			feed_medias: route.params.feed_medias.map(f=>{
-				route.params.selectedPhoto.some(v=>{
-					if((v.cropUri??v.uri)==f.media_uri){
+			feed_medias: route.params.feed_medias.map(f => {
+				route.params.selectedPhoto.some(v => {
+					if ((v.cropUri ?? v.uri) == f.media_uri) {
 						f.is_video = v.isVideo;
 					}
 				});
 				return f;
-				}
-			),
+			}),
 			feed_content: route.params.isEdit ? route.params.feed_content : route.params.feed_content.replace(changeTextRegex, '&$1&$1$1$2%&%&$1&$1'),
 			hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
 		};

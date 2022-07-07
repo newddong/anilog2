@@ -94,16 +94,27 @@ export default FeedList = ({route}) => {
 		}
 		getList(); //첫 리스트 받아오기
 		const unsubscribe = navigation.addListener('focus', () => {
-			if (feed_obj.shouldUpdate) {
+			if (feed_obj.shouldUpdateByEdit) {
 				//피드 수정후 갱신
 				try {
 					const findindex = feed_obj.list.findIndex(e => e._id == feed_obj.edit_obj._id);
 					let copy = [...feed_obj.list];
 					copy[findindex] = feed_obj.edit_obj;
 					setFeedList(copy);
-					feed_obj.shouldUpdate = false;
+					feed_obj.shouldUpdateByEdit = false;
 					feed_obj.edit_obj = {};
 					feed_obj.list = [];
+				} catch (err) {
+					console.log('err', err);
+				}
+			} else {
+				try {
+					if (feed_obj.list.length > 0 && feed_obj.shouldUpdateByComment) {
+						console.log('feed_obj.list', feed_obj.list.length);
+						let copy = [...feed_obj.list];
+						setFeedList(copy);
+						feed_obj.shouldUpdateByComment = false;
+					}
 				} catch (err) {
 					console.log('err', err);
 				}
@@ -114,15 +125,11 @@ export default FeedList = ({route}) => {
 	}, [route]);
 
 	React.useEffect(() => {
-		feed_obj.list = feedList;
-	}, [feedList]);
-
-	React.useEffect(() => {
 		//Refreshing 요청시 피드리스트 다시 조회
 		// if (route.name == 'MainHomeFeedList' && refreshing) {
 		// 	console.log('getList from refreshing');
 		// }
-		getList(false, false);
+		refreshing ? getList(false, false) : false;
 	}, [refreshing]);
 
 	const setFeed = list => {
@@ -169,6 +176,7 @@ export default FeedList = ({route}) => {
 
 	//피드리스트 호출
 	const getList = (pre, next) => {
+		console.log('피드리스트 목록 api 접근');
 		switch (route.name) {
 			case 'UserFeedList':
 				try {
@@ -211,7 +219,7 @@ export default FeedList = ({route}) => {
 							setTotal(result.total_count);
 							let list = [];
 							if (!pre && !next) {
-								console.log('첫 호출');
+								console.log('첫 호출 getFeedListByUserId');
 								list = res;
 							} else if (pre && !next) {
 								console.log('스크롤 최상단');
@@ -219,15 +227,11 @@ export default FeedList = ({route}) => {
 								list = [...res, ...feedList];
 								//앞 페이지를 받아오는 경우, 합산된 리스트의 0번 인덱스로 저절로 스크롤이 되는 현상 발견
 								//기존에 위로 스크롤 하고 있던 상태를 유지시키기 위한 scrollToIndex 처리
-								setTimeout(() => {
-									if (flatlist.current) {
-										console.log('scrollToItem 최상단');
-										flatlist.current.scrollToIndex({
-											animated: false,
-											index: res.length < 10 ? res.length : 10, // 새로 받아온 앞 페이지 리스트가 10개 이하(최상단 페이지라는 증거)일 때 가장 최신의 글로 인덱스 자동 이동
-										});
-									}
-								}, 0);
+								console.log('scrollToItem 최상단');
+								flatlist.current?.scrollToIndex({
+									animated: false,
+									index: res.length < 10 ? res.length : 10, // 새로 받아온 앞 페이지 리스트가 10개 이하(최상단 페이지라는 증거)일 때 가장 최신의 글로 인덱스 자동 이동
+								});
 							} else if (!pre && next) {
 								console.log('스크롤 최하단');
 								list = [...feedList, ...res];
@@ -306,15 +310,6 @@ export default FeedList = ({route}) => {
 							list = [...temp, ...feedList];
 							//앞 페이지를 받아오는 경우, 합산된 리스트의 0번 인덱스로 저절로 스크롤이 되는 현상 발견
 							//기존에 위로 스크롤 하고 있던 상태를 유지시키기 위한 scrollToIndex 처리
-							setTimeout(() => {
-								if (flatlist.current) {
-									console.log('scrollToItem 최상단');
-									flatlist.current.scrollToIndex({
-										animated: false,
-										index: res.length < 10 ? res.length : 10, // 새로 받아온 앞 페이지 리스트가 10개 이하(최상단 페이지라는 증거)일 때 가장 최신의 글로 인덱스 자동 이동
-									});
-								}
-							}, 0);
 						} else if (!pre && next) {
 							console.log('스크롤 최하단');
 							list = [...feedList, ...res];
@@ -322,6 +317,13 @@ export default FeedList = ({route}) => {
 						console.log('최종 list length', list.length);
 						setFeed(list);
 						setLoading(false);
+						setTimeout(() => {
+							console.log('scrollToItem 최상단');
+							flatlist.current?.scrollToIndex({
+								animated: false,
+								index: res.length < 10 ? res.length : 10, // 새로 받아온 앞 페이지 리스트가 10개 이하(최상단 페이지라는 증거)일 때 가장 최신의 글로 인덱스 자동 이동
+							});
+						}, 0);
 					},
 					errormsg => {
 						Modal.popOneBtn(errormsg, '확인', () => Modal.close());
@@ -432,8 +434,9 @@ export default FeedList = ({route}) => {
 				getFavoriteFeedListByUserId(
 					{userobject_id: userGlobalObject.userInfo._id},
 					({msg}) => {
+						console.log('msg', msg.length);
 						let temp = msg.filter(x => x.favorite_feed_id.feed_is_delete != true).map(data => data.favorite_feed_id);
-						console.log('temp temp', temp, msg);
+						// console.log('temp temp', temp, msg);
 						setFeed(temp);
 					},
 					error => {
@@ -460,13 +463,15 @@ export default FeedList = ({route}) => {
 					params,
 					result => {
 						setTotal(result.total_count);
+						let list = [];
 						if (pre) {
-							setFeed([...result.msg, ...feedList]);
+							list = [...result.msg, ...feedList];
 						} else if (params.target_object_id) {
-							setFeed([...feedList, ...result.msg]);
+							list = [...feedList, ...result.msg];
 						} else {
-							setFeed(result.msg);
+							list = result.msg;
 						}
+						setFeed(list);
 					},
 					errormsg => {
 						Modal.popOneBtn(NETWORK_ERROR, '확인', () => Modal.close());
@@ -493,7 +498,7 @@ export default FeedList = ({route}) => {
 			}
 		}
 		if (route.params && route.params.index < 10) return;
-		// setRefresh(!refresh);
+		feed_obj.list = [...feedList];
 	}, [feedList]);
 
 	//피드 삭제

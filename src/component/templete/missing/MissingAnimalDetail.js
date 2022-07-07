@@ -389,6 +389,7 @@ export default MissingAnimalDetail = props => {
 	const renderItem = ({item, index}) => {
 		return (
 			<ParentComment
+				writer={data.feed_writer_id}
 				parentComment={item}
 				onPressReplyBtn={onPressReply} // 부모 댓글의 답글쓰기 클릭 이벤트
 				onEdit={onEdit}

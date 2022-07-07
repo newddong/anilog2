@@ -221,7 +221,7 @@ export default ReportForm = props => {
 			'설정으로',
 			() => {
 				Modal.close();
-				props.navigation.goBack();
+				// navigation.goBack();
 			},
 			() => {
 				if (Platform.OS == 'android') {

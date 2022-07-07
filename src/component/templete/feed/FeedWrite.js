@@ -112,6 +112,8 @@ export default FeedWrite = props => {
 				? props.navigation.setOptions({title: props.route.params.feed_avatar_id.user_nickname})
 				: props.navigation.setOptions({title: userGlobalObj.userInfo?.user_nickname});
 			props.navigation.setParams({...props.route.params, feedType: 'Feed'});
+			props.navigation.setParams({...props.route.params, feed_public_type: 'public'});
+
 			// props.navigation.setOptions({title: userGlobalObj.userInfo?.user_nickname});
 			// props.navigation.setOptions({title: props.route.params.feed_avatar_id.user_nickname});
 		}
@@ -355,6 +357,10 @@ export default FeedWrite = props => {
 		}
 	};
 
+	const getPublicType = () => {
+		return props.route.params?.feed_public_type == 'public' ? 0 : props.route.params.feed_public_type == 'private' ? 1 : 2;
+	};
+
 	const getCurrentScrollOffset = e => {
 		scrolloffset.current = e.nativeEvent.contentOffset.y;
 	};
@@ -398,7 +404,7 @@ export default FeedWrite = props => {
 							</CheckBoxItem>
 							<View style={{height: 38 * DP, width: 2 * DP, backgroundColor: GRAY10}}></View>
 							<RadioBoxGroup
-								defaultSelect={props.route.params?.feed_public_type == 'public' ? 0 : props.route.params.feed_public_type == 'private' ? 1 : 2}
+								defaultSelect={props.route.params?.feed_public_type ? getPublicType() : 0}
 								style={{flexDirection: 'row', justifyContent: 'space-between', width: 484 * DP}}
 								onSelect={onSelectPublic}>
 								<RadioBoxItem textStyle={[txt.noto26, {lineHeight: 38 * DP}]}>전체공개</RadioBoxItem>

@@ -399,7 +399,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	const renderItem = ({item, index}) => {
 		return (
-			<View style={{alignItems: 'center'}}>
+			<View style={{alignItems: 'center', marginBottom: 10 * DP}}>
 				<ParentComment
 					writer={data.protect_request_writer_id}
 					parentComment={item}

@@ -253,7 +253,7 @@ export default ParentComment = React.memo((props, ref) => {
 						<UserLocationTimeLabel empty={true} time={data.comment_update_date} />
 					)}
 					{data.comment_is_secure ? (
-						<View style={[style.secureIcon, {justifyContent: 'flex-start', top: -6 * DP}]}>
+						<View style={[style.secureIcon, {justifyContent: 'flex-start', top: 0 * DP}]}>
 							<SecureIcon40 />
 						</View>
 					) : (

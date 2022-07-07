@@ -124,7 +124,7 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 			)}
 		</View>
 	);
-	console.log('phototagitem', data);
+	// console.log('phototagitem', data);
 	return <TouchableWithoutFeedback onPress={makeTag}>{render()}</TouchableWithoutFeedback>;
 };
 

@@ -66,6 +66,38 @@ export default FeedList = ({route}) => {
 	}, [route.params?.userobject]);
 
 	React.useEffect(() => {
+		if (feedList.length > 0) {
+			let indx = feedList.findIndex(v => v._id == route.params?.selected?._id);
+			if (route.params?.selected && !scrollComplete) {
+				setTimeout(() => {
+					flatlist.current?.scrollToItem({
+						animated: false,
+						item: feedList[indx],
+					});
+					setScrollComplete(true); //feedList가 갱신될 때 다시 스크롤되지 않도록 처리
+				}, 0);
+			}
+		}
+		//feedList의 댓글수, 최근댓글, 좋아요, 즐겨찾기의 전역관리를 위해 api로 호출된 feedList를 메모리에 저장
+		feedList.map((v, i) => {
+			const find = feed_obj.list.findIndex(e => e._id == v._id);
+			if (find == -1) {
+				//현 메모리에 저장되어 있지않은 피드아이템만 추가
+				feed_obj.list.push({
+					_id: v._id,
+					feed_recent_comment: v.feed_recent_comment,
+					feed_comment_count: v.feed_comment_count,
+					is_favorite: v.is_favorite,
+					feed_is_like: v.feed_is_like,
+					feed_like_count: v.feed_like_count,
+				});
+			}
+		});
+		console.log('feed_obj.list', feed_obj.list.length);
+		if (route.params && route.params.index < 10) return;
+	}, [feedList]);
+
+	React.useEffect(() => {
 		//페이지 상단 실종,제보 리스트 받아오기
 		if (route.name == 'MainHomeFeedList') {
 			// getMissingReportList(
@@ -107,17 +139,6 @@ export default FeedList = ({route}) => {
 				} catch (err) {
 					console.log('err', err);
 				}
-			} else {
-				try {
-					if (feed_obj.list.length > 0 && feed_obj.shouldUpdateByComment) {
-						console.log('feed_obj.list', feed_obj.list.length);
-						let copy = [...feed_obj.list];
-						setFeedList(copy);
-						feed_obj.shouldUpdateByComment = false;
-					}
-				} catch (err) {
-					console.log('err', err);
-				}
 			}
 		});
 
@@ -125,10 +146,6 @@ export default FeedList = ({route}) => {
 	}, [route]);
 
 	React.useEffect(() => {
-		//Refreshing 요청시 피드리스트 다시 조회
-		// if (route.name == 'MainHomeFeedList' && refreshing) {
-		// 	console.log('getList from refreshing');
-		// }
 		refreshing ? getList(false, false) : false;
 	}, [refreshing]);
 
@@ -227,7 +244,6 @@ export default FeedList = ({route}) => {
 								list = [...res, ...feedList];
 								//앞 페이지를 받아오는 경우, 합산된 리스트의 0번 인덱스로 저절로 스크롤이 되는 현상 발견
 								//기존에 위로 스크롤 하고 있던 상태를 유지시키기 위한 scrollToIndex 처리
-								console.log('scrollToItem 최상단');
 								flatlist.current?.scrollToIndex({
 									animated: false,
 									index: res.length < 10 ? res.length : 10, // 새로 받아온 앞 페이지 리스트가 10개 이하(최상단 페이지라는 증거)일 때 가장 최신의 글로 인덱스 자동 이동
@@ -308,6 +324,13 @@ export default FeedList = ({route}) => {
 								});
 							});
 							list = [...temp, ...feedList];
+							setTimeout(() => {
+								console.log('scrollToItem 최상단');
+								flatlist.current?.scrollToIndex({
+									animated: false,
+									index: res.length < 10 ? res.length : 10, // 새로 받아온 앞 페이지 리스트가 10개 이하(최상단 페이지라는 증거)일 때 가장 최신의 글로 인덱스 자동 이동
+								});
+							}, 0);
 							//앞 페이지를 받아오는 경우, 합산된 리스트의 0번 인덱스로 저절로 스크롤이 되는 현상 발견
 							//기존에 위로 스크롤 하고 있던 상태를 유지시키기 위한 scrollToIndex 처리
 						} else if (!pre && next) {
@@ -317,13 +340,6 @@ export default FeedList = ({route}) => {
 						console.log('최종 list length', list.length);
 						setFeed(list);
 						setLoading(false);
-						setTimeout(() => {
-							console.log('scrollToItem 최상단');
-							flatlist.current?.scrollToIndex({
-								animated: false,
-								index: res.length < 10 ? res.length : 10, // 새로 받아온 앞 페이지 리스트가 10개 이하(최상단 페이지라는 증거)일 때 가장 최신의 글로 인덱스 자동 이동
-							});
-						}, 0);
 					},
 					errormsg => {
 						Modal.popOneBtn(errormsg, '확인', () => Modal.close());
@@ -391,13 +407,11 @@ export default FeedList = ({route}) => {
 							//앞 페이지를 받아오는 경우, 합산된 리스트의 0번 인덱스로 저절로 스크롤이 되는 현상 발견
 							//기존에 위로 스크롤 하고 있던 상태를 유지시키기 위한 scrollToIndex 처리
 							setTimeout(() => {
-								if (flatlist.current) {
-									console.log('scrollToItem 최상단');
-									flatlist.current.scrollToIndex({
-										animated: false,
-										index: res.length < 10 ? res.length : 10, // 새로 받아온 앞 페이지 리스트가 10개 이하(최상단 페이지라는 증거)일 때 가장 최신의 글로 인덱스 자동 이동
-									});
-								}
+								console.log('scrollToItem 최상단');
+								flatlist.current?.scrollToIndex({
+									animated: false,
+									index: res.length < 10 ? res.length : 10, // 새로 받아온 앞 페이지 리스트가 10개 이하(최상단 페이지라는 증거)일 때 가장 최신의 글로 인덱스 자동 이동
+								});
 							}, 0);
 						} else if (!pre && next) {
 							console.log('스크롤 최하단');
@@ -484,23 +498,6 @@ export default FeedList = ({route}) => {
 	const [refresh, setRefresh] = React.useState(false);
 	const [scrollComplete, setScrollComplete] = React.useState(false); //feedList가 갱신될 때 다시 스크롤되지 않도록 처리
 
-	React.useEffect(() => {
-		if (feedList.length > 0) {
-			let indx = feedList.findIndex(v => v._id == route.params?.selected?._id);
-			if (route.params?.selected && !scrollComplete) {
-				setTimeout(() => {
-					flatlist.current?.scrollToItem({
-						animated: false,
-						item: feedList[indx],
-					});
-					setScrollComplete(true); //feedList가 갱신될 때 다시 스크롤되지 않도록 처리
-				}, 0);
-			}
-		}
-		if (route.params && route.params.index < 10) return;
-		feed_obj.list = [...feedList];
-	}, [feedList]);
-
 	//피드 삭제
 	const deleteFeedItem = id => {
 		Modal.close();
@@ -568,9 +565,12 @@ export default FeedList = ({route}) => {
 		if (e.nativeEvent.contentOffset.y > 0) {
 			userGlobalObject.t = e.nativeEvent.contentOffset;
 		} else if (route.name != 'MainHomeFeedList' && e.nativeEvent.contentOffset.y == 0) {
-			console.log('onReached At top');
-			if (route.params && route.params.index < 10) return;
-			getList(true, false);
+			console.log('onReached At top : what is total?', total, 'route.params.index', route.params.index);
+			if ((route.params && route.params.index < 10) || feedList.length == total) {
+				return;
+			} else {
+				getList(true, false);
+			}
 		}
 	};
 

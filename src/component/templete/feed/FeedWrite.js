@@ -88,7 +88,7 @@ export default FeedWrite = props => {
 
 	React.useEffect(() => {
 		if (props.route.name == 'FeedEdit') {
-			console.log('feedEdit 진입', props.route.params);
+			// console.log('feedEdit 진입', props.route.params);
 
 			if (props.route.params?.feed_type == 'missing') {
 				onPressMissingWrite();
@@ -96,8 +96,8 @@ export default FeedWrite = props => {
 			if (props.route.params?.feed_type == 'report') {
 				onPressReportWrite();
 			}
-			setSelectedImg(props.route.params.feed_medias.map(v => ({uri: v.media_uri})));
-			setPreviousPhotoList(props.route.params.feed_medias.map(v => ({uri: v.media_uri})));
+			setSelectedImg(props.route.params.feed_medias.map(v => ({...v, uri: v.media_uri})));
+			setPreviousPhotoList(props.route.params.feed_medias.map(v => ({...v, uri: v.media_uri})));
 			let regEx = new RegExp(`&#&#(.*?)%&%&`, `gm`);
 			let hashes = [];
 			let match = [];
@@ -347,7 +347,10 @@ export default FeedWrite = props => {
 				<View style={[{marginTop: 40 * DP, marginLeft: 28 * DP}]}>
 					<SelectedMediaList
 						layout={styles.img_square_round_336}
-						items={selectedImg.map(v => (v ? v.cropUri ?? v.uri : undefined))}
+						items={selectedImg.map(v => {
+							console.log('selectedImage', v);
+							return v ? v.cropUri ?? v.uri : undefined;
+						})}
 						onDelete={deletePhoto}
 					/>
 				</View>
@@ -370,7 +373,12 @@ export default FeedWrite = props => {
 				// onChangeText={inputMissingTxt}
 				maxLength={150}
 				onFind={onFindTag}
-				selectedImg={selectedImg.map(v => (v ? v.cropUri ?? v.uri : undefined))}
+				selectedImg={selectedImg.map(v => {
+					return v ? v.cropUri ?? v.uri : undefined;
+				})}
+				mediaList={selectedImg.map((v, i) => {
+					return v;
+				})}
 				onDelete={deletePhoto}
 				value={editText}
 				showImages={!showReportForm && !showLostAnimalForm}

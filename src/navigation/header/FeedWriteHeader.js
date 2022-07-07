@@ -92,7 +92,6 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 	};
 
 	const onCreate = () => {
-		console.log('sent?', sent);
 		Keyboard.dismiss();
 		if (!sent) {
 			setSent(true);
@@ -110,11 +109,11 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			let param = {
 				...route.params,
 				media_uri: route.params.selectedPhoto.map(v => {
-					return v.cropUri ?? v.uri;
+					return v.videoUri?? v.cropUri ?? v.uri;
 				}),
 				feed_medias: route.params.feed_medias.map(f=>{
 					route.params.selectedPhoto.some(v=>{
-						if((v.cropUri??v.uri)==f.media_uri){
+						if((v.videoUri?? v.cropUri ?? v.uri)==f.media_uri){
 							f.is_video = v.isVideo;
 						}
 					});
@@ -212,12 +211,13 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			...route.params,
 			feedobject_id: route.params._id,
 			media_uri: route.params.selectedPhoto?.map(v => {
-				return v.cropUri ?? v.uri;
+				return v.videoUri?? v.cropUri ?? v.uri;
 			}),
 			feed_medias: route.params.feed_medias.map(f=>{
 				route.params.selectedPhoto.some(v=>{
-					if((v.cropUri??v.uri)==f.media_uri){
+					if((v.cropUri ?? v.uri)==f.media_uri){
 						f.is_video = v.isVideo;
+						f.media_uri = v.videoUri?? v.cropUri ?? v.uri;
 					}
 				});
 				return f;
@@ -226,7 +226,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			feed_content: route.params.isEdit ? route.params.feed_content : route.params.feed_content.replace(changeTextRegex, '&$1&$1$1$2%&%&$1&$1'),
 			hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
 		};
-		// console.log('onEdit / FeedWrtieHeader', param);
+		console.log('onEdit / FeedWrtieHeader', param);
 		if (param.feed_type == 'feed') {
 			editFeed(param, complete, handleError);
 		} else if (param.feed_type == 'report') {

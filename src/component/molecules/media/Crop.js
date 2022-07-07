@@ -56,7 +56,6 @@ const Crop = prop => {
 				}
 			},	
 			onPanResponderMove: ({nativeEvent}) => {
-				console.log(nativeEvent);
 				if (nativeEvent.touches.length > 1 &&initDistance.current!=0) {
 					pan.setValue({x: (nativeEvent.touches[0].pageX+nativeEvent.touches[1].pageX)/2, y: (nativeEvent.touches[0].pageY+nativeEvent.touches[1].pageY)/2});
 					let pos1 = {x: nativeEvent.touches[0].pageX, y: nativeEvent.touches[0].pageY};

@@ -202,47 +202,57 @@ export default PetInfoSetting = ({route}) => {
 	const editPetInfo = () => {
 		//현재 반려동물의 소개란을 바꾸는 aPI가 없는 상태
 		setEditMode(!editMode);
-		updateUserIntroduction(
-			{userobject_id: petData._id, user_introduction: userIntro_temp},
-			success => {
-				console.log('updateUserIntroduction success', success);
-				setFamily();
-				scrollRef.current?.scrollTo({
-					y: 0,
-					animated: true,
-				});
-			},
-			err => {
-				console.log('introduction modify api', err);
-			},
-		);
+		if (petData.user_introduction != userIntro_temp) {
+			updateUserIntroduction(
+				{userobject_id: petData._id, user_introduction: userIntro_temp},
+				success => {
+					console.log('updateUserIntroduction success', success);
+					setFamily();
+					scrollRef.current?.scrollTo({
+						y: 0,
+						animated: true,
+					});
+				},
+				err => {
+					console.log('introduction modify api', err);
+				},
+			);
+		} else {
+			console.log('소개 바뀌지 않음');
+		}
 	};
 	const editKindInfo = () => {
 		if (kindEditMode) {
-			console.log('kind, species', kind, speices);
-			updatePetDetailInformation(
-				{
-					userobject_id: petData._id,
-					pet_species: speices,
-					pet_species_detail: kind,
-				},
-				result => {
-					// console.log('updatePetDetailInformation / PetInfoSetting Result : ', result.msg);
-					setPetData({...petData, pet_species: result.msg.pet_species, pet_species_detail: result.msg.pet_species_detail});
-					Modal.close();
-					// setTimeout(() => {
-					// 	Modal.popNoBtn('반려동물의 정보가 성공적으로 \n 변경되었습니다.');
-					// 	setTimeout(() => {
-					// 		Modal.close();
-					// 	}, 1000);
-					// }, 100);
-				},
-				err => {
-					console.log('updatePetDetailInformation / PetinfoSetting err : ', err);
-					Modal.close();
-				},
-			);
+			console.log('data', petData);
+			if (petData.pet_species != speices || petData.pet_species_detail != kind) {
+				updatePetDetailInformation(
+					{
+						userobject_id: petData._id,
+						pet_species: speices,
+						pet_species_detail: kind,
+					},
+					result => {
+						// console.log('updatePetDetailInformation / PetInfoSetting Result : ', result.msg);
+						setPetData({...petData, pet_species: result.msg.pet_species, pet_species_detail: result.msg.pet_species_detail});
+						Modal.close();
+						// setTimeout(() => {
+						// 	Modal.popNoBtn('반려동물의 정보가 성공적으로 \n 변경되었습니다.');
+						// 	setTimeout(() => {
+						// 		Modal.close();
+						// 	}, 1000);
+						// }, 100);
+					},
+					err => {
+						console.log('updatePetDetailInformation / PetinfoSetting err : ', err);
+						Modal.close();
+					},
+				);
+			} else {
+				console.log('바뀌지 않음');
+			}
 		}
+		console.log('kind, species', kind, speices);
+
 		setKindEditMode(!kindEditMode);
 	};
 	const editSexInfo = () => {

@@ -42,15 +42,16 @@ export default FeedWrite = props => {
 	const scrolloffset = React.useRef(0);
 	const lastTouchY = React.useRef(0);
 	const container = React.useRef();
+
 	const [editText, setEditText] = React.useState(
 		props.route.params.feed_content ? props.route.params.feed_content.replace(/(&@|&#){2}(.*?)%&%.*?(&@|&#){2}/gm, '$2') : '',
 	);
-
+	const type = props.route.params?.feed_public_type;
 	React.useEffect(() => {
 		// console.log('정보 변경', props.route);
 		if (props.route.name != 'FeedEdit') {
 			const param = props.route.params;
-			// console.log('param', param);
+			console.log('param', param);
 			// console.log('param.feed_avatar_id', param.feed_avatar_id);
 			param.feed_avatar_id //피드 글쓰기 클릭시 즉시 작성자 아바타 계정을 선택하는 절차가 추가됨에 따라 분기처리가 필요해짐
 				? // - 유저 계정에서 피드글쓰기를 누른 경우
@@ -88,7 +89,7 @@ export default FeedWrite = props => {
 
 	React.useEffect(() => {
 		if (props.route.name == 'FeedEdit') {
-			console.log('feedEdit 진입', props.route.params);
+			// console.log('feedEdit 진입', props.route.params);
 
 			if (props.route.params?.feed_type == 'missing') {
 				onPressMissingWrite();
@@ -96,8 +97,8 @@ export default FeedWrite = props => {
 			if (props.route.params?.feed_type == 'report') {
 				onPressReportWrite();
 			}
-			setSelectedImg(props.route.params.feed_medias.map(v => ({uri: v.media_uri})));
-			setPreviousPhotoList(props.route.params.feed_medias.map(v => ({uri: v.media_uri})));
+			setSelectedImg(props.route.params.feed_medias.map(v => ({...v, uri: v.media_uri})));
+			setPreviousPhotoList(props.route.params.feed_medias.map(v => ({...v, uri: v.media_uri})));
 			let regEx = new RegExp(`&#&#(.*?)%&%&`, `gm`);
 			let hashes = [];
 			let match = [];
@@ -347,7 +348,10 @@ export default FeedWrite = props => {
 				<View style={[{marginTop: 40 * DP, marginLeft: 28 * DP}]}>
 					<SelectedMediaList
 						layout={styles.img_square_round_336}
-						items={selectedImg.map(v => (v ? v.cropUri ?? v.uri : undefined))}
+						items={selectedImg.map(v => {
+							console.log('selectedImage', v);
+							return v ? v.cropUri ?? v.uri : undefined;
+						})}
 						onDelete={deletePhoto}
 					/>
 				</View>
@@ -370,7 +374,12 @@ export default FeedWrite = props => {
 				// onChangeText={inputMissingTxt}
 				maxLength={150}
 				onFind={onFindTag}
-				selectedImg={selectedImg.map(v => (v ? v.cropUri ?? v.uri : undefined))}
+				selectedImg={selectedImg.map(v => {
+					return v ? v.cropUri ?? v.uri : undefined;
+				})}
+				mediaList={selectedImg.map((v, i) => {
+					return v;
+				})}
 				onDelete={deletePhoto}
 				value={editText}
 				showImages={!showReportForm && !showLostAnimalForm}
@@ -381,6 +390,8 @@ export default FeedWrite = props => {
 	};
 
 	const render = ({item, index}) => {
+		console.log('ahghhhh', props.route.params.feed_public_type);
+
 		return (
 			<View style={[login_style.wrp_main]} ref={container}>
 				{!(showLostAnimalForm || showReportForm) && (
@@ -393,12 +404,25 @@ export default FeedWrite = props => {
 								justifyContent: 'space-between',
 								marginBottom: 20 * DP,
 							}}>
-							<CheckBoxItem style={{width: 148 * DP}} textStyle={[txt.noto26, {lineHeight: 38 * DP}]} onCheck={onSetDiary}>
+							<CheckBoxItem
+								isCheck={param.feed_is_protect_diary}
+								style={{width: 148 * DP}}
+								textStyle={[txt.noto26, {lineHeight: 38 * DP}]}
+								onCheck={onSetDiary}>
 								임보일기
 							</CheckBoxItem>
 							<View style={{height: 38 * DP, width: 2 * DP, backgroundColor: GRAY10}}></View>
 							<RadioBoxGroup
-								defaultSelect={props.route.params?.feed_public_type == 'public' ? 0 : props.route.params.feed_public_type == 'private' ? 1 : 2}
+								// defaultSelect={0}
+								defaultSelect={type == undefined ? 0 : type == 'public' ? 0 : type == 'private' ? 1 : 2}
+								// props.route.params.feed_public_type == undefined
+								// 	? 0
+								// 	: props.route.params?.feed_public_type == 'public'
+								// 	? 0
+								// 	: props.route.params.feed_public_type == 'private'
+								// 	? 1
+								// 	: 2
+								// }
 								style={{flexDirection: 'row', justifyContent: 'space-between', width: 484 * DP}}
 								onSelect={onSelectPublic}>
 								<RadioBoxItem textStyle={[txt.noto26, {lineHeight: 38 * DP}]}>전체공개</RadioBoxItem>

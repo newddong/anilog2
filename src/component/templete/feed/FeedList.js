@@ -604,10 +604,10 @@ export default FeedList = ({route}) => {
 						<View style={{height: 10 * DP, backgroundColor: GRAY30, width: 750 * DP}}></View>
 					</View>
 				)}
-				windowSize={15}
-				maxToRenderPerBatch={20}
-				updateCellsBatchingPeriod={30}
-				initialNumToRender={15}
+				windowSize={3}
+				maxToRenderPerBatch={5}
+				updateCellsBatchingPeriod={0}
+				initialNumToRender={5}
 				onEndReachedThreshold={0.6}
 				onEndReached={onEndReached}
 			/>

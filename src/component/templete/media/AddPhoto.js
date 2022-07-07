@@ -240,7 +240,7 @@ export default AddPhoto = props => {
 
 	React.useEffect(() => {
 		navigation.setParams({selectedPhoto: selectedPhoto});
-		console.log('선택사진 목록',selectedPhoto)
+		console.log('선택사진 목록', selectedPhoto);
 		// selectedPhoto.length>0?setIndex(selectedPhoto.length-1):setIndex(0);
 		// 	let index = selectedPhoto.length>0&&photolist.findIndex(v=>v.node.image.uri==selectedPhoto[selectedPhoto.length-1].uri)/4;
 		// 	index>0&&selectedPhoto.length>0&&flatlist.current.scrollToIndex({index:Math.floor(index)});
@@ -252,14 +252,15 @@ export default AddPhoto = props => {
 			setIndex(props.route.params.selectedPhoto.length - 1);
 		}
 	}, [props.route.params.selectedPhoto]);
-	const selectPhoto = (photo,duration) => {
-		console.log(duration);
+	const selectPhoto = (photo, duration) => {
+		console.log(photo,duration);
 		if (selectedPhoto.length >= limit) {
 			Modal.alert('사진은 최대 ' + limit + '장까지만 업로드 가능합니다.');
 			return;
 		}
 		let obj = {};
 		obj.uri = photo.image.uri;
+		obj.videoUri = photo.image.videoUri;
 		obj.isVideo = photo.type.includes('video');
 		obj.duration = duration;
 		if (isSingle) {
@@ -312,7 +313,6 @@ export default AddPhoto = props => {
 		// console.log(photolist);
 	};
 
-
 	const keyExtractor = React.useCallback((item, index) => (item ? item.node.image.uri : 'null' + index), [photolist]);
 	const getItemLayout = React.useCallback(
 		(data, index) => {
@@ -338,7 +338,7 @@ export default AddPhoto = props => {
 			idx = photolist.findIndex(v => v.node.image.uri == (selectedPhoto[index + 1].originUri ?? selectedPhoto[index + 1].uri)) / 4;
 			setIndex(index + 1);
 		}
-		if(idx<0)return;
+		if (idx < 0) return;
 		flatlist.current.scrollToIndex({index: Math.floor(idx)});
 	};
 	const prev = () => {
@@ -354,15 +354,16 @@ export default AddPhoto = props => {
 			idx = photolist.findIndex(v => v.node.image.uri == (selectedPhoto[index - 1].originUri ?? selectedPhoto[index - 1].uri)) / 4;
 			setIndex(index - 1);
 		}
-		if(idx<0)return;
+		if (idx < 0) return;
 		flatlist.current.scrollToIndex({index: Math.floor(idx)});
 	};
 
 	const videoEdit = () => {
-		console.log(selectedPhoto[index])
+		console.log(selectedPhoto[index]);
 		let media = selectedPhoto[index];
+
 		VideoEditor.unlockLicense();
-		VideoEditor.openVideoEditor(media.uri, media.duration, 15, 30, 'aniMov')
+		VideoEditor.openVideoEditor(media.videoUri??media.uri, media.duration, 15, 30, 'aniMov')
 			.then(r => {
 				console.log(r);
 				media.videoUri = r.video;
@@ -371,28 +372,40 @@ export default AddPhoto = props => {
 			.catch(e => {
 				console.log(e);
 			});
-	}
-
+	};
 	return (
 		<View style={lo.wrp_main}>
-			{selectedPhoto[index]?(selectedPhoto[index].isVideo ? (<View>
-				<Video style={{width:750*DP, height:750*DP,backgroundColor:'#000'}} source={{uri: selectedPhoto[index]?.videoUri??selectedPhoto[index]?.uri}} muted resizeMode='contain' />
-					<View style={{position:'absolute',width:100*DP,height:100*DP,backgroundColor:'red',bottom:0, right:0}} 
-					onStartShouldSetResponder={() => true}
-					onResponderGrant={() => {
-							videoEdit();
-						}}></View>
-				</View>
+			{selectedPhoto[index] ? (
+				selectedPhoto[index].isVideo || selectedPhoto[index].is_video ? (
+					<View>
+						<Video
+							style={{width: 750 * DP, height: 750 * DP, backgroundColor: '#000'}}
+							source={{uri: selectedPhoto[index]?.videoUri ?? selectedPhoto[index]?.uri}}
+							muted
+							resizeMode="contain"
+						/>
+						{selectedPhoto[index]&&!selectedPhoto[index].uri.includes('gif') && !selectedPhoto[index].uri.includes('http') && (
+							<View
+								style={{position: 'absolute', width: 100 * DP, height: 100 * DP, backgroundColor: 'red', bottom: 0, right: 0}}
+								onStartShouldSetResponder={() => true}
+								onResponderGrant={() => {
+									videoEdit();
+								}}></View>
+						)}
+					</View>
+				) : (
+					<Crop
+						width={750 * DP}
+						height={750 * DP}
+						paddingHorizontal={0 * DP}
+						paddingVertical={0 * DP}
+						uri={selectedPhoto[index].cropUri ?? selectedPhoto[index].uri}
+						onCrop={onCrop}
+					/>
+				)
 			) : (
-				<Crop
-					width={750 * DP}
-					height={750 * DP}
-					paddingHorizontal={0 * DP}
-					paddingVertical={0 * DP}
-					uri={selectedPhoto[index].cropUri ?? selectedPhoto[index].uri}
-					onCrop={onCrop}
-				/>
-			)):false}
+				false
+			)}
 			<View style={lo.box_title}>
 				<TouchableWithoutFeedback onPress={albumSelect}>
 					<View style={{flexDirection: 'row', alignItems: 'center'}}>

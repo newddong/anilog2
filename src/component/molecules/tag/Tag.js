@@ -33,7 +33,6 @@ const Tag = ({pos, user, onDelete, onEndTagMove, viewmode, backgroundLayout, onT
 			onPanResponderMove: ({nativeEvent}, state) => {
 				// console.log('== moveX: '+ state.moveX+'  moveY: '+ state.moveY+'  x0: '+state.x0+'  y0: '+state.y0+'  dx: '+state.dx+'  dy: '+state.dy+'  vx: '+state.vx+'  vy: '+state.vy);
 				// console.log('@@ x: '+nativeEvent.locationX+' pageX: '+nativeEvent.pageX+'    y: '+nativeEvent.locationY+' pageY: '+nativeEvent.pageY);
-				console.log(dimension);
 				let x = state.dx;
 				let y = state.dy;
 

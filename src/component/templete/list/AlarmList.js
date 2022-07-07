@@ -267,6 +267,7 @@ const AlarmList = props => {
 							showsVerticalScrollIndicator={false}
 							refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 							style={[{marginTop: 16 * DP}, {paddingBottom: 20 * DP}]}
+							contentContainerStyle={[{paddingBottom: 60 * DP}]}
 						/>
 					</View>
 				)}
@@ -278,10 +279,12 @@ const AlarmList = props => {
 const styles = StyleSheet.create({
 	container: {
 		width: 750 * DP,
-		// minHeight: 1322 * DP,
+		minHeight: 1322 * DP,
 		// height: 1400 * DP,
 		// alignItems: 'center',
+		flex: 1,
 		backgroundColor: WHITE,
+		// backgroundColor: 'red',
 	},
 	userContainer: {
 		width: 750 * DP,
@@ -290,9 +293,10 @@ const styles = StyleSheet.create({
 	},
 	listContainer: {
 		// height: 1270 * DP,
-		height: 1345 * DP,
-		height: Platform.OS === 'ios' ? 1265 * DP : 1345 * DP,
+		// height: 1345 * DP,
+		// height: Platform.OS === 'ios' ? 1265 * DP : 1345 * DP,
 		// backgroundColor: 'yellow',
+		flex: 1,
 	},
 	textConinter: {
 		height: 40 * DP,

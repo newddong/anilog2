@@ -85,7 +85,7 @@ const AlarmList = props => {
 		);
 	};
 	const onLabelClick = data => {
-		console.log('aa', data.target_object_type, data);
+		// console.log('aa', data.target_object_type, data);
 		let navState = props.navigation.getState();
 		// console.log('navState', navState);
 

@@ -113,7 +113,7 @@ const ReviewBriefItem = props => {
 	};
 
 	return (
-		<TouchableOpacity activeOpacity={0.8} onPress={onPressReview} style={[style.container]}>
+		<TouchableOpacity activeOpacity={0.4} onPress={onPressReview} style={[style.container]}>
 			{image.length == 0 ? (
 				<></>
 			) : (

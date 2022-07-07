@@ -49,6 +49,10 @@ const ProfileInfo = props => {
 		}
 	}, []);
 
+	React.useEffect(() => {
+		setData(props.data);
+	}, [props.data]);
+
 	//더보기 클릭
 	const onPressShowMore = () => {
 		setShowMore(!showMore);
@@ -376,10 +380,7 @@ const ProfileInfo = props => {
 			</ScrollView>
 			{/* 유저 소개글  */}
 			<View style={[style.userIntroCont]}>
-				<HashText
-					style={[txt.noto26]}
-					byteOfLine={60}
-					>
+				<HashText style={[txt.noto26]} byteOfLine={60}>
 					{data.user_introduction != '' ? data.user_introduction : '유저 인트로 소개글입니다. 현재는 비어있습니다.'}
 				</HashText>
 			</View>

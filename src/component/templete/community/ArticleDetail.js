@@ -609,22 +609,18 @@ export default ArticleDetail = props => {
 				<Article data={data} route={props.route.name} searchInput={searchInput} />
 				<View style={[{width: 694 * DP, height: 2 * DP, backgroundColor: GRAY40}]} />
 				<View style={[style.like, {}]}>
-					<View style={[style.header_icon, {}]}>
-						{data.community_is_favorite ? (
-							<FavoriteTag46_Filled onPress={() => onPressFavorite(false)} />
-						) : (
-							<FavoriteTag48_Border onPress={() => onPressFavorite(true)} />
-						)}
+					<TouchableOpacity onPress={() => onPressFavorite(data.community_is_favorite ? false : true)} style={[style.header_icon, {}]}>
+						{data.community_is_favorite ? <FavoriteTag46_Filled /> : <FavoriteTag48_Border />}
 						<Text style={[txt.noto24, {color: GRAY10, paddingTop: 6 * DP, marginLeft: 2 * DP, height: 48 * DP}]}>
 							{count_to_K(data.community_favorite_count)}
 						</Text>
-					</View>
-					<View style={[style.header_icon, {marginLeft: 20 * DP}]}>
-						{data.community_is_like ? <Like48_Filled onPress={() => onPressLike(false)} /> : <Like48_Border onPress={() => onPressLike(true)} />}
+					</TouchableOpacity>
+					<TouchableOpacity onPress={() => onPressLike(data.community_is_like ? false : true)} style={[style.header_icon, {marginLeft: 20 * DP}]}>
+						{data.community_is_like ? <Like48_Filled /> : <Like48_Border />}
 						<Text style={[txt.noto24, {color: GRAY10, paddingTop: 6 * DP, marginLeft: 8 * DP, height: 48 * DP}]}>
 							{count_to_K(data.community_like_count)}
 						</Text>
-					</View>
+					</TouchableOpacity>
 					{comments && comments.length > 0 ? (
 						<View style={[{position: 'absolute', right: 0}]}>
 							<Text style={[txt.noto26]}> 댓글 {comments.length - 1}개</Text>
@@ -682,7 +678,7 @@ export default ArticleDetail = props => {
 					<View style={{width: 500 * DP, flexDirection: 'row', justifyContent: 'center'}}>
 						{slicedPage.map((v, i) => {
 							return (
-								<TouchableOpacity activeOpacity={0.8} onPress={() => onPressPage(v)} style={{width: 100 * DP, alignItems: 'center'}} key={i}>
+								<TouchableOpacity onPress={() => onPressPage(v)} style={{width: 100 * DP, alignItems: 'center'}} key={i}>
 									<Text style={[txt.noto32, {color: offset == v ? BLACK : GRAY20}]}>{v}</Text>
 								</TouchableOpacity>
 							);
@@ -767,6 +763,7 @@ export default ArticleDetail = props => {
 			return (
 				<View style={[style.commentContainer, {backgroundColor: getBgColor()}]} key={item._id} onLayout={onLayoutCommentList}>
 					<ParentComment
+						writer={data.community_writer_id}
 						parentComment={item}
 						onPressReplyBtn={onReplyBtnClick} // 부모 댓글의 답글쓰기 클릭 이벤트
 						onEdit={onEdit}

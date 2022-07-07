@@ -91,6 +91,7 @@ const InputWithSelect = props => {
 						maxlength={props.maxlength}
 						onValid={onValid}
 						width={props.width - 20 * DP || 450}
+						placeholderSize={24}
 						height={104}
 						verified={props.verified}
 					/>

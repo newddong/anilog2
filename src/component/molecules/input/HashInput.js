@@ -287,7 +287,7 @@ const HashInput = React.forwardRef((props, ref) => {
 				</View>
 				{props.showImages && props.selectedImg.length > 0 && (
 					<View style={[style.mediaListContainer]}>
-						<SelectedMediaList items={props.selectedImg} onDelete={deletePhoto} />
+						<SelectedMediaList items={props.selectedImg} onDelete={deletePhoto} mediaList={props.mediaList}/>
 					</View>
 				)}
 			</View>

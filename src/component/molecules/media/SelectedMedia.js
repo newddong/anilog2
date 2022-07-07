@@ -5,7 +5,7 @@ import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import {Cancel48, Cancel62, Cancel36} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import FastImage from 'react-native-fast-image';
-
+import Video from 'react-native-video';
 /**
  * 갤러리에서 불러온 사진 박스
  * @param {object} props - Props Object
@@ -17,20 +17,32 @@ const SelectedMedia = props => {
 	const onDelete = () => {
 		props.onDelete();
 	};
+	const isVideo = props.media?(props.media.is_video||props.media.isVideo):false;
+	// console.log('isVideo', isVideo, props.media);
+	const image = () => {
+		if(isVideo)return false;
+		let uri = props.media_uri??props.media.uri;
+		console.log('uri',uri, props.media.uri, props.media_uri)
+		return uri.uri.includes('http') ? (
+			<FastImage source={{uri: uri.uri}} style={props.layout} />
+		) : (
+			<Image source={{uri: uri.uri}} style={props.layout} />
+		)
+	}
+
+	const video = () => {
+		let video = props.media.videoUri??props.media.uri;
+		return <Video source={{uri:video}} style={[props.layout]} mute={true} resizeMode='contain'></Video>
+	}
 
 	return (
-		<View style={props.layout}>
-			{props.media_uri.includes('http:') ? (
-				<FastImage source={{uri: props.media_uri}} style={props.layout} />
-			) : (
-				<Image source={{uri: props.media_uri}} style={props.layout} />
-			)}
+		<View style={[props.layout]}>
+			{isVideo?video():image()}
 			<View
 				style={{
 					position: 'absolute',
 					right: 6 * DP,
 					top: 6 * DP,
-					backgroundColor: 'white',
 					borderRadius: 30 * DP,
 				}}>
 				<View

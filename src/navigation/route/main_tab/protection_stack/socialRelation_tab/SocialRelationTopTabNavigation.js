@@ -41,14 +41,14 @@ export default SocialRelationTopTabNavigation = props => {
 		//입력마다 api 접속하는 것이 아닌 타이핑 이후 500ms 주어 타이핑이 종료되었을 때 검색을 실시하도록 timeOut 설정
 		setTimeout(() => {
 			fetchFollowerData();
-		}, 500);
+		}, 300);
 	}, [followerInput]);
 
 	React.useEffect(() => {
 		//입력마다 api 접속하는 것이 아닌 타이핑 이후 500ms 주어 타이핑이 종료되었을 때 검색을 실시하도록 timeOut 설정
 		setTimeout(() => {
 			fetchFollowData();
-		}, 500);
+		}, 300);
 	}, [followInput]);
 
 	const fetchData = async () => {

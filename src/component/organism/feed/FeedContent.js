@@ -80,7 +80,7 @@ export default FeedContent = props => {
 	const route = useRoute();
 	const [pressed, setPressed] = React.useState(false); //더보기 Arrow방향 false면 아래
 	const [show, setShow] = React.useState(false);
-	const [send, setSend] = React.useState();
+	const [send, setSend] = React.useState('false');
 	const [isFavorite, setIsFavorite] = React.useState(props.data.is_favorite);
 	const feed_writer = props.data.feed_avatar_id ? props.data.feed_avatar_id : props.data.feed_writer_id;
 
@@ -252,7 +252,6 @@ export default FeedContent = props => {
 	//피드 미트볼 메뉴 - 수정 클릭
 	const onPressEdit = () => {
 		Modal.close();
-		// console.log('props.', props.routeName);
 		let editData = props.data;
 		editData.routeName = props.routeName;
 		navigation.navigate('FeedEdit', editData);
@@ -553,18 +552,23 @@ export default FeedContent = props => {
 			<View style={[style.feedContent]}>
 				<View style={[style.userLocationLabel_view_feedContent]}>
 					<View style={[style.userLocationLabel_feedContent]}>
-						{send ? (
-							<UserLocationTimeLabel
-								data={send}
-								onClickLabel={onPressLabel}
-								location={feed_location}
-								time={feed_date}
-								isLarge
-								publicType={props.data.feed_public_type}
-							/>
+						{send != 'false' ? (
+							send ? (
+								<UserLocationTimeLabel
+									data={send}
+									onClickLabel={onPressLabel}
+									location={feed_location}
+									time={feed_date}
+									isLarge
+									publicType={props.data.feed_public_type}
+								/>
+							) : (
+								<UserLocationTimeLabel empty={true} time={feed_date} isLarge location={feed_location} publicType={props.data.feed_public_type} />
+							)
 						) : (
-							<UserLocationTimeLabel empty={true} time={feed_date} isLarge location={feed_location} publicType={props.data.feed_public_type} />
+							<></>
 						)}
+
 						<View style={{flexDirection: 'row', alignItems: 'center'}}>
 							{!isMissingReportRoute ? (
 								<View style={{flexDirection: 'row', alignItems: 'center'}}>

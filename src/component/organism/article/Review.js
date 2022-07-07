@@ -206,7 +206,7 @@ export default Review = React.memo(props => {
 			{/* 리뷰 헤더  */}
 			<View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
 				<View style={[style.header, {}]}>
-					<TouchableOpacity activeOpacity={0.6} onPress={onPressReviewContent}>
+					<TouchableOpacity activeOpacity={0.2} onPress={onPressReviewContent}>
 						<View style={[style.content]}>
 							<Text style={[txt.noto32]} numberOfLines={1}>
 								{props.isSearch == '' || props.isSearch.length < 2
@@ -224,7 +224,7 @@ export default Review = React.memo(props => {
 											),
 									  )}
 							</Text>
-							<View activeOpacity={0.8} style={[style.profile, {}]}>
+							<View style={[style.profile, {}]}>
 								<Text
 									style={[
 										style.user_nickname,
@@ -262,7 +262,7 @@ export default Review = React.memo(props => {
 					{data.community_is_like ? <Like48_Filled onPress={() => onPressLike(false)} /> : <Like48_Border onPress={() => onPressLike(true)} />}
 					<Text style={[txt.noto24, {color: GRAY10, marginLeft: 6 * DP}]}>{data.community_like_count}</Text>
 				</View>
-				<TouchableOpacity onPress={onPressReply} activeOpacity={0.8} style={[style.like, {marginLeft: 20 * DP}]}>
+				<TouchableOpacity onPress={onPressReply} style={[style.like, {marginLeft: 20 * DP}]}>
 					<Comment48 />
 					<Text style={[txt.noto24, {color: GRAY10, marginLeft: 6 * DP}]}>{data.community_comment_count}</Text>
 				</TouchableOpacity>

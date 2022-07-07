@@ -4,9 +4,10 @@ import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {styles} from 'Atom/image/imageStyle';
 import {APRI10, WHITE} from 'Root/config/color';
-import {Paw94x90} from 'Atom/icon';
+import {Paw94x90, VideoGrad186} from 'Atom/icon';
 import FastImage from 'react-native-fast-image';
 import Video from 'react-native-video';
+import CameraRoll from 'Root/module/CameraRoll';
 /**
  * 디바이스의 미디어 썸네일을 표시, 선택할때 사용하는 최소단위 컴포넌트
  *
@@ -31,28 +32,37 @@ import Video from 'react-native-video';
  *
  */
 const LocalMedia = props => {
-	// console.log(props.index)
-	// console.log('props.data', props.data);
-
+	const [duration, setDuration] = React.useState(0);
+	const videoUri = React.useRef();
 	const [isSelect, setSelected] = React.useState(false);
-
+	const isVideo = props.data.type.includes('video');
 
 	React.useEffect(() => {
 		setSelected(props.selected);
 	}, [props.selected]);
+
+	React.useEffect(() => {
+		if (isVideo) {
+			CameraRoll.getVideoAttributes(props.data.image.uri).then(r => {
+				console.log('video attribute', r);
+				videoUri.current = Platform.OS=='ios'?r[0].uri:r.duration;
+				setDuration(Platform.OS=='ios'?r[0].duration:r.duration);
+			}).catch(e=>console.log('video attribute error',e));
+		}
+	}, []);
 
 	const onPressMedia = e => {
 		if (isSelect) {
 			setSelected(false);
 			props.onCancel(props.data.image.uri);
 		} else {
+			let photo = {...props.data,image:{...props.data.image,videoUri:videoUri.current}}
 			// setSelected(true);
-			props.onSelect(props.data.image.uri);
+			props.onSelect(photo, duration);
 		}
 	};
 
 	const getStyleOfSelectedItem = React.useCallback(() => {
-		
 		return isSelect ? {borderWidth: 4 * DP, borderColor: APRI10, opacity: 0.6, backgroundColor: '#DDDDDD'} : {backgroundColor: '#DDDDDD'};
 	}, [isSelect]);
 
@@ -92,6 +102,12 @@ const LocalMedia = props => {
 			);
 		}
 	}, [props.index]);
+
+	const getDuration = second => {
+		let min = Math.floor(second / 360);
+		let sec = Math.floor(second % 60);
+		return (min == 0 ? '00' : min < 10 ? '0' + min : min) + ':' + (sec == 0 ? '00' : sec < 10 ? '0' + sec : sec);
+	};
 	// console.log('image',props.data.image)
 	// if(props.data.type.includes('video')){
 	// 	return (<Video style={getStyleOfSelectedItem()} source={{uri: props.data.image.uri}} muted paused/>);
@@ -103,37 +119,28 @@ const LocalMedia = props => {
 		<TouchableOpacity
 			onPress={onPressMedia}
 			style={{width: 187 * DP, height: 187 * DP, paddingHorizontal: 1 * DP, paddingVertical: 1 * DP, backgroundColor: '#FFF'}}>
-
-			 {/* <Image
-			renderToHardwareTextureAndroid
-			progressiveRenderingEnabled
-			source={{uri: props.data.image.uri, width: 100 * DP, height: 100 * DP}}
-			style={[{width: 186 * DP, height: 186 * DP}, getStyleOfSelectedItem()]}
-			onLoad={e=>console.log(e.nativeEvent)}
-			/> */}
-			{props.data.type.includes('video')&&Platform.OS=='ios'?<Image
-			renderToHardwareTextureAndroid
-			progressiveRenderingEnabled
-			source={{uri: props.data.image.uri, width: 100 * DP, height: 100 * DP}}
-			style={[{width: 186 * DP, height: 186 * DP}, getStyleOfSelectedItem()]}
-			/>:
-			<FastImage
-				renderToHardwareTextureAndroid
-				progressiveRenderingEnabled
-				source={{uri: props.data.image.uri, priority: props.data.type.includes('video')?FastImage.priority.normal:FastImage.priority.high}}
-				style={[{width: 186 * DP, height: 186 * DP}, getStyleOfSelectedItem()]}
-			/>}
-			{/* <Image
-				renderToHardwareTextureAndroid
-				progressiveRenderingEnabled
-				source={{uri: props.data.image.uri, width: 10 * DP, height: 10 * DP}}
-				style={[{width: 186 * DP, height: 186 * DP}, getStyleOfSelectedItem()]}
-				onLoad={e=>console.log(e.nativeEvent)}
-			/> */}
+			{isVideo && Platform.OS == 'ios' ? (
+				<Image
+					renderToHardwareTextureAndroid
+					progressiveRenderingEnabled
+					source={{uri: props.data.image.uri, width: 100 * DP, height: 100 * DP}}
+					style={[{width: 186 * DP, height: 186 * DP}, getStyleOfSelectedItem()]}
+				/>
+			) : (
+				<FastImage
+					renderToHardwareTextureAndroid
+					progressiveRenderingEnabled
+					source={{uri: props.data.image.uri, priority: isVideo ? FastImage.priority.normal : FastImage.priority.high}}
+					style={[{width: 186 * DP, height: 186 * DP}, getStyleOfSelectedItem()]}
+				/>
+			)}
 			{isSelect && getImageOfSelectedItem()}
-			{/* {props.data.image.playableDuration != null && (
-				<Text style={[txt.roboto22, {color: WHITE, position: 'absolute', left: 10 * DP, bottom: 6 * DP}]}>{props.data.image.playableDuration}</Text>
-			)} */}
+			{isVideo && (
+				<View style={{position:'absolute'}}>
+					<VideoGrad186 />
+					<Text style={[txt.roboto22, {color: WHITE, position: 'absolute', left: 10 * DP, bottom: 6 * DP}]}>{getDuration(duration)}</Text>
+				</View>
+			)}
 		</TouchableOpacity>
 	);
 	// isVideo = true 분기

@@ -12,18 +12,14 @@ import {
 	Image,
 	Alert,
 } from 'react-native';
-import {login_style, temp_style, feedMediaTagEdit} from 'Templete/style_templete';
 import {APRI10, BLACK, GRAY10, RED10, WHITE} from 'Root/config/color';
-import {useNavigationState} from '@react-navigation/native';
 import DP from 'Root/config/dp';
-import {txt} from 'Root/config/textstyle';
 import FastImage from 'react-native-fast-image';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Tag from 'Root/component/molecules/tag/Tag';
-import Swiper from 'react-native-swiper';
 import {styles} from 'Atom/image/imageStyle';
-import {Tag70} from 'Atom/icon';
-import Modal from 'Root/component/modal/Modal';
+import {Tag70, VideoPause, VideoMute66, VideoPlay, VideoSound66} from 'Atom/icon';
+import Video from 'react-native-video';
 
 export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, viewmode, feedType, onPressPhoto, onTagMoveStart, onEndTagMove}) => {
 	const [tags, setTags] = React.useState(taglist ? taglist : []);
@@ -32,7 +28,8 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 	const route = useRoute();
 	const clickedPost = React.useRef({x: -1, y: -1});
 	const tagBackground = React.useRef();
-
+	const [mute, setMute] = React.useState(false);
+	const [play, setPlay] = React.useState(true);
 	const makeTag = e => {
 		clickedPost.current = {x: e.nativeEvent.locationX, y: e.nativeEvent.locationY};
 		console.log(clickedPost.current);
@@ -65,7 +62,6 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 	}, [route.params]);
 
 	const showTag = () => {
-		console.log(tags);
 		setShowTags(!showTags);
 	};
 
@@ -106,14 +102,45 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 			/>
 		));
 	};
-	const measureBackground = e => {
-		console.log('PhotoTag onLayout', e.nativeEvent.layout);
-		tagBackground.current.measure((x, y, width, height, pageX, pageY) => console.log('measure', x, y, width, height, pageX, pageY));
+
+	const toggleMute = () => {
+		setMute(!mute);
+	};
+
+	const togglePlay = ()=>{
+		setPlay(!play);
+	}
+
+	const video = () => {
+		return (
+			<View style={{justifyContent: 'center', alignItems: 'center'}}>
+				<Video
+					style={styles.img_square_round_694}
+					source={{uri: uri}}
+					paused={!play}
+					muted={mute}
+					onVideoEnd={() => {
+						console.log('playend' + uri);
+					}}
+					repeat
+					resizeMode="contain"
+				/>
+				<View style={{position: 'absolute', top: 20 * DP, left: 20 * DP}}>
+					{mute ? <VideoMute66 onPress={toggleMute} /> : <VideoSound66 onPress={toggleMute} />}
+				</View>
+				{/* <View style={{position: 'absolute'}}>
+					{!play?<VideoPlay onPress={togglePlay}/>:
+					<VideoPause
+						onPress={togglePlay}
+					/>}
+				</View> */}
+			</View>
+		);
 	};
 
 	const render = () => (
 		<View style={[style.container, style.adjustCenter]}>
-			<FastImage style={styles.img_square_round_694} source={{uri: uri}} ref={tagBackground} onLayout={measureBackground} />
+			{data.is_video ? video() : <FastImage style={styles.img_square_round_694} source={{uri: uri}} ref={tagBackground} />}
 			{showTags && getTags()}
 			{tags.length > 0 && viewmode && (
 				<TouchableWithoutFeedback onPress={showTag}>
@@ -124,12 +151,7 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 			)}
 		</View>
 	);
-	
-	return (
-		<TouchableWithoutFeedback onPress={makeTag}>
-			{render()}
-		</TouchableWithoutFeedback>
-	);
+	return <TouchableWithoutFeedback onPress={makeTag}>{render()}</TouchableWithoutFeedback>;
 };
 
 PhotoTagItem.defaultProps = {

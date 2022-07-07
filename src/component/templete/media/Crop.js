@@ -185,6 +185,7 @@ export default Crop = prop => {
 	).current;
 
 	React.useEffect(()=>{
+		console.log('이미지 사이즈 로딩', imgUri);
 		imgUri&&Image.getSize(imgUri,(w,h)=>{
 			if(w>h){
 				let newWidth = (w/h)*WIDTH;

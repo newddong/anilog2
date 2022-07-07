@@ -92,7 +92,6 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 	};
 
 	const onCreate = () => {
-		console.log('sent?', sent);
 		Keyboard.dismiss();
 		if (!sent) {
 			setSent(true);
@@ -110,10 +109,21 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			let param = {
 				...route.params,
 				media_uri: route.params.selectedPhoto.map(v => {
-					return v.cropUri ?? v.uri;
+					return v.videoUri?? v.cropUri ?? v.uri;
 				}),
+				feed_medias: route.params.feed_medias.map(f=>{
+					route.params.selectedPhoto.some(v=>{
+						if((v.videoUri?? v.cropUri ?? v.uri)==f.media_uri){
+							f.is_video = v.isVideo;
+						}
+					});
+					
+					return f;
+					}
+				),
 				hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
 			};
+			console.log('param',param);
 			switch (route.params?.feedType) {
 				case 'Feed':
 					console.log('feed Param', JSON.stringify(param));
@@ -201,12 +211,22 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			...route.params,
 			feedobject_id: route.params._id,
 			media_uri: route.params.selectedPhoto?.map(v => {
-				return v.cropUri ?? v.uri;
+				return v.videoUri?? v.cropUri ?? v.uri;
 			}),
+			feed_medias: route.params.feed_medias.map(f=>{
+				route.params.selectedPhoto.some(v=>{
+					if((v.cropUri ?? v.uri)==f.media_uri){
+						f.is_video = v.isVideo;
+						f.media_uri = v.videoUri?? v.cropUri ?? v.uri;
+					}
+				});
+				return f;
+				}
+			),
 			feed_content: route.params.isEdit ? route.params.feed_content : route.params.feed_content.replace(changeTextRegex, '&$1&$1$1$2%&%&$1&$1'),
 			hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
 		};
-		// console.log('onEdit / FeedWrtieHeader', param);
+		console.log('onEdit / FeedWrtieHeader', param);
 		if (param.feed_type == 'feed') {
 			editFeed(param, complete, handleError);
 		} else if (param.feed_type == 'report') {
@@ -300,6 +320,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 
 	const titleStyle = [{textAlign: 'center'}, txt.noto40b, route.params?.feedType != 'Feed' ? {color: RED10} : {color: '#000'}];
 	const avartarSelect = () => {
+		Keyboard.dismiss();
 		Modal.popAvatarSelectModal(petObject => {
 			console.log('petObject / onOk', petObject);
 			petObject && navigation.setOptions({title: petObject.user_nickname});

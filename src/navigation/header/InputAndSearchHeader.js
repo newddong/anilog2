@@ -41,6 +41,8 @@ export default InputAndSearchHeader = props => {
 			});
 			// inputRef.current.focus();
 		}
+		const unsubscribe = navigation.addListener('focus', () => setBackPressed(false));
+		return unsubscribe;
 	}, []);
 
 	const reSearch = () => {
@@ -114,7 +116,7 @@ export default InputAndSearchHeader = props => {
 	return (
 		<View style={[style.headerContainer, style.shadow, {}]}>
 			<TouchableOpacity style={[style.backButtonContainer, {}]} onPress={onPressGoBack}>
-				<BackArrow32 onPress={onPressGoBack} />
+				<BackArrow32 />
 			</TouchableOpacity>
 			<View style={{marginBottom: 20 * DP, flex: 1, justifyContent: 'center', paddingTop: 20 * DP}}>
 				<InputWithSearchIcon

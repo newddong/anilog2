@@ -25,7 +25,11 @@ import RecommendReview from '../article/RecommendReview';
 export default ReviewList = props => {
 	const items = props.items;
 	const [data, setData] = React.useState('false');
-	const [recommend, setRecommend] = React.useState([]);
+	const [recommend, setRecommend] = React.useState(props.recommend);
+
+	React.useEffect(() => {
+		// setRecommend(props.recommend);
+	}, [props.recommend]);
 
 	React.useEffect(() => {
 		if (items && items.length != 0) {
@@ -35,13 +39,23 @@ export default ReviewList = props => {
 					.map((v, i, a) => {
 						let height = 128 * (1 / DP);
 						let arr = [];
-						const review_category_list = arr.concat(
-							v.community_interests.interests_review,
-							v.community_interests.interests_trip,
-							v.community_interests.interests_etc,
-							v.community_interests.interests_hospital,
-							v.community_interests.interests_interior,
-						);
+						if (v.community_interests.hasOwnProperty('interests_group1')) {
+							arr = arr.concat(
+								v.community_interests.interests_etc,
+								v.community_interests.interests_group1,
+								v.community_interests.interests_group2,
+								v.community_interests.interests_group3,
+							);
+						} else {
+							arr = arr.concat(
+								v.community_interests.interests_review,
+								v.community_interests.interests_trip,
+								v.community_interests.interests_etc,
+								v.community_interests.interests_hospital,
+								v.community_interests.interests_interior,
+							);
+						}
+						const review_category_list = arr;
 						//사진이 없으며 카테고리 선택도 없는 경우
 						if (!v.community_is_attached_file && review_category_list && review_category_list.length == 0) {
 							height = 266;
@@ -67,7 +81,7 @@ export default ReviewList = props => {
 						};
 					}),
 			);
-			setRecommend(items);
+			// setRecommend(items);
 		} else {
 			setData([]);
 		}
@@ -76,7 +90,7 @@ export default ReviewList = props => {
 	const renderItem = ({item, index}) => {
 		return (
 			<>
-				{index == 3 && props.showRecommend ? recommendReview() : <></>}
+				{/* {index == 3 && props.showRecommend ? recommendReview() : <></>} */}
 				<Review
 					data={item}
 					isSearch={props.isSearch}
@@ -91,8 +105,10 @@ export default ReviewList = props => {
 		);
 	};
 
-	const recommendReview = () => {
-		return <RecommendReview data={recommend} onPressRecommendReview={data => props.onPressRecommendReview(data)} />;
+	const header = () => {
+		if (recommend && recommend.length > 0 && props.showRecommend) {
+			return <RecommendReview data={recommend} onPressRecommendReview={data => props.onPressRecommendReview(data)} />;
+		} else return <></>;
 	};
 
 	if (data == 'false') {
@@ -109,6 +125,7 @@ export default ReviewList = props => {
 						if (!data[index]) return {length: 0, offset: 0, index: index};
 						return {length: data[index].height, offset: data[index].offset, index: index};
 					}}
+					ListHeaderComponent={header()}
 					ListEmptyComponent={props.whenEmpty}
 					ItemSeparatorComponent={() => {
 						return <View style={{width: 694 * DP, height: 2 * DP, backgroundColor: GRAY30, alignSelf: 'center'}} />;

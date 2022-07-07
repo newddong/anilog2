@@ -5,7 +5,7 @@ import ChildCommentList from 'Organism/comment/ChildCommentList';
 import UserLocationTimeLabel from 'Molecules/label/UserLocationTimeLabel';
 import {Arrow_Down_GRAY10, Arrow_Up_GRAY10, Heart30_Border, Heart30_Filled, Report30, SecureIcon40} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
-import {REPLY_MEATBALL_MENU_MY_REPLY, REPORT_MENU} from 'Root/i18n/msg';
+import {REPORT_MENU} from 'Root/i18n/msg';
 import {GRAY10, GRAY20} from 'Root/config/color';
 import {getChildCommentList} from 'Root/api/commentapi';
 import Modal from 'Component/modal/Modal';
@@ -21,6 +21,7 @@ import {count_to_K} from 'Root/util/stringutil';
  * 부모 댓글
  * @param {Object} props - Props Object
  * @param {Object} props.data - 부모 comment data object
+ * @param {Object} props.writer - 글 작성자 오브젝트
  * @param {void} props.onPressReplyBtn - 답글쓰기
  * @param {(id:string)=>void} props.onPressDelete - 댓글 삭제
  * @param {(id:string)=>void} props.onPressDeleteChild - 대댓글 삭제
@@ -33,6 +34,7 @@ import {count_to_K} from 'Root/util/stringutil';
 export default ParentComment = React.memo((props, ref) => {
 	// console.log('ParentComment : ', props.parentComment.comment_writer_id.user_nickname, props.parentComment.comment_is_secure);
 	// console.log('parentComment props', props.parentComment.comment_contents, props.parentComment.children_count);
+	// console.log('props writer,', props.writer);
 	const navigation = useNavigation();
 	const parent = props.parentComment;
 	const [data, setData] = React.useState(parent);
@@ -224,17 +226,14 @@ export default ParentComment = React.memo((props, ref) => {
 
 	const isNotAuthorized = () => {
 		let result = true;
+		// console.log('props.writer', props.writer);
 		if (!data.comment_is_secure) {
 			//비밀댓글이 아니라면 public
 			result = false;
 		} else if (isMyComment) {
 			//비밀댓글이지만 댓글의 작성자라면 public
 			result = false;
-		} else if (
-			data.comment_writer_id &&
-			userGlobalObject.userInfo._id != data.comment_writer_id._id &&
-			userGlobalObject.userInfo._id == data.comment_feed_writer_id
-		) {
+		} else if (props.writer && userGlobalObject.userInfo._id == props.writer._id) {
 			//댓글의 작성자는 아니지만 해당 피드의 작성자라면 public (차후 기획이 바뀐다면 피드 작성자도 볼 수 없다)
 			result = false;
 		}
@@ -266,7 +265,7 @@ export default ParentComment = React.memo((props, ref) => {
 			{data.comment_photo_uri == undefined || isNotAuthorized() ? (
 				<></>
 			) : (
-				<TouchableOpacity onPress={() => onPressReplyPhoto(data.comment_photo_uri)} activeOpacity={0.8} style={[style.img_square_round]}>
+				<TouchableOpacity onPress={() => onPressReplyPhoto(data.comment_photo_uri)} activeOpacity={0.4} style={[style.img_square_round]}>
 					{data.comment_photo_uri.includes('http') ? (
 						<FastImage style={[styles.img_square_round_614]} source={{uri: data.comment_photo_uri}} />
 					) : (
@@ -333,6 +332,7 @@ export default ParentComment = React.memo((props, ref) => {
 				<View style={[style.childCommentList, {}]}>
 					<ChildCommentList
 						items={child}
+						parent={parent}
 						showChildComment={showChildComment}
 						onPressDeleteChild={onPressDeleteChild}
 						onEdit={onEdit}

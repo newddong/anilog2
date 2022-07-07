@@ -33,6 +33,7 @@ import CameraRoll from 'Root/module/CameraRoll';
  */
 const LocalMedia = props => {
 	const [duration, setDuration] = React.useState(0);
+	const videoUri = React.useRef();
 	const [isSelect, setSelected] = React.useState(false);
 	const isVideo = props.data.type.includes('video');
 
@@ -44,7 +45,8 @@ const LocalMedia = props => {
 		if (isVideo) {
 			CameraRoll.getVideoAttributes(props.data.image.uri).then(r => {
 				console.log('video attribute', r);
-				setDuration(Platform.OS=='ios'?Math.floor(r[0].duration):r.duration);
+				videoUri.current = Platform.OS=='ios'?r[0].uri:r.duration;
+				setDuration(Platform.OS=='ios'?r[0].duration:r.duration);
 			}).catch(e=>console.log('video attribute error',e));
 		}
 	}, []);
@@ -54,8 +56,9 @@ const LocalMedia = props => {
 			setSelected(false);
 			props.onCancel(props.data.image.uri);
 		} else {
+			let photo = {...props.data,image:{...props.data.image,videoUri:videoUri.current}}
 			// setSelected(true);
-			props.onSelect(props.data, duration);
+			props.onSelect(photo, duration);
 		}
 	};
 
@@ -102,7 +105,7 @@ const LocalMedia = props => {
 
 	const getDuration = second => {
 		let min = Math.floor(second / 360);
-		let sec = second % 60;
+		let sec = Math.floor(second % 60);
 		return (min == 0 ? '00' : min < 10 ? '0' + min : min) + ':' + (sec == 0 ? '00' : sec < 10 ? '0' + sec : sec);
 	};
 	// console.log('image',props.data.image)

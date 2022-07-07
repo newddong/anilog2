@@ -253,13 +253,14 @@ export default AddPhoto = props => {
 		}
 	}, [props.route.params.selectedPhoto]);
 	const selectPhoto = (photo, duration) => {
-		console.log(duration);
+		console.log(photo,duration);
 		if (selectedPhoto.length >= limit) {
 			Modal.alert('사진은 최대 ' + limit + '장까지만 업로드 가능합니다.');
 			return;
 		}
 		let obj = {};
 		obj.uri = photo.image.uri;
+		obj.videoUri = photo.image.videoUri;
 		obj.isVideo = photo.type.includes('video');
 		obj.duration = duration;
 		if (isSingle) {
@@ -360,8 +361,9 @@ export default AddPhoto = props => {
 	const videoEdit = () => {
 		console.log(selectedPhoto[index]);
 		let media = selectedPhoto[index];
+
 		VideoEditor.unlockLicense();
-		VideoEditor.openVideoEditor(media.uri, media.duration, 15, 30, 'aniMov')
+		VideoEditor.openVideoEditor(media.videoUri??media.uri, media.duration, 15, 30, 'aniMov')
 			.then(r => {
 				console.log(r);
 				media.videoUri = r.video;
@@ -371,19 +373,18 @@ export default AddPhoto = props => {
 				console.log(e);
 			});
 	};
-
 	return (
 		<View style={lo.wrp_main}>
 			{selectedPhoto[index] ? (
 				selectedPhoto[index].isVideo || selectedPhoto[index].is_video ? (
 					<View>
-						{/* <Video
+						<Video
 							style={{width: 750 * DP, height: 750 * DP, backgroundColor: '#000'}}
 							source={{uri: selectedPhoto[index]?.videoUri ?? selectedPhoto[index]?.uri}}
 							muted
 							resizeMode="contain"
-						/> */}
-						{!selectedPhoto[index].uri.includes('gif') && !selectedPhoto[index].uri.includes('http') && (
+						/>
+						{selectedPhoto[index]&&!selectedPhoto[index].uri.includes('gif') && !selectedPhoto[index].uri.includes('http') && (
 							<View
 								style={{position: 'absolute', width: 100 * DP, height: 100 * DP, backgroundColor: 'red', bottom: 0, right: 0}}
 								onStartShouldSetResponder={() => true}

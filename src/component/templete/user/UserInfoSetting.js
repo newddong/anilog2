@@ -30,6 +30,9 @@ export default UserInfoSetting = ({route}) => {
 	const modifyRef = React.useRef();
 	const userData = userGlobalObject.userInfo;
 	const [newNick, setNewNick] = React.useState(data.user_nickname);
+	const [newIntro, setNewIntro] = React.useState(data.user_introduction);
+	const [newCity, setNewCity] = React.useState(data.user_address?.city);
+	const [newDistrict, setNewDistrict] = React.useState(data.user_address?.district);
 	const [validateted, setValidated] = React.useState(false);
 	const [confirmed, setConfirmed] = React.useState(false);
 	const [duplicated, setDuplicated] = React.useState(false);
@@ -244,16 +247,22 @@ export default UserInfoSetting = ({route}) => {
 
 	//수정 후 적용 버튼 클릭
 	const modify_finalize = () => {
+		if (newIntro.length == 0 || newIntro == data.user_introduction) {
+			console.log('소개 길이 0 or 이전과 같음');
+		} else {
+			updateUserIntroduction(
+				{userobject_id: data._id, user_introduction: newIntro},
+				success => {
+					console.log('introduction modify api', success);
+					// setData(...data, user_introduction : newIntro));
+					setData({...data, user_introduction: newIntro});
+				},
+				err => {
+					console.log('introduction modify api', err);
+				},
+			);
+		}
 		setModifyMode(!modifyMode);
-		updateUserIntroduction(
-			{userobject_id: data._id, user_introduction: data.user_introduction},
-			success => {
-				console.log('introduction modify api', success);
-			},
-			err => {
-				console.log('introduction modify api', err);
-			},
-		);
 	};
 	const onPressAddInterestLocation = () => {
 		Modal.popInterestTagModal(
@@ -297,7 +306,8 @@ export default UserInfoSetting = ({route}) => {
 		if (breaks > 15) {
 			return;
 		} else {
-			setData({...data, user_introduction: text});
+			// setData({...data, user_introduction: text});
+			setNewIntro(text);
 		}
 	};
 
@@ -351,7 +361,8 @@ export default UserInfoSetting = ({route}) => {
 					districts => {
 						setDistrict(districts.msg);
 						// console.log()
-						setData({...data, user_address: {...data.user_address, city: selected, district: districts.msg[0]}});
+						// setData({...data, user_address: {...data.user_address, city: selected, district: districts.msg[0]}});
+						setNewCity(selected);
 						Modal.close();
 					},
 					handleError,
@@ -374,7 +385,8 @@ export default UserInfoSetting = ({route}) => {
 					// },
 					district => {
 						setDistrict(district.msg);
-						setData({...data, user_address: {...data.user_address, city: data.user_address.city, district: selected}});
+						// setData({...data, user_address: {...data.user_address, city: data.user_address.city, district: selected}});
+						setNewDistrict(selected);
 						Modal.close();
 					},
 					handleError,
@@ -386,41 +398,57 @@ export default UserInfoSetting = ({route}) => {
 	//닉네임 수정 버튼 함수
 	const modifyNickNameButton = () => {
 		if (nickNameEdit) {
-			console.log('닉네임 수정되어야함');
-			updateUserInformation(
-				{
-					userobject_id: data._id,
-					user_nickname: newNick == '' ? data.user_nickname : newNick,
-				},
-				success => {
-					if (data.user_type == 'user') {
-						setNewNick(newNick);
-						userGlobalObject.userInfo.user_nickname = newNick;
-						userGlobalObject.userInfo.user_profile_uri = data.user_profile_uri;
-					}
-				},
-				err => {
-					Modal.close();
-					console.log('err', err);
-				},
-			);
+			if (newNick == data.user_nickname || newNick?.length == 0) {
+				console.log('닉네임 변경없음 or 길이 0');
+			} else {
+				updateUserInformation(
+					{
+						userobject_id: data._id,
+						user_nickname: newNick == '' ? data.user_nickname : newNick,
+					},
+					success => {
+						if (data.user_type == 'user') {
+							setNewNick(newNick);
+							userGlobalObject.userInfo.user_nickname = newNick;
+							userGlobalObject.userInfo.user_profile_uri = data.user_profile_uri;
+						}
+						data.user_nickname = newNick;
+						navigation.setOptions({title: newNick});
+					},
+					err => {
+						Modal.close();
+						console.log('err', err);
+					},
+				);
+			}
 		}
+
 		setNickNameEdit(!nickNameEdit);
-		data.user_nickname = newNick;
-		navigation.setOptions({title: newNick});
 	};
 
 	//나의 지역 수정 함수
 	const modifyLocation = () => {
 		if (locationEdit) {
-			console.log('나의 지역이 수정되어야함', data.user_address);
-			updateUserDetailInformation({
-				userobject_id: data._id,
-				user_address: {city: data.user_address.city, district: data.user_address.district},
-			}),
-				success => {
-					console.log('나의 지역 변경 잘됨');
-				};
+			if (data.user_address.city != newCity && data.user_address.district != newDistrict) {
+				// console.log('바뀐 지역', newCity, newDistrict);
+				updateUserDetailInformation(
+					{
+						userobject_id: data._id,
+						// user_address: {city: data.user_address.city, district: data.user_address.district},
+						user_address: {city: newCity, district: newDistrict},
+					},
+					success => {
+						// console.log('나의 지역 변경 잘됨');
+						// setData(...data, user_address :{city: newCity, district: newDistrict})
+						setData({...data, user_address: {...data.user_address, city: newCity, district: newDistrict}});
+					},
+					err => {
+						// console.log('지역 바꿈 err', err);
+					},
+				);
+			}
+		} else {
+			console.log('api 전송 x');
 		}
 		setLocationEdit(!locationEdit);
 	};
@@ -558,7 +586,8 @@ export default UserInfoSetting = ({route}) => {
 											style={[txt.noto26, userInfoSetting_style.user_intro_modifyMode, {backgroundColor: GRAY40}]}
 											defaultValue={data.user_introduction || ''}
 											multiline={true}
-											value={data.user_introduction}
+											// value={data.user_introduction}
+											value={newIntro}
 											placeholder={'소개를 입력해주세요. (최대 500자, 15줄)'}
 											placeholderTextColor="#767676"
 											maxLength={500}
@@ -620,8 +649,8 @@ export default UserInfoSetting = ({route}) => {
 										onPressInput={onSelectCity}
 										width={284}
 										height={108}
-										value={data.user_address.city || ''}
-										// value={'시,도'}
+										// value={data.user_address.city || ''}
+										value={newCity}
 										noBorder={true}
 										fontSize={28}
 									/>
@@ -631,7 +660,8 @@ export default UserInfoSetting = ({route}) => {
 										onPressInput={onSelectDistrict}
 										width={284}
 										height={108}
-										value={data.user_address.district}
+										// value={data.user_address.district}
+										value={newDistrict}
 										// value={'시,군,구'}
 										noBorder={true}
 										fontSize={28}

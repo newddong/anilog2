@@ -26,7 +26,6 @@ const NewMissingReportList = props => {
 		return ()=>{mounted=false}
 	},[])
 
-
 	React.useEffect(() => {
 		// getList();
 		const unsubscribe = navigation.addListener('focus', () => {
@@ -37,6 +36,7 @@ const NewMissingReportList = props => {
 		getList('first');
 		return unsubscribe;
 	}, [navigation]);
+
 
 	// React.useEffect(() => {
 	// 	console.log('두번 눌림', props.doubleTab);
@@ -55,13 +55,13 @@ const NewMissingReportList = props => {
 			result => {
 				if(!mounted)return;
 				// console.log('getMissingReportList length', result.msg.length);
+
 				const res = result.msg;
 				if (topList != 'false') {
 					let temp = [...topList];
 					res.map((v, i) => {
 						temp.push(v);
 					});
-					// console.log('temp lenth', temp.length);
 					setTopList(temp);
 				} else {
 					setTopList(res);

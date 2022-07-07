@@ -22,6 +22,12 @@ const ReviewFavoriteBriefList = props => {
 		props.onPressCheck(index, bool);
 	};
 
+	const [data, setData] = React.useState(props.items);
+
+	React.useEffect(() => {
+		setData(props.items);
+	}, [props.items]);
+
 	const renderItem = (item, index) => {
 		// console.log('ind', item.community_title, item.height, item.offset, item.community_title);
 		return (
@@ -55,6 +61,7 @@ const ReviewFavoriteBriefList = props => {
 				showsVerticalScrollIndicator={false}
 				listKey={({item, index}) => index}
 				keyExtractor={item => item._id}
+				extraData={props.items}
 				getItemLayout={(data, index) => {
 					if (!data[index]) return {length: 0, offset: 0, index: index};
 					return {length: data[index].height, offset: data[index].offset, index: index};

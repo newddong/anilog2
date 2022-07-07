@@ -64,6 +64,10 @@ export default ArticleMain = ({route}) => {
 					}, 500);
 				} else if (err.includes('없습니다')) {
 					setData([]);
+				} else {
+					setTimeout(() => {
+						Modal.alert(NETWORK_ERROR);
+					}, 500);
 				}
 				setLoading(false);
 			},

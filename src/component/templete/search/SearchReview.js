@@ -14,6 +14,7 @@ import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import AnimalButton from 'Root/component/molecules/button/AnimalButton';
 import community_obj, {updateReview} from 'Root/config/community_obj';
 import {txt} from 'Root/config/textstyle';
+import {NORESULT} from 'Root/i18n/msg';
 
 export default SearchReview = props => {
 	const navigation = useNavigation();
@@ -289,7 +290,7 @@ export default SearchReview = props => {
 	};
 
 	const whenEmpty = () => {
-		return <ListEmptyInfo paddingVertical={450 * DP} text={'검색 결과가 없습니다..'} />;
+		return <ListEmptyInfo paddingVertical={450 * DP} text={NORESULT} />;
 	};
 
 	if (props.loading) {

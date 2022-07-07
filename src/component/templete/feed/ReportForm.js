@@ -221,7 +221,7 @@ export default ReportForm = props => {
 			'설정으로',
 			() => {
 				Modal.close();
-				props.navigation.goBack();
+				// navigation.goBack();
 			},
 			() => {
 				if (Platform.OS == 'android') {
@@ -389,7 +389,7 @@ export default ReportForm = props => {
 								</View>
 							</TouchableOpacity>
 							<Location48Border onPress={onPressCurrentLocation} />
-							<Search48_BLACK />
+							<View style={{width: 48 * DP}}>{/* <Search48_BLACK /> */}</View>
 						</View>
 						<Input24
 							placeholder="제보하려는 장소의 위치를 설명해주세요."

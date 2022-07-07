@@ -9,6 +9,7 @@ import Loading from 'Root/component/molecules/modal/Loading';
 import searchContext from 'Root/config/searchContext';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import DP from 'Root/config/dp';
+import {NORESULT} from 'Root/i18n/msg';
 
 export default SearchArticle = props => {
 	// console.log('ArticleMain');
@@ -75,7 +76,7 @@ export default SearchArticle = props => {
 	};
 
 	const whenEmpty = () => {
-		return <ListEmptyInfo paddingVertical={450 * DP} text={'검색 결과가 없습니다..'} />;
+		return <ListEmptyInfo paddingVertical={450 * DP} text={NORESULT} />;
 	};
 
 	const header = () => {

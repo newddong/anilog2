@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, FlatList, StyleSheet, Platform, Keyboard, ActivityIndicator} from 'react-native';
+import {Text, View, FlatList, StyleSheet, Platform, Keyboard, ActivityIndicator, RefreshControl} from 'react-native';
 import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
 import {createComment, deleteComment, getCommentListByProtectId, updateComment} from 'Root/api/commentapi';
 import {txt} from 'Root/config/textstyle';
@@ -26,8 +26,9 @@ export default ProtectCommentList = props => {
 	const [childOpenList, setChildOpenList] = React.useState([]);
 	const [isLoading, setIsLoading] = React.useState(true);
 	const [editData, setEditData] = React.useState({comment_contents: '', comment_photo_uri: ''});
-	const input = React.useRef();
-	const flatlist = React.useRef();
+	const [refreshing, setRefreshing] = React.useState(false); //위로 스크롤 시도 => 리프레싱
+	const input = React.useRef(); //댓글창
+	const flatlist = React.useRef(); //댓글리스트 Flatlist Ref
 	const replyFromDetailRef = React.useRef(true); //실종,제보 상세글에서 답글쓰기를 누르고 왔을 경우 대상 댓글 스타일 적용 여부
 	const editFromDetailRef = React.useRef(true); //실종,제보 상세글에서 수정을 누르고 왔을 경우 대상 댓글 스타일 적용 여부
 	const addChildCommentFn = React.useRef(() => {});
@@ -438,6 +439,7 @@ export default ProtectCommentList = props => {
 		return (
 			<View style={[style.commentContainer, {backgroundColor: getBgColor(), alignItems: 'center', width: 750 * DP}]} key={item._id}>
 				<ParentComment
+					writer={data.protect_request_writer_id}
 					parentComment={item}
 					onPressReplyBtn={onReplyBtnClick} // 부모 댓글의 답글쓰기 클릭 이벤트
 					onEdit={onEdit}
@@ -470,15 +472,29 @@ export default ProtectCommentList = props => {
 		);
 	};
 
+	const wait = timeout => {
+		return new Promise(resolve => setTimeout(resolve, timeout));
+	};
+
+	const onRefresh = () => {
+		setRefreshing(true);
+		wait(0).then(() => setRefreshing(false));
+	};
+
+	React.useEffect(() => {
+		refreshing ? fetchData() : false;
+	}, [refreshing]);
+
 	return (
 		<View style={[{alignItems: 'center', flex: 1, backgroundColor: '#fff'}]}>
 			<FlatList
 				data={comments}
 				ref={flatlist}
-				extraData={refresh}
 				renderItem={render}
 				showsVerticalScrollIndicator={false}
 				ListHeaderComponent={header()}
+				extraData={refresh}
+				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
 				ListEmptyComponent={
 					isLoading ? (

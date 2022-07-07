@@ -41,6 +41,7 @@ import {
 import FeedMedia from 'Molecules/media/FeedMedia';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {object} from 'prop-types';
+import feed_obj from 'Root/config/feed_obj';
 
 export default FeedContent = props => {
 	const {
@@ -75,17 +76,29 @@ export default FeedContent = props => {
 		feed_comment_count,
 		feed_writer_id,
 		feed_avatar_id,
+		is_favorite,
 	} = props.data;
 	const navigation = useNavigation();
 	const route = useRoute();
 	const [pressed, setPressed] = React.useState(false); //더보기 Arrow방향 false면 아래
 	const [show, setShow] = React.useState(false);
 	const [send, setSend] = React.useState('false');
-	const [isFavorite, setIsFavorite] = React.useState(props.data.is_favorite);
+	const [isFavorite, setIsFavorite] = React.useState(is_favorite);
+	const [commentCount, setCommentCount] = React.useState(0);
 	const feed_writer = props.data.feed_avatar_id ? props.data.feed_avatar_id : props.data.feed_writer_id;
 
 	React.useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', () => setPressed(false));
+		const unsubscribe = navigation.addListener('focus', () => {
+			setPressed(false);
+			const findIndex = feed_obj.list.findIndex(e => e._id == props.data._id);
+			if (findIndex != -1) {
+				// console.log('is_favorite', feed_content, feed_obj.list[findIndex].is_favorite);
+				setCommentCount(feed_obj.list[findIndex].feed_comment_count);
+				setIsFavorite(feed_obj.list[findIndex].is_favorite);
+			} else {
+				console.log('@@@@@@@@@@@@@@@@@@@@@@@', feed_content, is_favorite);
+			}
+		});
 		return unsubscribe;
 	}, []);
 
@@ -95,6 +108,7 @@ export default FeedContent = props => {
 		} else {
 			setSend(feed_writer_id);
 		}
+		setCommentCount(feed_comment_count);
 	}, [props.data]);
 
 	//피드 미트볼 메뉴 - 신고 클릭
@@ -297,6 +311,11 @@ export default FeedContent = props => {
 						},
 						result => {
 							// console.log('result / followUser / FeedContent', result.msg);
+							let temp = [...feed_obj.list];
+							const findIndex = temp.findIndex(e => e._id == _id); //현재 보고 있는 피드게시글이 저장된 리스트에서 몇 번째인지
+							console.log('index of Favorite', findIndex);
+							temp[findIndex].is_favorite = isFavorite;
+							feed_obj.list = temp;
 							Modal.close();
 							Modal.popNoBtn('즐겨찾기 ' + (isFavorite ? '추가' : '삭제') + '가 완료되었습니다.');
 							setIsFavorite(isFavorite);
@@ -502,8 +521,6 @@ export default FeedContent = props => {
 
 	const moveToCommentList = async () => {
 		if (route.name != 'FeedCommentList') {
-			console.log('userGlobalObject.userInfo.isPreviewMode', userGlobalObject.userInfo.isPreviewMode);
-			console.log('feed_comment_count', feed_comment_count);
 			if (userGlobalObject.userInfo.isPreviewMode && feed_comment_count == 0) {
 				Modal.popLoginRequestModal(() => {
 					navigation.navigate('LoginRequired');
@@ -630,7 +647,7 @@ export default FeedContent = props => {
 									<View style={feed_templete_style.likeButtonWrapper}>
 										<View style={[feed_templete_style.like48]}>{props.isLike ? <Like48_Filled /> : <Like48_Border />}</View>
 										<View style={[feed_templete_style.like_count_feed]}>
-											<Text style={[txt.roboto24, {color: GRAY10}]}>{props.likeCount}</Text>
+											<Text style={[txt.roboto24, {color: GRAY10}]}>{JSON.stringify(props.likeCount)}</Text>
 										</View>
 									</View>
 								</TouchableWithoutFeedback>
@@ -640,7 +657,7 @@ export default FeedContent = props => {
 											<Comment48_Border />
 										</View>
 										<View style={[organism_style.comment_count_feed]}>
-											<Text style={[txt.roboto24, {color: GRAY10, marginLeft: -15 * DP}]}>{feed_comment_count}</Text>
+											<Text style={[txt.roboto24, {color: GRAY10, marginLeft: -15 * DP}]}>{commentCount}</Text>
 										</View>
 									</View>
 								</TouchableWithoutFeedback>

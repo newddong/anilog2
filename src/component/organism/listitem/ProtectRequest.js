@@ -125,7 +125,7 @@ export default ProtectRequest = React.memo(props => {
 				onLabelClick={(status, id) => props.onClickLabel(status, id)}
 			/>
 			{/* </View> */}
-			<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.6} onPress={() => props.onClickLabel()}>
+			<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.2} onPress={() => props.onClickLabel()}>
 				{/* <View>{contents()}</View> */}
 				{contents()}
 			</TouchableOpacity>

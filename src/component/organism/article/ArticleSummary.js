@@ -145,7 +145,7 @@ const ArticleSummary = props => {
 				<Text style={[txt.noto28, {color: GRAY10}]}>{getArticleType()} |</Text>
 				<TouchableOpacity
 					onPress={onPressArticle}
-					activeOpacity={props.selectMode ? 1 : 0.6}
+					activeOpacity={props.selectMode ? 1 : 0.2}
 					style={[
 						style.content,
 						{
@@ -154,7 +154,7 @@ const ArticleSummary = props => {
 					]}>
 					{text == '' ? <></> : getText()}
 				</TouchableOpacity>
-				<TouchableOpacity onPress={onPressArticle} activeOpacity={0} style={[style.content, {position: 'absolute', opacity: 0}]}>
+				<TouchableOpacity onPress={onPressArticle} activeOpacity={0.2} style={[style.content, {position: 'absolute', opacity: 1, zIndex: -1}]}>
 					<Text style={[txt.noto28, {textAlignVertical: 'center', color: WHITE}]} onTextLayout={onTextLayout}>
 						{data.community_title}
 						{'  '}

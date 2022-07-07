@@ -10,6 +10,7 @@ import Modal from 'Component/modal/Modal';
 import {likeFeed} from 'Root/api/feedapi';
 import userGlobalObj from 'Root/config/userGlobalObject';
 import userGlobalObject from 'Root/config/userGlobalObject';
+import feed_obj from 'Root/config/feed_obj';
 
 export default Feed = React.memo(props => {
 	// console.log('Feed', props.data);
@@ -47,8 +48,13 @@ export default Feed = React.memo(props => {
 		feed_writer_id,
 		feed_avatar_id,
 	} = props.data;
-	const [isLike, setLike] = React.useState(false);
-	const [likeCount, setLikeCount] = React.useState(0);
+	const [isLike, setLike] = React.useState(feed_is_like);
+	const [likeCount, setLikeCount] = React.useState(feed_like_count);
+	const [recent, setRecent] = React.useState({
+		comment_contents: '',
+		comment_id: '',
+		comment_user_nickname: '',
+	});
 
 	const toggleFeedLike = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
@@ -64,6 +70,12 @@ export default Feed = React.memo(props => {
 					is_like: !isLike,
 				},
 				result => {
+					let temp = [...feed_obj.list];
+					const findIndex = temp.findIndex(e => e._id == props.data._id); //현재 보고 있는 피드게시글이 저장된 리스트에서 몇 번째인지
+					temp[findIndex].feed_is_like = !isLike;
+					temp[findIndex].feed_like_count = result.msg.targetFeed.feed_like_count;
+					feed_obj.list = temp;
+					console.log('result.msg.targetFeed.feed_like_count', result.msg.targetFeed.feed_like_count);
 					setLikeCount(result.msg.targetFeed.feed_like_count);
 				},
 				error => console.log(error),
@@ -74,11 +86,24 @@ export default Feed = React.memo(props => {
 	React.useEffect(() => {
 		setLike(feed_is_like);
 		setLikeCount(feed_like_count);
+		setRecent(feed_recent_comment);
 	}, [props.data]);
 
 	const deleteFeed = id => {
 		props.deleteFeed(id);
 	};
+
+	React.useEffect(() => {
+		const updateData = navigation.addListener('focus', () => {
+			const findIndex = feed_obj.list.findIndex(e => e._id == props.data._id);
+			if (findIndex != -1) {
+				setRecent(feed_obj.list[findIndex].feed_recent_comment);
+				setLike(feed_obj.list[findIndex].feed_is_like);
+				setLikeCount(feed_obj.list[findIndex].feed_like_count);
+			}
+		});
+		return updateData;
+	}, []);
 
 	return (
 		<View style={[feed_templete_style.feed]} removeClippedSubviews>
@@ -86,16 +111,17 @@ export default Feed = React.memo(props => {
 			{/* 270DP */}
 			<View style={[feed_templete_style.comment_feed_view]}>
 				{/* RecentComment */}
-				{feed_recent_comment && (
+				{recent && (
 					<View style={[feed_templete_style.recentComment_view]}>
 						<View style={{width: 16 * DP, height: 3 * DP, backgroundColor: '#767676', position: 'absolute', top: 30 * DP, left: -20 * DP}} />
 						<View style={[feed_templete_style.writerID_feed_view]}>
 							<View style={[feed_templete_style.writerID_feed, {flex: 1}, {alignItems: 'flex-start'}]}>
-								<Text style={[txt.roboto24, feed_style.recent_comment_user]}>{feed_recent_comment?.comment_user_nickname}</Text>
+								<Text style={[txt.roboto24, feed_style.recent_comment_user]}>{recent?.comment_user_nickname}</Text>
 							</View>
 							<View style={(feed_templete_style.commentText_view, {flex: 3})}>
 								<Text style={[txt.noto26, {color: GRAY10}]} numberOfLines={2} ellipsizeMode="tail">
-									{feed_recent_comment?.comment_contents}
+									{/* {feed_recent_comment?.comment_contents} */}
+									{recent?.comment_contents}
 								</Text>
 							</View>
 						</View>

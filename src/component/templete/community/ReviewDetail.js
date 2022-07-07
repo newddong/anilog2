@@ -1,6 +1,6 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {ActivityIndicator, FlatList, Keyboard, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, FlatList, Keyboard, Platform, RefreshControl, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DP from 'Root/config/dp';
 import {GRAY10, GRAY20, GRAY30, GRAY40, WHITE} from 'Root/config/color';
 import ReviewBriefList from 'Root/component/organism/list/ReviewBriefList';
@@ -41,6 +41,7 @@ export default ReviewDetail = props => {
 	const [parentComment, setParentComment] = React.useState();
 	const [moveToCommentArea, setMoveToCommentArea] = React.useState(false); //리뷰 메인페이지에서 댓글 아이콘 클릭으로 진입 시 댓글 영역으로 이동, 첫 이동 이후 호출금지
 	const addChildCommentFn = React.useRef(() => {});
+	const [refreshing, setRefreshing] = React.useState(false); //위로 스크롤 시도 => 리프레싱
 	const [editMode, setEditMode] = React.useState(false); //댓글 편집 모드
 	const [editData, setEditData] = React.useState({
 		comment_contents: '',
@@ -627,6 +628,19 @@ export default ReviewDetail = props => {
 		});
 	};
 
+	const wait = timeout => {
+		return new Promise(resolve => setTimeout(resolve, timeout));
+	};
+
+	const onRefresh = () => {
+		setRefreshing(true);
+		wait(0).then(() => setRefreshing(false));
+	};
+
+	React.useEffect(() => {
+		refreshing ? getComment() : false;
+	}, [refreshing]);
+
 	const header = () => {
 		return (
 			<View style={{alignItems: 'center'}}>
@@ -752,6 +766,7 @@ export default ReviewDetail = props => {
 					ListHeaderComponent={header()}
 					ListFooterComponent={bottom()}
 					ListEmptyComponent={listEmpty}
+					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					showsVerticalScrollIndicator={false}
 					// keyboardDismissMode={'none'}
 					renderItem={renderItem}

@@ -6,6 +6,7 @@ import Loading from 'Root/component/molecules/modal/Loading';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import DP from 'Root/config/dp';
 import {useNavigation} from '@react-navigation/core';
+import {NORESULT} from 'Root/i18n/msg';
 
 export default SearchHashTag = React.memo((props, ref) => {
 	const navigation = useNavigation();
@@ -20,7 +21,7 @@ export default SearchHashTag = React.memo((props, ref) => {
 	};
 
 	const whenEmpty = () => {
-		return <ListEmptyInfo paddingVertical={600 * DP} text={'검색 결과가 없습니다..'} />;
+		return <ListEmptyInfo paddingVertical={600 * DP} text={NORESULT} />;
 	};
 
 	if (props.loading) {

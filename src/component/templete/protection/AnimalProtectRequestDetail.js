@@ -399,8 +399,9 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	const renderItem = ({item, index}) => {
 		return (
-			<View style={{alignItems: 'center'}}>
+			<View style={{alignItems: 'center', marginBottom: 10 * DP}}>
 				<ParentComment
+					writer={data.protect_request_writer_id}
 					parentComment={item}
 					onPressReplyBtn={onPressReply} // 부모 댓글의 답글쓰기 클릭 이벤트
 					onEdit={onEdit} // 수정 클릭

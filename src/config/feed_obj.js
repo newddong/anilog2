@@ -1,5 +1,7 @@
 export default feed_obj = {
-	shouldUpdate: false,
+	shouldUpdateByEdit: false,
+	shouldUpdateByComment: false,
 	edit_obj: {},
 	list: [],
+	mainHomeFeedList: [],
 };

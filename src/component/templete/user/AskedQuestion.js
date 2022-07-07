@@ -31,7 +31,7 @@ const AskedQuestion = ({route}) => {
 	const renderItem = ({item, index}) => {
 		// console.log('item', item);
 		let answered = false;
-
+    
 		if (item.qanda_status == 'waiting') {
 			answered = false;
 		} else {
@@ -50,7 +50,7 @@ const AskedQuestion = ({route}) => {
 		);
 	};
 
-	const listEmpty = () => {
+	const ListEmpty = () => {
 		return (
 			<View style={[{flex: 1}, {justifyContent: 'center'}, {alignItems: 'center'}]}>
 				<TwoPaw />
@@ -66,17 +66,21 @@ const AskedQuestion = ({route}) => {
 			</View>
 		);
 	} else {
-		return (
-			<View style={styles.container}>
-				<FlatList
-					data={data}
-					keyExtractor={item => item._id}
-					renderItem={renderItem}
-					// ListEmptyComponent={listEmpty}
-					showsVerticalScrollIndicator={false}
-				/>
-			</View>
-		);
+		if (data.length == 0) {
+			return <ListEmpty />;
+		} else {
+			return (
+				<View style={styles.container}>
+					<FlatList
+						data={data}
+						keyExtractor={item => item._id}
+						renderItem={renderItem}
+						// ListEmptyComponent={listEmpty}
+						showsVerticalScrollIndicator={false}
+					/>
+				</View>
+			);
+		}
 	}
 };
 

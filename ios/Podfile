@@ -1,9 +1,23 @@
+pre_install do |installer|
+  Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
+
+  installer.pod_targets.each do |pod|
+    if pod.name.eql?('RNPermissions') || pod.name.start_with?('Permission-')
+      def pod.build_type;
+        # Uncomment the line corresponding to your CocoaPods version
+        Pod::BuildType.static_library # >= 1.9
+        # Pod::Target::BuildType.static_library # < 1.9
+      end
+    end
+  end
+end
+
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 rn_maps_path = '../node_modules/react-native-maps' # 22.03.15 구글 맵스 활용을 위한 추가 (KSW)
 
 platform :ios, '11.0'
-use_frameworks! : linkage => :static
+use_frameworks! :linkage => :static
 
 target 'anilog' do
 
@@ -18,6 +32,12 @@ target 'anilog' do
   pod 'Permission-LocationAccuracy', :path => "#{permissions_path}/LocationAccuracy" # ios환경에서 gps location right detecting을 위한 추가
   pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways" # ios환경에서 gps location right detecting을 위한 추가
   pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse" # ios환경에서 gps location right detecting을 위한 추가
+  pod 'Permission-AppTrackingTransparency', :path => "#{permissions_path}/AppTrackingTransparency"
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
+  pod 'Permission-Contacts', :path => "#{permissions_path}/Contacts"
+  pod 'Permission-MediaLibrary', :path => "#{permissions_path}/MediaLibrary"
+  pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary"
+  pod 'Permission-PhotoLibraryAddOnly', :path => "#{permissions_path}/PhotoLibraryAddOnly"
   # pod 'react-native-google-maps', :path => rn_maps_path 
   # pod 'GoogleMaps' 
   # pod 'Google-Maps-iOS-Utils'
@@ -28,7 +48,7 @@ target 'anilog' do
   pod 'SDWebImagePhotosPlugin'
   
   pod 'VideoEditorSDK'
-  pod 'react-native-video/VideoCaching', : path => '../node_modules/react-native-video/react-native-video.podspec'
+  # pod 'react-native-video/VideoCaching', :path => '../node_modules/react-native-video/react-native-video.podspec'
   target 'anilogTests' do
     inherit! :complete
     # Pods for testing
@@ -38,10 +58,11 @@ target 'anilog' do
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and
   # you should disable the next line.
-  use_flipper!()
+  # use_flipper!()
 
   post_install do |installer|
     react_native_post_install(installer)
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
   end
 end
+

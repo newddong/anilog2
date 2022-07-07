@@ -37,7 +37,7 @@ const UserNote = props => {
 			)}
 			{/* 메모 썸네일 객체 */}
 			<View style={[styles.userNoteContainer]}>
-				<TouchableOpacity onPress={() => props.onLabelClick(data)}>
+				<TouchableOpacity onPress={() => props.onLabelClick(data)} disabled={props.checkBoxMode}>
 					<View style={[styles.userNoteThumbnail]}>
 						{data.opponent_user_profile_uri != undefined ? (
 							<Image source={{uri: data.opponent_user_profile_uri}} style={[styles.img_round_94]} />
@@ -88,7 +88,8 @@ const styles = StyleSheet.create({
 		height: 94 * DP,
 		flexDirection: 'row',
 		alignItems: 'center',
-		justifyContent: 'center',
+		// justifyContent: 'center',
+		marginLeft: 15 * DP,
 		// backgroundColor: '#F2C2C2',
 	},
 	userNoteThumbnail: {

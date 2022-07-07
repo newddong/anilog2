@@ -68,7 +68,7 @@ const SelectBoxModal = props => {
 		);
 	};
 
-	console.log('props.boxHeight', props.boxHeight);
+	// console.log('props.boxHeight', props.boxHeight);
 
 	const ItemSeparatorComponent = () => {
 		return <View style={{alignSelf: 'center', width: 630 * DP, height: 2 * DP, backgroundColor: GRAY30}}></View>;

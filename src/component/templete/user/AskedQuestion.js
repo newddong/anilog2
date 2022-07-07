@@ -18,7 +18,7 @@ const AskedQuestion = ({route}) => {
 		getQandInfo(
 			{qanda_user_id: userGlobalObj.userInfo._id},
 			result => {
-				console.log('result', result);
+				// console.log('result', result);
 				setData(result.msg);
 				setLoading(false);
 			},
@@ -29,8 +29,9 @@ const AskedQuestion = ({route}) => {
 	}, []);
 
 	const renderItem = ({item, index}) => {
-		console.log('item', item);
+		// console.log('item', item);
 		let answered = false;
+    
 		if (item.qanda_status == 'waiting') {
 			answered = false;
 		} else {
@@ -39,8 +40,7 @@ const AskedQuestion = ({route}) => {
 		const date = moment(item.announcement_date).format('YYYY.MM.DD');
 		return (
 			<OneNotice
-				// uptitle={`${date} / ${item.qanda_common_code_id?.common_code_msg_kor}`}
-				uptitle={`${date}`}
+				uptitle={`${date} / ${item.qanda_common_code_id?.common_code_msg_kor || ''} `}
 				downtitle={item.qanda_question_title}
 				contents={item.qanda_question_contents}
 				status={true}

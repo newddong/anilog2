@@ -138,6 +138,9 @@ export const VIDEO = '영상';
 export const REQ_ANIMAL = '동물보호';
 export const MY = 'MY';
 
+//검색탭
+export const NORESULT = '검색 결과가 없습니다.';
+
 //AnimalSavingHomeTopTabRoute
 export const MY_ACTIVITY = '내활동';
 export const HOW_TO_JOIN = '참여방법';

@@ -1,6 +1,6 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator, Keyboard} from 'react-native';
+import {FlatList, Platform, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator, Keyboard, RefreshControl} from 'react-native';
 import DP, {isNotch} from 'Root/config/dp';
 import {BLACK, GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
 import Modal from 'Root/component/modal/Modal';
@@ -39,6 +39,7 @@ export default ArticleDetail = props => {
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
 	const [parentComment, setParentComment] = React.useState(); //대댓글을 쓰는 경우 해당 댓글의 id container
+	const [refreshing, setRefreshing] = React.useState(false); //위로 스크롤 시도 => 리프레싱
 	const input = React.useRef();
 	const floatInput = React.useRef();
 	const addChildCommentFn = React.useRef(() => {});
@@ -640,6 +641,19 @@ export default ArticleDetail = props => {
 		}
 	};
 
+	const wait = timeout => {
+		return new Promise(resolve => setTimeout(resolve, timeout));
+	};
+
+	const onRefresh = () => {
+		setRefreshing(true);
+		wait(0).then(() => setRefreshing(false));
+	};
+
+	React.useEffect(() => {
+		refreshing ? getComment() : false;
+	}, [refreshing]);
+
 	const paging = () => {
 		if (articleList != 'false' && articleList.length != 0 && total != '') {
 			let totalPage = Array(Math.floor(total / FREE_LIMIT_DETAIL) + 1)
@@ -785,6 +799,7 @@ export default ArticleDetail = props => {
 					data={comments}
 					ref={flatListRef}
 					extraData={comments}
+					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					listKey={({item, index}) => index}
 					ListHeaderComponent={header()}
 					ListFooterComponent={bottom()}

@@ -7,6 +7,7 @@ import DP from 'Root/config/dp';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {GRAY10, WHITE} from 'Root/config/color';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
+import {NORESULT} from 'Root/i18n/msg';
 
 export default SearchAccountA = React.memo((props, ref) => {
 	// console.log('SearchAccountA', props.data);
@@ -95,7 +96,7 @@ export default SearchAccountA = React.memo((props, ref) => {
 								<Text style={[txt.noto24, {color: GRAY10}]}>검색 결과 {props.data.length}개</Text>
 							</View>
 						}
-						ListEmptyComponent={<ListEmptyInfo paddingVertical={540 * DP} text={props.listEmptyText} />}
+						ListEmptyComponent={<ListEmptyInfo paddingVertical={540 * DP} text={NORESULT} />}
 						windowSize={5}
 					/>
 				)}

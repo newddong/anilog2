@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Dimensions, Platform, FlatList, TouchableOpacity, ActivityIndicator, Image, ScrollView} from 'react-native';
-import {WHITE, GRAY10, APRI10, GRAY50} from 'Root/config/color';
+import {WHITE, GRAY10, APRI10, GRAY50, OPACITY90} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import Modal from 'Component/modal/Modal';
 import {getUserInfoById} from 'Root/api/userapi';
@@ -145,7 +145,7 @@ const AvatarSelectFromWriteModal = props => {
 	if (items == '') {
 		return (
 			<View style={[style.back]}>
-				<ActivityIndicator size={'large'} color={'black'} />
+				<ActivityIndicator size={'large'} color={'white'} />
 			</View>
 		);
 	} else
@@ -217,8 +217,8 @@ const style = StyleSheet.create({
 	back: {
 		flex: 1,
 		position: 'absolute',
-		backgroundColor: GRAY50,
-		opacity: 0.6,
+		backgroundColor: 'rgba(0,0,0,0.6)',
+		// opacity: 0.6,
 		left: 0,
 		right: 0,
 		top: 0,

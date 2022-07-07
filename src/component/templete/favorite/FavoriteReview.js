@@ -98,7 +98,7 @@ export default FavoriteReview = ({route, isFavorite}) => {
 						collectionName: 'communityobjects',
 					},
 					result => {
-						// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg[0]);
+						console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg.length);
 						let reviewList = [];
 						result.msg.map(v => {
 							if (v.favorite_etc_target_object_id.community_type == 'review') {

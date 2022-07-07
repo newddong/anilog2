@@ -263,15 +263,16 @@ export default CommunityWrite = props => {
 	KeyBoardEvent(
 		e => {
 			setKeyboardY(e.endCoordinates.height + KeyboardBorderLine);
-			// Platform.OS == 'android' ? setShowBtn(true) : setShowBtn(true);
+			Platform.OS == 'android' ? setShowBtn(true) : setShowBtn(true);
 		},
 		e => {
 			setKeyboardY(0);
+			Platform.OS == 'android' ? false : setShowBtn(false);
 		},
 	);
 
 	const onFocus = () => {
-		setShowBtn(true);
+		// setShowBtn(true);
 	};
 
 	const onBlur = () => {
@@ -469,13 +470,12 @@ export default CommunityWrite = props => {
 									textZoom={100}
 									editorStyle={{contentCSSText: `font-size:${28 * DP}px;`, backgroundColor: '#FAFAFA'}}
 									onChange={onChange}
-									keyboardDisplayRequiresUserAction={true}
 									style={{width: '100%', opacity: 0.99, flex: 1, minHeight: 500 * DP}}
 									placeholder={isReview ? WRITE_REVIEW_INFO : WRITE_FREE_INFO}
 									onCursorPosition={onCursorPosition}
 									onPaste={onPaste}
 									pasteAsPlainText={true}
-									onFocus={onFocus}
+									// onFocus={onFocus}
 									onBlur={onBlur}
 								/>
 							</ScrollView>
@@ -485,14 +485,13 @@ export default CommunityWrite = props => {
 									ref={richText}
 									editorStyle={{contentCSSText: `font-size:${28 * DP}px;`, backgroundColor: '#FAFAFA'}}
 									onChange={onChange}
-									keyboardDisplayRequiresUserAction={true}
 									style={{width: '100%', opacity: 0.99, flex: 1, minHeight: 500 * DP}}
 									contentMode={'mobile'}
 									placeholder={isReview ? WRITE_REVIEW_INFO : WRITE_FREE_INFO}
 									onCursorPosition={onCursorPosition}
 									onPaste={onPaste}
 									pasteAsPlainText={true}
-									onFocus={onFocus}
+									// onFocus={onFocus}
 									onBlur={onBlur}
 								/>
 							</ScrollView>
@@ -503,8 +502,8 @@ export default CommunityWrite = props => {
 				{data.community_address.normal_address.address_name != '' ? getMap() : <></>}
 				{/* 하단 버튼 컴포넌트  */}
 				{isReview ? (
-					<View style={[style.animalFilter_container]}>
-						<View style={[style.animalFilter]}>
+					<View style={[style.animalFilter_container, {}]}>
+						<View style={[style.animalFilter, {}]}>
 							<View style={[style.buttonContainer_review, {opacity: showBtn == true ? 0 : 1, zIndex: 1}]}>{getReviewButtonContainer(true)}</View>
 							<View style={{flexDirection: 'row', width: 398 * DP, justifyContent: 'space-between'}}>
 								<View style={[]}>
@@ -557,7 +556,7 @@ export default CommunityWrite = props => {
 				</View>
 			)}
 			{/* ios에서 키보드가 가려지는 현상 방지를 위한 keyBoard패딩 컴포넌트 */}
-			<View style={{height: Platform.OS == 'ios' ? KeyboardY - 40 : null}} />
+			<View style={{height: Platform.OS == 'ios' ? KeyboardY : null}} />
 		</View>
 	);
 };

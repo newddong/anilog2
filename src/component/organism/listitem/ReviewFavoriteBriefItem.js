@@ -34,8 +34,12 @@ const ReviewFavoriteBriefItem = props => {
 	};
 
 	React.useEffect(() => {
+		setData(props.data);
+	}, [props.data]);
+
+	React.useEffect(() => {
 		setIsLike(data.community_is_like);
-	}, []);
+	}, [data.community_is_like]);
 
 	const image = imageList();
 

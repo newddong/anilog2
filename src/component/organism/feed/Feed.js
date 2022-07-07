@@ -48,8 +48,8 @@ export default Feed = React.memo(props => {
 		feed_writer_id,
 		feed_avatar_id,
 	} = props.data;
-	const [isLike, setLike] = React.useState(false);
-	const [likeCount, setLikeCount] = React.useState(0);
+	const [isLike, setLike] = React.useState(feed_is_like);
+	const [likeCount, setLikeCount] = React.useState(feed_like_count);
 	const [recent, setRecent] = React.useState({
 		comment_contents: '',
 		comment_id: '',
@@ -75,6 +75,7 @@ export default Feed = React.memo(props => {
 					temp[findIndex].feed_is_like = !isLike;
 					temp[findIndex].feed_like_count = result.msg.targetFeed.feed_like_count;
 					feed_obj.list = temp;
+					console.log('result.msg.targetFeed.feed_like_count', result.msg.targetFeed.feed_like_count);
 					setLikeCount(result.msg.targetFeed.feed_like_count);
 				},
 				error => console.log(error),

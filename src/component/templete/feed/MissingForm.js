@@ -547,7 +547,7 @@ export default MissingForm = props => {
 							<Arrow_Down_BLACK />
 						</View>
 					</TouchableOpacity>
-					<Search48_BLACK />
+					<View style={{width: 48 * DP}}>{/* <Search48_BLACK /> */}</View>
 				</View>
 				<Input24
 					placeholder="반려동물이 실종된 구체적인 장소를 설명해 주세요."

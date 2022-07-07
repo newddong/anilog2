@@ -80,6 +80,13 @@ export default FeedList = ({route}) => {
 		}
 		//feedList의 댓글수, 최근댓글, 좋아요, 즐겨찾기의 전역관리를 위해 api로 호출된 feedList를 메모리에 저장
 		feedList.map((v, i) => {
+			// console.log('v', i, v);
+			if (v.is_favorite) {
+				// console.log('true,', v.feed_content);
+			} else {
+				// console.log('false,', v.feed_content);
+			}
+
 			const find = feed_obj.list.findIndex(e => e._id == v._id);
 			if (find == -1) {
 				//현 메모리에 저장되어 있지않은 피드아이템만 추가
@@ -233,6 +240,7 @@ export default FeedList = ({route}) => {
 							console.log('getFeedListByUserId', result.msg.length);
 							// console.log('totalCount', result.total_count);
 							const res = result.msg;
+
 							setTotal(result.total_count);
 							let list = [];
 							if (!pre && !next) {
@@ -306,6 +314,7 @@ export default FeedList = ({route}) => {
 					result => {
 						console.log('result / getUserTaggedFeedList', result.msg.length);
 						const res = result.msg.map((v, i) => v.usertag_feed_id);
+
 						setTotal(result.total_count);
 						let list = [];
 						if (!pre && !next) {
@@ -451,6 +460,7 @@ export default FeedList = ({route}) => {
 						console.log('msg', msg.length);
 						let temp = msg.filter(x => x.favorite_feed_id.feed_is_delete != true).map(data => data.favorite_feed_id);
 						// console.log('temp temp', temp, msg);
+
 						setFeed(temp);
 					},
 					error => {

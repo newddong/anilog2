@@ -76,13 +76,14 @@ export default FeedContent = props => {
 		feed_comment_count,
 		feed_writer_id,
 		feed_avatar_id,
+		is_favorite,
 	} = props.data;
 	const navigation = useNavigation();
 	const route = useRoute();
 	const [pressed, setPressed] = React.useState(false); //더보기 Arrow방향 false면 아래
 	const [show, setShow] = React.useState(false);
 	const [send, setSend] = React.useState('false');
-	const [isFavorite, setIsFavorite] = React.useState(props.data.is_favorite);
+	const [isFavorite, setIsFavorite] = React.useState(is_favorite);
 	const [commentCount, setCommentCount] = React.useState(0);
 	const feed_writer = props.data.feed_avatar_id ? props.data.feed_avatar_id : props.data.feed_writer_id;
 
@@ -91,9 +92,11 @@ export default FeedContent = props => {
 			setPressed(false);
 			const findIndex = feed_obj.list.findIndex(e => e._id == props.data._id);
 			if (findIndex != -1) {
-				// console.log('feed_comment_count', feed_content, feed_obj.list[findIndex].feed_comment_count);
+				// console.log('is_favorite', feed_content, feed_obj.list[findIndex].is_favorite);
 				setCommentCount(feed_obj.list[findIndex].feed_comment_count);
 				setIsFavorite(feed_obj.list[findIndex].is_favorite);
+			} else {
+				console.log('@@@@@@@@@@@@@@@@@@@@@@@', feed_content, is_favorite);
 			}
 		});
 		return unsubscribe;
@@ -645,7 +648,7 @@ export default FeedContent = props => {
 									<View style={feed_templete_style.likeButtonWrapper}>
 										<View style={[feed_templete_style.like48]}>{props.isLike ? <Like48_Filled /> : <Like48_Border />}</View>
 										<View style={[feed_templete_style.like_count_feed]}>
-											<Text style={[txt.roboto24, {color: GRAY10}]}>{props.likeCount}</Text>
+											<Text style={[txt.roboto24, {color: GRAY10}]}>{JSON.stringify(props.likeCount)}</Text>
 										</View>
 									</View>
 								</TouchableWithoutFeedback>

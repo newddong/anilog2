@@ -1,11 +1,12 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import {AlarmBadger48, MainLogo, Search48, AlarmBadgerNotice, Search48_BLACK, NewMainLogo} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {WHITE} from 'Root/config/color';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {getAlarmStatus} from 'Root/api/userapi';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export default LogoHeader = ({navigation, route, options, back}) => {
 	const isLoginUser = userGlobalObject.userInfo?._id;
@@ -55,7 +56,7 @@ export default LogoHeader = ({navigation, route, options, back}) => {
 			</View>
 			<View style={style.buttonContainer}>
 				<Search48_BLACK onPress={clickSearch} />
-				{isNewAlarm ? <AlarmBadgerNotice onPress={clickAlarm} /> : <AlarmBadger48 onPress={clickAlarm} />}
+				<TouchableOpacity onPress={clickAlarm}>{isNewAlarm ? <AlarmBadgerNotice /> : <AlarmBadger48 />}</TouchableOpacity>
 			</View>
 		</View>
 	);

@@ -268,12 +268,12 @@ export default PetInfoSetting = ({route}) => {
 					console.log('성별 변경 성공', result.msg);
 					setPetData({...petData, pet_species: result.msg.pet_species, pet_species_detail: result.msg.pet_species_detail});
 					Modal.close();
-					// setTimeout(() => {
-					// 	Modal.popNoBtn('반려동물의 정보가 성공적으로 \n 변경되었습니다.');
-					// 	setTimeout(() => {
-					// 		Modal.close();
-					// 	}, 1000);
-					// }, 100);
+					setTimeout(() => {
+						Modal.popNoBtn('반려동물의 정보가 성공적으로 \n 변경되었습니다.');
+						setTimeout(() => {
+							Modal.close();
+						}, 1000);
+					}, 100);
 				},
 				err => {
 					console.log('updatePetDetailInformation / PetinfoSetting err : ', err);
@@ -284,9 +284,57 @@ export default PetInfoSetting = ({route}) => {
 		setSexEditMode(!sexEditMode);
 	};
 	const editBirthInfo = () => {
+		if (birthEditMode) {
+			updatePetDetailInformation(
+				{
+					userobject_id: petData._id,
+					// pet_sex: petData.pet_sex,
+					pet_birthday: petData.pet_birthday,
+				},
+				result => {
+					console.log('성별 변경 성공', result.msg);
+					setPetData({...petData, pet_birthday: result.msg.pet_birthday});
+					Modal.close();
+					setTimeout(() => {
+						Modal.popNoBtn('반려동물의 정보가 성공적으로 \n 변경되었습니다.');
+						setTimeout(() => {
+							Modal.close();
+						}, 1000);
+					}, 100);
+				},
+				err => {
+					console.log('updatePetDetailInformation / PetinfoSetting err : ', err);
+					Modal.close();
+				},
+			);
+		}
 		setBirthEditMode(!birthEditMode);
 	};
 	const editWeightInfo = () => {
+		if (weightEditMode) {
+			updatePetDetailInformation(
+				{
+					userobject_id: petData._id,
+					// pet_sex: petData.pet_sex,
+					pet_weight: petData.pet_weight,
+				},
+				result => {
+					console.log('성별 변경 성공', result.msg);
+					setPetData({...petData, pet_weight: result.msg.pet_weight});
+					Modal.close();
+					setTimeout(() => {
+						Modal.popNoBtn('반려동물의 정보가 성공적으로 \n 변경되었습니다.');
+						setTimeout(() => {
+							Modal.close();
+						}, 1000);
+					}, 100);
+				},
+				err => {
+					console.log('updatePetDetailInformation / PetinfoSetting err : ', err);
+					Modal.close();
+				},
+			);
+		}
 		setWeightEditMode(!weightEditMode);
 	};
 

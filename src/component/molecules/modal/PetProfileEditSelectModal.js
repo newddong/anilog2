@@ -281,8 +281,6 @@ const style = StyleSheet.create({
 		width: 750 * DP,
 	},
 	listContainer3: {
-		// borderBottomWidth: 2 * DP,
-		// borderBottomColor: GRAY30,
 		width: 750 * DP,
 	},
 	footer: {

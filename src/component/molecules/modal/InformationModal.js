@@ -21,7 +21,7 @@ import Modal from 'Root/component/modal/Modal';
  */
 const InformationModal = props => {
 	const data = props.data;
-
+	console.log('datatata', data);
 	const userInfo = userGlobalObject.userInfo;
 	const isOwner = () => {
 		let result = false;
@@ -76,7 +76,7 @@ const InformationModal = props => {
 			user_interest_list = user_interest_list.filter(e => e != undefined);
 			user_interest_list = new Set(user_interest_list);
 			user_interest_list = [...user_interest_list];
-			// console.log('user_interest_list', user_interest_list);
+			console.log('user_interest_list', user_interest_list);
 			return (
 				<>
 					{/* 중성화 */}
@@ -220,7 +220,10 @@ const InformationModal = props => {
 				if (data.user_interests) {
 					let user_interest_list = [];
 
-					if (data.user_interests.hasOwnProperty('interests_group1')) {
+					if (
+						(data.user_interests.hasOwnProperty('interests_group1') || data.user_interests.hasOwnProperty('interests_group2'),
+						data.user_interests.hasOwnProperty('interests_group3'))
+					) {
 						user_interest_list = user_interest_list.concat(data.user_interests.interests_group1);
 						user_interest_list = user_interest_list.concat(data.user_interests.interests_group2);
 						user_interest_list = user_interest_list.concat(data.user_interests.interests_group3);
@@ -235,6 +238,8 @@ const InformationModal = props => {
 					user_interest_list = user_interest_list.filter(e => e != undefined);
 					user_interest_list = new Set(user_interest_list);
 					user_interest_list = [...user_interest_list];
+					console.log('user', user_interest_list);
+					user_interest_list = [];
 					return (
 						<>
 							<View style={[style.info_step2]}>

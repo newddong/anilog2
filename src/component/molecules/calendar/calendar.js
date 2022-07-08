@@ -6,7 +6,7 @@ import moment from 'moment';
 import DP from 'Root/config/dp';
 import {day} from 'Root/i18n/msg';
 import {txt} from 'Root/config/textstyle';
-import {APRI10, BLACK, GRAY10, GRAY20, GRAY30, WHITE} from 'Root/config/color';
+import {APRI10, BLACK, GRAY10, GRAY20, GRAY30, GRAY50, WHITE} from 'Root/config/color';
 import {ArrowMarkForCalendar, NextMark} from 'Root/component/atom/icon';
 import YearDropDown from 'Molecules/dropdown/YearDropDown';
 import AniButton from 'Molecules/button/AniButton';
@@ -279,7 +279,22 @@ const Calendar = props => {
 				{/* 하단 나가기 버튼 */}
 				<View style={[styles.btnCont]}>
 					<AniButton btnTitle={'취소'} btnStyle={'border'} btnLayout={{width: 136 * DP, borderRadius: 40 * DP, height: 70 * DP}} onPress={modalOff} />
-					<AniButton btnTitle={'완료'} btnLayout={{width: 136 * DP, borderRadius: 40 * DP, height: 70 * DP}} onPress={onPressConfirm} />
+					{selectedDate == '' ? (
+						<View
+							style={{
+								width: 136 * DP,
+								borderRadius: 40 * DP,
+								height: 70 * DP,
+								borderColor: GRAY30,
+								borderWidth: 2 * DP,
+								alignItems: 'center',
+								justifyContent: 'center',
+							}}>
+							<Text style={[txt.noto26, {color: GRAY20}]}>완료</Text>
+						</View>
+					) : (
+						<AniButton btnTitle={'완료'} btnLayout={{width: 136 * DP, borderRadius: 40 * DP, height: 70 * DP}} onPress={onPressConfirm} />
+					)}
 				</View>
 			</TouchableOpacity>
 		</TouchableOpacity>

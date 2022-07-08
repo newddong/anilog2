@@ -22,9 +22,11 @@ const NewMissingReportList = props => {
 		return <MissingReportBox index={index} data={item} />;
 	};
 	let mounted = true;
-	React.useEffect(()=>{
-		return ()=>{mounted=false}
-	},[])
+	React.useEffect(() => {
+		return () => {
+			mounted = false;
+		};
+	}, []);
 
 	React.useEffect(() => {
 		// getList();
@@ -36,7 +38,6 @@ const NewMissingReportList = props => {
 		getList('first');
 		return unsubscribe;
 	}, [navigation]);
-
 
 	// React.useEffect(() => {
 	// 	console.log('두번 눌림', props.doubleTab);
@@ -53,8 +54,8 @@ const NewMissingReportList = props => {
 		getMissingReportList(
 			{...topList, limit: PROTECT_REQUEST_MAIN_LIMIT, page: offset, main_type: true},
 			result => {
-				if(!mounted)return;
-				// console.log('getMissingReportList length', result.msg.length);
+				if (!mounted) return;
+				console.log('getMissingReportList length', result.msg[0]);
 
 				const res = result.msg;
 				if (topList != 'false') {

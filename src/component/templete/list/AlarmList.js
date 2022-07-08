@@ -266,8 +266,11 @@ const AlarmList = props => {
 							renderItem={renderItem}
 							showsVerticalScrollIndicator={false}
 							refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-							style={[{marginTop: 16 * DP}, {paddingBottom: 20 * DP}]}
-							contentContainerStyle={[{paddingBottom: 60 * DP}]}
+							style={[
+								{marginTop: 16 * DP},
+								// , {paddingBottom: 40 * DP}
+							]}
+							contentContainerStyle={[{paddingBottom: 150 * DP}]}
 						/>
 					</View>
 				)}

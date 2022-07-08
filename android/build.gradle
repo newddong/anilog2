@@ -1,5 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-
+tasks.whenTaskAdded { task -> if(task.name.equals("lint")) {   task.enabled = false } }
 buildscript {
     ext {
         kotlin_version = '1.5.32'
@@ -31,6 +31,8 @@ buildscript {
 
     }
 }
+
+
 
 allprojects {
     repositories {

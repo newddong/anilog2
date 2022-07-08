@@ -141,7 +141,7 @@ export default AddPhoto = props => {
 			first: requestloading,
 			toTime: 0,
 			toID: '123456789',
-			assetType: 'Photos',
+			assetType: 'All',
 			include: ['playableDuration'],
 			groupName: album,
 			groupTypes: 'album',
@@ -150,6 +150,7 @@ export default AddPhoto = props => {
 			delete param.fromTime;
 			delete param.toTime;
 			delete param.groupTypes;
+			delete param.include;
 		} else {
 			delete param.toID;
 		}

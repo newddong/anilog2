@@ -67,7 +67,7 @@ static void InitializeFlipper(UIApplication *application) {
   [SDImageLoadersManager.sharedManager addLoader:SDImagePhotosLoader.sharedLoader];
   SDImagePhotosLoader.sharedLoader.imageRequestOptions.sd_targetSize = CGSizeMake(720, 720);
   SDWebImageManager.defaultImageLoader = SDImageLoadersManager.sharedManager;
-
+  [NSThread sleepForTimeInterval:0.600];
   return YES;
 }
 

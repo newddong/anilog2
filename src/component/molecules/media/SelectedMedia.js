@@ -31,7 +31,7 @@ const SelectedMedia = props => {
 
 	const video = () => {
 		let video = props.media.videoUri??props.media.uri;
-		return <Video source={{uri:video}} style={[props.layout]} mute={true} resizeMode='contain'></Video>
+		return <Video source={{uri:video}} style={[props.layout]} muted={true} resizeMode='contain'></Video>
 	}
 
 	return (

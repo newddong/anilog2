@@ -34,6 +34,23 @@
    Album: 'Album',
    SmartAlbum: 'SmartAlbum',
  };
+
+ const SMART_ALBUM_SUBTYPES = [
+  "panorama", "파노라마",
+  "videos", "비디오",
+  "favorites", "즐겨찾는 항목",
+  "time-lapse","타임랩스",
+  "hidden","가려진 항목",
+  "recents","최근 항목",
+  "bursts","버스트",
+  "slo-mo","슬로 모션",
+  "selfies","셀카",
+  "screenshots","스크린샷",
+  "depth effect","인물 사진",
+  "live photos","라이브 포토",
+  "animated","움직이는 항목",
+  "long exposure",
+  "raw"];
  
  export type GroupTypes = keyof typeof GROUP_TYPES_OPTIONS;
  
@@ -74,7 +91,7 @@
    /**
     * Specifies filter on group subtype, basically for smart albums
     */
-   subType?: string,
+  //  subType?: string,
  
    /**
     * Specifies filter on asset type
@@ -256,7 +273,7 @@ export type VideoAttributes = {
    static getAlbums(
      params: GetAlbumsParams = {
        assetType: ASSET_TYPE_OPTIONS.All,
-       albumType: ALBUM_TYPE_OPTIONS.Album,
+       albumType: ALBUM_TYPE_OPTIONS.All,
      },
    ): Promise<Album[]> {
      return RNCCameraRoll.getAlbums(params);
@@ -269,6 +286,14 @@ export type VideoAttributes = {
      }
      if (!newParams.groupTypes && Platform.OS !== 'android') {
        newParams.groupTypes = GROUP_TYPES_OPTIONS.All;
+     }
+     //group name 값이 smart album subtype에 해당하는 경우 smart album 루트 타도록 함
+     if(newParams.groupName && Platform.OS == 'ios'){
+      if(SMART_ALBUM_SUBTYPES.includes(newParams.groupName)){
+        newParams.groupTypes = GROUP_TYPES_OPTIONS.SmartAlbum
+      } else {
+        newParams.groupTypes = GROUP_TYPES_OPTIONS.Album;
+      }
      }
      return newParams;
    }

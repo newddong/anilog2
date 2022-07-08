@@ -27,7 +27,7 @@ export default ReportForm = props => {
 
 	const route = useRoute();
 	const navigation = useNavigation();
-	const [city, setCity] = React.useState(['시, 도']); //광역시도 API자료 컨테이너
+	const [city, setCity] = React.useState(['광역시, 도']); //광역시도 API자료 컨테이너
 	const [district, setDistrict] = React.useState(['시,군,구']); //시군 API자료 컨테이너
 	const [isDistrictChanged, setIsDistrictChanged] = React.useState(false); // 시군 선택되었는지 여부
 	const [neighbor, setNeighbor] = React.useState(['동읍면']); //동읍면 API 자료 컨테이너
@@ -72,13 +72,6 @@ export default ReportForm = props => {
 				// type: types[0],
 			});
 		}
-	}, []);
-
-	React.useEffect(() => {
-		props.onDataChange && props.onDataChange(data);
-	}, [data]);
-
-	React.useEffect(() => {
 		getPettypes(
 			{},
 			types => {
@@ -99,42 +92,46 @@ export default ReportForm = props => {
 				console.log('err / getAddress / FeedWrite  : ', err);
 			},
 		);
+		const subscription = AppState.addEventListener('change', nextAppState => {
+			Modal.close();
+			if (nextAppState == 'active') {
+				requestPermission(); //다시 권한 요구
+			}
+		});
+		return () => {
+			subscription.remove();
+		};
 	}, []);
 
 	React.useEffect(() => {
-		getAddressList(
-			{
-				city: data.report_location.city,
-				district: data.report_location.district,
-			},
-			neighbor => {
-				if (neighbor.msg.length == 0) {
-					setNeighbor(['목록없음']);
-				} else {
-					setNeighbor(neighbor.msg);
-				}
-				// setData({...data, report_location: {city: data.report_location.city, district: data.report_location.district, neighbor: neighbor.msg[0]}});
-				// data.report_location.district == data.report_location.district ? false : setIsDistrictChanged(!isDistrictChanged);
-				setIsDistrictChanged(!isDistrictChanged);
-			},
-		);
-	}, [data.report_location.district]);
+		props.onDataChange && props.onDataChange(data);
+	}, [data]);
+
+	React.useEffect(() => {
+		console.log('data.report_location.city', data.report_location.city);
+		if (data.report_location.city != '광역시, 도') {
+			getAddressList(
+				{
+					city: data.report_location.city,
+					// district: data.report_location.district,
+				},
+				neighbor => {
+					console.log('getAddressList neighbor', neighbor);
+					if (neighbor.msg.length == 0) {
+						setNeighbor(['목록없음']);
+					} else {
+						setNeighbor(neighbor.msg);
+					}
+					// setData({...data, report_location: {city: data.report_location.city, district: data.report_location.district, neighbor: neighbor.msg[0]}});
+					// data.report_location.district == data.report_location.district ? false : setIsDistrictChanged(!isDistrictChanged);
+					setIsDistrictChanged(!isDistrictChanged);
+				},
+			);
+		}
+	}, [data.report_location.city]);
 
 	const onDateChange = date => {
 		setData({...data, report_witness_date: date});
-	};
-
-	const onSelectSpecies = () => {
-		Modal.popSelectScrollBoxModal(
-			[types.map(v => v.pet_species)],
-			'동물 종 선택',
-			selected => {
-				const find = types.find(e => e.pet_species == selected);
-				setData({...data, report_animal_species: selected});
-				setIsSpeciesChanged(!isSpeciesChanged);
-			},
-			() => Modal.close(),
-		);
 	};
 
 	const onPressCity = () => {
@@ -142,7 +139,7 @@ export default ReportForm = props => {
 		Modal.popSelectScrollBoxModal([city], '도, 광역, 특별시', selectedItem => {
 			let report_location = data.report_location;
 			report_location.city = selectedItem;
-			report_location.district = '시군 선택';
+			report_location.district = '시,군,구';
 			setData({...data, report_location: report_location});
 			getAddressList(
 				{city: selectedItem},
@@ -155,6 +152,7 @@ export default ReportForm = props => {
 			Modal.close();
 		});
 	};
+
 	const onPressDistrict = () => {
 		Keyboard.dismiss();
 		Modal.popSelectScrollBoxModal([district], '도, 광역, 특별시', selectedItem => {
@@ -197,17 +195,7 @@ export default ReportForm = props => {
 	};
 
 	//위치 권한을 위해 Background로 갔다가 앱으로 돌아왔을 경우 권한을 다시 확인
-	React.useEffect(() => {
-		const subscription = AppState.addEventListener('change', nextAppState => {
-			Modal.close();
-			if (nextAppState == 'active') {
-				requestPermission(); //다시 권한 요구
-			}
-		});
-		return () => {
-			subscription.remove();
-		};
-	}, []);
+	React.useEffect(() => {}, []);
 
 	//위치 권한이 설정되어 있지 않을 경우 디바이스 세팅으로 안내
 	const getToSetting = error => {
@@ -338,15 +326,12 @@ export default ReportForm = props => {
 
 	const feedInput = props.feedInput();
 	const feedInputRef = React.useRef();
+
 	//사진 추가
 	const moveToMultiPhotoSelect = () => {
-		// if (selectedImg.length > 4) {
-		// 	Modal.alert('첨부파일은 5개까지만 가능합니다');
-		// 	return;
-		// }
 		navigation.navigate('MultiPhotoSelect', {prev: {name: route.name, key: route.key}});
 	};
-	console.log(data);
+
 	return (
 		<View style={[feedWrite.reportForm_container]} showsVerticalScrollIndicator={false}>
 			<View style={[reportStyle.reportForm]}>

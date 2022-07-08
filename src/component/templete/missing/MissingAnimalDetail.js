@@ -51,11 +51,34 @@ export default MissingAnimalDetail = props => {
 				setData(result);
 				// console.log('data', data.msg);
 				navigation.setParams({writer: data.msg.feed_writer_id._id, isMissingOrReport: true, feed_object: data.msg});
+				if (props.route.params && props.route.params.from == 'feedList') {
+					// console.log('result', result);
+					const getGender = () => {
+						switch (result.missing_animal_sex) {
+							case 'male':
+								return '남아';
+							case 'female':
+								return '여아';
+							case 'unknown':
+								return '';
+							default:
+								break;
+						}
+					};
+					navigation.setOptions({
+						title: `${result.missing_animal_species}/${result.missing_animal_species_detail}${getGender() ? '/' + getGender() : ''}`,
+					});
+				}
 				fetchMissingPostList(result._id);
 			},
 			err => {
 				console.log('getFeedDetailById / Error / MissingAnimalDetail : ', err);
 				if (err.includes('code 500')) {
+					setData('false');
+					setTimeout(() => {
+						Modal.popOneBtn(NETWORK_ERROR, '확인', () => navigation.goBack());
+					}, 500);
+				} else if (err.includes('없습니다')) {
 					setData('false');
 					setTimeout(() => {
 						Modal.popOneBtn(NETWORK_ERROR, '확인', () => navigation.goBack());

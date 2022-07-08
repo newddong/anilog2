@@ -639,7 +639,7 @@ export default FeedContent = props => {
 				{props.showMedia ? (
 					<>
 						<View style={[style.feedMedia_feed]}>
-							<FeedMedia data={props.data} onPressPhoto={onPressPhoto} />
+							<FeedMedia data={props.data} onPressPhoto={onPressPhoto} isView={props.isView}/>
 						</View>
 						<View style={[feed_templete_style.likeCommentButtons_view]}>
 							<View style={[feed_templete_style.likeCommentInfo_view_feed]}>

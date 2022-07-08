@@ -20,39 +20,39 @@ export default PhotoSelectHeader = ({navigation, route, options, back}) => {
 
 	const confirm = () => {
 		console.log(route.params, selectedPhoto);
-		if (prevRoute && selectedPhoto.length > 1) {
-			let localFiles = selectedPhoto.filter(v => !v.uri.includes('http'));
-			let remoteFiles = selectedPhoto.filter(v => v.uri.includes('http'));
-			CameraRoll.compressImage({
-				imageFiles: localFiles.map(v =>{
-					return v.uri;
-				}),
-				quality: 0.7,
-				maxWidth: 1024,
-				maxHeight: 1024,
-			})
-				.then(compressedImg => {
-					console.log(compressedImg);
-					prevRoute &&
-						prevKey &&
-						navigation.navigate({
-							name: prevRoute,
-							key: prevKey,
-							params: {
-								selectedPhoto: localFiles.map((v, i) => {
-									v.originUri = v.uri;
-									v.uri = compressedImg.assets[i].uri;
-									return v;
-								}),
-							},
-							merge: true,
-						});
-				})
-				.catch(e => console.log('camerarollerr', e));
-		} else {
-			prevRoute && prevKey && navigation.navigate({name: prevRoute, key: prevKey, params: {selectedPhoto: selectedPhoto}, merge: true});
-		}
-		// alert('Confirm');
+		// if (prevRoute && selectedPhoto.length > 1) {
+		// 	let localFiles = selectedPhoto.filter(v => !v.uri.includes('http'));
+		// 	let remoteFiles = selectedPhoto.filter(v => v.uri.includes('http'));
+		// 	CameraRoll.compressImage({
+		// 		imageFiles: localFiles.map(v =>{
+		// 			return v.uri;
+		// 		}),
+		// 		quality: 0.7,
+		// 		maxWidth: 1024,
+		// 		maxHeight: 1024,
+		// 	})
+		// 		.then(compressedImg => {
+		// 			console.log(compressedImg);
+		// 			prevRoute &&
+		// 				prevKey &&
+		// 				navigation.navigate({
+		// 					name: prevRoute,
+		// 					key: prevKey,
+		// 					params: {
+		// 						selectedPhoto: localFiles.map((v, i) => {
+		// 							v.originUri = v.uri;
+		// 							v.uri = compressedImg.assets[i].uri;
+		// 							return v;
+		// 						}),
+		// 					},
+		// 					merge: true,
+		// 				});
+		// 		})
+		// 		.catch(e => console.log('camerarollerr', e));
+		// } else {
+		// 	prevRoute && prevKey && navigation.navigate({name: prevRoute, key: prevKey, params: {selectedPhoto: selectedPhoto}, merge: true});
+		// }
+		prevRoute && prevKey && navigation.navigate({name: prevRoute, key: prevKey, params: {selectedPhoto: selectedPhoto}, merge: true});
 	};
 
 	const test = () => {

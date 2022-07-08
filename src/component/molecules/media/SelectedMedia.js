@@ -22,11 +22,10 @@ const SelectedMedia = props => {
 	const image = () => {
 		if(isVideo)return false;
 		let uri = props.media_uri??props.media.uri;
-		console.log('uri',uri, props.media.uri, props.media_uri)
 		return uri.uri.includes('http') ? (
 			<FastImage source={{uri: uri.uri}} style={props.layout} />
 		) : (
-			<Image source={{uri: uri.uri}} style={props.layout} />
+			<Image source={{uri: uri.cropUri ?? uri.uri}} style={props.layout} />
 		)
 	}
 

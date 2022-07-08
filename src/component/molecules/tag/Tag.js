@@ -25,6 +25,7 @@ const Tag = ({pos, user, onDelete, onEndTagMove, viewmode, backgroundLayout, onT
 			onMoveShouldSetPanResponder: () => true,
 			onPanResponderGrant: ({nativeEvent}) => {
 				// console.log('moveg',nativeEvent,pan);
+				onTagMoveStart();
 			},
 			onPanResponderStart: ({nativeEvent}) => {
 				// console.log('moves',nativeEvent,pan);

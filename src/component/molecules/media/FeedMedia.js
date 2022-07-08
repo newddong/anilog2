@@ -125,6 +125,12 @@ export default FeedMedia = props => {
 			</View>
 		);
 	};
+	const [swiperIndex, setSwiperIndex] = React.useState(0);
+	const indexChange = index => {
+		console.log('index',index);
+		setSwiperIndex(index);
+	}
+
 	return (
 		<View style={{height: 734 * DP}}>
 			<View style={{height: 734 * DP}}>
@@ -138,6 +144,7 @@ export default FeedMedia = props => {
 					scrollEventThrottle={16}
 					ref={swiperRef}
 					renderPagination={pagenation}
+					onIndexChanged={indexChange}
 					horizontal={true}>
 					{feed_medias.map((data, idx) => {
 						return (
@@ -147,6 +154,7 @@ export default FeedMedia = props => {
 									uri={data.media_uri}
 									data={data}
 									taglist={data.tags}
+									onShow={props.isView&&(idx==swiperIndex||feed_medias.length==0)}
 									key={idx}
 									viewmode={true}
 									onPressPhoto={onPressPhoto}

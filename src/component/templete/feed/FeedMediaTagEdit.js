@@ -32,7 +32,7 @@ export default FeedMediaTagEdit = props => {
 	const feedData = route?route.params:[];
 	const [tagScreens, setTagScreens] = React.useState(feedData.feed_medias ?? []);
 	const [scroll, setScroll] = React.useState(true);
-	// console.log('feedData', feedData, navState);
+	console.log('feedData', feedData, navState);
 
 	const onEndTagMove = (tag, uri) => {
 		// console.log('onTagmoveEnd', tag);
@@ -47,6 +47,7 @@ export default FeedMediaTagEdit = props => {
 					}
 				})
 			}
+			v.is_video = v.is_video
 			return v;
 		}))
 
@@ -54,6 +55,7 @@ export default FeedMediaTagEdit = props => {
 
 	};
 	const onTagMoveStart = isMove => {
+		console.log('movestart')
 		setScroll(false); //태그의 움직임이 멈추면 Swipe가 가능하도록 설정
 	};
 
@@ -68,6 +70,7 @@ export default FeedMediaTagEdit = props => {
 					v.tags = [newtag];
 				}
 			}
+			v.is_video = v.is_video
 			return v;
 		}))
 	};
@@ -77,6 +80,7 @@ export default FeedMediaTagEdit = props => {
 			if(v.media_uri == uri){
 				v.tags = v.tags.filter(v=>v.user._id!=user._id);
 			}
+			v.is_video = v.is_video
 			return v;
 		}))
 
@@ -97,6 +101,7 @@ export default FeedMediaTagEdit = props => {
 			<PhotoTagItem
 				style={lo.box_img}
 				uri={v.media_uri}
+				isVideo={v.is_video}
 				taglist={v.tags}
 				key={v.tags.reduce((a,c)=>a+c.pos.x+c.pos.y,0)}
 				onMakeTag={onMakeTag}
@@ -107,7 +112,7 @@ export default FeedMediaTagEdit = props => {
 			/>
 		));
 	};
-
+	console.log('tagscreen',tagScreens);
 	return (
 		<View style={lo.wrp_main}>
 			<View style={lo.box_img_tag}>

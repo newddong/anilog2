@@ -114,7 +114,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 				feed_medias: route.params.feed_medias.map(f=>{
 					route.params.selectedPhoto.some(v=>{
 						if((v.videoUri?? v.cropUri ?? v.uri)==f.media_uri){
-							f.is_video = v.isVideo;
+							f.is_video = v.isVideo ?? v.is_video;
 						}
 					});
 
@@ -213,9 +213,9 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 				return v.videoUri?? v.cropUri ?? v.uri;
 			}),
 			feed_medias: route.params.feed_medias.map(f=>{
-				route.params.selectedPhoto.some(v=>{
+				route.params.selectedPhoto?.some(v=>{
 					if((v.cropUri ?? v.uri)==f.media_uri){
-						f.is_video = v.isVideo;
+						f.is_video = v.isVideo ?? v.is_video;
 						f.media_uri = v.videoUri?? v.cropUri ?? v.uri;
 					}
 				});

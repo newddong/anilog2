@@ -45,7 +45,7 @@ const LocalMedia = props => {
 		if (isVideo) {
 			CameraRoll.getVideoAttributes(props.data.image.uri).then(r => {
 				console.log('video attribute', r);
-				videoUri.current = Platform.OS=='ios'?r[0].uri:r.duration;
+				videoUri.current = Platform.OS=='ios'?r[0].uri:undefined;
 				setDuration(Platform.OS=='ios'?r[0].duration:r.duration);
 			}).catch(e=>console.log('video attribute error',e));
 		}
@@ -57,6 +57,7 @@ const LocalMedia = props => {
 			props.onCancel(props.data.image.uri);
 		} else {
 			let photo = {...props.data,image:{...props.data.image,videoUri:videoUri.current}}
+			console.log('사진',photo)
 			// setSelected(true);
 			props.onSelect(photo, duration);
 		}

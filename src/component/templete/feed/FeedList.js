@@ -90,14 +90,15 @@ export default FeedList = ({route}) => {
 			const find = feed_obj.list.findIndex(e => e._id == v._id);
 			if (find == -1) {
 				//현 메모리에 저장되어 있지않은 피드아이템만 추가
-				feed_obj.list.push({
-					_id: v._id,
-					feed_recent_comment: v.feed_recent_comment,
-					feed_comment_count: v.feed_comment_count,
-					is_favorite: v.is_favorite,
-					feed_is_like: v.feed_is_like,
-					feed_like_count: v.feed_like_count,
-				});
+				// feed_obj.list.push({
+				// 	_id: v._id,
+				// 	feed_recent_comment: v.feed_recent_comment,
+				// 	feed_comment_count: v.feed_comment_count,
+				// 	is_favorite: v.is_favorite,
+				// 	feed_is_like: v.feed_is_like,
+				// 	feed_like_count: v.feed_like_count,
+				// });
+				feed_obj.list.push(v)
 			}
 		});
 		console.log('feed_obj.list', feed_obj.list.length);
@@ -557,9 +558,9 @@ export default FeedList = ({route}) => {
 			/>
 		);
 	};
-
-	const renderItem = ({item}) => {
-		return <Feed data={item} deleteFeed={deleteFeedItem} />;
+	const [viewIndex, setViewIndex] = React.useState([]);
+	const renderItem = ({item,index}) => {
+		return <Feed data={item} deleteFeed={deleteFeedItem} isView={viewIndex.some(v=>v.index==index)}/>;
 	};
 
 	const wait = timeout => {
@@ -593,7 +594,7 @@ export default FeedList = ({route}) => {
 		return {length: data[index].height, offset: data[index].offset, index: index};
 	};
 	const keyExtractor = (item, index) => {
-		let key = item._id + item.feed_update_date + item.feed_is_like;
+		let key = item._id + item.feed_is_like + item.feed_medias?.reduce((a,c)=>{return a+c.tags.length+c.tags.reduce((a,c)=>{return a+c.position_x},0)},0);
 		return key;
 	};
 	const [tl, setTl] = React.useState({});
@@ -601,6 +602,7 @@ export default FeedList = ({route}) => {
 	const [fontSize, setSize] = React.useState(16);
 	const [testTx, setTx] = React.useState('한');
 	const [code, setCode] = React.useState(62);
+	const viewable = React.useCallback((e)=>{setViewIndex(e.viewableItems)},[]);
 	return (
 		<View style={[login_style.wrp_main, {flex: 1, backgroundColor: WHITE}, {borderTopWidth: 2 * DP}, {borderTopColor: GRAY30}]}>
 			<FlatList
@@ -609,7 +611,7 @@ export default FeedList = ({route}) => {
 				keyExtractor={keyExtractor}
 				refreshControl={route.name == 'MainHomeFeedList' ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} /> : <></>}
 				getItemLayout={getItemLayout}
-				ListHeaderComponent={route.name == 'MainHomeFeedList' ? MissingReport : <></>}
+				ListHeaderComponent={route.name == 'MainHomeFeedList' ? MissingReport() : false}
 				ref={flatlist}
 				refreshing
 				extraData={refresh}
@@ -619,6 +621,9 @@ export default FeedList = ({route}) => {
 						<View style={{height: 10 * DP, backgroundColor: GRAY30, width: 750 * DP}}></View>
 					</View>
 				)}
+				onViewableItemsChanged={viewable}
+				viewabilityConfig={{waitForInteraction: false,
+					viewAreaCoveragePercentThreshold: 40,minimumViewTime:0}}
 				windowSize={3}
 				maxToRenderPerBatch={5}
 				updateCellsBatchingPeriod={0}

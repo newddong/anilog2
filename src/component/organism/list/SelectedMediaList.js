@@ -12,21 +12,26 @@ import {selectedMediaList} from 'Organism/style_organism copy';
  * }} props
  */
 export default SelectedMediaList = props => {
-	const isContainVideo = props.mediaList.length>0;
+	const isContainVideo = props.mediaList.length > 0;
 	const onDelete = index => {
 		props.onDelete(index);
 	};
 	const renderItem = ({item, index}) => {
 		return (
-			<View style={[selectedMediaList.itemContainer,{borderRadius:30*DP}]}>
-				<SelectedMedia layout={props.layout} media={isContainVideo?item:false} media_uri={item} onDelete={() => onDelete(index)}/>
+			<View style={[selectedMediaList.itemContainer, {borderRadius: 30 * DP}]}>
+				<SelectedMedia layout={props.layout} media={isContainVideo ? item : false} media_uri={item} onDelete={() => onDelete(index)} />
 			</View>
 		);
 	};
-	
+
 	return (
-		<View style={{height:props.layout.height}}>
-			<FlatList data={isContainVideo?props.mediaList:props.items} renderItem={renderItem} horizontal={true} showsHorizontalScrollIndicator={false} />
+		<View style={{height: props.layout.height}}>
+			<FlatList
+				data={isContainVideo ? props.mediaList : props.items}
+				renderItem={renderItem}
+				horizontal={true}
+				showsHorizontalScrollIndicator={false}
+			/>
 		</View>
 	);
 };

@@ -714,20 +714,25 @@ RCT_EXPORT_METHOD(cropImage:(NSDictionary* _Nonnull) params
   if(uri == nil || uri.length == 0) {
     reject(@"Nil error", @"Uri is an empty string", nil);
     return;
-  } else if (![uri hasPrefix:@"ph://"]) {
-    reject(@"Uri format error", @"Uri format doesn't fit with photoKit ('ph://')", nil);
-    return;
   }
+//  else if (![uri hasPrefix:@"ph://"]) {
+//    reject(@"Uri format error", @"Uri format doesn't fit with photoKit ('ph://')", nil);
+//    return;
+//  }
   __block NSData* imageData;
-  
-  NSArray* errorOccured = [self requestImageData:uri
-              imageRequestResultHandlerOverAPI13:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, CGImagePropertyOrientation orientation, NSDictionary * _Nullable info) {
-    imageData = resultData;
+  NSArray* errorOccured = nil;
+  if ([uri hasPrefix:@"ph://"]) {
+    [self requestImageData:uri
+                imageRequestResultHandlerOverAPI13:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, CGImagePropertyOrientation orientation, NSDictionary * _Nullable info) {
+      imageData = resultData;
+    }
+                         imageRequestResultHandler:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+      imageData = resultData;
+    }];
   }
-                       imageRequestResultHandler:^(NSData * _Nullable resultData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
-    imageData = resultData;
-  }];
-  
+  else {
+    imageData = [NSData dataWithContentsOfFile:uri options:0 error:nil];
+  }
   if(errorOccured != nil){
     reject(([errorOccured[0] length] == 0) ? nil : errorOccured[0],
            ([errorOccured[1] length] == 0) ? nil : errorOccured[1],

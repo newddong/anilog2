@@ -48,17 +48,18 @@ export default FeedWrite = props => {
 	);
 	const type = props.route.params?.feed_public_type;
 	React.useEffect(() => {
-		// console.log('정보 변경', props.route);
+		console.log('정보 변경', selectedImg);
 		if (props.route.name != 'FeedEdit') {
 			const param = props.route.params;
-			console.log('param', param);
 			// console.log('param.feed_avatar_id', param.feed_avatar_id);
 			param.feed_avatar_id //피드 글쓰기 클릭시 즉시 작성자 아바타 계정을 선택하는 절차가 추가됨에 따라 분기처리가 필요해짐
 				? // - 유저 계정에서 피드글쓰기를 누른 경우
 				  props.navigation.setParams({
 						...props.route.params,
 						media_uri: selectedImg,
-						feed_medias: selectedImg.map(v => (v ? {media_uri: v.cropUri ?? v.uri, is_video: false, duration: 0, tags: []} : false)),
+						feed_medias: selectedImg.map(v =>
+							v ? {media_uri: v.videoUri ?? v.cropUri ?? v.uri, is_video: v.isVideo ?? v.is_video, duration: 0, tags: []} : false,
+						),
 						feed_avatar_id: param.feed_avatar_id._id
 							? param.feed_avatar_id._id
 							: param.feed_avatar_id
@@ -69,7 +70,12 @@ export default FeedWrite = props => {
 				  props.navigation.setParams({
 						...props.route.params,
 						media_uri: selectedImg.map(v => v.cropUri ?? v.uri),
-						feed_medias: selectedImg.map(v => ({media_uri: v.cropUri ?? v.uri, is_video: false, duration: 0, tags: []})),
+						feed_medias: selectedImg.map(v => ({
+							media_uri: v.videoUri ?? v.cropUri ?? v.uri,
+							is_video: v.isVideo ?? v.is_video,
+							duration: 0,
+							tags: [],
+						})),
 						// feed_avatar_id: props.route.params.feed_avatar_id ? props.route.params.feed_avatar_id?._id : userGlobalObject.userInfo._id,
 				  });
 		} else {
@@ -77,9 +83,9 @@ export default FeedWrite = props => {
 				...props.route.params,
 				media_uri: selectedImg.filter(v => !v.uri.includes('http')),
 				feed_medias: selectedImg.map(img => {
-					let uri = img.cropUri ?? img.uri;
+					let uri = img.videoUri ?? img.cropUri ?? img.uri;
 					let media = props.route.params.feed_medias.find(v => v.media_uri == uri);
-					return {media_uri: uri, is_video: false, duration: 0, tags: media ? media.tags : []};
+					return {media_uri: uri, is_video: img.isVideo ?? img.is_video, duration: 0, tags: media ? media.tags : []};
 				}),
 				photoToDelete: photoToDelete,
 			});
@@ -154,7 +160,8 @@ export default FeedWrite = props => {
 			}
 			if (props.route.name == 'FeedEdit') {
 				console.log('이미지 추가', selectedImg);
-				setSelectedImg(selectedImg.map(v => ({uri: v.uri})).concat(props.route.params.selectedPhoto));
+				// setSelectedImg(selectedImg.map(v => ({is_video:v.is_video,uri: v.videoUri ?? v.cropUri ?? v.uri})).concat(props.route.params.selectedPhoto));
+				setSelectedImg(props.route.params.selectedPhoto);
 			}
 			// setSelectedImg(props.route.params.selectedPhoto);
 		}
@@ -351,8 +358,12 @@ export default FeedWrite = props => {
 					<SelectedMediaList
 						layout={styles.img_square_round_336}
 						items={selectedImg.map(v => {
-							console.log('selectedImage', v);
+							// console.log('selectedImage', v);
 							return v ? v.cropUri ?? v.uri : undefined;
+						})}
+						mediaList={selectedImg.map(v => {
+							// console.log('selectedImage', v);
+							return v;
 						})}
 						onDelete={deletePhoto}
 					/>
@@ -381,9 +392,11 @@ export default FeedWrite = props => {
 				maxLength={150}
 				onFind={onFindTag}
 				selectedImg={selectedImg.map(v => {
-					return v ? v.cropUri ?? v.uri : undefined;
+					console.log('hash', v);
+					return v.videoUri ? v.cropUri ?? v.uri : undefined;
 				})}
 				mediaList={selectedImg.map((v, i) => {
+					console.log('media', v);
 					return v;
 				})}
 				onDelete={deletePhoto}
@@ -396,8 +409,6 @@ export default FeedWrite = props => {
 	};
 
 	const render = ({item, index}) => {
-		console.log('ahghhhh', props.route.params.feed_public_type);
-
 		return (
 			<View style={[login_style.wrp_main]} ref={container}>
 				{!(showLostAnimalForm || showReportForm) && (

@@ -19,6 +19,7 @@ const MissingReportBox = props => {
 	const [objCity, setObjCity] = React.useState('');
 	const navigation = useNavigation();
 	// console.log(moment(props.data?.missing_animal_date).format('YY.MM.DD'));
+
 	React.useEffect(() => {
 		try {
 			let objCitys = JSON.parse(`${props.data?.missing_animal_lost_location}`);
@@ -27,23 +28,12 @@ const MissingReportBox = props => {
 			// console.log('err', err);
 		}
 	}, []);
+
 	const onLabelClick = () => {
 		let sexValue = '';
 		switch (props.data.feed_type) {
 			case 'missing':
-				switch (props.data.missing_animal_sex) {
-					case 'male':
-						sexValue = '남';
-						break;
-					case 'female':
-						sexValue = '여';
-						break;
-					case 'unknown':
-						sexValue = '성별모름';
-						break;
-				}
-				const titleValue = props.data.missing_animal_species + '/' + props.data.missing_animal_species_detail + '/' + sexValue;
-				navigation.navigate('MissingAnimalDetail', {title: titleValue, _id: props.data._id});
+				navigation.navigate('MissingAnimalDetail', {title: '', _id: props.data._id, from: 'feedList'});
 				break;
 			case 'report':
 				navigation.navigate('ReportDetail', {_id: props.data._id});

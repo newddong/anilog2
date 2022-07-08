@@ -237,7 +237,6 @@ export default AddPhoto = props => {
 			}
 		}
 	}, []);
-
 	React.useEffect(() => {
 		navigation.setParams({selectedPhoto: selectedPhoto});
 		console.log('선택사진 목록', selectedPhoto);
@@ -252,8 +251,9 @@ export default AddPhoto = props => {
 			setIndex(props.route.params.selectedPhoto.length - 1);
 		}
 	}, [props.route.params.selectedPhoto]);
+
 	const selectPhoto = (photo, duration) => {
-		console.log(photo,duration);
+		// console.log('사진선택',photo,duration);
 		if (selectedPhoto.length >= limit) {
 			Modal.alert('사진은 최대 ' + limit + '장까지만 업로드 가능합니다.');
 			return;
@@ -320,12 +320,18 @@ export default AddPhoto = props => {
 		},
 		[photolist],
 	);
+
 	const onCrop = (originImg, cropImg) => {
-		if (originImg == cropImg) {
-			delete selectedPhoto[selectedPhoto.length - 1].cropUri;
-		} else {
-			selectedPhoto[selectedPhoto.length - 1].cropUri = cropImg;
-		}
+		console.log(selectedPhoto);
+		setSelectedPhoto(selectedPhoto.map((v,i)=>{
+			if(v.uri==originImg){
+				setIndex(i);
+				return {...v,cropUri:cropImg}
+			}else{
+				return v;
+			}
+		}))
+		
 	};
 
 	const next = () => {
@@ -363,7 +369,7 @@ export default AddPhoto = props => {
 		let media = selectedPhoto[index];
 
 		VideoEditor.unlockLicense();
-		VideoEditor.openVideoEditor(media.videoUri??media.uri, media.duration, 15, 30, 'aniMov')
+		VideoEditor.openVideoEditor(media.videoUri ?? media.uri, media.duration, 15, 60, 'aniMov')
 			.then(r => {
 				console.log(r);
 				media.videoUri = r.video;
@@ -373,6 +379,7 @@ export default AddPhoto = props => {
 				console.log(e);
 			});
 	};
+
 	return (
 		<View style={lo.wrp_main}>
 			{selectedPhoto[index] ? (
@@ -381,10 +388,11 @@ export default AddPhoto = props => {
 						<Video
 							style={{width: 750 * DP, height: 750 * DP, backgroundColor: '#000'}}
 							source={{uri: selectedPhoto[index]?.videoUri ?? selectedPhoto[index]?.uri}}
+							// source={{uri: selectedPhoto[index]?.videoUri}}
 							muted
 							resizeMode="contain"
 						/>
-						{selectedPhoto[index]&&!selectedPhoto[index].uri.includes('gif') && !selectedPhoto[index].uri.includes('http') && (
+						{selectedPhoto[index] && !selectedPhoto[index].uri.includes('gif') && !selectedPhoto[index].uri.includes('http') && (
 							<View
 								style={{position: 'absolute', width: 100 * DP, height: 100 * DP, backgroundColor: 'red', bottom: 0, right: 0}}
 								onStartShouldSetResponder={() => true}
@@ -394,14 +402,16 @@ export default AddPhoto = props => {
 						)}
 					</View>
 				) : (
-					<Crop
-						width={750 * DP}
-						height={750 * DP}
-						paddingHorizontal={0 * DP}
-						paddingVertical={0 * DP}
-						uri={selectedPhoto[index].cropUri ?? selectedPhoto[index].uri}
-						onCrop={onCrop}
-					/>
+					<React.Fragment key={selectedPhoto.length+(selectedPhoto.reduce((a,c)=>{return a+c.cropUri?1:0},0))+index}>
+						<Crop
+							width={750 * DP}
+							height={750 * DP}
+							paddingHorizontal={0 * DP}
+							paddingVertical={0 * DP}
+							photo={selectedPhoto[index]}
+							onCrop={onCrop}
+						/>
+					</React.Fragment>
 				)
 			) : (
 				false
@@ -415,13 +425,14 @@ export default AddPhoto = props => {
 						</View>
 					</View>
 				</TouchableWithoutFeedback>
-				{isSingle && false && (
-					<TouchableWithoutFeedback onPress={clickcheck}>
-						<View style={[btn.confirm_button, btn.shadow]}>
-							<Text style={[txt.noto28b, txt.white]}>사진등록</Text>
-						</View>
-					</TouchableWithoutFeedback>
-				)}
+				{isSingle ||
+					(true && (
+						<TouchableWithoutFeedback onPress={clickcheck}>
+							<View style={[btn.confirm_button, btn.shadow]}>
+								<Text style={[txt.noto28b, txt.white]}>사진등록</Text>
+							</View>
+						</TouchableWithoutFeedback>
+					))}
 				{/* {(
 					<TouchableWithoutFeedback onPress={clickcheck}>
 						<View style={[btn.confirm_button, btn.shadow]}>

@@ -21,7 +21,7 @@ import {styles} from 'Atom/image/imageStyle';
 import {Tag70, VideoPause, VideoMute66, VideoPlay, VideoSound66} from 'Atom/icon';
 import Video from 'react-native-video';
 
-export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, viewmode, feedType, onPressPhoto, onTagMoveStart, onEndTagMove}) => {
+export default PhotoTagItem = ({isVideo,onShow,uri, data, taglist, onMakeTag, onDeleteTag, viewmode, feedType, onPressPhoto, onTagMoveStart, onEndTagMove}) => {
 	const [tags, setTags] = React.useState(taglist ? taglist : []);
 	const [showTags, setShowTags] = React.useState(!viewmode);
 	const nav = useNavigation();
@@ -117,12 +117,11 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 				<Video
 					style={styles.img_square_round_694}
 					source={{uri: uri}}
-					paused={!play}
+					paused={!onShow}
+					// paused={false}
 					muted={mute}
-					onVideoEnd={() => {
-						console.log('playend' + uri);
-					}}
-					repeat
+					useTextureView={Platform.OS!='android'}
+					repeat={true}
 					resizeMode="contain"
 				/>
 				<View style={{position: 'absolute', top: 20 * DP, left: 20 * DP}}>
@@ -140,7 +139,7 @@ export default PhotoTagItem = ({uri, data, taglist, onMakeTag, onDeleteTag, view
 
 	const render = () => (
 		<View style={[style.container, style.adjustCenter]}>
-			{data.is_video ? video() : <FastImage style={styles.img_square_round_694} source={{uri: uri}} ref={tagBackground} />}
+			{data.is_video||isVideo ? video() : <FastImage style={styles.img_square_round_694} source={{uri: uri}} ref={tagBackground} />}
 			{showTags && getTags()}
 			{tags.length > 0 && viewmode && (
 				<TouchableWithoutFeedback onPress={showTag}>

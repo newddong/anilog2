@@ -18,10 +18,10 @@ const Crop = prop => {
 	const imgLayout = React.useRef({width:WIDTH,height:HEIGHT}).current;
 	const initDistance = React.useRef(0);
 	const [cropUri, setCropUri] = React.useState();
-	const [imgUri, setImgUri] = React.useState(prop.uri);
+	// const [imgUri, setImgUri] = React.useState(prop.uri);
+	const [photo, setPhoto] = React.useState(prop.photo)
 	const [imgDimension, setImgDimension] = React.useState({width:WIDTH,height:HEIGHT});
 	const isPinch = React.useRef(false);
-    const [isCropped, setIsCrop] = React.useState(false);
 	const [resizeMode, setResizeMode] = React.useState('stretch');
 	
 	const panResponder = React.useRef(
@@ -166,6 +166,7 @@ const Crop = prop => {
 					panPrev.y = pan.y._value + pan.y._offset;
 					
 					initDistance.current =0;
+					crop();
 				}
 				else{
 					console.log('move end');
@@ -197,13 +198,17 @@ const Crop = prop => {
 			}
 		}),
 	).current;
-
-	React.useEffect(()=>{
-		imgUri&&Image.getSize(imgUri,setInitDimension);
-
-
-	},[imgUri])
 	
+	React.useEffect(()=>{
+		console.log('set Photo', photo);
+		if(photo.cropUri){
+			Image.getSize(photo.cropUri,setInitDimension);
+		}else{
+			Image.getSize(photo.uri,setInitDimension);
+		}
+		
+	},[photo])
+
     const setInitDimension = (w,h)=>{
         pan.setOffset({x:0,y:0});
         scale.setValue(1);
@@ -259,59 +264,66 @@ const Crop = prop => {
         scalePrev.current = 1;
     }
 
+	React.useEffect(()=>{
+		console.log('photo',prop.photo);
+		setPhoto({...prop.photo});
+	},[prop.photo])
 
-    React.useEffect(()=>{
-        setImgUri(prop.uri);
-    },[prop.uri])
-
-
-    const crop =() => {
-		console.log('crop!')
-        if(!isCropped){
-            Image.getSize(imgUri,(originW,originH)=>{
-                let wRatio = originW/(imgLayout.width*scalePrev.current);
-                let hRatio = originH/(imgLayout.height*scalePrev.current);
-                let desW =Math.round((WIDTH-2*PADDINGLHORIZONTAL)*wRatio);
-                let desH = Math.round((HEIGHT-2*PADDINGVERTICAL)*hRatio);
-                
-                let offX = Math.abs(panPrev.x+imgLayout.width * (1-scalePrev.current)/2-PADDINGLHORIZONTAL)*wRatio;
-                let offY = Math.abs(panPrev.y+imgLayout.height * (1-scalePrev.current)/2-PADDINGVERTICAL)*hRatio;
-                console.log('crop!   offX:'+Math.round(offX)+'   offY:'+Math.round(offY)+'   desW:'+desW+'   desH:'+desH);
-                CameraRoll.cropImage({
-                    uri:imgUri,
-                    destHeight:desH,
-                    destWidth:desW,
-                    offsetX:Math.floor(offX),
-                    offsetY:Math.floor(offY),
-                    imgWidth:originW,
-                    imgHeight:originH
-                })
-                .then((r)=>{
-                    console.log(r);
-                    // setCropUri(r.uri);
-                    setImgUri(r.uri);
-                    setIsCrop(true);
-                    setInitDimension(r.width,r.height);
-					setResizeMode('stretch');
-                    prop.onCrop&&prop.onCrop(prop.uri,r.uri);
-                });
-            })
-        }
-        else{
-            setImgUri(prop.uri);
-            setIsCrop(false);
-			setResizeMode('stretch');
-            prop.onCrop&&prop.onCrop(prop.uri,prop.uri);
-        }
+    const crop = () => {
+		console.log('crop!',photo)
+		Image.getSize(photo.cropUri??photo.uri,(originW,originH)=>{
+			let wRatio = originW/(imgLayout.width*scalePrev.current);
+			let hRatio = originH/(imgLayout.height*scalePrev.current);
+			let desW =Math.round((WIDTH-2*PADDINGLHORIZONTAL)*wRatio);
+			let desH = Math.round((HEIGHT-2*PADDINGVERTICAL)*hRatio);
+			
+			let offX = Math.abs(panPrev.x+imgLayout.width * (1-scalePrev.current)/2-PADDINGLHORIZONTAL)*wRatio;
+			let offY = Math.abs(panPrev.y+imgLayout.height * (1-scalePrev.current)/2-PADDINGVERTICAL)*hRatio;
+			console.log('crop!   offX:'+Math.round(offX)+'   offY:'+Math.round(offY)+'   desW:'+desW+'   desH:'+desH+'   oriW: '+originW+'   oriH: '+originH);
+			CameraRoll.cropImage({
+				uri:photo.cropUri??photo.uri,
+				destHeight:desH,
+				destWidth:desW,
+				offsetX:Math.floor(offX),
+				offsetY:Math.floor(offY),
+				imgWidth:originW,
+				imgHeight:originH
+			})
+			.then((r)=>{
+				console.log(r);
+				// setCropUri(r.uri);
+				setPhoto({...photo,cropUri:r.uri});
+				setInitDimension(r.width,r.height);
+				setResizeMode('stretch');
+				panPrev.x = 0;
+				panPrev.y = 0;
+				scalePrev.current = 1;
+				imgLayout.width = WIDTH;
+				imgLayout.height = HEIGHT;
+				prop.onCrop&&prop.onCrop(photo.uri,r.uri);
+			});
+		})
         
     }
-
+	const returnOriginal = () => {
+		let p = {...photo};
+		delete p.cropUri;
+		setPhoto(p);
+		setResizeMode('stretch');
+		setImgDimension({width:WIDTH,height:HEIGHT});
+		panPrev.x = 0;
+				panPrev.y = 0;
+				scalePrev.current = 1;
+				imgLayout.width = WIDTH;
+				imgLayout.height = HEIGHT;
+		prop.onCrop&&prop.onCrop(photo.uri,photo.uri);
+	}
 	return (
         <View style={{width: WIDTH, height: HEIGHT, backgroundColor: 'black'}}>
             <Animated.View style={{width: imgDimension.width, height: imgDimension.height,alignItems:'center',backgroundColor:prop.backgroundColor,transform: [{translateX: pan.x}, {translateY: pan.y}, {scale: scale}]}} {...panResponder.panHandlers}>
                 <Image
                     style={{ width: imgDimension.width, height: imgDimension.height}}
-                    source={{uri: imgUri}}
+                    source={{uri: photo.cropUri??photo.uri}}
                     resizeMode={resizeMode}
                 />
             </Animated.View>
@@ -319,7 +331,7 @@ const Crop = prop => {
             <View style={{position:'absolute',top:PADDINGVERTICAL,left:PADDINGLHORIZONTAL,width:CROPBOXWIDTH, height:HEIGHT - 2*PADDINGVERTICAL,backgroundColor:'black'}}/>
             <View style={{position:'absolute',bottom:PADDINGVERTICAL,left:PADDINGLHORIZONTAL,width:WIDTH - 2*PADDINGLHORIZONTAL, height:CROPBOXWIDTH,backgroundColor:'black'}}/>
             <View style={{position:'absolute',top:PADDINGVERTICAL,right:PADDINGLHORIZONTAL,width:CROPBOXWIDTH, height:HEIGHT - 2*PADDINGVERTICAL,backgroundColor:'black'}}/>
-            {prop.isCrop&&<TouchableWithoutFeedback onPress={crop}>
+            {prop.isCrop&&<TouchableWithoutFeedback onPress={returnOriginal}>
                 <View style={{position:'absolute',bottom:30*DP,right:30*DP,width:150*DP,height:150*DP,justifyContent:'flex-end',alignItems:'flex-end'}}>
                     <Crop72 />
                 </View>

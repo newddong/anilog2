@@ -93,7 +93,7 @@ const PhotoListViewModal = props => {
 					{props.photoList != undefined &&
 						props.photoList.map((data, idx) => (
 							<TouchableOpacity activeOpacity={1} onPress={() => props.onClose()} key={idx}>
-								<Crop uri={data} width={750 * DP} height={1000 * DP} isCrop={false} backgroundColor={'black'} />
+								<Crop photo={{uri:data}} width={750 * DP} height={1000 * DP} isCrop={false} backgroundColor={'black'} />
 								<View style={[style.swiper_index]}>
 									<Text style={[txt.roboto24, {color: 'white'}]}>
 										{idx + 1}/{props.photoList.length}

@@ -38,7 +38,7 @@ export default FeedList = ({route}) => {
 	// const [topList, setTopList] = React.useState([]);
 	// const [offset, setOffset] = React.useState(1);
 	const flatlist = React.useRef();
-
+	const [focused, setFocused] = React.useState(true);
 	//피드썸네일 클릭 리스트일 경우
 	React.useEffect(() => {
 		if (route.params?.pressed != 0) {
@@ -134,8 +134,10 @@ export default FeedList = ({route}) => {
 		}
 		getList(); //첫 리스트 받아오기
 		const unsubscribe = navigation.addListener('focus', () => {
+			setFocused(true);
 			if (feed_obj.shouldUpdateByEdit) {
 				//피드 수정후 갱신
+				
 				try {
 					const findindex = feed_obj.list.findIndex(e => e._id == feed_obj.edit_obj._id);
 					let copy = [...feed_obj.list];
@@ -152,6 +154,17 @@ export default FeedList = ({route}) => {
 
 		return unsubscribe;
 	}, [route]);
+
+	React.useEffect(()=>{
+		const unsubscribe = navigation.addListener('blur', () => {
+			//동영상 모두 정지로
+			setFocused(false);
+			console.log('feedlist blur')
+		});
+		return unsubscribe;
+	},[navigation])
+
+
 
 	React.useEffect(() => {
 		refreshing ? getList(false, false) : false;
@@ -560,7 +573,7 @@ export default FeedList = ({route}) => {
 	};
 	const [viewIndex, setViewIndex] = React.useState([]);
 	const renderItem = ({item,index}) => {
-		return <Feed data={item} deleteFeed={deleteFeedItem} isView={viewIndex.some(v=>v.index==index)}/>;
+		return <Feed data={item} deleteFeed={deleteFeedItem} isView={focused&&viewIndex.some(v=>v.index==index)}/>;
 	};
 
 	const wait = timeout => {

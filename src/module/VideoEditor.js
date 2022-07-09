@@ -28,10 +28,10 @@ class VideoEditor {
   //    static openVideoEditor(option: VideoEditorOption): Promise<VideoEditorResult | null>{
 //        if(option.duration <= (!option.minTrimmedDuration ? option.minTrimmedDuration : 0.5)) {    
     static openVideoEditor(videoUrl, videoDuration, trimmedDuration = 15, bitRate = 30, filename = 'temp'){
-        if(videoDuration <= trimmedDuration) {    
-            console.log("자르고자 하는 길이보다 비디오의 길이가 짧음");
-            return null;
-        }
+        // if(videoDuration <= trimmedDuration) {    
+        //     console.log("자르고자 하는 길이보다 비디오의 길이가 짧음");
+        //     return null;
+        // }
 
 
         let configuration = {

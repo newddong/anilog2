@@ -218,6 +218,7 @@ import videoPlay from './videoPlay';
 import videoMute66 from './videoMute66';
 import videoPause from './videoPause';
 import videoSound66 from './videoSound66';
+import videoEditor from './videoEditor';
 
 import DP from 'Root/config/dp';
 import {APRI10, YELL20, GRAY20, GRAY30, GRAY10, BLACK, MAINBLACK} from 'Root/config/color';
@@ -540,4 +541,4 @@ export const VideoPlay = makeSvg(videoPlay,{width:99.75*DP,height:118.85*DP});
 export const VideoPause = makeSvg(videoPause, {width:93.5*DP,height:108.93*DP});
 export const VideoMute66 = makeSvg(videoMute66, size66);
 export const VideoSound66 = makeSvg(videoSound66, size66);
-
+export const VideoEditorIcon = makeSvg(videoEditor,{width:72*DP,height:72*DP});

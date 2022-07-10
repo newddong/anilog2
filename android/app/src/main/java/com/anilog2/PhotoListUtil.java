@@ -327,7 +327,7 @@ public class PhotoListUtil {
             return new int[]{width, height};
         }
 
-        static double getFileSize(Uri uri, Context context) {
+        static long getFileSize(Uri uri, Context context) {
             try {
                 ParcelFileDescriptor f = context.getContentResolver().openFileDescriptor(uri, "r");
                 return f.getStatSize();

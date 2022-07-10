@@ -863,12 +863,15 @@ RCT_EXPORT_METHOD(getVideoAttributes: (NSString* ) uri
                                                     options: nil
                                               resultHandler: ^(AVAsset *avAsset, AVAudioMix *audioMix, NSDictionary *info) {
         NSURL *url = (NSURL *)[[(AVURLAsset *)avAsset URL] fileReferenceURL];
-      [result addObject:@{
-        @"uri": [url absoluteString],
-        @"duration": [NSNumber numberWithFloat:(float)assets.firstObject.duration],
-      }];
+        NSNumber *fileSizeValue = nil;
+        [url getResourceValue:&fileSizeValue forKey:NSURLFileSizeKey error:nil];
+        [result addObject:@{
+          @"uri": [url absoluteString],
+          @"duration": [NSNumber numberWithFloat:(float)assets.firstObject.duration],
+          @"fileSize": fileSizeValue
+        }];
       
-      resolve(result);
+        resolve(result);
     }];
   });
 }

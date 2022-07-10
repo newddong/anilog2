@@ -55,8 +55,6 @@ const NewMissingReportList = props => {
 			{...topList, limit: PROTECT_REQUEST_MAIN_LIMIT, page: offset, main_type: true},
 			result => {
 				if (!mounted) return;
-				console.log('getMissingReportList length', result.msg[0]);
-
 				const res = result.msg;
 				if (topList != 'false') {
 					let temp = [...topList];

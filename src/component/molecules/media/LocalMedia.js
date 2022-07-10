@@ -44,7 +44,7 @@ const LocalMedia = props => {
 	React.useEffect(() => {
 		if (isVideo) {
 			CameraRoll.getVideoAttributes(props.data.image.uri).then(r => {
-				console.log('video attribute', r);
+				// console.log('video attribute', r);
 				videoUri.current = Platform.OS=='ios'?r[0].uri:undefined;
 				setDuration(Platform.OS=='ios'?r[0].duration:r.duration);
 			}).catch(e=>console.log('video attribute error',e));
@@ -105,7 +105,7 @@ const LocalMedia = props => {
 	}, [props.index]);
 
 	const getDuration = second => {
-		let min = Math.floor(second / 360);
+		let min = Math.floor(second / 60);
 		let sec = Math.floor(second % 60);
 		return (min == 0 ? '00' : min < 10 ? '0' + min : min) + ':' + (sec == 0 ? '00' : sec < 10 ? '0' + sec : sec);
 	};

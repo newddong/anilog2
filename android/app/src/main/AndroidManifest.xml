@@ -17,7 +17,8 @@
       android:roundIcon="@mipmap/ic_aniloglauncher_round"
       android:allowBackup="false"
       android:theme="@style/AppTheme"
-      android:requestLegacyExternalStorage="true"   
+      android:requestLegacyExternalStorage="true"
+      android:networkSecurityConfig="@xml/net_security_config"
     >
       <!-- android:networkSecurityConfig="@xml/net_security_config" -->
       <!-- # 22.03.15 구글 맵스 활용을 위한 추가 (KSW)   -->

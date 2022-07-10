@@ -24,6 +24,13 @@ const Crop = prop => {
 	const isPinch = React.useRef(false);
 	const [resizeMode, setResizeMode] = React.useState('stretch');
 	
+	let mounted = true;
+	React.useEffect(() => {
+		return () => {
+			mounted = false;
+		};
+	}, []);
+
 	const panResponder = React.useRef(
 		PanResponder.create({
 			onMoveShouldSetPanResponder: () => true,
@@ -118,7 +125,7 @@ const Crop = prop => {
 				};
 
 
-				console.log(nativeEvent);
+				// console.log(nativeEvent);
 				if (nativeEvent.changedTouches.length > 1 || initDistance.current !=0) {
 					console.log('pinch end',pan);
 					isPinch.current = false;
@@ -200,7 +207,7 @@ const Crop = prop => {
 	).current;
 	
 	React.useEffect(()=>{
-		console.log('set Photo', photo);
+		// console.log('set Photo', photo);
 		if(photo.cropUri){
 			Image.getSize(photo.cropUri,setInitDimension);
 		}else{
@@ -210,6 +217,7 @@ const Crop = prop => {
 	},[photo])
 
     const setInitDimension = (w,h)=>{
+		if(!mounted)return;
         pan.setOffset({x:0,y:0});
         scale.setValue(1);
 		let newImgWidth = 0;
@@ -257,7 +265,7 @@ const Crop = prop => {
 		panPrev.x = initPositionX;
 		panPrev.y = initPositionY;
 		pan.setValue(panPrev);
-		setImgDimension({
+		mounted&&setImgDimension({
 			width: newImgWidth,
 			height: newImgHeight
 		});
@@ -270,7 +278,7 @@ const Crop = prop => {
 	},[prop.photo])
 
     const crop = () => {
-		console.log('crop!',photo)
+		if(!mounted)return;
 		Image.getSize(photo.cropUri??photo.uri,(originW,originH)=>{
 			let wRatio = originW/(imgLayout.width*scalePrev.current);
 			let hRatio = originH/(imgLayout.height*scalePrev.current);
@@ -279,7 +287,7 @@ const Crop = prop => {
 			
 			let offX = Math.abs(panPrev.x+imgLayout.width * (1-scalePrev.current)/2-PADDINGLHORIZONTAL)*wRatio;
 			let offY = Math.abs(panPrev.y+imgLayout.height * (1-scalePrev.current)/2-PADDINGVERTICAL)*hRatio;
-			console.log('crop!   offX:'+Math.round(offX)+'   offY:'+Math.round(offY)+'   desW:'+desW+'   desH:'+desH+'   oriW: '+originW+'   oriH: '+originH);
+			// console.log('crop!   offX:'+Math.round(offX)+'   offY:'+Math.round(offY)+'   desW:'+desW+'   desH:'+desH+'   oriW: '+originW+'   oriH: '+originH);
 			CameraRoll.cropImage({
 				uri:photo.cropUri??photo.uri,
 				destHeight:desH,
@@ -290,7 +298,7 @@ const Crop = prop => {
 				imgHeight:originH
 			})
 			.then((r)=>{
-				console.log(r);
+				// console.log(r);
 				// setCropUri(r.uri);
 				setPhoto({...photo,cropUri:r.uri});
 				setInitDimension(r.width,r.height);

@@ -20,6 +20,12 @@ export default PhotoSelectHeader = ({navigation, route, options, back}) => {
 
 	const confirm = () => {
 		console.log(route.params, selectedPhoto);
+		if(selectedPhoto.some(v=>v.duration>14.99)){
+			Modal.alert('15초 이상 동영상은 편집해주세요');
+			return;
+		}
+
+
 		// if (prevRoute && selectedPhoto.length > 1) {
 		// 	let localFiles = selectedPhoto.filter(v => !v.uri.includes('http'));
 		// 	let remoteFiles = selectedPhoto.filter(v => v.uri.includes('http'));

@@ -287,10 +287,11 @@ export default FavoriteReview = ({route, isFavorite}) => {
 
 	const whenEmpty = () => {
 		return (
-			<View style={{paddingVertical: 150 * DP, alignItems: 'center'}}>
-				<EmptyIcon />
-				<Text style={[txt.noto28, {marginTop: 10 * DP}]}>{!isFavorite ? '작성한 리뷰글이 없습니다..' : '즐겨찾기한 리뷰가 없습니다..'} </Text>
-			</View>
+			// <View style={{paddingVertical: 150 * DP, alignItems: 'center'}}>
+			// 	<EmptyIcon />
+			// 	<Text style={[txt.noto28, {marginTop: 10 * DP}]}>{!isFavorite ? '작성한 리뷰글이 없습니다..' : '즐겨찾기한 리뷰가 없습니다..'} </Text>
+			// </View>
+			<ListEmptyInfo text={!isFavorite ? '작성한 자유게시글이 없습니다..' : '즐겨찾기한 자유게시글이 없습니다..'} />
 		);
 	};
 
@@ -336,6 +337,6 @@ const style = StyleSheet.create({
 		height: 10 * DP,
 		width: 750 * DP,
 		backgroundColor: GRAY40,
-		marginBottom: 10 * DP,
+		marginBottom: 20 * DP,
 	},
 });

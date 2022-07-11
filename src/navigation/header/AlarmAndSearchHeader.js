@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
-import {AlarmBadger48, Search48, BackArrow32} from 'Atom/icon';
+import {AlarmBadger48, Search48, BackArrow32, AlarmBadgerNotice} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {WHITE} from 'Root/config/color';
 import userGlobalObject from 'Root/config/userGlobalObject';
@@ -9,6 +9,7 @@ import Modal from 'Root/component/modal/Modal';
 export default AlarmAndSearchHeader = ({navigation, route, options, back}) => {
 	const [isNewAlarm, setIsNewAlarm] = React.useState();
 	const isLoginUser = userGlobalObject.userInfo?._id;
+
 	const clickSearch = () => {
 		navigation.navigate('Search', {mother: 0, child: 0, prevNav: route.name});
 	};
@@ -22,6 +23,7 @@ export default AlarmAndSearchHeader = ({navigation, route, options, back}) => {
 			navigation.navigate('AlarmList', {isNewAlarm: isNewAlarm});
 		}
 	};
+
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			// The screen is focused
@@ -45,16 +47,23 @@ export default AlarmAndSearchHeader = ({navigation, route, options, back}) => {
 		});
 		return unsubscribe;
 	}, [navigation]);
+
 	return (
 		<View style={[style.headerContainer, style.shadow]}>
-			<TouchableOpacity onPress={navigation.goBack}>
-				<View style={style.backButtonContainer}>
-					<BackArrow32 onPress={navigation.goBack} />
-				</View>
+			<TouchableOpacity onPress={navigation.goBack} style={style.backButtonContainer}>
+				<BackArrow32 onPress={navigation.goBack} />
 			</TouchableOpacity>
 			<View style={style.buttonContainer}>
 				<Search48 onPress={clickSearch} />
-				{isNewAlarm ? <AlarmBadgerNotice onPress={clickAlarm} /> : <AlarmBadger48 onPress={clickAlarm} />}
+				{isNewAlarm ? (
+					<TouchableOpacity onPress={clickAlarm}>
+						<AlarmBadgerNotice />
+					</TouchableOpacity>
+				) : (
+					<TouchableOpacity onPress={clickAlarm}>
+						<AlarmBadger48 />
+					</TouchableOpacity>
+				)}
 			</View>
 		</View>
 	);

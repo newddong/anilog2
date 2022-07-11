@@ -388,7 +388,7 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
         }
         node.putDouble("timestamp", dateTaken / 1000d);
         node.putDouble("modified", media.getLong(dateModifiedIndex));
-        Log.d("에지인포", "dateTaken: "+media.getLong(dateTakenIndex) + "   dateModifiedIndex : "+media.getLong(dateModifiedIndex)+ "  아이디 : "+media.getString(media.getColumnIndex(Images.Media._ID)));
+//        Log.d("에지인포", "dateTaken: "+media.getLong(dateTakenIndex) + "   dateModifiedIndex : "+media.getLong(dateModifiedIndex)+ "  아이디 : "+media.getString(media.getColumnIndex(Images.Media._ID)));
     }
 
     /**
@@ -633,6 +633,8 @@ public class PhotoListModule extends ReactContextBaseJavaModule{
         } else {
             try {
                 map.putInt("duration",  PhotoListUtil.getDuration(Uri.parse(uri), reactContext));
+                map.putString("uri",uri);
+                map.putDouble("fileSize", PhotoListUtil.getFileSize(Uri.parse(uri), reactContext));
                 promise.resolve(map);
             } catch (Exception e) {
                 promise.reject(errOthers, e.getMessage());

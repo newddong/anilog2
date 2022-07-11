@@ -42,7 +42,6 @@ const Crop = prop => {
 					isPinch.current = true;
 					initDistance.current = getDistance(pos1, pos2);
 					pan.setOffset({x: panPrev.x -(nativeEvent.touches[0].pageX+nativeEvent.touches[1].pageX)/2, y: panPrev.y - (nativeEvent.touches[0].pageY+nativeEvent.touches[1].pageY)/2});
-					return;
 				}else{
 					pan.setOffset({x: panPrev.x - nativeEvent.pageX, y: panPrev.y - nativeEvent.pageY});
 
@@ -56,21 +55,18 @@ const Crop = prop => {
 					isPinch.current = true;
 					initDistance.current = getDistance(pos1, pos2);
 					pan.setOffset({x: panPrev.x -(nativeEvent.touches[0].pageX+nativeEvent.touches[1].pageX)/2, y: panPrev.y - (nativeEvent.touches[0].pageY+nativeEvent.touches[1].pageY)/2});
-					return;
 				}else{
 					pan.setOffset({x: panPrev.x - nativeEvent.pageX, y: panPrev.y - nativeEvent.pageY});
 
 				}
 			},	
 			onPanResponderMove: ({nativeEvent}) => {
-				if (nativeEvent.touches.length > 1 &&initDistance.current!=0) {
+				if (nativeEvent.touches.length > 1 &&initDistance.current!=0 && isPinch.current) {
 					pan.setValue({x: (nativeEvent.touches[0].pageX+nativeEvent.touches[1].pageX)/2, y: (nativeEvent.touches[0].pageY+nativeEvent.touches[1].pageY)/2});
 					let pos1 = {x: nativeEvent.touches[0].pageX, y: nativeEvent.touches[0].pageY};
 					let pos2 = {x: nativeEvent.touches[1].pageX, y: nativeEvent.touches[1].pageY};
 					scale.setValue((scalePrev.current * getDistance(pos1, pos2)) / initDistance.current);
-					return;
 				}else{
-					if(isPinch.current)return;
 					let w = imgLayout.width*(1-scale._value)/2;
 					let h = imgLayout.height*(1-scale._value)/2;
 					
@@ -123,9 +119,16 @@ const Crop = prop => {
 					panPrev.y = HEIGHT-PADDINGVERTICAL-imgLayout.height+h;
 					console.log('stickToBottom');
 				};
+				let horizontalCenter = () => {
+                    pan.setValue({x: PADDINGLHORIZONTAL + (WIDTH - imgLayout.width * scalePrev.current) / 2 - pan.x._offset, y: panPrev.y - pan.y._offset});
+					panPrev.x = PADDINGLHORIZONTAL + (WIDTH - imgLayout.width * scalePrev.current) / 2
+                }
+				let verticalCenter = () => {
+                    pan.setValue({x: panPrev.x - pan.x._offset, y: PADDINGVERTICAL + (HEIGHT - imgLayout.height * scalePrev.current) /2  - pan.y._offset});
+					panPrev.y = PADDINGVERTICAL + (HEIGHT - imgLayout.height * scalePrev.current) /2;
+                }
 
 
-				// console.log(nativeEvent);
 				if (nativeEvent.changedTouches.length > 1 || initDistance.current !=0) {
 					console.log('pinch end',pan);
 					isPinch.current = false;
@@ -183,18 +186,23 @@ const Crop = prop => {
 					w = imgLayout.width * (1-scalePrev.current)/2;
 					h = imgLayout.height * (1-scalePrev.current)/2;
 					
-					if(panPrev.x+imgLayout.width<WIDTH-PADDINGLHORIZONTAL+w){
+					if(imgLayout.width * scalePrev.current < WIDTH - PADDINGLHORIZONTAL){
+                        horizontalCenter();
+                    }
+					else if(panPrev.x+imgLayout.width<WIDTH-PADDINGLHORIZONTAL+w){
 						stickToRight();
 					}
-					
-					if(panPrev.x>PADDINGLHORIZONTAL-w){
+					else if(panPrev.x>PADDINGLHORIZONTAL-w){
 						stickToLeft();
 					}
 					
-					if(panPrev.y+imgLayout.height<HEIGHT-PADDINGVERTICAL+h){
+					if(imgLayout.height * scalePrev.current < HEIGHT - PADDINGVERTICAL){
+                        verticalCenter();
+                    }
+					else if(panPrev.y+imgLayout.height<HEIGHT-PADDINGVERTICAL+h){
 						stickToBottom();
 					}
-					if(panPrev.y>PADDINGVERTICAL-h){
+					else if(panPrev.y>PADDINGVERTICAL-h){
 						stickToTop();
 					}
 					

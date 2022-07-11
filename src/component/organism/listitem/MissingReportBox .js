@@ -18,14 +18,16 @@ const MissingReportBox = props => {
 	// console.log('propsopsdo', props);
 	const [objCity, setObjCity] = React.useState('');
 	const navigation = useNavigation();
-	// console.log(moment(props.data?.missing_animal_date).format('YY.MM.DD'));
+
 
 	React.useEffect(() => {
 		try {
-			let objCitys = JSON.parse(`${props.data?.missing_animal_lost_location}`);
-			setObjCity(`${objCitys.district}`);
+			if (props.data.feed_type == 'missing') {
+				let objCitys = JSON.parse(`${props.data?.missing_animal_lost_location}`);
+				setObjCity(`${objCitys.district}`);
+			}
 		} catch (err) {
-			// console.log('err', err);
+			console.log('err', err);
 		}
 	}, []);
 

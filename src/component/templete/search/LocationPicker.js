@@ -29,6 +29,8 @@ import AniButton from 'Root/component/molecules/button/AniButton';
 import {btn_w654, btn_w694_r30} from 'Root/component/atom/btn/btn_style';
 import Modal from 'Root/component/modal/Modal';
 import Loading from 'Root/component/molecules/modal/Loading';
+import feed_obj from 'Root/config/feed_obj';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default LocationPicker = ({route}) => {
 	const [keyword, setKeyword] = useState(''); // 검색 키워드
@@ -64,30 +66,34 @@ export default LocationPicker = ({route}) => {
 	const [loading, setLoading] = React.useState(false);
 	const detailRef = React.useRef();
 	const map = React.useRef();
+	let mounted = true;
 
 	// 템플릿 호출 시 바로 현재 모바일 위치를 기반으로 위치 정보 수령
 	React.useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', () => {
-			requestPermission();
-		});
 		//위치 권한을 위해 Background로 갔다가 앱으로 돌아왔을 경우 권한을 다시 확인
-		const subscription = AppState.addEventListener('change', nextAppState => {
+		requestPermission();
+		const subscription = AppState.addEventListener('change', async nextAppState => {
 			Modal.close();
-			if (nextAppState == 'active') {
+			console.log('nextAppState', nextAppState, 'permission', permission);
+			const state = await AsyncStorage.getItem('permission');
+			console.log('state', state);
+			if (nextAppState == 'active' && (state == 'blocked' || state == 'denied' || state == 'granted')) {
+				// console.log('feed_obj.isGpsDenied', feed_obj.isGpsDenied);
+				// feed_obj.isGpsDenied ? false : requestPermission();
+				Modal.close();
 				requestPermission();
 			}
 		});
+
 		return () => {
-			unsubscribe;
 			subscription.remove();
+			mounted = false;
 		};
 	}, []);
 
 	React.useEffect(() => {
 		if (permission && route.params.searchInput != '') {
 			onChangeSearchText(route.params.searchInput);
-		} else {
-			// onChangeSearchText('');
 		}
 	}, [route.params]);
 
@@ -104,23 +110,39 @@ export default LocationPicker = ({route}) => {
 				console.log('requestPermission result', res);
 				if (res == 'granted') {
 					//허용
+					AsyncStorage.setItem('permission', 'granted');
 					setPermission(true);
 					geoLocation();
 					initializeRegion();
 				} else if (res == 'denied') {
 					//거절
+					AsyncStorage.setItem('permission', 'denied');
 					setTimeout(() => {
-						getToSetting('blocked');
+						Modal.popTwoBtn(
+							'위치 서비스를 사용할 수 없습니다. \n 기기의 설정 > 개인정보 보호 에서 위치 \n 서비스를 켜주세요.',
+							'확 인',
+							'취 소',
+							() => {
+								requestPermission();
+							},
+							() => navigation.goBack(),
+						);
 					}, 1000);
+					feed_obj.isGpsDenied = true;
 				} else if (res == 'unavailable') {
 					//gps자체가 꺼짐 상태
 					setTimeout(() => {
-						getToSetting('blocked');
+						if (mounted) {
+							getToSetting('blocked');
+						}
 					}, 1000);
 				} else if (res == 'blocked') {
 					// anilog앱만 '안함' 상태
+					AsyncStorage.setItem('permission', 'blocked');
 					setTimeout(() => {
-						getToSetting('blocked');
+						if (mounted) {
+							getToSetting('blocked');
+						}
 					}, 1000);
 				}
 			});
@@ -128,6 +150,34 @@ export default LocationPicker = ({route}) => {
 			console.log('requestPermission error:', error);
 		}
 	}
+
+	//위치정보 권한이 없을 시 디바이스 설정 호출
+	const getToSetting = error => {
+		let msg = '위치 서비스를 사용할 수 없습니다. \n 기기의 설정 > 개인정보 보호 에서 위치 \n 서비스를 켜주세요.';
+		if (error == 'blocked') {
+			msg = '현재 해당 앱의 위치서비스 이용이 거절되어 있는 상태입니다. 설정에서 앱에 대한 \n위치서비스를 허용해주세요.';
+		}
+		// console.log('getToSetting @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+		Modal.popTwoBtn(
+			msg,
+			'취소',
+			'설정으로',
+			() => {
+				Modal.close();
+				navigation.goBack();
+			},
+			() => {
+				if (Platform.OS == 'android') {
+					NativeModules.OpenExternalURLModule.generalSettings();
+				} else {
+					openSettings().catch(() => console.warn('cannot open settings'));
+				}
+			},
+			() => {
+				console.log('취소 불가능');
+			},
+		);
+	};
 
 	//현재 위치로 돌아감
 	const initializeRegion = () => {
@@ -181,7 +231,7 @@ export default LocationPicker = ({route}) => {
 				callInitialAddress(position.coords.longitude, position.coords.latitude);
 			},
 			error => {
-				console.log('geoLocation () error', error.code, error.message);
+				console.log('geoLocation error code : ', error.code, error.message);
 				//User denied access
 				if (error.code == 1) {
 					getToSetting();
@@ -280,33 +330,6 @@ export default LocationPicker = ({route}) => {
 		}
 	};
 
-	//위치정보 권한이 없을 시 디바이스 설정 호출
-	const getToSetting = error => {
-		let msg = '위치 서비스를 사용할 수 없습니다. \n 기기의 설정 > 개인정보 보호 에서 위치 \n 서비스를 켜주세요.';
-		if (error == 'blocked') {
-			msg = '현재 해당 앱의 위치서비스 이용이 거절되어 있는 상태입니다. 설정에서 앱에 대한 \n위치서비스를 허용해주세요.';
-		}
-		Modal.popTwoBtn(
-			msg,
-			'취소',
-			'설정으로',
-			() => {
-				Modal.close();
-				navigation.goBack();
-			},
-			() => {
-				if (Platform.OS == 'android') {
-					NativeModules.OpenExternalURLModule.generalSettings();
-				} else {
-					openSettings().catch(() => console.warn('cannot open settings'));
-				}
-			},
-			() => {
-				console.log('취소 불가능');
-			},
-		);
-	};
-
 	//위도 경도를 토대로 주소 받아오
 	const searchPlaceByKeyword = async keyword => {
 		try {
@@ -390,10 +413,10 @@ export default LocationPicker = ({route}) => {
 	//돋보기 아이콘 클릭 (모두 초가화하고 다시 검색)
 	const reSearch = () => {
 		route.params.reSearch(); //포커스이벤트 및 검색어 제거
-		setLocationObj('');
 		setDetailAddr('');
 		setPlaces([]);
 		setSelected('');
+		// setLocationObj('');
 		// setLogitude('');
 		// setLatitude('');
 		// setChangedLatitude('');

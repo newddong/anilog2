@@ -4,7 +4,7 @@ export const STAGING = 333;
 
 const appConfig = {
     mode:DEV,
-    version: '0.0.1 ver(staging, 7-8 14:00)',
+    version: '0.0.1 ver(staging, 7-11 14:00)',
     // version: '0.0.1 ver(debug, 6-24 13:54)'
     // version: '0.0.1 ver(release, 7-1 19:50)',
     medias:[],

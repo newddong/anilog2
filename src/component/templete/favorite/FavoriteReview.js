@@ -42,7 +42,7 @@ export default FavoriteReview = ({route, isFavorite}) => {
 						community_type: 'review',
 					},
 					result => {
-						// console.log('result.msg.review', result.msg.review.length);
+						console.log('result.msg.review', result.msg.review.length);
 						const res = result.msg.review.filter(
 							e => e.community_writer_id != null && e.community_writer_id.user_nickname == userGlobalObject.userInfo.user_nickname,
 						);
@@ -101,7 +101,7 @@ export default FavoriteReview = ({route, isFavorite}) => {
 						console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg.length);
 						let reviewList = [];
 						result.msg.map(v => {
-							if (v.favorite_etc_target_object_id.community_type == 'review') {
+							if (v.favorite_etc_target_object_id.community_type == 'review' && v.favorite_etc_target_object_id.community_is_delete != true) {
 								v.favorite_etc_target_object_id.community_is_favorite = v.is_favorite;
 								v.favorite_etc_target_object_id.community_is_like = v.is_like;
 								reviewList.push(v.favorite_etc_target_object_id);
@@ -291,7 +291,7 @@ export default FavoriteReview = ({route, isFavorite}) => {
 			// 	<EmptyIcon />
 			// 	<Text style={[txt.noto28, {marginTop: 10 * DP}]}>{!isFavorite ? '작성한 리뷰글이 없습니다..' : '즐겨찾기한 리뷰가 없습니다..'} </Text>
 			// </View>
-			<ListEmptyInfo text={!isFavorite ? '작성한 자유게시글이 없습니다..' : '즐겨찾기한 자유게시글이 없습니다..'} />
+			<ListEmptyInfo text={!isFavorite ? '작성한 자유게시글이 없습니다..' : '즐겨찾기한 리뷰글이 없습니다..'} />
 		);
 	};
 

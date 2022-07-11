@@ -4,4 +4,5 @@ export default feed_obj = {
 	edit_obj: {},
 	list: [],
 	mainHomeFeedList: [],
+	isGpsDenied: false,
 };

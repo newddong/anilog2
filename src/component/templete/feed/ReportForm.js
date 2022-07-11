@@ -15,6 +15,8 @@ import {openSettings} from 'react-native-permissions';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {Camera54, Location48Border, Paw54_Border, Location54, Arrow_Down_BLACK, Search48_BLACK} from 'Root/component/atom/icon/index';
 import Input24 from 'Molecules/input/Input24';
+import {getTimeLapsed} from 'Root/util/dateutil';
+import {parsingCityName} from 'Root/util/addressutill';
 
 //제보 컴포넌트
 export default ReportForm = props => {
@@ -92,6 +94,8 @@ export default ReportForm = props => {
 				console.log('err / getAddress / FeedWrite  : ', err);
 			},
 		);
+
+		//위치 권한을 위해 Background로 갔다가 앱으로 돌아왔을 경우 권한을 다시 확인
 		const subscription = AppState.addEventListener('change', nextAppState => {
 			Modal.close();
 			if (nextAppState == 'active') {
@@ -108,19 +112,21 @@ export default ReportForm = props => {
 	}, [data]);
 
 	React.useEffect(() => {
-		console.log('data.report_location.city', data.report_location.city);
 		if (data.report_location.city != '광역시, 도') {
+			console.log('data.report_location.city', data.report_location.city);
+			const parsedCity = parsingCityName(data.report_location?.city);
+			console.log('parsedCity', parsedCity);
 			getAddressList(
 				{
-					city: data.report_location.city,
+					city: parsedCity,
 					// district: data.report_location.district,
 				},
 				neighbor => {
 					console.log('getAddressList neighbor', neighbor);
 					if (neighbor.msg.length == 0) {
-						setNeighbor(['목록없음']);
+						setDistrict(['목록없음']);
 					} else {
-						setNeighbor(neighbor.msg);
+						setDistrict(neighbor.msg);
 					}
 					// setData({...data, report_location: {city: data.report_location.city, district: data.report_location.district, neighbor: neighbor.msg[0]}});
 					// data.report_location.district == data.report_location.district ? false : setIsDistrictChanged(!isDistrictChanged);
@@ -194,9 +200,6 @@ export default ReportForm = props => {
 		);
 	};
 
-	//위치 권한을 위해 Background로 갔다가 앱으로 돌아왔을 경우 권한을 다시 확인
-	React.useEffect(() => {}, []);
-
 	//위치 권한이 설정되어 있지 않을 경우 디바이스 세팅으로 안내
 	const getToSetting = error => {
 		let msg = '위치 서비스를 사용할 수 없습니다. \n 기기의 설정 > 개인정보 보호 에서 위치 \n 서비스를 켜주세요.';
@@ -234,7 +237,7 @@ export default ReportForm = props => {
 					android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
 				}),
 			).then(res => {
-				console.log('res', res);
+				// console.log('res', res);
 				if (res == 'granted') {
 					//허용
 					onPressCurrentLocation();
@@ -289,23 +292,23 @@ export default ReportForm = props => {
 				.get(`https://dapi.kakao.com/v2/local/geo/coord2address.json?input_coord=WGS84&x=${long}&y=${lati}`, {
 					headers: {
 						Authorization: 'KakaoAK 27b7c22d57bc044bc63e280b29db100e', // REST API 키
+						// https://developers.kakao.com/docs/latest/ko/local/dev-guide
 					},
 				})
 				.then(async res => {
-					console.log('res', res.data.documents[0]);
+					// console.log('res', res.data.documents[0]);
 					let location = res.data.documents[0];
 					const addr = location.address;
 					if (location.road_address == null || location.road_address == undefined) {
-						console.log('도로명이 Null  : ', location.address);
+						// console.log('도로명이 Null  : ', location.address);
 						let report_location = data.report_location;
 						report_location.city = addr.region_1depth_name;
 						report_location.district = addr.region_2depth_name;
 						report_location.detail = addr.region_3depth_name + ' ' + addr.main_address_no + '-' + addr.sub_address_no;
 						setData({...data, report_location: report_location});
-
 						Modal.close();
 					} else {
-						console.log('도로명 주소를 받아온경우  : ', location);
+						// console.log('도로명 주소를 받아온경우  : ', location);
 						let report_location = data.report_location;
 						report_location.city = addr.region_1depth_name;
 						report_location.district = addr.region_2depth_name;

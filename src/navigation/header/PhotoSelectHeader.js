@@ -26,49 +26,56 @@ export default PhotoSelectHeader = ({navigation, route, options, back}) => {
 		}
 
 
-		if (prevRoute && selectedPhoto.length > 1) {
+		if (prevRoute && selectedPhoto.length > 0) {
 			console.log('compress img', selectedPhoto)
 			let localFiles = selectedPhoto.filter(v => !v.uri.includes('http'));
 			let localImageFiles = selectedPhoto.filter(v=>!v.uri.includes('http')&&v.type.includes('image'));
 			let remoteFiles = selectedPhoto.filter(v => v.uri.includes('http'));
-			CameraRoll.compressImage({
-				imageFiles: localImageFiles.map(v =>{
-					return v.uri;
-				}),
-				quality: 0.7,
-				maxWidth: 1024,
-				maxHeight: 1024,
-			})
-				.then(compressedImg => {
-					console.log(compressedImg);
-					localImageFiles.forEach((v,i,a)=>{
-						a[i].cropUri = compressedImg.assets[i].uri;
-						a[i].fileSize = compressedImg.assets[i].fileSize;
-					})
-					console.log(localImageFiles)
-
-					selectedPhoto.forEach((v,i,a)=>{
-						let img = localImageFiles.find(localImg=>localImg.uri==v.uri)
-						if(img && a[i].cropUri){
-							a[i].cropUri = img.cropUri;
-							a[i].fileSize = img.fileSize;
-						}
-					})
-					console.log(selectedPhoto)
-					prevRoute &&
-						prevKey &&
-						navigation.navigate({
-							name: prevRoute,
-							key: prevKey,
-							params: {
-								selectedPhoto: selectedPhoto
-							},
-							merge: true,
-						});
+			if(localImageFiles.length>0){
+				console.log('contain local image');
+				CameraRoll.compressImage({
+					imageFiles: localImageFiles.map(v =>{
+						return v.uri;
+					}),
+					quality: 0.7,
+					maxWidth: 1024,
+					maxHeight: 1024,
 				})
-				.catch(e => console.log('camerarollerr', e));
+					.then(compressedImg => {
+						console.log(compressedImg);
+						localImageFiles.forEach((v,i,a)=>{
+							a[i].cropUri = compressedImg.assets[i].uri;
+							a[i].fileSize = compressedImg.assets[i].fileSize;
+						})
+						console.log(localImageFiles)
+
+						selectedPhoto.forEach((v,i,a)=>{
+							let img = localImageFiles.find(localImg=>localImg.uri==v.uri)
+							if(img && a[i].cropUri){
+								a[i].cropUri = img.cropUri;
+								a[i].fileSize = img.fileSize;
+							}
+						})
+						console.log(selectedPhoto)
+						prevRoute &&
+							prevKey &&
+							navigation.navigate({
+								name: prevRoute,
+								key: prevKey,
+								params: {
+									selectedPhoto: selectedPhoto
+								},
+								merge: true,
+							});
+					})
+					.catch(e => console.log('camerarollerr', e));
+			}else{
+				console.log('not contain local image');
+				prevRoute && prevKey && navigation.navigate({name: prevRoute, key: prevKey, params: {selectedPhoto: selectedPhoto}, merge: true});	
+			}
 		} else {
-			// prevRoute && prevKey && navigation.navigate({name: prevRoute, key: prevKey, params: {selectedPhoto: selectedPhoto}, merge: true});
+			console.log('exit');
+			prevRoute && prevKey && navigation.navigate({name: prevRoute, key: prevKey, params: {selectedPhoto: selectedPhoto}, merge: true});
 		}
 		// prevRoute && prevKey && navigation.navigate({name: prevRoute, key: prevKey, params: {selectedPhoto: selectedPhoto}, merge: true});
 	};

@@ -362,21 +362,26 @@ export default AddPhoto = props => {
 		if (idx < 0) return;
 		flatlist.current.scrollToIndex({index: Math.floor(idx)});
 	};
-
+	const [play, setPlay] = React.useState(true);
 	const videoEdit = () => {
 		console.log(selectedPhoto[index]);
 		let media = selectedPhoto[index];
 		let duration = media.duration <=15 ? media.duration : 15;
+		setPlay(false);
 		VideoEditor.unlockLicense();
 		VideoEditor.openVideoEditor(media.videoUri ?? media.uri, media.duration, duration, 60, 'aniMov')
 			.then(r => {
 				console.log(r);
 				if(r.hasChanges){
 					media.videoUri = r.video;
+					console.log('videoEditor Result',r);
 					CameraRoll.getVideoAttributes(r.video).then(r => {
-						media.duration = Platform.OS=='ios'?r[0].duration:r.duration;
-						media.fileSize = r.fileSize;
+						console.log('videoattribute', r);
+						let result = r ?? r[0]
+						media.duration = result.duration
+						media.fileSize = result.fileSize;
 						setSelectedPhoto([...selectedPhoto]);
+						setPlay(true);
 					}).catch(e=>console.log('video attribute error',e));
 				}
 			})
@@ -390,13 +395,14 @@ export default AddPhoto = props => {
 			{selectedPhoto[index] ? (
 				selectedPhoto[index].isVideo || selectedPhoto[index].is_video ? (
 					<View>
-						<Video
+						{play&&<Video
 							style={{width: 750 * DP, height: 750 * DP, backgroundColor: '#FFF'}}
 							source={{uri: selectedPhoto[index]?.videoUri ?? selectedPhoto[index]?.uri}}
 							// source={{uri: selectedPhoto[index]?.videoUri}}
+							paused={!play}
 							muted
 							resizeMode="contain"
-						/>
+						/>}
 						{selectedPhoto[index] && !selectedPhoto[index].uri.includes('gif') && !selectedPhoto[index].uri.includes('http') && (
 							<View
 								style={{position: 'absolute', width: 100 * DP, height: 100 * DP, bottom: 0*DP, right: 0*DP}}

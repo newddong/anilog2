@@ -841,39 +841,67 @@ RCT_EXPORT_METHOD(getVideoAttributes: (NSString* ) uri
   if(uri == nil || uri.length == 0) {
     reject(@"Nil error", @"Uri is an empty string", nil);
     return;
-  } else if (![uri hasPrefix:@"ph://"]) {
-    reject(@"Uri format error", @"Uri format doesn't fit with photoKit ('ph://')", nil);
+  }
+//  else if (![uri hasPrefix:@"ph://"]) {
+//    reject(@"Uri format error", @"Uri format doesn't fit with photoKit ('ph://')", nil);
+//    return;
+//  }
+  NSString *fileUri = nil;
+  NSNumber *fileSize = nil;
+  
+  if([uri hasPrefix:@"ph://"]){
+    fileUri = [uri substringFromIndex:@"ph://".length];
+    NSMutableArray * result = [NSMutableArray new];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
+      PHFetchResult<PHAsset *> *assets = [PHAsset fetchAssetsWithLocalIdentifiers:@[fileUri] options:nil];
+      
+      if(assets == nil || assets.count == 0) {
+        reject(@"PHAsset fetch result is nil", @"Check fetch result", nil);
+        return;
+      } else if(assets.firstObject == nil) {
+        reject(@"Asset is nil", @"Check video", nil);
+        return;
+      }
+      
+      [[PHImageManager defaultManager] requestAVAssetForVideo: assets.firstObject
+                                                      options: nil
+                                                resultHandler: ^(AVAsset *avAsset, AVAudioMix *audioMix, NSDictionary *info) {
+          NSURL *url = (NSURL *)[[(AVURLAsset *)avAsset URL] fileReferenceURL];
+          NSNumber *fileSizeValue = nil;
+          [url getResourceValue:&fileSizeValue forKey:NSURLFileSizeKey error:nil];
+          [result addObject:@{
+            @"uri": [url absoluteString],
+            @"duration": [NSNumber numberWithFloat:(float)assets.firstObject.duration],
+            @"fileSize": fileSizeValue
+          }];
+        
+          resolve(result);
+      }];
+    });
+  }else if([uri hasPrefix:@"file:///"]){
+    fileUri = [uri substringFromIndex:@"file:///".length];
+    fileSize = [NSNumber numberWithUnsignedLong:[[[NSFileManager defaultManager] attributesOfItemAtPath:fileUri error:nil] fileSize]];
+    CMTime time =[[AVURLAsset assetWithURL:[NSURL URLWithString:uri]] duration];
+    NSNumber* duration = [NSNumber numberWithInt:ceil(time.value/time.timescale)];
+    resolve(@{@"fileSize":fileSize,
+              @"duration": duration,
+              @"uri":fileUri
+            });
+    return;
+    
+  }else if([uri hasPrefix:@"/"]){
+    fileUri = [uri substringFromIndex:1];
+    fileSize = [NSNumber numberWithUnsignedLong:[[[NSFileManager defaultManager] attributesOfItemAtPath:fileUri error:nil] fileSize]];
+    CMTime time =[[AVURLAsset assetWithURL:[NSURL URLWithString:uri]] duration];
+    NSNumber* duration = [NSNumber numberWithInt:ceil(time.value/time.timescale)];
+    resolve(@{@"fileSize":fileSize,
+              @"duration": duration,
+              @"uri":fileUri
+            });
     return;
   }
   
-  NSMutableArray * result = [NSMutableArray new];
-  
-  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
-    PHFetchResult<PHAsset *> *assets = [PHAsset fetchAssetsWithLocalIdentifiers:@[[uri substringFromIndex:@"ph://".length]] options:nil];
-    
-    if(assets == nil || assets.count == 0) {
-      reject(@"PHAsset fetch result is nil", @"Check fetch result", nil);
-      return;
-    } else if(assets.firstObject == nil) {
-      reject(@"Asset is nil", @"Check video", nil);
-      return;
-    }
-    
-    [[PHImageManager defaultManager] requestAVAssetForVideo: assets.firstObject
-                                                    options: nil
-                                              resultHandler: ^(AVAsset *avAsset, AVAudioMix *audioMix, NSDictionary *info) {
-        NSURL *url = (NSURL *)[[(AVURLAsset *)avAsset URL] fileReferenceURL];
-        NSNumber *fileSizeValue = nil;
-        [url getResourceValue:&fileSizeValue forKey:NSURLFileSizeKey error:nil];
-        [result addObject:@{
-          @"uri": [url absoluteString],
-          @"duration": [NSNumber numberWithFloat:(float)assets.firstObject.duration],
-          @"fileSize": fileSizeValue
-        }];
-      
-        resolve(result);
-    }];
-  });
 }
 
 

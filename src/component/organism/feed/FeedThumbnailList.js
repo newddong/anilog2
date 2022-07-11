@@ -15,16 +15,17 @@ import DP from 'Root/config/dp';
 export default FeedThumbnailList = props => {
 	const NUMCOLUMNS = 3;
 	const [callOnScrollEnd, setCallOnScrollEnd] = React.useState(true); //처음 화면이 마운트 될 때 스크롤이 되지 않으면 onEndReached가 호출되지 않도록 처리
+	const keyExtractor = (item, index) => index + '';
 
 	const renderItem = ({item, index}) => {
-		return <FeedThumnail data={item} onSelect={() => props.onClickThumnail(index, item)} selectMode={props.selectMode} />;
+		return <FeedThumnail data={item} onSelect={() => {props.onClickThumnail(index, item)}} selectMode={props.selectMode} />;
 	};
 	return (
 		<View style={[{marginBottom: 0}, {minHeight: props?.height}, {marginTop: 0 * DP}]}>
 			<FlatList
 				data={props.items}
 				renderItem={renderItem}
-				keyExtractor={(item, index) => index + ''}
+				keyExtractor={keyExtractor}
 				ListHeaderComponent={props.ListHeaderComponent}
 				nestedScrollEnabled
 				showsVerticalScrollIndicator={false}

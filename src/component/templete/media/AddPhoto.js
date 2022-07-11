@@ -58,7 +58,7 @@ export default AddPhoto = props => {
 			toTime: timeStamp ? timeStamp * 1000 - 1 : 0,
 			toID: imageID,
 			assetType: type,
-			include: ['playableDuration'],
+			include: ['fileSize'],
 			groupName: album,
 			groupTypes: 'all',
 		};
@@ -66,7 +66,7 @@ export default AddPhoto = props => {
 			delete param.fromTime;
 			delete param.toTime;
 			delete param.groupTypes;
-			delete param.include;
+			// delete param.include;
 		} else {
 			delete param.toID;
 		}
@@ -142,7 +142,7 @@ export default AddPhoto = props => {
 			toTime: 0,
 			toID: '123456789',
 			assetType: 'All',
-			include: ['playableDuration'],
+			include: ['fileSize'],
 			groupName: album,
 			groupTypes: 'album',
 		};
@@ -150,7 +150,7 @@ export default AddPhoto = props => {
 			delete param.fromTime;
 			delete param.toTime;
 			delete param.groupTypes;
-			delete param.include;
+			// delete param.include;
 		} else {
 			delete param.toID;
 		}
@@ -259,7 +259,7 @@ export default AddPhoto = props => {
 			Modal.alert('사진은 최대 ' + limit + '장까지만 업로드 가능합니다.');
 			return;
 		}
-		let obj = {};
+		let obj = {...photo};
 		obj.uri = photo.image.uri;
 		obj.videoUri = photo.image.videoUri;
 		obj.isVideo = photo.type.includes('video');
@@ -375,6 +375,7 @@ export default AddPhoto = props => {
 					media.videoUri = r.video;
 					CameraRoll.getVideoAttributes(r.video).then(r => {
 						media.duration = Platform.OS=='ios'?r[0].duration:r.duration;
+						media.fileSize = r.fileSize;
 						setSelectedPhoto([...selectedPhoto]);
 					}).catch(e=>console.log('video attribute error',e));
 				}
@@ -410,7 +411,6 @@ export default AddPhoto = props => {
 				) : (
 					<React.Fragment key={(()=>{
 						let key = selectedPhoto.reduce((a,c)=>{return a+c.cropUri?1:0},0)+index+selectedPhoto[index].uri
-						console.log('cropkey',key);
 						return key;
 						})()}>
 						<Crop

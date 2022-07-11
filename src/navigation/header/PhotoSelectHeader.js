@@ -20,45 +20,57 @@ export default PhotoSelectHeader = ({navigation, route, options, back}) => {
 
 	const confirm = () => {
 		console.log(route.params, selectedPhoto);
-		if(selectedPhoto.some(v=>v.duration>14.99)){
-			Modal.alert('15초 이상 동영상은 편집해주세요');
+		if(selectedPhoto.some(v=>v.duration>14.99||v.fileSize>5000000)){
+			Modal.alert('15초 이상 5메가바이트 이상 동영상은\n편집버튼을 눌려 편집 해주세요');
 			return;
 		}
 
 
-		// if (prevRoute && selectedPhoto.length > 1) {
-		// 	let localFiles = selectedPhoto.filter(v => !v.uri.includes('http'));
-		// 	let remoteFiles = selectedPhoto.filter(v => v.uri.includes('http'));
-		// 	CameraRoll.compressImage({
-		// 		imageFiles: localFiles.map(v =>{
-		// 			return v.uri;
-		// 		}),
-		// 		quality: 0.7,
-		// 		maxWidth: 1024,
-		// 		maxHeight: 1024,
-		// 	})
-		// 		.then(compressedImg => {
-		// 			console.log(compressedImg);
-		// 			prevRoute &&
-		// 				prevKey &&
-		// 				navigation.navigate({
-		// 					name: prevRoute,
-		// 					key: prevKey,
-		// 					params: {
-		// 						selectedPhoto: localFiles.map((v, i) => {
-		// 							v.originUri = v.uri;
-		// 							v.uri = compressedImg.assets[i].uri;
-		// 							return v;
-		// 						}),
-		// 					},
-		// 					merge: true,
-		// 				});
-		// 		})
-		// 		.catch(e => console.log('camerarollerr', e));
-		// } else {
-		// 	prevRoute && prevKey && navigation.navigate({name: prevRoute, key: prevKey, params: {selectedPhoto: selectedPhoto}, merge: true});
-		// }
-		prevRoute && prevKey && navigation.navigate({name: prevRoute, key: prevKey, params: {selectedPhoto: selectedPhoto}, merge: true});
+		if (prevRoute && selectedPhoto.length > 1) {
+			console.log('compress img', selectedPhoto)
+			let localFiles = selectedPhoto.filter(v => !v.uri.includes('http'));
+			let localImageFiles = selectedPhoto.filter(v=>!v.uri.includes('http')&&v.type.includes('image'));
+			let remoteFiles = selectedPhoto.filter(v => v.uri.includes('http'));
+			CameraRoll.compressImage({
+				imageFiles: localImageFiles.map(v =>{
+					return v.uri;
+				}),
+				quality: 0.7,
+				maxWidth: 1024,
+				maxHeight: 1024,
+			})
+				.then(compressedImg => {
+					console.log(compressedImg);
+					localImageFiles.forEach((v,i,a)=>{
+						a[i].cropUri = compressedImg.assets[i].uri;
+						a[i].fileSize = compressedImg.assets[i].fileSize;
+					})
+					console.log(localImageFiles)
+
+					selectedPhoto.forEach((v,i,a)=>{
+						let img = localImageFiles.find(localImg=>localImg.uri==v.uri)
+						if(img && a[i].cropUri){
+							a[i].cropUri = img.cropUri;
+							a[i].fileSize = img.fileSize;
+						}
+					})
+					console.log(selectedPhoto)
+					prevRoute &&
+						prevKey &&
+						navigation.navigate({
+							name: prevRoute,
+							key: prevKey,
+							params: {
+								selectedPhoto: selectedPhoto
+							},
+							merge: true,
+						});
+				})
+				.catch(e => console.log('camerarollerr', e));
+		} else {
+			// prevRoute && prevKey && navigation.navigate({name: prevRoute, key: prevKey, params: {selectedPhoto: selectedPhoto}, merge: true});
+		}
+		// prevRoute && prevKey && navigation.navigate({name: prevRoute, key: prevKey, params: {selectedPhoto: selectedPhoto}, merge: true});
 	};
 
 	const test = () => {

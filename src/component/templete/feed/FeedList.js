@@ -655,8 +655,10 @@ export default FeedList = ({route}) => {
 					</View>
 				)}
 				onViewableItemsChanged={viewable}
-				viewabilityConfig={{waitForInteraction: false, viewAreaCoveragePercentThreshold: 40, minimumViewTime: 0}}
-				windowSize={3}
+				viewabilityConfig={{waitForInteraction: false,
+					viewAreaCoveragePercentThreshold: 40,minimumViewTime:0}}
+				windowSize={20}
+				decelerationRate={0.9}
 				maxToRenderPerBatch={5}
 				updateCellsBatchingPeriod={0}
 				initialNumToRender={5}

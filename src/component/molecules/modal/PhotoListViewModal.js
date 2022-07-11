@@ -7,6 +7,8 @@ import {Cross46} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
 import Swiper from 'react-native-swiper';
 import Crop from 'Molecules/media/Crop';
+import ExpansionView from 'Molecules/media/ExpansionView';
+import ImageView from 'react-native-image-viewing';
 
 /**
  * 사진 전체화면 모드 모달
@@ -20,7 +22,7 @@ import Crop from 'Molecules/media/Crop';
  */
 const PhotoListViewModal = props => {
 	const swiperRef = React.useRef();
-
+	const [swipe, setSwipe] = React.useState(true);
 	const [showImgMode, setShowImgMode] = React.useState(true);
 	const backAction = () => {
 		console.log('backAction', showImgMode);
@@ -38,14 +40,40 @@ const PhotoListViewModal = props => {
 		return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
 	}, [showImgMode]);
 
+	const startMove = () => {
+		console.log('startMove');
+		setSwipe(false);
+	}
+
+	const endMove = () => {
+		console.log('endMove');
+		setSwipe(true);
+	}
+	const pagenation = (index, total, context) => {
+		if (total <= 1) return false;
+		return (
+			<View style={[style.pagination,{bottom: 40 * DP}]}>
+				<Text style={[txt.roboto24, {color: WHITE}]}>
+					{index + 1}/{total}
+				</Text>
+			</View>
+		);
+	};
+
 	return (
 		<View style={style.background}>
-			<TouchableOpacity onPress={() => (props.onClose ? props.onClose() : Modal.close())} style={[style.crossMark]}>
-				<View style={{/*backgroundColor:'yellow',*/ width: 120 * DP, height: 120 * DP}}>
+			<TouchableOpacity style={[style.crossMark]} onPress={() => (props.onClose ? props.onClose() : Modal.close())}>
+				<View style={{paddingLeft:20*DP}}>
 					<Cross46 />
 				</View>
 			</TouchableOpacity>
-			<View style={[style.popUpWindow]}>
+			<ImageView
+				images={props.photoList.map(v=>({uri:v}))}
+				visible={true}
+				onRequestClose={()=>{props.onClose()}}
+			></ImageView>
+			
+			{/* <View style={[style.popUpWindow]}>
 				<Swiper
 					activeDotColor={APRI10}
 					showsButtons={false}
@@ -53,56 +81,28 @@ const PhotoListViewModal = props => {
 					loop={false}
 					removeClippedSubviews={false}
 					scrollEventThrottle={16}
-					scrollEnabled={true}
+					scrollEnabled={false&&swipe}
 					ref={swiperRef}
-					renderPagination={(index, total, context) => {
-						// console.log('context', context);
-						return props.photoList.length == 1 ? (
-							<></>
-						) : (
-							<View
-								style={{
-									bottom: -50 * DP,
-									alignSelf: 'center',
-									alignItems: 'center',
-									justifyContent: 'space-between',
-									width: 28 * props.photoList.length * DP,
-									height: 24 * DP,
-									flexDirection: 'row',
-									position: 'absolute',
-								}}>
-								{props.photoList.map((data, idx) => {
-									return (
-										<View
-											key={idx}
-											style={[
-												{
-													alignSelf: 'center',
-													width: 14 * DP,
-													height: 14 * DP,
-													backgroundColor: index == idx ? APRI10 : GRAY10,
-													borderRadius: 50 * DP,
-												},
-											]}></View>
-									);
-								})}
-							</View>
-						);
-					}}
+					renderPagination={pagenation}
 					horizontal={true}>
 					{props.photoList != undefined &&
 						props.photoList.map((data, idx) => (
+							<View key={idx}>
 							<TouchableOpacity activeOpacity={1} onPress={() => props.onClose()} key={idx}>
-								<Crop photo={{uri:data}} width={750 * DP} height={1000 * DP} isCrop={false} backgroundColor={'black'} />
-								<View style={[style.swiper_index]}>
-									<Text style={[txt.roboto24, {color: 'white'}]}>
-										{idx + 1}/{props.photoList.length}
-									</Text>
-								</View>
+								<ExpansionView 
+									photo={{uri:data}} 
+									width={750 * DP} 
+									height={1100 * DP} 
+									isCrop={true} 
+									backgroundColor={'#FFF'} 
+									onStartMove={startMove}
+									onEndMove={endMove}
+								/>
 							</TouchableOpacity>
+							</View>
 						))}
 				</Swiper>
-			</View>
+			</View> */}
 		</View>
 	);
 };
@@ -126,7 +126,12 @@ const style = StyleSheet.create({
 	crossMark: {
 		alignSelf: 'flex-start',
 		left: 30 * DP,
-		marginBottom: 70 * DP,
+		position:'absolute',
+		top:30*DP,
+		width:150*DP,
+		height:150*DP,
+		left:0,
+		// marginBottom: 70 * DP,
 	},
 	popUpWindow: {
 		width: 750 * DP,
@@ -140,6 +145,16 @@ const style = StyleSheet.create({
 		width: 750 * DP,
 		// height: 750 * DP,
 		backgroundColor: 'black',
+	},
+	pagination: {
+		width: 76 * DP,
+		height: 50 * DP,
+		borderRadius: 25 * DP,
+		backgroundColor: '#0008',
+		justifyContent: 'center',
+		alignItems: 'center',
+		position: 'absolute',
+		left: 28 * DP,
 	},
 });
 

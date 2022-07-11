@@ -33,9 +33,9 @@ import CameraRoll from 'Root/module/CameraRoll';
  */
 const LocalMedia = props => {
 	const [duration, setDuration] = React.useState(0);
-	const videoUri = React.useRef();
 	const [isSelect, setSelected] = React.useState(false);
 	const isVideo = props.data.type.includes('video');
+	const videoInfo = React.useRef({});
 
 	React.useEffect(() => {
 		setSelected(props.selected);
@@ -44,8 +44,8 @@ const LocalMedia = props => {
 	React.useEffect(() => {
 		if (isVideo) {
 			CameraRoll.getVideoAttributes(props.data.image.uri).then(r => {
-				// console.log('video attribute', r);
-				videoUri.current = Platform.OS=='ios'?r[0].uri:undefined;
+				console.log('video attribute', r);
+				videoInfo.current = Platform.OS=='ios'?r[0]:r;
 				setDuration(Platform.OS=='ios'?r[0].duration:r.duration);
 			}).catch(e=>console.log('video attribute error',e));
 		}
@@ -56,7 +56,7 @@ const LocalMedia = props => {
 			setSelected(false);
 			props.onCancel(props.data.image.uri);
 		} else {
-			let photo = {...props.data,image:{...props.data.image,videoUri:videoUri.current}}
+			let photo = {...props.data,fileSize:videoInfo.current.fileSize,image:{...props.data.image,videoUri:videoInfo.current.uri,fileSize:videoInfo.current.fileSize}}
 			console.log('사진',photo)
 			// setSelected(true);
 			props.onSelect(photo, duration);

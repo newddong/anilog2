@@ -279,22 +279,23 @@ const style = StyleSheet.create({
 		borderBottomWidth: 2 * DP,
 		borderBottomColor: GRAY30,
 		width: 750 * DP,
+		// backgroundColor: 'red',
 	},
 	listContainer3: {
 		width: 750 * DP,
+		// backgroundColor: 'red',
 	},
 	footer: {
 		alignItems: 'center',
 		justifyContent: 'flex-start',
 		width: 750 * DP,
-		// width: 750 * DP,
 		paddingHorizontal: 20 * DP,
 		paddingTop: 30 * DP,
 		paddingBottom: 70 * DP,
 		// height: 148 * DP,
+
 		flexDirection: 'row',
 		backgroundColor: OPACITY90,
-		opacity: 0.9,
 	},
 });
 

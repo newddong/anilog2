@@ -38,6 +38,7 @@ import {GRAY40} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import ProfileImageMedium148 from 'Root/component/molecules/image/ProfileImageMedium148';
 import Loading from 'Root/component/molecules/modal/Loading';
+import HashText from 'Root/component/molecules/info/HashText';
 export default UserMenu = props => {
 	// console.log('UserMenu Props', props);
 	const navigation = useNavigation();
@@ -46,6 +47,8 @@ export default UserMenu = props => {
 	const [showMoreIntro, setShowMoreIntro] = React.useState(false);
 	const [numberOfLines, setNumOfLines] = React.useState();
 	const [showInfo, setShowInfo] = React.useState(false);
+	const [into_height, setIntro_height] = React.useState(0); //user_introduction 의 길이 => 길이에 따른 '더보기' 버튼 출력 여부 결정
+	const [showMore, setShowMore] = React.useState(false);
 	//토큰에 로그인한 유저의 _id를 저장
 	React.useEffect(() => {
 		//자동로그인 이외의 기능에는 AsyncStorage를 사용해서 토큰을 불러오지 않음
@@ -105,6 +108,13 @@ export default UserMenu = props => {
 	// 내 정보 수정 클릭
 	const onPressModifyMyInfo = () => {
 		navigation.navigate('UserInfoSetting', {token: data._id}); //userObject
+	};
+	const onLayout = e => {
+		setIntro_height(e.nativeEvent.layout.height);
+	};
+	//더보기 클릭
+	const onPressShowMore = () => {
+		setShowMore(!showMore);
 	};
 
 	//하단 메뉴 클릭
@@ -184,14 +194,26 @@ export default UserMenu = props => {
 						</View>
 
 						<View style={{flexDirection: 'row', width: 694 * DP}}>
-							<View style={[styles.introduceBox, {alignSelf: 'flex-start'}]}>
-								{data._id != undefined && (
+							{/* <View style={[styles.introduceBox, {alignSelf: 'flex-start'}]}> */}
+							{/* {data._id != undefined && (
 									<Text numberOfLines={!showMoreIntro ? 15 : 2} style={[txt.noto26]}>
-										{/* // <Text numberOfLines={showInfo ? 15 : 1} style={[txt.noto26]} onTextLayout={onTextLayout}> */}
+										 <Text numberOfLines={showInfo ? 15 : 1} style={[txt.noto26]} onTextLayout={onTextLayout}>
 										{data.user_introduction || '자기소개가 없습니다.'}
 									</Text>
-								)}
+								)} */}
+							<ScrollView onLayout={onLayout} style={{position: 'absolute', opacity: 0}}>
+								<Text ellipsizeMode={'tail'} numberOfLines={showMore ? null : 2} style={[txt.noto26, styles.intro_expanded]}>
+									{data.user_introduction}
+								</Text>
+							</ScrollView>
+							{/* 유저 소개글  */}
+							<View style={[styles.userIntroCont]}>
+								<HashText style={[txt.noto26]} byteOfLine={55}>
+									{data.user_introduction != '' ? data.user_introduction : '유저 인트로 소개글입니다. 현재는 비어있습니다.'}
+								</HashText>
 							</View>
+							{/* </View> */}
+
 							{/* 더미 텍스트 삭제금지 */}
 							<Text
 								style={[txt.noto24, {position: 'absolute', opacity: 0, backgroundColor: 'red'}]}
@@ -349,5 +371,14 @@ const styles = StyleSheet.create({
 		marginVertical: 40 * DP,
 		width: 694 * DP,
 		alignItems: 'center',
+	},
+	intro_expanded: {
+		width: 568 * DP,
+	},
+	userIntroCont: {
+		flexDirection: 'row',
+		width: 694 * DP,
+		marginTop: 20 * DP,
+		// backgroundColor: 'red',
 	},
 });

@@ -163,7 +163,14 @@ export default MyHeader = ({route, options, back}) => {
 	};
 
 	if (items == '') {
-		return <></>;
+		return (
+			<View style={[style.headerContainer, style.shadow, {justifyContent: 'space-between'}]}>
+				<TouchableOpacity style={style.backButtonContainer} onPress={onPressBackButton}>
+					<BackArrow32 />
+				</TouchableOpacity>
+				<MeatBall />
+			</View>
+		);
 	} else
 		return (
 			<View style={[style.headerContainer, style.shadow]}>

@@ -129,7 +129,7 @@ const UserLocationTimeLabel = props => {
 							{publicIcon()}
 						</View>
 					</View>
-					<Text style={[props.isLarge ? txt.noto26 : txt.noto24, {lineHeight: 40 * DP, color: GRAY20, maxWidth: 470 * DP}]} numberOfLines={1}>
+					<Text style={[props.isLarge ? txt.noto24 : txt.noto24, {lineHeight: 40 * DP, color: GRAY20, maxWidth: 470 * DP}]} numberOfLines={1}>
 						{/* {address?.city} {address?.district} · {props.data.feed_type == undefined ? getCommentedTime() : props.data.comment_date} */}
 						{getTime()} {props.location == undefined ? '' : getLocation()}
 					</Text>

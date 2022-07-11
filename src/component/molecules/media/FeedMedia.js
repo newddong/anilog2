@@ -12,6 +12,7 @@ import PhotoTagItem from 'Organism/feed/PhotoTagItem';
 import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/core';
 import HashText from '../info/HashText';
+import X2JS from 'x2js';
 
 /**
  *
@@ -70,8 +71,10 @@ export default FeedMedia = props => {
 	if (feed_type == 'missing') {
 		const newMissingDateText = missing_animal_date.toString().split('-');
 		newMissingDate = newMissingDateText[0] + '.' + newMissingDateText[1] + '.' + newMissingDateText[2].toString().substring(0, 2);
-		splitAddress = missing_animal_lost_location.split('"');
-		newMissingAddress = splitAddress[11];
+		// splitAddress = missing_animal_lost_location.split('"');
+		// newMissingAddress = splitAddress[11];
+		const parsed = JSON.parse(missing_animal_lost_location);
+		newMissingAddress = parsed?.city + ' ' + parsed?.district;
 	}
 	if (feed_type == 'report') {
 		const newMissingDateText = report_witness_date.toString().split('-');
@@ -127,9 +130,9 @@ export default FeedMedia = props => {
 	};
 	const [swiperIndex, setSwiperIndex] = React.useState(0);
 	const indexChange = index => {
-		console.log('index',index);
+		console.log('index', index);
 		setSwiperIndex(index);
-	}
+	};
 
 	return (
 		<View style={{height: 734 * DP}}>
@@ -154,7 +157,7 @@ export default FeedMedia = props => {
 									uri={data.media_uri}
 									data={data}
 									taglist={data.tags}
-									onShow={props.isView&&(idx==swiperIndex||feed_medias.length==0)}
+									onShow={props.isView && (idx == swiperIndex || feed_medias.length == 0)}
 									key={idx}
 									viewmode={true}
 									onPressPhoto={onPressPhoto}

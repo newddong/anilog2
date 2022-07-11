@@ -107,7 +107,14 @@ export default Feed = React.memo(props => {
 
 	return (
 		<View style={[feed_templete_style.feed]} removeClippedSubviews>
-			<FeedContent data={props.data} deleteFeed={deleteFeed} toggleFeedLike={toggleFeedLike} isLike={isLike} likeCount={likeCount} isView={props.isView}/>
+			<FeedContent
+				data={props.data}
+				deleteFeed={deleteFeed}
+				toggleFeedLike={toggleFeedLike}
+				isLike={isLike}
+				likeCount={likeCount}
+				isView={props.isView}
+			/>
 			{/* 270DP */}
 			<View style={[feed_templete_style.comment_feed_view]}>
 				{/* RecentComment */}

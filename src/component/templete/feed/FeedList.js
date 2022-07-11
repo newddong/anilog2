@@ -98,7 +98,7 @@ export default FeedList = ({route}) => {
 				// 	feed_is_like: v.feed_is_like,
 				// 	feed_like_count: v.feed_like_count,
 				// });
-				feed_obj.list.push(v)
+				feed_obj.list.push(v);
 			}
 		});
 		console.log('feed_obj.list', feed_obj.list.length);
@@ -313,7 +313,7 @@ export default FeedList = ({route}) => {
 				getUserTaggedFeedList(
 					params,
 					result => {
-						console.log('result / getUserTaggedFeedList', result.msg.length);
+						console.log('result / getUserTaggedFeedList', result.msg);
 						const res = result.msg.map((v, i) => v.usertag_feed_id);
 
 						setTotal(result.total_count);
@@ -389,13 +389,17 @@ export default FeedList = ({route}) => {
 						params.order_value = 'interrupt';
 					}
 				}
-
 				console.log('TagMeFeedList 최종 param', params);
 				getUserTaggedFeedList(
 					params,
 					result => {
-						// console.log('result / getUserTaggedFeedList', result.msg);
-						const res = result.msg.map((v, i) => v.usertag_feed_id);
+						console.log('result / getUserTaggedFeedList', result);
+						let res = result.msg.map((v, i) => v.usertag_feed_id);
+						result.msg.map((v, i) => {
+							res[i].feed_is_like = v.feed_is_like;
+							res[i].is_favorite = v.is_favorite;
+						});
+
 						setTotal(result.total_count);
 						let list = [];
 						if (!pre && !next) {
@@ -458,10 +462,13 @@ export default FeedList = ({route}) => {
 				getFavoriteFeedListByUserId(
 					{userobject_id: userGlobalObject.userInfo._id},
 					({msg}) => {
-						console.log('msg', msg.length);
+						// console.log('msg', msg);
 						let temp = msg.filter(x => x.favorite_feed_id.feed_is_delete != true).map(data => data.favorite_feed_id);
+						msg.map((v, i) => {
+							temp[i].feed_is_like = v.feed_is_like;
+							temp[i].is_favorite = v.is_favorite;
+						});
 						// console.log('temp temp', temp, msg);
-
 						setFeed(temp);
 					},
 					error => {
@@ -559,8 +566,8 @@ export default FeedList = ({route}) => {
 		);
 	};
 	const [viewIndex, setViewIndex] = React.useState([]);
-	const renderItem = ({item,index}) => {
-		return <Feed data={item} deleteFeed={deleteFeedItem} isView={viewIndex.some(v=>v.index==index)}/>;
+	const renderItem = ({item, index}) => {
+		return <Feed data={item} deleteFeed={deleteFeedItem} isView={viewIndex.some(v => v.index == index)} />;
 	};
 
 	const wait = timeout => {
@@ -594,7 +601,18 @@ export default FeedList = ({route}) => {
 		return {length: data[index].height, offset: data[index].offset, index: index};
 	};
 	const keyExtractor = (item, index) => {
-		let key = item._id + item.feed_is_like + item.feed_medias?.reduce((a,c)=>{return a+c.tags.length+c.tags.reduce((a,c)=>{return a+c.position_x},0)},0);
+		let key =
+			item._id +
+			item.feed_is_like +
+			item.feed_medias?.reduce((a, c) => {
+				return (
+					a +
+					c.tags.length +
+					c.tags.reduce((a, c) => {
+						return a + c.position_x;
+					}, 0)
+				);
+			}, 0);
 		return key;
 	};
 	const [tl, setTl] = React.useState({});
@@ -602,7 +620,9 @@ export default FeedList = ({route}) => {
 	const [fontSize, setSize] = React.useState(16);
 	const [testTx, setTx] = React.useState('한');
 	const [code, setCode] = React.useState(62);
-	const viewable = React.useCallback((e)=>{setViewIndex(e.viewableItems)},[]);
+	const viewable = React.useCallback(e => {
+		setViewIndex(e.viewableItems);
+	}, []);
 	return (
 		<View style={[login_style.wrp_main, {flex: 1, backgroundColor: WHITE}, {borderTopWidth: 2 * DP}, {borderTopColor: GRAY30}]}>
 			<FlatList
@@ -622,8 +642,7 @@ export default FeedList = ({route}) => {
 					</View>
 				)}
 				onViewableItemsChanged={viewable}
-				viewabilityConfig={{waitForInteraction: false,
-					viewAreaCoveragePercentThreshold: 40,minimumViewTime:0}}
+				viewabilityConfig={{waitForInteraction: false, viewAreaCoveragePercentThreshold: 40, minimumViewTime: 0}}
 				windowSize={3}
 				maxToRenderPerBatch={5}
 				updateCellsBatchingPeriod={0}

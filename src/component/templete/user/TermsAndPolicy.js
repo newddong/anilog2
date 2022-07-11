@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/core';
-import React from 'react';
+import React, {useCallback} from 'react';
 import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet, FlatList} from 'react-native';
 import {GRAY10, GRAY40, APRI10, GRAY20} from 'Root/config/color';
 import DP from 'Root/config/dp';
@@ -25,12 +25,12 @@ const TermsAndPolicy = ({route}) => {
 				navigation.setOptions({title: '오픈소스 라이선스 정보'});
 		}
 	}, []);
-
+	const ITEM_HEIGHT = 108 * DP;
 	const onPressOpenLicense = item => {
 		navigation.navigate('OpenSourceDetail', {item: item});
 	};
 	const renderItem = ({item}) => {
-		// console.log('item', item);
+		console.log('item', item);
 		return (
 			<TouchableOpacity onPress={() => onPressOpenLicense(item)}>
 				<View style={[styles.renderItemStyle]}>
@@ -40,6 +40,15 @@ const TermsAndPolicy = ({route}) => {
 			</TouchableOpacity>
 		);
 	};
+	const getItemLayout = useCallback(
+		(data, index) => ({
+			length: ITEM_HEIGHT,
+			offset: ITEM_HEIGHT * index,
+			index,
+		}),
+		[],
+	);
+
 	return (
 		<View style={styles.container}>
 			{route.params.name != 'opensource' ? (
@@ -47,7 +56,7 @@ const TermsAndPolicy = ({route}) => {
 					<Text style={[txt.noto28]}>{data?.terms_of_service_contents.replace(/\\n/g, `\n`)}</Text>
 				</ScrollView>
 			) : (
-				<FlatList data={OpenSourceLicense} renderItem={renderItem} />
+				<FlatList data={OpenSourceLicense} renderItem={renderItem} keyExtractor={item => item.libraryName} getItemLayout={getItemLayout} />
 			)}
 		</View>
 	);

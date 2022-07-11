@@ -62,6 +62,7 @@ const ArticleList = props => {
 				listKey={({item, index}) => index}
 				renderItem={({item, index}) => renderItem(item, index)}
 				showsVerticalScrollIndicator={false}
+				ListHeaderComponent={<View style={{height: 30 * DP}} />}
 				ListEmptyComponent={props.whenEmpty}
 				// https://reactnative.dev/docs/optimizing-flatlist-configuration
 				initialNumToRender={15}
@@ -91,8 +92,11 @@ export default ArticleList;
 
 const style = StyleSheet.create({
 	container: {
-		width: 750 * DP,
+		// width: 750 * DP,
 		alignItems: 'center',
 		borderBottomWidth: 2 * DP,
+		paddingHorizontal: 28 * DP,
+		// paddingVertical: 30 * DP,
+		alignItems: 'center',
 	},
 });

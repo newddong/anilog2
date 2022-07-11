@@ -19,7 +19,7 @@ import CameraRoll from 'Root/module/CameraRoll';
 // import { hasAndroidPermission } from './camerapermission';
 // import { requestPermission, reqeustCameraPermission } from 'permission';
 import LocalMedia from 'Molecules/media/LocalMedia';
-import {Bracket48} from 'Atom/icon';
+import {Bracket48, VideoEditorIcon} from 'Atom/icon';
 import FastImage from 'react-native-fast-image';
 import Modal from 'Root/component/modal/Modal';
 import Video from 'react-native-video';
@@ -60,7 +60,7 @@ export default AddPhoto = props => {
 			assetType: type,
 			include: ['playableDuration'],
 			groupName: album,
-			groupTypes: 'album',
+			groupTypes: 'all',
 		};
 		if (Platform.OS == 'android') {
 			delete param.fromTime;
@@ -103,7 +103,7 @@ export default AddPhoto = props => {
 
 	const onMomentumscrollbegin = () => {
 		// console.log('begin')
-		FastImage.clearMemoryCache().then(() => console.log('clear'));
+		FastImage.clearMemoryCache();
 	};
 	const onScroll = e => {
 		// console.log(e.nativeEvent)
@@ -141,7 +141,7 @@ export default AddPhoto = props => {
 			first: requestloading,
 			toTime: 0,
 			toID: '123456789',
-			assetType: 'Photos',
+			assetType: 'All',
 			include: ['playableDuration'],
 			groupName: album,
 			groupTypes: 'album',
@@ -150,6 +150,7 @@ export default AddPhoto = props => {
 			delete param.fromTime;
 			delete param.toTime;
 			delete param.groupTypes;
+			delete param.include;
 		} else {
 			delete param.toID;
 		}
@@ -323,15 +324,11 @@ export default AddPhoto = props => {
 
 	const onCrop = (originImg, cropImg) => {
 		console.log(selectedPhoto);
-		setSelectedPhoto(selectedPhoto.map((v,i)=>{
+		selectedPhoto.forEach((v,i,a)=>{
 			if(v.uri==originImg){
-				setIndex(i);
-				return {...v,cropUri:cropImg}
-			}else{
-				return v;
+				a[i].cropUri = cropImg;
 			}
-		}))
-		
+		})
 	};
 
 	const next = () => {
@@ -344,6 +341,7 @@ export default AddPhoto = props => {
 			idx = photolist.findIndex(v => v.node.image.uri == (selectedPhoto[index + 1].originUri ?? selectedPhoto[index + 1].uri)) / 4;
 			setIndex(index + 1);
 		}
+		
 		if (idx < 0) return;
 		flatlist.current.scrollToIndex({index: Math.floor(idx)});
 	};
@@ -360,6 +358,7 @@ export default AddPhoto = props => {
 			idx = photolist.findIndex(v => v.node.image.uri == (selectedPhoto[index - 1].originUri ?? selectedPhoto[index - 1].uri)) / 4;
 			setIndex(index - 1);
 		}
+		
 		if (idx < 0) return;
 		flatlist.current.scrollToIndex({index: Math.floor(idx)});
 	};
@@ -367,13 +366,18 @@ export default AddPhoto = props => {
 	const videoEdit = () => {
 		console.log(selectedPhoto[index]);
 		let media = selectedPhoto[index];
-
+		let duration = media.duration <=15 ? media.duration : 15;
 		VideoEditor.unlockLicense();
-		VideoEditor.openVideoEditor(media.videoUri ?? media.uri, media.duration, 15, 60, 'aniMov')
+		VideoEditor.openVideoEditor(media.videoUri ?? media.uri, media.duration, duration, 60, 'aniMov')
 			.then(r => {
 				console.log(r);
-				media.videoUri = r.video;
-				setSelectedPhoto([...selectedPhoto]);
+				if(r.hasChanges){
+					media.videoUri = r.video;
+					CameraRoll.getVideoAttributes(r.video).then(r => {
+						media.duration = Platform.OS=='ios'?r[0].duration:r.duration;
+						setSelectedPhoto([...selectedPhoto]);
+					}).catch(e=>console.log('video attribute error',e));
+				}
 			})
 			.catch(e => {
 				console.log(e);
@@ -386,7 +390,7 @@ export default AddPhoto = props => {
 				selectedPhoto[index].isVideo || selectedPhoto[index].is_video ? (
 					<View>
 						<Video
-							style={{width: 750 * DP, height: 750 * DP, backgroundColor: '#000'}}
+							style={{width: 750 * DP, height: 750 * DP, backgroundColor: '#FFF'}}
 							source={{uri: selectedPhoto[index]?.videoUri ?? selectedPhoto[index]?.uri}}
 							// source={{uri: selectedPhoto[index]?.videoUri}}
 							muted
@@ -394,15 +398,21 @@ export default AddPhoto = props => {
 						/>
 						{selectedPhoto[index] && !selectedPhoto[index].uri.includes('gif') && !selectedPhoto[index].uri.includes('http') && (
 							<View
-								style={{position: 'absolute', width: 100 * DP, height: 100 * DP, backgroundColor: 'red', bottom: 0, right: 0}}
+								style={{position: 'absolute', width: 100 * DP, height: 100 * DP, bottom: 0*DP, right: 0*DP}}
 								onStartShouldSetResponder={() => true}
 								onResponderGrant={() => {
 									videoEdit();
-								}}></View>
+								}}>
+									<VideoEditorIcon />
+								</View>
 						)}
 					</View>
 				) : (
-					<React.Fragment key={selectedPhoto.length+(selectedPhoto.reduce((a,c)=>{return a+c.cropUri?1:0},0))+index}>
+					<React.Fragment key={(()=>{
+						let key = selectedPhoto.reduce((a,c)=>{return a+c.cropUri?1:0},0)+index+selectedPhoto[index].uri
+						console.log('cropkey',key);
+						return key;
+						})()}>
 						<Crop
 							width={750 * DP}
 							height={750 * DP}
@@ -425,14 +435,14 @@ export default AddPhoto = props => {
 						</View>
 					</View>
 				</TouchableWithoutFeedback>
-				{isSingle ||
+				{/* {isSingle ||
 					(true && (
 						<TouchableWithoutFeedback onPress={clickcheck}>
 							<View style={[btn.confirm_button, btn.shadow]}>
 								<Text style={[txt.noto28b, txt.white]}>사진등록</Text>
 							</View>
 						</TouchableWithoutFeedback>
-					))}
+					))} */}
 				{/* {(
 					<TouchableWithoutFeedback onPress={clickcheck}>
 						<View style={[btn.confirm_button, btn.shadow]}>

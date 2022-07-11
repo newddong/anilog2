@@ -16,13 +16,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="appIcon" translatesAutoresizingMaskIntoConstraints="NO" id="TiN-o1-2cu">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="appIcon" translatesAutoresizingMaskIntoConstraints="NO" id="TiN-o1-2cu">
                                 <rect key="frame" x="57" y="264" width="261" height="138"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="TiN-o1-2cu" firstAttribute="top" secondItem="Bcu-3y-fUS" secondAttribute="top" constant="264" id="5jb-pn-ym8"/>
+                            <constraint firstItem="Bcu-3y-fUS" firstAttribute="bottom" secondItem="TiN-o1-2cu" secondAttribute="bottom" constant="265" id="POS-ER-XBf"/>
+                            <constraint firstItem="Bcu-3y-fUS" firstAttribute="trailing" secondItem="TiN-o1-2cu" secondAttribute="trailing" constant="57" id="ao0-QY-eCj"/>
+                            <constraint firstItem="TiN-o1-2cu" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" constant="57" id="ulw-d1-Pgj"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -31,6 +36,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="appIcon" width="350" height="165"/>
+        <image name="appIcon" width="175" height="82.5"/>
     </resources>
 </document>

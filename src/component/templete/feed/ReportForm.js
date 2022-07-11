@@ -94,6 +94,7 @@ export default ReportForm = props => {
 				console.log('err / getAddress / FeedWrite  : ', err);
 			},
 		);
+
 		//위치 권한을 위해 Background로 갔다가 앱으로 돌아왔을 경우 권한을 다시 확인
 		const subscription = AppState.addEventListener('change', nextAppState => {
 			Modal.close();

@@ -19,6 +19,7 @@ const MissingReportBox = props => {
 	const [objCity, setObjCity] = React.useState('');
 	const navigation = useNavigation();
 
+
 	React.useEffect(() => {
 		try {
 			if (props.data.feed_type == 'missing') {

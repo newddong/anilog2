@@ -216,11 +216,11 @@ android {
         }
         releaseStaging {
             signingConfig signingConfigs.debug
-            if (nativeArchitectures) {
-                ndk {
-                    abiFilters nativeArchitectures.split(',')
-                }
-            }
+//            if (nativeArchitectures) {
+//                ndk {
+//                    abiFilters nativeArchitectures.split(',')
+//                }
+//            }
             resValue "string", "CodePushDeploymentKey", '"ET_pxmGkZaNcjuI-gLIaAW8QcA4bj0rOBEVBv"'
             matchingFallbacks = ['release']
         }

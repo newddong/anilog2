@@ -18,8 +18,9 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 	const complete = result => {
 		setSent(true);
 		Modal.close();
-		Modal.popNoBtn('게시물 등록이 완료되었습니다.');
-		// console.log('route.params', route.params);
+		setTimeout(() => {
+			Modal.popNoBtn('게시물 등록이 완료되었습니다.');
+		}, 100);
 		setTimeout(() => {
 			Modal.close();
 			if (param.tab == 'Protection') {
@@ -109,11 +110,11 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			let param = {
 				...route.params,
 				media_uri: route.params.selectedPhoto.map(v => {
-					return v.videoUri?? v.cropUri ?? v.uri;
+					return v.videoUri ?? v.cropUri ?? v.uri;
 				}),
-				feed_medias: route.params.feed_medias.map(f=>{
-					route.params.selectedPhoto.some(v=>{
-						if((v.videoUri?? v.cropUri ?? v.uri)==f.media_uri){
+				feed_medias: route.params.feed_medias.map(f => {
+					route.params.selectedPhoto.some(v => {
+						if ((v.videoUri ?? v.cropUri ?? v.uri) == f.media_uri) {
 							f.is_video = v.isVideo ?? v.is_video;
 						}
 					});
@@ -122,7 +123,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 				}),
 				hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
 			};
-			console.log('param', param);
+			// console.log('param', param);
 			switch (route.params?.feedType) {
 				case 'Feed':
 					console.log('feed Param', JSON.stringify(param));
@@ -130,10 +131,13 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 					break;
 				case 'Missing':
 					{
-						// console.log('Before Write Report ', param);
+						console.log('Before Write Report ', param);
 						const data = param;
 						delete data.feed_location;
-						if (data.missing_animal_lost_location.city == '광역시, 도' || data.missing_animal_lost_location.district == '구를 선택') {
+						if (data.missing_animal_species == '동물종류') {
+							Modal.alert('실종동물의 분류를 \n 선택해주세요.');
+							setSent(false);
+						} else if (data.missing_animal_lost_location.city == '광역시, 도' || data.missing_animal_lost_location.district == '구를 선택') {
 							Modal.alert('실종위치는 반드시 \n선택해주셔야합니다!');
 							setSent(false);
 							/*} else if (!check.test(data.missing_animal_age)) {
@@ -142,8 +146,8 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 							Modal.alert('실종 날짜를 선택해주세요.');
 							setSent(false);
 						} else if (
-							data.missing_animal_species &&
-							data.missing_animal_species_detail &&
+							data.missing_animal_species != '동물종류' &&
+							data.missing_animal_species_detail != '품종' &&
 							(data.feed_content || data.feed_medias) &&
 							data.media_uri.length > 0 &&
 							data.missing_animal_age &&
@@ -164,8 +168,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 				case 'Report':
 					{
 						const data = param;
-						console.log('data.report_witness_date', data.report_witness_date);
-						if (data.report_location.city == '광역시, 도' || data.report_location.district == '구를 선택') {
+						if (data.report_location.city == '광역시, 도' || data.report_location.district == '시,군,구') {
 							Modal.alert('제보위치는 반드시 \n선택해주셔야합니다.');
 							setSent(false);
 						} else if (data.report_witness_date == '' || data.report_witness_date == '눌러서 지정해주세요!') {
@@ -186,8 +189,12 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 								data.report_witness_location
 							) {
 								console.log('NotNull 통과');
+								Modal.popNoBtn('게시물을 등록중입니다.', () => {
+									Modal.close();
+									setSent(false);
+								});
 								createReport(param, complete, handleError);
-								Modal.close();
+								// Modal.close();
 							} else {
 								setSent(false);
 							}
@@ -210,13 +217,13 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			...route.params,
 			feedobject_id: route.params._id,
 			media_uri: route.params.selectedPhoto?.map(v => {
-				return v.videoUri?? v.cropUri ?? v.uri;
+				return v.videoUri ?? v.cropUri ?? v.uri;
 			}),
-			feed_medias: route.params.feed_medias.map(f=>{
-				route.params.selectedPhoto?.some(v=>{
-					if((v.cropUri ?? v.uri)==f.media_uri){
+			feed_medias: route.params.feed_medias.map(f => {
+				route.params.selectedPhoto?.some(v => {
+					if ((v.cropUri ?? v.uri) == f.media_uri) {
 						f.is_video = v.isVideo ?? v.is_video;
-						f.media_uri = v.videoUri?? v.cropUri ?? v.uri;
+						f.media_uri = v.videoUri ?? v.cropUri ?? v.uri;
 					}
 				});
 				return f;

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {AlarmBadger48, MainLogo, Search48, AlarmBadgerNotice, Search48_BLACK, NewMainLogo} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {WHITE} from 'Root/config/color';
@@ -56,7 +56,15 @@ export default LogoHeader = ({navigation, route, options, back}) => {
 			</View>
 			<View style={style.buttonContainer}>
 				<Search48_BLACK onPress={clickSearch} />
-				<TouchableOpacity onPress={clickAlarm}>{isNewAlarm ? <AlarmBadgerNotice /> : <AlarmBadger48 />}</TouchableOpacity>
+				{isNewAlarm ? (
+					<TouchableOpacity onPress={clickAlarm}>
+						<AlarmBadgerNotice />
+					</TouchableOpacity>
+				) : (
+					<TouchableOpacity onPress={clickAlarm}>
+						<AlarmBadger48 />
+					</TouchableOpacity>
+				)}
 			</View>
 		</View>
 	);

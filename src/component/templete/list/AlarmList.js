@@ -243,7 +243,16 @@ const AlarmList = props => {
 		} else {
 			isData = false;
 		}
-		return <DailyAlarm index={index} data={item} onLabelClick={onLabelClick} newNote={newNote} isData={isData} />;
+		return (
+			<DailyAlarm
+				index={index}
+				data={item}
+				onLabelClick={onLabelClick}
+				newNote={newNote}
+				// newNote={true}
+				isData={isData}
+			/>
+		);
 	};
 	if (loading) {
 		return (

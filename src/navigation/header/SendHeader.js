@@ -19,6 +19,7 @@ export default SendHeader = ({route, navigation, options}) => {
 			if (route.params.data) {
 				const data = route.params.data;
 				// console.log('data at SendHeader', JSON.stringify(data));
+				console.log('route.params.nav', route.params.nav);
 				switch (route.params.nav) {
 					case 'CommunityWrite': {
 						if (!data.community_content || !data.community_title) {
@@ -123,6 +124,7 @@ export default SendHeader = ({route, navigation, options}) => {
 								},
 							);
 						}
+						break;
 					}
 					case 'AidRequestAnimalList': {
 						//보호요청 글쓰기 템플릿

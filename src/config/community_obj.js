@@ -16,8 +16,8 @@ export default community_obj = {
 	review: [],
 };
 
-export const updateReview = (isLike, id, bool) => {
-	console.log('updateReview isLike', isLike, 'id : ', id);
+export const updateReview = (isLike, id, bool, count) => {
+	console.log('updateReview isLike', isLike, 'id : ', id, 'count', count);
 	if (isLike) {
 		if (community_obj.review.length != 0) {
 			const findIndex = community_obj.review.findIndex(e => e._id == id);
@@ -27,7 +27,7 @@ export const updateReview = (isLike, id, bool) => {
 				temp[findIndex] = {
 					...temp[findIndex],
 					community_is_like: bool,
-					community_like_count: bool ? ++temp[findIndex].community_like_count : --temp[findIndex].community_like_count,
+					community_like_count: count,
 				};
 				community_obj.review = temp;
 			}

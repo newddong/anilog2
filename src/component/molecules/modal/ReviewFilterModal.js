@@ -163,7 +163,7 @@ const ReviewFilterModal = props => {
 			let review_category_list = [];
 
 			review_category_list = arr.concat(
-				// userInterestReview.interests_review,
+				// userInterestReview.,
 				userInterestReview.interests_group1,
 				userInterestReview.interests_etc,
 				userInterestReview.interests_group2,
@@ -494,20 +494,20 @@ const ReviewFilterModal = props => {
 		if (communityInterests.hasOwnProperty('interests_group1')) {
 			return (
 				<>
-					{getCommuntyInterestList(communityInterests.interests_group1, 0)}
-					{getCommuntyInterestList(communityInterests.interests_group2, 1)}
-					{getCommuntyInterestList(communityInterests.interests_group3, 2)}
-					{getCommuntyInterestList(communityInterests.interests_etc, 4)}
+					{communityInterests.interests_group1 && getCommuntyInterestList(communityInterests.interests_group1, 0)}
+					{communityInterests.interests_group2 && getCommuntyInterestList(communityInterests.interests_group2, 1)}
+					{communityInterests.interests_group3 && getCommuntyInterestList(communityInterests.interests_group3, 2)}
+					{communityInterests.interests_etc && getCommuntyInterestList(communityInterests.interests_etc, 4)}
 				</>
 			);
 		} else {
 			return (
 				<>
-					{getCommuntyInterestList(communityInterests.interests_trip, 0)}
-					{getCommuntyInterestList(communityInterests.interests_interior, 1)}
-					{getCommuntyInterestList(communityInterests.interests_hospital, 2)}
-					{getCommuntyInterestList(communityInterests.interests_review, 3)}
-					{getCommuntyInterestList(communityInterests.interests_etc, 4)}
+					{communityInterests.interests_trip && getCommuntyInterestList(communityInterests.interests_trip, 0)}
+					{communityInterests.interests_interior && getCommuntyInterestList(communityInterests.interests_interior, 1)}
+					{communityInterests.interests_hospital && getCommuntyInterestList(communityInterests.interests_hospital, 2)}
+					{/* {getCommuntyInterestList(communityInterests.interests_review, 3)} */}
+					{communityInterests.interests_etc && getCommuntyInterestList(communityInterests.interests_etc, 4)}
 				</>
 			);
 		}
@@ -571,7 +571,7 @@ const ReviewFilterModal = props => {
 							/>
 						</View>
 					)}
-					<TouchableOpacity onPress={onClose} style={[style.crossMark, {alignItems: isReviewWrite ? 'flex-start' : 'flex-end'}]}>
+					<TouchableOpacity onPress={onClose} style={[style.crossMark, {alignItems: 'center'}]}>
 						<Cross24_Filled />
 					</TouchableOpacity>
 				</TouchableOpacity>
@@ -714,7 +714,7 @@ const style = StyleSheet.create({
 		// backgroundColor: 'yellow',
 	},
 	header_write: {
-		width: 52 * DP,
+		// width: 52 * DP,
 		height: 52 * DP,
 		marginRight: 20 * DP,
 		// marginBottom: 20 * DP,

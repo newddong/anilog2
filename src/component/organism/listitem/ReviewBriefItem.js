@@ -5,11 +5,11 @@ import {styles} from 'Root/component/atom/image/imageStyle';
 import {GRAY10, GRAY30, WHITE} from 'Root/config/color';
 import {Comment48, Like48_Border, Like48_Filled} from 'Root/component/atom/icon';
 import {getTimeLapsed} from 'Root/util/dateutil';
-import userGlobalObject from 'Root/config/userGlobalObject';
-import Modal from 'Root/component/modal/Modal';
 import {count_to_K} from 'Root/util/stringutil';
 import DP from 'Root/config/dp';
 import FastImage from 'react-native-fast-image';
+import community_obj from 'Root/config/community_obj';
+import {useNavigation} from '@react-navigation/core';
 
 /**
  * 후기 요약 컴포넌트 아이템
@@ -19,6 +19,7 @@ import FastImage from 'react-native-fast-image';
  * @param {()=>void)} props.onPressLike - 좋아요 클릭 이벤트
  */
 const ReviewBriefItem = props => {
+	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.data);
 	const imageList = () => {
 		let imageList = [];
@@ -33,9 +34,26 @@ const ReviewBriefItem = props => {
 	};
 
 	const image = imageList();
+
 	React.useEffect(() => {
 		setData(props.data);
 	}, [props.data]);
+
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			const findIndex = community_obj.review.findIndex(e => e._id == props.data._id);
+			if (findIndex != -1) {
+				setData({
+					...data,
+					community_is_favorite: community_obj.review[findIndex].community_is_favorite,
+					community_is_like: community_obj.review[findIndex].community_is_like,
+					community_like_count: community_obj.review[findIndex].community_like_count,
+				});
+			} else {
+			}
+		});
+		return unsubscribe;
+	}, []);
 
 	const onPressReview = () => {
 		props.onPressReview();
@@ -59,7 +77,7 @@ const ReviewBriefItem = props => {
 			data.community_interests.interests_trip.map(v => category_sum_list.push(v));
 			data.community_interests.interests_etc.map(v => category_sum_list.push(v));
 			data.community_interests.interests_hospital.map(v => category_sum_list.push(v));
-			data.community_interests.interests_review.map(v => category_sum_list.push(v));
+			// data.community_interests.interests_review.map(v => category_sum_list.push(v));
 			data.community_interests.interests_interior.map(v => category_sum_list.push(v));
 		}
 		// category_sum_list.push('테스트');

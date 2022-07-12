@@ -115,7 +115,7 @@ export default PhotoTagItem = ({isVideo,onShow,uri, data, taglist, onMakeTag, on
 		return (
 			<View style={{justifyContent: 'center', alignItems: 'center'}}>
 				<Video
-					style={styles.img_square_round_694}
+					style={[styles.img_square_round_694,{backgroundColor:'#000'}]}
 					source={{uri: uri}}
 					paused={!onShow}
 					// paused={false}

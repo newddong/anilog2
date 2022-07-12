@@ -20,6 +20,7 @@ import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import {APRI10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {useNavigation} from '@react-navigation/core';
+import feed_obj from 'Root/config/feed_obj';
 
 //즐겨찾기한 피드목록을 조회
 export default FavoriteFeeds = ({route}) => {
@@ -134,7 +135,11 @@ export default FavoriteFeeds = ({route}) => {
 					is_favorite: false,
 				},
 				result => {
-					console.log('result / favoriteFeed / FavoriteFeeds : ', result.msg.favoriteFeed.favorite_feed_is_delete);
+					console.log('result / favoriteFeed / FavoriteFeeds : ', result.msg.favoriteFeed);
+					let list = [...feed_obj.list];
+					const findIndex = list.findIndex(e => e._id == result.msg.favoriteFeed.favorite_feed_id); //현재 보고 있는 피드게시글이 저장된 리스트에서 몇 번째인지
+					list[findIndex].is_favorite = !list[findIndex].is_favorite;
+					feed_obj.list = list;
 					const temp = data.filter(e => e.checkBoxState != true);
 					setData(temp);
 				},
@@ -264,10 +269,11 @@ export default FavoriteFeeds = ({route}) => {
 				passing_id = feed_id.feed_writer_id._id;
 			}
 			const titleValue = feed_id.feed_writer_id.user_nickname;
+			// console.log('passing_id', passing_id);
 			//선택모드 true값과 false값이 반대로 주는 이유 확인 후 case 문으로 변경 필요
 			getUserProfile(
 				{
-					userobject_id: passing_id._id,
+					userobject_id: passing_id._id ?? passing_id,
 				},
 				result => {
 					// console.log('result / getUserProfile / FavoriteFeeds   :', result.msg.feedList[0]);

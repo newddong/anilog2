@@ -7,6 +7,7 @@ import {styles} from 'Atom/image/imageStyle';
 import {APRI10, BLACK, MAINBLACK, OPACITY90, RED10, WHITE} from 'Root/config/color';
 import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import FastImage from 'react-native-fast-image';
+import Video from 'react-native-video';
 
 /**
  * 피드썸네일
@@ -18,12 +19,12 @@ import FastImage from 'react-native-fast-image';
  * @param {string} props.data.feed_thumbnail -
  * @param {string} props.data.feed_type -
  * @param {Array.<object>} props.data.feed_medias -
- *
  */
-
 const FeedThumbnail = React.memo(props => {
 	// console.log('FeedThumbnail', props.data);
 	const [selected, setSelected] = React.useState(false);
+	const isVideo = props.data.feed_medias?props.data.feed_medias[0]?.is_video:false;
+
 	React.useEffect(() => {
 		setSelected(props.data.checkBoxState);
 	}, [props.data.checkBoxState]);
@@ -64,11 +65,13 @@ const FeedThumbnail = React.memo(props => {
 		if ((props.selectMode && selected) || (props.selectMode && props.data.checkBoxState)) {
 			return (
 				<View style={[{borderColor: APRI10, borderWidth: 2 * DP}]}>
-					<FastImage source={{uri: props.data.feed_thumbnail}} style={{width: 242 * DP, height: 242 * DP}} />
+					{isVideo?<Video source={{uri:props.data.feed_thumbnail}} style={{width:242*DP,height:242*DP}} paused={false} muted resizeMode="contain"/>:
+					<FastImage source={{uri: props.data.feed_thumbnail}} style={{width: 242 * DP, height: 242 * DP}} />}
 					<View style={[{width: 242 * DP, height: 242 * DP, position: 'absolute', backgroundColor: 'rgba(0,0,0,0.4)'}]}></View>
 				</View>
 			);
 		} else if (!props.data.checkBoxState || !selected) {
+			if(isVideo)return <Video source={{uri:props.data.feed_thumbnail}} style={{width:242*DP,height:242*DP,backgroundColor:'#000'}} paused={false} muted resizeMode="contain"/>;
 			return <FastImage source={{uri: props.data.feed_thumbnail}} style={styles.img_square_246} />;
 		}
 	};

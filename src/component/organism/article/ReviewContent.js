@@ -41,10 +41,10 @@ const ReviewContent = props => {
 			);
 		} else {
 			interests = temp.concat(
-				// data.community_interests.interests_etc,
+				data.community_interests.interests_etc,
 				data.community_interests.interests_hospital,
 				data.community_interests.interests_interior,
-				data.community_interests.interests_review,
+				// data.community_interests.interests_review,
 				data.community_interests.interests_trip,
 			);
 		}

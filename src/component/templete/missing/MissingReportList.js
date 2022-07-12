@@ -14,6 +14,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import MissingReportItem from 'Root/component/organism/listitem/MissingReportItem';
 import Modal from 'Root/component/modal/Modal';
+import feed_obj from 'Root/config/feed_obj';
 
 export default MissingReportList = props => {
 	const navigation = useNavigation();
@@ -35,10 +36,23 @@ export default MissingReportList = props => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			setShowActionButton(false);
-			getList();
 		});
+		getList();
 		return unsubscribe;
 	}, []);
+
+	React.useEffect(() => {
+		if (data != 'false' && data.length) {
+			data.map((v, i) => {
+				const find = feed_obj.list.findIndex(e => e._id == v._id);
+				if (find == -1) {
+					//현 메모리에 저장되어 있지않은 피드아이템만 추가
+					feed_obj.list.push(v);
+				}
+			});
+			console.log('feed_obj.list at MissingReportList', feed_obj.list.length);
+		}
+	}, [data]);
 
 	const getList = () => {
 		// setLoading(true);
@@ -99,6 +113,10 @@ export default MissingReportList = props => {
 			},
 			result => {
 				console.log('result / FavoriteFeed / MissingReportList : ', result.msg.targetFeed);
+				let temp = [...feed_obj.list];
+				const findIndex = temp.findIndex(e => e._id == result.msg.targetFeed._id); //현재 보고 있는 피드게시글이 저장된 리스트에서 몇 번째인지
+				temp[findIndex].is_favorite = !temp[findIndex].is_favorite;
+				feed_obj.list = temp;
 			},
 			err => {
 				console.log('err / FavoriteFeed / MissingReportList : ', err);

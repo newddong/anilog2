@@ -263,6 +263,7 @@ export default CommunityWrite = props => {
 	KeyBoardEvent(
 		e => {
 			setKeyboardY(e.endCoordinates.height + KeyboardBorderLine);
+			console.log('KeyboardBorderLine');
 			Platform.OS == 'android' ? setShowBtn(true) : setShowBtn(true);
 		},
 		e => {
@@ -276,6 +277,9 @@ export default CommunityWrite = props => {
 	};
 
 	const onBlur = () => {
+		console.log('onBlur');
+		Keyboard.dismiss();
+		richText.current?.dismissKeyboard(); //일반적인 input과 달리 RichText에서는 이와같이 키보드를 hide
 		setShowBtn(false);
 	};
 
@@ -492,7 +496,7 @@ export default CommunityWrite = props => {
 									onPaste={onPaste}
 									pasteAsPlainText={true}
 									// onFocus={onFocus}
-									onBlur={onBlur}
+									// onBlur={onBlur}
 								/>
 							</ScrollView>
 						)}
@@ -535,7 +539,7 @@ export default CommunityWrite = props => {
 				)}
 
 				{isReview ? <></> : <View style={[style.buttonContainer, {opacity: showBtn == true ? 0 : 1}]}>{getArticleButtonContainer(true)}</View>}
-				<View style={{height: 100}} />
+				<View style={{height: 200 * DP}} />
 			</ScrollView>
 			{isReview ? (
 				//키보드 영역 올라올 시 출력되야 하는 버튼 컨테이너 - 스타일 별도의 처리가 필요하여 분리 처리하였음

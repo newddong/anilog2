@@ -247,7 +247,8 @@ export default UserInfoSetting = ({route}) => {
 
 	//수정 후 적용 버튼 클릭
 	const modify_finalize = () => {
-		if (newIntro.length == 0 || newIntro == data.user_introduction) {
+		if(!newIntro)return;
+		if (newIntro&&newIntro.length == 0 || newIntro == data.user_introduction) {
 			console.log('소개 길이 0 or 이전과 같음');
 		} else {
 			updateUserIntroduction(
@@ -348,8 +349,8 @@ export default UserInfoSetting = ({route}) => {
 		);
 	};
 
-	const [city, setCity] = React.useState([userData.user_address.city]);
-	const [district, setDistrict] = React.useState([userData.user_address.district]);
+	const [city, setCity] = React.useState([userData.user_address?.city]);
+	const [district, setDistrict] = React.useState([userData.user_address?.district]);
 	const onSelectCity = (v, i) => {
 		Modal.popSelectScrollBoxModal(
 			[city],
@@ -673,7 +674,7 @@ export default UserInfoSetting = ({route}) => {
 						<View style={[styles.first]}>
 							<Text style={[txt.noto30b, {width: 162 * DP}]}>나의 지역</Text>
 							<Text style={[txt.noto28, {width: 462 * DP}]}>
-								{data.user_address.city} {data.user_address.district || ''}
+								{data.user_address?.city} {data.user_address?.district || ''}
 							</Text>
 							<TouchableOpacity onPress={modifyLocation} style={[{alignItems: 'flex-end'}, {marginLeft: 12 * DP}]}>
 								<Edit46 />

@@ -269,10 +269,11 @@ export default FavoriteFeeds = ({route}) => {
 				passing_id = feed_id.feed_writer_id._id;
 			}
 			const titleValue = feed_id.feed_writer_id.user_nickname;
+			// console.log('passing_id', passing_id);
 			//선택모드 true값과 false값이 반대로 주는 이유 확인 후 case 문으로 변경 필요
 			getUserProfile(
 				{
-					userobject_id: passing_id._id,
+					userobject_id: passing_id._id ?? passing_id,
 				},
 				result => {
 					// console.log('result / getUserProfile / FavoriteFeeds   :', result.msg.feedList[0]);

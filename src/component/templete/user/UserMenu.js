@@ -66,6 +66,7 @@ export default UserMenu = props => {
 			userObject => {
 				// console.log('user', userObject.msg.user_my_pets);
 				setData(userObject.msg);
+				console.log('userObjedt intro', userObject.msg.user_introduction.replace(/[\r\n]/gm, ''));
 			},
 
 			err => {
@@ -202,9 +203,9 @@ export default UserMenu = props => {
 									</Text>
 								)} */}
 							<ScrollView onLayout={onLayout} style={{position: 'absolute', opacity: 0}}>
-								<Text ellipsizeMode={'tail'} numberOfLines={showMore ? null : 2} style={[txt.noto26, styles.intro_expanded]}>
+								{/* <Text ellipsizeMode={'tail'} numberOfLines={showMore ? null : 2} style={[txt.noto26, styles.intro_expanded]}>
 									{data.user_introduction}
-								</Text>
+								</Text> */}
 							</ScrollView>
 							{/* 유저 소개글  */}
 							<View style={[styles.userIntroCont]}>
@@ -215,7 +216,7 @@ export default UserMenu = props => {
 							{/* </View> */}
 
 							{/* 더미 텍스트 삭제금지 */}
-							<Text
+							{/* <Text
 								style={[txt.noto24, {position: 'absolute', opacity: 0, backgroundColor: 'red'}]}
 								numberOfLines={null}
 								onTextLayout={({nativeEvent: {lines}}) => {
@@ -223,9 +224,9 @@ export default UserMenu = props => {
 									// setNumOfLines(lines.length);
 								}}>
 								{data.user_introduction || ''}
-							</Text>
+							</Text> */}
 							{/* 유저 소개란 - 2줄 이상일 경우 더보기/접기 컴포넌트 출력 */}
-							{numberOfLines > 2 ? (
+							{/* {numberOfLines > 2 ? (
 								!showMoreIntro ? (
 									<TouchableOpacity onPress={() => setShowMoreIntro(!showMoreIntro)} style={[shelterMenu.showMore, {flex: 1}]}>
 										<View style={[userMenu_style.showMoreContainer, {}]}>
@@ -243,7 +244,7 @@ export default UserMenu = props => {
 								) : null
 							) : (
 								<></>
-							)}
+							)} */}
 						</View>
 
 						{/* 내 정보 수정 버튼*/}

@@ -415,29 +415,32 @@ export default PetInfoSetting = ({route}) => {
 
 	const deleteAccount = () => {
 		console.log('deleteAccount');
-		updatePetDetailInformation(
-			{
-				userobject_id: petData._id,
-				// pet_sex: petData.pet_sex,
-				user_is_delete: true,
-			},
-			result => {
-				console.log('성별 변경 성공', result.msg);
-				setPetData({...petData, user_is_delete: true});
-				Modal.close();
-				setTimeout(() => {
-					Modal.popNoBtn('반려동물의 계정이 \n 삭제되었습니다.');
-					setTimeout(() => {
+		Modal.popTwoBtn('삭제한 계정은 복구할 수 없습니다.\n 정말로 삭제하시겠습니까?', '아니오', '네', Modal.close, () => {
+			Modal.close(),
+				updatePetDetailInformation(
+					{
+						userobject_id: petData._id,
+						// pet_sex: petData.pet_sex,
+						user_is_delete: true,
+					},
+					result => {
+						console.log('성별 변경 성공', result.msg);
+						setPetData({...petData, user_is_delete: true});
 						Modal.close();
-					}, 1000);
-				}, 100);
-				navigation.goBack();
-			},
-			err => {
-				console.log('updatePetDetailInformation / PetinfoSetting err : ', err);
-				Modal.close();
-			},
-		);
+						setTimeout(() => {
+							Modal.popNoBtn('반려동물의 계정이 \n 삭제되었습니다.');
+							setTimeout(() => {
+								Modal.close();
+							}, 1000);
+						}, 100);
+						navigation.goBack();
+					},
+					err => {
+						console.log('updatePetDetailInformation / PetinfoSetting err : ', err);
+						Modal.close();
+					},
+				);
+		});
 	};
 
 	// ----상세 정보 수정 코드 SetPetInformation 에서 가지고옴 ---

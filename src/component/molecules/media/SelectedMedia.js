@@ -17,26 +17,31 @@ const SelectedMedia = props => {
 	const onDelete = () => {
 		props.onDelete();
 	};
-	const isVideo = props.media?(props.media.is_video||props.media.isVideo):false;
+
+	const isVideo = props.media ? props.media.is_video || props.media.isVideo : false;
 	// console.log('isVideo', isVideo, props.media);
 	const image = () => {
-		if(isVideo)return false;
-		let uri = props.media_uri??props.media.uri;
-		return uri.uri.includes('http') ? (
-			<FastImage source={{uri: uri.uri}} style={props.layout} />
-		) : (
-			<Image source={{uri: uri.cropUri ?? uri.uri}} style={props.layout} />
-		)
-	}
+		if (isVideo) return false;
+		let uri = props.media_uri ?? props.media.uri;
+		if (uri.uri) {
+			return uri.uri.includes('http') ? (
+				<FastImage source={{uri: uri.uri}} style={props.layout} />
+			) : (
+				<Image source={{uri: uri.cropUri ?? uri.uri}} style={props.layout} />
+			);
+		} else {
+			return uri.includes('http') ? <FastImage source={{uri: uri.uri}} style={props.layout} /> : <Image source={{uri: uri}} style={props.layout} />;
+		}
+	};
 
 	const video = () => {
-		let video = props.media.videoUri??props.media.uri;
-		return <Video source={{uri:video}} style={[props.layout]} muted={true} resizeMode='contain'></Video>
-	}
+		let video = props.media.videoUri ?? props.media.uri;
+		return <Video source={{uri: video}} style={[props.layout]} muted={true} resizeMode="contain"></Video>;
+	};
 
 	return (
 		<View style={[props.layout]}>
-			{isVideo?video():image()}
+			{isVideo ? video() : image()}
 			<View
 				style={{
 					position: 'absolute',
@@ -54,7 +59,11 @@ const SelectedMedia = props => {
 						shadowOpacity: 0.1,
 					}}>
 					{/* 190 크기의 selectMedia를 호출한 경우 Cancel 마크 크기는 더 작게 */}
-					{(props.layout == styles.img_square_round_190||props.layout == styles.img_square_round_336) ? <Cancel36 onPress={onDelete} /> : <Cancel62 onPress={onDelete} />}
+					{props.layout == styles.img_square_round_190 || props.layout == styles.img_square_round_336 ? (
+						<Cancel36 onPress={onDelete} />
+					) : (
+						<Cancel62 onPress={onDelete} />
+					)}
 				</View>
 			</View>
 		</View>

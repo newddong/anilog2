@@ -242,13 +242,19 @@ export default MissingAnimalDetail = props => {
 				}
 			}
 			const image = await CameraRoll.saveImage(imageURI);
-			if (image) {
-				// Alert.alert('', 'Image saved successfully.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
-				Modal.popOneBtn('전단지가 저장되었습니다.', '확인', Modal.close);
-			}
+
+			// if (image) {
+			// 	// Alert.alert('', 'Image saved successfully.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
+			// 	Modal.popOneBtn('전단지가 저장되었습니다.', '확인', Modal.close);
+			// }
 			// Share.share({title: 'Image', url: imageURI});
 		} catch (error) {
 			console.log('error', error);
+		} finally {
+			// if (image) {
+			// Alert.alert('', 'Image saved successfully.', [{text: 'OK', onPress: () => {}}], {cancelable: false});
+			Modal.popOneBtn('전단지가 저장되었습니다.', '확인', Modal.close);
+			// }
 		}
 	}
 

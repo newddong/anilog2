@@ -9,6 +9,7 @@ import {getTimeLapsed} from 'Root/util/dateutil';
 import {ProfileDefaultImg, ProfileDefaultImg4, ProfileDefaultImg4_94} from 'Root/component/atom/icon';
 import {useNavigation} from '@react-navigation/core';
 import FastImage from 'react-native-fast-image';
+import {Hidden} from 'native-base';
 /**
  * 알람 객체
  * @param {object} props - Props Object
@@ -85,13 +86,15 @@ const styles = StyleSheet.create({
 		// flexGrow: 0, flex: 1
 	},
 	yescontainer: {
-		width: 690 * DP,
+		width: 714 * DP,
 		minHeight: 134 * DP,
 		justifyContent: 'center',
-		marginLeft: 30 * DP,
+		// marginLeft: 30 * DP,
+		// paddingLeft: 30 * DP,
+		marginHorizontal: 18 * DP,
 		borderRadius: 30 * DP,
-		flexGrow: 0,
-		flex: 1,
+		// flexGrow: 0,
+		// flex: 1,
 		// backgroundColor: colors[value],
 	},
 	userAlarmContainer: {

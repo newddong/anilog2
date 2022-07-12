@@ -22,7 +22,14 @@ const DailyAlarm = props => {
 		// console.log('item', item);
 		return (
 			// <View style={[accountHashList.userAccount]}>
-			<OneAlarm data={item} onLabelClick={item => props.onLabelClick(item)} newNote={props.newNote} index={index} isData={props.isData} />
+			<OneAlarm
+				data={item}
+				onLabelClick={item => props.onLabelClick(item)}
+				newNote={props.newNote}
+				// newNote={true}
+				index={index}
+				isData={props.isData}
+			/>
 			// </View>
 		);
 	};

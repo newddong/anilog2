@@ -288,6 +288,7 @@ const Crop = prop => {
     const crop = () => {
 		if(!mounted)return;
 		Image.getSize(photo.cropUri??photo.uri,(originW,originH)=>{
+			if(!mounted)return;
 			let wRatio = originW/(imgLayout.width*scalePrev.current);
 			let hRatio = originH/(imgLayout.height*scalePrev.current);
 			let desW =Math.round((WIDTH-2*PADDINGLHORIZONTAL)*wRatio);
@@ -306,6 +307,7 @@ const Crop = prop => {
 				imgHeight:originH
 			})
 			.then((r)=>{
+				if(!mounted)return;
 				// console.log(r);
 				// setCropUri(r.uri);
 				setPhoto({...photo,cropUri:r.uri});
@@ -322,6 +324,7 @@ const Crop = prop => {
         
     }
 	const returnOriginal = () => {
+		if(!mounted)return;
 		let p = {...photo};
 		delete p.cropUri;
 		setPhoto(p);

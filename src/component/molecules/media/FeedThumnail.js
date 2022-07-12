@@ -23,7 +23,7 @@ import Video from 'react-native-video';
 const FeedThumbnail = React.memo(props => {
 	// console.log('FeedThumbnail', props.data);
 	const [selected, setSelected] = React.useState(false);
-	const isVideo = props.data.feed_medias?props.data.feed_medias[0]?.is_video:false;
+	const isVideo = props.data.feed_medias ? props.data.feed_medias[0]?.is_video : false;
 
 	React.useEffect(() => {
 		setSelected(props.data.checkBoxState);
@@ -65,14 +65,62 @@ const FeedThumbnail = React.memo(props => {
 		if ((props.selectMode && selected) || (props.selectMode && props.data.checkBoxState)) {
 			return (
 				<View style={[{borderColor: APRI10, borderWidth: 2 * DP}]}>
-					{isVideo?<Video source={{uri:props.data.feed_thumbnail}} style={{width:242*DP,height:242*DP}} paused={false} muted resizeMode="contain"/>:
-					<FastImage source={{uri: props.data.feed_thumbnail}} style={{width: 242 * DP, height: 242 * DP}} />}
+					{isVideo ? (
+						<Video
+							source={{uri: props.data.feed_thumbnail}}
+							style={{width: 242 * DP, height: 242 * DP}}
+							paused={true}
+							muted={true}
+							repeat={false}
+							// resizeMode="contain"
+							maxBitRate={2000000}
+							disableDisconnectError={true}
+							selectedVideoTrack={{type:'resolution',value:720}}
+							bufferConfig={{
+								minBufferMs:15000,
+								maxBufferMs:50000,
+								bufferForPlaybackMs:2500,
+								bufferForPlaybackAfterRebufferMs: 5000,
+								maxHeapAllocationPercent: 0.1,
+								minBackBufferMemoryReservePercent: 0.1,
+								minBufferMemoryReservePercent:0.6
+							}}
+							preferredForwardBufferDuration={5}
+							rate={0}
+						/>
+					) : (
+						<FastImage source={{uri: props.data.feed_thumbnail}} style={{width: 242 * DP, height: 242 * DP}} />
+					)}
 					<View style={[{width: 242 * DP, height: 242 * DP, position: 'absolute', backgroundColor: 'rgba(0,0,0,0.4)'}]}></View>
 				</View>
 			);
 		} else if (!props.data.checkBoxState || !selected) {
-			if(isVideo)return <Video source={{uri:props.data.feed_thumbnail}} style={{width:242*DP,height:242*DP,backgroundColor:'#000'}} paused={false} muted resizeMode="contain"/>;
-			return <FastImage source={{uri: props.data.feed_thumbnail}} style={styles.img_square_246} />;
+			if (isVideo)
+				return (
+					<Video
+							source={{uri: props.data.feed_thumbnail}}
+							style={{width: 242 * DP, height: 242 * DP,backgroundColor:'#000'}}
+							paused={true}
+							muted={true}
+							repeat={false}
+							// resizeMode="contain"
+							maxBitRate={2000000}
+							disableDisconnectError={true}
+							selectedVideoTrack={{type:'resolution',value:720}}
+							bufferConfig={{
+								minBufferMs:15000,
+								maxBufferMs:50000,
+								bufferForPlaybackMs:2500,
+								bufferForPlaybackAfterRebufferMs: 5000,
+								maxHeapAllocationPercent: 0.1,
+								minBackBufferMemoryReservePercent: 0.1,
+								minBufferMemoryReservePercent:0.6
+							}}
+							preferredForwardBufferDuration={50}
+							rate={0}
+						/>
+				);
+			return <FastImage source={{uri: props.data.feed_thumbnail,width:246*DP,height:246*DP}} style={styles.img_square_246} />;
 		}
 	};
 	return (

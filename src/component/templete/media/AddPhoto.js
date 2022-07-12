@@ -58,7 +58,7 @@ export default AddPhoto = props => {
 			toTime: timeStamp ? timeStamp * 1000 - 1 : 0,
 			toID: imageID,
 			assetType: type,
-			include: ['fileSize'],
+			include: ['filename'],
 			groupName: album,
 			groupTypes: 'all',
 		};
@@ -69,6 +69,7 @@ export default AddPhoto = props => {
 			// delete param.include;
 		} else {
 			delete param.toID;
+			// delete param.include;
 		}
 		if (album.length == 0) {
 			delete param.groupName;
@@ -92,7 +93,7 @@ export default AddPhoto = props => {
 
 	/** 스크롤이 바닥에 닿을때 페이징 처리를 위한 함수 */
 	const scrollReachBottom = () => {
-		FastImage.clearMemoryCache();
+		// FastImage.clearMemoryCache();
 		let last = photolist.length;
 		// let blank = Array.from({length:last},v=>false)
 		// setPhotoList(photolist.concat(props.route.params.localfiles.slice(last,last+300)))
@@ -103,7 +104,7 @@ export default AddPhoto = props => {
 
 	const onMomentumscrollbegin = () => {
 		// console.log('begin')
-		FastImage.clearMemoryCache();
+		// FastImage.clearMemoryCache();
 	};
 	const onScroll = e => {
 		// console.log(e.nativeEvent)
@@ -142,7 +143,7 @@ export default AddPhoto = props => {
 			toTime: 0,
 			toID: '123456789',
 			assetType: 'All',
-			include: ['fileSize'],
+			include: ['filename'],
 			groupName: album,
 			groupTypes: 'album',
 		};

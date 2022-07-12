@@ -36,7 +36,7 @@ const LocalMedia = props => {
 	const [isSelect, setSelected] = React.useState(false);
 	const [fileSize, setFileSize] = React.useState(0);
 	const isVideo = props.data.type?.includes('video');
-	const isGif = props.data.image?.uri.includes('gif');
+	const isGif = props.data.image?.uri.includes('gif')||props.data.image?.filename?.includes('GIF')||props.data.image?.filename?.includes('gif');
 	const videoInfo = React.useRef({});
 
 	React.useEffect(() => {
@@ -138,7 +138,7 @@ const LocalMedia = props => {
 		<TouchableOpacity
 			onPress={onPressMedia}
 			style={{width: 187 * DP, height: 187 * DP, paddingHorizontal: 1 * DP, paddingVertical: 1 * DP, backgroundColor: '#FFF'}}>
-			{isVideo && Platform.OS == 'ios' ? (
+			{isVideo||isGif && Platform.OS == 'ios' ? (
 				<Image
 					renderToHardwareTextureAndroid
 					progressiveRenderingEnabled

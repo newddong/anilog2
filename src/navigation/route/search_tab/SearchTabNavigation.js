@@ -14,6 +14,7 @@ import SearchArticle from 'Root/component/templete/search/SearchArticle';
 import {useNavigation} from '@react-navigation/core';
 import {NETWORK_ERROR, REVIEW_LIMIT} from 'Root/i18n/msg';
 import Modal from 'Root/component/modal/Modal';
+import community_obj from 'Root/config/community_obj';
 
 const SearchTabNav = createMaterialTopTabNavigator();
 
@@ -44,6 +45,19 @@ export default SearchTabNavigation = props => {
 		});
 		return unsubscribe;
 	}, [searchContext.searchInfo.searchInput, searchContext.searchInfo.reSearch]);
+
+	React.useEffect(() => {
+		if (commList != 'false' && commList.review) {
+			commList.review.map((v, i) => {
+				const find = community_obj.review.findIndex(e => e._id == v._id);
+				if (find == -1) {
+					//현 메모리에 저장되어 있지않은 리뷰아이템만 추가
+					community_obj.review.push(v);
+				}
+			});
+		}
+		console.log('community_obj', community_obj.review.length);
+	}, [commList]);
 
 	const updateReview = async () => {
 		const comm = await getCommunityList(); //커뮤니티 검색

@@ -171,6 +171,10 @@ export default ReportDetail = props => {
 			},
 			result => {
 				console.log('result / FavoriteFeed / MissingReportList : ', result.msg.targetFeed);
+				let temp = [...feed_obj.list];
+				const findIndex = temp.findIndex(e => e._id == result.msg.targetFeed._id); //현재 보고 있는 피드게시글이 저장된 리스트에서 몇 번째인지
+				temp[findIndex].is_favorite = !temp[findIndex].is_favorite;
+				feed_obj.list = temp;
 			},
 			err => {
 				console.log('err / FavoriteFeed / MissingReportList : ', err);

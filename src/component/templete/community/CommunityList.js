@@ -49,6 +49,18 @@ const CommunityList = React.memo(props => {
 	}, [props.data]);
 
 	React.useEffect(() => {
+		if (review != 'false' && review.length) {
+			review.map((v, i) => {
+				const find = community_obj.review.findIndex(e => e._id == v._id);
+				if (find == -1) {
+					//현 메모리에 저장되어 있지않은 리뷰아이템만 추가
+					community_obj.review.push(v);
+				}
+			});
+		}
+	}, [review]);
+
+	React.useEffect(() => {
 		if (refresh) {
 			getArticleList(true);
 			getReviewList(true);
@@ -73,7 +85,7 @@ const CommunityList = React.memo(props => {
 				page: freeOffset,
 			},
 			result => {
-				console.log('result / getCommunityListuser / CommunityList : Free', result.msg.free.length);
+				// console.log('result / getCommunityListuser / CommunityList : Free', result.msg.free.length);
 				const res = result.msg.free;
 				if (isRefresh) {
 					setFree(res);
@@ -106,7 +118,7 @@ const CommunityList = React.memo(props => {
 				page: reviewOffset,
 			},
 			result => {
-				console.log('result / getCommunityListuser / CommunityList : Review ', result.msg.review.length);
+				// console.log('result / getCommunityListuser / CommunityList : Review ', result.msg.review.length);
 				const res = result.msg.review;
 				if (isRefresh) {
 					setReview(res);
@@ -131,6 +143,8 @@ const CommunityList = React.memo(props => {
 
 	//리스트 페이징 작업
 	const onEndReached = commtype => {
+		console.log('@@@@@@@@@@@@@@@ tyoe', type);
+		console.log('@#@#@#@#@#@# commtype', commtype);
 		if (commtype == 'free') {
 			console.log('EndReached Free', free.length % FREE_LIMIT);
 			//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
@@ -169,7 +183,7 @@ const CommunityList = React.memo(props => {
 				},
 				result => {
 					console.log('result/ onPressLike / ReviewMain : ', result.msg.targetPost.community_like_count);
-					updateReview(true, review[index]._id, bool);
+					updateReview(true, review[index]._id, bool, result.msg.targetPost.community_like_count);
 				},
 				err => console.log('err / onPressLike / ReviewMain : ', err),
 			);
@@ -215,6 +229,10 @@ const CommunityList = React.memo(props => {
 		);
 	};
 
+	React.useEffect(() => {
+		console.log('type', type);
+	}, [type]);
+
 	const header = () => {
 		return (
 			<View style={[style.filter]}>
@@ -240,47 +258,54 @@ const CommunityList = React.memo(props => {
 		return (
 			<View style={[style.container]}>
 				{header()}
-				<FlatList
-					data={[{}]}
-					renderItem={({item, index}) => {
-						return (
-							<View style={[style.listContainer]}>
-								{type == 'free' ? (
-									<>
-										<ArticleList
-											items={free}
-											onPressArticle={onPressArticle} //게시글 내용 클릭
-											whenEmpty={whenEmpty}
-											onEndReached={() => {
-												console.log('type at ArticleList : ', type);
-												type == 'free' ? onEndReached('free') : false;
-											}}
-										/>
-									</>
-								) : (
-									<>
-										<ReviewList
-											items={review}
-											whenEmpty={whenEmpty}
-											onPressReviewContent={onPressReviewContent}
-											onPressReply={onPressReply}
-											onPressFavorite={onPressFavorite}
-											onPressLike={i => onPressLike(i, true)}
-											onPressUnlike={i => onPressLike(i, false)}
-											showRecommend={false}
-											onEndReached={() => {
-												console.log('type at REviewList', type);
-												type == 'free' ? false : onEndReached('review');
-											}}
-										/>
-									</>
-								)}
-							</View>
-						);
-					}}
-					showsVerticalScrollIndicator={false}
-					listKey={({item, index}) => index}
-				/>
+				{type == 'free' ? (
+					<FlatList
+						data={[{}]}
+						renderItem={({item, index}) => {
+							return (
+								<View style={[style.listContainer]}>
+									<ArticleList
+										items={free}
+										onPressArticle={onPressArticle} //게시글 내용 클릭
+										whenEmpty={whenEmpty}
+										onEndReached={() => {
+											console.log('type at ArticleList : ', type);
+											type == 'free' ? onEndReached('free') : false;
+										}}
+									/>
+								</View>
+							);
+						}}
+						showsVerticalScrollIndicator={false}
+						listKey={({item, index}) => index}
+					/>
+				) : (
+					<FlatList
+						data={[{}]}
+						renderItem={({item, index}) => {
+							return (
+								<View style={[style.listContainer]}>
+									<ReviewList
+										items={review}
+										whenEmpty={whenEmpty}
+										onPressReviewContent={onPressReviewContent}
+										onPressReply={onPressReply}
+										onPressFavorite={onPressFavorite}
+										onPressLike={i => onPressLike(i, true)}
+										onPressUnlike={i => onPressLike(i, false)}
+										showRecommend={false}
+										onEndReached={() => {
+											console.log('type at REviewList', type);
+											type == 'free' ? false : onEndReached('review');
+										}}
+									/>
+								</View>
+							);
+						}}
+						showsVerticalScrollIndicator={false}
+						listKey={({item, index}) => index}
+					/>
+				)}
 			</View>
 		);
 });

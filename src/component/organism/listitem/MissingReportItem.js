@@ -11,6 +11,7 @@ import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/core';
 import DP from 'Root/config/dp';
 import HashText from 'Root/component/molecules/info/HashText';
+import feed_obj from 'Root/config/feed_obj';
 
 /**
  *
@@ -38,6 +39,17 @@ export default MissingReportItem = React.memo(props => {
 		img_uri: data.feed_thumbnail ? data.feed_thumbnail : DEFAULT_ANIMAL_PROFILE,
 		gender: data.missing_animal_sex,
 	};
+
+	React.useEffect(() => {
+		//즐겨찾기 상태 갱신
+		const unsubscribe = navigation.addListener('focus', () => {
+			const findIndex = feed_obj.list.findIndex(e => e._id == props.data._id);
+			if (findIndex != -1) {
+				setData({...data, is_favorite: feed_obj.list[findIndex].is_favorite});
+			}
+		});
+		return unsubscribe;
+	}, []);
 
 	React.useEffect(() => {
 		setData(props.data);

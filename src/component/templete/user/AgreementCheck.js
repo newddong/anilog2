@@ -175,11 +175,11 @@ export default AgreementCheck = props => {
 
 const userAssign_agreementCheckList = [
 	{text: '본인은 만 14세 이상입니다. (필수)', detail: false},
-	{text: '서비스 이용약관 동의 (필수)', detail: true},
-	{text: '개인정보 수집 이용약관 동의 (필수)', detail: true},
-	{text: '위치기반 서비스 이용약관 동의 (필수)', detail: true},
+	{text: '서비스 이용약관 동의 (필수)', detail: false},
+	{text: '개인정보 수집 이용약관 동의 (필수)', detail: false},
+	{text: '위치기반 서비스 이용약관 동의 (필수)', detail: false},
 	// {text: '기부내역 이용약관 동의(필수)', detail: true},
-	{text: '이벤트 및 마케팅 정보 수신 동의 동의(선택)', detail: true},
+	{text: '이벤트 및 마케팅 정보 수신 동의 (선택)', detail: false},
 ];
 
 const styles = StyleSheet.create({

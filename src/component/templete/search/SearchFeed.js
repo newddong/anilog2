@@ -14,6 +14,7 @@ import Loading from 'Root/component/molecules/modal/Loading';
 
 export default SearchFeed = React.memo((props, ref) => {
 	const navigation = useNavigation();
+	const [focused, setFocused] = React.useState(true);
 	const [feedList, setFeedList] = React.useState('');
 	const [showOnlyProtect, setShowOnlyProtect] = React.useState(false);
 
@@ -24,6 +25,19 @@ export default SearchFeed = React.memo((props, ref) => {
 		}
 		fetchData(); // effect Hook에서 async await 구문을 쓰기 위한 처리
 	}, [navigation]);
+
+	React.useEffect(()=>{
+		const unsubscribe = navigation.addListener('focus', () => {
+			setFocused(true);
+		});
+		return unsubscribe;
+	},[navigation]);
+	React.useEffect(()=>{
+		const unsubscribe = navigation.addListener('blur', () => {
+			setFocused(false);
+		});
+		return unsubscribe;
+	},[navigation]);
 
 	//임보일기 글만 보기 여부
 	const getOnlyProtect = () => {
@@ -85,7 +99,9 @@ export default SearchFeed = React.memo((props, ref) => {
 					<FeedThumbnailList
 						items={showOnlyProtect ? getOnlyProtect() : feedList}
 						onClickThumnail={onClickThumnail}
-						whenEmpty={<ListEmptyInfo text={'피드 게시글이 없습니다'} />}
+						whenEmpty={<ListEmptyInfo text={'피드 게시글이 없습니다'}
+						focused={focused}
+						/>}
 					/>
 				</View>
 			</View>

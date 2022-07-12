@@ -9,6 +9,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import ReviewThumbnail from './ReviewThumbnail';
+import community_obj from 'Root/config/community_obj';
 /**
  * 후기 아이템
  * @param {object} props - Props Object
@@ -21,10 +22,26 @@ import ReviewThumbnail from './ReviewThumbnail';
  * @param {(bool:boolean)=>void} props.onPressFavorite - 즐겨찾기 클릭
  * @param {string} props.isSearch - 리뷰 컨텐츠 클릭
  */
-export default Review = React.memo(props => {
+export default Review = props => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.data);
 	const [moreCategory, setMoreCategory] = React.useState(false);
+
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			const findIndex = community_obj.review.findIndex(e => e._id == props.data._id);
+			if (findIndex != -1) {
+				setData({
+					...data,
+					community_is_favorite: community_obj.review[findIndex].community_is_favorite,
+					community_is_like: community_obj.review[findIndex].community_is_like,
+					community_like_count: community_obj.review[findIndex].community_like_count,
+				});
+			} else {
+			}
+		});
+		return unsubscribe;
+	}, []);
 
 	//상위 컴포넌트에서 갱신이 이뤄졌을 시 Review에서도 갱신
 	React.useEffect(() => {
@@ -269,7 +286,7 @@ export default Review = React.memo(props => {
 			</View>
 		</View>
 	);
-});
+};
 
 Review.defaultProps = {
 	onPressReply: () => {},

@@ -69,6 +69,18 @@ export default ReviewDetail = props => {
 		}
 	}, [params]);
 
+	React.useEffect(() => {
+		if (reviewList != 'false' && reviewList.length) {
+			reviewList.map((v, i) => {
+				const find = community_obj.review.findIndex(e => e._id == v._id);
+				if (find == -1) {
+					//현 메모리에 저장되어 있지않은 피드아이템만 추가
+					community_obj.review.push(v);
+				}
+			});
+		}
+	}, [reviewList]);
+
 	//커뮤니티 데이터
 	const getReviewData = () => {
 		getCommunityByObjectId(
@@ -560,7 +572,7 @@ export default ReviewDetail = props => {
 				result => {
 					console.log('result/ onPressLike / ReviewMain : ', result.msg.targetPost);
 					setData({...data, community_is_like: bool, community_like_count: bool ? ++data.community_like_count : --data.community_like_count});
-					updateReview(true, data._id, bool);
+					updateReview(true, data._id, bool, result.msg.targetPost.community_like_count);
 				},
 				err => console.log('err / onPressLike / ReviewMain : ', err),
 			);
@@ -581,9 +593,9 @@ export default ReviewDetail = props => {
 					is_like: bool,
 				},
 				result => {
-					console.log('result / likeEtc / ReviewDetail : ', result.msg.likeEtc);
+					console.log('result / likeEtc / ReviewDetail : ', result.msg.targetPost);
 					fetchCommunityList();
-					updateReview(true, reviewList[index]._id, bool); // 리뷰 메인 페이지 데이터 전역변수 최신화
+					updateReview(true, reviewList[index]._id, bool, result.msg.targetPost.community_like_count); // 리뷰 메인 페이지 데이터 전역변수 최신화
 				},
 				err => {
 					console.log(' err / likeEtc / ReviewDetail :', err);

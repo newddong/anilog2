@@ -8,6 +8,8 @@ import {getTimeLapsed} from 'Root/util/dateutil';
 import moment from 'moment';
 import DP from 'Root/config/dp';
 import FastImage from 'react-native-fast-image';
+import community_obj from 'Root/config/community_obj';
+import {useNavigation} from '@react-navigation/core';
 
 /**
  * 후기 요약 컴포넌트 아이템
@@ -21,6 +23,7 @@ import FastImage from 'react-native-fast-image';
 const ReviewFavoriteBriefItem = props => {
 	const [data, setData] = React.useState(props.data);
 	const [isLike, setIsLike] = React.useState(false);
+	const navigation = useNavigation();
 	const imageList = () => {
 		let imageList = [];
 		let getImgTag = data.community_content.match(/<img[\w\W]+?\/?>/g); //img 태그 추출
@@ -32,6 +35,22 @@ const ReviewFavoriteBriefItem = props => {
 		}
 		return imageList;
 	};
+
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			const findIndex = community_obj.review.findIndex(e => e._id == props.data._id);
+			if (findIndex != -1) {
+				setData({
+					...data,
+					community_is_favorite: community_obj.review[findIndex].community_is_favorite,
+					community_is_like: community_obj.review[findIndex].community_is_like,
+					community_like_count: community_obj.review[findIndex].community_like_count,
+				});
+			} else {
+			}
+		});
+		return unsubscribe;
+	}, []);
 
 	React.useEffect(() => {
 		setData(props.data);
@@ -84,7 +103,7 @@ const ReviewFavoriteBriefItem = props => {
 		data.community_interests.interests_trip.map(v => category_sum_list.push(v));
 		data.community_interests.interests_etc.map(v => category_sum_list.push(v));
 		data.community_interests.interests_hospital.map(v => category_sum_list.push(v));
-		data.community_interests.interests_review.map(v => category_sum_list.push(v));
+		// data.community_interests.interests_review.map(v => category_sum_list.push(v));
 		data.community_interests.interests_interior.map(v => category_sum_list.push(v));
 	}
 	const getCategory = () => {

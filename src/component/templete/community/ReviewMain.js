@@ -8,7 +8,7 @@ import {getCommunityList} from 'Root/api/community';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeEtc} from 'Root/api/likeetc';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
-import community_obj from 'Root/config/community_obj';
+import community_obj, {updateReview} from 'Root/config/community_obj';
 import {NETWORK_ERROR, REPORT_MENU, REVIEW_LIMIT} from 'Root/i18n/msg';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import {searchProtectRequest} from 'Templete/style_templete';
@@ -126,7 +126,7 @@ export default ReviewMain = ({route}) => {
 				console.log('recommendList', recommendList);
 				setRecommend(recommendList); //추천 게시글 목록
 				setData(list); //리뷰글 set
-				community_obj.review = list; //전역 변수에 현재 리스트 갱신
+				// community_obj.review = list; //전역 변수에 현재 리스트 갱신
 				setOffset(offset + 1); //현재 페이지 +1
 				setLoading(false); //로딩 종료
 			},
@@ -144,6 +144,18 @@ export default ReviewMain = ({route}) => {
 			},
 		);
 	};
+
+	React.useEffect(() => {
+		if (data != 'false' && data.length) {
+			data.map((v, i) => {
+				const find = community_obj.review.findIndex(e => e._id == v._id);
+				if (find == -1) {
+					//현 메모리에 저장되어 있지않은 리뷰아이템만 추가
+					community_obj.review.push(v);
+				}
+			});
+		}
+	}, [data]);
 
 	//필터 존재 여부 테스트
 	const hasNoFilter = () => {
@@ -235,6 +247,8 @@ export default ReviewMain = ({route}) => {
 			},
 			result => {
 				console.log('result/ onPressLike / ReviewMain : ', result.msg);
+				let count = result.msg.targetPost.community_like_count;
+				updateReview(true, data[index]._id, bool, count); // 리뷰 메인 페이지 데이터 전역변수 최신화
 				// fetchData(); //offSet이 자동 increment되는 문제 발생 우선 보류
 			},
 			err => console.log('err / onPressLike / ReviewMain : ', err),

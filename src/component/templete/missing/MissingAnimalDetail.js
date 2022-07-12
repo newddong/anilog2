@@ -19,6 +19,7 @@ import {NETWORK_ERROR} from 'Root/i18n/msg';
 import CameraRoll from 'Root/module/CameraRoll';
 import DP from 'Root/config/dp';
 import FastImage from 'react-native-fast-image';
+import feed_obj from 'Root/config/feed_obj';
 
 export default MissingAnimalDetail = props => {
 	const navigation = useNavigation();
@@ -189,10 +190,14 @@ export default MissingAnimalDetail = props => {
 				is_favorite: value,
 			},
 			result => {
-				console.log('result / FavoriteFeed / MissingReportList : ', result.msg.targetFeed.missing_animal_features);
+				console.log('result / FavoriteFeed / MissingReportDetail : ', result.msg.targetFeed);
+				let temp = [...feed_obj.list];
+				const findIndex = temp.findIndex(e => e._id == result.msg.targetFeed._id); //현재 보고 있는 피드게시글이 저장된 리스트에서 몇 번째인지
+				temp[findIndex].is_favorite = !temp[findIndex].is_favorite;
+				feed_obj.list = temp;
 			},
 			err => {
-				console.log('err / FavoriteFeed / MissingReportList : ', err);
+				console.log('err / FavoriteFeed / MissingReportDetail : ', err);
 				if (err.includes('error')) {
 					Modal.alert(NETWORK_ERROR);
 				}

@@ -15,8 +15,6 @@ import {getFeedListByUserId, getUserTaggedFeedList} from 'Root/api/feedapi';
 import {useNavigation} from '@react-navigation/core';
 import Loading from 'Root/component/molecules/modal/Loading';
 import CommunityList from '../community/CommunityList';
-import {getCommunityListByUserId} from 'Root/api/community';
-import {createMemoBox} from 'Root/api/userapi';
 import {getProtectRequestListByShelterId} from 'Root/api/shelterapi';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
@@ -30,7 +28,6 @@ export default Profile = ({route}) => {
 	const [tagFeedList, setTagFeedList] = React.useState('false');
 	const [feedTotal, setFeedTotal] = React.useState();
 	const [tagFeedTotal, setTagFeedTotal] = React.useState();
-	const [commList, setCommList] = React.useState('false');
 	const [protectList, setProtectList] = React.useState('false');
 	const [offset, setOffset] = React.useState(1); //커뮤니티 페이지
 	const [loading, setLoading] = React.useState(false);
@@ -44,9 +41,7 @@ export default Profile = ({route}) => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			fetchData();
 			setPressed(false);
-			if (data.user_type == 'user') {
-				fetchCommunity();
-			} else if (data.user_type == 'shelter') {
+			if (data.user_type == 'shelter') {
 				fetchProtectRequest();
 			}
 		});
@@ -76,30 +71,6 @@ export default Profile = ({route}) => {
 				navigation.goBack();
 			});
 		}
-	};
-
-	//유저 프로필일 경우 하단의 커뮤니티 탭
-	const fetchCommunity = () => {
-		getCommunityListByUserId(
-			{
-				userobject_id: userId,
-				community_type: 'all',
-			},
-			result => {
-				setCommList(result.msg);
-			},
-			err => {
-				if (err.includes('code 500')) {
-					setCommList({free: [], review: []});
-					Modal.popOneBtn(NETWORK_ERROR, '확인', () => {
-						Modal.close();
-						navigation.goBack();
-					});
-				} else if (err.includes('없습니다')) {
-					setCommList({free: [], review: []});
-				}
-			},
-		);
 	};
 
 	//보호소 프로필일 경우 하단의 보호동물 탭
@@ -483,7 +454,7 @@ export default Profile = ({route}) => {
 						/>
 					);
 				} else {
-					return <CommunityList data={commList} user_id={route.params.userobject._id} />;
+					return <CommunityList user_id={route.params.userobject._id} />;
 				}
 			} else if (data.user_type == 'pet') {
 				if (tabMenuSelected != 2) {

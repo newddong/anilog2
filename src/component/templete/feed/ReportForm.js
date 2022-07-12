@@ -15,7 +15,6 @@ import {openSettings} from 'react-native-permissions';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {Camera54, Location48Border, Paw54_Border, Location54, Arrow_Down_BLACK, Search48_BLACK} from 'Root/component/atom/icon/index';
 import Input24 from 'Molecules/input/Input24';
-import {getTimeLapsed} from 'Root/util/dateutil';
 import {parsingCityName} from 'Root/util/addressutill';
 
 //제보 컴포넌트
@@ -32,8 +31,6 @@ export default ReportForm = props => {
 	const [city, setCity] = React.useState(['광역시, 도']); //광역시도 API자료 컨테이너
 	const [district, setDistrict] = React.useState(['시,군,구']); //시군 API자료 컨테이너
 	const [isDistrictChanged, setIsDistrictChanged] = React.useState(false); // 시군 선택되었는지 여부
-	const [neighbor, setNeighbor] = React.useState(['동읍면']); //동읍면 API 자료 컨테이너
-	const [isSpeciesChanged, setIsSpeciesChanged] = React.useState(false);
 	const [data, setData] = React.useState({
 		report_witness_date: '',
 		report_witness_location: '',
@@ -161,7 +158,7 @@ export default ReportForm = props => {
 
 	const onPressDistrict = () => {
 		Keyboard.dismiss();
-		Modal.popSelectScrollBoxModal([district], '도, 광역, 특별시', selectedItem => {
+		Modal.popSelectScrollBoxModal([district], '시, 군, 구', selectedItem => {
 			let report_location = data.report_location;
 			report_location.district = selectedItem;
 			setData({...data, report_location: report_location});

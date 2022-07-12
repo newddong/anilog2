@@ -211,7 +211,7 @@ export default MissingForm = props => {
 		});
 	};
 	const onPressDistrict = () => {
-		Modal.popSelectScrollBoxModal([district], '도, 광역, 특별시', selectedItem => {
+		Modal.popSelectScrollBoxModal([district], '시, 군, 구', selectedItem => {
 			let lost_location_container = data.missing_animal_lost_location;
 			lost_location_container.district = selectedItem;
 			setData({...data, missing_animal_lost_location: lost_location_container});

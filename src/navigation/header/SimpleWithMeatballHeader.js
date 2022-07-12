@@ -12,6 +12,7 @@ import {deleteFeed, favoriteFeed} from 'Root/api/feedapi';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import protect_obj, {updateProtect} from 'Root/config/protect_obj';
 import {GRAY30, WHITE} from 'Root/config/color';
+import feed_obj from 'Root/config/feed_obj';
 
 //보호 요청게시글 및 제보, 실종글 작성자일 경우 미트볼 아이콘 출력이 되는 헤더
 export default SimpleWithMeatballHeader = ({navigation, route, options, back}) => {
@@ -25,7 +26,13 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 			console.log('route.params.request_object?.protect_request_is_favorite ', route.params.request_object?.protect_request_is_favorite);
 			!route.params.request_object?.protect_request_is_favorite ? setFavoriteTag(false) : setFavoriteTag(true);
 		} else if (route.params.feed_object) {
-			!route.params.request_object?.is_favorite ? setFavoriteTag(false) : setFavoriteTag(true);
+			// console.log('is_favorite feed_object', route.params.feed_object);
+			const find = feed_obj.list.findIndex(e => e._id == route.params.feed_object._id);
+			if (find != -1) {
+				console.log('favo?', feed_obj.list[find].is_favorite);
+				setFavoriteTag(feed_obj.list[find].is_favorite);
+			}
+			// !route.params.feed_object?.is_favorite ? setFavoriteTag(false) : setFavoriteTag(true);
 		}
 	}, [route.params]);
 
@@ -284,12 +291,16 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 						is_favorite: bool,
 					},
 					result => {
-						// console.log('result / favoriteFeed / SimpleWith', result.msg);
+						console.log('result / favoriteFeed / SimpleWith', result.msg.favoriteFeed);
 						Modal.close();
-						Modal.popNoBtn('즐겨찾기 ' + (bool ? '추가' : '삭제') + '가 완료되었습니다.');
-						setTimeout(() => {
-							Modal.close();
-						}, 1000);
+						let temp = [...feed_obj.list];
+						const findIndex = temp.findIndex(e => e._id == result.msg.favoriteFeed.favorite_feed_id); //현재 보고 있는 피드게시글이 저장된 리스트에서 몇 번째인지
+						temp[findIndex].is_favorite = !temp[findIndex].is_favorite;
+						feed_obj.list = temp;
+						// Modal.popNoBtn('즐겨찾기 ' + (bool ? '추가' : '삭제') + '가 완료되었습니다.');
+						// setTimeout(() => {
+						// 	Modal.close();
+						// }, 1000);
 					},
 					err => {
 						console.log('err / favoriteFeed', err);

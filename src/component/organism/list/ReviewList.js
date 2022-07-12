@@ -5,6 +5,8 @@ import {BLACK, GRAY20, GRAY30, GRAY40} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import Review from '../article/Review';
 import RecommendReview from '../article/RecommendReview';
+import community_obj from 'Root/config/community_obj';
+import {useNavigation} from '@react-navigation/core';
 
 /**
  * 후기 리스트
@@ -26,6 +28,7 @@ export default ReviewList = props => {
 	const items = props.items;
 	const [data, setData] = React.useState('false');
 	const [recommend, setRecommend] = React.useState(props.recommend);
+	const navigation = useNavigation();
 
 	React.useEffect(() => {
 		// setRecommend(props.recommend);
@@ -120,7 +123,7 @@ export default ReviewList = props => {
 					data={data}
 					renderItem={renderItem}
 					showsVerticalScrollIndicator={false}
-					// keyExtractor={item => item._id}
+					keyExtractor={item => item._id}
 					getItemLayout={(data, index) => {
 						if (!data[index]) return {length: 0, offset: 0, index: index};
 						return {length: data[index].height, offset: data[index].offset, index: index};

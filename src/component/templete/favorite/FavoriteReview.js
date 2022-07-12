@@ -7,7 +7,7 @@ import Modal from 'Component/modal/Modal';
 import ReviewFavoriteBriefList from 'Root/component/organism/list/ReviewFavoriteBriefList';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {likeEtc} from 'Root/api/likeetc';
-import community_obj, {updateReview} from 'Root/config/community_obj';
+import community_obj, {updateReview, updateReview2} from 'Root/config/community_obj';
 import {getFavoriteEtcListByUserId, setFavoriteEtc, setFavoriteEtcCancelList} from 'Root/api/favoriteetc';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {getCommunityListByUserId} from 'Root/api/community';
@@ -26,11 +26,23 @@ export default FavoriteReview = ({route, isFavorite}) => {
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
-			fetchData();
+			// fetchData();
 		});
-		// fetchData();
+		fetchData();
 		return unsubscribe;
 	}, []);
+
+	React.useEffect(() => {
+		if (data != 'false' && data.length) {
+			data.map((v, i) => {
+				const find = community_obj.review.findIndex(e => e._id == v._id);
+				if (find == -1) {
+					//현 메모리에 저장되어 있지않은 리뷰아이템만 추가
+					community_obj.review.push(v);
+				}
+			});
+		}
+	}, [data]);
 
 	const fetchData = () => {
 		!isFavorite
@@ -269,9 +281,10 @@ export default FavoriteReview = ({route, isFavorite}) => {
 				is_like: bool,
 			},
 			result => {
-				console.log('result/ onPressLike / FavoriteReview : ', result.msg.targetPost.community_like_count);
+				// console.log('result/ onPressLike / FavoriteReview : ', result.msg.targetPost);
+				let count = result.msg.targetPost.community_like_count;
 				fetchData();
-				updateReview(true, data[index]._id, bool); // 리뷰 메인 페이지 데이터 전역변수 최신화
+				updateReview(true, data[index]._id, bool, count); // 리뷰 메인 페이지 데이터 전역변수 최신화
 			},
 			err => console.log('err / onPressLike / FavoriteReview : ', err),
 		);

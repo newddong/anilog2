@@ -37,6 +37,23 @@ export default SearchReview = props => {
 		},
 	});
 
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			const findIndex = community_obj.review.findIndex(e => e._id == props.data._id);
+			console.log('findIndex', findIndex);
+			if (findIndex != -1) {
+				setData({
+					...data,
+					community_is_favorite: community_obj.review[findIndex].community_is_favorite,
+					community_is_like: community_obj.review[findIndex].community_is_like,
+					community_like_count: community_obj.review[findIndex].community_like_count,
+				});
+			} else {
+			}
+		});
+		return unsubscribe;
+	}, []);
+
 	//검색탭 헤더의 인풋값이 바뀔 때마다 계정과 해쉬를 받아오는 api에 접속
 	React.useEffect(() => {
 		setSearchInput(searchContext.searchInfo.searchInput);
@@ -218,7 +235,7 @@ export default SearchReview = props => {
 				result => {
 					console.log('result/ onPressLike / SearchReview : ', result.msg);
 					props.resetCommunityList();
-					updateReview(true, getData()[index]._id, bool);
+					updateReview(true, getData()[index]._id, bool, result.msg.targetPost.community_like_count);
 				},
 				err => console.log('err / onPressLike / SearchReview : ', err),
 			);

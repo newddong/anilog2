@@ -20,8 +20,8 @@ export default PhotoSelectHeader = ({navigation, route, options, back}) => {
 
 	const confirm = () => {
 		console.log(route.params, selectedPhoto);
-		if(selectedPhoto.some(v=>v.duration>14.99||v.fileSize>5000000)){
-			Modal.alert('15초 이상 5메가바이트 이상 동영상은\n편집버튼을 눌려 편집 해주세요');
+		if(selectedPhoto.some(v=>v.fileSize>30000000)){
+			Modal.alert('30메가바이트 이상 동영상은\n편집버튼을 눌려 편집 해주세요');
 			return;
 		}
 
@@ -29,7 +29,7 @@ export default PhotoSelectHeader = ({navigation, route, options, back}) => {
 		if (prevRoute && selectedPhoto.length > 0) {
 			console.log('compress img', selectedPhoto)
 			let localFiles = selectedPhoto.filter(v => !v.uri.includes('http'));
-			let localImageFiles = selectedPhoto.filter(v=>!v.uri.includes('http')&&v.type.includes('image'));
+			let localImageFiles = selectedPhoto.filter(v=>!v.uri.includes('http')&&v.type.includes('image')&&!v.uri.includes('gif'));
 			let remoteFiles = selectedPhoto.filter(v => v.uri.includes('http'));
 			if(localImageFiles.length>0){
 				console.log('contain local image');
@@ -44,8 +44,13 @@ export default PhotoSelectHeader = ({navigation, route, options, back}) => {
 					.then(compressedImg => {
 						console.log(compressedImg);
 						localImageFiles.forEach((v,i,a)=>{
-							a[i].cropUri = compressedImg.assets[i].uri;
-							a[i].fileSize = compressedImg.assets[i].fileSize;
+							if(v.cropUri){
+								a[i].fileSize = compressedImg.assets[i].fileSize;
+							}else{
+								a[i].cropUri = compressedImg.assets[i].uri;
+								a[i].fileSize = compressedImg.assets[i].fileSize;
+							}
+							
 						})
 						console.log(localImageFiles)
 

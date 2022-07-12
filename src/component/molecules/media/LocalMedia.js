@@ -34,7 +34,9 @@ import CameraRoll from 'Root/module/CameraRoll';
 const LocalMedia = props => {
 	const [duration, setDuration] = React.useState(0);
 	const [isSelect, setSelected] = React.useState(false);
-	const isVideo = props.data.type.includes('video');
+	const [fileSize, setFileSize] = React.useState(0);
+	const isVideo = props.data.type?.includes('video');
+	const isGif = props.data.image?.uri.includes('gif');
 	const videoInfo = React.useRef({});
 
 	React.useEffect(() => {
@@ -47,6 +49,7 @@ const LocalMedia = props => {
 				console.log('video attribute', r);
 				videoInfo.current = Platform.OS=='ios'?r[0]:r;
 				setDuration(Platform.OS=='ios'?r[0].duration:r.duration);
+				setFileSize(Platform.OS=='ios'?r[0].fileSize:r.fileSize);
 			}).catch(e=>console.log('video attribute error',e));
 		}
 	}, []);
@@ -104,11 +107,26 @@ const LocalMedia = props => {
 		}
 	}, [props.index]);
 
+
 	const getDuration = second => {
 		let min = Math.floor(second / 60);
 		let sec = Math.floor(second % 60);
 		return (min == 0 ? '00' : min < 10 ? '0' + min : min) + ':' + (sec == 0 ? '00' : sec < 10 ? '0' + sec : sec);
 	};
+
+	const getFileSize = fileSize => {
+		let mega = 0;
+		let killo = 0;
+		if(fileSize>=1000000){
+			mega = Math.floor(fileSize/1000000)
+			return mega+'mb';
+		}else{
+			killo = Math.floor(fileSize/1000);
+			return killo+'kb';
+		}
+		 
+	
+	}
 	// console.log('image',props.data.image)
 	// if(props.data.type.includes('video')){
 	// 	return (<Video style={getStyleOfSelectedItem()} source={{uri: props.data.image.uri}} muted paused/>);
@@ -140,6 +158,13 @@ const LocalMedia = props => {
 				<View style={{position:'absolute'}}>
 					<VideoGrad186 />
 					<Text style={[txt.roboto22, {color: WHITE, position: 'absolute', left: 10 * DP, bottom: 6 * DP}]}>{getDuration(duration)}</Text>
+					<Text style={[txt.roboto22, {color: WHITE, position: 'absolute', right: 10 * DP, bottom: 6 * DP}]}>{getFileSize(fileSize)}</Text>
+				</View>
+			)}
+			{!isVideo &&isGif && (
+				<View style={{position:'absolute'}}>
+					<VideoGrad186 />
+					<Text style={[txt.roboto22, {color: WHITE, position: 'absolute', left: 10 * DP, bottom: 6 * DP}]}>GIF</Text>
 				</View>
 			)}
 		</TouchableOpacity>

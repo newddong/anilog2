@@ -37,12 +37,12 @@ class VideoEditor {
         let configuration = {
             mainCanvasActions: [CanvasAction.SOUND_ON_OFF],
             // tools: [Tool.TRIM],
-            enableZoom:false,
+            enableZoom:true,
             trim: {
                 //minimumDuration: !option.minTrimmedDuration ? 0.5 : option.minTrimmedDuration,
                 //maximumDuration: !option.maxTrimmedDuration ? 15 : option.maxTrimmedDuration,
                 minimumDuration: 0,
-                maximumDuration: 15,
+                maximumDuration: trimmedDuration,
                 forceMode: ForceTrimMode.SILENT,
             },
             export: {

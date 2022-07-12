@@ -359,7 +359,7 @@ export default FeedWrite = props => {
 						layout={styles.img_square_round_336}
 						items={selectedImg.map(v => {
 							// console.log('selectedImage', v);
-							return v ? v.cropUri ?? v.uri : undefined;
+							return v.videoUri ? v.cropUri ?? v.uri : undefined;
 						})}
 						mediaList={selectedImg.map(v => {
 							// console.log('selectedImage', v);

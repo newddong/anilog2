@@ -9,8 +9,10 @@ import {RED10} from 'Root/config/color';
 import {createFeed, createMissing, createReport, editFeed, editMissingReport, getFeedDetailById} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import feed_obj from 'Root/config/feed_obj';
+import {useNavigation} from '@react-navigation/core';
 
-export default FeedWriteHeader = ({route, navigation, options}) => {
+export default FeedWriteHeader = ({route, options}) => {
+	const navigation = useNavigation();
 	const userInfo = userGlobalObject;
 	const param = route.params;
 	const [sent, setSent] = React.useState(false);
@@ -25,7 +27,26 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			Modal.close();
 			if (param.tab == 'Protection') {
 				if (param.feedType == 'Report') {
-					navigation.navigate('ReportDetail', {_id: result.msg._id});
+					// console.log('navi', JSON.stringify(navigation.getState()));
+					navigation.reset({
+						index: 1,
+						routes: [
+							{
+								name: 'MainTab',
+								params: {
+									screen: 'PROTECTION',
+									params: {
+										screen: 'ProtectionTab',
+										params: {
+											isMissing: true,
+										},
+									},
+								},
+							},
+							{key: result.msg._id, name: 'ReportDetail', params: {_id: result.msg._id}},
+						],
+					});
+					// navigation.navigate('ReportDetail', {_id: result.msg._id});
 				} else if (param.feedType == 'Missing') {
 					let sexValue = '';
 					switch (result.msg.missing_animal_sex) {
@@ -40,7 +61,25 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 							break;
 					}
 					const titleValue = result.msg.missing_animal_species + '/' + result.msg.missing_animal_species_detail + '/' + sexValue;
-					navigation.navigate('MissingAnimalDetail', {title: titleValue, _id: result.msg._id});
+					navigation.reset({
+						index: 1,
+						routes: [
+							{
+								name: 'MainTab',
+								params: {
+									screen: 'PROTECTION',
+									params: {
+										screen: 'ProtectionTab',
+										params: {
+											isMissing: true,
+										},
+									},
+								},
+							},
+							{key: result.msg._id, name: 'MissingAnimalDetail', params: {title: titleValue, _id: result.msg._id}},
+						],
+					});
+					// navigation.navigate('MissingAnimalDetail', {title: titleValue, _id: result.msg._id});
 				} else {
 					navigation.goBack();
 				}
@@ -64,7 +103,6 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 						);
 					} else {
 						// console.log('route.params', route.params);
-
 						feed_obj.edit_obj = route.params; //피드수정 => 수정한 리스트 아이템만 setData하기 위한 오브젝트
 						feed_obj.shouldUpdateByEdit = true;
 						navigation.goBack();
@@ -231,7 +269,7 @@ export default FeedWriteHeader = ({route, navigation, options}) => {
 			feed_content: route.params.isEdit ? route.params.feed_content : route.params.feed_content.replace(changeTextRegex, '&$1&$1$1$2%&%&$1&$1'),
 			hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
 		};
-		console.log('onEdit / FeedWrtieHeader', param);
+		// console.log('onEdit / FeedWrtieHeader', param);
 		if (param.feed_type == 'feed') {
 			editFeed(param, complete, handleError);
 		} else if (param.feed_type == 'report') {

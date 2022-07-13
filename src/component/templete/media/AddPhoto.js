@@ -12,7 +12,7 @@ import {
 	NativeModules,
 	Dimensions,
 } from 'react-native';
-import {APRI10, GRAY10} from 'Root/config/color';
+import {APRI10, BLACK,WHITE, GRAY10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import CameraRoll from 'Root/module/CameraRoll';
@@ -58,7 +58,7 @@ export default AddPhoto = props => {
 			toTime: timeStamp ? timeStamp * 1000 - 1 : 0,
 			toID: imageID,
 			assetType: type,
-			include: ['fileSize'],
+			include: ['filename'],
 			groupName: album,
 			groupTypes: 'all',
 		};
@@ -69,6 +69,7 @@ export default AddPhoto = props => {
 			// delete param.include;
 		} else {
 			delete param.toID;
+			// delete param.include;
 		}
 		if (album.length == 0) {
 			delete param.groupName;
@@ -92,7 +93,7 @@ export default AddPhoto = props => {
 
 	/** 스크롤이 바닥에 닿을때 페이징 처리를 위한 함수 */
 	const scrollReachBottom = () => {
-		FastImage.clearMemoryCache();
+		// FastImage.clearMemoryCache();
 		let last = photolist.length;
 		// let blank = Array.from({length:last},v=>false)
 		// setPhotoList(photolist.concat(props.route.params.localfiles.slice(last,last+300)))
@@ -103,7 +104,7 @@ export default AddPhoto = props => {
 
 	const onMomentumscrollbegin = () => {
 		// console.log('begin')
-		FastImage.clearMemoryCache();
+		// FastImage.clearMemoryCache();
 	};
 	const onScroll = e => {
 		// console.log(e.nativeEvent)
@@ -142,7 +143,7 @@ export default AddPhoto = props => {
 			toTime: 0,
 			toID: '123456789',
 			assetType: 'All',
-			include: ['fileSize'],
+			include: ['filename'],
 			groupName: album,
 			groupTypes: 'album',
 		};
@@ -369,7 +370,7 @@ export default AddPhoto = props => {
 		let duration = media.duration <=15 ? media.duration : 15;
 		setPlay(false);
 		VideoEditor.unlockLicense();
-		VideoEditor.openVideoEditor(media.videoUri ?? media.uri, media.duration, duration, 60, 'aniMov')
+		VideoEditor.openVideoEditor(media.videoUri ?? media.uri, media.duration, media.duration, 10000000, 'aniMov')
 			.then(r => {
 				console.log(r);
 				if(r.hasChanges){
@@ -390,13 +391,34 @@ export default AddPhoto = props => {
 			});
 	};
 
+	const getDuration = second => {
+		let min = Math.floor(second / 60);
+		let sec = Math.floor(second % 60);
+		return (min == 0 ? '00' : min < 10 ? '0' + min : min) + ':' + (sec == 0 ? '00' : sec < 10 ? '0' + sec : sec);
+	};
+
+	const getFileSize = fileSize => {
+		let mega = 0;
+		let killo = 0;
+		if(fileSize>=1000000){
+			mega = Math.floor(fileSize/1000000)
+			return mega+'mb';
+		}else{
+			killo = Math.floor(fileSize/1000);
+			return killo+'kb';
+		}
+		 
+	
+	}
+
+
 	return (
 		<View style={lo.wrp_main}>
 			{selectedPhoto[index] ? (
 				selectedPhoto[index].isVideo || selectedPhoto[index].is_video ? (
 					<View>
-						{play&&<Video
-							style={{width: 750 * DP, height: 750 * DP, backgroundColor: '#FFF'}}
+						{<Video
+							style={{width: 750 * DP, height: 750 * DP, backgroundColor: '#000'}}
 							source={{uri: selectedPhoto[index]?.videoUri ?? selectedPhoto[index]?.uri}}
 							// source={{uri: selectedPhoto[index]?.videoUri}}
 							paused={!play}
@@ -411,8 +433,12 @@ export default AddPhoto = props => {
 									videoEdit();
 								}}>
 									<VideoEditorIcon />
-								</View>
+							</View>
 						)}
+						{selectedPhoto[index] && !selectedPhoto[index].uri.includes('gif') && !selectedPhoto[index].uri.includes('http') && (
+						<View
+						style={{position: 'absolute', bottom: 10*DP, left: 10*DP}}
+						><Text style={[txt.roboto26,{color:WHITE}]}>{getDuration(selectedPhoto[index].duration)+'  '+getFileSize(selectedPhoto[index].fileSize)}</Text></View>)}
 					</View>
 				) : (
 					<React.Fragment key={(()=>{

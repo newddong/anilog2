@@ -5,7 +5,7 @@ import {txt} from 'Root/config/textstyle';
 import {AddItem92, Arrow_Down_GRAY10, Arrow_Up_GRAY10, Cross52, Edit46, Home48Border, IconL, NextMark} from 'Atom/icon';
 import {login_style, petInfoSetting, setPetInformation, temp_style, userInfoSetting_style} from 'Templete/style_templete';
 import Modal from 'Component/modal/Modal';
-import {getUserInfoById, removeUserFromFamily, updatePetDetailInformation} from 'Root/api/userapi';
+import {getPettypes, getUserInfoById, removeUserFromFamily, updatePetDetailInformation} from 'Root/api/userapi';
 import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {updateUserIntroduction} from 'Root/api/userapi';
@@ -73,6 +73,7 @@ export default PetInfoSetting = ({route}) => {
 				setPetData(result.msg);
 				// console.log('result . pet data', result.msg);
 				setSpeices(result.msg.pet_species);
+				console.log('result.msg.pet_species_detail', result.msg.pet_species_detail);
 				setKind(result.msg.pet_species_detail);
 			},
 			err => {
@@ -81,6 +82,30 @@ export default PetInfoSetting = ({route}) => {
 			},
 		);
 	};
+
+	React.useEffect(() => {
+		if (speices != '') {
+			getPettypes(
+				{},
+				result => {
+					const find = result.msg.findIndex(e => e.pet_species == speices);
+					setSpeicesIndex(find);
+					let category = {
+						large: [],
+						sub: [],
+					};
+					result.msg.map((v, i) => {
+						category.large.push(v.pet_species);
+						category.sub.push(v.pet_species_detail);
+					});
+					setSub(category.sub);
+				},
+				err => {
+					console.log('err / getPetTypes / PetinfoSEttings : ', err);
+				},
+			);
+		}
+	}, [speices]);
 
 	//계정정보 - '종' 변경하기 버튼 클릭
 	const changePetInfo = async () => {
@@ -342,7 +367,7 @@ export default PetInfoSetting = ({route}) => {
 		Modal.popLoading(true);
 		const petKind = await PET_KIND();
 		Modal.close();
-		console.log('petKind', petKind);
+		// console.log('petKind', petKind);
 		let category = {
 			large: [],
 			sub: [],
@@ -375,6 +400,7 @@ export default PetInfoSetting = ({route}) => {
 
 				setSpeices(selected);
 				console.log('종 고름', category.large.indexOf(selected));
+				setKind(sub[category.large.indexOf(selected)][0]);
 				setSpeicesIndex(category.large.indexOf(selected));
 				Modal.close();
 			},
@@ -384,6 +410,9 @@ export default PetInfoSetting = ({route}) => {
 		);
 	};
 	const onSelectKind = (v, i) => {
+		console.log('sub[speicesIndex]', sub[speicesIndex]);
+		console.log('speicesIndex', speicesIndex);
+		console.log('sub', sub);
 		Modal.popSelectScrollBoxModal(
 			[sub[speicesIndex]],
 			'품종 선택',

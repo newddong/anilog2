@@ -86,6 +86,13 @@ import appConfig from 'Root/config/appConfig';
 const RootStack = createStackNavigator();
 
 export default RootStackNavigation = () => {
+	let mounted = true;
+	React.useEffect(() => {
+		return () => {
+			mounted = false;
+		};
+	}, []);
+
 	const [isPop, popupComponent] = useModal();
 	const [isLoading, setLoading] = React.useState(true);
 	const [initialRouteName, setInitialRouteName] = React.useState('Login');
@@ -146,8 +153,8 @@ export default RootStackNavigation = () => {
 							AsyncStorage.setItem('userInfo', JSON.stringify(userObject.msg));
 							userGlobalObj.userInfo = userObject.msg;
 						}
-						setInitialRouteName('MainTab');
-						setLoading(false);
+						mounted&&setInitialRouteName('MainTab');
+						mounted&&setLoading(false);
 					},
 					error => {
 						alert(error);
@@ -157,8 +164,8 @@ export default RootStackNavigation = () => {
 
 				// setLoading(false);
 			} else {
-				setInitialRouteName('Login');
-				setLoading(false);
+				mounted&&setInitialRouteName('Login');
+				mounted&&setLoading(false);
 			}
 		});
 	}, []);

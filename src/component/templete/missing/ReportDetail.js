@@ -63,9 +63,7 @@ export default ReportDetail = props => {
 						navigation.goBack();
 					});
 				} else {
-					Modal.popOneBtn(NETWORK_ERROR, '확인', () => {
-						navigation.goBack();
-					});
+					Modal.popOneBtn('이미 삭제된 게시글입니다.', '뒤로 가기', () => navigation.goBack());
 				}
 			},
 		);

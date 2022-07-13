@@ -60,7 +60,7 @@ export default ChangeUserProfileImage = ({route}) => {
 		if (route.params.selectedPhoto && route.params.selectedPhoto.length > 0) {
 			console.log(route.params);
 			let selected = route.params.selectedPhoto[0];
-			setData({...data, user_profile_uri: (selected.cropUri ?? selected.uri) || data.user_profile_uri});
+			setData({...data, user_profile_uri: (selected.cropUri ?? selected.uri)});
 			// 		setConfirmed(true);
 			// setSelectedImg(props.route.params.selectedPhoto);
 		}

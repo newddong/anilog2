@@ -22,20 +22,23 @@ export default MissingReportList = props => {
 	const [data, setData] = React.useState('false');
 	const [offset, setOffset] = React.useState(1);
 	const [loading, setLoading] = React.useState(false);
-	const [filterData, setFilterData] = React.useState({
-		city: '',
-		missing_animal_species: '',
-		feedobject_id: '',
-		request_number: 10,
-	});
+	const [filterData, setFilterData] = React.useState({city: ''});
 	const [onlyMissing, setOnlyMissing] = React.useState(false); //실종글만 보기
 	const [onlyReport, setOnlyReport] = React.useState(false); // 제보글만 보기
-	const [showActionButton, setShowActionButton] = React.useState(false); // 긴급게시(하얀버전) 클릭 시 - 실종/제보 버튼 출력 Boolean
 	const urgentBtnRef = React.useRef();
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
-			setShowActionButton(false);
+			if (feed_obj.deleted_obj != {}) {
+				try {
+					console.log('feed_obj.deleted_obj', feed_obj.deleted_obj);
+					//삭제된 실종,제보 반영
+					setData(data.filter(e => e._id != feed_obj.deleted_obj._id));
+					feed_obj.deleted_obj = {};
+				} catch (err) {
+					console.log('err', err);
+				}
+			}
 		});
 		getList();
 		return unsubscribe;
@@ -54,15 +57,16 @@ export default MissingReportList = props => {
 		}
 	}, [data]);
 
-	const getList = () => {
+	const getList = refresh => {
 		// setLoading(true);
-		console.log('filterData', filterData);
+		// console.log('filterData', filterData);
+		// console.log('offset', offset, refresh);
 		getMissingReportList(
-			{...filterData, limit: PROTECT_REQUEST_MAIN_LIMIT, page: offset},
+			{...filterData, limit: PROTECT_REQUEST_MAIN_LIMIT, page: refresh ? 1 : offset},
 			result => {
 				console.log('getMissingReportList length', result.msg.length);
 				const res = result.msg;
-				if (data != 'false') {
+				if (data != 'false' && !refresh) {
 					let temp = [...data];
 					res.map((v, i) => {
 						temp.push(v);
@@ -87,9 +91,12 @@ export default MissingReportList = props => {
 
 	// 실종 데이터 불러오기 (아직 API 미작업 )
 	React.useEffect(() => {
-		getList();
-		setData('false');
-		setOffset(1);
+		if (filterData && filterData.city != '') {
+			console.log('filterData', filterData);
+			getList();
+			setData('false');
+			setOffset(1);
+		}
 	}, [filterData]);
 
 	//제보 게시글 쓰기 클릭
@@ -236,7 +243,9 @@ export default MissingReportList = props => {
 		wait(0).then(() => setRefreshing(false));
 	};
 
-	React.useEffect(() => {}, [refreshing]);
+	React.useEffect(() => {
+		refreshing ? getList(true) : false;
+	}, [refreshing]);
 
 	const ITEM_HEIGHT = 266 * DP;
 	const keyExtractor = React.useCallback(item => item._id.toString(), []);

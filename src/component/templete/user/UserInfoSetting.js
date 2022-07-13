@@ -49,6 +49,8 @@ export default UserInfoSetting = ({route}) => {
 			},
 			userObject => {
 				setData(userObject.msg);
+				userObject.msg.user_address ? setNewCity(userObject.msg.user_address?.city) : false;
+				userObject.msg.user_address ? setNewDistrict(userObject.msg.user_address?.district) : false;
 				setUserDataLoaded(true);
 				navigation.setOptions({title: userGlobalObject.userInfo.user_nickname});
 			},
@@ -195,27 +197,6 @@ export default UserInfoSetting = ({route}) => {
 		}
 		// console.log('setData', data.user_interests);
 	}, [refresh, locationInterest, contentInterest]);
-	// React.useEffect(() => {
-	// 	console.log('data.user_interest 바뀜 -> 변경', data.user_interests);
-	// 	updateUserDetailInformation(
-	// 		{
-	// 			user_interests: data.user_interests,
-	// 		},
-
-	// 		result => {
-	// 			console.log('result / updateUserDetailInformation / SaveButtonHeader   : ', result);
-	// 			// setTimeout(() => {
-	// 			// Modal.close();
-	// 			// navigation.goBack();
-	// 			// }, 200);
-	// 		},
-	// 		err => {
-	// 			console.log('err / updateUserDetailInformation / SaveButtonHeader    :  ', err);
-	// 			Modal.close();
-	// 		},
-	// 	);
-	// }, [data.user_interests]);
-	//상세 정보 클릭
 
 	//프로필 변경 클릭
 	const onPressModofyProfile = () => {
@@ -247,7 +228,8 @@ export default UserInfoSetting = ({route}) => {
 
 	//수정 후 적용 버튼 클릭
 	const modify_finalize = () => {
-		if (newIntro.length == 0 || newIntro == data.user_introduction) {
+		if (!newIntro) return;
+		if ((newIntro && newIntro.length == 0) || newIntro == data.user_introduction) {
 			console.log('소개 길이 0 or 이전과 같음');
 		} else {
 			updateUserIntroduction(
@@ -348,8 +330,8 @@ export default UserInfoSetting = ({route}) => {
 		);
 	};
 
-	const [city, setCity] = React.useState([userData.user_address.city]);
-	const [district, setDistrict] = React.useState([userData.user_address.district]);
+	const [city, setCity] = React.useState([userData.user_address?.city]);
+	const [district, setDistrict] = React.useState([userData.user_address?.district]);
 	const onSelectCity = (v, i) => {
 		Modal.popSelectScrollBoxModal(
 			[city],
@@ -461,6 +443,10 @@ export default UserInfoSetting = ({route}) => {
 		setLocationEdit(!locationEdit);
 	};
 
+	React.useEffect(() => {
+		console.log('data', data.user_address);
+	}, [data]);
+
 	const handleError = error => {
 		Modal.popOneBtn(error, '확인', () => Modal.close());
 	};
@@ -527,46 +513,12 @@ export default UserInfoSetting = ({route}) => {
 					)}
 
 					<View style={[temp_style.userInfoSetting_step2]}>
-						{/* <View style={[temp_style.accountInfo]}>
-							<View style={[temp_style.title, userInfoSetting_style.title]}>
-								<Text style={[txt.noto30b, {color: GRAY10}]}>계정 정보</Text>
-							</View>
-							<View style={[temp_style.accountInfo_depth2]}>
-								<View style={[temp_style.user_email_userInfoSetting, userInfoSetting_style.user_email]}>
-									<Text style={[txt.roboto26, {maxWidth: 440 * DP}]} numberOfLines={1}>
-										{data.user_nickname || ''}
-									</Text>
-								</View>
-								<View style={[temp_style.changePassword_userInfoSetting, userInfoSetting_style.changePassword]}>
-									<TouchableOpacity onPress={onPressChangePwd}>
-										<Text style={[txt.noto26, {color: APRI10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>비밀번호 변경하기</Text>
-									</TouchableOpacity>
-								</View>
-							</View>
-						</View>
-						<View style={[temp_style.vertical_border]}></View> */}
-
-						{/* 상세정보 */}
-						{/* <View style={[temp_style.detailInfo]}>
-							<View style={[temp_style.title, userInfoSetting_style.title_detail]}>
-								<TouchableOpacity onPress={onPressDetail}>
-									<Text style={[txt.noto30b, {color: GRAY10}]}>상세 정보</Text>
-								</TouchableOpacity>
-							</View>
-							<View style={[temp_style.bracket48, userInfoSetting_style.bracket48]}>
-								<NextMark onPress={onPressDetail} />
-							</View>
-						</View> */}
 						<View style={[temp_style.vertical_border]}></View>
-
 						{/* /* 소개 */}
 						<View style={[temp_style.introduceInfo]}>
 							<View style={[temp_style.introduceInfo_depth1]}>
 								<View style={[userInfoSetting_style.title_detail]}>
-									<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>
-										소개
-										{/* <Text style={[txt.noto22b, {color: GRAY20}]}> (최대 500자, 15줄)</Text> */}
-									</Text>
+									<Text style={[txt.noto30b, {color: MAINBLACK}, {width: 162 * DP}]}>소개</Text>
 								</View>
 								<View style={[{alignItems: 'center'}, {marginLeft: 472 * DP}]}>
 									{modifyMode ? (
@@ -578,7 +530,6 @@ export default UserInfoSetting = ({route}) => {
 									) : (
 										<View style={[styles.changeInfo, userInfoSetting_style.changePassword]}>
 											<TouchableOpacity onPress={modify_userIntro}>
-												{/* <Text style={[txt.noto26, {color: APRI10}, {fontWeight: 'bold'}, {textDecorationLine: 'underline'}]}>수정</Text> */}
 												<Edit46 />
 											</TouchableOpacity>
 										</View>
@@ -653,27 +604,10 @@ export default UserInfoSetting = ({route}) => {
 							</View>
 							<View style={[styles.addressSelect]}>
 								<View style={[{marginRight: 20 * DP}]}>
-									<SelectInput
-										onPressInput={onSelectCity}
-										width={284}
-										height={108}
-										// value={data.user_address.city || ''}
-										value={newCity}
-										noBorder={true}
-										fontSize={28}
-									/>
+									<SelectInput onPressInput={onSelectCity} width={284} height={108} value={newCity} noBorder={true} fontSize={28} />
 								</View>
 								<View>
-									<SelectInput
-										onPressInput={onSelectDistrict}
-										width={284}
-										height={108}
-										// value={data.user_address.district}
-										value={newDistrict}
-										// value={'시,군,구'}
-										noBorder={true}
-										fontSize={28}
-									/>
+									<SelectInput onPressInput={onSelectDistrict} width={284} height={108} value={newDistrict} noBorder={true} fontSize={28} />
 								</View>
 							</View>
 						</View>
@@ -681,7 +615,7 @@ export default UserInfoSetting = ({route}) => {
 						<View style={[styles.first]}>
 							<Text style={[txt.noto30b, {width: 162 * DP}]}>나의 지역</Text>
 							<Text style={[txt.noto28, {width: 462 * DP}]}>
-								{data.user_address.city} {data.user_address.district || ''}
+								{data.user_address?.city} {data.user_address?.district || ''}
 							</Text>
 							<TouchableOpacity onPress={modifyLocation} style={[{alignItems: 'flex-end'}, {marginLeft: 12 * DP}]}>
 								<Edit46 />

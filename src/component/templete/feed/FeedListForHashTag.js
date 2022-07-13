@@ -14,11 +14,23 @@ export default FeedListForHashTag = props => {
 	const [hashInfo, setHashInfo] = React.useState(props.route.params);
 	const [feeds, setFeeds] = React.useState([]);
 	const navigation = useNavigation();
+	const [focused, setFocused] = React.useState(true);
 	const moveToHashFeedList = (index, item) => {
 		console.log('item', item._id);
 		navigation.navigate({key: item._id, name: 'HashFeedList', params: {selected: item, hashtag_keyword: hashInfo.hashtag_keyword, index: index}});
 	};
-
+	React.useEffect(()=>{
+		const unsubscribe = navigation.addListener('focus', () => {
+			setFocused(true);
+		});
+		return unsubscribe;
+	},[navigation]);
+	React.useEffect(()=>{
+		const unsubscribe = navigation.addListener('blur', () => {
+			setFocused(false);
+		});
+		return unsubscribe;
+	},[navigation]);
 	React.useEffect(() => {
 		navigation.setOptions({title: '#' + hashInfo.hashtag_keyword});
 	}, []);
@@ -54,7 +66,7 @@ export default FeedListForHashTag = props => {
 			<ScrollView horizontal={false} contentContainerStyle={{flex: 1}} showsVerticalScrollIndicator={false}>
 				<ScrollView horizontal={true} scrollEnabled={false}>
 					<View style={[feedListForHashTag.feedThumbnailList]}>
-						<FeedThumbnailList items={feeds} onClickThumnail={moveToHashFeedList} />
+						<FeedThumbnailList items={feeds} onClickThumnail={moveToHashFeedList} focused={focused}/>
 					</View>
 				</ScrollView>
 			</ScrollView>

@@ -25,6 +25,7 @@ import feed_obj from 'Root/config/feed_obj';
 //즐겨찾기한 피드목록을 조회
 export default FavoriteFeeds = ({route}) => {
 	const navigation = useNavigation();
+	const [focused, setFocused] = React.useState(true);
 	const [selectMode, setSelectMode] = React.useState(false);
 	const [data, setData] = React.useState('false');
 	const [tagObject, setTagObject] = React.useState();
@@ -36,6 +37,19 @@ export default FavoriteFeeds = ({route}) => {
 	React.useEffect(() => {
 		getList();
 	}, []);
+
+	React.useEffect(()=>{
+		const unsubscribe = navigation.addListener('focus', () => {
+			setFocused(true);
+		});
+		return unsubscribe;
+	},[navigation]);
+	React.useEffect(()=>{
+		const unsubscribe = navigation.addListener('blur', () => {
+			setFocused(false);
+		});
+		return unsubscribe;
+	},[navigation]);
 
 	const getList = refresh => {
 		setLoading(true);
@@ -298,7 +312,7 @@ export default FavoriteFeeds = ({route}) => {
 					}
 				},
 				err => {
-					Modal.alert('err / getUserProfile / FavoriteFeeds ' + err);
+					Modal.popOneBtn(NETWORK_ERROR, '확인', Modal.close);
 					console.log('err getUserProfile / FavoriteFeeds ', err);
 				},
 			);
@@ -338,7 +352,7 @@ export default FavoriteFeeds = ({route}) => {
 					{data.length == 0 ? (
 						<ListEmptyInfo text={emptyMsg()} />
 					) : (
-						<FeedThumbnailList items={data} selectMode={selectMode} onClickThumnail={onClickThumnail} onEndReached={onEndReached} />
+						<FeedThumbnailList items={data} selectMode={selectMode} onClickThumnail={onClickThumnail} onEndReached={onEndReached} focused={focused}/>
 					)}
 				</View>
 				{loading ? (

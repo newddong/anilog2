@@ -7,40 +7,17 @@ import {FavoriteTag48_Border, FavoriteTag48_Filled, Meatball50_GRAY20_Horizontal
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {GRAY10, WHITE} from 'Root/config/color';
-import {
-	FEED_MEATBALL_MENU,
-	FEED_MEATBALL_MENU_FOLLOWING,
-	FEED_MEATBALL_MENU_FOLLOWING_UNFAVORITE,
-	FEED_MEATBALL_MENU_MY_FEED,
-	FEED_MEATBALL_MENU_MY_FEED_WITH_STATUS,
-	FEED_MEATBALL_MENU_UNFOLLOWING,
-	FEED_MEATBALL_MENU_UNFOLLOWING_UNFAVORITE,
-	REPORT_MENU,
-	SHARE,
-} from 'Root/i18n/msg';
+import {FEED_MEATBALL_MENU_MY_FEED, REPORT_MENU} from 'Root/i18n/msg';
 import {MAINCOLOR} from 'Root/config/color';
 import HashText from 'Molecules/info/HashText';
 import Modal from 'Root/component/modal/Modal';
-import {createMemoBox, followUser, getAnimalListNotRegisterWithCompanion, getFollows, unFollowUser} from 'Root/api/userapi';
+import {createMemoBox, followUser, getFollows, unFollowUser} from 'Root/api/userapi';
 import {deleteFeed, favoriteFeed, getFavoriteFeedListByUserId} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import MissingReportInfo from 'Organism/info/MissingReportInfo';
 import {createReport} from 'Root/api/report';
-import {
-	getStringLength,
-	getLinesOfString,
-	count_to_K,
-	getByteSubtring,
-	getByteCharAt,
-	findByteIndex,
-	findByteLastIndex,
-	findNearSpace,
-	splitStr,
-	extractTags,
-} from 'Root/util/stringutil';
+import {getLinesOfString, count_to_K} from 'Root/util/stringutil';
 import FeedMedia from 'Molecules/media/FeedMedia';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {object} from 'prop-types';
 import feed_obj from 'Root/config/feed_obj';
 
 export default FeedContent = props => {
@@ -78,6 +55,7 @@ export default FeedContent = props => {
 		feed_avatar_id,
 		is_favorite,
 	} = props.data;
+	const [data, setData] = React.useState(props.data);
 	const navigation = useNavigation();
 	const route = useRoute();
 	const [pressed, setPressed] = React.useState(false); //더보기 Arrow방향 false면 아래
@@ -90,13 +68,19 @@ export default FeedContent = props => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			setPressed(false);
-			const findIndex = feed_obj.list.findIndex(e => e._id == props.data._id);
+			const findIndex = feed_obj.list.findIndex(e => e._id == _id);
 			if (findIndex != -1) {
-				// console.log('is_favorite', feed_content, feed_obj.list[findIndex].is_favorite);
 				setCommentCount(feed_obj.list[findIndex].feed_comment_count);
 				setIsFavorite(feed_obj.list[findIndex].is_favorite);
+				if (feed_obj.shouldUpdateByEdit && feed_obj.edit_obj && feed_obj.edit_obj._id == _id) {
+					// console.log('feed Contentetn : ', feed_content);
+					// console.log('feed_obj.edit_obj', feed_obj.edit_obj?.missing_animal_lost_location);
+					setData(feed_obj.edit_obj);
+					feed_obj.shouldUpdateByEdit = false;
+					feed_obj.edit_obj = {};
+				}
 			} else {
-				console.log('@@@@@@@@@@@@@@@@@@@@@@@', feed_content, is_favorite);
+				// console.log('FeedContent 전역찾기', feed_content, is_favorite);
 			}
 		});
 		return unsubscribe;
@@ -533,27 +517,28 @@ export default FeedContent = props => {
 	};
 
 	const onPressPhoto = () => {
-		console.log('props', route.name);
-		if (feed_type == 'report' || feed_type == 'missing') {
-			if (feed_type == 'report') {
-				navigation.navigate('ReportDetail', {_id: _id});
-			} else {
-				let sexValue = '';
-				switch (missing_animal_sex) {
-					case 'male':
-						sexValue = '남';
-						break;
-					case 'female':
-						sexValue = '여';
-						break;
-					case 'unknown':
-						sexValue = '성별모름';
-						break;
-				}
-				const titleValue = missing_animal_species + '/' + missing_animal_species_detail + '/' + sexValue;
-				navigation.navigate('MissingAnimalDetail', {title: titleValue, _id: _id});
-			}
-		}
+		props.onPressPhoto(props.data);
+		// console.log('props', route.name);
+		// if (feed_type == 'report' || feed_type == 'missing') {
+		// 	if (feed_type == 'report') {
+		// 		navigation.navigate('ReportDetail', {_id: _id});
+		// 	} else {
+		// 		let sexValue = '';
+		// 		switch (missing_animal_sex) {
+		// 			case 'male':
+		// 				sexValue = '남';
+		// 				break;
+		// 			case 'female':
+		// 				sexValue = '여';
+		// 				break;
+		// 			case 'unknown':
+		// 				sexValue = '성별모름';
+		// 				break;
+		// 		}
+		// 		const titleValue = missing_animal_species + '/' + missing_animal_species_detail + '/' + sexValue;
+		// 		navigation.navigate('MissingAnimalDetail', {title: titleValue, _id: _id});
+		// 	}
+		// }
 	};
 
 	const onPressLabel = user => {
@@ -639,7 +624,7 @@ export default FeedContent = props => {
 				{props.showMedia ? (
 					<>
 						<View style={[style.feedMedia_feed]}>
-							<FeedMedia data={props.data} onPressPhoto={onPressPhoto} isView={props.isView} />
+							<FeedMedia data={data} onPressPhoto={onPressPhoto} isView={props.isView} />
 						</View>
 						<View style={[feed_templete_style.likeCommentButtons_view]}>
 							<View style={[feed_templete_style.likeCommentInfo_view_feed]}>
@@ -707,7 +692,7 @@ export default FeedContent = props => {
 							onMoreView={() => {
 								setShow(true);
 							}}>
-							{feed_content || ''}
+							{data.feed_content || ''}
 						</HashText>
 					</View>
 				)}
@@ -724,6 +709,7 @@ FeedContent.defaultProps = {
 		content: 'comment 내용을 넣어야 합니다.',
 	},
 	deleteFeed: () => {},
+	onPressPhoto: () => {},
 	showMedia: true,
 };
 

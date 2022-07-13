@@ -35,18 +35,26 @@ export default Profile = ({route}) => {
 	const flatlist = React.useRef();
 	const userId = route.params.userobject._id; //현재 보고있는 프로필 대상의 _id
 	const [tabMenuSelected, setTabMenuSelected] = React.useState(0); //프로필 Tab의 선택상태
-
+	const [focused, setFocused] = React.useState(false);
 	React.useEffect(() => {
 		//페이지 포커스 시 프로필 데이터 및 하단 탭 데이터 갱신
 		const unsubscribe = navigation.addListener('focus', () => {
 			fetchData();
+			setFocused(true);
 			setPressed(false);
 			if (data.user_type == 'shelter') {
 				fetchProtectRequest();
 			}
 		});
 		return unsubscribe;
-	}, []);
+	}, [route]);
+
+	React.useEffect(()=>{
+		const unsubscribe = navigation.addListener('blur', () => {
+			setFocused(false);
+		});
+		return unsubscribe;
+	},[navigation])
 
 	//유저프로필 데이터 수신
 	const fetchData = () => {
@@ -442,6 +450,7 @@ export default Profile = ({route}) => {
 							whenEmpty={whenFeedThumbnailEmpty('피드 게시물이 없습니다.')}
 							onClickThumnail={onClick_Thumbnail_FeedTab}
 							onEndReached={() => onEndReached(tabMenuSelected)}
+							focused={focused}
 						/>
 					);
 				} else if (tabMenuSelected == 1) {
@@ -451,6 +460,7 @@ export default Profile = ({route}) => {
 							whenEmpty={whenFeedThumbnailEmpty('태그된 게시물이 없습니다.')}
 							onClickThumnail={onClick_Thumbnail_TagTab}
 							onEndReached={() => onEndReached(tabMenuSelected)}
+							focused={focused}
 						/>
 					);
 				} else {
@@ -463,6 +473,7 @@ export default Profile = ({route}) => {
 							items={item}
 							whenEmpty={whenFeedThumbnailEmpty('피드 게시물이 없습니다.')}
 							onClickThumnail={onClick_Thumbnail_FeedTab}
+							focused={focused}
 						/>
 					);
 				}
@@ -473,6 +484,7 @@ export default Profile = ({route}) => {
 							items={item}
 							whenEmpty={whenFeedThumbnailEmpty('피드 게시물이 없습니다.')}
 							onClickThumnail={onClick_Thumbnail_FeedTab}
+							focused={focused}
 						/>
 					);
 				} else if (tabMenuSelected == 1) {
@@ -481,6 +493,7 @@ export default Profile = ({route}) => {
 							items={item}
 							whenEmpty={whenFeedThumbnailEmpty('태그된 게시물이 없습니다.')}
 							onClickThumnail={onClick_Thumbnail_TagTab}
+							focused={focused}
 						/>
 					);
 				} else {

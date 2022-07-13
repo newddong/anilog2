@@ -21,7 +21,6 @@ import X2JS from 'x2js';
  * }} props
  */
 export default FeedMedia = props => {
-	// console.log(props.data);
 	const {
 		feed_content,
 		feed_thumbnail,
@@ -54,6 +53,7 @@ export default FeedMedia = props => {
 		feed_writer_id,
 		feed_avatar_id,
 	} = props.data;
+
 	const navigation = useNavigation();
 
 	const emergency_title = feed_type == 'report' ? '제보' : feed_type == 'missing' ? '실종' : '';
@@ -73,8 +73,12 @@ export default FeedMedia = props => {
 		newMissingDate = newMissingDateText[0] + '.' + newMissingDateText[1] + '.' + newMissingDateText[2].toString().substring(0, 2);
 		// splitAddress = missing_animal_lost_location.split('"');
 		// newMissingAddress = splitAddress[11];
-		const parsed = JSON.parse(missing_animal_lost_location);
-		newMissingAddress = parsed?.city + ' ' + parsed?.district;
+		if (typeof missing_animal_lost_location == 'object') {
+			newMissingAddress = missing_animal_lost_location?.city + ' ' + missing_animal_lost_location?.district;
+		} else {
+			const parsed = JSON.parse(missing_animal_lost_location);
+			newMissingAddress = parsed?.city + ' ' + parsed?.district;
+		}
 	}
 	if (feed_type == 'report') {
 		const newMissingDateText = report_witness_date.toString().split('-');

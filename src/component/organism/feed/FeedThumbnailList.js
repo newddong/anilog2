@@ -18,7 +18,7 @@ export default FeedThumbnailList = props => {
 	const keyExtractor = (item, index) => index + '';
 
 	const renderItem = ({item, index}) => {
-		return <FeedThumnail data={item} onSelect={() => {props.onClickThumnail(index, item)}} selectMode={props.selectMode} />;
+		return props.focused&&<FeedThumnail data={item} onSelect={() => {props.onClickThumnail(index, item)}} selectMode={props.selectMode} />;
 	};
 	return (
 		<View style={[{marginBottom: 0}, {minHeight: props?.height}, {marginTop: 0 * DP}]}>

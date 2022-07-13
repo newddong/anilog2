@@ -115,14 +115,25 @@ export default PhotoTagItem = ({isVideo,onShow,uri, data, taglist, onMakeTag, on
 		return (
 			<View style={{justifyContent: 'center', alignItems: 'center'}}>
 				<Video
-					style={styles.img_square_round_694}
+					style={[styles.img_square_round_694,{backgroundColor:'#000'}]}
 					source={{uri: uri}}
 					paused={!onShow}
-					// paused={false}
 					muted={mute}
 					useTextureView={Platform.OS!='android'}
 					repeat={true}
 					resizeMode="contain"
+					maxBitRate={2000000}
+					disableDisconnectError={true}
+					selectedVideoTrack={{type:'resolution',value:720}}
+					bufferConfig={{
+						minBufferMs:15000,
+						maxBufferMs:50000,
+						bufferForPlaybackMs:2500,
+						bufferForPlaybackAfterRebufferMs: 5000,
+						maxHeapAllocationPercent: 0.1,
+						minBackBufferMemoryReservePercent: 0.1,
+						minBufferMemoryReservePercent:0.6
+					}}
 				/>
 				<View style={{position: 'absolute', top: 20 * DP, left: 20 * DP}}>
 					{mute ? <VideoMute66 onPress={toggleMute} /> : <VideoSound66 onPress={toggleMute} />}

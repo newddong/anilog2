@@ -551,8 +551,9 @@ export default FeedList = ({route}) => {
 		);
 	};
 	const [viewIndex, setViewIndex] = React.useState([]);
-	const renderItem = ({item, index}) => {
-		return <Feed data={item} deleteFeed={deleteFeedItem} isView={focused && viewIndex.some(v => v.index == index)} onPressPhoto={onPressPhoto} />;
+	const renderItem = ({item,index}) => {
+		return (<Feed data={item} deleteFeed={deleteFeedItem} isView={focused&&viewIndex==index}/>);
+		// return (focused&&<View style={{backgroundColor:viewIndex==index?'red':'blue'}}><Feed data={item} deleteFeed={deleteFeedItem} isView={focused&&viewIndex==index}/></View>);
 	};
 
 	const wait = timeout => {
@@ -606,11 +607,16 @@ export default FeedList = ({route}) => {
 	const [testTx, setTx] = React.useState('한');
 	const [code, setCode] = React.useState(62);
 	const viewable = React.useCallback(e => {
-		setViewIndex(e.viewableItems);
+		console.log('viewable',e);
+		setViewIndex(e.viewableItems[0]?.index);
 	}, []);
+	const separatorComp = React.useCallback(()=>{
+		return <View style={[{height:10*DP,backgroundColor:GRAY30, width:750*DP}]}/>
+	},[])
+
 	return (
 		<View style={[login_style.wrp_main, {flex: 1, backgroundColor: WHITE}, {borderTopWidth: 2 * DP}, {borderTopColor: GRAY30}]}>
-			<FlatList
+			{<FlatList
 				data={feedList}
 				renderItem={renderItem}
 				keyExtractor={keyExtractor}
@@ -621,21 +627,18 @@ export default FeedList = ({route}) => {
 				refreshing
 				extraData={refresh}
 				onScroll={rememberScroll}
-				ItemSeparatorComponent={({highlited}) => (
-					<View style={[{alignItems: 'center'}]}>
-						<View style={{height: 10 * DP, backgroundColor: GRAY30, width: 750 * DP}}></View>
-					</View>
-				)}
+				ItemSeparatorComponent={separatorComp}
 				onViewableItemsChanged={viewable}
-				viewabilityConfig={{waitForInteraction: false, viewAreaCoveragePercentThreshold: 40, minimumViewTime: 0}}
-				windowSize={20}
+				viewabilityConfig={{waitForInteraction: false,
+					viewAreaCoveragePercentThreshold: 50,minimumViewTime:1}}
+				windowSize={4}
 				decelerationRate={0.9}
 				maxToRenderPerBatch={5}
-				updateCellsBatchingPeriod={0}
-				initialNumToRender={5}
+				updateCellsBatchingPeriod={10}
+				initialNumToRender={2}
 				onEndReachedThreshold={0.6}
 				onEndReached={onEndReached}
-			/>
+			/>}
 			{userGlobalObject.userInfo && (
 				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}]}>
 					{/* <View

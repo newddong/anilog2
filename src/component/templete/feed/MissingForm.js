@@ -49,24 +49,33 @@ export default MissingForm = props => {
 
 	React.useEffect(() => {
 		if (props.routeName == 'FeedEdit') {
-			const stringToJson = JSON.parse(route.params.missing_animal_lost_location);
-			console.log('stringToJson', stringToJson);
-			setData({
-				...data,
-				missing_animal_species: route.params.missing_animal_species,
-				missing_animal_species_detail: route.params.missing_animal_species_detail,
-				missing_animal_sex: route.params.missing_animal_sex,
-				missing_animal_age: route.params.missing_animal_age,
-				missing_animal_lost_location: {
-					city: stringToJson.city,
-					district: stringToJson.district,
-					detail: stringToJson.detail,
-				},
-				missing_animal_features: route.params.missing_animal_features,
-				missing_animal_date: route.params.missing_animal_date,
-				missing_animal_contact: route.params.missing_animal_contact,
-				type: types[0],
-			});
+			try {
+				let stringToJson = {};
+				if (typeof route.params.missing_animal_lost_location == 'object') {
+					stringToJson = route.params.missing_animal_lost_location;
+				} else {
+					stringToJson = JSON.parse(route.params.missing_animal_lost_location);
+				}
+				console.log('stringToJson', stringToJson);
+				setData({
+					...data,
+					missing_animal_species: route.params.missing_animal_species,
+					missing_animal_species_detail: route.params.missing_animal_species_detail,
+					missing_animal_sex: route.params.missing_animal_sex,
+					missing_animal_age: route.params.missing_animal_age,
+					missing_animal_lost_location: {
+						city: stringToJson.city,
+						district: stringToJson.district,
+						detail: stringToJson.detail,
+					},
+					missing_animal_features: route.params.missing_animal_features,
+					missing_animal_date: route.params.missing_animal_date,
+					missing_animal_contact: route.params.missing_animal_contact,
+					type: types[0],
+				});
+			} catch (err) {
+				console.log('err', err);
+			}
 		}
 	}, []);
 

@@ -31,10 +31,13 @@ export default MissingReportList = props => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			if (feed_obj.deleted_obj != {}) {
 				try {
-					console.log('feed_obj.deleted_obj', feed_obj.deleted_obj);
-					//삭제된 실종,제보 반영
-					setData(data.filter(e => e._id != feed_obj.deleted_obj._id));
-					feed_obj.deleted_obj = {};
+					if (data != 'false') {
+						console.log('feed_obj.deleted_obj', feed_obj.deleted_obj);
+						//삭제된 실종,제보 반영
+						console.log('data', data.length);
+						setData(data.filter(e => e._id != feed_obj.deleted_obj._id));
+						feed_obj.deleted_obj = {};
+					}
 				} catch (err) {
 					console.log('err', err);
 				}

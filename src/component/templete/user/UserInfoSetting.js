@@ -343,6 +343,7 @@ export default UserInfoSetting = ({route}) => {
 					districts => {
 						setDistrict(districts.msg);
 						// console.log()
+						setNewDistrict(districts.msg[0]);
 						// setData({...data, user_address: {...data.user_address, city: selected, district: districts.msg[0]}});
 						setNewCity(selected);
 						Modal.close();
@@ -359,7 +360,7 @@ export default UserInfoSetting = ({route}) => {
 			'시,군,구를 선택',
 			selected => {
 				getAddressList(
-					{city: data.user_address.city, district: selected},
+					{city: data.user_address.city},
 					// neighbor => {
 					// 	setDistrict(neighbor.msg);
 					// 	setData({...data, user_address: {...data.user_address, city: data.user_address.city, district: selected}});
@@ -604,10 +605,17 @@ export default UserInfoSetting = ({route}) => {
 							</View>
 							<View style={[styles.addressSelect]}>
 								<View style={[{marginRight: 20 * DP}]}>
-									<SelectInput onPressInput={onSelectCity} width={284} height={108} value={newCity} noBorder={true} fontSize={28} />
+									<SelectInput onPressInput={onSelectCity} width={284} height={108} value={newCity || '광역시, 도'} noBorder={true} fontSize={28} />
 								</View>
 								<View>
-									<SelectInput onPressInput={onSelectDistrict} width={284} height={108} value={newDistrict} noBorder={true} fontSize={28} />
+									<SelectInput
+										onPressInput={onSelectDistrict}
+										width={284}
+										height={108}
+										value={newDistrict || '시, 군, 구'}
+										noBorder={true}
+										fontSize={28}
+									/>
 								</View>
 							</View>
 						</View>

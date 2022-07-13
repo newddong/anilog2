@@ -98,13 +98,17 @@ export default FeedList = ({route}) => {
 			setFocused(true);
 			if (feed_obj.deleted_obj) {
 				//삭제된 실종,제보 반영
-				console.log('feedList', feedList.length);
-				// setFeed(data.filter(e => e._id != feed_obj.deleted_obj._id));
-				// feed_obj.deleted_obj = {};
+				try {
+					console.log('feedList when deleted_obj', feedList.length);
+					setFeed(feedList.filter(e => e._id != feed_obj.deleted_obj._id));
+					feed_obj.deleted_obj = {};
+				} catch (err) {
+					console.log('err', err);
+				}
 			}
 		});
 		return unsubscribe;
-	}, []);
+	}, [feedList]);
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('blur', () => {
@@ -425,11 +429,16 @@ export default FeedList = ({route}) => {
 					{userobject_id: userGlobalObject.userInfo._id},
 					({msg}) => {
 						// console.log('msg', msg);
-						let temp = msg.filter(x => x.favorite_feed_id.feed_is_delete != true).map(data => data.favorite_feed_id);
-						msg.map((v, i) => {
+						// let temp = msg.filter(x => x.favorite_feed_id.feed_is_delete != true).map(data => data.favorite_feed_id);
+						let temp = msg;
+						console.log('msg len', msg.length);
+						console.log('temp len', temp.length);
+						temp.map((v, i) => {
+							// console.log('v.temp[i]', temp[i].feed_is_like);
 							temp[i].feed_is_like = v.feed_is_like;
 							temp[i].is_favorite = v.is_favorite;
 						});
+						temp = temp.filter(x => x.favorite_feed_id.feed_is_delete != true).map(data => data.favorite_feed_id);
 						// console.log('temp temp', temp, msg);
 						setFeed(temp);
 					},
@@ -607,7 +616,7 @@ export default FeedList = ({route}) => {
 	const [testTx, setTx] = React.useState('한');
 	const [code, setCode] = React.useState(62);
 	const viewable = React.useCallback(e => {
-		console.log('viewable', e);
+		// console.log('viewable', e);
 		setViewIndex(e.viewableItems[0]?.index);
 	}, []);
 	const separatorComp = React.useCallback(() => {

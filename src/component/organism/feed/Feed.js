@@ -114,7 +114,7 @@ export default Feed = React.memo(props => {
 				isLike={isLike}
 				likeCount={likeCount}
 				isView={props.isView}
-				onPressPhoto={props.onPressPhoto}
+				onPressPhoto={props.onPressPhoto && props.onPressPhoto}
 			/>
 			{/* 270DP */}
 			<View style={[feed_templete_style.comment_feed_view]}>

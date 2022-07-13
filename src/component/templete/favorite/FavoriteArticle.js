@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, TextInput, View} from 'react-native';
 import DP from 'Root/config/dp';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import {getFavoriteEtcListByUserId, setFavoriteEtcCancelList} from 'Root/api/favoriteetc';
@@ -75,7 +75,7 @@ export default FavoriteArticle = ({route, isFavorite}) => {
 					},
 					result => {
 						setTotal(result.total_count);
-						console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg);
+						// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg);
 						let articleList = [];
 						result.msg.map((v, i) => {
 							if (v.favorite_etc_target_object_id.community_type == 'free' && v.favorite_etc_target_object_id.community_is_delete != true) {

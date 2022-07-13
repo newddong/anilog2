@@ -32,7 +32,6 @@ const NewMissingReportList = props => {
 		// getList();
 		const unsubscribe = navigation.addListener('focus', () => {
 			// setShowActionButton(false);
-			console.log('foucsued');
 			getList();
 		});
 		getList('first');

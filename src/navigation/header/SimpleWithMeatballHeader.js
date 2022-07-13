@@ -13,9 +13,11 @@ import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import protect_obj, {updateProtect} from 'Root/config/protect_obj';
 import {GRAY30, WHITE} from 'Root/config/color';
 import feed_obj from 'Root/config/feed_obj';
+import {useNavigation} from '@react-navigation/core';
 
 //보호 요청게시글 및 제보, 실종글 작성자일 경우 미트볼 아이콘 출력이 되는 헤더
-export default SimpleWithMeatballHeader = ({navigation, route, options, back}) => {
+export default SimpleWithMeatballHeader = ({route, options, back}) => {
+	const navigation = useNavigation();
 	const isProtect = route.params?.isMissingOrReport;
 	// console.log('simple Animal', route.params);
 	const [favoriteTag, setFavoriteTag] = React.useState(false);
@@ -23,13 +25,12 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 	//즐겨찾기 상태 아이콘 출력인 경우
 	React.useEffect(() => {
 		if (route.params.request_object) {
-			console.log('route.params.request_object?.protect_request_is_favorite ', route.params.request_object?.protect_request_is_favorite);
+			// console.log('route.params.request_object?.protect_request_is_favorite ', route.params.request_object?.protect_request_is_favorite);
 			!route.params.request_object?.protect_request_is_favorite ? setFavoriteTag(false) : setFavoriteTag(true);
 		} else if (route.params.feed_object) {
 			// console.log('is_favorite feed_object', route.params.feed_object);
 			const find = feed_obj.list.findIndex(e => e._id == route.params.feed_object._id);
 			if (find != -1) {
-				console.log('favo?', feed_obj.list[find].is_favorite);
 				setFavoriteTag(feed_obj.list[find].is_favorite);
 			}
 			// !route.params.feed_object?.is_favorite ? setFavoriteTag(false) : setFavoriteTag(true);
@@ -133,62 +134,78 @@ export default SimpleWithMeatballHeader = ({navigation, route, options, back}) =
 
 	//제보 실종 미트볼 메뉴 - 삭제 클릭
 	const onPressDeleteFeed = () => {
-		console.log('삭제 제보 실종', route.params);
-
-		Modal.close();
-		setTimeout(() => {
-			Modal.popTwoBtn(
-				'정말로 이 게시글을 \n 삭제하시겠습니까?',
-				'아니오',
-				'예',
-				() => Modal.close(),
-				() => {
-					Modal.close();
-					setTimeout(() => {
-						Modal.popLoading(true);
-						deleteFeed(
-							{feed_object_id: route.params._id},
-							result => {
-								console.log('result / DeleteFeed / FeedContent : ', result.msg);
-								Modal.close();
-								navigation.goBack();
-							},
-							err => {
-								console.log('err / DeleteFeed / FeedContent : ', err);
-								Modal.alert(NETWORK_ERROR);
-							},
-						);
-					}, 100);
-				},
-			);
-		}, 200);
+		try {
+			// console.log('삭제 제보 실종', route.params._id, route.params?.feed_object.feed_content);
+			Modal.close();
+			setTimeout(() => {
+				Modal.popTwoBtn(
+					'정말로 이 게시글을 \n 삭제하시겠습니까?',
+					'아니오',
+					'예',
+					() => Modal.close(),
+					() => {
+						Modal.close();
+						setTimeout(() => {
+							Modal.popLoading(true);
+							deleteFeed(
+								{feed_object_id: route.params._id},
+								result => {
+									// console.log('result / DeleteFeed / SimpleWithMeatballHeader : ', result.msg);
+									Modal.close();
+									feed_obj.deleted_obj = route.params?.feed_object;
+									// console.log('navi', JSON.stringify(navigation.getState()));
+									const tr = {
+										stale: false,
+										type: 'stack',
+										key: 'stack-_ualUkbrTqE6NUPyGIfor',
+										index: 1,
+										routes: [
+											{
+												key: 'ProtectionTab-LcAivqJmOGHGN9CrIvv_E',
+												name: 'ProtectionTab',
+												state: {
+													stale: false,
+													type: 'tab',
+													key: 'tab-bTOYiZi04DI7LapZElxqZ',
+													index: 1,
+													routeNames: ['ProtectRequestList', 'MissingReportList'],
+													history: [
+														{type: 'route', key: 'ProtectRequestList-Hfxl85jqWJx4u5C87S13w'},
+														{type: 'route', key: 'MissingReportList-36xWZJypAIw0283zA3DX4'},
+													],
+													routes: [
+														{name: 'ProtectRequestList', key: 'ProtectRequestList-Hfxl85jqWJx4u5C87S13w'},
+														{name: 'MissingReportList', key: 'MissingReportList-36xWZJypAIw0283zA3DX4'},
+													],
+												},
+											},
+											{
+												key: 'ReportDetail-HoRHRtamS7J_z6d9OdoKi',
+												name: 'ReportDetail',
+												params: {},
+											},
+										],
+									};
+									navigation.goBack();
+								},
+								err => {
+									console.log('err / DeleteFeed / SimpleWithMeatballHeader : ', err);
+									Modal.alert(NETWORK_ERROR);
+								},
+							);
+						}, 100);
+					},
+				);
+			}, 200);
+		} catch (err) {
+			console.log('err / SimpleWith', err);
+		}
 	};
 
 	//게시글 삭제
 	const onPressDelete = () => {
 		Modal.close();
 		setTimeout(() => {
-			// Modal.popTwoBtn(
-			// 	'이 게시글을 삭제하시겠습니까?',
-			// 	'아니오',
-			// 	'삭제',
-			// 	() => Modal.close(),
-			// 	() => {
-			// 		deleteProtectRequest(
-			// 			{
-			// 				protect_request_object_id: route.params.id,
-			// 			},
-			// 			result => {
-			// 				console.log('result / deleteProtectRequest / SimpleWithMeatBallHeader  : ', result.msg.protect_request_is_delete);
-			// 				navigation.goBack(); //뒤로 가기
-			// 			},
-			// 			err => {
-			// 				console.log('err /deleteProtectRequest / SimpleWithMeatBallHeader  :  ', err);
-			// 			},
-			// 		);
-			// 		Modal.close();
-			// 	},
-			// );
 			Modal.popOneBtn('이 게시글을 삭제하시겠습니까?', '삭제', () => {
 				deleteProtectRequest(
 					{

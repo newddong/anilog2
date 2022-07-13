@@ -143,8 +143,6 @@ const CommunityList = React.memo(props => {
 
 	//리스트 페이징 작업
 	const onEndReached = commtype => {
-		console.log('@@@@@@@@@@@@@@@ tyoe', type);
-		console.log('@#@#@#@#@#@# commtype', commtype);
 		if (commtype == 'free') {
 			console.log('EndReached Free', free.length % FREE_LIMIT);
 			//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요

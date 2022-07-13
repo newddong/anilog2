@@ -298,7 +298,7 @@ export default FavoriteFeeds = ({route}) => {
 					}
 				},
 				err => {
-					Modal.alert('err / getUserProfile / FavoriteFeeds ' + err);
+					Modal.popOneBtn(NETWORK_ERROR, '확인', Modal.close);
 					console.log('err getUserProfile / FavoriteFeeds ', err);
 				},
 			);

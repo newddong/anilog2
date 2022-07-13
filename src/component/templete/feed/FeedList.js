@@ -551,8 +551,8 @@ export default FeedList = ({route}) => {
 		);
 	};
 	const [viewIndex, setViewIndex] = React.useState([]);
-	const renderItem = ({item,index}) => {
-		return (<Feed data={item} deleteFeed={deleteFeedItem} isView={focused&&viewIndex==index}/>);
+	const renderItem = ({item, index}) => {
+		return <Feed data={item} deleteFeed={deleteFeedItem} isView={focused && viewIndex == index} onPressPhoto={onPressPhoto} />;
 		// return (focused&&<View style={{backgroundColor:viewIndex==index?'red':'blue'}}><Feed data={item} deleteFeed={deleteFeedItem} isView={focused&&viewIndex==index}/></View>);
 	};
 
@@ -607,38 +607,39 @@ export default FeedList = ({route}) => {
 	const [testTx, setTx] = React.useState('한');
 	const [code, setCode] = React.useState(62);
 	const viewable = React.useCallback(e => {
-		console.log('viewable',e);
+		console.log('viewable', e);
 		setViewIndex(e.viewableItems[0]?.index);
 	}, []);
-	const separatorComp = React.useCallback(()=>{
-		return <View style={[{height:10*DP,backgroundColor:GRAY30, width:750*DP}]}/>
-	},[])
+	const separatorComp = React.useCallback(() => {
+		return <View style={[{height: 10 * DP, backgroundColor: GRAY30, width: 750 * DP}]} />;
+	}, []);
 
 	return (
 		<View style={[login_style.wrp_main, {flex: 1, backgroundColor: WHITE}, {borderTopWidth: 2 * DP}, {borderTopColor: GRAY30}]}>
-			{<FlatList
-				data={feedList}
-				renderItem={renderItem}
-				keyExtractor={keyExtractor}
-				refreshControl={route.name == 'MainHomeFeedList' ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} /> : <></>}
-				getItemLayout={getItemLayout}
-				ListHeaderComponent={route.name == 'MainHomeFeedList' ? MissingReport() : false}
-				ref={flatlist}
-				refreshing
-				extraData={refresh}
-				onScroll={rememberScroll}
-				ItemSeparatorComponent={separatorComp}
-				onViewableItemsChanged={viewable}
-				viewabilityConfig={{waitForInteraction: false,
-					viewAreaCoveragePercentThreshold: 50,minimumViewTime:1}}
-				windowSize={4}
-				decelerationRate={0.9}
-				maxToRenderPerBatch={5}
-				updateCellsBatchingPeriod={10}
-				initialNumToRender={2}
-				onEndReachedThreshold={0.6}
-				onEndReached={onEndReached}
-			/>}
+			{
+				<FlatList
+					data={feedList}
+					renderItem={renderItem}
+					keyExtractor={keyExtractor}
+					refreshControl={route.name == 'MainHomeFeedList' ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} /> : <></>}
+					getItemLayout={getItemLayout}
+					ListHeaderComponent={route.name == 'MainHomeFeedList' ? MissingReport() : false}
+					ref={flatlist}
+					refreshing
+					extraData={refresh}
+					onScroll={rememberScroll}
+					ItemSeparatorComponent={separatorComp}
+					onViewableItemsChanged={viewable}
+					viewabilityConfig={{waitForInteraction: false, viewAreaCoveragePercentThreshold: 50, minimumViewTime: 1}}
+					windowSize={4}
+					decelerationRate={0.9}
+					maxToRenderPerBatch={5}
+					updateCellsBatchingPeriod={10}
+					initialNumToRender={2}
+					onEndReachedThreshold={0.6}
+					onEndReached={onEndReached}
+				/>
+			}
 			{userGlobalObject.userInfo && (
 				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}]}>
 					{/* <View

@@ -708,6 +708,7 @@ FeedContent.defaultProps = {
 		content: 'comment 내용을 넣어야 합니다.',
 	},
 	deleteFeed: () => {},
+	onPressPhoto: () => {},
 	showMedia: true,
 };
 

@@ -113,6 +113,8 @@ export default ReportForm = props => {
 			console.log('data.report_location.city', data.report_location.city);
 			const parsedCity = parsingCityName(data.report_location?.city);
 			console.log('parsedCity', parsedCity);
+			if (parsedCity != undefined) {
+			}
 			getAddressList(
 				{
 					city: parsedCity,

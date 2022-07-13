@@ -81,12 +81,14 @@ export default function BottomTab({state, descriptors, navigation, focus}) {
 	// 댓글 수정 => 키보드 해제시 수정모드가 종료되도록 적용
 	KeyBoardEvent(
 		() => {
-			setTimeout(
-				() => {
-					setKeyboardVisible(true);
-				},
-				Platform.OS == 'android' ? 150 : 0,
-			);
+			if (nestedRouteName != 'ServiceTab') {
+				setTimeout(
+					() => {
+						setKeyboardVisible(true);
+					},
+					Platform.OS == 'android' ? 150 : 0,
+				);
+			}
 		},
 		() => {
 			setKeyboardVisible(false);

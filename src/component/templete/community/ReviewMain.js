@@ -293,10 +293,11 @@ export default ReviewMain = ({route}) => {
 				is_favorite: bool,
 			},
 			result => {
-				console.log('result / favoriteEtc / ArticleDetail : ', result.msg.favoriteEtc);
+				console.log('result / favoriteEtc / ReviewMain : ', result.msg.favoriteEtc);
+				updateReview(false, data[index]._id, bool);
 				// setData({...data, })
 			},
-			err => console.log('err / favoriteEtc / ArticleDetail : ', err),
+			err => console.log('err / favoriteEtc / ReviewMain : ', err),
 		);
 	};
 

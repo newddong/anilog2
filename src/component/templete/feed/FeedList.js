@@ -35,8 +35,6 @@ export default FeedList = ({route}) => {
 	const [total, setTotal] = React.useState();
 	const [refreshing, setRefreshing] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
-	// const [topList, setTopList] = React.useState([]);
-	// const [offset, setOffset] = React.useState(1);
 	const flatlist = React.useRef();
 	const [focused, setFocused] = React.useState(true);
 	//피드썸네일 클릭 리스트일 경우
@@ -80,24 +78,9 @@ export default FeedList = ({route}) => {
 		}
 		//feedList의 댓글수, 최근댓글, 좋아요, 즐겨찾기의 전역관리를 위해 api로 호출된 feedList를 메모리에 저장
 		feedList.map((v, i) => {
-			// console.log('v', i, v);
-			if (v.is_favorite) {
-				// console.log('true,', v.feed_content);
-			} else {
-				// console.log('false,', v.feed_content);
-			}
-
 			const find = feed_obj.list.findIndex(e => e._id == v._id);
 			if (find == -1) {
 				//현 메모리에 저장되어 있지않은 피드아이템만 추가
-				// feed_obj.list.push({
-				// 	_id: v._id,
-				// 	feed_recent_comment: v.feed_recent_comment,
-				// 	feed_comment_count: v.feed_comment_count,
-				// 	is_favorite: v.is_favorite,
-				// 	feed_is_like: v.feed_is_like,
-				// 	feed_like_count: v.feed_like_count,
-				// });
 				feed_obj.list.push(v);
 			}
 		});
@@ -107,64 +90,30 @@ export default FeedList = ({route}) => {
 
 	React.useEffect(() => {
 		//페이지 상단 실종,제보 리스트 받아오기
-		if (route.name == 'MainHomeFeedList') {
-			// getMissingReportList(
-			// 	{...topList, limit: PROTECT_REQUEST_MAIN_LIMIT, page: offset},
-			// 	// {request_number: 1000},
-			// 	result => {
-			// 		const res = result.msg;
-			// 		console.log('result', result.msg[0]);
-			// 		// pList(result.msg);
-			// 		if (topList != 'false') {
-			// 			let temp = [...topList];
-			// 			res.map((v, i) => {
-			// 				temp.push(v);
-			// 			});
-			// 			console.log('temp lenth', temp.length);
-			// 			setTopList(temp);
-			// 		} else {
-			// 			setTopList(res);
-			// 		}
-			// 		setOffset(offset + 1);
-			// 	},
-			// 	err => {
-			// 		console.log('getMissingReportList err', err);
-			// 	},
-			// );
-		}
 		getList(); //첫 리스트 받아오기
-		const unsubscribe = navigation.addListener('focus', () => {
-			setFocused(true);
-			if (feed_obj.shouldUpdateByEdit) {
-				//피드 수정후 갱신
-				
-				try {
-					const findindex = feed_obj.list.findIndex(e => e._id == feed_obj.edit_obj._id);
-					let copy = [...feed_obj.list];
-					copy[findindex] = feed_obj.edit_obj;
-					setFeedList(copy);
-					feed_obj.shouldUpdateByEdit = false;
-					feed_obj.edit_obj = {};
-					feed_obj.list = [];
-				} catch (err) {
-					console.log('err', err);
-				}
-			}
-		});
-
-		return unsubscribe;
 	}, [route]);
 
-	React.useEffect(()=>{
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			setFocused(true);
+			if (feed_obj.deleted_obj) {
+				//삭제된 실종,제보 반영
+				console.log('feedList', feedList.length);
+				// setFeed(data.filter(e => e._id != feed_obj.deleted_obj._id));
+				// feed_obj.deleted_obj = {};
+			}
+		});
+		return unsubscribe;
+	}, []);
+
+	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('blur', () => {
 			//동영상 모두 정지로
 			setFocused(false);
-			console.log('feedlist blur')
+			// console.log('feedlist blur');
 		});
 		return unsubscribe;
-	},[navigation])
-
-
+	}, [navigation]);
 
 	React.useEffect(() => {
 		refreshing ? getList(false, false) : false;
@@ -550,6 +499,29 @@ export default FeedList = ({route}) => {
 		}, 100);
 	};
 
+	const onPressPhoto = e => {
+		if (e.feed_type == 'report' || e.feed_type == 'missing') {
+			if (e.feed_type == 'report') {
+				navigation.navigate('ReportDetail', {_id: e._id});
+			} else {
+				let sexValue = '';
+				switch (e.missing_animal_sex) {
+					case 'male':
+						sexValue = '남';
+						break;
+					case 'female':
+						sexValue = '여';
+						break;
+					case 'unknown':
+						sexValue = '성별모름';
+						break;
+				}
+				const titleValue = e.missing_animal_species + '/' + e.missing_animal_species_detail + '/' + sexValue;
+				navigation.navigate('MissingAnimalDetail', {title: titleValue, _id: e._id});
+			}
+		}
+	};
+
 	// 피드 글쓰기 아이콘 클릭
 	const moveToFeedWrite = () => {
 		if (userGlobalObject.userInfo.isPreviewMode) {
@@ -579,8 +551,8 @@ export default FeedList = ({route}) => {
 		);
 	};
 	const [viewIndex, setViewIndex] = React.useState([]);
-	const renderItem = ({item,index}) => {
-		return (<Feed data={item} deleteFeed={deleteFeedItem} isView={focused&&viewIndex==index}/>);
+	const renderItem = ({item, index}) => {
+		return <Feed data={item} deleteFeed={deleteFeedItem} isView={focused && viewIndex == index} onPressPhoto={onPressPhoto} />;
 		// return (focused&&<View style={{backgroundColor:viewIndex==index?'red':'blue'}}><Feed data={item} deleteFeed={deleteFeedItem} isView={focused&&viewIndex==index}/></View>);
 	};
 
@@ -635,38 +607,39 @@ export default FeedList = ({route}) => {
 	const [testTx, setTx] = React.useState('한');
 	const [code, setCode] = React.useState(62);
 	const viewable = React.useCallback(e => {
-		console.log('viewable',e);
+		console.log('viewable', e);
 		setViewIndex(e.viewableItems[0]?.index);
 	}, []);
-	const separatorComp = React.useCallback(()=>{
-		return <View style={[{height:10*DP,backgroundColor:GRAY30, width:750*DP}]}/>
-	},[])
+	const separatorComp = React.useCallback(() => {
+		return <View style={[{height: 10 * DP, backgroundColor: GRAY30, width: 750 * DP}]} />;
+	}, []);
 
 	return (
 		<View style={[login_style.wrp_main, {flex: 1, backgroundColor: WHITE}, {borderTopWidth: 2 * DP}, {borderTopColor: GRAY30}]}>
-			{<FlatList
-				data={feedList}
-				renderItem={renderItem}
-				keyExtractor={keyExtractor}
-				refreshControl={route.name == 'MainHomeFeedList' ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} /> : <></>}
-				getItemLayout={getItemLayout}
-				ListHeaderComponent={route.name == 'MainHomeFeedList' ? MissingReport() : false}
-				ref={flatlist}
-				refreshing
-				extraData={refresh}
-				onScroll={rememberScroll}
-				ItemSeparatorComponent={separatorComp}
-				onViewableItemsChanged={viewable}
-				viewabilityConfig={{waitForInteraction: false,
-					viewAreaCoveragePercentThreshold: 50,minimumViewTime:1}}
-				windowSize={4}
-				decelerationRate={0.9}
-				maxToRenderPerBatch={5}
-				updateCellsBatchingPeriod={10}
-				initialNumToRender={2}
-				onEndReachedThreshold={0.6}
-				onEndReached={onEndReached}
-			/>}
+			{
+				<FlatList
+					data={feedList}
+					renderItem={renderItem}
+					keyExtractor={keyExtractor}
+					refreshControl={route.name == 'MainHomeFeedList' ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} /> : <></>}
+					getItemLayout={getItemLayout}
+					ListHeaderComponent={route.name == 'MainHomeFeedList' ? MissingReport() : false}
+					ref={flatlist}
+					refreshing
+					extraData={refresh}
+					onScroll={rememberScroll}
+					ItemSeparatorComponent={separatorComp}
+					onViewableItemsChanged={viewable}
+					viewabilityConfig={{waitForInteraction: false, viewAreaCoveragePercentThreshold: 50, minimumViewTime: 1}}
+					windowSize={4}
+					decelerationRate={0.9}
+					maxToRenderPerBatch={5}
+					updateCellsBatchingPeriod={10}
+					initialNumToRender={2}
+					onEndReachedThreshold={0.6}
+					onEndReached={onEndReached}
+				/>
+			}
 			{userGlobalObject.userInfo && (
 				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}]}>
 					{/* <View

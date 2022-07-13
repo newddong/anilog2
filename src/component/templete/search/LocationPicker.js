@@ -157,7 +157,6 @@ export default LocationPicker = ({route}) => {
 		if (error == 'blocked') {
 			msg = '현재 해당 앱의 위치서비스 이용이 거절되어 있는 상태입니다. 설정에서 앱에 대한 \n위치서비스를 허용해주세요.';
 		}
-		// console.log('getToSetting @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
 		Modal.popTwoBtn(
 			msg,
 			'취소',

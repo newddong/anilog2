@@ -447,7 +447,6 @@ export default MissingForm = props => {
 		let day = Math.floor(yr * 365);
 		let now = new Date();
 		let birth = new Date(now.setDate(now.getDate() - day));
-		console.log(birth.toISOString());
 		return birth.toISOString().substring(0, 10).replace('-', '.').replace('-', '.');
 	};
 

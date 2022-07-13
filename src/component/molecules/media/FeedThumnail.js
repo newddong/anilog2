@@ -137,7 +137,7 @@ const FeedThumbnail = React.memo(props => {
 							height: 56 * DP,
 							position: 'absolute',
 							justifyContent: 'center',
-							backgroundColor: RED10,
+							backgroundColor: props.data.feed_type == 'report' ? '#FFD153' : RED10,
 							borderTopEndRadius: 20 * DP,
 							borderTopLeftRadius: 20 * DP,
 							right: 0,

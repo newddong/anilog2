@@ -1,40 +1,19 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {
-	Text,
-	View,
-	ScrollView,
-	TouchableOpacity,
-	TextInput,
-	ActivityIndicator,
-	StyleSheet,
-	Keyboard,
-	FlatList,
-	TouchableWithoutFeedback,
-} from 'react-native';
-import {GRAY10, GRAY40, APRI10, GRAY20, BLACK, MAINBLACK} from 'Root/config/color';
+import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet} from 'react-native';
+import {BLACK, MAINBLACK} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
-import moment from 'moment';
 import DP from 'Root/config/dp';
-import {getAllAnnouncement} from 'Root/api/announcement';
 import Modal from 'Component/modal/Modal';
 import SelectInput from 'Component/molecules/button/SelectInput';
 import InputLongText from 'Component/molecules/input/InputLongText';
-import AssignCheckListItem from 'Organism/listitem/AssignCheckListItem';
 import AniButton from 'Component/molecules/button/AniButton';
 import {btn_w654, btn_w694_r30} from 'Component/atom/btn/btn_style';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
 import {createQandA} from 'Root/api/qanda';
-import InputBalloon from 'Root/component/molecules/input/Input30';
-import Formtxtinput from 'Root/component/molecules/input/formtxtinput';
-import HashText from 'Root/component/molecules/info/HashText';
-import Input30 from 'Root/component/molecules/input/Input30';
-import {Check42, Check50, Rect42_Border} from 'Root/component/atom/icon';
 import {assignCheckListItem} from 'Root/component/organism/style_organism copy';
-import {KeyboardAvoidingView} from 'native-base';
 
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
-
 const AskQuestion = ({route}) => {
 	const navigation = useNavigation();
 	const [loading, setLoading] = React.useState(true);
@@ -46,8 +25,8 @@ const AskQuestion = ({route}) => {
 	const [title, setTitle] = React.useState();
 	const userAssign_agreementCheckList = [{text: '개인정보 수집 이용약관 동의 (필수)', detail: true}];
 	const [id, setId] = React.useState();
+
 	React.useEffect(() => {
-		let i;
 		let temp = [];
 		getCommonCodeDynamicQuery(
 			{common_code_c_name: 'helpbycategoryobjects', common_code_language: 'kor', common_code_out_type: 'list'},
@@ -65,9 +44,7 @@ const AskQuestion = ({route}) => {
 			},
 		);
 	}, []);
-	// React.useEffect(() => {
-	// 	console.log('categoy, contents, userAggree title', category, contents, userAgreement, title);
-	// }, [category, contents, userAgreement, title]);
+
 	const onSelectCategory = (v, i) => {
 		// debug && console.log('city:', city[i]);
 		// () => Keyboard.dismiss();

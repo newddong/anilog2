@@ -3,6 +3,7 @@ export default feed_obj = {
 	shouldUpdateByComment: false,
 	edit_obj: {},
 	list: [],
+	deleted_obj: {},
 	mainHomeFeedList: [],
 	isGpsDenied: false,
 };

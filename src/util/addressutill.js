@@ -77,6 +77,12 @@ export const parsingCityName = addr => {
 		case '경북':
 		case '경상북도':
 			return '경상북도';
+		case '제주':
+		case '제주특별자치도':
+			return '제주특별자치도';
+		case '광주':
+		case '광주광역시':
+			return '광주광역시';
 
 		default:
 			break;

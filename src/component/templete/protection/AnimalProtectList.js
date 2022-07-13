@@ -38,6 +38,7 @@ export default AnimalProtectList = ({route}) => {
 			err => {
 				console.log('err', err);
 				if (err.includes('검색 결과가 없습니다')) {
+					setData([]);
 				} else if (err.includes('Network')) {
 					Modal.alert(NETWORK_ERROR);
 					setData([]);

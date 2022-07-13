@@ -5,8 +5,8 @@ import {socialInfoB} from 'Organism/style_organism copy';
 import {useNavigation} from '@react-navigation/native';
 export default SocialInfoB = props => {
 	const navigation = useNavigation();
-	const moveToSocialRelation = () => {
-		navigation.navigate('SocialRelation', {userobject: props.data});
+	const moveToSocialRelation = initial => {
+		navigation.navigate('SocialRelation', {userobject: props.data, initial: initial});
 	};
 	const onPressUpload = () => {
 		navigation.navigate('UserProfile', {userobject: props.data});
@@ -29,11 +29,11 @@ export default SocialInfoB = props => {
 				<Text style={[txt.roboto34b, styles.number]}>{count_to_K(props.data.user_upload_count)}</Text>
 				<Text style={[txt.noto28, styles.title]}>업로드</Text>
 			</TouchableOpacity>
-			<TouchableOpacity onPress={moveToSocialRelation} style={[styles.socialInfo]}>
+			<TouchableOpacity onPress={() => moveToSocialRelation('Follower')} style={[styles.socialInfo]}>
 				<Text style={[txt.roboto34b, styles.number]}>{count_to_K(props.data.user_follower_count)}</Text>
 				<Text style={[txt.noto28, styles.title]}>팔로워</Text>
 			</TouchableOpacity>
-			<TouchableOpacity onPress={moveToSocialRelation} style={[styles.socialInfo]}>
+			<TouchableOpacity onPress={() => moveToSocialRelation('FollowingList')} style={[styles.socialInfo]}>
 				<Text style={[txt.roboto34b, styles.number]}>{count_to_K(props.data.user_follow_count)}</Text>
 				<Text style={[txt.noto28, styles.title]}>팔로잉</Text>
 			</TouchableOpacity>

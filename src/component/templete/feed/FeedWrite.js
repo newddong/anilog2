@@ -392,11 +392,11 @@ export default FeedWrite = props => {
 				maxLength={150}
 				onFind={onFindTag}
 				selectedImg={selectedImg.map(v => {
-					console.log('hash', v);
+					// console.log('hash', v);
 					return v.videoUri ? v.cropUri ?? v.uri : undefined;
 				})}
 				mediaList={selectedImg.map((v, i) => {
-					console.log('media', v);
+					// console.log('media', v);
 					return v;
 				})}
 				onDelete={deletePhoto}

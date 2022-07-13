@@ -29,7 +29,7 @@ export default PhotoSelectHeader = ({navigation, route, options, back}) => {
 		if (prevRoute && selectedPhoto.length > 0) {
 			console.log('compress img', selectedPhoto)
 			let localFiles = selectedPhoto.filter(v => !v.uri.includes('http'));
-			let localImageFiles = selectedPhoto.filter(v=>!v.uri.includes('http')&&v.type.includes('image')&&!v.uri.includes('gif'));
+			let localImageFiles = selectedPhoto.filter(v=>!v.uri.includes('http')&&v.type.includes('image')&&!v.uri.includes('gif')&&!v.image?.filename?.includes('GIF')&&!v.image?.filename?.includes('gif'));
 			let remoteFiles = selectedPhoto.filter(v => v.uri.includes('http'));
 			if(localImageFiles.length>0){
 				console.log('contain local image');

@@ -1,7 +1,7 @@
 appcenter codepush deployment list --app pinefriends/anilogIOS -k
 appcenter codepush deployment list --app pinefriends/anilogANDROID -k
 appcenter codepush release-react -a pinefriends/anilogIOS -d Staging
-appcenter codepush release-react -a pinefriends/anilogIOS -d Production
-appcenter codepush release-react -a pinefriends/anilogANDROID
 appcenter codepush release-react -a pinefriends/anilog-android-1 -d Staging
+appcenter codepush release-react -a pinefriends/anilogANDROID
+appcenter codepush release-react -a pinefriends/anilogIOS -d Production
 appcenter codepush release-react -a pinefriends/anilog-android-1 -d Production

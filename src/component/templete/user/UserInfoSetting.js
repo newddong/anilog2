@@ -394,7 +394,15 @@ export default UserInfoSetting = ({route}) => {
 							userGlobalObject.userInfo.user_nickname = newNick;
 							userGlobalObject.userInfo.user_profile_uri = data.user_profile_uri;
 						}
-						data.user_nickname = newNick;
+						Modal.close();
+						setTimeout(() => {
+							Modal.popNoBtn('닉네임이 성공적으로 \n 변경되었습니다.');
+							setTimeout(() => {
+								Modal.close();
+							}, 1000);
+						}, 100);
+						// data.user_nickname = newNick;
+						setData({...data, user_nickname: newNick});
 						navigation.setOptions({title: newNick});
 					},
 					err => {

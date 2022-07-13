@@ -149,7 +149,7 @@ export default UserVerification = props => {
 				phone: user_data.user_phone_number,
 			},
 		};
-		navigation.navigate('Certification', {data: data, navigationName: 'UserPasswordCheck',user_data: user_data.user_phone_number});
+		navigation.navigate('Certification', {data: data, navigationName: 'UserPasswordCheck', user_data: user_data});
 	};
 
 	const reVerificationRequest = () => {

@@ -31,7 +31,8 @@ import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 import AddPhoto from 'Root/component/templete/media/AddPhoto';
 import PhotoSelectHeader from 'Root/navigation/header/PhotoSelectHeader';
 import LogoHeader from 'Root/navigation/header/LogoHeader';
-
+import CommunityEdit from 'Root/component/templete/community/CommunityEdit';
+import SendHeader from 'Root/navigation/header/SendHeader';
 
 const ProtectionStack = createStackNavigator();
 
@@ -157,6 +158,14 @@ export default ProtectionStackNavigation = props => {
 				name="ChangePetProfileImage"
 				component={ChangePetProfileImage}
 				options={{header: props => <SimpleHeader {...props} />, title: '프로필 변경'}}
+			/>
+			<ProtectionStack.Screen
+				name={'CommunityEdit'}
+				component={CommunityEdit}
+				options={({route}) => ({
+					header: props => <SendHeader {...props} />,
+					title: ' ',
+				})}
 			/>
 		</ProtectionStack.Navigator>
 	);

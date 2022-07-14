@@ -155,14 +155,15 @@ export default FeedList = ({route}) => {
 
 	//스크롤 최하단 도착 콜백 (다음페이지 호출)
 	const onEndReached = ({distanceFromEnd}) => {
-		if (distanceFromEnd >= 0) {
-			console.log('onEndReached', feedList.length, total);
-			if (feedList.length < total) {
-				getList(false, true);
-			} else {
-				console.log('토탈 초과');
-			}
+		// if (distanceFromEnd >= 0) {
+		// console.log('distanceFromEnd', distanceFromEnd);
+		console.log('onEndReached', feedList.length, total);
+		if (feedList.length < total) {
+			getList(false, true);
+		} else {
+			console.log('토탈 초과');
 		}
+		// }
 	};
 
 	//피드리스트 호출
@@ -645,7 +646,7 @@ export default FeedList = ({route}) => {
 					maxToRenderPerBatch={5}
 					updateCellsBatchingPeriod={10}
 					initialNumToRender={2}
-					onEndReachedThreshold={0.6}
+					onEndReachedThreshold={0.3}
 					onEndReached={onEndReached}
 				/>
 			}
@@ -684,7 +685,6 @@ export default FeedList = ({route}) => {
 					</View>
 				</View>
 			)}
-
 			{false && (
 				<View style={{backgroundColor: 'red', width: 750 * DP, top: 0, position: 'absolute'}}>
 					<View style={{backgroundColor: 'yellow', marginBottom: 20}}>

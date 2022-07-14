@@ -16,9 +16,7 @@ import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
 import {openSettings} from 'react-native-permissions';
-import HashInput from 'Molecules/input/HashInput';
 import {Arrow_Down_BLACK, Arrow_Down_GRAY10, Search48_BLACK, Camera54} from 'Root/component/atom/icon';
-import moment from 'moment';
 
 //실종 컴포넌트
 export default MissingForm = props => {
@@ -42,6 +40,17 @@ export default MissingForm = props => {
 					() => {
 						console.log('Get Address Failed');
 					};
+			},
+			err => Modal.alert(err),
+		);
+		getPettypes(
+			{},
+			types => {
+				// console.log('types', types.msg);
+				const init = {pet_species: '동물종류', pet_species_detail: ['품종']};
+				let res = types.msg;
+				res.unshift(init);
+				setTypes(res);
 			},
 			err => Modal.alert(err),
 		);
@@ -73,6 +82,15 @@ export default MissingForm = props => {
 					missing_animal_contact: route.params.missing_animal_contact,
 					type: types[0],
 				});
+				getAddressList(
+					{city: stringToJson.city},
+					districts => {
+						setDistrict(districts.msg);
+					},
+					err => {
+						console.log('err / getAddressList / MissingForm : ', err);
+					},
+				);
 			} catch (err) {
 				console.log('err', err);
 			}
@@ -98,20 +116,6 @@ export default MissingForm = props => {
 	React.useEffect(() => {
 		props.onDataChange && props.onDataChange(data);
 	}, [data]);
-
-	React.useEffect(() => {
-		getPettypes(
-			{},
-			types => {
-				// console.log('types', types.msg);
-				const init = {pet_species: '동물종류', pet_species_detail: ['품종']};
-				let res = types.msg;
-				res.unshift(init);
-				setTypes(res);
-			},
-			err => Modal.alert(err),
-		);
-	}, []);
 
 	const getDefaultGender = () => {
 		let result = 0;

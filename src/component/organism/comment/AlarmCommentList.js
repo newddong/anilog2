@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, Image, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View, TouchableOpacity, RefreshControl} from 'react-native';
 import FeedContent from 'Organism/feed/FeedContent';
 import CommentList from 'Organism/comment/CommentList';
 import ReplyWriteBox from 'Organism/input/ReplyWriteBox';
@@ -10,7 +10,7 @@ import Modal from 'Component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import DP from 'Root/config/dp';
 import {GRAY10, GRAY20, GRAY30} from 'Root/config/color';
-import {useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
+import {KeyBoardEvent, useKeyboardBottom} from 'Molecules/input/usekeyboardbottom';
 import {useNavigation} from '@react-navigation/core';
 import {deleteComment} from 'Root/api/commentapi';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -24,6 +24,7 @@ const AlarmCommentList = props => {
 	const [searchInput, setSearchInput] = React.useState('');
 	const [articleList, setArticleList] = React.useState([]);
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
+	const [refresh, setRefresh] = React.useState(true);
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
 	const [parentComment, setParentComment] = React.useState(); //대댓글을 쓰는 경우 해당 댓글의 id container
 	const input = React.useRef();
@@ -33,21 +34,24 @@ const AlarmCommentList = props => {
 		comment_contents: '',
 		comment_photo_uri: '',
 	});
+	const [refreshing, setRefreshing] = React.useState(false); //위로 스크롤 시도 => 리프레싱
+
 	const [moveToIndex, setMoveToIndex] = React.useState();
 	const [loading, setLoading] = React.useState(true);
 	const flatListRef = React.useRef();
 	const keyboardY = useKeyboardBottom(0 * DP);
 	const commentListHeight = React.useRef(100);
+	const params = props.route.params;
 
 	React.useEffect(() => {
 		fetchData();
 	}, []);
 
 	const fetchData = () => {
-		console.log('getCommentList by ', props.route.params.feedobject._id);
+		console.log('getCommentList by ', params.feedobject._id);
 		getCommentListByFeedId(
 			{
-				feedobject_id: props.route.params.feedobject._id,
+				feedobject_id: params.feedobject._id,
 				request_number: 1000,
 				// login_userobject_id: userGlobalObject.userInfo._id,
 			},
@@ -65,9 +69,9 @@ const AlarmCommentList = props => {
 		if (commentsLoaded) {
 			comments.forEach((current, index) => {
 				// console.log('current', current);
-				if (props.route.params.parent) {
-					if (current._id == props.route.params.parent) {
-						console.log('targeted', current._id, props.route.params.target, index);
+				if (params.parent) {
+					if (current._id == params.parent) {
+						console.log('targeted', current._id, params.target, index);
 						setMoveToIndex(index);
 						setTimeout(
 							() =>
@@ -84,8 +88,8 @@ const AlarmCommentList = props => {
 						);
 					}
 				} else {
-					if (current._id == props.route.params.target) {
-						console.log('targeted', current._id, props.route.params.target, index);
+					if (current._id == params.target) {
+						console.log('targeted', current._id, params.target, index);
 						setMoveToIndex(index);
 						setTimeout(
 							() =>
@@ -139,11 +143,11 @@ const AlarmCommentList = props => {
 		}
 		console.log('porps.routename', props.route.name);
 		// if (props.route.name == 'FeedCommentList') {
-		// 	param = {...param, feedobject_id: props.route.params.feedobject._id};
+		// 	param = {...param, feedobject_id: params.feedobject._id};
 		// } else if (props.route.name == '동물보호요청') {
-		// 	param = {...param, protect_request_object_id: props.route.params.feedobject._id};
+		// 	param = {...param, protect_request_object_id: params.feedobject._id};
 		// }
-		param = {...param, feedobject_id: props.route.params.feedobject._id};
+		param = {...param, feedobject_id: params.feedobject._id};
 		if (parentComment) {
 			param = {...param, commentobject_id: parentComment._id};
 		}
@@ -166,7 +170,7 @@ const AlarmCommentList = props => {
 					if (props.route.name == 'AlarmCommentList') {
 						getCommentListByFeedId(
 							{
-								feedobject_id: props.route.params.feedobject._id,
+								feedobject_id: params.feedobject._id,
 								request_number: 1000,
 							},
 							comments => {
@@ -199,7 +203,7 @@ const AlarmCommentList = props => {
 						// if (props.route.name == 'FeedCommentList') {
 						getCommentListByFeedId(
 							{
-								feedobject_id: props.route.params.feedobject._id,
+								feedobject_id: params.feedobject._id,
 								request_number: 1000,
 							},
 							comments => {
@@ -231,11 +235,11 @@ const AlarmCommentList = props => {
 	};
 
 	React.useEffect(() => {
-		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
-			let selected = props.route.params.selectedPhoto[0];
+		if (params.selectedPhoto && params.selectedPhoto.length > 0) {
+			let selected = params.selectedPhoto[0];
 			setEditData({...editData, comment_photo_uri: selected.cropUri ?? selected.uri});
 		}
-	}, [props.route.params?.selectedPhoto]);
+	}, [params?.selectedPhoto]);
 
 	// 답글 쓰기 -> 이미지버튼 클릭 콜백함수
 	const onAddPhoto = () => {
@@ -290,18 +294,62 @@ const AlarmCommentList = props => {
 			input.current?.focus();
 		}, 500);
 	};
+
+	const wait = timeout => {
+		return new Promise(resolve => setTimeout(resolve, timeout));
+	};
+
+	const onRefresh = () => {
+		setRefreshing(true);
+		wait(0).then(() => setRefreshing(false));
+	};
+
+	React.useEffect(() => {
+		refreshing ? fetchData() : false;
+	}, [refreshing]);
+
+	const [isKeyboardVisible, setKeyboardVisible] = React.useState(false);
+	const keyBoardHideByDeleteImage = React.useRef(false);
+
+	React.useEffect(() => {
+		if (!isKeyboardVisible) {
+			if (editMode && !keyBoardHideByDeleteImage.current) {
+				//키보드가 해제될 때, 수정모드일 때는 모든 데이터를 초기화, 댓글 및 대댓글 작성 상태는 유지
+				setEditData({comment_contents: '', comment_photo_uri: ''});
+				setPrivateComment(false);
+				setEditMode(false);
+				keyBoardHideByDeleteImage.current = false;
+			}
+		}
+	}, [isKeyboardVisible]);
+
+	//댓글 수정 => 키보드 해제시 수정모드가 종료되도록 적용
+	KeyBoardEvent(
+		() => {},
+		() => {
+			setKeyboardVisible(false);
+		},
+	);
+
+	const onFocus = () => {
+		setTimeout(() => {
+			setKeyboardVisible(true);
+		}, 500);
+	};
+
 	const renderItem = ({item, index}) => {
 		// return item;
 		return (
 			<View style={[style.commentContainer]} key={item._id} onLayout={onLayoutCommentList}>
 				<ParentComment
+					writer={params.feedobject?.feed_writer_id}
 					parentComment={item}
 					onPressReplyBtn={onReplyBtnClick} // 부모 댓글의 답글쓰기 클릭 이벤트
 					onEdit={onEdit}
 					onPressDelete={onPressDelete}
 					onPressDeleteChild={onPressDelete}
-					target={props.route.params.target}
-					parent={props.route.params.parent}
+					target={params.target}
+					parent={params.parent}
 				/>
 			</View>
 		);
@@ -357,6 +405,8 @@ const AlarmCommentList = props => {
 				listKey={({item, index}) => index}
 				ListHeaderComponent={Header()}
 				ListFooterComponent={<View style={{height: heightReply + keyboardY}}></View>}
+				extraData={refresh}
+				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 				// ListFooterComponent={Bottom}
 				ref={flatListRef}
 				showsVerticalScrollIndicator={false}
@@ -373,6 +423,10 @@ const AlarmCommentList = props => {
 					privateComment={privateComment}
 					ref={input}
 					editData={editData}
+					parentComment={editMode ? '' : parentComment} //댓글 수정모드일 때 부모댓글 정보를 막는다
+					editMode={editMode}
+					viewMode={!isKeyboardVisible}
+					onFocus={onFocus}
 				/>
 			</View>
 			{/* </ScrollView> */}

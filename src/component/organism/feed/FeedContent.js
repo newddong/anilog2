@@ -362,8 +362,8 @@ export default FeedContent = props => {
 
 	const meatballActions = context => {
 		let isFavorite = context.favorite_feeds.some(feed => feed._id == _id);
-		console.log('즐겨찾기됨?', isFavorite);
-		let isMyFeed = userGlobalObject.userInfo._id == props.data.feed_writer_id._id;
+		// console.log('즐겨찾기됨?', isFavorite);
+		let isMyFeed = userGlobalObject.userInfo._id == props.data.feed_writer_id._id || props.data.feed_writer_id;
 		let feedType = props.data.feed_type;
 		if (feedType == 'feed') {
 			if (isMyFeed) {
@@ -387,7 +387,7 @@ export default FeedContent = props => {
 						result.msg.map((v, i) => {
 							follow_id_list.push(v.follower_id._id);
 						});
-						console.log('follow_id_list', follow_id_list);
+						// console.log('follow_id_list', follow_id_list);
 						let isFollowers = follow_id_list.includes(feed_writer._id); //해당 피드 게시글 작성자가 내 팔로워 목록에 있는지 여부
 						//현재 팔로우 상태 중인 유저의 피드글의 미트볼 헤더 클릭
 						Modal.popSelectBoxModal(

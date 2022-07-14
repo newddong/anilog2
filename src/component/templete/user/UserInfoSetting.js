@@ -17,6 +17,7 @@ import {updateUserInformation, nicknameDuplicationCheck} from 'Root/api/userapi'
 import SelectInput from 'Root/component/molecules/button/SelectInput';
 import {getAddressList} from 'Root/api/address';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
+import FastImage from 'react-native-fast-image';
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 export default UserInfoSetting = ({route}) => {
 	const navigation = useNavigation();
@@ -444,10 +445,6 @@ export default UserInfoSetting = ({route}) => {
 		setLocationEdit(!locationEdit);
 	};
 
-	React.useEffect(() => {
-		console.log('data', data.user_address);
-	}, [data]);
-
 	const handleError = error => {
 		Modal.popOneBtn(error, '확인', () => Modal.close());
 	};
@@ -462,7 +459,14 @@ export default UserInfoSetting = ({route}) => {
 				<ScrollView>
 					{/* step1 */}
 					<View style={[temp_style.userInfoSetting_step1]}>
-						<View style={[styles.profileImageLarge]}>{data._id != undefined && <ProfileImageMedium148 data={data} />}</View>
+						<View style={[styles.profileImageLarge]}>
+							{data._id != undefined && (
+								<FastImage
+									source={{uri: userGlobalObject.userInfo.user_profile_uri}}
+									style={{width: 148 * DP, height: 148 * DP, borderRadius: 500}}
+								/>
+							)}
+						</View>
 						<View style={[styles.textBox]}>
 							<TouchableOpacity style={[{alignItems: 'center'}]} onPress={onPressModofyProfile}>
 								<Text style={[txt.noto30, {color: APRI10}]}>프로필 사진 바꾸기</Text>

@@ -12,7 +12,7 @@ import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 import {Filter60Border, Filter60Filled} from 'Root/component/atom/icon';
 import moment from 'moment';
 import {getSearchResultProtectRequest, getSearchResultProtectRequestImprovingV1} from 'Root/api/protectapi';
-import protect_obj from 'Root/config/protect_obj';
+import protect_obj, {updateProtect} from 'Root/config/protect_obj';
 import {useNavigation} from '@react-navigation/core';
 import DP from 'Root/config/dp';
 
@@ -50,7 +50,7 @@ export default ProtectRequestList = ({route}) => {
 				// 	console.log('protect_animal_rescue_location', i, v.protect_animal_id.protect_animal_rescue_location);
 				// 	console.log('i', i, v.is_favorite);
 				// });
-				setData(protect_obj.protect);
+				// setData(protect_obj.protect);
 			}
 		});
 		return unsubscribe;
@@ -213,6 +213,7 @@ export default ProtectRequestList = ({route}) => {
 						console.log('result / favoriteEtc / ProtectRequestList : ', result.msg.favoriteEtc);
 						let prevData = [...getData()]; //
 						prevData[index].is_favorite = bool;
+						updateProtect(result.msg.favoriteEtc.favorite_etc_target_object_id, bool);
 						// setData(prevData); //useState로 View를 다시 그리면 UI Thread가 멈추는 현상 발견 임시 주석 처리
 					},
 					err => {

@@ -18,3 +18,14 @@ export const updateProtect = (id, bool) => {
 		}
 	}
 };
+
+export const pushProtect = arr => {
+	arr.map((v, i) => {
+		const find = protect_obj.protect.findIndex(e => e._id == v._id);
+		if (find == -1) {
+			//현 메모리에 저장되어 있지않은 피드아이템만 추가
+			protect_obj.protect.push(v);
+		}
+	});
+	console.log('arr', protect_obj.protect.length);
+};

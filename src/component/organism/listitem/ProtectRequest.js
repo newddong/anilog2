@@ -12,6 +12,7 @@ import DP from 'Root/config/dp';
 import {DEFAULT_ANIMAL_PROFILE} from 'Root/i18n/msg';
 import {APRI10, GRAY10} from 'Root/config/color';
 import {array} from 'prop-types';
+import protect_obj from 'Root/config/protect_obj';
 
 /**
  *
@@ -32,21 +33,6 @@ import {array} from 'prop-types';
 export default ProtectRequest = React.memo(props => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.data);
-	const {
-		_id,
-		protect_request_status,
-		protect_request_photos_uri,
-		protect_animal_sex,
-		notice_day,
-		is_favorite,
-		protect_request_date,
-		protect_request_notice_sdt,
-		protect_request_notice_edt,
-		protect_request_writer_id, // {user_nickname, _id }
-		protect_animal_species,
-		protect_animal_species_detail,
-		protect_animal_id, //protect_animal_rescue_location
-	} = props.data;
 
 	const thumbnailData = {
 		status: data.protect_request_status,
@@ -59,6 +45,20 @@ export default ProtectRequest = React.memo(props => {
 		gender: data.protect_animal_sex,
 		notice_day: data.notice_day,
 	};
+
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			try {
+				const find = protect_obj.protect.findIndex(e => e._id == props.data._id);
+				if (find != -1) {
+					setData({...data, is_favorite: protect_obj.protect[find].is_favorite});
+				}
+			} catch (err) {
+				console.log('err', err);
+			}
+		});
+		return unsubscribe;
+	}, []);
 
 	React.useEffect(() => {
 		setData(props.data);

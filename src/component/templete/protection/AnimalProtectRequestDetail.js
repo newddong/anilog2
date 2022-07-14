@@ -444,11 +444,8 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					<FlatList
 						data={removeThis}
 						renderItem={renderOtherRequest}
-						keyExtractor={item => item._id}
-						getItemLayout={(data, index) => {
-							if (!data[index]) return {length: 0, offset: 0, index: index};
-							return {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index: index};
-						}}
+						keyExtractor={keyExtractor}
+						getItemLayout={getItemLayout}
 						style={{backgroundColor: '#fff'}}
 						showsVerticalScrollIndicator={false}
 						ListEmptyComponent={whenEmpty}

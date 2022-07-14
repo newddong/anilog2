@@ -13,9 +13,8 @@ import {Urgent_Write2} from 'Atom/icon';
  * @param {()=>void} props.onMissing - 실종 클릭
  * @param {Object} props.layout - 액션 버튼 실제 위치 정보
  */
-const UrgentBtnModal = ({onReport, onMissing, layout}) => {
+const UrgentBtnModal = ({onReport, onMissing, layout, setPressed}) => {
 	console.log('layout', layout);
-
 	const moveToMissingForm = () => {
 		console.log('moveToMissingForm');
 		onMissing();
@@ -26,6 +25,7 @@ const UrgentBtnModal = ({onReport, onMissing, layout}) => {
 	};
 
 	const onPressShowActionButton = () => {
+		setPressed();
 		Modal.close();
 	};
 
@@ -65,6 +65,7 @@ UrgentBtnModal.defaultProps = {
 const style = StyleSheet.create({
 	background: {
 		backgroundColor: '#0009',
+		// backgroundColor: 'red',
 		height: Platform.OS == 'ios' ? Dimensions.get('window').height : '100%',
 		width: Platform.OS == 'ios' ? Dimensions.get('window').width : '100%',
 		justifyContent: 'flex-end',

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Image, ActivityIndicator, ScrollView} from 'react-native';
+import {View, StyleSheet, Image, ActivityIndicator, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
 import DP from 'Root/config/dp';
 import {WHITE} from 'Root/config/color';
 import NoteMessageList from 'Component/organism/list/NoteMessageList';
@@ -79,12 +79,30 @@ const UserNotePage = ({route}) => {
 	} else {
 		return (
 			<View style={[styles.container]}>
-				<View style={[styles.messageContainer]}>
-					<NoteMessageList data={data} />
-				</View>
-				<View style={[{position: 'absolute', bottom: keyboardY}, {backgroundColor: WHITE}]} onLayout={onReplyBtnLayout}>
-					<ReplyWriteBox onWrite={onWrite} onChangeReplyInput={onChangeReplyInput} ref={input} value={input} isMessage={true} />
-				</View>
+				{Platform.OS === 'ios' ? (
+					<View>
+						<KeyboardAvoidingView keyboardVerticalOffset={185 * DP} style={[styles.messageContainer]} behavior="padding">
+							{/* <View style={[styles.messageContainer]}> */}
+							<View style={[{flex: 1}, {marginBottom: 85 * DP}]}>
+								<NoteMessageList data={data} />
+							</View>
+
+							{/* </View> */}
+						</KeyboardAvoidingView>
+						<View style={[{position: 'absolute', bottom: keyboardY}, {backgroundColor: WHITE}]} onLayout={onReplyBtnLayout}>
+							<ReplyWriteBox onWrite={onWrite} onChangeReplyInput={onChangeReplyInput} ref={input} value={input} isMessage={true} />
+						</View>
+					</View>
+				) : (
+					<View>
+						<View style={[styles.messageContainer]}>
+							<NoteMessageList data={data} />
+						</View>
+						<View style={[{position: 'absolute', bottom: keyboardY}, {backgroundColor: WHITE}]} onLayout={onReplyBtnLayout}>
+							<ReplyWriteBox onWrite={onWrite} onChangeReplyInput={onChangeReplyInput} ref={input} value={input} isMessage={true} />
+						</View>
+					</View>
+				)}
 			</View>
 		);
 	}

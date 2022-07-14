@@ -97,6 +97,5 @@ const style = StyleSheet.create({
 		borderBottomWidth: 2 * DP,
 		paddingHorizontal: 28 * DP,
 		// paddingVertical: 30 * DP,
-		alignItems: 'center',
 	},
 });

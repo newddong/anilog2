@@ -103,7 +103,12 @@ export default FeedWriteHeader = ({route, options}) => {
 						);
 					} else {
 						// console.log('route.params', route.params);
-						feed_obj.edit_obj = route.params; //피드수정 => 수정한 리스트 아이템만 setData하기 위한 오브젝트
+						let edited = {...route.params};
+						if (route.params && route.params.feed_type == 'report') {
+							edited.report_witness_location = result.msg?.report_witness_location;
+						}
+						// console.log('edited First : ', edited.media_uri.cropUri);
+						feed_obj.edit_obj = edited; //피드수정 => 수정한 리스트 아이템만 setData하기 위한 오브젝트
 						feed_obj.shouldUpdateByEdit = true;
 						navigation.goBack();
 					}
@@ -169,7 +174,52 @@ export default FeedWriteHeader = ({route, options}) => {
 					break;
 				case 'Missing':
 					{
-						console.log('Before Write Report ', param);
+						const tr = {
+							feedType: 'Missing',
+							feed_content: '오리진',
+							feed_is_protect_diary: false,
+							feed_medias: [
+								{
+									duration: 0,
+									is_video: false,
+									media_uri:
+										'/Users/sangwoo/Library/Developer/CoreSimulator/Devices/A0C87E5D-C592-45C4-9BF1-DC8AB903607D/data/Containers/Data/Application/28A74F51-C290-44E5-8318-390DD80C9A11/tmp/anilog_temp/FB78BD5D-0AA9-481D-BD78-62537633FEA6.jpg',
+									tags: [Array],
+								},
+							],
+							hashtag_keyword: undefined,
+							isEdit: true,
+							media_uri: [
+								'/Users/sangwoo/Library/Developer/CoreSimulator/Devices/A0C87E5D-C592-45C4-9BF1-DC8AB903607D/data/Containers/Data/Application/28A74F51-C290-44E5-8318-390DD80C9A11/tmp/anilog_temp/FB78BD5D-0AA9-481D-BD78-62537633FEA6.jpg',
+							],
+							missing_animal_age: 0,
+							missing_animal_contact: '0109634342',
+							missing_animal_date: '2022.06.30',
+							missing_animal_features: '파워',
+							missing_animal_lost_location: {city: '광주광역시', detail: 'ㅇ', district: '남구'},
+							missing_animal_sex: 'female',
+							missing_animal_species: '기타',
+							missing_animal_species_detail: '파충류',
+							selectedPhoto: [
+								{
+									cropUri:
+										'/Users/sangwoo/Library/Developer/CoreSimulator/Devices/A0C87E5D-C592-45C4-9BF1-DC8AB903607D/data/Containers/Data/Application/28A74F51-C290-44E5-8318-390DD80C9A11/tmp/anilog_temp/FB78BD5D-0AA9-481D-BD78-62537633FEA6.jpg',
+									duration: 0,
+									fileSize: 179730,
+									group_name: 'All Photos',
+									image: [Object],
+									isVideo: false,
+									location: null,
+									timestamp: 1657634273.2941267,
+									type: 'image',
+									uri: 'ph://6E7EAF98-6152-4284-91F7-0204763BB145/L0/001',
+									videoUri: undefined,
+								},
+							],
+							tab: 'Protection',
+							type: {pet_species: '동물종류', pet_species_detail: ['품종']},
+						};
+						console.log('Before Write Missing ', param);
 						const data = param;
 						delete data.feed_location;
 						if (data.missing_animal_species == '동물종류') {
@@ -188,7 +238,7 @@ export default FeedWriteHeader = ({route, options}) => {
 							data.missing_animal_species_detail != '품종' &&
 							(data.feed_content || data.feed_medias) &&
 							data.media_uri.length > 0 &&
-							data.missing_animal_age &&
+							(data.missing_animal_age == 0 || data.missing_animal_age) &&
 							data.missing_animal_features &&
 							data.missing_animal_sex &&
 							data.missing_animal_date &&
@@ -327,7 +377,7 @@ export default FeedWriteHeader = ({route, options}) => {
 				data.missing_animal_species_detail &&
 				(data.feed_content || data.feed_medias) &&
 				data.feed_medias.length > 0 &&
-				data.missing_animal_age &&
+				(data.missing_animal_age == 0 || data.missing_animal_age) &&
 				data.missing_animal_features &&
 				data.missing_animal_date &&
 				data.missing_animal_sex &&

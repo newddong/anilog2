@@ -81,7 +81,7 @@ export default ReportDetail = props => {
 				// console.log('getMissingReportList result', result.msg[0]);
 				const res = result.msg;
 				const findIndex = res.findIndex(e => e._id == props.route.params._id);
-				console.log('findIndex', findIndex);
+				// console.log('findIndex', findIndex);
 				let temp = [];
 				if (res.length < 5) {
 					setReportList(res);

@@ -90,6 +90,7 @@ import ProfileHeader from 'Root/navigation/header/ProfileHeader';
 import OpenSourceDetail from 'Templete/user/OpenSourceDetail';
 import FeedWrite from 'Root/component/templete/feed/FeedWrite';
 import FeedWriteHeader from 'Root/navigation/header/FeedWriteHeader';
+import CommunityEdit from 'Root/component/templete/community/CommunityEdit';
 
 const MyStack = createStackNavigator();
 export default MyStackNavigation = props => {
@@ -415,6 +416,14 @@ export default MyStackNavigation = props => {
 				name="OpenSourceDetail"
 				component={OpenSourceDetail}
 				options={{header: props => <SimpleHeader {...props} />, title: '오픈소스 라이선스'}}
+			/>
+			<MyStack.Screen
+				name={'CommunityEdit'}
+				component={CommunityEdit}
+				options={({route}) => ({
+					header: props => <SendHeader {...props} />,
+					title: ' ',
+				})}
 			/>
 		</MyStack.Navigator>
 	);

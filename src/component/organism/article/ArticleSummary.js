@@ -149,7 +149,7 @@ const ArticleSummary = props => {
 					style={[
 						style.content,
 						{
-							width: props.selectMode ? 500 * DP : 560 * DP,
+							width: props.selectMode ? 500 * DP : 556 * DP,
 						},
 					]}>
 					{text == '' ? <></> : getText()}

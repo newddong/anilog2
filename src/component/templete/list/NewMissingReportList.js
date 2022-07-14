@@ -38,12 +38,6 @@ const NewMissingReportList = props => {
 		return unsubscribe;
 	}, [navigation]);
 
-	// React.useEffect(() => {
-	// 	console.log('두번 눌림', props.doubleTab);
-	// 	if (props.doubleTab) {
-	// 		getList();
-	// 	}
-	// }, [props.doubleTab]);
 	const getList = isFirst => {
 		if (isFirst != 'first') {
 			setLoading(true);

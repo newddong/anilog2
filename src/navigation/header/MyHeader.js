@@ -11,7 +11,7 @@ export default MyHeader = ({route, options, back}) => {
 	const [items, setItems] = React.useState('');
 	const [userData, setUserData] = React.useState('');
 	const [pressed, setPressed] = React.useState(false);
-
+	// console.log('route, option', route, options);
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			fetchData();
@@ -79,9 +79,10 @@ export default MyHeader = ({route, options, back}) => {
 						navigation.navigate('UserMenu', {userobject: data});
 					} else {
 						setPressed(false);
+						Modal.popOneBtn('현재 페이지입니다.', '확인', () => Modal.close());
 					}
 				}
-				Modal.close();
+				// Modal.close();
 			} else {
 				navigation.navigate('AssignPetProfileImage', {userobject_id: userData._id, previousRouteName: route.name});
 				Modal.close();

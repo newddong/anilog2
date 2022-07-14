@@ -19,12 +19,15 @@ const MissingReportBox = props => {
 	const [objCity, setObjCity] = React.useState('');
 	const navigation = useNavigation();
 
-
 	React.useEffect(() => {
+		console.log('props', props);
 		try {
 			if (props.data.feed_type == 'missing') {
 				let objCitys = JSON.parse(`${props.data?.missing_animal_lost_location}`);
-				setObjCity(`${objCitys.district}`);
+				let temp = objCitys.district.split(' ', 2)[0];
+				console.log('temptemptemep', temp);
+				setObjCity(`${temp}`);
+				// setObjCity(`${objCitys.district}`);
 			}
 		} catch (err) {
 			console.log('err', err);
@@ -33,6 +36,8 @@ const MissingReportBox = props => {
 
 	const onLabelClick = () => {
 		let sexValue = '';
+		// console.log('주소주소', props.data.report_witness_location.split(' ', 2)[1] || '');
+
 		switch (props.data.feed_type) {
 			case 'missing':
 				navigation.navigate('MissingAnimalDetail', {title: '', _id: props.data._id, from: 'feedList'});
@@ -88,6 +93,7 @@ const MissingReportBox = props => {
 							<Text style={[txt.noto26, {textAlign: 'center'}, {color: MAINBLACK}]} numberOfLines={1}>
 								{/* {props.data.feed_content || '내용 없음'} */}
 								{props.data.report_witness_location.split(' ', 2)[1] || ''}
+								{/* {props.data.missing_animal_lost_location?.district || props.data.report_witness_location.split(' ', 2)[1] || ''} */}
 							</Text>
 						</View>
 					</View>
@@ -102,11 +108,7 @@ const styles = StyleSheet.create({
 	container: {
 		width: 156 * DP,
 		height: 248 * DP,
-		// backgroundColor: WHITE,
-		// backgroundColor: 'red',
-		// backgroundColor: 'yellow',
 		marginRight: 30 * DP,
-		// borderRadius: 30 * DP,
 	},
 
 	img_156: {
@@ -164,11 +166,6 @@ const styles = StyleSheet.create({
 	content: {
 		width: 156 * DP,
 		height: 248 * DP,
-		// borderRadius: 30 * DP,
-		// backgroundColor: WHITE,
-		// backgroundColor: 'red',
-		// marginRight: 20 * DP,
-		// marginLeft: 28 * DP,
 	},
 	containerWarper: {
 		width: 176 * DP,

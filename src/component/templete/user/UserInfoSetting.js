@@ -381,37 +381,40 @@ export default UserInfoSetting = ({route}) => {
 	};
 	//닉네임 수정 버튼 함수
 	const modifyNickNameButton = () => {
+		console.log('');
 		if (nickNameEdit) {
 			if (newNick == data.user_nickname || newNick?.length == 0) {
 				console.log('닉네임 변경없음 or 길이 0');
 			} else {
-				updateUserInformation(
-					{
-						userobject_id: data._id,
-						user_nickname: newNick == '' ? data.user_nickname : newNick,
-					},
-					success => {
-						if (data.user_type == 'user') {
-							setNewNick(newNick);
-							userGlobalObject.userInfo.user_nickname = newNick;
-							userGlobalObject.userInfo.user_profile_uri = data.user_profile_uri;
-						}
-						Modal.close();
-						setTimeout(() => {
-							Modal.popNoBtn('닉네임이 성공적으로 \n 변경되었습니다.');
+				if (validateNewNick(newNick)) {
+					updateUserInformation(
+						{
+							userobject_id: data._id,
+							user_nickname: newNick == '' ? data.user_nickname : newNick,
+						},
+						success => {
+							if (data.user_type == 'user') {
+								setNewNick(newNick);
+								userGlobalObject.userInfo.user_nickname = newNick;
+								userGlobalObject.userInfo.user_profile_uri = data.user_profile_uri;
+							}
+							Modal.close();
 							setTimeout(() => {
-								Modal.close();
-							}, 1000);
-						}, 100);
-						// data.user_nickname = newNick;
-						setData({...data, user_nickname: newNick});
-						navigation.setOptions({title: newNick});
-					},
-					err => {
-						Modal.close();
-						console.log('err', err);
-					},
-				);
+								Modal.popNoBtn('닉네임이 성공적으로 \n 변경되었습니다.');
+								setTimeout(() => {
+									Modal.close();
+								}, 1000);
+							}, 100);
+							// data.user_nickname = newNick;
+							setData({...data, user_nickname: newNick});
+							navigation.setOptions({title: newNick});
+						},
+						err => {
+							Modal.close();
+							console.log('err', err);
+						},
+					);
+				}
 			}
 		}
 

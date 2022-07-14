@@ -636,15 +636,15 @@ export default FeedContent = props => {
 						</View>
 						<View style={[feed_templete_style.likeCommentButtons_view]}>
 							<View style={[feed_templete_style.likeCommentInfo_view_feed]}>
-								<TouchableWithoutFeedback onPress={props.toggleFeedLike}>
+								<TouchableOpacity onPress={props.toggleFeedLike}>
 									<View style={feed_templete_style.likeButtonWrapper}>
 										<View style={[feed_templete_style.like48]}>{props.isLike ? <Like48_Filled /> : <Like48_Border />}</View>
 										<View style={[feed_templete_style.like_count_feed]}>
 											<Text style={[txt.roboto24, {color: GRAY10}]}>{JSON.stringify(props.likeCount)}</Text>
 										</View>
 									</View>
-								</TouchableWithoutFeedback>
-								<TouchableWithoutFeedback onPress={moveToCommentList}>
+								</TouchableOpacity>
+								<TouchableOpacity onPress={moveToCommentList}>
 									<View style={feed_templete_style.commentButtonWrapper}>
 										<View style={organism_style.like48}>
 											<Comment48_Border />
@@ -653,7 +653,7 @@ export default FeedContent = props => {
 											<Text style={[txt.roboto24, {color: GRAY10, marginLeft: -15 * DP}]}>{commentCount}</Text>
 										</View>
 									</View>
-								</TouchableWithoutFeedback>
+								</TouchableOpacity>
 							</View>
 							{props.data.feed_writer_id ? (
 								<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
@@ -687,7 +687,8 @@ export default FeedContent = props => {
 					<View
 						style={[
 							organism_style.content_feedContent,
-							/*feedContent_style.content_Top10,*/ {
+							// *feedContent_style.content_Top10,*
+							{
 								width: 750 * DP,
 								paddingHorizontal: 28 * DP,
 								marginTop: route.name.includes('FeedCommentList') ? 10 * DP : 0,

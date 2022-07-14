@@ -617,7 +617,7 @@ export default FeedList = ({route}) => {
 	const [testTx, setTx] = React.useState('한');
 	const [code, setCode] = React.useState(62);
 	const viewable = React.useCallback(e => {
-		// console.log('viewable', e);
+
 		setViewIndex(e.viewableItems[0]?.index);
 	}, []);
 	const separatorComp = React.useCallback(() => {
@@ -646,7 +646,11 @@ export default FeedList = ({route}) => {
 					maxToRenderPerBatch={5}
 					updateCellsBatchingPeriod={10}
 					initialNumToRender={2}
+
 					onEndReachedThreshold={0.3}
+
+
+
 					onEndReached={onEndReached}
 				/>
 			}

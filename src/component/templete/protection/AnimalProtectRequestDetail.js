@@ -468,6 +468,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				<FlatList
 					data={comments && comments.length > 2 ? comments.slice(0, 2) : comments}
 					renderItem={renderItem}
+					keyExtractor={item => item._id}
 					ListHeaderComponent={header()}
 					ListFooterComponent={footer()}
 					ListEmptyComponent={<Text style={[txt.roboto28b, {color: GRAY10, paddingVertical: 40 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>}

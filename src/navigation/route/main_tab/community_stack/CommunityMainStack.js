@@ -31,6 +31,9 @@ import SocialRelationTopTabNavigation from '../protection_stack/socialRelation_t
 import InputAndSearchHeader from 'Root/navigation/header/InputAndSearchHeader';
 import AddPhoto from 'Root/component/templete/media/AddPhoto';
 import PhotoSelectHeader from 'Root/navigation/header/PhotoSelectHeader';
+import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballHeader';
+import ReportDetail from 'Root/component/templete/missing/ReportDetail';
+import MissingAnimalDetail from 'Root/component/templete/missing/MissingAnimalDetail';
 
 const CommunityMainStackNavi = createStackNavigator();
 
@@ -193,6 +196,16 @@ export default CommunityMainStack = props => {
 				name="UserInfoDetailSetting"
 				component={UserInfoDetailSettting}
 				options={{header: props => <SaveButtonHeader {...props} />, title: '프로필 상세 정보'}}
+			/>
+			<CommunityMainStackNavi.Screen
+				name="ReportDetail"
+				component={ReportDetail}
+				options={{header: props => <SimpleWithMeatballHeader {...props} />}}
+			/>
+			<CommunityMainStackNavi.Screen
+				name="MissingAnimalDetail"
+				component={MissingAnimalDetail}
+				options={{header: props => <SimpleWithMeatballHeader {...props} />}}
 			/>
 		</CommunityMainStackNavi.Navigator>
 	);

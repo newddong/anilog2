@@ -444,8 +444,11 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					<FlatList
 						data={removeThis}
 						renderItem={renderOtherRequest}
-						keyExtractor={keyExtractor}
-						getItemLayout={getItemLayout}
+						keyExtractor={item => item._id}
+						getItemLayout={(data, index) => {
+							if (!data[index]) return {length: 0, offset: 0, index: index};
+							return {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index: index};
+						}}
 						style={{backgroundColor: '#fff'}}
 						showsVerticalScrollIndicator={false}
 						ListEmptyComponent={whenEmpty}
@@ -468,6 +471,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				<FlatList
 					data={comments && comments.length > 2 ? comments.slice(0, 2) : comments}
 					renderItem={renderItem}
+					keyExtractor={item => item._id}
 					ListHeaderComponent={header()}
 					ListFooterComponent={footer()}
 					ListEmptyComponent={<Text style={[txt.roboto28b, {color: GRAY10, paddingVertical: 40 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>}

@@ -28,23 +28,7 @@ export default MissingReportList = props => {
 	const urgentBtnRef = React.useRef();
 
 	React.useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', () => {
-			if (feed_obj.deleted_obj != {}) {
-				try {
-					if (data != 'false') {
-						console.log('feed_obj.deleted_obj', feed_obj.deleted_obj);
-						//삭제된 실종,제보 반영
-						console.log('data', data.length);
-						setData(data.filter(e => e._id != feed_obj.deleted_obj._id));
-						feed_obj.deleted_obj = {};
-					}
-				} catch (err) {
-					console.log('err', err);
-				}
-			}
-		});
 		getList();
-		return unsubscribe;
 	}, []);
 
 	React.useEffect(() => {
@@ -56,8 +40,26 @@ export default MissingReportList = props => {
 					feed_obj.list.push(v);
 				}
 			});
-			console.log('feed_obj.list at MissingReportList', feed_obj.list.length);
 		}
+		const unsubscribe = navigation.addListener('focus', () => {
+			if (feed_obj.deleted_obj._id) {
+				try {
+					console.log('deleted List', feed_obj.deleted_list);
+					//삭제된 실종,제보 반영
+					let temp = [...data];
+					temp = temp.filter(e => !feed_obj.deleted_list.includes(e._id));
+					setData(temp);
+					// setData(data.filter(e => e._id != feed_obj.deleted_obj._id));
+					feed_obj.deleted_obj = {};
+				} catch (err) {
+					console.log('err', err);
+				}
+			}
+		});
+
+		return () => {
+			unsubscribe();
+		};
 	}, [data]);
 
 	const getList = refresh => {

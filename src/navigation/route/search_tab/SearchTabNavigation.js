@@ -142,13 +142,14 @@ export default SearchTabNavigation = props => {
 	};
 
 	const getCommunityList = async () => {
+		console.log('searchContext.searchInfo.searchInput.trimEnd()', searchContext.searchInfo.searchInput.trimEnd());
 		return new Promise(async function (resolve, reject) {
 			try {
 				getSearchCommunityList(
 					{
 						searchKeyword: searchContext.searchInfo.searchInput.trimEnd(),
 						page: 1,
-						limit: REVIEW_LIMIT,
+						limit: 1000,
 					},
 					result => {
 						// console.log('searchContext.searchInfo.searchInput', searchContext.searchInfo.searchInput);

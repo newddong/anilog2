@@ -96,11 +96,14 @@ export default FeedList = ({route}) => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			setFocused(true);
-			if (feed_obj.deleted_obj) {
+			if (feed_obj.deleted_list && feed_obj.deleted_list.length) {
 				//삭제된 실종,제보 반영
 				try {
-					console.log('feedList when deleted_obj', feedList.length);
-					setFeed(feedList.filter(e => e._id != feed_obj.deleted_obj._id));
+					//삭제된 실종,제보 반영
+					let temp = [...feedList];
+					temp = temp.filter(e => !feed_obj.deleted_list.includes(e._id));
+					// setFeed(feedList.filter(e => e._id != feed_obj.deleted_obj._id));
+					setFeed(temp);
 					feed_obj.deleted_obj = {};
 				} catch (err) {
 					console.log('err', err);
@@ -617,7 +620,6 @@ export default FeedList = ({route}) => {
 	const [testTx, setTx] = React.useState('한');
 	const [code, setCode] = React.useState(62);
 	const viewable = React.useCallback(e => {
-
 		setViewIndex(e.viewableItems[0]?.index);
 	}, []);
 	const separatorComp = React.useCallback(() => {
@@ -646,11 +648,7 @@ export default FeedList = ({route}) => {
 					maxToRenderPerBatch={5}
 					updateCellsBatchingPeriod={10}
 					initialNumToRender={2}
-
 					onEndReachedThreshold={0.3}
-
-
-
 					onEndReached={onEndReached}
 				/>
 			}

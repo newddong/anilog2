@@ -91,6 +91,8 @@ import OpenSourceDetail from 'Templete/user/OpenSourceDetail';
 import FeedWrite from 'Root/component/templete/feed/FeedWrite';
 import FeedWriteHeader from 'Root/navigation/header/FeedWriteHeader';
 import CommunityEdit from 'Root/component/templete/community/CommunityEdit';
+import ReportDetail from 'Root/component/templete/missing/ReportDetail';
+import MissingAnimalDetail from 'Root/component/templete/missing/MissingAnimalDetail';
 
 const MyStack = createStackNavigator();
 export default MyStackNavigation = props => {
@@ -335,9 +337,7 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen name="SettingOpen" component={SettingOpen} options={{header: props => <SimpleHeader {...props} />, title: '공개 설정'}} />
 			<MyStack.Screen name="ReceivedMessage" component={ReceivedMessage} options={{header: props => <SimpleHeader {...props} />, title: '쪽지함'}} />
 			{/* <MyStack.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />, title: props.title}} /> */}
-
 			<MyStack.Screen name="NoticeList" component={NoticeList} options={{header: props => <SimpleHeader {...props} />, title: '공지사항'}} />
-
 			<MyStack.Screen name="ServiceCenter" component={ServiceCenter} options={{header: props => <SimpleHeader {...props} />, title: '고객 센터'}} />
 			<MyStack.Screen name="CategoryHelp" component={CategoryHelp} options={{header: props => <AlarmAndSearchHeader {...props} />}} />
 			<MyStack.Screen
@@ -424,6 +424,12 @@ export default MyStackNavigation = props => {
 					header: props => <SendHeader {...props} />,
 					title: ' ',
 				})}
+			/>
+			<MyStack.Screen name="ReportDetail" component={ReportDetail} options={{header: props => <SimpleWithMeatballHeader {...props} />}} />
+			<MyStack.Screen
+				name="MissingAnimalDetail"
+				component={MissingAnimalDetail}
+				options={{header: props => <SimpleWithMeatballHeader {...props} />}}
 			/>
 		</MyStack.Navigator>
 	);

@@ -40,23 +40,6 @@ export default ProtectRequestList = ({route}) => {
 	const flatlist = React.useRef();
 
 	React.useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', () => {
-			// filterRef.current ? false : fetchData(); //포커스마다 새로 fetch를 시도하면 상세글을 갔다가 메인페이지로 돌아와도 기존의 스크롤로 이동을 하지 않음
-			// console.log('리뷰 게시글 전역변수 길이 :  ', community_obj.review.length);
-			if (protect_obj.protect.length > 0) {
-				console.log('protect_obj.protect.length : ', protect_obj.protect.length);
-				// let temp = [...data];
-				// protect_obj.protect.map((v, i) => {
-				// 	console.log('protect_animal_rescue_location', i, v.protect_animal_id.protect_animal_rescue_location);
-				// 	console.log('i', i, v.is_favorite);
-				// });
-				// setData(protect_obj.protect);
-			}
-		});
-		return unsubscribe;
-	}, []);
-
-	React.useEffect(() => {
 		getList(); //필터가 바뀔 때마다 호출되도록 설정
 	}, [filterData]);
 
@@ -113,7 +96,8 @@ export default ProtectRequestList = ({route}) => {
 			params,
 			result => {
 				// console.log('result 첫값 :', result.msg[0].protect_animal_id.protect_animal_rescue_location);
-				console.log('result length  ', result.msg.length);
+				// console.log('result length  ', result.msg.length);
+				console.log('total', result.total_count);
 				let res = result.msg;
 				res.filter(e => e != null); //간헐적으로 오는 null 익셉션 처리
 				//오브젝트 뎁스 일치화 작업

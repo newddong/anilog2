@@ -24,16 +24,20 @@ export default SimpleWithMeatballHeader = ({route, options, back}) => {
 
 	//즐겨찾기 상태 아이콘 출력인 경우
 	React.useEffect(() => {
-		if (route.params?.request_object) {
-			console.log('route.params.request_object', route.params.request_object?.protect_request_is_favorite);
-			!route.params.request_object?.protect_request_is_favorite ? setFavoriteTag(false) : setFavoriteTag(true);
-		} else if (route.params.feed_object) {
-			// console.log('is_favorite feed_object', route.params.feed_object);
-			const find = feed_obj.list.findIndex(e => e._id == route.params.feed_object._id);
-			if (find != -1) {
-				setFavoriteTag(feed_obj.list[find].is_favorite);
+		try {
+			if (route.params?.request_object) {
+				console.log('route.params.request_object', route.params.request_object?.protect_request_is_favorite);
+				!route.params.request_object?.protect_request_is_favorite ? setFavoriteTag(false) : setFavoriteTag(true);
+			} else if (route.params.feed_object) {
+				// console.log('is_favorite feed_object', route.params.feed_object);
+				const find = feed_obj.list.findIndex(e => e._id == route.params.feed_object._id);
+				if (find != -1) {
+					setFavoriteTag(feed_obj.list[find].is_favorite);
+				}
+				// !route.params.feed_object?.is_favorite ? setFavoriteTag(false) : setFavoriteTag(true);
 			}
-			// !route.params.feed_object?.is_favorite ? setFavoriteTag(false) : setFavoriteTag(true);
+		} catch (err) {
+			console.log('err', err);
 		}
 	}, [route.params]);
 
@@ -310,7 +314,7 @@ export default SimpleWithMeatballHeader = ({route, options, back}) => {
 					return <FavoriteTag48_Border onPress={() => onPressFavorite(true)} />;
 				}
 			}
-		} else {
+		} else if (route.params.request_object) {
 			const isWriter = route.params.request_object && userGlobalObject.userInfo._id == route.params.request_object.protect_request_writer_id._id; //작성자인지 여부 판단
 			if (isWriter) {
 				return <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />;
@@ -321,6 +325,8 @@ export default SimpleWithMeatballHeader = ({route, options, back}) => {
 					return <FavoriteTag48_Border onPress={() => onPressFavorite(true)} />;
 				}
 			}
+		} else {
+			return <></>;
 		}
 	};
 

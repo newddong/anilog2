@@ -12,7 +12,7 @@ import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 import {Filter60Border, Filter60Filled} from 'Root/component/atom/icon';
 import moment from 'moment';
 import {getSearchResultProtectRequest, getSearchResultProtectRequestImprovingV1} from 'Root/api/protectapi';
-import protect_obj, {updateProtect} from 'Root/config/protect_obj';
+import protect_obj, {pushProtect, updateProtect} from 'Root/config/protect_obj';
 import {useNavigation} from '@react-navigation/core';
 import DP from 'Root/config/dp';
 
@@ -115,7 +115,7 @@ export default ProtectRequestList = ({route}) => {
 				}
 				console.log('getSearchResultProtectRequest length', list.length);
 				setData(list);
-				protect_obj.protect = list;
+				// protect_obj.protect = list;
 				Modal.close();
 				setOffset(offset + 1); //데이터를 추가한 뒤 페이지 ++
 				setLoading(false); //로딩 Indicator 종료
@@ -129,6 +129,12 @@ export default ProtectRequestList = ({route}) => {
 			},
 		);
 	};
+
+	React.useEffect(() => {
+		if (data != 'false') {
+			pushProtect(data);
+		}
+	}, [data]);
 
 	//좌상단 필터 모달 호출
 	const onPressFilter = () => {

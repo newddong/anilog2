@@ -47,29 +47,29 @@ export default MissingAnimalDetail = props => {
 				feedobject_id: props.route.params._id,
 			},
 			data => {
+				// console.log('result / MissingAnimalDetail / getFeedDetailById', data.msg);
 				let result = data.msg;
 				result.feed_writer_id.is_favorite = result.is_favorite;
 				setData(result);
 				// console.log('data', data.msg);
 				navigation.setParams({writer: data.msg.feed_writer_id._id, isMissingOrReport: true, feed_object: data.msg});
-				if (props.route.params && props.route.params.from == 'feedList') {
-					// console.log('result', result);
-					const getGender = () => {
-						switch (result.missing_animal_sex) {
-							case 'male':
-								return '남아';
-							case 'female':
-								return '여아';
-							case 'unknown':
-								return '';
-							default:
-								break;
-						}
-					};
-					navigation.setOptions({
-						title: `${result.missing_animal_species}/${result.missing_animal_species_detail}${getGender() ? '/' + getGender() : ''}`,
-					});
-				}
+				// console.log('result', result);
+				const getGender = () => {
+					switch (result.missing_animal_sex) {
+						case 'male':
+							return '남아';
+						case 'female':
+							return '여아';
+						case 'unknown':
+							return '';
+						default:
+							break;
+					}
+				};
+				navigation.setOptions({
+					title: `${result.missing_animal_species}/${result.missing_animal_species_detail}${getGender() ? '/' + getGender() : ''}`,
+				});
+
 				fetchMissingPostList(result._id);
 			},
 			err => {

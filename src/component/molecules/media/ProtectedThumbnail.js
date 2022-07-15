@@ -6,6 +6,8 @@ import {txt} from 'Root/config/textstyle';
 import {Female48, Male48, Blur, RainbowBridge, RainbowBridge_226} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import FastImage from 'react-native-fast-image';
+import {useNavigation} from '@react-navigation/core';
+import feed_obj from 'Root/config/feed_obj';
 /**
  * 버튼 컴포넌트트
  * @param {object} props - Props Object
@@ -15,7 +17,23 @@ import FastImage from 'react-native-fast-image';
  */
 const ProtectedThumbnail = props => {
 	// console.log('props ProtectThumb', props.data);
-	const data = props.data;
+	// const data = props.data;
+	const navigation = useNavigation();
+	const [data, setData] = React.useState(props.data);
+
+	//해당 보호요청 혹은 실종/제보 게시글의 수정이 발생했을 경우 썸네일을 갱신
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			try {
+				if (feed_obj.shouldUpdateByEdit && feed_obj.edit_obj && feed_obj.edit_obj._id == props.data._id) {
+					setData({...data, img_uri: feed_obj.edit_obj.feed_thumbnail});
+				}
+			} catch (err) {
+				console.log('err', err);
+			}
+		});
+		return unsubscribe;
+	}, []);
 
 	const borderByStatus = () => {
 		if (data.status == 'emergency') {

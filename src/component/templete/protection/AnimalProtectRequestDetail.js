@@ -34,6 +34,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const [pressed, setPressed] = React.useState(false);
 	const isShelter = userGlobalObject.userInfo.user_type == 'shelter';
 	const flatlist = React.useRef();
+	let mounted = true;
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
@@ -41,7 +42,10 @@ export default AnimalProtectRequestDetail = ({route}) => {
 			getCommnetList(); //댓글리스트 가져오기
 			setPressed(false);
 		});
-		return unsubscribe;
+		return () => {
+			unsubscribe();
+			mounted = false;
+		};
 	}, []);
 
 	// 상태변경시 헤더에서 reset 파라미터를 true 변경 => 게시글 정보 갱신을 위한 api 재접속
@@ -61,7 +65,10 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				// console.log('result /AnimalProtectRequestDetail / getProtectRequestByProtectRequestId /  : ', result.msg.protect_request_writer_id);
 				let res = result.msg;
 				setData(res);
-				navigation.setParams({...route.params, request_object: result.msg, isMissingOrReport: false, reset: false});
+
+				if (mounted) {
+					navigation.setParams({...route.params, request_object: result.msg, isMissingOrReport: false, reset: false});
+				}
 				getProtectRequestList(result.msg); //API에서 받아온 보호요청게시글의 작성자 _id를 토대로, 작성자의 다른 보호요청게시글을 받아옴
 			},
 			err => {
@@ -86,11 +93,11 @@ export default AnimalProtectRequestDetail = ({route}) => {
 			{
 				shelter_userobject_id: request.protect_request_writer_id._id,
 				protect_request_status: 'all', //하단 리스트
-				limit: PROTECT_REQUEST_DETAIL_LIMIT,
+				limit: 5,
 				page: offset,
 			},
 			result => {
-				console.log('result / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', result.total_count);
+				console.log('result / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', result.msg.length);
 				//현재 보고 있는 보호요청게시글의 작성자(보호소)의 모든 보호요청게시글이 담겨 있는 writersAnotherRequests
 				//그러나 현재 보고 있는 보호요청게시글은 해당 리스트에 출력이 되어서는 안됨 => Filter처리
 				const res = result.msg;
@@ -214,16 +221,18 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	};
 
 	//보호요청 더보기의 리스트 중 한 아이템의 즐겨찾기 태그 클릭
-	const onPressFavoriteTag = (bool, index) => {
+	const onPressFavoriteTag = (bool, index, item) => {
+		console.log('item', item._id);
 		setFavoriteEtc(
 			{
 				collectionName: 'protectrequestobjects',
-				target_object_id: writersAnotherRequests[index]._id,
+				target_object_id: item._id,
 				is_favorite: bool,
 			},
 			result => {
-				console.log('result / setFavoriteEtc /  :', result.msg.favoriteEtc);
-				updateProtect(writersAnotherRequests[index]._id, bool);
+				// console.log('result / setFavoriteEtc /  :', result.msg.favoriteEtc.favorite_etc_target_object_id);
+				// console.log('즐겨찾기한 id : ', writersAnotherRequests[index]._id, writersAnotherRequests[index].is_favorite);
+				updateProtect(item._id, bool);
 			},
 			err => {
 				console.log('err / setFavoriteEtc / : ', err);
@@ -416,18 +425,19 @@ export default AnimalProtectRequestDetail = ({route}) => {
 			</View>
 		);
 	};
+	const renderOtherRequest = ({item, index}) => {
+		return (
+			<ProtectRequest
+				data={item}
+				key={item._id + new Date().getTime()}
+				onClickLabel={(status, id) => onClick_ProtectedThumbLabel(status, id, item)}
+				onFavoriteTag={e => onPressFavoriteTag(e, index, item)}
+			/>
+		);
+	};
 
 	//보호요청 더보기 및 댓글 입력란
 	const footer = () => {
-		const renderOtherRequest = ({item, index}) => {
-			return (
-				<ProtectRequest
-					data={item}
-					onClickLabel={(status, id) => onClick_ProtectedThumbLabel(status, id, item)}
-					onFavoriteTag={e => onPressFavoriteTag(e, index)}
-				/>
-			);
-		};
 		const removeThis = writersAnotherRequests.filter(e => e._id != data._id);
 
 		return (

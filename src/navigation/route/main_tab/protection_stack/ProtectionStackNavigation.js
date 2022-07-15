@@ -33,6 +33,8 @@ import PhotoSelectHeader from 'Root/navigation/header/PhotoSelectHeader';
 import LogoHeader from 'Root/navigation/header/LogoHeader';
 import CommunityEdit from 'Root/component/templete/community/CommunityEdit';
 import SendHeader from 'Root/navigation/header/SendHeader';
+import FeedWrite from 'Root/component/templete/feed/FeedWrite';
+import FeedWriteHeader from 'Root/navigation/header/FeedWriteHeader';
 
 const ProtectionStack = createStackNavigator();
 
@@ -85,6 +87,7 @@ export default ProtectionStackNavigation = props => {
 				component={AddPhoto}
 				options={{header: props => <PhotoSelectHeader {...props} />, title: ''}}
 			/>
+			<ProtectionStack.Screen name="MultiPhotoSelect" component={AddPhoto} options={{header: props => <PhotoSelectHeader {...props} />, title: ''}} />
 			<ProtectionStack.Screen
 				name="ProtectCommentList"
 				component={ProtectCommentList}
@@ -166,6 +169,21 @@ export default ProtectionStackNavigation = props => {
 					header: props => <SendHeader {...props} />,
 					title: ' ',
 				})}
+			/>
+			<ProtectionStack.Screen
+				name="FeedWrite"
+				component={FeedWrite}
+				options={{header: props => <FeedWriteHeader {...props} />, title: '게시물 작성'}}
+			/>
+			<ProtectionStack.Screen
+				name="FeedMissingWrite"
+				component={FeedWrite}
+				options={{header: props => <FeedWriteHeader {...props} />, title: '실종 게시물'}}
+			/>
+			<ProtectionStack.Screen
+				name="FeedReportWrite"
+				component={FeedWrite}
+				options={{header: props => <FeedWriteHeader {...props} />, title: '제보 게시물'}}
 			/>
 		</ProtectionStack.Navigator>
 	);

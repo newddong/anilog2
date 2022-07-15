@@ -20,7 +20,7 @@ import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import ParentComment from 'Root/component/organism/comment/ParentComment';
 import {DEFAULT_PROFILE, NETWORK_ERROR, NOT_REGISTERED_SHELTER, PROTECT_REQUEST_DETAIL_LIMIT, UNAVAILABLE_REQUEST_STATUS} from 'Root/i18n/msg';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
-import {updateProtect} from 'Root/config/protect_obj';
+import {pushProtect, updateProtect} from 'Root/config/protect_obj';
 import {Phone54, PhoneIcon, ProfileDefaultImg} from 'Root/component/atom/icon';
 
 //AnimalProtectRequestDetail 호출 경로
@@ -113,6 +113,11 @@ export default AnimalProtectRequestDetail = ({route}) => {
 			},
 		);
 	};
+	React.useEffect(() => {
+		if (writersAnotherRequests != 'false') {
+			pushProtect(writersAnotherRequests);
+		}
+	}, [writersAnotherRequests]);
 
 	//리스트 페이징 작업
 	const onEndReached = () => {
@@ -463,6 +468,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				<FlatList
 					data={comments && comments.length > 2 ? comments.slice(0, 2) : comments}
 					renderItem={renderItem}
+					keyExtractor={item => item._id}
 					ListHeaderComponent={header()}
 					ListFooterComponent={footer()}
 					ListEmptyComponent={<Text style={[txt.roboto28b, {color: GRAY10, paddingVertical: 40 * DP, textAlign: 'center'}]}>댓글이 없습니다.</Text>}
@@ -476,12 +482,16 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					<></>
 				) : (
 					<View style={[style.btnContainer]}>
-						{/* <AniButton onPress={onPressProtectRequest} btnTitle={'임시보호 신청'} btnStyle={'border'} btnLayout={btn_w276} titleFontStyle={30} /> */}
-						{/* <AniButton onPress={onPressAdoptionRequest} btnTitle={'입양 신청'} btnLayout={btn_w276} titleFontStyle={30} /> */}
-						<TouchableOpacity onPress={onPressProtectRequest} style={[style.protectBtn]}>
+						<TouchableOpacity
+							onPress={onPressProtectRequest}
+							activeOpacity={!data.protect_request_writer_id.user_contacted ? 1 : 0.2}
+							style={[style.protectBtn]}>
 							<Text style={[txt.noto32, {color: data.protect_request_writer_id.user_contacted ? MAINBLACK : GRAY30}]}>임시보호 문의</Text>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={onPressAdoptionRequest} style={[style.protectBtn]}>
+						<TouchableOpacity
+							onPress={onPressAdoptionRequest}
+							activeOpacity={!data.protect_request_writer_id.user_contacted ? 1 : 0.2}
+							style={[style.protectBtn]}>
 							<Text style={[txt.noto32, {color: data.protect_request_writer_id.user_contacted ? MAINBLACK : GRAY30}]}>입양 문의</Text>
 						</TouchableOpacity>
 						<TouchableOpacity onPress={connectPhoneCall} style={[style.phoneBtn]}>

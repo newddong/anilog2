@@ -101,7 +101,7 @@ export default MissingAnimalDetail = props => {
 				console.log('getMissingReportList result', result.msg.length);
 				const res = result.msg;
 				const findIndex = res.findIndex(e => e._id == props.route.params._id);
-				console.log('findIndex', findIndex);
+				// console.log('findIndex', findIndex);
 				let temp = [];
 				if (res.length < 5) {
 					setMissingList(res);

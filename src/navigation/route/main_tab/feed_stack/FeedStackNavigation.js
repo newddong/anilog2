@@ -28,6 +28,8 @@ import AddPhoto from 'Root/component/templete/media/AddPhoto';
 import PhotoSelectHeader from 'Root/navigation/header/PhotoSelectHeader';
 import FeedWrite from 'Root/component/templete/feed/FeedWrite';
 import FeedWriteHeader from 'Root/navigation/header/FeedWriteHeader';
+import SendHeader from 'Root/navigation/header/SendHeader';
+import CommunityEdit from 'Root/component/templete/community/CommunityEdit';
 const FeedStack = createStackNavigator();
 
 export default FeedStackNavigation = props => {
@@ -135,6 +137,14 @@ export default FeedStackNavigation = props => {
 			/>
 			<FeedStack.Screen name="ReportDetail" component={ReportDetail} options={{header: props => <SimpleWithMeatballHeader {...props} />}} />
 			<FeedStack.Screen name="SinglePhotoSelect" component={AddPhoto} options={{header: props => <PhotoSelectHeader {...props} />, title: ''}} />
+			<FeedStack.Screen
+				name={'CommunityEdit'}
+				component={CommunityEdit}
+				options={({route}) => ({
+					header: props => <SendHeader {...props} />,
+					title: ' ',
+				})}
+			/>
 		</FeedStack.Navigator>
 	);
 };

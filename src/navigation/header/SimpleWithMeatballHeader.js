@@ -24,8 +24,8 @@ export default SimpleWithMeatballHeader = ({route, options, back}) => {
 
 	//즐겨찾기 상태 아이콘 출력인 경우
 	React.useEffect(() => {
-		if (route.params.request_object) {
-			// console.log('route.params.request_object?.protect_request_is_favorite ', route.params.request_object?.protect_request_is_favorite);
+		if (route.params?.request_object) {
+			console.log('route.params.request_object', route.params.request_object?.protect_request_is_favorite);
 			!route.params.request_object?.protect_request_is_favorite ? setFavoriteTag(false) : setFavoriteTag(true);
 		} else if (route.params.feed_object) {
 			// console.log('is_favorite feed_object', route.params.feed_object);
@@ -135,7 +135,7 @@ export default SimpleWithMeatballHeader = ({route, options, back}) => {
 	//제보 실종 미트볼 메뉴 - 삭제 클릭
 	const onPressDeleteFeed = () => {
 		try {
-			// console.log('삭제 제보 실종', route.params._id, route.params?.feed_object.feed_content);
+			// console.log('삭제 제보 실종', route.params._id, route.params?.feed_object);
 			Modal.close();
 			setTimeout(() => {
 				Modal.popTwoBtn(
@@ -153,39 +153,8 @@ export default SimpleWithMeatballHeader = ({route, options, back}) => {
 									// console.log('result / DeleteFeed / SimpleWithMeatballHeader : ', result.msg);
 									Modal.close();
 									feed_obj.deleted_obj = route.params?.feed_object;
+									feed_obj.deleted_list.push(route.params?.feed_object._id);
 									// console.log('navi', JSON.stringify(navigation.getState()));
-									const tr = {
-										stale: false,
-										type: 'stack',
-										key: 'stack-_ualUkbrTqE6NUPyGIfor',
-										index: 1,
-										routes: [
-											{
-												key: 'ProtectionTab-LcAivqJmOGHGN9CrIvv_E',
-												name: 'ProtectionTab',
-												state: {
-													stale: false,
-													type: 'tab',
-													key: 'tab-bTOYiZi04DI7LapZElxqZ',
-													index: 1,
-													routeNames: ['ProtectRequestList', 'MissingReportList'],
-													history: [
-														{type: 'route', key: 'ProtectRequestList-Hfxl85jqWJx4u5C87S13w'},
-														{type: 'route', key: 'MissingReportList-36xWZJypAIw0283zA3DX4'},
-													],
-													routes: [
-														{name: 'ProtectRequestList', key: 'ProtectRequestList-Hfxl85jqWJx4u5C87S13w'},
-														{name: 'MissingReportList', key: 'MissingReportList-36xWZJypAIw0283zA3DX4'},
-													],
-												},
-											},
-											{
-												key: 'ReportDetail-HoRHRtamS7J_z6d9OdoKi',
-												name: 'ReportDetail',
-												params: {},
-											},
-										],
-									};
 									navigation.goBack();
 								},
 								err => {

@@ -25,23 +25,11 @@ export default MissingReportList = props => {
 	const [filterData, setFilterData] = React.useState({city: ''});
 	const [onlyMissing, setOnlyMissing] = React.useState(false); //실종글만 보기
 	const [onlyReport, setOnlyReport] = React.useState(false); // 제보글만 보기
+	const [pressed, setPressed] = React.useState(false);
 	const urgentBtnRef = React.useRef();
 
 	React.useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', () => {
-			if (feed_obj.deleted_obj != {}) {
-				try {
-					console.log('feed_obj.deleted_obj', feed_obj.deleted_obj);
-					//삭제된 실종,제보 반영
-					setData(data.filter(e => e._id != feed_obj.deleted_obj._id));
-					feed_obj.deleted_obj = {};
-				} catch (err) {
-					console.log('err', err);
-				}
-			}
-		});
 		getList();
-		return unsubscribe;
 	}, []);
 
 	React.useEffect(() => {
@@ -53,8 +41,26 @@ export default MissingReportList = props => {
 					feed_obj.list.push(v);
 				}
 			});
-			console.log('feed_obj.list at MissingReportList', feed_obj.list.length);
 		}
+		const unsubscribe = navigation.addListener('focus', () => {
+			if (feed_obj.deleted_obj._id) {
+				try {
+					console.log('deleted List', feed_obj.deleted_list);
+					//삭제된 실종,제보 반영
+					let temp = [...data];
+					temp = temp.filter(e => !feed_obj.deleted_list.includes(e._id));
+					setData(temp);
+					// setData(data.filter(e => e._id != feed_obj.deleted_obj._id));
+					feed_obj.deleted_obj = {};
+				} catch (err) {
+					console.log('err', err);
+				}
+			}
+		});
+
+		return () => {
+			unsubscribe();
+		};
 	}, [data]);
 
 	const getList = refresh => {
@@ -211,8 +217,11 @@ export default MissingReportList = props => {
 				navigation.navigate('LoginRequired');
 			});
 		} else {
+			setPressed(true);
 			// setShowActionButton(!showActionButton);
-			Modal.popUrgentBtnModal(moveToReportForm, moveToMissingForm, urgentBtnRef.current);
+			setTimeout(() => {
+				Modal.popUrgentBtnModal(moveToReportForm, moveToMissingForm, urgentBtnRef.current, () => setPressed(false));
+			}, 150);
 		}
 	};
 
@@ -319,8 +328,8 @@ export default MissingReportList = props => {
 				)}
 			</View>
 
-			<View style={[feedWrite.urgentBtnContainer]}>
-				<View style={[styles.urgentActionButton, {}]} onLayout={e => (urgentBtnRef.current = e.nativeEvent.layout)}>
+			<View style={[pressed ? feedWrite.urgentBtnContainer2 : feedWrite.urgentBtnContainer]}>
+				<View style={[styles.urgentActionButton]} onLayout={e => (urgentBtnRef.current = e.nativeEvent.layout)}>
 					<TouchableOpacity onPress={onPressShowActionButton}>
 						<Urgent_Write1 />
 					</TouchableOpacity>

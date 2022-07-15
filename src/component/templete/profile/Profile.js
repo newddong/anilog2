@@ -18,7 +18,7 @@ import CommunityList from '../community/CommunityList';
 import {getProtectRequestListByShelterId} from 'Root/api/shelterapi';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
-import {updateProtect} from 'Root/config/protect_obj';
+import protect_obj, {updateProtect} from 'Root/config/protect_obj';
 import {styles} from 'Root/component/atom/image/imageStyle';
 
 export default Profile = ({route}) => {
@@ -42,19 +42,32 @@ export default Profile = ({route}) => {
 			fetchData();
 			setFocused(true);
 			setPressed(false);
-			if (data.user_type == 'shelter') {
-				fetchProtectRequest();
-			}
 		});
+		if (data.user_type == 'shelter') {
+			fetchProtectRequest();
+		}
 		return unsubscribe;
 	}, [route]);
 
-	React.useEffect(()=>{
+	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('blur', () => {
 			setFocused(false);
 		});
 		return unsubscribe;
-	},[navigation])
+	}, [navigation]);
+
+	React.useEffect(() => {
+		if (protectList != 'false') {
+			protectList.map((v, i) => {
+				const find = protect_obj.protect.findIndex(e => e._id == v._id);
+				if (find == -1) {
+					//현 메모리에 저장되어 있지않은 피드아이템만 추가
+					protect_obj.protect.push(v);
+				}
+			});
+			console.log('protect_obj.protect', protect_obj.protect.length);
+		}
+	}, [protectList]);
 
 	//유저프로필 데이터 수신
 	const fetchData = () => {
@@ -64,7 +77,6 @@ export default Profile = ({route}) => {
 				result => {
 					navigation.setOptions({title: result.msg.user_nickname, data: result.msg});
 					setData(result.msg);
-					console.log('getUserProfile is_Favorite ', result.msg.is_follow);
 				},
 				err => {
 					Modal.popOneBtn(err, '확인', () => {

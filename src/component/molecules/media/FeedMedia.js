@@ -13,6 +13,7 @@ import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/core';
 import HashText from '../info/HashText';
 import X2JS from 'x2js';
+import feed_obj from 'Root/config/feed_obj';
 
 /**
  *
@@ -55,7 +56,7 @@ export default FeedMedia = props => {
 	} = props.data;
 
 	const navigation = useNavigation();
-
+	const [data, setData] = React.useState(props.data);
 	const emergency_title = feed_type == 'report' ? '제보' : feed_type == 'missing' ? '실종' : '';
 	const isEmergency = feed_type == 'report' || feed_type == 'missing';
 	const animal_species = missing_animal_species || report_animal_species;
@@ -68,23 +69,46 @@ export default FeedMedia = props => {
 	let splitAddress = '';
 	let newMissingAddress = '';
 
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			const findIndex = feed_obj.list.findIndex(e => e._id == props.data._id);
+			if (findIndex != -1) {
+				if (feed_obj.shouldUpdateByEdit && feed_obj.edit_obj && feed_obj.edit_obj._id == props.data._id) {
+					console.log(';feed_obj.edit_obj', feed_obj.edit_obj?.report_witness_location);
+					setData(feed_obj.edit_obj);
+				}
+			}
+		});
+		return unsubscribe;
+	}, []);
+
 	if (feed_type == 'missing') {
-		const newMissingDateText = missing_animal_date.toString().split('-');
-		newMissingDate = newMissingDateText[0] + '.' + newMissingDateText[1] + '.' + newMissingDateText[2].toString().substring(0, 2);
-		// splitAddress = missing_animal_lost_location.split('"');
-		// newMissingAddress = splitAddress[11];
-		if (typeof missing_animal_lost_location == 'object') {
-			newMissingAddress = missing_animal_lost_location?.city + ' ' + missing_animal_lost_location?.district;
-		} else {
-			const parsed = JSON.parse(missing_animal_lost_location);
-			newMissingAddress = parsed?.city + ' ' + parsed?.district;
+		try {
+			const newMissingDateText = missing_animal_date.toString().split('-');
+			newMissingDate = newMissingDateText[0] + '.' + newMissingDateText[1] + '.' + newMissingDateText[2].toString().substring(0, 2);
+			// splitAddress = missing_animal_lost_location.split('"');
+			// newMissingAddress = splitAddress[11];
+			if (typeof missing_animal_lost_location == 'object') {
+				newMissingAddress = missing_animal_lost_location?.city + ' ' + missing_animal_lost_location?.district;
+			} else {
+				const parsed = JSON.parse(missing_animal_lost_location);
+				newMissingAddress = parsed?.city + ' ' + parsed?.district;
+			}
+		} catch (err) {
+			console.log('err', err);
 		}
 	}
 	if (feed_type == 'report') {
-		const newMissingDateText = report_witness_date.toString().split('-');
-		newMissingDate = newMissingDateText[0] + '.' + newMissingDateText[1] + '.' + newMissingDateText[2].toString().substring(0, 2);
-		// var splitAddress = report_witness_location.split('"');
-		// var newMissingAddress = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
+		try {
+			let newMissingDateText = report_witness_date.toString().split('-');
+			if (newMissingDateText && newMissingDateText.length == 3) {
+				newMissingDate = newMissingDateText[0] + '.' + newMissingDateText[1] + '.' + newMissingDateText[2].toString().substring(0, 2);
+			} else {
+				newMissingDate = report_witness_date;
+			}
+		} catch (err) {
+			console.log('err', err);
+		}
 	}
 	// console.log(props.data.medias);
 	const onSelect = () => {
@@ -217,7 +241,7 @@ export default FeedMedia = props => {
 				<View style={[style.emergency_background]}>
 					<View style={[{flexDirection: 'column'}]}>
 						<Text style={[txt.roboto38b, {color: 'white', lineHeight: 62 * DP}]} numberOfLines={1}>
-							{report_witness_location}
+							{data.report_witness_location}
 						</Text>
 						<View style={[style.report_date_container]}>
 							<Text style={[txt.noto32, {color: 'white'}]}>제보 날짜: {newMissingDate}</Text>

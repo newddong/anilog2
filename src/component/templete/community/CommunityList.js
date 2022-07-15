@@ -33,6 +33,7 @@ const CommunityList = React.memo(props => {
 	const [freeOffset, setFreeOffset] = React.useState(1);
 	const [reviewOffset, setReviewOffset] = React.useState(1);
 	const [refresh, setRefresh] = React.useState(false);
+	const [loading, setLoading] = React.useState(false);
 
 	React.useEffect(() => {
 		getArticleList();
@@ -77,6 +78,7 @@ const CommunityList = React.memo(props => {
 
 	const getArticleList = isRefresh => {
 		console.log('isRefresh', isRefresh, freeOffset);
+		setLoading(true);
 		getCommunityListByUserId(
 			{
 				userobject_id: props.user_id,
@@ -96,6 +98,7 @@ const CommunityList = React.memo(props => {
 					setFree(res);
 				}
 				setFreeOffset(freeOffset + 1);
+				setLoading(false);
 			},
 			err => {
 				if (err.includes('code 500')) {
@@ -104,12 +107,14 @@ const CommunityList = React.memo(props => {
 				} else if (err.includes('없습니다')) {
 					setFree([]);
 				}
+				setLoading(false);
 			},
 		);
 	};
 
 	const getReviewList = isRefresh => {
 		console.log('isRefresh', isRefresh, reviewOffset);
+		setLoading(true);
 		getCommunityListByUserId(
 			{
 				userobject_id: props.user_id,
@@ -129,6 +134,7 @@ const CommunityList = React.memo(props => {
 					setReview(res);
 				}
 				setReviewOffset(reviewOffset + 1);
+				setLoading(false);
 			},
 			err => {
 				if (err.includes('code 500')) {
@@ -137,6 +143,7 @@ const CommunityList = React.memo(props => {
 				} else if (err.includes('없습니다')) {
 					setReview([]);
 				}
+				setLoading(false);
 			},
 		);
 	};
@@ -303,6 +310,11 @@ const CommunityList = React.memo(props => {
 						showsVerticalScrollIndicator={false}
 						listKey={({item, index}) => index}
 					/>
+				)}
+				{loading && (
+					<View style={{}}>
+						<ActivityIndicator size={'large'} color={APRI10} />
+					</View>
 				)}
 			</View>
 		);

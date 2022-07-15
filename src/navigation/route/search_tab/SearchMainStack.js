@@ -24,6 +24,9 @@ import ChangePetProfileImage from 'Root/component/templete/pet/ChangePetProfileI
 import ProfileHeader from 'Root/navigation/header/ProfileHeader';
 import AddPhoto from 'Root/component/templete/media/AddPhoto';
 import PhotoSelectHeader from 'Root/navigation/header/PhotoSelectHeader';
+import MissingAnimalDetail from 'Root/component/templete/missing/MissingAnimalDetail';
+import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballHeader';
+import ReportDetail from 'Root/component/templete/missing/ReportDetail';
 
 const SearchStackNav = createStackNavigator();
 
@@ -137,6 +140,12 @@ export default SearchMainStack = props => {
 				options={{header: props => <SimpleHeader {...props} />, title: '보호소 정보 수정'}}
 			/>
 			<SearchStackNav.Screen name="HashFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: ''}} />
+			<SearchStackNav.Screen name="ReportDetail" component={ReportDetail} options={{header: props => <SimpleWithMeatballHeader {...props} />}} />
+			<SearchStackNav.Screen
+				name="MissingAnimalDetail"
+				component={MissingAnimalDetail}
+				options={{header: props => <SimpleWithMeatballHeader {...props} />}}
+			/>
 		</SearchStackNav.Navigator>
 	);
 };

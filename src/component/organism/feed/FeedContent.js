@@ -69,15 +69,16 @@ export default FeedContent = props => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			setPressed(false);
 			const findIndex = feed_obj.list.findIndex(e => e._id == _id);
+			// console.log('findIndex', findIndex);
 			if (findIndex != -1) {
 				setCommentCount(feed_obj.list[findIndex].feed_comment_count);
 				setIsFavorite(feed_obj.list[findIndex].is_favorite);
 				if (feed_obj.shouldUpdateByEdit && feed_obj.edit_obj && feed_obj.edit_obj._id == _id) {
-					// console.log('feed Contentetn : ', feed_content);
-					// console.log('feed_obj.edit_obj', feed_obj.edit_obj?.missing_animal_lost_location);
+					console.log('feed Contentetn : ', feed_content);
+					console.log('feed_obj.edit_obj', feed_obj.edit_obj?.report_witness_location);
 					setData(feed_obj.edit_obj);
-					feed_obj.shouldUpdateByEdit = false;
-					feed_obj.edit_obj = {};
+					// feed_obj.shouldUpdateByEdit = false;
+					// feed_obj.edit_obj = {};
 				}
 			} else {
 				// console.log('FeedContent 전역찾기', feed_content, is_favorite);
@@ -250,7 +251,8 @@ export default FeedContent = props => {
 	//피드 미트볼 메뉴 - 수정 클릭
 	const onPressEdit = () => {
 		Modal.close();
-		let editData = props.data;
+		let editData = data;
+		console.log('editData', editData);
 		editData.routeName = props.routeName;
 		navigation.navigate('FeedEdit', editData);
 	};
@@ -279,41 +281,47 @@ export default FeedContent = props => {
 	//피드 미트볼 - 즐겨찾기 설정
 	const onFavorite = isFavorite => {
 		// console.log(props.data, '22');
-		Modal.close();
-		setTimeout(() => {
-			Modal.popTwoBtn(
-				isFavorite ? '게시물을 즐겨찾기로 추가하시겠습니까?' : '게시물을 즐겨찾기에서 삭제 하시겠습니까?',
-				'아니오',
-				isFavorite ? '즐겨찾기 추가' : '즐겨찾기 삭제',
-				() => Modal.close(),
-				() => {
-					favoriteFeed(
-						{
-							feedobject_id: _id,
-							userobject_id: userGlobalObject.userInfo._id,
-							is_favorite: isFavorite,
-						},
-						result => {
-							// console.log('result / followUser / FeedContent', result.msg);
-							let temp = [...feed_obj.list];
-							const findIndex = temp.findIndex(e => e._id == _id); //현재 보고 있는 피드게시글이 저장된 리스트에서 몇 번째인지
-							console.log('index of Favorite', findIndex);
-							temp[findIndex].is_favorite = isFavorite;
-							feed_obj.list = temp;
-							Modal.close();
-							Modal.popNoBtn('즐겨찾기 ' + (isFavorite ? '추가' : '삭제') + '가 완료되었습니다.');
-							setIsFavorite(isFavorite);
-							setTimeout(() => {
+		if (userGlobalObject.userInfo.isPreviewMode) {
+			Modal.popLoginRequestModal(() => {
+				navigation.navigate('LoginRequired');
+			});
+		} else {
+			Modal.close();
+			setTimeout(() => {
+				Modal.popTwoBtn(
+					isFavorite ? '게시물을 즐겨찾기로 추가하시겠습니까?' : '게시물을 즐겨찾기에서 삭제 하시겠습니까?',
+					'아니오',
+					isFavorite ? '즐겨찾기 추가' : '즐겨찾기 삭제',
+					() => Modal.close(),
+					() => {
+						favoriteFeed(
+							{
+								feedobject_id: _id,
+								userobject_id: userGlobalObject.userInfo._id,
+								is_favorite: isFavorite,
+							},
+							result => {
+								// console.log('result / followUser / FeedContent', result.msg);
+								let temp = [...feed_obj.list];
+								const findIndex = temp.findIndex(e => e._id == _id); //현재 보고 있는 피드게시글이 저장된 리스트에서 몇 번째인지
+								console.log('index of Favorite', findIndex);
+								temp[findIndex].is_favorite = isFavorite;
+								feed_obj.list = temp;
 								Modal.close();
-							}, 200);
-						},
-						err => {
-							console.log('err / favorite', err);
-						},
-					);
-				},
-			);
-		}, 100);
+								Modal.popNoBtn('즐겨찾기 ' + (isFavorite ? '추가' : '삭제') + '가 완료되었습니다.');
+								setIsFavorite(isFavorite);
+								setTimeout(() => {
+									Modal.close();
+								}, 200);
+							},
+							err => {
+								console.log('err / favorite', err);
+							},
+						);
+					},
+				);
+			}, 100);
+		}
 	};
 
 	const meatBallSelectAction = (selected, context) => {
@@ -354,8 +362,8 @@ export default FeedContent = props => {
 
 	const meatballActions = context => {
 		let isFavorite = context.favorite_feeds.some(feed => feed._id == _id);
-		console.log('즐겨찾기됨?', isFavorite);
-		let isMyFeed = userGlobalObject.userInfo._id == props.data.feed_writer_id._id;
+		// console.log('즐겨찾기됨?', isFavorite);
+		let isMyFeed = userGlobalObject.userInfo._id == props.data.feed_writer_id._id || props.data.feed_writer_id;
 		let feedType = props.data.feed_type;
 		if (feedType == 'feed') {
 			if (isMyFeed) {
@@ -379,7 +387,7 @@ export default FeedContent = props => {
 						result.msg.map((v, i) => {
 							follow_id_list.push(v.follower_id._id);
 						});
-						console.log('follow_id_list', follow_id_list);
+						// console.log('follow_id_list', follow_id_list);
 						let isFollowers = follow_id_list.includes(feed_writer._id); //해당 피드 게시글 작성자가 내 팔로워 목록에 있는지 여부
 						//현재 팔로우 상태 중인 유저의 피드글의 미트볼 헤더 클릭
 						Modal.popSelectBoxModal(

@@ -17,6 +17,7 @@ import {updateUserInformation, nicknameDuplicationCheck} from 'Root/api/userapi'
 import SelectInput from 'Root/component/molecules/button/SelectInput';
 import {getAddressList} from 'Root/api/address';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
+import FastImage from 'react-native-fast-image';
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 export default UserInfoSetting = ({route}) => {
 	const navigation = useNavigation();
@@ -343,6 +344,7 @@ export default UserInfoSetting = ({route}) => {
 					districts => {
 						setDistrict(districts.msg);
 						// console.log()
+						setNewDistrict(districts.msg[0]);
 						// setData({...data, user_address: {...data.user_address, city: selected, district: districts.msg[0]}});
 						setNewCity(selected);
 						Modal.close();
@@ -359,7 +361,7 @@ export default UserInfoSetting = ({route}) => {
 			'시,군,구를 선택',
 			selected => {
 				getAddressList(
-					{city: data.user_address.city, district: selected},
+					{city: data.user_address.city},
 					// neighbor => {
 					// 	setDistrict(neighbor.msg);
 					// 	setData({...data, user_address: {...data.user_address, city: data.user_address.city, district: selected}});
@@ -379,37 +381,40 @@ export default UserInfoSetting = ({route}) => {
 	};
 	//닉네임 수정 버튼 함수
 	const modifyNickNameButton = () => {
+		console.log('');
 		if (nickNameEdit) {
 			if (newNick == data.user_nickname || newNick?.length == 0) {
 				console.log('닉네임 변경없음 or 길이 0');
 			} else {
-				updateUserInformation(
-					{
-						userobject_id: data._id,
-						user_nickname: newNick == '' ? data.user_nickname : newNick,
-					},
-					success => {
-						if (data.user_type == 'user') {
-							setNewNick(newNick);
-							userGlobalObject.userInfo.user_nickname = newNick;
-							userGlobalObject.userInfo.user_profile_uri = data.user_profile_uri;
-						}
-						Modal.close();
-						setTimeout(() => {
-							Modal.popNoBtn('닉네임이 성공적으로 \n 변경되었습니다.');
+				if (validateNewNick(newNick)) {
+					updateUserInformation(
+						{
+							userobject_id: data._id,
+							user_nickname: newNick == '' ? data.user_nickname : newNick,
+						},
+						success => {
+							if (data.user_type == 'user') {
+								setNewNick(newNick);
+								userGlobalObject.userInfo.user_nickname = newNick;
+								userGlobalObject.userInfo.user_profile_uri = data.user_profile_uri;
+							}
+							Modal.close();
 							setTimeout(() => {
-								Modal.close();
-							}, 1000);
-						}, 100);
-						// data.user_nickname = newNick;
-						setData({...data, user_nickname: newNick});
-						navigation.setOptions({title: newNick});
-					},
-					err => {
-						Modal.close();
-						console.log('err', err);
-					},
-				);
+								Modal.popNoBtn('닉네임이 성공적으로 \n 변경되었습니다.');
+								setTimeout(() => {
+									Modal.close();
+								}, 1000);
+							}, 100);
+							// data.user_nickname = newNick;
+							setData({...data, user_nickname: newNick});
+							navigation.setOptions({title: newNick});
+						},
+						err => {
+							Modal.close();
+							console.log('err', err);
+						},
+					);
+				}
 			}
 		}
 
@@ -443,10 +448,6 @@ export default UserInfoSetting = ({route}) => {
 		setLocationEdit(!locationEdit);
 	};
 
-	React.useEffect(() => {
-		console.log('data', data.user_address);
-	}, [data]);
-
 	const handleError = error => {
 		Modal.popOneBtn(error, '확인', () => Modal.close());
 	};
@@ -461,7 +462,14 @@ export default UserInfoSetting = ({route}) => {
 				<ScrollView>
 					{/* step1 */}
 					<View style={[temp_style.userInfoSetting_step1]}>
-						<View style={[styles.profileImageLarge]}>{data._id != undefined && <ProfileImageMedium148 data={data} />}</View>
+						<View style={[styles.profileImageLarge]}>
+							{data._id != undefined && (
+								<FastImage
+									source={{uri: userGlobalObject.userInfo.user_profile_uri}}
+									style={{width: 148 * DP, height: 148 * DP, borderRadius: 500}}
+								/>
+							)}
+						</View>
 						<View style={[styles.textBox]}>
 							<TouchableOpacity style={[{alignItems: 'center'}]} onPress={onPressModofyProfile}>
 								<Text style={[txt.noto30, {color: APRI10}]}>프로필 사진 바꾸기</Text>
@@ -604,10 +612,17 @@ export default UserInfoSetting = ({route}) => {
 							</View>
 							<View style={[styles.addressSelect]}>
 								<View style={[{marginRight: 20 * DP}]}>
-									<SelectInput onPressInput={onSelectCity} width={284} height={108} value={newCity} noBorder={true} fontSize={28} />
+									<SelectInput onPressInput={onSelectCity} width={284} height={108} value={newCity || '광역시, 도'} noBorder={true} fontSize={28} />
 								</View>
 								<View>
-									<SelectInput onPressInput={onSelectDistrict} width={284} height={108} value={newDistrict} noBorder={true} fontSize={28} />
+									<SelectInput
+										onPressInput={onSelectDistrict}
+										width={284}
+										height={108}
+										value={newDistrict || '시, 군, 구'}
+										noBorder={true}
+										fontSize={28}
+									/>
 								</View>
 							</View>
 						</View>

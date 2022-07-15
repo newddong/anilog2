@@ -1008,7 +1008,7 @@ export default PetInfoSetting = ({route}) => {
 									{/* <View style={[setPetInformation.kg]}>
 									<Text style={[txt.noto28]}> kg </Text>
 								</View> */}
-									<View style={{position: 'absolute', right: 24 * DP, top: 20 * DP}}>
+									<View style={{position: 'absolute', right: 24 * DP, top: 30 * DP}}>
 										<Text style={[txt.noto28, {}]}>kg</Text>
 									</View>
 								</View>

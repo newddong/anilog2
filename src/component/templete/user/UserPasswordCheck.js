@@ -17,16 +17,19 @@ export default UserPasswordCheck = props => {
 		...props.route.params,
 		user_password: '',
 	}).current;
-
+	React.useEffect(() => {
+		console.log('userData', user_data);
+	}, [user_data]);
 	// 확인 버튼 클릭
 	const goToNextStep = () => {
+		console.log('user_data', user_data);
 		// setData({ ...data, user_password: pwd });
 		props.navigation.navigate('AssignUserHabitation', user_data);
 	};
 
 	const onChangePwd = pwd => {
 		console.log('onChangePwd    ' + pwd);
-		user_data.user_password = pwd;
+		user_data.user_data.user_password = pwd;
 	}; //오로지 인풋값 변화만을 감지, validation 로직과는 분리
 
 	//암호 양식(템플릿 레벨에서 정의, T/F값을 반환하여 양식 통과여부를 결정)

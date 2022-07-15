@@ -20,7 +20,7 @@ const AssignUserHabitation = props => {
 	console.log('-AssignUserHabitation-');
 	const debug = false;
 	const [data, setData] = React.useState({
-		...props.route.params,
+		...props.route.params.user_data,
 		user_address: {
 			// city: '시를 선택해 주세요', //시,도
 			// district: '구를 선택해 주세요', //군,구
@@ -56,7 +56,7 @@ const AssignUserHabitation = props => {
 	}, []);
 
 	React.useEffect(() => {
-		console.log('data.user_address:', data.user_address);
+		console.log('data.user_address:', data.user_address, data);
 		if (
 			data.user_address.city != '' &&
 			data.user_address.district != '군, 구를 선택해주세요.'
@@ -74,6 +74,7 @@ const AssignUserHabitation = props => {
 	};
 
 	const goToNextStep = () => {
+		console.log('datadata', data);
 		props.navigation.navigate('AssignUserProfileImage', data);
 	};
 

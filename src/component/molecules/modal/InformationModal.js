@@ -266,9 +266,17 @@ const InformationModal = props => {
 											})}
 										</Text>
 										{/* 더미 텍스트 컴포넌트 종료 */}
-										<View style={{flexDirection: 'row', width: 620 * DP, marginBottom: 20 * DP, marginTop: 10 * DP}}>
+										<View style={{flexDirection: 'row', width: 620 * DP, marginBottom: 20 * DP, marginTop: 10 * DP, justifyContent: 'center'}}>
 											{user_interest_list && user_interest_list.length == 0 ? (
-												<Text style={[txt.noto28, {width: 620 * DP, marginTop: 10 * DP, textAlign: 'center'}]}>
+												<Text
+													style={[
+														txt.noto28,
+														{
+															// width: 620 * DP,
+															marginTop: 10 * DP,
+															textAlign: 'center',
+														},
+													]}>
 													아직 {data.user_nickname}님의 관심사 설정이 되지 않았습니다.
 												</Text>
 											) : (

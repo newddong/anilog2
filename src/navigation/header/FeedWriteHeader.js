@@ -32,20 +32,32 @@ export default FeedWriteHeader = ({route, options}) => {
 						index: 1,
 						routes: [
 							{
-								name: 'MainTab',
+								name: 'ProtectionTab',
 								params: {
-									screen: 'PROTECTION',
-									params: {
-										screen: 'ProtectionTab',
-										params: {
-											isMissing: true,
-										},
-									},
+									isMissing: true,
 								},
 							},
 							{key: result.msg._id, name: 'ReportDetail', params: {_id: result.msg._id}},
 						],
 					});
+					// navigation.reset({
+					// 	index: 1,
+					// 	routes: [
+					// 		{
+					// 			name: 'MainTab',
+					// 			params: {
+					// 				screen: 'PROTECTION',
+					// 				params: {
+					// 					screen: 'ProtectionTab',
+					// 					params: {
+					// 						isMissing: true,
+					// 					},
+					// 				},
+					// 			},
+					// 		},
+					// 		{key: result.msg._id, name: 'ReportDetail', params: {_id: result.msg._id}},
+					// 	],
+					// });
 					// navigation.navigate('ReportDetail', {_id: result.msg._id});
 				} else if (param.feedType == 'Missing') {
 					let sexValue = '';
@@ -65,20 +77,32 @@ export default FeedWriteHeader = ({route, options}) => {
 						index: 1,
 						routes: [
 							{
-								name: 'MainTab',
+								name: 'ProtectionTab',
 								params: {
-									screen: 'PROTECTION',
-									params: {
-										screen: 'ProtectionTab',
-										params: {
-											isMissing: true,
-										},
-									},
+									isMissing: true,
 								},
 							},
 							{key: result.msg._id, name: 'MissingAnimalDetail', params: {title: titleValue, _id: result.msg._id}},
 						],
 					});
+					// navigation.reset({
+					// 	index: 1,
+					// 	routes: [
+					// 		{
+					// 			name: 'MainTab',
+					// 			params: {
+					// 				screen: 'PROTECTION',
+					// 				params: {
+					// 					screen: 'ProtectionTab',
+					// 					params: {
+					// 						isMissing: true,
+					// 					},
+					// 				},
+					// 			},
+					// 		},
+					// 		{key: result.msg._id, name: 'MissingAnimalDetail', params: {title: titleValue, _id: result.msg._id}},
+					// 	],
+					// });
 					// navigation.navigate('MissingAnimalDetail', {title: titleValue, _id: result.msg._id});
 				} else {
 					navigation.goBack();
@@ -103,11 +127,10 @@ export default FeedWriteHeader = ({route, options}) => {
 						);
 					} else {
 						// console.log('route.params', route.params);
-						let edited = {...route.params};
+						let edited = {...route.params, feed_medias: result.msg.feed_medias, feed_thumbnail: result.msg.feed_thumbnail};
 						if (route.params && route.params.feed_type == 'report') {
 							edited.report_witness_location = result.msg?.report_witness_location;
 						}
-						// console.log('edited First : ', edited.media_uri.cropUri);
 						feed_obj.edit_obj = edited; //피드수정 => 수정한 리스트 아이템만 setData하기 위한 오브젝트
 						feed_obj.shouldUpdateByEdit = true;
 						navigation.goBack();
@@ -174,51 +197,6 @@ export default FeedWriteHeader = ({route, options}) => {
 					break;
 				case 'Missing':
 					{
-						const tr = {
-							feedType: 'Missing',
-							feed_content: '오리진',
-							feed_is_protect_diary: false,
-							feed_medias: [
-								{
-									duration: 0,
-									is_video: false,
-									media_uri:
-										'/Users/sangwoo/Library/Developer/CoreSimulator/Devices/A0C87E5D-C592-45C4-9BF1-DC8AB903607D/data/Containers/Data/Application/28A74F51-C290-44E5-8318-390DD80C9A11/tmp/anilog_temp/FB78BD5D-0AA9-481D-BD78-62537633FEA6.jpg',
-									tags: [Array],
-								},
-							],
-							hashtag_keyword: undefined,
-							isEdit: true,
-							media_uri: [
-								'/Users/sangwoo/Library/Developer/CoreSimulator/Devices/A0C87E5D-C592-45C4-9BF1-DC8AB903607D/data/Containers/Data/Application/28A74F51-C290-44E5-8318-390DD80C9A11/tmp/anilog_temp/FB78BD5D-0AA9-481D-BD78-62537633FEA6.jpg',
-							],
-							missing_animal_age: 0,
-							missing_animal_contact: '0109634342',
-							missing_animal_date: '2022.06.30',
-							missing_animal_features: '파워',
-							missing_animal_lost_location: {city: '광주광역시', detail: 'ㅇ', district: '남구'},
-							missing_animal_sex: 'female',
-							missing_animal_species: '기타',
-							missing_animal_species_detail: '파충류',
-							selectedPhoto: [
-								{
-									cropUri:
-										'/Users/sangwoo/Library/Developer/CoreSimulator/Devices/A0C87E5D-C592-45C4-9BF1-DC8AB903607D/data/Containers/Data/Application/28A74F51-C290-44E5-8318-390DD80C9A11/tmp/anilog_temp/FB78BD5D-0AA9-481D-BD78-62537633FEA6.jpg',
-									duration: 0,
-									fileSize: 179730,
-									group_name: 'All Photos',
-									image: [Object],
-									isVideo: false,
-									location: null,
-									timestamp: 1657634273.2941267,
-									type: 'image',
-									uri: 'ph://6E7EAF98-6152-4284-91F7-0204763BB145/L0/001',
-									videoUri: undefined,
-								},
-							],
-							tab: 'Protection',
-							type: {pet_species: '동물종류', pet_species_detail: ['품종']},
-						};
 						console.log('Before Write Missing ', param);
 						const data = param;
 						delete data.feed_location;

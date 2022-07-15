@@ -4,10 +4,10 @@ export default protect_obj = {
 };
 
 export const updateProtect = (id, bool) => {
-	console.log('id', id, 'bool : ', bool);
+	// console.log('id', id, 'bool : ', bool);
 	if (protect_obj.protect.length != 0) {
 		const findIndex = protect_obj.protect.findIndex(e => e._id == id);
-		console.log('updateProtect : findIndex', findIndex);
+		console.log('updateProtect  findIndex : ', findIndex);
 		if (findIndex != -1) {
 			let temp = [...protect_obj.protect];
 			temp[findIndex].is_favorite = bool;
@@ -24,5 +24,4 @@ export const pushProtect = arr => {
 			protect_obj.protect.push(v);
 		}
 	});
-	console.log('arr', protect_obj.protect.length);
 };

@@ -41,7 +41,7 @@ export default ReviewMain = ({route}) => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			if (community_obj.review.length > 0) {
-				setData(community_obj.review);
+				// setData(community_obj.review);
 			}
 		});
 		return unsubscribe;

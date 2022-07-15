@@ -153,16 +153,20 @@ export default MissingForm = props => {
 	};
 
 	const onSelectSpeciesDetail = () => {
-		const find = types.find(e => e.pet_species == data.missing_animal_species);
-		Modal.popSelectScrollBoxModal(
-			[find.pet_species_detail],
-			'품종 선택',
-			selected => {
-				setData({...data, missing_animal_species_detail: selected});
-			},
-			() => Modal.close(),
-		);
-		// setData({...data, missing_animal_species_detail: data.type.pet_species_detail[i]});
+		try {
+			const find = types.find(e => e.pet_species == data.missing_animal_species);
+			Modal.popSelectScrollBoxModal(
+				[find.pet_species_detail],
+				'품종 선택',
+				selected => {
+					setData({...data, missing_animal_species_detail: selected});
+				},
+				() => Modal.close(),
+			);
+			// setData({...data, missing_animal_species_detail: data.type.pet_species_detail[i]});
+		} catch (err) {
+			console.log('err', err);
+		}
 	};
 
 	const selectSex = i => {

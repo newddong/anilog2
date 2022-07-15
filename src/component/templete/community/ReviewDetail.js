@@ -95,7 +95,7 @@ export default ReviewDetail = props => {
 			err => {
 				console.log('err / getCommunityByObjectId / ReviewDetail ', err);
 				if (err.includes('없습니다')) {
-					Modal.popOneBtn(NETWORK_ERROR, '확인', () => navigation.goBack());
+					Modal.popOneBtn('이미 삭제된 게시글입니다.', '확인', () => navigation.goBack());
 				} else {
 					Modal.popOneBtn(NETWORK_ERROR, '확인', () => navigation.goBack());
 				}

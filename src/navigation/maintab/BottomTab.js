@@ -95,7 +95,13 @@ export default function BottomTab({state, descriptors, navigation, focus}) {
 		},
 	);
 
-	if (nestedRouteName == 'CommunityWrite' || nestedRouteName == 'CommunityEdit' || nestedRouteName == 'SinglePhotoSelect') return false;
+	if (
+		nestedRouteName == 'CommunityWrite' ||
+		nestedRouteName == 'FeedWrite' ||
+		nestedRouteName == 'CommunityEdit' ||
+		nestedRouteName == 'SinglePhotoSelect'
+	)
+		return false;
 	return (
 		<>
 			{isKeyboardVisible ? (

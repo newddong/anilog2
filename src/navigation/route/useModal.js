@@ -305,8 +305,8 @@ export function useModal() {
 		!isPop && setPop(true);
 	};
 
-	Modal.popUrgentBtnModal = (onReport, onMissing, layout) => {
-		popIn(<UrgentBtnModal onReport={onReport} onMissing={onMissing} layout={layout} />);
+	Modal.popUrgentBtnModal = (onReport, onMissing, layout, setPressed) => {
+		popIn(<UrgentBtnModal onReport={onReport} onMissing={onMissing} layout={layout} setPressed={setPressed} />);
 		!isPop && setPop(true);
 	};
 

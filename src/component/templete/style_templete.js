@@ -4401,10 +4401,16 @@ export const feedWrite = StyleSheet.create({
 		marginTop: 42 * DP,
 	},
 	urgentBtnContainer: {
+		// width: 158 * DP,
+		// height: 332 * DP,
+		position: 'absolute',
+		right: 30 * DP,
+		bottom: 40 * DP,
+		justifyContent: 'flex-end',
+	},
+	urgentBtnContainer2: {
 		width: 158 * DP,
-		// width: 110 * DP,
 		height: 332 * DP,
-		// height: 110 * DP,
 		position: 'absolute',
 		right: 30 * DP,
 		bottom: 40 * DP,
@@ -4446,7 +4452,6 @@ export const feedWrite = StyleSheet.create({
 		marginBottom: 30 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
-		backgroundColor: 'red',
 	},
 	petAccountList: {
 		minHeight: 670 * DP,

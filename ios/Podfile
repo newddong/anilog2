@@ -46,7 +46,7 @@ target 'anilog' do
   # pod 'react-native-maps', :path => rn_maps_path # 22.03.15 구글 맵스 활용을 위한 추가 (KSW)
   pod 'SDWebImage', :modular_headers => true
   pod 'SDWebImagePhotosPlugin'
-  
+  # pod 'RNSentry', :podspec => '../node_modules/@sentry/react-native/RNSentry.podspec' # or your path to node_modules
   pod 'VideoEditorSDK'
   # pod 'react-native-video/VideoCaching', :path => '../node_modules/react-native-video/react-native-video.podspec'
   target 'anilogTests' do

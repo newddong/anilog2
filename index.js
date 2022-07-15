@@ -5,9 +5,7 @@ if (__DEV__) {
 	import('./ReactotronConfig').then(() => console.log('Reactotron Configured'));
 }
 import {AppRegistry, Text, TextInput} from 'react-native';
-// import App from './src/test_sangwoo/testNavi';
 import App from './App';
-// import App from './IosModuleTest_App';
 import {name as appName} from './app.json';
 
 //글자 크기 scaling 끄기
@@ -18,4 +16,4 @@ TextInput.defaultProps = TextInput.defaultProps || {};
 TextInput.defaultProps.autoCorrect = false;
 TextInput.defaultProps.allowFontScaling = false;
 
-AppRegistry.registerComponent(appName, () => App);
+AppRegistry.registerComponent(appName, ()=>App);

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import {BackArrow32, InfoIcon50, Meatball50_APRI10_Horizontal, Meatball50_GRAY20_Horizontal} from 'Atom/icon';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
@@ -38,16 +38,20 @@ export default ProfileHeader = props => {
 					Modal.popMessageModal(
 						data.user_nickname,
 						msg => {
-							createMemoBox(
-								{memobox_receive_id: data._id, memobox_contents: msg},
-								result => {
-									Modal.popOneBtn('쪽지가 성공적으로 전송되었습니다.', '확인', () => Modal.close());
-								},
-								err => {
-									console.log('message sent err', err);
-								},
-							);
-							console.log('msg', msg);
+							if (msg.length == 0) {
+								Alert.alert('내용을 입력해주세요');
+							} else {
+								createMemoBox(
+									{memobox_receive_id: data._id, memobox_contents: msg},
+									result => {
+										Modal.popOneBtn('쪽지가 성공적으로 전송되었습니다.', '확인', () => Modal.close());
+									},
+									err => {
+										console.log('message sent err', err);
+									},
+								);
+							}
+
 							Modal.close();
 						},
 						() => alert('나가기'),

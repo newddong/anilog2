@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet, FlatList} from 'react-native';
-import {GRAY10, GRAY40, APRI10, GRAY20} from 'Root/config/color';
+import {GRAY10, GRAY40, APRI10, GRAY20, WHITE} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import moment from 'moment';
 import DP from 'Root/config/dp';
@@ -18,7 +18,7 @@ const AskedQuestion = ({route}) => {
 		getQandInfo(
 			{qanda_user_id: userGlobalObj.userInfo._id},
 			result => {
-				// console.log('result', result);
+				console.log('result', result);
 				setData(result.msg);
 				setLoading(false);
 			},
@@ -31,7 +31,7 @@ const AskedQuestion = ({route}) => {
 	const renderItem = ({item, index}) => {
 		// console.log('item', item);
 		let answered = false;
-    
+
 		if (item.qanda_status == 'waiting') {
 			answered = false;
 		} else {
@@ -53,7 +53,6 @@ const AskedQuestion = ({route}) => {
 	const ListEmpty = () => {
 		return (
 			<View style={[{flex: 1}, {justifyContent: 'center'}, {alignItems: 'center'}]}>
-				<TwoPaw />
 				<Text style={[txt.noto28]}>문의 내역이 없습니다.</Text>
 			</View>
 		);
@@ -67,7 +66,13 @@ const AskedQuestion = ({route}) => {
 		);
 	} else {
 		if (data.length == 0) {
-			return <ListEmpty />;
+			// ListEmpty();
+			return (
+				<View style={[{flex: 1}, {justifyContent: 'center'}, {alignItems: 'center'}, {backgroundColor: WHITE}]}>
+					<TwoPaw />
+					<Text style={[txt.noto28]}>문의 내역이 없습니다.</Text>
+				</View>
+			);
 		} else {
 			return (
 				<View style={styles.container}>

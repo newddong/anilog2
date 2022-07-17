@@ -18,6 +18,7 @@ export async function setFavoriteEtc(params, callback, errcallback) {
  * @param {object} params
  * @param {string} params.userobject_id - 게시물 object_id
  * @param {string} params.collectionName - 타겟 컬렉션 이름
+ * @param {string} params.community_type - 커뮤니티일 경우 자유게시물과 리뷰글 구별 값 (community_type) - 커뮤니티가 아닐 경우 필드값 보내지 말 것
  * @param {function} callback - API응답처리 콜백
  * @param {(errmsg:string)=>void} errcallback - 에러처리 콜백
  */

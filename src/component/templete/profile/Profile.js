@@ -243,6 +243,7 @@ export default Profile = ({route}) => {
 
 	//프로필의 태그탭의 피드 썸네일 클릭
 	const onClick_Thumbnail_TagTab = (index, item) => {
+		// console.log('UserTagFeedList');
 		navigation.navigate('UserTagFeedList', {userobject: data, selected: item, index: index});
 	};
 
@@ -479,12 +480,21 @@ export default Profile = ({route}) => {
 					return <CommunityList user_id={route.params.userobject._id} />;
 				}
 			} else if (data.user_type == 'pet') {
-				if (tabMenuSelected != 2) {
+				if (tabMenuSelected == 0) {
 					return (
 						<FeedThumbnailList
 							items={item}
 							whenEmpty={whenFeedThumbnailEmpty('피드 게시물이 없습니다.')}
 							onClickThumnail={onClick_Thumbnail_FeedTab}
+							focused={focused}
+						/>
+					);
+				} else if (tabMenuSelected == 1) {
+					return (
+						<FeedThumbnailList
+							items={item}
+							whenEmpty={whenFeedThumbnailEmpty('태그된 게시물이 없습니다.')}
+							onClickThumnail={onClick_Thumbnail_TagTab}
 							focused={focused}
 						/>
 					);

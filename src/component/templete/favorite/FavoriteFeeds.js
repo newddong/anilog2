@@ -35,20 +35,17 @@ export default FavoriteFeeds = ({route}) => {
 	const [loading, setLoading] = React.useState(false);
 
 	React.useEffect(() => {
-		getList();
-	}, []);
-
-	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			setFocused(true);
+			getList();
 		});
-		return unsubscribe;
-	}, [navigation]);
-	React.useEffect(() => {
-		const unsubscribe = navigation.addListener('blur', () => {
+		const blur = navigation.addListener('blur', () => {
 			setFocused(false);
 		});
-		return unsubscribe;
+		return () => {
+			blur();
+			unsubscribe();
+		};
 	}, [navigation]);
 
 	const getList = refresh => {
@@ -97,7 +94,7 @@ export default FavoriteFeeds = ({route}) => {
 			setData(res);
 		}
 		setTotal(result.total_count);
-		console.log('result.total_count', result.total_count);
+		console.log('result.total_count', res.length);
 		setLoading(false);
 	};
 

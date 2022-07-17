@@ -108,17 +108,20 @@ export default FavoriteReview = ({route, isFavorite}) => {
 					{
 						userobject_id: userGlobalObject.userInfo._id,
 						collectionName: 'communityobjects',
+						community_type: 'review',
 					},
 					result => {
-						console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg.length);
+						// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg[1]);
 						let reviewList = [];
 						result.msg.map(v => {
+							// console.log(v.favorite_etc_target_object_id.community_type);
 							if (v.favorite_etc_target_object_id.community_type == 'review' && v.favorite_etc_target_object_id.community_is_delete != true) {
 								v.favorite_etc_target_object_id.community_is_favorite = v.is_favorite;
 								v.favorite_etc_target_object_id.community_is_like = v.is_like;
 								reviewList.push(v.favorite_etc_target_object_id);
 							}
 						});
+						console.log('reviewList', reviewList.length);
 						setData(
 							reviewList
 								.map((v, i, a) => {

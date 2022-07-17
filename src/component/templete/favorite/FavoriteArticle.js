@@ -16,7 +16,6 @@ import {GRAY10, GRAY40} from 'Root/config/color';
 export default FavoriteArticle = ({route, isFavorite}) => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
-
 	const [selectMode, setSelectMode] = React.useState(false);
 	const [selectCNT, setSelectCNT] = React.useState(0);
 	const [offset, setOffset] = React.useState(1);
@@ -34,12 +33,13 @@ export default FavoriteArticle = ({route, isFavorite}) => {
 		!isFavorite
 			? getCommunityListByUserId(
 					{
-						limit: FREE_LIMIT,
+						limit: 100,
 						page: offset,
 						userobject_id: userGlobalObject.userInfo._id,
 						community_type: 'free',
 					},
 					result => {
+						setTotal(result.total_count);
 						const res = result.msg.free.filter(
 							e => e.community_writer_id != null && e.community_writer_id.user_nickname == userGlobalObject.userInfo.user_nickname,
 						);
@@ -69,22 +69,31 @@ export default FavoriteArticle = ({route, isFavorite}) => {
 			: getFavoriteEtcListByUserId(
 					{
 						page: offset,
-						limit: FREE_LIMIT,
+						limit: 100,
 						userobject_id: userGlobalObject.userInfo._id,
 						collectionName: 'communityobjects',
+						community_type: 'free',
 					},
 					result => {
 						setTotal(result.total_count);
 						// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg);
 						let articleList = [];
 						result.msg.map((v, i) => {
+							// console.log('v', i, v.favorite_etc_target_object_id.community_is_delete, v.favorite_etc_target_object_id.community_title);
 							if (v.favorite_etc_target_object_id.community_type == 'free' && v.favorite_etc_target_object_id.community_is_delete != true) {
 								v.favorite_etc_target_object_id.community_is_like = v.is_like;
 								v.favorite_etc_target_object_id.community_is_favorite = v.is_favorite;
 								articleList.push(v.favorite_etc_target_object_id);
 							}
 						});
-						setData(articleList);
+						console.log('articleList', articleList.length);
+						if (data != 'false') {
+							console.log('temp lenth', [...data, ...articleList].length);
+							setData([...data, ...articleList]);
+						} else {
+							setData(articleList);
+						}
+						setOffset(offset + 1);
 					},
 					err => {
 						console.log('err / getFavoriteEtcListByUserId / FavoriteCommunity : ', err);
@@ -98,9 +107,9 @@ export default FavoriteArticle = ({route, isFavorite}) => {
 		console.log('EndReached', data.length, total);
 		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
 		//리뷰 메인 페이지에서는 필터가 적용이 되었을 때도 api 접속 불필요
-		if (data.length < total) {
-			fetchData();
-		}
+		// if (data.length < total) {
+		fetchData();
+		// }
 	};
 
 	// 게시글 내용 클릭

@@ -65,7 +65,7 @@ export default function HashText(props) {
 			</TouchableOpacity>
 		);
 		return input.map((v, i) => {
-			if (hide) {
+			if (hide && !props.hide) {
 				if (i > 1) return false;
 				if (i == 1) {
 					if (v.includes('#') || v.includes('@'))

@@ -138,7 +138,6 @@ export default FeedWriteHeader = ({route, options}) => {
 				} else {
 					// console.log('result', result);
 					if (navigation.getState().routes[0]) {
-						// navigation.navigate({key: navigation.getState().routes[0].key, name: 'MainTab'});
 						navigation.navigate('MainTab', {
 							screen: 'FEED',
 							params: {
@@ -276,116 +275,132 @@ export default FeedWriteHeader = ({route, options}) => {
 	};
 
 	const onEdit = () => {
-		Modal.popLoading(true);
-		Keyboard.dismiss();
-		let changeTextRegex = /([#@])([^#@\s]+)/gm;
-		let param = {
-			...route.params,
-			feedobject_id: route.params._id,
-			media_uri: route.params.selectedPhoto?.map(v => {
-				return v.videoUri ?? v.cropUri ?? v.uri;
-			}),
-			feed_medias: route.params.feed_medias.map(f => {
-				route.params.selectedPhoto?.some(v => {
-					if ((v.cropUri ?? v.uri) == f.media_uri) {
-						f.is_video = v.isVideo ?? v.is_video;
-						f.media_uri = v.videoUri ?? v.cropUri ?? v.uri;
-					}
-				});
-				return f;
-			}),
-			feed_content: route.params.isEdit ? route.params.feed_content : route.params.feed_content.replace(changeTextRegex, '&$1&$1$1$2%&%&$1&$1'),
-			hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
-		};
-		// console.log('onEdit / FeedWrtieHeader', param);
-		if (param.feed_type == 'feed') {
-			editFeed(param, complete, handleError);
-		} else if (param.feed_type == 'report') {
-			const data = param;
-			if (data.report_location.city == '광역시, 도' || data.report_location.district == '구를 선택') {
-				Modal.alert('제보위치는 반드시 \n선택해주셔야합니다.');
-			} else if (data.report_witness_date == '') {
-				// console.log('ddddd');
-				Modal.close();
-				setTimeout(() => {
-					Modal.alert('제보 날짜를 선택해주세요.');
-				}, 200);
-			} else {
-				console.log('제보날짜 제보위치는 넘어감', data.photoToDelete);
-				data.report_witness_location =
-					(data.report_location.city || '') + ' ' + (data.report_location.district || '') + ' ' + (data.report_location.detail || '');
-				delete data.report_location;
-				delete data.offset;
-				if (
-					(data.feed_content || data.feed_medias) &&
-					// data.media_uri.length > 0 &&
-					// data.report_animal_species &&
-					data.report_witness_date &&
-					data.report_witness_location
-				) {
-					// console.log('NotNull 통과', data);
-					editMissingReport(
-						{
-							feedobject_id: data.feedobject_id,
-							feed_content: data.feed_content,
-							hashtag_keyword: data.hashtag_keyword,
-							media_uri: data.media_uri,
-							photos_to_delete: data.photoToDelete,
-							report_witness_date: data.report_witness_date,
-							report_witness_location: data.report_witness_location,
-							report_animal_species: data.report_animal_species,
-						},
-						complete,
-						handleError,
-					);
+		// Modal.popLoading(true);
+		try {
+			Keyboard.dismiss();
+			if (!sent) {
+				setSent(true);
+				Modal.popNoBtn('게시물을 수정중입니다.', () => {
 					Modal.close();
+					setSent(false);
+				});
+				let changeTextRegex = /([#@])([^#@\s]+)/gm;
+				let param = {
+					...route.params,
+					feedobject_id: route.params._id,
+					media_uri: route.params.selectedPhoto?.map(v => {
+						return v.videoUri ?? v.cropUri ?? v.uri;
+					}),
+					feed_medias: route.params.feed_medias.map(f => {
+						route.params.selectedPhoto?.some(v => {
+							if ((v.cropUri ?? v.uri) == f.media_uri) {
+								f.is_video = v.isVideo ?? v.is_video;
+								f.media_uri = v.videoUri ?? v.cropUri ?? v.uri;
+							}
+						});
+						return f;
+					}),
+					feed_content: route.params.isEdit ? route.params.feed_content : route.params.feed_content.replace(changeTextRegex, '&$1&$1$1$2%&%&$1&$1'),
+					hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
+				};
+
+				// console.log('onEdit / FeedWrtieHeader', param);
+				if (param.feed_type == 'feed') {
+					editFeed(param, complete, handleError);
+				} else if (param.feed_type == 'report') {
+					const data = param;
+					if (data.report_location.city == '광역시, 도' || data.report_location.district == '구를 선택') {
+						Modal.alert('제보위치는 반드시 \n선택해주셔야합니다.');
+						setSent(false);
+					} else if (data.report_witness_date == '') {
+						// console.log('ddddd');
+						Modal.close();
+						setTimeout(() => {
+							Modal.alert('제보 날짜를 선택해주세요.');
+							setSent(false);
+						}, 200);
+					} else {
+						console.log('제보날짜 제보위치는 넘어감', data.photoToDelete);
+						data.report_witness_location =
+							(data.report_location.city || '') + ' ' + (data.report_location.district || '') + ' ' + (data.report_location.detail || '');
+						delete data.report_location;
+						delete data.offset;
+						if (
+							(data.feed_content || data.feed_medias) &&
+							// data.media_uri.length > 0 &&
+							// data.report_animal_species &&
+							data.report_witness_date &&
+							data.report_witness_location
+						) {
+							// console.log('NotNull 통과', data);
+							editMissingReport(
+								{
+									feedobject_id: data.feedobject_id,
+									feed_content: data.feed_content,
+									hashtag_keyword: data.hashtag_keyword,
+									media_uri: data.media_uri,
+									photos_to_delete: data.photoToDelete,
+									report_witness_date: data.report_witness_date,
+									report_witness_location: data.report_witness_location,
+									report_animal_species: data.report_animal_species,
+								},
+								complete,
+								handleError,
+							);
+							Modal.close();
+						}
+					}
+				} else if (param.feed_type == 'missing') {
+					const data = param;
+					delete data.feed_location;
+
+					let check = /^[0-9]+$/;
+					if (data.missing_animal_lost_location.city == '광역시, 도' || data.missing_animal_lost_location.district == '구를 선택') {
+						Modal.alert('실종위치는 반드시 \n선택해주셔야합니다!');
+						setSent(false);
+						/*} else if (!check.test(data.missing_animal_age)) {
+						Modal.alert('실종동물의 나이는 \n숫자만 입력가능합니다!');*/
+					} else if (
+						data.missing_animal_species &&
+						data.missing_animal_species_detail &&
+						(data.feed_content || data.feed_medias) &&
+						data.feed_medias.length > 0 &&
+						(data.missing_animal_age == 0 || data.missing_animal_age) &&
+						data.missing_animal_features &&
+						data.missing_animal_date &&
+						data.missing_animal_sex &&
+						data.missing_animal_date &&
+						data.missing_animal_lost_location &&
+						data.missing_animal_contact
+					) {
+						console.log('NotNull 통과');
+						editMissingReport(
+							{
+								feedobject_id: data.feedobject_id,
+								feed_content: data.feed_content,
+								hashtag_keyword: data.hashtag_keyword,
+								media_uri: data.media_uri,
+								photos_to_delete: data.photoToDelete,
+								missing_animal_species: data.missing_animal_species,
+								missing_animal_species_detail: data.missing_animal_species_detail,
+								missing_animal_sex: data.missing_animal_sex,
+								missing_animal_age: data.missing_animal_age,
+								missing_animal_lost_location: data.missing_animal_lost_location,
+								missing_animal_contact: data.missing_animal_contact,
+								missing_animal_features: data.missing_animal_features,
+								missing_animal_date: data.missing_animal_date,
+							},
+							complete,
+							handleError,
+						);
+					} else {
+						Modal.popOneBtn('작성란은 모두 작성해주셔야합니다.\n (사진 포함)', '확인', () => Modal.close());
+						setSent(false);
+					}
 				}
 			}
-		} else if (param.feed_type == 'missing') {
-			const data = param;
-			delete data.feed_location;
-
-			let check = /^[0-9]+$/;
-			if (data.missing_animal_lost_location.city == '광역시, 도' || data.missing_animal_lost_location.district == '구를 선택') {
-				Modal.alert('실종위치는 반드시 \n선택해주셔야합니다!');
-				/*} else if (!check.test(data.missing_animal_age)) {
-				Modal.alert('실종동물의 나이는 \n숫자만 입력가능합니다!');*/
-			} else if (
-				data.missing_animal_species &&
-				data.missing_animal_species_detail &&
-				(data.feed_content || data.feed_medias) &&
-				data.feed_medias.length > 0 &&
-				(data.missing_animal_age == 0 || data.missing_animal_age) &&
-				data.missing_animal_features &&
-				data.missing_animal_date &&
-				data.missing_animal_sex &&
-				data.missing_animal_date &&
-				data.missing_animal_lost_location &&
-				data.missing_animal_contact
-			) {
-				console.log('NotNull 통과');
-				editMissingReport(
-					{
-						feedobject_id: data.feedobject_id,
-						feed_content: data.feed_content,
-						hashtag_keyword: data.hashtag_keyword,
-						media_uri: data.media_uri,
-						photos_to_delete: data.photoToDelete,
-						missing_animal_species: data.missing_animal_species,
-						missing_animal_species_detail: data.missing_animal_species_detail,
-						missing_animal_sex: data.missing_animal_sex,
-						missing_animal_age: data.missing_animal_age,
-						missing_animal_lost_location: data.missing_animal_lost_location,
-						missing_animal_contact: data.missing_animal_contact,
-						missing_animal_features: data.missing_animal_features,
-						missing_animal_date: data.missing_animal_date,
-					},
-					complete,
-					handleError,
-				);
-			} else {
-				Modal.popOneBtn('작성란은 모두 작성해주셔야합니다.\n (사진 포함)', '확인', () => Modal.close());
-			}
+		} catch (err) {
+			console.log('err', err);
 		}
 	};
 

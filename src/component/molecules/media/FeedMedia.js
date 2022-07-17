@@ -214,7 +214,7 @@ export default FeedMedia = props => {
 				false
 			)}
 			{feed_type == 'missing' ? (
-				<View style={[style.emergency_background]}>
+				<TouchableOpacity onPress={onPressImg} style={[style.emergency_background, {}]}>
 					<View style={{flexDirection: 'row'}}>
 						<View style={{flex: 1}}>
 							<Text style={[txt.roboto38b, {color: 'white', lineHeight: 62 * DP}]} numberOfLines={3}>
@@ -233,12 +233,12 @@ export default FeedMedia = props => {
 							<Text style={[txt.noto32, {color: 'white'}]}>실종 장소: {newMissingAddress}</Text>
 						</View>
 					</View>
-				</View>
+				</TouchableOpacity>
 			) : (
 				false
 			)}
 			{feed_type == 'report' ? (
-				<View style={[style.emergency_background]}>
+				<TouchableOpacity onPress={onPressImg} style={[style.emergency_background]}>
 					<View style={[{flexDirection: 'column'}]}>
 						<Text style={[txt.roboto38b, {color: 'white', lineHeight: 62 * DP}]} numberOfLines={1}>
 							{data.report_witness_location}
@@ -252,7 +252,7 @@ export default FeedMedia = props => {
 							</Text>
 						</View>
 					</View>
-				</View>
+				</TouchableOpacity>
 			) : (
 				false
 			)}

@@ -64,7 +64,7 @@ export default MissingReportList = props => {
 
 	const getList = refresh => {
 		// setLoading(true);
-		// console.log('filterData', filterData);
+		console.log('filterData', filterData);
 		// console.log('offset', offset, refresh);
 		getMissingReportList(
 			{...filterData, limit: PROTECT_REQUEST_MAIN_LIMIT, page: refresh ? 1 : offset},
@@ -98,9 +98,9 @@ export default MissingReportList = props => {
 	React.useEffect(() => {
 		if (filterData && filterData.city != '') {
 			console.log('filterData', filterData);
-			getList();
-			setData('false');
 			setOffset(1);
+			getList(true);
+			setData('false');
 		}
 	}, [filterData]);
 
@@ -154,7 +154,7 @@ export default MissingReportList = props => {
 			'보호 지역 선택',
 			selected => {
 				selected == '실종/제보 지역' ? setFilterData({...filterData, city: ''}) : setFilterData({...filterData, city: selected});
-				setData('false');
+				// setData('false');
 				setOffset(1);
 				Modal.close();
 			},

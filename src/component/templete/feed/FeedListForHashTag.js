@@ -15,22 +15,25 @@ export default FeedListForHashTag = props => {
 	const [feeds, setFeeds] = React.useState([]);
 	const navigation = useNavigation();
 	const [focused, setFocused] = React.useState(true);
+
 	const moveToHashFeedList = (index, item) => {
 		console.log('item', item._id);
 		navigation.navigate({key: item._id, name: 'HashFeedList', params: {selected: item, hashtag_keyword: hashInfo.hashtag_keyword, index: index}});
 	};
-	React.useEffect(()=>{
+	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			setFocused(true);
 		});
 		return unsubscribe;
-	},[navigation]);
-	React.useEffect(()=>{
+	}, [navigation]);
+
+	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('blur', () => {
 			setFocused(false);
 		});
 		return unsubscribe;
-	},[navigation]);
+	}, [navigation]);
+
 	React.useEffect(() => {
 		navigation.setOptions({title: '#' + hashInfo.hashtag_keyword});
 	}, []);
@@ -41,7 +44,15 @@ export default FeedListForHashTag = props => {
 				{hashtag_keyword: hashInfo.hashtag_keyword},
 				result => {
 					// console.log('해쉬 피드리스트', result);
-					setFeeds(result.msg.feeds.map(v => v.hashtag_feed_id));
+					setFeeds(
+						result.msg.feeds
+							.filter(e => e.hashtag_feed_id != null && e.hashtag_feed_id.feed_is_delete != true)
+							.map(v => {
+								if (v.hashtag_feed_id) {
+									return v.hashtag_feed_id;
+								}
+							}),
+					);
 					setHashInfo(result.msg.hash);
 				},
 				error => {
@@ -66,7 +77,7 @@ export default FeedListForHashTag = props => {
 			<ScrollView horizontal={false} contentContainerStyle={{flex: 1}} showsVerticalScrollIndicator={false}>
 				<ScrollView horizontal={true} scrollEnabled={false}>
 					<View style={[feedListForHashTag.feedThumbnailList]}>
-						<FeedThumbnailList items={feeds} onClickThumnail={moveToHashFeedList} focused={focused}/>
+						<FeedThumbnailList items={feeds} onClickThumnail={moveToHashFeedList} focused={focused} />
 					</View>
 				</ScrollView>
 			</ScrollView>

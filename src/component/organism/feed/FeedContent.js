@@ -252,7 +252,7 @@ export default FeedContent = props => {
 	const onPressEdit = () => {
 		Modal.close();
 		let editData = data;
-		console.log('editData', editData);
+		// console.log('editData', editData);
 		editData.routeName = props.routeName;
 		navigation.navigate('FeedEdit', editData);
 	};
@@ -363,7 +363,7 @@ export default FeedContent = props => {
 	const meatballActions = context => {
 		let isFavorite = context.favorite_feeds.some(feed => feed._id == _id);
 		// console.log('즐겨찾기됨?', isFavorite);
-		let isMyFeed = userGlobalObject.userInfo._id == props.data.feed_writer_id._id || props.data.feed_writer_id;
+		let isMyFeed = userGlobalObject.userInfo._id == (props.data.feed_writer_id._id ? props.data.feed_writer_id._id : props.data.feed_writer_id);
 		let feedType = props.data.feed_type;
 		if (feedType == 'feed') {
 			if (isMyFeed) {

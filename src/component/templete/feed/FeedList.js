@@ -363,7 +363,7 @@ export default FeedList = ({route}) => {
 				getUserTaggedFeedList(
 					params,
 					result => {
-						console.log('result / getUserTaggedFeedList', result);
+						// console.log('result / getUserTaggedFeedList', result);
 						let res = result.msg.map((v, i) => v.usertag_feed_id);
 						result.msg.map((v, i) => {
 							res[i].feed_is_like = v.feed_is_like;
@@ -433,17 +433,13 @@ export default FeedList = ({route}) => {
 					{userobject_id: userGlobalObject.userInfo._id},
 					({msg}) => {
 						// console.log('msg', msg);
-						// let temp = msg.filter(x => x.favorite_feed_id.feed_is_delete != true).map(data => data.favorite_feed_id);
 						let temp = msg;
-						console.log('msg len', msg.length);
-						console.log('temp len', temp.length);
+						temp = temp.filter(x => x.favorite_feed_id.feed_is_delete != true);
 						temp.map((v, i) => {
-							// console.log('v.temp[i]', temp[i].feed_is_like);
-							temp[i].feed_is_like = v.feed_is_like;
-							temp[i].is_favorite = v.is_favorite;
+							temp[i].favorite_feed_id.feed_is_like = v.feed_is_like;
+							temp[i].favorite_feed_id.is_favorite = v.is_favorite;
 						});
-						temp = temp.filter(x => x.favorite_feed_id.feed_is_delete != true).map(data => data.favorite_feed_id);
-						// console.log('temp temp', temp, msg);
+						temp = temp.map(data => data.favorite_feed_id);
 						setFeed(temp);
 					},
 					error => {
@@ -453,7 +449,6 @@ export default FeedList = ({route}) => {
 							});
 						});
 					},
-					// console.log("");
 				);
 				break;
 			default:

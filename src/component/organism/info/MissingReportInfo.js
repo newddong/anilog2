@@ -75,7 +75,7 @@ const MissingReportInfo = props => {
 				<Text style={[txt.noto26b]}> : </Text>
 
 				{props.isHash ? (
-					<HashText style={[txt.noto28, {width: 482 * DP}]} byteOfLine={55}>
+					<HashText style={[txt.noto28, {width: 482 * DP}]} byteOfLine={55} hide={true}>
 						{props.content || '내용 없음'}
 					</HashText>
 				) : (

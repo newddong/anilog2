@@ -9,7 +9,6 @@ import DP from 'Root/config/dp';
 const ProtectionTab = createMaterialTopTabNavigator();
 
 export default ProtectionTopTabNavigation = ({route, navigation}) => {
-	console.log('route', route);
 	let init = route.params && route.params.isMissing ? 'MissingReportList' : 'ProtectRequestList';
 	return (
 		<ProtectionTab.Navigator

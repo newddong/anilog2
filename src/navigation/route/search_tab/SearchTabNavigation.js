@@ -56,17 +56,20 @@ export default SearchTabNavigation = props => {
 				}
 			});
 		}
-		console.log('community_obj', community_obj.review.length);
+		// console.log('community_obj', community_obj.review.length);
 	}, [commList]);
 
 	const updateReview = async () => {
-		const comm = await getCommunityList(); //커뮤니티 검색
-		setCommList(comm);
+		if (searchContext.searchInfo.searchInput && searchContext.searchInfo.searchInput.length > 1) {
+			const comm = await getCommunityList(); //커뮤니티 검색
+			setCommList(comm);
+		}
 	};
 
 	async function fetchData() {
 		setLoading(true);
-		if (searchContext.searchInfo.searchInput != '' && searchContext.searchInfo.searchInput.length > 1) {
+		if (searchContext.searchInfo.searchInput && searchContext.searchInfo.searchInput.length > 1) {
+			console.log('fetch?');
 			const user = await getUserList(); //계정 검색
 			const hash = await getHashList(); //태그 검색
 			const comm = await getCommunityList(); //커뮤니티 검색
@@ -123,7 +126,7 @@ export default SearchTabNavigation = props => {
 						hashtag_keyword: searchContext.searchInfo.searchInput.trimEnd(),
 					},
 					result => {
-						// console.log('hash editing', result.msg.length);
+						console.log('hash editing', result.msg.length);
 						resolve(result.msg);
 					},
 					err => {
@@ -153,7 +156,8 @@ export default SearchTabNavigation = props => {
 					},
 					result => {
 						// console.log('searchContext.searchInfo.searchInput', searchContext.searchInfo.searchInput);
-						// console.log('result / getSearchCommunityList / SearchTabNav : ', result.msg.review);
+						console.log('result / getSearchCommunityList / SearchTabNav : ', result.msg.review.length);
+						console.log('result / getSearchCommunityList / SearchTabNav : ', result.msg.free.length);
 						let res = result.msg;
 						const noneDeletedReview = result.msg.review.filter(e => e.community_is_delete != true);
 						const noneDeletedArticle = result.msg.free.filter(e => e.community_is_delete != true);

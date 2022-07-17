@@ -20,7 +20,7 @@ import {BLACK, GRAY10, GRAY20, GRAY30, MAINBLACK} from 'Root/config/color';
 import {useNavigation} from '@react-navigation/core';
 import axios from 'axios';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
-import {LocationMarker, Search48_BLACK} from 'Root/component/atom/icon';
+import {Location48Border, Location54, LocationMarker, Search48_BLACK} from 'Root/component/atom/icon';
 import Geolocation from '@react-native-community/geolocation';
 import {openSettings, PERMISSIONS, request} from 'react-native-permissions';
 import {useKeyboardBottom} from 'Root/component/molecules/input/usekeyboardbottom';
@@ -437,6 +437,22 @@ export default LocationPicker = ({route}) => {
 		Keyboard.dismiss(); // 키보드 내리기
 	};
 
+	const goToSearchedPlace = () => {
+		try {
+			map.current?.animateToRegion(
+				{
+					latitude: changedLatitude,
+					longitude: changedLongitude,
+					latitudeDelta: 0.0002,
+					longitudeDelta: 0.0023,
+				},
+				400,
+			);
+		} catch (err) {
+			console.log('err', err);
+		}
+	};
+
 	//선택한 위치로 설정 버튼 클릭
 	const confirm = () => {
 		let finalized = locationObj;
@@ -550,13 +566,14 @@ export default LocationPicker = ({route}) => {
 												style={[style.mapContainer]}
 												onPress={Keyboard.dismiss}
 												mapType={'standard'}
-												scrollEnabled={false}
+												// scrollEnabled={false}
+												showsUserLocation={true}
 												zoomEnabled
 												zoomControlEnabled
 												onRegionChangeComplete={(region, gesture) => {
 													if (gesture.isGesture) {
 														//클릭을 안했음에도 지속적으로 위도 경도가 바뀌는 현상 발생 -> 오로지 터치 시에만 반응하도록 적용
-														goToLocation(region); //탐색된 위도 경도를 바꿈
+														// goToLocation(region); //탐색된 위도 경도를 바꿈
 													}
 												}}
 												region={{
@@ -577,7 +594,7 @@ export default LocationPicker = ({route}) => {
 													{locationObj != '' ? (
 														<View style={[{alignItems: 'center', marginBottom: 20 * DP}]}>
 															{/* <Text style={[txt.noto22b, style.locationText]}>{locationObj.address.address_name}</Text>
-														<View style={[style.triangle]}></View> */}
+															<View style={[style.triangle]}></View> */}
 															{/* <LocationMarker /> */}
 														</View>
 													) : (
@@ -592,10 +609,10 @@ export default LocationPicker = ({route}) => {
 													ref={map}
 													// provider={PROVIDER_GOOGLE} // remove if not using Google Maps
 													style={[style.mapContainer]}
-													scrollEnabled={false}
+													// scrollEnabled={false}
 													onRegionChangeComplete={(region, gesture) => {
 														//클릭을 안했음에도 지속적으로 위도 경도가 바뀌는 현상 발생 -> 오로지 터치 시에만 반응하도록 적용
-														goToLocation(region); //탐색된 위도 경도를 바꿈
+														// goToLocation(region); //탐색된 위도 경도를 바꿈
 													}}
 													onPress={Keyboard.dismiss}
 													region={{
@@ -647,7 +664,10 @@ export default LocationPicker = ({route}) => {
 											</Text>
 										</View>
 									</View>
-									<Search48_BLACK onPress={reSearch} />
+									<View style={{position: 'absolute', right: 0, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+										<Location48Border onPress={goToSearchedPlace} />
+										<Search48_BLACK onPress={reSearch} />
+									</View>
 								</View>
 								<View style={[style.locationDetail]}>
 									<TextInput
@@ -724,7 +744,7 @@ const style = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	currentLocation: {
-		width: 634 * DP,
+		// width: 634 * DP,
 		// alignSelf: 'center',
 		// paddingVertical: 24 * DP,
 	},

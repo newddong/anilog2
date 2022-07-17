@@ -233,17 +233,6 @@ export default ProtectRequestList = ({route}) => {
 		return filtered;
 	});
 
-	//리스트 페이징 작업
-	const onEndReached = ({distanceFromEnd}) => {
-		console.log('distanceFromEnd', distanceFromEnd);
-		console.log('EndReached', getData().length % PROTECT_REQUEST_MAIN_LIMIT);
-		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
-
-		// if (getData().length % PROTECT_REQUEST_MAIN_LIMIT == 0) {
-		// 	getList();
-		// }
-	};
-
 	const [closePaging, setClosePaging] = React.useState(true);
 
 	const onScroll = e => {
@@ -253,17 +242,18 @@ export default ProtectRequestList = ({route}) => {
 		// console.log('to', To * ITEM_HEIGHT);
 		// if (y > ITEM_HEIGHT * To && closePaging) {
 		// console.log('offset * PROTECT_REQUEST_MAIN_LIMIT', offset * PROTECT_REQUEST_MAIN_LIMIT);
-		// console.log('getData().length', getData().length);
-		if (getData().length % PROTECT_REQUEST_MAIN_LIMIT == 0) {
-			getList();
-			// setClosePaging(false);
-		}
+		// if (getData().length % PROTECT_REQUEST_MAIN_LIMIT == 0) {
 		// }
+		console.log('closePaging', closePaging);
+		if (!closePaging) {
+			getList();
+			setClosePaging(true);
+		}
 	};
 
-	React.useEffect(() => {
-		setClosePaging(true);
-	}, [offset]);
+	const onMomentumScrollBegin = () => {
+		setClosePaging(false);
+	};
 
 	const moveToTop = () => {
 		flatlist.current.scrollToOffset({animated: true, offset: 0});
@@ -345,7 +335,7 @@ export default ProtectRequestList = ({route}) => {
 					keyExtractor={keyExtractor}
 					getItemLayout={getItemLayout}
 					refreshing
-					// onMomentumScrollEnd={onScroll}
+					onMomentumScrollBegin={onMomentumScrollBegin}
 					onEndReachedThreshold={0.5} //페이징을 하는 타이밍
 					onEndReached={onScroll} //Flatlist 페이징
 					// onEndReached={onEndReached} //Flatlist 페이징

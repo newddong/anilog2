@@ -1,0 +1,85 @@
+1. 앱의 빌드
+앱의 빌드는 xcode와 android studio를 이용한 apk파일을 통해 진행합니다.(앱스토어에 심사를 받기 이전 내부 배포용 설명입니다.)
+
+
+
+2. 사용하는 툴
+ - sentry (오류 로그 수집을 위한 툴입니다.)
+ - metro (자바스크립트 번들러입니다. react native에 내장되어 있습니다.)
+ - appcenter (codepush를 통해 자바스크립트 번들러를 업데이트 하기 위한 툴입니다.)
+ - xcode (ios컴파일, 환경설정, 네이티브 개발을 진행합니다.)
+ - android studio(android컴파일, 환경설정, 네이티브 개발을 진행합니다.)
+
+
+3. 앱의 구조
+리엑트 네이티브 앱은 간략하게 설명하자면 ios, android앱에 별도의 자바스크립트 구동 엔진이 들어있는 구조입니다.
+자바스크립트가 생성한 UI를 브릿지를 통해 네이티브 UI와 통신하며 UI를 렌더링합니다. 이를 통해 앱을 자바스크립트 소스로 구현 가능합니다.
+하지만 디바이스에 특화된 기능은 ios, android의 네이티브 코드를 통해 개발해야합니다. 때때로 더 저수준의 개발을 진행할 가능성이 있습니다.
+
+4. 자바스크립트 번들
+리엑트 네이티브 앱을 구동하는 자바스크립트는 내부 툴인 metro를 통해서 하나의 파일로 번들됩니다. 이는 다른 번들러인 webpack, uglyfyjs같은
+번들러가 chunk.js같은 파일을 제작하는 방식과 비교할수 있습니다. 안타깝지만 리엑트 네이티브는 metro사용을 강제합니다.
+로컬 환경에서의 테스트에서는 localhost:8081에 자바스크립트 번들 파일을 서빙하는 서버를 metro가 구동시킵니다. 시뮬레이터나 테스트 기기는
+metro서버와 통신하며 디버그 환경에서 앱을 구동시킵니다. 콘솔 로그와 오류 메세지는 sourcemap을 통해 번들과 소스를 매핑시킵니다.
+
+
+
+5. 자바스크립트 번들 빌드와 배포
+앱에 배포를 위한 자바스크립트 번들을 빌드합니다. react-native cli를 이용해 번들을 수동으로 빌드하는 과정을 플랫폼에 따라 표기합니다.
+
+5.1 ios
+프로젝트의 루트 경로(package.json이 위치한 경로) 에서 아래 명령을 복사합니다.
+
+npx react-native bundle \
+  --dev false \
+  --platform ios \
+  --entry-file index.js \
+  --bundle-output main.jsbundle \
+  --sourcemap-output main.jsbundle.map
+
+--dev옵션은 debug환경이 아니므로 false로 지정합니다.
+--platform은 ios입니다.
+--entry-file은 자바스크립트 파일의 진입점입니다. 최상위 자바스크립트 파일은 index.js입니다. AppRegistry가 있는 파일을 지정해줍니다.
+--bundle-output은 번들 파일명과 경로를 지정합니다. main.jsbundle이 프로젝트 루트에 생성됩니다. main.jsbundle은 ios의 기본 번들 네임입니다.
+첨언하자면 이 설정은 xcode의 프로젝트에 Build Phase의 Bundle React Native code and images의 스크립트에 지정된 react-native-xcode.sh스크립트 내부에 지정된 파일명입니다.
+AppDelegate의 sourceURLForBridge메소드의 번환값에서 해당 파일명을 반환하므로 ios에서는 main.jsbundle을 사용하는것을 권장합니다.
+--sourcemap-output은 번들파일과 소스를 매칭시켜주는 매핑 파일입니다. 지정되지 않으면 오류 메시지에서 번들 내부의 위치만을 지정합니다.
+
+위에서 생성된 main.jsbundle과 main.jsbundle.map은 한 쌍이 됩니다. 파일 이름은 변경하지 않는것이 좋습니다.
+
+main.jsbundle을 appcenter에 코드푸시합니다. 해당 과정은 상세히 설명하지 않고 아래의 명령어로 대체합니다.
+appcenter codepush release -a pinefriends/anilogIOS -d Staging -c ./main.jsbundle -t 1.0
+
+-a에는 조직/프로젝트명 을 입력합니다.
+-d에는 배포할 단계를 입력합니다. Debug/Release/Staging을 사용합니다.
+-c에는 번들파일 경로를 입력합니다.
+-t는 릴리즈 버전을 입력합니다.
+
+센트리에 로그를 수집하기 위해 번들파일과 소스맵을 업로드합니다.
+sentry-cli releases -o pinefriend -p anilogstaging files staging1 upload-sourcemaps --rewrite main.jsbundle.map main.jsbundle --url-prefix '~/'
+-o에는 조직을 입력합니다.
+-p는 프로젝트명입니다.
+--url-path에는 상대경로를 위한 접두사를 지정합니다. '~/'로 지정합니다.
+files뒤에는 릴리즈 명이 붙습니다. 이는 센트리의 릴리즈입니다. 코드푸시의 릴리즈와 혼동하지 않도록 합니다.
+
+5.2 android
+npx react-native bundle \
+  --dev false \
+  --platform android \
+  --entry-file index.js \
+  --bundle-output index.android.bundle \
+  --sourcemap-output index.android.bundle.map
+
+appcenter codepush release -a pinefriends/anilog-android-1 -d Staging -c ./index.android.bundle -t 1.0
+
+sentry-cli releases -o pinefriend -p anilogstaging files staging1 upload-sourcemaps --rewrite  index.android.bundle index.android.bundle.map --url-prefix '~/'
+
+
+
+6. trouble shooting
+센트리를 xcode에서 빌드할때 SentryTraceContext.h를 찾을수 없다는 오류가 나옵니다. 해당 오류가 난 파일 위치에 아래와 같이 조치합니다.
+
+//#import <Sentry/SentryTraceContext.h>
+@interface SentryTraceContext : NSObject
+- (nullable instancetype)initWithDict:(NSDictionary<NSString *, id> *)dictionary;
+@end

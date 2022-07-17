@@ -1,0 +1,45 @@
+make bundle
+
+1. ios
+
+npx react-native bundle \
+  --dev false \
+  --platform ios \
+  --entry-file index.js \
+  --bundle-output main.jsbundle \
+  --sourcemap-output main.jsbundle.map
+
+-add to bundle 
+//# sourceMappingURL=https://pinetreegy.s3.ap-northeast-2.amazonaws.com/sentrysourcemap/main.jsbundle.map
+https://pinetreegy.s3.ap-northeast-2.amazonaws.com/sentrysourcemap/main.jsbundle.map
+
+-codePush
+appcenter codepush release -a pinefriends/anilogIOS -d Staging -c ./main.jsbundle -t 1.0
+
+-sourcemap upload to artifact in sentry
+sentry-cli releases -o pinefriend -p anilogstaging files 0.0.1 upload-sourcemaps --rewrite main.jsbundle.map main.jsbundle --url-prefix '~/'
+
+
+2. android
+
+npx react-native bundle \
+  --dev false \
+  --platform android \
+  --entry-file index.js \
+  --bundle-output android.main.bundle \
+  --sourcemap-output android.main.bundle.map
+
+https://pinetreegy.s3.ap-northeast-2.amazonaws.com/sentrysourcemap/index.android.bundle.map
+
+//아티펙트에는 번들과 sourcemap이 같이 올라가야 매칭이 됨
+sentry-cli releases -o pinefriend -p anilogstaging files staging1 upload-sourcemaps --rewrite  main.jsbundle.map main.jsbundle --url-prefix '~/'
+
+//코드 푸시에는 react-native bundle로 생성한 번들이 올라가도록 함
+//코드 푸시에 안드로이드 번들을 올리는 appcenter cli명령어
+appcenter codepush release -a pinefriends/anilog-android-1 -d Staging -c ./안드로이드번들파일 -t 1.0
+
+
+//#import <Sentry/SentryTraceContext.h>
+@interface SentryTraceContext : NSObject
+- (nullable instancetype)initWithDict:(NSDictionary<NSString *, id> *)dictionary;
+@end

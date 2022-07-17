@@ -93,7 +93,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 			{
 				shelter_userobject_id: request.protect_request_writer_id._id,
 				protect_request_status: 'all', //하단 리스트
-				limit: PROTECT_REQUEST_DETAIL_LIMIT,
+				limit: 5,
 				page: offset,
 			},
 			result => {

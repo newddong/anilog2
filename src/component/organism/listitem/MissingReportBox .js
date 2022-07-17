@@ -64,7 +64,7 @@ const MissingReportBox = props => {
 						/>
 						<View style={[styles.date_txt]}>
 							<Text style={[txt.roboto26, {textAlign: 'center'}, {color: MAINBLACK}, {height: 32 * DP}]}>
-								{moment(props.data?.missing_animal_date).format('YY.MM.DD')}
+								{moment(props.data?.report_witness_date).format('YY.MM.DD')}
 							</Text>
 							{/* <Text style={[txt.noto28b, {textAlign: 'center'}, {color: 'black'}]}>
 								{props.data.missing_animal_species} / {props.data.missing_animal_age}살

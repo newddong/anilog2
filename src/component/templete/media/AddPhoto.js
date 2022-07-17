@@ -60,7 +60,7 @@ export default AddPhoto = props => {
 			assetType: type,
 			include: ['filename'],
 			groupName: album,
-			groupTypes: 'all',
+			groupTypes: type,
 		};
 		if (Platform.OS == 'android') {
 			delete param.fromTime;
@@ -142,7 +142,7 @@ export default AddPhoto = props => {
 			first: requestloading,
 			toTime: 0,
 			toID: '123456789',
-			assetType: 'All',
+			assetType: props.route.params.types ?? 'Photos',
 			include: ['filename'],
 			groupName: album,
 			groupTypes: 'album',

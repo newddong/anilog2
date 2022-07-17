@@ -11,6 +11,7 @@ import {
 	PixelRatio,
 	ActivityIndicator,
 	TouchableWithoutFeedback,
+	TouchableOpacity
 } from 'react-native';
 import {APRI10, WHITE} from 'Root/config/color';
 import {Write94, Camera54} from 'Atom/icon';
@@ -43,7 +44,6 @@ export default FeedList = ({route}) => {
 			moveToTop();
 		}
 	}, [route.params]);
-
 	React.useEffect(() => {
 		switch (route.name) {
 			case 'UserFeedList':
@@ -572,7 +572,7 @@ export default FeedList = ({route}) => {
 		setRefreshing(true);
 		wait(0).then(() => setRefreshing(false));
 	};
-
+	
 	const rememberScroll = e => {
 		if (e.nativeEvent.contentOffset.y > 0) {
 			userGlobalObject.t = e.nativeEvent.contentOffset;
@@ -585,7 +585,7 @@ export default FeedList = ({route}) => {
 			}
 		}
 	};
-
+	// console.log('ddsadf',vvvv)
 	const moveToTop = () => {
 		flatlist.current.scrollToOffset({animated: true, offset: 0});
 	};
@@ -682,6 +682,10 @@ export default FeedList = ({route}) => {
 					</View>
 				</View>
 			)}
+			{/*센트리오류 테스트*/}
+			{false&&<TouchableOpacity onPress={()=>{console.log(androidError)}} style={{width:100,height:100,backgroundColor:'yellow',position:'absolute'}}>
+				<View style={{width:100,height:100,backgroundColor:'blue',position:'absolute'}}></View>
+				</TouchableOpacity>}
 			{false && (
 				<View style={{backgroundColor: 'red', width: 750 * DP, top: 0, position: 'absolute'}}>
 					<View style={{backgroundColor: 'yellow', marginBottom: 20}}>

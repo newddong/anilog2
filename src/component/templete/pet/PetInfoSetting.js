@@ -985,15 +985,14 @@ export default PetInfoSetting = ({route}) => {
 									</View>
 								</View>
 								{/* <View style={[{}]}> */}
-								<View style={[{flexDirection: 'row'}, {marginBottom: 30 * DP}]}>
+								<View style={[{flexDirection: 'row'}, {marginBottom: 30 * DP}, {backgroundColor: 'red'}]}>
 									<Input30
 										alert_msg={WEIGHT_INPUT_FORM_INFO}
-										description="info"
+										// description="info"
 										showmsg={false}
 										confirm={true}
 										showTitle={false}
 										width={694}
-										height={104}
 										placeholder={'몸무게 입력'}
 										showCrossMark={false}
 										onChange={onChangeKg}

@@ -25,6 +25,7 @@ export default MissingReportList = props => {
 	const [filterData, setFilterData] = React.useState({city: ''});
 	const [onlyMissing, setOnlyMissing] = React.useState(false); //실종글만 보기
 	const [onlyReport, setOnlyReport] = React.useState(false); // 제보글만 보기
+	const [pressed, setPressed] = React.useState(false);
 	const urgentBtnRef = React.useRef();
 
 	React.useEffect(() => {
@@ -203,8 +204,11 @@ export default MissingReportList = props => {
 				navigation.navigate('LoginRequired');
 			});
 		} else {
+			setPressed(true);
 			// setShowActionButton(!showActionButton);
-			Modal.popUrgentBtnModal(moveToReportForm, moveToMissingForm, urgentBtnRef.current);
+			setTimeout(() => {
+				Modal.popUrgentBtnModal(moveToReportForm, moveToMissingForm, urgentBtnRef.current, () => setPressed(false));
+			}, 150);
 		}
 	};
 
@@ -311,8 +315,8 @@ export default MissingReportList = props => {
 				)}
 			</View>
 
-			<View style={[feedWrite.urgentBtnContainer]}>
-				<View style={[styles.urgentActionButton, {}]} onLayout={e => (urgentBtnRef.current = e.nativeEvent.layout)}>
+			<View style={[pressed ? feedWrite.urgentBtnContainer2 : feedWrite.urgentBtnContainer]}>
+				<View style={[styles.urgentActionButton]} onLayout={e => (urgentBtnRef.current = e.nativeEvent.layout)}>
 					<TouchableOpacity onPress={onPressShowActionButton}>
 						<Urgent_Write1 />
 					</TouchableOpacity>

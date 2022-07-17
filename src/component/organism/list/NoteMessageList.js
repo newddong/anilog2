@@ -40,7 +40,19 @@ const NoteMessageList = props => {
 	return (
 		<View style={style.container}>
 			{/* <Text>쪽지 내용 리스트 나오는 화면</Text> */}
-			<FlatList data={props.data} keyExtractor={item => item._id} renderItem={renderItem} showsVerticalScrollIndicator={false} ref={flatlistRef} />
+			<FlatList
+				data={props.data}
+				keyExtractor={item => item._id}
+				renderItem={renderItem}
+				showsVerticalScrollIndicator={false}
+				ref={flatlistRef}
+				onScrollToIndexFailed={info => {
+					const wait = new Promise(resolve => setTimeout(resolve, 500));
+					wait.then(() => {
+						flatlistRef.current?.scrollToIndex({index: info.index, animated: true});
+					});
+				}}
+			/>
 		</View>
 	);
 };

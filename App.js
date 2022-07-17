@@ -12,7 +12,7 @@ import Raven from 'raven-js';
 import ErrorBoundary from 'react-native-error-boundary';
 // require('raven-js/plugins/react-native')(Raven)
 // import Raven from 'raven-js/plugins/react-native';
-
+const NoRaven = false;
 const RELEASE_ID = appConfig.sentryReleaseID;
 const PUBLIC_DSN = appConfig.mode == DEV ? appConfig.sentryDsnStaging : appConfig.sentryDsnRelease;
 const integrations =
@@ -21,18 +21,20 @@ const integrations =
 		: new RewriteFramesIntegration({
 				prefix: '',
 		  });
-Sentry.init({
-	dsn: PUBLIC_DSN,
-	release: RELEASE_ID,
-	integrations: [integrations],
-});
+(function sentryinit(){
+	Sentry.init({
+		dsn: PUBLIC_DSN,
+		release: RELEASE_ID,
+		integrations: [integrations],
+	});
 
-init({
-	dsn: PUBLIC_DSN,
-	release: RELEASE_ID,
-	integrations: [integrations],
-});
-Raven.config(PUBLIC_DSN, {release: RELEASE_ID}).install();
+	init({
+		dsn: PUBLIC_DSN,
+		release: RELEASE_ID,
+		integrations: [integrations],
+	});
+	!NoRaven&&Raven.config(PUBLIC_DSN, {release: RELEASE_ID}).install();
+})()
 const codePushOptions = {
 	checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
 	// 언제 업데이트를 체크하고 반영할지를 정한다.
@@ -97,6 +99,6 @@ const App = () => {
 		</Sentry.ErrorBoundary>
 	);
 };
-export default Sentry.wrap(codePush(codePushOptions)(App));
-// export default (codePush(codePushOptions)(Sentry.wrap(App)));
+// export default Sentry.wrap(codePush(codePushOptions)(App));
+export default (codePush(codePushOptions)(Sentry.wrap(App)));
 // export default App

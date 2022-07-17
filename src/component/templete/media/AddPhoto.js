@@ -12,14 +12,14 @@ import {
 	NativeModules,
 	Dimensions,
 } from 'react-native';
-import {APRI10, BLACK,WHITE, GRAY10} from 'Root/config/color';
+import {APRI10, BLACK, WHITE, GRAY10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import CameraRoll from 'Root/module/CameraRoll';
 // import { hasAndroidPermission } from './camerapermission';
 // import { requestPermission, reqeustCameraPermission } from 'permission';
 import LocalMedia from 'Molecules/media/LocalMedia';
-import {Bracket48, VideoEditorIcon} from 'Atom/icon';
+import {Bracket48, VideoEditorIcon, FeedMediaNext} from 'Atom/icon';
 import FastImage from 'react-native-fast-image';
 import Modal from 'Root/component/modal/Modal';
 import Video from 'react-native-video';
@@ -187,7 +187,21 @@ export default AddPhoto = props => {
 	React.useEffect(() => {
 		console.log('최초 로드');
 		FastImage.preload(photolist.map(v => ({uri: v.node.image.uri})));
-		CameraRoll.getAlbums({albumType: 'All', assetType: 'All'}).then(r => setAlbumList(['모든사진'].concat(r.map(v => v.title))));
+		CameraRoll.getAlbums({albumType: 'All', assetType: 'All'}).then(r =>
+			setAlbumList(
+				['모든사진'].concat(
+					r
+						.map(v => v.title)
+						.filter(v => {
+							if (props.route.params.types !='Videos'&&props.route.params.types!='All') {
+								return v != '비디오'&&!v.includes('video');
+							} else {
+								return true;
+							}
+						}),
+				),
+			),
+		);
 		if (Platform.OS === 'ios') {
 			PermissionIos.checkPermission()
 				.then(status => {
@@ -301,20 +315,6 @@ export default AddPhoto = props => {
 		);
 	};
 
-	const clickcheck = () => {
-		// console.log(props.route.params);
-		// console.log(exportUriList);
-		// props.navigation.navigate(props.route.params?.navfrom,{})
-		// props.navigation.navigate({ name: props.route.params.navfrom, params: { localSelectedImages: exportUriList[0] }, merge: true });
-		// props.navigation.navigate({name: props.route.params?.navfrom, params: {image: exportUriList[0]}, merge: true});
-
-		// let lastID = photolist.length > 1 ? photolist[photolist.length - 1].node.imageID : "123456789";
-		// console.log('스크롤이 바닥에 닿았습니다. '+lastID+ '이후의 사진을 로드합니다.');
-		// loadPhotosMilsec(15,lastID);
-		console.log(selectedPhoto);
-		// console.log(photolist);
-	};
-
 	const keyExtractor = React.useCallback((item, index) => (item ? item.node.image.uri : 'null' + index), [photolist]);
 	const getItemLayout = React.useCallback(
 		(data, index) => {
@@ -325,11 +325,11 @@ export default AddPhoto = props => {
 
 	const onCrop = (originImg, cropImg) => {
 		console.log(selectedPhoto);
-		selectedPhoto.forEach((v,i,a)=>{
-			if(v.uri==originImg){
+		selectedPhoto.forEach((v, i, a) => {
+			if (v.uri == originImg) {
 				a[i].cropUri = cropImg;
 			}
-		})
+		});
 	};
 
 	const next = () => {
@@ -342,7 +342,7 @@ export default AddPhoto = props => {
 			idx = photolist.findIndex(v => v.node.image.uri == (selectedPhoto[index + 1].originUri ?? selectedPhoto[index + 1].uri)) / 4;
 			setIndex(index + 1);
 		}
-		
+
 		if (idx < 0) return;
 		flatlist.current.scrollToIndex({index: Math.floor(idx)});
 	};
@@ -359,7 +359,7 @@ export default AddPhoto = props => {
 			idx = photolist.findIndex(v => v.node.image.uri == (selectedPhoto[index - 1].originUri ?? selectedPhoto[index - 1].uri)) / 4;
 			setIndex(index - 1);
 		}
-		
+
 		if (idx < 0) return;
 		flatlist.current.scrollToIndex({index: Math.floor(idx)});
 	};
@@ -367,23 +367,25 @@ export default AddPhoto = props => {
 	const videoEdit = () => {
 		console.log(selectedPhoto[index]);
 		let media = selectedPhoto[index];
-		let duration = media.duration <=15 ? media.duration : 15;
+		let duration = media.duration <= 15 ? media.duration : 15;
 		setPlay(false);
 		VideoEditor.unlockLicense();
 		VideoEditor.openVideoEditor(media.videoUri ?? media.uri, media.duration, media.duration, 10000000, 'aniMov')
 			.then(r => {
 				console.log(r);
-				if(r.hasChanges){
+				if (r.hasChanges) {
 					media.videoUri = r.video;
-					console.log('videoEditor Result',r);
-					CameraRoll.getVideoAttributes(r.video).then(r => {
-						console.log('videoattribute', r);
-						let result = r ?? r[0]
-						media.duration = result.duration
-						media.fileSize = result.fileSize;
-						setSelectedPhoto([...selectedPhoto]);
-						setPlay(true);
-					}).catch(e=>console.log('video attribute error',e));
+					console.log('videoEditor Result', r);
+					CameraRoll.getVideoAttributes(r.video)
+						.then(r => {
+							console.log('videoattribute', r);
+							let result = r ?? r[0];
+							media.duration = result.duration;
+							media.fileSize = result.fileSize;
+							setSelectedPhoto([...selectedPhoto]);
+							setPlay(true);
+						})
+						.catch(e => console.log('video attribute error', e));
 				}
 			})
 			.catch(e => {
@@ -400,50 +402,73 @@ export default AddPhoto = props => {
 	const getFileSize = fileSize => {
 		let mega = 0;
 		let killo = 0;
-		if(fileSize>=1000000){
-			mega = Math.floor(fileSize/1000000)
-			return mega+'mb';
-		}else{
-			killo = Math.floor(fileSize/1000);
-			return killo+'kb';
+		if (fileSize >= 1000000) {
+			mega = Math.floor(fileSize / 1000000);
+			return mega + 'mb';
+		} else {
+			killo = Math.floor(fileSize / 1000);
+			return killo + 'kb';
 		}
-		 
-	
+	};
+	const nextPrevBtn = (mode) => {
+		if(selectedPhoto.length<2)return false;
+		return (<View
+			style={[{position: 'absolute', width: 78 * DP, height: 78 * DP, top: 350 * DP}, mode=='next'?{right: 0 * DP,transform:[{rotate:'180deg'}]}:{left:0}]}
+			onStartShouldSetResponder={() => true}
+			onResponderGrant={() => {
+				if(mode=='next'){
+					next();
+				}else{
+					prev();
+				}
+			}}>
+			<FeedMediaNext />
+		</View>)
 	}
-
 
 	return (
 		<View style={lo.wrp_main}>
-			{selectedPhoto[index] ? (
-				selectedPhoto[index].isVideo || selectedPhoto[index].is_video ? (
+			{selectedPhoto[index] ? 
+				(selectedPhoto[index].isVideo || selectedPhoto[index].is_video ? (
 					<View>
-						{<Video
+						<Video
 							style={{width: 750 * DP, height: 750 * DP, backgroundColor: '#000'}}
 							source={{uri: selectedPhoto[index]?.videoUri ?? selectedPhoto[index]?.uri}}
 							// source={{uri: selectedPhoto[index]?.videoUri}}
 							paused={!play}
 							muted
 							resizeMode="contain"
-						/>}
+						/>
 						{selectedPhoto[index] && !selectedPhoto[index].uri.includes('gif') && !selectedPhoto[index].uri.includes('http') && (
+						<>
 							<View
-								style={{position: 'absolute', width: 100 * DP, height: 100 * DP, bottom: 0*DP, right: 0*DP}}
+								style={{position: 'absolute', width: 100 * DP, height: 100 * DP, bottom: 0 * DP, right: 0 * DP}}
 								onStartShouldSetResponder={() => true}
 								onResponderGrant={() => {
 									videoEdit();
 								}}>
-									<VideoEditorIcon />
+								<VideoEditorIcon />
 							</View>
+							<View style={{position: 'absolute', bottom: 10 * DP, left: 10 * DP}}>
+								<Text style={[txt.roboto26, {color: WHITE}]}>
+									{getDuration(selectedPhoto[index].duration) + '  ' + getFileSize(selectedPhoto[index].fileSize)}
+								</Text>
+							</View>
+							{nextPrevBtn('prev')}
+							{nextPrevBtn('next')}
+						</>
 						)}
-						{selectedPhoto[index] && !selectedPhoto[index].uri.includes('gif') && !selectedPhoto[index].uri.includes('http') && (
-						<View
-						style={{position: 'absolute', bottom: 10*DP, left: 10*DP}}
-						><Text style={[txt.roboto26,{color:WHITE}]}>{getDuration(selectedPhoto[index].duration)+'  '+getFileSize(selectedPhoto[index].fileSize)}</Text></View>)}
 					</View>
 				) : (
-					<React.Fragment key={(()=>{
-						let key = selectedPhoto.reduce((a,c)=>{return a+c.cropUri?1:0},0)+index+selectedPhoto[index].uri
-						return key;
+					<React.Fragment
+						key={(() => {
+							let key =
+								selectedPhoto.reduce((a, c) => {
+									return a + c.cropUri ? 1 : 0;
+								}, 0) +
+								index +
+								selectedPhoto[index].uri;
+							return key;
 						})()}>
 						<Crop
 							width={750 * DP}
@@ -453,6 +478,8 @@ export default AddPhoto = props => {
 							photo={selectedPhoto[index]}
 							onCrop={onCrop}
 						/>
+						{nextPrevBtn('prev')}
+						{nextPrevBtn('next')}
 					</React.Fragment>
 				)
 			) : (
@@ -482,17 +509,6 @@ export default AddPhoto = props => {
 						</View>
 					</TouchableWithoutFeedback>
 				)} */}
-
-				<TouchableOpacity onPress={prev}>
-					<View style={[btn.confirm_button, btn.shadow]}>
-						<Text style={[txt.noto28b, txt.white]}>이전</Text>
-					</View>
-				</TouchableOpacity>
-				<TouchableOpacity onPress={next}>
-					<View style={[btn.confirm_button, btn.shadow]}>
-						<Text style={[txt.noto28b, txt.white]}>다음</Text>
-					</View>
-				</TouchableOpacity>
 			</View>
 			<FlatList
 				getItemLayout={getItemLayout}

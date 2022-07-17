@@ -10,6 +10,7 @@ import {createFeed, createMissing, createReport, editFeed, editMissingReport, ge
 import userGlobalObject from 'Root/config/userGlobalObject';
 import feed_obj from 'Root/config/feed_obj';
 import {useNavigation} from '@react-navigation/core';
+import { createThumbnail } from 'react-native-create-thumbnail';
 
 export default FeedWriteHeader = ({route, options}) => {
 	const navigation = useNavigation();
@@ -192,7 +193,18 @@ export default FeedWriteHeader = ({route, options}) => {
 			switch (route.params?.feedType) {
 				case 'Feed':
 					console.log('feed Param', JSON.stringify(param));
-					createFeed(param, complete, handleError);
+					if(param.feed_medias[0].is_video){
+						createThumbnail({url:param.feed_medias[0].media_uri,timeStamp:500}).then(r=>{
+							console.log('썸네일 생성',r)
+							param.media_uri = param.media_uri.concat(r.path);
+							// param.media_uri = param.media_uri.concat(r.path.includes('://')?r.path:'file:/'+r.path);
+							createFeed(param, complete, handleError);
+						}).catch(e=>{
+							createFeed(param, complete, handleError);	
+						})
+					}else{
+						createFeed(param, complete, handleError);
+					}
 					break;
 				case 'Missing':
 					{
@@ -306,7 +318,19 @@ export default FeedWriteHeader = ({route, options}) => {
 
 				// console.log('onEdit / FeedWrtieHeader', param);
 				if (param.feed_type == 'feed') {
-					editFeed(param, complete, handleError);
+					if(param.feed_medias[0].is_video){
+						createThumbnail({url:param.feed_medias[0].media_uri,timeStamp:500}).then(r=>{
+							console.log('썸네일 생성',r)
+							param.media_uri = route.params.selectedPhoto?.length>0?param.media_uri.concat(r.path):[r.path];
+							console.log('TJs',param.media_uri)
+							editFeed(param, complete, handleError);
+						}).catch(e=>{
+							editFeed(param, complete, handleError);	
+						})
+					}else{
+						editFeed(param, complete, handleError);
+					}
+					
 				} else if (param.feed_type == 'report') {
 					const data = param;
 					if (data.report_location.city == '광역시, 도' || data.report_location.district == '구를 선택') {

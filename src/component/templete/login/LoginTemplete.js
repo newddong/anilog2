@@ -296,7 +296,7 @@ export default LoginTemplete = props => {
 						<View style={[btn_style.btn_w522, loginTemplete_style.btn_w522_assign]}>
 							<AniButton
 								btnLayout={btn_w522_r30}
-								btnTitle={'로컬로'}
+								btnTitle={'로컬접속'}
 								btnStyle={'border'}
 								titleFontStyle={32}
 								onPress={() => {

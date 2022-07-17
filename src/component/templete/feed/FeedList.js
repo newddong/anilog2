@@ -147,7 +147,7 @@ export default FeedList = ({route}) => {
 						}, 0);
 						return {
 							...v,
-							offset: offset,
+							offset: route.name == 'MainHomeFeedList'?offset+276*DP:offset,
 						};
 					}),
 			);
@@ -560,7 +560,7 @@ export default FeedList = ({route}) => {
 	};
 	const [viewIndex, setViewIndex] = React.useState([]);
 	const renderItem = ({item, index}) => {
-		return <Feed data={item} deleteFeed={deleteFeedItem} isView={focused && viewIndex == index} onPressPhoto={onPressPhoto} />;
+		return <Feed data={item} deleteFeed={deleteFeedItem} isView={focused&& viewIndex == index} onPressPhoto={onPressPhoto} />;
 		// return (focused&&<View style={{backgroundColor:viewIndex==index?'red':'blue'}}><Feed data={item} deleteFeed={deleteFeedItem} isView={focused&&viewIndex==index}/></View>);
 	};
 
@@ -637,7 +637,7 @@ export default FeedList = ({route}) => {
 					onScroll={rememberScroll}
 					ItemSeparatorComponent={separatorComp}
 					onViewableItemsChanged={viewable}
-					viewabilityConfig={{waitForInteraction: false, viewAreaCoveragePercentThreshold: 50, minimumViewTime: 1}}
+					viewabilityConfig={{waitForInteraction: false, viewAreaCoveragePercentThreshold: 40, minimumViewTime: 1}}
 					windowSize={4}
 					decelerationRate={0.9}
 					maxToRenderPerBatch={5}
@@ -812,7 +812,6 @@ const styles = StyleSheet.create({
 		alignSelf: 'center',
 
 		marginBottom: 30 * DP,
-		// backgroundColor: 'yellow',
 		// borderTopWidth: 2 * DP,
 		// borderTopColor: GRAY40,
 	},

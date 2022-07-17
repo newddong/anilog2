@@ -49,7 +49,7 @@ AppDelegate의 sourceURLForBridge메소드의 번환값에서 해당 파일명�
 
 main.jsbundle을 appcenter에 코드푸시합니다. 해당 과정은 상세히 설명하지 않고 아래의 명령어로 대체합니다.
 appcenter codepush release -a pinefriends/anilogIOS -d Staging -c ./main.jsbundle -t 1.0
-
+appcenter codepush release -a pinefriends/anilogIOS -d Production -c ./main.jsbundle -t 1.0
 -a에는 조직/프로젝트명 을 입력합니다.
 -d에는 배포할 단계를 입력합니다. Debug/Release/Staging을 사용합니다.
 -c에는 번들파일 경로를 입력합니다.
@@ -57,6 +57,7 @@ appcenter codepush release -a pinefriends/anilogIOS -d Staging -c ./main.jsbundl
 
 센트리에 로그를 수집하기 위해 번들파일과 소스맵을 업로드합니다.
 sentry-cli releases -o pinefriend -p anilogstaging files staging1 upload-sourcemaps --rewrite main.jsbundle.map main.jsbundle --url-prefix '~/'
+sentry-cli releases -o pinefriend -p anilogrelease files release1 upload-sourcemaps --rewrite main.jsbundle.map main.jsbundle --url-prefix '~/'
 -o에는 조직을 입력합니다.
 -p는 프로젝트명입니다.
 --url-path에는 상대경로를 위한 접두사를 지정합니다. '~/'로 지정합니다.
@@ -71,9 +72,10 @@ npx react-native bundle \
   --sourcemap-output index.android.bundle.map
 
 appcenter codepush release -a pinefriends/anilog-android-1 -d Staging -c ./index.android.bundle -t 1.0
+appcenter codepush release -a pinefriends/anilog-android-1 -d Production -c ./index.android.bundle -t 1.0
 
 sentry-cli releases -o pinefriend -p anilogstaging files staging1 upload-sourcemaps --rewrite  index.android.bundle index.android.bundle.map --url-prefix '~/'
-
+sentry-cli releases -o pinefriend -p anilogrelease files release1 upload-sourcemaps --rewrite  index.android.bundle index.android.bundle.map --url-prefix '~/'
 
 
 6. trouble shooting

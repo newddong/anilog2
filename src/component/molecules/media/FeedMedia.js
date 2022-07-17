@@ -134,9 +134,11 @@ export default FeedMedia = props => {
 		} else return false;
 	};
 
-	const onPressPhoto = () => {
+	const onPressPhoto = (uri) => {
+		console.log(feed_medias)
+		let list = feed_medias.filter(v=>!v.is_video&&v.media_uri!=uri)
 		Modal.popPhotoListViewModal(
-			feed_medias.map(v => v.media_uri),
+			[uri].concat(list.map(v=>v.media_uri)),
 			() => Modal.close(),
 		);
 	};

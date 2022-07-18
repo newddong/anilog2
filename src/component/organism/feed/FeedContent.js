@@ -97,10 +97,8 @@ export default FeedContent = props => {
 	}, [props.data]);
 
 	//피드 미트볼 메뉴 - 신고 클릭
-	const onPressReport = context => {
-		console.log('신고 context', context, props.data._id);
+	const onPressReport = () => {
 		Modal.close();
-
 		setTimeout(() => {
 			Modal.popOneBtnSelectModal(
 				REPORT_MENU,
@@ -211,7 +209,6 @@ export default FeedContent = props => {
 	//피드 미트볼 메뉴 - 쪽지 보내기
 	const onPressSendMsg = _id => {
 		Modal.close();
-
 		setTimeout(() => {
 			if (userGlobalObject.userInfo.isPreviewMode) {
 				Modal.popLoginRequestModal(() => {
@@ -223,7 +220,6 @@ export default FeedContent = props => {
 					msg => {
 						// if (msg.trim() == '') {
 						// return Modal.popOneBtn('채팅을 입력하세요.', '확인', () => Modal.close());
-
 						if (msg.length == 0) {
 							console.log('메세지 입력없음');
 							Alert.alert('내용을 입력해주세요');
@@ -235,6 +231,10 @@ export default FeedContent = props => {
 									Modal.popOneBtn('쪽지 전송하였습니다.', '확인', () => Modal.close());
 								},
 								err => {
+									Modal.close();
+									setTimeout(() => {
+										Modal.alert('메시지 전송에 실패했습니다. \n 잠시후 다시 이용해주세요.');
+									}, 100);
 									console.log('message sent err', err);
 								},
 							);
@@ -339,10 +339,10 @@ export default FeedContent = props => {
 				onPressFollow();
 				break;
 			case '신고':
-				onPressReport(context);
+				onPressReport();
 				break;
 			case '쪽지 보내기':
-				onPressSendMsg(context._id);
+				onPressSendMsg(props.data.feed_writer_id);
 				break;
 			case '즐겨찾기':
 				onFavorite(true);
@@ -360,9 +360,7 @@ export default FeedContent = props => {
 		Modal.close();
 	};
 
-	const meatballActions = context => {
-		let isFavorite = context.favorite_feeds.some(feed => feed._id == _id);
-		// console.log('즐겨찾기됨?', isFavorite);
+	const meatballActions = () => {
 		let isMyFeed = userGlobalObject.userInfo._id == (props.data.feed_writer_id._id ? props.data.feed_writer_id._id : props.data.feed_writer_id);
 		let feedType = props.data.feed_type;
 		if (feedType == 'feed') {
@@ -371,7 +369,7 @@ export default FeedContent = props => {
 				Modal.popSelectBoxModal(
 					FEED_MEATBALL_MENU_MY_FEED,
 					selectedItem => {
-						meatBallSelectAction(selectedItem, context);
+						meatBallSelectAction(selectedItem);
 					},
 					() => Modal.close(),
 					false,
@@ -382,7 +380,7 @@ export default FeedContent = props => {
 				getFollows(
 					{userobject_id: userGlobalObject.userInfo._id},
 					result => {
-						// console.log('result / getFollows ', result.msg);
+						console.log('result / getFollows ', result.msg.length);
 						let follow_id_list = [];
 						result.msg.map((v, i) => {
 							follow_id_list.push(v.follower_id._id);
@@ -393,7 +391,7 @@ export default FeedContent = props => {
 						Modal.popSelectBoxModal(
 							['쪽지 보내기', isFollowers ? '팔로우 취소' : '팔로우', '신고'],
 							selectedItem => {
-								meatBallSelectAction(selectedItem, context);
+								meatBallSelectAction(selectedItem);
 							},
 							() => Modal.close(),
 							false,
@@ -412,7 +410,7 @@ export default FeedContent = props => {
 				Modal.popSelectBoxModal(
 					['수정', '삭제'],
 					selectedItem => {
-						meatBallSelectAction(selectedItem, context);
+						meatBallSelectAction(selectedItem);
 					},
 					() => Modal.close(),
 					false,
@@ -423,19 +421,13 @@ export default FeedContent = props => {
 				getFollows(
 					{userobject_id: userGlobalObject.userInfo._id},
 					result => {
-						console.log('getFollows / FeedContent : ', result.msg);
-						let follow_id_list = [];
-						result.msg.map((v, i) => {
-							follow_id_list.push(v.follower_id._id);
-						});
-						console.log('follow_id_list', follow_id_list);
-						// let isFollowers = follow_id_list.includes(props.data.feed_avatar_id ? props.data.feed_avatar_id._id : props.data.feed_writer_id._id); //해당 피드 게시글 작성자가 내 팔로워 목록에 있는지 여부
+						console.log('getFollows / FeedContent : ', result.msg.length);
+						let follow_id_list = result.msg.map(v => v.follower_id._id);
 						let isFollowers = follow_id_list.includes(feed_writer._id); //해당 피드 게시글 작성자가 내 팔로워 목록에 있는지 여부
 						Modal.popSelectBoxModal(
-							// FEED_MEATBALL_MENU,
 							['쪽지 보내기', isFollowers ? '팔로우 취소' : '팔로우', '신고'],
 							selectedItem => {
-								meatBallSelectAction(selectedItem, context);
+								meatBallSelectAction(selectedItem);
 							},
 							() => Modal.close(),
 							false,
@@ -457,44 +449,12 @@ export default FeedContent = props => {
 				navigation.navigate('LoginRequired');
 			});
 		} else {
-			getFavoriteFeedListByUserId(
-				{
-					userobject_id: userGlobalObject.userInfo._id,
-				},
-				r => {
-					let context = {
-						favorite_feeds: r.msg,
-						_id: feed_writer_id,
-					};
-					meatballActions(context);
-				},
-				err => {
-					console.log('getFavoriteFeedListByUserId / FeedContent', err);
-				},
-			);
+			meatballActions();
 		}
 	};
 
 	const isMissingReportRoute = route.name == 'MissingAnimalDetail' || route.name == 'ReportDetail';
 	const isCommentList = route.name == 'FeedCommentList';
-	const isMissingReportType = feed_content == 'missing' || feed_content == 'report';
-
-	const [numLine, setNumLine] = React.useState(isMissingReportRoute ? 0 : 2);
-
-	const showMore = () => {
-		setNumLine(0);
-		setShow(true);
-	};
-
-	const onPressFavoriteWriter = bool => {
-		if (userGlobalObject.userInfo.isPreviewMode) {
-			Modal.popLoginRequestModal(() => {
-				navigation.navigate('LoginRequired');
-			});
-		} else {
-			props.onPressFavorite && props.onPressFavorite(bool);
-		}
-	};
 	const lines = getLinesOfString(feed_content, 52);
 
 	const layoutStyle = () => {
@@ -526,33 +486,11 @@ export default FeedContent = props => {
 
 	const onPressPhoto = () => {
 		props.onPressPhoto(props.data);
-		// console.log('props', route.name);
-		// if (feed_type == 'report' || feed_type == 'missing') {
-		// 	if (feed_type == 'report') {
-		// 		navigation.navigate('ReportDetail', {_id: _id});
-		// 	} else {
-		// 		let sexValue = '';
-		// 		switch (missing_animal_sex) {
-		// 			case 'male':
-		// 				sexValue = '남';
-		// 				break;
-		// 			case 'female':
-		// 				sexValue = '여';
-		// 				break;
-		// 			case 'unknown':
-		// 				sexValue = '성별모름';
-		// 				break;
-		// 		}
-		// 		const titleValue = missing_animal_species + '/' + missing_animal_species_detail + '/' + sexValue;
-		// 		navigation.navigate('MissingAnimalDetail', {title: titleValue, _id: _id});
-		// 	}
-		// }
 	};
 
 	const onPressLabel = user => {
 		setPressed(true);
 		if (!pressed) {
-			console.log('user', user);
 			navigation.navigate({key: user._id, name: 'UserProfile', params: {userobject: user}});
 		}
 	};

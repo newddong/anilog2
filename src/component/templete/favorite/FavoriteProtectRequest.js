@@ -1,16 +1,14 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
-import {login_style, selectstat_view_style, temp_style} from 'Templete/style_templete';
 import Loading from 'Root/component/molecules/modal/Loading';
 import {getFavoriteEtcListByUserId, setFavoriteEtc, setFavoriteEtcCancelList} from 'Root/api/favoriteetc';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import AnimalNeedHelpList from 'Root/component/organism/list/AnimalNeedHelpList';
 import DP from 'Root/config/dp';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import SelectStat from 'Root/component/organism/list/SelectStat';
 import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
-import {Check42, Check50, Rect42_Border, Rect50_Border} from 'Root/component/atom/icon';
+import {Check42, Rect42_Border, Rect50_Border} from 'Root/component/atom/icon';
 import {updateProtect} from 'Root/config/protect_obj';
 
 export default FavoriteProtectRequest = ({route}) => {
@@ -37,7 +35,7 @@ export default FavoriteProtectRequest = ({route}) => {
 				// console.log('result / getFavoriteEtcListByUserId / FavoriteProtectRequest : ', result.msg[0]);
 				let temp = [];
 				result.msg.map((v, i) => {
-					if (v) {
+					if (v && v.favorite_etc_target_object_id) {
 						v.favorite_etc_target_object_id.is_favorite = v.is_favorite;
 						temp.push(v.favorite_etc_target_object_id);
 					}

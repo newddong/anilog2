@@ -584,4 +584,4 @@ export const THUMNAIL_LIMIT = 30; //썸네일리스트
 export const FEED_LIMIT = 10; //피드 메인
 export const ANIMAL_PROTECT_LIMIT = 10; //Usermenu => 동물보호 현황(임시보호 중인 동물 현황)
 export const ANIMAL_ADOPT_LIMIT = 20; //UserMenu => 신청 내역 => 입양 신청 더보기 클릭
-export const PROTECT_REQUEST_DETAIL_LIMIT = 10; //보호요청게시글 상세 하단 리스트
+export const PROTECT_REQUEST_DETAIL_LIMIT = 20; //보호요청게시글 상세 하단 리스트

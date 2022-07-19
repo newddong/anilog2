@@ -43,7 +43,7 @@ const ShelterSmallLabel = props => {
 	};
 
 	return (
-		<View style={{flexDirection: 'row', alignItems: 'center'}}>
+		<TouchableOpacity onPress={onClickLabel} style={{flexDirection: 'row', alignItems: 'center'}}>
 			<TouchableOpacity onPress={onClickLabel}>
 				{data.user_profile_uri ? (
 					<FastImage source={{uri: data.user_profile_uri}} style={styles.img_round_72} />
@@ -64,7 +64,7 @@ const ShelterSmallLabel = props => {
 					<></>
 				)}
 			</View>
-		</View>
+		</TouchableOpacity>
 	);
 };
 

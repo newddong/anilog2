@@ -6,5 +6,6 @@ export default feed_obj = {
 	deleted_obj: {},
 	deleted_list: [],
 	mainHomeFeedList: [],
-	isGpsDenied: false,
+	shouldUpdateUserProfile: false,
+	feed_writer: '',
 };

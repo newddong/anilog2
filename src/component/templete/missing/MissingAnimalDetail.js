@@ -29,6 +29,7 @@ export default MissingAnimalDetail = props => {
 	const [pressed, setPressed] = React.useState(false);
 	const viewShotRef = useRef();
 	const flatlist = useRef();
+	let mounted = true;
 
 	//페이지 진입 시 실종게시글 상세 데이터 및 댓글 목록 api 접속
 	React.useEffect(() => {
@@ -37,7 +38,10 @@ export default MissingAnimalDetail = props => {
 			getCommnetList();
 			setPressed(false);
 		});
-		return unsubscribe;
+		return () => {
+			unsubscribe();
+			mounted = false;
+		};
 	}, []);
 
 	//게시글 상세데이터 api
@@ -52,25 +56,26 @@ export default MissingAnimalDetail = props => {
 				result.feed_writer_id.is_favorite = result.is_favorite;
 				setData(result);
 				// console.log('data', data.msg);
-				navigation.setParams({writer: data.msg.feed_writer_id._id, isMissingOrReport: true, feed_object: data.msg});
-				// console.log('result', result);
-				const getGender = () => {
-					switch (result.missing_animal_sex) {
-						case 'male':
-							return '남아';
-						case 'female':
-							return '여아';
-						case 'unknown':
-							return '';
-						default:
-							break;
-					}
-				};
-				navigation.setOptions({
-					title: `${result.missing_animal_species}/${result.missing_animal_species_detail}${getGender() ? '/' + getGender() : ''}`,
-				});
+				if (mounted) {
+					navigation.setParams({writer: data.msg.feed_writer_id._id, isMissingOrReport: true, feed_object: data.msg});
+					const getGender = () => {
+						switch (result.missing_animal_sex) {
+							case 'male':
+								return '남아';
+							case 'female':
+								return '여아';
+							case 'unknown':
+								return '';
+							default:
+								break;
+						}
+					};
+					navigation.setOptions({
+						title: `${result.missing_animal_species}/${result.missing_animal_species_detail}${getGender() ? '/' + getGender() : ''}`,
+					});
 
-				fetchMissingPostList(result._id);
+					fetchMissingPostList(result._id);
+				}
 			},
 			err => {
 				console.log('getFeedDetailById / Error / MissingAnimalDetail : ', err);

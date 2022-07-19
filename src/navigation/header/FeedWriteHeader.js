@@ -10,7 +10,7 @@ import {createFeed, createMissing, createReport, editFeed, editMissingReport, ge
 import userGlobalObject from 'Root/config/userGlobalObject';
 import feed_obj from 'Root/config/feed_obj';
 import {useNavigation} from '@react-navigation/core';
-import { createThumbnail } from 'react-native-create-thumbnail';
+import {createThumbnail} from 'react-native-create-thumbnail';
 
 export default FeedWriteHeader = ({route, options}) => {
 	const navigation = useNavigation();
@@ -27,87 +27,20 @@ export default FeedWriteHeader = ({route, options}) => {
 		setTimeout(() => {
 			Modal.close();
 			if (param.tab == 'Protection') {
-				if (param.feedType == 'Report') {
-					// console.log('navi', JSON.stringify(navigation.getState()));
-					navigation.reset({
-						index: 1,
-						routes: [
-							{
-								name: 'ProtectionTab',
-								params: {
-									isMissing: true,
-								},
+				//동물보호 탭의 긴급게시를 통해 실종,제보 글을 작성하는 분기
+				navigation.reset({
+					// 작성화면으로 돌아가지 않도록 네비게이션 스택초기화
+					index: 1,
+					routes: [
+						{
+							name: 'ProtectionTab',
+							params: {
+								isMissing: true,
 							},
-							{key: result.msg._id, name: 'ReportDetail', params: {_id: result.msg._id}},
-						],
-					});
-					// navigation.reset({
-					// 	index: 1,
-					// 	routes: [
-					// 		{
-					// 			name: 'MainTab',
-					// 			params: {
-					// 				screen: 'PROTECTION',
-					// 				params: {
-					// 					screen: 'ProtectionTab',
-					// 					params: {
-					// 						isMissing: true,
-					// 					},
-					// 				},
-					// 			},
-					// 		},
-					// 		{key: result.msg._id, name: 'ReportDetail', params: {_id: result.msg._id}},
-					// 	],
-					// });
-					// navigation.navigate('ReportDetail', {_id: result.msg._id});
-				} else if (param.feedType == 'Missing') {
-					let sexValue = '';
-					switch (result.msg.missing_animal_sex) {
-						case 'male':
-							sexValue = '남';
-							break;
-						case 'female':
-							sexValue = '여';
-							break;
-						case 'unknown':
-							sexValue = '성별모름';
-							break;
-					}
-					const titleValue = result.msg.missing_animal_species + '/' + result.msg.missing_animal_species_detail + '/' + sexValue;
-					navigation.reset({
-						index: 1,
-						routes: [
-							{
-								name: 'ProtectionTab',
-								params: {
-									isMissing: true,
-								},
-							},
-							{key: result.msg._id, name: 'MissingAnimalDetail', params: {title: titleValue, _id: result.msg._id}},
-						],
-					});
-					// navigation.reset({
-					// 	index: 1,
-					// 	routes: [
-					// 		{
-					// 			name: 'MainTab',
-					// 			params: {
-					// 				screen: 'PROTECTION',
-					// 				params: {
-					// 					screen: 'ProtectionTab',
-					// 					params: {
-					// 						isMissing: true,
-					// 					},
-					// 				},
-					// 			},
-					// 		},
-					// 		{key: result.msg._id, name: 'MissingAnimalDetail', params: {title: titleValue, _id: result.msg._id}},
-					// 	],
-					// });
-					// navigation.navigate('MissingAnimalDetail', {title: titleValue, _id: result.msg._id});
-				} else {
-					navigation.goBack();
-				}
+						},
+						{key: result.msg._id, name: param.feedType == 'Report' ? 'ReportDetail' : 'MissingAnimalDetail', params: {_id: result.msg._id}},
+					],
+				});
 			} else {
 				if (route.name == 'FeedEdit') {
 					if (param.routeName == 'FeedCommentList') {
@@ -127,7 +60,6 @@ export default FeedWriteHeader = ({route, options}) => {
 							},
 						);
 					} else {
-						// console.log('route.params', route.params);
 						let edited = {...route.params, feed_medias: result.msg.feed_medias, feed_thumbnail: result.msg.feed_thumbnail};
 						if (route.params && route.params.feed_type == 'report') {
 							edited.report_witness_location = result.msg?.report_witness_location;
@@ -137,8 +69,15 @@ export default FeedWriteHeader = ({route, options}) => {
 						navigation.goBack();
 					}
 				} else {
-					// console.log('result', result);
-					if (navigation.getState().routes[0]) {
+					//일반 피드 글쓰기 분기
+					// console.log('navigation.getState()', navigation.getState());
+					const navi = navigation.getState();
+					if (navi.routeNames.includes('ProtectionTab')) {
+						//동물보호 탭에서 글쓰기
+						feed_obj.shouldUpdateUserProfile = true;
+						feed_obj.feed_writer = route.params.feed_avatar_id;
+						navigation.goBack();
+					} else
 						navigation.navigate('MainTab', {
 							screen: 'FEED',
 							params: {
@@ -146,11 +85,11 @@ export default FeedWriteHeader = ({route, options}) => {
 								params: {refreshing: true},
 							},
 						});
-					} else navigation.goBack();
 				}
 			}
 		}, 200);
 	};
+
 	const handleError = err => {
 		console.log('err', err);
 		Modal.close();
@@ -193,16 +132,18 @@ export default FeedWriteHeader = ({route, options}) => {
 			switch (route.params?.feedType) {
 				case 'Feed':
 					console.log('feed Param', JSON.stringify(param));
-					if(param.feed_medias[0].is_video){
-						createThumbnail({url:param.feed_medias[0].media_uri,timeStamp:500}).then(r=>{
-							console.log('썸네일 생성',r)
-							param.media_uri = param.media_uri.concat(r.path);
-							// param.media_uri = param.media_uri.concat(r.path.includes('://')?r.path:'file:/'+r.path);
-							createFeed(param, complete, handleError);
-						}).catch(e=>{
-							createFeed(param, complete, handleError);	
-						})
-					}else{
+					if (param.feed_medias[0].is_video) {
+						createThumbnail({url: param.feed_medias[0].media_uri, timeStamp: 500})
+							.then(r => {
+								console.log('썸네일 생성', r);
+								param.media_uri = param.media_uri.concat(r.path);
+								// param.media_uri = param.media_uri.concat(r.path.includes('://')?r.path:'file:/'+r.path);
+								createFeed(param, complete, handleError);
+							})
+							.catch(e => {
+								createFeed(param, complete, handleError);
+							});
+					} else {
 						createFeed(param, complete, handleError);
 					}
 					break;
@@ -316,21 +257,57 @@ export default FeedWriteHeader = ({route, options}) => {
 					hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
 				};
 
-				// console.log('onEdit / FeedWrtieHeader', param);
+				console.log('onEdit / FeedWrtieHeader', param);
+				const te = {
+					__v: 0,
+					_id: '62d60cae9b725bf32986f8e3',
+					feed_comment_count: 0,
+					feed_content: '피드 수정 태그 추가',
+					feed_date: '2022-07-19T01:45:18.764Z',
+					feed_favorite_count: 0,
+					feed_is_delete: false,
+					feed_is_like: false,
+					feed_is_protect_diary: false,
+					feed_like_count: 0,
+					feed_medias: [
+						{
+							duration: 0,
+							is_video: false,
+							media_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1658195118657_4CB89490-1641-4DF8-92BB-CC9E8AFEA2E8.jpg',
+							tags: [Array],
+						},
+					],
+					feed_public_type: 'public',
+					feed_thumbnail: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1658195118657_4CB89490-1641-4DF8-92BB-CC9E8AFEA2E8.jpg',
+					feed_type: 'feed',
+					feed_update_date: '2022-07-19T01:45:18.764Z',
+					feedobject_id: '62d60cae9b725bf32986f8e3',
+					hashtag_keyword: [],
+					height: 505.44,
+					is_favorite: false,
+					media_uri: undefined,
+					missing_animal_date: '2022-07-19T01:45:18.764Z',
+					offset: 143.52,
+					photoToDelete: [],
+					report_witness_date: '2022-07-19T01:45:18.764Z',
+					routeName: undefined,
+					type: 'FeedObject',
+				};
 				if (param.feed_type == 'feed') {
-					if(param.feed_medias[0].is_video){
-						createThumbnail({url:param.feed_medias[0].media_uri,timeStamp:500}).then(r=>{
-							console.log('썸네일 생성',r)
-							param.media_uri = route.params.selectedPhoto?.length>0?param.media_uri.concat(r.path):[r.path];
-							console.log('TJs',param.media_uri)
-							editFeed(param, complete, handleError);
-						}).catch(e=>{
-							editFeed(param, complete, handleError);	
-						})
-					}else{
+					if (param.feed_medias[0].is_video) {
+						createThumbnail({url: param.feed_medias[0].media_uri, timeStamp: 500})
+							.then(r => {
+								console.log('썸네일 생성', r);
+								param.media_uri = route.params.selectedPhoto?.length > 0 ? param.media_uri.concat(r.path) : [r.path];
+								console.log('TJs', param.media_uri);
+								editFeed(param, complete, handleError);
+							})
+							.catch(e => {
+								editFeed(param, complete, handleError);
+							});
+					} else {
 						editFeed(param, complete, handleError);
 					}
-					
 				} else if (param.feed_type == 'report') {
 					const data = param;
 					if (data.report_location.city == '광역시, 도' || data.report_location.district == '구를 선택') {

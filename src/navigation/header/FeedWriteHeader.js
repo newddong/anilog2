@@ -258,41 +258,6 @@ export default FeedWriteHeader = ({route, options}) => {
 				};
 
 				console.log('onEdit / FeedWrtieHeader', param);
-				const te = {
-					__v: 0,
-					_id: '62d60cae9b725bf32986f8e3',
-					feed_comment_count: 0,
-					feed_content: '피드 수정 태그 추가',
-					feed_date: '2022-07-19T01:45:18.764Z',
-					feed_favorite_count: 0,
-					feed_is_delete: false,
-					feed_is_like: false,
-					feed_is_protect_diary: false,
-					feed_like_count: 0,
-					feed_medias: [
-						{
-							duration: 0,
-							is_video: false,
-							media_uri: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1658195118657_4CB89490-1641-4DF8-92BB-CC9E8AFEA2E8.jpg',
-							tags: [Array],
-						},
-					],
-					feed_public_type: 'public',
-					feed_thumbnail: 'https://pinetreegy.s3.ap-northeast-2.amazonaws.com/upload/1658195118657_4CB89490-1641-4DF8-92BB-CC9E8AFEA2E8.jpg',
-					feed_type: 'feed',
-					feed_update_date: '2022-07-19T01:45:18.764Z',
-					feedobject_id: '62d60cae9b725bf32986f8e3',
-					hashtag_keyword: [],
-					height: 505.44,
-					is_favorite: false,
-					media_uri: undefined,
-					missing_animal_date: '2022-07-19T01:45:18.764Z',
-					offset: 143.52,
-					photoToDelete: [],
-					report_witness_date: '2022-07-19T01:45:18.764Z',
-					routeName: undefined,
-					type: 'FeedObject',
-				};
 				if (param.feed_type == 'feed') {
 					if (param.feed_medias[0].is_video) {
 						createThumbnail({url: param.feed_medias[0].media_uri, timeStamp: 500})

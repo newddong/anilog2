@@ -6,7 +6,9 @@ import {APRI10, BLACK, GRAY10, GRAY20, GRAY40, WHITE} from 'Root/config/color';
 import {Photo44} from 'Root/component/atom/icon';
 import {getTimeLapsed} from 'Root/util/dateutil';
 import moment from 'moment';
-import Loading from 'Root/component/molecules/modal/Loading';
+import {useNavigation} from '@react-navigation/core';
+import community_obj from 'Root/config/community_obj';
+
 /**
  * 게시글 컨텐츠
  * @param {object} props - Props Object
@@ -16,8 +18,20 @@ import Loading from 'Root/component/molecules/modal/Loading';
  * @param {boolean} props.selectMode - 검색어
  */
 const ArticleSummary = props => {
-	const data = props.data;
+	const navigation = useNavigation();
+	const [data, setData] = React.useState(props.data);
 	const [text, setText] = React.useState('');
+
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			const find = community_obj.editedList.findIndex(e => e._id == props.data._id);
+			if (find != -1) {
+				setData(community_obj.editedList[find]);
+			}
+		});
+		return unsubscribe;
+	}, []);
+
 	const getArticleType = () => {
 		switch (data.community_free_type) {
 			case 'talk':

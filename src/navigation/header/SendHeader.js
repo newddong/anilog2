@@ -8,6 +8,8 @@ import Modal from 'Root/component/modal/Modal';
 import {createProtectRequest, updateProtectRequest} from 'Root/api/shelterapi';
 import {RED} from 'Root/config/color';
 import {createCommunity, updateAndDeleteCommunity} from 'Root/api/community';
+import community_obj, {pushEditedCommunityList} from 'Root/config/community_obj';
+import comment_obj from 'Root/config/comment_obj';
 
 export default SendHeader = ({route, navigation, options}) => {
 	// console.log('props SendHeader', route.params);
@@ -19,7 +21,6 @@ export default SendHeader = ({route, navigation, options}) => {
 			if (route.params.data) {
 				const data = route.params.data;
 				// console.log('data at SendHeader', JSON.stringify(data));
-				console.log('route.params.nav', route.params.nav);
 				switch (route.params.nav) {
 					case 'CommunityWrite': {
 						if (!data.community_content || !data.community_title) {
@@ -78,42 +79,10 @@ export default SendHeader = ({route, navigation, options}) => {
 											community_is_attached_file: attachedCheck,
 										},
 										result => {
-											// console.log('result / updateAndDeleteCommunity / SendHeader ', result.msg);
-											console.log('param', route.params.isSearch);
-											if (route.params.isSearch) {
-												result.msg.community_type == 'review'
-													? navigation.reset({
-															index: 1,
-															routes: [
-																{name: 'SearchTab', params: {tab: 'REVIEW'}},
-																{name: 'ReviewDetail', params: {community_object: result.msg, searchInput: route.params.isSearch}},
-															],
-													  })
-													: navigation.reset({
-															index: 1,
-															routes: [
-																{name: 'SearchTab', params: {tab: 'ARTICLE'}},
-																{name: 'ArticleDetail', params: {community_object: result.msg, searchInput: route.params.isSearch}},
-															],
-													  });
-											} else {
-												// console.log('navi', navigation.getState());
-												result.msg.community_type == 'review'
-													? navigation.reset({
-															index: 1,
-															routes: [
-																{name: 'CommunityMain', params: {isReview: true}},
-																{name: 'ReviewDetail', params: {community_object: result.msg}},
-															],
-													  })
-													: navigation.reset({
-															index: 1,
-															routes: [
-																{name: 'CommunityMain', params: {isReview: false}},
-																{name: 'ArticleDetail', params: {community_object: result.msg}},
-															],
-													  });
-											}
+											console.log('result / updateAndDeleteCommunity / SendHeader ', result.msg.community_is_attached_file);
+											const res = result.msg;
+											pushEditedCommunityList(res);
+											navigation.goBack();
 										},
 										err => {
 											console.log('err / updateAndDeleteCommunity / sendHeader ', err);

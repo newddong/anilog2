@@ -1,11 +1,9 @@
 import React from 'react';
-import {FlatList, StyleSheet, View, Text, NativeModules} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 import {GRAY30, GRAY40, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import ArticleSummary from '../article/ArticleSummary';
 import {Check42, Check50, Rect42_Border, Rect50_Border} from 'Root/component/atom/icon';
-import {getLinesOfString} from 'Root/util/stringutil';
-import {txt} from 'Root/config/textstyle';
 
 /**
  * 자유 게시글 리스트

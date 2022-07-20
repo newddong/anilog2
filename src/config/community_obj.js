@@ -14,6 +14,16 @@ export default community_obj = {
 		},
 	},
 	review: [],
+	editedList: [],
+};
+
+export const pushEditedCommunityList = res => {
+	const findIndex = community_obj.editedList.findIndex(e => e._id == res._id);
+	if (findIndex != -1) {
+		community_obj.editedList[findIndex] = res;
+	} else {
+		community_obj.editedList.push(res);
+	}
 };
 
 export const updateReview = (isLike, id, bool, count) => {

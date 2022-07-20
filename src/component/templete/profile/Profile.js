@@ -20,6 +20,7 @@ import ProtectRequest from 'Root/component/organism/listitem/ProtectRequest';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import protect_obj, {updateProtect} from 'Root/config/protect_obj';
 import {styles} from 'Root/component/atom/image/imageStyle';
+import feed_obj from 'Root/config/feed_obj';
 
 export default Profile = ({route}) => {
 	const navigation = useNavigation();
@@ -29,6 +30,7 @@ export default Profile = ({route}) => {
 	const [feedTotal, setFeedTotal] = React.useState();
 	const [tagFeedTotal, setTagFeedTotal] = React.useState();
 	const [protectList, setProtectList] = React.useState('false');
+	const [requestTotal, setRequestTotal] = React.useState(0);
 	const [offset, setOffset] = React.useState(1); //커뮤니티 페이지
 	const [loading, setLoading] = React.useState(false);
 	const [pressed, setPressed] = React.useState(false);
@@ -42,6 +44,13 @@ export default Profile = ({route}) => {
 			fetchData();
 			setFocused(true);
 			setPressed(false);
+			if (feed_obj.shouldUpdateUserProfile) {
+				if (data._id == feed_obj.feed_writer) {
+					getFeedList(0, true, true);
+					feed_obj.shouldUpdateUserProfile = false;
+					feed_obj.feed_writer = '';
+				}
+			}
 		});
 		if (data.user_type == 'shelter') {
 			fetchProtectRequest();
@@ -107,6 +116,7 @@ export default Profile = ({route}) => {
 			result => {
 				// console.log('result / getProtectRequestListByShelterId / AnimalFromShelter', result.msg.length);
 				const res = result.msg;
+				setRequestTotal(result.total_count);
 				console.log('getProtectRequestListByShelterId / res.length', res.length);
 				if (protectList != 'false') {
 					console.log('temp lenth', [...protectList, ...res].length);
@@ -222,9 +232,9 @@ export default Profile = ({route}) => {
 					getFeedList(i, false, true);
 				}
 			}
-		} else if (protectList.length % PROTECT_REQUEST_DETAIL_LIMIT == 0) {
+		} else if (protectList.length < requestTotal && data.user_type == 'shelter') {
 			//보호소프로필인 경우 보호동물탭
-			console.log('EndReached', protectList.length % PROTECT_REQUEST_DETAIL_LIMIT);
+			console.log('EndReached', protectList.length, 'requestTotal', requestTotal);
 			fetchProtectRequest();
 		}
 	};
@@ -269,9 +279,13 @@ export default Profile = ({route}) => {
 				navigation.navigate('LoginRequired');
 			});
 		} else if (userGlobalObject.userInfo.user_type == 'user') {
-			Modal.popAvatarSelectFromWriteModal(obj => {
-				userGlobalObject.userInfo && navigation.navigate('FeedWrite', {feedType: 'Feed', feed_avatar_id: obj});
-			});
+			Modal.popAvatarSelectFromWriteModal(
+				obj => {
+					userGlobalObject.userInfo && navigation.navigate('FeedWrite', {feedType: 'Feed', feed_avatar_id: obj});
+				},
+				Modal.close,
+				'profile',
+			);
 		} else {
 			userGlobalObject.userInfo && navigation.navigate('FeedWrite', {feedType: 'Feed'});
 		}
@@ -499,7 +513,8 @@ export default Profile = ({route}) => {
 						/>
 					);
 				}
-			} else {
+			} else if (data.user_type == 'shelter') {
+				//보호소 계정
 				if (tabMenuSelected == 0) {
 					return (
 						<FeedThumbnailList

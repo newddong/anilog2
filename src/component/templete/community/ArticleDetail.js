@@ -167,6 +167,11 @@ export default ArticleDetail = props => {
 					}
 					res.push(dummyForBox);
 					setComments(res);
+					if (props.route.params.comment) {
+						setTimeout(() => {
+							scrollTo(0, -100);
+						}, 1000);
+					}
 				},
 				err => {
 					console.log('getCommentListByCommunityId', err);

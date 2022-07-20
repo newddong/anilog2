@@ -28,7 +28,8 @@ import {Phone54, PhoneIcon, ProfileDefaultImg} from 'Root/component/atom/icon';
 export default AnimalProtectRequestDetail = ({route}) => {
 	const navigation = useNavigation();
 	const [data, setData] = React.useState('false');
-	const [writersAnotherRequests, setWritersAnotherRequests] = React.useState('false'); //해당 게시글 작성자의 따른 보호요청게시글 목록
+	const [writersAnotherRequests, setWritersAnotherRequests] = React.useState('false'); //해당 게시글 작성자의 다른 보호요청게시글 목록(현재 글 제외)
+	const [total, setTotal] = React.useState(0); //해당 게시글 작성자의 보호요청게시글 작성글 총 개수
 	const [comments, setComments] = React.useState('false'); //comment list 정보
 	const [offset, setOffset] = React.useState(1);
 	const [pressed, setPressed] = React.useState(false);
@@ -93,11 +94,13 @@ export default AnimalProtectRequestDetail = ({route}) => {
 			{
 				shelter_userobject_id: request.protect_request_writer_id._id,
 				protect_request_status: 'all', //하단 리스트
-				limit: 5,
+				limit: PROTECT_REQUEST_DETAIL_LIMIT,
 				page: offset,
 			},
 			result => {
-				console.log('result / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', result.msg.length);
+				// console.log('result / getProtectRequestListByShelterId / AnimalProtectRequestDetail : ', result.msg.length);
+				// console.log('tota', result.total_count);
+				setTotal(result.total_count);
 				//현재 보고 있는 보호요청게시글의 작성자(보호소)의 모든 보호요청게시글이 담겨 있는 writersAnotherRequests
 				//그러나 현재 보고 있는 보호요청게시글은 해당 리스트에 출력이 되어서는 안됨 => Filter처리
 				const res = result.msg;
@@ -128,10 +131,10 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 	//리스트 페이징 작업
 	const onEndReached = () => {
-		console.log('EndReached', writersAnotherRequests.length % (PROTECT_REQUEST_DETAIL_LIMIT - 1));
+		console.log('EndReached', writersAnotherRequests.length, 'total : ', total);
 		//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
 		//리뷰 메인 페이지에서는 필터가 적용이 되었을 때도 api 접속 불필요
-		if (writersAnotherRequests.length % PROTECT_REQUEST_DETAIL_LIMIT == 0) {
+		if (writersAnotherRequests.length < total) {
 			getProtectRequestList(data);
 		}
 	};

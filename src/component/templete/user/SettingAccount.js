@@ -8,6 +8,7 @@ import DP from 'Root/config/dp';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import Modal from 'Root/component/modal/Modal';
 import searchContext from 'Root/config/searchContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export default SettingAccount = ({route}) => {
 	const navigation = useNavigation();
 	const logout = () => {
@@ -17,6 +18,14 @@ export default SettingAccount = ({route}) => {
 			'네',
 			() => Modal.close(),
 			() => {
+				AsyncStorage.getItem('userSetting', (err, userSetting) => {
+					console.log(userSetting, 'userSetting');
+					let UserSetting = JSON.parse(userSetting);
+					UserSetting.isAutoLogin = false;
+					console.log('UserSetting', UserSetting);
+
+					AsyncStorage.setItem('userSetting', JSON.stringify(UserSetting));
+				});
 				userLogout(
 					1,
 					e => {

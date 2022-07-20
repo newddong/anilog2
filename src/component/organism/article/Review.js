@@ -30,15 +30,22 @@ export default Review = props => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			const findIndex = community_obj.review.findIndex(e => e._id == props.data._id);
+			const isEdited = community_obj.editedList.findIndex(e => e._id == props.data._id);
+			let temp = {...data};
+			if (isEdited != -1) {
+				temp = community_obj.editedList[isEdited]; //수정된 내역이 있을 경우 해당 데이터로 갱신
+			}
 			if (findIndex != -1) {
-				setData({
-					...data,
+				//전역관리 리스트에 존재하는 데이터일 경우 좋아요, 즐겨찾기 상태 갱신을 공유
+				temp = {
+					...temp,
 					community_is_favorite: community_obj.review[findIndex].community_is_favorite,
 					community_is_like: community_obj.review[findIndex].community_is_like,
 					community_like_count: community_obj.review[findIndex].community_like_count,
-				});
-			} else {
+					community_comment_count: community_obj.review[findIndex].community_comment_count,
+				};
 			}
+			setData(temp);
 		});
 		return unsubscribe;
 	}, []);

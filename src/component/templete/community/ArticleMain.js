@@ -2,7 +2,7 @@ import React from 'react';
 import {ActivityIndicator, FlatList, Image, RefreshControl, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import ArticleList from 'Root/component/organism/list/ArticleList';
 import {APRI10, BLACK, GRAY10, GRAY20, GRAY40} from 'Root/config/color';
-import {Arrow48, Arrow48_GRAY, Check42, Check50, EmptyIcon, Rect42_Border, Rect50_Border, WriteBoard} from 'Atom/icon';
+import {Arrow48, Arrow48_GRAY, Check42, Rect42_Border, WriteBoard} from 'Atom/icon';
 import {txt} from 'Root/config/textstyle';
 import {useNavigation} from '@react-navigation/core';
 import {getCommunityListFreeByPageNumber} from 'Root/api/community';
@@ -12,6 +12,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import {FREE_LIMIT, NETWORK_ERROR} from 'Root/i18n/msg';
 import {searchProtectRequest} from '../style_templete';
 import DP from 'Root/config/dp';
+import community_obj, {pushFreeList} from 'Root/config/community_obj';
 
 export default ArticleMain = ({route}) => {
 	const navigation = useNavigation();
@@ -26,6 +27,25 @@ export default ArticleMain = ({route}) => {
 	React.useEffect(() => {
 		fetchData(1); // 1페이지 호출
 	}, []);
+
+	React.useEffect(() => {
+		if (data != 'false' && data.length) {
+			pushFreeList(data);
+		}
+		const unsubscribe = navigation.addListener('focus', () => {
+			if (community_obj.deleted_list && community_obj.deleted_list.length && data != 'false') {
+				//삭제된 자유글 필터 적용
+				try {
+					let temp = [...data];
+					temp = temp.filter(e => !community_obj.deleted_list.includes(e._id));
+					setData(temp);
+				} catch (err) {
+					console.log('err', err);
+				}
+			}
+		});
+		return unsubscribe;
+	}, [data]);
 
 	//리프레싱 시도(페이지 상단으로 스크롤) => 데이터 최신화 및 페이징 초기화
 	React.useEffect(() => {

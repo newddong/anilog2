@@ -186,6 +186,11 @@ export default CommunityMainStack = props => {
 				component={AddPhoto}
 				options={{header: props => <PhotoSelectHeader {...props} />, title: ''}}
 			/>
+			<CommunityMainStackNavi.Screen
+				name="MultiPhotoSelect"
+				component={AddPhoto}
+				options={{header: props => <PhotoSelectHeader {...props} />, title: ''}}
+			/>
 
 			<CommunityMainStackNavi.Screen
 				name="EditShelterInfo"

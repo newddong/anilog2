@@ -24,10 +24,19 @@ const ArticleSummary = props => {
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
-			const find = community_obj.editedList.findIndex(e => e._id == props.data._id);
-			if (find != -1) {
-				setData(community_obj.editedList[find]);
+			const isEdited = community_obj.editedList.findIndex(e => e._id == props.data._id);
+			const findIndex = community_obj.free.findIndex(e => e._id == props.data._id);
+			let temp = {...data};
+			if (isEdited != -1) {
+				temp = community_obj.editedList[isEdited];
 			}
+			if (findIndex != -1) {
+				temp = {
+					...temp,
+					community_comment_count: community_obj.free[findIndex].community_comment_count,
+				};
+			}
+			setData(temp);
 		});
 		return unsubscribe;
 	}, []);

@@ -10,6 +10,7 @@ import {RED} from 'Root/config/color';
 import {createCommunity, updateAndDeleteCommunity} from 'Root/api/community';
 import community_obj, {pushEditedCommunityList} from 'Root/config/community_obj';
 import comment_obj from 'Root/config/comment_obj';
+import {NETWORK_ERROR} from 'Root/i18n/msg';
 
 export default SendHeader = ({route, navigation, options}) => {
 	// console.log('props SendHeader', route.params);
@@ -42,12 +43,14 @@ export default SendHeader = ({route, navigation, options}) => {
 											{...data, community_is_attached_file: attachedCheck, community_content: removeLine},
 											result => {
 												// console.log('result / createCommunity / SendHeader ', result.msg);
+												Modal.close();
 												navigation.reset({
 													index: 0,
 													routes: [{name: 'CommunityMain', params: {isReview: data.community_type != 'free'}}],
 												});
 											},
 											err => {
+												Modal.popOneBtn(NETWORK_ERROR, '확인', navigation.goBack);
 												console.log('err / createCommunity / SendHeader ', err);
 											},
 										);
@@ -69,27 +72,30 @@ export default SendHeader = ({route, navigation, options}) => {
 								() => Modal.close(),
 								() => {
 									setSent(true);
-									// console.log('data before Create', data);
-									let getImgTag = data.community_content.match(/<img[\w\W]+?\/?>/g); //img 태그 추출
-									const attachedCheck = !(getImgTag == null); //추가된 img 태그가 있다면 is_attatched_file은 true or false
-									updateAndDeleteCommunity(
-										{
-											...data,
-											community_object_id: data._id,
-											community_is_attached_file: attachedCheck,
-										},
-										result => {
-											console.log('result / updateAndDeleteCommunity / SendHeader ', result.msg.community_is_attached_file);
-											const res = result.msg;
-											pushEditedCommunityList(res);
-											navigation.goBack();
-										},
-										err => {
-											console.log('err / updateAndDeleteCommunity / sendHeader ', err);
-											setSent(false);
-										},
-									);
 									Modal.close();
+									setTimeout(() => {
+										Modal.popNoBtn('게시글을 수정 중입니다.', Modal.close);
+										// console.log('data before Create', data);
+										let getImgTag = data.community_content.match(/<img[\w\W]+?\/?>/g); //img 태그 추출
+										const attachedCheck = !(getImgTag == null); //추가된 img 태그가 있다면 is_attatched_file은 true or false
+										updateAndDeleteCommunity(
+											{
+												...data,
+												community_object_id: data._id,
+												community_is_attached_file: attachedCheck,
+											},
+											result => {
+												console.log('result / updateAndDeleteCommunity / SendHeader ', result.msg.community_comment_count);
+												const res = result.msg;
+												pushEditedCommunityList(res);
+												navigation.goBack();
+											},
+											err => {
+												console.log('err / updateAndDeleteCommunity / sendHeader ', err);
+												setSent(false);
+											},
+										);
+									}, 100);
 								},
 							);
 						}

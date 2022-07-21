@@ -31,7 +31,7 @@ export default ReviewList = props => {
 	const navigation = useNavigation();
 
 	React.useEffect(() => {
-		// setRecommend(props.recommend);
+		setRecommend(props.recommend);
 	}, [props.recommend]);
 
 	React.useEffect(() => {

@@ -70,6 +70,21 @@ export default ArticleDetail = props => {
 		}
 	}, [props.route.params]);
 
+	React.useEffect(() => {
+		if (data != 'false' && comments.length != 0) {
+			let comments_count = comments.length - 1;
+			comments.map((v, i) => {
+				i != comments.length - 1 ? (comments_count = comments_count + v.children_count) : false;
+			});
+			const findIndex = community_obj.free.findIndex(e => e._id == data._id);
+			if (findIndex != -1) {
+				let temp = [...community_obj.free];
+				temp[findIndex].community_comment_count = comments_count;
+				community_obj.free = temp;
+			}
+		}
+	}, [comments]);
+
 	//커뮤니티 데이터
 	const getArticleData = () => {
 		getCommunityByObjectId(

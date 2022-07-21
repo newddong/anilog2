@@ -9,12 +9,11 @@ import {useNavigation} from '@react-navigation/core';
 import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {getCommunityListByUserId} from 'Root/api/community';
-import community_obj, {updateReview} from 'Root/config/community_obj';
+import community_obj, {pushFreeList, pushReviewList, updateReview} from 'Root/config/community_obj';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import {EmptyIcon} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
 import {FREE_LIMIT, REPORT_MENU, REVIEW_LIMIT} from 'Root/i18n/msg';
-import {styles} from 'Root/component/atom/image/imageStyle';
 
 /**
  *  프로필탭 커뮤니티 글 출력용 컴포넌트
@@ -51,15 +50,41 @@ const CommunityList = React.memo(props => {
 
 	React.useEffect(() => {
 		if (review != 'false' && review.length) {
-			review.map((v, i) => {
-				const find = community_obj.review.findIndex(e => e._id == v._id);
-				if (find == -1) {
-					//현 메모리에 저장되어 있지않은 리뷰아이템만 추가
-					community_obj.review.push(v);
-				}
-			});
+			pushReviewList(review);
 		}
+		const unsubscribe = navigation.addListener('focus', () => {
+			if (community_obj.deleted_list && community_obj.deleted_list.length && review != 'false') {
+				//삭제된 리뷰 필터 반영
+				try {
+					let temp = [...review];
+					temp = temp.filter(e => !community_obj.deleted_list.includes(e._id));
+					setReview(temp);
+				} catch (err) {
+					console.log('err', err);
+				}
+			}
+		});
+		return unsubscribe;
 	}, [review]);
+
+	React.useEffect(() => {
+		if (free != 'false' && free.length) {
+			pushFreeList(free);
+		}
+		const unsubscribe = navigation.addListener('focus', () => {
+			if (community_obj.deleted_list && community_obj.deleted_list.length && free != 'false') {
+				//삭제된 게시글 필터 반영
+				try {
+					let temp = [...free];
+					temp = temp.filter(e => !community_obj.deleted_list.includes(e._id));
+					setFree(temp);
+				} catch (err) {
+					console.log('err', err);
+				}
+			}
+		});
+		return unsubscribe;
+	}, [free]);
 
 	React.useEffect(() => {
 		if (refresh) {

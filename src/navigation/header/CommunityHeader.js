@@ -81,19 +81,21 @@ export default CommunityHeader = ({navigation, route, options, back}) => {
 												// console.log('result / updateAndDeleteCommunity / ArticleDetail : ', result.msg);
 												Modal.close();
 												community_obj.review = community_obj.review.filter(e => e._id == data._id);
+												community_obj.deleted_list.push(result.msg);
 												setTimeout(() => {
 													Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
 													setTimeout(() => {
 														Modal.close();
-														data.community_type == 'review'
-															? navigation.reset({
-																	index: 0,
-																	routes: [{name: 'CommunityMain', params: {isReview: true}}],
-															  })
-															: navigation.reset({
-																	index: 0,
-																	routes: [{name: 'CommunityMain', params: {isReview: false}}],
-															  });
+														navigation.goBack();
+														// data.community_type == 'review'
+														// 	? navigation.reset({
+														// 			index: 0,
+														// 			routes: [{name: 'CommunityMain', params: {isReview: true}}],
+														// 	  })
+														// 	: navigation.reset({
+														// 			index: 0,
+														// 			routes: [{name: 'CommunityMain', params: {isReview: false}}],
+														// 	  });
 													}, 600);
 												}, 200);
 											},

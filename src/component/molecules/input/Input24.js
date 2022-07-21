@@ -175,8 +175,9 @@ const Input24 = React.forwardRef((props, ref) => {
 						props.style || {color: MAINBLACK},
 						{
 							width: props.width ? (props.width - 46) * DP : null,
-							paddingLeft: 24 * DP,
-							height: '100%', //ios에서 안드로이드와 동작 일치시키기 위함
+							// paddingLeft: 24 * DP,
+							paddingHorizontal: 24 * DP,
+							height: props.heightRatio, //ios에서 안드로이드와 동작 일치시키기 위함
 							// height: props.height,
 							lineHeight: 44 * DP,
 							fontSize: props.value ? 28 * DP : props.placeholderSize * DP,
@@ -232,6 +233,8 @@ const Input24Props = {
 	/** @type {number} 최대 글자수 */
 	maxlength: number,
 	/** @type {number} Placeholder 폰트사이즈 */
+	heightRatio: any,
+	/** @type {number} 높이 비율 */
 	placeholderSize: number,
 	/** @type {boolean} 하단의 경고/확인 메세지를 표시할지 여부를 결정 */
 	showMsg: bool,
@@ -277,6 +280,7 @@ Input24.defaultProps = {
 	info: null, //
 	numberOfLines: 1,
 	placeholderSize: 28,
+	heightRatio: '100%',
 	multiline: false,
 	defaultValue: null, // 기존 아이디 등 DefaultValue가 필요한 경우에 대한 처리
 	showCrossMark: true, //Input 최우측 X마크(지우기마크) 출력 여부

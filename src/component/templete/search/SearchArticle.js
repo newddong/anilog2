@@ -72,7 +72,11 @@ export default SearchArticle = props => {
 		} else if (onlyMeeting) {
 			filtered = filtered.filter(e => e.community_free_type == 'meeting');
 		}
-		return filtered;
+		const reverse = [];
+		for (let i = filtered.length - 1; i >= 0; i--) {
+			reverse.push(filtered[i]);
+		}
+		return reverse;
 	};
 
 	const whenEmpty = () => {

@@ -137,6 +137,7 @@ export default FeedStackNavigation = props => {
 			/>
 			<FeedStack.Screen name="ReportDetail" component={ReportDetail} options={{header: props => <SimpleWithMeatballHeader {...props} />}} />
 			<FeedStack.Screen name="SinglePhotoSelect" component={AddPhoto} options={{header: props => <PhotoSelectHeader {...props} />, title: ''}} />
+			<FeedStack.Screen name="MultiPhotoSelect" component={AddPhoto} options={{header: props => <PhotoSelectHeader {...props} />, title: ''}} />
 			<FeedStack.Screen
 				name={'CommunityEdit'}
 				component={CommunityEdit}

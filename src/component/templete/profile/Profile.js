@@ -481,15 +481,19 @@ export default Profile = ({route}) => {
 						/>
 					);
 				} else if (tabMenuSelected == 1) {
-					return (
-						<FeedThumbnailList
-							items={item}
-							whenEmpty={whenFeedThumbnailEmpty('태그된 게시물이 없습니다.')}
-							onClickThumnail={onClick_Thumbnail_TagTab}
-							onEndReached={() => onEndReached(tabMenuSelected)}
-							focused={focused}
-						/>
-					);
+					if (tagFeedList != 'false') {
+						return (
+							<FeedThumbnailList
+								items={item}
+								whenEmpty={whenFeedThumbnailEmpty('태그된 게시물이 없습니다.')}
+								onClickThumnail={onClick_Thumbnail_TagTab}
+								onEndReached={() => onEndReached(tabMenuSelected)}
+								focused={focused}
+							/>
+						);
+					} else {
+						return <></>;
+					}
 				} else {
 					return <CommunityList user_id={route.params.userobject._id} />;
 				}
@@ -504,14 +508,19 @@ export default Profile = ({route}) => {
 						/>
 					);
 				} else if (tabMenuSelected == 1) {
-					return (
-						<FeedThumbnailList
-							items={item}
-							whenEmpty={whenFeedThumbnailEmpty('태그된 게시물이 없습니다.')}
-							onClickThumnail={onClick_Thumbnail_TagTab}
-							focused={focused}
-						/>
-					);
+					if (tagFeedList != 'false') {
+						return (
+							<FeedThumbnailList
+								items={item}
+								whenEmpty={whenFeedThumbnailEmpty('태그된 게시물이 없습니다.')}
+								onClickThumnail={onClick_Thumbnail_TagTab}
+								onEndReached={() => onEndReached(tabMenuSelected)}
+								focused={focused}
+							/>
+						);
+					} else {
+						return <></>;
+					}
 				}
 			} else if (data.user_type == 'shelter') {
 				//보호소 계정

@@ -331,8 +331,8 @@ export default ReportForm = props => {
 
 	//사진 추가
 	const moveToMultiPhotoSelect = () => {
-		// props.moveToPhotoSelect();
-		navigation.navigate('MultiPhotoSelect', {prev: {name: route.name, key: route.key}});
+		props.moveToPhotoSelect();
+		// navigation.navigate('MultiPhotoSelect', {prev: {name: route.name, key: route.key}});
 	};
 
 	return (

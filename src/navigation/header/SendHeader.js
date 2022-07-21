@@ -12,6 +12,7 @@ import community_obj, {pushEditedCommunityList} from 'Root/config/community_obj'
 import comment_obj from 'Root/config/comment_obj';
 import {NETWORK_ERROR} from 'Root/i18n/msg';
 
+
 export default SendHeader = ({route, navigation, options}) => {
 	// console.log('props SendHeader', route.params);
 	const [sent, setSent] = React.useState(false);

@@ -384,7 +384,7 @@ export default MyStackNavigation = props => {
 			<MyStack.Screen name="MyArticle" component={FavoriteArticle} options={{header: props => <SimpleHeader {...props} />, title: '나의 자유글'}} />
 			<MyStack.Screen name="MyReview" component={FavoriteReview} options={{header: props => <SimpleHeader {...props} />, title: '나의 리뷰'}} />
 			<MyStack.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
-			<MyStack.Screen name="AlarmCommentList" component={AlarmCommentList} options={{header: props => <SimpleHeader {...props} />}} />
+			<MyStack.Screen name="AlarmCommentList" component={FeedCommentList} options={{header: props => <SimpleHeader {...props} />}} />
 			<MyStack.Screen
 				name={'CommunityCommentList'}
 				component={CommunityCommentList}

@@ -73,11 +73,7 @@ export default FeedStackNavigation = props => {
 				options={{header: props => <SimpleHeader {...props} />, title: '프로필 변경'}}
 			/>
 			<FeedStack.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
-			<FeedStack.Screen
-				name="AlarmCommentList"
-				component={AlarmCommentList}
-				options={{header: props => <SimpleHeader {...props} />, title: '댓글'}}
-			/>
+			<FeedStack.Screen name="AlarmCommentList" component={FeedCommentList} options={{header: props => <SimpleHeader {...props} />, title: '댓글'}} />
 			<FeedStack.Screen
 				name={'CommunityCommentList'}
 				component={CommunityCommentList}

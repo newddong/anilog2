@@ -90,23 +90,12 @@ const AlarmList = props => {
 
 	const onLabelClick = data => {
 		console.log('target_object_type', data.target_object_type);
-		let navState = props.navigation.getState();
-		// console.log('navState', navState);
 		setNavLoading(true);
 		switch (data.target_object_type) {
-			case 'comment':
-				break;
 			case 'FollowObject':
 				getUserProfile(
 					{userobject_id: data.notice_user_related_id._id},
 					result => {
-						// console.log('result', result.msg);
-						// navigation.dispatch({
-						// 	...CommonActions.reset({
-						// 		index: 1,
-						// 		routes: [{name: 'MainTab'}, {name: 'AlarmList'}, {name: 'Profile', params: {userobject: result.msg}}],
-						// 	}),
-						// });
 						setNavLoading(false);
 						navigation.dispatch(
 							CommonActions.navigate({
@@ -131,34 +120,42 @@ const AlarmList = props => {
 				);
 				break;
 			case 'FeedObject':
+				// console.log('data.notice_object_type', data);
 				if (data.notice_object_type == 'LikeFeedObject') {
 					var selected = {_id: data.target_object};
 					getUserProfile(
 						{userobject_id: data.notice_user_receive_id},
 						result => {
-							// navigation.dispatch({
-							// 	...CommonActions.reset({
-							// 		index: 1,
-							// 		routes: [{name: 'MainTab'}, {name: 'AlarmList'}, {name: 'UserFeedList', params: {userobject: result.msg, selected: selected}}],
-							// 	}),
-							// });
-							setNavLoading(false);
-							navigation.dispatch(
-								CommonActions.navigate({
-									name: 'UserFeedList',
-									params: {userobject: result.msg, selected: selected},
-								}),
+							getFeedDetailById(
+								{feedobject_id: data.target_object},
+								res => {
+									setNavLoading(false);
+									navigation.dispatch(
+										CommonActions.navigate({
+											name: 'UserFeedList',
+											params: {userobject: result.msg, selected: selected},
+										}),
+									);
+								},
+								err => {
+									setNavLoading(false);
+									console.log('getFeedDetail err', err);
+									if (err.includes('없습니다')) {
+										Modal.alert('이미 삭제된 게시글입니다.', Modal.close);
+									}
+								},
 							);
 						},
 						err => {
 							setNavLoading(false);
-							console.log('err /', err);
+							console.log('err / FeedObject', err);
 						},
 					);
 				} else if (data.notice_object_type == 'CommentObject') {
 					getFeedDetailById(
 						{feedobject_id: data.target_object},
 						result => {
+							console.log(navigation.getState());
 							setNavLoading(false);
 							navigation.dispatch(
 								CommonActions.navigate({
@@ -167,6 +164,7 @@ const AlarmList = props => {
 									params: {
 										feedobject: result.msg,
 										showAllContents: true,
+										showMedia: true,
 										scroll: true,
 										target: data.notice_object,
 										parent: data?.notice_comment_parent,
@@ -185,22 +183,28 @@ const AlarmList = props => {
 				}
 				break;
 			case 'FeedUserTagObject':
-				var selected = {_id: data.target_object};
-				// console.log('selected', selected);
-				getUserProfile(
-					{userobject_id: data.notice_user_related_id._id},
+				var selected = {_id: data.notice_object};
+				// console.log('FeedUserTagObject data', data);
+				getFeedDetailById(
+					{feedobject_id: data.notice_object},
 					result => {
 						setNavLoading(false);
 						navigation.dispatch(
 							CommonActions.navigate({
 								name: 'UserFeedList',
-								params: {userobject: result.msg, selected: selected},
+								params: {
+									userobject: {_id: data.notice_user_related_id._id, user_nickname: data.notice_user_related_id.user_nickname},
+									selected: selected,
+								},
 							}),
 						);
 					},
 					err => {
-						console.log('err', err);
 						setNavLoading(false);
+						console.log('getFeedDetail err', err);
+						if (err.includes('없습니다')) {
+							Modal.alert('이미 삭제된 게시글입니다.', Modal.close);
+						}
 					},
 				);
 				break;
@@ -244,7 +248,7 @@ const AlarmList = props => {
 				);
 				break;
 			case 'CommunityObject':
-				console.log('data.target', data.target_object);
+				console.log('data.target', data);
 				getCommunityByObjectId(
 					{community_object_id: data.target_object},
 					result => {
@@ -259,7 +263,8 @@ const AlarmList = props => {
 					},
 					err => {
 						setNavLoading(false);
-						console.log('err', err);
+						console.log('err / CommunityObject', err);
+						Modal.alert('이미 삭제된 게시물입니다.');
 					},
 				);
 				break;

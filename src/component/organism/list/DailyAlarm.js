@@ -13,7 +13,7 @@ import {GRAY40} from 'Root/config/color';
  * @param {boolean} props.isData - 오늘, 어제 , 이번주 각각의 array에 data가 있으면 true 없으면 false
  * @param {void} props.onClickLabel - 알림 라벨 클릭
  */
-const stringList = ['오늘', '어제', '이번 주'];
+const stringList = ['오늘', '어제', '이번 주', '지난 알람'];
 const DailyAlarm = props => {
 	const ITEM_HEIGHT = 134 * DP;
 	// console.log('Daily Alarm props', props.data, props.index);

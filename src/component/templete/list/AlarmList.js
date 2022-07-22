@@ -16,6 +16,8 @@ import {getCommunityByObjectId} from 'Root/api/community';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
+import moment from 'moment';
+import {day} from 'Root/i18n/msg';
 
 const wait = timeout => {
 	return new Promise(resolve => setTimeout(resolve, timeout));
@@ -63,15 +65,29 @@ const AlarmList = props => {
 		AsyncStorage.getItem('AlarmList', (err, result) => {
 			asyncAlarm = result;
 		});
-		let temp = [[], [], []];
+		let temp = [[], [], [], []];
 		getNoticeUserList(
 			{},
 			result => {
 				// console.log('result', result.msg);
+				let today = moment();
+				let tempNumber = 0;
 				temp[0] = [...result.msg.today];
 				temp[1] = [...result.msg.yesterday];
-				temp[2] = [...result.msg.thisweek];
+				for (let i in {...result.msg.thisweek}) {
+					// console.log('IIII', result.msg.thisweek[i]);
+					let days = result.msg.thisweek[i].notice_user_date;
+
+					if (moment.duration(today.diff(days)).asDays() < 7) {
+						temp[2].push(result.msg.thisweek[i]);
+					} else {
+						temp[3].push(result.msg.thisweek[i]);
+					}
+				}
+
+				// temp[2] = [...result.msg.thisweek];
 				// console.log('temp', temp[0].length, temp[1].length, temp[2].length);
+				console.log('temp', temp);
 				setData(temp);
 				// if (!_.isEqual(JSON.stringify(result.msg), asyncAlarm)) {
 				// 	AsyncStorage.setItem('AlarmList', JSON.stringify(result.msg));
@@ -142,13 +158,18 @@ const AlarmList = props => {
 							// 		routes: [{name: 'MainTab'}, {name: 'AlarmList'}, {name: 'UserFeedList', params: {userobject: result.msg, selected: selected}}],
 							// 	}),
 							// });
-							setNavLoading(false);
-							navigation.dispatch(
-								CommonActions.navigate({
-									name: 'UserFeedList',
-									params: {userobject: result.msg, selected: selected},
-								}),
-							);
+							console.log('result', result);
+							if (result.msg.user_is_delete) {
+								Modal.popOneBtn('탈퇴한 유저의 계정입니다.', '확인', () => Modal.close());
+							} else {
+								setNavLoading(false);
+								navigation.dispatch(
+									CommonActions.navigate({
+										name: 'UserFeedList',
+										params: {userobject: result.msg, selected: selected},
+									}),
+								);
+							}
 						},
 						err => {
 							setNavLoading(false);
@@ -190,7 +211,8 @@ const AlarmList = props => {
 				getUserProfile(
 					{userobject_id: data.notice_user_related_id._id},
 					result => {
-						setNavLoading(false);
+						console.log('result', result);
+
 						navigation.dispatch(
 							CommonActions.navigate({
 								name: 'UserFeedList',

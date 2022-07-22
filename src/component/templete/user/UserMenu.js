@@ -66,7 +66,7 @@ export default UserMenu = props => {
 			userObject => {
 				// console.log('user', userObject.msg.user_my_pets);
 				setData(userObject.msg);
-				console.log('userObjedt intro', userObject.msg.user_introduction.replace(/[\r\n]/gm, ''));
+				// console.log('userObjedt intro', userObject.msg.user_introduction.replace(/[\r\n]/gm, ''));
 			},
 
 			err => {

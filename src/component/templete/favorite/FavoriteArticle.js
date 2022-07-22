@@ -33,7 +33,7 @@ export default FavoriteArticle = ({route, isFavorite}) => {
 		!isFavorite
 			? getCommunityListByUserId(
 					{
-						limit: 100,
+						limit: 1000,
 						page: offset,
 						userobject_id: userGlobalObject.userInfo._id,
 						community_type: 'free',

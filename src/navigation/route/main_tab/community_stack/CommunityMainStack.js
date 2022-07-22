@@ -34,6 +34,7 @@ import PhotoSelectHeader from 'Root/navigation/header/PhotoSelectHeader';
 import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballHeader';
 import ReportDetail from 'Root/component/templete/missing/ReportDetail';
 import MissingAnimalDetail from 'Root/component/templete/missing/MissingAnimalDetail';
+import FeedCommentList from 'Root/component/templete/feed/FeedCommentList';
 
 const CommunityMainStackNavi = createStackNavigator();
 
@@ -159,7 +160,7 @@ export default CommunityMainStack = props => {
 
 			{/* 알람용 */}
 			<CommunityMainStackNavi.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
-			<CommunityMainStackNavi.Screen name="AlarmCommentList" component={AlarmCommentList} options={{header: props => <SimpleHeader {...props} />}} />
+			<CommunityMainStackNavi.Screen name="AlarmCommentList" component={FeedCommentList} options={{header: props => <SimpleHeader {...props} />}} />
 			<CommunityMainStackNavi.Screen
 				name="ShelterVolunteerForm"
 				component={ApplicationFormVolunteer}

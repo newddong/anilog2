@@ -45,13 +45,15 @@ export default MissingReportItem = React.memo(props => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			try {
 				const findIndex = feed_obj.list.findIndex(e => e._id == props.data._id);
-				if (feed_obj.shouldUpdateByEdit && feed_obj.edit_obj && feed_obj.edit_obj._id == props.data._id) {
-					setData({...feed_obj.edit_obj, is_favorite: findIndex != -1 ? feed_obj.list[findIndex].is_favorite : feed_obj.edit_obj.is_favorite});
+				const isEditedList = feed_obj.edited_list.map(v => v._id).includes(props.data._id);
+				if (feed_obj.shouldUpdateByEdit && isEditedList) {
+					const edited_index = feed_obj.edited_list.findIndex(e => e._id == props.data._id);
+					setData(feed_obj.edited_list[edited_index]);
 				} else if (findIndex != -1) {
 					setData({...data, is_favorite: feed_obj.list[findIndex].is_favorite});
 				}
 			} catch (err) {
-				console.log('err', err);
+				console.log('err MissingReport', err);
 			}
 		});
 		return unsubscribe;

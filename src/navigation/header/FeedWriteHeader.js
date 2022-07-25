@@ -8,7 +8,7 @@ import Modal from 'Root/component/modal/Modal';
 import {RED10} from 'Root/config/color';
 import {createFeed, createMissing, createReport, editFeed, editMissingReport, getFeedDetailById} from 'Root/api/feedapi';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import feed_obj from 'Root/config/feed_obj';
+import feed_obj, {pushEditedFeedList} from 'Root/config/feed_obj';
 import {useNavigation} from '@react-navigation/core';
 import {createThumbnail} from 'react-native-create-thumbnail';
 
@@ -63,7 +63,11 @@ export default FeedWriteHeader = ({route, options}) => {
 						let edited = {...route.params, feed_medias: result.msg.feed_medias, feed_thumbnail: result.msg.feed_thumbnail};
 						if (route.params && route.params.feed_type == 'report') {
 							edited.report_witness_location = result.msg?.report_witness_location;
+						} else if (route.params && route.params.feed_type == 'missing') {
+							console.log('result.msg?.missing_animal_date', result.msg?.missing_animal_date);
+							edited.missing_animal_date = result.msg?.missing_animal_date;
 						}
+						pushEditedFeedList(edited);
 						feed_obj.edit_obj = edited; //피드수정 => 수정한 리스트 아이템만 setData하기 위한 오브젝트
 						feed_obj.shouldUpdateByEdit = true;
 						navigation.goBack();
@@ -77,7 +81,7 @@ export default FeedWriteHeader = ({route, options}) => {
 						feed_obj.shouldUpdateUserProfile = true;
 						feed_obj.feed_writer = route.params.feed_avatar_id;
 						navigation.goBack();
-					} else
+					} else {
 						navigation.navigate('MainTab', {
 							screen: 'FEED',
 							params: {
@@ -85,6 +89,7 @@ export default FeedWriteHeader = ({route, options}) => {
 								params: {refreshing: true},
 							},
 						});
+					}
 				}
 			}
 		}, 200);
@@ -257,7 +262,7 @@ export default FeedWriteHeader = ({route, options}) => {
 					hashtag_keyword: route.params.hashtag_keyword?.map(v => v.substring(1)),
 				};
 
-				console.log('onEdit / FeedWrtieHeader', param);
+				// console.log('onEdit / FeedWrtieHeader', param);
 				if (param.feed_type == 'feed') {
 					if (param.feed_medias[0].is_video) {
 						createThumbnail({url: param.feed_medias[0].media_uri, timeStamp: 500})

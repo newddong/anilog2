@@ -69,19 +69,14 @@ export default FeedContent = props => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			setPressed(false);
 			const findIndex = feed_obj.list.findIndex(e => e._id == _id);
-			// console.log('findIndex', findIndex);
 			if (findIndex != -1) {
 				setCommentCount(feed_obj.list[findIndex].feed_comment_count);
 				setIsFavorite(feed_obj.list[findIndex].is_favorite);
-				if (feed_obj.shouldUpdateByEdit && feed_obj.edit_obj && feed_obj.edit_obj._id == _id) {
-					console.log('feed Contentetn : ', feed_content);
-					console.log('feed_obj.edit_obj', feed_obj.edit_obj?.report_witness_location);
-					setData(feed_obj.edit_obj);
-					// feed_obj.shouldUpdateByEdit = false;
-					// feed_obj.edit_obj = {};
+				const isEditedList = feed_obj.edited_list.map(v => v._id).includes(_id);
+				if (feed_obj.shouldUpdateByEdit && isEditedList) {
+					const edited_index = feed_obj.edited_list.findIndex(e => e._id == _id);
+					setData(feed_obj.edited_list[edited_index]);
 				}
-			} else {
-				// console.log('FeedContent 전역찾기', feed_content, is_favorite);
 			}
 		});
 		return unsubscribe;
@@ -149,14 +144,10 @@ export default FeedContent = props => {
 		setTimeout(() => {
 			Modal.popOneBtn('이 계정을 팔로우 취소하시겠습니까?', '팔로우 취소', () => {
 				unFollowUser(
-					{
-						// follow_userobject_id: props.data.feed_avatar_id ? props.data.feed_avatar_id._id : props.data.feed_writer_id._id,
-						follow_userobject_id: feed_writer._id,
-					},
+					{follow_userobject_id: feed_writer._id},
 					result => {
 						// console.log('result / unFollowUser / FeedContent', result.msg);
 						Modal.close();
-						// Modal.popNoBtn(props.data.feed_writer_id.user_nickname + '님을 \n 팔로우 취소하였습니다.');
 						setTimeout(() => {
 							Modal.popNoBtn(feed_writer.user_nickname + '님을 \n 팔로우 취소하였습니다.');
 							setTimeout(() => {
@@ -260,18 +251,7 @@ export default FeedContent = props => {
 	//피드 미트볼 메뉴 - 삭제 클릭
 	const onPressDelete = () => {
 		Modal.close();
-		// console.log('삭제');
-		console.log('props.data before Delete', props.data._id);
 		setTimeout(() => {
-			// Modal.popTwoBtn(
-			// 	'정말로 이 게시글을 \n 삭제하시겠습니까?',
-			// 	'아니오',
-			// 	'예',
-			// 	() => Modal.close(),
-			// 	() => {
-			// 		props.deleteFeed(props.data._id);
-			// 	},
-			// );
 			Modal.popOneBtn('이 게시글을 삭제하시겠습니까?', '삭제', () => {
 				props.deleteFeed(props.data._id);
 			});
@@ -499,16 +479,16 @@ export default FeedContent = props => {
 		<View style={[layoutStyle()]}>
 			<View style={[style.feedContent]}>
 				<View style={[style.userLocationLabel_view_feedContent]}>
-					<View style={[style.userLocationLabel_feedContent]}>
+					<View style={[style.userLocationLabel_feedContent, {}]}>
 						{send != 'false' ? (
 							send ? (
 								<UserLocationTimeLabel
 									data={send}
 									onClickLabel={onPressLabel}
-									location={feed_location}
+									location={data.feed_location}
 									time={feed_date}
 									isLarge
-									publicType={props.data.feed_public_type}
+									publicType={data.feed_public_type}
 								/>
 							) : (
 								<UserLocationTimeLabel empty={true} time={feed_date} isLarge location={feed_location} publicType={props.data.feed_public_type} />
@@ -517,30 +497,19 @@ export default FeedContent = props => {
 							<></>
 						)}
 
-						<View style={{flexDirection: 'row', alignItems: 'center'}}>
+						<View style={{flexDirection: 'row', alignItems: 'center', position: 'absolute', right: 0}}>
 							{!isMissingReportRoute ? (
 								<View style={{flexDirection: 'row', alignItems: 'center'}}>
 									<View style={[feedContent_style.status /*{width:130*DP,height:38*DP}*/]}>
 										{feed_is_protect_diary && (
-											<View
-												style={{
-													width: 130 * DP,
-													height: 38 * DP,
-													justifyContent: 'center',
-													alignSelf: 'flex-end',
-													alignItems: 'center',
-													borderColor: MAINCOLOR,
-													borderRadius: 10 * DP,
-													borderWidth: 2 * DP,
-													marginRight: 10 * DP,
-												}}>
+											<View style={style.protect_diary}>
 												<Text style={[txt.roboto24, txt.maincolor]}>임보일기</Text>
 											</View>
 										)}
 									</View>
 
 									{props.data.feed_writer_id ? (
-										<View style={[{width: 100 * DP, height: 50 * DP, alignItems: 'flex-end', justifyContent: 'center'}]}>
+										<View style={[{height: 50 * DP, alignItems: 'flex-end', justifyContent: 'center'}]}>
 											<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
 										</View>
 									) : (
@@ -572,51 +541,53 @@ export default FeedContent = props => {
 						<View style={[style.feedMedia_feed]}>
 							<FeedMedia data={data} onPressPhoto={onPressPhoto} isView={props.isView} />
 						</View>
-						<View style={[feed_templete_style.likeCommentButtons_view]}>
-							<View style={[feed_templete_style.likeCommentInfo_view_feed]}>
-								<TouchableOpacity onPress={props.toggleFeedLike}>
-									<View style={feed_templete_style.likeButtonWrapper}>
-										<View style={[feed_templete_style.like48]}>{props.isLike ? <Like48_Filled /> : <Like48_Border />}</View>
-										<View style={[feed_templete_style.like_count_feed]}>
-											<Text style={[txt.roboto24, {color: GRAY10}]}>{JSON.stringify(props.likeCount)}</Text>
+						{!props.isComment && (
+							<View style={[feed_templete_style.likeCommentButtons_view]}>
+								<View style={[feed_templete_style.likeCommentInfo_view_feed]}>
+									<TouchableOpacity onPress={props.toggleFeedLike}>
+										<View style={feed_templete_style.likeButtonWrapper}>
+											<View style={[feed_templete_style.like48]}>{props.isLike ? <Like48_Filled /> : <Like48_Border />}</View>
+											<View style={[feed_templete_style.like_count_feed]}>
+												<Text style={[txt.roboto24, {color: GRAY10}]}>{JSON.stringify(props.likeCount)}</Text>
+											</View>
 										</View>
-									</View>
-								</TouchableOpacity>
-								<TouchableOpacity onPress={moveToCommentList}>
-									<View style={feed_templete_style.commentButtonWrapper}>
-										<View style={organism_style.like48}>
-											<Comment48_Border />
+									</TouchableOpacity>
+									<TouchableOpacity onPress={moveToCommentList}>
+										<View style={feed_templete_style.commentButtonWrapper}>
+											<View style={organism_style.like48}>
+												<Comment48_Border />
+											</View>
+											<View style={[organism_style.comment_count_feed]}>
+												<Text style={[txt.roboto24, {color: GRAY10, marginLeft: -15 * DP}]}>{commentCount}</Text>
+											</View>
 										</View>
-										<View style={[organism_style.comment_count_feed]}>
-											<Text style={[txt.roboto24, {color: GRAY10, marginLeft: -15 * DP}]}>{commentCount}</Text>
+									</TouchableOpacity>
+								</View>
+								{props.data.feed_writer_id ? (
+									<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
+										<View style={[organism_style.favoriteTag_feedContent]}>
+											{/* {props.data.feed_writer_id.is_favorite ? ( */}
+											{isFavorite ? (
+												<TouchableOpacity onPress={() => onFavorite(false)}>
+													<FavoriteTag48_Filled />
+												</TouchableOpacity>
+											) : (
+												<TouchableOpacity onPress={() => onFavorite(true)}>
+													<FavoriteTag48_Border />
+												</TouchableOpacity>
+											)}
 										</View>
-									</View>
-								</TouchableOpacity>
-							</View>
-							{props.data.feed_writer_id ? (
-								<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
-									<View style={[organism_style.favoriteTag_feedContent]}>
-										{/* {props.data.feed_writer_id.is_favorite ? ( */}
-										{isFavorite ? (
-											<TouchableOpacity onPress={() => onFavorite(false)}>
-												<FavoriteTag48_Filled />
-											</TouchableOpacity>
-										) : (
-											<TouchableOpacity onPress={() => onFavorite(true)}>
-												<FavoriteTag48_Border />
-											</TouchableOpacity>
+										{false && (
+											<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
+												<Text style={[txt.roboto24, {color: GRAY10}]}>{count_to_K(props.data.feed_writer_id.user_favorite_count)}</Text>
+											</View>
 										)}
 									</View>
-									{false && (
-										<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
-											<Text style={[txt.roboto24, {color: GRAY10}]}>{count_to_K(props.data.feed_writer_id.user_favorite_count)}</Text>
-										</View>
-									)}
-								</View>
-							) : (
-								<></>
-							)}
-						</View>
+								) : (
+									<></>
+								)}
+							</View>
+						)}
 					</>
 				) : (
 					<></>
@@ -716,6 +687,18 @@ const style = StyleSheet.create({
 		// height: 750 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
+	},
+	protect_diary: {
+		width: 130 * DP,
+		height: 38 * DP,
+		justifyContent: 'center',
+		alignSelf: 'flex-end',
+		alignItems: 'center',
+		borderColor: MAINCOLOR,
+		borderRadius: 10 * DP,
+		borderWidth: 2 * DP,
+		marginRight: 10 * DP,
+		bottom: 4 * DP,
 	},
 });
 

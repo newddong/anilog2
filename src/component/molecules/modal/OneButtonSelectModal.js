@@ -34,6 +34,7 @@ const OneButtonSelectModal = props => {
 	};
 	// console.log('modal props', props);
 	const [selectedItem, setSelectedItem] = React.useState(2);
+	const [confirmIndex, setConfirmIndex] = React.useState(2);
 	const [confirmedSelect, setConfirmedSelect] = React.useState(data[2]);
 	const [selectOpen, setSelectOpen] = React.useState(false);
 	const [directInput, setDirectInput] = React.useState('');
@@ -66,7 +67,7 @@ const OneButtonSelectModal = props => {
 		} else {
 			if (focused >= data.length) {
 				// 마지막 배열을 넘어서서 스크롤을 할 경우 마지막으로 자동 회귀
-				console.log('focused', focused);
+				// console.log('focused', focused);
 				setSelectedItem(data.length + 1);
 			} else {
 				setSelectedItem(focused + 2);
@@ -147,6 +148,10 @@ const OneButtonSelectModal = props => {
 
 	const onPressOutSide = () => {
 		if (selectOpen) {
+			console.log('s', selectedItem);
+			setConfirmIndex(selectedItem);
+			setSelectedItem(selectedItem);
+			setConfirmedSelect(data[selectedItem - 2]);
 			setSelectOpen(!selectOpen);
 		} else if (key) {
 			Keyboard.dismiss();
@@ -162,7 +167,7 @@ const OneButtonSelectModal = props => {
 				<Text style={[txt.noto28, style.msg]}>{props.msg}</Text>
 				<TouchableOpacity onPress={onOpen} style={style.dropdownContainer} activeOpacity={1}>
 					<View style={[style.selectedItem, {justifyContent: 'center', flexDirection: 'row'}]}>
-						<Text style={[txt.noto28, {fontSize: props.fontSize * DP - 5}]}>{data[selectedItem - 2]}</Text>
+						<Text style={[txt.noto28, {fontSize: props.fontSize * DP - 5}]}>{data[confirmIndex - 2]}</Text>
 						<View style={style.dropdownIcon}>{!selectOpen ? <Arrow_Down_GRAY10 onPress={onOpen} /> : <Arrow_Up_GRAY10 onPress={onOpen} />}</View>
 					</View>
 				</TouchableOpacity>
@@ -229,7 +234,7 @@ const style = StyleSheet.create({
 		width: Platform.OS == 'ios' ? Dimensions.get('window').width : '100%',
 		// justifyContent: 'center',
 		// top: 200 * DP,
-		paddingTop: 552 * DP,
+		paddingTop: 400 * DP,
 		alignItems: 'center',
 	},
 	popUpWindow: {

@@ -327,10 +327,10 @@ export default CommunityEdit = props => {
 	};
 
 	//리뷰글쓰기 버튼 아이콘 컨테이너
-	const getReviewButtonContainer = () => {
+	const getReviewButtonContainer = key => {
 		return (
 			<>
-				<TouchableOpacity onPress={onPressPhotoSelect} style={[style.buttonItem_review]}>
+				<TouchableOpacity onPress={() => onPressPhotoSelect(key)} style={[style.buttonItem_review]}>
 					<Camera54 />
 				</TouchableOpacity>
 				<View style={{height: 38 * DP, width: 2 * DP, backgroundColor: GRAY10, alignSelf: 'center', marginHorizontal: 30 * DP}}></View>
@@ -505,7 +505,7 @@ export default CommunityEdit = props => {
 				{isReview ? (
 					<View style={[style.animalFilter_container]}>
 						<View style={[style.animalFilter]}>
-							<View style={[style.buttonContainer_review, {opacity: showBtn == true ? 0 : 1, zIndex: 1}]}>{getReviewButtonContainer()}</View>
+							<View style={[style.buttonContainer_review, {opacity: showBtn == true ? 0 : 1, zIndex: 1}]}>{getReviewButtonContainer(true)}</View>
 							<View style={{flexDirection: 'row', width: 399 * DP, justifyContent: 'space-between'}}>
 								<View style={[]}>
 									{!animalType.dog ? (
@@ -555,7 +555,7 @@ export default CommunityEdit = props => {
 							zIndex: showBtn ? 3 : -1,
 						},
 					]}>
-					{getReviewButtonContainer()}
+					{getReviewButtonContainer(false)}
 				</View>
 			) : (
 				<View style={[style.buttonContainer_keyboard, {bottom: Platform.OS == 'android' ? 0 : KeyboardY, opacity: showBtn == false ? 0 : 1}]}>

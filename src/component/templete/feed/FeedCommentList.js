@@ -138,30 +138,23 @@ export default FeedCommentList = props => {
 	};
 
 	const updateGlobal = res => {
-		console.log('updateGlobal');
 		setIsLoading(false);
 		Modal.close();
-		let recent = res[0]; //가장 최근 댓글
 		let comment_count = res.length; //부모 댓글 총개수
 		res.map((v, i) => {
 			comment_count = comment_count + v.children_count; //자식 댓글있으면 부모 댓글 개수에 추가시킴
 		});
 		let temp = feed_obj.list; //현재 저장된 리스트
-		// console.log('temp', temp);
-		// console.log('comment_count', comment_count);
-		// console.log('params', params.feedobject.feed_comment_count, 'res length', res.length);
-		// console.log('fdd', feed_obj.list.length);
 		const findIndex = temp.findIndex(e => e._id == params.feedobject._id); //현재 보고 있는 피드게시글이 저장된 리스트에서 몇 번째인지
-		// console.log('find', findIndex);
 		temp[findIndex].feed_comment_count = comment_count; //해당 피드게시글의 댓글 개수 갱신
-		temp[findIndex].feed_recent_comment = {
-			//해당 피드게시글의 최근 댓글 갱신
-			comment_contents: recent.comment_contents,
-			comment_id: recent._id,
-			comment_user_nickname: recent.comment_writer_id.user_nickname,
-		};
+		// let recent = res[0]; //가장 최근 댓글
+		// temp[findIndex].feed_recent_comment = {
+		// 	//해당 피드게시글의 최근 댓글 갱신
+		// 	comment_contents: recent.comment_contents,
+		// 	comment_id: recent._id,
+		// 	comment_user_nickname: recent.comment_writer_id.user_nickname,
+		// };
 		feed_obj.list = [...temp]; //갱신
-		feed_obj.shouldUpdateByComment = true; //수정모드 true
 	};
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
@@ -513,8 +506,8 @@ export default FeedCommentList = props => {
 						deleteFeed={deleteFeedItem}
 						showAllContents={params.showAllContents}
 						showMedia={params.showMedia ? params.showMedia : false}
+						isComment={true}
 						routeName={props.route.name}
-						// showMedia={false}
 					/>
 					<View style={[{width: 694 * DP, height: 2 * DP, marginTop: 10 * DP, backgroundColor: GRAY40, alignSelf: 'center'}]} />
 					<View style={[{width: 694 * DP, alignSelf: 'center', marginTop: 20 * DP}]}>

@@ -44,6 +44,12 @@ export default PhotoTagItem = ({
 	const tagBackground = React.useRef();
 	const [mute, setMute] = React.useState(true);
 	const [play, setPlay] = React.useState(false);
+
+	//피드가 수정될 시 피드 갱신
+	React.useEffect(() => {
+		setTags(taglist);
+	}, [taglist]);
+
 	const makeTag = e => {
 		clickedPost.current = {x: e.nativeEvent.locationX, y: e.nativeEvent.locationY};
 		console.log(clickedPost.current);
@@ -147,27 +153,27 @@ export default PhotoTagItem = ({
 	};
 	const videoPause = () => {
 		Animated.sequence([
-			Animated.timing(fadeAnimPause,{
-				toValue:1,
-				duration:fadePauseDuration/3,
-				useNativeDriver:true
+			Animated.timing(fadeAnimPause, {
+				toValue: 1,
+				duration: fadePauseDuration / 3,
+				useNativeDriver: true,
 			}),
-			Animated.timing(fadeAnimPause,{
-				toValue:0,
-				duration:fadePauseDuration/3,
-				useNativeDriver:true
-			})
-		]).start()
-		setTimeout(()=>{
-			setPlay(false)
-		},fadePauseDuration+100)
+			Animated.timing(fadeAnimPause, {
+				toValue: 0,
+				duration: fadePauseDuration / 3,
+				useNativeDriver: true,
+			}),
+		]).start();
+		setTimeout(() => {
+			setPlay(false);
+		}, fadePauseDuration + 100);
 	};
 
-	React.useEffect(()=>{
-		if(!onShow){
+	React.useEffect(() => {
+		if (!onShow) {
 			setPlay(false);
 		}
-	},[onShow])
+	}, [onShow]);
 
 	const video = () => {
 		return (
@@ -176,7 +182,7 @@ export default PhotoTagItem = ({
 					<Video
 						style={[styles.img_square_round_694, {backgroundColor: '#000'}]}
 						source={{uri: uri}}
-						paused={!play&&viewmode}
+						paused={!play && viewmode}
 						muted={mute}
 						useTextureView={Platform.OS != 'android'}
 						repeat={true}
@@ -197,35 +203,37 @@ export default PhotoTagItem = ({
 				) : (
 					<View style={[styles.img_square_round_694, {backgroundColor: '#000'}]} />
 				)}
-				{viewmode&&<View style={{position: 'absolute'}}>
-					{!play ? (
-						<TouchableWithoutFeedback onPress={videoplay}>
-							<Animated.View
-								style={{
-									width: 750 * DP,
-									height: 750 * DP,
-									justifyContent: 'center',
-									alignItems: 'center',
-									opacity: fadeAnimPlay,
-								}}>
-								<VideoPlay />
-							</Animated.View>
-						</TouchableWithoutFeedback>
-					) : (
-						<TouchableWithoutFeedback onPress={videoPause}>
-							<Animated.View
-								style={{
-									width: 750 * DP,
-									height: 750 * DP,
-									justifyContent: 'center',
-									alignItems: 'center',
-									opacity: fadeAnimPause,
-								}}>
-								<VideoPause />
-							</Animated.View>
-						</TouchableWithoutFeedback>
-					)}
-				</View>}
+				{viewmode && (
+					<View style={{position: 'absolute'}}>
+						{!play ? (
+							<TouchableWithoutFeedback onPress={videoplay}>
+								<Animated.View
+									style={{
+										width: 750 * DP,
+										height: 750 * DP,
+										justifyContent: 'center',
+										alignItems: 'center',
+										opacity: fadeAnimPlay,
+									}}>
+									<VideoPlay />
+								</Animated.View>
+							</TouchableWithoutFeedback>
+						) : (
+							<TouchableWithoutFeedback onPress={videoPause}>
+								<Animated.View
+									style={{
+										width: 750 * DP,
+										height: 750 * DP,
+										justifyContent: 'center',
+										alignItems: 'center',
+										opacity: fadeAnimPause,
+									}}>
+									<VideoPause />
+								</Animated.View>
+							</TouchableWithoutFeedback>
+						)}
+					</View>
+				)}
 				<View style={{position: 'absolute', top: 20 * DP, left: 20 * DP}}>
 					{mute ? <VideoMute66 onPress={toggleMute} /> : <VideoSound66 onPress={toggleMute} />}
 				</View>

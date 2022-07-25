@@ -16,8 +16,6 @@ import feed_obj from 'Root/config/feed_obj';
  * @param {boolean} props.inActiveOpacity - 전시용일 경우 Touch 액션 제거
  */
 const ProtectedThumbnail = props => {
-	// console.log('props ProtectThumb', props.data);
-	// const data = props.data;
 	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.data);
 
@@ -25,8 +23,10 @@ const ProtectedThumbnail = props => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			try {
-				if (feed_obj.shouldUpdateByEdit && feed_obj.edit_obj && feed_obj.edit_obj._id == props.data._id) {
-					setData({...data, img_uri: feed_obj.edit_obj.feed_thumbnail});
+				const isEditedList = feed_obj.edited_list.map(v => v._id).includes(props.data._id);
+				if (feed_obj.shouldUpdateByEdit && isEditedList) {
+					const edited_index = feed_obj.edited_list.findIndex(e => e._id == props.data._id);
+					setData({...data, img_uri: feed_obj.edited_list[edited_index].feed_thumbnail});
 				}
 			} catch (err) {
 				console.log('err', err);

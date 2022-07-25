@@ -73,11 +73,7 @@ export default FeedStackNavigation = props => {
 				options={{header: props => <SimpleHeader {...props} />, title: '프로필 변경'}}
 			/>
 			<FeedStack.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
-			<FeedStack.Screen
-				name="AlarmCommentList"
-				component={AlarmCommentList}
-				options={{header: props => <SimpleHeader {...props} />, title: '댓글'}}
-			/>
+			<FeedStack.Screen name="AlarmCommentList" component={FeedCommentList} options={{header: props => <SimpleHeader {...props} />, title: '댓글'}} />
 			<FeedStack.Screen
 				name={'CommunityCommentList'}
 				component={CommunityCommentList}
@@ -137,6 +133,7 @@ export default FeedStackNavigation = props => {
 			/>
 			<FeedStack.Screen name="ReportDetail" component={ReportDetail} options={{header: props => <SimpleWithMeatballHeader {...props} />}} />
 			<FeedStack.Screen name="SinglePhotoSelect" component={AddPhoto} options={{header: props => <PhotoSelectHeader {...props} />, title: ''}} />
+			<FeedStack.Screen name="MultiPhotoSelect" component={AddPhoto} options={{header: props => <PhotoSelectHeader {...props} />, title: ''}} />
 			<FeedStack.Screen
 				name={'CommunityEdit'}
 				component={CommunityEdit}

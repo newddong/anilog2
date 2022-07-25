@@ -78,23 +78,13 @@ export default CommunityHeader = ({navigation, route, options, back}) => {
 												community_is_delete: true,
 											},
 											result => {
-												// console.log('result / updateAndDeleteCommunity / ArticleDetail : ', result.msg);
+												// console.log('result / updateAndDeleteCommunity / CommunityHeader : ', result.msg);
 												Modal.close();
 												community_obj.review = community_obj.review.filter(e => e._id == data._id);
 												setTimeout(() => {
 													Modal.popNoBtn('게시글 삭제가 완료되었습니다.');
-													setTimeout(() => {
-														Modal.close();
-														data.community_type == 'review'
-															? navigation.reset({
-																	index: 0,
-																	routes: [{name: 'CommunityMain', params: {isReview: true}}],
-															  })
-															: navigation.reset({
-																	index: 0,
-																	routes: [{name: 'CommunityMain', params: {isReview: false}}],
-															  });
-													}, 600);
+													community_obj.deleted_list.push(result.msg._id);
+													navigation.goBack();
 												}, 200);
 											},
 											err => {

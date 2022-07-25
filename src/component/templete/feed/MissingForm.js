@@ -442,7 +442,8 @@ export default MissingForm = props => {
 
 	//사진 추가
 	const moveToMultiPhotoSelect = () => {
-		navigation.navigate('MultiPhotoSelect', {prev: {name: route.name, key: route.key}});
+		// navigation.navigate('MultiPhotoSelect', {prev: {name: route.name, key: route.key}});
+		props.moveToPhotoSelect();
 	};
 
 	const feedInput = props.feedInput();
@@ -570,6 +571,7 @@ export default MissingForm = props => {
 					placeholderTextColor={GRAY10}
 					width={694}
 					height={104}
+					heightRatio={null}
 					descriptionType={'none'}
 					onChange={onChangeMissingLocationDetail}
 					maxlength={50}

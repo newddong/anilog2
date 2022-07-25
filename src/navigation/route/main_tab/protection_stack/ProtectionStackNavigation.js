@@ -124,7 +124,7 @@ export default ProtectionStackNavigation = props => {
 			/>
 			{/* 알람용 */}
 			<ProtectionStack.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
-			<ProtectionStack.Screen name="AlarmCommentList" component={AlarmCommentList} options={{header: props => <SimpleHeader {...props} />}} />
+			<ProtectionStack.Screen name="AlarmCommentList" component={FeedCommentList} options={{header: props => <SimpleHeader {...props} />}} />
 			<ProtectionStack.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />}} />
 			<ProtectionStack.Screen
 				name={'ArticleDetail'}

@@ -8,7 +8,7 @@ import {getCommunityList} from 'Root/api/community';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {likeEtc} from 'Root/api/likeetc';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
-import community_obj, {updateReview} from 'Root/config/community_obj';
+import community_obj, {pushReviewList, updateReview} from 'Root/config/community_obj';
 import {NETWORK_ERROR, REPORT_MENU, REVIEW_LIMIT} from 'Root/i18n/msg';
 import ListEmptyInfo from 'Root/component/molecules/info/ListEmptyInfo';
 import {searchProtectRequest} from 'Templete/style_templete';
@@ -40,12 +40,19 @@ export default ReviewMain = ({route}) => {
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
-			if (community_obj.review.length > 0) {
-				setData(community_obj.review);
+			if (community_obj.deleted_list && community_obj.deleted_list.length && data != 'false') {
+				//삭제된 리뷰 필터 적용
+				try {
+					let temp = [...data];
+					temp = temp.filter(e => !community_obj.deleted_list.includes(e._id));
+					setData(temp);
+				} catch (err) {
+					console.log('err', err);
+				}
 			}
 		});
 		return unsubscribe;
-	}, []);
+	}, [data]);
 
 	React.useEffect(() => {
 		fetchData();
@@ -123,7 +130,7 @@ export default ReviewMain = ({route}) => {
 				} else {
 					list = res;
 				}
-				console.log('recommendList', recommendList);
+				console.log('recommendList', recommendList.length);
 				setRecommend(recommendList); //추천 게시글 목록
 				setData(list); //리뷰글 set
 				// community_obj.review = list; //전역 변수에 현재 리스트 갱신
@@ -147,13 +154,7 @@ export default ReviewMain = ({route}) => {
 
 	React.useEffect(() => {
 		if (data != 'false' && data.length) {
-			data.map((v, i) => {
-				const find = community_obj.review.findIndex(e => e._id == v._id);
-				if (find == -1) {
-					//현 메모리에 저장되어 있지않은 리뷰아이템만 추가
-					community_obj.review.push(v);
-				}
-			});
+			pushReviewList(data);
 		}
 	}, [data]);
 

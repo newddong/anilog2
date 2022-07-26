@@ -246,6 +246,7 @@ export default FeedWrite = props => {
 					scrollref={scrollref}
 					currentScrollOffset={scrolloffset.current}
 					feedInput={feedInput}
+					moveToPhotoSelect={moveToMultiPhotoSelect}
 				/>
 			);
 		} // 긴급 게시 버튼 중 '실종' 클릭한 경우
@@ -260,6 +261,7 @@ export default FeedWrite = props => {
 					currentScrollOffset={scrolloffset.current}
 					feedInput={feedInput}
 					selectedImages={selectedImages}
+					moveToPhotoSelect={moveToMultiPhotoSelect}
 				/>
 			) : (
 				false

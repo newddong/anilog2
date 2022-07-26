@@ -11,7 +11,6 @@ import {
 	Text,
 	TextInput,
 	TouchableOpacity,
-	TouchableWithoutFeedback,
 	View,
 } from 'react-native';
 import DP from 'Root/config/dp';
@@ -20,7 +19,7 @@ import {BLACK, GRAY10, GRAY20, GRAY30, MAINBLACK} from 'Root/config/color';
 import {useNavigation} from '@react-navigation/core';
 import axios from 'axios';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
-import {LocationMarker, Search48_BLACK} from 'Root/component/atom/icon';
+import {Location48Border, Location54, LocationMarker, Search48_BLACK} from 'Root/component/atom/icon';
 import Geolocation from '@react-native-community/geolocation';
 import {openSettings, PERMISSIONS, request} from 'react-native-permissions';
 import {useKeyboardBottom} from 'Root/component/molecules/input/usekeyboardbottom';
@@ -73,21 +72,25 @@ export default LocationPicker = ({route}) => {
 		//위치 권한을 위해 Background로 갔다가 앱으로 돌아왔을 경우 권한을 다시 확인
 		requestPermission();
 		const subscription = AppState.addEventListener('change', async nextAppState => {
-			Modal.close();
 			console.log('nextAppState', nextAppState, 'permission', permission);
-			const state = await AsyncStorage.getItem('permission');
-			console.log('state', state);
-			if (nextAppState == 'active' && (state == 'blocked' || state == 'denied' || state == 'granted')) {
-				// console.log('feed_obj.isGpsDenied', feed_obj.isGpsDenied);
-				// feed_obj.isGpsDenied ? false : requestPermission();
-				Modal.close();
-				requestPermission();
-			}
+			const getPermission = await AsyncStorage.getItem('permission').then(res => {
+				const state = res;
+				console.log('state', state);
+				if (nextAppState == 'active') {
+					if (state == 'denied') {
+						navigation.goBack();
+					} else if (state == 'blocked' || state == 'granted') {
+						Modal.close();
+						geoLocation();
+					}
+				}
+			});
 		});
 
 		return () => {
 			subscription.remove();
 			mounted = false;
+			Modal.close();
 		};
 	}, []);
 
@@ -118,17 +121,20 @@ export default LocationPicker = ({route}) => {
 					//거절
 					AsyncStorage.setItem('permission', 'denied');
 					setTimeout(() => {
-						Modal.popTwoBtn(
-							'위치 서비스를 사용할 수 없습니다. \n 기기의 설정 > 개인정보 보호 에서 위치 \n 서비스를 켜주세요.',
-							'확 인',
-							'취 소',
-							() => {
-								requestPermission();
-							},
-							() => navigation.goBack(),
-						);
-					}, 1000);
-					feed_obj.isGpsDenied = true;
+						Modal.popOneBtn('위치 권한을 허용해주셔야 \n 위치 추가 기능을 사용하실 수 있습니다.', '뒤로가기', navigation.goBack);
+					}, 500);
+
+					// setTimeout(() => {
+					// 	Modal.popTwoBtn(
+					// 		'위치 서비스를 사용할 수 없습니다. \n 기기의 설정 > 개인정보 보호 에서 위치 \n 서비스를 켜주세요.',
+					// 		'확 인',
+					// 		'취 소',
+					// 		() => {
+					// 			requestPermission();
+					// 		},
+					// 		() => navigation.goBack(),
+					// 	);
+					// }, 1000);
 				} else if (res == 'unavailable') {
 					//gps자체가 꺼짐 상태
 					setTimeout(() => {
@@ -262,7 +268,7 @@ export default LocationPicker = ({route}) => {
 					.then(responseText => {
 						var x2js = new X2JS(); //XML 형식의 데이터를 JSON으로 파싱
 						var json = x2js.xml2js(responseText.data);
-						console.log('json', json);
+						// console.log('json', json);
 						resolve(json.results);
 					});
 			} catch (error) {
@@ -294,11 +300,11 @@ export default LocationPicker = ({route}) => {
 				.then(async res => {
 					let location = res.data.documents[0];
 					if (location.road_address == null || location.road_address == undefined) {
-						console.log('address_name  : ', location.address.address_name);
+						// console.log('address_name  : ', location.address.address_name);
 						//카카오 API에서 도로명주소가 간혹 Null값으로 오는 현상 발견
 						// Modal.popLoading();
 						const road_addr = await getRoadAddr(location.address.address_name); //카카오 API에서 받은 지번을 바탕으로 주변의 도로명주소를 받아오는 API
-						console.log('road_addr count : ', road_addr.common.totalCount);
+						// console.log('road_addr count : ', road_addr.common.totalCount);
 						if (road_addr.common.totalCount == '0') {
 							location.road_address = {
 								address_name: '도로명 주소가 없는 위치입니다.',
@@ -437,6 +443,22 @@ export default LocationPicker = ({route}) => {
 		Keyboard.dismiss(); // 키보드 내리기
 	};
 
+	const goToSearchedPlace = () => {
+		try {
+			map.current?.animateToRegion(
+				{
+					latitude: changedLatitude,
+					longitude: changedLongitude,
+					latitudeDelta: 0.0002,
+					longitudeDelta: 0.0023,
+				},
+				400,
+			);
+		} catch (err) {
+			console.log('err', err);
+		}
+	};
+
 	//선택한 위치로 설정 버튼 클릭
 	const confirm = () => {
 		let finalized = locationObj;
@@ -550,13 +572,14 @@ export default LocationPicker = ({route}) => {
 												style={[style.mapContainer]}
 												onPress={Keyboard.dismiss}
 												mapType={'standard'}
-												scrollEnabled={false}
+												// scrollEnabled={false}
+												showsUserLocation={true}
 												zoomEnabled
 												zoomControlEnabled
 												onRegionChangeComplete={(region, gesture) => {
 													if (gesture.isGesture) {
 														//클릭을 안했음에도 지속적으로 위도 경도가 바뀌는 현상 발생 -> 오로지 터치 시에만 반응하도록 적용
-														goToLocation(region); //탐색된 위도 경도를 바꿈
+														// goToLocation(region); //탐색된 위도 경도를 바꿈
 													}
 												}}
 												region={{
@@ -577,7 +600,7 @@ export default LocationPicker = ({route}) => {
 													{locationObj != '' ? (
 														<View style={[{alignItems: 'center', marginBottom: 20 * DP}]}>
 															{/* <Text style={[txt.noto22b, style.locationText]}>{locationObj.address.address_name}</Text>
-														<View style={[style.triangle]}></View> */}
+															<View style={[style.triangle]}></View> */}
 															{/* <LocationMarker /> */}
 														</View>
 													) : (
@@ -592,10 +615,10 @@ export default LocationPicker = ({route}) => {
 													ref={map}
 													// provider={PROVIDER_GOOGLE} // remove if not using Google Maps
 													style={[style.mapContainer]}
-													scrollEnabled={false}
+													// scrollEnabled={false}
 													onRegionChangeComplete={(region, gesture) => {
 														//클릭을 안했음에도 지속적으로 위도 경도가 바뀌는 현상 발생 -> 오로지 터치 시에만 반응하도록 적용
-														goToLocation(region); //탐색된 위도 경도를 바꿈
+														// goToLocation(region); //탐색된 위도 경도를 바꿈
 													}}
 													onPress={Keyboard.dismiss}
 													region={{
@@ -647,7 +670,10 @@ export default LocationPicker = ({route}) => {
 											</Text>
 										</View>
 									</View>
-									<Search48_BLACK onPress={reSearch} />
+									<View style={{position: 'absolute', right: 0, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+										<Location48Border onPress={goToSearchedPlace} />
+										<Search48_BLACK onPress={reSearch} />
+									</View>
 								</View>
 								<View style={[style.locationDetail]}>
 									<TextInput
@@ -724,7 +750,7 @@ const style = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	currentLocation: {
-		width: 634 * DP,
+		// width: 634 * DP,
 		// alignSelf: 'center',
 		// paddingVertical: 24 * DP,
 	},

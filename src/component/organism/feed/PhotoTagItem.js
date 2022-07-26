@@ -11,6 +11,7 @@ import {
 	TouchableWithoutFeedback,
 	Image,
 	Alert,
+	Animated,
 } from 'react-native';
 import {APRI10, BLACK, GRAY10, RED10, WHITE} from 'Root/config/color';
 import DP from 'Root/config/dp';
@@ -21,20 +22,39 @@ import {styles} from 'Atom/image/imageStyle';
 import {Tag70, VideoPause, VideoMute66, VideoPlay, VideoSound66} from 'Atom/icon';
 import Video from 'react-native-video';
 
-export default PhotoTagItem = ({isVideo,onShow,uri, data, taglist, onMakeTag, onDeleteTag, viewmode, feedType, onPressPhoto, onTagMoveStart, onEndTagMove}) => {
+export default PhotoTagItem = ({
+	isVideo,
+	onShow,
+	uri,
+	data,
+	taglist,
+	onMakeTag,
+	onDeleteTag,
+	viewmode,
+	feedType,
+	onPressPhoto,
+	onTagMoveStart,
+	onEndTagMove,
+}) => {
 	const [tags, setTags] = React.useState(taglist ? taglist : []);
 	const [showTags, setShowTags] = React.useState(!viewmode);
 	const nav = useNavigation();
 	const route = useRoute();
 	const clickedPost = React.useRef({x: -1, y: -1});
 	const tagBackground = React.useRef();
-	const [mute, setMute] = React.useState(false);
-	const [play, setPlay] = React.useState(true);
+	const [mute, setMute] = React.useState(true);
+	const [play, setPlay] = React.useState(false);
+
+	//피드가 수정될 시 피드 갱신
+	React.useEffect(() => {
+		setTags(taglist);
+	}, [taglist]);
+
 	const makeTag = e => {
 		clickedPost.current = {x: e.nativeEvent.locationX, y: e.nativeEvent.locationY};
 		console.log(clickedPost.current);
 		if (viewmode) {
-			onPressPhoto();
+			onPressPhoto(uri);
 		} else {
 			!viewmode && nav.navigate({name: 'UserList'});
 		}
@@ -60,6 +80,10 @@ export default PhotoTagItem = ({isVideo,onShow,uri, data, taglist, onMakeTag, on
 			onMakeTag && onMakeTag(newTag, uri);
 		}
 	}, [route.params]);
+
+	React.useEffect(() => {
+		return () => {};
+	}, []);
 
 	const showTag = () => {
 		setShowTags(!showTags);
@@ -107,50 +131,119 @@ export default PhotoTagItem = ({isVideo,onShow,uri, data, taglist, onMakeTag, on
 		setMute(!mute);
 	};
 
-	const togglePlay = ()=>{
+	const togglePlay = () => {
 		setPlay(!play);
-	}
+	};
+
+	const fadePlayDuration = 100;
+	const fadePauseDuration = 100;
+	const fadeAnimPlay = React.useRef(new Animated.Value(1)).current;
+	const fadeAnimPause = React.useRef(new Animated.Value(0)).current;
+
+	const videoplay = () => {
+		Animated.timing(fadeAnimPlay, {
+			toValue: 0,
+			duration: fadePlayDuration,
+			useNativeDriver: true,
+		}).start();
+		setTimeout(() => {
+			setPlay(true);
+			fadeAnimPlay.setValue(1);
+		}, fadePlayDuration);
+	};
+	const videoPause = () => {
+		Animated.sequence([
+			Animated.timing(fadeAnimPause, {
+				toValue: 1,
+				duration: fadePauseDuration / 3,
+				useNativeDriver: true,
+			}),
+			Animated.timing(fadeAnimPause, {
+				toValue: 0,
+				duration: fadePauseDuration / 3,
+				useNativeDriver: true,
+			}),
+		]).start();
+		setTimeout(() => {
+			setPlay(false);
+		}, fadePauseDuration + 100);
+	};
+
+	React.useEffect(() => {
+		if (!onShow) {
+			setPlay(false);
+		}
+	}, [onShow]);
 
 	const video = () => {
 		return (
 			<View style={{justifyContent: 'center', alignItems: 'center'}}>
-				<Video
-					style={[styles.img_square_round_694,{backgroundColor:'#000'}]}
-					source={{uri: uri}}
-					paused={!onShow}
-					muted={mute}
-					useTextureView={Platform.OS!='android'}
-					repeat={true}
-					resizeMode="contain"
-					maxBitRate={2000000}
-					disableDisconnectError={true}
-					selectedVideoTrack={{type:'resolution',value:720}}
-					bufferConfig={{
-						minBufferMs:15000,
-						maxBufferMs:50000,
-						bufferForPlaybackMs:2500,
-						bufferForPlaybackAfterRebufferMs: 5000,
-						maxHeapAllocationPercent: 0.1,
-						minBackBufferMemoryReservePercent: 0.1,
-						minBufferMemoryReservePercent:0.6
-					}}
-				/>
+				{onShow ? (
+					<Video
+						style={[styles.img_square_round_694, {backgroundColor: '#000'}]}
+						source={{uri: uri}}
+						paused={!play && viewmode}
+						muted={mute}
+						useTextureView={Platform.OS != 'android'}
+						repeat={true}
+						resizeMode="contain"
+						maxBitRate={2000000}
+						disableDisconnectError={true}
+						selectedVideoTrack={{type: 'resolution', value: 720}}
+						bufferConfig={{
+							minBufferMs: 15000,
+							maxBufferMs: 50000,
+							bufferForPlaybackMs: 2500,
+							bufferForPlaybackAfterRebufferMs: 5000,
+							maxHeapAllocationPercent: 0.1,
+							minBackBufferMemoryReservePercent: 0.1,
+							minBufferMemoryReservePercent: 0.6,
+						}}
+					/>
+				) : (
+					<View style={[styles.img_square_round_694, {backgroundColor: '#000'}]} />
+				)}
+				{viewmode && (
+					<View style={{position: 'absolute'}}>
+						{!play ? (
+							<TouchableWithoutFeedback onPress={videoplay}>
+								<Animated.View
+									style={{
+										width: 750 * DP,
+										height: 750 * DP,
+										justifyContent: 'center',
+										alignItems: 'center',
+										opacity: fadeAnimPlay,
+									}}>
+									<VideoPlay />
+								</Animated.View>
+							</TouchableWithoutFeedback>
+						) : (
+							<TouchableWithoutFeedback onPress={videoPause}>
+								<Animated.View
+									style={{
+										width: 750 * DP,
+										height: 750 * DP,
+										justifyContent: 'center',
+										alignItems: 'center',
+										opacity: fadeAnimPause,
+									}}>
+									<VideoPause />
+								</Animated.View>
+							</TouchableWithoutFeedback>
+						)}
+					</View>
+				)}
 				<View style={{position: 'absolute', top: 20 * DP, left: 20 * DP}}>
 					{mute ? <VideoMute66 onPress={toggleMute} /> : <VideoSound66 onPress={toggleMute} />}
 				</View>
-				{/* <View style={{position: 'absolute'}}>
-					{!play?<VideoPlay onPress={togglePlay}/>:
-					<VideoPause
-						onPress={togglePlay}
-					/>}
-				</View> */}
 			</View>
 		);
 	};
 
 	const render = () => (
 		<View style={[style.container, style.adjustCenter]}>
-			{data.is_video||isVideo ? video() : <FastImage style={styles.img_square_round_694} source={{uri: uri}} ref={tagBackground} />}
+			{data.is_video || isVideo ? video() : <FastImage style={[styles.img_square_round_694]} source={{uri: uri}} ref={tagBackground} />}
 			{showTags && getTags()}
 			{tags.length > 0 && viewmode && (
 				<TouchableWithoutFeedback onPress={showTag}>

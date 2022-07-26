@@ -153,8 +153,8 @@ export default RootStackNavigation = () => {
 							AsyncStorage.setItem('userInfo', JSON.stringify(userObject.msg));
 							userGlobalObj.userInfo = userObject.msg;
 						}
-						mounted&&setInitialRouteName('MainTab');
-						mounted&&setLoading(false);
+						mounted && setInitialRouteName('MainTab');
+						mounted && setLoading(false);
 					},
 					error => {
 						alert(error);
@@ -164,8 +164,8 @@ export default RootStackNavigation = () => {
 
 				// setLoading(false);
 			} else {
-				mounted&&setInitialRouteName('Login');
-				mounted&&setLoading(false);
+				mounted && setInitialRouteName('Login');
+				mounted && setLoading(false);
 			}
 		});
 	}, []);
@@ -390,16 +390,16 @@ export default RootStackNavigation = () => {
 							component={ShelterAsk}
 							options={{header: props => <SimpleHeader {...props} />, title: '보호소 문의하기'}}
 						/>
-						<RootStack.Screen
+						{/* <RootStack.Screen
 							name="MissingAnimalDetail"
 							component={MissingAnimalDetail}
 							options={{header: props => <SimpleWithMeatballHeader {...props} />}}
-						/>
-						<RootStack.Screen
+						/> */}
+						{/* <RootStack.Screen
 							name="ReportDetail"
 							component={ReportDetail}
 							options={{header: props => <SimpleWithMeatballHeader {...props} />, title: '제보글'}}
-						/>
+						/> */}
 						{/* <RootStack.Screen
 							name="FeedCommentList"
 							component={FeedCommentList}

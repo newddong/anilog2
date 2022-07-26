@@ -76,6 +76,7 @@ export default SearchMainStack = props => {
 				options={{header: props => <SimpleHeader {...props} />, title: '댓글'}}
 			/>
 			<SearchStackNav.Screen name="SinglePhotoSelect" component={AddPhoto} options={{header: props => <PhotoSelectHeader {...props} />, title: ''}} />
+			<SearchStackNav.Screen name="MultiPhotoSelect" component={AddPhoto} options={{header: props => <PhotoSelectHeader {...props} />, title: ''}} />
 			<SearchStackNav.Screen
 				name="FeedListForHashTag"
 				component={FeedListForHashTag}

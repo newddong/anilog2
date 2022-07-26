@@ -65,7 +65,7 @@ export default MissingReportList = props => {
 
 	const getList = refresh => {
 		// setLoading(true);
-		// console.log('filterData', filterData);
+		console.log('filterData', filterData);
 		// console.log('offset', offset, refresh);
 		getMissingReportList(
 			{...filterData, limit: PROTECT_REQUEST_MAIN_LIMIT, page: refresh ? 1 : offset},
@@ -99,9 +99,9 @@ export default MissingReportList = props => {
 	React.useEffect(() => {
 		if (filterData && filterData.city != '') {
 			console.log('filterData', filterData);
-			getList();
-			setData('false');
 			setOffset(1);
+			getList(true);
+			setData('false');
 		}
 	}, [filterData]);
 
@@ -137,23 +137,10 @@ export default MissingReportList = props => {
 		);
 	};
 
-	const onClickLabel = (status, id, item) => {
-		let sexValue = '';
+	const onClickLabel = (status, id, item, obj) => {
 		switch (status) {
 			case 'missing':
-				switch (item.missing_animal_sex) {
-					case 'male':
-						sexValue = '남';
-						break;
-					case 'female':
-						sexValue = '여';
-						break;
-					case 'unknown':
-						sexValue = '성별모름';
-						break;
-				}
-				const titleValue = item.missing_animal_species + '/' + item.missing_animal_species_detail + '/' + sexValue;
-				navigation.navigate('MissingAnimalDetail', {title: titleValue, _id: id});
+				navigation.navigate('MissingAnimalDetail', {_id: id});
 				break;
 			case 'report':
 				navigation.navigate('ReportDetail', {_id: id});
@@ -168,7 +155,7 @@ export default MissingReportList = props => {
 			'보호 지역 선택',
 			selected => {
 				selected == '실종/제보 지역' ? setFilterData({...filterData, city: ''}) : setFilterData({...filterData, city: selected});
-				setData('false');
+				// setData('false');
 				setOffset(1);
 				Modal.close();
 			},
@@ -234,7 +221,7 @@ export default MissingReportList = props => {
 			return (
 				<MissingReportItem
 					data={getData()[this.props.index]}
-					onClickLabel={(status, id) => onClickLabel(status, id, this.props.item)}
+					onClickLabel={(status, id, item) => onClickLabel(status, id, this.props.item, item)}
 					onFavoriteTag={e => onOff_FavoriteTag(e, this.props.index)}
 					onPressProtectRequest={() => onPressProtectRequest(this.props.item)}
 				/>
@@ -309,7 +296,7 @@ export default MissingReportList = props => {
 						contentContainerStyle={{backgroundColor: '#fff', alignItems: 'center'}}
 						renderItem={renderItem}
 						showsVerticalScrollIndicator={false}
-						keyExtractor={keyExtractor}
+						keyExtractor={item => item._id}
 						getItemLayout={getItemLayout}
 						refreshing
 						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}

@@ -69,19 +69,14 @@ export default FeedContent = props => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			setPressed(false);
 			const findIndex = feed_obj.list.findIndex(e => e._id == _id);
-			// console.log('findIndex', findIndex);
 			if (findIndex != -1) {
 				setCommentCount(feed_obj.list[findIndex].feed_comment_count);
 				setIsFavorite(feed_obj.list[findIndex].is_favorite);
-				if (feed_obj.shouldUpdateByEdit && feed_obj.edit_obj && feed_obj.edit_obj._id == _id) {
-					console.log('feed Contentetn : ', feed_content);
-					console.log('feed_obj.edit_obj', feed_obj.edit_obj?.report_witness_location);
-					setData(feed_obj.edit_obj);
-					// feed_obj.shouldUpdateByEdit = false;
-					// feed_obj.edit_obj = {};
+				const isEditedList = feed_obj.edited_list.map(v => v._id).includes(_id);
+				if (feed_obj.shouldUpdateByEdit && isEditedList) {
+					const edited_index = feed_obj.edited_list.findIndex(e => e._id == _id);
+					setData(feed_obj.edited_list[edited_index]);
 				}
-			} else {
-				// console.log('FeedContent 전역찾기', feed_content, is_favorite);
 			}
 		});
 		return unsubscribe;
@@ -97,10 +92,8 @@ export default FeedContent = props => {
 	}, [props.data]);
 
 	//피드 미트볼 메뉴 - 신고 클릭
-	const onPressReport = context => {
-		console.log('신고 context', context, props.data._id);
+	const onPressReport = () => {
 		Modal.close();
-
 		setTimeout(() => {
 			Modal.popOneBtnSelectModal(
 				REPORT_MENU,
@@ -151,14 +144,10 @@ export default FeedContent = props => {
 		setTimeout(() => {
 			Modal.popOneBtn('이 계정을 팔로우 취소하시겠습니까?', '팔로우 취소', () => {
 				unFollowUser(
-					{
-						// follow_userobject_id: props.data.feed_avatar_id ? props.data.feed_avatar_id._id : props.data.feed_writer_id._id,
-						follow_userobject_id: feed_writer._id,
-					},
+					{follow_userobject_id: feed_writer._id},
 					result => {
 						// console.log('result / unFollowUser / FeedContent', result.msg);
 						Modal.close();
-						// Modal.popNoBtn(props.data.feed_writer_id.user_nickname + '님을 \n 팔로우 취소하였습니다.');
 						setTimeout(() => {
 							Modal.popNoBtn(feed_writer.user_nickname + '님을 \n 팔로우 취소하였습니다.');
 							setTimeout(() => {
@@ -211,7 +200,6 @@ export default FeedContent = props => {
 	//피드 미트볼 메뉴 - 쪽지 보내기
 	const onPressSendMsg = _id => {
 		Modal.close();
-
 		setTimeout(() => {
 			if (userGlobalObject.userInfo.isPreviewMode) {
 				Modal.popLoginRequestModal(() => {
@@ -223,7 +211,6 @@ export default FeedContent = props => {
 					msg => {
 						// if (msg.trim() == '') {
 						// return Modal.popOneBtn('채팅을 입력하세요.', '확인', () => Modal.close());
-
 						if (msg.length == 0) {
 							console.log('메세지 입력없음');
 							Alert.alert('내용을 입력해주세요');
@@ -235,6 +222,10 @@ export default FeedContent = props => {
 									Modal.popOneBtn('쪽지 전송하였습니다.', '확인', () => Modal.close());
 								},
 								err => {
+									Modal.close();
+									setTimeout(() => {
+										Modal.alert('메시지 전송에 실패했습니다. \n 잠시후 다시 이용해주세요.');
+									}, 100);
 									console.log('message sent err', err);
 								},
 							);
@@ -252,7 +243,7 @@ export default FeedContent = props => {
 	const onPressEdit = () => {
 		Modal.close();
 		let editData = data;
-		console.log('editData', editData);
+		// console.log('editData', editData);
 		editData.routeName = props.routeName;
 		navigation.navigate('FeedEdit', editData);
 	};
@@ -260,18 +251,7 @@ export default FeedContent = props => {
 	//피드 미트볼 메뉴 - 삭제 클릭
 	const onPressDelete = () => {
 		Modal.close();
-		// console.log('삭제');
-		console.log('props.data before Delete', props.data._id);
 		setTimeout(() => {
-			// Modal.popTwoBtn(
-			// 	'정말로 이 게시글을 \n 삭제하시겠습니까?',
-			// 	'아니오',
-			// 	'예',
-			// 	() => Modal.close(),
-			// 	() => {
-			// 		props.deleteFeed(props.data._id);
-			// 	},
-			// );
 			Modal.popOneBtn('이 게시글을 삭제하시겠습니까?', '삭제', () => {
 				props.deleteFeed(props.data._id);
 			});
@@ -339,10 +319,10 @@ export default FeedContent = props => {
 				onPressFollow();
 				break;
 			case '신고':
-				onPressReport(context);
+				onPressReport();
 				break;
 			case '쪽지 보내기':
-				onPressSendMsg(context._id);
+				onPressSendMsg(props.data.feed_writer_id);
 				break;
 			case '즐겨찾기':
 				onFavorite(true);
@@ -360,10 +340,8 @@ export default FeedContent = props => {
 		Modal.close();
 	};
 
-	const meatballActions = context => {
-		let isFavorite = context.favorite_feeds.some(feed => feed._id == _id);
-		// console.log('즐겨찾기됨?', isFavorite);
-		let isMyFeed = userGlobalObject.userInfo._id == props.data.feed_writer_id._id || props.data.feed_writer_id;
+	const meatballActions = () => {
+		let isMyFeed = userGlobalObject.userInfo._id == (props.data.feed_writer_id._id ? props.data.feed_writer_id._id : props.data.feed_writer_id);
 		let feedType = props.data.feed_type;
 		if (feedType == 'feed') {
 			if (isMyFeed) {
@@ -371,7 +349,7 @@ export default FeedContent = props => {
 				Modal.popSelectBoxModal(
 					FEED_MEATBALL_MENU_MY_FEED,
 					selectedItem => {
-						meatBallSelectAction(selectedItem, context);
+						meatBallSelectAction(selectedItem);
 					},
 					() => Modal.close(),
 					false,
@@ -382,7 +360,7 @@ export default FeedContent = props => {
 				getFollows(
 					{userobject_id: userGlobalObject.userInfo._id},
 					result => {
-						// console.log('result / getFollows ', result.msg);
+						console.log('result / getFollows ', result.msg.length);
 						let follow_id_list = [];
 						result.msg.map((v, i) => {
 							follow_id_list.push(v.follower_id._id);
@@ -393,7 +371,7 @@ export default FeedContent = props => {
 						Modal.popSelectBoxModal(
 							['쪽지 보내기', isFollowers ? '팔로우 취소' : '팔로우', '신고'],
 							selectedItem => {
-								meatBallSelectAction(selectedItem, context);
+								meatBallSelectAction(selectedItem);
 							},
 							() => Modal.close(),
 							false,
@@ -412,7 +390,7 @@ export default FeedContent = props => {
 				Modal.popSelectBoxModal(
 					['수정', '삭제'],
 					selectedItem => {
-						meatBallSelectAction(selectedItem, context);
+						meatBallSelectAction(selectedItem);
 					},
 					() => Modal.close(),
 					false,
@@ -423,19 +401,13 @@ export default FeedContent = props => {
 				getFollows(
 					{userobject_id: userGlobalObject.userInfo._id},
 					result => {
-						console.log('getFollows / FeedContent : ', result.msg);
-						let follow_id_list = [];
-						result.msg.map((v, i) => {
-							follow_id_list.push(v.follower_id._id);
-						});
-						console.log('follow_id_list', follow_id_list);
-						// let isFollowers = follow_id_list.includes(props.data.feed_avatar_id ? props.data.feed_avatar_id._id : props.data.feed_writer_id._id); //해당 피드 게시글 작성자가 내 팔로워 목록에 있는지 여부
+						console.log('getFollows / FeedContent : ', result.msg.length);
+						let follow_id_list = result.msg.map(v => v.follower_id._id);
 						let isFollowers = follow_id_list.includes(feed_writer._id); //해당 피드 게시글 작성자가 내 팔로워 목록에 있는지 여부
 						Modal.popSelectBoxModal(
-							// FEED_MEATBALL_MENU,
 							['쪽지 보내기', isFollowers ? '팔로우 취소' : '팔로우', '신고'],
 							selectedItem => {
-								meatBallSelectAction(selectedItem, context);
+								meatBallSelectAction(selectedItem);
 							},
 							() => Modal.close(),
 							false,
@@ -457,44 +429,12 @@ export default FeedContent = props => {
 				navigation.navigate('LoginRequired');
 			});
 		} else {
-			getFavoriteFeedListByUserId(
-				{
-					userobject_id: userGlobalObject.userInfo._id,
-				},
-				r => {
-					let context = {
-						favorite_feeds: r.msg,
-						_id: feed_writer_id,
-					};
-					meatballActions(context);
-				},
-				err => {
-					console.log('getFavoriteFeedListByUserId / FeedContent', err);
-				},
-			);
+			meatballActions();
 		}
 	};
 
 	const isMissingReportRoute = route.name == 'MissingAnimalDetail' || route.name == 'ReportDetail';
 	const isCommentList = route.name == 'FeedCommentList';
-	const isMissingReportType = feed_content == 'missing' || feed_content == 'report';
-
-	const [numLine, setNumLine] = React.useState(isMissingReportRoute ? 0 : 2);
-
-	const showMore = () => {
-		setNumLine(0);
-		setShow(true);
-	};
-
-	const onPressFavoriteWriter = bool => {
-		if (userGlobalObject.userInfo.isPreviewMode) {
-			Modal.popLoginRequestModal(() => {
-				navigation.navigate('LoginRequired');
-			});
-		} else {
-			props.onPressFavorite && props.onPressFavorite(bool);
-		}
-	};
 	const lines = getLinesOfString(feed_content, 52);
 
 	const layoutStyle = () => {
@@ -526,33 +466,11 @@ export default FeedContent = props => {
 
 	const onPressPhoto = () => {
 		props.onPressPhoto(props.data);
-		// console.log('props', route.name);
-		// if (feed_type == 'report' || feed_type == 'missing') {
-		// 	if (feed_type == 'report') {
-		// 		navigation.navigate('ReportDetail', {_id: _id});
-		// 	} else {
-		// 		let sexValue = '';
-		// 		switch (missing_animal_sex) {
-		// 			case 'male':
-		// 				sexValue = '남';
-		// 				break;
-		// 			case 'female':
-		// 				sexValue = '여';
-		// 				break;
-		// 			case 'unknown':
-		// 				sexValue = '성별모름';
-		// 				break;
-		// 		}
-		// 		const titleValue = missing_animal_species + '/' + missing_animal_species_detail + '/' + sexValue;
-		// 		navigation.navigate('MissingAnimalDetail', {title: titleValue, _id: _id});
-		// 	}
-		// }
 	};
 
 	const onPressLabel = user => {
 		setPressed(true);
 		if (!pressed) {
-			console.log('user', user);
 			navigation.navigate({key: user._id, name: 'UserProfile', params: {userobject: user}});
 		}
 	};
@@ -561,16 +479,16 @@ export default FeedContent = props => {
 		<View style={[layoutStyle()]}>
 			<View style={[style.feedContent]}>
 				<View style={[style.userLocationLabel_view_feedContent]}>
-					<View style={[style.userLocationLabel_feedContent]}>
+					<View style={[style.userLocationLabel_feedContent, {}]}>
 						{send != 'false' ? (
 							send ? (
 								<UserLocationTimeLabel
 									data={send}
 									onClickLabel={onPressLabel}
-									location={feed_location}
+									location={data.feed_location}
 									time={feed_date}
 									isLarge
-									publicType={props.data.feed_public_type}
+									publicType={data.feed_public_type}
 								/>
 							) : (
 								<UserLocationTimeLabel empty={true} time={feed_date} isLarge location={feed_location} publicType={props.data.feed_public_type} />
@@ -579,30 +497,19 @@ export default FeedContent = props => {
 							<></>
 						)}
 
-						<View style={{flexDirection: 'row', alignItems: 'center'}}>
+						<View style={{flexDirection: 'row', alignItems: 'center', position: 'absolute', right: 0}}>
 							{!isMissingReportRoute ? (
 								<View style={{flexDirection: 'row', alignItems: 'center'}}>
 									<View style={[feedContent_style.status /*{width:130*DP,height:38*DP}*/]}>
 										{feed_is_protect_diary && (
-											<View
-												style={{
-													width: 130 * DP,
-													height: 38 * DP,
-													justifyContent: 'center',
-													alignSelf: 'flex-end',
-													alignItems: 'center',
-													borderColor: MAINCOLOR,
-													borderRadius: 10 * DP,
-													borderWidth: 2 * DP,
-													marginRight: 10 * DP,
-												}}>
+											<View style={style.protect_diary}>
 												<Text style={[txt.roboto24, txt.maincolor]}>임보일기</Text>
 											</View>
 										)}
 									</View>
 
 									{props.data.feed_writer_id ? (
-										<View style={[{width: 100 * DP, height: 50 * DP, alignItems: 'flex-end', justifyContent: 'center'}]}>
+										<View style={[{height: 50 * DP, alignItems: 'flex-end', justifyContent: 'center'}]}>
 											<Meatball50_GRAY20_Horizontal onPress={onClickMeatball} />
 										</View>
 									) : (
@@ -634,51 +541,53 @@ export default FeedContent = props => {
 						<View style={[style.feedMedia_feed]}>
 							<FeedMedia data={data} onPressPhoto={onPressPhoto} isView={props.isView} />
 						</View>
-						<View style={[feed_templete_style.likeCommentButtons_view]}>
-							<View style={[feed_templete_style.likeCommentInfo_view_feed]}>
-								<TouchableOpacity onPress={props.toggleFeedLike}>
-									<View style={feed_templete_style.likeButtonWrapper}>
-										<View style={[feed_templete_style.like48]}>{props.isLike ? <Like48_Filled /> : <Like48_Border />}</View>
-										<View style={[feed_templete_style.like_count_feed]}>
-											<Text style={[txt.roboto24, {color: GRAY10}]}>{JSON.stringify(props.likeCount)}</Text>
+						{!props.isComment && (
+							<View style={[feed_templete_style.likeCommentButtons_view]}>
+								<View style={[feed_templete_style.likeCommentInfo_view_feed]}>
+									<TouchableOpacity onPress={props.toggleFeedLike}>
+										<View style={feed_templete_style.likeButtonWrapper}>
+											<View style={[feed_templete_style.like48]}>{props.isLike ? <Like48_Filled /> : <Like48_Border />}</View>
+											<View style={[feed_templete_style.like_count_feed]}>
+												<Text style={[txt.roboto24, {color: GRAY10}]}>{JSON.stringify(props.likeCount)}</Text>
+											</View>
 										</View>
-									</View>
-								</TouchableOpacity>
-								<TouchableOpacity onPress={moveToCommentList}>
-									<View style={feed_templete_style.commentButtonWrapper}>
-										<View style={organism_style.like48}>
-											<Comment48_Border />
+									</TouchableOpacity>
+									<TouchableOpacity onPress={moveToCommentList}>
+										<View style={feed_templete_style.commentButtonWrapper}>
+											<View style={organism_style.like48}>
+												<Comment48_Border />
+											</View>
+											<View style={[organism_style.comment_count_feed]}>
+												<Text style={[txt.roboto24, {color: GRAY10, marginLeft: -15 * DP}]}>{commentCount}</Text>
+											</View>
 										</View>
-										<View style={[organism_style.comment_count_feed]}>
-											<Text style={[txt.roboto24, {color: GRAY10, marginLeft: -15 * DP}]}>{commentCount}</Text>
+									</TouchableOpacity>
+								</View>
+								{props.data.feed_writer_id ? (
+									<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
+										<View style={[organism_style.favoriteTag_feedContent]}>
+											{/* {props.data.feed_writer_id.is_favorite ? ( */}
+											{isFavorite ? (
+												<TouchableOpacity onPress={() => onFavorite(false)}>
+													<FavoriteTag48_Filled />
+												</TouchableOpacity>
+											) : (
+												<TouchableOpacity onPress={() => onFavorite(true)}>
+													<FavoriteTag48_Border />
+												</TouchableOpacity>
+											)}
 										</View>
-									</View>
-								</TouchableOpacity>
-							</View>
-							{props.data.feed_writer_id ? (
-								<View style={[organism_style.favoriteTag_view_feedContent, {}]}>
-									<View style={[organism_style.favoriteTag_feedContent]}>
-										{/* {props.data.feed_writer_id.is_favorite ? ( */}
-										{isFavorite ? (
-											<TouchableOpacity onPress={() => onFavorite(false)}>
-												<FavoriteTag48_Filled />
-											</TouchableOpacity>
-										) : (
-											<TouchableOpacity onPress={() => onFavorite(true)}>
-												<FavoriteTag48_Border />
-											</TouchableOpacity>
+										{false && (
+											<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
+												<Text style={[txt.roboto24, {color: GRAY10}]}>{count_to_K(props.data.feed_writer_id.user_favorite_count)}</Text>
+											</View>
 										)}
 									</View>
-									{false && (
-										<View style={[organism_style.like_count_feedContent, feedContent_style.like_count]}>
-											<Text style={[txt.roboto24, {color: GRAY10}]}>{count_to_K(props.data.feed_writer_id.user_favorite_count)}</Text>
-										</View>
-									)}
-								</View>
-							) : (
-								<></>
-							)}
-						</View>
+								) : (
+									<></>
+								)}
+							</View>
+						)}
 					</>
 				) : (
 					<></>
@@ -778,6 +687,18 @@ const style = StyleSheet.create({
 		// height: 750 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
+	},
+	protect_diary: {
+		width: 130 * DP,
+		height: 38 * DP,
+		justifyContent: 'center',
+		alignSelf: 'flex-end',
+		alignItems: 'center',
+		borderColor: MAINCOLOR,
+		borderRadius: 10 * DP,
+		borderWidth: 2 * DP,
+		marginRight: 10 * DP,
+		bottom: 4 * DP,
 	},
 });
 

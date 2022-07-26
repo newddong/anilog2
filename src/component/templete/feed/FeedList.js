@@ -11,6 +11,7 @@ import {
 	PixelRatio,
 	ActivityIndicator,
 	TouchableWithoutFeedback,
+	TouchableOpacity
 } from 'react-native';
 import {APRI10, WHITE} from 'Root/config/color';
 import {Write94, Camera54} from 'Atom/icon';
@@ -43,7 +44,6 @@ export default FeedList = ({route}) => {
 			moveToTop();
 		}
 	}, [route.params]);
-
 	React.useEffect(() => {
 		switch (route.name) {
 			case 'UserFeedList':
@@ -147,7 +147,7 @@ export default FeedList = ({route}) => {
 						}, 0);
 						return {
 							...v,
-							offset: offset,
+							offset: route.name == 'MainHomeFeedList'?offset+276*DP:offset,
 						};
 					}),
 			);
@@ -363,7 +363,7 @@ export default FeedList = ({route}) => {
 				getUserTaggedFeedList(
 					params,
 					result => {
-						console.log('result / getUserTaggedFeedList', result);
+						// console.log('result / getUserTaggedFeedList', result);
 						let res = result.msg.map((v, i) => v.usertag_feed_id);
 						result.msg.map((v, i) => {
 							res[i].feed_is_like = v.feed_is_like;
@@ -433,17 +433,13 @@ export default FeedList = ({route}) => {
 					{userobject_id: userGlobalObject.userInfo._id},
 					({msg}) => {
 						// console.log('msg', msg);
-						// let temp = msg.filter(x => x.favorite_feed_id.feed_is_delete != true).map(data => data.favorite_feed_id);
 						let temp = msg;
-						console.log('msg len', msg.length);
-						console.log('temp len', temp.length);
+						temp = temp.filter(x => x.favorite_feed_id.feed_is_delete != true);
 						temp.map((v, i) => {
-							// console.log('v.temp[i]', temp[i].feed_is_like);
-							temp[i].feed_is_like = v.feed_is_like;
-							temp[i].is_favorite = v.is_favorite;
+							temp[i].favorite_feed_id.feed_is_like = v.feed_is_like;
+							temp[i].favorite_feed_id.is_favorite = v.is_favorite;
 						});
-						temp = temp.filter(x => x.favorite_feed_id.feed_is_delete != true).map(data => data.favorite_feed_id);
-						// console.log('temp temp', temp, msg);
+						temp = temp.map(data => data.favorite_feed_id);
 						setFeed(temp);
 					},
 					error => {
@@ -453,7 +449,6 @@ export default FeedList = ({route}) => {
 							});
 						});
 					},
-					// console.log("");
 				);
 				break;
 			default:
@@ -565,7 +560,7 @@ export default FeedList = ({route}) => {
 	};
 	const [viewIndex, setViewIndex] = React.useState([]);
 	const renderItem = ({item, index}) => {
-		return <Feed data={item} deleteFeed={deleteFeedItem} isView={focused && viewIndex == index} onPressPhoto={onPressPhoto} />;
+		return <Feed data={item} deleteFeed={deleteFeedItem} isView={focused&& viewIndex == index} onPressPhoto={onPressPhoto} />;
 		// return (focused&&<View style={{backgroundColor:viewIndex==index?'red':'blue'}}><Feed data={item} deleteFeed={deleteFeedItem} isView={focused&&viewIndex==index}/></View>);
 	};
 
@@ -577,7 +572,7 @@ export default FeedList = ({route}) => {
 		setRefreshing(true);
 		wait(0).then(() => setRefreshing(false));
 	};
-
+	
 	const rememberScroll = e => {
 		if (e.nativeEvent.contentOffset.y > 0) {
 			userGlobalObject.t = e.nativeEvent.contentOffset;
@@ -590,7 +585,7 @@ export default FeedList = ({route}) => {
 			}
 		}
 	};
-
+	// console.log('ddsadf',vvvv)
 	const moveToTop = () => {
 		flatlist.current.scrollToOffset({animated: true, offset: 0});
 	};
@@ -642,7 +637,7 @@ export default FeedList = ({route}) => {
 					onScroll={rememberScroll}
 					ItemSeparatorComponent={separatorComp}
 					onViewableItemsChanged={viewable}
-					viewabilityConfig={{waitForInteraction: false, viewAreaCoveragePercentThreshold: 50, minimumViewTime: 1}}
+					viewabilityConfig={{waitForInteraction: false, viewAreaCoveragePercentThreshold: 40, minimumViewTime: 1}}
 					windowSize={4}
 					decelerationRate={0.9}
 					maxToRenderPerBatch={5}
@@ -687,6 +682,10 @@ export default FeedList = ({route}) => {
 					</View>
 				</View>
 			)}
+			{/*센트리오류 테스트*/}
+			{false&&<TouchableOpacity onPress={()=>{console.log(androidError)}} style={{width:100,height:100,backgroundColor:'yellow',position:'absolute'}}>
+				<View style={{width:100,height:100,backgroundColor:'blue',position:'absolute'}}></View>
+				</TouchableOpacity>}
 			{false && (
 				<View style={{backgroundColor: 'red', width: 750 * DP, top: 0, position: 'absolute'}}>
 					<View style={{backgroundColor: 'yellow', marginBottom: 20}}>
@@ -813,7 +812,6 @@ const styles = StyleSheet.create({
 		alignSelf: 'center',
 
 		marginBottom: 30 * DP,
-		// backgroundColor: 'yellow',
 		// borderTopWidth: 2 * DP,
 		// borderTopColor: GRAY40,
 	},

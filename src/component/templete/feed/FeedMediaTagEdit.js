@@ -32,7 +32,23 @@ export default FeedMediaTagEdit = props => {
 	const feedData = route?route.params:[];
 	const [tagScreens, setTagScreens] = React.useState(feedData.feed_medias ?? []);
 	const [scroll, setScroll] = React.useState(true);
+	const [focused, setFocused] = React.useState(true);
 	console.log('feedData', feedData, navState);
+
+	React.useEffect(() => {
+		const focus = props.navigation.addListener('focus', () => {
+			setFocused(true);
+		});
+		const blur = props.navigation.addListener('blur', () => {
+			//동영상 모두 정지로
+			setFocused(false);
+			// console.log('feedlist blur');
+		});
+		return ()=>{
+			focus();
+			blur();
+		}
+	}, [props.navigation]);
 
 	const onEndTagMove = (tag, uri) => {
 		// console.log('onTagmoveEnd', tag);
@@ -94,16 +110,22 @@ export default FeedMediaTagEdit = props => {
 		// 	}
 		// });
 	};
+	const [swiperIndex, setSwiperIndex] = React.useState(0);
+	const indexChange = index => {
+		console.log('index', index);
+		setSwiperIndex(index);
+	};
 
 	const renderItems = () => {
 		if (tagScreens.length < 1) return false;
-		return tagScreens.map((v, i) => (
+		return tagScreens.map((v, idx) => (
 			<PhotoTagItem
 				style={lo.box_img}
 				uri={v.media_uri}
 				isVideo={v.is_video}
 				taglist={v.tags}
 				key={v.tags.reduce((a,c)=>a+c.pos.x+c.pos.y,0)}
+				onShow={focused&&idx == swiperIndex}
 				onMakeTag={onMakeTag}
 				onDeleteTag={onDeleteTag}
 				viewmode={false}
@@ -126,6 +148,7 @@ export default FeedMediaTagEdit = props => {
 					scrollEventThrottle={16}
 					activeDot={false}
 					dot={false}
+					onIndexChanged={indexChange}
 					renderPagination={(index, total, context) => {
 						return tagScreens.length == 0 ? (
 							<></>

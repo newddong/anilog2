@@ -14,6 +14,42 @@ export default community_obj = {
 		},
 	},
 	review: [],
+	free: [],
+	deleted_list: [],
+	editedList: [],
+};
+
+export const pushEditedCommunityList = res => {
+	const findIndex = community_obj.editedList.findIndex(e => e._id == res._id);
+	if (findIndex != -1) {
+		community_obj.editedList[findIndex] = res;
+	} else {
+		community_obj.editedList.push(res);
+	}
+};
+
+export const pushReviewList = arr => {
+	arr.map((v, i) => {
+		const find = community_obj.review.findIndex(e => e._id == v._id);
+		if (find == -1) {
+			//현 메모리에 저장되어 있지않은 리뷰아이템만 추가
+			community_obj.review.push(v);
+		} else {
+			community_obj.review[find] = v;
+		}
+	});
+};
+
+export const pushFreeList = arr => {
+	arr.map((v, i) => {
+		const find = community_obj.free.findIndex(e => e._id == v._id);
+		if (find == -1) {
+			//현 메모리에 저장되어 있지않은 리뷰아이템만 추가
+			community_obj.free.push(v);
+		} else {
+			community_obj.free[find] = v;
+		}
+	});
 };
 
 export const updateReview = (isLike, id, bool, count) => {

@@ -5,3 +5,6 @@ appcenter codepush release-react -a pinefriends/anilog-android-1 -d Staging
 appcenter codepush release-react -a pinefriends/anilogANDROID
 appcenter codepush release-react -a pinefriends/anilogIOS -d Production
 appcenter codepush release-react -a pinefriends/anilog-android-1 -d Production
+
+
+appcenter codepush release -a pinefriends/anilogIOS -d Staging -c ./index.bundle -t 1.0.0

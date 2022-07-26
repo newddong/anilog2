@@ -24,7 +24,7 @@ import {useNavigation} from '@react-navigation/core';
 
 //반려동물 상세 페이지
 export default PetInfoSetting = ({route}) => {
-	// console.log('PetInfoSetting / route.params', route.params);
+	console.log('PetInfoSetting / route.params', route.params);
 	const navigation = useNavigation();
 	const [petData, setPetData] = React.useState('false'); // 현재 반려동물 프로필 데이터
 	const [familyAccountList, setFamilyAccountList] = React.useState([]); //가족 계정 목록 데이터
@@ -73,6 +73,7 @@ export default PetInfoSetting = ({route}) => {
 				setPetData(result.msg);
 				// console.log('result . pet data', result.msg);
 				setSpeices(result.msg.pet_species);
+				setUserIntro_temp(result.msg.user_introduction);
 				console.log('result.msg.pet_species_detail', result.msg.pet_species_detail);
 				setKind(result.msg.pet_species_detail);
 			},
@@ -988,12 +989,11 @@ export default PetInfoSetting = ({route}) => {
 								<View style={[{flexDirection: 'row'}, {marginBottom: 30 * DP}]}>
 									<Input30
 										alert_msg={WEIGHT_INPUT_FORM_INFO}
-										description="info"
+										// description="info"
 										showmsg={false}
 										confirm={true}
 										showTitle={false}
 										width={694}
-										height={104}
 										placeholder={'몸무게 입력'}
 										showCrossMark={false}
 										onChange={onChangeKg}

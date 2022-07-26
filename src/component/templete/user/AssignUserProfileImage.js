@@ -15,7 +15,7 @@ export default AssignUserProfileImage = props => {
 	const [imgSelected, setImgSelected] = React.useState();
 	const [nickname, setNickname] = React.useState('');
 	const [confirmed, setConfirmed] = React.useState(false);
-	console.log('프로필 사진 props props propss', props);
+	console.log('프로필 사진 props props propss', props.route.params);
 	React.useEffect(() => {
 		if (props.route.params.selectedPhoto && props.route.params.selectedPhoto.length > 0) {
 			let selected = props.route.params.selectedPhoto[0];
@@ -29,7 +29,8 @@ export default AssignUserProfileImage = props => {
 
 	//확인버튼
 	const pressConfirm = () => {
-		let params = {...props.route.params.user_data, user_nickname: nickname, user_profile_uri: imgSelected};
+		let params = {...props.route.params, user_nickname: nickname, user_profile_uri: imgSelected};
+		console.log('params!!!', params);
 		nicknameDuplicationCheck(
 			{user_nickname: params.user_nickname},
 			result => {

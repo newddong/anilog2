@@ -53,33 +53,31 @@ export default FeedMedia = props => {
 		feed_comment_count,
 		feed_writer_id,
 		feed_avatar_id,
+		_id,
 	} = props.data;
 
 	const navigation = useNavigation();
 	const [data, setData] = React.useState(props.data);
 	const emergency_title = feed_type == 'report' ? '제보' : feed_type == 'missing' ? '실종' : '';
-	const isEmergency = feed_type == 'report' || feed_type == 'missing';
-	const animal_species = missing_animal_species || report_animal_species;
-	const species_detail = missing_animal_species_detail || report_animal_species_detail;
-	const animal_species_detail = species_detail?.includes('un') || !species_detail ? '' : ' / ' + species_detail;
-	const emergency_location = missing_animal_lost_location || report_witness_location;
 	const contentParsing = feed_content.replace(/(&[#|@]){2}(.*?)%&%.*?(&[#|@]){2}/g, '$2');
 
 	let newMissingDate = '';
-	let splitAddress = '';
 	let newMissingAddress = '';
 
 	React.useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', () => {
-			const findIndex = feed_obj.list.findIndex(e => e._id == props.data._id);
-			if (findIndex != -1) {
-				if (feed_obj.shouldUpdateByEdit && feed_obj.edit_obj && feed_obj.edit_obj._id == props.data._id) {
-					console.log(';feed_obj.edit_obj', feed_obj.edit_obj?.report_witness_location);
-					setData(feed_obj.edit_obj);
+		try {
+			const unsubscribe = navigation.addListener('focus', () => {
+				const findIndex = feed_obj.list.findIndex(e => e._id == props.data._id);
+				const isEditedList = feed_obj.edited_list.map(v => v._id).includes(props.data._id);
+				if (findIndex != -1 && isEditedList) {
+					const edited_index = feed_obj.edited_list.findIndex(e => e._id == _id);
+					setData(feed_obj.edited_list[edited_index]);
 				}
-			}
-		});
-		return unsubscribe;
+			});
+			return unsubscribe;
+		} catch (err) {
+			console.log('err', err);
+		}
 	}, []);
 
 	if (feed_type == 'missing') {
@@ -110,35 +108,11 @@ export default FeedMedia = props => {
 			console.log('err', err);
 		}
 	}
-	// console.log(props.data.medias);
-	const onSelect = () => {
-		props.onSelect(props.data.feed_id);
-		// setSelected(!selected);
-	};
 
-	const getFeedIcon = () => {
-		//data.medias의 값들 중 video형식의 media가 하나 이상 존재하는 경우
-		if (feed_medias.some(v => v.isVideo == 'video')) {
-			return (
-				<View style={{position: 'absolute', top: 290 * DP, left: 328 * DP}}>
-					<VideoPlay_Feed />
-				</View>
-			);
-			//data.medias 배열의 길이가 1개 이상인 경우
-		} else if (feed_medias.length > 1) {
-			return (
-				<View style={{position: 'absolute', top: 20 * DP, left: 20 * DP}}>
-					<ImageList48 />
-				</View>
-			);
-		} else return false;
-	};
-
-	const onPressPhoto = () => {
-		Modal.popPhotoListViewModal(
-			feed_medias.map(v => v.media_uri),
-			() => Modal.close(),
-		);
+	const onPressPhoto = uri => {
+		console.log(feed_medias);
+		let list = feed_medias.filter(v => !v.is_video && v.media_uri != uri);
+		Modal.popPhotoListViewModal([uri].concat(list.map(v => v.media_uri)), () => Modal.close());
 	};
 
 	const onPressImg = () => {
@@ -177,7 +151,7 @@ export default FeedMedia = props => {
 					renderPagination={pagenation}
 					onIndexChanged={indexChange}
 					horizontal={true}>
-					{feed_medias.map((data, idx) => {
+					{data.feed_medias.map((data, idx) => {
 						return (
 							<React.Fragment key={idx}>
 								<PhotoTagItem
@@ -214,7 +188,7 @@ export default FeedMedia = props => {
 				false
 			)}
 			{feed_type == 'missing' ? (
-				<View style={[style.emergency_background]}>
+				<TouchableOpacity onPress={onPressImg} style={[style.emergency_background, {}]}>
 					<View style={{flexDirection: 'row'}}>
 						<View style={{flex: 1}}>
 							<Text style={[txt.roboto38b, {color: 'white', lineHeight: 62 * DP}]} numberOfLines={3}>
@@ -233,12 +207,12 @@ export default FeedMedia = props => {
 							<Text style={[txt.noto32, {color: 'white'}]}>실종 장소: {newMissingAddress}</Text>
 						</View>
 					</View>
-				</View>
+				</TouchableOpacity>
 			) : (
 				false
 			)}
 			{feed_type == 'report' ? (
-				<View style={[style.emergency_background]}>
+				<TouchableOpacity onPress={onPressImg} style={[style.emergency_background]}>
 					<View style={[{flexDirection: 'column'}]}>
 						<Text style={[txt.roboto38b, {color: 'white', lineHeight: 62 * DP}]} numberOfLines={1}>
 							{data.report_witness_location}
@@ -252,7 +226,7 @@ export default FeedMedia = props => {
 							</Text>
 						</View>
 					</View>
-				</View>
+				</TouchableOpacity>
 			) : (
 				false
 			)}

@@ -1,14 +1,10 @@
 import React from 'react';
 import {FlatList, Platform, ScrollView, Text, View, StyleSheet, SafeAreaView, ActivityIndicator, RefreshControl} from 'react-native';
-import {accountHashList} from 'Organism/style_organism copy';
-import UserNote from '../../organism/listitem/UserNote';
 import DailyAlarm from '../../organism/list/DailyAlarm';
 import {GRAY10, GRAY20, GRAY30, GRAY40, WHITE} from 'Root/config/color';
 import {getNoticeUserList} from 'Root/api/noticeuser';
 import _ from 'lodash';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {temp_inputLongText} from 'Root/i18n/msg';
-import {lo} from '../style_address';
 import {getUserProfile, setAlarmStatus} from 'Root/api/userapi';
 import {CommonActions, useNavigationState} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
@@ -19,6 +15,9 @@ import {getAppliesRecord} from 'Root/api/protectapi';
 import {getCommunityByObjectId} from 'Root/api/community';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {txt} from 'Root/config/textstyle';
+import Modal from 'Root/component/modal/Modal';
+import moment from 'moment';
+import {day} from 'Root/i18n/msg';
 
 const wait = timeout => {
 	return new Promise(resolve => setTimeout(resolve, timeout));
@@ -32,6 +31,7 @@ const AlarmList = props => {
 	const [data, setData] = React.useState();
 	const [isEmpty, setIsEmpty] = React.useState();
 	const [loading, setLoading] = React.useState(true);
+	const [navLoading, setNavLoading] = React.useState(false);
 	const navigation = useNavigation();
 	let count = 0;
 	const [refreshing, setRefreshing] = React.useState(false);
@@ -39,8 +39,12 @@ const AlarmList = props => {
 
 	const onRefresh = React.useCallback(() => {
 		setRefreshing(true);
-
 		wait(1000).then(() => getAlarmList());
+	}, []);
+
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => setNavLoading(false));
+		return unsubscribe;
 	}, []);
 
 	React.useEffect(() => {
@@ -48,27 +52,42 @@ const AlarmList = props => {
 		setAlarmStatus(
 			{user_object_id: userGlobalObject.userInfo?._id, user_alarm: false},
 			result => {
-				console.log('setAlarmStatus result', result);
+				// console.log('setAlarmStatus result', result);
 			},
 			err => {
 				console.log('setAlarmStatus err', err);
 			},
 		);
 	}, []);
+
 	const getAlarmList = () => {
 		let asyncAlarm;
 		AsyncStorage.getItem('AlarmList', (err, result) => {
 			asyncAlarm = result;
 		});
-		let temp = [[], [], []];
+		let temp = [[], [], [], []];
 		getNoticeUserList(
 			{},
 			result => {
-				console.log('result', result.msg);
+				// console.log('result', result.msg);
+				let today = moment();
+				let tempNumber = 0;
 				temp[0] = [...result.msg.today];
 				temp[1] = [...result.msg.yesterday];
-				temp[2] = [...result.msg.thisweek];
-				console.log('temp', temp[0].length, temp[1].length, temp[2].length);
+				for (let i in {...result.msg.thisweek}) {
+					// console.log('IIII', result.msg.thisweek[i]);
+					let days = result.msg.thisweek[i].notice_user_date;
+
+					if (moment.duration(today.diff(days)).asDays() < 7) {
+						temp[2].push(result.msg.thisweek[i]);
+					} else {
+						temp[3].push(result.msg.thisweek[i]);
+					}
+				}
+
+				// temp[2] = [...result.msg.thisweek];
+				// console.log('temp', temp[0].length, temp[1].length, temp[2].length);
+				console.log('temp', temp);
 				setData(temp);
 				// if (!_.isEqual(JSON.stringify(result.msg), asyncAlarm)) {
 				// 	AsyncStorage.setItem('AlarmList', JSON.stringify(result.msg));
@@ -84,25 +103,16 @@ const AlarmList = props => {
 			},
 		);
 	};
-	const onLabelClick = data => {
-		// console.log('aa', data.target_object_type, data);
-		let navState = props.navigation.getState();
-		// console.log('navState', navState);
 
+	const onLabelClick = data => {
+		console.log('target_object_type', data.target_object_type);
+		setNavLoading(true);
 		switch (data.target_object_type) {
-			case 'comment':
-				break;
 			case 'FollowObject':
 				getUserProfile(
 					{userobject_id: data.notice_user_related_id._id},
 					result => {
-						console.log('result', result.msg);
-						// navigation.dispatch({
-						// 	...CommonActions.reset({
-						// 		index: 1,
-						// 		routes: [{name: 'MainTab'}, {name: 'AlarmList'}, {name: 'Profile', params: {userobject: result.msg}}],
-						// 	}),
-						// });
+						setNavLoading(false);
 						navigation.dispatch(
 							CommonActions.navigate({
 								name: 'UserProfile',
@@ -112,6 +122,7 @@ const AlarmList = props => {
 					},
 					err => {
 						console.log('err', err);
+						setNavLoading(false);
 					},
 				);
 
@@ -125,26 +136,42 @@ const AlarmList = props => {
 				);
 				break;
 			case 'FeedObject':
+				// console.log('data.notice_object_type', data);
 				if (data.notice_object_type == 'LikeFeedObject') {
 					var selected = {_id: data.target_object};
-					getUserProfile({userobject_id: data.notice_user_receive_id}, result => {
-						// navigation.dispatch({
-						// 	...CommonActions.reset({
-						// 		index: 1,
-						// 		routes: [{name: 'MainTab'}, {name: 'AlarmList'}, {name: 'UserFeedList', params: {userobject: result.msg, selected: selected}}],
-						// 	}),
-						// });
-						navigation.dispatch(
-							CommonActions.navigate({
-								name: 'UserFeedList',
-								params: {userobject: result.msg, selected: selected},
-							}),
-						);
-					});
+					getUserProfile(
+						{userobject_id: data.notice_user_receive_id},
+						result => {
+							// navigation.dispatch({
+							// 	...CommonActions.reset({
+							// 		index: 1,
+							// 		routes: [{name: 'MainTab'}, {name: 'AlarmList'}, {name: 'UserFeedList', params: {userobject: result.msg, selected: selected}}],
+							// 	}),
+							// });
+							console.log('result', result);
+							if (result.msg.user_is_delete) {
+								Modal.popOneBtn('탈퇴한 유저의 계정입니다.', '확인', () => Modal.close());
+							} else {
+								setNavLoading(false);
+								navigation.dispatch(
+									CommonActions.navigate({
+										name: 'UserFeedList',
+										params: {userobject: result.msg, selected: selected},
+									}),
+								);
+							}
+						},
+						err => {
+							setNavLoading(false);
+							console.log('err / FeedObject', err);
+						},
+					);
 				} else if (data.notice_object_type == 'CommentObject') {
 					getFeedDetailById(
 						{feedobject_id: data.target_object},
 						result => {
+							console.log(navigation.getState());
+							setNavLoading(false);
 							navigation.dispatch(
 								CommonActions.navigate({
 									// name: 'FeedCommentList',
@@ -152,6 +179,7 @@ const AlarmList = props => {
 									params: {
 										feedobject: result.msg,
 										showAllContents: true,
+										showMedia: true,
 										scroll: true,
 										target: data.notice_object,
 										parent: data?.notice_comment_parent,
@@ -160,63 +188,99 @@ const AlarmList = props => {
 							);
 						},
 						err => {
+							setNavLoading(false);
 							console.log('getFeedDetail err', err);
+							if (err.includes('없습니다')) {
+								Modal.alert('이미 삭제된 게시글입니다.', Modal.close);
+							}
 						},
 					);
 				}
 				break;
 			case 'FeedUserTagObject':
-				var selected = {_id: data.target_object};
-				console.log('selected', selected);
-				getUserProfile({userobject_id: data.notice_user_related_id._id}, result => {
-					navigation.dispatch(
-						CommonActions.navigate({
-							name: 'UserFeedList',
-							params: {userobject: result.msg, selected: selected},
-						}),
-					);
-				});
+				var selected = {_id: data.notice_object};
+				// console.log('FeedUserTagObject data', data);
+				getFeedDetailById(
+					{feedobject_id: data.notice_object},
+					result => {
+						console.log('result', result);
+
+						navigation.dispatch(
+							CommonActions.navigate({
+								name: 'UserFeedList',
+								params: {
+									userobject: {_id: data.notice_user_related_id._id, user_nickname: data.notice_user_related_id.user_nickname},
+									selected: selected,
+								},
+							}),
+						);
+					},
+					err => {
+						setNavLoading(false);
+						console.log('getFeedDetail err', err);
+						if (err.includes('없습니다')) {
+							Modal.alert('이미 삭제된 게시글입니다.', Modal.close);
+						}
+					},
+				);
 				break;
 			case 'VolunteerActivityApplicantObject':
-				getUserVolunteerActivityList({}, result => {
-					console.log('result', result.msg);
-					let result_msg = result.msg;
-
-					for (let i of result_msg) {
-						if (i._id == data.target_object) {
-							navigation.push('ShelterVolunteerForm', i);
-						}
-					}
-				});
-				break;
-			case 'ProtectionActivityApplicantObject':
-				getApplyDetailById({protect_act_object_id: data.target_object}, result => {
-					let result_msg = result.msg;
-					result_msg.shelter_name = result.msg.proect_act_request_shelter_id.shelter_name;
-					result_msg.protect_request_date = result.msg.protect_act_request_article_id.protect_request_date;
-					result_msg.protect_animal_rescue_location = result.msg.protect_act_request_article_id.protect_animal_id.protect_animal_rescue_location;
-					result_msg.protect_request_photos_uri = result.msg.protect_act_request_article_id.protect_request_photos_uri;
-					result_msg.isNotification = true;
-					result_msg.approved_applicant = data.notice_approved_applicant;
-					navigation.push('ApplyAdoptionDetails', result_msg);
-				});
-
-				break;
-			case 'CommunityObject':
-				console.log('data.target', data.target_object);
-				getCommunityByObjectId(
-					{community_object_id: data.target_object},
+				getUserVolunteerActivityList(
+					{},
 					result => {
-						console.log('getCommunityByObjectId', result);
-						if (result.msg.community_type == 'free') {
-							navigation.push('ArticleDetail', {community_object: result.msg});
-						} else {
-							// navigation.push('ReviewDetail', {community_object: result.msg});
-							navigation.navigate({key: result.msg._id, name: 'ReviewDetail', params: {community_object: result.msg}});
+						console.log('result', result.msg);
+						let result_msg = result.msg;
+
+						for (let i of result_msg) {
+							if (i._id == data.target_object) {
+								navigation.push('ShelterVolunteerForm', i);
+							}
 						}
 					},
 					err => {
 						console.log('err', err);
+						setNavLoading(false);
+					},
+				);
+				break;
+			case 'ProtectionActivityApplicantObject':
+				getApplyDetailById(
+					{protect_act_object_id: data.target_object},
+					result => {
+						setNavLoading(false);
+						let result_msg = result.msg;
+						result_msg.shelter_name = result.msg.proect_act_request_shelter_id.shelter_name;
+						result_msg.protect_request_date = result.msg.protect_act_request_article_id.protect_request_date;
+						result_msg.protect_animal_rescue_location = result.msg.protect_act_request_article_id.protect_animal_id.protect_animal_rescue_location;
+						result_msg.protect_request_photos_uri = result.msg.protect_act_request_article_id.protect_request_photos_uri;
+						result_msg.isNotification = true;
+						result_msg.approved_applicant = data.notice_approved_applicant;
+						navigation.push('ApplyAdoptionDetails', result_msg);
+					},
+					err => {
+						console.log('err', err);
+						setNavLoading(false);
+					},
+				);
+				break;
+			case 'CommunityObject':
+				console.log('data.target', data);
+				getCommunityByObjectId(
+					{community_object_id: data.target_object},
+					result => {
+						setNavLoading(false);
+						// console.log('getCommunityByObjectId', result);
+						if (result.msg.community_type == 'free') {
+							navigation.navigate({key: result.msg._id, name: 'ArticleDetail', params: {community_object: result.msg, comment: true}});
+						} else {
+							// navigation.push('ReviewDetail', {community_object: result.msg});
+							navigation.navigate({key: result.msg._id, name: 'ReviewDetail', params: {community_object: result.msg, comment: true}});
+						}
+					},
+					err => {
+						setNavLoading(false);
+						console.log('err / CommunityObject', err);
+						Modal.alert('이미 삭제된 게시물입니다.');
 					},
 				);
 				break;
@@ -225,9 +289,11 @@ const AlarmList = props => {
 					{protect_request_object_id: data.target_object},
 					result => {
 						console.log('result', result.msg);
+						setNavLoading(false);
 						navigation.push('ProtectCommentList', {protectObject: result.msg, showKeyboard: false});
 					},
 					err => {
+						setNavLoading(false);
 						console.log('getProtectRequestByProtectRequestId err', err);
 					},
 				);
@@ -281,6 +347,11 @@ const AlarmList = props => {
 							]}
 							contentContainerStyle={[{paddingBottom: 150 * DP}]}
 						/>
+						{navLoading && (
+							<View style={styles.loadingContainer}>
+								<ActivityIndicator size={'large'} color={'white'} />
+							</View>
+						)}
 					</View>
 				)}
 			</View>
@@ -316,6 +387,17 @@ const styles = StyleSheet.create({
 		color: GRAY10,
 		width: 694 * DP,
 		paddingHorizontal: 28 * DP,
+	},
+	loadingContainer: {
+		position: 'absolute',
+		left: 0,
+		right: 0,
+		top: 0,
+		bottom: 0,
+		alignItems: 'center',
+		backgroundColor: 'rgba(0,0,0,0.6)',
+		// opacity: 0.2,
+		justifyContent: 'center',
 	},
 });
 

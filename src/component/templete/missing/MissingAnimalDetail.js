@@ -29,6 +29,7 @@ export default MissingAnimalDetail = props => {
 	const [pressed, setPressed] = React.useState(false);
 	const viewShotRef = useRef();
 	const flatlist = useRef();
+	let mounted = true;
 
 	//페이지 진입 시 실종게시글 상세 데이터 및 댓글 목록 api 접속
 	React.useEffect(() => {
@@ -37,7 +38,10 @@ export default MissingAnimalDetail = props => {
 			getCommnetList();
 			setPressed(false);
 		});
-		return unsubscribe;
+		return () => {
+			unsubscribe();
+			mounted = false;
+		};
 	}, []);
 
 	//게시글 상세데이터 api
@@ -47,13 +51,13 @@ export default MissingAnimalDetail = props => {
 				feedobject_id: props.route.params._id,
 			},
 			data => {
+				// console.log('result / MissingAnimalDetail / getFeedDetailById', data.msg);
 				let result = data.msg;
 				result.feed_writer_id.is_favorite = result.is_favorite;
 				setData(result);
 				// console.log('data', data.msg);
-				navigation.setParams({writer: data.msg.feed_writer_id._id, isMissingOrReport: true, feed_object: data.msg});
-				if (props.route.params && props.route.params.from == 'feedList') {
-					// console.log('result', result);
+				if (mounted) {
+					navigation.setParams({writer: data.msg.feed_writer_id._id, isMissingOrReport: true, feed_object: data.msg});
 					const getGender = () => {
 						switch (result.missing_animal_sex) {
 							case 'male':
@@ -69,8 +73,9 @@ export default MissingAnimalDetail = props => {
 					navigation.setOptions({
 						title: `${result.missing_animal_species}/${result.missing_animal_species_detail}${getGender() ? '/' + getGender() : ''}`,
 					});
+
+					fetchMissingPostList(result._id);
 				}
-				fetchMissingPostList(result._id);
 			},
 			err => {
 				console.log('getFeedDetailById / Error / MissingAnimalDetail : ', err);

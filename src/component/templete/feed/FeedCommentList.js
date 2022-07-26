@@ -23,6 +23,7 @@ export default FeedCommentList = props => {
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
 	const [comments, setComments] = React.useState([]);
+	const [commentsLoaded, setCommentsLoaded] = React.useState(false);
 	const [parentComment, setParentComment] = React.useState();
 	const [refresh, setRefresh] = React.useState(true);
 	const keyboardY = useKeyboardBottom(0 * DP);
@@ -59,6 +60,38 @@ export default FeedCommentList = props => {
 		}
 	}, []);
 
+	React.useEffect(() => {
+		if (commentsLoaded) {
+			comments.forEach((current, index) => {
+				if (params.parent) {
+					if (current._id == params.parent) {
+						setTimeout(
+							() =>
+								flatlist.current.scrollToIndex({
+									animated: true,
+									index: index,
+								}),
+
+							500,
+						);
+					}
+				} else {
+					if (current._id == params.target) {
+						setTimeout(
+							() =>
+								flatlist.current.scrollToIndex({
+									animated: true,
+									index: index,
+								}),
+
+							500,
+						);
+					}
+				}
+			});
+		}
+	}, [commentsLoaded]);
+
 	//댓글 리스트 api 접속
 	const fetchData = parent => {
 		getCommentListByFeedId(
@@ -82,6 +115,7 @@ export default FeedCommentList = props => {
 				}
 				setComments(res);
 				updateGlobal(res);
+				setCommentsLoaded(true);
 				setIsLoading(false);
 				if (params.edit && editFromDetailRef) {
 					//실종,제보 상세페이지에서 댓글 수정을 눌렀을 경우 해당 댓글로 스크롤 시도
@@ -104,30 +138,23 @@ export default FeedCommentList = props => {
 	};
 
 	const updateGlobal = res => {
-		console.log('updateGlobal');
 		setIsLoading(false);
 		Modal.close();
-		let recent = res[0]; //가장 최근 댓글
 		let comment_count = res.length; //부모 댓글 총개수
 		res.map((v, i) => {
 			comment_count = comment_count + v.children_count; //자식 댓글있으면 부모 댓글 개수에 추가시킴
 		});
 		let temp = feed_obj.list; //현재 저장된 리스트
-		// console.log('temp', temp);
-		// console.log('comment_count', comment_count);
-		// console.log('params', params.feedobject.feed_comment_count, 'res length', res.length);
-		// console.log('fdd', feed_obj.list.length);
 		const findIndex = temp.findIndex(e => e._id == params.feedobject._id); //현재 보고 있는 피드게시글이 저장된 리스트에서 몇 번째인지
-		// console.log('find', findIndex);
 		temp[findIndex].feed_comment_count = comment_count; //해당 피드게시글의 댓글 개수 갱신
-		temp[findIndex].feed_recent_comment = {
-			//해당 피드게시글의 최근 댓글 갱신
-			comment_contents: recent.comment_contents,
-			comment_id: recent._id,
-			comment_user_nickname: recent.comment_writer_id.user_nickname,
-		};
+		// let recent = res[0]; //가장 최근 댓글
+		// temp[findIndex].feed_recent_comment = {
+		// 	//해당 피드게시글의 최근 댓글 갱신
+		// 	comment_contents: recent.comment_contents,
+		// 	comment_id: recent._id,
+		// 	comment_user_nickname: recent.comment_writer_id.user_nickname,
+		// };
 		feed_obj.list = [...temp]; //갱신
-		feed_obj.shouldUpdateByComment = true; //수정모드 true
 	};
 
 	//답글 쓰기 => Input 작성 후 보내기 클릭 콜백 함수
@@ -478,8 +505,9 @@ export default FeedCommentList = props => {
 						data={params.feedobject}
 						deleteFeed={deleteFeedItem}
 						showAllContents={params.showAllContents}
+						showMedia={params.showMedia ? params.showMedia : false}
+						isComment={true}
 						routeName={props.route.name}
-						showMedia={false}
 					/>
 					<View style={[{width: 694 * DP, height: 2 * DP, marginTop: 10 * DP, backgroundColor: GRAY40, alignSelf: 'center'}]} />
 					<View style={[{width: 694 * DP, alignSelf: 'center', marginTop: 20 * DP}]}>
@@ -531,8 +559,11 @@ export default FeedCommentList = props => {
 					showChild={() => showChild(index)} //답글보기 열기
 					openChild={isOpen} //답글보기 열기 여부
 					editData={editData} //현재 수정 데이터
+					target={params.target}
+					parent={params.parent}
 					replyFromDetail={replyFromDetail} //실종,제보 상세의 댓글리스트에서 답글쓰기가 눌렸을 경우
 				/>
+				{index == comments.length - 1 && <View style={{height: 100 * DP, width: '100%'}} />}
 			</View>
 		);
 	};
@@ -565,7 +596,7 @@ export default FeedCommentList = props => {
 				ref={flatlist}
 			/>
 			{/* Parent Comment 혹은 Child Comment 에서 답글쓰기를 클릭할 시 화면 최하단에 등장 */}
-			{userGlobalObject.userInfo._id != '' && (editComment || props.route.name == 'FeedCommentList') ? (
+			{userGlobalObject.userInfo._id != '' ? (
 				<View style={{position: 'absolute', bottom: keyboardY - 2}} onLayout={onReplyBtnLayout}>
 					<ReplyWriteBox
 						onAddPhoto={onAddPhoto}

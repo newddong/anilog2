@@ -41,11 +41,19 @@ export default MissingReportItem = React.memo(props => {
 	};
 
 	React.useEffect(() => {
-		//즐겨찾기 상태 갱신
+		//수정 발생 시 전역관리 리스트에서 해당 인덱스와 비교 후 갱신 시킴
 		const unsubscribe = navigation.addListener('focus', () => {
-			const findIndex = feed_obj.list.findIndex(e => e._id == props.data._id);
-			if (findIndex != -1) {
-				setData({...data, is_favorite: feed_obj.list[findIndex].is_favorite});
+			try {
+				const findIndex = feed_obj.list.findIndex(e => e._id == props.data._id);
+				const isEditedList = feed_obj.edited_list.map(v => v._id).includes(props.data._id);
+				if (feed_obj.shouldUpdateByEdit && isEditedList) {
+					const edited_index = feed_obj.edited_list.findIndex(e => e._id == props.data._id);
+					setData(feed_obj.edited_list[edited_index]);
+				} else if (findIndex != -1) {
+					setData({...data, is_favorite: feed_obj.list[findIndex].is_favorite});
+				}
+			} catch (err) {
+				console.log('err MissingReport', err);
 			}
 		});
 		return unsubscribe;
@@ -107,10 +115,19 @@ export default MissingReportItem = React.memo(props => {
 		}
 	};
 	const getParsedAddress = () => {
-		let address = data.missing_animal_lost_location;
-		let splitAddress = address.split('"');
-		let newMissingLocation = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
-		return newMissingLocation;
+		try {
+			let newMissingLocation = '';
+			let address = data.missing_animal_lost_location;
+			if (typeof data.missing_animal_lost_location == 'object') {
+				newMissingLocation = address.city + ' ' + address.district + ' ' + address.detail;
+			} else {
+				let splitAddress = address.split('"');
+				newMissingLocation = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
+			}
+			return newMissingLocation;
+		} catch (err) {
+			console.log('err', err);
+		}
 	};
 
 	const checkIsMyPost = () => {
@@ -193,9 +210,9 @@ export default MissingReportItem = React.memo(props => {
 		<View style={[style.container, {height: 266 * DP}]}>
 			<View style={[style.container_basicInfo]}>
 				<View style={[style.protectedThumbnail_container]}>
-					<ProtectedThumbnail data={thumbnailData} onLabelClick={(status, id) => props.onClickLabel(status, id)} />
+					<ProtectedThumbnail data={thumbnailData} onLabelClick={(status, id) => props.onClickLabel(status, id, data)} />
 				</View>
-				<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.2} onPress={() => props.onClickLabel(data.feed_type, data._id)}>
+				<TouchableOpacity activeOpacity={props.inActiveOpacity ? 1 : 0.2} onPress={() => props.onClickLabel(data.feed_type, data._id, data)}>
 					<View>{contents()}</View>
 				</TouchableOpacity>
 				<View style={[style.detail_upper_tag]}>

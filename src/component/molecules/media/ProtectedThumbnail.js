@@ -6,6 +6,8 @@ import {txt} from 'Root/config/textstyle';
 import {Female48, Male48, Blur, RainbowBridge, RainbowBridge_226} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import FastImage from 'react-native-fast-image';
+import {useNavigation} from '@react-navigation/core';
+import feed_obj from 'Root/config/feed_obj';
 /**
  * 버튼 컴포넌트트
  * @param {object} props - Props Object
@@ -14,8 +16,24 @@ import FastImage from 'react-native-fast-image';
  * @param {boolean} props.inActiveOpacity - 전시용일 경우 Touch 액션 제거
  */
 const ProtectedThumbnail = props => {
-	// console.log('props ProtectThumb', props.data);
-	const data = props.data;
+	const navigation = useNavigation();
+	const [data, setData] = React.useState(props.data);
+
+	//해당 보호요청 혹은 실종/제보 게시글의 수정이 발생했을 경우 썸네일을 갱신
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			try {
+				const isEditedList = feed_obj.edited_list.map(v => v._id).includes(props.data._id);
+				if (feed_obj.shouldUpdateByEdit && isEditedList) {
+					const edited_index = feed_obj.edited_list.findIndex(e => e._id == props.data._id);
+					setData({...data, img_uri: feed_obj.edited_list[edited_index].feed_thumbnail});
+				}
+			} catch (err) {
+				console.log('err', err);
+			}
+		});
+		return unsubscribe;
+	}, []);
 
 	const borderByStatus = () => {
 		if (data.status == 'emergency') {

@@ -14,10 +14,6 @@
 		24DD834A9C1C42FE9FE332C9 /* NotoSansKR-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0A068D045B4047B2B4373AC9 /* NotoSansKR-Bold.otf */; };
 		2A31945F28615C46008D24D4 /* RNVideoEditorSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A31945B28615C46008D24D4 /* RNVideoEditorSDK.m */; };
 		2A31946028615C46008D24D4 /* RNImglyKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A31945E28615C46008D24D4 /* RNImglyKit.m */; };
-		2A5FA76C284F0F4C0059B4FC /* libSDWebImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A5FA76B284F0F4C0059B4FC /* libSDWebImage.a */; };
-		2A5FA76E284F0F520059B4FC /* libSDWebImageWebPCoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A5FA76D284F0F520059B4FC /* libSDWebImageWebPCoder.a */; };
-		2A5FA770284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A5FA76F284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a */; };
-		2C7A42484CA9CA675C35D61E /* libPods-anilog-anilogTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4615C9F5C3CE11D85E5CD042 /* libPods-anilog-anilogTests.a */; };
 		38C809C2E250425DBE6E3698 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 03A25EDACADC457B8C7B463B /* Roboto-Italic.ttf */; };
 		39266251E14A4E1C9F361D92 /* Roboto-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B7CC3F2370A94A2B8E77E173 /* Roboto-MediumItalic.ttf */; };
 		4167E5783D00443CB84C5A09 /* Roboto-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EC9C1B8ED74746BFAAF40EDB /* Roboto-BlackItalic.ttf */; };
@@ -29,6 +25,7 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A6656D5242D64B84A760D9E9 /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 76509BC8278D4CF685E56AD9 /* Roboto-BoldItalic.ttf */; };
 		A72774053C0A480B90682CC4 /* Roboto-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9C12F8D39E3F46AA9ADA1233 /* Roboto-LightItalic.ttf */; };
+		AA76E7BFEA59C2324F94D06B /* Pods_anilog_anilogTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEF6219DFF046AF05AB59E /* Pods_anilog_anilogTests.framework */; };
 		B3C88654360E43C29548F8C8 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F3F8D1B05DA044339A2953BF /* Roboto-Regular.ttf */; };
 		BA0CE0382852094F00E45F0D /* smartAlbums.strings in Resources */ = {isa = PBXBuildFile; fileRef = BA0CE0362852094F00E45F0D /* smartAlbums.strings */; };
 		BA0CE03E2852210100E45F0D /* smartAlbums.strings in Resources */ = {isa = PBXBuildFile; fileRef = BA0CE0402852210100E45F0D /* smartAlbums.strings */; };
@@ -36,8 +33,8 @@
 		BA879FE628141CB00052E1E1 /* RNCAssetsLibraryRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = BA879FE328141CB00052E1E1 /* RNCAssetsLibraryRequestHandler.m */; };
 		BA879FE728141CB00052E1E1 /* RNCCameraRollManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BA879FE428141CB00052E1E1 /* RNCCameraRollManager.m */; };
 		BADD4E1093BD4F9096A80D38 /* NotoSansKR-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5F41EF1252CC4F08B3BAF374 /* NotoSansKR-Regular.otf */; };
+		CE3D228EF428630C4EF4A55F /* Pods_anilog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FD73D713D233C9D5B22306C /* Pods_anilog.framework */; };
 		E6C58BF1C3784743B899A910 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FC408770C16F4B2F8C6E5B3C /* Roboto-Thin.ttf */; };
-		FA810DDFD3E9B502570DEDE0 /* libPods-anilog.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B079AF24774A2B10B60DFF49 /* libPods-anilog.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +59,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = anilog/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = anilog/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = anilog/main.m; sourceTree = "<group>"; };
+		231013C1460F6F0FEBD3934F /* Pods-anilog.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-anilog.staging.xcconfig"; path = "Target Support Files/Pods-anilog/Pods-anilog.staging.xcconfig"; sourceTree = "<group>"; };
 		260C0AB6EC0CEFE917F43DCA /* Pods-anilog-anilogTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-anilog-anilogTests.debug.xcconfig"; path = "Target Support Files/Pods-anilog-anilogTests/Pods-anilog-anilogTests.debug.xcconfig"; sourceTree = "<group>"; };
 		2A31945928615C46008D24D4 /* RNImglyKitSubclass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNImglyKitSubclass.h; path = anilog/RNImglyKitSubclass.h; sourceTree = "<group>"; };
 		2A31945A28615C46008D24D4 /* RNVideoEditorSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNVideoEditorSDK.h; path = anilog/RNVideoEditorSDK.h; sourceTree = "<group>"; };
@@ -71,17 +69,18 @@
 		2A31945E28615C46008D24D4 /* RNImglyKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNImglyKit.m; path = anilog/RNImglyKit.m; sourceTree = "<group>"; };
 		2A5FA76B284F0F4C0059B4FC /* libSDWebImage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; name = libSDWebImage.a; path = SDWebImage/libSDWebImage.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A5FA76D284F0F520059B4FC /* libSDWebImageWebPCoder.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; name = libSDWebImageWebPCoder.a; path = SDWebImageWebPCoder/libSDWebImageWebPCoder.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		2A5FA76F284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; name = libSDWebImagePhotosPlugin.a; path = SDWebImagePhotosPlugin/libSDWebImagePhotosPlugin.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		4615C9F5C3CE11D85E5CD042 /* libPods-anilog-anilogTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-anilog-anilogTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A5FA76F284F3B6A0059B4FC /* SDWebImagePhotosPlugin.h */ = {isa = PBXFileReference; explicitFileType = archive.ar; name = SDWebImagePhotosPlugin.h; path = SDWebImagePhotosPlugin/SDWebImagePhotosPlugin.framework/Headers/SDWebImagePhotosPlugin.h; sourceTree = BUILT_PRODUCTS_DIR; };
 		491A95C9D8B44C93826661F1 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Medium.ttf"; path = "../asset/fonts/Roboto-Medium.ttf"; sourceTree = "<group>"; };
+		496EA857809E61F14AC360FA /* Pods-anilog-anilogTests.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-anilog-anilogTests.staging.xcconfig"; path = "Target Support Files/Pods-anilog-anilogTests/Pods-anilog-anilogTests.staging.xcconfig"; sourceTree = "<group>"; };
+		4FD73D713D233C9D5B22306C /* Pods_anilog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_anilog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		589B0AC5A823102178DB5694 /* Pods-anilog-anilogTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-anilog-anilogTests.release.xcconfig"; path = "Target Support Files/Pods-anilog-anilogTests/Pods-anilog-anilogTests.release.xcconfig"; sourceTree = "<group>"; };
+		58EEF6219DFF046AF05AB59E /* Pods_anilog_anilogTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_anilog_anilogTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F41EF1252CC4F08B3BAF374 /* NotoSansKR-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "NotoSansKR-Regular.otf"; path = "../asset/fonts/NotoSansKR-Regular.otf"; sourceTree = "<group>"; };
 		74D65069EA9C4C30A86404F7 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Bold.ttf"; path = "../asset/fonts/Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		76509BC8278D4CF685E56AD9 /* Roboto-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-BoldItalic.ttf"; path = "../asset/fonts/Roboto-BoldItalic.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = anilog/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9C12F8D39E3F46AA9ADA1233 /* Roboto-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-LightItalic.ttf"; path = "../asset/fonts/Roboto-LightItalic.ttf"; sourceTree = "<group>"; };
 		AAC775FFF43F4592ABC47E11 /* Roboto-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Light.ttf"; path = "../asset/fonts/Roboto-Light.ttf"; sourceTree = "<group>"; };
-		B079AF24774A2B10B60DFF49 /* libPods-anilog.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-anilog.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7CC3F2370A94A2B8E77E173 /* Roboto-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-MediumItalic.ttf"; path = "../asset/fonts/Roboto-MediumItalic.ttf"; sourceTree = "<group>"; };
 		BA0CE0372852094F00E45F0D /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = smartAlbums.strings; sourceTree = "<group>"; };
 		BA0CE03F2852210100E45F0D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/smartAlbums.strings; sourceTree = "<group>"; };
@@ -106,7 +105,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C7A42484CA9CA675C35D61E /* libPods-anilog-anilogTests.a in Frameworks */,
+				AA76E7BFEA59C2324F94D06B /* Pods_anilog_anilogTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,10 +113,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA810DDFD3E9B502570DEDE0 /* libPods-anilog.a in Frameworks */,
-				2A5FA770284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a in Frameworks */,
-				2A5FA76C284F0F4C0059B4FC /* libSDWebImage.a in Frameworks */,
-				2A5FA76E284F0F520059B4FC /* libSDWebImageWebPCoder.a in Frameworks */,
+				CE3D228EF428630C4EF4A55F /* Pods_anilog.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,6 +171,8 @@
 				E31176A5D1C6961F817358D8 /* Pods-anilog.release.xcconfig */,
 				260C0AB6EC0CEFE917F43DCA /* Pods-anilog-anilogTests.debug.xcconfig */,
 				589B0AC5A823102178DB5694 /* Pods-anilog-anilogTests.release.xcconfig */,
+				231013C1460F6F0FEBD3934F /* Pods-anilog.staging.xcconfig */,
+				496EA857809E61F14AC360FA /* Pods-anilog-anilogTests.staging.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -182,12 +180,12 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				2A5FA76F284F3B6A0059B4FC /* libSDWebImagePhotosPlugin.a */,
+				2A5FA76F284F3B6A0059B4FC /* SDWebImagePhotosPlugin.h */,
 				2A5FA76D284F0F520059B4FC /* libSDWebImageWebPCoder.a */,
 				2A5FA76B284F0F4C0059B4FC /* libSDWebImage.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				B079AF24774A2B10B60DFF49 /* libPods-anilog.a */,
-				4615C9F5C3CE11D85E5CD042 /* libPods-anilog-anilogTests.a */,
+				4FD73D713D233C9D5B22306C /* Pods_anilog.framework */,
+				58EEF6219DFF046AF05AB59E /* Pods_anilog_anilogTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -392,7 +390,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\nexport NODE_BINARY=/Users/mabel/.nvm/versions/node/v16.13.2/bin/node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+			shellScript = "set -e -x\n\nexport NODE_BINARY=/opt/homebrew/bin/node\n#../node_modules/react-native/scripts/react-native-xcode.sh\nexport EMIT_SOURCEMAP=true\nexport EXTRA_PACKAGER_ARGS=\"--sourcemap-output $DERIVED_FILE_DIR/main.jsbundle.map\" #--sourcemap-sources-root $SRCROOT/..\"\nexport SENTRY_PROPERTIES=../sentry.properties\n# If you are using RN 0.46+\n#../node_modules/@sentry/cli/bin/sentry-cli react-native xcode\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		1363ED4656547214606772C7 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -757,7 +755,7 @@
 		};
 		2A3F418F2862D82B00121824 /* Staging */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E31176A5D1C6961F817358D8 /* Pods-anilog.release.xcconfig */;
+			baseConfigurationReference = 231013C1460F6F0FEBD3934F /* Pods-anilog.staging.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -786,7 +784,7 @@
 		};
 		2A3F41902862D82B00121824 /* Staging */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 589B0AC5A823102178DB5694 /* Pods-anilog-anilogTests.release.xcconfig */;
+			baseConfigurationReference = 496EA857809E61F14AC360FA /* Pods-anilog-anilogTests.staging.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";

@@ -267,7 +267,11 @@ export default SearchReview = props => {
 		if (!filterData.dog && !filterData.cat && !filterData.etc) {
 			filtered = data;
 		}
-		return filtered;
+		const reverse = [];
+		for (let i = filtered.length - 1; i >= 0; i--) {
+			reverse.push(filtered[i]);
+		}
+		return reverse;
 	};
 
 	const filterComponent = () => {

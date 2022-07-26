@@ -121,7 +121,7 @@ export default ReportForm = props => {
 					// district: data.report_location.district,
 				},
 				neighbor => {
-					console.log('getAddressList neighbor', neighbor);
+					// console.log('getAddressList neighbor', neighbor);
 					if (neighbor.msg.length == 0) {
 						setDistrict(['목록없음']);
 					} else {
@@ -331,7 +331,8 @@ export default ReportForm = props => {
 
 	//사진 추가
 	const moveToMultiPhotoSelect = () => {
-		navigation.navigate('MultiPhotoSelect', {prev: {name: route.name, key: route.key}});
+		props.moveToPhotoSelect();
+		// navigation.navigate('MultiPhotoSelect', {prev: {name: route.name, key: route.key}});
 	};
 
 	return (

@@ -39,15 +39,22 @@ const ReviewFavoriteBriefItem = props => {
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			const findIndex = community_obj.review.findIndex(e => e._id == props.data._id);
+			const isEdited = community_obj.editedList.findIndex(e => e._id == props.data._id);
+			let temp = {...data};
+			if (isEdited != -1) {
+				temp = community_obj.editedList[isEdited]; //수정된 내역이 있을 경우 해당 데이터로 갱신
+			}
 			if (findIndex != -1) {
-				setData({
-					...data,
+				temp = {
+					...temp,
 					community_is_favorite: community_obj.review[findIndex].community_is_favorite,
 					community_is_like: community_obj.review[findIndex].community_is_like,
 					community_like_count: community_obj.review[findIndex].community_like_count,
-				});
-			} else {
+					community_comment_count: community_obj.review[findIndex].community_comment_count,
+				};
 			}
+			// console.log('temp', temp.community_title, temp.community_comment_count);
+			setData(temp);
 		});
 		return unsubscribe;
 	}, []);
@@ -107,9 +114,7 @@ const ReviewFavoriteBriefItem = props => {
 		data.community_interests.interests_interior.map(v => category_sum_list.push(v));
 	}
 	const getCategory = () => {
-		if (!data.community_interests.hasOwnProperty('interests_trip')) {
-			return <></>;
-		} else {
+		try {
 			let filter = [];
 			if (props.selectMode) {
 				filter = category_sum_list.length > 2 ? category_sum_list.slice(0, 2) : category_sum_list;
@@ -138,6 +143,8 @@ const ReviewFavoriteBriefItem = props => {
 					);
 				}
 			});
+		} catch (err) {
+			console.log('err', err);
 		}
 	};
 

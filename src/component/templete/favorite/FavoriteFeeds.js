@@ -35,21 +35,18 @@ export default FavoriteFeeds = ({route}) => {
 	const [loading, setLoading] = React.useState(false);
 
 	React.useEffect(() => {
-		getList();
-	}, []);
-
-	React.useEffect(()=>{
 		const unsubscribe = navigation.addListener('focus', () => {
 			setFocused(true);
+			getList();
 		});
-		return unsubscribe;
-	},[navigation]);
-	React.useEffect(()=>{
-		const unsubscribe = navigation.addListener('blur', () => {
+		const blur = navigation.addListener('blur', () => {
 			setFocused(false);
 		});
-		return unsubscribe;
-	},[navigation]);
+		return () => {
+			blur();
+			unsubscribe();
+		};
+	}, [navigation]);
 
 	const getList = refresh => {
 		setLoading(true);
@@ -97,7 +94,7 @@ export default FavoriteFeeds = ({route}) => {
 			setData(res);
 		}
 		setTotal(result.total_count);
-		console.log('result.total_count', result.total_count);
+		console.log('result.total_count', res.length);
 		setLoading(false);
 	};
 
@@ -248,14 +245,18 @@ export default FavoriteFeeds = ({route}) => {
 	// 선택하기 => 전체 선택 클릭
 	const selectAll = () => {
 		//v.checkBoxState = !v.checkBoxState와 같이 할 경우 체크 박스 값들이 각각 다를 경우 그것의 반대로만 변경 될 뿐 모두 선택되거나 모두 취소 되지 않음.
-		setSelectCNT(selectCNT + 1);
-		let copy = [...data];
-		copy.map((v, i) => {
-			//카운트의 2로 나눈 나머지값을 이용해서 전체 선택 혹은 전체 취소가 되도록 함.
-			selectCNT % 2 == 0 ? (v.checkBoxState = true) : (v.checkBoxState = false);
-			console.log('checkBoxState==>' + v.checkBoxState);
-		});
-		setData(copy);
+		try {
+			setSelectCNT(selectCNT + 1);
+			let copy = [...data];
+			copy.map((v, i) => {
+				//카운트의 2로 나눈 나머지값을 이용해서 전체 선택 혹은 전체 취소가 되도록 함.
+				selectCNT % 2 == 0 ? (v.checkBoxState = true) : (v.checkBoxState = false);
+				console.log('checkBoxState==>' + v.checkBoxState);
+			});
+			setData(copy);
+		} catch (err) {
+			console.log('err', err);
+		}
 	};
 
 	const emptyMsg = () => {
@@ -352,7 +353,7 @@ export default FavoriteFeeds = ({route}) => {
 					{data.length == 0 ? (
 						<ListEmptyInfo text={emptyMsg()} />
 					) : (
-						<FeedThumbnailList items={data} selectMode={selectMode} onClickThumnail={onClickThumnail} onEndReached={onEndReached} focused={focused}/>
+						<FeedThumbnailList items={data} selectMode={selectMode} onClickThumnail={onClickThumnail} onEndReached={onEndReached} focused={focused} />
 					)}
 				</View>
 				{loading ? (

@@ -81,6 +81,21 @@ export default ReviewDetail = props => {
 		}
 	}, [reviewList]);
 
+	React.useEffect(() => {
+		if (data != 'false' && comments.length != 0) {
+			let comments_count = comments.length - 1;
+			comments.map((v, i) => {
+				i != comments.length - 1 ? (comments_count = comments_count + v.children_count) : false;
+			});
+			const findIndex = community_obj.review.findIndex(e => e._id == data._id);
+			if (findIndex != -1) {
+				let temp = [...community_obj.review];
+				temp[findIndex].community_comment_count = comments_count;
+				community_obj.review = temp;
+			}
+		}
+	}, [comments]);
+
 	//커뮤니티 데이터
 	const getReviewData = () => {
 		getCommunityByObjectId(
@@ -95,9 +110,11 @@ export default ReviewDetail = props => {
 			err => {
 				console.log('err / getCommunityByObjectId / ReviewDetail ', err);
 				if (err.includes('없습니다')) {
-					Modal.popOneBtn(NETWORK_ERROR, '확인', () => navigation.goBack());
+					Modal.popOneBtn('이미 삭제된 게시글입니다.', '확인', () => navigation.goBack());
 				} else {
-					Modal.popOneBtn(NETWORK_ERROR, '확인', () => navigation.goBack());
+					setTimeout(() => {
+						Modal.popOneBtn(NETWORK_ERROR, '확인', () => navigation.goBack());
+					}, 100);
 				}
 				setData('false');
 			},

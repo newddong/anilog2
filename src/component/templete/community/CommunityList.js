@@ -8,13 +8,12 @@ import ArticleList from 'Root/component/organism/list/ArticleList';
 import {useNavigation} from '@react-navigation/core';
 import Modal from 'Root/component/modal/Modal';
 import userGlobalObject from 'Root/config/userGlobalObject';
-import {getCommunityListByUserId, updateAndDeleteCommunity} from 'Root/api/community';
-import community_obj, {updateReview} from 'Root/config/community_obj';
+import {getCommunityListByUserId} from 'Root/api/community';
+import community_obj, {pushFreeList, pushReviewList, updateReview} from 'Root/config/community_obj';
 import {setFavoriteEtc} from 'Root/api/favoriteetc';
 import {EmptyIcon} from 'Root/component/atom/icon';
 import {likeEtc} from 'Root/api/likeetc';
 import {FREE_LIMIT, REPORT_MENU, REVIEW_LIMIT} from 'Root/i18n/msg';
-import {styles} from 'Root/component/atom/image/imageStyle';
 
 /**
  *  프로필탭 커뮤니티 글 출력용 컴포넌트
@@ -51,15 +50,41 @@ const CommunityList = React.memo(props => {
 
 	React.useEffect(() => {
 		if (review != 'false' && review.length) {
-			review.map((v, i) => {
-				const find = community_obj.review.findIndex(e => e._id == v._id);
-				if (find == -1) {
-					//현 메모리에 저장되어 있지않은 리뷰아이템만 추가
-					community_obj.review.push(v);
-				}
-			});
+			pushReviewList(review);
 		}
+		const unsubscribe = navigation.addListener('focus', () => {
+			if (community_obj.deleted_list && community_obj.deleted_list.length && review != 'false') {
+				//삭제된 리뷰 필터 반영
+				try {
+					let temp = [...review];
+					temp = temp.filter(e => !community_obj.deleted_list.includes(e._id));
+					setReview(temp);
+				} catch (err) {
+					console.log('err', err);
+				}
+			}
+		});
+		return unsubscribe;
 	}, [review]);
+
+	React.useEffect(() => {
+		if (free != 'false' && free.length) {
+			pushFreeList(free);
+		}
+		const unsubscribe = navigation.addListener('focus', () => {
+			if (community_obj.deleted_list && community_obj.deleted_list.length && free != 'false') {
+				//삭제된 게시글 필터 반영
+				try {
+					let temp = [...free];
+					temp = temp.filter(e => !community_obj.deleted_list.includes(e._id));
+					setFree(temp);
+				} catch (err) {
+					console.log('err', err);
+				}
+			}
+		});
+		return unsubscribe;
+	}, [free]);
 
 	React.useEffect(() => {
 		if (refresh) {
@@ -113,7 +138,7 @@ const CommunityList = React.memo(props => {
 	};
 
 	const getReviewList = isRefresh => {
-		console.log('isRefresh', isRefresh, reviewOffset);
+		// console.log('isRefresh', isRefresh, reviewOffset);
 		setLoading(true);
 		getCommunityListByUserId(
 			{
@@ -150,7 +175,8 @@ const CommunityList = React.memo(props => {
 
 	//리스트 페이징 작업
 	const onEndReached = commtype => {
-		if (commtype == 'free') {
+		console.log('onEndReached type', type);
+		if (type == 'free') {
 			console.log('EndReached Free', free.length % FREE_LIMIT);
 			//페이지당 출력 개수인 LIMIT로 나눴을 때 나머지 값이 0이 아니라면 마지막 페이지 => api 접속 불필요
 			//리뷰 메인 페이지에서는 필터가 적용이 되었을 때도 api 접속 불필요
@@ -229,14 +255,10 @@ const CommunityList = React.memo(props => {
 		return (
 			<View style={{paddingVertical: 130 * DP, alignItems: 'center'}}>
 				<EmptyIcon />
-				<Text style={[txt.noto28]}>목록이 없습니다..</Text>
+				<Text style={[txt.noto28b]}>목록이 없습니다..</Text>
 			</View>
 		);
 	};
-
-	React.useEffect(() => {
-		console.log('type', type);
-	}, [type]);
 
 	const header = () => {
 		return (
@@ -273,10 +295,7 @@ const CommunityList = React.memo(props => {
 										items={free}
 										onPressArticle={onPressArticle} //게시글 내용 클릭
 										whenEmpty={whenEmpty}
-										onEndReached={() => {
-											console.log('type at ArticleList : ', type);
-											type == 'free' ? onEndReached('free') : false;
-										}}
+										onEndReached={onEndReached}
 									/>
 								</View>
 							);
@@ -299,10 +318,7 @@ const CommunityList = React.memo(props => {
 										onPressLike={i => onPressLike(i, true)}
 										onPressUnlike={i => onPressLike(i, false)}
 										showRecommend={false}
-										onEndReached={() => {
-											console.log('type at REviewList', type);
-											type == 'free' ? false : onEndReached('review');
-										}}
+										onEndReached={onEndReached}
 									/>
 								</View>
 							);

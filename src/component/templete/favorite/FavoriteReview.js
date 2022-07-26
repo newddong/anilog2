@@ -25,14 +25,23 @@ export default FavoriteReview = ({route, isFavorite}) => {
 	const [offset, setOffset] = React.useState(1);
 
 	React.useEffect(() => {
-		const unsubscribe = navigation.addListener('focus', () => {
-			// fetchData();
-		});
 		fetchData();
-		return unsubscribe;
 	}, []);
 
 	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			if (community_obj.deleted_list && community_obj.deleted_list.length && data != 'false') {
+				//삭제된 리뷰글 필터 적용
+				console.log('삭제된 리뷰글 필터 전용시작', community_obj.deleted_list.length);
+				try {
+					let temp = [...data];
+					temp = temp.filter(e => !community_obj.deleted_list.includes(e._id));
+					setData(temp);
+				} catch (err) {
+					console.log('err', err);
+				}
+			}
+		});
 		if (data != 'false' && data.length) {
 			data.map((v, i) => {
 				const find = community_obj.review.findIndex(e => e._id == v._id);
@@ -42,6 +51,7 @@ export default FavoriteReview = ({route, isFavorite}) => {
 				}
 			});
 		}
+		return unsubscribe;
 	}, [data]);
 
 	const fetchData = () => {
@@ -108,17 +118,20 @@ export default FavoriteReview = ({route, isFavorite}) => {
 					{
 						userobject_id: userGlobalObject.userInfo._id,
 						collectionName: 'communityobjects',
+						community_type: 'review',
 					},
 					result => {
-						console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg.length);
+						// console.log('result / getFavoriteEtcListByUserId / FavoriteCommunity : ', result.msg[1]);
 						let reviewList = [];
 						result.msg.map(v => {
+							// console.log(v.favorite_etc_target_object_id.community_type);
 							if (v.favorite_etc_target_object_id.community_type == 'review' && v.favorite_etc_target_object_id.community_is_delete != true) {
 								v.favorite_etc_target_object_id.community_is_favorite = v.is_favorite;
 								v.favorite_etc_target_object_id.community_is_like = v.is_like;
 								reviewList.push(v.favorite_etc_target_object_id);
 							}
 						});
+						console.log('reviewList', reviewList.length);
 						setData(
 							reviewList
 								.map((v, i, a) => {
@@ -304,7 +317,7 @@ export default FavoriteReview = ({route, isFavorite}) => {
 			// 	<EmptyIcon />
 			// 	<Text style={[txt.noto28, {marginTop: 10 * DP}]}>{!isFavorite ? '작성한 리뷰글이 없습니다..' : '즐겨찾기한 리뷰가 없습니다..'} </Text>
 			// </View>
-			<ListEmptyInfo text={!isFavorite ? '작성한 자유게시글이 없습니다..' : '즐겨찾기한 리뷰글이 없습니다..'} />
+			<ListEmptyInfo text={!isFavorite ? '작성한 리뷰글이 없습니다..' : '즐겨찾기한 리뷰글이 없습니다..'} />
 		);
 	};
 

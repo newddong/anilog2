@@ -128,7 +128,6 @@ const NewMissingReportList = props => {
 const styles = StyleSheet.create({
 	container: {
 		width: 750 * DP,
-		// height: 396 * DP,
 		// alignItems: 'center',
 		backgroundColor: WHITE,
 		marginTop: 28 * DP,

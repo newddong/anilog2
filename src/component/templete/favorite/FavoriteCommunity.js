@@ -1,14 +1,7 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Dimensions, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {txt} from 'Root/config/textstyle';
-import userGlobalObject from 'Root/config/userGlobalObject';
+import {Dimensions, StyleSheet} from 'react-native';
 import DP from 'Root/config/dp';
-import {ArticleIcon, NextMark, ReviewIcon} from 'Root/component/atom/icon';
-import {getCommunityListByUserId} from 'Root/api/community';
-import Loading from 'Root/component/molecules/modal/Loading';
-import {getFavoriteEtcListByUserId} from 'Root/api/favoriteetc';
-import {NETWORK_ERROR} from 'Root/i18n/msg';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {APRI10, GRAY10, GRAY40} from 'Root/config/color';
 import FavoriteArticle from './FavoriteArticle';

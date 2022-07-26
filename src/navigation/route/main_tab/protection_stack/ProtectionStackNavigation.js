@@ -33,6 +33,12 @@ import PhotoSelectHeader from 'Root/navigation/header/PhotoSelectHeader';
 import LogoHeader from 'Root/navigation/header/LogoHeader';
 import CommunityEdit from 'Root/component/templete/community/CommunityEdit';
 import SendHeader from 'Root/navigation/header/SendHeader';
+import FeedWrite from 'Root/component/templete/feed/FeedWrite';
+import FeedWriteHeader from 'Root/navigation/header/FeedWriteHeader';
+import LocationPicker from 'Root/component/templete/search/LocationPicker';
+import ConfirmHeader from 'Root/navigation/header/ConfirmHeader';
+import FeedMediaTagEdit from 'Root/component/templete/feed/FeedMediaTagEdit';
+import AccountPicker from 'Root/component/templete/search/AccountPicker';
 
 const ProtectionStack = createStackNavigator();
 
@@ -85,6 +91,7 @@ export default ProtectionStackNavigation = props => {
 				component={AddPhoto}
 				options={{header: props => <PhotoSelectHeader {...props} />, title: ''}}
 			/>
+			<ProtectionStack.Screen name="MultiPhotoSelect" component={AddPhoto} options={{header: props => <PhotoSelectHeader {...props} />, title: ''}} />
 			<ProtectionStack.Screen
 				name="ProtectCommentList"
 				component={ProtectCommentList}
@@ -117,7 +124,7 @@ export default ProtectionStackNavigation = props => {
 			/>
 			{/* 알람용 */}
 			<ProtectionStack.Screen name="AlarmList" component={AlarmList} options={{header: props => <SimpleHeader {...props} />, title: '소식'}} />
-			<ProtectionStack.Screen name="AlarmCommentList" component={AlarmCommentList} options={{header: props => <SimpleHeader {...props} />}} />
+			<ProtectionStack.Screen name="AlarmCommentList" component={FeedCommentList} options={{header: props => <SimpleHeader {...props} />}} />
 			<ProtectionStack.Screen name="UserNotePage" component={UserNotePage} options={{header: props => <SimpleHeader {...props} />}} />
 			<ProtectionStack.Screen
 				name={'ArticleDetail'}
@@ -167,6 +174,34 @@ export default ProtectionStackNavigation = props => {
 					title: ' ',
 				})}
 			/>
+			<ProtectionStack.Screen
+				name="FeedWrite"
+				component={FeedWrite}
+				options={{header: props => <FeedWriteHeader {...props} />, title: '게시물 작성'}}
+			/>
+			<ProtectionStack.Screen
+				name="FeedMissingWrite"
+				component={FeedWrite}
+				options={{header: props => <FeedWriteHeader {...props} />, title: '실종 게시물'}}
+			/>
+			<ProtectionStack.Screen
+				name="FeedReportWrite"
+				component={FeedWrite}
+				options={{header: props => <FeedWriteHeader {...props} />, title: '제보 게시물'}}
+			/>
+			<ProtectionStack.Screen
+				name="FeedLocationPicker"
+				component={LocationPicker}
+				options={{header: props => <InputAndSearchHeader {...props} type={'location'} />}}
+			/>
+			<ProtectionStack.Screen
+				name="FeedMediaTagEdit"
+				component={FeedMediaTagEdit}
+				options={{header: props => <ConfirmHeader {...props} />, title: ''}}
+			/>
+			<ProtectionStack.Screen name="UserList" options={{header: props => <InputAndSearchHeader {...props} />, title: '계정'}}>
+				{props => <AccountPicker {...props} /*prevNav={props.prevNav} input={searchInput} onClickUser={onClickUser}*/ />}
+			</ProtectionStack.Screen>
 		</ProtectionStack.Navigator>
 	);
 };

@@ -84,7 +84,8 @@ const AskQuestion = ({route}) => {
 
 	const onPressAsk = () => {
 		console.log('어쩌고저쩌고', userAgreement, category, contents, title);
-		if (userAgreement && category != '카테고리 선택' && contents && title) {
+		// if (userAgreement && category != '카테고리 선택' && contents && title) {
+		if (category != '카테고리 선택' && contents && title) {
 			for (let i in commomCode) {
 				if (commomCode[i].common_code_msg_kor == category) {
 					// console.log('같은거 ', commomCode[i]._id);
@@ -108,9 +109,11 @@ const AskQuestion = ({route}) => {
 			);
 		} else {
 			Modal.close();
-			if (!userAgreement) {
-				Modal.alert('개인정보 수집 이용약관에 동의해주세요.');
-			} else if (category == '카테고리 선택') {
+			// if (!userAgreement) {
+			// 	Modal.alert('개인정보 수집 이용약관에 동의해주세요.');
+			// }
+			// else if (category == '카테고리 선택') {
+			if (category == '카테고리 선택') {
 				Modal.alert('문의 카테고리를 선택해주세요.');
 			} else if (!contents && contents.length == 0) {
 				Modal.alert('문의 내용을 적어주세요.');
@@ -153,9 +156,7 @@ const AskQuestion = ({route}) => {
 					/>
 				</View>
 				{/* </TouchableWithoutFeedback> */}
-				<View style={[{marginTop: 10 * DP}]}>
-					{/* <AssignCheckList items={userAssign_agreementCheckList} onCheck={onPressAcceptItem} onPressDetail={onPressDetail} /> */}
-					{/* <AssignCheckListItem items={userAssign_agreementCheckList} /> */}
+				{/* <View style={[{marginTop: 10 * DP}]}>
 					<View style={[assignCheckListItem.container]}>
 						<View style={[styles.check42]}>
 							<CheckBox onCheck={onCheck} state={userAgreement} />
@@ -167,7 +168,7 @@ const AskQuestion = ({route}) => {
 							<Text style={[txt.roboto28b, {color: MAINBLACK, textDecorationLine: 'underline'}]}>보기</Text>
 						</TouchableOpacity>
 					</View>
-				</View>
+				</View> */}
 				<View style={[{marginTop: 80 * DP}]}>
 					<AniButton btnTitle={'문의접수'} titleFontStyle={32} btnStyle={'border'} btnLayout={btn_w694_r30} onPress={onPressAsk} />
 				</View>

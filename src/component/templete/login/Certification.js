@@ -53,11 +53,15 @@ export default function Certification({route}) {
 						data={params}
 						loading={<Loading />}
 						callback={response => {
-							console.log('reponse', response);
-							(response.imp_success || response.success) &&
-								// navigation.navigate(route.params.navigationName, {response: response, user_data: route.params?.user_data});
+							console.log('핸드폰 인증 response', response);
+							// (response.imp_success || response.success) &&
+							if (response.success == 'true') {
+								console.log('인증성공');
 								navigation.replace(route.params.navigationName, {response: response, user_data: route.params?.user_data});
-							// navigation.reset({routes: [{name: route.params.navigationName}]});
+							} else {
+								console.log('인증 실패');
+								navigation.goBack();
+							}
 						}}
 					/>
 				</SafeAreaView>

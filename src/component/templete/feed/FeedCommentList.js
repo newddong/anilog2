@@ -41,11 +41,13 @@ export default FeedCommentList = props => {
 
 	React.useEffect(() => {
 		fetchData();
-		params.showKeyboard
-			? setTimeout(() => {
-					input.current.focus();
-			  }, 200)
-			: false;
+		if (userGlobalObject.userInfo._id != '') {
+			params.showKeyboard
+				? setTimeout(() => {
+						input.current.focus();
+				  }, 200)
+				: false;
+		}
 
 		// 실종,제보에서 댓글 수정 클릭시 수정데이터 덮어씌우고 스크롤 수행
 		if (params.edit && editFromDetailRef) {

@@ -7,7 +7,7 @@ import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {GRAY10, APRI10, BLACK} from 'Root/config/color';
 import {getTimeLapsed} from 'Root/util/dateutil';
-import {ProfileDefaultImg} from 'Root/component/atom/icon';
+import {Check42, Check50, Check64Filled, ProfileDefaultImg, Rect42_Border, Rect50_Border} from 'Root/component/atom/icon';
 /**
  * 쪽지 썸네일 객체
  * @param {object} props - Props Object
@@ -17,27 +17,28 @@ import {ProfileDefaultImg} from 'Root/component/atom/icon';
  * @param {boolean} props.checkBoxState - 선택 여부 (default = false)
  */
 const UserNote = props => {
-	// console.log('UserAccount item', props.data);
-	const data = props.data;
-	// console.log('time', data.memobox_date);
-	// console.log('getTime', getTimeLapsed(data.memobox_date));
-	// console.log('UserNote props', data);
+	const [data, setData] = React.useState(props.data);
+
+	React.useEffect(() => {
+		setData(props.data);
+	}, [props.data]);
 
 	return (
 		<View style={[styles.userNoteContainer]}>
 			{props.checkBoxMode ? (
-				<View style={[userAccount.checkBox]}>
-					<CheckBox
+				<View style={[userAccount.checkBox, {marginLeft: 10 * DP}]}>
+					{/* <CheckBox
 						state={props.data.checkBoxState}
 						onCheck={() => props.onCheckBox(props.data.type == 'HashTagObject' ? props.data.keyword : props.data.user_nickname)}
-					/>
+					/> */}
+					{data.checkBoxState ? <Check42 onPress={props.onCheckBox} /> : <Rect42_Border onPress={props.onCheckBox} />}
 				</View>
 			) : (
 				false
 			)}
 			{/* 메모 썸네일 객체 */}
 			<View style={[styles.userNoteContainer]}>
-				<TouchableOpacity onPress={() => props.onLabelClick(data)} disabled={props.checkBoxMode}>
+				<TouchableOpacity onPress={() => props.onLabelClick(data)}>
 					<View style={[styles.userNoteThumbnail]}>
 						{data.opponent_user_profile_uri != undefined ? (
 							<Image source={{uri: data.opponent_user_profile_uri}} style={[styles.img_round_94]} />
@@ -53,8 +54,8 @@ const UserNote = props => {
 								{/* {data.showStatus ? <Text style={[txt.noto22, {color: APRI10, alignSelf: 'center', paddingLeft: 10 * DP}]}> STATUS</Text> : null} */}
 							</View>
 							{data.memobox_contents ? (
-								<View style={[props.checkBoxMode ? {width: 450 * DP} : {width: 530 * DP}, {flexDirection: 'row'}]}>
-									<View style={[props.checkBoxMode ? {width: 328 * DP} : {width: 408 * DP}, {marginRight: 12 * DP}]}>
+								<View style={[props.checkBoxMode ? {width: 490 * DP} : {width: 568 * DP}, {flexDirection: 'row'}]}>
+									<View style={[props.checkBoxMode ? {width: 360 * DP} : {width: 444 * DP}, {marginRight: 12 * DP}]}>
 										<Text
 											style={[
 												txt.noto28,

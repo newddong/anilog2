@@ -1,27 +1,20 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet, TouchableWithoutFeedback, FlatList} from 'react-native';
-import {GRAY10, GRAY40, APRI10, GRAY20, TEXTBASECOLOR} from 'Root/config/color';
-import {txt} from 'Root/config/textstyle';
-import {deleteMemoBoxWithUserObjectID, getMemoBoxAllList, userLogout} from 'Root/api/userapi';
+import {Text, View, StyleSheet, FlatList, RefreshControl} from 'react-native';
+import {deleteMemoBoxWithUserObjectID, getMemoBoxAllList} from 'Root/api/userapi';
 import DP from 'Root/config/dp';
-import userGlobalObject from 'Root/config/userGlobalObject';
-import {login_style, temp_style, feedWrite} from '../style_templete';
-import NoteSelectStat from 'Root/component/organism/list/NoteSelectStat';
+import {login_style, temp_style} from '../style_templete';
 import NoteList from 'Root/component/organism/list/NoteList';
-import {Message94, Urgent_Write1, Urgent_Write2} from 'Root/component/atom/icon';
-import {lo} from '../style_address';
 import Modal from 'Root/component/modal/Modal';
+import UserNote from 'Root/component/organism/listitem/UserNote';
+import Loading from 'Root/component/molecules/modal/Loading';
 export default ReceivedMessage = ({route}) => {
 	const navigation = useNavigation();
-	const [checkBoxMode, setCheckBoxMode] = React.useState(false);
-	const [data, setData] = React.useState();
-	const [received, setReceived] = React.useState(true); //받은 쪽지함:true 보낸 쪽지함 false;
+	const [data, setData] = React.useState('false');
 	const [selectMode, setSelectMode] = React.useState(false);
 	const [selectCNT, setSelectCNT] = React.useState(0);
-	//data 구조가 아직 정해지지않아서 data처리는 추후에
-	//받은 쪽지함, 보낸쪽지함 처리
 
+	//받은 쪽지함, 보낸쪽지함 처리
 	React.useEffect(() => {
 		getMemoBoxListFunction();
 	}, []);
@@ -31,33 +24,23 @@ export default ReceivedMessage = ({route}) => {
 		getMemoBoxAllList(
 			{},
 			result => {
-				console.log('result', result.msg);
-				setData(result.msg);
+				console.log('result', result.msg.length);
+				setData(
+					result.msg.map(v => {
+						v = {...v, checkBoxState: false};
+						return v;
+					}),
+				);
 			},
 			err => {
-				console.log('err', err);
+				console.log('getMemoBoxAllList error : ', err);
 			},
 		);
 	};
 
-	//쪽지 보내기 모달
-	const onPressSendMsg = () => {
-		Modal.close();
-		setTimeout(() => {
-			Modal.popMessageModal(
-				'주둥이',
-				msg => {
-					console.log('msg', msg);
-					Modal.close();
-				},
-				() => alert('나가기'),
-			);
-		}, 100);
-	};
-
 	//Check Box On
 	const checkSelectMode = state => {
-		console.log('state', state);
+		// console.log('state', state);
 		setSelectMode(state);
 		//전체 선택을 처음 누를 경우 무조건 체크 박스가 모두 선택되도록 하기 위해 setSelectCNT값을 0으로 초기화.
 		setSelectCNT(0);
@@ -68,22 +51,24 @@ export default ReceivedMessage = ({route}) => {
 		});
 		setData(copy);
 	};
-	const onClickLabel = data => {
-		console.log('onCLick data', data);
-		navigation.navigate('UserNotePage', {title: data.opponent_user_nickname, _id: data.opponent});
+
+	//CheckBox 클릭 시
+	const onCheckBox = (item, index) => {
+		let copy = [...data];
+		copy[index].checkBoxState = !copy[index].checkBoxState;
+		setData(copy);
+	};
+
+	const onClickLabel = (item, index) => {
+		if (selectMode) {
+			let copy = [...data];
+			copy[index].checkBoxState = !copy[index].checkBoxState;
+			setData(copy);
+		} else navigation.navigate('UserNotePage', {title: item.opponent_user_nickname, _id: item.opponent});
 	};
 
 	// 선택하기 => 전체 선택 클릭
 	const selectAll = () => {
-		// selectCNT.current += 1;
-		// setSelectCNT(selectCNT + 1);
-		// let copy = [...data];
-		// // console.log('selectCNT.current =====>' + selectCNT.current);
-		// copy.map((v, i) => {
-		// 	//카운트의 2로 나눈 나머지값을 이용해서 전체 선택 혹은 전체 취소가 되도록 함.
-		// 	selectCNT.current % 2 == 1 ? (v.checkBoxState = true) : (v.checkBoxState = false);
-		// });
-		// setData(copy);
 		setSelectCNT(selectCNT + 1);
 		let copy = [...data];
 		if (data.findIndex(e => e.checkBoxState == true) == -1) {
@@ -110,15 +95,17 @@ export default ReceivedMessage = ({route}) => {
 		}
 		setData(copy);
 	};
+
 	const deleteSelectedItem = () => {
 		if (data.findIndex(e => e.checkBoxState == true) == -1) {
 			Modal.popOneBtn('선택된 쪽지가 없습니다.', '확인', () => Modal.close());
 		} else {
-			Modal.popTwoBtn('선택한 쪽지내역을 삭제하시겠습니까?', '삭제', '취소', () => doDelete(), Modal.close);
+			Modal.popTwoBtn('선택한 쪽지내역을 삭제하시겠습니까?', '취소', '삭제', Modal.close, () => doDelete());
 		}
 		// setCheckBoxMode(false);
 		// getMemoBoxListFunction();
 	};
+
 	const doDelete = () => {
 		let copy = [...data];
 		copy = copy.filter(e => e.checkBoxState == true);
@@ -127,7 +114,7 @@ export default ReceivedMessage = ({route}) => {
 			deleteMemoBoxWithUserObjectID(
 				{user_object_id: v.opponent},
 				result => {
-					console.log('delelteMemoBoxWithUser success', result);
+					// console.log('delelteMemoBoxWithUser success', result);
 					getMemoBoxListFunction();
 				},
 				err => {
@@ -139,9 +126,11 @@ export default ReceivedMessage = ({route}) => {
 			v.checkBoxState = false;
 		});
 		Modal.close();
+		// onRefresh();
 		setSelectMode(false);
 		// checkSelectMode(false);
 	};
+
 	//Checkbox off
 	const cancelSelectMode = e => {
 		data.map((v, i) => {
@@ -150,11 +139,21 @@ export default ReceivedMessage = ({route}) => {
 		setSelectMode(e);
 	};
 
-	//CheckBox 클릭 시
-	const onCheckBox = (item, index) => {
-		let copy = [...data];
-		copy[index].checkBoxState = !copy[index].checkBoxState;
+	const [refreshing, setRefreshing] = React.useState(false); //위로 스크롤 시도 => 리프레싱
+
+	const wait = timeout => {
+		return new Promise(resolve => setTimeout(resolve, timeout));
 	};
+
+	const onRefresh = () => {
+		setRefreshing(true);
+		wait(0).then(() => setRefreshing(false));
+	};
+
+	React.useEffect(() => {
+		refreshing ? getMemoBoxListFunction() : false;
+	}, [refreshing]);
+
 	const whenEmpty = () => {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
@@ -162,16 +161,42 @@ export default ReceivedMessage = ({route}) => {
 			</View>
 		);
 	};
-	if (data?.length == 0) {
+
+	const ITEM_HEIGHT = 94 * DP;
+
+	const renderItem = ({item, index}) => {
 		return (
-			<View style={[login_style.wrp_main, {flex: 1}]}>
-				<Text>쪽지 내역이 없습니다.</Text>
+			<View style={[style.userAccount]}>
+				<UserNote data={item} checkBoxMode={selectMode} onLabelClick={() => onClickLabel(item, index)} onCheckBox={e => onCheckBox(e, index)} />
+			</View>
+		);
+	};
+
+	const header = () => {
+		return (
+			<SelectStat
+				selectMode={selectMode}
+				// onSelectMode={e => showCheckBox(e)}
+				onSelectMode={checkSelectMode}
+				// onCancelSelectMode={e => hideCheckBox(e)}
+				onCancelSelectMode={cancelSelectMode}
+				onSelectAllClick={selectAll}
+				onDeleteSelectedItem={deleteSelectedItem}
+				// received={received}
+			/>
+		);
+	};
+
+	if (data == 'false') {
+		return (
+			<View style={[login_style.wrp_main, {flex: 1, paddingVertical: 200 * DP}]}>
+				<Loading isModal={false} />
 			</View>
 		);
 	} else {
 		return (
 			<View style={[login_style.wrp_main, {flex: 1}]}>
-				<View style={[temp_style.selectstat_view]}>
+				{/* <View style={[style.noteList, {}]}>
 					<SelectStat
 						selectMode={selectMode}
 						// onSelectMode={e => showCheckBox(e)}
@@ -182,8 +207,6 @@ export default ReceivedMessage = ({route}) => {
 						onDeleteSelectedItem={deleteSelectedItem}
 						// received={received}
 					/>
-				</View>
-				<View style={[styles.noteList]}>
 					<NoteList
 						data={data}
 						checkBoxMode={selectMode}
@@ -191,71 +214,39 @@ export default ReceivedMessage = ({route}) => {
 						onCheckBox={onCheckBox}
 						routeName={route.name}
 						whenEmpty={whenEmpty}
+						refresh={getMemoBoxListFunction}
 					/>
-				</View>
-				{/*<FlatList
-					data={[{}]}
+				</View> */}
+				<FlatList
+					data={data}
+					renderItem={renderItem}
+					extraData={data}
+					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+					ListHeaderComponent={header()}
+					keyExtractor={item => item._id}
 					showsVerticalScrollIndicator={false}
-					ListHeaderComponent={
-						<View style={[temp_style.selectstat_view]}>
-							<SelectStat
-								onSelectMode={e => showCheckBox(e)}
-								onCancelSelectMode={e => hideCheckBox(e)}
-								onSelectAllClick={selectAll}
-								onDeleteSelectedItem={deleteSelectedItem}
-								received={received}
-							/>
-						</View>
-					}
-					renderItem={() => {
-						return (
-							<View style={[styles.noteList]}>
-								<NoteList data={data} checkBoxMode={checkBoxMode} onClickLabel={onClickLabel} onCheckBox={onCheckBox} routeName={route.name} />
-							</View>
-						);
+					getItemLayout={(data, index) => {
+						if (!data[index]) return {length: 0, offset: 0, index: index};
+						return {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index: index};
 					}}
-				/>*/}
-				{/* <View style={[styles.messageBtnContainer]}>
-						<TouchableWithoutFeedback onPress={onPressSendMsg}>
-							<View style={[styles.messageActionButton]}>{checkBoxMode ? <Message94 /> : <Message94 />}</View>
-						</TouchableWithoutFeedback>
-					</View> */}
+					ListFooterComponent={<View style={{height: 100 * DP}} />}
+					ListEmptyComponent={whenEmpty()}
+				/>
 			</View>
 		);
 	}
 };
 
-const styles = StyleSheet.create({
+const style = StyleSheet.create({
 	noteList: {
-		width: 654 * DP,
-		marginTop: 30 * DP,
+		width: 694 * DP,
+		paddingVertical: 30 * DP,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
-	messageBtnContainer: {
-		width: 94 * DP,
+	userAccount: {
+		width: 750 * DP,
 		height: 94 * DP,
-		position: 'absolute',
-		right: 30 * DP,
-		bottom: 40 * DP,
-		justifyContent: 'flex-end',
-	},
-	messageActionButton: {
-		width: 94 * DP,
-		height: 94 * DP,
-		alignSelf: 'flex-end',
-		shadowColor: '#000000',
-		shadowOpacity: 0.3,
-		borderRadius: 100 * DP,
-		shadowOffset: {
-			width: 2,
-			height: 2,
-		},
-		shadowRadius: 3.65,
-		// shadowOffset: {
-		// 	width: 2 * DP,
-		// 	height: 1 * DP,
-		// },
-		elevation: 4,
+		marginTop: 40 * DP,
 	},
 });

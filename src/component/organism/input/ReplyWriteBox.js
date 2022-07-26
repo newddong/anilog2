@@ -112,11 +112,11 @@ const ReplyWriteBox = React.forwardRef((props, ref) => {
 	} else if (props.isMessage) {
 		return (
 			<View style={[style.commentBox, {flexDirection: 'row', paddingTop: 20 * DP}]}>
-				<View style={[style.commentBox_top, {width: 550 * DP}, , {marginRight: 24 * DP}]}>
+				<View style={[style.commentBox_top, {width: 550 * DP}, {marginRight: 24 * DP}]}>
 					<TextInput
 						defaultValue={content == '' ? null : content}
 						value={content == '' ? null : content}
-						style={[style.replyTextInput]}
+						style={[style.replyTextInput, {width: 500 * DP, marginHorizontal: 20 * DP}]}
 						multiline={true}
 						placeholder={'메세지 입력..'}
 						placeholderTextColor="#000000"

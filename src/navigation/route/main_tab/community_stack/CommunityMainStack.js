@@ -35,6 +35,7 @@ import SimpleWithMeatballHeader from 'Root/navigation/header/SimpleWithMeatballH
 import ReportDetail from 'Root/component/templete/missing/ReportDetail';
 import MissingAnimalDetail from 'Root/component/templete/missing/MissingAnimalDetail';
 import FeedCommentList from 'Root/component/templete/feed/FeedCommentList';
+import FeedListForHashTag from 'Root/component/templete/feed/FeedListForHashTag';
 
 const CommunityMainStackNavi = createStackNavigator();
 
@@ -192,7 +193,6 @@ export default CommunityMainStack = props => {
 				component={AddPhoto}
 				options={{header: props => <PhotoSelectHeader {...props} />, title: ''}}
 			/>
-
 			<CommunityMainStackNavi.Screen
 				name="EditShelterInfo"
 				component={EditShelterInfo}
@@ -212,6 +212,12 @@ export default CommunityMainStack = props => {
 				name="MissingAnimalDetail"
 				component={MissingAnimalDetail}
 				options={{header: props => <SimpleWithMeatballHeader {...props} />}}
+			/>
+			<CommunityMainStackNavi.Screen name="HashFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: ''}} />
+			<CommunityMainStackNavi.Screen
+				name="FeedListForHashTag"
+				component={FeedListForHashTag}
+				options={{header: props => <SimpleHeader {...props} />, title: '#반려동물'}}
 			/>
 		</CommunityMainStackNavi.Navigator>
 	);

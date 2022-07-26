@@ -20,12 +20,21 @@ const SocialInfoA = props => {
 
 	const onClickFollower = () => {
 		if (props.data.user_type == 'pet') {
-			navigation.navigate('PetFollowerList', {userobject: props.data, title: props.data.user_follower_count});
-		} else navigation.navigate('SocialRelation', {userobject: props.data, initial: 'FollwerList'});
+			navigation.navigate({
+				key: props.data._id + 'PetFollowerList',
+				name: 'PetFollowerList',
+				params: {userobject: props.data, title: props.data.user_follower_count},
+			});
+		} else
+			navigation.navigate({
+				key: props.data._id + 'SocailRelation',
+				name: 'SocialRelation',
+				params: {userobject: props.data, initial: 'FollowerList'},
+			});
 	};
 
 	const onClickFollow = () => {
-		navigation.navigate('SocialRelation', {userobject: props.data, initial: 'FollowingList'});
+		navigation.navigate({key: props.data._id + 'SocailRelation', name: 'SocialRelation', params: {userobject: props.data, initial: 'FollowingList'}});
 	};
 
 	return (

@@ -87,14 +87,18 @@ export default AssignPetInfoB = props => {
 				Modal.close();
 				// console.log('success', success.msg);
 				// console.log('아바타', userGlobalObj.userInfo.user_avatar);
-				if (userGlobalObj.userInfo.user_avatar != undefined) {
-					userGlobalObj.userInfo.user_avatar = userGlobalObj.userInfo.user_avatar.push(success.msg);
+				try {
+					if (userGlobalObj.userInfo.user_avatar != undefined) {
+						userGlobalObj.userInfo.user_avatar = userGlobalObj.userInfo.user_avatar.push(success.msg);
+					}
+				} catch (err) {
+					console.log('err', err);
 				}
+
 				Modal.popNoBtn('반려동물 등록이 완료되었습니다.');
 				setTimeout(() => {
 					Modal.close();
 					console.log('반려 추가 등록 전 userGlobal', userGlobalObj.userInfo.hasOwnProperty('_id'));
-
 					// 일반유저가 MY탭에서 반려동물을 추가할 경우 계속 추가 등록이 가능하도록 네비게이션 초기화 처리
 					Modal.popTwoBtn(
 						'추가로 등록할 반려동물이 있나요?',

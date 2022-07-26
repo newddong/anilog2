@@ -5,7 +5,7 @@ import {GRAY10, GRAY20, GRAY30, GRAY40, WHITE} from 'Root/config/color';
 import {getNoticeUserList} from 'Root/api/noticeuser';
 import _ from 'lodash';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getUserProfile, setAlarmStatus} from 'Root/api/userapi';
+import {getMemoBoxWithReceiveID, getUserProfile, setAlarmStatus} from 'Root/api/userapi';
 import {CommonActions, useNavigationState} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 import {getFeedDetailById} from 'Root/api/feedapi';
@@ -17,7 +17,7 @@ import userGlobalObject from 'Root/config/userGlobalObject';
 import {txt} from 'Root/config/textstyle';
 import Modal from 'Root/component/modal/Modal';
 import moment from 'moment';
-import {day} from 'Root/i18n/msg';
+import {day, NETWORK_ERROR} from 'Root/i18n/msg';
 
 const wait = timeout => {
 	return new Promise(resolve => setTimeout(resolve, timeout));
@@ -87,7 +87,7 @@ const AlarmList = props => {
 
 				// temp[2] = [...result.msg.thisweek];
 				// console.log('temp', temp[0].length, temp[1].length, temp[2].length);
-				console.log('temp', temp);
+				// console.log('temp', temp);
 				setData(temp);
 				// if (!_.isEqual(JSON.stringify(result.msg), asyncAlarm)) {
 				// 	AsyncStorage.setItem('AlarmList', JSON.stringify(result.msg));
@@ -128,12 +128,29 @@ const AlarmList = props => {
 
 				break;
 			case 'MemoBoxObject':
-				navigation.dispatch(
-					CommonActions.navigate({
-						name: 'UserNotePage',
-						params: {title: data.notice_user_related_id.user_nickname, _id: data.notice_user_related_id._id},
-					}),
+				getMemoBoxWithReceiveID(
+					{user_object_id: data.notice_user_related_id._id},
+					result => {
+						console.log('result', result.msg.length);
+						setNavLoading(false);
+						if (result.msg.length > 0) {
+							navigation.dispatch(
+								CommonActions.navigate({
+									name: 'UserNotePage',
+									params: {title: data.notice_user_related_id.user_nickname, _id: data.notice_user_related_id._id},
+								}),
+							);
+						} else {
+							Modal.alert('이미 삭제된 쪽지입니다.');
+						}
+					},
+					err => {
+						console.log('err', err);
+						setNavLoading(false);
+						Modal.alert(NETWORK_ERROR);
+					},
 				);
+
 				break;
 			case 'FeedObject':
 				// console.log('data.notice_object_type', data);
@@ -170,7 +187,7 @@ const AlarmList = props => {
 					getFeedDetailById(
 						{feedobject_id: data.target_object},
 						result => {
-							console.log(navigation.getState());
+							// console.log(navigation.getState());
 							setNavLoading(false);
 							navigation.dispatch(
 								CommonActions.navigate({
@@ -203,8 +220,7 @@ const AlarmList = props => {
 				getFeedDetailById(
 					{feedobject_id: data.notice_object},
 					result => {
-						console.log('result', result);
-
+						// console.log('result', result);
 						navigation.dispatch(
 							CommonActions.navigate({
 								name: 'UserFeedList',
@@ -288,9 +304,10 @@ const AlarmList = props => {
 				getProtectRequestByProtectRequestId(
 					{protect_request_object_id: data.target_object},
 					result => {
-						console.log('result', result.msg);
 						setNavLoading(false);
-						navigation.push('ProtectCommentList', {protectObject: result.msg, showKeyboard: false});
+						if (result.msg.protect_request_is_delete) {
+							Modal.alert('이미 삭제된 보호요청 건입니다.');
+						} else navigation.push('ProtectCommentList', {protectObject: result.msg, showKeyboard: false});
 					},
 					err => {
 						setNavLoading(false);

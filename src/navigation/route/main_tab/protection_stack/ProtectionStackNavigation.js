@@ -63,7 +63,7 @@ export default ProtectionStackNavigation = props => {
 				options={{header: props => <InputAndSearchHeader {...props} type={'social'} />}}
 			/>
 			<ProtectionStack.Screen name="UserFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />}} />
-			<ProtectionStack.Screen name="HashFeedList" component={FeedList} />
+			<ProtectionStack.Screen name="HashFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />}} />
 			<ProtectionStack.Screen name="ProtectAnimalFeedList" component={FeedList} />
 			<ProtectionStack.Screen name="UserTagFeedList" component={FeedList} options={{header: props => <SimpleHeader {...props} />, title: '프로필'}} />
 			<ProtectionStack.Screen

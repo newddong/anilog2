@@ -1,8 +1,10 @@
+import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {Text, View, Platform, StyleSheet} from 'react-native';
 import HashText from 'Root/component/molecules/info/HashText';
 import {APRI10, GRAY50} from 'Root/config/color';
 import DP from 'Root/config/dp';
+import feed_obj from 'Root/config/feed_obj';
 import {txt} from 'Root/config/textstyle';
 
 /**
@@ -12,6 +14,7 @@ import {txt} from 'Root/config/textstyle';
  * @returns 실종제보 요약정보 컴포넌트
  */
 const MissingReportInfo = props => {
+	const navigation = useNavigation();
 	const {
 		missing_animal_species,
 		missing_animal_species_detail,
@@ -26,6 +29,22 @@ const MissingReportInfo = props => {
 		report_witness_location,
 		feed_content,
 	} = props.data;
+
+	const [data, setData] = React.useState(props.data);
+
+	React.useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			const findIndex = feed_obj.list.findIndex(e => e._id == data._id);
+			if (findIndex != -1) {
+				const isEditedList = feed_obj.edited_list.map(v => v._id).includes(data._id);
+				if (isEditedList) {
+					const edited_index = feed_obj.edited_list.findIndex(e => e._id == data._id);
+					setData(feed_obj.edited_list[edited_index]);
+				}
+			}
+		});
+		return unsubscribe;
+	}, []);
 
 	let newAnimalSex = '';
 	//missing_animal_sex 문자열 처리
@@ -89,8 +108,14 @@ const MissingReportInfo = props => {
 	if (feed_type == 'missing') {
 		const newMissingDateText = missing_animal_date.toString().split('-');
 		const newMissingDate = newMissingDateText[0] + '.' + newMissingDateText[1] + '.' + newMissingDateText[2].toString().substring(0, 2);
-		let splitAddress = missing_animal_lost_location.split('"');
-		let newMissingLocation = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
+		let newMissingLocation = '';
+		if (typeof missing_animal_lost_location == 'object') {
+			newMissingLocation =
+				missing_animal_lost_location.city + ' ' + missing_animal_lost_location.district + ' ' + missing_animal_lost_location.detail;
+		} else {
+			let splitAddress = missing_animal_lost_location.split('"');
+			newMissingLocation = splitAddress[3] + ' ' + splitAddress[7] + ' ' + splitAddress[11];
+		}
 		return (
 			<View style={style.container}>
 				<InfoOneLine title="동물 분류" content={missing_animal_species + ' / ' + missing_animal_species_detail} />
@@ -102,15 +127,19 @@ const MissingReportInfo = props => {
 			</View>
 		);
 	} else if (feed_type == 'report') {
-		// console.log('ReportMissing Date', report_witness_date);
 		//날짜 문자열 형식처리
-		const newReportDateText = report_witness_date.toString().split('-');
-		const newReportDate = newReportDateText[0] + '.' + newReportDateText[1] + '.' + newReportDateText[2].toString().substring(0, 2);
+		const newReportDateText = data.report_witness_date.toString().split('-');
+		let newReportDate = '';
+		if (newReportDateText.length > 1) {
+			newReportDate = newReportDateText[0] + '.' + newReportDateText[1] + '.' + newReportDateText[2].toString().substring(0, 2);
+		} else {
+			newReportDate = data.report_witness_date;
+		}
 		return (
 			<View style={style.container}>
 				<InfoOneLine title="제보 날짜" content={newReportDate} />
-				<InfoOneLine title="제보 장소" content={report_witness_location} />
-				<InfoOneLine title="제보 내용" content={feed_content} isHash />
+				<InfoOneLine title="제보 장소" content={data.report_witness_location} />
+				{!props.isComment && <InfoOneLine title="제보 내용" content={data.feed_content} isHash />}
 			</View>
 		);
 	}

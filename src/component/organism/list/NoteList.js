@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, ScrollView, Text, View, StyleSheet, SafeAreaView} from 'react-native';
+import {FlatList, ScrollView, Text, View, StyleSheet, SafeAreaView, RefreshControl} from 'react-native';
 import {accountHashList} from 'Organism/style_organism copy';
 import UserNote from '../listitem/UserNote';
 
@@ -9,15 +9,14 @@ import UserNote from '../listitem/UserNote';
  * @param {object} props.data - 쪽지 데이터
  * @param {void} props.onClickLabel - 쪽지 라벨 클릭
  * @param {void} props.onCheckBox - 선택 체크박스 클릭
+ * @param {void} props.refresh - 메시지 갱신
  * @param {boolean} props.checkBoxMode - 선택 삭제 모드 여부 (default= false)
  * @param {boolean} props.showFollowBtn - 선택 삭제 모드 여부 (default= false)
  */
 const NoteList = props => {
-	console.log('NoteList props', props.data);
 	const renderItem = ({item, index}) => {
-		console.log('item', item);
 		return (
-			<View style={[accountHashList.userAccount]}>
+			<View style={[style.userAccount]}>
 				<UserNote
 					data={item}
 					checkBoxMode={props.checkBoxMode}
@@ -28,12 +27,28 @@ const NoteList = props => {
 		);
 	};
 
+	const [refreshing, setRefreshing] = React.useState(false); //위로 스크롤 시도 => 리프레싱
+
+	const wait = timeout => {
+		return new Promise(resolve => setTimeout(resolve, timeout));
+	};
+
+	const onRefresh = () => {
+		setRefreshing(true);
+		wait(0).then(() => setRefreshing(false));
+	};
+
+	React.useEffect(() => {
+		refreshing ? props.refresh() : false;
+	}, [refreshing]);
+
 	return (
-		<View style={[styles.container]}>
+		<View style={[style.container]}>
 			<FlatList
-				// extraData={props.data}
+				extraData={props.data}
 				data={props.data}
-				// keyExtractor={item => item._id}
+				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+				keyExtractor={item => item._id}
 				renderItem={renderItem}
 				showsVerticalScrollIndicator={false}
 				ListEmptyComponent={props.whenEmpty}
@@ -42,16 +57,17 @@ const NoteList = props => {
 	);
 };
 
-const styles = StyleSheet.create({
+const style = StyleSheet.create({
 	container: {
 		width: 750 * DP,
 		minHeight: 1322 * DP,
+		justifyContent: 'center',
 		alignItems: 'center',
 	},
-	userContainer: {
+	userAccount: {
 		width: 750 * DP,
-		// height: 94 * DP,
-		marginBottom: 40 * DP,
+		height: 94 * DP,
+		marginTop: 40 * DP,
 	},
 });
 
@@ -61,6 +77,7 @@ NoteList.defaultProps = {
 	onCheckBox: e => console.log(e),
 	checkBoxMode: false, // CheckBox 콘테이너 Show T/F
 	showFollowBtn: false,
+	refresh: () => {},
 };
 
 export default NoteList;

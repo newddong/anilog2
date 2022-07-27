@@ -19,6 +19,7 @@ export default ProtectCommentList = props => {
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
 	const [comments, setComments] = React.useState([]);
+	const [num_of_comments, setNum_of_comments] = React.useState(0);
 	const [parentComment, setParentComment] = React.useState();
 	const [refresh, setRefresh] = React.useState(true);
 	const [heightReply, setReplyHeight] = React.useState(0); //키보드 리플박스 높이
@@ -66,6 +67,7 @@ export default ProtectCommentList = props => {
 			},
 			comments => {
 				let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+				updateCommentsLength(res);
 				if (parent) {
 					const findIndex = res.findIndex(e => e._id == parent._id); //댓글 삭제 후
 					res.map((v, i) => {
@@ -144,6 +146,7 @@ export default ProtectCommentList = props => {
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
 								let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+								updateCommentsLength(res);
 								if (editData.parent != undefined && editData.children_count == 0) {
 									res.map((v, i) => {
 										res[i].isEdited = i == editData.parent ? true : false;
@@ -194,6 +197,7 @@ export default ProtectCommentList = props => {
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
 								let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+								updateCommentsLength(res);
 								setComments(res);
 								setPrivateComment(false);
 								setEditMode(false);
@@ -226,6 +230,19 @@ export default ProtectCommentList = props => {
 				);
 			}
 		}
+	};
+
+	//댓글 개수 갱신
+	const updateCommentsLength = res => {
+		let comments_length = 0;
+		res.map((v, i) => {
+			comments_length = comments_length + v.children_count;
+			if (v.comment_is_delete) {
+				comments_length--;
+			}
+		});
+		comments_length = comments_length + res.length;
+		setNum_of_comments(comments_length);
 	};
 
 	//페이지 상단 보호소 프로필 클릭
@@ -466,7 +483,7 @@ export default ProtectCommentList = props => {
 				</View>
 				<View style={{height: 2 * DP, width: 694 * DP, backgroundColor: GRAY40, marginVertical: 30 * DP}}></View>
 				<View style={{alignItems: 'flex-end', width: 694 * DP}}>
-					{comments.length == 0 ? <></> : <Text style={[txt.noto26, {color: GRAY10}]}>댓글 {comments.length}개 </Text>}
+					{comments.length == 0 ? <></> : <Text style={[txt.noto26, {color: GRAY10}]}>댓글 {num_of_comments}개 </Text>}
 				</View>
 			</View>
 		);

@@ -22,10 +22,10 @@ const NoteMessageList = props => {
 
 
 	React.useEffect(() => {
-		fetchMsgList();
-	}, []);
+		scrollToMsg();
+	}, [props.data]);
 
-	const fetchMsgList = () => {
+	const scrollToMsg = () => {
 		try {
 			if (props.data.length > 0) {
 				setTimeout(
@@ -35,7 +35,7 @@ const NoteMessageList = props => {
 							index: props.data.length - 1,
 							viewPosition: 0,
 						}),
-					1000,
+					100,
 				);
 			}
 		} catch (err) {
@@ -69,7 +69,7 @@ const NoteMessageList = props => {
 	};
 
 	React.useEffect(() => {
-		refreshing ? fetchMsgList() : false;
+		refreshing ? scrollToMsg() : false;
 	}, [refreshing]);
 
 

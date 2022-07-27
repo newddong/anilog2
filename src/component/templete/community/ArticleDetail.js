@@ -92,7 +92,7 @@ export default ArticleDetail = props => {
 				community_object_id: props.route.params.community_object._id,
 			},
 			result => {
-				console.log('ArticleDetail / getCommunityByObjectId / Result', result.status);
+				// console.log('ArticleDetail / getCommunityByObjectId / Result', result.msg);
 				setData(result.msg);
 				switch (result.msg.community_free_type) {
 					case 'talk':
@@ -180,6 +180,7 @@ export default ArticleDetail = props => {
 							res[i].isDeleted = false;
 						});
 					}
+					data != 'false' ? updateCommentsLength(res) : false;
 					res.push(dummyForBox);
 					setComments(res);
 					if (props.route.params.comment) {
@@ -258,6 +259,7 @@ export default ArticleDetail = props => {
 								comments => {
 									!parentComment && setComments([]); //댓글목록 초기화
 									let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+									updateCommentsLength(res);
 									let dummyForBox = res[res.length - 1];
 									if (editData.parent != undefined && editData.children_count == 0) {
 										res.map((v, i) => {
@@ -322,6 +324,7 @@ export default ArticleDetail = props => {
 								comments => {
 									!parentComment && setComments([]); //댓글목록 초기화
 									let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+									updateCommentsLength(res);
 									let dummyForBox = res[res.length - 1];
 									res.push(dummyForBox);
 									setComments(res);
@@ -360,6 +363,18 @@ export default ArticleDetail = props => {
 				Modal.close();
 			}
 		}
+	};
+
+	const updateCommentsLength = res => {
+		let commets_length = 0;
+		res.map((v, i) => {
+			commets_length = commets_length + v.children_count;
+			if (v.comment_is_delete) {
+				commets_length--;
+			}
+		});
+		commets_length = commets_length + res.length;
+		data != 'false' ? setData({...data, community_comment_count: commets_length}) : false;
 	};
 
 	const [isReplyFocused, setReplyFocus] = React.useState(false);
@@ -644,7 +659,7 @@ export default ArticleDetail = props => {
 					</TouchableOpacity>
 					{comments && comments.length > 0 ? (
 						<View style={[{position: 'absolute', right: 0}]}>
-							<Text style={[txt.noto26]}> 댓글 {comments.length - 1}개</Text>
+							<Text style={[txt.noto26]}> 댓글 {data.community_comment_count}개</Text>
 						</View>
 					) : (
 						<></>

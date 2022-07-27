@@ -11,7 +11,7 @@ import {
 	PixelRatio,
 	ActivityIndicator,
 	TouchableWithoutFeedback,
-	TouchableOpacity
+	TouchableOpacity,
 } from 'react-native';
 import {APRI10, WHITE} from 'Root/config/color';
 import {Write94, Camera54} from 'Atom/icon';
@@ -147,7 +147,7 @@ export default FeedList = ({route}) => {
 						}, 0);
 						return {
 							...v,
-							offset: route.name == 'MainHomeFeedList'?offset+276*DP:offset,
+							offset: route.name == 'MainHomeFeedList' ? offset + 276 * DP : offset,
 						};
 					}),
 			);
@@ -560,7 +560,7 @@ export default FeedList = ({route}) => {
 	};
 	const [viewIndex, setViewIndex] = React.useState([]);
 	const renderItem = ({item, index}) => {
-		return <Feed data={item} deleteFeed={deleteFeedItem} isView={focused&& viewIndex == index} onPressPhoto={onPressPhoto} />;
+		return <Feed data={item} deleteFeed={deleteFeedItem} isView={focused && viewIndex == index} onPressPhoto={onPressPhoto} />;
 		// return (focused&&<View style={{backgroundColor:viewIndex==index?'red':'blue'}}><Feed data={item} deleteFeed={deleteFeedItem} isView={focused&&viewIndex==index}/></View>);
 	};
 
@@ -572,7 +572,7 @@ export default FeedList = ({route}) => {
 		setRefreshing(true);
 		wait(0).then(() => setRefreshing(false));
 	};
-	
+
 	const rememberScroll = e => {
 		if (e.nativeEvent.contentOffset.y > 0) {
 			userGlobalObject.t = e.nativeEvent.contentOffset;
@@ -648,44 +648,34 @@ export default FeedList = ({route}) => {
 				/>
 			}
 			{userGlobalObject.userInfo && (
-				<View style={[{position: 'absolute', bottom: 40 * DP, right: 30 * DP}]}>
-					{/* <View
-						style={[
-							{
-								height: 94 * DP,
-								width: 94 * DP,
-								justifyContent: 'center',
-								alignItems: 'center',
-								backgroundColor: '#FFF',
-								borderRadius: 30 * DP,
-								marginBottom: 20 * DP,
-							},
-							buttonstyle.shadow,
-						]}>
-						<Camera54 onPress={movetoCamera} />
-					</View> */}
-
-					<View
-						style={[
-							{
-								height: 94 * DP,
-								width: 94 * DP,
-								justifyContent: 'center',
-								alignItems: 'center',
-								backgroundColor: '#ff9888',
-								borderRadius: 35 * DP,
-								marginBottom: 20 * DP,
-							},
-							buttonstyle.shadow,
-						]}>
-						<Write94 onPress={moveToFeedWrite} />
-					</View>
+				<View
+					style={[
+						{
+							position: 'absolute',
+							bottom: 40 * DP,
+							right: 30 * DP,
+							height: 94 * DP,
+							width: 94 * DP,
+							justifyContent: 'center',
+							alignItems: 'center',
+							backgroundColor: '#ff9888',
+							borderRadius: 35 * DP,
+						},
+						buttonstyle.shadow,
+					]}>
+					<Write94 onPress={moveToFeedWrite} />
 				</View>
 			)}
 			{/*센트리오류 테스트*/}
-			{false&&<TouchableOpacity onPress={()=>{console.log(androidError)}} style={{width:100,height:100,backgroundColor:'yellow',position:'absolute'}}>
-				<View style={{width:100,height:100,backgroundColor:'blue',position:'absolute'}}></View>
-				</TouchableOpacity>}
+			{false && (
+				<TouchableOpacity
+					onPress={() => {
+						console.log(androidError);
+					}}
+					style={{width: 100, height: 100, backgroundColor: 'yellow', position: 'absolute'}}>
+					<View style={{width: 100, height: 100, backgroundColor: 'blue', position: 'absolute'}}></View>
+				</TouchableOpacity>
+			)}
 			{false && (
 				<View style={{backgroundColor: 'red', width: 750 * DP, top: 0, position: 'absolute'}}>
 					<View style={{backgroundColor: 'yellow', marginBottom: 20}}>

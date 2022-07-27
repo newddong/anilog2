@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
-import {Platform,View,Text,TouchableOpacity} from 'react-native';
-import { txt } from 'Root/config/textstyle';
+import {Platform, View, Text, TouchableOpacity, LogBox} from 'react-native';
+import {txt} from 'Root/config/textstyle';
 import RootStackNavigation from 'Navigation/route/RootStackNavigation';
 import codePush from 'react-native-code-push';
 import appConfig, {DEV, RELEASE, STAGING} from 'Root/config/appConfig';
@@ -10,8 +10,11 @@ import {init, captureMessage} from '@sentry/browser';
 import {RewriteFrames as RewriteFramesIntegration} from '@sentry/integrations';
 import Raven from 'raven-js';
 import ErrorBoundary from 'react-native-error-boundary';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+
 // require('raven-js/plugins/react-native')(Raven)
 // import Raven from 'raven-js/plugins/react-native';
+LogBox.ignoreLogs(['Sending']);
 const NoRaven = false;
 const RELEASE_ID = appConfig.sentryReleaseID;
 const PUBLIC_DSN = appConfig.mode == DEV ? appConfig.sentryDsnStaging : appConfig.sentryDsnRelease;
@@ -21,7 +24,7 @@ const integrations =
 		: new RewriteFramesIntegration({
 				prefix: '',
 		  });
-(function sentryinit(){
+(function sentryinit() {
 	Sentry.init({
 		dsn: PUBLIC_DSN,
 		release: RELEASE_ID,
@@ -33,8 +36,8 @@ const integrations =
 		release: RELEASE_ID,
 		integrations: [integrations],
 	});
-	!NoRaven&&Raven.config(PUBLIC_DSN, {release: RELEASE_ID}).install();
-})()
+	!NoRaven && Raven.config(PUBLIC_DSN, {release: RELEASE_ID}).install();
+})();
 const codePushOptions = {
 	checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
 	// 언제 업데이트를 체크하고 반영할지를 정한다.
@@ -64,9 +67,9 @@ const consoleOld = console;
 		}
 	});
 })();
-const ErrorPage = (props) => {
+const ErrorPage = props => {
 	return (
-		<View style={{flex:1,backgroundColor:'red',justifyContent:'center',alignItems:'center'}}>
+		<View style={{flex: 1, backgroundColor: 'red', justifyContent: 'center', alignItems: 'center'}}>
 			<Text style={txt.noto30b}>에러가 발생했습니다.</Text>
 			<TouchableOpacity style={{width: 300, height: 300, backgroundColor: 'yellow'}} onPress={() => codePush.restartApp()}>
 				<Text style={txt.noto24b}>앱을 재시작합니다. 노란 박스를 눌러주세요</Text>
@@ -91,14 +94,14 @@ const App = () => {
 	// 	// <Route/>
 	// );
 
-	
-
 	return (
-		<Sentry.ErrorBoundary fallback={props=><ErrorPage {...props}/>}>
-			<RootStackNavigation />
-		</Sentry.ErrorBoundary>
+		<SafeAreaProvider>
+			<Sentry.ErrorBoundary fallback={props => <ErrorPage {...props} />}>
+				<RootStackNavigation />
+			</Sentry.ErrorBoundary>
+		</SafeAreaProvider>
 	);
 };
 // export default Sentry.wrap(codePush(codePushOptions)(App));
-export default (codePush(codePushOptions)(Sentry.wrap(App)));
-// export default App
+// export default (codePush(codePushOptions)(Sentry.wrap(App)));
+export default App;

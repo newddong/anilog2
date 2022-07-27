@@ -128,28 +128,20 @@ const AlarmList = props => {
 
 				break;
 			case 'MemoBoxObject':
-				getMemoBoxWithReceiveID(
-					{user_object_id: data.notice_user_related_id._id},
-					result => {
-						console.log('result', result.msg.length);
-						setNavLoading(false);
-						if (result.msg.length > 0) {
-							navigation.dispatch(
-								CommonActions.navigate({
-									name: 'UserNotePage',
-									params: {title: data.notice_user_related_id.user_nickname, _id: data.notice_user_related_id._id},
-								}),
-							);
-						} else {
-							Modal.alert('이미 삭제된 쪽지입니다.');
-						}
-					},
-					err => {
-						console.log('err', err);
-						setNavLoading(false);
-						Modal.alert(NETWORK_ERROR);
-					},
-				);
+
+				console.log('datadada', data);
+				if (data.notice_is_delete) {
+					Modal.popOneBtn('삭제된 쪽지 입니다.', '확인', () => Modal.close());
+					setNavLoading(false);
+				} else {
+					navigation.dispatch(
+						CommonActions.navigate({
+							name: 'UserNotePage',
+							params: {title: data.notice_user_related_id.user_nickname, _id: data.notice_user_related_id._id},
+						}),
+					);
+				}
+
 
 				break;
 			case 'FeedObject':

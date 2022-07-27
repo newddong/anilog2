@@ -68,11 +68,13 @@ const OneMessage = props => {
 				<View style={[styles.messageContainer]}>
 					<View style={styles.receivedMessageContainer}>
 						<View style={[{marginRight: 32 * DP}]}>
-							{data.memobox_send_id.user_profile_uri != undefined ? (
-								<FastImage source={{uri: data.memobox_send_id.user_profile_uri}} style={[styles.img_round_80]} />
-							) : (
-								<ProfileDefaultImg size={styles.img_round_80} />
-							)}
+							<TouchableOpacity onPress={() => props.onClick(data.memobox_send_id)}>
+								{data.memobox_send_id.user_profile_uri != undefined ? (
+									<FastImage source={{uri: data.memobox_send_id.user_profile_uri}} style={[styles.img_round_80]} />
+								) : (
+									<ProfileDefaultImg size={styles.img_round_80} />
+								)}
+							</TouchableOpacity>
 						</View>
 
 						<View>

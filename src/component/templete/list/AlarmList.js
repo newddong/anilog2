@@ -128,12 +128,19 @@ const AlarmList = props => {
 
 				break;
 			case 'MemoBoxObject':
-				navigation.dispatch(
-					CommonActions.navigate({
-						name: 'UserNotePage',
-						params: {title: data.notice_user_related_id.user_nickname, _id: data.notice_user_related_id._id},
-					}),
-				);
+				console.log('datadada', data);
+				if (data.notice_is_delete) {
+					Modal.popOneBtn('삭제된 쪽지 입니다.', '확인', () => Modal.close());
+					setNavLoading(false);
+				} else {
+					navigation.dispatch(
+						CommonActions.navigate({
+							name: 'UserNotePage',
+							params: {title: data.notice_user_related_id.user_nickname, _id: data.notice_user_related_id._id},
+						}),
+					);
+				}
+
 				break;
 			case 'FeedObject':
 				// console.log('data.notice_object_type', data);

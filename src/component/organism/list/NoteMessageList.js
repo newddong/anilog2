@@ -2,6 +2,7 @@ import React from 'react';
 import {FlatList, ScrollView, Text, View, StyleSheet, ActivityIndicator} from 'react-native';
 import OneMessage from 'Organism/listitem/OneMessage';
 import {styles} from 'Root/component/atom/image/imageStyle';
+import {useNavigation} from '@react-navigation/core';
 
 /**
  * 쪽지 리스트 출력 컴포넌트
@@ -14,7 +15,7 @@ import {styles} from 'Root/component/atom/image/imageStyle';
  */
 const NoteMessageList = props => {
 	const flatlistRef = React.useRef();
-
+	const navigation = useNavigation();
 	React.useEffect(() => {
 		setTimeout(
 			() =>
@@ -32,11 +33,14 @@ const NoteMessageList = props => {
 		//쪽지부분 정책 결정 필요
 		return (
 			<View style={[style.messageItemContainer]}>
-				<OneMessage data={item} />
+				<OneMessage data={item} onClick={onClick} />
 			</View>
 		);
 	};
-
+	const onClick = id => {
+		console.log('clicked');
+		navigation.navigate({key: id, name: 'UserProfile', params: {userobject: id}});
+	};
 	return (
 		<View style={style.container}>
 			{/* <Text>쪽지 내용 리스트 나오는 화면</Text> */}

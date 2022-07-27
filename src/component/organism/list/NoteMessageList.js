@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, ScrollView, Text, View, StyleSheet, ActivityIndicator} from 'react-native';
+import {FlatList, ScrollView, Text, View, StyleSheet, ActivityIndicator, RefreshControl} from 'react-native';
 import OneMessage from 'Organism/listitem/OneMessage';
 import {styles} from 'Root/component/atom/image/imageStyle';
 import {useNavigation} from '@react-navigation/core';
@@ -15,18 +15,33 @@ import {useNavigation} from '@react-navigation/core';
  */
 const NoteMessageList = props => {
 	const flatlistRef = React.useRef();
+
 	const navigation = useNavigation();
+
+	const [refreshing, setRefreshing] = React.useState(false); //위로 스크롤 시도 => 리프레싱
+
+
 	React.useEffect(() => {
-		setTimeout(
-			() =>
-				flatlistRef.current?.scrollToIndex({
-					animated: true,
-					index: props.data.length - 1,
-					viewPosition: 0,
-				}),
-			1000,
-		);
+		fetchMsgList();
 	}, []);
+
+	const fetchMsgList = () => {
+		try {
+			if (props.data.length > 0) {
+				setTimeout(
+					() =>
+						flatlistRef.current?.scrollToIndex({
+							animated: true,
+							index: props.data.length - 1,
+							viewPosition: 0,
+						}),
+					1000,
+				);
+			}
+		} catch (err) {
+			console.log('err', err);
+		}
+	};
 
 	const renderItem = ({item, index}) => {
 		// console.log('item', item);
@@ -37,10 +52,27 @@ const NoteMessageList = props => {
 			</View>
 		);
 	};
+
 	const onClick = id => {
 		console.log('clicked');
 		navigation.navigate({key: id, name: 'UserProfile', params: {userobject: id}});
 	};
+
+
+	const wait = timeout => {
+		return new Promise(resolve => setTimeout(resolve, timeout));
+	};
+
+	const onRefresh = () => {
+		setRefreshing(true);
+		wait(0).then(() => setRefreshing(false));
+	};
+
+	React.useEffect(() => {
+		refreshing ? fetchMsgList() : false;
+	}, [refreshing]);
+
+
 	return (
 		<View style={style.container}>
 			{/* <Text>쪽지 내용 리스트 나오는 화면</Text> */}
@@ -50,6 +82,7 @@ const NoteMessageList = props => {
 				renderItem={renderItem}
 				showsVerticalScrollIndicator={false}
 				ref={flatlistRef}
+				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 				onScrollToIndexFailed={info => {
 					const wait = new Promise(resolve => setTimeout(resolve, 500));
 					wait.then(() => {

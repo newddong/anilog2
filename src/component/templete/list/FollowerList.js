@@ -36,6 +36,10 @@ export default FollowerList = props => {
 	}, []);
 
 	React.useEffect(() => {
+		navigation.navigate(props.screen);
+	}, [props.screen]);
+
+	React.useEffect(() => {
 		setFollower(props.followers);
 		setLoading(false);
 	}, [props.followers]);

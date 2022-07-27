@@ -48,11 +48,19 @@ export default FeedWriteHeader = ({route, options}) => {
 							{feedobject_id: param._id},
 							result => {
 								// navigation.navigate('FeedCommentList', {feedobject: result.msg});
+								let edited = {...route.params, feed_medias: result.msg.feed_medias, feed_thumbnail: result.msg.feed_thumbnail};
+								if (route.params && route.params.feed_type == 'report') {
+									edited.report_witness_location = result.msg?.report_witness_location; //제보 위치 타입 오류 방지를 위한 처리
+								} else if (route.params && route.params.feed_type == 'missing') {
+									edited.missing_animal_date = result.msg?.missing_animal_date; // 실종날짜 타입 오류 방지를 위한 처리
+								}
+								pushEditedFeedList(edited);
 								setTimeout(() => {
-									navigation.reset({
-										index: 1,
-										routes: [{name: 'MainTab'}, {name: 'FeedCommentList', params: {feedobject: result.msg}}],
-									});
+									navigation.goBack();
+									// navigation.reset({
+									// 	index: 1,
+									// 	routes: [{name: 'MainTab'}, {name: 'FeedCommentList', params: {feedobject: result.msg}}],
+									// });
 								}, 200);
 							},
 							err => {
@@ -62,10 +70,9 @@ export default FeedWriteHeader = ({route, options}) => {
 					} else {
 						let edited = {...route.params, feed_medias: result.msg.feed_medias, feed_thumbnail: result.msg.feed_thumbnail};
 						if (route.params && route.params.feed_type == 'report') {
-							edited.report_witness_location = result.msg?.report_witness_location;
+							edited.report_witness_location = result.msg?.report_witness_location; //제보 위치 타입 오류 방지를 위한 처리
 						} else if (route.params && route.params.feed_type == 'missing') {
-							console.log('result.msg?.missing_animal_date', result.msg?.missing_animal_date);
-							edited.missing_animal_date = result.msg?.missing_animal_date;
+							edited.missing_animal_date = result.msg?.missing_animal_date; // 실종날짜 타입 오류 방지를 위한 처리
 						}
 						pushEditedFeedList(edited);
 						feed_obj.edit_obj = edited; //피드수정 => 수정한 리스트 아이템만 setData하기 위한 오브젝트

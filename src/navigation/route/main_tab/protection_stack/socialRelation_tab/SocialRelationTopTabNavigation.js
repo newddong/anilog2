@@ -2,13 +2,13 @@ import React from 'react';
 import {StyleSheet, Dimensions} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import FollowerList from 'Templete/list/FollowerList';
-import RecommendedAccountList from 'Templete/list/RecommendedAccountList';
 import DP from 'Root/config/dp';
 import {APRI10, BLACK, GRAY10, GRAY40, WHITE} from 'Root/config/color';
 import {count_to_K} from 'Root/util/stringutil';
 import {getFollowers, getFollows, getUserProfile} from 'Root/api/userapi';
 import {useNavigation} from '@react-navigation/core';
 import searchContext from 'Root/config/searchContext';
+import Loading from 'Root/component/molecules/modal/Loading';
 
 const SocialRelationTab = createMaterialTopTabNavigator();
 
@@ -22,7 +22,6 @@ export default SocialRelationTopTabNavigation = props => {
 	const [loading, setLoading] = React.useState(true);
 	const params = props.route.params;
 	const initial = params.initial != undefined ? params.initial : 'FollowerList';
-	// console.log('type', data.user_type);
 
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('blur', () => {
@@ -33,22 +32,25 @@ export default SocialRelationTopTabNavigation = props => {
 
 	//헤더 타이틀 설정 작업 및 유저 오브젝트 할당
 	React.useEffect(() => {
-		navigation.setOptions({title: params.userobject.user_nickname});
 		fetchData();
-	}, [params]);
+	}, []);
 
 	React.useEffect(() => {
 		//입력마다 api 접속하는 것이 아닌 타이핑 이후 500ms 주어 타이핑이 종료되었을 때 검색을 실시하도록 timeOut 설정
-		setTimeout(() => {
-			fetchFollowerData();
-		}, 300);
+		if (data != 'false') {
+			setTimeout(() => {
+				fetchFollowerData();
+			}, 300);
+		}
 	}, [followerInput]);
 
 	React.useEffect(() => {
 		//입력마다 api 접속하는 것이 아닌 타이핑 이후 500ms 주어 타이핑이 종료되었을 때 검색을 실시하도록 timeOut 설정
-		setTimeout(() => {
-			fetchFollowData();
-		}, 300);
+		if (data != 'false') {
+			setTimeout(() => {
+				fetchFollowData();
+			}, 300);
+		}
 	}, [followInput]);
 
 	const fetchData = async () => {
@@ -153,46 +155,69 @@ export default SocialRelationTopTabNavigation = props => {
 		setFollowInput(text);
 	};
 
-	return (
-		<SocialRelationTab.Navigator
-			initialRouteName={initial}
-			screenOptions={{
-				tabBarItemStyle: {height: 78 * DP},
-				tabBarIndicatorStyle: {backgroundColor: params.userobject.user_type == 'pet' ? WHITE : BLACK, height: 6 * DP},
-				tabBarLabelStyle: [styles.tabbarLabelStyle],
-				tabBarInactiveTintColor: GRAY10,
-				tabBarActiveTintColor: BLACK,
-				tabBarStyle: {
-					borderBottomWidth: 2 * DP,
-					borderTopColor: GRAY40,
-					borderBottomColor: GRAY40,
-					elevation: 0,
-					// height: params.userobject.user_type == 'pet' ? 0 : 78 * DP,
-				},
-			}}
-			initialLayout={{width: Dimensions.get('window').width}}
-			optimizationsEnabled={true}>
-			{/* <SocialRelationTab.Screen name="LinkedAccountList" component={LinkedAccountList} initialParams={{userobject: data}} /> */}
-			<SocialRelationTab.Screen
-				name="FollowerList"
-				initialParams={{userobject: data}}
-				options={{tabBarLabel: count_to_K(followers.length) + ' ' + '팔로워'}}>
-				{props => (
-					<FollowerList {...props} followers={followers} resetProfileInfo={fetchData} onChangeSearchInput={onChangeFollower} loading={loading} />
-				)}
-			</SocialRelationTab.Screen>
-			{params.userobject.user_type != 'pet' ? (
+	if (data == 'false') {
+		return (
+			<>
+				<Loading isModal={false} />
+			</>
+		);
+	} else
+		return (
+			<SocialRelationTab.Navigator
+				initialRouteName={initial}
+				screenOptions={{
+					tabBarItemStyle: {height: 78 * DP},
+					tabBarIndicatorStyle: {backgroundColor: params.userobject.user_type == 'pet' ? WHITE : BLACK, height: 6 * DP},
+					tabBarLabelStyle: [styles.tabbarLabelStyle],
+					tabBarInactiveTintColor: GRAY10,
+					tabBarActiveTintColor: BLACK,
+					tabBarStyle: {
+						borderBottomWidth: 2 * DP,
+						borderTopColor: GRAY40,
+						borderBottomColor: GRAY40,
+						elevation: 0,
+						// height: params.userobject.user_type == 'pet' ? 0 : 78 * DP,
+					},
+				}}
+				initialLayout={{width: Dimensions.get('window').width}}
+				optimizationsEnabled={true}>
+				{/* <SocialRelationTab.Screen name="LinkedAccountList" component={LinkedAccountList} initialParams={{userobject: data}} /> */}
 				<SocialRelationTab.Screen
-					name="FollowingList"
+					name="FollowerList"
 					initialParams={{userobject: data}}
-					options={{tabBarLabel: count_to_K(follows.length) + ' ' + '팔로잉'}}>
-					{props => <FollowerList {...props} follows={follows} resetProfileInfo={fetchData} onChangeSearchInput={onChangeFollow} loading={loading} />}
+					options={{tabBarLabel: count_to_K(followers.length) + ' ' + '팔로워'}}>
+					{props => (
+						<FollowerList
+							{...props}
+							followers={followers}
+							resetProfileInfo={fetchData}
+							onChangeSearchInput={onChangeFollower}
+							loading={loading}
+							screen={params.initial}
+						/>
+					)}
 				</SocialRelationTab.Screen>
-			) : (
-				<></>
-			)}
+				{params.userobject.user_type != 'pet' ? (
+					<SocialRelationTab.Screen
+						name="FollowingList"
+						initialParams={{userobject: data}}
+						options={{tabBarLabel: count_to_K(follows.length) + ' ' + '팔로잉'}}>
+						{props => (
+							<FollowerList
+								{...props}
+								follows={follows}
+								resetProfileInfo={fetchData}
+								onChangeSearchInput={onChangeFollow}
+								loading={loading}
+								screen={params.initial}
+							/>
+						)}
+					</SocialRelationTab.Screen>
+				) : (
+					<></>
+				)}
 
-			{/* <SocialRelationTab.Screen
+				{/* <SocialRelationTab.Screen
 				name="RecommendedAccountList"
 				options={{
 					tabBarLabel: '추천',
@@ -200,8 +225,8 @@ export default SocialRelationTopTabNavigation = props => {
 				component={RecommendedAccountList}
 				initialParams={{userobject: data}}
 			/> */}
-		</SocialRelationTab.Navigator>
-	);
+			</SocialRelationTab.Navigator>
+		);
 };
 
 const styles = StyleSheet.create({

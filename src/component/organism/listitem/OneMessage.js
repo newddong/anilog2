@@ -1,14 +1,11 @@
 import React from 'react';
-import {FlatList, ScrollView, Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import {accountHashList} from 'Organism/style_organism copy';
-import UserNote from './UserNote';
+import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import DP from 'Root/config/dp';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import {txt} from 'Root/config/textstyle';
 import {APRI10, GRAY10, GRAY20, GRAY30, WHITE} from 'Root/config/color';
 import {ProfileDefaultImg} from 'Component/atom/icon';
 import {getTimeLapsed} from 'Root/util/dateutil';
-import {setMemoBoxWithReport} from 'Root/api/userapi';
 import Modal from 'Root/component/modal/Modal';
 import {REPORT_MENU} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
@@ -68,7 +65,7 @@ const OneMessage = props => {
 	else {
 		return (
 			<View style={[{alignItems: 'center'}]}>
-				<View style={styles.messageContainer}>
+				<View style={[styles.messageContainer]}>
 					<View style={styles.receivedMessageContainer}>
 						<View style={[{marginRight: 32 * DP}]}>
 							<TouchableOpacity onPress={() => props.onClick(data.memobox_send_id)}>
@@ -102,7 +99,7 @@ const OneMessage = props => {
 };
 const styles = StyleSheet.create({
 	messageContainer: {
-		width: 654 * DP,
+		width: 694 * DP,
 	},
 	sendMessageContainer: {
 		alignItems: 'flex-end',

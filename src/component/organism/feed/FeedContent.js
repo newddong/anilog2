@@ -73,7 +73,7 @@ export default FeedContent = props => {
 				setCommentCount(feed_obj.list[findIndex].feed_comment_count);
 				setIsFavorite(feed_obj.list[findIndex].is_favorite);
 				const isEditedList = feed_obj.edited_list.map(v => v._id).includes(_id);
-				if (feed_obj.shouldUpdateByEdit && isEditedList) {
+				if (isEditedList) {
 					const edited_index = feed_obj.edited_list.findIndex(e => e._id == _id);
 					setData(feed_obj.edited_list[edited_index]);
 				}
@@ -533,7 +533,7 @@ export default FeedContent = props => {
 					!route.name.includes('TagMeFeedList') &&
 					(feed_type == 'report' || feed_type == 'missing') && (
 						<View style={[style.missingReportInfo]}>
-							<MissingReportInfo data={props.data} />
+							<MissingReportInfo data={data} isComment={props.isComment} />
 						</View>
 					)}
 				{props.showMedia ? (

@@ -116,6 +116,8 @@ const OneButtonSelectModal = props => {
 	//하단 드롭다운에서 완료 버튼 클릭
 	const onSelect = () => {
 		setSelectOpen(false);
+		setConfirmIndex(selectedItem);
+		setSelectedItem(selectedItem);
 		setConfirmedSelect(data[selectedItem - 2]);
 	};
 

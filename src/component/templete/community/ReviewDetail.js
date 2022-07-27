@@ -221,6 +221,7 @@ export default ReviewDetail = props => {
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
 								let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+								updateCommentsLength(res);
 								let dummyForBox = res[res.length - 1];
 								if (editData.parent != undefined && editData.children_count == 0) {
 									res.map((v, i) => {
@@ -286,6 +287,7 @@ export default ReviewDetail = props => {
 							comments => {
 								!parentComment && setComments([]); //댓글목록 초기화
 								let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+								updateCommentsLength(res);
 								let dummyForBox = res[res.length - 1];
 								res.push(dummyForBox);
 								setComments(res);
@@ -334,6 +336,7 @@ export default ReviewDetail = props => {
 			comments => {
 				// console.log('comments', comments.msg);
 				let res = comments.msg.filter(e => !e.comment_is_delete || e.children_count != 0);
+				updateCommentsLength(res);
 				let dummyForBox = res[res.length - 1];
 				if (parent) {
 					const findIndex = res.findIndex(e => e._id == parent._id);
@@ -367,6 +370,18 @@ export default ReviewDetail = props => {
 				}
 			},
 		);
+	};
+
+	const updateCommentsLength = res => {
+		let commets_length = 0;
+		res.map((v, i) => {
+			commets_length = commets_length + v.children_count;
+			if (v.comment_is_delete) {
+				commets_length--;
+			}
+		});
+		commets_length = commets_length + res.length;
+		data != 'false' ? setData({...data, community_comment_count: commets_length}) : false;
 	};
 
 	const [isReplyFocused, setReplyFocus] = React.useState(false);
@@ -691,7 +706,7 @@ export default ReviewDetail = props => {
 						<Text style={[txt.noto24, {color: GRAY10, marginLeft: 10 * DP}]}>{count_to_K(data.community_like_count)}</Text>
 					</TouchableOpacity>
 					<View style={[style.commentList]}>
-						{comments && comments.length > 0 ? <Text style={[txt.noto26, {textAlign: 'right'}]}> 댓글 {comments.length - 1}개</Text> : <></>}
+						{comments && comments.length > 0 ? <Text style={[txt.noto26, {textAlign: 'right'}]}> 댓글 {data.community_comment_count}개</Text> : <></>}
 					</View>
 				</View>
 			</View>

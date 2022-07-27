@@ -5,6 +5,7 @@ import DP from 'Root/config/dp';
 import Modal from 'Component/modal/Modal';
 import {txt} from 'Root/config/textstyle';
 import {Urgent_Write2} from 'Atom/icon';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 /**
  * 긴급 게시 버튼 출력 모달
@@ -14,7 +15,9 @@ import {Urgent_Write2} from 'Atom/icon';
  * @param {Object} props.layout - 액션 버튼 실제 위치 정보
  */
 const UrgentBtnModal = ({onReport, onMissing, layout, setPressed}) => {
-	console.log('layout', layout);
+	const insets = useSafeAreaInsets();
+	// console.log('ind', insets);
+
 	const moveToMissingForm = () => {
 		console.log('moveToMissingForm');
 		onMissing();
@@ -31,10 +34,7 @@ const UrgentBtnModal = ({onReport, onMissing, layout, setPressed}) => {
 
 	return (
 		<TouchableOpacity onPress={() => Modal.close()} activeOpacity={1} style={style.background}>
-			<TouchableOpacity
-				activeOpacity={1}
-				onPress={() => Modal.close()}
-				style={[style.popUpWindow, {bottom: Platform.OS == 'android' ? layout.y - 104 * DP : layout.y - 40 * DP}]}>
+			<TouchableOpacity activeOpacity={1} onPress={() => Modal.close()} style={[style.popUpWindow, {}]}>
 				<View style={[{marginTop: 0 * DP}]}>
 					<TouchableOpacity onPress={moveToMissingForm} activeOpacity={0.4} style={[style.urgentBtnItemContainer]}>
 						<Text style={[txt.noto32, {color: WHITE}]}>실종</Text>
@@ -42,13 +42,13 @@ const UrgentBtnModal = ({onReport, onMissing, layout, setPressed}) => {
 					<TouchableOpacity onPress={moveToReportForm} activeOpacity={0.4} style={[style.urgentBtnItemContainer]}>
 						<Text style={[txt.noto32, {color: WHITE}]}>제보</Text>
 					</TouchableOpacity>
-					<View style={[style.urgentActionButton]}>
-						<TouchableOpacity onPress={onPressShowActionButton}>
-							<Urgent_Write2 />
-						</TouchableOpacity>
-					</View>
 				</View>
 			</TouchableOpacity>
+			<View style={[style.urgentActionButton, {height: Platform.OS == 'android' ? 186 * DP : 186 * DP + insets.bottom}]}>
+				<TouchableOpacity onPress={onPressShowActionButton}>
+					<Urgent_Write2 />
+				</TouchableOpacity>
+			</View>
 		</TouchableOpacity>
 	);
 };
@@ -73,19 +73,9 @@ const style = StyleSheet.create({
 		position: 'absolute',
 	},
 	popUpWindow: {
-		// width: 110 * DP,
-		// height: 110 * DP,
-		// position: 'absolute',
-		// marginBottom: 235 * DP,
-		// marginRight: 60 * DP,
-		// justifyContent: 'center',
-		// backgroundColor: 'white',
-		// opacity: 0.9,
 		width: 158 * DP,
-		height: 332 * DP,
-		position: 'absolute',
 		right: 30 * DP,
-		// bottom: 40 * DP,
+		bottom: 40 * DP,
 		justifyContent: 'flex-end',
 	},
 	urgentBtnItemContainer: {
@@ -99,22 +89,11 @@ const style = StyleSheet.create({
 	},
 	urgentActionButton: {
 		width: 98 * DP,
-		height: 86 * DP,
+		height: 186 * DP,
 		alignSelf: 'flex-end',
-		// backgroundColor: 'white',
-		shadowColor: '#000000',
-		shadowOpacity: 0.5,
 		borderRadius: 40 * DP,
-		shadowOffset: {
-			width: 2,
-			height: 2,
-		},
-		shadowRadius: 4.65,
-		// shadowOffset: {
-		// 	width: 2 * DP,
-		// 	height: 1 * DP,
-		// },
-		elevation: 4,
+		right: 30 * DP,
+		bottom: 40 * DP,
 	},
 });
 

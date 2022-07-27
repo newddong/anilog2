@@ -23,6 +23,7 @@ export default FeedCommentList = props => {
 	const [editComment, setEditComment] = React.useState(false); //답글 쓰기 클릭 state
 	const [privateComment, setPrivateComment] = React.useState(false); // 공개 설정 클릭 state
 	const [comments, setComments] = React.useState([]);
+	const [num_of_comment, setNum_of_comment] = React.useState(0);
 	const [commentsLoaded, setCommentsLoaded] = React.useState(false);
 	const [parentComment, setParentComment] = React.useState();
 	const [refresh, setRefresh] = React.useState(true);
@@ -145,10 +146,14 @@ export default FeedCommentList = props => {
 		let comment_count = res.length; //부모 댓글 총개수
 		res.map((v, i) => {
 			comment_count = comment_count + v.children_count; //자식 댓글있으면 부모 댓글 개수에 추가시킴
+			if (v.comment_is_delete) {
+				comment_count--;
+			}
 		});
 		let temp = feed_obj.list; //현재 저장된 리스트
 		const findIndex = temp.findIndex(e => e._id == params.feedobject._id); //현재 보고 있는 피드게시글이 저장된 리스트에서 몇 번째인지
 		temp[findIndex].feed_comment_count = comment_count; //해당 피드게시글의 댓글 개수 갱신
+		setNum_of_comment(comment_count);
 		// let recent = res[0]; //가장 최근 댓글
 		// temp[findIndex].feed_recent_comment = {
 		// 	//해당 피드게시글의 최근 댓글 갱신
@@ -513,7 +518,7 @@ export default FeedCommentList = props => {
 					/>
 					<View style={[{width: 694 * DP, height: 2 * DP, marginTop: 10 * DP, backgroundColor: GRAY40, alignSelf: 'center'}]} />
 					<View style={[{width: 694 * DP, alignSelf: 'center', marginTop: 20 * DP}]}>
-						{comments.length == 0 ? <></> : <Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {comments.length}개</Text>}
+						{comments.length == 0 ? <></> : <Text style={[txt.noto24, {color: GRAY10}]}> 댓글 {num_of_comment}개</Text>}
 					</View>
 				</>
 			);

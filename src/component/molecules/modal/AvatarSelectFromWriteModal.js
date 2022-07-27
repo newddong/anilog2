@@ -10,6 +10,7 @@ import {styles} from 'Root/component/atom/image/imageStyle';
 import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, ProfileDefaultImg, Triangle, Write94} from 'Atom/icon';
 import FastImage from 'react-native-fast-image';
 import {NETWORK_ERROR} from 'Root/i18n/msg';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 /**
  * 글쓰기 선택 후 아바타 동물을 선택하는 모달창
@@ -23,6 +24,8 @@ const AvatarSelectFromWriteModal = props => {
 	const [items, setItems] = React.useState('');
 	const scrollViewRef = React.useRef();
 	const [scrollIndex, setScrollIndex] = React.useState(0); //현재 스크롤 페이지
+	const insets = useSafeAreaInsets();
+	console.log('ind', insets);
 
 	//첫 클릭 시 사용자의 반려동물 리스트를 받아서 user_avatar 전역변수에 저장
 	React.useEffect(() => {
@@ -156,7 +159,13 @@ const AvatarSelectFromWriteModal = props => {
 					onPress={closeModal}
 					// android 180 ios 235 였음
 					// style={[style.popUpWindow, {marginBottom: Platform.OS == 'android' ? 180 * DP : 275 * DP}, {backgroundColor: 'yellow'}]}>
-					style={[style.popUpWindow, {marginBottom: Platform.OS == 'android' ? 145 * DP : 240 * DP}]}>
+					style={[
+						style.popUpWindow,
+						{
+							// marginBottom: Platform.OS == 'android' ? 145 * DP : 240 * DP
+							bottom: 140 * DP + insets.bottom,
+						},
+					]}>
 					{scrollUp()}
 					<View style={[style.avatarList, {}]}>
 						<FlatList
@@ -193,7 +202,7 @@ const AvatarSelectFromWriteModal = props => {
 							</TouchableOpacity>
 						)}
 					</View>
-					<View style={[style.writeBtn, {bottom: Platform.OS == 'android' ? 20 * DP : -10 * DP}]}>
+					<View style={[style.writeBtn, {}]}>
 						<Write94 />
 					</View>
 				</TouchableOpacity>
@@ -235,11 +244,8 @@ const style = StyleSheet.create({
 		position: 'absolute',
 	},
 	popUpWindow: {
-		// width: 488 * DP,
-		marginBottom: 235 * DP,
-
-		marginRight: 35 * DP,
-		// backgroundColor: 'white',
+		position: 'absolute',
+		right: 30 * DP,
 	},
 	avatarList: {
 		maxHeight: 114 * 4 * DP,
@@ -281,16 +287,10 @@ const style = StyleSheet.create({
 		// backgroundColor: 'red',
 	},
 	writeBtn: {
-		// height: 94 * DP,
-		// width: 94 * DP,
 		alignSelf: 'flex-end',
 		justifyContent: 'center',
 		alignItems: 'center',
-		// backgroundColor: '#ff9888',
-		// backgroundColor: 'red',
 		borderRadius: 35 * DP,
-		marginBottom: -5 * DP,
-		right: -3 * DP,
 	},
 });
 

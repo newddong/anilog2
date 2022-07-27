@@ -17,10 +17,10 @@ const NoteMessageList = props => {
 	const [refreshing, setRefreshing] = React.useState(false); //위로 스크롤 시도 => 리프레싱
 
 	React.useEffect(() => {
-		fetchMsgList();
-	}, []);
+		scrollToMsg();
+	}, [props.data]);
 
-	const fetchMsgList = () => {
+	const scrollToMsg = () => {
 		try {
 			if (props.data.length > 0) {
 				setTimeout(
@@ -30,7 +30,7 @@ const NoteMessageList = props => {
 							index: props.data.length - 1,
 							viewPosition: 0,
 						}),
-					1000,
+					100,
 				);
 			}
 		} catch (err) {
@@ -58,7 +58,7 @@ const NoteMessageList = props => {
 	};
 
 	React.useEffect(() => {
-		refreshing ? fetchMsgList() : false;
+		refreshing ? scrollToMsg() : false;
 	}, [refreshing]);
 
 	return (

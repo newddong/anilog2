@@ -115,7 +115,9 @@ export default ReceivedMessage = ({route}) => {
 				{user_object_id: v.opponent},
 				result => {
 					// console.log('delelteMemoBoxWithUser success', result);
-					getMemoBoxListFunction();
+					if (i == copy.length - 1) {
+						getMemoBoxListFunction();
+					}
 				},
 				err => {
 					console.log('deleteMomoBoxWithUser err', err);

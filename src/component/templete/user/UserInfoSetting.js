@@ -553,6 +553,7 @@ export default UserInfoSetting = ({route}) => {
 											style={[txt.noto26, userInfoSetting_style.user_intro_modifyMode, {backgroundColor: GRAY40}]}
 											defaultValue={data.user_introduction || ''}
 											multiline={true}
+											// multiline={false}
 											// value={data.user_introduction}
 											value={newIntro}
 											placeholder={'소개를 입력해주세요. (최대 500자, 15줄)'}
@@ -564,7 +565,7 @@ export default UserInfoSetting = ({route}) => {
 								) : (
 									<View style={{}}>
 										<Text style={[txt.noto24]} ellipsizeMode={'tail'} numberOfLines={showMore ? null : 3}>
-											{data.user_introduction || ''}
+											{data.user_introduction || '소개가 없습니다.'}
 										</Text>
 										{/* 더미 텍스트 삭제금지 */}
 										<Text

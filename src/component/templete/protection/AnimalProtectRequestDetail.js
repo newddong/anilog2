@@ -31,6 +31,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 	const [writersAnotherRequests, setWritersAnotherRequests] = React.useState('false'); //해당 게시글 작성자의 다른 보호요청게시글 목록(현재 글 제외)
 	const [total, setTotal] = React.useState(0); //해당 게시글 작성자의 보호요청게시글 작성글 총 개수
 	const [comments, setComments] = React.useState('false'); //comment list 정보
+	const [num_of_comments, setNum_of_comments] = React.useState(0);
 	const [offset, setOffset] = React.useState(1);
 	const [pressed, setPressed] = React.useState(false);
 	const isShelter = userGlobalObject.userInfo.user_type == 'shelter';
@@ -158,7 +159,6 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					//일반 피드글과 구분하기 위해 feed_type 속성 추가 (다른 템플릿들과 시간 표기가 달라서 실종/제보에만 feed_type을 추가하고 시간 표기시 해당 속성 존재 여부만 판단)
 					comments.msg[i].feed_type = 'report';
 				});
-
 				//댓글과 대댓글 작업 (부모 댓글과 자식 댓글 그룹 형성- 부모 댓글에서 부모의 childArray 속성에 자식 댓글 속성들을 추가)
 				//부모 댓글은 실제 삭제불가하며 필드로 삭제 여부 값 형성 필요. (네이버나 다음 까페에서도 대댓글 존재시 댓글은 삭제해도 댓글 자리는 존재하고 그 밑으로 대댓글 그대로 노출됨)
 				let commentArray = [];
@@ -181,6 +181,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 					}
 				});
 				let res = commentArray.filter(e => !e.comment_is_delete || e.children_count != 0);
+				updateCommentsLength(res);
 				setComments(res);
 				//댓글이 출력이 안되는 현상 발견으로 비동기 처리
 			},
@@ -192,6 +193,19 @@ export default AnimalProtectRequestDetail = ({route}) => {
 				setComments([]);
 			},
 		);
+	};
+
+	//댓글 개수 갱신
+	const updateCommentsLength = res => {
+		let comments_length = 0;
+		res.map((v, i) => {
+			comments_length = comments_length + v.children_count;
+			if (v.comment_is_delete) {
+				comments_length--;
+			}
+		});
+		comments_length = comments_length + res.length;
+		setNum_of_comments(comments_length);
 	};
 
 	//보호요청 더보기의 Thumnail클릭
@@ -405,7 +419,7 @@ export default AnimalProtectRequestDetail = ({route}) => {
 
 				{comments && comments.length > 0 ? (
 					<TouchableOpacity onPress={moveToCommentPage} style={[style.replyCountContainer]}>
-						<Text style={[txt.noto26, {color: GRAY10}]}> 댓글 {comments.length}개 모두 보기</Text>
+						<Text style={[txt.noto26, {color: GRAY10}]}> 댓글 {num_of_comments}개 모두 보기</Text>
 					</TouchableOpacity>
 				) : (
 					<></>

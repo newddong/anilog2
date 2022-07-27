@@ -69,7 +69,6 @@ export default SearchTabNavigation = props => {
 	async function fetchData() {
 		setLoading(true);
 		if (searchContext.searchInfo.searchInput && searchContext.searchInfo.searchInput.length > 1) {
-			console.log('fetch?');
 			const user = await getUserList(); //계정 검색
 			const hash = await getHashList(); //태그 검색
 			const comm = await getCommunityList(); //커뮤니티 검색

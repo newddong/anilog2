@@ -53,6 +53,7 @@ const UserNotePage = ({route}) => {
 
 	const onWrite = () => {
 		if (content.trim() == '') return Modal.popOneBtn('채팅을 입력하세요.', '확인', () => Modal.close());
+		input.current?.blur();
 		createMemoBox(
 			{memobox_receive_id: route.params._id, memobox_contents: content},
 			result => {

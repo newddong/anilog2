@@ -88,7 +88,7 @@ export default SearchArticle = props => {
 			<>
 				<View style={[style.filterCont]}>
 					<View style={{flexDirection: 'row', width: 694 * DP, alignSelf: 'center', height: 62 * DP}}>
-						<View style={{alignSelf: 'flex-end', width: 300 * DP, justifyContent: 'flex-end'}}>
+						<View style={{alignSelf: 'flex-start', width: 300 * DP, justifyContent: 'flex-end'}}>
 							<Text style={[txt.noto24, {color: GRAY10}]}>검색 결과 {getData().length}개</Text>
 						</View>
 						<View style={[style.kindFilter]}>

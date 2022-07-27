@@ -1,8 +1,7 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, StyleSheet} from 'react-native';
+import {Text, View, ScrollView, TextInput, ActivityIndicator, StyleSheet} from 'react-native';
 import {BLACK, MAINBLACK} from 'Root/config/color';
-import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import Modal from 'Component/modal/Modal';
 import SelectInput from 'Component/molecules/button/SelectInput';
@@ -11,7 +10,6 @@ import AniButton from 'Component/molecules/button/AniButton';
 import {btn_w654, btn_w694_r30} from 'Component/atom/btn/btn_style';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
 import {createQandA} from 'Root/api/qanda';
-import {assignCheckListItem} from 'Root/component/organism/style_organism copy';
 
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 const AskQuestion = ({route}) => {
@@ -65,6 +63,7 @@ const AskQuestion = ({route}) => {
 	const onChangeText = text => {
 		setContents(text);
 	};
+
 	const onChangeTitle = text => {
 		setTitle(text);
 	};
@@ -73,17 +72,13 @@ const AskQuestion = ({route}) => {
 		setUserAgreement(isCheck);
 	};
 
-	React.useEffect(() => {
-		console.log('user', userAgreement);
-	}, [userAgreement]);
-
 	const onPressDetail = index => {
 		console.log(index + 'index 항목 더보기 클릭');
 		Modal.popOneBtn('적용 예정입니다.', '확인', () => Modal.close());
 	};
 
 	const onPressAsk = () => {
-		console.log('어쩌고저쩌고', userAgreement, category, contents, title);
+		// console.log('어쩌고저쩌고', userAgreement, category, contents, title);
 		// if (userAgreement && category != '카테고리 선택' && contents && title) {
 		if (category != '카테고리 선택' && contents && title) {
 			for (let i in commomCode) {
@@ -115,17 +110,16 @@ const AskQuestion = ({route}) => {
 			// else if (category == '카테고리 선택') {
 			if (category == '카테고리 선택') {
 				Modal.alert('문의 카테고리를 선택해주세요.');
-			} else if (!contents && contents.length == 0) {
+			} else if (contents == undefined) {
 				Modal.alert('문의 내용을 적어주세요.');
 			} else if (!title) {
 				Modal.alert('제목을 입력해주세요.');
 			}
-			// Modal.popOneBtn('입력을 확인해주세요', '확인', () => Modal.close());
 		}
 	};
+
 	const onCheck = isCheck => {
 		setUserAgreement(isCheck);
-		// props.onCheck(isCheck);
 	};
 
 	if (loading) {

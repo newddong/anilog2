@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {APRI10, GRAY10, GREEN, WHITE} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
@@ -55,6 +55,7 @@ export default PhoneNumVerification = props => {
 	// 		props.requestVerification();
 	// 	}
 	// };
+
 	const onNameInputChange = text => {
 		setUserName(text);
 		props.onNameInputChange(text);
@@ -166,25 +167,18 @@ export default PhoneNumVerification = props => {
 					verified={props?.phoneVerified}
 				/>
 			</View>
-			<View style={[{flexDirection: 'row'}, {marginTop: 14 * DP}]}>
+			{/* <View style={[{flexDirection: 'row'}, {marginTop: 14 * DP}]}>
 				{props.failed ? (
-					<View style={[{position: 'absolute', right: -10, bottom: -15}]}>
+					<View style={[{position: 'absolute', right: 0, bottom: -15}]}>
 						<TouchableOpacity onPress={props.requestVerification}>
 							<Text style={[txt.noto28b, {color: APRI10}, {textDecorationLine: 'underline'}]}>재인증</Text>
 						</TouchableOpacity>
 					</View>
 				) : (
-					// <Text></Text>
 					<Text style={[txt.noto24, {color: GRAY10}, {marginLeft: 200 * DP}]}>입력한 내용이 인증창이 뜰 시 자동 입력됩니다.</Text>
 				)}
-				{/* {props.phoneVerified ? (
-					<View style={[{position: 'absolute', right: 50, bottom: 0}]}>
-						<Text style={[txt.noto28b, {color: APRI10}]}>인증완료</Text>
-					</View>
-				) : (
-					<Text></Text>
-				)} */}
-			</View>
+			
+			</View> */}
 
 			{/* {validPhone ? (
 				<Text style={[txt.noto26, phoneNumVerification.phoneNumValidPassedText, {color: GREEN}]}>휴대전화번호 양식과 일치합니다. </Text>

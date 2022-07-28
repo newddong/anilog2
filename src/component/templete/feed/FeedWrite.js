@@ -413,7 +413,7 @@ export default FeedWrite = props => {
 	const render = ({item, index}) => {
 		return (
 			<View style={[login_style.wrp_main]} ref={container}>
-				{props.route.params.feedType == 'Feed' && !(showLostAnimalForm || showReportForm) && (
+				{!(showLostAnimalForm || showReportForm) && (
 					<View style={{width: '100%'}}>
 						<View
 							style={{
@@ -447,7 +447,6 @@ export default FeedWrite = props => {
 						{!isSearchTag && setWriteModeState()}
 					</View>
 				)}
-
 				{/* 긴급 게시 관련 버튼 클릭 시 출력되는 View */}
 				{setUrgBtnsClickedView()}
 			</View>

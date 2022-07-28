@@ -51,7 +51,8 @@ const AvatarSelectFromWriteModal = props => {
 			);
 		} else {
 			//전역변수가 있는 경우 api 접속 없이 리스트 채움
-			console.log('전역변수 있음');
+			// console.log('user_avatar', userGlobalObj.userInfo.user_avatar);
+			// console.log('전역변수 있음');
 			setItems(userGlobalObj.userInfo.user_avatar);
 		}
 	}, []);
@@ -128,11 +129,13 @@ const AvatarSelectFromWriteModal = props => {
 			return (
 				<TouchableOpacity
 					onPress={() => {
-						setScrollIndex(scrollIndex + 1);
-						scrollViewRef.current.scrollToIndex({
-							animated: true,
-							index: 4 * (scrollIndex + 1) >= items.length ? 4 * scrollIndex : 4 * (scrollIndex + 1),
-						});
+						if (items.length !== 0 && scrollViewRef !== null) {
+							setScrollIndex(scrollIndex + 1);
+							scrollViewRef.current.scrollToIndex({
+								animated: true,
+								index: 4 * (scrollIndex + 1) >= items.length ? 4 * scrollIndex : 4 * (scrollIndex + 1),
+							});
+						}
 					}}
 					style={[style.triangle, {transform: [{rotate: '180deg'}]}]}>
 					<Triangle />
@@ -163,7 +166,7 @@ const AvatarSelectFromWriteModal = props => {
 						style.popUpWindow,
 						{
 							// marginBottom: Platform.OS == 'android' ? 145 * DP : 240 * DP
-							bottom: 140 * DP + insets.bottom,
+							bottom: Platform.OS == 'android' ? 140 * DP : insets.bottom + 140 * DP,
 						},
 					]}>
 					{scrollUp()}
@@ -191,11 +194,13 @@ const AvatarSelectFromWriteModal = props => {
 						) : (
 							<TouchableOpacity
 								onPress={() => {
-									setScrollIndex(scrollIndex - 1);
-									scrollViewRef.current.scrollToIndex({
-										animated: true,
-										index: 4 * (scrollIndex - 1),
-									});
+									if (items.length !== 0 && scrollViewRef !== null) {
+										setScrollIndex(scrollIndex - 1);
+										scrollViewRef.current.scrollToIndex({
+											animated: true,
+											index: 4 * (scrollIndex - 1),
+										});
+									}
 								}}
 								style={[style.triangle]}>
 								<Triangle />
@@ -244,8 +249,10 @@ const style = StyleSheet.create({
 		position: 'absolute',
 	},
 	popUpWindow: {
-		position: 'absolute',
+		// position: 'absolute',
 		right: 30 * DP,
+		// backgroundColor: 'lightgray',
+		// opacity: 0.6,
 	},
 	avatarList: {
 		maxHeight: 114 * 4 * DP,
@@ -291,6 +298,8 @@ const style = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		borderRadius: 35 * DP,
+		// position: 'absolute',
+		bottom: 0,
 	},
 });
 

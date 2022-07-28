@@ -89,7 +89,7 @@ export default AssignPetInfoB = props => {
 				// console.log('아바타', userGlobalObj.userInfo.user_avatar);
 				try {
 					if (userGlobalObj.userInfo.user_avatar != undefined) {
-						userGlobalObj.userInfo.user_avatar = userGlobalObj.userInfo.user_avatar.push(success.msg);
+						userGlobalObj.userInfo.user_avatar.push(success.msg);
 					}
 				} catch (err) {
 					console.log('err', err);

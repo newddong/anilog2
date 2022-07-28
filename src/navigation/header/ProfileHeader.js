@@ -9,6 +9,7 @@ import {APPLY_VOLUNTEER, NOT_REGISTERED_SHELTER, REPORT_MENU, SHELTER_INFO} from
 import {createReport} from 'Root/api/report';
 import {createMemoBox} from 'Root/api/userapi';
 import {useNavigation} from '@react-navigation/core';
+import {CommonActions} from '@react-navigation/routers';
 
 /**
  * 유저가 기르는 반려동물의 프로필 사진, 닉네임, 유저의 닉네임을 출력하는 라벨
@@ -140,7 +141,14 @@ export default ProfileHeader = props => {
 							navigation.push('EditShelterInfo', {data: data});
 							break;
 						case 'pet':
-							navigation.navigate({key: new Date().getTime(), name: 'PetInfoSetting', params: {pet_id: data._id}});
+							navigation.navigate('MY', {
+								screen: 'PetInfoSetting',
+								params: {
+									pet_id: data._id,
+									from: 'ProfileHeader',
+								},
+							});
+							// navigation.navigate({key: new Date().getTime(), name: 'PetInfoSetting', params: {pet_id: data._id}});
 							break;
 						default:
 							break;

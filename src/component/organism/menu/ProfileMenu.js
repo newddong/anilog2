@@ -20,7 +20,7 @@ export default ProfileMenu = props => {
 		props.onClick(menuName);
 	};
 	const renderItem = (item, index) => {
-		// console.log('item', item);
+		console.log('item', item, props.noBottom);
 		return (
 			<View>
 				<View style={[profileMenu.itemContainer]}>
@@ -47,10 +47,14 @@ export default ProfileMenu = props => {
 						</View>
 					</View>
 				</View>
-				<View style={{flexDirection: 'row'}}>
-					<View style={[profileMenu.horizon_separator]} />
-					<View style={[profileMenu.horizon_separator]} />
-				</View>
+				{item[0] == '정보/문의' ? (
+					<></>
+				) : (
+					<View style={{flexDirection: 'row'}}>
+						<View style={[profileMenu.horizon_separator]} />
+						<View style={[profileMenu.horizon_separator]} />
+					</View>
+				)}
 			</View>
 		);
 	};

@@ -339,16 +339,17 @@ export default Profile = ({route}) => {
 	};
 
 	const onPressFollow = () => {
-		console.log('data._id', data._id);
+		setData({...data, is_follow: !data.is_follow});
 		followUser(
 			{follow_userobject_id: data._id},
 			result => {
 				console.log('result / followUser / Profile :', result.msg);
-				setData('');
 				fetchData();
 			},
 			err => {
 				console.log('err / followUser / err', err);
+				setData({...data, is_follow: data.is_follow});
+				Modal.alert('네트워크 오류가 발생했습니다.');
 			},
 		);
 	};
@@ -362,16 +363,18 @@ export default Profile = ({route}) => {
 				'예',
 				() => Modal.close(),
 				() => {
+					setData({...data, is_follow: !data.is_follow});
 					unFollowUser(
 						{follow_userobject_id: data._id},
 						result => {
 							console.log('result / unFollowUser / Profile :', result.msg);
-							setData('');
 							fetchData();
 							Modal.close();
 						},
 						err => {
 							console.log('err / unFollowUser / err', err);
+							setData({...data, is_follow: data.is_follow});
+							Modal.alert('네트워크 오류가 발생했습니다.');
 						},
 					);
 				},
@@ -600,29 +603,24 @@ export default Profile = ({route}) => {
 		//프로필 대상이 사용자 계정
 		return (
 			<View style={[login_style.wrp_main, profile.container]}>
-				{data != '' ? (
-					<>
-						{showTabContent()}
-						{userGlobalObject.userInfo._id == data._id ? (
-							<View style={[temp_style.floatingBtn, profile.floatingBtn, {alignItems: 'center', justifyContent: 'center'}]}>
-								<Write94 onPress={moveToFeedWrite} />
-							</View>
-						) : (
-							<View style={[temp_style.floatingTwoBtn, profile.floatingBtn, {alignItems: 'center', justifyContent: 'center'}]}>
-								{/* <View style={[buttonstyle.writeButton, buttonstyle.shadow]}>
+				<>
+					{showTabContent()}
+					{userGlobalObject.userInfo._id == data._id ? (
+						<View style={[temp_style.floatingBtn, profile.floatingBtn, {alignItems: 'center', justifyContent: 'center'}]}>
+							<Write94 onPress={moveToFeedWrite} />
+						</View>
+					) : (
+						<View style={[temp_style.floatingTwoBtn, profile.floatingBtn, {alignItems: 'center', justifyContent: 'center'}]}>
+							{/* <View style={[buttonstyle.writeButton, buttonstyle.shadow]}>
 									<Message94 onPress={() => onPressSendMsg(data._id, data.user_nickname)} />
 								</View> */}
-								<View style={[buttonstyle.writeButton, buttonstyle.shadow]}>
-									<Write94 onPress={moveToFeedWrite} />
-								</View>
+							<View style={[buttonstyle.writeButton, buttonstyle.shadow]}>
+								<Write94 onPress={moveToFeedWrite} />
 							</View>
-						)}
-					</>
-				) : (
-					<>
-						<Loading isModal={false} />
-					</>
-				)}
+						</View>
+					)}
+				</>
+
 				{loading ? (
 					<View
 						style={[

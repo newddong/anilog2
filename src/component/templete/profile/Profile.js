@@ -38,6 +38,7 @@ export default Profile = ({route}) => {
 	const userId = route.params.userobject._id; //현재 보고있는 프로필 대상의 _id
 	const [tabMenuSelected, setTabMenuSelected] = React.useState(0); //프로필 Tab의 선택상태
 	const [focused, setFocused] = React.useState(false);
+	const loggedInUser = userGlobalObject.userInfo._id;
 	React.useEffect(() => {
 		//페이지 포커스 시 프로필 데이터 및 하단 탭 데이터 갱신
 		const unsubscribe = navigation.addListener('focus', () => {
@@ -190,7 +191,26 @@ export default Profile = ({route}) => {
 							console.log('result / getUserTaggedFeedList / total_count : ', result.total_count);
 							if (refresh || tagFeedList.length == 0) {
 								// setFeedList(result.msg.map(v => v.usertag_feed_id));
-								setTagFeedList(result.msg.map(v => v.usertag_feed_id));
+								// result.msg.map(v => {
+								// 	if (v.usertag_feed_id.feed_public_type != 'private') {
+								// 		v.usertag_feed_id;
+								// 		console.log('not private ', v);
+								// 	} else if (v.usertag_user_id == loggedInUser || v.usertag_feed_id.feed_writer_id._id == loggedInUser) {
+								// 		v.usertag_feed_id;
+								// 		console.log('it is private but user related', v);
+								// 	}
+								// });
+								let temp = result.msg.map(v => {
+									if (v.usertag_feed_id.feed_public_type != 'private') {
+										return v.usertag_feed_id;
+									} else if (v.usertag_user_id == loggedInUser || v.usertag_feed_id.feed_writer_id._id == loggedInUser) {
+										return v.usertag_feed_id;
+									}
+								});
+								temp = temp.filter(v => v != undefined);
+								console.log('temptemp', temp);
+								setTagFeedList(temp);
+								// setTagFeedList(result.msg.map(v => v.usertag_feed_id));
 							} else {
 								//다음 페이지를 호출한 경우 기존 값에 추가된 result 추가
 								console.log('page 합산', [...tagFeedList, ...result.msg].length);

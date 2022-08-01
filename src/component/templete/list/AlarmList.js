@@ -112,13 +112,17 @@ const AlarmList = props => {
 				getUserProfile(
 					{userobject_id: data.notice_user_related_id._id},
 					result => {
-						setNavLoading(false);
-						navigation.dispatch(
-							CommonActions.navigate({
-								name: 'UserProfile',
-								params: {userobject: result.msg},
-							}),
-						);
+						if (result.msg.user_is_delete) {
+							Modal.popOneBtn('탈퇴한 유저의 계정입니다.', '확인', () => Modal.close());
+						} else {
+							setNavLoading(false);
+							navigation.dispatch(
+								CommonActions.navigate({
+									name: 'UserProfile',
+									params: {userobject: result.msg},
+								}),
+							);
+						}
 					},
 					err => {
 						console.log('err', err);
@@ -128,7 +132,6 @@ const AlarmList = props => {
 
 				break;
 			case 'MemoBoxObject':
-
 				console.log('datadada', data);
 				if (data.notice_is_delete) {
 					Modal.popOneBtn('삭제된 쪽지 입니다.', '확인', () => Modal.close());
@@ -142,58 +145,36 @@ const AlarmList = props => {
 					);
 				}
 
-
 				break;
 			case 'FeedObject':
-				// console.log('data.notice_object_type', data);
 				if (data.notice_object_type == 'LikeFeedObject') {
 					var selected = {_id: data.target_object};
-					getUserProfile(
-						{userobject_id: data.notice_user_receive_id},
-						result => {
-							// navigation.dispatch({
-							// 	...CommonActions.reset({
-							// 		index: 1,
-							// 		routes: [{name: 'MainTab'}, {name: 'AlarmList'}, {name: 'UserFeedList', params: {userobject: result.msg, selected: selected}}],
-							// 	}),
-							// });
-							console.log('result', result);
-							if (result.msg.user_is_delete) {
-								Modal.popOneBtn('탈퇴한 유저의 계정입니다.', '확인', () => Modal.close());
-							} else {
-								setNavLoading(false);
-								navigation.dispatch(
-									CommonActions.navigate({
-										name: 'UserFeedList',
-										params: {userobject: result.msg, selected: selected},
-									}),
-								);
-							}
-						},
-						err => {
-							setNavLoading(false);
-							console.log('err / FeedObject', err);
-						},
-					);
-				} else if (data.notice_object_type == 'CommentObject') {
 					getFeedDetailById(
 						{feedobject_id: data.target_object},
 						result => {
 							// console.log(navigation.getState());
+
 							setNavLoading(false);
-							navigation.dispatch(
-								CommonActions.navigate({
-									// name: 'FeedCommentList',
-									name: 'AlarmCommentList',
-									params: {
-										feedobject: result.msg,
-										showAllContents: true,
-										showMedia: true,
-										scroll: true,
-										target: data.notice_object,
-										parent: data?.notice_comment_parent,
-									},
-								}),
+							getUserProfile(
+								{userobject_id: data.notice_user_receive_id},
+								result => {
+									console.log('result', result);
+									if (result.msg.user_is_delete) {
+										Modal.popOneBtn('탈퇴한 유저의 계정입니다.', '확인', () => Modal.close());
+									} else {
+										setNavLoading(false);
+										navigation.dispatch(
+											CommonActions.navigate({
+												name: 'UserFeedList',
+												params: {userobject: result.msg, selected: selected},
+											}),
+										);
+									}
+								},
+								err => {
+									setNavLoading(false);
+									console.log('err / FeedObject', err);
+								},
 							);
 						},
 						err => {
@@ -204,7 +185,43 @@ const AlarmList = props => {
 							}
 						},
 					);
+				} else if (data.notice_object_type == 'CommentObject') {
+					if (!data.notice_is_delete) {
+						getFeedDetailById(
+							{feedobject_id: data.target_object},
+							result => {
+								// console.log(navigation.getState());
+								setNavLoading(false);
+								navigation.dispatch(
+									CommonActions.navigate({
+										// name: 'FeedCommentList',
+										name: 'AlarmCommentList',
+										params: {
+											feedobject: result.msg,
+											showAllContents: true,
+											showMedia: true,
+											scroll: true,
+											target: data.notice_object,
+											parent: data?.notice_comment_parent,
+										},
+									}),
+								);
+							},
+							err => {
+								setNavLoading(false);
+								console.log('getFeedDetail err', err);
+								if (err.includes('없습니다')) {
+									Modal.alert('이미 삭제된 게시글입니다.', Modal.close);
+								}
+							},
+						);
+					} else {
+						Modal.popOneBtn('삭제된 댓글입니다.', '확인', () => Modal.close());
+					}
 				}
+
+				console.log('data.notice_object_type', data);
+
 				break;
 			case 'FeedUserTagObject':
 				var selected = {_id: data.notice_object};

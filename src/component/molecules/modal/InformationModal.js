@@ -158,89 +158,69 @@ const InformationModal = props => {
 			} else {
 				//유저 프로필 정보
 				try {
+					let list = [];
 					if (data.user_interests) {
-						let user_interest_list = [];
-
 						if (
-							(data.user_interests.hasOwnProperty('interests_group1') || data.user_interests.hasOwnProperty('interests_group2'),
-							data.user_interests.hasOwnProperty('interests_group3'))
+							data.user_interests.hasOwnProperty('interests_group1') ||
+							data.user_interests.hasOwnProperty('interests_group2') ||
+							data.user_interests.hasOwnProperty('interests_group3')
 						) {
-							user_interest_list = user_interest_list.concat(data.user_interests.interests_group1);
-							user_interest_list = user_interest_list.concat(data.user_interests.interests_group2);
-							user_interest_list = user_interest_list.concat(data.user_interests.interests_group3);
-							user_interest_list = user_interest_list.concat(data.user_interests.interests_etc);
+							data.user_interests.interests_group1 ? (list = list.concat(data.user_interests.interests_group1)) : false;
+							data.user_interests.interests_group2 ? (list = list.concat(data.user_interests.interests_group2)) : false;
+							data.user_interests.interests_group3 ? (list = list.concat(data.user_interests.interests_group3)) : false;
+							data.user_interests.interests_etc ? (list = list.concat(data.user_interests.interests_etc)) : false;
 						} else {
-							user_interest_list = user_interest_list.concat(data.user_interests.interests_activity);
-							user_interest_list = user_interest_list.concat(data.user_interests.interests_beauty);
-							user_interest_list = user_interest_list.concat(data.user_interests.interests_food);
-							user_interest_list = user_interest_list.concat(data.user_interests.interests_health);
+							data.user_interests.interests_activity ? (list = list.concat(data.user_interests.interests_activity)) : false;
+							data.user_interests.interests_beauty ? (list = list.concat(data.user_interests.interests_beauty)) : false;
+							data.user_interests.interests_food ? (list = list.concat(data.user_interests.interests_food)) : false;
+							data.user_interests.interests_health ? (list = list.concat(data.user_interests.interests_health)) : false;
 						}
-
-						user_interest_list = user_interest_list.filter(e => e != undefined);
-						user_interest_list = new Set(user_interest_list);
-						user_interest_list = [...user_interest_list];
-						// console.log('user', user_interest_list);
-						user_interest_list = [];
-						return (
-							<>
-								<View style={[style.info_step2]}>
-									{/* <View style={[{marginBottom: 40 * DP, alignSelf: 'center'}]}>
-										<Text style={[txt.noto32b]}>
-											{data.user_nickname || ''}
-											<Text style={[txt.noto28, {color: BLACK}]}> 님의 정보</Text>
+					}
+					return (
+						<>
+							<View style={[style.info_step2]}>
+								{/* 관심사 */}
+								<View style={[style.category_step2, {paddingBottom: 20 * DP}]}>
+									<View style={[style.category_title]}>
+										<Text style={[txt.noto26, {color: GRAY10}]}>관심사</Text>
+									</View>
+									<View style={[style.category_step2_content]}>
+										{/* 더미 텍스트컴포넌트 - 조정되기 이전의 numberOfLine 판별용 */}
+										<Text
+											style={[txt.noto28, {position: 'absolute', opacity: 0}]}
+											onTextLayout={({nativeEvent: {lines}}) => {
+												setNumberOfLines(lines.length);
+											}}>
+											{list.map((v, i) => {
+												return v + (i != list.length - 1 ? ', ' : '');
+											})}
 										</Text>
-									</View> */}
-									{/* 관심사 */}
-									<View style={[style.category_step2, {paddingBottom: 20 * DP}]}>
-										<View style={[style.category_title]}>
-											<Text style={[txt.noto26, {color: GRAY10}]}>관심사</Text>
-										</View>
-										<View style={[style.category_step2_content]}>
-											{/* 더미 텍스트컴포넌트 - 조정되기 이전의 numberOfLine 판별용 */}
-											<Text
-												style={[txt.noto28, {position: 'absolute', opacity: 0}]}
-												onTextLayout={({nativeEvent: {lines}}) => {
-													setNumberOfLines(lines.length);
-												}}>
-												{user_interest_list.map((v, i) => {
-													return v + (i != user_interest_list.length - 1 ? ', ' : '');
-												})}
-											</Text>
-											{/* 더미 텍스트 컴포넌트 종료 */}
-											<View style={{flexDirection: 'row', width: 620 * DP, marginBottom: 20 * DP, marginTop: 10 * DP, justifyContent: 'center'}}>
-												{user_interest_list && user_interest_list.length == 0 ? (
-													<Text
-														style={[
-															txt.noto28,
-															{
-																// width: 620 * DP,
-																marginTop: 10 * DP,
-																textAlign: 'center',
-															},
-														]}>
-														아직 {data.user_nickname}님의 관심사 설정이 되지 않았습니다.
-													</Text>
-												) : (
-													<Text style={[txt.noto28]} numberOfLines={showMore ? numberOfLines : null}>
-														{user_interest_list.map((v, i) => {
-															return v + (i != user_interest_list.length - 1 ? ', ' : '');
-														})}
-													</Text>
-												)}
-											</View>
+										{/* 더미 텍스트 컴포넌트 종료 */}
+										<View style={{flexDirection: 'row', width: 620 * DP, marginBottom: 20 * DP, marginTop: 10 * DP, justifyContent: 'center'}}>
+											{list && list.length == 0 ? (
+												<Text style={[txt.noto28, {marginTop: 10 * DP, textAlign: 'center'}]}>
+													아직 {data.user_nickname}님의 관심사 설정이 되지 않았습니다.
+												</Text>
+											) : (
+												<Text style={[txt.noto28]} numberOfLines={showMore ? numberOfLines : null}>
+													{list.map((v, i) => {
+														return v + (i != list.length - 1 ? ', ' : '');
+													})}
+												</Text>
+											)}
 										</View>
 									</View>
 								</View>
-								{data._id == userInfo._id ? (
-									<View>
-										<AniButton onPress={onPressEdit} btnLayout={btn_w136} btnStyle={'border'} btnTitle={'수정'} />
-									</View>
-								) : (
-									<></>
-								)}
-							</>
-						);
-					}
+							</View>
+							{data._id == userInfo._id ? (
+								<View>
+									<AniButton onPress={onPressEdit} btnLayout={btn_w136} btnStyle={'border'} btnTitle={'수정'} />
+								</View>
+							) : (
+								<></>
+							)}
+						</>
+					);
 				} catch (err) {
 					console.log('err InformationModal', err);
 					return <></>;

@@ -273,7 +273,7 @@ export default UserMenu = props => {
 					</View>
 
 					{/* 하단 메뉴 */}
-					<View style={[temp_style.userMenu_step2, userMenu_style.horizontalLine]}>
+					<View style={[temp_style.userMenu_step2]}>
 						{/* <View style={[{borderBottomColor: GRAY40, borderBottomWidth: 10 * DP}]}> */}
 						{/* <View> */}
 						<ProfileMenu

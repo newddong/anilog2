@@ -304,7 +304,7 @@ export default SimpleWithMeatballHeader = ({route, options, back}) => {
 
 	const getMenuIcon = () => {
 		if (route.params.feed_object && route.params.isMissingOrReport) {
-			const isWriter = route.params.feed_object && userGlobalObject.userInfo._id == route.params.feed_object.feed_writer_id._id; //작성자인지 여부 판단
+			const isWriter = route.params.feed_object && userGlobalObject.userInfo._id == route.params.feed_object.feed_writer_id?._id; //작성자인지 여부 판단
 			if (isWriter) {
 				return <Meatball50_GRAY20_Horizontal onPress={onPressMeatball} />;
 			} else {

@@ -47,9 +47,11 @@ export default ReportDetail = props => {
 			},
 			data => {
 				let result = data.msg;
-				result.feed_writer_id.is_favorite = result.is_favorite;
+				if (result.feed_writer_id) {
+					result.feed_writer_id.is_favorite = result.is_favorite;
+				}
 				setData(data.msg);
-				navigation.setParams({writer: data.msg.feed_writer_id._id, isMissingOrReport: true, feed_object: data.msg});
+				navigation.setParams({writer: data.msg.feed_writer_id?._id, isMissingOrReport: true, feed_object: data.msg});
 				fetchReportList(result._id);
 			},
 			err => {

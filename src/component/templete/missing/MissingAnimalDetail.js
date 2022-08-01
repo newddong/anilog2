@@ -53,11 +53,13 @@ export default MissingAnimalDetail = props => {
 			data => {
 				// console.log('result / MissingAnimalDetail / getFeedDetailById', data.msg);
 				let result = data.msg;
-				result.feed_writer_id.is_favorite = result.is_favorite;
+				if (result.feed_writer_id) {
+					result.feed_writer_id.is_favorite = result.is_favorite;
+				}
 				setData(result);
 				// console.log('data', data.msg);
 				if (mounted) {
-					navigation.setParams({writer: data.msg.feed_writer_id._id, isMissingOrReport: true, feed_object: data.msg});
+					navigation.setParams({writer: data.msg.feed_writer_id?._id, isMissingOrReport: true, feed_object: data.msg});
 					const getGender = () => {
 						switch (result.missing_animal_sex) {
 							case 'male':

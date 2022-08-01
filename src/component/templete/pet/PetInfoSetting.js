@@ -24,7 +24,6 @@ import {useNavigation} from '@react-navigation/core';
 
 //반려동물 상세 페이지
 export default PetInfoSetting = ({route}) => {
-	console.log('PetInfoSetting / route.params', route.params);
 	const navigation = useNavigation();
 	const [petData, setPetData] = React.useState('false'); // 현재 반려동물 프로필 데이터
 	const [familyAccountList, setFamilyAccountList] = React.useState([]); //가족 계정 목록 데이터
@@ -47,10 +46,18 @@ export default PetInfoSetting = ({route}) => {
 	const [petSex, setPetSex] = React.useState('');
 	const [selectedBirthDate, setSelectedBirthDate] = React.useState('');
 	const [btnOn, setBtnOn] = React.useState(true);
+	const {reset} = useNavigation();
+
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			setFamily();
 			Modal.close();
+			if (route.params.from == 'ProfileHeader') {
+				reset({
+					index: 1,
+					routes: [{name: 'UserMenu'}, {name: 'PetInfoSetting', key: 'PetInfoSetting' + route.params.pet_id, params: route.params.pet_id}],
+				});
+			}
 		});
 		navigation.addListener('blur', () => setEditMode(false));
 
@@ -61,6 +68,8 @@ export default PetInfoSetting = ({route}) => {
 	React.useEffect(() => {
 		editMode ? modifyRef.current.focus() : null;
 	}, [editMode]);
+
+	React.useEffect(() => {}, []);
 
 	const setFamily = () => {
 		getUserInfoById(

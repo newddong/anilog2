@@ -16,8 +16,13 @@ import {deleteComment} from 'Root/api/commentapi';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ScrollView} from 'react-native-gesture-handler';
 
+/**
+ * 게시글
+ * @param {object} props.route.name -  루트 네임
+ */
+
 const AlarmCommentList = props => {
-	// console.log('AlarmCommentList props', props.route.params);
+	console.log('AlarmCommentList props', props.route.params);
 	const navigation = useNavigation();
 	const [comments, setComments] = React.useState(false);
 	const [commentsLoaded, setCommentsLoaded] = React.useState(false);

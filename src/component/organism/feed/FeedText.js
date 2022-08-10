@@ -1,13 +1,12 @@
 import React from 'react';
-import { Dimensions, FlatList, Text, View } from 'react-native';
-import { txt } from 'Root/config/textstyle';
-import { feedText } from 'Organism/style_organism';
+import {Dimensions, FlatList, Text, View} from 'react-native';
+import {txt} from 'Root/config/textstyle';
+import {feedText} from 'Organism/style_organism';
 import DP from 'Root/config/dp';
-
 
 export default FeedText = props => {
 	const origin_text = props.text; //FeedContent에서 보내주는 Feed 글 내용
-
+	console.log('FeedText props', props);
 	const char = []; //Char 단위로 나눈 Feed글을 담을 배열선언
 	char.length = origin_text.length; //Feed글의 글자수
 
@@ -15,7 +14,7 @@ export default FeedText = props => {
 	for (let i = 0; i < char.length; i++) {
 		char[i] = origin_text.charAt(i);
 	}
-	const num_of_char = 30
+	const num_of_char = 30;
 	const HEIGHT = Dimensions.get('screen').height;
 	const Width = Dimensions.get('screen').width;
 
@@ -50,21 +49,21 @@ export default FeedText = props => {
 			};
 		});
 		return (
-			<View style={{ flexDirection: 'row' }}>
+			<View style={{flexDirection: 'row'}}>
 				{valueInfos.map((v, idx) => {
 					//valueInfos에는 위에서 split한 값들의 str, isHt, idxArr 값이 들어있다.
 					const isLast = idx === valueInfos.length - 1; //마지막 split의 마지막 글자여부 Boolean
 					return (
 						<Text
-							ellipsizeMode='tail'
+							ellipsizeMode="tail"
 							key={idx}
 							// split된 값들의 isHT(hashTag로 시작하는가?)가 True일 경우 글자색은 blue이며
-							style={[txt.noto28, v.isHT ? { color: 'blue', height: 40 * DP, textDecorationLine: 'underline' } : { height: 40 * DP }]}
+							style={[txt.noto28, v.isHT ? {color: 'blue', height: 40 * DP, textDecorationLine: 'underline'} : {height: 40 * DP}]}
 							// 클릭이벤트가 부여된다. 해쉬로 시작하는 텍스트 Split가 아닐 경우 이벤트는 null
 							onPress={() => (v.isHT ? props.onHashClick(v.str) : null)}>
 							{v.str}
 							{/* 각 split의 마지막 글자인 경우 띄어쓰기를 부여,   */}
-							{!isLast && <Text style={{ backgroundColor: 'transparent' }}> </Text>}
+							{!isLast && <Text style={{backgroundColor: 'transparent'}}> </Text>}
 						</Text>
 					);
 				})}
@@ -74,7 +73,7 @@ export default FeedText = props => {
 
 	return (
 		<View style={feedText.container}>
-			<FlatList data={sliced} renderItem={({ item, index }) => renderItem(item, index)} />
+			<FlatList data={sliced} renderItem={({item, index}) => renderItem(item, index)} />
 		</View>
 	);
 };

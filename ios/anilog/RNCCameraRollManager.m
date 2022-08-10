@@ -4,6 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+//RCT로 마크된 함수는 CameraRoll.d.ts에서 RNCCameraRoll 객체를 통해 호출할 수 있다.
 
 #import "RNCCameraRollManager.h"
 
@@ -23,6 +24,7 @@
 //#MARK: PHAssetCollectionSubtype
 @implementation RCTConvert (PHAssetCollectionSubtype)
 
+///smart album 이름을 매칭시켜주기 위한 이넘
 RCT_ENUM_CONVERTER(PHAssetCollectionSubtype, (@{
   @"album": @(PHAssetCollectionSubtypeAny),
   @"event": @(PHAssetCollectionSubtypeAlbumSyncedEvent),
@@ -231,6 +233,8 @@ RCT_EXPORT_METHOD(saveToCameraRoll:(NSURLRequest *)request
 }
 
 //#MARK: getAlbums
+/// 갤러리 앨범명을 받아온다
+/// @param params CameraRoll.d.ts의 GetAlbumParams 참고
 RCT_EXPORT_METHOD(getAlbums:(NSDictionary *)params
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
@@ -308,6 +312,8 @@ static void RCTResolvePromise(RCTPromiseResolveBlock resolve,
 }
 
 //#MARK: getPhotos
+/// 갤러리 파일들을 불러온다
+/// @param params CameraRoll.d.ts GetPhotoParams 참고
 RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
@@ -498,7 +504,9 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
   });
 }
 
-//#MARK: deletePhotos
+//#MARK: RCT deletePhotos
+/// 주어진 주소의 갤러리 파일을 삭제한다
+/// @param assets 파일 주소 배열
 RCT_EXPORT_METHOD(deletePhotos:(NSArray<NSString *>*)assets
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
@@ -529,6 +537,7 @@ RCT_EXPORT_METHOD(deletePhotos:(NSArray<NSString *>*)assets
 ///options로 인자 받는 방식으로 변경 예정. 이미지를 정해진 크기로 변환한다. 세로 기준으로 파일 사이즈를 줄인다.
 ///현재는 cameraroll에서 리턴받는 ph://{local identifier} 주소로만 동작한다.
 ///quality는 1.0~0.0
+///@param params CameraRoll.d.ts CompressionParams 참고
 RCT_EXPORT_METHOD(compressImage:(NSDictionary * _Nonnull)params
                   resolver:(RCTPromiseResolveBlock) resolve
                   rejecter:(RCTPromiseRejectBlock) reject){
@@ -657,6 +666,7 @@ RCT_EXPORT_METHOD(compressImage:(NSDictionary * _Nonnull)params
 
 //#MARK: @RCT savaeImage
 /// 이미지를 저장하는 함수. 성공시 nil, 실패시 error를 리턴한다.
+/// @param uri 저장하고자 하는 이미지 파일의 주소
 RCT_EXPORT_METHOD(saveImage:(NSString*) uri
                   resolver:(RCTPromiseResolveBlock) resolve
                   rejecter:(RCTPromiseRejectBlock) reject){
@@ -737,6 +747,8 @@ imageRequestResultHandler:^(NSData * _Nullable resultData, NSString * _Nullable 
 
 //#MARK: @RCT cropImage
 //ph://{local identifier} 형태만 지원
+/// 이미지 파일을 크롭한다
+/// @param params CameraRoll.d.ts의 CropParams 참고
 RCT_EXPORT_METHOD(cropImage:(NSDictionary* _Nonnull) params
                   resolver:(RCTPromiseResolveBlock) resolve
                   rejecter:(RCTPromiseRejectBlock) reject) {
@@ -916,6 +928,10 @@ static void checkPhotoLibraryConfig()
 }
 
 //#MARK: @createTempImage
+/// 주어진 이미지 데이터의 임시 이미지를 생성하여 캐시 디렉토리에 저장한다
+/// @param data 저장하고자 하는 이미지의 데이터
+/// @param mimeType 이미지 파일의 mimeType. 현재는 jpg로 통일되어 있어 값에 따라 리턴값이 변화하지 않는다
+/// @return 생성된 임시 이미지의 파일 경로
 - (NSString*) createTempImage:(NSData*)data
                      mimeType:(NSString* _Nullable )mimeType{
   NSString *tmpDirFullPath = [self getTmpDirectory];
@@ -934,6 +950,8 @@ static void checkPhotoLibraryConfig()
 }
 
 //#MARK: @getTmpDirectory
+/// 캐시 디렉토리를 가져온다
+/// @return 캐시 디렉토리 경로
 - (NSString*) getTmpDirectory {
   NSString *tmpFullPath = [NSTemporaryDirectory() stringByAppendingString:tempDirectoryPath];
   
@@ -948,6 +966,8 @@ static void checkPhotoLibraryConfig()
 }
 
 //#MARK: @cleanTmpdirectory
+/// 캐시 디렉토리 내부 파일을 모두 지운다
+/// @return 성공 여부를 BOOL 값으로 반환한다
 - (BOOL)cleanTmpDirectory {
   NSString* tmpDirectoryPath = [self getTmpDirectory];
   NSArray* tmpDirectory = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:tmpDirectoryPath error:nil];
@@ -964,12 +984,11 @@ static void checkPhotoLibraryConfig()
 }
 
 //#MARK: @requestImageData
-   /**
-     ph://{local identifier} 형식의 uri에서 이미지를 가져오는 함수
-    가져온 데이터를 받는 건 handler callback
-    에러가 난 경우 핸들러로 넘어가지 않고 리턴한다. 즉, 에러가 나지 않으면 nil이 리턴된다
-      - Returns:  RCTRejectBlock에 넘길 NSArray* 형태 [ errCode, errMsg, {empty string} ]
-    */
+/// 주어진 경로로부터 이미지 데이터를 가져온다
+///@param uri 이미지 경로
+///@param imageRequestResultHandlerOverAPI13 API13을 넘는 경우 결과값을 받을 핸들러
+///@param imageRequestResultHandler 이외의 경우 결과값을 받을 핸들러
+///@return  RCTRejectBlock에 넘길 NSArray* 형태 [ errCode, errMsg, {empty string} ]. 에러가 나지 않으면 nil이 반환된다
 - (NSArray *_Nullable)        requestImageData: (NSString*) uri
             imageRequestResultHandlerOverAPI13: (void (^)(NSData *_Nullable imageData, NSString *_Nullable dataUTI, CGImagePropertyOrientation orientation, NSDictionary *_Nullable info)) imageRequestResultHandlerOverAPI13
                      imageRequestResultHandler:(void (^)(NSData *_Nullable imageData, NSString *_Nullable dataUTI, UIImageOrientation orientation, NSDictionary *_Nullable info)) imageRequestResultHandler
@@ -1017,6 +1036,7 @@ static void checkPhotoLibraryConfig()
 //}
 
 //#MARK: @RCT clean
+/// 캐싱 디렉토리 하위 파일을 모두 삭제한다
 RCT_REMAP_METHOD(clean,
                  resolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject) {

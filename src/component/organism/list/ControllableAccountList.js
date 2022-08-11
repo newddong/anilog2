@@ -8,23 +8,23 @@ import {controllableAccountList} from 'Organism/style_organism copy';
 import DP from 'Root/config/dp';
 
 /**
- *
- * @param {{
- * items : Object,
- * onClickFollowBtn: void,
- * onClickUnFollowBtn : void,
- * onClickAccount : void,
- * showCheckBox : boolean,
- * showCheckBox :boolean,
- * showButtons : boolean,
- * showFollowStatusText : boolean,
- * listEmptyText : string,
- * width : number,
- * }} props
+ * 사용자 목록 리스트
+ * @param {Object} props.items - 계정 목록
+ * @param {string} props.listEmptyText - 빈 리스트 일때의 안내문
+ * @param {void} props.onClickAccount - 계정 클릭 콜백
+ * @param {void} props.onClickFollowBtn - 계정 팔로우 버튼 클릭
+ * @param {void} props.onClickUnFollowBtn - 계정 언팔로우 버튼 클릭
+ * @param {void} props.onPressCrossMark - 크로스 마크 클릭
+ * @param {boolean} props.showButtons - 버튼 유무
+ * @param {boolean} props.showCheckBox - 체크박스 유무
+ * @param {boolean} props.showCrossMark - 크로스 유무
+ * @param {boolean} props.showFollowStatusText - 팔로잉 상태 표시 유무
+ * @param {string} props.title - 제목
+ * @param {number} props.width - width
+
  */
 export default ControllableAccountList = props => {
 	const [selectedItem, setSelectedItem] = React.useState(0);
-
 	//AccountList 선택이벤트
 	const onSelectItem = (item, index) => {
 		props.onClickAccount(item, index);

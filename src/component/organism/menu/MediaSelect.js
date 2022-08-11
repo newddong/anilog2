@@ -8,6 +8,11 @@ import AniButton from 'Molecules/button/AniButton';
 import LocalMedia from 'Molecules/media/LocalMedia';
 import {interestTagList, myPetList} from 'Organism/style_organism';
 
+/**
+ * 사용되지 않는 코드
+
+
+ */
 export default MediaSelect = props => {
 	const testData = [1, 2, 3];
 

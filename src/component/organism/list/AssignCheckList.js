@@ -4,12 +4,10 @@ import {View} from 'react-native';
 import AssignCheckListItem from 'Organism/listitem/AssignCheckListItem';
 import {assignCheckList} from 'Organism/style_organism copy';
 /**
- *
- *@param {{
- *items: 'array / 동의 목록의 list 정보',
- *onCheck : void,
- *onPressDetail : void
- * }} props
+ *@param {array} props.item -동의 목록의 list 정보
+ *@param {void} props.onCheck -동의 목록의 list 정보
+ *@param {void} props.onPressDetail - 상세보기 콜백 
+
  */
 export default AssignCheckList = props => {
 	// console.log('AssignCheckLis', props.items);

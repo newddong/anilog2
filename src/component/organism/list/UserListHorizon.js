@@ -3,6 +3,12 @@ import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 're
 import DP from 'Root/config/dp';
 import ProfileImageMedium94 from 'Root/component/molecules/image/ProfileImageMedium94';
 
+/**
+ * 가로 계정 리스트 객체 
+ * @param {Array} props.items - 계정 데이터
+ * @param {void} props.onClickLabel - 계정 선택 
+
+ */
 export default UserListHorizon = props => {
 	const renderItem = (item, index) => {
 		return (

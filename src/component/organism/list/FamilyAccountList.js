@@ -6,11 +6,10 @@ import ProfileImageSmall from 'Molecules/image/ProfileImageSmall';
 import {familyAccountList} from 'Organism/style_organism';
 
 /**
- *
- *@param {{
- * items : 'List item ',
- * onDeleteAccount : void,
- * }} props
+ * 가족 계정 목록 
+ *@param {void} props.itmes - 계정 목록 data
+ *@param {void} props.onDeleteAccount - 계정 삭제 
+
  */
 export default FamilyAccountList = props => {
 	const renderItem = (item, index) => {

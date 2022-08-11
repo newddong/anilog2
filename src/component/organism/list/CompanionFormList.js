@@ -4,14 +4,12 @@ import CompanionForm from 'Organism/form/CompanionForm';
 import {companionFormList} from 'Organism/style_organism copy';
 
 /**
- *
- * @param {{
- * onSelectSpecies : void,
- * onSelectAge:void,
- * onSelectDuration :void,
- * onSelectStatus :void,
- * onDelete : void,
- * }} props
+  *@param {void} props.onSelectSpecies - 상세보기 콜백 
+  *@param {void} props.onSelectAge - 니아 선택 콜백
+  *@param {void} props.onSelectDuration - 기간 선택 콜백 
+  *@param {void} props.onSelectStatus - 상태 선택 콜백 
+  *@param {void} props.onDelete - 삭제 콜백 
+
  */
 export default CompanionFormList = props => {
 	const [companionList, setCompanionList] = React.useState([]);

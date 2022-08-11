@@ -5,8 +5,7 @@ import {animalNeedHelpList} from 'Organism/style_organism copy';
 import {Check50, Rect50_Border} from 'Root/component/atom/icon';
 import DP from 'Root/config/dp';
 /**
- *
- *@param {{
+ * 동물 보호 리스트
  *nowRoute: parentName,
  *onClickLabel: 'void / Label클릭 콜백함수 '
  *onFavoriteTag : 'void / 즐겨찾기 태그 깃발 클릭 ',
@@ -20,7 +19,19 @@ import DP from 'Root/config/dp';
  *whenEmpty : 'component / 목록이 없을 시 출력되는 컴포넌트',
  *onLayout : void,
  *showFavorite : 'boolean / 즐겨찾기 아이콘 출력 여부 ',
- * }} props
+ * @param {object} props - Props Object
+ * @param {()=>void} props.onClickLabel -테두리 및 입양처보기, 게시글보기 모드
+ * @param {()=>void} props.onFavoriteTag - 즐겨찾기 태그 깃발 클릭
+ * @param {()=>void} props.onHashClick - HashClick Callback
+ * @param {()=>void} props.onPressAdoptorInfo - 테두리 모드 입양처 보기 클릭
+ * @param {()=>void} props.onPressProtectRequest - 테두리 모드 게시글보기 클릭
+ * @param {()=>void} props.onPressReporter -제보 게시글의 제보자 닉네임 클릭
+ * @param {()=>void} props.onPressCheck -보호요청 즐겨찾기 체크모드에서 체크
+ * @param {()=>void} props.onLayout
+ * @param {boolean} props.borderMode - 선택 및 테두리 출력 모드 테두리 및 입양처보기, 게시글보기 모드
+ * @param {boolean} props.onCheckBox - CheckBox 보이기
+ * @param {boolean} props.showFavorite -  즐겨찾기 아이콘 출력 여부
+ * @param {component} props.whenEmpty - 빈 값 시 출력 컴포넌트
  */
 export default AnimalNeedHelpList = props => {
 	const debug = false;

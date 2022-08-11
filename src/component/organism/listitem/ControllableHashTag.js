@@ -4,8 +4,12 @@ import {Cross46, Rect48_Border} from 'Atom/icon';
 import HashLabel from 'Molecules/label/HashLabel';
 import {controllableHashTag} from 'Organism/style_organism';
 
+/**
+ * 해시태그
+ * @param {object} props.data - 해시태그 데이터
+
+ */
 export default ControllableHashTag = props => {
-	console.log(props);
 	const [checked, setChecked] = React.useState(true);
 
 	return (

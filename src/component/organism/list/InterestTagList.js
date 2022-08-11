@@ -10,17 +10,16 @@ import {INTEREST_ACT, INTEREST_REGION} from 'Root/i18n/msg';
 import Modal from 'Root/component/modal/Modal';
 import {interestTagList} from 'Organism/style_organism copy';
 /**
- *
- *@param {{
- * title: string,
- * items : 'List item ',
- * onDelete : void,
- * onPressAddBtn : void,
- * extra : boolean,
- * }} props
+ * 관심 지역/활동 리스트 
+ * @param {string} props.title - 관심 활동 / 관심 지역 제목 
+ * @param {Array} props.items - 관심 활동 / 관심 지역 list 
+ * @param {boolean} props.extra - flatlist extraData 인자
+ * @param {void} props.onDelete - 삭제 함수
+ * @param {void} props.onPressAddBtn - 추가 버튼 함수
+
  */
 export default InterestTagList = props => {
-	// console.log('InterstTagList props', props);
+	console.log('InterstTagList props', props);
 	const navigation = useNavigation();
 	const onDelete = index => {
 		props.onDelete(index);

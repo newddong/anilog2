@@ -10,6 +10,13 @@ import Modal from 'Root/component/modal/Modal';
 import {REPORT_MENU} from 'Root/i18n/msg';
 import {createReport} from 'Root/api/report';
 import FastImage from 'react-native-fast-image';
+
+/**
+ * 메세지 한개 객체 
+ * @param {object} props.data - 쪽지 데이터
+ * @param {void} props.onClick - 쪽지 클릭 함수
+
+ */
 const OneMessage = props => {
 	// console.log('NoteMessageList props', props.data);
 	const data = props.data;

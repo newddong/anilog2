@@ -5,17 +5,16 @@ import {txt} from 'Root/config/textstyle';
 import {BLACK, GRAY30} from 'Root/config/color';
 import DP from 'Root/config/dp';
 /**
- *
- * @param {{
- *  onSelectMode: function,
- *  onCancelSelectMode: void,
- *  onSelectAllClick: void,
- *	onDeleteSelectedItem: void,
- *	selectMode: boolean,
- *	showBottomLine: boolean,
- * }} props
+ * 즐겨찾기 선택하기
+ * @param {void} props.onCancelSelectMode - 선택모드 취소
+ * @param {void} props.onDeleteSelectedItem - 선택된 항목 삭제
+ * @param {void} props.onSelectAllClick - 전체 선택
+ * @param {void} props.onSelectMode- 선택하기 함수
+ * @param {boolean} props.selectMode- true - 선택하기 모드 , false 선택하기 아닌 모드
+ * @param {boolean} props.showBottomLine- true일시 밑줄 보여줌
  */
 export default SelectStat = props => {
+	console.log('SelectStat', props);
 	const [selectMode, setSelectMode] = React.useState(props.selectMode || false);
 	let selectCNT = React.useRef(0);
 

@@ -6,7 +6,6 @@ import {APRI10, GRAY10, GRAY20, MAINBLACK} from 'Root/config/color';
 import {Private30, ProfileDefaultImg, Public30} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
 import userGlobalObj from 'Root/config/userGlobalObject';
-import {DEFAULT_PROFILE} from 'Root/i18n/msg';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 

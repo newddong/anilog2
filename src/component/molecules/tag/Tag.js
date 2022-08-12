@@ -1,17 +1,27 @@
 import React from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, Animated, PanResponder} from 'react-native';
-
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {Cancel48} from 'Atom/icon';
 
+/**
+ * 커스텀 탭 (메인색깔로 채워진 스타일)
+ * @param {object} props - Props Object
+ * @param {object} props.pos- 태그 좌표 정보
+ * @param {object} props.user - 유저 오브젝트
+ * @param {(user:object)=>void} props.onDelete - 태그 삭제 콜백
+ * @param {(user:object, x:number, y:number)=>void} props.onEndTagMove - 태그 터치 종료 콜백
+ * @param {()=>void} props.onTagMoveStart - 태그 터치 시작 콜백
+ * @param {boolean} props.viewmode - 태그의 출력 모드
+ * @param {object} props.backgroundLayout - 사진의 레이아웃
+ */
 const Tag = ({pos, user, onDelete, onEndTagMove, viewmode, backgroundLayout, onTagMoveStart}) => {
 	const [position, setPosition] = React.useState({x: pos?.x, y: pos?.y});
 
 	// const [dimension, setDimension] = React.useState({width: 0, height: 0});
-	const dimension = React.useRef({width:0,height:0});
-	const TOPLEFT = {x: 10*DP, y: 10*DP};
+	const dimension = React.useRef({width: 0, height: 0});
+	const TOPLEFT = {x: 10 * DP, y: 10 * DP};
 	const BOTTOMRIGHT = {x: 720 * DP, y: 720 * DP};
 	const tagnav = useNavigation();
 	const [isDelete, setDelete] = React.useState(false);
@@ -37,42 +47,39 @@ const Tag = ({pos, user, onDelete, onEndTagMove, viewmode, backgroundLayout, onT
 				let x = state.dx;
 				let y = state.dy;
 
-				if(position.x+state.dx<=TOPLEFT.x){
-					x= TOPLEFT.x-position.x
+				if (position.x + state.dx <= TOPLEFT.x) {
+					x = TOPLEFT.x - position.x;
 				}
-				if(position.y+state.dy<=TOPLEFT.y){
-					y= TOPLEFT.y-position.y
+				if (position.y + state.dy <= TOPLEFT.y) {
+					y = TOPLEFT.y - position.y;
 				}
 
-				if(position.x+state.dx+dimension.current.width>=BOTTOMRIGHT.x){
-					x= BOTTOMRIGHT.x - position.x - dimension.current.width 
+				if (position.x + state.dx + dimension.current.width >= BOTTOMRIGHT.x) {
+					x = BOTTOMRIGHT.x - position.x - dimension.current.width;
 				}
-				if(position.y+state.dy+dimension.current.height>=BOTTOMRIGHT.y){
-					y= BOTTOMRIGHT.y - position.y - dimension.current.height
+				if (position.y + state.dy + dimension.current.height >= BOTTOMRIGHT.y) {
+					y = BOTTOMRIGHT.y - position.y - dimension.current.height;
 				}
-				pan.setValue({x:x,y:y})
+				pan.setValue({x: x, y: y});
 			},
-			onPanResponderRelease: ({nativeEvent},state) => {
-				
-				
+			onPanResponderRelease: ({nativeEvent}, state) => {
 				let x = position.x + state.dx;
 				let y = position.y + state.dy;
 
-				if(position.x+state.dx<=TOPLEFT.x){
-					x= TOPLEFT.x
+				if (position.x + state.dx <= TOPLEFT.x) {
+					x = TOPLEFT.x;
 				}
-				if(position.y+state.dy<=TOPLEFT.y){
-					y= TOPLEFT.y
-				}
-
-				if(position.x+state.dx+dimension.current.width>=BOTTOMRIGHT.x){
-					x=BOTTOMRIGHT.x-dimension.current.width
+				if (position.y + state.dy <= TOPLEFT.y) {
+					y = TOPLEFT.y;
 				}
 
-				if(position.y+state.dy+dimension.current.height>=BOTTOMRIGHT.y){
-					y=BOTTOMRIGHT.y-dimension.current.height
+				if (position.x + state.dx + dimension.current.width >= BOTTOMRIGHT.x) {
+					x = BOTTOMRIGHT.x - dimension.current.width;
 				}
 
+				if (position.y + state.dy + dimension.current.height >= BOTTOMRIGHT.y) {
+					y = BOTTOMRIGHT.y - dimension.current.height;
+				}
 
 				pan.setValue({x: 0, y: 0});
 				onEndTagMove({user: user, x: x, y: y});
@@ -102,13 +109,9 @@ const Tag = ({pos, user, onDelete, onEndTagMove, viewmode, backgroundLayout, onT
 					tag.background,
 					{position: 'absolute', backgroundColor: '#0000', height: 100 * DP, top: HEIGTHRATIO * position.y, left: HEIGTHRATIO * position.x},
 				]}
-				onPress={moveToTaggedProfile}
-				>
+				onPress={moveToTaggedProfile}>
 				<Text style={[txt.roboto28, {opacity: 0, paddingHorizontal: 50 * DP}]}>{user.user_nickname}</Text>
-				<View
-					style={[tag.background, {paddingRight: 30 * DP}]}
-
-					>
+				<View style={[tag.background, {paddingRight: 30 * DP}]}>
 					<Text style={[txt.roboto28, txt.white]}>{user.user_nickname}</Text>
 				</View>
 			</TouchableOpacity>
@@ -126,10 +129,11 @@ const Tag = ({pos, user, onDelete, onEndTagMove, viewmode, backgroundLayout, onT
 						left: WIDTHRATIO * position.x,
 						transform: [{translateX: pan.x}, {translateY: pan.y}],
 					},
-				]} onLayout={onLayout}
+				]}
+				onLayout={onLayout}
 				onStartShouldSetResponder={() => true}>
 				<Text style={[txt.roboto28, {opacity: 0, paddingHorizontal: 50 * DP}]}>{user.user_nickname}</Text>
-				<View style={[tag.background]}  onStartShouldSetResponder={() => true}>
+				<View style={[tag.background]} onStartShouldSetResponder={() => true}>
 					<Text style={[txt.roboto28, txt.white]}>{user.user_nickname}</Text>
 					<View
 						style={{width: 58 * DP, height: 100 * DP, justifyContent: 'center', alignItems: 'flex-end'}}

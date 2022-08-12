@@ -1,20 +1,6 @@
 import React from 'react';
-import {
-	Animated,
-	PanResponder,
-	View,
-	Text,
-	Platform,
-	Button,
-	ScrollView,
-	Image,
-	StyleSheet,
-	TouchableWithoutFeedback,
-	PixelRatio,
-} from 'react-native';
-import CameraRoll from 'Root/module/CameraRoll';
+import {Animated, PanResponder, View, Image, TouchableWithoutFeedback} from 'react-native';
 import DP from 'Root/config/dp';
-import FastImage from 'react-native-fast-image';
 import {Crop72} from 'Root/component/atom/icon';
 
 const ExpansionView = prop => {
@@ -28,7 +14,7 @@ const ExpansionView = prop => {
 	const panPrev = React.useRef({x: 0, y: 0}).current;
 	const imgLayout = React.useRef({width: WIDTH, height: HEIGHT}).current;
 	const initDistance = React.useRef(0);
-    const initCenter = React.useRef({x:0,y:0}).current;
+	const initCenter = React.useRef({x: 0, y: 0}).current;
 	const [cropUri, setCropUri] = React.useState();
 	// const [imgUri, setImgUri] = React.useState(prop.uri);
 	const [photo, setPhoto] = React.useState(prop.photo);
@@ -46,54 +32,54 @@ const ExpansionView = prop => {
 	const panResponder = React.useRef(
 		PanResponder.create({
 			onMoveShouldSetPanResponder: () => true,
-			onPanResponderGrant: ({nativeEvent},state) => {
-                if(nativeEvent.touches.length>1){
-                    isPinch.current = true;
-                    let pos1 = {x: nativeEvent.touches[0].pageX, y: nativeEvent.touches[0].pageY};
+			onPanResponderGrant: ({nativeEvent}, state) => {
+				if (nativeEvent.touches.length > 1) {
+					isPinch.current = true;
+					let pos1 = {x: nativeEvent.touches[0].pageX, y: nativeEvent.touches[0].pageY};
 					let pos2 = {x: nativeEvent.touches[1].pageX, y: nativeEvent.touches[1].pageY};
-                    initDistance.current = getDistance(pos1, pos2);
-                    let center = getCenter(pos1, pos2);
-                    initCenter.x = center.x;
-                    initCenter.y = center.y;
-                    pan.setOffset({x: panPrev.x, y: panPrev.y});
-                }else{
-                    isPinch.current = false;
-                    pan.setValue({x:panPrev.x,y:panPrev.y})
-                }
-                console.log('grant')
-                prop.onStartMove&&prop.onStartMove();
+					initDistance.current = getDistance(pos1, pos2);
+					let center = getCenter(pos1, pos2);
+					initCenter.x = center.x;
+					initCenter.y = center.y;
+					pan.setOffset({x: panPrev.x, y: panPrev.y});
+				} else {
+					isPinch.current = false;
+					pan.setValue({x: panPrev.x, y: panPrev.y});
+				}
+				console.log('grant');
+				prop.onStartMove && prop.onStartMove();
 			},
-			onPanResponderStart: ({nativeEvent},state) => {
-				if(nativeEvent.identifier>1){
-                    isPinch.current = true;
-                }else{
-                    isPinch.current = false;
-                }
-                console.log('start')
-                prop.onStartMove&&prop.onStartMove();
+			onPanResponderStart: ({nativeEvent}, state) => {
+				if (nativeEvent.identifier > 1) {
+					isPinch.current = true;
+				} else {
+					isPinch.current = false;
+				}
+				console.log('start');
+				prop.onStartMove && prop.onStartMove();
 			},
-			onPanResponderMove: ({nativeEvent},state) => {
-				if(isPinch.current&&nativeEvent.touches.length>1){
-                    let pos1 = {x: nativeEvent.touches[0].pageX, y: nativeEvent.touches[0].pageY};
+			onPanResponderMove: ({nativeEvent}, state) => {
+				if (isPinch.current && nativeEvent.touches.length > 1) {
+					let pos1 = {x: nativeEvent.touches[0].pageX, y: nativeEvent.touches[0].pageY};
 					let pos2 = {x: nativeEvent.touches[1].pageX, y: nativeEvent.touches[1].pageY};
-                    let center = getCenter(pos1, pos2);
-                    scale.setValue((scalePrev.current * getDistance(pos1, pos2)) / initDistance.current);
-                    pan.setValue({x:panPrev.x+center.x-initCenter.x, y:panPrev.y+center.y-initCenter.y})
-                }else{
-                    pan.setValue({x:state.dx+panPrev.x, y: state.dy+panPrev.y})
-                }
-                console.log(nativeEvent, state)  
+					let center = getCenter(pos1, pos2);
+					scale.setValue((scalePrev.current * getDistance(pos1, pos2)) / initDistance.current);
+					pan.setValue({x: panPrev.x + center.x - initCenter.x, y: panPrev.y + center.y - initCenter.y});
+				} else {
+					pan.setValue({x: state.dx + panPrev.x, y: state.dy + panPrev.y});
+				}
+				console.log(nativeEvent, state);
 			},
-			onPanResponderRelease: ({nativeEvent},state) => {
-				if(isPinch.current){
-                    isPinch.current = false;
-                    scalePrev.current = scale._value;
-                }else{
-                    panPrev.x = pan.x._value;
-                    panPrev.y = pan.y._value;
-                }
-                
-                prop.onEndMove&&prop.onEndMove();
+			onPanResponderRelease: ({nativeEvent}, state) => {
+				if (isPinch.current) {
+					isPinch.current = false;
+					scalePrev.current = scale._value;
+				} else {
+					panPrev.x = pan.x._value;
+					panPrev.y = pan.y._value;
+				}
+
+				prop.onEndMove && prop.onEndMove();
 			},
 			onPanResponderTerminate: () => {
 				console.log('terminate');
@@ -102,12 +88,10 @@ const ExpansionView = prop => {
 	).current;
 
 	React.useEffect(() => {
-			// Image.getSize(photo.uri, setInitDimension);
+		// Image.getSize(photo.uri, setInitDimension);
 	}, [photo]);
 
-
 	const returnOriginal = () => {
-	
 		prop.onCrop && prop.onCrop(photo.uri, photo.uri);
 	};
 	return (
@@ -156,9 +140,9 @@ function getDistance(pos1, pos2) {
 }
 
 function getCenter(pos1, pos2) {
-    let x = pos1.x + pos2.x;
-    let y = pos1.y + pos2.y;
-    return ({x:x/2,y:y/2})
+	let x = pos1.x + pos2.x;
+	let y = pos1.y + pos2.y;
+	return {x: x / 2, y: y / 2};
 }
 
 export default ExpansionView;

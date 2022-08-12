@@ -1,8 +1,7 @@
 import React from 'react';
-import {txt} from 'Root/config/textstyle';
-import {Text, TouchableOpacity, FlatList, View} from 'react-native';
+import {TouchableOpacity, FlatList, View} from 'react-native';
 import DP from 'Root/config/dp';
-import {APRI10, BLACK, WHITE} from 'Root/config/color';
+import {WHITE} from 'Root/config/color';
 import {
 	CommunityIcon,
 	CommunityIcon_GRAY,

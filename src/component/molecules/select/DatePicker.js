@@ -5,7 +5,6 @@ import DP from 'Root/config/dp';
 import {Calendar48_Border} from 'Atom/icon';
 import {APRI10, BLACK, GRAY10, GRAY20, GRAY30, GRAY50} from 'Root/config/color';
 import Modal from 'Component/modal/Modal';
-import {object} from 'prop-types';
 
 /**
  * 날짜 선택 인풋

@@ -20,7 +20,7 @@ export default ProfileMenu = props => {
 		props.onClick(menuName);
 	};
 	const renderItem = (item, index) => {
-		console.log('item', item, props.noBottom);
+		// console.log('item', item, props.noBottom);
 		return (
 			<View>
 				<View style={[profileMenu.itemContainer]}>

@@ -6,7 +6,7 @@ import {Paw30_APRI10, Paw30_Mixed, Paw30_YELL20, ProfileDefaultImg} from 'Atom/i
 import FastImage from 'react-native-fast-image';
 
 /**
- * 버튼 컴포넌트트
+ * 펫 프로필 라벨 68 사이즈
  * @param {object} props - Props Object
  * @param {object} props.data -  UserObject(Pet)과 주인계정의 닉네임
  * @param {(object)=>void} props.onClickLabel - 라벨을 클릭했을 때 동작하는 콜백, 선택된 오브젝트 반환(UserObject -pet )

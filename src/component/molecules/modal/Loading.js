@@ -1,10 +1,9 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, StyleSheet, Platform, Dimensions, Image, Animated, Easing} from 'react-native';
+import React, {useRef} from 'react';
+import {View, StyleSheet, Platform, Dimensions, Image, Animated, Easing} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {WHITE, GRAY10, APRI10} from 'Root/config/color';
+import {WHITE, GRAY10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
-import {useNavigation} from '@react-navigation/core';
 
 /**
  * 버튼이 없는 모달

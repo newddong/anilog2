@@ -10,6 +10,17 @@ import AniButton from '../button/AniButton';
 import {btn_w116, btn_w92} from 'Root/component/atom/btn/btn_style';
 import Modal from 'Root/component/modal/Modal';
 
+/**
+ * 달력 선택창을 모달로 띄우는 함수
+ * @param {boolean} visible - 달력 모달 열기 true/false
+ * @param {()=>void} onOff - 달력 모달 닫기 콜백
+ * @param {(moment.Moment)=>void} date - 날짜 선택 반환값(Date타입)
+ * @param {boolean} past - 과거 날짜만 선택가능
+ * @param {boolean} future - 미래 날짜만 선택가능
+ * @param {boolean} multiple - 다중선택 가능
+ * @param {object} previous - 다중선택일 경우 기존의 선택 리스트
+ * @param {number} props.maxLength - 다중선택 모드일 경우 선택가능 수
+ */
 const Calendar_Multiple = props => {
 	const HEIGHT = Dimensions.get('screen').height;
 
@@ -222,6 +233,9 @@ const Calendar_Multiple = props => {
 		</TouchableOpacity>
 	);
 };
+
+Calendar_Multiple.defaultProps = {};
+
 export default Calendar_Multiple;
 
 const styles = StyleSheet.create({

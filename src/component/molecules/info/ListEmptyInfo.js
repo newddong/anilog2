@@ -3,13 +3,12 @@ import {Text, View} from 'react-native';
 import {EmptyIcon} from 'Root/component/atom/icon';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
+
 /**
- *
- *@param {{
- * items: 'Array / 피드 목록',
- * text: string,
- * paddingVertical : number
- * }} props
+ * 버튼 컴포넌트트
+ * @param {object} props - Props Object
+ * @param {number} props.paddingVertical - 상단 마진 수치
+ * @param {string} props.text - 출력 텍스트
  */
 export default ListEmptyInfo = props => {
 	return (

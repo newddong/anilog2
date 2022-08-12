@@ -6,7 +6,6 @@ import {WHITE, GRAY10, APRI10, GRAY20, GRAY40, OPACITY90} from 'Root/config/colo
 import {txt} from 'Root/config/textstyle';
 import DP, {isNotch} from 'Root/config/dp';
 import Modal from 'Root/component/modal/Modal';
-import {useKeyboardBottom} from '../input/usekeyboardbottom';
 
 /**
  * 두 버튼을 띄우는 모달 컴포넌트

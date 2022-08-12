@@ -5,9 +5,6 @@ import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
 import {Cross46} from 'Root/component/atom/icon';
 import Modal from 'Root/component/modal/Modal';
-import Swiper from 'react-native-swiper';
-import Crop from 'Molecules/media/Crop';
-import ExpansionView from 'Molecules/media/ExpansionView';
 import ImageView from 'react-native-image-viewing';
 
 /**
@@ -43,16 +40,16 @@ const PhotoListViewModal = props => {
 	const startMove = () => {
 		console.log('startMove');
 		setSwipe(false);
-	}
+	};
 
 	const endMove = () => {
 		console.log('endMove');
 		setSwipe(true);
-	}
+	};
 	const pagenation = (index, total, context) => {
 		if (total <= 1) return false;
 		return (
-			<View style={[style.pagination,{bottom: 40 * DP}]}>
+			<View style={[style.pagination, {bottom: 40 * DP}]}>
 				<Text style={[txt.roboto24, {color: WHITE}]}>
 					{index + 1}/{total}
 				</Text>
@@ -63,16 +60,17 @@ const PhotoListViewModal = props => {
 	return (
 		<View style={style.background}>
 			<TouchableOpacity style={[style.crossMark]} onPress={() => (props.onClose ? props.onClose() : Modal.close())}>
-				<View style={{paddingLeft:20*DP}}>
+				<View style={{paddingLeft: 20 * DP}}>
 					<Cross46 />
 				</View>
 			</TouchableOpacity>
 			<ImageView
-				images={props.photoList.map(v=>({uri:v}))}
+				images={props.photoList.map(v => ({uri: v}))}
 				visible={true}
-				onRequestClose={()=>{props.onClose()}}
-			></ImageView>
-			
+				onRequestClose={() => {
+					props.onClose();
+				}}></ImageView>
+
 			{/* <View style={[style.popUpWindow]}>
 				<Swiper
 					activeDotColor={APRI10}
@@ -126,11 +124,11 @@ const style = StyleSheet.create({
 	crossMark: {
 		alignSelf: 'flex-start',
 		left: 30 * DP,
-		position:'absolute',
-		top:30*DP,
-		width:150*DP,
-		height:150*DP,
-		left:0,
+		position: 'absolute',
+		top: 30 * DP,
+		width: 150 * DP,
+		height: 150 * DP,
+		left: 0,
 		// marginBottom: 70 * DP,
 	},
 	popUpWindow: {

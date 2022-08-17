@@ -2,8 +2,12 @@ import React from 'react';
 import {FlatList, Text, View} from 'react-native';
 import ShelterVerticalLabel from 'Organism/listitem/ShelterVerticalLabel';
 import {shelterList} from 'Organism/style_organism copy';
+/**
+ * 사용되지 않는 코드
 
+ */
 export default ShelterList = props => {
+	console.log('ShelterList', props);
 	const renderItem = (item, index) => {
 		// console.log('item', item);
 		return (

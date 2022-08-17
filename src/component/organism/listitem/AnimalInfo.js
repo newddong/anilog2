@@ -5,9 +5,15 @@ import {txt} from 'Root/config/textstyle';
 import PetImageLabel from 'Molecules/label/PetImageLabel';
 import {animalInfo} from 'Organism/style_organism copy';
 import DP from 'Root/config/dp';
+
+/**
+ * 보호중인 동물 정보 리스트
+ * @param {object} props.data - 보호 동물 데이터
+ * @param {void} props.onPressLabel - 동물 선택
+
+ */
 export default AnimalInfo = props => {
 	const [data, setData] = React.useState(props.data);
-	// console.log('AnimalInfo', props.data);
 	React.useEffect(() => {
 		let register_date = data.user_register_date;
 		const date = new Date(register_date);

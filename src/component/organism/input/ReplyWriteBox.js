@@ -16,9 +16,10 @@ import comment_obj from 'Root/config/comment_obj';
 /**
  * 댓글 작성 박스
  * @type {React.ForwardRefRenderFunction<?,ReplyWriteBoxProps>}
- *
+
  */
 const ReplyWriteBox = React.forwardRef((props, ref) => {
+	console.log('ReplyWriteBox', props);
 	React.useImperativeHandle(ref, () => ({
 		focus: () => {
 			inputRef.current.focus();

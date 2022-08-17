@@ -3,7 +3,16 @@ import {Text, View, StyleSheet, TouchableWithoutFeedback, TouchableOpacity} from
 import {txt} from 'Root/config/textstyle';
 import {socialInfoB} from 'Organism/style_organism copy';
 import {useNavigation} from '@react-navigation/native';
+
+/**
+ * 유저 팔로워 팔로잉 업로드 숫자 출력 컴포넌트
+ * @param {object} props - Props Object
+ * @param {object} props.data - 게시글 아이템 data
+ * @param {boolean} props.donationMode - 후원 모드 유무
+ */
+
 export default SocialInfoB = props => {
+	// console.log('SocialInfoB props', props);
 	const navigation = useNavigation();
 	const moveToSocialRelation = initial => {
 		navigation.navigate('SocialRelation', {userobject: props.data, initial: initial});

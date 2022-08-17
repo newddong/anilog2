@@ -5,7 +5,14 @@ import {Text, View, FlatList} from 'react-native';
 import {APRI10, GRAY10} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {vaccination} from 'Organism/style_organism copy';
+/**
+ * 상단 탭 네비게이션 테두리 
+ * @param {Array} props.data - 예방법종 데이터 
+ * @param {string} props.title  -제목 / 매월, 매년, 3개월에 1회 접종 
+ * @param {void} props.onDateChange  - 데이터 변경 콜백
+ * 
 
+ */
 export default Vaccination = props => {
 	// const testData = [
 	// 	{

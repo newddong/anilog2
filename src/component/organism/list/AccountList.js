@@ -7,19 +7,20 @@ import UserDescriptionLabel from 'Molecules/label/UserDescriptionLabel';
 import {organism_style} from 'Organism/style_organism copy';
 
 /**
+ * 계정 목록
+ * @param {object} props - Props Object
+ * @param {Array} props.items - 계정 목록
+ * @param {boolean} props.makeBorderMode - 클릭 시 테두리 생기는 모드 on/off , default = true',
+ * @param {boolean} props.showCrossMark - X마크 출력 여부 , default = true',
+ * @param {boolean} props.showStarMark -  별 마크(즐겨찾기 여부) 출력 여부 / default = false'
+ * @param {boolean} props.showFollowStatusText -  닉네임 우측 팔로우 중 텍스트 출력 여부'
+ * @param {void} props.onDelete -계정 지우기 마크 클릭 Callback
+ * @param {void} props.onClickLabel -계정 라벨 클릭
+ * @param {number} props.labelWidth - 유저의 자기소개글 영역 너비
+ * @param {component} props.listEmptyComponent -  리스트 없을 시의 컴포턴트
  *
- *@param {{
- * items : 'Array / 계정 목록',
- * onSelect : 'void / 계정 클릭  Callback'
- * makeBorderMode: 'boolean / 클릭 시 테두리 생기는 모드 on/off , default = true',
- * onDelete: '계정 지우기 마크 클릭 Callback',
- * onClickLabel : 'void / 계정 라벨 클릭 - ',
- * showCrossMark : 'boolean / X마크 출력 여부 , default = true',
- * showStarMark : 'boolean / 별 마크(즐겨찾기 여부) 출력 여부 / default = false'
- * labelWidth : 'number / 유저의 자기소개글 영역 너비'
- * listEmptyComponent : 'component / 리스트 없을 시 '
- * showFollowStatusText : 'boolean / 닉네임 우측 팔로우 중 텍스트 출력 여부'
- * }} props
+ *
+ *
  */
 export default AccountList = props => {
 	const [selectedIndex, setSelectedIndex] = React.useState();

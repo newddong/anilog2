@@ -5,13 +5,15 @@ import SelectedMedia from 'Molecules/media/SelectedMedia';
 import {selectedMediaList} from 'Organism/style_organism copy';
 
 /**
- * @param {{
- * layout : 'styles / layout ex) img_square_round_190',
- * items : 'list Items / [1,2,3,4]',
- * onDelete : '우상단 X마크 클릭 / 삭제 콜백함수'
- * }} props
+ * 제보 업로드 선택된 미디어 목록
+ * @param {Array} props.items - 미디어 목록
+ * @param {Array} props.mediaList - 미디어 목록
+ * @param {object} props.layout - 미디어 layout 사이즈
+ * @param {void} props.onDelete- 미디어 삭제 함수
+ *
  */
 export default SelectedMediaList = props => {
+	console.log('SeelctedMediaList', props);
 	const isContainVideo = props.mediaList.length > 0;
 	const onDelete = index => {
 		props.onDelete(index);

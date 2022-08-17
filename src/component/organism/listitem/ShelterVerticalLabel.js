@@ -6,6 +6,10 @@ import {BLACK} from 'Root/config/color';
 import ProfileImageMedium140 from 'Molecules/image/ProfileImageMedium140';
 import {shelterLabel} from 'Organism/style_organism copy';
 
+/**
+ * 사용되지 않는 컴포넌트에서 사용됨
+
+ */
 export default ShelterVerticalLabel = props => {
 	// console.log('props', props.data);
 	const data = props.data;

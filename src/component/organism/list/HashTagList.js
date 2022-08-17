@@ -4,11 +4,9 @@ import HashLabel from 'Molecules/label/HashLabel';
 import {hashTagList, organism_style} from 'Organism/style_organism';
 
 /**
- *
- *@param {{
- * items : 'List item ',
- * onDelete : void,
- * }} props
+ * 해시태그 목록
+ *@param {void} props.itmes - 해시태그 목록 data
+ *@param {void} props.onDelete - 계정 삭제
  */
 export default HashTagList = props => {
 	// console.log('propsddd', props.items);

@@ -6,7 +6,7 @@ import {temp_style} from 'Templete/style_templete';
 import {selectStat} from 'Organism/style_organism copy';
 import {APRI10} from 'Root/config/color';
 /**
- *
+ * 사용되지 않는 코드
  * @param {{
  *  onSelectMode: function,
  *  onCancelSelectMode: void,

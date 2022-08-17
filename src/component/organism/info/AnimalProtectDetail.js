@@ -11,9 +11,15 @@ import AniButton from 'Root/component/molecules/button/AniButton';
 import {btn_w654_h70} from 'Root/component/atom/btn/btn_style';
 import DP from 'Root/config/dp';
 import ProtectRequest from '../listitem/ProtectRequest';
+/**
+ *
 
+ * @param {object} props.data - 동물 보호 data
+
+
+ */
 export default AnimalProtectDetail = props => {
-	// console.log(' AnimalProtectDetail / props.data', props.data);
+	console.log(' AnimalProtectDetail / props.data', props);
 	const [statusText, setStatusText] = React.useState();
 	const [userText, setUserText] = React.useState('본 계정 보호자');
 	const data = props.data;

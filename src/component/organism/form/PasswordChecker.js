@@ -21,17 +21,20 @@ import DP from 'Root/config/dp';
 import {MAINBLACK} from 'Root/config/color';
 /**
  *
- * @param {{
- *isResetPwdMode: 'boolean / true일 경우 비밀번호 리셋 모드 - 3개의 input 출력, false일 경우 일반 비밀번호 설정 모드 - 2개의 input',
- *passwordValidator: 'void / 비밀번호 양식 확인 ',
- *passwordChecker: 'void / 비밀번호 더블체크 확인',
- *checkPresentPwd : 'void / 인자 - password 텍스트 비밀번호 변경 모드 => 현재 비밀번호 입력 발생 콜백함수 '  ,
- *pwdValid: 'boolean / 양식 통과 상태 ',,
- *presentPwdValid: 'boolean / 현재 비밀번호 값과 DB값의 일치 상태'
- *pwdCheck: 'boolean / 비밀번호 확인 통과 상태',
- *onPressClear: 'void 지우기 마크 클릭 콜백함수',
- *onChangePwd:'패스워드 입력이 바뀔때의 콜백'
- * }} props
+
+
+ * @param {boolean} props.isResetPwdMode - 'boolean / true일 경우 비밀번호 리셋 모드 - 3개의 input 출력, false일 경우 일반 비밀번호 설정 모드 - 2개의 input',
+ * @param {void} props.passwordValidator - 'void / 비밀번호 양식 확인 ',
+ * @param {void} props.passwordChecker - 비밀번호 더블체크 확인',
+ * @param {void} props.checkPresentPwd - 인자 - password 텍스트 비밀번호 변경 모드 => 현재 비밀번호 입력 발생 콜백함수 '  ,
+ * @param {void} props.onPressClear - 'void 지우기 마크 클릭 콜백함수',
+ * @param {void} props.onChangePwd - 패스워드 입력이 바뀔때의 콜백
+ * @param {boolean} props.pwdValid - 양식 통과 상태
+ * @param {boolean} props.presentPwdValid - 현재 비밀번호 값과 DB값의 일치 상태
+ * @param {boolean} props.pwdCheck - 비밀번호 확인 통과 상태
+ *
+ *
+ *
  */
 export default PasswordChecker = props => {
 	const checkerRef = React.useRef();

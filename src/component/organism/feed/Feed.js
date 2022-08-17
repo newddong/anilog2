@@ -12,8 +12,17 @@ import userGlobalObj from 'Root/config/userGlobalObject';
 import userGlobalObject from 'Root/config/userGlobalObject';
 import feed_obj from 'Root/config/feed_obj';
 
+/**
+ * 피드
+ * @param {object} props - Props Object
+ * @param {Object} props.data - 피드 data
+ * @param {boolean} props.isView - 사진 복수 check boolean
+ * @param {void} props.deleteFeed - 피드 삭제
+ * @param {void} props.onPressPhoto- 사진 클릭
+ */
+
 export default Feed = React.memo(props => {
-	// console.log('Feed', props.data);
+	// console.log('Feed', props);
 	const navigation = useNavigation();
 	const {
 		feed_content,

@@ -16,13 +16,25 @@ import {style} from 'Root/component/templete/protection/EditAidRequest';
 import Input24 from 'Root/component/molecules/input/Input24';
 /**
  *
- *@param {{
- *requestVerification: void,
- *requestReVerification: void,
- *onNameInputChange: void,
- *onPhoneNumberInputChange: void,
- *onVerificationNumberChange: void,
- * }} props
+
+ * @param {object} props.asyncConfirm - 인증 여부
+ * @param {boolean} props.failed - 인증 failed -인증 실패시 true
+ * @param {void} props.mobileNumValidator - 전화번호 형식 확인
+ * @param {void} props.nameValidator - 이름 형식 확인
+ * @param {void} props.onMobileCompanyInputChange - 통신사 입력
+ * @param {void} props.onNameInputChange - 이름 입력
+ * @param {void} props.onPhoneNumberInputChange - 전화번호 입력
+ * @param {void} props.onValid - 이름 전화번호 통신사 유효 확인
+ * @param {void} props.onVerificatiionNumberChange - 인증번호 입력
+ * @param {void} props.requestReVerification - 재인증
+ * @param {void} props.requestVerification - 인증
+ * @param {void} props.verifyNumValidator - 인증번호 유효확인
+ * @param {object} props.userData - 사용자 정보
+ * @param {boolean} props.phoneVerified - 전화번호 인증 여부 true - 성공
+ * @param {boolean} props.presentPwdValid - 현재 비밀번호 값과 DB값의 일치 상태
+ * @param {boolean} props.pwdCheck - 비밀번호 확인 통과 상태
+ *
+ *
  */
 export default PhoneNumVerification = props => {
 	// const [timeOut, setTimeOut] = React.useState(false);
@@ -34,7 +46,7 @@ export default PhoneNumVerification = props => {
 	const validVerifyNum = React.useRef(false);
 	const [validName, setValidName] = React.useState(false);
 	const [validPhone, setValidPhone] = React.useState(false);
-
+	console.log('PhonenUmverification props', props);
 	// const onEndTimer = () => {
 	// 	setTimeOut(true);
 	// };

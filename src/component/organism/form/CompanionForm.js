@@ -13,14 +13,16 @@ import SelectInput from 'Root/component/molecules/button/SelectInput';
 
 /**
  *
- * @param {{
- * onSelectSpecies : void,
- * onSelectAge:void,
- * onSelectDuration :void,
- * onSelectStatus :void,
- * onDelete : void,
- * }} props
+	반려동물등록 
+ * @param {void} props.onSelectSpecies - 종 선택  
+ * @param {void} props.onSelectAge - 나이 선택
+ * @param {void} props.onSelectDuration - 기간 선택
+ * @param {void} props.onSelectStatus - 상태 선택
+ * @param {void} props.onDelete - 삭제
+ * 
+ * 
  */
+
 export default CompanionForm = props => {
 	const [petTypes, setPetTypes] = React.useState(['동물종류']);
 	const [selectedPetTypes, setSelectedPetTypes] = React.useState('동물종류');

@@ -15,6 +15,11 @@ import AniButton from 'Root/component/molecules/button/AniButton';
  * onPressDelete: void,
  * onPressDeleteChild : void
  * }} props
+ 
+ * @param {Object} props.items - 댓글 목록들
+ * @param {Object} props.parent - 부모 댓글 오브젝트
+ * @param {(id:string)=>void} props.onPressReplyBtn - 답글 버튼 클릭 
+ * @param {(data:object)=>void} props.onPress_ChildComment_ReplyBtn - 대댓글 답글달기
  */
 export default CommentList = props => {
 	const like = data => {};

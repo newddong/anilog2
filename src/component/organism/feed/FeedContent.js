@@ -19,7 +19,17 @@ import {createReport} from 'Root/api/report';
 import {getLinesOfString, count_to_K} from 'Root/util/stringutil';
 import FeedMedia from 'Molecules/media/FeedMedia';
 import feed_obj from 'Root/config/feed_obj';
-
+/**
+ * 피드 content
+ * @param {object} props - Props Object
+ * @param {object} props.data - 피드 정보  Object
+ * @param {boolean} props.isLike - 좋아요 여부
+ * @param {int} props.likeCount - 좋아요 개수
+ * @param {void} props.deleteFeed - 피드 삭제
+ * @param {void} props.toggleFeedLike - 좋아요 클릭
+ *
+ *
+ */
 export default FeedContent = props => {
 	const {
 		_id,
@@ -64,7 +74,7 @@ export default FeedContent = props => {
 	const [isFavorite, setIsFavorite] = React.useState(is_favorite);
 	const [commentCount, setCommentCount] = React.useState(0);
 	const feed_writer = props.data.feed_avatar_id ? props.data.feed_avatar_id : props.data.feed_writer_id;
-
+	// console.log('props.data feed content', props);
 	React.useEffect(() => {
 		const unsubscribe = navigation.addListener('focus', () => {
 			setPressed(false);

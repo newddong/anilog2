@@ -8,7 +8,7 @@ import {EMAIL_DOMAIN} from 'Root/i18n/msg';
 import Modal from 'Root/component/modal/Modal';
 
 /**
- *
+ * 이메일 인풋 컴포넌트
  * @param {object} props
  * @param {Array.<string>} props.dropdownItems - 메일주소 업체들
  * @param {number} props.defaultIndex - 드롭다운의 기본 인덱스(기본값:0)

@@ -2,15 +2,16 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {Text, View, TouchableOpacity} from 'react-native';
 import DP from 'Root/config/dp';
-import {APRI10, GRAY10, GRAY20, GRAY30, GRAY40, WHITE} from 'Root/config/color';
+import {APRI10, GRAY30, GRAY40, WHITE} from 'Root/config/color';
 
 /**
+ * 온오프 스위치 컴포넌트 - 앱 설정 페이지
  *
- *@param {{
- *default: '0 - off , 1 - on'
- *onSwtichOn: 'Switch On Callback',
- *onSwtichOff: 'Switch Off Callback',
- * }} props
+ * @param {object} props - Props Object
+ * @param {boolean} props.default - 0 - off , 1 - on
+ * @param {boolean} props.isCheck - 초기 선택 상태
+ * @param {()=>void} props.onSwtichOn - 스위치 켜기 콜백
+ * @param {()=>void} props.onSwtichOff - 스위치 끄기 콜백
  */
 const OnOffSwitchForSetting = props => {
 	const [btnStatus, setBtnStatus] = React.useState(props.default || false);

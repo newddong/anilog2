@@ -5,7 +5,6 @@ import {APRI10, GRAY10, GRAY40} from 'Root/config/color';
 import {txt} from 'Root/config/textstyle';
 import {COMPANION_DURATION, COMPANION_STATUS, PET_AGE, PET_KIND} from 'Root/i18n/msg';
 import {Cross52, CrossMark_Filled} from 'Atom/icon';
-import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 import {companionForm} from 'Organism/style_organism copy';
 import DropdownSelect from 'Root/component/molecules/dropdown/DropdownSelect';
 import Modal from 'Root/component/modal/Modal';

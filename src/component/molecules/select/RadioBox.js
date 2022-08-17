@@ -2,11 +2,10 @@ import React from 'react';
 import {txt} from 'Root/config/textstyle';
 import {Text, View, TouchableOpacity, FlatList} from 'react-native';
 import DP from 'Root/config/dp';
-import {GRAY20} from 'Root/config/color';
 import {RadioChecked48, RadioUnchecked48} from 'Atom/icon';
 
 /**
- * 버튼 컴포넌트트
+ * 단일 라디오 박스
  * @param {object} props - Props Object
  * @param {object} props.items - 라디오박스 목록 Array
  * @param {boolean} props.horizontal - RadioBox 수평정렬 지정 Default=true
@@ -91,7 +90,7 @@ RadioBox.defaultProps = {
 	horizontal: true,
 	onSelect: e => console.log(e),
 	// defaultSelect: 1,
-	width:550*DP,
+	width: 550 * DP,
 };
 
 export default RadioBox;

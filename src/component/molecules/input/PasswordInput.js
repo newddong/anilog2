@@ -1,11 +1,10 @@
 import React from 'react';
 import {txt} from 'Root/config/textstyle';
-import {Text, View, TouchableOpacity, TextInput} from 'react-native';
+import {Text, View} from 'react-native';
 import PropsTypes, {any, bool, func, number, object, oneOf, oneOfType, string} from 'prop-types';
 import DP from 'Root/config/dp';
 import {APRI10, GRAY20, GRAY30, GREEN, MAINBLACK, RED10} from 'Root/config/color';
-import {Cross52, Eye52_APRI10, Eye52_Black, Eye52_GRAY20} from 'Atom/icon';
-import {BackgroundColor} from 'chalk';
+import {Eye52_Black, Eye52_GRAY20} from 'Atom/icon';
 import Input24 from 'Molecules/input/Input24';
 
 /**

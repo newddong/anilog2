@@ -15,6 +15,10 @@ import {extractTags, getFeedText, getByteSubtring} from 'Root/util/stringutil';
  * @param {object} props - Props Object
  * @param {string} props.value - 텍스트 값
  * @param {(input:string)=>void} props.onChange - 인풋 값 변경 콜백
+ * @param {number} props.byteOfLine - 한 줄당 출력 텍스트
+ * @param {object} props.children - 태그 오브젝트
+ * @param {void} props.onMoreView - 더보기 출력 여부
+ * @param {boolean} props.hide - 더보기 출력 여부
  */
 export default function HashText(props) {
 	const taginfo = React.useRef(extractTags(props.children));

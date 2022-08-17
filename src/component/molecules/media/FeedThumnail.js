@@ -1,13 +1,11 @@
 import React from 'react';
-import {Text, View, Image, TouchableOpacity, TouchableWithoutFeedback, StyleSheet} from 'react-native';
+import {Text, View, TouchableOpacity, StyleSheet} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {Blur, Blur246, Check42, Check50, ImageList48, VideoPlay48} from 'Atom/icon';
+import {Check42, ImageList48, VideoPlay48} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
-import {APRI10, BLACK, MAINBLACK, OPACITY90, RED10, WHITE} from 'Root/config/color';
-import {DEFAULT_PROFILE} from 'Root/i18n/msg';
+import {APRI10, RED10, WHITE} from 'Root/config/color';
 import FastImage from 'react-native-fast-image';
-import Video from 'react-native-video';
 
 /**
  * 피드썸네일
@@ -65,12 +63,18 @@ const FeedThumbnail = React.memo(props => {
 		if ((props.selectMode && selected) || (props.selectMode && props.data.checkBoxState)) {
 			return (
 				<View style={[{borderColor: APRI10, borderWidth: 2 * DP}]}>
-						<FastImage source={{uri: props.data.feed_thumbnail}} style={{width: 242 * DP, height: 242 * DP,backgroundColor:'#000'}} />
+					<FastImage source={{uri: props.data.feed_thumbnail}} style={{width: 242 * DP, height: 242 * DP, backgroundColor: '#000'}} />
 					<View style={[{width: 242 * DP, height: 242 * DP, position: 'absolute', backgroundColor: 'rgba(0,0,0,0.4)'}]}></View>
 				</View>
 			);
 		} else if (!props.data.checkBoxState || !selected) {
-			return <FastImage source={{uri: props.data.feed_thumbnail,width:246*DP,height:246*DP}} style={[styles.img_square_246,{backgroundColor:'#000'}]} resizeMode={FastImage.resizeMode.contain}/>;
+			return (
+				<FastImage
+					source={{uri: props.data.feed_thumbnail, width: 246 * DP, height: 246 * DP}}
+					style={[styles.img_square_246, {backgroundColor: '#000'}]}
+					resizeMode={FastImage.resizeMode.contain}
+				/>
+			);
 		}
 	};
 	return (

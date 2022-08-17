@@ -2,24 +2,20 @@ import React from 'react';
 import {Text, View, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {txt} from 'Root/config/textstyle';
 import DP from 'Root/config/dp';
-import {ImageList48, VideoPlay48, VideoPlay_Feed, Tag70, Blur694} from 'Atom/icon';
+import {Blur694} from 'Atom/icon';
 import {styles} from 'Atom/image/imageStyle';
-import {APRI10, BLACK, GRAY10, RED10, WHITE} from 'Root/config/color';
+import {APRI10, RED10, WHITE} from 'Root/config/color';
 import Swiper from 'react-native-swiper';
-import {number} from 'prop-types';
-import {phoneFomatter} from 'Root/util/stringutil';
 import PhotoTagItem from 'Organism/feed/PhotoTagItem';
 import Modal from 'Root/component/modal/Modal';
 import {useNavigation} from '@react-navigation/core';
-import HashText from '../info/HashText';
-import X2JS from 'x2js';
 import feed_obj from 'Root/config/feed_obj';
 
 /**
- *
- * @param {{
- *	onSelect: 'Callback',
- * }} props
+ * 피드의 사진 및 동영상 컴포넌트
+ * @param {object} props - Props Object
+ * @param {object} props.data -  피드 오브젝트
+ * @param {(object)=>void} props.onPressPhoto - 사진 선택 콜백
  */
 export default FeedMedia = props => {
 	const {
@@ -235,16 +231,7 @@ export default FeedMedia = props => {
 };
 
 FeedMedia.defaultProps = {
-	data: {
-		feed_id: null,
-		isVideo: false,
-		medias: [1, 2, 3, 4],
-		alert_title: 'alert_msg',
-		emergency: false,
-	},
-	onSelect: e => console.log(e),
 	onPressPhoto: () => {},
-	img_uri: 'https://consecutionjiujitsu.com/wp-content/uploads/2017/04/default-image.jpg',
 };
 
 const style = StyleSheet.create({

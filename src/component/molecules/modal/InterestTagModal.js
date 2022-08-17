@@ -125,29 +125,39 @@ const InterestTagModal = props => {
 		} else {
 			const prev = props.data;
 			let equals = true;
-			if (props.category == 'Location' && prev.length == userInterestLocation.length) {
-				prev.map((v, i) => {
-					if (!userInterestLocation.includes(v)) {
-						equals = false;
+			if (props.category == 'Location') {
+				if (prev.length == userInterestLocation.length) {
+					prev.map((v, i) => {
+						if (!userInterestLocation.includes(v)) {
+							equals = false;
+						}
+					});
+					if (equals) {
+						props.onClose();
+						Modal.close();
+					} else {
+						setShowBtnModal(true);
 					}
-				});
-				if (equals) {
+				} else {
 					props.onClose();
 					Modal.close();
-				} else {
-					setShowBtnModal(true);
 				}
-			} else if (props.category == 'Activity' && prev.length == userInterestContent.length) {
-				prev.map((v, i) => {
-					if (!userInterestContent.includes(v)) {
-						equals = false;
+			} else if (props.category == 'Activity') {
+				if (prev.length == userInterestContent.length) {
+					prev.map((v, i) => {
+						if (!userInterestContent.includes(v)) {
+							equals = false;
+						}
+					});
+					if (equals) {
+						props.onClose();
+						Modal.close();
+					} else {
+						setShowBtnModal(true);
 					}
-				});
-				if (equals) {
+				} else {
 					props.onClose();
 					Modal.close();
-				} else {
-					setShowBtnModal(true);
 				}
 			}
 		}

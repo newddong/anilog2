@@ -29,7 +29,7 @@ export default SocialInfoB = props => {
 				<Text style={[txt.roboto34b, styles.number]}>{count_to_K(props.data.user_upload_count)}</Text>
 				<Text style={[txt.noto28, styles.title]}>업로드</Text>
 			</TouchableOpacity>
-			<TouchableOpacity onPress={() => moveToSocialRelation('Follower')} style={[styles.socialInfo]}>
+			<TouchableOpacity onPress={() => moveToSocialRelation('FollowerList')} style={[styles.socialInfo]}>
 				<Text style={[txt.roboto34b, styles.number]}>{count_to_K(props.data.user_follower_count)}</Text>
 				<Text style={[txt.noto28, styles.title]}>팔로워</Text>
 			</TouchableOpacity>

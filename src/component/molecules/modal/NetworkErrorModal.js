@@ -11,6 +11,7 @@ import Modal from 'Root/component/modal/Modal';
  * @todo 모달창이 없어지기 위한 조건을 넣어야함.
  *
  * @param {Object} props - props object
+ * @param {string} props.msg - 메시지
  *
  */
 const NetworkErrorModal = props => {

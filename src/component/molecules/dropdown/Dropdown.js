@@ -2,16 +2,14 @@ import React from 'react';
 import {View, StyleSheet, Text, Dimensions, TouchableWithoutFeedback, Animated, Easing} from 'react-native';
 import Modal from 'Component/modal/Modal';
 import DP from 'Root/config/dp';
+import PropsTypes, {any, bool, func, number, object, oneOf, oneOfType, string} from 'prop-types';
 
 /**
+ * 인풋 크기 24
+ * @type {React.ForwardRefRenderFunction<?,DropDownProps>}
  *
- * @param {{
- * buttonComponent : '',
- * dropdownList : '',
- * horizontalOffset : '',
- * }} props
  */
-export default Dropdown = React.forwardRef((props, ref) => {
+const Dropdown = React.forwardRef((props, ref) => {
 	React.useImperativeHandle(ref, () => ({
 		button: buttonref,
 	}));
@@ -102,9 +100,22 @@ export default Dropdown = React.forwardRef((props, ref) => {
 	);
 });
 
+const DropdownProps = {
+	/** @type {object} 입력창 제목(상단) */
+	buttonComponent: object,
+	/** @type {object} */
+	dropdownList: object,
+	/** @type {number} 수평 길이 */
+	horizontalOffset: number,
+	/** @type {boolean} 수평 정렬 여부 */
+	alignBottom: Boolean,
+};
+
+Dropdown.propTypes = DropdownProps;
 Dropdown.defaultProps = {
 	dropdownList: <View style={{position: 'absolute', width: 100, height: 100, backgroundColor: 'blue'}} />,
 	buttonComponent: <View style={{position: 'absolute', width: 100, height: 100, backgroundColor: 'white'}} />,
 	alignBottom: false,
 	horizontalOffset: 0,
 };
+export default Dropdown;

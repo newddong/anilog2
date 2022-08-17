@@ -18,6 +18,8 @@ import SelectInput from 'Root/component/molecules/button/SelectInput';
 import {getAddressList} from 'Root/api/address';
 import {getCommonCodeDynamicQuery} from 'Root/api/commoncode';
 import FastImage from 'react-native-fast-image';
+import Modal from 'Root/component/modal/Modal';
+
 // 필요한 데이터 - 로그인 유저 제반 데이터, 나의 반려동물 관련 데이터(CompanionObject 참조)
 export default UserInfoSetting = ({route}) => {
 	const navigation = useNavigation();
@@ -60,6 +62,7 @@ export default UserInfoSetting = ({route}) => {
 			},
 		);
 	};
+
 	let temp = [];
 	React.useEffect(() => {
 		if (userDataLoaded) {
@@ -91,7 +94,7 @@ export default UserInfoSetting = ({route}) => {
 					// console.log('ohhh', content);
 					if (content[0] != 'interests_location' && content[0] != '_id') {
 						Object.entries(content[1]).map(contents => {
-							console.log('contents', contents);
+							// console.log('contents', contents);
 							temp.push(contents[1]);
 						});
 					}
@@ -105,6 +108,7 @@ export default UserInfoSetting = ({route}) => {
 			getAddresses();
 		}
 	}, [userDataLoaded]);
+
 	React.useEffect(() => {
 		navigation.addListener('focus', () => fetchData());
 		navigation.addListener('blur', () => setModifyMode(false)); //소개글 수정모드 종료
@@ -143,6 +147,7 @@ export default UserInfoSetting = ({route}) => {
 	React.useEffect(() => {
 		modifyMode ? modifyRef.current.focus() : null;
 	}, [modifyMode]);
+
 	//변경된 locationObject와 contentInterest를 저장형식에 맞게 파싱
 	React.useEffect(() => {
 		if (interestLoaded) {
@@ -150,10 +155,10 @@ export default UserInfoSetting = ({route}) => {
 
 			let tempObject = {};
 			for (const key in interestList) {
-				console.log('keys', key);
+				// console.log('keys', key);
 				tempObject[key] = interestList[key].definition;
 			}
-			console.log('tempObject', tempObject);
+			// console.log('tempObject', tempObject);
 			for (let props of contentInterest) {
 				console.log('props props interestList', props, contentInterest, interestList);
 				///TODO props로 넘어온 list의 값을 interestList에서 찾아서 interest_etc :[어쩌고] 이런식으러 만들어서 넘겨줘야함.
@@ -170,7 +175,7 @@ export default UserInfoSetting = ({route}) => {
 							temp[content[0]] = [props];
 						}
 
-						console.log('temp', temp);
+						// console.log('temp', temp);
 					}
 				});
 			}
@@ -181,10 +186,11 @@ export default UserInfoSetting = ({route}) => {
 				...prevState,
 				user_interests: locationObject,
 			}));
+			console.log('locationObject', locationObject);
 			updateUserDetailInformation(
 				{user_interests: locationObject},
 				result => {
-					// console.log('result / updateUserDetailInformation / SaveButtonHeader   : ', result);
+					console.log('result / updateUserDetailInformation / SaveButtonHeader   : ', result.msg.user_interests);
 					// setTimeout(() => {
 					// Modal.close();
 					// navigation.goBack();
@@ -247,6 +253,7 @@ export default UserInfoSetting = ({route}) => {
 		}
 		setModifyMode(!modifyMode);
 	};
+
 	const onPressAddInterestLocation = () => {
 		Modal.popInterestTagModal(
 			'Location',
@@ -256,6 +263,7 @@ export default UserInfoSetting = ({route}) => {
 			setLocationInterest,
 		);
 	};
+
 	const onPressAddInterestActivation = () => {
 		// console.log('contentInterest', contentInterest);
 		Modal.popInterestTagModal(
@@ -266,6 +274,7 @@ export default UserInfoSetting = ({route}) => {
 			setContentInterest,
 		);
 	};
+
 	const onDeleteInterestRegion = index => {
 		let copy = locationInterest;
 		copy.splice(index, 1);

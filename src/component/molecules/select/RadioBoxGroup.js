@@ -1,12 +1,9 @@
 import React from 'react';
-import {txt} from 'Root/config/textstyle';
-import {Text, View, TouchableOpacity, TouchableWithoutFeedback, FlatList} from 'react-native';
+import {View} from 'react-native';
 import DP from 'Root/config/dp';
-import {GRAY20} from 'Root/config/color';
-import {RadioChecked48, RadioUnchecked48} from 'Atom/icon';
 
 /**
- * 버튼 컴포넌트트
+ * 라디오 박스 그룹
  * @param {import('react-native').ViewProps} props - Props Object
  * @param {boolean} props.horizontal - RadioBox 수평정렬 지정 Default=true
  * @param {number} props.selectableNumber - 선택가능한 Radio Box 숫자 Default = 1

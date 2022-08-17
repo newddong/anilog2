@@ -44,7 +44,7 @@ const HashInput = React.forwardRef((props, ref) => {
 	//onSelectionChange는 한글의 자모 조립시에는 발생하지 않고, 한 음절이 입력이 끝난 뒤 커서의 위치가 변동되었을 경우만 발생한다.
 
 	const matchId = () => {
-		console.log('matchId ', internal.text);
+		// console.log('matchId ', internal.text);
 		if (typeof internal.text != 'string') return;
 		if (internal.linkStore.size > 0) {
 			internal.linkStore.forEach((value, key) => {
@@ -58,14 +58,14 @@ const HashInput = React.forwardRef((props, ref) => {
 				internal.text = internal.text.replace(regex, `&#&##${key}%&%${value}&#&#`);
 			});
 		}
-		console.log('matchId Result ', internal.text);
+		// console.log('matchId Result ', internal.text);
 	};
 
 	const onChangeText = text => {
 		internal.text = text.replace(changeTextRegex, '&$1&$1$1$2%&%&$1&$1'); //디비에 입력될 내용으로 변환
-		console.log('onChangeText 1st ', internal.text);
+		// console.log('onChangeText 1st ', internal.text);
 		internal.editTag = findTagAt(internal.textInputCursor, text);
-		console.log('onChangeText editTag ', internal.editTag);
+		// console.log('onChangeText editTag ', internal.editTag);
 		props.onFind && props.onFind(isTag(internal.editTag));
 		setFind(isTag(internal.editTag));
 
@@ -79,7 +79,7 @@ const HashInput = React.forwardRef((props, ref) => {
 						user_type: '',
 					},
 					result => {
-						console.log('user editing', result);
+						// console.log('user editing', result);
 						setFindList(result.msg);
 					},
 					error => {
@@ -97,7 +97,7 @@ const HashInput = React.forwardRef((props, ref) => {
 						hashtag_keyword: getTagName(internal.editTag),
 					},
 					result => {
-						console.log('hash editing', result);
+						// console.log('hash editing', result);
 						setFindList(result.msg);
 					},
 					error => {
@@ -118,14 +118,14 @@ const HashInput = React.forwardRef((props, ref) => {
 		// if (start == end) {
 		internal.textInputCursor = start;
 		// }
-		console.log('move cursor ', internal.textInputCursor);
+		// console.log('move cursor ', internal.textInputCursor);
 
 		internal.prevEditTag = internal.editTag;
 		internal.editTag = findTagAt(start, internal.value); //현재 커서의 위치에서 태그를 찾음
-		console.log('move tag ', internal.editTag, internal.value);
+		// console.log('move tag ', internal.editTag, internal.value);
 
 		if (internal.editTag != internal.prevEditTag) {
-			console.log('nickname search by move cursor ');
+			// console.log('nickname search by move cursor ');
 			if (internal.editTag.startsWith('@')) {
 				getUserListByNickname(
 					{
@@ -160,7 +160,7 @@ const HashInput = React.forwardRef((props, ref) => {
 
 		internal.tagStartIdx = findStartIndexOfTag(internal.textInputCursor, internal.value); //현재 커서가 위치한 단어의 시작 인덱스,
 		internal.tagEndIdx = findEndIndexOfTag(internal.textInputCursor, internal.value); //현재 커서가 위치한 단어의 끝 인덱스
-		console.log('tag position ', internal.tagStartIdx, internal.tagEndIdx);
+		// console.log('tag position ', internal.tagStartIdx, internal.tagEndIdx);
 		props.onFind && props.onFind(isTag(internal.editTag));
 		setFind(isTag(internal.editTag));
 		// matchId()
@@ -287,7 +287,7 @@ const HashInput = React.forwardRef((props, ref) => {
 				</View>
 				{props.showImages && props.selectedImg.length > 0 && (
 					<View style={[style.mediaListContainer]}>
-						<SelectedMediaList items={props.selectedImg} onDelete={deletePhoto} mediaList={props.mediaList}/>
+						<SelectedMediaList items={props.selectedImg} onDelete={deletePhoto} mediaList={props.mediaList} />
 					</View>
 				)}
 			</View>

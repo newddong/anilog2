@@ -5,17 +5,12 @@ import {GRAY10} from 'Root/config/color';
 import DP from 'Root/config/dp';
 import {txt} from 'Root/config/textstyle';
 import {Arrow_Down_GRAY10, Arrow_Up_GRAY10} from 'Atom/icon';
+import {array} from 'prop-types';
 
 /**
+ * 인풋 크기 24
+ * @type {React.ForwardRefRenderFunction<?,FilterButtonContainerProps>}
  *
- *@param {{
- *items : 'Array',
- *btnTitle: string,
- *titleFontSize: number,
- *btnLayout: '버튼 레이아웃 ex) btn_w226',
- *onOn: '버튼 On Callback',
- *onOff:'버튼 Off Callback',
- * }} props
  */
 export default FilterButtonContainer = React.forwardRef((props, ref) => {
 	React.useImperativeHandle(ref, () => ({
@@ -74,6 +69,33 @@ export default FilterButtonContainer = React.forwardRef((props, ref) => {
 	);
 });
 
+/**
+ *
+ *@param {{
+ *onOn: '버튼 On Callback',
+ *onOff:'버튼 Off Callback',
+ * }} props
+ */
+
+const FilterButtonContainerProps = {
+	/** @type {array} 입력창 제목(상단) */
+	items: array,
+
+	/** @type {string} 버튼 타이틀*/
+	btnTitle: string,
+	/** @type {string} 버튼 스타일 'filled'|'border'|'noborder'|undefined */
+	btnStyle: string,
+	/** @type {object} 버튼의 레이아웃 스타일(Atoms의 btn_wXXX) */
+	btnLayout: object,
+	/** @type {number} 타이틀 폰트 크기 */
+	titleFontSize: number,
+	/** @type {()=>void} 버튼이 열렸을 때 동작하는 콜백, 제목 반환홤 */
+	onOn: func,
+	/** @type {()=>void} 버튼이 닫혔을 때 동작하는 콜백, 제목 반환환 */
+	onOff: func,
+};
+
+FilterButtonContainer.propTypes = FilterButtonContainerProps;
 FilterButtonContainer.defaultProps = {
 	btnTitle: 'title',
 	titleFontSize: 24,

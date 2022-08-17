@@ -11,7 +11,6 @@ import Modal from 'Component/modal/Modal';
 import {PET_YEAR, PET_MONTH, WEIGHT_INPUT_FORM_INFO} from 'Root/i18n/msg';
 import {stagebar_style} from 'Organism/style_organism copy';
 import {CommonActions} from '@react-navigation/native';
-import NormalDropDown from 'Molecules/dropdown/NormalDropDown';
 import Input30 from 'Molecules/input/Input30';
 import {assignShelterAnimal} from 'Root/api/shelterapi';
 import {Arrow_Down_GRAY10} from 'Root/component/atom/icon';

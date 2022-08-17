@@ -20,12 +20,12 @@ const MissingReportBox = props => {
 	const navigation = useNavigation();
 
 	React.useEffect(() => {
-		console.log('props', props);
+		// console.log('props', props);
 		try {
 			if (props.data.feed_type == 'missing') {
 				let objCitys = JSON.parse(`${props.data?.missing_animal_lost_location}`);
 				let temp = objCitys.district.split(' ', 2)[0];
-				console.log('temptemptemep', temp);
+				// console.log('temptemptemep', temp);
 				setObjCity(`${temp}`);
 				// setObjCity(`${objCitys.district}`);
 			}

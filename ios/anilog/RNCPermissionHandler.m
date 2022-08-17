@@ -6,7 +6,7 @@
 #import <React/RCTConvert.h>
 
 #import "RNCPermissionHandler.h"
-
+//RCT로 마크된 함수는 PermissionIos.js 에서 PermissionHandlerIos 객체를 통해 호출할 수 있다.
 
 //MARK: - ENUMs
 /*
@@ -50,7 +50,9 @@ RCT_ENUM_CONVERTER(RNCPHPermissionIosStatus,
 
 RCT_EXPORT_MODULE(IosPermissionHandler);
 
-//enum RNCPHPermissionIosStatus를 문자열로 바꾸는 함수
+/// RNCPHPermissionIosStatus를 문자열로 바꾼다
+/// @param status 퍼미션 상태값
+/// @return RNCPHPermissionIosStatus에 해당하는 문자열. PermissionStatics.ts의 PERMISSION_IOS_STATUS와 대응한다
 - (NSString *)stringForStatus:(RNCPHPermissionIosStatus)status {
   switch (status) {
     case RNCPHPermissionIosStatusNotDetermined:
@@ -66,7 +68,9 @@ RCT_EXPORT_MODULE(IosPermissionHandler);
   }
 }
 
-//PHAuthorizationStatus 를 상단 enum RNCPHPermissionIosStatus에 해당하는 값으로 바꾸어 자바스크립트 단으로 넘겨주는 함수
+///PHAuthorizationStatus를 RNCPHPermissionIosStatus에 해당하는 값으로 바꾼다. 자바스크립트 단으로 넘길 때 사용
+/// @param status authorization 상태값
+/// @return RNCPHPermissionIosStatusdp 해당하는 값
 - (void)switchPHPermissionResolve:(PHAuthorizationStatus)status
                                   resolve:(RCTPromiseResolveBlock)resolve {
   switch (status) {
@@ -92,7 +96,8 @@ RCT_EXPORT_MODULE(IosPermissionHandler);
   }
 }
 
-//설정 창으로 이동하는 함수.
+//@MARK: - RCT openSetting
+/// iOS 설정 창을 연다
 RCT_EXPORT_METHOD(openSetting){
   //UI는 main queue에서만 업데이트 가능
   dispatch_async(dispatch_get_main_queue(), ^{
@@ -102,7 +107,8 @@ RCT_EXPORT_METHOD(openSetting){
   });
 }
 
-//퍼미션을 요청하고 해당 요청의 결과값을 리턴한다. reject 대응되어 있지 않음
+//@MARK: - RCT requestPermission
+///퍼미션을 요청하고 해당 요청의 결과값을 반환한다. reject 대응되어 있지 않음
 RCT_EXPORT_METHOD(requestPermission:
                   (RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject){
@@ -118,7 +124,8 @@ RCT_EXPORT_METHOD(requestPermission:
   }
 }
 
-//퍼미션을 체크하고 그에 대한 값을 리턴한다. reject 대응되어 있지 않음
+//@MARK: - RCT checkPermission
+///퍼미션을 체크하고 그에 대한 값을 리턴한다. reject 대응되어 있지 않음
 RCT_EXPORT_METHOD(checkPermission:
                   (RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject){
@@ -132,31 +139,31 @@ RCT_EXPORT_METHOD(checkPermission:
 }
 
 
-//카메라 퍼미션 작성 중
-RCT_EXPORT_METHOD(checkCameraPermission){
-  AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
-  
-  switch (status){
-    case AVAuthorizationStatusAuthorized:
-
-      NSLog(@"Authorized");
-    
-      break;
-      
-    case AVAuthorizationStatusNotDetermined:
-      NSLog(@"Not determined");
-      
-      break;
-      
-    case AVAuthorizationStatusDenied:
-      NSLog(@"denied");
-      break;
-      
-    case AVAuthorizationStatusRestricted:
-      NSLog(@"restricted");
-      break;
-    }
-  }
+////카메라 퍼미션 작성 중
+//RCT_EXPORT_METHOD(checkCameraPermission){
+//  AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+//
+//  switch (status){
+//    case AVAuthorizationStatusAuthorized:
+//
+//      NSLog(@"Authorized");
+//
+//      break;
+//
+//    case AVAuthorizationStatusNotDetermined:
+//      NSLog(@"Not determined");
+//
+//      break;
+//
+//    case AVAuthorizationStatusDenied:
+//      NSLog(@"denied");
+//      break;
+//
+//    case AVAuthorizationStatusRestricted:
+//      NSLog(@"restricted");
+//      break;
+//    }
+//  }
 
 
 @end

@@ -247,7 +247,7 @@ export type VideoAttributes = {
  
    /**
     * uri 리스트를 넘겨주고 해당 리스트의 uri에 해당하는 파일을 압축
-    * @param CompressionParams CameraRoll.d.ts 참조
+    * @param CompressionParams 압축하기 위한 이미지 주소, 퀄리티 등의 정보
     * @returns 
     */
    static compressImage(params: CompressionParams): Promise<Image[]>{
@@ -256,16 +256,27 @@ export type VideoAttributes = {
 
    /**
     * uri에 해당하는 이미지를 크롭, 결과는 promise로 반환
-    * @param {CropParams} params
+    * @param {CropParams} 크롭하기 위한 이미지 주소, 크기 등의 정보
+    * @returns 크롭된 이미지를 반환한다.
     */
    static cropImage(params: CropParams): Promise<Image>{
      return RNCCameraRoll.cropImage(params);
    }
 
+   /**
+    * uri에 해당하는 이미지를 저장
+    * @param uri 저장하고자 하는 이미지 주소
+    * @returns 저장하는 promise를 반환한다.
+    */
   static saveImage(uri: string): Promise<void>{
     return RNCCameraRoll.saveImage(uri);
   }
 
+  /**
+   * 카메라롤에서 기본적으로 사용되는 파일 주소(ph://{local identifier} 형태)에서 iOS 갤러리 내부에서 통용되는 주소 및 파일 길이를 가져옴
+   * @param uri 가져오고자 하는 이미지의 주소
+   * @returns iOS에서 기본적으로 통용되는 이미지 주소와 파일 길이를 VideoAttributes 형태로 반환한다
+   */
   static getVideoAttributes(uri: string): Promise<VideoAttributes>{
     return RNCCameraRoll.getVideoAttributes(uri);
   }

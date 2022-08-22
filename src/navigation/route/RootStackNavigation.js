@@ -78,10 +78,6 @@ import FollowerList from 'Root/component/templete/list/FollowerList';
 import PetFollowerList from 'Root/component/templete/list/PetFollowerList';
 import FeedCommentList from 'Root/component/templete/feed/FeedCommentList';
 
-import CameraRoll from 'Root/module/CameraRoll';
-import appconfig from 'Root/config/appConfig';
-import FastImage from 'react-native-fast-image';
-import appConfig from 'Root/config/appConfig';
 
 const RootStack = createStackNavigator();
 

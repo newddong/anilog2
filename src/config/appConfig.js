@@ -14,6 +14,6 @@ const appConfig = {
     medias:[],
     lastMedia:undefined,
     // localUri: 'http://localhost:3000'
-    localUri: Platform.OS=='ios'?'http://localhost:3000':'http://10.0.2.2:3000'
+    localUri: Platform.OS=='ios'?'http://localhost:3001':'http://10.0.2.2:3001'
 }
 export default appConfig;

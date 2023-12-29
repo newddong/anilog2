@@ -5,9 +5,6 @@ import RootStackNavigation from 'Navigation/route/RootStackNavigation';
 import codePush from 'react-native-code-push';
 import appConfig, {DEV, RELEASE, STAGING} from 'Root/config/appConfig';
 // import SplashScreen from 'react-native-splash-screen';
-import * as Sentry from '@sentry/react-native';
-import {init, captureMessage} from '@sentry/browser';
-import {RewriteFrames as RewriteFramesIntegration} from '@sentry/integrations';
 import Raven from 'raven-js';
 import ErrorBoundary from 'react-native-error-boundary';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -16,28 +13,13 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 // import Raven from 'raven-js/plugins/react-native';
 LogBox.ignoreLogs(['Sending']);
 const NoRaven = false;
-const RELEASE_ID = appConfig.sentryReleaseID;
-const PUBLIC_DSN = appConfig.mode == DEV ? appConfig.sentryDsnStaging : appConfig.sentryDsnRelease;
 const integrations =
 	Platform.OS == 'ios'
 		? new RewriteFramesIntegration({prefix: ''})
 		: new RewriteFramesIntegration({
 				prefix: '',
 		  });
-(function sentryinit() {
-	Sentry.init({
-		dsn: PUBLIC_DSN,
-		release: RELEASE_ID,
-		integrations: [integrations],
-	});
 
-	init({
-		dsn: PUBLIC_DSN,
-		release: RELEASE_ID,
-		integrations: [integrations],
-	});
-	!NoRaven && Raven.config(PUBLIC_DSN, {release: RELEASE_ID}).install();
-})();
 const codePushOptions = {
 	checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
 	// 언제 업데이트를 체크하고 반영할지를 정한다.

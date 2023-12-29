@@ -279,8 +279,6 @@ PODS:
     - glog
   - react-native-cookies (6.0.11):
     - React-Core
-  - react-native-create-thumbnail (1.5.1):
-    - React-Core
   - react-native-geolocation (2.0.2):
     - React
   - react-native-image-picker (4.8.4):
@@ -381,9 +379,6 @@ PODS:
   - RNScreens (3.8.0):
     - React-Core
     - React-RCTImage
-  - RNSentry (4.1.2):
-    - React-Core
-    - Sentry (= 7.20.0)
   - RNSVG (12.1.1):
     - React
   - SDWebImage (5.11.1):
@@ -394,9 +389,6 @@ PODS:
   - SDWebImageWebPCoder (0.8.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
-  - Sentry (7.20.0):
-    - Sentry/Core (= 7.20.0)
-  - Sentry/Core (7.20.0)
   - SSZipArchive (2.2.3)
   - VideoEditorSDK (10.30.1):
     - imglyKit (= 10.30.1)
@@ -438,7 +430,6 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - "react-native-cookies (from `../node_modules/@react-native-cookies/cookies`)"
-  - react-native-create-thumbnail (from `../node_modules/react-native-create-thumbnail`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-maps (from `../node_modules/react-native-maps`)
@@ -465,7 +456,6 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNScreens (from `../node_modules/react-native-screens`)
-  - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - SDWebImage
   - SDWebImagePhotosPlugin
@@ -486,7 +476,6 @@ SPEC REPOS:
     - SDWebImage
     - SDWebImagePhotosPlugin
     - SDWebImageWebPCoder
-    - Sentry
     - SSZipArchive
     - VideoEditorSDK
 
@@ -557,8 +546,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-cookies:
     :path: "../node_modules/@react-native-cookies/cookies"
-  react-native-create-thumbnail:
-    :path: "../node_modules/react-native-create-thumbnail"
   react-native-geolocation:
     :path: "../node_modules/@react-native-community/geolocation"
   react-native-image-picker:
@@ -611,8 +598,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-permissions"
   RNScreens:
     :path: "../node_modules/react-native-screens"
-  RNSentry:
-    :path: "../node_modules/@sentry/react-native"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   Yoga:
@@ -661,7 +646,6 @@ SPEC CHECKSUMS:
   React-jsinspector: c5989c77cb89ae6a69561095a61cce56a44ae8e8
   React-logger: a0833912d93b36b791b7a521672d8ee89107aff1
   react-native-cookies: cd92f3824ed1e32a20802e8185101e14bb5b76da
-  react-native-create-thumbnail: dedcb7cd3d14a4b6cc2026563197242081edb52b
   react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
   react-native-image-picker: cffb727cf2f59bd5c0408e30b3dbe0b935f88835
   react-native-maps: d752b0dd0e1951d815b1336332835aab6b4a836f
@@ -688,16 +672,14 @@ SPEC CHECKSUMS:
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
   RNScreens: 6e1ea5787989f92b0671049b808aef64fa1ef98c
-  RNSentry: b7b82fd671772dda9ae063af0b4873251aa04bdb
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImagePhotosPlugin: 7d52495711a00637da16bbd7098a634f524c8d7e
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
-  Sentry: 9e8ec837fa37e7b397f19f75542800461b138d0e
   SSZipArchive: 62d4947b08730e4cda640473b0066d209ff033c9
   VideoEditorSDK: 8248852e4288a996119a099ad985e36fdcb58d87
   Yoga: 99652481fcd320aefa4a7ef90095b95acd181952
 
 PODFILE CHECKSUM: 638306d406ba9b76026d8c128398542293640b76
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.1
